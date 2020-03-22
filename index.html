@@ -1,0 +1,929 @@
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
+
+<script src="//console.re/connector.js" data-channel="obsninja1" id="consolerescript"></script>
+
+<style type="text/css">
+        #mynetwork {
+		width: 600px;
+		height: 400px;
+		border: 1px solid lightgray;
+	}
+</style>
+<style>
+* {
+	padding: 0;
+	margin: 0;
+	box-sizing: border-box;
+
+}
+.email { unicode-bidi: bidi-override; direction: rtl; user-select: none;  }
+.credits {
+	color:black;
+	position:absolute;
+	bottom:0;
+	right:0;
+	z-index:-1;
+}
+.credits  >a {
+	color:black;
+}
+.credits >a:visited{
+	color:black;
+}
+
+.row {
+	align-content:center;
+	text-align: center;
+	margin-top:10px;
+
+}
+
+#videosource {
+	max-width:100%;
+	max-height:100%;
+}
+/* Clear floats after the columns */
+.row:after {
+	content: "";
+	display: table;
+	clear: both;
+}
+
+html {
+	height: 100%;
+}
+
+
+body {
+	padding: 0 3px;
+	height: 100%;
+	width: 100%;
+	background: #141926;
+	font-family: Helvetica, Arial, sans-serif;
+	display: flex;
+	flex-flow: column;
+}
+h2 {
+	color: white;
+}
+
+.outer {
+	position: relative;
+	margin: auto;
+	width: 70px;
+	margin-top: 0px;
+	cursor: pointer;
+}
+
+.inner {
+	width: inherit;
+	text-align: center;
+}
+
+label {
+	font-size: 1.1em;
+	line-height: 4em;
+	font-weight: bold;
+	text-transform: uppercase;
+	color: #000;
+	transition: all .3s ease-in;
+	opacity: 0;
+	cursor: pointer;
+}
+
+.inner:before, .inner:after {
+	position: absolute;
+	content: '';
+	height: 7px;
+	width: inherit;
+	background: #000;
+	left: 0;
+	transition: all .3s ease-in;
+}
+
+.inner:before {
+	top: 50%;
+	transform: rotate(45deg);
+}
+
+.inner:after {
+	bottom: 50%;
+	transform: rotate(-45deg);
+}
+
+.outer:hover label {
+	opacity: 1;
+}
+
+.outer:hover .inner:before,
+.outer:hover .inner:after {
+	transform: rotate(0);
+}
+
+.outer:hover .inner:before {
+	top: 0;
+}
+
+.outer:hover .inner:after {
+	bottom: 0;
+}
+.advanced { display: none !important} 
+
+.fullcolumn {
+	float:left;
+	display: inline-block;
+	margin: 0 auto;
+	width: 100%;
+	text-align: center;
+	/* Add shadows to create the "card" effect */
+	box-shadow: 0 4px 8px 0 rgba(0,0,0,.1);
+}
+
+/* Create four equal columns that floats next to each other */
+.column {
+	float:left;
+	display: inline-block;
+	margin: 1.8%;
+	min-width: 300px;
+	width: 20%;
+	padding: 28px;
+	height: 220px; /* Should be removed. Only for demonstration */
+
+	text-align: center;
+
+	/* Add shadows to create the "card" effect */
+	box-shadow: 0 4px 8px 0 rgba(0,0,0,.1);
+}
+/* On mouse-over, add a deeper shadow */
+.column:hover {
+	box-shadow: 0 8px 16px 0 rgba(0,0,0,.3);
+}
+.column > h2 {color:black;}
+
+.columnfade {
+	animation:fading 0.2s}@keyframes fading{0%{opacity:0}100%{opacity:1}}
+}
+
+img {
+	border-radius: 5px 5px 0 0;
+	margin:5px;
+}
+
+button {
+	padding:5px 10px 3px 10px;
+	margin:10px 0px;
+}
+/* Empty container that will replace the original container */
+#empty-container {
+	display: inline-block;
+	float:left;
+	width: 20%;
+	min-width: 300px;
+	padding: 28px;
+	height: 220px; /* Should be removed. Only for demonstration */
+	margin: 1.8%;
+	text-align: center;
+}
+
+#container-1 {
+	background-repeat: no-repeat;
+	background-size: 80px;
+	background-position: 50% 65%;
+	background-image: url(data:image/svg+xml;utf8;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0idXRmLTgiPz4KPHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHhtbG5zOnhsaW5rPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5L3hsaW5rIiB2ZXJzaW9uPSIxLjEiIHZpZXdCb3g9IjAgMCAxMjkgMTI5IiBlbmFibGUtYmFja2dyb3VuZD0ibmV3IDAgMCAxMjkgMTI5IiB3aWR0aD0iNTEycHgiIGhlaWdodD0iNTEycHgiPgogIDxnPgogICAgPGc+CiAgICAgIDxwYXRoIGQ9Im0xMC41LDU4LjloNDQuM2MyLjMsMCA0LjEtMS44IDQuMS00LjF2LTQ0LjNjMC0yLjMtMS44LTQuMS00LjEtNC4xaC00NC4zYy0yLjMsMC00LjEsMS44LTQuMSw0LjF2NDQuM2MwLDIuMiAxLjksNC4xIDQuMSw0LjF6bTQuMS00NC4zaDM2LjF2MzYuMWgtMzYuMXYtMzYuMXoiIGZpbGw9IiMwMDAwMDAiLz4KICAgICAgPHBhdGggZD0ibTEyMi42LDEwLjVjMC0yLjMtMS44LTQuMS00LjEtNC4xaC00NC4zYy0yLjMsMC00LjEsMS44LTQuMSw0LjF2NDQuM2MwLDIuMyAxLjgsNC4xIDQuMSw0LjFoNDQuM2MyLjMsMCA0LjEtMS44IDQuMS00LjF2LTQ0LjN6bS04LjIsNDAuMmgtMzYuMXYtMzYuMWgzNi4xdjM2LjF6IiBmaWxsPSIjMDAwMDAwIi8+CiAgICAgIDxwYXRoIGQ9Im0xMC41LDEyMi42aDQ0LjNjMi4zLDAgNC4xLTEuOCA0LjEtNC4xdi00NC4zYzAtMi4zLTEuOC00LjEtNC4xLTQuMWgtNDQuM2MtMi4zLDAtNC4xLDEuOC00LjEsNC4xdjQ0LjNjMCwyLjIgMS45LDQuMSA0LjEsNC4xem00LjEtNDQuM2gzNi4xdjM2LjFoLTM2LjF2LTM2LjF6IiBmaWxsPSIjMDAwMDAwIi8+CiAgICAgIDxwYXRoIGQ9Im0xMTguNSw3MC4xaC00NC4zYy0yLjMsMC00LjEsMS44LTQuMSw0LjF2NDQuM2MwLDIuMyAxLjgsNC4xIDQuMSw0LjFoNDQuM2MyLjMsMCA0LjEtMS44IDQuMS00LjF2LTQ0LjNjMC0yLjItMS45LTQuMS00LjEtNC4xem0tNC4xLDQ0LjNoLTM2LjF2LTM2LjFoMzYuMXYzNi4xeiIgZmlsbD0iIzAwMDAwMCIvPgogICAgPC9nPgogIDwvZz4KPC9zdmc+Cg==)
+}
+
+#container-2 {
+	background-repeat: no-repeat;
+	background-size: 80px;
+	background-position: 50% 65%;
+	background-image: url(data:image/svg+xml;utf8;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0idXRmLTgiPz4KPHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHhtbG5zOnhsaW5rPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5L3hsaW5rIiB2ZXJzaW9uPSIxLjEiIHZpZXdCb3g9IjAgMCAxMjkgMTI5IiBlbmFibGUtYmFja2dyb3VuZD0ibmV3IDAgMCAxMjkgMTI5IiB3aWR0aD0iNTEycHgiIGhlaWdodD0iNTEycHgiPgogIDxnPgogICAgPHBhdGggZD0ibTExOC41LDEwLjVoLTEwOGMtMi4zLDAtNC4xLDEuOC00LjEsNC4xdjUxLjcgMjEuMWMwLDIuMyAxLjgsNC4xIDQuMSw0LjFoNDkuOXYxOC44aC0yMi45Yy0yLjMsMC00LjEsMS44LTQuMSw0LjFzMS44LDQuMSA0LjEsNC4xaDU0YzIuMywwIDQuMS0xLjggNC4xLTQuMXMtMS44LTQuMS00LjEtNC4xaC0yMi45di0xOC44aDQ5LjljMi4zLDAgNC4xLTEuOCA0LjEtNC4xdi0yMS4xLTUxLjdjMC0yLjMtMS44LTQuMS00LjEtNC4xem0tNC4xLDcyLjhoLTk5Ljh2LTEzaDk5Ljh2MTN6bTAtMjEuMWgtOTkuOHYtNDMuNWg5OS44djQzLjV6IiBmaWxsPSIjMDAwMDAwIi8+CiAgPC9nPgo8L3N2Zz4K)
+}
+#container-3 {
+	background-repeat: no-repeat;
+	background-size: 80px;
+	background-position: 50% 65%;
+	background-image: url(data:image/svg+xml;utf8;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0idXRmLTgiPz4KPHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHhtbG5zOnhsaW5rPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5L3hsaW5rIiB2ZXJzaW9uPSIxLjEiIHZpZXdCb3g9IjAgMCAxMjkgMTI5IiBlbmFibGUtYmFja2dyb3VuZD0ibmV3IDAgMCAxMjkgMTI5IiB3aWR0aD0iNTEycHgiIGhlaWdodD0iNTEycHgiPgogIDxnPgogICAgPHBhdGggZD0ibTk2LjYsMjYuOGgtODYuMWMtMi4yLDAtNC4xLDEuOC00LjEsNC4xdjY3LjJjMCwyLjIgMS44LDQuMSA0LjEsNC4xaDg2LjFjMi4yLDAgNC4xLTEuOCA0LjEtNC4xdi0xOS40bDE0LjksMTQuOWMwLjgsMC44IDEuOCwxLjIgMi45LDEuMiAwLjUsMCAxLjEtMC4xIDEuNi0wLjMgMS41LTAuNiAyLjUtMi4xIDIuNS0zLjh2LTUyLjVjMC0xLjYtMS0zLjEtMi41LTMuOC0xLjUtMC42LTMuMy0wLjMtNC40LDAuOWwtMTQuOSwxNC45di0xOS4zYy0wLjEtMi4zLTEuOS00LjEtNC4yLTQuMXptLTQuMSwzMy4zdjguOCAyNS4yaC03OHYtNTkuMmg3OHYyNS4yem0yMS45LTEydjMyLjlsLTEzLjctMTMuN3YtNS40bDEzLjctMTMuOHoiIGZpbGw9IiMwMDAwMDAiLz4KICA8L2c+Cjwvc3ZnPgo=)
+}
+#container-4 {
+	background-repeat: no-repeat;
+	background-size: 80px;
+	background-position: 50% 65%;
+	background-image: url(data:image/svg+xml;utf8;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0idXRmLTgiPz4KPHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHhtbG5zOnhsaW5rPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5L3hsaW5rIiB2ZXJzaW9uPSIxLjEiIHZpZXdCb3g9IjAgMCAxMjkgMTI5IiBlbmFibGUtYmFja2dyb3VuZD0ibmV3IDAgMCAxMjkgMTI5IiB3aWR0aD0iNTEycHgiIGhlaWdodD0iNTEycHgiPgogIDxnPgogICAgPGc+CiAgICAgIDxwYXRoIGQ9Im0xOC43LDEyMi41aDkxLjZjMi4zLDAgNC4xLTEuOCA0LjEtNC4xdi0xMDcuOWMwLTIuMy0xLjgtNC4xLTQuMS00LjFoLTY4LjdjLTAuMywwLTAuNywwLTEsMC4xLTAuMSwwLTAuMiwwLjEtMC4yLDAuMS0wLjMsMC4xLTAuNSwwLjItMC44LDAuMy0wLjEsMC4xLTAuMiwwLjEtMC4zLDAuMi0wLjMsMC4yLTAuNiwwLjQtMC44LDAuN2wtMjIuOSwyN2MtMC4zLDAuMy0wLjUsMC43LTAuNywxLjEtMC4xLDAuMS0wLjEsMC4zLTAuMSwwLjQtMC4xLDAuMy0wLjEsMC42LTAuMiwwLjkgMCwwLjEgMCwwLjEgMCwwLjJ2ODAuOWMtMS4wNjU4MWUtMTQsMi40IDEuOSw0LjIgNC4xLDQuMnptMTguOC0xMDAuOHYxMS44aC0xMGwxMC0xMS44em0tMTQuNywxOS45aDE4LjhjMi4zLDAgNC4xLTEuOCA0LjEtNC4xdi0yMi45aDYwLjV2OTkuN2gtODMuNHYtNzIuN3oiIGZpbGw9IiMwMDAwMDAiLz4KICAgICAgPHBhdGggZD0ibTk0LDUwLjVoLTU5Yy0yLjMsMC00LjEsMS44LTQuMSw0LjEgMCwyLjMgMS44LDQuMSA0LjEsNC4xaDU5YzIuMywwIDQuMS0xLjggNC4xLTQuMSAwLTIuMy0xLjgtNC4xLTQuMS00LjF6IiBmaWxsPSIjMDAwMDAwIi8+CiAgICAgIDxwYXRoIGQ9Im05NCw3MC4zaC01OWMtMi4zLDAtNC4xLDEuOC00LjEsNC4xIDAsMi4zIDEuOCw0LjEgNC4xLDQuMWg1OWMyLjMsMCA0LjEtMS44IDQuMS00LjEgMC0yLjItMS44LTQuMS00LjEtNC4xeiIgZmlsbD0iIzAwMDAwMCIvPgogICAgPC9nPgogIDwvZz4KPC9zdmc+Cg==)
+}
+
+
+
+#container-5 {
+	background-repeat: no-repeat;
+	background-size: 80px;
+	background-position: 50% 65%;
+	background-image: url(data:image/png;base64,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)
+
+}
+.float{
+	position:fixed;
+	width:60px;
+	height:60px;
+	bottom:80px;
+	right:50px;
+	background-color:#C23;
+	color:#FFF;
+	border-radius:50px;
+	text-align:center;
+	box-shadow: 2px 2px 3px #999;
+	z-index:10;
+}
+.float2{
+        position:fixed;
+        width:60px;
+        height:60px;
+        bottom:80px;
+        right:132px;
+        background-color:#15B;
+        color:#FFF;
+        border-radius:50px;
+        text-align:center;
+        box-shadow: 2px 2px 3px #999;
+	z-index:10;
+}
+.float3{
+        position:fixed;
+        width:60px;
+        height:60px;
+        bottom:80px;
+        right:52px;
+        background-color:#0C2;
+        color:#FFF;
+        border-radius:50px;
+        text-align:center;
+        box-shadow: 2px 2px 3px #999;
+	z-index:10;
+}
+
+
+.my-float{
+	margin-top:7px;
+}
+
+#container-6 {
+	background-repeat: no-repeat;
+	background-size: 80px;
+	background-position: 50% 65%;
+	background-image: url(data:image/svg+xml;utf8;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0idXRmLTgiPz4KPHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHhtbG5zOnhsaW5rPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5L3hsaW5rIiB2ZXJzaW9uPSIxLjEiIHZpZXdCb3g9IjAgMCAxMjkgMTI5IiBlbmFibGUtYmFja2dyb3VuZD0ibmV3IDAgMCAxMjkgMTI5IiB3aWR0aD0iNTEycHgiIGhlaWdodD0iNTEycHgiPgogIDxnPgogICAgPHBhdGggZD0ibTExOC4yLDMzLjVjLTAuMiwwLTI1LjItMC42LTUwLjctMjUuOS0wLjgtMC44LTEuOC0xLjItMi45LTEuMmgtMC40Yy0xLjEsMC0yLjEsMC40LTIuOSwxLjItMjUuMywyNS4zLTUwLjMsMjUuOS01MC41LDI1LjktMi4yLDAtNCwxLjgtNCw0LjF2MjYuNGMwLDAuNSAwLjEsMSAwLjMsMS41IDAuNywxLjggMTgsNDQuNSA1Niw1Ni40IDAuNCwwLjEgMC44LDAuMiAxLjIsMC4yIDAuMSwwIDAuMywwIDAuNCwwIDAuNCwwIDAuOC0wLjEgMS4yLTAuMiAzOC0xMS45IDU1LjMtNTQuNiA1Ni01Ni40IDAuMi0wLjUgMC4zLTEgMC4zLTEuNXYtMjYuNGMwLTIuMi0xLjgtNC00LTQuMXptLTQuMSwyOS43Yy0yLjMsNS4zLTE4LjQsNDAuMi00OS42LDUwLjYtMzEuMi0xMC40LTQ3LjMtNDUuMy00OS42LTUwLjd2LTIxLjhjOC40LTEuMSAyOC41LTUuNyA0OS42LTI1LjQgMjEuMSwxOS43IDQxLjIsMjQuMyA0OS42LDI1LjR2MjEuOXoiIGZpbGw9IiMwMDAwMDAiLz4KICA8L2c+Cjwvc3ZnPgo=)
+}
+.container-inner {
+	display: none;
+}
+
+img {
+	max-width: 100%;
+}
+
+video {
+	flex: 1 1 auto;
+	background-color: black;
+}
+
+.close {
+	position: absolute;
+	right: 20px;
+	top: 20px;
+	cursor: pointer;
+	display: none;
+}
+
+.in-animation {
+	animation: inlightbox 0.8s forwards;
+	position: fixed !important;
+	margin: 0 !important;
+}
+
+.out-animation {
+	animation: outlightbox 0.8s forwards;
+}
+
+		@keyframes inlightbox
+		{
+			50% {
+				width: 100%;
+				left: 0;
+				height: 220px;
+			}
+			100% {
+				height: 100%;
+				width: 100%;
+				top: 0;
+				left: 0;
+			}
+		}
+
+</style>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.0/jquery.min.js"></script>
+</head>
+<body  id="main">
+	<script language="javascript" type="text/javascript" src="./webrtc.js"></script>
+
+	<div id="header">
+	<h2>
+		<a href="./" style="text-decoration:none;color:white;;">OBS.Ninja</a> &nbsp
+		<div id="head1" style="display:inline-block">
+			<input id="StreamID" name="StreamID" size=30 placeholder="Join by Room Name here"></input>
+			<button style="padding:1px;" onclick="play(document.getElementById('StreamID').value)">GO</button>
+		</div>
+		<div id="head3" style="display:inline-block" class='advanced'>
+			<font style="font-size:60%"> &nbsp Copy this URL into an OBS "Browser Source" =>  &nbsp </font><a id="reshare" data-share="" onclick="var range=document.createRange(); range.selectNodeContents(document.getElementById('reshare')); var selec = window.getSelection(); selec.removeAllRanges();selec.addRange(range);document.execCommand('copy');" onmouseover="this.style.cursor='pointer'"></a>
+		</div>
+
+		<div id="head2" class="advanced" style="display:inline-block;text-decoration:none;font-size:60%;color:white;">
+			You are joining room: <div id="roomid" style="display:inline-block"></div>
+		</div>
+
+	</h2>
+	<hr />
+	</div>
+
+	<div id="mutebutton" onclick="toggleMute()" class='advanced float3' style="cursor:pointer" alt="Toggle the mic">
+		<i style="font-size:48px;color:white" id="mutetoggle" class="fa fa-microphone my-float"></i>
+	</div>
+	<div id="helpbutton"  class='advanced float2' style="cursor:pointer" alt="How to Use This with OBS">
+		<i style="font-size:48px;color:white;" class="fa fa-question-circle my-float"></i>
+	</div>
+
+	<div id="mainmenu" class="row">
+		<div id="container-1" class="column columnfade" onclick="alert('coming soon');" style="background-color:#ddd;">
+			<h2>Add Group Video Chat to OBS</h2>
+			(Under Re-Development: coming soon)
+			<div class="container-inner">
+			</div>
+			<div class="outer close">
+				<div class="inner">
+					<label>Back</label>
+				</div>
+			</div>
+
+		</div>
+
+		<div id="container-3" class="column columnfade" onclick="previewWebcam()"  style="background-color:#ddd;">
+			<h2>Add your Camera to OBS</h2>
+			<div class="container-inner"><br />
+				<p>Select the audio/video source below and when you're ready just click START SHARING WEBCAM</p><br />
+				<button onclick="publishWebcam()" style="padding:20px;">CLICK HERE WHEN READY</button><br />
+				<p><input id="videoname3" placeholder="Give this video source a name (optional)" size=35 maxlength=50 style="padding:5px;" /></br ><br /></p>
+				<p><video id="previewWebcam" muted controls autoplay playsinline style="width:640px; max-width:83vw; max-height:35vh"></video></p>
+				<br />
+				<p>Video source: <select id="videoSource"></select></p><br/>
+				<p>Audio source: <select id="audioSource"></select></p>
+			</div>
+			<div class="outer close">
+				<div class="inner">
+					<label>Back</label>
+				</div>
+			</div>
+
+		</div>
+
+		<div id="container-2" class="column columnfade" style="background-color:#ddd;">
+			<h2>Remote Screenshare into OBS</h2>
+			<div class="container-inner">
+				<p><b>note</b>: Do not forget to click "Share audio" in Chrome.<br />(Firefox does not support audio sharing.)</p>
+				<p><img src="share.jpg" style="max-height:55vh"/></p>
+				<button onclick="publishScreen()">SELECT SCREEN TO SHARE</button>
+				<p><input id="videoname2" placeholder="Give this video source a name (optional)" size=35 maxlength=70 style="padding:5px;" /></br ><br /></p>
+			</div>
+			<div class="outer close">
+				<div class="inner">
+					<label>Back</label>
+				</div>
+			</div>
+
+		</div>
+
+		<div id="container-5" class="column columnfade advanced" onclick="previewWebcam()"  style="background-color:#ddd;">
+			<h2>Share Your Camera</h2>
+			<div class="container-inner"><br />
+				<p>Select the audio/video source below and when you're ready just click START SHARING WEBCAM</p><br />
+				<button onclick="publishWebcam()" style="padding:20px;">START SHARING WEBCAM</button><br />
+				<p><input id="videoname3" placeholder="Give this video source a name (optional)" size=735 maxlength=70 style="padding:5px;" /></br ><br /></p>
+				<p><video id="previewWebcam" playsinline muted controls autoplay style="width:640px; max-width:100vw; max-height:35vh"></video></p>
+				<br />
+				<p>Video source: <select id="videoSource"></select></p><br/>
+				<p>Audio source: <select id="audioSource"></select></p>
+			</div>
+			<div class="outer close">
+				<div class="inner">
+					<label>Back</label>
+				</div>
+			</div>
+		</div>
+
+		<p><div id="info" class="fullcolumn columnfade">
+			<center>
+				<div style="color:white;width:100%;padding:80px;max-width:1280px;" align="left">
+
+					<h2>What is OBS.Ninja</h2><br />
+					<li>100% <b>free</b>; no downloads; no personal data collection; no sign-in</li>
+					<li>Bring video from your smartphone, laptop, computer, or from your friends directly into your OBS video stream</li>
+					<li>We use cutting edge Peer-to-Peer forwarding technology that offers privacy and ultra-low latency</li>
+					<li>Youtube video <a href="https://www.youtube.com/watch?v=6R_sQKxFAhg">Demoing it here</a></li>
+					<br /><br />
+					<i><h3>Send feature requests and support to steve@seguin.email</i></h3>
+
+				</div>
+			</center>
+		</p></div>
+		<form method="post" onsubmit="setFormSubmitting()" style="display:none;">
+			<input type="submit" />
+		</form>
+
+		<script>
+
+			/////////////
+			var VIS = vis;
+var formSubmitting = true;
+var setFormSubmitting = function() { formSubmitting = true; };
+window.onload = function() {
+	window.addEventListener("beforeunload", function (e) {
+		if (formSubmitting) {
+			return undefined;
+		}
+
+		var confirmationMessage = 'Leaving the page now will terminate your stream ';
+		(e || window.event).returnValue = confirmationMessage; //Gecko + IE
+		return confirmationMessage; //Gecko + Webkit, Safari, Chrome etc.
+	});
+};
+
+var lastTouchEnd = 0;
+document.addEventListener('touchend', function (event) {
+	  var now = (new Date()).getTime();
+	  if (now - lastTouchEnd <= 300) {
+		      event.preventDefault();
+		    }
+	  lastTouchEnd = now;
+}, false);
+
+/////////////
+var session = Ooblex.Media;
+var micvolume = 100;
+session.connect();
+session.volume = micvolume;
+
+function toggleMute(){
+	var msg = {};
+	if (micvolume==0){
+		micvolume = 100;
+		document.getElementById("mutetoggle").className="fa fa-microphone my-float";
+		document.getElementById("mutebutton").className="float3";
+	} else{
+		micvolume=0;
+		document.getElementById("mutetoggle").className="fa fa-microphone-slash my-float";
+		document.getElementById("mutebutton").className="float";
+	}
+	msg.volume = micvolume;
+	session.volume = micvolume;
+	session.sendMessage(msg);
+}
+
+function changeTitle(aTitle="Untitled"){
+	console.log("changing title; if connected at least");
+	session.changeTitle(aTitle);
+}
+
+var activatedStream = false;
+function publishScreen(){
+	if( activatedStream == true){return;}
+	activatedStream = true;
+
+	var title = document.getElementById("videoname2").value;
+
+	formSubmitting = false;
+	session.publishScreen(title);
+	console.log("streamID is: "+session.streamID);
+	
+	document.getElementById("mutebutton").className="float3";
+	document.getElementById("helpbutton").className="float2";
+
+	document.getElementById("head1").className = 'advanced';
+        document.getElementById("head2").className = 'advanced';
+        document.getElementById("head3").className = '';
+
+}
+function publishWebcam(){
+	if( activatedStream == true){return;}
+	activatedStream = true;
+
+	var title = document.getElementById("videoname3").value;
+	var ele = document.getElementById("previewWebcam");
+	ele.parentNode.removeChild(ele);
+	activatedPreview=true
+	var audioSelect = document.querySelector('select#audioSource');
+	var videoSelect = document.querySelector('select#videoSource');
+
+	var iOS = !!navigator.platform && /iPad|iPhone|iPod/.test(navigator.platform);
+
+
+	if (iOS){
+	  var width = 720;
+          var height = 720;
+	  if (urlParams.has('width')){
+                var width = urlParams.get('width');
+          }
+          if (urlParams.has('height')){
+                var height = urlParams.get('height');
+          }
+	   var constraints = {
+		audio: {
+			deviceId: {exact: audioSelect.value}
+		},
+		video: {
+			height: {min: width},
+			width: {min: height},
+			deviceId: {exact: videoSelect.value}
+		}
+	   };
+	} else {
+	  var width = 1080;
+	  var ideal = 1920;
+          if (urlParams.has('width')){
+                var width = urlParams.get('width');
+          }
+          if (urlParams.has('height')){
+                var height = urlParams.get('height');
+          }
+
+	   var constraints = {
+                audio: {
+                        deviceId: {exact: audioSelect.value}
+                },
+                video: {
+                        height: {ideal: height, max:2160},
+                        width: {ideal: width, max:3840},
+                        deviceId: {exact: videoSelect.value}
+                }
+           };
+	};
+	formSubmitting = false;
+	session.publishWebcam(constraints, title);
+	console.log("streamID is: "+session.streamID);
+        document.getElementById("head1").className = 'advanced';
+	document.getElementById("head2").className = 'advanced';
+	document.getElementById("head3").className = '';
+
+	document.getElementById("mutebutton").className="float3";
+	document.getElementById("helpbutton").className="float2";
+
+
+}
+
+
+function gotDevices(deviceInfos) {
+	var audioSelect = document.querySelector('select#audioSource');
+	var videoSelect = document.querySelector('select#videoSource');
+
+	for (var i = 0; i !== deviceInfos.length; ++i) {
+		var deviceInfo = deviceInfos[i];
+		var matched=false;
+		for (j = 0; j < audioSelect.length; ++j){
+
+			if (audioSelect.options[j].value ==  deviceInfo.deviceId){
+				matched=true;
+				break;
+			}
+		}
+		if (matched==true){continue;}
+		for (j = 0; j < videoSelect.length; ++j){
+			if (videoSelect.options[j].value ==  deviceInfo.deviceId){
+				matched=true;
+				break;
+			}
+		}
+		if (matched==true){continue;}
+
+
+		var option = document.createElement('option');
+		option.value = deviceInfo.deviceId;
+		if (deviceInfo.kind === 'audioinput') {
+			option.text = deviceInfo.label ||
+				'microphone ' + (audioSelect.length + 1);
+			audioSelect.appendChild(option);
+			if (deviceInfo.deviceId==="default"){
+				console.log(i,"Default", deviceInfo.label);
+				option.selected=true;
+			}
+		} else if (deviceInfo.kind === 'videoinput') {
+			option.text = deviceInfo.label || 'camera ' +
+				(videoSelect.length + 1);
+			videoSelect.appendChild(option);
+			if (deviceInfo.deviceId==="default"){
+				console.log(i,"Default");
+				option.selected=true;
+			}
+		}
+	}
+}
+
+
+function handleError(error) {
+	console.log('Error: ', error);
+}
+
+var activatedPreview = false;
+function previewWebcam(){
+	if( activatedPreview == true){console.log("activeated preview return");return;}
+	activatedPreview=true;
+	var audioSelect = document.querySelector('select#audioSource');
+	var videoSelect = document.querySelector('select#videoSource');
+
+	var constraints = {audio:true, video:true };
+
+	navigator.mediaDevices.getUserMedia(constraints).then(function(){
+		navigator.mediaDevices.enumerateDevices().then(gotDevices).then(function(){
+
+			var audioSelect = document.querySelector('select#audioSource');
+			var videoSelect = document.querySelector('select#videoSource');
+
+			audioSelect.onchange = function(){activatedPreview=false;previewWebcam();};
+			videoSelect.onchange = function(){activatedPreview=false;previewWebcam();};
+
+			var constraints = {
+				audio: {
+					deviceId: {exact: audioSelect.value}
+				},
+				video: {
+					deviceId: {exact: videoSelect.value}
+				}
+			};
+
+			navigator.mediaDevices.getUserMedia(constraints).then(function(stream){
+				document.getElementById('previewWebcam').srcObject=stream;
+			}).catch(function(e){
+				console.log(e);
+				//    alert("Something went wrong. Do you have a webcam installed?");
+			});
+		});
+	}).catch(handleError);
+
+}
+
+
+function checkOBS(){
+	if (!navigator.mediaDevices || !navigator.mediaDevices.enumerateDevices) {
+		console.log("enumerateDevices() not supported.");
+		return;
+	}
+
+	navigator.mediaDevices.enumerateDevices().then(function(devices) {
+		var matchFound = false;
+		devices.forEach(function(device) {
+			if (device.label.startsWith("OBS-Camera")){
+				alert("An OBS Virtual Camera was detected; Success!");
+				console.log(device.kind + ": " + device.label +
+					" id = " + device.deviceId);
+				matchFound = true;
+
+			}
+			console.log(device.kind + ": " + device.label + " id = " + device.deviceId);
+		});
+		if (matchFound == false){
+			alert("No OBS Virtual Camera was found");
+		}
+	}).catch(function(err) {
+		console.log(err.name + ": " + err.message);
+	});
+}
+
+function play(streamName){
+	console.log("play stream");
+	session.watchStream(streamName);
+}
+function browse(){
+	console.log("browse streams");
+	session.listStreams().then(function(response){
+		document.getElementById("browserlist").innerHTML='No Active Broadcasts';
+		response.forEach(streamID => {
+			document.getElementById("browserlist").innerHTML="<a href='../?streamid="+streamID[1]+"'>"+streamID[2]+"</a> - "+streamID[0]+" seeders<br />";
+		});
+	},function(error){return {}});
+}
+
+function browsegraph(){
+	console.log("graph streams");
+	session.graphStreams().then(function(response){
+		// create an array with nodes
+		var nodes = [];
+		var edges = [];
+		for (var key in response){
+			if (response[key]==null){
+				edges.push({from:key, to:response[key]});
+				nodes.push({id:key,label:"PUBLISHER"});
+				continue;
+			} else if (key.length<=16){
+				edges.push({from:key, to:response[key]});
+				nodes.push({id:key,label:"SUPER SEEDER"});
+				continue;
+			}
+			nodes.push({id:key,label:"VIEWER"});
+			edges.push({from:key, to:response[key]});
+		};
+		// create a network
+		var container = document.getElementById('browsergraph');
+
+		// provide the data in the vis format
+		var data = {
+			nodes: nodes,
+			edges: edges
+		};
+		var options = {};
+
+		// initialize your network!
+		var network = new VIS.Network(container, data, options);
+
+	},function(error){return {}});
+}
+
+var urlParams = new URLSearchParams(window.location.search);
+if (urlParams.has('streamid')){
+
+	document.getElementById("container-3").className = 'column columnfade';
+	document.getElementById("container-2").className = 'column columnfade';
+	document.getElementById("container-1").className = 'column columnfade';
+	document.getElementById("container-5").className = 'advanced';
+	//document.getElementById("header").className = 'advanced';
+	document.getElementById("info").className = 'advanced';
+	document.getElementById("header").className = 'advanced';
+	document.getElementById("head1").className = 'advanced';
+	document.getElementById("head2").className = 'advanced';
+	document.getElementById("head3").className = 'advanced';
+	document.getElementById("roomid").innerHTML = urlParams.get('streamid');
+
+
+
+	console.log("auto playing");
+
+	if (navigator.userAgent.indexOf('Safari') != -1 && navigator.userAgent.indexOf('Chrome') == -1){ 
+		alert("Safari requires us to ask for an audio permission to use peer-to-peer technology. You will need to accept it in a moment if asked to view this live video");
+		navigator.mediaDevices.getUserMedia({audio: true}).then(function(){
+			play(urlParams.get('streamid'));
+			document.getElementById("mainmenu").style.display="none";
+		}).catch(function(){
+			play(urlParams.get('streamid'));
+			document.getElementById("mainmenu").style.display="none";
+		});
+	} else {
+		play(urlParams.get('streamid'));
+		//document.getElementById("mainmenu").style.display="none";
+	}
+}
+
+
+
+var vis = (function(){
+	var stateKey, eventKey, keys = {
+		hidden: "visibilitychange",
+		webkitHidden: "webkitvisibilitychange",
+		mozHidden: "mozvisibilitychange",
+		msHidden: "msvisibilitychange"
+	};
+	for (stateKey in keys) {
+		if (stateKey in document) {
+			eventKey = keys[stateKey];
+			break;
+		}
+	}
+	return function(c) {
+		if (c) {
+			document.addEventListener(eventKey, c);
+			//document.addEventListener("blur", c);
+			//document.addEventListener("focus", c);
+		}
+		return !document[stateKey];
+	}
+})();
+
+function poker(){
+	try{
+		Notification.requestPermission().then(function(result) {
+			if (result === 'denied') {
+				console.log('Permission wasn\'t granted. Allow a retry.');
+				return;
+			}
+			if (result === 'default') {
+				console.log('The permission request was dismissed.');
+				return;
+			}
+		});
+	} catch (error) {
+		// Safari doesn't return a promise for requestPermissions and it                                                                                                                                       
+		// throws a TypeError. It takes a callback as the first argument                                                                                                                                       
+		// instead.
+		if (error instanceof TypeError) {
+			Notification.requestPermission(() => {                                                                                                                                                             
+				console.log("permissions was approved");
+			});
+		} else {
+			console.log("permission was denied");
+			throw error;                                                                                                                                                                                      
+		}                                                                                                                                                                                                      
+	}   
+	vis(function(){
+		if (!vis()){
+			alert("DONT MINIMIZE OR CHANGE TABS");
+		}
+
+	});
+}
+
+
+		</script>
+		<script>
+
+			/* We need to create dynamic keyframes to show the animation from full-screen to normal. So we create a stylesheet in which we can insert CSS keyframe rules */
+			$("body").append('<style id="lightbox-animations" type="text/css"></style>');
+
+			/* Click on the container */
+			$(".column").on('click', function() {
+			/* The position of the container will be set to fixed, so set the top & left properties of the container */
+
+			var bounding_box = $(this).get(0).getBoundingClientRect();
+			$(this).css({ top: bounding_box.top + 'px', left: bounding_box.left -20+ 'px' });
+
+			/* Set container to fixed position. Add animation */
+			$(this).addClass('in-animation');
+
+			/* An empty container has to be added in place of the lightbox container so that the elements below don't come up
+			Dimensions of this empty container is the same as the original container */
+			$("#empty-container").remove();
+			$('<div id="empty-container" class="column"></div>').insertAfter(this);
+
+			/* To animate the container from full-screen to normal, we need dynamic keyframes */
+			var styles = '';
+			styles = '@keyframes outlightbox {';
+			styles += '0% {';
+			styles += 'height: 100%;';
+			styles += 'width: 100%;';
+			styles += 'top: 0px;';
+			styles += 'left: 0px;';
+			styles += '}';
+			styles += '50% {';
+			styles += 'height: 220px;';
+			styles += 'top: ' + bounding_box.y + 'px;';
+			styles += '}';
+			styles += '100% {';
+			styles += 'height: 220px;';
+			styles += 'width: '+bounding_box.width+'px;';
+			styles += 'top: ' + bounding_box.y + 'px;';
+			styles += 'left: ' + bounding_box.x + 'px;';
+			styles += '}';
+			styles += '}';
+
+			/* Add keyframe to CSS */
+			$("#lightbox-animations").get(0).sheet.insertRule(styles, 0);
+
+			/* Hide the window scrollbar */
+			$("body").css('overflow', 'hidden');
+			});
+
+			/* Click on close button when full-screen */
+			$(".close").on('click', function(e) {
+			$(this).hide();
+			$(".container-inner").hide();
+			/* Window scrollbar normal */
+			$("body").css('overflow', 'auto');
+
+			var bounding_box = $(this).parent().get(0).getBoundingClientRect();
+			$(this).parent().css({ top: bounding_box.top + 'px', left: bounding_box.left + 'px' });
+
+			/* Show animation */
+			$(this).parent().addClass('out-animation');
+
+			e.stopPropagation();
+			});
+
+			/* On animationend : from normal to full screen & full screen to normal */
+			$(".column").on('animationend', function(e) {
+			/* On animation end from normal to full-screen */
+			if(e.originalEvent.animationName == 'inlightbox') {
+			$(this).children(".close").show();
+			$(this).children(".container-inner").show();
+			}
+			/* On animation end from full-screen to normal */
+			else if(e.originalEvent.animationName == 'outlightbox') {
+			/* Remove fixed positioning, remove animation rules */
+			$(this).removeClass('in-animation').removeClass('out-animation').removeClass('columnfade');
+
+			/* Remove the empty container that was earlier added */
+			$("#empty-container").remove();
+
+			/* Delete the dynamic keyframe rule that was earlier created */
+			$("#lightbox-animations").get(0).sheet.deleteRule(0);
+			}
+			});
+		</script>
+		<div class='credits'>Icons made by <a href="https://www.flaticon.com/authors/lucy-g" title="Lucy G">Lucy G</a> from <a href="https://www.flaticon.com/" 			    title="Flaticon">www.flaticon.com</a> is licensed by <a href="https://creativecommons.org/licenses/by/3.0/" 			    title="Creative Commons BY 3.0" target="_blank">CC 3.0 BY</a></div>
+</body>
+
+
+</html>
