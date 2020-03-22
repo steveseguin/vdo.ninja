@@ -1,4 +1,4 @@
-# obsninja
+# http://obs.ninja
 
 This is the client-side software for OBS.ninja.  Feel free to use it as you will; code suggestions welcomed, although you may be best suited at getting ahold of me at steve@seguin.email
 
