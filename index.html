@@ -778,7 +778,17 @@ if (urlParams.has('streamid')){
 	}
 }
 
-
+document.addEventListener("dragstart", e => {
+	var url = e.target.href || e.target.data;
+	if (!url || !url.startsWith('http')) return;
+	var streamId = url.split('=')[1];
+	url += '&layer-name=OBS.Ninja';
+	if (streamId) url += ': ' + streamId;
+	var video = document.getElementById('videosource');
+	url += '&layer-width=' + video.videoWidth;
+	url += '&layer-height=' + video.videoHeight;
+	e.dataTransfer.setData("text/uri-list", encodeURI(url));
+});
 
 var vis = (function(){
 	var stateKey, eventKey, keys = {
