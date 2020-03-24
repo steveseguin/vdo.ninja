@@ -14,10 +14,10 @@ OBS.ninja uses peer 2 peer technology, so the server-side load is very small for
 
 ## Server side / API software?
 
-The Server-side software is hosted by my other project, https://Steves.app and https://meshcast.io  I have not made the server side software public yet, but it remains free to access and use.
+The Server-side software is hosted by my other project, https://Steves.app and https://meshcast.io  I have not made the server side software public yet, but it remains free to access and use. If it gets abused, I'll put up restrictions. I do my best to not collect data of any type, but I may do so to improve the service, such as monitoring site usage, logging errors, or ensuring reliable connectivity.
 
 Idea, feed back, bugs, etc -- all welcomed
 
 ## License 
 
-License? Well, currently it is free to use and modify however you wish. Please link back here if redistributing.  I reserve the right with release future versions that may not be free or may have a difference liceence agreement. I cannot be held responsible for what you do with my software and if my server goes down, I will not be responsible for that either.
+License? Well, currently it is free to use and modify however you wish. Please link back here if redistributing.  I reserve the right to  release future versions that may not be free or may have a difference liceence agreement. I cannot be held responsible for what you do with my software and if my server goes down, I will not be responsible for that either. 
