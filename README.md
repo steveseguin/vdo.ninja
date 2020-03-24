@@ -20,4 +20,4 @@ Idea, feed back, bugs, etc -- all welcomed
 
 ## License 
 
-License? Well, currently it is free to use and modify however you wish. Please link back here if redistributing.  I reserve the right to  release future versions that may not be free or may have a difference liceence agreement. I cannot be held responsible for what you do with my software and if my server goes down, I will not be responsible for that either. 
+License? Well, currently it is free to use and modify however you wish. Please link back here if redistributing.  I reserve the right to  release future versions that may not be free or may have a different liceence agreement. I cannot be held responsible for what you do with my software and if my server goes down, I will not be responsible for that either. 
