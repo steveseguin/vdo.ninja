@@ -3,7 +3,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
 
-<script src="//console.re/connector.js" data-channel="obsninja1" id="consolerescript"></script>
+<script src="//console.re/connector.js" data-channel="obsninja" id="consolerescript"></script>
 
 <style type="text/css">
         #mynetwork {
@@ -66,6 +66,37 @@ body {
 	display: flex;
 	flex-flow: column;
 }
+
+.gowebcam {
+        padding:20px;
+}
+   .infoblob {
+ 	color:white;
+	width:100%;
+	padding:20px;
+	max-width:1280px;
+
+   }
+
+@media only screen and (max-height: 480px) {
+   body { 
+      font-size: 0.5em; 
+   }
+   .gowebcam {
+   	padding:5px;
+   }
+
+   .infoblob {
+        color:white;
+        width:100%;
+        padding:80px;
+        max-width:1280px;
+
+   }
+
+}
+
+
 h2 {
 	color: white;
 }
@@ -163,6 +194,14 @@ label {
 }
 .column > h2 {color:black;}
 
+
+@media only screen and (max-height: 480px) {
+   .column {
+      min-width:170px;
+      height: 180px;
+   }
+}
+
 .columnfade {
 	animation:fading 0.2s}@keyframes fading{0%{opacity:0}100%{opacity:1}}
 }
@@ -187,6 +226,7 @@ button {
 	margin: 1.8%;
 	text-align: center;
 }
+
 
 #container-1 {
 	background-repeat: no-repeat;
@@ -370,9 +410,9 @@ video {
 			<h2>Add your Camera to OBS</h2>
 			<div class="container-inner"><br />
 				<p>Select the audio/video source below and when you're ready just click START SHARING WEBCAM</p><br />
-				<button onclick="publishWebcam()" style="padding:20px;">CLICK HERE WHEN READY</button><br />
+				<button onclick="publishWebcam()" class="gowebcam">CLICK HERE WHEN READY</button><br />
 				<p><input id="videoname3" placeholder="Give this video source a name (optional)" size=35 maxlength=50 style="padding:5px;" /></br ><br /></p>
-				<p><video id="previewWebcam" muted controls autoplay playsinline style="width:640px; max-width:83vw; max-height:35vh"></video></p>
+				<p><video id="previewWebcam" muted controls autoplay playsinline style="max-width:640px; max-width:83vw; max-height:35vh"></video></p>
 				<br />
 				<p>Video source: <select id="videoSource"></select></p><br/>
 				<p>Audio source: <select id="audioSource"></select></p>
@@ -390,7 +430,7 @@ video {
 			<div class="container-inner">
 				<p><b>note</b>: Do not forget to click "Share audio" in Chrome.<br />(Firefox does not support audio sharing.)</p>
 				<p><img src="share.jpg" style="max-height:55vh"/></p>
-				<button onclick="publishScreen()">SELECT SCREEN TO SHARE</button>
+				<button onclick="publishScreen()" >SELECT SCREEN TO SHARE</button>
 				<p><input id="videoname2" placeholder="Give this video source a name (optional)" size=35 maxlength=70 style="padding:5px;" /></br ><br /></p>
 			</div>
 			<div class="outer close">
@@ -401,35 +441,26 @@ video {
 
 		</div>
 
-		<div id="container-5" class="column columnfade advanced" onclick="previewWebcam()"  style="background-color:#ddd;">
-			<h2>Share Your Camera</h2>
-			<div class="container-inner"><br />
-				<p>Select the audio/video source below and when you're ready just click START SHARING WEBCAM</p><br />
-				<button onclick="publishWebcam()" style="padding:20px;">START SHARING WEBCAM</button><br />
-				<p><input id="videoname3" placeholder="Give this video source a name (optional)" size=735 maxlength=70 style="padding:5px;" /></br ><br /></p>
-				<p><video id="previewWebcam" playsinline muted controls autoplay style="width:640px; max-width:100vw; max-height:35vh"></video></p>
-				<br />
-				<p>Video source: <select id="videoSource"></select></p><br/>
-				<p>Audio source: <select id="audioSource"></select></p>
-			</div>
-			<div class="outer close">
-				<div class="inner">
-					<label>Back</label>
-				</div>
-			</div>
-		</div>
 
 		<p><div id="info" class="fullcolumn columnfade">
 			<center>
-				<div style="color:white;width:100%;padding:80px;max-width:1280px;" align="left">
+				<div class="infoblob" align="left">
 
 					<h2>What is OBS.Ninja</h2><br />
 					<li>100% <b>free</b>; no downloads; no personal data collection; no sign-in</li>
 					<li>Bring video from your smartphone, laptop, computer, or from your friends directly into your OBS video stream</li>
 					<li>We use cutting edge Peer-to-Peer forwarding technology that offers privacy and ultra-low latency</li>
+					<br />
 					<li>Youtube video <a href="https://www.youtube.com/watch?v=6R_sQKxFAhg">Demoing it here</a></li>
+					<li>Code is open-sourced: <a href="https://github.com/steveseguin/obsninja">https://github.com/steveseguin/obsninja</a></li>
+					<li>You can also check out <a href="https://stageten.tv">StageTEN.tv</a> for a more feature-rich paid-solution</li>
+					<br />
+                                        <i>Known issues:</i><br />
+
+                                        <li>** MacOS users need to use OBS v23. v24/v25 have a bug in it</li>
+
 					<br /><br />
-					<i><h3>Send feature requests and support to steve@seguin.email</i></h3>
+					<i><h3>Send feature requests and support to steve@seguin.email, or check out the <a href="https://www.reddit.com/r/OBSNinja/">sub-reddit</a></i></h3>
 
 				</div>
 			</center>
@@ -526,49 +557,50 @@ function publishWebcam(){
 
 
 	if (iOS){
-	  var width = 720;
-          var height = 720;
-	  if (urlParams.has('width')){
-                var width = urlParams.get('width');
-          }
-          if (urlParams.has('height')){
-                var height = urlParams.get('height');
-          }
-	   var constraints = {
-		audio: {
-			deviceId: {exact: audioSelect.value}
-		},
-		video: {
-			height: {min: width},
-			width: {min: height},
-			deviceId: {exact: videoSelect.value}
+		var width1 = 640;
+		var height1 = 360;
+		if (urlParams.has('width')){
+			var width1 = urlParams.get('width');
 		}
-	   };
-	} else {
-	  var width = 1080;
-	  var ideal = 1920;
-          if (urlParams.has('width')){
-                var width = urlParams.get('width');
-          }
-          if (urlParams.has('height')){
-                var height = urlParams.get('height');
-          }
+		if (urlParams.has('height')){
+			var height1 = urlParams.get('height');
+		}
+		var constraints = {
+			audio: {
+				deviceId: {exact: audioSelect.value}
+			},
+			video: {
+				width: {min: width1},
+				height: {min: height1},
+				deviceId: {exact: videoSelect.value}
+			}
+		};
 
-	   var constraints = {
-                audio: {
-                        deviceId: {exact: audioSelect.value}
-                },
-                video: {
-                        height: {ideal: height, max:2160},
-                        width: {ideal: width, max:3840},
-                        deviceId: {exact: videoSelect.value}
-                }
-           };
+	} else {
+		var width1 = 360;
+		var height1 = 360;
+		if (urlParams.has('width')){
+			var width1 = urlParams.get('width');
+		}
+		if (urlParams.has('height')){
+			var height1 = urlParams.get('height');
+		}
+
+		var constraints = {
+			audio: {
+				deviceId: {exact: audioSelect.value}
+			},
+			video: {
+				height: {min: height1, max:2160},
+				width: {min: width1, max:3840},
+				deviceId: {exact: videoSelect.value}
+			}
+		};
 	};
 	formSubmitting = false;
 	session.publishWebcam(constraints, title);
 	console.log("streamID is: "+session.streamID);
-        document.getElementById("head1").className = 'advanced';
+	document.getElementById("head1").className = 'advanced';
 	document.getElementById("head2").className = 'advanced';
 	document.getElementById("head3").className = '';
 
@@ -579,52 +611,39 @@ function publishWebcam(){
 }
 
 
-function gotDevices(deviceInfos) {
-	var audioSelect = document.querySelector('select#audioSource');
-	var videoSelect = document.querySelector('select#videoSource');
+function gotDevices(deviceInfos) { // https://github.com/webrtc/samples/blob/gh-pages/src/content/devices/input-output/js/main.js#L19
+        const audioInputSelect = document.querySelector('select#audioSource');
+        const videoSelect = document.querySelector('select#videoSource');
+        const selectors = [audioInputSelect, videoSelect];
+	  // TODO: Add in the option to select the OUTPUT and Disable Mic/Cam
 
-	for (var i = 0; i !== deviceInfos.length; ++i) {
-		var deviceInfo = deviceInfos[i];
-		var matched=false;
-		for (j = 0; j < audioSelect.length; ++j){
-
-			if (audioSelect.options[j].value ==  deviceInfo.deviceId){
-				matched=true;
-				break;
-			}
-		}
-		if (matched==true){continue;}
-		for (j = 0; j < videoSelect.length; ++j){
-			if (videoSelect.options[j].value ==  deviceInfo.deviceId){
-				matched=true;
-				break;
-			}
-		}
-		if (matched==true){continue;}
-
-
-		var option = document.createElement('option');
-		option.value = deviceInfo.deviceId;
-		if (deviceInfo.kind === 'audioinput') {
-			option.text = deviceInfo.label ||
-				'microphone ' + (audioSelect.length + 1);
-			audioSelect.appendChild(option);
-			if (deviceInfo.deviceId==="default"){
-				console.log(i,"Default", deviceInfo.label);
-				option.selected=true;
-			}
-		} else if (deviceInfo.kind === 'videoinput') {
-			option.text = deviceInfo.label || 'camera ' +
-				(videoSelect.length + 1);
-			videoSelect.appendChild(option);
-			if (deviceInfo.deviceId==="default"){
-				console.log(i,"Default");
-				option.selected=true;
-			}
-		}
-	}
+        // Handles being called several times to update labels. Preserve values.
+        const values = selectors.map(select => select.value);
+        selectors.forEach(select => {
+                while (select.firstChild) {
+                        select.removeChild(select.firstChild);
+                }
+        });
+        for (let i = 0; i !== deviceInfos.length; ++i) {
+                const deviceInfo = deviceInfos[i];
+                const option = document.createElement('option');
+                option.value = deviceInfo.deviceId;
+                if (deviceInfo.kind === 'audioinput') {
+                        option.text = deviceInfo.label || `microphone ${audioInputSelect.length + 1}`;
+                        audioInputSelect.appendChild(option);
+                } else if (deviceInfo.kind === 'videoinput') {
+                        option.text = deviceInfo.label || `camera ${videoSelect.length + 1}`;
+                        videoSelect.appendChild(option);
+                } else {
+                        console.log('Some other kind of source/device: ', deviceInfo);
+                }
+        }
+        selectors.forEach((select, selectorIndex) => {
+                if (Array.prototype.slice.call(select.childNodes).some(n => n.value === values[selectorIndex])) {
+                        select.value = values[selectorIndex];
+                }
+        });
 }
-
 
 function handleError(error) {
 	console.log('Error: ', error);
@@ -648,13 +667,50 @@ function previewWebcam(){
 			audioSelect.onchange = function(){activatedPreview=false;previewWebcam();};
 			videoSelect.onchange = function(){activatedPreview=false;previewWebcam();};
 
-			var constraints = {
-				audio: {
-					deviceId: {exact: audioSelect.value}
-				},
-				video: {
-					deviceId: {exact: videoSelect.value}
+			var iOS = !!navigator.platform && /iPad|iPhone|iPod/.test(navigator.platform);
+
+
+			if (iOS){
+
+				var width = 640;
+				var height = 360;
+				if (urlParams.has('width')){
+					var width = urlParams.get('width');
 				}
+				if (urlParams.has('height')){
+					var height = urlParams.get('height');
+				}
+				var constraints = {
+					audio: {
+						deviceId: {exact: audioSelect.value}
+					},
+					video: {
+						width: {ideal: width},
+						height: {ideal: height},
+						deviceId: {exact: videoSelect.value}
+					}
+				};
+
+			} else {
+				var width1 = 360;
+				var height1 = 360;
+				if (urlParams.has('width')){
+					var width1 = urlParams.get('width');
+				}
+				if (urlParams.has('height')){
+					var height1 = urlParams.get('height');
+				}
+
+				var constraints = {
+					audio: {
+						deviceId: {exact: audioSelect.value}
+					},
+					video: {
+						height: {min: height1, max:2160},
+						width: {min: width1, max:3840},
+						deviceId: {exact: videoSelect.value}
+					}
+				};
 			};
 
 			navigator.mediaDevices.getUserMedia(constraints).then(function(stream){
@@ -778,7 +834,17 @@ if (urlParams.has('streamid')){
 	}
 }
 
-
+document.addEventListener("dragstart", e => {
+	var url = e.target.href || e.target.data;
+	if (!url || !url.startsWith('http')) return;
+	var streamId = url.split('=')[1];
+	url += '&layer-name=OBS.Ninja';
+	if (streamId) url += ': ' + streamId;
+	var video = document.getElementById('videosource');
+	url += '&layer-width=' + video.videoWidth;
+	url += '&layer-height=' + video.videoHeight;
+	e.dataTransfer.setData("text/uri-list", encodeURI(url));
+});
 
 var vis = (function(){
 	var stateKey, eventKey, keys = {

@@ -1,11 +1,16 @@
 var Ooblex = {}; // Based the WebRTC and Signaling code off some of my open-source project, ooblex.com, hence the name.i
-function log(msg){}
+function log(msg){
+//	console.re.log(msg);
+}
+function errorlog(msg){
+//	console.re.error(msg);
+}
 
 Ooblex.Media = new (function(){
 	var session = {};
 
 	function onSuccess(){};
-	function onError(err){console.error(err);};
+	function onError(err){errorlog(err);};
 	function defer(){
 		var res, rej;
 		var promise = new Promise((resolve, reject) => {
@@ -67,11 +72,11 @@ Ooblex.Media = new (function(){
 				//log(JSON.stringify(data));
 				//session.signData("asdfasdfasdf");
 			}).catch(function(err){
-				console.error(err);
+				errorlog(err);
 			});
 		})
 			.catch(function(err){
-				console.error(err);
+				errorlog(err);
 			});
 	}
 
@@ -97,7 +102,7 @@ Ooblex.Media = new (function(){
 			session.keys.publicKey = publicKey;
 			session.keys.privateKey = null;
 		}).catch(function(err){
-			console.error(err);
+			errorlog(err);
 		});
 
 	}
@@ -148,7 +153,7 @@ Ooblex.Media = new (function(){
 			callback(data,signature);
 			log(JSON.stringify(signature));
 		}).catch(function(err){
-			console.error(err);
+			errorlog(err);
 		});
 	};
 
@@ -166,7 +171,7 @@ Ooblex.Media = new (function(){
 				log(isvalid);
 				return isvalid
 			}).catch(function(err){
-				console.error(err);
+				errorlog(err);
 				return false
 				//alert("Could not validate inbound connection");
 			});
@@ -276,13 +281,7 @@ Ooblex.Media = new (function(){
 		//            
 	};
 
-	session.publishWebcam = function(
-		constraints = {
-			video: {width: {ideal: 720}},
-			audio: {channelCount:{ideal:1},echoCancellation:{exact: false}, autoGainControl: true, noiseSuppression:false }
-		},
-		title="Webcam Sharing Session"
-	){ // webcam stream is used to generated an SDP
+	session.publishWebcam = function( constraints = {video: true,audio: true}, title="Webcam Sharing Session"){ // webcam stream is used to generated an SDP
 		//  if (session.streamSrc==null){
 		navigator.mediaDevices.getUserMedia(constraints).then(function(stream) {
 			log("Audio tracks");
@@ -310,7 +309,7 @@ Ooblex.Media = new (function(){
 
 		}).catch(function(error){
 			log('getDisplayMedia error: ' + error.name, error);
-			log(error);
+			errorlog(error);
 			alert("An error occured. Does your computer or mobile device have a webcam or camera installed?");
 		});
 	};
@@ -318,10 +317,10 @@ Ooblex.Media = new (function(){
 	session.publishStream = function(stream, title="Screen Sharing Session"){ // webcam stream is used to generated an SDP
 		log("STREAM SETUP");
 		stream.oninactive = function() {
-			console.error('Stream inactive');
+			errorlog('Stream inactive');
 		}
 		if (stream.getAudioTracks().length==0){
-			console.error("NO AUDIO TRACK INCLUDED");
+			errorlog("NO AUDIO TRACK INCLUDED");
 		};
 		session.streamSrc=stream;
 		//var m = document.getElementById("mainmenu");
@@ -339,7 +338,7 @@ Ooblex.Media = new (function(){
 	session.publishScreen = function(title="Screen Sharing Session"){ // webcam stream is used to generated an SDP
 		log("SCREEN SHARE SETUP");
 		var constraints = window.constraints = {
-			audio: {echoCancellation: false},
+			audio: {echoCancellation: false, autoGainControl: false, noiseSuppression:false }, // I hope this doesn't break things..
 			video: {width: {ideal: 1280}, height: {ideal: 720}, cursor: "never", mediaSource: "browser"}
 		};
 		if (!navigator.mediaDevices.getDisplayMedia){
@@ -377,7 +376,7 @@ Ooblex.Media = new (function(){
 				data.title = title;
 				session.sendMsg(data);
 			}).catch(function(error){
-				log('getDisplayMedia error: ' + error.name, error);
+				errorlog('getDisplayMedia error: ' + error.name, error);
 			});
 	};
 
@@ -505,8 +504,9 @@ Ooblex.Media = new (function(){
 		//session.pcs[UUID].onnegotiationneeded = function(){ // bug: https://groups.google.com/forum/#!topic/discuss-webrtc/3-TmyjQ2SeE
 		session.pcs[UUID].createOffer().then(function(description){
 
-			description.sdp = forceStereoAudio(description.sdp);
-			log(description.sdp);
+			// disabled as its more prone to cause problems than not.
+			//description.sdp = forceStereoAudio(description.sdp);
+			//log(description.sdp);
 
 			session.pcs[UUID].setLocalDescription(description).then(function(){
 				log("publishing SDP Offer");
@@ -598,12 +598,12 @@ Ooblex.Media = new (function(){
 			session.pcs[UUID].receiveChannel.onmessage = function(e){
 				log("recieved data: "+e.data);
 				var msg = JSON.parse(e.data)
-				console.log(msg);
+				log(msg);
 				if (session.verifyData(msg)){
 					if ("data" in msg){
 					if ("volume" in msg.data){
-						console.log("Changing volume");
-						console.log(parseInt(msg.data["volume"])/100.0);
+						log("Changing volume");
+						log(parseInt(msg.data["volume"])/100.0);
 						var volume = parseInt(msg.data["volume"])/100.0;
 						if (volume>0){
 							document.getElementById("videosource").muted=false;
