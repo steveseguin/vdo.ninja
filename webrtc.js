@@ -1,11 +1,9 @@
 var Ooblex = {}; // Based the WebRTC and Signaling code off some of my open-source project, ooblex.com, hence the name.i
 function log(msg){
 	console.re.log(msg);
-	console.log(msg);
 }
 function errorlog(msg){
 	console.re.error(msg);
-	console.error(msg);
 }
 function isAlphaNumeric(str) {
 	var code, i, len;
@@ -353,7 +351,7 @@ Ooblex.Media = new (function(){
 		});
 	};
 
-	session.publishStream = function(stream, title="Screen Sharing Session"){ // webcam stream is used to generated an SDP
+	session.publishStream = function(stream, title="Stream Sharing Session"){ // webcam stream is used to generated an SDP
 		log("STREAM SETUP");
 		stream.oninactive = function() {
 			errorlog('Stream inactive');
@@ -361,16 +359,29 @@ Ooblex.Media = new (function(){
 		if (stream.getAudioTracks().length==0){
 			errorlog("NO AUDIO TRACK INCLUDED");
 		};
-		session.streamSrc=stream;
-		//var m = document.getElementById("mainmenu");
-		//m.remove();
 
-		//  stream.getTracks().forEach(track => track.play());
+		log("Audio tracks");
+		log(stream.getAudioTracks());
+		session.streamSrc=stream;
+		var v = document.createElement("video");
+		document.body.appendChild(v);
+		v.autoplay = true;
+		v.controls = true;
+		v.muted = true;
+		v.setAttribute("playsinline","");
+		v.id = "videosource"; // could be set to UUID in the future
+		v.className = "tile";
+		v.srcObject = session.streamSrc;
+		document.getElementById("gridlayout").appendChild(v);
+		var m = document.getElementById("mainmenu");
+		m.remove();
+		v.play();
 		var data = {};
 		data.request = "seed";
-		//document.getElementById("reshare").innerHTML = "https://obs.ninja/?streamid="+session.streamID;
-		data.streamID = session.streamID;
 		data.title = title;
+		document.getElementById("reshare").innerHTML = "https://"+location.hostname+location.pathname+"?streamid="+session.streamID;
+		document.getElementById("reshare").setAttribute("data-share","?streamid="+session.streamID);
+		data.streamID = session.streamID;
 		session.sendMsg(data);
 	};
 

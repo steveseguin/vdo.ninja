@@ -1,6 +1,6 @@
 <html>
 <head>
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 <meta content="text/html;charset=utf-8" http-equiv="Content-Type">
 <meta content="utf-8" http-equiv="encoding">
 <link rel="shortcut icon" href="data:image/x-icon;," type="image/x-icon"> 
@@ -35,7 +35,9 @@
 .credits >a:visited{
 	color:black;
 }
-
+.gowebcam {
+	font-size:110%;
+}
 .row {
 	align-content:center;
 	text-align: center;
@@ -73,13 +75,13 @@
 }
 
 .gridlayout {
-  display: grid;
-  width:100%;
-  height:100%;
-  grid-gap: 0; 
-  overflow: hidden;
-  justify-items: stretch;
-  grid-auto-flow: dense;
+	display: grid;
+	width:100%;
+	height:100%;
+	grid-gap: 0; 
+	overflow: hidden;
+	justify-items: stretch;
+	grid-auto-flow: dense;
 }
 
 html {
@@ -109,6 +111,23 @@ body {
 
    }
 
+   .outer {
+	   position: relative;
+	   margin: auto;
+	   width: 70px;
+	   margin-top: 0px;
+	   cursor: pointer;
+   }
+
+
+.close {
+        position: absolute;
+        right: 20px;
+        top: 20px;
+        cursor: pointer;
+        display: none;
+}
+
    @media only screen and (max-height: 480px) {
 	   body { 
 		   font-size: 0.5em; 
@@ -126,8 +145,31 @@ body {
 	   }
 
 	   #qrcode img {
-		max-height:150px;
+		   max-height:150px;
 	   }
+	   .outer {
+		   width:50px;
+	   }
+	   .close { 
+		   top:0px;
+		   right:0px;
+	   }
+   }
+
+
+   @media only screen and (max-width: 480px) {
+	   .outer {
+		   width:50px;
+	   }
+	   .close{
+		   top:0;
+		   right:0;
+	   }
+	select {
+        	height:30px;
+		font-size:120%;
+
+	}
 
    }
 
@@ -136,13 +178,6 @@ body {
 	   color: white;
    }
 
-   .outer {
-	   position: relative;
-	   margin: auto;
-	   width: 70px;
-	   margin-top: 0px;
-	   cursor: pointer;
-   }
 
    .inner {
 	   width: inherit;
@@ -362,13 +397,6 @@ video {
 	background-color: black;
 }
 
-.close {
-	position: absolute;
-	right: 20px;
-	top: 20px;
-	cursor: pointer;
-	display: none;
-}
 
 .in-animation {
 	animation: inlightbox 0.8s forwards;
@@ -380,20 +408,20 @@ video {
 	animation: outlightbox 0.8s forwards;
 }
 
-			@keyframes inlightbox
-			{
-				50% {
-					width: 100%;
-					left: 0;
-					height: 220px;
+				@keyframes inlightbox
+				{
+					50% {
+						width: 100%;
+						left: 0;
+						height: 220px;
+					}
+					100% {
+						height: 100%;
+						width: 100%;
+						top: 0;
+						left: 0;
+					}
 				}
-				100% {
-					height: 100%;
-					width: 100%;
-					top: 0;
-					left: 0;
-				}
-			}
 
 </style>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.0/jquery.min.js"></script>
@@ -459,7 +487,7 @@ video {
 				<p>Select the audio/video source below and when you're ready just click START SHARING WEBCAM</p><br />
 				<button onclick="publishWebcam()" class="gowebcam">CLICK HERE WHEN READY</button><br />
 				<p><input id="videoname3" placeholder="Give this video source a name (optional)" size=35 maxlength=50 style="padding:5px;" /></p><br />
-				<p><video id="previewWebcam" muted controls autoplay playsinline style="max-width:640px; max-width:83vw; max-height:35vh"></video></p>
+				<p><video id="previewWebcam" oncanplay="console.log(document.getElementById('previewWebcam').videoWidth,document.getElementById('previewWebcam').videoHeight);" muted controls autoplay playsinline style="max-width:640px; max-width:83vw; max-height:35vh"></video></p>
 				<br />
 				<p>Video source: <select id="videoSource"></select></p><br/>
 				<p>Audio source: <select id="audioSource"></select></p>
@@ -543,12 +571,12 @@ document.addEventListener('touchend', function (event) {
 }, false);
 
 /////////////
-function updateURL(param) {
-      if (history.pushState) {
-          var newurl = window.location.protocol + "//" + window.location.host + window.location.pathname + '?' +param;
-          window.history.pushState({path:newurl},'',newurl);
-      }
-}
+	function updateURL(param) {
+		if (history.pushState) {
+			var newurl = window.location.protocol + "//" + window.location.host + window.location.pathname + '?' +param;
+			window.history.pushState({path:newurl},'',newurl);
+		}
+	}
 var session = Ooblex.Media;
 session.streamID = session.generateStreamID();
 var urlParams = new URLSearchParams(window.location.search);
@@ -587,7 +615,7 @@ function toggleMute(){
 }
 
 function changeTitle(aTitle="Untitled"){
-	console.log("changing title; if connected at least");
+	log("changing title; if connected at least");
 	session.changeTitle(aTitle);
 }
 
@@ -618,7 +646,7 @@ function publishScreen(){
 	};
 
 	session.publishScreen(constraints, title);
-	console.log("streamID is: "+session.streamID);
+	log("streamID is: "+session.streamID);
 
 	document.getElementById("mutebutton").className="float3";
 	document.getElementById("helpbutton").className="float2";
@@ -634,68 +662,14 @@ function publishWebcam(){
 
 	var title = document.getElementById("videoname3").value;
 	var ele = document.getElementById("previewWebcam");
+
+	var stream = ele.srcObject;
+
 	ele.parentNode.removeChild(ele);
-	activatedPreview=true
-	var audioSelect = document.querySelector('select#audioSource');
-	var videoSelect = document.querySelector('select#videoSource');
 
-	var iOS = !!navigator.platform && /iPad|iPhone|iPod/.test(navigator.platform);
-
-	//try{
-	//	updateURL("permaid="+session.streamID);  // OKAY , I disabled this, as i just found it way too annoying and confusing for the user.
-	//} catch (e){
-	//	console.error("perma id url update failed");
-	//}
-
-	if (iOS){
-		var width = {min: 640};
-		var height = {min: 360};
-
-		if (urlParams.has('width')){
-			width = urlParams.get('width');
-			width = {exact: width};
-		}
-		if (urlParams.has('height')){
-			height = urlParams.get('height');
-			height = {exact: height};
-		}
-		var constraints = {
-			audio: {
-				deviceId: {exact: audioSelect.value}
-			},
-			video: {
-				height: height,
-				width: width,
-				deviceId: {exact: videoSelect.value}
-			}
-		};
-	} else {
-		var width = {min: 360, max: 1920};
-		var height = {min: 360, max: 1920};
-
-		if (urlParams.has('width')){
-			width = urlParams.get('width');
-			width = {exact: width};
-		}
-		if (urlParams.has('height')){
-			height = urlParams.get('height');
-			height = {exact: height};
-		}
-
-		var constraints = {
-			audio: {
-				deviceId: {exact: audioSelect.value}
-			},
-			video: {
-				height: height,
-				width: width,
-				deviceId: {exact: videoSelect.value}
-			}
-		};
-	};
 	formSubmitting = false;
-	session.publishWebcam(constraints, title);
-	console.log("streamID is: "+session.streamID);
+	session.publishStream(stream, title);
+	log("streamID is: "+session.streamID);
 	document.getElementById("head1").className = 'advanced';
 	document.getElementById("head2").className = 'advanced';
 	document.getElementById("head3").className = '';
@@ -707,9 +681,9 @@ function publishWebcam(){
 }
 
 function joinRoom(roomname){
-	console.log("Join room",roomname);
+	log("Join room",roomname);
 	session.joinRoom(roomname).then(function(response){
-			console.log("Members in Room",response);
+		log("Members in Room",response);
 	},function(error){return {}});
 }
 
@@ -717,7 +691,7 @@ function joinRoom(roomname){
 function createRoom(){
 
 	var roomname = document.getElementById("videoname1").value;
-	console.log(roomname);
+	log(roomname);
 	if (roomname.length==0){
 		alert("Please enter a room name before continuing");
 		return;
@@ -731,7 +705,7 @@ function createRoom(){
 	//	document.body.appendChild(sheet);
 
 	var roomname = document.getElementById("videoname1").value;
-	console.log(roomname);
+	log(roomname);
 	formSubmitting = false;
 
 	var m = document.getElementById("mainmenu");
@@ -751,7 +725,44 @@ function createRoom(){
 
 }
 
-
+function enumerateDevices() {
+	if (typeof navigator.enumerateDevices === "function") {
+		return navigator.enumerateDevices();
+	}
+	else if (typeof navigator.mediaDevices === "object" &&
+		typeof navigator.mediaDevices.enumerateDevices === "function") {
+		return navigator.mediaDevices.enumerateDevices();
+	}
+	else {
+		return new Promise((resolve, reject) => {
+			try {
+				if (window.MediaStreamTrack == null || window.MediaStreamTrack.getSources == null) {
+					throw new Error();
+				}
+				window.MediaStreamTrack.getSources((devices) => {
+					resolve(devices
+						.filter(device => {
+							return device.kind.toLowerCase() === "video" || device.kind.toLowerCase() === "videoinput";
+						})
+						.map(device => {
+							return {
+								deviceId: device.deviceId != null ? device.deviceId : "",
+								groupId: device.groupId,
+								kind: "videoinput",
+								label: device.label,
+								toJSON: /* istanbul ignore next */ function () {
+									return this;
+								}
+							};
+						}));
+				});
+			}
+			catch (e) {
+				console.error(e);
+			}
+		});
+	}
+}
 
 function gotDevices(deviceInfos) { // https://github.com/webrtc/samples/blob/gh-pages/src/content/devices/input-output/js/main.js#L19
 	const audioInputSelect = document.querySelector('select#audioSource');
@@ -760,12 +771,16 @@ function gotDevices(deviceInfos) { // https://github.com/webrtc/samples/blob/gh-
 	// TODO: Add in the option to select the OUTPUT and Disable Mic/Cam
 
 	// Handles being called several times to update labels. Preserve values.
-	const values = selectors.map(select => select.value);
+		const values = selectors.map(select => select.value);
 	selectors.forEach(select => {
 		while (select.firstChild) {
 			select.removeChild(select.firstChild);
 		}
 	});
+	console.log("JSDFK");
+	console.log(deviceInfos);
+	//deviceInfos = extractCamerasFromDevices(deviceInfos);
+	console.log(deviceInfos);
 	for (let i = 0; i !== deviceInfos.length; ++i) {
 		const deviceInfo = deviceInfos[i];
 		const option = document.createElement('option');
@@ -777,106 +792,297 @@ function gotDevices(deviceInfos) { // https://github.com/webrtc/samples/blob/gh-
 			option.text = deviceInfo.label || `camera ${videoSelect.length + 1}`;
 			videoSelect.appendChild(option);
 		} else {
-			console.log('Some other kind of source/device: ', deviceInfo);
+			log('Some other kind of source/device: ', deviceInfo);
 		}
+}
+selectors.forEach((select, selectorIndex) => {
+	if (Array.prototype.slice.call(select.childNodes).some(n => n.value === values[selectorIndex])) {
+		select.value = values[selectorIndex];
 	}
-	selectors.forEach((select, selectorIndex) => {
-		if (Array.prototype.slice.call(select.childNodes).some(n => n.value === values[selectorIndex])) {
-			select.value = values[selectorIndex];
-		}
-	});
+});
 }
 
 function handleError(error) {
-	console.log('Error: ', error);
+	console.log(error);
+	log('Error: ', error);
+}
+
+function getUserMediaVideoParams(resolutionFallbackLevel, isSafariBrowser) {
+	switch (resolutionFallbackLevel) {
+		case 0:
+			if (isSafariBrowser) {
+				return {
+					width: { min: 1400, ideal: 1920, max: 1920 },
+					height: { min: 900, ideal: 1080, max: 1920 }
+				};
+			}
+			else {
+				return {
+					width: { min: 1400, ideal: 1920, max: 1920 },
+					height: { min: 900, ideal: 1080, max: 1920 }
+				};
+			}
+		case 1:
+			if (isSafariBrowser) {
+				return {
+					width: { min: 720, ideal: 1280, max: 1280 },
+					height: { min: 720, ideal: 720, max: 1280 }
+				};
+			}
+			else {
+				return {
+					width: { min: 720, ideal: 1280, max: 1280 },
+					height: { min: 720, ideal: 720, max: 1280 }
+				};
+			}
+		case 2:
+			if (isSafariBrowser) {
+				return {
+					width: { min: 640, ideal: 1200, max: 1280 },
+					height: { min: 640, ideal: 1200, max: 1280 }
+				};
+			}
+			else {
+				return {
+					width: { min: 540, ideal: 1280, max: 1920 },
+					height: { min: 640, ideal: 1280, max: 1080 }
+				};
+			}
+		case 3:
+			if (isSafariBrowser) {
+				return {
+					height: { min: 360, ideal: 720, max: 960 }
+				};
+			}
+			else {
+				return {
+					height: { min: 360, ideal: 960, max: 960 }
+				};
+			}
+		case 4:
+			if (isSafariBrowser) {
+				return {
+					width: { min: 720, ideal: 1024, max: 1440 },
+				};
+			}
+			else {
+				return {
+					width: { min: 720, ideal: 1280, max: 1440 },
+				};
+			}
+		case 5:
+			if (isSafariBrowser) {
+				return {
+					width: { min: 320, ideal: 640, max: 1440 },
+					height: { min: 320, ideal: 360, max: 720 }
+				};
+			}
+			else {
+				return {
+					width: { min: 320, ideal: 640, max: 1440 },
+					height: { min: 320, ideal: 360, max: 720 }
+				};
+			}
+		default:
+			return {};
+	}
+}
+
+function grabVideo(quality=0, audio=false){
+	if( activatedPreview == true){log("activeated preview return");return;}
+	activatedPreview = true;
+	console.log("trying with quality:",quality);
+	var audioSelect = document.querySelector('select#audioSource');
+	var videoSelect = document.querySelector('select#videoSource');
+	var iOS = !!navigator.platform && /iPad|iPhone|iPod/.test(navigator.platform);
+
+	if (audio==true){
+		audio = {deviceId: {exact: audioSelect.value}}
+	}
+	var constraints = {
+		audio: audio,
+		video: getUserMediaVideoParams(quality, iOS)
+	};
+	constraints.video.deviceId = { exact: videoSelect.value };
+
+	if (urlParams.has('width')){
+		var width = urlParams.get('width');
+		constraints.video.width = {exact: width};
+	}
+	if (urlParams.has('height')){
+		var height = urlParams.get('height');
+		constraints.video.height = {exact: height};
+	}
+
+	console.log(constraints);
+
+	var oldstream= document.getElementById('previewWebcam').srcObject;
+	if (oldstream){
+		oldstream.getTracks().forEach(function(track) {
+			track.stop();
+		});
+	}
+	setTimeout(()=>{
+		navigator.mediaDevices.getUserMedia(constraints).then(function(stream){
+			if (audio ==false){
+				activatedPreview = false;
+				grabVideo(quality,true);
+			}else {
+				console.log("DONE");
+				document.getElementById('previewWebcam').srcObject=stream;
+			}
+		}).catch(function(e){
+			activatedPreview = false;
+			if (e.name === "OverconstrainedError"){
+				log("Resolution didn't work");
+			} else if (e.name === "NotReadableError"){
+				alert("Error: Could not read from selected Camera");
+				activatedPreview=true;
+				return;
+			} else {
+				errorlog(e);
+			}
+			if (quality<=6){
+				grabVideo(quality+1);
+			} else {
+				errorlog(e);
+				activatedPreview=true;
+				alert("Camera is over-constrained. Please report which camera/device/browser you are using to steve@seguin.email");
+			}
+		});
+	},0);
+}
+
+
+
+function isBackCameraLabel(label) {
+	const lowercaseLabel = label.toLowerCase();
+	return backCameraKeywords.some(keyword => {
+		return lowercaseLabel.includes(keyword);
+	});
+}
+const backCameraKeywords = [
+	"rear",
+	"back",
+	"rÃ¼ck",
+	"arriÃ¨re",
+	"trasera",
+	"trÃ¡s",
+	"traseira",
+	"posteriore",
+	"åŽé¢",
+	"å¾Œé¢",
+	"èƒŒé¢",
+	"åŽç½®",
+	"å¾Œç½®",
+	"èƒŒç½®",
+	"Ð·Ð°Ð´Ð½ÐµÐ¹",
+	"Ø§Ù„Ø®Ù„ÙÙŠØ©",
+	"í›„",
+	"arka",
+	"achterzijde",
+	"à¸«à¸¥à¸±à¸‡",
+	"baksidan",
+	"bagside",
+	"sau",
+	"bak",
+	"tylny",
+	"takakamera",
+	"belakang",
+	"××—×•×¨×™×ª",
+	"Ï€Î¯ÏƒÏ‰",
+	"spate",
+	"hÃ¡tsÃ³",
+	"zadnÃ­",
+	"darrere",
+	"zadnÃ¡",
+	"Ð·Ð°Ð´Ð½Ñ",
+	"straÅ¾nja",
+	"belakang",
+	"à¤¬à¥ˆà¤•"
+];
+function extractCamerasFromDevices(devices) {
+	const cameraObjects = new Map();
+	var Camera = {"Type":{"FRONT":"front","BACK":"back"}};
+	const cameras = devices
+		.filter(device => {
+			return device.kind === "videoinput";
+		})
+		.map(videoDevice => {
+			if (cameraObjects.has(videoDevice.deviceId)) {
+				return cameraObjects.get(videoDevice.deviceId);
+			}
+			const label = videoDevice.label != null ? videoDevice.label : "";
+			const camera = {
+				deviceId: videoDevice.deviceId,
+				label,
+				cameraType: isBackCameraLabel(label) ? Camera.Type.BACK : Camera.Type.FRONT
+			};
+			if (label !== "") {
+				cameraObjects.set(videoDevice.deviceId, camera);
+			}
+			return camera;
+		});
+	if (cameras.length > 1 &&
+		!cameras.some(camera => {
+			return camera.cameraType === Camera.Type.BACK;
+		})) {
+		// Check if cameras are labeled with resolution information, take the higher-resolution one in that case
+		// Otherwise pick the last camera
+		let backCameraIndex = cameras.length - 1;
+		const cameraResolutions = cameras.map(camera => {
+			const match = camera.label.match(/\b([0-9]+)MP?\b/i);
+			if (match != null) {
+				return parseInt(match[1], 10);
+			}
+			return NaN;
+		});
+		if (!cameraResolutions.some(cameraResolution => {
+			return isNaN(cameraResolution);
+		})) {
+			backCameraIndex = cameraResolutions.lastIndexOf(Math.max(...cameraResolutions));
+		}
+		// tslint:disable-next-line:no-any
+		cameras[backCameraIndex].cameraType = Camera.Type.BACK;
+	}
+	return cameras;
 }
 
 var activatedPreview = false;
 function previewWebcam(){
-	if( activatedPreview == true){console.log("activeated preview return");return;}
-	activatedPreview=true;
+	if( activatedPreview == true){log("activeated preview return");return;}
+	activatedPreview = true;
+
 	var audioSelect = document.querySelector('select#audioSource');
 	var videoSelect = document.querySelector('select#videoSource');
 
 	var constraints = {audio:true, video:true };
 
-	navigator.mediaDevices.getUserMedia(constraints).then(function(){
-		navigator.mediaDevices.enumerateDevices().then(gotDevices).then(function(){
 
-			var audioSelect = document.querySelector('select#audioSource');
-			var videoSelect = document.querySelector('select#videoSource');
+	window.setTimeout(() => {
+		navigator.mediaDevices.getUserMedia(constraints).then(function(stream){
+			document.getElementById('previewWebcam').srcObject=stream;	
+			window.setTimeout(() => {
+				enumerateDevices().then(gotDevices).then(function(){
 
-			audioSelect.onchange = function(){activatedPreview=false;previewWebcam();};
-			videoSelect.onchange = function(){activatedPreview=false;previewWebcam();};
+					var audioSelect = document.querySelector('select#audioSource');
+					var videoSelect = document.querySelector('select#videoSource');
 
-			var iOS = !!navigator.platform && /iPad|iPhone|iPod/.test(navigator.platform);
+					audioSelect.onchange = function(){console.log("CHANGED");activatedPreview=false;grabVideo();};
+					videoSelect.onchange = function(){activatedPreview=false;grabVideo();};
 
+					grabVideo();
 
-			if (iOS){
-				var width = {min: 640};
-				var height = {min: 360};
-
-				if (urlParams.has('width')){
-					width = urlParams.get('width');
-					width = {exact: width};
-				}
-				if (urlParams.has('height')){
-					height = urlParams.get('height');
-					height = {exact: height};
-				}
-
-				var constraints = {
-					audio: {
-						deviceId: {exact: audioSelect.value}
-					},
-					video: {
-						height: height,
-						width: width,
-						deviceId: {exact: videoSelect.value}
-					}
-				};
-
-			} else {
-				var width = {min: 360, max: 1920};
-				var height = {min: 360, max: 1920};
-
-				if (urlParams.has('width')){
-					width = urlParams.get('width');
-					width = {exact: width};
-				}
-				if (urlParams.has('height')){
-					height = urlParams.get('height');
-					height = {exact: height};
-				}
-
-				var constraints = {
-					audio: {
-						deviceId: {exact: audioSelect.value}
-					},
-					video: {
-						height: height,
-						width: width,
-						deviceId: {exact: videoSelect.value}
-					}
-				};
-
-			};
-
-			navigator.mediaDevices.getUserMedia(constraints).then(function(stream){
-				document.getElementById('previewWebcam').srcObject=stream;
-			}).catch(function(e){
-				console.log(e);
-				//    alert("Something went wrong. Do you have a webcam installed?");
-			});
-		});
-	}).catch(handleError);
-
+				}).catch(handleError);
+			},0);	
+		}).catch(handleError);
+	},0);
 }
 
 
 function checkOBS(){
 	if (!navigator.mediaDevices || !navigator.mediaDevices.enumerateDevices) {
-		console.log("enumerateDevices() not supported.");
+		log("enumerateDevices() not supported.");
 		return;
 	}
 
@@ -885,27 +1091,27 @@ function checkOBS(){
 		devices.forEach(function(device) {
 			if (device.label.startsWith("OBS-Camera")){
 				alert("An OBS Virtual Camera was detected; Success!");
-				console.log(device.kind + ": " + device.label +
+				log(device.kind + ": " + device.label +
 					" id = " + device.deviceId);
 				matchFound = true;
 
 			}
-			console.log(device.kind + ": " + device.label + " id = " + device.deviceId);
+			log(device.kind + ": " + device.label + " id = " + device.deviceId);
 		});
 		if (matchFound == false){
 			alert("No OBS Virtual Camera was found");
 		}
 	}).catch(function(err) {
-		console.log(err.name + ": " + err.message);
+		log(err.name + ": " + err.message);
 	});
 }
 
 function play(streamName){
-	console.log("play stream");
+	log("play stream");
 	session.watchStream(streamName);
 }
 function browse(){
-	console.log("browse streams");
+	log("browse streams");
 	session.listStreams().then(function(response){
 		document.getElementById("browserlist").innerHTML='No Active Broadcasts';
 		response.forEach(streamID => {
@@ -929,43 +1135,43 @@ if (urlParams.has('streamid')){
 	document.getElementById("head3").className = 'advanced';
 	document.getElementById("roomid").innerHTML = urlParams.get('streamid');
 	document.getElementById("mainmenu").style.backgroundImage = "url('data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBzdGFuZGFsb25lPSJubyI/Pgo8IURPQ1RZUEUgc3ZnIFBVQkxJQyAiLS8vVzNDLy9EVEQgU1ZHIDEuMS8vRU4iICJodHRwOi8vd3d3LnczLm9yZy9HcmFwaGljcy9TVkcvMS4xL0RURC9zdmcxMS5kdGQiPgo8c3ZnIHdpZHRoPSI0MHB4IiBoZWlnaHQ9IjQwcHgiIHZpZXdCb3g9IjAgMCA0MCA0MCIgdmVyc2lvbj0iMS4xIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHhtbG5zOnhsaW5rPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5L3hsaW5rIiB4bWw6c3BhY2U9InByZXNlcnZlIiBzdHlsZT0iZmlsbC1ydWxlOmV2ZW5vZGQ7Y2xpcC1ydWxlOmV2ZW5vZGQ7c3Ryb2tlLWxpbmVqb2luOnJvdW5kO3N0cm9rZS1taXRlcmxpbWl0OjEuNDE0MjE7IiB4PSIwcHgiIHk9IjBweCI+CiAgICA8ZGVmcz4KICAgICAgICA8c3R5bGUgdHlwZT0idGV4dC9jc3MiPjwhW0NEQVRBWwogICAgICAgICAgICBALXdlYmtpdC1rZXlmcmFtZXMgc3BpbiB7CiAgICAgICAgICAgICAgZnJvbSB7CiAgICAgICAgICAgICAgICAtd2Via2l0LXRyYW5zZm9ybTogcm90YXRlKDBkZWcpCiAgICAgICAgICAgICAgfQogICAgICAgICAgICAgIHRvIHsKICAgICAgICAgICAgICAgIC13ZWJraXQtdHJhbnNmb3JtOiByb3RhdGUoLTM1OWRlZykKICAgICAgICAgICAgICB9CiAgICAgICAgICAgIH0KICAgICAgICAgICAgQGtleWZyYW1lcyBzcGluIHsKICAgICAgICAgICAgICBmcm9tIHsKICAgICAgICAgICAgICAgIHRyYW5zZm9ybTogcm90YXRlKDBkZWcpCiAgICAgICAgICAgICAgfQogICAgICAgICAgICAgIHRvIHsKICAgICAgICAgICAgICAgIHRyYW5zZm9ybTogcm90YXRlKC0zNTlkZWcpCiAgICAgICAgICAgICAgfQogICAgICAgICAgICB9CiAgICAgICAgICAgIHN2ZyB7CiAgICAgICAgICAgICAgICAtd2Via2l0LXRyYW5zZm9ybS1vcmlnaW46IDUwJSA1MCU7CiAgICAgICAgICAgICAgICAtd2Via2l0LWFuaW1hdGlvbjogc3BpbiAxLjVzIGxpbmVhciBpbmZpbml0ZTsKICAgICAgICAgICAgICAgIC13ZWJraXQtYmFja2ZhY2UtdmlzaWJpbGl0eTogaGlkZGVuOwogICAgICAgICAgICAgICAgYW5pbWF0aW9uOiBzcGluIDEuNXMgbGluZWFyIGluZmluaXRlOwogICAgICAgICAgICB9CiAgICAgICAgXV0+PC9zdHlsZT4KICAgIDwvZGVmcz4KICAgIDxnIGlkPSJvdXRlciI+CiAgICAgICAgPGc+CiAgICAgICAgICAgIDxwYXRoIGQ9Ik0yMCwwQzIyLjIwNTgsMCAyMy45OTM5LDEuNzg4MTMgMjMuOTkzOSwzLjk5MzlDMjMuOTkzOSw2LjE5OTY4IDIyLjIwNTgsNy45ODc4MSAyMCw3Ljk4NzgxQzE3Ljc5NDIsNy45ODc4MSAxNi4wMDYxLDYuMTk5NjggMTYuMDA2MSwzLjk5MzlDMTYuMDA2MSwxLjc4ODEzIDE3Ljc5NDIsMCAyMCwwWiIgc3R5bGU9ImZpbGw6YmxhY2s7Ii8+CiAgICAgICAgPC9nPgogICAgICAgIDxnPgogICAgICAgICAgICA8cGF0aCBkPSJNNS44NTc4Niw1Ljg1Nzg2QzcuNDE3NTgsNC4yOTgxNSA5Ljk0NjM4LDQuMjk4MTUgMTEuNTA2MSw1Ljg1Nzg2QzEzLjA2NTgsNy40MTc1OCAxMy4wNjU4LDkuOTQ2MzggMTEuNTA2MSwxMS41MDYxQzkuOTQ2MzgsMTMuMDY1OCA3LjQxNzU4LDEzLjA2NTggNS44NTc4NiwxMS41MDYxQzQuMjk4MTUsOS45NDYzOCA0LjI5ODE1LDcuNDE3NTggNS44NTc4Niw1Ljg1Nzg2WiIgc3R5bGU9ImZpbGw6cmdiKDIxMCwyMTAsMjEwKTsiLz4KICAgICAgICA8L2c+CiAgICAgICAgPGc+CiAgICAgICAgICAgIDxwYXRoIGQ9Ik0yMCwzMi4wMTIyQzIyLjIwNTgsMzIuMDEyMiAyMy45OTM5LDMzLjgwMDMgMjMuOTkzOSwzNi4wMDYxQzIzLjk5MzksMzguMjExOSAyMi4yMDU4LDQwIDIwLDQwQzE3Ljc5NDIsNDAgMTYuMDA2MSwzOC4yMTE5IDE2LjAwNjEsMzYuMDA2MUMxNi4wMDYxLDMzLjgwMDMgMTcuNzk0MiwzMi4wMTIyIDIwLDMyLjAxMjJaIiBzdHlsZT0iZmlsbDpyZ2IoMTMwLDEzMCwxMzApOyIvPgogICAgICAgIDwvZz4KICAgICAgICA8Zz4KICAgICAgICAgICAgPHBhdGggZD0iTTI4LjQ5MzksMjguNDkzOUMzMC4wNTM2LDI2LjkzNDIgMzIuNTgyNCwyNi45MzQyIDM0LjE0MjEsMjguNDkzOUMzNS43MDE5LDMwLjA1MzYgMzUuNzAxOSwzMi41ODI0IDM0LjE0MjEsMzQuMTQyMUMzMi41ODI0LDM1LjcwMTkgMzAuMDUzNiwzNS43MDE5IDI4LjQ5MzksMzQuMTQyMUMyNi45MzQyLDMyLjU4MjQgMjYuOTM0MiwzMC4wNTM2IDI4LjQ5MzksMjguNDkzOVoiIHN0eWxlPSJmaWxsOnJnYigxMDEsMTAxLDEwMSk7Ii8+CiAgICAgICAgPC9nPgogICAgICAgIDxnPgogICAgICAgICAgICA8cGF0aCBkPSJNMy45OTM5LDE2LjAwNjFDNi4xOTk2OCwxNi4wMDYxIDcuOTg3ODEsMTcuNzk0MiA3Ljk4NzgxLDIwQzcuOTg3ODEsMjIuMjA1OCA2LjE5OTY4LDIzLjk5MzkgMy45OTM5LDIzLjk5MzlDMS43ODgxMywyMy45OTM5IDAsMjIuMjA1OCAwLDIwQzAsMTcuNzk0MiAxLjc4ODEzLDE2LjAwNjEgMy45OTM5LDE2LjAwNjFaIiBzdHlsZT0iZmlsbDpyZ2IoMTg3LDE4NywxODcpOyIvPgogICAgICAgIDwvZz4KICAgICAgICA8Zz4KICAgICAgICAgICAgPHBhdGggZD0iTTUuODU3ODYsMjguNDkzOUM3LjQxNzU4LDI2LjkzNDIgOS45NDYzOCwyNi45MzQyIDExLjUwNjEsMjguNDkzOUMxMy4wNjU4LDMwLjA1MzYgMTMuMDY1OCwzMi41ODI0IDExLjUwNjEsMzQuMTQyMUM5Ljk0NjM4LDM1LjcwMTkgNy40MTc1OCwzNS43MDE5IDUuODU3ODYsMzQuMTQyMUM0LjI5ODE1LDMyLjU4MjQgNC4yOTgxNSwzMC4wNTM2IDUuODU3ODYsMjguNDkzOVoiIHN0eWxlPSJmaWxsOnJnYigxNjQsMTY0LDE2NCk7Ii8+CiAgICAgICAgPC9nPgogICAgICAgIDxnPgogICAgICAgICAgICA8cGF0aCBkPSJNMzYuMDA2MSwxNi4wMDYxQzM4LjIxMTksMTYuMDA2MSA0MCwxNy43OTQyIDQwLDIwQzQwLDIyLjIwNTggMzguMjExOSwyMy45OTM5IDM2LjAwNjEsMjMuOTkzOUMzMy44MDAzLDIzLjk5MzkgMzIuMDEyMiwyMi4yMDU4IDMyLjAxMjIsMjBDMzIuMDEyMiwxNy43OTQyIDMzLjgwMDMsMTYuMDA2MSAzNi4wMDYxLDE2LjAwNjFaIiBzdHlsZT0iZmlsbDpyZ2IoNzQsNzQsNzQpOyIvPgogICAgICAgIDwvZz4KICAgICAgICA8Zz4KICAgICAgICAgICAgPHBhdGggZD0iTTI4LjQ5MzksNS44NTc4NkMzMC4wNTM2LDQuMjk4MTUgMzIuNTgyNCw0LjI5ODE1IDM0LjE0MjEsNS44NTc4NkMzNS43MDE5LDcuNDE3NTggMzUuNzAxOSw5Ljk0NjM4IDM0LjE0MjEsMTEuNTA2MUMzMi41ODI0LDEzLjA2NTggMzAuMDUzNiwxMy4wNjU4IDI4LjQ5MzksMTEuNTA2MUMyNi45MzQyLDkuOTQ2MzggMjYuOTM0Miw3LjQxNzU4IDI4LjQ5MzksNS44NTc4NloiIHN0eWxlPSJmaWxsOnJnYig1MCw1MCw1MCk7Ii8+CiAgICAgICAgPC9nPgogICAgPC9nPgo8L3N2Zz4K')";
-        document.getElementById("mainmenu").style.backgroundRepeat = "no-repeat";
-	document.getElementById("mainmenu").style.backgroundPosition = "bottom center";
-	document.getElementById("mainmenu").style.minHeight = "300px";
-	document.getElementById("mainmenu").style.backgroundSize = "100px 100px";
+	document.getElementById("mainmenu").style.backgroundRepeat = "no-repeat";
+document.getElementById("mainmenu").style.backgroundPosition = "bottom center";
+document.getElementById("mainmenu").style.minHeight = "300px";
+document.getElementById("mainmenu").style.backgroundSize = "100px 100px";
 document.getElementById("mainmenu").innerHTML = '<font style="color:#666"><h1>Attempting to load video stream.</h1></font>';
 
-	setTimeout(function(){
-	
-		document.getElementById("mainmenu").innerHTML += '<font style="color:#EEE">If the stream does not load within a few seconds, the stream may not be available or some other error has occured. If the issue persists, please check out the <a href="https://reddit.com/r/obsninja">https://reddit.com/r/obsninja</a> for possible solutions or contact <a href="mailto:steve@seguin.email" target="_top">steve@seguin.email</a>.</font><br/><button onclick="location.reload();">Retry Connecting</button><br/>';
-		
-		if (urlParams.get("streamid")){
-			document.getElementById("mainmenu").innerHTML += '<div id="qrcode" style="background-color:white;display:inline-block;color:black;max-width:300px;padding:20px;"><h2 style="color:black">Stream Invite URL:</h2><p><a href="https://' + location.hostname+ location.pathname + '?permaid=' + session.streamID + '">https://' + location.hostname + location.pathname + '?permaid=' + urlParams.get("streamid") + '</a></p><br /></div>';
-			var qrcode = new QRCode(document.getElementById("qrcode"), {
-			       width : 300,
-			       height : 300,
-			       colorDark : "#000000",
-			       colorLight : "#FFFFFF",
-			       useSVG: false
-		        });
-			qrcode.makeCode('https://' + location.hostname + location.pathname + '?permaid=' + urlParams.get("streamid"));
+setTimeout(function(){
 
-		}
-	},2000);
+	document.getElementById("mainmenu").innerHTML += '<font style="color:#EEE">If the stream does not load within a few seconds, the stream may not be available or some other error has occured. If the issue persists, please check out the <a href="https://reddit.com/r/obsninja">https://reddit.com/r/obsninja</a> for possible solutions or contact <a href="mailto:steve@seguin.email" target="_top">steve@seguin.email</a>.</font><br/><button onclick="location.reload();">Retry Connecting</button><br/>';
 
-	console.log("auto playing");
-
-	if (navigator.userAgent.indexOf('Safari') != -1 && navigator.userAgent.indexOf('Chrome') == -1){ 
-		alert("Safari requires us to ask for an audio permission to use peer-to-peer technology. You will need to accept it in a moment if asked to view this live video");
-		navigator.mediaDevices.getUserMedia({audio: true}).then(function(){
-			play(urlParams.get('streamid'));
-		}).catch(function(){
-			play(urlParams.get('streamid'));
+	if (urlParams.get("streamid")){
+		document.getElementById("mainmenu").innerHTML += '<div id="qrcode" style="background-color:white;display:inline-block;color:black;max-width:300px;padding:20px;"><h2 style="color:black">Stream Invite URL:</h2><p><a href="https://' + location.hostname+ location.pathname + '?permaid=' + session.streamID + '">https://' + location.hostname + location.pathname + '?permaid=' + urlParams.get("streamid") + '</a></p><br /></div>';
+		var qrcode = new QRCode(document.getElementById("qrcode"), {
+			width : 300,
+			height : 300,
+			colorDark : "#000000",
+			colorLight : "#FFFFFF",
+			useSVG: false
 		});
-	} else {
-		play(urlParams.get('streamid'));
-		//document.getElementById("mainmenu").style.display="none";
+		qrcode.makeCode('https://' + location.hostname + location.pathname + '?permaid=' + urlParams.get("streamid"));
+
 	}
+},2000);
+
+log("auto playing");
+
+if (navigator.userAgent.indexOf('Safari') != -1 && navigator.userAgent.indexOf('Chrome') == -1){ 
+	alert("Safari requires us to ask for an audio permission to use peer-to-peer technology. You will need to accept it in a moment if asked to view this live video");
+	navigator.mediaDevices.getUserMedia({audio: true}).then(function(){
+		play(urlParams.get('streamid'));
+	}).catch(function(){
+		play(urlParams.get('streamid'));
+	});
+} else {
+	play(urlParams.get('streamid'));
+	//document.getElementById("mainmenu").style.display="none";
+}
 }
 
 document.addEventListener("dragstart", e => {
@@ -1007,11 +1213,11 @@ function poker(){
 	try{
 		Notification.requestPermission().then(function(result) {
 			if (result === 'denied') {
-				console.log('Permission wasn\'t granted. Allow a retry.');
+				log('Permission wasn\'t granted. Allow a retry.');
 				return;
 			}
 			if (result === 'default') {
-				console.log('The permission request was dismissed.');
+				log('The permission request was dismissed.');
 				return;
 			}
 		});
@@ -1019,14 +1225,14 @@ function poker(){
 		// Safari doesn't return a promise for requestPermissions and it                                                                                                                                       
 		// throws a TypeError. It takes a callback as the first argument                                                                                                                                       
 		// instead.
-		if (error instanceof TypeError) {
-			Notification.requestPermission(() => {                                                                                                                                                             
-				console.log("permissions was approved");
-			});
-		} else {
-			console.log("permission was denied");
-			throw error;                                                                                                                                                                                      
-		}                                                                                                                                                                                                      
+			if (error instanceof TypeError) {
+				Notification.requestPermission(() => {                                                                                                                                                             
+					log("permissions was approved");
+				});
+			} else {
+				log("permission was denied");
+				throw error;                                                                                                                                                                                      
+			}                                                                                                                                                                                                      
 	}   
 	vis(function(){
 		if (!vis()){
