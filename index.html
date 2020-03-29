@@ -1070,7 +1070,7 @@ function previewWebcam(){
 
 					audioSelect.onchange = function(){console.log("CHANGED");activatedPreview=false;grabVideo();};
 					videoSelect.onchange = function(){activatedPreview=false;grabVideo();};
-
+					activatedPreview = false;
 					grabVideo();
 
 				}).catch(handleError);
