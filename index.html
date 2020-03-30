@@ -1,10 +1,12 @@
 <html>
 <head>
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<meta content="text/html;charset=utf-8" http-equiv="Content-Type">
+<meta content="utf-8" http-equiv="encoding">
+<link rel="shortcut icon" href="data:image/x-icon;," type="image/x-icon"> 
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
-
-<script src="//console.re/connector.js" data-channel="obsninja" id="consolerescript"></script>
-
+<script type="text/javascript" src="qrcode.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.0/jquery.min.js"></script>
 <style type="text/css">
         #mynetwork {
 		width: 600px;
@@ -33,7 +35,9 @@
 .credits >a:visited{
 	color:black;
 }
-
+.gowebcam {
+	font-size:110%;
+}
 .row {
 	align-content:center;
 	text-align: center;
@@ -52,6 +56,33 @@
 	clear: both;
 }
 
+.vidcon {
+	max-width:100%;
+	max-height:100%
+}
+.vidcon:nth-of-type(3n) { grid-column: span 2; }
+.vidcon:nth-of-type(5n) {  grid-row: span 2;  }
+
+.tile {
+	object-fit: contain;
+	background-color:black;
+	width:100%;
+	height:100%;
+	border:0;
+	padding:0;
+	margin:0;
+}
+
+.gridlayout {
+	display: grid;
+	width:100%;
+	height:100%;
+	grid-gap: 0; 
+	overflow: hidden;
+	justify-items: stretch;
+	grid-auto-flow: dense;
+}
+
 html {
 	height: 100%;
 }
@@ -68,142 +99,180 @@ body {
 }
 
 .gowebcam {
-        padding:20px;
-}
-   .infoblob {
- 	color:white;
-	width:100%;
 	padding:20px;
-	max-width:1280px;
-
-   }
-
-@media only screen and (max-height: 480px) {
-   body { 
-      font-size: 0.5em; 
-   }
-   .gowebcam {
-   	padding:5px;
-   }
-
+	background-color:white;
+}
    .infoblob {
-        color:white;
-        width:100%;
-        padding:80px;
-        max-width:1280px;
+	   color:white;
+	   width:100%;
+	   padding:20px;
+	   max-width:1280px;
 
    }
 
-}
+   .outer {
+	   position: relative;
+	   margin: auto;
+	   width: 70px;
+	   margin-top: 0px;
+	   cursor: pointer;
+   }
 
 
-h2 {
-	color: white;
-}
+   .close {
+	   position: absolute;
+	   right: 20px;
+	   top: 20px;
+	   cursor: pointer;
+	   display: none;
+   }
 
-.outer {
-	position: relative;
-	margin: auto;
-	width: 70px;
-	margin-top: 0px;
-	cursor: pointer;
-}
+   @media only screen and (max-height: 480px) {
+	   body { 
+		   font-size: 0.5em; 
+	   }
+	   .gowebcam {
+		   padding:5px;
+	   }
 
-.inner {
-	width: inherit;
-	text-align: center;
-}
+	   .infoblob {
+		   color:white;
+		   width:100%;
+		   padding:80px;
+		   max-width:1280px;
 
-label {
-	font-size: 1.1em;
-	line-height: 4em;
-	font-weight: bold;
-	text-transform: uppercase;
-	color: #000;
-	transition: all .3s ease-in;
-	opacity: 0;
-	cursor: pointer;
-}
+	   }
 
-.inner:before, .inner:after {
-	position: absolute;
-	content: '';
-	height: 7px;
-	width: inherit;
-	background: #000;
-	left: 0;
-	transition: all .3s ease-in;
-}
-
-.inner:before {
-	top: 50%;
-	transform: rotate(45deg);
-}
-
-.inner:after {
-	bottom: 50%;
-	transform: rotate(-45deg);
-}
-
-.outer:hover label {
-	opacity: 1;
-}
-
-.outer:hover .inner:before,
-.outer:hover .inner:after {
-	transform: rotate(0);
-}
-
-.outer:hover .inner:before {
-	top: 0;
-}
-
-.outer:hover .inner:after {
-	bottom: 0;
-}
-.advanced { display: none !important} 
-
-.fullcolumn {
-	float:left;
-	display: inline-block;
-	margin: 0 auto;
-	width: 100%;
-	text-align: center;
-	/* Add shadows to create the "card" effect */
-	box-shadow: 0 4px 8px 0 rgba(0,0,0,.1);
-}
-
-/* Create four equal columns that floats next to each other */
-.column {
-	float:left;
-	display: inline-block;
-	margin: 1.8%;
-	min-width: 300px;
-	width: 20%;
-	padding: 28px;
-	height: 220px; /* Should be removed. Only for demonstration */
-
-	text-align: center;
-
-	/* Add shadows to create the "card" effect */
-	box-shadow: 0 4px 8px 0 rgba(0,0,0,.1);
-}
-/* On mouse-over, add a deeper shadow */
-.column:hover {
-	box-shadow: 0 8px 16px 0 rgba(0,0,0,.3);
-}
-.column > h2 {color:black;}
+	   #qrcode img {
+		   max-height:150px;
+	   }
+	   .outer {
+		   width:50px;
+	   }
+	   .close { 
+		   top:0px;
+		   right:0px;
+	   }
+   }
 
 
-@media only screen and (max-height: 480px) {
+   @media only screen and (max-width: 480px) {
+	   .outer {
+		   width:50px;
+	   }
+	   .close{
+		   top:0;
+		   right:0;
+	   }
+	   select {
+		   height:30px;
+		   font-size:120%;
+
+	   }
+
+   }
+
+
+   h2 {
+	   color: white;
+   }
+
+
+   .inner {
+	   width: inherit;
+	   text-align: center;
+   }
+
+   label {
+	   font-size: 1.1em;
+	   line-height: 4em;
+	   font-weight: bold;
+	   text-transform: uppercase;
+	   color: #000;
+	   transition: all .3s ease-in;
+	   opacity: 0;
+	   cursor: pointer;
+   }
+
+   .inner:before, .inner:after {
+	   position: absolute;
+	   content: '';
+	   height: 7px;
+	   width: inherit;
+	   background: #000;
+	   left: 0;
+	   transition: all .3s ease-in;
+   }
+
+   .inner:before {
+	   top: 50%;
+	   transform: rotate(45deg);
+   }
+
+   .inner:after {
+	   bottom: 50%;
+	   transform: rotate(-45deg);
+   }
+
+   .outer:hover label {
+	   opacity: 1;
+   }
+
+   .outer:hover .inner:before,
+   .outer:hover .inner:after {
+	   transform: rotate(0);
+   }
+
+   .outer:hover .inner:before {
+	   top: 0;
+   }
+
+   .outer:hover .inner:after {
+	   bottom: 0;
+   }
+   .advanced { display: none !important} 
+
+   .fullcolumn {
+	   float:left;
+	   display: inline-block;
+	   margin: 0 auto;
+	   width: 100%;
+	   text-align: center;
+	   /* Add shadows to create the "card" effect */
+	   box-shadow: 0 4px 8px 0 rgba(0,0,0,.1);
+   }
+
+   /* Create four equal columns that floats next to each other */
    .column {
-      min-width:170px;
-      height: 180px;
-   }
-}
+	   float:left;
+	   display: inline-block;
+	   margin: 1.8%;
+	   min-width: 300px;
+	   width: 20%;
+	   padding: 28px;
+	   height: 220px; /* Should be removed. Only for demonstration */
 
-.columnfade {
-	animation:fading 0.2s}@keyframes fading{0%{opacity:0}100%{opacity:1}}
+	   text-align: center;
+
+	   /* Add shadows to create the "card" effect */
+	   box-shadow: 0 4px 8px 0 rgba(0,0,0,.1);
+   }
+   /* On mouse-over, add a deeper shadow */
+   .column:hover {
+	   box-shadow: 0 8px 16px 0 rgba(0,0,0,.3);
+   }
+   .column > h2 {color:black;}
+
+
+   @media only screen and (max-height: 480px) {
+	   .column {
+		   min-width:170px;
+		   height: 180px;
+	   }
+   }
+
+   .columnfade {
+	   animation:fading 0.2s}@keyframes fading{0%{opacity:0}100%{opacity:1}}
 }
 
 img {
@@ -251,16 +320,7 @@ button {
 	background-repeat: no-repeat;
 	background-size: 80px;
 	background-position: 50% 65%;
-	background-image: url(data:image/svg+xml;utf8;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0idXRmLTgiPz4KPHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHhtbG5zOnhsaW5rPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5L3hsaW5rIiB2ZXJzaW9uPSIxLjEiIHZpZXdCb3g9IjAgMCAxMjkgMTI5IiBlbmFibGUtYmFja2dyb3VuZD0ibmV3IDAgMCAxMjkgMTI5IiB3aWR0aD0iNTEycHgiIGhlaWdodD0iNTEycHgiPgogIDxnPgogICAgPGc+CiAgICAgIDxwYXRoIGQ9Im0xOC43LDEyMi41aDkxLjZjMi4zLDAgNC4xLTEuOCA0LjEtNC4xdi0xMDcuOWMwLTIuMy0xLjgtNC4xLTQuMS00LjFoLTY4LjdjLTAuMywwLTAuNywwLTEsMC4xLTAuMSwwLTAuMiwwLjEtMC4yLDAuMS0wLjMsMC4xLTAuNSwwLjItMC44LDAuMy0wLjEsMC4xLTAuMiwwLjEtMC4zLDAuMi0wLjMsMC4yLTAuNiwwLjQtMC44LDAuN2wtMjIuOSwyN2MtMC4zLDAuMy0wLjUsMC43LTAuNywxLjEtMC4xLDAuMS0wLjEsMC4zLTAuMSwwLjQtMC4xLDAuMy0wLjEsMC42LTAuMiwwLjkgMCwwLjEgMCwwLjEgMCwwLjJ2ODAuOWMtMS4wNjU4MWUtMTQsMi40IDEuOSw0LjIgNC4xLDQuMnptMTguOC0xMDAuOHYxMS44aC0xMGwxMC0xMS44em0tMTQuNywxOS45aDE4LjhjMi4zLDAgNC4xLTEuOCA0LjEtNC4xdi0yMi45aDYwLjV2OTkuN2gtODMuNHYtNzIuN3oiIGZpbGw9IiMwMDAwMDAiLz4KICAgICAgPHBhdGggZD0ibTk0LDUwLjVoLTU5Yy0yLjMsMC00LjEsMS44LTQuMSw0LjEgMCwyLjMgMS44LDQuMSA0LjEsNC4xaDU5YzIuMywwIDQuMS0xLjggNC4xLTQuMSAwLTIuMy0xLjgtNC4xLTQuMS00LjF6IiBmaWxsPSIjMDAwMDAwIi8+CiAgICAgIDxwYXRoIGQ9Im05NCw3MC4zaC01OWMtMi4zLDAtNC4xLDEuOC00LjEsNC4xIDAsMi4zIDEuOCw0LjEgNC4xLDQuMWg1OWMyLjMsMCA0LjEtMS44IDQuMS00LjEgMC0yLjItMS44LTQuMS00LjEtNC4xeiIgZmlsbD0iIzAwMDAwMCIvPgogICAgPC9nPgogIDwvZz4KPC9zdmc+Cg==)
-}
-
-
-
-#container-5 {
-	background-repeat: no-repeat;
-	background-size: 80px;
-	background-position: 50% 65%;
-	background-image: url(data:image/png;base64,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)
+	background-image: url(data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iaXNvLTg4NTktMSI/Pg0KPCEtLSBHZW5lcmF0b3I6IEFkb2JlIElsbHVzdHJhdG9yIDE5LjAuMCwgU1ZHIEV4cG9ydCBQbHVnLUluIC4gU1ZHIFZlcnNpb246IDYuMDAgQnVpbGQgMCkgIC0tPg0KPHN2ZyB2ZXJzaW9uPSIxLjEiIGlkPSJDYXBhXzEiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgeG1sbnM6eGxpbms9Imh0dHA6Ly93d3cudzMub3JnLzE5OTkveGxpbmsiIHg9IjBweCIgeT0iMHB4Ig0KCSB2aWV3Qm94PSIwIDAgNDkwLjI4MiA0OTAuMjgyIiBzdHlsZT0iZW5hYmxlLWJhY2tncm91bmQ6bmV3IDAgMCA0OTAuMjgyIDQ5MC4yODI7IiB4bWw6c3BhY2U9InByZXNlcnZlIj4NCjxnPg0KCTxwYXRoIGQ9Ik0wLjA0MywyNDUuMTk3YzAuNiwxMC4xLDcuMywxOC42LDE3LDIxLjVsMTc5LjYsNTQuM2w2LjYsMTIzLjhjMC4zLDQuOSwzLjYsOS4yLDguMywxMC44YzEuMywwLjUsMi43LDAuNyw0LDAuNw0KCQljMy41LDAsNi44LTEuNCw5LjItNC4xbDYzLjUtNzAuM2w5MCw2Mi4zYzQsMi44LDguNyw0LjMsMTMuNiw0LjNjMTEuMywwLDIxLjEtOCwyMy41LTE5LjJsNzQuNy0zODAuN2MwLjktNC40LTAuOC05LTQuMi0xMS44DQoJCWMtMy41LTIuOS04LjItMy42LTEyLjQtMS45bC00NTksMTg2LjhDNS4xNDMsMjI1Ljg5Ny0wLjU1NywyMzUuMDk3LDAuMDQzLDI0NS4xOTd6IE0yMjYuMDQzLDQxNC4wOTdsLTQuMS03OC4xbDQ2LDMxLjgNCgkJTDIyNi4wNDMsNDE0LjA5N3ogTTM5MS40NDMsNDIzLjU5N2wtMTYzLjgtMTEzLjRsMjI5LjctMjIyLjJMMzkxLjQ0Myw0MjMuNTk3eiBNNDMyLjE0Myw3OC4xOTdsLTIyNy4xLDIxOS43bC0xNzkuNC01NC4yDQoJCUw0MzIuMTQzLDc4LjE5N3oiLz4NCjwvZz4NCjxnPg0KPC9nPg0KPGc+DQo8L2c+DQo8Zz4NCjwvZz4NCjxnPg0KPC9nPg0KPGc+DQo8L2c+DQo8Zz4NCjwvZz4NCjxnPg0KPC9nPg0KPGc+DQo8L2c+DQo8Zz4NCjwvZz4NCjxnPg0KPC9nPg0KPGc+DQo8L2c+DQo8Zz4NCjwvZz4NCjxnPg0KPC9nPg0KPGc+DQo8L2c+DQo8Zz4NCjwvZz4NCjwvc3ZnPg0K)
 
 }
 .float{
@@ -277,29 +337,29 @@ button {
 	z-index:10;
 }
 .float2{
-        position:fixed;
-        width:60px;
-        height:60px;
-        bottom:80px;
-        right:132px;
-        background-color:#15B;
-        color:#FFF;
-        border-radius:50px;
-        text-align:center;
-        box-shadow: 2px 2px 3px #999;
+	position:fixed;
+	width:60px;
+	height:60px;
+	bottom:80px;
+	right:132px;
+	background-color:#15B;
+	color:#FFF;
+	border-radius:50px;
+	text-align:center;
+	box-shadow: 2px 2px 3px #999;
 	z-index:10;
 }
 .float3{
-        position:fixed;
-        width:60px;
-        height:60px;
-        bottom:80px;
-        right:52px;
-        background-color:#0C2;
-        color:#FFF;
-        border-radius:50px;
-        text-align:center;
-        box-shadow: 2px 2px 3px #999;
+	position:fixed;
+	width:60px;
+	height:60px;
+	bottom:80px;
+	right:52px;
+	background-color:#0C2;
+	color:#FFF;
+	border-radius:50px;
+	text-align:center;
+	box-shadow: 2px 2px 3px #999;
 	z-index:10;
 }
 
@@ -327,13 +387,6 @@ video {
 	background-color: black;
 }
 
-.close {
-	position: absolute;
-	right: 20px;
-	top: 20px;
-	cursor: pointer;
-	display: none;
-}
 
 .in-animation {
 	animation: inlightbox 0.8s forwards;
@@ -345,58 +398,70 @@ video {
 	animation: outlightbox 0.8s forwards;
 }
 
-		@keyframes inlightbox
-		{
-			50% {
-				width: 100%;
-				left: 0;
-				height: 220px;
-			}
-			100% {
-				height: 100%;
-				width: 100%;
-				top: 0;
-				left: 0;
-			}
-		}
+						@keyframes inlightbox
+						{
+							50% {
+								width: 100%;
+								left: 0;
+								height: 220px;
+							}
+							100% {
+								height: 100%;
+								width: 100%;
+								top: 0;
+								left: 0;
+							}
+						}
 
 </style>
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.0/jquery.min.js"></script>
 </head>
 <body  id="main">
 	<script language="javascript" type="text/javascript" src="./webrtc.js"></script>
 
 	<div id="header">
-	<h2>
-		<a href="./" style="text-decoration:none;color:white;;">OBS.Ninja</a> &nbsp
-		<div id="head1" style="display:inline-block">
-			<input id="StreamID" name="StreamID" size=30 placeholder="Join by Room Name here"></input>
-			<button style="padding:1px;" onclick="play(document.getElementById('StreamID').value)">GO</button>
-		</div>
-		<div id="head3" style="display:inline-block" class='advanced'>
-			<font style="font-size:60%"> &nbsp Copy this URL into an OBS "Browser Source" =>  &nbsp </font><a id="reshare" data-share="" onclick="var range=document.createRange(); range.selectNodeContents(document.getElementById('reshare')); var selec = window.getSelection(); selec.removeAllRanges();selec.addRange(range);document.execCommand('copy');" onmouseover="this.style.cursor='pointer'"></a>
-		</div>
+		<h2>
+			<a href="./" style="text-decoration:none;color:white;"><font id="qos">O</font>BS.Ninja</a> &nbsp
+			<div id="head1" style="display:inline-block;;">
+				<input id="StreamID" name="StreamID" size=26 placeholder="Join by Room Name here"></input>
+				<button style="padding:1px;" onclick="play(document.getElementById('StreamID').value)">GO</button>
+			</div>
+			<div id="head3" style="display:inline-block" class='advanced'>
+				<font style="font-size:60%"> &nbsp Copy this URL into an OBS "Browser Source" =>  &nbsp </font><a id="reshare" data-share="" onclick="var range=document.createRange(); range.selectNodeContents(document.getElementById('reshare')); var selec = window.getSelection(); selec.removeAllRanges();selec.addRange(range);document.execCommand('copy');" onmouseover="this.style.cursor='pointer'"></a>
+			</div>
 
-		<div id="head2" class="advanced" style="display:inline-block;text-decoration:none;font-size:60%;color:white;">
-			You are joining room: <div id="roomid" style="display:inline-block"></div>
-		</div>
+			<div id="head4" style="display:inline-block" class='advanced'>
+				<font style="font-size:60%"> &nbsp You are in a director's view &nbsp </font>
+			</div>
 
-	</h2>
-	<hr />
+
+			<div id="head2" class="advanced" style="display:inline-block;text-decoration:none;font-size:60%;color:white;">
+				You are joining room: <div id="roomid" style="display:inline-block"></div>
+			</div>
+
+		</h2>
+		<hr />
 	</div>
 
 	<div id="mutebutton" onclick="toggleMute()" class='advanced float3' style="cursor:pointer" alt="Toggle the mic">
 		<i style="font-size:48px;color:white" id="mutetoggle" class="fa fa-microphone my-float"></i>
 	</div>
-	<div id="helpbutton"  class='advanced float2' style="cursor:pointer" alt="How to Use This with OBS">
+	<div id="helpbutton" onclick="alert('Email steve@seguin.email if the system breaks or check https://reddit.com/r/obsninja for support.\n\nThere are some advanced options hidden away, such as persistent streamIDs and custom resolutions.\n\nMacOS users should be using OBS v23 due to a bug in v24 and v25')"  class='advanced float2' style="cursor:pointer" alt="How to Use This with OBS">
 		<i style="font-size:48px;color:white;" class="fa fa-question-circle my-float"></i>
 	</div>
 
-	<div id="mainmenu" class="row">
-		<div id="container-1" class="column columnfade" onclick="alert('coming soon');" style="background-color:#ddd;">
+	<div id="mainmenu" class="row" style="align:center;">
+		<div id="container-1" class="column columnfade" onclick="alert('THIS FEATURE IS COMING SOON\n\nProgress Update 3/30/20: Fixed a lot of priority issues, re-wrote the server to support group chat, and am aiming to have group-chat ready by Wednesday.');" style="background-color:#ddd;">
 			<h2>Add Group Video Chat to OBS</h2>
-			(Under Re-Development: coming soon)
+			(COMING VERY SOON)
 			<div class="container-inner">
+				<br /><br />
+				<p><input id="videoname1" placeholder="Enter a ROOM NAME here" size=35 maxlength=50 style="padding:5px;" /></br ><br /></p>
+				<li>Anyone can enter a room if they know the name, so keep it unique</li>
+				<li>Having more than four (4) people in a room is not advisable due to performance reasons</li>
+				<br />
+				With a room name entered, enter the room as a director. Links to invite guests will be provided.
+				<br />
+				<button onclick="createRoom()" class="gowebcam">Enter  Room</button><br />
 			</div>
 			<div class="outer close">
 				<div class="inner">
@@ -411,8 +476,8 @@ video {
 			<div class="container-inner"><br />
 				<p>Select the audio/video source below and when you're ready just click START SHARING WEBCAM</p><br />
 				<button onclick="publishWebcam()" class="gowebcam">CLICK HERE WHEN READY</button><br />
-				<p><input id="videoname3" placeholder="Give this video source a name (optional)" size=35 maxlength=50 style="padding:5px;" /></br ><br /></p>
-				<p><video id="previewWebcam" muted controls autoplay playsinline style="max-width:640px; max-width:83vw; max-height:35vh"></video></p>
+				<p><input id="videoname3" placeholder="Give this video source a name (optional)" size=35 maxlength=50 style="padding:5px;" /></p><br />
+				<p><video id="previewWebcam" oncanplay="log('resolution found');log(document.getElementById('previewWebcam').videoWidth|0);log(document.getElementById('previewWebcam').videoHeight|0);this.srcObject.getVideoTracks().forEach(function(track) {log(track.getSettings().frameRate);});" muted controls autoplay playsinline style="max-width:640px; max-width:83vw; max-height:35vh"></video></p>
 				<br />
 				<p>Video source: <select id="videoSource"></select></p><br/>
 				<p>Audio source: <select id="audioSource"></select></p>
@@ -441,6 +506,20 @@ video {
 
 		</div>
 
+		<div id="container-4" class="column columnfade" style="background-color:#ddd;">
+			<h2>Generate Invite Link</h2>
+			<div class="container-inner">
+				<br /><br />
+				<p><input id="videoname4" placeholder="Give this video source a name (optional)" size=35 maxlength=70 style="padding:5px;" /></br ><br /></p>
+				<button onclick="generateQRPage(this)" >GENERATE THE INVITE LINK</button>
+			</div>
+			<div class="outer close">
+				<div class="inner">
+					<label>Back</label>
+				</div>
+			</div>
+
+		</div>
 
 		<p><div id="info" class="fullcolumn columnfade">
 			<center>
@@ -455,27 +534,29 @@ video {
 					<li>Code is open-sourced: <a href="https://github.com/steveseguin/obsninja">https://github.com/steveseguin/obsninja</a></li>
 					<li>You can also check out <a href="https://stageten.tv">StageTEN.tv</a> for a more feature-rich paid-solution</li>
 					<br />
-                                        <i>Known issues:</i><br />
+					<i><font style="color:red">Known issues:</font></i><br />
 
-                                        <li>** MacOS users need to use OBS v23. v24/v25 have a bug in it</li>
+					<li>** MacOS users need to use OBS v23 and a local microphone for the time being.</li>
+					<li>** The rear camera on some smartphones have issues. Please report these issues, including your phone's model.</li>
+					<li>** For some users the video fails to load in OBS. Try a few times and if it still fails, contact me.</li>
+					<br />
+					<li><b>March 30th, 2020</b>: Site updated. Previous version can be found at https://obs.ninja/old/</li>
 
 					<br /><br />
 					<i><h3>Send feature requests and support to steve@seguin.email, or check out the <a href="https://www.reddit.com/r/OBSNinja/">sub-reddit</a></i></h3>
-
 				</div>
 			</center>
 		</p></div>
 		<form method="post" onsubmit="setFormSubmitting()" style="display:none;">
 			<input type="submit" />
 		</form>
-
 		<script>
 
 			/////////////
 			var VIS = vis;
 var formSubmitting = true;
 var setFormSubmitting = function() { formSubmitting = true; };
-window.onload = function() {
+window.onload = function() { // This just keeps people from killing the live stream accidentally. Also give me a headsup that the stream is ending
 	window.addEventListener("beforeunload", function (e) {
 		if (formSubmitting) {
 			return undefined;
@@ -489,18 +570,40 @@ window.onload = function() {
 
 var lastTouchEnd = 0;
 document.addEventListener('touchend', function (event) {
-	  var now = (new Date()).getTime();
-	  if (now - lastTouchEnd <= 300) {
-		      event.preventDefault();
-		    }
-	  lastTouchEnd = now;
+	var now = (new Date()).getTime();
+	if (now - lastTouchEnd <= 300) {
+		event.preventDefault();
+	}
+	lastTouchEnd = now;
 }, false);
 
 /////////////
+function updateURL(param) {
+	if (history.pushState) {
+		var newurl = window.location.protocol + "//" + window.location.host + window.location.pathname + '?' +param;
+		window.history.pushState({path:newurl},'',newurl);
+	}
+}
 var session = Ooblex.Media;
+session.streamID = session.generateStreamID();
+var urlParams = new URLSearchParams(window.location.search);
+if (urlParams.has('permaid')){
+	var permaid  = urlParams.get('permaid');
+	session.changeStreamID(permaid);
+} 
 var micvolume = 100;
 session.connect();
+
 session.volume = micvolume;
+
+function checkConnection(){
+	if (session.ws.readyState === WebSocket.OPEN) {
+		document.getElementById("qos").style.color = "white";
+	} else {
+		document.getElementById("qos").style.color = "red";
+	}
+}
+setInterval(function(){checkConnection();},5000);
 
 function toggleMute(){
 	var msg = {};
@@ -519,7 +622,7 @@ function toggleMute(){
 }
 
 function changeTitle(aTitle="Untitled"){
-	console.log("changing title; if connected at least");
+	log("changing title; if connected at least");
 	session.changeTitle(aTitle);
 }
 
@@ -531,15 +634,33 @@ function publishScreen(){
 	var title = document.getElementById("videoname2").value;
 
 	formSubmitting = false;
-	session.publishScreen(title);
-	console.log("streamID is: "+session.streamID);
-	
+
+	var width = {ideal: 1280};
+	var height = {ideal: 720};
+
+	if (urlParams.has('width')){
+		width = urlParams.get('width');
+		width = {exact: width};
+	}
+	if (urlParams.has('height')){
+		height = urlParams.get('height');
+		height = {exact: height};
+	}
+
+	var constraints = window.constraints = {
+		audio: {echoCancellation: false, autoGainControl: false, noiseSuppression:false }, // I hope this doesn't break things..
+		video: {width: width, height: height, cursor: "never", mediaSource: "browser"}
+	};
+
+	session.publishScreen(constraints, title);
+	log("streamID is: "+session.streamID);
+
 	document.getElementById("mutebutton").className="float3";
 	document.getElementById("helpbutton").className="float2";
 
 	document.getElementById("head1").className = 'advanced';
-        document.getElementById("head2").className = 'advanced';
-        document.getElementById("head3").className = '';
+	document.getElementById("head2").className = 'advanced';
+	document.getElementById("head3").className = '';
 
 }
 function publishWebcam(){
@@ -548,186 +669,388 @@ function publishWebcam(){
 
 	var title = document.getElementById("videoname3").value;
 	var ele = document.getElementById("previewWebcam");
+
+	var stream = ele.srcObject;
+
 	ele.parentNode.removeChild(ele);
-	activatedPreview=true
-	var audioSelect = document.querySelector('select#audioSource');
-	var videoSelect = document.querySelector('select#videoSource');
 
-	var iOS = !!navigator.platform && /iPad|iPhone|iPod/.test(navigator.platform);
-
-
-	if (iOS){
-		var width1 = 640;
-		var height1 = 360;
-		if (urlParams.has('width')){
-			var width1 = urlParams.get('width');
-		}
-		if (urlParams.has('height')){
-			var height1 = urlParams.get('height');
-		}
-		var constraints = {
-			audio: {
-				deviceId: {exact: audioSelect.value}
-			},
-			video: {
-				width: {min: width1},
-				height: {min: height1},
-				deviceId: {exact: videoSelect.value}
-			}
-		};
-
-	} else {
-		var width1 = 360;
-		var height1 = 360;
-		if (urlParams.has('width')){
-			var width1 = urlParams.get('width');
-		}
-		if (urlParams.has('height')){
-			var height1 = urlParams.get('height');
-		}
-
-		var constraints = {
-			audio: {
-				deviceId: {exact: audioSelect.value}
-			},
-			video: {
-				height: {min: height1, max:2160},
-				width: {min: width1, max:3840},
-				deviceId: {exact: videoSelect.value}
-			}
-		};
-	};
 	formSubmitting = false;
-	session.publishWebcam(constraints, title);
-	console.log("streamID is: "+session.streamID);
+	window.scrollTo(0, 0); // iOS has a nasty habit of overriding the CSS when changing camaera selections, so this addresses that.
+	session.publishStream(stream, title);
+	log("streamID is: "+session.streamID);
 	document.getElementById("head1").className = 'advanced';
 	document.getElementById("head2").className = 'advanced';
 	document.getElementById("head3").className = '';
 
 	document.getElementById("mutebutton").className="float3";
 	document.getElementById("helpbutton").className="float2";
-
+	
 
 }
 
+function joinRoom(roomname){
+	log("Join room",roomname);
+	session.joinRoom(roomname).then(function(response){
+		log("Members in Room",response);
+	},function(error){return {}});
+}
+
+
+function createRoom(){
+
+	var roomname = document.getElementById("videoname1").value;
+	log(roomname);
+	if (roomname.length==0){
+		alert("Please enter a room name before continuing");
+		return;
+	}
+
+	var gridlayout = document.getElementById("gridlayout");
+	gridlayout.className = "gridlayout";
+
+	//	var sheet = document.createElement('style');
+	//	sheet.innerHTML = ".tile{object-fit:contain  }";
+	//	document.body.appendChild(sheet);
+
+	var roomname = document.getElementById("videoname1").value;
+	log(roomname);
+	formSubmitting = false;
+
+	var m = document.getElementById("mainmenu");
+	m.remove();
+
+	document.getElementById("head1").className = 'advanced';
+	document.getElementById("head2").className = 'advanced';
+	document.getElementById("head3").className = 'advanced';
+	document.getElementById("head4").className = '';
+
+	//document.getElementById("reshare").innerHTML = "https://obs.ninja/?room="+roomname;
+	//document.getElementById("reshare").setAttribute("data-share","?room="+roomname);
+
+	//document.getElementById("mutebutton").className="float3";
+	//document.getElementById("helpbutton").className="float2";
+	joinRoom(roomname);
+
+}
+
+function enumerateDevices() {
+	if (typeof navigator.enumerateDevices === "function") {
+		return navigator.enumerateDevices();
+	}
+	else if (typeof navigator.mediaDevices === "object" &&
+		typeof navigator.mediaDevices.enumerateDevices === "function") {
+		return navigator.mediaDevices.enumerateDevices();
+	}
+	else {
+		return new Promise((resolve, reject) => {
+			try {
+				if (window.MediaStreamTrack == null || window.MediaStreamTrack.getSources == null) {
+					throw new Error();
+				}
+				window.MediaStreamTrack.getSources((devices) => {
+					resolve(devices
+						.filter(device => {
+							return device.kind.toLowerCase() === "video" || device.kind.toLowerCase() === "videoinput";
+						})
+						.map(device => {
+							return {
+								deviceId: device.deviceId != null ? device.deviceId : "",
+								groupId: device.groupId,
+								kind: "videoinput",
+								label: device.label,
+								toJSON: /* istanbul ignore next */ function () {
+									return this;
+								}
+							};
+						}));
+				});
+			}
+			catch (e) {
+				errorlog(e);
+			}
+		});
+	}
+}
 
 function gotDevices(deviceInfos) { // https://github.com/webrtc/samples/blob/gh-pages/src/content/devices/input-output/js/main.js#L19
-        const audioInputSelect = document.querySelector('select#audioSource');
-        const videoSelect = document.querySelector('select#videoSource');
-        const selectors = [audioInputSelect, videoSelect];
-	  // TODO: Add in the option to select the OUTPUT and Disable Mic/Cam
+	const audioInputSelect = document.querySelector('select#audioSource');
+	const videoSelect = document.querySelector('select#videoSource');
+	const selectors = [audioInputSelect, videoSelect];
+	// TODO: Add in the option to select the OUTPUT and Disable Mic/Cam
 
-        // Handles being called several times to update labels. Preserve values.
-        const values = selectors.map(select => select.value);
-        selectors.forEach(select => {
-                while (select.firstChild) {
-                        select.removeChild(select.firstChild);
-                }
-        });
-        for (let i = 0; i !== deviceInfos.length; ++i) {
-                const deviceInfo = deviceInfos[i];
-                const option = document.createElement('option');
-                option.value = deviceInfo.deviceId;
-                if (deviceInfo.kind === 'audioinput') {
-                        option.text = deviceInfo.label || `microphone ${audioInputSelect.length + 1}`;
-                        audioInputSelect.appendChild(option);
-                } else if (deviceInfo.kind === 'videoinput') {
-                        option.text = deviceInfo.label || `camera ${videoSelect.length + 1}`;
-                        videoSelect.appendChild(option);
-                } else {
-                        console.log('Some other kind of source/device: ', deviceInfo);
-                }
-        }
-        selectors.forEach((select, selectorIndex) => {
-                if (Array.prototype.slice.call(select.childNodes).some(n => n.value === values[selectorIndex])) {
-                        select.value = values[selectorIndex];
-                }
-        });
+	// Handles being called several times to update labels. Preserve values.
+	const values = selectors.map(select => select.value);
+	selectors.forEach(select => {
+		while (select.firstChild) {
+			select.removeChild(select.firstChild);
+		}
+	});
+	log(deviceInfos);
+	for (let i = 0; i !== deviceInfos.length; ++i) {
+		const deviceInfo = deviceInfos[i];
+		const option = document.createElement('option');
+		option.value = deviceInfo.deviceId;
+		if (deviceInfo.kind === 'audioinput') {
+			option.text = deviceInfo.label || `microphone ${audioInputSelect.length + 1}`;
+			audioInputSelect.appendChild(option);
+		} else if (deviceInfo.kind === 'videoinput') {
+			option.text = deviceInfo.label || `camera ${videoSelect.length + 1}`;
+			videoSelect.appendChild(option);
+		} else {
+			log('Some other kind of source/device: ', deviceInfo);
+		}
+	}
+	selectors.forEach((select, selectorIndex) => {
+		if (Array.prototype.slice.call(select.childNodes).some(n => n.value === values[selectorIndex])) {
+			select.value = values[selectorIndex];
+		}
+	});
 }
 
 function handleError(error) {
-	console.log('Error: ', error);
+	errorlog(error);
+}
+
+function getUserMediaVideoParams(resolutionFallbackLevel, isSafariBrowser) {
+	switch (resolutionFallbackLevel) {
+		case 0:
+			if (isSafariBrowser) {
+				return {
+					width: { min: 640 },
+					height: { min: 360 }
+				};
+			}
+			else {
+				return {
+					width: { min: 720, ideal: 1920, max: 1920 },
+					height: { min: 720, ideal: 1080, max: 1920 }
+				};
+			}
+		case 1:
+			if (isSafariBrowser) {
+				return {
+					width: { min: 720, ideal: 1280, max: 1280 },
+					height: { min: 720, ideal: 720, max: 1280 }
+				};
+			}
+			else {
+				return {
+					width: { min: 720, ideal: 1280, max: 1280 },
+					height: { min: 720, ideal: 720, max: 1280 }
+				};
+			}
+		case 2:
+			if (isSafariBrowser) {
+				return {
+					width: { min: 640, ideal: 1200, max: 1280 },
+					height: { min: 640, ideal: 1200, max: 1280 }
+				};
+			}
+			else {
+				return {
+					width: { min: 640, ideal: 1280, max: 1920 },
+					height: { min: 640, ideal: 1280, max: 1080 }
+				};
+			}
+		case 3:
+			if (isSafariBrowser) {
+				return {
+					height: { min: 360, ideal: 720, max: 960 }
+				};
+			}
+			else {
+				return {
+					height: { min: 360, ideal: 960, max: 960 }
+				};
+			}
+		case 4:
+			if (isSafariBrowser) {
+				return {
+					width: { min: 360, ideal: 1280, max: 1440 },
+				};
+			}
+			else {
+				return {
+					width: { min: 360, ideal: 1280, max: 1440 },
+				};
+			}
+		case 5:
+			if (isSafariBrowser) {
+				return {
+					width: { min: 360, ideal: 640, max: 1440 },
+					height: { min: 360, ideal: 360, max: 720 }
+				};
+			}
+			else {
+				return {
+					width: { min: 360, ideal: 640, max: 1440 },
+					height: { min: 360, ideal: 360, max: 720 }
+				};
+			}
+		case 6:
+			if (isSafariBrowser) {
+				return {}; // iphone users probably don't need to wait any longer, so let them just get to it
+			}
+			else {
+				return { // If the camera is recording in low-light, it may have a low framerate. It coudl also be recording at a very high resolution.
+					width: { min: 360, ideal: 640 },
+					height: { min: 360, ideal: 360 },
+					framerate: 10
+				};
+			}
+		case 7:
+			return {}; // same as default, but I didn't want to mess with framerates until I gave it all a try first
+		case 8:
+			return {framerate: 0 };  // Some Samsung Devices report they can only support a framerate of 0.
+		default:
+			return {}; 
+	}
+}
+
+function grabVideo(quality=0, audio=false){
+	if( activatedPreview == true){log("activeated preview return");return;}
+	activatedPreview = true;
+	log(quality);
+	log("trying with quality:");
+
+	var audioSelect = document.querySelector('select#audioSource');
+	var videoSelect = document.querySelector('select#videoSource');
+	var iOS = !!navigator.platform && /iPad|iPhone|iPod/.test(navigator.platform);
+
+	if (audio==true){
+		audio = {deviceId: {exact: audioSelect.value}}
+	}
+	var constraints = {
+		audio: audio,
+		video: getUserMediaVideoParams(quality, iOS)
+	};
+	constraints.video.deviceId = { exact: videoSelect.value };
+
+	if (urlParams.has('width')){
+		var width = urlParams.get('width');
+		constraints.video.width = {exact: width};
+	}
+	if (urlParams.has('height')){
+		var height = urlParams.get('height');
+		constraints.video.height = {exact: height};
+	}
+
+	log(constraints);
+
+	setTimeout(()=>{
+		try {
+
+			log("Trying Constraints");
+			var oldstream= document.getElementById('previewWebcam').srcObject;
+			if (oldstream){
+				oldstream.getTracks().forEach(function(track) {
+					track.stop();
+				});
+			}
+		} catch(e){
+			errorlog(e);
+		}
+		navigator.mediaDevices.getUserMedia(constraints).then(function(stream){
+			if (audio ==false){
+				stream.getTracks().forEach(function(track) { // We don't want to keep it without audio; so we are going to try to add audio now.
+					track.stop();
+				});
+				log("GOT IT BUT WITH NO AUDIO");
+				activatedPreview = false;
+				grabVideo(quality,true);
+			}else {
+				document.getElementById('previewWebcam').srcObject = stream; // set the preview window and run with it
+				log("DONE - found stream");
+			}
+		}).catch(function(e){
+			activatedPreview = false;
+			if (e.name === "OverconstrainedError"){
+				log("Resolution didn't work");
+			} else if (e.name === "NotReadableError"){
+				alert("Error Listing Media Devices.\n\nThe default Camera may already be in use with another app. Typically webcams can only be accessed by one program at a time.\n\nThe selected device may also not be supported.");
+				activatedPreview=true;
+				return;
+			} else if (e.name === "NavigatorUserMediaError"){
+				alert("Unknown error: 'NavigatorUserMediaError'"); 
+				return;
+			} else {
+				errorlog(e);
+			}
+			if (quality<=8){
+				grabVideo(quality+1);
+			} else {
+				errorlog(e);
+				activatedPreview=true;
+				alert("Camera is over-constrained. Please report which camera/device/browser you are using to steve@seguin.email");
+			}
+		});
+	},0);
 }
 
 var activatedPreview = false;
 function previewWebcam(){
-	if( activatedPreview == true){console.log("activeated preview return");return;}
-	activatedPreview=true;
+	if( activatedPreview == true){log("activeated preview return");return;}
+	activatedPreview = true;
+
 	var audioSelect = document.querySelector('select#audioSource');
 	var videoSelect = document.querySelector('select#videoSource');
 
 	var constraints = {audio:true, video:true };
 
-	navigator.mediaDevices.getUserMedia(constraints).then(function(){
-		navigator.mediaDevices.enumerateDevices().then(gotDevices).then(function(){
 
-			var audioSelect = document.querySelector('select#audioSource');
-			var videoSelect = document.querySelector('select#videoSource');
+	window.setTimeout(() => {
 
-			audioSelect.onchange = function(){activatedPreview=false;previewWebcam();};
-			videoSelect.onchange = function(){activatedPreview=false;previewWebcam();};
-
-			var iOS = !!navigator.platform && /iPad|iPhone|iPod/.test(navigator.platform);
-
-
-			if (iOS){
-
-				var width = 640;
-				var height = 360;
-				if (urlParams.has('width')){
-					var width = urlParams.get('width');
-				}
-				if (urlParams.has('height')){
-					var height = urlParams.get('height');
-				}
-				var constraints = {
-					audio: {
-						deviceId: {exact: audioSelect.value}
-					},
-					video: {
-						width: {ideal: width},
-						height: {ideal: height},
-						deviceId: {exact: videoSelect.value}
-					}
-				};
-
-			} else {
-				var width1 = 360;
-				var height1 = 360;
-				if (urlParams.has('width')){
-					var width1 = urlParams.get('width');
-				}
-				if (urlParams.has('height')){
-					var height1 = urlParams.get('height');
-				}
-
-				var constraints = {
-					audio: {
-						deviceId: {exact: audioSelect.value}
-					},
-					video: {
-						height: {min: height1, max:2160},
-						width: {min: width1, max:3840},
-						deviceId: {exact: videoSelect.value}
-					}
-				};
-			};
-
-			navigator.mediaDevices.getUserMedia(constraints).then(function(stream){
-				document.getElementById('previewWebcam').srcObject=stream;
-			}).catch(function(e){
-				console.log(e);
-				//    alert("Something went wrong. Do you have a webcam installed?");
+		var oldstream= document.getElementById('previewWebcam').srcObject;
+		if (oldstream){
+			oldstream.getTracks().forEach(function(track) {
+				track.stop();
 			});
-		});
-	}).catch(handleError);
+		}
 
+		navigator.mediaDevices.getUserMedia(constraints).then(function(stream){ // Apple needs thi to happen before I can access EnumerateDevices. 
+			//document.getElementById('previewWebcam').srcObject=stream;
+				stream.getTracks().forEach(function(track) { // We don't want to keep it without audio; so we are going to try to add audio now.
+				       track.stop();
+				});
+				enumerateDevices().then(gotDevices).then(function(){
+
+					var audioSelect = document.querySelector('select#audioSource');
+					var videoSelect = document.querySelector('select#videoSource');
+
+					audioSelect.onchange = function(){log("AUDIO source CHANGED");activatedPreview=false;grabVideo();};
+					videoSelect.onchange = function(){log("video source changed");activatedPreview=false;grabVideo();};
+					activatedPreview = false;
+					grabVideo();
+
+				}).catch(handleError);
+		}).catch(function(e){
+			if (e.name === "NotReadableError"){
+				window.setTimeout(() => {
+					enumerateDevices().then(gotDevices).then(function(){
+
+						var audioSelect = document.querySelector('select#audioSource');
+						var videoSelect = document.querySelector('select#videoSource');
+
+						audioSelect.onchange = function(){log("AUDIO source CHANGED");activatedPreview=false;grabVideo();};
+						videoSelect.onchange = function(){log("video source changed");activatedPreview=false;grabVideo();};
+						activatedPreview = false;
+						grabVideo();
+
+					}).catch(handleError);
+				},0);
+			} else if (e.name === "NotAllowedError"){
+				alert("Error: Cannot access media devices \n\nPlease ensure both CAMERA and MICROPHONE permissions are allowed for this website to continue");
+			} else {
+				errorlog(e);
+			}
+		});
+	},0);
 }
 
 
 function checkOBS(){
 	if (!navigator.mediaDevices || !navigator.mediaDevices.enumerateDevices) {
-		console.log("enumerateDevices() not supported.");
+		log("enumerateDevices() not supported.");
 		return;
 	}
 
@@ -736,73 +1059,62 @@ function checkOBS(){
 		devices.forEach(function(device) {
 			if (device.label.startsWith("OBS-Camera")){
 				alert("An OBS Virtual Camera was detected; Success!");
-				console.log(device.kind + ": " + device.label +
+				log(device.kind + ": " + device.label +
 					" id = " + device.deviceId);
 				matchFound = true;
 
 			}
-			console.log(device.kind + ": " + device.label + " id = " + device.deviceId);
+			log(device.kind + ": " + device.label + " id = " + device.deviceId);
 		});
 		if (matchFound == false){
 			alert("No OBS Virtual Camera was found");
 		}
 	}).catch(function(err) {
-		console.log(err.name + ": " + err.message);
+		log(err.name + ": " + err.message);
 	});
 }
 
 function play(streamName){
-	console.log("play stream");
+	log("play stream");
 	session.watchStream(streamName);
 }
+var retry=null;
 function browse(){
-	console.log("browse streams");
+	log("browse streams");
 	session.listStreams().then(function(response){
 		document.getElementById("browserlist").innerHTML='No Active Broadcasts';
 		response.forEach(streamID => {
-			document.getElementById("browserlist").innerHTML="<a href='../?streamid="+streamID[1]+"'>"+streamID[2]+"</a> - "+streamID[0]+" seeders<br />";
+			document.getElementById("browserlist").innerHTML="<a href='./?streamid="+streamID[1]+"'>"+streamID[2]+"</a> - "+streamID[0]+" seeders<br />";
 		});
 	},function(error){return {}});
 }
 
-function browsegraph(){
-	console.log("graph streams");
-	session.graphStreams().then(function(response){
-		// create an array with nodes
-		var nodes = [];
-		var edges = [];
-		for (var key in response){
-			if (response[key]==null){
-				edges.push({from:key, to:response[key]});
-				nodes.push({id:key,label:"PUBLISHER"});
-				continue;
-			} else if (key.length<=16){
-				edges.push({from:key, to:response[key]});
-				nodes.push({id:key,label:"SUPER SEEDER"});
-				continue;
-			}
-			nodes.push({id:key,label:"VIEWER"});
-			edges.push({from:key, to:response[key]});
-		};
-		// create a network
-		var container = document.getElementById('browsergraph');
+function generateQRPage(ele){
+	try{
+		var sid = session.generateStreamID();
+		ele.parentNode.innerHTML = '<br /><div id="qrcode" style="background-color:white;display:inline-block;color:black;max-width:300px;padding:20px;"><h2 style="color:black">Invite Link:</h2><p><a href="https://' + location.hostname+ location.pathname + '?permaid=' + sid + '">https://' + location.hostname + location.pathname + '?permaid=' + sid + '</a></p><br /></div>\
+			<br /><br />and don\'t forget the<h2 style="color:black">OBS Link:</h2><p><a style="font-size:120%" href="https://' + location.hostname+ location.pathname + '?streamid=' + sid + '">https://' + location.hostname + location.pathname + '?streamid=' + sid + '</a></p><br /><i>In OBS v25 you can drag this link directly into OBS, or you can create a Browse element in OBS and insert it the URL source.</i> \
+			<br /><br />\
+		Please also note, the invite link and OBS ingestion link created is reusable, but only one person may use a specific invite at a time.';
+		var qrcode = new QRCode(document.getElementById("qrcode"), {
+			width : 300,
+			height : 300,
+			colorDark : "#000000",
+			colorLight : "#FFFFFF",
+			useSVG: false
+		});
+		qrcode.makeCode('https://' + location.hostname + location.pathname + '?permaid=' + sid);
 
-		// provide the data in the vis format
-		var data = {
-			nodes: nodes,
-			edges: edges
-		};
-		var options = {};
+	} catch(e){
+		errorlog(e);
+	}
 
-		// initialize your network!
-		var network = new VIS.Network(container, data, options);
-
-	},function(error){return {}});
 }
+
 
 var urlParams = new URLSearchParams(window.location.search);
 if (urlParams.has('streamid')){
-
+	document.getElementById("container-4").className = 'column columnfade';
 	document.getElementById("container-3").className = 'column columnfade';
 	document.getElementById("container-2").className = 'column columnfade';
 	document.getElementById("container-1").className = 'column columnfade';
@@ -813,24 +1125,55 @@ if (urlParams.has('streamid')){
 	document.getElementById("head2").className = 'advanced';
 	document.getElementById("head3").className = 'advanced';
 	document.getElementById("roomid").innerHTML = urlParams.get('streamid');
+	document.getElementById("mainmenu").style.backgroundImage = "url('data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBzdGFuZGFsb25lPSJubyI/Pgo8IURPQ1RZUEUgc3ZnIFBVQkxJQyAiLS8vVzNDLy9EVEQgU1ZHIDEuMS8vRU4iICJodHRwOi8vd3d3LnczLm9yZy9HcmFwaGljcy9TVkcvMS4xL0RURC9zdmcxMS5kdGQiPgo8c3ZnIHdpZHRoPSI0MHB4IiBoZWlnaHQ9IjQwcHgiIHZpZXdCb3g9IjAgMCA0MCA0MCIgdmVyc2lvbj0iMS4xIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHhtbG5zOnhsaW5rPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5L3hsaW5rIiB4bWw6c3BhY2U9InByZXNlcnZlIiBzdHlsZT0iZmlsbC1ydWxlOmV2ZW5vZGQ7Y2xpcC1ydWxlOmV2ZW5vZGQ7c3Ryb2tlLWxpbmVqb2luOnJvdW5kO3N0cm9rZS1taXRlcmxpbWl0OjEuNDE0MjE7IiB4PSIwcHgiIHk9IjBweCI+CiAgICA8ZGVmcz4KICAgICAgICA8c3R5bGUgdHlwZT0idGV4dC9jc3MiPjwhW0NEQVRBWwogICAgICAgICAgICBALXdlYmtpdC1rZXlmcmFtZXMgc3BpbiB7CiAgICAgICAgICAgICAgZnJvbSB7CiAgICAgICAgICAgICAgICAtd2Via2l0LXRyYW5zZm9ybTogcm90YXRlKDBkZWcpCiAgICAgICAgICAgICAgfQogICAgICAgICAgICAgIHRvIHsKICAgICAgICAgICAgICAgIC13ZWJraXQtdHJhbnNmb3JtOiByb3RhdGUoLTM1OWRlZykKICAgICAgICAgICAgICB9CiAgICAgICAgICAgIH0KICAgICAgICAgICAgQGtleWZyYW1lcyBzcGluIHsKICAgICAgICAgICAgICBmcm9tIHsKICAgICAgICAgICAgICAgIHRyYW5zZm9ybTogcm90YXRlKDBkZWcpCiAgICAgICAgICAgICAgfQogICAgICAgICAgICAgIHRvIHsKICAgICAgICAgICAgICAgIHRyYW5zZm9ybTogcm90YXRlKC0zNTlkZWcpCiAgICAgICAgICAgICAgfQogICAgICAgICAgICB9CiAgICAgICAgICAgIHN2ZyB7CiAgICAgICAgICAgICAgICAtd2Via2l0LXRyYW5zZm9ybS1vcmlnaW46IDUwJSA1MCU7CiAgICAgICAgICAgICAgICAtd2Via2l0LWFuaW1hdGlvbjogc3BpbiAxLjVzIGxpbmVhciBpbmZpbml0ZTsKICAgICAgICAgICAgICAgIC13ZWJraXQtYmFja2ZhY2UtdmlzaWJpbGl0eTogaGlkZGVuOwogICAgICAgICAgICAgICAgYW5pbWF0aW9uOiBzcGluIDEuNXMgbGluZWFyIGluZmluaXRlOwogICAgICAgICAgICB9CiAgICAgICAgXV0+PC9zdHlsZT4KICAgIDwvZGVmcz4KICAgIDxnIGlkPSJvdXRlciI+CiAgICAgICAgPGc+CiAgICAgICAgICAgIDxwYXRoIGQ9Ik0yMCwwQzIyLjIwNTgsMCAyMy45OTM5LDEuNzg4MTMgMjMuOTkzOSwzLjk5MzlDMjMuOTkzOSw2LjE5OTY4IDIyLjIwNTgsNy45ODc4MSAyMCw3Ljk4NzgxQzE3Ljc5NDIsNy45ODc4MSAxNi4wMDYxLDYuMTk5NjggMTYuMDA2MSwzLjk5MzlDMTYuMDA2MSwxLjc4ODEzIDE3Ljc5NDIsMCAyMCwwWiIgc3R5bGU9ImZpbGw6YmxhY2s7Ii8+CiAgICAgICAgPC9nPgogICAgICAgIDxnPgogICAgICAgICAgICA8cGF0aCBkPSJNNS44NTc4Niw1Ljg1Nzg2QzcuNDE3NTgsNC4yOTgxNSA5Ljk0NjM4LDQuMjk4MTUgMTEuNTA2MSw1Ljg1Nzg2QzEzLjA2NTgsNy40MTc1OCAxMy4wNjU4LDkuOTQ2MzggMTEuNTA2MSwxMS41MDYxQzkuOTQ2MzgsMTMuMDY1OCA3LjQxNzU4LDEzLjA2NTggNS44NTc4NiwxMS41MDYxQzQuMjk4MTUsOS45NDYzOCA0LjI5ODE1LDcuNDE3NTggNS44NTc4Niw1Ljg1Nzg2WiIgc3R5bGU9ImZpbGw6cmdiKDIxMCwyMTAsMjEwKTsiLz4KICAgICAgICA8L2c+CiAgICAgICAgPGc+CiAgICAgICAgICAgIDxwYXRoIGQ9Ik0yMCwzMi4wMTIyQzIyLjIwNTgsMzIuMDEyMiAyMy45OTM5LDMzLjgwMDMgMjMuOTkzOSwzNi4wMDYxQzIzLjk5MzksMzguMjExOSAyMi4yMDU4LDQwIDIwLDQwQzE3Ljc5NDIsNDAgMTYuMDA2MSwzOC4yMTE5IDE2LjAwNjEsMzYuMDA2MUMxNi4wMDYxLDMzLjgwMDMgMTcuNzk0MiwzMi4wMTIyIDIwLDMyLjAxMjJaIiBzdHlsZT0iZmlsbDpyZ2IoMTMwLDEzMCwxMzApOyIvPgogICAgICAgIDwvZz4KICAgICAgICA8Zz4KICAgICAgICAgICAgPHBhdGggZD0iTTI4LjQ5MzksMjguNDkzOUMzMC4wNTM2LDI2LjkzNDIgMzIuNTgyNCwyNi45MzQyIDM0LjE0MjEsMjguNDkzOUMzNS43MDE5LDMwLjA1MzYgMzUuNzAxOSwzMi41ODI0IDM0LjE0MjEsMzQuMTQyMUMzMi41ODI0LDM1LjcwMTkgMzAuMDUzNiwzNS43MDE5IDI4LjQ5MzksMzQuMTQyMUMyNi45MzQyLDMyLjU4MjQgMjYuOTM0MiwzMC4wNTM2IDI4LjQ5MzksMjguNDkzOVoiIHN0eWxlPSJmaWxsOnJnYigxMDEsMTAxLDEwMSk7Ii8+CiAgICAgICAgPC9nPgogICAgICAgIDxnPgogICAgICAgICAgICA8cGF0aCBkPSJNMy45OTM5LDE2LjAwNjFDNi4xOTk2OCwxNi4wMDYxIDcuOTg3ODEsMTcuNzk0MiA3Ljk4NzgxLDIwQzcuOTg3ODEsMjIuMjA1OCA2LjE5OTY4LDIzLjk5MzkgMy45OTM5LDIzLjk5MzlDMS43ODgxMywyMy45OTM5IDAsMjIuMjA1OCAwLDIwQzAsMTcuNzk0MiAxLjc4ODEzLDE2LjAwNjEgMy45OTM5LDE2LjAwNjFaIiBzdHlsZT0iZmlsbDpyZ2IoMTg3LDE4NywxODcpOyIvPgogICAgICAgIDwvZz4KICAgICAgICA8Zz4KICAgICAgICAgICAgPHBhdGggZD0iTTUuODU3ODYsMjguNDkzOUM3LjQxNzU4LDI2LjkzNDIgOS45NDYzOCwyNi45MzQyIDExLjUwNjEsMjguNDkzOUMxMy4wNjU4LDMwLjA1MzYgMTMuMDY1OCwzMi41ODI0IDExLjUwNjEsMzQuMTQyMUM5Ljk0NjM4LDM1LjcwMTkgNy40MTc1OCwzNS43MDE5IDUuODU3ODYsMzQuMTQyMUM0LjI5ODE1LDMyLjU4MjQgNC4yOTgxNSwzMC4wNTM2IDUuODU3ODYsMjguNDkzOVoiIHN0eWxlPSJmaWxsOnJnYigxNjQsMTY0LDE2NCk7Ii8+CiAgICAgICAgPC9nPgogICAgICAgIDxnPgogICAgICAgICAgICA8cGF0aCBkPSJNMzYuMDA2MSwxNi4wMDYxQzM4LjIxMTksMTYuMDA2MSA0MCwxNy43OTQyIDQwLDIwQzQwLDIyLjIwNTggMzguMjExOSwyMy45OTM5IDM2LjAwNjEsMjMuOTkzOUMzMy44MDAzLDIzLjk5MzkgMzIuMDEyMiwyMi4yMDU4IDMyLjAxMjIsMjBDMzIuMDEyMiwxNy43OTQyIDMzLjgwMDMsMTYuMDA2MSAzNi4wMDYxLDE2LjAwNjFaIiBzdHlsZT0iZmlsbDpyZ2IoNzQsNzQsNzQpOyIvPgogICAgICAgIDwvZz4KICAgICAgICA8Zz4KICAgICAgICAgICAgPHBhdGggZD0iTTI4LjQ5MzksNS44NTc4NkMzMC4wNTM2LDQuMjk4MTUgMzIuNTgyNCw0LjI5ODE1IDM0LjE0MjEsNS44NTc4NkMzNS43MDE5LDcuNDE3NTggMzUuNzAxOSw5Ljk0NjM4IDM0LjE0MjEsMTEuNTA2MUMzMi41ODI0LDEzLjA2NTggMzAuMDUzNiwxMy4wNjU4IDI4LjQ5MzksMTEuNTA2MUMyNi45MzQyLDkuOTQ2MzggMjYuOTM0Miw3LjQxNzU4IDI4LjQ5MzksNS44NTc4NloiIHN0eWxlPSJmaWxsOnJnYig1MCw1MCw1MCk7Ii8+CiAgICAgICAgPC9nPgogICAgPC9nPgo8L3N2Zz4K')";
 
+document.getElementById("mainmenu").style.backgroundRepeat = "no-repeat";
+document.getElementById("mainmenu").style.backgroundPosition = "bottom center";
+document.getElementById("mainmenu").style.minHeight = "300px";
+document.getElementById("mainmenu").style.backgroundSize = "100px 100px";
+document.getElementById("mainmenu").innerHTML = '<font style="color:#666"><h1>Attempting to load video stream.</h1></font>';
 
+setTimeout(function(){
+	try{
+		if (urlParams.get("streamid")){
+			if (document.getElementById("mainmenu")){
+				document.getElementById("mainmenu").innerHTML += '<font style="color:#EEE">If the stream does not load within a few seconds, the stream may not be available or some other error has occured. If the issue persists, please check out the <a href="https://reddit.com/r/obsninja">https://reddit.com/r/obsninja</a> for possible solutions or contact <a href="mailto:steve@seguin.email" target="_top">steve@seguin.email</a>.</font><br/><button onclick="location.reload();">Retry Connecting</button><br/>';
 
-	console.log("auto playing");
-
-	if (navigator.userAgent.indexOf('Safari') != -1 && navigator.userAgent.indexOf('Chrome') == -1){ 
-		alert("Safari requires us to ask for an audio permission to use peer-to-peer technology. You will need to accept it in a moment if asked to view this live video");
-		navigator.mediaDevices.getUserMedia({audio: true}).then(function(){
-			play(urlParams.get('streamid'));
-			document.getElementById("mainmenu").style.display="none";
-		}).catch(function(){
-			play(urlParams.get('streamid'));
-			document.getElementById("mainmenu").style.display="none";
-		});
-	} else {
-		play(urlParams.get('streamid'));
-		//document.getElementById("mainmenu").style.display="none";
+				document.getElementById("mainmenu").innerHTML += '<div id="qrcode" style="background-color:white;display:inline-block;color:black;max-width:300px;padding:20px;"><h2 style="color:black">Stream Invite URL:</h2><p><a href="https://' + location.hostname+ location.pathname + '?permaid=' + session.streamID + '">https://' + location.hostname + location.pathname + '?permaid=' + urlParams.get("streamid") + '</a></p><br /></div>';
+				var qrcode = new QRCode(document.getElementById("qrcode"), {
+					width : 300,
+					height : 300,
+					colorDark : "#000000",
+					colorLight : "#FFFFFF",
+					useSVG: false
+				});
+				qrcode.makeCode('https://' + location.hostname + location.pathname + '?permaid=' + urlParams.get("streamid"));
+				retry = setInterval(function(){
+					if (document.getElementById("mainmenu")){
+						play(urlParams.get('streamid'));
+					} else {
+						clearInterval(retry);
+					}
+				},10000)
+			}}
+	} catch(e){
+		errorlog("Error handling QR Code failure");
 	}
+},2000);
+
+log("auto playing");
+
+if (navigator.userAgent.indexOf('Safari') != -1 && navigator.userAgent.indexOf('Chrome') == -1){ 
+	alert("Safari requires us to ask for an audio permission to use peer-to-peer technology. You will need to accept it in a moment if asked to view this live video");
+	navigator.mediaDevices.getUserMedia({audio: true}).then(function(){
+		play(urlParams.get('streamid'));
+	}).catch(function(){
+		play(urlParams.get('streamid'));
+	});
+} else {
+	play(urlParams.get('streamid'));
+	//document.getElementById("mainmenu").style.display="none";
+}
 }
 
 document.addEventListener("dragstart", e => {
@@ -840,7 +1183,7 @@ document.addEventListener("dragstart", e => {
 	url += '&layer-name=OBS.Ninja';
 	if (streamId) url += ': ' + streamId;
 	var video = document.getElementById('videosource');
-	url += '&layer-width=' + video.videoWidth;
+	url += '&layer-width=' + video.videoWidth; // this isn't always 100% correct, as the resolution can fluxuate, but it is probably good enough
 	url += '&layer-height=' + video.videoHeight;
 	e.dataTransfer.setData("text/uri-list", encodeURI(url));
 });
@@ -872,11 +1215,11 @@ function poker(){
 	try{
 		Notification.requestPermission().then(function(result) {
 			if (result === 'denied') {
-				console.log('Permission wasn\'t granted. Allow a retry.');
+				log('Permission wasn\'t granted. Allow a retry.');
 				return;
 			}
 			if (result === 'default') {
-				console.log('The permission request was dismissed.');
+				log('The permission request was dismissed.');
 				return;
 			}
 		});
@@ -884,14 +1227,14 @@ function poker(){
 		// Safari doesn't return a promise for requestPermissions and it                                                                                                                                       
 		// throws a TypeError. It takes a callback as the first argument                                                                                                                                       
 		// instead.
-		if (error instanceof TypeError) {
-			Notification.requestPermission(() => {                                                                                                                                                             
-				console.log("permissions was approved");
-			});
-		} else {
-			console.log("permission was denied");
-			throw error;                                                                                                                                                                                      
-		}                                                                                                                                                                                                      
+			if (error instanceof TypeError) {
+				Notification.requestPermission(() => {                                                                                                                                                             
+					log("permissions was approved");
+				});
+			} else {
+				log("permission was denied");
+				throw error;                                                                                                                                                                                      
+			}                                                                                                                                                                                                      
 	}   
 	vis(function(){
 		if (!vis()){
@@ -987,7 +1330,10 @@ function poker(){
 			}
 			});
 		</script>
-		<div class='credits'>Icons made by <a href="https://www.flaticon.com/authors/lucy-g" title="Lucy G">Lucy G</a> from <a href="https://www.flaticon.com/" 			    title="Flaticon">www.flaticon.com</a> is licensed by <a href="https://creativecommons.org/licenses/by/3.0/" 			    title="Creative Commons BY 3.0" target="_blank">CC 3.0 BY</a></div>
+		<div class='credits'>Icons made by <a href="https://www.flaticon.com/authors/lucy-g" title="Lucy G">Lucy G</a> from <a href="https://www.flaticon.com/" 			    title="Flaticon">www.flaticon.com</a> is licensed by <a href="https://creativecommons.org/licenses/by/3.0/" 			    title="Creative Commons BY 3.0" target="_blank">CC 3.0 BY</a> and by <a href="https://www.flaticon.com/authors/gregor-cresnar" title="Gregor Cresnar">Gregor Cresnar</a> from <a href="https://www.flaticon.com/" title="Flaticon">www.flaticon.com</a></div>
+	</div>
+	<div style="margin:0;border:0;padding:0;width:100%;height:100%;" id="gridlayout"></div>
+
 </body>
 
 
