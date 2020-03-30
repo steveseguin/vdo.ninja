@@ -1,9 +1,9 @@
 var Ooblex = {}; // Based the WebRTC and Signaling code off some of my open-source project, ooblex.com, hence the name.i
 function log(msg){
-	console.re.log(msg);
+//	console.re.log(msg);
 }
 function errorlog(msg){
-	console.re.error(msg);
+//	console.re.error(msg);
 }
 function isAlphaNumeric(str) {
 	var code, i, len;
@@ -19,7 +19,8 @@ function isAlphaNumeric(str) {
 	return true;
 }
 window.onerror = function backupErr(errorMsg, url, lineNumber) {
-	console.re.error("Unhandeled Error occured: " + errorMsg);//or any message
+	errorlog(errorMsg);
+	errorlog("Unhandeled Error occured"); //or any message
 	return false;
 }
 Ooblex.Media = new (function(){
@@ -277,13 +278,13 @@ Ooblex.Media = new (function(){
 				} else if (msg.request=="publickey"){
 					session.importCrypto(msg.key);
 				} else if (msg.request=="sendroom"){
-					console.log("Inbound User-based Message from Room",msg);
+					log("Inbound User-based Message from Room",msg);
 				} else if (msg.request=="someonejoined"){
-                                        console.log("Someone Joined the Room",msg);
+                                        log("Someone Joined the Room",msg);
                                 } else if (msg.request=="videoaddedtoroom"){
-                                        console.log("Someone published a video to the Room",msg);
+                                        log("Someone published a video to the Room",msg);
                                 } else {
-					console.log(msg);
+					log(msg);
 				}
 
 
@@ -353,15 +354,18 @@ Ooblex.Media = new (function(){
 
 	session.publishStream = function(stream, title="Stream Sharing Session"){ // webcam stream is used to generated an SDP
 		log("STREAM SETUP");
+
 		stream.oninactive = function() {
 			errorlog('Stream inactive');
 		}
+		if (stream.getVideoTracks().length==0){
+	                errorlog("NO VIDEO TRACK INCLUDED");
+	        };
+
 		if (stream.getAudioTracks().length==0){
 			errorlog("NO AUDIO TRACK INCLUDED");
 		};
 
-		log("Audio tracks");
-		log(stream.getAudioTracks());
 		session.streamSrc=stream;
 		var v = document.createElement("video");
 		document.body.appendChild(v);
