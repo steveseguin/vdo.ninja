@@ -3,8 +3,12 @@
 ## What's in this repo?
 This is the client-side software for OBS.ninja.  Feel free to use it as you will; code contributions very welcomed. You may be best suited at getting ahold of me at steve@seguin.email instead of via Github if urgent though.
 
-## HOW TO DEPLOY
-To use, just download and host on a HTTPS-enabled webserver. You may want to hide the .html extensions within your HTTP server as well. Customize as desired. Poke me at steve@seguin.email if you wish to commit your changes to obs.ninja directly. Directions on how to deploy a TURN server are listed in the turnserver.conf file.
+## How to Deploy this Repo:
+To use, just download and host on a HTTPS-enabled webserver. You may want to hide the .html extensions within your HTTP server as well. Customize as desired. Poke me at steve@seguin.email if you wish to commit your changes to obs.ninja directly. 
+
+Directions on how to deploy a TURN server are listed in the turnserver.conf file.  Useful for bypassing firewalls.
+
+Why deploy? You may want to customize the UI for your brand/business, or control security/privacy beyond what I do already. The server API is fairly flexible, so you can also add features that I do not include currently. Please be aware that the SERVER api changes often, at least at this point in early development, so it is best to CONTRIBUTE to this repo if you intend to keep things compatible.
 
 ## What is OBS NINJA
 OBS.ninja uses peer 2 peer technology to bring remote cameras into OBS. The server-side load is very small, so I am able to offer it as a service for free. Please see the sub-reddit for more details: https://reddit.com/r/obsninja
