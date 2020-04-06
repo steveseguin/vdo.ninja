@@ -4,9 +4,11 @@
 <meta content="text/html;charset=utf-8" http-equiv="Content-Type">
 <meta content="utf-8" http-equiv="encoding">
 <link rel="shortcut icon" href="data:image/x-icon;," type="image/x-icon"> 
+<link rel="stylesheet" href="font-awesome.min.css">
+<script type="text/javascript" src="https://webrtc.github.io/adapter/adapter-latest.js"></script>
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
+
 <script type="text/javascript" src="qrcode.min.js"></script>
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.0/jquery.min.js"></script>
 <style type="text/css">
         #mynetwork {
 		width: 600px;
@@ -60,8 +62,8 @@
 	max-width:100%;
 	max-height:100%
 }
-.vidcon:nth-of-type(3n) { grid-column: span 2; }
-.vidcon:nth-of-type(5n) {  grid-row: span 2;  }
+.vidcon:nth-of-type(3n) { grid-column:  2; }
+.vidcon:nth-of-type(3n) {  grid-row: span ;  }
 
 .tile {
 	object-fit: contain;
@@ -73,7 +75,7 @@
 	margin:0;
 }
 
-.gridlayout {
+#gridlayout {
 	display: grid;
 	width:100%;
 	height:100%;
@@ -81,10 +83,34 @@
 	overflow: hidden;
 	justify-items: stretch;
 	grid-auto-flow: dense;
+	grid-auto-columns:minmax(50%, auto);
+	grid-auto-rows: minmax(50%, auto);
+}
+
+.directorsgrid {
+	justify-items: normal;
+	grid-auto-columns: minmax(100px,300px);
+	grid-auto-rows: minmax(100px, 300px);
+	display:block ! important;
+
+}
+.directorsgrid video {
+	max-width: 300px;
+	max-height: 300px;
+	padding:10px 10px 0px 10px !important;
+}
+.directorsgrid .vidcon {
+	display: inline-block !important;
+	max-width: 300px !important;
+        max-height: 300px !important;
+	background: #E3E4EF;
+}
+.directorsgrid .tile {
+        width: auto;
+	height: auto;
 }
 
 html {
-	height: 100%;
 }
 
 
@@ -384,7 +410,7 @@ img {
 
 video {
 	flex: 1 1 auto;
-	background-color: black;
+	background-color: transparent !important;
 }
 
 
@@ -414,8 +440,10 @@ video {
 						}
 
 </style>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.0/jquery.min.js"></script>
 </head>
 <body  id="main">
+	<script language="javascript" type="text/javascript" src="./CodecsHandler.js"></script>
 	<script language="javascript" type="text/javascript" src="./webrtc.js"></script>
 
 	<div id="header">
@@ -430,7 +458,7 @@ video {
 			</div>
 
 			<div id="head4" style="display:inline-block" class='advanced'>
-				<font style="font-size:60%"> &nbsp You are in a director's view &nbsp </font>
+				<font style="font-size:60%"> &nbsp You are in the director's view for room:&nbsp <div id="dirroomid" style="font-size:140%;color:#99C;display:inline-block"></div></font>
 			</div>
 
 
@@ -450,14 +478,14 @@ video {
 	</div>
 
 	<div id="mainmenu" class="row" style="align:center;">
-		<div id="container-1" class="column columnfade" onclick="alert('THIS FEATURE IS COMING SOON\n\nProgress Update 3/30/20: Fixed a lot of priority issues, re-wrote the server to support group chat, and am aiming to have group-chat ready by Wednesday.');" style="background-color:#ddd;">
+		<div id="container-1" class="column columnfade" style="background-color:#ddd;">
 			<h2>Add Group Video Chat to OBS</h2>
 			(COMING VERY SOON)
 			<div class="container-inner">
 				<br /><br />
 				<p><input id="videoname1" placeholder="Enter a ROOM NAME here" size=35 maxlength=50 style="padding:5px;" /></br ><br /></p>
 				<li>Anyone can enter a room if they know the name, so keep it unique</li>
-				<li>Having more than four (4) people in a room is not advisable due to performance reasons</li>
+				<li>Having more than four (4) people in a room is not advisable due to performance reasons.</li>
 				<br />
 				With a room name entered, enter the room as a director. Links to invite guests will be provided.
 				<br />
@@ -550,10 +578,29 @@ video {
 		<form method="post" onsubmit="setFormSubmitting()" style="display:none;">
 			<input type="submit" />
 		</form>
-		<script>
+<script>
+/////////////
 
-			/////////////
-			var VIS = vis;
+// Some browsers partially implement mediaDevices. We can't just assign an object
+// with getUserMedia as it would overwrite existing properties.
+// Here, we will just add the getUserMedia property if it's missing.
+if (navigator.mediaDevices.getUserMedia === undefined) {
+	navigator.mediaDevices.getUserMedia = function(constraints) {
+     // First get ahold of the legacy getUserMedia, if present
+      	var getUserMedia = navigator.webkitGetUserMedia || navigator.mozGetUserMedia;
+      // Some browsers just don't implement it - return a rejected promise with an error
+		      // to keep a consistent interface
+	if (!getUserMedia) {
+		            return Promise.reject(new Error('getUserMedia is not implemented in this browser'));
+	        }
+      // Otherwise, wrap the call to the old navigator.getUserMedia with a Promise
+	     return new Promise(function(resolve, reject) {
+	           getUserMedia.call(navigator, constraints, resolve, reject);
+	          });
+	 }
+}
+			
+var VIS = vis;
 var formSubmitting = true;
 var setFormSubmitting = function() { formSubmitting = true; };
 window.onload = function() { // This just keeps people from killing the live stream accidentally. Also give me a headsup that the stream is ending
@@ -591,10 +638,57 @@ if (urlParams.has('permaid')){
 	var permaid  = urlParams.get('permaid');
 	session.changeStreamID(permaid);
 } 
+if (urlParams.has('stereo')){
+	log("STEREO ENABLED");
+        session.stereo = true;
+}
+
+if (urlParams.has('bitrate')){
+        session.bitrate = parseInt(urlParams.get('bitrate'));
+	log("BITRATE ENABLED");
+	log(session.bitrate);
+}
+if (urlParams.has('turn')){
+	try {
+		var turnstring = urlParams.get('turn').split(";");
+		var turn = {};
+		turn.username = turnstring[0]; // myusername
+		turn.credential = turnstring[1];  mypassword
+		turn.urls = [turnstring[2]]; //  ["turn:turn.obs.ninja:443"];
+		session.configuration.iceServers.push(turn);
+	} catch (e){
+		alert("TURN server parameters were wrong.");
+	}
+}
+
+
 var micvolume = 100;
 session.connect();
-
 session.volume = micvolume;
+if (urlParams.has('roomid')){
+	var roomid  = urlParams.get('roomid');
+	session.roomid = roomid;
+	document.getElementById("videoname1").value = roomid;
+	document.getElementById("dirroomid").innerHTML = roomid;
+	document.getElementById("roomid").innerHTML = roomid;
+	if (urlParams.has('scene')){
+		session.scene = urlParams.get('scene');
+		document.getElementById("container-4").className = 'column columnfade';
+		document.getElementById("container-3").className = 'column columnfade';
+		document.getElementById("container-2").className = 'column columnfade';
+		document.getElementById("container-1").className = 'column columnfade';
+		document.getElementById("header").className = 'advanced';
+		document.getElementById("info").className = 'advanced';
+		document.getElementById("header").className = 'advanced';
+		document.getElementById("head1").className = 'advanced';
+		document.getElementById("head2").className = 'advanced';
+		document.getElementById("head3").className = 'advanced';
+		document.getElementById("mainmenu").innerHTML = "";
+		joinRoom(roomid);
+	}
+}	
+
+
 
 function checkConnection(){
 	if (session.ws.readyState === WebSocket.OPEN) {
@@ -605,8 +699,8 @@ function checkConnection(){
 }
 setInterval(function(){checkConnection();},5000);
 
-function toggleMute(){
-	var msg = {};
+function toggleMute(){ // TODO: I need to have this be MUTE, toggle, with volume not touched.
+		var msg = {};
 	if (micvolume==0){
 		micvolume = 100;
 		document.getElementById("mutetoggle").className="fa fa-microphone my-float";
@@ -620,6 +714,54 @@ function toggleMute(){
 	session.volume = micvolume;
 	session.sendMessage(msg);
 }
+
+function directMute(ele){ // A directing room only is controlled by the Director, with the exception of MUTE.
+		log("mute");
+	var msg = {};
+	msg.request = "sendroom";
+	msg.roomid = session.roomid;
+	msg.director = "placeholder";
+	msg.action = "mute";
+	msg.value =  0;
+	msg.target = ele.dataset.UUID;
+	session.sendMsg(msg); // send to everyone in the room, so they know if they are on air or not.
+}
+
+
+function directVolume(ele){ // A directing room only is controlled by the Director, with the exception of MUTE.
+		log("volume");
+	var msg = {};
+	msg.request = "sendroom";
+	msg.roomid = session.roomid;
+	msg.director = "placeholder";
+	msg.action = "volume";
+	msg.value = ele.value;
+	msg.target = ele.dataset.UUID; // i want to focus on the STREAM ID, not the UUID...
+		session.sendMsg(msg); // send to everyone in the room, so they know if they are on air or not.
+}
+
+function directVisibility(ele){ // A directing room only is controlled by the Director, with the exception of MUTE.
+		log("display ");
+	var msg = {};
+	msg.request = "sendroom";
+	msg.roomid = session.roomid;
+	msg.director = "placeholder";
+	msg.action = "display";
+	msg.value = 0;
+	msg.target = ele.dataset.UUID;
+	session.sendMsg(msg); // send to everyone in the room, so they know if they are on air or not.
+}
+
+function chatRoom(chatmessage="hi"){ // A directing room only is controlled by the Director, with the exception of MUTE.
+		log("display ");
+	var msg = {};
+	msg.request = "sendroom";
+	msg.roomid = session.roomid;
+	msg.action = "chat";
+	msg.value = chatmessage;
+	session.sendMsg(msg); // send to everyone in the room, so they know if they are on air or not.
+}
+
 
 function changeTitle(aTitle="Untitled"){
 	log("changing title; if connected at least");
@@ -640,11 +782,11 @@ function publishScreen(){
 
 	if (urlParams.has('width')){
 		width = urlParams.get('width');
-		width = {exact: width};
+		width = {ideal: width};
 	}
 	if (urlParams.has('height')){
 		height = urlParams.get('height');
-		height = {exact: height};
+		height = {ideal: height};
 	}
 
 	var constraints = window.constraints = {
@@ -676,6 +818,10 @@ function publishWebcam(){
 
 	formSubmitting = false;
 	window.scrollTo(0, 0); // iOS has a nasty habit of overriding the CSS when changing camaera selections, so this addresses that.
+
+		joinRoom(session.roomid,300);
+
+
 	session.publishStream(stream, title);
 	log("streamID is: "+session.streamID);
 	document.getElementById("head1").className = 'advanced';
@@ -684,15 +830,38 @@ function publishWebcam(){
 
 	document.getElementById("mutebutton").className="float3";
 	document.getElementById("helpbutton").className="float2";
-	
+
 
 }
 
-function joinRoom(roomname){
-	log("Join room",roomname);
-	session.joinRoom(roomname).then(function(response){
-		log("Members in Room",response);
-	},function(error){return {}});
+function joinRoom(roomname, maxbitrate=false){
+	roomname = roomname.replace(/[^0-9a-z]/gi, '');
+		if (roomname.length){
+			log("Join room",roomname);
+			session.joinRoom(roomname,maxbitrate).then(function(response){
+				log("Members in Room");
+				log(response);
+				for (i in response){
+					if ("UUID" in response[i]){
+						if ("streamID" in response[i]){
+							if (response[i]['UUID'] in session.pcs){
+								console.log("RTC already connected"); /// lets just say instead of Stream, we have 
+							} else {
+								//var title = "";
+								//if ("title" in response[i]){
+									//	title = response[i]["title"];
+									//}
+								console.log("PLAYING VIDEO 729");
+								session.watchStream(response[i]['streamID']); // How do I make sure they aren't requesting the same movie twice as a race condition?
+							}
+						}
+					}
+				}
+
+			},function(error){return {}});
+		} else {
+			errorlog("Room name not long enough or contained all bad characaters");
+		}	
 }
 
 
@@ -706,7 +875,7 @@ function createRoom(){
 	}
 
 	var gridlayout = document.getElementById("gridlayout");
-	gridlayout.className = "gridlayout";
+	gridlayout.classList.add("directorsgrid");
 
 	//	var sheet = document.createElement('style');
 	//	sheet.innerHTML = ".tile{object-fit:contain  }";
@@ -729,6 +898,7 @@ function createRoom(){
 
 	//document.getElementById("mutebutton").className="float3";
 	//document.getElementById("helpbutton").className="float2";
+	session.director = true;
 	joinRoom(roomname);
 
 }
@@ -779,7 +949,7 @@ function gotDevices(deviceInfos) { // https://github.com/webrtc/samples/blob/gh-
 	// TODO: Add in the option to select the OUTPUT and Disable Mic/Cam
 
 	// Handles being called several times to update labels. Preserve values.
-	const values = selectors.map(select => select.value);
+		const values = selectors.map(select => select.value);
 	selectors.forEach(select => {
 		while (select.firstChild) {
 			select.removeChild(select.firstChild);
@@ -799,12 +969,12 @@ function gotDevices(deviceInfos) { // https://github.com/webrtc/samples/blob/gh-
 		} else {
 			log('Some other kind of source/device: ', deviceInfo);
 		}
+}
+selectors.forEach((select, selectorIndex) => {
+	if (Array.prototype.slice.call(select.childNodes).some(n => n.value === values[selectorIndex])) {
+		select.value = values[selectorIndex];
 	}
-	selectors.forEach((select, selectorIndex) => {
-		if (Array.prototype.slice.call(select.childNodes).some(n => n.value === values[selectorIndex])) {
-			select.value = values[selectorIndex];
-		}
-	});
+});
 }
 
 function handleError(error) {
@@ -883,8 +1053,8 @@ function getUserMediaVideoParams(resolutionFallbackLevel, isSafariBrowser) {
 			}
 			else {
 				return {
-					width: { min: 360, ideal: 640, max: 1440 },
-					height: { min: 360, ideal: 360, max: 720 }
+					width: { min: 360, ideal: 640, max: 3840 },
+					height: { min: 360, ideal: 360, max: 2160 }
 				};
 			}
 		case 6:
@@ -892,17 +1062,20 @@ function getUserMediaVideoParams(resolutionFallbackLevel, isSafariBrowser) {
 				return {}; // iphone users probably don't need to wait any longer, so let them just get to it
 			}
 			else {
-				return { // If the camera is recording in low-light, it may have a low framerate. It coudl also be recording at a very high resolution.
-					width: { min: 360, ideal: 640 },
-					height: { min: 360, ideal: 360 },
-					framerate: 10
-				};
+				return {width: {min:360,max:1920}, height: {min:360, max:1920}}; // same as default, but I didn't want to mess with framerates until I gave it all a try first
 			}
 		case 7:
-			return {}; // same as default, but I didn't want to mess with framerates until I gave it all a try first
+			return { // If the camera is recording in low-light, it may have a low framerate. It coudl also be recording at a very high resolution.
+				width: { min: 360, ideal: 640 },
+				height: { min: 360, ideal: 360 },
+				framerate: 10
+			};
+
 		case 8:
+			return {width: {min:360,max:1920}, height: {min:360, max:1920}}; // same as default, but I didn't want to mess with framerates until I gave it all a try first
+		case 9:
 			return {framerate: 0 };  // Some Samsung Devices report they can only support a framerate of 0.
-		default:
+				default:
 			return {}; 
 	}
 }
@@ -918,7 +1091,13 @@ function grabVideo(quality=0, audio=false){
 	var iOS = !!navigator.platform && /iPad|iPhone|iPod/.test(navigator.platform);
 
 	if (audio==true){
-		audio = {deviceId: {exact: audioSelect.value}}
+		audio = {deviceId: {exact: audioSelect.value}};
+		if (urlParams.has('stereo')){
+			audio.echoCancellation = false;
+			audio.autoGainControl = false;
+			audio.noiseSuppression = false;
+		}
+
 	}
 	var constraints = {
 		audio: audio,
@@ -953,7 +1132,7 @@ function grabVideo(quality=0, audio=false){
 		navigator.mediaDevices.getUserMedia(constraints).then(function(stream){
 			if (audio ==false){
 				stream.getTracks().forEach(function(track) { // We don't want to keep it without audio; so we are going to try to add audio now.
-					track.stop();
+						track.stop();
 				});
 				log("GOT IT BUT WITH NO AUDIO");
 				activatedPreview = false;
@@ -964,88 +1143,94 @@ function grabVideo(quality=0, audio=false){
 			}
 		}).catch(function(e){
 			activatedPreview = false;
+			errorlog(e);
 			if (e.name === "OverconstrainedError"){
+				errorlog(e.message);
 				log("Resolution didn't work");
 			} else if (e.name === "NotReadableError"){
-				alert("Error Listing Media Devices.\n\nThe default Camera may already be in use with another app. Typically webcams can only be accessed by one program at a time.\n\nThe selected device may also not be supported.");
+				if (iOS){
+					alert("An error occured. Upgrading to at least iOS 13.4 should fix this glitch from happening again");
+				} else {
+					alert("Error Listing Media Devices.\n\nThe default Camera may already be in use with another app. Typically webcams can only be accessed by one program at a time.\n\nThe selected device may also not be supported.");
+				}
 				activatedPreview=true;
 				return;
 			} else if (e.name === "NavigatorUserMediaError"){
 				alert("Unknown error: 'NavigatorUserMediaError'"); 
 				return;
 			} else {
-				errorlog(e);
+				errorlog("An unknown camera error occured");
 			}
-			if (quality<=8){
-				grabVideo(quality+1);
-			} else {
-				errorlog(e);
-				activatedPreview=true;
-				alert("Camera is over-constrained. Please report which camera/device/browser you are using to steve@seguin.email");
-			}
-		});
-	},0);
-}
+			if (quality<=9){
+	  grabVideo(quality+1);
+	  } else {
+	  errorlog("********Camera failed to work");
+	  activatedPreview=true;
+	  alert("Camera failed to load. Please report which camera/device/browser you are using to steve@seguin.email");
+	  }
+	  });
+	  },0);
+	  }
 
-var activatedPreview = false;
-function previewWebcam(){
-	if( activatedPreview == true){log("activeated preview return");return;}
-	activatedPreview = true;
+	  var activatedPreview = false;
+	  function previewWebcam(){
+	  if( activatedPreview == true){log("activeated preview return");return;}
+	  activatedPreview = true;
 
-	var audioSelect = document.querySelector('select#audioSource');
-	var videoSelect = document.querySelector('select#videoSource');
+	  var audioSelect = document.querySelector('select#audioSource');
+	  var videoSelect = document.querySelector('select#videoSource');
 
-	var constraints = {audio:true, video:true };
+	  var constraints = {audio:true, video:true };
 
 
-	window.setTimeout(() => {
+	  window.setTimeout(() => {
 
-		var oldstream= document.getElementById('previewWebcam').srcObject;
-		if (oldstream){
-			oldstream.getTracks().forEach(function(track) {
-				track.stop();
-			});
-		}
+		  var oldstream= document.getElementById('previewWebcam').srcObject;
+		  if (oldstream){
+			  oldstream.getTracks().forEach(function(track) {
+				  track.stop();
+			  });
+		  }
 
-		navigator.mediaDevices.getUserMedia(constraints).then(function(stream){ // Apple needs thi to happen before I can access EnumerateDevices. 
-			//document.getElementById('previewWebcam').srcObject=stream;
-				stream.getTracks().forEach(function(track) { // We don't want to keep it without audio; so we are going to try to add audio now.
-				       track.stop();
-				});
-				enumerateDevices().then(gotDevices).then(function(){
+		  navigator.mediaDevices.getUserMedia(constraints).then(function(stream){ // Apple needs thi to happen before I can access EnumerateDevices. 
+				  //document.getElementById('previewWebcam').srcObject=stream;
+			  stream.getTracks().forEach(function(track) { // We don't want to keep it without audio; so we are going to try to add audio now.
+					  track.stop();
+			  });
+			  enumerateDevices().then(gotDevices).then(function(){
 
-					var audioSelect = document.querySelector('select#audioSource');
-					var videoSelect = document.querySelector('select#videoSource');
+				  var audioSelect = document.querySelector('select#audioSource');
+				  var videoSelect = document.querySelector('select#videoSource');
 
-					audioSelect.onchange = function(){log("AUDIO source CHANGED");activatedPreview=false;grabVideo();};
-					videoSelect.onchange = function(){log("video source changed");activatedPreview=false;grabVideo();};
-					activatedPreview = false;
-					grabVideo();
+				  audioSelect.onchange = function(){log("AUDIO source CHANGED");activatedPreview=false;grabVideo();};
+				  videoSelect.onchange = function(){log("video source changed");activatedPreview=false;grabVideo();};
+				  activatedPreview = false;
+				  grabVideo();
 
-				}).catch(handleError);
-		}).catch(function(e){
-			if (e.name === "NotReadableError"){
-				window.setTimeout(() => {
-					enumerateDevices().then(gotDevices).then(function(){
+			  }).catch(handleError);
+		  }).catch(function(e){
+			  if (e.name === "NotReadableError"){
+				  window.setTimeout(() => {
+					  enumerateDevices().then(gotDevices).then(function(){
 
-						var audioSelect = document.querySelector('select#audioSource');
-						var videoSelect = document.querySelector('select#videoSource');
+						  var audioSelect = document.querySelector('select#audioSource');
+						  var videoSelect = document.querySelector('select#videoSource');
 
-						audioSelect.onchange = function(){log("AUDIO source CHANGED");activatedPreview=false;grabVideo();};
-						videoSelect.onchange = function(){log("video source changed");activatedPreview=false;grabVideo();};
-						activatedPreview = false;
-						grabVideo();
+						  audioSelect.onchange = function(){log("AUDIO source CHANGED");activatedPreview=false;grabVideo();};
+						  videoSelect.onchange = function(){log("video source changed");activatedPreview=false;grabVideo();};
+						  activatedPreview = false;
+						  grabVideo();
 
-					}).catch(handleError);
-				},0);
-			} else if (e.name === "NotAllowedError"){
-				alert("Error: Cannot access media devices \n\nPlease ensure both CAMERA and MICROPHONE permissions are allowed for this website to continue");
-			} else {
-				errorlog(e);
-			}
-		});
-	},0);
-}
+					  }).catch(handleError);
+				  },0);
+			  } else if (e.name === "NotAllowedError"){
+				  alert("Error: Cannot access media devices \n\nPlease ensure both CAMERA and MICROPHONE permissions are allowed for this website to continue");
+			  } else {
+				  errorlog(e);
+			  }
+		  });
+	  },0);
+	  }
 
 
 function checkOBS(){
@@ -1112,7 +1297,7 @@ function generateQRPage(ele){
 }
 
 
-var urlParams = new URLSearchParams(window.location.search);
+
 if (urlParams.has('streamid')){
 	document.getElementById("container-4").className = 'column columnfade';
 	document.getElementById("container-3").className = 'column columnfade';
@@ -1124,42 +1309,42 @@ if (urlParams.has('streamid')){
 	document.getElementById("head1").className = 'advanced';
 	document.getElementById("head2").className = 'advanced';
 	document.getElementById("head3").className = 'advanced';
-	document.getElementById("roomid").innerHTML = urlParams.get('streamid');
+
 	document.getElementById("mainmenu").style.backgroundImage = "url('data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBzdGFuZGFsb25lPSJubyI/Pgo8IURPQ1RZUEUgc3ZnIFBVQkxJQyAiLS8vVzNDLy9EVEQgU1ZHIDEuMS8vRU4iICJodHRwOi8vd3d3LnczLm9yZy9HcmFwaGljcy9TVkcvMS4xL0RURC9zdmcxMS5kdGQiPgo8c3ZnIHdpZHRoPSI0MHB4IiBoZWlnaHQ9IjQwcHgiIHZpZXdCb3g9IjAgMCA0MCA0MCIgdmVyc2lvbj0iMS4xIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHhtbG5zOnhsaW5rPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5L3hsaW5rIiB4bWw6c3BhY2U9InByZXNlcnZlIiBzdHlsZT0iZmlsbC1ydWxlOmV2ZW5vZGQ7Y2xpcC1ydWxlOmV2ZW5vZGQ7c3Ryb2tlLWxpbmVqb2luOnJvdW5kO3N0cm9rZS1taXRlcmxpbWl0OjEuNDE0MjE7IiB4PSIwcHgiIHk9IjBweCI+CiAgICA8ZGVmcz4KICAgICAgICA8c3R5bGUgdHlwZT0idGV4dC9jc3MiPjwhW0NEQVRBWwogICAgICAgICAgICBALXdlYmtpdC1rZXlmcmFtZXMgc3BpbiB7CiAgICAgICAgICAgICAgZnJvbSB7CiAgICAgICAgICAgICAgICAtd2Via2l0LXRyYW5zZm9ybTogcm90YXRlKDBkZWcpCiAgICAgICAgICAgICAgfQogICAgICAgICAgICAgIHRvIHsKICAgICAgICAgICAgICAgIC13ZWJraXQtdHJhbnNmb3JtOiByb3RhdGUoLTM1OWRlZykKICAgICAgICAgICAgICB9CiAgICAgICAgICAgIH0KICAgICAgICAgICAgQGtleWZyYW1lcyBzcGluIHsKICAgICAgICAgICAgICBmcm9tIHsKICAgICAgICAgICAgICAgIHRyYW5zZm9ybTogcm90YXRlKDBkZWcpCiAgICAgICAgICAgICAgfQogICAgICAgICAgICAgIHRvIHsKICAgICAgICAgICAgICAgIHRyYW5zZm9ybTogcm90YXRlKC0zNTlkZWcpCiAgICAgICAgICAgICAgfQogICAgICAgICAgICB9CiAgICAgICAgICAgIHN2ZyB7CiAgICAgICAgICAgICAgICAtd2Via2l0LXRyYW5zZm9ybS1vcmlnaW46IDUwJSA1MCU7CiAgICAgICAgICAgICAgICAtd2Via2l0LWFuaW1hdGlvbjogc3BpbiAxLjVzIGxpbmVhciBpbmZpbml0ZTsKICAgICAgICAgICAgICAgIC13ZWJraXQtYmFja2ZhY2UtdmlzaWJpbGl0eTogaGlkZGVuOwogICAgICAgICAgICAgICAgYW5pbWF0aW9uOiBzcGluIDEuNXMgbGluZWFyIGluZmluaXRlOwogICAgICAgICAgICB9CiAgICAgICAgXV0+PC9zdHlsZT4KICAgIDwvZGVmcz4KICAgIDxnIGlkPSJvdXRlciI+CiAgICAgICAgPGc+CiAgICAgICAgICAgIDxwYXRoIGQ9Ik0yMCwwQzIyLjIwNTgsMCAyMy45OTM5LDEuNzg4MTMgMjMuOTkzOSwzLjk5MzlDMjMuOTkzOSw2LjE5OTY4IDIyLjIwNTgsNy45ODc4MSAyMCw3Ljk4NzgxQzE3Ljc5NDIsNy45ODc4MSAxNi4wMDYxLDYuMTk5NjggMTYuMDA2MSwzLjk5MzlDMTYuMDA2MSwxLjc4ODEzIDE3Ljc5NDIsMCAyMCwwWiIgc3R5bGU9ImZpbGw6YmxhY2s7Ii8+CiAgICAgICAgPC9nPgogICAgICAgIDxnPgogICAgICAgICAgICA8cGF0aCBkPSJNNS44NTc4Niw1Ljg1Nzg2QzcuNDE3NTgsNC4yOTgxNSA5Ljk0NjM4LDQuMjk4MTUgMTEuNTA2MSw1Ljg1Nzg2QzEzLjA2NTgsNy40MTc1OCAxMy4wNjU4LDkuOTQ2MzggMTEuNTA2MSwxMS41MDYxQzkuOTQ2MzgsMTMuMDY1OCA3LjQxNzU4LDEzLjA2NTggNS44NTc4NiwxMS41MDYxQzQuMjk4MTUsOS45NDYzOCA0LjI5ODE1LDcuNDE3NTggNS44NTc4Niw1Ljg1Nzg2WiIgc3R5bGU9ImZpbGw6cmdiKDIxMCwyMTAsMjEwKTsiLz4KICAgICAgICA8L2c+CiAgICAgICAgPGc+CiAgICAgICAgICAgIDxwYXRoIGQ9Ik0yMCwzMi4wMTIyQzIyLjIwNTgsMzIuMDEyMiAyMy45OTM5LDMzLjgwMDMgMjMuOTkzOSwzNi4wMDYxQzIzLjk5MzksMzguMjExOSAyMi4yMDU4LDQwIDIwLDQwQzE3Ljc5NDIsNDAgMTYuMDA2MSwzOC4yMTE5IDE2LjAwNjEsMzYuMDA2MUMxNi4wMDYxLDMzLjgwMDMgMTcuNzk0MiwzMi4wMTIyIDIwLDMyLjAxMjJaIiBzdHlsZT0iZmlsbDpyZ2IoMTMwLDEzMCwxMzApOyIvPgogICAgICAgIDwvZz4KICAgICAgICA8Zz4KICAgICAgICAgICAgPHBhdGggZD0iTTI4LjQ5MzksMjguNDkzOUMzMC4wNTM2LDI2LjkzNDIgMzIuNTgyNCwyNi45MzQyIDM0LjE0MjEsMjguNDkzOUMzNS43MDE5LDMwLjA1MzYgMzUuNzAxOSwzMi41ODI0IDM0LjE0MjEsMzQuMTQyMUMzMi41ODI0LDM1LjcwMTkgMzAuMDUzNiwzNS43MDE5IDI4LjQ5MzksMzQuMTQyMUMyNi45MzQyLDMyLjU4MjQgMjYuOTM0MiwzMC4wNTM2IDI4LjQ5MzksMjguNDkzOVoiIHN0eWxlPSJmaWxsOnJnYigxMDEsMTAxLDEwMSk7Ii8+CiAgICAgICAgPC9nPgogICAgICAgIDxnPgogICAgICAgICAgICA8cGF0aCBkPSJNMy45OTM5LDE2LjAwNjFDNi4xOTk2OCwxNi4wMDYxIDcuOTg3ODEsMTcuNzk0MiA3Ljk4NzgxLDIwQzcuOTg3ODEsMjIuMjA1OCA2LjE5OTY4LDIzLjk5MzkgMy45OTM5LDIzLjk5MzlDMS43ODgxMywyMy45OTM5IDAsMjIuMjA1OCAwLDIwQzAsMTcuNzk0MiAxLjc4ODEzLDE2LjAwNjEgMy45OTM5LDE2LjAwNjFaIiBzdHlsZT0iZmlsbDpyZ2IoMTg3LDE4NywxODcpOyIvPgogICAgICAgIDwvZz4KICAgICAgICA8Zz4KICAgICAgICAgICAgPHBhdGggZD0iTTUuODU3ODYsMjguNDkzOUM3LjQxNzU4LDI2LjkzNDIgOS45NDYzOCwyNi45MzQyIDExLjUwNjEsMjguNDkzOUMxMy4wNjU4LDMwLjA1MzYgMTMuMDY1OCwzMi41ODI0IDExLjUwNjEsMzQuMTQyMUM5Ljk0NjM4LDM1LjcwMTkgNy40MTc1OCwzNS43MDE5IDUuODU3ODYsMzQuMTQyMUM0LjI5ODE1LDMyLjU4MjQgNC4yOTgxNSwzMC4wNTM2IDUuODU3ODYsMjguNDkzOVoiIHN0eWxlPSJmaWxsOnJnYigxNjQsMTY0LDE2NCk7Ii8+CiAgICAgICAgPC9nPgogICAgICAgIDxnPgogICAgICAgICAgICA8cGF0aCBkPSJNMzYuMDA2MSwxNi4wMDYxQzM4LjIxMTksMTYuMDA2MSA0MCwxNy43OTQyIDQwLDIwQzQwLDIyLjIwNTggMzguMjExOSwyMy45OTM5IDM2LjAwNjEsMjMuOTkzOUMzMy44MDAzLDIzLjk5MzkgMzIuMDEyMiwyMi4yMDU4IDMyLjAxMjIsMjBDMzIuMDEyMiwxNy43OTQyIDMzLjgwMDMsMTYuMDA2MSAzNi4wMDYxLDE2LjAwNjFaIiBzdHlsZT0iZmlsbDpyZ2IoNzQsNzQsNzQpOyIvPgogICAgICAgIDwvZz4KICAgICAgICA8Zz4KICAgICAgICAgICAgPHBhdGggZD0iTTI4LjQ5MzksNS44NTc4NkMzMC4wNTM2LDQuMjk4MTUgMzIuNTgyNCw0LjI5ODE1IDM0LjE0MjEsNS44NTc4NkMzNS43MDE5LDcuNDE3NTggMzUuNzAxOSw5Ljk0NjM4IDM0LjE0MjEsMTEuNTA2MUMzMi41ODI0LDEzLjA2NTggMzAuMDUzNiwxMy4wNjU4IDI4LjQ5MzksMTEuNTA2MUMyNi45MzQyLDkuOTQ2MzggMjYuOTM0Miw3LjQxNzU4IDI4LjQ5MzksNS44NTc4NloiIHN0eWxlPSJmaWxsOnJnYig1MCw1MCw1MCk7Ii8+CiAgICAgICAgPC9nPgogICAgPC9nPgo8L3N2Zz4K')";
 
-document.getElementById("mainmenu").style.backgroundRepeat = "no-repeat";
-document.getElementById("mainmenu").style.backgroundPosition = "bottom center";
-document.getElementById("mainmenu").style.minHeight = "300px";
-document.getElementById("mainmenu").style.backgroundSize = "100px 100px";
-document.getElementById("mainmenu").innerHTML = '<font style="color:#666"><h1>Attempting to load video stream.</h1></font>';
+	document.getElementById("mainmenu").style.backgroundRepeat = "no-repeat";
+	document.getElementById("mainmenu").style.backgroundPosition = "bottom center";
+	document.getElementById("mainmenu").style.minHeight = "300px";
+	document.getElementById("mainmenu").style.backgroundSize = "100px 100px";
+	document.getElementById("mainmenu").innerHTML = '<font style="color:#666"><h1>Attempting to load video stream.</h1></font>';
 
-setTimeout(function(){
-	try{
-		if (urlParams.get("streamid")){
-			if (document.getElementById("mainmenu")){
-				document.getElementById("mainmenu").innerHTML += '<font style="color:#EEE">If the stream does not load within a few seconds, the stream may not be available or some other error has occured. If the issue persists, please check out the <a href="https://reddit.com/r/obsninja">https://reddit.com/r/obsninja</a> for possible solutions or contact <a href="mailto:steve@seguin.email" target="_top">steve@seguin.email</a>.</font><br/><button onclick="location.reload();">Retry Connecting</button><br/>';
+	setTimeout(function(){
+		try{
+			if (urlParams.get("streamid")){
+				if (document.getElementById("mainmenu")){
+					document.getElementById("mainmenu").innerHTML += '<font style="color:#EEE">If the stream does not load within a few seconds, the stream may not be available or some other error has occured. If the issue persists, please check out the <a href="https://reddit.com/r/obsninja">https://reddit.com/r/obsninja</a> for possible solutions or contact <a href="mailto:steve@seguin.email" target="_top">steve@seguin.email</a>.</font><br/><button onclick="location.reload();">Retry Connecting</button><br/>';
 
-				document.getElementById("mainmenu").innerHTML += '<div id="qrcode" style="background-color:white;display:inline-block;color:black;max-width:300px;padding:20px;"><h2 style="color:black">Stream Invite URL:</h2><p><a href="https://' + location.hostname+ location.pathname + '?permaid=' + session.streamID + '">https://' + location.hostname + location.pathname + '?permaid=' + urlParams.get("streamid") + '</a></p><br /></div>';
-				var qrcode = new QRCode(document.getElementById("qrcode"), {
-					width : 300,
-					height : 300,
-					colorDark : "#000000",
-					colorLight : "#FFFFFF",
-					useSVG: false
-				});
-				qrcode.makeCode('https://' + location.hostname + location.pathname + '?permaid=' + urlParams.get("streamid"));
-				retry = setInterval(function(){
-					if (document.getElementById("mainmenu")){
-						play(urlParams.get('streamid'));
-					} else {
-						clearInterval(retry);
-					}
-				},10000)
-			}}
-	} catch(e){
-		errorlog("Error handling QR Code failure");
-	}
-},2000);
+					document.getElementById("mainmenu").innerHTML += '<div id="qrcode" style="background-color:white;display:inline-block;color:black;max-width:300px;padding:20px;"><h2 style="color:black">Stream Invite URL:</h2><p><a href="https://' + location.hostname+ location.pathname + '?permaid=' + session.streamID + '">https://' + location.hostname + location.pathname + '?permaid=' + urlParams.get("streamid") + '</a></p><br /></div>';
+					var qrcode = new QRCode(document.getElementById("qrcode"), {
+						width : 300,
+						height : 300,
+						colorDark : "#000000",
+						colorLight : "#FFFFFF",
+						useSVG: false
+					});
+					qrcode.makeCode('https://' + location.hostname + location.pathname + '?permaid=' + urlParams.get("streamid"));
+					retry = setInterval(function(){
+						if (document.getElementById("mainmenu")){
+							play(urlParams.get('streamid'));
+						} else {
+							clearInterval(retry);
+						}
+					},10000)
+				}}
+		} catch(e){
+			errorlog("Error handling QR Code failure");
+		}
+	},2000);
 
 log("auto playing");
 
@@ -1333,6 +1518,10 @@ function poker(){
 		<div class='credits'>Icons made by <a href="https://www.flaticon.com/authors/lucy-g" title="Lucy G">Lucy G</a> from <a href="https://www.flaticon.com/" 			    title="Flaticon">www.flaticon.com</a> is licensed by <a href="https://creativecommons.org/licenses/by/3.0/" 			    title="Creative Commons BY 3.0" target="_blank">CC 3.0 BY</a> and by <a href="https://www.flaticon.com/authors/gregor-cresnar" title="Gregor Cresnar">Gregor Cresnar</a> from <a href="https://www.flaticon.com/" title="Flaticon">www.flaticon.com</a></div>
 	</div>
 	<div style="margin:0;border:0;padding:0;width:100%;height:100%;" id="gridlayout"></div>
+	<div id="controls_blank" style="display:none"><center>
+			<button>Enable</button><button onclick="directMute(this.parentNode.parentNode);">Mute</button><button onclick="directVisibility(this.parentNode.parentNode);">Pause</button><input type="range" min="0" max="100" onclick="directVolume(this.parentNode.parentNode);"><br />
+			<a href="https://obs.ninja/?streamid=xxxxx">https://obs.ninja/?streamid=xxxxx</a>
+		</center></div>
 
 </body>
 
