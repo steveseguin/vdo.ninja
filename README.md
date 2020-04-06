@@ -7,7 +7,9 @@ This is the client-side software for OBS.ninja.  Feel free to use it as you will
 To use, just download and host on a HTTPS-enabled webserver. You may want to hide the .html extensions within your HTTP server as well. Customize as desired. Poke me at steve@seguin.email if you wish to commit your changes to obs.ninja directly. Directions on how to deploy a TURN server are listed in the turnserver.conf file.
 
 ## What is OBS NINJA
-OBS.ninja uses peer 2 peer technology, so the server-side load is very small for most applications. 
+OBS.ninja uses peer 2 peer technology to bring remote cameras into OBS. The server-side load is very small, so I am able to offer it as a service for free. Please see the sub-reddit for more details: https://reddit.com/r/obsninja
+
+I demo the basic usage of OBS.ninja also on YoutuBe: https://www.youtube.com/watch?v=6R_sQKxFAhg
 
 ## Server side / API software?
 The Server-side software uses code from my other project, https://Steves.app and https://meshcast.io  I have not made the server side software public yet, but the API remains free to access and use. If it gets abused, I'll put up restrictions. I do my best to not collect data of any type, but I may do so to improve the service, such as monitoring site usage, logging errors, or ensuring reliable connectivity.
