@@ -1,9 +1,9 @@
 var Ooblex = {}; // Based the WebRTC and Signaling code off some of my open-source project, ooblex.com, hence the name.i
 function log(msg){
-	console.log(msg);
+//	console.log(msg);
 }
 function errorlog(msg){
-	console.error(msg);
+//	console.error(msg);
 }
 function isAlphaNumeric(str) {
 	var code, i, len;
@@ -40,8 +40,13 @@ Ooblex.Media = new (function(){
 		return promise;
 	}
 
-	session.configuration = {iceServers: [{ urls: ["stun:stun1.l.google.com:19302", "stun:stun2.l.google.com:19305" ]}, {urls:["stun:turnserver.appearin.net:443"]}]};
-//	var turn = {};
+	session.configuration =
+                {iceServers: [
+                { urls: ["stun:stun.l.google.com:19302", "stun:stun4.l.google.com:19302" ]},
+                { urls: ["stun:global.stun:3478?transport=udp"]},
+                { urls: ["stun:stun.stunprotocol.org:3478"]}
+                ]};
+	//	var turn = {};
 //	turn.username = "steve";
 //	turn.credential = "justtesting";
 //	turn.urls = ["turn:turn.obs.ninja:443"];
@@ -64,6 +69,8 @@ Ooblex.Media = new (function(){
 	session.screenshare = false;
 	session.director = false;
 	session.scene = false;
+	session.single = false;
+	session.roomid = false;
 	session.generateStreamID = function(){
 		var text = "";
 		var possible = "ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnpqrstuvwxyz023456789";
@@ -162,7 +169,7 @@ Ooblex.Media = new (function(){
 			video: kbps // 256kbits (both min-max)
 		};
 		// https://cdn.webrtc-experiment.com/CodecsHandler.js	
-		//sdp = CodecsHandler.preferCodec(sdp, 'h264');
+	//	sdp = CodecsHandler.preferCodec(sdp, 'h264');
 		sdp = CodecsHandler.setApplicationSpecificBandwidth(sdp, bandwidth, screenshare);
 		sdp = CodecsHandler.setVideoBitrates(sdp, {
 			min: bandwidth.video,
@@ -292,15 +299,53 @@ Ooblex.Media = new (function(){
 					session.importCrypto(msg.key, msg.streamID);
 				} else if (msg.request=="sendroom"){ // send a message to those in the group via server. p2p is probably the preferred method, but not always possible
 					log("Inbound User-based Message from Room");
+					try {
 					if ("director" in msg){
 						if (msg['director'] === session.scene){
 							if ("action" in msg){
-								if (msg['action'] == "mute"){
-									if ("target" in msg){
-										for (i in session.rpcs){ // If you are VIEWING this use
-											if (i === msg["target"]){
-												alert("MUTE");
-												
+								if ("target" in msg){
+									for (i in session.rpcs){ // If you are VIEWING this use
+										if (i === msg["target"]){
+											if ("value" in msg){
+												if (msg['action'] == "mute"){	
+													if (msg['value'] == 0){
+														log("Mute video -306");
+														document.getElementById("videosource_"+i).muted = true;
+														document.getElementById("videosource_"+i).dataset.director = 0;
+													} else {
+														log("Unmute video");
+														document.getElementById("videosource_"+i).dataset.director = 1;
+														if ("publisher" in document.getElementById("videosource_"+i)){
+															if (document.getElementById("videosource_"+i).dataset.publisher == 0){
+																log("did not mute");
+																return;} // if the publisher wants it muted. it says muted
+														}
+														document.getElementById("videosource_"+i).muted = false;
+													}
+												}  else if (msg['action'] == "display"){
+													if (session.single){log("We don't hide dedicated views");}
+													else if (msg['value'] == 0) { 
+														document.getElementById("videosource_"+i).style.display="none";
+													} else { 
+														document.getElementById("videosource_"+i).style.display="block";
+
+														if (!("director" in document.getElementById("videosource_"+i).dataset)){
+															document.getElementById("videosource_"+i).dataset.director = 1;
+														}
+															if (document.getElementById("videosource_"+i).dataset.director){
+																if ("publisher" in document.getElementById("videosource_"+i)){
+							                                                                                 if (document.getElementById("videosource_"+i).dataset.publisher == 0){return;}
+							                                                                        }
+																document.getElementById("videosource_"+i).muted=false;
+																log("UN-MUTED");
+
+															}	
+													}
+												} else if (msg['action'] == "volume"){
+											              log(parseInt(msg['value'])/100.0);
+                                                                                                      document.getElementById("videosource_"+i).volume=parseInt(msg['value'])/100.0;
+                                                                                                      log("UN-MUTED");
+                                                                                                }
 											}
 										}
 									}
@@ -309,6 +354,10 @@ Ooblex.Media = new (function(){
 							}
 						}
 					}
+					} catch(e){
+                                                      errorlog(e);
+				       }
+
 
 					log(msg);
 				} else if (msg.request=="someonejoined"){ // someone joined the room.  they may not have a video submitted: like the director.
@@ -781,7 +830,7 @@ Ooblex.Media = new (function(){
 			log("CREATE ICE");
 			if (event.candidate==null){log("null ice");return;}
 			var data = {};
-			data.UUID = this.UUID;
+			data.UUID = UUID;
 			data.type = "remote";
 			data.candidate = event.candidate;
 			session.sendMsg(data);
@@ -840,12 +889,41 @@ Ooblex.Media = new (function(){
 				if ("volume" in msg.data){
 					log("Changing volume");
 					log(parseInt(msg.data["volume"])/100.0);
-					var volume = parseInt(msg.data["volume"])/100.0;
-					if (volume>0){
-						document.getElementById("videosource_"+UUID).muted=false; // TODO: THIS SHOULDn't be UUID? or should it be STREAMID? *fak*
-						document.getElementById("videosource_"+UUID).volume = parseInt(msg.data["volume"])/100.0;
+					var volume = parseInt(msg.data["volume"])/100.0; //
+					document.getElementById("videosource_"+UUID).dataset.publisher = parseInt(msg.data["volume"]);
+					if (session.scene){
+						if ("director" in document.getElementById("videosource_"+UUID).dataset){
+							if (document.getElementById("videosource_"+UUID).dataset.director==0){
+								log("Mute override by director; this is a scene");
+								return;
+							} 
+						} else if (session.single){
+							 if (document.getElementById("videosource_"+UUID).dataset.director==0){
+                                                                log("Mute override by director; this is a scene");
+                                                                return;
+                                                        }		
+						} else {
+							document.getElementById("videosource_"+UUID).muted=true;
+							document.getElementById("videosource_"+UUID).volume = 1;
+							log("Mute override by director; this is a scene and the director has not unmuted");
+							return;
+						}
+					}
+					if (!session.director){
+					if (document.getElementById("videosource_"+UUID).volume==0){
+						if (volume>0){
+							log("unmuted - 892");
+							document.getElementById("videosource_"+UUID).muted=false; // TODO: THIS SHOULDn't be UUID? or should it be STREAMID? *fak*
+							document.getElementById("videosource_"+UUID).volume = volume;
+						} else {
+							document.getElementById("videosource_"+UUID).muted=true;
+						}
+					} else if (volume>0){
+						document.getElementById("videosource_"+UUID).muted=false;
+						log("unmuted 900");
 					} else {
 						document.getElementById("videosource_"+UUID).muted=true;
+					}
 					}
 				}}
 			//}
@@ -872,13 +950,7 @@ Ooblex.Media = new (function(){
 		if (document.getElementById("videosource_"+UUID)){
 			log("new track added to mediastream");
 			var v = document.getElementById("videosource_"+UUID);
-			v.autoplay = true;
-			v.controls = true;
-			v.muted = false;
-			v.volume = 0;
-			v.setAttribute("playsinline","");
 			v.srcObject = stream;
-			v.className = "tile";
 
 		} else {
 			log("video element is being created and media track added");
@@ -909,11 +981,20 @@ Ooblex.Media = new (function(){
 			if (session.director){
 				var controls = document.getElementById("controls_blank").cloneNode(true);
 				controls.id = "controls_"+UUID;
+				v.muted= true;
+				v.volume = 1;
 				controls.dataset.UUID = UUID;
 				controls.style.display = "block";
+				controls.innerHTML += "<div style='padding:5px;font-size:70%''>OBS link for just this video:<br /><a href='https://"+location.hostname+location.pathname+"?streamid="+session.rpcs[UUID].streamID+"&scene=1&roomid="+session.roomid+"'>https://"+location.hostname+location.pathname+"?streamid="+session.rpcs[UUID].streamID+"&scene=1&roomid="+session.roomid+"</a></div>";
 				container.appendChild(controls);
+			} else if (session.single){ 
+				log("single mode, so we won't touch the defaults");
+			} else if (session.scene){
+				v.style.display="none";
+				v.muted=true;
+				log("Mute - 968");
+			//	v.dataset.director = 0;
 			}
-
 			//stream.getTracks().forEach(track => {
 			//	log("Remote track", track)
 			//});
