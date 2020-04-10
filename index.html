@@ -452,7 +452,7 @@ video {
 </head>
 <body  id="main">
 	<script language="javascript" type="text/javascript" src="./CodecsHandler.js"></script>
-	<script language="javascript" type="text/javascript" src="./webrtc.js?v=5"></script>
+	<script language="javascript" type="text/javascript" src="./webrtc.js?v=8"></script>
 
 	<div id="header">
 		<h2>
@@ -577,8 +577,6 @@ video {
 					<li>** For some users the video fails to load into OBS; this is often caused by a network firewall.</li>
 					<br />
 					<li><b>April 7th, 2020</b>: Site updated. The previous version can be found at https://obs.ninja/old/</li><br />
-					<font style="color:green"><h1><u>** Please REFRESH the CACHE in OBS and on your Smartphone/Browser if having problems. <a href="https://imgur.com/C3Oxcpw">https://imgur.com/C3Oxcpw</a></u></h1></font>
-
 					<br /><br />
 					<i><h3>Check out the <a href="https://www.reddit.com/r/OBSNinja/">sub-reddit</a> for help and advanced info. Or email me steve@seguin.email</i></h3>
 				</div>
@@ -627,6 +625,24 @@ function updateURL(param) {
 }
 var session = Ooblex.Media;
 session.streamID = session.generateStreamID();
+(function (w) {
+
+    w.URLSearchParams = w.URLSearchParams || function (searchString) {
+        var self = this;
+        self.searchString = searchString;
+        self.get = function (name) {
+            var results = new RegExp('[\?&]' + name + '=([^&#]*)').exec(self.searchString);
+            if (results == null) {
+                return null;
+            }
+            else {
+                return decodeURI(results[1]) || 0;
+            }
+        };
+    }
+
+})(window)
+
 var urlParams = new URLSearchParams(window.location.search);
 if (urlParams.has('permaid')){
 	var permaid  = urlParams.get('permaid');
@@ -1026,32 +1042,32 @@ function handleError(error) {
 
 function getUserMediaVideoParams(resolutionFallbackLevel, isSafariBrowser) {
 	switch (resolutionFallbackLevel) {
-		case 0:
-			if (isSafariBrowser) {
-				return {
-					width: { min: 640 },
-					height: { min: 360 }
-				};
-			}
-			else {
-				return {
-					width: { min: 720, ideal: 1920, max: 1920 },
-					height: { min: 720, ideal: 1080, max: 1920 }
-				};
-			}
-		case 1:
-			if (isSafariBrowser) {
-				return {
-					width: { min: 720, ideal: 1280, max: 1280 },
-					height: { min: 720, ideal: 720, max: 1280 }
-				};
-			}
-			else {
-				return {
-					width: { min: 720, ideal: 1280, max: 1280 },
-					height: { min: 720, ideal: 720, max: 1280 }
-				};
-			}
+		 case 0:
+                        if (isSafariBrowser) {
+                                return {
+                                        width: { min: 360, ideal: 1280, max: 1920 },
+                                        height: { min: 360, ideal: 720, max: 1080 }
+                                };
+                        }
+                        else {
+                                return {
+                                        width: { min: 720, ideal: 1920, max: 1920 },
+                                        height: { min: 720, ideal: 1080, max: 1920 }
+                                };
+                        }
+                case 1:
+                        if (isSafariBrowser) {
+                                return {
+                                        width: { min: 640 },
+                                        height: { min: 360 }
+                                };
+                        }
+                        else {
+                                return {
+                                        width: { min: 720, ideal: 1280, max: 1280 },
+                                        height: { min: 720, ideal: 720, max: 1280 }
+                                };
+                        }
 		case 2:
 			if (isSafariBrowser) {
 				return {
