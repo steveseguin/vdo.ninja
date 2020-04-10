@@ -43,7 +43,6 @@ Ooblex.Media = new (function(){
 	session.configuration =
                 {iceServers: [
                 { urls: ["stun:stun.l.google.com:19302", "stun:stun4.l.google.com:19302" ]},
-                { urls: ["stun:global.stun:3478?transport=udp"]},
                 { urls: ["stun:stun.stunprotocol.org:3478"]}
                 ]};
 	//	var turn = {};
@@ -668,7 +667,7 @@ Ooblex.Media = new (function(){
 			if (event.candidate==null){return;}
 
 			var data = {};
-			data.UUID = this.UUID;
+			data.UUID = UUID;
 			data.type = "local";
 			data.candidate = event.candidate;
 			session.sendMsg(data);
