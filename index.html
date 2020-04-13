@@ -458,8 +458,8 @@ video {
 		<h2>
 			<a href="./" style="text-decoration:none;color:white;"><font id="qos">O</font>BS.Ninja</a> &nbsp
 			<div id="head1" style="display:inline-block;;">
-				<input id="StreamID" name="StreamID" size=26 placeholder="Join by Room Name here"></input>
-				<button style="padding:1px;" onclick="play(document.getElementById('StreamID').value)">GO</button>
+				<input id="joinroomID" name="joinroomID" size=26 placeholder="Join by Room Name here"></input>
+				<button style="padding:1px;" onclick="jumptoroom();">GO</button>
 			</div>
 			<div id="head3" style="display:inline-block" class='advanced'>
 				<font style="font-size:60%"> &nbsp Copy this URL into an OBS "Browser Source" =>  &nbsp </font><a id="reshare" data-share="" onclick="var range=document.createRange(); range.selectNodeContents(document.getElementById('reshare')); var selec = window.getSelection(); selec.removeAllRanges();selec.addRange(range);document.execCommand('copy');" onmouseover="this.style.cursor='pointer'"></a>
@@ -508,7 +508,7 @@ video {
 		</div>
 
 		<div id="container-3" class="column columnfade" onclick="previewWebcam()"  style="background-color:#ddd;">
-			<h2>Add your Camera to OBS</h2>
+			<h2 id="add_camera">Add your Camera to OBS</h2>
 			<div class="container-inner"><br />
 				<p>Select the audio/video source below and when you're ready just click START SHARING WEBCAM</p><br />
 				<button onclick="publishWebcam()" class="gowebcam">CLICK HERE WHEN READY</button><br />
@@ -527,7 +527,7 @@ video {
 		</div>
 
 		<div id="container-2" class="column columnfade" style="background-color:#ddd;">
-			<h2>Remote Screenshare into OBS</h2>
+			<h2 id="add_screen">Remote Screenshare into OBS</h2>
 			<div class="container-inner">
 				<p><b>note</b>: Do not forget to click "Share audio" in Chrome.<br />(Firefox does not support audio sharing.)</p>
 				<p><img src="share.jpg" style="max-height:55vh"/></p>
@@ -679,6 +679,17 @@ if (urlParams.has('turn')){
 }
 
 
+function jumptoroom(){
+	document.getElementById("joinroomID").value;
+	
+	var arr = window.location.href.split('?');
+	if (arr.length > 1 && arr[1] !== '') {
+	  window.location+="&roomid="+document.getElementById("joinroomID").value;
+	} else {
+		window.location+="?roomid="+document.getElementById("joinroomID").value;
+	}
+}
+
 var micvolume = 100;
 session.connect();
 session.volume = micvolume;
@@ -688,6 +699,11 @@ if (urlParams.has('roomid')){
 	document.getElementById("videoname1").value = roomid;
 	document.getElementById("dirroomid").innerHTML = roomid;
 	document.getElementById("roomid").innerHTML = roomid;
+	document.getElementById("container-1").className = 'column columnfade advanced';
+	document.getElementById("container-4").className = 'column columnfade advanced';
+	document.getElementById("head1").innerHTML = '- Welcome. Please select an option to join the chat room';
+	document.getElementById("add_camera").innerHTML = "Join Room with Camera";
+	document.getElementById("add_screen").innerHTML = "Screenshare with Room";
 	if (urlParams.has('scene')){
 		session.scene = urlParams.get('scene');
 		document.getElementById("container-4").className = 'column columnfade';
@@ -835,6 +851,13 @@ function publishScreen(){
 		video: {width: width, height: height, cursor: "never", mediaSource: "browser"}
 	};
 
+	if (session.roomid){
+		joinRoom(session.roomid,300);
+		document.getElementById("head3").className = 'advanced';
+	} else {
+		document.getElementById("head3").className = '';
+	}
+
 	session.publishScreen(constraints, title);
 	log("streamID is: "+session.streamID);
 
@@ -843,7 +866,6 @@ function publishScreen(){
 
 	document.getElementById("head1").className = 'advanced';
 	document.getElementById("head2").className = 'advanced';
-	document.getElementById("head3").className = '';
 
 }
 function publishWebcam(){

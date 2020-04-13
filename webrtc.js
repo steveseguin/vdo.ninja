@@ -450,8 +450,12 @@ Ooblex.Media = new (function(){
 			v.id = "videosource"; // could be set to UUID in the future
 			v.className = "tile";
 			v.srcObject = session.streamSrc;
-			var m = document.getElementById("mainmenu");
-			m.remove();
+			
+			try{
+				var m = document.getElementById("mainmenu");
+				m.remove();
+			} catch (e){}
+
 			v.play();
 			var data = {};
 			data.request = "seed";
@@ -542,8 +546,11 @@ Ooblex.Media = new (function(){
 				if (!v.srcObject || v.srcObject.id !== stream.id) {
 					v.srcObject = stream;
 				}
-				var m = document.getElementById("mainmenu");
-				m.remove();
+
+				try{
+					var m = document.getElementById("mainmenu");
+					m.remove();
+				} catch (e){}
 
 				//	stream.getTracks().forEach(track => track.play());
 
@@ -590,8 +597,11 @@ Ooblex.Media = new (function(){
 
 		v.id = "videosource"; // could be set to UUID in the future
 		v.className = "tile";
-		var m = document.getElementById("mainmenu");
-		m.remove();
+
+		try{
+			var m = document.getElementById("mainmenu");
+			m.remove();
+		} catch (e){}
 
 		try{
 			session.streamSrc=v.captureStream();;
