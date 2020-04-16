@@ -13,8 +13,8 @@ Why deploy? You may want to customize the UI for your brand/business, or control
 ## What is OBS NINJA
 OBS.ninja uses peer 2 peer technology to bring remote cameras into OBS. The server-side load is very small, so I am able to offer it as a service for free.
 
-Please see the sub-reddit for more support: https://reddit.com/r/obsninja  
-Also check out the FAQ for common answers: https://github.com/steveseguin/obsninja/wiki
+Please see the sub-reddit added info: https://reddit.com/r/obsninja  
+Also check out the FAQ for more info: https://github.com/steveseguin/obsninja/wiki
 
 ## How to use:
 I demo the basic usage of OBS.ninja also on YoutuBe: https://www.youtube.com/watch?v=6R_sQKxFAhg
@@ -25,7 +25,10 @@ Check the subreddit for added use cases, advanced features, and support.
 The Server-side software uses code from my other project, https://Steves.app and https://meshcast.io  I have not made the server side software public yet, but the API remains free to access and use. If it gets abused, I'll put up restrictions. I do my best to not collect data of any type, but I may do so to improve the service, such as monitoring site usage, logging errors, or ensuring reliable connectivity.
 
 ## Issues? problems? Not working?
-Please see the sub-reddit: https://reddit.com/r/obsninja  
+
+Please see the sub-reddit for more support: https://reddit.com/r/obsninja  
+Also check out the FAQ for common answers: https://github.com/steveseguin/obsninja/wiki
+Email me at steve@seguin.email or join me on discord: https://discord.gg/T4xpQVv
 
 ## Privacy
 I try to avoid data collection whenever possible. Video streams are generally private, but I've yet to fully-secure the system, so use at your own risk. It is best to not share links created with OBS.ninja with those you do not trust. I've provided instructions on how to deploy a TURN server if IP-address privacy is an issue or if direct peer-to-peer connectivity is blocked by a firewall. See: turnserver.conf  
