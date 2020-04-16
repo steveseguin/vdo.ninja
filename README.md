@@ -27,8 +27,10 @@ The Server-side software uses code from my other project, https://Steves.app and
 ## Issues? problems? Not working?
 
 Please see the sub-reddit for more support: https://reddit.com/r/obsninja  
+
 Also check out the FAQ for common answers: https://github.com/steveseguin/obsninja/wiki
-Email me at steve@seguin.email or join me on discord: https://discord.gg/T4xpQVv
+
+If urgent, email me at steve@seguin.email or join me on discord: https://discord.gg/T4xpQVv
 
 ## Privacy
 I try to avoid data collection whenever possible. Video streams are generally private, but I've yet to fully-secure the system, so use at your own risk. It is best to not share links created with OBS.ninja with those you do not trust. I've provided instructions on how to deploy a TURN server if IP-address privacy is an issue or if direct peer-to-peer connectivity is blocked by a firewall. See: turnserver.conf  
