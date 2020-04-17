@@ -1,4 +1,3 @@
-# http://obs.ninja
 ![ILogo by brimace](logo.png)
 
 ## What's in this repo?
@@ -12,7 +11,7 @@ Directions on how to deploy a TURN server are listed in the turnserver.conf file
 Why deploy? You may want to customize the UI for your brand/business, or control security/privacy beyond what I do already. The server API is fairly flexible, so you can also add features that I do not include currently. Please be aware that the SERVER api changes often, at least at this point in early development, so it is best to CONTRIBUTE to this repo if you intend to keep things compatible.
 
 ## What is OBS NINJA
-OBS.ninja uses peer 2 peer technology to bring remote cameras into OBS. The server-side load is very small, so I am able to offer it as a service for free.
+OBS.ninja uses peer 2 peer technology to bring remote cameras into OBS. The server-side load is very small, so I am able to offer it as a service for free.  It can be found at https://obs.ninja and the beta version can be found at https://obs.ninja/beta
 
 Please see the sub-reddit added info: https://reddit.com/r/obsninja  
 Also check out the FAQ for more info: https://github.com/steveseguin/obsninja/wiki
