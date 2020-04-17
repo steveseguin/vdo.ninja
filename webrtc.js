@@ -1,9 +1,11 @@
 var Ooblex = {}; // Based the WebRTC and Signaling code off some of my open-source project, ooblex.com, hence the name.i
 function log(msg){
-//	console.log(msg);
+	console.log(msg);
+	//console.re.log(msg);
 }
 function errorlog(msg){
-//	console.error(msg);
+	console.error(msg);
+	//console.re.error(msg);
 }
 function isAlphaNumeric(str) {
 	var code, i, len;
@@ -40,16 +42,16 @@ Ooblex.Media = new (function(){
 		return promise;
 	}
 
-	session.configuration =
-                {iceServers: [
-                { urls: ["stun:stun.l.google.com:19302", "stun:stun4.l.google.com:19302" ]},
-                { urls: ["stun:stun.stunprotocol.org:3478"]}
-                ]};
-	//	var turn = {};
-//	turn.username = "steve";
-//	turn.credential = "justtesting";
-//	turn.urls = ["turn:turn.obs.ninja:443"];
-//	session.configuration.iceServers.push(turn);
+	session.configuration = 
+		{iceServers: [
+		{ urls: ["stun:stun.l.google.com:19302", "stun:stun4.l.google.com:19302" ]},
+		{ urls: ["stun:stun.stunprotocol.org:3478"]}
+		]};
+	//var turn = {};
+	//turn.username = "steve";
+	//turn.credential = "justtesting";
+	//turn.urls = ["turn:turn.obs.ninja:443"];
+	//session.configuration.iceServers.push(turn);
 	log(session.configuration);
 
 	session.streamID = null; // This computer has its own streamID; this implies it can only publish 1 stream per session.
@@ -68,11 +70,17 @@ Ooblex.Media = new (function(){
 	session.screenshare = false;
 	session.director = false;
 	session.scene = false;
+	session.framerate = false;
+	session.maxframerate = false;
 	session.single = false;
 	session.roomid = false;
+	session.codec = "vp9"; // Setting the default codec to VP9, since it is the most stable it seems these days
+	session.width=false;
+	session.height=false;
+	session.videoElement = false;
 	session.generateStreamID = function(){
 		var text = "";
-		var possible = "ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnpqrstuvwxyz023456789";
+		var possible = "ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnpqrstuvwxyz23456789";
 		for (var i = 0; i < 7; i++){
 			text += possible.charAt(Math.floor(Math.random() * possible.length));
 		}
@@ -153,15 +161,14 @@ Ooblex.Media = new (function(){
 		});
 
 	}
+	
 	function extractSdp(sdpLine, pattern) {
 		var result = sdpLine.match(pattern);
 		return (result && result.length == 2)? result[1]: null;
 	}
 	function unlockBitrate(sdp, kbps=10000, screenshare=false){
 		kbps = parseInt(kbps);
-		if (kbps<300){kbps=300;}
-		var startkbps = parseInt(kbps/2.0);
-
+		if (kbps<50){kbps=50;}
 		var bandwidth = {
 			screen: 300, // 300kbits minimum
 			audio: 50, // 50kbits  minimum
@@ -175,10 +182,14 @@ Ooblex.Media = new (function(){
 			max: bandwidth.video
 		});
 		//sdp = BandwidthHandler.setOpusAttributes(sdp);
+		
+		//sdp = sdp.replace(/a=mid:(.*)\r\n/g, 'a=mid:$1\r\nb=AS:' + bandwidth + '\r\n');   // vp9? 
+		
 		return sdp;
 	}
 
 	session.signData = function(data,callback){ // data as string
+		console.log("data:",data);
 		if (session.mykey === {}){
 			log("Generate Some Crypto keys first");
 		}
@@ -259,14 +270,14 @@ Ooblex.Media = new (function(){
 	session.retryTimer = null; 
 	session.ws=null;
 
-	session.connect = function(){
+	session.connect = function(reconnect=false){
 		if (session.ws != null){return;}
 		session.ws = new WebSocket("wss://api.obs.ninja:7443");
 
 		session.sendMsg = function(msg){
 			log("sending message");
 			if (session.ws.readyState !== 1){session.msg = msg;} // store the last message to be sent if websocket is not ready. 
-			else {session.ws.send(JSON.stringify(msg));}
+			else {session.msg=null;session.ws.send(JSON.stringify(msg));}
 		}
 
 		session.ws.onopen = function(){
@@ -274,10 +285,20 @@ Ooblex.Media = new (function(){
 				clearInterval(session.retryTimer);
 				session.retryTimer=null;
 			}
+
 			log("connected to video server");
 			if (session.msg!==null){  // send the last store message that was in queue to be sent when ws was closed.  sending 1 message is better than none, and I don't want to spam the server with hundreds. so this is a balance.
 				session.ws.send(JSON.stringify(session.msg));
 				session.msg = null;
+			}
+			if (reconnect==true){
+				if (session.streamID){
+					var data = {};
+					data.request = "seed";
+					//data.title = title;
+					data.streamID = session.streamID;
+					session.sendMsg(data);
+				}
 			}
 		}
 
@@ -289,9 +310,6 @@ Ooblex.Media = new (function(){
 				} else if (msg.request=="listing"){ // Get a list of streams you have access to
 					log(msg.list);
 					session.listPromise.resolve(msg.list);
-				} else if (msg.request=="graph"){  // for debugging and for more advanced projects
-					log(msg.graph);
-					session.graphPromise.resolve(msg.graph);
 				} else if (msg.request=="genkey"){ // prevents spoofing ; more for future work 
 					session.generateCrypto();
 				} else if (msg.request=="publickey"){ // prevents spoofing
@@ -299,63 +317,80 @@ Ooblex.Media = new (function(){
 				} else if (msg.request=="sendroom"){ // send a message to those in the group via server. p2p is probably the preferred method, but not always possible
 					log("Inbound User-based Message from Room");
 					try {
-					if ("director" in msg){
-						if (msg['director'] === session.scene){
-							if ("action" in msg){
-								if ("target" in msg){
-									for (i in session.rpcs){ // If you are VIEWING this use
-										if (i === msg["target"]){
-											if ("value" in msg){
-												if (msg['action'] == "mute"){	
-													if (msg['value'] == 0){
-														log("Mute video -306");
-														document.getElementById("videosource_"+i).muted = true;
-														document.getElementById("videosource_"+i).dataset.director = 0;
-													} else {
-														log("Unmute video");
-														document.getElementById("videosource_"+i).dataset.director = 1;
-														if ("publisher" in document.getElementById("videosource_"+i)){
-															if (document.getElementById("videosource_"+i).dataset.publisher == 0){
-																log("did not mute");
-																return;} // if the publisher wants it muted. it says muted
+						if ("director" in msg){
+							if (msg['director'] === session.scene){
+								if ("action" in msg){
+									if ("target" in msg){
+										for (i in session.rpcs){ // If you are VIEWING this use
+											if (i === msg["target"]){
+												if ("value" in msg){
+													if (msg['action'] == "mute"){	
+														if (msg['value'] == 0){
+															log("Mute video -306");
+															
+															if (session.rpcs[i].videoElement){
+																session.rpcs[i].videoElement.muted = true;
+																session.rpcs[i].director = 0;
+															}
+														} else {
+															log("Unmute video");
+															if (session.rpcs[i].videoElement){
+																session.rpcs[i].director = 1;
+																if (session.rpcs[i].publisher!==false){
+																	if (session.rpcs[i].publisher == 0){
+																		log("did not mute");
+																		return;} // if the publisher wants it muted. it says muted
+																}
+																session.rpcs[i].videoElement.muted = false;
+															}
 														}
-														document.getElementById("videosource_"+i).muted = false;
-													}
-												}  else if (msg['action'] == "display"){
-													if (session.single){log("We don't hide dedicated views");}
-													else if (msg['value'] == 0) { 
-														document.getElementById("videosource_"+i).style.display="none";
-													} else { 
-														document.getElementById("videosource_"+i).style.display="block";
+													}  else if (msg['action'] == "display"){
+														if (session.single){log("We don't hide dedicated views");}
+														else if (msg['value'] == 0) { 
+															if (session.rpcs[i].videoElement){
+																session.rpcs[i].videoElement.style.display="none";
+																///  I can probably just go thru the RPCS[] list, using UUID, and say "visible" or not. Use Update on that instead.
+																// I won't need to update the lement directly , just the update function.
+															}
+															updateMixer();
+														} else { 
+															if (session.rpcs[i].videoElement){
+																session.rpcs[i].videoElement.style.display="block";
+															
+																if (session.rpcs[i].videoElement===false){
+																	session.rpcs[i].director = 1;
+																}
+																if (session.rpcs[i].director){
+																	if (session.rpcs[i].publisher!==false){
+																		if (session.rpcs[i].publisher == 0){return;}
+																			
+																		session.rpcs[i].videoElement.muted=false;
+																		log("UN-MUTED");
+																	
 
-														if (!("director" in document.getElementById("videosource_"+i).dataset)){
-															document.getElementById("videosource_"+i).dataset.director = 1;
+																	}	
+																}
+															}
+															updateMixer();
 														}
-															if (document.getElementById("videosource_"+i).dataset.director){
-																if ("publisher" in document.getElementById("videosource_"+i)){
-							                                                                                 if (document.getElementById("videosource_"+i).dataset.publisher == 0){return;}
-							                                                                        }
-																document.getElementById("videosource_"+i).muted=false;
-																log("UN-MUTED");
-
-															}	
+													} else if (msg['action'] == "volume"){
+														log(parseInt(msg['value'])/100.0);
+														if (session.rpcs[i].videoElement){
+															session.rpcs[i].videoElement.volume=parseInt(msg['value'])/100.0;
+															log("UN-MUTED");
+														}
 													}
-												} else if (msg['action'] == "volume"){
-											              log(parseInt(msg['value'])/100.0);
-                                                                                                      document.getElementById("videosource_"+i).volume=parseInt(msg['value'])/100.0;
-                                                                                                      log("UN-MUTED");
-                                                                                                }
+												}
 											}
 										}
-									}
 
+									}
 								}
 							}
 						}
-					}
 					} catch(e){
-                                                      errorlog(e);
-				       }
+                         errorlog(e);
+				    }
 
 
 					log(msg);
@@ -384,6 +419,7 @@ Ooblex.Media = new (function(){
 
 				}
 			} else if (msg.candidate){
+				console.log("GOT ICE!!");
 				if ((msg.UUID in session.pcs) && (msg.type=="remote")){
 					log("PCS WINS ICE");
 					session.pcs[msg.UUID].addIceCandidate(msg.candidate).then(function(){log("added ICE from viewer");}).catch(function(e){
@@ -419,14 +455,15 @@ Ooblex.Media = new (function(){
 			} else { log("what is this?",msg); }
 		}
 		session.ws.onclose = function(){
-			errorlog("Connection to Control Server lost.\n\nAuto-reconnect is not yet implemented");
+			errorlog("Connection to Control Server lost.\n\nAuto-reconnect is partially implemented");
+			//session.retryTimer = setTimeout(function() {
+			//	if (session.ws.readyState === WebSocket.CLOSED){
+			//		session.ws=null;
+			//		session.connect(true);
+			//	}
+			//}, 5550);
+				
 		};
-
-		//         alert("We lost our connection to the server. Refresh")};
-		//           session.ws=null;
-		//            setTimeout(function(){session.connect();}, 100);
-		//            session.connect();
-		//            
 	};
 
 	session.publishWebcam = function( constraints = {video: true,audio: true}, title="Webcam Sharing Session"){ // webcam stream is used to generated an SDP
@@ -442,6 +479,16 @@ Ooblex.Media = new (function(){
 			container.className = "vidcon";
 			document.getElementById("gridlayout").appendChild(container);
 			container.appendChild(v);
+			
+			if (session.director){
+			} else if (session.single){ 
+			} else if (session.scene){
+				session.rpcs[UUID].videoElement = v;
+				updateMixer();
+			} else if (session.roomid){
+				session.rpcs[UUID].videoElement = v;
+				updateMixer();
+			}
 
 			v.autoplay = true;
 			v.controls = true;
@@ -451,12 +498,23 @@ Ooblex.Media = new (function(){
 			v.className = "tile";
 			v.srcObject = session.streamSrc;
 			
+			if (session.director){
+			} else if (session.single){ 
+			} else if (session.scene){
+				session.rpcs[UUID].videoElement = v;
+				updateMixer();
+			} else if (session.roomid){
+				session.rpcs[UUID].videoElement = v;
+				updateMixer();
+			}
+			
 			try{
 				var m = document.getElementById("mainmenu");
 				m.remove();
 			} catch (e){}
-
 			v.play();
+			
+			
 			var data = {};
 			data.request = "seed";
 			data.title = title;
@@ -495,6 +553,17 @@ Ooblex.Media = new (function(){
 		document.getElementById("gridlayout").appendChild(container);
 		container.appendChild(v);
 
+		if (session.director){
+		} else if (session.single){ 
+		} else if (session.scene){
+			session.videoElement = v;
+			updateMixer();
+		} else if (session.roomid){
+			session.videoElement = v;
+			updateMixer();
+		}
+
+
 		v.autoplay = true;
 		v.controls = true;
 		v.muted = true;
@@ -502,8 +571,10 @@ Ooblex.Media = new (function(){
 		v.id = "videosource"; // could be set to UUID in the future
 		v.className = "tile";
 		v.srcObject = session.streamSrc;
-		var m = document.getElementById("mainmenu");
-		m.remove();
+		try{
+			var m = document.getElementById("mainmenu");
+			m.remove();
+		} catch (e){}
 		v.play();
 		var data = {};
 		data.request = "seed";
@@ -537,6 +608,17 @@ Ooblex.Media = new (function(){
 				document.getElementById("gridlayout").appendChild(container);
 				container.appendChild(v);
 
+
+				if (session.director){
+				} else if (session.single){ 
+				} else if (session.scene){
+					session.videoElement = v;
+					updateMixer();
+				} else if (session.roomid){
+					session.videoElement = v;
+					updateMixer();
+				}
+
 				v.autoplay = true;
 				v.controls = true;
 				v.setAttribute("playsinline","");
@@ -546,7 +628,6 @@ Ooblex.Media = new (function(){
 				if (!v.srcObject || v.srcObject.id !== stream.id) {
 					v.srcObject = stream;
 				}
-
 				try{
 					var m = document.getElementById("mainmenu");
 					m.remove();
@@ -560,9 +641,12 @@ Ooblex.Media = new (function(){
 				data.streamID = session.streamID;
 				data.title = title;
 				session.sendMsg(data);
+				
 			}).catch(function(error){
-				errorlog('getDisplayMedia error: ' + error.name, error);
-			});
+			log('getDisplayMedia error: ' + error.name, error);
+			errorlog(error);
+			alert("An error occured. Does your computer or mobile device have a webcam or camera installed?");
+		});
 	};
 
 	session.publishFile = function(ele,event, title="Video File Sharing Session"){ // webcam stream is used to generated an SDP
@@ -586,6 +670,17 @@ Ooblex.Media = new (function(){
 		v.setAttribute("playsinline","");
 		v.src = fileURL;
 
+		if (session.director){
+		} else if (session.single){ 
+		} else if (session.scene){
+			session.videoElement = v;
+			updateMixer();
+		} else if (session.roomid){
+			session.videoElement = v;
+			updateMixer();
+		}
+
+
 		var canPlay = v.canPlayType(type);
 		if (canPlay === ''){canPlay = 'no';}
 		log('Can play type "' + type + '": ' + canPlay);
@@ -597,11 +692,8 @@ Ooblex.Media = new (function(){
 
 		v.id = "videosource"; // could be set to UUID in the future
 		v.className = "tile";
-
-		try{
-			var m = document.getElementById("mainmenu");
-			m.remove();
-		} catch (e){}
+		var m = document.getElementById("mainmenu");
+		m.remove();
 
 		try{
 			session.streamSrc=v.captureStream();;
@@ -651,7 +743,11 @@ Ooblex.Media = new (function(){
 	};
 
 	session.offerSDP = function(stream,UUID){  // publisher/offerer (PCS)
-		if (UUID in session.pcs){errorlog("PROBLEM! RESENDING SDP OFFER SHOULD NOT HAPPEN");}
+		if (UUID in session.pcs){
+				errorlog("PROBLEM! RESENDING SDP OFFER SHOULD NOT HAPPEN");
+				session.createOffer(session.pcs[UUID], UUID);
+				//return;
+		}
 		else {log("Create a new RTC connection; offering SDP on request");}
 
 		session.pcs[UUID] = new RTCPeerConnection(session.configuration);
@@ -664,22 +760,22 @@ Ooblex.Media = new (function(){
 			session.sendMessage(msg, UUID); //TODO: does this work? UUID being passed like this?
 		};
 
-                session.pcs[UUID].sendChannel.onclose = () => {
+        session.pcs[UUID].sendChannel.onclose = () => {
 			log("send channel closed");
-                };
+         };
 
 		log("pubs streams to offeR",stream.getTracks());	
 		stream.getTracks().forEach(track => session.pcs[UUID].addTrack(track, stream));
 		session.pcs[UUID].ontrack = event => {errorlog("Publisher is being sent a video stream??? NOT EXPECTED!")};
 
 		session.pcs[UUID].onicecandidate = function(event){
-			log("CREATE ICE");
-			if (event.candidate==null){return;}
-
+			log("CREATE ICE 3");
+			if (event.candidate==null){log("empty ice..");return;}
 			var data = {};
 			data.UUID = UUID;
 			data.type = "local";
 			data.candidate = event.candidate;
+			log("UUID==="+UUID);
 			session.sendMsg(data);
 		};
 
@@ -687,7 +783,7 @@ Ooblex.Media = new (function(){
 			try {
 				if (this.iceConnectionState == 'closed') {
 					log('ICE closed?');
-                                } else	if (this.iceConnectionState == 'disconnected') {
+                 } else	if (this.iceConnectionState == 'disconnected') {
 					log('ICE Disconnected; wait for retry? pcs');
 					session.pcs[UUID].close();
 					session.pcs[UUID] = null;
@@ -701,39 +797,46 @@ Ooblex.Media = new (function(){
 				errorlog(e);
 			}
 		}
-
-		//session.pcs[UUID].onnegotiationneeded = function(){ // bug: https://groups.google.com/forum/#!topic/discuss-webrtc/3-TmyjQ2SeE
-		session.pcs[UUID].createOffer().then((description)=>{
-			if (session.stereo){
-				//description.sdp = CodecsHandler.forceStereoAudio(description.sdp);
-				description.sdp = CodecsHandler.setOpusAttributes(description.sdp, {
-					'stereo': 1,
-					//'sprop-stereo': 1,
-					'maxaveragebitrate': 128 * 1000 * 8,
-					'maxplaybackrate': 128 * 1000 * 8,
-					//'cbr': 1,
-					//'useinbandfec': 1,
-					// 'usedtx': 1,
-					'maxptime': 3
-				});
-				log("stereo enabled");
-			}
-
-			if (session.bitrate){
-				log("bit rate being munged");
-				description.sdp = unlockBitrate(description.sdp, session.bitrate, session.screenshare);
-			}
-
-			session.pcs[UUID].setLocalDescription(description).then(function(){
-				log("publishing SDP Offer");
-				var data = {};
-				data.description = session.pcs[UUID].localDescription;
-				data.UUID = UUID;
-				data.streamID = session.streamID;
-				session.ws.send(JSON.stringify(data));
+		
+		session.createOffer = function(pc, UUID){
+			pc.createOffer().then((description)=>{
+				if (session.stereo){
+					//description.sdp = CodecsHandler.forceStereoAudio(description.sdp);
+					description.sdp = CodecsHandler.setOpusAttributes(description.sdp, {
+						'stereo': 1,
+						//'sprop-stereo': 1,
+						'maxaveragebitrate': 128 * 1000 * 8,
+						'maxplaybackrate': 128 * 1000 * 8,
+						//'cbr': 1,
+						//'useinbandfec': 1,
+						// 'usedtx': 1,
+						'maxptime': 3
+					});
+					log("stereo enabled");
+				}
+				
+				if (session.bitrate){
+					log("bit rate being munged");
+					description.sdp = unlockBitrate(description.sdp, session.bitrate, session.screenshare);
+				} else if (session.codec){
+					description.sdp = CodecsHandler.preferCodec(description.sdp, session.codec); // h264, vp8, vp9
+				}
+				
+				
+				pc.setLocalDescription(description).then(function(){
+					log("publishing SDP Offer");
+					var data = {};
+					data.description = pc.localDescription;
+					data.UUID = UUID;
+					data.streamID = session.streamID;
+					session.ws.send(JSON.stringify(data));
+				}).catch(onError);
 			}).catch(onError);
-		}).catch(onError);
-		//};
+		}
+		
+		session.pcs[UUID].onnegotiationneeded = function(){ // bug: https://groups.google.com/forum/#!topic/discuss-webrtc/3-TmyjQ2SeE
+			session.createOffer(session.pcs[UUID], UUID);
+		};
 
 		//session.pcs[UUID].sendChannel = session.pcs[UUID].createDataChannel("sendChannel");
 		session.pcs[UUID].onclose = function(){
@@ -749,27 +852,47 @@ Ooblex.Media = new (function(){
 
 	};
 
+	session.reducebitrate = function(rpc, bandwidth){ // kbps
+		// In Chrome, use RTCRtpSender.setParameters to change bandwidth without
+		// (local) renegotiation. Note that this will be within the envelope of
+		// the initial maximum bandwidth negotiated via SDP.
+		try {
+			const parameters = rpc.getSenders()[0].getParameters();
+			if (!parameters.encodings){
+				parameters.encodings = [{}];
+			}
+			if (bandwidth < 0){
+				delete parameters.encodings[0].maxBitrate;
+			} else {
+				parameters.encodings[0].maxBitrate = bandwidth * 1000;
+			}
+			rpc.getSenders()[0].setParameters(parameters).then(() => {
+					log("bandwidth set");
+				}).catch(e => errorlog(e));
+		} catch (e){errorlog("failed to set max bitrate");}
+	}
 
 	session.connectPeer = function(msg){ // someone is SENDING us a video stream
 		session.rpcs[msg.UUID].setRemoteDescription(msg.description).then(function(){  // description, onSuccess, onError
 			if (session.rpcs[msg.UUID].remoteDescription.type === 'offer'){ // When receiving an offer/video lets answer it
 				session.rpcs[msg.UUID].createAnswer().then(function(description){  // creating answer
 					if (session.stereo){
-					description.sdp = CodecsHandler.setOpusAttributes(description.sdp, {
-						'stereo': 1,
-						'sprop-stereo': 1,
-						'maxaveragebitrate': 128 * 1000 * 2,
-						'maxplaybackrate': 128 * 1000 * 2,
-						//'cbr': 1,
-						//'useinbandfec': 1,
-						// 'usedtx': 1,
-						'maxptime': 3
-					});
-
+    					description.sdp = CodecsHandler.setOpusAttributes(description.sdp, {
+							'stereo': 1,
+							'sprop-stereo': 1,
+							'maxaveragebitrate': 128 * 1000 * 2,
+							'maxplaybackrate': 128 * 1000 * 2,
+							//'cbr': 1,
+							//'useinbandfec': 1,
+							// 'usedtx': 1,
+							'maxptime': 3
+						});
 					}
-					if (session.bitrate){
+					if (session.bitrate){  // works with vp8, not vp9
 						log("bit rate being munged");
-						description.sdp = unlockBitrate(description.sdp, session.bitrate);
+						description.sdp = unlockBitrate(description.sdp, session.bitrate); // vp8
+					} else if (session.codec){
+						description.sdp = CodecsHandler.preferCodec(description.sdp, session.codec); // default to vp9
 					}
 					return session.rpcs[msg.UUID].setLocalDescription(description);
 				}).then(function(){
@@ -781,7 +904,7 @@ Ooblex.Media = new (function(){
 
 					var data = {};
 					data.request = "getkey"
-					// data.UUID = msg.UUID;   -- they other party does not need this
+					//data.UUID = msg.UUID;   -- they other party does not need this
 					data.streamID = session.rpcs[msg.UUID]['streamID'];
 					session.sendMsg(data);
 
@@ -796,13 +919,22 @@ Ooblex.Media = new (function(){
 		if (UUID in session.rpcs){log("RTC connection is ALREADY ready; we can already accept answers");return;} // already exists
 		else {log("MAKING A NEW RTC CONNECTION");}
 		session.rpcs[UUID] = new RTCPeerConnection(session.configuration);
+
+		session.rpcs[UUID].videoElement=false;
+		session.rpcs[UUID].director=false;
+		session.rpcs[UUID].publisher=false;
+		//session.rpcs[UUID].volume=1;
+		//session.rpcs[UUID].muted=false;
+		
 		session.rpcs[UUID]["UUID"] = UUID;
 		if ("streamID" in msg){
-			session.rpcs[msg.UUID]['streamID'] = msg["streamID"];
+			session.rpcs[UUID]['streamID'] = msg["streamID"];
 		}
-		//session.rpcs[UUID].addTransceiver('video', { direction: 'recvonly'});
+		session.rpcs[UUID].addTransceiver('video', { direction: 'recvonly'});
 		session.rpcs[UUID].onclose = function(event){
 			log("rpc closed");
+			console.log("*********",UUID,);
+			console.log("*********",this.UUID);
 			try {
 				var streamID = this.streamID; // reconnect if possible
 				var data = {};
@@ -813,17 +945,30 @@ Ooblex.Media = new (function(){
 				errorlog("Couldn't re-connect"); // Might be fone forever. :(  Set a timeout? TODO
 				errorlog(e);
 			}
-
-			try {	if (document.getElementById("container_"+this.UUID)){
-					document.getElementById("container_"+this.UUID).parentNode.removeChild(document.getElementById("container_"+this.UUID));
+			
+			if (!(session.director)){
+				try {
+					if (session.rpcs[UUID].videoElement){
+						
+						session.rpcs[UUID].videoElement.style.display = "none";
+						updateMixer();
+					}
+				} catch (e){ }
+			}
+			
+			try {	
+				if (document.getElementById("container_"+UUID)){
+					document.getElementById("container_"+UUID).parentNode.removeChild(document.getElementById("container_"+UUID));
 				}
-			} catch (e){errorlog(e);}
-			try {	if (this.streamSrc){
-         	                        this.streamSrc.getTracks().forEach(function(track) {
-	                                       track.stop();
-                                	});
+			} catch (e){errorlog(e)}
+			
+			try {	
+				if (this.streamSrc){
+					this.streamSrc.getTracks().forEach(function(track) {
+						   track.stop();
+					});
 				}
-                        } catch (e){errorlog(e);}
+                } catch (e){errorlog(e);}
 			try {
 				this.receiveChannel.close();
 			}catch (e){errorlog(e);}	
@@ -836,14 +981,35 @@ Ooblex.Media = new (function(){
 		}
 
 		session.rpcs[UUID].onicecandidate = function(event){
-			log("CREATE ICE");
-			if (event.candidate==null){log("null ice");return;}
+			log("CREATE ICE RCPS");
+			if (event.candidate==null){log("null ice rpcs");return;}
 			var data = {};
+			log("UUID ICE:"+UUID);
 			data.UUID = UUID;
 			data.type = "remote";
 			data.candidate = event.candidate;
 			session.sendMsg(data);
 		};
+
+		session.rpcs[UUID].onconnectionstatechange = function(){
+			switch (session.rpcs[UUID].connectionState) {
+				case "connected":
+					if (session.rpcs[UUID].videoElement){
+                        session.rpcs[UUID].videoElement.srcObject = session.rpcs[UUID].streamSrc;
+					}
+					log("** connected");
+					// The connection has become fully connected
+					break;
+				case "disconnected":
+					log(" ** disconnected");
+				case "failed":
+					// One or more transports has terminated unexpectedly or in an error
+					break;
+				case "closed":
+					// The connection has been closed
+					break;
+			}	
+		}
 
 		session.rpcs[UUID].oniceconnectionstatechange = function() {
 			try{
@@ -860,171 +1026,172 @@ Ooblex.Media = new (function(){
 						errorlog(e);
 					}
 					if (this.streamSrc){
-                	                        this.streamSrc.getTracks().forEach(function(track) {
-        	                                       track.stop();
+						this.streamSrc.getTracks().forEach(function(track) {
+							track.stop();
 							log("Track stopped");
-	                                        });
-                        	        }
-
-
+						});
+					}
+					if (!(session.director)){
+						try {
+							if (session.rpcs[UUID].videoElement){
+								session.rpcs[UUID].videoElement.style.display = "none";
+								updateMixer();
+							}
+						} catch (e){ }
+					}
 					try {
 						if (document.getElementById("container_"+this.UUID)){
 							document.getElementById("container_"+this.UUID).parentNode.removeChild(document.getElementById("container_"+this.UUID));
 						}
-					} catch (e){errorlog(e);}
-						session.rpcs[this.UUID].close();
-						session.rpcs[this.UUID] = null
-						delete(session.rpcs[this.UUID]);
+					} catch (e){}
+					session.rpcs[this.UUID].close();
+					session.rpcs[this.UUID] = null
+					delete(session.rpcs[this.UUID]);
 
-			} else if (this.iceConnectionState == 'failed') {
-				errorlog("ICE FAILED");
-			} else {
-				log("ICE: "+this.iceConnectionState);
-			}
+				} else if (this.iceConnectionState == 'failed') {
+					errorlog("ICE FAILED");
+				} else {
+					log("ICE: "+this.iceConnectionState);
+				}
 
-		} catch (E){}
-	}
+			} catch (E){}
+		}
 
-	session.rpcs[UUID].ondatachannel = (event)=>{ // recieve data from peer; event data maybe
+		session.rpcs[UUID].ondatachannel = (event)=>{ // recieve data from peer; event data maybe
 
 
-		this.receiveChannel = event.channel;
-		this.receiveChannel.onmessage = (e)=>{
-			log("recieved data: "+e.data);
-			var msg = JSON.parse(e.data)
-			log(msg);
-			//if (session.verifyData(msg,session.rpcs[UUID]['streamID'])){  // I'm just going to disable security for now.
-			if ("data" in msg){
-				if ("volume" in msg.data){
-					log("Changing volume");
-					log(parseInt(msg.data["volume"])/100.0);
-					var volume = parseInt(msg.data["volume"])/100.0; //
-					document.getElementById("videosource_"+UUID).dataset.publisher = parseInt(msg.data["volume"]);
-					if (session.scene){
-						if ("director" in document.getElementById("videosource_"+UUID).dataset){
-							if (document.getElementById("videosource_"+UUID).dataset.director==0){
-								log("Mute override by director; this is a scene");
+			this.receiveChannel = event.channel;
+			this.receiveChannel.onmessage = (e)=>{
+				log("recieved data: "+e.data);
+				var msg = JSON.parse(e.data)
+				log(msg);
+				//if (session.verifyData(msg,session.rpcs[UUID]['streamID'])){  // I'm just going to disable security for now.
+				if ("data" in msg){
+					if ("volume" in msg.data){
+						log("Changing volume");
+						log(parseInt(msg.data["volume"])/100.0);
+						var volume = parseInt(msg.data["volume"])/100.0; //
+						session.rpcs[UUID].publisher = parseInt(msg.data["volume"]);
+						if (session.scene){
+							if (session.rpcs[UUID].director !== false){
+								if (ession.rpcs[UUID].director==0){
+									log("Mute override by director; this is a scene");
+									return;
+								} 
+							} else if (session.single){
+								if (session.rpcs[UUID].director==0){
+									log("Mute override by director; this is a scene");
+									return;
+								}		
+							} else {
+								session.rpcs[UUID].videoElement.muted = true;
+								session.rpcs[UUID].videoElement.volume = 1;
+								log("Mute override by director; this is a scene and the director has not unmuted");
 								return;
-							} 
-						} else if (session.single){
-							 if (document.getElementById("videosource_"+UUID).dataset.director==0){
-                                                                log("Mute override by director; this is a scene");
-                                                                return;
-                                                        }		
-						} else {
-							document.getElementById("videosource_"+UUID).muted=true;
-							document.getElementById("videosource_"+UUID).volume = 1;
-							log("Mute override by director; this is a scene and the director has not unmuted");
-							return;
+							}
 						}
-					}
-					if (!session.director){
-					if (document.getElementById("videosource_"+UUID).volume==0){
-						if (volume>0){
-							log("unmuted - 892");
-							document.getElementById("videosource_"+UUID).muted=false; // TODO: THIS SHOULDn't be UUID? or should it be STREAMID? *fak*
-							document.getElementById("videosource_"+UUID).volume = volume;
-						} else {
-							document.getElementById("videosource_"+UUID).muted=true;
+						if (!session.director){
+							if (session.rpcs[UUID].videoElement.volume==0){
+								if (volume>0){
+									session.rpcs[UUID].videoElement.muted=false; // TODO: THIS SHOULDn't be UUID? or should it be STREAMID? *fak*
+									session.rpcs[UUID].videoElement.volume = volume;
+								} else {
+									session.rpcs[UUID].videoElement.muted=true;
+								}
+							} else if (volume>0){
+								session.rpcs[UUID].videoElement.muted=false;
+								log("unmuted 900");
+							} else {
+								session.rpcs[UUID].videoElement.muted=true;
+							}
 						}
-					} else if (volume>0){
-						document.getElementById("videosource_"+UUID).muted=false;
-						log("unmuted 900");
-					} else {
-						document.getElementById("videosource_"+UUID).muted=true;
-					}
-					}
-				}}
-			//}
+					}}
+				//}
 
-		};
-		this.receiveChannel.onopen = function(){log("data channel opened")};
+			};
+			this.receiveChannel.onopen = function(){log("data channel opened")};
 
-		this.receiveChannel.onclose = () => {
-			log("rpc datachannel closed");
-			//this.receiveChannel.close();
-			//session.rpcs[UUID].close();
+			this.receiveChannel.onclose = () => {
+				log("rpc datachannel closed");
+				//this.receiveChannel.close();
+				//session.rpcs[UUID].close();
+			};
 		};
+
+		session.rpcs[UUID].ontrack = event => {
+
+			log("streams:",event.streams);
+			log(event.streams[0].getVideoTracks());
+			log(event.streams[0].getAudioTracks());
+			const stream = event.streams[0];
+			session.rpcs[UUID].streamSrc = stream;
+
+			//document.getElementById("reshare").innerHTML = "https://obs.ninja/?streamid="+session.streamID;
+			if (session.rpcs[UUID].videoElement){
+				log("new track added to mediastream");
+				var v = session.rpcs[UUID].videoElement;
+				if (session.rpcs[UUID].connectionState ==  "connected"){
+					v.srcObject = stream;
+				} 
+			} else {
+				log("video element is being created and media track added");
+
+				var container = document.createElement("div");	
+				container.id = "container_"+UUID;
+				container.className = "vidcon";
+				var v = document.createElement("video");
+				session.rpcs[UUID].videoElement = v;
+				document.getElementById("gridlayout").appendChild(container);
+				container.appendChild(v);
+				log("!!");
+				v.muted = false;
+				v.volume = 0;
+				v.autoplay = true;
+				v.controls = false;
+				v.id = "videosource_"+UUID; // could be set to UUID in the future
+				v.className += "tile";
+				v.setAttribute("playsinline","");
+					if (session.rpcs[UUID].connectionState ==  "connected"){
+                        v.srcObject = stream;
+					} 
+					if (document.getElementById("mainmenu")){
+						var m = document.getElementById("mainmenu");
+						m.remove();
+					}
+
+				if (session.director){
+					var controls = document.getElementById("controls_blank").cloneNode(true);
+					controls.id = "controls_"+UUID;
+					v.muted= true;
+					v.volume = 1;
+					v.controls = true;
+					container.style.margin="2px";
+					controls.dataset.UUID = UUID;
+					controls.style.display = "block";
+					controls.innerHTML += "<div style='padding:5px;font-size:90%'><b>==> Add this link to OBS:</b><br /><a href='https://"+location.hostname+location.pathname+"?streamid="+session.rpcs[UUID].streamID+"&scene=1&roomid="+session.roomid+"'>https://"+location.hostname+location.pathname+"?streamid="+session.rpcs[UUID].streamID+"&scene=1&roomid="+session.roomid+"</a></div>";
+					container.appendChild(controls);
+				} else if (session.single){ 
+					log("single mode, so we won't touch the defaults");
+				} else if (session.scene){
+					v.style.display="none";
+					v.muted=true;
+					//updateMixer();
+				} else if (session.roomid){
+					v.controls = true;
+					updateMixer();
+				}
+				
+				if (v.controls == false){
+					v.addEventListener("click", function() {
+						v.play();
+					});
+				}
+				
+			}
+		}
+		log("setup peer complete");
 	};
 
-	session.rpcs[UUID].ontrack = event => {
 
-		log("streams:",event.streams);
-		log(event.streams[0].getVideoTracks());
-		log(event.streams[0].getAudioTracks());
-		const stream = event.streams[0];
-		session.rpcs[UUID].streamSrc = stream;
-
-		//document.getElementById("reshare").innerHTML = "https://obs.ninja/?streamid="+session.streamID;
-		if (document.getElementById("videosource_"+UUID)){
-			log("new track added to mediastream");
-			var v = document.getElementById("videosource_"+UUID);
-			v.srcObject = stream;
-
-		} else {
-			log("video element is being created and media track added");
-
-			var container = document.createElement("div");	
-			container.id = "container_"+UUID;
-			container.className = "vidcon";
-			var v = document.createElement("video");
-			document.getElementById("gridlayout").appendChild(container);
-			container.appendChild(v);
-			v.muted = false;
-			v.volume = 0;
-			v.autoplay = true;
-			v.controls = true;
-			v.id = "videosource_"+UUID; // could be set to UUID in the future
-			v.className += "tile";
-			v.setAttribute("playsinline",""); 
-			if (!v.srcObject || v.srcObject.id !== stream.id) {
-				v.srcObject = stream;
-			}
-			try {
-				if (document.getElementById("mainmenu")){
-					var m = document.getElementById("mainmenu");
-					m.remove();
-				}
-			} catch(e){errorlog(e);}
-
-			if (session.director){
-				var controls = document.getElementById("controls_blank").cloneNode(true);
-				controls.id = "controls_"+UUID;
-				v.muted= true;
-				v.volume = 1;
-				controls.dataset.UUID = UUID;
-				controls.style.display = "block";
-				controls.innerHTML += "<div style='padding:5px;font-size:70%''>OBS link for just this video:<br /><a href='https://"+location.hostname+location.pathname+"?streamid="+session.rpcs[UUID].streamID+"&scene=1&roomid="+session.roomid+"'>https://"+location.hostname+location.pathname+"?streamid="+session.rpcs[UUID].streamID+"&scene=1&roomid="+session.roomid+"</a></div>";
-				container.appendChild(controls);
-			} else if (session.single){ 
-				log("single mode, so we won't touch the defaults");
-			} else if (session.scene){
-				v.style.display="none";
-				v.muted=true;
-				log("Mute - 968");
-			//	v.dataset.director = 0;
-			}
-			//stream.getTracks().forEach(track => {
-			//	log("Remote track", track)
-			//});
-
-			//	v.onloadedmetadata = (e) => {
-			//		log("Remote video play");
-			//		v.play().then(() => { log("Remote video playing") }).catch((e) => { log(e) });
-			//	}
-
-			// Time to become a seeder now that it's all working // Let's disable this for now. This is for my other project anyways.
-			var data = {};  
-			data.request = "seed";
-			//data.streamID = session.streamID; // Let's switch this to UUID. Protects publisher's STREAM ID and the server can sort it out anyways.
-			//data.streamID = session.rpcs[UUID].streamID;
-			//session.sendMsg(data);
-			//log("OPEN TO RE-SEEDING UUID: "+this.UUID);
-		}
-	}
-	log("setup peer complete");
-};
-
-
-return session;
+	return session;
 })();
