@@ -13,6 +13,8 @@ Why deploy? You may want to customize the UI for your brand/business, or control
 ## What is OBS NINJA
 OBS.ninja uses peer 2 peer technology to bring remote cameras into OBS. The server-side load is very small, so I am able to offer it as a service for free.  It can be found at https://obs.ninja and the beta version can be found at https://obs.ninja/beta
 
+OBS Ninja is not affiliated with OBS, but OBS Ninja is dependent on OBS to function.
+
 Please see the sub-reddit added info: https://reddit.com/r/obsninja  
 Also check out the FAQ for more info: https://github.com/steveseguin/obsninja/wiki
 
