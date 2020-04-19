@@ -1,4 +1,4 @@
-![ILogo by brimace](logo.png)
+![ILogo by brimace](obsNinja_logo_full.png)
 
 ## What's in this repo?
 This is the client-side software for OBS.ninja.  Feel free to use it as you will; code contributions very welcomed. You may be best suited at getting ahold of me at steve@seguin.email instead of via Github if urgent though.
