@@ -248,13 +248,13 @@ function directEnable(ele){ // A directing room only is controlled by the Direct
 	if (ele.parentNode.parentNode.dataset.enable==1){
 		ele.parentNode.parentNode.dataset.enable = 0;
 		ele.className = "";
-		ele.innerHTML = "Add to Scene 1";
+		ele.innerHTML = "Add to Group Scene";
 		ele.parentNode.parentNode.style.backgroundColor = "#E3E4EF";
 	} else {
 		ele.parentNode.parentNode.style.backgroundColor = "#AFA";
 		ele.parentNode.parentNode.dataset.enable = 1;
 		ele.className = "pressed";
-		ele.innerHTML = "Remove from Scene 1";
+		ele.innerHTML = "Remove from Group Scene";
 	}
         var msg = {};
         msg.request = "sendroom";
@@ -412,22 +412,14 @@ function joinRoom(roomname, maxbitrate=false){
 					if ("UUID" in response[i]){
 						if ("streamID" in response[i]){
 							if (response[i]['UUID'] in session.pcs){
-								console.log("RTC already connected"); /// lets just say instead of Stream, we have 
+								log("RTC already connected"); /// lets just say instead of Stream, we have 
 							} else {
 								//var title = "";                            // TODO: Assign labels 
 								//if ("title" in response[i]){
 									//	title = response[i]["title"];
 									//}
 								if (urlParams.has('streamid')){
-									session.single=true;
-									var streamlist = urlParams.get('streamid').split(",");
-									console.log(streamlist);
-									for (j in streamlist){
-										if (response[i]['streamID'] == streamlist[j]){
-											log("PLAYIGN!!!");
-										 	session.watchStream(response[i]['streamID'])
-										}
-									}
+									play(response[i]['streamID']);
 								} else {
 									session.watchStream(response[i]['streamID']); // How do I make sure they aren't requesting the same movie twice as a race condition?
 								}
@@ -481,18 +473,18 @@ function createRoom(){
 	session.director = true;
 	document.getElementById("reshare").parentNode.removeChild(document.getElementById("reshare"));
 	
-	gridlayout.innerHTML = "<br /><font style='font-size:130%;color:white;'>Group Chat Invite Link: Give this link to your guests -->  <a data-share='' onclick='var range=document.createRange(); range.selectNodeContents(this); var selec = window.getSelection(); selec.removeAllRanges();selec.addRange(range);document.execCommand(\"copy\");' onmouseover='this.style.cursor=\"pointer\"'><font style='color:#54F'>https://"+location.hostname+location.pathname+"?roomid="+session.roomid+"</font>\
-	</a>";
+	gridlayout.innerHTML = "<br /><div style='display:inline-block'><font style='font-size:130%;color:white;'><i class='fa fa-paper-plane-o' style='font-size:2em;'  aria-hidden='true'></i> Guest Invite Link: <a data-share='' onclick='var range=document.createRange(); range.selectNodeContents(this); var selec = window.getSelection(); selec.removeAllRanges();selec.addRange(range);document.execCommand(\"copy\");' onmouseover='this.style.cursor=\"pointer\"'><font style='color:#54F'>https://"+location.hostname+location.pathname+"?roomid="+session.roomid+"</font>\
+	</a></div>";
 	
-	gridlayout.innerHTML += "<br /><font style='font-size:130%;color:white;'>Add OBS VirtualCam Output Link-->  <a data-share='' onclick='var range=document.createRange(); range.selectNodeContents(this); var selec = window.getSelection(); selec.removeAllRanges();selec.addRange(range);document.execCommand(\"copy\");' onmouseover='this.style.cursor=\"pointer\"'><font style='color:#54F'>https://"+location.hostname+location.pathname+"?roomid="+session.roomid+"&streamid</font>\
-	</a>";
+	gridlayout.innerHTML += "<br /><font style='font-size:130%;color:white;'><i class='fa fa-video-camera' style='font-size:2em;'  aria-hidden='true'></i> Add Local Camera or OBS VirtualCam: <a data-share='' onclick='var range=document.createRange(); range.selectNodeContents(this); var selec = window.getSelection(); selec.removeAllRanges();selec.addRange(range);document.execCommand(\"copy\");' onmouseover='this.style.cursor=\"pointer\"'><font style='color:#F45'>https://"+location.hostname+location.pathname+"?roomid="+session.roomid+"&streamid</font>\
+	</a><br />";
+	
+	
+	gridlayout.innerHTML += "<font style='font-size:130%;color:white'><i class='fa fa-th-large' style='font-size:2em;'  aria-hidden='true'></i> Group Scene (OBS link /w auto-mixing):<a data-share='' onclick='var range=document.createRange(); range.selectNodeContents(this); var selec = window.getSelection(); selec.removeAllRanges();selec.addRange(range);document.execCommand(\"copy\");' onmouseover='this.style.cursor=\"pointer\"' id='reshare'><font style='color:#5F4'>https://"+location.hostname+location.pathname+"?scene=1&roomid="+session.roomid+"</font></a><br />";
 	
 	gridlayout.innerHTML += "<br /><br />\
-	<font style='font-size:80%;color:#CCC;'>From here, using the <i>OBS PULL</i> links provided below each video that appears, you can create individual video elements within OBS.<br />\
-	You can also use the following <i>Scene 1</i> link to crete a single element in OBS that comprises all the video elements and automixes them for you\
-	<br /><br /></font>";
-	
-	gridlayout.innerHTML += "<font style='font-size:80%;color:white'>Optional <b>Scene 1 </b> link for OBS. <i>This will auto-mix for you, if you prefer that instead.</i><a data-share='' onclick='var range=document.createRange(); range.selectNodeContents(this); var selec = window.getSelection(); selec.removeAllRanges();selec.addRange(range);document.execCommand(\"copy\");' onmouseover='this.style.cursor=\"pointer\"' id='reshare'><font style='color:#54F'><font style='color:#2F3'>https://"+location.hostname+location.pathname+"?scene=1&roomid="+session.roomid+"</font></a></font><br /><hr /><br />";
+	<font style='font-size:80%;color:#CCC;'> As guests join, their videos will appear below. You can bring their video streams into OBS manually as solo-scenes or you can add them to the Group Scene. The Group Scene auto-mixes together videos you have added to the group-scene; just add the Group Scene link to OBS in that case.\
+	<hr /><br /></font>";
 	
 	joinRoom(roomname,100);
 
@@ -842,9 +834,8 @@ function previewWebcam(){
 		  });
 	  }
 	  
-	  var iOS = !!navigator.platform && /iPad|iPhone|iPod/.test(navigator.platform);
-
-	  if (iOS){
+	  
+	  
 		  navigator.mediaDevices.getUserMedia({audio:true, video:true }).then(function(stream){ // Apple needs thi to happen before I can access EnumerateDevices. 
 				  //document.getElementById('previewWebcam').srcObject=stream;
 				stream.getTracks().forEach(function(track) { // We don't want to keep it without audio; so we are going to try to add audio now.
@@ -855,9 +846,7 @@ function previewWebcam(){
 			  errorlog("trying to list webcam again");
 			  setupWebcamSelection();
 		  });
-	  } else {
-		  setupWebcamSelection();
-	  }
+	  
 
   },0);
 }
@@ -889,9 +878,19 @@ function checkOBS(){
 	});
 }
 
-function play(streamName){
+function play(streamid=null){  // play whatever is in the URL params; or filter by a streamID option
 	log("play stream");
-	session.watchStream(streamName);
+	if (urlParams.has('streamid')){
+		var streamlist = urlParams.get('streamid').split(",");
+		log(streamlist);
+		for (j in streamlist){
+			if (streamid===null){
+				session.watchStream(streamlist[j]);
+			} else if (streamid === streamlist[j]){
+				session.watchStream(streamlist[j]);
+			}
+		}
+	}
 }
 var retry=null;
 function browse(){
@@ -906,9 +905,13 @@ function browse(){
 
 function generateQRPage(ele){
 	try{
+		var title = encodeURI(document.getElementById("videoname4").value);
+		if (title.length){
+			title = "&label="+title;
+		}
 		var sid = session.generateStreamID();
-		ele.parentNode.innerHTML = '<br /><div id="qrcode" style="background-color:white;display:inline-block;color:black;max-width:300px;padding:20px;"><h2 style="color:black">Invite Link:</h2><p><a href="https://' + location.hostname+ location.pathname + '?permaid=' + sid + '">https://' + location.hostname + location.pathname + '?permaid=' + sid + '</a></p><br /></div>\
-			<br /><br />and don\'t forget the<h2 style="color:black">OBS Link:</h2><p><a style="font-size:120%" href="https://' + location.hostname+ location.pathname + '?streamid=' + sid + '">https://' + location.hostname + location.pathname + '?streamid=' + sid + '</a></p><br /><i>In OBS v25 you can drag this link directly into OBS, or you can create a Browse element in OBS and insert it the URL source.</i> \
+		ele.parentNode.innerHTML = '<br /><div id="qrcode" style="background-color:white;display:inline-block;color:black;max-width:300px;padding:20px;"><h2 style="color:black">Invite Link:</h2><p style="max-width:170px;"><a href="https://' + location.hostname+ location.pathname + '?permaid=' + sid+'" ">https://' + location.hostname + location.pathname + '?permaid=' + sid  +'</a></p><br /></div>\
+			<br /><br />and don\'t forget the<h2 style="color:black">OBS Link:</h2><p><a style="font-size:120%" href="https://' + location.hostname+ location.pathname + '?streamid=' + sid + title + '">https://' + location.hostname + location.pathname + '?streamid=' + sid + title + '</a></p><br /><i>In OBS v25 you can drag this link directly into OBS, or you can create a Browse element in OBS and insert it the URL source.</i> \
 			<br /><br />\
 		Please also note, the invite link and OBS ingestion link created is reusable, but only one person may use a specific invite at a time.';
 		var qrcode = new QRCode(document.getElementById("qrcode"), {
@@ -925,6 +928,11 @@ function generateQRPage(ele){
 	}
 }
 
+
+if (urlParams.has('streamid')){
+	document.getElementById("main").className = "";
+	document.getElementById("credits").style.display = 'none';
+}
 
 
 if ((urlParams.has('streamid')) && (session.roomid==false)){
@@ -945,12 +953,13 @@ if ((urlParams.has('streamid')) && (session.roomid==false)){
 	document.getElementById("mainmenu").style.backgroundPosition = "bottom center";
 	document.getElementById("mainmenu").style.minHeight = "300px";
 	document.getElementById("mainmenu").style.backgroundSize = "100px 100px";
-	document.getElementById("mainmenu").innerHTML = '<font style="color:#666"><h1>Attempting to load video stream.</h1></font>';
-
+	document.getElementById("mainmenu").innerHTML = '';
+	
 	setTimeout(function(){
 		try{
 			if (urlParams.get("streamid")){
 				if (document.getElementById("mainmenu")){
+					document.getElementById("mainmenu").innerHTML = '<font style="color:#666"><h1>Attempting to load video stream.</h1></font>';
 					document.getElementById("mainmenu").innerHTML += '<font style="color:#EEE">If the stream does not load within a few seconds, the stream may not be available or some other error has occured. If the issue persists, please check out the <a href="https://reddit.com/r/obsninja">https://reddit.com/r/obsninja</a> for possible solutions or contact <a href="mailto:steve@seguin.email" target="_top">steve@seguin.email</a>.</font><br/><button onclick="location.reload();">Retry Connecting</button><br/>';
 
 					document.getElementById("mainmenu").innerHTML += '<div id="qrcode" style="background-color:white;display:inline-block;color:black;max-width:300px;padding:20px;"><h2 style="color:black">Stream Invite URL:</h2><p><a href="https://' + location.hostname+ location.pathname + '?permaid=' + session.streamID + '">https://' + location.hostname + location.pathname + '?permaid=' + urlParams.get("streamid") + '</a></p><br /></div>';
@@ -964,7 +973,7 @@ if ((urlParams.has('streamid')) && (session.roomid==false)){
 					qrcode.makeCode('https://' + location.hostname + location.pathname + '?permaid=' + urlParams.get("streamid"));
 					retry = setInterval(function(){
 						if (document.getElementById("mainmenu")){
-							play(urlParams.get('streamid'));
+							play();
 						} else {
 							clearInterval(retry);
 						}
@@ -980,12 +989,12 @@ if ((urlParams.has('streamid')) && (session.roomid==false)){
 	if (navigator.userAgent.indexOf('Safari') != -1 && navigator.userAgent.indexOf('Chrome') == -1){ 
 		alert("Safari requires us to ask for an audio permission to use peer-to-peer technology. You will need to accept it in a moment if asked to view this live video");
 		navigator.mediaDevices.getUserMedia({audio: true}).then(function(){
-			play(urlParams.get('streamid'));
+			play();
 		}).catch(function(){
-			play(urlParams.get('streamid'));
+			play();
 		});
 	} else {
-		play(urlParams.get('streamid'));
+		play();
 		//document.getElementById("mainmenu").style.display="none";
 	}
 }
@@ -1069,9 +1078,16 @@ function updateMixer(){
 document.addEventListener("dragstart", e => {
 	var url = e.target.href || e.target.data;
 	if (!url || !url.startsWith('http')) return;
-	var streamId = url.split('=')[1];
+	
+	var streamId = url.split('streamid=');
+	var label = url.split('label=');
+	
+	
 	url += '&layer-name=OBS.Ninja';
-	if (streamId) url += ': ' + streamId;
+	if (streamId.length>1) url += ': ' + streamId[1].split('&')[0];
+	
+	if (label.length>1) url += ' - ' + decodeURI(label[1].split('&')[0]);
+	
 	try{
 		var video = document.getElementById('videosource');
 		url += '&layer-width=' + video.videoWidth; // this isn't always 100% correct, as the resolution can fluxuate, but it is probably good enough

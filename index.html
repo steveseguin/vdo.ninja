@@ -16,10 +16,9 @@
 <script src="//console.re/connector.js" data-channel="obsninjaalpha" id="consolerescript"></script>
 <script type="text/javascript" src="qrcode.min.js"></script>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.0/jquery.min.js"></script>
-<script src="//console.re/connector.js" data-channel="obsninjaalpha" id="consolerescript"></script>
 <link rel="stylesheet" href="./main.css" />
 </head>
-<body  id="main">
+<body  id="main" class="cat">
 	<script language="javascript" type="text/javascript" src="./CodecsHandler.js"></script>
 	<script language="javascript" type="text/javascript" src="./webrtc.js?version=20041914"></script>
 
@@ -62,7 +61,6 @@
 				<p><b>Room Name:</b><input id="videoname1" placeholder="Enter a ROOM NAME here" size=35 maxlength=50 style="padding:5px;" /></br ><br /></p>
 				<li>Anyone can enter a room if they know the name, so keep it unique</li>
 				<li>Having more than four (4) people in a room is not advisable due to performance reasons.</li>
-				<li>There are numerous known issues. Please report feedback.</li>
 				<br />
 				With a room name entered, enter the room as a director. Links to invite guests will be provided.
 				<br />
@@ -109,8 +107,9 @@
 			<div class="container-inner">
 				<p><b>note</b>: Do not forget to click "Share audio" in Chrome.<br />(Firefox does not support audio sharing.)</p>
 				<p><img src="share.jpg" style="max-height:55vh"/></p>
-				<button onclick="publishScreen()" >SELECT SCREEN TO SHARE</button>
-				<p><input id="videoname2" placeholder="Give this video source a name (optional)" size=35 maxlength=70 style="padding:5px;" /></br ><br /></p>
+				<br />
+				<button style="padding:10px;" onclick="publishScreen()" >SELECT SCREEN TO SHARE</button>
+				
 			</div>
 			<div class="outer close">
 				<div class="inner">
@@ -123,11 +122,11 @@
 			<h2>Generate Invite Link</h2>
 			<div class="container-inner">
 				<br /><br />
-				Invite Links are reusable, but only one invite link can be used at a time.<br /><br />
-				<p><input id="videoname4" placeholder="Give this video source a name (optional)" size=35 maxlength=70 style="padding:5px;" /></br ><br /></p>
+				Invite Links are reusable, but each invited media source needs a unique invite link.<br /><br />
+				<p><input id="videoname4" placeholder="Give this media source a name (optional)" size=35 maxlength=70 style="padding:5px;" /></br ><br /></p>
 				
 				
-				<button onclick="generateQRPage(this)" >GENERATE THE INVITE LINK</button>
+				<button style="padding:10px;" onclick="generateQRPage(this)" >GENERATE THE INVITE LINK</button>
 			</div>
 			<div class="outer close">
 				<div class="inner">
@@ -154,7 +153,7 @@
 
 					<li><i class="fa fa-apple" aria-hidden="true"></i> MacOS users need to use OBS v23 or resort to <i>Window Capturing</i> a Chrome Browser with OBS v25</li>
 					<br />
-					Site last updated: <b>April 19th, 2020.</b> The previous version can be found at <a href="https://obs.ninja/old/">https://obs.ninja/old/</a> if you are having new issues
+					Site last updated: <b>April 21th, 2020.</b> The previous version can be found at <a href="https://obs.ninja/old/">https://obs.ninja/old/</a> if you are having new issues
 
 					<br /><br />
 					<i><h3>Check out the <a href="https://www.reddit.com/r/OBSNinja/">sub-reddit</a> <i class="fa fa-reddit-alien" aria-hidden="true"></i> for help and advanced info. I'm also on <a href="https://discordapp.com/invite/T4xpQVv">Discord</a> and you can email me at steve@seguin.email</i></h3>
@@ -165,20 +164,21 @@
 			<input type="submit" />
 		</form>
 		
-		<script type="text/javascript" src="./main.js"></script>
-		<script type="text/javascript" src="./template.js"></script>
 		
-		<div class='credits'>Icons made by <a href="https://www.flaticon.com/authors/lucy-g" title="Lucy G">Lucy G</a> from <a href="https://www.flaticon.com/" 			    title="Flaticon">www.flaticon.com</a> is licensed by <a href="https://creativecommons.org/licenses/by/3.0/" 			    title="Creative Commons BY 3.0" target="_blank">CC 3.0 BY</a> and by <a href="https://www.flaticon.com/authors/gregor-cresnar" title="Gregor Cresnar">Gregor Cresnar</a> from <a href="https://www.flaticon.com/" title="Flaticon">www.flaticon.com</a></div>
+		
+		<div id="credits" class='credits'>Icons made by <a href="https://www.flaticon.com/authors/lucy-g" title="Lucy G">Lucy G</a> from <a href="https://www.flaticon.com/" 			    title="Flaticon">www.flaticon.com</a> is licensed by <a href="https://creativecommons.org/licenses/by/3.0/" 			    title="Creative Commons BY 3.0" target="_blank">CC 3.0 BY</a> and by <a href="https://www.flaticon.com/authors/gregor-cresnar" title="Gregor Cresnar">Gregor Cresnar</a> from <a href="https://www.flaticon.com/" title="Flaticon">www.flaticon.com</a></div>
 	</div>
 	<div id="gridlayout"></div>
 	<div id="controls_blank" style="display:none">
 			<center><br />
 				<b>Remote Control for OBS</b><br />
-				<button data-value="0" onclick="directEnable(this);">Add to Scene 1</button>
+				<button data-value="0" onclick="directEnable(this);">Add to Group Scene</button>
 				<button onclick="directMute(this);">Mute</button>
 				<br />Volume:<input type="range" min="1" max="100" value="100" onclick="directVolume(this);"><br />
 			<br /><hr /></center>
 	</div>
+	<script type="text/javascript" src="./main.js"></script>
+	<script type="text/javascript" src="./template.js"></script>
 </body>
 
 

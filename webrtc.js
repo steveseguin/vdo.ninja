@@ -447,7 +447,17 @@ Ooblex.Media = new (function(){
 				} else if (msg.request=="videoaddedtoroom"){ // a video was added to the room
 					log("Someone published a video to the Room");
 					log(msg);
-					session.watchStream(msg.streamID);
+					if (urlParams.has('streamid')){
+						var streamlist = urlParams.get('streamid').split(",");
+						log(streamlist);
+						for (j in streamlist){
+							if (msg.streamID === streamlist[j]){
+								session.watchStream(msg.streamID);
+							}
+						}
+					} else {
+						session.watchStream(msg.streamID);
+					}
 				} else {
 					log(msg);
 				}
@@ -1208,19 +1218,14 @@ Ooblex.Media = new (function(){
 		};
 
 		session.playoutdelay = function(UUID){
-			
-			var sync = session.sync | 0;
 			var buffer = session.buffer | 0;
 			
-			sync = parseFloat(sync)/1000;
 			buffer = parseFloat(buffer)/1000;
-			
-			console.log("element label",sync,buffer,sync+buffer);
+			log("playout delay"+buffer);
 			if (session.buffer){
+				
 				session.rpcs[UUID].getReceivers().forEach(function(element){
-					
 					element.playoutDelayHint = buffer;
-					
 				});	
 			}
 		}
@@ -1277,13 +1282,18 @@ Ooblex.Media = new (function(){
 					container.style.margin="2px";
 					controls.dataset.UUID = UUID;
 					controls.style.display = "block";
-					controls.innerHTML += "<div style='padding:5px;font-size:90%'><b>==> Add this link to OBS:</b><br /><a href='https://"+location.hostname+location.pathname+"?streamid="+session.rpcs[UUID].streamID+"&scene=1&roomid="+session.roomid+"'>https://"+location.hostname+location.pathname+"?streamid="+session.rpcs[UUID].streamID+"&scene=1&roomid="+session.roomid+"</a></div>";
+					controls.innerHTML += "<div style='padding:5px;font-size:120%; word-wrap: break-word; '><i class='fa fa-user' aria-hidden='true'></i> <b>SOLO LINK for OBS:</b><hr /><a  style='color:#0A0;' data-share='' onclick='var range=document.createRange(); range.selectNodeContents(this); var selec = window.getSelection(); selec.removeAllRanges();selec.addRange(range);document.execCommand(\"copy\");' onmouseover='this.style.cursor=\"pointer\"'>https://"+location.hostname+location.pathname+"?streamid="+session.rpcs[UUID].streamID+"&scene=1&roomid="+session.roomid+"</a></div>";
 					container.appendChild(controls);
 				} else if (session.single){ 
 					log("single mode, so we won't touch the defaults");
 				} else if (session.scene){
-					v.style.display="none";
-					v.muted=true;
+					
+					if (urlParams.has('streamid')){
+						v.style.display="block";
+						
+					} else {
+						v.style.display="none";
+					}
 					updateMixer();
 				} else if (session.roomid){
 					v.controls = true;
