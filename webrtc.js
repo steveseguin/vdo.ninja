@@ -1,10 +1,10 @@
 var Ooblex = {}; // Based the WebRTC and Signaling code off some of my open-source project, ooblex.com, hence the name.i
 function log(msg){
-	console.log(msg);
+	//console.log(msg);
 	//console.re.log(msg);
 }
 function errorlog(msg){
-	console.error(msg);
+	//console.error(msg);
 	//console.re.error(msg);
 }
 function isAlphaNumeric(str) {
@@ -74,10 +74,15 @@ Ooblex.Media = new (function(){
 	session.maxframerate = false;
 	session.single = false;
 	session.roomid = false;
-	session.codec = "vp9"; // Setting the default codec to VP9, since it is the most stable it seems these days
+	session.codec = "vp9" //"h264"; // Setting the default codec to VP9?  ugh. Seems stable, but high CPU.
 	session.width=false;
 	session.height=false;
 	session.videoElement = false;
+	
+	//this._peerConnection.getReceivers().forEach(element => element.playoutDelayHint = 0.05);
+	session.sync = false;
+	session.buffer = false;
+	
 	session.generateStreamID = function(){
 		var text = "";
 		var possible = "ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnpqrstuvwxyz23456789";
@@ -162,6 +167,48 @@ Ooblex.Media = new (function(){
 
 	}
 	
+	session.requestRateLimit = function(bandwidth,UUID){
+		log("request rate limit: "+bandwidth)
+		if (session.rpcs[UUID].bandwidth==bandwidth){return;}
+		var msg = {};
+		msg.bitrate = parseInt(bandwidth);
+		if (session.sendRequest(msg,UUID)){
+			session.rpcs[UUID].bandwidth=bandwidth;
+		} else {
+			setTimeout(function(){updateMixer();},1000);
+			errorlog("couldn't set rate limit");
+		}
+	}
+	
+	session.limitBitrate = function(UUID, bandwidth){ 
+		// In Chrome, use RTCRtpSender.setParameters to change bandwidth without
+		// (local) renegotiation. Note that this will be within the envelope of
+		// the initial maximum bandwidth negotiated via SDP.
+		try{
+			if ((adapter.browserDetails.browser === 'chrome' ||
+				adapter.browserDetails.browser === 'safari' ||
+				(adapter.browserDetails.browser === 'firefox' &&
+				adapter.browserDetails.version >= 64)) && 'RTCRtpSender' in window && 'setParameters' in window.RTCRtpSender.prototype){
+					
+					var sender = session.pcs[UUID].getSenders()[0];
+					var parameters = sender.getParameters();
+					if (!parameters.encodings){
+						parameters.encodings = [{}];
+					}
+					if (bandwidth < 0) {
+						delete parameters.encodings[0].maxBitrate;
+					} else {
+						parameters.encodings[0].maxBitrate = bandwidth * 1000;
+					}
+					sender.setParameters(parameters).then(() => {
+						  log("bandwidth set!");
+					}).catch(e => errorlog(e));
+					return;
+					
+			}
+		} catch(e){errorlog(e);}
+	}
+	
 	function extractSdp(sdpLine, pattern) {
 		var result = sdpLine.match(pattern);
 		return (result && result.length == 2)? result[1]: null;
@@ -189,7 +236,7 @@ Ooblex.Media = new (function(){
 	}
 
 	session.signData = function(data,callback){ // data as string
-		console.log("data:",data);
+		log(data);
 		if (session.mykey === {}){
 			log("Generate Some Crypto keys first");
 		}
@@ -419,7 +466,7 @@ Ooblex.Media = new (function(){
 
 				}
 			} else if (msg.candidate){
-				console.log("GOT ICE!!");
+				log("GOT ICE!!");
 				if ((msg.UUID in session.pcs) && (msg.type=="remote")){
 					log("PCS WINS ICE");
 					session.pcs[msg.UUID].addIceCandidate(msg.candidate).then(function(){log("added ICE from viewer");}).catch(function(e){
@@ -512,7 +559,12 @@ Ooblex.Media = new (function(){
 				var m = document.getElementById("mainmenu");
 				m.remove();
 			} catch (e){}
-			v.play();
+			v.play().then(_ => {
+			  log("playing");
+			})
+			.catch(error => {
+			  errorlog("didnt autoplay");
+			});
 			
 			
 			var data = {};
@@ -570,12 +622,20 @@ Ooblex.Media = new (function(){
 		v.setAttribute("playsinline","");
 		v.id = "videosource"; // could be set to UUID in the future
 		v.className = "tile";
-		v.srcObject = session.streamSrc;
+		try {
+		    v.srcObject = session.streamSrc;
+		} catch (e){errorlog(e);}
 		try{
 			var m = document.getElementById("mainmenu");
 			m.remove();
 		} catch (e){}
-		v.play();
+		
+		v.play().then(_ => {
+		  log("playing");
+		})
+		.catch(error => {
+		  errorlog("didnt autoplay");
+		});
 		var data = {};
 		data.request = "seed";
 		data.title = title;
@@ -741,12 +801,52 @@ Ooblex.Media = new (function(){
 			}
 		});
 	};
+	
+	session.sendMessage = function(msg, UUID=null){ // Publisher signs the request. This lets sub-viewers, if any, verify if a message is from the original publisher or not.
+		msg['timestamp'] = Date.now().toString();
+		msg['counter'] = session.counter;
+
+		session.signData(msg,function(data,signature){
+			session.counter += 1;
+
+			if (UUID == null){ // send to all RTC peers i'm publishing to
+				for (i in session.pcs){
+					try{
+						session.pcs[i].sendChannel.send(JSON.stringify({data,signature}));
+					} catch(e){
+						log("RTC Connection seems to be dead? is it? If it is, or can't be validated, close this shit");
+						//session.pcs[i].close();
+						//delete(session.pcs[i]);
+					}
+				}
+			} else {
+				try{
+					session.pcs[UUID].sendChannel.send(JSON.stringify({data,signature}));
+				} catch(e){
+					log("RTC Connection seems to be dead? is it? If it is, or can't be validated, close this shit");
+					//session.pcs[UUID].close();
+					//delete(session.pcs[UUID]);
+				}	
+			}
+		});
+	};
+	
+	session.sendRequest = function(msg, UUID){ // Publisher signs the request. This lets sub-viewers, if any, verify if a message is from the original publisher or not.
+		try{
+			msg['timestamp'] = Date.now().toString();
+			session.rpcs[UUID].receiveChannel.send(JSON.stringify(msg));
+			return true;
+		} catch(e){
+			log("PUBLISHER's RTC Connection seems to be dead? ");
+			return false;
+		}	
+	};
 
 	session.offerSDP = function(stream,UUID){  // publisher/offerer (PCS)
 		if (UUID in session.pcs){
 				errorlog("PROBLEM! RESENDING SDP OFFER SHOULD NOT HAPPEN");
 				session.createOffer(session.pcs[UUID], UUID);
-				//return;
+				return;
 		}
 		else {log("Create a new RTC connection; offering SDP on request");}
 
@@ -763,6 +863,16 @@ Ooblex.Media = new (function(){
         session.pcs[UUID].sendChannel.onclose = () => {
 			log("send channel closed");
          };
+
+		session.pcs[UUID].sendChannel.onmessage = (e)=>{
+			log("recieved data from viewer");
+			var msg = JSON.parse(e.data)
+			log(msg);
+			if ("bitrate" in msg){
+				session.limitBitrate(UUID, msg.bitrate);
+			}
+		}
+		
 
 		log("pubs streams to offeR",stream.getTracks());	
 		stream.getTracks().forEach(track => session.pcs[UUID].addTrack(track, stream));
@@ -802,25 +912,26 @@ Ooblex.Media = new (function(){
 			pc.createOffer().then((description)=>{
 				if (session.stereo){
 					//description.sdp = CodecsHandler.forceStereoAudio(description.sdp);
-					description.sdp = CodecsHandler.setOpusAttributes(description.sdp, {
+					description.sdp = CodecsHandler.setOpusAttributes(description.sdp, {  // lets give the 
 						'stereo': 1,
-						//'sprop-stereo': 1,
+						'sprop-stereo': 1,
 						'maxaveragebitrate': 128 * 1000 * 8,
 						'maxplaybackrate': 128 * 1000 * 8,
-						//'cbr': 1,
-						//'useinbandfec': 1,
-						// 'usedtx': 1,
+						'cbr': 1,
+						'useinbandfec': 1,
+						 'usedtx': 1,
 						'maxptime': 3
 					});
 					log("stereo enabled");
 				}
 				
-				if (session.bitrate){
-					log("bit rate being munged");
-					description.sdp = unlockBitrate(description.sdp, session.bitrate, session.screenshare);
-				} else if (session.codec){
-					description.sdp = CodecsHandler.preferCodec(description.sdp, session.codec); // h264, vp8, vp9
-				}
+				//if (session.bitrate){
+				//	log("bit rate being munged");
+				//	description.sdp = unlockBitrate(description.sdp, session.bitrate, session.screenshare);
+				//} else 
+				//if (session.codec){
+				//	description.sdp = CodecsHandler.preferCodec(description.sdp, session.codec); // h264, vp8, vp9
+				//}
 				
 				
 				pc.setLocalDescription(description).then(function(){
@@ -851,26 +962,6 @@ Ooblex.Media = new (function(){
 		};
 
 	};
-
-	session.reducebitrate = function(rpc, bandwidth){ // kbps
-		// In Chrome, use RTCRtpSender.setParameters to change bandwidth without
-		// (local) renegotiation. Note that this will be within the envelope of
-		// the initial maximum bandwidth negotiated via SDP.
-		try {
-			const parameters = rpc.getSenders()[0].getParameters();
-			if (!parameters.encodings){
-				parameters.encodings = [{}];
-			}
-			if (bandwidth < 0){
-				delete parameters.encodings[0].maxBitrate;
-			} else {
-				parameters.encodings[0].maxBitrate = bandwidth * 1000;
-			}
-			rpc.getSenders()[0].setParameters(parameters).then(() => {
-					log("bandwidth set");
-				}).catch(e => errorlog(e));
-		} catch (e){errorlog("failed to set max bitrate");}
-	}
 
 	session.connectPeer = function(msg){ // someone is SENDING us a video stream
 		session.rpcs[msg.UUID].setRemoteDescription(msg.description).then(function(){  // description, onSuccess, onError
@@ -919,7 +1010,7 @@ Ooblex.Media = new (function(){
 		if (UUID in session.rpcs){log("RTC connection is ALREADY ready; we can already accept answers");return;} // already exists
 		else {log("MAKING A NEW RTC CONNECTION");}
 		session.rpcs[UUID] = new RTCPeerConnection(session.configuration);
-
+		session.rpcs[UUID].bandwidth=-1;
 		session.rpcs[UUID].videoElement=false;
 		session.rpcs[UUID].director=false;
 		session.rpcs[UUID].publisher=false;
@@ -933,8 +1024,6 @@ Ooblex.Media = new (function(){
 		session.rpcs[UUID].addTransceiver('video', { direction: 'recvonly'});
 		session.rpcs[UUID].onclose = function(event){
 			log("rpc closed");
-			console.log("*********",UUID,);
-			console.log("*********",this.UUID);
 			try {
 				var streamID = this.streamID; // reconnect if possible
 				var data = {};
@@ -949,7 +1038,6 @@ Ooblex.Media = new (function(){
 			if (!(session.director)){
 				try {
 					if (session.rpcs[UUID].videoElement){
-						
 						session.rpcs[UUID].videoElement.style.display = "none";
 						updateMixer();
 					}
@@ -1060,8 +1148,9 @@ Ooblex.Media = new (function(){
 		session.rpcs[UUID].ondatachannel = (event)=>{ // recieve data from peer; event data maybe
 
 
-			this.receiveChannel = event.channel;
-			this.receiveChannel.onmessage = (e)=>{
+			session.rpcs[UUID].receiveChannel = event.channel;
+			
+			session.rpcs[UUID].receiveChannel.onmessage = (e)=>{
 				log("recieved data: "+e.data);
 				var msg = JSON.parse(e.data)
 				log(msg);
@@ -1109,14 +1198,32 @@ Ooblex.Media = new (function(){
 				//}
 
 			};
-			this.receiveChannel.onopen = function(){log("data channel opened")};
+			session.rpcs[UUID].receiveChannel.onopen = function(){log("data channel opened")};
 
-			this.receiveChannel.onclose = () => {
+			session.rpcs[UUID].receiveChannel.onclose = () => {
 				log("rpc datachannel closed");
 				//this.receiveChannel.close();
 				//session.rpcs[UUID].close();
 			};
 		};
+
+		session.playoutdelay = function(UUID){
+			
+			var sync = session.sync | 0;
+			var buffer = session.buffer | 0;
+			
+			sync = parseFloat(sync)/1000;
+			buffer = parseFloat(buffer)/1000;
+			
+			console.log("element label",sync,buffer,sync+buffer);
+			if (session.buffer){
+				session.rpcs[UUID].getReceivers().forEach(function(element){
+					
+					element.playoutDelayHint = buffer;
+					
+				});	
+			}
+		}
 
 		session.rpcs[UUID].ontrack = event => {
 
@@ -1125,6 +1232,8 @@ Ooblex.Media = new (function(){
 			log(event.streams[0].getAudioTracks());
 			const stream = event.streams[0];
 			session.rpcs[UUID].streamSrc = stream;
+
+			session.playoutdelay(UUID);
 
 			//document.getElementById("reshare").innerHTML = "https://obs.ninja/?streamid="+session.streamID;
 			if (session.rpcs[UUID].videoElement){
@@ -1175,7 +1284,7 @@ Ooblex.Media = new (function(){
 				} else if (session.scene){
 					v.style.display="none";
 					v.muted=true;
-					//updateMixer();
+					updateMixer();
 				} else if (session.roomid){
 					v.controls = true;
 					updateMixer();
@@ -1183,7 +1292,12 @@ Ooblex.Media = new (function(){
 				
 				if (v.controls == false){
 					v.addEventListener("click", function() {
-						v.play();
+						v.play().then(_ => {
+						  log("playing");
+						})
+						.catch(error => {
+						  errorlog("didnt autoplay");
+						});
 					});
 				}
 				
