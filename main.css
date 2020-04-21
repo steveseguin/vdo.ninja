@@ -2,6 +2,7 @@
 	padding: 0;
 	margin: 0;
 	box-sizing: border-box;
+	border:0;
 
 }
 #mynetwork {
@@ -10,6 +11,30 @@
 		border: 1px solid lightgray;
 	}
 .email { unicode-bidi: bidi-override; direction: rtl; user-select: none;  }
+
+a:link {
+	text-decoration: none;
+  color: rgba(66,220,219,200);
+}
+
+/* visited link */
+a:visited {
+	text-decoration: none;
+  color: rgba(66,220,219,200);
+}
+
+/* mouse over link */
+a:hover {
+  color: rgba(66,220,219,200);
+}
+
+/* selected link */
+a:active {
+  color: rgba(66,220,219,200);
+}
+
+
+
 .credits {
 	color:black;
 	position:absolute;
@@ -55,6 +80,7 @@
 .vidcon {
 	max-width:100%;
 	max-height:100%
+	border:0;
 }
 .vidcon:nth-of-type(3n) { grid-column:  2; }
 .vidcon:nth-of-type(3n) {  grid-row: span ;  }
@@ -67,6 +93,7 @@
 	border:0;
 	padding:0;
 	margin:0;
+	border:0;
 }
 
 #gridlayout {
@@ -79,7 +106,11 @@
 	grid-auto-flow: dense;
 	grid-auto-columns:minmax(50%, auto);
 	grid-auto-rows: minmax(50%, auto);
+	border:0;
+	margin:0;
 }
+
+
 
 .directorsgrid {
 	justify-items: normal;
@@ -105,19 +136,39 @@
 }
 
 html {
+	border:0;
+	margin:0;
 }
 
 
 body {
-	padding: 0 3px;
+	padding: 0 0px;
 	height: 100%;
 	width: 100%;
-	background: #141926;
+	background-color: #141926;
+	background-color: -webkit-linear-gradient(to top, #181925, #141826, #0F2027);  /* Chrome 10-25, Safari 5.1-6 */
+	background-color: linear-gradient(to top, #181825, #141926, #0F2027); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+
 	font-family: Helvetica, Arial, sans-serif;
 	display: flex;
 	flex-flow: column;
+	border:0;
+	margin:0;
+
+	
 }
 
+ @media screen and (min-width: 1000px) {
+	 
+	body {
+		background-image: url(cat.svg);
+		background-repeat: no-repeat;
+		background-size: auto 50%;
+		background-attachment: fixed;
+		background-position: right bottom; 
+	 }
+ }
+ 
 .gowebcam {
 	padding:20px;
 	background-color:white;
@@ -281,6 +332,7 @@ body {
 
 	   /* Add shadows to create the "card" effect */
 	   box-shadow: 0 4px 8px 0 rgba(0,0,0,.1);
+	   
    }
    /* On mouse-over, add a deeper shadow */
    .column:hover {
@@ -414,6 +466,8 @@ img {
 video {
 	flex: 1 1 auto;
 	background-color: transparent !important;
+	border:0;
+	margin:0;
 }
 
 
@@ -448,5 +502,36 @@ video {
 	padding:0;
 	width:100%;
 	height:100%;
+}
+
+
+.column_neon {
+  color:white;
+  animation: neonGlow 2s infinite alternate cubic-bezier(0.455, 0.03, 0.515, 0.955);
+  box-shadow:  
+		 0 0 5px rgba(255,255,255,.8), 
+		 0 0 10px rgba(255,255,255,.8),
+		 0 0 20px rgba(66,220,219,.5),
+		 0 0 22px rgba(66,220,219,.5)
+}
+
+@keyframes neonGlow {
+  100% {
+    box-shadow:  
+				 0 0 5px rgba(255,255,255,.8), 
+				 0 0 10px rgba(255,255,255,.8),
+                 0 0 20px rgba(66,220,219,.5),
+                 0 0 22px rgba(66,220,219,.5)
+                
+               
+  }
+  0% {
+    box-shadow: 0 0 2px rgba(255,255,255,.8),
+				0 0 3px rgba(255,255,255,.8),
+				0 0 4px rgba(66,220,219,.5)
+                
+                
+                 
+  }
 }
 

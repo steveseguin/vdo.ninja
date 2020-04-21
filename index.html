@@ -3,9 +3,15 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta content="text/html;charset=utf-8" http-equiv="Content-Type">
 <meta content="utf-8" http-equiv="encoding">
-<link rel="shortcut icon" href="data:image/x-icon;," type="image/x-icon"> 
+<link rel="shortcut icon" href="data:image/x-icon;," type="image/x-icon">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="icon" href="favicon.ico" />
+<meta name="msapplication-TileColor" content="#da532c">
+<meta name="theme-color" content="#ffffff">
+
 <link rel="stylesheet" href="font-awesome.min.css">
-<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
 <script type="text/javascript" src="https://webrtc.github.io/adapter/adapter-latest.js"></script>
 <script src="//console.re/connector.js" data-channel="obsninjaalpha" id="consolerescript"></script>
 <script type="text/javascript" src="qrcode.min.js"></script>
@@ -15,11 +21,11 @@
 </head>
 <body  id="main">
 	<script language="javascript" type="text/javascript" src="./CodecsHandler.js"></script>
-	<script language="javascript" type="text/javascript" src="./webrtc.js?asdf=5"></script>
+	<script language="javascript" type="text/javascript" src="./webrtc.js?version=20041914"></script>
 
 	<div id="header">
 		<h2>
-			<a href="./" style="text-decoration:none;color:white;"><font id="qos">O</font>BS.Ninja</a> &nbsp
+			<a href="./" style="text-decoration:none;color:white;margin: 2px;"><font id="qos">O</font>BS.Ninja</a> &nbsp
 			<div id="head1" style="display:inline-block;;">
 				<input id="joinroomID" name="joinroomID" size=26 placeholder="Join by Room Name here"></input>
 				<button style="padding:1px;" onclick="jumptoroom();">GO</button>
@@ -52,7 +58,7 @@
 		<div id="container-1" class="column columnfade" style="background-color:#ddd;">
 			<h2>Add Group Video Chat to OBS</h2>
 			<div class="container-inner">
-				<br /><h2><font style="color:#D22">The Group Chat is EXPERIMENTAL and likely unstable.<br />Please report issues to steve@seguin.email</font></h2><br />
+				<br />
 				<p><b>Room Name:</b><input id="videoname1" placeholder="Enter a ROOM NAME here" size=35 maxlength=50 style="padding:5px;" /></br ><br /></p>
 				<li>Anyone can enter a room if they know the name, so keep it unique</li>
 				<li>Having more than four (4) people in a room is not advisable due to performance reasons.</li>
@@ -73,8 +79,7 @@
 			<h2 id="add_camera">Add your Camera to OBS</h2>
 			<div class="container-inner"><br />
 				<p>Select the audio/video source below and when you're ready just click START SHARING WEBCAM</p><br />
-				<button onclick="publishWebcam()" class="gowebcam">CLICK HERE WHEN READY</button><br />
-				<p><input id="videoname3" placeholder="Give this video source a name (optional)" size=35 maxlength=50 style="padding:5px;" /></p><br />
+				<button onclick="publishWebcam()" class="gowebcam">CLICK HERE WHEN READY</button>
 				<p><video id="previewWebcam" oncanplay="updateStats();" muted controls autoplay playsinline style="max-width:640px; max-width:83vw; max-height:35vh"></video></p>
 				<br/>
 				<p>Video source: <select id="videoSource"></select></p><br/>
@@ -118,18 +123,10 @@
 			<h2>Generate Invite Link</h2>
 			<div class="container-inner">
 				<br /><br />
+				Invite Links are reusable, but only one invite link can be used at a time.<br /><br />
 				<p><input id="videoname4" placeholder="Give this video source a name (optional)" size=35 maxlength=70 style="padding:5px;" /></br ><br /></p>
-				<br />
-				<form>
 				
-				<input type="radio" id="fullhd2" name="resolution" value="1080">
-				<label for="fullhd">Max Resolution </label> | 
-				<input type="radio" checked id="halfhd2" name="resolution" value="720">
-				<label for="halfhd">Balanced </label> | 
-				<input type="radio" id="nothd2" name="resolution" value="360">
-				<label for="nothd">Smooth and Cool </label>
-				</form>
-				<br />
+				
 				<button onclick="generateQRPage(this)" >GENERATE THE INVITE LINK</button>
 			</div>
 			<div class="outer close">
@@ -149,20 +146,18 @@
 					<li>Bring video from your smartphone, laptop, computer, or from your friends directly into your OBS video stream</li>
 					<li>We use cutting edge Peer-to-Peer forwarding technology that offers privacy and ultra-low latency</li>
 					<br />
-					<li>Youtube video <a href="https://www.youtube.com/watch?v=6R_sQKxFAhg">Demoing it here</a></li>
-					<li>Code is open-sourced: <a href="https://github.com/steveseguin/obsninja">https://github.com/steveseguin/obsninja</a></li>
+					<li>Youtube video <i class="fa fa-youtube-play" aria-hidden="true"></i> <a href="https://www.youtube.com/watch?v=6R_sQKxFAhg">Demoing it here</a> </li>
+					<li>Code is open-sourced <i class="fa fa-github" aria-hidden="true"></i> <a href="https://github.com/steveseguin/obsninja">https://github.com/steveseguin/obsninja</a> </li>
 					<li>You can also check out <a href="https://stageten.tv">StageTEN.tv</a> for a more feature-rich paid-solution</li>
 					<br />
 					<i><font style="color:red">Known issues:</font></i><br />
 
-					<li>** MacOS users need to use OBS v23, along with either a local microphone or virtual audio cable.</li>
-					<li>** The rear camera on some smartphones have issues. Please report these issues, including your phone's model.</li>
-					<li>** For some users the video fails to load into OBS; this is often caused by a network firewall.</li>
+					<li><i class="fa fa-apple" aria-hidden="true"></i> MacOS users need to use OBS v23 or resort to <i>Window Capturing</i> a Chrome Browser with OBS v25</li>
 					<br />
-					<li><b>April 7th, 2020</b>: Site updated. The previous version can be found at https://obs.ninja/old/</li>
+					Site last updated: <b>April 19th, 2020.</b> The previous version can be found at <a href="https://obs.ninja/old/">https://obs.ninja/old/</a> if you are having new issues
 
 					<br /><br />
-					<i><h3>Check out the <a href="https://www.reddit.com/r/OBSNinja/">sub-reddit</a> for help and advanced info. Or email me steve@seguin.email</i></h3>
+					<i><h3>Check out the <a href="https://www.reddit.com/r/OBSNinja/">sub-reddit</a> <i class="fa fa-reddit-alien" aria-hidden="true"></i> for help and advanced info. I'm also on <a href="https://discordapp.com/invite/T4xpQVv">Discord</a> and you can email me at steve@seguin.email</i></h3>
 				</div>
 			</center>
 		</p></div>

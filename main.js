@@ -28,7 +28,20 @@ document.addEventListener('touchend', function (event) {
 	lastTouchEnd = now;
 }, false);
 
-/////////////
+var interacted=false;
+document.addEventListener('click', function (event) {
+	if (interacted==false){
+		interacted=true;
+		history.pushState({}, '');
+	}
+});
+
+window.onpopstate = function() {
+	if (interacted){
+		window.location.reload(true);
+	}
+}; 
+
 
 var session = Ooblex.Media;
 session.streamID = session.generateStreamID();
@@ -58,6 +71,7 @@ if (urlParams.has('permaid')){
 	document.getElementById("container-1").className = 'column columnfade advanced';
 	document.getElementById("container-4").className = 'column columnfade advanced';
 } 
+
 if (urlParams.has('stereo')){
 	log("STEREO ENABLED");
         session.stereo = true;
@@ -87,6 +101,21 @@ if (urlParams.has('framerate')){
 	log("framerate Changed");
 	log(session.framerate);
 }
+
+if (urlParams.has('sync')){
+    session.sync = parseFloat(urlParams.get('sync'));
+	log("sync Changed");
+	log(session.sync);
+}
+
+if (urlParams.has('buffer')){
+    session.buffer = parseFloat(urlParams.get('buffer'));
+	log("buffer Changed");
+	log(session.buffer);
+}
+
+			//var sync = session.sync | 0;
+			//var buffer = session.buffer | 0;
 
 if (urlParams.has('turn')){
 	try {
@@ -142,6 +171,7 @@ session.connect();
 session.volume = micvolume;
 if (urlParams.has('roomid')){
 	var roomid  = urlParams.get('roomid');
+	roomid = encodeURIComponent(roomid);
 	session.roomid = roomid;
 	document.getElementById("videoname1").value = roomid;
 	document.getElementById("dirroomid").innerHTML = roomid;
@@ -340,7 +370,7 @@ function publishWebcam(){
 	if( activatedStream == true){return;}
 	activatedStream = true;
 
-	var title = document.getElementById("videoname3").value;
+	var title = "Webcam"; // document.getElementById("videoname3").value;
 	var ele = document.getElementById("previewWebcam");
 
 	var stream = ele.srcObject;
@@ -511,7 +541,6 @@ function gotDevices(deviceInfos) { // https://github.com/webrtc/samples/blob/gh-
 	const audioInputSelect = document.querySelector('select#audioSource');
 	const videoSelect = document.querySelector('select#videoSource');
 	const selectors = [audioInputSelect, videoSelect];
-	// TODO: Add in the option to select the OUTPUT and Disable Mic/Cam
 
 	// Handles being called several times to update labels. Preserve values.
 		const values = selectors.map(select => select.value);
@@ -521,6 +550,7 @@ function gotDevices(deviceInfos) { // https://github.com/webrtc/samples/blob/gh-
 		}
 	});
 	log(deviceInfos);
+	
 	for (let i = 0; i !== deviceInfos.length; ++i) {
 		const deviceInfo = deviceInfos[i];
 		const option = document.createElement('option');
@@ -534,12 +564,22 @@ function gotDevices(deviceInfos) { // https://github.com/webrtc/samples/blob/gh-
 		} else {
 			log('Some other kind of source/device: ', deviceInfo);
 		}
-}
-selectors.forEach((select, selectorIndex) => {
-	if (Array.prototype.slice.call(select.childNodes).some(n => n.value === values[selectorIndex])) {
-		select.value = values[selectorIndex];
 	}
-});
+	
+	const option = document.createElement('option');
+	option.text = "Disable Audio";
+	option.value = "ZZZ";
+	audioInputSelect.appendChild(option); // NO AUDIO OPTION
+	
+	
+	
+	selectors.forEach((select, selectorIndex) => {
+		if (Array.prototype.slice.call(select.childNodes).some(n => n.value === values[selectorIndex])) {
+			select.value = values[selectorIndex];
+		}
+	});
+	
+	audioInputSelect.selectedIndex  = 0;
 }
 
 function handleError(error) {
@@ -644,7 +684,7 @@ function getUserMediaVideoParams(resolutionFallbackLevel, isSafariBrowser) {
 	}
 }
 
-function grabVideo(quality=0, audio=false){
+function grabVideo(quality=0, audioEnable=false){
 	if( activatedPreview == true){log("activeated preview return");return;}
 	activatedPreview = true;
 	log(quality);
@@ -654,15 +694,24 @@ function grabVideo(quality=0, audio=false){
 	var videoSelect = document.querySelector('select#videoSource');
 	var iOS = !!navigator.platform && /iPad|iPhone|iPod/.test(navigator.platform);
 
-	if (audio==true){
-		audio = {deviceId: {exact: audioSelect.value}};
-		if (urlParams.has('stereo')){
-			audio.echoCancellation = false;
-			audio.autoGainControl = false;
-			audio.noiseSuppression = false;
+	if (iOS){  // iOS will not work correctly at 1080p; likely a h264 codec issue.
+		if (quality==0){
+			quality=1;
 		}
-
 	}
+
+	var audio = false;
+	if (audioEnable==true){
+		if (audioSelect.value!=="ZZZ"){
+			audio = {deviceId: {exact: audioSelect.value}};
+			if (session.stereo){
+				audio.echoCancellation = false;
+				audio.autoGainControl = false;
+				audio.noiseSuppression = false;
+			}
+		} 
+	}
+	
 	var constraints = {
 		audio: audio,
 		video: getUserMediaVideoParams(quality, iOS)
@@ -697,7 +746,7 @@ function grabVideo(quality=0, audio=false){
 			errorlog(e);
 		}
 		navigator.mediaDevices.getUserMedia(constraints).then(function(stream){
-			if (audio ==false){
+			if (audioEnable == false){
 				stream.getTracks().forEach(function(track) { // We don't want to keep it without audio; so we are going to try to add audio now.
 						track.stop();
 				});
@@ -729,76 +778,89 @@ function grabVideo(quality=0, audio=false){
 				errorlog("An unknown camera error occured");
 			}
 			if (quality<=9){
-	  grabVideo(quality+1);
-	  } else {
-		  errorlog("********Camera failed to work");
-		  activatedPreview=true;
-		  alert("Camera failed to load. Please make sure it is not already in use by another application.");
-		 }
-	  });
-	  },0);
-	  }
+				grabVideo(quality+1);
+			} else {
+				errorlog("********Camera failed to work");
+				activatedPreview=true;
+				alert("Camera failed to load. Please make sure it is not already in use by another application.");
+			}
+		});
+	},0);
+}
 
-	  var activatedPreview = false;
-	  function previewWebcam(){
-		  if( activatedPreview == true){log("activeated preview return");return;}
-		  activatedPreview = true;
+var activatedPreview = false;
+  
+  
+function setupWebcamSelection(){
+	enumerateDevices().then(gotDevices).then(function(){
+		if (parseInt(document.getElementById("webcamquality").elements.namedItem("resolution").value)==3){
+			session.maxframerate  = 30;
+		} else {
+				session.maxframerate = false;
+		}
 		
-		  window.setTimeout(() => {
-	
-			  var oldstream= document.getElementById('previewWebcam').srcObject;
-			  if (oldstream){
-				  oldstream.getTracks().forEach(function(track) {
-					  track.stop();
-				  });
-			  }
-			  
-			  navigator.mediaDevices.getUserMedia({audio:true, video:true }).then(function(stream){ // Apple needs thi to happen before I can access EnumerateDevices. 
-					  //document.getElementById('previewWebcam').srcObject=stream;
-					stream.getTracks().forEach(function(track) { // We don't want to keep it without audio; so we are going to try to add audio now.
-						  track.stop();
-					});
-					enumerateDevices().then(gotDevices).then(function(){
-					
-					if (parseInt(document.getElementById("webcamquality").elements.namedItem("resolution").value)==3){
-						session.maxframerate  = 30;
-					} else {
-							session.maxframerate = false;
-					}
-					
-					var audioSelect = document.querySelector('select#audioSource');
-					var videoSelect = document.querySelector('select#videoSource');
-					
-					audioSelect.onchange = function(){
-						log("AUDIO source CHANGED");
-						activatedPreview=false;
-						grabVideo(parseInt(document.getElementById("webcamquality").elements.namedItem("resolution").value));
-					};
-					videoSelect.onchange = function(){
-						log("video source changed");
-						activatedPreview=false;
-						grabVideo(parseInt(document.getElementById("webcamquality").elements.namedItem("resolution").value));
-					};
-					document.getElementById("webcamquality").onchange = function(){
-						log("AUDIO source CHANGED");
-						activatedPreview=false;
-						if (parseInt(document.getElementById("webcamquality").elements.namedItem("resolution").value)==3){
-							session.maxframerate  = 30;
-						} else {
-							session.maxframerate = false;
-						}
-						grabVideo(parseInt(document.getElementById("webcamquality").elements.namedItem("resolution").value));
-					};
+		var audioSelect = document.querySelector('select#audioSource');
+		var videoSelect = document.querySelector('select#videoSource');
+		
+		audioSelect.onchange = function(){
+			log("AUDIO source CHANGED");
+			activatedPreview=false;
+			grabVideo(parseInt(document.getElementById("webcamquality").elements.namedItem("resolution").value));
+		};
+		videoSelect.onchange = function(){
+			log("video source changed");
+			activatedPreview=false;
+			grabVideo(parseInt(document.getElementById("webcamquality").elements.namedItem("resolution").value));
+		};
+		document.getElementById("webcamquality").onchange = function(){
+			log("AUDIO source CHANGED");
+			activatedPreview=false;
+			if (parseInt(document.getElementById("webcamquality").elements.namedItem("resolution").value)==3){
+				session.maxframerate  = 30;
+			} else {
+				session.maxframerate = false;
+			}
+			grabVideo(parseInt(document.getElementById("webcamquality").elements.namedItem("resolution").value));
+		};
 
+		activatedPreview = false;
+		grabVideo(parseInt(document.getElementById("webcamquality").elements.namedItem("resolution").value));
 
-					activatedPreview = false;
-					grabVideo(parseInt(document.getElementById("webcamquality").elements.namedItem("resolution").value));
+	}).catch(handleError);
+}
 
-				  }).catch(handleError);
-			  }).catch(handleError);
+function previewWebcam(){
+  if( activatedPreview == true){log("activeated preview return");return;}
+  activatedPreview = true;
 
-		  },0);
+  window.setTimeout(() => {
+
+	  var oldstream= document.getElementById('previewWebcam').srcObject;
+	  if (oldstream){
+		  oldstream.getTracks().forEach(function(track) {
+			  track.stop();
+		  });
 	  }
+	  
+	  var iOS = !!navigator.platform && /iPad|iPhone|iPod/.test(navigator.platform);
+
+	  if (iOS){
+		  navigator.mediaDevices.getUserMedia({audio:true, video:true }).then(function(stream){ // Apple needs thi to happen before I can access EnumerateDevices. 
+				  //document.getElementById('previewWebcam').srcObject=stream;
+				stream.getTracks().forEach(function(track) { // We don't want to keep it without audio; so we are going to try to add audio now.
+					  track.stop();
+				});
+				setupWebcamSelection();
+		  }).catch(function(e){
+			  errorlog("trying to list webcam again");
+			  setupWebcamSelection();
+		  });
+	  } else {
+		  setupWebcamSelection();
+	  }
+
+  },0);
+}
 
 
 function checkOBS(){
@@ -913,19 +975,19 @@ if ((urlParams.has('streamid')) && (session.roomid==false)){
 		}
 	},2000);
 
-log("auto playing");
+	log("auto playing");
 
-if (navigator.userAgent.indexOf('Safari') != -1 && navigator.userAgent.indexOf('Chrome') == -1){ 
-	alert("Safari requires us to ask for an audio permission to use peer-to-peer technology. You will need to accept it in a moment if asked to view this live video");
-	navigator.mediaDevices.getUserMedia({audio: true}).then(function(){
+	if (navigator.userAgent.indexOf('Safari') != -1 && navigator.userAgent.indexOf('Chrome') == -1){ 
+		alert("Safari requires us to ask for an audio permission to use peer-to-peer technology. You will need to accept it in a moment if asked to view this live video");
+		navigator.mediaDevices.getUserMedia({audio: true}).then(function(){
+			play(urlParams.get('streamid'));
+		}).catch(function(){
+			play(urlParams.get('streamid'));
+		});
+	} else {
 		play(urlParams.get('streamid'));
-	}).catch(function(){
-		play(urlParams.get('streamid'));
-	});
-} else {
-	play(urlParams.get('streamid'));
-	//document.getElementById("mainmenu").style.display="none";
-}
+		//document.getElementById("mainmenu").style.display="none";
+	}
 }
 
 function updateMixer(){
@@ -955,7 +1017,10 @@ function updateMixer(){
 	for (i in session.rpcs){
 		if (session.rpcs[i].videoElement){
 			if (session.rpcs[i].videoElement.style.display!="none"){
+				session.requestRateLimit(-1,i); // unlock bitrate
 				mediaPool.push(session.rpcs[i].videoElement);
+			} else {
+				session.requestRateLimit(300,i);
 			}
 		}
 	};
@@ -986,21 +1051,17 @@ function updateMixer(){
 			//console.error((i+0.1)/rw,rh);
 		//}
 		
-		
-		
-		
 		offsety = (h- Math.ceil(mediaPool.length/rw)*Math.ceil(h/rh))/2;
-		
 		
 		vid.style.left = offsetx+Math.floor(((i%rw)+0)*w/rw)+"px"; 
 		//vid.style.left = Math.floor(((i%rw)+0)*w/rw)+"px"; 
-		
 		
 		vid.style.top  = offsety+Math.floor((Math.floor(i/rw)+0)*h/rh + hi)+"px";
 												
 		vid.style.width = Math.ceil(w/rw)+"px"; 
 		vid.style.height = Math.ceil(h/rh)+"px"; 
 		playarea.appendChild(vid);
+		vid.play();
 		i+=1;
 	});
 }
