@@ -160,7 +160,7 @@ body {
 
  @media screen and (min-width: 1000px) {
 	 
-	body {
+	.cat {
 		background-image: url(cat.svg);
 		background-repeat: no-repeat;
 		background-size: auto 50%;
