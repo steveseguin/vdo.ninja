@@ -24,17 +24,17 @@
 
 	<div id="header">
 		<h2>
-			<a href="./" style="text-decoration:none;color:white;margin: 2px;"><font id="qos">O</font>BS.Ninja</a> &nbsp
+			<a href="./" style="text-decoration:none;color:white;margin: 2px;"><font id="qos">O</font>BS.Ninja</a> &nbsp;
 			<div id="head1" style="display:inline-block;;">
-				<input id="joinroomID" name="joinroomID" size=26 placeholder="Join by Room Name here"></input>
+				<input id="joinroomID" name="joinroomID" size=26 placeholder="Join by Room Name here" />
 				<button style="padding:1px;" onclick="jumptoroom();">GO</button>
 			</div>
 			<div id="head3" style="display:inline-block" class='advanced'>
-				<font style="font-size:60%"> &nbsp Copy this URL into an OBS "Browser Source" =>  &nbsp </font><a id="reshare" data-share="" onclick="var range=document.createRange(); range.selectNodeContents(document.getElementById('reshare')); var selec = window.getSelection(); selec.removeAllRanges();selec.addRange(range);document.execCommand('copy');" onmouseover="this.style.cursor='pointer'"></a>&nbsp&nbsp<i class="fa fa-paperclip" aria-hidden="true" onclick="var range=document.createRange(); range.selectNodeContents(document.getElementById('reshare')); var selec = window.getSelection(); selec.removeAllRanges();selec.addRange(range);document.execCommand('copy');" onmouseover="this.style.cursor='pointer'"></i>
+				<font style="font-size:60%"> &nbsp; Copy this URL into an OBS "Browser Source" =>  &nbsp; </font><a id="reshare" data-share="" onclick="var range=document.createRange(); range.selectNodeContents(document.getElementById('reshare')); var selec = window.getSelection(); selec.removeAllRanges();selec.addRange(range);document.execCommand('copy');" onmouseover="this.style.cursor='pointer'"></a>&nbsp;&nbsp;<i class="fa fa-paperclip" aria-hidden="true" onclick="var range=document.createRange(); range.selectNodeContents(document.getElementById('reshare')); var selec = window.getSelection(); selec.removeAllRanges();selec.addRange(range);document.execCommand('copy');" onmouseover="this.style.cursor='pointer'"></i>
 			</div>
 
 			<div id="head4" style="display:inline-block" class='advanced'>
-				<font style="font-size:60%"> &nbsp You are in the director's view for room:&nbsp <div id="dirroomid" style="font-size:140%;color:#99C;display:inline-block"></div></font>
+				<font style="font-size:60%"> &nbsp; You are in the director's view for room:&nbsp; <div id="dirroomid" style="font-size:140%;color:#99C;display:inline-block"></div></font>
 			</div>
 
 
@@ -58,7 +58,7 @@
 			<h2>Add Group Video Chat to OBS</h2>
 			<div class="container-inner">
 				<br />
-				<p><b>Room Name:</b><input id="videoname1" placeholder="Enter a ROOM NAME here" size=35 maxlength=50 style="padding:5px;" /></br ><br /></p>
+				<p><b>Room Name:</b><input id="videoname1" placeholder="Enter a ROOM NAME here" size=35 maxlength=50 style="padding:5px;" /><br /><br /></p>
 				<li>Anyone can enter a room if they know the name, so keep it unique</li>
 				<li>Having more than four (4) people in a room is not advisable due to performance reasons.</li>
 				<br />
@@ -123,7 +123,7 @@
 			<div class="container-inner">
 				<br /><br />
 				Invite Links are reusable, but each invited media source needs a unique invite link.<br /><br />
-				<p><input id="videoname4" placeholder="Give this media source a name (optional)" size=35 maxlength=70 style="padding:5px;" /></br ><br /></p>
+				<p><input id="videoname4" placeholder="Give this media source a name (optional)" size=35 maxlength=70 style="padding:5px;" /><br /><br /></p>
 				
 				
 				<button style="padding:10px;" onclick="generateQRPage(this)" >GENERATE THE INVITE LINK</button>

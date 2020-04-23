@@ -324,7 +324,7 @@ function publishScreen(){
 	if( activatedStream == true){return;}
 	activatedStream = true;
 
-	var title = document.getElementById("videoname2").value;
+	var title = "ScreenShare" //document.getElementById("videoname2").value;
 
 	formSubmitting = false;
 
