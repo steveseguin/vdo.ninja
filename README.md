@@ -35,7 +35,7 @@ Also check out the FAQ for common answers: https://github.com/steveseguin/obsnin
 If urgent, email me at steve@seguin.email or join me on discord: https://discord.gg/T4xpQVv
 
 ## Related Projects
-An better way to perform "Window Capturing" on desktop if OBS Browser Sources fails you. A tool designed to enhance OBS.Ninja.
+OBS.Ninja's Electron Capture: A better way to perform "Window Capturing" on desktop if OBS Browser Sources fails you. A downloadable tool designed to enhance OBS.Ninja.
 https://github.com/steveseguin/electroncapture
 
 ## Privacy
