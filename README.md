@@ -34,6 +34,10 @@ Also check out the FAQ for common answers: https://github.com/steveseguin/obsnin
 
 If urgent, email me at steve@seguin.email or join me on discord: https://discord.gg/T4xpQVv
 
+## Related Projects
+An better way to perform "Window Capturing" on desktop if OBS Browser Sources fails you. A tool designed to enhance OBS.Ninja.
+https://github.com/steveseguin/electroncapture
+
 ## Privacy
 I try to avoid data collection whenever possible. Video streams are generally private, but I've yet to fully-secure the system, so use at your own risk. It is best to not share links created with OBS.ninja with those you do not trust. I've provided instructions on how to deploy a TURN server if IP-address privacy is an issue or if direct peer-to-peer connectivity is blocked by a firewall. See: turnserver.conf  
 
