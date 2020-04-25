@@ -32,7 +32,7 @@ Please see the sub-reddit for more support: https://reddit.com/r/obsninja
 
 Also check out the FAQ for common answers: https://github.com/steveseguin/obsninja/wiki
 
-If urgent, email me at steve@seguin.email or join me on discord: https://discord.gg/T4xpQVv
+If urgent, email me at steve@seguin.email or join me on discord: https://discord.gg/EksyhGA 
 
 ## Related Projects
 #### OBS.Ninja's Electron Capture:
