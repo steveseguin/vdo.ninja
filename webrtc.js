@@ -1031,7 +1031,7 @@ Ooblex.Media = new (function(){
 		if ("streamID" in msg){
 			session.rpcs[UUID]['streamID'] = msg["streamID"];
 		}
-		session.rpcs[UUID].addTransceiver('video', { direction: 'recvonly'});
+		//session.rpcs[UUID].addTransceiver('video', { direction: 'recvonly'});
 		session.rpcs[UUID].onclose = function(event){
 			log("rpc closed");
 			try {

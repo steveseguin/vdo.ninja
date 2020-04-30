@@ -13,14 +13,13 @@
 <link rel="stylesheet" href="font-awesome.min.css">
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
 <script type="text/javascript" src="https://webrtc.github.io/adapter/adapter-latest.js"></script>
-<script src="//console.re/connector.js" data-channel="obsninjaalpha" id="consolerescript"></script>
 <script type="text/javascript" src="qrcode.min.js"></script>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.0/jquery.min.js"></script>
 <link rel="stylesheet" href="./main.css" />
 </head>
 <body  id="main" class="cat">
 	<script language="javascript" type="text/javascript" src="./CodecsHandler.js"></script>
-	<script language="javascript" type="text/javascript" src="./webrtc.js?version=20041914"></script>
+	<script language="javascript" type="text/javascript" src="./webrtc.js?version=20042214"></script>
 
 	<div id="header">
 		<h2>
@@ -152,6 +151,7 @@
 					<i><font style="color:red">Known issues:</font></i><br />
 
 					<li><i class="fa fa-apple" aria-hidden="true"></i> MacOS users need to use OBS v23 or resort to <i>Window Capturing</i> a Chrome Browser with OBS v25</li>
+					<li>Some users will have "pixelation" problems with videos. Please add the URL parameter <b>&codec=vp9</b> to the OBS Links to correct it.</li>
 					<br />
 					Site last updated: <b>April 21th, 2020.</b> The previous version can be found at <a href="https://obs.ninja/old/">https://obs.ninja/old/</a> if you are having new issues
 
