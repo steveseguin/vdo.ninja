@@ -27,7 +27,9 @@ Why deploy OBS.Ninja? You may want to customize the UI for your brand/business, 
 
 ## Server side / API software?
 
-Other than the hosted TURN server, OBS.Ninja uses public STUN servers and a hosted handshake server. These are used to facilitate the initial setup of peer connections and are not required after a peer connection is established. Development builds of OBS.Ninja may included debugging software, but in-production releases have this removed.
+Other than the hosted TURN server, OBS.Ninja uses public STUN servers and a hosted handshake server. These are used to facilitate the initial setup of peer connections and are not required after a peer connection is established. Development builds of OBS.Ninja may include debugging software, but in-production releases have this removed.
+
+A design goal of OBS.Ninja is to be serverless and we are 99% of the way there. This design objective ensures OBS.Ninja can be offered for free, along with providing increased levels of security and privacy.
 
 ## Issues? problems? Not working?
 
@@ -49,10 +51,10 @@ https://steves.app/
 ## Privacy
 I try to avoid data collection whenever possible and video streams are generally designed to be private, but use at your own risk. It is best to not share links created with OBS.Ninja with those you do not trust. I've provided instructions on how to deploy a TURN server if IP-address privacy is an issue for you. See: turnserver.conf
 
-Additional security features are being added weekly. Please ask about these options.
+Additional security features are being added weekly on request. Please ask about these options if security and privacy are concerns for you.
 
 ## Feedback
 Idea, feed back, bugs, etc -- all welcomed.  I'm dumping many of my ideas as issues into Github. Feedback is typcially most welcomed via Email or Discord.
 
 ## License 
-License? Well, currently it is free to use and modify however you wish. Please link back here if redistributing. I reserve the right to  release future versions that may not be free or may have a different licence agreement. I cannot be held responsible for what you do with my software and if problems occur I will not be responsible for that either. 
+Currently the software is free to use and modify however you wish, including for commericial applications. Please link back here if redistributing any portion of OBS.Ninja as code or as a service. I (steve) reserve the right to release future versions that may not be free or may have a different licence agreement. I cannot be held responsible for what you do with my software, and if problems occur with the software or any provided service, I will not be responsible for that either. Usage of OBS.Ninja, as a service or as code, is to be used in Good Faith and may not be used to intentially harm OBS.Ninja or its creator.
