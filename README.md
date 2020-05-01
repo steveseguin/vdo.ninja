@@ -9,11 +9,11 @@ Please see the sub-reddit added info: https://reddit.com/r/obsninja
 Also check out the FAQ for more info: https://github.com/steveseguin/obsninja/wiki
 
 ## How to use:
-I demo the basic usage of OBS.Ninja also on YoutuBe: https://www.youtube.com/watch?v=6R_sQKxFAhg
+I demo the basic usage of OBS.Ninja on YouTube: https://www.youtube.com/watch?v=6R_sQKxFAhg
 
-Check the subreddit for added use cases, advanced features, and support. This includes high-quality audio modes, custom resolutions and video bitrates, and more.
+Check the subreddit for added use cases, advanced features, and support. Advanced features includes high-quality audio modes, custom video resolutions, and more.
 
-MacOS users will face some challenges in using OBS currently, but there are workarounds.
+MacOS users will face some challenges in using OBS currently, but there are workarounds. Please see Reddit or the Wiki.
 
 ## What's in this repo?
 This repo contains the software for OBS.ninja and its TURN server deployment settings. Feel free to use it as you will; code contributions very welcomed. You may be best suited at getting ahold of me at steve@seguin.email instead of via Github if urgent though.
@@ -26,7 +26,6 @@ Directions on how to deploy a TURN server are listed in the turnserver.conf file
 Why deploy OBS.Ninja? You may want to customize the UI for your brand/business, or control security/privacy beyond what I do already. I personally feel it is best to CONTRIBUTE desired changes to this repo instead, as technology moves fast and older forked versions will become obsolete. 
 
 ## Server side / API software?
-
 Other than the hosted TURN server, OBS.Ninja uses public STUN servers and a hosted handshake server. These are used to facilitate the initial setup of peer connections and are not required after a peer connection is established. Development builds of OBS.Ninja may include debugging software, but in-production releases have this removed.
 
 A design goal of OBS.Ninja is to be serverless and we are 99% of the way there. This design objective ensures OBS.Ninja can be offered for free, along with providing increased levels of security and privacy.
