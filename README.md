@@ -50,7 +50,7 @@ https://steves.app/
 ## Privacy
 I try to avoid data collection whenever possible and video streams are generally designed to be private, but use at your own risk. It is best to not share links created with OBS.Ninja with those you do not trust. I've provided instructions on how to deploy a TURN server if IP-address privacy is an issue for you. See: turnserver.conf
 
-Additional security features are being added weekly on request. Please ask about these options if added security and privacy are concerns for you.
+Additional security features are being added weekly on request. Please ask about these options if added security and privacy are requirements for you.
 
 ## Feedback
 Idea, feed back, bugs, etc -- all welcomed.  I'm dumping many of my ideas as issues into Github. Feedback is typcially most welcomed via Email or Discord.
