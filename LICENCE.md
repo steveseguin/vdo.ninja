@@ -1,1 +1,15 @@
-Currently the software is free to use and modify however you wish, including for commericial applications. Please link back to this repository if redistributing any portion of OBS.Ninja as code or as a service. I (steve) reserve the right to release future versions that may not be free or may have a different licence agreement. I cannot be held responsible for what you do with my software, and if problems occur with the software or any provided service, I will not be responsible for that either. Usage of OBS.Ninja, as a service or as code, is to be used in Good Faith and may not be used to intentially harm OBS.Ninja or its creator.
+The OBS.Ninja source repository is governed by the GNU AFFERO GENERAL PUBLIC LICENSE. (AGPL-3.0)
+That AGPL-3.0 licence can be found here: https://github.com/steveseguin/obsninja/AGPLv3.md
+
+In essence, OBS.Ninja is open-source and free to use, both for commericial and non-commericial use.
+Modifications of AGPL-3.0 licenced code must be made publicly accessible. Please refer to that licence.
+
+Some individual source files may contain different licencing term and perhaps different copyright holders.
+Such licencing and copyright information will be contained in the file's header and be limited to those files.
+If no such header is present in a file, the default AGPL-3.0 licence applies.
+Alternative licencing options can be made available on request, if AGPL-3.0 is not appropriate.
+
+Unless stated otherwise, all code is copyright 2020 Stephen Seguin. All rights reserved.
+Contributors to the OBS.Ninja project must first agree to the Contributor License Agreement (CLA).
+
+Thank you for your understanding.
