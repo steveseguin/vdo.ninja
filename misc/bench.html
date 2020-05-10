@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+<body>
+
+<p><output id="result">Click Start Test to measure your CPU capabilities</output></p>
+<button onclick="startWorker()">Start Test</button> 
+
+<p><strong>Note:</strong> Internet Explorer 9 and earlier versions do not support Web Workers.</p>
+
+<script>
+var score = 0;
+var count=0;
+var W = [];
+var interval;
+function startWorker(){
+	score=0
+	count=0
+        document.getElementById("result").innerHTML="Test is running. This should take just a second.";
+        for (var i=0;i<8;i++){
+                W.push(loadWorker());
+        }
+	console.log("Done loading");
+	interval = setTimeout(stopWorker,5000);
+}
+
+function loadWorker() {
+    var w;
+    if(typeof(Worker) !== "undefined") {
+        if(typeof(w) == "undefined") {
+            w = new Worker("bench_worker.js");
+        }
+        w.onmessage = function(event) {
+            score += Number(event.data);
+	    count += 1;
+	    if (count==8){stopWorker();}
+        };
+    }
+}
+
+function stopWorker() {
+	clearInterval(interval);
+	sss = Math.round(900000/Number(score))/10;
+	if (count!=8){sss="FAILED";}
+        document.getElementById("result").innerHTML="Score is: "+sss;
+}
+</script>
+
+</body>
+</html>
+

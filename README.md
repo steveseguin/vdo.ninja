@@ -1,7 +1,7 @@
-![ILogo by brimace](obsNinja_logo_full.png)
+![ILogo by brimace](images/obsNinja_logo_full.png)
 
 ## What is OBS NINJA
-OBS.Ninja uses peer-to-peer technology to bring remote cameras into OBS. In most cases, all video data is transferred directly from peer to peer, without needing to go through any remote server. This results in high-quality video with super low latency. In a small number of cases, video data may go through an encrypted TURN server, which is used to facilitate peer connections when otherwise not possible.
+OBS.Ninja uses peer-to-peer technology to bring remote cameras into OBS. In most cases, all video data is transferred directly from peer to peer, without needing to go through any video server. This results in high-quality video with super low latency. In a small number of cases, video data may go through an encrypted TURN server, which is used to facilitate peer connections when otherwise not possible.
 
 OBS Ninja is not affiliated with OBS, but OBS Ninja is dependent on OBS to function. OBS.Ninja is designed to allow content creators to produce real-time live shows with OBS Studio and to allow smartphones to be used as webcams on a Windows PC. 
 
@@ -55,5 +55,6 @@ Additional security features are being added weekly on request. Please ask about
 ## Feedback
 Idea, feed back, bugs, etc -- all welcomed.  I'm dumping many of my ideas as issues into Github. Feedback is typcially most welcomed via Email or Discord.
 
-## License 
-Currently the software is free to use and modify however you wish, including for commericial applications. Please link back here if redistributing any portion of OBS.Ninja as code or as a service. I (steve) reserve the right to release future versions that may not be free or may have a different licence agreement. I cannot be held responsible for what you do with my software, and if problems occur with the software or any provided service, I will not be responsible for that either. Usage of OBS.Ninja, as a service or as code, is to be used in Good Faith and may not be used to intentially harm OBS.Ninja or its creator.
+## Licence 
+OBS.Ninja is available as open-source; please see the LICENCE.md file for details.
+
