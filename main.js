@@ -1,11 +1,8 @@
-/*
-*  Copyright (c) 2020 Steve Seguin. All Rights Reserved.
-*
-*  Use of this source code is governed by the APGLv3 open-source license
-*  that can be found in the LICENSE file in the root of the source
-*  tree. Alternative licencing options can be made available on request.
-*
-*/
+/////////////
+
+// Some browsers partially implement mediaDevices. We can't just assign an object
+// with getUserMedia as it would overwrite existing properties.
+// Here, we will just add the getUserMedia property if it's missing.
 
 var VIS = vis;
 var formSubmitting = true;
@@ -16,6 +13,7 @@ window.onload = function() { // This just keeps people from killing the live str
 		if (formSubmitting) {
 			return undefined;
 		}
+
 		var confirmationMessage = 'Leaving the page now will terminate your stream ';
 		(e || window.event).returnValue = confirmationMessage; //Gecko + IE
 		return confirmationMessage; //Gecko + Webkit, Safari, Chrome etc.
@@ -45,10 +43,11 @@ window.onpopstate = function() {
 	}
 }; 
 
-var session = WebRTC.Media;
-session.streamID = session.generateStreamID();
 
+var session = Ooblex.Media;
+session.streamID = session.generateStreamID();
 (function (w) {
+
     w.URLSearchParams = w.URLSearchParams || function (searchString) {
         var self = this;
         self.searchString = searchString;
@@ -61,9 +60,9 @@ session.streamID = session.generateStreamID();
                 return decodeURI(results[1]) || 0;
             }
         };
-    };
+    }
 
-})(window);
+})(window)
 var urlParams = new URLSearchParams(window.location.search);
 
 var isMobile = false;
@@ -105,52 +104,6 @@ if (urlParams.has('codec')){
     session.codec = urlParams.get('codec');
 }
 
-if (urlParams.has('ln')){  // checking if manual lanuage override enabled
-	try {
-		fetch("./translations/"+urlParams.get('ln')+'.json').then(function(response){
-			if (response.status !== 200) {
-				console.log('Looks like there was a problem. Status Code: ' +
-				response.status);
-				return;
-			}
-			response.json().then(function(data) {
-				log(data);
-				document.querySelectorAll('[data-translate]').forEach(function(ele){
-					//log(ele.dataset.translate);
-					//log(translations[ele.dataset.translate]);
-					ele.innerHTML = data[ele.dataset.translate];
-				});
-			});
-		}).catch(function(err){
-			errorlog(err);
-		});
-	
-	} catch (error){
-		errorlog(error);
-	}
-} else {  // check if automatic language translation is available
-	
-	if (window.navigator.language.slice(0, 2) !== 'en'){  
-		fetch("./translations/"+window.navigator.language.slice(0, 2)+'.json').then(function(response){
-			if (response.status !== 200) {
-				logerror('Language translation file not found.' + response.status);
-				return;
-			}
-			response.json().then(function(data) {
-				log(data);
-				document.querySelectorAll('[data-translate]').forEach(function(ele){
-					//log(ele.dataset.translate);
-					//log(translations[ele.dataset.translate]);
-					ele.innerHTML = data[ele.dataset.translate];
-				});
-			});
-		}).catch(function(err){
-			errorlog(err);
-		});
-	}
-	
-}
-
 if (urlParams.has('bitrate')){
     session.bitrate = parseInt(urlParams.get('bitrate'));
 	log("BITRATE ENABLED");
@@ -164,11 +117,6 @@ if (urlParams.has('height')){
 if (urlParams.has('width')){
 	session.width = parseInt(urlParams.get('width'));
 }
-
-if (urlParams.has('sink')){
-	session.sink = urlParams.get('sink');
-}
-
 
 if (urlParams.has('secure')){
 	session.security = true;
@@ -216,12 +164,8 @@ if (urlParams.has('turn')){
         turn.credential = "justtesting";
         turn.urls = ["turn:turn.obs.ninja:443"]; // main TURN server. Do not abuse.  I pay out of pocket.
         session.configuration.iceServers.push(turn);
-		
-		var turn = {};
-        turn.username = "steve";
-        turn.credential = "justtesting";
-        turn.urls = ["turn:turn2.obs.ninja:443"]; // main TURN server. Do not abuse.  I pay out of pocket.
-        session.configuration.iceServers.push(turn);
+		turn.urls = ["turn:turn2.obs.ninja:443"];  // backup TURN server. Do not abuse. I pay out of pocket.
+		session.configuration.iceServers.push(turn);
 }
 
 function updateURL(param) {
@@ -244,6 +188,7 @@ function updateURL(param) {
 }
 
 function jumptoroom(){
+	document.getElementById("joinroomID").value;
 	var arr = window.location.href.split('?');
 	if (arr.length > 1 && arr[1] !== '') {
 		window.location+="&room="+document.getElementById("joinroomID").value;
@@ -318,12 +263,10 @@ if ( (urlParams.has('roomid')) || (filename) || (urlParams.has('room')) ){
 
 
 function checkConnection(){
-	if (document.getElementById("qos")){
-		if (session.ws.readyState === WebSocket.OPEN) {
-			document.getElementById("qos").style.color = "white";
-		} else {
-			document.getElementById("qos").style.color = "red";
-		}
+	if (session.ws.readyState === WebSocket.OPEN) {
+		document.getElementById("qos").style.color = "white";
+	} else {
+		document.getElementById("qos").style.color = "red";
 	}
 }
 setInterval(function(){checkConnection();},5000);
@@ -338,7 +281,7 @@ function updateStats(){
 			log(track.getSettings());
 			log(track.getSettings().frameRate);
 			//log(track.getSettings().frameRate);
-			document.getElementById("webcamstats").innerHTML = "Current Video Settings: "+(track.getSettings().width||0) +"x"+(track.getSettings().height||0)+"@"+(parseInt(track.getSettings().frameRate*10)/10)+"fps";
+			document.getElementById("webcamstats").innerHTML = "Current Video Settings: "+(track.getSettings().width|0) +"x"+(track.getSettings().height|0)+"@"+(parseInt(track.getSettings().frameRate*10)/10)+"fps";
 		}
 	);
 }
@@ -385,7 +328,7 @@ function directEnable(ele){ // A directing room only is controlled by the Direct
         var msg = {};
         msg.request = "sendroom";
         msg.roomid = session.roomid;
-        msg.director = "1"; // scene
+        msg.director = "1" // scene
         msg.action = "display";
         msg.value =  ele.parentNode.parentNode.dataset.enable;
         msg.target = ele.parentNode.parentNode.dataset.UUID;
@@ -529,10 +472,10 @@ function joinRoom(roomname, maxbitrate=false){
 			session.joinRoom(roomname,maxbitrate).then(function(response){  // callback from server; we've joined the room
 				log("Members in Room");
 				log(response);
-				for (var i in response){
+				for (i in response){
 					if ("UUID" in response[i]){
 						if ("streamID" in response[i]){
-							if (response[i].UUID in session.pcs){
+							if (response[i]['UUID'] in session.pcs){
 								log("RTC already connected"); /// lets just say instead of Stream, we have 
 							} else {
 								//var title = "";                            // TODO: Assign labels 
@@ -541,16 +484,16 @@ function joinRoom(roomname, maxbitrate=false){
 									//}
 									
 								if ((urlParams.has('streamid')) || (urlParams.has('view'))){
-									play(response[i].streamID);
+									play(response[i]['streamID']);
 								} else {
-									session.watchStream(response[i].streamID); // How do I make sure they aren't requesting the same movie twice as a race condition?
+									session.watchStream(response[i]['streamID']); // How do I make sure they aren't requesting the same movie twice as a race condition?
 								}
 							}
 						}
 					}
 				}
 
-			},function(error){return {};});
+			},function(error){return {}});
 		} else {
 			errorlog("Room name not long enough or contained all bad characaters");
 		}	
@@ -570,6 +513,12 @@ function createRoom(){
 	var gridlayout = document.getElementById("gridlayout");
 	gridlayout.classList.add("directorsgrid");
 
+	//	var sheet = document.createElement('style');
+	//	sheet.innerHTML = ".tile{object-fit:contain  }";
+	//	document.body.appendChild(sheet);
+
+	var roomname = document.getElementById("videoname1").value;
+	log(roomname);
 	session.roomid = roomname;
 	formSubmitting = false;
 
@@ -590,12 +539,12 @@ function createRoom(){
 	session.director = true;
 	document.getElementById("reshare").parentNode.removeChild(document.getElementById("reshare"));
 	
-	gridlayout.innerHTML = "<br /><div style='display:inline-block'><font style='font-size:130%;color:white;'></font><input  onclick='popupMessage(event);copyFunction(this)' onmousedown='copyFunction(this)' style='cursor:grab;font-weight:bold;background-color:#78F; width:400px; font-size:100%; padding:10px; border:2px solid black; margin:5px;'  class='task' value='https://"+location.host+location.pathname+"?room="+session.roomid+"' /><font style='font-size:130%;color:white;'><i class='fa fa-video-camera' style='font-size:2em;'  aria-hidden='true'></i> - Invites users to join the group and broadcast their feed to it. These users will see every feed, so a limit of 4 is recommended.</font></div>";
+	gridlayout.innerHTML = "<br /><div style='display:inline-block'><font style='font-size:130%;color:white;'></font><input  onclick='popupMessage(event);copyFunction(this)' onmousedown='copyFunction(this)' style='cursor:grab;font-weight:bold;background-color:#78F; width:400px; font-size:100%; padding:10px; border:2px solid black; margin:5px;'  class='task' value='https://"+location.host+location.pathname+"?room="+session.roomid+"' /><font style='font-size:130%;color:white;'><i class='fa fa-video-camera' style='font-size:2em;'  aria-hidden='true'></i> - Invite link to add guests to the group. These guests will see every camera feed, so more than 4 is not recommended.</font></div>";
 	
-	gridlayout.innerHTML += "<br /><font style='font-size:130%;color:white;'></font><input class='task' onclick='popupMessage(event);copyFunction(this)' onmousedown='copyFunction(this)' style='cursor:grab;font-weight:bold;background-color:#F45;width:400px;font-size:100%;padding:10px;border:2px solid black;margin:5px;' value='https://"+location.host+location.pathname+"?room="+session.roomid+"&view' /><font style='font-size:130%;color:white;'><i class='fa fa-video-camera' style='font-size:2em;'  aria-hidden='true'></i> - Link to Invite users to broadcast their feeds to the group. These users will not see or hear any feed from the group.</font><br />";
+	gridlayout.innerHTML += "<br /><font style='font-size:130%;color:white;'></font><input class='task' onclick='popupMessage(event);copyFunction(this)' onmousedown='copyFunction(this)' style='cursor:grab;font-weight:bold;background-color:#F45;width:400px;font-size:100%;padding:10px;border:2px solid black;margin:5px;' value='https://"+location.host+location.pathname+"?room="+session.roomid+"&view' /><font style='font-size:130%;color:white;'><i class='fa fa-video-camera' style='font-size:2em;'  aria-hidden='true'></i> - Link to add a camera to the group. This source will not be able to see or hear any other guest in the group.</font><br />";
 	
 	
-	gridlayout.innerHTML += "<font style='font-size:130%;color:white'></font><input class='task' onmousedown='copyFunction(this)' data-drag='1' onclick='popupMessage(event);copyFunction(this)' style='cursor:grab;font-weight:bold;background-color:#5F4;width:400px;font-size:100%;padding:10px;border:2px solid black;margin:5px;' value='https://"+location.host+location.pathname+"?scene=1&room="+session.roomid+"' /><font style='font-size:130%;color:white'><i class='fa fa-th-large' style='font-size:2em;' aria-hidden='true'></i> - This is an OBS Browser Source link that contains the group chat in just a single scene. Videos must be added to Group Scene.</font><br />";
+	gridlayout.innerHTML += "<font style='font-size:130%;color:white'></font><input class='task' onmousedown='copyFunction(this)' data-drag='1' onclick='popupMessage(event);copyFunction(this)' style='cursor:grab;font-weight:bold;background-color:#5F4;width:400px;font-size:100%;padding:10px;border:2px solid black;margin:5px;' value='https://"+location.host+location.pathname+"?scene=1&room="+session.roomid+"' /><font style='font-size:130%;color:white'><i class='fa fa-th-large' style='font-size:2em;' aria-hidden='true'></i> - This is a OBS Browser Source link that contains the group chat in just a single scene. Videos must be added to Group Scene.</font><br />";
 	
 	gridlayout.innerHTML += '<button style="margin:10px;padding:5px" onclick="toggle(document.getElementById(\'roomnotes2\'),this);">Click Here for a quick overview and help</button>';
 	
@@ -608,7 +557,7 @@ function createRoom(){
 	<li>You can use it to record video streams independently</li>\
 	<br />\
 	As guests join, their videos will appear below. You can bring their video streams into OBS as solo-scenes or you can add them to the Group Scene.\
-	<br />The Group Scene auto-mixes videos that have been added to the group scene. Please note that the Auto-Mixer requires guests be manually added to it for them to appear in it; they are not added automatically.<br /><Br />Apple mobile devices, such as iPhones and iPads, do not support Group Chat. This is a hardware constraint.<br /><br /></font></div><hr />";
+	<br />The Group Scene auto-mixes videos that have been added to the group scene. Please note that the Auto-Mixer requires guests be manually added to it for them to appear in it; they are not added automatically.<br />The Group Scene includes all audio sources by default, but they can be muted manually.<br /><Br />Apple mobile devices, such as iPhones and iPads, do not support Group Chat. This is a hardware constraint.<br /><br /></font></div><hr />";
 	
 	gridlayout.innerHTML += "<div id='deleteme'><br /><br /><center>\
 	<div style='display:inline-block;width:300px;height:350px;border:2px solid white;background-color:#999;margin:40px;'><br /><br />GUEST SLOT #1<br /><br />(A video will appear here when a guest joins)<br /><br /><i class='fa fa-user ' style='font-size:8em;' aria-hidden='true'></i><br /><br />A Solo-Link for OBS will appear here.</div>\
@@ -1132,7 +1081,7 @@ function dragElement(elmnt) {
 		// Check whether zoom is supported or not. 
 		if (!('zoom' in capabilities)) {
 			log('Zoom is not supported by ' + track0.label);
-			return;
+			return
 		}
 
 		// Map zoom to a slider element.
@@ -1142,7 +1091,7 @@ function dragElement(elmnt) {
 		input.value = settings.zoom;
 		
 		
-	} catch(e){errorlog(e);return;}
+	} catch(e){errorlog(e);return}
 	
 	
 	
@@ -1151,7 +1100,7 @@ function dragElement(elmnt) {
 	elmnt.onclick = onvideoclick;
 	
 	elmnt.ontouchstart = function (e) {
-		dragMouseDown(e);
+		dragMouseDown(e)
 	};
 	
 	var pos0 = 1;
@@ -1208,8 +1157,8 @@ function dragElement(elmnt) {
 	
 	var zoom =  parseFloat((pos4-pos2)*2/elmnt.offsetHeight);
 	
-	if (zoom>1){zoom =1.0;}
-	else if (zoom<-1){zoom=-1.0;}
+	if (zoom>1){zoom =1.0}
+	else if (zoom<-1){zoom=-1.0}
 	//zoom=(zoom+1)/2;
 		
 	input.value = zoom*(input.max - input.min) + input.min;
@@ -1323,7 +1272,7 @@ function previewWebcam(){
 		   if (window.isSecureContext) {
 			   alert("An error has occured when trying to access the webcam. The reason is not known.");
 		   } else {
-				alert("Error acessing webcam.\n\nWebsite is loaded in an insecure context.\n\nPlease see: https://developer.mozilla.org/en-US/docs/Web/API/MediaDevices/getUserMedia");
+				alert("Error acessing webcam./n/nWebsite is loaded in an insecure context.\n\nPlease see: https://developer.mozilla.org/en-US/docs/Web/API/MediaDevices/getUserMedia");
 		   }
 	   }
 	
@@ -1363,7 +1312,7 @@ function play(streamid=null){  // play whatever is in the URL params; or filter 
 		var streamlist = urlParams.get('streamid') || urlParams.get('view');
 		log(streamlist);
 		streamlist = streamlist.split(",");
-		for (var j in streamlist){
+		for (j in streamlist){
 			if (streamid===null){
 				session.watchStream(streamlist[j]);
 			} else if (streamid === streamlist[j]){
@@ -1482,7 +1431,7 @@ function recordVideo(event, video, UUID, videoKbps=2500){
 	
 	console.log('MediaRecorder started', mediaRecorder);
 
-	return this;
+	return this
 }
 function copyFunction(copyText) {
   copyText.select();
@@ -1578,7 +1527,7 @@ if (((urlParams.has('streamid')) || (urlParams.has('view'))) && (session.roomid=
 						} else {
 							clearInterval(retry);
 						}
-					},10000);
+					},10000)
 				}}
 		} catch(e){
 			errorlog("Error handling QR Code failure");
@@ -1634,18 +1583,18 @@ function updateMixer(){
 		log(session.infocus+" set fullscreen");
 		session.requestRateLimit(1200, session.infocus); // 1.2mbps is decent, no?
 		mediaPool.push(session.rpcs[session.infocus].videoElement);
-		for (var j in session.rpcs){
+		for (j in session.rpcs){
 			if (j != session.infocus){
 				session.requestRateLimit(40, j);
 			}
 		}
 	} else if ((session.infocus) && (session.infocus === true)){
 		log("myself set fullscreen");
-		for (var j in session.rpcs){
+		for (j in session.rpcs){
 			session.requestRateLimit(40, j);
 		}
 	} else {
-		for (var i in session.rpcs){
+		for (i in session.rpcs){
 			if (session.rpcs[i].videoElement){ // remote feeds
 			
 				session.rpcs[i].targetBandwidth = -1;
@@ -1671,16 +1620,16 @@ function updateMixer(){
 				 // only set to 300 if not a guest, or if zoomed in.
 				
 			}
-		}
+		};
 	}
 	
 	if (session.director){return;} // director view says go no further :)
 	
 	if (mediaPool.length>1){
-		var mod = Math.pow((ww*hh)/(mediaPool.length),0.5);  // 80
+		var mod = Math.pow((ww*hh)/(mediaPool.length),0.5)  // 80
 		var rw = Math.ceil(ww/mod);  // 80/80
 		var rh = Math.ceil(hh/mod);
-	} else { var rw=1; var rh=1;}
+	} else { rw=1; rh=1;}
 	
 	//log(mod+","+rw+","+rh);  //80,1,1
 	playarea.innerHTML = "";
@@ -1741,7 +1690,7 @@ function updateMixer(){
 					target.innerHTML = "<i class='fa fa-compress' style='font-size:50px' aria-hidden='true'></i>";
 				}
 				setTimeout(()=>updateMixer(),10);
-			};
+			}
 		} else {
 			button.dataset.UUID = vid.dataset.UUID;
 			button.onclick = function(event){
@@ -1758,7 +1707,7 @@ function updateMixer(){
 				}
 				setTimeout(()=>updateMixer(),10);
 			
-			};
+			}
 		}
 		
 		button.onmouseenter = function(){
@@ -1774,6 +1723,31 @@ function updateMixer(){
 		i+=1;
 	});
 }
+
+document.addEventListener("dragstart", e => {
+	var url = e.target.href || e.target.value;
+	if (!url || !url.startsWith('http')) return;
+	if (e.target.dataset.drag!="1"){
+		return;
+	}
+	var streamId = url.split('view=');
+	var label = url.split('label=');
+
+	url += '&layer-name=OBS.Ninja';
+	if (streamId.length>1) url += ': ' + streamId[1].split('&')[0];
+	
+	if (label.length>1) url += ' - ' + decodeURI(label[1].split('&')[0]);
+	
+	try{
+		var video = document.getElementById('videosource');
+		url += '&layer-width=' + video.videoWidth; // this isn't always 100% correct, as the resolution can fluxuate, but it is probably good enough
+		url += '&layer-height=' + video.videoHeight;
+	} catch(e){
+		url += '&layer-width=1280'; // this isn't always 100% correct, as the resolution can fluxuate, but it is probably good enough
+		url += '&layer-height=720';
+	}
+	e.dataTransfer.setData("text/uri-list", encodeURI(url));
+});
 
 var vis = (function(){
 	var stateKey, eventKey, keys = {
@@ -1795,7 +1769,7 @@ var vis = (function(){
 			//document.addEventListener("focus", c);
 		}
 		return !document[stateKey];
-	};
+	}
 })();
 
 (function() {  // right click menu
@@ -1824,24 +1798,24 @@ var vis = (function(){
    * @param {Object} e The event passed in
    * @return {Object} Returns the x and y position
    */
-  function getPosition(event2) {
+  function getPosition(e) {
     var posx = 0;
     var posy = 0;
 
-    if (!event2) var event = window.event;
+    if (!e) var e = window.event;
     
-    if (event2.pageX || event2.pageY) {
-      posx = event2.pageX;
-      posy = event2.pageY;
-    } else if (event2.clientX || event2.clientY) {
-      posx = event2.clientX + document.body.scrollLeft + document.documentElement.scrollLeft;
-      posy = event2.clientY + document.body.scrollTop + document.documentElement.scrollTop;
+    if (e.pageX || e.pageY) {
+      posx = e.pageX;
+      posy = e.pageY;
+    } else if (e.clientX || e.clientY) {
+      posx = e.clientX + document.body.scrollLeft + document.documentElement.scrollLeft;
+      posy = e.clientY + document.body.scrollTop + document.documentElement.scrollTop;
     }
 
     return {
       x: posx,
       y: posy
-    };
+    }
   }
 
   var contextMenuClassName = "context-menu";
@@ -1923,7 +1897,7 @@ var vis = (function(){
       if ( e.keyCode === 27 ) {
         toggleMenuOff();
       }
-    };
+    }
   }
 
   /**
@@ -2006,29 +1980,6 @@ var vis = (function(){
 
 })();
 
-document.addEventListener("dragstart", event => {
-	var url = event.target.href || event.target.value;
-	if (!url || !url.startsWith('https://')) return;
-	if (event.target.dataset.drag!="1"){
-		return;
-	}
-	var streamId = url.split('view=');
-	var label = url.split('label=');
-
-	url += '&layer-name=OBS.Ninja';
-	if (streamId.length>1) url += ': ' + streamId[1].split('&')[0];
-	if (label.length>1) url += ' - ' + decodeURI(label[1].split('&')[0]);
-	
-	try{
-		var video = document.getElementById('videosource');
-		url += '&layer-width=' + video.videoWidth; // this isn't always 100% correct, as the resolution can fluxuate, but it is probably good enough
-		url += '&layer-height=' + video.videoHeight;
-	} catch(error){
-		url += '&layer-width=1280'; // this isn't always 100% correct, as the resolution can fluxuate, but it is probably good enough
-		url += '&layer-height=720';
-	}
-	event.dataTransfer.setData("text/uri-list", encodeURI(url));
-});
 
 function popupMessage(e, message="Copied to Clipboard"){  // right click menu
   
@@ -2091,4 +2042,4 @@ function popupMessage(e, message="Copied to Clipboard"){  // right click menu
 		}
 	}
 	setTimeout(function(){toggleMenuOff();},1000);
-}
+};
