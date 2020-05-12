@@ -1,15 +1,24 @@
-var Ooblex = {}; // Based the WebRTC and Signaling code off some of my open-source project, ooblex.com, hence the name.i
+/*
+*  Copyright (c) 2020 Steve Seguin. All Rights Reserved.
+*
+*  Use of this source code is governed by the APGLv3 open-source license
+*  that can be found in the LICENSE file in the root of the source
+*  tree. Alternative licencing options can be made available on request.
+*
+*/
+
+var WebRTC = {}; 
 function log(msg){
-	//console.log(msg);
+	console.log(msg);
 	//console.re.log(msg);
 }
 function errorlog(msg, url=false, lineNumber=false){
 
-	//console.error(msg);
+	console.error(msg);
 	//console.re.error(msg);
 	if (lineNumber){
 	//	console.re.error(lineNumber);
-	//	console.error(lineNumber);
+		console.error(lineNumber);
 	}
 }
 function isAlphaNumeric(str) {
@@ -30,13 +39,13 @@ window.onerror = function backupErr(errorMsg, url, lineNumber) {
 	errorlog(lineNumber);
 	errorlog("Unhandeled Error occured"); //or any message
 	return false;
-}
+};
 
-Ooblex.Media = new (function(){
+WebRTC.Media = (function(){
 	var session = {};
 
-	function onSuccess(){};
-	function onError(err){errorlog(err);};
+	function onSuccess(){}
+	function onError(err){errorlog(err);}
 	function defer(){
 		var res, rej;
 		var promise = new Promise((resolve, reject) => {
@@ -59,38 +68,40 @@ Ooblex.Media = new (function(){
 	//turn.urls = ["turn:turn.obs.ninja:443"];
 	//session.configuration.iceServers.push(turn);
 	log(session.configuration);
-
-	session.streamID = null; // This computer has its own streamID; this implies it can only publish 1 stream per session.
-	session.pcs = {};
-	session.rpcs = {};
-	session.muted = false;
-	session.streamSrc = null; // location of this computer's stream, if there is one
-	session.msg = null;
-	session.keys = {}; // security signing stuff 
-	session.mykey = {};
-	session.counter=0; // this keeps track of messages sent. Lets the listener know if he missed any signed messages. security aspect.
-	session.enc = new TextEncoder("utf-8");
-	session.volume = 100; // state of volume.
-	session.stereo = false; // both peers need to have this enabled for it to work.
+    
 	session.bitrate = false; // 20000;
-	session.screenshare = false;
-	session.director = false;
-	session.scene = false;
-	session.framerate = false;
-	session.maxframerate = false;
-	session.single = false;
-	session.roomid = false;
-	session.codec = false ; // "vp9" //"h264"; // Setting the default codec to VP9?  ugh. Seems stable, but high CPU.
-	session.width=false;
-	session.height=false;
-	session.videoElement = false;
-	session.infocus = false;
-	session.security = false;
-	session.nocursor = false;
-	
-	//this._peerConnection.getReceivers().forEach(element => element.playoutDelayHint = 0.05);
-	session.sync = false;
 	session.buffer = false;
+	session.codec = false ; // "vp9" //"h264"; // Setting the default codec to VP9?  ugh. Seems stable, but high CPU.
+	session.counter=0; // this keeps track of messages sent. Lets the listener know if he missed any signed messages. security aspect.
+	session.director = false;
+	session.enc = new TextEncoder("utf-8");
+	session.framerate = false;
+	session.height=false;
+	session.infocus = false;
+	session.keys = {}; // security signing stuff
+	session.maxframerate = false;
+	session.msg = null;
+	session.muted = false;
+	session.mykey = {};
+	session.nocursor = false;
+	session.pcs = {};
+	session.remote = false;
+	session.roomid = false;
+	session.rpcs = {};
+	session.scene = false;
+	session.screenshare = false;
+	session.security = false;
+	session.sink  = false;
+	session.stereo = false; // both peers need to have this enabled for it to work.
+	session.streamID = null; // This computer has its own streamID; this implies it can only publish 1 stream per session.
+	session.streamSrc = null; // location of this computer's stream, if there is one
+	session.sync = false;
+	session.videoElement = false;
+	session.view = false;
+	session.volume = 100; // state of volume.
+	session.width=false;
+
+	//this._peerConnection.getReceivers().forEach(element => element.playoutDelayHint = 0.05);
 	
 	session.generateStreamID = function(){
 		var text = "";
@@ -111,7 +122,7 @@ Ooblex.Media = new (function(){
 		} else {
 			session.streamID = permaid;
 		}
-	}
+	};
 
 	session.generateCrypto = function(){
 		window.crypto.subtle.generateKey({
@@ -146,7 +157,7 @@ Ooblex.Media = new (function(){
 			.catch(function(err){
 				errorlog(err);
 			});
-	}
+	};
 
 	session.importCrypto = function(n,streamID){
 		window.crypto.subtle.importKey(
@@ -174,10 +185,10 @@ Ooblex.Media = new (function(){
 			errorlog(err);
 		});
 
-	}
+	};
 	
 	session.requestRateLimit = function(bandwidth, UUID){
-		log("request rate limit: "+bandwidth)
+		log("request rate limit: "+bandwidth);
 		
 		if (session.rpcs[UUID].manualBandwidth!==false){ // override the bandwidth; false is off
 			if (session.rpcs[UUID].manualBandwidth == bandwidth){return;}
@@ -188,7 +199,7 @@ Ooblex.Media = new (function(){
 				return;
 			}
 		} else {
-			session.rpcs[UUID].targetBandwidth=bandwidth
+			session.rpcs[UUID].targetBandwidth=bandwidth;
 		}
 
 		bandwidth = parseInt(session.rpcs[UUID].targetBandwidth);
@@ -204,7 +215,35 @@ Ooblex.Media = new (function(){
 			setTimeout(function(){session.requestRateLimit(false, UUID);},5000); // just try re-setting it if it didn't work
 			errorlog("couldn't set rate limit");
 		}
-	}
+	};
+	
+	session.requestZoomChange = function(zoom, UUID, passwd = session.remote){
+		log("request zoom change: "+zoom);
+		
+		var msg = {};
+		msg.zoom = zoom;
+		msg.remote = passwd;
+		
+		if (session.sendRequest(msg,UUID)){
+			log('zoom success');
+		} else {
+			errorlog("failed to send zoom change request");
+		}
+	};
+	
+	session.requestFocusChange = function(focal, UUID, passwd = session.remote){
+		log("request focus change: "+focal);
+		
+		var msg = {};
+		msg.focus = focal;
+		msg.remote = passwd;
+		
+		if (session.sendRequest(msg,UUID)){
+			log('focus success');
+		} else {
+			errorlog("failed to send focus change request");
+		}
+	};
 	
 	session.limitBitrate = function(UUID, bandwidth){ 
 		// In Chrome, use RTCRtpSender.setParameters to change bandwidth without
@@ -217,13 +256,13 @@ Ooblex.Media = new (function(){
 				(adapter.browserDetails.browser === 'firefox' &&
 				adapter.browserDetails.version >= 64)) && 'RTCRtpSender' in window && 'setParameters' in window.RTCRtpSender.prototype){
 					
-					var sender = session.pcs[UUID].getSenders().find(function(s) {return s.track.kind == "video"});
+					var sender = session.pcs[UUID].getSenders().find(function(s) {return s.track.kind == "video";});
 					
 					log(sender);
 					if (!sender){
 						errorlog("can't change bitrate; no video sender found");
-						return
-					};
+						return;
+					}
 					
 					var parameters = sender.getParameters();
 					if (!parameters.encodings){
@@ -244,6 +283,27 @@ Ooblex.Media = new (function(){
 					
 			}
 		} catch(e){errorlog(e);}
+	};
+	
+	function changeAudioOutputDevice(ele) {
+		if (session.sink){
+			navigator.mediaDevices.getUserMedia({audio:true,video:false}).then(function (stream){
+				if (typeof ele.sinkId !== 'undefined'){
+					ele.setSinkId(session.sink).then(() => {
+						log("New Output Device:"+session.sink);
+					}).catch(error => {
+						errorlog(error);
+						alert("Failed to change audio output destination.");
+						// audioOutputSelect.selectedIndex = 0; // Jump back to first output device in the list as it's the default.
+					});
+				} else {
+					alert("Your browser does not support alternative audio sources.");
+				}
+				stream.getTracks().forEach(track => {
+					track.stop();
+				});
+			}).catch(function(){alert("Can't play out to specific audio device without mic permissions allowed");});
+		}
 	}
 	
 	function extractSdp(sdpLine, pattern) {
@@ -308,21 +368,21 @@ Ooblex.Media = new (function(){
 			).then(function(isvalid){
 				//returns a boolean on whether the signature is true or not
 				log(isvalid);
-				return isvalid
+				return isvalid;
 			}).catch(function(err){
 				errorlog(err);
-				return false
+				return false;
 				//alert("Could not validate inbound connection");
 			});
 		}
-	}
+	};
 
 	session.changeTitle = function(title){
 		var data = {};
 		data.request = "changeTitle";
 		data.title = title;
 		session.sendMsg(data);
-	}
+	};
 
 
 	session.watchStream = function(streamID){
@@ -331,25 +391,25 @@ Ooblex.Media = new (function(){
 		data.request = "play";
 		data.streamID = streamID;
 		session.sendMsg(data);
-	}
+	};
 
 	session.debug = function(){
 		var data = {};
 		data.request = "debug123";
 		session.sendMsg(data);
-	}
+	};
 
 	session.joinRoom = function(roomid,maxbitrate){
 		var data = {};
 		data.request = "joinroom";
-		data.roomid = roomid
+		data.roomid = roomid;
 		session.sendMsg(data);
 		if (session.bitrate==false){
 			session.bitrate = maxbitrate; // allow users to override, but otherwise limit it
 		}
 		session.listPromise = defer();
 		return session.listPromise;
-	}
+	};
 
 	session.retryTimer = null; 
 	session.ws=null;
@@ -361,8 +421,11 @@ Ooblex.Media = new (function(){
 		session.sendMsg = function(msg){
 			log("sending message");
 			if (session.ws.readyState !== 1){session.msg = msg;} // store the last message to be sent if websocket is not ready. 
-			else {session.msg=null;session.ws.send(JSON.stringify(msg));}
-		}
+			else {
+        session.msg=null;
+        session.ws.send(JSON.stringify(msg));
+      }
+		};
 
 		session.ws.onopen = function(){
 			if (session.retryTimer!=null){
@@ -384,7 +447,7 @@ Ooblex.Media = new (function(){
 					session.sendMsg(data);
 				}
 			}
-		}
+		};
 
 		session.ws.onmessage = function (evt) {
 			var msg = JSON.parse(evt.data);
@@ -418,14 +481,14 @@ Ooblex.Media = new (function(){
 					log("Inbound User-based Message from Room");
 					try {
 						if ("director" in msg){
-							if (msg['director'] === session.scene){
+							if (msg.director === session.scene){
 								if ("action" in msg){
 									if ("target" in msg){
-										for (i in session.rpcs){ // If you are VIEWING this use
-											if (i === msg["target"]){
+										for (var i in session.rpcs){ // If you are VIEWING this use
+											if (i === msg.target){
 												if ("value" in msg){
-													if (msg['action'] == "mute"){	
-														if (msg['value'] == 0){
+													if (msg.action == "mute"){	
+														if (msg.value == 0){
 															log("Mute video -306");
 															
 															if (session.rpcs[i].videoElement){
@@ -444,9 +507,8 @@ Ooblex.Media = new (function(){
 																session.rpcs[i].videoElement.muted = false;
 															}
 														}
-													}  else if (msg['action'] == "display"){
-														if (session.single){log("We don't hide dedicated views");}
-														else if (msg['value'] == 0) { 
+													}  else if (msg.action == "display"){
+														if (msg.value == 0) { 
 															if (session.rpcs[i].videoElement){
 																session.rpcs[i].videoElement.style.display="none";
 																///  I can probably just go thru the RPCS[] list, using UUID, and say "visible" or not. Use Update on that instead.
@@ -473,10 +535,10 @@ Ooblex.Media = new (function(){
 															}
 															updateMixer();
 														}
-													} else if (msg['action'] == "volume"){
-														log(parseInt(msg['value'])/100.0);
+													} else if (msg.action == "volume"){
+														log(parseInt(msg.value)/100.0);
 														if (session.rpcs[i].videoElement){
-															session.rpcs[i].videoElement.volume=parseInt(msg['value'])/100.0;
+															session.rpcs[i].videoElement.volume=parseInt(msg.value)/100.0;
 															log("UN-MUTED");
 														}
 													}
@@ -500,11 +562,9 @@ Ooblex.Media = new (function(){
 				} else if (msg.request=="videoaddedtoroom"){ // a video was added to the room
 					log("Someone published a video to the Room");
 					log(msg);
-					if ((urlParams.has('streamid')) || (urlParams.has('view'))){
-						var streamlist = urlParams.get('streamid') || urlParams.get('view');
-						log(streamlist);
-						streamlist = streamlist.split(",");
-						for (j in streamlist){
+					if (session.view){
+						var streamlist = session.view.split(",");
+						for (var j in streamlist){
 							if (msg.streamID === streamlist[j]){
 								session.watchStream(msg.streamID);
 							}
@@ -577,7 +637,7 @@ Ooblex.Media = new (function(){
 				}
 
 			} else { log("what is this?",msg); }
-		}
+		};
 		session.ws.onclose = function(){
 			errorlog("Connection to Control Server lost.\n\nAuto-reconnect is partially implemented");
 			//session.retryTimer = setTimeout(function() {
@@ -597,14 +657,14 @@ Ooblex.Media = new (function(){
 
 		stream.oninactive = function() {
 			errorlog('Stream inactive');
-		}
+		};
 		if (stream.getVideoTracks().length==0){
 			errorlog("NO VIDEO TRACK INCLUDED");
-		};
+		}
 
 		if (stream.getAudioTracks().length==0){
 			errorlog("NO AUDIO TRACK INCLUDED");
-		};
+		}
 
 		session.streamSrc=stream;
 		var v = document.createElement("video");
@@ -618,7 +678,6 @@ Ooblex.Media = new (function(){
 		v.className = "tile";
 		
 		if (session.director){
-		} else if (session.single){ 
 		} else if (session.scene){
 			session.videoElement = v;
 			updateMixer();
@@ -658,8 +717,8 @@ Ooblex.Media = new (function(){
 		
 		try {
 		    v.srcObject = session.streamSrc;
-			
 		} catch (e){errorlog(e);}
+		
 		try{
 			var m = document.getElementById("mainmenu");
 			m.remove();
@@ -678,7 +737,7 @@ Ooblex.Media = new (function(){
 		log("SCREEN SHARE SETUP");
 		if (!navigator.mediaDevices.getDisplayMedia){
 			alert("Sorry, your browser is not supported. Please use the desktop versions of Firefox or Chrome instead");
-			return
+			return;
 		}
 		var streams = [];
 		for (var i=1; i<audioList.length;i++){
@@ -708,7 +767,7 @@ Ooblex.Media = new (function(){
 				session.screenshare = true;
 				stream.oninactive = function(){
 					log('Stream inactive');
-				}
+				};
 				console.log("adding tracks");
 				for (var i=0; i<streams.length;i++){
 					streams[i].getAudioTracks().forEach(function(track){
@@ -719,7 +778,7 @@ Ooblex.Media = new (function(){
 				streams = null;
 				if (stream.getAudioTracks().length==0){
 					alert("No Audio Source was detected.");
-				};
+				}
 				session.streamSrc=stream;
 				var v = document.createElement("video");
 				var container = document.createElement("div");
@@ -732,7 +791,6 @@ Ooblex.Media = new (function(){
 				v.className = "tile";
 				
 				if (session.director){
-				} else if (session.single){ 
 				} else if (session.scene){
 					session.videoElement = v;
 					updateMixer();
@@ -813,7 +871,6 @@ Ooblex.Media = new (function(){
 		v.src = fileURL;
 
 		if (session.director){
-		} else if (session.single){ 
 		} else if (session.scene){
 			session.videoElement = v;
 			updateMixer();
@@ -838,7 +895,7 @@ Ooblex.Media = new (function(){
 		m.remove();
 
 		try{
-			session.streamSrc=v.captureStream();;
+			session.streamSrc=v.captureStream();
 		} catch(e){
 			log(e);
 			alert("Safari and many older browsers do not support this feature. Perhaps try using Chrome or Firefox on desktop instead. Please refresh to try another option.");
@@ -856,14 +913,14 @@ Ooblex.Media = new (function(){
 	};
 
 	session.sendMessage = function(msg, UUID=null){ // I MIGHT NEED TO LOOK CLOSER AT THIS. ITS ONE DIRECTIONAL CURRENTLY
-		msg['timestamp'] = Date.now().toString();
-		msg['counter'] = session.counter;
+		msg.timestamp = Date.now().toString();
+		msg.counter = session.counter;
 
 		session.signData(msg,function(data,signature){
 			session.counter += 1;
 
 			if (UUID == null){ // send to all RTC peers i'm publishing to
-				for (i in session.pcs){
+				for (var i in session.pcs){
 					try{
 						session.pcs[i].sendChannel.send(JSON.stringify({data,signature}));
 					} catch(e){
@@ -885,14 +942,14 @@ Ooblex.Media = new (function(){
 	};
 	
 	session.sendMessage = function(msg, UUID=null){ // Publisher signs the request. This lets sub-viewers, if any, verify if a message is from the original publisher or not.
-		msg['timestamp'] = Date.now().toString();
-		msg['counter'] = session.counter;
+		msg.timestamp = Date.now().toString();
+		msg.counter = session.counter;
 
 		session.signData(msg,function(data,signature){
 			session.counter += 1;
 
 			if (UUID == null){ // send to all RTC peers i'm publishing to
-				for (i in session.pcs){
+				for (var i in session.pcs){
 					try{
 						session.pcs[i].sendChannel.send(JSON.stringify({data,signature}));
 					} catch(e){
@@ -915,7 +972,7 @@ Ooblex.Media = new (function(){
 	
 	session.sendRequest = function(msg, UUID){ // Publisher signs the request. This lets sub-viewers, if any, verify if a message is from the original publisher or not.
 		try{
-			msg['timestamp'] = Date.now().toString();
+			msg.timestamp = Date.now().toString();
 			session.rpcs[UUID].receiveChannel.send(JSON.stringify(msg));
 			return true;
 		} catch(e){
@@ -923,6 +980,19 @@ Ooblex.Media = new (function(){
 			return false;
 		}	
 	};
+
+	session.remoteZoom = function(zoom){
+		try {
+		var track0 = session.streamSrc.getVideoTracks();
+		var capabilities = track0.getCapabilities();
+		//var settings = track0.getSettings();
+		zoom = zoom*( capabilities.zoom.max - capabilities.zoom.min) + capabilities.zoom.min;
+		track0.applyConstraints({advanced: [ {zoom: zoom} ]});
+		} catch(e){
+			logerror(e);
+		}
+	};
+
 
 	session.offerSDP = function(stream,UUID){  // publisher/offerer (PCS)
 		if (UUID in session.pcs){
@@ -933,7 +1003,7 @@ Ooblex.Media = new (function(){
 		else {log("Create a new RTC connection; offering SDP on request");}
 
 		session.pcs[UUID] = new RTCPeerConnection(session.configuration);
-		session.pcs[UUID]['UUID'] = UUID;
+		session.pcs[UUID].UUID = UUID;
 		session.pcs[UUID].sendChannel = session.pcs[UUID].createDataChannel("sendChannel");
 
 		//session.pcs[UUID].sendChannel.onopen = () => { // we don't need this anymore if muting locally.
@@ -948,19 +1018,30 @@ Ooblex.Media = new (function(){
 
 		session.pcs[UUID].sendChannel.onmessage = (e)=>{
 			log("recieved data from viewer");
-			var msg = JSON.parse(e.data)
+			var msg = JSON.parse(e.data);
 			log(msg);
 			if ("bitrate" in msg){
 				session.limitBitrate(UUID, msg.bitrate);
 			}
-		}
+			if ("zoom" in msg){
+				if (session.remote){
+					if ("remote" in msg){
+						if (msg.remote === session.remote){ // authorized
+							session.remoteZoom(parseFloat(msg.zoom));
+						}
+					} else { // no password provided by remote
+						return;
+					}
+				}
+			}
+		};
 
 		log("pubs streams to offeR",stream.getTracks());	
 		stream.getTracks().forEach(track => {
 			var sender = session.pcs[UUID].addTrack(track, stream);
 		});
 		
-		session.pcs[UUID].ontrack = event => {errorlog("Publisher is being sent a video stream??? NOT EXPECTED!")};
+		session.pcs[UUID].ontrack = event => {errorlog("Publisher is being sent a video stream??? NOT EXPECTED!");};
 
 		session.pcs[UUID].onicecandidate = function(event){
 			log("CREATE ICE 3");
@@ -1000,7 +1081,7 @@ Ooblex.Media = new (function(){
 			} catch(e){
 				errorlog(e);
 			}
-		}
+		};
 		
 		session.pcs[UUID].onconnectionstatechange = function(){
 			switch (session.pcs[UUID].connectionState){
@@ -1009,8 +1090,9 @@ Ooblex.Media = new (function(){
 						session.ws.close();
 						alert("Remote peer connected to video stream.\n\nConnection to server being killed on request. This increases security, but the peer will not be able to reconnect automatically on connection failure.");
 					}
+          break;
 				case "disconnected":
-					// 
+					break;
 				case "failed":
 					// One or more transports has terminated unexpectedly or in an error
 					break;
@@ -1018,7 +1100,7 @@ Ooblex.Media = new (function(){
 					// The connection has been closed
 					break;
 			}
-		}
+		};
 		
 		session.createOffer = function(pc, UUID){
 			pc.createOffer().then((description)=>{
@@ -1056,7 +1138,7 @@ Ooblex.Media = new (function(){
 					session.ws.send(JSON.stringify(data));
 				}).catch(onError);
 			}).catch(onError);
-		}
+		};
 		
 		session.pcs[UUID].onnegotiationneeded = function(){ // bug: https://groups.google.com/forum/#!topic/discuss-webrtc/3-TmyjQ2SeE
 			session.createOffer(session.pcs[UUID], UUID);
@@ -1109,16 +1191,16 @@ Ooblex.Media = new (function(){
 					session.sendMsg(data);
 
 					var data = {};
-					data.request = "getkey"
+					data.request = "getkey";
 					//data.UUID = msg.UUID;   -- they other party does not need this
-					data.streamID = session.rpcs[msg.UUID]['streamID'];
+					data.streamID = session.rpcs[msg.UUID].streamID;
 					session.sendMsg(data);
 
 				}).catch(onError);
 			} else if (session.rpcs[msg.UUID].remoteDescription.type === 'answer'){  // someone responded to one of our answers; they presumably requested an offerSDP
 			}
 		}).catch(onError);
-	}
+	};
 	/// THE PROBLEM IS I HAVE A PATH WAY FOR INPUT AND A PATHWAY FOR OUTPUT, BU THEY SHARE THE SAME PATHWAY. LOL.  I NEED TO COMBINE THESE INTO ONE.
 	session.setupIncoming = function(msg){ // ingesting stream as a viewer
 		var UUID = msg.UUID;
@@ -1134,9 +1216,9 @@ Ooblex.Media = new (function(){
 		//session.rpcs[UUID].volume=1;
 		//session.rpcs[UUID].muted=false;
 		
-		session.rpcs[UUID]["UUID"] = UUID;
+		session.rpcs[UUID].UUID = UUID;
 		if ("streamID" in msg){
-			session.rpcs[UUID]['streamID'] = msg["streamID"];
+			session.rpcs[UUID].streamID = msg.streamID;
 		}
 		//session.rpcs[UUID].addTransceiver('video', { direction: 'recvonly'});  // this breaks OBS v23
 		session.rpcs[UUID].onclose = function(event){
@@ -1167,7 +1249,7 @@ Ooblex.Media = new (function(){
 				if (document.getElementById("container_"+UUID)){
 					document.getElementById("container_"+UUID).parentNode.removeChild(document.getElementById("container_"+UUID));
 				}
-			} catch (e){errorlog(e)}
+			} catch (e){errorlog(e);}
 			
 			try {	
 				if (this.streamSrc){
@@ -1181,11 +1263,11 @@ Ooblex.Media = new (function(){
 			}catch (e){errorlog(e);}	
 			
 			try {
-				session.rpcs[this.UUID] = null
+				session.rpcs[this.UUID] = null;
 				delete(session.rpcs[this.UUID]);
 			} catch (e){errorlog(e);}
 
-		}
+		};
 
 		session.rpcs[UUID].onicecandidate = function(event){
 			log("CREATE ICE RCPS");
@@ -1209,6 +1291,7 @@ Ooblex.Media = new (function(){
 					break;
 				case "disconnected":
 					log(" ** disconnected");
+          break;
 				case "failed":
 					// One or more transports has terminated unexpectedly or in an error
 					break;
@@ -1216,7 +1299,7 @@ Ooblex.Media = new (function(){
 					// The connection has been closed
 					break;
 			}	
-		}
+		};
 
 		session.rpcs[UUID].oniceconnectionstatechange = function() {
 			try{
@@ -1262,7 +1345,7 @@ Ooblex.Media = new (function(){
 						}
 					} catch (e){}
 					session.rpcs[this.UUID].close();
-					session.rpcs[this.UUID] = null
+					session.rpcs[this.UUID] = null;
 					delete(session.rpcs[this.UUID]);
 
 				} else if (this.iceConnectionState == 'failed') {
@@ -1272,7 +1355,7 @@ Ooblex.Media = new (function(){
 				}
 
 			} catch (E){}
-		}
+		};
 
 		session.rpcs[UUID].ondatachannel = (event)=>{ // recieve data from peer; event data maybe
 
@@ -1281,26 +1364,21 @@ Ooblex.Media = new (function(){
 			
 			session.rpcs[UUID].receiveChannel.onmessage = (e)=>{
 				log("recieved data: "+e.data);
-				var msg = JSON.parse(e.data)
+				var msg = JSON.parse(e.data);
 				log(msg);
 				//if (session.verifyData(msg,session.rpcs[UUID]['streamID'])){  // I'm just going to disable security for now.
 				if ("data" in msg){
 					if ("volume" in msg.data){
 						log("Changing volume");
-						log(parseInt(msg.data["volume"])/100.0);
-						var volume = parseInt(msg.data["volume"])/100.0; //
-						session.rpcs[UUID].publisher = parseInt(msg.data["volume"]);
+						log(parseInt(msg.data.volume)/100.0);
+						var volume = parseInt(msg.data.volume)/100.0; //
+						session.rpcs[UUID].publisher = parseInt(msg.data.volume);
 						if (session.scene){
 							if (session.rpcs[UUID].director !== false){
-								if (ession.rpcs[UUID].director==0){
-									log("Mute override by director; this is a scene");
-									return;
-								} 
-							} else if (session.single){
 								if (session.rpcs[UUID].director==0){
 									log("Mute override by director; this is a scene");
 									return;
-								}		
+								} 	
 							} else {
 								session.rpcs[UUID].videoElement.muted = true;
 								session.rpcs[UUID].videoElement.volume = 1;
@@ -1327,7 +1405,7 @@ Ooblex.Media = new (function(){
 				//}
 
 			};
-			session.rpcs[UUID].receiveChannel.onopen = function(){log("data channel opened")};
+			session.rpcs[UUID].receiveChannel.onopen = function(){log("data channel opened");};
 
 			session.rpcs[UUID].receiveChannel.onclose = () => {
 				log("rpc datachannel closed");
@@ -1337,7 +1415,7 @@ Ooblex.Media = new (function(){
 		};
 
 		session.playoutdelay = function(UUID){
-			var buffer = session.buffer | 0;
+			var buffer = session.buffer || 0;
 			
 			buffer = parseFloat(buffer)/1000;
 			log("playout delay"+buffer);
@@ -1347,15 +1425,14 @@ Ooblex.Media = new (function(){
 					element.playoutDelayHint = buffer;
 				});	
 			}
-		}
+		};
 
 		session.rpcs[UUID].ontrack = event => {
 
 			log("streams:",event.streams);
 			log(event.streams[0].getVideoTracks());
-			
-			
 			log(event.streams[0].getAudioTracks());
+			
 			const stream = event.streams[0];
 			session.rpcs[UUID].streamSrc = stream;
 
@@ -1388,6 +1465,8 @@ Ooblex.Media = new (function(){
 				v.className += "tile";
 				v.setAttribute("playsinline","");
 				
+				changeAudioOutputDevice(v);  // if enabled, changes to desired output audio device.
+				
 				if (session.rpcs[UUID].connectionState ==  "connected"){
 					v.srcObject = stream;
 				} 
@@ -1414,11 +1493,9 @@ Ooblex.Media = new (function(){
 					
 					session.requestRateLimit(100,UUID); /// limit resolution for director
 					
-				} else if (session.single){ 
-					log("single mode, so we won't touch the defaults");
 				} else if (session.scene){
 					
-					if ((urlParams.has('streamid')) || (urlParams.has('view'))){
+					if (session.view){
 						v.style.display="block";
 						
 					} else {
@@ -1445,10 +1522,16 @@ Ooblex.Media = new (function(){
 					if (session.nocursor==false){ // we do not want to show the controls. This is because MacOS + OBS does not work; so electron app needs this.
 						setTimeout(function(){v.controls=true;},3000); // 3 seconds before I enable the controls automatically. This way it doesn't auto appear during loading.  3s enough, right?
 					}
+					
+					v.play().then(_ => {
+						log("playing");
+					}).catch(error => {
+						errorlog("didnt autoplay");
+					});
 				}
 				
 			}
-		}
+		};
 		log("setup peer complete");
 	};
 
