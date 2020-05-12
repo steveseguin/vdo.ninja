@@ -105,29 +105,50 @@ if (urlParams.has('codec')){
     session.codec = urlParams.get('codec');
 }
 
-if (urlParams.has('ln')){
+if (urlParams.has('ln')){  // checking if manual lanuage override enabled
 	try {
-	fetch("./translations/"+urlParams.get('ln')+'.json').then(function(response){
-		if (response.status !== 200) {
-			console.log('Looks like there was a problem. Status Code: ' +
-			response.status);
-			return;
-		}
-		response.json().then(function(data) {
-			log(data);
-			document.querySelectorAll('[data-translate]').forEach(function(ele){
-				//log(ele.dataset.translate);
-				//log(translations[ele.dataset.translate]);
-				ele.innerHTML = data[ele.dataset.translate];
+		fetch("./translations/"+urlParams.get('ln')+'.json').then(function(response){
+			if (response.status !== 200) {
+				console.log('Looks like there was a problem. Status Code: ' +
+				response.status);
+				return;
+			}
+			response.json().then(function(data) {
+				log(data);
+				document.querySelectorAll('[data-translate]').forEach(function(ele){
+					//log(ele.dataset.translate);
+					//log(translations[ele.dataset.translate]);
+					ele.innerHTML = data[ele.dataset.translate];
+				});
 			});
+		}).catch(function(err){
+			errorlog(err);
 		});
-	}).catch(function(err){
-		errorlog(err);
-	});
 	
 	} catch (error){
 		errorlog(error);
 	}
+} else {  // check if automatic language translation is available
+	
+	if (window.navigator.language.slice(0, 2) !== 'en'){  
+		fetch("./translations/"+window.navigator.language.slice(0, 2)+'.json').then(function(response){
+			if (response.status !== 200) {
+				logerror('Language translation file not found.' + response.status);
+				return;
+			}
+			response.json().then(function(data) {
+				log(data);
+				document.querySelectorAll('[data-translate]').forEach(function(ele){
+					//log(ele.dataset.translate);
+					//log(translations[ele.dataset.translate]);
+					ele.innerHTML = data[ele.dataset.translate];
+				});
+			});
+		}).catch(function(err){
+			errorlog(err);
+		});
+	}
+	
 }
 
 if (urlParams.has('bitrate')){
