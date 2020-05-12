@@ -1483,6 +1483,12 @@ WebRTC.Media = (function(){
 					if (session.nocursor==false){ // we do not want to show the controls. This is because MacOS + OBS does not work; so electron app needs this.
 						setTimeout(function(){v.controls=true;},3000); // 3 seconds before I enable the controls automatically. This way it doesn't auto appear during loading.  3s enough, right?
 					}
+					
+					v.play().then(_ => {
+						log("playing");
+					}).catch(error => {
+						errorlog("didnt autoplay");
+					});
 				}
 				
 			}
