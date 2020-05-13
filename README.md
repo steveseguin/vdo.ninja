@@ -3,7 +3,7 @@
 ## What is OBS NINJA
 OBS.Ninja uses peer-to-peer technology to bring remote cameras into OBS. In most cases, all video data is transferred directly from peer to peer, without needing to go through any video server. This results in high-quality video with super low latency. In a small number of cases, video data may go through an encrypted TURN server, which is used to facilitate peer connections when otherwise not possible.
 
-OBS Ninja is not affiliated with OBS, but OBS Ninja is dependent on OBS to function. OBS.Ninja is designed to allow content creators to produce real-time live shows with OBS Studio and to allow smartphones to be used as webcams on a Windows PC. 
+OBS Ninja is not affiliated with OBS. OBS.Ninja is designed to allow content creators to produce real-time live shows with OBS Studio (or other compatible software) using remote media streams. It can also turn smartphones into wireless webcams, with an additional Virtualcam software. 
 
 Please see the sub-reddit added info: https://reddit.com/r/obsninja  
 Also check out the FAQ for more info: https://github.com/steveseguin/obsninja/wiki
