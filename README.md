@@ -13,7 +13,7 @@ I demo the basic usage of OBS.Ninja on YouTube: https://www.youtube.com/watch?v=
 
 Check the subreddit for added use cases, advanced features, and support. Advanced features includes high-quality audio modes, custom video resolutions, and more.
 
-MacOS users will face some challenges in using OBS currently, but there are workarounds. Please see Reddit or the Wiki.
+MacOS users will face some challenges in using OBS currently, but there are workarounds. Please see the subreddit or the Wiki.
 
 ## What's in this repo?
 This repo contains software for OBS.Ninja, including the HTML landing page for its Electron Capture app offering. A sample config file and instructions for setting up a TURN server (video relay server), is also provided. You may also find the Wiki for the project in this repo, which contains added information on how to use the software.
