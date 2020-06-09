@@ -50,7 +50,10 @@ a:active {
 }
 .gowebcam {
 	font-size:110%;
-	padding:10px;border:3px solid #CCC; cursor:pointer; background-color:#FFF
+	padding:10px;
+	border:3px solid #DDDDDD;
+	cursor:pointer;
+	background-color:#DDDDDD;
 }
 
 .pressed {
@@ -122,6 +125,7 @@ hr {
 	grid-auto-columns: minmax(100px,500px);
 	grid-auto-rows: minmax(100px, 300px);
 	display:block ! important;
+	overflow-y: auto !important;
 
 }
 .directorsgrid video {
@@ -453,19 +457,7 @@ button {
 	box-shadow: 2px 2px 3px #999;
 	z-index:10;
 }
-.float2{
-	position:fixed;
-	width:60px;
-	height:60px;
-	bottom:80px;
-	right:132px;
-	background-color:#15B;
-	color:#FFF;
-	border-radius:50px;
-	text-align:center;
-	box-shadow: 2px 2px 3px #999;
-	z-index:10;
-}
+
 .float3{
 	position:fixed;
 	width:60px;
@@ -479,7 +471,45 @@ button {
 	box-shadow: 2px 2px 3px #999;
 	z-index:10;
 }
-
+.float4{
+	position:fixed;
+	width:60px;
+	height:60px;
+	bottom:80px;
+	right:132px;
+	background-color:#399;
+	color:#FFF;
+	border-radius:50px;
+	text-align:center;
+	box-shadow: 2px 2px 3px #999;
+	z-index:10;
+}
+.float5{
+	position:fixed;
+	width:60px;
+	height:60px;
+	bottom:80px;
+	right:132px;
+	background-color:#C23;
+	color:#FFF;
+	border-radius:50px;
+	text-align:center;
+	box-shadow: 2px 2px 3px #999;
+	z-index:10;
+}
+.float2{
+	position:fixed;
+	width:60px;
+	height:60px;
+	bottom:80px;
+	right:212px;
+	background-color:#15B;
+	color:#FFF;
+	border-radius:50px;
+	text-align:center;
+	box-shadow: 2px 2px 3px #999;
+	z-index:10;
+}
 
 .my-float{
 	margin-top:7px;
@@ -682,7 +712,7 @@ video {
 
 div.multiselect {
 	background-color:#FFF;
-	max-width:320px;
+	max-width:550px;
 	white-space: nowrap;
 	overflow:hidden;
 	min-width:100px;
