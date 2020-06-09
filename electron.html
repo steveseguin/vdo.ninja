@@ -75,21 +75,31 @@ input[type='checkbox']:checked {
 <body >
 
 <div id="header" style="-webkit-app-region: drag;color:white;font-size:2em">OBS.Ninja</div>
-<div class="formcss"   >
+<div class="formcss" >
+
 	<input type="checkbox" class="check" id="prefervp9" name="prefervp9" value="false" onclick="modURL(this);">
 	<label for="prefervp9">Force VP9 Codec</label>
+	
 	<input type="checkbox" class="check" id="showcursor" name="showcursor" value="false" onclick="modURL(this);">
 	<label for="showcursor">Show Mouse Cursor</label>
+	
 	<input type="checkbox" class="check"  id="highbitrate" name="highbitrate" value="false" onclick="modURL(this);">
 	<label for="highbitrate">High Video Bitrate</label>
+	
 	<input type="checkbox" class="check" id="stereo" name="stereo" value="false" onclick="modURL(this);">
-	<label for="stereo">Pro Audio Mode</label><br><br><br>
-	<div class="formcss">
-    <input type="text" id="changeText" class="inputfield" value="http://obs.ninja/?view=" onchange="modURL"   onkeyup="enterPressed(event, gohere);" />
-	<button  onclick="gohere();" id="gobutton">GO</button>
-	<br><br>
-	<label for="audioOutput">Audio output destination: </label><select id="audioOutput" style="max-width:400px"></select>
-	</div>
+	<label for="stereo">Pro Audio Mode</label>
+	
+	<input type="checkbox" class="check" id="buffer" name="buffer" value="false" onclick="modURL(this);">
+	<label for="buffer">Lip-sync Fix</label>
+	
+	<br><br><br>
+	<div class="formcss"><center>
+		<input type="text" id="changeText" class="inputfield" value="http://obs.ninja/?view=" onchange="modURL"   onkeyup="enterPressed(event, gohere);" />
+		<button  onclick="gohere();" id="gobutton">GO</button>
+		<br><br>
+		<label for="audioOutput">Audio output destination: </label><select id="audioOutput" style="max-width:400px"></select>
+		
+	</center></div>
 </div>
 
 
@@ -121,7 +131,7 @@ function getPermssions(e){
 		return;
 	} 
 	e.currentTarget.blur();
-	navigator.mediaDevices.getUserMedia({audio: true,video: false}).then(function(stream){
+	navigator.mediaDevices.getUserMedia({audio: true,video: false}).then((stream)=>{
 		navigator.mediaDevices.enumerateDevices().then(gotDevices).catch(console.error); // list all devices
 		stream.getTracks().forEach(track => {
 		    track.stop();
@@ -207,10 +217,13 @@ function updateURLParameter(url, param, paramVal){
         if(TheParams){baseURL = TheParams;}
     }
 
-	if (paramVal==false){
+	if (paramVal===false){
 		temp="";
 		if(TheAnchor){temp += "#" + TheAnchor;}
 		var rows_txt = temp
+	} else if  (paramVal===""){
+		if(TheAnchor){paramVal += "#" + TheAnchor;}
+		var rows_txt = temp + "" + param;
 	} else {
 		if(TheAnchor){paramVal += "#" + TheAnchor;}
 		var rows_txt = temp + "" + param + "=" + paramVal;
@@ -230,7 +243,7 @@ function modURL(ele=false){
 	console.log(url);
 	if ((url.split("view").length>0) || (url.split("room").length>0)){
 			if (!document.getElementById("showcursor").checked){
-				url=updateURLParameter(url, "nocursor", "1");
+				url=updateURLParameter(url, "nocursor", "");
 			} else {
 				url=updateURLParameter(url, "nocursor", false);
 			}
@@ -254,10 +267,18 @@ function modURL(ele=false){
 			  
 			  if (ele.id =="stereo"){
 				if (document.getElementById("stereo").checked){
-					url=updateURLParameter(url, "stereo", "1");
+					url=updateURLParameter(url, "stereo", "");
 					alert('Audio bitrate increased to 256kbps.\n\nPlease note: the Video Publisher must also have the stereo flag enabled for stereo to work.');
 				} else {
 					url=updateURLParameter(url, "stereo", false);
+				}
+			  }
+			  
+			  if (ele.id =="buffer"){
+				if (document.getElementById("buffer").checked){
+					url=updateURLParameter(url, "buffer", "");
+				} else {
+					url=updateURLParameter(url, "buffer", false);
 				}
 			  }
 		}

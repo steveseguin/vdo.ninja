@@ -2,24 +2,49 @@
 <head>
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta content="text/html;charset=utf-8" http-equiv="Content-Type">
-<meta name="copyright" content="&copy; 2020 Stephen Seguin" />
 <meta content="utf-8" http-equiv="encoding">
+
+<meta name="copyright" content="&copy; 2020 Stephen Seguin" />
+
 <link rel="shortcut icon" href="data:image/x-icon;," type="image/x-icon">
 <link rel="icon" type="image/png" sizes="32x32" href="./images/favicon-32x32.png">
 <link rel="icon" type="image/png" sizes="16x16" href="./images/favicon-16x16.png">
 <link rel="icon" href="./images/favicon.ico" />
+
+<!-- Primary Meta Tags -->
+<title>OBS.Ninja</title>
+<meta name="title" content="OBS.Ninja">
+<meta name="description" content="Bring live video from your smartphone, computer, or friends directly into OBS Studio. 100% free.">
+
+<!-- Open Graph / Facebook -->
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://obs.ninja/">
+<meta property="og:title" content="OBS.Ninja">
+<meta property="og:description" content="Bring live video from your smartphone, computer, or friends directly into OBS Studio. 100% free.">
+<meta property="og:image" content="./images/obsNinja_logo_full.png">
+
+<!-- Twitter -->
+<meta property="twitter:card" content="summary_large_image">
+<meta property="twitter:url" content="https://obs.ninja/">
+<meta property="twitter:title" content="OBS.Ninja">
+<meta property="twitter:description" content="Bring live video from your smartphone, computer, or friends directly into OBS Studio. 100% free.">
+<meta property="twitter:image" content="./images/obsNinja_logo_full.png">
+
+
 <meta name="msapplication-TileColor" content="#da532c">
 <meta name="theme-color" content="#ffffff">
+
+<!-- <script src="//console.re/connector.js" data-channel="obsninjaalpha" id="consolerescript"></script> -->
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
 <script type="text/javascript" src="https://webrtc.github.io/adapter/adapter-latest.js"></script>
 <script type="text/javascript" src="./thirdparty/qrcode.min.js"></script>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.0/jquery.min.js"></script>
-
 <link rel="stylesheet" href="./main.css" />
+
 </head>
-<body  id="main" class="cat">
+<body id="main" class="cat">
 	<script language="javascript" type="text/javascript" src="./thirdparty/CodecsHandler.js"></script>
-	<script language="javascript" type="text/javascript" src="./webrtc.js?version=12"></script>
+	<script language="javascript" type="text/javascript" src="./webrtc.js"></script>
 	<input id='zoomSlider'type="range" style="display:none">
 	<div id="header">
 		<font style="font-size:130%;">
@@ -27,7 +52,8 @@
 			<span data-translate="logo-header"><font id="qos">O</font>BS.Ninja </a></span>
 			<div id="head1" style="display:inline-block;position:relative;">
 				<input id="joinroomID" name="joinroomID" size=26 placeholder=" Join by Room Name here"></input>
-				<button style="padding:0px;margin: 0 0" onclick="jumptoroom();">&nbsp;<span data-translate="GO">GO</span>&nbsp;</button>
+				<button style="padding:0px;margin: 0 0;background-color:#CCC;" onclick="jumptoroom();">&nbsp;<span data-translate="GO">GO</span>&nbsp;</button>
+				
 			</div>
 			<div id="head3" style="display:inline-block" class='advanced'>
 				<font style='font-size:80%;color:#888' id="copythisurl"> &nbsp; <span data-translate="copy-this-url">Copy this URL into an OBS "Browser Source"</span> =>  &nbsp; </font>
@@ -46,17 +72,22 @@
 			</div>
 
 		</font>
+		<span onclick="toggle(document.getElementById('languages'));"  style="cursor:pointer;" ><i style="float:right; bottom:0px; cursor:pointer; position: absolute;right: 10px;color: #D9E4EB;padding: 0;margin:2px 2px 0 0 ; font-size: 140%;" class="fa fa-language" aria-hidden="true"></i></span>
+				
 		<hr />
 	</div>
 
 	<div id="mutebutton" onclick="toggleMute()" class='advanced float3' style="cursor:pointer" alt="Toggle the mic">
 		<i style="font-size:48px;color:white" id="mutetoggle" class="fa fa-microphone my-float"></i>
 	</div>
+	<div id="mutevideobutton" onclick="toggleVideoMute()" class='advanced float4' style="cursor:pointer" alt="Toggle the camera">
+		<i style="font-size:48px;color:white" id="mutevideotoggle" class="fa fa-eye my-float"></i>
+	</div>
 	<div id="helpbutton" onclick="alert('Email steve@seguin.email if the system breaks or check https://reddit.com/r/obsninja for support.\n\nThere are some advanced options hidden away, such as persistent stream links and custom resolutions.\n\nMacOS users should be using OBS v23 due to a bug in v24 and v25')"  class='advanced float2' style="cursor:pointer" alt="How to Use This with OBS">
 		<i style="font-size:48px;color:white;" class="fa fa-question-circle my-float"></i>
 	</div>
 
-	<div id="mainmenu" class="row" style="align:center;">
+	<div id="mainmenu" class="row" style="opacity: 0; align:center;">
 		<div id="container-1" class="column columnfade" style="background-color:#ddd;">
 			<h2><span data-translate="add-group-chat">Add Group Chat to OBS</span></h2>
 			<div class="container-inner">
@@ -72,11 +103,9 @@
 				<span data-translate="added-notes">
 				<u><i>Added Notes:</i></u>
 				<li>Anyone can enter a room if they know the name, so keep it unique</li>
-				<li>Having more than four (4) people in a room is not advisable due to performance reasons, but it depends on your hardware.</li>
-				<li>iOS devices are limited to group sizes of no more than two (2) people. This is a hardware limitation.</li>
-				<li>The "Recording" option is new and is considered experimental.</li>
-				<li>You must "Add" a video feed to the "Group Scene" for it to appear there.</li>
-				<li>There is a new "enhanced fullscreen" button added to the Guest's view.</li>
+				<li>Invite only guests to the room you trust.</li>
+				<li>iOS devices will share just their audio with other guests; this is mainly a hardware limitation</li>
+				<li>The "Recording" option is considered experimental.</li>
 				</span>
 				</ul>
 			</div>
@@ -90,28 +119,35 @@
 		<div id="container-3" class="column columnfade" onclick="previewWebcam()"  style="background-color:#ddd;">
 			<h2 id="add_camera"><span data-translate="add-your-camera">Add your Camera to OBS</span></h2>
 			<div class="container-inner"><br />
-				<p><span data-translate="select-audio-video">Select the audio/video source below</span></p>
-				<button onclick="publishWebcam()" id="gowebcam" class="gowebcam"><span data-translate="waiting-for-camera">Waiting for Camera to Load</span></button>
-				<p><video id="previewWebcam" oncanplay="updateStats();"  muted controls autoplay playsinline style="max-width:640px; max-width:83vw; max-height:30vh"></video>
 				
-				</p>
+				<p><video id="previewWebcam" oncanplay="updateStats();"  muted controls autoplay playsinline style="max-width:640px; max-width:83vw; max-height:30vh"></video></p>
+
 				<div id="infof"></div>
+				<button onclick="publishWebcam()" id="gowebcam" class="gowebcam" disabled><span data-translate="waiting-for-camera">Waiting for Camera to Load</span></button>
 				<br/>
-				<p><span data-translate="video-source">Video source</span>: <select id="videoSource"></select></p><br/>
 				
-				<form id="webcamquality">
-				<input type="radio" id="fullhd" name="resolution" value="0">
-				<label for="fullhd"><span data-translate="max-resolution">Max Resolution</span> </label> | 
-				<input type="radio" checked id="halfhd" name="resolution" value="1">
-				<label for="halfhd"><span data-translate="balanced">Balanced</span> </label> | 
-				<input type="radio" id="nothd" name="resolution" value="3">
-				<label for="nothd"><span data-translate="smooth-cool">Smooth and Cool</span></label>
-				</form>
-				<center><div id="webcamstats" ></div></center><br/>
-	
+				<span   style=" background-color: #f3f3f3; display: inline-block; padding:5px 10px; border: 1px solid #ccc; vertical-align: middle;">
+					<span data-translate="video-source">Video source</span>: <select id="videoSource" style="background-color: #FFF; padding:5px; display: display:inline-block;vertical-align: middle;"></select>
+					<span id="gear_webcam" style="display:inline-block" onclick="toggle(document.getElementById('videoSettings'));">
+						&nbsp;&nbsp;<i class="fa fa-cog" style="font-size: 170%; vertical-align: middle;" aria-hidden="true"></i>
+					</span>
+				</span><br />
+				<center>
+				<span id='videoSettings' style="margin:auto auto; display:none; background-color: #f3f3f3; max-width:500px; padding:10px 0; margin: 0 0 5px 0;">
+					<form id="webcamquality">
+					<input type="radio" id="fullhd" name="resolution" value="0">
+					<label for="fullhd"><span data-translate="max-resolution">Max Resolution</span> </label> | 
+					<input type="radio" checked id="halfhd" name="resolution" value="1">
+					<label for="halfhd"><span data-translate="balanced">Balanced</span> </label> | 
+					<input type="radio" id="nothd" name="resolution" value="2">
+					<label for="nothd"><span data-translate="smooth-cool">Smooth and Cool</span></label>
+					<div id="webcamstats" style="padding:5px 0 0 0"></div>
+					</form>
+				</span><br/>
+				</center>
 				<div class="form-group multiselect">
 					<a class="form-control multiselect-trigger" tabindex="3">
-						<div id="audioTitle" class="title"><span data-translate="select-audio-source">Select Audio Sources</span>:<i class="fa fa-chevron-down" aria-hidden="true"></i> </div>
+						<div id="audioTitle"  style="padding:5px" class="title"><span data-translate="select-audio-source">Select Audio Source</span>:<i class="fa fa-chevron-down" aria-hidden="true"></i> </div>
 					</a>
 					<ul id="audioSource" class="multiselect-contents">
 						<li><input type="checkbox" id="multiselect1" name="multiselect1" style="display:none" checked value="ZZZ"> <label for="multiselect1">
@@ -136,8 +172,26 @@
 					<p><img src="./images/share.jpg" style="max-height:55vh"/></p>
 				</span>
 				<br />
-				<button style="padding:10px;border:3px solid #CCC; cursor:pointer; background-color:#FFF" onclick="publishScreen()" ><span data-translate="select-screen-to-share">SELECT SCREEN TO SHARE</span></button>
-				<br /><br />
+				<button style="padding:13px;border:3px solid #CCC; font-size:140%; cursor:pointer; background-color:#FFF" onclick="publishScreen()" ><span data-translate="select-screen-to-share">SELECT SCREEN TO SHARE</span></button>
+				
+				<span id="gear_screen" style="display:inline-block ;cursor:pointer;" onclick="toggle(document.getElementById('videoSettings2'));">
+					&nbsp;&nbsp;<i class="fa fa-cog" style="font-size: 170%; vertical-align: middle;" aria-hidden="true"></i>
+				</span>
+					
+				<center>
+				
+				<span id='videoSettings2' style="margin:auto auto; display:none; background-color: white; vertical-aligh:middle; border: 3px solid #ccc; max-width:500px; padding:10px 0 5px 0; margin: 10px 0 5px 0;">
+					<form id="webcamquality2">
+					<input type="radio" id="fullhd2" name="resolution2" value="0">
+					<label for="fullhd"><span data-translate="max-resolution">1080p (hi-def)</span> </label> &nbsp;&nbsp;|&nbsp;&nbsp;
+					<input type="radio" checked id="halfhd2" name="resolution2" value="1">
+					<label for="halfhd"><span data-translate="balanced">720p (balanced)</span> </label> &nbsp;&nbsp;|&nbsp;&nbsp;
+					<input type="radio" id="nothd2" name="resolution2" value="2">
+					<label for="nothd"><span data-translate="smooth-cool">360p (smooth)</span></label>
+					<div id="webcamstats2" style="padding:5px 0 0 0"></div>
+					</form>
+				</span><br/>
+				</center>
 				<p><span data-translate="audio-sources">Audio Sources</span>:<br />
 				<select id="audioSourceScreenshare" multiple style="height:60px;width:200px; resize: both; overflow: auto; padding:5px" onchange="requestAudioStream();">
 				<option value="screenshare" selected><span data-translate="screen-shrae-audio">Screen Share Audio (default)</span></option>
@@ -157,14 +211,43 @@
 				<br /><br />
 				<span data-translate="here-you-can-pre-generate">Here you can pre-generate a reusable Browser Source link and a related guest invite link.</span><br /><br />
 				<p><input style="padding:5px;font-size:120%;" id="videoname4" onkeyup="enterPressed(event, generateQRPage);" placeholder="Give this media source a name (optional)" size=35 maxlength=70 style="padding:5px;" /></br ><br /></p>
-				<button style="padding:20px;" onclick="generateQRPage()" ><span data-translate="generate-invite-link">GENERATE THE INVITE LINK</span></button><br /><br /><br />
-				<div style="margin:20px;max-width:330px;text-align:left;margin:auto auto;;">
-				<h5 style="padding:0 0 10px 0"><i><span data-translate="advanced-paramaters">Advanced Parameters</span></i></h5>
+				<button style="padding:20px;" onclick="generateQRPage()" ><span data-translate="generate-invite-link">GENERATE THE INVITE LINK</span></button><br /><br />
+				<div style="margin:20px;max-width:400px;text-align:left;margin:auto auto;;">
+				<br />
+				<h4 style="padding:0 0 10px 0"><i><span data-translate="advanced-paramaters">Advanced Options:</span></i></h4><br />
 				<input type="checkbox" id="invite_bitrate" /><label for="invite_bitrate"> <span data-translate="unlock-video-bitrate">Unlock Video Bitrate (20mbps)</span></label><br />
 				<input type="checkbox" id="invite_vp9" /><label for="invite_vp9"> <span data-translate="force-vp9-video-codec">Force VP9 Video Codec (less artifacting)</span></label><br />
 				<input type="checkbox" id="invite_stereo" /><label for="invite_stereo"> <span data-translate="enable-stereo-and-pro">Enable Stereo and Pro HD Audio</span></label><br />
-				<input type="checkbox" id="invite_secure" /><label for="invite_secure"> <span data-translate="high-security-mode">High Security Mode</span></label><br /><br />
-				<div>See the <a style="text-decoration:none;color:blue;" target="_blank" href="https://docs.obs.ninja/advanced">documentation</a> for more options.</div>
+				
+				<br /><label for="invite_quality" data-translate="video-resolution">Video Resolution: </label>
+				<select id="invite_quality" name="invite_quality">
+					<option value="-1" selected>User Selectable</option>
+					<option value="0">Maximum Resolution</option>
+					<option value="1">Balanced</option>
+					<option value="2">Smooth and Cool</option>
+				</select>
+				<br /><br />
+				
+				<input type="checkbox" id="invite_secure" /><label for="invite_secure"> <span data-translate="high-security-mode">High Security Mode</span></label><br />
+				<input type="checkbox" id="invite_hidescreen" /><label for="invite_hidescreen"> <span data-translate="hide-screen-share">Hide Screenshare Option</span></label><br />
+				<input type="checkbox" id="invite_remotecontrol" /><label for="invite_remotecontrol"> <span data-translate="allow-remote-control">Remote Control Camera Zoom (android)</span></label>
+				
+				<br /><br /><br />
+				
+				<span data-translate="add-the-guest-to-a-room"> Add the guest to a room:</span>
+				<input id="invite_joinroom" placeholder="Enter Room name here" oninput="document.getElementById('invitegroupchat').style.display='block';" /><br /><br />
+				
+				<span id="invitegroupchat" style="display:none;">
+				<label for="invite_group_chat_type" data-translate="invite-group-chat-type">This room guest can:</label>
+				<select id="invite_group_chat_type" name="invite_group_chat_type">
+					<option value="0" selected data-translate="can-see-and-hear">Can see and hear the group chat</option>
+					<option value="1" data-translate="can-hear-only">Can only hear the group chat</option>
+					<option value="2" data-translate="cant-see-or-hear">Cannot hear or see the group chat</option>
+				</select>
+				</span>
+				<br /><br /><br />
+				
+				<div>See the <a style="text-decoration:none;color:blue;" target="_blank" href="https://docs.obs.ninja/advanced">documentation</a> for more options and info.</div>
 				</div>
 				
 			</div>
@@ -182,20 +265,18 @@
 					<span data-translate="info-blob">
 						<h2>What is OBS.Ninja</h2><br />
 						<li>100% <b>free</b>; no downloads; no personal data collection; no sign-in</li>
-						<li>Bring video from your smartphone, laptop, computer, or from your friends directly into your OBS video stream</li>
+						<li>Bring video from your smartphone, computer, or friends directly into your OBS video stream</li>
 						<li>We use cutting edge Peer-to-Peer forwarding technology that offers privacy and ultra-low latency</li>
 						<br />
 						<li>Youtube video <i class="fa fa-youtube-play" aria-hidden="true"></i> <a href="https://www.youtube.com/watch?v=6R_sQKxFAhg">Demoing it here</a> </li>
-						<li>Code is available here: <i class="fa fa-github" aria-hidden="true"></i> <a href="https://github.com/steveseguin/obsninja">https://github.com/steveseguin/obsninja</a> </li>
-						<li>You can also check out <a href="https://steves.app">my other video app</a> designed for sharing video with friends and family</li>
 						<br />
 						<i><font style="color:red">Known issues:</font></i><br />
 
-						<li><i class="fa fa-apple" aria-hidden="true"></i> MacOS users need to use OBS v23 or resort to <i>Window Capturing</i> a Chrome Browser with OBS v25</li>
-						<li>Some users will have "pixelation" problems with videos. Please add the URL parameter <b>&codec=vp9</b> to the OBS Links to correct it.</li>
+						<li><i class="fa fa-apple" aria-hidden="true"></i> <a href='https://github.com/steveseguin/obsninja/wiki/FAQ#mac-os'>MacOS users</a> need to use OBS v23 or resort to <a href="https://github.com/steveseguin/electroncapture">Window Capturing</a> a browser with OBS v25</li>
+						<li>Some users will have <a href='https://github.com/steveseguin/obsninja/wiki/FAQ#video-is-pixelated'>"pixelation" problems</a> with videos. Adding <b>&codec=vp9</b> to the OBS links will often correct it.</li>
 						<br />
 						
-						Site last updated: <a href='https://www.reddit.com/r/OBSNinja/comments/gf5pd3/new_version_released_today_along_with_new/'>May 7th, 2020.</a> The previous version can be found at <a href="https://obs.ninja/v3/">https://obs.ninja/v3/</a> if you are having new issues.
+						Site last updated: <a href='https://www.reddit.com/r/OBSNinja/comments/gy7h4g/site_updated_on_june_7th_please_find_the_change/'>June 7th, 2020.</a> The previous version can be found at <a href="https://obs.ninja/v5/">https://obs.ninja/v5/</a> if you are having new issues.
 
 						<br /><br />
 						<i><h3>Check out the <a href="https://www.reddit.com/r/OBSNinja/">sub-reddit</a> <i class="fa fa-reddit-alien" aria-hidden="true"></i> for help and advanced info. I'm also on <a href="https://discord.gg/EksyhGA">Discord</a> and you can email me at steve@seguin.email</i></h3>
@@ -217,7 +298,7 @@
 				<b><span data-translate="remote-control-for-obs">Remote Control for OBS</span></b><br />
 				<button data-value="0" style="font-size:112%" onclick="directEnable(this);"><span data-translate="add-to-group">Add to Group Scene</span></button>
 				<button style="font-size:112%" onclick="directMute(this);"><span data-translate="mute">Mute</span></button>
-				<button style="font-size:112%" onclick="var video = document.getElementById('videosource_'+this.parentNode.parentNode.dataset.UUID);video.recorder=recordVideo(event,video,this.parentNode.parentNode.dataset.UUID);"><span data-translate="record">Record</span></button>
+				<button style="font-size:112%" onclick="var video = document.getElementById('videosource_'+this.parentNode.parentNode.dataset.UUID);recordVideo(event.currentTarget,video,this.parentNode.parentNode.dataset.UUID);"><span data-translate="record">Record</span></button>
 				<br /><span data-translate="volume">Volume</span>:<input type="range" min="1" max="100" value="100" onclick="directVolume(this);"><br />
 			<br /><hr /></center>
 	</div>
@@ -233,7 +314,13 @@
   </nav>
   <div id="messagePopup" class="popup-message">
   </div>
-	<script type="text/javascript" src="./main.js?ver=12"></script>
+  <div id="languages" class="popup-message" style="display:none;right:0;bottom:25px;position:absolute;">
+	  <b>Available Languages:</b><br />
+	  <u><a onclick="changeLg('ru');toggle(document.getElementById('languages'));" style="cursor:pointer">Russian</a><br />
+	  <a onclick="changeLg('fr');toggle(document.getElementById('languages'));" style="cursor:pointer">French</a><br />
+	  <a onclick="changeLg('en');toggle(document.getElementById('languages'));" style="cursor:pointer">English</a></u><br />
+  </div>
+	<script type="text/javascript" id="main-js" data-translation="blank" src="./main.js"></script>
 	<script type="text/javascript" src="./animations.js"></script>
 </body>
 
