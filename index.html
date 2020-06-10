@@ -320,7 +320,65 @@
 	  <a onclick="changeLg('fr');toggle(document.getElementById('languages'));" style="cursor:pointer">French</a><br />
 	  <a onclick="changeLg('en');toggle(document.getElementById('languages'));" style="cursor:pointer">English</a></u><br />
   </div>
-	<script type="text/javascript" id="main-js" data-translation="blank" src="./main.js"></script>
+  
+	<script>
+	
+		var session = WebRTC.Media; // session is a required global variable if configuring manually. Run before loading main.js but after webrtc.js.
+		
+		session.streamID = session.generateStreamID(); // randomly generates a streamID for this session. You can set your own programmatically if needed
+		
+		session.configuration = 
+			{iceServers: [
+				{ urls: ["stun:stun.l.google.com:19302", "stun:stun4.l.google.com:19302" ]} // more than 4 stun+turn servers may cause issues
+			]};
+			
+		var turn = {};
+        turn.username = "steve";
+        turn.credential = "justtesting";
+        turn.urls = ["turn:turn.obs.ninja:443"]; // US CENTRAL
+        session.configuration.iceServers.push(turn);
+		
+		turn = {};
+        turn.username = "steve";
+        turn.credential = "justtesting";
+        turn.urls = ["turn:turn2.obs.ninja:443"];  // US WEST
+        session.configuration.iceServers.push(turn);
+		
+		// session.configuration.iceTransportPolicy = "relay";  // uncomment to enable "&privacy" and force the TURN server
+		
+		///// The following lets you set the defaults
+		
+		// session.webcamonly // true,false
+		// session.stereo // 0,1,2,3
+		// session.audiobitrate // int in kbps
+		// session.view // "xxxx"
+		// session.remote
+		// session.optimize
+		// session.disableOBS
+		// session.audio 
+		// session.video
+		// session.forceios
+		// session.nocursor
+		// session.codec
+		// session.scale
+		// session.bitrate  // int in kbps
+		// session.height // int 
+		// session.width // int 
+		// session.quality // int 
+		// session.sink 
+		// session.offsetChannel // int 
+		// session.audioChannels // int 
+		// session.security 
+		// session.framerate // int 
+		// session.sync
+		// session.buffer // int in milliseconds
+		// session.roomid // "yyyy"
+		// session.scene 
+		// session.title // "zzzz"
+		
+	</script>
+	
+	<script type="text/javascript" id="main-js" src="./main.js" data-translation="blank"></script>
 	<script type="text/javascript" src="./animations.js"></script>
 </body>
 
