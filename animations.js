@@ -1,1 +1,115 @@
-var _0x5d73=['state','click','.multiselect-contents','get','checked','hide','overflow','hidden','out-animation','children','mousedown\x20touchend\x20focusin\x20focusout','insertRule','animationName','<style\x20id=\x22lightbox-animations\x22\x20type=\x22text/css\x22></style>','auto','getBoundingClientRect','.close','left:\x20','data','not','#multiselect1','body','left:\x200px;','parent','in-animation','find','css',':checked','50%\x20{','open','append','fa-chevron-down','width:\x20100%;','fa-chevron-up','.fa','.column','.multiselect-trigger','closed','change','left','width:\x20','stopPropagation','sheet','top','width','show','outlightbox','prop','input[type=\x22checkbox\x22]','px;','deleteRule','originalEvent','#empty-container','removeClass','preventDefault','addClass','remove'];(function(_0x595800,_0x40cbf8){var _0x1a0c5e=function(_0x38e004){while(--_0x38e004){_0x595800['push'](_0x595800['shift']());}};_0x1a0c5e(++_0x40cbf8);}(_0x5d73,0x154));var _0x431c=function(_0x595800,_0x40cbf8){_0x595800=_0x595800-0x0;var _0x1a0c5e=_0x5d73[_0x595800];return _0x1a0c5e;};$(_0x431c('0x17'))[_0x431c('0x20')](_0x431c('0xf'));$(_0x431c('0x25'))['on']('click',function(){var _0xe8d30c=$(this)[_0x431c('0x5')](0x0)[_0x431c('0x11')]();$(this)[_0x431c('0x1c')]({'top':_0xe8d30c[_0x431c('0x2d')]+'px','left':_0xe8d30c[_0x431c('0x29')]-0x14+'px'});$(this)[_0x431c('0x0')](_0x431c('0x1a'));$(_0x431c('0x36'))[_0x431c('0x1')]();$('<div\x20id=\x22empty-container\x22\x20class=\x22column\x22></div>')['insertAfter'](this);var _0x2e9e26='';_0x2e9e26='@keyframes\x20outlightbox\x20{';_0x2e9e26+='0%\x20{';_0x2e9e26+='height:\x20100%;';_0x2e9e26+=_0x431c('0x22');_0x2e9e26+='top:\x200px;';_0x2e9e26+=_0x431c('0x18');_0x2e9e26+='}';_0x2e9e26+=_0x431c('0x1e');_0x2e9e26+='height:\x20220px;';_0x2e9e26+='top:\x20'+_0xe8d30c['y']+_0x431c('0x33');_0x2e9e26+='}';_0x2e9e26+='100%\x20{';_0x2e9e26+='height:\x20220px;';_0x2e9e26+=_0x431c('0x2a')+_0xe8d30c[_0x431c('0x2e')]+'px;';_0x2e9e26+='top:\x20'+_0xe8d30c['y']+_0x431c('0x33');_0x2e9e26+=_0x431c('0x13')+_0xe8d30c['x']+_0x431c('0x33');_0x2e9e26+='}';_0x2e9e26+='}';$('#lightbox-animations')['get'](0x0)[_0x431c('0x2c')][_0x431c('0xd')](_0x2e9e26,0x0);$('body')[_0x431c('0x1c')]('overflow',_0x431c('0x9'));});$(_0x431c('0x12'))['on'](_0x431c('0x3'),function(_0x4329aa){$(this)[_0x431c('0x7')]();$('.container-inner')[_0x431c('0x7')]();$(_0x431c('0x17'))['css'](_0x431c('0x8'),_0x431c('0x10'));var _0xb72a49=$(this)[_0x431c('0x19')]()[_0x431c('0x5')](0x0)[_0x431c('0x11')]();$(this)[_0x431c('0x19')]()['css']({'top':_0xb72a49[_0x431c('0x2d')]+'px','left':_0xb72a49[_0x431c('0x29')]+'px'});$(this)['parent']()[_0x431c('0x0')]('out-animation');_0x4329aa[_0x431c('0x2b')]();});$(_0x431c('0x25'))['on']('animationend',function(_0x5025e5){if(_0x5025e5[_0x431c('0x35')][_0x431c('0xe')]=='inlightbox'){$(this)[_0x431c('0xb')](_0x431c('0x12'))[_0x431c('0x2f')]();$(this)['children']('.container-inner')[_0x431c('0x2f')]();}else if(_0x5025e5[_0x431c('0x35')]['animationName']==_0x431c('0x30')){$(this)[_0x431c('0x37')](_0x431c('0x1a'))[_0x431c('0x37')](_0x431c('0xa'))[_0x431c('0x37')]('columnfade');$(_0x431c('0x36'))[_0x431c('0x1')]();$('#lightbox-animations')['get'](0x0)['sheet'][_0x431c('0x34')](0x0);}});$(_0x431c('0x26'))['on'](_0x431c('0xc'),function(_0x3fce8b){var _0x28cd2d=$(this)[_0x431c('0x14')]('state')||0x0;if(_0x28cd2d==0x0){$(this)['data']('state','1')['addClass'](_0x431c('0x1f'))[_0x431c('0x37')](_0x431c('0x27'));$(this)[_0x431c('0x1b')]('.fa')[_0x431c('0x37')](_0x431c('0x21'))[_0x431c('0x0')](_0x431c('0x23'));$(this)[_0x431c('0x19')]()[_0x431c('0x1b')](_0x431c('0x4'))[_0x431c('0x2f')]();$(this)[_0x431c('0x19')]()[_0x431c('0x1b')](_0x431c('0x4'))[_0x431c('0x1b')](_0x431c('0x32'))[_0x431c('0x19')]()[_0x431c('0x2f')]();;$(this)[_0x431c('0x19')]()['find'](_0x431c('0x4'))[_0x431c('0x1b')](_0x431c('0x32'))['show']();;}else{$(this)[_0x431c('0x14')](_0x431c('0x2'),'0')['addClass']('closed')[_0x431c('0x37')]('open');$(this)[_0x431c('0x1b')](_0x431c('0x24'))['removeClass']('fa-chevron-up')[_0x431c('0x0')](_0x431c('0x21'));$(this)[_0x431c('0x19')]()['find'](_0x431c('0x4'))[_0x431c('0x1b')]('input[type=\x22checkbox\x22]')[_0x431c('0x15')](_0x431c('0x1d'))[_0x431c('0x19')]()[_0x431c('0x7')]();;$(this)[_0x431c('0x19')]()[_0x431c('0x1b')](_0x431c('0x4'))['find'](_0x431c('0x32'))['hide']();;}_0x3fce8b[_0x431c('0x38')]();});$(_0x431c('0x16'))['on'](_0x431c('0x28'),function(_0x132688){if($(this)['is'](':checked')){$(this)['parent']()[_0x431c('0x19')]()[_0x431c('0x1b')](_0x431c('0x32'))[_0x431c('0x15')](_0x431c('0x16'))[_0x431c('0x31')](_0x431c('0x6'),![]);}_0x132688[_0x431c('0x38')]();});
+
+/* We need to create dynamic keyframes to show the animation from full-screen to normal. So we create a stylesheet in which we can insert CSS keyframe rules */
+$("body").append('<style id="lightbox-animations" type="text/css"></style>');
+
+/* Click on the container */
+$(".column").on('click', function() {
+	/* The position of the container will be set to fixed, so set the top & left properties of the container */
+
+	var bounding_box = $(this).get(0).getBoundingClientRect();
+	$(this).css({ top: bounding_box.top + 'px', left: bounding_box.left -20+ 'px' });
+
+	/* Set container to fixed position. Add animation */
+	$(this).addClass('in-animation');
+
+	/* An empty container has to be added in place of the lightbox container so that the elements below don't come up
+	Dimensions of this empty container is the same as the original container */
+	$("#empty-container").remove();
+	$('<div id="empty-container" class="column"></div>').insertAfter(this);
+
+	/* To animate the container from full-screen to normal, we need dynamic keyframes */
+	var styles = '';
+	styles = '@keyframes outlightbox {';
+	styles += '0% {';
+	styles += 'height: 100%;';
+	styles += 'width: 100%;';
+	styles += 'top: 0px;';
+	styles += 'left: 0px;';
+	styles += '}';
+	styles += '50% {';
+	styles += 'height: 220px;';
+	styles += 'top: ' + bounding_box.y + 'px;';
+	styles += '}';
+	styles += '100% {';
+	styles += 'height: 220px;';
+	styles += 'width: '+bounding_box.width+'px;';
+	styles += 'top: ' + bounding_box.y + 'px;';
+	styles += 'left: ' + bounding_box.x + 'px;';
+	styles += '}';
+	styles += '}';
+
+	/* Add keyframe to CSS */
+	$("#lightbox-animations").get(0).sheet.insertRule(styles, 0);
+
+	/* Hide the window scrollbar */
+	$("body").css('overflow', 'hidden');
+});
+
+/* Click on close button when full-screen */
+$(".close").on('click', function(e) {
+$(this).hide();
+$(".container-inner").hide();
+/* Window scrollbar normal */
+$("body").css('overflow', 'auto');
+
+var bounding_box = $(this).parent().get(0).getBoundingClientRect();
+$(this).parent().css({ top: bounding_box.top + 'px', left: bounding_box.left + 'px' });
+
+/* Show animation */
+$(this).parent().addClass('out-animation');
+
+e.stopPropagation();
+});
+
+/* On animationend : from normal to full screen & full screen to normal */
+$(".column").on('animationend', function(e) {
+/* On animation end from normal to full-screen */
+if(e.originalEvent.animationName == 'inlightbox') {
+	$(this).children(".close").show();
+	$(this).children(".container-inner").show();
+}
+/* On animation end from full-screen to normal */
+else if(e.originalEvent.animationName == 'outlightbox') {
+/* Remove fixed positioning, remove animation rules */
+$(this).removeClass('in-animation').removeClass('out-animation').removeClass('columnfade');
+
+/* Remove the empty container that was earlier added */
+$("#empty-container").remove();
+
+/* Delete the dynamic keyframe rule that was earlier created */
+$("#lightbox-animations").get(0).sheet.deleteRule(0);
+}
+});
+
+ 
+// multiselect dropdowns
+$('.multiselect-trigger').on('mousedown touchend focusin focusout', function(e) {
+    var state = $(this).data('state') || 0;
+    if( state == 0 ) {
+        // open the dropdown
+        $(this).data('state', '1').addClass('open').removeClass('closed');
+        $(this).find('.fa').removeClass('fa-chevron-down').addClass('fa-chevron-up');
+        $(this).parent().find('.multiselect-contents').show();
+		$(this).parent().find('.multiselect-contents').find('input[type="checkbox"]').parent().show();;
+		$(this).parent().find('.multiselect-contents').find('input[type="checkbox"]').show();;
+    } else {
+        // close the dropdown
+        $(this).data('state', '0').addClass('closed').removeClass('open');
+        $(this).find('.fa').removeClass('fa-chevron-up').addClass('fa-chevron-down');
+        //$(this).parent().find('.multiselect-contents').hide();
+		//$(this).parent().find('.multiselect-contents').find('input[type="checkbox"]').hide();
+		$(this).parent().find('.multiselect-contents').find('input[type="checkbox"]').not(":checked").parent().hide();;
+		$(this).parent().find('.multiselect-contents').find('input[type="checkbox"]').hide();;
+    } 
+    e.preventDefault();
+});
+
+
+// when no preference is checked, uncheck the others
+$('#multiselect1').on('change', function(e) {
+    if( $(this).is(':checked') ) {
+        $(this).parent().parent().find('input[type="checkbox"]').not('#multiselect1').prop('checked', false);
+    }
+    e.preventDefault();
+});
+ 

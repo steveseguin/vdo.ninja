@@ -4,24 +4,33 @@
 <meta content="text/html;charset=utf-8" http-equiv="Content-Type">
 <meta content="utf-8" http-equiv="encoding">
 
-<meta name="copyright" content="&copy; 2020 Stephen Seguin" />
-
+<meta name="copyright" content="&copy; 2020 Steve Seguin" />
 <link rel="shortcut icon" href="data:image/x-icon;," type="image/x-icon">
 <link rel="icon" type="image/png" sizes="32x32" href="./images/favicon-32x32.png">
 <link rel="icon" type="image/png" sizes="16x16" href="./images/favicon-16x16.png">
 <link rel="icon" href="./images/favicon.ico" />
+<link itemprop="thumbnailUrl" href="./images/obsNinja_logo_full.png"> 
+
 
 <!-- Primary Meta Tags -->
 <title>OBS.Ninja</title>
 <meta name="title" content="OBS.Ninja">
 <meta name="description" content="Bring live video from your smartphone, computer, or friends directly into OBS Studio. 100% free.">
+<meta name="author" content="Steve Seguin">
 
 <!-- Open Graph / Facebook -->
-<meta property="og:type" content="website">
-<meta property="og:url" content="https://obs.ninja/">
-<meta property="og:title" content="OBS.Ninja">
-<meta property="og:description" content="Bring live video from your smartphone, computer, or friends directly into OBS Studio. 100% free.">
-<meta property="og:image" content="./images/obsNinja_logo_full.png">
+<meta property="og:site_name" content="OBS.Ninja" />
+<meta property="og:type" content="website" />
+<meta property="og:url" content="https://obs.ninja/" />
+<meta property="og:title" content="OBS.Ninja" />
+<meta property="og:description" content="Bring live video from your smartphone, computer, or friends directly into OBS Studio. 100% free." />
+<meta property="og:image" itemprop="image" content="./images/obsNinja_logo_full.png" />
+
+<meta name="msapplication-TileImage" content="./images/obsNinja_logo_full.png">
+<meta property="og:image:type" content="image/png">
+
+<meta property="og:image:width" content="256">
+<meta property="og:image:height" content="256">
 
 <!-- Twitter -->
 <meta property="twitter:card" content="summary_large_image">
@@ -43,8 +52,18 @@
 
 </head>
 <body id="main" class="cat">
-	<script language="javascript" type="text/javascript" src="./thirdparty/CodecsHandler.js"></script>
-	<script language="javascript" type="text/javascript" src="./webrtc.js"></script>
+	<span itemprop="image" itemscope itemtype="image/png"> 
+      <link itemprop="url" href="./images/obsNinja_logo_full.png"> 
+    </span>
+	
+	<link itemprop="thumbnailUrl" href="./images/obsNinja_logo_full.png"> 
+	<span itemprop="thumbnail" itemscope itemtype="http://schema.org/ImageObject"> 
+	  <link itemprop="url" href="./images/obsNinja_logo_full.png"> 
+	</span>
+
+
+	<script language="javascript" type="text/javascript" src="./thirdparty/CodecsHandler.js?ver=1"></script>
+	<script language="javascript" type="text/javascript" src="./webrtc.js?ver=2"></script>
 	<input id='zoomSlider'type="range" style="display:none">
 	<div id="header">
 		<font style="font-size:130%;">
@@ -72,7 +91,7 @@
 			</div>
 
 		</font>
-		<span onclick="toggle(document.getElementById('languages'));"  style="cursor:pointer;" ><i style="float:right; bottom:0px; cursor:pointer; position: absolute;right: 10px;color: #D9E4EB;padding: 0;margin:2px 2px 0 0 ; font-size: 140%;" class="fa fa-language" aria-hidden="true"></i></span>
+		<span onclick="toggle(document.getElementById('languages'));" id="translateButton" style="cursor:pointer;" ><i style="float:right; bottom:0px; cursor:pointer; position: absolute;right: 10px;color: #D9E4EB;padding: 0;margin:2px 2px 0 0 ; font-size: 140%;" class="fa fa-language" aria-hidden="true"></i></span>
 				
 		<hr />
 	</div>
@@ -88,7 +107,7 @@
 	</div>
 
 	<div id="mainmenu" class="row" style="opacity: 0; align:center;">
-		<div id="container-1" class="column columnfade" style="background-color:#ddd;">
+		<div id="container-1" class="column columnfade" style="background-color:#ddd;overflow-y:auto;">
 			<h2><span data-translate="add-group-chat">Add Group Chat to OBS</span></h2>
 			<div class="container-inner">
 				<br /><br /><span data-translate="rooms-allow-for">Rooms allow for simplified group-chat and the advanced management of multiple streams at once.</span><br /><br />
@@ -116,7 +135,7 @@
 			</div>
 		</div>
 
-		<div id="container-3" class="column columnfade" onclick="previewWebcam()"  style="background-color:#ddd;">
+		<div id="container-3" class="column columnfade" onclick="previewWebcam()"  style="background-color:#ddd;overflow-y:auto;">
 			<h2 id="add_camera"><span data-translate="add-your-camera">Add your Camera to OBS</span></h2>
 			<div class="container-inner"><br />
 				
@@ -164,12 +183,12 @@
 			</div>
 		</div>
 
-		<div id="container-2" class="column columnfade" style="background-color:#ddd;">
+		<div id="container-2" class="column columnfade" style="background-color:#ddd;overflow-y:auto;">
 			<h2 id="add_screen"><span data-translate="remote-screenshare-obs">Remote Screenshare into OBS</span></h2>
 			<div class="container-inner">
 				<p><span data-translate="note-share-audio">
 					<b>note</b>: Do not forget to click "Share audio" in Chrome.<br />(Firefox does not support audio sharing.)</p>
-					<p><img src="./images/share.jpg" style="max-height:55vh"/></p>
+					<p><img id="screenshare" /></p>
 				</span>
 				<br />
 				<button style="padding:13px;border:3px solid #CCC; font-size:140%; cursor:pointer; background-color:#FFF" onclick="publishScreen()" ><span data-translate="select-screen-to-share">SELECT SCREEN TO SHARE</span></button>
@@ -205,7 +224,7 @@
 			</div>
 		</div>
 
-		<div id="container-4" class="column columnfade" style="background-color:#ddd;">
+		<div id="container-4" class="column columnfade" style="background-color:#ddd;overflow-y:auto;">
 			<h2><span data-translate="create-reusable-invite">Create Reusable Invite</span></h2>
 			<div id="gencontent" class="container-inner">
 				<br /><br />
@@ -276,7 +295,7 @@
 						<li>Some users will have <a href='https://github.com/steveseguin/obsninja/wiki/FAQ#video-is-pixelated'>"pixelation" problems</a> with videos. Adding <b>&codec=vp9</b> to the OBS links will often correct it.</li>
 						<br />
 						
-						Site last updated: <a href='https://www.reddit.com/r/OBSNinja/comments/gy7h4g/site_updated_on_june_7th_please_find_the_change/'>June 7th, 2020.</a> The previous version can be found at <a href="https://obs.ninja/v5/">https://obs.ninja/v5/</a> if you are having new issues.
+						Site last updated: <a href='https://www.reddit.com/r/OBSNinja/comments/gy7h4g/site_updated_on_june_7th_please_find_the_change/'>June 15th, 2020.</a> The previous version can be found at <a href="https://obs.ninja/v5/">https://obs.ninja/v5/</a> if you are having new issues.
 
 						<br /><br />
 						<i><h3>Check out the <a href="https://www.reddit.com/r/OBSNinja/">sub-reddit</a> <i class="fa fa-reddit-alien" aria-hidden="true"></i> for help and advanced info. I'm also on <a href="https://discord.gg/EksyhGA">Discord</a> and you can email me at steve@seguin.email</i></h3>
@@ -316,9 +335,14 @@
   </div>
   <div id="languages" class="popup-message" style="display:none;right:0;bottom:25px;position:absolute;">
 	  <b>Available Languages:</b><br />
-	  <u><a onclick="changeLg('ru');toggle(document.getElementById('languages'));" style="cursor:pointer">Russian</a><br />
+	  <u>
+	  <a onclick="changeLg('ru');toggle(document.getElementById('languages'));" style="cursor:pointer">Russian</a><br />
 	  <a onclick="changeLg('fr');toggle(document.getElementById('languages'));" style="cursor:pointer">French</a><br />
-	  <a onclick="changeLg('en');toggle(document.getElementById('languages'));" style="cursor:pointer">English</a></u><br />
+	  <a onclick="changeLg('en');toggle(document.getElementById('languages'));" style="cursor:pointer">English</a><br />
+	  <a onclick="changeLg('pt');toggle(document.getElementById('languages'));" style="cursor:pointer">Portuguese </a><br />
+	  <a onclick="changeLg('it');toggle(document.getElementById('languages'));" style="cursor:pointer">Italian </a><br />
+	  </u><br />
+	  <a href="https://github.com/steveseguin/obsninja/tree/master/translations">Add More Here!</a><br />
   </div>
   
 	<script>
@@ -377,8 +401,11 @@
 		// session.title // "zzzz"
 		
 	</script>
-	
-	<script type="text/javascript" id="main-js" src="./main.js" data-translation="blank"></script>
+	<!-- 
+		// If you wish to change branding, blank offers a good clean start.
+		<script type="text/javascript" id="main-js" src="./main.js" data-translation="blank"></script>
+	-->
+	<script type="text/javascript" id="main-js" src="./main.js"></script>
 	<script type="text/javascript" src="./animations.js"></script>
 </body>
 

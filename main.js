@@ -1,9 +1,2252 @@
 /*
 *  Copyright (c) 2020 Steve Seguin. All Rights Reserved.
 *
-*  This file is part of OBS.Ninja, yet is not intended to be modified.
-*  This file cannot be modified without the express permission of its author.
-*  No warranty, explicit or implicit, provided.
-*  
+*  Use of this source code is governed by the APGLv3 open-source license
+*  that can be found in the LICENSE file in the root of the source
+*  tree. Alternative licencing options can be made available on request.
+*
 */
-var _0xede2=['bitrate','no-repeat','message','innerHeight','UUID','audioChannels','#000000','getElementsByTagName','object','scene','changeTitle','?view=','normal','preventDefault','float5','#FCC','umAdB','video/webm','director=','pressed','&quality=1','echoCancellation','backgroundRepeat','msvisibilitychange','push=','#messagePopup','#FFFFFF','type','videoMuted','#E3E4FF','framerate','open','novideo','slice','updating\x20audio','webkitvisibilitychange','&secure','main','reshare','step','joinRoom','webcamonly','<center>','replace','gear_screen','action','setup\x20webcam','onmouseenter','sink','zoom','<font\x20style=\x22color:#666\x22><h1>Attempting\x20to\x20load\x20video\x20stream.</h1></font>','div','select','startsWith','button','nocursor','</center>','column\x20columnfade\x20advanced','<br\x20/><font\x20style=\x27font-size:130%;color:white;\x27></font><input\x20class=\x27task\x27\x20onclick=\x27popupMessage(event);copyFunction(this)\x27\x20onmousedown=\x27copyFunction(this)\x27\x20style=\x27cursor:grab;font-weight:bold;background-color:#F45;width:400px;font-size:100%;padding:10px;border:2px\x20solid\x20black;margin:5px;\x27\x20value=\x27https://','room','appendChild','ondataavailable','off','playing','search','black','OBS\x20feedback\x20disabled','mutebutton','Enhanced\x20Security\x20Mode\x20Enabled.','Safari','Disable\x20Video','parentNode','MediaStreamTrack','Webcam','xMtBY','URL','DIHdM','URLSearchParams','adding\x20tracks','enabled','multiselect1','mouseenter','elements','sync\x20Changed','macOS:\x20','obsstudio','Some\x20other\x20kind\x20of\x20source/device:\x20','Resolution\x20scale\x20requested','classList','AMtrF','Record\x20Video\x20Clicked','context-menu','.json','PRESSED\x20PUBLISH\x20WEBCAM!!','translate','videoWidth','SELECTED','VlwOx','advanced','backgroundSize','toString','<button\x20style=\x22margin:10px;padding:5px\x22\x20onclick=\x22toggle(getById(\x27roomnotes2\x27),this);\x22>Click\x20Here\x20for\x20a\x20quick\x20overview\x20and\x20help</button>','offsetWidth','float4','keyCode','getTracks','NotReadableError','value','<br\x20/><div\x20style=\x27display:inline-block\x27><font\x20style=\x27font-size:130%;color:white;\x27></font><input\x20\x20onclick=\x27popupMessage(event);copyFunction(this)\x27\x20onmousedown=\x27copyFunction(this)\x27\x20style=\x27cursor:grab;font-weight:bold;background-color:#78F;\x20width:400px;\x20font-size:100%;\x20padding:10px;\x20border:2px\x20solid\x20black;\x20margin:5px;\x27\x20\x20class=\x27task\x27\x20value=\x27https://','name','forEach','namedItem','videobitrate','reload','An\x20unknown\x20camera\x20error\x20occured','Members\x20in\x20Room','now','false','credential','add_screen','offsetHeight','undefined','disableOBS','enumerated\x20failed\x201','invite_joinroom','Media','iceServers',',\x20Task\x20action\x20-\x20','streamid','stream\x20ended!\x20stopping\x20recording','add_camera','director','column\x20columnfade','play','currentTarget','location','got\x20first\x20stream','onmouseleave','button_','exec','webcamquality2','&layer-width=','call','gIGJO','kCNTp','checked','main-js','split','invite_bitrate','ontouchstart','onresize','onkeyup','an\x20error\x20occured\x20with\x20the\x20media\x20recorder;\x20stopping\x20recording','href','remote','display','invite_stereo','Add\x20to\x20Group\x20Scene','head','Room\x20name\x20not\x20long\x20enough\x20or\x20contained\x20all\x20bad\x20characaters','volume','onerror','WpeEf','efWjS','white','ontouchmove','Remove\x20from\x20Group\x20Scene','float3','onmouseup','scrollLeft','iceTransportPolicy','createObjectURL','recording','sync','getCapabilities','prototype','returnValue','Problem\x20with\x20Camera','context-menu--active','CODEC\x20CHANGED','onchange','function','filter','mirror','dragstart','innerHTML','data','Please\x20enter\x20a\x20room\x20name\x20before\x20continuing','noaudio','webcamstats','&layer-width=1280','changedTouches','container-2','#AFA','createElement','UPDATE\x20mixer','ScreenShare','qos','select#videoSource','touches','floor','firstChild','mutevideotoggle','\x27\x20/><font\x20style=\x27font-size:130%;color:white\x27><i\x20class=\x27fa\x20fa-th-large\x27\x20style=\x27font-size:2em;\x27\x20aria-hidden=\x27true\x27></i>\x20-\x20This\x20is\x20an\x20OBS\x20Browser\x20Source\x20link\x20that\x20contains\x20the\x20group\x20chat\x20in\x20just\x20a\x20single\x20scene.\x20Videos\x20must\x20be\x20added\x20to\x20Group\x20Scene.</font><br\x20/>','Mirror\x20all\x20videos','HxcfX','substring','then','<font\x20style=\x27font-size:130%;color:white\x27></font><input\x20class=\x27task\x27\x20onmousedown=\x27copyFunction(this)\x27\x20data-drag=\x271\x27\x20onclick=\x27popupMessage(event);copyFunction(this)\x27\x20style=\x27cursor:grab;font-weight:bold;background-color:#5F4;width:400px;font-size:100%;padding:10px;border:2px\x20solid\x20black;margin:5px;\x27\x20value=\x27https://','&view\x27\x20/><font\x20style=\x27font-size:130%;color:white;\x27><i\x20class=\x27fa\x20fa-video-camera\x27\x20style=\x27font-size:2em;\x27\x20\x20aria-hidden=\x27true\x27></i>\x20-\x20Link\x20to\x20Invite\x20users\x20to\x20broadcast\x20their\x20feeds\x20to\x20the\x20group.\x20These\x20users\x20will\x20not\x20see\x20or\x20hear\x20any\x20feed\x20from\x20the\x20group.</font><br\x20/>','childNodes','https:','targetBandwidth','An\x20error\x20occured.\x20Upgrading\x20to\x20at\x20least\x20iOS\x2013.4\x20should\x20fix\x20this\x20glitch\x20from\x20happening\x20again','.webm','click','scale','applyConstraints','Error:\x20Media\x20stream\x20creation\x20failed.','toLowerCase','An\x20OBS\x20Virtual\x20Camera\x20was\x20detected;\x20Success!','push','IyRLM','forceios','download','color','metaKey','<br\x20/><font\x20style=\x22color:#CCC\x22>Please\x20select\x20an\x20option\x20to\x20join.</font>','select#audioSourceScreenshare','header','hidden','camera\x20','checkbox','controls','stopping\x20old\x20track','enumerated','mutetoggle','mouseover','UzoiG','text','LSctz','trying\x20to\x20list\x20webcam\x20again','recorder','getVideoTracks','secure','NavigatorUserMediaError','TTTOx','roomid','userAgent','max','pluginVersion','obs.ninja','<font\x20style=\x22color:#CCC;\x22>-\x20Please\x20accept\x20any\x20camera\x20permissions</font>','webcam','configuration','fontWeight','yfbjb','security','view=','removeChild','noiseSuppression','OBS\x20STATUS:','clientX','AAhJv','enumerateDevices','CliCb','mousedown','float','&codec=vp9','Task\x20ID\x20-\x20','event','documentElement','[?&]','directorsgrid','Mute','GOT\x20IT\x20BUT\x20WITH\x20NO\x20AUDIO','bottom\x20center','scrollTo','channels','contextmenu','got\x20devices!','connect','videoElement','wxogg','width','Share\x20your\x20Camera','invite_quality','XRelz','fa\x20fa-eye\x20my-float','Recorded\x20Blobs:\x20','deviceId','left','get','Mac\x20OS\x20X','touchcancel','YEacf','removeAttribute','status','getAttribute','streamID\x20is:\x20','Press\x20OK\x20to\x20start\x20recording.\x20Press\x20again\x20to\x20stop\x20and\x20download.\x0a\x0aWarning:\x20Keep\x20this\x20browser\x20tab\x20active\x20to\x20continue\x20recording.\x0a\x0aYou\x20can\x20change\x20the\x20default\x20video\x20bitrate\x20if\x20desired\x20below\x20(kbps)','Update\x20should\x20not\x20be\x20called\x20on\x20DIRECTORs\x20view?\x20sorta\x20at\x20least','keyup','&stereo','Got\x20second\x20stream','session:\x20myself','mainmenu','view','SAiFZ','50px','addEventListener','sendroom','innerWidth','copy','rpcs','videoname4','dirroomid','which','mouseleave','request','RTC\x20already\x20connected','detail','fa\x20fa-microphone-slash\x20my-float','=([^&#]*)','HfzsN','ended','Record','gear_webcam','absolute','setSelectionRange','originalEvent','red','invite_hidescreen','codec','QSHMQ','Camera\x20failed\x20to\x20load.\x20\x0a\x0aPlease\x20make\x20sure\x20it\x20is\x20not\x20already\x20in\x20use\x20by\x20another\x20application.\x0a\x0aPlease\x20make\x20sure\x20you\x20have\x20accepted\x20the\x20camera\x20permissions.','tPlAA','Hide\x20This','data-translation','getStatus','touchend','resolution\x20found','Leaving\x20the\x20page\x20now\x20will\x20terminate\x20your\x20stream\x20','claim','mozvisibilitychange','privacy','previewWebcam','myself\x20set\x20fullscreen','XkERn','pushState','get\x20media\x20sources;\x20request\x20audio\x20stream','qkpYm','#3C3','block','Download','lONql','STEREO\x20ENABLED','drag\x20on','for','video\x20source\x20changed','mouseup','json','#DDDDDD','changing\x20title;\x20if\x20connected\x20at\x20least','catch','onmousedown','invite_vp9','videosource','onmousemove','\x20id\x20=\x20','contains','onpopstate','trying\x20with\x20quality:','ZZZ','Resolution\x20didn\x27t\x20work','isSecureContext','mbyIN','onclick','JwCvI','addTrack','buffer\x20Changed:\x20','#audioSource','activeated\x20preview\x20return\x201','obsoff','Unmute','invite_remotecontrol','muted','video\x20{transform:\x20scale(-1,\x201);webkit-transform:\x20scale(-1,\x201);-o-transform:\x20scale(-1,\x201);-moz-transform:\x20scale(-1,\x201);}','session:','remove','head3','ROOM\x20ID\x20ENABLED','pageY','pageX','Chat\x20message','outerHTML','\x22\x20/>\x20\x09\x09\x09<br\x20/><br\x20/>\x09\x09Please\x20also\x20note,\x20the\x20invite\x20link\x20and\x20OBS\x20ingestion\x20link\x20created\x20is\x20reusable,\x20but\x20only\x20one\x20person\x20may\x20use\x20a\x20specific\x20invite\x20at\x20a\x20time.','<i\x20class=\x27fa\x20fa-arrows-alt\x27\x20style=\x27font-size:50px\x27\x20aria-hidden=\x27true\x27></i>','dataset','start','enumerated\x20failed\x202','scrollTop','head4','SSL\x20(https)\x20is\x20not\x20enabled.\x20This\x20site\x20will\x20not\x20work\x20without\x20it!','auto\x20playing','Chrome','https://','resolution','style','invite_group_chat_type','getSources','OBS-Camera','mediaDevices','?scene=1&room=','OBS\x20SCENE','pathname','\x20set\x20fullscreen','chat','cursor','container-4','srcObject','buffer','<br\x20/><font\x20style=\x22color:#CCC\x22>-\x20Please\x20select\x20which\x20you\x20wish\x20to\x20share</font>','<i\x20class=\x27fa\x20fa-compress\x27\x20style=\x27font-size:50px\x27\x20aria-hidden=\x27true\x27></i>','getElementById','body','clientY','\x20is\x20not\x20defined;\x20skipping.','indexOf','revokeObjectURL','&novideo','info','maxframerate','frameRate','container-1','Trying\x20Constraints','IFgiL','never','getSettings','gencontent','querySelectorAll','min','OverconstrainedError','ALREADY\x20RECORDING!','OBS\x20VERSION:','none','visibility','mutevideobutton','Join\x20room','Waiting\x20for\x20Camera\x20to\x20load','stop','TURN\x20server\x20parameters\x20were\x20wrong.','input','max\x20channels\x20is\x2032;\x20channels\x20offset','host','hostname','saved','drag','float2','getAudioTracks','pcs','url(\x27data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBzdGFuZGFsb25lPSJubyI/Pgo8IURPQ1RZUEUgc3ZnIFBVQkxJQyAiLS8vVzNDLy9EVEQgU1ZHIDEuMS8vRU4iICJodHRwOi8vd3d3LnczLm9yZy9HcmFwaGljcy9TVkcvMS4xL0RURC9zdmcxMS5kdGQiPgo8c3ZnIHdpZHRoPSI0MHB4IiBoZWlnaHQ9IjQwcHgiIHZpZXdCb3g9IjAgMCA0MCA0MCIgdmVyc2lvbj0iMS4xIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHhtbG5zOnhsaW5rPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5L3hsaW5rIiB4bWw6c3BhY2U9InByZXNlcnZlIiBzdHlsZT0iZmlsbC1ydWxlOmV2ZW5vZGQ7Y2xpcC1ydWxlOmV2ZW5vZGQ7c3Ryb2tlLWxpbmVqb2luOnJvdW5kO3N0cm9rZS1taXRlcmxpbWl0OjEuNDE0MjE7IiB4PSIwcHgiIHk9IjBweCI+CiAgICA8ZGVmcz4KICAgICAgICA8c3R5bGUgdHlwZT0idGV4dC9jc3MiPjwhW0NEQVRBWwogICAgICAgICAgICBALXdlYmtpdC1rZXlmcmFtZXMgc3BpbiB7CiAgICAgICAgICAgICAgZnJvbSB7CiAgICAgICAgICAgICAgICAtd2Via2l0LXRyYW5zZm9ybTogcm90YXRlKDBkZWcpCiAgICAgICAgICAgICAgfQogICAgICAgICAgICAgIHRvIHsKICAgICAgICAgICAgICAgIC13ZWJraXQtdHJhbnNmb3JtOiByb3RhdGUoLTM1OWRlZykKICAgICAgICAgICAgICB9CiAgICAgICAgICAgIH0KICAgICAgICAgICAgQGtleWZyYW1lcyBzcGluIHsKICAgICAgICAgICAgICBmcm9tIHsKICAgICAgICAgICAgICAgIHRyYW5zZm9ybTogcm90YXRlKDBkZWcpCiAgICAgICAgICAgICAgfQogICAgICAgICAgICAgIHRvIHsKICAgICAgICAgICAgICAgIHRyYW5zZm9ybTogcm90YXRlKC0zNTlkZWcpCiAgICAgICAgICAgICAgfQogICAgICAgICAgICB9CiAgICAgICAgICAgIHN2ZyB7CiAgICAgICAgICAgICAgICAtd2Via2l0LXRyYW5zZm9ybS1vcmlnaW46IDUwJSA1MCU7CiAgICAgICAgICAgICAgICAtd2Via2l0LWFuaW1hdGlvbjogc3BpbiAxLjVzIGxpbmVhciBpbmZpbml0ZTsKICAgICAgICAgICAgICAgIC13ZWJraXQtYmFja2ZhY2UtdmlzaWJpbGl0eTogaGlkZGVuOwogICAgICAgICAgICAgICAgYW5pbWF0aW9uOiBzcGluIDEuNXMgbGluZWFyIGluZmluaXRlOwogICAgICAgICAgICB9CiAgICAgICAgXV0+PC9zdHlsZT4KICAgIDwvZGVmcz4KICAgIDxnIGlkPSJvdXRlciI+CiAgICAgICAgPGc+CiAgICAgICAgICAgIDxwYXRoIGQ9Ik0yMCwwQzIyLjIwNTgsMCAyMy45OTM5LDEuNzg4MTMgMjMuOTkzOSwzLjk5MzlDMjMuOTkzOSw2LjE5OTY4IDIyLjIwNTgsNy45ODc4MSAyMCw3Ljk4NzgxQzE3Ljc5NDIsNy45ODc4MSAxNi4wMDYxLDYuMTk5NjggMTYuMDA2MSwzLjk5MzlDMTYuMDA2MSwxLjc4ODEzIDE3Ljc5NDIsMCAyMCwwWiIgc3R5bGU9ImZpbGw6YmxhY2s7Ii8+CiAgICAgICAgPC9nPgogICAgICAgIDxnPgogICAgICAgICAgICA8cGF0aCBkPSJNNS44NTc4Niw1Ljg1Nzg2QzcuNDE3NTgsNC4yOTgxNSA5Ljk0NjM4LDQuMjk4MTUgMTEuNTA2MSw1Ljg1Nzg2QzEzLjA2NTgsNy40MTc1OCAxMy4wNjU4LDkuOTQ2MzggMTEuNTA2MSwxMS41MDYxQzkuOTQ2MzgsMTMuMDY1OCA3LjQxNzU4LDEzLjA2NTggNS44NTc4NiwxMS41MDYxQzQuMjk4MTUsOS45NDYzOCA0LjI5ODE1LDcuNDE3NTggNS44NTc4Niw1Ljg1Nzg2WiIgc3R5bGU9ImZpbGw6cmdiKDIxMCwyMTAsMjEwKTsiLz4KICAgICAgICA8L2c+CiAgICAgICAgPGc+CiAgICAgICAgICAgIDxwYXRoIGQ9Ik0yMCwzMi4wMTIyQzIyLjIwNTgsMzIuMDEyMiAyMy45OTM5LDMzLjgwMDMgMjMuOTkzOSwzNi4wMDYxQzIzLjk5MzksMzguMjExOSAyMi4yMDU4LDQwIDIwLDQwQzE3Ljc5NDIsNDAgMTYuMDA2MSwzOC4yMTE5IDE2LjAwNjEsMzYuMDA2MUMxNi4wMDYxLDMzLjgwMDMgMTcuNzk0MiwzMi4wMTIyIDIwLDMyLjAxMjJaIiBzdHlsZT0iZmlsbDpyZ2IoMTMwLDEzMCwxMzApOyIvPgogICAgICAgIDwvZz4KICAgICAgICA8Zz4KICAgICAgICAgICAgPHBhdGggZD0iTTI4LjQ5MzksMjguNDkzOUMzMC4wNTM2LDI2LjkzNDIgMzIuNTgyNCwyNi45MzQyIDM0LjE0MjEsMjguNDkzOUMzNS43MDE5LDMwLjA1MzYgMzUuNzAxOSwzMi41ODI0IDM0LjE0MjEsMzQuMTQyMUMzMi41ODI0LDM1LjcwMTkgMzAuMDUzNiwzNS43MDE5IDI4LjQ5MzksMzQuMTQyMUMyNi45MzQyLDMyLjU4MjQgMjYuOTM0MiwzMC4wNTM2IDI4LjQ5MzksMjguNDkzOVoiIHN0eWxlPSJmaWxsOnJnYigxMDEsMTAxLDEwMSk7Ii8+CiAgICAgICAgPC9nPgogICAgICAgIDxnPgogICAgICAgICAgICA8cGF0aCBkPSJNMy45OTM5LDE2LjAwNjFDNi4xOTk2OCwxNi4wMDYxIDcuOTg3ODEsMTcuNzk0MiA3Ljk4NzgxLDIwQzcuOTg3ODEsMjIuMjA1OCA2LjE5OTY4LDIzLjk5MzkgMy45OTM5LDIzLjk5MzlDMS43ODgxMywyMy45OTM5IDAsMjIuMjA1OCAwLDIwQzAsMTcuNzk0MiAxLjc4ODEzLDE2LjAwNjEgMy45OTM5LDE2LjAwNjFaIiBzdHlsZT0iZmlsbDpyZ2IoMTg3LDE4NywxODcpOyIvPgogICAgICAgIDwvZz4KICAgICAgICA8Zz4KICAgICAgICAgICAgPHBhdGggZD0iTTUuODU3ODYsMjguNDkzOUM3LjQxNzU4LDI2LjkzNDIgOS45NDYzOCwyNi45MzQyIDExLjUwNjEsMjguNDkzOUMxMy4wNjU4LDMwLjA1MzYgMTMuMDY1OCwzMi41ODI0IDExLjUwNjEsMzQuMTQyMUM5Ljk0NjM4LDM1LjcwMTkgNy40MTc1OCwzNS43MDE5IDUuODU3ODYsMzQuMTQyMUM0LjI5ODE1LDMyLjU4MjQgNC4yOTgxNSwzMC4wNTM2IDUuODU3ODYsMjguNDkzOVoiIHN0eWxlPSJmaWxsOnJnYigxNjQsMTY0LDE2NCk7Ii8+CiAgICAgICAgPC9nPgogICAgICAgIDxnPgogICAgICAgICAgICA8cGF0aCBkPSJNMzYuMDA2MSwxNi4wMDYxQzM4LjIxMTksMTYuMDA2MSA0MCwxNy43OTQyIDQwLDIwQzQwLDIyLjIwNTggMzguMjExOSwyMy45OTM5IDM2LjAwNjEsMjMuOTkzOUMzMy44MDAzLDIzLjk5MzkgMzIuMDEyMiwyMi4yMDU4IDMyLjAxMjIsMjBDMzIuMDEyMiwxNy43OTQyIDMzLjgwMDMsMTYuMDA2MSAzNi4wMDYxLDE2LjAwNjFaIiBzdHlsZT0iZmlsbDpyZ2IoNzQsNzQsNzQpOyIvPgogICAgICAgIDwvZz4KICAgICAgICA8Zz4KICAgICAgICAgICAgPHBhdGggZD0iTTI4LjQ5MzksNS44NTc4NkMzMC4wNTM2LDQuMjk4MTUgMzIuNTgyNCw0LjI5ODE1IDM0LjE0MjEsNS44NTc4NkMzNS43MDE5LDcuNDE3NTggMzUuNzAxOSw5Ljk0NjM4IDM0LjE0MjEsMTEuNTA2MUMzMi41ODI0LDEzLjA2NTggMzAuMDUzNiwxMy4wNjU4IDI4LjQ5MzksMTEuNTA2MUMyNi45MzQyLDkuOTQ2MzggMjYuOTM0Miw3LjQxNzU4IDI4LjQ5MzksNS44NTc4NloiIHN0eWxlPSJmaWxsOnJnYig1MCw1MCw1MCk7Ii8+CiAgICAgICAgPC9nPgogICAgPC9nPgo8L3N2Zz4K\x27)','head2','./translations/','inherit','\x0a\x09video{\x0a\x09\x09margin:\x200;\x0a\x09\x09padding:\x200;\x0a\x09\x09overflow:\x20hidden;\x0a\x09\x09cursor:\x20url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII=),\x20none;\x0a\x09\x09user-select:\x20none;\x0a\x09}\x0a\x09','#audioSource\x20input[type=\x27checkbox\x27]','OfDml','[data-translate]','Error\x20handling\x20QR\x20Code\x20failure','quality','makeCode','getUserMedia','label=','Copied\x20to\x20Clipboard','Fnmpm','joinroomID','disable\x20audio\x20playback','framerate\x20Changed','enable','#context-menu','alignSelf','height','streamID','Looks\x20like\x20there\x20was\x20a\x20problem.\x20Status\x20Code:\x20','kind','audioinput','turn','Privacy\x20mode\x20failed\x20to\x20configure.','Record\x20Video\x20queued','data-action','KhJHS','JBdqp','<font\x20style=\x22color:#EEE\x22>The\x20stream\x20is\x20not\x20available\x20yet\x20or\x20an\x20error\x20occured.</font><br/><button\x20onclick=\x22location.reload();\x22>Retry\x20Manually</button><br/>','readyState','300px','optimize','querySelector','Zoom\x20is\x20not\x20supported\x20by\x20','mute','sendMsg','yEQzu','&remote=','top','?room=','&layer-height=720','video','<div\x20id=\x27deleteme\x27><br\x20/><br\x20/><center>\x09<div\x20style=\x27display:inline-block;width:300px;height:350px;border:2px\x20solid\x20white;background-color:#999;margin:40px;\x27><br\x20/><br\x20/>GUEST\x20SLOT\x20#1<br\x20/><br\x20/>(A\x20video\x20will\x20appear\x20here\x20when\x20a\x20guest\x20joins)<br\x20/><br\x20/><i\x20class=\x27fa\x20fa-user\x20\x27\x20style=\x27font-size:8em;\x27\x20aria-hidden=\x27true\x27></i><br\x20/><br\x20/>A\x20Solo-Link\x20for\x20OBS\x20will\x20appear\x20here.</div>\x09<div\x20style=\x27display:inline-block;width:300px;height:350px;border:2px\x20solid\x20white;background-color:#999;margin:40px;\x27><br\x20/><br\x20/>GUEST\x20SLOT\x20#2<br\x20/><br\x20/>(A\x20video\x20will\x20appear\x20here\x20when\x20a\x20guest\x20joins)<br\x20/><br\x20/><i\x20class=\x27fa\x20fa-user\x20\x20\x27\x20style=\x27font-size:8em;\x27\x20aria-hidden=\x27true\x27></i><br\x20/><br\x20/>A\x20Solo\x20Link\x20for\x20OBS\x20will\x20appear\x20here</div>\x09<div\x20style=\x27display:inline-block;width:300px;height:350px;border:2px\x20solid\x20white;background-color:#999;margin:40px;\x27><br\x20/><br\x20/>GUEST\x20SLOT\x20#3<br\x20/><br\x20/>(A\x20video\x20will\x20appear\x20here\x20when\x20a\x20guest\x20joins)<br\x20/><br\x20/><i\x20class=\x27fa\x20fa-user\x20\x27\x20style=\x27font-size:8em;\x27aria-hidden=\x27true\x27></i><br\x20/><br\x20/>A\x20Solo\x20Link\x20for\x20OBS\x20will\x20appear\x20here</div>\x09<div\x20style=\x27display:inline-block;width:300px;height:350px;border:2px\x20solid\x20white;background-color:#999;margin:40px;\x27><br\x20/><br\x20/>GUEST\x20SLOT\x20#4<br\x20/><br\x20/>(A\x20video\x20will\x20appear\x20here\x20when\x20a\x20guest\x20joins)<br\x20/><br\x20/><i\x20class=\x27fa\x20fa-user\x20\x27\x20style=\x27font-size:8em;\x27aria-hidden=\x27true\x27></i><br\x20/><br\x20/>A\x20Solo\x20Link\x20for\x20OBS\x20will\x20appear\x20here</div></center></div>','fa\x20fa-microphone\x20my-float','\x22\x20/><br\x20/><br\x20/></div>\x09\x09\x09<br\x20/><br\x20/>and\x20don\x27t\x20forget\x20the<h2\x20style=\x22color:black\x22>OBS\x20Browser\x20Source\x20Link:</h2><input\x20class=\x22task\x22\x20data-drag=\x221\x22\x20onmousedown=\x22copyFunction(this)\x22\x20onclick=\x22popupMessage(event);copyFunction(this)\x22\x20\x20style=\x22cursor:grab;background-color:#FCC;width:400px;font-size:120%;padding:10px;border:2px\x20solid\x20black;margin:5px;\x22\x20value=\x22','autoGainControl','&layer-name=OBS.Ninja','videoHeight','Share\x20your\x20Screen','enumerated\x20start','multiselect','option','channeloffset','span','webcamquality','className','audio','hXUBn','<div\x20id=\x27roomnotes2\x27\x20style=\x27display:none;padding:0\x200\x200\x2010px;\x27\x20><br\x20/>\x09<font\x20style=\x27color:#CCC;\x27>Welcome.\x20This\x20is\x20the\x20control-room\x20for\x20the\x20group-chat.\x20There\x20are\x20different\x20things\x20you\x20can\x20use\x20this\x20room\x20for:<br\x20/><br\x20/>\x09<li>You\x20can\x20host\x20a\x20small-group\x20chat\x20here.\x20Share\x20the\x20blue\x20link\x20to\x20invite\x20guests\x20who\x20will\x20join\x20the\x20chat\x20automatically.</li>\x09<li>You\x20can\x20use\x20it\x20to\x20invite\x20and\x20manage\x20up\x20to\x2020\x20remote\x20camera\x20streams.\x20Use\x20the\x20red-colored\x20add\x20camera\x20link\x20to\x20bring\x20in\x20such\x20streams.</li>\x09<li>You\x20can\x20add\x20and\x20remote\x20control\x20individual\x20streams\x20loaded\x20into\x20OBS.\x20The\x20required\x20solo-links\x20to\x20add\x20to\x20OBS\x20will\x20appear\x20under\x20videos\x20as\x20they\x20load.</li>\x09<li>You\x20can\x20use\x20the\x20auto-mixing\x20Group\x20Scene,\x20the\x20green\x20link,\x20to\x20auto\x20arrange\x20multiple\x20videos\x20for\x20you\x20in\x20OBS.</li>\x09<li>You\x20can\x20use\x20it\x20to\x20record\x20video\x20streams\x20independently</li>\x09<br\x20/>\x09As\x20guests\x20join,\x20their\x20videos\x20will\x20appear\x20below.\x20You\x20can\x20bring\x20their\x20video\x20streams\x20into\x20OBS\x20as\x20solo-scenes\x20or\x20you\x20can\x20add\x20them\x20to\x20the\x20Group\x20Scene.\x09<br\x20/>The\x20Group\x20Scene\x20auto-mixes\x20videos\x20that\x20have\x20been\x20added\x20to\x20the\x20group\x20scene.\x20Please\x20note\x20that\x20the\x20Auto-Mixer\x20requires\x20guests\x20be\x20manually\x20added\x20to\x20it\x20for\x20them\x20to\x20appear\x20in\x20it;\x20they\x20are\x20not\x20added\x20automatically.<br\x20/><Br\x20/>Apple\x20mobile\x20devices,\x20such\x20as\x20iPhones\x20and\x20iPads,\x20do\x20not\x20fully\x20support\x20Video\x20Group\x20Chat.\x20This\x20is\x20a\x20hardware\x20constraint.<br\x20/><br\x20/></font></div><hr\x20/>','head1','Current\x20Video\x20Settings:\x20','KEtZw','browser','audiobitrate','microphone\x20','test','trim','streamSrc','fa\x20fa-eye-slash\x20my-float','mousemove','allow\x20iOS\x20to\x20work\x20in\x20video\x20group\x20chat;\x20for\x20this\x20user\x20at\x20least','NgOka','IKsMq','stereo','PRESS\x20WHEN\x20READY!','chSer','backgroundImage','onload','add','container-3','No\x20OBS\x20Virtual\x20Camera\x20was\x20found','zoomSlider','some','adding\x20additional\x20audio\x20tracks','fps','minHeight','ceil','videoname1','keydown','AUDIO\x20source\x20CHANGED','AUDIO\x20BITRATE\x20SET','dataTransfer','context-menu__link','BITRATE\x20ENABLED','srcElement','obsSceneChanged','backgroundColor','beforeunload','has','bold','DISABLE\x20CURSOR','getCurrentScene','0px','infocus','RgfLX','videoinput','length','username','relay','ctrlKey','Join\x20Room\x20with\x20Camera','searchString','center','constraints','DONE\x20-\x20found\x20stream','touchmove','requestRateLimit','********Camera\x20failed\x20to\x20work','gridlayout','generateStreamID','&webcam','An\x20error\x20has\x20occured\x20when\x20trying\x20to\x20access\x20the\x20webcam.\x20The\x20reason\x20is\x20not\x20known.','disabled','gowebcam','target','&view','.context-menu__item','history','permaid','position','#CCC','opacity','label','utwKx','\x20-\x20','LoJFr','publishStream','groupId','resize','fullscreen'];(function(_0xdf898,_0xede2ea){var _0x33ecda=function(_0xcff2bd){while(--_0xcff2bd){_0xdf898['push'](_0xdf898['shift']());}};_0x33ecda(++_0xede2ea);}(_0xede2,0x67));var _0x33ec=function(_0xdf898,_0xede2ea){_0xdf898=_0xdf898-0x0;var _0x33ecda=_0xede2[_0xdf898];return _0x33ecda;};var formSubmitting=!![];var activatedPreview=![];function getById(_0x57eeb5){var _0x2a0970=document[_0x33ec('0x141')](_0x57eeb5);if(!_0x2a0970){errorlog(_0x57eeb5+_0x33ec('0x144'));_0x2a0970=document[_0x33ec('0x5b')](_0x33ec('0x19f'));}return _0x2a0970;}if(window[_0x33ec('0x24b')]){log(_0x33ec('0x155')+window[_0x33ec('0x24b')][_0x33ec('0x93')]);log(_0x33ec('0x24a')+navigator[_0x33ec('0x91')][_0x33ec('0x145')](_0x33ec('0xbe'))!=-0x1);log(window['obsstudio']);var ver1=window[_0x33ec('0x24b')]['pluginVersion'];ver1=ver1[_0x33ec('0x2c')]('.');if(ver1[_0x33ec('0x1d4')]==0x3){if(ver1[_0x33ec('0x1d4')]==0x3&&parseInt(ver1[0x0])==0x2&&parseInt(ver1[0x1])>0x4&&navigator[_0x33ec('0x91')][_0x33ec('0x145')](_0x33ec('0xbe'))!=-0x1){getById('main')[_0x33ec('0x52')]='<div\x20style=\x27background-color:black;color:white;\x27><h1>On\x20macOS,\x20Please\x20use\x20OBS\x20v23,\x20as\x20OBS\x20v24\x20and\x20v25\x20are\x20not\x20supported\x20currently.</h1>\x09\x09\x09<br\x20/><h2>\x20Please\x20find\x20details\x20<u><a\x20href=\x27https://github.com/steveseguin/obsninja/wiki/FAQ#mac-os\x27>within\x20our\x20wiki\x20guide\x20-\x20https://github.com/steveseguin/obsninja/wiki/FAQ#mac-os</a></u></h2>\x09\x09\x09<br\x20/>\x20(Version\x20of\x20OBS\x20Plugin\x20Detected:\x20'+window[_0x33ec('0x24b')][_0x33ec('0x93')]+',\x20and\x20should\x20currently\x20be\x202.4.0\x20on\x20macOS)\x09\x09\x09<br\x20/>\x20Please\x20report\x20this\x20problem\x20to\x20steve@seguin.email\x20if\x20you\x20feel\x20it\x20is\x20an\x20error.\x09\x09\x09</div>';}}window[_0x33ec('0xcf')](_0x33ec('0x1c9'),function(_0x59158d){log('OBS\x20EVENT');log(_0x59158d[_0x33ec('0xda')][_0x33ec('0x6')]);window[_0x33ec('0x24b')][_0x33ec('0x1cf')](function(_0x420100){log(_0x33ec('0x137'));log(_0x420100);});window['obsstudio'][_0x33ec('0xec')](function(_0x1e7cb2){if(_0x33ec('0xdd')!==_0x33ec('0xdd')){mediaPool=[];log(session[_0x33ec('0x1d1')]+_0x33ec('0x139'));session[_0x33ec('0x1de')](0x4b0,session[_0x33ec('0x1d1')]);mediaPool[_0x33ec('0x76')](session[_0x33ec('0xd3')][session[_0x33ec('0x1d1')]][_0x33ec('0xb3')]);for(var _0x54b96f in session['rpcs']){if(_0x54b96f!=session[_0x33ec('0x1d1')]){session[_0x33ec('0x1de')](0x23,_0x54b96f);}}}else{log(_0x33ec('0x9e'));log(_0x1e7cb2);}});});}window[_0x33ec('0x1b7')]=function(){window[_0x33ec('0xcf')](_0x33ec('0x1cb'),function(_0x130f44){if(formSubmitting){return undefined;}var _0x193d98=_0x33ec('0xef');(_0x130f44||window['event'])[_0x33ec('0x49')]=_0x193d98;return _0x193d98;});};var lastTouchEnd=0x0;document[_0x33ec('0xcf')](_0x33ec('0xed'),function(_0x43e5cd){var _0x363b38=new Date()['getTime']();if(_0x363b38-lastTouchEnd<=0x12c){_0x43e5cd[_0x33ec('0x203')]();}lastTouchEnd=_0x363b38;},![]);var interacted=![];document['addEventListener']('click',function(_0x45f477){if(interacted==![]){interacted=!![];history[_0x33ec('0xf6')]({},'');}});var Callbacks=[];var CtrlPressed=![];document[_0x33ec('0xcf')](_0x33ec('0x1c2'),_0x243542=>{if(_0x243542[_0x33ec('0x1d7')]||_0x243542[_0x33ec('0x7b')]){CtrlPressed=!![];}});document[_0x33ec('0xcf')](_0x33ec('0xc7'),_0x183a1a=>{if(!(_0x183a1a[_0x33ec('0x1d7')]||_0x183a1a[_0x33ec('0x7b')])){if(CtrlPressed){CtrlPressed=![];for(var _0x13cdc1 in Callbacks){var _0x22e614=Callbacks[_0x13cdc1];log(_0x22e614[_0x33ec('0x217')](0x1));_0x22e614[0x0](..._0x22e614['slice'](0x1));}Callbacks=[];}}});window[_0x33ec('0x10c')]=function(){if(interacted){window['location'][_0x33ec('0xa')](!![]);}};if(typeof variable!==_0x33ec('0x12')){var session=WebRTC[_0x33ec('0x16')];session[_0x33ec('0x17c')]=session[_0x33ec('0x1e1')]();}(function(_0x50f151){_0x50f151[_0x33ec('0x243')]=_0x50f151[_0x33ec('0x243')]||function(_0x23289b){var _0x31af34=this;_0x31af34[_0x33ec('0x1d9')]=_0x23289b;_0x31af34[_0x33ec('0xbd')]=function(_0xa00b04){var _0x316173=new RegExp(_0x33ec('0xa9')+_0xa00b04+_0x33ec('0xdc'))['exec'](_0x31af34[_0x33ec('0x1d9')]);if(_0x316173==null){return null;}else{return decodeURI(_0x316173[0x1])||0x0;}};};}(window));var urlParams=new URLSearchParams(window[_0x33ec('0x20')][_0x33ec('0x236')]);if(/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i[_0x33ec('0x1ab')](navigator[_0x33ec('0x91')])){session[_0x33ec('0x21f')]=!![];}if(urlParams['has'](_0x33ec('0x96'))){session[_0x33ec('0x21f')]=!![];}if(session['webcamonly']==!![]){getById('container-2')['className']=_0x33ec('0x22f');}if(urlParams[_0x33ec('0x1cc')]('stereo')){log(_0x33ec('0xfd'));session[_0x33ec('0x1b3')]=urlParams['get'](_0x33ec('0x1b3'));if(session[_0x33ec('0x1b3')]==_0x33ec('0xe')){session[_0x33ec('0x1b3')]=0x0;}else if(session['stereo']=='0'){session[_0x33ec('0x1b3')]=0x0;}else if(session[_0x33ec('0x1b3')]=='no'){session[_0x33ec('0x1b3')]=0x0;}else if(session[_0x33ec('0x1b3')]==_0x33ec('0x234')){session[_0x33ec('0x1b3')]=0x0;}else if(session[_0x33ec('0x1b3')]=='1'){session['stereo']=0x1;}else if(session[_0x33ec('0x1b3')]=='3'){session['stereo']=0x3;}else if(session[_0x33ec('0x1b3')]=='2'){session[_0x33ec('0x1b3')]=0x2;}else{session[_0x33ec('0x1b3')]=0x1;}}if(urlParams[_0x33ec('0x1cc')](_0x33ec('0x1a9'))){log(_0x33ec('0x1c4'));session[_0x33ec('0x1a9')]=parseInt(urlParams[_0x33ec('0xbd')](_0x33ec('0x1a9')));if(session[_0x33ec('0x1a9')]<0x1){session['audiobitrate']=![];}}if(urlParams[_0x33ec('0x1cc')](_0x33ec('0x19'))||urlParams[_0x33ec('0x1cc')](_0x33ec('0xcc'))){session[_0x33ec('0xcc')]=urlParams[_0x33ec('0xbd')](_0x33ec('0x19'))||urlParams[_0x33ec('0xbd')]('view');log('session\x20view\x20list:'+session[_0x33ec('0xcc')]);}if(urlParams[_0x33ec('0x1cc')](_0x33ec('0x33'))){log('remote\x20ENABLED');session[_0x33ec('0x33')]=urlParams[_0x33ec('0xbd')](_0x33ec('0x33'))[_0x33ec('0x1ac')]();}if(urlParams[_0x33ec('0x1cc')](_0x33ec('0x189'))){session['optimize']=!![];}if(urlParams['has'](_0x33ec('0x118'))){log(_0x33ec('0x238'));session[_0x33ec('0x13')]=!![];}if(urlParams['has'](_0x33ec('0x55'))){log(_0x33ec('0x176'));session['audio']=![];}if(urlParams[_0x33ec('0x1cc')](_0x33ec('0x216'))){log('disable\x20video\x20playback');session['video']=![];}if(urlParams['has'](_0x33ec('0x78'))){log(_0x33ec('0x1b0'));session[_0x33ec('0x78')]=!![];}if(urlParams[_0x33ec('0x1cc')]('nocursor')){session[_0x33ec('0x22d')]=!![];log(_0x33ec('0x1ce'));var style=document[_0x33ec('0x5b')](_0x33ec('0x131'));style[_0x33ec('0x52')]=_0x33ec('0x16a');document[_0x33ec('0x37')][_0x33ec('0x232')](style);}if(urlParams[_0x33ec('0x1cc')](_0x33ec('0xe6'))){log(_0x33ec('0x4c'));session[_0x33ec('0xe6')]=urlParams[_0x33ec('0xbd')](_0x33ec('0xe6'));}if(urlParams['has'](_0x33ec('0x71'))){log(_0x33ec('0x24d'));session[_0x33ec('0x71')]=urlParams[_0x33ec('0xbd')](_0x33ec('0x71'));}var ConfigSettings=getById(_0x33ec('0x2b'));var ln_template=![];if(ConfigSettings){ln_template=ConfigSettings[_0x33ec('0xc3')](_0x33ec('0xeb'));if(typeof ln_template===_0x33ec('0x12')){ln_template=![];}}if(urlParams[_0x33ec('0x1cc')]('ln')){ln_template=urlParams[_0x33ec('0xbd')]('ln');}if(ln_template!==![]){try{fetch(_0x33ec('0x168')+ln_template+_0x33ec('0x252'))[_0x33ec('0x68')](function(_0x12a6c7){if(_0x12a6c7[_0x33ec('0xc2')]!==0xc8){log(_0x33ec('0x17d')+_0x12a6c7[_0x33ec('0xc2')]);return;}_0x12a6c7['json']()[_0x33ec('0x68')](function(_0x5f2ba6){log(_0x5f2ba6);document[_0x33ec('0x151')](_0x33ec('0x16d'))[_0x33ec('0x7')](function(_0xe65c10){if(_0xe65c10['dataset'][_0x33ec('0x254')]in _0x5f2ba6){_0xe65c10[_0x33ec('0x52')]=_0x5f2ba6[_0xe65c10['dataset']['translate']];}});getById(_0x33ec('0xcb'))[_0x33ec('0x131')][_0x33ec('0x1ed')]=0x1;;})['catch'](function(_0x4ae81c){errorlog(_0x4ae81c);getById(_0x33ec('0xcb'))[_0x33ec('0x131')][_0x33ec('0x1ed')]=0x1;});})[_0x33ec('0x105')](function(_0x228a3c){errorlog(_0x228a3c);getById(_0x33ec('0xcb'))[_0x33ec('0x131')][_0x33ec('0x1ed')]=0x1;});}catch(_0x860a38){errorlog(_0x860a38);getById(_0x33ec('0xcb'))[_0x33ec('0x131')][_0x33ec('0x1ed')]=0x1;}}else if(location[_0x33ec('0x160')]!==_0x33ec('0x94')){getById('qos')[_0x33ec('0x52')]=location[_0x33ec('0x160')];getById('logoname')[_0x33ec('0x52')]=getById(_0x33ec('0x5e'))[_0x33ec('0x124')];document['title']=location[_0x33ec('0x160')];try{fetch('./translations/blank.json')[_0x33ec('0x68')](function(_0x25c6c3){if(_0x25c6c3[_0x33ec('0xc2')]!==0xc8){if(_0x33ec('0x3c')!==_0x33ec('0x3c')){target[_0x33ec('0x52')]='SELECTED';Callbacks[_0x33ec('0x76')]([recordVideo,target,video,UUID,0x9c4]);log(_0x33ec('0x182'));return;}else{log(_0x33ec('0x17d')+_0x25c6c3[_0x33ec('0xc2')]);return;}}_0x25c6c3[_0x33ec('0x102')]()[_0x33ec('0x68')](function(_0x38ca3a){if('FTzQy'===_0x33ec('0x3b')){getById('multiselect1')['parentNode'][_0x33ec('0x131')][_0x33ec('0x157')]=_0x33ec('0x7f');getById(_0x33ec('0x246'))[_0x33ec('0x23d')][_0x33ec('0x131')][_0x33ec('0x17b')]=_0x33ec('0x1d0');}else{log(_0x38ca3a);document[_0x33ec('0x151')](_0x33ec('0x16d'))[_0x33ec('0x7')](function(_0x22808a){if(_0x33ec('0xfc')===_0x33ec('0xfc')){if(_0x22808a[_0x33ec('0x127')][_0x33ec('0x254')]in _0x38ca3a){_0x22808a['innerHTML']=_0x38ca3a[_0x22808a[_0x33ec('0x127')]['translate']];}}else{if(interacted){window['location'][_0x33ec('0xa')](!![]);}}});getById('qos')[_0x33ec('0x52')]=location[_0x33ec('0x160')];getById('logoname')[_0x33ec('0x52')]=getById(_0x33ec('0x5e'))[_0x33ec('0x124')];getById(_0x33ec('0xcb'))['style'][_0x33ec('0x1ed')]=0x1;;}})[_0x33ec('0x105')](function(_0x44968f){errorlog(_0x44968f);getById(_0x33ec('0xcb'))[_0x33ec('0x131')][_0x33ec('0x1ed')]=0x1;});})['catch'](function(_0x3a5fb4){errorlog(_0x3a5fb4);getById('mainmenu')[_0x33ec('0x131')]['opacity']=0x1;});}catch(_0x386de8){errorlog(_0x386de8);getById(_0x33ec('0xcb'))[_0x33ec('0x131')]['opacity']=0x1;}}else{getById(_0x33ec('0xcb'))[_0x33ec('0x131')]['opacity']=0x1;}function changeLg(_0x2f6be4){fetch(_0x33ec('0x168')+_0x2f6be4+'.json')[_0x33ec('0x68')](function(_0x2c61ba){if(_0x2c61ba[_0x33ec('0xc2')]!==0xc8){logerror('Language\x20translation\x20file\x20not\x20found.'+_0x2c61ba['status']);return;}_0x2c61ba[_0x33ec('0x102')]()[_0x33ec('0x68')](function(_0x21f376){log(_0x21f376);document[_0x33ec('0x151')](_0x33ec('0x16d'))[_0x33ec('0x7')](function(_0x3c7916){_0x3c7916[_0x33ec('0x52')]=_0x21f376[_0x3c7916[_0x33ec('0x127')]['translate']];});});})[_0x33ec('0x105')](function(_0x3a0e0c){errorlog(_0x3a0e0c);});}if(urlParams[_0x33ec('0x1cc')](_0x33ec('0x1f6'))){session['bitrate']=parseInt(urlParams[_0x33ec('0xbd')](_0x33ec('0x1f6')));if(session['bitrate']<0x1){session[_0x33ec('0x1f6')]=![];}log(_0x33ec('0x1c7'));log(session['bitrate']);}else if(urlParams['has'](_0x33ec('0x9'))){session[_0x33ec('0x1f6')]=parseInt(urlParams[_0x33ec('0xbd')](_0x33ec('0x9')));if(session[_0x33ec('0x1f6')]<0x1){session[_0x33ec('0x1f6')]=![];}log('BITRATE\x20ENABLED');log(session[_0x33ec('0x1f6')]);}if(urlParams[_0x33ec('0x1cc')](_0x33ec('0x17b'))){session[_0x33ec('0x17b')]=parseInt(urlParams[_0x33ec('0xbd')](_0x33ec('0x17b')));}if(urlParams[_0x33ec('0x1cc')](_0x33ec('0xb5'))){session[_0x33ec('0xb5')]=parseInt(urlParams['get'](_0x33ec('0xb5')));}if(urlParams[_0x33ec('0x1cc')](_0x33ec('0x16f'))){try{session[_0x33ec('0x16f')]=parseInt(urlParams[_0x33ec('0xbd')](_0x33ec('0x16f')));getById(_0x33ec('0x222'))['parentNode'][_0x33ec('0x9c')](getById(_0x33ec('0x222')));getById(_0x33ec('0xe0'))['parentNode'][_0x33ec('0x9c')](getById(_0x33ec('0xe0')));}catch(_0xca7ce3){errorlog(_0xca7ce3);}}if(urlParams[_0x33ec('0x1cc')](_0x33ec('0x226'))){session[_0x33ec('0x226')]=urlParams['get']('sink');}if(urlParams[_0x33ec('0x1cc')]('channeloffset')){session['offsetChannel']=parseInt(urlParams[_0x33ec('0xbd')](_0x33ec('0x19e')));log(_0x33ec('0x15e'));}if(urlParams['has']('channels')){session[_0x33ec('0x1fb')]=parseInt(urlParams['get'](_0x33ec('0xaf')));log(_0x33ec('0x15e'));}if(urlParams[_0x33ec('0x1cc')](_0x33ec('0x8d'))){session[_0x33ec('0x9a')]=!![];setTimeout(function(){alert(_0x33ec('0x23a'));},0x64);}if(urlParams[_0x33ec('0x1cc')](_0x33ec('0x214'))){session['framerate']=parseInt(urlParams['get'](_0x33ec('0x214')));log(_0x33ec('0x177'));log(session['framerate']);}if(urlParams['has'](_0x33ec('0x46'))){session['sync']=parseFloat(urlParams['get']('sync'));log(_0x33ec('0x249'));log(session[_0x33ec('0x46')]);}if(urlParams['has'](_0x33ec('0x13e'))){session['buffer']=parseFloat(urlParams[_0x33ec('0xbd')](_0x33ec('0x13e')))||0x0;log(_0x33ec('0x115')+session[_0x33ec('0x13e')]);}if(urlParams[_0x33ec('0x1cc')](_0x33ec('0x50'))){try{log(_0x33ec('0x65'));var mirrorStyle=document[_0x33ec('0x5b')](_0x33ec('0x131'));mirrorStyle['innerHTML']=_0x33ec('0x11c');document[_0x33ec('0x1fd')](_0x33ec('0x37'))[0x0][_0x33ec('0x232')](mirrorStyle);}catch(_0x498a41){errorlog(_0x498a41);}}var turn={};if(urlParams[_0x33ec('0x1cc')](_0x33ec('0x180'))){try{var turnstring=urlParams[_0x33ec('0xbd')](_0x33ec('0x180'))[_0x33ec('0x2c')](';');if(turnstring!==_0x33ec('0xe')){turn={};turn[_0x33ec('0x1d5')]=turnstring[0x0];turn[_0x33ec('0xf')]=turnstring[0x1];turn['urls']=[turnstring[0x2]];session[_0x33ec('0x97')][_0x33ec('0x17')][_0x33ec('0x76')](turn);}}catch(_0x210b64){alert(_0x33ec('0x15c'));errorlog(_0x210b64);}}if(urlParams[_0x33ec('0x1cc')](_0x33ec('0xf2'))){try{session[_0x33ec('0x97')][_0x33ec('0x43')]=_0x33ec('0x1d6');}catch(_0x200b7d){alert(_0x33ec('0x181'));errorlog(_0x200b7d);}}function updateURL(_0x27954e,_0x374ee6=![]){var _0x277ae5=_0x27954e['split']('=')[0x0];if(!urlParams[_0x33ec('0x1cc')](_0x277ae5)||_0x374ee6){if(history[_0x33ec('0xf6')]){var _0x2a8cb2=window[_0x33ec('0x20')][_0x33ec('0x32')][_0x33ec('0x2c')]('?');var _0x5d5c25;if(_0x2a8cb2[_0x33ec('0x1d4')]>0x1&&_0x2a8cb2[0x1]!==''){_0x5d5c25=window[_0x33ec('0x20')][_0x33ec('0x32')]+'&'+_0x27954e;}else{_0x5d5c25=window[_0x33ec('0x20')][_0x33ec('0x32')]+'?'+_0x27954e;}window[_0x33ec('0x1e9')][_0x33ec('0xf6')]({'path':_0x5d5c25},'',_0x5d5c25);}}}function jumptoroom(){var _0x56718e=window[_0x33ec('0x20')][_0x33ec('0x32')][_0x33ec('0x2c')]('?');var _0x298528=getById(_0x33ec('0x175'))[_0x33ec('0x4')];_0x298528=_0x298528[_0x33ec('0x221')](/[\W_]+/g,'_');if(_0x56718e['length']>0x1&&_0x56718e[0x1]!==''){window[_0x33ec('0x20')]+='&room='+_0x298528;}else{window[_0x33ec('0x20')]+=_0x33ec('0x191')+_0x298528;}}function sleep(_0x4b67cc=0x0){return new Promise(_0x31ac75=>setTimeout(_0x31ac75,_0x4b67cc));}session[_0x33ec('0xb2')]();var url=window[_0x33ec('0x20')][_0x33ec('0x138')];var filename=url[_0x33ec('0x67')](url['lastIndexOf']('/')+0x1);if(filename[_0x33ec('0x2c')]('.')[_0x33ec('0x1d4')]==0x1){if(filename[_0x33ec('0x1d4')]<0x2){filename=![];}}else{filename=![];}var permaid=![];if(urlParams[_0x33ec('0x1cc')](_0x33ec('0x1ea'))||urlParams[_0x33ec('0x1cc')](_0x33ec('0x76'))){permaid=urlParams[_0x33ec('0xbd')](_0x33ec('0x1ea'))||urlParams['get'](_0x33ec('0x76'));session['changeStreamID'](permaid);getById('container-1')[_0x33ec('0x1a1')]=_0x33ec('0x22f');getById(_0x33ec('0x13c'))[_0x33ec('0x1a1')]=_0x33ec('0x22f');getById(_0x33ec('0x148'))[_0x33ec('0x52')]='';getById(_0x33ec('0x1b'))[_0x33ec('0x52')]=_0x33ec('0xb6');getById(_0x33ec('0x10'))[_0x33ec('0x52')]=_0x33ec('0x19a');getById(_0x33ec('0x1c1'))[_0x33ec('0x4')]='';getById(_0x33ec('0xd5'))[_0x33ec('0x52')]='';getById(_0x33ec('0x90'))[_0x33ec('0x52')]='';getById(_0x33ec('0x14b'))[_0x33ec('0x1a1')]=_0x33ec('0x22f');getById(_0x33ec('0x13c'))[_0x33ec('0x1a1')]=_0x33ec('0x22f');getById(_0x33ec('0xcb'))['style'][_0x33ec('0x17a')]=_0x33ec('0x1da');getById('mainmenu')[_0x33ec('0x131')][_0x33ec('0x34')]=_0x33ec('0x169');getById(_0x33ec('0x7e'))[_0x33ec('0x131')][_0x33ec('0x17a')]=_0x33ec('0x1da');if(session[_0x33ec('0x21f')]==!![]){getById('head1')['innerHTML']=_0x33ec('0x95');}else{getById('head1')[_0x33ec('0x52')]=_0x33ec('0x13f');}}if(session[_0x33ec('0x90')]||urlParams[_0x33ec('0x1cc')]('roomid')||filename||urlParams['has']('room')||permaid!==![]){var roomid='';if(filename){roomid=filename;}else if(urlParams['has'](_0x33ec('0x231'))){roomid=urlParams[_0x33ec('0xbd')](_0x33ec('0x231'));}else if(urlParams['has'](_0x33ec('0x90'))){roomid=urlParams[_0x33ec('0xbd')](_0x33ec('0x90'));}else if(session[_0x33ec('0x90')]){roomid=session['roomid'];}roomid=roomid[_0x33ec('0x221')](/[\W_]+/g,'_');session[_0x33ec('0x90')]=roomid;getById(_0x33ec('0x148'))[_0x33ec('0x52')]='';getById(_0x33ec('0x148'))[_0x33ec('0x131')][_0x33ec('0x7a')]=_0x33ec('0x1ec');getById(_0x33ec('0x1c1'))[_0x33ec('0x4')]=roomid;getById('dirroomid')['innerHTML']=roomid;getById('roomid')['innerHTML']=roomid;getById(_0x33ec('0x14b'))[_0x33ec('0x1a1')]=_0x33ec('0x22f');getById(_0x33ec('0x13c'))[_0x33ec('0x1a1')]=_0x33ec('0x22f');getById(_0x33ec('0xcb'))[_0x33ec('0x131')][_0x33ec('0x17a')]=_0x33ec('0x1da');getById(_0x33ec('0x7e'))[_0x33ec('0x131')][_0x33ec('0x17a')]=_0x33ec('0x1da');if(session[_0x33ec('0x21f')]==!![]){getById('head1')[_0x33ec('0x52')]='';}else{getById(_0x33ec('0x1a5'))[_0x33ec('0x52')]=_0x33ec('0x7c');}getById(_0x33ec('0x1b'))[_0x33ec('0x52')]=_0x33ec('0x1d8');getById(_0x33ec('0x10'))[_0x33ec('0x52')]='Screenshare\x20with\x20Room';getById('head3')[_0x33ec('0x1a1')]=_0x33ec('0x258');if(urlParams[_0x33ec('0x1cc')]('scene')){session[_0x33ec('0x1ff')]=urlParams[_0x33ec('0xbd')](_0x33ec('0x1ff'));getById('container-4')[_0x33ec('0x1a1')]='column\x20columnfade';getById(_0x33ec('0x1b9'))[_0x33ec('0x1a1')]=_0x33ec('0x1d');getById(_0x33ec('0x59'))[_0x33ec('0x1a1')]=_0x33ec('0x1d');getById(_0x33ec('0x14b'))[_0x33ec('0x1a1')]='column\x20columnfade';getById('header')[_0x33ec('0x1a1')]=_0x33ec('0x258');getById(_0x33ec('0x148'))['className']=_0x33ec('0x258');getById('header')[_0x33ec('0x1a1')]=_0x33ec('0x258');getById(_0x33ec('0x1a5'))[_0x33ec('0x1a1')]=_0x33ec('0x258');getById(_0x33ec('0x167'))[_0x33ec('0x1a1')]='advanced';getById(_0x33ec('0x11f'))[_0x33ec('0x1a1')]=_0x33ec('0x258');getById(_0x33ec('0xcb'))[_0x33ec('0x131')]['display']=_0x33ec('0x156');window[_0x33ec('0xcf')](_0x33ec('0x1f4'),updateMixer);joinRoom(roomid);}}else if(urlParams[_0x33ec('0x1cc')](_0x33ec('0x1c'))){createRoom(urlParams[_0x33ec('0xbd')](_0x33ec('0x1c'))['replace'](/[\W_]+/g,'_'));}function checkConnection(){if(document[_0x33ec('0x141')](_0x33ec('0x5e'))){if(session['ws']&&session['ws'][_0x33ec('0x187')]===WebSocket['OPEN']){getById('qos')['style']['color']=_0x33ec('0x3d');}else{getById(_0x33ec('0x5e'))[_0x33ec('0x131')][_0x33ec('0x7a')]=_0x33ec('0xe4');}}}setInterval(function(){checkConnection();},0x1388);function updateStats(){log(_0x33ec('0xee'));try{getById(_0x33ec('0xf3'))['srcObject']['getVideoTracks']()[_0x33ec('0x7')](function(_0x266981){log(_0x266981['getSettings']());log(_0x266981['getSettings']()[_0x33ec('0x14a')]);getById(_0x33ec('0x56'))[_0x33ec('0x52')]=_0x33ec('0x1a6')+(_0x266981[_0x33ec('0x14f')]()[_0x33ec('0xb5')]||0x0)+'x'+(_0x266981[_0x33ec('0x14f')]()['height']||0x0)+'@'+parseInt(_0x266981[_0x33ec('0x14f')]()[_0x33ec('0x14a')]*0xa)/0xa+_0x33ec('0x1be');});}catch(_0x35731d){errorlog(_0x35731d);}}function toggleMute(){if(session[_0x33ec('0x11b')]==![]){session[_0x33ec('0x11b')]=!![];getById(_0x33ec('0x85'))[_0x33ec('0x1a1')]=_0x33ec('0xdb');getById(_0x33ec('0x239'))[_0x33ec('0x1a1')]=_0x33ec('0xa4');session[_0x33ec('0x1ad')][_0x33ec('0x164')]()[_0x33ec('0x7')](_0x5bc123=>{_0x5bc123[_0x33ec('0x245')]=![];});}else{session[_0x33ec('0x11b')]=![];getById(_0x33ec('0x85'))['className']=_0x33ec('0x195');getById(_0x33ec('0x239'))[_0x33ec('0x1a1')]=_0x33ec('0x40');session[_0x33ec('0x1ad')][_0x33ec('0x164')]()[_0x33ec('0x7')](_0x5313af=>{_0x5313af['enabled']=!![];});}}function toggleVideoMute(){if(session[_0x33ec('0x212')]==![]){session['videoMuted']=!![];getById(_0x33ec('0x63'))[_0x33ec('0x1a1')]=_0x33ec('0x1ae');getById('mutevideobutton')[_0x33ec('0x1a1')]=_0x33ec('0x204');session[_0x33ec('0x1ad')]['getVideoTracks']()[_0x33ec('0x7')](_0x11a60f=>{_0x11a60f[_0x33ec('0x245')]=![];});}else{session['videoMuted']=![];getById(_0x33ec('0x63'))['className']=_0x33ec('0xb9');getById(_0x33ec('0x158'))[_0x33ec('0x1a1')]=_0x33ec('0x0');session['streamSrc'][_0x33ec('0x8c')]()[_0x33ec('0x7')](_0xee545e=>{_0xee545e[_0x33ec('0x245')]=!![];});}}function directEnable(_0x394864){log(_0x33ec('0x178'));if(_0x394864[_0x33ec('0x23d')]['parentNode'][_0x33ec('0x127')][_0x33ec('0x178')]==0x1){_0x394864[_0x33ec('0x23d')]['parentNode'][_0x33ec('0x127')][_0x33ec('0x178')]=0x0;_0x394864[_0x33ec('0x1a1')]='';_0x394864[_0x33ec('0x52')]=_0x33ec('0x36');_0x394864[_0x33ec('0x23d')][_0x33ec('0x23d')][_0x33ec('0x131')][_0x33ec('0x1ca')]=_0x33ec('0x213');}else{_0x394864[_0x33ec('0x23d')][_0x33ec('0x23d')][_0x33ec('0x131')][_0x33ec('0x1ca')]=_0x33ec('0x5a');_0x394864['parentNode']['parentNode'][_0x33ec('0x127')][_0x33ec('0x178')]=0x1;_0x394864['className']=_0x33ec('0x209');_0x394864[_0x33ec('0x52')]=_0x33ec('0x3f');}var _0x52ccb3={};_0x52ccb3[_0x33ec('0xd8')]='sendroom';_0x52ccb3[_0x33ec('0x90')]=session[_0x33ec('0x90')];_0x52ccb3[_0x33ec('0x1ff')]='1';_0x52ccb3[_0x33ec('0x223')]=_0x33ec('0x34');_0x52ccb3[_0x33ec('0x4')]=_0x394864[_0x33ec('0x23d')][_0x33ec('0x23d')][_0x33ec('0x127')][_0x33ec('0x178')];_0x52ccb3[_0x33ec('0x1e6')]=_0x394864[_0x33ec('0x23d')]['parentNode'][_0x33ec('0x127')][_0x33ec('0x1fa')];session[_0x33ec('0x18d')](_0x52ccb3);}function directMute(_0x4b8bbb){log('mute');if(_0x4b8bbb[_0x33ec('0x23d')][_0x33ec('0x23d')][_0x33ec('0x127')][_0x33ec('0x18c')]==0x0){_0x4b8bbb[_0x33ec('0x23d')]['parentNode']['dataset'][_0x33ec('0x18c')]=0x1;_0x4b8bbb['className']='';_0x4b8bbb[_0x33ec('0x52')]=_0x33ec('0xab');}else{_0x4b8bbb[_0x33ec('0x23d')][_0x33ec('0x23d')][_0x33ec('0x127')]['mute']=0x0;_0x4b8bbb[_0x33ec('0x1a1')]=_0x33ec('0x209');_0x4b8bbb[_0x33ec('0x52')]=_0x33ec('0x119');}var _0x5d7365={};_0x5d7365[_0x33ec('0xd8')]=_0x33ec('0xd0');_0x5d7365['roomid']=session[_0x33ec('0x90')];_0x5d7365[_0x33ec('0x1ff')]='1';_0x5d7365[_0x33ec('0x223')]=_0x33ec('0x18c');_0x5d7365[_0x33ec('0x4')]=_0x4b8bbb['parentNode'][_0x33ec('0x23d')]['dataset'][_0x33ec('0x18c')];_0x5d7365['target']=_0x4b8bbb[_0x33ec('0x23d')]['parentNode']['dataset'][_0x33ec('0x1fa')];session[_0x33ec('0x18d')](_0x5d7365);}function directVolume(_0x11c095){log(_0x33ec('0x39'));var _0x223839={};_0x223839[_0x33ec('0xd8')]=_0x33ec('0xd0');_0x223839[_0x33ec('0x90')]=session[_0x33ec('0x90')];_0x223839[_0x33ec('0x1ff')]='1';_0x223839[_0x33ec('0x223')]='volume';_0x223839[_0x33ec('0x1e6')]=_0x11c095['parentNode'][_0x33ec('0x23d')][_0x33ec('0x127')][_0x33ec('0x1fa')];_0x223839[_0x33ec('0x4')]=_0x11c095['value'];session[_0x33ec('0x18d')](_0x223839);}function chatRoom(_0x4ea863='hi'){log(_0x33ec('0x123'));var _0x585baf={};_0x585baf['request']='sendroom';_0x585baf[_0x33ec('0x90')]=session[_0x33ec('0x90')];_0x585baf[_0x33ec('0x223')]=_0x33ec('0x13a');_0x585baf['value']=_0x4ea863;session[_0x33ec('0x18d')](_0x585baf);}function changeTitle(_0x5f5943='Untitled'){log(_0x33ec('0x104'));session[_0x33ec('0x200')](_0x5f5943);}var activatedStream=![];function publishScreen(){if(activatedStream==!![]){return;}activatedStream=!![];setTimeout(function(){activatedStream=![];},0x3e8);var _0x4e8c05=_0x33ec('0x5d');formSubmitting=![];var _0x43cb11=parseInt(getById(_0x33ec('0x25'))[_0x33ec('0x248')][_0x33ec('0x8')]('resolution2')[_0x33ec('0x4')]);if(session[_0x33ec('0x16f')]!==![]){if(_0x33ec('0x77')==='IyRLM'){_0x43cb11=session[_0x33ec('0x16f')];}else{track['enabled']=![];}}if(_0x43cb11==0x0){var _0x177a41={'ideal':0x780};var _0x287acf={'ideal':0x438};}else if(_0x43cb11==0x1){var _0x177a41={'ideal':0x500};var _0x287acf={'ideal':0x2d0};}else if(_0x43cb11==0x2){var _0x177a41={'ideal':0x280};var _0x287acf={'ideal':0x168};}else if(_0x43cb11>=0x3){var _0x177a41={'ideal':0x140};var _0x287acf={'ideal':0xb4};}if(session[_0x33ec('0xb5')]){_0x177a41={'ideal':session['width']};}if(session[_0x33ec('0x17b')]){_0x287acf={'ideal':session[_0x33ec('0x17b')]};}var _0x1dd9a0=window[_0x33ec('0x1db')]={'audio':{'echoCancellation':![],'autoGainControl':![],'noiseSuppression':![]},'video':{'width':_0x177a41,'height':_0x287acf,'cursor':_0x33ec('0x14e'),'mediaSource':_0x33ec('0x1a8')}};if(session[_0x33ec('0x214')]){_0x1dd9a0['video'][_0x33ec('0x14a')]=session[_0x33ec('0x214')];}var _0x1e5d83=document['querySelector'](_0x33ec('0x7d'));session['publishScreen'](_0x1dd9a0,_0x4e8c05,_0x1e5d83)['then'](_0x5ac6ff=>{if(_0x5ac6ff==![]){return;}log(_0x33ec('0xc4')+session[_0x33ec('0x17c')]);getById('mutebutton')[_0x33ec('0x1a1')]=_0x33ec('0x40');getById('helpbutton')[_0x33ec('0x1a1')]='float2';getById(_0x33ec('0x158'))[_0x33ec('0x1a1')]='float4';getById(_0x33ec('0x1a5'))[_0x33ec('0x1a1')]=_0x33ec('0x258');getById('head2')[_0x33ec('0x1a1')]=_0x33ec('0x258');})['catch'](()=>{});}function publishWebcam(){if(activatedStream==!![]){if(_0x33ec('0x111')!=='mbyIN'){document[_0x33ec('0x151')](_0x33ec('0x16b'))['forEach'](function(_0x3d2cd4){if(event[_0x33ec('0x1f')]['id']!==_0x3d2cd4['id']){_0x3d2cd4[_0x33ec('0x2a')]=![];}else{_0x3d2cd4[_0x33ec('0x2a')]=!![];}});}else{return;}}activatedStream=!![];log(_0x33ec('0x253'));var _0x44e813=_0x33ec('0x23f');var _0x39c3aa=getById(_0x33ec('0xf3'));var _0x1b22d6=_0x39c3aa[_0x33ec('0x13d')];_0x39c3aa[_0x33ec('0x23d')][_0x33ec('0x9c')](_0x39c3aa);formSubmitting=![];window[_0x33ec('0xae')](0x0,0x0);if(session[_0x33ec('0x90')]!==![]){log(_0x33ec('0x120'));window[_0x33ec('0xcf')](_0x33ec('0x1f4'),updateMixer);joinRoom(session[_0x33ec('0x90')]);getById(_0x33ec('0x11f'))[_0x33ec('0x1a1')]=_0x33ec('0x258');}else{getById(_0x33ec('0x11f'))[_0x33ec('0x1a1')]='';}log('streamID\x20is:\x20'+session[_0x33ec('0x17c')]);getById(_0x33ec('0x1a5'))[_0x33ec('0x1a1')]=_0x33ec('0x258');getById('head2')[_0x33ec('0x1a1')]=_0x33ec('0x258');getById(_0x33ec('0x239'))[_0x33ec('0x1a1')]=_0x33ec('0x40');getById('helpbutton')[_0x33ec('0x1a1')]=_0x33ec('0x163');getById(_0x33ec('0x158'))[_0x33ec('0x1a1')]=_0x33ec('0x0');updateURL(_0x33ec('0x20e')+session['streamID']);session[_0x33ec('0x1f2')](_0x1b22d6,_0x44e813);}function joinRoom(_0x12176d,_0x5d23ba=![]){_0x12176d=_0x12176d['replace'](/[^0-9a-z]/gi,'');if(_0x12176d['length']){log(_0x33ec('0x159'),_0x12176d);log(_0x12176d);session[_0x33ec('0x21e')](_0x12176d,_0x5d23ba)[_0x33ec('0x68')](function(_0x3df890){if(session[_0x33ec('0x1c')]){var _0x57c0a5={};_0x57c0a5[_0x33ec('0xd8')]=_0x33ec('0xf0');session[_0x33ec('0x18d')](_0x57c0a5);}log(_0x33ec('0xc'));log(_0x3df890);for(var _0x7440fb in _0x3df890){if(_0x33ec('0x1fa')in _0x3df890[_0x7440fb]){if(_0x33ec('0x17c')in _0x3df890[_0x7440fb]){if(_0x3df890[_0x7440fb][_0x33ec('0x1fa')]in session[_0x33ec('0x165')]){log(_0x33ec('0xd9'));}else{play(_0x3df890[_0x7440fb][_0x33ec('0x17c')]);}}}}},function(_0x2a1fd6){if(_0x33ec('0x24f')!==_0x33ec('0x1a7')){return{};}else{zoom=0x1;}});}else{log(_0x33ec('0x38'));}}function createRoom(_0x2f454a=![]){if(_0x2f454a==![]){if(_0x33ec('0x1ef')===_0x33ec('0x1ef')){_0x2f454a=getById('videoname1')[_0x33ec('0x4')];_0x2f454a=_0x2f454a[_0x33ec('0x221')](/[\W_]+/g,'_');updateURL(_0x33ec('0x208')+_0x2f454a);}else{if(device['label'][_0x33ec('0x22b')](_0x33ec('0x134'))){alert(_0x33ec('0x75'));log(device[_0x33ec('0x17e')]+':\x20'+device['label']+_0x33ec('0x10a')+device['deviceId']);matchFound=!![];}log(device[_0x33ec('0x17e')]+':\x20'+device[_0x33ec('0x1ee')]+_0x33ec('0x10a')+device[_0x33ec('0xbb')]);}}log(_0x2f454a);if(_0x2f454a[_0x33ec('0x1d4')]==0x0){alert(_0x33ec('0x54'));return;}var _0x102945=getById(_0x33ec('0x1e0'));_0x102945[_0x33ec('0x24e')][_0x33ec('0x1b8')](_0x33ec('0xaa'));session[_0x33ec('0x90')]=_0x2f454a;formSubmitting=![];var _0x31b3da=getById(_0x33ec('0xcb'));_0x31b3da[_0x33ec('0x11e')]();getById(_0x33ec('0x1a5'))[_0x33ec('0x1a1')]=_0x33ec('0x258');getById(_0x33ec('0x167'))[_0x33ec('0x1a1')]=_0x33ec('0x258');getById(_0x33ec('0x11f'))['className']=_0x33ec('0x258');getById(_0x33ec('0x12b'))[_0x33ec('0x1a1')]='';getById(_0x33ec('0xd5'))[_0x33ec('0x52')]=decodeURIComponent(_0x2f454a);getById(_0x33ec('0x90'))['innerHTML']=_0x2f454a;session[_0x33ec('0x1c')]=!![];getById(_0x33ec('0x21c'))[_0x33ec('0x23d')][_0x33ec('0x9c')](getById(_0x33ec('0x21c')));_0x102945['innerHTML']=_0x33ec('0x5')+location[_0x33ec('0x15f')]+location[_0x33ec('0x138')]+_0x33ec('0x191')+session[_0x33ec('0x90')]+'\x27\x20/><font\x20style=\x27font-size:130%;color:white;\x27><i\x20class=\x27fa\x20fa-video-camera\x27\x20style=\x27font-size:2em;\x27\x20\x20aria-hidden=\x27true\x27></i>\x20-\x20Invites\x20users\x20to\x20join\x20the\x20group\x20and\x20broadcast\x20their\x20feed\x20to\x20it.\x20These\x20users\x20will\x20see\x20every\x20feed,\x20so\x20a\x20limit\x20of\x204\x20is\x20recommended.</font></div>';_0x102945['innerHTML']+=_0x33ec('0x230')+location[_0x33ec('0x15f')]+location[_0x33ec('0x138')]+_0x33ec('0x191')+session[_0x33ec('0x90')]+_0x33ec('0x6a');_0x102945[_0x33ec('0x52')]+=_0x33ec('0x69')+location[_0x33ec('0x15f')]+location[_0x33ec('0x138')]+_0x33ec('0x136')+session[_0x33ec('0x90')]+_0x33ec('0x64');_0x102945['innerHTML']+=_0x33ec('0x25b');_0x102945[_0x33ec('0x52')]+=_0x33ec('0x1a4');_0x102945[_0x33ec('0x52')]+=_0x33ec('0x194');joinRoom(_0x2f454a);}function toggle(_0xcda487,_0x53682b=![]){var _0xd5c951=_0xcda487;if(_0xd5c951[_0x33ec('0x131')][_0x33ec('0x34')]===_0x33ec('0x156')){if(_0x33ec('0x185')!=='JBdqp'){var _0x311c39=getById(_0x33ec('0x1e5'));_0x311c39['disabled']=!![];_0x311c39[_0x33ec('0x131')][_0x33ec('0x1ca')]=_0x33ec('0x103');_0x311c39[_0x33ec('0x131')][_0x33ec('0x98')]=_0x33ec('0x202');_0x311c39['innerHTML']=_0x33ec('0x15a');log(_0x33ec('0x1c3'));activatedPreview=![];if(parseInt(getById(_0x33ec('0x1a0'))[_0x33ec('0x248')]['namedItem'](_0x33ec('0x130'))[_0x33ec('0x4')])==0x3){session[_0x33ec('0x149')]=0x1e;}else{session[_0x33ec('0x149')]=![];}grabVideo(parseInt(getById('webcamquality')[_0x33ec('0x248')][_0x33ec('0x8')](_0x33ec('0x130'))[_0x33ec('0x4')]));}else{_0xd5c951[_0x33ec('0x131')][_0x33ec('0x34')]=_0x33ec('0xfa');}}else{if(_0x33ec('0xf5')!=='MLBJZ'){_0xd5c951[_0x33ec('0x131')][_0x33ec('0x34')]=_0x33ec('0x156');}else{if(_0x53682b[_0x33ec('0x127')]['saved']){_0x53682b['innerHTML']=_0x53682b['dataset'][_0x33ec('0x161')];delete _0x53682b[_0x33ec('0x127')][_0x33ec('0x161')];}else{_0x53682b[_0x33ec('0x127')][_0x33ec('0x161')]=_0x53682b['innerHTML'];_0x53682b['innerHTML']=_0x33ec('0xea');}}}if(_0x53682b){if(_0x53682b[_0x33ec('0x127')][_0x33ec('0x161')]){_0x53682b[_0x33ec('0x52')]=_0x53682b[_0x33ec('0x127')][_0x33ec('0x161')];delete _0x53682b[_0x33ec('0x127')][_0x33ec('0x161')];}else{if(_0x33ec('0xa0')===_0x33ec('0x28')){log(_0x33ec('0x244'));for(var _0x41ad7a=0x0;_0x41ad7a<streams[_0x33ec('0x1d4')];_0x41ad7a++){streams[_0x41ad7a][_0x33ec('0x164')]()['forEach'](function(_0x5cf92d){stream[_0x33ec('0x114')](_0x5cf92d);log(_0x5cf92d);});}streams=null;getById(_0x33ec('0xf3'))[_0x33ec('0x13d')]=stream;var _0x229b64=getById(_0x33ec('0x1e5'));_0x229b64[_0x33ec('0x1e4')]=![];_0x229b64['style'][_0x33ec('0x1ca')]='#3C3';_0x229b64[_0x33ec('0x131')]['color']=_0x33ec('0x237');_0x229b64[_0x33ec('0x131')][_0x33ec('0x98')]=_0x33ec('0x1cd');_0x229b64[_0x33ec('0x52')]='PRESS\x20WHEN\x20READY!';setTimeout(function(){dragElement(getById(_0x33ec('0xf3')));},0x3e8);log(_0x33ec('0x1dc'));}else{_0x53682b[_0x33ec('0x127')][_0x33ec('0x161')]=_0x53682b[_0x33ec('0x52')];_0x53682b[_0x33ec('0x52')]=_0x33ec('0xea');}}}}function enumerateDevices(){log(_0x33ec('0x19b'));if(typeof navigator['enumerateDevices']===_0x33ec('0x4e')){if(_0x33ec('0x257')!==_0x33ec('0x257')){constraints['video'][_0x33ec('0x14a')]={'exact':session[_0x33ec('0x214')]};}else{errorlog(_0x33ec('0x14'));return navigator[_0x33ec('0xa1')]();}}else if(typeof navigator[_0x33ec('0x135')]===_0x33ec('0x1fe')&&typeof navigator[_0x33ec('0x135')][_0x33ec('0xa1')]===_0x33ec('0x4e')){errorlog(_0x33ec('0x129'));return navigator[_0x33ec('0x135')][_0x33ec('0xa1')]();}else{return new Promise((_0x36889e,_0x4151ef)=>{try{if(window[_0x33ec('0x23e')]==null||window[_0x33ec('0x23e')]['getSources']==null){throw new Error();}window[_0x33ec('0x23e')][_0x33ec('0x133')](_0x235c33=>{_0x36889e(_0x235c33[_0x33ec('0x4f')](_0x40a749=>{return _0x40a749[_0x33ec('0x17e')][_0x33ec('0x74')]()===_0x33ec('0x193')||_0x40a749['kind'][_0x33ec('0x74')]()==='videoinput';})['map'](_0x469640=>{return{'deviceId':_0x469640[_0x33ec('0xbb')]!=null?_0x469640[_0x33ec('0xbb')]:'','groupId':_0x469640[_0x33ec('0x1f3')],'kind':_0x33ec('0x1d3'),'label':_0x469640['label'],'toJSON':function(){return this;}};}));});}catch(_0x445156){errorlog(_0x445156);}});}}function requestAudioStream(){try{return navigator['mediaDevices'][_0x33ec('0x171')]({'audio':!![],'video':![]})[_0x33ec('0x68')](function(_0x5e7f04){log(_0x33ec('0xf7'));return enumerateDevices()['then'](function(_0x5e1a85){_0x5e7f04[_0x33ec('0x2')]()[_0x33ec('0x7')](function(_0x44ad3c){_0x44ad3c[_0x33ec('0x15b')]();});log(_0x33ec('0x218'));const _0x56d293=document[_0x33ec('0x18a')](_0x33ec('0x7d'));_0x56d293['remove'](0x1);_0x56d293[_0x33ec('0xc1')](_0x33ec('0x4d'));for(let _0x5c044a=0x0;_0x5c044a!==_0x5e1a85[_0x33ec('0x1d4')];++_0x5c044a){const _0xe361e7=_0x5e1a85[_0x5c044a];if(_0xe361e7==null){continue;}const _0x161c4f=document[_0x33ec('0x5b')](_0x33ec('0x19d'));_0x161c4f['value']=_0xe361e7[_0x33ec('0xbb')];if(_0xe361e7[_0x33ec('0x17e')]===_0x33ec('0x17f')){_0x161c4f[_0x33ec('0x88')]=_0xe361e7[_0x33ec('0x1ee')]||'microphone\x20'+(_0x56d293[_0x33ec('0x1d4')]+0x1);_0x56d293[_0x33ec('0x232')](_0x161c4f);}else{log('Some\x20other\x20kind\x20of\x20source/device:\x20',_0xe361e7);}}});});}catch(_0xddaeba){if(window['isSecureContext']){alert(_0x33ec('0x1e3'));}else{alert('Error\x20acessing\x20webcam.\x0a\x0aWebsite\x20is\x20loaded\x20in\x20an\x20insecure\x20context.\x0a\x0aPlease\x20see:\x20https://developer.mozilla.org/en-US/docs/Web/API/MediaDevices/getUserMedia');}}}function gotDevices(_0x3a1aae){log(_0x33ec('0xb1'));log(_0x3a1aae);try{const _0xda0b76=document[_0x33ec('0x18a')](_0x33ec('0x116'));const _0x55e272=document[_0x33ec('0x18a')](_0x33ec('0x5f'));const _0x5bb728=[_0x55e272];const _0x4b1188=_0x5bb728['map'](_0x33ed67=>_0x33ed67['value']);_0x5bb728[_0x33ec('0x7')](_0x3e9dc9=>{while(_0x3e9dc9['firstChild']){_0x3e9dc9[_0x33ec('0x9c')](_0x3e9dc9[_0x33ec('0x62')]);}});var _0x13d2e9=0x1;for(let _0x2b1feb=0x0;_0x2b1feb!==_0x3a1aae[_0x33ec('0x1d4')];++_0x2b1feb){const _0x4f9b92=_0x3a1aae[_0x2b1feb];if(_0x4f9b92==null){continue;}if(_0x4f9b92[_0x33ec('0x17e')]===_0x33ec('0x17f')){const _0x263188=document[_0x33ec('0x5b')](_0x33ec('0x15d'));_0x263188[_0x33ec('0x211')]=_0x33ec('0x81');_0x13d2e9++;const _0x405c58=document[_0x33ec('0x5b')]('li');if(_0x13d2e9==0x2){_0x263188['checked']=!![];_0x405c58[_0x33ec('0x131')][_0x33ec('0x34')]=_0x33ec('0xfa');_0x263188[_0x33ec('0x131')][_0x33ec('0x34')]=_0x33ec('0x156');getById('multiselect1')[_0x33ec('0x2a')]=![];getById(_0x33ec('0x246'))[_0x33ec('0x23d')][_0x33ec('0x131')][_0x33ec('0x34')]=_0x33ec('0x156');}else{_0x405c58[_0x33ec('0x131')][_0x33ec('0x34')]=_0x33ec('0x156');}_0x263188[_0x33ec('0x4')]=_0x4f9b92['deviceId'];_0x263188[_0x33ec('0x6')]='multiselect'+_0x13d2e9;_0x263188['id']=_0x33ec('0x19c')+_0x13d2e9;const _0x1baf2d=document['createElement'](_0x33ec('0x1ee'));_0x1baf2d[_0x33ec('0xff')]=_0x263188[_0x33ec('0x6')];_0x1baf2d[_0x33ec('0x52')]='\x20'+(_0x4f9b92[_0x33ec('0x1ee')]||_0x33ec('0x1aa')+(_0xda0b76['length']+0x1));_0x405c58[_0x33ec('0x232')](_0x263188);_0x405c58[_0x33ec('0x232')](_0x1baf2d);_0xda0b76['appendChild'](_0x405c58);getById('multiselect1')[_0x33ec('0x4d')]=function(_0x560eec){if(!getById(_0x33ec('0x246'))[_0x33ec('0x2a')]){getById(_0x33ec('0x246'))[_0x33ec('0x2a')]=!![];}};_0x263188[_0x33ec('0x4d')]=function(_0x5ed91b){getById('multiselect1')['checked']=![];if(!CtrlPressed){document[_0x33ec('0x151')](_0x33ec('0x16b'))[_0x33ec('0x7')](function(_0x467c95){if(_0x5ed91b[_0x33ec('0x1f')]['id']!==_0x467c95['id']){_0x467c95[_0x33ec('0x2a')]=![];}else{_0x467c95[_0x33ec('0x2a')]=!![];}});}};}else if(_0x4f9b92[_0x33ec('0x17e')]===_0x33ec('0x1d3')){const _0xf6352=document[_0x33ec('0x5b')]('option');_0xf6352[_0x33ec('0x4')]=_0x4f9b92[_0x33ec('0xbb')];_0xf6352[_0x33ec('0x88')]=_0x4f9b92[_0x33ec('0x1ee')]||_0x33ec('0x80')+(_0x55e272[_0x33ec('0x1d4')]+0x1);_0x55e272[_0x33ec('0x232')](_0xf6352);}else{if(_0x33ec('0x240')!==_0x33ec('0x240')){var _0x4b1e04=getById(_0x33ec('0x1bb'));var _0xeb96a5=elmnt['srcObject'];log(_0xeb96a5);var _0x1e7e5f=_0xeb96a5[_0x33ec('0x8c')]();log(_0x1e7e5f);_0x1e7e5f=_0x1e7e5f[0x0];var _0x1a4b9c=_0x1e7e5f[_0x33ec('0x47')]();var _0x57a657=_0x1e7e5f[_0x33ec('0x14f')]();if(!(_0x33ec('0x227')in _0x1a4b9c)){log(_0x33ec('0x18b')+_0x1e7e5f['label']);return;}_0x4b1e04[_0x33ec('0x152')]=_0x1a4b9c[_0x33ec('0x227')]['min'];_0x4b1e04['max']=_0x1a4b9c[_0x33ec('0x227')]['max'];_0x4b1e04[_0x33ec('0x21d')]=_0x1a4b9c[_0x33ec('0x227')][_0x33ec('0x21d')];_0x4b1e04['value']=_0x57a657[_0x33ec('0x227')];}else{log(_0x33ec('0x24c'),_0x4f9b92);}}}option=document[_0x33ec('0x5b')](_0x33ec('0x19d'));option[_0x33ec('0x88')]=_0x33ec('0x23c');option['value']=_0x33ec('0x10e');_0x55e272[_0x33ec('0x232')](option);_0x5bb728[_0x33ec('0x7')]((_0x569309,_0x262adb)=>{if(Array[_0x33ec('0x48')][_0x33ec('0x217')][_0x33ec('0x27')](_0x569309[_0x33ec('0x6b')])[_0x33ec('0x1bc')](_0x549274=>_0x549274[_0x33ec('0x4')]===_0x4b1188[_0x262adb])){if(_0x33ec('0xe9')!=='CIdFJ'){_0x569309['value']=_0x4b1188[_0x262adb];}else{log(_0x33ec('0x178'));if(ele[_0x33ec('0x23d')][_0x33ec('0x23d')][_0x33ec('0x127')]['enable']==0x1){ele[_0x33ec('0x23d')][_0x33ec('0x23d')][_0x33ec('0x127')]['enable']=0x0;ele['className']='';ele[_0x33ec('0x52')]=_0x33ec('0x36');ele[_0x33ec('0x23d')][_0x33ec('0x23d')][_0x33ec('0x131')][_0x33ec('0x1ca')]=_0x33ec('0x213');}else{ele[_0x33ec('0x23d')][_0x33ec('0x23d')][_0x33ec('0x131')][_0x33ec('0x1ca')]=_0x33ec('0x5a');ele[_0x33ec('0x23d')]['parentNode'][_0x33ec('0x127')][_0x33ec('0x178')]=0x1;ele[_0x33ec('0x1a1')]=_0x33ec('0x209');ele[_0x33ec('0x52')]=_0x33ec('0x3f');}var _0x2cccd8={};_0x2cccd8[_0x33ec('0xd8')]=_0x33ec('0xd0');_0x2cccd8['roomid']=session['roomid'];_0x2cccd8[_0x33ec('0x1ff')]='1';_0x2cccd8[_0x33ec('0x223')]='display';_0x2cccd8[_0x33ec('0x4')]=ele[_0x33ec('0x23d')][_0x33ec('0x23d')][_0x33ec('0x127')][_0x33ec('0x178')];_0x2cccd8[_0x33ec('0x1e6')]=ele['parentNode'][_0x33ec('0x23d')]['dataset'][_0x33ec('0x1fa')];session['sendMsg'](_0x2cccd8);}}});}catch(_0x23f8f2){errorlog(_0x23f8f2);}}if(location['protocol']!==_0x33ec('0x6c')){alert(_0x33ec('0x12c'));}function getUserMediaVideoParams(_0xadfa8e,_0x1be95d){switch(_0xadfa8e){case 0x0:if(_0x1be95d){return{'width':{'min':0x168,'ideal':0x780,'max':0x780},'height':{'min':0x168,'ideal':0x438,'max':0x438}};}else{return{'width':{'min':0x2d0,'ideal':0x780,'max':0x780},'height':{'min':0x2d0,'ideal':0x438,'max':0x780}};}case 0x1:if(_0x1be95d){return{'width':{'min':0x168,'ideal':0x500,'max':0x500},'height':{'min':0x168,'ideal':0x2d0,'max':0x2d0}};}else{return{'width':{'min':0x2d0,'ideal':0x500,'max':0x500},'height':{'min':0x2d0,'ideal':0x2d0,'max':0x500}};}case 0x2:if(_0x1be95d){return{'width':{'min':0x280},'height':{'min':0x168}};}else{return{'width':{'min':0xf0,'ideal':0x280,'max':0x500},'height':{'min':0xf0,'ideal':0x168,'max':0x500}};}case 0x3:if(_0x1be95d){return{'width':{'min':0x168,'ideal':0x500,'max':0x5a0}};}else{return{'width':{'min':0x168,'ideal':0x500,'max':0x5a0}};}case 0x4:if(_0x1be95d){return{'height':{'min':0x168,'ideal':0x2d0,'max':0x3c0}};}else{return{'height':{'min':0x168,'ideal':0x3c0,'max':0x3c0}};}case 0x5:if(_0x1be95d){return{'width':{'min':0x168,'ideal':0x280,'max':0x5a0},'height':{'min':0x168,'ideal':0x168,'max':0x2d0}};}else{return{'width':{'min':0x168,'ideal':0x280,'max':0xf00},'height':{'min':0x168,'ideal':0x168,'max':0x870}};}case 0x6:if(_0x1be95d){if('JwCvI'===_0x33ec('0x113')){return{};}else{url+=_0x33ec('0x57');url+=_0x33ec('0x192');}}else{return{'width':{'min':0x168,'max':0x780},'height':{'min':0x168,'max':0x780}};}case 0x7:return{'width':{'min':0x168,'ideal':0x280},'height':{'min':0x168,'ideal':0x168},'frameRate':0xa};case 0x8:return{'width':{'min':0x168,'max':0x780},'height':{'min':0x168,'max':0x780}};case 0x9:return{'frameRate':0x0};default:return{};}}function grabVideo(_0x373478=0x0,_0x37605b=![]){if(activatedPreview==!![]){log('activeated\x20preview\x20return\x202');return;}activatedPreview=!![];log(_0x373478);log(_0x33ec('0x10d'));var _0x3af3c9=document['querySelector']('select#videoSource');var _0x3e604e=0x0;if(session[_0x33ec('0x16f')]>0x2){_0x3e604e=0x2;}else{_0x3e604e=session[_0x33ec('0x16f')];}if(_0x3e604e!==![]){if(_0x373478>_0x3e604e){_0x373478=_0x3e604e;}}if(iOS){if(_0x373478==0x0){_0x373478=0x1;}}else if(iPad){if(_0x373478==0x0){_0x373478=0x1;}}var _0x30f039=![];var _0x2ea103=[];if(_0x3af3c9[_0x33ec('0x4')]=='ZZZ'||_0x37605b==!![]){var _0x3e3fb6=document[_0x33ec('0x18a')](_0x33ec('0x116'))[_0x33ec('0x151')](_0x33ec('0x15d'));var _0x3a6c29=[];for(var _0xa3e412=0x0;_0xa3e412<_0x3e3fb6[_0x33ec('0x1d4')];_0xa3e412++){if(_0x3e3fb6[_0xa3e412][_0x33ec('0x4')]==_0x33ec('0x10e')){continue;}if(_0x3e3fb6[_0xa3e412]['checked']){_0x3a6c29[_0x33ec('0x76')](_0x3e3fb6[_0xa3e412]);}}for(var _0xa3e412=0x1;_0xa3e412<_0x3a6c29[_0x33ec('0x1d4')];_0xa3e412++){var _0x2ff825={'audio':{'deviceId':{'exact':_0x3a6c29[_0xa3e412]['value']}}};if(session[_0x33ec('0x1b3')]==0x1||session['stereo']==0x3){_0x2ff825[_0x33ec('0x1a2')][_0x33ec('0x20b')]=![];_0x2ff825[_0x33ec('0x1a2')][_0x33ec('0x197')]=![];_0x2ff825[_0x33ec('0x1a2')]['noiseSuppression']=![];}navigator[_0x33ec('0x135')]['getUserMedia'](_0x2ff825)['then'](function(_0x3e51ea){_0x2ea103[_0x33ec('0x76')](_0x3e51ea);})[_0x33ec('0x105')](errorlog);}if(_0x3a6c29[_0x33ec('0x1d4')]){_0x30f039={'deviceId':{'exact':_0x3a6c29[0x0]['value']}};if(session[_0x33ec('0x1b3')]==0x1||session[_0x33ec('0x1b3')]==0x3){_0x30f039[_0x33ec('0x20b')]=![];_0x30f039[_0x33ec('0x197')]=![];_0x30f039[_0x33ec('0x9d')]=![];}}}if(_0x3af3c9[_0x33ec('0x4')]==_0x33ec('0x10e')){var _0x107bb3={'audio':_0x30f039,'video':![]};navigator[_0x33ec('0x135')][_0x33ec('0x171')](_0x107bb3)['then'](function(_0x5d34de){log(_0x33ec('0x1bd'));for(var _0x551708=0x0;_0x551708<_0x2ea103[_0x33ec('0x1d4')];_0x551708++){_0x2ea103[_0x551708][_0x33ec('0x164')]()[_0x33ec('0x7')](function(_0x4b0140){_0x5d34de[_0x33ec('0x114')](_0x4b0140);log(_0x4b0140);});}_0x2ea103=null;getById(_0x33ec('0xf3'))['srcObject']=_0x5d34de;var _0xb1430=getById(_0x33ec('0x1e5'));_0xb1430['disabled']=![];_0xb1430['style'][_0x33ec('0x1ca')]=_0x33ec('0xf9');_0xb1430[_0x33ec('0x131')][_0x33ec('0x7a')]=_0x33ec('0x237');_0xb1430[_0x33ec('0x131')][_0x33ec('0x98')]='bold';_0xb1430[_0x33ec('0x52')]='PRESS\x20WHEN\x20READY!';})[_0x33ec('0x105')](function(_0x5421d4){errorlog(_0x5421d4);alert(_0x33ec('0x73'));});}else{var _0x107bb3={'audio':_0x30f039,'video':getUserMediaVideoParams(_0x373478,iOS)};_0x107bb3[_0x33ec('0x193')][_0x33ec('0xbb')]=_0x3af3c9[_0x33ec('0x4')];if(session['width']){_0x107bb3[_0x33ec('0x193')][_0x33ec('0xb5')]={'exact':session['width']};}if(session[_0x33ec('0x17b')]){_0x107bb3['video'][_0x33ec('0x17b')]={'exact':session[_0x33ec('0x17b')]};}if(session['framerate']){_0x107bb3[_0x33ec('0x193')][_0x33ec('0x14a')]={'exact':session[_0x33ec('0x214')]};}else if(session[_0x33ec('0x149')]){_0x107bb3[_0x33ec('0x193')][_0x33ec('0x14a')]={'max':session[_0x33ec('0x149')]};}log(_0x107bb3);setTimeout(()=>{try{log(_0x33ec('0x14c'));var _0x551102=getById(_0x33ec('0xf3'))[_0x33ec('0x13d')];if(_0x551102){if(_0x33ec('0x29')==='kCNTp'){_0x551102[_0x33ec('0x2')]()[_0x33ec('0x7')](function(_0xe3f93c){_0xe3f93c[_0x33ec('0x15b')]();});}else{log(_0x33ec('0x123'));var _0x2dcdf2={};_0x2dcdf2[_0x33ec('0xd8')]='sendroom';_0x2dcdf2['roomid']=session['roomid'];_0x2dcdf2[_0x33ec('0x223')]=_0x33ec('0x13a');_0x2dcdf2[_0x33ec('0x4')]=chatmessage;session[_0x33ec('0x18d')](_0x2dcdf2);}}}catch(_0x68b0af){errorlog(_0x68b0af);}navigator[_0x33ec('0x135')][_0x33ec('0x171')](_0x107bb3)['then'](function(_0x58ac22){if(_0x33ec('0x89')===_0x33ec('0x89')){if(_0x37605b==![]){_0x58ac22[_0x33ec('0x2')]()[_0x33ec('0x7')](function(_0x50bbd1){_0x50bbd1[_0x33ec('0x15b')]();});log(_0x33ec('0xac'));activatedPreview=![];grabVideo(_0x373478,!![]);}else{log(_0x33ec('0x244'));for(var _0x21e0f9=0x0;_0x21e0f9<_0x2ea103['length'];_0x21e0f9++){_0x2ea103[_0x21e0f9][_0x33ec('0x164')]()['forEach'](function(_0x141159){_0x58ac22[_0x33ec('0x114')](_0x141159);log(_0x141159);});}_0x2ea103=null;getById(_0x33ec('0xf3'))[_0x33ec('0x13d')]=_0x58ac22;var _0x274d5e=getById(_0x33ec('0x1e5'));_0x274d5e[_0x33ec('0x1e4')]=![];_0x274d5e['style']['backgroundColor']='#3C3';_0x274d5e[_0x33ec('0x131')][_0x33ec('0x7a')]=_0x33ec('0x237');_0x274d5e['style'][_0x33ec('0x98')]=_0x33ec('0x1cd');_0x274d5e[_0x33ec('0x52')]=_0x33ec('0x1b4');setTimeout(function(){dragElement(getById(_0x33ec('0xf3')));},0x3e8);log('DONE\x20-\x20found\x20stream');}}else{document[_0x33ec('0xcf')](_0x33ec('0xb0'),function(_0x22b102){taskItemInContext=clickInsideElement(_0x22b102,taskItemClassName);if(taskItemInContext){_0x22b102[_0x33ec('0x203')]();toggleMenuOn();positionMenu(_0x22b102);}else{taskItemInContext=null;toggleMenuOff();}});}})['catch'](function(_0x5263cc){activatedPreview=![];errorlog(_0x5263cc);if(_0x5263cc['name']===_0x33ec('0x153')){errorlog(_0x5263cc[_0x33ec('0x1f8')]);log(_0x33ec('0x10f'));}else if(_0x5263cc[_0x33ec('0x6')]===_0x33ec('0x3')){if(iOS){alert(_0x33ec('0x6e'));}else{alert('Error\x20Listing\x20Media\x20Devices.\x0a\x0aThe\x20default\x20Camera\x20may\x20already\x20be\x20in\x20use\x20with\x20another\x20app.\x20Typically\x20webcams\x20can\x20only\x20be\x20accessed\x20by\x20one\x20program\x20at\x20a\x20time.\x0a\x0aThe\x20selected\x20device\x20may\x20also\x20not\x20be\x20supported.');}getById(_0x33ec('0x1e5'))[_0x33ec('0x52')]='Problem\x20with\x20Camera';activatedPreview=!![];return;}else if(_0x5263cc['name']===_0x33ec('0x8e')){getById(_0x33ec('0x1e5'))[_0x33ec('0x52')]=_0x33ec('0x4a');alert('Unknown\x20error:\x20\x27NavigatorUserMediaError\x27');return;}else{errorlog(_0x33ec('0xb'));}if(_0x373478<=0x9){grabVideo(_0x373478+0x1);}else{if('OvNlg'!==_0x33ec('0xa2')){errorlog(_0x33ec('0x1df'));activatedPreview=!![];getById(_0x33ec('0x1e5'))[_0x33ec('0x52')]='Problem\x20with\x20Camera';alert(_0x33ec('0xe8'));}else{var _0x12f71f=Callbacks[_0xa3e412];log(_0x12f71f[_0x33ec('0x217')](0x1));_0x12f71f[0x0](..._0x12f71f['slice'](0x1));}}});},0x0);}}function enterPressed(_0x5a508c,_0x4ea882){if(_0x5a508c[_0x33ec('0x1')]===0xd){_0x5a508c['preventDefault']();_0x4ea882();}}function dragElement(_0x17d335){var _0x2f358d=Date[_0x33ec('0xd')]();log(_0x17d335);try{if(_0x33ec('0x184')!==_0x33ec('0x184')){logerror('Language\x20translation\x20file\x20not\x20found.'+response[_0x33ec('0xc2')]);return;}else{var _0x16db07=getById('zoomSlider');var _0x14c681=_0x17d335['srcObject'];log(_0x14c681);var _0x4257eb=_0x14c681['getVideoTracks']();log(_0x4257eb);_0x4257eb=_0x4257eb[0x0];var _0x2a2737=_0x4257eb[_0x33ec('0x47')]();var _0x36c184=_0x4257eb[_0x33ec('0x14f')]();if(!(_0x33ec('0x227')in _0x2a2737)){log(_0x33ec('0x18b')+_0x4257eb['label']);return;}_0x16db07[_0x33ec('0x152')]=_0x2a2737['zoom']['min'];_0x16db07[_0x33ec('0x92')]=_0x2a2737[_0x33ec('0x227')][_0x33ec('0x92')];_0x16db07[_0x33ec('0x21d')]=_0x2a2737[_0x33ec('0x227')]['step'];_0x16db07[_0x33ec('0x4')]=_0x36c184['zoom'];}}catch(_0xdbeff3){if(_0x33ec('0xcd')!==_0x33ec('0xcd')){return new Promise(_0x57a637=>setTimeout(_0x57a637,ms));}else{errorlog(_0xdbeff3);return;}}log(_0x33ec('0xfe'));_0x17d335[_0x33ec('0x106')]=_0x4a3e52;_0x17d335[_0x33ec('0x112')]=_0x5221ab;_0x17d335[_0x33ec('0x2e')]=function(_0x287350){_0x4a3e52(_0x287350);};var _0x14b933=0x1;function _0x5221ab(_0x4bc86b){log(_0x33ec('0x70'),_0x4bc86b);_0x4bc86b=_0x4bc86b||window[_0x33ec('0xa7')];_0x4bc86b[_0x33ec('0x203')]();return![];}function _0x4a3e52(_0x31b872){log(_0x31b872);_0x17d335[_0x33ec('0x82')]=![];_0x31b872=_0x31b872||window[_0x33ec('0xa7')];_0x31b872[_0x33ec('0x203')]();_0x14b933=_0x16db07[_0x33ec('0x4')];if(_0x31b872[_0x33ec('0x211')]=='touchstart'||_0x31b872[_0x33ec('0x211')]==_0x33ec('0x1dd')||_0x31b872[_0x33ec('0x211')]==_0x33ec('0xed')||_0x31b872[_0x33ec('0x211')]==_0x33ec('0xbf')){var _0x302d49=_0x31b872[_0x33ec('0x60')][0x0]||_0x31b872[_0x33ec('0xe3')][_0x33ec('0x60')][0x0]||_0x31b872['originalEvent'][_0x33ec('0x58')][0x0];pos3=_0x302d49[_0x33ec('0x9f')];pos4=_0x302d49[_0x33ec('0x143')];}else if(_0x31b872[_0x33ec('0x211')]==_0x33ec('0xa3')||_0x31b872[_0x33ec('0x211')]=='mouseup'||_0x31b872[_0x33ec('0x211')]=='mousemove'||_0x31b872['type']=='mouseover'||_0x31b872[_0x33ec('0x211')]=='mouseout'||_0x31b872[_0x33ec('0x211')]==_0x33ec('0x247')||_0x31b872[_0x33ec('0x211')]=='mouseleave'){pos3=_0x31b872['clientX'];pos4=_0x31b872[_0x33ec('0x143')];}document[_0x33ec('0x3e')]=_0x3e03ee;document['onmouseup']=_0x248f21;document[_0x33ec('0x109')]=_0x3e03ee;}function _0x3e03ee(_0xffb570){_0xffb570=_0xffb570||window[_0x33ec('0xa7')];_0xffb570[_0x33ec('0x203')]();if(Date['now']()-_0x2f358d<0x32){return;}_0x2f358d=Date[_0x33ec('0xd')]();if(_0xffb570[_0x33ec('0x211')]=='touchstart'||_0xffb570[_0x33ec('0x211')]==_0x33ec('0x1dd')||_0xffb570[_0x33ec('0x211')]==_0x33ec('0xed')||_0xffb570['type']==_0x33ec('0xbf')){if('dldmk'!==_0x33ec('0x99')){var _0x56a399=_0xffb570['touches'][0x0]||_0xffb570['originalEvent']['touches'][0x0]||_0xffb570[_0x33ec('0xe3')][_0x33ec('0x58')][0x0];pos1=_0x56a399['clientX'];pos2=_0x56a399[_0x33ec('0x143')];}else{session[_0x33ec('0x1b3')]=0x1;}}else if(_0xffb570[_0x33ec('0x211')]==_0x33ec('0xa3')||_0xffb570[_0x33ec('0x211')]==_0x33ec('0x101')||_0xffb570['type']==_0x33ec('0x1af')||_0xffb570[_0x33ec('0x211')]==_0x33ec('0x86')||_0xffb570[_0x33ec('0x211')]=='mouseout'||_0xffb570[_0x33ec('0x211')]=='mouseenter'||_0xffb570['type']==_0x33ec('0xd7')){pos1=_0xffb570[_0x33ec('0x9f')];pos2=_0xffb570[_0x33ec('0x143')];}var _0x1986ff=parseFloat((pos4-pos2)*0x2/_0x17d335[_0x33ec('0x11')]);if(_0x1986ff>0x1){if(_0x33ec('0x1d2')===_0x33ec('0x1d2')){_0x1986ff=0x1;}else{document['addEventListener'](eventKey,c);}}else if(_0x1986ff<-0x1){_0x1986ff=-0x1;}_0x16db07[_0x33ec('0x4')]=_0x1986ff*(_0x16db07[_0x33ec('0x92')]-_0x16db07['min'])+_0x16db07['min'];if(_0x16db07[_0x33ec('0x4')]!=_0x14b933){_0x4257eb[_0x33ec('0x72')]({'advanced':[{'zoom':_0x16db07['value']}]});}}function _0x248f21(_0xd7c879){if(_0x33ec('0x1b1')!=='NgOka'){var _0x5ae1de=this;_0x5ae1de[_0x33ec('0x1d9')]=searchString;_0x5ae1de[_0x33ec('0xbd')]=function(_0x3555ff){var _0x373322=new RegExp(_0x33ec('0xa9')+_0x3555ff+_0x33ec('0xdc'))[_0x33ec('0x24')](_0x5ae1de['searchString']);if(_0x373322==null){return null;}else{return decodeURI(_0x373322[0x1])||0x0;}};}else{_0x17d335[_0x33ec('0x82')]=!![];document[_0x33ec('0x41')]=null;document[_0x33ec('0x109')]=null;document[_0x33ec('0x3e')]=null;}}}function setupWebcamSelection(){log(_0x33ec('0x224'));try{return enumerateDevices()[_0x33ec('0x68')](gotDevices)[_0x33ec('0x68')](function(){log(_0x33ec('0x84'));if(parseInt(getById(_0x33ec('0x1a0'))[_0x33ec('0x248')][_0x33ec('0x8')](_0x33ec('0x130'))[_0x33ec('0x4')])==0x3){session[_0x33ec('0x149')]=0x1e;}else{session['maxframerate']=![];}if(iOS||iPad){getById('multiselect1')['parentNode'][_0x33ec('0x131')]['visibility']=_0x33ec('0x7f');getById(_0x33ec('0x246'))[_0x33ec('0x23d')][_0x33ec('0x131')][_0x33ec('0x17b')]=_0x33ec('0x1d0');}var _0x4c0724=document[_0x33ec('0x18a')](_0x33ec('0x116'));var _0x337a03=document[_0x33ec('0x18a')](_0x33ec('0x5f'));_0x4c0724[_0x33ec('0x4d')]=function(){var _0x194343=getById(_0x33ec('0x1e5'));_0x194343[_0x33ec('0x1e4')]=!![];_0x194343[_0x33ec('0x131')][_0x33ec('0x1ca')]='#DDDDDD';_0x194343[_0x33ec('0x131')]['fontWeight']=_0x33ec('0x202');_0x194343[_0x33ec('0x52')]=_0x33ec('0x15a');log(_0x33ec('0x1c3'));activatedPreview=![];grabVideo(parseInt(getById(_0x33ec('0x1a0'))[_0x33ec('0x248')][_0x33ec('0x8')](_0x33ec('0x130'))[_0x33ec('0x4')]));};_0x337a03[_0x33ec('0x4d')]=function(){if('SQwnc'==='TYlpd'){roomid=session[_0x33ec('0x90')];}else{var _0x2f5d64=getById(_0x33ec('0x1e5'));_0x2f5d64[_0x33ec('0x1e4')]=!![];_0x2f5d64[_0x33ec('0x131')][_0x33ec('0x1ca')]=_0x33ec('0x103');_0x2f5d64['style'][_0x33ec('0x98')]=_0x33ec('0x202');_0x2f5d64['innerHTML']=_0x33ec('0x15a');log(_0x33ec('0x100'));activatedPreview=![];grabVideo(parseInt(getById('webcamquality')[_0x33ec('0x248')][_0x33ec('0x8')](_0x33ec('0x130'))[_0x33ec('0x4')]));}};getById(_0x33ec('0x1a0'))[_0x33ec('0x4d')]=function(){var _0x50fef5=getById(_0x33ec('0x1e5'));_0x50fef5[_0x33ec('0x1e4')]=!![];_0x50fef5[_0x33ec('0x131')]['backgroundColor']=_0x33ec('0x103');_0x50fef5[_0x33ec('0x131')]['fontWeight']=_0x33ec('0x202');_0x50fef5[_0x33ec('0x52')]='Waiting\x20for\x20Camera\x20to\x20load';log(_0x33ec('0x1c3'));activatedPreview=![];if(parseInt(getById(_0x33ec('0x1a0'))[_0x33ec('0x248')][_0x33ec('0x8')](_0x33ec('0x130'))[_0x33ec('0x4')])==0x3){session[_0x33ec('0x149')]=0x1e;}else{session[_0x33ec('0x149')]=![];}grabVideo(parseInt(getById('webcamquality')[_0x33ec('0x248')][_0x33ec('0x8')](_0x33ec('0x130'))[_0x33ec('0x4')]));};activatedPreview=![];grabVideo(parseInt(getById(_0x33ec('0x1a0'))[_0x33ec('0x248')]['namedItem'](_0x33ec('0x130'))[_0x33ec('0x4')]));})['catch'](_0xd770ec=>{errorlog(_0xd770ec);});}catch(_0x15094a){if(_0x33ec('0xc0')===_0x33ec('0xc0')){errorlog(_0x15094a);}else{return undefined;}}}function previewWebcam(){if(activatedPreview==!![]){log(_0x33ec('0x117'));return;}activatedPreview=!![];window['setTimeout'](()=>{try{var _0x522480=getById(_0x33ec('0xf3'))[_0x33ec('0x13d')];if(_0x522480){log('old\x20stream\x20found');_0x522480['getTracks']()[_0x33ec('0x7')](function(_0x4436c3){_0x4436c3[_0x33ec('0x15b')]();log(_0x33ec('0x83'));});}}catch(_0x5861e8){errorlog(_0x5861e8);}try{if(_0x33ec('0x14d')===_0x33ec('0x14d')){navigator[_0x33ec('0x135')][_0x33ec('0x171')]({'audio':!![],'video':!![]})[_0x33ec('0x68')](function(_0x5aa794){log(_0x33ec('0x21'));setupWebcamSelection()[_0x33ec('0x68')](()=>{log(_0x33ec('0xc9'));_0x5aa794[_0x33ec('0x2')]()[_0x33ec('0x7')](function(_0xad2510){_0xad2510[_0x33ec('0x15b')]();});});})[_0x33ec('0x105')](function(_0x4db512){errorlog(_0x33ec('0x8a'));setupWebcamSelection();});}else{if(document['getElementById'](_0x33ec('0xcb'))){getById(_0x33ec('0xcb'))[_0x33ec('0x131')]['backgroundImage']=_0x33ec('0x166');getById(_0x33ec('0xcb'))[_0x33ec('0x52')]='<font\x20style=\x22color:#666\x22><h1>Attempting\x20to\x20load\x20video\x20stream.</h1></font>';getById(_0x33ec('0xcb'))[_0x33ec('0x52')]+=_0x33ec('0x186');}}}catch(_0x53938f){if(window[_0x33ec('0x110')]){alert('An\x20error\x20has\x20occured\x20when\x20trying\x20to\x20access\x20the\x20webcam.\x20The\x20reason\x20is\x20not\x20known.');}else{alert('Error\x20acessing\x20webcam.\x0a\x0aWebsite\x20is\x20loaded\x20in\x20an\x20insecure\x20context.\x0a\x0aPlease\x20see:\x20https://developer.mozilla.org/en-US/docs/Web/API/MediaDevices/getUserMedia');}}},0xa);}function checkOBS(){if(!navigator[_0x33ec('0x135')]||!navigator[_0x33ec('0x135')][_0x33ec('0xa1')]){log('enumerateDevices()\x20not\x20supported.');return;}navigator[_0x33ec('0x135')][_0x33ec('0xa1')]()[_0x33ec('0x68')](function(_0x2af5c5){var _0x52ef95=![];_0x2af5c5[_0x33ec('0x7')](function(_0xeec946){if(_0xeec946[_0x33ec('0x1ee')]['startsWith']('OBS-Camera')){alert(_0x33ec('0x75'));log(_0xeec946[_0x33ec('0x17e')]+':\x20'+_0xeec946[_0x33ec('0x1ee')]+_0x33ec('0x10a')+_0xeec946[_0x33ec('0xbb')]);_0x52ef95=!![];}log(_0xeec946['kind']+':\x20'+_0xeec946[_0x33ec('0x1ee')]+_0x33ec('0x10a')+_0xeec946[_0x33ec('0xbb')]);});if(_0x52ef95==![]){if(_0x33ec('0xe7')===_0x33ec('0xb8')){ele[_0x33ec('0x52')]=data[ele[_0x33ec('0x127')]['translate']];}else{alert(_0x33ec('0x1ba'));}}})[_0x33ec('0x105')](function(_0x34dcfb){if(_0x33ec('0x1b5')!==_0x33ec('0x1b5')){getById(_0x33ec('0x1a5'))['innerHTML']='';}else{log(_0x34dcfb['name']+':\x20'+_0x34dcfb['message']);}});}function recordVideo(_0x2b65bc,_0x5abc7e,_0x3edf6c,_0x290286=![]){if(CtrlPressed){_0x2b65bc[_0x33ec('0x52')]=_0x33ec('0x256');Callbacks['push']([recordVideo,_0x2b65bc,_0x5abc7e,_0x3edf6c,0x9c4]);log(_0x33ec('0x182'));return;}log(_0x33ec('0x250'));if(_0x33ec('0x45')in _0x5abc7e){log(_0x33ec('0x154'));_0x2b65bc['style'][_0x33ec('0x1ca')]=null;_0x2b65bc[_0x33ec('0x52')]=_0x33ec('0xdf');_0x5abc7e[_0x33ec('0x8b')][_0x33ec('0x15b')]();session['requestRateLimit'](0x23,_0x3edf6c);delete _0x5abc7e[_0x33ec('0x8b')];delete _0x5abc7e['recording'];return;}else{_0x2b65bc['style'][_0x33ec('0x1ca')]=_0x33ec('0x205');_0x2b65bc[_0x33ec('0x52')]=_0x33ec('0xfb');_0x5abc7e[_0x33ec('0x45')]=!![];}if(_0x290286==![]){_0x290286=0x9c4;_0x290286=prompt(_0x33ec('0xc5'),_0x290286);_0x290286=parseInt(_0x290286);}if(_0x290286<0x23){_0x290286=0x23;}session[_0x33ec('0x1de')](_0x290286,_0x3edf6c);var _0x51c087=Date[_0x33ec('0xd')]()[_0x33ec('0x25a')]();var _0x4d5c16=[];var _0x223100=_0x5abc7e[_0x33ec('0x13d')];var _0x1b1c44=![];if(typeof _0x223100===_0x33ec('0x12')||!_0x223100){return;}this[_0x33ec('0x15b')]=_0x3b6df7;let _0x2d880b={'mimeType':_0x33ec('0x207'),'videoBitsPerSecond':parseInt(_0x290286*0x3e8)};var _0x119d57=new MediaRecorder(_0x223100,_0x2d880b);var _0x36db52=0x0;function _0x4dcb5f(){const _0xc08b54=new Blob(_0x4d5c16,{'type':_0x33ec('0x207')});const _0xa46fb=window[_0x33ec('0x241')][_0x33ec('0x44')](_0xc08b54);const _0x1890d2=document[_0x33ec('0x5b')]('a');_0x1890d2['style'][_0x33ec('0x34')]='none';_0x1890d2[_0x33ec('0x32')]=_0xa46fb;_0x1890d2[_0x33ec('0x79')]=_0x51c087+_0x33ec('0x6f');document[_0x33ec('0x142')][_0x33ec('0x232')](_0x1890d2);_0x1890d2[_0x33ec('0x70')]();setTimeout(()=>{document[_0x33ec('0x142')][_0x33ec('0x9c')](_0x1890d2);window['URL'][_0x33ec('0x146')](_0xa46fb);},0x64);}function _0x10f7a1(_0x251c80){if(_0x251c80[_0x33ec('0x53')]&&_0x251c80[_0x33ec('0x53')]['size']>0x0){_0x4d5c16[_0x33ec('0x76')](_0x251c80[_0x33ec('0x53')]);}}function _0x3b6df7(){_0x119d57[_0x33ec('0x15b')]();_0x1b1c44=!![];log(_0x33ec('0xba'),_0x4d5c16);_0x4dcb5f();}_0x119d57[_0x33ec('0x233')]=_0x10f7a1;_0x119d57[_0x33ec('0x3a')]=function(_0x27f0d3){errorlog(_0x27f0d3);_0x3b6df7();session[_0x33ec('0x1de')](0x23,_0x3edf6c);alert(_0x33ec('0x31'));};_0x223100[_0x33ec('0xde')]=function(_0x3fbd72){_0x3b6df7();session[_0x33ec('0x1de')](0x23,_0x3edf6c);alert(_0x33ec('0x1a'));};_0x119d57[_0x33ec('0x128')](0x64);_0x5abc7e['recorder']=this;return;}function copyFunction(_0x1cf723){_0x1cf723[_0x33ec('0x22a')]();_0x1cf723[_0x33ec('0xe2')](0x0,0x1869f);document['execCommand'](_0x33ec('0xd2'));}function generateQRPage(){try{var _0x5ae200=encodeURI(getById(_0x33ec('0xd4'))[_0x33ec('0x4')]);if(_0x5ae200[_0x33ec('0x1d4')]){_0x5ae200='&label='+_0x5ae200;}var _0x4ea57d=session['generateStreamID']();var _0x1f27be='';var _0x5eec7b='';if(getById(_0x33ec('0x2d'))['checked']){_0x1f27be+='&bitrate=20000';}if(getById(_0x33ec('0x107'))['checked']){_0x1f27be+=_0x33ec('0xa5');}if(getById(_0x33ec('0x35'))['checked']){_0x1f27be+=_0x33ec('0xc8');_0x5eec7b+='&stereo';}if(getById('invite_secure')['checked']){_0x5eec7b+=_0x33ec('0x21a');}if(getById(_0x33ec('0xe5'))[_0x33ec('0x2a')]){_0x5eec7b+=_0x33ec('0x1e2');}if(getById(_0x33ec('0x11a'))[_0x33ec('0x2a')]){var _0x3d4f42=session['generateStreamID']();_0x5eec7b+=_0x33ec('0x18f')+_0x3d4f42;_0x1f27be+=_0x33ec('0x18f')+_0x3d4f42;}if(getById(_0x33ec('0x15'))[_0x33ec('0x4')][_0x33ec('0x1ac')]()[_0x33ec('0x1d4')]){_0x5eec7b+='&room='+getById(_0x33ec('0x15'))[_0x33ec('0x4')][_0x33ec('0x1ac')]();_0x1f27be+='&scene=1&room='+getById(_0x33ec('0x15'))['value']['trim']();}if(getById(_0x33ec('0x132'))['value']){if(getById(_0x33ec('0x132'))[_0x33ec('0x4')]==0x1){_0x5eec7b+=_0x33ec('0x147');}else if(getById(_0x33ec('0x132'))[_0x33ec('0x4')]==0x2){_0x5eec7b+=_0x33ec('0x1e7');}}if(getById(_0x33ec('0xb7'))[_0x33ec('0x4')]){if(_0x33ec('0x87')!=='UzoiG'){return;}else{if(getById(_0x33ec('0xb7'))['value']==0x0){_0x5eec7b+='&quality=0';}else if(getById(_0x33ec('0xb7'))['value']==0x1){_0x5eec7b+=_0x33ec('0x20a');}else if(getById(_0x33ec('0xb7'))[_0x33ec('0x4')]==0x2){_0x5eec7b+='&quality=2';}}}_0x5eec7b='https://'+location[_0x33ec('0x15f')]+location[_0x33ec('0x138')]+'?push='+_0x4ea57d+_0x5eec7b;_0x1f27be=_0x33ec('0x12f')+location[_0x33ec('0x15f')]+location[_0x33ec('0x138')]+_0x33ec('0x201')+_0x4ea57d+_0x1f27be+_0x5ae200;getById(_0x33ec('0x150'))['innerHTML']='<br\x20/><div\x20id=\x22qrcode\x22\x20style=\x22background-color:white;display:inline-block;color:black;max-width:340px;padding:40px;\x22><h2\x20style=\x22color:black\x22>Guest\x20Invite\x20Link:</h2><input\x20class=\x22task\x22\x20onclick=\x22popupMessage(event);copyFunction(this)\x22\x20onmousedown=\x22copyFunction(this)\x22\x20\x20\x09\x09style=\x22cursor:grab;background-color:#CFC;border:\x202px\x20solid\x20black;width:260px;font-size:120%;padding:10px;\x22\x20\x20value=\x22'+_0x5eec7b+_0x33ec('0x196')+_0x1f27be+_0x33ec('0x125');var _0x8ef6dc=new QRCode(getById('qrcode'),{'width':0x12c,'height':0x12c,'colorDark':_0x33ec('0x1fc'),'colorLight':_0x33ec('0x210'),'useSVG':![]});_0x8ef6dc[_0x33ec('0x170')](_0x5eec7b);}catch(_0x1aed07){errorlog(_0x1aed07);}}if(session[_0x33ec('0xcc')]){getById(_0x33ec('0x21b'))[_0x33ec('0x1a1')]='';getById('credits')['style'][_0x33ec('0x34')]='none';}if(session[_0x33ec('0xcc')]&&session[_0x33ec('0x90')]===![]){getById('container-4')[_0x33ec('0x1a1')]=_0x33ec('0x1d');getById(_0x33ec('0x1b9'))[_0x33ec('0x1a1')]='column\x20columnfade';getById(_0x33ec('0x59'))[_0x33ec('0x1a1')]=_0x33ec('0x1d');getById(_0x33ec('0x14b'))[_0x33ec('0x1a1')]=_0x33ec('0x1d');getById(_0x33ec('0x148'))['className']=_0x33ec('0x258');getById(_0x33ec('0x7e'))[_0x33ec('0x1a1')]='advanced';getById(_0x33ec('0x1a5'))[_0x33ec('0x1a1')]=_0x33ec('0x258');getById(_0x33ec('0x167'))['className']=_0x33ec('0x258');getById(_0x33ec('0x11f'))[_0x33ec('0x1a1')]='advanced';getById(_0x33ec('0xcb'))[_0x33ec('0x131')][_0x33ec('0x20c')]=_0x33ec('0x1f7');getById(_0x33ec('0xcb'))[_0x33ec('0x131')]['backgroundPosition']=_0x33ec('0xad');getById('mainmenu')[_0x33ec('0x131')][_0x33ec('0x1bf')]=_0x33ec('0x188');getById(_0x33ec('0xcb'))[_0x33ec('0x131')][_0x33ec('0x259')]='100px\x20100px';getById(_0x33ec('0xcb'))[_0x33ec('0x52')]='';setTimeout(function(){try{if(session[_0x33ec('0xcc')]){if(document[_0x33ec('0x141')](_0x33ec('0xcb'))){getById(_0x33ec('0xcb'))[_0x33ec('0x131')][_0x33ec('0x1b6')]=_0x33ec('0x166');getById(_0x33ec('0xcb'))[_0x33ec('0x52')]=_0x33ec('0x228');getById(_0x33ec('0xcb'))[_0x33ec('0x52')]+=_0x33ec('0x186');}}}catch(_0x34b3a1){errorlog(_0x33ec('0x16e'));}},0xfa0);log(_0x33ec('0x12d'));if(navigator[_0x33ec('0x91')][_0x33ec('0x145')](_0x33ec('0x23b'))!=-0x1&&navigator['userAgent'][_0x33ec('0x145')](_0x33ec('0x12e'))==-0x1){alert('Safari\x20requires\x20us\x20to\x20ask\x20for\x20an\x20audio\x20permission\x20to\x20use\x20peer-to-peer\x20technology.\x20You\x20will\x20need\x20to\x20accept\x20it\x20in\x20a\x20moment\x20if\x20asked\x20to\x20view\x20this\x20live\x20video');navigator['mediaDevices']['getUserMedia']({'audio':!![]})[_0x33ec('0x68')](function(){play();})[_0x33ec('0x105')](function(){play();});}else{play();}}function updateMixer(){log(_0x33ec('0x5c'));var _0x52a2f6=getById('gridlayout');var _0x515c23=getById(_0x33ec('0x7e'));var _0xcb126e=_0x515c23['offsetHeight'];var _0x909c97=window['innerWidth'];var _0x1ce89b=window[_0x33ec('0x1f9')]-_0xcb126e;var _0x5c1aa1=_0x909c97/0x10;var _0x17c496=_0x1ce89b/0x9;var _0x3ae42e=[];if(session[_0x33ec('0xb3')]){if(session[_0x33ec('0xb3')][_0x33ec('0x131')][_0x33ec('0x34')]!=_0x33ec('0x156')){_0x3ae42e[_0x33ec('0x76')](session[_0x33ec('0xb3')]);}}if(session[_0x33ec('0x1d1')]&&session[_0x33ec('0x1d1')]in session[_0x33ec('0xd3')]){_0x3ae42e=[];log(session[_0x33ec('0x1d1')]+_0x33ec('0x139'));session['requestRateLimit'](0x4b0,session[_0x33ec('0x1d1')]);_0x3ae42e['push'](session[_0x33ec('0xd3')][session['infocus']][_0x33ec('0xb3')]);for(var _0x2aac6f in session[_0x33ec('0xd3')]){if(_0x2aac6f!=session['infocus']){session['requestRateLimit'](0x23,_0x2aac6f);}}}else if(session[_0x33ec('0x1d1')]&&session[_0x33ec('0x1d1')]===!![]){log(_0x33ec('0xf4'));for(var _0x2aac6f in session[_0x33ec('0xd3')]){session[_0x33ec('0x1de')](0x23,_0x2aac6f);}}else{if('LmSkV'===_0x33ec('0x206')){if(quality==0x0){quality=0x1;}}else{for(var _0x563930 in session[_0x33ec('0xd3')]){if(session['rpcs'][_0x563930][_0x33ec('0xb3')]){session[_0x33ec('0xd3')][_0x563930][_0x33ec('0x6d')]=-0x1;if(session[_0x33ec('0xd3')][_0x563930][_0x33ec('0xb3')][_0x33ec('0x131')]['display']!=_0x33ec('0x156')){if(_0x33ec('0x242')!==_0x33ec('0x242')){menu[_0x33ec('0x131')][_0x33ec('0x190')]=posy+'px';}else{_0x3ae42e[_0x33ec('0x76')](session[_0x33ec('0xd3')][_0x563930]['videoElement']);}}if(session[_0x33ec('0x1c')]){errorlog(_0x33ec('0xc6'));}else if(session['rpcs'][_0x563930][_0x33ec('0xb3')][_0x33ec('0x131')][_0x33ec('0x34')]==_0x33ec('0x156')){if(session[_0x33ec('0x1ff')]){session[_0x33ec('0x1de')](0xc8,_0x563930);}else{session[_0x33ec('0x1de')](0x23,_0x563930);}}else if(session['scene']){}else if(session['roomid']!==![]){session[_0x33ec('0x1de')](0x50,_0x563930);}}}}}if(session['director']){if(_0x33ec('0x18e')==='GqHDi'){session[_0x33ec('0x1de')](0x23,_0x2aac6f);}else{return;}}if(_0x3ae42e['length']>0x1){var _0x3b97e4=Math['pow'](_0x5c1aa1*_0x17c496/_0x3ae42e[_0x33ec('0x1d4')],0.5);var _0x4a300f=Math[_0x33ec('0x1c0')](_0x5c1aa1/_0x3b97e4);var _0x13ea80=Math[_0x33ec('0x1c0')](_0x17c496/_0x3b97e4);}else{var _0x4a300f=0x1;var _0x13ea80=0x1;}_0x52a2f6[_0x33ec('0x52')]='';var _0x563930=0x0;var _0x486cbc=0x0;_0x3ae42e[_0x33ec('0x7')](_0x33e791=>{if('Fnmpm'===_0x33ec('0x174')){_0x33e791[_0x33ec('0x131')][_0x33ec('0x1eb')]=_0x33ec('0xe1');_0x33e791['display']=_0x33ec('0xfa');offsetx=0x0;if(Math[_0x33ec('0x1c0')]((_0x563930+0.1)/_0x4a300f)==_0x13ea80){offsetx=(window[_0x33ec('0xd1')]-(_0x4a300f-_0x3ae42e[_0x33ec('0x1d4')]%_0x13ea80)*Math[_0x33ec('0x1c0')](window[_0x33ec('0xd1')]/_0x4a300f))/0x2;}offsety=(_0x1ce89b-Math['ceil'](_0x3ae42e[_0x33ec('0x1d4')]/_0x4a300f)*Math[_0x33ec('0x1c0')](_0x1ce89b/_0x13ea80))/0x2;_0x33e791[_0x33ec('0x131')]['left']=offsetx+Math[_0x33ec('0x61')]((_0x563930%_0x4a300f+0x0)*_0x909c97/_0x4a300f)+'px';_0x33e791[_0x33ec('0x131')][_0x33ec('0x190')]=offsety+Math[_0x33ec('0x61')]((Math[_0x33ec('0x61')](_0x563930/_0x4a300f)+0x0)*_0x1ce89b/_0x13ea80+_0xcb126e)+'px';_0x33e791[_0x33ec('0x131')][_0x33ec('0xb5')]=Math['ceil'](_0x909c97/_0x4a300f)+'px';_0x33e791[_0x33ec('0x131')][_0x33ec('0x17b')]=Math[_0x33ec('0x1c0')](_0x1ce89b/_0x13ea80)+'px';_0x52a2f6[_0x33ec('0x232')](_0x33e791);try{_0x33e791[_0x33ec('0x1e')]()[_0x33ec('0x68')](_0x215484=>{log(_0x33ec('0x235'));})[_0x33ec('0x105')](errorlog);}catch(_0x3c4d32){errorlog(_0x3c4d32);}var _0x29533f=document[_0x33ec('0x5b')](_0x33ec('0x229'));_0x29533f['id']=_0x33ec('0x23')+_0x33e791['id'];_0x29533f[_0x33ec('0x52')]=_0x33ec('0x126');_0x29533f['style'][_0x33ec('0xb5')]=_0x33ec('0xce');_0x29533f[_0x33ec('0x131')][_0x33ec('0x17b')]=_0x33ec('0xce');_0x29533f[_0x33ec('0x131')][_0x33ec('0x1eb')]=_0x33ec('0xe1');_0x29533f[_0x33ec('0x131')][_0x33ec('0x34')]=_0x33ec('0x156');_0x29533f[_0x33ec('0x131')][_0x33ec('0xbc')]=Math['ceil'](_0x909c97/_0x4a300f)-0x32+offsetx+Math['floor']((_0x563930%_0x4a300f+0x0)*_0x909c97/_0x4a300f)+'px';_0x29533f[_0x33ec('0x131')][_0x33ec('0x190')]=offsety+Math[_0x33ec('0x61')]((Math['floor'](_0x563930/_0x4a300f)+0x0)*_0x1ce89b/_0x13ea80+_0xcb126e)+'px';_0x29533f[_0x33ec('0x131')][_0x33ec('0x7a')]=_0x33ec('0x3d');_0x29533f['style'][_0x33ec('0x13b')]='pointer';_0x52a2f6[_0x33ec('0x232')](_0x29533f);if(_0x33e791['id']==_0x33ec('0x108')){if('wxogg'===_0x33ec('0xb4')){_0x29533f['onclick']=function(){var _0x44cd0a=event[_0x33ec('0x1f')];if(session[_0x33ec('0x1d1')]===!![]){session['infocus']=![];_0x44cd0a[_0x33ec('0x52')]='<i\x20class=\x27fa\x20fa-arrows-alt\x27\x20style=\x27font-size:50px\x27\x20aria-hidden=\x27true\x27></i>';}else{session['infocus']=!![];log(_0x33ec('0xca'));_0x44cd0a[_0x33ec('0x52')]=_0x33ec('0x140');}setTimeout(()=>updateMixer(),0xa);};}else{menuState=0x1;menu[_0x33ec('0x24e')][_0x33ec('0x1b8')](_0x33ec('0x4b'));}}else{_0x29533f[_0x33ec('0x127')]['UUID']=_0x33e791['dataset'][_0x33ec('0x1fa')];_0x29533f['onclick']=function(_0x5da660){var _0x19d95d=_0x5da660[_0x33ec('0x1f')];log(_0x33ec('0x1f5'));log(_0x19d95d);if(session[_0x33ec('0x1d1')]===_0x19d95d['dataset']['UUID']){_0x19d95d['innerHTML']=_0x33ec('0x126');session['infocus']=![];}else{_0x19d95d[_0x33ec('0x52')]=_0x33ec('0x140');session['infocus']=_0x19d95d[_0x33ec('0x127')][_0x33ec('0x1fa')];log(_0x33ec('0x11d')+_0x19d95d[_0x33ec('0x127')][_0x33ec('0x1fa')]);}setTimeout(()=>updateMixer(),0xa);};}_0x29533f[_0x33ec('0x225')]=function(){_0x29533f[_0x33ec('0x131')][_0x33ec('0x34')]=_0x33ec('0xfa');};_0x33e791[_0x33ec('0x225')]=function(){_0x29533f['style'][_0x33ec('0x34')]=_0x33ec('0xfa');};_0x33e791[_0x33ec('0x22')]=function(){_0x29533f[_0x33ec('0x131')][_0x33ec('0x34')]=_0x33ec('0x156');};_0x563930+=0x1;}else{log('resolution\x20found');try{getById(_0x33ec('0xf3'))[_0x33ec('0x13d')]['getVideoTracks']()['forEach'](function(_0x5dc248){log(_0x5dc248[_0x33ec('0x14f')]());log(_0x5dc248[_0x33ec('0x14f')]()[_0x33ec('0x14a')]);getById('webcamstats')[_0x33ec('0x52')]=_0x33ec('0x1a6')+(_0x5dc248[_0x33ec('0x14f')]()[_0x33ec('0xb5')]||0x0)+'x'+(_0x5dc248[_0x33ec('0x14f')]()[_0x33ec('0x17b')]||0x0)+'@'+parseInt(_0x5dc248[_0x33ec('0x14f')]()[_0x33ec('0x14a')]*0xa)/0xa+_0x33ec('0x1be');});}catch(_0xf1b74a){errorlog(_0xf1b74a);}}});}var vis=function(){var _0x5c02d2,_0x43c318,_0x47f5a3={'hidden':'visibilitychange','webkitHidden':_0x33ec('0x219'),'mozHidden':_0x33ec('0xf1'),'msHidden':_0x33ec('0x20d')};for(_0x5c02d2 in _0x47f5a3){if(_0x5c02d2 in document){_0x43c318=_0x47f5a3[_0x5c02d2];break;}}return function(_0x298975){if(_0x298975){document[_0x33ec('0xcf')](_0x43c318,_0x298975);}return!document[_0x5c02d2];};}();(function rightclickmenuthing(){'use strict';function _0x24a136(_0x45aa0e,_0x2666f5){var _0x1bac9a=_0x45aa0e[_0x33ec('0x1c8')]||_0x45aa0e[_0x33ec('0x1e6')];if(_0x1bac9a[_0x33ec('0x24e')][_0x33ec('0x10b')](_0x2666f5)){if(_0x33ec('0x1f1')!==_0x33ec('0x8f')){return _0x1bac9a;}else{session[_0x33ec('0x149')]=0x1e;}}else{while(_0x1bac9a=_0x1bac9a['parentNode']){if(_0x1bac9a['classList']&&_0x1bac9a[_0x33ec('0x24e')][_0x33ec('0x10b')](_0x2666f5)){return _0x1bac9a;}}}return![];}function _0x5e1b34(_0x465a08){var _0x33e344=0x0;var _0x1376db=0x0;if(!_0x465a08)var _0x5922e3=window[_0x33ec('0xa7')];if(_0x465a08[_0x33ec('0x122')]||_0x465a08['pageY']){_0x33e344=_0x465a08['pageX'];_0x1376db=_0x465a08['pageY'];}else if(_0x465a08[_0x33ec('0x9f')]||_0x465a08['clientY']){if(_0x33ec('0x66')!==_0x33ec('0x66')){session[_0x33ec('0x1de')](0xc8,i);}else{_0x33e344=_0x465a08[_0x33ec('0x9f')]+document[_0x33ec('0x142')][_0x33ec('0x42')]+document[_0x33ec('0xa8')][_0x33ec('0x42')];_0x1376db=_0x465a08[_0x33ec('0x143')]+document[_0x33ec('0x142')]['scrollTop']+document[_0x33ec('0xa8')]['scrollTop'];}}return{'x':_0x33e344,'y':_0x1376db};}var _0x18895b=_0x33ec('0x251');var _0x569caa='context-menu__item';var _0x35154a=_0x33ec('0x1c6');var _0x4a4e82='context-menu--active';var _0xc6f2ea='task';var _0x31941e;var _0x202413;var _0x53f445;var _0x4cb2fe;var _0x9a9737=document[_0x33ec('0x18a')](_0x33ec('0x179'));var _0x42316b=_0x9a9737[_0x33ec('0x151')](_0x33ec('0x1e8'));var _0x1fb243=0x0;var _0x177722;var _0x37e163;var _0x1315df;var _0x455837;var _0x1e794e;var _0x6851f3;var _0x3cbe68;function _0x32b2c8(){_0xfdaa8c();_0x1f12f8();_0x63d599();_0x31615a();}function _0xfdaa8c(){document[_0x33ec('0xcf')](_0x33ec('0xb0'),function(_0x452a9d){_0x31941e=_0x24a136(_0x452a9d,_0xc6f2ea);if(_0x31941e){_0x452a9d[_0x33ec('0x203')]();_0x87d1c1();_0x1f95b8(_0x452a9d);}else{_0x31941e=null;_0x4418ae();}});}function _0x1f12f8(){document[_0x33ec('0xcf')](_0x33ec('0x70'),function(_0x1d12c6){var _0x24cef1=_0x24a136(_0x1d12c6,_0x35154a);if(_0x24cef1){_0x1d12c6[_0x33ec('0x203')]();_0x11bf14(_0x24cef1);}else{var _0x1dce37=_0x1d12c6[_0x33ec('0xd6')]||_0x1d12c6[_0x33ec('0x22c')];if(_0x1dce37===0x1){if(_0x33ec('0x1b2')===_0x33ec('0x1b2')){_0x4418ae();}else{posx=_0x1d12c6[_0x33ec('0x9f')]+document['body'][_0x33ec('0x42')]+document[_0x33ec('0xa8')][_0x33ec('0x42')];posy=_0x1d12c6[_0x33ec('0x143')]+document[_0x33ec('0x142')]['scrollTop']+document[_0x33ec('0xa8')][_0x33ec('0x12a')];}}}});}function _0x63d599(){window[_0x33ec('0x30')]=function(_0x5d7838){if(_0x5d7838[_0x33ec('0x1')]===0x1b){if('Zbfan'===_0x33ec('0xf8')){var _0x7f5a85={'ideal':0x500};var _0x31d094={'ideal':0x2d0};}else{_0x4418ae();}}};}function _0x31615a(){window[_0x33ec('0x2f')]=function(_0x59d381){_0x4418ae();};}function _0x87d1c1(){if(_0x1fb243!==0x1){_0x1fb243=0x1;_0x9a9737[_0x33ec('0x24e')][_0x33ec('0x1b8')](_0x4a4e82);}}function _0x4418ae(){if(_0x1fb243!==0x0){_0x1fb243=0x0;_0x9a9737['classList']['remove'](_0x4a4e82);}}function _0x1f95b8(_0x48a6a3){_0x202413=_0x5e1b34(_0x48a6a3);_0x53f445=_0x202413['x'];_0x4cb2fe=_0x202413['y'];_0x177722=_0x9a9737[_0x33ec('0x25c')]+0x4;_0x37e163=_0x9a9737[_0x33ec('0x11')]+0x4;_0x6851f3=window[_0x33ec('0xd1')];_0x3cbe68=window[_0x33ec('0x1f9')];if(_0x6851f3-_0x53f445<_0x177722){_0x9a9737[_0x33ec('0x131')][_0x33ec('0xbc')]=_0x6851f3-_0x177722+'px';}else{_0x9a9737[_0x33ec('0x131')][_0x33ec('0xbc')]=_0x53f445+'px';}if(_0x3cbe68-_0x4cb2fe<_0x37e163){if(_0x33ec('0x1a3')===_0x33ec('0x1a3')){_0x9a9737[_0x33ec('0x131')][_0x33ec('0x190')]=_0x3cbe68-_0x37e163+'px';}else{errorlog(id+_0x33ec('0x144'));el=document[_0x33ec('0x5b')]('span');}}else{_0x9a9737['style'][_0x33ec('0x190')]=_0x4cb2fe+'px';}}function _0x11bf14(_0x58eb8a){if(_0x58eb8a[_0x33ec('0xc3')](_0x33ec('0x183'))=='Open'){window[_0x33ec('0x215')](_0x31941e[_0x33ec('0x4')]);}else{}log(_0x33ec('0xa6')+_0x31941e+_0x33ec('0x18')+_0x58eb8a['getAttribute'](_0x33ec('0x183')));_0x4418ae();}_0x32b2c8();}());document[_0x33ec('0xcf')](_0x33ec('0x51'),_0x4e79fb=>{var _0x25f620=_0x4e79fb[_0x33ec('0x1e6')][_0x33ec('0x32')]||_0x4e79fb[_0x33ec('0x1e6')][_0x33ec('0x4')];if(!_0x25f620||!_0x25f620[_0x33ec('0x22b')](_0x33ec('0x12f')))return;if(_0x4e79fb[_0x33ec('0x1e6')][_0x33ec('0x127')][_0x33ec('0x162')]!='1'){return;}var _0x21d9e2=_0x25f620['split'](_0x33ec('0x9b'));var _0x42d8f5=_0x25f620['split'](_0x33ec('0x172'));_0x25f620+=_0x33ec('0x198');if(_0x21d9e2[_0x33ec('0x1d4')]>0x1)_0x25f620+=':\x20'+_0x21d9e2[0x1]['split']('&')[0x0];if(_0x42d8f5[_0x33ec('0x1d4')]>0x1)_0x25f620+=_0x33ec('0x1f0')+decodeURI(_0x42d8f5[0x1]['split']('&')[0x0]);try{var _0x216da0=getById(_0x33ec('0x108'));_0x25f620+=_0x33ec('0x26')+_0x216da0[_0x33ec('0x255')];_0x25f620+='&layer-height='+_0x216da0[_0x33ec('0x199')];}catch(_0x22fd08){_0x25f620+=_0x33ec('0x57');_0x25f620+=_0x33ec('0x192');}_0x4e79fb[_0x33ec('0x1c5')]['setData']('text/uri-list',encodeURI(_0x25f620));});function popupMessage(_0x5f3635,_0x10fd60=_0x33ec('0x173')){var _0x5854fd=0x0;var _0x21ddf0=0x0;if(!_0x5f3635)var _0x5f3635=window[_0x33ec('0xa7')];if(_0x5f3635[_0x33ec('0x122')]||_0x5f3635[_0x33ec('0x121')]){if(_0x33ec('0x16c')!==_0x33ec('0x16c')){ln_template=![];}else{_0x5854fd=_0x5f3635[_0x33ec('0x122')];_0x21ddf0=_0x5f3635['pageY'];}}else if(_0x5f3635[_0x33ec('0x9f')]||_0x5f3635[_0x33ec('0x143')]){_0x5854fd=_0x5f3635[_0x33ec('0x9f')]+document[_0x33ec('0x142')]['scrollLeft']+document['documentElement'][_0x33ec('0x42')];_0x21ddf0=_0x5f3635[_0x33ec('0x143')]+document[_0x33ec('0x142')][_0x33ec('0x12a')]+document[_0x33ec('0xa8')][_0x33ec('0x12a')];}_0x5854fd+=0xa;var _0x4c82e3=document[_0x33ec('0x18a')](_0x33ec('0x20f'));_0x4c82e3[_0x33ec('0x52')]=_0x33ec('0x220')+_0x10fd60+_0x33ec('0x22e');var _0x20f780=0x0;var _0x10a845;var _0x1c045e;var _0x1acaa6;var _0x58f2ac;var _0x26d89c;var _0xbebfe5;var _0x1f3872;if(_0x20f780!==0x1){_0x20f780=0x1;_0x4c82e3[_0x33ec('0x24e')][_0x33ec('0x1b8')](_0x33ec('0x4b'));}_0x10a845=_0x4c82e3[_0x33ec('0x25c')]+0x4;_0x1c045e=_0x4c82e3[_0x33ec('0x11')]+0x4;_0xbebfe5=window[_0x33ec('0xd1')];_0x1f3872=window[_0x33ec('0x1f9')];if(_0xbebfe5-_0x5854fd<_0x10a845){_0x4c82e3[_0x33ec('0x131')][_0x33ec('0xbc')]=_0xbebfe5-_0x10a845+'px';}else{_0x4c82e3[_0x33ec('0x131')][_0x33ec('0xbc')]=_0x5854fd+'px';}if(_0x1f3872-_0x21ddf0<_0x1c045e){_0x4c82e3[_0x33ec('0x131')][_0x33ec('0x190')]=_0x1f3872-_0x1c045e+'px';}else{_0x4c82e3['style'][_0x33ec('0x190')]=_0x21ddf0+'px';}function _0x88492e(){if(_0x20f780!==0x0){_0x20f780=0x0;_0x4c82e3[_0x33ec('0x24e')][_0x33ec('0x11e')](_0x33ec('0x4b'));}}setTimeout(function(){_0x88492e();},0x3e8);}
+
+/*jshint esversion: 6 */
+
+
+var formSubmitting = true;
+var activatedPreview = false;
+
+function getById(id) {
+   var el = document.getElementById(id);
+   if (!el) {
+	    errorlog(id + " is not defined; skipping.");
+		el = document.createElement("span"); // create a fake element
+   }
+   return el;
+}
+
+if (window.obsstudio){
+	
+	log("OBS VERSION:"+window.obsstudio.pluginVersion);
+	log("macOS: "+navigator.userAgent.indexOf('Mac OS X') != -1);
+	log(window.obsstudio);
+	var ver1 = window.obsstudio.pluginVersion;
+	ver1 = ver1.split(".");
+	if (ver1.length == 3){
+		if ((ver1.length == 3) && (parseInt(ver1[0])==2) && (parseInt(ver1[1])>4) && (navigator.userAgent.indexOf('Mac OS X') != -1)){
+			getById("main").innerHTML = "<div style='background-color:black;color:white;'><h1>On macOS, Please use OBS v23, as OBS v24 and v25 are not supported currently.</h1>\
+			<br /><h2> Please find details <u><a href='https://github.com/steveseguin/obsninja/wiki/FAQ#mac-os'>within our wiki guide - https://github.com/steveseguin/obsninja/wiki/FAQ#mac-os</a></u></h2>\
+			<br /> (Version of OBS Plugin Detected: "+window.obsstudio.pluginVersion+", and should currently be 2.4.0 on macOS)\
+			<br /> Please report this problem to steve@seguin.email if you feel it is an error.\
+			</div>";
+		}
+	}
+	
+	window.addEventListener('obsSceneChanged', function(event) {
+		log("OBS EVENT");
+		log(event.detail.name);
+		
+		window.obsstudio.getCurrentScene(function(scene) {
+			log("OBS SCENE");
+			log(scene);
+		});
+		
+		window.obsstudio.getStatus(function (status) {
+			log("OBS STATUS:");
+			log(status);
+		});
+	});
+	
+}
+
+window.onload = function() { // This just keeps people from killing the live stream accidentally. Also give me a headsup that the stream is ending
+	window.addEventListener("beforeunload", function (e) {
+		if (formSubmitting) {
+			return undefined;
+		}
+		var confirmationMessage = 'Leaving the page now will terminate your stream ';
+		(e || window.event).returnValue = confirmationMessage; //Gecko + IE
+		return confirmationMessage; //Gecko + Webkit, Safari, Chrome etc.
+	});
+};
+
+
+
+var lastTouchEnd = 0;
+document.addEventListener('touchend', function (event) {
+	var now = (new Date()).getTime();
+	if (now - lastTouchEnd <= 300) {
+		event.preventDefault();
+	}
+	lastTouchEnd = now;
+}, false);
+
+var interacted=false;
+document.addEventListener('click', function (event) {
+	if (interacted==false){
+		interacted=true;
+		history.pushState({}, '');
+	}
+});
+var Callbacks = [];
+var CtrlPressed = false; // global
+
+document.addEventListener("keydown", event => { 
+	if ((event.ctrlKey) || (event.metaKey) ){  // detect if CTRL is pressed
+		CtrlPressed = true;
+	}
+});
+document.addEventListener("keyup", event => {
+	if (!((event.ctrlKey) || (event.metaKey))){ 
+		if (CtrlPressed){
+			CtrlPressed = false;
+			for (var i in Callbacks){
+				var cb = Callbacks[i];
+				log(cb.slice(1));
+				cb[0](...cb.slice(1)); // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Spread_syntax#A_better_apply
+			}
+			Callbacks=[];
+		}
+	}
+});
+
+window.onpopstate = function() {
+	if (interacted){
+		window.location.reload(true);
+	}
+}; 
+
+if (typeof variable !== 'undefined') { // make sure to init the WebRTC if not exists.
+	var session = WebRTC.Media;
+	session.streamID = session.generateStreamID();
+}
+
+(function (w) {
+    w.URLSearchParams = w.URLSearchParams || function (searchString) {
+        var self = this;
+        self.searchString = searchString;
+        self.get = function (name) {
+            var results = new RegExp('[\?&]' + name + '=([^&#]*)').exec(self.searchString);
+            if (results == null) {
+                return null;
+            }
+            else {
+                return decodeURI(results[1]) || 0;
+            }
+        };
+    };
+
+})(window);
+var urlParams = new URLSearchParams(window.location.search);
+
+
+if( /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ) {
+	session.webcamonly = true;
+}
+
+if (urlParams.has('webcam')){
+	session.webcamonly = true;
+} 
+
+if (session.webcamonly==true){
+	getById("container-2").className = 'column columnfade advanced'; // Hide screen share on mobile
+}
+
+
+
+if (urlParams.has('stereo')){ // both peers need this enabled for HD stereo to be on. If just pub, you get no echo/noise cancellation. if just viewer, you get high bitrate mono 
+	log("STEREO ENABLED");
+	session.stereo = urlParams.get('stereo');
+	
+	if (session.stereo=="false"){
+		session.stereo = 0;
+	} else if (session.stereo=="0"){
+		session.stereo = 0;
+	} else if (session.stereo=="no"){
+		session.stereo = 0;
+	} else if (session.stereo=="off"){
+		session.stereo = 0;
+	} else if (session.stereo=="1"){
+		session.stereo = 1;
+	} else if (session.stereo=="3"){
+		session.stereo = 3;
+	} else if (session.stereo=="2"){
+		session.stereo = 2;
+	} else {
+		session.stereo = 1;
+	}
+}
+
+if (urlParams.has('audiobitrate')){ // both peers need this enabled for HD stereo to be on. If just pub, you get no echo/noise cancellation. if just viewer, you get high bitrate mono 
+	log("AUDIO BITRATE SET");
+	session.audiobitrate = parseInt(urlParams.get('audiobitrate'));
+	if (session.audiobitrate<1){session.audiobitrate=false;}
+	
+}
+
+if ((urlParams.has('streamid')) || (urlParams.has('view'))){  // the streams we want to view; if set, but let blank, we will request no streams to watch.  
+	session.view = urlParams.get('streamid') || urlParams.get('view'); // this value can be comma seperated for multiple streams to pull
+	log("session view list:"+session.view);
+}
+
+if (urlParams.has('remote')){
+	log("remote ENABLED");
+    session.remote =  urlParams.get('remote').trim();
+}
+if (urlParams.has('optimize')){
+	session.optimize = true;
+}
+
+if (urlParams.has('obsoff')){
+	log("OBS feedback disabled");
+    session.disableOBS = true;
+}
+
+if (urlParams.has('noaudio')){
+	log("disable audio playback");
+    session.audio = false;
+}
+
+if (urlParams.has('novideo')){
+	log("disable video playback");
+    session.video = false;
+}
+
+
+if (urlParams.has('forceios')){
+	log("allow iOS to work in video group chat; for this user at least");
+    session.forceios = true;
+}
+
+if (urlParams.has('nocursor')){
+	session.nocursor = true;
+	log("DISABLE CURSOR");
+	var style = document.createElement('style');
+	style.innerHTML = `
+	video {
+		margin: 0;
+		padding: 0;
+		overflow: hidden;
+		cursor: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII=), none;
+		user-select: none;
+	}
+	`;
+	document.head.appendChild(style);
+}
+
+
+if (urlParams.has('codec')){
+	log("CODEC CHANGED");
+    session.codec = urlParams.get('codec');
+}
+
+if (urlParams.has('scale')){
+	log("Resolution scale requested");
+    session.scale = urlParams.get('scale');
+}
+
+var ConfigSettings = getById("main-js");
+var ln_template = false;
+
+try {
+	if (ConfigSettings){
+		ln_template = ConfigSettings.getAttribute('data-translation');   // Translations
+		if (typeof ln_template === "undefined" ) {
+		   ln_template = false;
+		} else if (ln_template === null ) {
+		   ln_template = false;
+		}
+	}
+
+	if (urlParams.has('ln')){
+		ln_template = urlParams.get('ln')
+	} 
+} catch (e){errorlog(e);}
+
+if (ln_template){  // checking if manual lanuage override enabled
+	try {
+		log("Template: "+ln_template);
+		fetch("./translations/"+ln_template+'.json').then(function(response){
+			if (response.status !== 200) {
+				log('Looks like there was a problem. Status Code: ' +
+				response.status);
+				return;
+			}
+			response.json().then(function(data) {
+				log(data);
+				document.querySelectorAll('[data-translate]').forEach(function(ele){
+					//log(ele.dataset.translate);
+					//log(translations[ele.dataset.translate]);
+					if (ele.dataset.translate in data){
+						ele.innerHTML = data[ele.dataset.translate];
+					}
+				});
+				getById("mainmenu").style.opacity = 1;;
+			}).catch(function(err){
+				errorlog(err);
+				getById("mainmenu").style.opacity = 1;
+			});
+		}).catch(function(err){
+			errorlog(err);
+			getById("mainmenu").style.opacity = 1;
+		});
+	
+	} catch (error){
+		errorlog(error);
+		getById("mainmenu").style.opacity = 1;
+	}
+} else if (location.hostname !== "obs.ninja"){
+	getById("qos").innerHTML = location.hostname;
+	getById("logoname").innerHTML = getById("qos").outerHTML ;
+	document.title = location.hostname;
+	try {
+		fetch("./translations/blank.json").then(function(response){
+			if (response.status !== 200) {
+				log('Looks like there was a problem. Status Code: ' +
+				response.status);
+				return;
+			}
+			response.json().then(function(data) {
+				log(data);
+				document.querySelectorAll('[data-translate]').forEach(function(ele){
+					//log(ele.dataset.translate);
+					//log(translations[ele.dataset.translate]);
+					if (ele.dataset.translate in data){
+						ele.innerHTML = data[ele.dataset.translate];
+					}
+				});
+				getById("qos").innerHTML = location.hostname;
+				getById("logoname").innerHTML = getById("qos").outerHTML ;
+				getById("mainmenu").style.opacity = 1;;
+			}).catch(function(err){
+				errorlog(err);
+				getById("mainmenu").style.opacity = 1;
+			});
+		}).catch(function(err){
+			errorlog(err);
+			getById("mainmenu").style.opacity = 1;
+		});
+		
+	} catch (error){
+		errorlog(error);
+		getById("mainmenu").style.opacity = 1;
+	}
+} else {  // check if automatic language translation is available
+	getById("mainmenu").style.opacity = 1;
+}
+//	if (window.navigator.language.slice(0, 2) !== 'en'){  
+//		fetch("./translations/"+window.navigator.language.slice(0, 2)+'.json').then(function(response){
+//			if (response.status !== 200) {
+//				logerror('Language translation file not found.' + response.status);
+//				return;
+//			}
+//			response.json().then(function(data) {
+//				log(data);
+//				document.querySelectorAll('[data-translate]').forEach(function(ele){
+//					//log(ele.dataset.translate);
+//					//log(translations[ele.dataset.translate]);
+//					ele.innerHTML = data[ele.dataset.translate];
+//				});
+//			});
+//		}).catch(function(err){
+//			errorlog(err);
+//		});
+//	}
+//}
+
+function changeLg(lang){
+		fetch("./translations/"+lang+'.json').then(function(response){
+			if (response.status !== 200) {
+				logerror('Language translation file not found.' + response.status);
+				return;
+			}
+			response.json().then(function(data) {
+				log(data);
+				document.querySelectorAll('[data-translate]').forEach(function(ele){
+					//log(ele.dataset.translate);
+					//log(translations[ele.dataset.translate]);
+					ele.innerHTML = data[ele.dataset.translate];
+				});
+			});
+		}).catch(function(err){
+			errorlog(err);
+		});
+}
+
+if (urlParams.has('bitrate')){
+    session.bitrate = parseInt(urlParams.get('bitrate'));
+	if (session.bitrate<1){session.bitrate=false;}
+	log("BITRATE ENABLED");
+	log(session.bitrate);
+} else if (urlParams.has('videobitrate')){ // just an alternative command to do it. more explicit
+    session.bitrate = parseInt(urlParams.get('videobitrate'));
+	if (session.bitrate<1){session.bitrate=false;}
+	log("BITRATE ENABLED");
+	log(session.bitrate);
+}
+
+if (urlParams.has('maxbitrate')){
+    session.maxvideobitrate = parseInt(urlParams.get('maxbitrate'));
+	if (session.maxvideobitrate<1){session.maxvideobitrate=false;}
+	log("maxvideobitrate ENABLED");
+	log(session.maxvideobitrate);
+} else if (urlParams.has('maxvideobitrate')){ // just an alternative command to do it. more explicit
+    session.maxvideobitrate = parseInt(urlParams.get('maxvideobitrate'));
+	if (session.maxvideobitrate<1){session.maxvideobitrate=false;}
+	log("maxvideobitrate ENABLED");
+	log(session.maxvideobitrate);
+}
+
+if (urlParams.has('height')){
+	session.height = parseInt(urlParams.get('height'));
+}
+
+if (urlParams.has('width')){
+	session.width = parseInt(urlParams.get('width'));
+}
+
+if (urlParams.has('quality')){
+	try{
+		session.quality = parseInt(urlParams.get('quality'));
+		getById("gear_screen").parentNode.removeChild(getById("gear_screen"));
+		getById("gear_webcam").parentNode.removeChild(getById("gear_webcam"));
+	} catch(e){
+		errorlog(e);
+	}
+}
+
+if (urlParams.has('sink')){
+	session.sink = urlParams.get('sink');
+}
+
+if (urlParams.has('cleanoutput')){
+	session.cleanOutput = true;
+	getById("translateButton").style.display="none";
+	getById("credits").style.display="none";
+}
+
+if (urlParams.has('channeloffset')){
+    session.offsetChannel = parseInt(urlParams.get('channeloffset'));
+	log("max channels is 32; channels offset");
+}
+if (urlParams.has('channels')){
+    session.audioChannels = parseInt(urlParams.get('channels'));
+	log("max channels is 32; channels offset");
+}
+
+if (urlParams.has('secure')){
+	session.security = true;
+	setTimeout(function() {alert("Enhanced Security Mode Enabled.");}, 100);
+}
+
+if (urlParams.has('framerate')){
+    session.framerate = parseInt(urlParams.get('framerate'));
+	log("framerate Changed");
+	log(session.framerate);
+}
+
+if (urlParams.has('sync')){
+    session.sync = parseFloat(urlParams.get('sync'));
+	log("sync Changed");
+	log(session.sync);
+}
+
+if (urlParams.has('buffer')){
+    session.buffer = parseFloat(urlParams.get('buffer')) || 0;
+	log("buffer Changed: "+session.buffer);
+}
+
+
+if ((urlParams.has('mirror')) && (urlParams.has('flip'))){
+	try {
+		log("Mirror all videos");
+		var mirrorStyle = document.createElement('style');
+		mirrorStyle.innerHTML = "video {transform: scaleX(-1) scaleY(-1); }";
+		document.getElementsByTagName("head")[0].appendChild(mirrorStyle);
+	} catch (e){errorlog(e);}
+} else if (urlParams.has('mirror')){  // mirror the video horizontally
+	try {
+		log("Mirror all videos");
+		var mirrorStyle = document.createElement('style');
+		mirrorStyle.innerHTML = "video {transform: scaleX(-1);}"; 
+		document.getElementsByTagName("head")[0].appendChild(mirrorStyle);
+	} catch (e){errorlog(e);}
+} else if (urlParams.has('flip')){  // mirror the video vertically
+	try {
+		log("Mirror all videos");
+		var mirrorStyle = document.createElement('style');
+		mirrorStyle.innerHTML = "video {transform: scaleY(-1); }";
+		document.getElementsByTagName("head")[0].appendChild(mirrorStyle);
+	} catch (e){errorlog(e);}
+}
+
+
+
+var turn = {};
+if (urlParams.has('turn')){
+	try {
+		var turnstring = urlParams.get('turn').split(";");
+		if (turnstring !== "false"){ // false disables the TURN server. Useful for debuggin
+			turn = {};
+			turn.username = turnstring[0]; // myusername
+			turn.credential = turnstring[1];  //mypassword
+			turn.urls = [turnstring[2]]; //  ["turn:turn.obs.ninja:443"];
+			session.configuration.iceServers.push(turn);
+		}
+	} catch (e){
+		alert("TURN server parameters were wrong.");
+		errorlog(e);
+	}
+}
+
+
+if (urlParams.has('privacy')){ // please only use if you are also using your own TURN service.
+	try {
+		session.configuration.iceTransportPolicy = "relay";  // https://developer.mozilla.org/en-US/docs/Web/API/RTCIceCandidate/address
+	} catch (e){
+		alert("Privacy mode failed to configure.");
+		errorlog(e);
+	}
+}
+
+
+function updateURL(param, force=false) {
+	var para = param.split('=')[0];
+	if (!(urlParams.has(para)) || (force)){
+		if (history.pushState){
+			
+			var arr = window.location.href.split('?');
+			var newurl;
+			if (arr.length > 1 && arr[1] !== '') {
+				newurl = window.location.href + '&' +param;
+			} else {
+				newurl = window.location.href + '?' +param;
+			}
+			
+			
+			window.history.pushState({path:newurl},'',newurl);
+		}
+	}
+}
+
+function jumptoroom(){
+	var arr = window.location.href.split('?');
+	var roomname = getById("joinroomID").value;
+	roomname = roomname.replace(/[\W_]+/g,"_");
+	if (arr.length > 1 && arr[1] !== '') {
+		window.location+="&room="+roomname;
+	} else {
+		window.location+="?room="+roomname;
+	}
+}
+
+function sleep(ms = 0){  
+  return new Promise(r => setTimeout(r, ms));  // LOLz!
+}
+
+session.connect();
+// session.volume = 100; // needs to be set after?
+
+var url = window.location.pathname;
+var filename = url.substring(url.lastIndexOf('/')+1);
+if (filename.split(".").length==1){
+	if (filename.length<2){
+		filename=false;
+	}
+} else {
+	filename = false;
+}
+
+
+var permaid=false;
+if ((urlParams.has('permaid')) || (urlParams.has('push'))){
+	permaid  = urlParams.get('permaid') || urlParams.get('push');
+	session.changeStreamID(permaid);
+	getById("container-1").className = 'column columnfade advanced';
+	getById("container-4").className = 'column columnfade advanced';
+	getById("info").innerHTML = "";
+	getById("add_camera").innerHTML = "Share your Camera";
+	getById("add_screen").innerHTML = "Share your Screen";
+	
+	getById("videoname1").value = "";
+	getById("dirroomid").innerHTML = "";
+	getById("roomid").innerHTML = "";
+	getById("container-1").className = 'column columnfade advanced';
+	getById("container-4").className = 'column columnfade advanced';
+	getById("mainmenu").style.alignSelf= "center";
+	getById("mainmenu").style.display="inherit";
+	getById("header").style.alignSelf= "center";
+	
+	if (session.webcamonly==true){  // mobile or manual flag 'webcam' pflag set
+		getById("head1").innerHTML = '<font style="color:#CCC;">- Please accept any camera permissions</font>';
+	} else {	
+		getById("head1").innerHTML = '<br /><font style="color:#CCC">- Please select which you wish to share</font>';
+	}
+} 
+
+
+if ( (session.roomid) || (urlParams.has('roomid')) || (filename) || (urlParams.has('room')) || (permaid!==false)){
+	
+	var roomid = "";
+	if (filename){
+		roomid = filename;
+	} else if (urlParams.has('room')){
+		roomid  = urlParams.get('room');
+	} else if (urlParams.has('roomid')){
+		roomid  = urlParams.get('roomid');
+	} else if (session.roomid){
+		roomid = session.roomid;
+	}
+	
+	roomid = roomid.replace(/[\W_]+/g,"_");
+	session.roomid = roomid;
+	
+	getById("info").innerHTML = "";
+	getById("info").style.color="#CCC";
+	getById("videoname1").value = roomid;
+	getById("dirroomid").innerHTML = roomid;
+	getById("roomid").innerHTML = roomid;
+	getById("container-1").className = 'column columnfade advanced';
+	getById("container-4").className = 'column columnfade advanced';
+	getById("mainmenu").style.alignSelf= "center";
+	getById("header").style.alignSelf= "center";
+	
+	if (session.webcamonly==true){  // mobile or manual flag 'webcam' pflag set
+		getById("head1").innerHTML = '';
+	} else {	
+		getById("head1").innerHTML = '<br /><font style="color:#CCC">Please select an option to join.</font>';
+	}
+	
+	getById("add_camera").innerHTML = "Join Room with Camera";
+	getById("add_screen").innerHTML = "Screenshare with Room";
+	getById("head3").className = 'advanced';
+	if (urlParams.has('scene')){
+		session.scene = urlParams.get('scene');
+		getById("container-4").className = 'column columnfade';
+		getById("container-3").className = 'column columnfade';
+		getById("container-2").className = 'column columnfade';
+		getById("container-1").className = 'column columnfade';
+		getById("header").className = 'advanced';
+		getById("info").className = 'advanced';
+		getById("header").className = 'advanced';
+		getById("head1").className = 'advanced';
+		getById("head2").className = 'advanced';
+		getById("head3").className = 'advanced';
+		getById("mainmenu").style.display = "none";
+		window.addEventListener("resize", updateMixer);
+		joinRoom(roomid); // this is a scene, so we want high resolutions
+	} 
+} else if (urlParams.has('director')){
+	createRoom(urlParams.get('director').replace(/[\W_]+/g,"_"));
+}
+
+
+function checkConnection(){
+	if (document.getElementById("qos")){
+		if ((session.ws) && (session.ws.readyState === WebSocket.OPEN)) {
+			getById("qos").style.color = "white";
+		} else {
+			getById("qos").style.color = "red";
+		}
+	}
+}
+setInterval(function(){checkConnection();},5000);
+
+
+function updateStats(){
+	log('resolution found');
+	try {
+		getById('previewWebcam').srcObject.getVideoTracks().forEach(
+			function(track) {
+				log(track.getSettings());
+				log(track.getSettings().frameRate);
+				//log(track.getSettings().frameRate);
+				getById("webcamstats").innerHTML = "Current Video Settings: "+(track.getSettings().width||0) +"x"+(track.getSettings().height||0)+"@"+(parseInt(track.getSettings().frameRate*10)/10)+"fps";
+			}
+		);
+		
+	} catch (e){errorlog(e);}
+}
+
+function toggleMute(){ // TODO: I need to have this be MUTE, toggle, with volume not touched.
+	if (session.muted==false){
+		session.muted = true;
+		getById("mutetoggle").className="fa fa-microphone-slash my-float";
+		getById("mutebutton").className="float";
+		session.streamSrc.getAudioTracks().forEach((track) => {
+		  track.enabled = false;
+		});
+		
+	} else{
+		session.muted=false;
+		
+		getById("mutetoggle").className="fa fa-microphone my-float";
+		getById("mutebutton").className="float3";
+		
+		session.streamSrc.getAudioTracks().forEach((track) => {
+		  track.enabled = true;
+		});
+	}
+}
+
+function toggleVideoMute(){ // TODO: I need to have this be MUTE, toggle, with volume not touched.
+	if (session.videoMuted==false){
+		session.videoMuted = true;
+		getById("mutevideotoggle").className="fa fa-eye-slash my-float";
+		getById("mutevideobutton").className="float5";
+		session.streamSrc.getVideoTracks().forEach((track) => {
+		  track.enabled = false;
+		});
+		
+	} else{
+		session.videoMuted=false;
+		
+		getById("mutevideotoggle").className="fa fa-eye my-float";
+		getById("mutevideobutton").className="float4";
+		
+		
+		session.streamSrc.getVideoTracks().forEach((track) => {
+		  track.enabled = true;
+		});
+	}
+}
+
+function directEnable(ele){ // A directing room only is controlled by the Director, with the exception of MUTE.
+        log("enable");
+	if (ele.parentNode.parentNode.dataset.enable==1){
+		ele.parentNode.parentNode.dataset.enable = 0;
+		ele.className = "";
+		ele.innerHTML = "Add to Group Scene";
+		ele.parentNode.parentNode.style.backgroundColor = "#E3E4FF";
+	} else {
+		ele.parentNode.parentNode.style.backgroundColor = "#AFA";
+		ele.parentNode.parentNode.dataset.enable = 1;
+		ele.className = "pressed";
+		ele.innerHTML = "Remove from Group Scene";
+	}
+        var msg = {};
+        msg.request = "sendroom";
+        msg.roomid = session.roomid;
+        msg.scene = "1"; // scene
+        msg.action = "display";
+        msg.value =  ele.parentNode.parentNode.dataset.enable;
+        msg.target = ele.parentNode.parentNode.dataset.UUID;
+        session.sendMsg(msg); // send to everyone in the room, so they know if they are on air or not.
+}
+
+
+function directMute(ele){ // A directing room only is controlled by the Director, with the exception of MUTE.
+	log("mute");
+	if (ele.parentNode.parentNode.dataset.mute==0){
+                ele.parentNode.parentNode.dataset.mute = 1;
+                ele.className = "";
+		ele.innerHTML = "Mute";
+        } else {
+                ele.parentNode.parentNode.dataset.mute = 0;
+                ele.className = "pressed";
+		ele.innerHTML = "Unmute";
+        }
+	var msg = {};
+	msg.request = "sendroom";
+	msg.roomid = session.roomid;
+	msg.scene = "1";
+	msg.action = "mute";
+	msg.value =  ele.parentNode.parentNode.dataset.mute;
+	msg.target = ele.parentNode.parentNode.dataset.UUID;
+	session.sendMsg(msg); // send to everyone in the room, so they know if they are on air or not.
+}
+
+
+function directVolume(ele){ // A directing room only is controlled by the Director, with the exception of MUTE.
+	log("volume");
+	var msg = {};
+	msg.request = "sendroom";
+	msg.roomid = session.roomid;
+	msg.scene = "1";
+	msg.action = "volume";
+	msg.target = ele.parentNode.parentNode.dataset.UUID; // i want to focus on the STREAM ID, not the UUID...
+	msg.value = ele.value;
+	
+	session.sendMsg(msg); // send to everyone in the room, so they know if they are on air or not.
+}
+
+
+function chatRoom(chatmessage="hi"){ // A directing room only is controlled by the Director, with the exception of MUTE.
+	log("Chat message");
+	var msg = {};
+	msg.request = "sendroom";
+	msg.roomid = session.roomid;
+	msg.action = "chat";
+	msg.value = chatmessage;
+	session.sendMsg(msg); // send to everyone in the room, so they know if they are on air or not.
+}
+
+
+function changeTitle(aTitle="Untitled"){
+	log("changing title; if connected at least");
+	session.changeTitle(aTitle);
+}
+
+var activatedStream = false;
+function publishScreen(){
+	if( activatedStream == true){return;}
+	activatedStream = true;
+	setTimeout(function(){activatedStream=false;},1000);
+
+	var title = "ScreenShare";//getById("videoname2").value;
+
+	formSubmitting = false;
+	
+	var quality = parseInt(getById("webcamquality2").elements.namedItem("resolution2").value);
+	
+	if (session.quality!==false){
+		quality=session.quality; // override the user's setting
+	}
+	
+	if (quality==0){
+		var width = {ideal: 1920};
+		var height = {ideal: 1080};
+	} else if (quality==1){
+		var width = {ideal: 1280};
+		var height = {ideal: 720};
+	} else if (quality==2){
+		var width = {ideal: 640};
+		var height = {ideal: 360};
+	} else if (quality>=3){  // lowest
+		var width = {ideal: 320};
+		var height = {ideal: 180};
+	}
+	
+	if (session.width){
+		width = {ideal: session.width};
+	}
+	if (session.height){
+		height = {ideal: session.height};
+	}
+
+	var constraints = window.constraints = {
+		audio: {echoCancellation: session.echoCancellation || false, autoGainControl: session.autoGainControl || false, noiseSuppression: session.noiseSuppression || false }, // I hope this doesn't break things..
+		video: {width: width, height: height, cursor: "never", mediaSource: "browser"}
+	};
+
+	if (session.framerate){
+		constraints.video.frameRate = session.framerate;
+	}	
+	
+	var audioSelect = document.querySelector('select#audioSourceScreenshare');
+	
+	session.publishScreen(constraints, title, audioSelect).then((res)=>{
+		if (res==false){return;} // no screen selected
+		log("streamID is: "+session.streamID);
+
+		if (!(session.cleanOutput)){
+			getById("mutebutton").className="float3";
+			getById("helpbutton").className="float2";
+			getById("mutevideobutton").className="float4";
+		}
+		getById("head1").className = 'advanced';
+		getById("head2").className = 'advanced';
+	}).catch(()=>{});
+
+}
+function publishWebcam(){
+	if( activatedStream == true){return;}
+	activatedStream = true;
+	log("PRESSED PUBLISH WEBCAM!!");
+	var title = "Webcam"; // getById("videoname3").value;
+	var ele = getById("previewWebcam");
+
+	var stream = ele.srcObject;
+	
+
+	ele.parentNode.removeChild(ele);
+
+	formSubmitting = false;
+	window.scrollTo(0, 0); // iOS has a nasty habit of overriding the CSS when changing camaera selections, so this addresses that.
+
+	if (session.roomid!==false){
+		log("ROOM ID ENABLED");
+		window.addEventListener("resize", updateMixer);
+		joinRoom(session.roomid);
+		getById("head3").className = 'advanced';
+	} else {
+		getById("head3").className = '';
+	}
+	
+	log("streamID is: "+session.streamID);
+	getById("head1").className = 'advanced';
+	getById("head2").className = 'advanced';
+
+	if (!(session.cleanOutput)){
+		getById("mutebutton").className="float3";
+		getById("helpbutton").className="float2";
+		getById("mutevideobutton").className="float4";
+	}
+	updateURL("push="+session.streamID);
+	session.publishStream(stream, title);
+
+}
+
+function joinRoom(roomname, maxbitrate=false){
+	roomname = roomname.replace(/[^0-9a-z]/gi, '');
+		if (roomname.length){
+			log("Join room",roomname);
+			log(roomname);
+			session.joinRoom(roomname,maxbitrate).then(function(response){  // callback from server; we've joined the room
+			
+				if (session.director){
+					var msg = {};
+					msg.request = "claim";
+					session.sendMsg(msg); 
+				}
+				
+				log("Members in Room");
+				log(response);
+				for (var i in response){
+					if ("UUID" in response[i]){
+						if ("streamID" in response[i]){
+							if (response[i].UUID in session.pcs){
+								log("RTC already connected"); /// lets just say instead of Stream, we have 
+							} else {
+								//var title = "";                            // TODO: Assign labels 
+								//if ("title" in response[i]){
+									//	title = response[i]["title"];
+									//}
+									
+								play(response[i].streamID);  // play handles the group room mechanics here
+							}
+						}
+					}
+				}
+
+			},function(error){return {};});
+		} else {
+			log("Room name not long enough or contained all bad characaters");
+		}	
+}
+
+
+function createRoom(roomname=false){
+
+	if (roomname==false){
+		roomname = getById("videoname1").value;
+		roomname = roomname.replace(/[\W_]+/g,"_");
+		updateURL("director="+roomname); // make the link reloadable.
+	}
+	log(roomname);
+	if (roomname.length==0){
+		alert("Please enter a room name before continuing");
+		return;
+	}
+
+	var gridlayout = getById("gridlayout");
+	gridlayout.classList.add("directorsgrid");
+
+	session.roomid = roomname;
+	formSubmitting = false;
+
+	var m = getById("mainmenu");
+	m.remove();
+
+	getById("head1").className = 'advanced';
+	getById("head2").className = 'advanced';
+	getById("head3").className = 'advanced';
+	getById("head4").className = '';
+	
+	getById("dirroomid").innerHTML =  decodeURIComponent(roomname);
+	getById("roomid").innerHTML = roomname;
+
+
+	//getById("mutebutton").className="float3";
+	//getById("helpbutton").className="float2";
+	session.director = true;
+	getById("reshare").parentNode.removeChild(getById("reshare"));
+	
+	gridlayout.innerHTML = "<br /><div style='display:inline-block'><font style='font-size:130%;color:white;'></font><input  onclick='popupMessage(event);copyFunction(this)' onmousedown='copyFunction(this)' style='cursor:grab;font-weight:bold;background-color:#78F; width:400px; font-size:100%; padding:10px; border:2px solid black; margin:5px;'  class='task' value='https://"+location.host+location.pathname+"?room="+session.roomid+"' /><font style='font-size:130%;color:white;'><i class='fa fa-video-camera' style='font-size:2em;'  aria-hidden='true'></i> - Invites users to join the group and broadcast their feed to it. These users will see every feed, so a limit of 4 is recommended.</font></div>";
+	
+	gridlayout.innerHTML += "<br /><font style='font-size:130%;color:white;'></font><input class='task' onclick='popupMessage(event);copyFunction(this)' onmousedown='copyFunction(this)' style='cursor:grab;font-weight:bold;background-color:#F45;width:400px;font-size:100%;padding:10px;border:2px solid black;margin:5px;' value='https://"+location.host+location.pathname+"?room="+session.roomid+"&view' /><font style='font-size:130%;color:white;'><i class='fa fa-video-camera' style='font-size:2em;'  aria-hidden='true'></i> - Link to Invite users to broadcast their feeds to the group. These users will not see or hear any feed from the group.</font><br />";
+	
+	
+	gridlayout.innerHTML += "<font style='font-size:130%;color:white'></font><input class='task' onmousedown='copyFunction(this)' data-drag='1' onclick='popupMessage(event);copyFunction(this)' style='cursor:grab;font-weight:bold;background-color:#5F4;width:400px;font-size:100%;padding:10px;border:2px solid black;margin:5px;' value='https://"+location.host+location.pathname+"?scene=1&room="+session.roomid+"' /><font style='font-size:130%;color:white'><i class='fa fa-th-large' style='font-size:2em;' aria-hidden='true'></i> - This is an OBS Browser Source link that contains the group chat in just a single scene. Videos must be added to Group Scene.</font><br />";
+	
+	gridlayout.innerHTML += '<button style="margin:10px;padding:5px" onclick="toggle(getById(\'roomnotes2\'),this);">Click Here for a quick overview and help</button>';
+	
+	gridlayout.innerHTML += "<div id='roomnotes2' style='display:none;padding:0 0 0 10px;' ><br />\
+	<font style='color:#CCC;'>Welcome. This is the control-room for the group-chat. There are different things you can use this room for:<br /><br />\
+	<li>You can host a small-group chat here. Share the blue link to invite guests who will join the chat automatically.</li>\
+	<li>You can use it to invite and manage up to 20 remote camera streams. Use the red-colored add camera link to bring in such streams.</li>\
+	<li>You can add and remote control individual streams loaded into OBS. The required solo-links to add to OBS will appear under videos as they load.</li>\
+	<li>You can use the auto-mixing Group Scene, the green link, to auto arrange multiple videos for you in OBS.</li>\
+	<li>You can use it to record video streams independently</li>\
+	<br />\
+	As guests join, their videos will appear below. You can bring their video streams into OBS as solo-scenes or you can add them to the Group Scene.\
+	<br />The Group Scene auto-mixes videos that have been added to the group scene. Please note that the Auto-Mixer requires guests be manually added to it for them to appear in it; they are not added automatically.<br /><Br />Apple mobile devices, such as iPhones and iPads, do not fully support Video Group Chat. This is a hardware constraint.<br /><br /></font></div><hr />";
+	
+	gridlayout.innerHTML += "<div id='deleteme'><br /><br /><center>\
+	<div style='display:inline-block;width:300px;height:350px;border:2px solid white;background-color:#999;margin:40px;'><br /><br />GUEST SLOT #1<br /><br />(A video will appear here when a guest joins)<br /><br /><i class='fa fa-user ' style='font-size:8em;' aria-hidden='true'></i><br /><br />A Solo-Link for OBS will appear here.</div>\
+	<div style='display:inline-block;width:300px;height:350px;border:2px solid white;background-color:#999;margin:40px;'><br /><br />GUEST SLOT #2<br /><br />(A video will appear here when a guest joins)<br /><br /><i class='fa fa-user  ' style='font-size:8em;' aria-hidden='true'></i><br /><br />A Solo Link for OBS will appear here</div>\
+	<div style='display:inline-block;width:300px;height:350px;border:2px solid white;background-color:#999;margin:40px;'><br /><br />GUEST SLOT #3<br /><br />(A video will appear here when a guest joins)<br /><br /><i class='fa fa-user ' style='font-size:8em;'aria-hidden='true'></i><br /><br />A Solo Link for OBS will appear here</div>\
+	<div style='display:inline-block;width:300px;height:350px;border:2px solid white;background-color:#999;margin:40px;'><br /><br />GUEST SLOT #4<br /><br />(A video will appear here when a guest joins)<br /><br /><i class='fa fa-user ' style='font-size:8em;'aria-hidden='true'></i><br /><br />A Solo Link for OBS will appear here</div></center></div>";
+	joinRoom(roomname);  // setting this to limit bitrate may break things.
+
+}
+
+function toggle(ele, tog=false) {
+  var x = ele;
+  if (x.style.display === "none") {
+    x.style.display = "block";
+  } else {
+    x.style.display = "none";
+  }
+  if (tog){
+	  if (tog.dataset.saved){
+		  tog.innerHTML= tog.dataset.saved;
+		  delete(tog.dataset.saved);
+	  } else {
+		  tog.dataset.saved = tog.innerHTML;
+		  tog.innerHTML = "Hide This";
+	  }
+  }
+}
+
+function enumerateDevices() {
+	
+	log("enumerated start");
+	
+	if (typeof navigator.enumerateDevices === "function") {
+		errorlog("enumerated failed 1");
+		return navigator.enumerateDevices();
+	}
+	else if (typeof navigator.mediaDevices === "object" &&
+		typeof navigator.mediaDevices.enumerateDevices === "function") {
+			errorlog("enumerated failed 2");
+		return navigator.mediaDevices.enumerateDevices();
+	} else {
+		return new Promise((resolve, reject) => {
+			try {
+				if (window.MediaStreamTrack == null || window.MediaStreamTrack.getSources == null) {
+					throw new Error();
+				}
+				window.MediaStreamTrack.getSources((devices) => {
+					resolve(devices
+						.filter(device => {
+							return device.kind.toLowerCase() === "video" || device.kind.toLowerCase() === "videoinput";
+						})
+						.map(device => {
+							return {
+								deviceId: device.deviceId != null ? device.deviceId : "",
+								groupId: device.groupId,
+								kind: "videoinput",
+								label: device.label,
+								toJSON: /* istanbul ignore next */ function () {
+									return this;
+								}
+							};
+						}));
+				});
+			}
+			catch (e) {
+				errorlog(e);
+			}
+		});
+	}
+}
+
+function requestAudioStream(){
+	try {
+	  return navigator.mediaDevices.getUserMedia({audio:true, video:false }).then(function(stream1){ // Apple needs thi to happen before I can access EnumerateDevices. 
+			log("get media sources; request audio stream");
+			  return enumerateDevices().then(function(deviceInfos){
+					stream1.getTracks().forEach(function(track) { // We don't want to keep it without audio; so we are going to try to add audio now.
+						track.stop(); // I need to do this after the enumeration step, else it breaks firefox's labels
+					});
+					log("updating audio");
+					const audioInputSelect = document.querySelector('select#audioSourceScreenshare');
+					audioInputSelect.remove(1);
+					audioInputSelect.removeAttribute("onchange");
+					//var temp = {};
+					//for (let i = 0; i !== deviceInfos.length; ++i) {  // getting rid of duplicates. This is a bit useless; I need to revisit.
+					//	if (deviceInfos[i].kind === 'audioinput') {
+					//		if (deviceInfos[i].deviceId in temp){
+					//			deviceInfos[i] = null;
+					//		} else {
+					//			temp[deviceInfos[i].deviceId]=true;
+					//		}
+					//	}
+					//}							
+					
+					for (let i = 0; i !== deviceInfos.length; ++i) {
+							const deviceInfo = deviceInfos[i];
+							if (deviceInfo==null){continue;}
+							const option = document.createElement('option');
+							option.value = deviceInfo.deviceId;
+							if (deviceInfo.kind === 'audioinput') {
+								option.text = deviceInfo.label || `microphone ${audioInputSelect.length + 1}`;
+								audioInputSelect.appendChild(option);
+							} else {
+								log('Some other kind of source/device: ', deviceInfo);
+							}
+					}
+			  });
+	  });
+   } catch (e){
+	   if (window.isSecureContext) {
+		   alert("An error has occured when trying to access the webcam. The reason is not known.");
+	   } else {
+		alert("Error acessing webcam.\n\nWebsite is loaded in an insecure context.\n\nPlease see: https://developer.mozilla.org/en-US/docs/Web/API/MediaDevices/getUserMedia");
+	   }
+   }
+}
+
+
+function gotDevices(deviceInfos) { // https://github.com/webrtc/samples/blob/gh-pages/src/content/devices/input-output/js/main.js#L19
+
+	log("got devices!");
+	log(deviceInfos);
+	try{
+		const audioInputSelect = document.querySelector('#audioSource');
+		const videoSelect = document.querySelector('select#videoSource');
+		const selectors = [ videoSelect];
+
+		// Handles being called several times to update labels. Preserve values.
+		const values = selectors.map(select => select.value);
+		selectors.forEach(select => {
+			while (select.firstChild) {
+				select.removeChild(select.firstChild);
+			}
+		});
+		//var temp = {};
+		//for (let i = 0; i !== deviceInfos.length; ++i) {
+		//	if (deviceInfos[i].kind === 'audioinput') {
+		//		if (deviceInfos[i].deviceId in temp){
+		//			deviceInfos[i] = null;
+		//		} else {
+		//			temp[deviceInfos[i].deviceId]=true;
+		//		}
+		//	}
+		//}
+		var counter = 1;
+		for (let i = 0; i !== deviceInfos.length; ++i) {
+			const deviceInfo = deviceInfos[i];
+			if (deviceInfo==null){continue;}
+			
+			if (deviceInfo.kind === 'audioinput') {
+				const option = document.createElement('input');
+				option.type="checkbox";
+				counter++;
+				const listele = document.createElement('li');
+				if (counter==2){
+					option.checked=true;
+					listele.style.display="block";
+					option.style.display="none";
+					getById("multiselect1").checked = false;
+					getById("multiselect1").parentNode.style.display="none";
+				} else {
+					listele.style.display="none";
+				}
+				
+				option.value = deviceInfo.deviceId;
+				option.name = "multiselect"+counter;
+				option.id = "multiselect"+counter;
+				const label = document.createElement('label');
+				label.for = option.name;
+				
+				label.innerHTML = " " + (deviceInfo.label || `microphone ${audioInputSelect.length + 1}`);
+				
+				listele.appendChild(option);
+				listele.appendChild(label);
+				audioInputSelect.appendChild(listele);
+				
+				
+				getById("multiselect1").onchange = function(event){  // make sure to clear 'no audio option' if anything else is selected
+					if (!(getById("multiselect1").checked)){
+						getById("multiselect1").checked= true;
+					}
+				};
+				
+				option.onchange = function(event){  // make sure to clear 'no audio option' if anything else is selected
+					getById("multiselect1").checked= false;
+					if (!(CtrlPressed)){ 
+						document.querySelectorAll("#audioSource input[type='checkbox']").forEach(function(item) {
+						  if (event.currentTarget.id !== item.id){
+							  item.checked = false;
+						  } else {
+							  item.checked = true;
+						  }
+						});
+					}
+				};
+		
+			} else if (deviceInfo.kind === 'videoinput') {
+				const option = document.createElement('option');
+				option.value = deviceInfo.deviceId;
+				option.text = deviceInfo.label || `camera ${videoSelect.length + 1}`;
+				videoSelect.appendChild(option);
+			} else {
+				log('Some other kind of source/device: ', deviceInfo);
+			}
+		}
+		
+		
+		//var option = document.createElement('option');
+		//option.text = "Disable Audio";
+		//option.value = "ZZZ";
+		//audioInputSelect.appendChild(option); // NO AUDIO OPTION
+		
+		option = document.createElement('option');
+		option.text = "Disable Video";
+		option.value = "ZZZ";
+		videoSelect.appendChild(option); // NO AUDIO OPTION
+		
+		selectors.forEach((select, selectorIndex) => {
+			if (Array.prototype.slice.call(select.childNodes).some(n => n.value === values[selectorIndex])) {
+				select.value = values[selectorIndex];
+			}
+		});
+		
+		//audioInputSelect.selectedIndex  = 0;
+	} catch (e){
+		errorlog(e);
+	}
+}
+
+
+if (location.protocol !== 'https:') {
+   alert("SSL (https) is not enabled. This site will not work without it!");
+}
+
+
+function getUserMediaVideoParams(resolutionFallbackLevel, isSafariBrowser) {
+	switch (resolutionFallbackLevel) {
+		case 0:
+			if (isSafariBrowser) {
+				return {
+						width: { min: 360, ideal: 1920, max: 1920 },
+						height: { min: 360, ideal: 1080, max: 1080 }
+					};
+			} else {
+				return {
+					width: { min: 720, ideal: 1920, max: 1920 },
+					height: { min: 720, ideal: 1080, max: 1920 }
+				};
+			}
+		case 1:
+			if (isSafariBrowser) {
+				return {
+						width: { min: 360, ideal: 1280, max: 1280 },
+						height: { min: 360, ideal: 720, max: 720 }
+					};
+			} else {
+				return {
+					width: { min: 720, ideal: 1280, max: 1280 },
+					height: { min: 720, ideal: 720, max: 1280 }
+				};
+			}
+		case 2:
+			if (isSafariBrowser) {
+				return {
+						width: { min: 640 },
+						height: { min: 360 }
+				};
+			} else {
+				return {
+					width: { min: 240, ideal: 640, max: 1280 },
+					height: { min: 240, ideal: 360, max: 1280 }
+				};
+			}
+		case 3:
+			if (isSafariBrowser) {
+				return {
+					width: { min: 360, ideal: 1280, max: 1440 }
+				};
+			}
+			else {
+				return {
+					width: { min: 360, ideal: 1280, max: 1440 }
+				};
+			}
+		case 4:
+			if (isSafariBrowser) {
+				return {
+					height: { min: 360, ideal: 720, max: 960 }
+				};
+			}
+			else {
+				return {
+					height: { min: 360, ideal: 960, max: 960 }
+				};
+			}
+		case 5:
+			if (isSafariBrowser) {
+				return {
+					width: { min: 360, ideal: 640, max: 1440 },
+					height: { min: 360, ideal: 360, max: 720 }
+				};
+			}
+			else {
+				return {
+					width: { min: 360, ideal: 640, max: 3840 },
+					height: { min: 360, ideal: 360, max: 2160 }
+				};
+			}
+		case 6:
+			if (isSafariBrowser) {
+				return {}; // iphone users probably don't need to wait any longer, so let them just get to it
+			}
+			else {
+				return {width: {min:360,max:1920}, 
+						height: {min:360, max:1920}}; // same as default, but I didn't want to mess with framerates until I gave it all a try first
+			}
+		case 7:
+			return { // If the camera is recording in low-light, it may have a low framerate. It coudl also be recording at a very high resolution.
+				width: { min: 360, ideal: 640 },
+				height: { min: 360, ideal: 360 },
+				frameRate: 10
+			};
+
+		case 8:
+			return {width: {min:360,max:1920}, height: {min:360, max:1920}}; // same as default, but I didn't want to mess with framerates until I gave it all a try first
+		case 9:
+			return {frameRate: 0 };  // Some Samsung Devices report they can only support a framerate of 0.
+		default:
+			return {}; 
+	}
+}
+
+function grabVideo(quality=0, audioEnable=false){
+	if( activatedPreview == true){log("activeated preview return 2");return;}
+	activatedPreview = true;
+	log("trying with quality:"+quality);
+
+	var videoSelect = document.querySelector('select#videoSource');
+	
+	var sq=0;
+	if (session.quality>2){  // 1080, 720, and 360p 
+		sq = 2; // hacking my own code. TODO: ugly, so I need to revisit this. 
+	} else {
+		sq = session.quality;
+	}
+	
+	if (sq!==false){
+		if (quality>sq){
+			quality=sq; // override the user's setting
+		}
+	}
+
+	if (iOS){  // iOS will not work correctly at 1080p; likely a h264 codec issue.
+		if (quality==0){
+			quality=1;
+		}
+	} else if (iPad){
+		if (quality==0){
+			quality=1;
+		}
+	}
+	
+	
+	var audio = false;
+	var streams = [];
+	if ((videoSelect.value == "ZZZ") || (audioEnable==true)){  // if there is no video, or if manually set to audio ready, then do this step.
+		
+		var audioSelect = document.querySelector('#audioSource').querySelectorAll("input"); 
+		var audioList = [];
+		
+		for (var i=0; i<audioSelect.length;i++){
+			if (audioSelect[i].value=="ZZZ"){
+				continue;
+			}
+			if (audioSelect[i].checked){
+				audioList.push(audioSelect[i]);
+			}
+		}
+		
+		for (var i=1; i<audioList.length;i++){
+			var constraint = {audio: {deviceId: {exact: audioList[i].value}}};
+			if ((session.stereo==1) || (session.stereo==3)){
+				constraint.audio.echoCancellation = session.echoCancellation;
+				constraint.audio.autoGainControl = session.autoGainControl;
+				constraint.audio.noiseSuppression = session.noiseSuppression;
+			}
+			navigator.mediaDevices.getUserMedia(constraint).then(function (stream2){
+				streams.push(stream2);
+			}).catch(errorlog);
+		} 
+		
+		if (audioList.length){
+			audio = {deviceId: {exact: audioList[0].value}};
+			if ((session.stereo==1) || (session.stereo==3)){
+				audio.echoCancellation = session.echoCancellation;
+				audio.autoGainControl = session.autoGainControl;
+				audio.noiseSuppression = session.noiseSuppression;
+			}
+		} 
+	}
+	
+	if (videoSelect.value == "ZZZ"){  // without video. Nice and quick
+		var constraints = {
+			audio: audio,
+			video: false
+		};
+		navigator.mediaDevices.getUserMedia(constraints).then(function(stream){
+			log("adding additional audio tracks");
+			for (var i=0; i<streams.length;i++){
+				streams[i].getAudioTracks().forEach(function(track){
+					stream.addTrack(track);
+					log(track);
+				});
+			}
+			streams = null;
+			
+			getById('previewWebcam').srcObject = stream; // set the preview window and run with it
+			
+			var gowebcam = getById("gowebcam");
+			gowebcam.disabled =false;
+			gowebcam.style.backgroundColor = "#3C3";
+			gowebcam.style.color = "black";
+			gowebcam.style.fontWeight="bold";
+			gowebcam.innerHTML = "PRESS WHEN READY!";
+			
+		}).catch(function(e){
+			errorlog(e);
+			alert("Error: Media stream creation failed.");
+		});
+	
+	} else {       // with video
+		var constraints = {  
+			audio: audio,
+			video: getUserMediaVideoParams(quality, iOS)
+		};
+		constraints.video.deviceId =  videoSelect.value ? {exact: videoSelect.value} : undefined; // hoping this fixes a bug with NDI + Iphone
+		if (session.width){
+			constraints.video.width = {exact: session.width};
+		}
+		if (session.height){
+			constraints.video.height = {exact: session.height};
+		}
+		if (session.framerate){
+			constraints.video.frameRate = {exact: session.framerate};
+		} else if (session.maxframerate){
+			constraints.video.frameRate = {max: session.maxframerate};
+		}
+	
+		log(constraints);
+
+		setTimeout(()=>{
+			try {
+
+				log("Trying Constraints");
+				var oldstream = getById('previewWebcam').srcObject;
+				if (oldstream){
+					oldstream.getTracks().forEach(function(track) {
+						track.stop();
+					});
+				}
+			} catch(e){
+				errorlog(e);
+			}
+			navigator.mediaDevices.getUserMedia(constraints).then(function(stream){
+				if (audioEnable == false){
+					stream.getTracks().forEach(function(track) { // We don't want to keep it without audio; so we are going to try to add audio now.
+						track.stop();
+					});
+					log("GOT IT BUT WITH NO AUDIO");
+					activatedPreview = false;
+					grabVideo(quality,true);
+				} else {
+					log("adding tracks");
+					for (var i=0; i<streams.length;i++){
+						streams[i].getAudioTracks().forEach(function(track){
+							stream.addTrack(track);
+							log(track);
+						});
+					}
+					streams = null;
+					
+					getById('previewWebcam').srcObject = stream; // set the preview window and run with it
+					
+					
+					var gowebcam = getById("gowebcam");
+					gowebcam.disabled =false;
+					gowebcam.style.backgroundColor = "#3C3";
+					gowebcam.style.color = "black";
+					gowebcam.style.fontWeight="bold";
+					gowebcam.innerHTML = "PRESS WHEN READY!";
+					
+					// Once crbug.com/711524 is fixed, we won't need to wait anymore. This is
+					// currently needed because capabilities can only be retrieved after the
+					// device starts streaming. This happens after and asynchronously w.r.t.
+					// getUserMedia() returns.
+					setTimeout(function(){dragElement(getById('previewWebcam'));},1000);  // focus
+					
+					log("DONE - found stream");
+					
+				}
+			}).catch(function(e){
+				activatedPreview = false;
+				errorlog(e);
+				if (e.name === "OverconstrainedError"){
+					errorlog(e.message);
+					log("Resolution didn't work");
+				} else if (e.name === "NotReadableError"){
+					if (iOS){
+						alert("An error occured. Upgrading to at least iOS 13.4 should fix this glitch from happening again");
+					} else {
+						alert("Error Listing Media Devices.\n\nThe default Camera may already be in use with another app. Typically webcams can only be accessed by one program at a time.\n\nThe selected device may also not be supported.");
+					}
+					getById('gowebcam').innerHTML="Problem with Camera";
+					activatedPreview=true;
+					return;
+				} else if (e.name === "NavigatorUserMediaError"){
+					getById('gowebcam').innerHTML="Problem with Camera";
+					alert("Unknown error: 'NavigatorUserMediaError'"); 
+					return;
+				} else {
+					errorlog("An unknown camera error occured");
+				}
+				if (quality<=9){
+					grabVideo(quality+1);
+				} else {
+					errorlog("********Camera failed to work");
+					activatedPreview=true;
+					getById('gowebcam').innerHTML="Problem with Camera";
+					alert("Camera failed to load. \n\nPlease make sure it is not already in use by another application.\n\nPlease make sure you have accepted the camera permissions.");
+				}
+			});
+		},0);
+	}
+}
+
+
+
+function enterPressed(event, callback){
+  // Number 13 is the "Enter" key on the keyboard
+  if (event.keyCode === 13){
+    // Cancel the default action, if needed
+    event.preventDefault();
+    // Trigger the button element with a click
+    callback();
+  }
+}
+
+
+function dragElement(elmnt) {
+	var  millis = Date.now();
+	log(elmnt);
+	try {
+		var input = getById("zoomSlider");
+		var stream = elmnt.srcObject;
+		log(stream);
+		var track0 = stream.getVideoTracks();
+		log(track0);
+		track0 = track0[0];
+		var capabilities = track0.getCapabilities();
+		var settings = track0.getSettings();
+
+		
+		
+		// Check whether zoom is supported or not. 
+		if (!('zoom' in capabilities)) {
+			log('Zoom is not supported by ' + track0.label);
+			return;
+		}
+
+		// Map zoom to a slider element.
+		input.min = capabilities.zoom.min;
+		input.max = capabilities.zoom.max;
+		input.step = capabilities.zoom.step;
+		input.value = settings.zoom;
+		
+		
+	} catch(e){errorlog(e);return;}
+	
+	
+	
+	log("drag on");
+    elmnt.onmousedown = dragMouseDown;
+	elmnt.onclick = onvideoclick;
+	
+	elmnt.ontouchstart = function (e) {
+		dragMouseDown(e);
+	};
+	
+	var pos0 = 1;
+	function onvideoclick(e){
+		
+		log("click",e);
+		//elmnt.controls = false;
+		e = e || window.event;
+		e.preventDefault();
+		return false;
+	}
+	
+  function dragMouseDown(e) {
+	log(e);
+	elmnt.controls = false;
+    e = e || window.event;
+    e.preventDefault();
+	
+	pos0 = input.value;
+	if(e.type == 'touchstart' || e.type == 'touchmove' || e.type == 'touchend' || e.type == 'touchcancel'){
+		var touch = e.touches[0] ||e.originalEvent.touches[0] || e.originalEvent.changedTouches[0];
+		pos3 = touch.clientX;
+		pos4 = touch.clientY;
+	} else if (e.type == 'mousedown' || e.type == 'mouseup' || e.type == 'mousemove' || e.type == 'mouseover'|| e.type=='mouseout' || e.type=='mouseenter' || e.type=='mouseleave') {
+		pos3 = e.clientX;
+		pos4 = e.clientY;
+	}
+
+	document.ontouchmove = elementDrag;
+	
+    document.onmouseup = closeDragElement;
+    // call a function whenever the cursor moves:
+    document.onmousemove = elementDrag;
+  }
+
+  function elementDrag(e) {
+    e = e || window.event;
+    e.preventDefault();
+    // calculate the new cursor position:
+	
+	if ( Date.now() - millis < 50){
+		return;
+	}
+	millis = Date.now();
+	
+	if(e.type == 'touchstart' || e.type == 'touchmove' || e.type == 'touchend' || e.type == 'touchcancel'){
+		var touch = e.touches[0] ||e.originalEvent.touches[0] || e.originalEvent.changedTouches[0];
+		pos1 =  touch.clientX;
+		pos2 =  touch.clientY;
+	} else if (e.type == 'mousedown' || e.type == 'mouseup' || e.type == 'mousemove' || e.type == 'mouseover'|| e.type=='mouseout' || e.type=='mouseenter' || e.type=='mouseleave') {
+		pos1 =  e.clientX;
+		pos2 =   e.clientY;
+	}
+	
+	var zoom =  parseFloat((pos4-pos2)*2/elmnt.offsetHeight);
+	
+	if (zoom>1){zoom =1.0;}
+	else if (zoom<-1){zoom=-1.0;}
+	//zoom=(zoom+1)/2;
+		
+	input.value = zoom*(input.max - input.min) + input.min;
+	
+	if (input.value !=  pos0){
+		track0.applyConstraints({advanced: [ {zoom: input.value} ]});
+		//getById("infof").innerHTML = input.value + " " + pos0;
+	}
+	//log(pos2 +" , "+ elmnt.offsetHeight  +" , "+ parseFloat((3*pos2)/elmnt.offsetHeight) );
+	
+
+  }
+
+  function closeDragElement(e) {
+	elmnt.controls=true;
+    /* stop moving when mouse button is released:*/
+    document.onmouseup = null;
+    document.onmousemove = null;
+	document.ontouchmove = null;
+  }
+}
+  
+  
+function setupWebcamSelection(){
+	log("setup webcam");
+	try {
+		return enumerateDevices().then(gotDevices).then(function(){
+			log("enumerated");
+			if (parseInt(getById("webcamquality").elements.namedItem("resolution").value)==3){
+				session.maxframerate  = 30;
+			} else {
+				session.maxframerate = false;
+			}
+			
+			if ((iOS) || (iPad)){
+				getById("multiselect1").parentNode.style.visibility="hidden";
+				getById("multiselect1").parentNode.style.height="0px";
+			}
+			
+			var audioSelect = document.querySelector('#audioSource');
+			var videoSelect = document.querySelector('select#videoSource');
+			
+			audioSelect.onchange = function(){
+				
+				var gowebcam = getById("gowebcam");
+				gowebcam.disabled = true;
+				gowebcam.style.backgroundColor = "#DDDDDD";
+				gowebcam.style.fontWeight="normal";
+				gowebcam.innerHTML = "Waiting for Camera to load";
+				
+				log("AUDIO source CHANGED");
+				activatedPreview=false;
+				grabVideo(parseInt(getById("webcamquality").elements.namedItem("resolution").value));
+			};
+			videoSelect.onchange = function(){
+				
+				var gowebcam = getById("gowebcam");
+				gowebcam.disabled = true;
+				gowebcam.style.backgroundColor = "#DDDDDD";
+				gowebcam.style.fontWeight="normal";
+				gowebcam.innerHTML = "Waiting for Camera to load";
+				
+				log("video source changed");
+				activatedPreview=false;
+				grabVideo(parseInt(getById("webcamquality").elements.namedItem("resolution").value));
+			};
+			getById("webcamquality").onchange = function(){
+				var gowebcam = getById("gowebcam");
+				gowebcam.disabled = true;
+				gowebcam.style.backgroundColor = "#DDDDDD";
+				gowebcam.style.fontWeight="normal";
+				gowebcam.innerHTML = "Waiting for Camera to load";
+				
+				log("AUDIO source CHANGED");
+				activatedPreview=false;
+				if (parseInt(getById("webcamquality").elements.namedItem("resolution").value)==3){
+					session.maxframerate  = 30;
+				} else {
+					session.maxframerate = false;
+				}
+				grabVideo(parseInt(getById("webcamquality").elements.namedItem("resolution").value));
+			};
+
+			activatedPreview = false;
+			grabVideo(parseInt(getById("webcamquality").elements.namedItem("resolution").value));
+
+		}).catch(e => {errorlog(e);})
+	} catch (e){errorlog(e);}
+}
+
+function previewWebcam(){
+  if( activatedPreview == true){log("activeated preview return 1");return;}
+  activatedPreview = true;
+
+  window.setTimeout(() => {
+	try{
+		var oldstream = getById('previewWebcam').srcObject;
+		if (oldstream){
+			log("old stream found");
+			oldstream.getTracks().forEach(function(track) {
+				track.stop();
+				log("stopping old track");
+			});
+		}
+	  
+	} catch (e){
+		errorlog(e);
+	}
+	try {
+	  navigator.mediaDevices.getUserMedia({audio:true, video:true }).then(function(stream){ // Apple needs thi to happen before I can access EnumerateDevices. 
+	  log("got first stream");
+			setupWebcamSelection().then(()=>{
+				log("Got second stream");
+				stream.getTracks().forEach(function(track) { // We don't want to keep it without audio; so we are going to try to add audio now.
+					  track.stop(); // I need to do this after the enumeration step, else it breaks firefox's labels
+				});
+			});
+	  }).catch(function(e){
+		  errorlog("trying to list webcam again");
+		  setupWebcamSelection();
+	  });
+	} catch (e){
+	    if (window.isSecureContext) {
+		    alert("An error has occured when trying to access the webcam. The reason is not known.");
+	    } else {
+			alert("Error acessing webcam.\n\nWebsite is loaded in an insecure context.\n\nPlease see: https://developer.mozilla.org/en-US/docs/Web/API/MediaDevices/getUserMedia");
+	    }
+	}
+  },10);
+}
+
+
+function checkOBS(){
+	if (!navigator.mediaDevices || !navigator.mediaDevices.enumerateDevices) {
+		log("enumerateDevices() not supported.");
+		return;
+	}
+
+	navigator.mediaDevices.enumerateDevices().then(function(devices) {
+		var matchFound = false;
+		devices.forEach(function(device) {
+			if (device.label.startsWith("OBS-Camera")){
+				alert("An OBS Virtual Camera was detected; Success!");
+				log(device.kind + ": " + device.label +
+					" id = " + device.deviceId);
+				matchFound = true;
+
+			}
+			log(device.kind + ": " + device.label + " id = " + device.deviceId);
+		});
+		if (matchFound == false){
+			alert("No OBS Virtual Camera was found");
+		}
+	}).catch(function(err) {
+		log(err.name + ": " + err.message);
+	});
+}
+
+
+function copyFunction(copyText) {
+  copyText.select();
+  copyText.setSelectionRange(0, 99999);
+  document.execCommand("copy");
+
+}
+
+
+function generateQRPage(){
+	try{
+		var title = encodeURI(getById("videoname4").value);
+		if (title.length){
+			title = "&label="+title;
+		}
+		var sid = session.generateStreamID(); 
+		
+		var viewstr = "";
+		var sendstr = "";
+		
+		if (getById("invite_bitrate").checked){
+			viewstr+="&bitrate=20000";
+		}
+		if (getById("invite_vp9").checked){
+			viewstr+="&codec=vp9";
+		}
+		if (getById("invite_stereo").checked){
+			viewstr+="&stereo";
+			sendstr+="&stereo";
+		}
+		if (getById("invite_secure").checked){
+			sendstr+="&secure";
+		}
+		if (getById("invite_hidescreen").checked){
+			sendstr+="&webcam";
+		}
+		
+		if (getById("invite_remotecontrol").checked){  //
+			var remote_gen_id = session.generateStreamID();
+			sendstr+="&remote="+remote_gen_id; // security
+			viewstr+="&remote="+remote_gen_id;
+		}
+		
+		if (getById("invite_joinroom").value.trim().length){
+			sendstr+="&room="+getById("invite_joinroom").value.trim();
+			viewstr+="&scene=1&room="+getById("invite_joinroom").value.trim();
+		}
+		
+		
+		if (getById("invite_group_chat_type").value){ //  0 is default
+			if (getById("invite_group_chat_type").value==1){ // no video
+				sendstr+="&novideo";
+			} else if (getById("invite_group_chat_type").value==2){  // no view or audio
+				sendstr+="&view";
+			}
+		}
+		
+		if (getById("invite_quality").value){
+			if (getById("invite_quality").value==0){
+				sendstr+="&quality=0";
+			} else if (getById("invite_quality").value==1){
+				sendstr+="&quality=1";
+			} else if (getById("invite_quality").value==2){
+				sendstr+="&quality=2";
+			}
+		}
+		
+		sendstr = 'https://' + location.host + location.pathname + '?push=' + sid + sendstr;
+		viewstr = 'https://' + location.host+ location.pathname + '?view=' + sid + viewstr + title;
+		
+		getById("gencontent").innerHTML = '<br /><div id="qrcode" style="background-color:white;display:inline-block;color:black;max-width:340px;padding:40px;"><h2 style="color:black">Guest Invite Link:</h2><input class="task" onclick="popupMessage(event);copyFunction(this)" onmousedown="copyFunction(this)"  \
+		style="cursor:grab;background-color:#CFC;border: 2px solid black;width:260px;font-size:120%;padding:10px;"  value="' + sendstr + '" /><br /><br /></div>\
+			<br /><br />and don\'t forget the<h2 style="color:black">OBS Browser Source Link:</h2><input class="task" data-drag="1" onmousedown="copyFunction(this)" onclick="popupMessage(event);copyFunction(this)"  style="cursor:grab;background-color:#FCC;width:400px;font-size:120%;padding:10px;border:2px solid black;margin:5px;" value="' + viewstr + '" /> \
+			<br /><br />\
+		Please also note, the invite link and OBS ingestion link created is reusable, but only one person may use a specific invite at a time.';
+		var qrcode = new QRCode(getById("qrcode"), {
+			width : 300,
+			height : 300,
+			colorDark : "#000000",
+			colorLight : "#FFFFFF",
+			useSVG: false
+		});
+		qrcode.makeCode(sendstr);
+
+	} catch(e){
+		errorlog(e);
+	}
+}
+
+
+if (session.view){
+	getById("main").className = "";
+	getById("credits").style.display = 'none';
+}
+
+
+if ((session.view) && (session.roomid===false)){
+	getById("container-4").className = 'column columnfade';
+	getById("container-3").className = 'column columnfade';
+	getById("container-2").className = 'column columnfade';
+	getById("container-1").className = 'column columnfade';
+	//getById("header").className = 'advanced';
+	getById("info").className = 'advanced';
+	getById("header").className = 'advanced';
+	getById("head1").className = 'advanced';
+	getById("head2").className = 'advanced';
+	getById("head3").className = 'advanced';
+
+	getById("mainmenu").style.backgroundRepeat = "no-repeat";
+	getById("mainmenu").style.backgroundPosition = "bottom center";
+	getById("mainmenu").style.minHeight = "300px";
+	getById("mainmenu").style.backgroundSize = "100px 100px";
+	getById("mainmenu").innerHTML = '';
+	
+	setTimeout(function(){
+		try{
+			if ((session.view) && (!(session.cleanOutput))){
+				if (document.getElementById("mainmenu")){
+					getById("mainmenu").style.backgroundImage = "url('data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBzdGFuZGFsb25lPSJubyI/Pgo8IURPQ1RZUEUgc3ZnIFBVQkxJQyAiLS8vVzNDLy9EVEQgU1ZHIDEuMS8vRU4iICJodHRwOi8vd3d3LnczLm9yZy9HcmFwaGljcy9TVkcvMS4xL0RURC9zdmcxMS5kdGQiPgo8c3ZnIHdpZHRoPSI0MHB4IiBoZWlnaHQ9IjQwcHgiIHZpZXdCb3g9IjAgMCA0MCA0MCIgdmVyc2lvbj0iMS4xIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHhtbG5zOnhsaW5rPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5L3hsaW5rIiB4bWw6c3BhY2U9InByZXNlcnZlIiBzdHlsZT0iZmlsbC1ydWxlOmV2ZW5vZGQ7Y2xpcC1ydWxlOmV2ZW5vZGQ7c3Ryb2tlLWxpbmVqb2luOnJvdW5kO3N0cm9rZS1taXRlcmxpbWl0OjEuNDE0MjE7IiB4PSIwcHgiIHk9IjBweCI+CiAgICA8ZGVmcz4KICAgICAgICA8c3R5bGUgdHlwZT0idGV4dC9jc3MiPjwhW0NEQVRBWwogICAgICAgICAgICBALXdlYmtpdC1rZXlmcmFtZXMgc3BpbiB7CiAgICAgICAgICAgICAgZnJvbSB7CiAgICAgICAgICAgICAgICAtd2Via2l0LXRyYW5zZm9ybTogcm90YXRlKDBkZWcpCiAgICAgICAgICAgICAgfQogICAgICAgICAgICAgIHRvIHsKICAgICAgICAgICAgICAgIC13ZWJraXQtdHJhbnNmb3JtOiByb3RhdGUoLTM1OWRlZykKICAgICAgICAgICAgICB9CiAgICAgICAgICAgIH0KICAgICAgICAgICAgQGtleWZyYW1lcyBzcGluIHsKICAgICAgICAgICAgICBmcm9tIHsKICAgICAgICAgICAgICAgIHRyYW5zZm9ybTogcm90YXRlKDBkZWcpCiAgICAgICAgICAgICAgfQogICAgICAgICAgICAgIHRvIHsKICAgICAgICAgICAgICAgIHRyYW5zZm9ybTogcm90YXRlKC0zNTlkZWcpCiAgICAgICAgICAgICAgfQogICAgICAgICAgICB9CiAgICAgICAgICAgIHN2ZyB7CiAgICAgICAgICAgICAgICAtd2Via2l0LXRyYW5zZm9ybS1vcmlnaW46IDUwJSA1MCU7CiAgICAgICAgICAgICAgICAtd2Via2l0LWFuaW1hdGlvbjogc3BpbiAxLjVzIGxpbmVhciBpbmZpbml0ZTsKICAgICAgICAgICAgICAgIC13ZWJraXQtYmFja2ZhY2UtdmlzaWJpbGl0eTogaGlkZGVuOwogICAgICAgICAgICAgICAgYW5pbWF0aW9uOiBzcGluIDEuNXMgbGluZWFyIGluZmluaXRlOwogICAgICAgICAgICB9CiAgICAgICAgXV0+PC9zdHlsZT4KICAgIDwvZGVmcz4KICAgIDxnIGlkPSJvdXRlciI+CiAgICAgICAgPGc+CiAgICAgICAgICAgIDxwYXRoIGQ9Ik0yMCwwQzIyLjIwNTgsMCAyMy45OTM5LDEuNzg4MTMgMjMuOTkzOSwzLjk5MzlDMjMuOTkzOSw2LjE5OTY4IDIyLjIwNTgsNy45ODc4MSAyMCw3Ljk4NzgxQzE3Ljc5NDIsNy45ODc4MSAxNi4wMDYxLDYuMTk5NjggMTYuMDA2MSwzLjk5MzlDMTYuMDA2MSwxLjc4ODEzIDE3Ljc5NDIsMCAyMCwwWiIgc3R5bGU9ImZpbGw6YmxhY2s7Ii8+CiAgICAgICAgPC9nPgogICAgICAgIDxnPgogICAgICAgICAgICA8cGF0aCBkPSJNNS44NTc4Niw1Ljg1Nzg2QzcuNDE3NTgsNC4yOTgxNSA5Ljk0NjM4LDQuMjk4MTUgMTEuNTA2MSw1Ljg1Nzg2QzEzLjA2NTgsNy40MTc1OCAxMy4wNjU4LDkuOTQ2MzggMTEuNTA2MSwxMS41MDYxQzkuOTQ2MzgsMTMuMDY1OCA3LjQxNzU4LDEzLjA2NTggNS44NTc4NiwxMS41MDYxQzQuMjk4MTUsOS45NDYzOCA0LjI5ODE1LDcuNDE3NTggNS44NTc4Niw1Ljg1Nzg2WiIgc3R5bGU9ImZpbGw6cmdiKDIxMCwyMTAsMjEwKTsiLz4KICAgICAgICA8L2c+CiAgICAgICAgPGc+CiAgICAgICAgICAgIDxwYXRoIGQ9Ik0yMCwzMi4wMTIyQzIyLjIwNTgsMzIuMDEyMiAyMy45OTM5LDMzLjgwMDMgMjMuOTkzOSwzNi4wMDYxQzIzLjk5MzksMzguMjExOSAyMi4yMDU4LDQwIDIwLDQwQzE3Ljc5NDIsNDAgMTYuMDA2MSwzOC4yMTE5IDE2LjAwNjEsMzYuMDA2MUMxNi4wMDYxLDMzLjgwMDMgMTcuNzk0MiwzMi4wMTIyIDIwLDMyLjAxMjJaIiBzdHlsZT0iZmlsbDpyZ2IoMTMwLDEzMCwxMzApOyIvPgogICAgICAgIDwvZz4KICAgICAgICA8Zz4KICAgICAgICAgICAgPHBhdGggZD0iTTI4LjQ5MzksMjguNDkzOUMzMC4wNTM2LDI2LjkzNDIgMzIuNTgyNCwyNi45MzQyIDM0LjE0MjEsMjguNDkzOUMzNS43MDE5LDMwLjA1MzYgMzUuNzAxOSwzMi41ODI0IDM0LjE0MjEsMzQuMTQyMUMzMi41ODI0LDM1LjcwMTkgMzAuMDUzNiwzNS43MDE5IDI4LjQ5MzksMzQuMTQyMUMyNi45MzQyLDMyLjU4MjQgMjYuOTM0MiwzMC4wNTM2IDI4LjQ5MzksMjguNDkzOVoiIHN0eWxlPSJmaWxsOnJnYigxMDEsMTAxLDEwMSk7Ii8+CiAgICAgICAgPC9nPgogICAgICAgIDxnPgogICAgICAgICAgICA8cGF0aCBkPSJNMy45OTM5LDE2LjAwNjFDNi4xOTk2OCwxNi4wMDYxIDcuOTg3ODEsMTcuNzk0MiA3Ljk4NzgxLDIwQzcuOTg3ODEsMjIuMjA1OCA2LjE5OTY4LDIzLjk5MzkgMy45OTM5LDIzLjk5MzlDMS43ODgxMywyMy45OTM5IDAsMjIuMjA1OCAwLDIwQzAsMTcuNzk0MiAxLjc4ODEzLDE2LjAwNjEgMy45OTM5LDE2LjAwNjFaIiBzdHlsZT0iZmlsbDpyZ2IoMTg3LDE4NywxODcpOyIvPgogICAgICAgIDwvZz4KICAgICAgICA8Zz4KICAgICAgICAgICAgPHBhdGggZD0iTTUuODU3ODYsMjguNDkzOUM3LjQxNzU4LDI2LjkzNDIgOS45NDYzOCwyNi45MzQyIDExLjUwNjEsMjguNDkzOUMxMy4wNjU4LDMwLjA1MzYgMTMuMDY1OCwzMi41ODI0IDExLjUwNjEsMzQuMTQyMUM5Ljk0NjM4LDM1LjcwMTkgNy40MTc1OCwzNS43MDE5IDUuODU3ODYsMzQuMTQyMUM0LjI5ODE1LDMyLjU4MjQgNC4yOTgxNSwzMC4wNTM2IDUuODU3ODYsMjguNDkzOVoiIHN0eWxlPSJmaWxsOnJnYigxNjQsMTY0LDE2NCk7Ii8+CiAgICAgICAgPC9nPgogICAgICAgIDxnPgogICAgICAgICAgICA8cGF0aCBkPSJNMzYuMDA2MSwxNi4wMDYxQzM4LjIxMTksMTYuMDA2MSA0MCwxNy43OTQyIDQwLDIwQzQwLDIyLjIwNTggMzguMjExOSwyMy45OTM5IDM2LjAwNjEsMjMuOTkzOUMzMy44MDAzLDIzLjk5MzkgMzIuMDEyMiwyMi4yMDU4IDMyLjAxMjIsMjBDMzIuMDEyMiwxNy43OTQyIDMzLjgwMDMsMTYuMDA2MSAzNi4wMDYxLDE2LjAwNjFaIiBzdHlsZT0iZmlsbDpyZ2IoNzQsNzQsNzQpOyIvPgogICAgICAgIDwvZz4KICAgICAgICA8Zz4KICAgICAgICAgICAgPHBhdGggZD0iTTI4LjQ5MzksNS44NTc4NkMzMC4wNTM2LDQuMjk4MTUgMzIuNTgyNCw0LjI5ODE1IDM0LjE0MjEsNS44NTc4NkMzNS43MDE5LDcuNDE3NTggMzUuNzAxOSw5Ljk0NjM4IDM0LjE0MjEsMTEuNTA2MUMzMi41ODI0LDEzLjA2NTggMzAuMDUzNiwxMy4wNjU4IDI4LjQ5MzksMTEuNTA2MUMyNi45MzQyLDkuOTQ2MzggMjYuOTM0Miw3LjQxNzU4IDI4LjQ5MzksNS44NTc4NloiIHN0eWxlPSJmaWxsOnJnYig1MCw1MCw1MCk7Ii8+CiAgICAgICAgPC9nPgogICAgPC9nPgo8L3N2Zz4K')";
+					getById("mainmenu").innerHTML = '<font style="color:#666"><h1>Attempting to load video stream.</h1></font>';
+					getById("mainmenu").innerHTML += '<font style="color:#EEE">The stream is not available yet or an error occured.</font><br/><button onclick="location.reload();">Retry Manually</button><br/>';
+					
+				}}
+		} catch(e){
+			errorlog("Error handling QR Code failure");
+		}
+	},4000);
+
+	log("auto playing");
+
+	if (navigator.userAgent.indexOf('Safari') != -1 && navigator.userAgent.indexOf('Chrome') == -1){ 
+		alert("Safari requires us to ask for an audio permission to use peer-to-peer technology. You will need to accept it in a moment if asked to view this live video");
+		navigator.mediaDevices.getUserMedia({audio: true}).then(function(){
+			play();
+		}).catch(function(){
+			play();
+		});
+	} else {
+		play();
+		//getById("mainmenu").style.display="none";
+	}
+}
+
+
+
+var vis = (function(){
+	var stateKey, eventKey, keys = {
+		hidden: "visibilitychange",
+		webkitHidden: "webkitvisibilitychange",
+		mozHidden: "mozvisibilitychange",
+		msHidden: "msvisibilitychange"
+	};
+	for (stateKey in keys) {
+		if (stateKey in document) {
+			eventKey = keys[stateKey];
+			break;
+		}
+	}
+	return function(c) {
+		if (c) {
+			document.addEventListener(eventKey, c);
+			//document.addEventListener("blur", c);
+			//document.addEventListener("focus", c);
+		}
+		return !document[stateKey];
+	};
+})();
+
+(function rightclickmenuthing() {  // right click menu
+  
+  "use strict";
+
+  function clickInsideElement( e, className ) {
+    var el = e.srcElement || e.target;
+    
+    if ( el.classList.contains(className) ) {
+      return el;
+    } else {
+      while ( el = el.parentNode ) {
+        if ( el.classList && el.classList.contains(className) ) {
+          return el;
+        }
+      }
+    }
+
+    return false;
+  }
+
+  /**
+   * Get's exact position of event.
+   * 
+   * @param {Object} e The event passed in
+   * @return {Object} Returns the x and y position
+   */
+  function getPosition(event2) {
+    var posx = 0;
+    var posy = 0;
+
+    if (!event2) var event = window.event;
+    
+    if (event2.pageX || event2.pageY) {
+      posx = event2.pageX;
+      posy = event2.pageY;
+    } else if (event2.clientX || event2.clientY) {
+      posx = event2.clientX + document.body.scrollLeft + document.documentElement.scrollLeft;
+      posy = event2.clientY + document.body.scrollTop + document.documentElement.scrollTop;
+    }
+
+    return {
+      x: posx,
+      y: posy
+    };
+  }
+
+  var contextMenuClassName = "context-menu";
+  var contextMenuItemClassName = "context-menu__item";
+  var contextMenuLinkClassName = "context-menu__link";
+  var contextMenuActive = "context-menu--active";
+
+  var taskItemClassName = "task";
+  var taskItemInContext;
+
+  var clickCoords;
+  var clickCoordsX;
+  var clickCoordsY;
+
+  var menu = document.querySelector("#context-menu");
+  var menuItems = menu.querySelectorAll(".context-menu__item");
+  var menuState = 0;
+  var menuWidth;
+  var menuHeight;
+  var menuPosition;
+  var menuPositionX;
+  var menuPositionY;
+
+  var windowWidth;
+  var windowHeight;
+
+  /**
+   * Initialise our application's code.
+   */
+  function init() {
+    contextListener();
+    clickListener();
+    keyupListener();
+    resizeListener();
+  }
+
+  /**
+   * Listens for contextmenu events.
+   */
+  function contextListener() {
+    document.addEventListener( "contextmenu", function(e) {
+      taskItemInContext = clickInsideElement( e, taskItemClassName );
+
+      if ( taskItemInContext ) {
+        e.preventDefault();
+        toggleMenuOn();
+        positionMenu(e);
+      } else {
+        taskItemInContext = null;
+        toggleMenuOff();
+      }
+    });
+  }
+
+  /**
+   * Listens for click events.
+   */
+  function clickListener() {
+    document.addEventListener( "click", function(e) {
+      var clickeElIsLink = clickInsideElement( e, contextMenuLinkClassName );
+
+      if ( clickeElIsLink ) {
+        e.preventDefault();
+        menuItemListener( clickeElIsLink );
+      } else {
+        var button = e.which || e.button;
+        if ( button === 1 ) {
+          toggleMenuOff();
+        }
+      }
+    });
+  }
+
+  /**
+   * Listens for keyup events.
+   */
+  function keyupListener() {
+    window.onkeyup = function(e) {
+      if ( e.keyCode === 27 ) {
+        toggleMenuOff();
+      }
+    };
+  }
+
+  /**
+   * Window resize event listener
+   */
+  function resizeListener() {
+    window.onresize = function(e) {
+      toggleMenuOff();
+    };
+  }
+
+  /**
+   * Turns the custom context menu on.
+   */
+  function toggleMenuOn() {
+    if ( menuState !== 1 ) {
+      menuState = 1;
+      menu.classList.add( contextMenuActive );
+    }
+  }
+
+  /**
+   * Turns the custom context menu off.
+   */
+  function toggleMenuOff() {
+    if ( menuState !== 0 ) {
+      menuState = 0;
+      menu.classList.remove( contextMenuActive );
+    }
+  }
+
+  /**
+   * Positions the menu properly.
+   * 
+   * @param {Object} e The event
+   */
+  function positionMenu(e) {
+    clickCoords = getPosition(e);
+    clickCoordsX = clickCoords.x;
+    clickCoordsY = clickCoords.y;
+
+    menuWidth = menu.offsetWidth + 4;
+    menuHeight = menu.offsetHeight + 4;
+
+    windowWidth = window.innerWidth;
+    windowHeight = window.innerHeight;
+
+    if ( (windowWidth - clickCoordsX) < menuWidth ) {
+      menu.style.left = windowWidth - menuWidth + "px";
+    } else {
+      menu.style.left = clickCoordsX + "px";
+    }
+
+    if ( (windowHeight - clickCoordsY) < menuHeight ) {
+      menu.style.top = windowHeight - menuHeight + "px";
+    } else {
+      menu.style.top = clickCoordsY + "px";
+    }
+  }
+
+  /**
+   * Dummy action function that logs an action when a menu item link is clicked
+   * 
+   * @param {HTMLElement} link The link that was clicked
+   */
+  function menuItemListener(  link ) {
+	if (link.getAttribute("data-action")=="Open"){
+		window.open(taskItemInContext.value);
+	} else {
+		// nothing needed
+	}
+    log( "Task ID - " + taskItemInContext + ", Task action - " + link.getAttribute("data-action"));
+    toggleMenuOff();
+  }
+
+  /**
+   * Run the app.
+   */
+  init();
+
+})();
+
+document.addEventListener("dragstart", event => {
+	var url = event.target.href || event.target.value;
+	if (!url || !url.startsWith('https://')) return;
+	if (event.target.dataset.drag!="1"){
+		return;
+	}
+	var streamId = url.split('view=');
+	var label = url.split('label=');
+
+	url += '&layer-name=OBS.Ninja';
+	if (streamId.length>1) url += ': ' + streamId[1].split('&')[0];
+	if (label.length>1) url += ' - ' + decodeURI(label[1].split('&')[0]);
+	
+	try{
+		var video = getById('videosource');
+		if (video == null){
+			url += '&layer-width=1920'; // this isn't always 100% correct, as the resolution can fluxuate, but it is probably good enough
+			url += '&layer-height=1080';
+		} else if ((video.videoWidth<200) || (video.videoHeight<200)){
+			url += '&layer-width=1920'; // this isn't always 100% correct, as the resolution can fluxuate, but it is probably good enough
+			url += '&layer-height=1080';
+		} else {
+			url += '&layer-width=' + video.videoWidth; // this isn't always 100% correct, as the resolution can fluxuate, but it is probably good enough
+			url += '&layer-height=' + video.videoHeight;
+		}
+	} catch(error){
+		url += '&layer-width=1920'; // this isn't always 100% correct, as the resolution can fluxuate, but it is probably good enough
+		url += '&layer-height=1080';
+	}
+	event.dataTransfer.setData("text/uri-list", encodeURI(url));
+});
+
+function popupMessage(e, message="Copied to Clipboard"){  // right click menu
+  
+    var posx = 0;
+    var posy = 0;
+
+    if (!e) var e = window.event;
+    
+    if (e.pageX || e.pageY) {
+		posx = e.pageX;
+		posy = e.pageY;
+    } else if (e.clientX || e.clientY) {
+		posx = e.clientX + document.body.scrollLeft + document.documentElement.scrollLeft;
+		posy = e.clientY + document.body.scrollTop + document.documentElement.scrollTop;
+    }
+
+	posx += 10;
+
+
+	var menu = document.querySelector("#messagePopup");
+	menu.innerHTML = "<center>"+message+"</center>";
+	var menuState = 0;
+	var menuWidth;
+	var menuHeight;
+	var menuPosition;
+	var menuPositionX;
+	var menuPositionY;
+
+	var windowWidth;
+	var windowHeight;
+
+    if ( menuState !== 1 ) {
+		menuState = 1;
+		menu.classList.add( "context-menu--active" );
+	}
+
+    menuWidth = menu.offsetWidth + 4;
+    menuHeight = menu.offsetHeight + 4;
+
+    windowWidth = window.innerWidth;
+    windowHeight = window.innerHeight;
+
+    if ( (windowWidth - posx) < menuWidth ) {
+		menu.style.left = windowWidth - menuWidth + "px";
+    } else {
+		menu.style.left = posx + "px";
+    }
+
+    if ( (windowHeight - posy) < menuHeight ) {
+		menu.style.top = windowHeight - menuHeight + "px";
+    } else {
+		menu.style.top = posy + "px";
+    }
+	
+	function toggleMenuOff() {
+		if ( menuState !== 0 ) {
+		  menuState = 0;
+		  menu.classList.remove( "context-menu--active" );
+		}
+	}
+	setTimeout(function(){toggleMenuOff();},1000);
+}
+

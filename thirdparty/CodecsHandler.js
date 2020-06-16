@@ -21,6 +21,9 @@ Copyright (c) 2012-2020 [Muaz Khan](https://github.com/muaz-khan)
 	CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	*/
 // Sourced from: https://cdn.webrtc-experiment.com/CodecsHandler.js
+
+// **** FILE HAS BEEN HEAVILY MODIFIED BY STEVE SEGUIN. ALL RIGHTS RESERVED ****
+
 var CodecsHandler = (function() {
     function preferCodec(sdp, codecName) {
         var info = splitLines(sdp);
@@ -118,16 +121,11 @@ var CodecsHandler = (function() {
 
         return info;
     }
-
-    function removeVPX(sdp) {
-        var info = splitLines(sdp);
-
-        // last parameter below means: ignore these codecs
-        sdp = preferCodecHelper(sdp, 'vp9', info, true);
-        sdp = preferCodecHelper(sdp, 'vp8', info, true);
-
-        return sdp;
-    }
+	
+	function extractSdp(sdpLine, pattern) {
+		var result = sdpLine.match(pattern);
+		return (result && result.length == 2)? result[1]: null;
+	}
 
     function disableNACK(sdp) {
         if (!sdp || typeof sdp !== 'string') {
@@ -142,72 +140,7 @@ var CodecsHandler = (function() {
         return sdp;
     }
 
-    function prioritize(codecMimeType, peer) {
-        if (!peer || !peer.getSenders || !peer.getSenders().length) {
-            return;
-        }
-
-        if (!codecMimeType || typeof codecMimeType !== 'string') {
-            throw 'Invalid arguments.';
-        }
-
-        peer.getSenders().forEach(function(sender) {
-            var params = sender.getParameters();
-            for (var i = 0; i < params.codecs.length; i++) {
-                if (params.codecs[i].mimeType == codecMimeType) {
-                    params.codecs.unshift(params.codecs.splice(i, 1));
-                    break;
-                }
-            }
-            sender.setParameters(params);
-        });
-    }
-
-    function removeNonG722(sdp) {
-        return sdp.replace(/m=audio ([0-9]+) RTP\/SAVPF ([0-9 ]*)/g, 'm=audio $1 RTP\/SAVPF 9');
-    }
-
-    function setBAS(sdp, bandwidth, isScreen) {
-        if (!bandwidth) {
-            return sdp;
-        }
-
-        if (typeof isFirefox !== 'undefined' && isFirefox) {
-            return sdp;
-        }
-
-        if (isScreen) {
-            if (!bandwidth.screen) {
-                console.warn('It seems that you are not using bandwidth for screen. Screen sharing is expected to fail.');
-            } else if (bandwidth.screen < 300) {
-                console.warn('It seems that you are using wrong bandwidth value for screen. Screen sharing is expected to fail.');
-            }
-        }
-
-        // if screen; must use at least 300kbs
-        if (bandwidth.screen && isScreen) {
-            sdp = sdp.replace(/b=AS([^\r\n]+\r\n)/g, '');
-            sdp = sdp.replace(/a=mid:video\r\n/g, 'a=mid:video\r\nb=AS:' + bandwidth.screen + '\r\n');
-        }
-
-        // remove existing bandwidth lines
-        if (bandwidth.audio || bandwidth.video) {
-            sdp = sdp.replace(/b=AS([^\r\n]+\r\n)/g, '');
-        }
-
-        if (bandwidth.audio) {
-            sdp = sdp.replace(/a=mid:audio\r\n/g, 'a=mid:audio\r\nb=AS:' + bandwidth.audio + '\r\n');
-        }
-
-        if (bandwidth.screen) {
-            sdp = sdp.replace(/a=mid:video\r\n/g, 'a=mid:video\r\nb=AS:' + bandwidth.screen + '\r\n');
-        } else if (bandwidth.video) {
-            sdp = sdp.replace(/a=mid:video\r\n/g, 'a=mid:video\r\nb=AS:' + bandwidth.video + '\r\n');
-        }
-
-        return sdp;
-    }
-
+  
     // Find the line in sdpLines that starts with |prefix|, and, if specified,
     // contains |substr| (case-insensitive search).
     function findLine(sdpLines, prefix, substr) {
@@ -236,21 +169,41 @@ var CodecsHandler = (function() {
         return (result && result.length === 2) ? result[1] : null;
     }
 
-    function setVideoBitrates(sdp, params) {
+    function setVideoBitrates(sdp, params, codec) {  // modified + Improved by Steve.
+		
+		if (codec){
+			codec = codec.toUpperCase();
+		} else{
+			codec="VP8";
+		}
+		
+		var sdpLines = sdp.split('\r\n');
+
+		// Search for m line.
+		var mLineIndex = findLine(sdpLines, 'm=', 'video');
+		if (mLineIndex === null) {
+			return sdp;
+		}
+		// Figure out the first codec payload type on the m=video SDP line.
+		var videoMLine = sdpLines[mLineIndex];
+		var pattern = new RegExp('m=video\\s\\d+\\s[A-Z/]+\\s');
+		var sendPayloadType = videoMLine.split(pattern)[1].split(' ')[0];
+		var fmtpLine = sdpLines[findLine(sdpLines, 'a=rtpmap', sendPayloadType)];
+		var codecName = fmtpLine.split('a=rtpmap:' + sendPayloadType)[1].split('/')[0];
+		
+		codec = codecName || codec; // Try to find first Codec; else use expected/default
+		
         params = params || {};
-        var xgoogle_min_bitrate = params.min;
-        var xgoogle_max_bitrate = params.max;
+        var xgoogle_min_bitrate = params.min.toString();
+        var xgoogle_max_bitrate = params.max.toString();
 
-        var sdpLines = sdp.split('\r\n');
-
-        // VP8
-        var vp8Index = findLine(sdpLines, 'a=rtpmap', 'VP8/90000');
-        var vp8Payload;
-        if (vp8Index) {
-            vp8Payload = getCodecPayloadType(sdpLines[vp8Index]);
+        var codecIndex = findLine(sdpLines, 'a=rtpmap', codec+'/90000');
+        var codecPayload;
+        if (codecIndex) {
+            codecPayload = getCodecPayloadType(sdpLines[codecIndex]);
         }
 
-        if (!vp8Payload) {
+        if (!codecPayload) {
             return sdp;
         }
 
@@ -267,7 +220,7 @@ var CodecsHandler = (function() {
         var rtxFmtpLineIndex = findLine(sdpLines, 'a=fmtp:' + rtxPayload.toString());
         if (rtxFmtpLineIndex !== null) {
             var appendrtxNext = '\r\n';
-            appendrtxNext += 'a=fmtp:' + vp8Payload + ' x-google-min-bitrate=' + (xgoogle_min_bitrate || '228') + '; x-google-max-bitrate=' + (xgoogle_max_bitrate || '228');
+            appendrtxNext += 'a=fmtp:' + codecPayload + ' x-google-min-bitrate=' + (xgoogle_min_bitrate || '228') + '; x-google-max-bitrate=' + (xgoogle_max_bitrate || '228');
             sdpLines[rtxFmtpLineIndex] = sdpLines[rtxFmtpLineIndex].concat(appendrtxNext);
             sdp = sdpLines.join('\r\n');
         }
@@ -357,26 +310,18 @@ var CodecsHandler = (function() {
     }
 
     return {
-        removeVPX: removeVPX,
         disableNACK: disableNACK,
-        prioritize: prioritize,
-        removeNonG722: removeNonG722,
-        setApplicationSpecificBandwidth: function(sdp, bandwidth, isScreen) {
-            return setBAS(sdp, bandwidth, isScreen);
-        },
-        setVideoBitrates: function(sdp, params) {
-            return setVideoBitrates(sdp, params);
+       
+        setVideoBitrates: function(sdp, params, codec) {
+            return setVideoBitrates(sdp, params, codec);
         },
         setOpusAttributes: function(sdp, params) {
             return setOpusAttributes(sdp, params);
         },
-        preferVP9: function(sdp) {
-            return preferCodec(sdp, 'vp9');
-        },
+
         preferCodec: preferCodec,
+		
         forceStereoAudio: forceStereoAudio
     };
 })();
 
-// backward compatibility
-window.BandwidthHandler = CodecsHandler;
