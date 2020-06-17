@@ -62,8 +62,8 @@
 	</span>
 
 
-	<script language="javascript" type="text/javascript" src="./thirdparty/CodecsHandler.js?ver=1"></script>
-	<script language="javascript" type="text/javascript" src="./webrtc.js?ver=2"></script>
+	<script language="javascript" type="text/javascript" src="./thirdparty/CodecsHandler.js?ver=2"></script>
+	<script language="javascript" type="text/javascript" src="./webrtc.js?ver=3"></script>
 	<input id='zoomSlider'type="range" style="display:none">
 	<div id="header">
 		<font style="font-size:130%;">
@@ -97,13 +97,13 @@
 	</div>
 
 	<div id="mutebutton" onclick="toggleMute()" class='advanced float3' style="cursor:pointer" alt="Toggle the mic">
-		<i style="font-size:48px;color:white" id="mutetoggle" class="fa fa-microphone my-float"></i>
+		<i id="mutetoggle" class="toggleSize fa fa-microphone my-float"></i>
 	</div>
 	<div id="mutevideobutton" onclick="toggleVideoMute()" class='advanced float4' style="cursor:pointer" alt="Toggle the camera">
-		<i style="font-size:48px;color:white" id="mutevideotoggle" class="fa fa-eye my-float"></i>
+		<i id="mutevideotoggle" class="toggleSize fa fa-eye my-float"></i>
 	</div>
-	<div id="helpbutton" onclick="alert('Email steve@seguin.email if the system breaks or check https://reddit.com/r/obsninja for support.\n\nThere are some advanced options hidden away, such as persistent stream links and custom resolutions.\n\nMacOS users should be using OBS v23 due to a bug in v24 and v25')"  class='advanced float2' style="cursor:pointer" alt="How to Use This with OBS">
-		<i style="font-size:48px;color:white;" class="fa fa-question-circle my-float"></i>
+	<div id="helpbutton" onclick="alert('Email steve@seguin.email if the system breaks or check https://reddit.com/r/obsninja for support.\n\nThere are some advanced options hidden away, such as persistent stream links and custom resolutions.')"  class='advanced float2' style="cursor:pointer" alt="How to Use This with OBS">
+		<i class="toggleSize fa fa-question-circle my-float"></i>
 	</div>
 
 	<div id="mainmenu" class="row" style="opacity: 0; align:center;">
@@ -295,7 +295,7 @@
 						<li>Some users will have <a href='https://github.com/steveseguin/obsninja/wiki/FAQ#video-is-pixelated'>"pixelation" problems</a> with videos. Adding <b>&codec=vp9</b> to the OBS links will often correct it.</li>
 						<br />
 						
-						Site last updated: <a href='https://www.reddit.com/r/OBSNinja/comments/gy7h4g/site_updated_on_june_7th_please_find_the_change/'>June 15th, 2020.</a> The previous version can be found at <a href="https://obs.ninja/v5/">https://obs.ninja/v5/</a> if you are having new issues.
+						Site last updated: June 17th, 2020. The previous version can be found at <a href="https://obs.ninja/v6/">https://obs.ninja/v6/</a> if you are having new issues.
 
 						<br /><br />
 						<i><h3>Check out the <a href="https://www.reddit.com/r/OBSNinja/">sub-reddit</a> <i class="fa fa-reddit-alien" aria-hidden="true"></i> for help and advanced info. I'm also on <a href="https://discord.gg/EksyhGA">Discord</a> and you can email me at steve@seguin.email</i></h3>
@@ -402,10 +402,10 @@
 		
 	</script>
 	<!-- 
-		// If you wish to change branding, blank.json offers a good clean start. 
+		// If you wish to change branding, blank offers a good clean start.
 		<script type="text/javascript" id="main-js" src="./main.js" data-translation="blank"></script>
 	-->
-	<script type="text/javascript" id="main-js" src="./main.js" data-translation="blank"></script>
+	<script type="text/javascript" id="main-js" src="./main.js?ver=5"></script>
 	<script type="text/javascript" src="./animations.js"></script>
 </body>
 

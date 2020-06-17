@@ -155,13 +155,13 @@ if (urlParams.has('stereo')){ // both peers need this enabled for HD stereo to b
 	log("STEREO ENABLED");
 	session.stereo = urlParams.get('stereo');
 	
-	if (session.stereo=="false"){
+	if (session.stereo.toLowerCase()=="false"){
 		session.stereo = 0;
 	} else if (session.stereo=="0"){
 		session.stereo = 0;
-	} else if (session.stereo=="no"){
+	} else if (session.stereo.toLowerCase()=="no"){
 		session.stereo = 0;
-	} else if (session.stereo=="off"){
+	} else if (session.stereo.toLowerCase()=="off"){
 		session.stereo = 0;
 	} else if (session.stereo=="1"){
 		session.stereo = 1;
@@ -173,6 +173,61 @@ if (urlParams.has('stereo')){ // both peers need this enabled for HD stereo to b
 		session.stereo = 1;
 	}
 }
+
+if ((session.stereo==1) || (session.stereo==3)){
+	session.echoCancellation = false;
+	session.autoGainControl = false;
+	session.noiseSuppression = false;
+}
+
+if (urlParams.has("aec")){
+	if (urlParams.get('aec').toLowerCase()=="false"){
+		session.echoCancellation = false;
+	} else if (urlParams.get('aec')=="0"){
+		session.echoCancellation = false;
+	} else if (urlParams.get('aec').toLowerCase()=="no"){
+		session.echoCancellation = false;
+	} else if (urlParams.get('aec').toLowerCase()=="off"){
+		session.echoCancellation = false;
+	} else if (urlParams.get('aec').toLowerCase()=="false"){
+		session.echoCancellation = false;
+	} else {
+		session.echoCancellation = true;
+	}
+} 
+
+if (urlParams.has("autogain")){
+	if (urlParams.get('autogain').toLowerCase()=="false"){
+		session.autoGainControl = false;
+	} else if (urlParams.get('autogain')=="0"){
+		session.autoGainControl = false;
+	} else if (urlParams.get('autogain').toLowerCase()=="no"){
+		session.autoGainControl = false;
+	} else if (urlParams.get('autogain').toLowerCase()=="off"){
+		session.autoGainControl = false;
+	} else if (urlParams.get('autogain').toLowerCase()=="false"){
+		session.autoGainControl = false;
+	} else {
+		session.autoGainControl = true;
+	}
+}
+
+if (urlParams.has("denoise")){
+	if (urlParams.get('denoise').toLowerCase()=="false"){
+		session.noiseSuppression = false;
+	} else if (urlParams.get('denoise')=="0"){
+		session.noiseSuppression = false;
+	} else if (urlParams.get('denoise').toLowerCase()=="no"){
+		session.noiseSuppression = false;
+	} else if (urlParams.get('denoise').toLowerCase()=="off"){
+		session.noiseSuppression = false;
+	} else if (urlParams.get('denoise').toLowerCase()=="false"){
+		session.noiseSuppression = false;
+	} else {
+		session.noiseSuppression = true;
+	}
+}
+
 
 if (urlParams.has('audiobitrate')){ // both peers need this enabled for HD stereo to be on. If just pub, you get no echo/noise cancellation. if just viewer, you get high bitrate mono 
 	log("AUDIO BITRATE SET");
@@ -668,7 +723,7 @@ function updateStats(){
 function toggleMute(){ // TODO: I need to have this be MUTE, toggle, with volume not touched.
 	if (session.muted==false){
 		session.muted = true;
-		getById("mutetoggle").className="fa fa-microphone-slash my-float";
+		getById("mutetoggle").className="fa fa-microphone-slash my-float toggleSize";
 		getById("mutebutton").className="float";
 		session.streamSrc.getAudioTracks().forEach((track) => {
 		  track.enabled = false;
@@ -677,7 +732,7 @@ function toggleMute(){ // TODO: I need to have this be MUTE, toggle, with volume
 	} else{
 		session.muted=false;
 		
-		getById("mutetoggle").className="fa fa-microphone my-float";
+		getById("mutetoggle").className="fa fa-microphone my-float toggleSize";
 		getById("mutebutton").className="float3";
 		
 		session.streamSrc.getAudioTracks().forEach((track) => {
@@ -689,7 +744,7 @@ function toggleMute(){ // TODO: I need to have this be MUTE, toggle, with volume
 function toggleVideoMute(){ // TODO: I need to have this be MUTE, toggle, with volume not touched.
 	if (session.videoMuted==false){
 		session.videoMuted = true;
-		getById("mutevideotoggle").className="fa fa-eye-slash my-float";
+		getById("mutevideotoggle").className="fa fa-eye-slash my-float toggleSize";
 		getById("mutevideobutton").className="float5";
 		session.streamSrc.getVideoTracks().forEach((track) => {
 		  track.enabled = false;
@@ -698,7 +753,7 @@ function toggleVideoMute(){ // TODO: I need to have this be MUTE, toggle, with v
 	} else{
 		session.videoMuted=false;
 		
-		getById("mutevideotoggle").className="fa fa-eye my-float";
+		getById("mutevideotoggle").className="fa fa-eye my-float toggleSize";
 		getById("mutevideobutton").className="float4";
 		
 		
@@ -709,40 +764,44 @@ function toggleVideoMute(){ // TODO: I need to have this be MUTE, toggle, with v
 }
 
 function directEnable(ele){ // A directing room only is controlled by the Director, with the exception of MUTE.
-        log("enable");
-	if (ele.parentNode.parentNode.dataset.enable==1){
-		ele.parentNode.parentNode.dataset.enable = 0;
-		ele.className = "";
-		ele.innerHTML = "Add to Group Scene";
-		ele.parentNode.parentNode.style.backgroundColor = "#E3E4FF";
-	} else {
-		ele.parentNode.parentNode.style.backgroundColor = "#AFA";
-		ele.parentNode.parentNode.dataset.enable = 1;
-		ele.className = "pressed";
-		ele.innerHTML = "Remove from Group Scene";
+
+	if (!(CtrlPressed)){ // reissues the command without toggling it
+		if (ele.parentNode.parentNode.dataset.enable==1){
+			ele.parentNode.parentNode.dataset.enable = 0;
+			ele.className = "";
+			ele.innerHTML = "Add to Group Scene";
+			ele.parentNode.parentNode.style.backgroundColor = "#E3E4FF";
+		} else {
+			ele.parentNode.parentNode.style.backgroundColor = "#AFA";
+			ele.parentNode.parentNode.dataset.enable = 1;
+			ele.className = "pressed";
+			ele.innerHTML = "Remove from Group Scene";
+		}
 	}
-        var msg = {};
-        msg.request = "sendroom";
-        msg.roomid = session.roomid;
-        msg.scene = "1"; // scene
-        msg.action = "display";
-        msg.value =  ele.parentNode.parentNode.dataset.enable;
-        msg.target = ele.parentNode.parentNode.dataset.UUID;
-        session.sendMsg(msg); // send to everyone in the room, so they know if they are on air or not.
+	var msg = {};
+	msg.request = "sendroom";
+	msg.roomid = session.roomid;
+	msg.scene = "1"; // scene
+	msg.action = "display";
+	msg.value =  ele.parentNode.parentNode.dataset.enable;
+	msg.target = ele.parentNode.parentNode.dataset.UUID;
+	session.sendMsg(msg); // send to everyone in the room, so they know if they are on air or not.
 }
 
 
 function directMute(ele){ // A directing room only is controlled by the Director, with the exception of MUTE.
 	log("mute");
-	if (ele.parentNode.parentNode.dataset.mute==0){
-                ele.parentNode.parentNode.dataset.mute = 1;
-                ele.className = "";
-		ele.innerHTML = "Mute";
+	if (!(CtrlPressed)){
+		if (ele.parentNode.parentNode.dataset.mute==0){
+			ele.parentNode.parentNode.dataset.mute = 1;
+			ele.className = "";
+			ele.innerHTML = "Mute";
         } else {
-                ele.parentNode.parentNode.dataset.mute = 0;
-                ele.className = "pressed";
-		ele.innerHTML = "Unmute";
+			ele.parentNode.parentNode.dataset.mute = 0;
+			ele.className = "pressed";
+			ele.innerHTML = "Unmute";
         }
+	}
 	var msg = {};
 	msg.request = "sendroom";
 	msg.roomid = session.roomid;
@@ -822,9 +881,19 @@ function publishScreen(){
 	}
 
 	var constraints = window.constraints = {
-		audio: {echoCancellation: session.echoCancellation || false, autoGainControl: session.autoGainControl || false, noiseSuppression: session.noiseSuppression || false }, // I hope this doesn't break things..
+		audio: {echoCancellation: session.echoCancellation, autoGainControl: session.autoGainControl, noiseSuppression: session.noiseSuppression }, 
 		video: {width: width, height: height, cursor: "never", mediaSource: "browser"}
 	};
+	
+	if (!(urlParams.has("denoise"))){
+		constraints.audio.noiseSuppression = false; // the defaults for screen publishing should be off.
+	}
+	if (!(urlParams.has("autogain"))){
+		constraints.audio.autoGainControl = false; // the defaults for screen publishing should be off.
+	}
+	if (!(urlParams.has("aec"))){
+		constraints.audio.echoCancellation = false; // the defaults for screen publishing should be off.
+	}
 
 	if (session.framerate){
 		constraints.video.frameRate = session.framerate;
@@ -1359,11 +1428,11 @@ function grabVideo(quality=0, audioEnable=false){
 		
 		for (var i=1; i<audioList.length;i++){
 			var constraint = {audio: {deviceId: {exact: audioList[i].value}}};
-			if ((session.stereo==1) || (session.stereo==3)){
-				constraint.audio.echoCancellation = session.echoCancellation;
-				constraint.audio.autoGainControl = session.autoGainControl;
-				constraint.audio.noiseSuppression = session.noiseSuppression;
-			}
+			
+			constraint.audio.echoCancellation = session.echoCancellation;
+			constraint.audio.autoGainControl = session.autoGainControl;
+			constraint.audio.noiseSuppression = session.noiseSuppression;
+			
 			navigator.mediaDevices.getUserMedia(constraint).then(function (stream2){
 				streams.push(stream2);
 			}).catch(errorlog);
@@ -1371,11 +1440,11 @@ function grabVideo(quality=0, audioEnable=false){
 		
 		if (audioList.length){
 			audio = {deviceId: {exact: audioList[0].value}};
-			if ((session.stereo==1) || (session.stereo==3)){
-				audio.echoCancellation = session.echoCancellation;
-				audio.autoGainControl = session.autoGainControl;
-				audio.noiseSuppression = session.noiseSuppression;
-			}
+			
+			audio.echoCancellation = session.echoCancellation;
+			audio.autoGainControl = session.autoGainControl;
+			audio.noiseSuppression = session.noiseSuppression;
+			
 		} 
 	}
 	
@@ -1384,6 +1453,7 @@ function grabVideo(quality=0, audioEnable=false){
 			audio: audio,
 			video: false
 		};
+		log(constraints);
 		navigator.mediaDevices.getUserMedia(constraints).then(function(stream){
 			log("adding additional audio tracks");
 			for (var i=0; i<streams.length;i++){
@@ -1413,7 +1483,11 @@ function grabVideo(quality=0, audioEnable=false){
 			audio: audio,
 			video: getUserMediaVideoParams(quality, iOS)
 		};
-		constraints.video.deviceId =  videoSelect.value ? {exact: videoSelect.value} : undefined; // hoping this fixes a bug with NDI + Iphone
+		if ((iOS) || (iPad)){
+			constraints.video.deviceId =  {exact: videoSelect.value}; // iPhone 6s compatible ?
+		} else {
+			constraints.video.deviceId = videoSelect.value; // NDI Compatible
+		}
 		if (session.width){
 			constraints.video.width = {exact: session.width};
 		}
@@ -1509,7 +1583,7 @@ function grabVideo(quality=0, audioEnable=false){
 					alert("Camera failed to load. \n\nPlease make sure it is not already in use by another application.\n\nPlease make sure you have accepted the camera permissions.");
 				}
 			});
-		},0);
+		},1);
 	}
 }
 
@@ -2171,10 +2245,10 @@ document.addEventListener("dragstart", event => {
 	
 	try{
 		var video = getById('videosource');
-		if (video == null){
+		if (typeof(video.videoWidth) == "undefined"){
 			url += '&layer-width=1920'; // this isn't always 100% correct, as the resolution can fluxuate, but it is probably good enough
 			url += '&layer-height=1080';
-		} else if ((video.videoWidth<200) || (video.videoHeight<200)){
+		} else if ((parseInt(video.videoWidth)<200) || (video.videoHeight<200)){
 			url += '&layer-width=1920'; // this isn't always 100% correct, as the resolution can fluxuate, but it is probably good enough
 			url += '&layer-height=1080';
 		} else {
@@ -2185,6 +2259,7 @@ document.addEventListener("dragstart", event => {
 		url += '&layer-width=1920'; // this isn't always 100% correct, as the resolution can fluxuate, but it is probably good enough
 		url += '&layer-height=1080';
 	}
+	errorlog(url);
 	event.dataTransfer.setData("text/uri-list", encodeURI(url));
 });
 

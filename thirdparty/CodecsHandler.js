@@ -22,7 +22,7 @@ Copyright (c) 2012-2020 [Muaz Khan](https://github.com/muaz-khan)
 	*/
 // Sourced from: https://cdn.webrtc-experiment.com/CodecsHandler.js
 
-// **** FILE HAS BEEN HEAVILY MODIFIED BY STEVE SEGUIN. ALL RIGHTS RESERVED ****
+// *FILE HAS BEEN HEAVILY MODIFIED BY STEVE SEGUIN. ALL RIGHTS RESERVED WHERE APPLICABLE *
 
 var CodecsHandler = (function() {
     function preferCodec(sdp, codecName) {
