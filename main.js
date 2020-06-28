@@ -22,20 +22,67 @@ function getById(id) {
    return el;
 }
 
+
+function updateURL(param, force=false) {
+	var para = param.split('=')[0];
+	if (!(urlParams.has(para)) || (force)){
+		if (history.pushState){
+			
+			var arr = window.location.href.split('?');
+			var newurl;
+			if (arr.length > 1 && arr[1] !== '') {
+				newurl = window.location.href + '&' +param;
+			} else {
+				newurl = window.location.href + '?' +param;
+			}
+			
+			window.history.pushState({path:newurl},'',newurl);
+		}
+	}
+
+	if (session.sticky){
+		setCookie("settings", encodeURI(window.location.href), 90)
+	}
+}
+
+
+(function (w) {
+    w.URLSearchParams = w.URLSearchParams || function (searchString) {
+        var self = this;
+        self.searchString = searchString;
+        self.get = function (name) {
+            var results = new RegExp('[\?&]' + name + '=([^&#]*)').exec(self.searchString);
+            if (results == null) {
+                return null;
+            }
+            else {
+                return decodeURI(results[1]) || 0;
+            }
+        };
+    };
+
+})(window);
+var urlParams = new URLSearchParams(window.location.search);
+
+
 if (window.obsstudio){
-	
 	log("OBS VERSION:"+window.obsstudio.pluginVersion);
 	log("macOS: "+navigator.userAgent.indexOf('Mac OS X') != -1);
 	log(window.obsstudio);
-	var ver1 = window.obsstudio.pluginVersion;
-	ver1 = ver1.split(".");
-	if (ver1.length == 3){
-		if ((ver1.length == 3) && (parseInt(ver1[0])==2) && (parseInt(ver1[1])>4) && (navigator.userAgent.indexOf('Mac OS X') != -1)){
-			getById("main").innerHTML = "<div style='background-color:black;color:white;'><h1>On macOS, Please use OBS v23, as OBS v24 and v25 are not supported currently.</h1>\
-			<br /><h2> Please find details <u><a href='https://github.com/steveseguin/obsninja/wiki/FAQ#mac-os'>within our wiki guide - https://github.com/steveseguin/obsninja/wiki/FAQ#mac-os</a></u></h2>\
-			<br /> (Version of OBS Plugin Detected: "+window.obsstudio.pluginVersion+", and should currently be 2.4.0 on macOS)\
-			<br /> Please report this problem to steve@seguin.email if you feel it is an error.\
-			</div>";
+	
+	if (!(urlParams.has('streamlabs'))){
+		
+		var ver1 = window.obsstudio.pluginVersion;
+		ver1 = ver1.split(".");
+		updateURL("streamlabs");
+		if (ver1.length == 3){ // Should be 3, but disabled3
+			if ((ver1.length == 3) && (parseInt(ver1[0])==2) && (parseInt(ver1[1])>4) && (navigator.userAgent.indexOf('Mac OS X') != -1)){
+				getById("main").innerHTML = "<div style='background-color:black;color:white;'><h1>On macOS, Please use OBS v23, as OBS v24 and v25 are not supported currently.</h1>\
+				<br /><h2> Please find details <u><a href='https://github.com/steveseguin/obsninja/wiki/FAQ#mac-os'>within our wiki guide - https://github.com/steveseguin/obsninja/wiki/FAQ#mac-os</a></u></h2>\
+				<br /> You can bypass this error message by refreshing, <a href='"+ window.location.href +"'> Clicking Here,</a> or by adding <i>&streamlabs</i> to the URL.\
+				<br /> Please report this problem to steve@seguin.email if you feel it is an error.\
+				</div>";
+			}
 		}
 	}
 	
@@ -118,32 +165,75 @@ if (typeof variable !== 'undefined') { // make sure to init the WebRTC if not ex
 	session.streamID = session.generateStreamID();
 }
 
-(function (w) {
-    w.URLSearchParams = w.URLSearchParams || function (searchString) {
-        var self = this;
-        self.searchString = searchString;
-        self.get = function (name) {
-            var results = new RegExp('[\?&]' + name + '=([^&#]*)').exec(self.searchString);
-            if (results == null) {
-                return null;
-            }
-            else {
-                return decodeURI(results[1]) || 0;
-            }
-        };
-    };
 
-})(window);
-var urlParams = new URLSearchParams(window.location.search);
+
+
+function setCookie(cname, cvalue, exdays) {
+  var d = new Date();
+  d.setTime(d.getTime() + (exdays * 24 * 60 * 60 * 1000));
+  var expires = "expires="+d.toUTCString();
+  document.cookie = cname + "=" + cvalue + ";" + expires + ";path=/";
+}
+
+function getCookie(cname) {
+  var name = cname + "=";
+  var ca = document.cookie.split(';');
+  for(var i = 0; i < ca.length; i++) {
+    var c = ca[i];
+    while (c.charAt(0) == ' ') {
+      c = c.substring(1);
+    }
+    if (c.indexOf(name) == 0) {
+      return c.substring(name.length, c.length);
+    }
+  }
+  return "";
+}
+
+if (getCookie("redirect") == "yes"){
+	setCookie("redirect", "", 0)
+	session.sticky = true;
+} else if (getCookie("settings") != ""){
+	session.sticky = confirm("Would you like you load your previous session's settings?");
+	if (!session.sticky){
+		setCookie("settings", "", 0)
+		log("deleting cookie as user said no");
+	} else {
+		var cookieSettings = decodeURI(getCookie("settings"));
+		setCookie("redirect", "yes", 1)
+		window.location.replace(cookieSettings);
+	}
+}
+if (urlParams.has('sticky')){
+	if (getCookie("permission")==""){
+		session.sticky = confirm("Would you allow us to store a cookie to keep your session settings persistent?");
+	} else {
+		session.sticky = true;
+	}
+	if (session.sticky){
+		setCookie("permission", "yes", 999)
+		setCookie("settings", encodeURI(window.location.href), 90)
+	}
+}
+
+
 
 
 if( /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ) {
 	session.webcamonly = true;
 }
 
-if (urlParams.has('webcam')){
+if (urlParams.has('webcam') || urlParams.has('wc')){
 	session.webcamonly = true;
 } 
+
+if (urlParams.has('screenshare') || urlParams.has('ss')){
+	session.screenshare = true;
+} 
+
+if (session.screenshare==true){
+	getById("container-3").className = 'column columnfade advanced'; // Hide screen share on mobile
+}
 
 if (session.webcamonly==true){
 	getById("container-2").className = 'column columnfade advanced'; // Hide screen share on mobile
@@ -151,17 +241,27 @@ if (session.webcamonly==true){
 
 
 
-if (urlParams.has('stereo')){ // both peers need this enabled for HD stereo to be on. If just pub, you get no echo/noise cancellation. if just viewer, you get high bitrate mono 
+
+if (urlParams.has('password')){
+	session.password = urlParams.get('password');
+	if (session.password.length==0){
+		session.password = prompt("Please enter the password below: \n\n(Note: Passwords are case-sensitive and you will not be alerted if it is incorrect.)");
+	}
+	getById("passwordRoom").value = session.password;
+}
+
+if (urlParams.has('stereo') || urlParams.has('s')){ // both peers need this enabled for HD stereo to be on. If just pub, you get no echo/noise cancellation. if just viewer, you get high bitrate mono 
 	log("STEREO ENABLED");
-	session.stereo = urlParams.get('stereo');
+	session.stereo = urlParams.get('stereo') || urlParams.get('s');
+	session.stereo = session.stereo.toLowerCase();
 	
-	if (session.stereo.toLowerCase()=="false"){
+	if (session.stereo=="false"){
 		session.stereo = 0;
 	} else if (session.stereo=="0"){
 		session.stereo = 0;
-	} else if (session.stereo.toLowerCase()=="no"){
+	} else if (session.stereo=="no"){
 		session.stereo = 0;
-	} else if (session.stereo.toLowerCase()=="off"){
+	} else if (session.stereo=="off"){
 		session.stereo = 0;
 	} else if (session.stereo=="1"){
 		session.stereo = 1;
@@ -180,48 +280,57 @@ if ((session.stereo==1) || (session.stereo==3)){
 	session.noiseSuppression = false;
 }
 
-if (urlParams.has("aec")){
-	if (urlParams.get('aec').toLowerCase()=="false"){
+
+if (urlParams.has("aec") || urlParams.has("ec")){
+	
+	session.echoCancellation = urlParams.get('aec') || urlParams.get('ec');
+	session.echoCancellation.toLowerCase();
+	
+	if (session.echoCancellation=="false"){
 		session.echoCancellation = false;
-	} else if (urlParams.get('aec')=="0"){
+	} else if (session.echoCancellation=="0"){
 		session.echoCancellation = false;
-	} else if (urlParams.get('aec').toLowerCase()=="no"){
+	} else if (session.echoCancellation=="no"){
 		session.echoCancellation = false;
-	} else if (urlParams.get('aec').toLowerCase()=="off"){
-		session.echoCancellation = false;
-	} else if (urlParams.get('aec').toLowerCase()=="false"){
+	} else if (session.echoCancellation=="off"){
 		session.echoCancellation = false;
 	} else {
 		session.echoCancellation = true;
 	}
-} 
+}
 
-if (urlParams.has("autogain")){
-	if (urlParams.get('autogain').toLowerCase()=="false"){
+
+
+if (urlParams.has("autogain") || urlParams.has("ag")){
+	
+	session.autoGainControl = urlParams.get('autogain') || urlParams.get('ag');
+	session.autoGainControl.toLowerCase();
+	
+	if (session.autoGainControl=="false"){
 		session.autoGainControl = false;
-	} else if (urlParams.get('autogain')=="0"){
+	} else if (session.autoGainControl=="0"){
 		session.autoGainControl = false;
-	} else if (urlParams.get('autogain').toLowerCase()=="no"){
+	} else if (session.autoGainControl=="no"){
 		session.autoGainControl = false;
-	} else if (urlParams.get('autogain').toLowerCase()=="off"){
-		session.autoGainControl = false;
-	} else if (urlParams.get('autogain').toLowerCase()=="false"){
+	} else if (session.autoGainControl=="off"){
 		session.autoGainControl = false;
 	} else {
 		session.autoGainControl = true;
 	}
 }
 
-if (urlParams.has("denoise")){
-	if (urlParams.get('denoise').toLowerCase()=="false"){
+if (urlParams.has("denoise") || urlParams.has("dn")){
+	
+	session.noiseSuppression = urlParams.get('denoise') || urlParams.get('dn');
+	session.noiseSuppression.toLowerCase();
+	
+	if (session.noiseSuppression=="false"){
 		session.noiseSuppression = false;
-	} else if (urlParams.get('denoise')=="0"){
+	} else if (session.noiseSuppression=="0"){
 		session.noiseSuppression = false;
-	} else if (urlParams.get('denoise').toLowerCase()=="no"){
+	} else if (session.noiseSuppression=="no"){
 		session.noiseSuppression = false;
-	} else if (urlParams.get('denoise').toLowerCase()=="off"){
-		session.noiseSuppression = false;
-	} else if (urlParams.get('denoise').toLowerCase()=="false"){
+	} else if (session.noiseSuppression=="off"){
 		session.noiseSuppression = false;
 	} else {
 		session.noiseSuppression = true;
@@ -229,37 +338,46 @@ if (urlParams.has("denoise")){
 }
 
 
-if (urlParams.has('audiobitrate')){ // both peers need this enabled for HD stereo to be on. If just pub, you get no echo/noise cancellation. if just viewer, you get high bitrate mono 
+if (urlParams.has('audiobitrate') || urlParams.has('ab')){ // both peers need this enabled for HD stereo to be on. If just pub, you get no echo/noise cancellation. if just viewer, you get high bitrate mono 
 	log("AUDIO BITRATE SET");
-	session.audiobitrate = parseInt(urlParams.get('audiobitrate'));
-	if (session.audiobitrate<1){session.audiobitrate=false;}
-	
+	session.audiobitrate = urlParams.get('audiobitrate') || urlParams.get('ab');
+	session.audiobitrate = parseInt(session.audiobitrate);
+	if (session.audiobitrate<1){
+		session.audiobitrate=false;
+	} else if (session.audiobitrate>1024){
+		session.audiobitrate=1024;
+	} // this is to just prevent abuse
 }
 
-if ((urlParams.has('streamid')) || (urlParams.has('view'))){  // the streams we want to view; if set, but let blank, we will request no streams to watch.  
-	session.view = urlParams.get('streamid') || urlParams.get('view'); // this value can be comma seperated for multiple streams to pull
-	log("session view list:"+session.view);
+if (urlParams.has('streamid') || urlParams.has('view') || urlParams.has('v') || urlParams.has('pull')){  // the streams we want to view; if set, but let blank, we will request no streams to watch.  
+	session.view = urlParams.get('streamid') || urlParams.get('view') || urlParams.get('v') || urlParams.get('pull'); // this value can be comma seperated for multiple streams to pull
 }
 
-if (urlParams.has('remote')){
+if (urlParams.has('icefilter')){
+	log("ICE FILTER ENABLED");
+    session.icefilter =  urlParams.get('icefilter');
+}
+
+if (urlParams.has('remote') || urlParams.has('rem')){
 	log("remote ENABLED");
-    session.remote =  urlParams.get('remote').trim();
+	session.remote = urlParams.get('remote') || urlParams.get('rem')
+    session.remote =  session.remote.trim();
 }
 if (urlParams.has('optimize')){
 	session.optimize = true;
 }
 
-if (urlParams.has('obsoff')){
+if (urlParams.has('obsoff') || urlParams.has('oo')){
 	log("OBS feedback disabled");
     session.disableOBS = true;
 }
 
-if (urlParams.has('noaudio')){
+if (urlParams.has('noaudio') || urlParams.has('na')){
 	log("disable audio playback");
     session.audio = false;
 }
 
-if (urlParams.has('novideo')){
+if (urlParams.has('novideo') || urlParams.has('nv')){
 	log("disable video playback");
     session.video = false;
 }
@@ -333,7 +451,7 @@ if (ln_template){  // checking if manual lanuage override enabled
 						ele.innerHTML = data[ele.dataset.translate];
 					}
 				});
-				getById("mainmenu").style.opacity = 1;;
+				getById("mainmenu").style.opacity = 1;
 			}).catch(function(err){
 				errorlog(err);
 				getById("mainmenu").style.opacity = 1;
@@ -347,10 +465,13 @@ if (ln_template){  // checking if manual lanuage override enabled
 		errorlog(error);
 		getById("mainmenu").style.opacity = 1;
 	}
+	if (location.hostname !== "obs.ninja"){
+		document.title = location.hostname;
+		getById("qos").innerHTML = location.hostname;
+		getById("logoname").innerHTML = getById("qos").outerHTML;
+		getById("helpbutton").style.display = "none";
+	}
 } else if (location.hostname !== "obs.ninja"){
-	getById("qos").innerHTML = location.hostname;
-	getById("logoname").innerHTML = getById("qos").outerHTML ;
-	document.title = location.hostname;
 	try {
 		fetch("./translations/blank.json").then(function(response){
 			if (response.status !== 200) {
@@ -367,9 +488,11 @@ if (ln_template){  // checking if manual lanuage override enabled
 						ele.innerHTML = data[ele.dataset.translate];
 					}
 				});
+				document.title = location.hostname;
 				getById("qos").innerHTML = location.hostname;
 				getById("logoname").innerHTML = getById("qos").outerHTML ;
-				getById("mainmenu").style.opacity = 1;;
+				getById("helpbutton").style.display = "none";
+				getById("mainmenu").style.opacity = 1;
 			}).catch(function(err){
 				errorlog(err);
 				getById("mainmenu").style.opacity = 1;
@@ -378,33 +501,16 @@ if (ln_template){  // checking if manual lanuage override enabled
 			errorlog(err);
 			getById("mainmenu").style.opacity = 1;
 		});
-		
+		document.title = location.hostname;
+		getById("qos").innerHTML = location.hostname;
+		getById("logoname").innerHTML = getById("qos").outerHTML;
+		getById("helpbutton").style.display = "none";
 	} catch (error){
 		errorlog(error);
-		getById("mainmenu").style.opacity = 1;
 	}
 } else {  // check if automatic language translation is available
 	getById("mainmenu").style.opacity = 1;
 }
-//	if (window.navigator.language.slice(0, 2) !== 'en'){  
-//		fetch("./translations/"+window.navigator.language.slice(0, 2)+'.json').then(function(response){
-//			if (response.status !== 200) {
-//				logerror('Language translation file not found.' + response.status);
-//				return;
-//			}
-//			response.json().then(function(data) {
-//				log(data);
-//				document.querySelectorAll('[data-translate]').forEach(function(ele){
-//					//log(ele.dataset.translate);
-//					//log(translations[ele.dataset.translate]);
-//					ele.innerHTML = data[ele.dataset.translate];
-//				});
-//			});
-//		}).catch(function(err){
-//			errorlog(err);
-//		});
-//	}
-//}
 
 function changeLg(lang){
 		fetch("./translations/"+lang+'.json').then(function(response){
@@ -425,41 +531,37 @@ function changeLg(lang){
 		});
 }
 
-if (urlParams.has('bitrate')){
-    session.bitrate = parseInt(urlParams.get('bitrate'));
-	if (session.bitrate<1){session.bitrate=false;}
-	log("BITRATE ENABLED");
-	log(session.bitrate);
-} else if (urlParams.has('videobitrate')){ // just an alternative command to do it. more explicit
-    session.bitrate = parseInt(urlParams.get('videobitrate'));
+if (urlParams.has('videobitrate') || urlParams.has('bitrate') || urlParams.has('vb')){
+	session.bitrate = urlParams.get('videobitrate') || urlParams.get('bitrate') || urlParams.get('vb');
+    session.bitrate = parseInt(session.bitrate);
 	if (session.bitrate<1){session.bitrate=false;}
 	log("BITRATE ENABLED");
 	log(session.bitrate);
 }
 
-if (urlParams.has('maxbitrate')){
-    session.maxvideobitrate = parseInt(urlParams.get('maxbitrate'));
+if (urlParams.has('maxvideobitrate') || urlParams.has('maxbitrate') || urlParams.has('mvb')){
+	session.maxvideobitrate = urlParams.get('maxvideobitrate') || urlParams.get('maxbitrate') || urlParams.get('mvb');
+    session.maxvideobitrate = parseInt(session.maxvideobitrate);
+	
 	if (session.maxvideobitrate<1){session.maxvideobitrate=false;}
 	log("maxvideobitrate ENABLED");
 	log(session.maxvideobitrate);
-} else if (urlParams.has('maxvideobitrate')){ // just an alternative command to do it. more explicit
-    session.maxvideobitrate = parseInt(urlParams.get('maxvideobitrate'));
-	if (session.maxvideobitrate<1){session.maxvideobitrate=false;}
-	log("maxvideobitrate ENABLED");
-	log(session.maxvideobitrate);
+} 
+
+if (urlParams.has('height') || urlParams.has('h')){
+	session.height = urlParams.get('height') || urlParams.get('h')
+	session.height = parseInt(session.height);
 }
 
-if (urlParams.has('height')){
-	session.height = parseInt(urlParams.get('height'));
+if (urlParams.has('width') || urlParams.has('w')){
+	session.width = urlParams.get('width') || urlParams.get('w')
+	session.width = parseInt(session.width);
 }
 
-if (urlParams.has('width')){
-	session.width = parseInt(urlParams.get('width'));
-}
-
-if (urlParams.has('quality')){
+if (urlParams.has('quality') || urlParams.has('q')){
 	try{
-		session.quality = parseInt(urlParams.get('quality'));
+		session.quality = urlParams.get('quality') || urlParams.get('q')
+		session.quality = parseInt(session.quality);
 		getById("gear_screen").parentNode.removeChild(getById("gear_screen"));
 		getById("gear_webcam").parentNode.removeChild(getById("gear_webcam"));
 	} catch(e){
@@ -471,7 +573,7 @@ if (urlParams.has('sink')){
 	session.sink = urlParams.get('sink');
 }
 
-if (urlParams.has('cleanoutput')){
+if (urlParams.has('cleanoutput') || urlParams.has('clean')){
 	session.cleanOutput = true;
 	getById("translateButton").style.display="none";
 	getById("credits").style.display="none";
@@ -486,13 +588,25 @@ if (urlParams.has('channels')){
 	log("max channels is 32; channels offset");
 }
 
+if (urlParams.has('maxviewers') || urlParams.has('mv') ){
+	
+	session.maxviewers = urlParams.get('maxviewers') || urlParams.get('mv')  
+	if (session.maxviewers.length==0){
+		session.maxviewers = 1;
+	} else {
+		session.maxviewers = parseInt(session.maxviewers);
+	}
+	log("maxviewers set");
+}
+
 if (urlParams.has('secure')){
 	session.security = true;
 	setTimeout(function() {alert("Enhanced Security Mode Enabled.");}, 100);
 }
 
-if (urlParams.has('framerate')){
-    session.framerate = parseInt(urlParams.get('framerate'));
+if (urlParams.has('framerate') || urlParams.has('fr') || urlParams.has('fps')){
+	session.framerate = urlParams.get('framerate') || urlParams.get('fr') || urlParams.get('fps');
+    session.framerate = parseInt(session.framerate);
 	log("framerate Changed");
 	log(session.framerate);
 }
@@ -562,24 +676,6 @@ if (urlParams.has('privacy')){ // please only use if you are also using your own
 }
 
 
-function updateURL(param, force=false) {
-	var para = param.split('=')[0];
-	if (!(urlParams.has(para)) || (force)){
-		if (history.pushState){
-			
-			var arr = window.location.href.split('?');
-			var newurl;
-			if (arr.length > 1 && arr[1] !== '') {
-				newurl = window.location.href + '&' +param;
-			} else {
-				newurl = window.location.href + '?' +param;
-			}
-			
-			
-			window.history.pushState({path:newurl},'',newurl);
-		}
-	}
-}
 
 function jumptoroom(){
 	var arr = window.location.href.split('?');
@@ -611,7 +707,7 @@ if (filename.split(".").length==1){
 
 
 var permaid=false;
-if ((urlParams.has('permaid')) || (urlParams.has('push'))){
+if (urlParams.has('permaid') || urlParams.has('push')){
 	permaid  = urlParams.get('permaid') || urlParams.get('push');
 	session.changeStreamID(permaid);
 	getById("container-1").className = 'column columnfade advanced';
@@ -619,7 +715,7 @@ if ((urlParams.has('permaid')) || (urlParams.has('push'))){
 	getById("info").innerHTML = "";
 	getById("add_camera").innerHTML = "Share your Camera";
 	getById("add_screen").innerHTML = "Share your Screen";
-	
+	getById("passwordRoom").value = "";
 	getById("videoname1").value = "";
 	getById("dirroomid").innerHTML = "";
 	getById("roomid").innerHTML = "";
@@ -637,7 +733,7 @@ if ((urlParams.has('permaid')) || (urlParams.has('push'))){
 } 
 
 
-if ( (session.roomid) || (urlParams.has('roomid')) || (filename) || (urlParams.has('room')) || (permaid!==false)){
+if ( (session.roomid) || (urlParams.has('roomid')) || (urlParams.has('r')) || (urlParams.has('room')) ||  (filename) || (permaid!==false)){
 	
 	var roomid = "";
 	if (filename){
@@ -646,6 +742,8 @@ if ( (session.roomid) || (urlParams.has('roomid')) || (filename) || (urlParams.h
 		roomid  = urlParams.get('room');
 	} else if (urlParams.has('roomid')){
 		roomid  = urlParams.get('roomid');
+	} else if (urlParams.has('r')){
+		roomid  = urlParams.get('r');
 	} else if (session.roomid){
 		roomid = session.roomid;
 	}
@@ -666,11 +764,16 @@ if ( (session.roomid) || (urlParams.has('roomid')) || (filename) || (urlParams.h
 	if (session.webcamonly==true){  // mobile or manual flag 'webcam' pflag set
 		getById("head1").innerHTML = '';
 	} else {	
-		getById("head1").innerHTML = '<br /><font style="color:#CCC">Please select an option to join.</font>';
+		getById("head1").innerHTML = '<font style="color:#CCC">Please select an option to join.</font>';
 	}
 	
-	getById("add_camera").innerHTML = "Join Room with Camera";
-	getById("add_screen").innerHTML = "Screenshare with Room";
+	if (session.roomid.length>0){
+		getById("add_camera").innerHTML = "Join Room with Camera";
+		getById("add_screen").innerHTML = "Screenshare with Room";
+	} else {
+		getById("add_camera").innerHTML = "Share your Camera";
+		getById("add_screen").innerHTML = "Share your Screen";
+	}
 	getById("head3").className = 'advanced';
 	if (urlParams.has('scene')){
 		session.scene = urlParams.get('scene');
@@ -680,21 +783,28 @@ if ( (session.roomid) || (urlParams.has('roomid')) || (filename) || (urlParams.h
 		getById("container-1").className = 'column columnfade';
 		getById("header").className = 'advanced';
 		getById("info").className = 'advanced';
-		getById("header").className = 'advanced';
 		getById("head1").className = 'advanced';
 		getById("head2").className = 'advanced';
 		getById("head3").className = 'advanced';
 		getById("mainmenu").style.display = "none";
+		getById("translateButton").style.display = "none";
+		log("Update Mixer Event on REsize SET");
 		window.addEventListener("resize", updateMixer);
 		joinRoom(roomid); // this is a scene, so we want high resolutions
+		getById("main").style.overflow = "hidden";
 	} 
-} else if (urlParams.has('director')){
+} else if (urlParams.has('director')){ // if I do a short form of this, it will cause duplications in the code elsewhere. 
 	createRoom(urlParams.get('director').replace(/[\W_]+/g,"_"));
-}
+} else if ((session.view) && (permaid===false)){
+	log("Update Mixer Event on REsize SET");
+	getById("translateButton").style.display = "none";
+	window.addEventListener("resize", updateMixer);
+	getById("main").style.overflow = "hidden";
+} 
 
 
 function checkConnection(){
-	if (document.getElementById("qos")){
+	if (document.getElementById("qos")){  // true or false; null might cause problems?
 		if ((session.ws) && (session.ws.readyState === WebSocket.OPEN)) {
 			getById("qos").style.color = "white";
 		} else {
@@ -723,8 +833,8 @@ function updateStats(){
 function toggleMute(){ // TODO: I need to have this be MUTE, toggle, with volume not touched.
 	if (session.muted==false){
 		session.muted = true;
-		getById("mutetoggle").className="fa fa-microphone-slash my-float toggleSize";
-		getById("mutebutton").className="float";
+		getById("mutetoggle").className="las la-microphone-slash my-float toggleSize";
+		getById("mutebutton").className="float2";
 		session.streamSrc.getAudioTracks().forEach((track) => {
 		  track.enabled = false;
 		});
@@ -732,8 +842,8 @@ function toggleMute(){ // TODO: I need to have this be MUTE, toggle, with volume
 	} else{
 		session.muted=false;
 		
-		getById("mutetoggle").className="fa fa-microphone my-float toggleSize";
-		getById("mutebutton").className="float3";
+		getById("mutetoggle").className="las la-microphone my-float toggleSize";
+		getById("mutebutton").className="float";
 		
 		session.streamSrc.getAudioTracks().forEach((track) => {
 		  track.enabled = true;
@@ -744,8 +854,8 @@ function toggleMute(){ // TODO: I need to have this be MUTE, toggle, with volume
 function toggleVideoMute(){ // TODO: I need to have this be MUTE, toggle, with volume not touched.
 	if (session.videoMuted==false){
 		session.videoMuted = true;
-		getById("mutevideotoggle").className="fa fa-eye-slash my-float toggleSize";
-		getById("mutevideobutton").className="float5";
+		getById("mutevideotoggle").className="las la-eye-slash my-float toggleSize";
+		getById("mutevideobutton").className="float2";
 		session.streamSrc.getVideoTracks().forEach((track) => {
 		  track.enabled = false;
 		});
@@ -753,14 +863,18 @@ function toggleVideoMute(){ // TODO: I need to have this be MUTE, toggle, with v
 	} else{
 		session.videoMuted=false;
 		
-		getById("mutevideotoggle").className="fa fa-eye my-float toggleSize";
-		getById("mutevideobutton").className="float4";
+		getById("mutevideotoggle").className="las la-eye my-float toggleSize";
+		getById("mutevideobutton").className="float";
 		
 		
 		session.streamSrc.getVideoTracks().forEach((track) => {
 		  track.enabled = true;
 		});
 	}
+}
+
+function hangup(){ // TODO: I need to have this be MUTE, toggle, with volume not touched.
+	session.hangup();
 }
 
 function directEnable(ele){ // A directing room only is controlled by the Director, with the exception of MUTE.
@@ -780,7 +894,7 @@ function directEnable(ele){ // A directing room only is controlled by the Direct
 	}
 	var msg = {};
 	msg.request = "sendroom";
-	msg.roomid = session.roomid;
+	//msg.roomid = session.roomid;
 	msg.scene = "1"; // scene
 	msg.action = "display";
 	msg.value =  ele.parentNode.parentNode.dataset.enable;
@@ -804,7 +918,7 @@ function directMute(ele){ // A directing room only is controlled by the Director
 	}
 	var msg = {};
 	msg.request = "sendroom";
-	msg.roomid = session.roomid;
+	//msg.roomid = session.roomid;
 	msg.scene = "1";
 	msg.action = "mute";
 	msg.value =  ele.parentNode.parentNode.dataset.mute;
@@ -817,7 +931,7 @@ function directVolume(ele){ // A directing room only is controlled by the Direct
 	log("volume");
 	var msg = {};
 	msg.request = "sendroom";
-	msg.roomid = session.roomid;
+	//msg.roomid = session.roomid;
 	msg.scene = "1";
 	msg.action = "volume";
 	msg.target = ele.parentNode.parentNode.dataset.UUID; // i want to focus on the STREAM ID, not the UUID...
@@ -831,7 +945,7 @@ function chatRoom(chatmessage="hi"){ // A directing room only is controlled by t
 	log("Chat message");
 	var msg = {};
 	msg.request = "sendroom";
-	msg.roomid = session.roomid;
+	//msg.roomid = session.roomid;
 	msg.action = "chat";
 	msg.value = chatmessage;
 	session.sendMsg(msg); // send to everyone in the room, so they know if they are on air or not.
@@ -906,9 +1020,10 @@ function publishScreen(){
 		log("streamID is: "+session.streamID);
 
 		if (!(session.cleanOutput)){
-			getById("mutebutton").className="float3";
-			getById("helpbutton").className="float2";
-			getById("mutevideobutton").className="float4";
+			getById("mutebutton").className="float";
+			getById("helpbutton").className="float";
+			getById("mutevideobutton").className="float";
+			getById("hangupbutton").className="float";
 		}
 		getById("head1").className = 'advanced';
 		getById("head2").className = 'advanced';
@@ -931,9 +1046,15 @@ function publishWebcam(){
 	window.scrollTo(0, 0); // iOS has a nasty habit of overriding the CSS when changing camaera selections, so this addresses that.
 
 	if (session.roomid!==false){
-		log("ROOM ID ENABLED");
-		window.addEventListener("resize", updateMixer);
-		joinRoom(session.roomid);
+		if ((session.roomid==="") && ((!(session.view)) || (session.view===""))){  
+					//	no room, no viewing, viewing disabled
+		} else {
+			log("ROOM ID ENABLED");
+			log("Update Mixer Event on REsize SET");
+			window.addEventListener("resize", updateMixer);
+			getById("main").style.overflow = "hidden";
+			joinRoom(session.roomid);
+		}
 		getById("head3").className = 'advanced';
 	} else {
 		getById("head3").className = '';
@@ -944,9 +1065,10 @@ function publishWebcam(){
 	getById("head2").className = 'advanced';
 
 	if (!(session.cleanOutput)){
-		getById("mutebutton").className="float3";
-		getById("helpbutton").className="float2";
-		getById("mutevideobutton").className="float4";
+		getById("mutebutton").className="float";
+		getById("helpbutton").className="float";
+		getById("mutevideobutton").className="float";
+		getById("hangupbutton").className="float";
 	}
 	updateURL("push="+session.streamID);
 	session.publishStream(stream, title);
@@ -958,7 +1080,7 @@ function joinRoom(roomname, maxbitrate=false){
 		if (roomname.length){
 			log("Join room",roomname);
 			log(roomname);
-			session.joinRoom(roomname,maxbitrate).then(function(response){  // callback from server; we've joined the room
+			session.joinRoom(roomname, maxbitrate).then(function(response){  // callback from server; we've joined the room
 			
 				if (session.director){
 					var msg = {};
@@ -978,7 +1100,7 @@ function joinRoom(roomname, maxbitrate=false){
 								//if ("title" in response[i]){
 									//	title = response[i]["title"];
 									//}
-									
+								
 								play(response[i].streamID);  // play handles the group room mechanics here
 							}
 						}
@@ -997,13 +1119,23 @@ function createRoom(roomname=false){
 	if (roomname==false){
 		roomname = getById("videoname1").value;
 		roomname = roomname.replace(/[\W_]+/g,"_");
-		updateURL("director="+roomname); // make the link reloadable.
+		if (roomname.length!=0){
+			updateURL("director="+roomname); // make the link reloadable.
+		}
 	}
-	log(roomname);
 	if (roomname.length==0){
 		alert("Please enter a room name before continuing");
 		return;
 	}
+	log(roomname);
+	
+	var passwordRoom = getById("passwordRoom").value;
+	if (passwordRoom.length){
+		session.password=passwordRoom;
+		updateURL("password="+session.password);
+	}
+	
+	
 
 	var gridlayout = getById("gridlayout");
 	gridlayout.classList.add("directorsgrid");
@@ -1023,36 +1155,44 @@ function createRoom(roomname=false){
 	getById("roomid").innerHTML = roomname;
 
 
-	//getById("mutebutton").className="float3";
-	//getById("helpbutton").className="float2";
+	//getById("mutebutton").className="float";
+	//getById("helpbutton").className="float";
 	session.director = true;
 	getById("reshare").parentNode.removeChild(getById("reshare"));
 	
-	gridlayout.innerHTML = "<br /><div style='display:inline-block'><font style='font-size:130%;color:white;'></font><input  onclick='popupMessage(event);copyFunction(this)' onmousedown='copyFunction(this)' style='cursor:grab;font-weight:bold;background-color:#78F; width:400px; font-size:100%; padding:10px; border:2px solid black; margin:5px;'  class='task' value='https://"+location.host+location.pathname+"?room="+session.roomid+"' /><font style='font-size:130%;color:white;'><i class='fa fa-video-camera' style='font-size:2em;'  aria-hidden='true'></i> - Invites users to join the group and broadcast their feed to it. These users will see every feed, so a limit of 4 is recommended.</font></div>";
+	var passAdd="";
+	var passAdd2="";
+	if (session.password){
+		passAdd="&password";
+		passAdd2="&password="+session.password;
+	}
 	
-	gridlayout.innerHTML += "<br /><font style='font-size:130%;color:white;'></font><input class='task' onclick='popupMessage(event);copyFunction(this)' onmousedown='copyFunction(this)' style='cursor:grab;font-weight:bold;background-color:#F45;width:400px;font-size:100%;padding:10px;border:2px solid black;margin:5px;' value='https://"+location.host+location.pathname+"?room="+session.roomid+"&view' /><font style='font-size:130%;color:white;'><i class='fa fa-video-camera' style='font-size:2em;'  aria-hidden='true'></i> - Link to Invite users to broadcast their feeds to the group. These users will not see or hear any feed from the group.</font><br />";
+	gridlayout.innerHTML = "<br /><div style='display:inline-block'><font style='font-size:130%;color:white;'></font><input  onclick='popupMessage(event);copyFunction(this)' onmousedown='copyFunction(this)' style='cursor:grab;font-weight:bold;background-color:#78F; width:400px; font-size:100%; padding:10px; border:2px solid black; margin:5px;'  class='task' value='https://"+location.host+location.pathname+"?room="+session.roomid+passAdd+"' /><font style='font-size:130%;color:white;'><i class='las la-video' style='position:relative;top:10px;font-size:2em;'  aria-hidden='true'></i> - Invites users to join the group and broadcast their feed to it. These users will see every feed, so a limit of 4 is recommended.</font></div>";
+	
+	gridlayout.innerHTML += "<br /><font style='font-size:130%;color:white;'></font><input class='task' onclick='popupMessage(event);copyFunction(this)' onmousedown='copyFunction(this)' style='cursor:grab;font-weight:bold;background-color:#F45;width:400px;font-size:100%;padding:10px;border:2px solid black;margin:5px;' value='https://"+location.host+location.pathname+"?room="+session.roomid+passAdd+"&view' /><font style='font-size:130%;color:white;'><i class='las la-video' style='position:relative;top:10px;font-size:2em;'  aria-hidden='true'></i> - Link to Invite users to broadcast their feeds to the group. These users will not see or hear any feed from the group.</font><br />";
 	
 	
-	gridlayout.innerHTML += "<font style='font-size:130%;color:white'></font><input class='task' onmousedown='copyFunction(this)' data-drag='1' onclick='popupMessage(event);copyFunction(this)' style='cursor:grab;font-weight:bold;background-color:#5F4;width:400px;font-size:100%;padding:10px;border:2px solid black;margin:5px;' value='https://"+location.host+location.pathname+"?scene=1&room="+session.roomid+"' /><font style='font-size:130%;color:white'><i class='fa fa-th-large' style='font-size:2em;' aria-hidden='true'></i> - This is an OBS Browser Source link that contains the group chat in just a single scene. Videos must be added to Group Scene.</font><br />";
+	gridlayout.innerHTML += "<font style='font-size:130%;color:white'></font><input class='task' onmousedown='copyFunction(this)' data-drag='1' onclick='popupMessage(event);copyFunction(this)' style='cursor:grab;font-weight:bold;background-color:#5F4;width:400px;font-size:100%;padding:10px;border:2px solid black;margin:5px;' value='https://"+location.host+location.pathname+"?scene=1&room="+session.roomid+passAdd2+"' /><font style='font-size:130%;color:white'><i class='las la-th-large' style='position:relative;top:10px;font-size:2em;' aria-hidden='true'></i> - This is an OBS Browser Source link that contains the group chat in just a single scene. Videos must be added to Group Scene.</font><br />";
 	
 	gridlayout.innerHTML += '<button style="margin:10px;padding:5px" onclick="toggle(getById(\'roomnotes2\'),this);">Click Here for a quick overview and help</button>';
 	
 	gridlayout.innerHTML += "<div id='roomnotes2' style='display:none;padding:0 0 0 10px;' ><br />\
 	<font style='color:#CCC;'>Welcome. This is the control-room for the group-chat. There are different things you can use this room for:<br /><br />\
 	<li>You can host a small-group chat here. Share the blue link to invite guests who will join the chat automatically.</li>\
-	<li>You can use it to invite and manage up to 20 remote camera streams. Use the red-colored add camera link to bring in such streams.</li>\
+	<li>You can use it to invite and manage up to ~20 remote camera streams. Use the red-colored add camera link to bring in such streams.</li>\
 	<li>You can add and remote control individual streams loaded into OBS. The required solo-links to add to OBS will appear under videos as they load.</li>\
 	<li>You can use the auto-mixing Group Scene, the green link, to auto arrange multiple videos for you in OBS.</li>\
 	<li>You can use it to record video streams independently</li>\
 	<br />\
 	As guests join, their videos will appear below. You can bring their video streams into OBS as solo-scenes or you can add them to the Group Scene.\
-	<br />The Group Scene auto-mixes videos that have been added to the group scene. Please note that the Auto-Mixer requires guests be manually added to it for them to appear in it; they are not added automatically.<br /><Br />Apple mobile devices, such as iPhones and iPads, do not fully support Video Group Chat. This is a hardware constraint.<br /><br /></font></div><hr />";
+	<br />The Group Scene auto-mixes videos that have been added to the group scene. Please note that the Auto-Mixer requires guests be manually added to it for them to appear in it; they are not added automatically.<br /><Br />Apple mobile devices, such as iPhones and iPads, do not fully support Video Group Chat. This is a hardware constraint.<br /><br />\
+	For advanced options and parameters, <a href=\"https://github.com/steveseguin/obsninja/wiki/Guides-and-How-to's#urlparameters\">see the Wiki.</a></font></div><hr />";
 	
 	gridlayout.innerHTML += "<div id='deleteme'><br /><br /><center>\
-	<div style='display:inline-block;width:300px;height:350px;border:2px solid white;background-color:#999;margin:40px;'><br /><br />GUEST SLOT #1<br /><br />(A video will appear here when a guest joins)<br /><br /><i class='fa fa-user ' style='font-size:8em;' aria-hidden='true'></i><br /><br />A Solo-Link for OBS will appear here.</div>\
-	<div style='display:inline-block;width:300px;height:350px;border:2px solid white;background-color:#999;margin:40px;'><br /><br />GUEST SLOT #2<br /><br />(A video will appear here when a guest joins)<br /><br /><i class='fa fa-user  ' style='font-size:8em;' aria-hidden='true'></i><br /><br />A Solo Link for OBS will appear here</div>\
-	<div style='display:inline-block;width:300px;height:350px;border:2px solid white;background-color:#999;margin:40px;'><br /><br />GUEST SLOT #3<br /><br />(A video will appear here when a guest joins)<br /><br /><i class='fa fa-user ' style='font-size:8em;'aria-hidden='true'></i><br /><br />A Solo Link for OBS will appear here</div>\
-	<div style='display:inline-block;width:300px;height:350px;border:2px solid white;background-color:#999;margin:40px;'><br /><br />GUEST SLOT #4<br /><br />(A video will appear here when a guest joins)<br /><br /><i class='fa fa-user ' style='font-size:8em;'aria-hidden='true'></i><br /><br />A Solo Link for OBS will appear here</div></center></div>";
+	<div style='display:inline-block;width:300px;height:350px;border:2px solid white;background-color:#999;margin:40px;'><br /><br />GUEST SLOT #1<br /><br />(A video will appear here when a guest joins)<br /><br /><i class='las la-user ' style='font-size:8em;' aria-hidden='true'></i><br /><br />A Solo-Link for OBS will appear here.</div>\
+	<div style='display:inline-block;width:300px;height:350px;border:2px solid white;background-color:#999;margin:40px;'><br /><br />GUEST SLOT #2<br /><br />(A video will appear here when a guest joins)<br /><br /><i class='las la-user  ' style='font-size:8em;' aria-hidden='true'></i><br /><br />A Solo Link for OBS will appear here</div>\
+	<div style='display:inline-block;width:300px;height:350px;border:2px solid white;background-color:#999;margin:40px;'><br /><br />GUEST SLOT #3<br /><br />(A video will appear here when a guest joins)<br /><br /><i class='las la-user ' style='font-size:8em;'aria-hidden='true'></i><br /><br />A Solo Link for OBS will appear here</div>\
+	<div style='display:inline-block;width:300px;height:350px;border:2px solid white;background-color:#999;margin:40px;'><br /><br />GUEST SLOT #4<br /><br />(A video will appear here when a guest joins)<br /><br /><i class='las la-user ' style='font-size:8em;'aria-hidden='true'></i><br /><br />A Solo Link for OBS will appear here</div></center></div>";
 	joinRoom(roomname);  // setting this to limit bitrate may break things.
 
 }
@@ -1080,12 +1220,9 @@ function enumerateDevices() {
 	log("enumerated start");
 	
 	if (typeof navigator.enumerateDevices === "function") {
-		errorlog("enumerated failed 1");
+		log("enumerated failed 1");
 		return navigator.enumerateDevices();
-	}
-	else if (typeof navigator.mediaDevices === "object" &&
-		typeof navigator.mediaDevices.enumerateDevices === "function") {
-			errorlog("enumerated failed 2");
+	} else if (typeof navigator.mediaDevices === "object" && typeof navigator.mediaDevices.enumerateDevices === "function") {
 		return navigator.mediaDevices.enumerateDevices();
 	} else {
 		return new Promise((resolve, reject) => {
@@ -1153,6 +1290,8 @@ function requestAudioStream(){
 								log('Some other kind of source/device: ', deviceInfo);
 							}
 					}
+					audioInputSelect.style.minHeight = ((audioInputSelect.childElementCount + 1)*1.15 * 16) + 'px';
+					audioInputSelect.style.minWidth = "342px";
 			  });
 	  });
    } catch (e){
@@ -1211,13 +1350,14 @@ function gotDevices(deviceInfos) { // https://github.com/webrtc/samples/blob/gh-
 					listele.style.display="none";
 				}
 				
-				option.value = deviceInfo.deviceId;
+				
+				option.value = deviceInfo.deviceId || "default";
 				option.name = "multiselect"+counter;
 				option.id = "multiselect"+counter;
 				const label = document.createElement('label');
 				label.for = option.name;
 				
-				label.innerHTML = " " + (deviceInfo.label || `microphone ${audioInputSelect.length + 1}`);
+				label.innerHTML = " " + (deviceInfo.label || ("microphone "+ ((audioInputSelect.length || 0)+1)));
 				
 				listele.appendChild(option);
 				listele.appendChild(label);
@@ -1245,7 +1385,7 @@ function gotDevices(deviceInfos) { // https://github.com/webrtc/samples/blob/gh-
 		
 			} else if (deviceInfo.kind === 'videoinput') {
 				const option = document.createElement('option');
-				option.value = deviceInfo.deviceId;
+				option.value = deviceInfo.deviceId || "default";
 				option.text = deviceInfo.label || `camera ${videoSelect.length + 1}`;
 				videoSelect.appendChild(option);
 			} else {
@@ -1380,7 +1520,7 @@ function getUserMediaVideoParams(resolutionFallbackLevel, isSafariBrowser) {
 }
 
 function grabVideo(quality=0, audioEnable=false){
-	if( activatedPreview == true){log("activeated preview return 2");return;}
+	if( activatedPreview == true){log("activated preview return 2");return;}
 	activatedPreview = true;
 	log("trying with quality:"+quality);
 
@@ -1557,7 +1697,7 @@ function grabVideo(quality=0, audioEnable=false){
 				errorlog(e);
 				if (e.name === "OverconstrainedError"){
 					errorlog(e.message);
-					log("Resolution didn't work");
+					log("Resolution or framerate didn't work");
 				} else if (e.name === "NotReadableError"){
 					if (iOS){
 						alert("An error occured. Upgrading to at least iOS 13.4 should fix this glitch from happening again");
@@ -1786,6 +1926,21 @@ function setupWebcamSelection(){
 	} catch (e){errorlog(e);}
 }
 
+Promise.wait = function (ms) {
+    return new Promise(function (resolve) {
+        setTimeout(resolve, ms);
+    });
+};
+
+Promise.prototype.timeout = function(ms) {
+    return Promise.race([
+        this, 
+        Promise.wait(ms).then(function () {
+            throw new Error("Time Out\n\nDid you accept camera permissions in time? Please do so first.\n\nOtherwise, do you have NDI Tools installed? Maybe try uninstalling it.");
+        })
+    ])
+};
+
 function previewWebcam(){
   if( activatedPreview == true){log("activeated preview return 1");return;}
   activatedPreview = true;
@@ -1805,15 +1960,32 @@ function previewWebcam(){
 		errorlog(e);
 	}
 	try {
-	  navigator.mediaDevices.getUserMedia({audio:true, video:true }).then(function(stream){ // Apple needs thi to happen before I can access EnumerateDevices. 
-	  log("got first stream");
-			setupWebcamSelection().then(()=>{
-				log("Got second stream");
-				stream.getTracks().forEach(function(track) { // We don't want to keep it without audio; so we are going to try to add audio now.
-					  track.stop(); // I need to do this after the enumeration step, else it breaks firefox's labels
-				});
+	  navigator.mediaDevices.getUserMedia({audio:true, video:true }).timeout(15000).then(function(stream){ // Apple needs thi to happen before I can access EnumerateDevices. 
+		log("got first stream");
+		setupWebcamSelection().then(()=>{
+			log("Got second stream");
+			stream.getTracks().forEach(function(track) { // We don't want to keep it without audio; so we are going to try to add audio now.
+				  track.stop(); // I need to do this after the enumeration step, else it breaks firefox's labels
 			});
-	  }).catch(function(e){
+		});
+	  }).catch(function(err){
+		  errorlog(err); /* handle the error */
+			if (err.name == "NotFoundError" || err.name == "DevicesNotFoundError") {
+				//required track is missing 
+			} else if (err.name == "NotReadableError" || err.name == "TrackStartError") {
+				//webcam or mic are already in use 
+			} else if (err.name == "OverconstrainedError" || err.name == "ConstraintNotSatisfiedError") {
+				//constraints can not be satisfied by avb. devices 
+			} else if (err.name == "NotAllowedError" || err.name == "PermissionDeniedError") {
+				//permission denied in browser 
+				setTimeout(function(){alert("Permissions denied. Please ensure you have allowed the mic/camera permissions.");},1);
+				return;
+			} else if (err.name == "TypeError" || err.name == "TypeError") {
+				//empty constraints object 
+			}  else {
+				//permission denied in browser 
+				setTimeout(function(){alert(err);},1);
+			}
 		  errorlog("trying to list webcam again");
 		  setupWebcamSelection();
 	  });
@@ -1827,32 +1999,6 @@ function previewWebcam(){
   },10);
 }
 
-
-function checkOBS(){
-	if (!navigator.mediaDevices || !navigator.mediaDevices.enumerateDevices) {
-		log("enumerateDevices() not supported.");
-		return;
-	}
-
-	navigator.mediaDevices.enumerateDevices().then(function(devices) {
-		var matchFound = false;
-		devices.forEach(function(device) {
-			if (device.label.startsWith("OBS-Camera")){
-				alert("An OBS Virtual Camera was detected; Success!");
-				log(device.kind + ": " + device.label +
-					" id = " + device.deviceId);
-				matchFound = true;
-
-			}
-			log(device.kind + ": " + device.label + " id = " + device.deviceId);
-		});
-		if (matchFound == false){
-			alert("No OBS Virtual Camera was found");
-		}
-	}).catch(function(err) {
-		log(err.name + ": " + err.message);
-	});
-}
 
 
 function copyFunction(copyText) {
@@ -1891,6 +2037,10 @@ function generateQRPage(){
 			sendstr+="&webcam";
 		}
 		
+		
+		
+		
+		
 		if (getById("invite_remotecontrol").checked){  //
 			var remote_gen_id = session.generateStreamID();
 			sendstr+="&remote="+remote_gen_id; // security
@@ -1900,6 +2050,11 @@ function generateQRPage(){
 		if (getById("invite_joinroom").value.trim().length){
 			sendstr+="&room="+getById("invite_joinroom").value.trim();
 			viewstr+="&scene=1&room="+getById("invite_joinroom").value.trim();
+		}
+		
+		if (getById("invite_password").value.trim().length){
+			sendstr+="&password";
+			viewstr+="&password="+getById("invite_password").value.trim();
 		}
 		
 		

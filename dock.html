@@ -139,8 +139,8 @@ function generateInvite(){
 		}
 	}
 
-	sendstr = 'https://' + location.host + location.pathname + '?push=' + sid + sendstr;
-	viewstr = 'https://' + location.host+ location.pathname + '?view=' + sid + viewstr + title;
+	sendstr = 'https://obs.ninja/?push=' + sid + sendstr;
+	viewstr = 'https://obs.ninja/?view=' + sid + viewstr + title;
 	getById("container-setup").style.display="none";
 	getById("container-links").style.display="block";
 	
