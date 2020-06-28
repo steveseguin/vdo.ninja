@@ -3,23 +3,23 @@ The MIT License (MIT)
 
 Copyright (c) 2012-2020 [Muaz Khan](https://github.com/muaz-khan)
 
-	Permission is hereby granted, free of charge, to any person obtaining a copy of
-	this software and associated documentation files (the "Software"), to deal in
-	the Software without restriction, including without limitation the rights to
-	use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
-	the Software, and to permit persons to whom the Software is furnished to do so,
-	subject to the following conditions:
+    Permission is hereby granted, free of charge, to any person obtaining a copy of
+    this software and associated documentation files (the "Software"), to deal in
+    the Software without restriction, including without limitation the rights to
+    use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
+    the Software, and to permit persons to whom the Software is furnished to do so,
+    subject to the following conditions:
 
-	The above copyright notice and this permission notice shall be included in all
-	copies or substantial portions of the Software.
+    The above copyright notice and this permission notice shall be included in all
+    copies or substantial portions of the Software.
 
-	THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-	IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
-	FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
-	COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
-	IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
-	CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-	*/
+    THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+    IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
+    FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
+    COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
+    IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+    CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+    */
 // Sourced from: https://cdn.webrtc-experiment.com/CodecsHandler.js
 
 // *FILE HAS BEEN HEAVILY MODIFIED BY STEVE SEGUIN. ALL RIGHTS RESERVED WHERE APPLICABLE *
@@ -121,11 +121,11 @@ var CodecsHandler = (function() {
 
         return info;
     }
-	
-	function extractSdp(sdpLine, pattern) {
-		var result = sdpLine.match(pattern);
-		return (result && result.length == 2)? result[1]: null;
-	}
+    
+    function extractSdp(sdpLine, pattern) {
+        var result = sdpLine.match(pattern);
+        return (result && result.length == 2)? result[1]: null;
+    }
 
     function disableNACK(sdp) {
         if (!sdp || typeof sdp !== 'string') {
@@ -169,30 +169,85 @@ var CodecsHandler = (function() {
         return (result && result.length === 2) ? result[1] : null;
     }
 
-    function setVideoBitrates(sdp, params, codec) {  // modified + Improved by Steve.
-		
-		if (codec){
-			codec = codec.toUpperCase();
-		} else{
-			codec="VP8";
-		}
-		
-		var sdpLines = sdp.split('\r\n');
+    function getVideoBitrates(sdp) { 
 
-		// Search for m line.
-		var mLineIndex = findLine(sdpLines, 'm=', 'video');
-		if (mLineIndex === null) {
-			return sdp;
-		}
-		// Figure out the first codec payload type on the m=video SDP line.
-		var videoMLine = sdpLines[mLineIndex];
-		var pattern = new RegExp('m=video\\s\\d+\\s[A-Z/]+\\s');
-		var sendPayloadType = videoMLine.split(pattern)[1].split(' ')[0];
-		var fmtpLine = sdpLines[findLine(sdpLines, 'a=rtpmap', sendPayloadType)];
-		var codecName = fmtpLine.split('a=rtpmap:' + sendPayloadType)[1].split('/')[0];
-		
-		codec = codecName || codec; // Try to find first Codec; else use expected/default
-		
+        var sdpLines = sdp.split('\r\n');
+        var mLineIndex = findLine(sdpLines, 'm=', 'video');
+        if (mLineIndex === null) {
+            return 2500;
+        }
+        var videoMLine = sdpLines[mLineIndex];
+        var pattern = new RegExp('m=video\\s\\d+\\s[A-Z/]+\\s');
+        var sendPayloadType = videoMLine.split(pattern)[1].split(' ')[0];
+        var fmtpLine = sdpLines[findLine(sdpLines, 'a=rtpmap', sendPayloadType)];
+        var codec = fmtpLine.split('a=rtpmap:' + sendPayloadType)[1].split('/')[0];
+
+        var codecIndex = findLine(sdpLines, 'a=rtpmap', codec+'/90000');
+        var codecPayload;
+        if (codecIndex) {
+            codecPayload = getCodecPayloadType(sdpLines[codecIndex]);
+        }
+
+        if (!codecPayload) {
+            return 2500;
+        }
+
+        var rtxIndex = findLine(sdpLines, 'a=rtpmap', 'rtx/90000');
+        var rtxPayload;
+        if (rtxIndex) {
+            rtxPayload = getCodecPayloadType(sdpLines[rtxIndex]);
+        }
+
+        if (!rtxIndex) {
+            return 2500;
+        }
+
+        var rtxFmtpLineIndex = findLine(sdpLines, 'a=fmtp:' + rtxPayload.toString());
+        if (rtxFmtpLineIndex !== null) {
+            try {
+                var maxBitrate = parseInt(sdpLines[rtxFmtpLineIndex].split("x-google-max-bitrate=")[1].split(";")[0]);
+                var minBitrate = parseInt(sdpLines[rtxFmtpLineIndex].split("x-google-min-bitrate=")[1].split(";")[0]);
+            } catch(e){
+                return 2500;
+            }
+           
+           if (minBitrate>maxBitrate){
+               maxBitrate = minBitrate;
+           }
+           if (maxBitrate<1){maxBitrate=1;}
+           return maxBitrate
+        } else {
+            return 2500;
+        }
+
+        
+        
+    }
+
+    function setVideoBitrates(sdp, params, codec) {  // modified + Improved by Steve.
+        
+        if (codec){
+            codec = codec.toUpperCase();
+        } else{
+            codec="VP8";
+        }
+        
+        var sdpLines = sdp.split('\r\n');
+
+        // Search for m line.
+        var mLineIndex = findLine(sdpLines, 'm=', 'video');
+        if (mLineIndex === null) {
+            return sdp;
+        }
+        // Figure out the first codec payload type on the m=video SDP line.
+        var videoMLine = sdpLines[mLineIndex];
+        var pattern = new RegExp('m=video\\s\\d+\\s[A-Z/]+\\s');
+        var sendPayloadType = videoMLine.split(pattern)[1].split(' ')[0];
+        var fmtpLine = sdpLines[findLine(sdpLines, 'a=rtpmap', sendPayloadType)];
+        var codecName = fmtpLine.split('a=rtpmap:' + sendPayloadType)[1].split('/')[0];
+        
+        codec = codecName || codec; // Try to find first Codec; else use expected/default
+        
         params = params || {};
         var xgoogle_min_bitrate = params.min.toString();
         var xgoogle_max_bitrate = params.max.toString();
@@ -311,7 +366,11 @@ var CodecsHandler = (function() {
 
     return {
         disableNACK: disableNACK,
-       
+        
+		getVideoBitrates: function(sdp) {
+            return getVideoBitrates(sdp);
+        },
+		
         setVideoBitrates: function(sdp, params, codec) {
             return setVideoBitrates(sdp, params, codec);
         },
@@ -320,7 +379,7 @@ var CodecsHandler = (function() {
         },
 
         preferCodec: preferCodec,
-		
+        
         forceStereoAudio: forceStereoAudio
     };
 })();
