@@ -51,7 +51,7 @@ button {
 
 #header {
 	width: 100%;
-	height: 24px;
+	min-height: 24px;
 	background-color:#0F131D;
 	color:#FFF;
 	
@@ -283,7 +283,7 @@ body {
 	   #reshare{
 		   max-width:650px !important;
 		   font-size:96% !important;
-		   min-width:400px !important;
+		   width:300px !important;
 		   
 	   }
 		.fa-paperclip {
@@ -532,7 +532,7 @@ img {
 	z-index:5;
 	bottom:5px;
 	width:100%;
-	display: flex;
+	display: none;
 	justify-content: center;
 	align-items: center;
 	height: 60px;

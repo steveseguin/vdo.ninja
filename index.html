@@ -38,7 +38,7 @@
 		<script type="text/javascript" src="https://webrtc.github.io/adapter/adapter-latest.js"></script>
 		<script type="text/javascript" src="./thirdparty/qrcode.min.js"></script>
 		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.0/jquery.min.js"></script>
-		<link rel="stylesheet" href="./main.css" />
+		<link rel="stylesheet" href="./main.css?ver=2" />
 	</head>
 	<body id="main" class="cat">
 		<span itemprop="image" itemscope itemtype="image/png">
@@ -48,8 +48,8 @@
 		<span itemprop="thumbnail" itemscope itemtype="http://schema.org/ImageObject">
 			<link itemprop="url" href="./images/obsNinja_logo_full.png" />
 		</span>
-		<script language="javascript" type="text/javascript" src="./thirdparty/CodecsHandler.js?ver=5"></script>
-		<script language="javascript" type="text/javascript" src="./webrtc.js?ver=6"></script>
+		<script language="javascript" type="text/javascript" src="./thirdparty/CodecsHandler.js?ver=6"></script>
+		<script language="javascript" type="text/javascript" src="./webrtc.js?ver=7"></script>
 		<input id="zoomSlider" type="range" style="display: none;" />
 		<div id="header">
 			<a id="logoname" href="./" style="text-decoration: none; color: white; margin: 2px;">
@@ -60,7 +60,7 @@
 			<div id="head1" style="display: inline-block; position: relative;">
 				
 			</div>
-			<div id="head3" style="display: inline-block;" class="advanced">
+			<div id="head3" style="display: block;" class="advanced">
 				<font style="color: #888;" id="copythisurl"> &nbsp; 
 					<span data-translate="copy-this-url">Copy this URL into an OBS "Browser Source"</span> <i style="color: #CCC;" class="las la-long-arrow-alt-right"></i> &nbsp; 
 				</font>
@@ -435,7 +435,7 @@
 							</li>
 							<br />
 
-                            Site last updated: June 28th, 2020. The previous version can be found at 
+                            Site last updated: <a href="https://www.reddit.com/r/OBSNinja/comments/hhba50/version_8_just_released_see_the_change_log_here/">June 28th, 2020</a>. The previous version can be found at 
 							<a href="https://obs.ninja/v7/">https://obs.ninja/v7/</a> if you are having new issues.
 
                             
@@ -585,9 +585,11 @@
             // session.scene
             // session.title // "zzzz"
         </script>
-
+		<!-- 
+		// If you wish to change branding, blank offers a good clean start.
 		<script type="text/javascript" id="main-js" src="./main.js" data-translation="blank"></script>
-	
+	-->
+		<script type="text/javascript" id="main-js" src="./main.js?ver=9"></script>
 		<script type="text/javascript" src="./animations.js"></script>
 	</body>
 </html>

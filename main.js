@@ -253,7 +253,11 @@ if (urlParams.has('password')){
 if (urlParams.has('stereo') || urlParams.has('s')){ // both peers need this enabled for HD stereo to be on. If just pub, you get no echo/noise cancellation. if just viewer, you get high bitrate mono 
 	log("STEREO ENABLED");
 	session.stereo = urlParams.get('stereo') || urlParams.get('s');
-	session.stereo = session.stereo.toLowerCase();
+	session.stereo = session.stereo;
+	
+	if (session.stereo){
+		session.stereo = session.stereo.toLowerCase();
+	}
 	
 	if (session.stereo=="false"){
 		session.stereo = 0;
@@ -284,8 +288,10 @@ if ((session.stereo==1) || (session.stereo==3)){
 if (urlParams.has("aec") || urlParams.has("ec")){
 	
 	session.echoCancellation = urlParams.get('aec') || urlParams.get('ec');
-	session.echoCancellation.toLowerCase();
 	
+	if (session.echoCancellation){
+		session.echoCancellation = session.echoCancellation.toLowerCase();
+	}
 	if (session.echoCancellation=="false"){
 		session.echoCancellation = false;
 	} else if (session.echoCancellation=="0"){
@@ -304,8 +310,9 @@ if (urlParams.has("aec") || urlParams.has("ec")){
 if (urlParams.has("autogain") || urlParams.has("ag")){
 	
 	session.autoGainControl = urlParams.get('autogain') || urlParams.get('ag');
-	session.autoGainControl.toLowerCase();
-	
+	if (session.echoCancellation){
+		session.autoGainControl.autoGainControl();
+	}
 	if (session.autoGainControl=="false"){
 		session.autoGainControl = false;
 	} else if (session.autoGainControl=="0"){
@@ -322,8 +329,10 @@ if (urlParams.has("autogain") || urlParams.has("ag")){
 if (urlParams.has("denoise") || urlParams.has("dn")){
 	
 	session.noiseSuppression = urlParams.get('denoise') || urlParams.get('dn');
-	session.noiseSuppression.toLowerCase();
 	
+	if (session.noiseSuppression){
+		session.noiseSuppression = session.noiseSuppression.toLowerCase();
+	}
 	if (session.noiseSuppression=="false"){
 		session.noiseSuppression = false;
 	} else if (session.noiseSuppression=="0"){
@@ -577,6 +586,15 @@ if (urlParams.has('cleanoutput') || urlParams.has('clean')){
 	session.cleanOutput = true;
 	getById("translateButton").style.display="none";
 	getById("credits").style.display="none";
+	getById("header").style.display="none";
+	var style = document.createElement('style');
+	style.innerHTML = `
+	video {
+		background-image: none;
+	}
+	`;
+	document.head.appendChild(style);
+	
 }
 
 if (urlParams.has('channeloffset')){
@@ -1024,6 +1042,9 @@ function publishScreen(){
 			getById("helpbutton").className="float";
 			getById("mutevideobutton").className="float";
 			getById("hangupbutton").className="float";
+			getById("controlButtons").style.display="flex";
+		} else {
+			getById("controlButtons").style.display="none";
 		}
 		getById("head1").className = 'advanced';
 		getById("head2").className = 'advanced';
@@ -1058,6 +1079,7 @@ function publishWebcam(){
 		getById("head3").className = 'advanced';
 	} else {
 		getById("head3").className = '';
+		getById("logoname").style.display = 'none';
 	}
 	
 	log("streamID is: "+session.streamID);
@@ -1069,6 +1091,9 @@ function publishWebcam(){
 		getById("helpbutton").className="float";
 		getById("mutevideobutton").className="float";
 		getById("hangupbutton").className="float";
+		getById("controlButtons").style.display="flex";
+	} else {
+		getById("controlButtons").style.display="none";
 	}
 	updateURL("push="+session.streamID);
 	session.publishStream(stream, title);
@@ -1155,8 +1180,6 @@ function createRoom(roomname=false){
 	getById("roomid").innerHTML = roomname;
 
 
-	//getById("mutebutton").className="float";
-	//getById("helpbutton").className="float";
 	session.director = true;
 	getById("reshare").parentNode.removeChild(getById("reshare"));
 	
