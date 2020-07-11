@@ -39,13 +39,13 @@
   "video-source": "Fonte de vídeo",
   "volume": "Volume",
   "you-are-in-the-control-center": "Está no Centro de Controlo da Sala",
-  "waiting-for-camera": "Waiting for Camera to Load",
-  "video-resolution": "Video Resolution: ",
-  "hide-screen-share": "Hide Screenshare Option",
-  "allow-remote-control": "Remote Control Camera Zoom (android)",
-  "add-the-guest-to-a-room": " Add the guest to a room:",
-  "invite-group-chat-type": "This room guest can:",
-  "can-see-and-hear": "Can see and hear the group chat",
-  "can-hear-only": "Can only hear the group chat",
-  "cant-see-or-hear": "Cannot hear or see the group chat"
+  "waiting-for-camera": "À espera que a câmera carregue",
+  "video-resolution": "Resolução de Vídeo: ",
+  "hide-screen-share": "Esconder opção de partilha de ecrã",
+  "allow-remote-control": "Controlo remoto do zoom da câmera (android)",
+  "add-the-guest-to-a-room": " Adicionar o convidado a uma sala:",
+  "invite-group-chat-type": "Este convidado:",
+  "can-see-and-hear": "Pode ver e ouvir a conversa da sala",
+  "can-hear-only": "Apenas pode ouvir a conversa da sala",
+  "cant-see-or-hear": "Não pode ouvir nem ver a conversa da sala"
 }
