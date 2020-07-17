@@ -8,7 +8,7 @@
 		<link rel="icon" type="image/png" sizes="32x32" href="./images/favicon-32x32.png" />
 		<link rel="icon" type="image/png" sizes="16x16" href="./images/favicon-16x16.png" />
 		<link rel="icon" href="./images/favicon.ico" />
-		<link itemprop="thumbnailUrl" href="./images/obsNinja_logo_full.png" />
+		<link itemprop="thumbnailUrl" href="//images/obsNinja_logo_full.png" />
 		<!-- Primary Meta Tags -->
 		<title>OBS.Ninja</title>
 		<meta name="title" content="OBS.Ninja" />
@@ -20,11 +20,11 @@
 		<meta property="og:url" content="https://obs.ninja/" />
 		<meta property="og:title" content="OBS.Ninja" />
 		<meta property="og:description" content="Bring live video from your smartphone, computer, or friends directly into OBS Studio. 100% free." />
-		<meta property="og:image" itemprop="image" content="./images/obsNinja_logo_full.png" />
+		<meta property="og:image" itemprop="image" content="https://obs.ninja/images/obsNinja_logo_full.png" />
 		<meta name="msapplication-TileImage" content="./images/obsNinja_logo_full.png" />
 		<meta property="og:image:type" content="image/png" />
-		<meta property="og:image:width" content="256" />
-		<meta property="og:image:height" content="256" />
+		<meta property="og:image:width" content="1200" />
+		<meta property="og:image:height" content="630" />
 		<!-- Twitter -->
 		<meta property="twitter:card" content="summary_large_image" />
 		<meta property="twitter:url" content="https://obs.ninja/" />
@@ -38,7 +38,7 @@
 		<script type="text/javascript" src="https://webrtc.github.io/adapter/adapter-latest.js"></script>
 		<script type="text/javascript" src="./thirdparty/qrcode.min.js"></script>
 		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.0/jquery.min.js"></script>
-		<link rel="stylesheet" href="./main.css?ver=2" />
+		<link rel="stylesheet" href="./main.css?ver=3" />
 	</head>
 	<body id="main" class="cat">
 		<span itemprop="image" itemscope itemtype="image/png">
@@ -48,8 +48,8 @@
 		<span itemprop="thumbnail" itemscope itemtype="http://schema.org/ImageObject">
 			<link itemprop="url" href="./images/obsNinja_logo_full.png" />
 		</span>
-		<script language="javascript" type="text/javascript" src="./thirdparty/CodecsHandler.js?ver=6"></script>
-		<script language="javascript" type="text/javascript" src="./webrtc.js?ver=7"></script>
+		<script language="javascript" type="text/javascript" src="./thirdparty/CodecsHandler.js?ver=7"></script>
+		<script language="javascript" type="text/javascript" src="./webrtc.js?ver=9"></script>
 		<input id="zoomSlider" type="range" style="display: none;" />
 		<div id="header">
 			<a id="logoname" href="./" style="text-decoration: none; color: white; margin: 2px;">
@@ -57,10 +57,11 @@
 					<font id="qos">O</font>BS.Ninja 
 				</span>
 			</a>
-			<div id="head1" style="display: inline-block; position: relative;">
-				
+			<div id="head1" style="display: inline-block; padding:1px; position: relative;">
+				<input id="joinroomID" name="joinroomID" size="22" placeholder="Join by Room Name here" />
+				<button style="padding:1px;margin:0;" onclick="jumptoroom();">GO</button>
 			</div>
-			<div id="head3" style="display: block;" class="advanced">
+			<div id="head3" style="display: inline-block;" class="advanced">
 				<font style="color: #888;" id="copythisurl"> &nbsp; 
 					<span data-translate="copy-this-url">Copy this URL into an OBS "Browser Source"</span> <i style="color: #CCC;" class="las la-long-arrow-alt-right"></i> &nbsp; 
 				</font>
@@ -435,7 +436,7 @@
 							</li>
 							<br />
 
-                            Site last updated: <a href="https://www.reddit.com/r/OBSNinja/comments/hhba50/version_8_just_released_see_the_change_log_here/">June 28th, 2020</a>. The previous version can be found at 
+                            Site last updated: <a href="https://www.reddit.com/r/OBSNinja/comments/hhba50/version_8_just_released_see_the_change_log_here/">July 10th, 2020</a>. The previous version can be found at 
 							<a href="https://obs.ninja/v7/">https://obs.ninja/v7/</a> if you are having new issues.
 
                             
@@ -525,6 +526,12 @@
 				<br />
 				<a onclick="changeLg('it');toggle(document.getElementById('languages'));" style="cursor: pointer;">Italian </a>
 				<br />
+				<a onclick="changeLg('de');toggle(document.getElementById('languages'));" style="cursor: pointer;">German </a>
+				<br />
+				<a onclick="changeLg('es');toggle(document.getElementById('languages'));" style="cursor: pointer;">Spanish </a>
+				<br />
+				<a onclick="changeLg('nl');toggle(document.getElementById('languages'));" style="cursor: pointer;">Dutch </a>
+				<br />
 			</u>
 			<br />
 			<a href="https://github.com/steveseguin/obsninja/tree/master/translations">Add More Here!</a>
@@ -550,7 +557,7 @@
             turn = {};
             turn.username = "steve";
             turn.credential = "justtesting";
-            turn.urls = ["turn:turn2.obs.ninja:443"]; // US WEST
+            turn.urls = ["turn:turn2.obs.ninja:3478?transport=tcp"]; // US WEST
             session.configuration.iceServers.push(turn);
 
             // session.configuration.iceTransportPolicy = "relay";  // uncomment to enable "&privacy" and force the TURN server

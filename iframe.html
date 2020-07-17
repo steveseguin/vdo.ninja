@@ -1,0 +1,116 @@
+<html>
+<head><title>IFRAME Example</title>
+<style>
+body{
+	padding:0;
+	margin:0;
+}
+iframe {
+	border:0;
+	margin:0;
+	padding:0;
+	display:block;
+	margin:10px;
+	width:320px;
+	height:180px;
+}
+#viewlink {
+	width:400px;
+}
+#container {
+	display:block;
+	padding:0px;
+}
+input{
+	padding:5px;
+	margin:5px;
+}
+button{
+	padding:5px;
+	margin:5px;
+}
+</style>
+<script>
+
+function loadIframe(){
+	
+	var iframe = document.createElement("iframe");
+	var iframeContainer = document.createElement("div");
+	
+	iframe.allow="autoplay";
+
+	if (document.getElementById("clean").checked){
+		iframe.src = document.getElementById("viewlink").value+"&cleanoutput";
+	} else {
+		iframe.src = document.getElementById("viewlink").value;
+	}
+	
+	iframeContainer.appendChild(iframe);
+	document.getElementById("container").appendChild(iframeContainer);
+	
+		var button = document.createElement("button");
+		button.innerHTML = "Mute";
+		button.onclick = function(){iframe.contentWindow.postMessage({"mute":true}, '*');}
+		iframeContainer.appendChild(button);
+		
+		var button = document.createElement("button");
+		button.innerHTML = "Un-Mute";
+		button.onclick = function(){iframe.contentWindow.postMessage({"mute":false}, '*');}
+		iframeContainer.appendChild(button);
+		
+		var button = document.createElement("button");
+		button.innerHTML = "Toggle Mute";
+		button.onclick = function(){iframe.contentWindow.postMessage({"mute":"toggle"}, '*');}
+		iframeContainer.appendChild(button);
+		
+		var button = document.createElement("button");
+		button.innerHTML = "Disconnect";
+		button.onclick = function(){iframe.contentWindow.postMessage({"close":true}, '*');}
+		iframeContainer.appendChild(button);
+		
+		var button = document.createElement("button");
+		button.innerHTML = "Low Bitrate";
+		button.onclick = function(){iframe.contentWindow.postMessage({"bitrate":30}, '*');}
+		iframeContainer.appendChild(button);
+		
+		var button = document.createElement("button");
+		button.innerHTML = "High Bitrate";
+		button.onclick = function(){iframe.contentWindow.postMessage({"bitrate":5000}, '*');}
+		iframeContainer.appendChild(button);
+		
+		var button = document.createElement("button");
+		button.innerHTML = "Default Bitrate";
+		button.onclick = function(){iframe.contentWindow.postMessage({"bitrate":-1}, '*');}
+		iframeContainer.appendChild(button);
+		
+		var button = document.createElement("button");
+		button.innerHTML = "Reload";
+		button.onclick = function(){iframe.contentWindow.postMessage({"reload":true}, '*');}
+		iframeContainer.appendChild(button);
+		
+		var button = document.createElement("button");
+		button.innerHTML = "50% Volume";
+		button.onclick = function(){iframe.contentWindow.postMessage({"volume":0.5}, '*');}
+		iframeContainer.appendChild(button);
+		
+		var button = document.createElement("button");
+		button.innerHTML = "100% Volume";
+		button.onclick = function(){iframe.contentWindow.postMessage({"volume":1.0}, '*');}
+		iframeContainer.appendChild(button);
+		
+		
+	
+}
+
+</script>
+</head>
+<body>
+
+<input placeholder="Enter an OBS.Ninja View URL here" id="viewlink" />
+<button onclick="loadIframe();">ADD</button>
+<input type="checkbox" id="clean" checked>Clean Output
+<div id="container">
+
+</div>
+</body>
+</html>

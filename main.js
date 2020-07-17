@@ -139,7 +139,21 @@ document.addEventListener("keydown", event => {
 	if ((event.ctrlKey) || (event.metaKey) ){  // detect if CTRL is pressed
 		CtrlPressed = true;
 	}
+	
+	if (CtrlPressed && event.keyCode){
+		
+	  if (event.keyCode == 77) {  // m
+		toggleMute();
+	  } else if (event.keyCode == 69) { // e
+		hangup();
+	  } else if (event.keyCode == 66) { // b
+		toggleVideoMute();
+	  }
+	}
+	
+	
 });
+
 document.addEventListener("keyup", event => {
 	if (!((event.ctrlKey) || (event.metaKey))){ 
 		if (CtrlPressed){
@@ -160,9 +174,10 @@ window.onpopstate = function() {
 	}
 }; 
 
-if (typeof variable !== 'undefined') { // make sure to init the WebRTC if not exists.
+if (typeof session === 'undefined') { // make sure to init the WebRTC if not exists.
 	var session = WebRTC.Media;
 	session.streamID = session.generateStreamID();
+	errorlog("Serious error: WebRTC session didn't load in time");
 }
 
 
@@ -647,6 +662,8 @@ if ((urlParams.has('mirror')) && (urlParams.has('flip'))){
 		var mirrorStyle = document.createElement('style');
 		mirrorStyle.innerHTML = "video {transform: scaleX(-1) scaleY(-1); }";
 		document.getElementsByTagName("head")[0].appendChild(mirrorStyle);
+		session.mirrored=true;
+		session.flipped=true;
 	} catch (e){errorlog(e);}
 } else if (urlParams.has('mirror')){  // mirror the video horizontally
 	try {
@@ -654,12 +671,14 @@ if ((urlParams.has('mirror')) && (urlParams.has('flip'))){
 		var mirrorStyle = document.createElement('style');
 		mirrorStyle.innerHTML = "video {transform: scaleX(-1);}"; 
 		document.getElementsByTagName("head")[0].appendChild(mirrorStyle);
+		session.mirrored=true;
 	} catch (e){errorlog(e);}
 } else if (urlParams.has('flip')){  // mirror the video vertically
 	try {
 		log("Mirror all videos");
+		session.flipped=true;
 		var mirrorStyle = document.createElement('style');
-		mirrorStyle.innerHTML = "video {transform: scaleY(-1); }";
+		mirrorStyle.innerHTML = "video {transform: scaleY(-1);}";
 		document.getElementsByTagName("head")[0].appendChild(mirrorStyle);
 	} catch (e){errorlog(e);}
 }
@@ -847,6 +866,73 @@ function updateStats(){
 		
 	} catch (e){errorlog(e);}
 }
+
+window.onmessage = function(e){ // iFRAME support
+	log(e.data);
+	
+    if ("mute" in e.data) {
+		if (e.data.mute == true){
+			for (var i in session.rpcs){
+				try {
+					session.rpcs[i].videoElement.muted = true;
+				} catch(e){
+					errorlog(e);
+				}
+			}
+		} else if (e.data.mute == false){
+			for (var i in session.rpcs){
+				try {
+					session.rpcs[i].videoElement.muted = false;
+				} catch(e){
+					errorlog(e);
+				}
+			}
+		} else if (e.data.mute == "toggle"){
+			for (var i in session.rpcs){
+				try {
+					session.rpcs[i].videoElement.muted = !(session.rpcs[i].videoElement.muted);
+				} catch(e){
+					errorlog(e);
+				}
+			}
+		}
+    }
+	
+	if ("volume" in e.data) {
+		for (var i in session.rpcs){
+			try {
+				session.rpcs[i].videoElement.volume = parseFloat(e.data.volume);
+			} catch(e){
+				errorlog(e);
+			}
+		}
+    }
+	
+	if ("bitrate" in e.data){
+		for (var i in session.rpcs){
+			try {
+				session.requestRateLimit(parseInt(e.data.bitrate),i);
+			} catch(e){
+				errorlog(e);
+			}
+		}
+	}
+	
+	if ("reload" in e.data){
+        location.reload();
+    } 
+	
+	if ("close" in e.data){
+        for (var i in session.rpcs){
+			try {
+				session.rpcs[i].close();
+			} catch(e){
+				errorlog(e);
+			}
+		}
+    }
+};
+
 
 function toggleMute(){ // TODO: I need to have this be MUTE, toggle, with volume not touched.
 	if (session.muted==false){
@@ -1190,7 +1276,7 @@ function createRoom(roomname=false){
 		passAdd2="&password="+session.password;
 	}
 	
-	gridlayout.innerHTML = "<br /><div style='display:inline-block'><font style='font-size:130%;color:white;'></font><input  onclick='popupMessage(event);copyFunction(this)' onmousedown='copyFunction(this)' style='cursor:grab;font-weight:bold;background-color:#78F; width:400px; font-size:100%; padding:10px; border:2px solid black; margin:5px;'  class='task' value='https://"+location.host+location.pathname+"?room="+session.roomid+passAdd+"' /><font style='font-size:130%;color:white;'><i class='las la-video' style='position:relative;top:10px;font-size:2em;'  aria-hidden='true'></i> - Invites users to join the group and broadcast their feed to it. These users will see every feed, so a limit of 4 is recommended.</font></div>";
+	gridlayout.innerHTML = "<br /><div style='display:inline-block'><font style='font-size:130%;color:white;'></font><input  onclick='popupMessage(event);copyFunction(this)' onmousedown='copyFunction(this)' style='cursor:grab;font-weight:bold;background-color:#78F; width:400px; font-size:100%; padding:10px; border:2px solid black; margin:5px;'  class='task' value='https://"+location.host+location.pathname+"?room="+session.roomid+passAdd+"' /><font style='font-size:130%;color:white;'><i class='las la-video' style='position:relative;top:10px;font-size:2em;'  aria-hidden='true'></i> - Invites users to join the group and broadcast their feed to it. These users will see every feed, so performance problems may arise for some guests if too many people join a room.</font></div>";
 	
 	gridlayout.innerHTML += "<br /><font style='font-size:130%;color:white;'></font><input class='task' onclick='popupMessage(event);copyFunction(this)' onmousedown='copyFunction(this)' style='cursor:grab;font-weight:bold;background-color:#F45;width:400px;font-size:100%;padding:10px;border:2px solid black;margin:5px;' value='https://"+location.host+location.pathname+"?room="+session.roomid+passAdd+"&view' /><font style='font-size:130%;color:white;'><i class='las la-video' style='position:relative;top:10px;font-size:2em;'  aria-hidden='true'></i> - Link to Invite users to broadcast their feeds to the group. These users will not see or hear any feed from the group.</font><br />";
 	
@@ -1967,6 +2053,17 @@ Promise.prototype.timeout = function(ms) {
 function previewWebcam(){
   if( activatedPreview == true){log("activeated preview return 1");return;}
   activatedPreview = true;
+
+
+  if (session.mirrored && session.flipped){
+		 getById('previewWebcam').style.transform = " scaleX(1) scaleY(-1)";
+	} else if (session.mirrored){
+		 getById('previewWebcam').style.transform = "scaleX(1)";
+	} else if (session.flipped){
+		 getById('previewWebcam').style.transform = "scaleY(-1) scaleX(-1)";
+	} else {
+		 getById('previewWebcam').style.transform = "scaleX(-1)";
+	}
 
   window.setTimeout(() => {
 	try{
