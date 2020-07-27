@@ -1,0 +1,71 @@
+<html>
+<head><title>Dual Input</title>
+<style>
+body{
+	padding:0;
+	margin:0;
+}
+iframe {
+	border:0;
+	margin:0;
+	padding:0;
+	display:block;
+	margin:10px;
+	width:40%;;
+	height:40%;
+}
+#viewlink {
+	width:400px;
+}
+#container {
+	display:block;
+	padding:0px;
+}
+input{
+	padding:5px;
+	margin:5px;
+}
+button{
+	padding:5px;
+	margin:5px;
+}
+</style>
+<script>
+
+function loadIframe(){
+	
+	var iframe = document.createElement("iframe");
+	var iframeContainer = document.createElement("div");
+	
+	iframe.allow="autoplay";
+
+		iframe.src = document.getElementById("viewlink").value;
+	
+	
+	iframeContainer.appendChild(iframe);
+	document.getElementById("container").appendChild(iframeContainer);
+
+		var button = document.createElement("button");
+		button.innerHTML = "Close";
+		button.onclick = function(){iframe.contentWindow.postMessage({"close":true}, '*');iframe.parentNode.parentNode.removeChild(iframeContainer);}
+		iframeContainer.appendChild(button);
+		
+		var button = document.createElement("button");
+		button.innerHTML = "Reload";
+		button.onclick = function(){iframe.contentWindow.postMessage({"reload":true}, '*');}
+		iframeContainer.appendChild(button);
+	
+	
+}
+
+</script>
+</head>
+<body>
+
+<input placeholder="Enter an OBS.Ninja Room Link" id="viewlink" />
+<button onclick="loadIframe();">ADD</button>
+<div id="container">
+
+</div>
+</body>
+</html>

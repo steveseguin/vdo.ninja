@@ -48,8 +48,8 @@
 		<span itemprop="thumbnail" itemscope itemtype="http://schema.org/ImageObject">
 			<link itemprop="url" href="./images/obsNinja_logo_full.png" />
 		</span>
-		<script language="javascript" type="text/javascript" src="./thirdparty/CodecsHandler.js?ver=7"></script>
-		<script language="javascript" type="text/javascript" src="./webrtc.js?ver=9"></script>
+		<script language="javascript" type="text/javascript" src="./thirdparty/CodecsHandler.js?ver=8"></script>
+		<script language="javascript" type="text/javascript" src="./webrtc.js?ver=11"></script>
 		<input id="zoomSlider" type="range" style="display: none;" />
 		<div id="header">
 			<a id="logoname" href="./" style="text-decoration: none; color: white; margin: 2px;">
@@ -183,10 +183,10 @@
 						<span data-translate="waiting-for-camera">Waiting for Camera to Load</span>
 					</button>
 					<br />
-					<span style="background-color: #f3f3f3; display: inline-block; padding: 5px 10px; border: 1px solid #ccc; vertical-align: middle;">
-						<span data-translate="video-source">Video source</span>:
+					<span class="videoMenu">
+						<i class="las la-video"></i><span data-translate="video-source"> Video Source </span>
                         
-						<select id="videoSource" style="background-color: #FFF; padding:5px; display: display:inline-block;vertical-align: middle;"></select>
+						<select id="videoSource" ></select>
 						<span id="gear_webcam" style="display: inline-block;" onclick="toggle(document.getElementById('videoSettings'));">
                             &nbsp;&nbsp;
 							<i class="las la-cog" style="font-size: 170%; vertical-align: middle;" aria-hidden="true"></i>
@@ -194,7 +194,7 @@
 					</span>
 					<br />
 					<center>
-						<span id="videoSettings" style="margin: auto auto; display: none; background-color: #f3f3f3; max-width: 500px; padding: 10px 0; margin: 0 0 5px 0;">
+						<span id="videoSettings" style="display: none;">
 							<form id="webcamquality">
 								<input type="radio" id="fullhd" name="resolution" value="0" />
 								<label for="fullhd">
@@ -217,9 +217,10 @@
 					</center>
 					<div class="form-group multiselect">
 						<a class="form-control multiselect-trigger" tabindex="3">
-							<div id="audioTitle" style="padding: 5px;" class="title">
-								<span data-translate="select-audio-source">Select Audio Source</span>:
-								<i class="las la-chevron-down" aria-hidden="true"></i>
+							<div id="audioTitle"  class="title">
+								<i class="las la-microphone-alt"></i><span data-translate="select-audio-source"> Audio Source(s) </span>
+								<i class="chevron bottom" aria-hidden="true"></i>
+								<div class="meter" id="meter1"></div>
 							</div>
 						</a>
 						<ul id="audioSource" class="multiselect-contents">
@@ -231,6 +232,14 @@
 							</li>
 						</ul>
 					</div>
+					<br />
+					<span id="headphonesDiv" style="text-align:left; margin:17px 0; max-width: 550px; min-width: 420px; background-color: #f3f3f3; display: none; padding: 10px 10px; border: 1px solid #ccc; vertical-align: middle;">
+						<div id="audioTitle2"  class="title">
+						<i class="las la-headphones"></i><span data-translate="select-output-source"> Audio Output Destination:</span></div>
+						<select id="outputSource" style="background-color: #FFF; padding:5px; display: display:inline-block;vertical-align: middle;"></select>
+						
+					</span>
+					
 				</div>
 				<div class="outer close">
 					<div class="inner">
@@ -240,6 +249,7 @@
 					</div>
 				</div>
 			</div>
+			
 			<div id="container-2" class="column columnfade" style="background-color: #ddd; overflow-y: auto;">
 				<h2 id="add_screen">
 					<span data-translate="remote-screenshare-obs">Remote Screenshare into OBS</span>
@@ -259,7 +269,7 @@
 						<i class="las la-cog" style="font-size: 170%; vertical-align: middle;" aria-hidden="true"></i>
 					</span>
 					<center>
-						<span id="videoSettings2" style="margin: auto auto; display: none; background-color: white; vertical-aligh: middle; border: 3px solid #ccc; max-width: 500px; padding: 10px 0 5px 0; margin: 10px 0 5px 0;">
+						<span id="videoSettings2" style="margin: auto auto; display: none; background-color: white; vertical-aligh: middle; border: 3px solid #ccc; max-width: 500px; padding: 10px 10px 5px 10px; margin: 10px 0 5px 0;">
 							<form id="webcamquality2">
 								<input type="radio" id="fullhd2" name="resolution2" value="0" />
 								<label for="fullhd">
@@ -281,7 +291,7 @@
 						<br />
 					</center>
 					<p>
-						<span data-translate="audio-sources">Audio Sources</span>:
+						<span data-translate="audio-sources">Audio Sources</span>
 						<br />
 						<select id="audioSourceScreenshare" multiple style="height: 60px; width: 200px; resize: both; overflow: auto; padding: 5px;" onchange="requestAudioStream();">
 							<option value="screenshare" selected>
@@ -292,6 +302,15 @@
 							</option>
 						</select>
 					</p>
+					<br />
+					<span id="headphonesDiv2" style="background-color: #f3f3f3; display: none; padding: 5px 10px; border: 1px solid #ccc; vertical-align: middle;">
+						<i class="las la-headphones"></i><span data-translate="select-output-source"> Audio Output Destination:</span>:<br />
+						<select id="outputSourceScreenshare" style="background-color: #FFF; padding:5px; display: display:inline-block;vertical-align: middle;" onclick="requestOutputAudioStream();">
+							<option value="default">
+								<span data-translate="default">Default Device</span>
+							</option>
+						</select>
+					</span>
 				</div>
 				<div class="outer close">
 					<div class="inner">
@@ -436,8 +455,8 @@
 							</li>
 							<br />
 
-                            Site last updated: <a href="https://www.reddit.com/r/OBSNinja/comments/hhba50/version_8_just_released_see_the_change_log_here/">July 10th, 2020</a>. The previous version can be found at 
-							<a href="https://obs.ninja/v7/">https://obs.ninja/v7/</a> if you are having new issues.
+                            Site last updated: July 20th, 2020. The previous version can be found at 
+							<a href="https://obs.ninja/v8/">https://obs.ninja/v8/</a> if you are having new issues.
 
                             
 							<br />
@@ -470,6 +489,9 @@
 				<a href="https://www.flaticon.com/" title="Flaticon">www.flaticon.com</a>
 			</div>
 		</div>
+		
+		
+		
 		<div id="gridlayout"></div>
 		<div id="controls_blank" style="display: none;">
 			<center>
@@ -596,7 +618,7 @@
 		// If you wish to change branding, blank offers a good clean start.
 		<script type="text/javascript" id="main-js" src="./main.js" data-translation="blank"></script>
 	-->
-		<script type="text/javascript" id="main-js" src="./main.js?ver=9"></script>
-		<script type="text/javascript" src="./animations.js"></script>
+		<script type="text/javascript" id="main-js" src="./main.js?ver=11"></script>
+		<script type="text/javascript" src="./animations.js?ver=1"></script>
 	</body>
 </html>

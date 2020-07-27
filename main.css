@@ -5,10 +5,21 @@
 	border:0;
 
 }
+
+
+
+.meter {
+  display: inline-block;
+  width: 100px;
+  height: 10px;
+  background: green;
+  transition: all 52ms linear;
+}
+
 #mynetwork {
-		width: 600px;
-		height: 400px;
-		border: 1px solid lightgray;
+	width: 600px;
+	height: 400px;
+	border: 1px solid lightgray;
 }
 	
 .email { 
@@ -69,6 +80,29 @@ button {
 }
 .credits >a:visited{
 	color:black;
+}
+
+.chevron{
+	padding:0px 6px;
+}
+
+.chevron::before {
+	border-style: solid;
+	border-width: 0.14em 0.14em 0 0;
+	content: '';
+	display: inline-block;
+	height: 0.32em;
+	left: 0.15em;
+	position: relative;
+	top: .43em;
+	transform: rotate(-45deg);
+	vertical-align: top;
+	width: 0.32em;
+}
+
+.chevron.bottom:before {
+	top: .28em;
+	transform: rotate(135deg);
 }
 
 
@@ -196,10 +230,11 @@ body {
 
 .gowebcam {
 	font-size:110%;
-	padding:10px;
 	border:3px solid #DDDDDD;
 	cursor:pointer;
 	background-color:#DDDDDD;
+	margin: 20px;
+	padding:10px 50px;
 }
 
 .gobutton {
@@ -243,6 +278,7 @@ body {
 	   }
 	   .gowebcam {
 		   padding:5px;
+		   margin: 5px;
 	   }
 
 	   .infoblob {
@@ -302,11 +338,44 @@ body {
 			float:none !important;
 			padding: 15px 10px 1px 10px !important;
 	    }
-		input[type=radio]{
-			b
-			
+		
+		#videoSettings {
+			max-width: 100% !important;
+			min-width: 100% !important;
 		}
 
+		.videoMenu {
+			max-width: 100% !important;
+			min-width: 100% !important;
+		}
+
+		div.multiselect { 
+			max-width: 100% !important;
+			min-width: 100% !important;
+		}	
+		
+		#headphonesDiv {
+			max-width: 100% !important;
+			min-width: 100% !important;
+			overflow: hidden !important;
+		}
+		
+		#outputSource {
+			width: 100% !important;
+		}
+		
+		#audioSourceScreenshare {
+			max-width: 90% !important;
+			min-width: 90% !important;
+			overflow: hidden !important;
+		}
+		
+		#videoSettings2 {
+			max-width: 90% !important;
+			min-width: 90% !important;
+			overflow: hidden !important;
+		}
+		
    }
 
 
@@ -519,7 +588,6 @@ img {
 	display: block !important;
 	margin: auto auto !important;
 	position: relative !important;
-	transform: translate(0, -50%) !important;
 	top: 50% !important;
 }
 
@@ -758,6 +826,15 @@ video {
   background-color: #0066aa  !important;
 }
 
+#audioTitle{
+	text-align:left;
+	padding: 7px 10px;
+}
+
+#audioTitle2{
+	text-align:left;
+	padding: 0px 10px 10px 1px;
+}
 .multiselect .multiselect-trigger:hover {
     cursor: pointer;
     cursor: hand;
@@ -774,15 +851,40 @@ video {
     border-bottom-right-radius: 4px;
 }
 
+#videoSettings {
+	margin: auto auto; 
+	background-color: #f3f3f3; 
+	width: 420px;   
+	padding: 10px 0; 
+	margin: 0 0 5px 0;
+	border: 1px solid #ccc;
+}
+
+#videoSource {
+	background-color: #FFF; 
+	display: display:inline-block;
+	vertical-align: middle;
+}
+
+.videoMenu{
+	background-color: #f3f3f3; 
+	width: 420px; 
+	display: inline-block; 
+	padding: 5px 10px; 
+	border: 1px solid #ccc; 
+	vertical-align: middle;
+	text-align:left;
+}
+
 div.multiselect {
 	background-color:#FFF;
-	max-width:550px;
+	width: 420px; 
 	white-space: nowrap;
 	overflow:hidden;
-	min-width:100px;
 	margin:auto auto;
 	border: 1px solid #ccc;
 	border-bottom:0;
+	display: inline-block;
 }
 
 .multiselect .multiselect-contents {
@@ -859,6 +961,7 @@ input[type=checkbox]
   -o-transform: scale(1.3); /* Opera */
   transform: scale(1.3);
   padding: 5px;
+  margin: 0 5px;
 }
 
 #screenshare {

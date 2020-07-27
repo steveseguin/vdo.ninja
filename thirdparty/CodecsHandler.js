@@ -20,6 +20,7 @@ Copyright (c) 2012-2020 [Muaz Khan](https://github.com/muaz-khan)
     IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
     CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
     */
+	
 // Sourced from: https://cdn.webrtc-experiment.com/CodecsHandler.js
 
 // *FILE HAS BEEN HEAVILY MODIFIED BY STEVE SEGUIN. ALL RIGHTS RESERVED WHERE APPLICABLE *
@@ -171,10 +172,12 @@ var CodecsHandler = (function() {
 
     function getVideoBitrates(sdp) { 
 
+		var defaultBitrate = 2500;
+
         var sdpLines = sdp.split('\r\n');
         var mLineIndex = findLine(sdpLines, 'm=', 'video');
         if (mLineIndex === null) {
-            return 2500;
+            return defaultBitrate;
         }
         var videoMLine = sdpLines[mLineIndex];
         var pattern = new RegExp('m=video\\s\\d+\\s[A-Z/]+\\s');
@@ -189,7 +192,7 @@ var CodecsHandler = (function() {
         }
 
         if (!codecPayload) {
-            return 2500;
+            return defaultBitrate;
         }
 
         var rtxIndex = findLine(sdpLines, 'a=rtpmap', 'rtx/90000');
@@ -199,7 +202,7 @@ var CodecsHandler = (function() {
         }
 
         if (!rtxIndex) {
-            return 2500;
+            return defaultBitrate;
         }
 
         var rtxFmtpLineIndex = findLine(sdpLines, 'a=fmtp:' + rtxPayload.toString());
@@ -208,7 +211,7 @@ var CodecsHandler = (function() {
                 var maxBitrate = parseInt(sdpLines[rtxFmtpLineIndex].split("x-google-max-bitrate=")[1].split(";")[0]);
                 var minBitrate = parseInt(sdpLines[rtxFmtpLineIndex].split("x-google-min-bitrate=")[1].split(";")[0]);
             } catch(e){
-                return 2500;
+                return defaultBitrate;
             }
            
            if (minBitrate>maxBitrate){
@@ -217,7 +220,7 @@ var CodecsHandler = (function() {
            if (maxBitrate<1){maxBitrate=1;}
            return maxBitrate
         } else {
-            return 2500;
+            return defaultBitrate;
         }
 
         
@@ -275,7 +278,7 @@ var CodecsHandler = (function() {
         var rtxFmtpLineIndex = findLine(sdpLines, 'a=fmtp:' + rtxPayload.toString());
         if (rtxFmtpLineIndex !== null) {
             var appendrtxNext = '\r\n';
-            appendrtxNext += 'a=fmtp:' + codecPayload + ' x-google-min-bitrate=' + (xgoogle_min_bitrate || '228') + '; x-google-max-bitrate=' + (xgoogle_max_bitrate || '228');
+            appendrtxNext += 'a=fmtp:' + codecPayload + ' x-google-min-bitrate=' + (xgoogle_min_bitrate || '2500') + '; x-google-max-bitrate=' + (xgoogle_max_bitrate || '2500');
             sdpLines[rtxFmtpLineIndex] = sdpLines[rtxFmtpLineIndex].concat(appendrtxNext);
             sdp = sdpLines.join('\r\n');
         }
@@ -283,12 +286,11 @@ var CodecsHandler = (function() {
         return sdp;
     }
 
-    function setOpusAttributes(sdp, params) {
+    function setOpusAttributes(sdp, params) { 
         params = params || {};
 
         var sdpLines = sdp.split('\r\n');
 
-        // Opus
         var opusIndex = findLine(sdpLines, 'a=rtpmap', 'opus/48000');
         var opusPayload;
         if (opusIndex) {
@@ -305,65 +307,58 @@ var CodecsHandler = (function() {
         }
 
         var appendOpusNext = '';
-        appendOpusNext += '; stereo=' + (typeof params.stereo != 'undefined' ? params.stereo : '1');
-        appendOpusNext += '; sprop-stereo=' + (typeof params['sprop-stereo'] != 'undefined' ? params['sprop-stereo'] : '1');
-
+		
+		// Please see https://tools.ietf.org/html/rfc7587 for more details on OPUS settings
+		
+		if (typeof params.maxptime != 'undefined') {  // max packet size in milliseconds
+            appendOpusNext += ';maxptime:' + params.maxptime; // 3, 5, 10, 20, 40, 60 and the default is 120. (20 is minimum recommended for webrtc)
+        }
+		
+		if (typeof params.ptime != 'undefined') {  // packet size; webrtc doesn't support less than 10 or 20 I think.
+            appendOpusNext += ';ptime:' + params.ptime; 
+        }
+		
+		if (typeof params.stereo != 'undefined'){
+			if (params.stereo==0){
+				appendOpusNext += ';stereo=0;sprop-stereo=0';  // defaults to 0
+			} else if (params.stereo==1){
+				appendOpusNext += ';stereo=1;sprop-stereo=1'; // defaults to 0
+			} else if (params.stereo==2){
+				sdpLines[opusIndex] = sdpLines[opusIndex].replace("opus/48000/2", "multiopus/48000/6");
+				appendOpusNext += ';channel_mapping=0,4,1,2,3,5;num_streams=4;coupled_streams=2';  // Multi-channel 5.1 audio
+			}
+		}
+		
         if (typeof params.maxaveragebitrate != 'undefined') {
-            appendOpusNext += '; maxaveragebitrate=' + (params.maxaveragebitrate || 128 * 1024 * 8);
+            appendOpusNext += ';maxaveragebitrate=' + params.maxaveragebitrate; // default 2500 (kbps)
         }
 
         if (typeof params.maxplaybackrate != 'undefined') {
-            appendOpusNext += '; maxplaybackrate=' + (params.maxplaybackrate || 128 * 1024 * 8);
+            appendOpusNext += ';maxplaybackrate=' + params.maxplaybackrate; // Default should be 48000 (hz) , 8000 to 48000 are valid options
         }
 
         if (typeof params.cbr != 'undefined') {
-            appendOpusNext += '; cbr=' + (typeof params.cbr != 'undefined' ? params.cbr : '1');
+            appendOpusNext += ';cbr=' + params.cbr; // default is 0 (vbr)
         }
 
-        if (typeof params.useinbandfec != 'undefined') {
-            appendOpusNext += '; useinbandfec=' + params.useinbandfec;
+        //if (typeof params.useinbandfec != 'undefined') {  // useful for handling packet loss
+        //    appendOpusNext += '; useinbandfec=' + params.useinbandfec;  // Defaults to 0
+        //}
+
+        if (typeof params.usedtx != 'undefined') {  // Default is 0
+            appendOpusNext += ';usedtx=' + params.usedtx; // if decoder prefers the use of DTX.
         }
 
-        if (typeof params.usedtx != 'undefined') {
-            appendOpusNext += '; usedtx=' + params.usedtx;
-        }
-
-        if (typeof params.maxptime != 'undefined') {
-            appendOpusNext += '\r\na=maxptime:' + params.maxptime;
-        }
+        
 
         sdpLines[opusFmtpLineIndex] = sdpLines[opusFmtpLineIndex].concat(appendOpusNext);
 
         sdp = sdpLines.join('\r\n');
+		
         return sdp;
     }
 
-    // forceStereoAudio => via webrtcexample.com
-    // requires getUserMedia => echoCancellation:false
-    function forceStereoAudio(sdp) {
-        var sdpLines = sdp.split('\r\n');
-        var fmtpLineIndex = null;
-        for (var i = 0; i < sdpLines.length; i++) {
-            if (sdpLines[i].search('opus/48000') !== -1) {
-                var opusPayload = extractSdp(sdpLines[i], /:(\d+) opus\/48000/i);
-                break;
-            }
-        }
-        for (var i = 0; i < sdpLines.length; i++) {
-            if (sdpLines[i].search('a=fmtp') !== -1) {
-                var payload = extractSdp(sdpLines[i], /a=fmtp:(\d+)/);
-                if (payload === opusPayload) {
-                    fmtpLineIndex = i;
-                    break;
-                }
-            }
-        }
-        if (fmtpLineIndex === null) return sdp;
-        sdpLines[fmtpLineIndex] = sdpLines[fmtpLineIndex].concat('; stereo=1; sprop-stereo=1');
-        sdp = sdpLines.join('\r\n');
-        return sdp;
-    }
-
+	
     return {
         disableNACK: disableNACK,
         
@@ -378,9 +373,7 @@ var CodecsHandler = (function() {
             return setOpusAttributes(sdp, params);
         },
 
-        preferCodec: preferCodec,
-        
-        forceStereoAudio: forceStereoAudio
+        preferCodec: preferCodec
     };
 })();
 

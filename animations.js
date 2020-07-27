@@ -81,6 +81,20 @@ $("#lightbox-animations").get(0).sheet.deleteRule(0);
 }
 });
 
+
+// multiselect dropdowns
+$('#audioSource').on('mousedown touchend focusin focusout', function(e) {
+    var state = $('.multiselect-trigger').data('state') || 0;
+    if( state == 0 ) {
+        // open the dropdown
+        $('.multiselect-trigger').data('state', '1').addClass('open').removeClass('closed');
+        $('.multiselect-trigger').find('.chevron').removeClass('bottom'); 
+        $('.multiselect-trigger').parent().find('.multiselect-contents').show();
+		$('.multiselect-trigger').parent().find('.multiselect-contents').find('input[type="checkbox"]').parent().show();;
+		$('.multiselect-trigger').parent().find('.multiselect-contents').find('input[type="checkbox"]').show();;
+    } 
+    e.preventDefault();
+});
  
 // multiselect dropdowns
 $('.multiselect-trigger').on('mousedown touchend focusin focusout', function(e) {
@@ -88,14 +102,14 @@ $('.multiselect-trigger').on('mousedown touchend focusin focusout', function(e) 
     if( state == 0 ) {
         // open the dropdown
         $(this).data('state', '1').addClass('open').removeClass('closed');
-        $(this).find('.fa').removeClass('fa-chevron-down').addClass('fa-chevron-up');
+        $(this).find('.chevron').removeClass('bottom');
         $(this).parent().find('.multiselect-contents').show();
 		$(this).parent().find('.multiselect-contents').find('input[type="checkbox"]').parent().show();;
 		$(this).parent().find('.multiselect-contents').find('input[type="checkbox"]').show();;
     } else {
         // close the dropdown
         $(this).data('state', '0').addClass('closed').removeClass('open');
-        $(this).find('.fa').removeClass('fa-chevron-up').addClass('fa-chevron-down');
+        $(this).find('.chevron').addClass('bottom');
         //$(this).parent().find('.multiselect-contents').hide();
 		//$(this).parent().find('.multiselect-contents').find('input[type="checkbox"]').hide();
 		$(this).parent().find('.multiselect-contents').find('input[type="checkbox"]').not(":checked").parent().hide();;

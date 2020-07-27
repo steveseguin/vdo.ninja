@@ -268,7 +268,6 @@ if (urlParams.has('password')){
 if (urlParams.has('stereo') || urlParams.has('s')){ // both peers need this enabled for HD stereo to be on. If just pub, you get no echo/noise cancellation. if just viewer, you get high bitrate mono 
 	log("STEREO ENABLED");
 	session.stereo = urlParams.get('stereo') || urlParams.get('s');
-	session.stereo = session.stereo;
 	
 	if (session.stereo){
 		session.stereo = session.stereo.toLowerCase();
@@ -319,7 +318,6 @@ if (urlParams.has("aec") || urlParams.has("ec")){
 		session.echoCancellation = true;
 	}
 }
-
 
 
 if (urlParams.has("autogain") || urlParams.has("ag")){
@@ -375,6 +373,13 @@ if (urlParams.has('audiobitrate') || urlParams.has('ab')){ // both peers need th
 
 if (urlParams.has('streamid') || urlParams.has('view') || urlParams.has('v') || urlParams.has('pull')){  // the streams we want to view; if set, but let blank, we will request no streams to watch.  
 	session.view = urlParams.get('streamid') || urlParams.get('view') || urlParams.get('v') || urlParams.get('pull'); // this value can be comma seperated for multiple streams to pull
+	getById("headphonesDiv").style.display="inline-block";
+	getById("headphonesDiv2").style.display="inline-block";
+	
+	if (session.view.split(",").length>1){
+		session.view_set = session.view.split(",");
+	} 
+	
 }
 
 if (urlParams.has('icefilter')){
@@ -396,14 +401,27 @@ if (urlParams.has('obsoff') || urlParams.has('oo')){
     session.disableOBS = true;
 }
 
-if (urlParams.has('noaudio') || urlParams.has('na')){
-	log("disable audio playback");
-    session.audio = false;
+
+
+if (urlParams.has('novideo') || urlParams.has('nv') || urlParams.has('hidevideo')){
+	if (session.novideo===""){
+		session.novideo=[];
+	} else {
+		session.novideo = urlParams.get('novideo') || urlParams.get('nv') || urlParams.has('hidevideo');
+		session.novideo = session.novideo.split(",");
+	}
+	log("disable video playback");
+	log(session.novideo);
 }
 
-if (urlParams.has('novideo') || urlParams.has('nv')){
-	log("disable video playback");
-    session.video = false;
+if (urlParams.has('noaudio') || urlParams.has('na') || urlParams.has('hideaudio')){
+	if (session.noaudio==""){
+		session.noaudio=[];
+	} else {
+		session.noaudio = urlParams.get('noaudio') || urlParams.get('na') || urlParams.has('hideaudio');
+		session.noaudio = session.noaudio.split(",");
+	}
+	log("disable audio playback");
 }
 
 
@@ -427,6 +445,7 @@ if (urlParams.has('nocursor')){
 	`;
 	document.head.appendChild(style);
 }
+
 
 
 if (urlParams.has('codec')){
@@ -557,7 +576,14 @@ function changeLg(lang){
 
 if (urlParams.has('videobitrate') || urlParams.has('bitrate') || urlParams.has('vb')){
 	session.bitrate = urlParams.get('videobitrate') || urlParams.get('bitrate') || urlParams.get('vb');
-    session.bitrate = parseInt(session.bitrate);
+	
+
+	if ((session.view_set) && (session.bitrate.split(",").length>1)){
+		session.bitrate_set = session.bitrate.split(",");
+		session.bitrate = parseInt(session.bitrate_set[0]);
+	} else {
+		session.bitrate = parseInt(session.bitrate);
+	}
 	if (session.bitrate<1){session.bitrate=false;}
 	log("BITRATE ENABLED");
 	log(session.bitrate);
@@ -734,6 +760,7 @@ session.connect();
 
 var url = window.location.pathname;
 var filename = url.substring(url.lastIndexOf('/')+1);
+
 if (filename.split(".").length==1){
 	if (filename.length<2){
 		filename=false;
@@ -788,6 +815,8 @@ if ( (session.roomid) || (urlParams.has('roomid')) || (urlParams.has('r')) || (u
 	roomid = roomid.replace(/[\W_]+/g,"_");
 	session.roomid = roomid;
 	
+	getById("headphonesDiv2").style.display="inline-block";
+	getById("headphonesDiv").style.display="inline-block";
 	getById("info").innerHTML = "";
 	getById("info").style.color="#CCC";
 	getById("videoname1").value = roomid;
@@ -1100,7 +1129,7 @@ function publishScreen(){
 
 	var constraints = window.constraints = {
 		audio: {echoCancellation: session.echoCancellation, autoGainControl: session.autoGainControl, noiseSuppression: session.noiseSuppression }, 
-		video: {width: width, height: height, cursor: "never", mediaSource: "browser"}
+		video: {width: width, height: height,  mediaSource: "screen"} 
 	};
 	
 	if (!(urlParams.has("denoise"))){
@@ -1113,12 +1142,20 @@ function publishScreen(){
 		constraints.audio.echoCancellation = false; // the defaults for screen publishing should be off.
 	}
 
+
 	if (session.framerate){
 		constraints.video.frameRate = session.framerate;
 	}	
 	
 	var audioSelect = document.querySelector('select#audioSourceScreenshare');
+	var outputSelect = document.querySelector('select#outputSourceScreenshare');
 	
+	
+	session.sink = outputSelect.options[outputSelect.selectedIndex].value;
+	log("Session SInk: "+session.sink);
+	if (session.sink=="default"){session.sink=false;}
+	
+	log("*");
 	session.publishScreen(constraints, title, audioSelect).then((res)=>{
 		if (res==false){return;} // no screen selected
 		log("streamID is: "+session.streamID);
@@ -1184,6 +1221,99 @@ function publishWebcam(){
 	updateURL("push="+session.streamID);
 	session.publishStream(stream, title);
 
+}
+
+
+var audioContext = null;
+var meter = null;
+var mediaStreamSource = null;
+var drawLoopLimiter = null;
+
+function volumeStream(stream) {
+	log("gostream");
+	if (meter){
+		meter.shutdown;
+	}
+	if (stream.getAudioTracks().length){
+		window.AudioContext = window.AudioContext || window.webkitAudioContext;
+		audioContext = new AudioContext();
+		mediaStreamSource = audioContext.createMediaStreamSource(stream);
+		meter = createAudioMeter(audioContext);
+		mediaStreamSource.connect(meter);
+		clearInterval(drawLoopLimiter);
+		drawLoopLimiter = setTimeout(function(){drawLoop();},1)
+	}
+}
+
+function drawLoop( time ) {
+	log("draw volume");
+	if (!document.getElementById("meter1")){
+		return
+	}
+	if (meter.clipping){
+		getById("meter1").style.width = "100px";
+		getById("meter1").style.background = "red";
+	} else {
+		if ((100-meter.volume*100*4)<=1){
+			getById("meter1").style.width = "100px";
+			getById("meter1").style.background = "green";
+		} else if ((100-meter.volume*100*4)<100){
+			getById("meter1").style.width = (meter.volume*100*4)+"px";
+			getById("meter1").style.background = "green";
+		} else {
+			getById("meter1").style.width = "0px";
+		}
+	}
+	clearInterval(drawLoopLimiter);
+	drawLoopLimiter = setTimeout(function(){drawLoop();},50)
+}
+function createAudioMeter(audioContext,clipLevel,averaging,clipLag) {
+	var processor = audioContext.createScriptProcessor(512);
+	processor.onaudioprocess = volumeAudioProcess;
+	processor.clipping = false;
+	processor.lastClip = 0;
+	processor.volume = 0;
+	processor.clipLevel = clipLevel || 0.95;
+	processor.averaging = averaging || 0.90;
+	processor.clipLag = clipLag || 750;
+
+	processor.connect(audioContext.destination);
+
+	processor.checkClipping = function(){
+			if (!this.clipping)
+				return false;
+			if ((this.lastClip + this.clipLag) < window.performance.now())
+				this.clipping = false;
+			return this.clipping;
+		};
+
+	processor.shutdown = function(){
+			this.disconnect();
+			this.onaudioprocess = null;
+		};
+
+	return processor;
+}
+
+function volumeAudioProcess( event ) {
+	var buf = event.inputBuffer.getChannelData(0);
+    var bufLength = buf.length;
+	var sum = 0;
+    var x;
+
+    for (var i=0; i<bufLength; i++) {
+    	x = buf[i];
+    	if (Math.abs(x)>=this.clipLevel) {
+    		this.clipping = true;
+    		this.lastClip = window.performance.now();
+    	} else {
+			this.clipping = false;
+		}
+    	sum += x * x ;
+    }
+
+    var rms =  Math.pow(sum / bufLength,0.3);
+    this.volume = Math.max(rms, this.volume*this.averaging);
 }
 
 function joinRoom(roomname, maxbitrate=false){
@@ -1309,7 +1439,7 @@ function createRoom(roomname=false){
 function toggle(ele, tog=false) {
   var x = ele;
   if (x.style.display === "none") {
-    x.style.display = "block";
+    x.style.display = "inline-block";
   } else {
     x.style.display = "none";
   }
@@ -1364,9 +1494,52 @@ function enumerateDevices() {
 	}
 }
 
+function requestOutputAudioStream(){
+	try {
+		warnlog("GET USER MEDIA");
+		return navigator.mediaDevices.getUserMedia({audio:true, video:false }).then(function(stream1){ // Apple needs thi to happen before I can access EnumerateDevices. 
+			log("get media sources; request audio stream");
+			  return enumerateDevices().then(function(deviceInfos){
+					stream1.getTracks().forEach(function(track) { // We don't want to keep it without audio; so we are going to try to add audio now.
+						track.stop(); // I need to do this after the enumeration step, else it breaks firefox's labels
+					});
+					const audioOutputSelect = document.querySelector('#outputSourceScreenshare');
+					audioOutputSelect.remove(0);
+					audioOutputSelect.removeAttribute("onclick");
+					
+					for (let i = 0; i !== deviceInfos.length; ++i) {
+							const deviceInfo = deviceInfos[i];
+							if (deviceInfo==null){continue;}
+							const option = document.createElement('option');
+							option.value = deviceInfo.deviceId;
+							if (deviceInfo.kind === 'audiooutput') {
+								const option = document.createElement('option');
+								option.value = deviceInfo.deviceId || "default";
+								if (option.value == session.sink){
+									option.selected = true;
+								}
+								option.text = deviceInfo.label || `Speaker ${audioOutputSelect.length + 1}`;
+								audioOutputSelect.appendChild(option);
+							} else {
+								log('Some other kind of source/device: ', deviceInfo);
+							}
+					}
+			  });
+	  });
+   } catch (e){
+	   if (window.isSecureContext) {
+		   alert("An error has occured when trying to access the webcam. The reason is not known.");
+	   } else {
+		alert("Error acessing webcam.\n\nWebsite is loaded in an insecure context.\n\nPlease see: https://developer.mozilla.org/en-US/docs/Web/API/MediaDevices/getUserMedia");
+	   }
+   }
+}
+
+
 function requestAudioStream(){
 	try {
-	  return navigator.mediaDevices.getUserMedia({audio:true, video:false }).then(function(stream1){ // Apple needs thi to happen before I can access EnumerateDevices. 
+		warnlog("GET USER MEDIA");
+		return navigator.mediaDevices.getUserMedia({audio:true, video:false }).then(function(stream1){ // Apple needs thi to happen before I can access EnumerateDevices. 
 			log("get media sources; request audio stream");
 			  return enumerateDevices().then(function(deviceInfos){
 					stream1.getTracks().forEach(function(track) { // We don't want to keep it without audio; so we are going to try to add audio now.
@@ -1376,16 +1549,7 @@ function requestAudioStream(){
 					const audioInputSelect = document.querySelector('select#audioSourceScreenshare');
 					audioInputSelect.remove(1);
 					audioInputSelect.removeAttribute("onchange");
-					//var temp = {};
-					//for (let i = 0; i !== deviceInfos.length; ++i) {  // getting rid of duplicates. This is a bit useless; I need to revisit.
-					//	if (deviceInfos[i].kind === 'audioinput') {
-					//		if (deviceInfos[i].deviceId in temp){
-					//			deviceInfos[i] = null;
-					//		} else {
-					//			temp[deviceInfos[i].deviceId]=true;
-					//		}
-					//	}
-					//}							
+									
 					
 					for (let i = 0; i !== deviceInfos.length; ++i) {
 							const deviceInfo = deviceInfos[i];
@@ -1393,7 +1557,7 @@ function requestAudioStream(){
 							const option = document.createElement('option');
 							option.value = deviceInfo.deviceId;
 							if (deviceInfo.kind === 'audioinput') {
-								option.text = deviceInfo.label || `microphone ${audioInputSelect.length + 1}`;
+								option.text = deviceInfo.label || `Microphone ${audioInputSelect.length + 1}`;
 								audioInputSelect.appendChild(option);
 							} else {
 								log('Some other kind of source/device: ', deviceInfo);
@@ -1420,25 +1584,16 @@ function gotDevices(deviceInfos) { // https://github.com/webrtc/samples/blob/gh-
 	try{
 		const audioInputSelect = document.querySelector('#audioSource');
 		const videoSelect = document.querySelector('select#videoSource');
+		const audioOutputSelect = document.querySelector('#outputSource');
 		const selectors = [ videoSelect];
 
-		// Handles being called several times to update labels. Preserve values.
 		const values = selectors.map(select => select.value);
 		selectors.forEach(select => {
 			while (select.firstChild) {
 				select.removeChild(select.firstChild);
 			}
 		});
-		//var temp = {};
-		//for (let i = 0; i !== deviceInfos.length; ++i) {
-		//	if (deviceInfos[i].kind === 'audioinput') {
-		//		if (deviceInfos[i].deviceId in temp){
-		//			deviceInfos[i] = null;
-		//		} else {
-		//			temp[deviceInfos[i].deviceId]=true;
-		//		}
-		//	}
-		//}
+		
 		var counter = 1;
 		for (let i = 0; i !== deviceInfos.length; ++i) {
 			const deviceInfo = deviceInfos[i];
@@ -1497,16 +1652,26 @@ function gotDevices(deviceInfos) { // https://github.com/webrtc/samples/blob/gh-
 				option.value = deviceInfo.deviceId || "default";
 				option.text = deviceInfo.label || `camera ${videoSelect.length + 1}`;
 				videoSelect.appendChild(option);
+			} else if (deviceInfo.kind === 'audiooutput'){
+				const option = document.createElement('option');
+				option.value = deviceInfo.deviceId || "default";
+				if (option.value == session.sink){
+					option.selected = true;
+				}
+				option.text = deviceInfo.label || `Speaker ${outputSelect.length + 1}`;
+				audioOutputSelect.appendChild(option);
 			} else {
 				log('Some other kind of source/device: ', deviceInfo);
 			}
 		}
 		
+		if (audioOutputSelect.childNodes.length==0){
+			const option = document.createElement('option');
+			option.value = "default";
+			option.text = "System Default";
+			audioOutputSelect.appendChild(option);
+		}
 		
-		//var option = document.createElement('option');
-		//option.text = "Disable Audio";
-		//option.value = "ZZZ";
-		//audioInputSelect.appendChild(option); // NO AUDIO OPTION
 		
 		option = document.createElement('option');
 		option.text = "Disable Video";
@@ -1519,7 +1684,6 @@ function gotDevices(deviceInfos) { // https://github.com/webrtc/samples/blob/gh-
 			}
 		});
 		
-		//audioInputSelect.selectedIndex  = 0;
 	} catch (e){
 		errorlog(e);
 	}
@@ -1628,12 +1792,8 @@ function getUserMediaVideoParams(resolutionFallbackLevel, isSafariBrowser) {
 	}
 }
 
-function grabVideo(quality=0, audioEnable=false){
-	if( activatedPreview == true){log("activated preview return 2");return;}
-	activatedPreview = true;
-	log("trying with quality:"+quality);
 
-	var videoSelect = document.querySelector('select#videoSource');
+function changeVideo(deviceID="default", quality=0){
 	
 	var sq=0;
 	if (session.quality>2){  // 1080, 720, and 360p 
@@ -1657,79 +1817,186 @@ function grabVideo(quality=0, audioEnable=false){
 			quality=1;
 		}
 	}
+	var constraints = {  
+		audio: false,
+		video: getUserMediaVideoParams(quality, iOS)
+	};
 	
+	//enumerateDevices().then(gotDevices).then(function(){
+	if ((iOS) || (iPad)){
+		constraints.video.deviceId =  deviceID; // iPhone 6s compatible ?
+	} else {
+		constraints.video.deviceId = deviceID; // NDI Compatible
+	}
+	//}
 	
-	var audio = false;
-	var streams = [];
-	if ((videoSelect.value == "ZZZ") || (audioEnable==true)){  // if there is no video, or if manually set to audio ready, then do this step.
+	if (session.width){
+		constraints.video.width = {exact: session.width};
+	}
+	if (session.height){
+		constraints.video.height = {exact: session.height};
+	}
+	if (session.framerate){
+		constraints.video.frameRate = {exact: session.framerate};
+	} else if (session.maxframerate){
+		constraints.video.frameRate = {max: session.maxframerate};
+	}
+
+	warnlog(constraints);
+	navigator.mediaDevices.getUserMedia(constraints).then(function(stream){
 		
-		var audioSelect = document.querySelector('#audioSource').querySelectorAll("input"); 
-		var audioList = [];
-		
-		for (var i=0; i<audioSelect.length;i++){
-			if (audioSelect[i].value=="ZZZ"){
-				continue;
+		log("adding tracks");
+		session.streamSrc.getVideoTracks().forEach((track) => {
+		  track.stop();
+		  session.streamSrc.removeTrack(track);
+		});
+		stream.getVideoTracks().forEach((track) => {
+			session.streamSrc.addTrack(track);
+		});
+	}).catch(function(e){
+		errorlog(e);
+		if (e.name === "OverconstrainedError"){
+			errorlog(e.message);
+			log("Resolution or framerate didn't work");
+		} else if (e.name === "NotReadableError"){
+			if (iOS){
+				alert("An error occured. Upgrading to at least iOS 13.4 should fix this glitch from happening again");
+			} else {
+				alert("Error Listing Media Devices.\n\nThe default Camera may already be in use with another app. Typically webcams can only be accessed by one program at a time.\n\nThe selected device may also not be supported.");
 			}
-			if (audioSelect[i].checked){
-				audioList.push(audioSelect[i]);
-			}
+			return;
+		} else if (e.name === "NavigatorUserMediaError"){
+			alert("Unknown error: 'NavigatorUserMediaError'"); 
+			return;
+		} else {
+			errorlog("An unknown camera error occured");
 		}
+	});
+}
+
+async function getAudioOnly(){
+	var audioSelect = document.querySelector('#audioSource').querySelectorAll("input"); 
+	var audioList = [];
+	var streams = [];
+	
+	for (var i=0; i<audioSelect.length;i++){
+		if (audioSelect[i].value=="ZZZ"){
+			continue;
+		}
+		if (audioSelect[i].checked){
+			audioList.push(audioSelect[i]);
+		}
+	}
+	
+	for (var i=0; i<audioList.length;i++){
 		
-		for (var i=1; i<audioList.length;i++){
+		if ((audioList[i].value=="default") && session.echoCancellation && session.autoGainControl && session.noiseSuppression){
+			var constraint = {audio: true};
+		} else if (session.echoCancellation && session.autoGainControl && session.noiseSuppression){ // Just trying to avoid problems with some systems that don't support these features
 			var constraint = {audio: {deviceId: {exact: audioList[i].value}}};
-			
+		} else {
+			var constraint = {audio: {deviceId: {exact: audioList[i].value}}};
 			constraint.audio.echoCancellation = session.echoCancellation;
 			constraint.audio.autoGainControl = session.autoGainControl;
 			constraint.audio.noiseSuppression = session.noiseSuppression;
-			
-			navigator.mediaDevices.getUserMedia(constraint).then(function (stream2){
-				streams.push(stream2);
-			}).catch(errorlog);
-		} 
-		
-		if (audioList.length){
-			audio = {deviceId: {exact: audioList[0].value}};
-			
-			audio.echoCancellation = session.echoCancellation;
-			audio.autoGainControl = session.autoGainControl;
-			audio.noiseSuppression = session.noiseSuppression;
-			
-		} 
+		}
+		constraint.video = false;
+		warnlog(constraint);
+		var stream = await navigator.mediaDevices.getUserMedia(constraint).then(function (stream2){
+			log("pushing stream2");
+			return stream2;
+		}).catch(errorlog); // More error reporting maybe?
+		if (stream){
+			streams.push(stream);
+		}
+	} 
+	
+	return streams;
+}
+
+function applyMirror(mirror){
+	if (mirror){
+		if (session.mirrored && session.flipped){
+			 getById('previewWebcam').style.transform = " scaleX(-1) scaleY(-1)";
+		} else if (session.mirrored){
+			 getById('previewWebcam').style.transform = "scaleX(-1)";
+		} else if (session.flipped){
+			 getById('previewWebcam').style.transform = "scaleY(-1) scaleX(1)";
+		} else {
+			 getById('previewWebcam').style.transform = "scaleX(1)";
+		}
+	} else {
+		if (session.mirrored && session.flipped){
+			 getById('previewWebcam').style.transform = " scaleX(1) scaleY(-1)";
+		} else if (session.mirrored){
+			 getById('previewWebcam').style.transform = "scaleX(1)";
+		} else if (session.flipped){
+			 getById('previewWebcam').style.transform = "scaleY(-1) scaleX(-1)";
+		} else {
+			 getById('previewWebcam').style.transform = "scaleX(-1)";
+		}
+	}	
+}
+
+async function grabVideo(quality=0){
+	if( activatedPreview == true){log("activated preview return 2");return;}
+	activatedPreview = true;
+	
+	try {
+		log("Resetting Stream");
+		var oldstream = getById('previewWebcam').srcObject;
+		if (oldstream){
+			oldstream.getVideoTracks().forEach(function(track) {
+				track.stop();
+				oldstream.removeTrack(track);
+			});
+		} else {
+			getById('previewWebcam').srcObject = new MediaStream();
+		}
+	} catch(e){
+		errorlog(e);
 	}
+
+	var videoSelect = document.querySelector('select#videoSource');
+	var mirror=false;
 	
-	if (videoSelect.value == "ZZZ"){  // without video. Nice and quick
-		var constraints = {
-			audio: audio,
-			video: false
-		};
-		log(constraints);
-		navigator.mediaDevices.getUserMedia(constraints).then(function(stream){
-			log("adding additional audio tracks");
-			for (var i=0; i<streams.length;i++){
-				streams[i].getAudioTracks().forEach(function(track){
-					stream.addTrack(track);
-					log(track);
-				});
+	if (videoSelect.value == "ZZZ"){  // if there is no video, or if manually set to audio ready, then do this step.
+		 // revisit
+		applyMirror(mirror);
+		
+		var gowebcam = getById("gowebcam");
+		gowebcam.disabled =false;
+		gowebcam.style.backgroundColor = "#3C3";
+		gowebcam.style.color = "black";
+		gowebcam.style.fontWeight="bold";
+		gowebcam.innerHTML = "START";
+	} else { 
+		
+		var sq=0;
+		if (session.quality>2){  // 1080, 720, and 360p 
+			sq = 2; // hacking my own code. TODO: ugly, so I need to revisit this. 
+		} else {
+			sq = session.quality;
+		}
+		
+		if (sq!==false){
+			if (quality>sq){
+				quality=sq; // override the user's setting
 			}
-			streams = null;
-			
-			getById('previewWebcam').srcObject = stream; // set the preview window and run with it
-			
-			var gowebcam = getById("gowebcam");
-			gowebcam.disabled =false;
-			gowebcam.style.backgroundColor = "#3C3";
-			gowebcam.style.color = "black";
-			gowebcam.style.fontWeight="bold";
-			gowebcam.innerHTML = "PRESS WHEN READY!";
-			
-		}).catch(function(e){
-			errorlog(e);
-			alert("Error: Media stream creation failed.");
-		});
-	
-	} else {       // with video
+		}
+
+		if (iOS){  // iOS will not work correctly at 1080p; likely a h264 codec issue.
+			if (quality==0){
+				quality=1;
+			}
+		} else if (iPad){
+			if (quality==0){
+				quality=1;
+			}
+		}
+		
 		var constraints = {  
-			audio: audio,
+			audio: false,
 			video: getUserMediaVideoParams(quality, iOS)
 		};
 		if ((iOS) || (iPad)){
@@ -1737,6 +2004,19 @@ function grabVideo(quality=0, audioEnable=false){
 		} else {
 			constraints.video.deviceId = videoSelect.value; // NDI Compatible
 		}
+		
+		log(videoSelect.options[videoSelect.selectedIndex].text);  
+		if (videoSelect.options[videoSelect.selectedIndex].text.startsWith("OBS-Camera")){
+			mirror=true;
+		} else if (videoSelect.options[videoSelect.selectedIndex].text.includes(" back")){
+			mirror=true;
+		} else if (videoSelect.options[videoSelect.selectedIndex].text.startsWith("Back Camera")){
+			mirror=true;
+		} else {
+			mirror=false;
+		}
+		
+		
 		if (session.width){
 			constraints.video.width = {exact: session.width};
 		}
@@ -1749,93 +2029,115 @@ function grabVideo(quality=0, audioEnable=false){
 			constraints.video.frameRate = {max: session.maxframerate};
 		}
 	
-		log(constraints);
-
-		setTimeout(()=>{
-			try {
-
-				log("Trying Constraints");
-				var oldstream = getById('previewWebcam').srcObject;
-				if (oldstream){
-					oldstream.getTracks().forEach(function(track) {
-						track.stop();
-					});
-				}
-			} catch(e){
-				errorlog(e);
-			}
-			navigator.mediaDevices.getUserMedia(constraints).then(function(stream){
-				if (audioEnable == false){
-					stream.getTracks().forEach(function(track) { // We don't want to keep it without audio; so we are going to try to add audio now.
-						track.stop();
-					});
-					log("GOT IT BUT WITH NO AUDIO");
-					activatedPreview = false;
-					grabVideo(quality,true);
-				} else {
-					log("adding tracks");
-					for (var i=0; i<streams.length;i++){
-						streams[i].getAudioTracks().forEach(function(track){
-							stream.addTrack(track);
-							log(track);
-						});
-					}
-					streams = null;
-					
-					getById('previewWebcam').srcObject = stream; // set the preview window and run with it
-					
-					
-					var gowebcam = getById("gowebcam");
-					gowebcam.disabled =false;
-					gowebcam.style.backgroundColor = "#3C3";
-					gowebcam.style.color = "black";
-					gowebcam.style.fontWeight="bold";
-					gowebcam.innerHTML = "PRESS WHEN READY!";
-					
-					// Once crbug.com/711524 is fixed, we won't need to wait anymore. This is
-					// currently needed because capabilities can only be retrieved after the
-					// device starts streaming. This happens after and asynchronously w.r.t.
-					// getUserMedia() returns.
-					setTimeout(function(){dragElement(getById('previewWebcam'));},1000);  // focus
-					
-					log("DONE - found stream");
-					
-				}
-			}).catch(function(e){
-				activatedPreview = false;
-				errorlog(e);
-				if (e.name === "OverconstrainedError"){
-					errorlog(e.message);
-					log("Resolution or framerate didn't work");
-				} else if (e.name === "NotReadableError"){
-					if (iOS){
-						alert("An error occured. Upgrading to at least iOS 13.4 should fix this glitch from happening again");
-					} else {
-						alert("Error Listing Media Devices.\n\nThe default Camera may already be in use with another app. Typically webcams can only be accessed by one program at a time.\n\nThe selected device may also not be supported.");
-					}
-					getById('gowebcam').innerHTML="Problem with Camera";
-					activatedPreview=true;
-					return;
-				} else if (e.name === "NavigatorUserMediaError"){
-					getById('gowebcam').innerHTML="Problem with Camera";
-					alert("Unknown error: 'NavigatorUserMediaError'"); 
-					return;
-				} else {
-					errorlog("An unknown camera error occured");
-				}
-				if (quality<=9){
-					grabVideo(quality+1);
-				} else {
-					errorlog("********Camera failed to work");
-					activatedPreview=true;
-					getById('gowebcam').innerHTML="Problem with Camera";
-					alert("Camera failed to load. \n\nPlease make sure it is not already in use by another application.\n\nPlease make sure you have accepted the camera permissions.");
-				}
+		warnlog(constraints);
+		navigator.mediaDevices.getUserMedia(constraints).then(function(stream){
+			
+			log("adding video tracks");
+			
+			volumeStream(stream);
+			stream.getVideoTracks().forEach(function(track){
+				getById('previewWebcam').srcObject.addTrack(track);
 			});
-		},1);
+			
+			applyMirror(mirror);
+			
+			var gowebcam = getById("gowebcam");
+			gowebcam.disabled =false;
+			gowebcam.style.backgroundColor = "#3C3";
+			gowebcam.style.color = "black";
+			gowebcam.style.fontWeight="bold";
+			gowebcam.innerHTML = "START";
+			
+			// Once crbug.com/711524 is fixed, we won't need to wait anymore. This is
+			// currently needed because capabilities can only be retrieved after the
+			// device starts streaming. This happens after and asynchronously w.r.t.
+			// getUserMedia() returns.
+			setTimeout(function(){dragElement(getById('previewWebcam'));},1000);  // focus
+			
+			log("DONE - found stream");
+		}).catch(function(e){
+			activatedPreview = false;
+			errorlog(e);
+			if (e.name === "OverconstrainedError"){
+				errorlog(e.message);
+				log("Resolution or framerate didn't work");
+			} else if (e.name === "NotReadableError"){
+				if (iOS){
+					alert("An error occured. Closing existing tabs in Safari may solve this issue.");
+				} else {
+					alert("Error Listing Media Devices.\n\nThe default Camera may already be in use with another app. Typically webcams can only be accessed by one program at a time.\n\nThe selected device may also not be supported.");
+				}
+				getById('gowebcam').innerHTML="Problem with Camera";
+				activatedPreview=true;
+				return;
+			} else if (e.name === "NavigatorUserMediaError"){
+				getById('gowebcam').innerHTML="Problem with Camera";
+				alert("Unknown error: 'NavigatorUserMediaError'"); 
+				return;
+			} else {
+				errorlog("An unknown camera error occured");
+			}
+			if (quality<=9){
+				grabVideo(quality+1);
+			} else {
+				errorlog("********Camera failed to work");
+				activatedPreview=true;
+				getById('gowebcam').innerHTML="Problem with Camera";
+				alert("Camera failed to load. \n\nPlease make sure it is not already in use by another application.\n\nPlease make sure you have accepted the camera permissions.");
+			}
+		});
+		
 	}
 }
 
+
+async function grabAudio(){
+	if( activatedPreview == true){log("activated preview return 2");return;}
+	activatedPreview = true;
+	
+	try {
+		log("Resetting Audio Streams");
+		var oldstream = getById('previewWebcam').srcObject;
+		if (oldstream){
+			oldstream.getAudioTracks().forEach(function(track) {
+				track.stop();
+				oldstream.removeTrack(track);
+			});
+		} else { // if no stream exists
+			getById('previewWebcam').srcObject = new MediaStream();
+		}
+	} catch(e){
+		errorlog(e);
+	}
+	
+	var videoSelect = document.querySelector('select#videoSource');
+	
+	  // if there is no video, or if manually set to audio ready, then do this step.
+	var mirror=false; // revisit
+	applyMirror(mirror);
+	var streams = await getAudioOnly();
+	log("adding additional audio tracks");
+	
+	for (var i=0; i<streams.length;i++){
+		streams[i].getAudioTracks().forEach(function(track){
+			getById('previewWebcam').srcObject.addTrack(track);
+			log(track);
+		});
+	}
+	
+	log(getById('previewWebcam').srcObject);
+	
+	if (streams.length){
+		volumeStream(getById('previewWebcam').srcObject);
+	}
+	
+	var gowebcam = getById("gowebcam");
+	gowebcam.disabled =false;
+	gowebcam.style.backgroundColor = "#3C3";
+	gowebcam.style.color = "black";
+	gowebcam.style.fontWeight="bold";
+	gowebcam.innerHTML = "START";
+}
 
 
 function enterPressed(event, callback){
@@ -1968,10 +2270,16 @@ function dragElement(elmnt) {
 }
   
   
-function setupWebcamSelection(){
+function setupWebcamSelection(stream){
 	log("setup webcam");
 	try {
 		return enumerateDevices().then(gotDevices).then(function(){
+			
+			stream.getTracks().forEach(function(track) { // We don't want to keep it without audio; so we are going to try to add audio now.
+				  track.stop(); // I need to do this after the enumeration step, else it breaks firefox's labels
+				  stream.removeTrack(track);
+			});
+			
 			log("enumerated");
 			if (parseInt(getById("webcamquality").elements.namedItem("resolution").value)==3){
 				session.maxframerate  = 30;
@@ -1986,6 +2294,7 @@ function setupWebcamSelection(){
 			
 			var audioSelect = document.querySelector('#audioSource');
 			var videoSelect = document.querySelector('select#videoSource');
+			var outputSelect = document.querySelector('select#outputSource');
 			
 			audioSelect.onchange = function(){
 				
@@ -1997,7 +2306,7 @@ function setupWebcamSelection(){
 				
 				log("AUDIO source CHANGED");
 				activatedPreview=false;
-				grabVideo(parseInt(getById("webcamquality").elements.namedItem("resolution").value));
+				grabAudio();
 			};
 			videoSelect.onchange = function(){
 				
@@ -2011,6 +2320,19 @@ function setupWebcamSelection(){
 				activatedPreview=false;
 				grabVideo(parseInt(getById("webcamquality").elements.namedItem("resolution").value));
 			};
+			
+			outputSelect.onchange = function(){
+				session.sink = outputSelect.options[outputSelect.selectedIndex].value;
+				if (session.sink=="default"){session.sink=false;} else {
+					getById("previewWebcam").setSinkId(session.sink).then(() => {
+							log("New Output Device:"+session.sink);
+						}).catch(error => {
+							errorlog(error);
+							setTimeout(function(){alert("Failed to change audio output destination.");},1);
+						});
+				}
+			}
+			
 			getById("webcamquality").onchange = function(){
 				var gowebcam = getById("gowebcam");
 				gowebcam.disabled = true;
@@ -2030,6 +2352,8 @@ function setupWebcamSelection(){
 
 			activatedPreview = false;
 			grabVideo(parseInt(getById("webcamquality").elements.namedItem("resolution").value));
+			activatedPreview = false;
+			grabAudio();
 
 		}).catch(e => {errorlog(e);})
 	} catch (e){errorlog(e);}
@@ -2072,6 +2396,7 @@ function previewWebcam(){
 			log("old stream found");
 			oldstream.getTracks().forEach(function(track) {
 				track.stop();
+				oldstream.removeTrack(track);
 				log("stopping old track");
 			});
 		}
@@ -2079,15 +2404,11 @@ function previewWebcam(){
 	} catch (e){
 		errorlog(e);
 	}
+	
 	try {
 	  navigator.mediaDevices.getUserMedia({audio:true, video:true }).timeout(15000).then(function(stream){ // Apple needs thi to happen before I can access EnumerateDevices. 
 		log("got first stream");
-		setupWebcamSelection().then(()=>{
-			log("Got second stream");
-			stream.getTracks().forEach(function(track) { // We don't want to keep it without audio; so we are going to try to add audio now.
-				  track.stop(); // I need to do this after the enumeration step, else it breaks firefox's labels
-			});
-		});
+		setupWebcamSelection(stream);
 	  }).catch(function(err){
 		  errorlog(err); /* handle the error */
 			if (err.name == "NotFoundError" || err.name == "DevicesNotFoundError") {
@@ -2107,7 +2428,7 @@ function previewWebcam(){
 				setTimeout(function(){alert(err);},1);
 			}
 		  errorlog("trying to list webcam again");
-		  setupWebcamSelection();
+		  setupWebcamSelection(stream);
 	  });
 	} catch (e){
 	    if (window.isSecureContext) {
