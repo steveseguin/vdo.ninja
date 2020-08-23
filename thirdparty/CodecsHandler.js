@@ -248,12 +248,13 @@ var CodecsHandler = (function() {
         var sendPayloadType = videoMLine.split(pattern)[1].split(' ')[0];
         var fmtpLine = sdpLines[findLine(sdpLines, 'a=rtpmap', sendPayloadType)];
         var codecName = fmtpLine.split('a=rtpmap:' + sendPayloadType)[1].split('/')[0];
-        
+		
         codec = codecName || codec; // Try to find first Codec; else use expected/default
         
         params = params || {};
-        var xgoogle_min_bitrate = params.min.toString();
-        var xgoogle_max_bitrate = params.max.toString();
+        var min_bitrate = params.min.toString() || '30';
+        var max_bitrate = params.max.toString() || '2500';
+		
 
         var codecIndex = findLine(sdpLines, 'a=rtpmap', codec+'/90000');
         var codecPayload;
@@ -272,17 +273,21 @@ var CodecsHandler = (function() {
         }
 
         if (!rtxIndex) {
+			sdpLines[mLineIndex] += '\r\nb=AS:' + max_bitrate;
+			sdp = sdpLines.join('\r\n');
             return sdp;
-        }
+        } 
+		
 
-        var rtxFmtpLineIndex = findLine(sdpLines, 'a=fmtp:' + rtxPayload.toString());
-        if (rtxFmtpLineIndex !== null) {
+        var rtxFmtpLineIndexChromium = findLine(sdpLines, 'a=fmtp:' + rtxPayload.toString());
+		
+        if (rtxFmtpLineIndexChromium !== null){
             var appendrtxNext = '\r\n';
-            appendrtxNext += 'a=fmtp:' + codecPayload + ' x-google-min-bitrate=' + (xgoogle_min_bitrate || '2500') + '; x-google-max-bitrate=' + (xgoogle_max_bitrate || '2500');
-            sdpLines[rtxFmtpLineIndex] = sdpLines[rtxFmtpLineIndex].concat(appendrtxNext);
+            appendrtxNext += 'a=fmtp:' + codecPayload + ' x-google-min-bitrate=' + min_bitrate + '; x-google-max-bitrate=' + max_bitrate;
+            sdpLines[rtxFmtpLineIndexChromium] = sdpLines[rtxFmtpLineIndexChromium].concat(appendrtxNext);
             sdp = sdpLines.join('\r\n');
         }
-
+		
         return sdp;
     }
 

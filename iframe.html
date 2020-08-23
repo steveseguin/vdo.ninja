@@ -4,6 +4,7 @@
 body{
 	padding:0;
 	margin:0;
+	background-color: rgb(253,253,253);
 }
 iframe {
 	border:0;
@@ -11,8 +12,8 @@ iframe {
 	padding:0;
 	display:block;
 	margin:10px;
-	width:320px;
-	height:180px;
+	width:640px;
+	height:320px;
 }
 #viewlink {
 	width:400px;
@@ -36,70 +37,160 @@ function loadIframe(){
 	
 	var iframe = document.createElement("iframe");
 	var iframeContainer = document.createElement("div");
-	
-	iframe.allow="autoplay";
+	var iframesrc = document.getElementById("viewlink").value;
+	iframe.allow="autoplay;camera;microphone";
+	iframe.allowtransparency="true"
+
+	if (iframesrc==""){
+		iframesrc="https://obs.ninja/";
+	}
 
 	if (document.getElementById("clean").checked){
-		iframe.src = document.getElementById("viewlink").value+"&cleanoutput";
-	} else {
-		iframe.src = document.getElementById("viewlink").value;
+		if (iframesrc.includes("?")){
+			iframesrc+='&';
+		} else {
+			iframesrc+='?';
+		}
+		iframesrc+="cleanoutput";
+	}
+	if (document.getElementById("transparent").checked){
+		if (iframesrc.includes("?")){
+			iframesrc+='&';
+		} else {
+			iframesrc+='?';
+		}
+		iframesrc+="transparent";
 	}
 	
+	if (document.getElementById("hidemenu").checked){
+		if (iframesrc.includes("?")){
+			iframesrc+='&';
+		} else {
+			iframesrc+='?';
+		}
+		iframesrc+="hidemenu";
+	}
+	
+	iframe.src = iframesrc;
+	
 	iframeContainer.appendChild(iframe);
+	
 	document.getElementById("container").appendChild(iframeContainer);
 	
+	
 		var button = document.createElement("button");
-		button.innerHTML = "Mute";
-		button.onclick = function(){iframe.contentWindow.postMessage({"mute":true}, '*');}
+		button.innerHTML = "Mute Speaker";
+		button.onclick = function(){iframe.contentWindow.postMessage({"mute":true}, '*');};
 		iframeContainer.appendChild(button);
 		
 		var button = document.createElement("button");
-		button.innerHTML = "Un-Mute";
-		button.onclick = function(){iframe.contentWindow.postMessage({"mute":false}, '*');}
+		button.innerHTML = "Un-Mute Speaker";
+		button.onclick = function(){iframe.contentWindow.postMessage({"mute":false}, '*');};
 		iframeContainer.appendChild(button);
 		
 		var button = document.createElement("button");
-		button.innerHTML = "Toggle Mute";
+		button.innerHTML = "Toggle Speaker";
 		button.onclick = function(){iframe.contentWindow.postMessage({"mute":"toggle"}, '*');}
 		iframeContainer.appendChild(button);
 		
 		var button = document.createElement("button");
+		button.innerHTML = "Mute Mic";
+		button.onclick = function(){iframe.contentWindow.postMessage({"mic":false}, '*');};
+		iframeContainer.appendChild(button);
+		
+		var button = document.createElement("button");
+		button.innerHTML = "Un-Mute Mic";
+		button.onclick = function(){iframe.contentWindow.postMessage({"mic":true}, '*');};
+		iframeContainer.appendChild(button);
+		
+		var button = document.createElement("button");
+		button.innerHTML = "Toggle Mic";
+		button.onclick = function(){iframe.contentWindow.postMessage({"mic":"toggle"}, '*');};
+		iframeContainer.appendChild(button);
+		
+		var button = document.createElement("button");
 		button.innerHTML = "Disconnect";
-		button.onclick = function(){iframe.contentWindow.postMessage({"close":true}, '*');}
+		button.onclick = function(){iframe.contentWindow.postMessage({"close":true}, '*');};
 		iframeContainer.appendChild(button);
 		
 		var button = document.createElement("button");
 		button.innerHTML = "Low Bitrate";
-		button.onclick = function(){iframe.contentWindow.postMessage({"bitrate":30}, '*');}
+		button.onclick = function(){iframe.contentWindow.postMessage({"bitrate":30}, '*');};
 		iframeContainer.appendChild(button);
 		
 		var button = document.createElement("button");
 		button.innerHTML = "High Bitrate";
-		button.onclick = function(){iframe.contentWindow.postMessage({"bitrate":5000}, '*');}
+		button.onclick = function(){iframe.contentWindow.postMessage({"bitrate":5000}, '*');};
 		iframeContainer.appendChild(button);
 		
 		var button = document.createElement("button");
 		button.innerHTML = "Default Bitrate";
-		button.onclick = function(){iframe.contentWindow.postMessage({"bitrate":-1}, '*');}
+		button.onclick = function(){iframe.contentWindow.postMessage({"bitrate":-1}, '*');};
 		iframeContainer.appendChild(button);
 		
 		var button = document.createElement("button");
 		button.innerHTML = "Reload";
-		button.onclick = function(){iframe.contentWindow.postMessage({"reload":true}, '*');}
+		button.onclick = function(){iframe.contentWindow.postMessage({"reload":true}, '*');};
 		iframeContainer.appendChild(button);
 		
 		var button = document.createElement("button");
 		button.innerHTML = "50% Volume";
-		button.onclick = function(){iframe.contentWindow.postMessage({"volume":0.5}, '*');}
+		button.onclick = function(){iframe.contentWindow.postMessage({"volume":0.5}, '*');};
 		iframeContainer.appendChild(button);
 		
 		var button = document.createElement("button");
 		button.innerHTML = "100% Volume";
-		button.onclick = function(){iframe.contentWindow.postMessage({"volume":1.0}, '*');}
+		button.onclick = function(){iframe.contentWindow.postMessage({"volume":1.0}, '*');};
+		iframeContainer.appendChild(button);
+		
+		var button = document.createElement("button");
+		button.innerHTML = "Request Stats";
+		button.onclick = function(){iframe.contentWindow.postMessage({"getStats":true}, '*');};
 		iframeContainer.appendChild(button);
 		
 		
+		var button = document.createElement("button");
+		button.innerHTML = "Say Hello";
+		button.onclick = function(){iframe.contentWindow.postMessage({"sendChat":"Hello!"}, '*');};
+		iframeContainer.appendChild(button);
+		
+		var button = document.createElement("button");
+		button.innerHTML = "previewWebcam()";
+		button.onclick = function(){iframe.contentWindow.postMessage({"function":"previewWebcam"}, '*');};  // publishScreen
+		iframeContainer.appendChild(button);
+		
+		var button = document.createElement("button");
+		button.innerHTML = "CLOSE IFRAME";
+		button.onclick = function(){iframeContainer.parentNode.removeChild(iframeContainer);};
+		iframeContainer.appendChild(button);
+		
+		
+		////////////  LISTEN FOR EVENTS
 	
+		var eventMethod = window.addEventListener ? "addEventListener" : "attachEvent";
+		var eventer = window[eventMethod];
+		var messageEvent = eventMethod === "attachEvent" ? "onmessage" : "message";
+
+
+		/// If you have a routing system setup, you could have just one global listener for all iframes instead.
+		
+		eventer(messageEvent, function (e) {
+			if (e.source != iframe.contentWindow){return} // reject messages send from other iframes
+			
+			if ("stats" in e.data){
+				var outputWindow = document.createElement("outputWindow");
+				outputWindow.innerHTML = e.data.stats;
+				iframeContainer.appendChild(outputWindow);
+			}
+			
+			if ("gotChat" in e.data){
+				var outputWindow = document.createElement("outputWindow");
+				outputWindow.innerHTML = e.data.gotChat.msg;
+				outputWindow.style.border="1px dotted black";
+				iframeContainer.appendChild(outputWindow);
+			}
+		});
+		
 }
 
 </script>
@@ -109,6 +200,8 @@ function loadIframe(){
 <input placeholder="Enter an OBS.Ninja View URL here" id="viewlink" />
 <button onclick="loadIframe();">ADD</button>
 <input type="checkbox" id="clean" checked>Clean Output
+<input type="checkbox" id="transparent" checked>Transparent
+<input type="checkbox" id="hidemenu">Hide Menu
 <div id="container">
 
 </div>

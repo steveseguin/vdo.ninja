@@ -138,9 +138,12 @@ function generateInvite(){
 			sendstr+="&quality=2";
 		}
 	}
-
-	sendstr = 'https://obs.ninja/?push=' + sid + sendstr;
-	viewstr = 'https://obs.ninja/?view=' + sid + viewstr + title;
+	
+	var href = window.location.href;
+	var dir = href.substring(0, href.lastIndexOf('/')) + "/";
+	
+	sendstr = dir+'?push=' + sid + sendstr;
+	viewstr = dir+'?view=' + sid + viewstr + title;
 	getById("container-setup").style.display="none";
 	getById("container-links").style.display="block";
 	
@@ -162,7 +165,7 @@ document.addEventListener("dragstart", event => {
 	var streamId = url.split('view=');
 	var label = url.split('label=');
 
-	url += '&layer-name=OBS.Ninja';
+	url += '&layer-name=OBSN';
 	if (streamId.length>1) url += ': ' + streamId[1].split('&')[0];
 	if (label.length>1) url += ' - ' + decodeURI(label[1].split('&')[0]);
 	
