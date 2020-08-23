@@ -1,5 +1,19 @@
 <html>
 	<head>
+		<script type="text/javascript">
+			//  MS Internet Explorer must not be given a chance to fail before I can give the user an error message.
+			try {
+				var msie = window.navigator.userAgent.indexOf("MSIE ");
+				if (msie>0 || !!navigator.userAgent.match(/Trident.*rv\:11\./)){ // If MSIE or IE 11
+					alert("Internet Explorer is not supported.\n\nPlease consider using Google Chrome instead\n\nYou will be forwarded to the download page for Google Chrome now.");
+					console.error("INTERNET EXPLORER IS EVIL");
+					window.location = "https://www.google.com/chrome/";
+				}
+			} catch(e){
+				console.error(e);
+			}
+		
+		</script>
 		<meta name="viewport" content="width=device-width, initial-scale=1" />
 		<meta content="text/html;charset=utf-8" http-equiv="Content-Type" />
 		<meta content="utf-8" http-equiv="encoding" />
@@ -33,12 +47,12 @@
 		<meta property="twitter:image" content="./images/obsNinja_logo_full.png" />
 		<meta name="msapplication-TileColor" content="#da532c" />
 		<meta name="theme-color" content="#ffffff" />
-		<!-- <script src="//console.re/connector.js" data-channel="obsninjaalpha" id="consolerescript"></script> -->
+		<!--<script src="//console.re/connector.js" data-channel="obsninjaalpha" id="consolerescript"></script>-->
 		<link rel="stylesheet" href="./lineawesome/css/line-awesome.min.css">
 		<script type="text/javascript" src="https://webrtc.github.io/adapter/adapter-latest.js"></script>
 		<script type="text/javascript" src="./thirdparty/qrcode.min.js"></script>
 		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.0/jquery.min.js"></script>
-		<link rel="stylesheet" href="./main.css?ver=3" />
+		<link rel="stylesheet" href="./main.css?ver=10" />
 	</head>
 	<body id="main" class="cat">
 		<span itemprop="image" itemscope itemtype="image/png">
@@ -48,8 +62,8 @@
 		<span itemprop="thumbnail" itemscope itemtype="http://schema.org/ImageObject">
 			<link itemprop="url" href="./images/obsNinja_logo_full.png" />
 		</span>
-		<script language="javascript" type="text/javascript" src="./thirdparty/CodecsHandler.js?ver=8"></script>
-		<script language="javascript" type="text/javascript" src="./webrtc.js?ver=11"></script>
+		<script language="javascript" type="text/javascript" src="./thirdparty/CodecsHandler.js?ver=17"></script>
+		<script language="javascript" type="text/javascript" src="./webrtc.js?ver=33"></script>
 		<input id="zoomSlider" type="range" style="display: none;" />
 		<div id="header">
 			<a id="logoname" href="./" style="text-decoration: none; color: white; margin: 2px;">
@@ -71,7 +85,7 @@
                     onclick="popupMessage(event);copyFunction(this)"
                     class="task"
                     onmousedown="copyFunction(this)"
-                    style="font-weight: bold; color: #afa; cursor: grab; background-color: #0000; font-size: 115%; min-width: 300px; max-width: 800px;"
+                    style="font-weight: bold; color: #afa; cursor: grab; background-color: #0000; font-size: 115%; min-width: 335px; max-width: 800px;"
                 />
 				<i class="las la-paperclip task" style="color: #DDD;" onclick="popupMessage(event);copyFunction(document.getElementById('reshare'));" onmouseover="this.style.cursor='pointer'"></i>
 			</div>
@@ -91,31 +105,38 @@
 			
 		</div>
 		<div id="controlButtons">
+			<div id="chatbutton" title="Toggle the Chat" onclick="toggleChat()" class="advanced float" style="cursor: pointer;" alt="Toggle the Chat">
+				<i id="chattoggle" class="toggleSize las la-comment-alt my-float"></i>
+				<div id="chatNotification"></div>
+			</div>
 			<div id="mutebutton" title="Mute the Mic" onclick="toggleMute()" class="advanced float" style="cursor: pointer;" alt="Toggle the mic">
 				<i id="mutetoggle" class="toggleSize las la-microphone my-float"></i>
 			</div>
 			<div id="mutevideobutton" title="Disable the Camera" onclick="toggleVideoMute()" class="advanced float" style="cursor: pointer;" alt="Toggle the camera">
 				<i id="mutevideotoggle" class="toggleSize las la-eye my-float"></i>
 			</div>
-			<div
-                id="helpbutton"
-				title="Show Help Info" 
-                onclick="alert('Email steve@seguin.email if the system breaks or check https://reddit.com/r/obsninja for support.\n\nThere are some advanced options hidden away, such as persistent stream links and custom resolutions; see the Wiki.')"
-                class="advanced float"
-                style="cursor: pointer;"
-                alt="How to Use This with OBS"
-            >
-				<i class="toggleSize las la-question-circle my-float"></i>
+			<div id="settingsbutton" title="Settings" onclick="toggleSettings(this)" class="advanced float" style="cursor: pointer;" alt="Toggle the Settings Menu">
+				<i id="settingstoggle" class="toggleSize las la-cog my-float"></i>
 			</div>
 			<div id="hangupbutton" title="Hangup the Call" onclick="hangup()" class="advanced float" style="cursor: pointer;" alt="Disconnect and End">
 				<i class="toggleSize my-float las la-phone rotate225" aria-hidden="true"></i>
 			</div>
+			
 		</div>
+		<span
+                id="helpbutton"
+				title="Show Help Info" 
+                onclick="alert('Email steve@seguin.email if the system breaks or check https://reddit.com/r/obsninja for support.\n\nThere are some advanced options hidden away, such as persistent stream links and custom resolutions; see the Wiki.')"
+                style="cursor: pointer; display:none;"
+                alt="How to Use This with OBS"
+            >
+				<i class="las la-question-circle " style="float: right; bottom: 0px; cursor: pointer; position: fixed; right: 24px; color: #d9e4eb; padding: 2px; margin: 2px 2px 0 0; font-size: 140%;"></i>
+		</span>
 		<span title="Language Options" onclick="toggle(document.getElementById('languages'));" id="translateButton">
-			<i style="float: right; bottom: 0px; cursor: pointer; position: fixed; right: 10px; color: #d9e4eb; padding: 0; margin: 2px 2px 0 0; font-size: 140%;" class="las la-language" aria-hidden="true"></i>
+			<i style="float: right; bottom: 0px; cursor: pointer; position: fixed; right: 2px; color: #d9e4eb; padding: 2px; margin: 2px 2px 0 0; font-size: 140%;" class="las la-language" aria-hidden="true"></i>
 		</span>
 		<div id="mainmenu" class="row" style="opacity: 0; align: center;">
-			<div id="container-1" class="column columnfade" style="background-color: #ddd; overflow-y: auto;">
+			<div id="container-1" class="column columnfade" style=" overflow-y: auto;">
 				<h2>
 					<span data-translate="add-group-chat">Add Group Chat to OBS</span>
 				</h2>
@@ -148,8 +169,8 @@
 					<br />
 					<button onclick="toggle(document.getElementById('roomnotes'),this);">
 						<span data-translate="show-tips">Show me some tips..</span>
-					</button>
-					<ul style="padding: 10px; margin: auto auto; max-width: 500px; display: none; text-align: left;" id="roomnotes">
+					</button><br />
+					<ul style=" margin: auto auto; max-width: 500px; display: none; text-align: left;" id="roomnotes">
 						<br />
 						<span data-translate="added-notes">
 							<u>
@@ -169,27 +190,27 @@
 					</div>
 				</div>
 			</div>
-			<div id="container-3" class="column columnfade" onclick="previewWebcam()" style="background-color: #ddd; overflow-y: auto;">
+			<div id="container-3" class="column columnfade" onclick="previewWebcam()" style=" overflow-y: auto;">
 				<h2 id="add_camera">
 					<span data-translate="add-your-camera">Add your Camera to OBS</span>
 				</h2>
 				<div class="container-inner">
 					<br />
 					<p>
-						<video id="previewWebcam" oncanplay="updateStats();" muted controls autoplay playsinline style="max-width: 640px; max-width: 83vw; max-height: 30vh;"></video>
+						<video id="previewWebcam" class="previewWebcam" oncanplay="updateStats();"  disablePictureInPicture controlsList="nodownload" muted autoplay playsinline ></video>
 					</p>
 					<div id="infof"></div>
 					<button onclick="publishWebcam()" id="gowebcam" class="gowebcam" disabled>
 						<span data-translate="waiting-for-camera">Waiting for Camera to Load</span>
 					</button>
 					<br />
-					<span class="videoMenu">
+					<span id="videoMenu" class="videoMenu">
 						<i class="las la-video"></i><span data-translate="video-source"> Video Source </span>
                         
 						<select id="videoSource" ></select>
 						<span id="gear_webcam" style="display: inline-block;" onclick="toggle(document.getElementById('videoSettings'));">
                             &nbsp;&nbsp;
-							<i class="las la-cog" style="font-size: 170%; vertical-align: middle;" aria-hidden="true"></i>
+							<i class="las la-cog" style="font-size: 140%; vertical-align: middle;" aria-hidden="true"></i>
 						</span>
 					</span>
 					<br />
@@ -213,17 +234,16 @@
 								<div id="webcamstats" style="padding: 5px 0 0 0;"></div>
 							</form>
 						</span>
-						<br />
 					</center>
-					<div class="form-group multiselect">
-						<a class="form-control multiselect-trigger" tabindex="3">
+					<div id="audioMenu" class="form-group multiselect" alt="tip: Hold CTRL (command) to select Multiple" title="tip: Hold CTRL (command) to select Multiple">
+						<a id="multiselect-trigger" class="form-control multiselect-trigger" tabindex="3">
 							<div id="audioTitle"  class="title">
 								<i class="las la-microphone-alt"></i><span data-translate="select-audio-source"> Audio Source(s) </span>
-								<i class="chevron bottom" aria-hidden="true"></i>
+								<i id='chevarrow1' class="chevron bottom" aria-hidden="true"></i>
 								<div class="meter" id="meter1"></div>
 							</div>
 						</a>
-						<ul id="audioSource" class="multiselect-contents">
+						<ul id="audioSource" class="multiselect-contents" >
 							<li>
 								<input type="checkbox" id="multiselect1" name="multiselect1" style="display: none;" checked value="ZZZ" />
 								<label for="multiselect1">
@@ -236,7 +256,7 @@
 					<span id="headphonesDiv" style="text-align:left; margin:17px 0; max-width: 550px; min-width: 420px; background-color: #f3f3f3; display: none; padding: 10px 10px; border: 1px solid #ccc; vertical-align: middle;">
 						<div id="audioTitle2"  class="title">
 						<i class="las la-headphones"></i><span data-translate="select-output-source"> Audio Output Destination:</span></div>
-						<select id="outputSource" style="background-color: #FFF; padding:5px; display: display:inline-block;vertical-align: middle;"></select>
+						<select id="outputSource" ></select>
 						
 					</span>
 					
@@ -250,7 +270,7 @@
 				</div>
 			</div>
 			
-			<div id="container-2" class="column columnfade" style="background-color: #ddd; overflow-y: auto;">
+			<div id="container-2" class="column columnfade" style=" overflow-y: auto;">
 				<h2 id="add_screen">
 					<span data-translate="remote-screenshare-obs">Remote Screenshare into OBS</span>
 				</h2>
@@ -290,10 +310,10 @@
 						</span>
 						<br />
 					</center>
-					<p>
+					<p id="audioScreenShare1">
 						<span data-translate="audio-sources">Audio Sources</span>
 						<br />
-						<select id="audioSourceScreenshare" multiple style="height: 60px; width: 200px; resize: both; overflow: auto; padding: 5px;" onchange="requestAudioStream();">
+						<select id="audioSourceScreenshare" multiple  alt="tip: Hold CTRL (command) to select Multiple" title="tip: Hold CTRL (command) to select Multiple"  style="height: 60px; width: 200px; resize: both; overflow: auto; padding: 5px;" onchange="requestAudioStream();">
 							<option value="screenshare" selected>
 								<span data-translate="screen-shrae-audio">Screen Share Audio (default)</span>
 							</option>
@@ -320,7 +340,7 @@
 					</div>
 				</div>
 			</div>
-			<div id="container-4" class="column columnfade" style="background-color: #ddd; overflow-y: auto;">
+			<div id="container-4" class="column columnfade" style=" overflow-y: auto;">
 				<h2>
 					<span data-translate="create-reusable-invite">Create Reusable Invite</span>
 				</h2>
@@ -450,13 +470,13 @@
                             
 							</li>
 							<li>Some users will have 
-								<a href="https://github.com/steveseguin/obsninja/wiki/FAQ#video-is-pixelated">"pixelation" problems</a> with videos. Adding 
-								<b>&codec=vp9</b> to the OBS links will often correct it.
+								<a href="https://github.com/steveseguin/obsninja/wiki/FAQ#video-is-pixelated">"pixel smearing"</a> problems with videos. Avoid Wi-Fi to reduce it or add 
+								<b>&codec=vp9</b> to the OBS view links to prevent it.
 							</li>
 							<br />
 
-                            Site last updated: July 20th, 2020. The previous version can be found at 
-							<a href="https://obs.ninja/v8/">https://obs.ninja/v8/</a> if you are having new issues.
+                            Site last updated: <a href="https://www.reddit.com/r/OBSNinja/comments/ib7vhk/version_10_released_text_chat_and_more_added_see/">August 17th, 2020</a>. The previous version can be found at 
+							<a href="https://obs.ninja/v9/">https://obs.ninja/v9/</a> if you are having new issues.
 
                             
 							<br />
@@ -464,9 +484,8 @@
 							<h3>
 								<i>
                                     Check out the 
-									<a href="https://www.reddit.com/r/OBSNinja/">sub-reddit</a>
-									<i class="lab la-reddit-alien"></i> for help and advanced info. I'm also on
-                                    
+									<a href="https://www.reddit.com/r/OBSNinja/">sub-reddit
+									<i class="lab la-reddit-alien"></i> </a>for help and see the <a href="https://github.com/steveseguin/obsninja/wiki/">Wiki for advanced info</a>. I'm also on
 									<a href="https://discord.gg/EksyhGA">Discord</a> and you can email me at steve@seguin.email
                                 
 								</i>
@@ -489,9 +508,6 @@
 				<a href="https://www.flaticon.com/" title="Flaticon">www.flaticon.com</a>
 			</div>
 		</div>
-		
-		
-		
 		<div id="gridlayout"></div>
 		<div id="controls_blank" style="display: none;">
 			<center>
@@ -500,13 +516,13 @@
 					<span data-translate="remote-control-for-obs">Remote Control for OBS</span>
 				</b>
 				<br />
-				<button data-value="0" style="font-size: 112%;" onclick="directEnable(this);">
+				<button data-value="0" style="font-size: 112%;" onclick="directEnable(this, event);">
 					<span data-translate="add-to-group">Add to Group Scene</span>
 				</button>
-				<button style="font-size: 112%;" onclick="directMute(this);">
+				<button style="font-size: 112%;" onclick="directMute(this, event);">
 					<span data-translate="mute">Mute</span>
 				</button>
-				<button style="font-size: 112%;" onclick="recordVideo(this)">
+				<button style="font-size: 112%;" onclick="recordVideo(this, event)">
 					<span data-translate="record">Record</span>
 				</button>
 				<br />
@@ -516,6 +532,40 @@
 				<br />
 				<hr />
 			</center>
+		</div>
+		<div id="popupSelector" style="display:none;">
+				<span id="videoMenu3" class="videoMenu">
+					<i class="las la-video"></i><span data-translate="video-source"> Video Source </span>
+					
+					<select id="videoSource3" ></select>
+					
+				</span>
+				<br />
+				<br />
+				
+				<div id="audioMenu3" class="form-group multiselect" alt="tip: Hold CTRL (command) to select Multiple" title="tip: Hold CTRL (command) to select Multiple" style="padding: 10px; background-color:#f3f3f3;">
+					<a id="multiselect-trigger3" class="form-control multiselect-trigger" tabindex="3">
+						<div id="audioTitle2" class="title">
+							<i class="las la-microphone-alt"></i><span data-translate="select-audio-source"> Audio Source(s) </span>
+							<i id="chevarrow2" class="chevron bottom" aria-hidden="true"></i>
+						</div>
+					</a>
+					<ul id="audioSource3" style="background-color:white;"  class="multiselect-contents">
+						<li>
+						</li>
+					</ul>
+				</div>
+				<br />
+				<span id="headphonesDiv3" style="display: inline-block;">
+					<div id="audioTitle3"  class="title">
+						<i class="las la-headphones"></i><span data-translate="select-output-source"> Audio Output Destination:</span>
+					</div>
+					<select id="outputSource3" ></select>
+				</span>
+				<br />
+				<button id="shareScreenGear" style="padding:20px;" onclick="grabScreen()"><b>Share Screen</b><br /><i style="padding:5px; font-size:300%;" class="las la-desktop"></i></button><br />
+				<button onclick="toggleSettings()" style="background-color:#EFEFEF;padding:10px 12px 12px 2px;"><i class="chevron right" style="font-size:150%;top:3px;position:relative;"></i> <b>Close Settings</b></button>
+			</p>
 		</div>
 		<nav id="context-menu" class="context-menu">
 			<ul class="context-menu__items">
@@ -533,6 +583,21 @@
 				</li>
 			</ul>
 		</nav>
+		
+		<div id="chatModule" style="display:none;">
+			<div id="chatBody"> 
+				<div class="inMessage">
+					Welcome to OBS.Ninja! You can send text messages directly to connected peers from here.
+				</div>
+				<div class="outMessage">
+					Names identifying connected peers will be a feature in an upcoming release.
+				</div>
+			</div>
+			<input id="chatInput" placeholder="Enter chat message to send here"onkeypress="EnterButtonChat(event)" />
+			<button style="width:60px;background-color:#EEE;" onclick="sendChatMessage()">Send</button>
+		</div>
+		
+		
 		<div id="messagePopup" class="popup-message"></div>
 		<div id="languages" class="popup-message" style="display: none; right: 0; bottom: 25px; position: absolute;">
 			<b>Available Languages:</b>
@@ -560,6 +625,7 @@
 			<br />
 		</div>
 		<script>
+		
             var session = WebRTC.Media; // session is a required global variable if configuring manually. Run before loading main.js but after webrtc.js.
 
             session.streamID = session.generateStreamID(); // randomly generates a streamID for this session. You can set your own programmatically if needed
@@ -618,7 +684,7 @@
 		// If you wish to change branding, blank offers a good clean start.
 		<script type="text/javascript" id="main-js" src="./main.js" data-translation="blank"></script>
 	-->
-		<script type="text/javascript" id="main-js" src="./main.js?ver=11"></script>
-		<script type="text/javascript" src="./animations.js?ver=1"></script>
+		<script type="text/javascript" id="main-js" src="./main.js?ver=33"></script>
+		<script type="text/javascript" src="./animations.js?ver=8"></script>
 	</body>
 </html>
