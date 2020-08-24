@@ -202,6 +202,10 @@ hr {
 	animation: pulse 2s infinite;
 }
 
+.mirror {
+	transform: scaleX(-1);
+}
+
 .notification {
 	position: relative;
     top: -40px;

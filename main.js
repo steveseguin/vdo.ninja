@@ -838,27 +838,52 @@ if (urlParams.has('buffer')){
 	log("buffer Changed: "+session.buffer);
 }
 
-if ((urlParams.has('mirror')) && (urlParams.has('flip'))){
+
+if (urlParams.has('mirror')){
+	if (urlParams.get('mirror')=="3"){
+		getById("main").classList.add("mirror");
+	} else if (urlParams.get('mirror')=="2"){
+		session.mirrored = 2;
+	} else if (urlParams.get('mirror')=="0"){
+		session.mirrored = 0;
+	} else if (urlParams.get('mirror')=="false"){
+		session.mirrored = 0;
+	} else if (urlParams.get('mirror')=="off"){
+		session.mirrored = 0;
+	} else {
+		session.mirrored = 1;
+	}
+}
+
+if (urlParams.has('flip')){
+	if (urlParams.get('flip')=="0"){
+		session.flipped = false;
+	} else if (urlParams.get('flip')=="false"){
+		session.flipped = false;
+	} else if (urlParams.get('flip')=="off"){
+		session.flipped = false;
+	} else {
+		session.flipped = true;
+	}
+}
+
+if ((session.mirrored) && (session.flipped)){
 	try {
 		log("Mirror all videos");
 		var mirrorStyle = document.createElement('style');
 		mirrorStyle.innerHTML = "video {transform: scaleX(-1) scaleY(-1); }";
 		document.getElementsByTagName("head")[0].appendChild(mirrorStyle);
-		session.mirrored=true;
-		session.flipped=true;
 	} catch (e){errorlog(e);}
-} else if (urlParams.has('mirror')){  // mirror the video horizontally
+} else if (session.mirrored){  // mirror the video horizontally
 	try {
 		log("Mirror all videos");
 		var mirrorStyle = document.createElement('style');
 		mirrorStyle.innerHTML = "video {transform: scaleX(-1);}"; 
 		document.getElementsByTagName("head")[0].appendChild(mirrorStyle);
-		session.mirrored=true;
 	} catch (e){errorlog(e);}
-} else if (urlParams.has('flip')){  // mirror the video vertically
+} else if (session.flipped){  // mirror the video vertically
 	try {
 		log("Mirror all videos");
-		session.flipped=true;
 		var mirrorStyle = document.createElement('style');
 		mirrorStyle.innerHTML = "video {transform: scaleY(-1);}";
 		document.getElementsByTagName("head")[0].appendChild(mirrorStyle);
@@ -1119,7 +1144,7 @@ if ( (session.roomid) || (urlParams.has('roomid')) || (urlParams.has('r')) || (u
 	}
 	getById("head3").className = 'advanced';
 	if (urlParams.has('scene')){
-		session.scene = urlParams.get('scene');
+		session.scene = parseInt(urlParams.get('scene')) || 0;
 		getById("container-4").className = 'column columnfade';
 		getById("container-3").className = 'column columnfade';
 		getById("container-2").className = 'column columnfade';
@@ -2530,7 +2555,7 @@ async function getAudioOnly(selector, trackid=null){
 	return streams;
 }
 
-function applyMirror(mirror, eleName='previewWebcam'){
+function applyMirror(mirror, eleName='previewWebcam'){  // true unmirrors as its already mirrored
 	
 	var transFlip = "";
 	var transNorm = "";
@@ -2539,7 +2564,13 @@ function applyMirror(mirror, eleName='previewWebcam'){
 		 transNorm = " translate(0, -50%)";
 	}
 	
-	if (mirror){
+	if (session.mirrored==2){
+		mirror=true;
+	} else if (session.mirrored==0){
+		mirror=true;
+	}
+	
+	if (mirror){ 
 		if (session.mirrored && session.flipped){
 			 getById(eleName).style.transform = " scaleX(-1) scaleY(-1)"+transFlip;
 			 getById(eleName).classList.add("mirrorControl");
@@ -3299,10 +3330,10 @@ function previewWebcam(){
 	activatedPreview = true;
 	
 
-	if (session.mirrored && session.flipped){
+	if (session.mirrored==1 && session.flipped){
 		 getById('previewWebcam').style.transform = " scaleX(1) scaleY(-1)";
 		 getById('previewWebcam').classList.remove("mirrorControl");
-	} else if (session.mirrored){
+	} else if (session.mirrored==1){
 		 getById('previewWebcam').style.transform = "scaleX(1)";
 		 getById('previewWebcam').classList.remove("mirrorControl");
 	} else if (session.flipped){
