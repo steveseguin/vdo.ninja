@@ -11,10 +11,10 @@ iframe {
 	padding:0;
 	display:block;
 	margin:0px;
-	min-height: 420px;
-    min-width: 350px;
-    max-height: 720px;
-    max-width: 1280px;
+	min-height: 100px;
+    min-width: 100px;
+    max-height: 95%;
+    max-width: 99%%;
     float: left;
     position: fixed;
 }
@@ -53,15 +53,15 @@ button{
 }
 
 .popup {
-  z-index: 9;
-  background-color: #f1f1f1;
-  border: 1px solid #d3d3d3;
-  text-align: center;
-	min-height: 420px;
-    min-width: 350px;
-    max-height: 720px;
-    max-width: 1280px;
-  scale: 0.5;
+	z-index: 9;
+	background-color: #f1f1f1;
+	border: 1px solid #d3d3d3;
+	text-align: center;
+	min-height: 100px;
+	min-width: 100px;
+	max-height: 95%;
+    max-width: 99%;
+	scale: 0.5;
 }
 
 .popup {
@@ -132,7 +132,7 @@ button{
 <div id="container"></div>
 
 <script>
-
+var currentZIndex = 100;
 function initDragElement(popup){
 
 	var pos1 = 0,
@@ -141,7 +141,6 @@ function initDragElement(popup){
 		pos4 = 0;
 
 	var elmnt = null;
-	var currentZIndex = 100; //TODO reset z index when a threshold is passed
 
 	var header = getHeader(popup);
 	var iframe = getIFrame(popup);
@@ -291,6 +290,9 @@ function loadIframe(){
 
 	var iframeContainer = document.createElement("div");
 	iframeContainer.className="popup";
+	iframeContainer.style.zIndex = "" + ++currentZIndex;
+	iframeContainer.style.width="325px";
+	iframeContainer.style.height="420px";
 	
 	var button = document.createElement("button");
 	button.innerHTML = "Move";
@@ -312,6 +314,9 @@ function loadIframe(){
 	var iframe = document.createElement("iframe");
 	iframe.allow="autoplay";
 	iframe.src = document.getElementById("viewlink").value || "https://obs.ninja";
+	iframe.style.width="325px";
+	iframe.style.height="420px";
+	
 	iframeContainer.appendChild(iframe);
 	
 	document.getElementById("container").appendChild(iframeContainer);

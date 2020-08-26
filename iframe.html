@@ -42,7 +42,7 @@ function loadIframe(){
 	iframe.allowtransparency="true"
 
 	if (iframesrc==""){
-		iframesrc="https://obs.ninja/";
+		iframesrc="./";
 	}
 
 	if (document.getElementById("clean").checked){
@@ -179,7 +179,18 @@ function loadIframe(){
 			
 			if ("stats" in e.data){
 				var outputWindow = document.createElement("outputWindow");
-				outputWindow.innerHTML = e.data.stats;
+				console.log(e.data.stats);
+				
+				
+				var out = "<br />total_inbound_connections:"+e.data.stats.total_inbound_connections;
+				out += "<br />total_outbound_connections:"+e.data.stats.total_outbound_connections;
+				
+				for (var streamID in e.data.stats.inbound_stats){
+					out += "<br /><br /><b>streamID:</b> "+streamID+"<br />";
+					out += printValues(e.data.stats.inbound_stats[streamID]);
+				}
+				
+				outputWindow.innerHTML = out;
 				iframeContainer.appendChild(outputWindow);
 			}
 			
@@ -193,6 +204,21 @@ function loadIframe(){
 		
 }
 
+
+function printValues( obj) {
+	var out = "";
+	for (var key in obj) {
+		if (typeof obj[key] === "object") {
+			out +="<br />";
+			out += printValues(obj[key]);   
+		} else {
+			out +="<b>"+key+"</b>: "+obj[key]+"<br />";
+		}
+	}
+	return out;
+}
+		
+		
 </script>
 </head>
 <body>

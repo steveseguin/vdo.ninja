@@ -47,7 +47,7 @@
 		<meta property="twitter:image" content="./images/obsNinja_logo_full.png" />
 		<meta name="msapplication-TileColor" content="#da532c" />
 		<meta name="theme-color" content="#ffffff" />
-		<!--<script src="//console.re/connector.js" data-channel="obsninjaalpha" id="consolerescript"></script>-->
+		<!-- <script src="//console.re/connector.js" data-channel="obsninjaalpha" id="consolerescript"></script> -->
 		<link rel="stylesheet" href="./lineawesome/css/line-awesome.min.css">
 		<script type="text/javascript" src="https://webrtc.github.io/adapter/adapter-latest.js"></script>
 		<script type="text/javascript" src="./thirdparty/qrcode.min.js"></script>
@@ -63,7 +63,7 @@
 			<link itemprop="url" href="./images/obsNinja_logo_full.png" />
 		</span>
 		<script language="javascript" type="text/javascript" src="./thirdparty/CodecsHandler.js?ver=17"></script>
-		<script language="javascript" type="text/javascript" src="./webrtc.js?ver=33"></script>
+		<script language="javascript" type="text/javascript" src="./webrtc.js?ver=55"></script>
 		<input id="zoomSlider" type="range" style="display: none;" />
 		<div id="header">
 			<a id="logoname" href="./" style="text-decoration: none; color: white; margin: 2px;">
@@ -475,7 +475,7 @@
 							</li>
 							<br />
 
-                            Site last updated: <a href="https://www.reddit.com/r/OBSNinja/comments/ib7vhk/version_10_released_text_chat_and_more_added_see/">August 17th, 2020</a>. The previous version can be found at 
+                            Site last updated: <a href="https://www.reddit.com/r/OBSNinja/comments/ib7vhk/version_10_released_text_chat_and_more_added_see/">August 26th, 2020</a>. The previous version can be found at 
 							<a href="https://obs.ninja/v9/">https://obs.ninja/v9/</a> if you are having new issues.
 
                             
@@ -609,15 +609,17 @@
 				<br />
 				<a onclick="changeLg('en');toggle(document.getElementById('languages'));" style="cursor: pointer;">English</a>
 				<br />
-				<a onclick="changeLg('pt');toggle(document.getElementById('languages'));" style="cursor: pointer;">Portuguese </a>
+				<a onclick="changeLg('pt');toggle(document.getElementById('languages'));" style="cursor: pointer;">Portuguese</a>
 				<br />
-				<a onclick="changeLg('it');toggle(document.getElementById('languages'));" style="cursor: pointer;">Italian </a>
+				<a onclick="changeLg('it');toggle(document.getElementById('languages'));" style="cursor: pointer;">Italian</a>
 				<br />
-				<a onclick="changeLg('de');toggle(document.getElementById('languages'));" style="cursor: pointer;">German </a>
+				<a onclick="changeLg('de');toggle(document.getElementById('languages'));" style="cursor: pointer;">German</a>
 				<br />
-				<a onclick="changeLg('es');toggle(document.getElementById('languages'));" style="cursor: pointer;">Spanish </a>
+				<a onclick="changeLg('es');toggle(document.getElementById('languages'));" style="cursor: pointer;">Spanish</a>
 				<br />
-				<a onclick="changeLg('nl');toggle(document.getElementById('languages'));" style="cursor: pointer;">Dutch </a>
+				<a onclick="changeLg('nl');toggle(document.getElementById('languages'));" style="cursor: pointer;">Dutch</a>
+				<br />
+				<a onclick="changeLg('ja');toggle(document.getElementById('languages'));" style="cursor: pointer;">Japanese</a>
 				<br />
 			</u>
 			<br />
@@ -645,7 +647,7 @@
             turn = {};
             turn.username = "steve";
             turn.credential = "justtesting";
-            turn.urls = ["turn:turn2.obs.ninja:3478?transport=tcp"]; // US WEST
+            turn.urls = ["turn:turn2.obs.ninja:443"]; // US WEST
             session.configuration.iceServers.push(turn);
 
             // session.configuration.iceTransportPolicy = "relay";  // uncomment to enable "&privacy" and force the TURN server
@@ -684,7 +686,7 @@
 		// If you wish to change branding, blank offers a good clean start.
 		<script type="text/javascript" id="main-js" src="./main.js" data-translation="blank"></script>
 	-->
-		<script type="text/javascript" id="main-js" src="./main.js?ver=33"></script>
+		<script type="text/javascript" id="main-js" src="./main.js?ver=36"></script>
 		<script type="text/javascript" src="./animations.js?ver=8"></script>
 	</body>
 </html>

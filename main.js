@@ -271,10 +271,6 @@ if (urlParams.has('mute') || urlParams.has('muted')){
 	session.muted = true;
 }
 
-if (urlParams.has('mute') || urlParams.has('muted')){
-	session.muted = true;
-} 
-
 if (session.screenshare==true){
 	getById("container-3").className = 'column columnfade advanced'; // Hide screen share on mobile
 }
@@ -398,6 +394,16 @@ if (urlParams.has("denoise") || urlParams.has("dn")){
 		session.noiseSuppression = false;
 	} else {
 		session.noiseSuppression = true;
+	}
+}
+
+
+if (urlParams.has('roombitrate') || urlParams.has('rbr')){ 
+	log("Room BITRATE SET");
+	session.roombitrate = urlParams.get('roombitrate') || urlParams.get('rbr');
+	session.roombitrate = parseInt(session.roombitrate);
+	if (session.roombitrate<1){
+		session.roombitrate=0;
 	}
 }
 
@@ -576,6 +582,20 @@ if (urlParams.has('nocursor')){
 	document.head.appendChild(style);
 }
 
+
+if (urlParams.has('vbr')){
+	session.cbr = 0;
+}
+
+if (urlParams.has('minptime')){
+	session.minptime =  parseInt(urlParams.get('minptime')) || 10;
+	if (session.minptime<10){session.minptime=10;}
+}
+
+if (urlParams.has('maxptime')){
+	session.maxptime = parseInt(urlParams.get('maxptime')) || 30;
+	if (session.maxptime<session.minptime){session.maxptime=session.minptime;}
+}
 
 
 if (urlParams.has('codec')){
@@ -1011,11 +1031,15 @@ window.onmessage = function(e){ // iFRAME support
     } 
 		
 	if ("getStats" in e.data){
-		var out = "";
+		
+		var stats = {};
+		stats.total_outbound_connections = Object.keys(session.pcs).length;
+		stats.total_inbound_connections = Object.keys(session.rpcs).length;
+		stats.inbound_stats = {};
 		for (var i in session.rpcs){
-			out += printValues(session.rpcs[i].stats);
+			stats.inbound_stats[session.rpcs[i].streamID] = session.rpcs[i].stats;
 		}
-		parent.postMessage({"stats": out }, "*");
+		parent.postMessage({"stats": stats }, "*");
     }
 	
 	if ("close" in e.data){
@@ -1447,7 +1471,6 @@ function publishScreen(){
 			noiseSuppression: false
 		}, 
 		video: {width: width, height: height, mediaSource: "screen"}
-		//,cursor: {exact: "none"}
 	};
 	
 	if (session.noiseSuppression == true){
@@ -1460,14 +1483,15 @@ function publishScreen(){
 		constraints.audio.echoCancellation = true; // the defaults for screen publishing should be off.
 	}
 	
-	//if (session.nocursor){
-	//	constraints.video.cursor = ["motion", "always"];
-	//} 
+	if (session.nocursor){
+		constraints.video.cursor = { exact: "none" };  // Not sure this does anything, but whatever.
+	} 
 	
-
-	if (session.framerate){
+	if (session.framerate!==false){
 		constraints.video.frameRate = session.framerate;
-	}	
+	} else {
+		constraints.video.frameRate = {ideal: 60};
+	}
 	
 	var audioSelect = document.querySelector('select#audioSourceScreenshare');
 	var outputSelect = document.querySelector('select#outputSourceScreenshare');
@@ -2744,7 +2768,7 @@ var grabVideoTimer = null;
 async function grabVideo(quality=0, eleName='previewWebcam', selector="select#videoSource"){
 	if( activatedPreview == true){log("activated preview return 2");return;}
 	activatedPreview = true;
-	log("Grabbing video");
+	log("Grabbing video: "+quality);
 	if (grabVideoTimer){
 		clearTimeout(grabVideoTimer);
 	}
@@ -3238,7 +3262,7 @@ function setupWebcamSelection(stream=null){
 				warnlog("video source changed");
 				
 				activatedPreview=false;
-				if (session.quality){
+				if (session.quality!==false){
 					grabVideo(session.quality);
 				} else {
 					session.quality_wb = parseInt(getById("webcamquality").elements.namedItem("resolution").value);
@@ -3293,9 +3317,9 @@ function setupWebcamSelection(stream=null){
 					return;
 				}
 			} else {
-				log("GRabbing video");
+				log("GRabbing video: "+session.quality);
 				activatedPreview = false;
-				if (session.quality){
+				if (session.quality!==false){
 					grabVideo(session.quality);
 				} else {
 					session.quality_wb = parseInt(getById("webcamquality").elements.namedItem("resolution").value);
