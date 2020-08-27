@@ -442,6 +442,12 @@ if (urlParams.has('icefilter')){
     session.icefilter =  urlParams.get('icefilter');
 }
 
+
+if (urlParams.has('nopreview')){
+	log("preview OFF");
+    session.nopreview = true;
+}
+
 if (urlParams.has('obsfix')){
 	session.obsfix = urlParams.get('obsfix');
 	if (session.obsfix){
@@ -536,7 +542,7 @@ if (urlParams.has("autojoin") || urlParams.has("autostart") || urlParams.has("aj
 
 if (urlParams.has('novideo') || urlParams.has('nv') || urlParams.has('hidevideo')){
 	
-	session.novideo = urlParams.get('novideo') || urlParams.get('nv') || urlParams.has('hidevideo');
+	session.novideo = urlParams.get('novideo') || urlParams.get('nv') || urlParams.get('hidevideo');
 	
 	if (!(session.novideo)){
 		session.novideo=[];
@@ -549,7 +555,7 @@ if (urlParams.has('novideo') || urlParams.has('nv') || urlParams.has('hidevideo'
 
 if (urlParams.has('noaudio') || urlParams.has('na') || urlParams.has('hideaudio')){
 	
-	session.noaudio = urlParams.get('noaudio') || urlParams.get('na') || urlParams.has('hideaudio');
+	session.noaudio = urlParams.get('noaudio') || urlParams.get('na') || urlParams.get('hideaudio');
 	errorlog(session.noaudio);
 	
 	if (!(session.noaudio)){
@@ -1362,13 +1368,13 @@ function directEnable(ele, event){ // A directing room only is controlled by the
 		if (ele.parentNode.parentNode.dataset.enable==1){
 			ele.parentNode.parentNode.dataset.enable = 0;
 			ele.className = "";
-			ele.innerHTML = "Add to Group Scene";
+			ele.innerHTML = "➕ Add to Group Scene";
 			ele.parentNode.parentNode.style.backgroundColor = "#E3E4FF";
 		} else {
 			ele.parentNode.parentNode.style.backgroundColor = "#AFA";
 			ele.parentNode.parentNode.dataset.enable = 1;
 			ele.className = "pressed";
-			ele.innerHTML = "Remove from Group Scene";
+			ele.innerHTML = "➖ Remove from Scene";
 		}
 	}
 	var msg = {};
@@ -1388,11 +1394,11 @@ function directMute(ele, event){ // A directing room only is controlled by the D
 		if (ele.parentNode.parentNode.dataset.mute==0){
 			ele.parentNode.parentNode.dataset.mute = 1;
 			ele.className = "";
-			ele.innerHTML = "Mute";
+			ele.innerHTML = "🔇 Mute in all Scenes";
         } else {
 			ele.parentNode.parentNode.dataset.mute = 0;
 			ele.className = "pressed";
-			ele.innerHTML = "Unmute";
+			ele.innerHTML = "🔊 un-Mute all Scenes";
         }
 	}
 	var msg = {};
@@ -1767,22 +1773,25 @@ function createRoom(roomname=false){
 		passAdd2="&password="+session.password;
 	}
 	
-	gridlayout.innerHTML = "<br /><div style='display:inline-block'><font style='font-size:130%;color:white;'></font><input  onclick='popupMessage(event);copyFunction(this)' onmousedown='copyFunction(this)' style='cursor:grab;font-weight:bold;background-color:#78F; width:400px; font-size:100%; padding:10px; border:2px solid black; margin:5px;'  class='task' value='https://"+location.host+location.pathname+"?room="+session.roomid+passAdd+"' /><font style='font-size:110%;color:white;'><i class='las la-video' style='position:relative;top:7px;font-size:2em;'  aria-hidden='true'></i> - Invites users to join the group and broadcast their feed to it. These users will see every feed, so performance problems may arise for some guests if too many people join a room.</font></div>";
+	gridlayout.innerHTML = "<br /><div style='display:inline-block'><font style='font-size:130%;color:white;'></font><input  onclick='popupMessage(event);copyFunction(this)' onmousedown='copyFunction(this)' style='cursor:grab;font-weight:bold;background-color:#78F; width:400px; font-size:100%; padding:10px; border:2px solid black; margin:5px;'  class='task' value='https://"+location.host+location.pathname+"?room="+session.roomid+passAdd+"' /><font style='font-size:110%;color:white;'><i class='las la-video' style='position:relative;top:7px;font-size:2em;'  aria-hidden='true'></i> - Invites users to join the group and broadcast their feed to it. These users will see every feed in the room.</font></div>";
 	
 	gridlayout.innerHTML += "<br /><font style='font-size:130%;color:white;'></font><input class='task' onclick='popupMessage(event);copyFunction(this)' onmousedown='copyFunction(this)' style='cursor:grab;font-weight:bold;background-color:#F45;width:400px;font-size:100%;padding:10px;border:2px solid black;margin:5px;' value='https://"+location.host+location.pathname+"?room="+session.roomid+passAdd+"&view' /><font style='font-size:110%;color:white;'><i class='las la-video' style='position:relative;top:7px;font-size:2em;'  aria-hidden='true'></i> - Link to Invite users to broadcast their feeds to the group. These users will not see or hear any feed from the group.</font><br />";
 	
 	
-	gridlayout.innerHTML += "<font style='font-size:130%;color:white'></font><input class='task' onmousedown='copyFunction(this)' data-drag='1' onclick='popupMessage(event);copyFunction(this)' style='cursor:grab;font-weight:bold;background-color:#5F4;width:400px;font-size:100%;padding:10px;border:2px solid black;margin:5px;' value='https://"+location.host+location.pathname+"?scene=1&room="+session.roomid+passAdd2+"' /><font style='font-size:110%;color:white'><i class='las la-th-large' style='position:relative;top:7px;font-size:2em;' aria-hidden='true'></i> - This is an OBS Browser Source link that contains the group chat in just a single scene. Videos must be added to Group Scene.</font><br />";
+	gridlayout.innerHTML += "<font style='font-size:130%;color:white'></font><input class='task' onmousedown='copyFunction(this)' data-drag='1' onclick='popupMessage(event);copyFunction(this)' style='cursor:grab;font-weight:bold;background-color:#5F4;width:400px;font-size:100%;padding:10px;border:2px solid black;margin:5px;' value='https://"+location.host+location.pathname+"?scene=1&room="+session.roomid+passAdd2+"' /><font style='font-size:110%;color:white'><i class='las la-th-large' style='position:relative;top:7px;font-size:2em;' aria-hidden='true'></i> - This is an OBS Browser Source link that contains the group chat in just a single scene. Videos must be manually added to this scene.</font><br />";
 	
-	gridlayout.innerHTML += '<button style="margin:10px;" onclick="toggle(getById(\'roomnotes2\'),this);">Click Here for a quick overview and help</button><br />';
+	gridlayout.innerHTML += '<button style="margin:10px;" onclick="toggle(getById(\'roomnotes2\'),this);">❔ Click Here for a quick overview and help</button><br />';
 	
 	gridlayout.innerHTML += "<div id='roomnotes2' style='display:none;padding:0 0 0 10px;' ><br />\
 	<font style='color:#CCC;'>Welcome. This is the control-room for the group-chat. There are different things you can use this room for:<br /><br />\
-	<li>You can host a small-group chat here. Share the blue link to invite guests who will join the chat automatically.</li>\
-	<li>You can use it to invite and manage up to ~20 remote camera streams. Use the red-colored add camera link to bring in such streams.</li>\
-	<li>You can add and remote control individual streams loaded into OBS. The required solo-links to add to OBS will appear under videos as they load.</li>\
+	<li>You can host a group chat with friends using a room. Share the blue link to invite guests who will join the chat automatically.</li>\
+	<li>A group room can handle around 4 to 30 guests, depending on numerous factors, including CPU and available bandwidth of all guests in the room.</li>\
+	<li>Solo-views of each video are offered under videos as they load. These can be used within an OBS Browser Source.</li>\
 	<li>You can use the auto-mixing Group Scene, the green link, to auto arrange multiple videos for you in OBS.</li>\
-	<li>You can use it to record video streams independently</li>\
+	<li>You can use this control room to record isolated video or audio streams, but it is an experimental feature still.</li>\
+	<li>Videos in the Director's room will be of low quality on purpose; to save bandwidth/CPU</li>\
+	<li>Guest's in the room will see each other's videos at a very limited quality to conserve bandwidth/CPU.</li>\
+	<li>OBS will see a guest's video in high-quality; the default video bitrate is 2500kbps.</li>\
 	<br />\
 	As guests join, their videos will appear below. You can bring their video streams into OBS as solo-scenes or you can add them to the Group Scene.\
 	<br />The Group Scene auto-mixes videos that have been added to the group scene. Please note that the Auto-Mixer requires guests be manually added to it for them to appear in it; they are not added automatically.<br /><Br />Apple mobile devices, such as iPhones and iPads, do not fully support Video Group Chat. This is a hardware constraint.<br /><br />\
@@ -2532,7 +2541,28 @@ function gotDevices2(deviceInfos){
 	}
 }
 
-
+function playtone(screen=false){
+	
+	if (screen){
+		var outputSelect = document.querySelector('select#outputSourceScreenshare');
+		session.sink = outputSelect.options[outputSelect.selectedIndex].value;
+	}
+	
+	var testtone= getById("testtone");
+	if (testtone){
+		if (session.sink){
+			testtone.setSinkId(session.sink).then(() => {
+				log("changing audio sink:"+session.sink);
+				testtone.play();
+			}).catch(error => {
+				errolog("couldn't set sink");
+				errorlog(error);
+			});
+		} else {
+			testtone.play();
+		}
+	}
+}
 
 async function getAudioOnly(selector, trackid=null){
 	var audioSelect = document.querySelector(selector).querySelectorAll("input"); 
@@ -2715,23 +2745,28 @@ async function grabScreen(quality=0, audio=true){
 			session.streamSrc = getById(eleName).srcObject;
 			
 				
-				
 			if (track.kind == "video"){
 				toggleVideoMute(true);
 				for (UUID in session.pcs){
 					try {
-						var senders = session.pcs[UUID].getSenders(); // for any connected peer, update the video they have if connected with a video already.
-						var added=false;
-						senders.forEach((sender) => { // I suppose there could be a race condition between negotiating and updating this. if joining at the same time as changnig streams?
-							if (sender.track){
-								if (sender.track.kind == "video"){ 
-									sender.replaceTrack(track);  // replace may not be supported by all browsers.  eek.
-									added=true;
-								} 
+						if (((iOS) || (iPad)) && (session.pcs[UUID].guest==true)){
+							warnlog("iOS and GUest detected");
+						} else if ((session.pcs[UUID].guest==true) && (session.roombitrate===0)) {
+							log("room rate restriction detected. No videos will be published to other guests");
+						} else  if (session.pcs[UUID].allowVideo==true){  // allow 
+							var senders = session.pcs[UUID].getSenders(); // for any connected peer, update the video they have if connected with a video already.
+							var added=false;
+							senders.forEach((sender) => { // I suppose there could be a race condition between negotiating and updating this. if joining at the same time as changnig streams?
+								if (sender.track){
+									if (sender.track.kind == "video"){ 
+										sender.replaceTrack(track);  // replace may not be supported by all browsers.  eek.
+										added=true;
+									} 
+								}
+							});
+							if (added==false){
+								session.pcs[UUID].addTrack(track, stream);
 							}
-						});
-						if (added==false){
-							session.pcs[UUID].addTrack(track, stream);
 						}
 					} catch (e){
 						errorlog(e);
@@ -2741,7 +2776,9 @@ async function grabScreen(quality=0, audio=true){
 				toggleMute(true);  // I might want to move this outside the loop, but whatever
 				for (UUID in session.pcs){
 					try {
-						session.pcs[UUID].addTrack(track, stream);
+						if (session.pcs[UUID].allowAudio==true){
+							session.pcs[UUID].addTrack(track, stream);
+						}
 					} catch (e){
 						errorlog(log);
 					}
@@ -2903,18 +2940,25 @@ async function grabVideo(quality=0, eleName='previewWebcam', selector="select#vi
 					toggleVideoMute(true);
 					for (UUID in session.pcs){
 						try {
-							var senders = session.pcs[UUID].getSenders(); // for any connected peer, update the video they have if connected with a video already.
-							var added=false;
-							senders.forEach((sender) => { // I suppose there could be a race condition between negotiating and updating this. if joining at the same time as changnig streams?
-								if (sender.track){
-									if (sender.track.kind == "video"){ 
-										sender.replaceTrack(track);  // replace may not be supported by all browsers.  eek.
-										added=true;
+							if (((iOS) || (iPad)) && (session.pcs[UUID].guest==true)){
+								warnlog("iOS and GUest detected");
+							} else if ((session.pcs[UUID].guest==true) && (session.roombitrate===0)) {
+								log("room rate restriction detected. No videos will be published to other guests");
+							} else  if (session.pcs[UUID].allowVideo==true){  // allow 
+						
+								var senders = session.pcs[UUID].getSenders(); // for any connected peer, update the video they have if connected with a video already.
+								var added=false;
+								senders.forEach((sender) => { // I suppose there could be a race condition between negotiating and updating this. if joining at the same time as changnig streams?
+									if (sender.track){
+										if (sender.track.kind == "video"){ 
+											sender.replaceTrack(track);  // replace may not be supported by all browsers.  eek.
+											added=true;
+										}
 									}
+								});
+								if (added==false){
+									session.pcs[UUID].addTrack(track, stream); // can't replace, so adding
 								}
-							});
-							if (added==false){
-								session.pcs[UUID].addTrack(track, stream); // can't replace, so adding
 							}
 							
 						} catch (e){
@@ -3062,8 +3106,10 @@ async function grabAudio(eleName="previewWebcam", selector="#audioSource", track
 				toggleMute(true);
 					
 				for (UUID in session.pcs){
-					session.pcs[UUID].addTrack(track, streams[i]);
-					//sender.replaceTrack(track);
+					if (session.pcs[UUID].allowAudio==true){  // allow 
+						session.pcs[UUID].addTrack(track, streams[i]);
+						//sender.replaceTrack(track);
+					}
 				}
 			});
 		}
