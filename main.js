@@ -3533,11 +3533,6 @@ function generateQRPage(){
 		if (getById("invite_hidescreen").checked){
 			sendstr+="&webcam";
 		}
-		
-		
-		
-		
-		
 		if (getById("invite_remotecontrol").checked){  //
 			var remote_gen_id = session.generateStreamID();
 			sendstr+="&remote="+remote_gen_id; // security
@@ -3577,6 +3572,26 @@ function generateQRPage(){
 			if (getById("invite_language").value!='en'){
 				sendstr+="&ln=" + getById("invite_language").value;
 			}
+		}
+
+		if (getById("invite_novideo").checked){
+			viewstr+="&novideo";
+		}
+
+		if (getById("invite_noaudio").checked){
+			viewstr+="&noaudio";
+		}
+
+		if (getById("invite_denoise").checked == false){
+			sendstr+="&denoise=0";
+		}
+
+		if (getById("invite_agc").checked == false){
+			sendstr+="&autogain=0";
+		}
+
+		if (getById("invite_aec").checked == false){
+			sendstr+="&aec=0";
 		}
 		
 		sendstr = 'https://' + location.host + location.pathname + '?push=' + sid + sendstr;

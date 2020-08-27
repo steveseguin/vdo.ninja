@@ -4,7 +4,7 @@
   "add-to-group": "Add to Group Scene",
   "add-your-camera": "Add your Camera",
   "added-notes": "\n\t\t\t\t<u><i>Added Notes:</i></u>\n\t\t\t\t<li>Anyone can enter a room if they know the name, so keep it unique</li>\n\t\t\t\t<li>Having more than four (4) people in a room is not advisable due to performance reasons, but it depends on your hardware.</li>\n\t\t\t\t<li>iOS devices will have their video only be visible to the director. This is a hardware limitation.</li>\n\t\t\t\t<li>The \"Recording\" option is new and is considered experimental.</li>\n\t\t\t\t<li>You must \"Add\" a video feed to the \"Group Scene\" for it to appear there.</li>\n\t\t\t\t<li>There is a new \"enhanced fullscreen\" button added to the Guest's view.</li>\n\t\t\t\t",
-  "advanced-paramaters": "Advanced Parameters",
+  "advanced-video-options": "Advanced Video Options",
   "audio-sources": "Audio Sources",
   "back": "Back",
   "balanced": "Balanced",
@@ -41,11 +41,16 @@
   "you-are-in-the-control-center": "You are in the room's control center",
   "waiting-for-camera": "Waiting for Camera to Load",
   "video-resolution": "Video Resolution: ",
-  "hide-screen-share": "Hide Screenshare Option",
+  "hide-screen-share": "Hide screenshare option",
+  "hide-camera-share": "Hide share your camera option",
   "allow-remote-control": "Remote Control Camera Zoom (android)",
   "add-the-guest-to-a-room": " Add the guest to a room:",
   "invite-group-chat-type": "This room guest can:",
   "can-see-and-hear": "Can see and hear the group chat",
   "can-hear-only": "Can only hear the group chat",
-  "cant-see-or-hear": "Cannot hear or see the group chat"
+  "cant-see-or-hear": "Cannot hear or see the group chat",
+  "other-options": "Other Options",
+  "auto-gain": "Auto gain",
+  "audio-denoise": "Audio denoise",
+  "echo-cancellation": "Echo cancellation"
 }

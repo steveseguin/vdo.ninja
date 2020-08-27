@@ -364,8 +364,14 @@
 					<div style="margin: 20px; max-width: 400px; text-align: left; margin: auto auto;">
 						<div class="invite_setting_group">
 							<h4>
-								<span data-translate="advanced-paramaters">Advanced Options</span>
+								<span data-translate="advanced-video-options">Advanced Video Options</span>
 							</h4>
+							<div class="invite_setting_item">
+								<input type="checkbox" id="invite_novideo" />
+								<label for="invite_novideo">
+									<span data-translate="disable-video">Disable video stream (viewer)</span>
+								</label>
+							</div>
 							<div class="invite_setting_item">
 								<input type="checkbox" id="invite_bitrate" />
 								<label for="invite_bitrate">
@@ -379,12 +385,6 @@
 								</label>
 							</div>
 							<div class="invite_setting_item">
-								<input type="checkbox" id="invite_stereo" />
-								<label for="invite_stereo">
-									<span data-translate="enable-stereo-and-pro">Enable Stereo and Pro HD Audio</span>
-								</label>
-							</div>
-							<div class="invite_setting_item">
 								<label for="invite_quality" data-translate="video-resolution">Video Resolution: </label>
 								<select id="invite_quality" name="invite_quality">
 									<option value="-1" selected>User Selectable</option>
@@ -395,12 +395,40 @@
 							</div>
 						</div>
 						<div class="invite_setting_group">
+							<h4><span data-translate="advanced-audio-options">Advanced Audio Options</span></h4>
 							<div class="invite_setting_item">
-								<input type="checkbox" id="invite_secure" />
-								<label for="invite_secure">
-									<span data-translate="high-security-mode">High Security Mode</span>
+								<input type="checkbox" id="invite_noaudio" />
+								<label for="invite_noaudio">
+									<span data-translate="disable audio">Disable audio stream (viewer)</span>
 								</label>
 							</div>
+							<div class="invite_setting_item">
+								<input type="checkbox" id="invite_stereo" />
+								<label for="invite_stereo">
+									<span data-translate="enable-stereo-and-pro">Enable Stereo and Pro HD Audio</span>
+								</label>
+							</div>
+							<div class="invite_setting_item">
+								<input type="checkbox" id="invite_denoise" checked/>
+								<label for="invite_denoise">
+									<span data-translate="audio-denoise">Audio denoise</span>
+								</label>
+							</div>
+							<div class="invite_setting_item">
+								<input type="checkbox" id="invite_agc" checked/>
+								<label for="invite_agc">
+									<span data-translate="auto-gain">Auto gain</span>
+								</label>
+							</div>
+							<div class="invite_setting_item">
+								<input type="checkbox" id="invite_aec" checked/>
+								<label for="invite_aec">
+									<span data-translate="echo-cancellation">Echo cancellation</span>
+								</label>
+							</div>
+						</div>
+						<div class="invite_setting_group">
+							<h4>Sharing Options</h4>
 							<div class="invite_setting_item">
 								<input type="checkbox" id="invite_hidescreen" />
 								<label for="invite_hidescreen">
@@ -408,17 +436,20 @@
 								</label>
 							</div>
 							<div class="invite_setting_item">
-								<input type="checkbox" id="invite_remotecontrol" />
-								<label for="invite_remotecontrol">
-									<span data-translate="allow-remote-control">Remote Control Camera Zoom (android)</span>
+								<input type="checkbox" id="invite_hidecamera" />
+								<label for="invite_hidecamera">
+									<span data-translate="hide-camera-share">Hide Share Camera Option</span>
 								</label>
 							</div>
+						</div>
+						<div class="invite_setting_group">
+							<h4>Room Options</h4>
 							<div class="invite_setting_item">
-								<span data-translate="add-a-password-to-stream"> Add a password:</span>
+								<span data-translate="add-a-password-to-stream">Add a password:</span>
 								<input id="invite_password" placeholder="Add an optional password" />
 							</div>
 							<div class="invite_setting_item">
-								<span data-translate="add-the-guest-to-a-room"> Add the guest to a room:</span>
+								<span data-translate="add-the-guest-to-a-room">Add the guest to a room:</span>
 								<input id="invite_joinroom" placeholder="Enter Room name here" oninput="document.getElementById('invitegroupchat').style.display='block';" />
 							</div>
 							<div class="invite_setting_item">
@@ -431,6 +462,9 @@
 									</select>
 								</span>
 							</div>
+						</div>
+						<div class="invite_setting_group">
+							<h4><span data-translate="other-options">Other options</span></h4>
 							<div class="invite_setting_item">
 								<label for="invite_language" data-translate="language">Language: </label>
 								<select id="invite_language" name="invite_language">
@@ -444,6 +478,18 @@
 									<option value="ru">Russian</option>
 									<option value="es">Spanish</option>
 								</select>
+							</div>
+							<div class="invite_setting_item">
+								<input type="checkbox" id="invite_secure" />
+								<label for="invite_secure">
+									<span data-translate="high-security-mode">High Security Mode</span>
+								</label>
+							</div>
+							<div class="invite_setting_item">
+								<input type="checkbox" id="invite_remotecontrol" />
+								<label for="invite_remotecontrol">
+									<span data-translate="allow-remote-control">Remote Control Camera Zoom (android)</span>
+								</label>
 							</div>
 						</div>
 						<div>See the 
