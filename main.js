@@ -3571,6 +3571,12 @@ function generateQRPage(){
 				sendstr+="&quality=2";
 			}
 		}
+
+		if (getById("invite_language").value){
+			if (getById("invite_language").value!='en'){
+				sendstr+="&ln=" + getById("invite_language").value;
+			}
+		}
 		
 		sendstr = 'https://' + location.host + location.pathname + '?push=' + sid + sendstr;
 		viewstr = 'https://' + location.host+ location.pathname + '?view=' + sid + viewstr + title;
