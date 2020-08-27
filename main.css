@@ -1281,3 +1281,15 @@ input[type=checkbox]
 	}
 }
 
+/* Invite link generator */
+.invite_setting_group {
+	margin: 20px 0px;
+	background-color: #d2d2d2;
+	padding: 10px;
+}
+.invite_setting_group h4 {
+	margin:10px 0px 20px;
+}
+.invite_setting_item {
+ margin: 10px 0px;
+}

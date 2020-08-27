@@ -361,73 +361,76 @@
 					<br />
 					<br />
 					<div style="margin: 20px; max-width: 400px; text-align: left; margin: auto auto;">
-						<br />
-						<h4 style="padding: 0 0 10px 0;">
-							<i>
-								<span data-translate="advanced-paramaters">Advanced Options:</span>
-							</i>
-						</h4>
-						<br />
-						<input type="checkbox" id="invite_bitrate" />
-						<label for="invite_bitrate">
-							<span data-translate="unlock-video-bitrate">Unlock Video Bitrate (20mbps)</span>
-						</label>
-						<br />
-						<input type="checkbox" id="invite_vp9" />
-						<label for="invite_vp9">
-							<span data-translate="force-vp9-video-codec">Force VP9 Video Codec (less artifacting)</span>
-						</label>
-						<br />
-						<input type="checkbox" id="invite_stereo" />
-						<label for="invite_stereo">
-							<span data-translate="enable-stereo-and-pro">Enable Stereo and Pro HD Audio</span>
-						</label>
-						<br />
-						<br />
-						<label for="invite_quality" data-translate="video-resolution">Video Resolution: </label>
-						<select id="invite_quality" name="invite_quality">
-							<option value="-1" selected>User Selectable</option>
-							<option value="0">Maximum Resolution</option>
-							<option value="1">Balanced</option>
-							<option value="2">Smooth and Cool</option>
-						</select>
-						<br />
-						<br />
-						<input type="checkbox" id="invite_secure" />
-						<label for="invite_secure">
-							<span data-translate="high-security-mode">High Security Mode</span>
-						</label>
-						<br />
-						<input type="checkbox" id="invite_hidescreen" />
-						<label for="invite_hidescreen">
-							<span data-translate="hide-screen-share">Hide Screenshare Option</span>
-						</label>
-						<br />
-						<input type="checkbox" id="invite_remotecontrol" />
-						<label for="invite_remotecontrol">
-							<span data-translate="allow-remote-control">Remote Control Camera Zoom (android)</span>
-						</label>
-						<br />
-						<br />
-						<span data-translate="add-a-password-to-stream"> Add a password:</span>
-						<input id="invite_password" placeholder="Add an optional password" />
-						<br />
-						<br />
-						<span data-translate="add-the-guest-to-a-room"> Add the guest to a room:</span>
-						<input id="invite_joinroom" placeholder="Enter Room name here" oninput="document.getElementById('invitegroupchat').style.display='block';" />
-						<br />
-						<br />
-						<span id="invitegroupchat" style="display: none;">
-							<label for="invite_group_chat_type" data-translate="invite-group-chat-type">This room guest can:</label>
-							<select id="invite_group_chat_type" name="invite_group_chat_type">
-								<option value="0" selected data-translate="can-see-and-hear">Can see and hear the group chat</option>
-								<option value="1" data-translate="can-hear-only">Can only hear the group chat</option>
-								<option value="2" data-translate="cant-see-or-hear">Cannot hear or see the group chat</option>
-							</select>
-						</span>
-						<br />
-						<br />
-						<br />
+						<div class="invite_setting_group">
+							<h4>
+								<span data-translate="advanced-paramaters">Advanced Options</span>
+							</h4>
+							<div class="invite_setting_item">
+								<input type="checkbox" id="invite_bitrate" />
+								<label for="invite_bitrate">
+									<span data-translate="unlock-video-bitrate">Unlock Video Bitrate (20mbps)</span>
+								</label>
+							</div>
+							<div class="invite_setting_item">
+								<input type="checkbox" id="invite_vp9" />
+								<label for="invite_vp9">
+									<span data-translate="force-vp9-video-codec">Force VP9 Video Codec (less artifacting)</span>
+								</label>
+							</div>
+							<div class="invite_setting_item">
+								<input type="checkbox" id="invite_stereo" />
+								<label for="invite_stereo">
+									<span data-translate="enable-stereo-and-pro">Enable Stereo and Pro HD Audio</span>
+								</label>
+							</div>
+							<div class="invite_setting_item">
+								<label for="invite_quality" data-translate="video-resolution">Video Resolution: </label>
+								<select id="invite_quality" name="invite_quality">
+									<option value="-1" selected>User Selectable</option>
+									<option value="0">Maximum Resolution</option>
+									<option value="1">Balanced</option>
+									<option value="2">Smooth and Cool</option>
+								</select>
+							</div>
+						</div>
+						<div class="invite_setting_group">
+							<div class="invite_setting_item">
+								<input type="checkbox" id="invite_secure" />
+								<label for="invite_secure">
+									<span data-translate="high-security-mode">High Security Mode</span>
+								</label>
+							</div>
+							<div class="invite_setting_item">
+								<input type="checkbox" id="invite_hidescreen" />
+								<label for="invite_hidescreen">
+									<span data-translate="hide-screen-share">Hide Screenshare Option</span>
+								</label>
+							</div>
+							<div class="invite_setting_item">
+								<input type="checkbox" id="invite_remotecontrol" />
+								<label for="invite_remotecontrol">
+									<span data-translate="allow-remote-control">Remote Control Camera Zoom (android)</span>
+								</label>
+							</div>
+							<div class="invite_setting_item">
+								<span data-translate="add-a-password-to-stream"> Add a password:</span>
+								<input id="invite_password" placeholder="Add an optional password" />
+							</div>
+							<div class="invite_setting_item">
+								<span data-translate="add-the-guest-to-a-room"> Add the guest to a room:</span>
+								<input id="invite_joinroom" placeholder="Enter Room name here" oninput="document.getElementById('invitegroupchat').style.display='block';" />
+							</div>
+							<div class="invite_setting_item">
+								<span id="invitegroupchat" style="display: none;">
+									<label for="invite_group_chat_type" data-translate="invite-group-chat-type">This room guest can:</label>
+									<select id="invite_group_chat_type" name="invite_group_chat_type">
+										<option value="0" selected data-translate="can-see-and-hear">Can see and hear the group chat</option>
+										<option value="1" data-translate="can-hear-only">Can only hear the group chat</option>
+										<option value="2" data-translate="cant-see-or-hear">Cannot hear or see the group chat</option>
+									</select>
+								</span>
+							</div>
+						</div>
 						<div>See the 
 							<a style="text-decoration: none; color: blue;" target="_blank" href="https://docs.obs.ninja/advanced">documentation</a> for more options and info.
 						</div>
