@@ -1773,16 +1773,15 @@ function createRoom(roomname=false){
 		passAdd2="&password="+session.password;
 	}
 	
-	gridlayout.innerHTML = "<br /><div style='display:inline-block'><font style='font-size:130%;color:white;'></font><input  onclick='popupMessage(event);copyFunction(this)' onmousedown='copyFunction(this)' style='cursor:grab;font-weight:bold;background-color:#78F; width:400px; font-size:100%; padding:10px; border:2px solid black; margin:5px;'  class='task' value='https://"+location.host+location.pathname+"?room="+session.roomid+passAdd+"' /><font style='font-size:110%;color:white;'><i class='las la-video' style='position:relative;top:7px;font-size:2em;'  aria-hidden='true'></i> - Invites users to join the group and broadcast their feed to it. These users will see every feed in the room.</font></div>";
+	gridlayout.innerHTML = "<div class='director-url'><h1>Invite to send and receive group audio/video</h1><input  onclick='popupMessage(event);copyFunction(this)' onmousedown='copyFunction(this)' style='cursor:grab;font-weight:bold;background-color:#78F; width:400px; font-size:100%; padding:10px; border:2px solid black; margin:5px;'  class='task' value='https://"+location.host+location.pathname+"?room="+session.roomid+passAdd+"' /></div>";
 	
-	gridlayout.innerHTML += "<br /><font style='font-size:130%;color:white;'></font><input class='task' onclick='popupMessage(event);copyFunction(this)' onmousedown='copyFunction(this)' style='cursor:grab;font-weight:bold;background-color:#F45;width:400px;font-size:100%;padding:10px;border:2px solid black;margin:5px;' value='https://"+location.host+location.pathname+"?room="+session.roomid+passAdd+"&view' /><font style='font-size:110%;color:white;'><i class='las la-video' style='position:relative;top:7px;font-size:2em;'  aria-hidden='true'></i> - Link to Invite users to broadcast their feeds to the group. These users will not see or hear any feed from the group.</font><br />";
+	gridlayout.innerHTML += "<div class='director-url'><h1>Invite to send video/audio to group</h1><input class='task' onclick='popupMessage(event);copyFunction(this)' onmousedown='copyFunction(this)' style='cursor:grab;font-weight:bold;background-color:#F45;width:400px;font-size:100%;padding:10px;border:2px solid black;margin:5px;' value='https://"+location.host+location.pathname+"?room="+session.roomid+passAdd+"&view' /></div>";
+		
+	gridlayout.innerHTML += "<div class='director-url'><h1>Automatic group feed</h1><input class='task' onmousedown='copyFunction(this)' data-drag='1' onclick='popupMessage(event);copyFunction(this)' style='cursor:grab;font-weight:bold;background-color:#5F4;width:400px;font-size:100%;padding:10px;border:2px solid black;margin:5px;' value='https://"+location.host+location.pathname+"?scene=1&room="+session.roomid+passAdd2+"' /></div>";
 	
+	gridlayout.innerHTML += '<button id="director-help" onclick="toggle(getById(\'roomnotes2\'),this);">&quest;</button>';
 	
-	gridlayout.innerHTML += "<font style='font-size:130%;color:white'></font><input class='task' onmousedown='copyFunction(this)' data-drag='1' onclick='popupMessage(event);copyFunction(this)' style='cursor:grab;font-weight:bold;background-color:#5F4;width:400px;font-size:100%;padding:10px;border:2px solid black;margin:5px;' value='https://"+location.host+location.pathname+"?scene=1&room="+session.roomid+passAdd2+"' /><font style='font-size:110%;color:white'><i class='las la-th-large' style='position:relative;top:7px;font-size:2em;' aria-hidden='true'></i> - This is an OBS Browser Source link that contains the group chat in just a single scene. Videos must be manually added to this scene.</font><br />";
-	
-	gridlayout.innerHTML += '<button style="margin:10px;" onclick="toggle(getById(\'roomnotes2\'),this);">❔ Click Here for a quick overview and help</button><br />';
-	
-	gridlayout.innerHTML += "<div id='roomnotes2' style='display:none;padding:0 0 0 10px;' ><br />\
+	gridlayout.innerHTML += "<div id='roomnotes2' style='display:none;' ><br />\
 	<font style='color:#CCC;'>Welcome. This is the control-room for the group-chat. There are different things you can use this room for:<br /><br />\
 	<li>You can host a group chat with friends using a room. Share the blue link to invite guests who will join the chat automatically.</li>\
 	<li>A group room can handle around 4 to 30 guests, depending on numerous factors, including CPU and available bandwidth of all guests in the room.</li>\
@@ -1795,7 +1794,9 @@ function createRoom(roomname=false){
 	<br />\
 	As guests join, their videos will appear below. You can bring their video streams into OBS as solo-scenes or you can add them to the Group Scene.\
 	<br />The Group Scene auto-mixes videos that have been added to the group scene. Please note that the Auto-Mixer requires guests be manually added to it for them to appear in it; they are not added automatically.<br /><Br />Apple mobile devices, such as iPhones and iPads, do not fully support Video Group Chat. This is a hardware constraint.<br /><br />\
-	For advanced options and parameters, <a href=\"https://github.com/steveseguin/obsninja/wiki/Guides-and-How-to's#urlparameters\">see the Wiki.</a></font></div><hr />";
+	For advanced options and parameters, <a href=\"https://github.com/steveseguin/obsninja/wiki/Guides-and-How-to's#urlparameters\">see the Wiki.</a></font></div>";
+	
+	gridlayout.innerHTML += '<h2>Guest feeds</h2>';
 	
 	gridlayout.innerHTML += "<div id='deleteme'><br /><br /><center>\
 	<div style='display:inline-block;width:300px;height:350px;border:2px solid white;background-color:#999;margin:40px;'><br /><br />GUEST SLOT #1<br /><br />(A video will appear here when a guest joins)<br /><br /><i class='las la-user ' style='font-size:8em;' aria-hidden='true'></i><br /><br />A Solo-Link for OBS will appear here.</div>\
