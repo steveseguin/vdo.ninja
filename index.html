@@ -22,7 +22,7 @@
 		<link rel="icon" type="image/png" sizes="32x32" href="./images/favicon-32x32.png" />
 		<link rel="icon" type="image/png" sizes="16x16" href="./images/favicon-16x16.png" />
 		<link rel="icon" href="./images/favicon.ico" />
-		<link itemprop="thumbnailUrl" href="//images/obsNinja_logo_full.png" />
+		<link itemprop="thumbnailUrl" href="./images/obsNinja_logo_full.png" />
 		<!-- Primary Meta Tags -->
 		<title>OBS.Ninja</title>
 		<meta name="title" content="OBS.Ninja" />
@@ -47,11 +47,11 @@
 		<meta property="twitter:image" content="./images/obsNinja_logo_full.png" />
 		<meta name="msapplication-TileColor" content="#da532c" />
 		<meta name="theme-color" content="#ffffff" />
-		<!-- <script src="//console.re/connector.js" data-channel="obsninjaalpha" id="consolerescript"></script> -->
+		<!-- <script src="//console.re/connector.js" data-channel="obsninjaalpha"  type="text/javascript" id="consolerescript"></script>-->
 		<link rel="stylesheet" href="./lineawesome/css/line-awesome.min.css">
-		<script type="text/javascript" src="https://webrtc.github.io/adapter/adapter-latest.js"></script>
-		<script type="text/javascript" src="./thirdparty/qrcode.min.js"></script>
-		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.0/jquery.min.js"></script>
+		<script type="text/javascript" crossorigin="anonymous" src="https://webrtc.github.io/adapter/adapter-latest.js"></script>
+		<script type="text/javascript" crossorigin="anonymous" src="./thirdparty/qrcode.min.js"></script>
+		<script type="text/javascript" crossorigin="anonymous" src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script> 
 		<link rel="stylesheet" href="./main.css?ver=10" />
 	</head>
 	<body id="main">
@@ -62,8 +62,8 @@
 		<span itemprop="thumbnail" itemscope itemtype="http://schema.org/ImageObject">
 			<link itemprop="url" href="./images/obsNinja_logo_full.png" />
 		</span>
-		<script language="javascript" type="text/javascript" src="./thirdparty/CodecsHandler.js?ver=17"></script>
-		<script language="javascript" type="text/javascript" src="./webrtc.js?ver=55"></script>
+		<script  type="text/javascript" crossorigin="anonymous"  src="./thirdparty/CodecsHandler.js?ver=17"></script>
+		<script  type="text/javascript" crossorigin="anonymous" src="./webrtc.js?ver=56"></script>
 		<input id="zoomSlider" type="range" style="display: none;" />
 		<div id="header">
 			<a id="logoname" href="./" style="text-decoration: none; color: white; margin: 2px;">
@@ -110,7 +110,7 @@
 				<div id="chatNotification"></div>
 			</div>
 			<div id="mutebutton" title="Mute the Mic" onclick="toggleMute()" class="advanced float" style="cursor: pointer;" alt="Toggle the mic">
-				<i id="mutetoggle" class="toggleSize las la-microphone my-float"></i>
+				<i id="mutetoggle" class="toggleSize las la-microphone my-float" style="position: relative; top: 0.5px;"></i>
 			</div>
 			<div id="mutevideobutton" title="Disable the Camera" onclick="toggleVideoMute()" class="advanced float" style="cursor: pointer;" alt="Toggle the camera">
 				<i id="mutevideotoggle" class="toggleSize las la-eye my-float"></i>
@@ -255,7 +255,8 @@
 					<br />
 					<span id="headphonesDiv" style="text-align:left; margin:17px 0; max-width: 550px; min-width: 420px; background-color: #f3f3f3; display: none; padding: 10px 10px; border: 1px solid #ccc; vertical-align: middle;">
 						<div id="audioTitle2"  class="title">
-						<i class="las la-headphones"></i><span data-translate="select-output-source"> Audio Output Destination:</span></div>
+						<i class="las la-headphones"></i><span data-translate="select-output-source"> Audio Output Destination: <button onclick="playtone()" style="margin:0 0 0 15px;" type="button">Test</button>
+						</span></div>
 						<select id="outputSource" ></select>
 						
 					</span>
@@ -313,7 +314,7 @@
 					<p id="audioScreenShare1">
 						<span data-translate="audio-sources">Audio Sources</span>
 						<br />
-						<select id="audioSourceScreenshare" multiple  alt="tip: Hold CTRL (command) to select Multiple" title="tip: Hold CTRL (command) to select Multiple"  style="height: 60px; width: 200px; resize: both; overflow: auto; padding: 5px;" onchange="requestAudioStream();">
+						<select id="audioSourceScreenshare" multiple  alt="tip: Hold CTRL (command) to select Multiple" title="tip: Hold CTRL (command) to select Multiple"  style="height: 60px; min-width: 290px; resize: both; overflow: auto; padding: 5px;" onchange="requestAudioStream();">
 							<option value="screenshare" selected>
 								<span data-translate="screen-shrae-audio">Screen Share Audio (default)</span>
 							</option>
@@ -323,9 +324,9 @@
 						</select>
 					</p>
 					<br />
-					<span id="headphonesDiv2" style="background-color: #f3f3f3; display: none; padding: 5px 10px; border: 1px solid #ccc; vertical-align: middle;">
-						<i class="las la-headphones"></i><span data-translate="select-output-source"> Audio Output Destination:</span>:<br />
-						<select id="outputSourceScreenshare" style="background-color: #FFF; padding:5px; display: display:inline-block;vertical-align: middle;" onclick="requestOutputAudioStream();">
+					<span id="headphonesDiv2" style="background-color: #f3f3f3; min-width: 290px; display: none; padding: 5px 10px; border: 1px solid #ccc; vertical-align: middle;">
+						<i class="las la-headphones"></i><span data-translate="select-output-source"> Audio Output Destination: <button onclick="playtone(true)" style="margin:0;margin-left:15px;" type="button">Test</button></span></span><br />
+						<select id="outputSourceScreenshare" style="background-color: #FFF; padding:10px 5px; min-width: 288px; display: display:inline-block;vertical-align: middle;" onclick="requestOutputAudioStream();">
 							<option value="default">
 								<span data-translate="default">Default Device</span>
 							</option>
@@ -361,7 +362,7 @@
 					<br />
 					<br />
 					<div style="margin: 20px; max-width: 400px; text-align: left; margin: auto auto;">
-						<div class="invite_setting_group">
+												<div class="invite_setting_group">
 							<h4>
 								<span data-translate="advanced-paramaters">Advanced Options</span>
 							</h4>
@@ -513,28 +514,24 @@
 		</div>
 		<div id="gridlayout"></div>
 		<div id="controls_blank" style="display: none;">
-			<center>
-				<br />
-				<b>
-					<span data-translate="remote-control-for-obs">Remote Control for OBS</span>
-				</b>
-				<br />
-				<button data-value="0" style="font-size: 112%;" onclick="directEnable(this, event);">
-					<span data-translate="add-to-group">Add to Group Scene</span>
+			<b>
+				<button data-value="0" style="padding: 2px 10px 3px 5px;font-weight:display-block;margin: 2px 0 0 5px;" title="Add this Video to any remote '&scene=1'" onclick="directEnable(this, event);">
+					<span data-translate="add-to-group" view">➕ Add to Group Scene</span>
 				</button>
-				<button style="font-size: 112%;" onclick="directMute(this, event);">
-					<span data-translate="mute">Mute</span>
-				</button>
-				<button style="font-size: 112%;" onclick="recordVideo(this, event)">
-					<span data-translate="record">Record</span>
+				<button style="padding: 2px 10px 3px 5px;display:inline-block;margin: 2px 0 0 5px;" title="Start Recording this stream. *experimental*' views" onclick="recordVideo(this, event)">
+					<span data-translate="record">🔴 Record</span>
 				</button>
 				<br />
-				<span data-translate="volume">Volume</span>:
-				<input type="range" min="1" max="100" value="100" onclick="directVolume(this);" />
-				<br />
-				<br />
-				<hr />
-			</center>
+				<button style="padding: 2px 10px 3px 5px;display:inline-block;margin: 2px 0 0 5px;" title="Remotely Mute this Audio in all remote '&scene' views" onclick="directMute(this, event);">
+					<span data-translate="mute" >🔇 Mute in all Scenes</span>
+				</button>
+				<i  style="font-size:2vh; position: relative; top: 3px;" title="Change this Audio's volume in all remote '&scene' views" class="las la-volume-up"></i>
+				<input type="range" min="1" max="100" value="100"  title="Change this Audio's volume in all remote '&scene' views" onclick="directVolume(this);" style="width: 100px; position: relative; top: 4px;"/>
+			</b>
+			<br />
+			
+			<hr style="margin:5px 0 0 0;"/>
+			
 		</div>
 		<div id="popupSelector" style="display:none;">
 				<span id="videoMenu3" class="videoMenu">
@@ -561,11 +558,10 @@
 				<br />
 				<span id="headphonesDiv3" style="display: inline-block;">
 					<div id="audioTitle3"  class="title">
-						<i class="las la-headphones"></i><span data-translate="select-output-source"> Audio Output Destination:</span>
+						<i class="las la-headphones"></i><span data-translate="select-output-source"> Audio Output Destination: 
 					</div>
 					<select id="outputSource3" ></select>
 				</span>
-				<br />
 				<button id="shareScreenGear" style="padding:20px;" onclick="grabScreen()"><b>Share Screen</b><br /><i style="padding:5px; font-size:300%;" class="las la-desktop"></i></button><br />
 				<button onclick="toggleSettings()" style="background-color:#EFEFEF;padding:10px 12px 12px 2px;"><i class="chevron right" style="font-size:150%;top:3px;position:relative;"></i> <b>Close Settings</b></button>
 			</p>
@@ -600,6 +596,10 @@
 			<button style="width:60px;background-color:#EEE;" onclick="sendChatMessage()">Send</button>
 		</div>
 		
+		<audio id="testtone" style="display:none;" preload="none">
+			<source src="tone.mp3" type="audio/mpeg"> 
+			<source src="tone.ogg" type="audio/ogg"> 
+		</audio>
 		
 		<div id="messagePopup" class="popup-message"></div>
 		<div id="languages" class="popup-message" style="display: none; right: 0; bottom: 25px; position: absolute;">
@@ -624,6 +624,8 @@
 				<br />
 				<a onclick="changeLg('ja');toggle(document.getElementById('languages'));" style="cursor: pointer;">Japanese</a>
 				<br />
+				<a onclick="changeLg('pig');toggle(document.getElementById('languages'));" style="cursor: pointer;">Pig Latin</a>
+				<br />
 			</u>
 			<br />
 			<a href="https://github.com/steveseguin/obsninja/tree/master/translations">Add More Here!</a>
@@ -635,23 +637,24 @@
 
             session.streamID = session.generateStreamID(); // randomly generates a streamID for this session. You can set your own programmatically if needed
 
-            session.configuration = {
-                iceServers: [
-                    { urls: ["stun:stun.l.google.com:19302", "stun:stun4.l.google.com:19302"] }, // more than 4 stun+turn servers may cause issues
-                ],
-            };
+            // session.configuration = {
+            //     iceServers: [
+            //         { urls: ["stun:stun.l.google.com:19302", "stun:stun4.l.google.com:19302"] }, // more than 4 stun+turn servers may cause issues
+            //     ],
+			// 	sdpSemantics: 'unified-plan'
+            // };
 
-            var turn = {};
-            turn.username = "steve";
-            turn.credential = "justtesting";
-            turn.urls = ["turn:turn.obs.ninja:443"]; // US CENTRAL
-            session.configuration.iceServers.push(turn);
+            // var turn = {};
+            // turn.username = "steve";
+            // turn.credential = "justtesting";
+            // turn.urls = ["turn:turn.obs.ninja:443"]; // US CENTRAL
+            // session.configuration.iceServers.push(turn);
 
-            turn = {};
-            turn.username = "steve";
-            turn.credential = "justtesting";
-            turn.urls = ["turn:turn2.obs.ninja:443"]; // US WEST
-            session.configuration.iceServers.push(turn);
+            // turn = {};
+            // turn.username = "steve";
+            // turn.credential = "justtesting";
+            // turn.urls = ["turn:turn2.obs.ninja:443"]; // US WEST
+            // session.configuration.iceServers.push(turn);
 
             // session.configuration.iceTransportPolicy = "relay";  // uncomment to enable "&privacy" and force the TURN server
 
@@ -689,7 +692,7 @@
 		// If you wish to change branding, blank offers a good clean start.
 		<script type="text/javascript" id="main-js" src="./main.js" data-translation="blank"></script>
 	-->
-		<script type="text/javascript" id="main-js" src="./main.js?ver=36"></script>
-		<script type="text/javascript" src="./animations.js?ver=8"></script>
+		<script type="text/javascript" crossorigin="anonymous" id="main-js" src="./main.js?ver=37"></script>
+		<script type="text/javascript" crossorigin="anonymous" src="./animations.js?ver=8"></script>
 	</body>
 </html>

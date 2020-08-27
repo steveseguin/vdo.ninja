@@ -171,7 +171,18 @@ hr {
 	margin:0;
 }
 
-
+/* Invite link generator */
+.invite_setting_group {
+	margin: 20px 0px;
+	background-color: #d2d2d2;
+	padding: 10px;
+}
+.invite_setting_group h4 {
+	margin:10px 0px 20px;
+}
+.invite_setting_item {
+ margin: 10px 0px;
+} 
 
 .directorsgrid {
 	justify-items: normal;
@@ -182,15 +193,14 @@ hr {
 
 }
 .directorsgrid video {
-	max-width: 400px;
-	max-height: 225px;
-	min-width: 300px;
+	height: 169px;
+    width: 300px;
 	padding:10px 10px 0px 10px !important;
 }
 
 .directorsgrid .vidcon {
 	display: inline-block !important;
-	max-width: 400px !important;
+	width: 300px !important;
     max-height: 500px !important;
 	background: #E3E4EF;
 }
@@ -718,6 +728,8 @@ img {
 
 .rotate225 {
    transform: rotate(135deg);
+   position: relative;
+   top: 1px;
 }
 
 
@@ -1281,15 +1293,3 @@ input[type=checkbox]
 	}
 }
 
-/* Invite link generator */
-.invite_setting_group {
-	margin: 20px 0px;
-	background-color: #d2d2d2;
-	padding: 10px;
-}
-.invite_setting_group h4 {
-	margin:10px 0px 20px;
-}
-.invite_setting_item {
- margin: 10px 0px;
-}
