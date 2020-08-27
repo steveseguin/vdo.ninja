@@ -1810,7 +1810,7 @@ function createRoom(roomname=false){
 function toggle(ele, tog=false) {
   var x = ele;
   if (x.style.display === "none") {
-    x.style.display = "inline-block";
+    x.style.display = "inherit";
   } else {
     x.style.display = "none";
   }
@@ -1820,7 +1820,7 @@ function toggle(ele, tog=false) {
 		  delete(tog.dataset.saved);
 	  } else {
 		  tog.dataset.saved = tog.innerHTML;
-		  tog.innerHTML = "Hide This";
+		  tog.innerHTML = "&times;";
 	  }
   }
 }
