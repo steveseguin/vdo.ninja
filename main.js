@@ -323,6 +323,8 @@ if (urlParams.has('stereo') || urlParams.has('s') || urlParams.has('proaudio')){
 		session.stereo = 1;
 	} else if (session.stereo==="3"){
 		session.stereo = 3;
+	} else if (session.stereo==="4"){
+		session.stereo = 4;
 	} else if (session.stereo==="2"){
 		session.stereo = 2;
 	} else {
@@ -330,7 +332,7 @@ if (urlParams.has('stereo') || urlParams.has('s') || urlParams.has('proaudio')){
 	}
 }
 
-if ((session.stereo==1) || (session.stereo==3)){
+if ((session.stereo==1) || (session.stereo==3) || (session.stereo==4)){
 	session.echoCancellation = false;
 	session.autoGainControl = false;
 	session.noiseSuppression = false;
@@ -435,11 +437,6 @@ if (urlParams.has('streamid') || urlParams.has('view') || urlParams.has('v') || 
 		} 
 	}
 	
-}
-
-if (urlParams.has('icefilter')){
-	log("ICE FILTER ENABLED");
-    session.icefilter =  urlParams.get('icefilter');
 }
 
 
@@ -556,7 +553,6 @@ if (urlParams.has('novideo') || urlParams.has('nv') || urlParams.has('hidevideo'
 if (urlParams.has('noaudio') || urlParams.has('na') || urlParams.has('hideaudio')){
 	
 	session.noaudio = urlParams.get('noaudio') || urlParams.get('na') || urlParams.get('hideaudio');
-	errorlog(session.noaudio);
 	
 	if (!(session.noaudio)){
 		session.noaudio=[];
@@ -917,22 +913,60 @@ if ((session.mirrored) && (session.flipped)){
 }
 
 
+if (urlParams.has('icefilter')){
+	log("ICE FILTER ENABLED");
+    session.icefilter =  urlParams.get('icefilter');
+}
 
-var turn = {};
+if (urlParams.has('twilio')){ // Not for public use. 
+	
+} 
+
+
 if (urlParams.has('turn')){
-	try {
-		var turnstring = urlParams.get('turn').split(";");
-		if (turnstring !== "false"){ // false disables the TURN server. Useful for debuggin
-			turn = {};
-			turn.username = turnstring[0]; // myusername
-			turn.credential = turnstring[1];  //mypassword
-			turn.urls = [turnstring[2]]; //  ["turn:turn.obs.ninja:443"];
-			session.configuration.iceServers = [{ urls: ["stun:stun.l.google.com:19302", "stun:stun4.l.google.com:19302" ]}]
-			session.configuration.iceServers.push(turn);
+	var turnstring = urlParams.get('turn');
+	if (turnstring=="twilio"){
+		try{
+			var request = new XMLHttpRequest();
+			request.open('GET', 'https://api.obs.ninja/twilio', false);  // `false` makes the request synchronous
+			request.send(null);
+
+			if (request.status === 200) {
+				log(request.responseText);
+				var res = JSON.parse(request.responseText);
+				
+				session.configuration = {
+					iceServers: [
+						{ "username": res["1"],
+						  "credential": res["2"],
+						  "url": "turn:global.turn.twilio.com:3478?transport=tcp",
+						  "urls": "turn:global.turn.twilio.com:3478?transport=tcp"
+						},
+						{ "username": res["1"],
+						  "credential": res["2"],
+						  "url": "turn:global.turn.twilio.com:443?transport=tcp",
+						  "urls": "turn:global.turn.twilio.com:443?transport=tcp"
+						}
+					],
+					sdpSemantics: 'unified-plan' // future-proofing
+				};
+			}
+		} catch(e){errorlog("Twilio Failed");}
+	} else {
+		try {
+			turnstring = turnstring.split(";");
+			if (turnstring !== "false"){ // false disables the TURN server. Useful for debuggin
+				var turn = {};
+				turn.username = turnstring[0]; // myusername
+				turn.credential = turnstring[1];  //mypassword
+				turn.urls = [turnstring[2]]; //  ["turn:turn.obs.ninja:443"];
+				session.configuration.iceServers = [{ urls: ["stun:stun.l.google.com:19302", "stun:stun4.l.google.com:19302" ]}]
+				session.configuration.iceServers.push(turn);
+			}
+		} catch (e){
+			alert("TURN server parameters were wrong.");
+			errorlog(e);
 		}
-	} catch (e){
-		alert("TURN server parameters were wrong.");
-		errorlog(e);
 	}
 }
 
@@ -1143,9 +1177,9 @@ if ( (session.roomid) || (urlParams.has('roomid')) || (urlParams.has('r')) || (u
 	}
 	getById("info").innerHTML = "";
 	getById("info").style.color="#CCC";
-	getById("videoname1").value = roomid;
-	getById("dirroomid").innerHTML = roomid;
-	getById("roomid").innerHTML = roomid;
+	getById("videoname1").value = session.roomid;
+	getById("dirroomid").innerHTML = session.roomid;
+	getById("roomid").innerHTML = session.roomid;
 	getById("container-1").className = 'column columnfade advanced';
 	getById("container-4").className = 'column columnfade advanced';
 	getById("mainmenu").style.alignSelf= "center";
@@ -1188,7 +1222,7 @@ if ( (session.roomid) || (urlParams.has('roomid')) || (urlParams.has('r')) || (u
 		getById("translateButton").style.display = "none";
 		log("Update Mixer Event on REsize SET");
 		window.addEventListener("resize", updateMixer);
-		joinRoom(roomid); // this is a scene, so we want high resolutions
+		joinRoom(session.roomid); // this is a scene, so we want high resolutions
 		getById("main").style.overflow = "hidden";
 	} 
 } else if (urlParams.has('director')){ // if I do a short form of this, it will cause duplications in the code elsewhere. 
@@ -1207,6 +1241,11 @@ if (urlParams.has('hidemenu')){  // needs to happen the room and permaid applica
 	getById("header").style.opacity = 0;
 }
 
+if (urlParams.has('hideheader')){  // needs to happen the room and permaid applications
+	getById("header").style.display="none";
+	getById("header").style.opacity = 0;
+}
+
 function checkConnection(){
 	if (document.getElementById("qos")){  // true or false; null might cause problems?
 		if ((session.ws) && (session.ws.readyState === WebSocket.OPEN)) {
@@ -1218,6 +1257,70 @@ function checkConnection(){
 }
 setInterval(function(){checkConnection();},5000);
 
+function printValues(obj) {
+	var out = "";
+	for (var key in obj) {
+		if (typeof obj[key] === "object") {
+			if (obj[key]!=null){
+				out += "<br /><u>"+key+"</u><br />"
+				out += printValues(obj[key]);
+			}
+		} else {
+			if (key.startsWith("_")){
+				// if it starts with _, we don't want to show it.
+			} else {
+				out +="<b>"+key+"</b>: "+obj[key]+"<br />";
+			}
+		}
+	}
+	return out;
+}
+
+function printMyStats(ele){
+		
+	session.stats.outbound_connections = Object.keys(session.pcs).length;
+	session.stats.inbound_connections = Object.keys(session.rpcs).length;
+	ele.innerHTML="Click window to close<br /><br />";
+	
+	function printValues(obj) {
+		for (var key in obj) {
+			if (typeof obj[key] === "object") {
+				ele.innerHTML +="<br />";
+				printValues(obj[key]);   
+			} else {
+				ele.innerHTML +="<b>"+key+"</b>: "+obj[key]+"<br />";
+			}
+		}
+	}
+	printValues(session.stats);
+	ele.innerHTML+="<br /><button style='margin:5px;padding:20px;' onclick='session.forcePLI(null,event);'>Send Video Keyframe to Remote Viewers</button>";
+	for (var uid in session.pcs){
+		printValues(session.pcs[uid].stats);
+	}
+	
+};
+
+function setupStatsMenu(e){
+	var menu = document.createElement("div");
+	menu.style.left= parseInt(Math.random()*20)+100+"px"
+	menu.style.top= parseInt(Math.random()*20)+100+"px"
+	menu.style.width="300px";
+	menu.style.minHeight="200px";
+	menu.style.backgroundColor="white";
+	menu.style.position="absolute";
+	menu.style.zIndex="20";
+	menu.style.border="1px solid black";
+	menu.style.padding="2px";
+	//menu.id = "stats_"+e.currentTarget.dataset.UUID
+	getById('main').appendChild(menu);
+	menu.innerHTML = "";
+	printMyStats(menu);
+	menu.interval = setInterval(printMyStats,3000, menu);
+	menu.addEventListener('click', function(e) { 
+		clearInterval(e.currentTarget.interval);
+		e.currentTarget.parentNode.removeChild(e.currentTarget);
+	});
+}
 
 function updateStats(obsvc=false){
 	log('resolution found');
@@ -1683,42 +1786,42 @@ function volumeAudioProcess( event ) {
     this.volume = Math.max(rms, this.volume*this.averaging);
 }
 
-function joinRoom(roomname, maxbitrate=false){
+function joinRoom(roomname){
 	roomname = roomname.replace(/[^0-9a-z]/gi, '');
-		if (roomname.length){
-			log("Join room",roomname);
-			log(roomname);
-			session.joinRoom(roomname, maxbitrate).then(function(response){  // callback from server; we've joined the room
+	if (roomname.length){
+		log("Join room");
+		log(roomname);
+		session.joinRoom(roomname).then(function(response){  // callback from server; we've joined the room
+		
+			if (session.director){
+				var msg = {};
+				msg.request = "claim";
+				session.sendMsg(msg); 
+			}
 			
-				if (session.director){
-					var msg = {};
-					msg.request = "claim";
-					session.sendMsg(msg); 
-				}
-				
-				log("Members in Room");
-				log(response);
-				for (var i in response){
-					if ("UUID" in response[i]){
-						if ("streamID" in response[i]){
-							if (response[i].UUID in session.pcs){
-								log("RTC already connected"); /// lets just say instead of Stream, we have 
-							} else {
-								//var title = "";                            // TODO: Assign labels 
-								//if ("title" in response[i]){
-									//	title = response[i]["title"];
-									//}
-								
-								play(response[i].streamID);  // play handles the group room mechanics here
-							}
+			log("Members in Room");
+			log(response);
+			for (var i in response){
+				if ("UUID" in response[i]){
+					if ("streamID" in response[i]){
+						if (response[i].UUID in session.pcs){
+							log("RTC already connected"); /// lets just say instead of Stream, we have 
+						} else {
+							//var title = "";                            // TODO: Assign labels 
+							//if ("title" in response[i]){
+								//	title = response[i]["title"];
+								//}
+							
+							play(response[i].streamID);  // play handles the group room mechanics here
 						}
 					}
 				}
+			}
 
-			},function(error){return {};});
-		} else {
-			log("Room name not long enough or contained all bad characaters");
-		}	
+		},function(error){return {};});
+	} else {
+		log("Room name not long enough or contained all bad characaters");
+	}	
 }
 
 
@@ -1775,14 +1878,19 @@ function createRoom(roomname=false){
 	
 	gridlayout.innerHTML = "<br /><div style='display:inline-block'><font style='font-size:130%;color:white;'></font><input  onclick='popupMessage(event);copyFunction(this)' onmousedown='copyFunction(this)' style='cursor:grab;font-weight:bold;background-color:#78F; width:400px; font-size:100%; padding:10px; border:2px solid black; margin:5px;'  class='task' value='https://"+location.host+location.pathname+"?room="+session.roomid+passAdd+"' /><font style='font-size:110%;color:white;'><i class='las la-video' style='position:relative;top:7px;font-size:2em;'  aria-hidden='true'></i> - Invites users to join the group and broadcast their feed to it. These users will see every feed in the room.</font></div>";
 	
-	gridlayout.innerHTML += "<br /><font style='font-size:130%;color:white;'></font><input class='task' onclick='popupMessage(event);copyFunction(this)' onmousedown='copyFunction(this)' style='cursor:grab;font-weight:bold;background-color:#F45;width:400px;font-size:100%;padding:10px;border:2px solid black;margin:5px;' value='https://"+location.host+location.pathname+"?room="+session.roomid+passAdd+"&view' /><font style='font-size:110%;color:white;'><i class='las la-video' style='position:relative;top:7px;font-size:2em;'  aria-hidden='true'></i> - Link to Invite users to broadcast their feeds to the group. These users will not see or hear any feed from the group.</font><br />";
+	gridlayout.innerHTML += "<br /><font style='font-size:130%;color:white;'></font><input class='task' onclick='popupMessage(event);copyFunction(this)' onmousedown='copyFunction(this)' style='cursor:grab;font-weight:bold;background-color:#F45;width:400px;font-size:100%;padding:10px;border:2px solid black;margin:5px;' value='https://"+location.host+location.pathname+"?room="+session.roomid+passAdd+"&view' /><font style='font-size:110%;color:white;'><i class='las la-video' style='position:relative;top:7px;font-size:2em;'  aria-hidden='true'></i> - Link to invite users to broadcast their feeds to the group. These users will not see or hear any feed from the group.</font><br />";
 	
 	
-	gridlayout.innerHTML += "<font style='font-size:130%;color:white'></font><input class='task' onmousedown='copyFunction(this)' data-drag='1' onclick='popupMessage(event);copyFunction(this)' style='cursor:grab;font-weight:bold;background-color:#5F4;width:400px;font-size:100%;padding:10px;border:2px solid black;margin:5px;' value='https://"+location.host+location.pathname+"?scene=1&room="+session.roomid+passAdd2+"' /><font style='font-size:110%;color:white'><i class='las la-th-large' style='position:relative;top:7px;font-size:2em;' aria-hidden='true'></i> - This is an OBS Browser Source link that contains the group chat in just a single scene. Videos must be manually added to this scene.</font><br />";
+	gridlayout.innerHTML += "<font style='font-size:130%;color:white'></font><input class='task' onmousedown='copyFunction(this)' data-drag='1' onclick='popupMessage(event);copyFunction(this)' style='cursor:grab;font-weight:bold;background-color:#5F4;width:400px;font-size:100%;padding:10px;border:2px solid black;margin:5px;' value='https://"+location.host+location.pathname+"?scene=1&room="+session.roomid+passAdd2+"' /><font style='font-size:110%;color:white'><i class='las la-th-large' style='position:relative;top:7px;font-size:2em;' aria-hidden='true'></i> - This is an OBS Browser Source link that is empty by default. Videos in the room can be manually added to this scene.</font><br />";
 	
-	gridlayout.innerHTML += '<button style="margin:10px;" onclick="toggle(getById(\'roomnotes2\'),this);">❔ Click Here for a quick overview and help</button><br />';
+	gridlayout.innerHTML += "<font style='font-size:130%;color:white'></font><input class='task' onmousedown='copyFunction(this)' data-drag='1' onclick='popupMessage(event);copyFunction(this)' style='cursor:grab;font-weight:bold;background-color:#7C7;width:400px;font-size:100%;padding:10px;border:2px solid black;margin:5px;' value='https://"+location.host+location.pathname+"?scene=0&room="+session.roomid+passAdd2+"' /><font style='font-size:110%;color:white'><i class='las la-th-large' style='position:relative;top:7px;font-size:2em;' aria-hidden='true'></i> - Also an OBS Browser Source link, all videos in this group chat room will automatically be added into this scene.</font><br />";
 	
-	gridlayout.innerHTML += "<div id='roomnotes2' style='display:none;padding:0 0 0 10px;' ><br />\
+	gridlayout.innerHTML += '<button style="margin:10px;" onclick="toggle(getById(\'roomnotes2\'),this);">❔ Click Here for a quick overview and help</button> ';
+	
+	
+	gridlayout.innerHTML +=  '<button id="press2talk" style="margin:10px;" onclick="press2talk(this);">🔊 Enable Press to Talk</button>'; 
+	
+	gridlayout.innerHTML += "<br /><div id='roomnotes2' style='display:none;padding:0 0 0 10px;' ><br />\
 	<font style='color:#CCC;'>Welcome. This is the control-room for the group-chat. There are different things you can use this room for:<br /><br />\
 	<li>You can host a group chat with friends using a room. Share the blue link to invite guests who will join the chat automatically.</li>\
 	<li>A group room can handle around 4 to 30 guests, depending on numerous factors, including CPU and available bandwidth of all guests in the room.</li>\
@@ -1802,8 +1910,33 @@ function createRoom(roomname=false){
 	<div style='display:inline-block;width:300px;height:350px;border:2px solid white;background-color:#999;margin:40px;'><br /><br />GUEST SLOT #2<br /><br />(A video will appear here when a guest joins)<br /><br /><i class='las la-user  ' style='font-size:8em;' aria-hidden='true'></i><br /><br />A Solo Link for OBS will appear here</div>\
 	<div style='display:inline-block;width:300px;height:350px;border:2px solid white;background-color:#999;margin:40px;'><br /><br />GUEST SLOT #3<br /><br />(A video will appear here when a guest joins)<br /><br /><i class='las la-user ' style='font-size:8em;'aria-hidden='true'></i><br /><br />A Solo Link for OBS will appear here</div>\
 	<div style='display:inline-block;width:300px;height:350px;border:2px solid white;background-color:#999;margin:40px;'><br /><br />GUEST SLOT #4<br /><br />(A video will appear here when a guest joins)<br /><br /><i class='las la-user ' style='font-size:8em;'aria-hidden='true'></i><br /><br />A Solo Link for OBS will appear here</div></center></div>";
-	joinRoom(roomname);  // setting this to limit bitrate may break things.
+	joinRoom(roomname);
 
+}
+
+
+function press2talk(ele){
+	log(ele);
+	if (!(document.getElementById("videosource"))){
+		ele.innerHTML = "🔴 Push to Mute";
+		session.publishDirector();
+		return;
+	}
+	if (ele.dataset.enabled=="false"){
+		ele.innerHTML = "🔴 Push to Mute";
+		ele.dataset.enabled="true";
+		session.streamSrc.getAudioTracks().forEach((track) => {
+		  track.enabled = true;
+		});
+		log("PUSHED TO TALK 1");
+	} else {
+		ele.innerHTML = "🔴 Push to Talk ";
+		ele.dataset.enabled="false";
+		session.streamSrc.getAudioTracks().forEach((track) => {
+		  track.enabled = false;
+		});
+		log("PUSHED TO TALK 2");
+	}
 }
 
 function toggle(ele, tog=false) {

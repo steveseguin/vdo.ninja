@@ -50,12 +50,13 @@ a:active {
 input {
     border-radius: 4px;
 	padding:2px;
+	-webkit-app-region: no-drag;
 }
 
 button {
     border-radius: 7px;
 	border: 1px solid #4444;
-
+	-webkit-app-region: no-drag;
 	padding:5px 10px 3px 10px;
 	margin:10px 0px;
 }
@@ -192,7 +193,7 @@ hr {
 	overflow-y: auto !important;
 
 }
-.directorsgrid video {
+.directorsgrid .vidcon video {
 	height: 169px;
     width: 300px;
 	padding:10px 10px 0px 10px !important;
@@ -229,6 +230,21 @@ hr {
     margin: 0;
 }
 
+button.glyphicon-button:focus,
+button.glyphicon-button:active:focus,
+button.glyphicon-button.active:focus,
+button.glyphicon-button.focus,
+button.glyphicon-button:active.focus,
+button.glyphicon-button.active.focus {
+  outline: none !important;
+}
+
+#main{
+	-webkit-tap-highlight-color: rgba(255, 255, 255, 0) !important;
+	-webkit-tap-highlight-color: transparent !important;
+	outline: 0px !important;
+}
+
 video::-webkit-media-controls-current-time-display{
 	display:none;
 }
@@ -248,7 +264,6 @@ video::-webkit-media-controls-timeline-container{
 video::-webkit-media-controls-toggle-closed-captions-button{
 	display:none;
 }
-
 
 
 @keyframes pulse {
@@ -288,6 +303,7 @@ video::-webkit-media-controls-toggle-closed-captions-button{
 html {
 	border:0;
 	margin:0;
+	outline:0;	
 }
 
 li {
@@ -917,7 +933,6 @@ img {
 }
 
 video {
-	
 	background-color: transparent !important;
 	border:0;
 	margin:0;
