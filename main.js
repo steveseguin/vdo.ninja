@@ -1257,7 +1257,29 @@ function checkConnection(){
 }
 setInterval(function(){checkConnection();},5000);
 
-function printValues(obj) {
+
+function printViewStats(menu, statsObj, streamID){  // Stats for viewing a remote video
+	
+	menu.style.left="100px";
+	menu.style.top="100px";
+	menu.style.width="300px";
+	menu.style.minHeight="200px";
+	menu.style.backgroundColor="blue";  // white
+	menu.style.position="absolute";
+	menu.style.zIndex="20";
+	
+	menu.interval = setInterval(printViewStats,3000, menu, statsObj, streamID);
+								
+	menu.addEventListener('click', function(e) { 
+		clearInterval(e.currentTarget.interval);
+		e.currentTarget.parentNode.removeChild(e.currentTarget);
+	});
+	
+	menu.innerHTML ="Click to close.<br />";
+	menu.innerHTML +="Settings for StreamID: <b>"+streamID+"</b><br />";
+	menu.innerHTML+= printValues(statsObj);
+}
+function printValues(obj) {  // see: printViewStats
 	var out = "";
 	for (var key in obj) {
 		if (typeof obj[key] === "object") {
@@ -1276,51 +1298,55 @@ function printValues(obj) {
 	return out;
 }
 
-function printMyStats(ele){
-		
-	session.stats.outbound_connections = Object.keys(session.pcs).length;
-	session.stats.inbound_connections = Object.keys(session.rpcs).length;
-	ele.innerHTML="Click window to close<br /><br />";
-	
-	function printValues(obj) {
-		for (var key in obj) {
-			if (typeof obj[key] === "object") {
-				ele.innerHTML +="<br />";
-				printValues(obj[key]);   
-			} else {
-				ele.innerHTML +="<b>"+key+"</b>: "+obj[key]+"<br />";
-			}
-		}
-	}
-	printValues(session.stats);
-	ele.innerHTML+="<br /><button style='margin:5px;padding:20px;' onclick='session.forcePLI(null,event);'>Send Video Keyframe to Remote Viewers</button>";
-	for (var uid in session.pcs){
-		printValues(session.pcs[uid].stats);
-	}
-	
-};
 
-function setupStatsMenu(e){
-	var menu = document.createElement("div");
+
+function setupStatsMenu(menu){  // Stats for checking on our local video being published
+	
 	menu.style.left= parseInt(Math.random()*20)+100+"px"
 	menu.style.top= parseInt(Math.random()*20)+100+"px"
 	menu.style.width="300px";
 	menu.style.minHeight="200px";
-	menu.style.backgroundColor="white";
+	menu.style.backgroundColor= "red"; // white
 	menu.style.position="absolute";
 	menu.style.zIndex="20";
 	menu.style.border="1px solid black";
 	menu.style.padding="2px";
-	//menu.id = "stats_"+e.currentTarget.dataset.UUID
-	getById('main').appendChild(menu);
-	menu.innerHTML = "";
-	printMyStats(menu);
+	
 	menu.interval = setInterval(printMyStats,3000, menu);
-	menu.addEventListener('click', function(e) { 
+	
+	menu.addEventListener('click', function(e) {
 		clearInterval(e.currentTarget.interval);
 		e.currentTarget.parentNode.removeChild(e.currentTarget);
 	});
+	
+	menu.innerHTML = "";
+	printMyStats(menu);
 }
+function printMyStats(menu){  // see: setupStatsMenu
+	
+	session.stats.outbound_connections = Object.keys(session.pcs).length;
+	session.stats.inbound_connections = Object.keys(session.rpcs).length;
+	menu.innerHTML="Click window to close<br /><br />";
+	
+	function printViewValues(obj) { 
+		for (var key in obj) {
+			if (typeof obj[key] === "object") {
+				menu.innerHTML +="<br />";
+				printViewValues(obj[key]);   
+			} else {
+				menu.innerHTML +="<b>"+key+"</b>: "+obj[key]+"<br />";
+			}
+		}
+	}
+	printViewValues(session.stats);
+	menu.innerHTML+="<br /><button style='margin:5px;padding:20px;' onclick='session.forcePLI(null,event);'>Send Video Keyframe to Remote Viewers</button>";
+	for (var uuid in session.pcs){
+		printViewValues(session.pcs[uuid].stats);
+	}
+	
+}
+
+
 
 function updateStats(obsvc=false){
 	log('resolution found');
