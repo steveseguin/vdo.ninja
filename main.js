@@ -1260,38 +1260,51 @@ setInterval(function(){checkConnection();},5000);
 
 function printViewStats(menu, statsObj, streamID){  // Stats for viewing a remote video
 	
-	menu.style.left="100px";
-	menu.style.top="100px";
-	menu.style.width="300px";
-	menu.style.minHeight="200px";
-	menu.style.backgroundColor="blue";  // white
-	menu.style.position="absolute";
-	menu.style.zIndex="20";
-	
-	menu.interval = setInterval(printViewStats,3000, menu, statsObj, streamID);
-								
-	menu.addEventListener('click', function(e) { 
-		clearInterval(e.currentTarget.interval);
-		e.currentTarget.parentNode.removeChild(e.currentTarget);
-	});
-	
-	menu.innerHTML ="Click to close.<br />";
-	menu.innerHTML +="Settings for StreamID: <b>"+streamID+"</b><br />";
+	menu.className = "debugStats remotestats";
+
+	menu.interval = setTimeout(printViewStats,3000, menu, statsObj, streamID);
+									
+	menu.innerHTML="<h1>Statistics</h1>";
+	menu.innerHTML+="<button class='close'>×</button>";
+	menu.innerHTML+="StreamID: <b>"+streamID+"</b><br />";
 	menu.innerHTML+= printValues(statsObj);
+
+	document.getElementsByClassName('close')[0].addEventListener('click', function(e) { 
+		clearTimeout(menu.interval);
+		e.currentTarget.parentNode.remove();
+	});
 }
 function printValues(obj) {  // see: printViewStats
 	var out = "";
 	for (var key in obj) {
 		if (typeof obj[key] === "object") {
 			if (obj[key]!=null){
-				out += "<br /><u>"+key+"</u><br />"
+				out += "<li><h2 title='" + key + "'>"+key+"</h2></li>"
 				out += printValues(obj[key]);
 			}
 		} else {
 			if (key.startsWith("_")){
 				// if it starts with _, we don't want to show it.
 			} else {
-				out +="<b>"+key+"</b>: "+obj[key]+"<br />";
+				var unit  = '';
+				var stat = key;
+				if(key == 'Bitrate_in_kbps') {
+					var unit = " kbps";
+					stat = "Bitrate";
+				}
+				if(key == 'type') {
+					var unit = "";
+					stat = 'Type';
+				}
+				if(key == 'packetLoss_in_percentage') {
+					var unit = " %";
+					stat = 'Packet Loss';
+				}
+				if(key == 'Buffer_Delay_in_ms') {
+					var unit = " ms";
+					stat = 'Buffer Delay';
+				}
+				out +="<li><span>"+stat+"</span><span>"+obj[key]+ unit + "</span></li>";
 			}
 		}
 	}
@@ -1301,48 +1314,40 @@ function printValues(obj) {  // see: printViewStats
 
 
 function setupStatsMenu(menu){  // Stats for checking on our local video being published
-	
-	menu.style.left= parseInt(Math.random()*20)+100+"px"
-	menu.style.top= parseInt(Math.random()*20)+100+"px"
-	menu.style.width="300px";
-	menu.style.minHeight="200px";
-	menu.style.backgroundColor= "red"; // white
-	menu.style.position="absolute";
-	menu.style.zIndex="20";
-	menu.style.border="1px solid black";
-	menu.style.padding="2px";
-	
+		
+	menu.className = 'debugStats viewstats';
+
 	menu.interval = setInterval(printMyStats,3000, menu);
-	
-	menu.addEventListener('click', function(e) {
-		clearInterval(e.currentTarget.interval);
-		e.currentTarget.parentNode.removeChild(e.currentTarget);
-	});
-	
-	menu.innerHTML = "";
 	printMyStats(menu);
 }
 function printMyStats(menu){  // see: setupStatsMenu
 	
 	session.stats.outbound_connections = Object.keys(session.pcs).length;
 	session.stats.inbound_connections = Object.keys(session.rpcs).length;
-	menu.innerHTML="Click window to close<br /><br />";
 	
+	menu.innerHTML = "";
+	menu.innerHTML+="<h1>Statistics</h1>";
+	menu.innerHTML+="<button class='close'>×</button>";
+
 	function printViewValues(obj) { 
 		for (var key in obj) {
-			if (typeof obj[key] === "object") {
-				menu.innerHTML +="<br />";
-				printViewValues(obj[key]);   
+			if (typeof obj[key] === "object") {				
+				printViewValues(obj[key]);
 			} else {
-				menu.innerHTML +="<b>"+key+"</b>: "+obj[key]+"<br />";
+				menu.innerHTML +="<li><span>"+key+"</span><span>"+obj[key]+"</span></li>";
 			}
 		}
 	}
 	printViewValues(session.stats);
-	menu.innerHTML+="<br /><button style='margin:5px;padding:20px;' onclick='session.forcePLI(null,event);'>Send Video Keyframe to Remote Viewers</button>";
+	menu.innerHTML+="<button onclick='session.forcePLI(null,event);'>Send Keyframe to Viewers</button>";
 	for (var uuid in session.pcs){
 		printViewValues(session.pcs[uuid].stats);
 	}
+
+	document.getElementsByClassName('close')[0].addEventListener('click', function(e) {
+		clearInterval(menu.interval);
+		e.currentTarget.parentNode.remove();
+	});
 	
 }
 
