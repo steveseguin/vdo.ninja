@@ -1281,6 +1281,108 @@ input[type=checkbox]
 	   
 }
 
+.debugStats {
+	font-size: 0.8rem;
+	list-style-type: none;
+	left: 50px;
+	top: 50px;
+	width: 300px;
+	min-height: 200px;
+	max-height: 90vh;
+	overflow-y: auto;
+	background-color: rgba(0,0,0,0.95);
+	position: absolute;
+	z-index: 20;
+	color: white;
+	padding: 20px;
+	border: 2px solid #1d1d1d;
+}
+
+.debugStats::-webkit-scrollbar {
+	width: 0.5em;
+  }
+
+.debugStats::-webkit-scrollbar-track {
+	background:black;
+	border-radius: 10px;
+}
+
+/* Handle */
+.debugStats::-webkit-scrollbar-thumb {
+	background: rgb(119, 119, 119); 
+	border-radius: 10px;
+}
+
+/* Handle on hover */
+.debugStats::-webkit-scrollbar-thumb:hover {
+	background: rgb(158, 158, 158); ; 
+}
+
+.debugStats h1 {
+	font-size: 1rem;
+	text-align: left;
+	text-transform: uppercase;
+	margin-bottom: 10px;
+	margin-top: -5px;
+}
+
+.debugStats h2 {
+	font-size: 0.8rem;
+	text-align: left;
+	text-transform: uppercase;
+	margin-top: 10px;
+	white-space: nowrap;
+	text-overflow: ellipsis;
+	display:block;
+	overflow: hidden;
+}
+
+.viewstats::-webkit-scrollbar-track {
+	box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
+}
+
+.debugStats li {
+	display: flex;
+	margin: 5px 0px;
+}
+
+.debugStats li:nth-child(even) {
+    background: rgba(33,33,33,0.8);
+    padding: 2px 0px;
+}
+
+.debugStats li span:first-child {
+    flex: 1;
+}
+.debugStats li span:last-child {
+    flex: 1;
+    text-align: right;
+}
+
+.debugStats .close {
+	font-weight: bold;
+	color:white;
+	display: block;
+	background:none;
+	padding: 0;
+	margin: 0;
+	font-size: 1.5rem;
+	border:none;
+	top: 10px;
+	right: 10px;
+}
+
+.debugStats button:not(.close) {
+	margin: 10px 0px;
+	padding: 10px 0px;
+	background: #263250;
+	color: white;
+	border-radius: 0;
+	width: 100%;
+	font-weight: bold;
+	border-bottom: 2px solid #364c84;
+}
+
 @media only screen and (max-width: 390px) {
 	#chatBody{
 		z-index: 12;
