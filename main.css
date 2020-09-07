@@ -1007,12 +1007,12 @@ video {
   background-color: #0066aa  !important;
 }
 
-#audioTitle{
+.audioTitle {
 	text-align:left;
 	padding: 7px 0px;
 }
 
-#audioTitle2{
+.audioTitle2 {
 	text-align:left;
 	padding: 0px 10px 10px 1px;
 }

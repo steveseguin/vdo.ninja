@@ -1259,20 +1259,10 @@ setInterval(function(){checkConnection();},5000);
 
 
 function printViewStats(menu, statsObj, streamID){  // Stats for viewing a remote video
-	
-	menu.className = "debugStats remotestats";
 
-	menu.interval = setTimeout(printViewStats,3000, menu, statsObj, streamID);
-									
-	menu.innerHTML="<h1>Statistics</h1>";
-	menu.innerHTML+="<button class='close'>×</button>";
-	menu.innerHTML+="StreamID: <b>"+streamID+"</b><br />";
+	menu.innerHTML="StreamID: <b>"+streamID+"</b><br />";
 	menu.innerHTML+= printValues(statsObj);
-
-	document.getElementsByClassName('close')[0].addEventListener('click', function(e) { 
-		clearTimeout(menu.interval);
-		e.currentTarget.parentNode.remove();
-	});
+	
 }
 function printValues(obj) {  // see: printViewStats
 	var out = "";
@@ -1312,23 +1302,13 @@ function printValues(obj) {  // see: printViewStats
 }
 
 
-
-function setupStatsMenu(menu){  // Stats for checking on our local video being published
-		
-	menu.className = 'debugStats viewstats';
-
-	menu.interval = setInterval(printMyStats,3000, menu);
-	printMyStats(menu);
-}
 function printMyStats(menu){  // see: setupStatsMenu
+	menu.innerHTML="";
 	
 	session.stats.outbound_connections = Object.keys(session.pcs).length;
 	session.stats.inbound_connections = Object.keys(session.rpcs).length;
 	
-	menu.innerHTML = "";
-	menu.innerHTML+="<h1>Statistics</h1>";
-	menu.innerHTML+="<button class='close'>×</button>";
-
+	
 	function printViewValues(obj) { 
 		for (var key in obj) {
 			if (typeof obj[key] === "object") {				
@@ -1343,12 +1323,6 @@ function printMyStats(menu){  // see: setupStatsMenu
 	for (var uuid in session.pcs){
 		printViewValues(session.pcs[uuid].stats);
 	}
-
-	document.getElementsByClassName('close')[0].addEventListener('click', function(e) {
-		clearInterval(menu.interval);
-		e.currentTarget.parentNode.remove();
-	});
-	
 }
 
 
@@ -1455,7 +1429,7 @@ function toggleVideoMute(apply=false){ // TODO: I need to have this be MUTE, tog
 	}
 }
 
-function toggleSettings(ele=null){ // TODO: I need to have this be MUTE, toggle, with volume not touched.
+function toggleSettings(){ // TODO: I need to have this be MUTE, toggle, with volume not touched.
 	
 	
 	if (getById("popupSelector").style.display=="none"){
@@ -1556,6 +1530,8 @@ function directVolume(ele){ // A directing room only is controlled by the Direct
 	msg.target = ele.parentNode.parentNode.dataset.UUID; // i want to focus on the STREAM ID, not the UUID...
 	msg.value = ele.value;
 	
+	// session.anysend(msg // msg.UUID ->  can't do this yet as DIRECTOR isn't "verfied" via WebRTC yet. ALSO,  
+	// need to send to just scenes, and that isn't the case as voice is push to talk setup first. RTC is off by default then.
 	session.sendMsg(msg); // send to everyone in the room, so they know if they are on air or not.
 }
 
@@ -1897,8 +1873,19 @@ function createRoom(roomname=false){
 	getById("roomid").innerHTML = roomname;
 
 
+	try{
+		if (document.title==""){
+			document.title = "Control Room";
+		} else {
+			document.title += " - Control Room";
+		}
+	} catch(e){errorlog(e);};
+	
+
 	session.director = true;
 	getById("reshare").parentNode.removeChild(getById("reshare"));
+	getById("chatbutton").classList.remove("advanced");
+	getById("controlButtons").style.display = "inherit";
 	
 	var passAdd="";
 	var passAdd2="";
@@ -1914,12 +1901,12 @@ function createRoom(roomname=false){
 	
 	gridlayout.innerHTML += "<font style='font-size:130%;color:white'></font><input class='task' onmousedown='copyFunction(this)' data-drag='1' onclick='popupMessage(event);copyFunction(this)' style='cursor:grab;font-weight:bold;background-color:#5F4;width:400px;font-size:100%;padding:10px;border:2px solid black;margin:5px;' value='https://"+location.host+location.pathname+"?scene=1&room="+session.roomid+passAdd2+"' /><font style='font-size:110%;color:white'><i class='las la-th-large' style='position:relative;top:7px;font-size:2em;' aria-hidden='true'></i> - This is an OBS Browser Source link that is empty by default. Videos in the room can be manually added to this scene.</font><br />";
 	
-	gridlayout.innerHTML += "<font style='font-size:130%;color:white'></font><input class='task' onmousedown='copyFunction(this)' data-drag='1' onclick='popupMessage(event);copyFunction(this)' style='cursor:grab;font-weight:bold;background-color:#7C7;width:400px;font-size:100%;padding:10px;border:2px solid black;margin:5px;' value='https://"+location.host+location.pathname+"?scene=0&room="+session.roomid+passAdd2+"' /><font style='font-size:110%;color:white'><i class='las la-th-large' style='position:relative;top:7px;font-size:2em;' aria-hidden='true'></i> - Also an OBS Browser Source link, all videos in this group chat room will automatically be added into this scene.</font><br />";
+	gridlayout.innerHTML += "<font style='font-size:130%;color:white'></font><input class='task' onmousedown='copyFunction(this)' data-drag='1' onclick='popupMessage(event);copyFunction(this)' style='cursor:grab;font-weight:bold;background-color:#7C7;width:400px;font-size:100%;padding:10px;border:2px solid black;margin:5px;' value='https://"+location.host+location.pathname+"?scene=0&room="+session.roomid+passAdd2+"' /><font style='font-size:110%;color:white'><i class='las la-th-large' style='position:relative;top:7px;font-size:2em;' aria-hidden='true'></i> - Also an OBS Browser Source link. All guest videos in this group chat room will automatically be added into this scene.</font><br />";
 	
 	gridlayout.innerHTML += '<button style="margin:10px;" onclick="toggle(getById(\'roomnotes2\'),this);">❔ Click Here for a quick overview and help</button> ';
 	
 	
-	gridlayout.innerHTML +=  '<button id="press2talk" style="margin:10px;" onclick="press2talk(this);">🔊 Enable Press to Talk</button>'; 
+	gridlayout.innerHTML +=  '<span id="miniPerformer"><button id="press2talk" style="margin:10px;" onclick="press2talk(this);">🔊 Enable Director\'s Push-to-Talk Mode</button></span>'; 
 	
 	gridlayout.innerHTML += "<br /><div id='roomnotes2' style='display:none;padding:0 0 0 10px;' ><br />\
 	<font style='color:#CCC;'>Welcome. This is the control-room for the group-chat. There are different things you can use this room for:<br /><br />\
@@ -1948,6 +1935,7 @@ function createRoom(roomname=false){
 
 function press2talk(ele){
 	log(ele);
+	ele.style.minWidth="127px";
 	if (!(document.getElementById("videosource"))){
 		ele.innerHTML = "🔴 Push to Mute";
 		session.publishDirector();
@@ -1961,7 +1949,7 @@ function press2talk(ele){
 		});
 		log("PUSHED TO TALK 1");
 	} else {
-		ele.innerHTML = "🔴 Push to Talk ";
+		ele.innerHTML = "🔇 Push to Talk ";
 		ele.dataset.enabled="false";
 		session.streamSrc.getAudioTracks().forEach((track) => {
 		  track.enabled = false;
@@ -3484,11 +3472,11 @@ function setupWebcamSelection(stream=null){
 				session.sink = outputSelect.options[outputSelect.selectedIndex].value;
 				//if (session.sink=="default"){session.sink=false;} else {
 					getById("previewWebcam").setSinkId(session.sink).then(() => {
-							log("New Output Device:"+session.sink);
-						}).catch(error => {
-							errorlog(error);
-							//setTimeout(function(){alert("Failed to change audio output destination.");},1);
-						});
+						log("New Output Device:"+session.sink);
+					}).catch(error => {
+						errorlog(error);
+						//setTimeout(function(){alert("Failed to change audio output destination.");},1);
+					});
 				//}
 			}
 			
@@ -3762,6 +3750,13 @@ function generateQRPage(){
 if (session.view){
 	getById("main").className = "";
 	getById("credits").style.display = 'none';
+	try{
+		if (document.title==""){
+			document.title = "View="+session.view.toString();
+		} else {
+			document.title += ", View="+session.view.toString();
+		}
+	} catch(e){errorlog(e);};
 }
 
 
@@ -3810,6 +3805,15 @@ if ((session.view) && (session.roomid===false)){
 		play();
 		//getById("mainmenu").style.display="none";
 	}
+} else if (session.roomid!==false){
+	try{
+		if (document.title==""){
+			document.title = "Room="+session.roomid.toString();
+		} else {
+			document.title += ", Room="+session.roomid.toString();
+		}
+	} catch(e){errorlog(e);};
+	
 }
 
 

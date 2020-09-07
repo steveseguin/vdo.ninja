@@ -138,11 +138,13 @@ function updateOutputTarget(e){
 	document.getElementById('changeText').value = url;
 }
 
-function getPermssions(e){
+function getPermssions(e=null){
 	if (listed==true){
 		return;
 	} 
-	e.currentTarget.blur();
+	if (e!==null){
+		e.currentTarget.blur();
+	}
 	navigator.mediaDevices.getUserMedia({audio: true,video: false}).then((stream)=>{
 		navigator.mediaDevices.enumerateDevices().then(gotDevices).catch(console.error); // list all devices
 		stream.getTracks().forEach(track => {
@@ -301,9 +303,10 @@ function modURL(ele=false){
 	return url;
 }
 function gohere(){
-		  var url = modURL(true);
-          window.location = url;
-    };
+	var url = modURL(true);
+	window.location = url;
+};
+getPermssions();
 </script>
 </body>
 </html>

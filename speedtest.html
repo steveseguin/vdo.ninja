@@ -131,7 +131,9 @@ function loadIframe(){
 			for (var streamID in e.data.stats.inbound_stats){
 				out += printValues(e.data.stats.inbound_stats[streamID]);
 			}
-			document.getElementById("statsdiv").innerHTML = out;
+			if (out.split("Bitrate_in_kbps").length>1){
+				document.getElementById("statsdiv").innerHTML = "<b>Bitrate_in_kbps</b>"+out.split("Bitrate_in_kbps")[1];
+			}
 		}
 	});
 	
@@ -145,7 +147,9 @@ function printValues( obj) {
 			out +="<br />";
 			out += printValues(obj[key]);   
 		} else {
-			out +="<b>"+key+"</b>: "+obj[key]+"<br />";
+			if (key.startsWith("_")){} else {
+				out +="<b>"+key+"</b>: "+obj[key]+"<br />";
+			}
 		}
 	}
 	return out;
