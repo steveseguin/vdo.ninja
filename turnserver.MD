@@ -23,7 +23,7 @@ sudo systemctl restart coturn
 sudo systemctl status coturn
 
 ```
-
+and this should go to  /etc/turnserver.conf with the contents below
 ```
 ## turnserver.conf
 
