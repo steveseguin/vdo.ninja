@@ -1,30 +1,29 @@
-This was used with OVH loaded onto a VM with Ubuntu 20
+This install script and config file was used with OVH loaded onto a VM with Ubuntu 20
 
 ```
-# sudo apt-get update
-# 
-# sudo apt-get install coturn
-# set TURNSERVER_ENABLED=1
-# 
-# sudo add-apt-repository ppa:certbot/certbot
-# sudo apt-get install certbot
-# sudo certbot certonly --standalone
-# 
-# sudo ls /etc/letsencrypt/live/turn3.obs.ninja/fullchain.pem
-# 
-# sudo apt install net-tools
-# ifconfig
-# 
-# sudo ufw allow 60000:62000/tcp ## can be whatever port range you want I guess
-# sudo ufw allow 60000:62000/udp ## default needed is like 40000 to 65000 or so
-#
-# sudo vi /etc/turnserver.conf
-#
-# sudo systemctl restart coturn
-# sudo systemctl status coturn
-#
-##
+sudo apt-get update
+ 
+sudo apt-get install coturn
+set TURNSERVER_ENABLED=1
+
+sudo add-apt-repository ppa:certbot/certbot
+sudo apt-get install certbot
+sudo certbot certonly --standalone
+
+sudo ls /etc/letsencrypt/live/turn3.obs.ninja/fullchain.pem
+
+sudo apt install net-tools
+ifconfig
+ 
+sudo ufw allow 60000:62000/tcp ## can be whatever port range you want I guess
+sudo ufw allow 60000:62000/udp ## default needed is like 40000 to 65000 or so
+
+sudo vi /etc/turnserver.conf
+sudo systemctl restart coturn
+sudo systemctl status coturn
+
 ```
+
 ```
 ## turnserver.conf
 
