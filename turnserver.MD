@@ -10,7 +10,7 @@ sudo add-apt-repository ppa:certbot/certbot
 sudo apt-get install certbot
 sudo certbot certonly --standalone
 
-sudo ls /etc/letsencrypt/live/turn3.obs.ninja/fullchain.pem
+sudo ls /etc/letsencrypt/live/turn.obs.ninja/fullchain.pem
 
 sudo apt install net-tools
 ifconfig
@@ -36,8 +36,8 @@ external-ip = 1111:3333:555:3333::9999  ## External ipv6 address.  Add to DNS se
 min-port=60000 ## ufw is needed to open these ports
 max-port=62000 ## default is like 49000 to 60000 or so?
 
-realm=turn3.obs.ninja	## Domain name is needed; OVH provides one, but you can add a novelty one for cheap yourself.
-server-name=turn3.obs.ninja
+realm=turn.obs.ninja	## Domain name is needed; OVH provides one, but you can add a novelty one for cheap yourself.
+server-name=turn.obs.ninja
 
 #lt-cred-mech
 #userdb=/etc/turnuserdb.conf  ## For server-based credentials, if you want some added security
