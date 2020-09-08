@@ -15,8 +15,8 @@ sudo ls /etc/letsencrypt/live/turn3.obs.ninja/fullchain.pem
 sudo apt install net-tools
 ifconfig
  
-sudo ufw allow 60000:62000/tcp ## can be whatever port range you want I guess
-sudo ufw allow 60000:62000/udp ## default needed is like 40000 to 65000 or so
+sudo ufw allow 60000:62000/tcp 
+sudo ufw allow 60000:62000/udp
 
 sudo vi /etc/turnserver.conf
 sudo systemctl restart coturn
