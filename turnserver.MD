@@ -1,6 +1,5 @@
-```
-## This was used with OVH loaded onto a VM with Ubuntu 20
-#########################################################
+This was used with OVH loaded onto a VM with Ubuntu 20
+
 # sudo apt-get update
 # 
 # sudo apt-get install coturn
@@ -24,6 +23,9 @@
 # sudo systemctl status coturn
 #
 ##
+
+```
+## turnserver.conf
 
 listening-port=3478
 tls-listening-port=443
