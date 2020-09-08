@@ -25,7 +25,7 @@ sudo systemctl status coturn
 ```
 and this should go to  /etc/turnserver.conf with the contents below
 ```
-## turnserver.conf
+## sudo vi /etc/turnserver.conf
 
 listening-port=3478
 tls-listening-port=443
