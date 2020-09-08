@@ -1,5 +1,6 @@
 This was used with OVH loaded onto a VM with Ubuntu 20
 
+```
 # sudo apt-get update
 # 
 # sudo apt-get install coturn
@@ -23,7 +24,7 @@ This was used with OVH loaded onto a VM with Ubuntu 20
 # sudo systemctl status coturn
 #
 ##
-
+```
 ```
 ## turnserver.conf
 
