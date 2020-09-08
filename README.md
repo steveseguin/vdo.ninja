@@ -19,14 +19,16 @@ MacOS users will face some challenges in using OBS currently, but there are work
 This repo contains software for OBS.Ninja, including the HTML landing page for its Electron Capture app offering. A sample config file and instructions for setting up a TURN server (video relay server), is also provided. You may also find the Wiki for the project in this repo, which contains added information on how to use the software.
 
 ## How to Deploy this Repo:
-To use, just download and host on a HTTPS-enabled webserver. You may want to hide the .html extensions within your HTTP server as well, else the generated links will not work. 
+To use, just download and host the files on a HTTPS-enabled webserver. You may want to hide the .html extensions within your HTTP server as well, else the generated links will not work.
 
-Directions on how to deploy a TURN server are listed in the turnserver.conf file. You may wish to do so if you are having problems with my existing TURN server, although most users will not need one. About 10% of users, those often connected via 4G LTE, will require a TURN server. 
+Directions on how to deploy a TURN server are listed in the turnserver.md file. You may wish to do so, although not all use cases will not need one. About 10% of remote guests, those often connected via 4G LTE, will require a TURN server however. While OBS.Ninja does host some TURN servers, they are quite expensive to operate and not really for private deployment use. If you are deploying your own version of OBS.Ninja, I'd ask you use your own TURN servers instead.
 
 ## Server side / API software?
 Since OBS.Ninja uses peer-2-peer technology, video connections are made directly between viewer and publisher in 90% of cases. Hosting a TURN server yourself may help improve performance, but less than 1% of users will see any benefit of this. Details on how to deploy a TURN server are provided. For those capable of hosting their own TURN server, that would be appreciated if possible, as TURN servers are the only real cost incurred by OBS.Ninja at present. (other than time, of course)
 
-Other than TURN servers, OBS.Ninja also uses public STUN servers and a hosted handshake server. These are used to facilitate the initial setup of peer connections and are generally not required after a peer connection is established. Development builds of OBS.Ninja may include debugging software, but in-production releases have this removed. 
+Other than TURN servers, OBS.Ninja also uses public STUN servers and a hosted handshake server. These are used to facilitate the initial setup of peer connections and are generally not required after a peer connection is established. These servers are free to access and use, even for private deployments. 
+
+Development builds of OBS.Ninja may include debugging software, but in-production releases have this removed. Double check to ensure "console.re" debugging is disabled before deployment, just to be safe.
 
 A design goal of OBS.Ninja is to be serverless and we are 99% of the way there. This design objective ensures OBS.Ninja can be offered for free, along with providing increased levels of security and privacy. 
 
