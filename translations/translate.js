@@ -42,7 +42,7 @@ function updateTranslation(filename){  // updates the website with a specific tr
 	});
 }
 
-var updateList = ["en", "de", "es", "ru", "fr", "pl", "ar", "it", "nl", "pt", "zh", "ja", "blank", "pig"];  // list of languages to update. Update this if you add a new language.
+var updateList = ["en", "de", "es", "ru", "fr", "pl",  "ja", "ar", "it", "nl", "pt", "zh","blank"];  // list of languages to update. Update this if you add a new language.
 
 downloadTranslation("default");
 
