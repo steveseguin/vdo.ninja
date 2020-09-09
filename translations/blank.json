@@ -47,5 +47,8 @@
   "invite-group-chat-type": "This room guest can:",
   "can-see-and-hear": "Can see and hear the group chat",
   "can-hear-only": "Can only hear the group chat",
-  "cant-see-or-hear": "Cannot hear or see the group chat"
+  "cant-see-or-hear": "Cannot hear or see the group chat",
+  "password-input-field": "Password",
+  "select-output-source": " Audio Output Destination: \n\t\t\t\t\t",
+  "add-a-password-to-stream": " Add a password:"
 }

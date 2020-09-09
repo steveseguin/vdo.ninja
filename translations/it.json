@@ -46,5 +46,8 @@
   "record": "Registra",
   "volume": "Volume",
   "open-in-new-tab": "Apri in una nuova Tab",
-  "copy-to-clipboard": "Copia negli appunti"
+  "copy-to-clipboard": "Copia negli appunti",
+  "password-input-field": "Password",
+  "select-output-source": " Audio Output Destination: \n\t\t\t\t\t",
+  "add-a-password-to-stream": " Add a password:"
 }
