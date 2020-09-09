@@ -47,5 +47,8 @@
   "invite-group-chat-type": "Deze kamer gast kan:",
   "can-see-and-hear": "Het groepsgesprek zien en horen",
   "can-hear-only": "Alleen het groepsgesprek horen",
-  "cant-see-or-hear": "Het groepsgesprek niet horen en zien"
+  "cant-see-or-hear": "Het groepsgesprek niet horen en zien",
+  "password-input-field": "Password",
+  "select-output-source": " Audio Output Destination: \n\t\t\t\t\t",
+  "add-a-password-to-stream": " Add a password:"
 }
