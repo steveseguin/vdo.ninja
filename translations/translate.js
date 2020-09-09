@@ -1,6 +1,6 @@
 // Copy and paste this code into OBS.Ninja's developer's console to generate new Translation files
 
-function downloadTranslation(filename, trans={}){  // downloads the current translation to a file
+function downloadTranslation(filename, trans){  // downloads the current translation to a file
 	document.querySelectorAll('[data-translate]').forEach(function(ele){
 		trans[ele.dataset.translate] = ele.innerHTML;
 	});
@@ -42,9 +42,9 @@ function updateTranslation(filename){  // updates the website with a specific tr
 	});
 }
 
-var updateList = ["en", "de", "es", "ru", "fr", "pl",  "ja", "ar", "it", "nl", "pt", "zh","blank"];  // list of languages to update. Update this if you add a new language.
+var updateList = ["en", "de", "es", "ru", "fr", "pl",  "ja", "ar", "it", "nl", "pt", "zh", "blank"];  // list of languages to update. Update this if you add a new language.
 
-downloadTranslation("default");
+//downloadTranslation("default");
 
 for (var i in updateList){
 	var ln = updateList[i];
