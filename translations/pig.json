@@ -14,7 +14,7 @@
   "enable-stereo-and-pro": "Enableway Ereostay andway Opray HDAY Audioway",
   "enter-the-rooms-control": "Enterway ethay Oom'sray Ontrolcay Entercay",
   "force-vp9-video-codec": "Orcefay VPAY9 Ideovay Odeccay (esslay artifactingway)",
-  "generate-invite-link": "ENERATEGAY ETHAY INVITEWAY INKLAY",
+  "generate-invite-link": "ENERATEGAY ETHAY INVITEWAY INKLAY",  
   "here-you-can-pre-generate": "Erehay ouyay ancay epray-enerategay away eusableray iewvay inklay andway away elatedray uestgay inviteway inklay.",
   "high-security-mode": "Ighhay Ecuritysay Odemay",
   "info-blob": "",
@@ -47,8 +47,5 @@
   "invite-group-chat-type": "Isthay oomray uestgay ancay:",
   "can-see-and-hear": "Ancay eesay andway earhay ethay oupgray atchay",
   "can-hear-only": "Ancay onlyway earhay ethay oupgray atchay",
-  "cant-see-or-hear": "Annotcay earhay orway eesay ethay oupgray atchay",
-  "password-input-field": "Password",
-  "select-output-source": "音声出力先:",
-  "add-a-password-to-stream": "パスワードを追加:"
+  "cant-see-or-hear": "Annotcay earhay orway eesay ethay oupgray atchay"
 }
