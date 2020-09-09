@@ -115,7 +115,7 @@
 			<div id="mutevideobutton" title="Disable the Camera" onclick="toggleVideoMute()" class="advanced float" style="cursor: pointer;" alt="Toggle the camera">
 				<i id="mutevideotoggle" class="toggleSize las la-eye my-float"></i>
 			</div>
-			<div id="settingsbutton" title="Settings" onclick="toggleSettings(this)" class="advanced float" style="cursor: pointer;" alt="Toggle the Settings Menu">
+			<div id="settingsbutton" title="Settings" onclick="toggleSettings()" class="advanced float" style="cursor: pointer;" alt="Toggle the Settings Menu">
 				<i id="settingstoggle" class="toggleSize las la-cog my-float"></i>
 			</div>
 			<div id="hangupbutton" title="Hangup the Call" onclick="hangup()" class="advanced float" style="cursor: pointer;" alt="Disconnect and End">
@@ -237,7 +237,7 @@
 					</center>
 					<div id="audioMenu" class="form-group multiselect" alt="tip: Hold CTRL (command) to select Multiple" title="tip: Hold CTRL (command) to select Multiple">
 						<a id="multiselect-trigger" class="form-control multiselect-trigger" tabindex="3">
-							<div id="audioTitle"  class="title">
+							<div  class="audioTitle">
 								<i class="las la-microphone-alt"></i><span data-translate="select-audio-source"> Audio Source(s) </span>
 								<i id='chevarrow1' class="chevron bottom" aria-hidden="true"></i>
 								<div class="meter" id="meter1"></div>
@@ -254,7 +254,7 @@
 					</div>
 					<br />
 					<span id="headphonesDiv" style="text-align:left; margin:17px 0; max-width: 550px; min-width: 420px; background-color: #f3f3f3; display: none; padding: 10px 10px; border: 1px solid #ccc; vertical-align: middle;">
-						<div id="audioTitle2"  class="title">
+						<div class="audioTitle2">
 						<i class="las la-headphones"></i><span data-translate="select-output-source"> Audio Output Destination: <button onclick="playtone()" style="margin:0 0 0 15px;" type="button">Test</button>
 						</span></div>
 						<select id="outputSource" ></select>
@@ -607,7 +607,7 @@
 				<br />
 				<br />
 				
-				<div id="audioMenu3" class="form-group multiselect" alt="tip: Hold CTRL (command) to select Multiple" title="tip: Hold CTRL (command) to select Multiple" style="padding: 10px; background-color:#f3f3f3;">
+				<div class="form-group multiselect" alt="tip: Hold CTRL (command) to select Multiple" title="tip: Hold CTRL (command) to select Multiple" style="padding: 10px; background-color:#f3f3f3;">
 					<a id="multiselect-trigger3" class="form-control multiselect-trigger" tabindex="3">
 						<div id="audioTitle2" class="title">
 							<i class="las la-microphone-alt"></i><span data-translate="select-audio-source"> Audio Source(s) </span>
@@ -621,7 +621,7 @@
 				</div>
 				<br />
 				<span id="headphonesDiv3" style="display: inline-block;">
-					<div id="audioTitle3"  class="title">
+					<div class="title">
 						<i class="las la-headphones"></i><span data-translate="select-output-source"> Audio Output Destination: 
 					</div>
 					<select id="outputSource3" ></select>

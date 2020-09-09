@@ -47,5 +47,13 @@
   "invite-group-chat-type": "Dieser Gast..",
   "can-see-and-hear": "..kann den Gruppen-Chat sehen und hören",
   "can-hear-only": "..kann den Gruppen-Chat nur hören",
-  "cant-see-or-hear": "..kann den Gruppen-chat weder hören noch sehen"
+  "cant-see-or-hear": "..kann den Gruppen-chat weder hören noch sehen",
+  "password-input-field": "Password",
+  "select-output-source": " Audio Output Destination: \n\t\t\t\t\t",
+  "add-a-password-to-stream": " Add a password:",
+  "welcome-to-obs-ninja-chat": "\n\t\t\t\t\tWelcome to OBS.Ninja! You can send text messages directly to connected peers from here.\n\t\t\t\t",
+  "names-and-labels-coming-soon": "\n\t\t\t\t\tNames identifying connected peers will be a feature in an upcoming release.\n\t\t\t\t",
+  "send-chat": "Send",
+  "available-languages": "Available Languages:",
+  "add-more-here": "Add More Here!"
 }

@@ -17,7 +17,7 @@
   "generate-invite-link": "GENERAR EL LINK DE INVITACIÓN",
   "here-you-can-pre-generate": "Aquí puedes pregenerar un enlace reutilizable para la fuente de navegador y un enlace para invitados.",
   "high-security-mode": "Modo de alta seguridad",
-  "info-blob": "\n\t\t\t\t\t\t<h2>Qué es OBS.Ninja</h2><br>\n\t\t\t\t\t\t<li>100% <b>gratis</b>; sin descargas; sin recopilación de datos personales; sin registros</li>\n\t\t\t\t\t\t<li>Lleva video desde tu móbil, portátil, ordenador de sobremesa, o de tus amigos directamente a tu stream en OBS</li>\n\t\t\t\t\t\t<li>Utilizamos tecnología innovadora Peer-to-Peer que ofrece privacidad y ultra baja latencia</li>\n\t\t\t\t\t\t<br>\n\t\t\t\t\t\t<li>Youtube video <i class=\"fa fa-youtube-play\" aria-hidden=\"true\"></i> <a href=\"https://www.youtube.com/watch?v=6R_sQKxFAhg\">Demo aquí</a> </li>\n\t\t\t\t\t\t<li>El cdigo está disponible aquí: <i class=\"fa fa-github\" aria-hidden=\"true\"></i> <a href=\"https://github.com/steveseguin/obsninja\">https://github.com/steveseguin/obsninja</a> </li>\n\t\t\t\t\t\t<br>\n\t\t\t\t\t\t<i><font style=\"color:red\">Problemas conocidos:</font></i><br>\n\n\t\t\t\t\t\t<li><i class=\"fa fa-apple\" aria-hidden=\"true\"></i> Los usuarios de MacOS necesitan utilizar OBS v23 o recurrir a i>Capturar ventana</i> de un navegador Chrome con OBS v25</li>\n\t\t\t\t\t\t<li>Algunos usuarios tendrán problemas de \"pixelación\" con videos. Por favor añade en la URL el parametro <b>&amp;codec=vp9</b> a los enlaces de OBS para corregirlo.</li>\n\t<h3><i>Revisa <a href=\"https://www.reddit.com/r/OBSNinja/\">sub-reddit</a> <i class=\"fa fa-reddit-alien\" aria-hidden=\"true\"></i> para ayuda e información avanzada. También estoy en <a href=\"https://discord.gg/EksyhGA\">Discord</a> y puedes enviarme un email a steve@seguin.email</i></h3>\n\t\t\t\t\t",
+  "info-blob": "\n\t\t\t\t\t\t<h2>Qué es OBS.Ninja</h2><br>\n\t\t\t\t\t\t<li>100% <b>gratis</b>; sin descargas; sin recopilación de datos personales; sin registros</li>\n\t\t\t\t\t\t<li>Lleva video desde tu móbil, portátil, ordenador de sobremesa, o de tus amigos directamente a tu stream en OBS</li>\n\t\t\t\t\t\t<li>Utilizamos tecnología innovadora Peer-to-Peer que ofrece privacidad y ultra baja latencia</li>\n\t\t\t\t\t\t<br>\n\t\t\t\t\t\t<li>Youtube video <i class=\"fa fa-youtube-play\" aria-hidden=\"true\"></i> <a href=\"https://www.youtube.com/watch?v=6R_sQKxFAhg\">Demo aquí</a> </li>\n\t\t\t\t\t\t<li>El cdigo está disponible aquí: <i class=\"fa fa-github\" aria-hidden=\"true\"></i> <a href=\"https://github.com/steveseguin/obsninja\">https://github.com/steveseguin/obsninja</a> </li>\n\t\t\t\t\t\t<br>\n\t\t\t\t\t\t<i><font style=\"color:red\">Problemas conocidos:</font></i><br>\n\n\t\t\t\t\t\t<li><i class=\"fa fa-apple\" aria-hidden=\"true\"></i> Los usuarios de MacOS necesitan utilizar OBS v23 o recurrir a i&gt;Capturar ventana de un navegador Chrome con OBS v25</li>\n\t\t\t\t\t\t<li>Algunos usuarios tendrán problemas de \"pixelación\" con videos. Por favor añade en la URL el parametro <b>&amp;codec=vp9</b> a los enlaces de OBS para corregirlo.</li>\n\t<h3><i>Revisa <a href=\"https://www.reddit.com/r/OBSNinja/\">sub-reddit</a> <i class=\"fa fa-reddit-alien\" aria-hidden=\"true\"></i> para ayuda e información avanzada. También estoy en <a href=\"https://discord.gg/EksyhGA\">Discord</a> y puedes enviarme un email a steve@seguin.email</i></h3>\n\t\t\t\t\t",
   "joining-room": "Estás entrado en la sala",
   "logo-header": "<font id=\"qos\" style=\"color: white;\">O</font>BS.Ninja ",
   "max-resolution": "Max. Resolución",
@@ -47,5 +47,13 @@
   "invite-group-chat-type": "Este invitado a la sala puede:",
   "can-see-and-hear": "Puede ver y oir el chat de grupo",
   "can-hear-only": "Sólo puede oir el chat de grupo",
-  "cant-see-or-hear": "No puede ni oir ni ver el chat de grupo"
+  "cant-see-or-hear": "No puede ni oir ni ver el chat de grupo",
+  "password-input-field": "Password",
+  "select-output-source": " Audio Output Destination: \n\t\t\t\t\t",
+  "add-a-password-to-stream": " Add a password:",
+  "welcome-to-obs-ninja-chat": "\n\t\t\t\t\tWelcome to OBS.Ninja! You can send text messages directly to connected peers from here.\n\t\t\t\t",
+  "names-and-labels-coming-soon": "\n\t\t\t\t\tNames identifying connected peers will be a feature in an upcoming release.\n\t\t\t\t",
+  "send-chat": "Send",
+  "available-languages": "Available Languages:",
+  "add-more-here": "Add More Here!"
 }
