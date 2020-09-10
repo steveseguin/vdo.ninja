@@ -74,8 +74,8 @@ no-loopback-peers
 cert=/etc/letsencrypt/live/turn.obs.ninja/fullchain.pem
 pkey=/etc/letsencrypt/live/turn.obs.ninja/privkey.pem
 
-verbose
-#no-stdout-log
+# verbose
+no-stdout-log
 
 ```
 
