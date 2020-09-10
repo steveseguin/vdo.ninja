@@ -6,8 +6,15 @@ sudo apt-get update
 sudo apt-get install coturn -y
 sudo add-apt-repository ppa:certbot/certbot
 sudo apt-get install certbot -y
+
+sudo vi /etc/default/coturn
 ```
-Make sure you have the DNS pointing to your IP address for this next step (ipv4 + ipv6 if possible). You will need to validate that in the next step.
+...and we uncomment the line:
+#TURNSERVER_ENABLED=1
+….leaving it like this:
+TURNSERVER_ENABLED=1
+
+Next make sure you have the DNS pointing to your IP address for this next step (ipv4 + ipv6 if possible). You will need to validate that in the next step.
 ```
 sudo certbot certonly --standalone
 ```
