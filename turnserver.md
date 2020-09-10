@@ -27,8 +27,10 @@ sudo ufw allow 60000:62000/udp
 Update turnserver.conf with passwords, domain names, and whatever else that needs changing.  Example contents are provided below.  Once you have updated it, start the TURN server and ensure it started correctly.
 ```
 sudo vi /etc/turnserver.conf
+
 sudo systemctl restart coturn
 sudo systemctl status coturn
+sudo systemctl enable coturn
 
 ```
 
@@ -58,7 +60,7 @@ fingerprint
 stale-nonce
 
 no-multicast-peers
-no-stun
+# no-stun
 
 # oauth
 lt-cred-mech
