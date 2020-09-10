@@ -39,38 +39,44 @@ The follwoing are the contents of an example /etc/turnserver.conf file.
 listening-port=3478
 tls-listening-port=443
 
-external-ip = 111.222.333.444      ## external IPv4 address
-external-ip = 1111:3333:555:3333::9999  ## External ipv6 address.  Add to DNS server as well
 
-min-port=60000 ## ufw is needed to open these ports
-max-port=62000 ## default is like 49000 to 60000 or so?
+## Update IP addresses; IPv4 is at least needed
+external-ip=51.195.41.188
+external-ip=2001:41d0:701:1100::287a
 
-realm=turn.obs.ninja	## Domain name is needed; OVH provides one, but you can add a novelty one for cheap yourself.
+min-port=60000
+max-port=62000
+
+## Update domain name
+realm=turn.obs.ninja
 server-name=turn.obs.ninja
 
-#lt-cred-mech
-#userdb=/etc/turnuserdb.conf  ## For server-based credentials, if you want some added security
+# lt-cred-mech
+# userdb=/etc/turnuserdb.conf
 
-fingerprint ## security
-stale-nonce ## security
+fingerprint
+stale-nonce
 
 no-multicast-peers
-no-stun  ## you might want this on actually
+no-stun
 
-#oauth
+# oauth
 lt-cred-mech
-user=USERNAME:PASSWORD ## Change as desired
 
-# max-bps=650000 # Just over 5mbps limit ; use to prevernt DDoS attacks?
+## Update your credentials
+user=steve:setupYourOwnPlease
+
+# max-bps=650000
 
 no-loopback-peers
 
-# use real-valid certificate/privatekey files
-cert=/etc/letsencrypt/live/turn.obs.ninja/fullchain.pem ## update as per certbot
+## use real-valid certificate/privatekey files. Update the location
+cert=/etc/letsencrypt/live/turn.obs.ninja/fullchain.pem
 pkey=/etc/letsencrypt/live/turn.obs.ninja/privkey.pem
 
-#verbose
-no-stdout-log
+verbose
+#no-stdout-log
+
 ```
 
 
