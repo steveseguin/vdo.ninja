@@ -64,4 +64,3 @@ Ideas, feedback, bugs, etc -- all welcomed.  I'm dumping many of my ideas as iss
 
 ## Licence 
 OBS.Ninja is available as open-source; please see the LICENCE.md file for details.
-
