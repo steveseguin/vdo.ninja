@@ -41,8 +41,8 @@ tls-listening-port=443
 
 
 ## Update IP addresses; IPv4 is at least needed
-external-ip=51.195.41.188
-external-ip=2001:41d0:701:1100::287a
+external-ip=51.195.41.189
+external-ip=2001:41d0:701:1100::287c
 
 min-port=60000
 max-port=62000
@@ -64,7 +64,7 @@ no-stun
 lt-cred-mech
 
 ## Update your credentials
-user=steve:setupYourOwnPlease
+user=USERNAMEHERE:PASSWORDHERE
 
 # max-bps=650000
 
