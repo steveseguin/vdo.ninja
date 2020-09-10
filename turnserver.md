@@ -4,8 +4,6 @@ This install script and config file was used with a standard virtual machine ser
 sudo apt-get update
  
 sudo apt-get install coturn -y
-set TURNSERVER_ENABLED=1
-
 sudo add-apt-repository ppa:certbot/certbot
 sudo apt-get install certbot -y
 ```
@@ -19,7 +17,10 @@ sudo ls /etc/letsencrypt/live/turn.obs.ninja/fullchain.pem
 
 sudo apt install net-tools
 ```
-We are going to open up some ports.
+note: If you run into error 701 issues with your TURN server, check that the coturn service has access to your new SSL certificates:
+see this issue with coturn: https://github.com/coturn/coturn/issues/268
+
+Next, we are going to open up some ports... just in case they are blocked by default.
 ```
 sudo ufw allow 60000:62000/tcp 
 sudo ufw allow 60000:62000/udp
