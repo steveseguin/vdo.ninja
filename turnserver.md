@@ -42,8 +42,8 @@ listening-port=3478
 ## TLS needs an SSL certificate and domain, but enables TCP
 tls-listening-port=443
 
-# min-port=10000
-# max-port=20000
+# min-port=49000
+# max-port=65535
 
 realm=turn.obs.ninja
 server-name=turn.obs.ninja
