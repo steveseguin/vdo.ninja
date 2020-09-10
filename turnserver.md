@@ -20,7 +20,8 @@ sudo certbot certonly --standalone
 ```
 Replace turn.obs.ninja with the domain name you registered certbot with. If the file is not found, things did not work.
 ```
-sudo ls /etc/letsencrypt/live/turn.obs.ninja/fullchain.pem
+sudo chmod 755 /etc/letsencrypt/live/
+ls /etc/letsencrypt/live/turn.obs.ninja/fullchain.pem
 
 sudo apt install net-tools
 ```
@@ -96,7 +97,7 @@ dh2066
 # verbose
 no-stdout-log
 
-## bypass the letsencrypt bug; easier than modifying the service, but higher risk of being hacked.
+## bypass soem letsencrypt bugs; easier than modifying the service. optional
 proc-user=root
 proc-group=root
 
