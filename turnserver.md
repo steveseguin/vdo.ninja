@@ -17,12 +17,6 @@ TURNSERVER_ENABLED=1
 Next make sure you have the DNS pointing to your IP address for this next step (ipv4 + ipv6 if possible). You will need to validate that in the next step.
 ```
 sudo certbot certonly --standalone
-```
-Replace turn.obs.ninja with the domain name you registered certbot with. If the file is not found, things did not work.
-```
-sudo chmod 755 /etc/letsencrypt/live/
-ls /etc/letsencrypt/live/turn.obs.ninja/fullchain.pem
-
 sudo apt install net-tools
 ```
 note: If you run into error 701 issues with your TURN server, check that the coturn service has access to your new SSL certificates:
@@ -37,6 +31,13 @@ sudo ufw allow 443/udp
 sudo ufw allow 49152:65535/tcp
 sudo ufw allow 49152:65535/udp
 ```
+
+Now wet the User and Group to root, as this fixes an issue with Lets Encrypt. ..  I welcome a better solution tho.
+```
+sudo vi /usr/lib/systemd/system/coturn.service
+sudo systemctl daemon-reload
+```
+
 Update turnserver.conf with passwords, domain names, and whatever else that needs changing.  Example contents are provided below.  Once you have updated it, start the TURN server and ensure it started correctly.
 ```
 sudo vi /etc/turnserver.conf
@@ -97,7 +98,7 @@ dh2066
 # verbose
 no-stdout-log
 
-## bypass soem letsencrypt bugs; easier than modifying the service. optional
+## optional
 proc-user=root
 proc-group=root
 
