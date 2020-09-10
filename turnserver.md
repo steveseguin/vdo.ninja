@@ -20,10 +20,10 @@ sudo apt install net-tools
 note: If you run into error 701 issues with your TURN server, check that the coturn service has access to your new SSL certificates:
 see this issue with coturn: https://github.com/coturn/coturn/issues/268
 
-Next, we are going to open up some ports... just in case they are blocked by default.
+Next, we are going to open up some ports... just in case they are blocked by default. Which exactly? well, these are default ports. TCP may not be needed?
 ```
-sudo ufw allow 60000:62000/tcp 
-sudo ufw allow 60000:62000/udp
+sudo ufw allow 49000:65535/tcp
+sudo ufw allow 49000:65535/udp
 ```
 Update turnserver.conf with passwords, domain names, and whatever else that needs changing.  Example contents are provided below.  Once you have updated it, start the TURN server and ensure it started correctly.
 ```
@@ -32,54 +32,63 @@ sudo vi /etc/turnserver.conf
 sudo systemctl restart coturn
 sudo systemctl status coturn
 sudo systemctl enable coturn
-
 ```
 
-The follwoing are the contents of an example /etc/turnserver.conf file.
+The follwoing are the contents of an example /etc/turnserver.conf file from above
 ```
 ## sudo vi /etc/turnserver.conf
 
 listening-port=3478
+## TLS needs an SSL certificate and domain, but enables TCP
 tls-listening-port=443
 
+# min-port=10000
+# max-port=20000
 
-## Update IP addresses; IPv4 is at least needed
-external-ip=51.195.41.189
-external-ip=2001:41d0:701:1100::287c
-
-min-port=60000
-max-port=62000
-
-## Update domain name
 realm=turn.obs.ninja
 server-name=turn.obs.ninja
 
-# lt-cred-mech
-# userdb=/etc/turnuserdb.conf
-
+## webrtc likes to use this
 fingerprint
-stale-nonce
 
-no-multicast-peers
-# no-stun
+## Lets just use Google since its more reliable
+no-stun
 
-# oauth
 lt-cred-mech
+user=steve:setupYourOwnPlease
 
-## Update your credentials
-user=USERNAMEHERE:PASSWORDHERE
+stale-nonce=600
 
-# max-bps=650000
+## depreciated in newer coturn
+# no-loopback-peers
 
-no-loopback-peers
+## prevents hackers from hacking
+no-multicast-peers
 
-## use real-valid certificate/privatekey files. Update the location
+## 1-gbps/100 users = ~ 1-mbps each with this setting then
+total-quota=100
+
 cert=/etc/letsencrypt/live/turn.obs.ninja/fullchain.pem
 pkey=/etc/letsencrypt/live/turn.obs.ninja/privkey.pem
+
+## Tweaks to fix some lets encrypt errors
+cipher-list="ECDHE-RSA-AES256-GCM-SHA512:DHE-RSA-AES256-GCM-SHA512:ECDHE-RSA-AES256-GCM-SHA384:DHE-RSA-AES256-GCM-SHA384:ECDHE-RSA-AES256-SHA384"
+no-sslv3
+no-tlsv1
+no-tlsv1_1
+# no-tlsv1_2
+dh2066
+
+# no-udp
+# no-tcp
 
 # verbose
 no-stdout-log
 
+## bypass the letsencrypt bug; easier than modifying the service, but higher risk of being hacked.
+proc-user=root
+proc-group=root
+
 ```
 
-
+easier said then done. good luck!
