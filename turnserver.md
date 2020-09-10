@@ -1,4 +1,4 @@
-This install script and config file was used with OVH loaded onto a VM with Ubuntu 20. 
+This install script and config file was used with a standard virtual machine server loaded with Ubuntu 20.  GCP/AWS servers might need slightly different settings.
 
 ```
 sudo apt-get update
