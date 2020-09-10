@@ -22,6 +22,12 @@ sudo apt install net-tools
 note: If you run into error 701 issues with your TURN server, check that the coturn service has access to your new SSL certificates:
 see this issue with coturn: https://github.com/coturn/coturn/issues/268
 
+Nexzt, we update the User and Group values in our service file to be "root". This seems to fix the issue with Lets Encrypt. ..  I welcome a better solution tho.
+```
+sudo vi /usr/lib/systemd/system/coturn.service
+sudo systemctl daemon-reload
+```
+
 Next, we are going to open up some ports... just in case they are blocked by default. Which exactly? well, these are default ports. TCP may not be needed?
 ```
 sudo ufw allow 3478/tcp
@@ -30,12 +36,6 @@ sudo ufw allow 443/tcp
 sudo ufw allow 443/udp
 sudo ufw allow 49152:65535/tcp
 sudo ufw allow 49152:65535/udp
-```
-
-Now wet the User and Group to root, as this fixes an issue with Lets Encrypt. ..  I welcome a better solution tho.
-```
-sudo vi /usr/lib/systemd/system/coturn.service
-sudo systemctl daemon-reload
 ```
 
 Update turnserver.conf with passwords, domain names, and whatever else that needs changing.  Example contents are provided below.  Once you have updated it, start the TURN server and ensure it started correctly.
@@ -47,7 +47,7 @@ sudo systemctl status coturn
 sudo systemctl enable coturn
 ```
 
-The follwoing are the contents of an example /etc/turnserver.conf file from above
+The following are the contents of an example /etc/turnserver.conf file from above
 ```
 ## sudo vi /etc/turnserver.conf
 
