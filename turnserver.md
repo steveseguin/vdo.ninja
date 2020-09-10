@@ -55,7 +55,7 @@ fingerprint
 no-stun
 
 lt-cred-mech
-user=steve:setupYourOwnPlease
+user=SOMESUERNAME:SOMEPASSWQORD
 
 stale-nonce=600
 
