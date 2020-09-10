@@ -91,4 +91,6 @@ proc-group=root
 
 ```
 
-easier said then done. good luck!
+You can validate here: https://webrtc.github.io/samples/src/content/peerconnection/trickle-ice/
+
+Setting this all up is easier said then done. good luck!
