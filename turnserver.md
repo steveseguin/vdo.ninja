@@ -1,29 +1,38 @@
-This install script and config file was used with OVH loaded onto a VM with Ubuntu 20
+This install script and config file was used with OVH loaded onto a VM with Ubuntu 20. 
 
 ```
 sudo apt-get update
  
-sudo apt-get install coturn
+sudo apt-get install coturn -y
 set TURNSERVER_ENABLED=1
 
 sudo add-apt-repository ppa:certbot/certbot
-sudo apt-get install certbot
+sudo apt-get install certbot -y
+```
+Make sure you have the DNS pointing to your IP address for this next step (ipv4 + ipv6 if possible). You will need to validate that in the next step.
+```
 sudo certbot certonly --standalone
-
+```
+Replace turn.obs.ninja with the domain name you registered certbot with. If the file is not found, things did not work.
+```
 sudo ls /etc/letsencrypt/live/turn.obs.ninja/fullchain.pem
 
 sudo apt install net-tools
-ifconfig
- 
+```
+We are going to open up some ports.
+```
 sudo ufw allow 60000:62000/tcp 
 sudo ufw allow 60000:62000/udp
-
+```
+Update turnserver.conf with passwords, domain names, and whatever else that needs changing.  Example contents are provided below.  Once you have updated it, start the TURN server and ensure it started correctly.
+```
 sudo vi /etc/turnserver.conf
 sudo systemctl restart coturn
 sudo systemctl status coturn
 
 ```
-and this should go to  /etc/turnserver.conf with the contents below
+
+The follwoing are the contents of an example /etc/turnserver.conf file.
 ```
 ## sudo vi /etc/turnserver.conf
 
@@ -63,3 +72,5 @@ pkey=/etc/letsencrypt/live/turn.obs.ninja/privkey.pem
 #verbose
 no-stdout-log
 ```
+
+
