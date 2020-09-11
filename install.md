@@ -1,6 +1,6 @@
 Deploying this code. A guide.  (INITIAL DRAFT VERSION)
 
-PREFACE
+### PREFACE
 
 The code is obvious enough already that someone experienced with the NGINX webserver or with basic site deployments should have no problem getting things running.
 
@@ -16,7 +16,7 @@ For those wanting a private TURN server setup, you can load the settings for tho
 
 There are also misconceptions. Deploying the website code will NOT make the service faster. The service is peer-to-peer based, so deploying servers will not make it faster in nearly all cases. Even deploying a TURN server is often not advisable, as using a VPN, cloud VM for OBS, or disabling any symmetrical firewall will often provide a better end result.
 
-SETUP
+### SETUP
 
 I use Cloudflare with Flexible SSL enabled and HTTP Rewrites. If you do not use Cloudflare, you will need to deploy SSL certificates onto  your website.  Have Cloudflare point the domain name to the IP address of your webserver.
 
