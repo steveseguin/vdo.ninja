@@ -19,7 +19,7 @@ MacOS users will face some challenges in using OBS currently, but there are work
 This repo contains software for OBS.Ninja, including the HTML landing page for its Electron Capture app offering. A sample config file and instructions for setting up a TURN server (video relay server), is also provided. You may also find the Wiki for the project in this repo, which contains added information on how to use the software.
 
 ## How to Deploy this Repo:
-To use, just download and host the files on a HTTPS-enabled webserver. You may want to hide the .html extensions within your HTTP server as well, else the generated links will not work. See [here](https://github.com/steveseguin/obsninja/blob/master/install.md) for added details , although I don't really recommend it in most cases.
+To use, just download and host the files on a HTTPS-enabled webserver. You may want to hide the .html extensions within your HTTP server as well, else the generated links will not work. See [here](https://github.com/steveseguin/obsninja/blob/master/install.md) for added details, although I don't really recommend it.
 
 Directions on how to deploy a TURN server are listed in the turnserver.md file. You may wish to do so, although not all use cases will not need one. About 10% of remote guests, those often connected via 4G LTE, will require a TURN server however. While OBS.Ninja does host some TURN servers, they are quite expensive to operate and not really for private deployment use. If you are deploying your own version of OBS.Ninja, I'd ask you use your own TURN servers instead.
 
