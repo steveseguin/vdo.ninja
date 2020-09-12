@@ -51,7 +51,7 @@
   "password-input-field": "Password",
   "select-output-source": " Destino de la salida de audio: \n\t\t\t\t\t",
   "add-a-password-to-stream": " Añadir un password:",
-  "welcome-to-obs-ninja-chat": "\n\t\t\t\t\tBienvenido a OBS.Ninja! Puede enviar mensajes de texto directamente a compañeros conectados desde aquí.\n\t\t\t\t",
+  "welcome-to-obs-ninja-chat": "\n\t\t\t\t\tBienvenido a OBS.Ninja! Puedes enviar mensajes de texto directamente a compañeros conectados desde aquí.\n\t\t\t\t",
   "names-and-labels-coming-soon": "\n\t\t\t\t\tNombres identificando a los compañeros conectados serán una nueva característica en una próxima versión.\n\t\t\t\t",
   "send-chat": "Enviar",
   "available-languages": "Idiomas disponibles:",
