@@ -14,13 +14,15 @@ sudo vi /etc/default/coturn
 ….leaving it like this:
 TURNSERVER_ENABLED=1
 
-Next make sure you have the DNS pointing to your IP address for this next step (ipv4 + ipv6 if possible). You will need to validate that in the next step.
+Next make sure you have the DNS pointing to your IP address for this next step (ipv4, and ipv6 if possible). You will need to validate that in the next step.
 ```
 sudo certbot certonly --standalone
 sudo apt install net-tools
 ```
 note: If you run into error 701 issues with your TURN server, check that the coturn service has access to your new SSL certificates:
 see this issue with coturn: https://github.com/coturn/coturn/issues/268
+
+You might also want to consider buying a better certificiate, as Google does not properly support certbot cerifications. see [this issue ticket](https://github.com/coturn/coturn/issues/240#issuecomment-648550885).  If you go this route, see [turnserver2.conf](https://github.com/steveseguin/obsninja/blob/master/turnserver2.conf) for an example config.
 
 Nexzt, we update the User and Group values in our service file to be "root". This seems to fix the issue with Lets Encrypt. ..  I welcome a better solution tho.
 ```
