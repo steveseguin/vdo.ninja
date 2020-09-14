@@ -66,25 +66,27 @@ var urlParams = new URLSearchParams(window.location.search);
 
 if (window.obsstudio){
 	session.obsfix=true; // can be manually set via URL.
-	log("OBS VERSION:"+window.obsstudio.pluginVersion);
-	log("macOS: "+navigator.userAgent.indexOf('Mac OS X') != -1);
-	log(window.obsstudio);
-	
-	if (!(urlParams.has('streamlabs'))){
+	try{
+		log("OBS VERSION:"+window.obsstudio.pluginVersion);
+		log("macOS: "+navigator.userAgent.indexOf('Mac OS X') != -1);
+		log(window.obsstudio);
 		
-		var ver1 = window.obsstudio.pluginVersion;
-		ver1 = ver1.split(".");
-		updateURL("streamlabs");
-		if (ver1.length == 3){ // Should be 3, but disabled3
-			if ((ver1.length == 3) && (parseInt(ver1[0])==2) && (parseInt(ver1[1])>4) && (navigator.userAgent.indexOf('Mac OS X') != -1)){
-				getById("main").innerHTML = "<div style='background-color:black;color:white;'><h1>On macOS, Please use OBS v23, as OBS v24 and v25 are not supported currently.</h1>\
-				<br /><h2> Please find details <u><a href='https://github.com/steveseguin/obsninja/wiki/FAQ#mac-os'>within our wiki guide - https://github.com/steveseguin/obsninja/wiki/FAQ#mac-os</a></u></h2>\
-				<br /> You can bypass this error message by refreshing, <a href='"+ window.location.href +"'> Clicking Here,</a> or by adding <i>&streamlabs</i> to the URL.\
-				<br /> Please report this problem to steve@seguin.email if you feel it is an error.\
-				</div>";
+		if (!(urlParams.has('streamlabs'))){
+			
+			var ver1 = window.obsstudio.pluginVersion;
+			ver1 = ver1.split(".");
+			updateURL("streamlabs");
+			if (ver1.length == 3){ // Should be 3, but disabled3
+				if ((ver1.length == 3) && (parseInt(ver1[0])==2) && (parseInt(ver1[1])>4) && (navigator.userAgent.indexOf('Mac OS X') != -1)){
+					getById("main").innerHTML = "<div style='background-color:black;color:white;' data-translate='obs-macos-not-supported'><h1>On macOS, Please use the <a href='https://github.com/steveseguin/electroncapture'>Electron Capture app</a>, or OBS v23, as newer versions of OBS are not supported currently on macOS.</h1>\
+					<br /><h2> You can find details <u><a href='https://github.com/steveseguin/obsninja/wiki/FAQ#mac-os'>within our wiki guide - https://github.com/steveseguin/obsninja/wiki/FAQ#mac-os</a></u></h2>\
+					<br /> If using OBS v23 or Streamlabs, you can bypass this error message by refreshing, <a href='"+ window.location.href +"'> Clicking Here,</a> or by adding <i>&streamlabs</i> to the URL.\
+					<br /> Please report this problem to steve@seguin.email if you feel it is an error.\
+					</div>";
+				}
 			}
 		}
-	}
+	} catch(e){errorlog(e);}
 	
 	window.addEventListener('obsSceneChanged', function(event) {
 		log("OBS EVENT");
@@ -537,9 +539,9 @@ if (urlParams.has("autojoin") || urlParams.has("autostart") || urlParams.has("aj
 }
 
 
-if (urlParams.has('novideo') || urlParams.has('nv') || urlParams.has('hidevideo')){
+if (urlParams.has('novideo') || urlParams.has('nv') || urlParams.has('hidevideo') || urlParams.has('showonly') ){
 	
-	session.novideo = urlParams.get('novideo') || urlParams.get('nv') || urlParams.get('hidevideo');
+	session.novideo = urlParams.get('novideo') || urlParams.get('nv') || urlParams.get('hidevideo') || urlParams.get('showonly');
 	
 	if (!(session.novideo)){
 		session.novideo=[];
@@ -550,9 +552,9 @@ if (urlParams.has('novideo') || urlParams.has('nv') || urlParams.has('hidevideo'
 	log(session.novideo);
 }
 
-if (urlParams.has('noaudio') || urlParams.has('na') || urlParams.has('hideaudio')){
+if (urlParams.has('noaudio') || urlParams.has('na') || urlParams.has('hideaudio') ){
 	
-	session.noaudio = urlParams.get('noaudio') || urlParams.get('na') || urlParams.get('hideaudio');
+	session.noaudio = urlParams.get('noaudio') || urlParams.get('na') || urlParams.get('hideaudio') ;
 	
 	if (!(session.noaudio)){
 		session.noaudio=[];
@@ -738,7 +740,9 @@ function changeLg(lang){
 					//log(ele.dataset.translate);
 					//log(translations[ele.dataset.translate]);
 					try {
-						ele.innerHTML = data[ele.dataset.translate];
+						if (ele.dataset.translate in data){
+							ele.innerHTML = data[ele.dataset.translate];
+						}
 					} catch (e){
 						errorlog(e);
 					}
@@ -971,7 +975,7 @@ if (urlParams.has('turn')){
 }
 
 
-if (urlParams.has('privacy')){ // please only use if you are also using your own TURN service.
+if (urlParams.has('privacy') || urlParams.has('private') || urlParams.has('relay')){ // please only use if you are also using your own TURN service.
 	try {
 		session.configuration.iceTransportPolicy = "relay";  // https://developer.mozilla.org/en-US/docs/Web/API/RTCIceCandidate/address
 	} catch (e){
@@ -1430,7 +1434,6 @@ function toggleVideoMute(apply=false){ // TODO: I need to have this be MUTE, tog
 }
 
 function toggleSettings(){ // TODO: I need to have this be MUTE, toggle, with volume not touched.
-	
 	
 	if (getById("popupSelector").style.display=="none"){
 		
@@ -1894,40 +1897,46 @@ function createRoom(roomname=false){
 		passAdd2="&password="+session.password;
 	}
 	
-	gridlayout.innerHTML = "<br /><div style='display:inline-block'><font style='font-size:130%;color:white;'></font><input  onclick='popupMessage(event);copyFunction(this)' onmousedown='copyFunction(this)' style='cursor:grab;font-weight:bold;background-color:#78F; width:400px; font-size:100%; padding:10px; border:2px solid black; margin:5px;'  class='task' value='https://"+location.host+location.pathname+"?room="+session.roomid+passAdd+"' /><font style='font-size:110%;color:white;'><i class='las la-video' style='position:relative;top:7px;font-size:2em;'  aria-hidden='true'></i> - Invites users to join the group and broadcast their feed to it. These users will see every feed in the room.</font></div>";
+	gridlayout.innerHTML = "<br /><div style='display:inline-block'><font style='font-size:130%;color:white;'></font><input onclick='popupMessage(event);copyFunction(this)' onmousedown='copyFunction(this)' style='cursor:grab;font-weight:bold;background-color:#78F; width:400px; font-size:100%; padding:10px; border:2px solid black; margin:5px;'  class='task' value='https://"+location.host+location.pathname+"?room="+session.roomid+passAdd+"' /><font style='font-size:110%;color:white;'><i class='las la-video' style='position:relative;top:7px;font-size:2em;' aria-hidden='true'></i> - <span data-translate='invite-users-to-join'>Invites users to join the group and broadcast their feed to it. These users will see every feed in the room.</span></font></div>";
 	
-	gridlayout.innerHTML += "<br /><font style='font-size:130%;color:white;'></font><input class='task' onclick='popupMessage(event);copyFunction(this)' onmousedown='copyFunction(this)' style='cursor:grab;font-weight:bold;background-color:#F45;width:400px;font-size:100%;padding:10px;border:2px solid black;margin:5px;' value='https://"+location.host+location.pathname+"?room="+session.roomid+passAdd+"&view' /><font style='font-size:110%;color:white;'><i class='las la-video' style='position:relative;top:7px;font-size:2em;'  aria-hidden='true'></i> - Link to invite users to broadcast their feeds to the group. These users will not see or hear any feed from the group.</font><br />";
-	
-	
-	gridlayout.innerHTML += "<font style='font-size:130%;color:white'></font><input class='task' onmousedown='copyFunction(this)' data-drag='1' onclick='popupMessage(event);copyFunction(this)' style='cursor:grab;font-weight:bold;background-color:#5F4;width:400px;font-size:100%;padding:10px;border:2px solid black;margin:5px;' value='https://"+location.host+location.pathname+"?scene=1&room="+session.roomid+passAdd2+"' /><font style='font-size:110%;color:white'><i class='las la-th-large' style='position:relative;top:7px;font-size:2em;' aria-hidden='true'></i> - This is an OBS Browser Source link that is empty by default. Videos in the room can be manually added to this scene.</font><br />";
-	
-	gridlayout.innerHTML += "<font style='font-size:130%;color:white'></font><input class='task' onmousedown='copyFunction(this)' data-drag='1' onclick='popupMessage(event);copyFunction(this)' style='cursor:grab;font-weight:bold;background-color:#7C7;width:400px;font-size:100%;padding:10px;border:2px solid black;margin:5px;' value='https://"+location.host+location.pathname+"?scene=0&room="+session.roomid+passAdd2+"' /><font style='font-size:110%;color:white'><i class='las la-th-large' style='position:relative;top:7px;font-size:2em;' aria-hidden='true'></i> - Also an OBS Browser Source link. All guest videos in this group chat room will automatically be added into this scene.</font><br />";
-	
-	gridlayout.innerHTML += '<button style="margin:10px;" onclick="toggle(getById(\'roomnotes2\'),this);">❔ Click Here for a quick overview and help</button> ';
+	gridlayout.innerHTML += "<br /><font style='font-size:130%;color:white;'></font><input class='task' onclick='popupMessage(event);copyFunction(this)' onmousedown='copyFunction(this)' style='cursor:grab;font-weight:bold;background-color:#F45;width:400px;font-size:100%;padding:10px;border:2px solid black;margin:5px;' value='https://"+location.host+location.pathname+"?room="+session.roomid+passAdd+"&view' /><font style='font-size:110%;color:white;'><i class='las la-video' style='position:relative;top:7px;font-size:2em;'  aria-hidden='true'></i> - <span data-translate='link-to-invite-camera'>Link to invite users to broadcast their feeds to the group. These users will not see or hear any feed from the group.</span></font><br />";
 	
 	
-	gridlayout.innerHTML +=  '<span id="miniPerformer"><button id="press2talk" style="margin:10px;" onclick="press2talk(this);">🔊 Enable Director\'s Push-to-Talk Mode</button></span>'; 
+	gridlayout.innerHTML += "<font style='font-size:130%;color:white'></font><input class='task' onmousedown='copyFunction(this)' data-drag='1' onclick='popupMessage(event);copyFunction(this)' style='cursor:grab;font-weight:bold;background-color:#5F4;width:400px;font-size:100%;padding:10px;border:2px solid black;margin:5px;' value='https://"+location.host+location.pathname+"?scene=1&room="+session.roomid+passAdd2+"' /><font style='font-size:110%;color:white'><i class='las la-th-large' style='position:relative;top:7px;font-size:2em;' aria-hidden='true'></i> - <span data-translate='this-is-obs-browser-source-link'>This is an OBS Browser Source link that is empty by default. Videos in the room can be manually added to this scene.</span></font><br />";
+	
+	gridlayout.innerHTML += "<font style='font-size:130%;color:white'></font><input class='task' onmousedown='copyFunction(this)' data-drag='1' onclick='popupMessage(event);copyFunction(this)' style='cursor:grab;font-weight:bold;background-color:#7C7;width:400px;font-size:100%;padding:10px;border:2px solid black;margin:5px;' value='https://"+location.host+location.pathname+"?scene=0&room="+session.roomid+passAdd2+"' /><font style='font-size:110%;color:white'><i class='las la-th-large' style='position:relative;top:7px;font-size:2em;' aria-hidden='true'></i> - <span data-translate='this-is-obs-browser-souce-link-auto'>Also an OBS Browser Source link. All guest videos in this group chat room will automatically be added into this scene.</span></font><br />";
+	
+	gridlayout.innerHTML += '<button data-translate="click-for-quick-room-overview" style="margin:10px;" onclick="toggle(getById(\'roomnotes2\'),this);">❔ Click Here for a quick overview and help</button> ';
+	
+	
+	gridlayout.innerHTML +=  '<span id="miniPerformer"><button id="press2talk" style="margin:10px;" data-translate="push-to-talk-enable"  onclick="press2talk(this);">🔊 Enable Director\'s Push-to-Talk Mode</button></span>'; 
 	
 	gridlayout.innerHTML += "<br /><div id='roomnotes2' style='display:none;padding:0 0 0 10px;' ><br />\
-	<font style='color:#CCC;'>Welcome. This is the control-room for the group-chat. There are different things you can use this room for:<br /><br />\
-	<li>You can host a group chat with friends using a room. Share the blue link to invite guests who will join the chat automatically.</li>\
+	<font style='color:#CCC;' data-translate='welcome-to-control-room'>Welcome. This is the director's control-room for the group-chat. <br /><br />\
+	<font style='color:red'>Known Limitations with Group Rooms:</font><br />\
+	<li>iPhones and iPads <b>will not be visible to other guests</b>, but will appear to the director and inside OBS. <a target='_blank' href='https://www.reddit.com/r/OBSNinja/comments/iol981/obs_ninja_iphone/g4ekuqz/?utm_source=reddit&utm_medium=web2x&context=3'>Please see here for details.</a></li>\
 	<li>A group room can handle around 4 to 30 guests, depending on numerous factors, including CPU and available bandwidth of all guests in the room.</li>\
+	<li>Videos will appear of low quality on purpose for just the guests and the director; this is to save bandwidth and CPU resources.</li>\
+	<li>The state of the scenes, such as which videos are active in a scene, are lost when the director resets the control-room.</li>\
+	<br />\
+	There are different things you can use this room for:<br /><br />\
+	<li>You can host a group chat with friends using a room. Share the blue link to invite guests who will join the chat automatically.</li>\
 	<li>Solo-views of each video are offered under videos as they load. These can be used within an OBS Browser Source.</li>\
-	<li>You can use the auto-mixing Group Scene, the green link, to auto arrange multiple videos for you in OBS.</li>\
+	<li>You can use the auto-mixing Group Scenes, the green links, to auto arrange multiple videos for you in OBS.</li>\
 	<li>You can use this control room to record isolated video or audio streams, but it is an experimental feature still.</li>\
 	<li>Videos in the Director's room will be of low quality on purpose; to save bandwidth/CPU</li>\
 	<li>Guest's in the room will see each other's videos at a very limited quality to conserve bandwidth/CPU.</li>\
 	<li>OBS will see a guest's video in high-quality; the default video bitrate is 2500kbps.</li>\
 	<br />\
-	As guests join, their videos will appear below. You can bring their video streams into OBS as solo-scenes or you can add them to the Group Scene.\
-	<br />The Group Scene auto-mixes videos that have been added to the group scene. Please note that the Auto-Mixer requires guests be manually added to it for them to appear in it; they are not added automatically.<br /><Br />Apple mobile devices, such as iPhones and iPads, do not fully support Video Group Chat. This is a hardware constraint.<br /><br />\
+	As guests join, their videos will appear below. You can bring their video streams into OBS as solo-scenes or you can add them to Group Scenes.\
+	<br />The Group Scenes auto-mix videos into a layout. Please note that while Scene=1 is an Auto-Mixer, it requires videos be manually added to it; they will not appear automatically.<br /><br />\
 	For advanced options and parameters, <a href=\"https://github.com/steveseguin/obsninja/wiki/Guides-and-How-to's#urlparameters\">see the Wiki.</a></font></div><hr />";
 	
 	gridlayout.innerHTML += "<div id='deleteme'><br /><br /><center>\
-	<div style='display:inline-block;width:300px;height:350px;border:2px solid white;background-color:#999;margin:40px;'><br /><br />GUEST SLOT #1<br /><br />(A video will appear here when a guest joins)<br /><br /><i class='las la-user ' style='font-size:8em;' aria-hidden='true'></i><br /><br />A Solo-Link for OBS will appear here.</div>\
-	<div style='display:inline-block;width:300px;height:350px;border:2px solid white;background-color:#999;margin:40px;'><br /><br />GUEST SLOT #2<br /><br />(A video will appear here when a guest joins)<br /><br /><i class='las la-user  ' style='font-size:8em;' aria-hidden='true'></i><br /><br />A Solo Link for OBS will appear here</div>\
-	<div style='display:inline-block;width:300px;height:350px;border:2px solid white;background-color:#999;margin:40px;'><br /><br />GUEST SLOT #3<br /><br />(A video will appear here when a guest joins)<br /><br /><i class='las la-user ' style='font-size:8em;'aria-hidden='true'></i><br /><br />A Solo Link for OBS will appear here</div>\
-	<div style='display:inline-block;width:300px;height:350px;border:2px solid white;background-color:#999;margin:40px;'><br /><br />GUEST SLOT #4<br /><br />(A video will appear here when a guest joins)<br /><br /><i class='las la-user ' style='font-size:8em;'aria-hidden='true'></i><br /><br />A Solo Link for OBS will appear here</div></center></div>";
+	<div style='display:inline-block;width:300px;height:350px;border:2px solid white;background-color:#999;margin:40px;'><br /><br />GUEST SLOT #1<br /><br /><span data-translate='guest-will-appaer-here-on-join'>(A video will appear here when a guest joins)</span><br /><br /><i class='las la-user ' style='font-size:8em;' aria-hidden='true'></i><br /><br />A Solo-Link for OBS will appear here.</div>\
+	<div style='display:inline-block;width:300px;height:350px;border:2px solid white;background-color:#999;margin:40px;'><br /><br />GUEST SLOT #2<br /><br /><span data-translate='guest-will-appaer-here-on-join'>(A video will appear here when a guest joins)</span><br /><br /><i class='las la-user  ' style='font-size:8em;' aria-hidden='true'></i><br /><br />A Solo Link for OBS will appear here</div>\
+	<div style='display:inline-block;width:300px;height:350px;border:2px solid white;background-color:#999;margin:40px;'><br /><br />GUEST SLOT #3<br /><br /><span data-translate='guest-will-appaer-here-on-join'>(A video will appear here when a guest joins)</span><br /><br /><i class='las la-user ' style='font-size:8em;'aria-hidden='true'></i><br /><br />A Solo Link for OBS will appear here</div>\
+	<div style='display:inline-block;width:300px;height:350px;border:2px solid white;background-color:#999;margin:40px;'><br /><br />GUEST SLOT #4<br /><br /><span data-translate='guest-will-appaer-here-on-join'>(A video will appear here when a guest joins)</span><br /><br /><i class='las la-user ' style='font-size:8em;'aria-hidden='true'></i><br /><br />A Solo Link for OBS will appear here</div></center></div>";
 	joinRoom(roomname);
 
 }
@@ -3259,8 +3268,8 @@ async function grabAudio(eleName="previewWebcam", selector="#audioSource", track
 					
 				for (UUID in session.pcs){
 					if (session.pcs[UUID].allowAudio==true){  // allow 
-						session.pcs[UUID].addTrack(track, streams[i]);
-						//sender.replaceTrack(track);
+						var sender = session.pcs[UUID].addTrack(track, streams[i]);
+						//sender.track.onended = tryAgain;
 					}
 				}
 			});
@@ -3281,7 +3290,89 @@ async function grabAudio(eleName="previewWebcam", selector="#audioSource", track
 		gowebcam.innerHTML = "START";
 	}
 }
-
+var tryAgainTimer=null;
+function tryAgain(event){  // audio or video agnostic track reconnect
+	warnlog(event.currentTarget);
+	if (getById("videosource")==null){ // Don't bother with this if just a preview stream
+		return;
+	}
+	
+	var deviceType = event.currentTarget.kind;
+	var deviceId= event.currentTarget.id;
+	
+	if (tryAgainTimer!=null){
+		clearTimeout(tryAgainTimer);
+		tryAgainTimer=null;
+	}
+	tryAgainTimer = setTimeout(function(){
+		navigator.mediaDevices.ondevicechange = null;  // we only give it 10-seconds to reconnect.
+	},10000);
+	
+	navigator.mediaDevices.ondevicechange = function(){
+		clearTimeout(tryAgainTimer);
+		tryAgainTimer=null;
+		navigator.mediaDevices.ondevicechange=null; // clear
+		
+		
+		if (deviceType=="audio"){
+			if ((deviceId=="default") && (session.echoCancellation!==false) && (session.autoGainControl!==false) && (session.noiseSuppression!==false)){
+				var constraint = {audio: true};
+			} else { 
+				var constraint = {audio: {deviceId: {exact: deviceId}}};
+				if (session.echoCancellation==false){
+					constraint.audio.echoCancellation=false;
+				} 
+				if (session.autoGainControl==false){
+					constraint.audio.autoGainControl=false;
+				}
+				if (session.noiseSuppression==false){
+					constraint.audio.noiseSuppression=false;
+				}
+			}
+			constraint.video = false;
+		} else if (deviceType=="video"){
+			var constraint = {
+				video: {deviceId: {exact: deviceId}},
+				audio: false
+			};
+		} else {
+			return;  // no idea what this is? fail gently.
+		}
+		
+		warnlog(constraint);
+		navigator.mediaDevices.getUserMedia(constraint).timeout(3000).then(function (stream){
+			stream.getTracks().forEach(function(track){
+				
+				getById("videosource").srcObject.addTrack(track, stream); // add video track to the preview video
+				session.streamSrc = getById(eleName).srcObject;
+				toggleMute(true);
+					
+				for (UUID in session.pcs){
+					if (session.pcs[UUID].allowAudio==true){  // allow  
+						var senders = session.pcs[UUID].getSenders(); // for any connected peer, update the video they have if connected with a video already.
+						var added=false;
+						senders.forEach((sender) => { // I suppose there could be a race condition between negotiating and updating this. if joining at the same time as changnig streams?
+							if (sender.track){
+								if (sender.track.id == track.id){
+									added=true;
+									warnlog(sender.track);
+									if (sender.track.readyState=="ended"){
+										sender.replaceTrack(track);  
+									}
+								} 
+							}
+						});
+						if (added==false){
+							sender = session.pcs[UUID].addTrack(track, stream);
+							sender.track.onended = tryAgain;
+						}
+					}
+				}
+			});
+		}).catch(errorlog); // console error message only
+	}
+}
+	
 
 function enterPressed(event, callback){
   // Number 13 is the "Enter" key on the keyboard
@@ -3444,6 +3535,7 @@ function setupWebcamSelection(stream=null){
 					gowebcam.style.backgroundColor = "#DDDDDD";
 					gowebcam.style.fontWeight="normal";
 					gowebcam.innerHTML = "Waiting for Camera to load";
+					gowebcam.dataset.translate='waiting-for-camera-to-load';
 				}
 				activatedPreview=false;
 				grabAudio();
@@ -3456,6 +3548,7 @@ function setupWebcamSelection(stream=null){
 					gowebcam.style.backgroundColor = "#DDDDDD";
 					gowebcam.style.fontWeight="normal";
 					gowebcam.innerHTML = "Waiting for Camera to load";
+					gowebcam.dataset.translate='waiting-for-camera-to-load';
 				}
 				warnlog("video source changed");
 				
@@ -3487,6 +3580,7 @@ function setupWebcamSelection(stream=null){
 					gowebcam.style.backgroundColor = "#DDDDDD";
 					gowebcam.style.fontWeight="normal";
 					gowebcam.innerHTML = "Waiting for Camera to load";
+					gowebcam.dataset.translate='waiting-for-camera-to-load';
 				}
 				
 				if (parseInt(getById("webcamquality").elements.namedItem("resolution").value)==3){
@@ -3511,6 +3605,7 @@ function setupWebcamSelection(stream=null){
 						gowebcam.style.color = "black";
 						gowebcam.style.fontWeight="bold";
 						gowebcam.innerHTML = "START";
+						gowebcam.dataset.translate='start';
 					}
 					return;
 				}
@@ -3727,11 +3822,11 @@ function generateQRPage(){
 		sendstr = 'https://' + location.host + location.pathname + '?push=' + sid + sendstr;
 		viewstr = 'https://' + location.host+ location.pathname + '?view=' + sid + viewstr + title;
 		
-		getById("gencontent").innerHTML = '<br /><div id="qrcode" style="background-color:white;display:inline-block;color:black;max-width:340px;padding:40px;"><h2 style="color:black">Guest Invite Link:</h2><input class="task" onclick="popupMessage(event);copyFunction(this)" onmousedown="copyFunction(this)"  \
+		getById("gencontent").innerHTML = '<br /><div id="qrcode" style="background-color:white;display:inline-block;color:black;max-width:340px;padding:40px;"><h2 style="color:black"  data-translate="invite-link">Guest Invite Link:</h2><input class="task" onclick="popupMessage(event);copyFunction(this)" onmousedown="copyFunction(this)"  \
 		style="cursor:grab;background-color:#CFC;border: 2px solid black;width:260px;font-size:120%;padding:10px;"  value="' + sendstr + '" /><br /><br /></div>\
 			<br /><br />and don\'t forget the<h2 style="color:black">OBS Browser Source Link:</h2><input class="task" data-drag="1" onmousedown="copyFunction(this)" onclick="popupMessage(event);copyFunction(this)"  style="cursor:grab;background-color:#FCC;width:400px;font-size:120%;padding:10px;border:2px solid black;margin:5px;" value="' + viewstr + '" /> \
 			<br /><br />\
-		Please also note, the invite link and OBS ingestion link created is reusable, but only one person may use a specific invite at a time.';
+		<span data-translate="please-note-invite-ingestion-link">Please also note, the invite link and OBS ingestion link created is reusable, but only one person may use a specific invite at a time.</span>';
 		var qrcode = new QRCode(getById("qrcode"), {
 			width : 300,
 			height : 300,
@@ -3783,8 +3878,8 @@ if ((session.view) && (session.roomid===false)){
 			if ((session.view) && (!(session.cleanOutput))){
 				if (document.getElementById("mainmenu")){
 					getById("mainmenu").style.backgroundImage = "url('data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBzdGFuZGFsb25lPSJubyI/Pgo8IURPQ1RZUEUgc3ZnIFBVQkxJQyAiLS8vVzNDLy9EVEQgU1ZHIDEuMS8vRU4iICJodHRwOi8vd3d3LnczLm9yZy9HcmFwaGljcy9TVkcvMS4xL0RURC9zdmcxMS5kdGQiPgo8c3ZnIHdpZHRoPSI0MHB4IiBoZWlnaHQ9IjQwcHgiIHZpZXdCb3g9IjAgMCA0MCA0MCIgdmVyc2lvbj0iMS4xIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHhtbG5zOnhsaW5rPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5L3hsaW5rIiB4bWw6c3BhY2U9InByZXNlcnZlIiBzdHlsZT0iZmlsbC1ydWxlOmV2ZW5vZGQ7Y2xpcC1ydWxlOmV2ZW5vZGQ7c3Ryb2tlLWxpbmVqb2luOnJvdW5kO3N0cm9rZS1taXRlcmxpbWl0OjEuNDE0MjE7IiB4PSIwcHgiIHk9IjBweCI+CiAgICA8ZGVmcz4KICAgICAgICA8c3R5bGUgdHlwZT0idGV4dC9jc3MiPjwhW0NEQVRBWwogICAgICAgICAgICBALXdlYmtpdC1rZXlmcmFtZXMgc3BpbiB7CiAgICAgICAgICAgICAgZnJvbSB7CiAgICAgICAgICAgICAgICAtd2Via2l0LXRyYW5zZm9ybTogcm90YXRlKDBkZWcpCiAgICAgICAgICAgICAgfQogICAgICAgICAgICAgIHRvIHsKICAgICAgICAgICAgICAgIC13ZWJraXQtdHJhbnNmb3JtOiByb3RhdGUoLTM1OWRlZykKICAgICAgICAgICAgICB9CiAgICAgICAgICAgIH0KICAgICAgICAgICAgQGtleWZyYW1lcyBzcGluIHsKICAgICAgICAgICAgICBmcm9tIHsKICAgICAgICAgICAgICAgIHRyYW5zZm9ybTogcm90YXRlKDBkZWcpCiAgICAgICAgICAgICAgfQogICAgICAgICAgICAgIHRvIHsKICAgICAgICAgICAgICAgIHRyYW5zZm9ybTogcm90YXRlKC0zNTlkZWcpCiAgICAgICAgICAgICAgfQogICAgICAgICAgICB9CiAgICAgICAgICAgIHN2ZyB7CiAgICAgICAgICAgICAgICAtd2Via2l0LXRyYW5zZm9ybS1vcmlnaW46IDUwJSA1MCU7CiAgICAgICAgICAgICAgICAtd2Via2l0LWFuaW1hdGlvbjogc3BpbiAxLjVzIGxpbmVhciBpbmZpbml0ZTsKICAgICAgICAgICAgICAgIC13ZWJraXQtYmFja2ZhY2UtdmlzaWJpbGl0eTogaGlkZGVuOwogICAgICAgICAgICAgICAgYW5pbWF0aW9uOiBzcGluIDEuNXMgbGluZWFyIGluZmluaXRlOwogICAgICAgICAgICB9CiAgICAgICAgXV0+PC9zdHlsZT4KICAgIDwvZGVmcz4KICAgIDxnIGlkPSJvdXRlciI+CiAgICAgICAgPGc+CiAgICAgICAgICAgIDxwYXRoIGQ9Ik0yMCwwQzIyLjIwNTgsMCAyMy45OTM5LDEuNzg4MTMgMjMuOTkzOSwzLjk5MzlDMjMuOTkzOSw2LjE5OTY4IDIyLjIwNTgsNy45ODc4MSAyMCw3Ljk4NzgxQzE3Ljc5NDIsNy45ODc4MSAxNi4wMDYxLDYuMTk5NjggMTYuMDA2MSwzLjk5MzlDMTYuMDA2MSwxLjc4ODEzIDE3Ljc5NDIsMCAyMCwwWiIgc3R5bGU9ImZpbGw6YmxhY2s7Ii8+CiAgICAgICAgPC9nPgogICAgICAgIDxnPgogICAgICAgICAgICA8cGF0aCBkPSJNNS44NTc4Niw1Ljg1Nzg2QzcuNDE3NTgsNC4yOTgxNSA5Ljk0NjM4LDQuMjk4MTUgMTEuNTA2MSw1Ljg1Nzg2QzEzLjA2NTgsNy40MTc1OCAxMy4wNjU4LDkuOTQ2MzggMTEuNTA2MSwxMS41MDYxQzkuOTQ2MzgsMTMuMDY1OCA3LjQxNzU4LDEzLjA2NTggNS44NTc4NiwxMS41MDYxQzQuMjk4MTUsOS45NDYzOCA0LjI5ODE1LDcuNDE3NTggNS44NTc4Niw1Ljg1Nzg2WiIgc3R5bGU9ImZpbGw6cmdiKDIxMCwyMTAsMjEwKTsiLz4KICAgICAgICA8L2c+CiAgICAgICAgPGc+CiAgICAgICAgICAgIDxwYXRoIGQ9Ik0yMCwzMi4wMTIyQzIyLjIwNTgsMzIuMDEyMiAyMy45OTM5LDMzLjgwMDMgMjMuOTkzOSwzNi4wMDYxQzIzLjk5MzksMzguMjExOSAyMi4yMDU4LDQwIDIwLDQwQzE3Ljc5NDIsNDAgMTYuMDA2MSwzOC4yMTE5IDE2LjAwNjEsMzYuMDA2MUMxNi4wMDYxLDMzLjgwMDMgMTcuNzk0MiwzMi4wMTIyIDIwLDMyLjAxMjJaIiBzdHlsZT0iZmlsbDpyZ2IoMTMwLDEzMCwxMzApOyIvPgogICAgICAgIDwvZz4KICAgICAgICA8Zz4KICAgICAgICAgICAgPHBhdGggZD0iTTI4LjQ5MzksMjguNDkzOUMzMC4wNTM2LDI2LjkzNDIgMzIuNTgyNCwyNi45MzQyIDM0LjE0MjEsMjguNDkzOUMzNS43MDE5LDMwLjA1MzYgMzUuNzAxOSwzMi41ODI0IDM0LjE0MjEsMzQuMTQyMUMzMi41ODI0LDM1LjcwMTkgMzAuMDUzNiwzNS43MDE5IDI4LjQ5MzksMzQuMTQyMUMyNi45MzQyLDMyLjU4MjQgMjYuOTM0MiwzMC4wNTM2IDI4LjQ5MzksMjguNDkzOVoiIHN0eWxlPSJmaWxsOnJnYigxMDEsMTAxLDEwMSk7Ii8+CiAgICAgICAgPC9nPgogICAgICAgIDxnPgogICAgICAgICAgICA8cGF0aCBkPSJNMy45OTM5LDE2LjAwNjFDNi4xOTk2OCwxNi4wMDYxIDcuOTg3ODEsMTcuNzk0MiA3Ljk4NzgxLDIwQzcuOTg3ODEsMjIuMjA1OCA2LjE5OTY4LDIzLjk5MzkgMy45OTM5LDIzLjk5MzlDMS43ODgxMywyMy45OTM5IDAsMjIuMjA1OCAwLDIwQzAsMTcuNzk0MiAxLjc4ODEzLDE2LjAwNjEgMy45OTM5LDE2LjAwNjFaIiBzdHlsZT0iZmlsbDpyZ2IoMTg3LDE4NywxODcpOyIvPgogICAgICAgIDwvZz4KICAgICAgICA8Zz4KICAgICAgICAgICAgPHBhdGggZD0iTTUuODU3ODYsMjguNDkzOUM3LjQxNzU4LDI2LjkzNDIgOS45NDYzOCwyNi45MzQyIDExLjUwNjEsMjguNDkzOUMxMy4wNjU4LDMwLjA1MzYgMTMuMDY1OCwzMi41ODI0IDExLjUwNjEsMzQuMTQyMUM5Ljk0NjM4LDM1LjcwMTkgNy40MTc1OCwzNS43MDE5IDUuODU3ODYsMzQuMTQyMUM0LjI5ODE1LDMyLjU4MjQgNC4yOTgxNSwzMC4wNTM2IDUuODU3ODYsMjguNDkzOVoiIHN0eWxlPSJmaWxsOnJnYigxNjQsMTY0LDE2NCk7Ii8+CiAgICAgICAgPC9nPgogICAgICAgIDxnPgogICAgICAgICAgICA8cGF0aCBkPSJNMzYuMDA2MSwxNi4wMDYxQzM4LjIxMTksMTYuMDA2MSA0MCwxNy43OTQyIDQwLDIwQzQwLDIyLjIwNTggMzguMjExOSwyMy45OTM5IDM2LjAwNjEsMjMuOTkzOUMzMy44MDAzLDIzLjk5MzkgMzIuMDEyMiwyMi4yMDU4IDMyLjAxMjIsMjBDMzIuMDEyMiwxNy43OTQyIDMzLjgwMDMsMTYuMDA2MSAzNi4wMDYxLDE2LjAwNjFaIiBzdHlsZT0iZmlsbDpyZ2IoNzQsNzQsNzQpOyIvPgogICAgICAgIDwvZz4KICAgICAgICA8Zz4KICAgICAgICAgICAgPHBhdGggZD0iTTI4LjQ5MzksNS44NTc4NkMzMC4wNTM2LDQuMjk4MTUgMzIuNTgyNCw0LjI5ODE1IDM0LjE0MjEsNS44NTc4NkMzNS43MDE5LDcuNDE3NTggMzUuNzAxOSw5Ljk0NjM4IDM0LjE0MjEsMTEuNTA2MUMzMi41ODI0LDEzLjA2NTggMzAuMDUzNiwxMy4wNjU4IDI4LjQ5MzksMTEuNTA2MUMyNi45MzQyLDkuOTQ2MzggMjYuOTM0Miw3LjQxNzU4IDI4LjQ5MzksNS44NTc4NloiIHN0eWxlPSJmaWxsOnJnYig1MCw1MCw1MCk7Ii8+CiAgICAgICAgPC9nPgogICAgPC9nPgo8L3N2Zz4K')";
-					getById("mainmenu").innerHTML = '<font style="color:#666"><h1>Attempting to load video stream.</h1></font>';
-					getById("mainmenu").innerHTML += '<font style="color:#EEE">The stream is not available yet or an error occured.</font><br/><button onclick="location.reload();">Retry Manually</button><br/>';
+					getById("mainmenu").innerHTML = '<font style="color:#666"><h1 data-translate="attempting-to-load">Attempting to load video stream.</h1></font>';
+					getById("mainmenu").innerHTML += '<font style="color:#EEE" data-translate="stream-not-available-yet">The stream is not available yet or an error occured.</font><br/><button onclick="location.reload();" data-translate="try-manually">Retry Manually</button><br/>';
 					
 				}}
 		} catch(e){
@@ -3805,7 +3900,7 @@ if ((session.view) && (session.roomid===false)){
 		play();
 		//getById("mainmenu").style.display="none";
 	}
-} else if (session.roomid!==false){
+} else if (session.roomid){
 	try{
 		if (document.title==""){
 			document.title = "Room="+session.roomid.toString();
@@ -4228,7 +4323,9 @@ function updateMessages(){
 		
 		var time = timeSince(messageList[i].time);
 		var msg = document.createElement("div");
+		////// KEEP THIS IN /////////
 		console.log(messageList[i].msg); // Display Recieved messages for View-Only clients.
+		/////////////////////////////
 		if (messageList[i].type == "sent"){
 			msg.innerHTML = messageList[i].msg + " <i><small> <small>- "+time+"</small></small></i>";
 			msg.classList.add("outMessage");

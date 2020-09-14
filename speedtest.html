@@ -74,7 +74,7 @@ function loadIframe(){
 	var iframeContainer = document.createElement("span");
 	
 	iframe.allow="autoplay";
-	var srcString = "./?push="+streamID+"&cleanoutput&privacy&autojoin&videodevice";
+	var srcString = "./?push="+streamID+"&cleanoutput&privacy&audiodevice=0";
 	
 	if (urlParams.has('turn')){
 		iframe.src = srcString+"&turn="+urlParams.get("turn");

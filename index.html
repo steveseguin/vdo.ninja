@@ -51,8 +51,8 @@
 		<link rel="stylesheet" href="./lineawesome/css/line-awesome.min.css">
 		<script type="text/javascript" crossorigin="anonymous" src="https://webrtc.github.io/adapter/adapter-latest.js"></script>
 		<script type="text/javascript" crossorigin="anonymous" src="./thirdparty/qrcode.min.js"></script>
-		<script type="text/javascript" crossorigin="anonymous" src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script> 
-		<link rel="stylesheet" href="./main.css?ver=10" />
+		<script type="text/javascript" src="./thirdparty/jquery.min.js"></script> 
+		<link rel="stylesheet" href="./main.css?ver=11" />
 	</head>
 	<body id="main" >
 		<span itemprop="image" itemscope itemtype="image/png">
@@ -62,8 +62,8 @@
 		<span itemprop="thumbnail" itemscope itemtype="http://schema.org/ImageObject">
 			<link itemprop="url" href="./images/obsNinja_logo_full.png" />
 		</span>
-		<script  type="text/javascript" crossorigin="anonymous"  src="./thirdparty/CodecsHandler.js?ver=18"></script>
-		<script  type="text/javascript" crossorigin="anonymous" src="./webrtc.js?ver=57"></script>
+		<script  type="text/javascript" crossorigin="anonymous"  src="./thirdparty/CodecsHandler.js?ver=19"></script>
+		<script  type="text/javascript" crossorigin="anonymous" src="./webrtc.js?ver=60"></script>
 		<input id="zoomSlider" type="range" style="display: none;" />
 		<div id="header"">
 			<a id="logoname" href="./" style="text-decoration: none; color: white; margin: 2px;">
@@ -174,10 +174,10 @@
 						<br />
 						<span data-translate="added-notes">
 							<u>
-								<i>Added Notes:</i>
+								<i>Important Notes:</i><br /><br />
 							</u>
-							<li>Invite only guests to the room you trust.</li>
-							<li>iOS devices will share just their audio with other guests; this is mainly a hardware limitation</li>
+							<li>Invite only guests to the room that you trust.</li>
+							<li>iOS devices will share just their audio with other room guests; not video. This is intended as a way to avoid a hardware limitation with iOS devices.</li>
 							<li>The "Recording" option is considered experimental.</li>
 						</span>
 					</ul>
@@ -482,8 +482,8 @@
 							</li>
 							<br />
 
-                            Site last updated: <a href="https://www.reddit.com/r/OBSNinja/comments/ib7vhk/version_10_released_text_chat_and_more_added_see/">August 30th, 2020</a>. The previous version can be found at 
-							<a href="https://obs.ninja/v9/">https://obs.ninja/v9/</a> if you are having new issues.
+                            🚨 Site Recently Updated: September 12th, 2020. The previous version can be found at 
+							<a href="https://obs.ninja/v11/">https://obs.ninja/v11/</a> if you are having new issues.
 
                             
 							<br />
@@ -581,7 +581,7 @@
 				<li class="context-menu__item">
 					<a href="#" class="context-menu__link" data-action="Copy">
 						<i class="las la-paperclip"></i>
-						<span data-translate="copy-to-clipboard">Copy to Clipboard</span>
+						<span data-translate="copy-to-clipboard" >Copy to Clipboard</span>
 					</a>
 				</li>
 			</ul>
@@ -589,15 +589,15 @@
 		
 		<div id="chatModule" style="display:none;">
 			<div id="chatBody"> 
-				<div class="inMessage">
+				<div class="inMessage" data-translate='welcome-to-obs-ninja-chat'>
 					Welcome to OBS.Ninja! You can send text messages directly to connected peers from here.
 				</div>
-				<div class="outMessage">
+				<div class="outMessage" data-translate='names-and-labels-coming-soon'>
 					Names identifying connected peers will be a feature in an upcoming release.
 				</div>
 			</div>
 			<input id="chatInput" placeholder="Enter chat message to send here"onkeypress="EnterButtonChat(event)" />
-			<button style="width:60px;background-color:#EEE;" onclick="sendChatMessage()">Send</button>
+			<button style="width:60px;background-color:#EEE;" onclick="sendChatMessage()" data-translate='send-chat'>Send</button>
 		</div>
 		
 		<audio id="testtone" style="display:none;" preload="none">
@@ -607,7 +607,7 @@
 		
 		<div id="messagePopup" class="popup-message"></div>
 		<div id="languages" class="popup-message" style="display: none; right: 0; bottom: 25px; position: absolute;">
-			<b>Available Languages:</b>
+			<b  data-translate='available-languages'>Available Languages:</b>
 			<br />
 			<u>
 				<a onclick="changeLg('ru');toggle(document.getElementById('languages'));" style="cursor: pointer;">Russian</a>
@@ -632,7 +632,7 @@
 				<br />
 			</u>
 			<br />
-			<a href="https://github.com/steveseguin/obsninja/tree/master/translations">Add More Here!</a>
+			<a href="https://github.com/steveseguin/obsninja/tree/master/translations"  data-translate='add-more-here'>Add More Here!</a>
 			<br />
 		</div>
 		<script>
@@ -698,7 +698,7 @@
 		// If you wish to change branding, blank offers a good clean start.
 		<script type="text/javascript" id="main-js" src="./main.js" data-translation="blank"></script>
 	-->
-		<script type="text/javascript" crossorigin="anonymous" id="main-js" src="./main.js?ver=39"></script>
-		<script type="text/javascript" crossorigin="anonymous" src="./animations.js?ver=9"></script>
+		<script type="text/javascript" crossorigin="anonymous" id="main-js" src="./main.js?ver=40"></script>
+		<script type="text/javascript" crossorigin="anonymous" src="./animations.js?ver=10"></script>
 	</body>
 </html>

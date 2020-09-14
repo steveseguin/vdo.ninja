@@ -1,0 +1,28 @@
+<html>
+<body>
+<pre  id="json"><pre>
+
+<script>
+  var supports = navigator.mediaDevices.getSupportedConstraints();
+  document.getElementById("json").innerHTML = "BROWSER SUPPORTED OPTIONS<HR>";
+  document.getElementById("json").innerHTML += JSON.stringify(supports, undefined, 2);
+  
+  
+  navigator.mediaDevices.getUserMedia({video:  { facingMode: { ideal: "environment" }}, audio:false}).then(function(mediaStream){
+		console.log("worked");
+		 
+			setTimeout(function(){
+				mediaStream.getVideoTracks().forEach((track)=>{
+					const capabilities = track.getCapabilities();
+					const settings = track.getSettings();
+					document.getElementById("json").innerHTML += "<HR>CAMERA SUPPORTED<HR>";
+					document.getElementById("json").innerHTML += JSON.stringify(capabilities, undefined, 2);
+					document.getElementById("json").innerHTML += "<HR>CAMERA SETTINGS <HR>";
+					document.getElementById("json").innerHTML += JSON.stringify(settings, undefined, 2);
+				});
+			},1000);
+		 
+	});
+</script>
+</body>
+</html>

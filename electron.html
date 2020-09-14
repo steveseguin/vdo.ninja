@@ -83,6 +83,31 @@ input[type='checkbox'] {
 input[type='checkbox']:checked {
     background: #1A1;
 }
+#audioOutput{
+	font-size: calc(16px + 0.3vw);
+	max-width:590px
+}
+	
+@media only screen and (max-width: 1030px) {
+	body{
+		zoom: 0.9; 
+		-moz-transform: scale(0.9); 
+		-moz-transform-origin: 0 0;
+	}
+}
+
+@media only screen and (max-width: 940px) {
+	body{
+		zoom: 0.64; 
+		-moz-transform: scale(0.64); 
+		-moz-transform-origin: 0 0;
+		
+	}
+	#audioOutput{
+		font-size: calc(14px + 1.4vw);
+		max-width:486px
+	}
+}
 </style></head>
 <body >
 
@@ -109,7 +134,7 @@ input[type='checkbox']:checked {
 		<input type="text" id="changeText" class="inputfield" value="http://obs.ninja/?view=" onchange="modURL"   onkeyup="enterPressed(event, gohere);" />
 		<button  onclick="gohere();" id="gobutton">GO</button>
 		<br><br>
-		<label for="audioOutput">Audio output destination: </label><select id="audioOutput" style="max-width:400px"></select>
+		<label for="audioOutput">Audio output destination: </label><select id="audioOutput"></select>
 		
 	</center></div>
 </div>
@@ -199,6 +224,10 @@ var urlParams = new URLSearchParams(window.location.search);
 var isMobile = false;
 if( /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)){ // does not detect iPad Pros.
 	isMobile=true; // if iOS, default to H264?  meh.  let's not.
+}
+// Windows can show the cursor, since it captures in a different way.
+if (navigator.platform.indexOf("Win") != -1){
+	document.getElementById("showcursor").checked=true;
 }
 
 function updateURLParameter(url, param, paramVal){
