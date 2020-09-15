@@ -7,17 +7,11 @@ Whenever you commit to this repository, GitHub Pages will run [Jekyll](https://j
 [![Everything Is AWESOME](http://i.imgur.com/Ot5DWAW.png)](https://youtu.be/StTqXEQ2l-Y?t=35s "Everything Is AWESOME")
 
 
-<iframe width="560" height="315"
-src="https://www.youtube.com/embed/MUQfKFzIOeU" 
-frameborder="0" 
+<iframe width="560" height="315" src="https://www.youtube.com/embed/MUQfKFzIOeU" frameborder="0" 
 allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" 
 allowfullscreen></iframe>
 
-<iframe width="560" height="315"
-src="https://obs.ninja/" 
-frameborder="0" 
-allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" 
-allowfullscreen></iframe>
+<iframe width="560" height="315" src="https://obs.ninja/" frameborder="0" allow="camera; microphone; accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
 
 
 <div align="center">
