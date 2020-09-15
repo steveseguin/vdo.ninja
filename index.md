@@ -4,6 +4,20 @@ You can use the [editor on GitHub](https://github.com/steveseguin/obsninja/edit/
 
 Whenever you commit to this repository, GitHub Pages will run [Jekyll](https://jekyllrb.com/) to rebuild the pages in your site, from the content in your Markdown files.
 
+[![Everything Is AWESOME](http://i.imgur.com/Ot5DWAW.png)](https://youtu.be/StTqXEQ2l-Y?t=35s "Everything Is AWESOME")
+
+
+   <iframe width="560" height="315"
+src="https://www.youtube.com/embed/MUQfKFzIOeU" 
+frameborder="0" 
+allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" 
+allowfullscreen></iframe>
+
+
+<div align="center">
+  <a href="https://youtu.be/StTqXEQ2l-Y?t=35s"><img src="https://img.youtube.com/vi/StTqXEQ2l-Y/0.jpg" alt="IMAGE ALT TEXT"></a>
+</div>
+
 ### Markdown
 
 Markdown is a lightweight and easy-to-use syntax for styling your writing. It includes conventions for
