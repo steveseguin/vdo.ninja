@@ -24,7 +24,8 @@ see this issue with coturn: https://github.com/coturn/coturn/issues/268
 
 You might also want to consider buying a better certificiate, as not all Google-related projects properly support certbot certificates, including libwebrtc. see [this issue ticket](https://github.com/coturn/coturn/issues/240#issuecomment-648550885).  If you go this route, see [turnserver2.conf](https://github.com/steveseguin/obsninja/blob/master/turnserver2.conf) for an example config.
 
-Nexzt, we update the User and Group values in our service file to be "root". This seems to fix the issue with Lets Encrypt. ..  I welcome a better solution tho.
+Next, we may want to update the User and Group values in our service file to be "root". This seems to be a quick hacky fix for the issue with Lets Encrypt. ..  I welcome a better solution tho.  If you move the certs somewhere else, or buy proper certificates, then the default turnserver user/group will work.
+
 ```
 sudo vi /usr/lib/systemd/system/coturn.service
 sudo systemctl daemon-reload
