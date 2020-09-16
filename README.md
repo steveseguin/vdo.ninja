@@ -49,8 +49,8 @@ https://github.com/steveseguin/electroncapture
 A website designed to also work with OBS.Ninja as a Broadcasting tool. Share your webcam, window, desktop, or video file with friends and family. Peer-2-peer, so privacy can be maintained, but you can also list your broadcasts for others to watch.
 https://steves.app/
 
-#### StageTen.tv
-A browser-based studio solution and simplified alternative to OBS, with built-in OBS.Ninja functionality. It is a server-based approach to group interactions and live production. Steve Seguin is affiliated with StageTen, yet StageTen is not affiliated with OBS.Ninja.
+#### StageTEN.tv
+A browser-based studio solution and simplified alternative to OBS, with built-in OBS.Ninja functionality. It is a server-based approach to group interactions and live production. Steve Seguin is affiliated with StageTEn, yet StageTEN is not affiliated with OBS.Ninja.
 
 ## Privacy
 I try to avoid data collection whenever possible and video streams are generally designed to be private, but use at your own risk. It is best to not share links created with OBS.Ninja with those you do not trust. I've provided instructions on how to deploy a TURN server if IP-address privacy is an issue for you. See: turnserver.md 
