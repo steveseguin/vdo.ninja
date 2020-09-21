@@ -51,10 +51,33 @@
 					<div id="main">
 						<div class="inner">
 							<h1>Generic Page</h1>
+							
+							You can customize the playback of videos by added parameters to the OBS.Ninja URL links, along with many other aspects. OBS.Ninja is highly flexible in this regard, letting you achieve your desired outcome without needing to code and without additional software.
+
+For example, https://obs.ninja/?view=xxxxxxx, could be amended to https://obs.ninja/?view=xxxxxxx&bitrate=500, which will target a video bitrate of 500-kbps.
+
+Multiple parameters can be appended together by using the separating charater "&".
+							
+							
 							<span class="image main"><img src="images/pic13.jpg" alt="" /></span>
-							<p>Donec eget ex magna. Interdum et malesuada fames ac ante ipsum primis in faucibus. Pellentesque venenatis dolor imperdiet dolor mattis sagittis. Praesent rutrum sem diam, vitae egestas enim auctor sit amet. Pellentesque leo mauris, consectetur id ipsum sit amet, fergiat. Pellentesque in mi eu massa lacinia malesuada et a elit. Donec urna ex, lacinia in purus ac, pretium pulvinar mauris. Curabitur sapien risus, commodo eget turpis at, elementum convallis elit. Pellentesque enim turpis, hendrerit tristique.</p>
-							<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis dapibus rutrum facilisis. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Etiam tristique libero eu nibh porttitor fermentum. Nullam venenatis erat id vehicula viverra. Nunc ultrices eros ut ultricies condimentum. Mauris risus lacus, blandit sit amet venenatis non, bibendum vitae dolor. Nunc lorem mauris, fringilla in aliquam at, euismod in lectus. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. In non lorem sit amet elit placerat maximus. Pellentesque aliquam maximus risus, vel venenatis mauris vehicula hendrerit.</p>
-							<p>Interdum et malesuada fames ac ante ipsum primis in faucibus. Pellentesque venenatis dolor imperdiet dolor mattis sagittis. Praesent rutrum sem diam, vitae egestas enim auctor sit amet. Pellentesque leo mauris, consectetur id ipsum sit amet, fersapien risus, commodo eget turpis at, elementum convallis elit. Pellentesque enim turpis, hendrerit tristique lorem ipsum dolor.</p>
+							
+							<pre><code>
+							example: http://obs.ninja/?view=xxxxxxx&bitrate=500&stereo=1
+							
+							</code></pre>
+							You can do some rather powerful combos, such as publish a video while also viewing multiple others videos. OBS.Ninja will auto-mix the videos together into a single layout for you.
+							<pre><code>
+example: http://obs.ninja/?push=aaa&view=bbb,ccc,ddd
+							
+							</code></pre>
+							<p>
+You might notice the Stream ID values I'm using (ie: aaa, bbb, etc); these can be manually created and reused. Use &push=STREAMID to publish a video and &view=STREAMID to remotely view it. If you don't manually specify a stream ID, OBS.Ninja will sometimes generate one for you.
+
+							</p>
+							<p>
+To make up a valid stream ID of your own though, choose something with less than 31-characters of length and ensure it's AlpHaNuMerIc-only. A stream ID must also not already be in active use, else you will be provided with an error.
+
+							</p>
 						</div>
 					</div>
 
