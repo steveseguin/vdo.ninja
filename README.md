@@ -6,6 +6,6 @@ Here's an OBS Ninja cheat-sheet to get you started
 ![OBS Ninja cheat-sheet](cheatsheet/OBSN_cheat-sheet.jpg)
 (v0.3, 2020-09-23)
 
-* [download PDF](cheatsheet/OBSN_cheat-sheet.pdf)
+* [download PDF](cheatsheet/OBSN_cheat-sheet.pdf) (best for printing)
 * [download PNG](cheatsheet/OBSN_cheat-sheet.png)
-* [download JPG](cheatsheet/OBSN_cheat-sheet.pdf)
+* [download JPG](cheatsheet/OBSN_cheat-sheet.pdf) 
