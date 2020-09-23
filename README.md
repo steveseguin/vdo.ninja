@@ -1,4 +1,5 @@
-![ILogo by brimace](images/obsNinja_logo_full.png | width=400)
+(images/obsNinja_logo_full.png | width=400)
+<img src="images/obsNinja_logo_full.png" alt="Logo by brimace" data-canonical-src="https://gyazo.com/eb5c5741b6a9a16c692170a41a49c858.png" height="300" />
 
 ## What is OBS NINJA
 OBS.Ninja uses peer-to-peer technology to bring remote cameras into OBS. In most cases, all video data is transferred directly from peer to peer, without needing to go through any video server. This results in high-quality video with super low latency. In a small number of cases, video data may go through an encrypted TURN server, which is used to facilitate peer connections when otherwise not possible.
