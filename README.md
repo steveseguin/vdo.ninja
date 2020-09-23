@@ -9,13 +9,14 @@ OBS Ninja is not affiliated with OBS. OBS.Ninja is designed to allow content cre
 Please see the sub-reddit added info: https://reddit.com/r/obsninja  
 Also check out the FAQ for more info: https://github.com/steveseguin/obsninja/wiki
 
+<img src="https://user-images.githubusercontent.com/2575698/94018108-34b1de00-fd7e-11ea-8c7d-df001253b60d.png" data-canonical-src="https://gyazo.com/eb5c5741b6a9a16c692170a41a49c858.png" height="300" />
+
 ## How to use:
 I demo the basic usage of OBS.Ninja on YouTube: https://www.youtube.com/watch?v=6R_sQKxFAhg
 
 Check the subreddit for added use cases, advanced features, and support. Advanced features includes high-quality audio modes, custom video resolutions, and more.
 
 MacOS users will face some challenges in using OBS currently, but there are workarounds. Please see the subreddit or the Wiki.
-<img src="https://user-images.githubusercontent.com/2575698/94018108-34b1de00-fd7e-11ea-8c7d-df001253b60d.png" data-canonical-src="https://gyazo.com/eb5c5741b6a9a16c692170a41a49c858.png" height="300" />
 
 ## What's in this repo?
 This repo contains software for OBS.Ninja, including the HTML landing page for its Electron Capture app offering. A sample config file and instructions for setting up a TURN server (video relay server), is also provided. You may also find the Wiki for the project in this repo, which contains added information on how to use the software.
