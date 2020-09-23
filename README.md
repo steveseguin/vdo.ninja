@@ -1,4 +1,4 @@
-(images/obsNinja_logo_full.png | width=400)
+
 <img src="images/obsNinja_logo_full.png" alt="Logo by brimace" data-canonical-src="https://gyazo.com/eb5c5741b6a9a16c692170a41a49c858.png" height="300" />
 
 ## What is OBS NINJA
