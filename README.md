@@ -15,7 +15,7 @@ Check the subreddit for added use cases, advanced features, and support. Advance
 
 MacOS users will face some challenges in using OBS currently, but there are workarounds. Please see the subreddit or the Wiki.
 
-![image](https://user-images.githubusercontent.com/2575698/94018108-34b1de00-fd7e-11ea-8c7d-df001253b60d.png  | height=300)
+![image](https://user-images.githubusercontent.com/2575698/94018108-34b1de00-fd7e-11ea-8c7d-df001253b60d.png | height=300)
 
 ## What's in this repo?
 This repo contains software for OBS.Ninja, including the HTML landing page for its Electron Capture app offering. A sample config file and instructions for setting up a TURN server (video relay server), is also provided. You may also find the Wiki for the project in this repo, which contains added information on how to use the software.
