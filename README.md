@@ -1,4 +1,4 @@
-![ILogo by brimace](images/obsNinja_logo_full.png)
+![ILogo by brimace](images/obsNinja_logo_full.png | height=300)
 
 ## What is OBS NINJA
 OBS.Ninja uses peer-to-peer technology to bring remote cameras into OBS. In most cases, all video data is transferred directly from peer to peer, without needing to go through any video server. This results in high-quality video with super low latency. In a small number of cases, video data may go through an encrypted TURN server, which is used to facilitate peer connections when otherwise not possible.
@@ -15,7 +15,7 @@ Check the subreddit for added use cases, advanced features, and support. Advance
 
 MacOS users will face some challenges in using OBS currently, but there are workarounds. Please see the subreddit or the Wiki.
 
-![image](https://user-images.githubusercontent.com/2575698/94018108-34b1de00-fd7e-11ea-8c7d-df001253b60d.png)
+![image](https://user-images.githubusercontent.com/2575698/94018108-34b1de00-fd7e-11ea-8c7d-df001253b60d.png  | height=300)
 
 ## What's in this repo?
 This repo contains software for OBS.Ninja, including the HTML landing page for its Electron Capture app offering. A sample config file and instructions for setting up a TURN server (video relay server), is also provided. You may also find the Wiki for the project in this repo, which contains added information on how to use the software.
