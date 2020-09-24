@@ -1814,7 +1814,7 @@ function joinRoom(roomname){
 			for (var i in response){
 				if ("UUID" in response[i]){
 					if ("streamID" in response[i]){
-						if (response[i].UUID in session.pcs){
+						if (response[i].UUID in session.rpcs){
 							log("RTC already connected"); /// lets just say instead of Stream, we have 
 						} else {
 							//var title = "";                            // TODO: Assign labels 
