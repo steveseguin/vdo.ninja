@@ -48,6 +48,9 @@ If urgent, join me on discord: https://discord.gg/EksyhGA or email me at steve@s
 A better way to perform "Window Capturing" on desktop if OBS Browser Sources fails you. A downloadable tool designed to enhance OBS.Ninja.
 https://github.com/steveseguin/electroncapture
 
+#### CAPTION.Ninja
+A free AI-based closed-captioning tool to add speech-to-text overlays to OBS Studio. It's browser-based with an easy OBS integration. Developed by Steve as well! https://caption.ninja
+
 #### Steves.app:
 A website designed to also work with OBS.Ninja as a Broadcasting tool. Share your webcam, window, desktop, or video file with friends and family. Peer-2-peer, so privacy can be maintained, but you can also list your broadcasts for others to watch.
 https://steves.app/
