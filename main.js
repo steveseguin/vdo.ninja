@@ -161,8 +161,6 @@ document.addEventListener("keydown", event => {
 		} else {
 			toggleMute(); // Windows
 		}
-	  } else if (event.keyCode == 77) {  // m
-		toggleMute();
 	 // } else if (event.keyCode == 69) { // e 
 	//	hangup();
 	  } else if (event.keyCode == 66) { // b
