@@ -1,5 +1,5 @@
 The OBS.Ninja source repository is governed by the GNU AFFERO GENERAL PUBLIC LICENSE. (AGPL-3.0)
-That AGPL-3.0 licence can be found here: https://github.com/steveseguin/obsninja/AGPLv3.md
+That AGPL-3.0 licence can be found here: https://raw.githubusercontent.com/steveseguin/obsninja/master/AGPLv3.md
 
 In essence, OBS.Ninja is open-source and free to use, both for commercial and non-commercial use.
 Modifications of AGPL-3.0 licenced code must be made publicly accessible. Please refer to that licence.
