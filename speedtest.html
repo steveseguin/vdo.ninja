@@ -74,13 +74,13 @@ function loadIframe(){
 	var iframeContainer = document.createElement("span");
 	
 	iframe.allow="autoplay";
-	var srcString = "./?push="+streamID+"&cleanoutput&privacy&audiodevice=0";
+	var srcString = "./?push="+streamID+"&cleanoutput&privacy&audiodevice=0&fullscreen";
 	
 	if (urlParams.has('turn')){
-		iframe.src = srcString+"&turn="+urlParams.get("turn");
-	} else {
-		iframe.src = srcString;
+		srcString = srcString+"&turn="+urlParams.get("turn");
 	}
+	
+	iframe.src = srcString;
 	
 	iframeContainer.appendChild(iframe);
 	document.getElementById("container").appendChild(iframeContainer);
@@ -89,7 +89,17 @@ function loadIframe(){
 	var iframeContainer = document.createElement("span");
 	
 	iframe.allow="autoplay";
-	iframe.src = "./?view="+streamID+"&cleanoutput&privacy&noaudio";
+	var srcString = "./?view="+streamID+"&cleanoutput&privacy&noaudio";
+	
+	if (urlParams.has('turn')){
+		srcString = srcString+"&turn="+urlParams.get("turn");
+	}
+	
+	if (urlParams.has('buffer')){
+		srcString = srcString+"&buffer="+urlParams.get("buffer");
+	}
+	
+	iframe.src = srcString;
 	
 	iframeContainer.appendChild(iframe);
 	document.getElementById("container").appendChild(iframeContainer);

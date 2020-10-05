@@ -337,7 +337,7 @@ body {
 .previewWebcam{
 	max-width: 640px; 
 	max-width: 83vw; 
-	max-height: 30vh;
+	height: 30vh;
 }
 
 .gowebcam {
@@ -768,6 +768,11 @@ img {
 	cursor: pointer;
 	z-index:6;
 }
+
+#helpButton{
+	cursor: pointer;
+	z-index:6;
+}
 #controlButtons{
 	position:fixed;
 	z-index:5;
@@ -1066,16 +1071,44 @@ video {
 }
 
 #videoSource {
-	background-color: #FFF; 
 	display: inline-block;
 	vertical-align: middle;
+}
+.gone {
+	position: absolute;
+	display:inline-block;
+	left: -9999px;
+}
 
-	max-width:260px;
-	max-height:100%;
-	background-color:white;
-	
-	padding: 0px;
-	font-size:93%;
+.grabLinks {
+	color:black !important; 
+	display:inline-flex; 
+	cursor:grab; 
+	white-space: nowrap; 
+	overflow: hidden; 
+	text-overflow: ellipsis; 
+	font-weight:bold;
+	width:450px;
+	font-size:100%;
+	padding:10px;border:2px solid black; 
+	margin:5px;
+}
+
+.grabLinks a:hover {
+	color:black !important; 
+}
+
+.grabLinks a:active {
+	color:black !important; 
+}
+
+.grabLinks a:link {
+	color:black !important; 
+}
+
+/* visited link */
+.grabLinks a:visited {
+	color:black !important; 
 }
 
 #videoSettings3 {

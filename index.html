@@ -52,7 +52,7 @@
 		<script type="text/javascript" crossorigin="anonymous" src="https://webrtc.github.io/adapter/adapter-latest.js"></script>
 		<script type="text/javascript" crossorigin="anonymous" src="./thirdparty/qrcode.min.js"></script>
 		<script type="text/javascript" src="./thirdparty/jquery.min.js"></script> 
-		<link rel="stylesheet" href="./main.css?ver=11" />
+		<link rel="stylesheet" href="./main.css?ver=12" />
 	</head>
 	<body id="main" >
 		<span itemprop="image" itemscope itemtype="image/png">
@@ -63,7 +63,7 @@
 			<link itemprop="url" href="./images/obsNinja_logo_full.png" />
 		</span>
 		<script  type="text/javascript" crossorigin="anonymous"  src="./thirdparty/CodecsHandler.js?ver=19"></script>
-		<script  type="text/javascript" crossorigin="anonymous" src="./webrtc.js?ver=60"></script>
+		<script  type="text/javascript" crossorigin="anonymous" src="./webrtc.js?ver=62"></script>
 		<input id="zoomSlider" type="range" style="display: none;" />
 		<div id="header"">
 			<a id="logoname" href="./" style="text-decoration: none; color: white; margin: 2px;">
@@ -79,14 +79,14 @@
 				<font style="color: #888;" id="copythisurl"> &nbsp; 
 					<span data-translate="copy-this-url">Copy this URL into an OBS "Browser Source"</span> <i style="color: #CCC;" class="las la-long-arrow-alt-right"></i> &nbsp; 
 				</font>
-				<input
+				<a
                     id="reshare"
                     data-drag="1"
                     onclick="popupMessage(event);copyFunction(this)"
-                    class="task"
+                    class="task grabLinks"
                     onmousedown="copyFunction(this)"
-                    style="font-weight: bold; color: #afa; cursor: grab; background-color: #0000; font-size: 115%; min-width: 335px; max-width: 800px;"
-                />
+                    style="font-weight: bold; color: #afa !important; cursor: grab; background-color: #0000;  font-size: 115%; min-width: 335px; max-width: 800px;"
+                ></a>
 				<i class="las la-paperclip task" style="color: #DDD;" onclick="popupMessage(event);copyFunction(document.getElementById('reshare'));" onmouseover="this.style.cursor='pointer'"></i>
 			</div>
 			<div id="head4" style="display: inline-block;" class="advanced">
@@ -126,14 +126,14 @@
 		<span
                 id="helpbutton"
 				title="Show Help Info" 
-                onclick="alert('Email steve@seguin.email if the system breaks or check https://reddit.com/r/obsninja for support.\n\nThere are some advanced options hidden away, such as persistent stream links and custom resolutions; see the Wiki.')"
+                onclick="alert('Email steve@seguin.email if the system breaks or check https://reddit.com/r/obsninja for support.\n\nThe Wiki contains many help guides and advanced settings.\n\nAccess the debug menu by pressing CTRL (command) and Left-Clicking on a video.\n\nMost issues can be fixed by using Wired Internet instead of Wi-Fi.')"
                 style="cursor: pointer; display:none;"
                 alt="How to Use This with OBS"
             >
-				<i class="las la-question-circle " style="float: right; bottom: 0px; cursor: pointer; position: fixed; right: 24px; color: #d9e4eb; padding: 2px; margin: 2px 2px 0 0; font-size: 140%;"></i>
+			<i style="float: right; bottom: 0px; cursor: pointer; position: fixed; right: 24px; color: #d9e4eb; padding: 2px; margin: 2px 2px 0 0; font-size: 140%;" class="las la-question-circle" aria-hidden="true"></i>
 		</span>
 		<span title="Language Options" onclick="toggle(document.getElementById('languages'));" id="translateButton">
-			<i style="float: right; bottom: 0px; cursor: pointer; position: fixed; right: 2px; color: #d9e4eb; padding: 2px; margin: 2px 2px 0 0; font-size: 140%;" class="las la-language" aria-hidden="true"></i>
+			<i style="float: right; bottom: 0px; cursor: pointer; position: fixed; right:  2px; color: #d9e4eb; padding: 2px; margin: 2px 2px 0 0; font-size: 140%;" class="las la-language" aria-hidden="true"></i>
 		</span>
 		<div id="mainmenu" class="row" style="opacity: 0; align: center;">
 			<div id="container-1" class="column columnfade" style=" overflow-y: auto;">
@@ -482,7 +482,7 @@
 							</li>
 							<br />
 
-                            🚨 Site Recently Updated: September 12th, 2020. The previous version can be found at 
+                            🚨 Site Recently Updated: October 1st, 2020. The previous version can be found at 
 							<a href="https://obs.ninja/v11/">https://obs.ninja/v11/</a> if you are having new issues.
 
                             
@@ -520,9 +520,9 @@
 		<div id="controls_blank" style="display: none;">
 			<b>
 				<button data-value="0" style="padding: 2px 10px 3px 5px;font-weight:display-block;margin: 2px 0 0 5px;" title="Add this Video to any remote '&scene=1'" onclick="directEnable(this, event);">
-					<span data-translate="add-to-group" view">➕ Add to Group Scene</span>
+					<span data-translate="add-to-group">➕ Add to Group Scene</span>
 				</button>
-				<button style="padding: 2px 10px 3px 5px;display:inline-block;margin: 2px 0 0 5px;" title="Start Recording this stream. *experimental*' views" onclick="recordVideo(this, event)">
+				<button style="padding: 2px 10px 3px 5px;display:inline-block;margin: 2px 0 0 5px;" data-action-type="recorder" title="Start Recording this stream. *experimental*' views" onclick="recordVideo(this, event)">
 					<span data-translate="record">🔴 Record</span>
 				</button>
 				<br />
@@ -531,6 +531,13 @@
 				</button>
 				<i  style="font-size:2vh; position: relative; top: 3px;" title="Change this Audio's volume in all remote '&scene' views" class="las la-volume-up"></i>
 				<input type="range" min="1" max="100" value="100"  title="Change this Audio's volume in all remote '&scene' views" onclick="directVolume(this);" style="width: 100px; position: relative; top: 4px;"/>
+				
+				<button data-value="0" style="padding: 2px 10px 3px 5px;font-weight:display-block;margin: 2px 0 0 5px;" title="Force the user to Disconnect. They can always reconnect." onclick="directHangup(this, event);">
+					<span data-translate="disconnect-guest" >🚪 Hangup Guest</span>
+				</button>
+				<button data-value="0" style="padding: 2px 10px 3px 5px;font-weight:display-block;margin: 2px 0 0 5px;" title="Forward user to another room. They can always return." onclick="directMigrate(this, event);">
+					<span data-translate="forward-to-room">🚕 Transfer Guest</span>
+				</button>
 			</b>
 			<br />
 			
@@ -568,6 +575,7 @@
 				</span>
 				<button id="shareScreenGear" style="padding:20px;" onclick="grabScreen()"><b>Share Screen</b><br /><i style="padding:5px; font-size:300%;" class="las la-desktop"></i></button><br />
 				<button onclick="toggleSettings()" style="background-color:#EFEFEF;padding:10px 12px 12px 2px;"><i class="chevron right" style="font-size:150%;top:3px;position:relative;"></i> <b>Close Settings</b></button>
+				<button onclick="toggleSettings()" style="background-color:#EFEFEF;padding:10px 12px 12px 2px;"><i class="chevron right" style="font-size:150%;top:3px;position:relative;"></i> <b>Close Settings</b></button>
 			</p>
 		</div>
 		<nav id="context-menu" class="context-menu">
@@ -604,7 +612,10 @@
 			<source src="tone.mp3" type="audio/mpeg"> 
 			<source src="tone.ogg" type="audio/ogg"> 
 		</audio>
-		
+		<div class="gone" >
+			<!-- This image is used when dragging elements -->
+			<img src="./images/favicon-32x32.png" id="dragImage" />
+		</div>
 		<div id="messagePopup" class="popup-message"></div>
 		<div id="languages" class="popup-message" style="display: none; right: 0; bottom: 25px; position: absolute;">
 			<b  data-translate='available-languages'>Available Languages:</b>
@@ -635,6 +646,7 @@
 			<a href="https://github.com/steveseguin/obsninja/tree/master/translations"  data-translate='add-more-here'>Add More Here!</a>
 			<br />
 		</div>
+		
 		<script>
 		
             var session = WebRTC.Media; // session is a required global variable if configuring manually. Run before loading main.js but after webrtc.js.
@@ -698,7 +710,7 @@
 		// If you wish to change branding, blank offers a good clean start.
 		<script type="text/javascript" id="main-js" src="./main.js" data-translation="blank"></script>
 	-->
-		<script type="text/javascript" crossorigin="anonymous" id="main-js" src="./main.js?ver=41"></script>
+		<script type="text/javascript" crossorigin="anonymous" id="main-js" src="./main.js?ver=43"></script>
 		<script type="text/javascript" crossorigin="anonymous" src="./animations.js?ver=10"></script>
 	</body>
 </html>

@@ -200,6 +200,13 @@ function loadIframe(){
 				outputWindow.style.border="1px dotted black";
 				iframeContainer.appendChild(outputWindow);
 			}
+			
+			if ("action" in e.data){
+				var outputWindow = document.createElement("outputWindow");
+				outputWindow.innerHTML = "child-page-action: "+e.data.action+"<br />";
+				outputWindow.style.border="1px dotted black";
+				iframeContainer.appendChild(outputWindow);
+			}
 		});
 		
 }

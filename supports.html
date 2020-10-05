@@ -7,6 +7,13 @@
   document.getElementById("json").innerHTML = "BROWSER SUPPORTED OPTIONS<HR>";
   document.getElementById("json").innerHTML += JSON.stringify(supports, undefined, 2);
   
+  const FaceSupported = (async () => 'FaceDetector' in window &&
+    await new FaceDetector().detect(document.createElement('canvas'))
+    .then(_ => true)
+    .catch(e => e.name === 'NotSupportedError' ? false : true))();
+  
+  FaceSupported.then(function(result){document.getElementById("json").innerHTML += "<hr>Face Detection Supported: "+result+"   -- can be enabled via chrome://flags -> experimental web platform features";});
+  
   
   navigator.mediaDevices.getUserMedia({video:  { facingMode: { ideal: "environment" }}, audio:false}).then(function(mediaStream){
 		console.log("worked");
