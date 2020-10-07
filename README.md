@@ -14,7 +14,7 @@ OBS Ninja lets you bring remote video feeds into OBS via WebRTC
 
 ## THE MAC NDI METHOD
 
-![OBS Ninja | Mac NDI Method](a/OBSN2OBS_Mac-NDI-Method.jpg)   
+![OBS Ninja | Mac NDI Method](macndimethod/OBSN2OBS_Mac-NDI-Method.jpg)   
 (v1.0, 2020-10-07)
 
 * [download PDF](macndimethod/OBSN2OBS_Mac-NDI-Method.pdf) (best for printing)
