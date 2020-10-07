@@ -8,6 +8,7 @@ Jump to:
 * [Mac NDI Method](#macndimethod)
 
 <a name="gettingstarted">
+
 ## GETTING STARTED
 
 ![OBS Ninja | cheat-sheet](cheatsheet/OBSN_cheat-sheet.jpg)   
@@ -19,6 +20,7 @@ Jump to:
 
 
 <a name="macndimethod">
+
 ## THE MAC NDI METHOD
 
 ![OBS Ninja | Mac NDI Method](macndimethod/OBSN2OBS_Mac-NDI-Method.jpg)   
