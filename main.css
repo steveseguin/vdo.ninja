@@ -928,6 +928,10 @@ img {
 .close-btn:hover {
   color: darkgray;
 }
+
+.la-phone{
+	color:red;
+}
 @-webkit-keyframes animatetop {
   from {top:-300px; opacity:0} 
   to {top:0; opacity:1}

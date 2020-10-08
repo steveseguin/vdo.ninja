@@ -340,7 +340,7 @@ if (urlParams.has('stereo') || urlParams.has('s') || urlParams.has('proaudio')){
 		session.stereo = 3;
 	} else if (session.stereo==="4"){
 		session.stereo = 4;
-	} else if (session.stereo==="2"){
+	} else if (session.stereo==="2"){  // this is for GUESTS to use in a room so they don't send out Stereo themsevles. shoudl still pull 256kbps
 		session.stereo = 2;
 	} else {
 		session.stereo = 1;
@@ -640,6 +640,7 @@ if (urlParams.has('nocursor')){
 if (urlParams.has('vbr')){
 	session.cbr = 0;
 } 
+ 
 
 if (urlParams.has('minptime')){
 	session.minptime =  parseInt(urlParams.get('minptime')) || 10;
@@ -654,7 +655,7 @@ if (urlParams.has('maxptime')){
 
 if (urlParams.has('codec')){
 	log("CODEC CHANGED");
-    session.codec = urlParams.get('codec');
+    session.codec = urlParams.get('codec').toLowerCase();
 }
 
 if (urlParams.has('scale')){
@@ -864,6 +865,10 @@ if (urlParams.has('sink')){
 if (urlParams.has('fullscreen')){
 	session.fullscreen=true;
 }
+if (urlParams.has('stats')){
+	session.statsMenu=true;
+}
+
 
 if (urlParams.has('cleanoutput') || urlParams.has('clean')){
 	session.cleanOutput = true;
@@ -1017,7 +1022,7 @@ if (urlParams.has('style')){
 	} else if ((parseInt(urlParams.get('style'))==3) || (urlParams.get('style')=="avatar")){ // photo is taken? upload option? canvas?
 		session.style = 3;
 	} else {
-		sesson.style = false;
+		sesson.style = 1;
 	}
 }
 
@@ -1792,8 +1797,6 @@ function toggleSettings(){ // TODO: I need to have this be MUTE, toggle, with vo
 		getById("settingsbutton").classList.remove("float2");
 		setTimeout(function(){getById("popupSelector").style.display="none";},200);
 	}
-	
-	
 }
 
 function hangup(){ // TODO: I need to have this be MUTE, toggle, with volume not touched.
@@ -1804,11 +1807,31 @@ function hangupComplete(){
 	getById("main").innerHTML = "<font style='font-size:500%;top:40%;left:50%;margin:auto 0;position:absolute;'>👋</font>";
 }
 
-var previousRoom=""
+var previousRoom="";
+var stillNeedRoom=true;
 function directMigrate(ele, event){  // everyone in the room will hangup this guest also?  I like that idea.  What about the STREAM ID?  I suppose we don't kick out if the viewID matches.
 
-	var migrateRoom = prompt("What room to forward them to?", previousRoom);
-	migrateRoom = migrateRoom.replace(/[^0-9a-z]/gi, '');
+	if (event === false){
+		migrateRoom = previousRoom
+	} else if ((event.ctrlKey) || (event.metaKey)){
+		ele.innerHTML = "<span data-translate='forward-to-room'>🚕 ARMED</span>";
+		Callbacks.push([directMigrate, ele, stillNeedRoom]);
+		stillNeedRoom=false;
+		log("Record Video queued");
+		return;
+	} else {
+		var migrateRoom = prompt("What room to forward them to?", previousRoom);
+		try{
+			migrateRoom = migrateRoom.replace(/[^0-9a-z]/gi, '');
+			//migrateRoom=false;
+		} catch(e){}
+		stillNeedRoom=true;
+	}
+	errorlog(ele);
+	ele.innerHTML = "<span data-translate='forward-to-room'>🚕 Transfer Guest</span>";
+
+	//var migrateRoom = prompt("What room to forward them to?", previousRoom);
+	//migrateRoom = migrateRoom.replace(/[^0-9a-z]/gi, '');
 	if (migrateRoom){
 		previousRoom = migrateRoom;
 		
@@ -1819,14 +1842,14 @@ function directMigrate(ele, event){  // everyone in the room will hangup this gu
 				var msg = {};
 				msg.request = "migrate";
 				msg.roomid = rid;
-				msg.target = ele.parentNode.parentNode.dataset.UUID;
+				msg.target = ele.dataset.UUID;
 				session.sendMsg(msg); // send to everyone in the room, so they know if they are on air or not.
 			});
 		} else {
 			var msg = {};
 			msg.request = "migrate";
 			msg.roomid = migrateRoom;
-			msg.target = ele.parentNode.parentNode.dataset.UUID;
+			msg.target = ele.dataset.UUID;
 			session.sendMsg(msg); // send to everyone in the room, so they know if they are on air or not.
 		}
 	}
@@ -1839,23 +1862,24 @@ function directHangup(ele, event){  // everyone in the room will hangup this gue
 		//msg.request = "sendroom";
 		msg.hangup = true;
 		
-		//msg.target = ele.parentNode.parentNode.dataset.UUID;
+		//msg.target = ele.dataset.UUID;
 		log(msg);
-		session.sendRequest(msg, ele.parentNode.parentNode.dataset.UUID);
+		log(ele.dataset.UUID);
+		session.sendRequest(msg, ele.dataset.UUID);
 		//session.anysend(msg); // send to everyone in the room, so they know if they are on air or not.
 	}
 }
 
 function directEnable(ele, event){ // A directing room only is controlled by the Director, with the exception of MUTE.
 	if (!((event.ctrlKey) || (event.metaKey))){
-		if (ele.parentNode.parentNode.dataset.enable==1){
-			ele.parentNode.parentNode.dataset.enable = 0;
+		if (ele.dataset.enable==1){
+			ele.dataset.enable = 0;
 			ele.className = "";
 			ele.innerHTML = "➕ Add to Group Scene";
 			ele.parentNode.parentNode.style.backgroundColor = "#E3E4FF";
 		} else {
 			ele.parentNode.parentNode.style.backgroundColor = "#AFA";
-			ele.parentNode.parentNode.dataset.enable = 1;
+			ele.dataset.enable = 1;
 			ele.className = "pressed";
 			ele.innerHTML = "➖ Remove from Scene";
 		}
@@ -1865,8 +1889,8 @@ function directEnable(ele, event){ // A directing room only is controlled by the
 	//msg.roomid = session.roomid;
 	msg.scene = "1"; // scene
 	msg.action = "display";
-	msg.value =  ele.parentNode.parentNode.dataset.enable;
-	msg.target = ele.parentNode.parentNode.dataset.UUID;
+	msg.value =  ele.dataset.enable;
+	msg.target = ele.dataset.UUID;
 	session.sendMsg(msg); // send to everyone in the room, so they know if they are on air or not.
 }
 
@@ -1874,12 +1898,12 @@ function directEnable(ele, event){ // A directing room only is controlled by the
 function directMute(ele, event){ // A directing room only is controlled by the Director, with the exception of MUTE.
 	log("mute");
 	if (!((event.ctrlKey) || (event.metaKey))){
-		if (ele.parentNode.parentNode.dataset.mute==0){
-			ele.parentNode.parentNode.dataset.mute = 1;
+		if (ele.dataset.mute==0){
+			ele.dataset.mute = 1;
 			ele.className = "";
 			ele.innerHTML = "🔇 Mute in all Scenes";
         } else {
-			ele.parentNode.parentNode.dataset.mute = 0;
+			ele.dataset.mute = 0;
 			ele.className = "pressed";
 			ele.innerHTML = "🔊 un-Mute all Scenes";
         }
@@ -1889,8 +1913,8 @@ function directMute(ele, event){ // A directing room only is controlled by the D
 	//msg.roomid = session.roomid;
 	msg.scene = "1";
 	msg.action = "mute";
-	msg.value =  ele.parentNode.parentNode.dataset.mute;
-	msg.target = ele.parentNode.parentNode.dataset.UUID;
+	msg.value =  ele.dataset.mute;
+	msg.target = ele.dataset.UUID;
 	session.sendMsg(msg); // send to everyone in the room, so they know if they are on air or not.
 }
 
@@ -1902,7 +1926,7 @@ function directVolume(ele){ // A directing room only is controlled by the Direct
 	//msg.roomid = session.roomid;
 	msg.scene = "1";
 	msg.action = "volume";
-	msg.target = ele.parentNode.parentNode.dataset.UUID; // i want to focus on the STREAM ID, not the UUID...
+	msg.target = ele.dataset.UUID; // i want to focus on the STREAM ID, not the UUID...
 	msg.value = ele.value;
 	
 	// session.anysend(msg // msg.UUID ->  can't do this yet as DIRECTOR isn't "verfied" via WebRTC yet. ALSO,  
@@ -2032,7 +2056,12 @@ function publishWebcam(){
 			log("Update Mixer Event on REsize SET");
 			window.addEventListener("resize", updateMixer);
 			getById("main").style.overflow = "hidden";
+			session.cbr=0; // we're just going to override it
+			if (session.stereo==1){
+				session.stereo=3;
+			}
 			joinRoom(session.roomid);
+			
 		}
 		getById("head3").className = 'advanced';
 	} else {
@@ -2266,22 +2295,31 @@ function createRoom(roomname=false){
 		passAdd2="&password="+session.password;
 	}
 	
-	gridlayout.innerHTML = "<br /><div style='display:inline-block'>\
-	<a onclick='popupMessage(event);copyFunction(this)' onmousedown='copyFunction(this)' style='cursor: copy; background-color: #78F;' class='task grabLinks' href='https://"+location.host+location.pathname+"?room="+session.roomid+passAdd+"' '>https://"+location.host+location.pathname+"?room="+session.roomid+passAdd+"</a><font style='font-size:110%;color:white;'><i class='las la-video' style='position:relative;top:7px;font-size:2em;' aria-hidden='true'></i> - <span data-translate='invite-users-to-join'>Invites users to join the group and broadcast their feed to it. These users will see every feed in the room.</span></font></div>";
+	gridlayout.innerHTML =	"<div style='display:block;'>\
+			<a onclick='popupMessage(event);copyFunction(this)' onmousedown='copyFunction(this)' style='cursor: copy; background-color: #78F;' class='task grabLinks' href='https://"+location.host+location.pathname+"?room="+session.roomid+passAdd+"'>https://"+location.host+location.pathname+"?room="+session.roomid+passAdd+"</a>\
+		<font style='font-size:110%;color:white;'>\
+			<i class='las la-video' style='position:relative;top:7px;font-size:2em;' aria-hidden='true'></i>\
+			- <span data-translate='invite-users-to-join'>Invites users to join the group and broadcast their feed to it. These users will see every feed in the room.</span>\
+		</font></div>";
 	
-	gridlayout.innerHTML += "<br /><a class='task grabLinks' onclick='popupMessage(event);copyFunction(this)' onmousedown='copyFunction(this)' style='cursor: copy;  background-color: #F45;' href='https://"+location.host+location.pathname+"?room="+session.roomid+passAdd+"&view' '>https://"+location.host+location.pathname+"?room="+session.roomid+passAdd+"&view</a><font style='font-size:110%;color:white;'><i class='las la-video' style='position:relative;top:7px;font-size:2em;'  aria-hidden='true'></i> - <span data-translate='link-to-invite-camera'>Link to invite users to broadcast their feeds to the group. These users will not see or hear any feed from the group.</span></font><br />";
-	
-	gridlayout.innerHTML += "<a class='task grabLinks' \
-	onmousedown='copyFunction(this)' \
-	data-drag='1' draggable='true'  \
-	style='background-color: #5F4;' \
-	onclick='popupMessage(event);copyFunction(this)' \
-	href='https://"+location.host+location.pathname+"?scene=1&room="+session.roomid+passAdd2+"''>https://"+location.host+location.pathname+"?scene=1&room="+session.roomid+passAdd2+"</a><font style='font-size:110%;color:white'><i class='las la-th-large' style='position:relative;top:7px;font-size:2em;' aria-hidden='true'></i> - <span data-translate='this-is-obs-browser-source-link'>This is an OBS Browser Source link that is empty by default. Videos in the room can be manually added to this scene.</span></font><br />";
-	
-	gridlayout.innerHTML += "<a class='task grabLinks' onmousedown='copyFunction(this)' draggable='true' data-drag='1' onclick='popupMessage(event);copyFunction(this)' style='background-color: #7C7;' href='https://"+location.host+location.pathname+"?scene=0&room="+session.roomid+passAdd2+"' >https://"+location.host+location.pathname+"?scene=0&room="+session.roomid+passAdd2+"</a><font style='font-size:110%;color:white'><i class='las la-th-large' style='position:relative;top:7px;font-size:2em;' aria-hidden='true'></i> - <span data-translate='this-is-obs-browser-souce-link-auto'>Also an OBS Browser Source link. All guest videos in this group chat room will automatically be added into this scene.</span></font><br />";
+		gridlayout.innerHTML += "<div style='display:block;'><a class='task grabLinks' onclick='popupMessage(event);copyFunction(this)' onmousedown='copyFunction(this)' style='cursor: copy;  background-color: #F45;' href='https://"+location.host+location.pathname+"?room="+session.roomid+passAdd+"&view'>https://"+location.host+location.pathname+"?room="+session.roomid+passAdd+"&view</a>\
+		<font style='font-size:110%;color:white;'>\
+			<i class='las la-video' style='position:relative;top:7px;font-size:2em;'  aria-hidden='true'></i>\
+			- <span data-translate='link-to-invite-camera'>Link to invite users to broadcast their feeds to the group. These users will not see or hear any feed from the group.</span>\
+		</font></div>";
+		
+		gridlayout.innerHTML += "<div style='display:block;'><a class='task grabLinks' \
+		onmousedown='copyFunction(this)' \
+		data-drag='1' draggable='true'  \
+		style='background-color: #5F4;' \
+		onclick='popupMessage(event);copyFunction(this)' \
+		href='https://"+location.host+location.pathname+"?scene=1&room="+session.roomid+passAdd2+"'>https://"+location.host+location.pathname+"?scene=1&room="+session.roomid+passAdd2+"</a><font style='font-size:110%;color:white'><i class='las la-th-large' style='position:relative;top:7px;font-size:2em;' aria-hidden='true'></i> - <span data-translate='this-is-obs-browser-source-link'>This is an OBS Browser Source link that is empty by default. Videos in the room can be manually added to this scene.</span></font></div>";
+		
+		gridlayout.innerHTML += "<div style='display:block;'><a class='task grabLinks' onmousedown='copyFunction(this)' draggable='true' data-drag='1' onclick='popupMessage(event);copyFunction(this)' style='background-color: #7C7;' href='https://"+location.host+location.pathname+"?scene=0&room="+session.roomid+passAdd2+"' >https://"+location.host+location.pathname+"?scene=0&room="+session.roomid+passAdd2+"</a><font style='font-size:110%;color:white'><i class='las la-th-large' style='position:relative;top:7px;font-size:2em;' aria-hidden='true'></i> - <span data-translate='this-is-obs-browser-souce-link-auto'>Also an OBS Browser Source link. All guest videos in this group chat room will automatically be added into this scene.</span></font></div>";
 	
 	gridlayout.innerHTML += '<button data-translate="click-for-quick-room-overview" style="margin:10px;" onclick="toggle(getById(\'roomnotes2\'),this);">❔ Click Here for a quick overview and help</button> ';
 	
+	//gridlayout.innerHTML += '<button data-translate="click-to-hide-room-links" style="margin:10px;" onclick="toggle(getById(\'directorRoomLinks\'),this);">Hide the above Links</button> ';
 	
 	gridlayout.innerHTML +=  '<span id="miniPerformer"><button id="press2talk" style="margin:10px;" data-translate="push-to-talk-enable"  onclick="press2talk(this);">🔊 Enable Director\'s Push-to-Talk Mode</button></span>'; 
 	
@@ -2331,6 +2369,7 @@ function createControlBox(UUID, soloLink, streamID){
 	container.className = "vidcon";
 	container.style.margin="2px 0px 10px 10px";
 	controls.style.display = "block";
+	controls.id = "controls_"+UUID;
 	getById("gridlayout").appendChild(container); 
 	
 	controls.innerHTML += "<div style='padding:5px;font-size:120%; word-wrap: break-word;' title='A direct solo view of the video/audio stream with nothing else. Its audio can be remotely controlled from here'><i class='las la-user' aria-hidden='true'></i> \
@@ -3391,7 +3430,7 @@ async function grabScreen(quality=0, audio=true){
 				toggleVideoMute(true);
 				for (UUID in session.pcs){
 					try {
-						if (((iOS) || (iPad)) && (session.pcs[UUID].guest==true)){
+						if (((iOS) || (iPad)) && (session.pcs[UUID].guest==true) && (session.pcs[UUID].forceios==false)){
 							warnlog("iOS and GUest detected");
 						} else if ((session.pcs[UUID].guest==true) && (session.roombitrate===0)) {
 							log("room rate restriction detected. No videos will be published to other guests");
@@ -3907,7 +3946,9 @@ function dragElement(elmnt) {
 	try {
 		var input = getById("zoomSlider");
 		var stream = elmnt.srcObject;
-		var track0 = stream.getVideoTracks();
+		try {
+			var track0 = stream.getVideoTracks();
+		} catch(e){return;}
 		track0 = track0[0];
 		if (track0.getCapabilities){
 			var capabilities = track0.getCapabilities();
@@ -4037,12 +4078,12 @@ function setupWebcamSelection(stream=null){
 				session.maxframerate = false;
 			}
 			
-			if ((iOS) || (iPad)){
-				getById("multiselect1").parentNode.style.visibility="hidden";
-				getById("multiselect1").parentNode.style.height="0px";
+			//if ((iOS) || (iPad)){
+				//getById("multiselect1").parentNode.style.visibility="hidden";
+				//getById("multiselect1").parentNode.style.height="0px";
 				//getById("multiselecta1").parentNode.style.height="0px";
 				//getById("multiselecta1").parentNode.style.visibility="hidden";
-			}
+			//}
 			
 			var audioSelect = document.querySelector('#audioSource');
 			var videoSelect = document.querySelector('select#videoSource');
@@ -4224,12 +4265,37 @@ function previewWebcam(){
 		}
 	}
 	
-	//if (session.videoDevice===0){
-	constraint.video = false;
-	//} else {
-	//	constraint.video = true;
-	//}
+	if (session.videoDevice===0){
+		constraint.video = false;
+	} else {
+		constraint.video = true;
+	}
+	
+	try{
+		if ("permissions" in navigator){
+			navigator.permissions.query({name: 'camera'}).then((permissionObj) => {
+				log(permissionObj.state);
+				if (permissionObj.state!=="prompt"){
+					constraint.video = false;
+				}
+				requestBasicPermissions(constraint)
+			}).catch((error) => {
+				requestBasicPermissions(constraint)
+				errorlog('Got error :', error);
+			});
+		}
+	} catch(e){
+		requestBasicPermissions(constraint)
+		errorlog(e);
+	}
+	
+	
+	
 	log("PreviewWebcam");
+	
+}
+
+function requestBasicPermissions(constraint){
 	try {
 	  navigator.mediaDevices.getUserMedia(constraint).timeout(15000).then(function(stream){ // Apple needs thi to happen before I can access EnumerateDevices. 
 		log("got first stream");
