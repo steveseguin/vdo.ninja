@@ -65,7 +65,7 @@
 		<script  type="text/javascript" crossorigin="anonymous"  src="./thirdparty/CodecsHandler.js?ver=19"></script>
 		<script  type="text/javascript" crossorigin="anonymous" src="./webrtc.js?ver=62"></script>
 		<input id="zoomSlider" type="range" style="display: none;" />
-		<div id="header"">
+		<div id="header">
 			<a id="logoname" href="./" style="text-decoration: none; color: white; margin: 2px;">
 				<span data-translate="logo-header">
 					<font id="qos">O</font>BS.Ninja 
@@ -73,12 +73,13 @@
 			</a>
 			<div id="head1" style="display: inline-block; padding:1px; position: relative;">
 				<input id="joinroomID" name="joinroomID" size="22" placeholder="Join by Room Name here" />
-				<button style="padding:1px;margin:0;" onclick="jumptoroom();">GO</button>
+				<button onclick="jumptoroom();">GO</button>
 			</div>
 			<div id="head3" style="display: inline-block;" class="advanced">
 				<font style="color: #888;" id="copythisurl"> &nbsp; 
 					<span data-translate="copy-this-url">Copy this URL into an OBS "Browser Source"</span> <i style="color: #CCC;" class="las la-long-arrow-alt-right"></i> &nbsp; 
 				</font>
+				<i class="las la-paperclip task" style="color: #DDD;" onclick="popupMessage(event);copyFunction(document.getElementById('reshare'));" onmouseover="this.style.cursor='pointer'"></i>
 				<a
                     id="reshare"
                     data-drag="1"
@@ -87,12 +88,11 @@
                     onmousedown="copyFunction(this)"
                     style="font-weight: bold; color: #afa !important; cursor: grab; background-color: #0000;  font-size: 115%; min-width: 335px; max-width: 800px;"
                 ></a>
-				<i class="las la-paperclip task" style="color: #DDD;" onclick="popupMessage(event);copyFunction(document.getElementById('reshare'));" onmouseover="this.style.cursor='pointer'"></i>
 			</div>
 			<div id="head4" style="display: inline-block;" class="advanced">
 				<font style="font-size: 68%; color: white;">
                     &nbsp; 
-					<span data-translate="you-are-in-the-control-center">You are in the room's control center</span>:&nbsp;
+					<span data-translate="you-are-in-the-control-center">Control center for room:</span>:&nbsp;
                     
 					<div id="dirroomid" style="font-size: 140%; color: #99c; display: inline-block;"></div>
 				</font>
@@ -518,38 +518,39 @@
 		<span id="electronDragZone" style="pointer-events: none; z-index:-10; position:absolute;top:0;left:0;width:100%;height:20%;-webkit-app-region: drag;"></span>
 		<div id="gridlayout" ></div>
 		<div id="controls_blank" style="display: none;">
-			<b>
-				<button data-value="0" style="padding: 2px 10px 3px 5px;font-weight:display-block;margin: 2px 0 0 5px;" title="Add this Video to any remote '&scene=1'" onclick="directEnable(this, event);">
-					<span data-translate="add-to-group">➕ Add to Group Scene</span>
+			<div class="controlsGrid">
+
+				<button data-value="0" title="Add this Video to any remote '&scene=1'" onclick="directEnable(this, event);">
+					<i class="las la-plus-square"></i>
+					<span data-translate="add-to-scene">Add to Scene</span>
 				</button>
-				<button style="padding: 2px 10px 3px 5px;display:inline-block;margin: 2px 0 0 5px;" data-action-type="recorder" title="Start Recording this stream. *experimental*' views" onclick="recordVideo(this, event)">
-					<span data-translate="record">🔴 Record</span>
+				<button data-value="0" title="Forward user to another room. They can always return." onclick="directMigrate(this, event);">
+					<i class="las la-paper-plane"></i>
+					<span data-translate="forward-to-room">Transfer</span>
 				</button>
-				<br />
-				<button style="padding: 2px 10px 3px 5px;display:inline-block;margin: 2px 0 0 5px;" title="Remotely Mute this Audio in all remote '&scene' views" onclick="directMute(this, event);">
-					<span data-translate="mute" >🔇 Mute in all Scenes</span>
+
+				<button data-action-type="recorder" title="Start Recording this stream. *experimental*' views" onclick="recordVideo(this, event)">
+					<i class="las la-circle"></i>
+					<span data-translate="record"> Record</span>
 				</button>
-				<i  style="font-size:2vh; position: relative; top: 3px;" title="Change this Audio's volume in all remote '&scene' views" class="las la-volume-up"></i>
-				<input type="range" min="1" max="100" value="100"  title="Change this Audio's volume in all remote '&scene' views" onclick="directVolume(this);" style="width: 100px; position: relative; top: 4px;"/>
+				<button data-value="0" title="Force the user to Disconnect. They can always reconnect." onclick="directHangup(this, event);">
+					<i class="las la-sign-out-alt"></i>
+					<span data-translate="disconnect-guest" >Hangup</span>
+				</button>
+
+				<button style="grid-column: 2;" title="Remotely Mute this Audio in all remote '&scene' views" onclick="directMute(this, event);">
+					<i class="las la-volume-off"></i>
+					<span data-translate="mute" >Mute in all Scenes</span>
+				</button>
 				
-				<button data-value="0" style="padding: 2px 10px 3px 5px;font-weight:display-block;margin: 2px 0 0 5px;" title="Force the user to Disconnect. They can always reconnect." onclick="directHangup(this, event);">
-					<span data-translate="disconnect-guest" >🚪 Hangup Guest</span>
-				</button>
-				<button data-value="0" style="padding: 2px 10px 3px 5px;font-weight:display-block;margin: 2px 0 0 5px;" title="Forward user to another room. They can always return." onclick="directMigrate(this, event);">
-					<span data-translate="forward-to-room">🚕 Transfer Guest</span>
-				</button>
-			</b>
-			<br />
-			
-			<hr style="margin:5px 0 0 0;"/>
-			
+				<input style="grid-column: 1 / span 2" type="range" min="1" max="100" value="100"  title="Change this Audio's volume in all remote '&scene' views" onclick="directVolume(this);" style="width: 100px; position: relative; top: 4px;"/>
+			</div>
+						
 		</div>
 		<div id="popupSelector" style="display:none;">
 				<span id="videoMenu3" class="videoMenu">
 					<i class="las la-video"></i><span data-translate="video-source"> Video Source </span>
-					
-					<select id="videoSource3" ></select>
-					
+					<select id="videoSource3" ></select>					
 				</span>
 				<br />
 				<br />
