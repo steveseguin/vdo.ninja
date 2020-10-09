@@ -1875,13 +1875,13 @@ function directEnable(ele, event){ // A directing room only is controlled by the
 		if (ele.dataset.enable==1){
 			ele.dataset.enable = 0;
 			ele.className = "";
-			ele.innerHTML = "➕ Add to Group Scene";
-			ele.parentNode.parentNode.style.backgroundColor = "#E3E4FF";
+			ele.children[1].innerHTML = "Add to Scene";
+			ele.parentNode.parentNode.style.backgroundColor = "#7E7E7E";
 		} else {
 			ele.parentNode.parentNode.style.backgroundColor = "#AFA";
 			ele.dataset.enable = 1;
 			ele.className = "pressed";
-			ele.innerHTML = "➖ Remove from Scene";
+			ele.children[1].innerHTML = "Remove";
 		}
 	}
 	var msg = {};
@@ -1901,11 +1901,11 @@ function directMute(ele, event){ // A directing room only is controlled by the D
 		if (ele.dataset.mute==0){
 			ele.dataset.mute = 1;
 			ele.className = "";
-			ele.innerHTML = "🔇 Mute in all Scenes";
+			ele.children[1].innerHTML = "mute";
         } else {
 			ele.dataset.mute = 0;
 			ele.className = "pressed";
-			ele.innerHTML = "🔊 un-Mute all Scenes";
+			ele.children[1].innerHTML = "un-mute";
         }
 	}
 	var msg = {};
@@ -2295,35 +2295,47 @@ function createRoom(roomname=false){
 		passAdd2="&password="+session.password;
 	}
 	
-	gridlayout.innerHTML =	"<div style='display:block;'>\
-			<a onclick='popupMessage(event);copyFunction(this)' onmousedown='copyFunction(this)' style='cursor: copy; background-color: #78F;' class='task grabLinks' href='https://"+location.host+location.pathname+"?room="+session.roomid+passAdd+"'>https://"+location.host+location.pathname+"?room="+session.roomid+passAdd+"</a>\
-		<font style='font-size:110%;color:white;'>\
-			<i class='las la-video' style='position:relative;top:7px;font-size:2em;' aria-hidden='true'></i>\
-			- <span data-translate='invite-users-to-join'>Invites users to join the group and broadcast their feed to it. These users will see every feed in the room.</span>\
-		</font></div>";
+	gridlayout.innerHTML = "<div class='directorContainer'>\
+	<div class='directorBlock'><h2>Invite Guests</h2>\
+	<span data-translate='invite-users-to-join'>Invites users to join the group and broadcast their feed to it.\
+	These users will see every feed in the room.</span>\
+	<a onclick='popupMessage(event);copyFunction(this)' onmousedown='copyFunction(this)'\
+	class='task grabLinks'\
+	href='https://"+location.host+location.pathname+"?room="+session.roomid+passAdd+"' '>\
+	https://"+location.host+location.pathname+"?room="+session.roomid+passAdd+"</a>\
+	<button class='pull-right' onclick='popupMessage(event);copyFunction(this.previousElementSibling )'><i class='las la-video'></i>Copy link</button></div>"
 	
-		gridlayout.innerHTML += "<div style='display:block;'><a class='task grabLinks' onclick='popupMessage(event);copyFunction(this)' onmousedown='copyFunction(this)' style='cursor: copy;  background-color: #F45;' href='https://"+location.host+location.pathname+"?room="+session.roomid+passAdd+"&view'>https://"+location.host+location.pathname+"?room="+session.roomid+passAdd+"&view</a>\
-		<font style='font-size:110%;color:white;'>\
-			<i class='las la-video' style='position:relative;top:7px;font-size:2em;'  aria-hidden='true'></i>\
-			- <span data-translate='link-to-invite-camera'>Link to invite users to broadcast their feeds to the group. These users will not see or hear any feed from the group.</span>\
-		</font></div>";
-		
-		gridlayout.innerHTML += "<div style='display:block;'><a class='task grabLinks' \
-		onmousedown='copyFunction(this)' \
-		data-drag='1' draggable='true'  \
-		style='background-color: #5F4;' \
-		onclick='popupMessage(event);copyFunction(this)' \
-		href='https://"+location.host+location.pathname+"?scene=1&room="+session.roomid+passAdd2+"'>https://"+location.host+location.pathname+"?scene=1&room="+session.roomid+passAdd2+"</a><font style='font-size:110%;color:white'><i class='las la-th-large' style='position:relative;top:7px;font-size:2em;' aria-hidden='true'></i> - <span data-translate='this-is-obs-browser-source-link'>This is an OBS Browser Source link that is empty by default. Videos in the room can be manually added to this scene.</span></font></div>";
-		
-		gridlayout.innerHTML += "<div style='display:block;'><a class='task grabLinks' onmousedown='copyFunction(this)' draggable='true' data-drag='1' onclick='popupMessage(event);copyFunction(this)' style='background-color: #7C7;' href='https://"+location.host+location.pathname+"?scene=0&room="+session.roomid+passAdd2+"' >https://"+location.host+location.pathname+"?scene=0&room="+session.roomid+passAdd2+"</a><font style='font-size:110%;color:white'><i class='las la-th-large' style='position:relative;top:7px;font-size:2em;' aria-hidden='true'></i> - <span data-translate='this-is-obs-browser-souce-link-auto'>Also an OBS Browser Source link. All guest videos in this group chat room will automatically be added into this scene.</span></font></div>";
+	+ "<div class='directorBlock'><h2>Broadcast Invite</h2>\
+	<span data-translate='link-to-invite-camera'>Link to invite users to broadcast their feeds to the group. These users will not see or hear any feed from the group.</span>\
+	<a class='task grabLinks' onclick='popupMessage(event);copyFunction(this)' onmousedown='copyFunction(this)'\
+	href='https://"+location.host+location.pathname+"?room="+session.roomid+passAdd+"&view' '>\
+	https://"+location.host+location.pathname+"?room="+session.roomid+passAdd+"&view</a>\
+	<button class='pull-right' onclick='popupMessage(event);copyFunction(this.previousElementSibling )'><i class='las la-video'></i>Copy link</button></div>"
 	
-	gridlayout.innerHTML += '<button data-translate="click-for-quick-room-overview" style="margin:10px;" onclick="toggle(getById(\'roomnotes2\'),this);">❔ Click Here for a quick overview and help</button> ';
+	+ "<div class='directorBlock'><h2>Scene: all guests</h2>\
+	<span data-translate='this-is-obs-browser-source-link'>This is an OBS Browser Source link that is empty by default. Videos in the room can be manually added to this scene.</span>\
+	<a class='task grabLinks'\
+	onmousedown='copyFunction(this)' \
+	data-drag='1' draggable='true'  \
+	onclick='popupMessage(event);copyFunction(this)' \
+	href='https://"+location.host+location.pathname+"?scene=1&room="+session.roomid+passAdd2+"''>\
+	https://"+location.host+location.pathname+"?scene=1&room="+session.roomid+passAdd2+"</a>\
+	<button class='pull-right' onclick='popupMessage(event);copyFunction(this.previousElementSibling )'><i class='las la-th-large' aria-hidden='true'></i></i>Copy link</button></div>"
 	
-	//gridlayout.innerHTML += '<button data-translate="click-to-hide-room-links" style="margin:10px;" onclick="toggle(getById(\'directorRoomLinks\'),this);">Hide the above Links</button> ';
+	+ "<div class='directorBlock'><h2>Scene: Manual</h2>\
+	<span data-translate='this-is-obs-browser-souce-link-auto'>Also an OBS Browser Source link. All guest videos in this group chat room will automatically be added into this scene.</span>\
+	<a class='task grabLinks' onmousedown='copyFunction(this)' draggable='true' data-drag='1'\
+	onclick='popupMessage(event);copyFunction(this)'\
+	href='https://"+location.host+location.pathname+"?scene=0&room="+session.roomid+passAdd2+"' >https://"+location.host+location.pathname+"?scene=0&room="+session.roomid+passAdd2+"</a>\
+	<button class='pull-right' onclick='popupMessage(event);copyFunction(this.previousElementSibling )'><i class='las la-video'></i>Copy link</button></div>"
+	+ "</div>"
 	
-	gridlayout.innerHTML +=  '<span id="miniPerformer"><button id="press2talk" style="margin:10px;" data-translate="push-to-talk-enable"  onclick="press2talk(this);">🔊 Enable Director\'s Push-to-Talk Mode</button></span>'; 
-	
-	gridlayout.innerHTML += "<br /><div id='roomnotes2' style='display:none;padding:0 0 0 10px;' ><br />\
+	+ "<div class='directorContainer'>"
+	+ '<button data-translate="click-for-quick-room-overview" onclick="toggle(getById(\'roomnotes2\'),this);"><i class="las la-question-circle"></i> Click Here for a quick overview and help</button> '
+	+ '<span id="miniPerformer"><button id="press2talk" onclick="press2talk(this);"><i class="las la-headset"></i><span data-translate="push-to-talk-enable">Enable Director\'s Push-to-Talk Mode</span></button></span>'
+	+ "</div>"
+
+	+ "<div id='roomnotes2' style='display:none;padding:0 0 0 10px;' >\
 	<font style='color:#CCC;' data-translate='welcome-to-control-room'>Welcome. This is the director's control-room for the group-chat. <br /><br />\
 	<font style='color:red'>Known Limitations with Group Rooms:</font><br />\
 	<li>iPhones and iPads <b>will not be visible to other guests</b>, but will appear to the director and inside OBS. <a target='_blank' href='https://www.reddit.com/r/OBSNinja/comments/iol981/obs_ninja_iphone/g4ekuqz/?utm_source=reddit&utm_medium=web2x&context=3'>Please see here for details.</a></li>\
@@ -2342,15 +2354,18 @@ function createRoom(roomname=false){
 	<br />\
 	As guests join, their videos will appear below. You can bring their video streams into OBS as solo-scenes or you can add them to Group Scenes.\
 	<br />The Group Scenes auto-mix videos into a layout. Please note that while Scene=1 is an Auto-Mixer, it requires videos be manually added to it; they will not appear automatically.<br /><br />\
-	For advanced options and parameters, <a href=\"https://github.com/steveseguin/obsninja/wiki/Guides-and-How-to's#urlparameters\">see the Wiki.</a></font></div><hr />";
+	For advanced options and parameters, <a href=\"https://github.com/steveseguin/obsninja/wiki/Guides-and-How-to's#urlparameters\">see the Wiki.</a></font></div>";
 	
-	gridlayout.innerHTML += "<div id='deleteme'><br /><br /><center>\
-	<div style='display:inline-block;width:300px;height:350px;border:2px solid white;background-color:#999;margin:40px;'><br /><br />GUEST SLOT #1<br /><br /><span data-translate='guest-will-appaer-here-on-join'>(A video will appear here when a guest joins)</span><br /><br /><i class='las la-user ' style='font-size:8em;' aria-hidden='true'></i><br /><br />A Solo-Link for OBS will appear here.</div>\
-	<div style='display:inline-block;width:300px;height:350px;border:2px solid white;background-color:#999;margin:40px;'><br /><br />GUEST SLOT #2<br /><br /><span data-translate='guest-will-appaer-here-on-join'>(A video will appear here when a guest joins)</span><br /><br /><i class='las la-user  ' style='font-size:8em;' aria-hidden='true'></i><br /><br />A Solo Link for OBS will appear here</div>\
-	<div style='display:inline-block;width:300px;height:350px;border:2px solid white;background-color:#999;margin:40px;'><br /><br />GUEST SLOT #3<br /><br /><span data-translate='guest-will-appaer-here-on-join'>(A video will appear here when a guest joins)</span><br /><br /><i class='las la-user ' style='font-size:8em;'aria-hidden='true'></i><br /><br />A Solo Link for OBS will appear here</div>\
-	<div style='display:inline-block;width:300px;height:350px;border:2px solid white;background-color:#999;margin:40px;'><br /><br />GUEST SLOT #4<br /><br /><span data-translate='guest-will-appaer-here-on-join'>(A video will appear here when a guest joins)</span><br /><br /><i class='las la-user ' style='font-size:8em;'aria-hidden='true'></i><br /><br />A Solo Link for OBS will appear here</div></center></div>";
+	gridlayout.innerHTML += "<div id='guestFeeds'><div id='deleteme'>\
+	<div class='vidcon' style='min-height: 300px'><h2>Guest 1</h2><i class='las la-user-circle' style='font-size:8em; margin: 20px 0px;' aria-hidden='true'></i></div>\
+	<div class='vidcon' style='min-height: 300px'><h2>Guest 2</h2><i class='las la-user-circle' style='font-size:8em; margin: 20px 0px;' aria-hidden='true'></i></div>\
+	<div class='vidcon' style='min-height: 300px'><h2>Guest 3</h2><i class='las la-user-circle' style='font-size:8em; margin: 20px 0px;' aria-hidden='true'></i></div>\
+	<div class='vidcon' style='min-height: 300px'><h2>Guest 4</h2><i class='las la-user-circle' style='font-size:8em; margin: 20px 0px;' aria-hidden='true'></i></div>\
+	</div></div>";
 	joinRoom(roomname);
 
+
+	
 }
 
 
@@ -2370,24 +2385,34 @@ function createControlBox(UUID, soloLink, streamID){
 	container.style.margin="2px 0px 10px 10px";
 	controls.style.display = "block";
 	controls.id = "controls_"+UUID;
-	getById("gridlayout").appendChild(container); 
+	getById("guestFeeds").appendChild(container); 
 	
-	controls.innerHTML += "<div style='padding:5px;font-size:120%; word-wrap: break-word;' title='A direct solo view of the video/audio stream with nothing else. Its audio can be remotely controlled from here'><i class='las la-user' aria-hidden='true'></i> \
-	<b data-translate='SOLO-LINK'>SOLO LINK for OBS:</b><input onmousedown='copyFunction(this)' onclick='popupMessage(event);copyFunction(this)' data-drag='1' style='cursor:grab;font-weight:bold;color:white;background-color:#080;width:290px;font-size:70%;padding:10px;border:2px solid black;margin:5px 0;' \
-	value='"+soloLink+"' />\
-	<div style='width: 290px; padding:3px; height:27px; background-color:white; border:solid 1px; display:inline-block; onmousedown='copyFunction(this)' onclick='popupMessage(event);copyFunction(this)'><span style='user-select: none;'><i class='las la-copy' title='Copy this Stream ID to the clipboard' style='cursor:pointer'></i> StreamID: </span><b>"+streamID+"</b> \
-	</div></div>";
+	var buttons = "<div class='streamID' onmousedown='copyFunction(this.firstElementChild.innerText)' onclick='popupMessage(event);copyFunction(this.firstElementChild.innerText)'>ID:<span style='user-select: none;'> "+streamID+"</span><i class='las la-copy' title='Copy this Stream ID to the clipboard' style='cursor:pointer'></i>\
+	</div>";
+
+
+	setTimeout(function(){ 
+		container.insertAdjacentHTML('afterbegin', buttons);
+		controls.innerHTML += "<div>\
+		<div style='padding:5px;word-wrap: break-word;' title='A direct solo view of the video/audio stream with nothing else. Its audio can be remotely controlled from here'> \
+		<input class='soloLink' data-lpignore='true' onmousedown='copyFunction(this.previousElementSibling)' onclick='popupMessage(event);copyFunction(this.previousElementSibling)' data-drag='1' \
+		value='"+soloLink+"' />\
+		<button class='pull-right' onmousedown='copyFunction(this.previousElementSibling)' onclick='popupMessage(event);copyFunction(this.previousElementSibling)'>copy OBS Solo link</button>\
+		</div></div>";
 	
+	 }, 3000);
+	
+
 	container.appendChild(controls);
 }
 
 function createDirectorCam(vid){
 	vid.style.width="80px";
-	vid.style.height="45px";
+	vid.style.height="25px";
 	vid.style.padding ="0";
 	vid.style.margin ="0 7px";
-	getById("press2talk").innerHTML = "<span data-translate='Push-to-Mute'>🔴 Push to Mute</span>";
-	getById("press2talk").outerHTML += '<button style="padding:5px 5px 3px 5px;" onclick="toggleSettings()"><i class="las la-cog" style="font-size:130%;"></i></button>';
+	getById("press2talk").innerHTML = "<i class='las la-volume-mute'></i><span data-translate='Push-to-Mute'>Push to Mute</span>";
+	getById("press2talk").outerHTML += '<button onclick="toggleSettings()"><i class="las la-cog"></i></button>';
 	getById("miniPerformer").appendChild(vid);
 	getById("press2talk").dataset.enabled="true";
 }
@@ -2396,12 +2421,14 @@ function press2talk(ele){
 	log(ele);
 	ele.style.minWidth="127px";
 	if (!(document.getElementById("videosource"))){
-		ele.innerHTML = "🔴 Push to Mute";
+		ele.getElementsByTagName('i')[0].classList = "las la-volume-mute";
+		ele.getElementsByTagName('span')[0].innerHTML = "Push to Mute";
 		session.publishDirector();
 		return;
 	}
 	if (ele.dataset.enabled=="false"){
-		ele.innerHTML = "🔴 Push to Mute";
+		ele.getElementsByTagName('i')[0].classList = "las la-volume-mute";
+		ele.getElementsByTagName('span')[0].innerHTML = "Push to Mute";
 		ele.dataset.enabled="true";
 		if (session.streamSrc){
 			session.streamSrc.getAudioTracks().forEach((track) => {
@@ -2410,7 +2437,8 @@ function press2talk(ele){
 		}
 		log("PUSHED TO TALK 1");
 	} else {
-		ele.innerHTML = "🔇 Push to Talk ";
+		ele.getElementsByTagName('i')[0].classList = "las la-headset";
+		ele.getElementsByTagName('span')[0].innerHTML = "Push to Talk";
 		ele.dataset.enabled="false";
 		if (session.streamSrc){
 			session.streamSrc.getAudioTracks().forEach((track) => {
