@@ -14,7 +14,9 @@ Also check out the FAQ for more info: https://github.com/steveseguin/obsninja/wi
 ## How to use:
 I demo the basic usage of OBS.Ninja on YouTube: https://www.youtube.com/watch?v=6R_sQKxFAhg
 
-Here is a podcast series showing how to use different OBS.Ninja features: https://www.youtube.com/watch?v=XfSqufuoV74&list=PLWodc2tCfAH1l_LDvEyxEqFf42hOBKqQM
+Here is a podcast series showing how to use different basic OBS.Ninja features, including macOS support: https://www.youtube.com/watch?v=XfSqufuoV74&list=PLWodc2tCfAH1l_LDvEyxEqFf42hOBKqQM
+
+And Here is another video series touching on some more advanced settings: https://www.youtube.com/watch?v=mQ1Jdhf5aYg&list=PL8VJWj2-XLFpFu3G35Hdm1nKZ2xn9_0_8
 
 Check the subreddit for added use cases, advanced features, and support. Advanced features includes high-quality audio modes, custom video resolutions, and more.
 
