@@ -620,9 +620,9 @@ body {
 	   /* Add shadows to create the "card" effect */
 	   box-shadow: 0 4px 8px 0 rgba(0,0,0,.1);
 	   background-color: #ddd;
-	   transition: box-shadow 0.1s ease-in-out;
-	   
+	   transition: box-shadow 0.1s ease-in-out;   
    }
+
    /* On mouse-over, add a deeper shadow */
    .column:hover {
 	   box-shadow: 0 8px 16px 0 rgba(0,0,0,.3);
@@ -630,6 +630,11 @@ body {
    
    .column:active{
 	    box-shadow: 0 8px 16px 0 rgba(0,0,0,.5);
+   }
+
+    /* When the columns are inactive, make behave link-like */
+   .column:not(.in-animation) {
+	   cursor: pointer;
    }
    
    .column > h2 {color:black;}
