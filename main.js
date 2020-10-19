@@ -1349,7 +1349,7 @@ function updateStats(obsvc=false){
 }
 
 
-function toggleMute(apply=false){ // TODO: I need to have this be MUTE, toggle, with volume not touched.
+function toggleMute(apply){ // TODO: I need to have this be MUTE, toggle, with volume not touched.
 	if (apply==undefined){
 		session.muted=!session.muted;
 	} else {
