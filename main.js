@@ -1031,9 +1031,9 @@ window.onmessage = function(e){ // iFRAME support
 	
 	if ("mic" in e.data){
 		if (e.data.mic == true){
-			toggleMute(true);
-		} else if (e.data.mic == false){
 			toggleMute(false);
+		} else if (e.data.mic == false){
+			toggleMute(true);
 		} else if (e.data.mic == "toggle"){
 			toggleMute();
 		} 
