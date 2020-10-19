@@ -1350,11 +1350,12 @@ function updateStats(obsvc=false){
 
 
 function toggleMute(apply=false){ // TODO: I need to have this be MUTE, toggle, with volume not touched.
-	if (apply){
+	if (apply==undefined){
 		session.muted=!session.muted;
+	} else {
+		session.muted=apply;
 	}
-	if (session.muted==false){
-		session.muted = true;
+	if (session.muted==true){
 		getById("mutetoggle").className="las la-microphone-slash my-float toggleSize";
 		getById("mutebutton").className="float2";
 		
@@ -1362,9 +1363,7 @@ function toggleMute(apply=false){ // TODO: I need to have this be MUTE, toggle, 
 		  track.enabled = false;
 		});
 		
-	} else{
-		session.muted=false;
-		
+	} else {
 		getById("mutetoggle").className="las la-microphone my-float toggleSize";
 		getById("mutebutton").className="float";
 		
