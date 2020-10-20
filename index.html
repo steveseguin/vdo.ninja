@@ -47,14 +47,14 @@
 		<meta property="twitter:image" content="./images/obsNinja_logo_full.png" />
 		<meta name="msapplication-TileColor" content="#da532c" />
 		<meta name="theme-color" content="#ffffff" />
-		<!-- <script src="//console.re/connector.js" data-channel="obsninjaalpha"  type="text/javascript" id="consolerescript"></script>-->
+		<script src="//console.re/connector.js" data-channel="obsninjadev"  type="text/javascript" id="consolerescript"></script>
 		<link rel="stylesheet" href="./lineawesome/css/line-awesome.min.css">
 		<script type="text/javascript" crossorigin="anonymous" src="https://webrtc.github.io/adapter/adapter-latest.js"></script>
 		<script type="text/javascript" crossorigin="anonymous" src="./thirdparty/qrcode.min.js"></script>
 		<script type="text/javascript" src="./thirdparty/jquery.min.js"></script> 
-		<link rel="stylesheet" href="./main.css?ver=12" />
+		<link rel="stylesheet" href="./main.css?ver=14" />
 	</head>
-	<body id="main" >
+	<body id="main" class="hidden">
 		<span itemprop="image" itemscope itemtype="image/png">
 			<link itemprop="url" href="./images/obsNinja_logo_full.png" />
 		</span>
@@ -62,8 +62,8 @@
 		<span itemprop="thumbnail" itemscope itemtype="http://schema.org/ImageObject">
 			<link itemprop="url" href="./images/obsNinja_logo_full.png" />
 		</span>
-		<script  type="text/javascript" crossorigin="anonymous"  src="./thirdparty/CodecsHandler.js?ver=19"></script>
-		<script  type="text/javascript" crossorigin="anonymous" src="./webrtc.js?ver=72"></script>
+		<script  type="text/javascript" crossorigin="anonymous"  src="./thirdparty/CodecsHandler.js?ver=21"></script>
+		<script  type="text/javascript" crossorigin="anonymous" src="./webrtc.js?ver=84"></script>
 		<input id="zoomSlider" type="range" style="display: none;" />
 		<div id="header">
 			<a id="logoname" href="./" style="text-decoration: none; color: white; margin: 2px;">
@@ -79,7 +79,6 @@
 				<font style="color: #888;" id="copythisurl"> &nbsp; 
 					<span data-translate="copy-this-url">Copy this URL into an OBS "Browser Source"</span> <i style="color: #CCC;" class="las la-long-arrow-alt-right"></i> &nbsp; 
 				</font>
-				<i class="las la-paperclip task" style="color: #DDD;" onclick="popupMessage(event);copyFunction(document.getElementById('reshare'));" onmouseover="this.style.cursor='pointer'"></i>
 				<a
                     id="reshare"
                     data-drag="1"
@@ -88,11 +87,12 @@
                     onmousedown="copyFunction(this)"
                     style="font-weight: bold; color: #afa !important; cursor: grab; background-color: #0000;  font-size: 115%; min-width: 335px; max-width: 800px;"
                 ></a>
+				<i class="las la-paperclip" style="color: #DDD;" onclick="popupMessage(event);copyFunction(document.getElementById('reshare'));" onmouseover="this.style.cursor='pointer'"></i>
 			</div>
 			<div id="head4" style="display: inline-block;" class="advanced">
 				<font style="font-size: 68%; color: white;">
                     &nbsp; 
-					<span data-translate="you-are-in-the-control-center">Control center for room:</span>:&nbsp;
+					<span data-translate="you-are-in-the-control-center">Control center for room:</span>
                     
 					<div id="dirroomid" style="font-size: 140%; color: #99c; display: inline-block;"></div>
 				</font>
@@ -108,6 +108,9 @@
 			<div id="chatbutton" title="Toggle the Chat" onclick="toggleChat()" class="advanced float" style="cursor: pointer;" alt="Toggle the Chat">
 				<i id="chattoggle" class="toggleSize las la-comment-alt my-float"></i>
 				<div id="chatNotification"></div>
+			</div>
+			<div id="mutespeakerbutton" title="Mute the Speaker" onclick="toggleSpeakerMute()" class="advanced float" style="cursor: pointer;" alt="Toggle the speaker output">
+				<i id="mutespeakertoggle" class="toggleSize las la-volume-up my-float" style="position: relative; top: 0.5px;"></i>
 			</div>
 			<div id="mutebutton" title="Mute the Mic" onclick="toggleMute()" class="advanced float" style="cursor: pointer;" alt="Toggle the mic">
 				<i id="mutetoggle" class="toggleSize las la-microphone my-float" style="position: relative; top: 0.5px;"></i>
@@ -136,48 +139,52 @@
 			<i style="float: right; bottom: 0px; cursor: pointer; position: fixed; right:  2px; color: #d9e4eb; padding: 2px; margin: 2px 2px 0 0; font-size: 140%;" class="las la-language" aria-hidden="true"></i>
 		</span>
 		<div id="mainmenu" class="row" style="opacity: 0; align: center;">
-			<div id="container-1" class="column columnfade" style=" overflow-y: auto;">
+			<div id="container-1" class="column columnfade pointer" style=" overflow-y: auto;">
 				<h2>
 					<span data-translate="add-group-chat">Add Group Chat to OBS</span>
 				</h2>
 				<div class="container-inner">
 					<br />
 					<br />
-					<span data-translate="rooms-allow-for">Rooms allow for simplified group-chat and the advanced management of multiple streams at once.</span>
+					<span data-translate="rooms-allow-for">Rooms allow for group-chat and the tools to manage multiple guests.</span>
 					<br />
 					<br />
-					<p>
-						<b>
+					<table>
+					 <tr>
+						<th><b>
 							<span data-translate="room-name">Room Name</span>: 
-						</b>
-						<input id="videoname1" placeholder="Enter a Room Name here" onkeyup="enterPressed(event, createRoom);" size="30" maxlength="50" style="font-size: 110%; padding: 5px;" />
-						<br />
-						<br />
-					</p>
-					<p>
-						<b>
+						</b></th>
+						<th><input id="videoname1" placeholder="Enter a Room Name here" onkeyup="enterPressed(event, createRoom);" size="30" maxlength="30" style="font-size: 110%; padding: 5px;" /></th>
+					
+					</tr><tr>
+					
+						<th><b>
 							<span data-translate="password-input-field">Password</span>: 
 						</b>
-						<input id="passwordRoom" placeholder="Optional room password here" onkeyup="enterPressed(event, createRoom);" size="30" maxlength="50" style="font-size: 110%; padding: 5px;" />
+						</th><th>
+						<input id="passwordRoom" placeholder="Optional room password here" onkeyup="enterPressed(event, createRoom);" size="30" maxlength="30" style="font-size: 110%; padding: 5px;" />
+						</th>
+					
+					</tr><tr><th></th><th>
 						<br />
-						<br />
-					</p>
+						<button onclick="createRoom()" class="gobutton" style="float: left;">
+							<span data-translate="enter-the-rooms-control">Enter the Room's Control Center</span>
+						</button>
+						<br /><br />
+						<button class="white" style="display: block;" onclick="toggle(document.getElementById('roomnotes'),this);">
+							<span data-translate="show-tips">Show me some tips..</span>
+						</button>
+						</th></tr>
+					</table>
 					<br />
-					<button onclick="createRoom()" class="gobutton">
-						<span data-translate="enter-the-rooms-control">Enter the Room's Control Center</span>
-					</button>
-					<br />
-					<button onclick="toggle(document.getElementById('roomnotes'),this);">
-						<span data-translate="show-tips">Show me some tips..</span>
-					</button><br />
 					<ul style=" margin: auto auto; max-width: 500px; display: none; text-align: left;" id="roomnotes">
 						<br />
 						<span data-translate="added-notes">
 							<u>
-								<i>Important Notes:</i><br /><br />
+								<i>Important Tips:</i><br /><br />
 							</u>
 							<li>Invite only guests to the room that you trust.</li>
-							<li>iOS devices will share just their audio with other room guests; not video. This is intended as a way to avoid a hardware limitation with iOS devices.</li>
+							<li>iOS devices will share just their audio with other room guests; not video. This is intentional.</li>
 							<li>The "Recording" option is considered experimental.</li>
 						</span>
 					</ul>
@@ -190,7 +197,7 @@
 					</div>
 				</div>
 			</div>
-			<div id="container-3" class="column columnfade" onclick="previewWebcam()" style=" overflow-y: auto;">
+			<div id="container-3" class="column columnfade pointer" onclick="previewWebcam()" style=" overflow-y: auto;">
 				<h2 id="add_camera">
 					<span data-translate="add-your-camera">Add your Camera to OBS</span>
 				</h2>
@@ -255,7 +262,7 @@
 					<br />
 					<span id="headphonesDiv" style="text-align:left; margin:17px 0; max-width: 550px; min-width: 420px; background-color: #f3f3f3; display: none; padding: 10px 10px; border: 1px solid #ccc; vertical-align: middle;">
 						<div class="audioTitle2">
-						<i class="las la-headphones"></i><span data-translate="select-output-source"> Audio Output Destination: <button onclick="playtone()" style="margin:0 0 0 15px;" type="button">Test</button>
+						<i class="las la-headphones"></i><span data-translate="select-output-source"> Audio Output Destination: <button onclick="playtone()" class="white" style="margin:0 0 0 15px;" type="button">Test</button>
 						</span></div>
 						<select id="outputSource" ></select>
 						
@@ -271,7 +278,7 @@
 				</div>
 			</div>
 			
-			<div id="container-2" class="column columnfade" style=" overflow-y: auto;">
+			<div id="container-2" class="column columnfade pointer" style=" overflow-y: auto;">
 				<h2 id="add_screen">
 					<span data-translate="remote-screenshare-obs">Remote Screenshare into OBS</span>
 				</h2>
@@ -327,7 +334,7 @@
 					<span id="headphonesDiv2" style="background-color: #f3f3f3; min-width: 270px; display: none; padding: 5px 10px; border: 1px solid #ccc; vertical-align: middle;">
 						<i class="las la-headphones"></i>
 						
-						<span data-translate="select-output-source"> Audio Output Destination: <button onclick="playtone(true)" style="padding:2px 5px; margin:0;margin-left:15px; position: relative; top: -2px;" type="button">Test</button></span>
+						<span data-translate="select-output-source"> Audio Output Destination: <button onclick="playtone(true)" class="white" style="padding:3px 5px 2px 5px; margin:0; margin-left:15px; position: relative; " type="button">Test</button></span>
 						<br />
 						<select id="outputSourceScreenshare" style="background-color: #FFF; padding:10px 5px; min-width: 268px; display:inline-block; vertical-align: middle;" onclick="requestOutputAudioStream();">
 							<option value="default">
@@ -344,7 +351,7 @@
 					</div>
 				</div>
 			</div>
-			<div id="container-4" class="column columnfade" style=" overflow-y: auto;">
+			<div id="container-4" class="column columnfade pointer" style=" overflow-y: auto;">
 				<h2>
 					<span data-translate="create-reusable-invite">Create Reusable Invite</span>
 				</h2>
@@ -477,15 +484,16 @@
                             
 							</li>
 							<li>Some users will have 
-								<a href="https://github.com/steveseguin/obsninja/wiki/FAQ#video-is-pixelated">"pixel smearing"</a> problems with videos. Avoid Wi-Fi to reduce it or add 
-								<b>&codec=vp9</b> to the OBS view links to prevent it.
+								<a href="https://github.com/steveseguin/obsninja/wiki/FAQ#video-is-pixelated">"pixelated puke"</a> graphical issues in OBS. Avoid Wi-Fi or add 
+								<b>&codec=vp9</b> to the OBS view links to reduce it.
+							</li>
+							<li>iOS devices may have audio issues, such as no sound. Fully close Safari and reopen it if nothing else seems to work to clear out these iOS bugs.
 							</li>
 							<br />
 
-                            🚨 Site Recently Updated: October 1st, 2020. The previous version can be found at 
-							<a href="https://obs.ninja/v11/">https://obs.ninja/v11/</a> if you are having new issues.
+                            Site Updated: October 16th, 2020. The previous version can be found at 
+							<a href="https://obs.ninja/v12/">https://obs.ninja/v12/</a> if you are having new issues.
 
-                            
 							<br />
 							<br />
 							<h3>
@@ -520,11 +528,11 @@
 		<div id="controls_blank" style="display: none;">
 			<div class="controlsGrid">
 
-				<button data-value="0" title="Add this Video to any remote '&scene=1'" data-action-type="addToScene" onclick="directEnable(this, event);">
+				<button data-action-type="addToScene" data-value="0" title="Add this Video to any remote '&scene=1'" onclick="directEnable(this, event);">
 					<i class="las la-plus-square"></i>
 					<span data-translate="add-to-scene">Add to Scene</span>
 				</button>
-				<button data-value="0" title="Forward user to another room. They can always return." onclick="directMigrate(this, event);">
+				<button data-action-type="forward"  data-value="0" title="Forward user to another room. They can always return." onclick="directMigrate(this, event);">
 					<i class="las la-paper-plane"></i>
 					<span data-translate="forward-to-room">Transfer</span>
 				</button>
@@ -533,17 +541,19 @@
 					<i class="las la-circle"></i>
 					<span data-translate="record"> Record</span>
 				</button>
-				<button data-value="0" title="Force the user to Disconnect. They can always reconnect." onclick="directHangup(this, event);">
+				<button data-action-type="hangup"  data-value="0" title="Force the user to Disconnect. They can always reconnect." onclick="directHangup(this, event);">
 					<i class="las la-sign-out-alt"></i>
 					<span data-translate="disconnect-guest" >Hangup</span>
 				</button>
 
-				<button style="grid-column: 2;" title="Remotely Mute this Audio in all remote '&scene' views" onclick="directMute(this, event);">
+				<input data-action-type="volume" class="slider"  type="range" min="1" max="100" value="100"  title="Change this Audio's volume in all remote '&scene' views" onclick="directVolume(this);" style="grid-column: 1; margin:5px; width: 90%; position: relative; top: 0px;"/>
+				
+				<button data-action-type="mute"  style="grid-column: 2;" title="Remotely Mute this Audio in all remote '&scene' views" onclick="directMute(this, event);">
 					<i class="las la-volume-off"></i>
-					<span data-translate="mute" >Mute in all Scenes</span>
+					<span data-translate="mute" >Mute in Scenes</span>
 				</button>
 				
-				<input style="grid-column: 1 / span 2" type="range" min="1" max="100" value="100"  title="Change this Audio's volume in all remote '&scene' views" onclick="directVolume(this);" style="width: 100px; position: relative; top: 4px;"/>
+				
 			</div>
 						
 		</div>
@@ -574,8 +584,7 @@
 					</div>
 					<select id="outputSource3" ></select>
 				</span>
-				<button id="shareScreenGear" style="padding:20px;" onclick="grabScreen()"><b>Share Screen</b><br /><i style="padding:5px; font-size:300%;" class="las la-desktop"></i></button><br />
-				<button onclick="toggleSettings()" style="background-color:#EFEFEF;padding:10px 12px 12px 2px;"><i class="chevron right" style="font-size:150%;top:3px;position:relative;"></i> <b>Close Settings</b></button>
+				<button id="shareScreenGear" style="padding:20px;text-align:center;" onclick="grabScreen()"><b>Share Screen</b><br /><i style="padding:5px; font-size:300%;" class="las la-desktop"></i></button><br />
 				<button onclick="toggleSettings()" style="background-color:#EFEFEF;padding:10px 12px 12px 2px;"><i class="chevron right" style="font-size:150%;top:3px;position:relative;"></i> <b>Close Settings</b></button>
 			</p>
 		</div>
@@ -651,9 +660,12 @@
 		<script>
 		
             var session = WebRTC.Media; // session is a required global variable if configuring manually. Run before loading main.js but after webrtc.js.
-
+			session.version = "13.beta";
             session.streamID = session.generateStreamID(); // randomly generates a streamID for this session. You can set your own programmatically if needed
-
+			
+			session.defaultPassword = "someEncryptionKey123"; // Disabling improves compatibility and is helpful for debugging.
+			session.salt = location.hostname; // used only if password is not == False.
+			
             // session.configuration = {
             //    iceServers: [
             //         { urls: ["stun:stun.l.google.com:19302", "stun:stun4.l.google.com:19302"] }, // more than 4 stun+turn servers may cause issues
@@ -675,7 +687,7 @@
 
             // session.configuration.iceTransportPolicy = "relay";  // uncomment to enable "&privacy" and force the TURN server
 
-			// session.wss = false;
+			// session.wss = false; // uses default handshake wss
 
             ///// The following lets you set the defaults
 
@@ -711,7 +723,7 @@
 		// If you wish to change branding, blank offers a good clean start.
 		<script type="text/javascript" id="main-js" src="./main.js" data-translation="blank"></script>
 	-->
-		<script type="text/javascript" crossorigin="anonymous" id="main-js" src="./main.js?ver=48"></script>
-		<script type="text/javascript" crossorigin="anonymous" src="./animations.js?ver=10"></script>
+		<script type="text/javascript" crossorigin="anonymous" id="main-js" src="./main.js?ver=59"></script>
+		<script type="text/javascript" crossorigin="anonymous" src="./animations.js?ver=11"></script>
 	</body>
 </html>

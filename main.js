@@ -16,7 +16,7 @@ var activatedPreview = false;
 function getById(id) {
    var el = document.getElementById(id);
    if (!el) {
-	    errorlog(id + " is not defined; skipping.");
+	    warnlog(id + " is not defined; skipping.");
 		el = document.createElement("span"); // create a fake element
    }
    return el;
@@ -127,7 +127,7 @@ window.onload = function() { // This just keeps people from killing the live str
 	});
 };
 
-
+getById("credits").innerHTML = "Version: "+session.version+" - "+getById("credits").innerHTML
 
 var lastTouchEnd = 0;
 document.addEventListener('touchend', function (event) {
@@ -274,6 +274,7 @@ if( /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(naviga
 
 if (urlParams.has('webcam') || urlParams.has('wc')){
 	session.webcamonly = true;
+	
 } 
 
 if (urlParams.has('screenshare') || urlParams.has('ss')){
@@ -286,22 +287,60 @@ if (urlParams.has('mute') || urlParams.has('muted')){
 
 if (session.screenshare==true){
 	getById("container-3").className = 'column columnfade advanced'; // Hide screen share on mobile
+	getById("container-2").classList.add("skip-animation");
+	getById("container-2").classList.remove('pointer');
 }
 
 if (session.webcamonly==true){
 	getById("container-2").className = 'column columnfade advanced'; // Hide screen share on mobile
 	//getById("shareScreenGear").style.display="none"; // removed based on fluffy's feedback
+	getById("container-3").classList.add("skip-animation");
+	getById("container-3").classList.remove('pointer');
+	setTimeout(function(){previewWebcam();},10);
 }
 
-
-
+getById("main").classList.remove('hidden');
 
 if (urlParams.has('password')){
 	session.password = urlParams.get('password');
 	if (session.password.length==0){
 		session.password = prompt("Please enter the password below: \n\n(Note: Passwords are case-sensitive and you will not be alerted if it is incorrect.)");
+	} else if (session.password==="false"){
+		session.password=false;
+	} else if (session.password==="0"){
+		session.password=false;
+	} else if (session.password==="off"){
+		session.password=false;
 	}
+}
+
+if (session.password){
+	session.password = session.password.trim().replace(/[\W]+/g,"_");
 	getById("passwordRoom").value = session.password;
+	session.defaultPassword = false;
+}
+
+if (urlParams.has('hash') || urlParams.has('crc') || urlParams.has('check')){  // could be brute forced in theory, so not as safe as just not using a hash check.
+	var hash_input = urlParams.get('hash') || urlParams.get('crc') || urlParams.get('check');
+	if (session.password===false){
+		session.password = prompt("Please enter the password below: \n\n(Note: Passwords are case-sensitive and you will not be alerted if it is incorrect.)");
+		session.password = session.password.trim().replace(/[\W]+/g,"_");
+		getById("passwordRoom").value = session.password;
+		session.defaultPassword = false;
+	} 
+	
+	session.generateHash(session.password+session.salt,6).then(function(hash){ // million to one error. 
+		log("hash is "+hash);
+		if (hash.substring(0, 4) !== hash_input){ // hash crc checks are just first 4 characters.
+			alert("The password was incorrect.\n\nRefresh and try again.");
+		} else {
+			session.hash = hash;
+		}
+	});
+}
+
+if (session.defaultPassword!==false){
+	session.password = session.defaultPassword; // no user entered password; let's use the default password if its not disabled.
 }
 
 
@@ -453,7 +492,6 @@ if (urlParams.has('streamid') || urlParams.has('view') || urlParams.has('v') || 
 	
 }
 
-
 if (urlParams.has('nopreview')){
 	log("preview OFF");
     session.nopreview = true;
@@ -475,7 +513,7 @@ if (urlParams.has('obsfix')){
 	} else if (parseInt(session.obsfix)>0){
 		session.obsfix = parseInt(session.obsfix);
 	} else {
-		session.obsfix = 20;
+		session.obsfix = 1; // aggressive.
 	}
 }
 
@@ -511,7 +549,7 @@ if (urlParams.has("videodevice") || urlParams.has("vdevice")  || urlParams.has("
 	session.videoDevice = urlParams.get("videodevice") || urlParams.get("vdevice")  || urlParams.get("vd")  || urlParams.get("device")  || urlParams.get("d");
 	
 	if (session.videoDevice){
-		session.videoDevice = session.videoDevice.toLowerCase().replace(/[\W_]+/g,"_");
+		session.videoDevice = session.videoDevice.toLowerCase().replace(/[\W]+/g,"_");
 	}
 	if (session.videoDevice=="false"){
 		session.videoDevice = 0;
@@ -553,7 +591,7 @@ if (urlParams.has("audiodevice") || urlParams.has("adevice")  || urlParams.has("
 	session.audioDevice = urlParams.get("audiodevice") || urlParams.get("adevice")  || urlParams.get("ad")  || urlParams.get("device")  || urlParams.get("d");
 	
 	if (session.audioDevice){
-		session.audioDevice = session.audioDevice.toLowerCase().replace(/[\W_]+/g,"_");
+		session.audioDevice = session.audioDevice.toLowerCase().replace(/[\W]+/g,"_");
 	}
 	if (session.audioDevice=="false"){
 		session.audioDevice = 0;
@@ -656,6 +694,10 @@ if (urlParams.has('maxptime')){
 if (urlParams.has('codec')){
 	log("CODEC CHANGED");
     session.codec = urlParams.get('codec').toLowerCase();
+} else if (window.obsstudio){
+	if (session.obsfix===false){
+		session.codec = "h264"; // vp8 and vp9 are not working.
+	}
 }
 
 if (urlParams.has('scale')){
@@ -885,8 +927,6 @@ if (urlParams.has('cleanoutput') || urlParams.has('clean')){
 	
 }
 
-session.audioEffects=true; /////// DELETE ME!!!!!!!!!
-
 if (urlParams.has('channels')){ // must be loaded before channelOffset
     session.audioChannels = parseInt(urlParams.get('channels'));
 	session.offsetChannel = 0;
@@ -910,8 +950,6 @@ if (urlParams.has('maxviewers') || urlParams.has('mv') ){
 	}
 	log("maxviewers set");
 }
-
-
 
 if (urlParams.has('secure')){
 	session.security = true;
@@ -1007,18 +1045,18 @@ if (urlParams.has('icefilter')){
 if (urlParams.has('effects') || urlParams.has('effect')){
 	session.effects = urlParams.get('effects') || urlParams.get('effect');
 	session.effects = parseInt(session.effects);
-	if (session.effects){ // face align
-		session.effects = 1;
-	} else {
+	if (session.effects<=0){ 
 		sesson.effects = false;
 	}
+	// mirror == 2
+	// face == 1
 }
-
 if (urlParams.has('style')){
-	if ((parseInt(urlParams.get('style'))==1 ) || (urlParams.get('style')=="justvideo")){ // face align
+	if ((parseInt(urlParams.get('style'))==1 ) || (urlParams.get('style')=="justvideo")){ // no audio only
 		session.style = 1;
-	} else if ((parseInt(urlParams.get('style'))==2) || (urlParams.get('style')=="waveform")){ // mirror 
+	} else if ((parseInt(urlParams.get('style'))==2) || (urlParams.get('style')=="waveform")){  // audio waveform
 		session.style = 2;
+		session.audioEffects=true; ////!!!!!!! Do I want to enable the audioEffects myself? or do it here?
 	} else if ((parseInt(urlParams.get('style'))==3) || (urlParams.get('style')=="avatar")){ // photo is taken? upload option? canvas?
 		session.style = 3;
 	} else {
@@ -1192,6 +1230,20 @@ window.onmessage = function(e){ // iFRAME support
 		parent.postMessage({"stats": stats }, "*");
     }
 	
+	if ("getLoudness" in e.data){
+		log("GOT OUDNESS REQUEST");
+		if (e.data.getLoudness == true){
+			var loudness = {};
+			for (var i in session.rpcs){
+				loudness[session.rpcs[i].streamID] = session.rpcs[i].stats.Audio_Loudness;
+			}
+			parent.postMessage({"loudness": loudness }, "*");
+			session.pushLoudness = true;
+		} else {
+			session.pushLoudness = false;
+		}
+    }
+	
 	if ("close" in e.data){
         for (var i in session.rpcs){
 			try {
@@ -1201,6 +1253,8 @@ window.onmessage = function(e){ // iFRAME support
 			}
 		}
     }
+	
+	
 };
 
 function pokeIframeAPI(action){
@@ -1212,7 +1266,7 @@ function pokeIframeAPI(action){
 function jumptoroom(){
 	var arr = window.location.href.split('?');
 	var roomname = getById("joinroomID").value;
-	roomname = roomname.replace(/[\W_]+/g,"_");
+	roomname = roomname.replace(/[\W]+/g,"_");
 	if (arr.length > 1 && arr[1] !== '') {
 		window.location+="&room="+roomname;
 	} else {
@@ -1479,7 +1533,7 @@ if ( (session.roomid) || (urlParams.has('roomid')) || (urlParams.has('r')) || (u
 		roomid = session.roomid;
 	}
 	
-	roomid = roomid.replace(/[\W_]+/g,"_");
+	roomid = roomid.replace(/[\W]+/g,"_");
 	session.roomid = roomid;
 	
 	if (session.audioDevice===false){
@@ -1533,15 +1587,17 @@ if ( (session.roomid) || (urlParams.has('roomid')) || (urlParams.has('r')) || (u
 		getById("translateButton").style.display = "none";
 		log("Update Mixer Event on REsize SET");
 		window.addEventListener("resize", updateMixer);
+		window.addEventListener("orientationchange", updateMixer);
 		joinRoom(session.roomid); // this is a scene, so we want high resolutions
 		getById("main").style.overflow = "hidden";
 	} 
 } else if (urlParams.has('director')){ // if I do a short form of this, it will cause duplications in the code elsewhere. 
-	createRoom(urlParams.get('director').replace(/[\W_]+/g,"_"));
+	createRoom(urlParams.get('director').replace(/[\W]+/g,"_"));
 } else if ((session.view) && (permaid===false)){
 	log("Update Mixer Event on REsize SET");
 	getById("translateButton").style.display = "none";
 	window.addEventListener("resize", updateMixer);
+	window.addEventListener("orientationchange", updateMixer);
 	getById("main").style.overflow = "hidden";
 } 
 
@@ -1678,9 +1734,19 @@ function updateStats(obsvc=false){
 
 
 function toggleMute(apply=false){ // TODO: I need to have this be MUTE, toggle, with volume not touched.
+
+	if (session.director){
+		if (!session.directorEnabledPPT){
+			// director has not enabled PTT yet.
+			return;
+		}
+	}
+
 	if (apply){
 		session.muted=!session.muted;
 	}
+	var ptt = getById("press2talk");
+	
 	if (session.muted==false){
 		session.muted = true;
 		getById("mutetoggle").className="las la-microphone-slash my-float toggleSize";
@@ -1690,10 +1756,12 @@ function toggleMute(apply=false){ // TODO: I need to have this be MUTE, toggle, 
 			  track.enabled = false;
 			});
 		}
+		if (ptt){
+			ptt.innerHTML = "<span data-translate='Push-to-Mute'>🔇 Push to Talk</span>";
+		}
 		
 	} else{
 		session.muted=false;
-		
 		getById("mutetoggle").className="las la-microphone my-float toggleSize";
 		getById("mutebutton").className="float";
 		if (session.streamSrc){
@@ -1701,9 +1769,48 @@ function toggleMute(apply=false){ // TODO: I need to have this be MUTE, toggle, 
 			  track.enabled = true;
 			});
 		}
+		if (ptt){
+			ptt.innerHTML = "<span data-translate='Push-to-Mute'>🔴 Push to Mute</span>";
+		}
 	}
 }
 
+
+function toggleSpeakerMute(apply=false){ // TODO: I need to have this be MUTE, toggle, with volume not touched.
+	if (apply){
+		session.speakerMuted=!session.speakerMuted;
+	}
+	if (session.speakerMuted==false){
+		session.speakerMuted = true;
+		getById("mutespeakertoggle").className="las la-volume-mute my-float toggleSize";
+		getById("mutespeakerbutton").className="float2";
+		
+		var sounds = document.getElementsByTagName("video");
+		for (var i = 0; i < sounds.length; ++i){
+			sounds[i].muted = session.speakerMuted;
+		}
+	} else{
+		session.speakerMuted=false;
+		
+		getById("mutespeakertoggle").className="las la-volume-up my-float toggleSize";
+		getById("mutespeakerbutton").className="float";
+		
+		var sounds = document.getElementsByTagName("video");
+		for (var i = 0; i < sounds.length; ++i){
+			
+			if (sounds[i].id === "videosource"){ // don't unmute ourselves. feedback galore if so.
+				continue;
+			} else if (sounds[i].id === "previewWebcam"){
+				continue;
+			} else if (sounds[i].id === "screenshare"){
+				continue;
+			} else {
+				sounds[i].muted = session.speakerMuted;
+			}
+		}
+		
+	}
+}
 
 
 function toggleChat(ele=null){ // TODO: I need to have this be MUTE, toggle, with volume not touched.
@@ -1814,31 +1921,31 @@ function directMigrate(ele, event){  // everyone in the room will hangup this gu
 	if (event === false){
 		migrateRoom = previousRoom
 	} else if ((event.ctrlKey) || (event.metaKey)){
-		ele.innerHTML = "<span data-translate='forward-to-room'>🚕 ARMED</span>";
+		ele.innerHTML = '<i class="las la-check"></i> <span data-translate="forward-to-room">Armed</span>';
+		ele.style.backgroundColor = "#BF3F3F";
+		
 		Callbacks.push([directMigrate, ele, stillNeedRoom]);
 		stillNeedRoom=false;
-		log("Record Video queued");
+		log("Migrate queued");
 		return;
 	} else {
-		var migrateRoom = prompt("What room to forward them to?", previousRoom);
+		var migrateRoom = prompt("Transfer guests to room:", previousRoom);
 		try{
-			migrateRoom = migrateRoom.replace(/[^0-9a-z]/gi, '');
+			migrateRoom = migrateRoom.trim().replace(/[\W]+/g,"_");
 			//migrateRoom=false;
 		} catch(e){}
 		stillNeedRoom=true;
 	}
-	errorlog(ele);
-	ele.innerHTML = "<span data-translate='forward-to-room'>🚕 Transfer Guest</span>";
-
-	//var migrateRoom = prompt("What room to forward them to?", previousRoom);
-	//migrateRoom = migrateRoom.replace(/[^0-9a-z]/gi, '');
+	ele.innerHTML = '<i class="las la-paper-plane"></i> <span data-translate="forward-to-room">Transfer</span>';
+	ele.style.backgroundColor = null;
+	
 	if (migrateRoom){
 		previousRoom = migrateRoom;
 		
 		var msg = {};
 		msg.request = "migrate";
 		if (session.password){
-			return session.generateHash(migrateRoom+session.password,30).then(function(rid){
+			return session.generateHash(migrateRoom+session.password+session.salt,16).then(function(rid){
 				var msg = {};
 				msg.request = "migrate";
 				msg.roomid = rid;
@@ -1854,9 +1961,26 @@ function directMigrate(ele, event){  // everyone in the room will hangup this gu
 		}
 	}
 }
-
+var stillNeedHangupTarget=1;
 function directHangup(ele, event){  // everyone in the room will hangup this guest?  I like that idea.
-	var confirmHangup = confirm("Are you sure you wish to disconnect this user?");
+	if (event == false){
+		if (stillNeedHangupTarget===1){
+			var confirmHangup = confirm("Are you sure you wish to disconnect these users?");
+			stillNeedHangupTarget = confirmHangup;
+		} else {
+			confirmHangup = stillNeedHangupTarget;
+		}
+	} else if ((event.ctrlKey) || (event.metaKey)){
+		ele.innerHTML = '<i class="las la-skull-crossbones"></i> <span data-translate="disconnect-guest" >ARMED</span>';
+		ele.style.backgroundColor = "#BF3F3F";
+		stillNeedHangupTarget=1;
+		Callbacks.push([directHangup, ele, false]);
+		log("Hangup queued");
+		return;
+	} else {
+		var confirmHangup = confirm("Are you sure you wish to disconnect this user?");
+	}
+
 	if (confirmHangup){
 		var msg = {};
 		//msg.request = "sendroom";
@@ -1867,6 +1991,9 @@ function directHangup(ele, event){  // everyone in the room will hangup this gue
 		log(ele.dataset.UUID);
 		session.sendRequest(msg, ele.dataset.UUID);
 		//session.anysend(msg); // send to everyone in the room, so they know if they are on air or not.
+	} else {
+		ele.innerHTML = '<i class="las la-sign-out-alt"></i><span data-translate="disconnect-guest" >Hangup</span>';
+		ele.style.backgroundColor = null;
 	}
 }
 
@@ -1876,9 +2003,9 @@ function directEnable(ele, event){ // A directing room only is controlled by the
 			ele.dataset.enable = 0;
 			ele.className = "";
 			ele.children[1].innerHTML = "Add to Scene";
-			ele.parentNode.parentNode.style.backgroundColor = "#7E7E7E";
+			getById("container_"+ele.dataset.UUID).style.backgroundColor = null;
 		} else {
-			ele.parentNode.parentNode.style.backgroundColor = "#AFA";
+			getById("container_"+ele.dataset.UUID).style.backgroundColor = "#649166";
 			ele.dataset.enable = 1;
 			ele.className = "pressed";
 			ele.children[1].innerHTML = "Remove";
@@ -1901,11 +2028,11 @@ function directMute(ele, event){ // A directing room only is controlled by the D
 		if (ele.dataset.mute==0){
 			ele.dataset.mute = 1;
 			ele.className = "";
-			ele.children[1].innerHTML = "mute";
+			ele.children[1].innerHTML = "Mute in scenes";
         } else {
 			ele.dataset.mute = 0;
 			ele.className = "pressed";
-			ele.children[1].innerHTML = "un-mute";
+			ele.children[1].innerHTML = "Un-mute";
         }
 	}
 	var msg = {};
@@ -2023,6 +2150,7 @@ function publishScreen(){
 
 		if (!(session.cleanOutput)){
 			getById("mutebutton").className="float";
+			getById("mutespeakerbutton").className="float";
 			getById("chatbutton").className="float";
 			getById("mutevideobutton").className="float";
 			getById("hangupbutton").className="float";
@@ -2055,6 +2183,7 @@ function publishWebcam(){
 			log("ROOM ID ENABLED");
 			log("Update Mixer Event on REsize SET");
 			window.addEventListener("resize", updateMixer);
+			window.addEventListener("orientationchange", updateMixer);
 			getById("main").style.overflow = "hidden";
 			session.cbr=0; // we're just going to override it
 			if (session.stereo==1){
@@ -2075,6 +2204,7 @@ function publishWebcam(){
 
 	if (!(session.cleanOutput)){
 		getById("mutebutton").className="float";
+		getById("mutespeakerbutton").className="float";
 		getById("chatbutton").className="float";
 		getById("mutevideobutton").className="float";
 		getById("hangupbutton").className="float";
@@ -2098,6 +2228,16 @@ var drawLoopLimiter = null;
 function volumeStream(stream) {
 	if ((iOS) || (iPad)){
 		log("Volume Meter not support on iOS due to Safari Glitch");
+		//setInterval(function(){
+		//	var sounds = document.getElementsByTagName("video");
+		//	for (var i = 0; i < sounds.length; ++i){
+		//		sounds[i].addEventListener('pause', function onPause() {
+		//		  sounds[i].removeEventListener('pause', onPause);
+		//		  sounds[i].play();
+		//		});
+		//		sounds[i].pause();
+		//	}
+		//},5000);
 	} else {
 		log("gostream");
 		if (meter){
@@ -2199,7 +2339,7 @@ function volumeAudioProcess( event ) {
 }
 
 function joinRoom(roomname){
-	roomname = roomname.replace(/[^0-9a-z]/gi, '');
+	roomname = roomname.replace(/[\W]+/g,"_");
 	if (roomname.length){
 		log("Join room");
 		log(roomname);
@@ -2207,6 +2347,7 @@ function joinRoom(roomname){
 
 			log("Members in Room");
 			log(response);
+			
 			for (var i in response){
 				if ("UUID" in response[i]){
 					if ("streamID" in response[i]){
@@ -2223,19 +2364,17 @@ function joinRoom(roomname){
 					}
 				}
 			}
-
 		},function(error){return {};});
 	} else {
 		log("Room name not long enough or contained all bad characaters");
 	}	
 }
 
-
 function createRoom(roomname=false){
-
+	
 	if (roomname==false){
 		roomname = getById("videoname1").value;
-		roomname = roomname.replace(/[\W_]+/g,"_");
+		roomname = roomname.replace(/[\W]+/g,"_");
 		if (roomname.length!=0){
 			updateURL("director="+roomname); // make the link reloadable.
 		}
@@ -2245,19 +2384,38 @@ function createRoom(roomname=false){
 		return;
 	}
 	log(roomname);
+	session.roomid = roomname;
+	
+	getById("dirroomid").innerHTML =  decodeURIComponent(session.roomid);
+	getById("roomid").innerHTML = session.roomid;
 	
 	var passwordRoom = getById("passwordRoom").value;
+	passwordRoom = passwordRoom.trim().replace(/[\W]+/g,"_");
 	if (passwordRoom.length){
 		session.password=passwordRoom;
+		session.defaultPassword = false;
 		updateURL("password="+session.password);
 	}
 	
+	var passAdd="";
+	var passAdd2="";
 	
+	if ((session.defaultPassword === false) && (session.password)){
+			passAdd2="&password="+session.password;
+			return session.generateHash(session.password+session.salt,4).then(function(hash){
+				passAdd="&hash="+hash;
+				createRoomCallback(passAdd, passAdd2);
+			});
+	} else {
+		createRoomCallback(passAdd, passAdd2);
+	}
+}
+
+function createRoomCallback(passAdd, passAdd2){
 
 	var gridlayout = getById("gridlayout");
 	gridlayout.classList.add("directorsgrid");
 
-	session.roomid = roomname;
 	formSubmitting = false;
 
 	var m = getById("mainmenu");
@@ -2267,10 +2425,6 @@ function createRoom(roomname=false){
 	getById("head2").className = 'advanced';
 	getById("head3").className = 'advanced';
 	getById("head4").className = '';
-	
-	getById("dirroomid").innerHTML =  decodeURIComponent(roomname);
-	getById("roomid").innerHTML = roomname;
-
 
 	try{
 		if (session.label===false){
@@ -2287,55 +2441,53 @@ function createRoom(roomname=false){
 	getById("reshare").parentNode.removeChild(getById("reshare"));
 	getById("chatbutton").classList.remove("advanced");
 	getById("controlButtons").style.display = "inherit";
+	getById("mutespeakerbutton").classList.remove("advanced");
+	//getById("mutespeakerbutton").style.display = null;
+	session.speakerMuted = true; // the director will start with audio playback muted.
+	toggleSpeakerMute(true);
 	
-	var passAdd="";
-	var passAdd2="";
-	if (session.password){
-		passAdd="&password=";
-		passAdd2="&password="+session.password;
-	}
 	
 	gridlayout.innerHTML = "<div class='directorContainer'>\
-	<div class='directorBlock'><h2>Invite Guests</h2>\
-	<span data-translate='invite-users-to-join'>Invites users to join the group and broadcast their feed to it.\
+	<div class='directorBlock'><h2>GUEST INVITE</h2>\
+	<span data-translate='invite-users-to-join'>Invites users to join the group and broadcast their feed to it. They will see and hear other guests in the same room.\
 	These users will see every feed in the room.</span>\
 	<a onclick='popupMessage(event);copyFunction(this)' onmousedown='copyFunction(this)'\
-	class='task grabLinks'\
+	class='task grabLinks' style='cursor:copy' \
 	href='https://"+location.host+location.pathname+"?room="+session.roomid+passAdd+"' '>\
 	https://"+location.host+location.pathname+"?room="+session.roomid+passAdd+"</a>\
-	<button class='pull-right' onclick='popupMessage(event);copyFunction(this.previousElementSibling )'><i class='las la-video'></i>Copy link</button></div>"
+	<button class='pull-right grey' style='font-size:1.2em' onclick='popupMessage(event);copyFunction(this.previousElementSibling )'><i class='las la-video'></i>Copy link</button></div>"
 	
-	+ "<div class='directorBlock'><h2>Broadcast Invite</h2>\
+	+ "<div class='directorBlock'><h2>BROACAST INVITE</h2>\
 	<span data-translate='link-to-invite-camera'>Link to invite users to broadcast their feeds to the group. These users will not see or hear any feed from the group.</span>\
-	<a class='task grabLinks' onclick='popupMessage(event);copyFunction(this)' onmousedown='copyFunction(this)'\
+	<a class='task grabLinks' style='cursor:copy' onclick='popupMessage(event);copyFunction(this)' onmousedown='copyFunction(this)'\
 	href='https://"+location.host+location.pathname+"?room="+session.roomid+passAdd+"&view' '>\
 	https://"+location.host+location.pathname+"?room="+session.roomid+passAdd+"&view</a>\
-	<button class='pull-right' onclick='popupMessage(event);copyFunction(this.previousElementSibling )'><i class='las la-video'></i>Copy link</button></div>"
+	<button class='pull-right grey' style='font-size:1.2em;' onclick='popupMessage(event);copyFunction(this.previousElementSibling )'><i class='las la-video'></i>Copy link</button></div>"
 	
-	+ "<div class='directorBlock'><h2>Scene: all guests</h2>\
-	<span data-translate='this-is-obs-browser-source-link'>This is an OBS Browser Source link that is empty by default. Videos in the room can be manually added to this scene.</span>\
+	+ "<div class='directorBlock'><h2>SCENE LINK: MANUAL</h2>\
+	<span data-translate='this-is-obs-browser-source-link'>This is an OBS Browser Source link that is empty by default. Click 'add to scene' for each guest you want included in this scene</span>\
 	<a class='task grabLinks'\
 	onmousedown='copyFunction(this)' \
 	data-drag='1' draggable='true'  \
 	onclick='popupMessage(event);copyFunction(this)' \
 	href='https://"+location.host+location.pathname+"?scene=1&room="+session.roomid+passAdd2+"''>\
 	https://"+location.host+location.pathname+"?scene=1&room="+session.roomid+passAdd2+"</a>\
-	<button class='pull-right' onclick='popupMessage(event);copyFunction(this.previousElementSibling )'><i class='las la-th-large' aria-hidden='true'></i></i>Copy link</button></div>"
+	<button class='pull-right grey' style='font-size:1.2em;' onclick='popupMessage(event);copyFunction(this.previousElementSibling )'><i class='las la-th-large' aria-hidden='true'></i></i>Copy link</button></div>"
 	
-	+ "<div class='directorBlock'><h2>Scene: Manual</h2>\
+	+ "<div class='directorBlock'><h2>SCENE LINK: AUTO</h2>\
 	<span data-translate='this-is-obs-browser-souce-link-auto'>Also an OBS Browser Source link. All guest videos in this group chat room will automatically be added into this scene.</span>\
 	<a class='task grabLinks' onmousedown='copyFunction(this)' draggable='true' data-drag='1'\
 	onclick='popupMessage(event);copyFunction(this)'\
 	href='https://"+location.host+location.pathname+"?scene=0&room="+session.roomid+passAdd2+"' >https://"+location.host+location.pathname+"?scene=0&room="+session.roomid+passAdd2+"</a>\
-	<button class='pull-right' onclick='popupMessage(event);copyFunction(this.previousElementSibling )'><i class='las la-video'></i>Copy link</button></div>"
+	<button class='pull-right grey' style='font-size:1.2em;' onclick='popupMessage(event);copyFunction(this.previousElementSibling )'><i class='las la-th-large'></i>Copy link</button></div>"
 	+ "</div>"
 	
-	+ "<div class='directorContainer'>"
-	+ '<button data-translate="click-for-quick-room-overview" onclick="toggle(getById(\'roomnotes2\'),this);"><i class="las la-question-circle"></i> Click Here for a quick overview and help</button> '
-	+ '<span id="miniPerformer"><button id="press2talk" onclick="press2talk(this);"><i class="las la-headset"></i><span data-translate="push-to-talk-enable">Enable Director\'s Push-to-Talk Mode</span></button></span>'
+	+ "<div class='directorContainer half'>"
+	+ '<button class="grey" data-translate="click-for-quick-room-overview" onclick="toggle(getById(\'roomnotes2\'),this,false);"><i class="las la-question-circle"></i> Click Here for a quick overview and help</button> '
+	+ '<span id="miniPerformer"><button id="press2talk" class="grey" onclick="press2talk();"><i class="las la-headset"></i><span data-translate="push-to-talk-enable"> Enable Director\'s Push-to-Talk Mode</span></button></span>'
 	+ "</div>"
 
-	+ "<div id='roomnotes2' style='display:none;padding:0 0 0 10px;' >\
+	+ "<div id='roomnotes2' style='max-width:1200px;display:none;padding:0 0 0 10px;' >\
 	<font style='color:#CCC;' data-translate='welcome-to-control-room'>Welcome. This is the director's control-room for the group-chat. <br /><br />\
 	<font style='color:red'>Known Limitations with Group Rooms:</font><br />\
 	<li>iPhones and iPads <b>will not be visible to other guests</b>, but will appear to the director and inside OBS. <a target='_blank' href='https://www.reddit.com/r/OBSNinja/comments/iol981/obs_ninja_iphone/g4ekuqz/?utm_source=reddit&utm_medium=web2x&context=3'>Please see here for details.</a></li>\
@@ -2357,15 +2509,13 @@ function createRoom(roomname=false){
 	For advanced options and parameters, <a href=\"https://github.com/steveseguin/obsninja/wiki/Guides-and-How-to's#urlparameters\">see the Wiki.</a></font></div>";
 	
 	gridlayout.innerHTML += "<div id='guestFeeds'><div id='deleteme'>\
-	<div class='vidcon' style='min-height: 300px'><h2>Guest 1</h2><i class='las la-user-circle' style='font-size:8em; margin: 20px 0px;' aria-hidden='true'></i></div>\
-	<div class='vidcon' style='min-height: 300px'><h2>Guest 2</h2><i class='las la-user-circle' style='font-size:8em; margin: 20px 0px;' aria-hidden='true'></i></div>\
-	<div class='vidcon' style='min-height: 300px'><h2>Guest 3</h2><i class='las la-user-circle' style='font-size:8em; margin: 20px 0px;' aria-hidden='true'></i></div>\
-	<div class='vidcon' style='min-height: 300px'><h2>Guest 4</h2><i class='las la-user-circle' style='font-size:8em; margin: 20px 0px;' aria-hidden='true'></i></div>\
-	</div></div>";
-	joinRoom(roomname);
+	<div class='vidcon' style='margin: 15px 20px 0 0; min-height: 300px;text-align: center;'><h2>Guest 1</h2><i class='las la-user-circle' style='font-size:8em; margin: 20px 0px;' aria-hidden='true'></i></div>\
+<div class='vidcon' style='margin: 15px 20px 0 0; min-height: 300px;text-align: center;'><h2>Guest 2</h2><i class='las la-user-circle' style='font-size:8em; margin: 20px 0px;' aria-hidden='true'></i></div>\
+<div class='vidcon' style='margin: 15px 20px 0 0; min-height: 300px;text-align: center;'><h2>Guest 3</h2><i class='las la-user-circle' style='font-size:8em; margin: 20px 0px;' aria-hidden='true'></i></div>\
+<div class='vidcon' style='margin: 15px 20px 0 0; min-height: 300px;text-align: center;'><h2>Guest 4</h2><i class='las la-user-circle' style='font-size:8em; margin: 20px 0px;' aria-hidden='true'></i></div>\
+<h4 style='color:#CCC;margin:20px 20px 0 20px;'>These four guest slots are just for demonstration. More than four guests can actually join a room.</h4></div></div>";
+	joinRoom(session.roomid);
 
-
-	
 }
 
 
@@ -2375,14 +2525,11 @@ function createControlBox(UUID, soloLink, streamID){
 	}
 	var controls = getById("controls_blank").cloneNode(true);
 	
-	controls.querySelectorAll('[data-action-type]').forEach((ele)=>{  // give action buttons some self-reference
-		ele.dataset.UUID = UUID;
-	});
-	
 	var container = document.createElement("div");	
 	container.id = "container_"+UUID; // needed to delete on user disconnect
 	container.className = "vidcon";
-	container.style.margin="2px 0px 10px 10px";
+	container.style.margin="15px 20px 0 0 ";
+	
 	controls.style.display = "block";
 	controls.id = "controls_"+UUID;
 	getById("guestFeeds").appendChild(container); 
@@ -2390,70 +2537,61 @@ function createControlBox(UUID, soloLink, streamID){
 	var buttons = "<div class='streamID' onmousedown='copyFunction(this.firstElementChild.innerText)' onclick='popupMessage(event);copyFunction(this.firstElementChild.innerText)'>ID:<span style='user-select: none;'> "+streamID+"</span><i class='las la-copy' title='Copy this Stream ID to the clipboard' style='cursor:pointer'></i>\
 	</div>";
 
+	var videoContainer = document.createElement("div");	
+	videoContainer.id = "videoContainer_"+UUID; // needed to delete on user disconnect
+	videoContainer.style.margin="0";
 
-	setTimeout(function(){ 
-		container.insertAdjacentHTML('afterbegin', buttons);
-		controls.innerHTML += "<div>\
-		<div style='padding:5px;word-wrap: break-word;' title='A direct solo view of the video/audio stream with nothing else. Its audio can be remotely controlled from here'> \
-		<input class='soloLink' data-lpignore='true' onmousedown='copyFunction(this.previousElementSibling)' onclick='popupMessage(event);copyFunction(this.previousElementSibling)' data-drag='1' \
-		value='"+soloLink+"' />\
-		<button class='pull-right' onmousedown='copyFunction(this.previousElementSibling)' onclick='popupMessage(event);copyFunction(this.previousElementSibling)'>copy OBS Solo link</button>\
+	controls.innerHTML += "<div>\
+		<div style='padding:5px;word-wrap: break-word; overflow:hidden; white-space: nowrap; overflow: hidden; font-size:0.7em; text-overflow: ellipsis;' title='A direct solo view of the video/audio stream with nothing else. Its audio can be remotely controlled from here'> \
+		<a class='soloLink' data-drag='1' draggable='true' onmousedown='copyFunction(this.previousElementSibling)' onclick='popupMessage(event);copyFunction(this.previousElementSibling)' \
+		value='"+soloLink+"' href='"+soloLink+"'/>"+soloLink+"</a>\
+		<button class='pull-right' style='width:100%;' onmousedown='copyFunction(this.previousElementSibling)' onclick='popupMessage(event);copyFunction(this.previousElementSibling)'><i class='las la-user'></i> copy Solo link</button>\
 		</div></div>";
-	
-	 }, 3000);
-	
+		
+	controls.querySelectorAll('[data-action-type]').forEach((ele)=>{  // give action buttons some self-reference
+		ele.dataset.UUID = UUID;
+	});
 
+	container.innerHTML = buttons;
+	container.appendChild(videoContainer);
 	container.appendChild(controls);
 }
 
 function createDirectorCam(vid){
 	vid.style.width="80px";
-	vid.style.height="25px";
+	vid.style.height="35px";
 	vid.style.padding ="0";
-	vid.style.margin ="0 7px";
-	getById("press2talk").innerHTML = "<i class='las la-volume-mute'></i><span data-translate='Push-to-Mute'>Push to Mute</span>";
-	getById("press2talk").outerHTML += '<button onclick="toggleSettings()"><i class="las la-cog"></i></button>';
+	getById("press2talk").innerHTML = "<span data-translate='Push-to-Mute'>🔴 Push to Mute</span>";
+	getById("press2talk").outerHTML += '<button class="grey" style="margin: 10px 15px;" onclick="toggleSettings()"><i class="las la-cog"></i></button>';
 	getById("miniPerformer").appendChild(vid);
 	getById("press2talk").dataset.enabled="true";
+	session.muted=false;
+	toggleMute(true);
 }
 
-function press2talk(ele){
-	log(ele);
+function press2talk(){
+	var ele = getById("press2talk");
 	ele.style.minWidth="127px";
-	if (!(document.getElementById("videosource"))){
-		ele.getElementsByTagName('i')[0].classList = "las la-volume-mute";
-		ele.getElementsByTagName('span')[0].innerHTML = "Push to Mute";
+	ele.style.padding="7px";
+	if (!session.directorEnabledPPT){
+		ele.innerHTML = "<span data-translate='Push-to-Mute'>🔴 Push to Mute</span>";
 		session.publishDirector();
+		session.muted=false;
+		toggleMute(true);
 		return;
 	}
-	if (ele.dataset.enabled=="false"){
-		ele.getElementsByTagName('i')[0].classList = "las la-volume-mute";
-		ele.getElementsByTagName('span')[0].innerHTML = "Push to Mute";
-		ele.dataset.enabled="true";
-		if (session.streamSrc){
-			session.streamSrc.getAudioTracks().forEach((track) => {
-			  track.enabled = true;
-			});
-		}
-		log("PUSHED TO TALK 1");
-	} else {
-		ele.getElementsByTagName('i')[0].classList = "las la-headset";
-		ele.getElementsByTagName('span')[0].innerHTML = "Push to Talk";
-		ele.dataset.enabled="false";
-		if (session.streamSrc){
-			session.streamSrc.getAudioTracks().forEach((track) => {
-			  track.enabled = false;
-			});
-		}
-		log("PUSHED TO TALK 2");
-	}
+	toggleMute();
 }
 
 
-function toggle(ele, tog=false) {
+function toggle(ele, tog=false, inline=true) {
   var x = ele;
   if (x.style.display === "none") {
-    x.style.display = "inline-block";
+	if(inline){
+		x.style.display = "inline-block";
+	} else {
+		x.style.display = "block";
+	}
   } else {
     x.style.display = "none";
   }
@@ -2648,18 +2786,49 @@ function gotDevices(deviceInfos) { // https://github.com/webrtc/samples/blob/gh-
 			}
 		});
 		
-		if ((session.audioDevice) && (session.audioDevice!==1)){
+		
+		function comp(a, b) {
+			if (a.kind === 'audioinput'){return 0;}
+			else if (a.kind === 'audiooutput'){return 0;}
+			const labelA = a.label.toUpperCase();
+			const labelB = b.label.toUpperCase();
+			if (labelA > labelB) { return 1;} 
+			else if (labelA < labelB) {	return -1;	}
+			return 0;
+		}
+		//deviceInfos.sort(comp); // I like this idea, but it messes with the defaults.  I just don't know what it will do.
+		
+		// This is to hide NDI from default device. NDI Tools fucks up.
+		var tmp = [];
+		for (let i = 0; i !== deviceInfos.length; ++i) {
+			deviceInfo = deviceInfos[i];
+			if (!((deviceInfo.kind === 'videoinput')  &&  (deviceInfo.label.toLowerCase().startsWith("ndi") || deviceInfo.label.toLowerCase().startsWith("newtek")))){
+				tmp.push(deviceInfo);
+			}
+		}
+		
+		for (let i = 0; i !== deviceInfos.length; ++i) {
+			deviceInfo = deviceInfos[i];
+			if ((deviceInfo.kind === 'videoinput')  &&  (deviceInfo.label.toLowerCase().startsWith("ndi") || deviceInfo.label.toLowerCase().startsWith("newtek"))){
+				tmp.push(deviceInfo);
+				log("V DEVICE FOUND = "+deviceInfo.label.replace(/[\W]+/g,"_").toLowerCase());
+			}
+		}
+		deviceInfos = tmp;
+		log(deviceInfos);
+		
+		if ((session.audioDevice) && (session.audioDevice!==1)){  // this sorts according to users's manual selection
 			var tmp = [];
 			for (let i = 0; i !== deviceInfos.length; ++i) {
 				deviceInfo = deviceInfos[i];
-				if ((deviceInfo.kind === 'audioinput')  &&  (deviceInfo.label.replace(/[\W_]+/g,"_").toLowerCase().startsWith(session.audioDevice))){
+				if ((deviceInfo.kind === 'audioinput')  &&  (deviceInfo.label.replace(/[\W]+/g,"_").toLowerCase().startsWith(session.audioDevice))){
 					tmp.push(deviceInfo);
-					log("A DEVICE FOUND = "+deviceInfo.label.replace(/[\W_]+/g,"_").toLowerCase());
+					log("A DEVICE FOUND = "+deviceInfo.label.replace(/[\W]+/g,"_").toLowerCase());
 				}
 			}
 			for (let i = 0; i !== deviceInfos.length; ++i) {
 				deviceInfo = deviceInfos[i];
-				if (!((deviceInfo.kind === 'audioinput')  &&  (deviceInfo.label.replace(/[\W_]+/g,"_").toLowerCase().startsWith(session.audioDevice)))){
+				if (!((deviceInfo.kind === 'audioinput')  &&  (deviceInfo.label.replace(/[\W]+/g,"_").toLowerCase().startsWith(session.audioDevice)))){
 					tmp.push(deviceInfo);
 				}
 			}
@@ -2670,38 +2839,18 @@ function gotDevices(deviceInfos) { // https://github.com/webrtc/samples/blob/gh-
 		}
 		
 		
-		// This is to hide NDI from default device. NDI Tools fucks up.
-		var tmp = [];
-		for (let i = 0; i !== deviceInfos.length; ++i) {
-			deviceInfo = deviceInfos[i];
-			if (!((deviceInfo.kind === 'videoinput')  &&  (deviceInfo.label.toLowerCase().startsWith("ndi") || deviceInfo.label.toLowerCase().startsWith("newtek")))){
-				tmp.push(deviceInfo);
-			}
-		}
-		for (let i = 0; i !== deviceInfos.length; ++i) {
-			deviceInfo = deviceInfos[i];
-			if ((deviceInfo.kind === 'videoinput')  &&  (deviceInfo.label.toLowerCase().startsWith("ndi") || deviceInfo.label.toLowerCase().startsWith("newtek"))){
-				tmp.push(deviceInfo);
-				log("V DEVICE FOUND = "+deviceInfo.label.replace(/[\W_]+/g,"_").toLowerCase());
-			}
-		}
-		deviceInfos = tmp;
-		log(deviceInfos);
-		
-		
-		
-		if ((session.videoDevice) && (session.videoDevice!==1)){
+		if ((session.videoDevice) && (session.videoDevice!==1)){  // this sorts according to users's manual selection
 			var tmp = [];
 			for (let i = 0; i !== deviceInfos.length; ++i) {
 				deviceInfo = deviceInfos[i];
-				if ((deviceInfo.kind === 'videoinput')  &&  (deviceInfo.label.replace(/[\W_]+/g,"_").toLowerCase().startsWith(session.videoDevice))){
+				if ((deviceInfo.kind === 'videoinput')  &&  (deviceInfo.label.replace(/[\W]+/g,"_").toLowerCase().startsWith(session.videoDevice))){
 					tmp.push(deviceInfo);
-					log("V DEVICE FOUND = "+deviceInfo.label.replace(/[\W_]+/g,"_").toLowerCase());
+					log("V DEVICE FOUND = "+deviceInfo.label.replace(/[\W]+/g,"_").toLowerCase());
 				}
 			}
 			for (let i = 0; i !== deviceInfos.length; ++i) {
 				deviceInfo = deviceInfos[i];
-				if (!((deviceInfo.kind === 'videoinput')  &&  (deviceInfo.label.replace(/[\W_]+/g,"_").toLowerCase().startsWith(session.videoDevice)))){
+				if (!((deviceInfo.kind === 'videoinput')  &&  (deviceInfo.label.replace(/[\W]+/g,"_").toLowerCase().startsWith(session.videoDevice)))){
 					tmp.push(deviceInfo);
 				}
 			}
@@ -3452,7 +3601,6 @@ async function grabScreen(quality=0, audio=true){
 			
 			getById(eleName).srcObject.addTrack(track, stream); // Lets not add the audio to this preview; echo can be annoying
 			session.streamSrc = getById(eleName).srcObject;
-			
 				
 			if (track.kind == "video"){
 				toggleVideoMute(true);
@@ -3999,86 +4147,84 @@ function dragElement(elmnt) {
 	log("drag on");
     elmnt.onmousedown = dragMouseDown;
 	elmnt.onclick = onvideoclick;
-	
-	elmnt.ontouchstart = function (e) {
-		dragMouseDown(e);
-	};
+	elmnt.ontouchstart = dragMouseDown;
 	
 	var pos0 = 1;
 	function onvideoclick(e){
-		
-		log("click",e);
+		log(e);
+		log("onvideoclick");
 		e = e || window.event;
 		e.preventDefault();
 		return false;
 	}
 	
-  function dragMouseDown(e) {
-	log(e);
-	elmnt.controls = false;
-    e = e || window.event;
-    e.preventDefault();
-	
-	pos0 = input.value;
-	if(e.type == 'touchstart' || e.type == 'touchmove' || e.type == 'touchend' || e.type == 'touchcancel'){
-		var touch = e.touches[0] ||e.originalEvent.touches[0] || e.originalEvent.changedTouches[0];
-		pos3 = touch.clientX;
-		pos4 = touch.clientY;
-	} else if (e.type == 'mousedown' || e.type == 'mouseup' || e.type == 'mousemove' || e.type == 'mouseover'|| e.type=='mouseout' || e.type=='mouseenter' || e.type=='mouseleave') {
-		pos3 = e.clientX;
-		pos4 = e.clientY;
-	}
-
-	document.ontouchmove = elementDrag;
-	
-    document.onmouseup = closeDragElement;
-    // call a function whenever the cursor moves:
-    document.onmousemove = elementDrag;
-  }
-
-  function elementDrag(e) {
-    e = e || window.event;
-    e.preventDefault();
-    // calculate the new cursor position:
-	
-	if ( Date.now() - millis < 50){
-		return;
-	}
-	millis = Date.now();
-	
-	if(e.type == 'touchstart' || e.type == 'touchmove' || e.type == 'touchend' || e.type == 'touchcancel'){
-		var touch = e.touches[0] ||e.originalEvent.touches[0] || e.originalEvent.changedTouches[0];
-		pos1 =  touch.clientX;
-		pos2 =  touch.clientY;
-	} else if (e.type == 'mousedown' || e.type == 'mouseup' || e.type == 'mousemove' || e.type == 'mouseover'|| e.type=='mouseout' || e.type=='mouseenter' || e.type=='mouseleave') {
-		pos1 =  e.clientX;
-		pos2 =   e.clientY;
-	}
-	
-	var zoom =  parseFloat((pos4-pos2)*2/elmnt.offsetHeight);
-	
-	if (zoom>1){zoom =1.0;}
-	else if (zoom<-1){zoom=-1.0;}
-	//zoom=(zoom+1)/2;
+	function dragMouseDown(e) {
+		log(e);
+		log("dragMouseDown");
 		
-	input.value = zoom*(input.max - input.min) + input.min;
-	
-	if (input.value !=  pos0){
-		track0.applyConstraints({advanced: [ {zoom: input.value} ]});
-		//getById("infof").innerHTML = input.value + " " + pos0;
+		//closeDragElement(null);
+		
+		//elmnt.controls = false;
+		e = e || window.event;
+		e.preventDefault();
+
+		pos0 = input.value;
+		if(e.type == 'touchstart' || e.type == 'touchmove' || e.type == 'touchend' || e.type == 'touchcancel'){
+			var touch = e.touches[0] ||e.originalEvent.touches[0] || e.originalEvent.changedTouches[0];
+			pos3 = touch.clientX;
+			pos4 = touch.clientY;
+		} else if (e.type == 'mousedown' || e.type == 'mouseup' || e.type == 'mousemove' || e.type == 'mouseover'|| e.type=='mouseout' || e.type=='mouseenter' || e.type=='mouseleave') {
+			pos3 = e.clientX;
+			pos4 = e.clientY;
+		}
+		document.ontouchup = closeDragElement;
+		document.onmouseup = closeDragElement;
+		
+		document.ontouchmove = elementDrag;
+		document.onmousemove = elementDrag;
 	}
-	//log(pos2 +" , "+ elmnt.offsetHeight  +" , "+ parseFloat((3*pos2)/elmnt.offsetHeight) );
-	
 
-  }
+	function elementDrag(e) {
+		e = e || window.event;
+		e.preventDefault();
+		// calculate the new cursor position:
+		
+		if ( Date.now() - millis < 50){
+			return;
+		}
+		millis = Date.now();
+		
+		if(e.type == 'touchstart' || e.type == 'touchmove' || e.type == 'touchend' || e.type == 'touchcancel'){
+			var touch = e.touches[0] ||e.originalEvent.touches[0] || e.originalEvent.changedTouches[0];
+			pos1 =  touch.clientX;
+			pos2 =  touch.clientY;
+		} else if (e.type == 'mousedown' || e.type == 'mouseup' || e.type == 'mousemove' || e.type == 'mouseover'|| e.type=='mouseout' || e.type=='mouseenter' || e.type=='mouseleave') {
+			pos1 =  e.clientX;
+			pos2 =   e.clientY;
+		}
+		
+		var zoom =  parseFloat((pos4-pos2)*2/elmnt.offsetHeight);
+		
+		if (zoom>1){zoom =1.0;}
+		else if (zoom<-1){zoom=-1.0;}
+		input.value = zoom*(input.max - input.min) + input.min;
+		if (input.value !=  pos0){
+			track0.applyConstraints({advanced: [ {zoom: input.value} ]});
+		}
+	}
 
-  function closeDragElement(e) {
-	elmnt.controls=true;
-    /* stop moving when mouse button is released:*/
-    document.onmouseup = null;
-    document.onmousemove = null;
-	document.ontouchmove = null;
-  }
+	function closeDragElement(e) {
+		log(e);
+		log("closeDragElement");
+		//if (e!==null){
+		//	elmnt.controls=true;
+		//}
+		/* stop moving when mouse button is released:*/
+		document.ontouchup = null;
+		document.onmouseup = null;
+		document.onmousemove = null;
+		document.ontouchmove = null;
+	}
 }
   
   
@@ -4300,17 +4446,24 @@ function previewWebcam(){
 	}
 	
 	try{
+		log("getting permission from navigator");
 		if ("permissions" in navigator){
+			log("queried0");
 			navigator.permissions.query({name: 'camera'}).then((permissionObj) => {
+				log("queried ok");
 				log(permissionObj.state);
 				if (permissionObj.state!=="prompt"){
 					constraint.video = false;
 				}
 				requestBasicPermissions(constraint)
 			}).catch((error) => {
+				log("queried err");
 				requestBasicPermissions(constraint)
 				errorlog('Got error :', error);
 			});
+		} else {
+			log("queried not supported");
+			requestBasicPermissions(constraint);
 		}
 	} catch(e){
 		requestBasicPermissions(constraint)
@@ -4319,11 +4472,13 @@ function previewWebcam(){
 	
 	
 	
-	log("PreviewWebcam");
+	
 	
 }
 
 function requestBasicPermissions(constraint){
+	log("PreviewWebcam");
+	log(constraint);
 	try {
 	  navigator.mediaDevices.getUserMedia(constraint).timeout(15000).then(function(stream){ // Apple needs thi to happen before I can access EnumerateDevices. 
 		log("got first stream");
@@ -4380,8 +4535,17 @@ function copyFunction(copyText) {
 	}
 }
 
-
 function generateQRPage(){
+	if (getById("invite_password").value.trim().length){
+		return session.generateHash(getById("invite_password").value.trim().replace(/[\W]+/g,"_")+session.salt,4).then(function(hash){
+			generateQRPageCallback(hash);
+		});
+	} else {
+		generateQRPageCallback("");
+	}
+}
+
+function generateQRPageCallback(hash){
 	try{
 		var title = encodeURI(getById("videoname4").value);
 		if (title.length){
@@ -4425,7 +4589,7 @@ function generateQRPage(){
 		}
 		
 		if (getById("invite_password").value.trim().length){
-			sendstr+="&password=";
+			sendstr+="&hash="+hash;
 			viewstr+="&password="+getById("invite_password").value.trim();
 		}
 		
@@ -4451,10 +4615,11 @@ function generateQRPage(){
 		sendstr = 'https://' + location.host + location.pathname + '?push=' + sid + sendstr;
 		viewstr = 'https://' + location.host+ location.pathname + '?view=' + sid + viewstr + title;
 		
-		getById("gencontent").innerHTML = '<br /><div id="qrcode" style="background-color:white;display:inline-block;color:black;max-width:340px;padding:40px;"><h2 style="color:black"  data-translate="invite-link">Guest Invite Link:</h2>\
+		getById("gencontent").innerHTML = '<br /><div id="qrcode" style="background-color:white;display:inline-block;color:black;max-width:380px;padding:35px 40px 40px 40px;">\
+		<h2 style="margin:0 0 8px 0;color:black"  data-translate="invite-link">Guest Invite Link:</h2>\
 		<a class="task grabLinks" onclick="popupMessage(event);copyFunction(this)" onmousedown="copyFunction(this)"  \
-		style="cursor:copy;background-color:#CFC;border: 2px solid black;width:260px;padding:8px;margin:0px;"  href="' + sendstr + '" >'+viewstr+'</a><br /><br /></div>\
-			<br /><br />and don\'t forget the<h2 style="color:black">OBS Browser Source Link:</h2><a class="task grabLinks" data-drag="1" onmousedown="copyFunction(this)" onclick="popupMessage(event);copyFunction(this)"  style="margin:0px;cursor:grab;background-color:#FCC;width:400px;padding:10px;border:2px solid black;margin:5px;" href="' + viewstr + '" >'+viewstr+'</a> \
+		style="cursor:copy;background-color:#CFC;border: 2px solid black;width:300px;padding:8px;margin:0px;color:#000;"  href="' + sendstr + '" >'+viewstr+'</a><br /><br /></div>\
+			<br /><br />and don\'t forget the<h2 style="color:black">OBS Browser Source Link:</h2><a class="task grabLinks" data-drag="1" onmousedown="copyFunction(this)" onclick="popupMessage(event);copyFunction(this)"  style="margin:0px;cursor:grab;background-color:#FCC;width:380px;padding:10px;border:2px solid black;margin:5px;color:#000;" href="' + viewstr + '" >'+viewstr+'</a> \
 			<br /><br />\
 		<span data-translate="please-note-invite-ingestion-link">Please also note, the invite link and OBS ingestion link created is reusable, but only one person may use a specific invite at a time.</span>';
 		var qrcode = new QRCode(getById("qrcode"), {
@@ -4780,7 +4945,6 @@ var vis = (function(){
 
 document.addEventListener("dragstart", event => {
 	var url = event.target.href || event.target.value;
-	
 	if (!url || !url.startsWith('https://')) return;
 	if (event.target.dataset.drag!="1"){
 		return;
@@ -5014,4 +5178,120 @@ function EnterButtonChat(event){
 		// Trigger the button element with a click
 		sendChatMessage();
 	}
+}
+
+var defaultRecordingBitrate = false;
+function recordVideo(target, event, videoKbps = false, interval=30){  // event.currentTarget,this.parentNode.parentNode.dataset.UUID
+
+	var UUID = target.dataset.UUID;
+	var video = session.rpcs[UUID].videoElement;
+	
+	if (event === null){
+		if (defaultRecordingBitrate===false){
+			
+		}
+	} else if ((event.ctrlKey) || (event.metaKey)){
+		target.innerHTML = '<i class="las la-check"></i> <span data-translate="record"> ARMED</span>';
+		target.style.backgroundColor = "#BF3F3F";
+		Callbacks.push([recordVideo, target, null, false]);
+		log("Record Video queued");
+		defaultRecordingBitrate=false;
+		return;
+	}
+	
+	log("Record Video Clicked");
+	if ("recording" in video){
+			log("ALREADY RECORDING!");
+			target.style.backgroundColor = null;
+			target.innerHTML = '<i class="las la-circle"></i><span data-translate="record"> Record</span>';
+			video.recorder.stop();
+			session.requestRateLimit(35,UUID); // 100kbps
+			delete(video.recorder);
+			delete(video.recording);
+			return;
+		
+	} else {
+		target.style.backgroundColor = "#FCC";
+		target.innerHTML = "<i style='font-size:110%;' class='las la-file-download'></i> <span data-translate='Download'>Download</span>";
+		video.recording = true;
+	}
+	
+	video.recorder = {};
+	
+	if (videoKbps==false){
+		if (defaultRecordingBitrate==false){
+			videoKbps = 4000; // 4mbps recording bitrate
+			videoKbps = prompt("Press OK to start recording. Press again to stop and download.\n\nWarning: Keep this browser tab active to continue recording.\n\nYou can change the default video bitrate if desired below (kbps)",videoKbps);
+			videoKbps = parseInt(videoKbps);
+			defaultRecordingBitrate = videoKbps;
+		} else {
+			videoKbps = defaultRecordingBitrate;
+		}
+	} 
+	
+	if (videoKbps<35){  // this just makes sure you can't set 0 on the record bitrate.
+		videoKbps=35;
+	}
+	
+	session.requestRateLimit(parseInt(videoKbps*0.8), UUID); // 3200kbps transfer bitrate. Less than the recording bitrate, to avoid waste.
+	
+	var filename = Date.now().toString();
+	var recordedBlobs = [];
+	
+
+	var cancell = false;
+    if (typeof video.srcObject === "undefined" || !video.srcObject) {return;}
+	
+	video.recorder.stop = function (){
+        video.recorder.mediaRecorder.stop();
+		cancell = true;
+        log('Recorded Blobs: ', recordedBlobs);
+		download();
+    };
+	
+	let options = { 
+		mimeType: "video/webm",
+		videoBitsPerSecond: parseInt(videoKbps*1024) // 2.5Mbps
+	};
+	video.recorder.mediaRecorder = new MediaRecorder(video.srcObject, options); 
+	
+	function download() {
+        const blob = new Blob(recordedBlobs, { type: "video/webm" });
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.style.display = 'none';
+        a.href = url;
+        a.download = filename+".webm";
+        document.body.appendChild(a);
+        a.click();
+        setTimeout(() => {
+            document.body.removeChild(a);
+            window.URL.revokeObjectURL(url);
+        }, 100);
+    }
+	
+	function handleDataAvailable(event) {
+        if (event.data && event.data.size > 0) {
+            recordedBlobs.push(event.data);
+        }
+    }
+    
+	video.recorder.mediaRecorder.ondataavailable = handleDataAvailable;
+	
+	video.recorder.mediaRecorder.onerror = function(event) {
+		errorlog(event);
+		video.recorder.stop();
+		session.requestRateLimit(35,UUID);
+		setTimeout(function(){alert("an error occured with the media recorder; stopping recording");},1);
+	};
+	 
+	video.srcObject.ended  = function(event) {
+		video.recorder.stop();
+		session.requestRateLimit(35,UUID);
+		setTimeout(function(){alert("stream ended! stopping recording");},1);
+	};
+	  
+	video.recorder.mediaRecorder.start(100); // 100ms chunks
+
+	return;
 }

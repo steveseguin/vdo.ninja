@@ -148,6 +148,16 @@ function loadIframe(){
 		button.onclick = function(){iframe.contentWindow.postMessage({"getStats":true}, '*');};
 		iframeContainer.appendChild(button);
 		
+		var button = document.createElement("button");
+		button.innerHTML = "Request Loudness Levels";
+		button.onclick = function(){iframe.contentWindow.postMessage({"getLoudness":true}, '*');};
+		iframeContainer.appendChild(button);
+		
+		var button = document.createElement("button");
+		button.innerHTML = "Stop Sending Loudness Levels";
+		button.onclick = function(){iframe.contentWindow.postMessage({"getLoudness":false}, '*');};
+		iframeContainer.appendChild(button);
+		
 		
 		var button = document.createElement("button");
 		button.innerHTML = "Say Hello";
@@ -178,7 +188,7 @@ function loadIframe(){
 			if (e.source != iframe.contentWindow){return} // reject messages send from other iframes
 			
 			if ("stats" in e.data){
-				var outputWindow = document.createElement("outputWindow");
+				var outputWindow = document.createElement("div");
 				console.log(e.data.stats);
 				
 				
@@ -195,18 +205,38 @@ function loadIframe(){
 			}
 			
 			if ("gotChat" in e.data){
-				var outputWindow = document.createElement("outputWindow");
+				var outputWindow = document.createElement("div");
 				outputWindow.innerHTML = e.data.gotChat.msg;
 				outputWindow.style.border="1px dotted black";
 				iframeContainer.appendChild(outputWindow);
 			}
 			
 			if ("action" in e.data){
-				var outputWindow = document.createElement("outputWindow");
+				var outputWindow = document.createElement("div");
 				outputWindow.innerHTML = "child-page-action: "+e.data.action+"<br />";
 				outputWindow.style.border="1px dotted black";
 				iframeContainer.appendChild(outputWindow);
 			}
+			
+			if ("loudness" in e.data){
+				console.log(e.data);
+				if (document.getElementById("loudness")){
+					outputWindow = document.getElementById("loudness");
+				} else {
+					var outputWindow = document.createElement("div");
+					outputWindow.style.border="1px dotted black";
+					iframeContainer.appendChild(outputWindow);
+					outputWindow.id = "loudness";
+				}
+				outputWindow.innerHTML = "child-page-action: loudness<br />";
+				for (var key in e.data.loudness) {
+                    outputWindow.innerHTML += key + " Loudness: " +  e.data.loudness[key] + "\n";          
+                }
+				outputWindow.style.border="1px black";
+				
+			}
+			
+			
 		});
 		
 }
