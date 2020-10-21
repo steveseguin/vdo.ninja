@@ -1140,6 +1140,7 @@ video {
 	font-size: 1em;
 	padding: 10px;
 	margin: 5px;
+	word-break: break-all;
 }
 .grabLinks a:hover {
 	color: black !important;
@@ -1482,6 +1483,8 @@ input[type=checkbox] {
 	margin: 10px;
 	color: white;
 	position:relative;
+	max-width: 100%;
+    overflow: hidden;
 	
 }
 .directorBlock:nth-child(1) {
@@ -1558,6 +1561,9 @@ i.las.la-circle {
 	text-align: right;
 	margin: 5px;
 	font-size: 0.7em;
+	cursor: copy;
+	text-overflow: ellipsis;
+    overflow: hidden;
 }
 .streamID i {
 	margin-left: 5px;

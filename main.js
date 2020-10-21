@@ -52,7 +52,7 @@ function updateURL(param, force=false) {
 	}
 
 	if (session.sticky){
-		setCookie("settings", encodeURI(window.location.href), 90)
+		setCookie("settings", encodeURI(window.location.href), 90);
 	}
 }
 
@@ -73,6 +73,61 @@ function updateURL(param, force=false) {
 
 })(window);
 var urlParams = new URLSearchParams(window.location.search);
+
+sanitizeStreamID = function(streamID){
+	streamID = streamID.trim();
+	
+	if (streamID.length < 1){
+		streamID = session.generateStreamID(8);
+		alert("No streamID was provided; one will be generated randomily.");
+	}
+	var streamID_sanitized = streamID.replace(/[\W]+/g,"_");
+	if (streamID !== streamID_sanitized){
+		alert("Info: Only AlphaNumeric characters should be used for the stream ID.\n\nThe offending characters have been replaced by an underscore");
+	}
+	if  (streamID_sanitized.length > 24){
+		streamID_sanitized = streamID_sanitized.substring(0, 24);
+		alert("The Stream ID should be less than 25 alPhaNuMeric characters long.\n\nWe will trim it to length.");
+	}
+	return streamID_sanitized;
+};
+	
+sanitizeRoomName = function(roomid){
+	if (roomid===""){return roomid;}
+	else if (roomid===false){return roomid;}
+	
+	roomid = roomid.trim();
+	
+	if (roomid.length < 1){
+		roomid = session.generateStreamID(8);
+		alert("The room name provided was blank; one will be generated randomily.");
+	}
+	
+	var santized = roomid.replace(/[\W]+/g,"_");
+	if (santized!==roomid){
+		alert("Info: Only AlphaNumeric characters should be used for the room name.\n\nThe offending characters have been replaced by an underscore");
+	}
+	if (santized.length > 30){
+		santized = santized.substring(0, 30);
+		alert("The Room name should be less than 31 alPhaNuMeric characters long.\n\nWe will trim it to length.");
+	} 
+	return santized;
+};
+
+sanitizePassword = function(passwrd){
+	if (passwrd===""){return passwrd;}
+	else if (passwrd===false){return passwrd;}
+	
+	passwrd = passwrd.trim();
+	if (passwrd.length < 1){
+		alert("The password provided was blank.");
+	}
+	var santized = passwrd.replace(/[\W]+/g,"_");
+	if (santized!==passwrd){
+		alert("Info: Only AlphaNumeric characters should be used in the password.\n\nThe offending characters have been replaced by an underscore");
+	}
+	return santized;
+};
 
 
 if (window.obsstudio){
@@ -127,7 +182,7 @@ window.onload = function() { // This just keeps people from killing the live str
 	});
 };
 
-getById("credits").innerHTML = "Version: "+session.version+" - "+getById("credits").innerHTML
+getById("credits").innerHTML = "Version: "+session.version+" - "+getById("credits").innerHTML;
 
 var lastTouchEnd = 0;
 document.addEventListener('touchend', function (event) {
@@ -237,16 +292,16 @@ function getCookie(cname) {
 }
 
 if (getCookie("redirect") == "yes"){
-	setCookie("redirect", "", 0)
+	setCookie("redirect", "", 0);
 	session.sticky = true;
 } else if (getCookie("settings") != ""){
 	session.sticky = confirm("Would you like you load your previous session's settings?");
 	if (!session.sticky){
-		setCookie("settings", "", 0)
+		setCookie("settings", "", 0);
 		log("deleting cookie as user said no");
 	} else {
 		var cookieSettings = decodeURI(getCookie("settings"));
-		setCookie("redirect", "yes", 1)
+		setCookie("redirect", "yes", 1);
 		window.location.replace(cookieSettings);
 	}
 }
@@ -257,8 +312,8 @@ if (urlParams.has('sticky')){
 		session.sticky = true;
 	}
 	if (session.sticky){
-		setCookie("permission", "yes", 999)
-		setCookie("settings", encodeURI(window.location.href), 90)
+		setCookie("permission", "yes", 999);
+		setCookie("settings", encodeURI(window.location.href), 90);
 	}
 }
 
@@ -315,7 +370,7 @@ if (urlParams.has('password')){
 }
 
 if (session.password){
-	session.password = session.password.trim().replace(/[\W]+/g,"_");
+	session.password = sanitizePassword(session.password);
 	getById("passwordRoom").value = session.password;
 	session.defaultPassword = false;
 }
@@ -324,7 +379,7 @@ if (urlParams.has('hash') || urlParams.has('crc') || urlParams.has('check')){  /
 	var hash_input = urlParams.get('hash') || urlParams.get('crc') || urlParams.get('check');
 	if (session.password===false){
 		session.password = prompt("Please enter the password below: \n\n(Note: Passwords are case-sensitive and you will not be alerted if it is incorrect.)");
-		session.password = session.password.trim().replace(/[\W]+/g,"_");
+		session.password = sanitizePassword(session.password);
 		getById("passwordRoom").value = session.password;
 		session.defaultPassword = false;
 	} 
@@ -346,10 +401,14 @@ if (session.defaultPassword!==false){
 
 if (urlParams.has('label')){
 	session.label = decodeURIComponent(urlParams.get('label'));
+	
 	if (session.label.length==0){
-		session.label = prompt("Please enter your name");
+		session.label = prompt("Please enter your display name:");
 	}
-	document.title=session.label;
+	
+	session.label = session.label.replace(/[\W]+/g,"_").replace(/_+/g, '_'); // but not what others might get.
+	document.title=session.label.replace(/_/g, ' '); // what the result is.
+	
 	updateURL("label="+session.label, true);
 }
 
@@ -564,9 +623,9 @@ if (urlParams.has("videodevice") || urlParams.has("vdevice")  || urlParams.has("
 	} else if (session.videoDevice=="canon"){
 		session.videoDevice = "eos";
 	} else if (session.videoDevice=="camlink"){
-		session.videoDevice=="cam_link"
+		session.videoDevice = "cam_link";
 	} else if (session.videoDevice=="ndi"){
-		session.videoDevice="newtek_ndi_video"
+		session.videoDevice = "newtek_ndi_video";
 	} else if (session.videoDevice==""){
 		session.videoDevice = 1;
 	} else if (session.videoDevice=="1"){
@@ -608,12 +667,12 @@ if (urlParams.has("audiodevice") || urlParams.has("adevice")  || urlParams.has("
 	} else if (session.audioDevice=="default"){
 		session.audioDevice = 1;
 	} else if (session.audioDevice=="ndi"){
-		session.audioDevice="line_newtek_ndi_audio"
+		session.audioDevice="line_newtek_ndi_audio";
 	} else {
 		// whatever the user entered I guess
 	}
 	
-	log("session.audioDevice:" + session.audioDevice)
+	log("session.audioDevice:" + session.audioDevice);
 	
 	getById("audioMenu").style.display="none";
 	getById("headphonesDiv").style.display="none";
@@ -719,7 +778,7 @@ try {
 	}
 
 	if (urlParams.has('ln')){
-		ln_template = urlParams.get('ln')
+		ln_template = urlParams.get('ln');
 	} 
 } catch (e){errorlog(e);}
 
@@ -880,18 +939,18 @@ if (urlParams.has('maxvideobitrate') || urlParams.has('maxbitrate') || urlParams
 } 
 
 if (urlParams.has('height') || urlParams.has('h')){
-	session.height = urlParams.get('height') || urlParams.get('h')
+	session.height = urlParams.get('height') || urlParams.get('h');
 	session.height = parseInt(session.height);
 }
 
 if (urlParams.has('width') || urlParams.has('w')){
-	session.width = urlParams.get('width') || urlParams.get('w')
+	session.width = urlParams.get('width') || urlParams.get('w');
 	session.width = parseInt(session.width);
 }
 
 if (urlParams.has('quality') || urlParams.has('q')){
 	try{
-		session.quality = urlParams.get('quality') || urlParams.get('q')
+		session.quality = urlParams.get('quality') || urlParams.get('q');
 		session.quality = parseInt(session.quality);
 		getById("gear_screen").parentNode.removeChild(getById("gear_screen"));
 		getById("gear_webcam").parentNode.removeChild(getById("gear_webcam"));
@@ -942,7 +1001,7 @@ if (urlParams.has('channeloffset')){
 
 if (urlParams.has('maxviewers') || urlParams.has('mv') ){
 	
-	session.maxviewers = urlParams.get('maxviewers') || urlParams.get('mv')  
+	session.maxviewers = urlParams.get('maxviewers') || urlParams.get('mv');
 	if (session.maxviewers.length==0){
 		session.maxviewers = 1;
 	} else {
@@ -1103,7 +1162,7 @@ if (urlParams.has('turn')){
 				turn.username = turnstring[0]; // myusername
 				turn.credential = turnstring[1];  //mypassword
 				turn.urls = [turnstring[2]]; //  ["turn:turn.obs.ninja:443"];
-				session.configuration.iceServers = [{ urls: ["stun:stun.l.google.com:19302", "stun:stun4.l.google.com:19302" ]}]
+				session.configuration.iceServers = [{ urls: ["stun:stun.l.google.com:19302", "stun:stun4.l.google.com:19302" ]}];
 				session.configuration.iceServers.push(turn);
 			}
 		} catch (e){
@@ -1130,34 +1189,7 @@ if (urlParams.has('wss')){
 }
 
 window.onmessage = function(e){ // iFRAME support
-    if ("mute" in e.data){
-		if (e.data.mute == true){
-			for (var i in session.rpcs){
-				try {
-					session.rpcs[i].videoElement.muted = true;
-				} catch(e){
-					errorlog(e);
-				}
-			}
-		} else if (e.data.mute == false){
-			for (var i in session.rpcs){
-				try {
-					session.rpcs[i].videoElement.muted = false;
-				} catch(e){
-					errorlog(e);
-				}
-			}
-		} else if (e.data.mute == "toggle"){
-			for (var i in session.rpcs){
-				try {
-					session.rpcs[i].videoElement.muted = !(session.rpcs[i].videoElement.muted);
-				} catch(e){
-					errorlog(e);
-				}
-			}
-		} 
-    }
-	
+
 	if ("function" in e.data){ // these are calling in-app functions, with perhaps a callback -- TODO: add callbacks
 		var ret = null;
 		if (e.data.function === "previewWebcam"){
@@ -1175,13 +1207,39 @@ window.onmessage = function(e){ // iFRAME support
 	// Chat out gets called via getChatMessage function
 	// Related code: parent.postMessage({"chat": {"msg":-----,"type":----,"time":---} }, "*");
 	
-	if ("mic" in e.data){
-		if (e.data.mic == true){
-			toggleMute(true);
-		} else if (e.data.mic == false){
-			toggleMute(false);
-		} else if (e.data.mic == "toggle"){
+	if ("mic" in e.data){  // this should work for the director's mic mute button as well. Needs to be manually enabled the first time still tho.
+		if (e.data.mic === true){ // unmute
+			session.muted = false; // set
+			log(session.mute);
+			toggleMute(true); // apply 
+		} else if (e.data.mic === false){ // mute
+			session.muted = true; // set
+			log(session.mute);
+			toggleMute(true); // apply
+		} else if (e.data.mic === "toggle"){ // toggle
 			toggleMute();
+		} 
+	} 
+
+	if ("mute" in e.data){
+		if (e.data.mute === true){ // unmute
+			session.speakerMuted = true; // set
+			toggleSpeakerMute(true); // apply 
+		} else if (e.data.mute === false){ // mute
+			session.speakerMuted = false; // set
+			toggleSpeakerMute(true); // apply
+		} else if (e.data.mute === "toggle"){ // toggle
+			toggleSpeakerMute();
+		} 
+	} else if ("speaker" in e.data){                  // same thing as mute.
+		if (e.data.speaker === true){ // unmute
+			session.speakerMuted = false; // set
+			toggleSpeakerMute(true); // apply 
+		} else if (e.data.speaker === false){ // mute
+			session.speakerMuted = true; // set
+			toggleSpeakerMute(true); // apply
+		} else if (e.data.speaker === "toggle"){ // toggle
+			toggleSpeakerMute();
 		} 
 	}
 	
@@ -1266,7 +1324,7 @@ function pokeIframeAPI(action){
 function jumptoroom(){
 	var arr = window.location.href.split('?');
 	var roomname = getById("joinroomID").value;
-	roomname = roomname.replace(/[\W]+/g,"_");
+	roomname = sanitizeRoomName(roomname);
 	if (arr.length > 1 && arr[1] !== '') {
 		window.location+="&room="+roomname;
 	} else {
@@ -1368,7 +1426,7 @@ function drawFace(){
 		var image = new Image();
 		var zoom = 10;
 		var scale = 1;
-		var lastFace = {}
+		var lastFace = {};
 		
 		var w = vid.videoWidth;
 		var h = vid.videoHeight;
@@ -1445,11 +1503,11 @@ function drawFace(){
 			if (lastFace.h-h<0.15*lastFace.h){
 				h = h*0.999 + 0.001*lastFace.h;
 			}
-			if (Math.abs(x-(lastFace.x+lastFace.w/2))>0.15*(lastFace.x+lastFace.w/2.)){
-				x = x*0.999 + 0.001*(lastFace.x+lastFace.w/2.);
+			if (Math.abs(x-(lastFace.x+lastFace.w/2))>0.15*(lastFace.x+lastFace.w/2.0)){
+				x = x*0.999 + 0.001*(lastFace.x+lastFace.w/2.0);
 			}
-			if (Math.abs(y-(lastFace.y+lastFace.h/2))>0.15*(lastFace.y+lastFace.h/2.)){
-				y = y*0.999 + 0.001*(lastFace.y+lastFace.h/2.);
+			if (Math.abs(y-(lastFace.y+lastFace.h/2))>0.15*(lastFace.y+lastFace.h/2.0)){
+				y = y*0.999 + 0.001*(lastFace.y+lastFace.h/2.0);
 			}
 			
 			yoffset = w*9/zoom/2;
@@ -1491,7 +1549,8 @@ function drawFace(){
 var permaid=false;
 if (urlParams.has('permaid') || urlParams.has('push')){
 	permaid  = urlParams.get('permaid') || urlParams.get('push');
-	session.changeStreamID(permaid);
+	session.streamID = sanitizeStreamID(permaid);
+	
 	getById("container-1").className = 'column columnfade advanced';
 	getById("container-4").className = 'column columnfade advanced';
 	getById("info").innerHTML = "";
@@ -1533,8 +1592,7 @@ if ( (session.roomid) || (urlParams.has('roomid')) || (urlParams.has('r')) || (u
 		roomid = session.roomid;
 	}
 	
-	roomid = roomid.replace(/[\W]+/g,"_");
-	session.roomid = roomid;
+	session.roomid = sanitizeRoomName(roomid);
 	
 	if (session.audioDevice===false){
 		getById("headphonesDiv2").style.display="inline-block";
@@ -1591,8 +1649,10 @@ if ( (session.roomid) || (urlParams.has('roomid')) || (urlParams.has('r')) || (u
 		joinRoom(session.roomid); // this is a scene, so we want high resolutions
 		getById("main").style.overflow = "hidden";
 	} 
-} else if (urlParams.has('director')){ // if I do a short form of this, it will cause duplications in the code elsewhere. 
-	createRoom(urlParams.get('director').replace(/[\W]+/g,"_"));
+} else if (urlParams.has('director')){ // if I do a short form of this, it will cause duplications in the code elsewhere.
+	var director_room_input = urlParams.get('director');
+	director_room_input = sanitizeRoomName(director_room_input);
+	createRoom(director_room_input);
 } else if ((session.view) && (permaid===false)){
 	log("Update Mixer Event on REsize SET");
 	getById("translateButton").style.display = "none";
@@ -1735,17 +1795,21 @@ function updateStats(obsvc=false){
 
 function toggleMute(apply=false){ // TODO: I need to have this be MUTE, toggle, with volume not touched.
 
+	log("muting");
+
 	if (session.director){
 		if (!session.directorEnabledPPT){
+			log("Director doesn't have PPT enabled yet");
 			// director has not enabled PTT yet.
 			return;
 		}
 	}
-
+	
+	log(session.muted);
 	if (apply){
-		session.muted=!session.muted;
+		session.muted =! session.muted;
 	}
-	var ptt = getById("press2talk");
+	try{var ptt = getById("press2talk");} catch(e){var ptt=false;}
 	
 	if (session.muted==false){
 		session.muted = true;
@@ -1778,9 +1842,9 @@ function toggleMute(apply=false){ // TODO: I need to have this be MUTE, toggle, 
 
 function toggleSpeakerMute(apply=false){ // TODO: I need to have this be MUTE, toggle, with volume not touched.
 	if (apply){
-		session.speakerMuted=!session.speakerMuted;
+		session.speakerMuted =! session.speakerMuted; 
 	}
-	if (session.speakerMuted==false){
+	if (session.speakerMuted == false){
 		session.speakerMuted = true;
 		getById("mutespeakertoggle").className="las la-volume-mute my-float toggleSize";
 		getById("mutespeakerbutton").className="float2";
@@ -1790,7 +1854,7 @@ function toggleSpeakerMute(apply=false){ // TODO: I need to have this be MUTE, t
 			sounds[i].muted = session.speakerMuted;
 		}
 	} else{
-		session.speakerMuted=false;
+		session.speakerMuted = false;
 		
 		getById("mutespeakertoggle").className="las la-volume-up my-float toggleSize";
 		getById("mutespeakerbutton").className="float";
@@ -1931,7 +1995,7 @@ function directMigrate(ele, event){  // everyone in the room will hangup this gu
 	} else {
 		var migrateRoom = prompt("Transfer guests to room:", previousRoom);
 		try{
-			migrateRoom = migrateRoom.trim().replace(/[\W]+/g,"_");
+			migrateRoom = sanitizeRoomName(migrateRoom);
 			//migrateRoom=false;
 		} catch(e){}
 		stillNeedRoom=true;
@@ -2339,8 +2403,8 @@ function volumeAudioProcess( event ) {
 }
 
 function joinRoom(roomname){
-	roomname = roomname.replace(/[\W]+/g,"_");
 	if (roomname.length){
+		roomname = sanitizeRoomName(roomname);
 		log("Join room");
 		log(roomname);
 		session.joinRoom(roomname).then(function(response){  // callback from server; we've joined the room
@@ -2354,12 +2418,10 @@ function joinRoom(roomname){
 						if (response[i].UUID in session.rpcs){
 							log("RTC already connected"); /// lets just say instead of Stream, we have 
 						} else {
-							//var title = "";                            // TODO: Assign labels 
-							//if ("title" in response[i]){
-								//	title = response[i]["title"];
-								//}
-							
-							play(response[i].streamID);  // play handles the group room mechanics here
+							log(response[i].streamID);
+							var streamID = session.desaltStreamID(response[i].streamID);
+							log("STREAM ID DESALTED 3: "+streamID);
+							play(streamID);  // play handles the group room mechanics here
 						}
 					}
 				}
@@ -2374,7 +2436,7 @@ function createRoom(roomname=false){
 	
 	if (roomname==false){
 		roomname = getById("videoname1").value;
-		roomname = roomname.replace(/[\W]+/g,"_");
+		roomname = sanitizeRoomName(roomname);
 		if (roomname.length!=0){
 			updateURL("director="+roomname); // make the link reloadable.
 		}
@@ -2390,7 +2452,7 @@ function createRoom(roomname=false){
 	getById("roomid").innerHTML = session.roomid;
 	
 	var passwordRoom = getById("passwordRoom").value;
-	passwordRoom = passwordRoom.trim().replace(/[\W]+/g,"_");
+	passwordRoom = sanitizePassword(passwordRoom);
 	if (passwordRoom.length){
 		session.password=passwordRoom;
 		session.defaultPassword = false;
@@ -2534,7 +2596,9 @@ function createControlBox(UUID, soloLink, streamID){
 	controls.id = "controls_"+UUID;
 	getById("guestFeeds").appendChild(container); 
 	
-	var buttons = "<div class='streamID' onmousedown='copyFunction(this.firstElementChild.innerText)' onclick='popupMessage(event);copyFunction(this.firstElementChild.innerText)'>ID:<span style='user-select: none;'> "+streamID+"</span><i class='las la-copy' title='Copy this Stream ID to the clipboard' style='cursor:pointer'></i>\
+	var buttons = "<div class='streamID' onmousedown='copyFunction(this.firstElementChild.innerText)' onclick='popupMessage(event);copyFunction(this.firstElementChild.innerText)'>ID:<span style='user-select: none;'> "+streamID+"</span>\
+	<i class='las la-copy' title='Copy this Stream ID to the clipboard' style='cursor:pointer'></i>\
+	<span id='label_"+UUID+"'></span>\
 	</div>";
 
 	var videoContainer = document.createElement("div");	
@@ -2543,7 +2607,7 @@ function createControlBox(UUID, soloLink, streamID){
 
 	controls.innerHTML += "<div>\
 		<div style='padding:5px;word-wrap: break-word; overflow:hidden; white-space: nowrap; overflow: hidden; font-size:0.7em; text-overflow: ellipsis;' title='A direct solo view of the video/audio stream with nothing else. Its audio can be remotely controlled from here'> \
-		<a class='soloLink' data-drag='1' draggable='true' onmousedown='copyFunction(this.previousElementSibling)' onclick='popupMessage(event);copyFunction(this.previousElementSibling)' \
+		<a class='soloLink' data-drag='1' draggable='true' onmousedown='copyFunction(this)' onclick='popupMessage(event);copyFunction(this)' \
 		value='"+soloLink+"' href='"+soloLink+"'/>"+soloLink+"</a>\
 		<button class='pull-right' style='width:100%;' onmousedown='copyFunction(this.previousElementSibling)' onclick='popupMessage(event);copyFunction(this.previousElementSibling)'><i class='las la-user'></i> copy Solo link</button>\
 		</div></div>";
@@ -4469,11 +4533,6 @@ function previewWebcam(){
 		requestBasicPermissions(constraint)
 		errorlog(e);
 	}
-	
-	
-	
-	
-	
 }
 
 function requestBasicPermissions(constraint){
@@ -4536,8 +4595,9 @@ function copyFunction(copyText) {
 }
 
 function generateQRPage(){
-	if (getById("invite_password").value.trim().length){
-		return session.generateHash(getById("invite_password").value.trim().replace(/[\W]+/g,"_")+session.salt,4).then(function(hash){
+	var pass = sanitizePassword(getById("invite_password").value);
+	if (pass.length){
+		return session.generateHash(pass+session.salt,4).then(function(hash){
 			generateQRPageCallback(hash);
 		});
 	} else {
@@ -4547,8 +4607,9 @@ function generateQRPage(){
 
 function generateQRPageCallback(hash){
 	try{
-		var title = encodeURI(getById("videoname4").value);
+		var title = getById("videoname4").value;
 		if (title.length){
+			title = title.replace(/[\W]+/g,"_").replace(/_+/g, '_'); // but not what others might get.
 			title = "&label="+title;
 		}
 		var sid = session.generateStreamID(); 
@@ -4566,16 +4627,12 @@ function generateQRPageCallback(hash){
 			viewstr+="&stereo";
 			sendstr+="&stereo";
 		}
-		if (getById("invite_secure").checked){
-			sendstr+="&secure";
+		if (getById("invite_automic").checked){
+			sendstr+="&audiodevice=1";
 		}
 		if (getById("invite_hidescreen").checked){
 			sendstr+="&webcam";
 		}
-		
-		
-		
-		
 		
 		if (getById("invite_remotecontrol").checked){  //
 			var remote_gen_id = session.generateStreamID();
@@ -4585,7 +4642,7 @@ function generateQRPageCallback(hash){
 		
 		if (getById("invite_joinroom").value.trim().length){
 			sendstr+="&room="+getById("invite_joinroom").value.trim();
-			viewstr+="&scene=1&room="+getById("invite_joinroom").value.trim();
+			viewstr+="&scene&room="+getById("invite_joinroom").value.trim();
 		}
 		
 		if (getById("invite_password").value.trim().length){
@@ -4612,16 +4669,16 @@ function generateQRPageCallback(hash){
 			}
 		}
 		
-		sendstr = 'https://' + location.host + location.pathname + '?push=' + sid + sendstr;
+		sendstr = 'https://' + location.host + location.pathname + '?push=' + sid + sendstr + title;
 		viewstr = 'https://' + location.host+ location.pathname + '?view=' + sid + viewstr + title;
 		
 		getById("gencontent").innerHTML = '<br /><div id="qrcode" style="background-color:white;display:inline-block;color:black;max-width:380px;padding:35px 40px 40px 40px;">\
 		<h2 style="margin:0 0 8px 0;color:black"  data-translate="invite-link">Guest Invite Link:</h2>\
-		<a class="task grabLinks" onclick="popupMessage(event);copyFunction(this)" onmousedown="copyFunction(this)"  \
-		style="cursor:copy;background-color:#CFC;border: 2px solid black;width:300px;padding:8px;margin:0px;color:#000;"  href="' + sendstr + '" >'+viewstr+'</a><br /><br /></div>\
-			<br /><br />and don\'t forget the<h2 style="color:black">OBS Browser Source Link:</h2><a class="task grabLinks" data-drag="1" onmousedown="copyFunction(this)" onclick="popupMessage(event);copyFunction(this)"  style="margin:0px;cursor:grab;background-color:#FCC;width:380px;padding:10px;border:2px solid black;margin:5px;color:#000;" href="' + viewstr + '" >'+viewstr+'</a> \
+		<a class="task grabLinks" title="Click to copy guest invite link to clipboard" onclick="popupMessage(event);copyFunction(this)" onmousedown="copyFunction(this)"  \
+		style="word-break: break-all;cursor:copy;background-color:#CFC;border: 2px solid black;width:300px;padding:8px;margin:0px;color:#000;"  href="' + sendstr + '" >'+sendstr+' <i class="las la-paperclip" style="cursor:pointer"></i></a><br /><br /></div>\
+			<br /><br />and don\'t forget the<h2 style="color:black">OBS Browser Source Link:</h2><a class="task grabLinks" title="Click to copy or just Drag the link directly into OBS" data-drag="1" onmousedown="copyFunction(this)" onclick="popupMessage(event);copyFunction(this)"  style="word-break: break-all;margin:0px;cursor:grab;background-color:#FCC;width:380px;padding:10px;border:2px solid black;margin:5px;color:#000;" href="' + viewstr + '" >'+viewstr+' <i class="las la-paperclip" style="cursor:pointer"></i></a> \
 			<br /><br />\
-		<span data-translate="please-note-invite-ingestion-link">Please also note, the invite link and OBS ingestion link created is reusable, but only one person may use a specific invite at a time.</span>';
+		<span data-translate="please-note-invite-ingestion-link">This invite link and OBS ingestion link are reusable. Only one person may use a specific invite at a time.</span>';
 		var qrcode = new QRCode(getById("qrcode"), {
 			width : 300,
 			height : 300,

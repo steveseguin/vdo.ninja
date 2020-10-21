@@ -136,7 +136,7 @@ function generateInvite(){
 
 	if (getById("invite_joinroom").value.trim().length){
 		sendstr+="&room="+getById("invite_joinroom").value.replace(/[\W]+/g,"_");
-		viewstr+="&scene=1&room="+getById("invite_joinroom").value.replace(/[\W]+/g,"_");
+		viewstr+="&scene&room="+getById("invite_joinroom").value.replace(/[\W]+/g,"_");
 	}
 
 	if (getById("invite_group_chat_type").value){ //  0 is default

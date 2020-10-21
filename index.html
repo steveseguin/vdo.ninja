@@ -63,7 +63,7 @@
 			<link itemprop="url" href="./images/obsNinja_logo_full.png" />
 		</span>
 		<script  type="text/javascript" crossorigin="anonymous"  src="./thirdparty/CodecsHandler.js?ver=21"></script>
-		<script  type="text/javascript" crossorigin="anonymous" src="./webrtc.js?ver=84"></script>
+		<script  type="text/javascript" crossorigin="anonymous" src="./webrtc.js?ver=86"></script>
 		<input id="zoomSlider" type="range" style="display: none;" />
 		<div id="header">
 			<a id="logoname" href="./" style="text-decoration: none; color: white; margin: 2px;">
@@ -379,19 +379,19 @@
 							<div class="invite_setting_item">
 								<input type="checkbox" id="invite_bitrate" />
 								<label for="invite_bitrate">
-									<span data-translate="unlock-video-bitrate">Unlock Video Bitrate (20mbps)</span>
+									<span data-translate="unlock-video-bitrate" title="Ideal for 1080p60 gaming, if your computer and upload are up for it" >Unlock Video Bitrate (20mbps)</span>
 								</label>
 							</div>
 							<div class="invite_setting_item">
 								<input type="checkbox" id="invite_vp9" />
 								<label for="invite_vp9">
-									<span data-translate="force-vp9-video-codec">Force VP9 Video Codec (less artifacting)</span>
+									<span data-translate="force-vp9-video-codec" title="Better video compression and quality at the cost of increased CPU encoding load">Force VP9 Video Codec</span>
 								</label>
 							</div>
 							<div class="invite_setting_item">
 								<input type="checkbox" id="invite_stereo" />
 								<label for="invite_stereo">
-									<span data-translate="enable-stereo-and-pro">Enable Stereo and Pro HD Audio</span>
+									<span data-translate="enable-stereo-and-pro" title="Disable digital audio-effects and increase audio bitrate">Enable Stereo and Pro HD Audio</span>
 								</label>
 							</div>
 							<div class="invite_setting_item">
@@ -406,33 +406,33 @@
 						</div>
 						<div class="invite_setting_group">
 							<div class="invite_setting_item">
-								<input type="checkbox" id="invite_secure" />
-								<label for="invite_secure">
-									<span data-translate="high-security-mode">High Security Mode</span>
+								<input type="checkbox" id="invite_automic" />
+								<label for="invite_automic">
+									<span data-translate="hide-mic-selection" title="The guest will not have a choice over audio-options">Force Default Microphone</span>
 								</label>
 							</div>
 							<div class="invite_setting_item">
 								<input type="checkbox" id="invite_hidescreen" />
 								<label for="invite_hidescreen">
-									<span data-translate="hide-screen-share">Hide Screenshare Option</span>
+									<span data-translate="hide-screen-share" title="The guest will only be able to select their webcam as an option">Hide Screenshare Option</span>
 								</label>
 							</div>
 							<div class="invite_setting_item">
 								<input type="checkbox" id="invite_remotecontrol" />
 								<label for="invite_remotecontrol">
-									<span data-translate="allow-remote-control">Remote Control Camera Zoom (android)</span>
+									<span data-translate="allow-remote-control" title="Hold CTRL and the mouse wheel to zoom in and out remotely of compatible video streams">Remote Control Camera Zoom (android)</span>
 								</label>
 							</div>
 							<div class="invite_setting_item">
-								<span data-translate="add-a-password-to-stream"> Add a password:</span>
+								<span data-translate="add-a-password-to-stream" title="Add a password to make the stream inaccessible to those without the password"> Add a password:</span>
 								<input id="invite_password" placeholder="Add an optional password" />
 							</div>
 							<div class="invite_setting_item">
-								<span data-translate="add-the-guest-to-a-room"> Add the guest to a room:</span>
+								<span data-translate="add-the-guest-to-a-room" title="Add the guest to a group-chat room; it will be created automatically if needed."> Add the guest to a room:</span>
 								<input id="invite_joinroom" placeholder="Enter Room name here" oninput="document.getElementById('invitegroupchat').style.display='block';" />
 							</div>
 							<div class="invite_setting_item">
-								<span id="invitegroupchat" style="display: none;">
+								<span id="invitegroupchat" style="display: none;" title="Customize the room settings for this guest">
 									<label for="invite_group_chat_type" data-translate="invite-group-chat-type">This room guest can:</label>
 									<select id="invite_group_chat_type" name="invite_group_chat_type">
 										<option value="0" selected data-translate="can-see-and-hear">Can see and hear the group chat</option>
@@ -478,20 +478,16 @@
 							</i>
 							<br />
 							<li>
-								
-								<a href="https://github.com/steveseguin/obsninja/wiki/FAQ#mac-os">MacOS <i class="lab la-apple"></i> users</a> need to use OBS v23 or resort to
-								<a href="https://github.com/steveseguin/electroncapture">Window Capturing</a> a browser with OBS v25
+								<a href="https://github.com/steveseguin/obsninja/wiki/FAQ#mac-os">MacOS <i class="lab la-apple"></i> users</a> will need to use OBS v23 or resort to
+								<a href="https://github.com/steveseguin/electroncapture">Window Capturing</a> with the provided Electron-Capture app for the time being.
                             
 							</li>
-							<li>Some users will have 
-								<a href="https://github.com/steveseguin/obsninja/wiki/FAQ#video-is-pixelated">"pixelated puke"</a> graphical issues in OBS. Avoid Wi-Fi or add 
-								<b>&codec=vp9</b> to the OBS view links to reduce it.
-							</li>
-							<li>iOS devices may have audio issues, such as no sound. Fully close Safari and reopen it if nothing else seems to work to clear out these iOS bugs.
+							<li>
+								iOS devices may have audio issues, such as no sound. Fully close Safari and reopen it if nothing else seems to work to clear out these iOS bugs.
 							</li>
 							<br />
 
-                            Site Updated: October 16th, 2020. The previous version can be found at 
+                            Site Updated: October 20th, 2020. The previous version can be found at 
 							<a href="https://obs.ninja/v12/">https://obs.ninja/v12/</a> if you are having new issues.
 
 							<br />
@@ -723,7 +719,7 @@
 		// If you wish to change branding, blank offers a good clean start.
 		<script type="text/javascript" id="main-js" src="./main.js" data-translation="blank"></script>
 	-->
-		<script type="text/javascript" crossorigin="anonymous" id="main-js" src="./main.js?ver=59"></script>
-		<script type="text/javascript" crossorigin="anonymous" src="./animations.js?ver=11"></script>
+		<script type="text/javascript" crossorigin="anonymous" id="main-js" src="./main.js?ver=62"></script>
+		<script type="text/javascript" crossorigin="anonymous" src="./animations.js?ver=12"></script>
 	</body>
 </html>
