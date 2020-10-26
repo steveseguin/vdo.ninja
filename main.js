@@ -79,37 +79,41 @@ sanitizeStreamID = function(streamID){
 	
 	if (streamID.length < 1){
 		streamID = session.generateStreamID(8);
-		alert("No streamID was provided; one will be generated randomily.");
+		if (!(session.cleanOutput)){
+			alert("No streamID was provided; one will be generated randomily.\n\nStream ID: "+streamID);
+		}
 	}
 	var streamID_sanitized = streamID.replace(/[\W]+/g,"_");
 	if (streamID !== streamID_sanitized){
-		alert("Info: Only AlphaNumeric characters should be used for the stream ID.\n\nThe offending characters have been replaced by an underscore");
+		if (!(session.cleanOutput)){
+			alert("Info: Only AlphaNumeric characters should be used for the stream ID.\n\nThe offending characters have been replaced by an underscore");
+		}
 	}
 	if  (streamID_sanitized.length > 24){
 		streamID_sanitized = streamID_sanitized.substring(0, 24);
-		alert("The Stream ID should be less than 25 alPhaNuMeric characters long.\n\nWe will trim it to length.");
+		if (!(session.cleanOutput)){
+			alert("The Stream ID should be less than 25 alPhaNuMeric characters long.\n\nWe will trim it to length.");
+		}
 	}
 	return streamID_sanitized;
 };
 	
 sanitizeRoomName = function(roomid){
+	roomid = roomid.trim();
 	if (roomid===""){return roomid;}
 	else if (roomid===false){return roomid;}
 	
-	roomid = roomid.trim();
-	
-	if (roomid.length < 1){
-		roomid = session.generateStreamID(8);
-		alert("The room name provided was blank; one will be generated randomily.");
-	}
-	
 	var santized = roomid.replace(/[\W]+/g,"_");
 	if (santized!==roomid){
-		alert("Info: Only AlphaNumeric characters should be used for the room name.\n\nThe offending characters have been replaced by an underscore");
+		if (!(session.cleanOutput)){
+			alert("Info: Only AlphaNumeric characters should be used for the room name.\n\nThe offending characters have been replaced by an underscore");
+		}
 	}
 	if (santized.length > 30){
 		santized = santized.substring(0, 30);
-		alert("The Room name should be less than 31 alPhaNuMeric characters long.\n\nWe will trim it to length.");
+		if (!(session.cleanOutput)){
+			alert("The Room name should be less than 31 alPhaNuMeric characters long.\n\nWe will trim it to length.");
+		}
 	} 
 	return santized;
 };
@@ -120,18 +124,22 @@ sanitizePassword = function(passwrd){
 	
 	passwrd = passwrd.trim();
 	if (passwrd.length < 1){
-		alert("The password provided was blank.");
+		if (!(session.cleanOutput)){
+			alert("The password provided was blank.");
+		}
 	}
 	var santized = passwrd.replace(/[\W]+/g,"_");
 	if (santized!==passwrd){
-		alert("Info: Only AlphaNumeric characters should be used in the password.\n\nThe offending characters have been replaced by an underscore");
+		if (!(session.cleanOutput)){
+			alert("Info: Only AlphaNumeric characters should be used in the password.\n\nThe offending characters have been replaced by an underscore");
+		}
 	}
 	return santized;
 };
 
 
 if (window.obsstudio){
-	session.obsfix=20; // can be manually set via URL.
+	session.obsfix=15; // can be manually set via URL.  ; VP8=15, VP9=30. (previous was 20.)
 	try{
 		log("OBS VERSION:"+window.obsstudio.pluginVersion);
 		log("macOS: "+navigator.userAgent.indexOf('Mac OS X') != -1);
@@ -323,17 +331,24 @@ if (urlParams.has('retrytimeout')){
 }
 
 if( /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ) {
-	session.webcamonly = true;
+	//session.webcamonly = true;
 	getById("shareScreenGear").style.display="none";
+	getById("container-2").className = 'column columnfade advanced'; // Hide screen share on mobile
+} else if ((iOS) || (iPad)){
+	getById("shareScreenGear").style.display="none";
+	getById("container-2").className = 'column columnfade advanced'; // Hide screen share on mobile
 }
 
 if (urlParams.has('webcam') || urlParams.has('wc')){
 	session.webcamonly = true;
-	
-} 
-
-if (urlParams.has('screenshare') || urlParams.has('ss')){
+} else if (urlParams.has('screenshare') || urlParams.has('ss')){
 	session.screenshare = true;
+} else if (urlParams.has('fileshare') || urlParams.has('fs')){
+	getById("container-5").classList.remove('advanced');
+	getById("container-3").className = 'column columnfade advanced'; // Hide screen share on mobile
+	getById("container-2").className = 'column columnfade advanced'; // Hide screen share on mobile
+	getById("container-5").classList.add("skip-animation");
+	getById("container-5").classList.remove('pointer');
 }
 
 if (urlParams.has('mute') || urlParams.has('muted')){
@@ -387,7 +402,9 @@ if (urlParams.has('hash') || urlParams.has('crc') || urlParams.has('check')){  /
 	session.generateHash(session.password+session.salt,6).then(function(hash){ // million to one error. 
 		log("hash is "+hash);
 		if (hash.substring(0, 4) !== hash_input){ // hash crc checks are just first 4 characters.
-			alert("The password was incorrect.\n\nRefresh and try again.");
+			if (!(session.cleanOutput)){
+				alert("The password was incorrect.\n\nRefresh and try again.");
+			}
 		} else {
 			session.hash = hash;
 		}
@@ -444,12 +461,16 @@ if (urlParams.has('stereo') || urlParams.has('s') || urlParams.has('proaudio')){
 		session.stereo = 1;
 	}
 }
-
 if ((session.stereo==1) || (session.stereo==3) || (session.stereo==4)){
 	session.echoCancellation = false;
 	session.autoGainControl = false;
 	session.noiseSuppression = false;
 }
+if ((iOS) || (iPad)){
+	session.audiobitrate = false; // iOS devices seem to get distortion with custom audio bitrates.  Disable for now.
+	session.maxiosbitrate = 10; // this is 10-kbps by default already.
+}
+
 
 
 if (urlParams.has("aec") || urlParams.has("ec")){
@@ -513,9 +534,9 @@ if (urlParams.has("denoise") || urlParams.has("dn")){
 }
 
 
-if (urlParams.has('roombitrate') || urlParams.has('rbr')){ 
+if (urlParams.has('roombitrate') || urlParams.has('roomvideobitrate') || urlParams.has('rbr')){ 
 	log("Room BITRATE SET");
-	session.roombitrate = urlParams.get('roombitrate') || urlParams.get('rbr');
+	session.roombitrate = urlParams.get('roombitrate') || urlParams.get('rbr') || urlParams.get('roomvideobitrate');
 	session.roombitrate = parseInt(session.roombitrate);
 	if (session.roombitrate<1){
 		session.roombitrate=0;
@@ -533,6 +554,10 @@ if (urlParams.has('audiobitrate') || urlParams.has('ab')){ // both peers need th
 		session.audiobitrate=510;
 	} // this is to just prevent abuse
 }
+if ((iOS) || (iPad)){
+	session.audiobitrate = false; // iOS devices seem to get distortion with custom audio bitrates.  Disable for now.
+}
+			
 
 if (urlParams.has('streamid') || urlParams.has('view') || urlParams.has('v') || urlParams.has('pull')){  // the streams we want to view; if set, but let blank, we will request no streams to watch.  
 	session.view = urlParams.get('streamid') || urlParams.get('view') || urlParams.get('v') || urlParams.get('pull'); // this value can be comma seperated for multiple streams to pull
@@ -712,7 +737,6 @@ if (urlParams.has('noaudio') || urlParams.has('na') || urlParams.has('hideaudio'
 	log("disable audio playback");
 }
 
-
 if (urlParams.has('forceios')){
 	log("allow iOS to work in video group chat; for this user at least");
     session.forceios = true;
@@ -753,11 +777,11 @@ if (urlParams.has('maxptime')){
 if (urlParams.has('codec')){
 	log("CODEC CHANGED");
     session.codec = urlParams.get('codec').toLowerCase();
-} else if (window.obsstudio){
-	if (session.obsfix===false){
-		session.codec = "h264"; // vp8 and vp9 are not working.
-	}
-}
+} //else if (window.obsstudio){
+	//if (session.obsfix===false){
+	//	session.codec = "h264"; // H264 --- It's too laggy!!! FUCKEEEEEEE
+	//}
+//}
 
 if (urlParams.has('scale')){
 	log("Resolution scale requested");
@@ -1010,11 +1034,26 @@ if (urlParams.has('maxviewers') || urlParams.has('mv') ){
 	log("maxviewers set");
 }
 
+if (urlParams.has('maxpublishers') || urlParams.has('mp') ){
+	
+	session.maxpublishers = urlParams.get('maxpublishers') || urlParams.get('mp');
+	if (session.maxpublishers.length==0){
+		session.maxpublishers = 1;
+	} else {
+		session.maxpublishers = parseInt(session.maxpublishers);
+	}
+	log("maxpublishers set");
+}
+
 if (urlParams.has('secure')){
 	session.security = true;
 	if (!(session.cleanOutput)){
 		setTimeout(function() {alert("Enhanced Security Mode Enabled.");}, 100);
 	}
+}
+
+if (urlParams.has('random') || urlParams.has('randomize')){
+	session.randomize = true;
 }
 
 if (urlParams.has('framerate') || urlParams.has('fr') || urlParams.has('fps')){
@@ -1166,7 +1205,9 @@ if (urlParams.has('turn')){
 				session.configuration.iceServers.push(turn);
 			}
 		} catch (e){
-			alert("TURN server parameters were wrong.");
+			if (!(session.cleanOutput)){
+				alert("TURN server parameters were wrong.");
+			}
 			errorlog(e);
 		}
 	}
@@ -1177,7 +1218,9 @@ if (urlParams.has('privacy') || urlParams.has('private') || urlParams.has('relay
 	try {
 		session.configuration.iceTransportPolicy = "relay";  // https://developer.mozilla.org/en-US/docs/Web/API/RTCIceCandidate/address
 	} catch (e){
-		alert("Privacy mode failed to configure.");
+		if (!(session.cleanOutput)){
+			alert("Privacy mode failed to configure.");
+		}
 		errorlog(e);
 	}
 }
@@ -1325,10 +1368,12 @@ function jumptoroom(){
 	var arr = window.location.href.split('?');
 	var roomname = getById("joinroomID").value;
 	roomname = sanitizeRoomName(roomname);
-	if (arr.length > 1 && arr[1] !== '') {
-		window.location+="&room="+roomname;
-	} else {
-		window.location+="?room="+roomname;
+	if (roomname.length){
+		if (arr.length > 1 && arr[1] !== '') {
+			window.location+="&room="+roomname;
+		} else {
+			window.location+="?room="+roomname;
+		}
 	}
 }
 
@@ -1551,6 +1596,8 @@ if (urlParams.has('permaid') || urlParams.has('push')){
 	permaid  = urlParams.get('permaid') || urlParams.get('push');
 	session.streamID = sanitizeStreamID(permaid);
 	
+	updateURL("push="+session.streamID, true);
+	
 	getById("container-1").className = 'column columnfade advanced';
 	getById("container-4").className = 'column columnfade advanced';
 	getById("info").innerHTML = "";
@@ -1645,7 +1692,7 @@ if ( (session.roomid) || (urlParams.has('roomid')) || (urlParams.has('r')) || (u
 		getById("translateButton").style.display = "none";
 		log("Update Mixer Event on REsize SET");
 		window.addEventListener("resize", updateMixer);
-		window.addEventListener("orientationchange", updateMixer);
+		window.addEventListener("orientationchange", function(){setTimeout(updateMixer, 200);});
 		joinRoom(session.roomid); // this is a scene, so we want high resolutions
 		getById("main").style.overflow = "hidden";
 	} 
@@ -1657,7 +1704,7 @@ if ( (session.roomid) || (urlParams.has('roomid')) || (urlParams.has('r')) || (u
 	log("Update Mixer Event on REsize SET");
 	getById("translateButton").style.display = "none";
 	window.addEventListener("resize", updateMixer);
-	window.addEventListener("orientationchange", updateMixer);
+	window.addEventListener("orientationchange", function(){setTimeout(updateMixer, 200);});
 	getById("main").style.overflow = "hidden";
 } 
 
@@ -1853,7 +1900,8 @@ function toggleSpeakerMute(apply=false){ // TODO: I need to have this be MUTE, t
 		for (var i = 0; i < sounds.length; ++i){
 			sounds[i].muted = session.speakerMuted;
 		}
-	} else{
+		
+	} else {
 		session.speakerMuted = false;
 		
 		getById("mutespeakertoggle").className="las la-volume-up my-float toggleSize";
@@ -1872,7 +1920,17 @@ function toggleSpeakerMute(apply=false){ // TODO: I need to have this be MUTE, t
 				sounds[i].muted = session.speakerMuted;
 			}
 		}
-		
+	}
+	
+	for (var UUID in session.rpcs){
+		if (session.rpcs[UUID].videoElement){
+			if (UUID === session.directorUUID){
+				session.rpcs[UUID].videoElement.muted = false; // unmute director
+				log("MAKE SURE DIRECTOR ISN'T MUTED");
+			} else {
+				session.rpcs[UUID].videoElement.muted = session.speakerMuted;
+			}
+		}
 	}
 }
 
@@ -1971,34 +2029,53 @@ function toggleSettings(){ // TODO: I need to have this be MUTE, toggle, with vo
 }
 
 function hangup(){ // TODO: I need to have this be MUTE, toggle, with volume not touched.
-	session.hangup();
+	getById("main").innerHTML = "<font style='font-size:500%;top:40%;left:50%;margin:auto 0;position:absolute;'>👋</font>";
+	setTimeout(function(){session.hangup();},0);
 }
 
 function hangupComplete(){
-	getById("main").innerHTML = "<font style='font-size:500%;top:40%;left:50%;margin:auto 0;position:absolute;'>👋</font>";
+	//getById("main").innerHTML = "<font style='font-size:500%;top:40%;left:50%;margin:auto 0;position:absolute;'>👋</font>";
 }
 
 var previousRoom="";
 var stillNeedRoom=true;
+var transferCancelled = false;
 function directMigrate(ele, event){  // everyone in the room will hangup this guest also?  I like that idea.  What about the STREAM ID?  I suppose we don't kick out if the viewID matches.
 
 	if (event === false){
+		if (previousRoom===null){ // user cancelled in previous callback
+			ele.innerHTML = '<i class="las la-paper-plane"></i> <span data-translate="forward-to-room">Transfer</span>';
+			ele.style.backgroundColor = null;
+			return;
+		}
+		if (transferCancelled===true){
+			ele.innerHTML = '<i class="las la-paper-plane"></i> <span data-translate="forward-to-room">Transfer</span>';
+			ele.style.backgroundColor = null;
+			return;
+		}
 		migrateRoom = previousRoom
 	} else if ((event.ctrlKey) || (event.metaKey)){
 		ele.innerHTML = '<i class="las la-check"></i> <span data-translate="forward-to-room">Armed</span>';
 		ele.style.backgroundColor = "#BF3F3F";
-		
+		transferCancelled=false;
 		Callbacks.push([directMigrate, ele, stillNeedRoom]);
 		stillNeedRoom=false;
 		log("Migrate queued");
 		return;
 	} else {
 		var migrateRoom = prompt("Transfer guests to room:", previousRoom);
+		stillNeedRoom=true;
+		if (migrateRoom===null){ // user cancelled
+			ele.innerHTML = '<i class="las la-paper-plane"></i> <span data-translate="forward-to-room">Transfer</span>';
+			ele.style.backgroundColor = null;
+			transferCancelled=true;
+			return;
+		}
 		try{
 			migrateRoom = sanitizeRoomName(migrateRoom);
-			//migrateRoom=false;
+			previousRoom = migrateRoom;
 		} catch(e){}
-		stillNeedRoom=true;
+		
 	}
 	ele.innerHTML = '<i class="las la-paper-plane"></i> <span data-translate="forward-to-room">Transfer</span>';
 	ele.style.backgroundColor = null;
@@ -2082,6 +2159,7 @@ function directEnable(ele, event){ // A directing room only is controlled by the
 	msg.action = "display";
 	msg.value =  ele.dataset.enable;
 	msg.target = ele.dataset.UUID;
+	
 	session.sendMsg(msg); // send to everyone in the room, so they know if they are on air or not.
 }
 
@@ -2229,7 +2307,15 @@ function publishScreen(){
 	}).catch(()=>{});
 
 }
-function publishWebcam(){
+function publishWebcam(btn = false){
+	log(btn);
+	if (btn){
+		if (btn.dataset.ready == "false"){
+			warnlog("Clicked too quickly; button not enabled yet");
+			return;
+		}
+	}
+	
 	if( activatedStream == true){return;}
 	activatedStream = true;
 	log("PRESSED PUBLISH WEBCAM!!");
@@ -2247,7 +2333,7 @@ function publishWebcam(){
 			log("ROOM ID ENABLED");
 			log("Update Mixer Event on REsize SET");
 			window.addEventListener("resize", updateMixer);
-			window.addEventListener("orientationchange", updateMixer);
+			window.addEventListener("orientationchange", function(){setTimeout(updateMixer, 200);});
 			getById("main").style.overflow = "hidden";
 			session.cbr=0; // we're just going to override it
 			if (session.stereo==1){
@@ -2402,26 +2488,59 @@ function volumeAudioProcess( event ) {
     this.volume = Math.max(rms, this.volume*this.averaging);
 }
 
+function randomizeArray(unshuffled) {
+	
+	var arr = unshuffled.map((a) => ({sort: Math.random(), value: a})).sort((a, b) => a.sort - b.sort).map((a) => a.value); // shuffle once
+	
+    for (var i = arr.length - 1; i > 0; i--) {  // shuffle twice
+        var j = Math.floor(Math.random() * (i + 1));
+        var tmp = arr[i];
+        arr[i] = arr[j];
+        arr[j] = tmp;
+    }
+	return arr
+}
+
 function joinRoom(roomname){
 	if (roomname.length){
 		roomname = sanitizeRoomName(roomname);
 		log("Join room");
 		log(roomname);
-		session.joinRoom(roomname).then(function(response){  // callback from server; we've joined the room
+		session.joinRoom(roomname).then(function(response){  // callback from server; we've joined the room. Just the listing is returned
 
 			log("Members in Room");
 			log(response);
 			
-			for (var i in response){
-				if ("UUID" in response[i]){
-					if ("streamID" in response[i]){
-						if (response[i].UUID in session.rpcs){
-							log("RTC already connected"); /// lets just say instead of Stream, we have 
-						} else {
-							log(response[i].streamID);
-							var streamID = session.desaltStreamID(response[i].streamID);
-							log("STREAM ID DESALTED 3: "+streamID);
-							play(streamID);  // play handles the group room mechanics here
+			if (session.randomize===true){
+				response = randomizeArray(response);
+				log("Randomized List of Viewers");
+				log(response);
+				for (var i in response){
+					if ("UUID" in response[i]){
+						if ("streamID" in response[i]){
+							if (response[i].UUID in session.rpcs){
+								log("RTC already connected"); /// lets just say instead of Stream, we have 
+							} else {
+								log(response[i].streamID);
+								var streamID = session.desaltStreamID(response[i].streamID);
+								log("STREAM ID DESALTED 3: "+streamID);
+								setTimeout(function(sid){play(sid);} ,(Math.floor(Math.random()*100)), streamID); // add some furtherchance with up to 100ms added latency							
+							}
+						}
+					}
+				}
+			} else {
+				for (var i in response){
+					if ("UUID" in response[i]){
+						if ("streamID" in response[i]){
+							if (response[i].UUID in session.rpcs){
+								log("RTC already connected"); /// lets just say instead of Stream, we have 
+							} else {
+								log(response[i].streamID);
+								var streamID = session.desaltStreamID(response[i].streamID);
+								log("STREAM ID DESALTED 3: "+streamID);
+								play(streamID);  // play handles the group room mechanics here
+							}
 						}
 					}
 				}
@@ -2442,7 +2561,9 @@ function createRoom(roomname=false){
 		}
 	}
 	if (roomname.length==0){
-		alert("Please enter a room name before continuing");
+		if (!(session.cleanOutput)){
+			alert("Please enter a room name before continuing");
+		}
 		return;
 	}
 	log(roomname);
@@ -2542,40 +2663,12 @@ function createRoomCallback(passAdd, passAdd2){
 	onclick='popupMessage(event);copyFunction(this)'\
 	href='https://"+location.host+location.pathname+"?scene=0&room="+session.roomid+passAdd2+"' >https://"+location.host+location.pathname+"?scene=0&room="+session.roomid+passAdd2+"</a>\
 	<button class='pull-right grey' style='font-size:1.2em;' onclick='popupMessage(event);copyFunction(this.previousElementSibling )'><i class='las la-th-large'></i>Copy link</button></div>"
-	+ "</div>"
+	+ "</div>";
 	
-	+ "<div class='directorContainer half'>"
-	+ '<button class="grey" data-translate="click-for-quick-room-overview" onclick="toggle(getById(\'roomnotes2\'),this,false);"><i class="las la-question-circle"></i> Click Here for a quick overview and help</button> '
-	+ '<span id="miniPerformer"><button id="press2talk" class="grey" onclick="press2talk();"><i class="las la-headset"></i><span data-translate="push-to-talk-enable"> Enable Director\'s Push-to-Talk Mode</span></button></span>'
-	+ "</div>"
-
-	+ "<div id='roomnotes2' style='max-width:1200px;display:none;padding:0 0 0 10px;' >\
-	<font style='color:#CCC;' data-translate='welcome-to-control-room'>Welcome. This is the director's control-room for the group-chat. <br /><br />\
-	<font style='color:red'>Known Limitations with Group Rooms:</font><br />\
-	<li>iPhones and iPads <b>will not be visible to other guests</b>, but will appear to the director and inside OBS. <a target='_blank' href='https://www.reddit.com/r/OBSNinja/comments/iol981/obs_ninja_iphone/g4ekuqz/?utm_source=reddit&utm_medium=web2x&context=3'>Please see here for details.</a></li>\
-	<li>A group room can handle around 4 to 30 guests, depending on numerous factors, including CPU and available bandwidth of all guests in the room.</li>\
-	<li>Videos will appear of low quality on purpose for just the guests and the director; this is to save bandwidth and CPU resources.</li>\
-	<li>The state of the scenes, such as which videos are active in a scene, are lost when the director resets the control-room.</li>\
-	<br />\
-	There are different things you can use this room for:<br /><br />\
-	<li>You can host a group chat with friends using a room. Share the blue link to invite guests who will join the chat automatically.</li>\
-	<li>Solo-views of each video are offered under videos as they load. These can be used within an OBS Browser Source.</li>\
-	<li>You can use the auto-mixing Group Scenes, the green links, to auto arrange multiple videos for you in OBS.</li>\
-	<li>You can use this control room to record isolated video or audio streams, but it is an experimental feature still.</li>\
-	<li>Videos in the Director's room will be of low quality on purpose; to save bandwidth/CPU</li>\
-	<li>Guest's in the room will see each other's videos at a very limited quality to conserve bandwidth/CPU.</li>\
-	<li>OBS will see a guest's video in high-quality; the default video bitrate is 2500kbps.</li>\
-	<br />\
-	As guests join, their videos will appear below. You can bring their video streams into OBS as solo-scenes or you can add them to Group Scenes.\
-	<br />The Group Scenes auto-mix videos into a layout. Please note that while Scene=1 is an Auto-Mixer, it requires videos be manually added to it; they will not appear automatically.<br /><br />\
-	For advanced options and parameters, <a href=\"https://github.com/steveseguin/obsninja/wiki/Guides-and-How-to's#urlparameters\">see the Wiki.</a></font></div>";
+	if (getById("roomTemplate")){
+		gridlayout.innerHTML += getById("roomTemplate").innerHTML;
+	}
 	
-	gridlayout.innerHTML += "<div id='guestFeeds'><div id='deleteme'>\
-	<div class='vidcon' style='margin: 15px 20px 0 0; min-height: 300px;text-align: center;'><h2>Guest 1</h2><i class='las la-user-circle' style='font-size:8em; margin: 20px 0px;' aria-hidden='true'></i></div>\
-<div class='vidcon' style='margin: 15px 20px 0 0; min-height: 300px;text-align: center;'><h2>Guest 2</h2><i class='las la-user-circle' style='font-size:8em; margin: 20px 0px;' aria-hidden='true'></i></div>\
-<div class='vidcon' style='margin: 15px 20px 0 0; min-height: 300px;text-align: center;'><h2>Guest 3</h2><i class='las la-user-circle' style='font-size:8em; margin: 20px 0px;' aria-hidden='true'></i></div>\
-<div class='vidcon' style='margin: 15px 20px 0 0; min-height: 300px;text-align: center;'><h2>Guest 4</h2><i class='las la-user-circle' style='font-size:8em; margin: 20px 0px;' aria-hidden='true'></i></div>\
-<h4 style='color:#CCC;margin:20px 20px 0 20px;'>These four guest slots are just for demonstration. More than four guests can actually join a room.</h4></div></div>";
 	joinRoom(session.roomid);
 
 }
@@ -2743,12 +2836,14 @@ function requestOutputAudioStream(){
 			  });
 	  });
    } catch (e){
-	   if (window.isSecureContext) {
-			alert("An error has occured when trying to access the default audio device. The reason is not known.");
-	   } else if ((iOS) || (iPad)){
-			alert("iOS version 13.4 and up is generally recommended; older than iOS 11 is not supported.");
-	   } else {
-			alert("Error acessing the default audio device.\n\nThe website may be loaded in an insecure context.\n\nPlease see: https://developer.mozilla.org/en-US/docs/Web/API/MediaDevices/getUserMedia");
+	   if (!(session.cleanOutput)){
+		   if (window.isSecureContext) {
+				alert("An error has occured when trying to access the default audio device. The reason is not known.");
+		   } else if ((iOS) || (iPad)){
+				alert("iOS version 13.4 and up is generally recommended; older than iOS 11 is not supported.");
+		   } else {
+				alert("Error acessing the default audio device.\n\nThe website may be loaded in an insecure context.\n\nPlease see: https://developer.mozilla.org/en-US/docs/Web/API/MediaDevices/getUserMedia");
+		   }
 	   }
    }
 }
@@ -2786,12 +2881,14 @@ function requestAudioStream(){
 			  });
 	  });
    } catch (e){
-	   if (window.isSecureContext) {
-			alert("An error has occured when trying to access the default audio device. The reason is not known.");
-	   } else if ((iOS) || (iPad)){
-			alert("iOS version 13.4 and up is generally recommended; older than iOS 11 is not supported.");
-	   } else {
-			alert("Error acessing the default audio device.\n\nThe website may be loaded in an insecure context.\n\nPlease see: https://developer.mozilla.org/en-US/docs/Web/API/MediaDevices/getUserMedia");
+	   if (!(session.cleanOutput)){
+		   if (window.isSecureContext) {
+				alert("An error has occured when trying to access the default audio device. The reason is not known.");
+		   } else if ((iOS) || (iPad)){
+				alert("iOS version 13.4 and up is generally recommended; older than iOS 11 is not supported.");
+		   } else {
+				alert("Error acessing the default audio device.\n\nThe website may be loaded in an insecure context.\n\nPlease see: https://developer.mozilla.org/en-US/docs/Web/API/MediaDevices/getUserMedia");
+		   }
 	   }
    }
 }
@@ -3015,7 +3112,9 @@ function gotDevices(deviceInfos) { // https://github.com/webrtc/samples/blob/gh-
 
 
 if (location.protocol !== 'https:') {
-   alert("SSL (https) is not enabled. This site will not work without it!");
+	if (!(session.cleanOutput)){
+		alert("SSL (https) is not enabled. This site will not work without it!");
+	}
 }
 
 
@@ -3580,7 +3679,9 @@ function applyMirror(mirror, eleName='previewWebcam'){  // true unmirrors as its
 
 async function grabScreen(quality=0, audio=true){
 	if (!navigator.mediaDevices.getDisplayMedia){
-		setTimeout(function(){alert("Sorry, your browser is not supported. Please use the desktop versions of Firefox or Chrome instead");},1);
+		if (!(session.cleanOutput)){
+			setTimeout(function(){alert("Sorry, your browser is not supported. Please use the desktop versions of Firefox or Chrome instead");},1);
+		}
 		return false;
 	}
 	
@@ -3670,9 +3771,7 @@ async function grabScreen(quality=0, audio=true){
 				toggleVideoMute(true);
 				for (UUID in session.pcs){
 					try {
-						if (((iOS) || (iPad)) && (session.pcs[UUID].guest==true) && (session.pcs[UUID].forceios==false)){
-							warnlog("iOS and GUest detected");
-						} else if ((session.pcs[UUID].guest==true) && (session.roombitrate===0)) {
+						if ((session.pcs[UUID].guest==true) && (session.roombitrate===0)) {
 							log("room rate restriction detected. No videos will be published to other guests");
 						} else  if (session.pcs[UUID].allowVideo==true){  // allow 
 							var senders = session.pcs[UUID].getSenders(); // for any connected peer, update the video they have if connected with a video already.
@@ -3717,7 +3816,9 @@ async function grabScreen(quality=0, audio=true){
 			if (audio==true){
 				setTimeout(function(){grabScreen(quality, false);},1);
 			}
-			setTimeout(function(){alert(err);},1); // TypeError: Failed to execute 'getDisplayMedia' on 'MediaDevices': Audio capture is not supported
+			if (!(session.cleanOutput)){
+				setTimeout(function(){alert(err);},1); // TypeError: Failed to execute 'getDisplayMedia' on 'MediaDevices': Audio capture is not supported
+			}
 		}
 	});
 }
@@ -3769,7 +3870,8 @@ async function grabVideo(quality=0, eleName='previewWebcam', selector="select#vi
 				updateStats();
 				var gowebcam = getById("gowebcam");
 				if (gowebcam){
-					gowebcam.disabled =false;
+					gowebcam.disabled = false;
+					gowebcam.dataset.ready = "true";
 					gowebcam.style.backgroundColor = "#3C3";
 					gowebcam.style.color = "black";
 					gowebcam.style.fontWeight="bold";
@@ -3922,7 +4024,8 @@ async function grabVideo(quality=0, eleName='previewWebcam', selector="select#vi
 						updateStats(obscam);
 						var gowebcam = getById("gowebcam");
 						if (gowebcam){
-							gowebcam.disabled =false;
+							gowebcam.disabled = false;
+							gowebcam.dataset.ready = "true";
 							gowebcam.style.backgroundColor = "#3C3";
 							gowebcam.style.color = "black";
 							gowebcam.style.fontWeight="bold";
@@ -3960,10 +4063,12 @@ async function grabVideo(quality=0, eleName='previewWebcam', selector="select#vi
 					if (quality<=10){
 						grabVideo(quality+1, eleName, selector);
 					} else {
-						if (iOS){
-							alert("An error occured. Closing existing tabs in Safari may solve this issue.");
-						} else {
-							alert("Error: Could not start video source.\n\nTypically this means the Camera is already be in use elsewhere. Most webcams can only be accessed by one program at a time.\n\nTry a different camera or perhaps try re-plugging in the device.");
+						if (!(session.cleanOutput)){
+							if (iOS){
+								alert("An error occured. Closing existing tabs in Safari may solve this issue.");
+							} else {
+								alert("Error: Could not start video source.\n\nTypically this means the Camera is already be in use elsewhere. Most webcams can only be accessed by one program at a time.\n\nTry a different camera or perhaps try re-plugging in the device.");
+							}
 						}
 						activatedPreview=true;
 						if (getById('gowebcam')){
@@ -3976,14 +4081,18 @@ async function grabVideo(quality=0, eleName='previewWebcam', selector="select#vi
 					if (getById('gowebcam')){
 						getById('gowebcam').innerHTML="Problem with Camera";
 					}
-					alert("Unknown error: 'NavigatorUserMediaError'"); 
+					if (!(session.cleanOutput)){
+						alert("Unknown error: 'NavigatorUserMediaError'"); 
+					}
 					return;
 				} else if (e.name === "timedOut"){
 					activatedPreview=true;
 					if (getById('gowebcam')){
 						getById('gowebcam').innerHTML="Problem with Camera";
 					}
-					alert(e.message);
+					if (!(session.cleanOutput)){
+						alert(e.message);
+					}
 					return;
 				} else {
 					errorlog("An unknown camera error occured");
@@ -3997,10 +4106,12 @@ async function grabVideo(quality=0, eleName='previewWebcam', selector="select#vi
 					if (getById('gowebcam')){
 						getById('gowebcam').innerHTML="Problem with Camera";
 					}
-					if (session.width || session.height || session.framerate){
-						alert("Camera failed to load.\n\nPlease ensure your camera supports the resolution and framerate that has been manually specified. Perhaps use &quality=0 instead.");
-					} else {
-						alert("Camera failed to load.\n\nPlease make sure it is not already in use by another application.\n\nPlease make sure you have accepted the camera permissions.");
+					if (!(session.cleanOutput)){
+						if (session.width || session.height || session.framerate){
+							alert("Camera failed to load.\n\nPlease ensure your camera supports the resolution and framerate that has been manually specified. Perhaps use &quality=0 instead.");
+						} else {
+							alert("Camera failed to load.\n\nPlease make sure it is not already in use by another application.\n\nPlease make sure you have accepted the camera permissions.");
+						}
 					}
 				}
 			});
@@ -4078,6 +4189,7 @@ async function grabAudio(eleName="previewWebcam", selector="#audioSource", track
 	var gowebcam = getById("gowebcam");
 	if (gowebcam){
 		gowebcam.disabled =false;
+		gowebcam.dataset.ready = "true";
 		gowebcam.style.backgroundColor = "#3C3";
 		gowebcam.style.color = "black";
 		gowebcam.style.fontWeight="bold";
@@ -4332,6 +4444,7 @@ function setupWebcamSelection(stream=null){
 				var gowebcam = getById("gowebcam");
 				if (gowebcam){
 					gowebcam.disabled = true;
+					gowebcam.dataset.ready = "true";
 					gowebcam.style.backgroundColor = "#DDDDDD";
 					gowebcam.style.fontWeight="normal";
 					gowebcam.innerHTML = "Waiting for Camera to load";
@@ -4345,6 +4458,7 @@ function setupWebcamSelection(stream=null){
 				var gowebcam = getById("gowebcam");
 				if(gowebcam){
 					gowebcam.disabled = true;
+					gowebcam.dataset.ready = "true";
 					gowebcam.style.backgroundColor = "#DDDDDD";
 					gowebcam.style.fontWeight="normal";
 					gowebcam.innerHTML = "Waiting for Camera to load";
@@ -4377,6 +4491,7 @@ function setupWebcamSelection(stream=null){
 				var gowebcam = getById("gowebcam");
 				if (gowebcam){
 					gowebcam.disabled = true;
+					gowebcam.dataset.ready = "true";
 					gowebcam.style.backgroundColor = "#DDDDDD";
 					gowebcam.style.fontWeight="normal";
 					gowebcam.innerHTML = "Waiting for Camera to load";
@@ -4407,6 +4522,7 @@ function setupWebcamSelection(stream=null){
 					var gowebcam = getById("gowebcam");
 					if (gowebcam){
 						gowebcam.disabled =false;
+						gowebcam.dataset.ready = "true";
 						gowebcam.style.backgroundColor = "#3C3";
 						gowebcam.style.color = "black";
 						gowebcam.style.fontWeight="bold";
@@ -4553,25 +4669,31 @@ function requestBasicPermissions(constraint){
 				//constraints can not be satisfied by avb. devices 
 			} else if (err.name == "NotAllowedError" || err.name == "PermissionDeniedError") {
 				//permission denied in browser 
-				setTimeout(function(){alert("Permissions denied. Please ensure you have allowed the mic/camera permissions.");},1);
+				if (!(session.cleanOutput)){
+					setTimeout(function(){alert("Permissions denied. Please ensure you have allowed the mic/camera permissions.");},1);
+				}
 				return;
 			} else if (err.name == "TypeError" || err.name == "TypeError") {
 				//empty constraints object 
 			}  else {
 				//permission denied in browser 
-				setTimeout(function(){alert(err);},1);
+				if (!(session.cleanOutput)){
+					setTimeout(function(){alert(err);},1);
+				}
 			}
 		  errorlog("trying to list webcam again");
 		  setupWebcamSelection();
 	  });
 	} catch (e){
 		errorlog(e);
-		if (window.isSecureContext) {
-			alert("An error has occured when trying to access the webcam or microphone. The reason is not known.");
-		} else if ((iOS) || (iPad)){
-			alert("iOS version 13.4 and up is generally recommended; older than iOS 11 is not supported.");
-		} else {
-			alert("Error acessing camera or microphone.\n\nThe website may be loaded in an insecure context.\n\nPlease see: https://developer.mozilla.org/en-US/docs/Web/API/MediaDevices/getUserMedia");
+		if (!(session.cleanOutput)){
+			if (window.isSecureContext) {
+				alert("An error has occured when trying to access the webcam or microphone. The reason is not known.");
+			} else if ((iOS) || (iPad)){
+				alert("iOS version 13.4 and up is generally recommended; older than iOS 11 is not supported.");
+			} else {
+				alert("Error acessing camera or microphone.\n\nThe website may be loaded in an insecure context.\n\nPlease see: https://developer.mozilla.org/en-US/docs/Web/API/MediaDevices/getUserMedia");
+			}
 		}
 	}
 }
@@ -4744,7 +4866,9 @@ if ((session.view) && (session.roomid===false)){
 	log("auto playing");
 
 	if (navigator.userAgent.indexOf('Safari') != -1 && navigator.userAgent.indexOf('Chrome') == -1){ 
-		alert("Safari requires us to ask for an audio permission to use peer-to-peer technology. You will need to accept it in a moment if asked to view this live video");
+		if (!(session.cleanOutput)){
+			alert("Safari requires us to ask for an audio permission to use peer-to-peer technology. You will need to accept it in a moment if asked to view this live video");
+		}
 		navigator.mediaDevices.getUserMedia({audio: true}).then(function(){
 			play();
 		}).catch(function(){
@@ -5244,8 +5368,10 @@ function recordVideo(target, event, videoKbps = false, interval=30){  // event.c
 	var video = session.rpcs[UUID].videoElement;
 	
 	if (event === null){
-		if (defaultRecordingBitrate===false){
-			
+		if (defaultRecordingBitrate===null){
+			target.style.backgroundColor = null;
+			target.innerHTML = '<i class="las la-circle"></i><span data-translate="record"> Record</span>';
+			return;
 		}
 	} else if ((event.ctrlKey) || (event.metaKey)){
 		target.innerHTML = '<i class="las la-check"></i> <span data-translate="record"> ARMED</span>';
@@ -5279,6 +5405,14 @@ function recordVideo(target, event, videoKbps = false, interval=30){  // event.c
 		if (defaultRecordingBitrate==false){
 			videoKbps = 4000; // 4mbps recording bitrate
 			videoKbps = prompt("Press OK to start recording. Press again to stop and download.\n\nWarning: Keep this browser tab active to continue recording.\n\nYou can change the default video bitrate if desired below (kbps)",videoKbps);
+			if (videoKbps===null){
+				target.style.backgroundColor = null;
+				target.innerHTML = '<i class="las la-circle"></i><span data-translate="record"> Record</span>';
+				delete(video.recorder);
+				delete(video.recording);
+				defaultRecordingBitrate=null;
+				return;
+			}
 			videoKbps = parseInt(videoKbps);
 			defaultRecordingBitrate = videoKbps;
 		} else {
@@ -5339,13 +5473,17 @@ function recordVideo(target, event, videoKbps = false, interval=30){  // event.c
 		errorlog(event);
 		video.recorder.stop();
 		session.requestRateLimit(35,UUID);
-		setTimeout(function(){alert("an error occured with the media recorder; stopping recording");},1);
+		if (!(session.cleanOutput)){
+			setTimeout(function(){alert("an error occured with the media recorder; stopping recording");},1);
+		}
 	};
 	 
 	video.srcObject.ended  = function(event) {
 		video.recorder.stop();
 		session.requestRateLimit(35,UUID);
-		setTimeout(function(){alert("stream ended! stopping recording");},1);
+		if (!(session.cleanOutput)){
+			setTimeout(function(){alert("stream ended! stopping recording");},1);
+		}
 	};
 	  
 	video.recorder.mediaRecorder.start(100); // 100ms chunks

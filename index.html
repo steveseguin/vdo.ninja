@@ -47,12 +47,12 @@
 		<meta property="twitter:image" content="./images/obsNinja_logo_full.png" />
 		<meta name="msapplication-TileColor" content="#da532c" />
 		<meta name="theme-color" content="#ffffff" />
-		<script src="//console.re/connector.js" data-channel="obsninjadev"  type="text/javascript" id="consolerescript"></script>
+		<!--<script src="//console.re/connector.js" data-channel="obsninjadev"  type="text/javascript" id="consolerescript"></script>-->
 		<link rel="stylesheet" href="./lineawesome/css/line-awesome.min.css">
 		<script type="text/javascript" crossorigin="anonymous" src="https://webrtc.github.io/adapter/adapter-latest.js"></script>
 		<script type="text/javascript" crossorigin="anonymous" src="./thirdparty/qrcode.min.js"></script>
 		<script type="text/javascript" src="./thirdparty/jquery.min.js"></script> 
-		<link rel="stylesheet" href="./main.css?ver=14" />
+		<link rel="stylesheet" href="./main.css?ver=17" />
 	</head>
 	<body id="main" class="hidden">
 		<span itemprop="image" itemscope itemtype="image/png">
@@ -62,8 +62,8 @@
 		<span itemprop="thumbnail" itemscope itemtype="http://schema.org/ImageObject">
 			<link itemprop="url" href="./images/obsNinja_logo_full.png" />
 		</span>
-		<script  type="text/javascript" crossorigin="anonymous"  src="./thirdparty/CodecsHandler.js?ver=21"></script>
-		<script  type="text/javascript" crossorigin="anonymous" src="./webrtc.js?ver=86"></script>
+		<script  type="text/javascript" crossorigin="anonymous"  src="./thirdparty/CodecsHandler.js?ver=22"></script>
+		<script  type="text/javascript" crossorigin="anonymous" src="./webrtc.js?ver=108"></script>
 		<input id="zoomSlider" type="range" style="display: none;" />
 		<div id="header">
 			<a id="logoname" href="./" style="text-decoration: none; color: white; margin: 2px;">
@@ -207,7 +207,7 @@
 						<video id="previewWebcam" class="previewWebcam" oncanplay="updateStats();"  disablePictureInPicture controlsList="nodownload" muted autoplay playsinline ></video>
 					</p>
 					<div id="infof"></div>
-					<button onclick="publishWebcam()" id="gowebcam" class="gowebcam" disabled>
+					<button onclick="publishWebcam(this)" id="gowebcam" class="gowebcam" disabled data-ready="false" >
 						<span data-translate="waiting-for-camera">Waiting for Camera to Load</span>
 					</button>
 					<br />
@@ -455,6 +455,24 @@
 					</div>
 				</div>
 			</div>
+			<div id="container-5" class="column columnfade pointer advanced" style=" overflow-y: auto;">
+				<h2><span data-translate="share-local-video-file">Stream Media File</span></h2>
+				<div class="container-inner">
+					
+					<br /><br />
+					SELECT THE VIDEO FILE TO SHARE<br /><br />
+					<input id="fileselector" onchange="session.publishFile(this,event);" type="file" accept="video/*,audio/*"/>
+				</div>
+				<div class="outer close">
+					<div class="inner">
+						<label class="labelclass">
+							<span data-translate="back">Back</span>
+						</label>
+					</div>
+				</div>
+
+			</div>
+
 			<p></p>
 			<div id="info" class="fullcolumn columnfade">
 				<center>
@@ -482,12 +500,15 @@
 								<a href="https://github.com/steveseguin/electroncapture">Window Capturing</a> with the provided Electron-Capture app for the time being.
                             
 							</li>
+							<li>Some users will have 
+								<a href="https://github.com/steveseguin/obsninja/wiki/FAQ#video-is-pixelated">"pixel smearing"</a> problems with videos. Avoid Wi-Fi to reduce it or add <b>&codec=vp9</b> to the OBS view links to prevent it.
+							</li>
 							<li>
-								iOS devices may have audio issues, such as no sound. Fully close Safari and reopen it if nothing else seems to work to clear out these iOS bugs.
+								iOS devices may have occasional audio issues, such as no sound. Fully close Safari and reopen it if nothing else seems to work.
 							</li>
 							<br />
 
-                            Site Updated: October 20th, 2020. The previous version can be found at 
+                            🎈 Site Updated: <a href="https://www.reddit.com/r/OBSNinja/comments/jik5fk/version_13_released_change_log/">October 26th, 2020</a>. The previous version can be found at 
 							<a href="https://obs.ninja/v12/">https://obs.ninja/v12/</a> if you are having new issues.
 
 							<br />
@@ -541,7 +562,28 @@
 					<i class="las la-sign-out-alt"></i>
 					<span data-translate="disconnect-guest" >Hangup</span>
 				</button>
-
+				
+				<!--
+				<span>
+					<button data-action-type="change-quality" title="Change Video Bitrate" onclick="session.requestRateLimit(50, this.dataset.UUID);">
+						<i class="las la-circle"></i>
+						<span data-translate="change-to-low-quality"> O</span>
+					</button>
+					<button data-action-type="change-quality" title="Change Video Bitrate" onclick="session.requestRateLimit(35, this.dataset.UUID);">
+						<i class="las la-circle"></i>
+						<span data-translate="change-to-medium-quality"> L</span>
+					</button>
+					<button data-action-type="change-quality" title="Change Video Bitrate" onclick="session.requestRateLimit(1200, this.dataset.UUID);">
+						<i class="las la-circle"></i>
+						<span data-translate="change-to-high-quality"> H</span>
+					</button>
+				</span>
+				<button data-action-type="direct-chat" title="Send Direct Message" onclick="sendChatMessage(this.dataset.UUID);">
+					<i class="las la-circle"></i>
+					<span data-translate="send-direct-chat"> Message</span>
+				</button>
+				-->
+				
 				<input data-action-type="volume" class="slider"  type="range" min="1" max="100" value="100"  title="Change this Audio's volume in all remote '&scene' views" onclick="directVolume(this);" style="grid-column: 1; margin:5px; width: 90%; position: relative; top: 0px;"/>
 				
 				<button data-action-type="mute"  style="grid-column: 2;" title="Remotely Mute this Audio in all remote '&scene' views" onclick="directMute(this, event);">
@@ -601,6 +643,49 @@
 			</ul>
 		</nav>
 		
+		<div id="roomTemplate" style="display:none;">
+			<div class='directorContainer half'>
+				<button class="grey" data-translate="click-for-quick-room-overview" onclick="toggle(getById('roomnotes2'),this,false);"><i class="las la-question-circle"></i> Click Here for a quick overview and help</button>
+				<span id="miniPerformer"><button id="press2talk" class="grey" onclick="press2talk();"><i class="las la-headset"></i><span data-translate="push-to-talk-enable"> Enable Director's Push-to-Talk Mode</span></button></span>
+			</div>
+
+			<div id='roomnotes2' style='max-width:1200px;display:none;padding:0 0 0 10px;' >
+				<font style='color:#CCC;' data-translate='welcome-to-control-room'>
+					<b>Welcome. This is the director's control-room for the group-chat.</b><br /><br />
+					You can host a group chat with friends using a room. Share the blue link to invite guests who will join the chat automatically.
+					<br /><br />
+					<font style='color:red'>Known Limitations with Group Rooms:</font><br />
+					<li>A group room can handle up to around 30 guests, depending on numerous factors, including CPU and available bandwidth of all guests in the room. To achieve more than around 7-guests though, you will likely want to disable video sharing between guests. &roombitrate=0 or &novideo are options there.</li>
+					
+					<li>Videos will appear of low quality on purpose for guests and director; this is to save bandwidth and CPU resources. It will be high-quality within OBS still though.</li>
+					
+					<li>The state of the scenes, such as which videos are active in a scene, are lost when the director resets the control-room or the scene.</li>
+					<br />
+					Further Notes:<br /><br />
+					<li>Links to Solo-views of each guest video are offered under videos as they load. These can be used within an OBS Browser Source.</li>
+					<li>You can use the auto-mixing Group Scenes, the green links, to auto arrange multiple videos for you in OBS.</li>
+					<li>You can use this control room to record isolated video or audio streams, but it is an experimental feature still.</li>
+					<li>If you transfer a guest from one room to another, they won't know which room they have been transferred to.</li>
+					<li>OBS will see a guest's video in high-quality; the default video bitrate is 2500kbps. Setting higher bitrates will improve motion.</li>
+					<li>VP8 is typically the default video codec, but using &codec=v9 as a URL in OBS can help to reduce corrupted video puke issues.</li>
+					<li>&stereo=2 can be added to guests to turn off audio effects, such as echo cancellation and noise-reduction.</li>
+					<li>https://invite.cam is a free service provided that can help obfuscuate the URL parameters of an invite link given to guests.</li>
+					<li>Adding &showonly=SOME_OBS_VIRTUALCAM to the guest invite links allows for only a single video to be seen by the guests; this can be output of the OBS Virtual Camera for example</li>
+					<br />
+					
+					For advanced URL options and parameters, <a href="https://github.com/steveseguin/obsninja/wiki/Guides-and-How-to's#urlparameters">see the Wiki.</a>
+				</font>
+			</div>
+
+			<div id='guestFeeds'><div id='deleteme'>
+				<div class='vidcon' style='margin: 15px 20px 0 0; min-height: 300px;text-align: center;'><h2>Guest 1</h2><i class='las la-user-circle' style='font-size:8em; margin: 20px 0px;' aria-hidden='true'></i></div>
+				<div class='vidcon' style='margin: 15px 20px 0 0; min-height: 300px;text-align: center;'><h2>Guest 2</h2><i class='las la-user-circle' style='font-size:8em; margin: 20px 0px;' aria-hidden='true'></i></div>
+				<div class='vidcon' style='margin: 15px 20px 0 0; min-height: 300px;text-align: center;'><h2>Guest 3</h2><i class='las la-user-circle' style='font-size:8em; margin: 20px 0px;' aria-hidden='true'></i></div>
+				<div class='vidcon' style='margin: 15px 20px 0 0; min-height: 300px;text-align: center;'><h2>Guest 4</h2><i class='las la-user-circle' style='font-size:8em; margin: 20px 0px;' aria-hidden='true'></i></div>
+				<h4 style='color:#CCC;margin:20px 20px 0 20px;' data-translate='more-than-four-can-join' >These four guest slots are just for demonstration. More than four guests can actually join a room.</h4>
+			</div></div>
+		</div>
+		
 		<div id="chatModule" style="display:none;">
 			<div id="chatBody"> 
 				<div class="inMessage" data-translate='welcome-to-obs-ninja-chat'>
@@ -610,7 +695,7 @@
 					Names identifying connected peers will be a feature in an upcoming release.
 				</div>
 			</div>
-			<input id="chatInput" placeholder="Enter chat message to send here"onkeypress="EnterButtonChat(event)" />
+			<input id="chatInput" placeholder="Enter chat message to send here" onkeypress="EnterButtonChat(event)" />
 			<button style="width:60px;background-color:#EEE;" onclick="sendChatMessage()" data-translate='send-chat'>Send</button>
 		</div>
 		
@@ -656,7 +741,7 @@
 		<script>
 		
             var session = WebRTC.Media; // session is a required global variable if configuring manually. Run before loading main.js but after webrtc.js.
-			session.version = "13.beta";
+			session.version = "13.0";
             session.streamID = session.generateStreamID(); // randomly generates a streamID for this session. You can set your own programmatically if needed
 			
 			session.defaultPassword = "someEncryptionKey123"; // Disabling improves compatibility and is helpful for debugging.
@@ -719,7 +804,7 @@
 		// If you wish to change branding, blank offers a good clean start.
 		<script type="text/javascript" id="main-js" src="./main.js" data-translation="blank"></script>
 	-->
-		<script type="text/javascript" crossorigin="anonymous" id="main-js" src="./main.js?ver=62"></script>
-		<script type="text/javascript" crossorigin="anonymous" src="./animations.js?ver=12"></script>
+		<script type="text/javascript" crossorigin="anonymous" id="main-js" src="./main.js?ver=76"></script>
+		<script type="text/javascript" crossorigin="anonymous" src="./animations.js?ver=13"></script>
 	</body>
 </html>

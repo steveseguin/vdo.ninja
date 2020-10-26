@@ -109,12 +109,22 @@ input[type='checkbox']:checked {
 		max-width:486px
 	}
 }
+
+#messageDiv {
+	font-size: .7em;
+	color: #DDD;
+	transition: all 0.5s linear;
+	font-style: italic;
+	opacity: 0;
+	text-align: center;
+	margin: 10px 0;
+}
 </style></head>
 <body >
 
 <div id="header" style="-webkit-app-region: drag;color:white;font-size:2em">OBS.Ninja</div>
 <div class="formcss" >
-
+	
 	<div id='warning4mac' style="border:2px dotted; display:none;max-width:700px; padding:10px; margin:0 90px 20px 90px;color:white;font-size:1.3em"> 🚨 If using OBS v26 on macOS, right-click the Electron Capture app and disable <i>Always-on-Top</i> to reveal it during window-selection. You can enable it again afterwards.</div>
 
 	<input type="checkbox" class="check" id="prefervp9" name="prefervp9" value="false" onclick="modURL(this);">
@@ -132,7 +142,8 @@ input[type='checkbox']:checked {
 	<input type="checkbox" class="check" id="buffer" name="buffer" value="false" onclick="modURL(this);">
 	<label for="buffer">Lip-sync Fix</label>
 	
-	<br><br><br>
+	<br>
+	<div id="messageDiv" style='display:block'><br /></div>
 	<div class="formcss"><center>
 		<input type="text" id="changeText" class="inputfield" value="http://obs.ninja/?view=" onchange="modURL"   onkeyup="enterPressed(event, gohere);" />
 		<button  onclick="gohere();" id="gobutton">GO</button>
@@ -185,7 +196,12 @@ function getPermssions(e=null){
 		listed=true;
 		audioOutputSelect.focus();
 		
-	}).catch(function(){alert("Failed to list available output devices\n\nPlease ensure you allowed the microphone permissions.");});
+	}).catch(function(){
+		document.getElementById("messageDiv").innerHTML = "Failed to list available output devices\n\nPlease ensure you allowed the microphone permissions.";
+		document.getElementById("messageDiv").style.display="block";
+		setTimeout(function(){document.getElementById("messageDiv").style.opacity="1.0";},0);
+		
+		});
 }
 
 function gotDevices(deviceInfos) {
@@ -317,10 +333,13 @@ function modURL(ele=false){
 			  
 			  if (ele.id =="stereo"){
 				if (document.getElementById("stereo").checked){
-					url=updateURLParameter(url, "stereo", "");
-					alert('Audio bitrate increased to 256kbps.\n\nPlease note: the Video Publisher must also have the stereo flag enabled for stereo to work.');
+					url=updateURLParameter(url, "proaudio", "");
+					document.getElementById("messageDiv").innerHTML = "Audio bitrate increased to 256-kbps.\n\nPlease note that the Sender must also have the <b>&proaudio</b> flag added for full-effect";
+					document.getElementById("messageDiv").style.display="block";
+					setTimeout(function(){document.getElementById("messageDiv").style.opacity="1.0";},0);
 				} else {
-					url=updateURLParameter(url, "stereo", false);
+					url=updateURLParameter(url, "proaudio", false);
+					setTimeout(function(){document.getElementById("messageDiv").style.opacity="0";},0);
 				}
 			  }
 			  
