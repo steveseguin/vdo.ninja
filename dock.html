@@ -50,6 +50,12 @@ button{
 	transform-origin: 0 0;
 }
 
+.gone {
+	position: absolute;
+	display:inline-block;
+	left: -9999px;
+}
+
 </style>
 </head>
 <body>
@@ -69,17 +75,35 @@ function copyFunction(copyText) {
 
 }
 function generateStreamID(){
-		var text = "";
-		var possible = "ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnpqrstuvwxyz23456789";
-		for (var i = 0; i < 7; i++){
-			text += possible.charAt(Math.floor(Math.random() * possible.length));
+	var text = "";
+	var possible = "ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnpqrstuvwxyz23456789";
+	for (var i = 0; i < 7; i++){
+		text += possible.charAt(Math.floor(Math.random() * possible.length));
+	}
+	console.log(text);
+	return text;
+};
+function toHexString(byteArray){
+	return Array.prototype.map.call(byteArray, function(byte){
+		return ('0' + (byte & 0xFF).toString(16)).slice(-2);
+	}).join('');
+}
+generateHash = function (str, length=false){
+	var buffer = new TextEncoder("utf-8").encode(str);
+	return crypto.subtle.digest("SHA-256", buffer).then(
+		function (hash) {
+			hash = new Uint8Array(hash);
+			if (length){
+				hash = hash.slice(0, parseInt(parseInt(length)/2));
+			}
+			hash = toHexString(hash);
+			return hash;
 		}
-		console.log(text);
-		return text;
-	};
+	);
+};
 
 function generateInvite(){
-	var title = encodeURI(getById("videoname").value);
+	var title = encodeURI(getById("videoname").value.replace(/[\W]+/g,"_"));
 	if (title.length){
 		title = "&label="+title;
 	}
@@ -111,15 +135,9 @@ function generateInvite(){
 	}
 
 	if (getById("invite_joinroom").value.trim().length){
-		sendstr+="&room="+getById("invite_joinroom").value.trim();
-		viewstr+="&scene=1&room="+getById("invite_joinroom").value.trim();
+		sendstr+="&room="+getById("invite_joinroom").value.replace(/[\W]+/g,"_");
+		viewstr+="&scene&room="+getById("invite_joinroom").value.replace(/[\W]+/g,"_");
 	}
-
-	if (getById("invite_password").value.trim().length){
-		sendstr+="&password";
-		viewstr+="&password="+getById("invite_password").value.trim();
-	}
-
 
 	if (getById("invite_group_chat_type").value){ //  0 is default
 		if (getById("invite_group_chat_type").value==1){ // no video
@@ -142,13 +160,31 @@ function generateInvite(){
 	var href = window.location.href;
 	var dir = href.substring(0, href.lastIndexOf('/')) + "/";
 	
-	sendstr = dir+'?push=' + sid + sendstr;
-	viewstr = dir+'?view=' + sid + viewstr + title;
-	getById("container-setup").style.display="none";
-	getById("container-links").style.display="block";
+	var salt = location.hostname; // "obs.ninja" is the expected default. You will want to change this if hosting dock.html locally.
 	
-	getById("guest-link").value = sendstr;
-	getById("obs-link").value = viewstr;
+	if (getById("invite_password").value.trim().length){
+		generateHash(getById("invite_password").value.trim().replace(/[\W]+/g,"_")+salt,4).then(function(hash){
+			sendstr+="&hash="+hash;
+			viewstr+="&password="+getById("invite_password").value.trim();
+			sendstr = dir+'?push=' + sid + sendstr;
+			viewstr = dir+'?view=' + sid + viewstr + title;
+			getById("container-setup").style.display="none";
+			getById("container-links").style.display="block";
+			
+			getById("guest-link").value = sendstr;
+			getById("obs-link").value = viewstr;
+		});
+	} else {
+		sendstr = dir+'?push=' + sid + sendstr;
+		viewstr = dir+'?view=' + sid + viewstr + title;
+		getById("container-setup").style.display="none";
+		getById("container-links").style.display="block";
+		
+		getById("guest-link").value = sendstr;
+		getById("obs-link").value = viewstr;
+	}
+	
+	
 }
 
 function goBack(){
@@ -158,10 +194,13 @@ function goBack(){
 
 document.addEventListener("dragstart", event => {
 	var url = event.target.href || event.target.value;
+	
 	if (!url || !url.startsWith('https://')) return;
 	if (event.target.dataset.drag!="1"){
 		return;
 	}
+	//event.target.ondragend = function(){event.target.blur();}
+	
 	var streamId = url.split('view=');
 	var label = url.split('label=');
 
@@ -173,8 +212,12 @@ document.addEventListener("dragstart", event => {
 	url += '&layer-width=1920'; // this isn't always 100% correct, as the resolution can fluxuate, but it is probably good enough
 	url += '&layer-height=1080';
 	
-	console.warn(url);
+	event.dataTransfer.setDragImage(document.querySelector('#dragImage'), 24, 24);
 	event.dataTransfer.setData("text/uri-list", encodeURI(url));
+	//event.dataTransfer.setData("url", encodeURI(url));
+	
+	//warnlog(event);
+	
 });
 
 </script>
@@ -247,6 +290,10 @@ document.addEventListener("dragstart", event => {
 			<br />
 			<i>(links are draggable)</i>
 	</div>
+</div>
+<div class="gone" >
+	<!-- This image is used when dragging elements -->
+	<img src="./images/favicon-32x32.png" id="dragImage" />
 </div>
 </body>
 </html>

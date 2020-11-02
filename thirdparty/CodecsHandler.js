@@ -335,7 +335,7 @@ var CodecsHandler = (function() {
 		}
 		
         if (typeof params.maxaveragebitrate != 'undefined') {
-            appendOpusNext += ';maxaveragebitrate=' + params.maxaveragebitrate; // default 2500 (kbps)
+            appendOpusNext += ';maxaveragebitrate=' + params.maxaveragebitrate; // default 32000? (kbps)
         }
 
         if (typeof params.maxplaybackrate != 'undefined') {

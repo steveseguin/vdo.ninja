@@ -6,11 +6,16 @@ $("body").append('<style id="lightbox-animations" type="text/css"></style>');
 $(".column").on('click', function() {
 	/* The position of the container will be set to fixed, so set the top & left properties of the container */
 
+	if ( $(this).hasClass( "skip-animation" )){
+		return;
+	}
+	
+
 	var bounding_box = $(this).get(0).getBoundingClientRect();
 	$(this).css({ top: bounding_box.top + 'px', left: bounding_box.left -20+ 'px' });
 
 	/* Set container to fixed position. Add animation */
-	$(this).addClass('in-animation');
+	$(this).addClass('in-animation').removeClass('pointer');
 
 	/* An empty container has to be added in place of the lightbox container so that the elements below don't come up
 	Dimensions of this empty container is the same as the original container */
@@ -91,8 +96,8 @@ if(e.originalEvent.animationName == 'inlightbox') {
 /* On animation end from full-screen to normal */
 else if(e.originalEvent.animationName == 'outlightbox') {
 	/* Remove fixed positioning, remove animation rules */
-	$(this).removeClass('in-animation').removeClass('out-animation').removeClass('columnfade');
-
+	$(this).removeClass('in-animation').removeClass('out-animation').removeClass('columnfade').addClass('pointer');
+	
 	/* Remove the empty container that was earlier added */
 	$("#empty-container").remove();
 
