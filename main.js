@@ -893,8 +893,6 @@ if (ln_template){  // checking if manual lanuage override enabled
 		}
 		getById("qos").innerHTML = "";
 		getById("logoname").innerHTML = "";
-		getById("header").style.height = 0;
-		getById("header").style.minHeight = 0;
 		getById("helpbutton").style.display = "none";
 		getById("helpbutton").style.opacity = 0;
 		getById("mainmenu").style.opacity = 1;
