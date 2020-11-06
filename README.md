@@ -1,1 +1,1 @@
-[https://guide.obs.ninja/](https://guide.obs.ninja/)
+[https://guides.obs.ninja/](https://guides.obs.ninja/)
