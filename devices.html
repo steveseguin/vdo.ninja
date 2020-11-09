@@ -1,0 +1,28 @@
+<html>
+<head><meta charset="UTF-8"></head>
+	<body>
+	<pre><code id="json-container"></code></pre>
+<script>
+  
+    
+
+	var list = [];
+	
+
+	navigator.mediaDevices.enumerateDevices()
+	.then(function(devices) {
+	  devices.forEach(function(device) {
+		console.log(device.kind + ": " + device.label +
+					" id = " + device.deviceId);
+		list.push(device);
+	  });
+	  document.getElementById('json-container').innerHTML = JSON.stringify(list, null, 2);
+	})
+	.catch(function(err) {
+	  console.log(err.name + ": " + err.message);
+	});
+	
+	
+</script>
+</body>
+</html>

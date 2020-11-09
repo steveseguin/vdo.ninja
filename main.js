@@ -491,17 +491,23 @@ if (urlParams.has('stereo') || urlParams.has('s') || urlParams.has('proaudio')){
 		session.stereo = 0;
 	} else if (session.stereo==="1"){
 		session.stereo = 1;
+	} else if (session.stereo==="both"){
+		session.stereo = 1;
 	} else if (session.stereo==="3"){
+		session.stereo = 3;
+	} else if (session.stereo==="out"){
 		session.stereo = 3;
 	} else if (session.stereo==="4"){
 		session.stereo = 4;
-	} else if (session.stereo==="2"){  // this is for GUESTS to use in a room so they don't send out Stereo themsevles. shoudl still pull 256kbps
+	} else if (session.stereo==="2"){  
+		session.stereo = 2;
+	} else if (session.stereo==="in"){  
 		session.stereo = 2;
 	} else {
-		session.stereo = 1;
+		session.stereo = 5; // guests; no stereo in, no high bitrate in, but otherwise like stereo=1
 	}
 }
-if ((session.stereo==1) || (session.stereo==3) || (session.stereo==4)){
+if ((session.stereo==1) || (session.stereo==3) || (session.stereo==4) || (session.stereo==5)){
 	session.echoCancellation = false;
 	session.autoGainControl = false;
 	session.noiseSuppression = false;
@@ -2057,6 +2063,8 @@ function toggleSettings(){ // TODO: I need to have this be MUTE, toggle, with vo
 	
 	if (getById("popupSelector").style.display=="none"){
 		
+		updateConstraintSliders();
+		
 		setTimeout(function(){document.addEventListener("click", toggleSettings);},10);
 		
 		getById("popupSelector").addEventListener("click",function(e){
@@ -2397,8 +2405,8 @@ function publishWebcam(btn = false){
 			window.addEventListener("resize", updateMixer);
 			window.addEventListener("orientationchange", function(){setTimeout(updateMixer, 200);});
 			getById("main").style.overflow = "hidden";
-			session.cbr=0; // we're just going to override it
-			if (session.stereo==1){
+			//session.cbr=0; // we're just going to override it
+			if (session.stereo==5){
 				session.stereo=3;
 			}
 			joinRoom(session.roomid);
@@ -4034,6 +4042,9 @@ async function grabVideo(quality=0, eleName='previewWebcam', selector="select#vi
 		if (videoSelect.options[videoSelect.selectedIndex].text.startsWith("OBS-Camera")){  // OBS Virtualcam
 			mirror=true;
 			obscam = true;
+		} else if (videoSelect.options[videoSelect.selectedIndex].text.startsWith("OBS Virtual Camera")){  // OBS Virtualcam
+			mirror=true;
+			obscam = true;
 		} else if (videoSelect.options[videoSelect.selectedIndex].text.includes(" back")){  // Android
 			mirror=true;
 		} else if (videoSelect.options[videoSelect.selectedIndex].text.includes(" rear")){  // Android
@@ -4123,10 +4134,15 @@ async function grabVideo(quality=0, eleName='previewWebcam', selector="select#vi
 						getById(eleName).controls=true;
 					}
 				}
+				if (getById("popupSelector_constraints")){
+					getById("popupSelector_constraints").innerHTML = "";
+				}
 				grabVideoTimer = setTimeout(function(){
 					if (eleName=="previewWebcam"){
 						getById(eleName).controls=true;
 					}
+					updateConstraintSliders();
+					
 					dragElement(getById(eleName));
 				},1000);  // focus
 				
@@ -4480,7 +4496,90 @@ function dragElement(elmnt) {
 		document.ontouchmove = null;
 	}
 }
-  
+
+
+
+function updateConstraintSliders(){
+	getById("popupSelector_constraints").innerHTML = "";
+	
+	try {
+		var track0 = session.streamSrc.getVideoTracks();
+		track0 = track0[0];
+		if (track0.getCapabilities){
+			session.cameraConstaints = track0.getCapabilities();
+		}
+		
+		log(session.cameraConstaints);
+	} catch(e){
+		errorlog(e);
+		return;
+	}
+	
+	try {
+		var currentCameraConstaints={};
+		if (track0.getSettings){
+			currentCameraConstaints = track0.getSettings();
+		}
+	} catch(e){
+		errorlog(e);
+	}
+	
+	for (var i in session.cameraConstaints){
+		try {
+			if ((typeof session.cameraConstaints[i] ==='object') && (session.cameraConstaints[i] !== null) && ("max" in session.cameraConstaints[i]) && ("min" in session.cameraConstaints[i])){
+				log(i);
+				log(session.cameraConstaints[i]);
+				
+				if (i==="aspectRatio"){continue;}
+				else if (i==="width"){continue;}
+				else if (i==="height"){continue;}
+				else if (i==="frameRate"){continue;}
+				
+				var label = document.createElement("label");
+				label.id= "label_"+i;
+				label.htmlFor = "constraints_"+i;
+				label.innerHTML = i+":";
+				
+				var input = document.createElement("input");
+				input.min = session.cameraConstaints[i].min;
+				input.max = session.cameraConstaints[i].max;
+				
+				if (i in currentCameraConstaints){
+					input.value = currentCameraConstaints[i];
+					label.innerHTML = i+": "+currentCameraConstaints[i];
+				} else {
+					label.innerHTML = i;
+				}
+				if ("step" in session.cameraConstaints[i]){
+					input.step = session.cameraConstaints[i].step;
+				}
+				input.type = "range";
+				input.dataset.keyname = i;
+				input.id = "constraints_"+i;
+				input.style="display:block; width:95%;";
+				input.name = "constraints_"+i;
+				
+				
+				input.onchange = function(e){
+					getById("label_"+e.target.dataset.keyname).innerHTML =e.target.dataset.keyname+": "+e.target.value;
+					updateCameraConstraints(e.target.dataset.keyname, e.target.value);
+				};
+				
+				
+				
+				getById("popupSelector_constraints").appendChild(label);
+				getById("popupSelector_constraints").appendChild(input);
+			}
+		} catch(e){errorlog(e);}
+			
+	}
+}
+ 
+function updateCameraConstraints(constraint, value=null){
+	var track0 = session.streamSrc.getVideoTracks();
+	track0 = track0[0];
+	track0.applyConstraints({advanced: [ {[constraint]: value} ]});
+}
   
 function setupWebcamSelection(stream=null){
 	log("setup webcam");

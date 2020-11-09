@@ -52,7 +52,7 @@
 		<script type="text/javascript" crossorigin="anonymous" src="https://webrtc.github.io/adapter/adapter-latest.js"></script>
 		<script type="text/javascript" crossorigin="anonymous" src="./thirdparty/qrcode.min.js"></script>
 		<script type="text/javascript" src="./thirdparty/jquery.min.js"></script> 
-		<link rel="stylesheet" href="./main.css?ver=18" />
+		<link rel="stylesheet" href="./main.css?ver=22" />
 	</head>
 	<body id="main" class="hidden">
 		<span itemprop="image" itemscope itemtype="image/png">
@@ -63,7 +63,7 @@
 			<link itemprop="url" href="./images/obsNinja_logo_full.png" />
 		</span>
 		<script  type="text/javascript" crossorigin="anonymous"  src="./thirdparty/CodecsHandler.js?ver=22"></script>
-		<script  type="text/javascript" crossorigin="anonymous" src="./webrtc.js?ver=110"></script>
+		<script  type="text/javascript" crossorigin="anonymous" src="./webrtc.js?ver=111"></script>
 		<input id="zoomSlider" type="range" style="display: none;" />
 		<div id="header">
 			<a id="logoname" href="./" style="text-decoration: none; color: white; margin: 2px;">
@@ -505,9 +505,12 @@
 							<li>
 								iOS devices may have occasional audio issues, such as no sound. Fully close Safari and reopen it if nothing else seems to work.
 							</li>
+							<li>
+								The VP9 codec on Chromium-based browsers seems to lag when screen-sharing at the moment. Use the OBS Virtual Camera as a capture source instead.
+							</li>
 							<br />
 
-                            🎈 Site Updated: <a href="https://www.reddit.com/r/OBSNinja/comments/jik5fk/version_13_released_change_log/">November 2nd, 2020</a>. The previous version can be found at 
+                            🎈 Site Updated: <a href="https://www.reddit.com/r/OBSNinja/comments/jik5fk/version_13_released_change_log/">November 9th, 2020</a>. The previous version can be found at 
 							<a href="https://obs.ninja/v12/">https://obs.ninja/v12/</a> if you are having new issues.
 
 							<br />
@@ -539,7 +542,7 @@
 				<a href="https://www.flaticon.com/" title="Flaticon">www.flaticon.com</a>
 			</div>
 		</div>
-		<span id="electronDragZone" style="pointer-events: none; z-index:-10; position:absolute;top:0;left:0;width:100%;height:20%;-webkit-app-region: drag;"></span>
+		<span id="electronDragZone" style="pointer-events: none; z-index:-10; position:absolute;top:0;left:0;width:100%;height:5%;-webkit-app-region: drag;"></span>
 		<div id="gridlayout" ></div>
 		<div id="controls_blank" style="display: none;">
 			<div class="controlsGrid">
@@ -622,7 +625,10 @@
 					<select id="outputSource3" ></select>
 				</span>
 				<button id="shareScreenGear" style="padding:20px;text-align:center;" onclick="grabScreen()"><b>Share Screen</b><br /><i style="padding:5px; font-size:300%;" class="las la-desktop"></i></button><br />
-				<button onclick="toggleSettings()" style="background-color:#EFEFEF;padding:10px 12px 12px 2px;"><i class="chevron right" style="font-size:150%;top:3px;position:relative;"></i> <b>Close Settings</b></button>
+				<button onclick="toggleSettings()" style="background-color:#EFEFEF;padding:10px 12px 12px 2px;margin: 10px 0px 20px 0"><i class="chevron right" style="font-size:150%;top:3px;position:relative;"></i> <b>Close Settings</b></button>
+				<span id="popupSelector_constraints" style="display: block;">
+				
+				</span>
 			</p>
 		</div>
 		<nav id="context-menu" class="context-menu">
@@ -740,7 +746,7 @@
 		<script>
 		
             var session = WebRTC.Media; // session is a required global variable if configuring manually. Run before loading main.js but after webrtc.js.
-			session.version = "13.1";
+			session.version = "13.2";
             session.streamID = session.generateStreamID(); // randomly generates a streamID for this session. You can set your own programmatically if needed
 			
 			session.defaultPassword = "someEncryptionKey123"; // Disabling improves compatibility and is helpful for debugging.
@@ -804,7 +810,7 @@
 		// If you wish to change branding, blank offers a good clean start.
 		<script type="text/javascript" id="main-js" src="./main.js" data-translation="blank"></script>
 	-->
-		<script type="text/javascript" crossorigin="anonymous" id="main-js" src="./main.js?ver=79"></script>
+		<script type="text/javascript" crossorigin="anonymous" id="main-js" src="./main.js?ver=80"></script>
 		<script type="text/javascript" crossorigin="anonymous" src="./animations.js?ver=13"></script>
 	</body>
 </html>
