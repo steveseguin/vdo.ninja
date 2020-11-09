@@ -1,7 +1,7 @@
 /*
 *  Copyright (c) 2020 Steve Seguin. All Rights Reserved.
 *
-*  Use of this source code is governed by the APGLv3 open-source licensenavigator.userAgent
+*  Use of this source code is governed by the APGLv3 open-source license
 *  that can be found in the LICENSE file in the root of the source
 *  tree. Alternative licencing options can be made available on request.
 *
