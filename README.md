@@ -22,7 +22,7 @@ Jump to:
 
 <a name="automation">
 
-## AUTOMATING OBSN START-UP
+## AUTOMATING OBSN START-UP (currently in beta only)
 
 ![OBS Ninja | automating start-up](automation/OBSN_automation_cheat-sheet.jpg)   
 (v0.5, 2020-11-22)
