@@ -45,6 +45,9 @@ sudo ufw allow 49152:65535/tcp
 sudo ufw allow 49152:65535/udp
 ```
 
+If we expect heavy usage of this server, like hundreds of connections, you might want to ensure your system supports enough open sockets. I'm not sure if this actually works or is needed, but you can see this article for example on how to increase the number of available sockets on Ubuntu: https://medium.com/@muhammadtriwibowo/set-permanently-ulimit-n-open-files-in-ubuntu-4d61064429a  
+
+
 Update turnserver.conf with passwords, domain names, and whatever else that needs changing.  Example contents are provided below.  Once you have updated it, start the TURN server and ensure it started correctly.
 ```
 sudo vi /etc/turnserver.conf
