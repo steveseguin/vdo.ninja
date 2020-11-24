@@ -5,9 +5,9 @@
 			try {
 				var msie = window.navigator.userAgent.indexOf("MSIE ");
 				if (msie>0 || !!navigator.userAgent.match(/Trident.*rv\:11\./)){ // If MSIE or IE 11
-					alert("Internet Explorer is not supported.\n\nPlease consider using Google Chrome instead\n\nYou will be forwarded to the download page for Google Chrome now.");
+					alert("Internet Explorer is not supported.\n\nPlease consider using Microsoft Edge or Google Chrome instead\n\nYou will be forwarded to the download page for MS Edge now.");
 					console.error("INTERNET EXPLORER IS EVIL");
-					window.location = "https://www.google.com/chrome/";
+					window.location = "https://www.microsoft.com/edge";
 				}
 			} catch(e){
 				console.error(e);
@@ -47,9 +47,9 @@
 		<meta property="twitter:image" content="./images/obsNinja_logo_full.png" />
 		<meta name="msapplication-TileColor" content="#da532c" />
 		<meta name="theme-color" content="#ffffff" />
-		<!--<script src="//console.re/connector.js" data-channel="obsninjadev"  type="text/javascript" id="consolerescript"></script>-->
+		<!-- <script src="//console.re/connector.js" data-channel="obsninjadev"  type="text/javascript" id="consolerescript"></script>-->
 		<link rel="stylesheet" href="./lineawesome/css/line-awesome.min.css">
-		<script type="text/javascript" crossorigin="anonymous" src="https://webrtc.github.io/adapter/adapter-latest.js"></script>
+		<script type="text/javascript" crossorigin="anonymous" src="./thirdparty/adapter-latest.js"></script>
 		<script type="text/javascript" crossorigin="anonymous" src="./thirdparty/qrcode.min.js"></script>
 		<script type="text/javascript" src="./thirdparty/jquery.min.js"></script> 
 		<link rel="stylesheet" href="./main.css?ver=22" />
@@ -63,7 +63,7 @@
 			<link itemprop="url" href="./images/obsNinja_logo_full.png" />
 		</span>
 		<script  type="text/javascript" crossorigin="anonymous"  src="./thirdparty/CodecsHandler.js?ver=22"></script>
-		<script  type="text/javascript" crossorigin="anonymous" src="./webrtc.js?ver=111"></script>
+		<script  type="text/javascript" crossorigin="anonymous" src="./webrtc.js?ver=118"></script>
 		<input id="zoomSlider" type="range" style="display: none;" />
 		<div id="header">
 			<a id="logoname" href="./" style="text-decoration: none; color: white; margin: 2px;">
@@ -461,7 +461,7 @@
 					
 					<br /><br />
 					SELECT THE VIDEO FILE TO SHARE<br /><br />
-					<input id="fileselector" onchange="session.publishFile(this,event);" type="file" accept="video/*,audio/*"/>
+					<input id="fileselector" onchange="session.publishFile(this,event);" type="file" accept="video/*,audio/*" alt="Hold CTRL (or CMD) to select multiple files" title="Hold CTRL (or CMD) to select multiple files" multiple/>
 				</div>
 				<div class="outer close">
 					<div class="inner">
@@ -503,14 +503,14 @@
 							<li>If you have	<a href="https://github.com/steveseguin/obsninja/wiki/FAQ#video-is-pixelated">"pixel smearing"</a> or corrupted video, try adding <b>&codec=vp9</b> or &codec=h264 to the OBS view link. Using Wi-Fi will make the issue worse.
 							</li>
 							<li>
-								iOS devices may have occasional audio issues, such as no sound. Fully close Safari and reopen it if nothing else seems to work.
+								iOS devices may have occasional audio or camera issues, such as no sound. Fully close Safari and reopen it if nothing else seems to work.
 							</li>
 							<li>
 								The VP9 codec on Chromium-based browsers seems to lag when screen-sharing at the moment. Use the OBS Virtual Camera as a capture source instead.
 							</li>
 							<br />
 
-                            🎈 Site Updated: <a href="https://www.reddit.com/r/OBSNinja/comments/jik5fk/version_13_released_change_log/">November 9th, 2020</a>. The previous version can be found at 
+                            🎈 Site Updated: <a href="https://www.reddit.com/r/OBSNinja/comments/k02enh/version_134_of_obsninja_released_change_log_here/">November 24th, 2020</a>. The previous version can be found at 
 							<a href="https://obs.ninja/v12/">https://obs.ninja/v12/</a> if you are having new issues.
 
 							<br />
@@ -542,8 +542,9 @@
 				<a href="https://www.flaticon.com/" title="Flaticon">www.flaticon.com</a>
 			</div>
 		</div>
-		<span id="electronDragZone" style="pointer-events: none; z-index:-10; position:absolute;top:0;left:0;width:100%;height:5%;-webkit-app-region: drag;"></span>
+		<span id="electronDragZone" style="pointer-events: none; z-index:-10; position:absolute;top:0;left:0;width:100%;height:5%;-webkit-app-region: drag;min-height:33px;"></span>
 		<div id="gridlayout" ></div>
+		<div id="overlayMsgs" onclick="function(e){e.target.innerHTML = '';}" style="display:none"></div>
 		<div id="controls_blank" style="display: none;">
 			<div class="controlsGrid">
 
@@ -565,37 +566,29 @@
 					<span data-translate="disconnect-guest" >Hangup</span>
 				</button>
 				
-				<!--
-				<span>
-					<button data-action-type="change-quality" title="Change Video Bitrate" onclick="session.requestRateLimit(50, this.dataset.UUID);">
-						<i class="las la-circle"></i>
-						<span data-translate="change-to-low-quality"> O</span>
-					</button>
-					<button data-action-type="change-quality" title="Change Video Bitrate" onclick="session.requestRateLimit(35, this.dataset.UUID);">
-						<i class="las la-circle"></i>
-						<span data-translate="change-to-medium-quality"> L</span>
-					</button>
-					<button data-action-type="change-quality" title="Change Video Bitrate" onclick="session.requestRateLimit(1200, this.dataset.UUID);">
-						<i class="las la-circle"></i>
-						<span data-translate="change-to-high-quality"> H</span>
-					</button>
-				</span>
-				<button data-action-type="direct-chat" title="Send Direct Message" onclick="sendChatMessage(this.dataset.UUID);">
-					<i class="las la-circle"></i>
-					<span data-translate="send-direct-chat"> Message</span>
-				</button>
-				-->
-				
-				<input data-action-type="volume" class="slider"  type="range" min="1" max="100" value="100"  title="Change this Audio's volume in all remote '&scene' views" onclick="directVolume(this);" style="grid-column: 1; margin:5px; width: 90%; position: relative; top: 0px;"/>
+				<input data-action-type="volume" class="slider"  type="range" min="1" max="100" value="100"  title="Change this Audio's volume in all remote '&scene' views" onclick="directVolume(this);" style="grid-column: 1; margin:5px; width: 93%; position: relative; top: 0px; background-color:#fff0;"/>
 				
 				<button data-action-type="mute"  style="grid-column: 2;" title="Remotely Mute this Audio in all remote '&scene' views" onclick="directMute(this, event);">
 					<i class="las la-volume-off"></i>
 					<span data-translate="mute" >Mute in Scenes</span>
 				</button>
 				
+				<span>
+					<button style="width: 36px" data-action-type="change-quality" title="Disable Video Preview" onclick="toggleQualityDirector(0, this.dataset.UUID, this);">
+						<span data-translate="change-to-low-quality">&nbsp;&nbsp;<i class="las la-video-slash"></i></span>
+					</button>
+					<button style="width: 36px" data-action-type="change-quality" title="Low-Quality Preview" onclick="toggleQualityDirector(50, this.dataset.UUID, this);">
+						<span data-translate="change-to-medium-quality">&nbsp;&nbsp;<i class="las la-video"></i></span>
+					</button>
+					<button style="width: 36px" data-action-type="change-quality" title="High-Quality Preview" onclick="toggleQualityDirector(1200, this.dataset.UUID, this);">
+						<span data-translate="change-to-high-quality">&nbsp;&nbsp;<i class="las la-binoculars"></i></span>
+					</button>
+				</span>
+				<button data-action-type="direct-chat" title="Send Direct Message" onclick="directorSendMessage(this);">
+					<span data-translate="send-direct-chat"><i class="las la-envelope"></i> Message</span>
+				</button>
 				
-			</div>
-						
+			</div>	
 		</div>
 		<div id="popupSelector" style="display:none;">
 				<span id="videoMenu3" class="videoMenu">
@@ -624,9 +617,11 @@
 					</div>
 					<select id="outputSource3" ></select>
 				</span>
-				<button id="shareScreenGear" style="padding:20px;text-align:center;" onclick="grabScreen()"><b>Share Screen</b><br /><i style="padding:5px; font-size:300%;" class="las la-desktop"></i></button><br />
-				<button onclick="toggleSettings()" style="background-color:#EFEFEF;padding:10px 12px 12px 2px;margin: 10px 0px 20px 0"><i class="chevron right" style="font-size:150%;top:3px;position:relative;"></i> <b>Close Settings</b></button>
-				<span id="popupSelector_constraints" style="display: block;">
+				<button id="shareScreenGear" style="width: 135px; padding:20px;text-align:center;" onclick="grabScreen()"><b>Share Screen</b><br /><i style="padding:5px; font-size:300%;" class="las la-desktop"></i></button><br />
+				<button onclick="toggleSettings()" style="width: 135px; background-color:#EFEFEF;padding:10px 12px 12px 2px;margin: 10px 0px 20px 0"><i class="chevron right" style="font-size:150%;top:3px;position:relative;"></i> <b>Close Settings</b></button>
+				
+				<button id='advancedOptions' onclick="this.style.display = 'none'; toggle(getById('popupSelector_constraints'),false,false); " style="display:none; background-color:#EFEFEF;padding:10px 12px 12px 2px;margin: 10px 0px 0px 10px"><i class="chevron bottom" style="font-size:150%;top:3px;position:relative;"></i> <b>Show Advanced</b></button>
+				<span id="popupSelector_constraints" style="display: none;">
 				
 				</span>
 			</p>
@@ -733,7 +728,11 @@
 				<br />
 				<a onclick="changeLg('nl');toggle(document.getElementById('languages'));" style="cursor: pointer;">Dutch</a>
 				<br />
+				<a onclick="changeLg('tr');toggle(document.getElementById('languages'));" style="cursor: pointer;">Turkish</a>
+				<br />
 				<a onclick="changeLg('ja');toggle(document.getElementById('languages'));" style="cursor: pointer;">Japanese</a>
+				<br />
+				<a onclick="changeLg('cs');toggle(document.getElementById('languages'));" style="cursor: pointer;">Czech </a>
 				<br />
 				<a onclick="changeLg('pig');toggle(document.getElementById('languages'));" style="cursor: pointer;">Pig Latin</a>
 				<br />
@@ -746,7 +745,7 @@
 		<script>
 		
             var session = WebRTC.Media; // session is a required global variable if configuring manually. Run before loading main.js but after webrtc.js.
-			session.version = "13.2";
+			session.version = "13.4";
             session.streamID = session.generateStreamID(); // randomly generates a streamID for this session. You can set your own programmatically if needed
 			
 			session.defaultPassword = "someEncryptionKey123"; // Disabling improves compatibility and is helpful for debugging.
@@ -810,7 +809,7 @@
 		// If you wish to change branding, blank offers a good clean start.
 		<script type="text/javascript" id="main-js" src="./main.js" data-translation="blank"></script>
 	-->
-		<script type="text/javascript" crossorigin="anonymous" id="main-js" src="./main.js?ver=80"></script>
+		<script type="text/javascript" crossorigin="anonymous" id="main-js" src="./main.js?ver=87"></script>
 		<script type="text/javascript" crossorigin="anonymous" src="./animations.js?ver=13"></script>
 	</body>
 </html>

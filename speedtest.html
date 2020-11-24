@@ -59,9 +59,7 @@ button{
 })(window);
 var urlParams = new URLSearchParams(window.location.search);
 
-
-
-function loadIframe(){
+function loadIframe(){ // this is pretty important if you want to avoid camera permission popup problems. YOu need to load the iFRAME after  you load the parent body. A quick solution is like: <body onload=>loadIframe();"> !!!
 	
 	var streamID = "";
 	var possible = "ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnpqrstuvwxyz23456789";
@@ -74,22 +72,37 @@ function loadIframe(){
 	var iframeContainer = document.createElement("span");
 	
 	iframe.allow="autoplay";
-	var srcString = "./?push="+streamID+"&cleanoutput&privacy&audiodevice=0";
+	var srcString = "./?push="+streamID+"&cleanoutput&privacy&webcam&audiodevice=0&fullscreen";
 	
 	if (urlParams.has('turn')){
-		iframe.src = srcString+"&turn="+urlParams.get("turn");
-	} else {
-		iframe.src = srcString;
+		srcString = srcString+"&turn="+urlParams.get("turn");
 	}
+	
+	// we are changing some text on page load, just to demonstrate what's possible.
+	iframe.onload = function(e){e.target.contentWindow.postMessage({"function":"changeHTML", "target":"add_camera","value":"Select your Camera"}, '*');};
+	iframe.src = srcString;
 	
 	iframeContainer.appendChild(iframe);
 	document.getElementById("container").appendChild(iframeContainer);
+	
+	
+	
 	
 	var iframe = document.createElement("iframe");
 	var iframeContainer = document.createElement("span");
 	
 	iframe.allow="autoplay";
-	iframe.src = "./?view="+streamID+"&cleanoutput&privacy&noaudio";
+	var srcString = "./?view="+streamID+"&cleanoutput&privacy&noaudio";
+	
+	if (urlParams.has('turn')){
+		srcString = srcString+"&turn="+urlParams.get("turn");
+	}
+	
+	if (urlParams.has('buffer')){
+		srcString = srcString+"&buffer="+urlParams.get("buffer");
+	}
+	
+	iframe.src = srcString;
 	
 	iframeContainer.appendChild(iframe);
 	document.getElementById("container").appendChild(iframeContainer);
@@ -106,6 +119,9 @@ function loadIframe(){
 	button.innerHTML = "Low Bitrate";
 	button.onclick = function(){iframe.contentWindow.postMessage({"bitrate":30}, '*');}
 	document.getElementById("container").appendChild(button);
+	
+	
+	
 	
 	var button = document.createElement("button");
 	button.innerHTML = "High Bitrate";

@@ -4,7 +4,7 @@
 body{
 	padding:0;
 	margin:0;
-	background-color: rgb(253,253,253);
+	background-color: rgb(222,242,253);
 }
 iframe {
 	border:0;
@@ -33,13 +33,14 @@ button{
 </style>
 <script>
 
-function loadIframe(){
+function loadIframe(){  // this is pretty important if you want to avoid camera permission popup problems.  You can also call it automatically via: <body onload=>loadIframe();"> , but don't call it before the page loads.
 	
 	var iframe = document.createElement("iframe");
 	var iframeContainer = document.createElement("div");
 	var iframesrc = document.getElementById("viewlink").value;
 	iframe.allow="autoplay;camera;microphone";
-	iframe.allowtransparency="true"
+	iframe.allowtransparency="true";
+	iframe.allowfullscreen ="true";
 
 	if (iframesrc==""){
 		iframesrc="./";
@@ -108,6 +109,24 @@ function loadIframe(){
 		button.onclick = function(){iframe.contentWindow.postMessage({"mic":"toggle"}, '*');};
 		iframeContainer.appendChild(button);
 		
+		
+		var button = document.createElement("button");
+		button.innerHTML = "Mute Camera";
+		button.onclick = function(){iframe.contentWindow.postMessage({"camera":false}, '*');};
+		iframeContainer.appendChild(button);
+		
+		var button = document.createElement("button");
+		button.innerHTML = "Unmute Camera";
+		button.onclick = function(){iframe.contentWindow.postMessage({"camera":true}, '*');};
+		iframeContainer.appendChild(button);
+		
+		var button = document.createElement("button");
+		button.innerHTML = "Toggle Camera";
+		button.onclick = function(){iframe.contentWindow.postMessage({"camera":"toggle"}, '*');};
+		iframeContainer.appendChild(button);
+		
+		
+		
 		var button = document.createElement("button");
 		button.innerHTML = "Disconnect";
 		button.onclick = function(){iframe.contentWindow.postMessage({"close":true}, '*');};
@@ -164,14 +183,53 @@ function loadIframe(){
 		iframeContainer.appendChild(button);
 		
 		var button = document.createElement("button");
+		button.innerHTML = "Insert Style Sheet";
+		var stylesheet = "#main { zoom: 0.5;} video {float: left; margin: 0; padding: 0; } #info {display:none;}";
+		button.onclick = function(){iframe.contentWindow.postMessage({"style":stylesheet}, '*');};
+		iframeContainer.appendChild(button);
+		
+		var button = document.createElement("button");
+		button.innerHTML = "get StreamIDs and labels"; 
+		button.onclick = function(){iframe.contentWindow.postMessage({"getStreamIDs":true}, '*');};
+		iframeContainer.appendChild(button);
+		
+		var button = document.createElement("button");
+		button.innerHTML = "Start AutoMixer"; 
+		button.onclick = function(){iframe.contentWindow.postMessage({"automixer":true}, '*');};
+		iframeContainer.appendChild(button);
+		
+		var button = document.createElement("button");
+		button.innerHTML = "Stop AutoMixer"; 
+		button.onclick = function(){iframe.contentWindow.postMessage({"automixer":false}, '*');};
+		iframeContainer.appendChild(button);
+		
+		var button = document.createElement("button");
+		button.innerHTML = "Add Target Video"; 
+		button.onclick = function(){iframe.contentWindow.postMessage({"target":"*", "add":true, "settings":{"style":{"width":"640px", "height":"360px", "float":"left", "border":"10px solid red", "display":"block"}}}, '*');}; // target can be a stream ID or * for all.
+		iframeContainer.appendChild(button);
+		
+		var button = document.createElement("button");
+		button.innerHTML = "Remove Target Video"; 
+		button.onclick = function(){iframe.contentWindow.postMessage({"target":"*",  "remove": true}, '*');};  // target can be a stream ID or * for all.
+		iframeContainer.appendChild(button);
+		
+		var button = document.createElement("button");
 		button.innerHTML = "previewWebcam()";
 		button.onclick = function(){iframe.contentWindow.postMessage({"function":"previewWebcam"}, '*');};  // publishScreen
+		iframeContainer.appendChild(button);
+		
+		var button = document.createElement("button");
+		button.innerHTML = "Change Add Camera text";
+		button.onclick = function(){iframe.contentWindow.postMessage({"function":"changeHTML", "target":"add_camera", "value":"NEW CAMERA TEXT"}, '*');};  // change text of add camera button
 		iframeContainer.appendChild(button);
 		
 		var button = document.createElement("button");
 		button.innerHTML = "CLOSE IFRAME";
 		button.onclick = function(){iframeContainer.parentNode.removeChild(iframeContainer);};
 		iframeContainer.appendChild(button);
+		
+		
+		
 		
 		
 		////////////  LISTEN FOR EVENTS
@@ -213,6 +271,17 @@ function loadIframe(){
 			if ("action" in e.data){
 				var outputWindow = document.createElement("div");
 				outputWindow.innerHTML = "child-page-action: "+e.data.action+"<br />";
+				outputWindow.style.border="1px dotted black";
+				iframeContainer.appendChild(outputWindow);
+			}
+			
+			
+			if ("streamIDs" in e.data){
+				var outputWindow = document.createElement("div");
+				outputWindow.innerHTML = "child-page-action: streamIDs<br />";
+				for (var key in e.data.streamIDs) {
+                    outputWindow.innerHTML += "streamID: " +  key + ", label:"+e.data.streamIDs[key] + "\n";          
+                }
 				outputWindow.style.border="1px dotted black";
 				iframeContainer.appendChild(outputWindow);
 			}

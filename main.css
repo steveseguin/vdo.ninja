@@ -127,11 +127,42 @@ button.white:active {
 
 #header {
 	width: 100%;
-	min-height: 24px;
+	padding: 1px;
 	background-color: #0F131D;
 	color: #FFF;
 }
 
+#overlayMsgs{
+	margin:0 auto;
+	background-color: #0000;
+	color: white;
+	font-family: Cousine, monospace;
+	font-size: 4em;
+	line-height: 1.5em;
+	letter-spacing: 0.0em;
+	text-shadow: 0.05em 0.05em 0px rgba(0,0,0,1);
+	width:100%;
+	height:100vh;
+	z-index: 1;
+    vertical-align: top;
+    text-align: center;
+    top: 0;
+    position: fixed;
+	overflow-wrap: anywhere;
+	padding:3%;
+	pointer-events: none
+}
+#overlayMsgs span{
+	background-color: #000A;
+	padding: 8px 8px 0px 8px;
+	margin:10px;
+	text-align: center;
+	width:100%;
+	pointer-events: none
+}
+#popupSelector_constraints{
+	margin:30px 9% 0 7%;
+}
 .credits {
 	color: #101020;
 	position: fixed;
@@ -495,13 +526,13 @@ input[type=range]::-webkit-slider-runnable-track {
 input[type=range]::-webkit-slider-thumb {
   box-shadow: 1px 1px 1px #000000, 0px 0px 1px #0d0d0d;
   border: 1px solid #000000;
-  height: 36px;
+  height: 30px;
   width: 16px;
   border-radius: 3px;
   background: #ffffff;
   cursor: pointer;
   -webkit-appearance: none;
-  margin-top: -14px;
+  margin-top: -11px;
 }
 input[type=range]:focus::-webkit-slider-runnable-track {
   background: #367ebd;
@@ -1066,8 +1097,14 @@ img {
 .close-btn:hover {
 	color: darkgray;
 }
+#chattoggle{
+	top: 0.5px;
+    position: relative;
+}
+
 .la-phone {
 	color: red;
+	top:0.5;
 }
 @-webkit-keyframes animatetop {
 	from {
@@ -1095,6 +1132,12 @@ video {
 	background-color: transparent !important;
 	border: 0;
 	margin: 0;
+	user-select:none;
+	-webkit-user-select: none; /* Chrome/Safari */        
+	-moz-user-select: none; /* Firefox */
+	-ms-user-select: none; /* IE10+ */
+	-webkit-tap-highlight-color:transparent;
+	outline-style:none;
 	background-size: auto 50px;
 	background-repeat: no-repeat;
 	background-position: center;
@@ -1446,7 +1489,7 @@ input[type=checkbox] {
 	border-radius: 5px;
 	padding: 1px 7px;
 	overflow-y:scroll;
-	overflow-wrap: break-word;
+	overflow-wrap: anywhere;
 	max-height: 800px;
 }
 
