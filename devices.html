@@ -1,28 +1,94 @@
 <html>
-<head><meta charset="UTF-8"></head>
+	<head>
+		<link rel="stylesheet" href="./lineawesome/css/line-awesome.min.css" />
+		<link rel="stylesheet" href="./main.css?ver=11" />
+		<link rel="stylesheet" href="./devices.css?ver=1" />
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		<meta charset="utf8" />
+	</head>
 	<body>
-	<pre><code id="json-container"></code></pre>
-<script>
-  
-    
+		<div id="header">
+			<a
+				id="logoname"
+				href="./"
+				style="text-decoration: none; color: white; margin: 2px"
+			>
+				<span data-translate="logo-header">
+					<font id="qos">O</font>BS.Ninja
+				</span>
+			</a>
+		</div>
+		<div id="devices">
+			<div class="notice">Device IDs are bound to a combination of domain and browser. <br/>If you want to use electron-capture, open this URL on the electron-capture app.</div>
+			<div class="notice">Check for browser and camera capabilities <a href="/supports">here</a>.</div>
+				<div class="card">
+				<h1>🎤 Audio Inputs</h1>
+				<div id="audioInputs"></div>
+			</div>
+			<div class="card">
+				<h1>📹 Video Inputs</h1>
+				<div id="videoInputs"></div>
+			</div>
+			<div class="card">
+				<h1>🔉 Audio Outputs</h1>
+				<div id="audioOutputs"></div>
+			</div>
+		</div>
 
-	var list = [];
-	
+		<script>
+			var list = [];
 
-	navigator.mediaDevices.enumerateDevices()
-	.then(function(devices) {
-	  devices.forEach(function(device) {
-		console.log(device.kind + ": " + device.label +
-					" id = " + device.deviceId);
-		list.push(device);
-	  });
-	  document.getElementById('json-container').innerHTML = JSON.stringify(list, null, 2);
-	})
-	.catch(function(err) {
-	  console.log(err.name + ": " + err.message);
-	});
-	
-	
-</script>
-</body>
+			function isAudioInput(value) {
+				return value.kind == "audioinput";
+			}
+
+			function isAudioOutput(value) {
+				return value.kind == "audiooutput";
+			}
+
+			function isVideoInput(value) {
+				return value.kind == "videoinput";
+			}
+
+			function prettyPrint(json, element) {
+				var output = "<div class='prettyJson two-col'>";
+
+				var nestedObjs;
+
+				Object.entries(json)
+					.sort()
+					.forEach(([key, value]) => {
+						output += "<div class='device'>";
+
+						output +=
+							"<span class='device-name'>" +
+							value.label +
+							"</span><span class='device-id'>Device ID: " +
+							value.deviceId +
+							"</span>";
+
+						output += "</div>";
+					});
+				output += "</div>";
+				document.getElementById(element).innerHTML = output;
+			}
+
+			navigator.mediaDevices
+				.enumerateDevices()
+				.then(function (devices) {
+					devices.forEach(function (device) {
+						console.log(
+							device.kind + ": " + device.label + " id = " + device.deviceId
+						);
+						list.push(device);
+					});
+					prettyPrint(devices.filter(isAudioInput), "audioInputs");
+					prettyPrint(devices.filter(isAudioOutput), "audioOutputs");
+					prettyPrint(devices.filter(isVideoInput), "videoInputs");
+				})
+				.catch(function (err) {
+					console.log(err.name + ": " + err.message);
+				});
+		</script>
+	</body>
 </html>

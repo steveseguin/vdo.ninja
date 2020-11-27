@@ -1,0 +1,62 @@
+#devices {
+    max-width: 80%;
+    width: fit-content;
+    margin: 0 auto;
+}
+
+h1 {
+    font-size: 1.5em;
+    padding:10px;
+    background-color:#457b9d;
+    color:white;
+}
+
+.device {
+    display: flex;
+    flex-direction: column;
+    margin: 20px 0px;
+    font-size: 1rem;
+}
+
+.device-name{
+    font-weight: bold;
+    margin-bottom: 5px;
+}
+
+.device-id {
+
+}
+
+.card {
+    margin: 10px;
+}
+
+.card > div {
+    padding: 10px;
+}
+
+.notice {
+    background-color: orange;
+    margin: 10px;
+    padding: 20px 20px;
+    font-weight: bold;
+    font-size: 1.2em;
+    text-align: center;
+}
+
+.notice a {
+    color: #457b9d;
+}
+
+@media only screen
+  and (min-device-width: 375px)
+  and (max-device-width: 812px)
+  and (orientation: portrait) {
+    #devices {
+        width: 100%;
+    }
+    .device-id {
+        text-overflow: ellipsis;
+        overflow: hidden;
+    }
+}
