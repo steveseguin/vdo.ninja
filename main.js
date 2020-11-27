@@ -948,7 +948,12 @@ if (ln_template){  // checking if manual lanuage override enabled
 					//log(ele.dataset.translate);
 					//log(translations[ele.dataset.translate]);
 					if (ele.dataset.translate in data){
-						ele.innerHTML = data[ele.dataset.translate];
+						if (ele.dataset.translateType) {
+							ele.setAttribute(ele.dataset.translateType, data[ele.dataset.translate]);
+						} else {
+							ele.innerHTML = data[ele.dataset.translate];
+						}
+						
 					}
 				});
 				getById("mainmenu").style.opacity = 1;
@@ -1852,8 +1857,10 @@ if (urlParams.has('permaid') || urlParams.has('push')){
 			getById("add_camera").innerHTML = "Share your Microphone";
 		} else {
 			getById("add_camera").innerHTML = "Share your Camera";
+			getById("add_camera").dataset.translate = "share-your-camera";
 		}
 		getById("add_screen").innerHTML = "Share your Screen";
+		getById("add_screen").dataset.translate = "share-your-screen";
 		getById("passwordRoom").value = "";
 		getById("videoname1").value = "";
 		getById("dirroomid").innerHTML = "";
