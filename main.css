@@ -800,6 +800,11 @@ label {
 }
 
 
+.card {
+	box-shadow: 0 4px 8px 0 rgba(0, 0, 0, .1);
+	background-color: #ddd;
+}
+
 /* Create four equal columns that floats next to each other */
 
 .column {
@@ -815,8 +820,6 @@ label {
 	text-align: center;
 	font-size: 100%;
 	/* Add shadows to create the "card" effect */
-	box-shadow: 0 4px 8px 0 rgba(0, 0, 0, .1);
-	background-color: #ddd;
 	transition: box-shadow 0.1s ease-in-out;
 }
 
