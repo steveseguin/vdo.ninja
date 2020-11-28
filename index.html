@@ -207,6 +207,9 @@
 						<video id="previewWebcam" class="previewWebcam" oncanplay="updateStats();"  disablePictureInPicture controlsList="nodownload" muted autoplay playsinline ></video>
 					</p>
 					<div id="infof"></div>
+					<button onclick="this.disabled=true;setTimeout(function(){requestBasicPermissions();},20);" id="getPermissions" style="display:none;" data-ready="false" >
+						<span data-translate="ask-for-permissions">Allow Access to Camera/Microphone</span>
+					</button>
 					<button onclick="publishWebcam(this)" id="gowebcam" class="gowebcam" disabled data-ready="false" >
 						<span data-translate="waiting-for-camera">Waiting for Camera to Load</span>
 					</button>
@@ -463,6 +466,7 @@
 					SELECT THE VIDEO FILE TO SHARE<br /><br />
 					<input id="fileselector" onchange="session.publishFile(this,event);" type="file" accept="video/*,audio/*" alt="Hold CTRL (or CMD) to select multiple files" title="Hold CTRL (or CMD) to select multiple files" multiple/>
 				</div>
+				<p>Keep this tab visible if using Chrome, else the video playback will stop</p>
 				<div class="outer close">
 					<div class="inner">
 						<label class="labelclass">
@@ -472,7 +476,27 @@
 				</div>
 
 			</div>
+			<div id="container-6" class="column columnfade pointer" style=" overflow-y: auto;">
+				<h2><span data-translate="share-website-iframe">Share Remote Website</span></h2>
+				<div class="container-inner">
+					
+					<br /><br />
+					Enter the URL website you wish to share.<br /><br />
+					<input id="iframeURL" type="text" style="margin:10px; border:2px solid; padding:10px; width:400px;" title="Enter an HTTPS URL" multiple/><br />
+					<button onclick="loadIframe(getById('iframeURL').value);" >Preview</button> 
+					<button onclick="this.innerHTML = 'Update';session.publishIFrame(getById('iframeURL').value);" >Share</button><br />
+					<small>Remote website must be CORS/IFrame compatible with full SSL-encryption enabled.</small>
+					<div id="iFramePreview" style=" width: 1280px; height: 720px; margin: auto; padding: 10px;"></div>
+				</div>
+				<div class="outer close">
+					<div class="inner">
+						<label class="labelclass">
+							<span data-translate="back">Back</span>
+						</label>
+					</div>
+				</div>
 
+			</div>
 			<p></p>
 			<div id="info" class="fullcolumn columnfade">
 				<center>
@@ -510,7 +534,7 @@
 							</li>
 							<br />
 
-                            🎈 Site Updated: <a href="https://www.reddit.com/r/OBSNinja/comments/k02enh/version_134_of_obsninja_released_change_log_here/">November 24th, 2020</a>. The previous version can be found at 
+                            🎈 Site Updated: <a href="https://www.reddit.com/r/OBSNinja/comments/k02enh/version_134_of_obsninja_released_change_log_here/">November 27th, 2020</a>. The previous version can be found at 
 							<a href="https://obs.ninja/v12/">https://obs.ninja/v12/</a> if you are having new issues.
 
 							<br />
@@ -577,7 +601,7 @@
 					<button style="width: 36px" data-action-type="change-quality" title="Disable Video Preview" onclick="toggleQualityDirector(0, this.dataset.UUID, this);">
 						<span data-translate="change-to-low-quality">&nbsp;&nbsp;<i class="las la-video-slash"></i></span>
 					</button>
-					<button style="width: 36px" data-action-type="change-quality" title="Low-Quality Preview" onclick="toggleQualityDirector(50, this.dataset.UUID, this);">
+					<button class="pressed" style="width:36px;" data-action-type="change-quality" title="Low-Quality Preview" onclick="toggleQualityDirector(50, this.dataset.UUID, this);">
 						<span data-translate="change-to-medium-quality">&nbsp;&nbsp;<i class="las la-video"></i></span>
 					</button>
 					<button style="width: 36px" data-action-type="change-quality" title="High-Quality Preview" onclick="toggleQualityDirector(1200, this.dataset.UUID, this);">
@@ -587,6 +611,15 @@
 				<button data-action-type="direct-chat" title="Send Direct Message" onclick="directorSendMessage(this);">
 					<span data-translate="send-direct-chat"><i class="las la-envelope"></i> Message</span>
 				</button>
+				
+				<button data-action-type="advanced-camera-settings" title="Advanced Settings and Remote Control" onclick="directorSendMessage(this);">
+					<span data-translate="advanced-camera-settings"><i class="las la-cog"></i> Advanced</span>
+				</button>
+				<button data-action-type="voice-chat" title="Toggle Voice Chat with this Guest" onclick="directorSendMessage(this);">
+					<span data-translate="voice-chat"><i class="las la-microphone"></i> Voice Chat</span>
+				</button>
+				
+				
 				
 			</div>	
 		</div>
@@ -620,8 +653,13 @@
 				<button id="shareScreenGear" style="width: 135px; padding:20px;text-align:center;" onclick="grabScreen()"><b>Share Screen</b><br /><i style="padding:5px; font-size:300%;" class="las la-desktop"></i></button><br />
 				<button onclick="toggleSettings()" style="width: 135px; background-color:#EFEFEF;padding:10px 12px 12px 2px;margin: 10px 0px 20px 0"><i class="chevron right" style="font-size:150%;top:3px;position:relative;"></i> <b>Close Settings</b></button>
 				
-				<button id='advancedOptions' onclick="this.style.display = 'none'; toggle(getById('popupSelector_constraints'),false,false); " style="display:none; background-color:#EFEFEF;padding:10px 12px 12px 2px;margin: 10px 0px 0px 10px"><i class="chevron bottom" style="font-size:150%;top:3px;position:relative;"></i> <b>Show Advanced</b></button>
-				<span id="popupSelector_constraints" style="display: none;">
+				<button id='advancedOptionsCamera' onclick="this.style.display = 'none'; toggle(getById('popupSelector_constraints_camera'),false,false); " style="display:none; background-color:#EFEFEF;padding:10px 12px 12px 2px;margin: 10px 0px 0px 10px"><i class="chevron bottom" style="font-size:150%;top:3px;position:relative;"></i> <b>Advanced Video</b></button>
+				<button id='advancedOptionsAudio' onclick="this.style.display = 'none'; toggle(getById('popupSelector_constraints_audio'),false,false); " style="display:none; background-color:#EFEFEF;padding:10px 12px 12px 2px;margin: 10px 0px 0px 10px"><i class="chevron bottom" style="font-size:150%;top:3px;position:relative;"></i> <b>Advanced Audio</b></button>
+				
+				<span id="popupSelector_constraints_audio" class="popupSelector_constraints" style="display: none;">
+				
+				</span>
+				<span id="popupSelector_constraints_video" class="popupSelector_constraints" style="display: none;">
 				
 				</span>
 			</p>
@@ -687,6 +725,7 @@
 		</div>
 		
 		<div id="chatModule" style="display:none;">
+			<a target="popup" style="cursor:pointer;" onclick="createPopoutChat();">💢</a>
 			<div id="chatBody"> 
 				<div class="inMessage" data-translate='welcome-to-obs-ninja-chat'>
 					Welcome to OBS.Ninja! You can send text messages directly to connected peers from here.
@@ -706,6 +745,8 @@
 		<div class="gone" >
 			<!-- This image is used when dragging elements -->
 			<img src="./images/favicon-32x32.png" id="dragImage" />
+		</div>
+		<div id="request_info_prompt" style="display:none">
 		</div>
 		<div id="messagePopup" class="popup-message"></div>
 		<div id="languages" class="popup-message" style="display: none; right: 0; bottom: 25px; position: absolute;">
@@ -745,7 +786,7 @@
 		<script>
 		
             var session = WebRTC.Media; // session is a required global variable if configuring manually. Run before loading main.js but after webrtc.js.
-			session.version = "13.4";
+			session.version = "13.5b";
             session.streamID = session.generateStreamID(); // randomly generates a streamID for this session. You can set your own programmatically if needed
 			
 			session.defaultPassword = "someEncryptionKey123"; // Disabling improves compatibility and is helpful for debugging.

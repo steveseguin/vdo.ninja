@@ -196,7 +196,7 @@ sanitizeRoomName = function(roomid){
 sanitizePassword = function(passwrd){
 	if (passwrd===""){return passwrd;}
 	else if (passwrd===false){return passwrd;}
-	
+	else if (passwrd===null){return passwrd;}
 	passwrd = passwrd.trim();
 	if (passwrd.length < 1){
 		if (!(session.cleanOutput)){
@@ -423,7 +423,7 @@ if (/CriOS/i.test(navigator.userAgent) && /iphone|ipod|ipad/i.test(navigator.use
 }
 
 if (urlParams.has('broadcast') || urlParams.has('bc')){ 
-	log("Room BITRATE SET");
+	log("Broadcast flag set");
 	session.broadcast = urlParams.get('broadcast') || urlParams.get('bc');
 	session.nopreview=true;
 	session.style=1;
@@ -490,7 +490,9 @@ if (session.password){
 	session.defaultPassword = false;
 }
 
+
 if (urlParams.has('hash') || urlParams.has('crc') || urlParams.has('check')){  // could be brute forced in theory, so not as safe as just not using a hash check.
+    session.taintedSession=null; // waiting to see if valid or not.
 	var hash_input = urlParams.get('hash') || urlParams.get('crc') || urlParams.get('check');
 	if (session.password===false){
 		session.password = prompt("Please enter the password below: \n\n(Note: Passwords are case-sensitive and you will not be alerted if it is incorrect.)");
@@ -502,10 +504,22 @@ if (urlParams.has('hash') || urlParams.has('crc') || urlParams.has('check')){  /
 	session.generateHash(session.password+session.salt,6).then(function(hash){ // million to one error. 
 		log("hash is "+hash);
 		if (hash.substring(0, 4) !== hash_input){ // hash crc checks are just first 4 characters.
+		    session.taintedSession=true;
 			if (!(session.cleanOutput)){
-				alert("The password was incorrect.\n\nRefresh and try again.");
+				getById("request_info_prompt").innerHTML = "The password was incorrect.\n\nRefresh and try again.";
+				getById("request_info_prompt").style.display = "block";
+				getById("mainmenu").style.display = "none";
+				getById("head1").style.display = "none";
+				session.cleanOutput = true;
+				
+			} else {
+				getById("request_info_prompt").innerHTML = "";
+				getById("request_info_prompt").style.display = "block";
+				getById("mainmenu").style.display = "none";
+				getById("head1").style.display = "none";
 			}
 		} else {
+			session.taintedSession=false;
 			session.hash = hash;
 		}
 	});
@@ -1120,8 +1134,8 @@ if (urlParams.has('quality') || urlParams.has('q')){
 
 if (urlParams.has('sink')){
 	session.sink = urlParams.get('sink');
-} else if (urlParams.has('outputdevice') || urlParams.has('od')){
-	session.outputDevice = urlParams.get('outputdevice') || urlParams.get('od');
+} else if (urlParams.has('outputdevice') || urlParams.has('od') || urlParams.has('audiooutput')){
+	session.outputDevice = urlParams.get('outputdevice') || urlParams.get('od') || urlParams.get('audiooutput');
 	if (session.outputDevice){
 		session.outputDevice = session.outputDevice.toLowerCase().replace(/[\W]+/g,"_");
 	} else {
@@ -1509,6 +1523,34 @@ window.onmessage = function(e){ // iFRAME support
 		for (var i in session.rpcs){
 			stats.inbound_stats[session.rpcs[i].streamID] = session.rpcs[i].stats;
 		}
+		
+		for (var uuid in session.pcs){
+			session.pcs[uuid].getStats().then(function(stats){
+				stats.forEach(stat=>{
+					if (stat.type=="outbound-rtp"){
+						if (stat.kind=="video"){
+							
+							if ("qualityLimitationReason" in stat){
+								session.pcs[uuid].stats.quality_Limitation_Reason = stat.qualityLimitationReason;
+							}
+							if ("framesPerSecond" in stat){
+								session.pcs[uuid].stats.resolution = stat.frameWidth+" x "+ stat.frameHeight +" @ "+stat.framesPerSecond;
+							}
+							if ("encoderImplementation" in stat){
+								session.pcs[uuid].stats.encoder = stat.encoderImplementation;
+							}
+							
+						}
+					}
+				});
+				
+			});
+		}
+		
+		stats.outbound_stats = {};
+		for (var i in session.pcs){  
+			stats.outbound_stats[i] = session.pcs[i].stats;
+		}
 		parent.postMessage({"stats": stats }, "*");
     }
 	
@@ -1627,7 +1669,7 @@ function sleep(ms = 0){
   return new Promise(r => setTimeout(r, ms));  // LOLz!
 }
 
-session.connect();
+
 // session.volume = 100; // needs to be set after?
 
 
@@ -1969,6 +2011,7 @@ if (urlParams.has('hideheader') || urlParams.has('noheader') || urlParams.has('h
 }
 
 function checkConnection(){
+	if (session.ws===null){return;}
 	if (document.getElementById("qos")){  // true or false; null might cause problems?
 		if ((session.ws) && (session.ws.readyState === WebSocket.OPEN)) {
 			getById("qos").style.color = "white";
@@ -1981,9 +2024,12 @@ setInterval(function(){checkConnection();},5000);
 
 
 function printViewStats(menu, statsObj, streamID){  // Stats for viewing a remote video
-
+	var scrollLeft = menu.scrollLeft;
+	var scrollTop = menu.scrollTop;
 	menu.innerHTML="StreamID: <b>"+streamID+"</b><br />";
 	menu.innerHTML+= printValues(statsObj);
+	menu.scrollTop = scrollTop;
+	menu.scrollLeft = scrollLeft;
 	
 }
 function printValues(obj) {  // see: printViewStats
@@ -2025,6 +2071,10 @@ function printValues(obj) {  // see: printViewStats
 
 
 function printMyStats(menu){  // see: setupStatsMenu
+	
+    var scrollLeft = getById("menuStatsBox").scrollLeft;
+    var scrollTop = getById("menuStatsBox").scrollTop;
+	log(scrollTop + " " + scrollLeft);
 	menu.innerHTML="";
 	
 	session.stats.outbound_connections = Object.keys(session.pcs).length;
@@ -2061,9 +2111,17 @@ function printMyStats(menu){  // see: setupStatsMenu
 				}
 			});
 			printViewValues(session.pcs[uuid].stats);
-			menu.innerHTML+="<br /><br />"
+			menu.innerHTML+="<br /><br />";
+			try{
+				getById("menuStatsBox").scrollLeft = scrollLeft;
+				getById("menuStatsBox").scrollTop = scrollTop;
+			} catch(e){}
 		});
 	}
+	try{
+		getById("menuStatsBox").scrollLeft = scrollLeft;
+		getById("menuStatsBox").scrollTop = scrollTop;
+	} catch(e){}
 }
 
 
@@ -2183,7 +2241,7 @@ function toggleSpeakerMute(apply=false){ // TODO: I need to have this be MUTE, t
 }
 
 
-function toggleChat(ele=null){ // TODO: I need to have this be MUTE, toggle, with volume not touched.
+function toggleChat(event=null){ // TODO: I need to have this be MUTE, toggle, with volume not touched.
 	if (session.chat==false){
 		setTimeout(function(){document.addEventListener("click", toggleChat);},10);
 		
@@ -2649,7 +2707,6 @@ function publishScreen(){
 
 }
 function publishWebcam(btn = false){
-	log(btn);
 	if (btn){
 		if (btn.dataset.ready == "false"){
 			warnlog("Clicked too quickly; button not enabled yet");
@@ -2713,7 +2770,6 @@ function publishWebcam(btn = false){
 	} else {
 		updateURL("push="+session.streamID);
 	}
-	
 	
 	session.publishStream(ele, title);
 
@@ -3940,7 +3996,7 @@ function playtone(screen=false){
 	}
 }
 
-async function getAudioOnly(selector, trackid=null){
+async function getAudioOnly(selector, trackid=null, override=false){
 	var audioSelect = document.querySelector(selector).querySelectorAll("input"); 
 	var audioList = [];
 	var streams = [];
@@ -3974,6 +4030,10 @@ async function getAudioOnly(selector, trackid=null){
 		}
 		constraint.video = false;
 		//warnlog(constraint);
+		if (override!==false){
+			constraint = override;
+		}
+		
 		var stream = await navigator.mediaDevices.getUserMedia(constraint).then(function (stream2){
 			log("pushing stream2");
 			return stream2;
@@ -4484,7 +4544,7 @@ async function grabVideo(quality=0, eleName='previewWebcam', selector="select#vi
 }
 
 
-async function grabAudio(eleName="previewWebcam", selector="#audioSource", trackid = null){ // trackid is the excluded track
+async function grabAudio(eleName="previewWebcam", selector="#audioSource", trackid = null, override=false){ // trackid is the excluded track
 	if( activatedPreview == true){log("activated preview return 2");return;}
 	activatedPreview = true;
 	try {
@@ -4526,7 +4586,7 @@ async function grabAudio(eleName="previewWebcam", selector="#audioSource", track
 		errorlog(e);
 	}
 	
-	var streams = await getAudioOnly(selector, trackid); // Get audio streams
+	var streams = await getAudioOnly(selector, trackid, override); // Get audio streams
 	try {
 		for (var i=0; i<streams.length;i++){
 			streams[i].getAudioTracks().forEach(function(track){
@@ -4767,11 +4827,219 @@ function dragElement(elmnt) {
 	}
 }
 
+function loadIframe(iframesrc){  // this is pretty important if you want to avoid camera permission popup problems.  You can also call it automatically via: <body onload=>loadIframe();"> , but don't call it before the page loads.
+	
+	var iframe = document.createElement("iframe");
+	var iframeContainer = getById("iFramePreview");
+	iframe.allow="autoplay;camera;microphone";
+	iframe.allowtransparency="true";
+	iframe.allowfullscreen ="true";
+	iframe.style.width="100%";
+	iframe.style.height="100%";
+
+	if (iframesrc==""){
+		iframesrc="./";
+	}
+	
+	iframe.src = iframesrc;
+	iframeContainer.appendChild(iframe);
+}
 
 
 function updateConstraintSliders(){
-	getById("popupSelector_constraints").innerHTML = "";
+	log("updateConstraintSliders");
+	listAudioSettings();
+	listCameraSettings();
+}
+
+function listAudioSettings(){
+	getById("popupSelector_constraints_audio").innerHTML = "";
+	try {
+		var track0 = session.streamSrc.getAudioTracks();
+		track0 = track0[0];
+		if (track0.getCapabilities){
+			session.cameraConstaints = track0.getCapabilities();
+		}
+		
+		log(session.cameraConstaints);
+	} catch(e){
+		errorlog(e);
+		return;
+	}
+	try {
+		
+		if (track0.getSettings){
+			session.currentCameraConstaints = track0.getSettings();
+		}
+	} catch(e){
+		errorlog(e);
+	}
 	
+	for (var i in session.cameraConstaints){
+		try {
+			log(i);
+			log(session.cameraConstaints[i]);
+			if ((typeof session.cameraConstaints[i] ==='object') && (session.cameraConstaints[i] !== null) && ("max" in session.cameraConstaints[i]) && ("min" in session.cameraConstaints[i])){
+				if (i==="aspectRatio"){continue;}
+				else if (i==="width"){continue;}
+				else if (i==="height"){continue;}
+				else if (i==="frameRate"){continue;}
+				
+				var label = document.createElement("label");
+				label.id= "label_"+i;
+				label.htmlFor = "constraints_"+i;
+				label.innerHTML = i+":";
+				
+				var input = document.createElement("input");
+				input.min = session.cameraConstaints[i].min;
+				input.max = session.cameraConstaints[i].max;
+				if (input.min == input.max){continue;}
+				
+				if (getById("popupSelector_constraints_audio").style.display == "none"){
+					getById("advancedOptionsAudio").style.display="inline-block";
+				}
+				
+				
+				if (i in session.currentCameraConstaints){
+					input.value = session.currentCameraConstaints[i];
+					label.innerHTML = i+": "+session.currentCameraConstaints[i];
+				} else {
+					label.innerHTML = i;
+				}
+				if ("step" in session.cameraConstaints[i]){
+					input.step = session.cameraConstaints[i].step;
+				}
+				input.type = "range";
+				input.dataset.keyname = i;
+				input.id = "constraints_"+i;
+				input.style="display:block; width:100%;";
+				input.name = "constraints_"+i;
+				
+				
+				input.onchange = function(e){
+					getById("label_"+e.target.dataset.keyname).innerHTML =e.target.dataset.keyname+": "+e.target.value;
+					//updateAudioConstraints(e.target.dataset.keyname, e.target.value);
+					applyAudioHack(track0,e.target.dataset.keyname, e.target.value);
+				};
+				
+				
+				getById("popupSelector_constraints_audio").appendChild(label);
+				getById("popupSelector_constraints_audio").appendChild(input);
+			} else if ((typeof session.cameraConstaints[i] ==='object') && (session.cameraConstaints[i] !== null)){
+				if (i == "resizeMode"){continue;}
+				
+				var div = document.createElement("div");
+				var label = document.createElement("label");
+				label.id= "label_"+i;
+				label.htmlFor = "constraints_"+i;
+				label.innerHTML = i+":";
+				label.style="display:inline-block; padding:0;margin: 15px 0px 29px;"; 
+				label.dataset.keyname = i;
+				var input = document.createElement("select");
+				var c = document.createElement("option");
+					
+				if (session.cameraConstaints[i].length>1){
+					for (var opts in session.cameraConstaints[i]) {
+					  log(opts);
+					  var opt = new Option(session.cameraConstaints[i][opts], session.cameraConstaints[i][opts]);
+					  input.options.add(opt);
+					}
+				} else if (i.toLowerCase == "torch"){
+					var opt = new Option("Off", false);
+					input.options.add(opt);
+					opt = new Option("On", true);
+					input.options.add(opt);
+				} else {
+					continue;
+				}
+				
+				input.id = "constraints_"+i;
+				input.className="constraintCameraInput";
+				input.name = "constraints_"+i;
+				input.style = "display:inline; padding:2px; margin:0 10px;";
+				input.dataset.keyname = i;
+				input.onchange = function(e){
+					//getById("label_"+e.target.dataset.keyname).innerHTML =e.target.dataset.keyname+": "+e.target.value;
+					//updateAudioConstraints(e.target.dataset.keyname, e.target.value);
+					applyAudioHack(track0,e.target.dataset.keyname, e.target.value);
+					log(e.target.dataset.keyname, e.target.value);
+				};
+				getById("popupSelector_constraints_audio").appendChild(div);
+				div.appendChild(label);
+				div.appendChild(input);
+			} else if (typeof session.cameraConstaints[i] === 'boolean'){
+				
+				var div = document.createElement("div");
+				var label = document.createElement("label");
+				label.id= "label_"+i;
+				label.htmlFor = "constraints_"+i;
+				label.innerHTML = i+":";
+				label.style="display:inline-block; padding:0;margin: 15px 0px 29px;"; 
+				label.dataset.keyname = i;
+				var input = document.createElement("select");
+				var c = document.createElement("option");
+				
+				var opt = new Option("Off", false);
+				input.options.add(opt);
+				opt = new Option("On", true);
+				input.options.add(opt);
+				
+				input.id = "constraints_"+i;
+				input.className="constraintCameraInput";
+				input.name = "constraints_"+i;
+				input.style = "display:inline; padding:2px; margin:0 10px;";
+				input.dataset.keyname = i;
+				input.onchange = function(e){
+					//getById("label_"+e.target.dataset.keyname).innerHTML =e.target.dataset.keyname+": "+e.target.value;
+					//updateAudioConstraints(e.target.dataset.keyname, e.target.value);
+					applyAudioHack(track0,e.target.dataset.keyname, e.target.value);
+					log(e.target.dataset.keyname, e.target.value);
+				};
+				getById("popupSelector_constraints_audio").appendChild(div);
+				div.appendChild(label);
+				div.appendChild(input);
+			}
+		} catch(e){errorlog(e);}
+			
+	}
+}
+
+
+function applyAudioHack(track, constraint, value=null){
+	if (value == parseFloat(value)){
+		value = parseFloat(value);
+		value = {exact: value};
+	} else if (value == "true"){
+		value = true;
+	} else if (value == "false"){
+		value = false;
+	}
+	log("CONTREAIT",constraint);
+	var  new_constraints = Object.assign(track.getSettings(), {[constraint]:value}, );
+	new_constraints = {audio: new_constraints, video:false};
+	log(new_constraints);
+	activatedPreview=false;
+	grabAudio("videosource","#audioSource3", null, new_constraints);
+}
+
+function updateAudioConstraints(constraint, value=null){  // this is what it SHOULD be, but this doesn't work yet.
+	var track0 = session.streamSrc.getAudioTracks();
+	track0 = track0[0];
+	if (value == parseFloat(value)){
+		value = parseFloat(value);
+	} else if (value == "true"){
+		value = true;
+	} else if (value == "false"){
+		value = false;
+	}
+	log({advanced: [ {[constraint]: value} ]});
+	track0.applyConstraints({advanced: [ {[constraint]: value} ]});
+	return;
+	
+}
+
+function listCameraSettings(){
+	getById("popupSelector_constraints_video").innerHTML = "";
 	try {
 		var track0 = session.streamSrc.getVideoTracks();
 		track0 = track0[0];
@@ -4804,9 +5072,7 @@ function updateConstraintSliders(){
 				else if (i==="height"){continue;}
 				else if (i==="frameRate"){continue;}
 				
-				if (getById("popupSelector_constraints").style.display == "none"){
-					getById("advancedOptions").style.display="inline-block";
-				}
+				
 				
 				var label = document.createElement("label");
 				label.id= "label_"+i;
@@ -4816,6 +5082,12 @@ function updateConstraintSliders(){
 				var input = document.createElement("input");
 				input.min = session.cameraConstaints[i].min;
 				input.max = session.cameraConstaints[i].max;
+				
+				if (input.min == input.max){continue;}
+				
+				if (getById("popupSelector_constraints_video").style.display == "none"){
+					getById("advancedOptionsCamera").style.display="inline-block";
+				}
 				
 				if (i in session.currentCameraConstaints){
 					input.value = session.currentCameraConstaints[i];
@@ -4839,8 +5111,8 @@ function updateConstraintSliders(){
 				};
 				
 				
-				getById("popupSelector_constraints").appendChild(label);
-				getById("popupSelector_constraints").appendChild(input);
+				getById("popupSelector_constraints_video").appendChild(label);
+				getById("popupSelector_constraints_video").appendChild(input);
 			} else if ((typeof session.cameraConstaints[i] ==='object') && (session.cameraConstaints[i] !== null)){
 				if (i == "resizeMode"){continue;}
 				
@@ -4879,7 +5151,7 @@ function updateConstraintSliders(){
 					updateCameraConstraints(e.target.dataset.keyname, e.target.value);
 					log(e.target.dataset.keyname, e.target.value);
 				};
-				getById("popupSelector_constraints").appendChild(div);
+				getById("popupSelector_constraints_video").appendChild(div);
 				div.appendChild(label);
 				div.appendChild(input);
 			} else if (typeof session.cameraConstaints[i] === 'boolean'){
@@ -4909,7 +5181,7 @@ function updateConstraintSliders(){
 					updateCameraConstraints(e.target.dataset.keyname, e.target.value);
 					log(e.target.dataset.keyname, e.target.value);
 				};
-				getById("popupSelector_constraints").appendChild(div);
+				getById("popupSelector_constraints_video").appendChild(div);
 				div.appendChild(label);
 				div.appendChild(input);
 			}
@@ -5099,32 +5371,23 @@ Promise.prototype.timeout = function(ms) {
 };
 
 function previewWebcam(){
+	
+	if (session.taintedSession===null){
+		log("STILL WAITING ON HASH TO VALIDATE")
+		setTimeout(function(){previewWebcam();},1000);
+		return;
+	} else if (session.taintedSession===true){
+		warnlog("HASH FAILED; PASSWORD NOT VALID");
+		return;
+	} else {
+		log("NOT TAINTED");
+	}
+	
 	if( activatedPreview == true){
 		log("activeated preview return 1");
 		return;
 	}
-	
 	activatedPreview = true;
-	
-	try{
-		var oldstream = getById('previewWebcam').srcObject;
-		
-		if (oldstream){
-			log("old stream found");
-			oldstream.getTracks().forEach(function(track) {
-				track.stop();
-				oldstream.removeTrack(track);
-				log("stopping old track");
-			});
-		} else {
-			getById('previewWebcam').srcObject = new MediaStream();
-			session.streamSrc = getById('previewWebcam').srcObject;
-			log("CREATE NEW STREAM");
-		}
-	  
-	} catch (e){
-		errorlog(e);
-	}
 	
 	if (session.audioDevice===0){ // OFF
 		var constraint = {audio: false};
@@ -5155,104 +5418,127 @@ function previewWebcam(){
 		constraint.video = true;
 	}
 	
-	try {
-		log("getting permission from navigator");
-		if ("permissions" in navigator){
-			log("queried0");
-			navigator.permissions.query({name: 'camera'}).then((permissionObj) => {
-				log("queried camera permissions successfully:");
-				log(permissionObj.state);
-				if (permissionObj.state!=="prompt"){ // trying to bypass any NDI problems
-					
-					enumerateDevices().then(function(devices){
-						var vtrue = false;
-						var atrue = false;
-						devices.forEach(function(device) {
-							if (device.kind === 'audioinput'){
-								atrue=true;
-							} else if (device.kind === 'videoinput'){
-								vtrue = true;
+//	try {
+//		var autoPlayAllowed = false;
+//		log("trying to play video");
+//		
+//		var vid = document.createElement('video');
+//		vid.src = ""; // we need this.play();
+//		playPromise = vid.play();
+//		// In browsers that don’t yet support this functionality,
+//		// playPromise won’t be defined.
+//		if (playPromise !== undefined) {
+//			getById("getPermissions").style.display="";
+//			getById("gowebcam").style.display="none";
+//			//activatedPreview=false;
+//			log("checking promise");
+//			log(playPromise);
+//			playPromise.catch(function(error) {
+//				if (error.name !== 'NotAllowedError') {
+//					autoPlayAllowed=true;
+//					log("PROMISE GOOD");
+//				}
+//			}).finally(function() {
+//				log("FINALLY ");
+//				delete vid;
+//				if (autoPlayAllowed) { /////// GOOD //////
+//						log("ALLOWED TO PLAY");
+//						getById("gowebcam").style.display="";
+//						getById("getPermissions").style.display="none";
+						enumerateDevices().then(function(devices){
+							log("enumeratated");
+							log(devices);
+							var vtrue = false;
+							var atrue = false;
+							devices.forEach(function(device) {
+								if (device.kind === 'audioinput'){
+									atrue=true;
+								} else if (device.kind === 'videoinput'){
+									vtrue = true;
+								}
+							});
+							if (atrue===false){
+								constraint.audio = false;
+							} 
+							if (vtrue===false){
+								constraint.video = false;
 							}
+							setTimeout(function(constraint){requestBasicPermissions(constraint);},0,constraint);
+						}).catch((error)=>{
+							log("enumeratated failed. Seeking permissions.");
+							setTimeout(function(constraint){requestBasicPermissions(constraint);},0,constraint);
 						});
-						if (atrue===false){
-							constraint.audio = false;
-							requestBasicPermissions(constraint);
-						} else {
-							constraint.video = false;
-							requestBasicPermissions(constraint);
-						}
-					}).catch((error)=>{
-						requestBasicPermissions(constraint)
-					});
-				
-				} else {
-					log("constraint: "+constraint);
-					enumerateDevices().then(function(devices){
-						log("enumeratated");
-						var vtrue = false;
-						var atrue = false;
-						devices.forEach(function(device) {
-							if (device.kind === 'audioinput'){
-								atrue=true;
-							} else if (device.kind === 'videoinput'){
-								vtrue = true;
-							}
-						});
-						if (atrue===false){
-							constraint.audio = false;
-						} 
-						if (vtrue===false){
-							constraint.video = false;
-						}
-						requestBasicPermissions(constraint);
-					}).catch((error)=>{
-						log("enumeratated failed. Seeking permissions.");
-						requestBasicPermissions(constraint)
-					});
-				}
-				
-			}).catch((error) => {
-				log("queried camera permissions returned error");
-				
-				enumerateDevices().then(function(devices){
-					var vtrue = false;
-					var atrue = false;
-					devices.forEach(function(device) {
-						if (device.kind === 'audioinput'){
-							atrue=true;
-						} else if (device.kind === 'videoinput'){
-							vtrue = true;
-						}
-					});
-					if (atrue===false){
-						constraint.audio = false;
-					} 
-					if (vtrue===false){
-						constraint.video = false;
-					}
-					requestBasicPermissions(constraint);
-				}).catch((error)=>{
-					requestBasicPermissions(constraint)
-				});
-			});
-		} else {
-			log("queried not supported");
-			requestBasicPermissions(constraint);
-		}
-	} catch(e){
-		requestBasicPermissions(constraint)
-		errorlog(e);
-	}
+//						return;
+//					
+//				} else {
+//					// BUTTON.
+//					log("NOT ALLOWED TO CONTINUE -");
+//				}
+//			});
+//		} else {
+//			delete vid;
+//			enumerateDevices().then(function(devices){
+//				log("enumeratated");
+//				log(devices);
+//				var vtrue = false;
+//				var atrue = false;
+//				devices.forEach(function(device) {
+//					if (device.kind === 'audioinput'){
+//						atrue=true;
+//					} else if (device.kind === 'videoinput'){
+//						vtrue = true;
+//					}
+//				});
+//				if (atrue===false){
+//					constraint.audio = false;
+//				} 
+//				if (vtrue===false){
+//					constraint.video = false;
+//				}
+//				setTimeout(function(constraint){requestBasicPermissions(constraint);},0,constraint);
+//			}).catch((error)=>{
+//				log("enumeratated failed. Seeking permissions.");
+//				setTimeout(function(constraint){requestBasicPermissions(constraint);},0,constraint);
+//			});
+//		}
+//		
+//	} catch(e){
+//		setTimeout(function(constraint){requestBasicPermissions(constraint);},0,constraint);
+//		errorlog(e);
+//	}
 }
 
-function requestBasicPermissions(constraint){
-	log("PreviewWebcam");
-	log(constraint);
+function requestBasicPermissions(constraint={video:true,audio:true}){
+	if (session.taintedSession===null){
+		log("STILL WAITING ON HASH TO VALIDATE")
+		setTimeout(function(constraint){requestBasicPermissions(constraint);},1000,constraint);
+		return;
+	} else if (session.taintedSession===true){
+		warnlog("HASH FAILED; PASSWORD NOT VALID");
+		return;
+	} else {
+		log("NOT TAINTED 1");
+	}
+	setTimeout(function(){
+	getById("getPermissions").style.display="none";
+	getById("gowebcam").style.display="";
+	},0);
+	log("REQUESTING BASIC PERMISSIONS");
+	
 	try {
-	  var timerBasicCheck = setTimeout(function(){alert("Camera Access Request Timed Out\n\nDid you accept camera permissions? Please do so first.\n\nOtherwise, do you have NDI Tools installed? Maybe try uninstalling NDI tools.\n\nPlease also double check that your camera and audio devices are correctly connected. You may also need to refresh the page.");},10000);
+	  var timerBasicCheck=null;
+	  if (!(session.cleanOutput)){
+		log("Setting Timer for getUserMedia");
+		timerBasicCheck = setTimeout(function(){
+			if (!(session.cleanOutput)){
+				alert("Camera Access Request Timed Out\n\nDid you accept camera permissions? Please do so first.\n\nOtherwise, do you have NDI Tools installed? Maybe try uninstalling NDI tools.\n\nPlease also double check that your camera and audio devices are correctly connected. You may also need to refresh the page.");
+			}},10000);
+	  }
+	  log(constraint);
 	  navigator.mediaDevices.getUserMedia(constraint).then(function(stream){ // Apple needs thi to happen before I can access EnumerateDevices. 
+	  log("got first stream");
 	    clearTimeout(timerBasicCheck);
-		log("got first stream");
+		
 		setupWebcamSelection(stream);
 	  }).catch(function(err){
 		    clearTimeout(timerBasicCheck);
@@ -5875,16 +6161,30 @@ function sendChatMessage(){ // filtered + visual
 	document.getElementById('chatInput').value = "";
 	messageList.push(data);
 	messageList = messageList.slice(-100);
+	if(session.broadcastChannel!==false){
+		session.broadcastChannel.postMessage(data);
+	}
 	updateMessages();
 }
 
-function toggleQualityDirector(bitrate, UUID, ele = null){
+function toggleQualityDirector(bitrate, UUID, ele = null){  // ele is specific to the button in the director's room
 	var eles = ele.parentNode.childNodes;
 	for (i in eles){
 		eles[i].className="";
 	}
 	ele.className="pressed";
 	session.requestRateLimit(bitrate, UUID);
+}
+
+function createPopoutChat(){
+	var randid = session.generateStreamID(8);
+	log(randid);
+	window.open('./popout?id='+randid,'popup','width=600,height=480,toolbar=no,menubar=no,resizable=yes');
+	session.broadcastChannel = new BroadcastChannel(randid);
+	setTimeout(function(){
+		session.broadcastChannel.postMessage({messageList:messageList}); /// all data.  delayed to ensure it loads.  Should probably have a callback instead.
+	},5000);
+	return false;
 }
 
 function getChatMessage(msg, label=false, director=false, overlay=false){
@@ -5943,6 +6243,9 @@ function getChatMessage(msg, label=false, director=false, overlay=false){
 	
 	if (parent){
 		parent.postMessage({"gotChat": data }, "*");
+	}
+	if (session.broadcastChannel!==false){
+		session.broadcastChannel.postMessage(data); /* send */
 	}
 	
 }
@@ -6019,6 +6322,8 @@ function recordVideo(target, event, videoKbps = false, interval=30){  // event.c
 		log("Record Video queued");
 		defaultRecordingBitrate=false;
 		return;
+	} else {
+		defaultRecordingBitrate=false;
 	}
 	
 	log("Record Video Clicked");
@@ -6086,6 +6391,7 @@ function recordVideo(target, event, videoKbps = false, interval=30){  // event.c
 	video.recorder.mediaRecorder = new MediaRecorder(video.srcObject, options); 
 	
 	function download() {
+		
         const blob = new Blob(recordedBlobs, { type: "video/webm" });
         const url = window.URL.createObjectURL(blob);
         const a = document.createElement('a');

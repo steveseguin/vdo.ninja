@@ -85,13 +85,13 @@ function loadIframe(){ // this is pretty important if you want to avoid camera p
 	iframeContainer.appendChild(iframe);
 	document.getElementById("container").appendChild(iframeContainer);
 	
+	setInterval(function(){iframe.contentWindow.postMessage({"getStats":true}, '*');},5000);
 	
 	
-	
-	var iframe = document.createElement("iframe");
+	var iframe2 = document.createElement("iframe");
 	var iframeContainer = document.createElement("span");
 	
-	iframe.allow="autoplay";
+	iframe2.allow="autoplay";
 	var srcString = "./?view="+streamID+"&cleanoutput&privacy&noaudio";
 	
 	if (urlParams.has('turn')){
@@ -102,9 +102,9 @@ function loadIframe(){ // this is pretty important if you want to avoid camera p
 		srcString = srcString+"&buffer="+urlParams.get("buffer");
 	}
 	
-	iframe.src = srcString;
+	iframe2.src = srcString;
 	
-	iframeContainer.appendChild(iframe);
+	iframeContainer.appendChild(iframe2);
 	document.getElementById("container").appendChild(iframeContainer);
 	
 	var button = document.createElement("br");
@@ -112,12 +112,12 @@ function loadIframe(){ // this is pretty important if you want to avoid camera p
 	
 	var button = document.createElement("button");
 	button.innerHTML = "Disconnect";
-	button.onclick = function(){iframe.contentWindow.postMessage({"close":true}, '*');}
+	button.onclick = function(){iframe2.contentWindow.postMessage({"close":true}, '*');}
 	document.getElementById("container").appendChild(button);
 	
 	var button = document.createElement("button");
 	button.innerHTML = "Low Bitrate";
-	button.onclick = function(){iframe.contentWindow.postMessage({"bitrate":30}, '*');}
+	button.onclick = function(){iframe2.contentWindow.postMessage({"bitrate":100}, '*');}
 	document.getElementById("container").appendChild(button);
 	
 	
@@ -125,15 +125,15 @@ function loadIframe(){ // this is pretty important if you want to avoid camera p
 	
 	var button = document.createElement("button");
 	button.innerHTML = "High Bitrate";
-	button.onclick = function(){iframe.contentWindow.postMessage({"bitrate":6000}, '*');}
+	button.onclick = function(){iframe2.contentWindow.postMessage({"bitrate":6000}, '*');}
 	document.getElementById("container").appendChild(button);
 	
 	var button = document.createElement("button");
 	button.innerHTML = "Default Bitrate";
-	button.onclick = function(){iframe.contentWindow.postMessage({"bitrate":-1}, '*');}
+	button.onclick = function(){iframe2.contentWindow.postMessage({"bitrate":-1}, '*');}
 	document.getElementById("container").appendChild(button);
 	
-	setInterval(function(){iframe.contentWindow.postMessage({"getStats":true}, '*');},1000);
+	setInterval(function(){iframe2.contentWindow.postMessage({"getStats":true}, '*');},1000);
 	
 	var eventMethod = window.addEventListener ? "addEventListener" : "attachEvent";
 	var eventer = window[eventMethod];
@@ -143,13 +143,20 @@ function loadIframe(){ // this is pretty important if you want to avoid camera p
 		
 		if ("stats" in e.data){
 			var out = "";
-			
+			console.log( e.data.stats);
 			for (var streamID in e.data.stats.inbound_stats){
 				out += printValues(e.data.stats.inbound_stats[streamID]);
 			}
 			if (out.split("Bitrate_in_kbps").length>1){
 				document.getElementById("statsdiv").innerHTML = "<b>Bitrate_in_kbps</b>"+out.split("Bitrate_in_kbps")[1];
 			}
+			for (var i in e.data.stats.outbound_stats){  
+				if ("quality_Limitation_Reason" in e.data.stats.outbound_stats[i]){
+					document.getElementById("statsdivOut").innerHTML = "<b>Quality Limitation Reasons:</b> "+e.data.stats.outbound_stats[i].quality_Limitation_Reason+"";
+				}
+			}
+			
+			
 		}
 	});
 	
@@ -176,17 +183,19 @@ function printValues( obj) {
 <body onload="loadIframe();">
 <div id="container">
 </div>
-<div style="width:48%;padding:0;margin:0;border:0;display:inline-block;">
+<div style="width:48%;padding:0;margin:0 10px;border:0;display:inline-block;">
 <h3>OBS.Ninja Speed Test - prototype version</h3>
 (Tests connection to TURN server and back)<br /><br />
 <li>1.Select your camera.</li>
 <li>2.Hit start</li>
 <li>3.Wait for the video to load side-by-side. *If it does not auto-load within 20s, refresh and try again.*</li>
-<li>4.Stats will load on the right-hand side of the page here. (or press CTRL + LeftClick on the new video to open stats that way)</li>
+<li>4.Stats will load on the right-hand side of the page here. (or press CTRL + LeftClick on the new video to open stats)</li>
 <li>5.Bitrate_in_kbps, Buffer_Delay_in_ms, and packetLoss_percentage are important connection quality metrics</li>
 <li>6.Increase the video bitrate by pressing <i>High Bitrate</i>; it should approach 6000-kbps if the network allows.</li>
 </div>
 <div id="statsdiv" style="width:48%;padding:0;margin:0;border:0;display:inline-block;">
+</div>
+<div id="statsdivOut" style="font-size:200%;width:48%;padding:20px;margin:0;border:0;display:inline-block;">
 </div>
 </body>
 </html>

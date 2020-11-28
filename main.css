@@ -160,9 +160,7 @@ button.white:active {
 	width:100%;
 	pointer-events: none
 }
-#popupSelector_constraints{
-	margin:30px 9% 0 7%;
-}
+
 .credits {
 	color: #101020;
 	position: fixed;
@@ -458,6 +456,16 @@ body {
 	animation: fading 0.2s;
 }
 
+#getPermissions{
+	font-size: 110%;
+	border: 3px solid #99A;
+	cursor: pointer;
+	background-color: #cce0ff;
+	margin: 20px;
+	padding: 10px 50px;
+	text-align:center;
+}
+
 .gowebcam {
 	font-size: 110%;
 	border: 3px solid #DDDDDD;
@@ -698,8 +706,10 @@ input[type=range]:focus::-ms-fill-upper {
 	}
 }
 
-
-#popupSelector_constraints label{
+.popupSelector_constraints{
+	margin:30px 9% 0 7%;
+}
+.popupSelector_constraints label{
 	color:white;
 	text-shadow: 0px 0px 6px #000000FF;
 	font-weight: 700;
@@ -1128,6 +1138,17 @@ img {
 		opacity: 1
 	}
 }
+#request_info_prompt{
+	z-index: 20;
+    color: white;
+    font-size: 30px;
+    font-size: 3.5vw;
+    top: 0;
+    align-self: center;
+    margin: 25vh 0;
+    position: absolute;
+}
+
 video {
 	background-color: transparent !important;
 	border: 0;
