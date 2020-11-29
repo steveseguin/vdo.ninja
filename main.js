@@ -1514,11 +1514,32 @@ window.onmessage = function(e){ // iFRAME support
 		for (var i in session.rpcs){
 			stats.inbound_stats[session.rpcs[i].streamID] = session.rpcs[i].stats;
 		}
+        stats.outbound_stats = {};
+		for (var uuid in session.pcs){
+            stats.outbound_stats[uuid] = session.pcs[uuid].stats.info;
+			session.pcs[uuid].getStats().then(function(detailedstats){
+				detailedstats.forEach(stat=>{
+                    if (stat.type=="outbound-rtp"){
+                        if (stat.kind=="video"){
+                            if ("qualityLimitationReason" in stat){
+                                stats.outbound_stats[uuid].quality_Limitation_Reason = stat.qualityLimitationReason;
+                            }
+                            if ("framesPerSecond" in stat){
+                                stats.outbound_stats[uuid].resolution = stat.frameWidth+" x "+ stat.frameHeight +" @ "+stat.framesPerSecond;
+                            }
+                            if ("encoderImplementation" in stat){
+                                stats.outbound_stats[uuid].encoder = stat.encoderImplementation;
+                            }
+                        }
+                    }
+                });
+			});
+        }
 		parent.postMessage({"stats": stats }, "*");
     }
 	
 	if ("getLoudness" in e.data){
-		log("GOT OUDNESS REQUEST");
+		log("GOT LOUDNESS REQUEST");
 		if (e.data.getLoudness == true){
 			var loudness = {};
 			for (var i in session.rpcs){
@@ -1532,7 +1553,7 @@ window.onmessage = function(e){ // iFRAME support
     }
 	
 	if ("getStreamIDs" in e.data){
-		log("GOT OUDNESS REQUEST");
+		log("GOT LOUDNESS REQUEST");
 		if (e.data.getStreamIDs == true){
 			var streamIDs = {};
 			for (var i in session.rpcs){
