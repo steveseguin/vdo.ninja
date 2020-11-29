@@ -1515,25 +1515,23 @@ window.onmessage = function(e){ // iFRAME support
 			stats.inbound_stats[session.rpcs[i].streamID] = session.rpcs[i].stats;
 		}
         stats.outbound_stats = {};
-		for (var uuid in session.pcs){
+        for (var uuid in session.pcs){
             stats.outbound_stats[uuid] = (session.pcs[uuid].stats.info != undefined) ? session.pcs[uuid].stats.info:{};
-			session.pcs[uuid].getStats().then(function(detailedstats){
-				detailedstats.forEach(stat=>{
-                    if (stat.type=="outbound-rtp"){
-                        if (stat.kind=="video"){
-                            if ("qualityLimitationReason" in stat){
-                                stats.outbound_stats[uuid].quality_Limitation_Reason = stat.qualityLimitationReason;
-                            }
-                            if ("framesPerSecond" in stat){
-                                stats.outbound_stats[uuid].resolution = stat.frameWidth+" x "+ stat.frameHeight +" @ "+stat.framesPerSecond;
-                            }
-                            if ("encoderImplementation" in stat){
-                                stats.outbound_stats[uuid].encoder = stat.encoderImplementation;
-                            }
+            session.pcs[uuid].getStats().then(function(detailedstats){
+                detailedstats.forEach(stat=>{
+                    if (stat.type=="outbound-rtp" && stat.kind=="video"){
+                        if ("qualityLimitationReason" in stat){
+                            stats.outbound_stats[uuid].quality_Limitation_Reason = stat.qualityLimitationReason;
                         }
+                        if ("framesPerSecond" in stat){
+                            stats.outbound_stats[uuid].resolution = stat.frameWidth+" x "+ stat.frameHeight +" @ "+stat.framesPerSecond;
+                        }
+                        if ("encoderImplementation" in stat){
+                            stats.outbound_stats[uuid].encoder = stat.encoderImplementation;
+                        } 
                     }
                 });
-			});
+            });
         }
 		parent.postMessage({"stats": stats }, "*");
     }
