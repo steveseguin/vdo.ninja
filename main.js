@@ -1516,7 +1516,7 @@ window.onmessage = function(e){ // iFRAME support
 		}
         stats.outbound_stats = {};
 		for (var uuid in session.pcs){
-            stats.outbound_stats[uuid] = session.pcs[uuid].stats.info;
+            stats.outbound_stats[uuid] = (session.pcs[uuid].stats.info != undefined) ? session.pcs[uuid].stats.info:{};
 			session.pcs[uuid].getStats().then(function(detailedstats){
 				detailedstats.forEach(stat=>{
                     if (stat.type=="outbound-rtp"){
