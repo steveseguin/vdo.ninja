@@ -7,6 +7,23 @@
 <script type="text/javascript" crossorigin="anonymous" src="./thirdparty/qrcode.min.js"></script>
 <script type="text/javascript" src="./thirdparty/jquery.min.js"></script> 
 <link rel="stylesheet" href="./main.css?ver=22" />
+<style>
+#chatModule{
+    bottom: 1px;
+    position: fixed;
+    align-self: center;
+    width: 100%;
+}
+#chatInput{
+    color: #000;
+    background-color: #FFFE;
+    max-width: 700px;
+    min-width: 390px;
+    font-size: 105%;
+    margin-left: 10px;
+    padding: 3px;
+}
+</style>
 </head>
 <body>
 <div id="chatModule" >
@@ -50,6 +67,7 @@ if (urlParams.has("id")){
  var bid = urlParams.get("id");
 }
 var bc = new BroadcastChannel(bid);
+bc.postMessage({"loaded":true});
 bc.onmessage = function (e) {
 	//if (e.source != iframe.contentWindow){return} // reject messages send from other iframes
 	console.log(e);
@@ -64,6 +82,31 @@ bc.onmessage = function (e) {
 		}
 	}
 };
+function sanitize(string) {
+	var temp = document.createElement('div');
+	temp.textContent = string;
+	return temp.innerHTML;
+}
+
+function EnterButtonChat(event){
+	 // Number 13 is the "Enter" key on the keyboard
+	var key = event.which || event.keyCode;
+	if (key  === 13) {
+		// Cancel the default action, if needed
+		event.preventDefault();
+		// Trigger the button element with a click
+		sendChatMessage();
+	}
+}
+
+function sendChatMessage(chatMsg = false){ // filtered + visual
+	var msg = document.getElementById('chatInput').value;
+	msg = sanitize(msg);
+	if (msg==""){return;}
+	console.log(msg);
+	bc.postMessage({"msg":msg})
+	document.getElementById('chatInput').value = "";
+}
 
 function timeSince(date) {
 
@@ -93,16 +136,6 @@ function timeSince(date) {
   return "Seconds ago";
 }
 
-
-
-function toggleQualityDirector(bitrate, UUID, ele = null){  // ele is specific to the button in the director's room
-	var eles = ele.parentNode.childNodes;
-	for (i in eles){
-		eles[i].className="";
-	}
-	ele.className="pressed";
-	session.requestRateLimit(bitrate, UUID);
-}
 
 
 function updateMessages(){

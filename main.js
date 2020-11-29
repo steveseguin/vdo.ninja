@@ -852,6 +852,20 @@ if (urlParams.has("autojoin") || urlParams.has("autostart") || urlParams.has("aj
 	session.autostart = true;
 }
 
+if (urlParams.has('noiframe') || urlParams.has('noiframes') || urlParams.has('nif')){
+	
+	session.noiframe = urlParams.get('noiframe') || urlParams.get('noiframes') || urlParams.get('nif');
+	
+	if (!(session.noiframe)){
+		session.noiframe=[];
+	} else {
+		session.noiframe = session.noiframe.split(",");
+	}
+	log("disable iframe playback");
+	log(session.noiframe);
+}
+
+
 
 if (urlParams.has('novideo') || urlParams.has('nv') || urlParams.has('hidevideo') || urlParams.has('showonly') ){
 	
@@ -1198,7 +1212,11 @@ if (urlParams.has('channeloffset')){
 	log("max channels is 32; channels offset");
 	session.audioEffects=true;
 }
-
+if (urlParams.has('enhance')){
+	//if (parseInt(urlParams.get('enhance')>0){
+	session.enhance = true;//parseInt(urlParams.get('enhance'));
+	//}
+}
 
 if (urlParams.has('maxviewers') || urlParams.has('mv') ){
 	
@@ -1529,38 +1547,43 @@ window.onmessage = function(e){ // iFRAME support
 			stats.inbound_stats[session.rpcs[i].streamID] = session.rpcs[i].stats;
 		}
 		
-		for (var uuid in session.pcs){
-			session.pcs[uuid].getStats().then(function(stats){
-				stats.forEach(stat=>{
-					if (stat.type=="outbound-rtp"){
-						if (stat.kind=="video"){
-							
-							if ("qualityLimitationReason" in stat){
-								session.pcs[uuid].stats.quality_Limitation_Reason = stat.qualityLimitationReason;
-							}
-							if ("framesPerSecond" in stat){
-								session.pcs[uuid].stats.resolution = stat.frameWidth+" x "+ stat.frameHeight +" @ "+stat.framesPerSecond;
-							}
-							if ("encoderImplementation" in stat){
-								session.pcs[uuid].stats.encoder = stat.encoderImplementation;
-							}
-							
-						}
-					}
-				});
-				
-			});
-		}
 		
-		stats.outbound_stats = {};
-		for (var i in session.pcs){  
-			stats.outbound_stats[i] = session.pcs[i].stats;
+		for (var uuid in session.pcs){
+			setTimeout(function(UUID){
+				session.pcs[UUID].getStats().then(function(stats){
+					stats.forEach(stat=>{
+						if (stat.type=="outbound-rtp"){
+							if (stat.kind=="video"){
+								
+								if ("qualityLimitationReason" in stat){
+									session.pcs[UUID].stats.quality_Limitation_Reason = stat.qualityLimitationReason;
+								}
+								if ("framesPerSecond" in stat){
+									session.pcs[UUID].stats.resolution = stat.frameWidth+" x "+ stat.frameHeight +" @ "+stat.framesPerSecond;
+								}
+								if ("encoderImplementation" in stat){
+									session.pcs[UUID].stats.encoder = stat.encoderImplementation;
+								}
+								
+							}
+						}
+						return;
+					});
+					return;
+				});
+			},0,uuid);
 		}
-		parent.postMessage({"stats": stats }, "*");
+		setTimeout(function(){
+			stats.outbound_stats = {};
+			for (var i in session.pcs){  
+				stats.outbound_stats[i] = session.pcs[i].stats;
+			}
+			parent.postMessage({"stats": stats }, "*");
+		},1000);
     }
 	
 	if ("getLoudness" in e.data){
-		log("GOT OUDNESS REQUEST");
+		log("GOT LOUDNESS REQUEST");
 		if (e.data.getLoudness == true){
 			var loudness = {};
 			for (var i in session.rpcs){
@@ -1574,7 +1597,7 @@ window.onmessage = function(e){ // iFRAME support
     }
 	
 	if ("getStreamIDs" in e.data){
-		log("GOT OUDNESS REQUEST");
+		log("GOT LOUDNESS REQUEST");
 		if (e.data.getStreamIDs == true){
 			var streamIDs = {};
 			for (var i in session.rpcs){
@@ -2099,31 +2122,38 @@ function printMyStats(menu){  // see: setupStatsMenu
 	}
 	menu.innerHTML+="<button onclick='session.forcePLI(null,event);'>Send Keyframe to Viewers</button>";
 	for (var uuid in session.pcs){
-		session.pcs[uuid].getStats().then(function(stats){
-			stats.forEach(stat=>{
-				if (stat.type=="outbound-rtp"){
-					if (stat.kind=="video"){
-						
-						if ("qualityLimitationReason" in stat){
-							session.pcs[uuid].stats.quality_Limitation_Reason = stat.qualityLimitationReason;
+		setTimeout(function(UUID){
+			session.pcs[UUID].getStats().then(function(stats){
+				stats.forEach(stat=>{
+					if (stat.type=="outbound-rtp"){
+						if (stat.kind=="video"){
+							if ("qualityLimitationReason" in stat){
+								session.pcs[UUID].stats.quality_Limitation_Reason = stat.qualityLimitationReason;
+							}
+							if ("framesPerSecond" in stat){
+								session.pcs[UUID].stats.resolution = stat.frameWidth+" x "+ stat.frameHeight +" @ "+stat.framesPerSecond;
+							}
+							if ("encoderImplementation" in stat){
+								session.pcs[UUID].stats.encoder = stat.encoderImplementation;
+							}
+							
 						}
-						if ("framesPerSecond" in stat){
-							session.pcs[uuid].stats.resolution = stat.frameWidth+" x "+ stat.frameHeight +" @ "+stat.framesPerSecond;
-						}
-						if ("encoderImplementation" in stat){
-							session.pcs[uuid].stats.encoder = stat.encoderImplementation;
-						}
-						
 					}
-				}
+					return;
+				});
+				printViewValues(session.pcs[UUID].stats);
+				menu.innerHTML+="<hr>";
+				try{
+					getById("menuStatsBox").scrollLeft = scrollLeft;
+					getById("menuStatsBox").scrollTop = scrollTop;
+				} catch(e){}
+				return;
+			}).catch(()=>{
+				printViewValues(session.pcs[UUID].stats);
+				menu.innerHTML+="<hr>";
 			});
-			printViewValues(session.pcs[uuid].stats);
-			menu.innerHTML+="<br /><br />";
-			try{
-				getById("menuStatsBox").scrollLeft = scrollLeft;
-				getById("menuStatsBox").scrollTop = scrollTop;
-			} catch(e){}
-		});
+
+		},0,uuid);
 	}
 	try{
 		getById("menuStatsBox").scrollLeft = scrollLeft;
@@ -4837,21 +4867,34 @@ function dragElement(elmnt) {
 function loadIframe(iframesrc){  // this is pretty important if you want to avoid camera permission popup problems.  You can also call it automatically via: <body onload=>loadIframe();"> , but don't call it before the page loads.
 	
 	var iframe = document.createElement("iframe");
-	var iframeContainer = getById("iFramePreview");
 	iframe.allow="autoplay;camera;microphone";
 	iframe.allowtransparency="true";
 	iframe.allowfullscreen ="true";
 	iframe.style.width="100%";
 	iframe.style.height="100%";
-
+	iframe.style.border = "10px dashed rgb(64 65 62)";
+	
 	if (iframesrc==""){
 		iframesrc="./";
 	}
-	
+	if (document.getElementById("mainmenu")){
+		var m = getById("mainmenu");
+		m.remove();
+	}
 	iframe.src = iframesrc;
-	iframeContainer.appendChild(iframe);
+	return iframe
 }
 
+function dropDownButtonAction(ele){
+	var ele = getById("dropButton");
+	if (ele){
+		ele.parentNode.removeChild(ele);
+		getById('container-5').classList.remove('advanced');
+		getById('container-8').classList.remove('advanced');
+		getById('container-6').classList.remove('advanced');
+		getById('container-7').classList.remove('advanced');
+	}
+}
 
 function updateConstraintSliders(){
 	log("updateConstraintSliders");
@@ -6156,9 +6199,13 @@ function timeSince(date) {
 var chatUpdateTimeout = null;
 var messageList = []
 
-function sendChatMessage(){ // filtered + visual
+function sendChatMessage(chatMsg = false){ // filtered + visual
 	var data = {};
-	var msg = document.getElementById('chatInput').value;
+	if (chatMsg===false){
+		var msg = document.getElementById('chatInput').value;
+	} else {
+		var msg = chatMsg;
+	}
 	if (msg==""){return;}
 	sendChat(msg); // send message to peers
 	data.time = Date.now();
@@ -6168,7 +6215,8 @@ function sendChatMessage(){ // filtered + visual
 	document.getElementById('chatInput').value = "";
 	messageList.push(data);
 	messageList = messageList.slice(-100);
-	if(session.broadcastChannel!==false){
+	if (session.broadcastChannel!==false){
+		log(session.broadcastChannel);
 		session.broadcastChannel.postMessage(data);
 	}
 	updateMessages();
@@ -6188,9 +6236,13 @@ function createPopoutChat(){
 	log(randid);
 	window.open('./popout?id='+randid,'popup','width=600,height=480,toolbar=no,menubar=no,resizable=yes');
 	session.broadcastChannel = new BroadcastChannel(randid);
-	setTimeout(function(){
-		session.broadcastChannel.postMessage({messageList:messageList}); /// all data.  delayed to ensure it loads.  Should probably have a callback instead.
-	},5000);
+	session.broadcastChannel.onmessage = function (e) {
+		if ("loaded" in e.data){
+			session.broadcastChannel.postMessage({messageList:messageList});
+		} else if ("msg" in e.data){
+			sendChatMessage(e.data.msg);
+		}
+	}
 	return false;
 }
 

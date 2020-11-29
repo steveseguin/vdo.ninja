@@ -63,7 +63,7 @@
 			<link itemprop="url" href="./images/obsNinja_logo_full.png" />
 		</span>
 		<script  type="text/javascript" crossorigin="anonymous"  src="./thirdparty/CodecsHandler.js?ver=22"></script>
-		<script  type="text/javascript" crossorigin="anonymous" src="./webrtc.js?ver=118"></script>
+		<script  type="text/javascript" crossorigin="anonymous" src="./webrtc.js?ver=119"></script>
 		<input id="zoomSlider" type="range" style="display: none;" />
 		<div id="header">
 			<a id="logoname" href="./" style="text-decoration: none; color: white; margin: 2px;">
@@ -458,15 +458,19 @@
 					</div>
 				</div>
 			</div>
-			<div id="container-5" class="column columnfade pointer advanced card" style=" overflow-y: auto;">
+			
+			<div id="dropButton"><i class="las la-chevron-down" onclick="dropDownButtonAction()"></i></div>
+			
+			<div id="container-5" class="column columnfade pointer card advanced" style=" overflow-y: auto;">
 				<h2><span data-translate="share-local-video-file">Stream Media File</span></h2>
 				<div class="container-inner">
 					
 					<br /><br />
 					SELECT THE VIDEO FILE TO SHARE<br /><br />
 					<input id="fileselector" onchange="session.publishFile(this,event);" type="file" accept="video/*,audio/*" alt="Hold CTRL (or CMD) to select multiple files" title="Hold CTRL (or CMD) to select multiple files" multiple/>
+					<p style="margin:10px">Keep this tab visible if using Chrome, else the video playback will stop</p>
 				</div>
-				<p>Keep this tab visible if using Chrome, else the video playback will stop</p>
+				
 				<div class="outer close">
 					<div class="inner">
 						<label class="labelclass">
@@ -474,17 +478,18 @@
 						</label>
 					</div>
 				</div>
-
 			</div>
-			<div id="container-6" class="column columnfade pointer" style=" overflow-y: auto;">
-				<h2><span data-translate="share-website-iframe">Share Remote Website</span></h2>
+			
+			<div id="container-6" class="column columnfade pointer card advanced" style=" overflow-y: auto;">
+				<h2><span data-translate="share-website-iframe">Share Website</span></h2>
+				<i style="margin-top:30px;font-size:560%;overflow:hidden;" class="las la-broadcast-tower"></i>
 				<div class="container-inner">
 					
 					<br /><br />
 					Enter the URL website you wish to share.<br /><br />
 					<input id="iframeURL" type="text" style="margin:10px; border:2px solid; padding:10px; width:400px;" title="Enter an HTTPS URL" multiple/><br />
 					<button onclick="loadIframe(getById('iframeURL').value);" >Preview</button> 
-					<button onclick="this.innerHTML = 'Update';session.publishIFrame(getById('iframeURL').value);" >Share</button><br />
+					<button onclick="this.innerHTML = 'Update'; session.publishIFrame(getById('iframeURL').value);" >Share</button><br />
 					<small>Remote website must be CORS/IFrame compatible with full SSL-encryption enabled.</small>
 					<div id="iFramePreview" style=" width: 1280px; height: 720px; margin: auto; padding: 10px;"></div>
 				</div>
@@ -497,6 +502,17 @@
 				</div>
 
 			</div>
+			
+			<div id="container-7" class="column columnfade pointer card advanced" style=" overflow-y: auto;" onclick="window.location = 'https://s10.fun/speedtest';">
+				<h2><span data-translate="run-a-speed-test">Run a Speed Test</span></h2>
+				<i style="margin-top:30px;font-size:600%;overflow:hidden;" <i class="las la-tachometer-alt"></i>
+			</div>
+			
+			<div id="container-8" class="column columnfade pointer card advanced" style=" overflow-y: auto;" onclick="window.location = 'https://guides.obs.ninja';">
+				<h2><span data-translate="read-the-guides">Browse the Guides</span></h2>
+				<i style="margin-top:30px;font-size:600%;overflow:hidden;" <i class="las la-book-open"></i>
+			</div>
+			
 			<p></p>
 			<div id="info" class="fullcolumn columnfade">
 				<center>
@@ -724,8 +740,8 @@
 			</div></div>
 		</div>
 		
-		<div id="chatModule" style="display:none;">
-			<a target="popup" style="cursor:pointer;" onclick="createPopoutChat();">💢</a>
+		<div id="chatModule" style="display:none;text-align:right">
+			<a target="popup" style="cursor:pointer;text-align:right;color:#a3b7e9;" onclick="createPopoutChat();"><i class="las la-external-link-alt"></i></a>
 			<div id="chatBody"> 
 				<div class="inMessage" data-translate='welcome-to-obs-ninja-chat'>
 					Welcome to OBS.Ninja! You can send text messages directly to connected peers from here.
