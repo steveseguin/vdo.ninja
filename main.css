@@ -1842,3 +1842,34 @@ a#reshare {
 #joinroomID+button {
 	margin: 0px var(--regular-margin);
 }
+
+/* Tips for guests */
+span#guestTips {
+    margin: 10 auto;
+    width: 450px;
+    display: flex;
+    flex-direction: column;
+    text-align: left;
+    background: #f3f3f3;
+    border: 1px solid #cccccc;
+    padding: 10px;
+}
+
+#guestTips p {
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+
+#guestTips span:nth-child(1) {
+    color: red;
+}
+
+#guestTips > span > i {
+    font-size: 2.5em;
+    margin-right: 10px;
+}
+
+#guestTips > span > span {
+    line-height: 2.5em;
+    vertical-align: bottom;
+}
