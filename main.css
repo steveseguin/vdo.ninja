@@ -92,6 +92,16 @@ button.grey {
 	color: white;
 }
 
+button.red {
+	-webkit-app-region: no-drag;
+	padding: 10px;
+	margin: 10px 0px;
+	cursor: pointer;
+	border-radius: 2px;
+	background-color:  var(--red-accent);
+	color: white;
+}
+
 button {
 	-webkit-app-region: no-drag;
 	padding: 7px 10px 6px 10px;
