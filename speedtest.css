@@ -1,0 +1,119 @@
+body {
+    background-color: #141926;
+}
+
+h1 {
+    color: white;
+    margin: 20px 0px;
+}
+
+h1 small {
+    display: block;
+    margin-top: 0.5em;
+    font-size: 0.5em;
+}
+
+#container, #graphs, #log {
+    width: 80%;
+    margin: 0 auto;
+}
+
+#explanation {
+    color: white;
+    font-family: sans-serif;
+    width: 80%;
+    margin: 0 auto;
+    margin-top: 20px;
+}
+
+#explanation h2 {
+    border-bottom: 1px solid #383838;
+    margin-bottom: 10px;
+    padding-bottom: 5px;
+}
+
+iframe {
+    min-height: 30vh;
+    width: 39vw;
+}
+
+#controls {
+    margin-top: 20px;
+}
+
+#controls button {
+    margin: 5px;
+}
+
+canvas {
+    background-color: black;
+    margin: 20px;
+}
+
+#log {
+    margin-top: 20px;
+    background: #2a2a2a;
+    padding: 20px 0px;
+    border: 1px solid #383838; 
+}
+
+#log ul {
+    margin: 20px;
+    list-style: none;
+    color: #cacaca;
+    max-height: 20vh;
+    overflow: auto;
+    overflow-x: hidden;
+}
+
+#graphs {
+    display: flex;
+    margin-top: 20px;
+    background: #2a2a2a;
+    padding: 20px 0px;
+    border: 1px solid #383838;
+}
+
+.graph {
+    flex: 1;
+    position: relative;
+}
+
+.graph h2, #log h2 {
+    margin: 0px 20px;
+    font-size: 1em;
+}
+
+.graph > span {
+    position: absolute;
+    bottom: 30px;
+    left: 30px;
+    color: #cacaca;
+    font-weight: bold;
+}
+
+ol {
+    margin-left: 20px;
+    margin-top: 30px;
+}
+
+@media only screen
+  and (min-device-width: 375px)
+  and (max-device-width: 812px)
+  and (orientation: portrait) {
+
+    #container {
+        width: 90%;
+    }
+
+    #graphs {
+        flex-direction: column;
+    }
+
+    iframe {
+        width: 90vw;
+        min-height: 0;
+    }
+  }
+
+  #statsdiv {display: none;}
