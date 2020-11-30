@@ -797,7 +797,7 @@ label {
 }
 
 .advanced {
-	display: none !important
+	display: none !important;
 }
 #dropButton{
 	font-size: 2em;
@@ -830,7 +830,6 @@ label {
 	display: inline-block;
 	margin: 1.8%;
 	min-width: 300px;
-	max-width: 500px;
 	width: 20%;
 	padding: 25px;
 	height: 220px;

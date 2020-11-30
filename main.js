@@ -972,18 +972,32 @@ if (ln_template){  // checking if manual lanuage override enabled
 			}
 			response.json().then(function(data) {
 				log(data);
-				document.querySelectorAll('[data-translate]').forEach(function(ele){
-					//log(ele.dataset.translate);
-					//log(translations[ele.dataset.translate]);
-					if (ele.dataset.translate in data){
-						if (ele.dataset.translateType) {
-							ele.setAttribute(ele.dataset.translateType, data[ele.dataset.translate]);
-						} else {
-							ele.innerHTML = data[ele.dataset.translate];
-						}
-						
+				
+				var trans = data.innerHTML;
+				var allItems = document.querySelectorAll('[data-translate]');
+				allItems.forEach(function(ele){
+					if (ele.dataset.translate in trans){
+						ele.innerHTML = trans[ele.dataset.translate];
 					}
 				});
+				trans = data.titles;
+				var allTitles = document.querySelectorAll('[title]');
+				allTitles.forEach(function(ele){
+					var key = ele.title.replace(/[\W]+/g,"-").toLowerCase();
+					if (key in trans){
+						ele.title = trans[key];
+					}
+				});
+				trans = data.placeholders;
+				var allPlaceholders = document.querySelectorAll('[placeholder]');
+				allPlaceholders.forEach(function(ele){
+					var key = ele.placeholder.replace(/[\W]+/g,"-").toLowerCase();
+					if (key in trans){
+						ele.placeholder = trans[key];
+					}
+				});
+					
+					
 				getById("mainmenu").style.opacity = 1;
 			}).catch(function(err){
 				errorlog(err);
@@ -1034,13 +1048,31 @@ if (ln_template){  // checking if manual lanuage override enabled
 			}
 			response.json().then(function(data) {
 				log(data);
-				document.querySelectorAll('[data-translate]').forEach(function(ele){
-					//log(ele.dataset.translate);
-					//log(translations[ele.dataset.translate]);
-					if (ele.dataset.translate in data){
-						ele.innerHTML = data[ele.dataset.translate];
+				
+				var trans = data.innerHTML;
+				var allItems = document.querySelectorAll('[data-translate]');
+				allItems.forEach(function(ele){
+					if (ele.dataset.translate in trans){
+						ele.innerHTML = trans[ele.dataset.translate];
 					}
 				});
+				trans = data.titles;
+				var allTitles = document.querySelectorAll('[title]');
+				allTitles.forEach(function(ele){
+					var key = ele.title.replace(/[\W]+/g,"-").toLowerCase();
+					if (key in trans){
+						ele.title = trans[key];
+					}
+				});
+				trans = data.placeholders;
+				var allPlaceholders = document.querySelectorAll('[placeholder]');
+				allPlaceholders.forEach(function(ele){
+					var key = ele.placeholder.replace(/[\W]+/g,"-").toLowerCase();
+					if (key in trans){
+						ele.placeholder = trans[key];
+					}
+				});
+				
 				if (session.label===false){
 					document.title = location.hostname;
 				}
@@ -1078,15 +1110,27 @@ function changeLg(lang){
 			}
 			response.json().then(function(data) {
 				log(data);
-				document.querySelectorAll('[data-translate]').forEach(function(ele){
-					//log(ele.dataset.translate);
-					//log(translations[ele.dataset.translate]);
-					try {
-						if (ele.dataset.translate in data){
-							ele.innerHTML = data[ele.dataset.translate];
-						}
-					} catch (e){
-						errorlog(e);
+				var trans = data.innerHTML;
+				var allItems = document.querySelectorAll('[data-translate]');
+				allItems.forEach(function(ele){
+					if (ele.dataset.translate in trans){
+						ele.innerHTML = trans[ele.dataset.translate];
+					}
+				});
+				trans = data.titles;
+				var allTitles = document.querySelectorAll('[title]');
+				allTitles.forEach(function(ele){
+					var key = ele.title.replace(/[\W]+/g,"-").toLowerCase();
+					if (key in trans){
+						ele.title = trans[key];
+					}
+				});
+				trans = data.placeholders;
+				var allPlaceholders = document.querySelectorAll('[placeholder]');
+				allPlaceholders.forEach(function(ele){
+					var key = ele.placeholder.replace(/[\W]+/g,"-").toLowerCase();
+					if (key in trans){
+						ele.placeholder = trans[key];
 					}
 				});
 			});
@@ -1674,9 +1718,22 @@ window.onmessage = function(e){ // iFRAME support
 	}
 };
 
-function pokeIframeAPI(action){
+function pokeIframeAPI(action, value=null, UUID=null){
 	try{
-		parent.postMessage({"action": action }, "*");
+		var data = {};
+		
+		data.action = action;
+		
+		if (value!==null){
+			data.value = value;
+		}
+		if (UUID !==null){
+			data.UUID = UUID;
+		}
+		
+		if (parent){
+			parent.postMessage(data, "*");
+		}
 	} catch(e){errorlog(e);}
 }
 
