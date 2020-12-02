@@ -256,7 +256,10 @@ if (window.obsstudio){
 
 window.onload = function() { // This just keeps people from killing the live stream accidentally. Also give me a headsup that the stream is ending
 	window.addEventListener("beforeunload", function (e) {
-		session.ws.close();
+		try{
+			session.ws.close();
+		} catch (e){
+		}
 		//setTimeout(function(){session.hangup();},0);
 		return undefined; // ADDED OCT 29th; get rid of popup. Just close the socket connection if the user is refreshing the page.  It's one or the other.
 		
@@ -1019,6 +1022,7 @@ if (ln_template){  // checking if manual lanuage override enabled
 		getById("qos").innerHTML = location.hostname;
 		getById("logoname").innerHTML = getById("qos").outerHTML;
 		getById("helpbutton").style.display = "none";
+		getById("reportbutton").style.display = "none";
 	}
 } else if (location.hostname === "rtc.ninja"){
 	try{
@@ -1029,6 +1033,7 @@ if (ln_template){  // checking if manual lanuage override enabled
 		getById("logoname").innerHTML = "";
 		getById("helpbutton").style.display = "none";
 		getById("helpbutton").style.opacity = 0;
+		getById("reportbutton").style.display = "none";
 		getById("mainmenu").style.opacity = 1;
 		getById("mainmenu").style.margin = "30px 0";
 		getById("translateButton").style.display = "none";
@@ -1079,6 +1084,7 @@ if (ln_template){  // checking if manual lanuage override enabled
 				getById("qos").innerHTML = location.hostname;
 				getById("logoname").innerHTML = getById("qos").outerHTML ;
 				getById("helpbutton").style.display = "none";
+				getById("reportbutton").style.display = "none";
 				getById("mainmenu").style.opacity = 1;
 			}).catch(function(err){
 				errorlog(err);
@@ -1094,6 +1100,7 @@ if (ln_template){  // checking if manual lanuage override enabled
 		getById("qos").innerHTML = location.hostname;
 		getById("logoname").innerHTML = getById("qos").outerHTML;
 		getById("helpbutton").style.display = "none";
+		getById("reportbutton").style.display = "none";
 		getById("chatBody").innerHTML = "";
 	} catch (error){
 		errorlog(error);
@@ -2161,7 +2168,6 @@ function printMyStats(menu){  // see: setupStatsMenu
 	
     var scrollLeft = getById("menuStatsBox").scrollLeft;
     var scrollTop = getById("menuStatsBox").scrollTop;
-	log(scrollTop + " " + scrollLeft);
 	menu.innerHTML="";
 	
 	session.stats.outbound_connections = Object.keys(session.pcs).length;
@@ -2483,7 +2489,6 @@ function toggleSettings(){ // TODO: I need to have this be MUTE, toggle, with vo
 		enumerateDevices().then(gotDevices2).then(function(){});
 	
 		getById("popupSelector").style.display="inline-block"
-		getById("settingstoggle").classList.add("icn-spinner");
 		getById("settingsbutton").classList.add("float2");
 		getById("settingsbutton").classList.remove("float");
 		setTimeout(function(){getById("popupSelector").style.right="0px";},1);
@@ -2496,7 +2501,6 @@ function toggleSettings(){ // TODO: I need to have this be MUTE, toggle, with vo
 		});
 		
 		getById("popupSelector").style.right="-400px";
-		getById("settingstoggle").classList.remove("icn-spinner");
 		
 		getById("settingsbutton").classList.add("float");
 		getById("settingsbutton").classList.remove("float2");
@@ -2792,6 +2796,7 @@ function publishScreen(){
 			}
 			getById("controlButtons").style.display="flex";
 			getById("helpbutton").style.display = "inherit";
+			getById("reportbutton").style.display = "";
 		} else {
 			getById("controlButtons").style.display="none";
 		}
@@ -2855,6 +2860,7 @@ function publishWebcam(btn = false){
 		}
 		getById("controlButtons").style.display="flex";
 		getById("helpbutton").style.display = "inherit";
+		getById("reportbutton").style.display = "";
 	} else {
 		getById("controlButtons").style.display="none";
 	}
@@ -3226,7 +3232,7 @@ function createDirectorCam(vid){
 	vid.style.height="35px";
 	vid.style.padding ="0";
 	getById("press2talk").innerHTML = "<span data-translate='Push-to-Mute'>🔴 Push to Mute</span>";
-	getById("press2talk").outerHTML += '<button class="grey" style="margin: 10px 15px;" onclick="toggleSettings()"><i class="las la-cog"></i></button>';
+	getById("press2talk").outerHTML += '<button class="grey" style="margin: 10px 15px;" onclick="toggleSettings()"><i class="las la-sliders-h"></i></button>';
 	getById("miniPerformer").appendChild(vid);
 	getById("press2talk").dataset.enabled="true";
 	session.muted=false;
@@ -3997,6 +4003,7 @@ function gotDevices2(deviceInfos){
 			option.checked = false;
 		}	
 		option.onchange = function(event){  // make sure to clear 'no audio option' if anything else is selected
+			log("Audio OPTION HAS CHANGED?");
 			if (!(CtrlPressed)){
 				document.querySelectorAll("#audioSource3 input[type='checkbox']").forEach(function(item) {
 					if (event.currentTarget.value !== item.value){
@@ -4035,6 +4042,7 @@ function gotDevices2(deviceInfos){
 		});
 		
 		audioInputSelect.onchange = function(){
+			log("Audio OPTION HAS CHANGED? 2");
 			activatedPreview=false;
 			grabAudio("videosource","#audioSource3");
 		};
@@ -4095,8 +4103,10 @@ async function getAudioOnly(selector, trackid=null, override=false){
 	var audioList = [];
 	var streams = [];
 	log("getAudioOnly()");
+	log(trackid);
 	for (var i=0; i<audioSelect.length;i++){
 		if (audioSelect[i].value=="ZZZ"){
+			log("ZZZ as Audio");
 			continue;
 		} else if (trackid==audioSelect[i].value){ // skip already excluded
 			continue;
@@ -4186,6 +4196,62 @@ function applyMirror(mirror, eleName='previewWebcam'){  // true unmirrors as its
 		}
 	}	
 }
+
+///  Detect system changes; handle change or use for debugging
+var audioReconnectTimeout = null;
+var videoReconnectTimeout = null;
+function reconnectDevices(event){
+	warnlog("A media device has changed");
+	errorlog(event);
+	enumerateDevices().then(gotDevices2).then(function(){
+		
+		clearTimeout(audioReconnectTimeout);
+		audioReconnectTimeout = setTimeout(function(){
+			activatedPreview=false;
+			grabAudio("videosource","#audioSource3", "default");
+		},1000);
+		
+		clearTimeout(videoReconnectTimeout);
+		videoReconnectTimeout = setTimeout(function(){
+			activatedPreview=false;
+			grabVideo(session.quality, "videosource", "select#videoSource3");
+		},1000);;
+		
+		var outputSelect = document.querySelector('select#outputSource3');
+		session.sink = outputSelect.options[outputSelect.selectedIndex].value;
+		
+		getById("videosource").setSinkId(session.sink).then(() => {
+			log("New Output Device:"+session.sink);
+		}).catch(error => {
+			errorlog(error);
+		});
+		for (UUID in session.rpcs){
+			session.rpcs[UUID].videoElement.setSinkId(session.sink).then(() => {
+				log("New Output Device for: "+UUID);
+			}).catch(error => {
+				errorlog(error);
+			});
+		}
+		
+	});
+}
+
+try {
+	navigator.mediaDevices.ondevicechange = reconnectDevices;
+} catch(e){errorlog(e);}
+
+
+function updateConnectionStatus() {
+  warnlog("Connection type changed from " + session.stats.network_type + " to " + Connection.effectiveType);
+  session.stats.network_type = Connection.effectiveType + " / " +Connection.type;
+}
+ 
+try{
+	var Connection = navigator.connection || navigator.mozConnection || navigator.webkitConnection;
+	session.stats.network_type = Connection.effectiveType + " / " +Connection.type;
+	Connection.addEventListener('change', updateConnectionStatus);
+} catch(e){}
+
 
 
 async function grabScreen(quality=0, audio=true){
@@ -4558,10 +4624,20 @@ async function grabVideo(quality=0, eleName='previewWebcam', selector="select#vi
 						getById(eleName).controls=true;
 					}
 				}
-				if (getById("popupSelector_constraints")){
-					getById("popupSelector_constraints").innerHTML = "";
+				if (getById("popupSelector_constraints_video")){
+					getById("popupSelector_constraints_video").innerHTML = "";
 				}
+				if (getById("popupSelector_constraints_audio")){
+					getById("popupSelector_constraints_audio").innerHTML = "";
+				}
+				if (getById("popupSelector_constraints_loading")){
+					getById("popupSelector_constraints_loading").style.display="";
+				}
+				
 				grabVideoTimer = setTimeout(function(){
+					if (getById("popupSelector_constraints_loading")){
+						getById("popupSelector_constraints_loading").style.display="none";
+					}
 					if (eleName=="previewWebcam"){
 						getById(eleName).controls=true;
 					}
@@ -4692,7 +4768,7 @@ async function grabAudio(eleName="previewWebcam", selector="#audioSource", track
 				for (UUID in session.pcs){
 					if (session.pcs[UUID].allowAudio==true){  // allow 
 						var sender = session.pcs[UUID].addTrack(track, streams[i]);
-						//sender.track.onended = tryAgain;
+						sender.track.onended =  tryAgain;
 					}
 				}
 			});
@@ -4715,88 +4791,9 @@ async function grabAudio(eleName="previewWebcam", selector="#audioSource", track
 	}
 }
 
-var tryAgainTimer=null;
-
 function tryAgain(event){  // audio or video agnostic track reconnect ------------not actually in use,.  maybe out of date
-	warnlog(event.currentTarget);
-	if (getById("videosource")==null){ // Don't bother with this if just a preview stream
-		return;
-	}
-	
-	var deviceType = event.currentTarget.kind;
-	var deviceId= event.currentTarget.id;
-	
-	if (tryAgainTimer!=null){
-		clearTimeout(tryAgainTimer);
-		tryAgainTimer=null;
-	}
-	tryAgainTimer = setTimeout(function(){
-		navigator.mediaDevices.ondevicechange = null;  // we only give it 10-seconds to reconnect.
-	},10000);
-	
-	navigator.mediaDevices.ondevicechange = function(){
-		clearTimeout(tryAgainTimer);
-		tryAgainTimer=null;
-		navigator.mediaDevices.ondevicechange=null; // clear
-		
-		
-		if (deviceType=="audio"){
-			if ((deviceId=="default") && (session.echoCancellation!==false) && (session.autoGainControl!==false) && (session.noiseSuppression!==false)){
-				var constraint = {audio: true};
-			} else { 
-				var constraint = {audio: {deviceId: {exact: deviceId}}};
-				if (session.echoCancellation==false){
-					constraint.audio.echoCancellation=false;
-				} 
-				if (session.autoGainControl==false){
-					constraint.audio.autoGainControl=false;
-				}
-				if (session.noiseSuppression==false){
-					constraint.audio.noiseSuppression=false;
-				}
-			}
-			constraint.video = false;
-		} else if (deviceType=="video"){
-			var constraint = {
-				video: {deviceId: {exact: deviceId}},
-				audio: false
-			};
-		} else {
-			return;  // no idea what this is? fail gently.
-		}
-		
-		//warnlog(constraint);
-		navigator.mediaDevices.getUserMedia(constraint).timeout(3000).then(function (stream){
-			stream.getTracks().forEach(function(track){
-				
-				getById("videosource").srcObject.addTrack(track, stream); // add video track to the preview video
-				session.streamSrc = getById(eleName).srcObject;
-				toggleMute(true);
-					
-				for (UUID in session.pcs){
-					if (session.pcs[UUID].allowAudio==true){  // allow  
-						var senders = session.pcs[UUID].getSenders(); // for any connected peer, update the video they have if connected with a video already.
-						var added=false;
-						senders.forEach((sender) => { // I suppose there could be a race condition between negotiating and updating this. if joining at the same time as changnig streams?
-							if (sender.track){
-								if (sender.track.id == track.id){
-									added=true;
-									//warnlog(sender.track);
-									if (sender.track.readyState=="ended"){
-										sender.replaceTrack(track);  
-									}
-								} 
-							}
-						});
-						if (added==false){
-							sender = session.pcs[UUID].addTrack(track, stream);
-							sender.track.onended = tryAgain;
-						}
-					}
-				}
-			});
-		}).catch(errorlog); // console error message only
-	}
+	log("TRY AGAIN TRIGGERED");
+	errorlog(event);
 }
 	
 
@@ -4963,13 +4960,18 @@ function listAudioSettings(){
 	getById("popupSelector_constraints_audio").innerHTML = "";
 	try {
 		var track0 = session.streamSrc.getAudioTracks();
-		track0 = track0[0];
-		if (track0.getCapabilities){
-			session.cameraConstaints = track0.getCapabilities();
+		if (track0.length){
+			track0 = track0[0];
+			if (track0.getCapabilities){
+				session.cameraConstaints = track0.getCapabilities();
+			}
+			log(session.cameraConstaints);
+		} else {
+			warnlog("session.streamSrc contains no audio tracks");
+			return;
 		}
-		
-		log(session.cameraConstaints);
 	} catch(e){
+		warnlog("session.streamSrc contains no audio tracks");
 		errorlog(e);
 		return;
 	}
@@ -5121,7 +5123,7 @@ function applyAudioHack(track, constraint, value=null){
 	} else if (value == "false"){
 		value = false;
 	}
-	log("CONTREAIT",constraint);
+	log(constraint);
 	var  new_constraints = Object.assign(track.getSettings(), {[constraint]:value}, );
 	new_constraints = {audio: new_constraints, video:false};
 	log(new_constraints);

@@ -119,13 +119,22 @@
 				<i id="mutevideotoggle" class="toggleSize las la-eye my-float"></i>
 			</div>
 			<div id="settingsbutton" title="Settings" onclick="toggleSettings()" class="advanced float" style="cursor: pointer;" alt="Toggle the Settings Menu">
-				<i id="settingstoggle" class="toggleSize las la-cog my-float"></i>
+				<i id="settingstoggle" class="toggleSize las la-sliders-h my-float"></i>
 			</div>
 			<div id="hangupbutton" title="Hangup the Call" onclick="hangup()" class="advanced float" style="cursor: pointer;" alt="Disconnect and End">
 				<i class="toggleSize my-float las la-phone rotate225" aria-hidden="true"></i>
 			</div>
 			
 		</div>
+		
+		<span
+                id="reportbutton"
+				title="Submit any error logs" 
+                onclick="submitDebugLog();"
+                style="cursor: pointer; visibility: hidden; display:none;"
+            >
+			<i style="float: right; bottom: 0px; cursor: pointer; position: fixed; right: 46px; color: #d9e4eb; padding: 2px; margin: 2px 2px 0 0; font-size: 140%;" class="las la-bug" aria-hidden="true"></i>
+		</span>
 		<span
                 id="helpbutton"
 				title="Show Help Info" 
@@ -226,7 +235,7 @@
 						<select id="videoSource" ></select>
 						<span id="gear_webcam" style="display: inline-block;" onclick="toggle(document.getElementById('videoSettings'));">
                             &nbsp;&nbsp;
-							<i class="las la-cog" style="font-size: 140%; vertical-align: middle;" aria-hidden="true"></i>
+							<i class="las la-sliders-h" style="font-size: 140%; vertical-align: middle;" aria-hidden="true"></i>
 						</span>
 					</span>
 					<br />
@@ -303,7 +312,7 @@
 					</button>
 					<span id="gear_screen" style="display: inline-block; cursor: pointer;" onclick="toggle(document.getElementById('videoSettings2'));">
                         &nbsp;&nbsp;
-						<i class="las la-cog" style="font-size: 170%; vertical-align: middle;" aria-hidden="true"></i>
+						<i class="las la-sliders-h" style="font-size: 170%; vertical-align: middle;" aria-hidden="true"></i>
 					</span>
 					<center>
 						<span id="videoSettings2" style="margin: auto auto; display: none; background-color: white; vertical-aligh: middle; border: 3px solid #ccc; max-width: 500px; padding: 10px 10px 5px 10px; margin: 10px 0 5px 0;">
@@ -635,7 +644,7 @@
 				</button>
 				
 				<button data-action-type="advanced-camera-settings" title="Advanced Settings and Remote Control" onclick="directorSendMessage(this);">
-					<span data-translate="advanced-camera-settings"><i class="las la-cog"></i> Advanced</span>
+					<span data-translate="advanced-camera-settings"><i class="las la-sliders-h"></i> Advanced</span>
 				</button>
 				<button data-action-type="voice-chat" title="Toggle Voice Chat with this Guest" onclick="directorSendMessage(this);">
 					<span data-translate="voice-chat"><i class="las la-microphone"></i> Voice Chat</span>
@@ -675,14 +684,19 @@
 				<button id="shareScreenGear" style="width: 135px; padding:20px;text-align:center;" onclick="grabScreen()"><b>Share Screen</b><br /><i style="padding:5px; font-size:300%;" class="las la-desktop"></i></button><br />
 				<button onclick="toggleSettings()" style="width: 135px; background-color:#EFEFEF;padding:10px 12px 12px 2px;margin: 10px 0px 20px 0"><i class="chevron right" style="font-size:150%;top:3px;position:relative;"></i> <b>Close Settings</b></button>
 				
-				<button id='advancedOptionsCamera' onclick="this.style.display = 'none'; toggle(getById('popupSelector_constraints_camera'),false,false); " style="display:none; background-color:#EFEFEF;padding:10px 12px 12px 2px;margin: 10px 0px 0px 10px"><i class="chevron bottom" style="font-size:150%;top:3px;position:relative;"></i> <b>Advanced Video</b></button>
-				<button id='advancedOptionsAudio' onclick="this.style.display = 'none'; toggle(getById('popupSelector_constraints_audio'),false,false); " style="display:none; background-color:#EFEFEF;padding:10px 12px 12px 2px;margin: 10px 0px 0px 10px"><i class="chevron bottom" style="font-size:150%;top:3px;position:relative;"></i> <b>Advanced Audio</b></button>
+				<button id='advancedOptionsCamera' onclick="this.style.display = 'none'; toggle(getById('popupSelector_constraints_video'),false,false);  getById('popupSelector_constraints_loading').style.visibility='visible';" style="display:none; background-color:#EFEFEF;padding:10px 12px 12px 2px;margin: 10px 0px 0px 10px"><i class="chevron bottom" style="font-size:150%;top:3px;position:relative;"></i> <b>Advanced Video</b></button>
+				
+				<button id='advancedOptionsAudio' onclick="this.style.display = 'none'; toggle(getById('popupSelector_constraints_audio'),false,false); getById('popupSelector_constraints_loading').style.visibility='visible';" style="display:none; background-color:#EFEFEF;padding:10px 12px 12px 2px;margin: 10px 0px 0px 10px"><i class="chevron bottom" style="font-size:150%;top:3px;position:relative;"></i> <b>Advanced Audio</b></button>
+				
 				
 				<span id="popupSelector_constraints_audio" class="popupSelector_constraints" style="display: none;">
 				
 				</span>
 				<span id="popupSelector_constraints_video" class="popupSelector_constraints" style="display: none;">
 				
+				</span>
+				<span id="popupSelector_constraints_loading" style="display: none; visibility:hidden">
+					<i class='las la-spinner icn-spinner' style='margin:30px;font-size:400%;color:white;'></i>
 				</span>
 			</p>
 		</div>
@@ -806,6 +820,10 @@
 		</div>
 		
 		<script>
+		
+			if (window.location.hostname.indexOf("www.obs.ninja") == 0) {
+				window.location = window.location.href.replace("www.obs.ninja","obs.ninja"); // the session.salt is domain specific; let's consolidate www as a result.
+			}
 		
             var session = WebRTC.Media; // session is a required global variable if configuring manually. Run before loading main.js but after webrtc.js.
 			session.version = "13.5b";

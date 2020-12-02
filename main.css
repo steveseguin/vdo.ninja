@@ -394,8 +394,23 @@ button.glyphicon-button.active.focus {
 	}
 }
 
+.la-sliders-h {
+	cursor:pointer;
+}
+
+.la-sliders-h {
+	cursor:pointer;
+}
+
+select {
+	cursor:pointer;
+}
+
+input[type='checkbox'] { cursor:pointer; }
+input[type='radio'] { cursor:pointer; }
+
 .icn-spinner {
-	/* animation: spin-animation 3s infinite; */
+	animation: spin-animation 3s infinite;
 	display: inline-block;
 	z-index: 10;
 }
@@ -817,7 +832,6 @@ label {
 	text-align: center;
 	/* Add shadows to create the "card" effect */
 }
-
 
 .card {
 	box-shadow: 0 4px 8px 0 rgba(0, 0, 0, .1);
