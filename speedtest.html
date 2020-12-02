@@ -1,0 +1,343 @@
+<html>
+	<head>
+		<link rel="stylesheet" href="./lineawesome/css/line-awesome.min.css" />
+		<link rel="stylesheet" href="./main.css?ver=11" />
+		<link rel="stylesheet" href="./speedtest.css?ver=1" />
+		<meta charset="utf8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		<title>OBSN Speed Test</title>
+		<script>
+			(function (w) {
+				w.URLSearchParams =
+					w.URLSearchParams ||
+					function (searchString) {
+						var self = this;
+						self.searchString = searchString;
+						self.get = function (name) {
+							var results = new RegExp("[\?&]" + name + "=([^&#]*)").exec(
+								self.searchString
+							);
+							if (results == null) {
+								return null;
+							} else {
+								return decodeURI(results[1]) || 0;
+							}
+						};
+					};
+			})(window);
+			var urlParams = new URLSearchParams(window.location.search);
+
+			function loadIframe() {
+				// this is pretty important if you want to avoid camera permission popup problems. YOu need to load the iFRAME after  you load the parent body. A quick solution is like: <body onload=>loadIframe();"> !!!
+
+				var streamID = "";
+				var possible =
+					"ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnpqrstuvwxyz23456789";
+				for (var i = 0; i < 7; i++) {
+					streamID += possible.charAt(
+						Math.floor(Math.random() * possible.length)
+					);
+				}
+
+				var iframe = document.createElement("iframe");
+				var iframeContainer = document.createElement("span");
+
+				iframe.allow = "autoplay";
+				var srcString =
+					"./?push=" +
+					streamID +
+					"&cleanoutput&privacy&webcam&audiodevice=0&fullscreen";
+
+				if (urlParams.has("turn")) {
+					srcString = srcString + "&turn=" + urlParams.get("turn");
+				}
+
+				// we are changing some text on page load, just to demonstrate what's possible.
+				iframe.onload = function (e) {
+					e.target.contentWindow.postMessage(
+						{
+							function: "changeHTML",
+							target: "add_camera",
+							value: "Select your Camera",
+						},
+						"*"
+					);
+				};
+				iframe.src = srcString;
+
+				iframeContainer.appendChild(iframe);
+				document.getElementById("container").appendChild(iframeContainer);
+
+				var iframe = document.createElement("iframe");
+				var iframeContainer = document.createElement("span");
+
+				iframe.allow = "autoplay";
+				var srcString = "./?view=" + streamID + "&cleanoutput&privacy&noaudio";
+
+				if (urlParams.has("turn")) {
+					srcString = srcString + "&turn=" + urlParams.get("turn");
+				}
+
+				if (urlParams.has("buffer")) {
+					srcString = srcString + "&buffer=" + urlParams.get("buffer");
+				}
+
+				iframe.src = srcString;
+
+				iframeContainer.appendChild(iframe);
+				document.getElementById("container").appendChild(iframeContainer);
+
+				var button = document.createElement("br");
+				document.getElementById("container").appendChild(button);
+
+				var buttonContainer = document.createElement("div");
+				buttonContainer.id = "controls";
+
+				var button = document.createElement("button");
+				button.innerHTML = "Disconnect";
+				button.className = "red";
+				button.onclick = function () {
+					iframe.contentWindow.postMessage({ close: true }, "*");
+				};
+				buttonContainer.appendChild(button);
+
+				var button = document.createElement("button");
+				button.innerHTML = "Low Bitrate";
+				button.className = "grey";
+				button.onclick = function () {
+					iframe.contentWindow.postMessage({ bitrate: 30 }, "*");
+				};
+				buttonContainer.appendChild(button);
+
+				var button = document.createElement("button");
+				button.innerHTML = "High Bitrate";
+				button.className = "grey";
+				button.onclick = function () {
+					iframe.contentWindow.postMessage({ bitrate: 6000 }, "*");
+				};
+				buttonContainer.appendChild(button);
+
+				var button = document.createElement("button");
+				button.innerHTML = "Default Bitrate";
+				button.className = "grey";
+				button.onclick = function () {
+					iframe.contentWindow.postMessage({ bitrate: -1 }, "*");
+				};
+				buttonContainer.appendChild(button);
+
+				document.getElementById("container").appendChild(buttonContainer);
+
+				setInterval(function () {
+					iframe.contentWindow.postMessage({ getStats: true }, "*");
+				}, 1000);
+
+				var eventMethod = window.addEventListener
+					? "addEventListener"
+					: "attachEvent";
+				var eventer = window[eventMethod];
+				var messageEvent =
+					eventMethod === "attachEvent" ? "onmessage" : "message";
+				var previousResolution;
+
+				eventer(messageEvent, function (e) {
+					if ("action" in e.data) {
+						logData("Action",e.data.action);
+					}
+					if ("stats" in e.data) {
+						var out = "";
+						for (var streamID in e.data.stats.inbound_stats) {
+							out += printValues(e.data.stats.inbound_stats[streamID]);
+						}
+
+
+
+						if (out.split("Bitrate_in_kbps").length > 1) {
+
+							for (var key in e.data.stats.inbound_stats[streamID]) {
+
+								if (key.startsWith("RTCMediaStreamTrack_receiver")) {
+									var bitrate =
+										e.data.stats.inbound_stats[streamID][key][
+											"Bitrate_in_kbps"
+										];
+									plotData("bitrate-graph", bitrate, 6000);
+
+									var buffer =
+										e.data.stats.inbound_stats[streamID][key][
+											"Buffer_Delay_in_ms"
+										];
+									plotData("buffer-graph", buffer, 200);
+
+									var packetloss =
+										e.data.stats.inbound_stats[streamID][key][
+											"packetLoss_in_percentage"
+										].toFixed(2);
+									plotData("packetloss-graph", packetloss, 3);
+
+									var resolution = 
+										e.data.stats.inbound_stats[streamID][key][
+											"Resolution"
+										]
+
+									if(previousResolution != resolution) {
+										previousResolution = resolution;
+										logData("Resolution", resolution);
+									}
+										
+								}
+							}
+
+							document.getElementById("statsdiv").innerHTML =
+								"<b>Bitrate (Kbps)</b>" + out.split("Bitrate_in_kbps")[1];
+						}
+					}
+				});
+			}
+
+			function printValues(obj) {
+				var out = "";
+				for (var key in obj) {
+					if (typeof obj[key] === "object") {
+						out += "<br />";
+						out += printValues(obj[key]);
+					} else {
+						if (key.startsWith("_")) {
+						} else {
+							out += "<b>" + key + "</b>: " + obj[key] + "<br />";
+						}
+					}
+				}
+				return out;
+			}
+
+			function logData(type, data){
+				var log = document.getElementById("log").getElementsByTagName("ul")[0];
+				var entry = document.createElement('li');
+				entry.innerText = "[" + new Date().toLocaleTimeString() + "] " + type + " : " + data;
+				log.prepend(entry);
+			}
+		</script>
+	</head>
+	<body onload="loadIframe();">
+		<div id="header">
+			<a
+				id="logoname"
+				href="./"
+				style="text-decoration: none; color: white; margin: 2px"
+			>
+				<span data-translate="logo-header">
+					<font id="qos">O</font>BS.Ninja
+				</span>
+			</a>
+		</div>
+		<div id="container">
+			<h1>
+				OBS.Ninja Speed Test - prototype version
+				<small>(Tests connection to TURN server and back)</small>
+			</h1>
+		</div>
+		<div id="graphs">
+			<div class="graph">
+				<h2>Bitrate (kbps)</h2>
+				<span>0</span>
+				<canvas id="bitrate-graph"></canvas>
+			</div>
+
+			<div class="graph">
+				<h2>Buffer delay (ms)</h2>
+				<span>0</span>
+				<canvas id="buffer-graph"></canvas>
+			</div>
+
+			<div class="graph">
+				<h2>Packet Loss (%)</h2>
+				<span>0</span>
+				<canvas
+					id="packetloss-graph"
+				></canvas>
+			</div>
+		</div>
+		<div id="log">
+			<h2>Log</h2>
+			<ul></ul>
+		</div>
+		
+		
+		<div id="explanation">
+			<h2>How to use</h2>
+			<ol>
+				<li>Select your camera.</li>
+				<li>Hit start</li>
+				<li>
+					Wait for the video to load side-by-side. *If it does not auto-load
+					within 20s, refresh and try again.*
+				</li>
+				<li>
+					Stats will load on the right-hand side of the page here. (or press
+					CTRL + LeftClick on the new video to open stats that way)
+				</li>
+				<li>
+					Bitrate, Buffer delay, and packet loss are
+					important connection quality metrics
+				</li>
+				<li>
+					Change the video bitrate by pressing the buttons below the video.
+					It should approach 6000-kbps if the network allows.
+				</li>
+			</ol>
+		</div>
+		<div id="statsdiv"></div>
+
+		<script>
+			function plotData(element, data, max) {
+				var canvas;
+				var context;
+				var yScale;
+
+				canvas = document.getElementById(element);
+				context = canvas.getContext("2d");
+
+				if (isNaN(data)) {
+					data = 0;
+				}
+
+				var text = (canvas.previousElementSibling.innerHTML = data);
+
+				var height = context.canvas.height;
+				var width = context.canvas.width;
+
+				context.fillStyle = "#009933";
+				context.imageSmoothingEnabled = true;
+
+				yScale = height / max;
+
+				if (data > max) {
+					data = max;
+				}
+
+				context.fillRect(
+					width - 1,
+					height - data * yScale,
+					1,
+					height
+				);
+
+				// shift everything to the left:
+				var imageData = context.getImageData(
+					1,
+					0,
+					width - 1,
+					height
+				);
+				context.putImageData(imageData, 0, 0);
+				// now clear the right-most pixels:
+				context.clearRect(
+					width - 1,
+					0,
+					1,
+					height
+				);
+			}
+		</script>
+	</body>
+</html>
