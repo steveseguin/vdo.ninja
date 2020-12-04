@@ -10,7 +10,7 @@ Those reasons are:  wanting custom branding; contributing as a developer to the 
 
 For a subset of those users even, they might still have better options available.
 
-I offer https://rtc.ninja for those looking for a brand-free experience already. You can also point your domain to the OBS.Ninja IP address (provided on request), which will also rebrand the site automatically to match your domain name.
+I offer https://rtc.ninja for those looking for a brand-free experience already. You can also point your domain to the OBS.Ninja IP address (provided on request), which will also rebrand the site automatically to match your domain name. (You'd need to use Cloudflare for this, fyi)
 
 For those wanting a private TURN server setup, you can load the settings for those via the URL parameters. If infrequently needing a private TURN, this is a great solution.
 
