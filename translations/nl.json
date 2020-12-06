@@ -107,7 +107,16 @@
     "names-and-labels-coming-soon": "\n\t\t\t\t\tNames identifying connected peers will be a feature in an upcoming release.\n\t\t\t\t",
     "send-chat": "Send",
     "available-languages": "Available Languages:",
-    "add-more-here": "Add More Here!"
+    "add-more-here": "Add More Here!",
+	"waiting-for-camera-to-load":"waiting-for-camera-to-load",
+	"start": "START",
+	"share-your-mic": "Share your microphone",
+	"share-your-camera": "Share your Camera",
+	"share-your-screen": "Share your Screen",
+	"join-room-with-mic": "Join room with Microphone",
+	"share-screen-with-room": "Share-screen with Room",
+	"join-room-with-camera": "Join room with Camera",
+	"click-start-to-join": "Click Start to Join"
   },
   "placeholders": {
     "join-by-room-name-here": "Join by Room Name here",

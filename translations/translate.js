@@ -19,24 +19,24 @@ function updateTranslation(filename){  // updates the website with a specific tr
 	request.send(null);
 
 	if (request.status !== 200) {
-	  return;
+	  return false, {};
 	}
 	try{
 		var data = JSON.parse(request.responseText);
 	} catch(e){
 		console.log(request.responseText);
 		console.error(e);
-		return false;
+		return false, {};
 	}
 	
-	var oldTransItems = data;  // UPDATE AFTER to point to data.innerHTML
+	var oldTransItems = data.innerHTML;  
 	var allItems1 = document.querySelectorAll('[data-translate]');
 	allItems1.forEach(function(ele){
 		if (ele.dataset.translate in oldTransItems){
 			ele.innerHTML = oldTransItems[ele.dataset.translate];
 		}
 	});
-	var oldTransTitles = {}; // UPDATED AFTER to point to DATA.title
+	var oldTransTitles = data.titles;
 	var allTitles1 = document.querySelectorAll('[title]');
 	allTitles1.forEach(function(ele){
 		var key = ele.title.replace(/[\W]+/g,"-").toLowerCase();
@@ -45,7 +45,7 @@ function updateTranslation(filename){  // updates the website with a specific tr
 		}
 	});
 	
-	var oldTransPlaceholders = {}; // UPDATED AFTER to point to DATA.placeholders
+	var oldTransPlaceholders = data.placeholders; 
 	var allPlaceholders1 = document.querySelectorAll('[placeholder]');
 	allPlaceholders1.forEach(function(ele){
 		var key = ele.placeholder.replace(/[\W]+/g,"-").toLowerCase();
@@ -54,7 +54,7 @@ function updateTranslation(filename){  // updates the website with a specific tr
 		}
 	});
 	
-	return true;
+	return [true, data];
 }
 
 var updateList = ["cs","de", "en", "es", "fr", "it", "ja", "nl", "pig", "pt", "ru", "tr", "blank" ];  // list of languages to update. Update this if you add a new language.
@@ -87,22 +87,22 @@ for (var i in updateList){
 	var lang = updateList[i];
 	setTimeout(function(ln){
 		var suceess = updateTranslation(ln); // we don't need to worry about DATA.
-		if (suceess==true){
-			var newTrans = {};
+		if (suceess[0]==true){
+			var newTrans = suceess[1].innerHTML;
 			var allItems = document.querySelectorAll('[data-translate]');
 			allItems.forEach(function(ele){
 				var key = ele.dataset.translate;
 				newTrans[key] = ele.innerHTML;
 			});
 			
-			var newTransTitles = {};
+			var newTransTitles = suceess[1].titles;
 			var allTitles = document.querySelectorAll('[title]');
 			allTitles.forEach(function(ele){
 				var key = ele.title.replace(/[\W]+/g,"-").toLowerCase();
 				newTransTitles[key] = ele.title;
 			});
 			
-			var newPlaceholders = {};
+			var newPlaceholders = suceess[1].placeholders;
 			var allPlaceholders = document.querySelectorAll('[placeholder]');
 			allPlaceholders.forEach(function(ele){
 				var key = ele.placeholder.replace(/[\W]+/g,"-").toLowerCase();
