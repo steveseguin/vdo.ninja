@@ -100,10 +100,11 @@ allPlaceholders.forEach((ele) => {
     defaultTransPlaceholders[ele.placeholder] = ele.placeholder;
 });
 
-const combinedTrans = {}
+const combinedTrans = {};
 combinedTrans.titles = defaultTransTitles;
 combinedTrans.innerHTML = defaultTrans;
 combinedTrans.placeholders = defaultTransPlaceholders;
+
 var counter = 0;
 for (const i in updateList) {
     const lang = updateList[i];
