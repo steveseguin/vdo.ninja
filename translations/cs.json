@@ -28,14 +28,14 @@
     "forward-user-to-another-room-they-can-always-return-": "Přesměrujte uživatele na jiný room. Uživatel se může kdykoliv vrátit.",
     "start-recording-this-stream-experimental-views": "Začít nahrávat tento stream. *experimentální*'",
     "force-the-user-to-disconnect-they-can-always-reconnect-": "Odpojit tohoto uživatele. Uživatel se může kdykoliv připojit zpět.",
-    "change-this-audio-s-volume-in-all-remote-scene-views": "Change this Audio's volume in all remote '&scene' views",
-    "remotely-mute-this-audio-in-all-remote-scene-views": "Remotely Mute this Audio in all remote '&scene' views",
-    "disable-video-preview": "Disable Video Preview",
-    "low-quality-preview": "Low-Quality Preview",
-    "high-quality-preview": "High-Quality Preview",
-    "send-direct-message": "Send Direct Message",
-    "advanced-settings-and-remote-control": "Advanced Settings and Remote Control",
-    "toggle-voice-chat-with-this-guest": "Toggle Voice Chat with this Guest"
+    "change-this-audio-s-volume-in-all-remote-scene-views": "Změnit toto audio ve všech cílových '&scene' pohledech.",
+    "remotely-mute-this-audio-in-all-remote-scene-views": "Vzdáleně zlumit toto audio ve všech cílových '&scene' pohledech.",
+    "disable-video-preview": "Vypnout náhled videa",
+    "low-quality-preview": "Náhled videa v nízké kvalitě",
+    "high-quality-preview": "Náhled videa ve vysoké kvalitě",
+    "send-direct-message": "Poslat přímou zprávu",
+    "advanced-settings-and-remote-control": "Pokročilá nastavení a vzálené ovládání",
+    "toggle-voice-chat-with-this-guest": "Vypnout/zapnout voice chat tohoto hosta "
   },
   "innerHTML": {
     "logo-header": "<font id=\"qos\" style=\"color: white;\">O</font>BS.Ninja ",
