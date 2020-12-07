@@ -27,6 +27,24 @@
 			})(window);
 			var urlParams = new URLSearchParams(window.location.search);
 
+			function copyFunction(copyText) {
+				alert("Log copied to the clipboard.");
+				try {
+					copyText.select();
+					copyText.setSelectionRange(0, 99999);
+					document.execCommand("copy");
+				} catch (e) {
+					var dummy = document.createElement("input");
+					document.body.appendChild(dummy);
+					dummy.value = copyText;
+					dummy.select();
+					document.execCommand("copy");
+					document.body.removeChild(dummy);
+					return false;
+				}
+				
+			}
+
 			function loadIframe() {
 				// this is pretty important if you want to avoid camera permission popup problems. YOu need to load the iFRAME after  you load the parent body. A quick solution is like: <body onload=>loadIframe();"> !!!
 
@@ -66,7 +84,16 @@
 				iframe.src = srcString;
 
 				iframeContainer.appendChild(iframe);
-				document.getElementById("container").appendChild(iframeContainer);
+
+				var title = document.createElement("h3");
+				title.innerText = "Local video feed";
+				iframeContainer.appendChild(title);
+
+				var feeds = document.createElement("div");
+				feeds.id = "feeds";
+
+				document.getElementById("container").appendChild(feeds);
+				document.getElementById("feeds").appendChild(iframeContainer);
 
 				var iframe = document.createElement("iframe");
 				var iframeContainer = document.createElement("span");
@@ -85,7 +112,12 @@
 				iframe.src = srcString;
 
 				iframeContainer.appendChild(iframe);
-				document.getElementById("container").appendChild(iframeContainer);
+
+				var title = document.createElement("h3");
+				title.innerText = "Server video feed";
+				iframeContainer.appendChild(title);
+
+				document.getElementById("feeds").appendChild(iframeContainer);
 
 				var button = document.createElement("br");
 				document.getElementById("container").appendChild(button);
@@ -94,18 +126,11 @@
 				buttonContainer.id = "controls";
 
 				var button = document.createElement("button");
-				button.innerHTML = "Disconnect";
-				button.className = "red";
-				button.onclick = function () {
-					iframe.contentWindow.postMessage({ close: true }, "*");
-				};
-				buttonContainer.appendChild(button);
-
-				var button = document.createElement("button");
 				button.innerHTML = "Low Bitrate";
 				button.className = "grey";
 				button.onclick = function () {
 					iframe.contentWindow.postMessage({ bitrate: 30 }, "*");
+					bitrate.target = 30;
 				};
 				buttonContainer.appendChild(button);
 
@@ -114,14 +139,25 @@
 				button.className = "grey";
 				button.onclick = function () {
 					iframe.contentWindow.postMessage({ bitrate: 6000 }, "*");
+					bitrate.target = 6000;
 				};
 				buttonContainer.appendChild(button);
 
 				var button = document.createElement("button");
 				button.innerHTML = "Default Bitrate";
-				button.className = "grey";
+				button.className = "grey active";
 				button.onclick = function () {
 					iframe.contentWindow.postMessage({ bitrate: -1 }, "*");
+					bitrate.target = 3000;
+				};
+				buttonContainer.appendChild(button);
+
+				var button = document.createElement("button");
+				button.innerHTML = "Disconnect";
+				button.className = "red";
+				button.style.display = "none";
+				button.onclick = function () {
+					iframe.contentWindow.postMessage({ close: true }, "*");
 				};
 				buttonContainer.appendChild(button);
 
@@ -141,7 +177,34 @@
 
 				eventer(messageEvent, function (e) {
 					if ("action" in e.data) {
-						logData("Action",e.data.action);
+						logData(e.data.action, e.data.value);
+
+						if (e.data.action == "new-view-connection") {
+							buttonContainer.querySelectorAll(
+								"#controls button:last-child"
+							)[0].style.display = "inline";
+						}
+
+						if (e.data.action == "setVideoBitrate") {
+							buttonContainer.querySelectorAll("button").forEach((button) => {
+								button.classList.remove("active");
+							});
+							if (e.data.value == 30) {
+								document
+									.querySelectorAll("#controls button")[0]
+									.classList.add("active");
+							}
+							if (e.data.value == 6000) {
+								document
+									.querySelectorAll("#controls button")[1]
+									.classList.add("active");
+							}
+							if (e.data.value == -1) {
+								document
+									.querySelectorAll("#controls button")[2]
+									.classList.add("active");
+							}
+						}
 					}
 					if ("stats" in e.data) {
 						var out = "";
@@ -149,41 +212,37 @@
 							out += printValues(e.data.stats.inbound_stats[streamID]);
 						}
 
-
-
 						if (out.split("Bitrate_in_kbps").length > 1) {
-
 							for (var key in e.data.stats.inbound_stats[streamID]) {
-
 								if (key.startsWith("RTCMediaStreamTrack_receiver")) {
 									var bitrate =
 										e.data.stats.inbound_stats[streamID][key][
 											"Bitrate_in_kbps"
 										];
-									plotData("bitrate-graph", bitrate, 6000);
+									updateData("bitrate", bitrate);
 
 									var buffer =
 										e.data.stats.inbound_stats[streamID][key][
 											"Buffer_Delay_in_ms"
 										];
-									plotData("buffer-graph", buffer, 200);
+									updateData("buffer", buffer);
 
 									var packetloss =
 										e.data.stats.inbound_stats[streamID][key][
 											"packetLoss_in_percentage"
-										].toFixed(2);
-									plotData("packetloss-graph", packetloss, 3);
+										];
+									if (packetloss != undefined) {
+										packetloss = packetloss.toFixed(2);
+										updateData("packetloss", packetloss);
+									}
 
-									var resolution = 
-										e.data.stats.inbound_stats[streamID][key][
-											"Resolution"
-										]
+									var resolution =
+										e.data.stats.inbound_stats[streamID][key]["Resolution"];
 
-									if(previousResolution != resolution) {
+									if (previousResolution != resolution) {
 										previousResolution = resolution;
 										logData("Resolution", resolution);
 									}
-										
 								}
 							}
 
@@ -210,10 +269,11 @@
 				return out;
 			}
 
-			function logData(type, data){
+			function logData(type, data) {
 				var log = document.getElementById("log").getElementsByTagName("ul")[0];
 				var entry = document.createElement('li');
-				entry.innerText = "[" + new Date().toLocaleTimeString() + "] " + type + " : " + data;
+				entry.textContent =
+					"[" + new Date().toLocaleTimeString() + "] " + type + " : " + data;
 				log.prepend(entry);
 			}
 		</script>
@@ -252,17 +312,14 @@
 			<div class="graph">
 				<h2>Packet Loss (%)</h2>
 				<span>0</span>
-				<canvas
-					id="packetloss-graph"
-				></canvas>
+				<canvas id="packetloss-graph"></canvas>
 			</div>
 		</div>
-		<div id="log">
-			<h2>Log</h2>
+		<div id="log" onclick="copyFunction(this.innerText)">
+			<h2>Log <i class="las la-clipboard"></i></h2>
 			<ul></ul>
 		</div>
-		
-		
+
 		<div id="explanation">
 			<h2>How to use</h2>
 			<ol>
@@ -277,66 +334,117 @@
 					CTRL + LeftClick on the new video to open stats that way)
 				</li>
 				<li>
-					Bitrate, Buffer delay, and packet loss are
-					important connection quality metrics
+					Bitrate, Buffer delay, and packet loss are important connection
+					quality metrics
 				</li>
 				<li>
-					Change the video bitrate by pressing the buttons below the video.
-					It should approach 6000-kbps if the network allows.
+					Change the video bitrate by pressing the buttons below the video. It
+					should approach 6000-kbps if the network allows.
 				</li>
 			</ol>
 		</div>
 		<div id="statsdiv"></div>
 
 		<script>
-			function plotData(element, data, max) {
+			var bitrate = {
+				element: "bitrate-graph",
+				data: 0,
+				max: 6000,
+				target: 3000,
+			};
+			var frames;
+			var buffer = {
+				element: "buffer-graph",
+				data: 0,
+				max: 200,
+				target: 100,
+			};
+			var packetloss = {
+				element: "packetloss-graph",
+				data: 0,
+				max: 3,
+				target: 2,
+			};
+
+			function updateData(type, data) {
+				if (type == "bitrate") {
+					bitrate.data = data;
+					plotData("bitrate", bitrate);
+				}
+
+				if (type == "buffer") {
+					buffer.data = data;
+					plotData("buffer", buffer);
+				}
+
+				if (type == "packetloss") {
+					packetloss.data = data;
+					plotData("packetloss", packetloss);
+				}
+			}
+
+			function plotData(type, stat) {
 				var canvas;
 				var context;
 				var yScale;
 
-				canvas = document.getElementById(element);
+				canvas = document.getElementById(stat.element);
 				context = canvas.getContext("2d");
 
-				if (isNaN(data)) {
-					data = 0;
+				if (isNaN(stat.data)) {
+					stat.data = 0;
 				}
 
-				var text = (canvas.previousElementSibling.innerHTML = data);
+				var text = (canvas.previousElementSibling.innerHTML = stat.data);
 
 				var height = context.canvas.height;
 				var width = context.canvas.width;
 
-				context.fillStyle = "#009933";
-				context.imageSmoothingEnabled = true;
+				var borderWidth = 5;
+				var offset = borderWidth * 2;
 
-				yScale = height / max;
+				// Create gradient
+				var grd = context.createLinearGradient(0, 0, 0, height);
 
-				if (data > max) {
-					data = max;
+				if (type == "bitrate") {
+					// Higher values are green
+					grd.addColorStop(0, "#33C433");
+					grd.addColorStop(0.7, "#F3F304");
+					grd.addColorStop(0.9, "#F30404");
+				} else {
+					// Higher values are red
+					grd.addColorStop(0, "#F30404");
+					grd.addColorStop(0.3, "#F3F304");
+					grd.addColorStop(0.7, "#33C433");
 				}
 
-				context.fillRect(
-					width - 1,
-					height - data * yScale,
-					1,
-					height
-				);
+				context.strokeStyle = "white";
+				context.fillStyle = grd;
+				//context.fillStyle = "#009933";
+				//context.imageSmoothingEnabled = true;
+
+				yScale = height / stat.target;
+
+				if (stat.data > stat.target) {
+					stat.data = stat.target;
+				}
+
+				if (type == "packetloss" && stat.data == 0.0) {
+					stat.data = 0.1;
+				}
+
+				var x = width - 1;
+				var y = height - stat.data * yScale;
+				var w = 1;
+
+				context.fillStyle = grd;
+				context.fillRect(x, y, w, height);
 
 				// shift everything to the left:
-				var imageData = context.getImageData(
-					1,
-					0,
-					width - 1,
-					height
-				);
+				var imageData = context.getImageData(1, 0, width - 1, height);
 				context.putImageData(imageData, 0, 0);
 				// now clear the right-most pixels:
-				context.clearRect(
-					width - 1,
-					0,
-					1,
-					height
-				);
+				context.clearRect(width - 1, 0, 1, height);
 			}
 		</script>
 	</body>

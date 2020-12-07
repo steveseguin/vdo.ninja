@@ -32,9 +32,27 @@ h1 small {
     padding-bottom: 5px;
 }
 
+#feeds {
+    display: flex;
+}
+
+#feeds span {
+    flex: 1;
+    height: 30vh;
+    display: flex;
+    flex-direction: column;
+}
+
+#feeds h3 {
+    color: whitesmoke;
+    margin: 10px;
+    text-align: center;
+}
+
 iframe {
-    min-height: 30vh;
-    width: 39vw;
+    height: auto;
+    width: 100%;
+    flex: 1;
 }
 
 #controls {
@@ -43,6 +61,10 @@ iframe {
 
 #controls button {
     margin: 5px;
+}
+
+#controls button.active {
+    background-color: green;
 }
 
 canvas {
@@ -54,7 +76,8 @@ canvas {
     margin-top: 20px;
     background: #2a2a2a;
     padding: 20px 0px;
-    border: 1px solid #383838; 
+    border: 1px solid #383838;
+    cursor: pointer;
 }
 
 #log ul {
@@ -111,9 +134,19 @@ ol {
     }
 
     iframe {
-        width: 90vw;
-        min-height: 0;
+        width: 100%;
+    }
+
+    #feeds {
+        flex-direction: column;
+    }
+
+    #feeds h3 {
+        display: none;
     }
   }
 
   #statsdiv {display: none;}
+
+
+  
