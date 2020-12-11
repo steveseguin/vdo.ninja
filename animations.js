@@ -59,8 +59,8 @@ $(".close").on('click', function(e) {
 	
 	$("body").css('overflow', 'auto');
 
-	var bounding_box = $(this).parent().get(0).getBoundingClientRect();
-	$(this).parent().css({ top: bounding_box.top + 'px', left: bounding_box.left + 'px' });
+	const bounding_box = $(this).parent().get(0).getBoundingClientRect();
+	$(this).parent().css({ top: `${bounding_box.top}px`, left: `${bounding_box.left}px` });
 
 	/* Show animation */
 	$(this).parent().addClass('out-animation');
