@@ -1967,14 +1967,14 @@ span#guestTips {
 
 .video-label {
     position: absolute;
-    bottom: max(5px,0.6em);
-	left: max(5px,0.5em);
+    bottom: 0.6vh;
+	left: 0.5vh;
 	margin: 0px;
     color: white;
     padding: 5px 10px;
     background: rgba(0, 0, 0, .5);
 	pointer-events:none;
-    font-size: min(4vh,2em);
+    font-size: 4vh;
 }
 
 .video-label.zoom {
@@ -1986,25 +1986,25 @@ span#guestTips {
     padding: 5px 10px;
     background: rgba(0, 0, 0, .5);
 	pointer-events:none;
-    font-size: min(4vh,2em);
+    font-size: 4vh;
 }
 
 .video-label.teams {
     position: absolute;
-    bottom: max(5px,0.6em);
-	left: max(5px,0.5em);
+    bottom: 0.6vh;
+	left: 0.5vh;
 	margin: 0px;
     color: white;
     padding: 5px 10px;
     background: rgba(0, 0, 0, .4);
 	pointer-events:none;
-	font-size: min(4vh,2em);
+	font-size: 4vh;
 	border-radius: 5px;
 }
 
 .video-label.skype {
     position: absolute;
-    bottom: max(50px,2em);
+    bottom: 2vh;
 	left: 50%;
 	transform: translateX(-50%);
 	margin: 0px;
@@ -2012,7 +2012,7 @@ span#guestTips {
     padding: 5px 10px;
     background: rgba(0, 0, 0, .8);
 	pointer-events:none;
-	font-size: min(2vh,1em);
+	font-size: 4vh;
 	border-radius: 5px;
 }
 
@@ -2022,7 +2022,7 @@ span#guestTips {
     left: 0;
     background: #141926;
     padding: 10px 5%;
-    font-size: min(4vh, 3em);
+    font-size: 4vh;
 }
 
 .video-label.toprounded {
@@ -2031,7 +2031,7 @@ span#guestTips {
     bottom: unset;
     background: rgb(0 0 0 / 70%);
     padding: 10px 5%;
-    font-size: min(4vh, 3em);
+    font-size: 4vh;
     left: 50%;
     transform: translateX(-50%);
     width: 50%;
@@ -2047,7 +2047,7 @@ span#guestTips {
     color: #FFFFFF;
     text-shadow: 0 -1px 4px #FFF, 0 -2px 10px #ff0, 0 -10px 20px #ff8000, 0 -18px 40px #F00;
     font-weight: bold;
-    font-size: max(5vh, 2em);
+    font-size: 5vh;
     position: absolute;
     bottom: 2vh;
     width: 100%;
