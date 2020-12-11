@@ -119,8 +119,8 @@ $('#audioSource').on('mousedown touchend focusin focusout', (_e) => {
         $('#multiselect-trigger').data('state', '1').addClass('open').removeClass('closed');
         $('#multiselect-trigger').find('.chevron').removeClass('bottom');
         $('#multiselect-trigger').parent().find('.multiselect-contents').show();
-        $('#multiselect-trigger').parent().find('.multiselect-contents').find('input[type="checkbox"]').parent().show();;
-        $('#multiselect-trigger').parent().find('.multiselect-contents').find('input[type="checkbox"]').show();;
+        $('#multiselect-trigger').parent().find('.multiselect-contents').find('input[type="checkbox"]').parent().show();
+        $('#multiselect-trigger').parent().find('.multiselect-contents').find('input[type="checkbox"]').show();
     }
     // e.preventDefault();
 });
@@ -132,8 +132,8 @@ $('#audioSource3').on('mousedown touchend focusin focusout', (_e) => {
         $('#multiselect-trigger3').attr('data-state', '1').addClass('open').removeClass('closed');
         $('#multiselect-trigger3').find('.chevron').removeClass('bottom');
         $('#multiselect-trigger3').parent().find('.multiselect-contents').show();
-        $('#multiselect-trigger3').parent().find('.multiselect-contents').find('input[type="checkbox"]').parent().show();;
-        $('#multiselect-trigger3').parent().find('.multiselect-contents').find('input[type="checkbox"]').show();;
+        $('#multiselect-trigger3').parent().find('.multiselect-contents').find('input[type="checkbox"]').parent().show();
+        $('#multiselect-trigger3').parent().find('.multiselect-contents').find('input[type="checkbox"]').show();
     }
     // e.preventDefault();
 });
@@ -146,14 +146,14 @@ $('#multiselect-trigger').on('mousedown touchend focusin focusout', function (e)
         $(this).data('state', '1').addClass('open').removeClass('closed');
         $(this).find('.chevron').removeClass('bottom');
         $(this).parent().find('.multiselect-contents').show();
-        $(this).parent().find('.multiselect-contents').find('input[type="checkbox"]').parent().show();;
-        $(this).parent().find('.multiselect-contents').find('input[type="checkbox"]').show();;
+        $(this).parent().find('.multiselect-contents').find('input[type="checkbox"]').parent().show();
+        $(this).parent().find('.multiselect-contents').find('input[type="checkbox"]').show();
     } else {
         // close the dropdown
         $(this).data('state', '0').addClass('closed').removeClass('open');
         $(this).find('.chevron').addClass('bottom');
-        $(this).parent().find('.multiselect-contents').find('input[type="checkbox"]').not(":checked").parent().hide();;
-        $(this).parent().find('.multiselect-contents').find('input[type="checkbox"]').hide();;
+        $(this).parent().find('.multiselect-contents').find('input[type="checkbox"]').not(":checked").parent().hide();
+        $(this).parent().find('.multiselect-contents').find('input[type="checkbox"]').hide();
     } e.preventDefault();
 });
 // multiselect dropdowns
@@ -166,13 +166,13 @@ $('#multiselect-trigger3').on('mousedown touchend focusin focusout', function (e
         $(this).attr('data-state', '1').addClass('open').removeClass('closed');
         $(this).find('.chevron').removeClass('bottom');
         $(this).parent().find('.multiselect-contents').show();
-        $(this).parent().find('.multiselect-contents').find('input[type="checkbox"]').parent().show();;
-        $(this).parent().find('.multiselect-contents').find('input[type="checkbox"]').show();;
+        $(this).parent().find('.multiselect-contents').find('input[type="checkbox"]').parent().show();
+        $(this).parent().find('.multiselect-contents').find('input[type="checkbox"]').show();
     } else {
         // close the dropdown
         $(this).attr('data-state', '0').addClass('closed').removeClass('open');
         $(this).find('.chevron').addClass('bottom');
-        $(this).parent().find('.multiselect-contents').find('input[type="checkbox"]').not(":checked").parent().hide();;
-        $(this).parent().find('.multiselect-contents').find('input[type="checkbox"]').hide();;
+        $(this).parent().find('.multiselect-contents').find('input[type="checkbox"]').not(":checked").parent().hide();
+        $(this).parent().find('.multiselect-contents').find('input[type="checkbox"]').hide();
     } e.preventDefault();
 });
