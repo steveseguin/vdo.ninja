@@ -121,10 +121,10 @@ $('#audioSource').on('mousedown touchend focusin focusout', function(e) {
 });
 
 $('#audioSource3').on('mousedown touchend focusin focusout', function(e) {
-     var state = $('#multiselect-trigger3').data('state') || 0;
+     var state = $('#multiselect-trigger3').attr('data-state') || 0;
      if( state == 0 ) {
         ////open the dropdown
-        $('#multiselect-trigger3').data('state', '1').addClass('open').removeClass('closed');
+        $('#multiselect-trigger3').attr('data-state', '1').addClass('open').removeClass('closed');
         $('#multiselect-trigger3').find('.chevron').removeClass('bottom'); 
         $('#multiselect-trigger3').parent().find('.multiselect-contents').show();
 		$('#multiselect-trigger3').parent().find('.multiselect-contents').find('input[type="checkbox"]').parent().show();;
@@ -154,17 +154,19 @@ $('#multiselect-trigger').on('mousedown touchend focusin focusout', function(e) 
 });
 // multiselect dropdowns
 $('#multiselect-trigger3').on('mousedown touchend focusin focusout', function(e) {
-    var state = $(this).data('state') || 0;
+    var state = $(this).attr('data-state') || 0;
+	
     if( state == 0 ) {
         // open the dropdown
-        $(this).data('state', '1').addClass('open').removeClass('closed');
+		errorlog("STATE: "+state);
+        $(this).attr('data-state', '1').addClass('open').removeClass('closed');
         $(this).find('.chevron').removeClass('bottom');
         $(this).parent().find('.multiselect-contents').show();
 		$(this).parent().find('.multiselect-contents').find('input[type="checkbox"]').parent().show();;
 		$(this).parent().find('.multiselect-contents').find('input[type="checkbox"]').show();;
     } else {
         // close the dropdown
-        $(this).data('state', '0').addClass('closed').removeClass('open');
+        $(this).attr('data-state', '0').addClass('closed').removeClass('open');
         $(this).find('.chevron').addClass('bottom');
 		$(this).parent().find('.multiselect-contents').find('input[type="checkbox"]').not(":checked").parent().hide();;
 		$(this).parent().find('.multiselect-contents').find('input[type="checkbox"]').hide();;

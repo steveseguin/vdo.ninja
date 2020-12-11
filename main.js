@@ -25,7 +25,7 @@ function getById(id) {
 
 function changeParam(url,paramName,paramValue){
 	var qind = url.indexOf('?');
-	var params = url.substring(qind).split('&');
+	var params = url.substring(qind+1).split('&');
 	var query = '';
 	for(var i=0;i<params.length;i++) {
 		var tokens = params[i].split('=');
@@ -43,7 +43,7 @@ function changeParam(url,paramName,paramValue){
 		} 
 		
 		if(query == '') {
-			query = name + value;
+			query = "?"+name + value;
 		} else {
 			query = query + '&' + name + value;
 		}
@@ -55,14 +55,13 @@ function updateURL(param, force=false, cleanUrl=false){
 	var para = param.split('=');
 	if (cleanUrl){
 		if (history.pushState){
-			log("not false");
 			var href = new URL(cleanUrl);
 			if (para.length==1){
 				href = changeParam(cleanUrl, para[0],"")
 			} else {
 				href = changeParam(cleanUrl, para[0],para[1]);
 			}
-			log("---"+href.toString());
+			log("--"+href.toString());
 			window.history.pushState({path:href.toString()},'',href.toString());
 		}
 	} else if (!(urlParams.has(para[0]))){
@@ -88,7 +87,6 @@ function updateURL(param, force=false, cleanUrl=false){
 			log("---"+href.toString());
 			window.history.pushState({path:href.toString()},'',href.toString());
 		}
-		log("asdfasdf");
 	}
 	log("asdfasdf 222");
 	if (session.sticky){
@@ -428,10 +426,29 @@ if (/CriOS/i.test(navigator.userAgent) && /iphone|ipod|ipad/i.test(navigator.use
 if (urlParams.has('broadcast') || urlParams.has('bc')){ 
 	log("Broadcast flag set");
 	session.broadcast = urlParams.get('broadcast') || urlParams.get('bc');
-	session.nopreview=true;
+	if ((iOS) || (iPad)){
+		session.nopreview=false;
+	} else {
+		session.nopreview=true;
+	}
 	session.style=1;
 	getById("header").style.display="none";
 	getById("header").style.opacity = 0;
+}
+
+var directorLanding = false;
+if (urlParams.has('director')){
+	directorLanding = urlParams.get('director');
+	if (directorLanding===null){
+		directorLanding = true;
+	} else if (directorLanding.length===0){
+		directorLanding = true;
+	} else {
+		directorLanding = false;
+	}
+} else if (filename==="director"){
+	directorLanding=true;
+	filename=false;
 }
 
 
@@ -441,10 +458,16 @@ if (urlParams.has('webcam') || urlParams.has('wc')){
 	session.screenshare = true;
 } else if (urlParams.has('fileshare') || urlParams.has('fs')){
 	getById("container-5").classList.remove('advanced');
-	getById("container-3").className = 'column columnfade advanced'; // Hide screen share on mobile
-	getById("container-2").className = 'column columnfade advanced'; // Hide screen share on mobile
 	getById("container-5").classList.add("skip-animation");
 	getById("container-5").classList.remove('pointer');
+} else if (directorLanding){
+	getById("container-1").classList.remove('advanced');
+	getById("container-1").classList.add("skip-animation");
+	getById("container-1").classList.remove('pointer');
+} else if (urlParams.has('website') || urlParams.has('iframe')){
+	getById("container-6").classList.remove('advanced');
+	getById("container-6").classList.add("skip-animation");
+	getById("container-6").classList.remove('pointer');
 }
 
 if (urlParams.has('mute') || urlParams.has('muted')){
@@ -459,6 +482,24 @@ if (session.screenshare==true){
 
 if (urlParams.has('manual')){
 	session.manual = true;
+}
+
+if (urlParams.has('hands')){
+	session.raisehands = true;
+}
+
+var screensharebutton=false;
+if (urlParams.has('ssb')){
+	var screensharebutton=true;;
+}
+
+if (urlParams.has('bigbutton')){
+	session.bigmutebutton=true;
+	getById("mutebutton").style.width = "min(40vh,40vw)";
+	getById("mutebutton").style.height = "min(40vh,40vw)";
+	getById("mutetoggle").style.width = "min(40vh,40vw)";
+	getById("mutetoggle").style.height = "min(40vh,40vw)";
+	
 }
 
 if (session.webcamonly==true){
@@ -532,6 +573,9 @@ if (session.defaultPassword!==false){
 	session.password = session.defaultPassword; // no user entered password; let's use the default password if its not disabled.
 }
 
+if (urlParams.has('showlabels') || urlParams.has('showlabel')){
+	session.showlabels=true;
+}
 
 if (urlParams.has('label')){
 	session.label = decodeURIComponent(urlParams.get('label'));
@@ -702,12 +746,14 @@ if (urlParams.has('streamid') || urlParams.has('view') || urlParams.has('v') || 
 			session.view_set = session.view.split(",");
 		} 
 	}
-	
 }
 
 if (urlParams.has('nopreview')){
 	log("preview OFF");
     session.nopreview = true;
+} else if ((urlParams.has('preview')) || (urlParams.has('showpreview'))){
+	log("preview ON");
+    session.nopreview = false;
 } 
 
 if (urlParams.has('obsfix')){
@@ -736,17 +782,35 @@ if (urlParams.has('remote') || urlParams.has('rem')){
     session.remote =  session.remote.trim();
 }
 
+if (urlParams.has('latency') || urlParams.has('al')  || urlParams.has('audiolatency')){
+	log("latency  ENABLED");
+	session.audioLatency = urlParams.get('latency') || urlParams.get('al') || urlParams.get('audiolatency');
+	session.audioLatency = parseInt(session.audioLatency) || 0 ;
+}
+
+if (urlParams.has('audiogain') || urlParams.has('gain')){
+	log("audio gain  ENABLED");
+	session.audioGain = urlParams.get('audiogain') || urlParams.get('gain');
+	session.audioGain = parseInt(session.audioGain) || 0 ;
+}
+if (urlParams.has('compressor')){
+	log("audio gain  ENABLED");
+	session.compressor = 1;
+} else if (urlParams.has('limiter')){
+	log("audio gain  ENABLED");
+	session.compressor = 2;
+} 
 
 if (urlParams.has('keyframeinterval') || urlParams.has('keyframerate') || urlParams.has('keyframe') ||urlParams.has('fki')){
 	log("keyframerate ENABLED");
-	session.keyframerate = parseInt(urlParams.get('keyframeinterval') || urlParams.get('keyframerate') || urlParams.get('keyframe') || urlParams.get('fki'));
+	session.keyframerate = parseInt(urlParams.get('keyframeinterval') || urlParams.get('keyframerate') || urlParams.get('keyframe') || urlParams.get('fki')) || 0;
 }
 
 if (urlParams.has('optimize')){
 	session.optimize = true;
 }
 
-if (urlParams.has('obsoff') || urlParams.has('oo')){
+if (urlParams.has('tallyoff') || urlParams.has('obsoff') || urlParams.has('oo')){
 	log("OBS feedback disabled");
     session.disableOBS = true;
 }
@@ -793,6 +857,7 @@ if (urlParams.has("videodevice") || urlParams.has("vdevice")  || urlParams.has("
 	
 	if (session.videoDevice === 0){
 		getById("add_camera").innerHTML = "Share your Microphone";
+		miniTranslate(getById("add_camera"),"share-your-mic");
 	}
 	
 	getById("videoMenu").style.display="none";
@@ -832,6 +897,7 @@ if (urlParams.has("audiodevice") || urlParams.has("adevice")  || urlParams.has("
 	if (session.videoDevice === 0){
 		if (session.audioDevice === 0){
 			getById("add_camera").innerHTML = "Click Start to Join";
+			miniTranslate(getById("add_camera"),"click-start-to-join");
 			getById("container-2").className = 'column columnfade advanced'; // Hide screen share on mobile
 			//getById("shareScreenGear").style.display="none"; // removed based on fluffy's feedback
 			getById("container-3").classList.add("skip-animation");
@@ -868,6 +934,19 @@ if (urlParams.has('noiframe') || urlParams.has('noiframes') || urlParams.has('ni
 	log(session.noiframe);
 }
 
+
+if (urlParams.has('exclude') || urlParams.has('ex')){
+	
+	session.exclude = urlParams.get('exclude') || urlParams.get('ex');
+	
+	if (!(session.exclude)){
+		session.exclude = false;
+	} else {
+		session.exclude = session.exclude.split(",");
+	}
+	log("exclude video playback");
+	log(session.exclude);
+}
 
 
 if (urlParams.has('novideo') || urlParams.has('nv') || urlParams.has('hidevideo') || urlParams.has('showonly') ){
@@ -924,11 +1003,19 @@ if (urlParams.has('vbr')){
 if (urlParams.has('minptime')){
 	session.minptime =  parseInt(urlParams.get('minptime')) || 10;
 	if (session.minptime<10){session.minptime=10;}
+	if (session.minptime>300){session.minptime=300;}
 }
 
 if (urlParams.has('maxptime')){
-	session.maxptime = parseInt(urlParams.get('maxptime')) || 30;
-	if (session.maxptime<session.minptime){session.maxptime=session.minptime;}
+	session.maxptime = parseInt(urlParams.get('maxptime')) || 60;
+	if (session.maxptime<10){session.maxptime=10;}
+	if (session.maxptime>300){session.maxptime=300;}
+}
+
+if (urlParams.has('ptime')){
+	session.ptime =  parseInt(urlParams.get('ptime')) || 20;
+	if (session.minptime<10){session.ptime=10;}
+	if (session.minptime>300){session.ptime=300;}
 }
 
 
@@ -948,7 +1035,7 @@ if (urlParams.has('scale')){
 
 var ConfigSettings = getById("main-js");
 var ln_template = false;
-
+var translation = false;
 try {
 	if (ConfigSettings){
 		ln_template = ConfigSettings.getAttribute('data-translation');   // Translations
@@ -975,7 +1062,7 @@ if (ln_template){  // checking if manual lanuage override enabled
 			}
 			response.json().then(function(data) {
 				log(data);
-				
+				translation = data;
 				var trans = data.innerHTML;
 				var allItems = document.querySelectorAll('[data-translate]');
 				allItems.forEach(function(ele){
@@ -1015,35 +1102,27 @@ if (ln_template){  // checking if manual lanuage override enabled
 		errorlog(error);
 		getById("mainmenu").style.opacity = 1;
 	}
-	if (location.hostname !== "obs.ninja"){
-		if (session.label===false){
-			document.title = location.hostname;
-		}
-		getById("qos").innerHTML = location.hostname;
-		getById("logoname").innerHTML = getById("qos").outerHTML;
-		getById("helpbutton").style.display = "none";
-		getById("reportbutton").style.display = "none";
-	}
-} else if (location.hostname === "rtc.ninja"){
-	try{
-		if (session.label===false){
-			document.title = "";
-		}
-		getById("qos").innerHTML = "";
-		getById("logoname").innerHTML = "";
-		getById("helpbutton").style.display = "none";
-		getById("helpbutton").style.opacity = 0;
-		getById("reportbutton").style.display = "none";
-		getById("mainmenu").style.opacity = 1;
-		getById("mainmenu").style.margin = "30px 0";
-		getById("translateButton").style.display = "none";
-		getById("translateButton").style.opacity = 0;
-		getById("info").style.display = "none";
-		getById("info").style.opacity = 0;
-		getById("chatBody").innerHTML = "";
-		
-	} catch(e){}
 } else if (location.hostname !== "obs.ninja"){
+	if (location.hostname === "rtc.ninja"){
+		try{
+			if (session.label===false){
+				document.title = "";
+			}
+			getById("qos").innerHTML = "";
+			getById("logoname").innerHTML = "";
+			getById("helpbutton").style.display = "none";
+			getById("helpbutton").style.opacity = 0;
+			getById("reportbutton").style.display = "none";
+			getById("mainmenu").style.opacity = 1;
+			getById("mainmenu").style.margin = "30px 0";
+			getById("translateButton").style.display = "none";
+			getById("translateButton").style.opacity = 0;
+			getById("info").style.display = "none";
+			getById("info").style.opacity = 0;
+			getById("chatBody").innerHTML = "";
+			
+		} catch(e){}
+	}
 	try {
 		fetch("./translations/blank.json").then(function(response){
 			if (response.status !== 200) {
@@ -1109,6 +1188,47 @@ if (ln_template){  // checking if manual lanuage override enabled
 	getById("mainmenu").style.opacity = 1;
 }
 
+try{
+	if (location.hostname === "rtc.ninja"){ // an extra-brand-free version of OBS.Ninja
+		if (session.label===false){
+			document.title = "";
+		}
+		getById("qos").innerHTML = "";
+		getById("logoname").innerHTML = "";
+		getById("helpbutton").style.display = "none";
+		getById("helpbutton").style.opacity = 0;
+		getById("reportbutton").style.display = "none";
+		getById("mainmenu").style.opacity = 1;
+		getById("mainmenu").style.margin = "30px 0";
+		getById("translateButton").style.display = "none";
+		getById("translateButton").style.opacity = 0;
+		getById("info").style.display = "none";
+		getById("info").style.opacity = 0;
+		getById("chatBody").innerHTML = "";
+	} else if (location.hostname !== "obs.ninja"){
+		if (session.label===false){
+			document.title = location.hostname;
+		}
+		getById("qos").innerHTML = location.hostname;
+		getById("logoname").innerHTML = getById("qos").outerHTML;
+		getById("helpbutton").style.display = "none";
+		getById("reportbutton").style.display = "none";
+	}
+	
+} catch(e){}
+
+function miniTranslate(ele, ident=false){
+	if (ident){
+		ele.dataset.translate = ident;
+	} else {
+		ident = ele.dataset.translate;
+	}
+	try {
+		if (ident in translation.innerHTML){
+			ele.innerHTML = translation.innerHTML[ident];
+		}
+	} catch(e){}
+}
 function changeLg(lang){
 		fetch("./translations/"+lang+'.json').then(function(response){
 			if (response.status !== 200) {
@@ -1117,6 +1237,7 @@ function changeLg(lang){
 			}
 			response.json().then(function(data) {
 				log(data);
+				translation = data; // translation.innerHTML[ele.dataset.translate]
 				var trans = data.innerHTML;
 				var allItems = document.querySelectorAll('[data-translate]');
 				allItems.forEach(function(ele){
@@ -1576,12 +1697,41 @@ window.onmessage = function(e){ // iFRAME support
 		}
 	}
 	
+	if ("sceneState" in e.data){  // TRUE OR FALSE - tells the connected peers if they are live or not via a tally light change.
+		
+		var visibility = e.data.sceneState;
+		var bundle = {};
+		bundle.sceneUpdate = [];
+		
+		for (var UUID in session.rpcs){
+			if (session.rpcs[UUID].visibility!==visibility){ // only move forward if there is a change; the event likes to double fire you see.
+				
+				session.rpcs[UUID].visibility = visibility;
+				var msg = {};
+				msg.visibility = visibility;
+				
+				if (session.rpcs[UUID].videoElement.style.display == "none"){  // Flag will be left alone, but message will say its disabled.
+					msg.visibility = false;
+				}
+				
+				msg.UUID = UUID;
+				session.sendRequest(msg, UUID); 
+				bundle.sceneUpdate.push(msg)
+			}
+		}
+		session.sendRequest(bundle); // we want all publishing peers to know the state
+	}
+	
 	if ("sendMessage" in e.data){  // webrtc send to viewers
 		session.sendMessage(e.data);
 	}
 	
 	if ("sendRequest" in e.data){  // webrtc send to publishers
 		session.sendRequest(e.data);
+	}
+	
+	if ("sendPeers" in e.data){ // webrtc send message to every connected peer; like send and request; a hammer vs a knife.
+		session.sendPeers(e.data)
 	}
 	
 	if ("reload" in e.data){
@@ -1821,8 +1971,8 @@ function applyEffects(eleName, track, stream){
 		if (session.canvasInterval!==null){clearInterval(session.canvasInterval);}
 		session.canvasInterval = setInterval(function(){drawFrameMirrored();},drawRate);
 	} else {
-		getById(eleName).srcObject.addTrack(track, stream); // add video track to the preview video
-		session.streamSrc = getById(eleName).srcObject;
+		session.streamSrc.addTrack(track, stream);
+		getById(eleName).srcObject = outboundAudioPipeline(session.streamSrc);
 	}
 }
 
@@ -1981,29 +2131,32 @@ if (urlParams.has('permaid') || urlParams.has('push')){
 	} else {
 		getById("container-1").className = 'column columnfade advanced';
 		getById("container-4").className = 'column columnfade advanced';
+		getById("dropButton").className = 'column columnfade advanced';
+		
 		getById("info").innerHTML = "";
 		if (session.videoDevice === 0){
 			getById("add_camera").innerHTML = "Share your Microphone";
+			miniTranslate(getById("add_camera"),"share-your-mic");
 		} else {
 			getById("add_camera").innerHTML = "Share your Camera";
-			getById("add_camera").dataset.translate = "share-your-camera";
+			miniTranslate(getById("add_camera"),"share-your-camera");
 		}
 		getById("add_screen").innerHTML = "Share your Screen";
-		getById("add_screen").dataset.translate = "share-your-screen";
+		miniTranslate(getById("add_screen"),"share-your-screen");
+		
 		getById("passwordRoom").value = "";
 		getById("videoname1").value = "";
 		getById("dirroomid").innerHTML = "";
 		getById("roomid").innerHTML = "";
-		getById("container-1").className = 'column columnfade advanced';
-		getById("container-4").className = 'column columnfade advanced';
+		
 		getById("mainmenu").style.alignSelf= "center";
 		getById("mainmenu").classList.add("mainmenuclass");
 		getById("header").style.alignSelf= "center";
 		
 		if (session.webcamonly==true){  // mobile or manual flag 'webcam' pflag set
-			getById("head1").innerHTML = '<font style="color:#CCC;">- Please accept any camera permissions</font>';
+			getById("head1").innerHTML = '<font style="color:#CCC;" data-translate="please-accept-permissions">- Please accept any camera permissions</font>';
 		} else {	
-			getById("head1").innerHTML = '<br /><font style="color:#CCC">- Please select which you wish to share</font>';
+			getById("head1").innerHTML = '<br /><font style="color:#CCC" data-translate="please-select-which-to-share">- Please select which you wish to share</font>';
 		}
 	}
 } 
@@ -2036,29 +2189,37 @@ if ( (session.roomid) || (urlParams.has('roomid')) || (urlParams.has('r')) || (u
 	getById("roomid").innerHTML = session.roomid;
 	getById("container-1").className = 'column columnfade advanced';
 	getById("container-4").className = 'column columnfade advanced';
+	getById("container-7").style.display = 'none';
+	getById("container-8").style.display = 'none';
 	getById("mainmenu").style.alignSelf= "center";
 	getById("header").style.alignSelf= "center";
 	
 	if (session.webcamonly==true){  // mobile or manual flag 'webcam' pflag set
 		getById("head1").innerHTML = '';
 	} else {	
-		getById("head1").innerHTML = '<font style="color:#CCC">Please select an option to join.</font>';
+		getById("head1").innerHTML = '<font style="color:#CCC" data-translate="please-select-option-to-join">Please select an option to join.</font>';
 	}
 	
 	if (session.roomid.length>0){
 		if (session.videoDevice === 0){
 			getById("add_camera").innerHTML = "Join room with Microphone";
+			miniTranslate(getById("add_camera"),"join-room-with-mic");
 		} else {
 			getById("add_camera").innerHTML = "Join Room with Camera";
+			miniTranslate(getById("add_camera"),"join-room-with-camera");
 		}
 		getById("add_screen").innerHTML = "Screenshare with Room";
+		miniTranslate(getById("add_screen"),"share-screen-with-room");
 	} else {
 		if (session.videoDevice === 0){
 			getById("add_camera").innerHTML = "Share your Microphone";
+			miniTranslate(getById("add_camera"),"share-your-mic");
 		} else {
 			getById("add_camera").innerHTML = "Share your Camera";
+			miniTranslate(getById("add_camera"),"share-your-camera");
 		}
 		getById("add_screen").innerHTML = "Share your Screen";
+		miniTranslate(getById("add_screen"),"share-your-screen");
 	}
 	getById("head3").className = 'advanced';
 	if (urlParams.has('scene')){
@@ -2081,9 +2242,12 @@ if ( (session.roomid) || (urlParams.has('roomid')) || (urlParams.has('r')) || (u
 		getById("main").style.overflow = "hidden";
 	} 
 } else if (urlParams.has('director')){ // if I do a short form of this, it will cause duplications in the code elsewhere.
-	var director_room_input = urlParams.get('director');
-	director_room_input = sanitizeRoomName(director_room_input);
-	createRoom(director_room_input);
+	if (directorLanding==false){
+		var director_room_input = urlParams.get('director');
+		director_room_input = sanitizeRoomName(director_room_input);
+		log("director_room_input:"+director_room_input);
+		createRoom(director_room_input);
+	}
 } else if ((session.view) && (permaid===false)){
 	log("Update Mixer Event on REsize SET");
 	getById("translateButton").style.display = "none";
@@ -2183,7 +2347,7 @@ function printMyStats(menu){  // see: setupStatsMenu
 			}
 		}
 	}
-	menu.innerHTML+="<button onclick='session.forcePLI(null,event);'>Send Keyframe to Viewers</button>";
+	menu.innerHTML+="<button onclick='session.forcePLI(null,event);' data-translate='send-keyframe-to-viewer'>Send Keyframe to Viewers</button>";
 	for (var uuid in session.pcs){
 		setTimeout(function(UUID){
 			session.pcs[UUID].getStats().then(function(stats){
@@ -2227,8 +2391,8 @@ function printMyStats(menu){  // see: setupStatsMenu
 
 
 function updateStats(obsvc=false){
-	log('resolution found');
-	if (!(getById('previewWebcam'))){return;} // Don't show unless preview (or new stats pane is added)
+	log('updateStats - resolution found');
+	if (getById('previewWebcam')===null){return;} // Don't show unless preview (or new stats pane is added)
 	try {
 		getById("webcamstats").innerHTML = "";
 		getById('previewWebcam').srcObject.getVideoTracks().forEach(
@@ -2371,6 +2535,54 @@ function toggleChat(event=null){ // TODO: I need to have this be MUTE, toggle, w
 	}
 	getById("chatNotification").classList.remove("notification");
 }
+
+function directorAdvanced(ele){
+	var target = document.createElement("div");
+	target.style = "position:absolute;float:left;width:275px;height:222px;background-color:#7E7E7E;";
+	
+	var someButton = document.createElement("button");
+	someButton.innerHTML = "<i class='las la-reply'></i> some action ";
+	someButton.style.left = "5px";
+    someButton.style.position = "relative";
+	someButton.onclick = function(){
+		var actionMsg = {}; 
+		session.sendRequest(actionMsg, ele.dataset.UUID);
+	};
+	
+	var closeButton = document.createElement("button");
+	closeButton.innerHTML = "<i class='las la-times'></i> close";
+	closeButton.style.left = "5px";
+    closeButton.style.position = "relative";
+	closeButton.onclick = function(){
+		target.parentNode.removeChild(target);
+	};
+	
+
+	var overlayMsg = document.createElement("span");
+	
+	overlayMsg.style.left = "16px";
+	overlayMsg.style.top = "6px";
+    overlayMsg.style.position = "relative";
+	overlayMsg.innerHTML = "<i class='lar la-bell' style='font-size:170%; color:#FFF; cursor:pointer;'></i>";
+	target.overlay=true;
+	
+	overlayMsg.onclick = function(e){
+		log(e.target.parentNode.parentNode);
+		if (e.target.parentNode.parentNode.overlay===true){
+			e.target.parentNode.parentNode.overlay = false;
+			e.target.parentNode.innerHTML = "<i class='lar la-bell-slash' style='font-size:170%; color:#DDD; cursor:pointer;'></i>";
+		} else {
+			e.target.parentNode.parentNode.overlay=true;
+			e.target.parentNode.innerHTML = "<i class='lar la-bell' style='font-size:170%; color:#FFF; cursor:pointer;'></i>";
+		}
+	}
+	
+	target.appendChild(closeButton);
+	target.appendChild(someButton);
+	target.appendChild(overlayMsg);
+	ele.parentNode.appendChild(target);
+}
+
 function directorSendMessage(ele){
 	var target = document.createElement("div");
 	target.style = "position:absolute;float:left;width:275px;height:222px;background-color:#7E7E7E;";
@@ -2473,8 +2685,17 @@ function toggleVideoMute(apply=false){ // TODO: I need to have this be MUTE, tog
 	}
 }
 
-function toggleSettings(){ // TODO: I need to have this be MUTE, toggle, with volume not touched.
+var toggleSettingsState = false;
+function toggleSettings(forceShow=false){ // TODO: I need to have this be MUTE, toggle, with volume not touched.
+	//$(this).attr('state', '1')
 	
+	getById("multiselect-trigger3").dataset.state="0";
+	getById("multiselect-trigger3").classList.add('closed');
+	getById("multiselect-trigger3").classList.remove('open');
+	
+	getById("chevarrow2").classList.add('bottom');
+		
+	if (toggleSettingsState==true){if (forceShow==true){return;}} // don't close if already open
 	if (getById("popupSelector").style.display=="none"){
 		
 		updateConstraintSliders();
@@ -2492,7 +2713,7 @@ function toggleSettings(){ // TODO: I need to have this be MUTE, toggle, with vo
 		getById("settingsbutton").classList.add("float2");
 		getById("settingsbutton").classList.remove("float");
 		setTimeout(function(){getById("popupSelector").style.right="0px";},1);
-		
+		toggleSettingsState=true;
 	} else{
 		document.removeEventListener("click", toggleSettings);
 		getById("popupSelector").removeEventListener("click", function(e){
@@ -2505,16 +2726,44 @@ function toggleSettings(){ // TODO: I need to have this be MUTE, toggle, with vo
 		getById("settingsbutton").classList.add("float");
 		getById("settingsbutton").classList.remove("float2");
 		setTimeout(function(){getById("popupSelector").style.display="none";},200);
+		toggleSettingsState=false;
 	}
 }
 
 function hangup(){ // TODO: I need to have this be MUTE, toggle, with volume not touched.
-	getById("main").innerHTML = "<font style='font-size:500%;top:40%;left:50%;margin:auto 0;position:absolute;'>👋</font>";
+	getById("main").innerHTML = "<font style='font-size:500%;text-align:center;margin:auto;'>👋</font>";
 	setTimeout(function(){session.hangup();},0);
 }
 
 function hangupComplete(){
-	getById("main").innerHTML = "<font style='font-size:500%;top:40%;left:50%;margin:auto 0;position:absolute;'>👋</font>";
+	getById("main").innerHTML = "<font style='font-size:500%;text-align:center;margin:auto;'>👋</font>";
+}
+
+
+function raisehand(){
+	if (session.directorUUID==false){
+		log("no director in room yet");
+		return;
+	}
+	
+	var data = {};
+	data.UUID = session.directorUUID;
+	
+	log(data);
+	if (getById("raisehandbutton").dataset.raised=="0"){
+		getById("raisehandbutton").dataset.raised="1";
+		getById("raisehandbutton").classList.add("raisedHand");
+		data.chat = "Raised hand";
+		log("hand raised");
+	} else {
+		log("hand lowered");
+		getById("raisehandbutton").dataset.raised="0";
+		getById("raisehandbutton").classList.remove("raisedHand");
+		data.chat = "Lowered hand";
+	}
+	
+	session.sendMessage(data, data.UUID);
+	
 }
 
 var previousRoom="";
@@ -2543,7 +2792,7 @@ function directMigrate(ele, event){  // everyone in the room will hangup this gu
 		log("Migrate queued");
 		return;
 	} else {
-		var migrateRoom = prompt("Transfer guests to room:", previousRoom);
+		var migrateRoom = prompt("Transfer guests to room:\n\n(Please note rooms must share the same password)", previousRoom);
 		stillNeedRoom=true;
 		if (migrateRoom===null){ // user cancelled
 			ele.innerHTML = '<i class="las la-paper-plane"></i> <span data-translate="forward-to-room">Transfer</span>';
@@ -2668,6 +2917,41 @@ function directMute(ele, event){ // A directing room only is controlled by the D
 }
 
 
+
+
+function remoteMute(ele, event){ 
+	log("mute");
+	if (!((event.ctrlKey) || (event.metaKey))){
+		if (ele.dataset.mute==1){
+			ele.dataset.mute = 0;
+			ele.className = "";
+			ele.children[1].innerHTML = "mute guest";
+        } else {
+			ele.dataset.mute = 1;
+			ele.className = "pressed";
+			ele.children[1].innerHTML = "Un-mute guest";
+        }
+	}
+	
+	try {
+		session.rpcs[ele.dataset.UUID].directorMutedState = ele.dataset.mute;
+		var volume = session.rpcs[ele.dataset.UUID].directorVolumeState;
+	} catch(e){
+		errorlog(e);
+		var volume = 100;
+	}
+	
+	
+	var msg = {};
+	if (ele.dataset.mute==0){
+		msg.volume = volume;
+	} else {
+		msg.volume = 0;
+	}
+	msg.UUID = ele.dataset.UUID;
+	session.sendRequest(msg, ele.dataset.UUID);
+}
+
 function directVolume(ele){ // A directing room only is controlled by the Director, with the exception of MUTE.
 	log("volume");
 	var msg = {};
@@ -2677,10 +2961,22 @@ function directVolume(ele){ // A directing room only is controlled by the Direct
 	msg.action = "volume";
 	msg.target = ele.dataset.UUID; // i want to focus on the STREAM ID, not the UUID...
 	msg.value = ele.value;
-	
-	// session.anysend(msg // msg.UUID ->  can't do this yet as DIRECTOR isn't "verfied" via WebRTC yet. ALSO,  
-	// need to send to just scenes, and that isn't the case as voice is push to talk setup first. RTC is off by default then.
 	session.sendMsg(msg); // send to everyone in the room, so they know if they are on air or not.
+}
+
+
+function remoteVolume(ele){ // A directing room only is controlled by the Director, with the exception of MUTE.
+	log("volume");
+	var msg = {};
+	var muted = session.rpcs[ele.dataset.UUID].directorMutedState;
+	if (muted==1){ // 1 is a string, not an int, so == and not ===. this happens in a few places :/  
+		session.rpcs[ele.dataset.UUID].directorVolumeState = ele.value;
+	} else {
+		session.rpcs[ele.dataset.UUID].directorVolumeState = ele.value;
+		msg.volume = ele.value;
+		msg.UUID = ele.dataset.UUID;
+		session.sendRequest(msg, ele.dataset.UUID);
+	}
 }
 
 
@@ -2794,6 +3090,12 @@ function publishScreen(){
 			if (session.showSettings){
 				getById("settingsbutton").className="float";
 			}
+			if (session.raisehands){
+				getById("raisehandbutton").className="float";
+			}
+			if (screensharebutton){
+				getById("screensharebutton").className="float";
+			}
 			getById("controlButtons").style.display="flex";
 			getById("helpbutton").style.display = "inherit";
 			getById("reportbutton").style.display = "";
@@ -2858,6 +3160,12 @@ function publishWebcam(btn = false){
 		if (session.showSettings){
 			getById("settingsbutton").className="float";
 		}
+		if (session.raisehands){
+			getById("raisehandbutton").className="float";
+		}
+		if (screensharebutton){
+			getById("screensharebutton").className="float";
+		}
 		getById("controlButtons").style.display="flex";
 		getById("helpbutton").style.display = "inherit";
 		getById("reportbutton").style.display = "";
@@ -2875,123 +3183,185 @@ function publishWebcam(btn = false){
 
 }
 
-
-var audioContext = null;
-var meter = null;
-var mediaStreamSource = null;
+var meterNode = null;
 var drawLoopLimiter = null;
 
-function volumeStream(stream) {
-	if ((iOS) || (iPad)){
-		log("Volume Meter not support on iOS due to Safari Glitch");
-		//setInterval(function(){
-		//	var sounds = document.getElementsByTagName("video");
-		//	for (var i = 0; i < sounds.length; ++i){
-		//		sounds[i].addEventListener('pause', function onPause() {
-		//		  sounds[i].removeEventListener('pause', onPause);
-		//		  sounds[i].play();
-		//		});
-		//		sounds[i].pause();
-		//	}
-		//},5000);
-	} else {
-		log("gostream");
-		if (meter){
-			meter.shutdown;
+function outboundAudioPipeline(stream){
+	
+	//if ((iOS) || (iPad)){
+	//	return stream
+	//} else {
+		log("Web Audio");
+		var tracks = stream.getAudioTracks();
+		if (tracks.length){
+			for (var waid in session.webAudios){ // TODO:  EXCLUDE CURRENT TRACK IF ALREADY EXISTS ... if (track.id === wa.id){..
+				 session.webAudios[waid].stop();
+				 delete session.webAudios[waid];
+			}
+			
+			
+			var webAudio = {};
+			webAudio.compressor = false;
+			webAudio.analyser = false;
+			webAudio.gainNode = false;
+			webAudio.id = tracks[0].id;
+			
+			if (session.audioLatency!==false){ // session.audioLatency could be useful for fixing clicking issues?
+				var audioContext = new AudioContext({
+				  latencyHint: session.audioLatency/1000.0, // needs to be in seconds, but OBSN user input is via milliseconds
+				  sampleRate: 48000 // not sure this is a great idea, but might as well add this here, versus later on since it is needed anyways.
+				});
+			} else {
+				var audioContext = new AudioContext();
+			}
+			
+			webAudio.audioContext = audioContext;
+			webAudio.mediaStreamSource = audioContext.createMediaStreamSource(stream); // clone to fix iOS issue
+			webAudio.gainNode = audioGainNode(webAudio.mediaStreamSource, audioContext);
+			
+			if (session.compressor===1){
+			    webAudio.compressor = audioCompressor(webAudio.gainNode, audioContext);
+				webAudio.analyser = audioMeter(webAudio.compressor, audioContext);
+			} else if (session.compressor===2){
+			    webAudio.compressor = audioLimiter(webAudio.gainNode, audioContext);
+				webAudio.analyser = audioMeter(webAudio.compressor, audioContext);
+			} else {
+				webAudio.analyser = audioMeter(webAudio.gainNode, audioContext);
+			}
+			
+			webAudio.destination = audioContext.createMediaStreamDestination();
+			webAudio.analyser.connect(webAudio.destination);
+			
+			webAudio.stop = function(){
+				try{webAudio.destination.disconnect();}catch(e){}
+				try{clearInterval(webAudio.analyser.interval);}catch(e){}
+				try{webAudio.analyser.disconnect();}catch(e){}
+				try{webAudio.gainNode.disconnect();}catch(e){}
+				try{webAudio.compressor.disconnect();}catch(e){}
+				try{webAudio.mediaStreamSource.context.close();}catch(e){}
+			}
+			
+			webAudio.mediaStreamSource.onended = function(){
+				webAudio.stop();
+			};
+			
+			session.webAudios[webAudio.id] = webAudio;
+			
+			stream.getTracks().forEach(function(track){
+				if (webAudio.id!=track.id){
+					webAudio.destination.stream.addTrack(track,stream);
+				}
+			});
+			
+			return webAudio.destination.stream;
+		} else {
+			return stream; // no audio track
 		}
-		meter=null;
-		mediaStreamSource = null;
-		audioContext=null
-		if (!document.getElementById("meter1")){
+	//}
+}
+
+function audioGainNode(mediaStreamSource, audioContext){
+	var gainNode = audioContext.createGain();
+	if (session.audioGain!==false){
+		var gain = parseFloat(session.audioGain/100.0) || 1.0;
+	} else {
+		var gain = 1.0;
+	}
+	gainNode.gain.setValueAtTime(gain, audioContext.currentTime);
+	mediaStreamSource.connect(gainNode);
+	return gainNode;
+}
+
+function audioMeter(mediaStreamSource, audioContext){
+	var analyser = audioContext.createAnalyser();
+	mediaStreamSource.connect(analyser);
+	analyser.fftSize = 256;
+	analyser.smoothingTimeConstant = 0.10;
+	
+	var bufferLength = analyser.frequencyBinCount;
+	var dataArray = new Uint8Array(bufferLength);
+	
+	
+	function draw() {
+		log("baseLatency: "+audioContext.baseLatency);
+		if (!(document.getElementById("meter1"))){
+			clearInterval(analyser.interval);
+			warnlog("METER 1 NOT FOUND");
 			return;
 		}
-		if (stream.getAudioTracks().length){
-			window.AudioContext = window.AudioContext || window.webkitAudioContext;
-			audioContext = new AudioContext();
-			mediaStreamSource = audioContext.createMediaStreamSource(stream); // clone to fix iOS issue
-			meter = createAudioMeter(audioContext);
-			mediaStreamSource.connect(meter);
-			clearInterval(drawLoopLimiter);
-			drawLoopLimiter = setTimeout(function(){drawLoop();},1)
+		analyser.getByteFrequencyData(dataArray);
+		var total = 0;
+        for (var i = 0; i < dataArray.length; i++)
+            total += dataArray[i];
+        total = total/100;
+		
+		if (total==0){
+			getById("meter1").style.width = "1px";
+			getById("meter2").style.width = "0px";
+		} else if (total<=1){
+			getById("meter1").style.width = "1px";
+			getById("meter2").style.width = "0px";
+		} else if (total<=150){
+			getById("meter1").style.width = total+"px";
+			getById("meter2").style.width = "0px";
+		} else if (total>150){
+			if (total>200){total=200;}
+			getById("meter1").style.width = "150px";
+			getById("meter2").style.width = (total-150)+"px";
+			meter2
 		}
-	}
+		
+    };
+
+    analyser.interval = setInterval(function(){draw();},100);
+	return analyser;
+	
 }
 
-function drawLoop( time ) {
+function audioCompressor(mediaStreamSource, audioContext){
+	var compressor = audioContext.createDynamicsCompressor();
+	compressor.threshold.setValueAtTime(-50, audioContext.currentTime);
+	compressor.knee.setValueAtTime(40, audioContext.currentTime);
+	compressor.ratio.setValueAtTime(12, audioContext.currentTime);
+	compressor.attack.setValueAtTime(0, audioContext.currentTime);
+	compressor.release.setValueAtTime(0.25, audioContext.currentTime);
+	mediaStreamSource.connect(compressor);
+	return compressor;
+}
+
+function audioLimiter(mediaStreamSource, audioContext){
+	var compressor = audioContext.createDynamicsCompressor();
+	compressor.threshold.setValueAtTime(-5, audioContext.currentTime);
+	compressor.knee.setValueAtTime(0, audioContext.currentTime);
+	compressor.ratio.setValueAtTime(20.0, audioContext.currentTime); // 1 to 20
+	compressor.attack.setValueAtTime(0.001, audioContext.currentTime);
+	compressor.release.setValueAtTime(0.1, audioContext.currentTime);
+	mediaStreamSource.connect(compressor);
+	return compressor;
+}
+
+function drawLoop(  ) {
 	if (!document.getElementById("meter1")){
 		clearInterval(drawLoopLimiter);
-		if (meter){
-			meter.shutdown;
+		if (meterNode){
+			meterNode.shutdown;
 		}
-		meter=null;
-		mediaStreamSource = null;
-		audioContext=null;
+		meterNode=null;
 		return;
 	}
-	if (meter.clipping){
+	
+	if ((100-meterNode.volume*100*4)<=1){
 		getById("meter1").style.width = "100px";
-		getById("meter1").style.background = "red";
+		getById("meter1").style.background = "green";
+	} else if ((100-meterNode.volume*100*4)<100){
+		getById("meter1").style.width = (meterNode.volume*100*4)+"px";
+		getById("meter1").style.background = "green";
 	} else {
-		if ((100-meter.volume*100*4)<=1){
-			getById("meter1").style.width = "100px";
-			getById("meter1").style.background = "green";
-		} else if ((100-meter.volume*100*4)<100){
-			getById("meter1").style.width = (meter.volume*100*4)+"px";
-			getById("meter1").style.background = "green";
-		} else {
-			getById("meter1").style.width = "0px";
-		}
+		getById("meter1").style.width = "0px";
 	}
+	
 	clearInterval(drawLoopLimiter);
 	drawLoopLimiter = setTimeout(function(){drawLoop();},50)
-}
-function createAudioMeter(audioContext,clipLevel,averaging,clipLag) {
-	var processor = audioContext.createScriptProcessor(512);
-	processor.onaudioprocess = volumeAudioProcess;
-	processor.clipping = false;
-	processor.lastClip = 0;
-	processor.volume = 0;
-	processor.clipLevel = clipLevel || 0.95;
-	processor.averaging = averaging || 0.90;
-	processor.clipLag = clipLag || 750;
-
-	processor.connect(audioContext.destination);
-
-	processor.checkClipping = function(){
-			if (!this.clipping)
-				return false;
-			if ((this.lastClip + this.clipLag) < window.performance.now())
-				this.clipping = false;
-			return this.clipping;
-		};
-
-	processor.shutdown = function(){
-			this.disconnect();
-			this.onaudioprocess = null;
-		};
-
-	return processor;
-}
-
-function volumeAudioProcess( event ) {
-	var buf = event.inputBuffer.getChannelData(0);
-    var bufLength = buf.length;
-	var sum = 0;
-    var x;
-
-    for (var i=0; i<bufLength; i++) {
-    	x = buf[i];
-    	if (Math.abs(x)>=this.clipLevel) {
-    		this.clipping = true;
-    		this.lastClip = window.performance.now();
-    	} else {
-			this.clipping = false;
-		}
-    	sum += x * x ;
-    }
-
-    var rms =  Math.pow(sum / bufLength,0.3);
-    this.volume = Math.max(rms, this.volume*this.averaging);
 }
 
 function randomizeArray(unshuffled) {
@@ -3070,7 +3440,7 @@ function createRoom(roomname=false){
 		roomname = getById("videoname1").value;
 		roomname = sanitizeRoomName(roomname);
 		if (roomname.length!=0){
-			updateURL("director="+roomname); // make the link reloadable.
+			updateURL("director="+roomname, true); // make the link reloadable.
 		}
 	}
 	if (roomname.length==0){
@@ -3106,13 +3476,51 @@ function createRoom(roomname=false){
 		createRoomCallback(passAdd, passAdd2);
 	}
 }
-
 function createRoomCallback(passAdd, passAdd2){
 
 	var gridlayout = getById("gridlayout");
 	gridlayout.classList.add("directorsgrid");
 
+	var broadcastFlag = getById("broadcastFlag");
+	try{
+		if (broadcastFlag.checked){
+			broadcastFlag=true;
+		} else {
+			broadcastFlag=false;
+		}
+	} catch (e){broadcastFlag=false;}
+	
+	var broadcastString = "";
+	if (broadcastFlag){
+		broadcastString = "&broadcast";
+	}
+	
+	///////
+
+	var codecGroupFlag = getById("codecGroupFlag");
+	
+	if (codecGroupFlag.value){
+		if (codecGroupFlag.value==="vp9"){
+			codecGroupFlag = "&codec=vp9";
+		} else if (codecGroupFlag.value==="h264"){
+			codecGroupFlag = "&codec=h264";
+		} else if (codecGroupFlag.value==="vp8"){
+			codecGroupFlag = "&codec=vp8";
+		} else{
+			codecGroupFlag = "";
+		}
+	} else {
+		codecGroupFlag = "";
+	}
+	if (codecGroupFlag){
+		session.codecGroupFlag = codecGroupFlag;
+	}
+	////////
+	
+	
+	
 	formSubmitting = false;
+
 
 	var m = getById("mainmenu");
 	m.remove();
@@ -3132,7 +3540,7 @@ function createRoomCallback(passAdd, passAdd2){
 		}
 	} catch(e){errorlog(e);};
 	
-
+	
 	session.director = true;
 	getById("reshare").parentNode.removeChild(getById("reshare"));
 	getById("chatbutton").classList.remove("advanced");
@@ -3149,15 +3557,15 @@ function createRoomCallback(passAdd, passAdd2){
 	These users will see every feed in the room.</span>\
 	<a onclick='popupMessage(event);copyFunction(this)' onmousedown='copyFunction(this)'\
 	class='task grabLinks' style='cursor:copy' \
-	href='https://"+location.host+location.pathname+"?room="+session.roomid+passAdd+"' '>\
-	https://"+location.host+location.pathname+"?room="+session.roomid+passAdd+"</a>\
+	href='https://"+location.host+location.pathname+"?room="+session.roomid+broadcastString+passAdd+"' '>\
+	https://"+location.host+location.pathname+"?room="+session.roomid+broadcastString+passAdd+"</a>\
 	<button class='pull-right grey' style='font-size:1.2em' onclick='popupMessage(event);copyFunction(this.previousElementSibling )'><i class='las la-video'></i>Copy link</button></div>"
 	
 	+ "<div class='directorBlock'><h2>BROADCAST INVITE</h2>\
 	<span data-translate='link-to-invite-camera'>Link to invite users to broadcast their feeds to the group. These users will not see or hear any feed from the group.</span>\
 	<a class='task grabLinks' style='cursor:copy' onclick='popupMessage(event);copyFunction(this)' onmousedown='copyFunction(this)'\
-	href='https://"+location.host+location.pathname+"?room="+session.roomid+passAdd+"&view' '>\
-	https://"+location.host+location.pathname+"?room="+session.roomid+passAdd+"&view</a>\
+	href='https://"+location.host+location.pathname+"?room="+session.roomid+broadcastString+passAdd+"&view' '>\
+	https://"+location.host+location.pathname+"?room="+session.roomid+broadcastString+passAdd+"&view</a>\
 	<button class='pull-right grey' style='font-size:1.2em;' onclick='popupMessage(event);copyFunction(this.previousElementSibling )'><i class='las la-video'></i>Copy link</button></div>"
 	
 	+ "<div class='directorBlock'><h2>SCENE LINK: MANUAL</h2>\
@@ -3166,15 +3574,15 @@ function createRoomCallback(passAdd, passAdd2){
 	onmousedown='copyFunction(this)' \
 	data-drag='1' draggable='true'  \
 	onclick='popupMessage(event);copyFunction(this)' \
-	href='https://"+location.host+location.pathname+"?scene=1&room="+session.roomid+passAdd2+"''>\
-	https://"+location.host+location.pathname+"?scene=1&room="+session.roomid+passAdd2+"</a>\
+	href='https://"+location.host+location.pathname+"?scene=1&room="+session.roomid+codecGroupFlag+passAdd2+"''>\
+	https://"+location.host+location.pathname+"?scene=1&room="+session.roomid+codecGroupFlag+passAdd2+"</a>\
 	<button class='pull-right grey' style='font-size:1.2em;' onclick='popupMessage(event);copyFunction(this.previousElementSibling )'><i class='las la-th-large' aria-hidden='true'></i></i>Copy link</button></div>"
 	
 	+ "<div class='directorBlock'><h2>SCENE LINK: AUTO</h2>\
 	<span data-translate='this-is-obs-browser-souce-link-auto'>Also an OBS Browser Source link. All guest videos in this group chat room will automatically be added into this scene.</span>\
 	<a class='task grabLinks' onmousedown='copyFunction(this)' draggable='true' data-drag='1'\
 	onclick='popupMessage(event);copyFunction(this)'\
-	href='https://"+location.host+location.pathname+"?scene=0&room="+session.roomid+passAdd2+"' >https://"+location.host+location.pathname+"?scene=0&room="+session.roomid+passAdd2+"</a>\
+	href='https://"+location.host+location.pathname+"?scene=0&room="+session.roomid+codecGroupFlag+passAdd2+"' >https://"+location.host+location.pathname+"?scene=0&room="+session.roomid+codecGroupFlag+passAdd2+"</a>\
 	<button class='pull-right grey' style='font-size:1.2em;' onclick='popupMessage(event);copyFunction(this.previousElementSibling )'><i class='las la-th-large'></i>Copy link</button></div>"
 	+ "</div>";
 	
@@ -3211,12 +3619,19 @@ function createControlBox(UUID, soloLink, streamID){
 	videoContainer.id = "videoContainer_"+UUID; // needed to delete on user disconnect
 	videoContainer.style.margin="0";
 
+	var handsID = "hands_"+UUID;
+
 	controls.innerHTML += "<div>\
 		<div style='padding:5px;word-wrap: break-word; overflow:hidden; white-space: nowrap; overflow: hidden; font-size:0.7em; text-overflow: ellipsis;' title='A direct solo view of the video/audio stream with nothing else. Its audio can be remotely controlled from here'> \
 		<a class='soloLink' data-drag='1' draggable='true' onmousedown='copyFunction(this)' onclick='popupMessage(event);copyFunction(this)' \
 		value='"+soloLink+"' href='"+soloLink+"'/>"+soloLink+"</a>\
 		<button class='pull-right' style='width:100%;' onmousedown='copyFunction(this.previousElementSibling)' onclick='popupMessage(event);copyFunction(this.previousElementSibling)'><i class='las la-user'></i> copy Solo link</button>\
-		</div></div>";
+		</div>\
+		<button data-action-type=\"hand-raised\" id='"+handsID+"' style='margin: auto;margin-bottom:10px;display:none;background-color:yellow;' data-value='0' title=\"This guest raised their hand. Click this to clear notification.\" onclick=\"this.style.display='none';\">\
+			<i class=\"las la-hand-paper\"></i>\
+			<span data-translate=\"user-raised-hand\">Guest Raised Hand</span>\
+		</button>\
+		</div>";
 		
 	controls.querySelectorAll('[data-action-type]').forEach((ele)=>{  // give action buttons some self-reference
 		ele.dataset.UUID = UUID;
@@ -3231,8 +3646,9 @@ function createDirectorCam(vid){
 	vid.style.width="80px";
 	vid.style.height="35px";
 	vid.style.padding ="0";
+	vid.title = "This is the mini-preview of the Director's audio and video output";
 	getById("press2talk").innerHTML = "<span data-translate='Push-to-Mute'>🔴 Push to Mute</span>";
-	getById("press2talk").outerHTML += '<button class="grey" style="margin: 10px 15px;" onclick="toggleSettings()"><i class="las la-sliders-h"></i></button>';
+	getById("press2talk").outerHTML += '<button class="grey" style="margin: 10px 15px;" title="Change the Audio or Video device here" onclick="toggleSettings()"><i class="las la-cog"></i></button>';
 	getById("miniPerformer").appendChild(vid);
 	getById("press2talk").dataset.enabled="true";
 	session.muted=false;
@@ -3336,6 +3752,11 @@ function requestOutputAudioStream(){
 							option.value = deviceInfo.deviceId;
 							if (deviceInfo.kind === 'audiooutput') {
 								const option = document.createElement('option');
+								if (audioOutputSelect.length===0){
+									option.dataset.default = true;
+								} else {
+									option.dataset.default = false;
+								}
 								option.value = deviceInfo.deviceId || "default";
 								if (option.value == session.sink){
 									option.selected = true;
@@ -3588,6 +4009,11 @@ function gotDevices(deviceInfos) { // https://github.com/webrtc/samples/blob/gh-
 				videoSelect.appendChild(option);
 			} else if (deviceInfo.kind === 'audiooutput'){
 				option = document.createElement('option');
+				if (audioOutputSelect.length===0){
+					option.dataset.default = true;
+				} else {
+					option.dataset.default = false;
+				}
 				option.value = deviceInfo.deviceId || "default";
 				if (option.value == session.sink){
 					option.selected = true;
@@ -3842,7 +4268,8 @@ function gotDevices2(deviceInfos){
 				listele.style.display="none";
 				
 				try {
-					getById("videosource").srcObject.getAudioTracks().forEach(function(track){
+					session.streamSrc.getAudioTracks().forEach(function(track){
+						log(track);
 						if (deviceInfo.label==track.label){
 							option.checked = true;
 							listele.style.display="inherit";
@@ -3886,7 +4313,7 @@ function gotDevices2(deviceInfos){
 				option.value = deviceInfo.deviceId || "default";
 				option.text = deviceInfo.label || `camera ${videoSelect.length + 1}`;
 				try {
-					getById("videosource").srcObject.getVideoTracks().forEach(function(track){
+					session.streamSrc.getVideoTracks().forEach(function(track){
 						if (option.text==track.label){
 							option.selected = true;
 						}
@@ -3896,6 +4323,11 @@ function gotDevices2(deviceInfos){
 				
 			} else if (deviceInfo.kind === 'audiooutput'){
 				const option = document.createElement('option');
+				if (audioOutputSelect.length===0){
+					option.dataset.default = true;
+				} else {
+					option.dataset.default = false;
+				}
 				option.value = deviceInfo.deviceId || "default";
 				if (option.value == session.sink){
 					option.selected = true;
@@ -4051,6 +4483,11 @@ function gotDevices2(deviceInfos){
 			activatedPreview=false;
 			grabVideo(session.quality, "videosource", "select#videoSource3");
 		};
+		getById("refreshVideoButton").onclick = function(){
+			log("video source changed");
+			activatedPreview=false;
+			grabVideo(session.quality, "videosource", "select#videoSource3");
+		};
 		
 		audioOutputSelect.onchange = function(){
 			var outputSelect = document.querySelector('select#outputSource3');
@@ -4085,7 +4522,7 @@ function playtone(screen=false){
 	var testtone= getById("testtone");
 	if (testtone){
 		if (session.sink){
-			testtone.setSinkId(session.sink).then(() => {
+			testtone.setSinkId(session.sink).then(() => {  // TODO: iOS doens't support sink. Needs to bypass if IOS
 				log("changing audio sink:"+session.sink);
 				testtone.play();
 			}).catch(error => {
@@ -4200,19 +4637,36 @@ function applyMirror(mirror, eleName='previewWebcam'){  // true unmirrors as its
 ///  Detect system changes; handle change or use for debugging
 var audioReconnectTimeout = null;
 var videoReconnectTimeout = null;
-function reconnectDevices(event){
+function reconnectDevices(event){   ///  TODO: Perhaps change this to only if there is a DISCONNECT; rather than ON NEW DEVICE?
+	if ((iOS) || (iPad)){return;}
 	warnlog("A media device has changed");
-	errorlog(event);
+	warnlog(event);
+	
+	if (session.streamSrc===null){return;}
+	if (document.getElementById("videosource")===null){return;}
+	
 	enumerateDevices().then(gotDevices2).then(function(){
 		
 		clearTimeout(audioReconnectTimeout);
 		audioReconnectTimeout = setTimeout(function(){
+			
+			// TODO: check to see if any audio is connected?
+			
+			
 			activatedPreview=false;
-			grabAudio("videosource","#audioSource3", "default");
+			var audioSelector = "#audioSource3";
+			var audioSelect = document.querySelector(audioSelector).querySelectorAll("input"); 
+			for (var i=0; i<audioSelect.length;i++){
+				if (audioSelect[i].value.toLowerCase()=="default"){
+					audioSelect[i].checked=true;
+				}
+			}
+			grabAudio("videosource",audioSelector);
+			setTimeout(function(){enumerateDevices().then(gotDevices2).then(function(){});},1000);
 		},1000);
 		
 		clearTimeout(videoReconnectTimeout);
-		videoReconnectTimeout = setTimeout(function(){
+		videoReconnectTimeout = setTimeout(function(){ // 
 			activatedPreview=false;
 			grabVideo(session.quality, "videosource", "select#videoSource3");
 		},1000);;
@@ -4252,9 +4706,27 @@ try{
 	Connection.addEventListener('change', updateConnectionStatus);
 } catch(e){}
 
+var ScreeShareState=false;
+async function toggleScreenShare(ele){
+	if (ScreeShareState==false){
+		await grabScreen(quality=0, audio=true, videoOnEnd=true).then(res=>{
+			if (res!=false){
+				ScreeShareState=true;
+				getById("screensharebutton").classList.add("float2");
+				getById("screensharebutton").classList.remove("float");
+			}
+		});
+	} else {
+		//activatedPreview = false;
+		toggleSettings(forceShow=true);
+		//grabVideo(eleName='videosource', selector="select#videoSource3");  
+		//getById("screensharebutton").classList.add("float");
+		//getById("screensharebutton").classList.remove("float2");
+		//ScreeShareState=false;
+	}
+}
 
-
-async function grabScreen(quality=0, audio=true){
+async function grabScreen(quality=0, audio=true, videoOnEnd=false){
 	if (!navigator.mediaDevices.getDisplayMedia){
 		if (!(session.cleanOutput)){
 			setTimeout(function(){alert("Sorry, your browser is not supported. Please use the desktop versions of Firefox or Chrome instead");},1);
@@ -4316,24 +4788,33 @@ async function grabScreen(quality=0, audio=true){
 		
 		var eleName = "videosource";
 		try {
-			var oldstream = getById(eleName).srcObject;
-			if (oldstream){
-				oldstream.getVideoTracks().forEach(function(track){
+			if (session.streamSrc){
+				session.streamSrc.getVideoTracks().forEach(function(track){
 					track.stop();
-					oldstream.removeTrack(track);
+					session.streamSrc.removeTrack(track);
 					log("stopping video track");
 				});
 			} else {
-				getById(eleName).srcObject = new MediaStream();
+				session.streamSrc = new MediaStream();
 				log("CREATE NEW STREAM");
 			}
 		} catch(e){
 			errorlog(e);
 		}
+		getById(eleName).srcObject = session.streamSrc;
 		
 		try {
 			stream.getVideoTracks()[0].onended = function () { // if screen share stops, 
-				grabScreen();
+				if (videoOnEnd==true){
+					//activatedPreview = false;
+					toggleSettings(forceShow=true);
+					//grabVideo(eleName='videosource', selector="select#videoSource3");  
+					ScreeShareState=false;
+					getById("screensharebutton").classList.add("float");
+					getById("screensharebutton").classList.remove("float2");
+				} else {
+					grabScreen();
+				} 
 			};
 		} catch(e){log("No Video selected; screensharing?");}
 		
@@ -4341,8 +4822,8 @@ async function grabScreen(quality=0, audio=true){
 			log(track);
 			addScreenDevices(track);
 			
-			getById(eleName).srcObject.addTrack(track, stream); // Lets not add the audio to this preview; echo can be annoying
-			session.streamSrc = getById(eleName).srcObject;
+			session.streamSrc.addTrack(track, stream); // Lets not add the audio to this preview; echo can be annoying
+			getById(eleName).srcObject = outboundAudioPipeline(session.streamSrc);
 				
 			if (track.kind == "video"){
 				toggleVideoMute(true);
@@ -4384,9 +4865,12 @@ async function grabScreen(quality=0, audio=true){
 		});
 		
 		applyMirror(true,eleName);
+		return true;
 	}).catch(function(err){
 		errorlog(err); /* handle the error */
-		
+		getById("screensharebutton").classList.add("float");
+		getById("screensharebutton").classList.remove("float2");
+		ScreeShareState=false;
 		if ((err.name == "NotAllowedError") || (err.name == "PermissionDeniedError")){
 			// User Stopped it.
 		} else {
@@ -4397,6 +4881,7 @@ async function grabScreen(quality=0, audio=true){
 				setTimeout(function(){alert(err);},1); // TypeError: Failed to execute 'getDisplayMedia' on 'MediaDevices': Audio capture is not supported
 			}
 		}
+		return false;
 	});
 }
 
@@ -4414,28 +4899,26 @@ async function grabVideo(quality=0, eleName='previewWebcam', selector="select#vi
 	getById(eleName).controls=false;
 	
 	try {
-		var oldstream = getById(eleName).srcObject;
-		if (oldstream){
-			oldstream.getVideoTracks().forEach(function(track){
+		if (session.streamSrc){
+			session.streamSrc.getVideoTracks().forEach(function(track){
 				track.stop();
-				session.streamSrc = getById(eleName).srcObject;
-				//track.enabled = false;
-				oldstream.removeTrack(track);
+				session.streamSrc.removeTrack(track);
 				log("track removed");
-				//log("stopping video track");
 			});
+			getById(eleName).srcObject = outboundAudioPipeline(session.streamSrc);  // TODO  is this needed if no audio? or already connected audio?  safe probably to just leave it tho.
 		} else {
 			log(getById(eleName));
-			getById(eleName).srcObject = new MediaStream();
-			session.streamSrc = getById(eleName).srcObject;
+			session.streamSrc = new MediaStream();
+			getById(eleName).srcObject = session.streamSrc;
 			log("CREATE NEW STREAM");
 		}
 	} catch(e){
 		errorlog(e);
 	}
 		
-	
+	log("selector: " + selector);
 	var videoSelect = document.querySelector(selector);
+	log("videoSelect: " + videoSelect);
 	var mirror=false;
 	
 	if (videoSelect.value == "ZZZ"){  // if there is no video, or if manually set to audio ready, then do this step.
@@ -4444,6 +4927,7 @@ async function grabVideo(quality=0, eleName='previewWebcam', selector="select#vi
 				publishWebcam();  // no need to mirror as there is no video...
 				return;
 			} else {
+				log("4462");
 				updateStats();
 				var gowebcam = getById("gowebcam");
 				if (gowebcam){
@@ -4453,6 +4937,7 @@ async function grabVideo(quality=0, eleName='previewWebcam', selector="select#vi
 					gowebcam.style.color = "black";
 					gowebcam.style.fontWeight="bold";
 					gowebcam.innerHTML = "START";
+					miniTranslate(gowebcam,"start");
 				}
 			}
 		} else {  // If they disabled the video but not in preview mode; but actualy live. We will want to remove the stream from the publishing
@@ -4474,7 +4959,7 @@ async function grabVideo(quality=0, eleName='previewWebcam', selector="select#vi
 		// end
 	} else {
 		var sq=0;
-		if (session.quality==false){
+		if (session.quality===false){
 			sq = session.quality_wb;
 		} else if (session.quality>2){  // 1080, 720, and 360p 
 			sq = 2; // hacking my own code. TODO: ugly, so I need to revisit this. 
@@ -4482,9 +4967,10 @@ async function grabVideo(quality=0, eleName='previewWebcam', selector="select#vi
 			sq = session.quality;
 		}
 		
-		if (quality<sq){
+		if ((quality===false) || (quality<sq)){
 			quality=sq; // override the user's setting
 		}
+		
 
 		if ((iOS) || (iPad)){  // iOS will not work correctly at 1080p; likely a h264 codec issue.
 			if (quality==0){
@@ -4559,8 +5045,8 @@ async function grabVideo(quality=0, eleName='previewWebcam', selector="select#vi
 					if (session.effects){
 						applyEffects(eleName, track, stream);
 					} else {
-						getById(eleName).srcObject.addTrack(track, stream); // add video track to the preview video
-						session.streamSrc = getById(eleName).srcObject;
+						session.streamSrc.addTrack(track, stream); // add video track to the preview video
+						getById(eleName).srcObject = outboundAudioPipeline(session.streamSrc);
 					}
 					
 					toggleVideoMute(true);
@@ -4600,6 +5086,7 @@ async function grabVideo(quality=0, eleName='previewWebcam', selector="select#vi
 					if (session.autostart){
 						publishWebcam();
 					} else {
+						log("4620");
 						updateStats(obscam);
 						var gowebcam = getById("gowebcam");
 						if (gowebcam){
@@ -4609,6 +5096,7 @@ async function grabVideo(quality=0, eleName='previewWebcam', selector="select#vi
 							gowebcam.style.color = "black";
 							gowebcam.style.fontWeight="bold";
 							gowebcam.innerHTML = "START";
+							miniTranslate(gowebcam,"start");
 						}
 					}
 				}
@@ -4719,19 +5207,19 @@ async function grabAudio(eleName="previewWebcam", selector="#audioSource", track
 	activatedPreview = true;
 	try {
 		log("Resetting Audio Streams");
-		var oldstream = getById(eleName).srcObject;
-		if (oldstream){
-			oldstream.getAudioTracks().forEach(function(track){
+		if (session.streamSrc){
+			session.streamSrc.getAudioTracks().forEach(function(track){
+				log("track: " +track.id);
 				if (track.id == trackid){return;} // excluded track
 				
 				for (UUID in session.pcs){
 					try {
-						const senders = session.pcs[UUID].getSenders();
+						const senders = session.pcs[UUID].getSenders();  // WTF is going on here again.
 						senders.forEach((sender) => {
 							log(sender);
 							try {
 								if (sender.track){
-									if (sender.track.id === track.id){ // Audio Track to be Replaced/Removed
+									if (sender.track.id === track.id){ // Audio Track to be Replaced/Removed !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!  IS THIS ACTUALLY VALID?Q!!????????????????????????????????????????????
 										log("removing track from sender");
 										session.pcs[UUID].removeTrack(sender);  // sender.replaceTrack(track);
 									}
@@ -4745,11 +5233,12 @@ async function grabAudio(eleName="previewWebcam", selector="#audioSource", track
 					}
 				};
 				log("REMOVE AUDIO TRACK");
-				oldstream.removeTrack(track);
+				session.streamSrc.removeTrack(track);
 				track.stop();
 			});
 		} else { // if no stream exists
-			getById(eleName).srcObject = new MediaStream();
+			session.streamSrc = new MediaStream();
+			getById(eleName).srcObject = session.streamSrc;
 			log("CREATE NEW SOURCE FOR AUDIO");
 		}
 	} catch(e){
@@ -4757,28 +5246,28 @@ async function grabAudio(eleName="previewWebcam", selector="#audioSource", track
 	}
 	
 	var streams = await getAudioOnly(selector, trackid, override); // Get audio streams
+	warnlog(streams);
 	try {
 		for (var i=0; i<streams.length;i++){
 			streams[i].getAudioTracks().forEach(function(track){
-				
-				getById(eleName).srcObject.addTrack(track, streams[i]); // add video track to the preview video
-				session.streamSrc = getById(eleName).srcObject;
-				toggleMute(true);
-					
+				session.streamSrc.addTrack(track, streams[i]); // add video track to the preview video
+			});
+		}
+		getById(eleName).srcObject = outboundAudioPipeline(session.streamSrc);
+		toggleMute(true);
+		if (getById(eleName).srcObject.getAudioTracks()){
+			getById(eleName).srcObject.getAudioTracks().forEach(function(track){
 				for (UUID in session.pcs){
 					if (session.pcs[UUID].allowAudio==true){  // allow 
-						var sender = session.pcs[UUID].addTrack(track, streams[i]);
+						var sender = session.pcs[UUID].addTrack(track, getById(eleName).srcObject);
 						sender.track.onended =  tryAgain;
+						log("ADDED TRACK TO SENDER");
 					}
 				}
 			});
 		}
 	} catch (e){
 		errorlog(e);
-	}
-	
-	if (streams.length){
-		volumeStream(getById(eleName).srcObject);
 	}
 	var gowebcam = getById("gowebcam");
 	if (gowebcam){
@@ -4788,6 +5277,7 @@ async function grabAudio(eleName="previewWebcam", selector="#audioSource", track
 		gowebcam.style.color = "black";
 		gowebcam.style.fontWeight="bold";
 		gowebcam.innerHTML = "START";
+		miniTranslate(gowebcam,"start");
 	}
 }
 
@@ -4816,6 +5306,9 @@ function dragElement(elmnt) {
 		try {
 			var track0 = stream.getVideoTracks();
 		} catch(e){return;}
+		
+		if (!(track0.length)){return;}
+		
 		track0 = track0[0];
 		if (track0.getCapabilities){
 			var capabilities = track0.getCapabilities();
@@ -4984,6 +5477,7 @@ function listAudioSettings(){
 		errorlog(e);
 	}
 	
+	
 	for (var i in session.cameraConstaints){
 		try {
 			log(i);
@@ -4993,6 +5487,7 @@ function listAudioSettings(){
 				else if (i==="width"){continue;}
 				else if (i==="height"){continue;}
 				else if (i==="frameRate"){continue;}
+				else if (i==="latency"){continue;}
 				
 				var label = document.createElement("label");
 				label.id= "label_"+i;
@@ -5002,7 +5497,8 @@ function listAudioSettings(){
 				var input = document.createElement("input");
 				input.min = session.cameraConstaints[i].min;
 				input.max = session.cameraConstaints[i].max;
-				if (input.min == input.max){continue;}
+				
+				if (parseFloat(input.min) == parseFloat(input.max)){continue;}
 				
 				if (getById("popupSelector_constraints_audio").style.display == "none"){
 					getById("advancedOptionsAudio").style.display="inline-block";
@@ -5147,16 +5643,61 @@ function updateAudioConstraints(constraint, value=null){  // this is what it SHO
 	
 }
 
+var originalBitrate = session.totalRoomBitrate;
+
 function listCameraSettings(){
 	getById("popupSelector_constraints_video").innerHTML = "";
-	try {
-		var track0 = session.streamSrc.getVideoTracks();
-		track0 = track0[0];
-		if (track0.getCapabilities){
-			session.cameraConstaints = track0.getCapabilities();
+	
+	if ((originalBitrate) && (session.roomid) && (session.view!=="")){
+		log("LISTING OPTION FOR BITRATE CONTROL");
+		var i = "inbound bandwidth (kbps)";
+		var label = document.createElement("label");
+		label.id= "label_"+i;
+		label.htmlFor = "constraints_"+i;
+		label.innerHTML = i+":";
+		label.title = "If you're on a slow network, you can improve frame rate and audio quality by reducing the amount of video data that others send you";
+		
+		var input = document.createElement("input");
+		input.min = 0;
+		input.max = parseInt(originalBitrate);
+		
+		if (getById("popupSelector_constraints_video").style.display == "none"){
+			getById("advancedOptionsCamera").style.display="inline-block";
 		}
 		
-		log(session.cameraConstaints);
+		input.value = session.totalRoomBitrate;
+		label.innerHTML = i+": "+session.totalRoomBitrate;
+		
+		input.type = "range";
+		input.dataset.keyname = i;
+		input.id = "constraints_"+i;
+		input.style="display:block; width:100%;";
+		input.name = "constraints_"+i;
+		input.title = "If you're on a slow network, you can improve frame rate and audio quality by reducing the amount of video data that others send you";
+		
+		
+		input.onchange = function(e){
+			getById("label_"+e.target.dataset.keyname).innerHTML =e.target.dataset.keyname+": "+e.target.value;
+			
+			if (e.target.value>originalBitrate){return;}
+			else {session.totalRoomBitrate = parseInt(e.target.value);}
+			updateMixer();
+		};
+		
+		
+		getById("popupSelector_constraints_video").appendChild(label);
+		getById("popupSelector_constraints_video").appendChild(input);
+	
+	}
+	try {
+		var track0 = session.streamSrc.getVideoTracks();
+		if (track0.length){
+			track0 = track0[0];
+			if (track0.getCapabilities){
+				session.cameraConstaints = track0.getCapabilities();
+			}
+			log(session.cameraConstaints);
+		}
 	} catch(e){
 		errorlog(e);
 		return;
@@ -5192,7 +5733,7 @@ function listCameraSettings(){
 				input.min = session.cameraConstaints[i].min;
 				input.max = session.cameraConstaints[i].max;
 				
-				if (input.min == input.max){continue;}
+				if (parseFloat(input.min) == parseFloat(input.max)){continue;}
 				
 				if (getById("popupSelector_constraints_video").style.display == "none"){
 					getById("advancedOptionsCamera").style.display="inline-block";
@@ -5320,11 +5861,9 @@ function setupWebcamSelection(stream=null){
 	
 	if (stream){
 		log(getById("previewWebcam"));
-		getById("previewWebcam").srcObject = stream;
 		session.streamSrc = stream;
-		if (stream.getAudioTracks().length){
-			volumeStream(getById("previewWebcam").srcObject);
-		}
+		getById("previewWebcam").srcObject = outboundAudioPipeline(session.streamSrc);
+		
 	} else {
 		log("THIS IS NO STREAM??");
 	}
@@ -5359,7 +5898,7 @@ function setupWebcamSelection(stream=null){
 					gowebcam.style.backgroundColor = "#DDDDDD";
 					gowebcam.style.fontWeight="normal";
 					gowebcam.innerHTML = "Waiting for Camera to load";
-					gowebcam.dataset.translate='waiting-for-camera-to-load';
+					miniTranslate(gowebcam,"waiting-for-camera-to-load");
 				}
 				activatedPreview=false;
 				grabAudio();
@@ -5373,7 +5912,7 @@ function setupWebcamSelection(stream=null){
 					gowebcam.style.backgroundColor = "#DDDDDD";
 					gowebcam.style.fontWeight="normal";
 					gowebcam.innerHTML = "Waiting for Camera to load";
-					gowebcam.dataset.translate='waiting-for-camera-to-load';
+					miniTranslate(gowebcam,"waiting-for-camera-to-load");
 				}
 				warnlog("video source changed");
 				
@@ -5406,7 +5945,7 @@ function setupWebcamSelection(stream=null){
 					gowebcam.style.backgroundColor = "#DDDDDD";
 					gowebcam.style.fontWeight="normal";
 					gowebcam.innerHTML = "Waiting for Camera to load";
-					gowebcam.dataset.translate='waiting-for-camera-to-load';
+					miniTranslate(gowebcam,"waiting-for-camera-to-load");
 				}
 				
 				if (parseInt(getById("webcamquality").elements.namedItem("resolution").value)==3){
@@ -5438,7 +5977,7 @@ function setupWebcamSelection(stream=null){
 						gowebcam.style.color = "black";
 						gowebcam.style.fontWeight="bold";
 						gowebcam.innerHTML = "START";
-						gowebcam.dataset.translate='start';
+						miniTranslate(gowebcam,"start");
 					}
 					return;
 				}

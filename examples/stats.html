@@ -1,0 +1,264 @@
+<html>
+
+<head>
+    <title>OBS.Ninja IFRAME Outgoing Stats Example</title>
+    <link rel="shortcut icon" href="data:image/x-icon;," type="image/x-icon" />
+    <link rel="icon" type="image/png" sizes="32x32" href="./images/favicon-32x32.png" />
+    <link rel="icon" type="image/png" sizes="16x16" href="./images/favicon-16x16.png" />
+    <link rel="icon" href="./images/favicon.ico" />
+    <link itemprop="thumbnailUrl" href="./images/obsNinja_logo_full.png" />
+    <link rel="stylesheet" type="text/css" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        body {
+            padding: 0;
+            margin: 0;
+            background-color: rgb(20, 25, 38);
+        }
+
+        iframe {
+            border: 0;
+            margin: 2px auto;
+            padding: 0;
+            display: block;
+            margin: 10px;
+            width: 640px;
+            height: 320px;
+            background-color: black;
+        }
+
+        input {
+            padding: 5px;
+            margin: 5px;
+        }
+
+        button {
+            padding: 5px;
+            margin: 5px;
+        }
+
+    </style>
+</head>
+
+<body>
+    <div class="container-fluid">
+        <div class="row controls" style="margin-bottom:15px;border-bottom:1px solid black;">
+            <div class="col-8">
+                <input type="text" class="form-control" style="width:95%;margin:10px auto;" placeholder="Enter an OBS.Ninja View URL here" value="" id="viewlink" />
+            </div>
+            <div class="col-4">
+                <div class="row">
+                    <div class="col-2"></div>
+                    <div class="col-10">
+                        <button type="button" class="btn btn-primary" style="margin:10px 0;width:calc(90% + 15px);margin-left:5px;" id="btnStart">Start</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row output">
+            <div class="col-7" id="source">
+                <iframe style="margin:0 auto;" allow="autoplay;camera;microphone" src=""></iframe>
+            </div>
+            <div class="col-5" id="sourcecontrols">
+                <div class="row text-light" style="margin-top:15px;">
+                    <div class="col">
+                        <p>This example will show all connections to the stream generated from this page using statistics gathered using the <a href="https://github.com/steveseguin/obsninja/blob/master/IFRAME.md">iFrame API</a>.</p>
+                        <p>Click start to generate a stream using the OBS.Ninja URL shown. If you use the example URL shown, you can <a id="aView" href="" target="_blank">click here</a> to connect to this stream as a viewer in a new window/tab, this will then show in the table below. Expired connections will be removed after a short delay.</p>
+                    </div>
+                </div>
+                <div class="row" style="margin-top:5px;">
+                    <div style="padding-top:10px;" class="col-4 text-right font-weight-bold text-light">Audio:</div>
+                    <div class="col-8">
+                        <button type="button" class="btn btn-sm btn-secondary" style="width:45%;" id="btnMuteAudio">Disable</button>
+                        <button type="button" class="btn btn-sm btn-success" style="width:45%;" id="btnUnMuteAudio">Enabled</button>
+                    </div>
+                </div>
+                <div class="row">
+                    <div style="padding-top:10px;" class="col-4 text-right font-weight-bold text-light">Video:</div>
+                    <div class="col-8">
+                        <button type="button" class="btn btn-sm btn-secondary" style="width:45%;" id="btnMuteVidio">Disable</button>
+                        <button type="button" class="btn btn-sm btn-success" style="width:45%;" id="btnUnMuteVidio">Enabled</button>
+                    </div>
+                </div>
+                <div class="row">
+                    <div style="padding-top:10px;" class="col-4 text-right font-weight-bold text-light">Stats:</div>
+                    <div class="col-8">
+                        <button type="button" class="btn btn-sm btn-secondary" style="width:45%;" id="btnStatsAuto">Auto Refresh Off</button>
+                        <button type="button" class="btn btn-sm btn-secondary" style="width:45%;" id="btnStatsRefresh">Refresh</button>
+                    </div>
+                </div>
+                <div class="row">
+                    <div style="padding-top:5px;" class="col-6 text-right font-weight-bold text-light">Outbound Connections:</div>
+                    <div style="padding-top:5px;" class="col-6 font-weight-bold text-light" id="divTotalConnections">0</div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-12">
+                <table id="viewers" style="margin-top:15px;" class="table table-hover text-center table-striped table-dark">
+                    <thead>
+                        <tr>
+                            <th scope="col" class="align-middle">Label</th>
+                            <th scope="col" class="align-middle">Added</th>
+                            <th scope="col" class="align-middle">Quality Limit Reason</th>
+                            <th scope="col" class="align-middle">Resolution</th>
+                            <th scope="col" class="align-middle">Platform</th>
+                            <th scope="col" class="align-middle">Encoder</th>
+                            <th scope="col" class="align-middle">User Agent</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script>
+        var autorefresh = false;
+        var eventMethod = window.addEventListener ? "addEventListener" : "attachEvent";
+        var eventer = window[eventMethod];
+        var messageEvent = eventMethod === "attachEvent" ? "onmessage" : "message";
+
+        eventer(messageEvent, function(e) {
+            //Check message is coming from our iframe, otherwise we don't care
+            if (e.source != $('#source iframe')[0].contentWindow) return;
+
+            if ("stats" in e.data) {
+                var now = new Date(); //Used for "Added" column and to remove stale viewers
+                for (var viewer in e.data.stats.outbound_stats) {
+                    //Check to see if a row exists for this viewier, if not then its a new viewer and we should create a row
+                    if ($("#obsn_viewer_" + viewer).length == 0) {
+                        var h = now.getHours();
+                        var m = now.getMinutes();
+                        var s = now.getSeconds();
+                        $('#viewers tbody').append('<tr id="obsn_viewer_' + viewer + '"><th class="obsn_viewer_label" scope="row"></th><td class="obsn_viewer_added">' + ("0" + h).slice(-2) + ':' + ("0" + m).slice(-2) + ':' + ("0" + s).slice(-2) + '</td><td class="obsn_viewer_qlr"></td><td class="obsn_viewer_resolution"></td><td class="obsn_viewer_platform"></td><td class="obsn_viewer_encoder"></td><td class="obsn_viewer_useragent"></td></tr>');
+                    }
+                    //Insert/update stats
+                    //Initially objects can be available but without any attributes, check they exist and ignore till the basics are available
+                    if (e.data.stats.outbound_stats[viewer] == undefined) continue;
+                    if (e.data.stats.outbound_stats[viewer].info == undefined) continue;
+                    //Checking these exist as not all attributes are available straight away when stats are created
+                    if (e.data.stats.outbound_stats[viewer].info.label != undefined) {
+                        $("#obsn_viewer_" + viewer).find('.obsn_viewer_label').text(e.data.stats.outbound_stats[viewer].info.label);
+                    }
+                    if (e.data.stats.outbound_stats[viewer].quality_Limitation_Reason != undefined) {
+                        $("#obsn_viewer_" + viewer).find('.obsn_viewer_qlr').text(e.data.stats.outbound_stats[viewer].quality_Limitation_Reason);
+                    }
+                    if (e.data.stats.outbound_stats[viewer].resolution != undefined) {
+                        $("#obsn_viewer_" + viewer).find('.obsn_viewer_resolution').text(e.data.stats.outbound_stats[viewer].resolution);
+                    }
+                    if (e.data.stats.outbound_stats[viewer].info.platform != undefined) {
+                        $("#obsn_viewer_" + viewer).find('.obsn_viewer_platform').text(e.data.stats.outbound_stats[viewer].info.platform);
+                    }
+                    if (e.data.stats.outbound_stats[viewer].encoder != undefined) {
+                        $("#obsn_viewer_" + viewer).find('.obsn_viewer_encoder').text(e.data.stats.outbound_stats[viewer].encoder);
+                    }
+                    if (e.data.stats.outbound_stats[viewer].info.useragent != undefined) {
+                        $("#obsn_viewer_" + viewer).find('.obsn_viewer_useragent').text(e.data.stats.outbound_stats[viewer].info.useragent);
+                    }
+                    $("#obsn_viewer_" + viewer).data('last', now.getTime()); //Used below to remove old viewers
+                }
+                //Mark and then remove viewers who have not been seen for a while
+                $('#viewers tbody tr').each(function(el) {
+                    if (parseInt($(this).data('last')) < (now.getTime() - 10000)) { //10 seconds
+                        $(this).remove();
+                    } else if (parseInt($(this).data('last')) < (now.getTime())) { //Mark viewer in red to show they have disappeared, note that it takes a few seconds for this to happen
+                        $(this).addClass('bg-danger');
+                    } else { //Viewer is there, make sure they're not marked as missing
+                        $(this).removeClass('bg-danger');
+                    }
+                });
+                $('#divTotalConnections').text(e.data.stats.total_outbound_connections);
+            }
+        });
+
+        $(document).ready(function() {
+            $('#btnMuteAudio').on('click', function() {
+                $(this).addClass('btn-success').removeClass('btn-secondary').text('Disabled');
+                $('#btnUnMuteAudio').removeClass('btn-success').addClass('btn-secondary').text('Enable');
+                $('#source iframe')[0].contentWindow.postMessage({
+                    "mic": false
+                }, '*');
+            });
+            $('#btnUnMuteAudio').on('click', function() {
+                $(this).addClass('btn-success').removeClass('btn-secondary').text('Enabled');
+                $('#btnMuteAudio').removeClass('btn-success').addClass('btn-secondary').text('Disable');
+                $('#source iframe')[0].contentWindow.postMessage({
+                    "mic": true
+                }, '*');
+            });
+            $('#btnMuteVidio').on('click', function() {
+                $(this).addClass('btn-success').removeClass('btn-secondary').text('Disabled');
+                $('#btnUnMuteVidio').removeClass('btn-success').addClass('btn-secondary').text('Enable');
+                $('#source iframe')[0].contentWindow.postMessage({
+                    "camera": false
+                }, '*');
+            });
+            $('#btnUnMuteVidio').on('click', function() {
+                $(this).addClass('btn-success').removeClass('btn-secondary').text('Enabled');
+                $('#btnMuteVidio').removeClass('btn-success').addClass('btn-secondary').text('Disable');
+                $('#source iframe')[0].contentWindow.postMessage({
+                    "camera": true
+                }, '*');
+            });
+
+            $('#btnStatsAuto').on('click', function() {
+                if (autorefresh) {
+                    autorefresh = false;
+                    $('#btnStatsAuto').removeClass('btn-success').addClass('btn-secondary').text('Auto Refresh Off');
+                } else {
+                    autorefresh = true;
+                    $('#btnStatsAuto').addClass('btn-success').removeClass('btn-secondary').text('Auto Refresh On');
+                }
+            });
+            $('#btnStatsRefresh').on('click', function() {
+                $(this).addClass('btn-success').removeClass('btn-secondary').attr('disabled', true);
+                $('#source iframe')[0].contentWindow.postMessage({
+                    "getStats": true
+                }, '*');
+                setTimeout(function() {
+                    $('#btnStatsRefresh').addClass('btn-secondary').removeClass('btn-success').attr('disabled', false);
+                }, 700);
+            });
+
+            $('#btnStart').on('click', function() {
+                //Reset buttons as currently we can't check the state of these properties
+                $('#btnMuteAudio,#btnMuteVidio').removeClass('btn-success').addClass('btn-secondary').text('Disable');
+                $('#btnUnMuteAudio,#btnUnMuteVidio').addClass('btn-success').removeClass('btn-secondary').text('Enabled');
+                //Update the iframe source from the input field, yup, that simple
+                $('#source iframe').attr('src', $('#viewlink').val());
+                //Start autorefresh of stats
+                autorefresh = true;
+                $('#btnStatsAuto').addClass('btn-success').removeClass('btn-secondary').text('Auto Refresh On');
+            });
+            //Start checking for stats
+            setInterval(function() {
+                if (autorefresh == false) return;
+                $('#source iframe')[0].contentWindow.postMessage({
+                    "getStats": true
+                }, '*');
+            }, 1000);
+            //Add in random ID and password strings to URL's, the below is purely for the purposes of this example
+            var pushid = makeid();
+            var password = makeid();
+            var baseUrl = "https://obs.ninja/";
+            $('#aView').attr('href', baseUrl + '?view=' + pushid + '&password=' + password + '&label=Test_Link');
+            $('#viewlink').val(baseUrl + '?push=' + pushid + '&password=' + password + '&autostart&turn=false&fps=25&maxbitrate=1000&cleanoutput&audiobitrate=32&aec=0&denoise=0&webcam');
+        });
+        //This function is purely used to generate random push id and password strings for the purposes of this example
+        function makeid() {
+            var result = '';
+            var characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+            var charactersLength = characters.length;
+            for (var i = 0; i < 8; i++) {
+                result += characters.charAt(Math.floor(Math.random() * charactersLength));
+            }
+            return result;
+        }
+
+    </script>
+</body>
+
+</html>
