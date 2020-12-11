@@ -79,8 +79,8 @@ $(".close").on('click', function(e) {
 				});
 		}
 		activatedPreview=false;
-	} catch (e){
-		errorlog(e);
+	} catch (er){
+		errorlog(er);
 	}
 	log("Cleaned up Video");
 	e.stopPropagation();
