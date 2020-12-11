@@ -11,7 +11,7 @@ $(".column").on('click', function() {
 	}
 	
 
-	var bounding_box = $(this).get(0).getBoundingClientRect();
+	const bounding_box = $(this).get(0).getBoundingClientRect();
 	$(this).css({ top: bounding_box.top + 'px', left: bounding_box.left -20+ 'px' });
 
 	/* Set container to fixed position. Add animation */
@@ -23,7 +23,7 @@ $(".column").on('click', function() {
 	$('<div id="empty-container" class="column"></div>').insertAfter(this);
 
 	/* To animate the container from full-screen to normal, we need dynamic keyframes */
-	var styles = '';
+	let styles = '';
 	styles = '@keyframes outlightbox {';
 	styles += '0% {';
 	styles += 'height: 100%;';
@@ -68,15 +68,15 @@ $(".close").on('click', function(e) {
 
 	try{
 		
-		var oldstream = getById('previewWebcam').srcObject;
+		const oldstream = getById('previewWebcam').srcObject;
 		
 		if (oldstream){
 			log("old stream found");
-			oldstream.getTracks().forEach(function(track) {
-				track.stop();
-				oldstream.removeTrack(track);
-				log("stopping old track");
-			});
+			oldstream.getTracks().forEach((track) => {
+					track.stop();
+					oldstream.removeTrack(track);
+					log("stopping old track");
+				});
 		}
 		activatedPreview=false;
 	} catch (e){
@@ -107,35 +107,35 @@ else if(e.originalEvent.animationName == 'outlightbox') {
 });
 
 
-$('#audioSource').on('mousedown touchend focusin focusout', function(e) {
-     var state = $('#multiselect-trigger').data('state') || 0;
-     if( state == 0 ) {
-        ////open the dropdown
-        $('#multiselect-trigger').data('state', '1').addClass('open').removeClass('closed');
-        $('#multiselect-trigger').find('.chevron').removeClass('bottom'); 
-        $('#multiselect-trigger').parent().find('.multiselect-contents').show();
-		$('#multiselect-trigger').parent().find('.multiselect-contents').find('input[type="checkbox"]').parent().show();;
-		$('#multiselect-trigger').parent().find('.multiselect-contents').find('input[type="checkbox"]').show();;
-    } 
-    // e.preventDefault();
-});
+$('#audioSource').on('mousedown touchend focusin focusout', (_e) => {
+		const state = $('#multiselect-trigger').data('state') || 0;
+		if (state == 0) {
+			////open the dropdown
+			$('#multiselect-trigger').data('state', '1').addClass('open').removeClass('closed');
+			$('#multiselect-trigger').find('.chevron').removeClass('bottom');
+			$('#multiselect-trigger').parent().find('.multiselect-contents').show();
+			$('#multiselect-trigger').parent().find('.multiselect-contents').find('input[type="checkbox"]').parent().show();;
+			$('#multiselect-trigger').parent().find('.multiselect-contents').find('input[type="checkbox"]').show();;
+		}
+		// e.preventDefault();
+	});
 
-$('#audioSource3').on('mousedown touchend focusin focusout', function(e) {
-     var state = $('#multiselect-trigger3').attr('data-state') || 0;
-     if( state == 0 ) {
-        ////open the dropdown
-        $('#multiselect-trigger3').attr('data-state', '1').addClass('open').removeClass('closed');
-        $('#multiselect-trigger3').find('.chevron').removeClass('bottom'); 
-        $('#multiselect-trigger3').parent().find('.multiselect-contents').show();
-		$('#multiselect-trigger3').parent().find('.multiselect-contents').find('input[type="checkbox"]').parent().show();;
-		$('#multiselect-trigger3').parent().find('.multiselect-contents').find('input[type="checkbox"]').show();;
-    } 
-    // e.preventDefault();
-});
+$('#audioSource3').on('mousedown touchend focusin focusout', (_e) => {
+		const state = $('#multiselect-trigger3').attr('data-state') || 0;
+		if (state == 0) {
+			////open the dropdown
+			$('#multiselect-trigger3').attr('data-state', '1').addClass('open').removeClass('closed');
+			$('#multiselect-trigger3').find('.chevron').removeClass('bottom');
+			$('#multiselect-trigger3').parent().find('.multiselect-contents').show();
+			$('#multiselect-trigger3').parent().find('.multiselect-contents').find('input[type="checkbox"]').parent().show();;
+			$('#multiselect-trigger3').parent().find('.multiselect-contents').find('input[type="checkbox"]').show();;
+		}
+		// e.preventDefault();
+	});
  
 // multiselect dropdowns
 $('#multiselect-trigger').on('mousedown touchend focusin focusout', function(e) {
-    var state = $(this).data('state') || 0;
+    const state = $(this).data('state') || 0;
     if( state == 0 ) {
         // open the dropdown
         $(this).data('state', '1').addClass('open').removeClass('closed');
@@ -154,7 +154,7 @@ $('#multiselect-trigger').on('mousedown touchend focusin focusout', function(e) 
 });
 // multiselect dropdowns
 $('#multiselect-trigger3').on('mousedown touchend focusin focusout', function(e) {
-    var state = $(this).attr('data-state') || 0;
+    const state = $(this).attr('data-state') || 0;
 	
     if( state == 0 ) {
         // open the dropdown
