@@ -1976,3 +1976,107 @@ span#guestTips {
 	pointer-events:none;
     font-size: min(4vh,2em);
 }
+
+.video-label.zoom {
+	position: absolute;
+    bottom: 0;
+	left: 0;
+	margin: 0px;
+    color: white;
+    padding: 5px 10px;
+    background: rgba(0, 0, 0, .5);
+	pointer-events:none;
+    font-size: min(4vh,2em);
+}
+
+.video-label.teams {
+    position: absolute;
+    bottom: max(5px,0.6em);
+	left: max(5px,0.5em);
+	margin: 0px;
+    color: white;
+    padding: 5px 10px;
+    background: rgba(0, 0, 0, .4);
+	pointer-events:none;
+	font-size: min(4vh,2em);
+	border-radius: 5px;
+}
+
+.video-label.skype {
+    position: absolute;
+    bottom: max(50px,2em);
+	left: 50%;
+	transform: translateX(-50%);
+	margin: 0px;
+    color: white;
+    padding: 5px 10px;
+    background: rgba(0, 0, 0, .8);
+	pointer-events:none;
+	font-size: min(2vh,1em);
+	border-radius: 5px;
+}
+
+.video-label.ninjablue {
+    position: absolute;
+    bottom: 5%;
+    left: 0;
+    background: #141926;
+    padding: 10px 5%;
+    font-size: min(4vh, 3em);
+}
+
+.video-label.toprounded {
+	position: absolute;
+    top: 0;
+    bottom: unset;
+    background: rgb(0 0 0 / 70%);
+    padding: 10px 5%;
+    font-size: min(4vh, 3em);
+    left: 50%;
+    transform: translateX(-50%);
+    width: 50%;
+    text-align: center;
+    border-bottom-left-radius: 50px;
+    border-bottom-right-radius: 50px;
+    text-transform: uppercase;
+    letter-spacing: 3;
+    box-shadow: 0px 0px 10px #00000059;
+}
+
+.video-label.fire {
+    color: #FFFFFF;
+    text-shadow: 0 -1px 4px #FFF, 0 -2px 10px #ff0, 0 -10px 20px #ff8000, 0 -18px 40px #F00;
+    font-weight: bold;
+    font-size: max(5vh, 2em);
+    position: absolute;
+    bottom: 2vh;
+    width: 100%;
+    text-align: center;
+}
+
+
+@keyframes floating { 
+    0% { transform: translate(0,  0px); } 
+    50%  { transform: translate(0, 15%); } 
+    100%   { transform: translate(0, -0px); }     
+} 
+
+.video-label.floating3d {
+	text-transform: uppercase;
+    display: block;
+    color: #FFFFFF;
+    text-shadow: 0 1px 0 #CCCCCC, 0 2px 0 #c9c9c9, 0 3px 0 #bbb, 0 4px 0 #b9b9b9, 0 5px 0 #aaa, 0 6px 1px rgba(0,0,0,.1), 0 0 5px rgba(0,0,0,.1), 0 1px 3px rgba(0,0,0,.3), 0 3px 5px rgba(0,0,0,.2), 0 5px 10px rgba(0,0,0,.25), 0 10px 10px rgba(0,0,0,.2), 0 20px 20px rgba(0,0,0,.15);
+    color: #FFFFFF;
+    animation-name: floating;
+    animation-duration: 5s;
+    animation-iteration-count: infinite;
+	animation-timing-function: ease-in-out;
+    width: 100%;
+	font-size: 5em;
+	font-weight:bold;
+    text-align: center;
+    bottom: 4vh;
+    position: absolute;
+}
+
+
