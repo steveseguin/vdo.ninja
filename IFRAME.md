@@ -20,6 +20,8 @@ Adding that iframe to the DOM will reveal a simple page accessing for a user to 
 An example of how this API is used by OBS.Ninja is with its Internet Speedtest, which has two OBS.Ninja IFrames on a single page. One iframe feeds video to the other iframe, and the speed at which it does this is a measure of the system's performance. Detailed stats of the connection are made available to the parent window, which displays the results.
 https://obs.ninja/speedtest
 
+More community-contributed IFRAME examples can be found here: https://github.com/steveseguin/obsninja/tree/master/examples
+
 A sandbox of options is available at this page, too: https://obs.ninja/iframe  You can enter an OBS.Ninja URL in the input box to start using it.  For developers, viewing the source of that page will reveal examples of how all the available functions work, along with a way to test and play with each of them. You can also see here for the source-code on GitHub: https://github.com/steveseguin/obsninja/blob/master/iframe.html
 
 One thing to note about this iframe API is that it is a mix of URL parameters given to the iframe *src* URL, but also the postMessage and addEventListener methods of the browser. The later is used to dynamically control OBS.Ninja, while the former is used to initiate the instance to a desired state.
