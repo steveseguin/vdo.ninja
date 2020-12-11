@@ -3509,7 +3509,7 @@ function createRoomCallback(passAdd, passAdd2){
 	}
 	if (codecGroupFlag){
 		session.codecGroupFlag = codecGroupFlag;
-	
+	}
 	
 	formSubmitting = false;
 
