@@ -2687,12 +2687,10 @@ function toggleVideoMute(apply=false){ // TODO: I need to have this be MUTE, tog
 
 var toggleSettingsState = false;
 function toggleSettings(forceShow=false){ // TODO: I need to have this be MUTE, toggle, with volume not touched.
-	//$(this).attr('state', '1')
 	
 	getById("multiselect-trigger3").dataset.state="0";
 	getById("multiselect-trigger3").classList.add('closed');
 	getById("multiselect-trigger3").classList.remove('open');
-	
 	getById("chevarrow2").classList.add('bottom');
 		
 	if (toggleSettingsState==true){if (forceShow==true){return;}} // don't close if already open
@@ -3289,6 +3287,7 @@ function audioMeter(mediaStreamSource, audioContext){
 			warnlog("METER 1 NOT FOUND");
 			return;
 		}
+
 		analyser.getByteFrequencyData(dataArray);
 		var total = 0;
         for (var i = 0; i < dataArray.length; i++)
@@ -3312,10 +3311,8 @@ function audioMeter(mediaStreamSource, audioContext){
 		}
 		
     };
-
     analyser.interval = setInterval(function(){draw();},100);
 	return analyser;
-	
 }
 
 function audioCompressor(mediaStreamSource, audioContext){
@@ -3494,8 +3491,6 @@ function createRoomCallback(passAdd, passAdd2){
 	if (broadcastFlag){
 		broadcastString = "&broadcast";
 	}
-	
-	///////
 
 	var codecGroupFlag = getById("codecGroupFlag");
 	
@@ -3514,9 +3509,6 @@ function createRoomCallback(passAdd, passAdd2){
 	}
 	if (codecGroupFlag){
 		session.codecGroupFlag = codecGroupFlag;
-	}
-	////////
-	
 	
 	
 	formSubmitting = false;

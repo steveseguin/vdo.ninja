@@ -334,6 +334,7 @@ hr {
 	grid-auto-rows: minmax(50%, auto);
 	border: 0;
 	margin: 0;
+	pointer-events:none;
 }
 
 
