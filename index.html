@@ -5,27 +5,29 @@ order: 0
 description: >
   Getting started with OBS.Ninja
 ---
+
 <header>
-	<h1>{{ page.description }}</h1>
-	<p>Bring remote video and audio streams into your video production software for free. Low-latency and high-quality, OBS.Ninja is flexible tool ideal for the COVID era of remote participation.
+  <h1>{{ page.description }}</h1>
+  <p>
+    Bring remote video and audio streams into your video production software for
+    free. Low-latency and high-quality, OBS.Ninja is flexible tool ideal for the
+    COVID era of remote participation.
   </p>
 </header>
 <section class="tiles">
+  {% assign pages = site.pages | sort: 'order' | shift: 0 %} {% for page in
+  pages %} {% if page.title and page.order != 0 %}
+  <article class="{{ page.class }}">
+    <span class="image">
+      <img src="{{ page.list-image | prepend: site.baseurl }}" alt="" />
+    </span>
+    <a href="{{ page.url | prepend: site.baseurl }}" title="{{ page.title }}">
+      <h2>{{ page.title }}</h2>
 
-  {% assign pages = site.pages | sort: 'order' | shift: 1 %}
-  {% for page in pages %}
-      <article class="{{ page.class }}">
-        <span class="image">
-          <img src="{{ page.list-image | prepend: site.baseurl }}" alt="">
-        </span>
-        <a href="{{ page.url | prepend: site.baseurl }}" title="{{ page.title }}">
-          <h2>{{ page.title }}</h2>
-          
-          <div class="content">
-            <p>{{ page.description }}</p>
-          </div>
-        </a>
-      </article>
-    {% endfor %}
-
+      <div class="content">
+        <p>{{ page.description }}</p>
+      </div>
+    </a>
+  </article>
+  {% endif %} {% endfor %}
 </section>

@@ -21,4 +21,7 @@ kramdown:
   input:      GFM
   auto_ids:   false
 
+sass:
+  style: compact
+
 exclude: ["README.md", "LICENSE.md", "screenshot.png"]
