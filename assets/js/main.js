@@ -1,185 +1,200 @@
 /*
 	Phantom by HTML5 UP
-	html5up.net | @ajlkn
+	html5up.net | @n33co
 	Free for personal and commercial use under the CCA 3.0 license (html5up.net/license)
 */
 
 (function($) {
 
-	var	$window = $(window),
-		$body = $('body');
+	skel.breakpoints({
+		xlarge:	'(max-width: 1680px)',
+		large:	'(max-width: 1280px)',
+		medium:	'(max-width: 980px)',
+		small:	'(max-width: 736px)',
+		xsmall:	'(max-width: 480px)'
+	});
 
-	// Breakpoints.
-		breakpoints({
-			xlarge:   [ '1281px',  '1680px' ],
-			large:    [ '981px',   '1280px' ],
-			medium:   [ '737px',   '980px'  ],
-			small:    [ '481px',   '736px'  ],
-			xsmall:   [ '361px',   '480px'  ],
-			xxsmall:  [ null,      '360px'  ]
-		});
+	$(function() {
 
-	// Play initial animations on page load.
-		$window.on('load', function() {
-			window.setTimeout(function() {
-				$body.removeClass('is-preload');
-			}, 100);
-		});
+		var	$window = $(window),
+			$body = $('body');
 
-	// Touch?
-		if (browser.mobile)
-			$body.addClass('is-touch');
+		// Disable animations/transitions until the page has loaded.
+			$body.addClass('is-loading');
 
-	// Forms.
-		var $form = $('form');
-
-		// Auto-resizing textareas.
-			$form.find('textarea').each(function() {
-
-				var $this = $(this),
-					$wrapper = $('<div class="textarea-wrapper"></div>'),
-					$submits = $this.find('input[type="submit"]');
-
-				$this
-					.wrap($wrapper)
-					.attr('rows', 1)
-					.css('overflow', 'hidden')
-					.css('resize', 'none')
-					.on('keydown', function(event) {
-
-						if (event.keyCode == 13
-						&&	event.ctrlKey) {
-
-							event.preventDefault();
-							event.stopPropagation();
-
-							$(this).blur();
-
-						}
-
-					})
-					.on('blur focus', function() {
-						$this.val($.trim($this.val()));
-					})
-					.on('input blur focus --init', function() {
-
-						$wrapper
-							.css('height', $this.height());
-
-						$this
-							.css('height', 'auto')
-							.css('height', $this.prop('scrollHeight') + 'px');
-
-					})
-					.on('keyup', function(event) {
-
-						if (event.keyCode == 9)
-							$this
-								.select();
-
-					})
-					.triggerHandler('--init');
-
-				// Fix.
-					if (browser.name == 'ie'
-					||	browser.mobile)
-						$this
-							.css('max-height', '10em')
-							.css('overflow-y', 'auto');
-
+			$window.on('load', function() {
+				window.setTimeout(function() {
+					$body.removeClass('is-loading');
+				}, 100);
 			});
 
-	// Menu.
-		var $menu = $('#menu');
+		// Touch?
+			if (skel.vars.touch)
+				$body.addClass('is-touch');
 
-		$menu.wrapInner('<div class="inner"></div>');
+		// Forms.
+			var $form = $('form');
 
-		$menu._locked = false;
+			// Auto-resizing textareas.
+				$form.find('textarea').each(function() {
 
-		$menu._lock = function() {
+					var $this = $(this),
+						$wrapper = $('<div class="textarea-wrapper"></div>'),
+						$submits = $this.find('input[type="submit"]');
 
-			if ($menu._locked)
-				return false;
+					$this
+						.wrap($wrapper)
+						.attr('rows', 1)
+						.css('overflow', 'hidden')
+						.css('resize', 'none')
+						.on('keydown', function(event) {
 
-			$menu._locked = true;
+							if (event.keyCode == 13
+							&&	event.ctrlKey) {
 
-			window.setTimeout(function() {
-				$menu._locked = false;
-			}, 350);
+								event.preventDefault();
+								event.stopPropagation();
 
-			return true;
+								$(this).blur();
 
-		};
+							}
 
-		$menu._show = function() {
+						})
+						.on('blur focus', function() {
+							$this.val($.trim($this.val()));
+						})
+						.on('input blur focus --init', function() {
 
-			if ($menu._lock())
-				$body.addClass('is-menu-visible');
+							$wrapper
+								.css('height', $this.height());
 
-		};
+							$this
+								.css('height', 'auto')
+								.css('height', $this.prop('scrollHeight') + 'px');
 
-		$menu._hide = function() {
+						})
+						.on('keyup', function(event) {
 
-			if ($menu._lock())
-				$body.removeClass('is-menu-visible');
+							if (event.keyCode == 9)
+								$this
+									.select();
 
-		};
+						})
+						.triggerHandler('--init');
 
-		$menu._toggle = function() {
+					// Fix.
+						if (skel.vars.browser == 'ie'
+						||	skel.vars.mobile)
+							$this
+								.css('max-height', '10em')
+								.css('overflow-y', 'auto');
 
-			if ($menu._lock())
-				$body.toggleClass('is-menu-visible');
+				});
 
-		};
+			// Fix: Placeholder polyfill.
+				$form.placeholder();
 
-		$menu
-			.appendTo($body)
-			.on('click', function(event) {
-				event.stopPropagation();
-			})
-			.on('click', 'a', function(event) {
+		// Prioritize "important" elements on medium.
+			skel.on('+medium -medium', function() {
+				$.prioritize(
+					'.important\\28 medium\\29',
+					skel.breakpoint('medium').active
+				);
+			});
 
-				var href = $(this).attr('href');
+		// Menu.
+			var $menu = $('#menu');
 
-				event.preventDefault();
-				event.stopPropagation();
+			$menu.wrapInner('<div class="inner"></div>');
 
-				// Hide.
-					$menu._hide();
+			$menu._locked = false;
 
-				// Redirect.
-					if (href == '#menu')
-						return;
+			$menu._lock = function() {
 
-					window.setTimeout(function() {
-						window.location.href = href;
-					}, 350);
+				if ($menu._locked)
+					return false;
 
-			})
-			.append('<a class="close" href="#menu">Close</a>');
+				$menu._locked = true;
 
-		$body
-			.on('click', 'a[href="#menu"]', function(event) {
+				window.setTimeout(function() {
+					$menu._locked = false;
+				}, 350);
 
-				event.stopPropagation();
-				event.preventDefault();
+				return true;
 
-				// Toggle.
-					$menu._toggle();
+			};
 
-			})
-			.on('click', function(event) {
+			$menu._show = function() {
 
-				// Hide.
-					$menu._hide();
+				if ($menu._lock())
+					$body.addClass('is-menu-visible');
 
-			})
-			.on('keydown', function(event) {
+			};
 
-				// Hide on escape.
-					if (event.keyCode == 27)
+			$menu._hide = function() {
+
+				if ($menu._lock())
+					$body.removeClass('is-menu-visible');
+
+			};
+
+			$menu._toggle = function() {
+
+				if ($menu._lock())
+					$body.toggleClass('is-menu-visible');
+
+			};
+
+			$menu
+				.appendTo($body)
+				.on('click', function(event) {
+					event.stopPropagation();
+				})
+				.on('click', 'a', function(event) {
+
+					var href = $(this).attr('href');
+
+					event.preventDefault();
+					event.stopPropagation();
+
+					// Hide.
 						$menu._hide();
 
-			});
+					// Redirect.
+						if (href == '#menu')
+							return;
+
+						window.setTimeout(function() {
+							window.location.href = href;
+						}, 350);
+
+				})
+				.append('<a class="close" href="#menu">Close</a>');
+
+			$body
+				.on('click', 'a[href="#menu"]', function(event) {
+
+					event.stopPropagation();
+					event.preventDefault();
+
+					// Toggle.
+						$menu._toggle();
+
+				})
+				.on('click', function(event) {
+
+					// Hide.
+						$menu._hide();
+
+				})
+				.on('keydown', function(event) {
+
+					// Hide on escape.
+						if (event.keyCode == 27)
+							$menu._hide();
+
+				});
+
+	});
 
 })(jQuery);

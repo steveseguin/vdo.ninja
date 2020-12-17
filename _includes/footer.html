@@ -1,0 +1,39 @@
+<!-- Footer -->
+          <footer id="footer">
+            <div class="inner">
+              <section>
+                <h2>Get in touch</h2>
+                <form method="post" action="#">
+                  <div class="field half first">
+                    <input type="text" name="name" id="name" placeholder="Name" />
+                  </div>
+                  <div class="field half">
+                    <input type="email" name="email" id="email" placeholder="Email" />
+                  </div>
+                  <div class="field">
+                    <textarea name="message" id="message" placeholder="Message"></textarea>
+                  </div>
+                  <ul class="actions">
+                    <li><input type="submit" value="Send" class="special" /></li>
+                  </ul>
+                </form>
+              </section>
+              <section>
+                <h2>Follow</h2>
+                <ul class="icons">
+                  <li><a href="https://twitter.com/{{ site.twitter_username }}" class="icon style2 fa-twitter" title="{{ site.twitter_username }}" target="_blank"><span class="label">{{ site.twitter_username }}</span></a></li>
+                  <li><a href="#" class="icon style2 fa-facebook" title="Facebook" target="_blank"><span class="label">Facebook</span></a></li>
+                  <li><a href="#" class="icon style2 fa-instagram" title="Instagram" target="_blank"><span class="label">Instagram</span></a></li>
+                  <li><a href="#" class="icon style2 fa-dribbble" title="Dribbble" target="_blank"><span class="label">Dribbble</span></a></li>
+                  <li><a href="https://github.com/{{ site.github_username }}" class="icon style2 fa-github" title="{{ site.github_username }}" target="_blank"><span class="label">{{ site.github_username }}</span></a></li>
+                  <li><a href="#" class="icon style2 fa-500px" title="500px" target="_blank"><span class="label">500px</span></a></li>
+                  <li><a href="#" class="icon style2 fa-phone" title="Phone" target="_blank"><span class="label">Phone</span></a></li>
+                  <li><a href="mailto:{{ site.email }}" class="icon style2 fa-envelope-o" title="{{ site.email }}"><span class="label">{{ site.email }}</span></a></li>
+                </ul>
+              </section>
+              <ul class="copyright">
+                <li>&copy; Untitled. All rights reserved</li><li>Design: <a href="http://html5up.net" title="HTML5 UP" target="_blank">HTML5 UP</a></li>
+                <li>subscribe <a href="{{ "/feed.xml" | prepend: site.baseurl }}">via RSS</a></li>
+              </ul>
+            </div>
+          </footer>

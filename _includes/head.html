@@ -1,0 +1,18 @@
+<head>
+    <title>{% if page.title %}{{ page.title | escape }} | {{ site.title | escape }}{% else %}{{ site.title | escape }}{% endif %}</title>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="
+      {% if page.excerpt %}
+        {{ page.excerpt | strip_html | strip_newlines | truncate: 160 }}
+      {% else %}
+        {{ site.description }}
+      {% endif %}">
+    <!--[if lte IE 8]><script src="{{ "/assets/js/ie/html5shiv.js" | prepend: site.baseurl }}"></script><![endif]-->
+    <link rel="stylesheet" href="{{ "/assets/css/main.css" | prepend: site.baseurl }}">
+    <!--[if lte IE 9]><link rel="stylesheet" href="{{ "/assets/css/ie9.css" | prepend: site.baseurl }}"><![endif]-->
+    <!--[if lte IE 8]><link rel="stylesheet" href="{{ "/assets/css/ie8.css" | prepend: site.baseurl }}"><![endif]-->
+    <link rel="canonical" href="{{ page.url | replace:'index.html','' | prepend: site.baseurl | prepend: site.url }}">
+    <link rel="alternate" type="application/rss+xml" title="{{ site.title }}" href="{{ "/feed.xml" | prepend: site.baseurl | prepend: site.url }}">
+  </head>
