@@ -1,0 +1,11 @@
+# GNU/Linux
+.*
+!.gitignore
+!.editorconfig
+!.htaccess
+*~
+
+# Jekyll
+_site
+.sass-cache
+.jekyll-metadata

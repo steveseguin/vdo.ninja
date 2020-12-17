@@ -1,0 +1,102 @@
+---
+# Only the main Sass file needs front matter (the dashes are enough)
+---
+@charset "utf-8";
+
+@import 'libs/vars';
+@import 'libs/functions';
+@import 'libs/mixins';
+@import 'libs/skel';
+@import 'vendors/syntax-highlighting';
+@import 'font-awesome.min.css';
+@import url('http://fonts.googleapis.com/css?family=Source+Sans+Pro:300,700,900');
+
+/*
+	Phantom by HTML5 UP
+	html5up.net | @n33co
+	Free for personal and commercial use under the CCA 3.0 license (html5up.net/license)
+*/
+
+	@include skel-breakpoints((
+		xlarge: '(max-width: 1680px)',
+		large: '(max-width: 1280px)',
+		medium: '(max-width: 980px)',
+		small: '(max-width: 736px)',
+		xsmall: '(max-width: 480px)',
+		xxsmall: '(max-width: 360px)'
+	));
+
+	@include skel-layout((
+		reset: 'full',
+		boxModel: 'border',
+		grid: (
+			gutters: 2em
+		),
+		breakpoints: (
+			medium: (
+				grid: (
+					gutters: 1.5em
+				)
+			),
+			small: (
+				grid: (
+					gutters: 1em
+				)
+			)
+		)
+	));
+
+// Base.
+
+	@import 'base/page';
+	@import 'base/typography';
+
+// Component.
+
+	@import 'components/section';
+	@import 'components/icon';
+	@import 'components/list';
+	@import 'components/form';
+	@import 'components/box';
+	@import 'components/image';
+	@import 'components/table';
+	@import 'components/button';
+	@import 'components/tiles';
+
+// Layout.
+
+	@import 'layout/header';
+	@import 'layout/menu';
+	@import 'layout/main';
+	@import 'layout/footer';
+	@import 'layout/wrapper';
+
+
+	p.warning {
+		background: #ffd27e;
+		padding: 10px;
+		/* box-shadow: 2px 4px 0px #dcb66f; */
+		border: 4px solid #dcb66f;
+	}
+
+	img {
+		max-width: 100%;
+	}
+
+	figure {
+		background: #9a9a9a;
+		margin: 10px;
+		padding: 20px 80px;
+		width: fit-content;
+		text-align: center;
+	}
+
+	figure img {
+		box-shadow: 0px 0px 20px 10px rgba(0,0,0,0.1);
+	}
+
+	figcaption {
+		font-weight: bold;
+		color: white;
+		text-transform: uppercase;
+	}

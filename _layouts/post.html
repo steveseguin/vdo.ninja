@@ -1,0 +1,29 @@
+---
+layout: default
+---
+<article itemscope itemtype="http://schema.org/BlogPosting">
+
+  <header>
+    <h1 itemprop="name headline">{{ page.title }}</h1>
+    <p>
+      <time datetime="{{ page.date | date_to_xmlschema }}" itemprop="datePublished">
+        {{ page.date | date: "%b %-d, %Y" }}
+      </time> •
+      <span itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span itemprop="name">{{ page.author }}</span>
+      </span>
+      {% for cat in page.categories %}
+        • <span>{{ cat }}</span>
+      {% endfor %}
+      {% for tag in page.tags %}
+        • <span>{{ tag }}</span>
+      {% endfor %}
+    </p>
+    <span class="image main"><img src="{{ page.header-image | prepend: site.baseurl }}" alt="{{ page.alt-image }}"></span>
+  </header>
+
+  <div itemprop="articleBody">
+    {{ content }}
+  </div>
+
+</article>
