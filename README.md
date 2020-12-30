@@ -70,7 +70,7 @@ https://obs.ninja may unavoidably use cookies that are exempt from EU laws of re
 Additional security features are being added weekly on request. Please ask about these options if added security and privacy are requirements for you.
 
 ## Feedback
-Ideas, feedback, bugs, etc -- all welcomed.  I'm dumping many of my ideas as issues into Github. Feedback is typcially most welcomed via Email or Discord.
+Ideas, feedback, bugs, etc -- all welcomed.  I'm dumping many of my ideas as issues into Github. Feedback is typically most welcomed via Email or Discord.
 
 ## Licence 
 OBS.Ninja is available as open-source; please see the LICENCE.md file for details.
