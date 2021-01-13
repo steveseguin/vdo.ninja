@@ -20,7 +20,9 @@ And Here is another video series touching on some more advanced settings: https:
 
 Check the subreddit for added use cases, advanced features, and support. Advanced features includes high-quality audio modes, custom video resolutions, and more.
 
-[as of January 2021] MacOS need to upgrade to OBS v26.1.2 or newer to have access native support for OBS.Ninja on macOS. Users with older OBS versions or using StreamLabs may still wish to use the Electron Capture app. https://github.com/steveseguin/electroncapture
+[Update as of January 2021]
+
+MacOS need to upgrade to OBS v26.1.2 or newer to have access native support for OBS.Ninja on macOS. Users with older OBS versions or using StreamLabs may still wish to use the Electron Capture app: https://github.com/steveseguin/electroncapture
 
 ## What's in this repo?
 This repo contains client-side software for OBS.Ninja, including the HTML landing page for its Electron Capture app offering. A sample config file and instructions for setting up a TURN server (video relay server) is also provided. You may also find the Wiki for the project in this repo, which contains added information on how to use the software. The code provided is designed to allow for innovation, customization, white-labelling, and exploration.
