@@ -26,7 +26,7 @@ You can also point your domain to the OBS.Ninja IP address (provided on request)
 
 For those wanting a private TURN server setup, you can load the settings for those via the URL parameters. If infrequently needing a private TURN, this is a great solution.  You can also use URL forwarding services to load up a customized link to OBS.Ninja, with URL parameters already included, such as https://invite.mypersonaldomain.com , which might secretly resolve to https://obs.ninja/?room=myRoom&hash=3423&label or such.
 
-OBS.Ninja also supports IFRAMES, so you can embed OBS.Ninja into your website and customize it via both URL parameters, but also via the IFRAME API.  You can insert custom CSS styles with this method, giving OBS.Ninja quite a bit of flare.
+OBS.Ninja also supports IFRAMES, so you can embed OBS.Ninja into your website and customize it via both URL parameters, but also via the IFRAME API.  You can insert custom CSS styles with this method, giving OBS.Ninja quite a bit of flare.  see more on IFRAMES here: https://github.com/steveseguin/obsninja/blob/master/IFRAME.md
 
 Understanding clearly why you need to deploy any code or server is important. Maintaining updated deployed code can be quite hard, as OBS.Ninja updates frequently, so there are good reasons to consider an IFRAME approach instead. Feature requests there are welcomed.
 
