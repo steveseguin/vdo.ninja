@@ -10,17 +10,17 @@ There may be misconceptions that deploying the website code will make the servic
 
 For those looking for a brand-free experience already with a different domain name, I offer https://rtc.ninja, and as well as other alternate domain names, such as:
 
-https://encrypted.chat
-https://chromicam.com
-https://invite.cam (via URL obfuscation option)
-https://ltt.ninja
-https://obsn.me
-https://rtc.ninja
-https://vmix.ninja
-https://webrtc.party
-https://callin.ninja
-https://auxiliary.live (backup hosted)
-https://backup.obs.ninja (fully backup hosted)
+- https://encrypted.chat
+- https://chromicam.com
+- https://invite.cam (via URL obfuscation option)
+- https://ltt.ninja
+- https://obsn.me
+- https://rtc.ninja
+- https://vmix.ninja
+- https://webrtc.party
+- https://callin.ninja
+- https://auxiliary.live (backup hosted)
+- https://backup.obs.ninja (fully backup hosted)
 
 You can also point your domain to the OBS.Ninja IP address (provided on request), which will also rebrand the site automatically to match your domain name. (Requires Cloudflare as DNS server and proxy, Flexible SSL cert on, and HTTPs always on - all free.) 
 
