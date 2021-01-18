@@ -10,7 +10,6 @@ There may be misconceptions that deploying the website code will make the servic
 
 For those looking for a brand-free experience already with a different domain name, I offer https://rtc.ninja, and as well as other alternate domain names, such as:
 
-- https://encrypted.chat
 - https://chromicam.com
 - https://invite.cam (via URL obfuscation option)
 - https://ltt.ninja
