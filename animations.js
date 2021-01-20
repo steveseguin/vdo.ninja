@@ -4,7 +4,7 @@ $(".column").on('click', function() {
 		return;
 	}
 	var bounding_box = $(this).get(0).getBoundingClientRect();
-	$(this).css({ top: bounding_box.top + 'px', left: bounding_box.left -20+ 'px' });
+	$(this).css({ top: `${bounding_box.top}px`, left: `${bounding_box.left - 20}px` });
 	$(this).addClass('in-animation').removeClass('pointer');
 	$("#empty-container").remove();
 	$('<div id="empty-container" class="column"></div>').insertAfter(this);
@@ -58,27 +58,27 @@ $(".column").on('animationend', function(e){
 });
 
 
-$('#audioSource').on('mousedown touchend focusin focusout', function(e) {
-     var state = $('#multiselect-trigger').data('state') || 0;
-     if( state == 0 ) {
-        $('#multiselect-trigger').data('state', '1').addClass('open').removeClass('closed');
-        $('#multiselect-trigger').find('.chevron').removeClass('bottom'); 
-        $('#multiselect-trigger').parent().find('.multiselect-contents').show();
-		$('#multiselect-trigger').parent().find('.multiselect-contents').find('input[type="checkbox"]').parent().show();;
-		$('#multiselect-trigger').parent().find('.multiselect-contents').find('input[type="checkbox"]').show();;
-    } 
-});
+$('#audioSource').on('mousedown touchend focusin focusout', (e) => {
+		var state = $('#multiselect-trigger').data('state') || 0;
+		if (state == 0) {
+			$('#multiselect-trigger').data('state', '1').addClass('open').removeClass('closed');
+			$('#multiselect-trigger').find('.chevron').removeClass('bottom');
+			$('#multiselect-trigger').parent().find('.multiselect-contents').show();
+			$('#multiselect-trigger').parent().find('.multiselect-contents').find('input[type="checkbox"]').parent().show();
+			$('#multiselect-trigger').parent().find('.multiselect-contents').find('input[type="checkbox"]').show();
+		}
+	});
 
-$('#audioSource3').on('mousedown touchend focusin focusout', function(e) {
-     var state = $('#multiselect-trigger3').attr('data-state') || 0;
-     if( state == 0 ) {
-        $('#multiselect-trigger3').attr('data-state', '1').addClass('open').removeClass('closed');
-        $('#multiselect-trigger3').find('.chevron').removeClass('bottom'); 
-        $('#multiselect-trigger3').parent().find('.multiselect-contents').show();
-		$('#multiselect-trigger3').parent().find('.multiselect-contents').find('input[type="checkbox"]').parent().show();;
-		$('#multiselect-trigger3').parent().find('.multiselect-contents').find('input[type="checkbox"]').show();;
-    } 
-});
+$('#audioSource3').on('mousedown touchend focusin focusout', (e) => {
+		var state = $('#multiselect-trigger3').attr('data-state') || 0;
+		if (state == 0) {
+			$('#multiselect-trigger3').attr('data-state', '1').addClass('open').removeClass('closed');
+			$('#multiselect-trigger3').find('.chevron').removeClass('bottom');
+			$('#multiselect-trigger3').parent().find('.multiselect-contents').show();
+			$('#multiselect-trigger3').parent().find('.multiselect-contents').find('input[type="checkbox"]').parent().show();
+			$('#multiselect-trigger3').parent().find('.multiselect-contents').find('input[type="checkbox"]').show();
+		}
+	});
  
 $('#multiselect-trigger').on('mousedown touchend focusin focusout', function(e) {
     var state = $(this).data('state') || 0;
@@ -87,14 +87,14 @@ $('#multiselect-trigger').on('mousedown touchend focusin focusout', function(e) 
         $(this).data('state', '1').addClass('open').removeClass('closed');
         $(this).find('.chevron').removeClass('bottom');
         $(this).parent().find('.multiselect-contents').show();
-		$(this).parent().find('.multiselect-contents').find('input[type="checkbox"]').parent().show();;
-		$(this).parent().find('.multiselect-contents').find('input[type="checkbox"]').show();;
+		$(this).parent().find('.multiselect-contents').find('input[type="checkbox"]').parent().show();
+		$(this).parent().find('.multiselect-contents').find('input[type="checkbox"]').show();
     } else {
         // close the dropdown
         $(this).data('state', '0').addClass('closed').removeClass('open');
         $(this).find('.chevron').addClass('bottom');
-		$(this).parent().find('.multiselect-contents').find('input[type="checkbox"]').not(":checked").parent().hide();;
-		$(this).parent().find('.multiselect-contents').find('input[type="checkbox"]').hide();;
+		$(this).parent().find('.multiselect-contents').find('input[type="checkbox"]').not(":checked").parent().hide();
+		$(this).parent().find('.multiselect-contents').find('input[type="checkbox"]').hide();
     } 
     e.preventDefault();
 });
@@ -104,18 +104,18 @@ $('#multiselect-trigger3').on('mousedown touchend focusin focusout', function(e)
 	
     if( state == 0 ) {
         // open the dropdown
-		errorlog("STATE: "+state);
+		errorlog(`STATE: ${state}`);
         $(this).attr('data-state', '1').addClass('open').removeClass('closed');
         $(this).find('.chevron').removeClass('bottom');
         $(this).parent().find('.multiselect-contents').show();
-		$(this).parent().find('.multiselect-contents').find('input[type="checkbox"]').parent().show();;
-		$(this).parent().find('.multiselect-contents').find('input[type="checkbox"]').show();;
+		$(this).parent().find('.multiselect-contents').find('input[type="checkbox"]').parent().show();
+		$(this).parent().find('.multiselect-contents').find('input[type="checkbox"]').show();
     } else {
         // close the dropdown
         $(this).attr('data-state', '0').addClass('closed').removeClass('open');
         $(this).find('.chevron').addClass('bottom');
-		$(this).parent().find('.multiselect-contents').find('input[type="checkbox"]').not(":checked").parent().hide();;
-		$(this).parent().find('.multiselect-contents').find('input[type="checkbox"]').hide();;
+		$(this).parent().find('.multiselect-contents').find('input[type="checkbox"]').not(":checked").parent().hide();
+		$(this).parent().find('.multiselect-contents').find('input[type="checkbox"]').hide();
     } 
     e.preventDefault();
 });
