@@ -26,7 +26,7 @@ table {
 #bigPlayButton {
 	margin:0 auto;
 	background-color: #0000;
-	color: white;
+	color: #;
 	font-family: Cousine, monospace;
 	font-size: 4em;
 	line-height: 1.5em;
@@ -46,10 +46,12 @@ table {
 
 #playButton {
   font-size: 50vh;
+  border-radius: 50vh;
   font-size: min(50vw, 50vh);
   cursor:pointer;
-  opacity:30%;
+  opacity:100%;
   margin-top: 20vh;
+  background-color:#444;
 }
 
 tr {
@@ -288,7 +290,17 @@ hr {
 	background-color: gray;
 }
 
-
+.orderspan{
+	font-size: 50%;
+    display: inline-block;
+    margin: auto;
+    text-align: center;
+    width: 49px;
+    height: 22px;
+    top: 5px;
+    position: relative;
+	user-select: none;  
+}
 /* Clear floats after the columns */
 
 .row:after {
@@ -299,7 +311,6 @@ hr {
 
 .vidcon {
 	max-width: 100%;
-	max-height: 100%;
 	border: 0;
 }
 
@@ -365,16 +376,15 @@ hr {
 	max-width: 100%;
 	padding: 5px;
 	width: 100%;
-	height: auto;
-	max-height: 160px;
+	height: 157px;
 }
 
 .directorsgrid .vidcon {
 	display: inline-block !important;
-	width: 275.3px !important;
-	max-height: 530px !important;
+	width: 269.2px !important;
 	background: #7E7E7E;
 	color: #FCFCFC;
+	vertical-align: top;
 }
 
 .directorsgrid .vidcon>.las {
@@ -779,6 +789,9 @@ input[type=range]:focus::-ms-fill-upper {
 		font-size: 92%;
 		width: 385px !important
 	}
+	.mobileHide{
+		display:none !important;
+	}
 }
 
 .popupSelector_constraints{
@@ -955,7 +968,7 @@ img {
 /* Empty container that will replace the original container */
 #empty-container {
 	display: inline-block;
-	float: left;
+	/*float: left;*/
 	width: 20%;
 	min-width: 300px;
 	padding: 28px;
@@ -1065,7 +1078,7 @@ img {
 #controlButtons {
 	position: fixed;
 	z-index: 5;
-	bottom: 5px;
+	bottom: 0px;
 	width: 100%;
 	display: none;
 	justify-content: center;
@@ -1210,6 +1223,11 @@ img {
 	color: red;
 	top:0.5;
 }
+
+.raisedHand{
+	background-color: #DD1A;
+}
+
 @-webkit-keyframes animatetop {
 	from {
 		top: -300px;
@@ -1282,7 +1300,6 @@ video::-webkit-media-controls-timeline-container {
 	display: none;
 }
 
-
 audio::-webkit-media-controls-overlay-play-button, video::-webkit-media-controls-overlay-play-button {
     display: none;
 }
@@ -1311,14 +1328,27 @@ video.clean::-webkit-media-controls-timeline-container {
 	display: inherit;
 }
 
-
 .mirrorControl::-webkit-media-controls-enclosure {
 	padding: 0px;
 	height: 30px;
 	transform: scaleX(-1);
 	-webkit-transform: scaleX(-1);
 }
-
+.popup-screen {
+	align-text: center;
+	position: absolute;
+	display:none;
+	top:0;
+	left:0;
+	z-index: 7 !important;
+	padding: 20px;
+	margin:15px 15px 80px 15px;
+	width: 80vh !important;
+	height:  80vh !important;
+	background-color: #ccc !important;
+	border: solid 1px #dfdfdf !important;
+	box-shadow: 1px 1px 2px #cfcfcf !important;
+}
 .context-menu {
 	display: none;
 	position: absolute;
@@ -1417,10 +1447,17 @@ video.clean::-webkit-media-controls-timeline-container {
 #audioMenu {
 	margin: 15px 0 0 0;
 }
-#videoSource {
+
+#videosource {
 	display: inline-block;
 	vertical-align: middle;
 	font-size: 100%;
+}
+#videoSourceSelect {
+	display: inline-block;
+	vertical-align: middle;
+	font-size: 100%;
+	max-width: 260px;
 }
 .gone {
 	position: absolute;
@@ -1772,14 +1809,14 @@ input[type=checkbox] {
 	grid-template-columns: 1fr 1fr 1fr 1fr;
 	margin: 10px;
 	padding: 5px 10px;
-	max-width: 1200px
+	max-width: 1190px
 }
 .directorContainer.half {
 	background-color: var(--container-color);
 	display: grid;
 	grid-template-columns: 1fr 1fr;
 	padding: 5px 20px;
-	max-width: 1200px
+	max-width: 1190px
 }
 .directorBlock {
 	cursor: grab;
@@ -1789,7 +1826,6 @@ input[type=checkbox] {
 	position:relative;
 	max-width: 100%;
     overflow: hidden;
-	
 }
 .directorBlock:nth-child(1) {
 	background-color: var(--blue-accent);
@@ -1805,7 +1841,6 @@ input[type=checkbox] {
 }
 .directorBlock button {
 	position: absolute;
-    right: 0;
     bottom: 0;
 	margin: 10px;
 }
@@ -1862,6 +1897,11 @@ div#roomnotes2 {
 
 .pull-right {
 	float: right;
+	right: 0;
+}
+.pull-left {
+    float: left;
+	left: 0;
 }
 i.las.la-circle {
 	color: red;
@@ -2054,6 +2094,26 @@ span#guestTips {
     text-align: center;
 }
 
+.video-meter {
+	padding:0.5vh;
+	display:block;
+	width:0.5vh;
+	height:0.5vh;
+	top: 2vh;
+	right: 2vh;
+	background-color:green;
+	position:absolute;
+	display:none;
+	border-radius: 1vh;
+	pointer-events:none;
+}
+#help_directors_room{
+	cursor:pointer;
+}
+
+#shareScreenGear{
+	display:none;
+}
 
 @keyframes floating { 
     0% { transform: translate(0,  0px); } 
@@ -2080,3 +2140,55 @@ span#guestTips {
 }
 
 
+.switch {
+  position: relative;
+  display: inline-block;
+  width: 40px;
+  height: 24px;
+  margin:5px 5px 10px 5px;
+  bottom:20px;
+  border-radius: 2px;
+}
+
+.switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #ccc;
+  -webkit-transition: .4s;
+  transition: .4s;
+}
+
+.slider:before {
+  position: absolute;
+  content: "";
+  height: 17px;
+  width: 17px;
+  left: 3px;
+  bottom: 3px;
+  background-color: white;
+  -webkit-transition: .4s;
+  transition: .4s;
+}
+input:checked + .slider {
+  background-color: #86b98f;
+}
+
+input:focus + .slider {
+  box-shadow: 0 0 1px #86b98f;
+}
+
+input:checked + .slider:before {
+  -webkit-transform: translateX(16px);
+  -ms-transform: translateX(16px);
+  transform: translateX(16px);
+}

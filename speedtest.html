@@ -1,7 +1,6 @@
 <html>
 	<head>
 		<link rel="stylesheet" href="./lineawesome/css/line-awesome.min.css" />
-		<link rel="stylesheet" href="./main.css?ver=11" />
 		<link rel="stylesheet" href="./speedtest.css?ver=1" />
 		<meta charset="utf8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -26,7 +25,9 @@
 					};
 			})(window);
 			var urlParams = new URLSearchParams(window.location.search);
-
+			var quality_reason = "";
+			var encoder = "";
+			var Round_Trip_Time_ms = "";
 			function copyFunction(copyText) {
 				alert("Log copied to the clipboard.");
 				try {
@@ -60,11 +61,15 @@
 				var iframe = document.createElement("iframe");
 				var iframeContainer = document.createElement("span");
 
-				iframe.allow = "autoplay";
+				iframe.allow="autoplay;camera;microphone";
+				iframe.allowtransparency="true";
+				iframe.allowfullscreen ="true";
+
+				//iframe.allow = "autoplay";
 				var srcString =
 					"./?push=" +
 					streamID +
-					"&cleanoutput&privacy&webcam&audiodevice=0&fullscreen";
+					"&cleanoutput&privacy&webcam&audiodevice=0&fullscreen&transparent";
 
 				if (urlParams.has("turn")) {
 					srcString = srcString + "&turn=" + urlParams.get("turn");
@@ -94,6 +99,11 @@
 
 				document.getElementById("container").appendChild(feeds);
 				document.getElementById("feeds").appendChild(iframeContainer);
+
+
+				setInterval(function (iframe1) {
+					iframe1.contentWindow.postMessage({ getStats: true }, "*");
+				}, 1000, iframe);
 
 				var iframe = document.createElement("iframe");
 				var iframeContainer = document.createElement("span");
@@ -208,8 +218,25 @@
 					}
 					if ("stats" in e.data) {
 						var out = "";
+						
 						for (var streamID in e.data.stats.inbound_stats) {
 							out += printValues(e.data.stats.inbound_stats[streamID]);
+						}
+						
+						for (var streamID in e.data.stats.outbound_stats) {
+							if (e.data.stats.outbound_stats[streamID].quality_Limitation_Reason){
+								if (quality_reason != e.data.stats.outbound_stats[streamID].quality_Limitation_Reason) {
+									quality_reason = e.data.stats.outbound_stats[streamID].quality_Limitation_Reason;
+									logData("Quality Limitation Reason:", quality_reason);
+								}
+							}
+							
+							if (e.data.stats.outbound_stats[streamID].encoder){
+								if (encoder != e.data.stats.outbound_stats[streamID].encoder) {
+									encoder = e.data.stats.outbound_stats[streamID].encoder;
+									logData("Encoder used:", encoder);
+								}
+							}
 						}
 
 						if (out.split("Bitrate_in_kbps").length > 1) {
@@ -246,8 +273,6 @@
 								}
 							}
 
-							document.getElementById("statsdiv").innerHTML =
-								"<b>Bitrate (Kbps)</b>" + out.split("Bitrate_in_kbps")[1];
 						}
 					}
 				});
@@ -279,21 +304,9 @@
 		</script>
 	</head>
 	<body onload="loadIframe();">
-		<div id="header">
-			<a
-				id="logoname"
-				href="./"
-				style="text-decoration: none; color: white; margin: 2px"
-			>
-				<span data-translate="logo-header">
-					<font id="qos">O</font>BS.Ninja
-				</span>
-			</a>
-		</div>
 		<div id="container">
 			<h1>
-				OBS.Ninja Speed Test - prototype version
-				<small>(Tests connection to TURN server and back)</small>
+				OBS.Ninja Speed Test
 			</h1>
 		</div>
 		<div id="graphs">
@@ -343,7 +356,6 @@
 				</li>
 			</ol>
 		</div>
-		<div id="statsdiv"></div>
 
 		<script>
 			var bitrate = {
