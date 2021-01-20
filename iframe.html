@@ -204,6 +204,16 @@ function loadIframe(){  // this is pretty important if you want to avoid camera 
 		iframeContainer.appendChild(button);
 		
 		var button = document.createElement("button");
+		button.innerHTML = "ENABLE TALLY LIGHT"; 
+		button.onclick = function(){iframe.contentWindow.postMessage({"sceneState":true}, '*');};
+		iframeContainer.appendChild(button);
+		
+		var button = document.createElement("button");
+		button.innerHTML = "STOP TALLY LIGHT"; 
+		button.onclick = function(){iframe.contentWindow.postMessage({"sceneState":false}, '*');};
+		iframeContainer.appendChild(button);
+		
+		var button = document.createElement("button");
 		button.innerHTML = "Add Target Video"; 
 		button.onclick = function(){iframe.contentWindow.postMessage({"target":"*", "add":true, "settings":{"style":{"width":"640px", "height":"360px", "float":"left", "border":"10px solid red", "display":"block"}}}, '*');}; // target can be a stream ID or * for all.
 		iframeContainer.appendChild(button);
@@ -304,7 +314,33 @@ function loadIframe(){  // this is pretty important if you want to avoid camera 
 				
 			}
 			
-			
+			if ("sensors" in e.data){
+				console.log(e.data);
+				if (document.getElementById("sensors")){
+					outputWindow = document.getElementById("sensors");
+				} else {
+					var outputWindow = document.createElement("div");
+					outputWindow.style.border="1px dotted black";
+					iframeContainer.appendChild(outputWindow);
+					outputWindow.id = "sensors";
+				}
+				outputWindow.innerHTML = "child-page-action: sensors<br /><br />";
+					
+				for (var key in e.data.sensors.lin) {
+                    outputWindow.innerHTML += key + " linear: " +  e.data.sensors.lin[key] + "<br />";          
+                }
+				for (var key in e.data.sensors.acc) {
+                    outputWindow.innerHTML += key + " acceleration: " +  e.data.sensors.acc[key] + "<br />";         
+                }
+				for (var key in e.data.sensors.gyro) {
+                    outputWindow.innerHTML += key + " gyro: " +  e.data.sensors.gyro[key] + "<br />";           
+                }
+				for (var key in e.data.sensors.mag) {
+                    outputWindow.innerHTML += key + " magnet: " +  e.data.sensors.mag[key] + "<br />";         
+                }
+				outputWindow.style.border="1px black";
+				
+			}
 		});
 		
 }

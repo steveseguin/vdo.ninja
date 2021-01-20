@@ -315,12 +315,23 @@ var CodecsHandler = (function() {
 		
 		// Please see https://tools.ietf.org/html/rfc7587 for more details on OPUS settings
 		
+	
+		if (typeof params.minptime != 'undefined') {  // max packet size in milliseconds
+			if (params.minptime != false) {
+				appendOpusNext += ';minptime:' + params.minptime; // 3, 5, 10, 20, 40, 60 and the default is 120. (20 is minimum recommended for webrtc)
+			}
+        }
+		
 		if (typeof params.maxptime != 'undefined') {  // max packet size in milliseconds
-            appendOpusNext += ';maxptime:' + params.maxptime; // 3, 5, 10, 20, 40, 60 and the default is 120. (20 is minimum recommended for webrtc)
+			if (params.maxptime != false) {
+				appendOpusNext += ';maxptime:' + params.maxptime; // 3, 5, 10, 20, 40, 60 and the default is 120. (20 is minimum recommended for webrtc)
+			}
         }
 		
 		if (typeof params.ptime != 'undefined') {  // packet size; webrtc doesn't support less than 10 or 20 I think.
-            appendOpusNext += ';ptime:' + params.ptime; 
+			if (params.ptime != false) {
+				appendOpusNext += ';ptime:' + params.ptime; 
+			}
         }
 		
 		if (typeof params.stereo != 'undefined'){
@@ -346,9 +357,9 @@ var CodecsHandler = (function() {
             appendOpusNext += ';cbr=' + params.cbr; // default is 0 (vbr)
         }
 
-        //if (typeof params.useinbandfec != 'undefined') {  // useful for handling packet loss
-        //    appendOpusNext += '; useinbandfec=' + params.useinbandfec;  // Defaults to 0
-        //}
+        if (typeof params.useinbandfec != 'undefined') {  // useful for handling packet loss
+            appendOpusNext += ';useinbandfec=' + params.useinbandfec;  // Defaults to 0
+        }
 
         if (typeof params.usedtx != 'undefined') {  // Default is 0
             appendOpusNext += ';usedtx=' + params.usedtx; // if decoder prefers the use of DTX.

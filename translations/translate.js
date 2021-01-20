@@ -1,65 +1,170 @@
 // Copy and paste this code into OBS.Ninja's developer's console to generate new Translation files
 
-function downloadTranslation(filename, trans={}){  // downloads the current translation to a file
-	allItems.forEach(function(ele){
-		trans[ele.dataset.translate] = ele.innerHTML;
-	});
+function downloadTranslation(filename, trans = {}) { // downloads the current translation to a file
 
-	var textDoc = JSON.stringify(trans, null, 2);
+    const textDoc = JSON.stringify(trans, null, 2);
 
-	var hiddenElement = document.createElement('a');
-	hiddenElement.href = 'data:text/html,' + encodeURIComponent(textDoc);
-	hiddenElement.target = '_blank';
-	hiddenElement.download = filename+".json";
-	hiddenElement.click();
-	return trans;
+    const hiddenElement = document.createElement('a');
+
+    hiddenElement.href = `data:text/html,${
+        encodeURIComponent(textDoc)
+    }`;
+    hiddenElement.target = '_blank';
+    hiddenElement.download = `${filename}.json`;
+    hiddenElement.click();
+
+    return trans;
 }
 
 
-function updateTranslation(filename){  // updates the website with a specific translation
-	var request = new XMLHttpRequest();
-	request.open('GET', "./translations/"+filename+'.json?'+(Math.random()*100).toString(), false);  // `false` makes the request synchronous
-	request.send(null);
+function updateTranslation(filename) { // updates the website with a specific translation
+    const request = new XMLHttpRequest();
+    request.open('GET', `./translations/${filename}.json?${
+        (Math.random() * 100).toString()
+    }`, false); // `false` makes the request synchronous
+    request.send(null);
 
-	if (request.status !== 200) {
-	  return;
-	}
-	try{
-		data = JSON.parse(request.responseText);
-	} catch(e){
-		console.log(request.responseText);
-		console.error(e);
-		return false;
-	}
-	allItems.forEach(function(ele){
-		if (ele.dataset.translate in data){
-			ele.innerHTML = data[ele.dataset.translate];
-		}
-	});
-	return [filename, data];
+    if (request.status !== 200) {
+        return false, {};
+    }
+    try {
+        var data = JSON.parse(request.responseText);
+    } catch (e) {
+        console.log(request.responseText);
+        console.error(e);
+        return false, {};
+    }
+
+    const oldTransItems = data.innerHTML;
+   // const allItems1 = document.querySelectorAll('[data-translate]');
+
+    allItems.forEach((ele) => {
+		const key = ele.dataset.translate;//.replace(/[\W]+/g, "-").toLowerCase();
+        if (key in oldTransItems) {
+            ele.innerHTML = oldTransItems[key];
+        }
+    });
+
+    const oldTransTitles = data.titles;
+    //const allTitles1 = document.querySelectorAll('[title]');
+    allTitles.forEach((ele) => {
+		const key = ele.dataset.key;
+        //const key = ele.title.replace(/[\W]+/g, "-").toLowerCase();
+        if (key in oldTransTitles) {
+            ele.title = oldTransTitles[key];
+        }
+    });
+
+    const oldTransPlaceholders = data.placeholders;
+    //const allPlaceholders1 = document.querySelectorAll('[placeholder]');
+    allPlaceholders.forEach((ele) => {
+		const key = ele.dataset.key;
+        //const key = ele.placeholder.replace(/[\W]+/g, "-").toLowerCase();
+        if (key in oldTransPlaceholders) {
+            ele.placeholder = oldTransPlaceholders[key];
+        }
+    });
+
+    return [true, data];
 }
 
-var updateList = ["en", "de", "es", "ru", "fr", "pl", "ja", "ar", "it", "nl", "pt"];  // list of languages to update. Update this if you add a new language.
-var allItems = document.querySelectorAll('[data-translate]');
-var defaultTrans = {};
-allItems.forEach(function(ele){
-	defaultTrans[ele.dataset.translate] = ele.innerHTML;
+const updateList = [
+    "cs",
+    "de",
+    "en",
+    "es",
+    "fr",
+    "it",
+    "ja",
+    "nl",
+    "pig",
+    "pt",
+    "ru",
+    "tr",
+    "blank"
+]; // list of languages to update. Update this if you add a new language.
+
+const allItems = document.querySelectorAll('[data-translate]');
+const defaultTrans = {};
+allItems.forEach((ele) => {
+    const key = ele.dataset.translate;//.replace(/[\W]+/g, "-").toLowerCase();
+    defaultTrans[key] = ele.innerHTML;
 });
 
-console.log(defaultTrans);
+const defaultTransTitles = {};
+const allTitles = document.querySelectorAll('[title]');
+allTitles.forEach((ele) => {
+	const key = ele.title.replace(/[\W]+/g, "-").toLowerCase();
+	ele.dataset.key = key;
+    defaultTransTitles[key] = ele.title;
+});
 
-for (var i in updateList){
-	var ln = updateList[i];
-	res = updateTranslation(ln);
-	if (res==false){continue;}
-	if (res[0]){
-		console.log(res[0]);
-		downloadTranslation(res[0], res[1]);
-	}
-	
-	allItems.forEach(function(ele){
-		if (ele.dataset.translate in defaultTrans){
-			ele.innerHTML = defaultTrans[ele.dataset.translate];
-		}
-	});
+const defaultTransPlaceholders = {};
+const allPlaceholders = document.querySelectorAll('[placeholder]');
+allPlaceholders.forEach((ele) => {
+	const key = ele.placeholder.replace(/[\W]+/g, "-").toLowerCase();
+	ele.dataset.key = key;
+    defaultTransPlaceholders[key] = ele.placeholder;
+});
+
+const combinedTrans = {};
+combinedTrans.titles = defaultTransTitles;
+combinedTrans.innerHTML = defaultTrans;
+combinedTrans.placeholders = defaultTransPlaceholders;
+
+var counter = 0;
+for (const i in updateList) {
+    const lang = updateList[i];
+    setTimeout((ln) => {
+        var suceess = updateTranslation(ln); // we don't need to worry about DATA.
+        if (suceess[0] == true) {
+            const newTrans = suceess[1].innerHTML;
+            //const allItems = document.querySelectorAll('[data-translate]');
+            allItems.forEach((ele) => {
+                const key = ele.dataset.translate;//.replace(/[\W]+/g, "-").toLowerCase();
+                newTrans[key] = ele.innerHTML;
+            });
+
+            const newTransTitles = suceess[1].titles;
+            //const allTitles = document.querySelectorAll('[title]');
+            allTitles.forEach((ele) => {
+                const key = ele.dataset.key;
+                newTransTitles[key] = ele.title;
+            });
+
+            const newPlaceholders = suceess[1].placeholders;
+           // const allPlaceholders = document.querySelectorAll('[placeholder]');
+            allPlaceholders.forEach((ele) => {
+                const key = ele.dataset.key;
+                newPlaceholders[key] = ele.placeholder;
+            });
+
+            // //// DOWNLOAD UPDATED TRANSLATION
+            const outputTrans = {};
+            outputTrans.titles = newTransTitles;
+            outputTrans.innerHTML = newTrans;
+            outputTrans.placeholders = newPlaceholders;
+            downloadTranslation(ln, outputTrans);
+        }
+        // //////// RESET THING BACK
+        allItems.forEach((ele) => {
+			const key = ele.dataset.translate;//.replace(/[\W]+/g, "-").toLowerCase();
+            if (key in defaultTrans) {
+                ele.innerHTML = defaultTrans[key];
+            }
+        });
+        allTitles.forEach((ele) => {
+            const key = ele.dataset.key;
+            if (key in defaultTransTitles) {
+                ele.title = defaultTransTitles[key];
+            }
+        });
+        allPlaceholders.forEach((ele) => {
+            const key = ele.dataset.key;
+            if (key in defaultTransPlaceholders) {
+                ele.placeholder = defaultTransPlaceholders[key];
+            }
+        });
+    }, counter, lang);
+    counter += 800;
 }
