@@ -60,7 +60,7 @@ $(".column").on('animationend', function(e){
 });
 
 
-$('#audioSource').on('mousedown touchend focusin focusout', (e) => {
+$('#audioSource').on('mousedown touchend focusin focusout', (_e) => {
 		const state = $('#multiselect-trigger').data('state') || 0;
 		if (state == 0) {
 			$('#multiselect-trigger').data('state', '1').addClass('open').removeClass('closed');
@@ -71,7 +71,7 @@ $('#audioSource').on('mousedown touchend focusin focusout', (e) => {
 		}
 });
 
-$('#audioSource3').on('mousedown touchend focusin focusout', (e) => {
+$('#audioSource3').on('mousedown touchend focusin focusout', (_e) => {
 		const state = $('#multiselect-trigger3').attr('data-state') || 0;
 		if (state == 0) {
 			$('#multiselect-trigger3').attr('data-state', '1').addClass('open').removeClass('closed');
