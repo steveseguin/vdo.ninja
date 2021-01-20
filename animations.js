@@ -1,15 +1,16 @@
 $("body").append('<style id="lightbox-animations" type="text/css"></style>');
 $(".column").on('click', function() {
-	if ( $(this).hasClass( "skip-animation" )){
+	if ($(this).hasClass( "skip-animation" )){
 		return;
 	}
-	var bounding_box = $(this).get(0).getBoundingClientRect();
+
+	const bounding_box = $(this).get(0).getBoundingClientRect();
 	$(this).css({ top: `${bounding_box.top}px`, left: `${bounding_box.left - 20}px` });
 	$(this).addClass('in-animation').removeClass('pointer');
 	$("#empty-container").remove();
 	$('<div id="empty-container" class="column"></div>').insertAfter(this);
 
-	var styles = '';
+	let styles = '';
 	styles = '@keyframes outlightbox {';
 	styles += '0% {';
 	styles += 'height: 100%;';
@@ -38,8 +39,9 @@ $(".close").on('click', function(e) {
 	$(this).hide();
 	$(".container-inner").hide();
 	$("body").css('overflow', 'auto');
-	var bounding_box = $(this).parent().get(0).getBoundingClientRect();
-	$(this).parent().css({ top: bounding_box.top + 'px', left: bounding_box.left + 'px' });
+
+	const bounding_box = $(this).parent().get(0).getBoundingClientRect();
+	$(this).parent().css({ top: `${bounding_box.top}px`, left: `${bounding_box.left}px` });
 	$(this).parent().addClass('out-animation');
 	cleanupMediaTracks(); 
 	e.stopPropagation();
