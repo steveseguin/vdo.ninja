@@ -1,28 +1,40 @@
 # OBS Ninja Cheat Sheets
-OBS Ninja lets you bring remote video feeds into OBS via WebRTC
+OBS Ninja lets you bring remote video feeds into OBS at low latency and with excellent quality
 
+  Jump to:
 
-Jump to:
-
+* [OBS Ninja Main Components](#maincomponents)
 * [Getting Started with OBS Ninja](#gettingstarted)
 * [Automating OBSN start-up](#automation)
 * [The Mac NDI Method](#macndimethod)
 
-<a name="gettingstarted">
+<a name="maincomponents">
+## MAIN COMPONENTS
 
+![OBS Ninja | main components](maincomponents/OBSN_main_components.jpg)   
+(v1.0, 2021-01-20)
+
+* [download PDF](maincomponents/OBSN_main_components.pdf) (best for printing)
+* [download PNG](maincomponents/OBSN_main_components.png)
+* [download JPG](maincomponents/OBSN_main_components.jpg)
+
+</a>
+
+<a name="gettingstarted">
 ## GETTING STARTED
+</a>
 
 ![OBS Ninja | cheat-sheet](cheatsheet/OBSN_cheat-sheet.jpg)   
 (v0.4, 2020-09-25)
 
 * [download PDF](cheatsheet/OBSN_cheat-sheet.pdf) (best for printing)
 * [download PNG](cheatsheet/OBSN_cheat-sheet.png)
-* [download JPG](cheatsheet/OBSN_cheat-sheet.pdf)
+* [download JPG](cheatsheet/OBSN_cheat-sheet.jpg)
 
 
 <a name="automation">
-
 ## AUTOMATING OBSN START-UP (currently in beta only)
+</a>
 
 ![OBS Ninja | automating start-up](automation/OBSN_automation_cheat-sheet.jpg)   
 (v0.5, 2020-11-22)
@@ -33,12 +45,12 @@ Jump to:
 
 
 <a name="macndimethod">
-
 ## THE MAC NDI METHOD
+</a>
 
 ![OBS Ninja | Mac NDI Method](macndimethod/OBSN2OBS_Mac-NDI-Method.jpg)   
 (v1.0, 2020-10-07)
 
 * [download PDF](macndimethod/OBSN2OBS_Mac-NDI-Method.pdf) (best for printing)
 * [download PNG](macndimethod/OBSN2OBS_Mac-NDI-Method.png)
-* [download JPG](macndimethod/OBSN2OBS_Mac-NDI-Method.pdf)
+* [download JPG](macndimethod/OBSN2OBS_Mac-NDI-Method.jpg)
