@@ -8,7 +8,8 @@ OBS Ninja lets you bring remote video feeds into OBS at low latency and with exc
 * [Automating OBSN start-up](#automation)
 * [The Mac NDI Method](#macndimethod)
 
-<a name="maincomponents">
+<a name="maincomponents"></a>
+
 ## MAIN COMPONENTS
 
 ![OBS Ninja | main components](maincomponents/OBSN_main_components.jpg)   
@@ -18,11 +19,10 @@ OBS Ninja lets you bring remote video feeds into OBS at low latency and with exc
 * [download PNG](maincomponents/OBSN_main_components.png)
 * [download JPG](maincomponents/OBSN_main_components.jpg)
 
-</a>
 
-<a name="gettingstarted">
+<a name="gettingstarted"></a>
+
 ## GETTING STARTED
-</a>
 
 ![OBS Ninja | cheat-sheet](cheatsheet/OBSN_cheat-sheet.jpg)   
 (v0.4, 2020-09-25)
@@ -32,9 +32,9 @@ OBS Ninja lets you bring remote video feeds into OBS at low latency and with exc
 * [download JPG](cheatsheet/OBSN_cheat-sheet.jpg)
 
 
-<a name="automation">
+<a name="automation"></a>
+
 ## AUTOMATING OBSN START-UP (currently in beta only)
-</a>
 
 ![OBS Ninja | automating start-up](automation/OBSN_automation_cheat-sheet.jpg)   
 (v0.5, 2020-11-22)
@@ -44,9 +44,9 @@ OBS Ninja lets you bring remote video feeds into OBS at low latency and with exc
 * [download JPG](automation/OBSN_automation_cheat-sheet.jpg)
 
 
-<a name="macndimethod">
+<a name="macndimethod"></a>
+
 ## THE MAC NDI METHOD
-</a>
 
 ![OBS Ninja | Mac NDI Method](macndimethod/OBSN2OBS_Mac-NDI-Method.jpg)   
 (v1.0, 2020-10-07)
