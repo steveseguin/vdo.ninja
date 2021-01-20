@@ -51,6 +51,6 @@ OBS Ninja lets you bring remote video feeds into OBS at low latency and with exc
 ![OBS Ninja | Mac NDI Method](macndimethod/OBSN2OBS_Mac-NDI-Method.jpg)   
 (v1.0, 2020-10-07)
 
-* [download PDF](macndimethod/OBSN2OBS_Mac-NDI-Method.pdf) (best for printing)
-* [download PNG](macndimethod/OBSN2OBS_Mac-NDI-Method.png)
-* [download JPG](macndimethod/OBSN2OBS_Mac-NDI-Method.jpg)
+[download PDF](macndimethod/OBSN2OBS_Mac-NDI-Method.pdf) (best for printing) |
+[download PNG](macndimethod/OBSN2OBS_Mac-NDI-Method.png) |
+[download JPG](macndimethod/OBSN2OBS_Mac-NDI-Method.jpg)
