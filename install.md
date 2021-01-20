@@ -2,21 +2,38 @@ Deploying this code. A guide.  (INITIAL DRAFT VERSION)
 
 ### PREFACE
 
-The code is obvious enough already that someone experienced with the NGINX webserver or with basic site deployments should have no problem getting things running.
+The code is obvious enough already that someone experienced with NGINX webservers or with basic site deployments should have no problem getting things running.
 
-I'm concerned at times that less experienced users will be deploying the code without really understanding why or properly how to.  There are few cases a person needs to deploy any code.  
+I'm concerned at times that less experienced users will be deploying the code without really understanding why or properly how to.  There are few cases a person needs to deploy any code. Those reasons are:  wanting custom branding; contributing as a developer to the codebase; or deploying a private TURN server.
 
-Those reasons are:  wanting custom branding; contributing as a developer to the codebase; or deploying a private TURN server.
+There may be misconceptions that deploying the website code will make the service faster; it will not. The service is video peer-to-peer based, so deploying webservers servers will not make it faster. Deploying a TURN server may help in some cases, although using a VPN, a cloud VM (for OBS), or disabling any symmetrical firewall will often provide a better end result than a private TURN server.
 
-For a subset of those users even, they might still have better options available.
+For those looking for a brand-free experience already with a different domain name, I offer https://rtc.ninja, and as well as other alternate domain names, such as:
 
-I offer https://rtc.ninja for those looking for a brand-free experience already. You can also point your domain to the OBS.Ninja IP address (provided on request), which will also rebrand the site automatically to match your domain name. (Requires Cloudflare as DNS server and proxy, Flexible SSL cert on, and HTTPs always on - all free.) 
+- https://chromicam.com
+- https://invite.cam (via URL obfuscation option)
+- https://ltt.ninja
+- https://obsn.me
+- https://rtc.ninja
+- https://vmix.ninja
+- https://webrtc.party
+- https://callin.ninja
+- https://auxiliary.live (backup hosted)
+- https://backup.obs.ninja (fully backup hosted)
 
-For those wanting a private TURN server setup, you can load the settings for those via the URL parameters. If infrequently needing a private TURN, this is a great solution.
+There is also an isolated version specificly designed for use in mainland China, hosted at https://insecure.cam in Hong Kong AWS.
 
-There are also misconceptions. Deploying the website code will NOT make the service faster. The service is peer-to-peer based, so deploying servers will not make it faster. Even deploying a TURN server is often not the best choice, as using a VPN, cloud VM for OBS, or disabling any symmetrical firewall will often provide a better end result. 
+You can also point your domain to the OBS.Ninja IP address (provided on request), which will also rebrand the site automatically to match your domain name. (Requires Cloudflare as DNS server and proxy, Flexible SSL cert on, and HTTPs always on - all free.) 
 
-Understanding clearly why you need to deploy any code or server is important. If you do know why, please continue.
+For those wanting a private TURN server setup, you can load the settings for those via the URL parameters. If infrequently needing a private TURN, this is a great solution.  You can also use URL forwarding services to load up a customized link to OBS.Ninja, with URL parameters already included, such as https://invite.mypersonaldomain.com , which might secretly resolve to https://obs.ninja/?room=myRoom&hash=3423&label or such.
+
+OBS.Ninja also supports IFRAMES, so you can embed OBS.Ninja into your website and customize it via both URL parameters, but also via the IFRAME API.  You can insert custom CSS styles with this method, giving OBS.Ninja quite a bit of flare.
+
+See more on IFRAMES here: https://github.com/steveseguin/obsninja/blob/master/IFRAME.md
+
+Understanding clearly why you need to deploy any code or server is important. Maintaining updated deployed code can be quite hard, as OBS.Ninja updates frequently, so there are good reasons to consider an IFRAME approach instead. Feature requests there are welcomed.
+
+That all aside, please continue:
 
 ### SETUP
 

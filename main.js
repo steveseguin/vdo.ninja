@@ -222,29 +222,8 @@ if (window.obsstudio){
 		log("macOS: "+navigator.userAgent.indexOf('Mac OS X') != -1);
 		log(window.obsstudio);
 		
-		if (!(urlParams.has('streamlabs'))){
-			
-			var ver = window.obsstudio.pluginVersion;
-			ver1 = ver.split(".");
-			updateURL("streamlabs");
-			var cefVersion = getChromeVersion();
-			
-			if (ver1.length == 3){ // Should be 3, but disabled3
-				if ((ver1.length == 3) && (parseInt(ver1[0])==2) && ( cefVersion<76 ) && (navigator.userAgent.indexOf('Mac OS X') != -1)){
-					getById("main").innerHTML = "<div style='background-color:black;color:white;' data-translate='obs-macos-not-supported'><h1>On macOS, the current release of OBS Studio does not work with OBS.Ninja.\
-					<br /><br /> An upcoming version of OBS Studio, v26.2 (?), will support OBS.Ninja though.\
-					<br /><br /> <font color='red'>You can now download a working PREVIEW version</font> of OBS v26.2 <a href='https://github.com/obsproject/obs-browser/issues/209#issuecomment-748683083'>FROM HERE</a><br />\
-					(<i><small><small>or here: <a href='https://github.com/obsproject/obs-browser/issues/209#issuecomment-748683083'>https://github.com/obsproject/obs-browser/issues/209#issuecomment-748683083</a></small></small></i>)\
-					</h1> <br /><br />\
-					<h2>Please use the <a href='https://github.com/steveseguin/electroncapture'>Electron Capture app</a> if the Preview version of OBS doesn't work for you.</h2>\
-					<br />You can find more details <u><a href='https://github.com/steveseguin/obsninja/wiki/FAQ#mac-os'>within our wiki guide - https://github.com/steveseguin/obsninja/wiki/FAQ#mac-os</a></u></h2>\
-					<br /> If using OBS v23 or Streamlabs, you can bypass this error message by refreshing, <a href='"+ window.location.href +"'> Clicking Here,</a> or by adding <i>&streamlabs</i> to the URL.\
-					\
-					<br /> Please report this problem to steve@seguin.email if you feel it is an error.\
-					</div>";
-				}
-			}
-		}
+		// Upgrade to OBS v26.1.2 to obtain native support for OBS.Ninja.
+    
 	} catch(e){errorlog(e);}
 	
 	window.addEventListener('obsSceneChanged', function(event){
