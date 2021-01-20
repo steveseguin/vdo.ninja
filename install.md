@@ -21,6 +21,8 @@ For those looking for a brand-free experience already with a different domain na
 - https://auxiliary.live (backup hosted)
 - https://backup.obs.ninja (fully backup hosted)
 
+There is also an isolated version specificly designed for use in mainland China, hosted at https://insecure.cam in Hong Kong AWS.
+
 You can also point your domain to the OBS.Ninja IP address (provided on request), which will also rebrand the site automatically to match your domain name. (Requires Cloudflare as DNS server and proxy, Flexible SSL cert on, and HTTPs always on - all free.) 
 
 For those wanting a private TURN server setup, you can load the settings for those via the URL parameters. If infrequently needing a private TURN, this is a great solution.  You can also use URL forwarding services to load up a customized link to OBS.Ninja, with URL parameters already included, such as https://invite.mypersonaldomain.com , which might secretly resolve to https://obs.ninja/?room=myRoom&hash=3423&label or such.
