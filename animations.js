@@ -10,25 +10,28 @@ $(".column").on('click', function() {
 	$("#empty-container").remove();
 	$('<div id="empty-container" class="column"></div>').insertAfter(this);
 
-	let styles = '';
-	styles = '@keyframes outlightbox {';
-	styles += '0% {';
-	styles += 'height: 100%;';
-	styles += 'width: 100%;';
-	styles += 'top: 0px;';
-	styles += 'left: 0px;';
-	styles += '}';
-	styles += '50% {';
-	styles += 'height: 220px;';
-	styles += 'top: ' + bounding_box.y + 'px;';
-	styles += '}';
-	styles += '100% {';
-	styles += 'height: 220px;';
-	styles += 'width: '+bounding_box.width+'px;';
-	styles += 'top: ' + bounding_box.y + 'px;';
-	styles += 'left: ' + bounding_box.x + 'px;';
-	styles += '}';
-	styles += '}';
+	const styles = `
+		@keyframes outlightbox {
+			0% {
+				height: 100%;
+				width: 100%;
+				top: 0px;
+				left: 0px;
+			}
+
+			50% {
+				height: 220px;
+				top: ${bounding_box.y}px;
+			}
+
+			100% {
+				height: 220px;
+				width: ${bounding_box.width}px;
+				top: ${bounding_box.y}px;
+				left: ${bounding_box.x}px;
+			}
+		}
+	`;
 
 	$("#lightbox-animations").empty();
 	$("#lightbox-animations").get(0).sheet.insertRule(styles, 0);
