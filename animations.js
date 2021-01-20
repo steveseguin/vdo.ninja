@@ -1,6 +1,6 @@
 $("body").append('<style id="lightbox-animations" type="text/css"></style>');
 $(".column").on('click', function() {
-	if ($(this).hasClass( "skip-animation" )){
+	if ($(this).hasClass("skip-animation")){
 		return;
 	}
 
@@ -107,7 +107,7 @@ $('#multiselect-trigger').on('mousedown touchend focusin focusout', function(e) 
 $('#multiselect-trigger3').on('mousedown touchend focusin focusout', function(e) {
     const state = $(this).attr('data-state') || 0;
 	
-    if( state == 0 ) {
+    if(state == 0) {
         // open the dropdown
 		errorlog(`STATE: ${state}`);
         $(this).attr('data-state', '1').addClass('open').removeClass('closed');
