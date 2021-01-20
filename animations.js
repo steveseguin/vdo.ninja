@@ -9,7 +9,7 @@ $(".column").on('click', function() {
 	$(this).addClass('in-animation').removeClass('pointer');
 	$("#empty-container").remove();
 	$('<div id="empty-container" class="column"></div>').insertAfter(this);
-
+	
 	const styles = `
 		@keyframes outlightbox {
 			0% {
