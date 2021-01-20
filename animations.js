@@ -51,11 +51,11 @@ $(".close").on('click', function(e) {
 });
 
 $(".column").on('animationend', function(e){
-	if (e.originalEvent.animationName == 'inlightbox') {
+	if (e.originalEvent.animationName === 'inlightbox') {
 		$(this).children(".close").show();
 		$(this).children(".container-inner").show();
 	}
-	else if (e.originalEvent.animationName == 'outlightbox') {
+	else if (e.originalEvent.animationName === 'outlightbox') {
 		$(this).removeClass('in-animation').removeClass('out-animation').removeClass('columnfade').addClass('pointer');
 		$("#empty-container").remove();
 		$("#lightbox-animations").get(0).sheet.deleteRule(0);
@@ -65,7 +65,7 @@ $(".column").on('animationend', function(e){
 
 $('#audioSource').on('mousedown touchend focusin focusout', (_e) => {
 		const state = $('#multiselect-trigger').data('state') || 0;
-		if (state == 0) {
+		if (state === 0) {
 			$('#multiselect-trigger').data('state', '1').addClass('open').removeClass('closed');
 			$('#multiselect-trigger').find('.chevron').removeClass('bottom');
 			$('#multiselect-trigger').parent().find('.multiselect-contents').show();
@@ -76,7 +76,7 @@ $('#audioSource').on('mousedown touchend focusin focusout', (_e) => {
 
 $('#audioSource3').on('mousedown touchend focusin focusout', (_e) => {
 		const state = $('#multiselect-trigger3').attr('data-state') || 0;
-		if (state == 0) {
+		if (state === 0) {
 			$('#multiselect-trigger3').attr('data-state', '1').addClass('open').removeClass('closed');
 			$('#multiselect-trigger3').find('.chevron').removeClass('bottom');
 			$('#multiselect-trigger3').parent().find('.multiselect-contents').show();
@@ -87,7 +87,7 @@ $('#audioSource3').on('mousedown touchend focusin focusout', (_e) => {
  
 $('#multiselect-trigger').on('mousedown touchend focusin focusout', function(e) {
     const state = $(this).data('state') || 0;
-    if( state == 0 ) {
+    if( state === 0 ) {
         // open the dropdown
         $(this).data('state', '1').addClass('open').removeClass('closed');
         $(this).find('.chevron').removeClass('bottom');
@@ -107,7 +107,7 @@ $('#multiselect-trigger').on('mousedown touchend focusin focusout', function(e) 
 $('#multiselect-trigger3').on('mousedown touchend focusin focusout', function(e) {
     const state = $(this).attr('data-state') || 0;
 	
-    if(state == 0) {
+    if(state === 0) {
         // open the dropdown
 		errorlog(`STATE: ${state}`);
         $(this).attr('data-state', '1').addClass('open').removeClass('closed');
