@@ -61,7 +61,7 @@ $(".column").on('animationend', function(e){
 
 
 $('#audioSource').on('mousedown touchend focusin focusout', (e) => {
-		var state = $('#multiselect-trigger').data('state') || 0;
+		const state = $('#multiselect-trigger').data('state') || 0;
 		if (state == 0) {
 			$('#multiselect-trigger').data('state', '1').addClass('open').removeClass('closed');
 			$('#multiselect-trigger').find('.chevron').removeClass('bottom');
@@ -69,10 +69,10 @@ $('#audioSource').on('mousedown touchend focusin focusout', (e) => {
 			$('#multiselect-trigger').parent().find('.multiselect-contents').find('input[type="checkbox"]').parent().show();
 			$('#multiselect-trigger').parent().find('.multiselect-contents').find('input[type="checkbox"]').show();
 		}
-	});
+});
 
 $('#audioSource3').on('mousedown touchend focusin focusout', (e) => {
-		var state = $('#multiselect-trigger3').attr('data-state') || 0;
+		const state = $('#multiselect-trigger3').attr('data-state') || 0;
 		if (state == 0) {
 			$('#multiselect-trigger3').attr('data-state', '1').addClass('open').removeClass('closed');
 			$('#multiselect-trigger3').find('.chevron').removeClass('bottom');
@@ -80,10 +80,10 @@ $('#audioSource3').on('mousedown touchend focusin focusout', (e) => {
 			$('#multiselect-trigger3').parent().find('.multiselect-contents').find('input[type="checkbox"]').parent().show();
 			$('#multiselect-trigger3').parent().find('.multiselect-contents').find('input[type="checkbox"]').show();
 		}
-	});
+});
  
 $('#multiselect-trigger').on('mousedown touchend focusin focusout', function(e) {
-    var state = $(this).data('state') || 0;
+    const state = $(this).data('state') || 0;
     if( state == 0 ) {
         // open the dropdown
         $(this).data('state', '1').addClass('open').removeClass('closed');
@@ -102,7 +102,7 @@ $('#multiselect-trigger').on('mousedown touchend focusin focusout', function(e) 
 });
 // multiselect dropdowns
 $('#multiselect-trigger3').on('mousedown touchend focusin focusout', function(e) {
-    var state = $(this).attr('data-state') || 0;
+    const state = $(this).attr('data-state') || 0;
 	
     if( state == 0 ) {
         // open the dropdown
