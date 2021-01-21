@@ -25,7 +25,7 @@ $(".column").on('click', function() {
 			}
 
 			100% {
-				height: 20px;
+				height: 200px;
 				width: ${bounding_box.width}px;
 				top: ${bounding_box.y}px;
 				left: ${bounding_box.x}px;
