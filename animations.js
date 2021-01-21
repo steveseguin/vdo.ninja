@@ -20,12 +20,12 @@ $(".column").on('click', function() {
 			}
 
 			50% {
-				height: 220px;
+				height: 200px;
 				top: ${bounding_box.y}px;
 			}
 
 			100% {
-				height: 220px;
+				height: 20px;
 				width: ${bounding_box.width}px;
 				top: ${bounding_box.y}px;
 				left: ${bounding_box.x}px;
