@@ -9,7 +9,7 @@ OBS Ninja lets you bring remote video feeds into OBS at low latency and with exc
 
 <a name="basiccomponents"></a>
 
-## MAIN COMPONENTS
+## BASIC CONCEPTS
 
 ![OBS Ninja | basic concepts](basicconcepts/OBSN_basic_concepts.jpg)   
 (v1.2, 2021-01-22)
