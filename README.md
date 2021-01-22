@@ -3,54 +3,40 @@ OBS Ninja lets you bring remote video feeds into OBS at low latency and with exc
 
   Jump to:
 
-* [OBS Ninja Main Components](#maincomponents)
+* [OBS Ninja Basic Concepts](#basicconcepts)
 * [Getting Started with OBS Ninja](#gettingstarted)
 * [Automating OBSN start-up](#automation)
-* [The Mac NDI Method](#macndimethod)
 
-<a name="maincomponents"></a>
+<a name="basiccomponents"></a>
 
 ## MAIN COMPONENTS
 
-![OBS Ninja | main components](maincomponents/OBSN_main_components.jpg)   
+![OBS Ninja | basic concepts](basicconcepts/OBSN_basic_components.jpg)   
 (v1.2, 2021-01-22)
 
-[download PDF](maincomponents/OBSN_main_components.pdf) (best for printing) |
-[download PNG](maincomponents/OBSN_main_components.png) |
-[download JPG](maincomponents/OBSN_main_components.jpg)
-
+[download JPG](basicconcepts/OBSN_basic_concepts.jpg) |
+[download PNG](basicconcepts/OBSN_basic_concepts.png) |
+[download PDF](basicconcepts/OBSN_basic_concepts.pdf) (best for printing)
 
 <a name="gettingstarted"></a>
 
 ## GETTING STARTED
 
 ![OBS Ninja | cheat-sheet](cheatsheet/OBSN_cheat-sheet.jpg)   
-(v0.4, 2020-09-25)
+(v1.0, 2021-01-22)
 
-[download PDF](cheatsheet/OBSN_cheat-sheet.pdf) (best for printing) |
+[download JPG](cheatsheet/OBSN_cheat-sheet.jpg) |
 [download PNG](cheatsheet/OBSN_cheat-sheet.png) |
-[download JPG](cheatsheet/OBSN_cheat-sheet.jpg)
-
+[download PDF](cheatsheet/OBSN_cheat-sheet.pdf) (best for printing)
 
 <a name="automation"></a>
 
 ## AUTOMATING OBSN START-UP (currently in beta only)
 
 ![OBS Ninja | automating start-up](automation/OBSN_automation_cheat-sheet.jpg)   
-(v0.5, 2020-11-22)
+(v1.0, 2021-01-22)
 
-[download PDF](automation/OBSN_automation_cheat-sheet.pdf) (best for printing) |
+[download JPG](automation/OBSN_automation_cheat-sheet.jpg) |
 [download PNG](automation/OBSN_automation_cheat-sheet.png) |
-[download JPG](automation/OBSN_automation_cheat-sheet.jpg)
+[download PDF](automation/OBSN_automation_cheat-sheet.pdf) (best for printing)
 
-
-<a name="macndimethod"></a>
-
-## THE MAC NDI METHOD
-
-![OBS Ninja | Mac NDI Method](macndimethod/OBSN2OBS_Mac-NDI-Method.jpg)   
-(v1.0, 2020-10-07)
-
-[download PDF](macndimethod/OBSN2OBS_Mac-NDI-Method.pdf) (best for printing) |
-[download PNG](macndimethod/OBSN2OBS_Mac-NDI-Method.png) |
-[download JPG](macndimethod/OBSN2OBS_Mac-NDI-Method.jpg)

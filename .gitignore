@@ -1,1 +1,3 @@
 .DS_Store
+.gitignore.swp
+.nova/Configuration.json
