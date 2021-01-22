@@ -39,7 +39,7 @@ This includes things like
 * buffering behaviour
 
 ![OBS Ninja | cheat-sheet](cheatsheet/OBSN_cheat-sheet.jpg)   
-(v1.0, 2021-01-22)
+(v1.1, 2021-01-22)
 
 [download JPG](cheatsheet/OBSN_cheat-sheet.jpg) |
 [download PNG](cheatsheet/OBSN_cheat-sheet.png) |
