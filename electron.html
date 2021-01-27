@@ -125,7 +125,7 @@ input[type='checkbox']:checked {
 <div id="header" style="-webkit-app-region: drag;color:white;font-size:2em">OBS.Ninja</div>
 <div class="formcss" >
 	
-	<div id='warning4mac' style="border:2px dotted; display:none;max-width:700px; padding:10px; margin:0 90px 20px 90px;color:white;font-size:1.3em"> 🚨 If using OBS v26 on macOS, right-click the Electron Capture app and disable <i>Always-on-Top</i> to reveal it during window-selection. You can enable it again afterwards.</div>
+	<div id='warning4mac' style="border:2px dotted; display:none;max-width:800px; padding:10px; margin:0 90px 20px 90px;color:white;font-size:1.3em"> ✨ Great News! OBS v26.1.2 <a href="https://github.com/obsproject/obs-browser/issues/209#issuecomment-748683083">now supports</a> OBS.Ninja without needing the Electron Capture app! 🥳</div>
 
 	<input type="checkbox" class="check" id="prefervp9" name="prefervp9" value="false" onclick="modURL(this);">
 	<label for="prefervp9">Force VP9 Codec</label>
@@ -164,9 +164,9 @@ input[type='checkbox']:checked {
 *
 */
 
-//if (navigator.userAgent.indexOf('Mac OS X') != -1){
-//	document.getElementById("warning4mac").style.display="block";
-//}
+if (navigator.userAgent.indexOf('Mac OS X') != -1){
+	document.getElementById("warning4mac").style.display="block";
+}
 
 var audioOutputSelect = document.querySelector('select#audioOutput');
 audioOutputSelect.disabled = !('sinkId' in HTMLMediaElement.prototype);
