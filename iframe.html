@@ -229,6 +229,11 @@ function loadIframe(){  // this is pretty important if you want to avoid camera 
 		iframeContainer.appendChild(button);
 		
 		var button = document.createElement("button");
+		button.innerHTML = "eval('alert(\"DANGERUS\")'";
+		button.onclick = function(){iframe.contentWindow.postMessage({"function":"eval", "value":'alert(\"DANGERUS\")'}, '*');};  // publishScreen
+		iframeContainer.appendChild(button);
+		
+		var button = document.createElement("button");
 		button.innerHTML = "Change Add Camera text";
 		button.onclick = function(){iframe.contentWindow.postMessage({"function":"changeHTML", "target":"add_camera", "value":"NEW CAMERA TEXT"}, '*');};  // change text of add camera button
 		iframeContainer.appendChild(button);

@@ -139,6 +139,10 @@ button.grey {
 	background-size: 50%;
 }
 
+#reportbutton{
+	visibility: hidden;
+}
+
 .red {
 	background-color: #840000 !important;
 }
@@ -450,30 +454,26 @@ button.glyphicon-button.active.focus {
 	border-radius: 38px;
 	background-color: #030303dd; 
 	padding: 5px 7px;
-	bottom: 2.25em;
 	position: absolute;
 	pointer-events: auto;
 }
 
-@media only screen and (max-width: 500px){
+@media only screen and (max-width: 700px){
 	#subControlButtons {
 		padding: 2px 4px; 
-		zoom: .9; 
 		-moz-transform: scale(.9); 
 	} 
 }
 @media only screen and (max-width: 400px){
 	#subControlButtons {
 		padding: 1px 2px; 
-		bottom: 2.1em;
-		zoom: .8; 
+		zoom: .9; 
 		-moz-transform: scale(.8); 
 	} 
 }
 @media only screen and (max-width: 300px){
 	#subControlButtons {
 		padding: 0px;
-		bottom: 2.0em;
 	} 
 }
 
@@ -853,7 +853,33 @@ input[type=range]:focus::-ms-fill-upper {
 	text-shadow: 0px 0px 6px #000000FF;
 	font-weight: 700;
 }
-
+.tooltip {
+  position: relative;
+  display: inline-block;
+  border-bottom: 1px dotted black;
+}
+.tooltip .tooltiptext {
+    visibility: hidden;
+	width: 10em;
+	background-color: #9d5050;
+	color: #fff;
+	text-align: center;
+	/* padding: 5px 0; */
+	border-radius: 10px;
+	position: absolute;
+	z-index: 1;
+	top: -10px;
+	font-family: "Lato", sans-serif;
+}
+.tooltip:hover .tooltiptext {
+  visibility: visible;
+}
+#screensharebutton.float2{
+	background-color: #335c3a;
+}
+#screenshare2button.float2{
+	background-color: #335c3a;
+}
 #popupSelector {
 	background: linear-gradient(6deg, rgba(221, 221, 221, 0) 4%, rgb(221, 221, 221, 0.2) 30%, rgba(120, 120, 100, .5) 100%);
 	transition: all 0.2s linear 0s;
@@ -861,9 +887,10 @@ input[type=range]:focus::-ms-fill-upper {
 	position: fixed;
 	top: 0px;
 	height: 90%;
-	width: 490px;
+	width: 505px;
 	right: -400px;
 	overflow: auto;
+	z-index: 1;
 }
 
 h2 {
@@ -1141,7 +1168,7 @@ img {
 	border: 0;
 	pointer-events: none;
 }
-
+.popup .menu { margin: 2px; }
 .my-float {
 	margin-top: 7px;
 	opacity: 0.9;
@@ -2166,6 +2193,16 @@ span#guestTips {
 	border-radius: 1vh;
 	pointer-events:none;
 }
+
+.video-mute-state {
+    top: 0.5em;
+    right: 0.5em;
+    position: absolute;
+	color:white;
+	border-radius: 1vh;
+	background-color:#b11313;
+}
+
 #help_directors_room{
 	cursor:pointer;
 }
