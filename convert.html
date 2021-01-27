@@ -107,7 +107,7 @@ audio{
 	
 	const force1080 = async ({ target: { files } }) => {
       const { name } = files[0];
-	  const sourceBuffer = await fetch("cap.webm").then(r => r.arrayBuffer());
+	  const sourceBuffer = await fetch("./media/cap.webm").then(r => r.arrayBuffer());
 	  document.getElementById('uploader').style.display="none";
 	  document.getElementById('uploader2').style.display="none";
 	  document.getElementById('uploader3').style.display="none";
@@ -139,7 +139,6 @@ audio{
 			video.src = URL.createObjectURL(new Blob([data.buffer], { type: 'audio/opus' }));
 			download(data, name.split(".")[0]+".opus");
 		} else {
-			delete data;
 			await ffmpeg.run('-i', name, '-vn',  '-acodec', 'copy', 'output.wav');
 			const data2 = ffmpeg.FS('readFile', 'output.wav');
 			video.src = URL.createObjectURL(new Blob([data.buffer], { type: 'audio/pcm' }));
