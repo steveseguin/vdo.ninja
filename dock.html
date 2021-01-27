@@ -117,22 +117,25 @@ function generateInvite(){
 	if (getById("invite_vp9").checked){
 		viewstr+="&codec=vp9";
 	}
+	if (getById("invite_h264").checked){
+		viewstr+="&codec=h264";
+	}
 	if (getById("invite_stereo").checked){
 		viewstr+="&stereo";
 		sendstr+="&stereo";
 	}
-	if (getById("invite_secure").checked){
-		sendstr+="&secure";
-	}
+	//if (getById("invite_secure").checked){
+	//	sendstr+="&secure";
+	//}
 	if (getById("invite_hidescreen").checked){
 		sendstr+="&webcam";
 	}
 
-	if (getById("invite_remotecontrol").checked){  //
-		var remote_gen_id = generateStreamID();
-		sendstr+="&remote="+remote_gen_id; // security
-		viewstr+="&remote="+remote_gen_id;
-	}
+	//if (getById("invite_remotecontrol").checked){  //
+	//	var remote_gen_id = generateStreamID();
+	//	sendstr+="&remote="+remote_gen_id; // security
+	//	viewstr+="&remote="+remote_gen_id;
+	//}
 
 	if (getById("invite_joinroom").value.trim().length){
 		sendstr+="&room="+getById("invite_joinroom").value.replace(/[\W]+/g,"_");
@@ -231,7 +234,9 @@ document.addEventListener("dragstart", event => {
 	
 	<input type="checkbox" id="invite_bitrate" /><label for="invite_bitrate"> <span data-translate="unlock-video-bitrate">Unlock Video Bitrate (20mbps)</span></label>
 	<br />
-	<input type="checkbox" id="invite_vp9" /><label for="invite_vp9"> <span data-translate="force-vp9-video-codec">VP9 Video Codec</span></label>
+	<input type="checkbox" id="invite_vp9" onclick="getById('invite_h264').checked=false;" /><label for="invite_vp9"> <span data-translate="force-vp9-video-codec">VP9 Video Codec</span></label>
+	<br />
+	<input type="checkbox" id="invite_h264" onclick="getById('invite_vp9').checked=false;" /><label for="invite_h264"> <span data-translate="force-h264-video-codec">H264 Video Codec</span></label>
 	<br />
 	<input type="checkbox" id="invite_stereo" /><label for="invite_stereo"> <span data-translate="enable-stereo-and-pro">Stereo and Pro HD Audio</span></label>
 	<br />
@@ -245,17 +250,11 @@ document.addEventListener("dragstart", event => {
 	</select>
 	<br />
 	<br />
-	<input type="checkbox" id="invite_secure" />
-	<label for="invite_secure"> <span data-translate="high-security-mode">High Security Mode</span></label>
-	<br />
 	<input type="checkbox" id="invite_hidescreen" />
 	<label for="invite_hidescreen"> <span data-translate="hide-screen-share">Hide Screenshare Option</span></label>
 	<br />
-	<input type="checkbox" id="invite_remotecontrol" />
-	<label for="invite_remotecontrol"> <span data-translate="allow-remote-control">Remote Control Camera Zoom</span></label>
 	<br />
-	<br />
-	<label for="videoname">Stream label:</label>
+	<label for="videoname">Stream Label:</label>
 	<input id="videoname" placeholder="Give stream a description"  />
 	<br />
 	<br />

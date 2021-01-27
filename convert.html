@@ -1,20 +1,76 @@
-<body>
+<head>
+<link rel="stylesheet" href="./main.css?ver=39" />
+<style>
+
+body {
+
+}
+
+input {padding:10px;}
+
+h3 { margin-top:10px; padding:5px;}
+
+hr {
+	margin: 20px 0;
+}
+video{
+	max-width:640px;
+	max-height:360px;
+	padding:20px;
+}
+audio{
+	max-width:640px;
+	max-height:360px;
+	padding:20px;
+}
+
+</style>
+</head>
+<body style='color:white'>
+
 <video id="player" controls style="display:none"></video>
+<audio id="player2" controls style="display:none"></audio>
 <div id="info">
-	<h3>This tool can be used to convert WebM videos of dynamic resolution to MP4 files of a fixed 1280x720 resolution.</h3>  Just select a video file and wait. It takes about 60-seconds to transcode 1-second of video.  Very sloowww...<br />
-	<p>You can use FFMpeg locally to achieve much faster results.</p>
-	<p>This tool performs the following action in your browser: <i>fmpeg -i input.webm -vf scale=1280:720 output.mp4</i><p>
+<h1>Web-based Media Conversion Tools</h1>
+<hr>
+	<h3>Transcodes WebM files to MP4 files with a fixed 1280x720 resolution. (very slow!)</h3><br />
+	<small><p>This tool performs the following action in your browser: <i> fmpeg -i input.webm -vf scale=1280:720 output.mp4</i></p></small>
 	<input type="file" id="uploader" title="Convert WebM to MP4">
-	<hr>
-	<h3>Bonus: This option converts MKV files to MP4 files without transcoding.</h3> </p><i>fmpeg -i INPUTFILE -vcodec copy -acodec copy output.mp4</i>
-	<br /><br /><input type="file" id="uploader2" accept=".mkv" title="Convert MKV to MP4">
-	<p>You can use FFMpeg locally to achieve much faster results with either option.</p>
-	<h3>This option converts WebM files to MP4 files without transcoding, and attempting to force high resolutions.
-	<br /><br /><input type="file" id="uploader3"  accept=".webm" title="Convert WebM to MP4">
 	
-  </div>
+	<hr>
+	<h3>Remuxes MKV files to MP4 files without transcoding.</h3> </p><br /><small><i> fmpeg -i INPUTFILE -vcodec copy -acodec copy output.mp4</i></small>
+	<br /><input type="file" id="uploader2" accept=".mkv" title="Convert MKV to MP4">
+	
+	<hr>
+	
+	<h3>Remuxes WebM files to MP4 files without transcoding (attempts to force high resolutions, also)</h3>
+	<input type="file" id="uploader3"  accept=".webm" title="Convert WebM to MP4">
+	
+	<hr>
+	<h3>Remuxes WebM to Audio-only files (opus or wav)</h3>
+	<input type="file" id="uploader4"  accept=".webm" title="Convert WebM to OPUS">
+	
+	<hr>
+	
+</div>
   <script src="https://unpkg.com/@ffmpeg/ffmpeg@0.9.6/dist/ffmpeg.min.js"></script>
   <script>
+  
+	function download(data, filename) {
+        const blob = new Blob([data.buffer]);
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.style.display = 'none';
+        a.href = url;
+        a.download = filename;
+        document.body.appendChild(a);
+        a.click();
+        setTimeout(() => {
+            document.body.removeChild(a);
+            window.URL.revokeObjectURL(url);
+        }, 100);
+    }
+  
     const { createFFmpeg, fetchFile } = FFmpeg;
     const ffmpeg = createFFmpeg({ log: true });
     const transcode = async ({ target: { files } }) => {
@@ -44,13 +100,14 @@
       const data = ffmpeg.FS('readFile', 'output.mp4');
       const video = document.getElementById('player');
       video.src = URL.createObjectURL(new Blob([data.buffer], { type: 'video/mp4' }));
+	  
 	  video.style.display="block";
 	  document.getElementById('info').innerText = "Operation Done. Play video or download it.";
     }
 	
 	const force1080 = async ({ target: { files } }) => {
       const { name } = files[0];
-	  const sourceBuffer = await fetch("cap.webm").then(r => r.arrayBuffer());
+	  const sourceBuffer = await fetch("./media/cap.webm").then(r => r.arrayBuffer());
 	  document.getElementById('uploader').style.display="none";
 	  document.getElementById('uploader2').style.display="none";
 	  document.getElementById('uploader3').style.display="none";
@@ -67,8 +124,34 @@
 	  document.getElementById('info').innerText = "Operation Done. Play video or download it.";
     }
 	
+	const convertToAudioOnly = async ({ target: { files } }) => {
+    const { name } = files[0];
+	  document.getElementById('info').innerText = "Transcoding file... this will take a while";
+      await ffmpeg.load();
+	  ffmpeg.FS('writeFile', name, await fetchFile(files[0]));
+	  const video = document.getElementById('player');
+		  
+	  await ffmpeg.run('-i', name, '-vn',  '-acodec', 'copy', 'output.opus');
+	  const data = ffmpeg.FS('readFile', 'output.opus');
+	  
+	  console.log(data.buffer.byteLength);
+		if (data.buffer.byteLength){
+			video.src = URL.createObjectURL(new Blob([data.buffer], { type: 'audio/opus' }));
+			download(data, name.split(".")[0]+".opus");
+		} else {
+			await ffmpeg.run('-i', name, '-vn',  '-acodec', 'copy', 'output.wav');
+			const data2 = ffmpeg.FS('readFile', 'output.wav');
+			video.src = URL.createObjectURL(new Blob([data.buffer], { type: 'audio/pcm' }));
+			download(data2, name.split(".")[0]+".wav");
+		}
+	  
+	  video.style.display="block";
+	  document.getElementById('info').innerText = "Operation Done. Play audio or download it.";
+    }
+	
     document.getElementById('uploader').addEventListener('change', transcode);
 	document.getElementById('uploader2').addEventListener('change', transmux);
 	document.getElementById('uploader3').addEventListener('change', force1080);
+	document.getElementById('uploader4').addEventListener('change', convertToAudioOnly);
   </script>
 </body>

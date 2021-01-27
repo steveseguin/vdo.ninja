@@ -2,9 +2,9 @@
 	--background-color: #141926;
 	--container-color: #373737;
 	--button-color: #2A2A2A;
-	--blue-accent: #4B4959;
+	--blue-accent: #4a4c63;
 	--red-accent: #553737;
-	--green-accent: #304F2B;
+	--green-accent: #3f4f50;
 	--olive-accent: #535D32;
 	--regular-margin: 10px;
 }
@@ -130,13 +130,25 @@ button.grey {
 	color: white;
 }
 
+
+#miniPerformer>#videosource{
+	width: 80px;
+	height: 45px;
+	margin: 5px;
+	background-color: #464749 !important;
+	background-size: 50%;
+}
+
+.red {
+	background-color: #840000 !important;
+}
+
 button.red {
 	-webkit-app-region: no-drag;
 	padding: 10px;
 	margin: 10px 0px;
 	cursor: pointer;
 	border-radius: 2px;
-	background-color:  var(--red-accent);
 	color: white;
 }
 
@@ -148,6 +160,7 @@ button {
 	cursor: pointer;
 	border-radius: 2px;
 }
+
 
 button.white {
 	-webkit-app-region: no-drag;
@@ -185,8 +198,8 @@ button.white:active {
 	background-color: #0000;
 	color: white;
 	font-family: Cousine, monospace;
-	font-size: 4em;
-	line-height: 1.5em;
+	font-size: 6vh;
+    line-height: 8vh;
 	letter-spacing: 0.0em;
 	text-shadow: 0.05em 0.05em 0px rgba(0,0,0,1);
 	width:100%;
@@ -197,13 +210,13 @@ button.white:active {
     top: 0;
     position: fixed;
 	overflow-wrap: anywhere;
-	padding:3%;
+	padding:2% 3%;
 	pointer-events: none
 }
 #overlayMsgs span{
-	background-color: #000A;
-	padding: 8px 8px 0px 8px;
-	margin:10px;
+	background-color: #000B;
+	padding: 2px;
+	margin: 0.5vh;
 	text-align: center;
 	width:100%;
 	pointer-events: none
@@ -334,7 +347,6 @@ hr {
 
 #gridlayout {
 	padding: 0;
-	display: grid;
 	width: 100%;
 	height: 100%;
 	grid-gap: 0;
@@ -374,14 +386,14 @@ hr {
 
 .directorsgrid .vidcon video {
 	max-width: 100%;
-	padding: 5px;
+	padding: 0 5px;
 	width: 100%;
-	height: 157px;
+	height: 148px;
 }
 
 .directorsgrid .vidcon {
 	display: inline-block !important;
-	width: 269.2px !important;
+	width: 269.7px !important;
 	background: #7E7E7E;
 	color: #FCFCFC;
 	vertical-align: top;
@@ -433,6 +445,45 @@ button.glyphicon-button.active.focus {
 	height:100%;
 }
 
+#subControlButtons {
+	display: flex;
+	border-radius: 38px;
+	background-color: #030303dd; 
+	padding: 5px 7px;
+	bottom: 2.25em;
+	position: absolute;
+	pointer-events: auto;
+}
+
+@media only screen and (max-width: 500px){
+	#subControlButtons {
+		padding: 2px 4px; 
+		zoom: .9; 
+		-moz-transform: scale(.9); 
+	} 
+}
+@media only screen and (max-width: 400px){
+	#subControlButtons {
+		padding: 1px 2px; 
+		bottom: 2.1em;
+		zoom: .8; 
+		-moz-transform: scale(.8); 
+	} 
+}
+@media only screen and (max-width: 300px){
+	#subControlButtons {
+		padding: 0px;
+		bottom: 2.0em;
+	} 
+}
+
+@media only screen and (max-height: 500px){
+	#subControlButtons {
+		padding: 0;
+		bottom: .7em;
+		-moz-transform: scale(.9); 
+	} 
+}
 
 
 @keyframes pulse {
@@ -913,13 +964,14 @@ label {
 
 /* Create four equal columns that floats next to each other */
 
+
 .column {
 	display: inline-block;
 	margin: 1.8%;
 	min-width: 300px;
 	width: 20%;
 	padding: 25px;
-	height: 220px;
+	height: 200px;
 	/* Should be removed. Only for demonstration */
 	border-radius: 5px;
 	text-align: center;
@@ -945,7 +997,7 @@ label {
 
 @media only screen and (max-height: 650px) {
 	.column {
-		height: 180px;
+		
 	}
 }
 
@@ -972,7 +1024,7 @@ img {
 	width: 20%;
 	min-width: 300px;
 	padding: 28px;
-	height: 220px;
+	height: 200px;
 	/* Should be removed. Only for demonstration */
 	
 	margin: 1.8%;
@@ -1037,6 +1089,7 @@ img {
 	text-align: center;
 	margin: 5px;
 	pointer-events: auto;
+	outline:none;
 }
 .float2 {
 	opacity: 0.8;
@@ -1049,6 +1102,7 @@ img {
 	z-index: 10;
 	margin: 5px;
 	pointer-events: auto;
+	outline:none;
 }
 
 .rotate225 {
@@ -1087,6 +1141,7 @@ img {
 	border: 0;
 	pointer-events: none;
 }
+
 .my-float {
 	margin-top: 7px;
 	opacity: 0.9;
@@ -1135,7 +1190,7 @@ img {
 	max-width: 100%;
 }
 .in-animation {
-	animation: inlightbox 0.8s forwards;
+	animation: inlightbox 0.5s forwards;
 	position: fixed !important;
 	margin: 0 !important;
 }
@@ -1153,7 +1208,7 @@ img {
 }
 
 .out-animation {
-	animation: outlightbox 0.8s forwards;
+	animation: outlightbox 0.5s forwards;
 }
 
 .pointer {
@@ -1163,7 +1218,7 @@ img {
 	50% {
 		width: 100%;
 		left: 0;
-		height: 220px;
+		height: 200px;
 	}
 	
 	100% {
@@ -1470,7 +1525,7 @@ video.clean::-webkit-media-controls-timeline-container {
 	font-weight: bold;
 	font-size: 1em;
 	padding: 10px;
-	margin: 5px;
+	margin: 5px 0;
 	word-break: break-all;
 }
 .grabLinks a:hover {
@@ -1803,24 +1858,32 @@ input[type=checkbox] {
 		font-size: 100%;
 	}
 }
+.hideLinksClass {
+	background-color:  var(--container-color);
+	width:1191px;
+	padding: 10px;
+	margin: 10px;
+}
 .directorContainer {
 	background-color: var(--container-color);
 	display: grid;
-	grid-template-columns: 1fr 1fr 1fr 1fr;
-	margin: 10px;
-	padding: 5px 10px;
-	max-width: 1190px
+	grid-template-columns: 1fr ;
+	margin: 10px 0px 10px 10px;
+	padding: 10px;
+	max-width: 1191px
+}
+#directorLinksButton{
+	cursor:pointer;
 }
 .directorContainer.half {
 	background-color: var(--container-color);
 	display: grid;
 	grid-template-columns: 1fr 1fr;
-	padding: 5px 20px;
-	max-width: 1190px
+	padding: 10px 10px;
+	width: 591px;
 }
 .directorBlock {
-	cursor: grab;
-	padding: 10px 10px 50px 10px;
+	padding: 10px 10px 5px 10px;
 	margin: 10px;
 	color: white;
 	position:relative;
@@ -1831,16 +1894,15 @@ input[type=checkbox] {
 	background-color: var(--blue-accent);
 }
 .directorBlock:nth-child(2) {
-	background-color: var(--red-accent);
-}
-.directorBlock:nth-child(3) {
 	background-color: var(--green-accent);
 }
-.directorBlock:nth-child(4) {
+.directorBlock:nth-child(3) {
 	background-color: var(--olive-accent);
 }
+.directorBlock:nth-child(4) {
+	background-color: var(--red-accent);
+}
 .directorBlock button {
-	position: absolute;
     bottom: 0;
 	margin: 10px;
 }
@@ -1854,8 +1916,9 @@ input[type=checkbox] {
 }
 .directorBlock h2 {
 	text-transform: uppercase;
-	font-size: 1em;
 	margin-bottom: 10px;
+	margin-left: 5px;
+	font-size:1.2em;
 }
 #toggleroomnotes {
 	grid-column: 4;
@@ -1864,7 +1927,7 @@ input[type=checkbox] {
 div#roomnotes2 {
 	background: var(--container-color);
 	padding: 10px !important;
-	margin: 0px var(--regular-margin);
+	margin: 0 var(--regular-margin) 10px var(--regular-margin);
 	width: 100%;
 }
 .directorsgrid .directorContainer:nth-child(2) button {
@@ -1910,7 +1973,6 @@ i.las.la-circle {
 	text-align: right;
 	margin: 5px;
 	font-size: 0.7em;
-	cursor: copy;
 	text-overflow: ellipsis;
     overflow: hidden;
 }
@@ -1936,7 +1998,7 @@ i.las.la-circle {
 }
 div#guestFeeds {
 	background: var(--container-color);
-	padding: 0 0 15px 20px;
+	padding: 5px 0 15px 20px;
 	display: inline-block;
 	margin: 0px var(--regular-margin);
 }
@@ -2014,8 +2076,9 @@ span#guestTips {
     padding: 5px 10px;
     background: rgba(0, 0, 0, .5);
 	pointer-events:none;
-    font-size: 4vh;
+    font-size: 1em;
 }
+
 
 .video-label.zoom {
 	position: absolute;
@@ -2026,7 +2089,6 @@ span#guestTips {
     padding: 5px 10px;
     background: rgba(0, 0, 0, .5);
 	pointer-events:none;
-    font-size: 4vh;
 }
 
 .video-label.teams {
@@ -2038,7 +2100,6 @@ span#guestTips {
     padding: 5px 10px;
     background: rgba(0, 0, 0, .4);
 	pointer-events:none;
-	font-size: 4vh;
 	border-radius: 5px;
 }
 
@@ -2052,8 +2113,8 @@ span#guestTips {
     padding: 5px 10px;
     background: rgba(0, 0, 0, .8);
 	pointer-events:none;
-	font-size: 4vh;
 	border-radius: 5px;
+	font-size: 0.8em;
 }
 
 .video-label.ninjablue {
@@ -2062,7 +2123,6 @@ span#guestTips {
     left: 0;
     background: #141926;
     padding: 10px 5%;
-    font-size: 4vh;
 }
 
 .video-label.toprounded {
@@ -2071,7 +2131,6 @@ span#guestTips {
     bottom: unset;
     background: rgb(0 0 0 / 70%);
     padding: 10px 5%;
-    font-size: 4vh;
     left: 50%;
     transform: translateX(-50%);
     width: 50%;
@@ -2081,13 +2140,13 @@ span#guestTips {
     text-transform: uppercase;
     letter-spacing: 3;
     box-shadow: 0px 0px 10px #00000059;
+	font-size: 0.7em
 }
 
 .video-label.fire {
     color: #FFFFFF;
     text-shadow: 0 -1px 4px #FFF, 0 -2px 10px #ff0, 0 -10px 20px #ff8000, 0 -18px 40px #F00;
     font-weight: bold;
-    font-size: 5vh;
     position: absolute;
     bottom: 2vh;
     width: 100%;
@@ -2111,6 +2170,13 @@ span#guestTips {
 	cursor:pointer;
 }
 
+.iframeblob{
+	padding-top:18px;
+	text-align: left;
+    width: 600px;
+    display: block;
+    margin: auto;
+}
 #shareScreenGear{
 	display:none;
 }
@@ -2139,46 +2205,54 @@ span#guestTips {
     position: absolute;
 }
 
+.director-link-icons {
+	font-size: 1.5em;
+    float: left;
+    bottom: 4px;
+    position: relative;
+    margin-right: 9px;
+}
 
 .switch {
   position: relative;
-  display: inline-block;
+  margin:5px 5px 10px 5px;
   width: 40px;
   height: 24px;
-  margin:5px 5px 10px 5px;
   bottom:20px;
   border-radius: 2px;
+  display: inline-block;
 }
 
 .switch input {
-  opacity: 0;
   width: 0;
   height: 0;
+  opacity: 0;
 }
 
 .slider {
-  position: absolute;
   cursor: pointer;
   top: 0;
   left: 0;
   right: 0;
   bottom: 0;
   background-color: #ccc;
-  -webkit-transition: .4s;
-  transition: .4s;
+  -webkit-transition: .3s;
+  transition: .3s;
+  position: absolute;
 }
 
 .slider:before {
-  position: absolute;
   content: "";
   height: 17px;
   width: 17px;
   left: 3px;
   bottom: 3px;
   background-color: white;
-  -webkit-transition: .4s;
-  transition: .4s;
+  -webkit-transition: .3s;
+  transition: .3s;
+  position: absolute;
 }
+
 input:checked + .slider {
   background-color: #86b98f;
 }
