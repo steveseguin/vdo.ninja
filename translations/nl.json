@@ -84,7 +84,16 @@
     "shift-this-video-up-in-order": "Schuif deze video hoger in orde",
     "remote-audio-settings": "Audio instellingen op afstand",
     "advanced-video-settings": "Geavanceerde instellingen van video",
-    "activate-or-reload-this-video-device-": "Activeer of herlaadt deze video bron."
+    "activate-or-reload-this-video-device-": "Activeer of herlaadt deze video bron.",
+    "create-a-seconary-stream": "Create a Seconary Stream",
+    "the-director-will-be-visible-in-scenes-as-if-a-performer-themselves-": "The director will be visible in scenes, as if a performer themselves.",
+    "useful-if-you-want-to-perform-and-direct-at-the-same-time": "Useful if you want to perform and direct at the same time",
+    "start-streaming": "start streaming",
+    "if-disabled-the-invited-guest-will-not-be-able-to-see-or-hear-anyone-in-the-room-": "If disabled, the invited guest will not be able to see or hear anyone in the room.",
+    "if-disabled-you-must-manually-add-a-video-to-a-scene-for-it-to-appear-": "If disabled, you must manually add a video to a scene for it to appear.",
+    "toggle-solo-voice-chat": "Toggle Solo Voice Chat",
+    "toggle-the-remote-guest-s-speaker-output": "Toggle the remote guest's speaker output",
+    "toggle-the-remote-guest-s-display-output": "Toggle the remote guest's display output"
   },
   "innerHTML": {
     "logo-header": "<font id=\"qos\" style=\"color: white;\">O</font>BS Ninja",
@@ -178,7 +187,10 @@
     "record-remote": " Opname remote",
     "order-down": "<i class=\"las la-minus\"></i>",
     "order-up": "<i class=\"las la-plus\"></i>",
-    "advanced-audio-settings": "<i class=\"las la-sliders-h\"></i> Audio instellingen"
+    "advanced-audio-settings": "<i class=\"las la-sliders-h\"></i> Audio instellingen",
+    "scenes-can-see-director": "Director will also be a performer",
+    "toggle-remote-speaker": "Deafen Guest",
+    "toggle-remote-display": "Blind Guest"
   },
   "placeholders": {
     "join-by-room-name-here": "Ga binnen met een kamer naam",
