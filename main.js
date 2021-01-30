@@ -1,7 +1,11 @@
 /*
- *  Copyright (c) 2020 Steve Seguin. All Rights Reserved.
- *
- */
+*  Copyright (c) 2020 Steve Seguin. All Rights Reserved.
+*
+*  Use of this source code is governed by the APGLv3 open-source license
+*  that can be found in the LICENSE file in the root of the source
+*  tree. Alternative licencing options can be made available on request.
+*
+*/
 /*jshint esversion: 6 */
 
 var formSubmitting = true;
@@ -47,17 +51,18 @@ if ( parent && (window.location !== window.parent.location )) {
 }
 
 function changeParam(url, paramName, paramValue) {
+	paramName = paramName.replace("?", "");
 	var qind = url.indexOf('?');
+	url = url.replace("?", "&");
 	var params = url.substring(qind + 1).split('&');
 	var query = '';
 	var match = false;
 	for (var i = 0; i < params.length; i++) {
 		var tokens = params[i].split('=');
 		var name = tokens[0];
+		var value = "";
 		if (tokens.length > 1 && tokens[1] !== '') {
-			var value = tokens[1];
-		} else {
-			value = "";
+			value = tokens[1];
 		}
 
 		if (name == paramName) {
@@ -81,47 +86,43 @@ function changeParam(url, paramName, paramValue) {
 }
 
 function updateURL(param, force = false, cleanUrl = false) {
+	param = param.replace("?", "");
 	var para = param.split('=');
 	if (cleanUrl) {
 		if (history.pushState) {
 			var href = new URL(cleanUrl);
 			if (para.length == 1) {
-				href = changeParam(cleanUrl, para[0], "")
+				href = changeParam(cleanUrl, para[0], "");
 			} else {
 				href = changeParam(cleanUrl, para[0], para[1]);
 			}
 			log("--" + href.toString());
-			window.history.pushState({
-				path: href.toString()
-			}, '', href.toString());
+			window.history.pushState({path: href.toString()}, '', href.toString());
 		}
 	} else if (!(urlParams.has(para[0]))) { // don't need to replace as it doesn't exist.
 		if (history.pushState) {
-			var arr = window.location.href.split('?');
+			var href = window.location.href;
+			href = href.replace("??", "?");
+			var arr = href.split('?');
 			var newurl;
 			if (arr.length > 1 && arr[1] !== '') {
-				newurl = window.location.href + '&' + param;
+				newurl = href + '&' + param;
 			} else {
-				updateURL
-				newurl = window.location.href + '?' + param;
+				newurl = href + '?' + param;
 			}
 
-			window.history.pushState({
-				path: newurl.toString()
-			}, '', newurl.toString());
+			window.history.pushState({path: newurl.toString()}, '', newurl.toString());
 		}
 	} else if (force) {
 		if (history.pushState) {
 			var href = new URL(window.location.href);
 			if (para.length == 1) {
-				href = changeParam(window.location.href, para[0], "")
+				href = changeParam(window.location.href, para[0], "");
 			} else {
 				href = changeParam(window.location.href, para[0], para[1]);
 			}
 			log("---" + href.toString());
-			window.history.pushState({
-				path: href.toString()
-			}, '', href.toString());
+			window.history.pushState({path: href.toString()}, '', href.toString());
 		}
 	}
 	if (session.sticky) {
@@ -133,6 +134,7 @@ function updateURL(param, force = false, cleanUrl = false) {
 var filename = false;
 try {
 	filename = window.location.pathname.substring(window.location.pathname.lastIndexOf('/') + 1);
+	filename = filename.replace("??", "?");
 	filename2 = filename.split("?")[0];
 	// split at ???
 	if (filename.split(".").length == 1) {
@@ -150,9 +152,7 @@ try {
 				tmpHref = tmpHref + "/?" + filename;
 				filename = false;
 				//alert("Please ensure your URL is correctly formatted.");
-				window.history.pushState({
-					path: tmpHref.toString()
-				}, '', tmpHref.toString());
+				window.history.pushState({path: tmpHref.toString()}, '', tmpHref.toString());
 			}
 		} else {
 			filename = filename2.split("&")[0];
@@ -172,6 +172,7 @@ try {
 (function(w) {
 	w.URLSearchParams = w.URLSearchParams || function(searchString) {
 		var self = this;
+		searchString = searchString.replace("??", "?");
 		self.searchString = searchString;
 		self.get = function(name) {
 			var results = new RegExp('[\?&]' + name + '=([^&#]*)').exec(self.searchString);
@@ -184,7 +185,16 @@ try {
 	};
 
 })(window);
-var urlParams = new URLSearchParams(window.location.search);
+
+var urlEdited = window.location.search.replace(/\?\?/g, "?");
+urlEdited = urlEdited.replace(/\?/g, "&");
+urlEdited = urlEdited.replace(/\&/, "?");
+
+if (urlEdited !== window.location.search){
+	warnlog(window.location.search + " changed to " + urlEdited);
+	window.history.pushState({path: urlEdited.toString()}, '', urlEdited.toString());
+}
+var urlParams = new URLSearchParams(urlEdited);
 
 var sanitizeStreamID = function(streamID) {
 	streamID = streamID.trim();
@@ -219,7 +229,7 @@ var checkStrength = function(string) {
 	} else {
 		return false;
 	}
-}
+};
 
 var checkStrengthRoom = function() {
 	var result1 = checkStrength(getById('videoname1').value);
@@ -235,7 +245,7 @@ var checkStrengthRoom = function() {
 	} else {
 		target.innerHTML = "<font style='color:red'>Insecure room name.</font> Allowed chars: <i>A-Z, a-z, 0-9, _</i>";
 	}
-}
+};
 
 var sanitizeChat = function(string) {
 	var temp = document.createElement('div');
@@ -244,12 +254,12 @@ var sanitizeChat = function(string) {
 	temp = temp.textContent || temp.innerText || "";
 	temp = temp.substring(0, Math.min(temp.length, 500));
 	return temp.trim();
-}
+};
 
 var sanitizeString = function(str) {
 	str = str.replace(/[^a-z0-9áéíóúñü \.,_-]/gim, "");
 	return str.trim();
-}
+};
 
 var sanitizeLabel = function(string) {
 	let temp = document.createElement("div");
@@ -257,8 +267,8 @@ var sanitizeLabel = function(string) {
 	temp.innerText = temp.innerHTML;
 	temp = temp.textContent || temp.innerText || "";
 	temp = temp.substring(0, Math.min(temp.length, 50));
-	return temp.trim()
-}
+	return temp.trim();
+};
 
 var sanitizeRoomName = function(roomid) {
 	roomid = roomid.trim();
@@ -312,8 +322,9 @@ function getChromeVersion() {
 }
 
 function safariVersion() {
+	var ver = 0;
 	try {
-		var ver = navigator.appVersion.split("Version/");
+		ver = navigator.appVersion.split("Version/");
 		if (ver.length > 1) {
 			ver = ver[1].split(" Safari");
 		}
@@ -405,7 +416,7 @@ window.onload = function winonLoad() { // This just keeps people from killing th
 				session.videoElement.recorder.writer.close();
 				session.videoElement.recording = false;
 			}
-			for (i in session.rpcs) {
+			for (var i in session.rpcs) {
 				if (session.rpcs[i].videoElement) {
 					if (session.rpcs[i].videoElement.recording) {
 						session.rpcs[i].videoElement.recorder.writer.close();
@@ -512,21 +523,21 @@ function makeDraggableElement(elmnt) {
 		elmnt.style.cursor = "grab";
 		elmnt.stashonmouseup = null;
 		elmnt.stashonmousemove = null;
-
+		
 	} catch (e) {
+		errorlog(e);
 		return;
-	};
+	}
 
-	var pos1 = 0
-		, pos2 = 0
-		, pos3 = 0
-		, pos4 = 0;
-	elmnt.onmousedown = dragMouseDown;
-
+	var pos1 = 0;
+	var pos2 = 0;
+	var pos3 = 0;
+	var pos4 = 0;
+	
 	function dragMouseDown(e) {
 		e = e || window.event;
 		e.preventDefault();
-
+		
 		pos3 = e.clientX;
 		pos4 = e.clientY;
 		elmnt.stashonmouseup = document.onmouseup; // I don't want to interfere with other drag events.
@@ -535,10 +546,11 @@ function makeDraggableElement(elmnt) {
 		document.onmouseup = closeDragElement;
 		document.onmousemove = elementDrag;
 	}
-
+	
 	function elementDrag(e) {
 		e = e || window.event;
 		e.preventDefault();
+		
 		elmnt.dragElement = true;
 		pos1 = pos3 - e.clientX;
 		pos2 = pos4 - e.clientY;
@@ -547,12 +559,14 @@ function makeDraggableElement(elmnt) {
 
 		var topDrag = (elmnt.offsetTop - pos2);
 		if (topDrag > -3) {
-			topDrag = -3
-		};
+			topDrag = -3;
+		}
 		elmnt.style.top = topDrag + "px";
 		elmnt.style.left = (elmnt.offsetLeft - pos1) + "px";
+		
 	}
-
+	
+	elmnt.onmousedown = dragMouseDown;
 	function closeDragElement() {
 		document.onmouseup = elmnt.stashonmouseup;
 		document.onmousemove = elmnt.stashonmousemove;
@@ -607,7 +621,6 @@ if (urlParams.has('sticky')) {
 	}
 }
 
-
 if (urlParams.has('retrytimeout')) {
 	session.retryTimeout = parseInt(urlParams.get('retrytimeout'));
 }
@@ -649,7 +662,8 @@ if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(naviga
 	session.audioEffects = false; // disable audio inbound effects also.
 	session.audioMeterGuest = false;
 } else {
-	makeDraggableElement(document.getElementById("subControlButtons"));
+	log("MAKE DRAGGABLE");
+	setTimeout(function(){makeDraggableElement(document.getElementById("subControlButtons"));},100);
 }
 
 
@@ -659,7 +673,7 @@ if (/CriOS/i.test(navigator.userAgent) && (iOS || iPad)) {
 			navigator.mediaDevices.getUserMedia;
 		} catch (e) {
 			alert("Chrome on this device does not support the required technology to use this site.\n\nPlease use Safari instead or update your iOS and browser version.");
-		};
+		}
 	}
 }
 
@@ -677,8 +691,8 @@ if (urlParams.has('broadcast') || urlParams.has('bc')) {
 }
 
 var directorLanding = false;
-if (urlParams.has('director')) {
-	directorLanding = urlParams.get('director');
+if (urlParams.has('director') || urlParams.has('dir')) {
+	directorLanding = urlParams.get('director') || urlParams.get('dir');
 	if (directorLanding === null) {
 		directorLanding = true;
 	} else if (directorLanding.length === 0) {
@@ -697,7 +711,8 @@ if (urlParams.has('showdirector')) {
 }
 
 if (urlParams.has('midi') || urlParams.has('hotkeys')) {
-	session.midiHotkeys = true;
+	session.midiHotkeys = urlParams.get('midi') || urlParams.get ('hotkeys') || 1;
+	session.midiHotkeys = parseInt(session.midiHotkeys);
 }
 var loadedQRCode = false;
 function loadQR(){
@@ -1020,7 +1035,7 @@ if (urlParams.has('mono')) {
 
 if (urlParams.has("channelcount") || urlParams.has("ac")) {
 	session.audioInputChannels = urlParams.get('channelcount') || urlParams.get('ac');
-	session.audioInputChannels == parseInt(session.audioInputChannels);
+	session.audioInputChannels = parseInt(session.audioInputChannels);
 	if (!session.audioInputChannels) {
 		session.audioInputChannels = false;
 	}
@@ -1803,7 +1818,7 @@ if (urlParams.has('sink')) {
 						if (deviceInfos[i].label.replace(/[\W]+/g, "_").toLowerCase().includes(session.outputDevice)) {
 							session.sink = deviceInfos[i].deviceId;
 							log("AUDIO OUT DEVICE: " + deviceInfos[i].deviceId);
-							break
+							break;
 						}
 					}
 				}
@@ -2032,7 +2047,7 @@ if (urlParams.has('samplerate') || urlParams.has('sr')) {
 	}
 	session.audioCtx = new AudioContext({ // create a new audio context with a higher sample rate. 
 		sampleRate: session.sampleRate
-	})
+	});
 	session.audioEffects = true;
 }
 
@@ -2057,26 +2072,26 @@ if (urlParams.has('turn')) {
 
 				session.configuration = {
 					iceServers: [{
-							"username": res["1"]
-							, "credential": res["2"]
-							, "url": "turn:global.turn.twilio.com:3478?transport=tcp"
-							, "urls": "turn:global.turn.twilio.com:3478?transport=tcp"
+							"username": res["1"],
+							"credential": res["2"],
+							"url": "turn:global.turn.twilio.com:3478?transport=tcp",
+							"urls": "turn:global.turn.twilio.com:3478?transport=tcp"
+						},
+						{
+							"username": res["1"],
+							"credential": res["2"],
+							"url": "turn:global.turn.twilio.com:443?transport=tcp",
+							"urls": "turn:global.turn.twilio.com:443?transport=tcp"
 						}
-						, {
-							"username": res["1"]
-							, "credential": res["2"]
-							, "url": "turn:global.turn.twilio.com:443?transport=tcp"
-							, "urls": "turn:global.turn.twilio.com:443?transport=tcp"
-						}
-					]
-					, sdpSemantics: 'unified-plan' // future-proofing
+					],
+					sdpSemantics: 'unified-plan' // future-proofing
 				};
 			}
 		} catch (e) {
 			errorlog("Twilio Failed");
 		}
 
-	} else if ((turnstring == "false") || (turnstring == "off")) { // disable TURN servers
+	} else if ((turnstring == "false") || (turnstring == "off") || (turnstring == "0")) { // disable TURN servers
 		session.configuration.iceServers = [{
 			urls: ["stun:stun.l.google.com:19302", "stun:stun4.l.google.com:19302"]
 		}];
@@ -2133,6 +2148,10 @@ if (urlParams.has('wss')) {
 	}
 }
 
+if (urlParams.has('queue')) {
+	session.queue = true;
+}
+
 window.onmessage = function(e) { // iFRAME support
 	log(e);
 	try {
@@ -2146,7 +2165,7 @@ window.onmessage = function(e) { // iFRAME support
 			} else if (e.data.function === "publishScreen") {
 				ret = publishScreen();
 			} else if (e.data.function === "eval") {
-				eval(e.data.value);
+				eval(e.data.value); // eval == evil ; feedback welcomed
 			}
 		}
 	} catch (err) {
@@ -2249,7 +2268,7 @@ window.onmessage = function(e) { // iFRAME support
 
 				msg.UUID = UUID;
 				session.sendRequest(msg, UUID);
-				bundle.sceneUpdate.push(msg)
+				bundle.sceneUpdate.push(msg);
 			}
 		}
 		session.sendRequest(bundle); // we want all publishing peers to know the state
@@ -2264,7 +2283,7 @@ window.onmessage = function(e) { // iFRAME support
 	}
 
 	if ("sendPeers" in e.data) { // webrtc send message to every connected peer; like send and request; a hammer vs a knife.
-		session.sendPeers(e.data)
+		session.sendPeers(e.data);
 	}
 
 	if ("reload" in e.data) {
@@ -2394,7 +2413,7 @@ window.onmessage = function(e) { // iFRAME support
 			session.manual = false;
 			try {
 				updateMixer();
-			} catch (e) {};
+			} catch (e) {}
 		} else if (e.data.automixer == false) {
 			session.manual = true;
 		}
@@ -2508,9 +2527,9 @@ function jumptoroom(event = null) {
 		}
 
 		if (arr.length > 1 && arr[1] !== '') {
-			window.location += "&room=" + roomname + passStr
+			window.location += "&room=" + roomname + passStr;
 		} else {
-			window.location += "?room=" + roomname + passStr
+			window.location += "?room=" + roomname + passStr;
 		}
 	}
 }
@@ -2726,17 +2745,7 @@ function drawFace() {
 				xxx = 0;
 			}
 
-			ctx.drawImage(
-				vid
-				, xxx
-				, yyy
-				, www
-				, hhh
-				, 0
-				, 0
-				, vid.videoWidth
-				, vid.videoHeight
-			);
+			ctx.drawImage(vid, xxx, yyy, www, hhh, 0, 0, vid.videoWidth, vid.videoHeight);
 
 			setTimeout(function() {
 				draw();
@@ -2765,7 +2774,7 @@ if (urlParams.has('permaid') || urlParams.has('push')) {
 		updateURL("push=" + session.streamID, true, false); // I'm not deleting the permaID first tho...
 	}
 
-	if (urlParams.has('director')) { // if I do a short form of this, it will cause duplications in the code elsewhere.
+	if (urlParams.has('director') || urlParams.has('dir')) { // if I do a short form of this, it will cause duplications in the code elsewhere.
 		//var director_room_input = urlParams.get('director');
 		//director_room_input = sanitizeRoomName(director_room_input);
 		//createRoom(director_room_input);
@@ -2908,9 +2917,9 @@ if ((session.roomid) || (urlParams.has('roomid')) || (urlParams.has('r')) || (ur
 		}
 	}
 
-} else if (urlParams.has('director')) { // if I do a short form of this, it will cause duplications in the code elsewhere.
+} else if (urlParams.has('director') || urlParams.has('dir')) { // if I do a short form of this, it will cause duplications in the code elsewhere.
 	if (directorLanding == false) {
-		var director_room_input = urlParams.get('director');
+		var director_room_input = urlParams.get('director') || urlParams.get('dir');
 		director_room_input = sanitizeRoomName(director_room_input);
 		log("director_room_input:" + director_room_input);
 		createRoom(director_room_input);
@@ -3246,6 +3255,7 @@ function toggleMute(apply = false) { // TODO: I need to have this be MUTE, toggl
 		session.muted = !session.muted;
 	}
 	//try{var ptt = getById("press2talk");} catch(e){var ptt=false;}
+	
 
 	if (session.muted == false) {
 		session.muted = true;
@@ -3272,6 +3282,10 @@ function toggleMute(apply = false) { // TODO: I need to have this be MUTE, toggl
 		//if (ptt){
 		//	ptt.innerHTML = "<span data-translate='Push-to-Mute'>🔴 Push to Mute</span>";
 		//}
+	}
+	
+	if (document.getElementById("screensharesource")){
+		document.getElementById("screensharesource").contentWindow.postMessage({"mic":!session.muted}, '*');
 	}
 
 	if (!apply) { // only if they are changing states do we bother to spam.
@@ -3904,6 +3918,9 @@ function directVolume(ele) { // A directing room only is controlled by the Direc
 	session.sendMsg(msg); // send to everyone in the room, so they know if they are on air or not.
 }
 
+function remoteVolumeUI(ele){
+	ele.nextSibling.innerHTML = ele.value;
+}
 
 function remoteVolume(ele) { // A directing room only is controlled by the Director, with the exception of MUTE.
 	log("volume");
@@ -4595,8 +4612,7 @@ function activeSpeaker() {
 function randomizeArray(unshuffled) {
 
 	var arr = unshuffled.map((a) => ({
-		sort: Math.random()
-		, value: a
+		sort: Math.random(), value: a
 	})).sort((a, b) => a.sort - b.sort).map((a) => a.value); // shuffle once
 
 	for (var i = arr.length - 1; i > 0; i--) { // shuffle twice
@@ -4637,10 +4653,20 @@ function joinRoom(roomname) {
 							} else {
 								log(response[i].streamID);
 								var streamID = session.desaltStreamID(response[i].streamID);
-								log("STREAM ID DESALTED 3: " + streamID);
-								setTimeout(function(sid) {
-									play(sid);
-								}, (Math.floor(Math.random() * 100)), streamID); // add some furtherchance with up to 100ms added latency							
+								if (session.queue){
+									if (session.directorUUID === response[i].UUID){
+										play(streamID);
+									} else if (session.queueList.length<5000){
+										if (!session.queueList.includes(streamID)){
+											session.queueList.push(streamID);
+										}
+									}
+								} else {
+									log("STREAM ID DESALTED 3: " + streamID);
+									setTimeout(function(sid) {
+										play(sid);
+									}, (Math.floor(Math.random() * 100)), streamID); // add some furtherchance with up to 100ms added latency			
+								}	
 							}
 						}
 					}
@@ -4654,13 +4680,24 @@ function joinRoom(roomname) {
 							} else {
 								log(response[i].streamID);
 								var streamID = session.desaltStreamID(response[i].streamID);
-								log("STREAM ID DESALTED 3: " + streamID);
-								play(streamID); // play handles the group room mechanics here
+								if (session.queue){
+									if (session.directorUUID === response[i].UUID){
+										play(streamID);
+									} else if (session.queueList.length<5000){
+										if (!session.queueList.includes(streamID)){
+											session.queueList.push(streamID);
+										}
+									}
+								} else {
+									log("STREAM ID DESALTED 3: " + streamID);
+									play(streamID); // play handles the group room mechanics here
+								}
 							}
 						}
 					}
 				}
 			}
+			session.updateQueue();
 		}, function(error) {
 			return {};
 		});
@@ -4674,8 +4711,13 @@ function createRoom(roomname = false) {
 	if (roomname == false) {
 		roomname = getById("videoname1").value;
 		roomname = sanitizeRoomName(roomname);
+		
 		if (roomname.length != 0) {
-			updateURL("director=" + roomname, true, false); // make the link reloadable.
+			if (urlParams.has('dir')){
+				updateURL("dir=" + roomname, true, false); // make the link reloadable.
+			} else {
+				updateURL("director=" + roomname, true, false); // make the link reloadable.
+			}
 		}
 	}
 	if (roomname.length == 0) {
@@ -4867,6 +4909,9 @@ function createRoomCallback(passAdd, passAdd2) {
 	getById("guestFeeds").style.display = "";
 
 	if (!(session.cleanOutput)) {
+		if (session.queue){
+			getById("queuebutton").classList.remove("advanced");
+		}
 		getById("chatbutton").classList.remove("advanced");
 		getById("controlButtons").style.display = "inherit";
 		getById("mutespeakerbutton").classList.remove("advanced");
@@ -6007,7 +6052,9 @@ function gotDevices2(deviceInfos) {
 						}
 					} else {
 						item.checked = true;
-						if (SelectedAudioInputDevices.indexOf(event.currentTarget.value) > -1) {} else {
+						if (SelectedAudioInputDevices.indexOf(event.currentTarget.value) > -1) {
+							//
+						} else {
 							SelectedAudioInputDevices.push(event.currentTarget.value);
 						}
 					}
@@ -6048,7 +6095,9 @@ function gotDevices2(deviceInfos) {
 		audioInputSelect.onchange = function() {
 			log("Audio OPTION HAS CHANGED? 2");
 			activatedPreview = false;
-			grabAudio("videosource", "#audioSource3");
+			setTimeout(function(){
+				grabAudio("videosource", "#audioSource3");
+			},10)
 		};
 		videoSelect.onchange = function(event) {
 			try {
@@ -6439,7 +6488,6 @@ function reconnectDevices(event) { ///  TODO: Perhaps change this to only if the
 				errorlog(videoSelect.value);
 
 				if (videoSelect.value == "ZZZ") {
-					//errorlog(videoSelect.options)
 					for (var i = 0; i < videoSelect.options.length; i++) {
 						try {
 							if (videoSelect.options[i].innerHTML == lastVideoDevice) {
@@ -6495,7 +6543,7 @@ function resetupAudioOut() {
 						session.rpcs[uuid].videoElement.play().then(() => {
 							log("toggle pause/play");
 						});
-					}, 0, UUID)
+					}, 0, UUID);
 
 				});
 			}
@@ -7106,8 +7154,8 @@ async function grabVideo(quality = 0, eleName = 'previewWebcam', selector = "sel
 		}
 
 		var constraints = {
-			audio: false
-			, video: getUserMediaVideoParams(quality, iOS)
+			audio: false,
+			video: getUserMediaVideoParams(quality, iOS)
 		};
 
 		log("Quality selected:" + quality);
@@ -7805,7 +7853,7 @@ function listAudioSettingsPrep() {
 			trackSet.lowcut = false;
 		}
 
-		data.push(trackSet)
+		data.push(trackSet);
 	}
 	return data;
 }
@@ -9280,7 +9328,7 @@ function setupWebcamSelection(stream = null) {
 
 		}).catch(e => {
 			errorlog(e);
-		})
+		});
 	} catch (e) {
 		errorlog(e);
 	}
@@ -9294,8 +9342,7 @@ Promise.wait = function(ms) {
 
 Promise.prototype.timeout = function(ms) {
 	return Promise.race([
-		this
-		, Promise.wait(ms).then(function() {
+		this, Promise.wait(ms).then(function() {
 			var errormsg = new Error("Time Out\nDid you accept camera permissions in time? Please do so first.\n\nOtherwise, do you have NDI Tools installed? Maybe try uninstalling it.\n\nPlease also ensure your camera and audio device are correctly connected and not already in use. You may also need to refresh the page.");
 			errormsg.name = "timedOut";
 			errormsg.message = "Time Out\nDid you accept camera permissions in time? Please do so first.\n\nOtherwise, do you have NDI Tools installed? Maybe try uninstalling it.\n\nPlease also ensure your camera and audio device are correctly connected and not already in use. You may also need to refresh the page."
@@ -9374,10 +9421,17 @@ function createIframePopup() {
 	if (session.password) {
 		pass = "&password=" + session.password; // encodeURIComponent(
 	}
-	iframe.src = "./?screenshare&transparent&cleanoutput&noheader&ad=0&autostart&view&room=" + session.roomid + "&push=" + iFrameID + pass;
+	
+	if (session.muted){
+		iframe.src = "./?screenshare&transparent&cleanoutput&noheader&autostart&view&muted&room=" + session.roomid + "&push=" + iFrameID + pass;
+	} else {
+		iframe.src = "./?screenshare&transparent&cleanoutput&noheader&autostart&view&room=" + session.roomid + "&push=" + iFrameID + pass;
+	}
+	
 	iframe.style.width = "100%";
 	iframe.style.height = "100%";
 	iframe.style.overflow = "hidden";
+	iframe.id = "screensharesource";
 
 	//iframeContainer.appendChild(iframe);
 
@@ -9394,117 +9448,12 @@ function createIframePopup() {
 	getById("screenshare2button").classList.remove("float");
 
 	return; // ignore the rest.
-
-	try {
-		iframeContainer.dragElement = false;
-		//iframeContainer.style.bottom = "auto";
-		button1.style.cursor = "grab";
-		button1.stashonmouseup = null;
-		button1.stashonmousemove = null;
-
-	} catch (e) {
-		return;
-	};
-
-	var pos1 = 0
-		, pos2 = 0
-		, pos3 = 0
-		, pos4 = 0;
-	button1.onmousedown = dragMouseDown;
-
-	var w = window.innerWidth;
-	var h = window.innerHeight;
-
-	function dragMouseDown(e) {
-		e = e || window.event;
-		e.preventDefault();
-
-		pos3 = e.clientX;
-		pos4 = e.clientY;
-		button1.stashonmouseup = document.onmouseup; // I don't want to interfere with other drag events.
-		button1.stashonmousemove = document.onmousemove;
-
-		document.onmouseup = closeDragElement;
-		document.onmousemove = elementDrag;
-	}
-
-	function elementDrag(e) {
-
-		e = e || window.event;
-		e.preventDefault();
-
-		try {
-			if (("buttons" in e) && e.buttons !== 1) {
-				closeDragElement();
-				//document.onmouseup = null;
-				//document.onmousemove = null;
-				return;
-			}
-		} catch (e) {}
-
-		iframeContainer.dragElement = true;
-		pos1 = pos3 - e.clientX;
-		pos2 = pos4 - e.clientY;
-		pos3 = e.clientX;
-		pos4 = e.clientY;
-
-
-		//log(button1.offsetTop +" "+ button1.offsetLeft +" "+ button1.offsetHeight +" "+ button1.offsetWidth +" "+ pos2+" "+pos1 );
-		//if (Math.abs(pos1)>350){
-		//	 closeDragElement()
-		//	 return;
-		//} else if (Math.abs(pos2)>350){
-		//	 closeDragElement()
-		//	 return;
-		//}
-		/////////
-
-		var topDrag = (iframeContainer.offsetTop - pos2);
-		var botDrag = window.innerHeight - (iframeContainer.offsetTop + 40);
-
-		if (topDrag < -15) {
-			closeDragElement();
-			topDrag = -5
-		};
-		if (botDrag < -10) {
-			closeDragElement();
-			topDrag = window.innerHeight - 40
-		};
-
-		/////
-
-		var leftDrag = (iframeContainer.offsetLeft - pos1);
-		var rightDrag = window.innerWidth - (iframeContainer.offsetLeft + button1.offsetWidth);
-
-		//log(rightDrag);
-
-		if (leftDrag < -10) {
-			closeDragElement();
-			leftDrag = 0
-		};
-		if (rightDrag < -10) {
-			closeDragElement();
-			leftDrag = window.innerWidth - button1.offsetWidth
-		};
-
-		///////////
-
-		iframeContainer.style.top = topDrag + "px";
-		iframeContainer.style.left = (leftDrag) + "px";
-
-	}
-
-	function closeDragElement() {
-		document.onmouseup = null;
-		document.onmousemove = null;
-	}
 }
 
 function previewWebcam() {
 
-
 	if (session.taintedSession === null) {
-		log("STILL WAITING ON HASH TO VALIDATE")
+		log("STILL WAITING ON HASH TO VALIDATE");
 		setTimeout(function() {
 			previewWebcam();
 		}, 1000);
@@ -9557,33 +9506,28 @@ function previewWebcam() {
 		constraint.video = true;
 	}
 
-	//	try {
-	//		var autoPlayAllowed = false;
-	//		log("trying to play video");
-	//		
-	//		var vid = document.createElement('video');
-	//		vid.src = ""; // we need this.play();
-	//		playPromise = vid.play();
-	//		// In browsers that don’t yet support this functionality,
-	//		// playPromise won’t be defined.
-	//		if (playPromise !== undefined) {
-	//			getById("getPermissions").style.display="";
-	//			getById("gowebcam").style.display="none";
-	//			//activatedPreview=false;
-	//			log("checking promise");
-	//			log(playPromise);
-	//			playPromise.catch(function(error) {
-	//				if (error.name !== 'NotAllowedError') {
-	//					autoPlayAllowed=true;
-	//					log("PROMISE GOOD");
-	//				}
-	//			}).finally(function() {
-	//				log("FINALLY ");
-	//				delete vid;
-	//				if (autoPlayAllowed) { /////// GOOD //////
-	//						log("ALLOWED TO PLAY");
-	//						getById("gowebcam").style.display="";
-	//						getById("getPermissions").style.display="none";
+	if ((constraint.video === false) && (constraint.audio === false)){
+		
+		if (session.autostart) {
+			publishWebcam(); // no need to mirror as there is no video...
+			return;
+		} else {
+			var gowebcam = document.getElementById("gowebcam");
+			getById("getPermissions").style.display = "none";
+			if (gowebcam) {
+				gowebcam.style.display = "";
+				gowebcam.disabled = false;
+				gowebcam.dataset.ready = "true";
+				gowebcam.style.backgroundColor = "#3C3";
+				gowebcam.style.color = "black";
+				gowebcam.style.fontWeight = "bold";
+				gowebcam.innerHTML = "START";
+				miniTranslate(gowebcam, "start");
+			}
+		}
+		return;
+	}
+
 	enumerateDevices().then(function(devices) {
 		log("enumeratated");
 		log(devices);
@@ -9611,44 +9555,7 @@ function previewWebcam() {
 			requestBasicPermissions(constraint);
 		}, 0, constraint);
 	});
-	//						return;
-	//					
-	//				} else {
-	//					// BUTTON.
-	//					log("NOT ALLOWED TO CONTINUE -");
-	//				}
-	//			});
-	//		} else {
-	//			delete vid;
-	//			enumerateDevices().then(function(devices){
-	//				log("enumeratated");
-	//				log(devices);
-	//				var vtrue = false;
-	//				var atrue = false;
-	//				devices.forEach(function(device) {
-	//					if (device.kind === 'audioinput'){
-	//						atrue=true;
-	//					} else if (device.kind === 'videoinput'){
-	//						vtrue = true;
-	//					}
-	//				});
-	//				if (atrue===false){
-	//					constraint.audio = false;
-	//				} 
-	//				if (vtrue===false){
-	//					constraint.video = false;
-	//				}
-	//				setTimeout(function(constraint){requestBasicPermissions(constraint);},0,constraint);
-	//			}).catch((error)=>{
-	//				log("enumeratated failed. Seeking permissions.");
-	//				setTimeout(function(constraint){requestBasicPermissions(constraint);},0,constraint);
-	//			});
-	//		}
-	//		
-	//	} catch(e){
-	//		setTimeout(function(constraint){requestBasicPermissions(constraint);},0,constraint);
-	//		errorlog(e);
-	//	}
+	
 }
 
 function requestBasicPermissions(constraint = {
@@ -9656,7 +9563,7 @@ function requestBasicPermissions(constraint = {
 	, audio: true
 }) {
 	if (session.taintedSession === null) {
-		log("STILL WAITING ON HASH TO VALIDATE")
+		log("STILL WAITING ON HASH TO VALIDATE");
 		setTimeout(function(constraint) {
 			requestBasicPermissions(constraint);
 		}, 1000, constraint);
@@ -10460,7 +10367,7 @@ function getChatMessage(msg, label = false, director = false, overlay = false) {
 	}
 
 	if (label) {
-		label = sanitizeLabel(label)
+		label = sanitizeLabel(label);
 	}
 
 	data = {};
@@ -10614,7 +10521,7 @@ function updateMessages() {
 	}
 	document.getElementById("chatBody").scrollTop = document.getElementById("chatBody").scrollHeight;
 	chatUpdateTimeout = setTimeout(function() {
-		updateMessages()
+		updateMessages();
 	}, 60000);
 }
 
@@ -10759,10 +10666,7 @@ function recordVideo(target, event, videoKbps = false) { // event.currentTarget,
 		return;
 	}
 
-	const {
-		readable
-		, writable
-	} = new TransformStream({
+	const {readable, writable} = new TransformStream({
 		transform: (chunk, ctrl) => chunk.arrayBuffer().then(b => ctrl.enqueue(new Uint8Array(b)))
 	});
 	readable.pipeTo(streamSaver.createWriteStream(filename + '.webm'));
@@ -10952,7 +10856,8 @@ function updateLocalRecordButton(UUID, recorder) {
 	}
 }
 
-function recordLocalVideoToggle(ele) {
+function recordLocalVideoToggle() {
+	var ele = getById("recordLocalbutton");
 	if (ele.dataset.state == "0") {
 		ele.dataset.state = "1";
 		ele.style.backgroundColor = "red";
@@ -11103,10 +11008,7 @@ function recordLocalVideo(action = null, videoKbps = 6000) { // event.currentTar
 		return;
 	}
 
-	const {
-		readable
-		, writable
-	} = new TransformStream({
+	const {readable, writable} = new TransformStream({
 		transform: (chunk, ctrl) => chunk.arrayBuffer().then(b => ctrl.enqueue(new Uint8Array(b)))
 	});
 
@@ -11271,16 +11173,154 @@ if (session.midiHotkeys) {
 
 			for (var i = 0; i < WebMidi.inputs.length; i++) {
 				var input = WebMidi.inputs[i];
-
-				input.addListener('noteon', "all"
-					, function(e) {
+				if (session.midiHotkeys==1){
+					input.addListener('noteon', "all", function(e) {
 						log(e);
 						var note = e.note.name + e.note.octave;
-						if (note == "C4") {
+						if (note == "G3") {  // open and close the chat window
+							toggleChat();
+						} else if (note == "A3") { // mute your audio output
 							toggleMute();
+						} else if (note == "B3") { // mute your video output
+							toggleVideoMute();
+						} else if (note == "C4") { // enable / disable screenshare
+							toggleScreenShare();
+						} else if (note == "D4") { // completely kill your connection/session
+							hangup();
+						} else if (note == "E4") { // raise your hand; director sees this
+							raisehand();
+						} else if (note == "F4") { // start/stop local recording
+							recordLocalVideoToggle();
+						} else if (note == "G4") {  // Director Enables their Audio output
+							press2talk(true);
+						} else if (note == "A4") {  // Director cut's their audio/video output
+							hangup2();
 						}
-					}
-				);
+					});
+				} else if (session.midiHotkeys==2){
+					input.addListener('noteon', "all", function(e) {
+						log(e);
+						var note = e.note.name + e.note.octave;
+						if (note == "G1") {  // open and close the chat window
+							toggleChat();
+						} else if (note == "A1") { // mute your audio output
+							toggleMute();
+						} else if (note == "B1") { // mute your video output
+							toggleVideoMute();
+						} else if (note == "C2") { // enable / disable screenshare
+							toggleScreenShare();
+						} else if (note == "D2") { // completely kill your connection/session
+							hangup();
+						} else if (note == "E2") { // raise your hand; director sees this
+							raisehand();
+						} else if (note == "F2") { // start/stop local recording
+							recordLocalVideoToggle();
+						} else if (note == "G2") {  // Director Enables their Audio output
+							press2talk(true);
+						} else if (note == "A2") {  // Director cut's their audio/video output
+							hangup2();
+						}
+					});
+				} else if (session.midiHotkeys==3){
+					input.addListener('noteon', "all", function(e) {
+						log(e);
+						var note = e.note.name + e.note.octave;
+						var velocity = e.velocity;
+						if (note == "C1"){
+							if (velocity == "0") {  // open and close the chat window
+								toggleChat();
+							} else if (note == "1") { // mute your audio output
+								toggleMute();
+							} else if (note == "2") { // mute your video output
+								toggleVideoMute();
+							} else if (note == "3") { // enable / disable screenshare
+								toggleScreenShare();
+							} else if (note == "4") { // completely kill your connection/session
+								hangup();
+							} else if (note == "5") { // raise your hand; director sees this
+								raisehand();
+							} else if (note == "6") { // start/stop local recording
+								recordLocalVideoToggle();
+							} else if (note == "7") {  // Director Enables their Audio output
+								press2talk(true);
+							} else if (note == "8") {  // Director cut's their audio/video output
+								hangup2();
+							}
+						}
+					});
+				} else if (session.midiHotkeys==4){
+					
+					/* channel: 1
+					controller: {number: 110, name: undefined}
+					data: Uint8Array(3) [176, 110, 3]
+					target: Input {_userHandlers: {…}, _midiInput: MIDIInput, …}
+					timestamp: 98235.34000001382
+					type: "controlchange"
+					value: 3 */
+					
+					input.addListener('controlchange', "all", function(e) {
+						log(e);
+						var command = e.controller.number;
+						var value = e.value;
+						
+						if (command == 110){
+							if (value == 0) {  // open and close the chat window
+								toggleChat();
+							} else if (value == 1) { // mute your audio output
+								toggleMute();
+							} else if (value == 2) { // mute your video output
+								toggleVideoMute();
+							} else if (value == 3) { // enable / disable screenshare
+								toggleScreenShare();
+							} else if (value == 4) { // completely kill your connection/session
+								hangup();
+							} else if (value == 5) { // raise your hand; director sees this
+								raisehand();
+							} else if (value == 6) { // start/stop local recording
+								recordLocalVideoToggle();
+							} else if (value == 7) {  // Director Enables their Audio output
+								press2talk(true);
+							} else if (value == 8) {  // Director cut's their audio/video output
+								hangup2();
+							}
+						} else if (command > 110){
+							var guestslot = command-111;
+							if (value == 0) { 
+								var elements = document.querySelectorAll('[data-action-type="forward"][data--u-u-i-d]');
+								if (elements[guestslot]) {
+									directMigrate(elements[guestslot], true);
+								}
+							} else if (value == 1) { 
+								var elements = document.querySelectorAll('[data-action-type="addToScene"][data--u-u-i-d]');
+								if (elements[guestslot]) {
+									directEnable(elements[guestslot], true);
+								}
+							} else if (value == 2) { 
+								var elements = document.querySelectorAll('[data-action-type="mute-scene"][data--u-u-i-d]');
+								if (elements[guestslot]) {
+									directMute(elements[guestslot], true);
+								}
+							} else if (value == 3) { 
+								var elements = document.querySelectorAll('[data-action-type="mute-guest"][data--u-u-i-d]');
+								if (elements[guestslot]) {
+									directMute(elements[guestslot], true);
+								}
+							}  else if (value == 4) { 
+								var elements = document.querySelectorAll('[data-action-type="hangup"][data--u-u-i-d]');
+								if (elements[guestslot]) {
+									directHangup(elements[guestslot], true);
+								}
+							} else if (value == 5) { 
+								var elements = document.querySelectorAll('[data-action-type="solo-chat"][data--u-u-i-d]');
+								if (elements[guestslot]) {
+									session.toggleSoloChat(elements[guestslot].dataset.UUID);
+								}
+							}
+							
+						}
+					});
+				
+				}
 			}
 		});
 	};
@@ -11378,7 +11418,7 @@ addEventToAll("#audioSource", 'mousedown touchend focusin focusout', function(e,
 			mapToAll('input[type="checkbox"]', function(ele2) {
 				ele2.parentNode.style.display = "block";
 				ele2.style.display = "inline-block";
-			}, ele)
+			}, ele);
 		}, parentElement = getById('multiselect-trigger').parentNode);
 	}
 	e.stopPropagation();

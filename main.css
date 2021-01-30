@@ -432,6 +432,19 @@ hr {
 	height: 11px;
 	margin: 0;
 }
+.queueNotification {
+	position: relative;
+	top: -40px;
+	right: -33px;
+	padding: 2px 0;
+	border-radius: 50%;
+	background: #335c3a;
+	color: white;
+	width: 23px;
+	height: 23px;
+	margin: 0;
+}
+
 
 button.glyphicon-button:focus,
 button.glyphicon-button:active:focus,
@@ -449,6 +462,19 @@ button.glyphicon-button.active.focus {
 	height:100%;
 }
 
+#controlButtons {
+	position: fixed;
+	z-index: 5;
+	bottom: 0px;
+	width: 100%;
+	display: none;
+	justify-content: center;
+	align-items: center;
+	height: 60px;
+	border: 0;
+	pointer-events: none;
+}
+
 #subControlButtons {
 	display: flex;
 	border-radius: 38px;
@@ -461,15 +487,21 @@ button.glyphicon-button.active.focus {
 @media only screen and (max-width: 700px){
 	#subControlButtons {
 		padding: 2px 4px; 
-		-moz-transform: scale(.9); 
-	} 
+		transform: scale(0.9);
+	}
+	#controlButtons {
+		height: 54px;
+	}
 }
 @media only screen and (max-width: 400px){
 	#subControlButtons {
 		padding: 1px 2px; 
 		zoom: .9; 
-		-moz-transform: scale(.8); 
-	} 
+		transform: scale(0.8);
+	}
+	#controlButtons {
+		height: 48px;
+	}
 }
 @media only screen and (max-width: 300px){
 	#subControlButtons {
@@ -477,14 +509,40 @@ button.glyphicon-button.active.focus {
 	} 
 }
 
-@media only screen and (max-height: 500px){
+@media only screen and (max-height: 700px){
 	#subControlButtons {
 		padding: 0;
-		bottom: .7em;
-		-moz-transform: scale(.9); 
-	} 
+		bottom: 0em;
+		transform: scale(0.9);
+	}
+	#controlButtons {
+		height: 54px;
+	}
 }
 
+@media only screen and (max-height: 540px){
+	#subControlButtons {
+		padding: 0;
+		bottom: 0em;
+		transform: scale(0.85);
+	} 
+	#controlButtons {
+		height: 51px;
+	}
+}
+@media only screen and (max-height: 400px){
+	#subControlButtons {
+		padding: 0;
+		bottom: 0em;
+		transform: scale(0.8);
+	} 
+	#controlButtons {
+		height: 48px;
+	}
+	#header{
+		display:none;
+	}
+}
 
 @keyframes pulse {
 	0% {
@@ -1022,12 +1080,6 @@ label {
 	color: black;
 }
 
-@media only screen and (max-height: 650px) {
-	.column {
-		
-	}
-}
-
 @keyframes fading {
 	0% {
 		opacity: 0
@@ -1156,18 +1208,7 @@ img {
 	cursor: pointer;
 	z-index: 6;
 }
-#controlButtons {
-	position: fixed;
-	z-index: 5;
-	bottom: 0px;
-	width: 100%;
-	display: none;
-	justify-content: center;
-	align-items: center;
-	height: 60px;
-	border: 0;
-	pointer-events: none;
-}
+
 .popup .menu { margin: 2px; }
 .my-float {
 	margin-top: 7px;

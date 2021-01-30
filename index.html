@@ -67,7 +67,7 @@
 			<link itemprop="url" href="./media/obsNinja_logo_full.png" />
 		</span>
 		<script  type="text/javascript" crossorigin="anonymous"  src="./thirdparty/CodecsHandler.js?ver=26"></script>
-		<script  type="text/javascript" crossorigin="anonymous" src="./webrtc.js?ver=173"></script>
+		<script  type="text/javascript" crossorigin="anonymous" src="./webrtc.js?ver=174"></script>
 		<input id="zoomSlider" type="range" style="display: none;" />
 		<div id="header">
 			<a id="logoname" href="./" style="text-decoration: none; color: white; margin: 2px;">
@@ -110,17 +110,21 @@
 		</div>
 		<div id="controlButtons" >
 			<div id="subControlButtons">
-				<div id="chatbutton" title="Toggle the Chat" alt="Toggle the Chat" onmousedown="event.preventDefault(); event.stopPropagation();"  onclick="toggleChat()"  tabindex="16" role="button" aria-pressed="false" onkeyup="enterPressedClick(event,this);"  class="advanced float" style="cursor: pointer;" alt="Toggle the Chat">
+				<div id="queuebutton" title="Load the next guest in queue" alt="Load the next guest in queue" onmousedown="event.preventDefault(); event.stopPropagation();"  onclick="session.nextQueue()"  tabindex="16" role="button" aria-pressed="false" onkeyup="enterPressedClick(event,this);"  class="advanced float" style="cursor: pointer;" >
+					<i id="queuetoggle" class="toggleSize las la-stream my-float"></i>
+					<div id="queueNotification"></div>
+				</div>
+				<div id="chatbutton" title="Toggle the Chat" alt="Toggle the Chat" onmousedown="event.preventDefault(); event.stopPropagation();"  onclick="toggleChat()"  tabindex="16" role="button" aria-pressed="false" onkeyup="enterPressedClick(event,this);"  class="advanced float" style="cursor: pointer;" >
 					<i id="chattoggle" class="toggleSize las la-comment-alt my-float"></i>
 					<div id="chatNotification"></div>
 				</div>
-				<div id="mutespeakerbutton" onmousedown="event.preventDefault(); event.stopPropagation();"  title="Mute the Speaker"  alt="Mute the Speaker"  onclick="toggleSpeakerMute()"  tabindex="17" role="button" aria-pressed="false" onkeyup="enterPressedClick(event,this);"  class="advanced float" style="cursor: pointer;" alt="Toggle the speaker output.">
+				<div id="mutespeakerbutton" onmousedown="event.preventDefault(); event.stopPropagation();"  title="Mute the Speaker" onclick="toggleSpeakerMute()"  tabindex="17" role="button" aria-pressed="false" onkeyup="enterPressedClick(event,this);"  class="advanced float" style="cursor: pointer;" alt="Toggle the speaker output.">
 					<i id="mutespeakertoggle" class="toggleSize las la-volume-up my-float" style="position: relative; top: 0.5px;"></i>
 				</div>
-				<div id="mutebutton" onmousedown="event.preventDefault(); event.stopPropagation();"  title="Mute the Mic"  alt="Mute the Mic" onclick="toggleMute()"  tabindex="18" role="button" aria-pressed="false" onkeyup="enterPressedClick(event,this);"  class="advanced float" style="cursor: pointer;" alt="Toggle the mic">
+				<div id="mutebutton" onmousedown="event.preventDefault(); event.stopPropagation();"  title="Mute the Mic" onclick="toggleMute()"  tabindex="18" role="button" aria-pressed="false" onkeyup="enterPressedClick(event,this);"  class="advanced float" style="cursor: pointer;" alt="Toggle the mic">
 					<i id="mutetoggle" class="toggleSize las la-microphone my-float" style="position: relative; top: 0.5px;"></i>
 				</div>
-				<div id="mutevideobutton" onmousedown="event.preventDefault(); event.stopPropagation();"  title="Disable the Camera" alt="Disable the Camera" onclick="toggleVideoMute()"   tabindex="19" role="button" aria-pressed="false" onkeyup="enterPressedClick(event,this);"  class="advanced float" style="cursor: pointer;" alt="Toggle the camera">
+				<div id="mutevideobutton" onmousedown="event.preventDefault(); event.stopPropagation();"  title="Disable the Camera" alt="Disable the Camera" onclick="toggleVideoMute()"   tabindex="19" role="button" aria-pressed="false" onkeyup="enterPressedClick(event,this);"  class="advanced float" style="cursor: pointer;">
 					<i id="mutevideotoggle" onmousedown="event.preventDefault(); event.stopPropagation();"  class="toggleSize las la-eye my-float"></i>
 				</div>
 				<div id="screensharebutton" onmousedown="event.preventDefault(); event.stopPropagation();"  title="Share a Screen with others" alt="Share a Screen with others" onclick="toggleScreenShare()" tabindex="20" role="button" aria-pressed="false" onkeyup="enterPressedClick(event,this);"  class="float advanced" style="cursor: pointer;">
@@ -129,21 +133,21 @@
 				<div id="screenshare2button" onmousedown="event.preventDefault(); event.stopPropagation();"  title="Create a Seconary Stream" alt="Create a Seconary Stream" onclick="createIframePopup()" tabindex="20" role="button" aria-pressed="false" onkeyup="enterPressedClick(event,this);"  class="float advanced" style="cursor: pointer;">
 					<i id="screenshare2toggle" onmousedown="event.preventDefault(); event.stopPropagation();"  class="toggleSize las  la-tv my-float"></i>
 				</div>
-				<div id="settingsbutton" onmousedown="event.preventDefault(); event.stopPropagation();"  title="Settings" alt="Settings" onclick="toggleSettings()" class="advanced float"  tabindex="21" role="button" aria-pressed="false" onkeyup="enterPressedClick(event,this);" style="cursor: pointer;" alt="Toggle the Settings Menu">
+				<div id="settingsbutton" onmousedown="event.preventDefault(); event.stopPropagation();"  title="Settings"  onclick="toggleSettings()" class="advanced float"  tabindex="21" role="button" aria-pressed="false" onkeyup="enterPressedClick(event,this);" style="cursor: pointer;" alt="Toggle the Settings Menu">
 					<i id="settingstoggle" class="toggleSize las la-cog my-float"></i>
 				</div>
-				<div id="hangupbutton"  onmousedown="event.preventDefault(); event.stopPropagation();" title="Hangup the Call"  alt="Hangup the Call" onclick="hangup()" class="advanced float"  tabindex="22" role="button" aria-pressed="false" onkeyup="enterPressedClick(event,this);" style="cursor: pointer;" alt="Disconnect and End">
+				<div id="hangupbutton"  onmousedown="event.preventDefault(); event.stopPropagation();" title="Hangup the Call"  alt="Hangup the Call" onclick="hangup()" class="advanced float"  tabindex="22" role="button" aria-pressed="false" onkeyup="enterPressedClick(event,this);" style="cursor: pointer;" >
 					<i class="toggleSize my-float las la-phone rotate225" aria-hidden="true"></i>
 				</div>
 				<div id="raisehandbutton" onmousedown="event.preventDefault(); event.stopPropagation();"  data-raised="0" title="Alert the host you want to speak"  alt="Alert the host you want to speak" tabindex="23" role="button" aria-pressed="false" onkeyup="enterPressedClick(event,this);" onclick="raisehand()" class="advanced float" style="cursor: pointer;">
 					<i class="toggleSize my-float las la-hand-paper" style="position: relative; right: 1px;" aria-hidden="true"></i>
 				</div>
-				<div id="recordLocalbutton" onmousedown="event.preventDefault(); event.stopPropagation();"  data-state="0" title="Record your stream to disk" alt="Record your stream to disk" tabindex="24" role="button" aria-pressed="false" onkeyup="enterPressedClick(event,this);" onclick="recordLocalVideoToggle(this);" class="advanced float" style="cursor: pointer;">
+				<div id="recordLocalbutton" onmousedown="event.preventDefault(); event.stopPropagation();"  data-state="0" title="Record your stream to disk" alt="Record your stream to disk" tabindex="24" role="button" aria-pressed="false" onkeyup="enterPressedClick(event,this);" onclick="recordLocalVideoToggle();" class="advanced float" style="cursor: pointer;">
 					<i class="toggleSize my-float las la-dot-circle" style="position: relative;" aria-hidden="true"></i>
 				</div>
 				<span id="miniPerformer" style="pointer-events: auto;" class="advanced"></span>
 				
-				<div id="hangupbutton2" onmousedown="event.preventDefault(); event.stopPropagation();"  title="Cancel the Director's Video/Audio"  alt="Hangup the Call" onclick="hangup2()" class="advanced float"  tabindex="25" role="button" aria-pressed="false" onkeyup="enterPressedClick(event,this);" style="cursor: pointer;" alt="Disconnect Direcotor's cam">
+				<div id="hangupbutton2" onmousedown="event.preventDefault(); event.stopPropagation();"  title="Cancel the Director's Video/Audio"  onclick="hangup2()" class="advanced float"  tabindex="25" role="button" aria-pressed="false" onkeyup="enterPressedClick(event,this);" style="cursor: pointer;" alt="Disconnect Direcotor's cam">
 					<i class="toggleSize my-float las la-phone rotate225" aria-hidden="true"></i>
 				</div>
 			</div>
@@ -648,8 +652,8 @@
 							</li>
 							<br />
 
-                            🥳 Site Updated: <a href="https://github.com/steveseguin/obsninja/wiki/v15-release-notes">Jan 18th, 2021</a>. The previous version can be found at 
-							<a href="https://obs.ninja/v14/">https://obs.ninja/v14/</a> if you are having new issues.
+                            🥳 Site Updated: Jan 30th, 2021. The previous version can be found at 
+							<a href="https://obs.ninja/v15/">https://obs.ninja/v15/</a> if you are having new issues.
 
 							<br />
 							<br />
@@ -919,9 +923,7 @@
 		<div id="bigPlayButton" onclick="function(e){e.target.innerHTML = '';}" style="display:none"></div>
 		<div id="controls_blank" style="display: none;">
 			<div class="controlsGrid">
-
-				
-				
+			
 				<button data-action-type="forward"  data-value="0" title="Move the user to another room, controlled by another director" onclick="directMigrate(this, event);">
 					<i class="las la-paper-plane"></i>
 					<span data-translate="forward-to-room">Transfer</span>
@@ -940,8 +942,8 @@
 					<span data-translate="mute-scene" >mute in scene</span>
 				</button>
 				
-				
-				<input data-action-type="volume" type="range" min="1" max="100" value="100" title="Remotely change the volume of this guest" onclick="remoteVolume(this);" style="grid-column: 1; margin:5px; width: 93%; position: relative; top: 0px; background-color:#fff0;"/>
+				<font class="tooltip" style="height: 0; border: 0;">
+					<input data-action-type="volume" type="range" min="0" max="200" value="100" title="Remotely change the volume of this guest" oninput="remoteVolumeUI(this)" onclick="remoteVolume(this);" style="grid-column: 1; margin:5px; width: 93%; position: relative;top: 0.6em; background-color:#fff0;"/><span class="tooltiptext" style='float: right; overflow: auto;  left: 40px;  width: 2.5em;  top: -13px; margin: 0; position:relative;font-family:"Noto Color Emoji", "Apple Color Emoji", "Segoe UI Emoji", Times, Symbola, Aegyptus,Code2000, Code2001, Code2002, Musica, serif, LastResort;' >100</span></font>
 				
 				<button data-action-type="mute-guest"  style="grid-column: 2;" title="Mute this guest everywhere" onclick="remoteMute(this, event);">
 					<i class="las la-microphone-slash"></i>
@@ -949,13 +951,13 @@
 				</button>
 
 				<span>
-					<button style="width: 36px" data-action-type="change-quality1" title="Disable Video Preview" onclick="toggleQualityDirector(0, this.dataset.UUID, this);">
+					<button style="width: 35.2px" data-action-type="change-quality1" title="Disable Video Preview" onclick="toggleQualityDirector(0, this.dataset.UUID, this);">
 						<span data-translate="change-to-low-quality">&nbsp;&nbsp;<i class="las la-video-slash"></i></span>
 					</button>
-					<button class="pressed" style="width:36px;" data-action-type="change-quality2" title="Low-Quality Preview" onclick="toggleQualityDirector(50, this.dataset.UUID, this);">
+					<button class="pressed" style="width:35.2px;" data-action-type="change-quality2" title="Low-Quality Preview" onclick="toggleQualityDirector(50, this.dataset.UUID, this);">
 						<span data-translate="change-to-medium-quality">&nbsp;&nbsp;<i class="las la-video"></i></span>
 					</button>
-					<button style="width: 36px" data-action-type="change-quality3" title="High-Quality Preview" onclick="toggleQualityDirector(1200, this.dataset.UUID, this);">
+					<button style="width: 35.2px" data-action-type="change-quality3" title="High-Quality Preview" onclick="toggleQualityDirector(1200, this.dataset.UUID, this);">
 						<span data-translate="change-to-high-quality">&nbsp;&nbsp;<i class="las la-binoculars"></i></span>
 					</button>
 				</span>
@@ -1156,7 +1158,7 @@
 			}
 		
             var session = WebRTC.Media; // session is a required global variable if configuring manually. Run before loading main.js but after webrtc.js.
-			session.version = "15.3";
+			session.version = "16.0";
             session.streamID = session.generateStreamID(); // randomly generates a streamID for this session. You can set your own programmatically if needed
 			
 			session.defaultPassword = "someEncryptionKey123"; // Disabling improves compatibility and is helpful for debugging.
@@ -1221,7 +1223,7 @@
 		<script type="text/javascript" id="main-js" src="./main.js" data-translation="blank"></script>
 		<script type="text/javascript" crossorigin="anonymous" id="mixer-js" src="./mixer.js?ver=2"></script>
 	-->
-		<script type="text/javascript" crossorigin="anonymous" id="main-js" src="./main.js?ver=159"></script>
+		<script type="text/javascript" crossorigin="anonymous" id="main-js" src="./main.js?ver=160"></script>
 		<script type="text/javascript">
 			setTimeout(function(){ // lazy load
 				var script = document.createElement('script');
