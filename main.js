@@ -1,11 +1,7 @@
 /*
-*  Copyright (c) 2020 Steve Seguin. All Rights Reserved.
-*
-*  Use of this source code is governed by the APGLv3 open-source license
-*  that can be found in the LICENSE file in the root of the source
-*  tree. Alternative licencing options can be made available on request.
-*
-*/
+ *  Copyright (c) 2020 Steve Seguin. All Rights Reserved.
+ *
+ */
 /*jshint esversion: 6 */
 
 var formSubmitting = true;
@@ -25,9 +21,11 @@ function addEventToAll(targets, trigger, callback) { // js helper
 	var triggers = trigger.split(" ");
 	for (let i = 0; i < target.length; i++) {
 		for (let j = 0; j < triggers.length; j++) {
-			target[i].addEventListener(triggers[j], function(e) {
-				callback(e, target[i]);
-			});
+			setTimeout(function(t1,t2){
+				t1.addEventListener(t2, function(e) {
+					callback(e, t1);
+				});
+			},0,target[i],triggers[j]);
 		}
 	}
 }
@@ -749,6 +747,26 @@ if (urlParams.has('ssb')) {
 
 if (urlParams.has('mute') || urlParams.has('muted') || urlParams.has('m')) {
 	session.muted = true;
+}
+
+if (urlParams.has('videomute') || urlParams.has('videomuted') || urlParams.has('vm')) {
+	session.videoMutedFlag = true;
+}
+
+
+if (urlParams.has('deaf') || urlParams.has('deafen')) {
+	session.directorSpeakerMuted=true; // false == true in this case.
+}
+
+if (urlParams.has('blind')) {
+	session.directorDisplayMuted=true; // false == true in this case.
+}
+
+
+if (urlParams.has('dpi') || urlParams.has('dpr')) {
+	session.devicePixelRatio = urlParams.get('dpi') || urlParams.get('dpr') || 2.0;
+} else if (window.devicePixelRatio && window.devicePixelRatio!==1){ 
+	session.devicePixelRatio = window.devicePixelRatio; // this annoys me to no end.
 }
 
 if (urlParams.has('speakermute') || urlParams.has('mutespeaker') || urlParams.has('sm') || urlParams.has('ms')) {
@@ -2152,309 +2170,310 @@ if (urlParams.has('queue')) {
 	session.queue = true;
 }
 
-window.onmessage = function(e) { // iFRAME support
-	log(e);
-	try {
-		if ("function" in e.data) { // these are calling in-app functions, with perhaps a callback -- TODO: add callbacks
-			var ret = null;
-			if (e.data.function === "previewWebcam") {
-				ret = previewWebcam();
-			} else if (e.data.function === "changeHTML") {
-				ret = getById(e.data.target);
-				ret.innerHTML = e.data.value;
-			} else if (e.data.function === "publishScreen") {
-				ret = publishScreen();
-			} else if (e.data.function === "eval") {
-				eval(e.data.value); // eval == evil ; feedback welcomed
-			}
-		}
-	} catch (err) {
-		errorlog(err);
-	}
-
-	if ("sendChat" in e.data) {
-		sendChat(e.data.sendChat); // sends to all peers; more options down the road
-	}
-	// Chat out gets called via getChatMessage function
-	// Related code: parent.postMessage({"chat": {"msg":-----,"type":----,"time":---} }, "*");
-
-	if ("mic" in e.data) { // this should work for the director's mic mute button as well. Needs to be manually enabled the first time still tho.
-		if (e.data.mic === true) { // unmute
-			session.muted = false; // set
-			log(session.muted);
-			toggleMute(true); // apply 
-		} else if (e.data.mic === false) { // mute
-			session.muted = true; // set
-			log(session.muted);
-			toggleMute(true); // apply
-		} else if (e.data.mic === "toggle") { // toggle
-			toggleMute();
-		}
-	}
-
-	if ("camera" in e.data) { // this should work for the director's mic mute button as well. Needs to be manually enabled the first time still tho.
-		if (e.data.camera === true) { // unmute
-			session.videoMuted = false; // set
-			log(session.videoMuted);
-			toggleVideoMute(true); // apply 
-		} else if (e.data.camera === false) { // mute
-			session.videoMuted = true; // set
-			log(session.videoMuted);
-			toggleVideoMute(true); // apply
-		} else if (e.data.camera === "toggle") { // toggle
-			toggleVideoMute();
-		}
-	}
-
-	if ("mute" in e.data) {
-		if (e.data.mute === true) { // unmute
-			session.speakerMuted = true; // set
-			toggleSpeakerMute(true); // apply 
-		} else if (e.data.mute === false) { // mute
-			session.speakerMuted = false; // set
-			toggleSpeakerMute(true); // apply
-		} else if (e.data.mute === "toggle") { // toggle
-			toggleSpeakerMute();
-		}
-	} else if ("speaker" in e.data) { // same thing as mute.
-		if (e.data.speaker === true) { // unmute
-			session.speakerMuted = false; // set
-			toggleSpeakerMute(true); // apply 
-		} else if (e.data.speaker === false) { // mute
-			session.speakerMuted = true; // set
-			toggleSpeakerMute(true); // apply
-		} else if (e.data.speaker === "toggle") { // toggle
-			toggleSpeakerMute();
-		}
-	}
-
-
-	if ("volume" in e.data) {
-		for (var i in session.rpcs) {
-			try {
-				session.rpcs[i].videoElement.volume = parseFloat(e.data.volume);
-			} catch (e) {
-				errorlog(e);
-			}
-		}
-	}
-
-	if ("bitrate" in e.data) {
-		for (var i in session.rpcs) {
-			try {
-				session.requestRateLimit(parseInt(e.data.bitrate), i);
-			} catch (e) {
-				errorlog(e);
-			}
-		}
-	}
-
-	if ("sceneState" in e.data) { // TRUE OR FALSE - tells the connected peers if they are live or not via a tally light change.
-
-		var visibility = e.data.sceneState;
-		var bundle = {};
-		bundle.sceneUpdate = [];
-
-		for (var UUID in session.rpcs) {
-			if (session.rpcs[UUID].visibility !== visibility) { // only move forward if there is a change; the event likes to double fire you see.
-
-				session.rpcs[UUID].visibility = visibility;
-				var msg = {};
-				msg.visibility = visibility;
-
-				if (session.rpcs[UUID].videoElement.style.display == "none") { // Flag will be left alone, but message will say its disabled.
-					msg.visibility = false;
+if (isIFrame) { // reduce CPU load if not needed.
+	window.onmessage = function(e) { // iFRAME support
+		log(e);
+		try {
+			if ("function" in e.data) { // these are calling in-app functions, with perhaps a callback -- TODO: add callbacks
+				var ret = null;
+				if (e.data.function === "previewWebcam") {
+					ret = previewWebcam();
+				} else if (e.data.function === "changeHTML") {
+					ret = getById(e.data.target);
+					ret.innerHTML = e.data.value;
+				} else if (e.data.function === "publishScreen") {
+					ret = publishScreen();
+				} else if (e.data.function === "eval") {
+					eval(e.data.value); // eval == evil ; feedback welcomed
 				}
+			}
+		} catch (err) {
+			errorlog(err);
+		}
 
-				msg.UUID = UUID;
-				session.sendRequest(msg, UUID);
-				bundle.sceneUpdate.push(msg);
+		if ("sendChat" in e.data) {
+			sendChat(e.data.sendChat); // sends to all peers; more options down the road
+		}
+		// Chat out gets called via getChatMessage function
+		// Related code: parent.postMessage({"chat": {"msg":-----,"type":----,"time":---} }, "*");
+
+		if ("mic" in e.data) { // this should work for the director's mic mute button as well. Needs to be manually enabled the first time still tho.
+			if (e.data.mic === true) { // unmute
+				session.muted = false; // set
+				log(session.muted);
+				toggleMute(true); // apply 
+			} else if (e.data.mic === false) { // mute
+				session.muted = true; // set
+				log(session.muted);
+				toggleMute(true); // apply
+			} else if (e.data.mic === "toggle") { // toggle
+				toggleMute();
 			}
 		}
-		session.sendRequest(bundle); // we want all publishing peers to know the state
-	}
 
-	if ("sendMessage" in e.data) { // webrtc send to viewers
-		session.sendMessage(e.data);
-	}
+		if ("camera" in e.data) { // this should work for the director's mic mute button as well. Needs to be manually enabled the first time still tho.
+			if (e.data.camera === true) { // unmute
+				session.videoMuted = false; // set
+				log(session.videoMuted);
+				toggleVideoMute(true); // apply 
+			} else if (e.data.camera === false) { // mute
+				session.videoMuted = true; // set
+				log(session.videoMuted);
+				toggleVideoMute(true); // apply
+			} else if (e.data.camera === "toggle") { // toggle
+				toggleVideoMute();
+			}
+		}
 
-	if ("sendRequest" in e.data) { // webrtc send to publishers
-		session.sendRequest(e.data);
-	}
-
-	if ("sendPeers" in e.data) { // webrtc send message to every connected peer; like send and request; a hammer vs a knife.
-		session.sendPeers(e.data);
-	}
-
-	if ("reload" in e.data) {
-		location.reload();
-	}
-
-	if ("getStats" in e.data) {
-
-		var stats = {};
-		stats.total_outbound_connections = Object.keys(session.pcs).length;
-		stats.total_inbound_connections = Object.keys(session.rpcs).length;
-		stats.inbound_stats = {};
-		for (var i in session.rpcs) {
-			stats.inbound_stats[session.rpcs[i].streamID] = session.rpcs[i].stats;
+		if ("mute" in e.data) {
+			if (e.data.mute === true) { // unmute
+				session.speakerMuted = true; // set
+				toggleSpeakerMute(true); // apply 
+			} else if (e.data.mute === false) { // mute
+				session.speakerMuted = false; // set
+				toggleSpeakerMute(true); // apply
+			} else if (e.data.mute === "toggle") { // toggle
+				toggleSpeakerMute();
+			}
+		} else if ("speaker" in e.data) { // same thing as mute.
+			if (e.data.speaker === true) { // unmute
+				session.speakerMuted = false; // set
+				toggleSpeakerMute(true); // apply 
+			} else if (e.data.speaker === false) { // mute
+				session.speakerMuted = true; // set
+				toggleSpeakerMute(true); // apply
+			} else if (e.data.speaker === "toggle") { // toggle
+				toggleSpeakerMute();
+			}
 		}
 
 
-		for (var uuid in session.pcs) {
-			setTimeout(function(UUID) {
-				session.pcs[UUID].getStats().then(function(stats) {
-					stats.forEach(stat => {
-						if (stat.type == "outbound-rtp") {
-							if (stat.kind == "video") {
+		if ("volume" in e.data) {
+			for (var i in session.rpcs) {
+				try {
+					session.rpcs[i].videoElement.volume = parseFloat(e.data.volume);
+				} catch (e) {
+					errorlog(e);
+				}
+			}
+		}
 
-								if ("qualityLimitationReason" in stat) {
-									session.pcs[UUID].stats.quality_Limitation_Reason = stat.qualityLimitationReason;
+		if ("bitrate" in e.data) {
+			for (var i in session.rpcs) {
+				try {
+					session.requestRateLimit(parseInt(e.data.bitrate), i);
+				} catch (e) {
+					errorlog(e);
+				}
+			}
+		}
+
+		if ("sceneState" in e.data) { // TRUE OR FALSE - tells the connected peers if they are live or not via a tally light change.
+
+			var visibility = e.data.sceneState;
+			var bundle = {};
+			bundle.sceneUpdate = [];
+
+			for (var UUID in session.rpcs) {
+				if (session.rpcs[UUID].visibility !== visibility) { // only move forward if there is a change; the event likes to double fire you see.
+
+					session.rpcs[UUID].visibility = visibility;
+					var msg = {};
+					msg.visibility = visibility;
+
+					if (session.rpcs[UUID].videoElement.style.display == "none") { // Flag will be left alone, but message will say its disabled.
+						msg.visibility = false;
+					}
+
+					msg.UUID = UUID;
+					session.sendRequest(msg, UUID);
+					bundle.sceneUpdate.push(msg);
+				}
+			}
+			session.sendRequest(bundle); // we want all publishing peers to know the state
+		}
+
+		if ("sendMessage" in e.data) { // webrtc send to viewers
+			session.sendMessage(e.data);
+		}
+
+		if ("sendRequest" in e.data) { // webrtc send to publishers
+			session.sendRequest(e.data);
+		}
+
+		if ("sendPeers" in e.data) { // webrtc send message to every connected peer; like send and request; a hammer vs a knife.
+			session.sendPeers(e.data);
+		}
+
+		if ("reload" in e.data) {
+			location.reload();
+		}
+
+		if ("getStats" in e.data) {
+
+			var stats = {};
+			stats.total_outbound_connections = Object.keys(session.pcs).length;
+			stats.total_inbound_connections = Object.keys(session.rpcs).length;
+			stats.inbound_stats = {};
+			for (var i in session.rpcs) {
+				stats.inbound_stats[session.rpcs[i].streamID] = session.rpcs[i].stats;
+			}
+
+
+			for (var uuid in session.pcs) {
+				setTimeout(function(UUID) {
+					session.pcs[UUID].getStats().then(function(stats) {
+						stats.forEach(stat => {
+							if (stat.type == "outbound-rtp") {
+								if (stat.kind == "video") {
+
+									if ("qualityLimitationReason" in stat) {
+										session.pcs[UUID].stats.quality_Limitation_Reason = stat.qualityLimitationReason;
+									}
+									if ("framesPerSecond" in stat) {
+										session.pcs[UUID].stats.resolution = stat.frameWidth + " x " + stat.frameHeight + " @ " + stat.framesPerSecond;
+									}
+									if ("encoderImplementation" in stat) {
+										session.pcs[UUID].stats.encoder = stat.encoderImplementation;
+									}
 								}
-								if ("framesPerSecond" in stat) {
-									session.pcs[UUID].stats.resolution = stat.frameWidth + " x " + stat.frameHeight + " @ " + stat.framesPerSecond;
+							} else if (stat.type == "remote-candidate") {
+								if ("relayProtocol" in stat) {
+									if ("ip" in stat) {
+										session.pcs[UUID].stats.remote_relay_IP = stat.ip;
+									}
+									session.pcs[UUID].stats.remote_relayProtocol = stat.relayProtocol;
 								}
-								if ("encoderImplementation" in stat) {
-									session.pcs[UUID].stats.encoder = stat.encoderImplementation;
+								if ("candidateType" in stat) {
+									session.pcs[UUID].stats.remote_candidateType = stat.candidateType;
+								}
+							} else if (stat.type == "local-candidate") {
+								if ("relayProtocol" in stat) {
+									if ("ip" in stat) {
+										session.pcs[UUID].stats.local_relayIP = stat.ip;
+									}
+									session.pcs[UUID].stats.local_relayProtocol = stat.relayProtocol;
+								}
+								if ("candidateType" in stat) {
+									session.pcs[UUID].stats.local_candidateType = stat.candidateType;
 								}
 							}
-						} else if (stat.type == "remote-candidate") {
-							if ("relayProtocol" in stat) {
-								if ("ip" in stat) {
-									session.pcs[UUID].stats.remote_relay_IP = stat.ip;
-								}
-								session.pcs[UUID].stats.remote_relayProtocol = stat.relayProtocol;
-							}
-							if ("candidateType" in stat) {
-								session.pcs[UUID].stats.remote_candidateType = stat.candidateType;
-							}
-						} else if (stat.type == "local-candidate") {
-							if ("relayProtocol" in stat) {
-								if ("ip" in stat) {
-									session.pcs[UUID].stats.local_relayIP = stat.ip;
-								}
-								session.pcs[UUID].stats.local_relayProtocol = stat.relayProtocol;
-							}
-							if ("candidateType" in stat) {
-								session.pcs[UUID].stats.local_candidateType = stat.candidateType;
-							}
-						}
+							return;
+						});
 						return;
 					});
-					return;
-				});
-			}, 0, uuid);
-		}
-		setTimeout(function() {
-			stats.outbound_stats = {};
-			for (var i in session.pcs) {
-				stats.outbound_stats[i] = session.pcs[i].stats;
+				}, 0, uuid);
 			}
-			parent.postMessage({
-				"stats": stats
-			}, "*");
-		}, 1000);
-	}
+			setTimeout(function() {
+				stats.outbound_stats = {};
+				for (var i in session.pcs) {
+					stats.outbound_stats[i] = session.pcs[i].stats;
+				}
+				parent.postMessage({
+					"stats": stats
+				}, "*");
+			}, 1000);
+		}
 
-	if ("getLoudness" in e.data) {
-		log("GOT LOUDNESS REQUEST");
-		if (e.data.getLoudness == true) {
-			var loudness = {};
+		if ("getLoudness" in e.data) {
+			log("GOT LOUDNESS REQUEST");
+			if (e.data.getLoudness == true) {
+				var loudness = {};
+				for (var i in session.rpcs) {
+					loudness[session.rpcs[i].streamID] = session.rpcs[i].stats.Audio_Loudness;
+				}
+				parent.postMessage({
+					"loudness": loudness
+				}, "*");
+				session.pushLoudness = true;
+			} else {
+				session.pushLoudness = false;
+			}
+		}
+
+		if ("getStreamIDs" in e.data) {
+			log("GOT LOUDNESS REQUEST");
+			if (e.data.getStreamIDs == true) {
+				var streamIDs = {};
+				for (var i in session.rpcs) {
+					streamIDs[session.rpcs[i].streamID] = session.rpcs[i].label;
+				}
+				parent.postMessage({
+					"streamIDs": streamIDs
+				}, "*");
+
+			}
+		}
+
+		if ("close" in e.data) {
 			for (var i in session.rpcs) {
-				loudness[session.rpcs[i].streamID] = session.rpcs[i].stats.Audio_Loudness;
+				try {
+					session.rpcs[i].close();
+				} catch (e) {
+					errorlog(e);
+				}
 			}
-			parent.postMessage({
-				"loudness": loudness
-			}, "*");
-			session.pushLoudness = true;
-		} else {
-			session.pushLoudness = false;
 		}
-	}
 
-	if ("getStreamIDs" in e.data) {
-		log("GOT LOUDNESS REQUEST");
-		if (e.data.getStreamIDs == true) {
-			var streamIDs = {};
-			for (var i in session.rpcs) {
-				streamIDs[session.rpcs[i].streamID] = session.rpcs[i].label;
-			}
-			parent.postMessage({
-				"streamIDs": streamIDs
-			}, "*");
-
-		}
-	}
-
-	if ("close" in e.data) {
-		for (var i in session.rpcs) {
+		if ("style" in e.data) {
 			try {
-				session.rpcs[i].close();
+				const style = document.createElement('style');
+				style.textContent = e.data.style;
+				document.head.append(style);
+				log(style);
 			} catch (e) {
 				errorlog(e);
 			}
 		}
-	}
 
-	if ("style" in e.data) {
-		try {
-			const style = document.createElement('style');
-			style.textContent = e.data.style;
-			document.head.append(style);
-			log(style);
-		} catch (e) {
-			errorlog(e);
+
+		if ("automixer" in e.data) {
+			if (e.data.automixer == true) {
+				session.manual = false;
+				try {
+					updateMixer();
+				} catch (e) {}
+			} else if (e.data.automixer == false) {
+				session.manual = true;
+			}
 		}
-	}
 
-
-	if ("automixer" in e.data) {
-		if (e.data.automixer == true) {
-			session.manual = false;
-			try {
-				updateMixer();
-			} catch (e) {}
-		} else if (e.data.automixer == false) {
-			session.manual = true;
-		}
-	}
-
-	if ("target" in e.data) {
-		log(e.data);
-		for (var i in session.rpcs) {
-			try {
-				if ("streamID" in session.rpcs[i]) {
-					if ((session.rpcs[i].streamID == e.data.target) || (e.data.target == "*")) {
-						try {
-							if ("settings" in e.data) {
-								for (const property in e.data.settings) {
-									session.rpcs[i].videoElement[property] = e.data.settings[property];
+		if ("target" in e.data) {
+			log(e.data);
+			for (var i in session.rpcs) {
+				try {
+					if ("streamID" in session.rpcs[i]) {
+						if ((session.rpcs[i].streamID == e.data.target) || (e.data.target == "*")) {
+							try {
+								if ("settings" in e.data) {
+									for (const property in e.data.settings) {
+										session.rpcs[i].videoElement[property] = e.data.settings[property];
+									}
 								}
-							}
-							if ("add" in e.data) {
-								getById("gridlayout").appendChild(session.rpcs[i].videoElement);
+								if ("add" in e.data) {
+									getById("gridlayout").appendChild(session.rpcs[i].videoElement);
 
-							} else if ("remove" in e.data) {
-								try {
-									session.rpcs[i].videoElement.parentNode.removeChild(session.rpcs[i].videoElement);
-								} catch (e) {
+								} else if ("remove" in e.data) {
 									try {
-										session.rpcs[i].videoElement.parentNode.parentNode.removeChild(session.rpcs[i].videoElement.parentNode);
-									} catch (e) {}
+										session.rpcs[i].videoElement.parentNode.removeChild(session.rpcs[i].videoElement);
+									} catch (e) {
+										try {
+											session.rpcs[i].videoElement.parentNode.parentNode.removeChild(session.rpcs[i].videoElement.parentNode);
+										} catch (e) {}
+									}
 								}
+							} catch (e) {
+								errorlog(e);
 							}
-						} catch (e) {
-							errorlog(e);
 						}
 					}
+				} catch (e) {
+					errorlog(e);
 				}
-			} catch (e) {
-				errorlog(e);
 			}
 		}
-	}
-};
-
+	};
+}
 
 var eventMethod = window.addEventListener ? "addEventListener" : "attachEvent";
 var eventer = window[eventMethod];
@@ -3339,12 +3358,12 @@ function toggleSpeakerMute(apply = false) { // TODO: I need to have this be MUTE
 
 	for (var UUID in session.rpcs) {
 		if (session.rpcs[UUID].videoElement) {
-			if (UUID === session.directorUUID) {
-				session.rpcs[UUID].videoElement.muted = false; // unmute director
-				log("MAKE SURE DIRECTOR ISN'T MUTED");
-			} else {
+			//if (UUID === session.directorUUID) {
+			//	session.rpcs[UUID].videoElement.muted = false; // unmute director
+			//	log("MAKE SURE DIRECTOR ISN'T MUTED");
+			//} else {
 				session.rpcs[UUID].videoElement.muted = session.speakerMuted;
-			}
+		//	}
 		}
 	}
 
@@ -3514,6 +3533,9 @@ function toggleVideoMute(apply = false) { // TODO: I need to have this be MUTE, 
 			});
 		}
 	}
+	var msg = {};
+	msg.videoMuted = session.videoMuted;
+	session.sendMessage(msg);
 }
 
 var toggleSettingsState = false;
@@ -3619,10 +3641,15 @@ function hangup2() {
 	getById("settingsbutton").classList.add("advanced");
 	getById("mutebutton").classList.add("advanced");
 	getById("hangupbutton2").classList.add("advanced");
-	getById("chatbutton").classList.remove("advanced");
+	//getById("chatbutton").classList.remove("advanced");
 	getById("controlButtons").style.display = "inherit";
-	getById("mutespeakerbutton").classList.remove("advanced");
-
+	//getById("mutespeakerbutton").classList.add("advanced");
+	getById("mutevideobutton").classList.add("advanced");
+	getById("screenshare2button").classList.add("advanced");
+	
+	getById("screensharebutton").classList.add("float");
+	getById("screensharebutton").classList.remove("float2");
+	
 	if (session.showDirector == false) {
 		getById("miniPerformer").innerHTML = '<button id="press2talk" onmousedown="event.preventDefault(); event.stopPropagation();" style="width:auto;margin-left:5px;height:45px;border-radius: 38px;" class="float" onclick="press2talk(true);" title="You can also enable the director`s Video Output afterwards by clicking the Setting`s button"><i class="las la-headset"></i><span data-translate="push-to-talk-enable"> enable director`s microphone or video<br />(only guests can see this feed)</span></button>';
 	} else {
@@ -3834,12 +3861,32 @@ function remoteSpeakerMute(ele, event) {
 
 	var msg = {};
 	if (ele.dataset.mute == 0) {
-		msg.speakerMute = ele.dataset.mute;
+		msg.speakerMute = false;
 	} else {
-		msg.speakerMute = 0;
+		msg.speakerMute = true;
 	}
 	msg.UUID = ele.dataset.UUID;
 	session.sendRequest(msg, ele.dataset.UUID);
+}
+
+function updateRemoteSpeakerMute(UUID) {
+	var ele = document.querySelectorAll('[data-action-type="toggle-remote-speaker"][data--u-u-i-d="' + UUID + '"]');
+	if (ele[0]) {
+		ele[0].classList.add("pressed");
+		ele[0].dataset.mute = 1;
+		ele[0].className = "pressed";
+		ele[0].children[1].innerHTML = "Un-deafen";
+	}
+}
+
+function updateRemoteDisplayMute(UUID) {
+	var ele = document.querySelectorAll('[data-action-type="toggle-remote-display"][data--u-u-i-d="' + UUID + '"]');
+	if (ele[0]) {
+		ele[0].classList.add("pressed");
+		ele[0].dataset.mute = 1;
+		ele[0].className = "pressed";
+		ele[0].children[1].innerHTML = "Un-blind";
+	}
 }
 
 function remoteDisplayMute(ele, event) {
@@ -3858,9 +3905,9 @@ function remoteDisplayMute(ele, event) {
 
 	var msg = {};
 	if (ele.dataset.mute == 0) {
-		msg.displayMute = ele.dataset.mute;
+		msg.displayMute = false;
 	} else {
-		msg.displayMute = 0;
+		msg.displayMute = true;
 	}
 	msg.UUID = ele.dataset.UUID;
 	session.sendRequest(msg, ele.dataset.UUID);
@@ -6117,7 +6164,6 @@ function gotDevices2(deviceInfos) {
 			enumerateDevices().then(gotDevices2).then(function() {
 				ScreenShareState = false;
 				pokeIframeAPI("screen-share-ended");
-
 				getById("screensharebutton").classList.add("float");
 				getById("screensharebutton").classList.remove("float2");
 			});
@@ -11422,7 +11468,7 @@ addEventToAll("#audioSource", 'mousedown touchend focusin focusout', function(e,
 		}, parentElement = getById('multiselect-trigger').parentNode);
 	}
 	e.stopPropagation();
-	e.preventDefault();
+	//e.preventDefault();
 });
 addEventToAll("#audioSource3", 'mousedown touchend focusin focusout', function(e, ele) {
 	var state = getById('multiselect-trigger3').dataset.state || 0;
@@ -11444,7 +11490,7 @@ addEventToAll("#audioSource3", 'mousedown touchend focusin focusout', function(e
 		}, getById('multiselect-trigger3').parentNode);
 	}
 	e.stopPropagation();
-	e.preventDefault();
+	//e.preventDefault();
 });
 addEventToAll("#multiselect-trigger", 'mousedown touchend focusin focusout', function(e, ele) {
 	var state = ele.dataset.state || 0;

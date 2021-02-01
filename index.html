@@ -55,7 +55,7 @@
 			}
 		</style>
 		<link rel="stylesheet" href="./lineawesome/css/line-awesome.min.css" />
-		<link rel="stylesheet" href="./main.css?ver=43" />
+		<link rel="stylesheet" href="./main.css?ver=45" />
 		<script type="text/javascript" crossorigin="anonymous" src="./thirdparty/adapter.min.js"></script>
 	</head>
 	<body id="main" class="hidden">
@@ -67,7 +67,7 @@
 			<link itemprop="url" href="./media/obsNinja_logo_full.png" />
 		</span>
 		<script  type="text/javascript" crossorigin="anonymous"  src="./thirdparty/CodecsHandler.js?ver=26"></script>
-		<script  type="text/javascript" crossorigin="anonymous" src="./webrtc.js?ver=174"></script>
+		<script  type="text/javascript" crossorigin="anonymous" src="./webrtc.js?ver=176"></script>
 		<input id="zoomSlider" type="range" style="display: none;" />
 		<div id="header">
 			<a id="logoname" href="./" style="text-decoration: none; color: white; margin: 2px;">
@@ -76,7 +76,7 @@
 				</span>
 			</a>
 			<div id="head1" style="display: inline-block; padding:1px; position: relative;">
-				<input type="text" autocorrect="off" autocapitalize="none" id="joinroomID" autofocus name="joinroomID" size="22" placeholder="Join by Room Name here" alt="Enter a room name to join" title="Enter a room name to quick join" onkeyup="jumptoroom(event)"/>
+				<input type="text" autocorrect="off" autocapitalize="none" id="joinroomID" name="joinroomID" size="22" placeholder="Join by Room Name here" alt="Enter a room name to join" title="Enter a room name to quick join" onkeyup="jumptoroom(event)"/>
 				<button onclick="jumptoroom();"  role="button" aria-pressed="false" alt="Join room" title="Join room" >GO</button>
 			</div>
 			<div id="head3" style="display: inline-block;" class="advanced">
@@ -651,8 +651,7 @@
 								The VP9 codec on Chromium-based browsers seems to lag when screen-sharing at the moment. Use the OBS Virtual Camera as a capture source instead.
 							</li>
 							<br />
-
-                            🥳 Site Updated: Jan 30th, 2021. The previous version can be found at 
+                            🥳 Site Updated: <a href="https://github.com/steveseguin/obsninja/wiki/v16-release-notes">Fed 1st, 2021</a>. The previous version can be found at 
 							<a href="https://obs.ninja/v15/">https://obs.ninja/v15/</a> if you are having new issues.
 
 							<br />
@@ -1158,7 +1157,7 @@
 			}
 		
             var session = WebRTC.Media; // session is a required global variable if configuring manually. Run before loading main.js but after webrtc.js.
-			session.version = "16.0";
+			session.version = "16.1";
             session.streamID = session.generateStreamID(); // randomly generates a streamID for this session. You can set your own programmatically if needed
 			
 			session.defaultPassword = "someEncryptionKey123"; // Disabling improves compatibility and is helpful for debugging.
@@ -1223,7 +1222,7 @@
 		<script type="text/javascript" id="main-js" src="./main.js" data-translation="blank"></script>
 		<script type="text/javascript" crossorigin="anonymous" id="mixer-js" src="./mixer.js?ver=2"></script>
 	-->
-		<script type="text/javascript" crossorigin="anonymous" id="main-js" src="./main.js?ver=160"></script>
+		<script type="text/javascript" crossorigin="anonymous" id="main-js" src="./main.js?ver=162"></script>
 		<script type="text/javascript">
 			setTimeout(function(){ // lazy load
 				var script = document.createElement('script');

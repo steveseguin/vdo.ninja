@@ -483,24 +483,17 @@ button.glyphicon-button.active.focus {
 	position: absolute;
 	pointer-events: auto;
 }
-
+#container.vidcon {
+	height:100%;
+}
 @media only screen and (max-width: 700px){
-	#subControlButtons {
-		padding: 2px 4px; 
-		transform: scale(0.9);
-	}
 	#controlButtons {
-		height: 54px;
+		transform: scale(0.8) translateY(20%);
 	}
 }
 @media only screen and (max-width: 400px){
-	#subControlButtons {
-		padding: 1px 2px; 
-		zoom: .9; 
-		transform: scale(0.8);
-	}
 	#controlButtons {
-		height: 48px;
+		transform: scale(0.8) translateY(20%);
 	}
 }
 @media only screen and (max-width: 300px){
@@ -509,40 +502,80 @@ button.glyphicon-button.active.focus {
 	} 
 }
 
-@media only screen and (max-height: 700px){
-	#subControlButtons {
-		padding: 0;
-		bottom: 0em;
-		transform: scale(0.9);
-	}
-	#controlButtons {
-		height: 54px;
-	}
-}
+
+
+
 
 @media only screen and (max-height: 540px){
 	#subControlButtons {
-		padding: 0;
-		bottom: 0em;
-		transform: scale(0.85);
+		transform: scale(0.90);
 	} 
-	#controlButtons {
-		height: 51px;
+	#gridlayout>#container.vidcon {
+		height:90%
 	}
+	#controlButtons {
+		height:54px;
+	} 
 }
 @media only screen and (max-height: 400px){
 	#subControlButtons {
-		padding: 0;
-		bottom: 0em;
-		transform: scale(0.8);
+		transform: scale(0.85);
 	} 
-	#controlButtons {
-		height: 48px;
-	}
 	#header{
 		display:none;
 	}
+	#gridlayout>#container.vidcon {
+		height:85%
+	}
+	#controlButtons {
+		height:50px;
+	} 
 }
+@media only screen and (max-height: 240px){
+	#gridlayout>#container.vidcon {
+		height:78%
+	}
+	#subControlButtons {
+		transform: scale(0.77);
+	}
+	#controlButtons {
+		height:46.2px;
+	} 
+}
+@media only screen and (max-height: 190px){
+	#gridlayout>#container.vidcon {
+		height:75%
+	}
+	#subControlButtons {
+		transform: scale(0.73);
+	} 
+	#controlButtons {
+		height:42px
+	} 
+}
+@media only screen and (max-height: 160px){
+	#gridlayout>#container.vidcon {
+		height:70%
+	}
+	#subControlButtons {
+		transform: scale(0.65);
+	} 
+	#controlButtons {
+		height:38px
+	} 
+}
+@media only screen and (max-height: 120px){
+	#gridlayout>#container.vidcon {
+		height:70%
+	}
+	#subControlButtons {
+		transform: scale(0.52);
+	} 
+	#controlButtons {
+		height:30px
+	} 
+}
+
 
 @keyframes pulse {
 	0% {
@@ -1210,6 +1243,7 @@ img {
 }
 
 .popup .menu { margin: 2px; }
+
 .my-float {
 	margin-top: 7px;
 	opacity: 0.9;
@@ -1218,42 +1252,7 @@ img {
 	font-size: 32px;
 	color: white;
 }
-@media only screen and (max-height: 650px) {
-	.my-float {
-		margin-top: 4px;
-		margin-left: 1px;
-	}
-	
-	.toggleSize {
-		font-size: 24px;
-		color: white;
-	}
-	
-	.float {
-		opacity: 0.8;
-		width: 30px;
-		height: 30px;
-		background-color: #6666;
-		color: #FFF;
-		border-radius: 38px;
-		text-align: center;
-		margin: 5px;
-		pointer-events: auto;
-	}
-	
-	.float2 {
-		opacity: 0.8;
-		width: 30px;
-		height: 30px;
-		background-color: #8888;
-		color: #FFF;
-		border-radius: 38px;
-		text-align: center;
-		z-index: 10;
-		margin: 5px;
-		pointer-events: auto;
-	}
-}
+
 img {
 	max-width: 100%;
 }
