@@ -66,11 +66,8 @@
 				iframe.allowfullscreen ="true";
 
 				//iframe.allow = "autoplay";
-				var srcString =
-					"./?push=" +
-					streamID +
-					"&cleanoutput&privacy&webcam&audiodevice=0&fullscreen&transparent";
-
+				var srcString =	"./?push=" + streamID + "&cleanoutput&privacy&speedtest&webcam&audiodevice=0&fullscreen&transparent";
+				
 				if (urlParams.has("turn")) {
 					srcString = srcString + "&turn=" + urlParams.get("turn");
 				}
@@ -109,7 +106,7 @@
 				var iframeContainer = document.createElement("span");
 
 				iframe.allow = "autoplay";
-				var srcString = "./?view=" + streamID + "&cleanoutput&privacy&noaudio";
+				var srcString = "./?view=" + streamID + "&cleanoutput&privacy&noaudio&scale=0";
 
 				if (urlParams.has("turn")) {
 					srcString = srcString + "&turn=" + urlParams.get("turn");
