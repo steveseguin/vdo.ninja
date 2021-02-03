@@ -97,6 +97,7 @@ canvas {
     padding: 20px 0px;
     border: 1px solid #383838;
     cursor: pointer;
+	max-height:300px;
 }
 
 #log ul {

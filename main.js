@@ -1,7 +1,11 @@
 /*
- *  Copyright (c) 2020 Steve Seguin. All Rights Reserved.
- *
- */
+*  Copyright (c) 2020 Steve Seguin. All Rights Reserved.
+*
+*  Use of this source code is governed by the APGLv3 open-source license
+*  that can be found in the LICENSE file in the root of the source
+*  tree. Alternative licencing options can be made available on request.
+*
+*/
 /*jshint esversion: 6 */
 
 var formSubmitting = true;
@@ -2146,16 +2150,32 @@ if (urlParams.has('privacy') || urlParams.has('private') || urlParams.has('relay
 		}
 		errorlog(e);
 	}
-	if (session.maxvideobitrate !== false) {
-		if (session.maxvideobitrate > 2500) {
-			session.maxvideobitrate = 2500; // Please feel free to get rid of this if using your own TURN servers...
+	
+	if (urlParams.has('speedtest')){
+		if (session.maxvideobitrate !== false) {
+			if (session.maxvideobitrate > 6000) {
+				session.maxvideobitrate = 6000; // Please feel free to get rid of this if using your own TURN servers...
+			}
+		} else {
+			session.maxvideobitrate = 6000; // don't let people pull more than 2500 from you
+		}
+		if (session.bitrate !== false) {
+			if (session.bitrate > 6000) {
+				session.bitrate = 6000; // Please feel free to get rid of this if using your own TURN servers...
+			}
 		}
 	} else {
-		session.maxvideobitrate = 2500; // don't let people pull more than 2500 from you
-	}
-	if (session.bitrate !== false) {
-		if (session.bitrate > 2500) {
-			session.bitrate = 2500; // Please feel free to get rid of this if using your own TURN servers...
+		if (session.maxvideobitrate !== false) {
+			if (session.maxvideobitrate > 2500) {
+				session.maxvideobitrate = 2500; // Please feel free to get rid of this if using your own TURN servers...
+			}
+		} else {
+			session.maxvideobitrate = 2500; // don't let people pull more than 2500 from you
+		}
+		if (session.bitrate !== false) {
+			if (session.bitrate > 2500) {
+				session.bitrate = 2500; // Please feel free to get rid of this if using your own TURN servers...
+			}
 		}
 	}
 }
@@ -2378,21 +2398,23 @@ if (isIFrame) { // reduce CPU load if not needed.
 		if ("getLoudness" in e.data) {
 			log("GOT LOUDNESS REQUEST");
 			if (e.data.getLoudness == true) {
+				session.pushLoudness = true;
 				var loudness = {};
+				
 				for (var i in session.rpcs) {
 					loudness[session.rpcs[i].streamID] = session.rpcs[i].stats.Audio_Loudness;
 				}
+				
 				parent.postMessage({
 					"loudness": loudness
 				}, "*");
-				session.pushLoudness = true;
+				
 			} else {
 				session.pushLoudness = false;
 			}
 		}
 
 		if ("getStreamIDs" in e.data) {
-			log("GOT LOUDNESS REQUEST");
 			if (e.data.getStreamIDs == true) {
 				var streamIDs = {};
 				for (var i in session.rpcs) {
@@ -5046,8 +5068,10 @@ function createControlBox(UUID, soloLink, streamID) {
 		session.rpcs[UUID].voiceMeter.dataset.level = 0;
 	}
 
-	session.rpcs[UUID].voiceMeter.style.top = "1vh";
-	session.rpcs[UUID].voiceMeter.style.right = "1vh";
+	session.rpcs[UUID].voiceMeter.style.width = "10px";
+	session.rpcs[UUID].voiceMeter.style.height = "10px";
+	session.rpcs[UUID].voiceMeter.style.top = "8px";
+	session.rpcs[UUID].voiceMeter.style.right = "10px";
 
 
 	session.rpcs[UUID].remoteMuteElement = getById("muteStateTemplate").cloneNode(true);
@@ -6833,6 +6857,7 @@ async function toggleScreenShare(reload = false) { ////////////////////////////
 					errorlog(e);
 				}
 			}
+			session.refreshScale();
 			beforeScreenShare = null;
 		}
 		toggleSettings(forceShow = true);
@@ -7009,6 +7034,7 @@ async function grabScreen(quality = 0, audio = true, videoOnEnd = false) {
 									errorlog(e);
 								}
 							}
+							session.refreshScale();
 						}
 						beforeScreenShare = null;
 					}
@@ -7058,6 +7084,7 @@ async function grabScreen(quality = 0, audio = true, videoOnEnd = false) {
 						errorlog(e);
 					}
 				}
+				session.refreshScale();
 			} else {
 				toggleMute(true); // I might want to move this outside the loop, but whatever
 				for (UUID in session.pcs) {
@@ -7176,6 +7203,9 @@ async function grabVideo(quality = 0, eleName = 'previewWebcam', selector = "sel
 				});
 
 			}
+			var msg = {};
+			msg.videoMuted = true;
+			session.sendMessage(msg);
 		}
 		// end
 	} else {
@@ -7331,7 +7361,7 @@ async function grabVideo(quality = 0, eleName = 'previewWebcam', selector = "sel
 							errorlog(e);
 						}
 					}
-
+					session.refreshScale();
 				});
 
 				applyMirror(mirror, eleName);
@@ -7882,7 +7912,7 @@ function listAudioSettingsPrep() {
 			trackSet.currentAudioConstraints = track0.getSettings();
 		}
 
-		trackSet.trackLabel = "unknown";
+		trackSet.trackLabel = "unknown or none";
 		if (track0.label) {
 			trackSet.trackLabel = track0.label;
 		}
@@ -7928,7 +7958,7 @@ function listVideoSettingsPrep() {
 		return;
 	}
 	var msg = {};
-	msg.trackLabel = "unknown";
+	msg.trackLabel = "unknown or none";
 	if (track0.label) {
 		msg.trackLabel = track0.label;
 	}
@@ -11200,6 +11230,352 @@ function recordLocalVideo(action = null, videoKbps = 6000) { // event.currentTar
 }
 
 
+function changeAudioOutputDevice(ele) {
+	if (session.sink){
+		if ((iOS) || (iPad)){return;} // iOS devices do not support this.
+		
+		if (typeof ele.sinkId !== 'undefined'){
+			navigator.mediaDevices.getUserMedia({audio:true,video:false}).then(function (stream){
+				ele.setSinkId(session.sink).then(() => {
+					log("New Output Device:"+session.sink);
+				}).catch(errorlog);
+				stream.getTracks().forEach(track => {
+					track.stop();
+				});
+			}).catch(function canplayspecificaudio(){errorlog("Can't play out to specific audio device without mic permissions allowed");});
+		} else {
+			warnlog("Your browser does not support alternative audio sources.");
+		}
+	}
+}
+
+function addAudioPipeline(stream, UUID, track){  // INBOUND AUDIO EFFECTS
+	try{
+		log("Triggered webaudio effects path");
+		
+		if (session.audioEffects!==true){ // audio effects is not enable. Do not apply.
+				errorlog("Add Audio Pipeline tried to add effects but should be disabled?");
+				return stream;
+		}
+		for (var tid in session.rpcs[UUID].inboundAudioPipeline){
+			delete session.rpcs[UUID].inboundAudioPipeline[tid]; // get rid of old nodes.
+		}
+		var trackid = track.id;
+		session.rpcs[UUID].inboundAudioPipeline[trackid] = {};
+		
+		session.rpcs[UUID].inboundAudioPipeline[trackid].mediaStream = new MediaStream();
+		session.rpcs[UUID].inboundAudioPipeline[trackid].mediaStream.addTrack(track);
+		session.rpcs[UUID].inboundAudioPipeline[trackid].mutedAudio = new Audio();
+		session.rpcs[UUID].inboundAudioPipeline[trackid].mutedAudio.muted = true;
+		session.rpcs[UUID].inboundAudioPipeline[trackid].mutedAudio.srcObject = session.rpcs[UUID].inboundAudioPipeline[trackid].mediaStream; // needs to be added as an streamed element to be usable, even if its hidden
+		
+		session.rpcs[UUID].inboundAudioPipeline[trackid].mutedAudio.play().then(_ => {
+			log("playing");
+		}).catch(warnlog);
+	
+		// https://developer.mozilla.org/en-US/docs/Web/API/AudioContext/createMediaStreamTrackSource
+		source = session.audioCtx.createMediaStreamSource(session.rpcs[UUID].inboundAudioPipeline[trackid].mediaStream);
+		
+		//////////////////
+	
+		var screwedUp = false;
+		session.rpcs[UUID].inboundAudioPipeline[trackid].destination = false;
+		if (session.sync!==false){
+			log("adding a delay node to audio");
+			source = addDelayNode( source, UUID, trackid);
+			screwedUp = true;
+		}
+		
+		if (session.style===2){
+			log("adding a fftwave node to audio");
+			source = fftWaveform( source, UUID, trackid);
+		} else if (session.style===3){
+			log("adding a loudness meter node to audio");
+			source = audioMeterGuest(source, UUID, trackid);
+		} else if (session.audioMeterGuest){
+			log("adding a loudness meter node to audio");
+			source = audioMeterGuest(source, UUID, trackid);
+		}
+		
+		if (session.offsetChannel !==false){  // proably better to do this last.
+			log("adding offset channels");
+			session.rpcs[UUID].inboundAudioPipeline[trackid].destination = session.audioCtx.createMediaStreamDestination();
+			source = offsetChannel( session.rpcs[UUID].inboundAudioPipeline[trackid].destination, source);
+			screwedUp = true;
+		}
+		
+		if (screwedUp){
+			if (session.rpcs[UUID].inboundAudioPipeline[trackid].destination===false){
+				session.rpcs[UUID].inboundAudioPipeline[trackid].destination = session.audioCtx.createMediaStreamDestination();
+			}
+			source.connect(session.rpcs[UUID].inboundAudioPipeline[trackid].destination);
+			stream.getTracks().forEach((trk)=>{
+				if (trackid != trk.id){
+					session.rpcs[UUID].inboundAudioPipeline[trackid].destination.stream.addTrack(trk);
+					log("secondary stream added");
+					log(trk);
+				}
+			});
+			
+			return session.rpcs[UUID].inboundAudioPipeline[trackid].destination.stream;
+		}
+		return stream;
+	} catch(e) {errorlog(e);}
+	return stream;
+}
+
+function offsetChannel( destination, source){
+	session.audioCtx.destination.channelCountMode = 'explicit';
+	session.audioCtx.destination.channelInterpretation = 'discrete';
+	destination.channelCountMode = 'explicit';
+	destination.channelInterpretation = 'discrete';
+	
+	try {
+		destination.channelCount = session.audioChannels;
+	} catch (e){errorlog("Max channels: "+destination.channelCount);}
+	
+	var splitter = session.audioCtx.createChannelSplitter(2);
+	var merger = session.audioCtx.createChannelMerger(2+session.offsetChannel);
+	
+	source.connect(splitter);
+	splitter.connect(merger, 0,session.offsetChannel);
+	
+	if ((session.stereo) && (session.stereo!=3)){
+		splitter.connect(merger, 1, 1+session.offsetChannel);
+	}
+	return merger;
+}
+
+function addDelayNode(source, UUID, trackid){  // append the delay Node to the track??? WOULD THIS WORK?
+	session.rpcs[UUID].inboundAudioPipeline[trackid].delayNode = session.audioCtx.createDelay(5.0);
+	var delay = parseFloat(session.sync/1000);
+	if (delay<0){delay=0;}
+	session.rpcs[UUID].inboundAudioPipeline[trackid].delayNode.delayTime.value = delay; // delayTime takes it in seconds.
+	source.connect(session.rpcs[UUID].inboundAudioPipeline[trackid].delayNode);
+	log("added new delay node");
+	return session.rpcs[UUID].inboundAudioPipeline[trackid].delayNode;
+}
+
+function fftWaveform( source, UUID, trackid){  // append the delay Node to the track??? WOULD THIS WORK?
+	// https://developer.mozilla.org/en-US/docs/Web/API/AnalyserNode
+	session.rpcs[UUID].inboundAudioPipeline[trackid].analyser = session.audioCtx.createAnalyser();
+	session.rpcs[UUID].inboundAudioPipeline[trackid].analyser.fftSize = 512;
+	var bufferLength = session.rpcs[UUID].inboundAudioPipeline[trackid].analyser.frequencyBinCount;
+	var dataArray = new Uint8Array(bufferLength);
+	session.rpcs[UUID].inboundAudioPipeline[trackid].analyser.getByteTimeDomainData(dataArray);
+	// analyser.getByteTimeDomainData(dataArray);
+	source.connect(session.rpcs[UUID].inboundAudioPipeline[trackid].analyser);
+	
+	if (session.rpcs[UUID].canvas===null){
+		session.rpcs[UUID].canvas = document.createElement("canvas");
+		session.rpcs[UUID].canvas.width="256";
+		session.rpcs[UUID].canvas.height="144";
+		session.rpcs[UUID].canvas.dataset.UUID = UUID
+		session.rpcs[UUID].canvas.style.pointerEvents = "auto";
+		session.rpcs[UUID].canvasCtx = session.rpcs[UUID].canvas.getContext('2d');
+		//
+		session.rpcs[UUID].canvas.addEventListener('click', function(e) { // show stats of video if double clicked
+			log("clicked");
+			try {
+				if ((e.ctrlKey)||(e.metaKey)){
+					e.preventDefault();
+					var uid = e.currentTarget.dataset.UUID;
+					if ("stats" in session.rpcs[uid]){
+						
+						if (getById("menuStatsBox")){
+							clearInterval(getById("menuStatsBox").interval);
+							getById("menuStatsBox").remove();
+						}
+								
+						var menu = document.createElement("div");
+						menu.id = "menuStatsBox";
+						menu.className = "debugStats remotestats";
+						getById('main').appendChild(menu);
+						
+						menu.style.left = parseInt(Math.random()*10+15)+"px"
+						menu.style.top = parseInt(Math.random()*10+5)+"px"
+						
+						menu.innerHTML="<h1 data-translate='statistics'>Statistics</h1>";
+						var menuCloseBtn = document.createElement("button");
+						menuCloseBtn.className="close";
+						menuCloseBtn.innerHTML="×";
+						menu.appendChild(menuCloseBtn);
+						
+						var innerMenu = document.createElement("div");
+						menu.appendChild(innerMenu);
+						
+						printViewStats(innerMenu, session.rpcs[uid].stats, session.rpcs[uid].streamID );
+						
+						menu.interval = setInterval(printViewStats,3000, innerMenu, session.rpcs[uid].stats, session.rpcs[uid].streamID);
+						
+						menuCloseBtn.addEventListener('click', function(eve) {
+							clearInterval(menu.interval);
+							eve.currentTarget.parentNode.remove();
+						});
+						
+					}
+					e.stopPropagation();
+					return false;
+				}
+			} catch(e){log("3");errorlog(e);}
+		});
+		
+		if (session.statsMenu){
+			if ("stats" in session.rpcs[UUID]){
+				
+				if (getById("menuStatsBox")){
+					clearInterval(getById("menuStatsBox").interval);
+					getById("menuStatsBox").remove();
+				}
+						
+				var menu = document.createElement("div");
+				menu.id = "menuStatsBox";
+				menu.className = "debugStats remotestats";
+				getById('main').appendChild(menu);
+				
+				menu.style.left = parseInt(Math.random()*10+15)+"px"
+				menu.style.top = parseInt(Math.random()*10+5)+"px"
+				
+				menu.innerHTML="<h1 data-translate='statistics'>Statistics</h1>";
+				var menuCloseBtn = document.createElement("button");
+				menuCloseBtn.className="close";
+				menuCloseBtn.innerHTML="×";
+				menu.appendChild(menuCloseBtn);
+				
+				var innerMenu = document.createElement("div");
+				menu.appendChild(innerMenu);
+				
+				printViewStats(innerMenu, session.rpcs[UUID].stats, session.rpcs[UUID].streamID );
+				
+				menu.interval = setInterval(printViewStats,3000, innerMenu, session.rpcs[UUID].stats, session.rpcs[UUID].streamID);
+				
+				menuCloseBtn.addEventListener('click', function(e) {
+					clearInterval(menu.interval);
+					e.currentTarget.parentNode.remove();
+				});
+				
+			}
+		}
+		//
+		updateMixer();
+		//getById("gridlayout").appendChild(session.rpcs[UUID].canvas);
+	}
+	
+	var fftInterval = setInterval(function(uuid){
+		try{
+			session.rpcs[UUID].inboundAudioPipeline[trackid].analyser.getByteTimeDomainData(dataArray);
+			session.rpcs[uuid].canvasCtx.fillStyle = "rgba(0, 0, 0, 0.2)";
+			session.rpcs[uuid].canvasCtx.fillRect(0, 0, session.rpcs[uuid].canvas.width, session.rpcs[uuid].canvas.height);
+			session.rpcs[uuid].canvasCtx.lineWidth = 2;
+			session.rpcs[uuid].canvasCtx.strokeStyle = "rgb(111, 255, 111)";
+			
+			var sliceWidth = session.rpcs[uuid].canvas.width * 1.0 / bufferLength;
+			var x = 0;
+
+			var loudness = dataArray;
+			var Squares = loudness.map((val) => ((val-128.0)*(val-128.0)));
+			var Sum = Squares.reduce((acum, val) => (acum + val));
+			var Mean = Sum/loudness.length;
+			loudness = Math.sqrt(Mean)*10;
+			session.rpcs[uuid].stats.Audio_Loudness = parseInt(loudness);
+			
+			if (session.pushLoudness==true){
+				var loudnessObj = {};
+				loudnessObj[session.rpcs[uuid].streamID] = session.rpcs[uuid].stats.Audio_Loudness;
+				
+				if (isIFrame){
+					parent.postMessage({"loudness": loudnessObj, "action":"loudness", "value":loudness, "UUID":uuid}, "*");
+				}
+			}
+			
+			if (loudness<2){return;}
+			
+			//log(bufferLength);
+			session.rpcs[uuid].canvasCtx.beginPath();
+			var m = session.rpcs[uuid].canvas.height / 256.0;
+			session.rpcs[uuid].canvasCtx.moveTo(0, dataArray[0]*m);
+			for (var i = 1; i < bufferLength; i++){
+				var y = dataArray[i] * m;
+				 session.rpcs[uuid].canvasCtx.lineTo(x, y);
+				x += sliceWidth;
+			}
+			session.rpcs[uuid].canvasCtx.lineTo(session.rpcs[uuid].canvas.width, session.rpcs[uuid].canvas.height / 2);
+			session.rpcs[uuid].canvasCtx.stroke();
+		} catch(e){
+			warnlog(e);
+			warnlog("Did the remote source disconnect?");
+			clearInterval(fftInterval);
+			warnlog(session.rpcs[uuid]);
+		}
+	},50, UUID);
+	return session.rpcs[UUID].inboundAudioPipeline[trackid].analyser; 
+}
+
+function audioMeterGuest(mediaStreamSource, UUID, trackid){
+	log("audioMeterGuest started");
+	session.rpcs[UUID].inboundAudioPipeline[trackid].analyser = session.audioCtx.createAnalyser();
+	mediaStreamSource.connect(session.rpcs[UUID].inboundAudioPipeline[trackid].analyser);
+	session.rpcs[UUID].inboundAudioPipeline[trackid].analyser.fftSize = 256;
+	session.rpcs[UUID].inboundAudioPipeline[trackid].analyser.smoothingTimeConstant = 0.05;
+	
+	var bufferLength = session.rpcs[UUID].inboundAudioPipeline[trackid].analyser.frequencyBinCount;
+	var dataArray = new Uint8Array(bufferLength);
+	
+	function updateLevels() {
+		try {
+			session.rpcs[UUID].inboundAudioPipeline[trackid].analyser.getByteFrequencyData(dataArray);
+			var total = 0;
+			for (var i = 0; i < dataArray.length; i++){
+				total += dataArray[i];
+			}
+			total = total/100;
+			session.rpcs[UUID].stats.Audio_Loudness = parseInt(total);
+			if (session.rpcs[UUID].voiceMeter){
+				if (total>15){
+					session.rpcs[UUID].voiceMeter.style.opacity = 100; // temporary
+				} else {
+					session.rpcs[UUID].voiceMeter.style.opacity = 0; // temporary
+				}
+				session.rpcs[UUID].voiceMeter.dataset.level = total;
+			} else {
+				session.rpcs[UUID].voiceMeter = getById("voiceMeterTemplate").cloneNode(true);
+				session.rpcs[UUID].voiceMeter.id = "voiceMeter_"+UUID;
+				if (total>15){
+					session.rpcs[UUID].voiceMeter.style.opacity = 100; // temporary
+				} else {
+					session.rpcs[UUID].voiceMeter.style.opacity = 0; // temporary
+				}
+				session.rpcs[UUID].voiceMeter.style.display = "block";
+				session.rpcs[UUID].voiceMeter.dataset.level = total;
+				updateMixer();
+			}
+			
+			if (session.pushLoudness==true){
+				var loudnessObj = {};
+				loudnessObj[session.rpcs[UUID].streamID] = session.rpcs[UUID].stats.Audio_Loudness;
+				
+				if (isIFrame){
+					parent.postMessage({"loudness": loudnessObj, "action":"loudness", "value":session.rpcs[UUID].stats.Audio_Loudness, "UUID":UUID}, "*");
+				}
+			}
+			try{
+				clearTimeout(session.rpcs[UUID].inboundAudioPipeline[trackid].analyser.interval);
+				session.rpcs[UUID].inboundAudioPipeline[trackid].analyser.interval = setTimeout(function(){updateLevels();},100);
+			} catch(e){
+				log("closing old inaudio pipeline");
+			}
+		} catch(e){
+			warnlog(e);
+			return;
+		}
+	};
+	clearTimeout(session.rpcs[UUID].inboundAudioPipeline[trackid].analyser.interval);
+	session.rpcs[UUID].inboundAudioPipeline[trackid].analyser.interval = setTimeout(function(){updateLevels();},100);
+	return session.rpcs[UUID].inboundAudioPipeline[trackid].analyser;
+}
+
+
+
 if (session.midiHotkeys) {
 	var script = document.createElement('script');
 	script.onload = function() {
@@ -11365,7 +11741,6 @@ if (session.midiHotkeys) {
 							
 						}
 					});
-				
 				}
 			}
 		});

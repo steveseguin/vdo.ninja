@@ -1225,7 +1225,6 @@ img {
 .myVideo {
 	box-shadow: rgb(88, 88, 88) 0px 0px 5px 1px;
 	max-width: 800px !important;
-	width: 100% !important;
 	max-height: 100% !important;
 	height: auto !important;
 	display: block !important;
