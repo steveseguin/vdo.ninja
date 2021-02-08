@@ -159,7 +159,7 @@ const eventer = window[eventMethod];
 const messageEvent = eventMethod === "attachEvent" ? "onmessage" : "message";
 
 eventer(messageEvent, function (e) {
-	if (e.source != iframe.contentWindow){return} // reject messages send from other iframes
+	if (e.source !== iframe.contentWindow){return} // reject messages send from other iframes
 
 	if ("stats" in e.data){
 		const outputWindow = document.createElement("div");
