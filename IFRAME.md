@@ -164,7 +164,7 @@ eventer(messageEvent, function (e) {
 	if ("stats" in e.data){
 		const outputWindow = document.createElement("div");
 
-		const out = "<br />total_inbound_connections:"+e.data.stats.total_inbound_connections;
+		let out = "<br />total_inbound_connections:"+e.data.stats.total_inbound_connections;
 		out += "<br />total_outbound_connections:"+e.data.stats.total_outbound_connections;
 
 		for (const streamID in e.data.stats.inbound_stats){
