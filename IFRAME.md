@@ -55,97 +55,97 @@ Some of the more interesting ones primarily for iframe users might include:
 As for the actually details for methods and options available to dynamically control child OBSN iframe, they are primarily kept up to via the iframe.html file that is mentioned previously. see: _iframe.html_. Below is a snippet from that file:
 
 ```js
-const button = document.createElement("button");
+let button = document.createElement("button");
 button.innerHTML = "Mute Speaker";
 button.onclick = () => { iframe.contentWindow.postMessage({ "mute": true }, '*'); };
 iframeContainer.appendChild(button);
 
-const button = document.createElement("button");
+button = document.createElement("button");
 button.innerHTML = "Un-Mute Speaker";
 button.onclick = () => { iframe.contentWindow.postMessage({ "mute": false }, '*'); };
 iframeContainer.appendChild(button);
 
-const button = document.createElement("button");
+button = document.createElement("button");
 button.innerHTML = "Toggle Speaker";
 button.onclick = () => { iframe.contentWindow.postMessage({ "mute": "toggle" }, '*'); }
 iframeContainer.appendChild(button);
 
-const button = document.createElement("button");
+button = document.createElement("button");
 button.innerHTML = "Mute Mic";
 button.onclick = () => { iframe.contentWindow.postMessage({ "mic": false }, '*'); };
 iframeContainer.appendChild(button);
 
-const button = document.createElement("button");
+button = document.createElement("button");
 button.innerHTML = "Un-Mute Mic";
 button.onclick = () => { iframe.contentWindow.postMessage({ "mic": true }, '*'); };
 iframeContainer.appendChild(button);
 
-const button = document.createElement("button");
+button = document.createElement("button");
 button.innerHTML = "Toggle Mic";
 button.onclick = () => { iframe.contentWindow.postMessage({ "mic": "toggle" }, '*'); };
 iframeContainer.appendChild(button);
 
-const button = document.createElement("button");
+button = document.createElement("button");
 button.innerHTML = "Disconnect";
 button.onclick = () => { iframe.contentWindow.postMessage({ "close": true }, '*'); };
 iframeContainer.appendChild(button);
 
-const button = document.createElement("button");
+button = document.createElement("button");
 button.innerHTML = "Low Bitrate";
 button.onclick = () => { iframe.contentWindow.postMessage({ "bitrate": 30 }, '*'); };
 iframeContainer.appendChild(button);
 
-const button = document.createElement("button");
+button = document.createElement("button");
 button.innerHTML = "High Bitrate";
 button.onclick = () => { iframe.contentWindow.postMessage({ "bitrate": 5000 }, '*'); };
 iframeContainer.appendChild(button);
 
-const button = document.createElement("button");
+button = document.createElement("button");
 button.innerHTML = "Default Bitrate";
 button.onclick = () => { iframe.contentWindow.postMessage({ "bitrate": -1 }, '*'); };
 iframeContainer.appendChild(button);
 
-const button = document.createElement("button");
+button = document.createElement("button");
 button.innerHTML = "Reload";
 button.onclick = () => { iframe.contentWindow.postMessage({ "reload": true }, '*'); };
 iframeContainer.appendChild(button);
 
-const button = document.createElement("button");
+button = document.createElement("button");
 button.innerHTML = "50% Volume";
 button.onclick = () => { iframe.contentWindow.postMessage({ "volume": 0.5 }, '*'); };
 iframeContainer.appendChild(button);
 
-const button = document.createElement("button");
+button = document.createElement("button");
 button.innerHTML = "100% Volume";
 button.onclick = () => { iframe.contentWindow.postMessage({ "volume": 1.0 }, '*'); };
 iframeContainer.appendChild(button);
 
-const button = document.createElement("button");
+button = document.createElement("button");
 button.innerHTML = "Request Stats";
 button.onclick = () => { iframe.contentWindow.postMessage({ "getStats": true }, '*'); };
 iframeContainer.appendChild(button);
 
-const button = document.createElement("button");
+button = document.createElement("button");
 button.innerHTML = "Request Loudness Levels";
 button.onclick = () => { iframe.contentWindow.postMessage({ "getLoudness": true }, '*'); };
 iframeContainer.appendChild(button);
 
-const button = document.createElement("button");
+button = document.createElement("button");
 button.innerHTML = "Stop Sending Loudness Levels";
 button.onclick = () => { iframe.contentWindow.postMessage({ "getLoudness": false }, '*'); };
 iframeContainer.appendChild(button);
 
-const button = document.createElement("button");
+button = document.createElement("button");
 button.innerHTML = "Say Hello";
 button.onclick = () => { iframe.contentWindow.postMessage({ "sendChat": "Hello!" }, '*'); };
 iframeContainer.appendChild(button);
 
-const button = document.createElement("button");
+button = document.createElement("button");
 button.innerHTML = "previewWebcam()";
 button.onclick = () => { iframe.contentWindow.postMessage({ "function": "previewWebcam" }, '*'); };
 iframeContainer.appendChild(button);
 
-const button = document.createElement("button");
+button = document.createElement("button");
 button.innerHTML = "CLOSE IFRAME";
 button.onclick = () => { iframeContainer.parentNode.removeChild(iframeContainer); };
 iframeContainer.appendChild(button);
