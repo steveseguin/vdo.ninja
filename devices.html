@@ -158,8 +158,8 @@
 				document.getElementById(element).innerHTML = output;
 			}
 
-			document.getElementById("devicesUrl").onclick = () => {
-				this.select();
+			document.getElementById("devicesUrl").onclick = (e) => {
+				e.target.select();
 				document.execCommand("copy");
 			};
 
