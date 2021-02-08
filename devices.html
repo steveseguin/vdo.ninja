@@ -146,18 +146,13 @@
 				Object.entries(json)
 					.sort()
 					.forEach(([key, value]) => {
-						output += "<div class='device' onclick='addDevice(this)'>";
-
-						output +=
-							"<span class='device-name'>" +
-							value.label +
-							"</span><span class='device-id' data-device-type='" +
-							value.kind +
-							"'>" +
-							value.deviceId +
-							"</span>";
-
-						output += "</div>";
+						output += `
+						<div class='device' onclick='addDevice(this)'>
+							<span class='device-name'>${value.label}</span>
+							<span class='device-id' data-device-type='${value.kind}'>
+								${value.deviceId}
+							</span>
+						</div>`;
 					});
 				output += "</div>";
 				document.getElementById(element).innerHTML = output;
