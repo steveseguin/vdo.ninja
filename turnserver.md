@@ -42,8 +42,8 @@ Next, we are going to open up some ports... just in case they are blocked by def
 ```
 sudo ufw allow 3478/tcp # The default coturn TCP port
 sudo ufw allow 3478/udp # The default coturn UDP port
-sudo ufw allow 443/tcp # The HTTPS UDP port
-sudo ufw allow 443/udp # The HTTPS TCP port
+sudo ufw allow 443/tcp # The HTTPS TCP port
+sudo ufw allow 443/udp # The HTTPS UDP port
 sudo ufw allow 49152:65535/tcp
 sudo ufw allow 49152:65535/udp
 ```
