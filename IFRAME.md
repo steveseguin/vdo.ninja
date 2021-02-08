@@ -57,97 +57,97 @@ As for the actually details for methods and options available to dynamically con
 ```js
 const button = document.createElement("button");
 button.innerHTML = "Mute Speaker";
-button.onclick = function(){iframe.contentWindow.postMessage({"mute":true}, '*');};
+button.onclick = () => { iframe.contentWindow.postMessage({ "mute": true }, '*'); };
 iframeContainer.appendChild(button);
 
 const button = document.createElement("button");
 button.innerHTML = "Un-Mute Speaker";
-button.onclick = function(){iframe.contentWindow.postMessage({"mute":false}, '*');};
+button.onclick = () => { iframe.contentWindow.postMessage({ "mute": false }, '*'); };
 iframeContainer.appendChild(button);
 
 const button = document.createElement("button");
 button.innerHTML = "Toggle Speaker";
-button.onclick = function(){iframe.contentWindow.postMessage({"mute":"toggle"}, '*');}
+button.onclick = () => { iframe.contentWindow.postMessage({ "mute": "toggle" }, '*'); }
 iframeContainer.appendChild(button);
 
 const button = document.createElement("button");
 button.innerHTML = "Mute Mic";
-button.onclick = function(){iframe.contentWindow.postMessage({"mic":false}, '*');};
+button.onclick = () => { iframe.contentWindow.postMessage({ "mic": false }, '*'); };
 iframeContainer.appendChild(button);
 
 const button = document.createElement("button");
 button.innerHTML = "Un-Mute Mic";
-button.onclick = function(){iframe.contentWindow.postMessage({"mic":true}, '*');};
+button.onclick = () => { iframe.contentWindow.postMessage({ "mic": true }, '*'); };
 iframeContainer.appendChild(button);
 
 const button = document.createElement("button");
 button.innerHTML = "Toggle Mic";
-button.onclick = function(){iframe.contentWindow.postMessage({"mic":"toggle"}, '*');};
+button.onclick = () => { iframe.contentWindow.postMessage({ "mic": "toggle" }, '*'); };
 iframeContainer.appendChild(button);
 
 const button = document.createElement("button");
 button.innerHTML = "Disconnect";
-button.onclick = function(){iframe.contentWindow.postMessage({"close":true}, '*');};
+button.onclick = () => { iframe.contentWindow.postMessage({ "close": true }, '*'); };
 iframeContainer.appendChild(button);
 
 const button = document.createElement("button");
 button.innerHTML = "Low Bitrate";
-button.onclick = function(){iframe.contentWindow.postMessage({"bitrate":30}, '*');};
+button.onclick = () => { iframe.contentWindow.postMessage({ "bitrate": 30 }, '*'); };
 iframeContainer.appendChild(button);
 
 const button = document.createElement("button");
 button.innerHTML = "High Bitrate";
-button.onclick = function(){iframe.contentWindow.postMessage({"bitrate":5000}, '*');};
+button.onclick = () => { iframe.contentWindow.postMessage({ "bitrate": 5000 }, '*'); };
 iframeContainer.appendChild(button);
 
 const button = document.createElement("button");
 button.innerHTML = "Default Bitrate";
-button.onclick = function(){iframe.contentWindow.postMessage({"bitrate":-1}, '*');};
+button.onclick = () => { iframe.contentWindow.postMessage({ "bitrate": -1 }, '*'); };
 iframeContainer.appendChild(button);
 
 const button = document.createElement("button");
 button.innerHTML = "Reload";
-button.onclick = function(){iframe.contentWindow.postMessage({"reload":true}, '*');};
+button.onclick = () => { iframe.contentWindow.postMessage({ "reload": true }, '*'); };
 iframeContainer.appendChild(button);
 
 const button = document.createElement("button");
 button.innerHTML = "50% Volume";
-button.onclick = function(){iframe.contentWindow.postMessage({"volume":0.5}, '*');};
+button.onclick = () => { iframe.contentWindow.postMessage({ "volume": 0.5 }, '*'); };
 iframeContainer.appendChild(button);
 
 const button = document.createElement("button");
 button.innerHTML = "100% Volume";
-button.onclick = function(){iframe.contentWindow.postMessage({"volume":1.0}, '*');};
+button.onclick = () => { iframe.contentWindow.postMessage({ "volume": 1.0 }, '*'); };
 iframeContainer.appendChild(button);
 
 const button = document.createElement("button");
 button.innerHTML = "Request Stats";
-button.onclick = function(){iframe.contentWindow.postMessage({"getStats":true}, '*');};
+button.onclick = () => { iframe.contentWindow.postMessage({ "getStats": true }, '*'); };
 iframeContainer.appendChild(button);
 
 const button = document.createElement("button");
 button.innerHTML = "Request Loudness Levels";
-button.onclick = function(){iframe.contentWindow.postMessage({"getLoudness":true}, '*');};
+button.onclick = () => { iframe.contentWindow.postMessage({ "getLoudness": true }, '*'); };
 iframeContainer.appendChild(button);
 
 const button = document.createElement("button");
 button.innerHTML = "Stop Sending Loudness Levels";
-button.onclick = function(){iframe.contentWindow.postMessage({"getLoudness":false}, '*');};
+button.onclick = () => { iframe.contentWindow.postMessage({ "getLoudness": false }, '*'); };
 iframeContainer.appendChild(button);
 
 const button = document.createElement("button");
 button.innerHTML = "Say Hello";
-button.onclick = function(){iframe.contentWindow.postMessage({"sendChat":"Hello!"}, '*');};
+button.onclick = () => { iframe.contentWindow.postMessage({ "sendChat": "Hello!" }, '*'); };
 iframeContainer.appendChild(button);
 
 const button = document.createElement("button");
 button.innerHTML = "previewWebcam()";
-button.onclick = function(){iframe.contentWindow.postMessage({"function":"previewWebcam"}, '*');};
+button.onclick = () => { iframe.contentWindow.postMessage({ "function": "previewWebcam" }, '*'); };
 iframeContainer.appendChild(button);
 
 const button = document.createElement("button");
 button.innerHTML = "CLOSE IFRAME";
-button.onclick = function(){iframeContainer.parentNode.removeChild(iframeContainer);};
+button.onclick = () => { iframeContainer.parentNode.removeChild(iframeContainer); };
 iframeContainer.appendChild(button);
 
 As for listening events, where the parent listens for responses or events from the OBSN child frame:
