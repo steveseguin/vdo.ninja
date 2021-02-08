@@ -57,156 +57,240 @@ As for the actually details for methods and options available to dynamically con
 ```js
 let button = document.createElement("button");
 button.innerHTML = "Mute Speaker";
-button.onclick = () => { iframe.contentWindow.postMessage({ "mute": true }, '*'); };
+button.onclick = () => {
+    iframe.contentWindow.postMessage({
+        "mute": true
+    }, '*');
+};
 iframeContainer.appendChild(button);
 
 button = document.createElement("button");
 button.innerHTML = "Un-Mute Speaker";
-button.onclick = () => { iframe.contentWindow.postMessage({ "mute": false }, '*'); };
+button.onclick = () => {
+    iframe.contentWindow.postMessage({
+        "mute": false
+    }, '*');
+};
 iframeContainer.appendChild(button);
 
 button = document.createElement("button");
 button.innerHTML = "Toggle Speaker";
-button.onclick = () => { iframe.contentWindow.postMessage({ "mute": "toggle" }, '*'); }
+button.onclick = () => {
+    iframe.contentWindow.postMessage({
+        "mute": "toggle"
+    }, '*');
+}
 iframeContainer.appendChild(button);
 
 button = document.createElement("button");
 button.innerHTML = "Mute Mic";
-button.onclick = () => { iframe.contentWindow.postMessage({ "mic": false }, '*'); };
+button.onclick = () => {
+    iframe.contentWindow.postMessage({
+        "mic": false
+    }, '*');
+};
 iframeContainer.appendChild(button);
 
 button = document.createElement("button");
 button.innerHTML = "Un-Mute Mic";
-button.onclick = () => { iframe.contentWindow.postMessage({ "mic": true }, '*'); };
+button.onclick = () => {
+    iframe.contentWindow.postMessage({
+        "mic": true
+    }, '*');
+};
 iframeContainer.appendChild(button);
 
 button = document.createElement("button");
 button.innerHTML = "Toggle Mic";
-button.onclick = () => { iframe.contentWindow.postMessage({ "mic": "toggle" }, '*'); };
+button.onclick = () => {
+    iframe.contentWindow.postMessage({
+        "mic": "toggle"
+    }, '*');
+};
 iframeContainer.appendChild(button);
 
 button = document.createElement("button");
 button.innerHTML = "Disconnect";
-button.onclick = () => { iframe.contentWindow.postMessage({ "close": true }, '*'); };
+button.onclick = () => {
+    iframe.contentWindow.postMessage({
+        "close": true
+    }, '*');
+};
 iframeContainer.appendChild(button);
 
 button = document.createElement("button");
 button.innerHTML = "Low Bitrate";
-button.onclick = () => { iframe.contentWindow.postMessage({ "bitrate": 30 }, '*'); };
+button.onclick = () => {
+    iframe.contentWindow.postMessage({
+        "bitrate": 30
+    }, '*');
+};
 iframeContainer.appendChild(button);
 
 button = document.createElement("button");
 button.innerHTML = "High Bitrate";
-button.onclick = () => { iframe.contentWindow.postMessage({ "bitrate": 5000 }, '*'); };
+button.onclick = () => {
+    iframe.contentWindow.postMessage({
+        "bitrate": 5000
+    }, '*');
+};
 iframeContainer.appendChild(button);
 
 button = document.createElement("button");
 button.innerHTML = "Default Bitrate";
-button.onclick = () => { iframe.contentWindow.postMessage({ "bitrate": -1 }, '*'); };
+button.onclick = () => {
+    iframe.contentWindow.postMessage({
+        "bitrate": -1
+    }, '*');
+};
 iframeContainer.appendChild(button);
 
 button = document.createElement("button");
 button.innerHTML = "Reload";
-button.onclick = () => { iframe.contentWindow.postMessage({ "reload": true }, '*'); };
+button.onclick = () => {
+    iframe.contentWindow.postMessage({
+        "reload": true
+    }, '*');
+};
 iframeContainer.appendChild(button);
 
 button = document.createElement("button");
 button.innerHTML = "50% Volume";
-button.onclick = () => { iframe.contentWindow.postMessage({ "volume": 0.5 }, '*'); };
+button.onclick = () => {
+    iframe.contentWindow.postMessage({
+        "volume": 0.5
+    }, '*');
+};
 iframeContainer.appendChild(button);
 
 button = document.createElement("button");
 button.innerHTML = "100% Volume";
-button.onclick = () => { iframe.contentWindow.postMessage({ "volume": 1.0 }, '*'); };
+button.onclick = () => {
+    iframe.contentWindow.postMessage({
+        "volume": 1.0
+    }, '*');
+};
 iframeContainer.appendChild(button);
 
 button = document.createElement("button");
 button.innerHTML = "Request Stats";
-button.onclick = () => { iframe.contentWindow.postMessage({ "getStats": true }, '*'); };
+button.onclick = () => {
+    iframe.contentWindow.postMessage({
+        "getStats": true
+    }, '*');
+};
 iframeContainer.appendChild(button);
 
 button = document.createElement("button");
 button.innerHTML = "Request Loudness Levels";
-button.onclick = () => { iframe.contentWindow.postMessage({ "getLoudness": true }, '*'); };
+button.onclick = () => {
+    iframe.contentWindow.postMessage({
+        "getLoudness": true
+    }, '*');
+};
 iframeContainer.appendChild(button);
 
 button = document.createElement("button");
 button.innerHTML = "Stop Sending Loudness Levels";
-button.onclick = () => { iframe.contentWindow.postMessage({ "getLoudness": false }, '*'); };
+button.onclick = () => {
+    iframe.contentWindow.postMessage({
+        "getLoudness": false
+    }, '*');
+};
 iframeContainer.appendChild(button);
 
 button = document.createElement("button");
 button.innerHTML = "Say Hello";
-button.onclick = () => { iframe.contentWindow.postMessage({ "sendChat": "Hello!" }, '*'); };
+button.onclick = () => {
+    iframe.contentWindow.postMessage({
+        "sendChat": "Hello!"
+    }, '*');
+};
 iframeContainer.appendChild(button);
 
 button = document.createElement("button");
 button.innerHTML = "previewWebcam()";
-button.onclick = () => { iframe.contentWindow.postMessage({ "function": "previewWebcam" }, '*'); };
+button.onclick = () => {
+    iframe.contentWindow.postMessage({
+        "function": "previewWebcam"
+    }, '*');
+};
 iframeContainer.appendChild(button);
 
 button = document.createElement("button");
 button.innerHTML = "CLOSE IFRAME";
-button.onclick = () => { iframeContainer.parentNode.removeChild(iframeContainer); };
+button.onclick = () => {
+    iframeContainer.parentNode.removeChild(iframeContainer);
+};
 iframeContainer.appendChild(button);
 
-As for listening events, where the parent listens for responses or events from the OBSN child frame:
+// As for listening events, where the parent listens for responses or events from the OBSN child frame:
 
-////////////  LISTEN FOR EVENTS
+// //////////  LISTEN FOR EVENTS
 
 const eventMethod = window.addEventListener ? "addEventListener" : "attachEvent";
 const eventer = window[eventMethod];
 const messageEvent = eventMethod === "attachEvent" ? "onmessage" : "message";
 
 eventer(messageEvent, function (e) {
-	if (e.source !== iframe.contentWindow){return} // reject messages send from other iframes
+    if (e.source !== iframe.contentWindow) {
+        return
+    } // reject messages send from other iframes
 
-	if ("stats" in e.data){
-		const outputWindow = document.createElement("div");
+    if ("stats" in e.data) {
+        const outputWindow = document.createElement("div");
 
-		let out = `<br />total_inbound_connections:${e.data.stats.total_inbound_connections}`;
-		out += `<br />total_outbound_connections:${e.data.stats.total_outbound_connections}`;
+        let out = `<br />total_inbound_connections:${
+            e.data.stats.total_inbound_connections
+        }`;
+        out += `<br />total_outbound_connections:${
+            e.data.stats.total_outbound_connections
+        }`;
 
-		for (const streamID in e.data.stats.inbound_stats){
-			out += `<br /><br /><b>streamID:</b> ${streamID}<br />`;
-			out += printValues(e.data.stats.inbound_stats[streamID]);
-		}
+        for (const streamID in e.data.stats.inbound_stats) {
+            out += `<br /><br /><b>streamID:</b> ${streamID}<br />`;
+            out += printValues(e.data.stats.inbound_stats[streamID]);
+        }
 
-		outputWindow.innerHTML = out;
-		iframeContainer.appendChild(outputWindow);
-	}
+        outputWindow.innerHTML = out;
+        iframeContainer.appendChild(outputWindow);
+    }
 
-	if ("gotChat" in e.data){
-		const outputWindow = document.createElement("div");
-		outputWindow.innerHTML = e.data.gotChat.msg;
-		outputWindow.style.border="1px dotted black";
-		iframeContainer.appendChild(outputWindow);
-	}
+    if ("gotChat" in e.data) {
+        const outputWindow = document.createElement("div");
+        outputWindow.innerHTML = e.data.gotChat.msg;
+        outputWindow.style.border = "1px dotted black";
+        iframeContainer.appendChild(outputWindow);
+    }
 
-	if ("action" in e.data){
-		const outputWindow = document.createElement("div");
-		outputWindow.innerHTML = `child-page-action: ${e.data.action}<br />`;
-		outputWindow.style.border="1px dotted black";
-		iframeContainer.appendChild(outputWindow);
-	}
+    if ("action" in e.data) {
+        const outputWindow = document.createElement("div");
+        outputWindow.innerHTML = `child-page-action: ${
+            e.data.action
+        }<br />`;
+        outputWindow.style.border = "1px dotted black";
+        iframeContainer.appendChild(outputWindow);
+    }
 
-	if ("loudness" in e.data){
-		console.log(e.data);
-		if (document.getElementById("loudness")){
-			outputWindow = document.getElementById("loudness");
-		} else {
-			const outputWindow = document.createElement("div");
-			outputWindow.style.border="1px dotted black";
-			iframeContainer.appendChild(outputWindow);
-			outputWindow.id = "loudness";
-		}
-		outputWindow.innerHTML = "child-page-action: loudness<br />";
-		for (const key in e.data.loudness) {
-    outputWindow.innerHTML += `${key} Loudness: ${e.data.loudness[key]}\n`;
-}
-		outputWindow.style.border="1px black";
+    if ("loudness" in e.data) {
+        console.log(e.data);
+        if (document.getElementById("loudness")) {
+            outputWindow = document.getElementById("loudness");
+        } else {
+            const outputWindow = document.createElement("div");
+            outputWindow.style.border = "1px dotted black";
+            iframeContainer.appendChild(outputWindow);
+            outputWindow.id = "loudness";
+        }
+        outputWindow.innerHTML = "child-page-action: loudness<br />";
+        for (const key in e.data.loudness) {
+            outputWindow.innerHTML += `${key} Loudness: ${
+                e.data.loudness[key]
+            }\n`;
+        }
+        outputWindow.style.border = "1px black";
 
-	}
+    }
 });
 ```
 
