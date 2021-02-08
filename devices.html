@@ -69,14 +69,14 @@
 			}
 
 			function addDevice(element) {
-				const info = element.getElementsByClassName("device-id")[0];
-				const type = info.dataset.deviceType;
+				const type = element.dataset.deviceType;
+				const device = sanitizeDeviceName(element.querySelector('span').innerText);
 
 				if (type === "audioinput") {
-					setAudioSearchParams(info);
+					setAudioSearchParams(element);
 				}
 				if (type === "videoinput") {
-					setVideoSearchParams(info);
+					setVideoSearchParams(element);
 				}
 				if (type === "audiooutput") {
 					return;
@@ -89,9 +89,9 @@
 
 				function setAudioSearchParams(info) {
 					// Device was already selected
-					if (info.parentNode.className === "device selected") {
+					if (info.className === "device selected") {
 						// Remove device from list of selected devices
-						const index = audioInputDevices.indexOf(info.innerText);
+						const index = audioInputDevices.indexOf(device);
 						if (index !== -1) {
 							audioInputDevices.splice(index, 1);
 						}
@@ -106,7 +106,8 @@
 						}
 					} else {
 						// Device is unselected
-						audioInputDevices.push(info.innerText);
+						
+						audioInputDevices.push(device);
 						url.searchParams.set("ad", audioInputDevices.join(","));
 						element.className = "device selected";
 					}
@@ -117,11 +118,12 @@
 				*/
 				function setVideoSearchParams(info) {
 					// Device was already selected
-					if (info.parentNode.className === "device selected") {
-						info.parentNode.className = "device";
+					if (info.className === "device selected") {
+						element.className = "device";
+
 
 						// Set the url param to the devices that are left
-						url.searchParams.set("vd", info.innerText);
+						url.searchParams.set("vd", device);
 						element.className = "device";
 
 						// If no devices remained, just remove the param completely
@@ -130,7 +132,13 @@
 						}
 					} else {
 						// Device is unselected
-						url.searchParams.set("vd", info.innerText);
+						try {
+							element.parentElement.querySelector('.device.selected').className = "device";
+						} catch (error) {
+							console.log("There was no video device already selected.");
+						}
+						
+						url.searchParams.set("vd", device);
 						element.className = "device selected";
 					}
 				}
@@ -152,9 +160,9 @@
 					.sort()
 					.forEach(([key, value]) => {
 						output += `
-						<div class='device' onclick='addDevice(this)'>
+						<div class='device' onclick='addDevice(this)' data-device-type='${value.kind}'>
 							<span class='device-name'>${value.label}</span>
-							<span class='device-id' data-device-type='${value.kind}'>
+							<span class='device-id'>
 								${value.deviceId}
 							</span>
 						</div>`;
