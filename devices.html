@@ -64,6 +64,10 @@
 				return value.kind === "videoinput";
 			}
 
+			function sanitizeDeviceName(deviceName) {
+				return String(deviceName).toLowerCase().replace(/[\W]+/g, "_");
+			}
+
 			function addDevice(element) {
 				const info = element.getElementsByClassName("device-id")[0];
 				const type = info.dataset.deviceType;
