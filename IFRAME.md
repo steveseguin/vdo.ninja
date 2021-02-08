@@ -164,11 +164,11 @@ eventer(messageEvent, function (e) {
 	if ("stats" in e.data){
 		const outputWindow = document.createElement("div");
 
-		let out = "<br />total_inbound_connections:"+e.data.stats.total_inbound_connections;
-		out += "<br />total_outbound_connections:"+e.data.stats.total_outbound_connections;
+		let out = `<br />total_inbound_connections:${e.data.stats.total_inbound_connections}`;
+		out += `<br />total_outbound_connections:${e.data.stats.total_outbound_connections}`;
 
 		for (const streamID in e.data.stats.inbound_stats){
-			out += "<br /><br /><b>streamID:</b> "+streamID+"<br />";
+			out += `<br /><br /><b>streamID:</b> ${streamID}<br />`;
 			out += printValues(e.data.stats.inbound_stats[streamID]);
 		}
 
@@ -185,7 +185,7 @@ eventer(messageEvent, function (e) {
 
 	if ("action" in e.data){
 		const outputWindow = document.createElement("div");
-		outputWindow.innerHTML = "child-page-action: "+e.data.action+"<br />";
+		outputWindow.innerHTML = `child-page-action: ${e.data.action}<br />`;
 		outputWindow.style.border="1px dotted black";
 		iframeContainer.appendChild(outputWindow);
 	}
@@ -202,7 +202,7 @@ eventer(messageEvent, function (e) {
 		}
 		outputWindow.innerHTML = "child-page-action: loudness<br />";
 		for (const key in e.data.loudness) {
-    outputWindow.innerHTML += key + " Loudness: " +  e.data.loudness[key] + "\n";
+    outputWindow.innerHTML += `${key} Loudness: ${e.data.loudness[key]}\n`;
 }
 		outputWindow.style.border="1px black";
 
