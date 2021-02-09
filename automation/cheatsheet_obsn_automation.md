@@ -1,6 +1,8 @@
 # OBS Ninja Cheat Sheets
 
-## AUTOMATING OBSN START-UP (currently in beta only)
+[⬅ back](../)
+
+## AUTOMATING OBSN START-UP
 
 For regularly repeated setups you can automate a lot of the parameters:
 
