@@ -1,5 +1,7 @@
 # OBS Ninja Cheat Sheets
 
+[⬅ back](../README.md)
+
 ## MAC: AUDIO ROUTING USING LOOPBACK (EXAMPLE 1)
 
 Route audio from multiple apps to all guests in a room and record the same audio in OBS while simultaneously being a participant in the room.

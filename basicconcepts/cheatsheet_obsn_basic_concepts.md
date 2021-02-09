@@ -1,5 +1,7 @@
 # OBS Ninja Cheat Sheets
 
+[⬅ back](../README.md)
+
 ## BASIC CONCEPTS
 
 To understand OBS Ninja, you have to understand its three main components: 

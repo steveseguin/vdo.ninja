@@ -1,5 +1,7 @@
 # OBS Ninja Cheat Sheets
 
+[⬅ back](../README.md)
+
 ## USING PARAMETERS
 
 Many of the OBS Ninja behaviour is managed through URL parameters in the form of &parameter=value.  
