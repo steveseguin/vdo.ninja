@@ -6,6 +6,7 @@ OBS Ninja lets you bring remote video feeds into OBS at low latency and with exc
 * [OBS Ninja Basic Concepts](#basicconcepts)
 * [Getting Started with OBS Ninja](#gettingstarted)
 * [Automating OBSN start-up](#automation)
+* [Mac: Audio Routing with Loopback (example 1)](#loopbackrouting1)
 
 <a name="basiccomponents"></a>
 
@@ -66,3 +67,16 @@ Depending on your platform, you can put all these into scripts or even apps for 
 [download PNG](automation/OBSN_automation_cheat-sheet.png) |
 [download PDF](automation/OBSN_automation_cheat-sheet.pdf) (best for printing)
 
+
+<a name="loopbackrouting1"></a>
+
+## MAC: AUDIO ROUTING USING LOOPBACK (EXAMPLE 1)
+
+Route audio from multiple apps to all guests in a room and record the same audio in OBS while simultaneously being a participant in the room.
+
+![OBS Ninja | mac audio routing example 1](loopbackrouting1/loopbackrouting1.jpg)   
+(v1.0, 2021-02-09)
+
+[download JPG](loopbackrouting1/loopbackrouting1.jpg) |
+[download PNG](loopbackrouting1/loopbackrouting1.png) |
+[download PDF](loopbackrouting1/loopbackrouting1.pdf) (best for printing)
