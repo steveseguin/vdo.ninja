@@ -1,6 +1,6 @@
 # OBS Ninja Cheat Sheets
 
-[⬅ back](../)
+[⬅ back](../README.md)
 
 ## AUTOMATING OBSN START-UP
 
