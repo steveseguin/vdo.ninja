@@ -13,7 +13,7 @@ Learn how to use parameters to customize OBS Ninja's behavior
 [![OBS Ninja | cheat-sheet](cheatsheet/OBSN_cheat-sheet_thumbnail.jpg)](cheatsheet/cheatsheet_obsn_parameters.md)
 
 ### [OBS Ninja Automation Cheatsheet](automation/cheatsheet_obsn_automation.md)
-Learn how to automate starting up OBS Ninja, automatically join rooms and scenes   
+Learn how to automate starting up OBS Ninja, automatically join rooms and scenes with camera and audio devices already selected   
 [![OBS Ninja | cheat-sheet](automation/OBSN_automation_cheat-sheet_thumbnail.jpg)](automation/cheatsheet_obsn_automation.md)
 
 ### [OBS Ninja Mac Audio Routing w Loopback Cheatsheet (example 1)](loopbackrouting1/cheatsheet_obsn_loopback_routing1.md)
