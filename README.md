@@ -33,7 +33,7 @@ Directions on how to deploy a TURN server are listed in the turnserver.md file. 
 ## Server side / API software?
 Since OBS.Ninja uses peer-2-peer technology, video connections are made directly between viewer and publisher in 90% of cases. Hosting a TURN server yourself may help improve performance, but less than 1% of users will see any benefit of this. Details on how to deploy a TURN server are provided. For those capable of hosting their own TURN server, that would be appreciated if possible, as TURN servers are the only real cost incurred by OBS.Ninja at present. (other than time, of course)
 
-Other than TURN servers, OBS.Ninja also uses public STUN servers and a hosted handshake server. These are used to facilitate the initial setup of peer connections and are generally not required after a peer connection is established. These servers are free to access and use, even for private deployments. 
+Other than TURN servers, OBS.Ninja also uses public STUN servers and a hosted handshake server. These are used to facilitate the initial setup of peer connections and are generally not required after a peer connection is established. These servers are free to access and use, even for private deployments. THe handshake server's code is currently not available.
 
 Development builds of OBS.Ninja may include debugging software, but in-production releases have this removed. Double check to ensure "console.re" debugging is disabled before deployment, just to be safe.
 
