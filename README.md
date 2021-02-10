@@ -20,10 +20,10 @@ And Here is another video series touching on some more advanced settings: https:
 
 Check the subreddit for added use cases, advanced features, and support. Advanced features includes high-quality audio modes, custom video resolutions, and more.
 
-MacOS users will face some challenges in using OBS 25/26, but there are workarounds. Please see the subreddit or the Wiki.
+MacOS users will face some challenges in using OBS 25/26, but there are workarounds. Please see the subreddit or [the Wiki](https://github.com/steveseguin/obsninja/wiki).
 
 ## What's in this repo?
-This repo contains software for OBS.Ninja, including the HTML landing page for its Electron Capture app offering. A sample config file and instructions for setting up a TURN server (video relay server), is also provided. You may also find the Wiki for the project in this repo, which contains added information on how to use the software.
+This repo contains software for OBS.Ninja, including the HTML landing page for its Electron Capture app offering. A sample config file and instructions for setting up a TURN server (video relay server), is also provided. You may also find [the Wiki](https://github.com/steveseguin/obsninja/wiki) for the project in this repo, which contains added information on how to use the software.
 
 ## How to Deploy this Repo:
 To use, just download and host the files on a HTTPS-enabled webserver. You may want to hide the .html extensions within your HTTP server as well, else the generated links will not work. See [here](https://github.com/steveseguin/obsninja/blob/master/install.md) for added details and alternative install options.
