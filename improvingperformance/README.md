@@ -2,6 +2,8 @@
 
 ## SYMPTOMS
 
+![symptoms](symptoms.png)
+
 Depending on several factors, you might see
 
 * stuttery video (aka frame drops)
@@ -9,6 +11,8 @@ Depending on several factors, you might see
 * video being out of sync with audio (typically video lagging behind audio)
 
 ## CULPRITS
+
+![culprits](culprits.png)
 
 The main reason for performance issues are
 
@@ -18,6 +22,8 @@ The main reason for performance issues are
 - **iOS.** Low frame rates from iOS devices in the guest room and control center is normal and by design. iPhones and iPads can only encode a limited amount of video streams at the same time. OBS Ninja works around that by lowering their frame rates to around 1 fps in the guest rooms as well as in the director's control center. Audio in the guest room will be just fine though. This will not affect frame rates viewed in OBS through solo links or in group scenes.
 
 ## TOOLS
+
+![tools](tools.png)
 
 An important tool to help you troubleshoot connections is the stats view that you can open by holding CTRL (Win) or command (Mac) and right clicking on a guest window.
 
@@ -35,6 +41,8 @@ Status information includes:
 
 ## BANDWIDTH
 
+![bandwidth](bandwidth.png)
+
 * **Use ethernet!** Ask your guest to use ethernet. Being on WIFI is the most common reason for bandwidth issues. Avoid WIFI if you can. Being closer to your router can help, but often doesn't. 
 
 * **Stop other traffic sources.** Those include online backups, dropbox, and even youtube or netflix being watched in the other room.
@@ -45,8 +53,12 @@ Video and audio bandwidth used by OBS Ninja are determined on the receiving side
 
 ## CPU - SENDING SYSTEM
 
+![cpu](cpu.png)
+
 TBD
 
 ## CPU - RECEIVING SYSTEM
+
+![cpu](cpu.png)
 
 TBD
