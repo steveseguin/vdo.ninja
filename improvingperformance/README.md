@@ -2,7 +2,7 @@
 
 ## SYMPTOMS
 
-![symptoms](symptoms.png)
+![symptoms](symptoms.jpg)
 
 Depending on several factors, you might see
 
@@ -12,7 +12,7 @@ Depending on several factors, you might see
 
 ## CULPRITS
 
-![culprits](culprits.png)
+![culprits](culprits.jpg)
 
 The main reason for performance issues are
 
@@ -23,7 +23,7 @@ The main reason for performance issues are
 
 ## TOOLS
 
-![tools](tools.png)
+![tools](tools.jpg)
 
 An important tool to help you troubleshoot connections is the stats view that you can open by holding CTRL (Win) or command (Mac) and right clicking on a guest window.
 
@@ -41,7 +41,7 @@ Status information includes:
 
 ## BANDWIDTH
 
-![bandwidth](bandwidth.png)
+![bandwidth](bandwidth.jpg)
 
 * **Use ethernet!** Ask your guest to use ethernet. Being on WIFI is the most common reason for bandwidth issues. Avoid WIFI if you can. Being closer to your router can help, but often doesn't. 
 
@@ -53,12 +53,12 @@ Video and audio bandwidth used by OBS Ninja are determined on the receiving side
 
 ## CPU - SENDING SYSTEM
 
-![cpu](cpu.png)
+![cpu](cpu.jpg)
 
 TBD
 
 ## CPU - RECEIVING SYSTEM
 
-![cpu](cpu.png)
+![cpu](cpu.jpg)
 
 TBD
