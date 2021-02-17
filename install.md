@@ -92,5 +92,7 @@ A newly deployed code deployment should work without any changes to the index.ht
 
 My suggestion? Limit changes to images and perhaps the translation files (maybe add a new one); these are good starting points. If making changes to the main.css style sheet or index.html file, you should be mostly okay too, since these files are designed to be changed; I try to keep that in mind when updating the code at least. Making changes to other files though is strongly not recommend and in some cases discouraged. If you find a bug or need to make a change to other files, it might be best to make a Pull Request with the desired changes and hope it gets adopted into the main codebase.
 
+Final note: I haven't provided here instructions on deploying STUN services or a private handshake server; the OBS.Ninja handshake server code is currently not provided, but access to it as a service is freely accessible for private deployments.
+
 Regards,
 Steve

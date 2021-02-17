@@ -501,10 +501,23 @@ button.glyphicon-button.active.focus {
 		padding: 0px;
 	} 
 }
+/* Node selector to prioritise this selector above .float */
+button.btnArmTransferRoom{
+    width:auto;
+    margin-left: 2px;
+    height:38px;
+    border-radius: 15px;
+}
+button.btnArmTransferRoom i{
+    margin-right:3px;
+}
+button.btnArmTransferRoom:hover{
+    background-color: var(--green-accent);
+}
 
-
-
-
+button.btnArmTransferRoom.selected{
+    background-color: var(--red-accent);
+}
 
 @media only screen and (max-height: 540px){
 	#subControlButtons {

@@ -707,6 +707,11 @@ if (urlParams.has('director') || urlParams.has('dir')) {
 	filename = false;
 }
 
+if (urlParams.has('rooms')) {
+    session.rooms = urlParams.get('rooms').split(",").map(function(e) { 
+        return sanitizeRoomName(e);
+    });
+}
 
 if (urlParams.has('showdirector')) {
 	session.showDirector = true;
@@ -3723,6 +3728,7 @@ function lowerhand() {
 var previousRoom = "";
 var stillNeedRoom = true;
 var transferCancelled = false;
+var armedTransfer = true;
 
 function directMigrate(ele, event) { // everyone in the room will hangup this guest also?  I like that idea.  What about the STREAM ID?  I suppose we don't kick out if the viewID matches.
 
@@ -3746,6 +3752,8 @@ function directMigrate(ele, event) { // everyone in the room will hangup this gu
 		stillNeedRoom = false;
 		log("Migrate queued");
 		return;
+    } else if (armedTransfer){
+		migrateRoom = sanitizeRoomName(previousRoom);
 	} else {
 		var migrateRoom = prompt("Transfer guests to room:\n\n(Please note rooms must share the same password)", previousRoom);
 		stillNeedRoom = true;
@@ -4997,6 +5005,18 @@ function createRoomCallback(passAdd, passAdd2) {
 			getById("miniPerformer").innerHTML = '<button id="press2talk" onmousedown="event.preventDefault(); event.stopPropagation();" style="width:auto;margin-left:5px;height:45px;border-radius: 38px;" class="float" onclick="press2talk(true);" title="You can also enable the director`s Video Output afterwards by clicking the Setting`s button"><i class="las la-headset"></i><span data-translate="push-to-talk-enable"> enable director`s microphone or video</span></button>';
 		}
 		getById("miniPerformer").className = "";
+        
+        var tabindex = 26;
+        if(session.rooms && session.rooms.length > 0){
+            var container = getById("rooms");
+            container.innerHTML += 'Arm Transfer: ';
+            session.rooms.forEach(function (r) {
+                if(session.roomid == r) return; //don't include self
+                container.innerHTML += '<button id="roomselect_' + r + '" onmousedown="event.preventDefault(); event.stopPropagation();" class="float btnArmTransferRoom" onclick="handleRoomSelect(\'' + r + '\');" title="Arm/disarm transfer to this room" tabindex="' + tabindex + '"><i class="las la-paper-plane"></i>' + r + '</button>';
+                tabindex++;
+            });
+        }
+        
 	} else {
 		getById("miniPerformer").style.display = "none";
 		getById("controlButtons").style.display = "none";
@@ -5015,6 +5035,26 @@ function createRoomCallback(passAdd, passAdd2) {
 
 	joinRoom(session.roomid);
 
+}
+/**
+ * Handles click actions on the room selection buttons in #controlButtons
+ * @param {string} room - Room name to select/deselect for the next transfer call
+ */
+function handleRoomSelect(room) {
+    var elems = document.querySelectorAll(".btnArmTransferRoom");
+    [].forEach.call(elems, function(el) {
+        el.classList.remove("selected");
+    });
+    if (previousRoom == room) {
+        previousRoom = undefined;
+        armedTransfer = false;
+        stillNeedRoom = true;
+    } else {
+        previousRoom = room;
+        stillNeedRoom = false;
+        armedTransfer = true;
+        getById("roomselect_" + room).classList.add('selected');
+    }
 }
 
 function requestAudioSettings(ele) {
