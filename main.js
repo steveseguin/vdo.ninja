@@ -769,9 +769,9 @@ if (urlParams.has('blind')) {
 
 if (urlParams.has('dpi') || urlParams.has('dpr')) {
 	session.devicePixelRatio = urlParams.get('dpi') || urlParams.get('dpr') || 2.0;
-} else if (window.devicePixelRatio && window.devicePixelRatio!==1){ 
-	session.devicePixelRatio = window.devicePixelRatio; // this annoys me to no end.
-}
+} //else if (window.devicePixelRatio && window.devicePixelRatio!==1){ 
+//	session.devicePixelRatio = window.devicePixelRatio; // this annoys me to no end.
+//}
 
 if (urlParams.has('speakermute') || urlParams.has('mutespeaker') || urlParams.has('sm') || urlParams.has('ms')) {
 	session.speakerMuted = true;
@@ -2911,8 +2911,13 @@ if ((session.roomid) || (urlParams.has('roomid')) || (urlParams.has('r')) || (ur
 
 	if (session.roomid.length > 0) {
 		if (session.videoDevice === 0) {
-			getById("add_camera").innerHTML = "Join room with Microphone";
-			miniTranslate(getById("add_camera"), "join-room-with-mic");
+			if (session.audioDevice === 0) {
+				getById("add_camera").innerHTML = "Join room";
+				miniTranslate(getById("add_camera"), "join-room");
+			} else {
+				getById("add_camera").innerHTML = "Join room with Microphone";
+				miniTranslate(getById("add_camera"), "join-room-with-mic");
+			}
 		} else {
 			getById("add_camera").innerHTML = "Join Room with Camera";
 			miniTranslate(getById("add_camera"), "join-room-with-camera");
@@ -4908,6 +4913,8 @@ function createRoomCallback(passAdd, passAdd2) {
 			codecGroupFlag = "&codec=h264";
 		} else if (codecGroupFlag.value === "vp8") {
 			codecGroupFlag = "&codec=vp8";
+		} else if (codecGroupFlag.value === "av1") {
+			codecGroupFlag = "&codec=av1";
 		} else {
 			codecGroupFlag = "";
 		}
@@ -5000,6 +5007,10 @@ function createRoomCallback(passAdd, passAdd2) {
 		getById("controlButtons").style.display = "inherit";
 	} else if (session.chatbutton === false) {
 		getById("chatbutton").classList.add("advanced");
+	}
+
+	if (session.autostart){
+		press2talk(true);
 	}
 
 	joinRoom(session.roomid);
@@ -10421,7 +10432,7 @@ function toggleQualityDirector(bitrate, UUID, ele = null) { // ele is specific t
 function createPopoutChat() {
 	var randid = session.generateStreamID(8);
 	log(randid);
-	window.open('./popout?id=' + randid, 'popup', 'width=600,height=480,toolbar=no,menubar=no,resizable=yes');
+	window.open('./popout.html?id=' + randid, 'popup', 'width=600,height=480,toolbar=no,menubar=no,resizable=yes');
 	session.broadcastChannel = new BroadcastChannel(randid);
 	session.broadcastChannel.onmessage = function(e) {
 		if ("loaded" in e.data) {

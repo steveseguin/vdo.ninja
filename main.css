@@ -508,10 +508,21 @@ button.glyphicon-button.active.focus {
 
 @media only screen and (max-height: 540px){
 	#subControlButtons {
-		transform: scale(0.90);
+		transform: scale(0.88);
 	} 
 	#gridlayout>#container.vidcon {
-		height:90%
+		height:88%
+	}
+	#controlButtons {
+		height:54px;
+	} 
+}
+@media only screen and (max-height: 500px){
+	#subControlButtons {
+		transform: scale(0.87);
+	} 
+	#gridlayout>#container.vidcon {
+		height:87%
 	}
 	#controlButtons {
 		height:54px;
@@ -521,7 +532,16 @@ button.glyphicon-button.active.focus {
 	#subControlButtons {
 		transform: scale(0.85);
 	} 
-	#header{
+	#logoname{
+		display:none;
+	}
+	#head1{
+		display:none;
+	}
+	#head4{
+		display:none;
+	}
+	#head2{
 		display:none;
 	}
 	#gridlayout>#container.vidcon {
@@ -530,6 +550,20 @@ button.glyphicon-button.active.focus {
 	#controlButtons {
 		height:50px;
 	} 
+}
+@media only screen and (max-height: 300px){
+	#gridlayout>#container.vidcon {
+		height:81%
+	}
+	#subControlButtons {
+		transform: scale(0.81);
+	}
+	#controlButtons {
+		height:46.2px;
+	}
+	#head2 {
+		display:none !important;
+	}
 }
 @media only screen and (max-height: 240px){
 	#gridlayout>#container.vidcon {
@@ -576,6 +610,9 @@ button.glyphicon-button.active.focus {
 	} 
 }
 
+#header:empty{
+	display:none;
+}
 
 @keyframes pulse {
 	0% {
