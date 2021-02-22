@@ -486,9 +486,9 @@ button.glyphicon-button.active.focus {
 #container.vidcon {
 	height:100%;
 }
-@media only screen and (max-width: 700px){
+@media only screen and (max-width: 640px){
 	#controlButtons {
-		transform: scale(0.8) translateY(20%);
+		transform: scale(0.9) translateY(10%);
 	}
 }
 @media only screen and (max-width: 400px){
@@ -983,6 +983,18 @@ input[type=range]:focus::-ms-fill-upper {
 	}
 	.mobileHide{
 		display:none !important;
+	}
+}
+
+@media only screen and (max-height: 355px) {
+	#popupSelector {
+		padding: 0 !important;
+	}
+}
+@media only screen and (max-height: 330px) {
+	#popupSelector {
+		padding: 0 !important;
+		font-size: 92%;
 	}
 }
 
@@ -2197,36 +2209,21 @@ span#guestTips {
 
 
 .video-label.zoom {
-	position: absolute;
     bottom: 0;
 	left: 0;
-	margin: 0px;
-    color: white;
-    padding: 5px 10px;
-    background: rgba(0, 0, 0, .5);
 	pointer-events:none;
 }
 
 .video-label.teams {
-    position: absolute;
-    bottom: 0.6vh;
-	left: 0.5vh;
-	margin: 0px;
-    color: white;
-    padding: 5px 10px;
     background: rgba(0, 0, 0, .4);
 	pointer-events:none;
 	border-radius: 5px;
 }
 
 .video-label.skype {
-    position: absolute;
     bottom: 2vh;
 	left: 50%;
 	transform: translateX(-50%);
-	margin: 0px;
-    color: white;
-    padding: 5px 10px;
     background: rgba(0, 0, 0, .8);
 	pointer-events:none;
 	border-radius: 5px;
@@ -2234,7 +2231,6 @@ span#guestTips {
 }
 
 .video-label.ninjablue {
-    position: absolute;
     bottom: 5%;
     left: 0;
     background: #141926;
@@ -2242,7 +2238,6 @@ span#guestTips {
 }
 
 .video-label.toprounded {
-	position: absolute;
     top: 0;
     bottom: unset;
     background: rgb(0 0 0 / 70%);
@@ -2260,11 +2255,10 @@ span#guestTips {
 }
 
 .video-label.fire {
-    color: #FFFFFF;
     text-shadow: 0 -1px 4px #FFF, 0 -2px 10px #ff0, 0 -10px 20px #ff8000, 0 -18px 40px #F00;
     font-weight: bold;
-    position: absolute;
     bottom: 2vh;
+	left: 0;
     width: 100%;
     text-align: center;
 }
@@ -2274,22 +2268,25 @@ span#guestTips {
 	display:block;
 	width:0.5vh;
 	height:0.5vh;
+	min-width:10px;
+	min-height:10px;
 	top: 2vh;
 	right: 2vh;
 	background-color:green;
 	position:absolute;
 	display:none;
-	border-radius: 1vh;
+	border-radius: 2vh;
 	pointer-events:none;
 }
 
 .video-mute-state {
-    top: 0.5em;
-    right: 0.5em;
+    top: 2vh;
+	right: 2vh;
     position: absolute;
 	color:white;
-	border-radius: 1vh;
+	border-radius: 2vh;
 	background-color:#b11313;
+	padding: 2px 2px 2px 1px;
 }
 
 #help_directors_room{
