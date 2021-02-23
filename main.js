@@ -11982,4 +11982,14 @@ addEventToAll("#multiselect-trigger3", 'mousedown touchend focusin focusout', fu
 	e.stopPropagation();
 });
 
-		  
+// Warns user about network going down
+
+window.addEventListener("offline", function (e) {
+  if (!session.cleanOutput) {
+    alert("OBS.Ninja has no network connectivity and can't work properly.");
+  } else {
+    console.log(
+      "OBS.Ninja has no network connectivity and can't work properly."
+    );
+  }
+});
