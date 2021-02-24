@@ -2389,3 +2389,47 @@ input:checked + .slider:before {
   -ms-transform: translateX(16px);
   transform: translateX(16px);
 }
+
+.alertModal {
+	position: absolute;
+    background-color: rgb(221 221 221);
+    box-shadow: 0 0 30px 10px #0000005c;
+    color: black;
+    font-size: 1.2em;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    border-radius: 10px;
+    font-weight: bold;
+	z-index:1;
+}
+
+.alertModalInner {
+	position: relative;
+	padding: 2em;
+}
+
+.alertModalClose {
+    position: absolute;
+    top: -2px;
+    right: 4px;
+    cursor: pointer;
+    font-weight: bolder;
+}
+
+.alertModalBackdrop {
+	background: var(--background-color);
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 0;
+	opacity: 0.8;
+}
+
+@media only screen and (max-width: 390px) {
+	.alertModal {
+		width: 90%;
+	}
+}
