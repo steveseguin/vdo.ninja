@@ -216,7 +216,7 @@ var sanitizeStreamID = function(streamID) {
 	if (streamID_sanitized.length > 24) {
 		streamID_sanitized = streamID_sanitized.substring(0, 24);
 		if (!(session.cleanOutput)) {
-			alert("The Stream ID should be less than 25 alPhaNuMeric characters long.\n\nWe will trim it to length.");
+			warnUser("The Stream ID should be less than 25 alPhaNuMeric characters long.\n\nWe will trim it to length.");
 		}
 	}
 	return streamID_sanitized;
@@ -1942,7 +1942,7 @@ if (urlParams.has('secure')) {
 	session.security = true;
 	if (!(session.cleanOutput)) {
 		setTimeout(function() {
-			alert("Enhanced Security Mode Enabled.");
+			warnUser("Enhanced Security Mode Enabled.");
 		}, 100);
 	}
 }
@@ -5616,7 +5616,7 @@ function gotDevices(deviceInfos) { // https://github.com/webrtc/samples/blob/gh-
 
 if (location.protocol !== 'https:') {
 	if (!(session.cleanOutput)) {
-		alert("SSL (https) is not enabled. This site will not work without it!");
+		warnUser("SSL (https) is not enabled. This site will not work without it!");
 	}
 }
 
@@ -11983,13 +11983,54 @@ addEventToAll("#multiselect-trigger3", 'mousedown touchend focusin focusout', fu
 });
 
 // Warns user about network going down
-
 window.addEventListener("offline", function (e) {
   if (!session.cleanOutput) {
-    alert("OBS.Ninja has no network connectivity and can't work properly.");
+    warnUser("OBS.Ninja has no network connectivity and can't work properly.");
   } else {
-    console.log(
+    log(
       "OBS.Ninja has no network connectivity and can't work properly."
     );
   }
 });
+
+// Remove modal if network comes back up
+window.addEventListener("online", function (e) {
+	if (!session.cleanOutput) {
+		// Remove last inserted modal; Could be improved by tagging the
+		// modal elements and only removing modals tagged 'offline'
+		userWarnings = document.querySelectorAll('.alertModal');
+		closeModal(userWarnings[userWarnings.length- 1]);
+	} else {
+	  log(
+		"Network connectivity has been restored."
+	  );
+	}
+  });
+
+function warnUser(message){
+
+	// Allows for multiple alerts to stack better.
+	// Every modal and backdrop has an increasing z-index
+	// to block the previous modal
+	zindex = document.querySelectorAll('.alertModal').length;
+
+	modalTemplate =
+	`<div class="alertModal" onclick="closeModal(this)" style="z-index:${zindex + 2}">	
+		<div class="alertModalInner">
+			<span class='alertModalClose'>×</span>
+			<span class='alertModalMessage'>${message}</span>
+		</div>
+	</div>
+	<div class="alertModalBackdrop" style="z-index:${zindex + 1}"></div>`
+
+	// Insert modal at body end
+	document.body.insertAdjacentHTML("beforeend", modalTemplate);
+}
+
+function closeModal(element){
+	// Delete backdrop
+	element.nextElementSibling.outerHTML = ''
+
+	// Delete modal
+	element.outerHTML = ''
+}
