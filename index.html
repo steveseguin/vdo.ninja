@@ -55,7 +55,7 @@
 			}
 		</style>
 		<link rel="stylesheet" href="./lineawesome/css/line-awesome.min.css" />
-		<link rel="stylesheet" href="./main.css?ver=46" />
+		<link rel="stylesheet" href="./main.css?ver=48" />
 		<script type="text/javascript" crossorigin="anonymous" src="./thirdparty/adapter.min.js"></script>
 	</head>
 	<body id="main" class="hidden">
@@ -66,8 +66,8 @@
 		<span itemprop="thumbnail" itemscope itemtype="http://schema.org/ImageObject">
 			<link itemprop="url" href="./media/obsNinja_logo_full.png" />
 		</span>
-		<script  type="text/javascript" crossorigin="anonymous"  src="./thirdparty/CodecsHandler.js?ver=26"></script>
-		<script  type="text/javascript" crossorigin="anonymous" src="./webrtc.js?ver=177"></script>
+		<script  type="text/javascript" crossorigin="anonymous"  src="./thirdparty/CodecsHandler.js?ver=29"></script>
+		<script  type="text/javascript" crossorigin="anonymous" src="./webrtc.js?ver=179"></script>
 		<input id="zoomSlider" type="range" style="display: none;" />
 		<div id="header">
 			<a id="logoname" href="./" style="text-decoration: none; color: white; margin: 2px;">
@@ -103,7 +103,6 @@
 			</div>
 			<div id="head2" class="advanced" style="display: inline-block; text-decoration: none; font-size: 60%; color: white;">
 				<span data-translate="joining-room">You are in room</span>:
-                
 				<div id="roomid" style="display: inline-block;"></div>
 			</div>
 			
@@ -165,7 +164,7 @@
 		<span
                 id="helpbutton"
 				title="Show Help Info" 
-                onclick="alert('Email steve@seguin.email if the system breaks or check https://reddit.com/r/obsninja for support.\n\nThe Wiki contains many help guides and advanced settings.\n\nAccess the debug menu by pressing CTRL (command) and Left-Clicking on a video.\n\nMost issues can be fixed by using Wired Internet instead of Wi-Fi.')"
+                onclick="alert('For support, please browse https://reddit.com/r/obsninja or join the live chat on Discord at https://discord.obs.ninja.\n\nThe Wiki also contains many help guides and advanced settings, located at https://wiki.obs.ninja.\n\nTo access the video stats menu, hold CTRL (command) and Left-Click on a video. Most video issues can be fixed by using Wired Internet instead of Wi-Fi.')"
                 style="cursor: pointer; display:none;"
                 alt="How to Use This with OBS"
             >
@@ -563,7 +562,8 @@
 					<input id="fileselector" onchange="session.publishFile(this,event);" type="file" accept="video/*,audio/*" alt="Hold CTRL (or CMD) to select multiple files" title="Hold CTRL (or CMD) to select multiple files" multiple/>
 					<br /><br />
 					<p style="margin:10px">Keep this tab visible if using Chrome, else the video playback will stop</p>
-					<p style="margin:10px">(Media file streaming is still quite experimental)</p>
+					<p style="margin:10px">(Media file streaming is still quite experimental)</p><br />
+					<p style="margin:10px">File Sharing seems to be broken on Chrome v88. <br />Using The Electron Capture app instead of Chrome should work: <a href="https://github.com/steveseguin/electroncapture/releases/tag/1.1.3" style="color:blue"><u>GET IT HERE</u></a><br />You can also <a href="https://github.com/aws/amazon-chime-sdk-js/issues/1031" style="color:blue">turn off hardware-accleration</a> in Chrome/Edge to fix the issue.</p>
 				</div>
 				
 				<div class="outer close">
@@ -587,9 +587,9 @@
 					<button onclick="previewIframe(getById('iframeURL').value);" >Preview</button> 
 					<button onclick="this.innerHTML = 'Update'; session.publishIFrame(getById('iframeURL').value);" >Share</button><br />
 					<small class="iframeblob">
-						<li>Remote website must be CORS/IFrame compatible with full SSL-encryption enabled.</li>
-						<li>Not all websites will work with this feature and many will actively not allow embedding like this.</li>
-						<li>If sharing a Youtube video, try using the embeddable link version and ensure that the video is set to allow embedding.</li>
+						<li>Not all websites will work with this feature as some sites disallow embedding.</li>
+						<li>The site will try to auto-optimize standard Youtube or Twitch links.</li>
+						<li>Remote websites must be CORS/IFrame compatible with full SSL-encryption enabled.</li>
 					</small>
 					<div id="iFramePreview" style=" width: 1280px; height: 720px; margin: auto; padding: 10px;"></div>
 				</div>
@@ -603,7 +603,7 @@
 
 			</div>
 			
-			<div id="container-7" class="column columnfade pointer card advanced" style="overflow: hidden;" onclick="window.location = './speedtest';">
+			<div id="container-7" class="column columnfade pointer card advanced" style="overflow: hidden;" onclick="window.location = './speedtest.html';">
 				<h2><span data-translate="run-a-speed-test">Run a Speed Test</span></h2>
 				<i style="margin-top:30px;font-size:600%;overflow:hidden;" class="las la-tachometer-alt"></i>
 			</div>
@@ -620,10 +620,8 @@
 						<span data-translate="info-blob">
 							<h2>What is OBS.Ninja</h2>
 							<br />
-							<li>100% 
-								<b>free</b>; no downloads; no personal data collection; no sign-in
-							</li>
-							<li>Bring video from your smartphone, computer, or friends directly into your OBS video stream</li>
+							<li>100% <b>free</b>; no downloads; no personal data collection; no sign-in</li>
+							<li>Bring live video from your smartphone, remote computer, or friends directly into OBS or other studio software.</li>
 							<li>We use cutting edge Peer-to-Peer forwarding technology that offers privacy and ultra-low latency</li>
 							<br />
 							<li>Youtube video 
@@ -631,41 +629,32 @@
 								<a href="https://www.youtube.com/watch?v=vLpRzMjUDaE&list=PLWodc2tCfAH1WHjl4WAOOoRSscJ8CHACe&index=2" alt="Youtube video demoing OBS.Ninja">Demoing it here</a>
 							</li>
 							<br />
+							
+							🥳 Over 350,000 streamers have used OBS.Ninja this month alone, including major TV networks and some of the biggest Youtube/Twitch stars.
+							<br />
+							<br />
+							<br />
 							<i>
 								<font style="color: red;">Known issues:</font>
 							</i>
 							<br />
 							<li>
-								MacOS users using OBS will need to update to <a href="https://github.com/obsproject/obs-studio/releases/tag/26.1.2">OBS Studio 26.1.2</a> or resort to
-								window-capturing with the provided <a href="https://github.com/steveseguin/electroncapture">Electron-Capture app</a>.
-                            
-							</li>
-							<li>If you have	<a href="https://github.com/steveseguin/obsninja/wiki/FAQ#video-is-pixelated">"pixel smearing"</a> or corrupted video, try adding <b>&codec=vp9</b> or &codec=h264 to the OBS view link. Using Wi-Fi will make the issue worse.
-							</li>
-							<li>
-								iOS devices may have occasional audio or camera issues, such as no sound or distorted sound. <a href="https://bugs.webkit.org/show_bug.cgi?id=218762">Partially fixed in iOS 14.3</a>
+								If you have	<a href="https://github.com/steveseguin/obsninja/wiki/FAQ#video-is-pixelated">"pixel smearing"</a> or corrupted video, try adding <i>&codec=h264</i> or <i>&codec=vp9</i> to the OBS view link. Using Wi-Fi will make the issue worse.
 							</li>
 							<li>
 								Chrome on Android 11 has an issue with the browser freezing at times. To unfreeze it, background the browser and then foreground it again.
 							</li>
-							<li>
-								The VP9 codec on Chromium-based browsers seems to lag when screen-sharing at the moment. Use the OBS Virtual Camera as a capture source instead.
-							</li>
 							<br />
-                            🥳 Site Updated: <a href="https://github.com/steveseguin/obsninja/wiki/v16-release-notes">Fed 3rd, 2021</a>. The previous version can be found at 
-							<a href="https://obs.ninja/v15/">https://obs.ninja/v15/</a> if you are having new issues.
+                            Site Updated: <a href="https://github.com/steveseguin/obsninja/wiki/v16.3-update-notes">Feb 24th, 2021</a> (v16.3).  The previous version can be found at <a href="https://obs.ninja/v16/">https://obs.ninja/v16/</a> if you are having issues with this minor update.
 
 							<br />
 							<br />
 							<h3>
-								<i>
-                                    Check out the 
-									<a href="https://www.reddit.com/r/OBSNinja/">sub-reddit
-									<i class="lab la-reddit-alien"></i> </a>for help and see the <a href="https://github.com/steveseguin/obsninja/wiki/">Wiki for advanced info</a>. I'm also on
-									<a href="https://discord.gg/T4xpQVv">Discord <i class="lab la-discord"></i></a> or email me at steve@seguin.email
+                               🛠 For support, see the <a href="https://www.reddit.com/r/OBSNinja/">sub-reddit <i class="lab la-reddit-alien"></i></a> or join the <a href="https://discord.gg/T4xpQVv">Discord <i class="lab la-discord"></i></a>. The <a href="https://github.com/steveseguin/obsninja/wiki/">Wiki is here</a> and my personal email is <i>steve@seguin.email</i>
+							</h3> 
                                 
-								</i>
-							</h3>
+								
+							
 						</span>
 					</div>
 				</center>
@@ -933,7 +922,7 @@
 					<span data-translate="send-direct-chat"><i class="las la-envelope"></i> Message</span>
 				</button>
 
-				<button data-action-type="addToScene"  style="grid-column: 1;"  data-value="0" title="Add this Video to any remote '&scene=1'" onclick="directEnable(this, event);">
+				<button data-action-type="addToScene"  style="grid-column: 1;"  data-value="0" title="Add this Video to any remote '&scene=1'" onclick="directEnable(this, event, 1);">
 					<i class="las la-plus-square"></i>
 					<span data-translate="add-to-scene">Add to Scene</span>
 				</button>
@@ -942,9 +931,33 @@
 					<span data-translate="mute-scene" >mute in scene</span>
 				</button>
 				
-				<font class="tooltip" style="height: 0; border: 0;">
-					<input data-action-type="volume" type="range" min="0" max="200" value="100" title="Remotely change the volume of this guest" oninput="remoteVolumeUI(this)" onclick="remoteVolume(this);" style="grid-column: 1; margin:5px; width: 93%; position: relative;top: 0.6em; background-color:#fff0;"/><span class="tooltiptext" style='float: right; overflow: auto;  left: 40px;  width: 2.5em;  top: -13px; margin: 0; position:relative;font-family:"Noto Color Emoji", "Apple Color Emoji", "Segoe UI Emoji", Times, Symbola, Aegyptus,Code2000, Code2001, Code2002, Musica, serif, LastResort;' >100</span></font>
+				<span id="sceneGroup1" style="display:none">
+					<button style="width: 35.2px" data-action-type="add-scene-2" title="Add to Scene 2" onclick="directEnable(this, event, 2);">
+						<span >S2</span>
+					</button>
+					<button style="width:35.2px;" data-action-type="add-scene-3" title="Add to Scene 3" onclick="directEnable(this, event, 3);">
+						<span >S3</span>
+					</button>
+					<button style="width: 35.2px" data-action-type="add-scene-4" title="Add to Scene 4" onclick="directEnable(this, event, 4);">
+						<span >S4</span>
+					</button>
+				</span>
 				
+				
+				<font class="tooltip" style="height: 0; border: 0;">
+					<input data-action-type="volume" type="range" min="0" max="200" value="100" title="Remotely change the volume of this guest" oninput="remoteVolumeUI(this)" onclick="remoteVolume(this);" style="grid-column: 2; margin:5px; width: 93%; position: relative;top: 0.6em; background-color:#fff0;"/><span class="tooltiptext" style='float: right; overflow: auto;  left: 40px;  width: 2.5em;  top: -13px; margin: 0; position:relative;font-family:"Noto Color Emoji", "Apple Color Emoji", "Segoe UI Emoji", Times, Symbola, Aegyptus,Code2000, Code2001, Code2002, Musica, serif, LastResort;' >100</span>
+				</font>
+				<span id="sceneGroup2" style="display:none">
+					<button style="width: 35.2px" data-action-type="add-scene-5" title="Add to Scene 5" onclick="directEnable(this, event, 5);">
+						<span >S5</span>
+					</button>
+					<button style="width: 35.2px" data-action-type="add-scene-6" title="Add to Scene 6" onclick="directEnable(this, event, 6);">
+						<span >S6</span>
+					</button>
+					<button style="width: 35.2px" data-action-type="add-scene-7" title="Add to Scene 7" onclick="directEnable(this, event, 7);">
+						<span >S7</span>
+					</button>
+				</span>
 				<button data-action-type="mute-guest"  style="grid-column: 2;" title="Mute this guest everywhere" onclick="remoteMute(this, event);">
 					<i class="las la-microphone-slash"></i>
 					<span data-translate="mute-guest" >mute guest</span>
@@ -992,12 +1005,50 @@
 					</button>
 				</span>
 				
-				<button  data-action-type="toggle-remote-speaker"  style="grid-column: 1;" title="Toggle the remote guest's speaker output" onclick="remoteSpeakerMute(this, event);">
+				<span id="channelGroup1" style="display:none">
+					<button style="width: 35.2px" data-action-type="add-channel" class="pressed" title="Set to Default Audio Channel" onclick="changeChannelOffset(this.dataset.UUID, false);">
+						<span >00</span>
+					</button>
+					<button style="width:35.2px;" data-action-type="add-channel" title="Set to Audio Channel 1" onclick="changeChannelOffset(this.dataset.UUID, 0);">
+						<span >C1</span>
+					</button>
+					<button style="width: 35.2px" data-action-type="add-channel" title="Set to Audio Channel 2" onclick="changeChannelOffset(this.dataset.UUID, 1);">
+						<span >C2</span>
+					</button>
+				</span>
+				
+				<button  data-action-type="toggle-remote-speaker"   title="Toggle the remote guest's speaker output" onclick="remoteSpeakerMute(this, event);">
 					<i class="las la-volume-off"></i> <span data-translate="toggle-remote-speaker">Deafen Guest</span>
 				</button>
+				
+				<span id="channelGroup2" style="display:none" >
+					<button style="width: 35.2px" data-action-type="add-channel" title="Set to Audio Channel 3" onclick="changeChannelOffset(this.dataset.UUID, 2);">
+						<span >C3</span>
+					</button>
+					<button style="width:35.2px;" data-action-type="add-channel" title="Set to Audio Channel 4" onclick="changeChannelOffset(this.dataset.UUID,3);">
+						<span >C4</span>
+					</button>
+					<button style="width: 35.2px" data-action-type="add-channel" title="Set to Audio Channel 5" onclick="changeChannelOffset(this.dataset.UUID, 4);">
+						<span >C5</span>
+					</button>
+				</span>
+				
 				<button  data-action-type="toggle-remote-display"  style="grid-column: 2;" title="Toggle the remote guest's display output" onclick="remoteDisplayMute(this, event);">
 					<i class="las la-eye-slash"></i> <span data-translate="toggle-remote-display">Blind Guest</span>
 				</button>
+				
+				
+				<span id="channelGroup3" style="display:none" >
+					<button style="width: 35.2px" data-action-type="add-channel" title="Set to Audio Channel 6" onclick="changeChannelOffset(this.dataset.UUID, 5);">
+						<span >C6</span>
+					</button>
+					<button style="width:35.2px;" data-action-type="add-channel" title="Set to Audio Channel 7" onclick="changeChannelOffset(this.dataset.UUID, 6);">
+						<span >C7</span>
+					</button>
+					<button style="width: 35.2px" data-action-type="add-channel" title="Set to Audio Channel 8" onclick="changeChannelOffset(this.dataset.UUID, 7);">
+						<span >C8</span>
+					</button>
+				</span>
 				
 				<button class="" data-action-type="advanced-audio-settings"  data-active="false" style="grid-column: 1;" title="Remote Audio Settings" onclick="requestAudioSettings(this);">
 					<span data-translate="advanced-audio-settings"><i class="las la-sliders-h"></i> Audio Settings</span>
@@ -1158,7 +1209,7 @@
 			}
 		
             var session = WebRTC.Media; // session is a required global variable if configuring manually. Run before loading main.js but after webrtc.js.
-			session.version = "16.2";
+			session.version = "16.3";
             session.streamID = session.generateStreamID(); // randomly generates a streamID for this session. You can set your own programmatically if needed
 			
 			session.defaultPassword = "someEncryptionKey123"; // Disabling improves compatibility and is helpful for debugging.
@@ -1223,7 +1274,7 @@
 		<script type="text/javascript" id="main-js" src="./main.js" data-translation="blank"></script>
 		<script type="text/javascript" crossorigin="anonymous" id="mixer-js" src="./mixer.js?ver=2"></script>
 	-->
-		<script type="text/javascript" crossorigin="anonymous" id="main-js" src="./main.js?ver=163"></script>
+		<script type="text/javascript" crossorigin="anonymous" id="main-js" src="./main.js?ver=168"></script>
 		<script type="text/javascript">
 			setTimeout(function(){ // lazy load
 				var script = document.createElement('script');

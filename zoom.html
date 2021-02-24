@@ -1,0 +1,182 @@
+
+<html>
+<head><style>
+span{margin:10px 0 0 0;display:block;} 
+body {
+	
+	background-color:#cdf;
+	padding:0;
+	width;100%;height:100%
+} 
+
+input{padding:5px;}
+
+button {margin:10px 3px;}
+
+#stream{
+	display:block;
+}
+
+ </style></head>
+<body id="main" style="margin:5%;"
+<meta charset="utf-8"/>
+
+<video id="video" autoplay="true" muted="true" playsinline style='height:420px;background-color:black;display:block;margin:0 0 10px 0;'></video>
+<div id="devices">
+  <div class="select">
+    <label for="videoSource">Video source: </label><select id="videoSource"></select>
+  </div>
+  <div class="select">
+    <label for="audioSource">Audio source: </label><select id="audioSource"></select>
+  </div>
+</div>
+<button onclick="fullwindow()">FULL WINDOW</button>
+<script>
+window.onerror = function backupErr(errorMsg, url=false, lineNumber=false) {
+	console.error(errorMsg);
+	console.error(lineNumber);
+	console.error("Unhandeled Error occured"); //or any message
+	return false;
+};
+
+function fullwindow(){
+	videoElement.style.width="100%";
+	videoElement.style.padding= "0";
+	videoElement.style.margin="0";
+	videoElement.style.height="100%";
+	videoElement.style.zIndex="5";
+	videoElement.style.position = "absolute";
+	videoElement.style.top="0px";
+	videoElement.style.left="0px";
+	document.getElementById("main").style.overflow = "hidden";
+	videoElement.style.overflow = "hidden"
+	document.getElementById("main").style.backgroundColor="#000";
+	videoElement.style.cursor="none";
+	document.getElementById("main").style.cursor="none";
+}
+
+var videoElement = document.getElementById("video");
+var gotDev = false;
+async function gotDevices() {
+ if (gotDev){return;}
+	gotDev=true;
+	await navigator.mediaDevices.getUserMedia({audio:true, video:true}); // is needed to ask for permissinos.
+	navigator.mediaDevices.enumerateDevices().then((deviceInfos)=>{
+	  for (let i = 0; i !== deviceInfos.length; ++i) {
+		var deviceInfo = deviceInfos[i];
+		var option = document.createElement("option");
+		option.value = deviceInfo.deviceId;
+		
+		if (deviceInfo.kind === "audioinput") {
+		  option.text = deviceInfo.label || "microphone " + (audioSelect.length + 1);
+		  audioSelect.appendChild(option);
+		  if (option.text.startsWith("CABLE")){
+			option.selected =true;
+		  }
+		} else if (deviceInfo.kind === "videoinput") {
+		  option.text = deviceInfo.label || "camera " + (videoSelect.length + 1);
+		  if (option.text.startsWith("NewTek")){
+			continue;
+		  }
+		  videoSelect.appendChild(option);
+		  if (option.text.startsWith("OBS")){
+			option.selected =true;
+		  }
+		}
+	  }
+	  getStream();
+  });
+}
+
+function getStream() {
+  if (window.stream) {
+	window.stream.getTracks().forEach(function (track) {
+		track.stop();
+		log("TRack stopping");
+	});
+  }
+	
+  const constraints = {
+    audio: {
+      deviceId: { exact: audioSelect.value },
+	  echoCancellation : false,
+	  autoGainControl : false,
+	  noiseSuppression : false
+    },
+    video: {
+      deviceId: { exact: videoSelect.value },
+		width: { min: 1280, ideal: 1920, max: 1920 },
+		height: { min: 720, ideal: 1080, max: 1080 }
+    }
+  };
+  return navigator.mediaDevices.getUserMedia(constraints)
+    .then(gotStream)
+    .catch(console.error);
+}
+
+
+function gotStream(stream) {
+	if (window.stream) {
+		window.stream = stream; // make stream available to console
+		videoElement.srcObject = stream;
+		var senders = session.pc.getSenders();
+		videoElement.srcObject.getVideoTracks().forEach((track)=>{
+			var added = false;
+			senders.forEach((sender) => { // I suppose there could be a race condition between negotiating and updating this. if joining at the same time as changnig streams?
+				if (sender.track) {
+					if (sender.track && sender.track.kind == "video") {
+						sender.replaceTrack(track); // replace may not be supported by all browsers.  eek.
+						track.enabled = notCensored;
+						added = true;
+					}
+				}
+			});
+			if (added==false){
+				session.pc.addTrack(track);
+				log("ADDED NOT REPLACED?");
+			}
+		});
+
+		videoElement.srcObject.getAudioTracks().forEach((track)=>{
+			var added = false;
+			senders.forEach((sender) => { // I suppose there could be a race condition between negotiating and updating this. if joining at the same time as changnig streams?
+				if (sender.track) {
+					if (sender.track && sender.track.kind == "audio") {
+						sender.replaceTrack(track); // replace may not be supported by all browsers.  eek.
+						track.enabled = notCensored;
+						added = true;
+					}
+				}
+			});
+			if (added==false){
+				session.pc.addTrack(track);
+				log("ADDED NOT REPLACED?");
+			}
+		});
+	} else {
+		window.stream = stream; // make stream available to console
+		videoElement.srcObject = stream;
+	}
+}
+
+
+var audioSelect = document.querySelector("select#audioSource");
+var videoSelect = document.querySelector("select#videoSource");
+audioSelect.onchange = getStream;
+videoSelect.onchange = getStream;
+gotDevices();
+
+
+</script>
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+

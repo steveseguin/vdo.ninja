@@ -669,6 +669,23 @@ if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(naviga
 }
 
 
+if ((iOS) || (iPad)) {
+	window.addEventListener('resize', function() {  // Safari is the new IE.
+
+        if ( window.matchMedia("(orientation: portrait)").matches ) {
+            document.getElementsByTagName("html")[0].style.height = "100vh";
+            setTimeout(function(){
+                document.getElementsByTagName("html")[0].style.height = "100%";
+            }, 1000);
+        } else if ( window.matchMedia("(orientation: landscape)").matches ) {
+            document.getElementsByTagName("html")[0].style.height = "100vh";
+            setTimeout(function(){
+                document.getElementsByTagName("html")[0].style.height = "100%";
+            }, 1000);
+        }
+    });
+}
+
 if (/CriOS/i.test(navigator.userAgent) && (iOS || iPad)) {
 	if (!(session.cleanOutput)) {
 		try {
@@ -682,11 +699,11 @@ if (/CriOS/i.test(navigator.userAgent) && (iOS || iPad)) {
 if (urlParams.has('broadcast') || urlParams.has('bc')) {
 	log("Broadcast flag set");
 	session.broadcast = urlParams.get('broadcast') || urlParams.get('bc');
-	if ((iOS) || (iPad)) {
-		session.nopreview = false;
-	} else {
-		session.nopreview = true;
-	}
+	//if ((iOS) || (iPad)) {
+	//	session.nopreview = false;
+	//} else {
+	//	session.nopreview = true;
+	//}
 	session.style = 1;
 	getById("header").style.display = "none";
 	getById("header").style.opacity = 0;
@@ -774,9 +791,9 @@ if (urlParams.has('blind')) {
 
 if (urlParams.has('dpi') || urlParams.has('dpr')) {
 	session.devicePixelRatio = urlParams.get('dpi') || urlParams.get('dpr') || 2.0;
-} else if (window.devicePixelRatio && window.devicePixelRatio!==1){ 
-	session.devicePixelRatio = window.devicePixelRatio; // this annoys me to no end.
-}
+} //else if (window.devicePixelRatio && window.devicePixelRatio!==1){ 
+//	session.devicePixelRatio = window.devicePixelRatio; // this annoys me to no end.
+//}
 
 if (urlParams.has('speakermute') || urlParams.has('mutespeaker') || urlParams.has('sm') || urlParams.has('ms')) {
 	session.speakerMuted = true;
@@ -859,6 +876,11 @@ if (urlParams.has('scene')) {
 	session.disableWebAudio = true;
 	session.audioEffects = false;
 	session.audioMeterGuest = false;
+}
+
+if (urlParams.has('scenes')) {
+	getById("sceneGroup1").style.display = "block";
+	getById("sceneGroup2").style.display = "block";
 }
 
 if (urlParams.has('mediasettings')) {
@@ -1897,6 +1919,14 @@ if (urlParams.has('channeloffset')) {
 	log("max channels is 32; channels offset");
 	session.audioEffects = true;
 }
+if (urlParams.has('showchannels')) {
+	getById("channelGroup1").style.display = "block";
+	getById("channelGroup2").style.display = "block";
+	getById("channelGroup3").style.display = "block";
+	session.audioEffects = true;
+}
+
+
 if (urlParams.has('enhance')) {
 	//if (parseInt(urlParams.get('enhance')>0){
 	session.enhance = true; //parseInt(urlParams.get('enhance'));
@@ -2147,6 +2177,8 @@ if (urlParams.has('turn')) {
 
 
 if (urlParams.has('privacy') || urlParams.has('private') || urlParams.has('relay')) { // please only use if you are also using your own TURN service.
+	session.privacy = true;
+	
 	try {
 		session.configuration.iceTransportPolicy = "relay"; // https://developer.mozilla.org/en-US/docs/Web/API/RTCIceCandidate/address
 	} catch (e) {
@@ -2916,8 +2948,13 @@ if ((session.roomid) || (urlParams.has('roomid')) || (urlParams.has('r')) || (ur
 
 	if (session.roomid.length > 0) {
 		if (session.videoDevice === 0) {
-			getById("add_camera").innerHTML = "Join room with Microphone";
-			miniTranslate(getById("add_camera"), "join-room-with-mic");
+			if (session.audioDevice === 0) {
+				getById("add_camera").innerHTML = "Join room";
+				miniTranslate(getById("add_camera"), "join-room");
+			} else {
+				getById("add_camera").innerHTML = "Join room with Microphone";
+				miniTranslate(getById("add_camera"), "join-room-with-mic");
+			}
 		} else {
 			getById("add_camera").innerHTML = "Join Room with Camera";
 			miniTranslate(getById("add_camera"), "join-room-with-camera");
@@ -3723,10 +3760,10 @@ function lowerhand() {
 var previousRoom = "";
 var stillNeedRoom = true;
 var transferCancelled = false;
-var armedTransfer = true;
+var armedTransfer = false;
 
 function directMigrate(ele, event) { // everyone in the room will hangup this guest also?  I like that idea.  What about the STREAM ID?  I suppose we don't kick out if the viewID matches.
-
+	log("directMigrate");
 	if (event === false) {
 		if (previousRoom === null) { // user cancelled in previous callback
 			ele.innerHTML = '<i class="las la-paper-plane"></i> <span data-translate="forward-to-room">Transfer</span>';
@@ -3743,6 +3780,7 @@ function directMigrate(ele, event) { // everyone in the room will hangup this gu
 		ele.innerHTML = '<i class="las la-check"></i> <span data-translate="forward-to-room">Armed</span>';
 		ele.style.backgroundColor = "#BF3F3F";
 		transferCancelled = false;
+		armedTransfer=true;
 		Callbacks.push([directMigrate, ele, stillNeedRoom]);
 		stillNeedRoom = false;
 		log("Migrate queued");
@@ -3826,28 +3864,33 @@ function directHangup(ele, event) { // everyone in the room will hangup this gue
 	}
 }
 
-function directEnable(ele, event) { // A directing room only is controlled by the Director, with the exception of MUTE.
+function directEnable(ele, event, scene=1) { // A directing room only is controlled by the Director, with the exception of MUTE.
 	if (!((event.ctrlKey) || (event.metaKey))) {
 		if (ele.dataset.enable == 1) {
 			ele.dataset.enable = 0;
 			ele.className = "";
-			ele.children[1].innerHTML = "Add to Scene";
-			getById("container_" + ele.dataset.UUID).style.backgroundColor = null;
+			if (ele.children[1]){
+				ele.children[1].innerHTML = "Add to Scene";
+				getById("container_" + ele.dataset.UUID).style.backgroundColor = null;
+			}
 		} else {
-			getById("container_" + ele.dataset.UUID).style.backgroundColor = "#649166";
 			ele.dataset.enable = 1;
 			ele.className = "pressed";
-			ele.children[1].innerHTML = "Remove";
+			if (ele.children[1]){
+				ele.children[1].innerHTML = "Remove";
+				getById("container_" + ele.dataset.UUID).style.backgroundColor = "#649166";
+			}
 		}
 	}
 	var msg = {};
 	msg.request = "sendroom";
 	//msg.roomid = session.roomid;
-	msg.scene = "1"; // scene
+	msg.scene = scene;
 	msg.action = "display";
 	msg.value = ele.dataset.enable;
 	msg.target = ele.dataset.UUID;
 
+	//session.anysend(msg);
 	session.sendMsg(msg); // send to everyone in the room, so they know if they are on air or not.
 }
 
@@ -4916,6 +4959,8 @@ function createRoomCallback(passAdd, passAdd2) {
 			codecGroupFlag = "&codec=h264";
 		} else if (codecGroupFlag.value === "vp8") {
 			codecGroupFlag = "&codec=vp8";
+		} else if (codecGroupFlag.value === "av1") {
+			codecGroupFlag = "&codec=av1";
 		} else {
 			codecGroupFlag = "";
 		}
@@ -4939,11 +4984,7 @@ function createRoomCallback(passAdd, passAdd2) {
 
 	try {
 		if (session.label === false) {
-			if (document.title == "") {
-				document.title = "Control Room";
-			} else {
-				document.title += " - Control Room";
-			}
+			document.title = "Control Room";
 		}
 	} catch (e) {
 		errorlog(e);
@@ -5022,7 +5063,14 @@ function createRoomCallback(passAdd, passAdd2) {
 		getById("chatbutton").classList.add("advanced");
 	}
 
-	joinRoom(session.roomid);
+	if (session.autostart){
+		press2talk(true);
+	} else {
+		session.seeding=true;
+		session.seedStream();
+	}
+
+	joinRoom(session.roomid); 
 
 }
 /**
@@ -5474,12 +5522,17 @@ function gotDevices(deviceInfos) { // https://github.com/webrtc/samples/blob/gh-
 				if ((deviceInfo.kind === 'audioinput') && (deviceInfo.label.replace(/[\W]+/g, "_").toLowerCase().includes(session.audioDevice))) {
 					tmp.push(deviceInfo);
 					log("A DEVICE FOUND = " + deviceInfo.label.replace(/[\W]+/g, "_").toLowerCase());
+				} else if (deviceInfo.deviceId === session.audioDevice){
+					tmp.push(deviceInfo);
+					log("EXACT A DEVICE FOUND");
 				}
 			}
 			for (let i = 0; i !== deviceInfos.length; ++i) {
 				deviceInfo = deviceInfos[i];
 				if (!((deviceInfo.kind === 'audioinput') && (deviceInfo.label.replace(/[\W]+/g, "_").toLowerCase().includes(session.audioDevice)))) {
-					tmp.push(deviceInfo);
+					if (deviceInfo.deviceId !== session.audioDevice){
+						tmp.push(deviceInfo);
+					}
 				}
 			}
 
@@ -5496,12 +5549,17 @@ function gotDevices(deviceInfos) { // https://github.com/webrtc/samples/blob/gh-
 				if ((deviceInfo.kind === 'videoinput') && (deviceInfo.label.replace(/[\W]+/g, "_").toLowerCase().includes(session.videoDevice))) {
 					tmp.push(deviceInfo);
 					log("V DEVICE FOUND = " + deviceInfo.label.replace(/[\W]+/g, "_").toLowerCase());
+				} else if (deviceInfo.deviceId === session.videoDevice){
+					tmp.push(deviceInfo);
+					log("EXACT V DEVICE FOUND");
 				}
 			}
 			for (let i = 0; i !== deviceInfos.length; ++i) {
 				deviceInfo = deviceInfos[i];
 				if (!((deviceInfo.kind === 'videoinput') && (deviceInfo.label.replace(/[\W]+/g, "_").toLowerCase().includes(session.videoDevice)))) {
-					tmp.push(deviceInfo);
+					if (deviceInfo.deviceId !== session.videoDevice){
+						tmp.push(deviceInfo);
+					}
 				}
 			}
 			deviceInfos = tmp;
@@ -7854,6 +7912,36 @@ function previewIframe(iframesrc) { // this is pretty important if you want to a
 		iframesrc = "./";
 	}
 
+
+	if (iframesrc.startsWith("https://") || iframesrc.startsWith("http://")){
+		var domain = (new URL(iframesrc));
+		domain = domain.hostname;
+		log(domain);
+		if ((domain=="www.youtube.com") || (domain=="youtube.com")){
+			var regExp = /^.*((youtu.be\/)|(v\/)|(\/u\/\w\/)|(embed\/)|(watch\?))\??v?=?([^#&?]*).*/;
+			var match = iframesrc.match(regExp);
+			var vidid = (match&&match[7].length==11)? match[7] : false;
+			
+			if(vidid){
+				iframesrc = "https://www.youtube.com/embed/"+vidid+"?autoplay=1&modestbranding=1";
+				log(iframesrc);
+			}
+		} else if (domain=="www.twitch.tv"){
+			var vidid = iframesrc.split('/').pop().split('#')[0].split('?')[0];
+			if (vidid){
+				iframesrc = "https://player.twitch.tv/?channel="+vidid+"&parent="+location.hostname;
+				log(iframesrc);
+			}
+		} else if (domain=="twitch.tv"){
+			var vidid = iframesrc.split('/').pop().split('#')[0].split('?')[0];
+			if (vidid){
+				iframesrc = "https://player.twitch.tv/?channel="+vidid+"&parent="+location.hostname;
+				log(iframesrc);
+			}
+		}
+		
+	}
+
 	iframe.src = iframesrc;
 	getById("previewIframe").innerHTML = "";
 	getById("previewIframe").style.width = "640px";
@@ -9481,42 +9569,7 @@ function createIframePopup() {
 		getById("screenshare2button").classList.remove("float2");
 		return;
 	}
-
-	//var iframeContainer = document.createElement("div");
-	//iframeContainer.className="popup";
-	//iframeContainer.style.zIndex = ""+22;
-	//iframeContainer.style.width="640px";
-	//iframeContainer.style.height="480px";
-	//iframeContainer.style.position = "fixed";
-	//iframeContainer.style.top = "60px";
-	//iframeContainer.style.left = "0";
-	//iframeContainer.style.border = "dotted 3px #777";
-	//iframeContainer.style.overflow="auto";
-	//iframeContainer.style.resize="both";
-	//session.screenShareElement = iframeContainer;
-	//session.screenShareElement.dataset.doNotMove = true;
-
-	//var button1 = document.createElement("button");
-	//button1.innerHTML = "<i class='las la-arrows-alt'></i> Move";
-	//button1.className = "popup-header menu";
-	//iframeContainer.appendChild(button1);
-
-	//var button2 = document.createElement("button");
-	//button2.innerHTML = "<i class='las la-times'></i> Close";
-	//button2.className = "menu";
-	//button2.onclick = function(){
-	//	iframe.contentWindow.postMessage({"close":true}, '*');
-	//	iframe.parentNode.parentNode.removeChild(iframeContainer);
-	//	session.screenShareElement = false;
-	//}
-	//iframeContainer.appendChild(button2);
-
-	//var button3 = document.createElement("button");
-	//button3.innerHTML = "<i class='las la-sync'></i> Reload";
-	//button3.className = "menu reload";
-	//button3.onclick = function(){iframe.contentWindow.postMessage({"reload":true}, '*');}
-	//iframeContainer.appendChild(button3);
-
+	
 	if (session.screenshareid) {
 		var iFrameID = session.screenshareid;
 	} else {
@@ -9533,23 +9586,32 @@ function createIframePopup() {
 	var iframe = document.createElement("iframe");
 	iframe.allow = "autoplay";
 	iframe.allowtransparency = "true";
-	var pass = "";
-	if (session.password) {
-		pass = "&password=" + session.password; // encodeURIComponent(
+	
+	var extras = "";
+	if (session.password){
+		extras += "&password=" + session.password; // encodeURIComponent(
+	}
+	
+	if (session.privacy){
+		extras += "&privacy"; 
+	}
+	
+	if (session.quality){
+		extras += "&q="+session.quality;
+	} else {
+		extras += "&q=0";
 	}
 	
 	if (session.muted){
-		iframe.src = "./?screenshare&transparent&cleanoutput&noheader&autostart&view&muted&room=" + session.roomid + "&push=" + iFrameID + pass;
+		iframe.src = "./?ad=1&screenshare&transparent&cleanoutput&noheader&autostart&view&muted&room=" + session.roomid + "&push=" + iFrameID + extras;
 	} else {
-		iframe.src = "./?screenshare&transparent&cleanoutput&noheader&autostart&view&room=" + session.roomid + "&push=" + iFrameID + pass;
+		iframe.src = "./?ad=1&screenshare&transparent&cleanoutput&noheader&autostart&view&room=" + session.roomid + "&push=" + iFrameID + extras;
 	}
 	
 	iframe.style.width = "100%";
 	iframe.style.height = "100%";
 	iframe.style.overflow = "hidden";
 	iframe.id = "screensharesource";
-
-	//iframeContainer.appendChild(iframe);
 
 
 	session.screenShareElement = iframe;
@@ -10081,7 +10143,7 @@ if ((session.view) && (session.roomid === false)) {
 			if (document.title == "") {
 				document.title = "Room=" + session.roomid.toString();
 			} else {
-				document.title += ", Room=" + session.roomid.toString();
+				document.title += ": " + session.roomid.toString();
 			}
 		}
 	} catch (e) {
@@ -10461,7 +10523,7 @@ function toggleQualityDirector(bitrate, UUID, ele = null) { // ele is specific t
 function createPopoutChat() {
 	var randid = session.generateStreamID(8);
 	log(randid);
-	window.open('./popout?id=' + randid, 'popup', 'width=600,height=480,toolbar=no,menubar=no,resizable=yes');
+	window.open('./popout.html?id=' + randid, 'popup', 'width=600,height=480,toolbar=no,menubar=no,resizable=yes');
 	session.broadcastChannel = new BroadcastChannel(randid);
 	session.broadcastChannel.onmessage = function(e) {
 		if ("loaded" in e.data) {
@@ -10496,9 +10558,10 @@ function getChatMessage(msg, label = false, director = false, overlay = false) {
 		} else {
 			data.label = "<b>" + data.label + ":</b> ";
 		}
+		label = label+":";
 	} else if (director) {
 		data.label = "<b><i>Director:</i></b> ";
-		label = "Director";
+		label = "Director:";
 	} else {
 		data.label = "";
 		label = "";
@@ -10512,20 +10575,22 @@ function getChatMessage(msg, label = false, director = false, overlay = false) {
 	}
 	updateMessages();
 
-	if (overlay && director) {
-		var textOverlay = getById("overlayMsgs");
-		if (textOverlay) {
-			var spanOverlay = document.createElement("span");
-			spanOverlay.innerHTML = "<b><i>" + label + ":</i></b> " + msg + "<br />";
-			textOverlay.appendChild(spanOverlay);
-			textOverlay.style.display = "block";
-			var showtime = msg.length * 200 + 3000;
-			if (showtime > 8000) {
-				showtime = 8000;
+	if (overlay) {
+		if (!(session.cleanOutput)){
+			var textOverlay = getById("overlayMsgs");
+			if (textOverlay) {
+				var spanOverlay = document.createElement("span");
+				spanOverlay.innerHTML = "<b><i>" + label + "</i></b> " + msg + "<br />";
+				textOverlay.appendChild(spanOverlay);
+				textOverlay.style.display = "block";
+				var showtime = msg.length * 200 + 3000;
+				if (showtime > 8000) {
+					showtime = 8000;
+				}
+				setTimeout(function(ele) {
+					ele.parentNode.removeChild(ele);
+				}, showtime, spanOverlay);
 			}
-			setTimeout(function(ele) {
-				ele.parentNode.removeChild(ele);
-			}, showtime, spanOverlay);
 		}
 	}
 
@@ -11337,10 +11402,15 @@ function addAudioPipeline(stream, UUID, track){  // INBOUND AUDIO EFFECTS
 			source = audioMeterGuest(source, UUID, trackid);
 		}
 		
-		if (session.offsetChannel !==false){  // proably better to do this last.
+		if (session.rpcs[UUID].channelOffset !== false){
+			log("custom offset set");
+			session.rpcs[UUID].inboundAudioPipeline[trackid].destination = session.audioCtx.createMediaStreamDestination();
+			source = offsetChannel( session.rpcs[UUID].inboundAudioPipeline[trackid].destination, source, session.rpcs[UUID].channelOffset);
+			screwedUp = true;
+		} else if (session.offsetChannel !== false){  // proably better to do this last.
 			log("adding offset channels");
 			session.rpcs[UUID].inboundAudioPipeline[trackid].destination = session.audioCtx.createMediaStreamDestination();
-			source = offsetChannel( session.rpcs[UUID].inboundAudioPipeline[trackid].destination, source);
+			source = offsetChannel( session.rpcs[UUID].inboundAudioPipeline[trackid].destination, source, session.offsetChannel);
 			screwedUp = true;
 		}
 		
@@ -11364,7 +11434,28 @@ function addAudioPipeline(stream, UUID, track){  // INBOUND AUDIO EFFECTS
 	return stream;
 }
 
-function offsetChannel( destination, source){
+function changeChannelOffset(UUID, channel){
+	session.rpcs[UUID].channelOffset = channel;
+	var tracks = session.rpcs[UUID].streamSrc.getAudioTracks();
+	if (tracks.length){
+		var track = tracks[0];
+		session.rpcs[UUID].videoElement.srcObject = addAudioPipeline(session.rpcs[UUID].streamSrc, UUID, track);
+	}
+	
+	var ele = document.querySelectorAll('[data-action-type="add-channel"][data--u-u-i-d="' + UUID + '"]');
+	for (var i=0;i<ele.length;i++){
+		if ((i==0) && (channel===false)){
+			ele[i].classList.add("pressed");
+		} else if (channel===i-1){
+			ele[i].classList.add("pressed");
+		} else {
+			ele[i].classList.remove("pressed");
+		}
+	}
+	
+}
+
+function offsetChannel( destination, source, offset){
 	session.audioCtx.destination.channelCountMode = 'explicit';
 	session.audioCtx.destination.channelInterpretation = 'discrete';
 	destination.channelCountMode = 'explicit';
@@ -11375,13 +11466,13 @@ function offsetChannel( destination, source){
 	} catch (e){errorlog("Max channels: "+destination.channelCount);}
 	
 	var splitter = session.audioCtx.createChannelSplitter(2);
-	var merger = session.audioCtx.createChannelMerger(2+session.offsetChannel);
+	var merger = session.audioCtx.createChannelMerger(2+offset);
 	
 	source.connect(splitter);
-	splitter.connect(merger, 0,session.offsetChannel);
+	splitter.connect(merger, 0,offset);
 	
 	if ((session.stereo) && (session.stereo!=3)){
-		splitter.connect(merger, 1, 1+session.offsetChannel);
+		splitter.connect(merger, 1, 1+offset);
 	}
 	return merger;
 }

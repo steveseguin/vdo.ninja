@@ -31,17 +31,13 @@ var CodecsHandler = (function() {
 
         if (!info.videoCodecNumbers) {
             return sdp;
-        }
-
-        if (codecName === 'vp8' && info.vp8LineNumber === info.videoCodecNumbers[0]) {
+        } else if (codecName === 'vp8' && info.vp8LineNumber === info.videoCodecNumbers[0]) {
             return sdp;
-        }
-
-        if (codecName === 'vp9' && info.vp9LineNumber === info.videoCodecNumbers[0]) {
+        } else if (codecName === 'vp9' && info.vp9LineNumber === info.videoCodecNumbers[0]) {
             return sdp;
-        }
-
-        if (codecName === 'h264' && info.h264LineNumber === info.videoCodecNumbers[0]) {
+        } else if (codecName === 'h264' && info.h264LineNumber === info.videoCodecNumbers[0]) {
+            return sdp;
+        } else if (codecName === 'av1' && info.av1LineNumber === info.videoCodecNumbers[0]) {
             return sdp;
         }
 
@@ -58,21 +54,24 @@ var CodecsHandler = (function() {
                 return sdp;
             }
             preferCodecNumber = info.vp8LineNumber;
-        }
-
-        if (codec === 'vp9') {
+			
+        } else if (codec === 'vp9') {
             if (!info.vp9LineNumber) {
                 return sdp;
             }
             preferCodecNumber = info.vp9LineNumber;
-        }
-
-        if (codec === 'h264') {
+			
+        } else if (codec === 'h264') {
             if (!info.h264LineNumber) {
                 return sdp;
             }
-
             preferCodecNumber = info.h264LineNumber;
+			
+        } else if (codec === 'av1') {
+            if (!info.av1LineNumber) {
+                return sdp;
+            }
+            preferCodecNumber = info.av1LineNumber;
         }
 
         var newLine = info.videoCodecNumbersOriginal.split('SAVPF')[0] + 'SAVPF ';
@@ -117,6 +116,10 @@ var CodecsHandler = (function() {
 
             if (line.indexOf('H264/90000') !== -1 && !info.h264LineNumber) {
                 info.h264LineNumber = line.replace('a=rtpmap:', '').split(' ')[0];
+            }
+			
+			if (line.indexOf('AV1X/90000') !== -1 && !info.av1LineNumber) {
+                info.av1LineNumber = line.replace('a=rtpmap:', '').split(' ')[0];
             }
         });
 
