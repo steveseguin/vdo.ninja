@@ -55,7 +55,7 @@
 			}
 		</style>
 		<link rel="stylesheet" href="./lineawesome/css/line-awesome.min.css" />
-		<link rel="stylesheet" href="./main.css?ver=47" />
+		<link rel="stylesheet" href="./main.css?ver=48" />
 		<script type="text/javascript" crossorigin="anonymous" src="./thirdparty/adapter.min.js"></script>
 	</head>
 	<body id="main" class="hidden">
@@ -66,8 +66,8 @@
 		<span itemprop="thumbnail" itemscope itemtype="http://schema.org/ImageObject">
 			<link itemprop="url" href="./media/obsNinja_logo_full.png" />
 		</span>
-		<script  type="text/javascript" crossorigin="anonymous"  src="./thirdparty/CodecsHandler.js?ver=28"></script>
-		<script  type="text/javascript" crossorigin="anonymous" src="./webrtc.js?ver=178"></script>
+		<script  type="text/javascript" crossorigin="anonymous"  src="./thirdparty/CodecsHandler.js?ver=29"></script>
+		<script  type="text/javascript" crossorigin="anonymous" src="./webrtc.js?ver=179"></script>
 		<input id="zoomSlider" type="range" style="display: none;" />
 		<div id="header">
 			<a id="logoname" href="./" style="text-decoration: none; color: white; margin: 2px;">
@@ -563,7 +563,7 @@
 					<br /><br />
 					<p style="margin:10px">Keep this tab visible if using Chrome, else the video playback will stop</p>
 					<p style="margin:10px">(Media file streaming is still quite experimental)</p><br />
-					<p style="margin:10px">File Sharing seems to be broken on Chrome v88. <br />Using The Electron Capture app instead of Chrome should work though. <a href="https://github.com/steveseguin/electroncapture/releases/tag/1.1.3" style="color:blue"><u>GET IT HERE</u></a></p>
+					<p style="margin:10px">File Sharing seems to be broken on Chrome v88. <br />Using The Electron Capture app instead of Chrome should work: <a href="https://github.com/steveseguin/electroncapture/releases/tag/1.1.3" style="color:blue"><u>GET IT HERE</u></a><br />You can also <a href="https://github.com/aws/amazon-chime-sdk-js/issues/1031" style="color:blue">turn off hardware-accleration</a> in Chrome/Edge to fix the issue.</p>
 				</div>
 				
 				<div class="outer close">
@@ -587,9 +587,9 @@
 					<button onclick="previewIframe(getById('iframeURL').value);" >Preview</button> 
 					<button onclick="this.innerHTML = 'Update'; session.publishIFrame(getById('iframeURL').value);" >Share</button><br />
 					<small class="iframeblob">
-						<li>Remote website must be CORS/IFrame compatible with full SSL-encryption enabled.</li>
-						<li>Not all websites will work with this feature and many will actively not allow embedding like this.</li>
-						<li>If sharing a Youtube video, try using the embeddable link version and ensure that the video is set to allow embedding.</li>
+						<li>Not all websites will work with this feature as some sites disallow embedding.</li>
+						<li>The site will try to auto-optimize standard Youtube or Twitch links.</li>
+						<li>Remote websites must be CORS/IFrame compatible with full SSL-encryption enabled.</li>
 					</small>
 					<div id="iFramePreview" style=" width: 1280px; height: 720px; margin: auto; padding: 10px;"></div>
 				</div>
@@ -645,8 +645,7 @@
 								Chrome on Android 11 has an issue with the browser freezing at times. To unfreeze it, background the browser and then foreground it again.
 							</li>
 							<br />
-                            Site Updated: <a href="https://github.com/steveseguin/obsninja/wiki/v16-release-notes">Feb 18rd, 2021</a>. The previous version can be found at 
-							<a href="https://obs.ninja/v15/">https://obs.ninja/v15/</a> if you are having new issues.
+                            Site Updated: <a href="https://github.com/steveseguin/obsninja/wiki/v16.3-update-notes">Feb 24th, 2021</a> (v16.3).  The previous version can be found at <a href="https://obs.ninja/v16/">https://obs.ninja/v16/</a> if you are having issues with this minor update.
 
 							<br />
 							<br />
@@ -1210,7 +1209,7 @@
 			}
 		
             var session = WebRTC.Media; // session is a required global variable if configuring manually. Run before loading main.js but after webrtc.js.
-			session.version = "16.2";
+			session.version = "16.3";
             session.streamID = session.generateStreamID(); // randomly generates a streamID for this session. You can set your own programmatically if needed
 			
 			session.defaultPassword = "someEncryptionKey123"; // Disabling improves compatibility and is helpful for debugging.
@@ -1275,7 +1274,7 @@
 		<script type="text/javascript" id="main-js" src="./main.js" data-translation="blank"></script>
 		<script type="text/javascript" crossorigin="anonymous" id="mixer-js" src="./mixer.js?ver=2"></script>
 	-->
-		<script type="text/javascript" crossorigin="anonymous" id="main-js" src="./main.js?ver=166"></script>
+		<script type="text/javascript" crossorigin="anonymous" id="main-js" src="./main.js?ver=168"></script>
 		<script type="text/javascript">
 			setTimeout(function(){ // lazy load
 				var script = document.createElement('script');
