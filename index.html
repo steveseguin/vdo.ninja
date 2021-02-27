@@ -124,7 +124,7 @@
 					<i id="mutetoggle" class="toggleSize las la-microphone my-float" style="position: relative; top: 0.5px;"></i>
 				</div>
 				<div id="mutevideobutton" onmousedown="event.preventDefault(); event.stopPropagation();"  title="Disable the Camera" alt="Disable the Camera" onclick="toggleVideoMute()"   tabindex="19" role="button" aria-pressed="false" onkeyup="enterPressedClick(event,this);"  class="advanced float" style="cursor: pointer;">
-					<i id="mutevideotoggle" onmousedown="event.preventDefault(); event.stopPropagation();"  class="toggleSize las la-eye my-float"></i>
+					<i id="mutevideotoggle" onmousedown="event.preventDefault(); event.stopPropagation();"  class="toggleSize las la-video my-float"></i>
 				</div>
 				<div id="screensharebutton" onmousedown="event.preventDefault(); event.stopPropagation();"  title="Share a Screen with others" alt="Share a Screen with others" onclick="toggleScreenShare()" tabindex="20" role="button" aria-pressed="false" onkeyup="enterPressedClick(event,this);"  class="float advanced" style="cursor: pointer;">
 					<i id="screensharetoggle" onmousedown="event.preventDefault(); event.stopPropagation();"  class="toggleSize las la-desktop my-float"></i>
@@ -354,6 +354,25 @@
 						</span><button onclick="playtone()" class="white" style="margin:0 0 0 15px;" type="button">Test</button></div>
 						<select id="outputSource" ></select>
 						
+					</span>
+					<span id="addPasswordBasic" style="width: 450px;
+							white-space: nowrap;
+							overflow: hidden;
+							border-bottom: 0;
+							display: inline-block;
+							text-align: left;
+							margin: 17px 0;
+							max-width: 550px;
+							min-width: 420px;
+							background-color: #f3f3f3;
+							padding: 10px 10px;
+							border: 1px solid #ccc;
+							vertical-align: middle;">
+						<i class="las la-key"></i><span data-translate="add-a-password"> Add a Password:</span>
+						<input type="text" id="passwordBasicInput" placeholder="optional" style="border: solid 1px #AAA;
+							padding: 4px 6px;
+							width: 200px;
+							margin: 0 6px;"/>
 					</span>
 					
 				</div>
@@ -628,11 +647,7 @@
 								<i class="lab la-youtube"></i>
 								<a href="https://www.youtube.com/watch?v=vLpRzMjUDaE&list=PLWodc2tCfAH1WHjl4WAOOoRSscJ8CHACe&index=2" alt="Youtube video demoing OBS.Ninja">Demoing it here</a>
 							</li>
-							<br />
 							
-							🥳 Over 350,000 streamers have used OBS.Ninja this month alone, including major TV networks and some of the biggest Youtube/Twitch stars.
-							<br />
-							<br />
 							<br />
 							<i>
 								<font style="color: red;">Known issues:</font>

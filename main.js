@@ -309,12 +309,12 @@ var sanitizePassword = function(passwrd) {
 			alert("The password provided was blank.");
 		}
 	}
-	var sanitized = passwrd.replace(/[\W]+/g, "_");
-	if (sanitized !== passwrd) {
-		if (!(session.cleanOutput)) {
-			alert("Info: Only AlphaNumeric characters should be used in the password.\n\nThe offending characters have been replaced by an underscore");
-		}
-	}
+	var sanitized = encodeURIComponent(passwrd);//.replace(/[\W]+/g, "_");
+	//if (sanitized !== passwrd) {
+	//	if (!(session.cleanOutput)) {
+	//		alert("Info: Only AlphaNumeric characters should be used in the password.\n\nThe offending characters have been replaced by an underscore");
+	//	}
+	//}
 	return sanitized;
 };
 
@@ -928,6 +928,7 @@ if (session.password) {
 	session.password = sanitizePassword(session.password);
 	getById("passwordRoom").value = session.password;
 	session.defaultPassword = false;
+	getById("addPasswordBasic").style.display = "none";
 }
 
 
@@ -1188,6 +1189,7 @@ if (urlParams.has('streamid') || urlParams.has('view') || urlParams.has('v') || 
 
 	getById("headphonesDiv2").style.display = "inline-block";
 	getById("headphonesDiv").style.display = "inline-block";
+	getById("addPasswordBasic").style.display = "none";
 
 	if (session.view == null) {
 		session.view = "";
@@ -2074,10 +2076,13 @@ if (urlParams.has('effects') || urlParams.has('effect')) {
 	session.effects = urlParams.get('effects') || urlParams.get('effect');
 	session.effects = parseInt(session.effects);
 	if (session.effects <= 0) {
-		sesson.effects = false;
+		session.effects = false;
 	}
+	
 	// mirror == 2
 	// face == 1
+	// blur = 3
+	// green = 4
 }
 
 
@@ -2629,51 +2634,74 @@ function drawFrameMirrored() {
 	session.canvasCtx.restore();
 }
 
-function setupCanvas(eleName) {
+function setupCanvas() {
 	if (session.canvas === null) {
+		warnlog("SETUP CANVAS");
 		session.canvas = document.createElement("canvas");
-		session.canvas.width = "1280";
-		session.canvas.height = "720";
+		session.canvas.width = 1280;
+		session.canvas.height = 720;
 		session.canvasCtx = session.canvas.getContext('2d');
+		session.canvasCtx.width=1280;
+		session.canvasCtx.height=720;
+		session.canvasCtx.fillStyle = "blue";
+		session.canvasCtx.fillRect(0, 0, 1280, 720);
 		session.canvasSource = document.createElement("video");
+		session.canvasSource.width=1280;
+		session.canvasSource.height=720;
 		session.canvasSource.autoplay = true;
 		session.canvasSource.srcObject = new MediaStream();
-		session.streamSrc = session.canvas.captureStream(30);
-		session.videoElement.srcObject = session.streamSrc;
 	}
 }
 
-function addTracks(eleName) {
-	if (session.canvas === null) {
-		session.canvas = document.createElement("canvas");
-		session.canvas.width = "1280";
-		session.canvas.height = "720";
-		session.canvasCtx = session.canvas.getContext('2d');
-		session.canvasSource = document.createElement("video");
-		session.canvasSource.autoplay = true;
-		session.canvasSource.srcObject = new MediaStream();
-		session.streamSrc = session.canvas.captureStream(30);
-		session.videoElement.srcObject = session.streamSrc;
-	}
-}
+function applyEffects(track, stream) {
 
-function applyEffects(eleName, track, stream) {
-
+	setupCanvas();
 	if (session.effects == 1) {
-		setupCanvas(eleName);
+		
+		session.canvasSource.srcObject.getTracks().forEach(function(trk) {
+			session.canvasSource.srcObject.removeTrack(trk);
+		});
+		
 		session.canvasSource.srcObject.addTrack(track, stream);
+		session.canvasSource.width = track.getSettings().width || 1280;
+		session.canvasSource.height = track.getSettings().height || 720;
 		session.canvas.width = track.getSettings().width;
 		session.canvas.height = track.getSettings().height;
-		if (session.effects == 1) {
-			setTimeout(function() {
-				drawFace();
-			}, 100);
-		}
+		
+		var audioTracks = session.streamSrc.getAudioTracks();
+		
+		session.streamSrc = session.canvas.captureStream(30);
+		
+		audioTracks.forEach(function(trk) {
+			session.streamSrc.addTrack(trk);
+		});
+		session.videoElement.srcObject = session.streamSrc
+		
+		setTimeout(function() {
+			drawFace();
+		}, 100);
+		
 	} else if (session.effects == 2) {
-		setupCanvas(eleName);
+		
+		session.canvasSource.srcObject.getTracks().forEach(function(trk) {
+			session.canvasSource.srcObject.removeTrack(trk);
+		});
+		
 		session.canvasSource.srcObject.addTrack(track, stream);
+		session.canvasSource.width = track.getSettings().width || 1280;
+		session.canvasSource.height = track.getSettings().height || 720;
 		session.canvas.width = track.getSettings().width;
 		session.canvas.height = track.getSettings().height;
+		
+		var audioTracks = session.streamSrc.getAudioTracks();
+		
+		session.streamSrc = session.canvas.captureStream(30);
+		
+		audioTracks.forEach(function(trk) {
+			session.streamSrc.addTrack(trk);
+		});
+		session.videoElement.srcObject = session.streamSrc
+		
 		var drawRate = parseInt(1000 / track.getSettings().frameRate) + 1;
 		if (session.canvasInterval !== null) {
 			clearInterval(session.canvasInterval);
@@ -2681,6 +2709,28 @@ function applyEffects(eleName, track, stream) {
 		session.canvasInterval = setInterval(function() {
 			drawFrameMirrored();
 		}, drawRate);
+	} else if (session.effects == 3) {
+		
+		session.canvasSource.srcObject.getTracks().forEach(function(trk) {
+			session.canvasSource.srcObject.removeTrack(trk);
+		});
+		
+		session.canvasSource.srcObject.addTrack(track, stream);
+		session.canvasSource.width = track.getSettings().width || 640;
+		session.canvasSource.height = track.getSettings().height || 360;
+		session.canvas.width = track.getSettings().width || 640;
+		session.canvas.height = track.getSettings().height || 360;
+		
+		var audioTracks = session.streamSrc.getAudioTracks();
+		
+		session.streamSrc = session.canvas.captureStream(30);
+		
+		audioTracks.forEach(function(trk) {
+			session.streamSrc.addTrack(trk);
+		});
+		
+		session.videoElement.srcObject = session.streamSrc;
+		warnlog("APPLY EFFECTS DONE");
 	} else {
 		session.streamSrc.addTrack(track, stream);
 		session.videoElement.srcObject.addTrack(track, stream);
@@ -2832,6 +2882,7 @@ function drawFace() {
 	})();
 }
 
+
 ////////  END CANVAS EFFECTS  ///////////////////
 
 
@@ -2927,6 +2978,8 @@ if ((session.roomid) || (urlParams.has('roomid')) || (urlParams.has('r')) || (ur
 		getById("headphonesDiv2").style.display = "inline-block";
 		getById("headphonesDiv").style.display = "inline-block";
 	}
+	getById("addPasswordBasic").style.display = "none";
+	
 	getById("info").innerHTML = "";
 	getById("info").style.color = "#CCC";
 	getById("videoname1").value = session.roomid;
@@ -3578,7 +3631,7 @@ function toggleVideoMute(apply = false) { // TODO: I need to have this be MUTE, 
 	}
 	if (session.videoMuted == false) {
 		session.videoMuted = true;
-		getById("mutevideotoggle").className = "las la-eye-slash my-float toggleSize";
+		getById("mutevideotoggle").className = "las la-video-slash my-float toggleSize";
 		getById("mutevideobutton").className = "float2 red";
 		if (session.streamSrc) {
 			session.streamSrc.getVideoTracks().forEach((track) => {
@@ -3589,7 +3642,7 @@ function toggleVideoMute(apply = false) { // TODO: I need to have this be MUTE, 
 	} else {
 		session.videoMuted = false;
 
-		getById("mutevideotoggle").className = "las la-eye my-float toggleSize";
+		getById("mutevideotoggle").className = "las la-video my-float toggleSize";
 		getById("mutevideobutton").className = "float";
 		if (session.streamSrc) {
 			session.streamSrc.getVideoTracks().forEach((track) => {
@@ -4248,6 +4301,25 @@ function publishWebcam(btn = false) {
 			warnlog("Clicked too quickly; button not enabled yet");
 			return;
 		}
+		
+		if (getById("passwordBasicInput").value.length){
+			session.password = getById("passwordBasicInput").value;
+			session.password = sanitizePassword(session.password);
+			if (session.password.length==0){
+				session.password = false;
+			} else {
+				session.defaultPassword = false;
+				if (urlParams.has('pass')) {
+					updateURL("pass=" + session.password);
+				} else if (urlParams.has('pw')) {
+					updateURL("pw=" + session.password);
+				} else if (urlParams.has('p')) {
+					updateURL("p=" + session.password);
+				} else {
+					updateURL("password=" + session.password);
+				}
+			}
+		}
 	}
 
 	if (activatedStream == true) {
@@ -4352,7 +4424,7 @@ function publishWebcam(btn = false) {
 	} else {
 		updateURL("push=" + session.streamID);
 	}
-
+	
 	session.publishStream(ele, title);
 
 }
@@ -7422,7 +7494,7 @@ async function grabVideo(quality = 0, eleName = 'previewWebcam', selector = "sel
 					}
 
 					if (session.effects) {
-						applyEffects(eleName, track, stream);
+						applyEffects(track,stream);
 					} else {
 						log(session.videoElement);
 						session.streamSrc.addTrack(track, stream); // add video track to the preview video
@@ -11706,6 +11778,70 @@ function audioMeterGuest(mediaStreamSource, UUID, trackid){
 }
 
 
+if (session.effects==3) {
+	var script = document.createElement('script');
+	var script2 = document.createElement('script');
+	var net = false;
+	var segmentation = false;
+	var imgTmp = new Image();
+	var canvasTmp = document.createElement('canvas');
+	canvasTmp.width=640;
+	canvasTmp.height=360;
+	var ctxTmp = canvasTmp.getContext('2d');
+	ctxTmp.width=640;
+	ctxTmp.height=360;
+	script.onload = function() {
+		document.head.appendChild(script2);
+	}
+	script2.onload = function() {
+		
+		//var calcBlurInterval = setInterval(function(){calcBlur();},66);
+		var applyBlurInterval = setInterval(function(){applyBlur();},200);
+		if (session.canvas===null){return;}
+		
+		async function applyBlur() {
+			clearInterval(applyBlurInterval);
+			try {
+				if (net===false){
+					net = await bodyPix.load({ 
+					  architecture: 'MobileNetV1',
+					  outputStride: 16,
+					  multiplier: 0.75,
+					  quantBytes: 2
+					});
+					log("LOADED MODEL"); // https://github.com/tensorflow/tfjs-models/tree/master/body-pix
+					if(session.canvas==null){
+						applyBlurInterval = setInterval(function(){applyBlur();},200);
+						return;
+					}
+				}
+				
+				try{
+					const backgroundBlurAmount = 3;
+					const edgeBlurAmount = 3;
+					ctxTmp.drawImage(session.canvasSource, 0, 0, 640, 360);
+					imgTmp.src = canvasTmp.toDataURL();
+					segmentation = await net.segmentPerson(imgTmp);
+					bodyPix.drawBokehEffect(session.canvas, imgTmp, segmentation, backgroundBlurAmount, edgeBlurAmount, false);
+				} catch(e){
+					errorlog(e);
+					session.canvasCtx.drawImage(session.canvasSource, 0, 0,session.canvas.width, session.canvas.height);
+				}
+				window.requestAnimationFrame(applyBlur);
+			} catch (e){
+				clearInterval(applyBlurInterval);
+				applyBlurInterval = setInterval(function(){applyBlur();},200);
+			}
+		}
+		
+	}
+	script.type = 'text/javascript';
+	script2.type = 'text/javascript';
+	script.src = "https://cdnjs.cloudflare.com/ajax/libs/tensorflow/1.2.1/tf.min.js"; // dynamically load this only if its needed. Keeps loading time down for all..
+	script2.src = "https://cdn.jsdelivr.net/npm/@tensorflow-models/body-pix@2.1.0/dist/body-pix.min.js";
+	document.head.appendChild(script);
+	
+}
 
 if (session.midiHotkeys) {
 	var script = document.createElement('script');
