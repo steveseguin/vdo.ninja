@@ -139,6 +139,14 @@ button.grey {
 	background-size: 50%;
 }
 
+#miniPerformer>#previewWebcam{
+	width: 80px;
+	height: 45px;
+	margin: 5px;
+	background-color: #464749 !important;
+	background-size: 50%;
+}
+
 #reportbutton{
 	visibility: hidden;
 }
@@ -195,6 +203,15 @@ button.white:active {
 	padding: 1px;
 	background-color: #0F131D;
 	color: #FFF;
+}
+#head5 {
+    display: inline-block;
+    text-decoration: none;
+    color: white;
+    text-align: right;
+    margin-right: 10px;
+	pointer-events: none;
+	float: right;
 }
 
 #overlayMsgs{
@@ -516,7 +533,7 @@ button.btnArmTransferRoom:hover{
 }
 
 button.btnArmTransferRoom.selected{
-    background-color: var(--red-accent);
+    background-color: #840000;
 }
 
 @media only screen and (max-height: 540px){
@@ -552,6 +569,9 @@ button.btnArmTransferRoom.selected{
 		display:none;
 	}
 	#head4{
+		display:none;
+	}
+	#head5{
 		display:none;
 	}
 	#head2{
@@ -1127,6 +1147,7 @@ label {
     /* padding: 30px; */
     border-radius: 30px;
 	cursor:pointer;
+	color: #636363
 }
 .fullcolumn {
 	float: left;
@@ -2203,8 +2224,8 @@ span#guestTips {
     color: white;
     padding: 5px 10px;
     background: rgba(0, 0, 0, .5);
-	pointer-events:none;
     font-size: 1em;
+	pointer-events:none;
 }
 
 
@@ -2401,7 +2422,9 @@ input:checked + .slider:before {
     transform: translate(-50%, -50%);
     border-radius: 10px;
     font-weight: bold;
-	z-index:1;
+	z-index:2;
+	width:400px;
+	max-width:90%;
 }
 
 .alertModalInner {
@@ -2411,10 +2434,11 @@ input:checked + .slider:before {
 
 .alertModalClose {
     position: absolute;
-    top: -2px;
+    top: -4px;
     right: 4px;
     cursor: pointer;
     font-weight: bolder;
+	font-size: 1.8em;
 }
 
 .alertModalBackdrop {
