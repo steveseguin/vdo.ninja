@@ -1893,10 +1893,10 @@ input[type=checkbox] {
 	font-size: 0.8rem;
 	list-style-type: none;
 	left: 50px;
-	top: 50px;
+	top: 0px;
 	width: 300px;
 	min-height: 200px;
-	max-height: 90vh;
+	max-height: 99vh;
 	overflow-y: auto;
 	background-color: rgba(0, 0, 0, 0.95);
 	position: absolute;

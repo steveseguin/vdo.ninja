@@ -2697,8 +2697,8 @@ function setupCanvas() {
 		session.canvas.width = 1280;
 		session.canvas.height = 720;
 		session.canvasCtx = session.canvas.getContext('2d');
-		session.canvasCtx.width=1280;
-		session.canvasCtx.height=720;
+		//session.canvasCtx.width=1280;
+		//session.canvasCtx.height=720;
 		session.canvasCtx.fillStyle = "blue";
 		session.canvasCtx.fillRect(0, 0, 1280, 720);
 		session.canvasSource = document.createElement("video");
@@ -2815,14 +2815,82 @@ function applyEffects(track, stream) {
 		
 		session.videoElement.srcObject = session.streamSrc;
 		warnlog("APPLY EFFECTS DONE");
+	} else if (session.effects == 6){
+		
+		
+		
+		session.canvasSource.srcObject.getTracks().forEach(function(trk) {
+			session.canvasSource.srcObject.removeTrack(trk);
+		});
+		
+		session.canvasSource.onloadeddata = main;
+		
+		session.canvasSource.srcObject.addTrack(track, stream);
+		session.canvasSource.width = track.getSettings().width || 1280;
+		session.canvasSource.height = track.getSettings().height || 720;
+		session.canvas.width = track.getSettings().width;
+		session.canvas.height = track.getSettings().height;
+		
+		var audioTracks = session.streamSrc.getAudioTracks();
+		
+		session.streamSrc = session.canvas.captureStream(30);
+		
+		audioTracks.forEach(function(trk) {
+			session.streamSrc.addTrack(trk);
+		});
+		
+		
+		session.videoElement.srcObject = session.streamSrc;
+		warnlog("APPLY EFFECTS DONE");
+		
 	} else {
 		session.streamSrc.addTrack(track, stream);
 		session.videoElement.srcObject.addTrack(track, stream);
 		//session.videoElement.srcObject = outboundAudioPipeline(session.streamSrc); // WE don't do this unless we are prepared re-send all the audio tracks again also; this breaks the audio senders.
 	}
 }
+function heatMapColorforValue(value){
+  var h = parseInt((1.0 - value) * 240);
+  if (h<0){h=0;}
+  if (h>240){h=240;}
+  return "hsl(" + h + ", 100%, 50%)";
+}
 
-function draw2CanvasBlur(now, metadata) { // 
+var active1=false;
+var active2=false;
+
+async function main() {
+  if (active1){return;}
+  if (model == false){
+	 setTimeout(function(){main();},1000);
+	 return;
+  }
+  active1=true;
+  
+  const predictions = await model.estimateFaces({
+	input: session.canvasSource
+  });
+  if (predictions.length > 0) {
+	for (let j = 0; j < predictions.length; j++) {
+	  const fp = predictions[j].annotations;
+	  session.canvasCtx.fillStyle = "#000000";
+	  session.canvasCtx.fillRect(0, 0, 1280, 720);
+	  const keypoints = predictions[j].scaledMesh
+	  for (let i = 0; i < keypoints.length; i++) {
+		const [x, y, z] = keypoints[i];
+		session.canvasCtx.fillStyle = heatMapColorforValue((z+40)/60);
+		session.canvasCtx.fillRect(parseInt(x), parseInt(y), 5, 5);
+	  }
+	}
+  }
+  active1=false;
+  setTimeout(function(){main();},20);
+}
+
+
+function draw2CanvasBlur(now, metadata) { //
+	if (active1){return;}
+	active1=true;
 	try {
 		if (mask) {
 			bodyPix.drawBokehEffect(session.canvas, session.canvasSource, mask, 3, 6, false);
@@ -2830,10 +2898,12 @@ function draw2CanvasBlur(now, metadata) { //
 	} catch (e){
 		errorlog(e);
 	}
+	active1=false;
 	session.canvasSource.requestVideoFrameCallback(draw2CanvasBlur);
 }
 async function segmentFilterBlur(now, metadata) { // runs at like 15fps
-	//warnlog(".");
+	if (active2){return;}
+	active2=true;
 	try {
 		if (net){
 			session.canvasSource.width = metadata.width;
@@ -2843,10 +2913,12 @@ async function segmentFilterBlur(now, metadata) { // runs at like 15fps
 	} catch (e){
 		errorlog(e);
 	}
+	active2=false;
 	session.canvasSource.requestVideoFrameCallback(segmentFilterBlur);
 }
 function draw2CanvasGreen(now, metadata) { // runs fast; maybe like 30fps
-	//warnlog("!");
+	if (active1){return;}
+	active1=true;
 	try {
 		if (mask) {
 			bodyPix.drawMask(session.canvas, session.canvasSource, mask, 1, 0, false);
@@ -2854,10 +2926,12 @@ function draw2CanvasGreen(now, metadata) { // runs fast; maybe like 30fps
 	} catch (e){
 	//	errorlog(e);
 	}
+	active1=false;
 	session.canvasSource.requestVideoFrameCallback(draw2CanvasGreen);
 }
 async function segmentFilterGreen(now, metadata) { // runs at like 15fps
-	//warnlog(".");
+	if (active2){return;}
+	active2=true;
 	try {
 		session.canvasSource.width = metadata.width;
 		session.canvasSource.height = metadata.height;
@@ -2866,6 +2940,7 @@ async function segmentFilterGreen(now, metadata) { // runs at like 15fps
 	} catch (e){
 	//	errorlog(e);
 	}
+	active2=false;
 	session.canvasSource.requestVideoFrameCallback(segmentFilterGreen);
 }
 
@@ -3278,7 +3353,7 @@ function printValues(obj) { // see: printViewStats
 						var unit = " kbps";
 						stat = "Bitrate";
 					}
-					if (key == 'type') {
+					else if (key == 'type') {
 						var unit = "";
 						stat = 'Type';
 
@@ -3292,68 +3367,67 @@ function printValues(obj) { // see: printViewStats
 						}
 
 					}
-					if (key == 'packetLoss_in_percentage') {
+					else if (key == 'packetLoss_in_percentage') {
 						var unit = " %";
 						stat = 'Packet Loss 📶';
 						value = parseInt(parseFloat(value) * 10000) / 10000.0;
 					}
-					if (key == 'local_relayIP') {
+					else if (key == 'local_relayIP') {
 						value = "<a href='https://whatismyipaddress.com/ip/" + value + "' target='_blank'>" + value + "</a>";
 					}
-					if (key == 'remote_relay_IP') {
+					else if (key == 'remote_relay_IP') {
 						value = "<a href='https://whatismyipaddress.com/ip/" + value + "' target='_blank'>" + value + "</a>";
 					}
-					if (key == 'local_candidateType') {
+					else if (key == 'local_candidateType') {
 						if (value == "relay") {
 							value = "💸 relay server";
 						}
 					}
-					if (key == 'remote_candidateType') {
+					else if (key == 'remote_candidateType') {
 						if (value == "relay") {
 							value = "💸 relay server";
 						}
 					}
-					if (key == 'height_url') {
+					else if (key == 'height_url') {
 						if (value == false) {
 							continue;
 						}
 					}
-					if (key == 'width_url') {
+					else if (key == 'width_url') {
 						if (value == false) {
 							continue;
 						}
 					}
-					if (key == 'height_url') {
+					else if (key == 'height_url') {
 						if (value == false) {
 							continue;
 						}
 					}
-					if (key == 'version') {
+					else if (key == 'version') {
 						stat = "OBS.Ninja Version";
-					}
-					if (key == 'platform') {
+					} else if (key == 'platform') {
 						stat = "Platform (OS)";
 					}
-					if (key == 'aec_url') {
+					else if (key == 'aec_url') {
 						stat = "Echo-Cancellation";
 					}
-					if (key == 'agc_url') {
+					else if (key == 'agc_url') {
 						stat = "Auto-Gain (agc)";
 					}
-					if (key == 'denoise_url') {
+					else if (key == 'denoise_url') {
 						stat = "De-noising ";
 					}
-					if (key == 'audio_level') {
+					else if (key == 'audio_level') {
 						stat = "Audio Level";
 					}
-					if (key == 'Buffer_Delay_in_ms') {
+					else if (key == 'Buffer_Delay_in_ms') {
 						var unit = " ms";
 						stat = 'Buffer Delay';
 					}
-					if (value === null) {
+					else if (value === null) {
 						value = "null";
 					}
-					if (key == "stereo_url") {
+					else if (key == "stereo_url") {
 						stat = "Pro-Audio<br />(Stereo-mode)";
 						if (value == 3) {
 							value = "3 (outbound hi-fi)<br />Use Headphones";
@@ -3367,7 +3441,12 @@ function printValues(obj) { // see: printViewStats
 							value = "5 (auto-mode)<br />Use Headphones";
 						}
 					}
-
+					else if (value === false) {
+						continue
+					} 
+					else if (value === "false") {
+						continue
+					}
 					out += "<li><span>" + stat + "</span><span>" + value + unit + "</span></li>";
 				} catch (e) {
 					warnlog(e);
@@ -8859,6 +8938,7 @@ function updateDirectorsVideo(data, UUID) {
 		label.style.display = "block";
 		videoEle.appendChild(label);
 	}
+	
 	for (var i in data.cameraConstraints) {
 		try {
 			log(i);
@@ -11825,7 +11905,7 @@ function fftWaveform( source, UUID, trackid){  // append the delay Node to the t
 						getById('main').appendChild(menu);
 						
 						menu.style.left = parseInt(Math.random()*10+15)+"px"
-						menu.style.top = parseInt(Math.random()*10+5)+"px"
+						menu.style.top = parseInt(Math.random()*10)+"px"
 						
 						menu.innerHTML="<h1 data-translate='statistics'>Statistics</h1>";
 						var menuCloseBtn = document.createElement("button");
@@ -11866,7 +11946,7 @@ function fftWaveform( source, UUID, trackid){  // append the delay Node to the t
 				getById('main').appendChild(menu);
 				
 				menu.style.left = parseInt(Math.random()*10+15)+"px"
-				menu.style.top = parseInt(Math.random()*10+5)+"px"
+				menu.style.top = parseInt(Math.random()*10)+"px"
 				
 				menu.innerHTML="<h1 data-translate='statistics'>Statistics</h1>";
 				var menuCloseBtn = document.createElement("button");
@@ -12048,8 +12128,35 @@ if ((session.effects==3) || (session.effects==4) || (session.effects==5)){
 	script.src = "https://cdnjs.cloudflare.com/ajax/libs/tensorflow/1.2.1/tf.min.js"; // dynamically load this only if its needed. Keeps loading time down for all..
 	script2.src = "https://cdn.jsdelivr.net/npm/@tensorflow-models/body-pix@2.0.0/dist/body-pix.min.js";
 	document.head.appendChild(script);
+} else if (session.effects==6){
+	var script = document.createElement('script');
+	var script2 = document.createElement('script');
+	var script3 = document.createElement('script');
+	var script4 = document.createElement('script');
+	var model = false;
+	script.onload = function() {
+		document.head.appendChild(script2);
+	}
+	script2.onload = function() {
+		document.head.appendChild(script3);
+	}
+	script3.onload = function() {
+		document.head.appendChild(script4);
+	}
+	script4.onload = function() {
+		async function loadModel(){
+			model = await faceLandmarksDetection.load(faceLandmarksDetection.SupportedPackages.mediapipeFacemesh);
+		}
+		loadModel();
+	}
+	script.src = "https://unpkg.com/@tensorflow/tfjs-core@2.4.0/dist/tf-core.js";
+	script2.src = "https://unpkg.com/@tensorflow/tfjs-converter@2.4.0/dist/tf-converter.js";
+	script3.src = "https://unpkg.com/@tensorflow/tfjs-backend-webgl@2.4.0/dist/tf-backend-webgl.js";
+	script4.src = "https://unpkg.com/@tensorflow-models/face-landmarks-detection@0.0.1/dist/face-landmarks-detection.js";
+	
+	script.type = 'text/javascript';script2.type = 'text/javascript';script3.type = 'text/javascript';script4.type = 'text/javascript';
+	document.head.appendChild(script);
 }
-
 if (session.midiHotkeys) {
 	var script = document.createElement('script');
 	script.onload = function() {
