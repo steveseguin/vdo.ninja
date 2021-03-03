@@ -178,6 +178,16 @@ function loadIframe(){  // this is pretty important if you want to avoid camera 
 		iframeContainer.appendChild(button);
 		
 		var button = document.createElement("button");
+		button.innerHTML = "Start Recording";
+		button.onclick = function(){iframe.contentWindow.postMessage({"record":true}, '*');};
+		iframeContainer.appendChild(button);
+		
+		var button = document.createElement("button");
+		button.innerHTML = "Stop Recording";
+		button.onclick = function(){iframe.contentWindow.postMessage({"record":false}, '*');};
+		iframeContainer.appendChild(button);
+		
+		var button = document.createElement("button");
 		button.innerHTML = "Say Hello";
 		button.onclick = function(){iframe.contentWindow.postMessage({"sendChat":"Hello!"}, '*');};
 		iframeContainer.appendChild(button);

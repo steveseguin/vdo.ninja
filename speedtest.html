@@ -260,10 +260,7 @@
 										];
 									updateData("buffer", buffer);
 
-									var packetloss =
-										e.data.stats.inbound_stats[streamID][key][
-											"packetLoss_in_percentage"
-										];
+									var packetloss = e.data.stats.inbound_stats[streamID][key]["packetLoss_in_percentage"];
 									if (packetloss != undefined) {
 										packetloss = packetloss.toFixed(2);
 										updateData("packetloss", packetloss);

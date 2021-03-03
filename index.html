@@ -55,7 +55,7 @@
 			}
 		</style>
 		<link rel="stylesheet" href="./lineawesome/css/line-awesome.min.css" />
-		<link rel="stylesheet" href="./main.css?ver=48" />
+		<link rel="stylesheet" href="./main.css?ver=52" />
 		<script type="text/javascript" crossorigin="anonymous" src="./thirdparty/adapter.min.js"></script>
 	</head>
 	<body id="main" class="hidden">
@@ -67,18 +67,21 @@
 			<link itemprop="url" href="./media/obsNinja_logo_full.png" />
 		</span>
 		<script  type="text/javascript" crossorigin="anonymous"  src="./thirdparty/CodecsHandler.js?ver=29"></script>
-		<script  type="text/javascript" crossorigin="anonymous" src="./webrtc.js?ver=179"></script>
+		<script  type="text/javascript" crossorigin="anonymous" src="./webrtc.js?ver=181"></script>
 		<input id="zoomSlider" type="range" style="display: none;" />
 		<div id="header">
+			
 			<a id="logoname" href="./" style="text-decoration: none; color: white; margin: 2px;">
 				<span data-translate="logo-header">
 					<font id="qos">O</font>BS.Ninja 
 				</span>
 			</a>
+			
 			<div id="head1" style="display: inline-block; padding:1px; position: relative;">
 				<input type="text" autocorrect="off" autocapitalize="none" id="joinroomID" name="joinroomID" size="22" placeholder="Join by Room Name here" alt="Enter a room name to join" title="Enter a room name to quick join" onkeyup="jumptoroom(event)"/>
 				<button onclick="jumptoroom();"  role="button" aria-pressed="false" alt="Join room" title="Join room" >GO</button>
 			</div>
+			<div id="head5" class="advanced"></div>
 			<div id="head3" style="display: inline-block;" class="advanced">
 				<font style="color: #888;" id="copythisurl"> &nbsp; 
 					<span data-translate="copy-this-url">Copy this URL into an OBS "Browser Source"</span> <i style="color: #CCC;" class="las la-long-arrow-alt-right"></i> &nbsp; 
@@ -124,7 +127,7 @@
 					<i id="mutetoggle" class="toggleSize las la-microphone my-float" style="position: relative; top: 0.5px;"></i>
 				</div>
 				<div id="mutevideobutton" onmousedown="event.preventDefault(); event.stopPropagation();"  title="Disable the Camera" alt="Disable the Camera" onclick="toggleVideoMute()"   tabindex="19" role="button" aria-pressed="false" onkeyup="enterPressedClick(event,this);"  class="advanced float" style="cursor: pointer;">
-					<i id="mutevideotoggle" onmousedown="event.preventDefault(); event.stopPropagation();"  class="toggleSize las la-eye my-float"></i>
+					<i id="mutevideotoggle" onmousedown="event.preventDefault(); event.stopPropagation();"  class="toggleSize las la-video my-float"></i>
 				</div>
 				<div id="screensharebutton" onmousedown="event.preventDefault(); event.stopPropagation();"  title="Share a Screen with others" alt="Share a Screen with others" onclick="toggleScreenShare()" tabindex="20" role="button" aria-pressed="false" onkeyup="enterPressedClick(event,this);"  class="float advanced" style="cursor: pointer;">
 					<i id="screensharetoggle" onmousedown="event.preventDefault(); event.stopPropagation();"  class="toggleSize las la-desktop my-float"></i>
@@ -145,7 +148,7 @@
 					<i class="toggleSize my-float las la-dot-circle" style="position: relative;" aria-hidden="true"></i>
 				</div>
 				<span id="miniPerformer" style="pointer-events: auto;" class="advanced"></span>
-				<span id="rooms" style="padding-top:3px;pointer-events: auto;color:#fff;"></span>
+				<span id="rooms" style="padding-top:3px;padding-left:6px;pointer-events: auto;color:#fff;"></span>
 				
 				<div id="hangupbutton2" onmousedown="event.preventDefault(); event.stopPropagation();"  title="Cancel the Director's Video/Audio"  onclick="hangup2()" class="advanced float"  tabindex="25" role="button" aria-pressed="false" onkeyup="enterPressedClick(event,this);" style="cursor: pointer;" alt="Disconnect Direcotor's cam">
 					<i class="toggleSize my-float las la-phone rotate225" aria-hidden="true"></i>
@@ -164,7 +167,7 @@
 		<span
                 id="helpbutton"
 				title="Show Help Info" 
-                onclick="alert('For support, please browse https://reddit.com/r/obsninja or join the live chat on Discord at https://discord.obs.ninja.\n\nThe Wiki also contains many help guides and advanced settings, located at https://wiki.obs.ninja.\n\nTo access the video stats menu, hold CTRL (command) and Left-Click on a video. Most video issues can be fixed by using Wired Internet instead of Wi-Fi.')"
+                onclick="warnUser('For support, please browse https://reddit.com/r/obsninja or join the live chat on Discord at https://discord.obs.ninja.\n\nThe Wiki also contains many help guides and advanced settings, located at https://wiki.obs.ninja.\n\nTo access the video stats menu, hold CTRL (command) and Left-Click on a video. Most video issues can be fixed by using Wired Internet instead of Wi-Fi.')"
                 style="cursor: pointer; display:none;"
                 alt="How to Use This with OBS"
             >
@@ -354,6 +357,25 @@
 						</span><button onclick="playtone()" class="white" style="margin:0 0 0 15px;" type="button">Test</button></div>
 						<select id="outputSource" ></select>
 						
+					</span>
+					<span id="addPasswordBasic" style="width: 450px;
+							white-space: nowrap;
+							overflow: hidden;
+							border-bottom: 0;
+							display: inline-block;
+							text-align: left;
+							margin: 17px 0;
+							max-width: 550px;
+							min-width: 420px;
+							background-color: #f3f3f3;
+							padding: 10px 10px;
+							border: 1px solid #ccc;
+							vertical-align: middle;">
+						<i class="las la-key"></i><span data-translate="add-a-password"> Add a Password:</span>
+						<input type="text" id="passwordBasicInput" placeholder="optional" style="border: solid 1px #AAA;
+							padding: 4px 6px;
+							width: 200px;
+							margin: 0 6px;"/>
 					</span>
 					
 				</div>
@@ -628,11 +650,7 @@
 								<i class="lab la-youtube"></i>
 								<a href="https://www.youtube.com/watch?v=vLpRzMjUDaE&list=PLWodc2tCfAH1WHjl4WAOOoRSscJ8CHACe&index=2" alt="Youtube video demoing OBS.Ninja">Demoing it here</a>
 							</li>
-							<br />
 							
-							🥳 Over 350,000 streamers have used OBS.Ninja this month alone, including major TV networks and some of the biggest Youtube/Twitch stars.
-							<br />
-							<br />
 							<br />
 							<i>
 								<font style="color: red;">Known issues:</font>
@@ -645,7 +663,7 @@
 								Chrome on Android 11 has an issue with the browser freezing at times. To unfreeze it, background the browser and then foreground it again.
 							</li>
 							<br />
-                            Site Updated: <a href="https://github.com/steveseguin/obsninja/wiki/v16.3-update-notes">Feb 24th, 2021</a> (v16.3).  The previous version can be found at <a href="https://obs.ninja/v16/">https://obs.ninja/v16/</a> if you are having issues with this minor update.
+                            Site Updated: <a href="https://github.com/steveseguin/obsninja/wiki/v16.4-update-notes">March 3rd, 2021</a> (v16.4).  The previous version can be found at <a href="https://obs.ninja/v16/">https://obs.ninja/v16/</a> if you are having issues with this minor update.
 
 							<br />
 							<br />
@@ -771,13 +789,13 @@
 						  <input type="checkbox" data-param="&l" onchange="updateLink(1,this);">
 						  <span class="slider"></span>
 						</label>
-						Ask for Display Name
+						Ask for display name
 						<Br />
 						<label class="switch" title="Display Names will be shown in the bottom-left corner of videos">
 						  <input type="checkbox" data-param="&sl" onchange="updateLink(1,this);">
 						  <span class="slider"></span>
 						</label>
-						Show Display Names
+						Show display names
 					</div>
 					<div  style="display:inline-block;top: 12px; position: relative; margin-left:10px;">
 						<label class="switch" title="Request 1080p60 from the Guest instead of 720p60, if possible">
@@ -790,13 +808,13 @@
 						  <input type="checkbox" data-param="&ad" onchange="updateLink(1,this);">
 						  <span class="slider"></span>
 						</label>
-						Auto-select Default Microphone
+						Auto-select default microphone
 						<Br />
 						<label class="switch" title="The default camera device will selected automatically">
 						  <input type="checkbox" data-param="&vd" onchange="updateLink(1,this);">
 						  <span class="slider"></span>
 						</label>
-						Auto-select Default Camera
+						Auto-select default camera
 						<Br />
 						<label class="switch" title="The guest won't have access to changing camera settings or screenshare">
 						  <input type="checkbox" data-param="&ns" onchange="updateLink(1,this);">
@@ -809,50 +827,50 @@
 						  <input type="checkbox" data-param="&np" onchange="updateLink(1,this);">
 						  <span class="slider"></span>
 						</label>
-						Disable Self-Preview
+						Disable self-preview
 						<Br />
 						<label class="switch" title="Guests will have an option to poke the Director by pressing a button">
 						  <input type="checkbox" data-param="&hand" onchange="updateLink(1,this);">
 						  <span class="slider"></span>
 						</label>
-						Display 'Raise-Hand' button
+						Display 'raise-hand' button
 						<Br />
 						<label class="switch" title="Add an audio compressor to the guest's microphone">
 						  <input type="checkbox" data-param="&comp" onchange="updateLink(1,this);">
 						  <span class="slider"></span>
 						</label>
-						Enable Audio Compressor
+						Enable audio compressor
 						<Br />
 						<label class="switch" title="Add an Equalizer to the guest's microphone that the director can control">
 						  <input type="checkbox" data-param="&eq" onchange="updateLink(1,this);">
 						  <span class="slider"></span>
 						</label>
-						Enable Equalizer as Option
+						Enable equalizer as option
 					</div>
 					<div  style="display:inline-block;top: 12px; position: relative; margin-left:10px; height: 20px;">
 						<label class="switch" title="The guest can only see the Director's video, if provided">
 						  <input type="checkbox" data-param="&broadcast" id="broadcastSlider" onchange="updateLink(1,this);">
 						  <span class="slider"></span>
 						</label>
-						Only see the Director's Feed
+						Only see the director's feed
 						<br />
 						<label class="switch" title="The guest's microphone will be muted on joining. They can unmute themselves.">
 						  <input type="checkbox" data-param="&m" onchange="updateLink(1,this);">
 						  <span class="slider"></span>
 						</label>
-						Mute Microphone by Default
+						Mute microphone by default
 						<Br />
 						<label class="switch" title="Have the guest join muted, so only the director can Unmute the guest.">
 						  <input type="checkbox" data-param="&g=0" onchange="updateLink(1,this);">
 						  <span class="slider"></span>
 						</label>
-						Unmute by Director Only
+						Unmute by director only
 						<Br />
 						<label class="switch" title="Make the invite URL encoded, so parameters are harder to tinker with by guests">
 						  <input type="checkbox" data-param="" id="obfuscate_director_1" onchange="updateLink(1,this);">
 						  <span class="slider"></span>
 						</label>
-						Obfuscate Link and Parameters
+						Obfuscate link and parameters
 					</div>
 				</div>
 			
@@ -875,7 +893,7 @@
 						  <input type="checkbox" data-param="&sl" onchange="updateLink(3,this);">
 						  <span class="slider"></span>
 						</label>
-						Show Display Names
+						Show display names
 					</div>
 					<div  style="display:inline-block;top: 12px; height: 20px; position: relative; margin-left:10px;">
 						<label class="switch">
@@ -889,7 +907,7 @@
 						  <input type="checkbox" data-param="&mono" onchange="updateLink(3,this);">
 						  <span class="slider"></span>
 						</label>
-						Force Mono Audio
+						Force mono audio
 					</div>
 					
 				</div>
@@ -924,7 +942,7 @@
 
 				<button data-action-type="addToScene"  style="grid-column: 1;"  data-value="0" title="Add this Video to any remote '&scene=1'" onclick="directEnable(this, event, 1);">
 					<i class="las la-plus-square"></i>
-					<span data-translate="add-to-scene">Add to Scene</span>
+					<span data-translate="add-to-scene">add to scene</span>
 				</button>
 				<button data-action-type="mute-scene"  style="grid-column: 2;" title="Remotely Mute this Audio in all remote '&scene' views" onclick="directMute(this, event);">
 					<i class="las la-microphone-slash"></i>
@@ -1050,6 +1068,11 @@
 					</button>
 				</span>
 				
+				<button data-action-type="force-keyframe"  data-value="0" title="Force the remote sender to issue a keyframe to all scenes, fixing Pixel Smearing issues." onclick="requestKeyframeScene(this, event);">
+					<i class="las la-first-aid"></i>
+					<span data-translate="force-keyframe">Rainbow Puke</span>
+				</button>
+				
 				<button class="" data-action-type="advanced-audio-settings"  data-active="false" style="grid-column: 1;" title="Remote Audio Settings" onclick="requestAudioSettings(this);">
 					<span data-translate="advanced-audio-settings"><i class="las la-sliders-h"></i> Audio Settings</span>
 				</button>
@@ -1057,7 +1080,6 @@
 					<span data-translate="advanced-camera-settings"><i class="las la-sliders-h"></i> Video Settings</span>
 				</button>
 				
-
 			</div>	
 		</div>
 		
@@ -1209,7 +1231,7 @@
 			}
 		
             var session = WebRTC.Media; // session is a required global variable if configuring manually. Run before loading main.js but after webrtc.js.
-			session.version = "16.3";
+			session.version = "16.4";
             session.streamID = session.generateStreamID(); // randomly generates a streamID for this session. You can set your own programmatically if needed
 			
 			session.defaultPassword = "someEncryptionKey123"; // Disabling improves compatibility and is helpful for debugging.
@@ -1274,7 +1296,7 @@
 		<script type="text/javascript" id="main-js" src="./main.js" data-translation="blank"></script>
 		<script type="text/javascript" crossorigin="anonymous" id="mixer-js" src="./mixer.js?ver=2"></script>
 	-->
-		<script type="text/javascript" crossorigin="anonymous" id="main-js" src="./main.js?ver=168"></script>
+		<script type="text/javascript" crossorigin="anonymous" id="main-js" src="./main.js?ver=174"></script>
 		<script type="text/javascript">
 			setTimeout(function(){ // lazy load
 				var script = document.createElement('script');
