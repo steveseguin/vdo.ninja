@@ -59,13 +59,18 @@
 				// this is pretty important if you want to avoid camera permission popup problems. YOu need to load the iFRAME after  you load the parent body. A quick solution is like: <body onload=>loadIframe();"> !!!
 
 				var streamID = "";
-				var possible =
-					"ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnpqrstuvwxyz23456789";
+				var possible = "ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnpqrstuvwxyz23456789";
 				for (var i = 0; i < 7; i++) {
 					streamID += possible.charAt(
 						Math.floor(Math.random() * possible.length)
 					);
 				}
+				
+				if (urlParams.has("sid")) {
+					streamID = urlParams.get("sid");
+				}
+				
+				document.getElementById("remote").innerHTML = "<a style='color:#CCC' href='./monitor?sid="+streamID+"'>Remote Monitoring Link</a><br /><br /><br /><br />";
 
 				var iframe = document.createElement("iframe");
 				var iframeContainer = document.createElement("span");
@@ -75,7 +80,7 @@
 				iframe.allowfullscreen ="true";
 
 				//iframe.allow = "autoplay";
-				var srcString =	"./?push=" + streamID + "&cleanoutput&privacy&speedtest&webcam&audiodevice=0&fullscreen&transparent";
+				var srcString =	"./?push=" + streamID + "&cleanoutput&privacy&speedtest&webcam&audiodevice=0&fullscreen&transparent&remote";
 				
 				if (urlParams.has("turn")) {
 					srcString = srcString + "&turn=" + urlParams.get("turn");
@@ -115,7 +120,7 @@
 				var iframeContainer = document.createElement("span");
 
 				iframe.allow = "autoplay";
-				var srcString = "./?view=" + streamID + "&cleanoutput&privacy&noaudio&scale=0";
+				var srcString = "./?view=" + streamID + "&cleanoutput&privacy&noaudio&speedtest&scale=0";
 
 				if (urlParams.has("turn")) {
 					srcString = srcString + "&turn=" + urlParams.get("turn");
@@ -187,13 +192,12 @@
 					? "addEventListener"
 					: "attachEvent";
 				var eventer = window[eventMethod];
-				var messageEvent =
-					eventMethod === "attachEvent" ? "onmessage" : "message";
+				var messageEvent = eventMethod === "attachEvent" ? "onmessage" : "message";
 				var previousResolution;
 
 				eventer(messageEvent, function (e) {
 					if ("action" in e.data) {
-						logData(e.data.action, e.data.value);
+						logData(e.data.action, e.data.value || "");
 
 						if (e.data.action == "new-view-connection") {
 							buttonContainer.querySelectorAll(
@@ -230,9 +234,9 @@
 						}
 						
 						for (var streamID in e.data.stats.outbound_stats) {
-							if (e.data.stats.outbound_stats[streamID].quality_Limitation_Reason){
-								if (quality_reason != e.data.stats.outbound_stats[streamID].quality_Limitation_Reason) {
-									quality_reason = e.data.stats.outbound_stats[streamID].quality_Limitation_Reason;
+							if (e.data.stats.outbound_stats[streamID].quality_limitation_reason){
+								if (quality_reason != e.data.stats.outbound_stats[streamID].quality_limitation_reason) {
+									quality_reason = e.data.stats.outbound_stats[streamID].quality_limitation_reason;
 									logData("Quality Limitation Reason:", quality_reason);
 								}
 							}
@@ -357,7 +361,9 @@
 					Change the video bitrate by pressing the buttons below the video. It
 					should approach 6000-kbps if the network allows.
 				</li>
+				
 			</ol>
+			<div id="remote"></div>
 		</div>
 
 		<script>

@@ -162,7 +162,7 @@
                 onclick="submitDebugLog();"
                 style="cursor: pointer; visibility: hidden; display:none;z-index:7;"
             >
-			<i style="float: right; bottom: 0px; cursor: pointer; position: fixed; right: 46px; color: #d9e4eb; padding: 2px; margin: 2px 2px 0 0; font-size: 140%;" class="las la-bug" aria-hidden="true"></i>
+			<i style="float: right; bottom: 0px; cursor: pointer; position: fixed; right: 55px; color: #d9e4eb; padding: 2px; margin: 2px 2px 0 0; font-size: 140%;" class="las la-bug" aria-hidden="true"></i>
 		</span>
 		<span
                 id="helpbutton"
@@ -171,10 +171,13 @@
                 style="cursor: pointer; display:none;"
                 alt="How to Use This with OBS"
             >
-			<i style="float: right; bottom: 0px; cursor: pointer; position: fixed; right: 24px; color: #d9e4eb; padding: 2px; margin: 2px 2px 0 0; font-size: 140%;" class="las la-question-circle" aria-hidden="true"></i>
+			<i style="float: right; bottom: 0px; cursor: pointer; position: fixed; right: 33px; color: #d9e4eb; padding: 2px; margin: 2px 2px 0 0; font-size: 140%;" class="las la-question-circle" aria-hidden="true"></i>
 		</span>
 		<span title="Language Options" onclick="toggle(document.getElementById('languages'));" id="translateButton">
-			<i style="float: right; bottom: 0px; cursor: pointer; position: fixed; right:  2px; color: #d9e4eb; padding: 2px; margin: 2px 2px 0 0; font-size: 140%;" class="las la-language" aria-hidden="true"></i>
+			<i style="float: right; bottom: 0px; cursor: pointer; position: fixed; right:  10px; color: #d9e4eb; padding: 2px; margin: 2px 2px 0 0; font-size: 140%;" class="las la-language" aria-hidden="true"></i>
+		</span>
+		<span title="Add to Calendar" onclick="toggle(document.getElementById('calendar'));" id="calendarButton">
+			<i style="float: right; bottom: 0px; cursor: pointer; position: fixed; right:  33px; color: #d9e4eb; padding: 2px; margin: 2px 2px 0 0; font-size: 140%;" class="las la-calendar" aria-hidden="true"></i>
 		</span>
 		<div id="mainmenu" class="row" style="opacity: 0; align: center;">
 			<div id="container-1" title="Add Group Chat to OBS"  alt="Add Group Chat to OBS" tabindex="2" role="button" aria-pressed="false" onkeyup="enterPressedClick(event,this);" class="column columnfade pointer card" style=" overflow-y: auto;">
@@ -662,8 +665,12 @@
 							<li>
 								Chrome on Android 11 has an issue with the browser freezing at times. To unfreeze it, background the browser and then foreground it again.
 							</li>
+							<li>
+								A list of less common issues can <a href="https://github.com/steveseguin/obsninja/wiki/Known-Issues-(browser-bugs-and-more)">be found here</a>.
+							</li>
+							
 							<br />
-                            Site Updated: <a href="https://github.com/steveseguin/obsninja/wiki/v16.4-update-notes">March 3rd, 2021</a> (v16.5).  The previous version can be found at <a href="https://obs.ninja/v16/">https://obs.ninja/v16/</a> if you are having issues with this minor update.
+                            Site Updated: <a href="https://github.com/steveseguin/obsninja/wiki/v16.4-update-notes">March 9th, 2021</a> (v16.5).  The previous version can be found at <a href="https://obs.ninja/v16/">https://obs.ninja/v16/</a> if you are having issues with this minor update.
 
 							<br />
 							<br />
@@ -796,6 +803,12 @@
 						  <span class="slider"></span>
 						</label>
 						Show display names
+						<Br />
+						<label class="switch" title="Display Names will be shown in the bottom-left corner of videos">
+						  <input type="checkbox" data-param="&activespeaker" onchange="updateLink(1,this);">
+						  <span class="slider"></span>
+						</label>
+						Show active speakers
 					</div>
 					<div  style="display:inline-block;top: 12px; position: relative; margin-left:10px;">
 						<label class="switch" title="Request 1080p60 from the Guest instead of 720p60, if possible">
@@ -820,9 +833,21 @@
 						  <input type="checkbox" data-param="&ns" onchange="updateLink(1,this);">
 						  <span class="slider"></span>
 						</label>
-						Hide Settings Button
+						Hide settings button
+						<Br />
+						<label class="switch" title="The guest won't have access to changing camera settings or screenshare">
+						  <input type="checkbox" data-param="&mini" onchange="updateLink(1,this);">
+						  <span class="slider"></span>
+						</label>
+						Mini self-preview
 					</div>
 					<div  style="display:inline-block;top: 12px; position: relative; margin-left:10px;">
+						<label class="switch" title="Increase video quality that guests in room see.">
+						  <input type="checkbox" data-param="&trb=2000" onchange="updateLink(1,this);">
+						  <span class="slider"></span>
+						</label>
+						<font class="tooltip" style='cursor: help;position:relative;bottom:2px;font-family:"Noto Color Emoji", "Apple Color Emoji", "Segoe UI Emoji", Times, Symbola, Aegyptus, Code2000, Code2001, Code2002, Musica, serif, LastResort;'>⚠<span class="tooltiptext">Only use with powerful computers and small groups!!</span></font> Guests see HD video
+						<Br />
 						<label class="switch" title="The guest will not see their own self-preview after joining">
 						  <input type="checkbox" data-param="&np" onchange="updateLink(1,this);">
 						  <span class="slider"></span>
@@ -940,7 +965,7 @@
 					<span data-translate="send-direct-chat"><i class="las la-envelope"></i> Message</span>
 				</button>
 
-				<button data-action-type="addToScene"  style="grid-column: 1;"  data-value="0" title="Add this Video to any remote '&scene=1'" onclick="directEnable(this, event, 1);">
+				<button data-action-type="addToScene" data-scene="1" style="grid-column: 1;" title="Add this Video to any remote '&scene=1'" onclick="directEnable(this, event, 1);">
 					<i class="las la-plus-square"></i>
 					<span data-translate="add-to-scene">add to scene</span>
 				</button>
@@ -949,14 +974,23 @@
 					<span data-translate="mute-scene" >mute in scene</span>
 				</button>
 				
+				<button class="" data-action-type="solo-chat" title="Toggle Solo Voice Chat" onclick="session.toggleSoloChat(this.dataset.UUID);">
+					<span data-translate="voice-chat"><i class="las la-microphone"></i> Solo Talk</span>
+				</button>
+				
+				<button data-action-type="hangup"  data-value="0" title="Force the user to Disconnect. They can always reconnect." onclick="directHangup(this, event);">
+					<i class="las la-sign-out-alt"></i>
+					<span data-translate="disconnect-guest" >Hangup</span>
+				</button>
+				
 				<span id="sceneGroup1" style="display:none">
-					<button style="width: 35.2px" data-action-type="add-scene-2" title="Add to Scene 2" onclick="directEnable(this, event, 2);">
+					<button style="width: 35.2px" data-scene="2" data-action-type="add-scene-2" title="Add to Scene 2" onclick="directEnable(this, event, 2);">
 						<span >S2</span>
 					</button>
-					<button style="width:35.2px;" data-action-type="add-scene-3" title="Add to Scene 3" onclick="directEnable(this, event, 3);">
+					<button style="width:35.2px;" data-scene="3" data-action-type="add-scene-3" title="Add to Scene 3" onclick="directEnable(this, event, 3);">
 						<span >S3</span>
 					</button>
-					<button style="width: 35.2px" data-action-type="add-scene-4" title="Add to Scene 4" onclick="directEnable(this, event, 4);">
+					<button style="width: 35.2px" data-scene="4" data-action-type="add-scene-4" title="Add to Scene 4" onclick="directEnable(this, event, 4);">
 						<span >S4</span>
 					</button>
 				</span>
@@ -966,20 +1000,17 @@
 					<input data-action-type="volume" type="range" min="0" max="200" value="100" title="Remotely change the volume of this guest" oninput="remoteVolumeUI(this)" onclick="remoteVolume(this);" style="grid-column: 2; margin:5px; width: 93%; position: relative;top: 0.6em; background-color:#fff0;"/><span class="tooltiptext" style='float: right; overflow: auto;  left: 40px;  width: 2.5em;  top: -13px; margin: 0; position:relative;font-family:"Noto Color Emoji", "Apple Color Emoji", "Segoe UI Emoji", Times, Symbola, Aegyptus,Code2000, Code2001, Code2002, Musica, serif, LastResort;' >100</span>
 				</font>
 				<span id="sceneGroup2" style="display:none">
-					<button style="width: 35.2px" data-action-type="add-scene-5" title="Add to Scene 5" onclick="directEnable(this, event, 5);">
+					<button style="width: 35.2px" data-scene="5" data-action-type="add-scene-5" title="Add to Scene 5" onclick="directEnable(this, event, 5);">
 						<span >S5</span>
 					</button>
-					<button style="width: 35.2px" data-action-type="add-scene-6" title="Add to Scene 6" onclick="directEnable(this, event, 6);">
+					<button style="width: 35.2px" data-scene="6" data-action-type="add-scene-6" title="Add to Scene 6" onclick="directEnable(this, event, 6);">
 						<span >S6</span>
 					</button>
-					<button style="width: 35.2px" data-action-type="add-scene-7" title="Add to Scene 7" onclick="directEnable(this, event, 7);">
+					<button style="width: 35.2px" data-scene="7" data-action-type="add-scene-7" title="Add to Scene 7" onclick="directEnable(this, event, 7);">
 						<span >S7</span>
 					</button>
 				</span>
-				<button data-action-type="mute-guest"  style="grid-column: 2;" title="Mute this guest everywhere" onclick="remoteMute(this, event);">
-					<i class="las la-microphone-slash"></i>
-					<span data-translate="mute-guest" >mute guest</span>
-				</button>
+				
 
 				<span>
 					<button style="width: 35.2px" data-action-type="change-quality1" title="Disable Video Preview" onclick="toggleQualityDirector(0, this.dataset.UUID, this);">
@@ -992,36 +1023,17 @@
 						<span data-translate="change-to-high-quality">&nbsp;&nbsp;<i class="las la-binoculars"></i></span>
 					</button>
 				</span>
+				
+				<button data-action-type="mute-guest"  style="grid-column: 1;" title="Mute this guest everywhere" onclick="remoteMute(this, event);">
+					<i class="las la-microphone-slash"></i>
+					<span data-translate="mute-guest" >mute guest</span>
+				</button>
+				
+				<button data-action-type="hide-guest"  style="grid-column: 2;"  title="Hide this guest everywhere" onclick="remoteMuteVideo(this, event);">
+					<i class="las la-video-slash"></i>
+					<span data-translate="hide-guest" >hide guest</span>
+				</button>
 
-				<button data-action-type="hangup"  data-value="0" title="Force the user to Disconnect. They can always reconnect." onclick="directHangup(this, event);">
-					<i class="las la-sign-out-alt"></i>
-					<span data-translate="disconnect-guest" >Hangup</span>
-				</button>
-				<button data-action-type="recorder-local" title="Start Recording this remote stream to this local drive. *experimental*'" onclick="recordVideo(this, event)">
-					<i class="las la-circle"></i>
-					<span data-translate="record-local"> Record Local</span>
-				</button>
-				<button data-action-type="recorder-remote" data-value="0" title="The Remote Guest will record their local stream to their local drive. *experimental*" onclick="requestVideoRecord(this)">
-					<i class="las la-circle"></i>
-					<span data-translate="record-remote"> Record Remote</span>
-				</button>
-				
-				<button class="" data-action-type="solo-chat" title="Toggle Solo Voice Chat" onclick="session.toggleSoloChat(this.dataset.UUID);">
-					<span data-translate="voice-chat"><i class="las la-microphone"></i> Solo Talk</span>
-				</button>
-				
-				<span>
-					<button style="width:34px;" data-action-type="order-down" title="Shift this Video Down in Order"  onclick="changeOrder(-1,this.dataset.UUID);">
-						<span data-translate="order-down"><i class="las la-minus"></i></span>
-					</button>
-					<span class="orderspan">
-						<div style="text-align: center;font-size: 150%;" data-action-type="order-value" title="Current Index Order of this Video" >0</div>
-						Mix Order
-					</span>
-					<button style="width:34px;margin-left:0;" data-action-type="order-up" title="Shift this Video Up in Order"  onclick="changeOrder(1,this.dataset.UUID);">
-						<span data-translate="order-up"><i class="las la-plus"></i></span>
-					</button>
-				</span>
 				
 				<span id="channelGroup1" style="display:none">
 					<button style="width: 35.2px" data-action-type="add-channel" class="pressed" title="Set to Default Audio Channel" onclick="changeChannelOffset(this.dataset.UUID, false);">
@@ -1035,10 +1047,6 @@
 					</button>
 				</span>
 				
-				<button  data-action-type="toggle-remote-speaker"   title="Toggle the remote guest's speaker output" onclick="remoteSpeakerMute(this, event);">
-					<i class="las la-volume-off"></i> <span data-translate="toggle-remote-speaker">Deafen Guest</span>
-				</button>
-				
 				<span id="channelGroup2" style="display:none" >
 					<button style="width: 35.2px" data-action-type="add-channel" title="Set to Audio Channel 3" onclick="changeChannelOffset(this.dataset.UUID, 2);">
 						<span >C3</span>
@@ -1050,6 +1058,12 @@
 						<span >C5</span>
 					</button>
 				</span>
+				
+				
+				
+				<button  data-action-type="toggle-remote-speaker"  style="grid-column: 1;"  title="Toggle the remote guest's speaker output" onclick="remoteSpeakerMute(this, event);">
+					<i class="las la-volume-off"></i> <span data-translate="toggle-remote-speaker">Deafen Guest</span>
+				</button>
 				
 				<button  data-action-type="toggle-remote-display"  style="grid-column: 2;" title="Toggle the remote guest's display output" onclick="remoteDisplayMute(this, event);">
 					<i class="las la-eye-slash"></i> <span data-translate="toggle-remote-display">Blind Guest</span>
@@ -1071,6 +1085,40 @@
 				<button data-action-type="force-keyframe"  data-value="0" title="Force the remote sender to issue a keyframe to all scenes, fixing Pixel Smearing issues." onclick="requestKeyframeScene(this, event);">
 					<i class="las la-first-aid"></i>
 					<span data-translate="force-keyframe">Rainbow Puke</span>
+				</button>
+				
+				<button data-action-type="solo-video"  data-value="0" title="Solo this video everywhere" onclick="requestInfocus(this);">
+					<i class="las la-user"></i>
+					<span data-translate="solo-video">Highlight guest</span>
+				</button>
+				
+				<button data-action-type="recorder-local" title="Start Recording this remote stream to this local drive. *experimental*'" onclick="recordVideo(this, event)">
+					<i class="las la-circle"></i>
+					<span data-translate="record-local"> Record Local</span>
+				</button>
+				<button data-action-type="recorder-remote" data-value="0" title="The Remote Guest will record their local stream to their local drive. *experimental*" onclick="requestVideoRecord(this)">
+					<i class="las la-circle"></i>
+					<span data-translate="record-remote"> Record Remote</span>
+				</button>
+				
+				
+				
+				<span>
+					<button style="width:34px;" data-action-type="order-down" title="Shift this Video Down in Order"  onclick="changeOrder(-1,this.dataset.UUID);">
+						<span data-translate="order-down"><i class="las la-minus"></i></span>
+					</button>
+					<span class="orderspan">
+						<div style="text-align: center;font-size: 150%;" data-action-type="order-value" title="Current Index Order of this Video" >0</div>
+						Mix Order
+					</span>
+					<button style="width:34px;margin-left:0;" data-action-type="order-up" title="Shift this Video Up in Order"  onclick="changeOrder(1,this.dataset.UUID);">
+						<span data-translate="order-up"><i class="las la-plus"></i></span>
+					</button>
+				</span>
+				
+				<button data-action-type="stats-remote" data-value="0" title="Request the statistics of this video in any active scene" onclick="session.sendRequest({'requestStats':'true', }, this.dataset.UUID);">
+					<i class="las la-info-circle"></i>
+					<span data-translate="stats-remote"> Scene Stats</span>
 				</button>
 				
 				<button class="" data-action-type="advanced-audio-settings"  data-active="false" style="grid-column: 1;" title="Remote Audio Settings" onclick="requestAudioSettings(this);">
@@ -1223,7 +1271,20 @@
 			<a href="https://github.com/steveseguin/obsninja/tree/master/translations" target="_blank" rel="noopener noreferrer" data-translate='add-more-here'>Add More Here!</a>
 			<br />
 		</div>
-		
+		<div id="calendar" class="popup-message" style="display: none; right: 0; padding-left:5px; bottom: 25px; position: absolute;">
+			<b  data-translate='add-to-calendar'>Add details to your Calendar:</b>
+			<br />
+			<u>
+				<br />
+				<a onclick="addToGoogleCalendar();" style="cursor: pointer;">Add to Google Calendar</a>
+				<br />
+				<a onclick="addToOutlookCalendar();" style="cursor: pointer;">Add to Outlook Calendar</a>
+				<br />
+				<a onclick="addToYahooCalendar();" style="cursor: pointer;">Add to Yahoo Calendar</a>
+				<br />
+				<br />
+			</u>
+		</div>
 		<script>
 		
 			if (window.location.hostname.indexOf("www.obs.ninja") == 0) {
@@ -1231,7 +1292,7 @@
 			}
 		
             var session = WebRTC.Media; // session is a required global variable if configuring manually. Run before loading main.js but after webrtc.js.
-			session.version = "16.4";
+			session.version = "17.beta";
             session.streamID = session.generateStreamID(); // randomly generates a streamID for this session. You can set your own programmatically if needed
 			
 			session.defaultPassword = "someEncryptionKey123"; // Disabling improves compatibility and is helpful for debugging.
@@ -1243,13 +1304,11 @@
             //    ],
 			//    sdpSemantics: 'unified-plan'
             // };
-
             // var turn = {};
             // turn.username = "steve";
             // turn.credential = "justtesting";
             // turn.urls = ["turn:turn.obs.ninja:443"]; // US CENTRAL
             // session.configuration.iceServers.push(turn);
-
             // turn = {};
             // turn.username = "steve";
             // turn.credential = "justtesting";
@@ -1258,8 +1317,15 @@
 
             // session.configuration.iceTransportPolicy = "relay";  // uncomment to enable "&privacy" and force the TURN server
 
-			// session.wss = "wss://wss14.obs.ninja:443";   //false; // uses default handshake wss
-
+			///// Different endpoints are available; each isolated from each other.
+			// session.wss = "wss://wss13.obs.ninja:443"; // US-East (Default)
+			// session.wss = "wss://apibackup.obs.ninja:443"; // US-West
+			// session.wss = "wss://jp1wss.obs.ninja:443";  // Japan
+			// session.wss = "wss://au1wss.obs.ninja:443"; // Australia
+			// session.wss = "wss://de1wss.obs.ninja:443"; // Germany
+			// session.wss = "wss://insecure.cam:444"; // China
+			  
+				
             ///// The following lets you set the defaults
 
             // session.webcamonly // true,false
@@ -1296,7 +1362,7 @@
 		<script type="text/javascript" id="main-js" src="./main.js" data-translation="blank"></script>
 		<script type="text/javascript" crossorigin="anonymous" id="mixer-js" src="./mixer.js?ver=2"></script>
 	-->
-		<script type="text/javascript" crossorigin="anonymous" id="main-js" src="./main.js?ver=174"></script>
+		<script type="text/javascript" crossorigin="anonymous" id="main-js" src="./main.js?ver=175"></script>
 		<script type="text/javascript">
 			setTimeout(function(){ // lazy load
 				var script = document.createElement('script');

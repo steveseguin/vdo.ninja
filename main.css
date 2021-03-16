@@ -1063,7 +1063,7 @@ input[type=range]:focus::-ms-fill-upper {
 	width: 505px;
 	right: -400px;
 	overflow: auto;
-	z-index: 1;
+	z-index: 3;
 }
 
 h2 {
@@ -1314,6 +1314,11 @@ img {
 	margin: auto auto !important;
 	position: relative !important;
 	top: 50% !important;
+}
+#calendarButton {
+	cursor: pointer;
+	z-index: 6;
+	display:none;
 }
 #translateButton {
 	cursor: pointer;
@@ -1567,8 +1572,8 @@ video.clean::-webkit-media-controls-timeline-container {
 	display: none;
 	align-text: center;
 	position: absolute;
-	z-index: 10 !important;
-	padding: 3px 0 !important;
+	z-index: 21 !important;
+	padding: 3px !important;
 	min-width: 180px !important;
 	background-color: #fff !important;
 	border: solid 1px #dfdfdf !important;
@@ -2425,6 +2430,7 @@ input:checked + .slider:before {
 	z-index:2;
 	width:400px;
 	max-width:90%;
+	overflow-wrap: break-word;
 }
 
 .alertModalInner {
