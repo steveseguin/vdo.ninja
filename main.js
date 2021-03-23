@@ -10649,11 +10649,14 @@ var vis = (function() {
 	}
 
 	function keyupListener() {
-		// window.onkeyup = function(e) {
+		window.onkeyup = function(e) {
 		//  if ( e.keyCode === 27 ) {
 		//    toggleMenuOff();
 		//  }
-		// };
+			if (e.altKey && e.shiftKey && e.keyCode === 67 /* C */) {
+				toggleControlBar();
+			}
+		};
 	}
 
 	function resizeListener() {
@@ -10674,6 +10677,17 @@ var vis = (function() {
 			menuState = 0;
 			menu.classList.remove(contextMenuActive);
 		}
+	}
+
+	function toggleControlBar() {
+		if (getById("controlButtons").style.display != 'none') {
+			// Dont hardcode style here. Copy it over to data-style before changing to none;
+			getById("controlButtons").dataset.style = getById("controlButtons").style.display;
+			getById("controlButtons").style.display = 'none';
+		} else {
+			// Copy the style over from the data-style attribute.
+			getById("controlButtons").style.display = getById("controlButtons").dataset.style;
+		};
 	}
 
 	function positionMenu(e) {
