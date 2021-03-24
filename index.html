@@ -1193,32 +1193,20 @@
 		<div id="languages" class="popup-message" style="display: none; right: 0; bottom: 25px; position: absolute;">
 			<b  data-translate='available-languages'>Available Languages:</b>
 			<br />
-			<u>
-				<a onclick="changeLg('ru');toggle(document.getElementById('languages'));" style="cursor: pointer;">Russian</a>
-				<br />
-				<a onclick="changeLg('fr');toggle(document.getElementById('languages'));" style="cursor: pointer;">French</a>
-				<br />
-				<a onclick="changeLg('en');toggle(document.getElementById('languages'));" style="cursor: pointer;">English</a>
-				<br />
-				<a onclick="changeLg('pt');toggle(document.getElementById('languages'));" style="cursor: pointer;">Portuguese</a>
-				<br />
-				<a onclick="changeLg('it');toggle(document.getElementById('languages'));" style="cursor: pointer;">Italian</a>
-				<br />
-				<a onclick="changeLg('de');toggle(document.getElementById('languages'));" style="cursor: pointer;">German</a>
-				<br />
-				<a onclick="changeLg('es');toggle(document.getElementById('languages'));" style="cursor: pointer;">Spanish</a>
-				<br />
-				<a onclick="changeLg('nl');toggle(document.getElementById('languages'));" style="cursor: pointer;">Dutch</a>
-				<br />
-				<a onclick="changeLg('tr');toggle(document.getElementById('languages'));" style="cursor: pointer;">Turkish</a>
-				<br />
-				<a onclick="changeLg('ja');toggle(document.getElementById('languages'));" style="cursor: pointer;">Japanese</a>
-				<br />
-				<a onclick="changeLg('cs');toggle(document.getElementById('languages'));" style="cursor: pointer;">Czech </a>
-				<br />
-				<a onclick="changeLg('pig');toggle(document.getElementById('languages'));" style="cursor: pointer;">Pig Latin</a>
-				<br />
-			</u>
+			<ul id="languagesList" style="list-style-type: none; margin: 0;">
+				<li><a onclick="changeLg('en');toggle(document.getElementById('languages'));" style="cursor: pointer;">English</a></li>
+				<li><a onclick="changeLg('ru');toggle(document.getElementById('languages'));" style="cursor: pointer;" data-tz="Europe/Moscow">Russian</a></li>
+				<li><a onclick="changeLg('fr');toggle(document.getElementById('languages'));" style="cursor: pointer;" data-tz="Europe/Paris">French</a></li>
+				<li><a onclick="changeLg('pt');toggle(document.getElementById('languages'));" style="cursor: pointer;" data-tz="Europe/Lisbon;America/Araguaina">Portuguese</a></li>
+				<li><a onclick="changeLg('it');toggle(document.getElementById('languages'));" style="cursor: pointer;" data-tz="Europe/Rome">Italian</a></li>
+				<li><a onclick="changeLg('de');toggle(document.getElementById('languages'));" style="cursor: pointer;" data-tz="Europe/Berlin">German</a></li>
+				<li><a onclick="changeLg('es');toggle(document.getElementById('languages'));" style="cursor: pointer;" data-tz="Europe/Madrid">Spanish</a></li>
+				<li><a onclick="changeLg('nl');toggle(document.getElementById('languages'));" style="cursor: pointer;" data-tz="Europe/Amsterdam">Dutch</a></li>
+				<li><a onclick="changeLg('tr');toggle(document.getElementById('languages'));" style="cursor: pointer;" data-tz="Europe/Istanbul">Turkish</a></li>
+				<li><a onclick="changeLg('ja');toggle(document.getElementById('languages'));" style="cursor: pointer;" data-tz="Asia/Tokyo">Japanese</a></li>
+				<li><a onclick="changeLg('cs');toggle(document.getElementById('languages'));" style="cursor: pointer;" data-tz="Europe/Prague">Czech </a></li>
+				<li><a onclick="changeLg('pig');toggle(document.getElementById('languages'));" style="cursor: pointer;">Pig Latin</a></li>
+			</ul>
 			<br />
 			<a href="https://github.com/steveseguin/obsninja/tree/master/translations" target="_blank" rel="noopener noreferrer" data-translate='add-more-here'>Add More Here!</a>
 			<br />
@@ -1314,7 +1302,25 @@
 				},500);
 			},0);
 			
+			var languages = getById('languagesList').querySelectorAll('li a');
+			var timezones = [];
 			
+			languages.forEach(language => {
+				if (language.dataset.tz) {
+					var languageTimezones = language.dataset.tz.split(';'); // each link can have multiple timezones separated by ;
+					languageTimezones.forEach(element => {
+						timezones.push(element);
+					});
+				}
+			});
+			
+			var currentTimezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+			
+			if (timezones.includes(currentTimezone)) {
+				var el = getById('languagesList').querySelector("li a[data-tz*='" + currentTimezone +"']"); // select language li
+				el.parentElement.removeChild(el); // remove it
+				getById('languagesList').insertBefore(el, getById('languagesList').querySelector('li:nth-child(2)')); // insert it after English
+			}
 			
 		</script> 
 	</body>
