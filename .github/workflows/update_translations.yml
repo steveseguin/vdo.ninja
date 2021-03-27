@@ -1,6 +1,6 @@
 # This is a basic workflow to help you get started with Actions
 
-name: Generate translations
+name: Update translations
 
 # Controls when the action will run. 
 on:
@@ -30,4 +30,8 @@ jobs:
         - run: node .github/ci-generateTranslations.js
         - name: Create Pull Request
           uses: peter-evans/create-pull-request@v3
-          
+          with:
+            commit-message: Generated updated translations
+            branch: generated_translations
+            title: "[OBSNinja Bot] Updated translations"
+            labels: i18n
