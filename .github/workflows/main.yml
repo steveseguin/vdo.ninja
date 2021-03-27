@@ -27,6 +27,7 @@ jobs:
           with:
             node-version: '14'
         - run: npm install jsdom && npm install axios
+        - run: node .github/ci-generateTranslations.js
         - name: Create Pull Request
           uses: peter-evans/create-pull-request@v3
           
