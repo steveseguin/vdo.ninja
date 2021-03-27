@@ -25,7 +25,7 @@ function downloadTranslation(filename, trans = {}) {
   console.log("Saving translation:  " + filename);
   const textDoc = JSON.stringify(trans, null, 2);
 
-  fs.writeFile(`translations\\${filename}.json`, textDoc, function (err) {
+  fs.writeFile(`..\\translations\\${filename}.json`, textDoc, function (err) {
     if (err) {
       return console.log(err);
     }
