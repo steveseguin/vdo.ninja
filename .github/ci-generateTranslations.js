@@ -42,9 +42,13 @@ async function updateTranslation(filename) {
     url: `https://raw.githubusercontent.com/steveseguin/obsninja/master/translations/${filename}.json?${(
       Math.random() * 100
     ).toString()}`,
-  }).then(function (response) {
-    return response.data;
-  });
+  })
+    .then(function (response) {
+      return response.data;
+    })
+    .catch(function (error) {
+      console.log(error);
+    });
 
   const oldTransItems = data["innerHTML"];
 
@@ -129,33 +133,37 @@ for (const i in updateList) {
   const lang = updateList[i];
 
   var translation = updateTranslation(lang); // we don't need to worry about DATA.
-  updateTranslation(lang).then(function (translation) {
-    const newTrans = translation[1]["innerHTML"];
-    //const allItems = document.querySelectorAll('[data-translate]');
-    allItems.forEach((ele) => {
-      const key = ele.dataset.translate; //.replace(/[\W]+/g, "-").toLowerCase();
-      newTrans[key] = ele.innerHTML;
-    });
+  updateTranslation(lang)
+    .then(function (translation) {
+      const newTrans = translation[1]["innerHTML"];
+      //const allItems = document.querySelectorAll('[data-translate]');
+      allItems.forEach((ele) => {
+        const key = ele.dataset.translate; //.replace(/[\W]+/g, "-").toLowerCase();
+        newTrans[key] = ele.innerHTML;
+      });
 
-    const newTransTitles = translation[1]["titles"];
-    //const allTitles = document.querySelectorAll('[title]');
-    allTitles.forEach((ele) => {
-      const key = ele.dataset.key;
-      newTransTitles[key] = ele.title;
-    });
+      const newTransTitles = translation[1]["titles"];
+      //const allTitles = document.querySelectorAll('[title]');
+      allTitles.forEach((ele) => {
+        const key = ele.dataset.key;
+        newTransTitles[key] = ele.title;
+      });
 
-    const newPlaceholders = translation[1]["placeholders"];
-    // const allPlaceholders = document.querySelectorAll('[placeholder]');
-    allPlaceholders.forEach((ele) => {
-      const key = ele.dataset.key;
-      newPlaceholders[key] = ele.placeholder;
-    });
+      const newPlaceholders = translation[1]["placeholders"];
+      // const allPlaceholders = document.querySelectorAll('[placeholder]');
+      allPlaceholders.forEach((ele) => {
+        const key = ele.dataset.key;
+        newPlaceholders[key] = ele.placeholder;
+      });
 
-    // //// DOWNLOAD UPDATED TRANSLATION
-    const outputTrans = {};
-    outputTrans["titles"] = newTransTitles;
-    outputTrans["innerHTML"] = newTrans;
-    outputTrans["placeholders"] = newPlaceholders;
-    downloadTranslation(lang, outputTrans);
-  });
+      // //// DOWNLOAD UPDATED TRANSLATION
+      const outputTrans = {};
+      outputTrans["titles"] = newTransTitles;
+      outputTrans["innerHTML"] = newTrans;
+      outputTrans["placeholders"] = newPlaceholders;
+      downloadTranslation(lang, outputTrans);
+    })
+    .catch(function (error) {
+      console.log(error);
+    });
 }
