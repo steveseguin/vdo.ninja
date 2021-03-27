@@ -39,7 +39,7 @@ async function updateTranslation(filename) {
   // updates the website with a specific translation
   let data = await axios({
     method: "get",
-    url: `https://obs.ninja/translations/${filename}.json?${(
+    url: `https://raw.githubusercontent.com/steveseguin/obsninja/master/translations/${filename}.json?${(
       Math.random() * 100
     ).toString()}`,
   }).then(function (response) {
