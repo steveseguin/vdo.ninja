@@ -22,14 +22,13 @@ global.document = new JSDOM(``, {
 
 function downloadTranslation(filename, trans = {}) {
   // downloads the current translation to a file
-  console.log("Saving translation:  " + filename);
+  console.log("Downloading translation: " + filename);
   const textDoc = JSON.stringify(trans, null, 2);
 
   fs.writeFile(`translations/${filename}.json`, textDoc, function (err) {
     if (err) {
       return console.log(err);
     }
-    console.log("The file was saved!");
   });
 
   return trans;
@@ -129,7 +128,7 @@ combinedTrans.innerHTML = defaultTrans;
 combinedTrans.placeholders = defaultTransPlaceholders;
 
 var counter = 0;
-for (const i in updateList) {
+for (var i = 0; i < updateList.length; i++) {
   const lang = updateList[i];
 
   var translation = updateTranslation(lang); // we don't need to worry about DATA.
