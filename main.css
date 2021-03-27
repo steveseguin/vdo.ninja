@@ -753,6 +753,11 @@ body {
 	margin: 20px;
 	padding: 10px 50px;
 }
+.gowebcam:enabled {
+	background-color: #3C3;
+	color: black;
+	font-weight: bold;
+}
 
 .mainmenuclass {
 	display: inherit;

@@ -7651,9 +7651,6 @@ async function grabVideo(quality = 0, eleName = 'previewWebcam', selector = "sel
 				if (gowebcam) {
 					gowebcam.disabled = false;
 					gowebcam.dataset.ready = "true";
-					gowebcam.style.backgroundColor = "#3C3";
-					gowebcam.style.color = "black";
-					gowebcam.style.fontWeight = "bold";
 					gowebcam.innerHTML = "START";
 					miniTranslate(gowebcam, "start");
 				}
@@ -7845,9 +7842,6 @@ async function grabVideo(quality = 0, eleName = 'previewWebcam', selector = "sel
 						if (gowebcam) {
 							gowebcam.disabled = false;
 							gowebcam.dataset.ready = "true";
-							gowebcam.style.backgroundColor = "#3C3";
-							gowebcam.style.color = "black";
-							gowebcam.style.fontWeight = "bold";
 							gowebcam.innerHTML = "START";
 							miniTranslate(gowebcam, "start");
 						}
@@ -8111,9 +8105,6 @@ async function grabAudio(eleName = "previewWebcam", selector = "#audioSource", t
 	if (gowebcam) {
 		gowebcam.disabled = false;
 		gowebcam.dataset.ready = "true";
-		gowebcam.style.backgroundColor = "#3C3";
-		gowebcam.style.color = "black";
-		gowebcam.style.fontWeight = "bold";
 		gowebcam.innerHTML = "START";
 		miniTranslate(gowebcam, "start");
 	}
@@ -9867,9 +9858,6 @@ function setupWebcamSelection(stream = null) {
 					if (gowebcam) {
 						gowebcam.disabled = false;
 						gowebcam.dataset.ready = "true";
-						gowebcam.style.backgroundColor = "#3C3";
-						gowebcam.style.color = "black";
-						gowebcam.style.fontWeight = "bold";
 						gowebcam.innerHTML = "START";
 						miniTranslate(gowebcam, "start");
 					}
@@ -10068,9 +10056,6 @@ function previewWebcam() {
 				gowebcam.style.display = "";
 				gowebcam.disabled = false;
 				gowebcam.dataset.ready = "true";
-				gowebcam.style.backgroundColor = "#3C3";
-				gowebcam.style.color = "black";
-				gowebcam.style.fontWeight = "bold";
 				gowebcam.innerHTML = "START";
 				miniTranslate(gowebcam, "start");
 			}
