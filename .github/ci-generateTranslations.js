@@ -25,7 +25,7 @@ function downloadTranslation(filename, trans = {}) {
   console.log("Downloading translation: " + filename);
   const textDoc = JSON.stringify(trans, null, 2);
 
-  fs.writeFile(`translations/${filename}.json`, textDoc, function (err) {
+  fs.writeFile(`translations/${filename}.json`, textDoc, (err) => {
     if (err) {
       return console.log(err);
     }
@@ -42,10 +42,10 @@ async function updateTranslation(filename) {
       Math.random() * 100
     ).toString()}`,
   })
-    .then(function (response) {
+    .then((response) => response.data)
       return response.data;
     })
-    .catch(function (error) {
+    .catch((error) => {
       console.log(error);
     });
 
@@ -133,7 +133,7 @@ for (var i = 0; i < updateList.length; i++) {
 
   var translation = updateTranslation(lang); // we don't need to worry about DATA.
   updateTranslation(lang)
-    .then(function (translation) {
+    .then((translation) => {
       const newTrans = translation[1]["innerHTML"];
       //const allItems = document.querySelectorAll('[data-translate]');
       allItems.forEach((ele) => {
@@ -162,7 +162,7 @@ for (var i = 0; i < updateList.length; i++) {
       outputTrans["placeholders"] = newPlaceholders;
       downloadTranslation(lang, outputTrans);
     })
-    .catch(function (error) {
+    .catch((error) => {
       console.log(error);
     });
 }
