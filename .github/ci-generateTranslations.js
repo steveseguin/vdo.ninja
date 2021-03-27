@@ -127,41 +127,35 @@ combinedTrans.placeholders = defaultTransPlaceholders;
 var counter = 0;
 for (const i in updateList) {
   const lang = updateList[i];
-  setTimeout(
-    (ln) => {
-      var suceess = updateTranslation(ln); // we don't need to worry about DATA.
-      updateTranslation(ln).then(function (suceess) {
-        const newTrans = suceess[1]["innerHTML"];
-        //const allItems = document.querySelectorAll('[data-translate]');
-        allItems.forEach((ele) => {
-          const key = ele.dataset.translate; //.replace(/[\W]+/g, "-").toLowerCase();
-          newTrans[key] = ele.innerHTML;
-        });
 
-        const newTransTitles = suceess[1]["titles"];
-        //const allTitles = document.querySelectorAll('[title]');
-        allTitles.forEach((ele) => {
-          const key = ele.dataset.key;
-          newTransTitles[key] = ele.title;
-        });
+  var translation = updateTranslation(lang); // we don't need to worry about DATA.
+  updateTranslation(lang).then(function (translation) {
+    const newTrans = translation[1]["innerHTML"];
+    //const allItems = document.querySelectorAll('[data-translate]');
+    allItems.forEach((ele) => {
+      const key = ele.dataset.translate; //.replace(/[\W]+/g, "-").toLowerCase();
+      newTrans[key] = ele.innerHTML;
+    });
 
-        const newPlaceholders = suceess[1]["placeholders"];
-        // const allPlaceholders = document.querySelectorAll('[placeholder]');
-        allPlaceholders.forEach((ele) => {
-          const key = ele.dataset.key;
-          newPlaceholders[key] = ele.placeholder;
-        });
+    const newTransTitles = translation[1]["titles"];
+    //const allTitles = document.querySelectorAll('[title]');
+    allTitles.forEach((ele) => {
+      const key = ele.dataset.key;
+      newTransTitles[key] = ele.title;
+    });
 
-        // //// DOWNLOAD UPDATED TRANSLATION
-        const outputTrans = {};
-        outputTrans["titles"] = newTransTitles;
-        outputTrans["innerHTML"] = newTrans;
-        outputTrans["placeholders"] = newPlaceholders;
-        downloadTranslation(ln, outputTrans);
-      });
-    },
-    counter,
-    lang
-  );
-  counter += 800;
+    const newPlaceholders = translation[1]["placeholders"];
+    // const allPlaceholders = document.querySelectorAll('[placeholder]');
+    allPlaceholders.forEach((ele) => {
+      const key = ele.dataset.key;
+      newPlaceholders[key] = ele.placeholder;
+    });
+
+    // //// DOWNLOAD UPDATED TRANSLATION
+    const outputTrans = {};
+    outputTrans["titles"] = newTransTitles;
+    outputTrans["innerHTML"] = newTrans;
+    outputTrans["placeholders"] = newPlaceholders;
+    downloadTranslation(lang, outputTrans);
+  });
 }
