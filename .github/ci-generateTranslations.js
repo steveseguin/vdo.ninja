@@ -42,7 +42,7 @@ async function updateTranslation(filename) {
       Math.random() * 100
     ).toString()}`,
   })
-    .then((response) => response.data)
+    .then((response) => {
       return response.data;
     })
     .catch((error) => {
