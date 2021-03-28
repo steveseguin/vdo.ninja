@@ -583,9 +583,21 @@
 					SELECT THE VIDEO FILES TO SHARE<br /><br />
 					<input id="fileselector" onchange="session.publishFile(this,event);" type="file" accept="video/*,audio/*" alt="Hold CTRL (or CMD) to select multiple files" title="Hold CTRL (or CMD) to select multiple files" multiple/>
 					<br /><br />
-					<p style="margin:10px">Keep this tab visible if using Chrome, else the video playback will stop</p>
-					<p style="margin:10px">(Media file streaming is still quite experimental)</p><br />
-					<p style="margin:10px">File Sharing seems to be broken on Chrome v88. <br />Using The Electron Capture app instead of Chrome should work: <a href="https://github.com/steveseguin/electroncapture/releases/tag/1.1.3" style="color:blue"><u>GET IT HERE</u></a><br />You can also <a href="https://github.com/aws/amazon-chime-sdk-js/issues/1031" style="color:blue">turn off hardware-accleration</a> in Chrome/Edge to fix the issue.</p>
+					<div class='warning message-card'>
+						<h1>Warning</h1>
+						<p>Media file streaming is still quite experimental. Please do not rely on it heavily for your productions. Feedback welcome.</p>
+					</div>
+					<div class='warning message-card'>
+						<h1>Chrome users</h1>
+						<p>Keep this tab visible if using Chrome, else the video playback will stop</p>
+					</div>
+					<div class='info message-card'>
+						<h1>File Sharing seems to be broken on Chrome v88.</h1>
+						<p>Using The Electron Capture app instead of Chrome should work:
+							<a href="https://github.com/steveseguin/electroncapture/releases/latest">GET IT HERE</a>
+							<br />
+							You can also <a href="https://github.com/aws/amazon-chime-sdk-js/issues/1031">turn off hardware-accleration</a> in Chrome/Edge to fix the issue.</p>
+					</div>
 				</div>
 				
 				<div class="outer close">
