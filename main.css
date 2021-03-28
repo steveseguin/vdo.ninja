@@ -2352,6 +2352,65 @@ span#guestTips {
 	display:none;
 }
 
+div.message-card {
+    padding: 10px;
+    display: block;
+    padding-left: 1em;
+    align-items: center;
+    width: 600px;
+    margin: 0 auto;
+    position: relative;
+    padding-left: 60px;
+    margin: 0 auto;
+    margin-bottom: 20px;
+    box-shadow: 0px 5px 10px -5px #a9a9a9;
+}
+
+div.message-card a {
+	color: rgb(0 77 218);
+	font-weight: bold;
+	text-decoration: underline;
+}
+
+.warning.message-card {
+	border-left: 4px solid #eff150;
+    background: #fffded;
+}
+.info.message-card {
+	border-left: 4px solid #aacefd;
+    background: #e6e8f0;
+}
+
+.message-card h1 {
+    display: block;
+    font-size: 110%;
+    text-align: left;
+}
+
+.message-card p {
+    display: block;
+    text-align: left;
+    margin-top: 10px;
+}
+
+div.message-card:before {
+    font-family: 'Line Awesome Free';
+    font-weight: 900;
+    font-size: 2em;
+    margin-right: 0.5em;
+    position: absolute;
+    top: 6px;
+    left: 10px;
+}
+
+div.message-card.warning:before {
+	content: "\f071";
+}
+
+div.message-card.info:before {
+	content: "\f05a";
+}
+
 @keyframes floating { 
     0% { transform: translate(0,  0px); } 
     50%  { transform: translate(0, 15%); } 
