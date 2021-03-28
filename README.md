@@ -9,7 +9,7 @@ OBS Ninja is not affiliated with OBS. OBS.Ninja is designed to allow content cre
 Please see the sub-reddit added info: https://reddit.com/r/obsninja  
 Also check out the FAQ for more info: https://github.com/steveseguin/obsninja/wiki
 
-<img src="https://user-images.githubusercontent.com/2575698/94018108-34b1de00-fd7e-11ea-8c7d-df001253b60d.png" " height="300" />
+<img src="https://user-images.githubusercontent.com/2575698/94018108-34b1de00-fd7e-11ea-8c7d-df001253b60d.png" height="300" />
 
 ## How to use
 I demo the basic usage of OBS.Ninja on YouTube: https://www.youtube.com/watch?v=6R_sQKxFAhg
