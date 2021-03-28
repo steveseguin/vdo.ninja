@@ -1071,6 +1071,33 @@ input[type=range]:focus::-ms-fill-upper {
 	z-index: 1;
 }
 
+#audioSourceScreenshare {
+	display:block;
+	height: 60px;
+	min-width: 290px;
+	overflow: auto;
+	padding: 5px;
+	resize: both;
+}
+
+p#audioScreenShare1 {
+    border: 1px solid #ccc;
+    display: inline-block;
+    background: #f3f3f3;
+    padding: 4px 10px 10px 10px;
+	text-align: left;
+}
+
+#audioScreenShare1 > i {
+    display: inline-block;
+}
+
+#audioScreenShare1 > span {
+    margin: 7px 0px;
+    text-align: left;
+    display: inline-block;
+}
+
 h2 {
 	color: white;
 	-webkit-user-select: none;
