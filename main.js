@@ -8285,9 +8285,6 @@ async function grabVideo(quality = 0, eleName = 'previewWebcam', selector = "sel
 				if (gowebcam) {
 					gowebcam.disabled = false;
 					gowebcam.dataset.ready = "true";
-					gowebcam.style.backgroundColor = "#3C3";
-					gowebcam.style.color = "black";
-					gowebcam.style.fontWeight = "bold";
 					gowebcam.innerHTML = "START";
 					miniTranslate(gowebcam, "start");
 				}
@@ -8486,9 +8483,6 @@ async function grabVideo(quality = 0, eleName = 'previewWebcam', selector = "sel
 						if (gowebcam) {
 							gowebcam.disabled = false;
 							gowebcam.dataset.ready = "true";
-							gowebcam.style.backgroundColor = "#3C3";
-							gowebcam.style.color = "black";
-							gowebcam.style.fontWeight = "bold";
 							gowebcam.innerHTML = "START";
 							miniTranslate(gowebcam, "start");
 						}
@@ -8753,9 +8747,6 @@ async function grabAudio(eleName = "previewWebcam", selector = "#audioSource", t
 	if (gowebcam) {
 		gowebcam.disabled = false;
 		gowebcam.dataset.ready = "true";
-		gowebcam.style.backgroundColor = "#3C3";
-		gowebcam.style.color = "black";
-		gowebcam.style.fontWeight = "bold";
 		gowebcam.innerHTML = "START";
 		miniTranslate(gowebcam, "start");
 	}
@@ -10579,9 +10570,6 @@ function setupWebcamSelection(stream = null) {
 					if (gowebcam) {
 						gowebcam.disabled = false;
 						gowebcam.dataset.ready = "true";
-						gowebcam.style.backgroundColor = "#3C3";
-						gowebcam.style.color = "black";
-						gowebcam.style.fontWeight = "bold";
 						gowebcam.innerHTML = "START";
 						miniTranslate(gowebcam, "start");
 					}
@@ -10781,9 +10769,6 @@ function previewWebcam() {
 				gowebcam.style.display = "";
 				gowebcam.disabled = false;
 				gowebcam.dataset.ready = "true";
-				gowebcam.style.backgroundColor = "#3C3";
-				gowebcam.style.color = "black";
-				gowebcam.style.fontWeight = "bold";
 				gowebcam.innerHTML = "START";
 				miniTranslate(gowebcam, "start");
 			}
@@ -11362,11 +11347,14 @@ var vis = (function() {
 	}
 
 	function keyupListener() {
-		// window.onkeyup = function(e) {
+		window.onkeyup = function(e) {
 		//  if ( e.keyCode === 27 ) {
 		//    toggleMenuOff();
 		//  }
-		// };
+			if (e.altKey && e.shiftKey && e.keyCode === 67 /* C */) {
+				toggleControlBar();
+			}
+		};
 	}
 
 	function resizeListener() {
@@ -11387,6 +11375,17 @@ var vis = (function() {
 			menuState = 0;
 			menu.classList.remove(contextMenuActive);
 		}
+	}
+
+	function toggleControlBar() {
+		if (getById("controlButtons").style.display != 'none') {
+			// Dont hardcode style here. Copy it over to data-style before changing to none;
+			getById("controlButtons").dataset.style = getById("controlButtons").style.display;
+			getById("controlButtons").style.display = 'none';
+		} else {
+			// Copy the style over from the data-style attribute.
+			getById("controlButtons").style.display = getById("controlButtons").dataset.style;
+		};
 	}
 
 	function positionMenu(e) {
