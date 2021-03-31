@@ -148,7 +148,7 @@
 					<i class="toggleSize my-float las la-dot-circle" style="position: relative;" aria-hidden="true"></i>
 				</div>
 				<span id="miniPerformer" style="pointer-events: auto;" class="advanced"></span>
-				<span id="rooms" style="padding-top:3px;padding-left:6px;pointer-events: auto;color:#fff;"></span>
+				<span id="rooms" class="advanced" style="padding-top:3px;padding-left:6px;pointer-events: auto;color:#fff;"></span>
 				
 				<div id="hangupbutton2" onmousedown="event.preventDefault(); event.stopPropagation();"  title="Cancel the Director's Video/Audio"  onclick="hangup2()" class="advanced float"  tabindex="25" role="button" aria-pressed="false" onkeyup="enterPressedClick(event,this);" style="cursor: pointer;" alt="Disconnect Direcotor's cam">
 					<i class="toggleSize my-float las la-phone rotate225" aria-hidden="true"></i>
@@ -244,6 +244,7 @@
 									<option value="vp9">VP9</option>
 									<option value="h264">H264</option>
 									<option value="vp8">VP8</option>
+									<option value="av1">AV1 👨‍🔬</option>
 								</select >
 								</b>
 							</th>	
@@ -354,21 +355,48 @@
 						</ul>
 					</div>
 					<br />
-					<span id="headphonesDiv" style="text-align:left; margin:17px 0; max-width: 550px; min-width: 420px; background-color: #f3f3f3; display: none; padding: 10px 10px; border: 1px solid #ccc; vertical-align: middle;">
+					<span id="headphonesDiv" style="text-align:left; margin:17px 0 0 0; max-width: 550px; min-width: 420px; background-color: #f3f3f3; display: none; padding: 10px 10px; border: 1px solid #ccc; vertical-align: middle;">
 						<div class="audioTitle2">
 						<i class="las la-headphones"></i><span data-translate="select-output-source"> Audio Output Destination:
 						</span><button onclick="playtone()" class="white" style="margin:0 0 0 15px;" type="button">Test</button></div>
 						<select id="outputSource" ></select>
 						
 					</span>
+					<div id="effectsDiv" style="user-select: none; font-size:100%; text-align:left; margin: 17px auto; max-width:450px; min-width: 420px; background-color: #f3f3f3; display: none; padding: 10px 10px; border: 1px solid #ccc; vertical-align: middle;">
+						<div style="text-align: left;display: inline-block;">
+							<i class="las la-robot"></i><span data-translate="select-digital-effect"> Digital Video Effects: </span>
+						</div>
+						<select id="effectSelector" onchange="effectsDynamicallyUpdate(event, this);">
+							<option value="0">No effects applied</option>	
+							<option value="3">Blurred background</option>
+							<option value="4">Digital greenscreen</option>	
+							<option value="5">Virtual background</option>
+						</select>
+						<span data-warnSimdNotice="true" style='display:none; font-size: 140%; margin-left:10px; vertical-align: middle; cursor:pointer' title="Improve performance and quality with this tip" onclick="warnUser(`For improved performance, use Chrome v87 or newer with SIMD support enabled.<br />Enable SIMD here: <a href='chrome://flags/#enable-webassembly-simd' target='_blank' onclick='popupMessage(event);copyFunction(this)' >chrome://flags/#enable-webassembly-simd</a>`);">
+							<i class="las la-info-circle"></i>
+						</span>
+						<span data-effectsNotice="true" style='display:none; font-size: 140%; margin-left:10px; vertical-align: middle; cursor:pointer' title="Improve performance and quality with this tip" onclick="warnUser('Use a Chromium Based Browser');">
+							<i class="las la-info-circle"></i>
+						</span>
+						
+						<div id="selectImageTFLITE" style="display:none;margin-top:10px;">
+							<img src="./media/bg_sample.jpg" style="max-width:130px;max-height:73.5px;display:inline-block:margin:10px;cursor:pointer;" onclick="changeTFLiteImage(event, this);"/>
+							<img src="./media/bg_sample2.jpg" style="max-width:130px;max-height:73.5px;display:inline-block:margin:10px;cursor:pointer;"  onclick="changeTFLiteImage(event, this);"/>
+							<label style="width:130px;display:inline-block;margin:0 10px; text-align: center; cursor:pointer;">
+							  <i class="las la-hdd" style="font-size: 3em;"></i><br />Select Local Image
+							  <input type="file" onchange="changeTFLiteImage(event, this)" accept="image/*" style="position: fixed; top: -100em; margin-left:10px; border:1px solid #555;"> 
+							</label>
+						</div>
+						
+					</div>
 					<span id="addPasswordBasic" style="width: 450px;
 							white-space: nowrap;
 							overflow: hidden;
 							border-bottom: 0;
-							display: inline-block;
+							display: block;
 							text-align: left;
-							margin: 17px 0;
-							max-width: 550px;
+							margin: 17px auto;
+							max-width: 450px;
 							min-width: 420px;
 							background-color: #f3f3f3;
 							padding: 10px 10px;
@@ -804,7 +832,7 @@
 						</label>
 						Show display names
 						<Br />
-						<label class="switch" title="Display Names will be shown in the bottom-left corner of videos">
+						<label class="switch" title="Guests not actively speaking will be hidden">
 						  <input type="checkbox" data-param="&activespeaker" onchange="updateLink(1,this);">
 						  <span class="slider"></span>
 						</label>
@@ -824,7 +852,7 @@
 						Auto-select default microphone
 						<Br />
 						<label class="switch" title="The default camera device will selected automatically">
-						  <input type="checkbox" data-param="&vd" onchange="updateLink(1,this);">
+						  <input type="checkbox" id="vd1toggle" data-param="&vd" onchange="if(getById('vd0toggle').checked){getById('vd0toggle').checked=false;updateLink(1,getById('vd0toggle'));} updateLink(1,this);">
 						  <span class="slider"></span>
 						</label>
 						Auto-select default camera
@@ -885,6 +913,12 @@
 						</label>
 						Mute microphone by default
 						<Br />
+						<label class="switch" title="The guest will not be asked for a video device on connection">
+						  <input type="checkbox" id="vd0toggle" data-param="&vd=0" onchange="if(getById('vd1toggle').checked){getById('vd1toggle').checked=false;updateLink(1,getById('vd1toggle'));} updateLink(1,this);">
+						  <span class="slider"></span>
+						</label>
+						Guest joins with no camera
+						<Br />
 						<label class="switch" title="Have the guest join muted, so only the director can Unmute the guest.">
 						  <input type="checkbox" data-param="&g=0" onchange="updateLink(1,this);">
 						  <span class="slider"></span>
@@ -900,41 +934,50 @@
 				</div>
 			
 				<div class='directorBlock' id="customizeLinks3" style='display:none;margin-top:5px;padding-bottom:0;'>
-					<div style="display:inline-block;top: 12px; position: relative;">
-						<label class="switch">
-						<input type="checkbox" data-param="&s" onchange="updateLink(3,this);">
-						<span class="slider"></span>
-						</label><font class="tooltip" style='cursor: help;position:relative;bottom:2px;font-family:"Noto Color Emoji", "Apple Color Emoji", "Segoe UI Emoji", Times, Symbola, Aegyptus, Code2000, Code2001, Code2002, Musica, serif, LastResort;'>⚠<span class="tooltiptext" style="width: 10em;">This can cause audio clicking issues</span></font> Pro-audio mode
+					<div  style="display:inline-block;top: 12px; position: relative; margin-left:10px; ">
+						<div style="display:inline-block;top: 12px; position: relative;">
+							<label class="switch">
+							<input type="checkbox" data-param="&s" onchange="updateLink(3,this);">
+							<span class="slider"></span>
+							</label><font class="tooltip" style='cursor: help;position:relative;bottom:2px;font-family:"Noto Color Emoji", "Apple Color Emoji", "Segoe UI Emoji", Times, Symbola, Aegyptus, Code2000, Code2001, Code2002, Musica, serif, LastResort;'>⚠<span class="tooltiptext" style="width: 10em;">This can cause audio clicking issues</span></font> Pro-audio mode
+						</div>
+						<div  style="display:inline-block;top: 12px; position: relative; margin-left:10px;">
+							<label class="switch">
+							  <input type="checkbox" data-param="&st" onchange="updateLink(3,this);">
+							  <span class="slider"></span>
+							</label>
+							Hide audio-only sources
+						</div>
+						<div  style="display:inline-block;top: 12px; position: relative; margin-left:10px;">
+							<label class="switch">
+							  <input type="checkbox" data-param="&sl" onchange="updateLink(3,this);">
+							  <span class="slider"></span>
+							</label>
+							Show display names
+						</div>
+						<div  style="display:inline-block;top: 12px; height: 20px; position: relative; margin-left:10px;">
+							<label class="switch">
+							  <input type="checkbox" data-param="&vb=20000" onchange="updateLink(3,this);">
+							  <span class="slider"></span>
+							</label>
+							<font class="tooltip" style='cursor: help;position:relative;bottom:2px;font-family:"Noto Color Emoji", "Apple Color Emoji", "Segoe UI Emoji", Times, Symbola, Aegyptus, Code2000, Code2001, Code2002, Musica, serif, LastResort;'>⚠<span class="tooltiptext">This can cause video playback to lag</span></font> Unlock Video Bitrate
+						</div>
+						<div  style="display:inline-block;top: 12px; height: 20px;position: relative; margin-left:10px;">
+							<label class="switch">
+							  <input type="checkbox" data-param="&mono" onchange="updateLink(3,this);">
+							  <span class="slider"></span>
+							</label>
+							Force mono audio
+						</div>
 					</div>
-					<div  style="display:inline-block;top: 12px; position: relative; margin-left:10px;">
-						<label class="switch">
-						  <input type="checkbox" data-param="&st" onchange="updateLink(3,this);">
-						  <span class="slider"></span>
-						</label>
-						Hide audio-only sources
+					<div  style="display:inline-block;top: 12px; position: relative; margin-left:10px; margin-bottom: 20px;">
+						<div style="display:inline-block;top: 12px; position: relative;">
+							<label class="switch">
+							<input type="checkbox" id="codech264toggle" data-param="&codec=h264" onchange="updateLink(3,this);">
+							<span class="slider"></span>
+							</label><font class="tooltip" style='cursor: help;position:relative;bottom:2px;font-family:"Noto Color Emoji", "Apple Color Emoji", "Segoe UI Emoji", Times, Symbola, Aegyptus, Code2000, Code2001, Code2002, Musica, serif, LastResort;'>💉<span class="tooltiptext" style="width: 10em; background-color: #77C">This can reduce video corruption caused by packet loss</span></font> Use H264 Codec
+						</div>
 					</div>
-					<div  style="display:inline-block;top: 12px; position: relative; margin-left:10px;">
-						<label class="switch">
-						  <input type="checkbox" data-param="&sl" onchange="updateLink(3,this);">
-						  <span class="slider"></span>
-						</label>
-						Show display names
-					</div>
-					<div  style="display:inline-block;top: 12px; height: 20px; position: relative; margin-left:10px;">
-						<label class="switch">
-						  <input type="checkbox" data-param="&vb=20000" onchange="updateLink(3,this);">
-						  <span class="slider"></span>
-						</label>
-						<font class="tooltip" style='cursor: help;position:relative;bottom:2px;font-family:"Noto Color Emoji", "Apple Color Emoji", "Segoe UI Emoji", Times, Symbola, Aegyptus, Code2000, Code2001, Code2002, Musica, serif, LastResort;'>⚠<span class="tooltiptext">This can cause video playback to lag</span></font> Unlock Video Bitrate
-					</div>
-					<div  style="display:inline-block;top: 12px; height: 20px;position: relative; margin-left:10px;">
-						<label class="switch">
-						  <input type="checkbox" data-param="&mono" onchange="updateLink(3,this);">
-						  <span class="slider"></span>
-						</label>
-						Force mono audio
-					</div>
-					
 				</div>
 				<a href="https://params.obs.ninja" style="color:#888;" target="_blank" >
 					<div style="display: block;float:right;font-size:70%;z-index:30;bottom:6px;right:10px;position:relative;color:#888;" >Learn more about URL parameters at <font style="text-decoration: underline;">params.obs.ninja</font>
@@ -1087,6 +1130,16 @@
 					<span data-translate="force-keyframe">Rainbow Puke</span>
 				</button>
 				
+				<button data-action-type="change-url"  data-value="0" title="Remotely reload the guest's page with a new URL" onclick="directPageReload(this, event);">
+					<i class="las la-sync"></i>
+					<span data-translate="change-url">Change URL</span>
+				</button>
+				
+				<button data-action-type="change-params" style="display:none" title="Change user parameters" onclick="promptUser('transferSettingsTemplate', this.dataset.UUID);">
+					<i class="las la-cog"></i>
+					<span data-translate="change-params">URL Params</span>
+				</button>
+				
 				<button data-action-type="solo-video"  data-value="0" title="Solo this video everywhere" onclick="requestInfocus(this);">
 					<i class="las la-user"></i>
 					<span data-translate="solo-video">Highlight guest</span>
@@ -1131,6 +1184,73 @@
 			</div>	
 		</div>
 		
+		<div id="controls_directors_blank" style="display: none;">
+			<div class="controlsGrid">
+
+				<button data-action-type="addToScene" data-scene="1" style="grid-column: 1;" title="Add this Video to any remote '&scene=1'" onclick="directEnable(this, event, 1, true);">
+					<i class="las la-plus-square"></i>
+					<span data-translate="add-to-scene">add to scene</span>
+				</button>
+				<button data-action-type="mute-scene"  style="grid-column: 2;" title="Remotely Mute this Audio in all remote '&scene' views" onclick="directMute(this, event);">
+					<i class="las la-microphone-slash"></i>
+					<span data-translate="mute-scene" >mute in scene</span>
+				</button>
+				
+				<span id="sceneGroup1" style="display:none">
+					<button style="width: 35.2px" data-scene="2" data-action-type="add-scene-2" title="Add to Scene 2" onclick="directEnable(this, event, 2);">
+						<span >S2</span>
+					</button>
+					<button style="width:35.2px;" data-scene="3" data-action-type="add-scene-3" title="Add to Scene 3" onclick="directEnable(this, event, 3);">
+						<span >S3</span>
+					</button>
+					<button style="width: 35.2px" data-scene="4" data-action-type="add-scene-4" title="Add to Scene 4" onclick="directEnable(this, event, 4);">
+						<span >S4</span>
+					</button>
+				</span>
+				
+				<span id="sceneGroup2" style="display:none">
+					<button style="width: 35.2px" data-scene="5" data-action-type="add-scene-5" title="Add to Scene 5" onclick="directEnable(this, event, 5);">
+						<span >S5</span>
+					</button>
+					<button style="width: 35.2px" data-scene="6" data-action-type="add-scene-6" title="Add to Scene 6" onclick="directEnable(this, event, 6);">
+						<span >S6</span>
+					</button>
+					<button style="width: 35.2px" data-scene="7" data-action-type="add-scene-7" title="Add to Scene 7" onclick="directEnable(this, event, 7);">
+						<span >S7</span>
+					</button>
+				</span>
+				
+				<button data-action-type="force-keyframe"  data-value="0" title="Force the remote sender to issue a keyframe to all scenes, fixing Pixel Smearing issues." onclick="session.sendKeyFrameScenes();">
+					<i class="las la-first-aid"></i>
+					<span data-translate="force-keyframe">Rainbow Puke</span>
+				</button>
+				
+				<button data-action-type="solo-video"  data-value="0" title="Solo this video everywhere" onclick="requestInfocus(this);">
+					<i class="las la-user"></i>
+					<span data-translate="solo-video">Highlight guest</span>
+				</button>
+				
+				<button data-action-type="recorder-local" title="Start Recording this remote stream to this local drive. *experimental*'" onclick="recordLocalVideoToggle();">
+					<i class="las la-circle"></i>
+					<span data-translate="record-local"> Record</span>
+				</button>
+				
+				<span>
+					<button style="width:34px;" data-action-type="order-down" title="Shift this Video Down in Order"  onclick="changeOrderDirector(-1);">
+						<span data-translate="order-down"><i class="las la-minus"></i></span>
+					</button>
+					<span class="orderspan">
+						<div style="text-align: center;font-size: 150%;" data-action-type="order-value-director" title="Current Index Order of this Video" >0</div>
+						Mix Order
+					</span>
+					<button style="width:34px;margin-left:0;" data-action-type="order-up" title="Shift this Video Up in Order"  onclick="changeOrderDirector(1);">
+						<span data-translate="order-up"><i class="las la-plus"></i></span>
+					</button>
+				</span>
+				
+			</div>	
+		</div>
+		
 		<div id="popupSelector" style="display:none;">
 				<span id="videoMenu3" class="videoMenu">
 					<i class="las la-video"></i><span data-translate="video-source"> Video Source </span>
@@ -1160,11 +1280,35 @@
 					</div>
 					<select id="outputSource3" ></select>
 				</span>
+				<span id="effectsDiv3" style="display: none; user-select: none;">
+					<div class="title">
+						<i class="las la-robot"></i>
+						<span data-translate="select-digital-effect"> Digital Video Effects: </span>
+					</div>
+					<select id="effectSelector3" onchange="effectsDynamicallyUpdate(event, this);">
+						<option value="0">No effects applied</option>	
+						<option value="3">Blurred background</option>
+						<option value="4">Digital greenscreen</option>	
+						<option value="5">Virtual background</option>
+					</select>
+					<span data-warnSimdNotice="true" style='display:none; font-size: 140%; margin-left:10px; vertical-align: middle; cursor:pointer' title="Improve performance and quality with this tip" onclick="warnUser(`For improved performance, use Chrome v87 or newer with SIMD support enabled.<br />Enable SIMD here: <a href='chrome://flags/#enable-webassembly-simd' onclick='popupMessage(event);copyFunction(this)' target='_blank'>chrome://flags/#enable-webassembly-simd</a>`);">
+						<i class="las la-info-circle"></i>
+					</span>
+					<div id="selectImageTFLITE3" style="display:none;margin-top:10px;">
+						<img src="./media/bg_sample.jpg" style="max-width:130px;max-height:73.5px;display:inline-block:margin:10px;cursor:pointer;" onclick="changeTFLiteImage(event, this);"/>
+						<img src="./media/bg_sample2.jpg" style="max-width:130px;max-height:73.5px;display:inline-block:margin:10px;cursor:pointer;"  onclick="changeTFLiteImage(event, this);"/>
+						<label style="width:130px;display:inline-block;margin:0 10px; text-align: center; cursor:pointer;">
+						  <i class="las la-hdd" style="font-size: 3em;"></i><br />Select Local Image
+						  <input type="file"  accept="image/*" onchange="changeTFLiteImage(event, this)" style="position: fixed; top: -100em; margin-left:10px; border:1px solid #555;"> 
+						</label>
+					</div>
+					
+				</span>
 				<button id="shareScreenGear" style="width: 135px; padding:20px;text-align:center;" onclick="grabScreen()"><b>Share Screen</b><br /><i style="padding:5px; font-size:300%;" class="las la-desktop"></i></button>
 				<button id="pIpStartButton" style="width: 135px; background-color:#EFEFEF;padding:20px;text-align:center;display:none;"><b>Preview PiP VIdeo</b><br /><i style="padding:5px; font-size:300%;color:black;" class="las la-compress-arrows-alt"></i></button>
 				<br />
 				
-				<button onclick="toggleSettings()" style="width: 135px; background-color:#EFEFEF;padding:9px 12px 10px 2px;margin: 10px 0px 20px 0"><i class="chevron right" style="font-size:150%;top:3px;position:relative;"></i> <b>Close Settings</b></button>
+				<button onclick="toggleSettings()" style="width: 135px; background-color:#EFEFEF;padding:9px 12px 10px 2px;margin: 0px 0px 20px 0"><i class="chevron right" style="font-size:150%;top:3px;position:relative;"></i> <b>Close Settings</b></button>
 				
 				<button id='advancedOptionsCamera' onclick="this.classList.toggle('highlight');toggle(getById('popupSelector_constraints_video'),false,false);  getById('popupSelector_constraints_loading').style.visibility='visible';" class="advancedToggle"><i class="las la-sliders-h" style="font-size:150%;top:3px;position:relative;"></i> <b><span class="mobileHide">Advanced </span>Video</b></button>
 				
@@ -1212,6 +1356,68 @@
 			<input type="text" id="chatInput" placeholder="Enter chat message to send here" onkeypress="EnterButtonChat(event)" />
 			<button style="width:60px;background-color:#EEE;top: -1px;position: relative;" onclick="sendChatMessage()" data-translate='send-chat'>Send</button>
 		</div>
+		
+		<div id="transferSettingsTemplate" style="display:none">
+			<h3>Change guest settings</h3><br />
+			<label class="switch" title="Cannot see videos">
+			  <input type="checkbox" data-param="novideo" onchange=" ">
+			  <span class="slider"></span>
+			</label>
+			Cannot see videos
+			<br />
+			<label class="switch" title="Cannot hear others">
+			  <input type="checkbox" data-param="noaudio" onchange=" ">
+			  <span class="slider"></span>
+			</label>
+			Cannot hear others
+			<br />
+			<label class="switch" title="See director only">
+			  <input type="checkbox" data-param="broadcast" onchange=" ">
+			  <span class="slider"></span>
+			</label>
+			Broadcast mode
+			<br />
+			<label class="switch" title="Show Mini preview">
+			  <input type="checkbox" data-param="minipreview" onchange=" ">
+			  <span class="slider"></span>
+			</label>
+			Mini preview
+			<br />
+			<label class="switch" title="Raise hand button">
+			  <input type="checkbox" id="testD" data-param="raisehands" onchange=" ">
+			  <span class="slider"></span>
+			</label>
+			Raise hand button
+			<br />
+			<label class="switch" title="Show labels">
+			  <input type="checkbox" data-param="showlabels" onchange=" ">
+			  <span class="slider"></span>
+			</label>
+			Show labels
+			<br />
+			<label class="switch" title="Transfer to a new Room">
+			  <input type="checkbox" data-param="changeroom" onchange="toggle(this.parentNode.nextElementSibling, false, false);">
+			  <span class="slider"></span>
+			</label>
+			Transfer to room
+			<input type="text" style="display:none" data-param="roomid" class="largeTextEntry" placeholder="Enter the room name here" onkeypress="EnterButtonChat(event)" />
+			<br />
+			<label class="switch" title="Enable custom password">
+			  <input type="checkbox" data-param="changepassword" onchange="toggle(this.parentNode.nextElementSibling, false, false);">
+			  <span class="slider"></span>
+			</label>
+			Room password
+			<input type="text" style="display:none" data-param="password" class="largeTextEntry" placeholder="Enter the room password here" onkeypress="EnterButtonChat(event)" />
+			<br />
+			<button style="width:120px; background-color: #fff; position: relative;border: 1px solid #999; margin: 0 0 0 55px;" onclick="changeGuestSettings(this.parentNode)" data-translate='apply-new-guest-settings'>Apply settings</button>
+			<button style="width:120px; background-color: #fff; position: relative;border: 1px solid #999; margin: 0;" onclick="closeModal()" data-translate='cancel'>Cancel</button>
+		</div>
+
+		<div id="connectUsers">
+			<div><u>User List</u></div>
+			<div id="userList">
+			</div>
+		</div>
 	
 		<div id="voiceMeterTemplate" class="video-meter">
 		</div>
@@ -1231,12 +1437,12 @@
 		</div>
 		<div id="screenPopup" class="popup-screen">
 			<button onclick="getById('screenPopup').style.display='none';margin:0;padding:0;">Close Window</button>
-			
 			<div>See the 
 				<a style="text-decoration: none; color: blue;" target="_blank" href="https://docs.obs.ninja/advanced">documentation</a> for more options and info.
 			</div>
 		
 		</div>
+		
 		<div id="messagePopup" class="popup-message"></div>
 		<div id="languages" class="popup-message" style="display: none; right: 0; bottom: 25px; position: absolute;">
 			<b  data-translate='available-languages'>Available Languages:</b>

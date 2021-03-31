@@ -649,15 +649,23 @@ button.btnArmTransferRoom.selected{
 
 @keyframes pulse {
 	0% {
-		transform: scale(0.95);
+		transform: scale(1);
 		box-shadow: 0 0 0 0 rgba(14, 19, 26, 0.7);
 	}
-	70% {
-		transform: scale(1);
+	15% {
+		transform: scale(1.2);
 		box-shadow: 0 0 0 10px rgba(2, 3, 4, 0);
 	}
-	100% {
+	50% {
+		transform: scale(1.0);
+		box-shadow: 0 0 0 0 rgba(14, 19, 26, 0);
+	}
+	85% {
 		transform: scale(0.95);
+		box-shadow: 0 0 0 0 rgba(14, 19, 26, 0);
+	}
+	100% {
+		transform: scale(1);
 		box-shadow: 0 0 0 0 rgba(14, 19, 26, 0);
 	}
 }
@@ -796,7 +804,7 @@ body {
 	display:none; 
 	background-color:#EFEFEF;
 	padding:10px 12px 12px 2px;
-	margin: 10px 0px 0px 10px;
+	margin: 0px 0px 0px 10px;
 }
 
 .highlight {
@@ -971,6 +979,16 @@ input[type=range]:focus::-ms-fill-upper {
 		min-width: 100% !important;
 	}
 	#headphonesDiv3 {
+		max-width: 100% !important;
+		min-width: 100% !important;
+		overflow: hidden !important;
+	}
+	#effectsDiv3 {
+		max-width: 100% !important;
+		min-width: 100% !important;
+		overflow: hidden !important;
+	}
+	#effectsDiv {
 		max-width: 100% !important;
 		min-width: 100% !important;
 		overflow: hidden !important;
@@ -1485,6 +1503,9 @@ img {
 }
 
 video {
+	transition: opacity .25s ease-in-out;
+    -moz-transition: opacity .25s ease-in-out;
+    -webkit-transition: opacity .25s ease-in-out;
 	pointer-events: auto;
 	background-color: transparent !important;
 	border: 0;
@@ -1645,6 +1666,26 @@ video.clean::-webkit-media-controls-timeline-container {
 	border: 1px solid #ccc;
 	vertical-align: middle;
 }
+
+#effectSelector3{
+	background-color: #FFF;
+    display: inline-block;
+    vertical-align: middle;
+    padding: 3px;
+    font-size: 93%;
+    max-width: 100%;
+	width: 100%;
+}
+
+#effectsDiv3 {
+	text-align: left;
+	margin: 0;
+	width: 450px;
+	background-color: #f3f3f3;
+	padding: 10px 10px;
+	border: 1px solid #ccc;
+	vertical-align: middle;
+}
 #videoSettings {
 	margin: auto auto;
 	background-color: #f3f3f3;
@@ -1663,6 +1704,12 @@ video.clean::-webkit-media-controls-timeline-container {
 	font-size: 100%;
 }
 #videoSourceSelect {
+	display: inline-block;
+	vertical-align: middle;
+	font-size: 100%;
+	max-width: 260px;
+}
+#effectSelector{
 	display: inline-block;
 	vertical-align: middle;
 	font-size: 100%;
@@ -2416,7 +2463,7 @@ input:checked + .slider:before {
   transform: translateX(16px);
 }
 
-.alertModal {
+#promptModal {
 	position: absolute;
     background-color: rgb(221 221 221);
     box-shadow: 0 0 30px 10px #0000005c;
@@ -2427,10 +2474,74 @@ input:checked + .slider:before {
     transform: translate(-50%, -50%);
     border-radius: 10px;
     font-weight: bold;
-	z-index:2;
-	width:400px;
+	z-index:31;
+	min-width:400px;
 	max-width:90%;
 	overflow-wrap: break-word;
+}
+
+.largeTextEntry {
+	width:300px;
+	margin: 0 0 0 55px;
+    font-size: 1em;
+    padding: 0.4em;
+    display: block;
+	
+}
+.promptModalInner {
+	position: relative;
+	padding: 1em;
+}
+
+
+#alertModal {
+	position: absolute;
+    background-color: rgb(221 221 221);
+    box-shadow: 0 0 30px 10px #0000005c;
+    color: black;
+    font-size: 1.2em;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    border-radius: 10px;
+    font-weight: bold;
+	z-index:32;
+	min-width:360px;
+	max-width:90%;
+	overflow-wrap: break-word;
+}
+
+#connectUsers{
+	float: right;
+	display: none;
+	position: absolute;
+	max-width: 200px;
+	max-height: 80%;
+	background-color: white;
+	z-index: 5;
+	padding: 10px;
+	right: 20px;
+	top: 30px;
+	
+}
+
+#alertModal a:link {
+  color: blue;
+}
+
+/* visited link */
+#alertModal a:visited {
+  color: blue;
+}
+
+/* mouse over link */
+#alertModal a:hover {
+  color: blue;
+}
+
+/* selected link */
+ #alertModal a:active {
+  color: blue;
 }
 
 .alertModalInner {
@@ -2438,7 +2549,7 @@ input:checked + .slider:before {
 	padding: 2em;
 }
 
-.alertModalClose {
+.modalClose {
     position: absolute;
     top: -4px;
     right: 4px;
@@ -2447,7 +2558,7 @@ input:checked + .slider:before {
 	font-size: 1.8em;
 }
 
-.alertModalBackdrop {
+#modalBackdrop {
 	background: var(--background-color);
     position: fixed;
     top: 0;
