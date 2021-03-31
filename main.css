@@ -2398,13 +2398,6 @@ span#guestTips {
 	cursor:pointer;
 }
 
-.iframeblob{
-	padding-top:18px;
-	text-align: left;
-    width: 600px;
-    display: block;
-    margin: auto;
-}
 #shareScreenGear{
 	display:none;
 }
@@ -2466,6 +2459,15 @@ div.message-card.warning:before {
 
 div.message-card.info:before {
 	content: "\f05a";
+}
+
+.message-card ul {
+	text-align: left;
+	margin-top: var(--regular-margin);
+}
+
+.message-card li {
+	margin: 5px 0;
 }
 
 @keyframes floating { 
