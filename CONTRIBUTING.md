@@ -2,7 +2,7 @@
 
 To ensure the long-term viability of the open-source OBS.Ninja project, and for the protection of its creator and its users, we request that contributors to the project first agree to some basic terms. The terms when accepted applies to all of your past, present and future contributions.
 
-## Contribution Policy
+# Contribution Policy
 
 Contributions that only take 20 lines of code or less will have its Intellectual Property implicitly transferred to Stephen Seguin, the creator of OBS.Ninja. You agree with this rule by pushing your code or works to github, by sending the code or works to one of OBS.Ninja's core developers, or by distributing your code or works in any other way.
 
