@@ -1089,6 +1089,11 @@ input[type=range]:focus::-ms-fill-upper {
 	z-index: 3;
 }
 
+#popupSelector .title {
+    margin-bottom: 10px;
+    font-weight: bold;
+}
+
 #audioSourceScreenshare {
 	display:block;
 	height: 60px;
