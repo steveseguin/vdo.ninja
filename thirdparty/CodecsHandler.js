@@ -39,6 +39,10 @@ var CodecsHandler = (function() {
             return sdp;
         } else if (codecName === 'av1' && info.av1LineNumber === info.videoCodecNumbers[0]) {
             return sdp;
+		} else if (codecName === 'red' && info.redLineNumber === info.videoCodecNumbers[0]) {
+            return sdp;
+		} else if (codecName === 'fec' && info.fecLineNumber === info.videoCodecNumbers[0]) {
+            return sdp;
         }
 
         sdp = preferCodecHelper(sdp, codecName, info);
@@ -72,6 +76,18 @@ var CodecsHandler = (function() {
                 return sdp;
             }
             preferCodecNumber = info.av1LineNumber;
+			
+		} else if (codec === 'red') {
+            if (!info.redLineNumber) {
+                return sdp;
+            }
+            preferCodecNumber = info.redLineNumber;
+			
+		} else if (codec === 'fec') {
+            if (!info.fecLineNumber) {
+                return sdp;
+            }
+            preferCodecNumber = info.fecLineNumber;
         }
 
         var newLine = info.videoCodecNumbersOriginal.split('SAVPF')[0] + 'SAVPF ';
@@ -121,6 +137,14 @@ var CodecsHandler = (function() {
 			if (line.indexOf('AV1X/90000') !== -1 && !info.av1LineNumber) {
                 info.av1LineNumber = line.replace('a=rtpmap:', '').split(' ')[0];
             }
+			
+			if (line.indexOf('red/90000') !== -1 && !info.redLineNumber) {
+                info.redLineNumber = line.replace('a=rtpmap:', '').split(' ')[0];
+            }
+			
+			if (line.indexOf('ulpfec/90000') !== -1 && !info.fecLineNumber) {
+                info.fecLineNumber = line.replace('a=rtpmap:', '').split(' ')[0];
+            }
         });
 
         return info;
@@ -136,11 +160,89 @@ var CodecsHandler = (function() {
             throw 'Invalid arguments.';
         }
 
-        sdp = sdp.replace('a=rtcp-fb:126 nack\r\n', '');
-        sdp = sdp.replace('a=rtcp-fb:126 nack pli\r\n', 'a=rtcp-fb:126 pli\r\n');
-        sdp = sdp.replace('a=rtcp-fb:97 nack\r\n', '');
+		sdp = sdp.replace('a=rtcp-fb:35 nack\r\n', '');
+        sdp = sdp.replace('a=rtcp-fb:35 nack pli\r\n', 'a=rtcp-fb:35 pli\r\n');
+		sdp = sdp.replace('a=rtcp-fb:96 nack\r\n', '');
+        sdp = sdp.replace('a=rtcp-fb:96 nack pli\r\n', 'a=rtcp-fb:96 pli\r\n');
+		sdp = sdp.replace('a=rtcp-fb:97 nack\r\n', '');
         sdp = sdp.replace('a=rtcp-fb:97 nack pli\r\n', 'a=rtcp-fb:97 pli\r\n');
-
+		sdp = sdp.replace('a=rtcp-fb:98 nack\r\n', '');
+        sdp = sdp.replace('a=rtcp-fb:98 nack pli\r\n', 'a=rtcp-fb:98 pli\r\n');
+		sdp = sdp.replace('a=rtcp-fb:99 nack\r\n', '');
+        sdp = sdp.replace('a=rtcp-fb:99 nack pli\r\n', 'a=rtcp-fb:99 pli\r\n');
+		sdp = sdp.replace('a=rtcp-fb:100 nack\r\n', '');
+        sdp = sdp.replace('a=rtcp-fb:100 nack pli\r\n', 'a=rtcp-fb:100 pli\r\n');
+		sdp = sdp.replace('a=rtcp-fb:102 nack\r\n', '');
+        sdp = sdp.replace('a=rtcp-fb:102 nack pli\r\n', 'a=rtcp-fb:102 pli\r\n');
+		sdp = sdp.replace('a=rtcp-fb:108 nack\r\n', '');
+        sdp = sdp.replace('a=rtcp-fb:108 nack pli\r\n', 'a=rtcp-fb:108 pli\r\n');
+		sdp = sdp.replace('a=rtcp-fb:124 nack\r\n', '');
+        sdp = sdp.replace('a=rtcp-fb:124 nack pli\r\n', 'a=rtcp-fb:124 pli\r\n');
+		sdp = sdp.replace('a=rtcp-fb:123 nack\r\n', '');
+        sdp = sdp.replace('a=rtcp-fb:123 nack pli\r\n', 'a=rtcp-fb:123 pli\r\n');
+		sdp = sdp.replace('a=rtcp-fb:125 nack\r\n', '');
+        sdp = sdp.replace('a=rtcp-fb:125 nack pli\r\n', 'a=rtcp-fb:125 pli\r\n');
+		sdp = sdp.replace('a=rtcp-fb:126 nack\r\n', '');
+        sdp = sdp.replace('a=rtcp-fb:126 nack pli\r\n', 'a=rtcp-fb:126 pli\r\n');
+		sdp = sdp.replace('a=rtcp-fb:127 nack\r\n', '');
+        sdp = sdp.replace('a=rtcp-fb:127 nack pli\r\n', 'a=rtcp-fb:127 pli\r\n');
+		
+        return sdp;
+    }
+	
+	function disableREMB(sdp) {
+        if (!sdp || typeof sdp !== 'string') {
+            throw 'Invalid arguments.';
+        }
+		sdp = sdp.replace('a=rtcp-fb:35 goog-remb\r\n', '');
+		sdp = sdp.replace('a=rtcp-fb:96 goog-remb\r\n', '');
+		sdp = sdp.replace('a=rtcp-fb:97 goog-remb\r\n', '');
+		sdp = sdp.replace('a=rtcp-fb:98 goog-remb\r\n', '');
+		sdp = sdp.replace('a=rtcp-fb:99 goog-remb\r\n', '');
+		sdp = sdp.replace('a=rtcp-fb:100 goog-remb\r\n', '');
+		sdp = sdp.replace('a=rtcp-fb:102 goog-remb\r\n', '');
+		sdp = sdp.replace('a=rtcp-fb:108 goog-remb\r\n', '');
+		sdp = sdp.replace('a=rtcp-fb:124 goog-remb\r\n', '');
+		sdp = sdp.replace('a=rtcp-fb:123 goog-remb\r\n', '');
+		sdp = sdp.replace('a=rtcp-fb:125 goog-remb\r\n', '');
+		sdp = sdp.replace('a=rtcp-fb:126 goog-remb\r\n', '');
+		sdp = sdp.replace('a=rtcp-fb:127 goog-remb\r\n', '');
+		
+        return sdp;
+    }
+	
+	function disablePLI(sdp) {
+        if (!sdp || typeof sdp !== 'string') {
+            throw 'Invalid arguments.';
+        }
+		
+		sdp = sdp.replace('a=rtcp-fb:35 pli\r\n', '');
+        sdp = sdp.replace('a=rtcp-fb:35 nack pli\r\n', 'a=rtcp-fb:35 nack\r\n');
+		sdp = sdp.replace('a=rtcp-fb:96 pli\r\n', '');
+        sdp = sdp.replace('a=rtcp-fb:96 nack pli\r\n', 'a=rtcp-fb:96 nack\r\n');
+		sdp = sdp.replace('a=rtcp-fb:97 pli\r\n', '');
+        sdp = sdp.replace('a=rtcp-fb:97 nack pli\r\n', 'a=rtcp-fb:97 nack\r\n');
+		sdp = sdp.replace('a=rtcp-fb:98 pli\r\n', '');
+        sdp = sdp.replace('a=rtcp-fb:98 nack pli\r\n', 'a=rtcp-fb:98 nack\r\n');
+		sdp = sdp.replace('a=rtcp-fb:99 pli\r\n', '');
+        sdp = sdp.replace('a=rtcp-fb:99 nack pli\r\n', 'a=rtcp-fb:99 nack\r\n');
+		sdp = sdp.replace('a=rtcp-fb:100 pli\r\n', '');
+        sdp = sdp.replace('a=rtcp-fb:100 nack pli\r\n', 'a=rtcp-fb:100 nack\r\n');
+		sdp = sdp.replace('a=rtcp-fb:102 pli\r\n', '');
+        sdp = sdp.replace('a=rtcp-fb:102 nack pli\r\n', 'a=rtcp-fb:102 nack\r\n');
+		sdp = sdp.replace('a=rtcp-fb:108 pli\r\n', '');
+        sdp = sdp.replace('a=rtcp-fb:108 nack pli\r\n', 'a=rtcp-fb:108 nack\r\n');
+		sdp = sdp.replace('a=rtcp-fb:124 pli\r\n', '');
+        sdp = sdp.replace('a=rtcp-fb:124 nack pli\r\n', 'a=rtcp-fb:124 nack\r\n');
+		sdp = sdp.replace('a=rtcp-fb:123 pli\r\n', '');
+        sdp = sdp.replace('a=rtcp-fb:123 nack pli\r\n', 'a=rtcp-fb:123 nack\r\n');
+		sdp = sdp.replace('a=rtcp-fb:125 pli\r\n', '');
+        sdp = sdp.replace('a=rtcp-fb:125 nack pli\r\n', 'a=rtcp-fb:125 nack\r\n');
+		sdp = sdp.replace('a=rtcp-fb:126 pli\r\n', '');
+        sdp = sdp.replace('a=rtcp-fb:126 nack pli\r\n', 'a=rtcp-fb:126 nack\r\n');
+		sdp = sdp.replace('a=rtcp-fb:127 pli\r\n', '');
+        sdp = sdp.replace('a=rtcp-fb:127 nack pli\r\n', 'a=rtcp-fb:127 nack\r\n');
+		
         return sdp;
     }
 
@@ -175,7 +277,7 @@ var CodecsHandler = (function() {
 
     function getVideoBitrates(sdp) { 
 
-		var defaultBitrate = 2500;
+		var defaultBitrate = false;
 
         var sdpLines = sdp.split('\r\n');
         var mLineIndex = findLine(sdpLines, 'm=', 'video');
@@ -349,23 +451,33 @@ var CodecsHandler = (function() {
 		}
 		
         if (typeof params.maxaveragebitrate != 'undefined') {
-            appendOpusNext += ';maxaveragebitrate=' + params.maxaveragebitrate; // default 32000? (kbps)
+			if (sdpLines[opusFmtpLineIndex].split("maxaveragebitrate=").length==1){
+				appendOpusNext += ';maxaveragebitrate=' + params.maxaveragebitrate; // default 32000? (kbps)
+			}
         }
 
         if (typeof params.maxplaybackrate != 'undefined') {
-            appendOpusNext += ';maxplaybackrate=' + params.maxplaybackrate; // Default should be 48000 (hz) , 8000 to 48000 are valid options
+			if (sdpLines[opusFmtpLineIndex].split("maxplaybackrate=").length==1){
+				appendOpusNext += ';maxplaybackrate=' + params.maxplaybackrate; // Default should be 48000 (hz) , 8000 to 48000 are valid options
+			}
         }
 
         if (typeof params.cbr != 'undefined') {
-            appendOpusNext += ';cbr=' + params.cbr; // default is 0 (vbr)
+			if (sdpLines[opusFmtpLineIndex].split("cbr=").length==1){
+				appendOpusNext += ';cbr=' + params.cbr; // default is 0 (vbr)
+			}
         }
 
         if (typeof params.useinbandfec != 'undefined') {  // useful for handling packet loss
-            appendOpusNext += ';useinbandfec=' + params.useinbandfec;  // Defaults to 0
+			if (sdpLines[opusFmtpLineIndex].split("useinbandfec=").length==1){
+				appendOpusNext += ';useinbandfec=' + params.useinbandfec;  // Defaults to 0
+			}
         }
 
         if (typeof params.usedtx != 'undefined') {  // Default is 0
-            appendOpusNext += ';usedtx=' + params.usedtx; // if decoder prefers the use of DTX.
+			if (sdpLines[opusFmtpLineIndex].split("usedtx=").length==1){
+				appendOpusNext += ';usedtx=' + params.usedtx; // if decoder prefers the use of DTX.
+			}
         }
 
         
@@ -376,10 +488,47 @@ var CodecsHandler = (function() {
 		
         return sdp;
     }
+	
+	
+	function getOpusBitrate(sdp) { 
+
+        var sdpLines = sdp.split('\r\n');
+
+        var opusIndex = findLine(sdpLines, 'a=rtpmap', 'opus/48000');
+        var opusPayload;
+        if (opusIndex) {
+            opusPayload = getCodecPayloadType(sdpLines[opusIndex]);
+        }
+
+        if (!opusPayload) {
+            return 0;
+        }
+
+        var opusFmtpLineIndex = findLine(sdpLines, 'a=fmtp:' + opusPayload.toString());
+        if (opusFmtpLineIndex === null) {
+            return 0;
+        }
+
+        var appendOpusNext = '';
+		
+        if (sdpLines[opusFmtpLineIndex].split("maxaveragebitrate=").length>1){
+			var tmp = sdpLines[opusFmtpLineIndex].split("maxaveragebitrate=")[1];
+			tmp = tmp.split('\r')[0];
+			tmp = tmp.split('\n')[0];
+			tmp = tmp.split(';')[0];
+			tmp = parseInt(tmp);
+			return tmp;
+		}
+        return 32768;
+    }
 
 	
     return {
         disableNACK: disableNACK,
+		
+		disablePLI: disablePLI,
+		
+		disableREMB: disableREMB,
         
 		getVideoBitrates: function(sdp) {
             return getVideoBitrates(sdp);
@@ -391,6 +540,10 @@ var CodecsHandler = (function() {
         setOpusAttributes: function(sdp, params) {
             return setOpusAttributes(sdp, params);
         },
+		
+		getOpusBitrate: function(sdp){
+			return getOpusBitrate(sdp);
+		},
 
         preferCodec: preferCodec
     };

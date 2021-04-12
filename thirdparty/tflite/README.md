@@ -1,0 +1,1 @@
+The virtual-background code was initially based on the works of Google and this repo: https://github.com/Volcomix/virtual-background ; Apache-2.0 License. The Google portion was published initially with an Apache lic, although it changed to a Google Lic at a later date.
