@@ -782,6 +782,14 @@ if (urlParams.has('nosettings') || urlParams.has('ns')) {
 	session.showSettings = false;
 }
 
+if (urlParams.has('nomicbutton') || urlParams.has('nmb')) {
+	getById("mutebutton").setAttribute('style', "display: none !important");
+}
+
+
+if (urlParams.has('novideobutton') || urlParams.has('nvb')) {
+	getById("mutevideobutton").setAttribute('style', "display: none !important");
+}
 
 if (urlParams.has('screenshareid') || urlParams.has('ssid')) {
 	if (urlParams.get('screenshareid') || urlParams.get('ssid')) {
