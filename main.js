@@ -3731,7 +3731,7 @@ function updateMixerRun(e=false){  // this is the main auto-mixing code.  It's a
 			}
 		}
 		if (!fontsize){
-			log("1");
+			
 			fontsize = (holder.offsetWidth + holder.offsetHeight)*0.03;
 		}
 		log("fontsize final:" +fontsize);
@@ -6416,7 +6416,7 @@ function publishWebcam(btn = false) {
 				}
 			}
 			getById("head3").className = 'advanced';
-			log("4");
+			
 		}
 
 	} else {
@@ -6562,7 +6562,7 @@ session.publishIFrame = function(iframeURL){
 		} else {
 			log("ROOMID EANBLED");
 			getById("head3").className = 'advanced';
-			log("2");
+			
 			joinRoom(session.roomid);
 		}
 		
@@ -9155,8 +9155,7 @@ function reconnectDevices(event) { ///  TODO: Perhaps change this to only if the
 		try {
 			session.sink = outputSelect.options[outputSelect.selectedIndex].value;
 			getById("previewWebcam").setSinkId(session.sink).then(() => {}).catch(error => {
-				errorlog("4960");
-				errorlog(error);
+				warnlog(error);
 			});
 		} catch (e) {
 			errorlog(e);
@@ -9471,9 +9470,10 @@ try {
 	Connection.addEventListener('change', updateConnectionStatus);
 } catch (e) {}
 
+
+
 var beforeScreenShare = null; // video
 var screenShareAudioTrack = null;
-
 async function toggleScreenShare(reload = false) { ////////////////////////////
 
 	if (reload) {
@@ -9573,6 +9573,78 @@ async function toggleScreenShare(reload = false) { ////////////////////////////
 
 	}
 }
+var ElectronDesktopCapture = false;
+if (navigator.userAgent.toLowerCase().indexOf(' electron/') > -1) {  // this enables Screen Capture in Electron
+	try{
+		const { desktopCapturer} = require('electron');  // This is definitely Electron specific. Requires Node Integration to be on, which is a potential security hazzard
+		window.navigator.mediaDevices.getDisplayMedia = () => {
+		  return new Promise(async (resolve, reject) => {
+			try {
+			  const sources = await desktopCapturer.getSources({ types: ['screen', 'window'] });
+
+			  const selectionElem = document.createElement('div');
+			  selectionElem.classList = 'desktop-capturer-selection';
+			  selectionElem.innerHTML = `
+				<div class="desktop-capturer-selection__scroller">
+				  <ul class="desktop-capturer-selection__list">
+					${sources.map(({id, name, thumbnail, display_id, appIcon}) => `
+					  <li class="desktop-capturer-selection__item">
+						<button class="desktop-capturer-selection__btn" data-id="${id}" title="${name}">
+						  <img class="desktop-capturer-selection__thumbnail" src="${thumbnail.toDataURL()}" />
+						  <span class="desktop-capturer-selection__name">${name}</span>
+						</button>
+					  </li>
+					`).join('')}
+					<button id="cancelscreenshare">CANCEL<br />SCREEN SHARE<br />SELECTION</button>
+				  </ul>
+				</div>
+			  `;
+			  document.body.appendChild(selectionElem);
+
+			  document.getElementById('cancelscreenshare').addEventListener('click', async () => {
+				   selectionElem.remove()
+				   reject(err)
+			  });
+			  
+
+			  document.querySelectorAll('.desktop-capturer-selection__btn').forEach(button => {
+				  button.addEventListener('click', async () => {
+					try {
+					  const id = button.getAttribute('data-id')
+					  const source = sources.find(source => source.id === id)
+					  if(!source) {
+						throw new Error(`Source with id ${id} does not exist`)
+					  }
+					  
+					  const stream = await window.navigator.mediaDevices.getUserMedia({
+						audio: false,
+						video: {
+						  mandatory: {
+							chromeMediaSource: 'desktop',
+							chromeMediaSourceId: source.id
+						  }
+						}
+					  })
+					  resolve(stream)
+
+					  selectionElem.remove()
+					} catch (err) {
+					  errorlog('Error selecting desktop capture source:', err)
+					  reject(err)
+					}
+				  })
+				});
+			} catch (err) {
+			  errorlog('Error displaying desktop capture sources:', err);
+			  reject(err);
+			}
+		  })
+		}
+		ElectronDesktopCapture = true;
+	} catch(e){
+		warnlog("couldn't load electron's screen capture; you might need to decrease security permissions a bit.");
+	}
+}
 
 async function grabScreen(quality = 0, audio = true, videoOnEnd = false) {
 	if (!navigator.mediaDevices.getDisplayMedia) {
@@ -9585,11 +9657,13 @@ async function grabScreen(quality = 0, audio = true, videoOnEnd = false) {
 	}
 	
 	if (navigator.userAgent.toLowerCase().indexOf(' electron/') > -1) {
-	   if (!(session.cleanOutput)) {
-			warnUser("The Electron Capture app does not support Screen Capture.");
+		if (!ElectronDesktopCapture){
+			if (!(session.cleanOutput)) {
+				warnUser("The Electron Capture app does not support Screen Capture.");
+			}
+			warnlog("Electron doesn't support screen capture");
+			return false;
 		}
-		warnlog("Electron doesn't support screen capture");
-		return false;
 	}
 
 	if (quality == 0) { // I'm going to go with default quality in most cases, as I assume Dynamic screenshare is going to want low-fps / high def.
@@ -10928,11 +11002,13 @@ session.publishScreen = function(constraints, title="Screen Sharing Session", au
 		return false;
 	}
 	if (navigator.userAgent.toLowerCase().indexOf(' electron/') > -1) {
-	   if (!(session.cleanOutput)) {
-			warnUser("The Electron Capture app does not support Screen Capture.");
-		}
-		warnlog("Electron doesn't support screen capture");
+		if (!ElectronDesktopCapture){
+			if (!(session.cleanOutput)) {
+				warnUser("The Electron Capture app does not support Screen Capture.");
+			}
+			warnlog("Electron doesn't support screen capture");
 		return false;
+		}
 	}
 	
 	var streams = [];
@@ -10977,7 +11053,7 @@ session.publishScreen = function(constraints, title="Screen Sharing Session", au
 				
 			} else {
 				getById("head3").className = 'advanced';
-				log("3");
+				
 				log("ROOMID EANBLED");
 				log("Update Mixer Event on REsize SET");
 				window.addEventListener("resize", updateMixer);
@@ -11006,7 +11082,11 @@ session.publishScreen = function(constraints, title="Screen Sharing Session", au
 		if (session.audioDevice !== 0){
 			if (stream.getAudioTracks().length==0){
 				if (!(session.cleanOutput)){
-					setTimeout(function(){warnUser("No Audio Source was detected.\n\nIf you were wanting to capture an Application's Audio, please see:\nhttp://docs.obs.ninja/audio for an alternative method.");},300);
+					if (navigator.userAgent.toLowerCase().indexOf(' electron/') > -1){
+						// Electron has no audio.
+					} else {
+						setTimeout(function(){warnUser("No Audio Source was detected.\n\nIf you were wanting to capture an Application's Audio, please see:\nhttp://docs.obs.ninja/audio for an alternative method.");},300);
+					}
 				}
 			}
 		}
@@ -11191,11 +11271,13 @@ session.publishScreen = function(constraints, title="Screen Sharing Session", au
 	}).catch(function(err){
 		errorlog(err); /* handle the error */
 		if (navigator.userAgent.toLowerCase().indexOf(' electron/') > -1) {
-		   if (!(session.cleanOutput)) {
-				warnUser("The Electron Capture app does not support Screen Capture.");
+			if (!ElectronDesktopCapture){
+				if (!(session.cleanOutput)) {
+					warnUser("The Electron Capture app does not support Screen Capture.");
+				}
+				warnlog("Electron doesn't support screen capture");
+				return false;
 			}
-			warnlog("Electron doesn't support screen capture");
-			return false;
 		}
 		if ((err.name == "NotAllowedError") || (err.name == "PermissionDeniedError")){
 			// User Stopped it.
@@ -11265,7 +11347,7 @@ session.publishFile = function(ele, event, title="Video File Sharing Session"){ 
 			window.addEventListener("resize", updateMixer);
 			window.addEventListener("orientationchange", updateMixer);
 			getById("head3").className = 'advanced';
-			log("1");
+			
 			joinRoom(session.roomid);
 		}
 		
@@ -13975,7 +14057,7 @@ if ((session.view) && (session.roomid === false)) {
 	getById("head1").className = 'advanced';
 	getById("head2").className = 'advanced';
 	getById("head3").className = 'advanced';
-	log("5");
+	
 
 	getById("mainmenu").style.backgroundRepeat = "no-repeat";
 	getById("mainmenu").style.backgroundPosition = "bottom center";
@@ -15237,7 +15319,7 @@ async function chunkedVideoTransfer(videoKbps = 500) {
 			const arrayBuffer = await event.data.arrayBuffer();
 			for (var i in session.pcs){
 				session.pcs[i].sendChannel.send(arrayBuffer);
-				errorlog(".");
+				
 			}
 		}
 		
@@ -15662,7 +15744,7 @@ function fftWaveform( source, UUID, trackid){  // append the delay Node to the t
 					e.stopPropagation();
 					return false;
 				}
-			} catch(e){log("3");errorlog(e);}
+			} catch(e){errorlog(e);}
 		});
 		
 		if (session.statsMenu){

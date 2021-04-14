@@ -359,6 +359,9 @@ function modURL(ele=false){
 }
 function gohere(){
 	var url = modURL(true);
+	if (!(document.getElementById('changeText').value.includes("obs.ninja")) && (document.getElementById('changeText').value.includes("http"))  && (document.getElementById('changeText').value.includes("&sink"))){
+		alert("Notice: The &sink command is domain specific.\nVisit https://YOURDOMAIN.com/electron instead.");
+	}
 	window.location = url;
 };
 getPermssions();
