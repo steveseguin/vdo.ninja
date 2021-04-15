@@ -6813,6 +6813,9 @@ function outboundAudioPipeline(stream) {
 					webAudio.gainNode.disconnect();
 				} catch (e) {}
 				try {
+					webAudio.micDelay.disconnect();
+				} catch (e) {}
+				try {
 					webAudio.compressor.disconnect();
 				} catch (e) {}
 				try {
@@ -13574,9 +13577,9 @@ function createIframePopup() {
 	}
 	
 	if (session.muted){
-		iframe.src = "./?ad=1&screenshare&transparent&cleanoutput&noheader&autostart&view&muted&room=" + session.roomid + "&push=" + iFrameID + extras;
+		iframe.src = "./?audiodevice=1&screenshare&transparent&cleanoutput&noheader&autostart&view&muted&room=" + session.roomid + "&push=" + iFrameID + extras;
 	} else {
-		iframe.src = "./?ad=1&screenshare&transparent&cleanoutput&noheader&autostart&view&room=" + session.roomid + "&push=" + iFrameID + extras;
+		iframe.src = "./?audiodevice=1&screenshare&transparent&cleanoutput&noheader&autostart&view&room=" + session.roomid + "&push=" + iFrameID + extras;
 	}
 	
 	iframe.style.width = "100%";
