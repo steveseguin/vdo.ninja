@@ -147,7 +147,7 @@
     "no-audio": "No Audio",
     "select-output-source": " Audio Output Destination: ",
     "remote-screenshare-obs": "Remote Screenshare",
-    "note-share-audio": "\n\t\t\t\t\t\t<p>\n\t\t\t\t\t\t\t<video id=\"screenshare\" autoplay=\"true\" muted=\"true\" loop=\"\" src=\"./images/screenshare.webm\"></video>\n\t\t\t\t\t\t</p>\n\t\t\t\t\t",
+    "note-share-audio": "\n\t\t\t\t\t\t<p>\n\t\t\t\t\t\t\t<video id=\"screenshare\" autoplay=\"true\" muted=\"true\" loop=\"\" src=\"./media/screenshare.webm\"></video>\n\t\t\t\t\t\t</p>\n\t\t\t\t\t",
     "select-screen-to-share": "SELECT SCREEN TO SHARE",
     "audio-sources": "Audio Sources",
     "create-reusable-invite": "Create Reusable Invite",
