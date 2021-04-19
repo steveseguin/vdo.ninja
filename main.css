@@ -2398,6 +2398,7 @@ span#guestTips {
 	position:absolute;
 	border-radius: 2vh;
 	pointer-events:none;
+	border: 1px black solid;
 }
 
 #voiceMeterTemplate{

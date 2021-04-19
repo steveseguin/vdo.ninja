@@ -225,7 +225,8 @@ function promptUser(eleId, UUID=null){
 	});
 	
 }
-function warnUser(message){
+var warnUserTimeout=null;
+function warnUser(message, timeout=false){
 	// Allows for multiple alerts to stack better.
 	// Every modal and backdrop has an increasing z-index
 	// to block the previous modal
@@ -250,7 +251,10 @@ function warnUser(message){
 	
 	document.getElementById("modalBackdrop").addEventListener("click", closeModal);
 	
-
+	clearTimeout(warnUserTimeout);
+	if (timeout){
+		warnUserTimeout = setTimeout(closeModal, timeout);
+	}
 	getById("alertModal").addEventListener("click", function(e) {
 		e.stopPropagation();
 		return false;
@@ -489,11 +493,7 @@ function safariVersion() {
 }
 
 if (urlParams.has('optimize')) {
-	var optimize = parseInt(urlParams.get('optimize'));
-	if (!optimize) {
-		optimize = 600;
-	}
-	session.optimize = optimize;
+	session.optimize = parseInt(urlParams.get('optimize')) || 0;
 }
 
 if (window.obsstudio) {
@@ -531,11 +531,9 @@ if (window.obsstudio) {
 		errorlog(e);
 	}
 
-	//if (session.optimize){
 	if (navigator.userAgent.indexOf('Mac OS X') != -1) {
 		session.codec = "h264"; // default the codec to h264 if OBS and macOS
 	}
-	//}
 
 	window.addEventListener('obsSceneChanged', function(event) {
 		log("OBS EVENT");
@@ -2328,28 +2326,27 @@ if (urlParams.has('effects') || urlParams.has('effect')) {
 	if (session.effects === 0){
 		getById("effectsDiv").style.display = "block";
 	}
+	
+	if (session.effects === 5){
+		getById("selectImageTFLITE").style.display = "block";
+		getById("selectImageTFLITE3").style.display = "block";
+		getById("effectSelector").style.display = "none";
+		getById("effectsDiv").style.display = "block";
+	}
 	// mirror == 2
 	// face == 1
 	// blur = 3
 	// green = 4
 	// image = 5
-	// avatar = 6
 }
 
 if (urlParams.has('activespeaker') || urlParams.has('speakerview')  || urlParams.has('sas')){
 	session.activeSpeaker = true;
-	//if (session.audioEffects === null) {
 	session.audioEffects = true;
 	session.audioMeterGuest = true;
-	//}
 	setInterval(function(){activeSpeaker(false)},100);
 	
-}// else {
-//	if (session.scene!==false){
-//		setInterval(function(){activeSpeaker(true)},100);
-//	}
-//}
-
+}
 
 if (urlParams.has('style') || urlParams.has('st')) {
 	session.style = urlParams.get('style') || urlParams.get('st') || 1;
@@ -3291,6 +3288,8 @@ function updateMixerRun(e=false){  // this is the main auto-mixing code.  It's a
 						} else if (session.rpcs[i].directorVideoMuted){
 							// it's muted by the director, so likely disabled.
 							mediaPool_invisible.push(session.rpcs[i].videoElement);  // skipped later on
+						} else if (session.rpcs[i].videoElement.style.opacity==="0"){
+							mediaPool_invisible.push(session.rpcs[i].videoElement);  // skipped later on
 						} else {
 							roomQuality+=1;
 						}
@@ -3364,6 +3363,10 @@ function updateMixerRun(e=false){  // this is the main auto-mixing code.  It's a
 			if (session.rpcs[i].videoElement){ // remote feeds
 			
 				//session.rpcs[i].targetBandwidth = -1;
+				if (session.rpcs[i].videoElement.style.opacity==="0"){
+					continue;
+				}
+							
 				try{
 					session.rpcs[i].videoElement.style.visibility = "visible";
 				} catch(e){}
@@ -5936,9 +5939,9 @@ function directPageReload(ele, event) {
 	}
 }
 
-function directMute(ele, event) { // A directing room only is controlled by the Director, with the exception of MUTE.
+function directMute(ele,  event=false) { // A directing room only is controlled by the Director, with the exception of MUTE.
 	log("mute");
-	if (!((event.ctrlKey) || (event.metaKey))) {
+	if (!event ||  (!((event.ctrlKey) || (event.metaKey)))) {
 		if (ele.dataset.value == 0) {
 			ele.dataset.value = 1;
 			ele.className = "";
@@ -5958,9 +5961,9 @@ function directMute(ele, event) { // A directing room only is controlled by the 
 	session.sendMsg(msg); // send to everyone in the room, so they know if they are on air or not.
 }
 
-function remoteSpeakerMute(ele, event) {
+function remoteSpeakerMute(ele,  event=false){
 	log("speaker mute");
-	if (!((event.ctrlKey) || (event.metaKey))) {
+	if (!event || (!((event.ctrlKey) || (event.metaKey)))) {
 		if (ele.dataset.value == 1) {
 			ele.dataset.value = 0;
 			ele.className = "";
@@ -6002,9 +6005,9 @@ function updateRemoteDisplayMute(UUID) {
 	}
 }
 
-function remoteDisplayMute(ele, event) {
+function remoteDisplayMute(ele, event=false) {
 	log("display mute");
-	if (!((event.ctrlKey) || (event.metaKey))) {
+	if (!event ||  (!((event.ctrlKey) || (event.metaKey)))) {
 		if (ele.dataset.value == 1) {
 			ele.dataset.value = 0;
 			ele.className = "";
@@ -6034,9 +6037,9 @@ function remoteLowerhands(UUID) {
 }
 
 
-function remoteMute(ele, event) {
+function remoteMute(ele,  event=false) {
 	log("mute");
-	if (!((event.ctrlKey) || (event.metaKey))) {
+	if (!event ||  (!((event.ctrlKey) || (event.metaKey)))) {
 		if (ele.dataset.value == 1) {
 			ele.dataset.value = 0;
 			ele.className = "";
@@ -6066,10 +6069,10 @@ function remoteMute(ele, event) {
 	session.sendRequest(msg, ele.dataset.UUID);
 }
 
-function remoteMuteVideo(ele, event) {
+function remoteMuteVideo(ele,  event=false) {
 	log("video mute");
 	
-	if ((event.ctrlKey) || (event.metaKey)) {
+	if (!event ||  ((event.ctrlKey) || (event.metaKey))) {
 		ele.children[1].innerHTML = "ARMED";
 		ele.style.backgroundColor = "#BF3F3F";
 		Callbacks.push([remoteMuteVideo, ele, false]);
@@ -7024,6 +7027,7 @@ function audioLimiter(mediaStreamSource, audioContext) {
 	return compressor;
 }
 
+
 function activeSpeaker(border=false) {
 	var lastActiveSpeaker = null;
 	var changed = false;
@@ -7069,9 +7073,8 @@ function activeSpeaker(border=false) {
 		if (session.rpcs[UUID].activelySpeaking){speaker=true;}
 	}
 	
-	if (!speaker && lastActiveSpeaker &&  (session.nopreview || session.minipreview)){
+	if (!speaker && lastActiveSpeaker &&  (session.nopreview || session.minipreview || session.scene!==false)){
 		session.rpcs[lastActiveSpeaker].activelySpeaking=true;
-
 	} else if (changed) {
 		setTimeout(function(){updateMixer();},1);
 	}
@@ -8276,7 +8279,7 @@ function gotDevices(deviceInfos) { // https://github.com/webrtc/samples/blob/gh-
 
 if (location.protocol !== 'https:') {
 	if (!(session.cleanOutput)) {
-		warnUser("SSL (https) is not enabled. This site will not work without it!");
+		warnUser("SSL (https) is not enabled. This site will not work without it!<br /><br /><a href='https://"+window.location.host+window.location.pathname+window.location.search+"'>Try accessing the site from here instead.</a>");
 	}
 }
 
@@ -9019,12 +9022,18 @@ async function getAudioOnly(selector, trackid = null, override = false) {
 			};
 			if (session.echoCancellation === false) {
 				constraint.audio.echoCancellation = false;
+			} else {
+				constraint.audio.echoCancellation = true;
 			}
 			if (session.autoGainControl === false) {
 				constraint.audio.autoGainControl = false;
+			} else {
+				constraint.audio.autoGainControl = true;
 			}
 			if (session.noiseSuppression === false) {
 				constraint.audio.noiseSuppression = false;
+			} else {
+				constraint.audio.noiseSuppression = true;
 			}
 		}
 		constraint.video = false;
@@ -10595,28 +10604,28 @@ session.publishDirector =  async function(clean, vdevice=false, adevice=true){ /
 		}
 	}
 	
-	if (session.echoCancellation===false){
-		if (constraints.audio === true){
-			constraints.audio = {};
-		} else if (constraints.audio){
-			constraints.audio.echoCancellation=false;
-		}
-		
+	//if (session.echoCancellation===false){
+	if (constraints.audio === true){
+		constraints.audio = {};
 	}
-	if (session.autoGainControl===false){
-		if (constraints.audio === true){
-			constraints.audio = {};
-		} else if (constraints.audio){
-			constraints.audio.autoGainControl=false;
+	if (constraints.audio){
+		if (session.echoCancellation===false || session.autoGainControl===false || session.noiseSuppression===false){
+			if (session.echoCancellation===false){
+				constraints.audio.echoCancellation=false;
+			} else {
+				constraints.audio.echoCancellation=true;
+			}
+			if (session.autoGainControl===false){
+				constraints.audio.autoGainControl=false;
+			} else {
+				constraints.audio.autoGainControl=true;
+			}
+			if (session.noiseSuppression===false){
+				constraints.audio.noiseSuppression=false;
+			} else {
+				constraints.audio.noiseSuppression=true;
+			}
 		}
-	}
-	if (session.noiseSuppression===false){
-		if (constraints.audio === true){
-			constraints.audio = {};
-		} else if (constraints.audio){
-			constraints.audio.noiseSuppression=false;
-		}
-		
 	}
 	
 	//if (session.quality===false){
@@ -11029,12 +11038,18 @@ session.publishScreen = function(constraints, title="Screen Sharing Session", au
 			
 			if (session.echoCancellation===false){  // default should be ON.  we won't even add it since deviceID is specified and Browser defaults to on already
 				constraint.audio.echoCancellation=false;
+			} else {
+				constraint.audio.echoCancellation=true;
 			}
 			if (session.autoGainControl===false){
 				constraint.audio.autoGainControl=false;
+			} else {
+				constraint.audio.autoGainControl=true;
 			}
 			if (session.noiseSuppression===false){
 				constraint.audio.noiseSuppression=false;
+			} else {
+				constraint.audio.noiseSuppression=true;
 			}
 			navigator.mediaDevices.getUserMedia(constraint).then((stream)=>{
 				streams.push(stream);
@@ -13498,8 +13513,8 @@ function setupWebcamSelection(stream = null) {
 			if (document.getElementById("previewWebcam") && document.getElementById("previewWebcam").setSinkId) {
 				if (session.sink) {
 					getById("previewWebcam").setSinkId(session.sink).then(() => {}).catch(error => {
-						errorlog("6665");
-						errorlog(error);
+						warnlog("6665");
+						warnlog(error);
 					});
 				}
 			}
@@ -14097,11 +14112,12 @@ if ((session.view) && (session.roomid === false)) {
 		play();
 	} else if (navigator.userAgent.indexOf('Safari') != -1 && navigator.userAgent.indexOf('Chrome') == -1) { // Safari on Desktop does require pop up
 		if (!(session.cleanOutput)) {
-			warnUser("Safari requires us to ask for an audio permission to use peer-to-peer technology. You will need to accept it in a moment if asked to view this live video");
+			warnUser("Safari requires us to ask for an audio permission to use peer-to-peer technology. You will need to accept it in a moment if asked to view this live video", 20000);
 		}
 		navigator.mediaDevices.getUserMedia({
 			audio: true
 		}).then(function() {
+			closeModal();
 			play();
 		}).catch(function() {
 			play();
@@ -15846,6 +15862,25 @@ function audioMeterGuest(mediaStreamSource, UUID, trackid){
 			}
 			total = total/100;
 			session.rpcs[UUID].stats.Audio_Loudness = parseInt(total);
+			
+			if (session.pushLoudness==true){
+				var loudnessObj = {};
+				loudnessObj[session.rpcs[UUID].streamID] = session.rpcs[UUID].stats.Audio_Loudness;
+				
+				if (isIFrame){
+					parent.postMessage({"loudness": loudnessObj, "action":"loudness", "value":session.rpcs[UUID].stats.Audio_Loudness, "UUID":UUID}, "*");
+				}
+			}
+			
+			try{
+				clearTimeout(session.rpcs[UUID].inboundAudioPipeline[trackid].analyser.interval);
+				session.rpcs[UUID].inboundAudioPipeline[trackid].analyser.interval = setTimeout(function(){updateLevels();},100);
+			} catch(e){
+				log("closing old inaudio pipeline");
+			}
+			
+			if (session.scene!==false){return;}
+			
 			if (session.rpcs[UUID].voiceMeter){
 				if (total>15){
 					session.rpcs[UUID].voiceMeter.style.opacity = 100; // temporary
@@ -15866,20 +15901,6 @@ function audioMeterGuest(mediaStreamSource, UUID, trackid){
 				updateMixer();
 			}
 			
-			if (session.pushLoudness==true){
-				var loudnessObj = {};
-				loudnessObj[session.rpcs[UUID].streamID] = session.rpcs[UUID].stats.Audio_Loudness;
-				
-				if (isIFrame){
-					parent.postMessage({"loudness": loudnessObj, "action":"loudness", "value":session.rpcs[UUID].stats.Audio_Loudness, "UUID":UUID}, "*");
-				}
-			}
-			try{
-				clearTimeout(session.rpcs[UUID].inboundAudioPipeline[trackid].analyser.interval);
-				session.rpcs[UUID].inboundAudioPipeline[trackid].analyser.interval = setTimeout(function(){updateLevels();},100);
-			} catch(e){
-				log("closing old inaudio pipeline");
-			}
 		} catch(e){
 			warnlog(e);
 			return;
@@ -16221,6 +16242,11 @@ if (session.midiHotkeys) {
 					
 					input.addListener('controlchange', "all", function(e) {
 						log(e);
+						if (e.channel!==1){
+							errorlog("OBSN is currently configured for use on channel 1");
+							return;
+						} // channel 1?
+						
 						var command = e.controller.number;
 						var value = e.value;
 						
@@ -16276,8 +16302,24 @@ if (session.midiHotkeys) {
 								if (elements[guestslot]) {
 									session.toggleSoloChat(elements[guestslot].dataset.UUID);
 								}
-							}
 							
+							} else if (value == 6) { 
+								var elements = document.querySelectorAll('[data-action-type="toggle-remote-speaker"][data--u-u-i-d]');
+								if (elements[guestslot]) {
+									remoteSpeakerMute(elements[guestslot]);
+								}
+							} else if (value == 7) { 
+								var elements = document.querySelectorAll('[data-action-type="toggle-remote-display"][data--u-u-i-d]');
+								if (elements[guestslot]) {
+									remoteDisplayMute(elements[guestslot]);
+								}
+							} else if ((value => 27)) { 
+								var elements = document.querySelectorAll('[data-action-type="volume"][data--u-u-i-d]');
+								if (elements[guestslot]) {
+									elements[guestslot].value = parseInt(value-27);
+									remoteVolume(elements[guestslot]);
+								}
+							}
 						}
 					});
 				}
