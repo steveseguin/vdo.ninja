@@ -1,11 +1,211 @@
 <html>
 	<head>
-		<link rel="stylesheet" href="./lineawesome/css/line-awesome.min.css" />
-		<link rel="stylesheet" href="./speedtest.css?ver=2" />
 		<meta charset="utf8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1" />
 		<title>OBSN Monitoring</title>
-		<script>
+		<style>
+		
+		body {
+			-webkit-font-smoothing: antialiased;
+			text-rendering: optimizeLegibility;
+			font-family: "Lato", sans-serif;
+			padding: 0 0px;
+			height: 100%;
+			width: 100%;
+			font-family: Helvetica, Arial, sans-serif;
+			border: 0;
+			margin: 0;
+			opacity:  1;
+			transition: opacity .1s linear;
+			background-color: #141926;
+		}
+
+		h1 {
+			color: white;
+			margin: 5px 20px;
+		}
+
+		h1 small {
+			display: block;
+			margin-top: 0.5em;
+			font-size: 0.5em;
+		}
+		
+		h2 {
+			color: #CCC;
+			margin-top:10px;
+		}
+
+		#explanation {
+			color: white;
+			font-family: sans-serif;
+			width: 80%;
+			margin: 0 auto;
+			margin-top: 20px;
+		}
+
+		#container, #graphs, #log {
+			width: 80%;
+			margin: 0 auto;
+		}
+
+
+		#explanation h2 {
+			border-bottom: 1px solid #383838;
+			margin-bottom: 10px;
+			padding-bottom: 5px;
+		}
+
+		#feeds {
+			display: inline-block;
+			width:100%;
+			height:380px;
+			
+		}
+
+		#feeds span {
+			margin:auto;
+			height: 100%;
+			min-width:50%;
+			display: inline-block;
+			flex-direction: column;
+		}
+
+		#button_container{
+			margin:auto;
+		}
+		#feeds h3 {
+			color: whitesmoke;
+			margin: 10px;
+		}
+
+		iframe {
+			height: 85%;
+			width: 100%;
+			flex: 1;
+		}
+
+		#controls {
+			margin:auto;
+		}
+
+		#controls button {
+			margin: 5px;
+		}
+
+		#controls button.active {
+			background-color: #70ff70;
+		}
+
+		canvas {
+			background-color: black;
+			margin: 20px;
+		}
+
+		#log {
+			margin-top: 10px;
+			background: #313131;
+			padding: 20px 0px;
+			border: 1px solid #383838;
+			cursor: pointer;
+			max-height:300px;
+		}
+
+		#log ul {
+			margin: 20px;
+			list-style: none;
+			color: #cacaca;
+			max-height: 20vh;
+			overflow: auto;
+			overflow-x: hidden;
+		}
+
+		#graphs {
+			display: block;
+			margin-top: 20px;
+			background: #313131;
+			padding: 20px 0px;
+			border: 1px solid #383838;
+			text-align: center;
+		}
+
+		.graphContainer {
+			display: block;
+			margin-top: 20px;
+			background: #313131;
+			border: 1px solid #383838;
+		}
+
+		.graph {
+			display: inline-block;
+			position: relative;
+		}
+
+		.graph h2, #log h2 {
+			margin: 10px 20px 0 20px;
+			font-size: 1em;
+		}
+
+		.graph > span {
+			position: absolute;
+			bottom: 30px;
+			left: 30px;
+			color: #cacaca;
+			font-weight: bold;
+		}
+
+		ol {
+			margin-left: 20px;
+			margin-top: 30px;
+		}
+
+
+		@media only screen and (max-width: 800px) {
+			
+			#container, #graphs, #log {
+				width: 100%;
+				margin: 0 auto;
+			}
+
+			#graphs {
+				flex-direction: column;
+			}
+
+			iframe {
+				width: 100%;
+			}
+
+			#feeds {
+				flex-direction: column;
+			}
+
+			#feeds h3 {
+				font-size:50%;
+			}
+			
+			h1{
+				color: white;
+				margin: 2px;
+				font-size:70%
+			}
+			
+			#feeds span{
+				height: 50%;
+				width:100%;
+				display: inline-block;
+			}
+			canvas {
+				margin:auto;
+			}
+			
+		}
+
+		#statsdiv {display: none;}
+
+
+  
+	</style>
+	<script>
 		
 			function getChromeVersion() {
 				var raw = navigator.userAgent.match(/Chrom(e|ium)\/([0-9]+)\./);
@@ -34,9 +234,11 @@
 					};
 			})(window);
 			var urlParams = new URLSearchParams(window.location.search);
-			var quality_reason = "";
-			var video_encoder="";
-			var resolution="";
+			
+			var quality_reason = {};
+			var video_encoder={};
+			var resolution={};
+				
 			function copyFunction(copyText) {
 				try {
 					copyText.select();
@@ -58,7 +260,6 @@
 				
 				var iframe = document.createElement("iframe");
 
-
 				if (urlParams.has("remote")) {
 					var remote = urlParams.get("remote");
 				} else {
@@ -73,6 +274,9 @@
 					return;
 				}
 				
+				if (document.getElementById("streamID_header")){
+					document.getElementById("streamID_header").innerText += ": "+streamID;
+				}
 				
 				var room="";
 				if (urlParams.has("room")) {
@@ -96,18 +300,6 @@
 
 				document.body.appendChild(iframe);
 
-				
-
-				//var button = document.createElement("button");
-				//button.innerHTML = "Disconnect";
-				//button.className = "red";
-				//button.style.display = "none";
-				//button.onclick = function () {
-				//	iframe.contentWindow.postMessage({ close: true }, "*");
-				//};
-				//buttonContainer.appendChild(button);
-				//document.getElementById("container").appendChild(buttonContainer);
-
 				setInterval(function () {
 					iframe.contentWindow.postMessage({ getRemoteStats: true }, "*");
 				}, 3000);
@@ -116,8 +308,7 @@
 					? "addEventListener"
 					: "attachEvent";
 				var eventer = window[eventMethod];
-				var messageEvent =
-					eventMethod === "attachEvent" ? "onmessage" : "message";
+				var messageEvent = eventMethod === "attachEvent" ? "onmessage" : "message";
 				var previousResolution;
 
 				eventer(messageEvent, function (e) {
@@ -128,23 +319,23 @@
 						for (var UUID in e.data.remoteStats) {
 							
 							if (e.data.remoteStats[UUID].quality_limitation_reason){
-								if (quality_reason != e.data.remoteStats[UUID].quality_limitation_reason) {
-									quality_reason = e.data.remoteStats[UUID].quality_limitation_reason;
-									logData("Quality Limitation Reason:", quality_reason, UUID);
+								if (quality_reason[UUID] != e.data.remoteStats[UUID].quality_limitation_reason) {
+									quality_reason[UUID] = e.data.remoteStats[UUID].quality_limitation_reason;
+									logData("Quality Limitation Reason:", quality_reason[UUID], UUID);
 								}
 							}
 							
 							if (e.data.remoteStats[UUID].video_encoder){
-								if (video_encoder != e.data.remoteStats[UUID].video_encoder) {
-									video_encoder = e.data.remoteStats[UUID].video_encoder;
-									logData("Video encoder used:", video_encoder, UUID);
+								if (video_encoder[UUID] != e.data.remoteStats[UUID].video_encoder) {
+									video_encoder[UUID] = e.data.remoteStats[UUID].video_encoder;
+									logData("Video encoder used:", video_encoder[UUID], UUID);
 								}
 							}
 							
 							if (e.data.remoteStats[UUID].resolution){
-								if (resolution != e.data.remoteStats[UUID].resolution) {
-									resolution = e.data.remoteStats[UUID].resolution;
-									logData("Resolution:", resolution, UUID);
+								if (resolution[UUID] != e.data.remoteStats[UUID].resolution) {
+									resolution[UUID] = e.data.remoteStats[UUID].resolution;
+									logData("Resolution:", resolution[UUID], UUID);
 								}
 							}
 							
@@ -167,6 +358,13 @@
 								updateData("retransmit", retransmitted_kbps, UUID);
 							} else if (document.getElementById(UUID)){
 								updateData("retransmit", 0, UUID);
+							}
+							
+							if (e.data.remoteStats[UUID].info.label){
+								if (!document.getElementById("label_"+UUID)){
+									document.getElementById(UUID).innerHTML = "<h1 class='small' id='label_"+UUID+"'></h1>" + document.getElementById(UUID).innerHTML;
+								}
+								document.getElementById("label_"+UUID).innerText = e.data.remoteStats[UUID].info.label;
 							}
 							
 							
@@ -203,23 +401,24 @@
 					var entry = document.createElement('li');
 					entry.style.color ="white";
 					entry.textContent =	"[" + new Date().toLocaleTimeString() + "] " + type + " : " + data;
-					log.prepend(entry);
+					if (log.childElementCount>10){
+						log.childNodes[0].parentNode.removeChild(log.childNodes[0]);
+					}
+					log.appendChild(entry);
 				} catch(e){}
 			}
 		</script>
 	</head>
 	<body onload="loadIframe();">
 		<div id="container">
-			<h1>
-				OBS.Ninja Remote Monitor
+			<h1 >
+				<span id="streamID_header">OBS.Ninja Remote Monitor</span>
 			</h1>
 		</div>
 		
 		<div id="graphs" style="display:none">
 		
-			<div data-log="true" onclick="copyFunction(this.innerText)" style="max-height:400px;display:inline-block;">
-				<ul></ul>
-			</div>
+			
 			
 			<div class="graph">
 				<h2>Bitrate (kbps)</h2>
@@ -237,6 +436,10 @@
 				<h2>Retransmitted (kbps)</h2>
 				<span>0</span>
 				<canvas data-retransmit-graph="true"></canvas>
+			</div>
+			
+			<div data-log="true" onclick="copyFunction(this.innerText)" style="max-height:400px;display:inline-block;">
+				<ul></ul>
 			</div>
 		</div>
 		
@@ -286,8 +489,6 @@
 				var context;
 				var yScale;
 
-				console.log(type);
-				console.log(stat);
 				var container = document.getElementById(UUID);
 				if (container){
 					canvas = container.querySelectorAll('[data-'+stat.element+']')[0];
