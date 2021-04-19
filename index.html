@@ -382,8 +382,8 @@
 						</span>
 						
 						<div id="selectImageTFLITE" style="display:none;margin-top:10px;">
-							<img src="./media/bg_sample.jpg" style="max-width:130px;max-height:73.5px;display:inline-block:margin:10px;cursor:pointer;" onclick="changeTFLiteImage(event, this);"/>
-							<img src="./media/bg_sample2.jpg" style="max-width:130px;max-height:73.5px;display:inline-block:margin:10px;cursor:pointer;"  onclick="changeTFLiteImage(event, this);"/>
+							<img src="./media/bg_sample.webp" style="max-width:130px;max-height:73.5px;display:inline-block:margin:10px;cursor:pointer;" onclick="changeTFLiteImage(event, this);"/>
+							<img src="./media/bg_sample2.webp" style="max-width:130px;max-height:73.5px;display:inline-block:margin:10px;cursor:pointer;"  onclick="changeTFLiteImage(event, this);"/>
 							<label style="width:130px;display:inline-block;margin:0 10px; text-align: center; cursor:pointer;">
 							  <i class="las la-hdd" style="font-size: 3em;"></i><br />Select Local Image
 							  <input type="file" onchange="changeTFLiteImage(event, this)" accept="image/*" style="position: fixed; top: -100em; margin-left:10px; border:1px solid #555;"> 
@@ -833,6 +833,14 @@
 						</label>
 						<span data-translate="hide-audio-only-sources">Hide audio-only sources</span>
 						<Br />
+						
+						<label class="switch" title="Allow for remote stat monitoring via the monitoring tool">
+						  <input type="checkbox" data-param="&remote" onchange="updateLink(1,this);">
+						  <span class="slider"></span>
+						</label>
+						<span data-translate="remote-monitoring">Remote Monitoring</span>
+						<Br />
+						
 						<label class="switch" title="Guest will be prompted to enter a Display Name">
 						  <input type="checkbox" data-param="&l" onchange="updateLink(1,this);">
 						  <span class="slider"></span>
@@ -923,7 +931,7 @@
 					</div>
 					<div  style="display:inline-block;top: 12px; position: relative; margin-left:10px; height: 20px;">
 						<label class="switch" title="This low-fi video codec uses very little CPU, even with dozens of active viewers.">
-						  <input type="checkbox" data-param="&webp" onchange="updateLink(1,this);">
+						  <input type="checkbox" data-param="&webp" onchange="updateLinkWebP(1,this);">
 						  <span class="slider"></span>
 						</label>
 						<font class="tooltip" style='cursor: help;position:relative;bottom:2px;font-family:"Noto Color Emoji", "Apple Color Emoji", "Segoe UI Emoji", Times, Symbola, Aegyptus, Code2000, Code2001, Code2002, Musica, serif, LastResort;'>⚠<span class="tooltiptext">You must keep the director's tab open and visible for this to work, or use the electron capture app.</span></font>
@@ -1359,8 +1367,8 @@
 						<i class="las la-info-circle"></i>
 					</span>
 					<div id="selectImageTFLITE3" style="display:none;margin-top:10px;">
-						<img src="./media/bg_sample.jpg" style="max-width:130px;max-height:73.5px;display:inline-block:margin:10px;cursor:pointer;" onclick="changeTFLiteImage(event, this);"/>
-						<img src="./media/bg_sample2.jpg" style="max-width:130px;max-height:73.5px;display:inline-block:margin:10px;cursor:pointer;"  onclick="changeTFLiteImage(event, this);"/>
+						<img src="./media/bg_sample.webp" style="max-width:130px;max-height:73.5px;display:inline-block:margin:10px;cursor:pointer;" onclick="changeTFLiteImage(event, this);"/>
+						<img src="./media/bg_sample2.webp" style="max-width:130px;max-height:73.5px;display:inline-block:margin:10px;cursor:pointer;"  onclick="changeTFLiteImage(event, this);"/>
 						<label style="width:130px;display:inline-block;margin:0 10px; text-align: center; cursor:pointer;">
 						  <i class="las la-hdd" style="font-size: 3em;"></i><br /><span data-translate="select-local-image">Select Local Image</span>
 						  <input type="file"  accept="image/*" onchange="changeTFLiteImage(event, this)" style="position: fixed; top: -100em; margin-left:10px; border:1px solid #555;"> 
@@ -1520,9 +1528,7 @@
 				<li><a onclick="changeLg('nl');toggle(document.getElementById('languages'));" style="cursor: pointer;" data-tz="Europe/Amsterdam">Dutch</a></li>
 				<li><a onclick="changeLg('tr');toggle(document.getElementById('languages'));" style="cursor: pointer;" data-tz="Europe/Istanbul">Turkish</a></li>
 				<li><a onclick="changeLg('ja');toggle(document.getElementById('languages'));" style="cursor: pointer;" data-tz="Asia/Tokyo">Japanese</a></li>
-				<li><a onclick="changeLg('cs');toggle(document.getElementById('languages'));" style="cursor: pointer;" data-tz="Europe/Prague">Czech</a></li>
-				<li><a onclick="changeLg('uk');toggle(document.getElementById('languages'));" style="cursor: pointer;" data-tz="Europe/Kiev">Ukrainian</a></li>
-
+				<li><a onclick="changeLg('cs');toggle(document.getElementById('languages'));" style="cursor: pointer;" data-tz="Europe/Prague">Czech </a></li>
 				<li><a onclick="changeLg('pig');toggle(document.getElementById('languages'));" style="cursor: pointer;">Pig Latin</a></li>
 			</ul>
 			<br />
@@ -1550,7 +1556,7 @@
 			}
 		
             var session = WebRTC.Media; // session is a required global variable if configuring manually. Run before loading main.js but after webrtc.js.
-			session.version = "17.beta";
+			session.version = "17.0";
             session.streamID = session.generateStreamID(); // randomly generates a streamID for this session. You can set your own programmatically if needed
 			
 			session.defaultPassword = "someEncryptionKey123"; // Disabling improves compatibility and is helpful for debugging.

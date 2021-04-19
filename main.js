@@ -13845,6 +13845,16 @@ function generateQRPage() {
 	}
 }
 
+function updateLinkWebP(arg, input) {
+	if (input.checked){
+		if (!((getById("director_block_" + arg).dataset.raw.includes("&broadcast")) || (getById("director_block_" + arg).dataset.raw.includes("?broadcast")))){
+			getById("broadcastSlider").checked=true;
+			updateLink(arg, getById("broadcastSlider"));
+		}
+	}
+	updateLink(arg, input);
+}
+
 function updateLink(arg, input) {
 	log(input.dataset.param);
 	if (input.checked) {
