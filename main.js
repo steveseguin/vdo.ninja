@@ -870,6 +870,22 @@ if (urlParams.has('broadcast') || urlParams.has('bc')) {
 	session.style = 1;
 	getById("header").style.display = "none";
 	getById("header").style.opacity = 0;
+	session.showList=false;
+}
+
+if (urlParams.has('showlist')) {
+	session.showList = urlParams.get('showlist');
+	if (session.showList === "false") {
+		session.showList = false;
+	} else if (session.showList=== "0") {
+		session.showList = false;
+	} else if (session.showList === "no") {
+		session.showList = false;
+	} else if (session.showList === "off") {
+		session.showList = false;
+	} else {
+		session.showList = true;
+	}
 }
 
 var directorLanding = false;
@@ -4206,7 +4222,7 @@ async function makeImages(startup=false){
 var updateUserListTimeout=null
 var updateUserListActive = false;
 function updateUserList(){
-	if (session.cleanOutput || session.scene!==false || !session.roomid || session.director){return;}
+	if ((session.showList!==true) && (session.cleanOutput || (session.scene!==false) || !session.roomid || session.director || (session.showList===false))){return;}
 	clearInterval(updateUserListTimeout);
 	updateUserListTimeout = setTimeout(function(){
 		if (updateUserListActive){return;}
@@ -4735,7 +4751,9 @@ if ((session.roomid) || (urlParams.has('roomid')) || (urlParams.has('r')) || (ur
 		createRoom(director_room_input);
 	}
 } else if ((session.view) && (session.permaid === false)) {
+	//if (!session.activeSpeaker){
 	session.audioMeterGuest = false;
+	//}
 	if (session.audioEffects === null) {
 		session.audioEffects = false;
 	}
@@ -7073,10 +7091,10 @@ function activeSpeaker(border=false) {
 		if (session.rpcs[UUID].activelySpeaking){speaker=true;}
 	}
 	
-	if (!speaker && lastActiveSpeaker &&  (session.nopreview || session.minipreview || session.scene!==false)){
-		session.rpcs[lastActiveSpeaker].activelySpeaking=true;
+	if (!speaker && lastActiveSpeaker &&  (session.nopreview || session.minipreview || (session.scene!==false) || (session.permaid === false))){
+		session.rpcs[lastActiveSpeaker].activelySpeaking=true; 
 	} else if (changed) {
-		setTimeout(function(){updateMixer();},1);
+		setTimeout(function(){updateMixer();},0);
 	}
 }
 
@@ -10046,7 +10064,9 @@ async function grabVideo(quality = 0, eleName = 'previewWebcam', selector = "sel
 			sq = session.quality;
 		}
 
-		if ((quality === false) || (quality < sq)) {
+		if (session.director && (quality !== false)){ // URL-based quality won't matter if DIRECTOR; 
+			// quality = quality; 
+		} else if ((quality === false) || (quality < sq)) {
 			quality = sq; // override the user's setting
 		}
 
@@ -10633,6 +10653,11 @@ session.publishDirector =  async function(clean, vdevice=false, adevice=true){ /
 	//		session.quality_wb=1;
 	//	}
 	//}
+	if (session.quality!==false){
+		var quality = parseInt(session.quality) || 0;
+		if (quality>2){quality=2;} else if (quality<0){quality = 0;}
+		getById("webcamquality3").elements.namedItem("resolution").value = quality;
+	}
 	
 	getById("gear_webcam3").style.display = "inline-block";
 	
@@ -15653,6 +15678,9 @@ function addAudioPipeline(stream, UUID, track){  // INBOUND AUDIO EFFECTS
 		} else if (session.audioMeterGuest){
 			log("adding a loudness meter node to audio");
 			source = audioMeterGuest(source, UUID, trackid);
+		} else if (session.activeSpeaker){
+			log("adding a loudness meter node to audio");
+			source = audioMeterGuest(source, UUID, trackid);
 		}
 		
 		if (session.rpcs[UUID].channelOffset !== false){
@@ -15889,7 +15917,8 @@ function audioMeterGuest(mediaStreamSource, UUID, trackid){
 				log("closing old inaudio pipeline");
 			}
 			
-			if (session.scene!==false){return;}
+			if (session.scene!==false){return;} // don't show if a scene
+			if (session.audioMeterGuest===false){return;} // don't show if we just want the volume levels
 			
 			if (session.rpcs[UUID].voiceMeter){
 				if (total>15){
