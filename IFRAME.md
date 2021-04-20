@@ -17,6 +17,9 @@ iframe.allowtransparency = "false";
 iframe.src = "https://obs.ninja/?webcam";
 ```
 
+You can also make an OBS.Ninja without Javascript, using just HTML, like
+`<iframe allow="autoplay;camera;microphone" src="https://obs.ninja/?view=vhX5PYg&cleanoutput&transparent"></iframe>`
+
 Adding that iframe to the DOM will reveal a simple page accessing for a user to select and share their webcam. For a developer wishing to access a remote guest's stream, this makes the ingestion of that stream into production software like OBS Studios very easy. The level of customization and control opens up opportunities, such as a pay-to-join audience option for a streaming interactive broadcast experience.
 
 An example of how this API is used by OBS.Ninja is with its Internet Speedtest, which has two OBS.Ninja IFrames on a single page. One iframe feeds video to the other iframe, and the speed at which it does this is a measure of the system's performance. Detailed stats of the connection are made available to the parent window, which displays the results.
