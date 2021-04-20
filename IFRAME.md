@@ -10,7 +10,7 @@ Modern web browsers allow the parent website to communicate with the child webpa
 
 Creating an OBSN iframe can be done in HTML or programmatically with Javascript like so:
 
-```js
+```
 const iframe = document.createElement("iframe");
 iframe.allow = "autoplay;camera;microphone";
 iframe.allowtransparency = "false";
@@ -18,6 +18,7 @@ iframe.src = "https://obs.ninja/?webcam";
 ```
 
 You can also make an OBS.Ninja without Javascript, using just HTML, like
+
 `<iframe allow="autoplay;camera;microphone" src="https://obs.ninja/?view=vhX5PYg&cleanoutput&transparent"></iframe>`
 
 Adding that iframe to the DOM will reveal a simple page accessing for a user to select and share their webcam. For a developer wishing to access a remote guest's stream, this makes the ingestion of that stream into production software like OBS Studios very easy. The level of customization and control opens up opportunities, such as a pay-to-join audience option for a streaming interactive broadcast experience.
