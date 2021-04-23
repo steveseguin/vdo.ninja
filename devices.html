@@ -79,7 +79,7 @@
 					setVideoSearchParams(element);
 				}
 				if (type === "audiooutput") {
-					return;
+					setAudioOutputSearchParams(element);
 				}
 
 				/*
@@ -139,6 +139,36 @@
 						}
 						
 						url.searchParams.set("vd", device);
+						element.className = "device selected";
+					}
+				}
+				
+				/*
+				Only allows for a single audio output device to be selected
+				*/
+				function setAudioOutputSearchParams(info) {
+					// Device was already selected
+					if (info.className === "device selected") {
+						element.className = "device";
+
+
+						// Set the url param to the devices that are left
+						url.searchParams.set("od", device);
+						element.className = "device";
+
+						// If no devices remained, just remove the param completely
+						if (audioInputDevices.length === 0) {
+							url.searchParams.delete("od");
+						}
+					} else {
+						// Device is unselected
+						try {
+							element.parentElement.querySelector('.device.selected').className = "device";
+						} catch (error) {
+							console.log("There was no video device already selected.");
+						}
+						
+						url.searchParams.set("od", device);
 						element.className = "device selected";
 					}
 				}

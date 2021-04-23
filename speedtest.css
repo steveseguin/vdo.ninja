@@ -116,7 +116,15 @@ canvas {
     padding: 20px 0px;
     border: 1px solid #383838;
 	text-align: center;
+}
 
+.graphContainer {
+	display: block;
+    margin-top: 20px;
+    background: #313131;
+    padding: 20px 0px;
+    border: 1px solid #383838;
+	text-align: center;
 }
 
 .graph {

@@ -37,6 +37,16 @@
 		</div>
 
 		<script>
+		
+			function getChromeVersion() {
+				var raw = navigator.userAgent.match(/Chrom(e|ium)\/([0-9]+)\./);
+				return raw ? parseInt(raw[2], 10) : false;
+			}
+			
+			if (!getChromeVersion() || getChromeVersion < 60){
+				alert("This tool really only works with recent Chromium based browsers; Firefox or Safari are not supported");
+			}
+		
 			function prettyPrintJsonToId(json, element) {
 				var output = "<div class='prettyJson three-col'>";
 
@@ -97,13 +107,18 @@
 			function changeCamera() {
 				var deviceId = document.getElementById("cameraSelector").value;
 				getCameraDetails(deviceId);
+				
 			}
 
 			function getCameraDetails(deviceId) {
+				console.log(deviceId);
 				navigator.mediaDevices
 					.getUserMedia({
 						video: {
-							deviceId: deviceId,
+							deviceId: {exact: deviceId},
+							zoom: true,
+							pan: true,
+							tilt: true
 						},
 						audio: false,
 					})
@@ -111,49 +126,98 @@
 						console.log("worked");
 						setTimeout(function () {
 							mediaStream.getVideoTracks().forEach((track) => {
-								const capabilities = track.getCapabilities();
-								const settings = track.getSettings();
-								prettyPrintSupportedOptions(capabilities, "cameraSupportedOptions");
-								document
+								try{
+									const capabilities = track.getCapabilities();
+									const settings = track.getSettings();
+									prettyPrintSupportedOptions(capabilities, "cameraSupportedOptions");
+									document
+										.querySelectorAll(".property")
+										.forEach((el) => el.classList.remove("ok"));
+
+									Object.entries(capabilities)
+										.sort()
+										.forEach(([key, value]) => {
+											document.getElementById(key).classList.add("ok");
+										});
+									prettyPrintJsonToId(settings, "cameraSettings");
+								} catch (e){
+									document
 									.querySelectorAll(".property")
 									.forEach((el) => el.classList.remove("ok"));
-
-								Object.entries(capabilities)
-									.sort()
-									.forEach(([key, value]) => {
-										document.getElementById(key).classList.add("ok");
-									});
-								prettyPrintJsonToId(settings, "cameraSettings");
+								}
 							});
 						}, 1000);
+					}).catch(function(e){
+						setTimeout(function(){getCameraDetailsFallback(deviceId)},0);
+					})
+			}
+			
+			function getCameraDetailsFallback(deviceId) {
+				console.log(deviceId);
+				navigator.mediaDevices
+					.getUserMedia({
+						video: {
+							deviceId: deviceId
+						},
+						audio: false,
+					})
+					.then(function (mediaStream) {
+						console.log("worked");
+						setTimeout(function () {
+							mediaStream.getVideoTracks().forEach((track) => {
+								try{
+									const capabilities = track.getCapabilities();
+									const settings = track.getSettings();
+									prettyPrintSupportedOptions(capabilities, "cameraSupportedOptions");
+									document
+										.querySelectorAll(".property")
+										.forEach((el) => el.classList.remove("ok"));
+
+									Object.entries(capabilities)
+										.sort()
+										.forEach(([key, value]) => {
+											document.getElementById(key).classList.add("ok");
+										});
+									prettyPrintJsonToId(settings, "cameraSettings");
+								} catch (e){
+									document
+									.querySelectorAll(".property")
+									.forEach((el) => el.classList.remove("ok"));
+								}
+							});
+						}, 1000);
+						//updateDeviceList();
 					});
 			}
-
+			
 			var supports = navigator.mediaDevices.getSupportedConstraints();
 			prettyPrintJsonToId(supports, "browserSupportedOptions");
 			document.getElementById("browserSupportedOptionsTitle").innerText +=
 				" (" + Object.keys(supports).length + ")";
 
-			navigator.mediaDevices
-				.enumerateDevices()
-				.then(function (devices) {
-					setTimeout(function () {
-						console.log("Listing devices");
-						devices.forEach(function (device) {
-							if (device.kind == "videoinput") {
-								var element = document.createElement("option");
-								element.setAttribute("value", device.deviceId);
-								element.innerText = device.label;
-								document.getElementById("cameraSelector").appendChild(element);
-								console.log(device);
-							}
-						});
-						getCameraDetails(devices[0]);
-					}, 1000);
-				})
-				.catch(function (err) {
-					console.log(err.name + ": " + err.message);
-				});
+			function updateDeviceList(){
+				navigator.mediaDevices
+					.enumerateDevices()
+					.then(function (devices) {
+						setTimeout(function (devices) {
+							console.log("Listing devices");
+							devices.forEach(function (device) {
+								if (device.kind == "videoinput") {
+									var element = document.createElement("option");
+									element.setAttribute("value", device.deviceId);
+									element.innerText = device.label  || "No Label Available";
+									document.getElementById("cameraSelector").appendChild(element);
+									console.log(device);
+								}
+							});
+							setTimeout(function(){changeCamera();},10);
+						}, 1000, devices);
+					})
+					.catch(function (err) {
+						console.log(err.name + ": " + err.message);
+					});
+			}
+			updateDeviceList();
 		</script>
 	</body>
 </html>
