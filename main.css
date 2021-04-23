@@ -1090,12 +1090,6 @@ input[type=range]:focus::-ms-fill-upper {
 	z-index: 3;
 }
 
-#popupSelector .title {
-    margin-bottom: 10px;
-    font-weight: bold;
-}
-
-
 #audioSourceScreenshare {
 	display:block;
 	height: 60px;
@@ -1691,7 +1685,7 @@ video.clean::-webkit-media-controls-timeline-container {
 }
 #headphonesDiv3 {
 	text-align: left;
-	margin: 17px 0;
+	margin: 17px 0 0 0;
 	width: 450px;
 	background-color: #f3f3f3;
 	padding: 10px 10px;
@@ -1720,12 +1714,12 @@ video.clean::-webkit-media-controls-timeline-container {
 
 #effectsDiv3 {
 	text-align: left;
-	margin: 0;
 	width: 450px;
 	background-color: #f3f3f3;
 	padding: 10px 10px;
 	border: 1px solid #ccc;
 	vertical-align: middle;
+	margin: 17px 0 0 0;
 }
 #videoSettings {
 	margin: auto auto;
@@ -1831,6 +1825,7 @@ video.clean::-webkit-media-controls-timeline-container {
 	vertical-align: middle;
 	text-align: left;
 }
+
 div.multiselect {
 	width: 450px;
 	white-space: nowrap;
@@ -2677,13 +2672,16 @@ input:checked + .slider:before {
 	max-width: 400px;
 	min-width: 150px;
 	max-height: 80%;
-	background-color: white;
+	background-color: #08090e;
 	z-index: 5;
 	padding: 10px;
 	right: 20px;
 	bottom: 120px;
-	box-shadow: 2px 2px #000;
+	box-shadow: 2px 2px #313131;
 	border-radius: 5px;
+	border: 1px solid #252525;
+	opacity: 0.7;
+	color: white;
 }
 
 #alertModal a:link {

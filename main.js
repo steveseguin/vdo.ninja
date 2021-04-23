@@ -2116,11 +2116,13 @@ if (urlParams.has('quality') || urlParams.has('q')) {
 if (urlParams.has('sink')) {
 	session.sink = urlParams.get('sink');
 } else if (urlParams.has('outputdevice') || urlParams.has('od') || urlParams.has('audiooutput')) {
-	session.outputDevice = urlParams.get('outputdevice') || urlParams.get('od') || urlParams.get('audiooutput');
+	session.outputDevice = urlParams.get('outputdevice') || urlParams.get('od') || urlParams.get('audiooutput') || null;
+	
 	if (session.outputDevice) {
 		session.outputDevice = session.outputDevice.toLowerCase().replace(/[\W]+/g, "_");
 	} else {
-		session.outputDevice = false;
+		session.outputDevice = null;
+		getById("headphonesDiv3").style.display = "none"; // 
 	}
 
 	if (session.outputDevice) {
@@ -2138,6 +2140,9 @@ if (urlParams.has('sink')) {
 			});
 		} catch (e) {}
 	}
+	
+	getById("headphonesDiv").style.display = "none";
+	getById("headphonesDiv2").style.display = "none";
 }
 
 if (urlParams.has('fullscreen')) {
@@ -2336,11 +2341,18 @@ if (urlParams.has('icefilter')) {
 
 
 if (urlParams.has('effects') || urlParams.has('effect')) {
-	session.effects = urlParams.get('effects') || urlParams.get('effect') || 0;
-	session.effects = parseInt(session.effects);
-	
-	if (session.effects === 0){
+	session.effects = urlParams.get('effects') || urlParams.get('effect') || null;
+	if (session.effects === null){
 		getById("effectsDiv").style.display = "block";
+		session.effects = 0;
+	} else if (session.effects === "0" || session.effects === "false" || session.effects === "off"){
+		session.effects = false;
+		getById("effectSelector3").style.display = "none";
+		getById("effectsDiv3").style.display = "none";
+		getById("effectSelector").style.display = "none";
+		getById("effectsDiv").style.display = "none";
+	} else {
+		session.effects = parseInt(session.effects);
 	}
 	
 	if (session.effects === 5){
@@ -4493,6 +4505,8 @@ function drawFace() {
 
 		async function detect() {
 
+			if (session.effects !== 1){return;}
+
 			ctx_tmp.drawImage(vid, 0, 0, vid.videoWidth, vid.videoHeight);
 			image.src = canvas_tmp.toDataURL();
 			await faceDetector.detect(image).then(faces => {
@@ -4521,6 +4535,9 @@ function drawFace() {
 		}
 
 		function draw() {
+			
+			if (session.effects !== 1){return;}
+			
 			canvas.height = vid.videoHeight;
 			canvas.width = vid.videoWidth;
 
@@ -4664,7 +4681,7 @@ if ((session.roomid) || (urlParams.has('roomid')) || (urlParams.has('r')) || (ur
 		}
 	}
 
-	if (session.audioDevice === false) {
+	if (session.audioDevice === false && session.outputDevice === false) {
 		getById("headphonesDiv2").style.display = "inline-block";
 		getById("headphonesDiv").style.display = "inline-block";
 	}
@@ -6247,7 +6264,6 @@ function publishScreen() {
 		, video: {
 			width: width
 			, height: height
-			, mediaSource: "screen"
 		}
 	};
 
@@ -6261,11 +6277,20 @@ function publishScreen() {
 		constraints.audio.echoCancellation = true; // the defaults for screen publishing should be off.
 	}
 
-	if (session.nocursor) {
-		constraints.video.cursor = {
-			exact: "none"
-		}; // Not sure this does anything, but whatever.
+	try {
+		let supportedConstraints = navigator.mediaDevices.getSupportedConstraints(); // cursor hidding isn't supported by most browsers anyways.
+		if (supportedConstraints.cursor) {
+			constraints.video.cursor = "never";
+		}
+	} catch(e){
+		warnlog("navigator.mediaDevices.getSupportedConstraints() not supported");
 	}
+
+	//if (session.nocursor) { // we assume no cursor on screen share anyways. maybe make a different flag for screenshare cursor
+	//	constraints.video.cursor = {
+	//		exact: "none"
+	//	}; // Not sure this does anything, but whatever.
+	//}
 
 	if (session.framerate !== false) {
 		constraints.video.frameRate = session.framerate;
@@ -7444,7 +7469,7 @@ function createRoomCallback(passAdd, passAdd2) {
 	session.updateLocalStatsInterval = setInterval(function(){updateLocalStats();},3000);
 
 	if (session.autostart){
-		press2talk(true);
+		setTimeout(function(){press2talk(true);},400);
 	} else {
 		session.seeding=true;
 		session.seedStream();
@@ -9754,7 +9779,6 @@ async function grabScreen(quality = 0, audio = true, videoOnEnd = false) {
 		, video: {
 			width: width
 			, height: height
-			, mediaSource: "screen"
 		}
 		//,cursor: {exact: "none"}
 	};
@@ -11934,10 +11958,10 @@ function updateConstraintSliders() {
 		listCameraSettings();
 		if ((iOS) || (iPad)){
 		} else {
-			getById("effectsDiv3").style.display = "block";
-			if (session.effects){
+			if (session.effects!==false){
+				getById("effectsDiv3").style.display = "block";
 				try{
-					getById("effectSelector3").value = parseInt(session.effects)+"";
+					getById("effectSelector3").value = parseInt(session.effects || 0)+"";
 				} catch(E){}
 			}
 		}	
@@ -16042,25 +16066,15 @@ function attemptTFLiteJsFileLoad(){
 	TFLITELOADING=true;
 	session.tfliteModule={};
 		
-	if (getChromeVersion()>=77){
-		if (!document.getElementById("tflitesimdjs")){
-			var tmpScript = document.createElement('script');
-			tmpScript.onload = loadTFLiteModel;
-			tmpScript.type = 'text/javascript';
-			tmpScript.src = "./thirdparty/tflite/tflite-simd.js";
-			tmpScript.id = "tflitesimdjs";
-			document.head.appendChild(tmpScript);
-		}
-	} else {
-		if (!document.getElementById("tflitejs")){
-			var tmpScript = document.createElement('script');
-			tmpScript.onload = loadTFLiteModel;
-			tmpScript.type = 'text/javascript';
-			tmpScript.src = "./thirdparty/tflite/tflite.js";
-			tmpScript.id = "tflitejs";
-			document.head.appendChild(tmpScript);
-		}
+	if (!document.getElementById("tflitesimdjs")){
+		var tmpScript = document.createElement('script');
+		tmpScript.onload = loadTFLiteModel;
+		tmpScript.type = 'text/javascript';
+		tmpScript.src = "./thirdparty/tflite/tflite-simd.js?ver=2";
+		tmpScript.id = "tflitesimdjs";
+		document.head.appendChild(tmpScript);
 	}
+	
 	return false;
 }
 async function changeTFLiteImage(ev, ele){
@@ -16079,51 +16093,25 @@ async function changeTFLiteImage(ev, ele){
 	}
 }
 
-var SIMD_SUPPORT = null;
+
 async function loadTFLiteModel(){
 	try{
 		if (session.tfliteModule && (session.tfliteModule.img)){
 			var img = session.tfliteModule.img;
-			if (SIMD_SUPPORT!==false){
-				session.tfliteModule = await createTFLiteSIMDModule();
-			} else {
-				session.tfliteModule = await createTFLiteModule();
-			}
+			session.tfliteModule = await createTFLiteSIMDModule();
 			session.tfliteModule.img = img;
 		} else {
 			session.tfliteModule = {};
-			if (SIMD_SUPPORT!==false){
-				session.tfliteModule = await createTFLiteSIMDModule();
-			} else {
-				session.tfliteModule = await createTFLiteModule();
-			}
+			session.tfliteModule = await createTFLiteSIMDModule();
 		}
-		if (SIMD_SUPPORT===null){
-			SIMD_SUPPORT=true;
-			log("WASM-SIMD SUPPORTED");
-		}
-	} catch(e){
-		if (SIMD_SUPPORT===null){
-			warnlog("WASM-SIMD NOT SUPPORTED");
-			SIMD_SUPPORT=false;
-			setTimeout(function(){
-				warnlog("LOADING NON-SIMD");
-				if (!document.getElementById("tflitejs")){
-					var tmpScript = document.createElement('script');
-					tmpScript.onload = loadTFLiteModel;
-					tmpScript.type = 'text/javascript';
-					tmpScript.src = "./thirdparty/tflite/tflite.js";
-					tmpScript.id = "tflitejs";
-					document.head.appendChild(tmpScript);
-				}
-			},0);
+		if (!session.tfliteModule.simd){
 			var elements = document.querySelectorAll('[data-warnSimdNotice]')
 			for (let i = 0; i < elements.length; i++) {
 				elements[i].style.display = "inline-block";
 			}
-		} else {
-			warnlog("TF-LITE FAILED TO LOAD");
 		}
+	} catch(e){
+		warnlog("TF-LITE FAILED TO LOAD");
 		return;
 	}
 	const modelResponse = await fetch("./thirdparty/tflite/segm_full_v679.tflite");

@@ -55,7 +55,7 @@
 			}
 		</style>
 		<link rel="stylesheet" href="./lineawesome/css/line-awesome.min.css" />
-		<link rel="stylesheet" href="./main.css?ver=54" />
+		<link rel="stylesheet" href="./main.css?ver=56" />
 		<script type="text/javascript" crossorigin="anonymous" src="./thirdparty/adapter.min.js"></script>
 	</head>
 	<body id="main" class="hidden">
@@ -67,7 +67,7 @@
 			<link itemprop="url" href="./media/obsNinja_logo_full.png" />
 		</span>
 		<script  type="text/javascript" crossorigin="anonymous"  src="./thirdparty/CodecsHandler.js?ver=31"></script>
-		<script  type="text/javascript" crossorigin="anonymous" src="./webrtc.js?ver=183"></script>
+		<script  type="text/javascript" crossorigin="anonymous" src="./webrtc.js?ver=184"></script>
 		<input id="zoomSlider" type="range" style="display: none;" />
 		<div id="header">
 			
@@ -307,10 +307,7 @@
 						<span><i class="las la-headphones"></i><span>You are using headphones / earphones</span></span>
 					</span>
 					<span id="videoMenu" class="videoMenu">
-						<div class="title">
-							<i class="las la-video"></i>
-							<span data-translate="video-source">Video Source</span>
-						</div>
+						<i class="las la-video"></i><span data-translate="video-source"> Video Source </span>
 						<select id="videoSourceSelect" ></select>
 						<span id="gear_webcam" style="display: inline-block; cursor:pointer;" onclick="toggle(document.getElementById('videoSettings'));">
                             &nbsp;&nbsp;
@@ -982,7 +979,7 @@
 							<label class="switch">
 								<input type="checkbox" id="codech264toggle" data-param="&codec=h264" onchange="updateLink(3,this);">
 								<span class="slider"></span>
-							</label><font class="tooltip" style='cursor: help;position:relative;bottom:2px;font-family:"Noto Color Emoji", "Apple Color Emoji", "Segoe UI Emoji", Times, Symbola, Aegyptus, Code2000, Code2001, Code2002, Musica, serif, LastResort;'>💉<span class="tooltiptext" style="width: 10em; background-color: #77C"><span data-translate="this-can-reduce-packet-loss">This can reduce video corruption caused by packet loss</span></span></font> 
+							</label><font class="tooltip" style='cursor: help;position:relative;bottom:2px;font-family:"Noto Color Emoji", "Apple Color Emoji", "Segoe UI Emoji", Times, Symbola, Aegyptus, Code2000, Code2001, Code2002, Musica, serif, LastResort;'>💉<span class="tooltiptext" style="width: 10em; background-color: #77C"><span data-translate="this-can-reduce-packet-loss">Can reduce packet loss video corruption in OBS on PC</span></span></font> 
 							<span data-translate="use-h264-codec">Use H264 codec</span>
 							
 						</div>
@@ -1079,7 +1076,7 @@
 				
 				<button data-action-type="addToScene"  class="hidden" data-cluster="1" style="grid-column: 1;" data-scene="2" title="Add this Video to any remote '&scene=2'" onclick="directEnable(this, event, 2);">
 					<i class="las la-plus-square" style="color:#060"></i>
-					<span data-translate="add-to-scene">add to scene 2</span>
+					<span data-translate="add-to-scene2">add to scene 2</span>
 				</button>
 				
 				<button data-action-type="mute-scene"  class="hidden"  data-cluster="1" title="Remotely Mute this Audio in all remote '&scene' views" onclick="directMute(this, event);">
@@ -1345,7 +1342,7 @@
 					</ul>
 				</div>
 				<br />
-				<span id="headphonesDiv3" style="display: inline-block;">
+				<span id="headphonesDiv3" style="display: block;">
 					<div class="title">
 						<i class="las la-headphones"></i>
 						<span data-translate="select-output-source"> Audio Output Destination: </span>
@@ -1483,7 +1480,8 @@
 		</div>
 
 		<div id="connectUsers">
-			<div><u ><span data-translate="invisible-guests">Not Visible</span></u></div>
+			<div style="margin-bottom:5px"><u ><span data-translate="invisible-guests">Not Visible</span></u> 
+			<span title="Hide this window" style="cursor:pointer;font-size:1.2em; float: right;" onclick="session.showList=false;getById('connectUsers').style.display = 'none';"><i class="las la-times"></i></span></div>
 			<span style="height:5px;display:block;"></span>
 			<div id="userList">
 			</div>
@@ -1556,7 +1554,7 @@
 			}
 		
             var session = WebRTC.Media; // session is a required global variable if configuring manually. Run before loading main.js but after webrtc.js.
-			session.version = "17.0";
+			session.version = "17.1";
             session.streamID = session.generateStreamID(); // randomly generates a streamID for this session. You can set your own programmatically if needed
 			
 			session.defaultPassword = "someEncryptionKey123"; // Disabling improves compatibility and is helpful for debugging.
@@ -1626,7 +1624,7 @@
 		<script type="text/javascript" id="main-js" src="./main.js" data-translation="blank"></script>
 		<script type="text/javascript" crossorigin="anonymous" id="mixer-js" src="./mixer.js?ver=2"></script>
 	-->
-		<script type="text/javascript" crossorigin="anonymous" id="main-js" src="./main.js?ver=190"></script>
+		<script type="text/javascript" crossorigin="anonymous" id="main-js" src="./main.js?ver=192"></script>
 		<script type="text/javascript">
 			setTimeout(function(){ // lazy load
 				var script = document.createElement('script');
