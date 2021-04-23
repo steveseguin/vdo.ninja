@@ -55,6 +55,10 @@ https://github.com/steveseguin/electroncapture
 ### CAPTION.Ninja
 A free AI-based closed-captioning tool to add speech-to-text overlays to OBS Studio. It's browser-based with an easy OBS integration. Developed by Steve as well! https://caption.ninja
 
+### Chat.Overlay.Ninja
+A free Chrome extension that lets you select Youtube Live Chat comments, with those comments then appearing directly in OBS or VMix as an overlay. No chroma-keying needed and the styling is pretty easy to customize without needing to modify the Chrome extension itself.
+http://chat.overlay.ninja/
+
 ### Steves.app:
 A website designed to also work with OBS.Ninja as a Broadcasting tool. Share your webcam, window, desktop, or video file with friends and family. Peer-2-peer, so privacy can be maintained, but you can also list your broadcasts for others to watch.
 https://steves.app/
