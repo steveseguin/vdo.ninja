@@ -55,7 +55,7 @@
 			}
 		</style>
 		<link rel="stylesheet" href="./lineawesome/css/line-awesome.min.css" />
-		<link rel="stylesheet" href="./main.css?ver=56" />
+		<link rel="stylesheet" href="./main.css?ver=57" />
 		<script type="text/javascript" crossorigin="anonymous" src="./thirdparty/adapter.min.js"></script>
 	</head>
 	<body id="main" class="hidden">
@@ -67,7 +67,7 @@
 			<link itemprop="url" href="./media/obsNinja_logo_full.png" />
 		</span>
 		<script  type="text/javascript" crossorigin="anonymous"  src="./thirdparty/CodecsHandler.js?ver=31"></script>
-		<script  type="text/javascript" crossorigin="anonymous" src="./webrtc.js?ver=184"></script>
+		<script  type="text/javascript" crossorigin="anonymous" src="./webrtc.js?ver=185"></script>
 		<input id="zoomSlider" type="range" style="display: none;" />
 		<div id="header">
 			
@@ -1085,27 +1085,25 @@
 				</button>
 				
 				<span id="sceneGroup1" class="hidden" data-cluster="1" >
-					<button style="width: 35.2px" data-scene="3" data-action-type="add-scene-3" title="Add to Scene 3" onclick="directEnable(this, event, 3);">
+					<button style="width: 35.2px" data-action-type="addToScene" data-scene="3" data-action-type="add-scene-3" title="Add to Scene 3" onclick="directEnable(this, event, 3);">
 						<span >S3</span>
 					</button>
-					<button style="width:35.2px;" data-scene="4" data-action-type="add-scene-4" title="Add to Scene 4" onclick="directEnable(this, event, 4);">
+					<button style="width:35.2px;" data-action-type="addToScene" data-scene="4" data-action-type="add-scene-4" title="Add to Scene 4" onclick="directEnable(this, event, 4);">
 						<span >S4</span>
 					</button>
-					<button style="width: 35.2px" data-scene="5" data-action-type="add-scene-5" title="Add to Scene 5" onclick="directEnable(this, event, 5);">
+					<button style="width: 35.2px" data-action-type="addToScene" data-scene="5" data-action-type="add-scene-5" title="Add to Scene 5" onclick="directEnable(this, event, 5);">
 						<span >S5</span>
 					</button>
 				</span>
 				
-				
-				
 				<span id="sceneGroup2" class="hidden" data-cluster="1">
-					<button style="width: 35.2px" data-scene="6" data-action-type="add-scene-6" title="Add to Scene 6" onclick="directEnable(this, event, 6);">
+					<button style="width: 35.2px" data-action-type="addToScene" data-scene="6" data-action-type="add-scene-6" title="Add to Scene 6" onclick="directEnable(this, event, 6);">
 						<span >S6</span>
 					</button>
-					<button style="width: 35.2px" data-scene="7" data-action-type="add-scene-7" title="Add to Scene 7" onclick="directEnable(this, event, 7);">
+					<button style="width: 35.2px" data-action-type="addToScene" data-scene="7" data-action-type="add-scene-7" title="Add to Scene 7" onclick="directEnable(this, event, 7);">
 						<span >S7</span>
 					</button>
-					<button style="width: 35.2px" data-scene="8" data-action-type="add-scene-8" title="Add to Scene 8" onclick="directEnable(this, event, 8);">
+					<button style="width: 35.2px" data-action-type="addToScene" data-scene="8" data-action-type="add-scene-8" title="Add to Scene 8" onclick="directEnable(this, event, 8);">
 						<span >S8</span>
 					</button>
 				</span>
@@ -1235,31 +1233,31 @@
 					<i class="las la-plus-square"></i>
 					<span data-translate="add-to-scene">add to scene 1</span>
 				</button>
-				<button data-action-type="mute-scene"   title="Remotely Mute this Audio in all remote '&scene' views" onclick="directMute(this, event);">
+				<button data-action-type="mute-scene" title="Remotely Mute this Audio in all remote '&scene' views" onclick="directMute(this, event);">
 					<i class="las la-microphone-slash"></i>
 					<span data-translate="mute-scene" >mute in scene</span>
 				</button>
 				
 				<span id="sceneGroup1">
-					<button style="width: 35.2px" data-scene="2" data-action-type="add-scene-2" title="Add to Scene 2" onclick="directEnable(this, event, 2);">
+					<button style="width: 35.2px" data-scene="2" data-action-type="addToScene" data-action-type="add-scene-2" title="Add to Scene 2" onclick="directEnable(this, event, 2);">
 						<span >S2</span>
 					</button>
-					<button style="width:35.2px;" data-scene="3" data-action-type="add-scene-3" title="Add to Scene 3" onclick="directEnable(this, event, 3);">
+					<button style="width:35.2px;" data-scene="3" data-action-type="addToScene" data-action-type="add-scene-3" title="Add to Scene 3" onclick="directEnable(this, event, 3);">
 						<span >S3</span>
 					</button>
-					<button style="width: 35.2px" data-scene="4" data-action-type="add-scene-4" title="Add to Scene 4" onclick="directEnable(this, event, 4);">
+					<button style="width: 35.2px" data-scene="4" data-action-type="addToScene" data-action-type="add-scene-4" title="Add to Scene 4" onclick="directEnable(this, event, 4);">
 						<span >S4</span>
 					</button>
 				</span>
 				
 				<span id="sceneGroup2">
-					<button style="width: 35.2px" data-scene="5" data-action-type="add-scene-5" title="Add to Scene 5" onclick="directEnable(this, event, 5);">
+					<button style="width: 35.2px" data-scene="5" data-action-type="addToScene" data-action-type="add-scene-5" title="Add to Scene 5" onclick="directEnable(this, event, 5);">
 						<span >S5</span>
 					</button>
-					<button style="width: 35.2px" data-scene="6" data-action-type="add-scene-6" title="Add to Scene 6" onclick="directEnable(this, event, 6);">
+					<button style="width: 35.2px" data-scene="6" data-action-type="addToScene" data-action-type="add-scene-6" title="Add to Scene 6" onclick="directEnable(this, event, 6);">
 						<span >S6</span>
 					</button>
-					<button style="width: 35.2px" data-scene="7" data-action-type="add-scene-7" title="Add to Scene 7" onclick="directEnable(this, event, 7);">
+					<button style="width: 35.2px" data-scene="7" data-action-type="addToScene" data-action-type="add-scene-7" title="Add to Scene 7" onclick="directEnable(this, event, 7);">
 						<span >S7</span>
 					</button>
 				</span>
@@ -1489,6 +1487,8 @@
 	
 		<div id="voiceMeterTemplate" class="video-meter">
 		</div>
+		<div id="voiceMeterTemplate2" class="video-meter2">
+		</div>
 		<div id="muteStateTemplate" style="display:none;" class="video-mute-state">
 			<i class="las la-microphone-slash"></i>
 		</div>
@@ -1554,7 +1554,7 @@
 			}
 		
             var session = WebRTC.Media; // session is a required global variable if configuring manually. Run before loading main.js but after webrtc.js.
-			session.version = "17.1";
+			session.version = "17.2";
             session.streamID = session.generateStreamID(); // randomly generates a streamID for this session. You can set your own programmatically if needed
 			
 			session.defaultPassword = "someEncryptionKey123"; // Disabling improves compatibility and is helpful for debugging.
@@ -1624,7 +1624,7 @@
 		<script type="text/javascript" id="main-js" src="./main.js" data-translation="blank"></script>
 		<script type="text/javascript" crossorigin="anonymous" id="mixer-js" src="./mixer.js?ver=2"></script>
 	-->
-		<script type="text/javascript" crossorigin="anonymous" id="main-js" src="./main.js?ver=192"></script>
+		<script type="text/javascript" crossorigin="anonymous" id="main-js" src="./main.js?ver=194"></script>
 		<script type="text/javascript">
 			setTimeout(function(){ // lazy load
 				var script = document.createElement('script');

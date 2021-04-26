@@ -550,7 +550,59 @@ if (window.obsstudio) {
 		});
 	});
 
+	window.obsstudio.onVisibilityChange = function obsvisibility(visibility){
+		try {
+			log("OBS VISIBILITY:"+visibility);
+			if (session.disableOBS===false){
+				var bundle = {};
+				bundle.sceneUpdate = [];
+				for (var UUID in session.rpcs){
+					if (session.rpcs[UUID].visibility!==visibility){ // only move forward if there is a change; the event likes to double fire you see.
+						
+						session.rpcs[UUID].visibility = visibility;
+						var msg = {};
+						msg.visibility = visibility;
+						
+						if (session.rpcs[UUID].videoElement.style.display == "none"){  // Flag will be left alone, but message will say its disabled.
+							msg.visibility = false;
+						}
+						if (session.optimize){
+							//////////////  bandwidth stuff
+							var bandwidth = parseInt(session.rpcs[UUID].targetBandwidth);  // we don't want to change the target bandwidth, as that's still the real goal and are point of reference for reverting this change.
+							log("bandwidth:"+bandwidth);
+							if (visibility==false){ // limit bandwidth if not visible
+								if ((bandwidth > session.optimize) || (bandwidth<0)){ // limit to optimized bitrate
+									bandwidth = session.optimize;
+								}
+							}
+							if (session.rpcs[UUID].bandwidth !== bandwidth){ // bandwidth already set correctly. don't resend.
+								msg.bitrate = bandwidth;
+								if (session.sendRequest(msg, UUID)){
+									session.rpcs[UUID].bandwidth=bandwidth; // this is letting the system know what the actual bandwidth is, even if it isn't the real target.
+								} else {
+									errorlog("Unable to set update OBS Visibility");
+								}
+							} else {
+								session.sendRequest(msg, UUID);
+								msg.UUID = UUID;
+								bundle.sceneUpdate.push(msg)
+							}
+							/////////////////  end bandwidth stuff
+						} else {
+							session.sendRequest(msg, UUID);
+							msg.UUID = UUID;
+							bundle.sceneUpdate.push(msg)
+						}
+					}
+				}
+				for (var UUID in session.rpcs){
+					session.sendRequest(bundle, UUID);
+				}
+			}
+		} catch (e){errorlog(e)};
+	};
 }
+
 
 window.onload = function winonLoad() { // This just keeps people from killing the live stream accidentally. Also give me a headsup that the stream is ending
 	window.addEventListener("beforeunload", function(e) {
@@ -2373,7 +2425,10 @@ if (urlParams.has('activespeaker') || urlParams.has('speakerview')  || urlParams
 	session.audioEffects = true;
 	session.audioMeterGuest = true;
 	setInterval(function(){activeSpeaker(false)},100);
-	
+}
+
+if (urlParams.has('meter') || urlParams.has('meterstyle')){
+	session.meterStyle = urlParams.get('meter') || urlParams.get('meterstyle') || 1;
 }
 
 if (urlParams.has('style') || urlParams.has('st')) {
@@ -5883,7 +5938,7 @@ function directEnable(ele, event, scene=1, director=false) { // A directing room
 	if (!((event.ctrlKey) || (event.metaKey))) {
 		if (ele.dataset.value == 1) {
 			ele.dataset.value = 0;
-			ele.className = "";
+			ele.classList.remove("pressed");
 			if (ele.children[1]){
 				ele.children[1].innerHTML = "Add to Scene "+scene;
 				if (director){
@@ -5894,7 +5949,7 @@ function directEnable(ele, event, scene=1, director=false) { // A directing room
 			}
 		} else {
 			ele.dataset.value = 1;
-			ele.className = "pressed";
+			ele.classList.add("pressed");
 			if (ele.children[1]){
 				ele.children[1].innerHTML = "Remove";
 				if (director){
@@ -5906,14 +5961,25 @@ function directEnable(ele, event, scene=1, director=false) { // A directing room
 		}
 	}
 	var msg = {};
-	msg.request = "sendroom";
+	
 	msg.scene = scene;
 	msg.action = "display";
 	msg.value = ele.dataset.value;
 	msg.target = ele.dataset.sid;
 
-	//session.anysend(msg);
-	session.sendMsg(msg); // send to everyone in the room, so they know if they are on air or not.
+	for (var uuid in session.pcs){
+		if (session.pcs[uuid].stats.info  && ("version" in session.pcs[uuid].stats.info) &&  (session.pcs[uuid].stats.info.version < 17.2)){
+			msg.request = "sendroom"; 
+			session.sendMsg(msg);
+			return;
+		}
+	}
+
+	for (var uuid in session.pcs){
+		if (session.pcs[uuid].scene!==false){ // send to all scenes (but scene = 0)
+			session.sendMessage(msg, uuid);
+		}
+	}
 }
 
 var previousURL = "";
@@ -5976,24 +6042,36 @@ function directPageReload(ele, event) {
 
 function directMute(ele,  event=false) { // A directing room only is controlled by the Director, with the exception of MUTE.
 	log("mute");
-	if (!event ||  (!((event.ctrlKey) || (event.metaKey)))) {
+	if (!event || (!((event.ctrlKey) || (event.metaKey)))) {
 		if (ele.dataset.value == 0) {
 			ele.dataset.value = 1;
-			ele.className = "";
+			ele.classList.remove("pressed");
 			ele.children[1].innerHTML = "Mute in scene";
 		} else {
 			ele.dataset.value = 0;
-			ele.className = "pressed";
+			ele.classList.add("pressed");
 			ele.children[1].innerHTML = "Un-mute";
 		}
 	}
 	var msg = {};
-	msg.request = "sendroom";
-	msg.scene = "1";
+	msg.scene = true; 
 	msg.action = "mute";
 	msg.value = ele.dataset.value;
 	msg.target = ele.dataset.sid;
-	session.sendMsg(msg); // send to everyone in the room, so they know if they are on air or not.
+	
+	for (var uuid in session.pcs){
+		if (session.pcs[uuid].stats.info && ("version" in session.pcs[uuid].stats.info) && (session.pcs[uuid].stats.info.version < 17.2)){
+			msg.request = "sendroom"; 
+			session.sendMsg(msg);
+			return;
+		}
+	}
+
+	for (var uuid in session.pcs){
+		if (session.pcs[uuid].scene!==false){ // send to all scenes (but scene = 0)
+			session.sendMessage(msg, uuid);
+		}
+	}
 }
 
 function remoteSpeakerMute(ele,  event=false){
@@ -6001,20 +6079,20 @@ function remoteSpeakerMute(ele,  event=false){
 	if (!event || (!((event.ctrlKey) || (event.metaKey)))) {
 		if (ele.dataset.value == 1) {
 			ele.dataset.value = 0;
-			ele.className = "";
+			ele.classList.remove("pressed");
 			ele.children[1].innerHTML = "deafen guest";
 		} else {
 			ele.dataset.value = 1;
-			ele.className = "pressed";
+			ele.classList.add("pressed");
 			ele.children[1].innerHTML = "Un-deafen";
 		}
 	}
 
 	var msg = {};
 	if (ele.dataset.value == 0) {
-		msg.speakerMute = ele.dataset.value;
+		msg.speakerMute = false
 	} else {
-		msg.speakerMute = ele.dataset.value;
+		msg.speakerMute = true;
 	}
 	msg.UUID = ele.dataset.UUID;
 	session.sendRequest(msg, ele.dataset.UUID);
@@ -6025,7 +6103,6 @@ function updateRemoteSpeakerMute(UUID) {
 	if (ele[0]) {
 		ele[0].classList.add("pressed");
 		ele[0].dataset.value = 1;
-		ele[0].className = "pressed";
 		ele[0].children[1].innerHTML = "Un-deafen";
 	}
 }
@@ -6035,7 +6112,6 @@ function updateRemoteDisplayMute(UUID) {
 	if (ele[0]) {
 		ele[0].classList.add("pressed");
 		ele[0].dataset.value = 1;
-		ele[0].className = "pressed";
 		ele[0].children[1].innerHTML = "Un-blind";
 	}
 }
@@ -6045,11 +6121,11 @@ function remoteDisplayMute(ele, event=false) {
 	if (!event ||  (!((event.ctrlKey) || (event.metaKey)))) {
 		if (ele.dataset.value == 1) {
 			ele.dataset.value = 0;
-			ele.className = "";
+			ele.classList.remove("pressed");
 			ele.children[1].innerHTML = "blind guest";
 		} else {
 			ele.dataset.value = 1;
-			ele.className = "pressed";
+			ele.classList.add("pressed");
 			ele.children[1].innerHTML = "Un-blind";
 		}
 	}
@@ -6077,11 +6153,11 @@ function remoteMute(ele,  event=false) {
 	if (!event ||  (!((event.ctrlKey) || (event.metaKey)))) {
 		if (ele.dataset.value == 1) {
 			ele.dataset.value = 0;
-			ele.className = "";
+			ele.classList.remove("pressed");
 			ele.children[1].innerHTML = "mute guest";
 		} else {
 			ele.dataset.value = 1;
-			ele.className = "pressed";
+			ele.classList.add("pressed");
 			ele.children[1].innerHTML = "Un-mute guest";
 		}
 	}
@@ -6116,11 +6192,11 @@ function remoteMuteVideo(ele,  event=false) {
 	} else {
 		if (ele.dataset.value == 1) {
 			ele.dataset.value = 0;
-			ele.className = "";
+			ele.classList.remove("pressed");
 			ele.children[1].innerHTML = "hide guest";
 		} else {
 			ele.dataset.value = 1;
-			ele.className = "pressed";
+			ele.classList.add("pressed");
 			ele.children[1].innerHTML = "Unhide guest";
 		}
 		ele.style.backgroundColor = null;
@@ -6150,7 +6226,7 @@ function updateDirectorVideoMute(UUID) {
 	var ele = document.querySelectorAll('[data-action-type="hide-guest"][data--u-u-i-d="' + UUID + '"]');
 	if (ele[0]) {
 		ele[0].dataset.value = 1;
-		ele[0].className = "pressed";
+		ele[0].classList.add("pressed");
 		ele[0].children[1].innerHTML = "Unhide guest";
 	}
 }
@@ -6158,12 +6234,24 @@ function updateDirectorVideoMute(UUID) {
 function directVolume(ele) { // NOT USED ANYMORE
 	log("volume");
 	var msg = {};
-	msg.request = "sendroom";
-	msg.scene = "1";
+	msg.scene = true;
 	msg.action = "volume";
 	msg.target = ele.dataset.sid; // i want to focus on the STREAM ID, not the UUID...
 	msg.value = ele.value;
-	session.sendMsg(msg); // send to everyone in the room, so they know if they are on air or not.
+	
+	for (var uuid in session.pcs){
+		if (session.pcs[uuid].stats.info  && ("version" in session.pcs[uuid].stats.info) &&  (session.pcs[uuid].stats.info.version < 17.2)){
+			msg.request = "sendroom"; 
+			session.sendMsg(msg);
+			return;
+		}
+	}
+
+	for (var uuid in session.pcs){
+		if (session.pcs[uuid].scene!==false){ // send to all scenes (but scene = 0)
+			session.sendMessage(msg, uuid);
+		}
+	}
 }
 
 function remoteVolumeUI(ele){
@@ -7507,7 +7595,7 @@ function getDirectorSettings(scene){
 		if (parseInt(eles[i].dataset.value)==1){
 			warnlog(eles[i]);
 			if (eles[i].dataset.sid){
-				settings.soloVideo = eles[i].dataset.sid;
+				settings.soloVideo = eles[i].dataset.sid; // who is solo, if someone is solo
 			}
 		}
 	}
@@ -7531,7 +7619,22 @@ function getDirectorSettings(scene){
 			}
 		}
 	}
-	return settings
+	settings.mute = {};
+	var eles = document.querySelectorAll('[data-action-type="mute-scene"]');
+	for (var i=0;i<eles.length;i++) {
+		if (parseInt(eles[i].dataset.value)==0){ // if muted
+			if (eles[i].dataset.sid){
+				
+				var msg = {};
+				msg.action = "mute";
+				msg.scene = true;
+				msg.value = eles[i].dataset.value;
+				msg.target = eles[i].dataset.sid;
+				settings.mute[eles[i].dataset.sid]=msg;
+			}
+		}
+	}
+	return settings;
 }
 
 function requestInfocus(ele) {
@@ -7701,18 +7804,16 @@ function createControlBox(UUID, soloLink, streamID) {
 	</div>";
 
 	if (!session.rpcs[UUID].voiceMeter) {
-		session.rpcs[UUID].voiceMeter = getById("voiceMeterTemplate").cloneNode(true);
+		if (session.meterStyle==1){
+			session.rpcs[UUID].voiceMeter = getById("voiceMeterTemplate2").cloneNode(true);
+		} else {
+			session.rpcs[UUID].voiceMeter = getById("voiceMeterTemplate").cloneNode(true);
+			session.rpcs[UUID].voiceMeter.classList.add("video-meter-director");
+			session.rpcs[UUID].voiceMeter.style.opacity = 0; 
+		}
 		session.rpcs[UUID].voiceMeter.id = "voiceMeter_" + UUID;
-		session.rpcs[UUID].voiceMeter.style.opacity = 0; // temporary
-		//session.rpcs[UUID].voiceMeter.style.display = "block";
 		session.rpcs[UUID].voiceMeter.dataset.level = 0;
 	}
-
-	session.rpcs[UUID].voiceMeter.style.width = "10px";
-	session.rpcs[UUID].voiceMeter.style.height = "10px";
-	session.rpcs[UUID].voiceMeter.style.top = "8px";
-	session.rpcs[UUID].voiceMeter.style.right = "10px";
-
 
 	session.rpcs[UUID].remoteMuteElement = getById("muteStateTemplate").cloneNode(true);
 	session.rpcs[UUID].remoteMuteElement.id = "";
@@ -14706,7 +14807,7 @@ function toggleQualityDirector(bitrate, UUID, ele = null) { // ele is specific t
 	for (var i=0;i<eles.length;i++) {
 		eles[i].className = "";
 	}
-	ele.className = "pressed";
+	ele.classList.add("pressed");
 	session.requestRateLimit(bitrate, UUID);
 }
 
@@ -14761,14 +14862,7 @@ function getChatMessage(msg, label = false, director = false, overlay = false) {
 		label = "";
 	}
 	data.type = "recv";
-	messageList.push(data);
-	messageList = messageList.slice(-100);
-
-	if (session.beepToNotify) {
-		playtone();
-	}
-	updateMessages();
-
+	
 	if (overlay) {
 		if (!(session.cleanOutput)){
 			var textOverlay = getById("overlayMsgs");
@@ -14787,6 +14881,22 @@ function getChatMessage(msg, label = false, director = false, overlay = false) {
 			}
 		}
 	}
+	
+	if (isIFrame) {
+		parent.postMessage({
+			"gotChat": data
+		}, "*");
+	}
+
+	if (session.chatbutton===false){return;} // messages can still appear as overlays ^
+	
+	messageList.push(data);
+	messageList = messageList.slice(-100);
+
+	if (session.beepToNotify) {
+		playtone();
+	}
+	updateMessages();
 
 	if (session.chat == false) {
 		getById("chattoggle").className = "las la-comments my-float toggleSize puslate";
@@ -14801,11 +14911,7 @@ function getChatMessage(msg, label = false, director = false, overlay = false) {
 
 	}
 
-	if (isIFrame) {
-		parent.postMessage({
-			"gotChat": data
-		}, "*");
-	}
+	
 	if (session.broadcastChannel !== false) {
 		session.broadcastChannel.postMessage(data); /* send */
 	}
@@ -14863,6 +14969,7 @@ function updateClosedCaptions(msg, label, UUID) {
 }
 
 function updateMessages() {
+	if (session.chatbutton===false){return;}
 	document.getElementById("chatBody").innerHTML = "";
 	for (i in messageList) {
 
@@ -15945,21 +16052,37 @@ function audioMeterGuest(mediaStreamSource, UUID, trackid){
 			if (session.audioMeterGuest===false){return;} // don't show if we just want the volume levels
 			
 			if (session.rpcs[UUID].voiceMeter){
-				if (total>15){
-					session.rpcs[UUID].voiceMeter.style.opacity = 100; // temporary
-				} else {
-					session.rpcs[UUID].voiceMeter.style.opacity = 0; // temporary
-				}
 				session.rpcs[UUID].voiceMeter.dataset.level = total;
-			} else {
-				session.rpcs[UUID].voiceMeter = getById("voiceMeterTemplate").cloneNode(true);
-				session.rpcs[UUID].voiceMeter.id = "voiceMeter_"+UUID;
-				if (total>15){
-					session.rpcs[UUID].voiceMeter.style.opacity = 100; // temporary
+				if (session.meterStyle==1){
+					session.rpcs[UUID].voiceMeter.style.height = Math.min(total,100) + "%";
+					if (total>75){
+						total = Math.min(100,(total - 75)*4);
+						var R = parseInt((255 * total) / 100).toString(16).padStart(2, '0');
+						var G = parseInt(255 * (100 - total) / 100).toString(16).padStart(2, '0');
+						session.rpcs[UUID].voiceMeter.style.backgroundColor = "#" + R + G + "00";
+					} else {
+						session.rpcs[UUID].voiceMeter.style.backgroundColor = "#00FF00";
+					}
 				} else {
-					session.rpcs[UUID].voiceMeter.style.opacity = 0; // temporary
+					if (total>15){
+						session.rpcs[UUID].voiceMeter.style.opacity = 100; // temporary
+					} else {
+						session.rpcs[UUID].voiceMeter.style.opacity = 0; // temporary
+					}
 				}
-				//session.rpcs[UUID].voiceMeter.style.display = "block";
+				
+			} else {
+				if (session.meterStyle==1){
+					session.rpcs[UUID].voiceMeter = getById("voiceMeterTemplate2").cloneNode(true);
+				} else {
+					session.rpcs[UUID].voiceMeter = getById("voiceMeterTemplate").cloneNode(true);
+					if (total>15){
+						session.rpcs[UUID].voiceMeter.style.opacity = 100; // temporary
+					} else {
+						session.rpcs[UUID].voiceMeter.style.opacity = 0; // temporary
+					}
+				}
+				session.rpcs[UUID].voiceMeter.id = "voiceMeter_"+UUID;
 				session.rpcs[UUID].voiceMeter.dataset.level = total;
 				updateMixer();
 			}
@@ -16317,7 +16440,7 @@ if (session.midiHotkeys) {
 							} else if (value == 3) { 
 								var elements = document.querySelectorAll('[data-action-type="mute-guest"][data--u-u-i-d]');
 								if (elements[guestslot]) {
-									directMute(elements[guestslot], true);
+									remoteMute(elements[guestslot], true);
 								}
 							}  else if (value == 4) { 
 								var elements = document.querySelectorAll('[data-action-type="hangup"][data--u-u-i-d]');
@@ -16329,7 +16452,6 @@ if (session.midiHotkeys) {
 								if (elements[guestslot]) {
 									session.toggleSoloChat(elements[guestslot].dataset.UUID);
 								}
-							
 							} else if (value == 6) { 
 								var elements = document.querySelectorAll('[data-action-type="toggle-remote-speaker"][data--u-u-i-d]');
 								if (elements[guestslot]) {

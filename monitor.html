@@ -260,10 +260,11 @@
 				
 				var iframe = document.createElement("iframe");
 
-				if (urlParams.has("remote")) {
-					var remote = urlParams.get("remote");
+				if (urlParams.has('remote') || urlParams.has('rem')) {
+					var remote = urlParams.get('remote') || urlParams.get('rem') || "nosecurity";
+					remote = remote.trim();
 				} else {
-					var remote="";
+					var remote = "";
 				}
 
 				if (urlParams.has("sid")) {

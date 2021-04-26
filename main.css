@@ -2395,8 +2395,31 @@ span#guestTips {
 	pointer-events:none;
 	border: 1px black solid;
 }
+.video-meter-director {
+	width: 10px;
+	height: 10px;
+	top: 8px;
+	right: 10px;
+}
+.video-meter2 {
+	padding:0;
+	width: 4px;
+	height:0%;
+	min-width:2px;
+	bottom: 1px;
+	right: 5px;
+	background-color:#0000;
+	position:absolute;
+	border-radius: 2vh;
+	pointer-events:none;
+	border: 1px black solid;
+	transition: height 0.1s ease,  background-color 0.1s ease;
+}
 
 #voiceMeterTemplate{
+	display:none;
+}
+#voiceMeterTemplate2{
 	display:none;
 }
 
