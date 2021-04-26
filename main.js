@@ -566,7 +566,7 @@ if (window.obsstudio) {
 						if (session.rpcs[UUID].videoElement.style.display == "none"){  // Flag will be left alone, but message will say its disabled.
 							msg.visibility = false;
 						}
-						if (session.optimize){
+						if (session.optimize!==false){
 							//////////////  bandwidth stuff
 							var bandwidth = parseInt(session.rpcs[UUID].targetBandwidth);  // we don't want to change the target bandwidth, as that's still the real goal and are point of reference for reverting this change.
 							log("bandwidth:"+bandwidth);
