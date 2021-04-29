@@ -8,6 +8,7 @@
 	--olive-accent: #535D32;
 	--regular-margin: 10px;
 	--director-margin: 15px 20px 0 0;
+	--fit-style: contain;
 }
 
 * {
@@ -226,7 +227,7 @@ button.white:active {
 	text-shadow: 0.05em 0.05em 0px rgba(0,0,0,1);
 	width:100%;
 	height:100vh;
-	z-index: 1;
+	z-index: 7;
     vertical-align: top;
     text-align: center;
     top: 0;
@@ -358,7 +359,7 @@ hr {
 }
 
 .tile {
-	object-fit: contain;
+	object-fit: var(--fit-style);
 	background-color: black;
 	width: 100%;
 	height: 100%;
@@ -407,10 +408,11 @@ hr {
 }
 
 .directorsgrid .vidcon video {
-	max-width: 100%;
-	padding: 0 5px;
+	margin: 0 5px;
+	padding:0;
 	width: 100%;
 	height: 148px;
+	max-width: 260px;
 }
 
 .directorsgrid .vidcon {

@@ -496,6 +496,96 @@ if (urlParams.has('optimize')) {
 	session.optimize = parseInt(urlParams.get('optimize')) || 0;
 }
 
+document.addEventListener("visibilitychange", function() {
+	log(document.hidden, document.visibilityState);
+	if ((iOS) || (iPad)) { // fixes a bug on iOS devices.  Not need with other devices?
+		if (document.visibilityState === 'visible') {
+			setTimeout(function() {
+				resetupAudioOut();
+			}, 500);
+		}
+	}
+});
+
+function obsSceneChanged(event){
+	log(event.detail.name);
+	window.obsstudio.getCurrentScene(function(scene) {
+		log("OBS SCENE");
+		log(scene);
+	});
+	window.obsstudio.getStatus(function(status) {
+		log("OBS STATUS:");
+		log(status);
+	});
+};
+
+function obsStreamingStarted(event){};
+function obsStreamingStopped(event){};
+function obsRecordingStarting(event){};
+function obsRecordingStopped(event){};
+function obsSourceActiveChanged(event){};
+
+function obsSourceVisibleChanged(event){
+	try {
+		if (event===true){
+			var visibility = true; // manually triggered
+		} else if (event===false){
+			var visibility = false; // manually triggered
+		} else {
+			var visibility = event.detail.visible; // OBS triggered
+		}
+		log("OBS VISIBILITY:"+visibility);
+		if (session.disableOBS===false){
+			var bundle = {};
+			bundle.sceneUpdate = [];
+			for (var UUID in session.rpcs){
+				if (session.rpcs[UUID].visibility!==visibility){ // only move forward if there is a change; the event likes to double fire you see.
+					
+					session.rpcs[UUID].visibility = visibility;
+					var msg = {};
+					msg.visibility = visibility;
+					
+					if (session.rpcs[UUID].videoElement.style.display == "none"){  // Flag will be left alone, but message will say its disabled.
+						msg.visibility = false;
+					}
+					
+					if (session.optimize!==false){
+						//////////////  bandwidth stuff
+						var bandwidth = parseInt(session.rpcs[UUID].targetBandwidth);  // we don't want to change the target bandwidth, as that's still the real goal and are point of reference for reverting this change.
+						log("bandwidth:"+bandwidth);
+						
+						if (visibility==false){ // limit bandwidth if not visible
+							if ((bandwidth > session.optimize) || (bandwidth<0)){ // limit to optimized bitrate
+								bandwidth = session.optimize;
+							}
+						}
+						if (session.rpcs[UUID].bandwidth !== bandwidth){ // bandwidth already set correctly. don't resend.
+							msg.bitrate = bandwidth;
+							if (session.sendRequest(msg, UUID)){
+								session.rpcs[UUID].bandwidth=bandwidth; // this is letting the system know what the actual bandwidth is, even if it isn't the real target.
+							} else {
+								errorlog("Unable to set update OBS Visibility");
+							}
+						} else {
+							session.sendRequest(msg, UUID);
+							msg.UUID = UUID;
+							bundle.sceneUpdate.push(msg)
+						}
+						/////////////////  end bandwidth stuff
+					} else {
+						session.sendRequest(msg, UUID);
+						msg.UUID = UUID;
+						bundle.sceneUpdate.push(msg)
+					}
+				}
+			}
+			for (var UUID in session.rpcs){
+				session.sendRequest(bundle, UUID);
+			}
+		}
+	} catch (e){errorlog(e)};
+};
+
 if (window.obsstudio) {
 	session.disableWebAudio = true; // default true; might be useful to disable on slow or old computers?
 	session.audioMeterGuest = false;
@@ -505,16 +595,17 @@ if (window.obsstudio) {
 		log("OBS VERSION:" + window.obsstudio.pluginVersion);
 		log("macOS: " + navigator.userAgent.indexOf('Mac OS X') != -1);
 		log(window.obsstudio);
-
+		
 		if (!(urlParams.has('streamlabs'))) {
 
 			var ver = window.obsstudio.pluginVersion;
 			ver1 = ver.split(".");
-			updateURL("streamlabs");
+			
 			var cefVersion = getChromeVersion();
 
 			if (ver1.length == 3) { // Should be 3, but disabled3
 				if ((ver1.length == 3) && (parseInt(ver1[0]) == 2) && (cefVersion < 76) && (navigator.userAgent.indexOf('Mac OS X') != -1)) {
+					updateURL("streamlabs");
 					getById("main").innerHTML = "<div style='background-color:black;color:white;' data-translate='obs-macos-not-supported'><h1>Update OBS Studio to v26.1.2 or newer; older versions and StreamLabs OBS are not supported on macOS.\
 					<br /><i><small><small>download here: <a href='https://github.com/obsproject/obs-studio/releases/tag/26.1.2'>https://github.com/obsproject/obs-studio/releases/tag/26.1.2</a></small></small></i>\
 					</h1> <br /><br />\
@@ -527,80 +618,29 @@ if (window.obsstudio) {
 				}
 			}
 		}
+		
+		if (navigator.userAgent.indexOf('Mac OS X') != -1) {
+			session.codec = "h264"; // default the codec to h264 if OBS is on macOS (that's all it supports with hardware)
+		}
+		
+		window.addEventListener("obsSourceVisibleChanged", obsSourceVisibleChanged);
+		
+		window.addEventListener("obsSourceActiveChanged", obsSourceActiveChanged);
+		
+		window.addEventListener("obsSceneChanged", obsSceneChanged);
+		
+		window.addEventListener("obsStreamingStarted", obsStreamingStarted);
+		
+		window.addEventListener("obsStreamingStopped", obsStreamingStopped);
+		
+		window.addEventListener("obsRecordingStarting", obsRecordingStarting);
+		
+		window.addEventListener("obsRecordingStopped", obsRecordingStopped);
+
+		
 	} catch (e) {
 		errorlog(e);
 	}
-
-	if (navigator.userAgent.indexOf('Mac OS X') != -1) {
-		session.codec = "h264"; // default the codec to h264 if OBS and macOS
-	}
-
-	window.addEventListener('obsSceneChanged', function(event) {
-		log("OBS EVENT");
-		log(event.detail.name);
-
-		window.obsstudio.getCurrentScene(function(scene) {
-			log("OBS SCENE");
-			log(scene);
-		});
-
-		window.obsstudio.getStatus(function(status) {
-			log("OBS STATUS:");
-			log(status);
-		});
-	});
-
-	window.obsstudio.onVisibilityChange = function obsvisibility(visibility){
-		try {
-			log("OBS VISIBILITY:"+visibility);
-			if (session.disableOBS===false){
-				var bundle = {};
-				bundle.sceneUpdate = [];
-				for (var UUID in session.rpcs){
-					if (session.rpcs[UUID].visibility!==visibility){ // only move forward if there is a change; the event likes to double fire you see.
-						
-						session.rpcs[UUID].visibility = visibility;
-						var msg = {};
-						msg.visibility = visibility;
-						
-						if (session.rpcs[UUID].videoElement.style.display == "none"){  // Flag will be left alone, but message will say its disabled.
-							msg.visibility = false;
-						}
-						if (session.optimize!==false){
-							//////////////  bandwidth stuff
-							var bandwidth = parseInt(session.rpcs[UUID].targetBandwidth);  // we don't want to change the target bandwidth, as that's still the real goal and are point of reference for reverting this change.
-							log("bandwidth:"+bandwidth);
-							if (visibility==false){ // limit bandwidth if not visible
-								if ((bandwidth > session.optimize) || (bandwidth<0)){ // limit to optimized bitrate
-									bandwidth = session.optimize;
-								}
-							}
-							if (session.rpcs[UUID].bandwidth !== bandwidth){ // bandwidth already set correctly. don't resend.
-								msg.bitrate = bandwidth;
-								if (session.sendRequest(msg, UUID)){
-									session.rpcs[UUID].bandwidth=bandwidth; // this is letting the system know what the actual bandwidth is, even if it isn't the real target.
-								} else {
-									errorlog("Unable to set update OBS Visibility");
-								}
-							} else {
-								session.sendRequest(msg, UUID);
-								msg.UUID = UUID;
-								bundle.sceneUpdate.push(msg)
-							}
-							/////////////////  end bandwidth stuff
-						} else {
-							session.sendRequest(msg, UUID);
-							msg.UUID = UUID;
-							bundle.sceneUpdate.push(msg)
-						}
-					}
-				}
-				for (var UUID in session.rpcs){
-					session.sendRequest(bundle, UUID);
-				}
-			}
-		} catch (e){errorlog(e)};
-	};
 }
 
 
@@ -1077,6 +1117,10 @@ if (urlParams.has('portrait') || urlParams.has('916') || urlParams.has('vertical
 } else if (urlParams.has('square') || urlParams.has('11')) {
 	session.aspectratio = 2; // 9:16  (default of 0 is 16:9)
 }
+
+if (urlParams.has('cover')) {
+	document.documentElement.style.setProperty('--fit-style', 'cover');
+} 
 
 if (urlParams.has('record')) {
 	if (safariVersion()) {
@@ -1771,6 +1815,7 @@ if (urlParams.has('nocursor')) {
 	}
 	`;
 	document.head.appendChild(style);
+	
 }
 
 if (urlParams.has('vbr')) {
@@ -3746,7 +3791,7 @@ function updateMixerRun(e=false){  // this is the main auto-mixing code.  It's a
 		}
 		
 		
-		vid.style.objectFit = "contain";
+		//vid.style.objectFit = "contain"; // set by .tile now
 		//vid.classList="";
 		vid.style.maxWidth = "100%";
 		vid.style.maxHeight = "100%";
@@ -3940,9 +3985,9 @@ function updateMixerRun(e=false){  // this is the main auto-mixing code.  It's a
 				button.style.minWidth ="15px";
 				button.style.minHeight = "15px";
 				button.style.position = "absolute";
-				//button.style.display="none";
+				button.style.display="none";
 				//button.style.opacity="10%";
-				button.style.zIndex="3";
+				button.style.zIndex="6";
 				button.style.right = "4vh";//(Math.ceil(w/rw) -30 - 30 + offsetx+Math.floor(((i%rw)+0)*w/rw))+"px";
 				button.style.top  = "4vh";//(  offsety + 30 + Math.floor((Math.floor(i/rw)+0)*h/rh + hi))+"px";
 				button.style.color = "white";
@@ -5941,9 +5986,14 @@ function directEnable(ele, event, scene=1, director=false) { // A directing room
 			ele.classList.remove("pressed");
 			if (ele.children[1]){
 				ele.children[1].innerHTML = "Add to Scene "+scene;
-				if (director){
+			}
+			if (director){
+				if (getById("container_director").querySelectorAll('[data-action-type="addToScene"][data-value="1"]').length==0){
 					getById("container_director").style.backgroundColor = null;
-				} else {
+				}
+			} else {
+				// data-action-type="addToScene"
+				if (getById("container_" + ele.dataset.UUID).querySelectorAll('[data-action-type="addToScene"][data-value="1"]').length==0){
 					getById("container_" + ele.dataset.UUID).style.backgroundColor = null;
 				}
 			}
@@ -5952,11 +6002,11 @@ function directEnable(ele, event, scene=1, director=false) { // A directing room
 			ele.classList.add("pressed");
 			if (ele.children[1]){
 				ele.children[1].innerHTML = "Remove";
-				if (director){
-					getById("container_director").style.backgroundColor = "#649166";
-				} else {
-					getById("container_" + ele.dataset.UUID).style.backgroundColor = "#649166";
-				}
+			}
+			if (director){
+				getById("container_director").style.backgroundColor = "#649166";
+			} else {
+				getById("container_" + ele.dataset.UUID).style.backgroundColor = "#649166";
 			}
 		}
 	}
@@ -9604,16 +9654,7 @@ function obfuscateURL(input) {
 	return output;
 }
 
-document.addEventListener("visibilitychange", function() {
-	log(document.hidden, document.visibilityState);
-	if ((iOS) || (iPad)) { // fixes a bug on iOS devices.  Not need with other devices?
-		if (document.visibilityState === 'visible') {
-			setTimeout(function() {
-				resetupAudioOut();
-			}, 500);
-		}
-	}
-});
+
 
 try {
 	navigator.mediaDevices.ondevicechange = reconnectDevices;
@@ -9718,6 +9759,7 @@ async function toggleScreenShare(reload = false) { ////////////////////////////
 						});
 						if (added == false) {
 							session.pcs[UUID].addTrack(beforeScreenShare, stream);
+							setTimeout(function(uuid){session.optimizeBitrate(uuid);},2000, UUID);
 						}
 					}
 				} catch (e) {
@@ -9990,6 +10032,7 @@ async function grabScreen(quality = 0, audio = true, videoOnEnd = false) {
 										});
 										if (added == false) {
 											session.pcs[UUID].addTrack(beforeScreenShare, stream);
+											setTimeout(function(uuid){session.optimizeBitrate(uuid);},2000, UUID);
 										}
 									}
 								} catch (e) {
@@ -10040,6 +10083,7 @@ async function grabScreen(quality = 0, audio = true, videoOnEnd = false) {
 							});
 							if (added == false) {
 								session.pcs[UUID].addTrack(track, stream);
+								setTimeout(function(uuid){session.optimizeBitrate(uuid);},2000, UUID);
 							}
 						}
 					} catch (e) {
@@ -10335,6 +10379,7 @@ async function grabVideo(quality = 0, eleName = 'previewWebcam', selector = "sel
 								});
 								if (added == false) {
 									session.pcs[UUID].addTrack(track, stream); // can't replace, so adding
+									setTimeout(function(uuid){session.optimizeBitrate(uuid);},2000, UUID);
 								}
 							}
 
@@ -11616,6 +11661,7 @@ session.publishFile = function(ele, event, title="Video File Sharing Session"){ 
 								});
 								if (added==false){
 									session.pcs[UUID].addTrack(track, session.streamSrc);
+									setTimeout(function(uuid){session.optimizeBitrate(uuid);},2000, UUID);
 								}
 							}
 						} catch (e){
@@ -14864,7 +14910,7 @@ function getChatMessage(msg, label = false, director = false, overlay = false) {
 	data.type = "recv";
 	
 	if (overlay) {
-		if (!(session.cleanOutput)){
+		if (!(session.cleanOutput && session.cleanish==false)){
 			var textOverlay = getById("overlayMsgs");
 			if (textOverlay) {
 				var spanOverlay = document.createElement("span");

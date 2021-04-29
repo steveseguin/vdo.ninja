@@ -76,7 +76,6 @@
 					<font id="qos">O</font>BS.Ninja 
 				</span>
 			</a>
-			
 			<div id="head1" style="display: inline-block; padding:1px; position: relative;">
 				<input type="text" autocorrect="off" autocapitalize="none" id="joinroomID" name="joinroomID" size="22" placeholder="Join by Room Name here" alt="Enter a room name to join" title="Enter a room name to quick join" onkeyup="jumptoroom(event)"/>
 				<button onclick="jumptoroom();"  role="button" aria-pressed="false" alt="Join room" title="Join room" >GO</button>
@@ -111,6 +110,7 @@
 			
 		</div>
 		<div id="controlButtons" >
+			<div id="obsState" class="advanced" style="border:red solid 2px;padding:10px;margin:10px;color: white; zIndex:2; background-color: #222D;display: block;top: 0;position: fixed;">ON AIR</div>
 			<div id="subControlButtons">
 				<div id="queuebutton" title="Load the next guest in queue" alt="Load the next guest in queue" onmousedown="event.preventDefault(); event.stopPropagation();"  onclick="session.nextQueue()"  tabindex="16" role="button" aria-pressed="false" onkeyup="enterPressedClick(event,this);"  class="advanced float" style="cursor: pointer;" >
 					<i id="queuetoggle" class="toggleSize las la-stream my-float"></i>
@@ -167,7 +167,7 @@
 		<span
                 id="helpbutton"
 				title="Show Help Info" 
-                onclick="warnUser('For support, please browse https://reddit.com/r/obsninja or join the live chat on Discord at https://discord.obs.ninja.\n\nThe Wiki also contains many help guides and advanced settings, located at https://wiki.obs.ninja.\n\nTo access the video stats menu, hold CTRL (command) and Left-Click on a video. Most video issues can be fixed by using Wired Internet instead of Wi-Fi.')"
+                onclick="warnUser('For support, please browse https://reddit.com/r/obsninja or join the live chat on Discord at https://discord.obs.ninja.\n\nThe Docs also contains many help guides and advanced settings, located at https://docs.obs.ninja.\n\nTo access the video stats menu, hold CTRL (command) and Left-Click on a video. Most video issues can be fixed by using Wired Internet instead of Wi-Fi.')"
                 style="cursor: pointer; display:none;"
                 alt="How to Use This with OBS"
             >
@@ -594,7 +594,7 @@
 							</div>
 						</div>
 						<div>See the 
-							<a style="text-decoration: none; color: blue;" target="_blank" href="https://docs.obs.ninja/advanced">documentation</a> for more options and info.
+							<a style="text-decoration: none; color: blue;" target="_blank" href="https://docs.obs.ninja/advanced-settings">documentation</a> for more options and info.
 						</div>
 					</div>
 				</div>
@@ -715,7 +715,7 @@
 							<br />
 							<br />
 							<h3>
-                               🛠 For support, see the <a href="https://www.reddit.com/r/OBSNinja/">sub-reddit <i class="lab la-reddit-alien"></i></a> or join the <a href="https://discord.gg/T4xpQVv">Discord <i class="lab la-discord"></i></a>. The <a href="https://github.com/steveseguin/obsninja/wiki/">Wiki is here</a> and my personal email is <i>steve@seguin.email</i>
+                               🛠 For support, see the <a href="https://www.reddit.com/r/OBSNinja/">sub-reddit <i class="lab la-reddit-alien"></i></a> or join the <a href="https://discord.obs.ninja">Discord <i class="lab la-discord"></i></a>. The <a href="https://docs.obs.ninja">Docs are here</a> and my personal email is <i>steve@seguin.email</i>
 							</h3> 
                                 
 						</span>
@@ -1239,25 +1239,25 @@
 				</button>
 				
 				<span id="sceneGroup1">
-					<button style="width: 35.2px" data-scene="2" data-action-type="addToScene" data-action-type="add-scene-2" title="Add to Scene 2" onclick="directEnable(this, event, 2);">
+					<button style="width: 35.2px" data-scene="2" data-action-type="addToScene" data-action-type="add-scene-2" title="Add to Scene 2" onclick="directEnable(this, event, 2, true);">
 						<span >S2</span>
 					</button>
-					<button style="width:35.2px;" data-scene="3" data-action-type="addToScene" data-action-type="add-scene-3" title="Add to Scene 3" onclick="directEnable(this, event, 3);">
+					<button style="width:35.2px;" data-scene="3" data-action-type="addToScene" data-action-type="add-scene-3" title="Add to Scene 3" onclick="directEnable(this, event, 3, true);">
 						<span >S3</span>
 					</button>
-					<button style="width: 35.2px" data-scene="4" data-action-type="addToScene" data-action-type="add-scene-4" title="Add to Scene 4" onclick="directEnable(this, event, 4);">
+					<button style="width: 35.2px" data-scene="4" data-action-type="addToScene" data-action-type="add-scene-4" title="Add to Scene 4" onclick="directEnable(this, event, 4, true);">
 						<span >S4</span>
 					</button>
 				</span>
 				
 				<span id="sceneGroup2">
-					<button style="width: 35.2px" data-scene="5" data-action-type="addToScene" data-action-type="add-scene-5" title="Add to Scene 5" onclick="directEnable(this, event, 5);">
+					<button style="width: 35.2px" data-scene="5" data-action-type="addToScene" data-action-type="add-scene-5" title="Add to Scene 5" onclick="directEnable(this, event, 5, true);">
 						<span >S5</span>
 					</button>
-					<button style="width: 35.2px" data-scene="6" data-action-type="addToScene" data-action-type="add-scene-6" title="Add to Scene 6" onclick="directEnable(this, event, 6);">
+					<button style="width: 35.2px" data-scene="6" data-action-type="addToScene" data-action-type="add-scene-6" title="Add to Scene 6" onclick="directEnable(this, event, 6, true);">
 						<span >S6</span>
 					</button>
-					<button style="width: 35.2px" data-scene="7" data-action-type="addToScene" data-action-type="add-scene-7" title="Add to Scene 7" onclick="directEnable(this, event, 7);">
+					<button style="width: 35.2px" data-scene="7" data-action-type="addToScene" data-action-type="add-scene-7" title="Add to Scene 7" onclick="directEnable(this, event, 7, true);">
 						<span >S7</span>
 					</button>
 				</span>
@@ -1506,7 +1506,7 @@
 		<div id="screenPopup" class="popup-screen">
 			<button onclick="getById('screenPopup').style.display='none';margin:0;padding:0;">Close Window</button>
 			<div>See the 
-				<a style="text-decoration: none; color: blue;" target="_blank" href="https://docs.obs.ninja/advanced">documentation</a> for more options and info.
+				<a style="text-decoration: none; color: blue;" target="_blank" href="https://docs.obs.ninja/advanced-settings">documentation</a> for more options and info.
 			</div>
 		
 		</div>
