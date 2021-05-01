@@ -1486,8 +1486,17 @@ img {
 	top:0.5;
 }
 
+
+.recording{
+	border: red solid 2px !important;
+}
+
+.sourceActive {
+	border: green solid 2px !important;
+}
+
 .raisedHand{
-	background-color: #DD1A;
+	background-color: #DD1A !important;
 }
 
 @-webkit-keyframes animatetop {

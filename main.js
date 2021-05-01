@@ -495,7 +495,6 @@ function safariVersion() {
 if (urlParams.has('optimize')) {
 	session.optimize = parseInt(urlParams.get('optimize')) || 0;
 }
-
 document.addEventListener("visibilitychange", function() {
 	log(document.hidden, document.visibilityState);
 	if ((iOS) || (iPad)) { // fixes a bug on iOS devices.  Not need with other devices?
@@ -506,83 +505,45 @@ document.addEventListener("visibilitychange", function() {
 		}
 	}
 });
-
 function obsSceneChanged(event){
 	log(event.detail.name);
 	window.obsstudio.getCurrentScene(function(scene) {
 		log("OBS SCENE");
 		log(scene);
 	});
-	window.obsstudio.getStatus(function(status) {
-		log("OBS STATUS:");
-		log(status);
-	});
+};
+function obsStreamingStarted(event){
+	session.obsState.streaming = true;
+	session.obsStateSync();
+};
+function obsStreamingStopped(event){
+	session.obsState.streaming = false;
+	session.obsStateSync();
+};
+function obsRecordingStarted(event){
+	session.obsState.recording = true;
+	session.obsStateSync();
+};
+function obsRecordingStopped(event){
+	session.obsState.recording = false;
+	session.obsStateSync();
+};
+function obsSourceActiveChanged(event){
+	session.sourceActive = event.detail.active;
+	session.obsStateSync();
 };
 
-function obsStreamingStarted(event){};
-function obsStreamingStopped(event){};
-function obsRecordingStarting(event){};
-function obsRecordingStopped(event){};
-function obsSourceActiveChanged(event){};
-
-function obsSourceVisibleChanged(event){
+function obsSourceVisibleChanged(event){ // accounts for visible in OBS.Ninja scene AND visible in OBS scene
 	try {
-		if (event===true){
-			var visibility = true; // manually triggered
-		} else if (event===false){
-			var visibility = false; // manually triggered
-		} else {
-			var visibility = event.detail.visible; // OBS triggered
+		if (event===true){var visibility = true;}
+		else if (event===false){var visibility = false;}
+		else {var visibility = event.detail.visible;}
+
+		if (session.obsState.visibility!==visibility){ // only move forward if there is a change; the event likes to double fire you see.
+			session.obsState.visibility = visibility;
+			session.obsStateSync();
 		}
-		log("OBS VISIBILITY:"+visibility);
-		if (session.disableOBS===false){
-			var bundle = {};
-			bundle.sceneUpdate = [];
-			for (var UUID in session.rpcs){
-				if (session.rpcs[UUID].visibility!==visibility){ // only move forward if there is a change; the event likes to double fire you see.
-					
-					session.rpcs[UUID].visibility = visibility;
-					var msg = {};
-					msg.visibility = visibility;
-					
-					if (session.rpcs[UUID].videoElement.style.display == "none"){  // Flag will be left alone, but message will say its disabled.
-						msg.visibility = false;
-					}
-					
-					if (session.optimize!==false){
-						//////////////  bandwidth stuff
-						var bandwidth = parseInt(session.rpcs[UUID].targetBandwidth);  // we don't want to change the target bandwidth, as that's still the real goal and are point of reference for reverting this change.
-						log("bandwidth:"+bandwidth);
-						
-						if (visibility==false){ // limit bandwidth if not visible
-							if ((bandwidth > session.optimize) || (bandwidth<0)){ // limit to optimized bitrate
-								bandwidth = session.optimize;
-							}
-						}
-						if (session.rpcs[UUID].bandwidth !== bandwidth){ // bandwidth already set correctly. don't resend.
-							msg.bitrate = bandwidth;
-							if (session.sendRequest(msg, UUID)){
-								session.rpcs[UUID].bandwidth=bandwidth; // this is letting the system know what the actual bandwidth is, even if it isn't the real target.
-							} else {
-								errorlog("Unable to set update OBS Visibility");
-							}
-						} else {
-							session.sendRequest(msg, UUID);
-							msg.UUID = UUID;
-							bundle.sceneUpdate.push(msg)
-						}
-						/////////////////  end bandwidth stuff
-					} else {
-						session.sendRequest(msg, UUID);
-						msg.UUID = UUID;
-						bundle.sceneUpdate.push(msg)
-					}
-				}
-			}
-			for (var UUID in session.rpcs){
-				session.sendRequest(bundle, UUID);
-			}
-		}
+		
 	} catch (e){errorlog(e)};
 };
 
@@ -595,6 +556,16 @@ if (window.obsstudio) {
 		log("OBS VERSION:" + window.obsstudio.pluginVersion);
 		log("macOS: " + navigator.userAgent.indexOf('Mac OS X') != -1);
 		log(window.obsstudio);
+		
+		if (typeof document.visibilityState !== "undefined"){
+			session.obsState.visibility = document.visibilityState==="visible";
+		}
+		
+		window.obsstudio.getStatus(function(status) {
+			log("OBS STATUS:");
+			log(status);
+			// TODO: update state here
+		});
 		
 		if (!(urlParams.has('streamlabs'))) {
 
@@ -623,26 +594,117 @@ if (window.obsstudio) {
 			session.codec = "h264"; // default the codec to h264 if OBS is on macOS (that's all it supports with hardware)
 		}
 		
-		window.addEventListener("obsSourceVisibleChanged", obsSourceVisibleChanged);
-		
-		window.addEventListener("obsSourceActiveChanged", obsSourceActiveChanged);
-		
-		window.addEventListener("obsSceneChanged", obsSceneChanged);
-		
-		window.addEventListener("obsStreamingStarted", obsStreamingStarted);
-		
-		window.addEventListener("obsStreamingStopped", obsStreamingStopped);
-		
-		window.addEventListener("obsRecordingStarting", obsRecordingStarting);
-		
-		window.addEventListener("obsRecordingStopped", obsRecordingStopped);
-
+		if (session.disableOBS===false){
+			window.addEventListener("obsSourceVisibleChanged", obsSourceVisibleChanged);
+			window.addEventListener("obsSourceActiveChanged", obsSourceActiveChanged);
+			window.addEventListener("obsSceneChanged", obsSceneChanged);
+			window.addEventListener("obsStreamingStarted", obsStreamingStarted);
+			window.addEventListener("obsStreamingStopped", obsStreamingStopped);
+			window.addEventListener("obsRecordingStarted", obsRecordingStarted);
+			window.addEventListener("obsRecordingStopped", obsRecordingStopped);
+		}
 		
 	} catch (e) {
 		errorlog(e);
 	}
 }
 
+function manageSceneState(data, UUID){
+	if ("sceneDisplay" in data){ 
+		session.pcs[UUID].sceneDisplay = data.sceneDisplay;
+		if (session.pcs[UUID].obsSourceActive){
+			getById("obsState6").classList.remove("sourceActive");  // JUST TESING
+			getById("obsState1").classList.remove("advanced");
+		} else {
+			getById("obsState6").classList.add("sourceActive");
+			getById("obsState1").classList.add("advanced");
+		}
+	}
+	if ("sceneMute" in data){ 
+		session.pcs[UUID].sceneMute = data.sceneMute;
+		if (session.pcs[UUID].obsSourceActive){
+			getById("obsState5").classList.remove("sourceActive"); // JUST TESING
+			getById("obsState1").classList.remove("advanced");
+		} else {
+			getById("obsState5").classList.add("sourceActive");
+			getById("obsState1").classList.add("advanced");
+		}
+	}
+	if ("obsVisibility" in data){   
+		session.pcs[UUID].obsVisibility = data.obsVisibility;
+		session.optimizeBitrate(UUID); // &optimize flag; sets video bitrate to target value if this flag == HIDDEN (if optimize=0, disables both audio and video)
+		
+		if (session.pcs[UUID].obsSourceActive){
+			getById("obsState4").classList.remove("sourceActive"); // JUST TESING
+			getById("obsState1").classList.remove("advanced");
+		} else {
+			getById("obsState4").classList.add("sourceActive");
+			getById("obsState1").classList.add("advanced");
+		}
+	}
+	if ("obsSourceActive" in data){  
+		session.pcs[UUID].obsSourceActive = data.obsSourceActive;
+		if (session.pcs[UUID].obsSourceActive){
+			getById("obsState3").classList.remove("sourceActive");// JUST TESING
+			getById("obsState1").classList.remove("advanced");
+		} else {
+			getById("obsState3").classList.add("sourceActive");
+			getById("obsState1").classList.add("advanced");
+		}
+	}
+	if ("obsStreaming" in data){  
+		session.pcs[UUID].obsStreaming = data.obsStreaming;
+		if (session.pcs[UUID].obsStreaming){
+			getById("obsState2").classList.remove("recording"); // JUST TESING
+			getById("obsState1").classList.remove("advanced");
+		} else {
+			getById("obsState2").classList.add("recording");
+			getById("obsState1").classList.add("advanced");
+		}
+	}
+	if ("obsRecording" in data){   
+		session.pcs[UUID].obsRecording = data.obsRecording;
+		if (session.pcs[UUID].obsRecording){
+			getById("obsState1").classList.remove("recording"); // JUST TESING
+			getById("obsState1").classList.remove("advanced");
+		} else {
+			getById("obsState1").classList.add("recording");
+			getById("obsState1").classList.add("advanced");
+		}
+	}
+	
+	///////////////////
+	if ((session.pcs[UUID].obsVisibility===true) && (session.pcs[UUID].sceneDisplay===true)){ // BASIC TALLY LIGHT
+		if (document.getElementById("videosource")){
+			if (session.cleanOutput===false){
+				getById("obsState").classList.remove("advanced"); // LIVE
+			}
+			session.visibilityStore[UUID]=true
+			//getById("videosource").style.border = "solid 1px red";
+		}
+	} else if ((session.pcs[UUID].obsVisibility===true) && (session.pcs[UUID].sceneDisplay===null) && (session.pcs[UUID].scene===0)){ 
+		if (document.getElementById("videosource")){
+			if (session.cleanOutput===false){
+				getById("obsState").classList.remove("advanced"); // LIVE
+			}
+			session.visibilityStore[UUID]=true
+			//getById("videosource").style.border = "solid 1px red";
+		}
+	} else {
+		if (document.getElementById("videosource")){
+			if (UUID in session.visibilityStore){
+				delete(session.visibilityStore[UUID]);
+			}
+			if (session.cleanOutput===false){
+				if (Object.keys(session.visibilityStore).length==0){
+					getById("obsState").classList.add("advanced");
+				}
+			}
+			//getById("videosource").style.border = "solid 1px rgb(88, 88, 88)";
+		}
+	}
+	////////////////////
+}
 
 window.onload = function winonLoad() { // This just keeps people from killing the live stream accidentally. Also give me a headsup that the stream is ending
 	window.addEventListener("beforeunload", function(e) {
@@ -750,6 +812,13 @@ if (typeof session === 'undefined') { // make sure to init the WebRTC if not exi
 	var session = WebRTC.Media;
 	session.streamID = session.generateStreamID();
 	errorlog("Serious error: WebRTC session didn't load in time");
+}
+
+if (navigator.userAgent.toLowerCase().indexOf(' electron/') > -1) {
+	const ipcRenderer = require('electron').ipcRenderer;
+	window.prompt = function(title, val){
+	  return ipcRenderer.sendSync('prompt', {title, val})
+	}
 }
 
 function makeDraggableElement(elmnt) {
@@ -952,7 +1021,7 @@ if (/CriOS/i.test(navigator.userAgent) && (iOS || iPad)) {
 
 if (urlParams.has('broadcast') || urlParams.has('bc')) {
 	log("Broadcast flag set");
-	session.broadcast = urlParams.get('broadcast') || urlParams.get('bc');
+	session.broadcast = urlParams.get('broadcast') || urlParams.get('bc') || null;
 	//if ((iOS) || (iPad)) {
 	//	session.nopreview = false;
 	//} else {
@@ -982,7 +1051,7 @@ if (urlParams.has('showlist')) {
 
 var directorLanding = false;
 if (urlParams.has('director') || urlParams.has('dir')) {
-	directorLanding = urlParams.get('director') || urlParams.get('dir');
+	directorLanding = urlParams.get('director') || urlParams.get('dir') || null;
 	if (directorLanding === null) {
 		directorLanding = true;
 	} else if (directorLanding.length === 0) {
@@ -1039,6 +1108,7 @@ if (urlParams.has('webcam') || urlParams.has('wc')) {
 	getById("container-6").classList.remove('pointer');
 }
 
+
 if (urlParams.has('ssb')) {
 	screensharebutton = true;
 }
@@ -1082,7 +1152,7 @@ if (urlParams.has('speakermute') || urlParams.has('mutespeaker') || urlParams.ha
 }
 
 if (urlParams.has('chatbutton') || urlParams.has('chat') || urlParams.has('cb')) {
-	session.chatbutton = urlParams.get('chatbutton') || urlParams.get('chat') || urlParams.get('cb');
+	session.chatbutton = urlParams.get('chatbutton') || urlParams.get('chat') || urlParams.get('cb') || null;
 	if (session.chatbutton === "false") {
 		session.chatbutton = false;
 	} else if (session.chatbutton === "0") {
@@ -1240,7 +1310,7 @@ if (urlParams.has('hash') || urlParams.has('crc') || urlParams.has('check')) { /
 	session.taintedSession = null; // waiting to see if valid or not.
 	var hash_input = urlParams.get('hash') || urlParams.get('crc') || urlParams.get('check');
 	if (session.password === false) {
-		session.password = prompt("Please enter the password below: \n\n(Note: Passwords are case-sensitive and you will not be alerted if it is incorrect.)");
+		session.password = prompt("Please enter the password below: \n\n(Note: Passwords are case-sensitive.)");
 		session.password = sanitizePassword(session.password);
 		getById("passwordRoom").value = session.password;
 		session.defaultPassword = false;
@@ -2187,6 +2257,12 @@ if (urlParams.has('totalroombitrate') || urlParams.has('totalroomvideobitrate') 
 	log("totalRoomBitrate ENABLED");
 	log(session.totalRoomBitrate);
 }
+if (session.totalRoomBitrate===false){
+	session.totalRoomBitrate = session.totalRoomBitrate_default;
+} else {
+	session.totalRoomBitrate_default = session.totalRoomBitrate; // trb_default doesn't change dynamically, but trb can (per director I guess)
+}
+
 
 
 if (urlParams.has('height') || urlParams.has('h')) {
@@ -2474,6 +2550,10 @@ if (urlParams.has('activespeaker') || urlParams.has('speakerview')  || urlParams
 
 if (urlParams.has('meter') || urlParams.has('meterstyle')){
 	session.meterStyle = urlParams.get('meter') || urlParams.get('meterstyle') || 1;
+}
+
+if (urlParams.has('directorchat') || urlParams.has('dc')){
+	session.directorChat = true;
 }
 
 if (urlParams.has('style') || urlParams.has('st')) {
@@ -2769,26 +2849,10 @@ if (isIFrame) { // reduce CPU load if not needed.
 		if ("sceneState" in e.data) { // TRUE OR FALSE - tells the connected peers if they are live or not via a tally light change.
 
 			var visibility = e.data.sceneState;
-			var bundle = {};
-			bundle.sceneUpdate = [];
-
-			for (var UUID in session.rpcs) {
-				if (session.rpcs[UUID].visibility !== visibility) { // only move forward if there is a change; the event likes to double fire you see.
-
-					session.rpcs[UUID].visibility = visibility;
-					var msg = {};
-					msg.visibility = visibility;
-
-					if (session.rpcs[UUID].videoElement.style.display == "none") { // Flag will be left alone, but message will say its disabled.
-						msg.visibility = false;
-					}
-
-					msg.UUID = UUID;
-					session.sendRequest(msg, UUID);
-					bundle.sceneUpdate.push(msg);
-				}
+			
+			if (session.obsState.visibility !== visibility) { // only move forward if there is a change; the event likes to double fire you see.
+				session.obsStateSync();
 			}
-			session.sendRequest(bundle); // we want all publishing peers to know the state
 		}
 
 		if ("sendMessage" in e.data) { // webrtc send to viewers
@@ -6443,8 +6507,8 @@ function publishScreen() {
 		};
 	}
 
-	var audioSelect = document.querySelector('select#audioSourceScreenshare');
-	var outputSelect = document.querySelector('select#outputSourceScreenshare');
+	var audioSelect = getById('audioSourceScreenshare');
+	var outputSelect = getById('outputSourceScreenshare');
 
 
 	session.sink = outputSelect.options[outputSelect.selectedIndex].value;
@@ -7528,7 +7592,6 @@ function createRoomCallback(passAdd, passAdd2) {
 		errorlog(e);
 	};
 
-
 	session.director = true;
 	screensharesupport = false;
 
@@ -7606,15 +7669,14 @@ function createRoomCallback(passAdd, passAdd2) {
 	clearInterval(session.updateLocalStatsInterval);
 	session.updateLocalStatsInterval = setInterval(function(){updateLocalStats();},3000);
 
+	joinRoom(session.roomid); 
+	
 	if (session.autostart){
 		setTimeout(function(){press2talk(true);},400);
 	} else {
 		session.seeding=true;
 		session.seedStream();
 	}
-	
-	joinRoom(session.roomid); 
-
 }
 /**
  * Handles click actions on the room selection buttons in #controlButtons
@@ -7867,8 +7929,18 @@ function createControlBox(UUID, soloLink, streamID) {
 
 	session.rpcs[UUID].remoteMuteElement = getById("muteStateTemplate").cloneNode(true);
 	session.rpcs[UUID].remoteMuteElement.id = "";
-	session.rpcs[UUID].remoteMuteElement.style.top = "1vh";
-	session.rpcs[UUID].remoteMuteElement.style.right = "1vh";
+	session.rpcs[UUID].remoteMuteElement.style.top = "5px";
+	session.rpcs[UUID].remoteMuteElement.style.right = "7px";
+	
+	session.rpcs[UUID].remoteVideoMuteElement = getById("videoMuteStateTemplate").cloneNode(true);
+	session.rpcs[UUID].remoteVideoMuteElement.id = "";
+	session.rpcs[UUID].remoteVideoMuteElement.style.top = "5px";
+	session.rpcs[UUID].remoteVideoMuteElement.style.right = "28px";
+	
+	session.rpcs[UUID].remoteRaisedHandElement = getById("raisedHandTemplate").cloneNode(true);
+	session.rpcs[UUID].remoteRaisedHandElement.id = "";
+	session.rpcs[UUID].remoteRaisedHandElement.style.top = "5px";
+	session.rpcs[UUID].remoteRaisedHandElement.style.right = "49px";
 
 
 	var videoContainer = document.createElement("div");
@@ -7889,7 +7961,7 @@ function createControlBox(UUID, soloLink, streamID) {
 		</div>\
 		<button data-action-type=\"hand-raised\" id='" + handsID + "' style='margin: auto;margin-bottom:10px;display:none;background-color:yellow;' data-value='0' title=\"This guest raised their hand. Click this to clear notification.\" onclick=\"remoteLowerhands('" + UUID + "');this.style.display='none';\">\
 			<i class=\"las la-hand-paper\"></i>\
-			<span data-translate=\"user-raised-hand\">Guest Raised Hand</span>\
+			<span data-translate=\"user-raised-hand\">Lower Raised Hand</span>\
 		</button>\
 		</div>";
 
@@ -7902,6 +7974,8 @@ function createControlBox(UUID, soloLink, streamID) {
 	container.appendChild(videoContainer);
 	videoContainer.appendChild(session.rpcs[UUID].voiceMeter);
 	videoContainer.appendChild(session.rpcs[UUID].remoteMuteElement);
+	videoContainer.appendChild(session.rpcs[UUID].remoteVideoMuteElement);
+	videoContainer.appendChild(session.rpcs[UUID].remoteRaisedHandElement);
 	container.appendChild(controls);
 }
 
@@ -8115,7 +8189,7 @@ function requestOutputAudioStream() {
 				stream1.getTracks().forEach(function(track) { // We don't want to keep it without audio; so we are going to try to add audio now.
 					track.stop(); // I need to do this after the enumeration step, else it breaks firefox's labels
 				});
-				const audioOutputSelect = document.querySelector('#outputSourceScreenshare');
+				const audioOutputSelect =  getById('outputSourceScreenshare');
 				audioOutputSelect.remove(0);
 				audioOutputSelect.removeAttribute("onclick");
 
@@ -8172,7 +8246,7 @@ function requestAudioStream() {
 					track.stop(); // I need to do this after the enumeration step, else it breaks firefox's labels
 				});
 				log("updating audio");
-				const audioInputSelect = document.querySelector('select#audioSourceScreenshare');
+				const audioInputSelect =  getById('audioSourceScreenshare');
 				audioInputSelect.remove(1);
 				audioInputSelect.removeAttribute("onchange");
 
@@ -8214,7 +8288,7 @@ function gotDevices(deviceInfos) { // https://github.com/webrtc/samples/blob/gh-
 	log("got devices!");
 	log(deviceInfos);
 	try {
-		const audioInputSelect = document.querySelector('#audioSource');
+		const audioInputSelect = getById('audioSource');
 
 		audioInputSelect.innerHTML = "";
 
@@ -8266,8 +8340,8 @@ function gotDevices(deviceInfos) { // https://github.com/webrtc/samples/blob/gh-
 		getById('multiselect-trigger').classList.remove('open');
 		getById('chevarrow1').classList.add('bottom');
 
-		const videoSelect = document.querySelector('select#videoSourceSelect');
-		const audioOutputSelect = document.querySelector('#outputSource');
+		const videoSelect = getById('videoSourceSelect');
+		const audioOutputSelect =  getById('outputSource');
 		const selectors = [videoSelect];
 
 		const values = selectors.map(select => select.value);
@@ -8384,7 +8458,9 @@ function gotDevices(deviceInfos) { // https://github.com/webrtc/samples/blob/gh-
 					listele.style.display = "block";
 					option.style.display = "none";
 					getById("multiselect1").checked = false;
-					getById("multiselect1").parentNode.style.display = "none";
+					try{
+						getById("multiselect1").parentNode.style.display = "none";
+					} catch(e){}
 				} else {
 					listele.style.display = "none";
 				}
@@ -8674,7 +8750,7 @@ function getUserMediaVideoParams(resolutionFallbackLevel, isSafariBrowser) {
 
 function addScreenDevices(device) {
 	if (device.kind == "audio") {
-		const audioInputSelect = document.querySelector('#audioSource3');
+		const audioInputSelect =  getById('audioSource3');
 		const listele = document.createElement('li');
 		listele.style.display = "block";
 
@@ -8734,7 +8810,7 @@ function addScreenDevices(device) {
 		getById("audioSourceNoAudio2").checked = false;
 
 	} else if (device.kind == "video") {
-		const videoSelect = document.querySelector('select#videoSource3');
+		const videoSelect =  getById('videoSource3');
 		//const selectors = [ videoSelect];
 		//const values = selectors.map(select => select.value);
 		const option = document.createElement('option');
@@ -8758,9 +8834,9 @@ function gotDevices2(deviceInfos) {
 	var knownTrack = false;
 
 	try {
-		const audioInputSelect = document.querySelector('#audioSource3');
-		const videoSelect = document.querySelector('select#videoSource3');
-		const audioOutputSelect = document.querySelector('#outputSource3');
+		const audioInputSelect =  getById('audioSource3');
+		const videoSelect =  getById('videoSource3');
+		const audioOutputSelect =  getById('outputSource3');
 		const selectors = [videoSelect];
 
 
@@ -9117,7 +9193,7 @@ function gotDevices2(deviceInfos) {
 				return;
 			}
 
-			var outputSelect = document.querySelector('select#outputSource3');
+			var outputSelect =  getById('outputSource3');
 			session.sink = outputSelect.options[outputSelect.selectedIndex].value;
 			//if (session.sink=="default"){session.sink=false;} else {
 			try {
@@ -9158,7 +9234,7 @@ function playtone(screen = false) {
 	}
 
 	if (screen) {
-		var outputSelect = document.querySelector('select#outputSourceScreenshare');
+		var outputSelect = getById('outputSourceScreenshare');
 		session.sink = outputSelect.options[outputSelect.selectedIndex].value;
 	}
 
@@ -9417,7 +9493,7 @@ function reconnectDevices(event) { ///  TODO: Perhaps change this to only if the
 			enumerateDevices().then(gotDevices2).then(function() {
 				// TODO: check to see if any audio is connected?
 				var streamConnected = false;
-				var audioSelect = document.querySelector("#audioSource3").querySelectorAll("input");
+				var audioSelect =  getById("audioSource3").querySelectorAll("input");
 				for (var i = 0; i < audioSelect.length; i++) {
 					if (audioSelect[i].value == "ZZZ") {
 						continue;
@@ -9759,7 +9835,7 @@ async function toggleScreenShare(reload = false) { ////////////////////////////
 						});
 						if (added == false) {
 							session.pcs[UUID].addTrack(beforeScreenShare, stream);
-							setTimeout(function(uuid){session.optimizeBitrate(uuid);},2000, UUID);
+							setTimeout(function(uuid){session.optimizeBitrate(uuid);},session.rampUpTime, UUID); // 3 seconds lets us ramp up the quality a bit and figure out the total bandwidth quicker
 						}
 					}
 				} catch (e) {
@@ -10032,7 +10108,7 @@ async function grabScreen(quality = 0, audio = true, videoOnEnd = false) {
 										});
 										if (added == false) {
 											session.pcs[UUID].addTrack(beforeScreenShare, stream);
-											setTimeout(function(uuid){session.optimizeBitrate(uuid);},2000, UUID);
+											setTimeout(function(uuid){session.optimizeBitrate(uuid);},session.rampUpTime, UUID); // 3 seconds lets us ramp up the quality a bit and figure out the total bandwidth quicker
 										}
 									}
 								} catch (e) {
@@ -10083,7 +10159,7 @@ async function grabScreen(quality = 0, audio = true, videoOnEnd = false) {
 							});
 							if (added == false) {
 								session.pcs[UUID].addTrack(track, stream);
-								setTimeout(function(uuid){session.optimizeBitrate(uuid);},2000, UUID);
+								setTimeout(function(uuid){session.optimizeBitrate(uuid);},session.rampUpTime, UUID); // 3 seconds lets us ramp up the quality a bit and figure out the total bandwidth quicker
 							}
 						}
 					} catch (e) {
@@ -10186,7 +10262,7 @@ async function grabVideo(quality = 0, eleName = 'previewWebcam', selector = "sel
 	log(videoSelect);
 	var mirror = false;
 
-	if (videoSelect.value == "ZZZ") { // if there is no video, or if manually set to audio ready, then do this step.
+	if (!videoSelect || videoSelect.value == "ZZZ") { // if there is no video, or if manually set to audio ready, then do this step.
 		warnlog("ZZZ SET - so no VIDEO");
 		if (eleName == "previewWebcam") {
 			if (session.autostart) {
@@ -10379,7 +10455,7 @@ async function grabVideo(quality = 0, eleName = 'previewWebcam', selector = "sel
 								});
 								if (added == false) {
 									session.pcs[UUID].addTrack(track, stream); // can't replace, so adding
-									setTimeout(function(uuid){session.optimizeBitrate(uuid);},2000, UUID);
+									setTimeout(function(uuid){session.optimizeBitrate(uuid);},session.rampUpTime, UUID); // 3 seconds lets us ramp up the quality a bit and figure out the total bandwidth quicker
 								}
 							}
 
@@ -10783,6 +10859,62 @@ session.publishDirector =  async function(clean, vdevice=false, adevice=true){ /
 	
 	//createDirectorCam(v,clean);
 	
+	var quality = 1;
+	var framerate = 30;
+	
+	
+	if (session.quality!==false){
+		quality = parseInt(session.quality) || 0;
+		if (quality>2){quality=2;} else if (quality<0){quality = 0;}
+	}
+	
+	if (session.showDirector){
+		if (quality<2){
+			framerate = 60;
+		}
+	}
+	
+	if (session.framerate!==false){
+		framerate = parseInt(session.framerate) || 30;
+	}
+	
+	if (session.maxframerate){
+		if (framerate > session.maxframerate){
+			framerate = session.maxframerate || framerate;
+		}
+	}
+	
+	if (vdevice){
+		if (vdevice===true){
+			vdevice = {};
+		}
+		if (quality===0){
+			vdevice.width = {ideal:1920};			//{deviceId: {exact: deviceInfo.deviceId}};
+			vdevice.height = {ideal:1080};
+			vdevice.framerate = {ideal:framerate};
+		} else if (quality===1){
+			vdevice.width = {ideal:1280};			//{deviceId: {exact: deviceInfo.deviceId}};
+			vdevice.height = {ideal:720};
+			vdevice.framerate = {ideal:framerate};
+		} else if (quality===2){
+			vdevice.width = {ideal:640};			//{deviceId: {exact: deviceInfo.deviceId}};
+			vdevice.height = {ideal:360};
+			vdevice.framerate = {ideal:framerate};
+		}
+		if (session.framerate){
+			vdevice.framerate.ideal = parseInt(session.framerate) || 30;
+		}
+		if (session.maxframerate){
+			vdevice.framerate.max = parseInt(session.maxframerate) || 60;
+		}
+		if (session.width){
+			vdevice.width = {exact: session.width};			//{deviceId: {exact: deviceInfo.deviceId}};
+		}
+		if (session.height){
+			vdevice.height = {exact: session.height};			//{deviceId: {exact: deviceInfo.deviceId}};
+		}
+	}
+	
 	var constraints = {audio: adevice, video: vdevice};
 	
 	if (session.audioInputChannels){
@@ -10817,38 +10949,30 @@ session.publishDirector =  async function(clean, vdevice=false, adevice=true){ /
 			}
 		}
 	}
+
 	
-	//if (session.quality===false){
-	//	if (session.quality_wb===false){
-	//		session.quality_wb=1;
-	//	}
-	//}
-	if (session.quality!==false){
-		var quality = parseInt(session.quality) || 0;
-		if (quality>2){quality=2;} else if (quality<0){quality = 0;}
+	try {
 		getById("webcamquality3").elements.namedItem("resolution").value = quality;
-	}
-	
-	getById("gear_webcam3").style.display = "inline-block";
-	
-	getById("webcamquality3").onchange = function(event) {
-		if (parseInt(getById("webcamquality3").elements.namedItem("resolution").value) == 2) {
-			if (session.maxframerate===false){
-				session.maxframerate = 30;
-				session.maxframerate_q2 = true;
-			} 
-		} else if (session.maxframerate_q2){
-			session.maxframerate = false;
-			session.maxframerate_q2 = false;
-		}
-		activatedPreview = false;
-		session.quality_wb = parseInt(getById("webcamquality3").elements.namedItem("resolution").value);
-		
-		grabVideo(session.quality_wb, "videosource", "select#videoSource3");
-	};
+		getById("gear_webcam3").style.display = "inline-block";
+		getById("webcamquality3").onchange = function(event) {
+			if (parseInt(getById("webcamquality3").elements.namedItem("resolution").value) == 2) {
+				if (session.maxframerate===false){
+					session.maxframerate = 30;
+					session.maxframerate_q2 = true;
+				} 
+			} else if (session.maxframerate_q2){
+				session.maxframerate = false;
+				session.maxframerate_q2 = false;
+			}
+			activatedPreview = false;
+			session.quality_wb = parseInt(getById("webcamquality3").elements.namedItem("resolution").value);
+			
+			grabVideo(session.quality_wb, "videosource", "select#videoSource3");
+		};
+	} catch (e) {}
 	
 	log("constraint");
-	log(constraints);
+	errorlog(constraints);
 	navigator.mediaDevices.getUserMedia(constraints).then(function(stream){ // very simple.
 		session.streamSrc = stream;
 		v.srcObject = outboundAudioPipeline(session.streamSrc); // not blank, so now we worry
@@ -11661,7 +11785,7 @@ session.publishFile = function(ele, event, title="Video File Sharing Session"){ 
 								});
 								if (added==false){
 									session.pcs[UUID].addTrack(track, session.streamSrc);
-									setTimeout(function(uuid){session.optimizeBitrate(uuid);},2000, UUID);
+									setTimeout(function(uuid){session.optimizeBitrate(uuid);},session.rampUpTime, UUID); // 3 seconds lets us ramp up the quality a bit and figure out the total bandwidth quicker
 								}
 							}
 						} catch (e){
@@ -13573,8 +13697,8 @@ function setupWebcamSelection(stream = null) {
 
 	try {
 		return enumerateDevices().then(gotDevices).then(function() {
-
-			if (parseInt(getById("webcamquality").elements.namedItem("resolution").value) == 3) {
+			
+			if (getById("webcamquality").elements && parseInt(getById("webcamquality").elements.namedItem("resolution").value) == 3) {
 				if (session.maxframerate===false){
 					session.maxframerate = 30;
 					session.maxframerate_q2 = true;
@@ -13584,9 +13708,9 @@ function setupWebcamSelection(stream = null) {
 				session.maxframerate_q2 = false;
 			}
 
-			var audioSelect = document.querySelector('#audioSource');
-			var videoSelect = document.querySelector('select#videoSourceSelect');
-			var outputSelect = document.querySelector('select#outputSource');
+			var audioSelect =  getById('audioSource');
+			var videoSelect =  getById('videoSourceSelect');
+			var outputSelect =  getById('outputSource');
 
 			audioSelect.onchange = function() {
 
@@ -14420,7 +14544,7 @@ var vis = (function() {
 	var clickCoordsX;
 	var clickCoordsY;
 
-	var menu = document.querySelector("#context-menu");
+	var menu =  getById("context-menu");
 	var menuItems = menu.querySelectorAll(".context-menu__item");
 	var menuState = 0;
 	var menuWidth;
@@ -14591,7 +14715,7 @@ document.addEventListener("dragstart", event => {
 		url += '&layer-height=1080';
 	}
 
-	event.dataTransfer.setDragImage(document.querySelector('#dragImage'), 24, 24);
+	event.dataTransfer.setDragImage( getById('dragImage'), 24, 24);
 	event.dataTransfer.setData("text/uri-list", encodeURI(url));
 	//event.dataTransfer.setData("url", encodeURI(url));
 
@@ -14615,7 +14739,7 @@ function popupMessage(e, message = "Copied to Clipboard") { // right click menu
 	posx += 10;
 
 
-	var menu = document.querySelector("#messagePopup");
+	var menu =  getById("messagePopup");
 	menu.innerHTML = "<center>" + message + "</center>";
 	var menuState = 0;
 	var menuWidth;
@@ -14830,6 +14954,16 @@ function sendChatMessage(chatMsg = false) { // filtered + visual
 		messageList.push(data);
 		updateMessages();
 		return;
+	} else if (session.directorChat===true){
+		if (session.directorUUID){
+			sendChat(msg, session.directorUUID); // send message to peers
+			var data = {};
+			data.time = Date.now();
+			data.msg = sanitizeChat(msg); // this is what the other person should see
+			data.label = false;
+			data.type = "sent";
+			messageList.push(data);
+		}
 	} else {
 		sendChat(msg); // send message to peers
 		data.time = Date.now();

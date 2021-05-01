@@ -110,7 +110,14 @@
 			
 		</div>
 		<div id="controlButtons" >
-			<div id="obsState" class="advanced" style="border:red solid 2px;padding:10px;margin:10px;color: white; zIndex:2; background-color: #222D;display: block;top: 0;position: fixed;">ON AIR</div>
+			<div id="obsState" class="advanced" style="border:grey solid 2px;padding:10px;margin:10px;color: white; zIndex:2; background-color: #222D;display: block;top: 0;position: fixed;">ON AIR</div>
+			<div id="obsState1" class="advanced" style="border:grey solid 2px;padding:10px;margin:10px;color: white; zIndex:2; background-color: #222D;display: block;top: 0;position: fixed;">obsRecording</div>
+			<div id="obsState2" class="advanced" style="border:grey solid 2px;padding:10px;margin:10px;color: white; zIndex:2; background-color: #222D;display: block;top: 0;position: fixed;">obsStreaming</div>
+			<div id="obsState3" class="advanced" style="border:grey solid 2px;padding:10px;margin:10px;color: white; zIndex:2; background-color: #222D;display: block;top: 0;position: fixed;">obsSourceActive</div>
+			<div id="obsState4" class="advanced" style="border:grey solid 2px;padding:10px;margin:10px;color: white; zIndex:2; background-color: #222D;display: block;top: 0;position: fixed;">obsVisibility</div>
+			<div id="obsState5" class="advanced" style="border:grey solid 2px;padding:10px;margin:10px;color: white; zIndex:2; background-color: #222D;display: block;top: 0;position: fixed;">sceneMute</div>
+			<div id="obsState6" class="advanced" style="border:grey solid 2px;padding:10px;margin:10px;color: white; zIndex:2; background-color: #222D;display: block;top: 0;position: fixed;">sceneDisplay</div>
+			
 			<div id="subControlButtons">
 				<div id="queuebutton" title="Load the next guest in queue" alt="Load the next guest in queue" onmousedown="event.preventDefault(); event.stopPropagation();"  onclick="session.nextQueue()"  tabindex="16" role="button" aria-pressed="false" onkeyup="enterPressedClick(event,this);"  class="advanced float" style="cursor: pointer;" >
 					<i id="queuetoggle" class="toggleSize las la-stream my-float"></i>
@@ -710,7 +717,7 @@
 							</li>
 							
 							<br />
-                            👓🔆 Site Updated on April 20th: <a href="https://github.com/steveseguin/obsninja/wiki/v17-Release-Notes">v17 Release Notes</a>.  The previous version can be found at <a href="https://obs.ninja/v164/">https://obs.ninja/v164/</a> if you are having issues with this minor update.
+                             ⛔ Site Updated on May 1st: 📵 🚷 ⚠  THIS ALPHA BUILD IS NOT TESTED AND NOT COMPATIBLE WITH PRODUCTION ☣ ☢ 🔞 
 
 							<br />
 							<br />
@@ -1492,7 +1499,12 @@
 		<div id="muteStateTemplate" style="display:none;" class="video-mute-state">
 			<i class="las la-microphone-slash"></i>
 		</div>
-		
+		<div id="videoMuteStateTemplate" style="display:none;" class="video-mute-state">
+			<i class="las la-video-slash"></i>
+		</div>
+		<div id="raisedHandTemplate" style="display:none;" class="video-mute-state raisedHand">
+			<i class="las la-hand-paper"></i>
+		</div>
 		<audio id="testtone" style="display:none;" preload="none">
 			<source src="tone.mp3" type="audio/mpeg"> 
 			<source src="tone.ogg" type="audio/ogg"> 
@@ -1554,7 +1566,7 @@
 			}
 		
             var session = WebRTC.Media; // session is a required global variable if configuring manually. Run before loading main.js but after webrtc.js.
-			session.version = "17.2";
+			session.version = "17.3";
             session.streamID = session.generateStreamID(); // randomly generates a streamID for this session. You can set your own programmatically if needed
 			
 			session.defaultPassword = "someEncryptionKey123"; // Disabling improves compatibility and is helpful for debugging.
@@ -1581,7 +1593,7 @@
 
 			///// Different endpoints are available; each isolated from each other.
 			// session.wss = "wss://wss13.obs.ninja:443"; // US-East (Default)
-			// session.wss = "wss://apibackup.obs.ninja:443"; // US-West
+			session.wss = "wss://apibackup.obs.ninja:443"; // US-West
 			// session.wss = "wss://jp1wss.obs.ninja:443";  // Japan
 			// session.wss = "wss://au1wss.obs.ninja:443"; // Australia
 			// session.wss = "wss://de1wss.obs.ninja:443"; // Germany

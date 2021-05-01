@@ -8,6 +8,23 @@ html {
 	
 }
 
+a:link {
+    text-decoration: bold;
+	color: #CDF;
+}
+
+a:visited {
+    text-decoration: none;
+}
+
+a:hover {
+    text-decoration: underline;
+}
+
+a:active {
+    text-decoration: underline;
+}
+
 video {
 
 	margin: 0;
@@ -126,6 +143,8 @@ input[type='checkbox']:checked {
 <div class="formcss" >
 	
 	<div id='warning4mac' style="border:2px dotted; display:none;max-width:800px; padding:10px; margin:0 90px 20px 90px;color:white;font-size:1.3em"> ✨ Great News! OBS v26.1.2 <a href="https://github.com/obsproject/obs-browser/issues/209#issuecomment-748683083">now supports</a> OBS.Ninja without needing the Electron Capture app! 🥳</div>
+	
+	<div id='electronVersion' style="border:2px dotted; display:none;max-width:800px; padding:10px; margin:0 90px 20px 90px;color:white;font-size:1.3em"><center>✨ Great News! <a href="https://github.com/steveseguin/electroncapture/releases/latest">Electron Capture <span id="currentElectronVersion"></span></a> is now available!<br />Update yours today to stay up-to-date with security patches.</center></div>
 
 	<input type="checkbox" class="check" id="prefervp9" name="prefervp9" value="false" onclick="modURL(this);">
 	<label for="prefervp9">Force VP9 Codec</label>
@@ -166,6 +185,49 @@ input[type='checkbox']:checked {
 
 if (navigator.userAgent.indexOf('Mac OS X') != -1){
 	document.getElementById("warning4mac").style.display="block";
+} else {
+	try {
+		if (navigator.userAgent.toLowerCase().indexOf(' electron/') > -1) { // for now, just PC or Linux versions only.
+			function compareVersions(version){
+				version = version.split(".");
+				fetch('https://api.github.com/repos/steveseguin/electroncapture/releases/latest')
+				  .then(response => response.json())
+				  .then(data => {
+					console.log("recentVersion: "+data.tag_name);
+					var recentVersion = data.tag_name.split(".");
+					var ood = false;
+					if (recentVersion[0]>version[0]){
+						ood = true;
+					} else if (recentVersion[0]==version[0]) {
+						if (recentVersion[1]>version[1]){
+							ood = true;
+						} else if (recentVersion[1]==version[1]) {
+							if (recentVersion[2]>version[2]){
+								ood = true;
+							} 
+						}
+					}
+					if (ood){
+						document.getElementById("electronVersion").style.display = "block";
+						document.getElementById("currentElectronVersion").innerText = data.tag_name;
+					}
+				  });
+			}
+			
+			var checkVersion = setTimeout(function(){ // pre 1.5.2
+				compareVersions("0.0.0");
+			},500);
+		
+			const ipcRenderer = require('electron').ipcRenderer;
+			console.log("ELECTRON DETECTED");
+			ipcRenderer.on('appVersion', function(event, version) {
+				clearTimeout(checkVersion);
+				console.log("version: "+version);
+				compareVersions(version);
+			})
+			ipcRenderer.send('getAppVersion');
+		}
+	} catch(e){console.error(e);}
 }
 
 var audioOutputSelect = document.querySelector('select#audioOutput');
