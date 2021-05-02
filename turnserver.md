@@ -1,4 +1,4 @@
-## Install and setup gudie for a TURN Relay Server
+## Install and setup guide for a TURN Relay Server
 
 #### why? You may want to deploy one to ensure high compatiblity with remote guests. If you try to use the official OBS.Ninja TURN servers for a private deployment, you may find yourself getting kicked off.
 
