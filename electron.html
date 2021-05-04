@@ -183,9 +183,29 @@ input[type='checkbox']:checked {
 *
 */
 
+
+(function (w) {
+    w.URLSearchParams = w.URLSearchParams || function (searchString) {
+        var self = this;
+        self.searchString = searchString;
+        self.get = function (name) {
+            var results = new RegExp('[\?&]' + name + '=([^&#]*)').exec(self.searchString);
+            if (results == null) {
+                return null;
+            }
+            else {
+                return decodeURI(results[1]) || 0;
+            }
+        };
+    }
+
+})(window)
+
+var urlParams = new URLSearchParams(window.location.search);
+
 if (navigator.userAgent.indexOf('Mac OS X') != -1){
 	document.getElementById("warning4mac").style.display="block";
-} else {
+} else if (location.hostname.toLowerCase() == "obs.ninja"){
 	try {
 		if (navigator.userAgent.toLowerCase().indexOf(' electron/') > -1) { // for now, just PC or Linux versions only.
 			function compareVersions(version){
@@ -213,19 +233,24 @@ if (navigator.userAgent.indexOf('Mac OS X') != -1){
 					}
 				  });
 			}
+			if (urlParams.has('version')){
+				var ver = urlParams.get('version');
+				console.log("version: "+ver);
+				compareVersions(ver);
+			} else{
+				var checkVersion = setTimeout(function(){ // pre 1.5.2
+					compareVersions("0.0.0");
+				},500);
 			
-			var checkVersion = setTimeout(function(){ // pre 1.5.2
-				compareVersions("0.0.0");
-			},500);
-		
-			const ipcRenderer = require('electron').ipcRenderer;
-			console.log("ELECTRON DETECTED");
-			ipcRenderer.on('appVersion', function(event, version) {
-				clearTimeout(checkVersion);
-				console.log("version: "+version);
-				compareVersions(version);
-			})
-			ipcRenderer.send('getAppVersion');
+				const ipcRenderer = require('electron').ipcRenderer;
+				console.log("ELECTRON DETECTED");
+				ipcRenderer.on('appVersion', function(event, version) {
+					clearTimeout(checkVersion);
+					console.log("version: "+version);
+					compareVersions(version);
+				})
+				ipcRenderer.send('getAppVersion');
+			}
 		}
 	} catch(e){console.error(e);}
 }
@@ -288,24 +313,7 @@ function enterPressed(event, callback){
   }
 }
 
-(function (w) {
-    w.URLSearchParams = w.URLSearchParams || function (searchString) {
-        var self = this;
-        self.searchString = searchString;
-        self.get = function (name) {
-            var results = new RegExp('[\?&]' + name + '=([^&#]*)').exec(self.searchString);
-            if (results == null) {
-                return null;
-            }
-            else {
-                return decodeURI(results[1]) || 0;
-            }
-        };
-    }
 
-})(window)
-
-var urlParams = new URLSearchParams(window.location.search);
 var isMobile = false;
 if( /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)){ // does not detect iPad Pros.
 	isMobile=true; // if iOS, default to H264?  meh.  let's not.

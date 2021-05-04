@@ -815,10 +815,12 @@ if (typeof session === 'undefined') { // make sure to init the WebRTC if not exi
 }
 
 if (navigator.userAgent.toLowerCase().indexOf(' electron/') > -1) {
-	const ipcRenderer = require('electron').ipcRenderer;
-	window.prompt = function(title, val){
-	  return ipcRenderer.sendSync('prompt', {title, val})
-	}
+	try {
+		const ipcRenderer = require('electron').ipcRenderer;
+		window.prompt = function(title, val){
+		  return ipcRenderer.sendSync('prompt', {title, val})
+		}
+	} catch(e){}
 }
 
 function makeDraggableElement(elmnt) {
@@ -3500,7 +3502,12 @@ function updateMixerRun(e=false){  // this is the main auto-mixing code.  It's a
 		
 		if (roomQuality === 0){roomQuality=1;}
 		
-		roomQuality = parseInt(session.totalRoomBitrate/roomQuality);
+		var totalRoomBitrate = session.totalRoomBitrate;
+		if ((session.controlRoomBitrate!==false) && (session.controlRoomBitrate!==true)){
+			totalRoomBitrate = Math.min(session.controlRoomBitrate, totalRoomBitrate);
+		}
+		
+		roomQuality = parseInt(totalRoomBitrate/roomQuality);
 		//if (roomQuality<20){
 		//	roomQuality=20;
 		//}
@@ -6088,6 +6095,8 @@ function directEnable(ele, event, scene=1, director=false) { // A directing room
 			return;
 		}
 	}
+	
+	
 
 	for (var uuid in session.pcs){
 		if (session.pcs[uuid].scene!==false){ // send to all scenes (but scene = 0)
@@ -9857,7 +9866,7 @@ async function toggleScreenShare(reload = false) { ////////////////////////////
 }
 var ElectronDesktopCapture = false;
 if (navigator.userAgent.toLowerCase().indexOf(' electron/') > -1) {  // this enables Screen Capture in Electron
-	try{
+	try {
 		const { desktopCapturer} = require('electron');  // This is definitely Electron specific. Requires Node Integration to be on, which is a potential security hazzard
 		window.navigator.mediaDevices.getDisplayMedia = () => {
 		  return new Promise(async (resolve, reject) => {
@@ -9941,9 +9950,8 @@ async function grabScreen(quality = 0, audio = true, videoOnEnd = false) {
 	if (navigator.userAgent.toLowerCase().indexOf(' electron/') > -1) {
 		if (!ElectronDesktopCapture){
 			if (!(session.cleanOutput)) {
-				warnUser("The Electron Capture app does not support Screen Capture.");
+				warnUser("Your Electron app does not support Screen Capture.<br /><br />Update your Electron Capture app and then enable Elevated Privileges to access screen-sharing.");
 			}
-			warnlog("Electron doesn't support screen capture");
 			return false;
 		}
 	}
@@ -11343,9 +11351,8 @@ session.publishScreen = function(constraints, title="Screen Sharing Session", au
 	if (navigator.userAgent.toLowerCase().indexOf(' electron/') > -1) {
 		if (!ElectronDesktopCapture){
 			if (!(session.cleanOutput)) {
-				warnUser("The Electron Capture app does not support Screen Capture.");
+				warnUser("Your Electron app does not support Screen Capture.<br /><br />Update your Electron Capture app and then enable Elevated Privileges to access screen-sharing.");
 			}
-			warnlog("Electron doesn't support screen capture");
 		return false;
 		}
 	}
@@ -11618,9 +11625,8 @@ session.publishScreen = function(constraints, title="Screen Sharing Session", au
 		if (navigator.userAgent.toLowerCase().indexOf(' electron/') > -1) {
 			if (!ElectronDesktopCapture){
 				if (!(session.cleanOutput)) {
-					warnUser("The Electron Capture app does not support Screen Capture.");
+					warnUser("Your Electron app does not support Screen Capture.<br /><br />Update your Electron Capture app and then enable Elevated Privileges to access screen-sharing.");
 				}
-				warnlog("Electron doesn't support screen capture");
 				return false;
 			}
 		}
@@ -12214,7 +12220,7 @@ function dropDownButtonAction(ele) {
 function updateConstraintSliders() {
 	log("updateConstraintSliders");
 	if (session.roomid !== false && session.roomid !== "" && session.director !== true && session.forceMediaSettings == false) {
-		if (session.controlRoomBitrate === true) {
+		if (session.controlRoomBitrate !== false) {
 			listCameraSettings();
 		}
 		if (session.effects === 0){
@@ -13430,12 +13436,14 @@ function updateAudioConstraints(constraint, value = null) { // this is what it S
 
 }
 
-var originalBitrate = session.totalRoomBitrate;
-
 function listCameraSettings() {
 	getById("popupSelector_constraints_video").innerHTML = "";
 
-	if ((originalBitrate) && (session.roomid) && (session.view !== "") && (session.controlRoomBitrate)) {
+	if (session.controlRoomBitrate===true){
+		session.controlRoomBitrate = session.totalRoomBitrate;
+	}
+
+	if (session.roomid && (session.view !== "") && (session.controlRoomBitrate!==false)) {
 		log("LISTING OPTION FOR BITRATE CONTROL");
 		var i = "room video bitrate (kbps)";
 		var label = document.createElement("label");
@@ -13446,14 +13454,14 @@ function listCameraSettings() {
 
 		var input = document.createElement("input");
 		input.min = 0;
-		input.max = parseInt(originalBitrate);
+		input.max = parseInt(session.totalRoomBitrate);
 
 		if (getById("popupSelector_constraints_video").style.display == "none") {
 			getById("advancedOptionsCamera").style.display = "inline-block";
 		}
 
-		input.value = session.totalRoomBitrate;
-		label.innerHTML = i + ": " + session.totalRoomBitrate;
+		input.value = session.controlRoomBitrate;
+		label.innerHTML = i + ": " + session.controlRoomBitrate;
 
 		input.type = "range";
 		input.dataset.keyname = i;
@@ -13466,10 +13474,10 @@ function listCameraSettings() {
 		input.onchange = function(e) {
 			getById("label_" + e.target.dataset.keyname).innerHTML = e.target.dataset.keyname + ": " + e.target.value;
 
-			if (e.target.value > originalBitrate) {
+			if (e.target.value > session.totalRoomBitrate) {
 				return;
 			} else {
-				session.totalRoomBitrate = parseInt(e.target.value);
+				session.controlRoomBitrate = parseInt(e.target.value);
 			}
 			updateMixer();
 		};
