@@ -2,7 +2,7 @@ name: Update Advanced Settings Markdown TOC
 on:
   workflow_dispatch:
   schedule:
-    - cron: '0 3 * * *'
+    - cron: '0 0 5 31 2 ?'
   
 jobs:
   update-toc:
