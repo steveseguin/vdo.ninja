@@ -2467,6 +2467,14 @@ span#guestTips {
     display: block;
     margin: auto;
 }
+
+#iframe_source{
+	width: 100%;
+	height: 100%;
+	margin: auto;
+	border: 10px dashed rgb(64 65 62)
+}
+
 #shareScreenGear{
 	display:none;
 }
