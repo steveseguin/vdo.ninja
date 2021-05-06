@@ -148,7 +148,7 @@ function changeGuestSettings(ele){
 	for (var i = 0;i< eles.length; i++){
 		if (eles[i].tagName.toLowerCase() == "input"){
 			if (eles[i].checked===true){
-				settings[eles[i].dataset.param] = true
+				settings[eles[i].dataset.param] = true;
 			} else if (eles[i].checked===false){
 				settings[eles[i].dataset.param] = false;
 			} else {
@@ -465,7 +465,7 @@ if (!(getChromeVersion()>=57)){
 	getById("effectSelector3").disabled=true;
 	getById("effectSelector").title = "Effects are only support on Chromium-based browsers";
 	getById("effectSelector3").title = "Effects are only support on Chromium-based browsers";
-	var elements = document.querySelectorAll('[data-effectsNotice]')
+	var elements = document.querySelectorAll('[data-effectsNotice]');
 	for (let i = 0; i < elements.length; i++) {
 		elements[i].style.display = "inline-block";
 	}
@@ -511,41 +511,71 @@ function obsSceneChanged(event){
 		log("OBS SCENE");
 		log(scene);
 	});
-};
+}
 function obsStreamingStarted(event){
 	session.obsState.streaming = true;
 	session.obsStateSync();
-};
+}
 function obsStreamingStopped(event){
 	session.obsState.streaming = false;
 	session.obsStateSync();
-};
+}
 function obsRecordingStarted(event){
 	session.obsState.recording = true;
 	session.obsStateSync();
-};
+}
 function obsRecordingStopped(event){
 	session.obsState.recording = false;
 	session.obsStateSync();
-};
+}
 function obsSourceActiveChanged(event){
-	session.sourceActive = event.detail.active;
-	session.obsStateSync();
-};
+	warnlog("obsSourceActiveChanged");
+	warnlog( event.detail);
+	
+	try {
+		if (typeof event==="boolean"){var sourceActive = event;}
+		else if (typeof event.detail === "boolean"){var sourceActive = event.detail;}
+		else if (typeof event.detail.active === "boolean"){var sourceActive = event.detail.active;}
+		else {var sourceActive = event.detail.active;}
+		
+		if (typeof sourceActive === "undefined"){return;} // Just fail.
+		
+		if (session.obsState.sourceActive!==sourceActive){ // only move forward if there is a change; the event likes to double fire you see.
+			session.obsState.sourceActive = sourceActive;
+			session.obsStateSync();
+		}
+		
+	} catch (e){errorlog(e);}
+}
 
 function obsSourceVisibleChanged(event){ // accounts for visible in OBS.Ninja scene AND visible in OBS scene
+	warnlog("obsSourceVisibleChanged");
+	warnlog(event.detail);
 	try {
-		if (event===true){var visibility = true;}
-		else if (event===false){var visibility = false;}
+		if (typeof event==="boolean"){var visibility = event;}
+		else if (typeof event.detail === "boolean"){var visibility = event.detail;}
+		else if (typeof event.detail.visible === "boolean"){var visibility = event.detail.visible;}
 		else {var visibility = event.detail.visible;}
+		
+		if (typeof visibility === "undefined"){ // fall back
+			if (typeof document.visibilityState !== "undefined"){
+				visibility = document.visibilityState==="visible"; // modern
+			} else if (typeof document.hidden !== "undefined"){
+				visibility = !document.hidden; // legacy
+			} else {
+				return; // ... unknown input? fail.
+			}
+		}
 
+		errorlog("visibility: "+visibility);
+		
 		if (session.obsState.visibility!==visibility){ // only move forward if there is a change; the event likes to double fire you see.
 			session.obsState.visibility = visibility;
 			session.obsStateSync();
 		}
 		
-	} catch (e){errorlog(e)};
-};
+	} catch (e){errorlog(e);}
+}
 
 if (window.obsstudio) {
 	session.disableWebAudio = true; // default true; might be useful to disable on slow or old computers?
@@ -612,64 +642,70 @@ if (window.obsstudio) {
 function manageSceneState(data, UUID){
 	if ("sceneDisplay" in data){ 
 		session.pcs[UUID].sceneDisplay = data.sceneDisplay;
-		if (session.pcs[UUID].obsSourceActive){
+		/* if (session.pcs[UUID].obsSourceActive){
 			getById("obsState6").classList.remove("sourceActive");  // JUST TESING
 			getById("obsState1").classList.remove("advanced");
 		} else {
 			getById("obsState6").classList.add("sourceActive");
 			getById("obsState1").classList.add("advanced");
-		}
+		} */
 	}
 	if ("sceneMute" in data){ 
 		session.pcs[UUID].sceneMute = data.sceneMute;
-		if (session.pcs[UUID].obsSourceActive){
+		/* if (session.pcs[UUID].obsSourceActive){
 			getById("obsState5").classList.remove("sourceActive"); // JUST TESING
 			getById("obsState1").classList.remove("advanced");
 		} else {
 			getById("obsState5").classList.add("sourceActive");
 			getById("obsState1").classList.add("advanced");
-		}
+		} */
 	}
 	if ("obsVisibility" in data){   
 		session.pcs[UUID].obsVisibility = data.obsVisibility;
 		session.optimizeBitrate(UUID); // &optimize flag; sets video bitrate to target value if this flag == HIDDEN (if optimize=0, disables both audio and video)
-		
-		if (session.pcs[UUID].obsSourceActive){
+		/* if (session.pcs[UUID].obsSourceActive){
 			getById("obsState4").classList.remove("sourceActive"); // JUST TESING
 			getById("obsState1").classList.remove("advanced");
 		} else {
 			getById("obsState4").classList.add("sourceActive");
 			getById("obsState1").classList.add("advanced");
-		}
+		} */
 	}
 	if ("obsSourceActive" in data){  
 		session.pcs[UUID].obsSourceActive = data.obsSourceActive;
-		if (session.pcs[UUID].obsSourceActive){
-			getById("obsState3").classList.remove("sourceActive");// JUST TESING
-			getById("obsState1").classList.remove("advanced");
-		} else {
-			getById("obsState3").classList.add("sourceActive");
-			getById("obsState1").classList.add("advanced");
+		if (session.cleanOutput===false){
+			if (document.getElementById("videosource")){
+				if (session.pcs[UUID].obsSourceActive){
+					getById("obsState").classList.add("sourceActive"); //  TODO: this needs to check all peers to make sure it's valid
+				} else {
+					getById("obsState").classList.remove("sourceActive");
+				}
+			}
 		}
 	}
 	if ("obsStreaming" in data){  
 		session.pcs[UUID].obsStreaming = data.obsStreaming;
-		if (session.pcs[UUID].obsStreaming){
+		/*if (session.pcs[UUID].obsStreaming){
 			getById("obsState2").classList.remove("recording"); // JUST TESING
 			getById("obsState1").classList.remove("advanced");
 		} else {
 			getById("obsState2").classList.add("recording");
 			getById("obsState1").classList.add("advanced");
-		}
+		} */
 	}
 	if ("obsRecording" in data){   
-		session.pcs[UUID].obsRecording = data.obsRecording;
-		if (session.pcs[UUID].obsRecording){
-			getById("obsState1").classList.remove("recording"); // JUST TESING
-			getById("obsState1").classList.remove("advanced");
+		session.pcs[UUID].obsRecording = data.obsRecording; 
+		
+		var recording = false;
+		for (var uid in session.pcs){
+			if (session.pcs[uid].obsRecording){
+				recording=true;
+			}
+		}
+		if (recording){
+			getById("obsState").classList.add("recording");  // TODO: this needs to check all peers to make sure it's valid
 		} else {
-			getById("obsState1").classList.add("recording");
-			getById("obsState1").classList.add("advanced");
+			getById("obsState").classList.remove("recording");
 		}
 	}
 	
@@ -679,7 +715,7 @@ function manageSceneState(data, UUID){
 			if (session.cleanOutput===false){
 				getById("obsState").classList.remove("advanced"); // LIVE
 			}
-			session.visibilityStore[UUID]=true
+			session.visibilityStore[UUID]=true;
 			//getById("videosource").style.border = "solid 1px red";
 		}
 	} else if ((session.pcs[UUID].obsVisibility===true) && (session.pcs[UUID].sceneDisplay===null) && (session.pcs[UUID].scene===0)){ 
@@ -687,7 +723,7 @@ function manageSceneState(data, UUID){
 			if (session.cleanOutput===false){
 				getById("obsState").classList.remove("advanced"); // LIVE
 			}
-			session.visibilityStore[UUID]=true
+			session.visibilityStore[UUID]=true;
 			//getById("videosource").style.border = "solid 1px red";
 		}
 	} else {
@@ -818,8 +854,8 @@ if (navigator.userAgent.toLowerCase().indexOf(' electron/') > -1) {
 	try {
 		const ipcRenderer = require('electron').ipcRenderer;
 		window.prompt = function(title, val){
-		  return ipcRenderer.sendSync('prompt', {title, val})
-		}
+		  return ipcRenderer.sendSync('prompt', {title, val});
+		};
 	} catch(e){}
 }
 
@@ -956,6 +992,20 @@ if (urlParams.has('screenshareid') || urlParams.has('ssid')) {
 	if (urlParams.get('screenshareid') || urlParams.get('ssid')) {
 		session.screenshareid = urlParams.get('screenshareid') || urlParams.get('ssid');
 		session.screenshareid = sanitizeStreamID(session.screenshareid);
+	}
+}
+
+if (urlParams.has('screensharefps') || urlParams.has('ssfps')) {
+	if (urlParams.get('screensharefps') || urlParams.get('ssfps')) {
+		session.screensharefps = urlParams.get('screensharefps') || urlParams.get('ssfps');
+		session.screensharefps = parseInt(session.screensharefps) || 2;
+	}
+}
+
+if (urlParams.has('screensharequality') || urlParams.has('ssq')) {
+	if (urlParams.get('screensharequality') || urlParams.get('ssq')) {
+		session.screensharequality = urlParams.get('screensharequality') || urlParams.get('ssq');
+		session.screensharequality = parseInt(session.screensharequality) || 1;
 	}
 }
 
@@ -1187,7 +1237,7 @@ if (urlParams.has('hands') || urlParams.has('hand')) {
 if (urlParams.has('portrait') || urlParams.has('916') || urlParams.has('vertical')) {
 	session.aspectratio = 1; // 9:16  (default of 0 is 16:9)
 } else if (urlParams.has('square') || urlParams.has('11')) {
-	session.aspectratio = 2; // 9:16  (default of 0 is 16:9)
+	session.aspectratio = 2; //1:1 ?
 }
 
 if (urlParams.has('cover')) {
@@ -1273,12 +1323,12 @@ if (urlParams.has('css')){
 	cssStylesheet.onload = function() {
 		getById("main").classList.remove('hidden');
 		log("loaded remote style sheet");
-	}
+	};
 
 	cssStylesheet.onerror = function() {
 		getById("main").classList.remove('hidden');
 		errorlog("REMOTE STYLE SHEET HAD ERROR");
-	}
+	};
 	
 } else {
 	getById("main").classList.remove('hidden');
@@ -2547,7 +2597,7 @@ if (urlParams.has('activespeaker') || urlParams.has('speakerview')  || urlParams
 	session.activeSpeaker = true;
 	session.audioEffects = true;
 	session.audioMeterGuest = true;
-	setInterval(function(){activeSpeaker(false)},100);
+	setInterval(function(){activeSpeaker(false);},100);
 }
 
 if (urlParams.has('meter') || urlParams.has('meterstyle')){
@@ -2651,15 +2701,21 @@ if (urlParams.has('turn')) {
 		};
 	} else {
 		try {
+			//session.configuration = {iceServers: [], sdpSemantics: 'unified-plan'};
 			turnstring = turnstring.split(";");
 			if (turnstring !== "false") { // false disables the TURN server. Useful for debuggin
 				var turn = {};
 				turn.username = turnstring[0]; // myusername
 				turn.credential = turnstring[1]; //mypassword
 				turn.urls = [turnstring[2]]; //  ["turn:turn.obs.ninja:443"];
-				session.configuration.iceServers = [{
-					urls: ["stun:stun.l.google.com:19302", "stun:stun4.l.google.com:19302"]
-				}];
+				
+				session.configuration = {
+					iceServers: [
+						{ urls: ["stun:stun.l.google.com:19302", "stun:stun4.l.google.com:19302"]} // more than 4 stun+turn servers will cause firefox issues? (2 + 2 for now then)
+					],
+					sdpSemantics: 'unified-plan' // future-proofing
+				};
+				
 				session.configuration.iceServers.push(turn);
 			}
 		} catch (e) {
@@ -3764,7 +3820,7 @@ function updateMixerRun(e=false){  // this is the main auto-mixing code.  It's a
 						container.style.width="18%";
 						//container.style.height="20%";
 						container.style.display = "flex";
-						container.style.zIndex=2;
+						container.style.zIndex = "2";
 						container.style.margin="2%";
 						container.style.position="absolute";
 						container.style.cursor = "pointer";
@@ -4489,7 +4545,7 @@ function TFLiteWorker(){
 		URL.revokeObjectURL(session.tfliteModule.img.src);  // no longer needed, free memory
 		session.tfliteModule.img.ready = true;
 	}
-	session.tfliteModule.img.src = "./media/bg_sample.jpg";
+	session.tfliteModule.img.src = "./media/bg_sample.webp";
 	session.tfliteModule.img.ready = false;
 	
 	console.log('Starting Loop');
@@ -5246,6 +5302,9 @@ function printMyStats(menu) { // see: setupStatsMenu
 	for (var uuid in session.pcs) {
 		printViewValues(session.pcs[uuid].stats);
 		menu.innerHTML += "<hr>";
+	}
+	if ((iOS) || (iPad)){
+		menu.innerHTML += "<br /><div style='height:100px'></div>";
 	}
 	try {
 		getById("menuStatsBox").scrollLeft = scrollLeft;
@@ -6519,12 +6578,13 @@ function publishScreen() {
 	var audioSelect = getById('audioSourceScreenshare');
 	var outputSelect = getById('outputSourceScreenshare');
 
-
-	session.sink = outputSelect.options[outputSelect.selectedIndex].value;
-	log("Session SInk: " + session.sink);
-	if (session.sink == "default") {
-		session.sink = false;
-	}
+	try {
+		session.sink = outputSelect.options[outputSelect.selectedIndex].value; // will probably fail on Safari.
+		log("Session SInk: " + session.sink);
+		if (session.sink == "default") {
+			session.sink = false;
+		}
+	} catch (e){errorlog(e);}
 
 	/* if (session.sink ===false){
 		if (session.outputDevice){
@@ -6809,14 +6869,9 @@ session.publishIFrame = function(iframeURL){
 	iframe.allow="autoplay;camera;microphone";
 	iframe.allowtransparency="true";
 	iframe.allowfullscreen ="true";
-	iframe.style.width="100%";
-	iframe.style.height="100%";
-	iframe.style.margin="auto";
-	iframe.style.border = "10px dashed rgb(64 65 62)";
 	iframe.src = session.iframeSrc;
 	iframe.id = "iframe_source"
 	session.iframeEle = iframe;
-	
 	
 	if (session.roomid!==false){
 		
@@ -9202,24 +9257,30 @@ function gotDevices2(deviceInfos) {
 				return;
 			}
 
-			var outputSelect =  getById('outputSource3');
-			session.sink = outputSelect.options[outputSelect.selectedIndex].value;
-			//if (session.sink=="default"){session.sink=false;} else {
+			try {
+				var outputSelect =  getById('outputSource3');
+				session.sink = outputSelect.options[outputSelect.selectedIndex].value;
+			} catch (e) {
+				errorlog(e);
+			}
+			if (!session.sink){return;}
+			
 			try {
 				getById("videosource").setSinkId(session.sink).then(() => {
 					log("New Output Device:" + session.sink);
 				}).catch(error => {
 					errorlog(error);
 				});
+			
+				for (UUID in session.rpcs) {
+					session.rpcs[UUID].videoElement.setSinkId(session.sink).then(() => {
+						log("New Output Device for: " + UUID);
+					}).catch(error => {
+						errorlog(error);
+					});
+				}
 			} catch (e) {
 				errorlog(e);
-			}
-			for (UUID in session.rpcs) {
-				session.rpcs[UUID].videoElement.setSinkId(session.sink).then(() => {
-					log("New Output Device for: " + UUID);
-				}).catch(error => {
-					errorlog(error);
-				});
 			}
 		}
 
@@ -9243,8 +9304,10 @@ function playtone(screen = false) {
 	}
 
 	if (screen) {
-		var outputSelect = getById('outputSourceScreenshare');
-		session.sink = outputSelect.options[outputSelect.selectedIndex].value;
+		try{
+			var outputSelect = getById('outputSourceScreenshare');
+			session.sink = outputSelect.options[outputSelect.selectedIndex].value;
+		} catch(e){errorlog(e);}
 	}
 
 	var testtone = document.getElementById("testtone");
@@ -9337,7 +9400,7 @@ async function getAudioOnly(selector, trackid = null, override = false) {
 		var stream = await navigator.mediaDevices.getUserMedia(constraint).then(function(stream2) {
 			return stream2;
 		}).catch(function(err) {
-			errorlog(err);
+			warnlog(err);
 			if (!(session.cleanOutput)) {
 				if (override !== false) {
 					if (err.name) {
@@ -9453,11 +9516,15 @@ function reconnectDevices(event) { ///  TODO: Perhaps change this to only if the
 		}
 		try {
 			session.sink = outputSelect.options[outputSelect.selectedIndex].value;
-			getById("previewWebcam").setSinkId(session.sink).then(() => {}).catch(error => {
-				warnlog(error);
-			});
 		} catch (e) {
 			errorlog(e);
+		}
+		if (session.sink){
+			try {
+				getById("previewWebcam").setSinkId(session.sink).then(() => {}).catch(error => {
+					warnlog(error);
+				});
+			} catch(e){errorlog(e);}
 		}
 		return;
 	}
@@ -10541,9 +10608,9 @@ async function grabVideo(quality = 0, eleName = 'previewWebcam', selector = "sel
 				log("DONE - found stream");
 			}).catch(function(e) {
 				activatedPreview = false;
-				errorlog(e);
+				warnlog(e);
 				if (e.name === "OverconstrainedError") {
-					errorlog(e.message);
+					warnlog(e.message);
 					log("Resolution or framerate didn't work");
 				} else if (e.name === "NotReadableError") {
 					if (quality <= 10) {
@@ -13761,17 +13828,21 @@ function setupWebcamSelection(stream = null) {
 				if ((iOS) || (iPad)) {
 					return;
 				}
-
-				session.sink = outputSelect.options[outputSelect.selectedIndex].value;
-				//if (session.sink=="default"){session.sink=false;} else {
-				getById("previewWebcam").setSinkId(session.sink).then(() => {
-					log("New Output Device:" + session.sink);
-				}).catch(error => {
-					errorlog("6597");
-					errorlog(error);
-					//setTimeout(function(){warnUser("Failed to change audio output destination.");},1);
-				});
-				//}
+				try{
+					session.sink = outputSelect.options[outputSelect.selectedIndex].value;
+				} catch(e){errorlog(e);}
+				
+				if (!session.sink){return;}
+				
+				try{
+					getById("previewWebcam").setSinkId(session.sink).then(() => {
+						log("New Output Device:" + session.sink);
+					}).catch(error => {
+						errorlog("6597");
+						errorlog(error);
+						//setTimeout(function(){warnUser("Failed to change audio output destination.");},1);
+					});
+				} catch(e){errorlog(e);}
 			}
 
 			getById("webcamquality").onchange = function() {
@@ -13832,12 +13903,14 @@ function setupWebcamSelection(stream = null) {
 			}
 
 			if ((iOS) || (iPad)) {
-
 				return;
 			}
-			if (outputSelect.selectedIndex >= 0) {
-				session.sink = outputSelect.options[outputSelect.selectedIndex].value;
-			}
+			try {
+				if (outputSelect.selectedIndex >= 0) {
+					session.sink = outputSelect.options[outputSelect.selectedIndex].value;
+				}
+			} catch(e){errorlog(e);}
+			
 			if (document.getElementById("previewWebcam") && document.getElementById("previewWebcam").setSinkId) {
 				if (session.sink) {
 					getById("previewWebcam").setSinkId(session.sink).then(() => {}).catch(error => {
@@ -13913,11 +13986,18 @@ function createIframePopup() {
 		extras += "&privacy"; 
 	}
 	
-	if (session.quality){
+	if (session.screensharequality!==false){
+		extras += "&q="+session.screensharequality;
+	} else if (session.quality){
 		extras += "&q="+session.quality;
 	} else {
 		extras += "&q=0";
 	}
+	
+	if (session.screensharefps!==false){
+		extras += "&maxframerate="+session.screensharefps;
+	} 
+	
 	
 	if (session.muted){
 		iframe.src = "./?audiodevice=1&screenshare&transparent&cleanoutput&noheader&autostart&view&muted&room=" + session.roomid + "&push=" + iFrameID + extras;
@@ -16329,7 +16409,7 @@ function effectsDynamicallyUpdate(event, ele, preview=true){
 		}
 	} else if (effect === "5"){
 		if (session.tfliteModule.img){
-			session.tfliteModule.img.src = "./media/bg_sample.jpg";
+			session.tfliteModule.img.src = "./media/bg_sample.webp";
 		}
 		if ((session.effects<3) || (session.effects>5)){
 			session.effects = 5;

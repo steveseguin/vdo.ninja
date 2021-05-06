@@ -13,6 +13,10 @@ body {
     background-color: #141926;
 }
 
+#add_screen{
+	display:none;
+}
+
 h1 {
     color: white;
     margin: 20px 0px;
@@ -24,6 +28,9 @@ h1 small {
     font-size: 0.5em;
 }
 
+video {
+	transform: translate(0px, 0%) !important;
+}
 #explanation {
     color: white;
     font-family: sans-serif;
