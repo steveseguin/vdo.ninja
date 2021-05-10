@@ -1577,6 +1577,19 @@
             // turn.urls = ["turn:turn2.obs.ninja:443"]; // US WEST
             // session.configuration.iceServers.push(turn);
 
+			// uncomment this section if you plan to do the configuration in index.php as index file, e.g., to use a turn-server that uses use-auth-secret and static-auth-secret
+            // session.configuration = {
+            //   iceServers: [
+            //        { urls: ["xxx_stun_servers_xxx"] }, // xxx_stun-server_xxx will be automatically replaced by index.php
+            //   ],
+			//   sdpSemantics: 'unified-plan'
+            //};
+            //var turn = {};
+            //turn.username = "xxx_username_xxx"; // username will be generated in index.php; xxx_username_xxx will be automatically replaced
+            //turn.credential = "xxx_password_xxx"; // password generated in index.php; xxx_password_xxx will be automatically replaced
+            //turn.urls = ["xxx_turn_servers_xxx"]; // xxx_turn-server_xxx will be automatically replaced by index.php
+            //session.configuration.iceServers.push(turn);
+
             // session.configuration.iceTransportPolicy = "relay";  // uncomment to enable "&privacy" and force the TURN server
 
 			///// Different endpoints are available; each isolated from each other.
