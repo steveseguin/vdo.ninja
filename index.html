@@ -1577,6 +1577,9 @@
             // turn.urls = ["turn:turn2.obs.ninja:443"]; // US WEST
             // session.configuration.iceServers.push(turn);
 
+            // session.turn-mode == "twilio" // uncomment to use credentials for the turn-server provided by Twilio
+            // session.turn-mode = "php-credentials" // uncomment to distribute the turn-username, -password and -server via running turn-credentials.php, e.g., if you have a turn-server with a static-auth-secret
+
             // session.configuration.iceTransportPolicy = "relay";  // uncomment to enable "&privacy" and force the TURN server
 
 			///// Different endpoints are available; each isolated from each other.

@@ -2474,7 +2474,7 @@ if (urlParams.has('speedtest')){ // forces essentially UDP mode, unless TCP is s
 
 if (urlParams.has('turn')) {
 	var turnstring = urlParams.get('turn');
-	if (turnstring == "twilio") { // a sample function on loading remote credentials for TURN servers.
+	if (turnstring == "twilio" || session.turn-mode == "twilio") { // a sample function on loading remote credentials for TURN servers.
 		try {
 			
 			session.ws = false; // prevents connection
@@ -2513,6 +2513,45 @@ if (urlParams.has('turn')) {
 			
 		} catch (e) {
 			errorlog("Twilio Failed");
+		}
+
+	} else if (turnstring == "php-credentials" || session.turn-mode == "php-credentials") { // a function loading the turn server credentials from the provided php-script "turn-credentials.php"
+		try {
+			
+			session.ws = false; // prevents connection
+			var phpcredentialsRequest = new XMLHttpRequest();
+			phpcredentialsRequest.onreadystatechange = function() {
+				if (phpcredentialsRequest.status === 200) {
+					try{
+						var res = JSON.parse(phpcredentialsRequest.responseText);
+					} catch(e){return;}
+					session.configuration = {
+						iceServers: [{
+								"username": res["1"],
+								"credential": res["2"],
+								"urls": res["3"]
+							},
+							{
+								"username": res["1"],
+								"credential": res["2"],
+								"urls": res["4"]
+							}
+						],
+						sdpSemantics: 'unified-plan' // future-proofing
+					};
+					if (session.ws===false){
+						session.ws=null; // allows connection (clears state)
+						session.connect(); // connect if not already connected.
+					}
+				}
+				// system does not connect if php script does not respond.
+			};
+			phpcredentialsRequest.open('GET', 'turn-credentials.php', true); // `false` makes the request synchronous
+			phpcredentialsRequest.send();
+
+			
+		} catch (e) {
+			errorlog("php-credentials script Failed");
 		}
 
 	} else if ((turnstring == "false") || (turnstring == "off") || (turnstring == "0")) { // disable TURN servers
