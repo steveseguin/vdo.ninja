@@ -2474,7 +2474,7 @@ if (urlParams.has('speedtest')){ // forces essentially UDP mode, unless TCP is s
 
 if (urlParams.has('turn')) {
 	var turnstring = urlParams.get('turn');
-	if (turnstring == "twilio" || session.turn-mode == "twilio") { // a sample function on loading remote credentials for TURN servers.
+	if (turnstring == "twilio" || session.turnmode == "twilio") { // a sample function on loading remote credentials for TURN servers.
 		try {
 			
 			session.ws = false; // prevents connection
@@ -2515,7 +2515,7 @@ if (urlParams.has('turn')) {
 			errorlog("Twilio Failed");
 		}
 
-	} else if (turnstring == "php-credentials" || session.turn-mode == "php-credentials") { // a function loading the turn server credentials from the provided php-script "turn-credentials.php"
+	} else if (turnstring == "php-credentials" || session.turnmode == "php-credentials") { // a function loading the turn server credentials from the provided php-script "turn-credentials.php"
 		try {
 			
 			session.ws = false; // prevents connection
