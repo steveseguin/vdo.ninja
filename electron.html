@@ -23,7 +23,6 @@ body {
 	padding: 0 0px;
 	height: 100%;
 	width: 100%;
-	/* background-color: #202738; */
 	background-color: -webkit-linear-gradient(to top, #363644, 50%, #151b29);  /* Chrome 10-25, Safari 5.1-6 */
 	background: linear-gradient(to top, #363644, 50%, #151b29); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
 	font-size: 2em;
@@ -69,19 +68,15 @@ button.glyphicon-button.active.focus {
 input#changeText {
     font-size: 1em;
     align-self: center;
-    /* height: 30px; */
     width: 100%;
-    /* margin: auto auto; */
     padding: 1em;
     font-weight: bold;
     font-family: system-ui;
     background: white;
     border-bottom: 4px solid #6aab23;
     box-shadow: 0px 30px 40px -32px #6aab23;
-    /* border: none; */
     border-top-left-radius: 10px;
     border-bottom-left-radius: 10px;
-    /* border-bottom: 2px solid #6aab23; */
 	transition: all 0.2s linear;
 }
 
@@ -111,7 +106,7 @@ input[type='checkbox'] {
 input[type='checkbox']:checked {
     background: #1A1;
 }
-#audioOutput {
+#audioOutput, #lastUrls {
     font-size: calc(16px + 0.3vw);
 	width: 730px;
     height: 100%;
@@ -134,7 +129,17 @@ label[for="changeText"] {
     padding-top: 10px;
     padding-right: 10px;
 }
-div#audioOutputContainer {
+
+label[for="lastUrls"] {
+font-size: 3em;
+	color: #1a1;
+    text-shadow: 0px 0px 30px #1a1;
+    padding-top: 10px;
+    padding-right: 10px;
+	cursor: pointer;
+}
+
+div#audioOutputContainer, #history {
     display: flex;
     flex-direction: row;
     flex-wrap: nowrap;
@@ -157,9 +162,9 @@ div#audioOutputContainer {
 		-moz-transform-origin: 0 0;
 		
 	}
-	#audioOutput{
-		font-size: calc(14px + 1.4vw);
-		max-width:486px
+	.container{
+		/* font-size: calc(14px + 1.4vw); */
+		max-width:750px;
 	}
 }
 
@@ -175,15 +180,11 @@ div#audioOutputContainer {
 
 div#urlInput {
     margin: 4em;
-    /* background: #353543; */
-    /* border-radius: 10px; */
-    /* box-shadow: 0px 36px 40px -41px #24baff; */
-    /* border-bottom: 3px solid #24baff; */
     display: flex;
     flex-direction: row;
 }
 
-label[for="audioOutput"] {
+label[for="audioOutput"], label[for="lastUrls"] {
     font-size: 3em;
 }
 
@@ -204,6 +205,20 @@ label[for="audioOutput"] {
 	color:white;
  }
 
+ ul#lastUrls {
+    list-style: none;
+    background: #101520;
+    color: white;
+	padding: 1em;
+}
+
+ul#lastUrls li {
+	padding: 5px 0px;
+}
+ul#lastUrls li:nth-child(even) {
+	background-color: #182031;
+}
+
 </style></head>
 <body >
 
@@ -223,8 +238,15 @@ label[for="audioOutput"] {
 				<button  onclick="gohere();" id="gobutton">GO</button>
 			</div>
 			<div id="audioOutputContainer">
-			<label for="audioOutput"><i class="las la-headphones"></i></label><select id="audioOutput"></select>
-		</div>
+				<label for="audioOutput"><i class="las la-headphones"></i></label><select id="audioOutput"></select>
+			</div>
+			<div id="history">
+				<label for="lastUrls" onclick="resetHistory()">
+					<i class="las la-history"></i>
+				</label>
+				<select id="lastUrls" onchange="setUrl()"></select>
+			</div>
+
 	</div>
 </div>
 
@@ -238,7 +260,28 @@ label[for="audioOutput"] {
 *  tree. Alternative licencing options can be made available on request.
 *
 */
-document.querySelector("#changeText").value = localStorage.getItem('lastURL');
+var lastUrls = JSON.parse(localStorage.getItem('lastUrls'));
+if (lastUrls != undefined) {
+	document.querySelector("#changeText").value = lastUrls[0];
+
+	lastUrls.forEach((url)=>{
+		var o = document.createElement('option');
+		o.value = url;
+		o.text = url;
+		document.querySelector("#lastUrls").appendChild(o);
+	})
+}
+
+function setUrl(){
+	document.querySelector("#changeText").value = document.querySelector("#lastUrls").value;
+	gohere();
+}
+
+function resetHistory(){
+	localStorage.clear();
+	document.querySelector('#lastUrls').innerHTML = '';
+	lastUrls = [];
+}
 
 if (navigator.userAgent.indexOf('Mac OS X') != -1){
 	document.getElementById("warning4mac").style.display="block";
@@ -428,6 +471,18 @@ if (urlParams.has('name')){
 	}
 } 
 
+function addUrlToHistory(url){
+	if (lastUrls == undefined){
+		lastUrls = [];
+	}
+	if ( lastUrls[0] != url ) {
+		lastUrls.unshift(url);
+		if (lastUrls.length == 6) {
+			lastUrls.pop();
+		}
+	}
+}
+
 function modURL(ele=false){
 	var url = document.getElementById('changeText').value;
 	console.log(url);
@@ -436,7 +491,8 @@ function modURL(ele=false){
 	return url;
 }
 function gohere(){
-	localStorage.setItem('lastURL', document.getElementById('changeText').value);
+	addUrlToHistory(document.getElementById('changeText').value);
+	localStorage.setItem('lastUrls', JSON.stringify(lastUrls));
 	var url = modURL(true);
 	if (!(document.getElementById('changeText').value.includes("obs.ninja")) && (document.getElementById('changeText').value.includes("http"))  && (document.getElementById('changeText').value.includes("&sink"))){
 		alert("Notice: The &sink command is domain specific.\nVisit https://YOURDOMAIN.com/electron instead.");
