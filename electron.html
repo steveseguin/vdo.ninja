@@ -1,11 +1,13 @@
 <html>
 <meta charset="UTF-8">
-<head><style>
+<head>
+	<link rel="stylesheet" href="./lineawesome/css/line-awesome.min.css" />
+<style>
 html {
 	border:0;
 	margin:0;
 	outline:0;
-	
+	overflow: hidden;
 }
 
 video {
@@ -21,10 +23,9 @@ body {
 	padding: 0 0px;
 	height: 100%;
 	width: 100%;
-	background-color: #141926;
-	background-color: -webkit-linear-gradient(to top, #181925, #141826, #0F2027);  /* Chrome 10-25, Safari 5.1-6 */
-	background-color: linear-gradient(to top, #181825, #141926, #0F2027); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
-
+	/* background-color: #202738; */
+	background-color: -webkit-linear-gradient(to top, #363644, 50%, #151b29);  /* Chrome 10-25, Safari 5.1-6 */
+	background: linear-gradient(to top, #363644, 50%, #151b29); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
 	font-size: 2em;
 	font-family: Helvetica, Arial, sans-serif;
 	display: flex;
@@ -43,26 +44,52 @@ button.glyphicon-button.active.focus {
   outline: none !important;
 }
 
-button{
-	padding:10px;
-	font-size: 20px;
+#gobutton{
+	padding: 1em;
+	font-size: 1em;
 	margin: auto auto;
+	height: 100%;
+	font-family: system-ui;
+	font-weight: bold;
+	border: 2px solid #6aab23;
+	background: #6aab23;
+	display: flex;
+	border-top-right-radius: 10px;
+	border-bottom-right-radius: 10px;
+	box-shadow: 0 12px 15px -10px #5ca70b;
+	position: relative;
+    right: 2px;
+	top: 1px;
+	color:white;
 }
 #header{
-	height:80px;
 	width:100%;
 	background-color: #101520;
 }
-.inputfield{
-	font-size: 20px;
-	align-self:center;
-	height:30px;
-	width:780px;
-	margin: auto auto;
-	padding:20px
+input#changeText {
+    font-size: 1em;
+    align-self: center;
+    /* height: 30px; */
+    width: 100%;
+    /* margin: auto auto; */
+    padding: 1em;
+    font-weight: bold;
+    font-family: system-ui;
+    background: white;
+    border-bottom: 4px solid #6aab23;
+    box-shadow: 0px 30px 40px -32px #6aab23;
+    /* border: none; */
+    border-top-left-radius: 10px;
+    border-bottom-left-radius: 10px;
+    /* border-bottom: 2px solid #6aab23; */
+	transition: all 0.2s linear;
 }
 
-.formcss{
+input#changeText:focus {
+    outline: none;
+}
+
+.container{
 	font-size: 20px;
 	align-self:center;
 	margin: auto auto;
@@ -84,9 +111,35 @@ input[type='checkbox'] {
 input[type='checkbox']:checked {
     background: #1A1;
 }
-#audioOutput{
-	font-size: calc(16px + 0.3vw);
-	max-width:590px
+#audioOutput {
+    font-size: calc(16px + 0.3vw);
+	width: 730px;
+    height: 100%;
+    flex: 20;
+    border-radius: 10px;
+    padding: 1em;
+    background: #eaeaea;
+}
+label[for="audioOutput"] {
+    font-size: 3em;
+    color: #FE53BB;
+    text-shadow: 0px 0px 30px #fe53bb;
+	padding-top: 10px;
+	padding-right: 10px;
+}
+label[for="changeText"] {
+    font-size: 3em;
+    color: #00F6FF;
+    text-shadow: 0px 0px 30px #00f6ff;
+    padding-top: 10px;
+    padding-right: 10px;
+}
+div#audioOutputContainer {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    justify-content: center;
+	margin: 4em;
 }
 	
 @media only screen and (max-width: 1030px) {
@@ -119,38 +172,60 @@ input[type='checkbox']:checked {
 	text-align: center;
 	margin: 10px 0;
 }
+
+div#urlInput {
+    margin: 4em;
+    /* background: #353543; */
+    /* border-radius: 10px; */
+    /* box-shadow: 0px 36px 40px -41px #24baff; */
+    /* border-bottom: 3px solid #24baff; */
+    display: flex;
+    flex-direction: row;
+}
+
+label[for="audioOutput"] {
+    font-size: 3em;
+}
+
+#warning4mac, #electronVersion {
+	background: #8500f7;
+	box-shadow: 0px 0px 50px 10px #8500f7ab, inset 0px 0px 10px 2px #8d08ffba;
+	border: 2px solid #8500f7;
+    border-radius: 10px;
+	width: 90%;
+	padding:1em;
+	margin:0 auto;
+	color:white;
+	font-size:1.3em;
+	margin-bottom: 20px;
+}
+
+#warning4mac a, #electronVersion a {
+	color:white;
+ }
+
 </style></head>
 <body >
 
-<div id="header" style="-webkit-app-region: drag;color:white;font-size:2em">OBS.Ninja</div>
-<div class="formcss" >
+<div id="header" style="-webkit-app-region: drag;color:#6f6f6f;font-size:40px; line-height: 40px; padding: 20px; letter-spacing: 3; font-weight: bold;">OBS.Ninja</div>
+<div class="container" >
 	
-	<div id='warning4mac' style="border:2px dotted; display:none;max-width:800px; padding:10px; margin:0 90px 20px 90px;color:white;font-size:1.3em"> ✨ Great News! OBS v26.1.2 <a href="https://github.com/obsproject/obs-browser/issues/209#issuecomment-748683083">now supports</a> OBS.Ninja without needing the Electron Capture app! 🥳</div>
-
-	<input type="checkbox" class="check" id="prefervp9" name="prefervp9" value="false" onclick="modURL(this);">
-	<label for="prefervp9">Force VP9 Codec</label>
+	<div id='warning4mac' style="display:none;"> ✨ Great News! OBS v26.1.2 <a href="https://github.com/obsproject/obs-browser/issues/209#issuecomment-748683083">now supports</a> OBS.Ninja without needing the Electron Capture app! 🥳</div>
+	<div id="electronVersion" style="display:none;">✨ Great News! <a href="https://github.com/steveseguin/electroncapture/releases/latest">Electron Capture <span id="currentElectronVersion"></span></a> is now available!<br>Update yours today to stay up-to-date with security patches.</div>
 	
-	<input type="checkbox" class="check" id="showcursor" name="showcursor" value="false" onclick="modURL(this);">
-	<label for="showcursor">Show Mouse Cursor</label>
-	
-	<input type="checkbox" class="check"  id="highbitrate" name="highbitrate" value="false" onclick="modURL(this);">
-	<label for="highbitrate">High Video Bitrate</label>
-	
-	<input type="checkbox" class="check" id="stereo" name="stereo" value="false" onclick="modURL(this);">
-	<label for="stereo">Pro Audio Mode</label>
-	
-	<input type="checkbox" class="check" id="buffer" name="buffer" value="false" onclick="modURL(this);">
-	<label for="buffer">Lip-sync Fix</label>
-	
-	<br>
 	<div id="messageDiv" style='display:block'><br /></div>
-	<div class="formcss"><center>
-		<input type="text" id="changeText" class="inputfield" value="http://obs.ninja/?view=" onchange="modURL"   onkeyup="enterPressed(event, gohere);" />
-		<button  onclick="gohere();" id="gobutton">GO</button>
-		<br><br>
-		<label for="audioOutput">Audio output destination: </label><select id="audioOutput"></select>
-		
-	</center></div>
+	<div class="container">
+			<div id="urlInput">
+				<label for="changeText">
+					<i class="las la-play"></i>
+				</label>
+				<input type="text" id="changeText" class="inputfield" value="http://obs.ninja/?view=" onchange="modURL"   onkeyup="enterPressed(event, gohere);" />
+				<button  onclick="gohere();" id="gobutton">GO</button>
+			</div>
+			<div id="audioOutputContainer">
+			<label for="audioOutput"><i class="las la-headphones"></i></label><select id="audioOutput"></select>
+		</div>
+	</div>
 </div>
 
 
@@ -166,6 +241,54 @@ input[type='checkbox']:checked {
 
 if (navigator.userAgent.indexOf('Mac OS X') != -1){
 	document.getElementById("warning4mac").style.display="block";
+} else if (location.hostname.toLowerCase() == "obs.ninja"){
+	try {
+		if (navigator.userAgent.toLowerCase().indexOf(' electron/') > -1) { // for now, just PC or Linux versions only.
+			function compareVersions(version){
+				version = version.split(".");
+				fetch('https://api.github.com/repos/steveseguin/electroncapture/releases/latest')
+				  .then(response => response.json())
+				  .then(data => {
+					console.log("recentVersion: "+data.tag_name);
+					var recentVersion = data.tag_name.split(".");
+					var ood = false;
+					if (recentVersion[0]>version[0]){
+						ood = true;
+					} else if (recentVersion[0]==version[0]) {
+						if (recentVersion[1]>version[1]){
+							ood = true;
+						} else if (recentVersion[1]==version[1]) {
+							if (recentVersion[2]>version[2]){
+								ood = true;
+							} 
+						}
+					}
+					if (ood){
+						document.getElementById("electronVersion").style.display = "block";
+						document.getElementById("currentElectronVersion").innerText = data.tag_name;
+					}
+				  });
+			}
+			if (urlParams.has('version')){
+				var ver = urlParams.get('version');
+				console.log("version: "+ver);
+				compareVersions(ver);
+			} else{
+				var checkVersion = setTimeout(function(){ // pre 1.5.2
+					compareVersions("0.0.0");
+				},500);
+			
+				const ipcRenderer = require('electron').ipcRenderer;
+				console.log("ELECTRON DETECTED");
+				ipcRenderer.on('appVersion', function(event, version) {
+					clearTimeout(checkVersion);
+					console.log("version: "+version);
+					compareVersions(version);
+				})
+				ipcRenderer.send('getAppVersion');
+			}
+		}
+	} catch(e){console.error(e);}
 }
 
 var audioOutputSelect = document.querySelector('select#audioOutput');
@@ -249,9 +372,9 @@ if( /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(naviga
 	isMobile=true; // if iOS, default to H264?  meh.  let's not.
 }
 // Windows can show the cursor, since it captures in a different way.
-if (navigator.platform.indexOf("Win") != -1){
-	document.getElementById("showcursor").checked=true;
-}
+//if (navigator.platform.indexOf("Win") != -1){
+//	document.getElementById("showcursor").checked=true;
+//}
 
 function updateURLParameter(url, param, paramVal){
     var TheAnchor = null;
@@ -307,52 +430,6 @@ if (urlParams.has('name')){
 function modURL(ele=false){
 	var url = document.getElementById('changeText').value;
 	console.log(url);
-	if ((url.split("view").length>0) || (url.split("room").length>0)){
-			if (!document.getElementById("showcursor").checked){
-				url=updateURLParameter(url, "nocursor", "");
-			} else {
-				url=updateURLParameter(url, "nocursor", false);
-			}
-		  
-		if (ele!=false){
-			  if (ele.id =="prefervp9"){ 
-				  if (document.getElementById("prefervp9").checked){
-					url=updateURLParameter(url, "codec", "vp9");
-				  } else {
-					url=updateURLParameter(url, "codec", false);
-				  }
-			  }
-
-			  if (ele.id =="highbitrate"){
-				  if (document.getElementById("highbitrate").checked){
-					url=updateURLParameter(url, "bitrate", "10000");
-				  } else {
-					url=updateURLParameter(url, "bitrate", false);
-				  }
-			  }
-			  
-			  if (ele.id =="stereo"){
-				if (document.getElementById("stereo").checked){
-					url=updateURLParameter(url, "proaudio", "");
-					document.getElementById("messageDiv").innerHTML = "Audio bitrate increased to 256-kbps.\n\nPlease note that the Sender must also have the <b>&proaudio</b> flag added for full-effect";
-					document.getElementById("messageDiv").style.display="block";
-					setTimeout(function(){document.getElementById("messageDiv").style.opacity="1.0";},0);
-				} else {
-					url=updateURLParameter(url, "proaudio", false);
-					setTimeout(function(){document.getElementById("messageDiv").style.opacity="0";},0);
-				}
-			  }
-			  
-			  if (ele.id =="buffer"){
-				if (document.getElementById("buffer").checked){
-					url=updateURLParameter(url, "buffer", "");
-				} else {
-					url=updateURLParameter(url, "buffer", false);
-				}
-			  }
-		}
-		  
-	}
 	document.getElementById('changeText').value = url;
 	console.log(url);
 	return url;
