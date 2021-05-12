@@ -238,6 +238,7 @@ label[for="audioOutput"] {
 *  tree. Alternative licencing options can be made available on request.
 *
 */
+document.querySelector("#changeText").value = localStorage.getItem('lastURL');
 
 if (navigator.userAgent.indexOf('Mac OS X') != -1){
 	document.getElementById("warning4mac").style.display="block";
@@ -435,6 +436,7 @@ function modURL(ele=false){
 	return url;
 }
 function gohere(){
+	localStorage.setItem('lastURL', document.getElementById('changeText').value);
 	var url = modURL(true);
 	if (!(document.getElementById('changeText').value.includes("obs.ninja")) && (document.getElementById('changeText').value.includes("http"))  && (document.getElementById('changeText').value.includes("&sink"))){
 		alert("Notice: The &sink command is domain specific.\nVisit https://YOURDOMAIN.com/electron instead.");
