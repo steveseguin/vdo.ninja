@@ -239,6 +239,16 @@ function loadIframe(){  // this is pretty important if you want to avoid camera 
 		iframeContainer.appendChild(button);
 		
 		var button = document.createElement("button");
+		button.innerHTML = "Change to Camera #2";
+		button.onclick = function(){iframe.contentWindow.postMessage({"changeVideoDevice":2}, '*');};  // change text of add camera button
+		iframeContainer.appendChild(button);
+		
+		var button = document.createElement("button");
+		button.innerHTML = "Change to Microphone #4";
+		button.onclick = function(){iframe.contentWindow.postMessage({"changeAudioDevice":4}, '*');};  // change text of add camera button
+		iframeContainer.appendChild(button);
+		
+		var button = document.createElement("button");
 		button.innerHTML = "eval('alert(\"DANGERUS\")'";
 		button.onclick = function(){iframe.contentWindow.postMessage({"function":"eval", "value":'alert(\"DANGERUS\")'}, '*');};  // publishScreen
 		iframeContainer.appendChild(button);

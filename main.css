@@ -9,6 +9,8 @@
 	--regular-margin: 10px;
 	--director-margin: 15px 20px 0 0;
 	--fit-style: contain;
+	--fadein-speed: 0;
+	--video-margin: 0px;
 }
 
 * {
@@ -365,7 +367,8 @@ hr {
 	height: 100%;
 	border: 0;
 	padding: 0;
-	margin: 0;
+	overflow: hidden;
+	margin: var(--video-margin);
 }
 
 #gridlayout {
@@ -1569,6 +1572,41 @@ img {
 	pointer-events: none;
 }
 
+.fadein {
+  animation: fadeIn var(--fadein-speed);
+  -webkit-animation: fadeIn var(--fadein-speed);
+  -moz-animation: fadeIn var(--fadein-speed);
+  -o-animation: fadeIn var(--fadein-speed);
+  -ms-animation: fadeIn var(--fadein-speed);
+}
+
+
+
+@keyframes fadeIn {
+  0% {opacity:0;}
+  100% {opacity:1;}
+}
+
+@-moz-keyframes fadeIn {
+  0% {opacity:0;}
+  100% {opacity:1;}
+}
+
+@-webkit-keyframes fadeIn {
+  0% {opacity:0;}
+  100% {opacity:1;}
+}
+
+@-o-keyframes fadeIn {
+  0% {opacity:0;}
+  100% {opacity:1;}
+}
+
+@-ms-keyframes fadeIn {
+  0% {opacity:0;}
+  100% {opacity:1;}
+}
+
 video {
 	transition: opacity .25s ease-in-out;
     -moz-transition: opacity .25s ease-in-out;
@@ -2151,6 +2189,10 @@ input[type=checkbox] {
 	padding: 10px;
 	max-width: 1191px
 }
+@media only screen and (max-width: 390px) {
+	
+}
+
 #directorLinksButton{
 	cursor:pointer;
 }
@@ -2317,7 +2359,7 @@ a#reshare {
 
 /* Tips for guests */
 span#guestTips {
-    margin: 10 auto;
+    margin: 0 auto 15px auto;
     width: 450px;
     display: flex;
     flex-direction: column;
@@ -2598,7 +2640,7 @@ div.message-card.info:before {
 
 .switch {
   position: relative;
-  margin:5px 5px 10px 5px;
+  margin:5px 5px 2px 5px;
   width: 40px;
   height: 24px;
   bottom:20px;

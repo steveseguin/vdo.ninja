@@ -55,7 +55,7 @@
 			}
 		</style>
 		<link rel="stylesheet" href="./lineawesome/css/line-awesome.min.css" />
-		<link rel="stylesheet" href="./main.css?ver=60" />
+		<link rel="stylesheet" href="./main.css?ver=61" />
 		<script type="text/javascript" crossorigin="anonymous" src="./thirdparty/adapter.min.js"></script>
 	</head>
 	<body id="main" class="hidden">
@@ -717,12 +717,12 @@
 							</li>
 							
 							<br />
-                             ⛔ Site Updated on May 5th: 📵 🚷 ⚠  THIS ALPHA BUILD IS NOT TESTED AND NOT COMPATIBLE WITH PRODUCTION ☣ ☢ 🔞 
+                            👓🔆 Site Updated on May 13th: <a href="https://docs.obs.ninja/release-notes/v17-release-notes">v17 Release Notes</a>.  The previous version can be found at <a href="https://obs.ninja/v164/">https://obs.ninja/v164/</a> if you are having issues with this minor update.
 
 							<br />
 							<br />
 							<h3>
-                               🛠 For support, see the <a href="https://www.reddit.com/r/OBSNinja/">sub-reddit <i class="lab la-reddit-alien"></i></a> or join the <a href="https://discord.obs.ninja">Discord <i class="lab la-discord"></i></a>. The <a href="https://docs.obs.ninja">Docs are here</a> and my personal email is <i>steve@seguin.email</i>
+                               🛠 For support, see the <a href="https://www.reddit.com/r/OBSNinja/">sub-reddit <i class="lab la-reddit-alien"></i></a> or join the <a href="https://discord.gg/T4xpQVv">Discord <i class="lab la-discord"></i></a>. The <a href="https://docs.obs.ninja/">documentation is here</a> and my personal email is <i>steve@seguin.email</i>
 							</h3> 
                                 
 						</span>
@@ -825,7 +825,7 @@
 			</div>
 			<div class='directorContainer' id="customizeLinks" style='display:none;margin-top:0;padding-top:15px'>
 				<div class='directorBlock' id="customizeLinks1" style='display:none;margin-top:0;padding-bottom:0;'>
-					<div style="display:inline-block;top: 12px;   position: relative;">
+					<div style="display:inline-block;margin-top: 12px;   position: relative;  margin-right:10px;">
 						<label class="switch" title="Disables Echo Cancellation and improves audio quality">
 						<input type="checkbox" data-param="&s" onchange="updateLink(1,this);">
 						<span class="slider"></span>
@@ -843,6 +843,13 @@
 						  <span class="slider"></span>
 						</label>
 						<span data-translate="remote-monitoring">Remote Monitoring</span>
+						<Br />
+						
+						<label class="switch" title="The guest will be asked if they want to reload the previous link when revisiting">
+						  <input type="checkbox" data-param="&sticky" onchange="updateLink(1,this);">
+						  <span class="slider"></span>
+						</label>
+						<span data-translate="remote-monitoring">Invite saved to cookie</span>
 						<Br />
 						
 						<label class="switch" title="Guest will be prompted to enter a Display Name">
@@ -864,7 +871,7 @@
 						<span data-translate="show-active-speaker">Show active speakers</span>
 						
 					</div>
-					<div  style="display:inline-block;top: 12px; position: relative; margin-left:10px;">
+					<div  style="display:inline-block;margin-top: 12px; position: relative; margin-right:10px;">
 						<label class="switch" title="Request 1080p60 from the Guest instead of 720p60, if possible">
 						  <input type="checkbox" data-param="&q" onchange="updateLink(1,this);">
 						  <span class="slider"></span>
@@ -902,7 +909,7 @@
 						<font class="tooltip" style='cursor: help;position:relative;bottom:2px;font-family:"Noto Color Emoji", "Apple Color Emoji", "Segoe UI Emoji", Times, Symbola, Aegyptus, Code2000, Code2001, Code2002, Musica, serif, LastResort;'>⚠<span class="tooltiptext">Uses more CPU and freezes the video if the guest doesn't keep the tab visible.</span></font> <span data-translate="virtual-backgrounds">Virtual backgrounds</span>
 						
 					</div>
-					<div  style="display:inline-block;top: 12px; position: relative; margin-left:10px;">
+					<div  style="display:inline-block;margin-top: 12px; position: relative; margin-right:10px;">
 						<label class="switch" title="Increase video quality that guests in room see.">
 						  <input type="checkbox" data-param="&trb=2000" onchange="updateLink(1,this);">
 						  <span class="slider"></span>
@@ -932,8 +939,15 @@
 						  <span class="slider"></span>
 						</label>
 						<span data-translate="enable-equalizer">Enable equalizer as option</span>
+						<br />
+						<label class="switch">
+						  <input type="checkbox" data-param="&tips" onchange="updateLink(1,this);">
+						  <span class="slider"></span>
+						</label>
+						<span data-translate="show-guest-tips" title="Show some prep suggestions to the guests on connect">Show guest setup tips</span>
+							
 					</div>
-					<div  style="display:inline-block;top: 12px; position: relative; margin-left:10px; height: 20px;">
+					<div  style="display:inline-block;margin-top: 12px; position: relative; height: 20px;">
 						<label class="switch" title="This low-fi video codec uses very little CPU, even with dozens of active viewers.">
 						  <input type="checkbox" data-param="&webp" onchange="updateLinkWebP(1,this);">
 						  <span class="slider"></span>
@@ -974,8 +988,16 @@
 				</div>
 			
 				<div class='directorBlock' id="customizeLinks3" style='display:none;margin-top:5px;padding-bottom:0;'>
-					<div  style="display:inline-block; position: relative; margin-left:10px; ">
-						<div style="display:inline-block;top: 12px; position: relative;">
+					<div  style="display:inline-block; position: relative; margin-right:10px; ">
+						<div style="display:inline-block;margin-top: 12px;   position: relative;">
+						
+						<label class="switch">
+							  <input type="checkbox" data-param="&st" onchange="updateLink(3,this);">
+							  <span class="slider"></span>
+							</label>
+							<span data-translate="hide-audio-only-sources">Hide audio-only sources</span>
+							<br />
+							
 							<label class="switch">
 								<input type="checkbox" data-param="&s" onchange="updateLink(3,this);">
 								<span class="slider"></span>
@@ -991,28 +1013,45 @@
 							
 						</div>
 						
-						<div  style="display:inline-block;top: 12px; position: relative; margin-left:10px; height: 20px;">
-							<label class="switch">
-							  <input type="checkbox" data-param="&st" onchange="updateLink(3,this);">
-							  <span class="slider"></span>
-							</label>
-							<span data-translate="hide-audio-only-sources">Hide audio-only sources</span>
-							<br />
-							
+						<div  style="display:inline-block;margin-top: 12px; position: relative; margin-right:10px; height: 20px;">
 							
 							<label class="switch" title="The active speakers are made visible automatically">
 							  <input type="checkbox" data-param="&sas" onchange="updateLink(3,this);">
 							  <span class="slider"></span>
 							</label>
 							<span data-translate="show-active-speakers">Show active speakers</span>
+							<br />
+							
+							<label class="switch" title="Set the background color to bright green">
+							  <input type="checkbox" data-param="&chroma" onchange="updateLink(3,this);">
+							  <span class="slider"></span>
+							</label>
+							<span data-translate="green-background">Green background</span>
+							
+							<br />
+							
+							<label class="switch" title="Fade videos in over 500ms">
+							  <input type="checkbox" data-param="&fadein" onchange="updateLink(3,this);">
+							  <span class="slider"></span>
+							</label>
+							<span data-translate="fade-videos-in">Fade-in videos</span>
+							
+							
 						</div>
 						
-						<div  style="display:inline-block;top: 12px; position: relative; margin-left:10px;">
+						<div  style="display:inline-block;margin-top: 12px; position: relative; margin-right:10px; height: 20px;">
 							<label class="switch">
 							  <input type="checkbox" data-param="&sl" onchange="updateLink(3,this);">
 							  <span class="slider"></span>
 							</label>
 							<span data-translate="show-display-names">Show display names</span>
+							<br />
+							
+							<label class="switch" title="Add a 10px margin around all video elements">
+							  <input type="checkbox" data-param="&margin" onchange="updateLink(3,this);">
+							  <span class="slider"></span>
+							</label>
+							<span data-translate="add-margin">Add margin to videos</span>
 							<br />
 							<label class="switch">
 							  <input type="checkbox" data-param="&vb=20000" onchange="updateLink(3,this);">
@@ -1021,12 +1060,24 @@
 							<font class="tooltip" style='cursor: help;position:relative;bottom:2px;font-family:"Noto Color Emoji", "Apple Color Emoji", "Segoe UI Emoji", Times, Symbola, Aegyptus, Code2000, Code2001, Code2002, Musica, serif, LastResort;'>⚠<span class="tooltiptext">This can cause video playback to lag</span></font> Unlock Video Bitrate
 						</div>
 						
-						<div  style="display:inline-block;top: 12px; height: 20px;position: relative; margin-left:10px;">
-							<label class="switch">
+						<div  style="display:inline-block;margin-top: 12px; position: relative; height: 20px;">
+							<label class="switch" title="Playback the video with mono-channel audio">
 							  <input type="checkbox" data-param="&mono" onchange="updateLink(3,this);">
 							  <span class="slider"></span>
 							</label>
 							<span data-translate="force-mono-audio">Force mono audio</span>
+							<br />
+							<label class="switch" title="Have the videos fit their respective areas, even if it means cropping a bit">
+							  <input type="checkbox" data-param="&cover" onchange="updateLink(3,this);">
+							  <span class="slider"></span>
+							</label>
+							<span data-translate="fill-video-space">Crop video to fit</span>
+							<br />
+							<label class="switch" title="Have videos be aligned with sizing designed for vertical video">
+							  <input type="checkbox" data-param="&916" onchange="updateLink(3,this);">
+							  <span class="slider"></span>
+							</label>
+							<span data-translate="vertical-aspect-ratio">Vertical video mode</span>
 						</div>
 					</div>
 				</div>
@@ -1593,13 +1644,18 @@
 
 			///// Different endpoints are available; each isolated from each other.
 			// session.wss = "wss://wss13.obs.ninja:443"; // US-East (Default)
-			session.wss = "wss://apibackup.obs.ninja:443"; // US-West
+			// session.wss = "wss://apibackup.obs.ninja:443"; // US-West
 			// session.wss = "wss://jp1wss.obs.ninja:443";  // Japan
 			// session.wss = "wss://au1wss.obs.ninja:443"; // Australia
 			// session.wss = "wss://de1wss.obs.ninja:443"; // Germany
 			// session.wss = "wss://insecure.cam:444"; // China
-			  
-				
+			session.wss = "wss://wss.contribute.cam:443";
+			session.pie=true;
+			/// Or you can use piesocket.com or any echo websocket server to host a server for your yourself.
+			//session.pie = true; // Enable piesocket.com server support (or any basic relay websocket server)
+			//var apiKey = "ZCu96UFf9ezeQeClK7BOCkq6Q0x0lxWAPJcgxjz5";  // get an API key from https://www.piesocket.com/ for a free API server of your own
+			//session.wss = "wss://us-nyc-1.websocket.me/v3/1?api_key="+apiKey;
+			
             ///// The following lets you set the defaults
 
             // session.webcamonly // true,false
@@ -1636,7 +1692,7 @@
 		<script type="text/javascript" id="main-js" src="./main.js" data-translation="blank"></script>
 		<script type="text/javascript" crossorigin="anonymous" id="mixer-js" src="./mixer.js?ver=2"></script>
 	-->
-		<script type="text/javascript" crossorigin="anonymous" id="main-js" src="./main.js?ver=203"></script>
+		<script type="text/javascript" crossorigin="anonymous" id="main-js" src="./main.js?ver=206"></script>
 		<script type="text/javascript">
 			setTimeout(function(){ // lazy load
 				var script = document.createElement('script');

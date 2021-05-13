@@ -1011,6 +1011,7 @@ if (urlParams.has('screensharequality') || urlParams.has('ssq')) {
 
 if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
 	//session.webcamonly = true;
+	session.mobile = true;
 	getById("shareScreenGear").style.display = "none";
 	screensharebutton = false;
 	screensharesupport = false;
@@ -1022,6 +1023,7 @@ if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(naviga
 	
 } else if ((iOS) || (iPad)) {
 	getById("shareScreenGear").style.display = "none";
+	session.mobile = true;
 	screensharebutton = false;
 	screensharesupport = false;
 	getById("container-2").className = 'column columnfade advanced'; // Hide screen share on mobile
@@ -1241,6 +1243,7 @@ if (urlParams.has('portrait') || urlParams.has('916') || urlParams.has('vertical
 }
 
 if (urlParams.has('cover')) {
+	session.cover = true;
 	document.documentElement.style.setProperty('--fit-style', 'cover');
 } 
 
@@ -1414,13 +1417,14 @@ if (urlParams.has('sizelabel') || urlParams.has('labelsize') || urlParams.has('f
 }
 
 if (urlParams.has('label') || urlParams.has('l')) {
-	session.label = urlParams.get('label') || urlParams.get('l');
+	session.label = urlParams.get('label') || urlParams.get('l') || null;
 	var updateURLAsNeed = true;
 	if (session.label == null || session.label.length == 0) {
 		session.label = prompt("Please enter your display name:");
 	} else {
 		var updateURLAsNeed = false;
 		session.label = decodeURIComponent(session.label);
+		session.label = session.label.replace(/_/g, " ")
 	}
 	if (session.label != null) {
 		session.label = sanitizeLabel(session.label); // alphanumeric was too strict. 
@@ -1492,6 +1496,16 @@ if (urlParams.has('stereo') || urlParams.has('s') || urlParams.has('proaudio')) 
 		session.stereo = 2;
 	} else {
 		session.stereo = 5; // guests; no stereo in, no high bitrate in, but otherwise like stereo=1
+	}
+}
+
+
+if (urlParams.has('pie')){
+	session.pie = urlParams.get('pie') || true;
+	if (session.pie===true){
+		session.wss = "wss://us-nyc-1.websocket.me/v3/1?api_key=ZCu96UFf9ezeQeClK7BOCkq6Q0x0lxWAPJcgxjz5";
+	} else {
+		session.wss = "wss://us-nyc-1.websocket.me/v3/1?api_key="+session.pie;
 	}
 }
 
@@ -1707,6 +1721,10 @@ if (urlParams.has('micdelay') || urlParams.has('delay') || urlParams.has('md')) 
 	session.disableWebAudio = false;
 }
 
+if (urlParams.has('tips')){
+	getById("guestTips").style.display="flex";
+}
+
 if (urlParams.has('audiogain') || urlParams.has('gain') || urlParams.has('g')) {
 	log("audio gain  ENABLED");
 	session.audioGain = urlParams.get('audiogain') || urlParams.get('gain') || urlParams.get('g');
@@ -1751,8 +1769,36 @@ if (urlParams.has('tallyoff') || urlParams.has('obsoff') || urlParams.has('oo'))
 
 if (urlParams.has('chroma')) {
 	log("Chroma ENABLED");
-	getById("main").style.backgroundColor = "#" + (urlParams.get('chroma') || "000");
+	getById("main").style.backgroundColor = "#" + (urlParams.get('chroma') || "0F0");
 }
+
+if (urlParams.has('margin')) {
+	if (urlParams.get('margin') || 10){
+		try {
+			var videoMargin = urlParams.get('margin')  || 10;
+			videoMargin = parseInt(videoMargin);
+			videoMargin+="px";
+			document.querySelector(':root').style.setProperty('--video-margin', videoMargin);
+		} catch(e){errorlog("variable css failed");}
+	}
+}
+
+if (urlParams.has('fadein')) {
+	if (urlParams.get('fadein') || 0){
+		try {
+			var fadeinspeed = parseInt(urlParams.get('fadein') || 0)/1000.0;
+			fadeinspeed+="s";
+			document.querySelector(':root').style.setProperty('--fadein-speed', fadeinspeed);
+		} catch(e){errorlog("variable css failed");}
+	} else {
+		try {
+			var fadeinspeed = 0.5;
+			fadeinspeed+="s";
+			document.querySelector(':root').style.setProperty('--fadein-speed', fadeinspeed);
+		} catch(e){errorlog("variable css failed");}
+	}
+}
+
 
 if (urlParams.has("videodevice") || urlParams.has("vdevice") || urlParams.has('vd') || urlParams.has('device') || urlParams.has('d')) {
 
@@ -2313,6 +2359,12 @@ if (session.totalRoomBitrate===false){
 	session.totalRoomBitrate = session.totalRoomBitrate_default;
 } else {
 	session.totalRoomBitrate_default = session.totalRoomBitrate; // trb_default doesn't change dynamically, but trb can (per director I guess)
+}
+
+
+if (urlParams.has('limittotalbitrate') || urlParams.has('ltb')){
+	session.limitTotalBitrate = urlParams.get('limittotalbitrate') || urlParams.get('ltb') || 2500;
+	session.limitTotalBitrate = parseInt(session.limitTotalBitrate);
 }
 
 
@@ -2903,6 +2955,16 @@ if (isIFrame) { // reduce CPU load if not needed.
 			}
 		}
 		
+		if ("changeVideoDevice" in e.data) {
+			warnlog(e.data.changeVideoDevice);
+			changeVideoDevice(e.data.changeVideoDevice);
+		}
+		
+		if ("changeAudioDevice" in e.data) {
+			warnlog(e.data.changeAudioDevice);
+			changeAudioDevice(e.data.changeAudioDevice);
+		}
+		
 
 		if ("sceneState" in e.data) { // TRUE OR FALSE - tells the connected peers if they are live or not via a tally light change.
 
@@ -3180,7 +3242,7 @@ function setupIncomingVideoTracking(v, UUID){  // video element.
 	v.volume = 1.0; // play audio automatically
 	v.autoplay = true;
 	v.controls = false;
-	v.className += "tile";
+	v.classList.add("tile");
 	v.setAttribute("playsinline","");
 	v.controlTimer = null;
 	
@@ -3363,6 +3425,10 @@ function setupIncomingVideoTracking(v, UUID){  // video element.
 		}
 	}
 	
+	if (session.fadein){
+		v.classList.add("fadein"); // allows the video to fade in.
+	}
+	
 	setTimeout(session.processStats, 1000, UUID);
 	
 }
@@ -3397,17 +3463,17 @@ function updateMixerRun(e=false){  // this is the main auto-mixing code.  It's a
 		}
 	}
 	
+	var arW = 16.0;
+	var arH = 9.0;
+	
 	if (session.aspectratio){
 		if (session.aspectratio==1){
-			var arW = 9.0;
-			var arH = 16.0;
+			arW = 9.0;
+			arH = 16.0;
 		} else if (session.aspectratio==2){
-			var arW = 1.0;
-			var arH = 1.0;
+			arW = 12.0; // square root; cause why not.
+			arH = 12.0;
 		}
-	} else {
-		var arW = 16.0;
-		var arH = 9.0;
 	}
 	
 	var ww = w/arW;
@@ -3922,7 +3988,7 @@ function updateMixerRun(e=false){  // this is the main auto-mixing code.  It's a
 		//vid.classList="";
 		vid.style.maxWidth = "100%";
 		vid.style.maxHeight = "100%";
-		vid.style.margin = "auto";
+		//vid.style.margin = "auto";
 
 		// Creates relative positioned element, important for label pos
 		var holder = document.createElement("div");
@@ -3978,6 +4044,13 @@ function updateMixerRun(e=false){  // this is the main auto-mixing code.  It's a
 			if (vid.tagName.toLowerCase()=="iframe"){
 				holder.style.width = "100%";
 			}
+			holder.style.left = 0;
+			holder.style.top =  0;
+		}
+		
+		if (session.cover){
+			holder.style.width = "100%";
+			holder.style.height = "100%";
 			holder.style.left = 0;
 			holder.style.top =  0;
 		}
@@ -5488,14 +5561,18 @@ function updateLocalStats(){
 		}, 0, uuid);
 	}
 	var headerStats = "Viewers: ";
-	headerStats += Object.keys(session.pcs).length || 0;
+	try{
+		headerStats += Object.keys(session.pcs).length || 0;
+	} catch(e){}
 	headerStats += ", Upload (kbps): "+totalBitrate2; // + " / "+totalBitrate;
 	if (cpuLimited){
 		headerStats += ", CPU Overloaded";
 	}
-	if (Object.keys(session.pcs).length){
-		getById("head5").classList.remove("advanced");
-	}
+	try{
+		if (Object.keys(session.pcs).length){
+			getById("head5").classList.remove("advanced");
+		}
+	} catch(e){}
 	getById("head5").innerHTML = headerStats;
 }
 
@@ -7593,6 +7670,15 @@ function createRoomCallback(passAdd, passAdd2) {
 		broadcastString = "&broadcast";
 		getById("broadcastSlider").checked = true;
 	}
+	
+	var pie = "";
+	if (session.pie){
+		if (session.pie!==true){
+			pie = "&pie="+session.pie;
+		} else {
+			pie = "&pie";
+		}
+	}
 
 	var showdirectorFlag = getById("showdirectorFlag");
 	try {
@@ -7676,14 +7762,14 @@ function createRoomCallback(passAdd, passAdd2) {
 		getById("directorLinks1").style.display = "inline-block";
 		getById("directorLinks2").style.display = "inline-block";
 
-		getById("director_block_1").dataset.raw = "https://" + location.host + location.pathname + "?room=" + session.roomid + broadcastString + passAdd;
-		getById("director_block_1").href = "https://" + location.host + location.pathname + "?room=" + session.roomid + broadcastString + passAdd;
-		getById("director_block_1").innerText = "https://" + location.host + location.pathname + "?room=" + session.roomid + broadcastString + passAdd;
+		getById("director_block_1").dataset.raw = "https://" + location.host + location.pathname + "?room=" + session.roomid + broadcastString + passAdd + pie;
+		getById("director_block_1").href = "https://" + location.host + location.pathname + "?room=" + session.roomid + broadcastString + passAdd + pie;
+		getById("director_block_1").innerText = "https://" + location.host + location.pathname + "?room=" + session.roomid + broadcastString + passAdd + pie;
 
 
-		getById("director_block_3").dataset.raw = "https://" + location.host + location.pathname + "?scene&room=" + session.roomid + codecGroupFlag + passAdd2;
-		getById("director_block_3").href = "https://" + location.host + location.pathname + "?scene&room=" + session.roomid + codecGroupFlag + passAdd2;
-		getById("director_block_3").innerText = "https://" + location.host + location.pathname + "?scene&room=" + session.roomid + codecGroupFlag + passAdd2;
+		getById("director_block_3").dataset.raw = "https://" + location.host + location.pathname + "?scene&room=" + session.roomid + codecGroupFlag + passAdd2 + pie;
+		getById("director_block_3").href = "https://" + location.host + location.pathname + "?scene&room=" + session.roomid + codecGroupFlag + passAdd2 + pie;
+		getById("director_block_3").innerText = "https://" + location.host + location.pathname + "?scene&room=" + session.roomid + codecGroupFlag + passAdd2 + pie;
 		
 		getById("calendarButton").style.display = "inline-block";
 
@@ -7894,7 +7980,16 @@ function createDirectorOnlyBox() {
 			passAdd2="&password="+session.password;
 		}
 	}
-	var soloLink = "https://"+location.host+location.pathname+"?view="+session.streamID+"&scene"+codecGroupFlag+"&room="+session.roomid+passAdd2;
+	var pie = "";
+	if (session.pie){
+		if (session.pie!==true){
+			pie = "&pie="+session.pie;
+		} else {
+			pie = "&pie";
+		}
+	}
+	
+	var soloLink = "https://"+location.host+location.pathname+"?view="+session.streamID+"&scene"+codecGroupFlag+"&room="+session.roomid+passAdd2+pie;
 			
 	if (document.getElementById("deleteme")) {
 		getById("deleteme").parentNode.removeChild(getById("deleteme"));
@@ -9273,11 +9368,13 @@ function gotDevices2(deviceInfos) {
 				});
 			
 				for (UUID in session.rpcs) {
-					session.rpcs[UUID].videoElement.setSinkId(session.sink).then(() => {
-						log("New Output Device for: " + UUID);
-					}).catch(error => {
-						errorlog(error);
-					});
+					try{
+						session.rpcs[UUID].videoElement.setSinkId(session.sink).then(() => {
+							log("New Output Device for: " + UUID);
+						}).catch(error => {
+							errorlog(error);
+						});
+					} catch(e){warnlog(e);}
 				}
 			} catch (e) {
 				errorlog(e);
@@ -9287,6 +9384,81 @@ function gotDevices2(deviceInfos) {
 	} catch (e) {
 		errorlog(e);
 	}
+}
+
+function gotDevicesRemote(deviceInfos, UUID) {
+	
+	try {
+		if (document.getElementById("remoteVideoSelect_"+UUID)){
+			var videoSelect = document.getElementById("remoteVideoSelect_"+UUID);
+			var length = videoSelect.options.length;
+			for (i = length-1; i >= 0; i--) {
+			  videoSelect.options[i] = null;
+			}
+		} else {
+			var videoSelect = document.createElement("select");
+			videoSelect.id = "remoteVideoSelect_"+UUID;
+			videoSelect.style = "max-width:190px;font-size: 70% !important; margin: 5px 5px 5px 0; padding:2px;";
+			var buttonGO = document.createElement("button");
+			buttonGO.innerHTML = "Apply";
+			buttonGO.style = "padding: 5px;";
+			buttonGO.title = "This will ask the remote guest for permission to change";
+			buttonGO.onclick = function(){
+				var data = {}
+				data.changeCamera = videoSelect.value;
+				data.UUID = UUID;
+				session.sendRequest(data, UUID); // Viewer is requesting the PUBLISHER
+			}
+			
+			getById("advanced_video_director_" + UUID).appendChild(videoSelect);
+			getById("advanced_video_director_" + UUID).appendChild(buttonGO);
+		}
+		
+		if (document.getElementById("remoteAudioSelect_"+UUID)){
+			var audioSelect = document.getElementById("remoteAudioSelect_"+UUID);
+			var length = audioSelect.options.length;
+			for (i = length-1; i >= 0; i--) {
+			  audioSelect.options[i] = null;
+			}
+		} else {
+			var audioSelect = document.createElement("select");
+			audioSelect.id = "remoteAudioSelect_"+UUID;
+			audioSelect.style = "max-width:190px;font-size: 70% !important; margin: 5px 5px 5px 0; padding:2px;";
+			var buttonGO = document.createElement("button");
+			buttonGO.innerHTML = "Apply";
+			buttonGO.style = "padding: 5px;";
+			buttonGO.title = "This will ask the remote guest for permission to change";
+			buttonGO.onclick = function(){
+				var data = {}
+				data.changeMicrophone = audioSelect.value;
+				data.UUID = UUID;
+				session.sendRequest(data, UUID); // Viewer is requesting the PUBLISHER
+			}
+			getById("advanced_audio_director_" + UUID).appendChild(audioSelect);
+			getById("advanced_audio_director_" + UUID).appendChild(buttonGO);
+		}
+		
+		
+		for (let i = 0; i !== deviceInfos.length; ++i) {
+			const deviceInfo = deviceInfos[i];
+			if (deviceInfo == null) {
+				continue;
+			}
+			if (deviceInfo.kind === 'videoinput'){
+				const option = document.createElement('option');
+				option.value = deviceInfo.deviceId || "default";
+				option.text = deviceInfo.label || `camera ${videoSelect.length + 1}`;
+				videoSelect.appendChild(option);
+
+			} else if (deviceInfo.kind === 'audioinput'){
+				const option = document.createElement('option');
+				option.value = deviceInfo.deviceId || "default";
+				option.text = deviceInfo.label || `microphone ${videoSelect.length + 1}`;
+				audioSelect.appendChild(option);
+			}
+		}
+		
+	} catch(e){errorlog(e);}
 }
 
 function playtone(screen = false) {
@@ -9503,7 +9675,7 @@ function reconnectDevices(event) { ///  TODO: Perhaps change this to only if the
 		//	try{
 		//		session.audioContext.resume();
 		//	} catch(e){errorlog(e);}
-		resetupAudioOut();
+		// resetupAudioOut();
 		return;
 	}
 	warnlog("A media device has changed");
@@ -9673,15 +9845,18 @@ function reconnectDevices(event) { ///  TODO: Perhaps change this to only if the
 function resetupAudioOut() {
 	if ((iOS) || (iPad)) {
 		for (var UUID in session.rpcs) {
-			if (session.rpcs[UUID].videoElement) {
-				session.rpcs[UUID].videoElement.pause().then(() => {
-					setTimeout(function(uuid) {
-						session.rpcs[uuid].videoElement.play().then(() => {
-							log("toggle pause/play");
-						});
-					}, 0, UUID);
-
-				});
+			if (session.rpcs[UUID].videoElement){
+				try{
+					session.rpcs[UUID].videoElement.pause().then(() => {
+						setTimeout(function(uuid) {
+							try{
+								session.rpcs[uuid].videoElement.play().then(() => {
+									log("toggle pause/play");
+								});
+							} catch(e){errorlog(e);}
+						}, 0, UUID);
+					});
+				} catch(e){errorlog(e);}
 			}
 		}
 		return;
@@ -9979,7 +10154,8 @@ if (navigator.userAgent.toLowerCase().indexOf(' electron/') > -1) {  // this ena
 						video: {
 						  mandatory: {
 							chromeMediaSource: 'desktop',
-							chromeMediaSourceId: source.id
+							chromeMediaSourceId: source.id,
+							maxFrameRate: 60
 						  }
 						}
 					  })
@@ -10276,6 +10452,88 @@ async function grabScreen(quality = 0, audio = true, videoOnEnd = false) {
 		}
 		return false;
 	});
+}
+
+function sendMediaDevices(UUID){
+	enumerateDevices().then(function(deviceInfos){
+		var data = {};
+		data.UUID = UUID;
+		data.mediaDevices = deviceInfos;
+		session.sendMessage(data, data.UUID);
+	});
+}
+
+function changeVideoDevice(index, quality=0){
+	enumerateDevices().then(gotDevices2).then(function() {
+		activatedPreview=false;
+		document.getElementById("videoSource3").selectedIndex = index+"";
+		grabVideo(quality, "videosource", "#videoSource3");
+	});
+}
+
+function changeAudioDevice(index){
+	enumerateDevices().then(gotDevices2).then(function() {
+		activatedPreview=false;
+		var audioSelect = document.getElementById("audioSource3").querySelectorAll("input");
+		for (var i = 0; i < audioSelect.length; i++) {
+			audioSelect[i].checked = false;
+		}
+		audioSelect[index-1].checked = true;
+		grabAudio("videosource", "#audioSource3");
+	});
+}
+
+function changeVideoDeviceById(deviceID, UUID){
+	enumerateDevices().then(gotDevices2).then(function() {
+		var opts = document.getElementById("videoSource3").options;
+		var index = false
+		for (var opt, j = 0; opt = opts[j]; j++) {
+			if (opt.value == deviceID) {
+				index = j;
+			    break;
+			}
+		}
+		var allow = false
+		if (index!==false){
+			allow = confirm("Allow the director to change your video device to :"+opts[index].text+" ?");
+		}
+		if (allow){
+			document.getElementById("videoSource3").selectedIndex = j;
+			activatedPreview=false;
+			grabVideo(0, "videosource", "#videoSource3");
+			setTimeout(function(uuid){
+				var data = {};
+				data.UUID = uuid;
+				data.videoOptions = listVideoSettingsPrep();
+				session.sendMessage(data, data.UUID);
+			},1000, UUID);
+		}
+	});
+}
+
+function changeAudioDeviceById(deviceID, UUID){
+	var allow = false;
+	allow = confirm("Allow the director to change your audio mic source?");
+	if (allow){
+		enumerateDevices().then(gotDevices2).then(function() {
+			var audioSelect = document.getElementById("audioSource3").querySelectorAll("input");
+			for (var i = 0; i < audioSelect.length; i++) {
+				if (audioSelect[i].value == deviceID){
+					audioSelect[i].checked=true;
+				} else {
+					audioSelect[i].checked = false;
+				}
+			}
+			activatedPreview=false;
+			grabAudio("videosource", "#audioSource3");
+			setTimeout(function(uuid){
+				var data = {};
+				data.UUID = uuid;
+				data.audioOptions = listAudioSettingsPrep();
+				session.sendMessage(data, data.UUID);
+			},1000, UUID);
+		});
+	}
 }
 
 
@@ -11199,6 +11457,7 @@ session.publishStream = function(v, title="Stream Sharing Session"){ //  stream 
 	getById("gridlayout").appendChild(container);
 	
 	v.className = "tile";
+	
 	v.muted = true;
 	v.autoplay = true;
 	v.controls = false;
@@ -11387,8 +11646,18 @@ session.publishStream = function(v, title="Stream Sharing Session"){ //  stream 
 			added="&pw="+session.password;
 		}
 	}
-	getById("reshare").href = "https://"+location.host+location.pathname+"?view="+session.streamID+added;
-	getById("reshare").text = "https://"+location.host+location.pathname+"?view="+session.streamID+added;
+	
+	var pie = "";
+	if (session.pie){
+		if (session.pie!==true){
+			pie = "&pie="+session.pie;
+		} else {
+			pie = "&pie";
+		}
+	}
+	
+	getById("reshare").href = "https://"+location.host+location.pathname+"?view="+session.streamID+added+pie;
+	getById("reshare").text = "https://"+location.host+location.pathname+"?view="+session.streamID+added+pie;
 	getById("reshare").style.width = ((getById("reshare").text.length + 1)*1.15 * 8) + 'px';
 	pokeIframeAPI('started-camera');
 	
@@ -11504,7 +11773,7 @@ session.publishScreen = function(constraints, title="Screen Sharing Session", au
 					if (navigator.userAgent.toLowerCase().indexOf(' electron/') > -1){
 						// Electron has no audio.
 					} else {
-						setTimeout(function(){warnUser("No Audio Source was detected.\n\nIf you were wanting to capture an Application's Audio, please see:\nhttp://docs.obs.ninja/audio for an alternative method.");},300);
+						setTimeout(function(){warnUser("No Audio Source was detected.\n\nIf you were wanting to capture an Application's Audio, please see:\nhttps://docs.obs.ninja/help/guides-and-how-tos#audio for some guides.");},300);
 					}
 				}
 			}
@@ -11667,8 +11936,17 @@ session.publishScreen = function(constraints, title="Screen Sharing Session", au
 			m.remove();
 		} catch (e){}
 		
-		getById("reshare").href = "https://"+location.host+location.pathname+"?view="+session.streamID;
-		getById("reshare").text = "https://"+location.host+location.pathname+"?view="+session.streamID;
+		var pie = "";
+		if (session.pie){
+			if (session.pie!==true){
+				pie = "&pie="+session.pie;
+			} else {
+				pie = "&pie";
+			}
+		}
+		
+		getById("reshare").href = "https://"+location.host+location.pathname+"?view="+session.streamID+pie;
+		getById("reshare").text = "https://"+location.host+location.pathname+"?view="+session.streamID+pie;
 		getById("reshare").style.width = ((getById("reshare").text.length + 1)*1.15 * 8) + 'px';
 		
 		
@@ -12029,9 +12307,17 @@ session.publishFile = function(ele, event, title="Video File Sharing Session"){ 
 		m.remove();
 	} catch (e){}
 	
+	var pie = "";
+	if (session.pie){
+		if (session.pie!==true){
+			pie = "&pie="+session.pie;
+		} else {
+			pie = "&pie";
+		}
+	}
 	
-	getById("reshare").href = "https://"+location.host+location.pathname+"?view="+session.streamID;
-	getById("reshare").text = "https://"+location.host+location.pathname+"?view="+session.streamID;
+	getById("reshare").href = "https://"+location.host+location.pathname+"?view="+session.streamID+pie;
+	getById("reshare").text = "https://"+location.host+location.pathname+"?view="+session.streamID+pie;
 	getById("reshare").style.width = ((getById("reshare").text.length + 1)*1.15 * 8) + 'px';
 	pokeIframeAPI('started-fileshare');
 	
@@ -12923,6 +13209,7 @@ function updateDirectorsVideo(data, UUID) {
 		label.style.display = "block";
 		videoEle.appendChild(label);
 	}
+	
 	
 	for (var i in data.cameraConstraints) {
 		try {
@@ -14414,14 +14701,23 @@ function generateQRPageCallback(hash) {
 				sendstr += "&quality=2";
 			}
 		}
+		
+		var pie = "";
+		if (session.pie){
+			if (session.pie!==true){
+				pie = "&pie="+session.pie;
+			} else {
+				pie = "&pie";
+			}
+		}
 
-		sendstr = 'https://' + location.host + location.pathname + '?push=' + sid + sendstr + title;
+		sendstr = 'https://' + location.host + location.pathname + '?push=' + sid + sendstr + title + pie;
 
 		if (getById("invite_obfuscate").checked) {
 			sendstr = obfuscateURL(sendstr);
 		}
 
-		viewstr = 'https://' + location.host + location.pathname + '?view=' + sid + viewstr + title;
+		viewstr = 'https://' + location.host + location.pathname + '?view=' + sid + viewstr + title + pie;
 		getById("gencontent").style.display = "none";
 		getById("gencontent").className = ""; //
 		getById("gencontent2").style.display = "block";
