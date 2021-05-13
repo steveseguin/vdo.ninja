@@ -60,6 +60,7 @@ button.glyphicon-button.active.focus {
     right: 2px;
 	top: 1px;
 	color:white;
+	cursor:pointer;
 }
 #header{
 	width:100%;
@@ -114,6 +115,7 @@ input[type='checkbox']:checked {
     border-radius: 10px;
     padding: 1em;
     background: #eaeaea;
+	cursor:pointer;
 }
 label[for="audioOutput"] {
     font-size: 3em;
@@ -234,7 +236,7 @@ ul#lastUrls li:nth-child(even) {
 				<label for="changeText">
 					<i class="las la-play"></i>
 				</label>
-				<input type="text" id="changeText" class="inputfield" value="http://obs.ninja/?view=" onchange="modURL"   onkeyup="enterPressed(event, gohere);" />
+				<input type="text" id="changeText" class="inputfield" value="http://obs.ninja/?view=" onchange="modURL" onkeyup="enterPressed(event, gohere);" />
 				<button  onclick="gohere();" id="gobutton">GO</button>
 			</div>
 			<div id="audioOutputContainer">
@@ -263,13 +265,18 @@ ul#lastUrls li:nth-child(even) {
 var lastUrls = JSON.parse(localStorage.getItem('lastUrls'));
 if (lastUrls != undefined) {
 	document.querySelector("#changeText").value = lastUrls[0];
-
-	lastUrls.forEach((url)=>{
-		var o = document.createElement('option');
-		o.value = url;
-		o.text = url;
-		document.querySelector("#lastUrls").appendChild(o);
-	})
+	if (lastUrls.length>0){
+		lastUrls.forEach((url)=>{
+			var o = document.createElement('option');
+			o.value = url;
+			o.text = url;
+			document.querySelector("#lastUrls").appendChild(o);
+		})
+	} else {
+		document.querySelector("#history").style.display="none";
+	}
+} else {
+	document.querySelector("#history").style.display="none";
 }
 
 function setUrl(){
@@ -503,26 +510,3 @@ getPermssions();
 </script>
 </body>
 </html>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
