@@ -311,7 +311,7 @@ if (navigator.userAgent.indexOf('Mac OS X') != -1){
 						document.getElementById("electronVersion").style.display = "block";
 						document.getElementById("currentElectronVersion").innerText = data.tag_name;
 					}
-				  });
+				  }).catch(console.error);
 			}
 			if (urlParams.has('version')){
 				var ver = urlParams.get('version');
