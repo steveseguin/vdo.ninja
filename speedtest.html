@@ -54,6 +54,8 @@
 				}
 				
 			}
+			
+			
 
 			function loadIframe() {
 				// this is pretty important if you want to avoid camera permission popup problems. YOu need to load the iFRAME after  you load the parent body. A quick solution is like: <body onload=>loadIframe();"> !!!
@@ -70,6 +72,8 @@
 					streamID = urlParams.get("sid");
 				}
 				
+				
+				
 				document.getElementById("remote").innerHTML = "<a style='color:#CCC' href='./monitor?sid="+streamID+"'>Remote Monitoring Link</a><br /><br /><br /><br />";
 
 				var iframe = document.createElement("iframe");
@@ -80,7 +84,7 @@
 				iframe.allowfullscreen ="true";
 
 				//iframe.allow = "autoplay";
-				var srcString =	"./?push=" + streamID + "&cleanoutput&privacy&speedtest&webcam&audiodevice=0&fullscreen&transparent&remote";
+				var srcString =	"./?push=" + streamID + "&cleanoutput&privacy&speedtest&"+testType+"&audiodevice=0&fullscreen&transparent&remote";
 				
 				if (urlParams.has("turn")) {
 					srcString = srcString + "&turn=" + urlParams.get("turn");
@@ -363,10 +367,20 @@
 				</li>
 				
 			</ol>
+			<div id="screen" style="color: #CCC; margin:10px 0;"><a href="./speedtest?screen" style="color: #CCC;">Test screen-sharing performance here</a></div>
 			<div id="remote"></div>
+			
 		</div>
 
 		<script>
+		
+			var testType= "webcam";
+			if (urlParams.has("screen") || urlParams.has("ss") || urlParams.has("screenshare") || urlParams.has("screentest")) {
+				document.getElementById("screen").innerHTML = '<a href="./speedtest" style="color: #CCC;">Test webcam-streaming performance here</a>';
+				testType = "quality=0&screenshare&css=speedtest.css"
+			}
+			
+			
 			var bitrate = {
 				element: "bitrate-graph",
 				data: 0,
