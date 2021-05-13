@@ -232,17 +232,17 @@ ul#lastUrls li:nth-child(even) {
 	
 	<div id="messageDiv" style='display:block'><br /></div>
 	<div class="container">
-			<div id="urlInput">
+			<div id="urlInput" title="Put the link you want to load here">
 				<label for="changeText">
 					<i class="las la-play"></i>
 				</label>
 				<input type="text" id="changeText" class="inputfield" value="http://obs.ninja/?view=" onchange="modURL" onkeyup="enterPressed(event, gohere);" />
 				<button  onclick="gohere();" id="gobutton">GO</button>
 			</div>
-			<div id="audioOutputContainer">
+			<div id="audioOutputContainer" title="This option will only work with the official obs.ninja domain">
 				<label for="audioOutput"><i class="las la-headphones"></i></label><select id="audioOutput"></select>
 			</div>
-			<div id="history">
+			<div id="history" title="History of past links used. You can clear this history using the button to the left">
 				<label for="lastUrls" onclick="resetHistory()">
 					<i class="las la-history"></i>
 				</label>
