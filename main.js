@@ -550,59 +550,7 @@ if (window.obsstudio) {
 		});
 	});
 
-	window.obsstudio.onVisibilityChange = function obsvisibility(visibility){
-		try {
-			log("OBS VISIBILITY:"+visibility);
-			if (session.disableOBS===false){
-				var bundle = {};
-				bundle.sceneUpdate = [];
-				for (var UUID in session.rpcs){
-					if (session.rpcs[UUID].visibility!==visibility){ // only move forward if there is a change; the event likes to double fire you see.
-						
-						session.rpcs[UUID].visibility = visibility;
-						var msg = {};
-						msg.visibility = visibility;
-						
-						if (session.rpcs[UUID].videoElement.style.display == "none"){  // Flag will be left alone, but message will say its disabled.
-							msg.visibility = false;
-						}
-						if (session.optimize!==false){
-							//////////////  bandwidth stuff
-							var bandwidth = parseInt(session.rpcs[UUID].targetBandwidth);  // we don't want to change the target bandwidth, as that's still the real goal and are point of reference for reverting this change.
-							log("bandwidth:"+bandwidth);
-							if (visibility==false){ // limit bandwidth if not visible
-								if ((bandwidth > session.optimize) || (bandwidth<0)){ // limit to optimized bitrate
-									bandwidth = session.optimize;
-								}
-							}
-							if (session.rpcs[UUID].bandwidth !== bandwidth){ // bandwidth already set correctly. don't resend.
-								msg.bitrate = bandwidth;
-								if (session.sendRequest(msg, UUID)){
-									session.rpcs[UUID].bandwidth=bandwidth; // this is letting the system know what the actual bandwidth is, even if it isn't the real target.
-								} else {
-									errorlog("Unable to set update OBS Visibility");
-								}
-							} else {
-								session.sendRequest(msg, UUID);
-								msg.UUID = UUID;
-								bundle.sceneUpdate.push(msg)
-							}
-							/////////////////  end bandwidth stuff
-						} else {
-							session.sendRequest(msg, UUID);
-							msg.UUID = UUID;
-							bundle.sceneUpdate.push(msg)
-						}
-					}
-				}
-				for (var UUID in session.rpcs){
-					session.sendRequest(bundle, UUID);
-				}
-			}
-		} catch (e){errorlog(e)};
-	};
 }
-
 
 window.onload = function winonLoad() { // This just keeps people from killing the live stream accidentally. Also give me a headsup that the stream is ending
 	window.addEventListener("beforeunload", function(e) {
@@ -910,9 +858,13 @@ if (/CriOS/i.test(navigator.userAgent) && (iOS || iPad)) {
 	}
 }
 
+if (urlParams.has('tips')){
+	getById("guestTips").style.display="flex";
+}
+
 if (urlParams.has('broadcast') || urlParams.has('bc')) {
 	log("Broadcast flag set");
-	session.broadcast = urlParams.get('broadcast') || urlParams.get('bc');
+	session.broadcast = urlParams.get('broadcast') || urlParams.get('bc')  || null;
 	//if ((iOS) || (iPad)) {
 	//	session.nopreview = false;
 	//} else {
@@ -942,7 +894,7 @@ if (urlParams.has('showlist')) {
 
 var directorLanding = false;
 if (urlParams.has('director') || urlParams.has('dir')) {
-	directorLanding = urlParams.get('director') || urlParams.get('dir');
+	directorLanding = urlParams.get('director') || urlParams.get('dir')  || null;
 	if (directorLanding === null) {
 		directorLanding = true;
 	} else if (directorLanding.length === 0) {
@@ -2516,6 +2468,7 @@ if (urlParams.has('turn')) {
 		}
 
 	} else if ((turnstring == "false") || (turnstring == "off") || (turnstring == "0")) { // disable TURN servers
+		if (!session.configuration){session.configuration={};}
 		session.configuration = {
 			iceServers: [
 				{ urls: ["stun:stun.l.google.com:19302", "stun:stun4.l.google.com:19302"]} // more than 4 stun+turn servers will cause firefox issues? (2 + 2 for now then)
@@ -2530,9 +2483,12 @@ if (urlParams.has('turn')) {
 				turn.username = turnstring[0]; // myusername
 				turn.credential = turnstring[1]; //mypassword
 				turn.urls = [turnstring[2]]; //  ["turn:turn.obs.ninja:443"];
-				session.configuration.iceServers = [{
-					urls: ["stun:stun.l.google.com:19302", "stun:stun4.l.google.com:19302"]
-				}];
+				session.configuration = {
+					iceServers: [
+						{ urls: ["stun:stun.l.google.com:19302", "stun:stun4.l.google.com:19302"]} // more than 4 stun+turn servers will cause firefox issues? (2 + 2 for now then)
+					],
+					sdpSemantics: 'unified-plan' // future-proofing
+				};
 				session.configuration.iceServers.push(turn);
 			}
 		} catch (e) {
@@ -4373,7 +4329,7 @@ function TFLiteWorker(){
 		URL.revokeObjectURL(session.tfliteModule.img.src);  // no longer needed, free memory
 		session.tfliteModule.img.ready = true;
 	}
-	session.tfliteModule.img.src = "./media/bg_sample.jpg";
+	session.tfliteModule.img.src = "./media/bg_sample.webp";
 	session.tfliteModule.img.ready = false;
 	
 	console.log('Starting Loop');
@@ -6686,6 +6642,10 @@ session.publishIFrame = function(iframeURL){
 	iframe.allow="autoplay;camera;microphone";
 	iframe.allowtransparency="true";
 	iframe.allowfullscreen ="true";
+	iframe.style.width="100%";
+	iframe.style.height="100%";
+	iframe.style.margin="auto";
+	iframe.style.border = "10px dashed rgb(64 65 62)";
 	iframe.src = session.iframeSrc;
 	iframe.id = "iframe_source"
 	session.iframeEle = iframe;
@@ -16137,7 +16097,7 @@ function effectsDynamicallyUpdate(event, ele, preview=true){
 		}
 	} else if (effect === "5"){
 		if (session.tfliteModule.img){
-			session.tfliteModule.img.src = "./media/bg_sample.jpg";
+			session.tfliteModule.img.src = "./media/bg_sample.webp";
 		}
 		if ((session.effects<3) || (session.effects>5)){
 			session.effects = 5;
