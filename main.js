@@ -852,6 +852,7 @@ if (typeof session === 'undefined') { // make sure to init the WebRTC if not exi
 
 if (navigator.userAgent.toLowerCase().indexOf(' electron/') > -1) {
 	try {
+		getById("electronDragZone").style.cursor="grab";
 		const ipcRenderer = require('electron').ipcRenderer;
 		window.prompt = function(title, val){
 		  return ipcRenderer.sendSync('prompt', {title, val});
@@ -2422,9 +2423,12 @@ if (urlParams.has('sink')) {
 	getById("headphonesDiv2").style.display = "none";
 }
 
-if (urlParams.has('fullscreen')) {
+if (window.obsstudio || (navigator.userAgent.toLowerCase().indexOf(' electron/') > -1)){
+	session.fullscreen = true;
+} else if (urlParams.has('fullscreen')) {
 	session.fullscreen = true;
 }
+
 if (urlParams.has('stats')) {
 	session.statsMenu = true;
 }
@@ -2743,7 +2747,10 @@ if (urlParams.has('turn')) {
 		} catch (e) {
 			errorlog("Twilio Failed");
 		}
-
+	} else if (turnstring == "nostun") { // disable TURN servers
+		session.configuration = {
+			sdpSemantics: 'unified-plan' // future-proofing
+		};
 	} else if ((turnstring == "false") || (turnstring == "off") || (turnstring == "0")) { // disable TURN servers
 		session.configuration = {
 			iceServers: [
@@ -2886,6 +2893,10 @@ if (isIFrame) { // reduce CPU load if not needed.
 			} else if (e.data.camera === "toggle") { // toggle
 				toggleVideoMute();
 			}
+		}
+		
+		if ("keyframe" in e.data) {
+			session.sendKeyFrameScenes();
 		}
 
 		if ("mute" in e.data) {
@@ -7761,6 +7772,7 @@ function createRoomCallback(passAdd, passAdd2) {
 		//getById("directorLinks").style.display = "";
 		getById("directorLinks1").style.display = "inline-block";
 		getById("directorLinks2").style.display = "inline-block";
+		
 
 		getById("director_block_1").dataset.raw = "https://" + location.host + location.pathname + "?room=" + session.roomid + broadcastString + passAdd + pie;
 		getById("director_block_1").href = "https://" + location.host + location.pathname + "?room=" + session.roomid + broadcastString + passAdd + pie;
@@ -7786,6 +7798,7 @@ function createRoomCallback(passAdd, passAdd2) {
 		getById("chatbutton").classList.remove("advanced");
 		getById("controlButtons").style.display = "inherit";
 		getById("mutespeakerbutton").classList.remove("advanced");
+		getById("websitesharebutton").classList.remove("advanced");
 		if (session.showDirector == false) {
 			getById("miniPerformer").innerHTML = '<button id="press2talk" onmousedown="event.preventDefault(); event.stopPropagation();" style="width:auto;margin-left:5px;height:45px;border-radius: 38px;" class="float" onclick="press2talk(true);" title="You can also enable the director`s Video Output afterwards by clicking the Setting`s button"><i class="las la-headset"></i><span data-translate="push-to-talk-enable"> enable director`s microphone or video<br />(only guests can see this feed)</span></button>';
 		} else {
@@ -8169,6 +8182,8 @@ function press2talk(clean = false) {
 	ele.style.minWidth = "127px";
 	ele.style.padding = "7px";
 	getById("settingsbutton").classList.remove("advanced");
+	
+	
 	if (!document.getElementById("controls_director") && session.showDirector){createDirectorOnlyBox();}
 	
 	
@@ -10597,7 +10612,7 @@ async function grabVideo(quality = 0, eleName = 'previewWebcam', selector = "sel
 
 	if (!videoSelect || videoSelect.value == "ZZZ") { // if there is no video, or if manually set to audio ready, then do this step.
 		warnlog("ZZZ SET - so no VIDEO");
-		if (eleName == "previewWebcam") {
+		if ((eleName == "previewWebcam") && document.getElementById("previewWebcam")){
 			if (session.autostart) {
 				publishWebcam(); // no need to mirror as there is no video...
 				return;
@@ -10808,7 +10823,7 @@ async function grabVideo(quality = 0, eleName = 'previewWebcam', selector = "sel
 
 				applyMirror(mirror, eleName);
 
-				if (eleName == "previewWebcam") {
+				if ((eleName == "previewWebcam") && document.getElementById("previewWebcam")){
 					if (session.autostart) {
 						publishWebcam();
 					} else {
@@ -10834,7 +10849,7 @@ async function grabVideo(quality = 0, eleName = 'previewWebcam', selector = "sel
 				// getUserMedia() returns.
 				if (grabVideoTimer) {
 					clearTimeout(grabVideoTimer);
-					if (eleName == "previewWebcam") {
+					if ((eleName == "previewWebcam") && document.getElementById("previewWebcam")){
 						session.videoElement.controls = true;
 					}
 				}
@@ -10852,7 +10867,7 @@ async function grabVideo(quality = 0, eleName = 'previewWebcam', selector = "sel
 					if (getById("popupSelector_constraints_loading")) {
 						getById("popupSelector_constraints_loading").style.display = "none";
 					}
-					if (eleName == "previewWebcam") {
+					if ((eleName == "previewWebcam") && document.getElementById("previewWebcam")){
 						session.videoElement.controls = true;
 					} else {
 						updateConstraintSliders();
@@ -11142,6 +11157,7 @@ session.publishDirector =  async function(clean, vdevice=false, adevice=true){ /
 		getById("screensharebutton").classList.remove("advanced");
 		getById("hangupbutton2").classList.remove("advanced");
 		
+		
 		v.muted = true;
 		v.autoplay = true;
 		v.controls = false;
@@ -11154,6 +11170,7 @@ session.publishDirector =  async function(clean, vdevice=false, adevice=true){ /
 			getById("screensharebutton").classList.remove("float");
 			session.screenShareState = false;
 		}
+		
 		
 		activatedPreview = false;
 		await grabAudio("videosource", "#audioSource3");
@@ -11305,7 +11322,6 @@ session.publishDirector =  async function(clean, vdevice=false, adevice=true){ /
 	} catch (e) {}
 	
 	log("constraint");
-	errorlog(constraints);
 	navigator.mediaDevices.getUserMedia(constraints).then(function(stream){ // very simple.
 		session.streamSrc = stream;
 		v.srcObject = outboundAudioPipeline(session.streamSrc); // not blank, so now we worry
@@ -14232,6 +14248,85 @@ Promise.prototype.timeout = function(ms) {
 		})
 	])
 };
+
+
+function shareWebsite(){
+	
+	if (session.iframeSrc){
+		session.iframeSrc = false;
+		session.iframeEle = null;
+		getById("websitesharetoggle").classList.add("la-window-maximize");
+		getById("websitesharetoggle").classList.remove("la-window-close");
+		
+		getById("websitesharebutton").classList.remove("float2");
+		getById("websitesharebutton").classList.add("float");
+		
+		var data = {};
+		data.iframeSrc = false;
+		session.sendMessage(data);
+		return
+	}
+	
+	var iframeURL = prompt("Enter a website URL to share", "https://www.youtube.com/watch?v=dQw4w9WgXcQ");
+	
+	if (!iframeURL){
+		return;
+	} 
+	if (iframeURL == session.iframeSrc){return;}
+	
+	if (!(iframeURL.startsWith("https://") || iframeURL.startsWith("http://"))){
+		iframeURL = "https://"+iframeURL;
+	}
+	
+	var domain = new URL(iframeURL);
+	domain = domain.hostname;
+	log(domain);
+	if ((domain=="www.youtube.com") || (domain=="youtube.com")){
+		var regExp = /^.*((youtu.be\/)|(v\/)|(\/u\/\w\/)|(embed\/)|(watch\?))\??v?=?([^#&?]*).*/;
+		var match = iframeURL.match(regExp);
+		var vidid = (match&&match[7].length==11)? match[7] : false;
+		
+		if(vidid){
+			iframeURL = "https://www.youtube.com/embed/"+vidid+"?autoplay=1&modestbranding=1";
+			log(iframeURL);
+		}
+	} else if (domain=="www.twitch.tv"){
+		var vidid = iframeURL.split('/').pop().split('#')[0].split('?')[0];
+		if (vidid){
+			iframeURL = "https://player.twitch.tv/?channel="+vidid+"&parent="+location.hostname;
+			log(iframeURL);
+		}
+	} else if (domain=="twitch.tv"){
+		var vidid = iframeURL.split('/').pop().split('#')[0].split('?')[0];
+		if (vidid){
+			iframeURL = "https://player.twitch.tv/?channel="+vidid+"&parent="+location.hostname;
+			log(iframeURL);
+		}
+	}
+		
+	
+	
+	session.iframeSrc = iframeURL;
+	
+	var iframe = document.createElement("iframe");
+	iframe.allow="autoplay;camera;microphone";
+	iframe.allowtransparency="true";
+	iframe.allowfullscreen ="true";
+	iframe.src = session.iframeSrc;
+	iframe.id = "iframe_source"
+	session.iframeEle = iframe;
+	
+	getById("websitesharetoggle").classList.remove("la-window-maximize");
+	getById("websitesharetoggle").classList.add("la-window-close");
+	
+	getById("websitesharebutton").classList.add("float2");
+	getById("websitesharebutton").classList.remove("float");
+	
+	var data = {};
+	data.iframeSrc = iframeURL;
+	session.sendMessage(data);
+
+}
 
 function createIframePopup() {
 
