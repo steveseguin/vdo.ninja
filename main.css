@@ -1354,7 +1354,7 @@ img {
 }
 .float {
 	opacity: 0.8;
-	width: 45px;
+	min-width: 45px;
 	height: 45px;
 	background-color: #6666;
 	color: #FFF;
@@ -1516,8 +1516,7 @@ img {
 	border: red solid 2px !important;
 }
 
-.sourceActive {
-	border: green solid 2px !important;
+.onair {
 	display: block !important;
 }
 

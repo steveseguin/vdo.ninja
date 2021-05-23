@@ -110,13 +110,7 @@
 			
 		</div>
 		<div id="controlButtons" >
-			<div id="obsState" class="advanced" style="border:grey solid 2px;padding:10px;margin:10px;color: white; z-index:2; background-color: #222D;display: block;top: 0;position: fixed;">ON AIR</div>
-			<div id="obsState1" class="advanced" style="border:grey solid 2px;padding:10px;margin:10px;color: white; z-index:2; background-color: #222D;display: block;top: 0;position: fixed;">obsRecording</div>
-			<div id="obsState2" class="advanced" style="border:grey solid 2px;padding:10px;margin:10px;color: white; z-index:2; background-color: #222D;display: block;top: 0;position: fixed;">obsStreaming</div>
-			<div id="obsState3" class="advanced" style="border:grey solid 2px;padding:10px;margin:10px;color: white; z-index:2; background-color: #222D;display: block;top: 0;position: fixed;">obsSourceActive</div>
-			<div id="obsState4" class="advanced" style="border:grey solid 2px;padding:10px;margin:10px;color: white; z-index:2; background-color: #222D;display: block;top: 0;position: fixed;">obsVisibility</div>
-			<div id="obsState5" class="advanced" style="border:grey solid 2px;padding:10px;margin:10px;color: white; z-index:2; background-color: #222D;display: block;top: 0;position: fixed;">sceneMute</div>
-			<div id="obsState6" class="advanced" style="border:grey solid 2px;padding:10px;margin:10px;color: white; z-index:2; background-color: #222D;display: block;top: 0;position: fixed;">sceneDisplay</div>
+			<div id="obsState" class="advanced" style="border:grey solid 2px;padding:10px;margin:10px;color: white; z-index:2; background-color: #222D;display: block;top: 0;position: fixed;">ACTIVE</div>
 			
 			<div id="subControlButtons">
 				<div id="queuebutton" title="Load the next guest in queue" alt="Load the next guest in queue" onmousedown="event.preventDefault(); event.stopPropagation();"  onclick="session.nextQueue()"  tabindex="16" role="button" aria-pressed="false" onkeyup="enterPressedClick(event,this);"  class="advanced float" style="cursor: pointer;" >
@@ -720,7 +714,7 @@
 							</li>
 							
 							<br />
-							👓🔆 Site Updated on May 13th: <a href="https://docs.obs.ninja/release-notes/v17-release-notes">v17 Release Notes</a>.  The previous version can be found at <a href="https://obs.ninja/v164/">https://obs.ninja/v164/</a> if you are having issues with this minor update.
+							👓🔆 Site Updated on May 19th.   This is the BETA version.
 
 							<br />
 							<br />
@@ -795,7 +789,7 @@
 					<span style="display:block;">
 						<span style="bottom: 0; margin: 0 0 0 10px; top: 22px; position: relative;">
 							<label class="switch" title="If disabled, the invited guest will not be able to see or hear anyone in the room.">
-							<input type="checkbox" checked data-param="&view=" onchange="updateLinkInverse(1,this);">
+							<input type="checkbox" checked data-param="&view=" onchange="updateLinkInverse(1,this);saveDirectorSettings();">
 							<span class="slider"></span>
 						</label>
 							<span data-translate="guests-hear-others">Guests hear others</span>
@@ -814,7 +808,7 @@
 					<span style="display:block;">
 						<span style="bottom: 0; margin: 0 0 0 10px; top: 22px; position: relative;">
 							<label class="switch" title="If disabled, you must manually add a video to a scene for it to appear.">
-							<input type="checkbox" checked data-param="&scene" onchange="updateLinkScene(3,this);">
+							<input type="checkbox" checked data-param="&scene" onchange="updateLinkScene(3,this);saveDirectorSettings();">
 							<span class="slider"></span>
 						</label>
 							<span data-translate="auto-add-guests">Auto-add guests</span>
@@ -1145,7 +1139,7 @@
 					<span data-translate="mute-scene" >mute in scene</span>
 				</button>
 				
-				<span id="sceneGroup1" class="hidden" data-cluster="1" >
+				<span class="hidden" data-cluster="1" >
 					<button style="width: 35.2px" data-action-type="addToScene" data-scene="3" data-action-type="add-scene-3" title="Add to Scene 3" onclick="directEnable(this, event, 3);">
 						<span >S3</span>
 					</button>
@@ -1157,7 +1151,7 @@
 					</button>
 				</span>
 				
-				<span id="sceneGroup2" class="hidden" data-cluster="1">
+				<span class="hidden" data-cluster="1">
 					<button style="width: 35.2px" data-action-type="addToScene" data-scene="6" data-action-type="add-scene-6" title="Add to Scene 6" onclick="directEnable(this, event, 6);">
 						<span >S6</span>
 					</button>
@@ -1299,7 +1293,7 @@
 					<span data-translate="mute-scene" >mute in scene</span>
 				</button>
 				
-				<span id="sceneGroup1">
+				<span>
 					<button style="width: 35.2px" data-scene="2" data-action-type="addToScene" data-action-type="add-scene-2" title="Add to Scene 2" onclick="directEnable(this, event, 2, true);">
 						<span >S2</span>
 					</button>
@@ -1311,7 +1305,7 @@
 					</button>
 				</span>
 				
-				<span id="sceneGroup2">
+				<span >
 					<button style="width: 35.2px" data-scene="5" data-action-type="addToScene" data-action-type="add-scene-5" title="Add to Scene 5" onclick="directEnable(this, event, 5, true);">
 						<span >S5</span>
 					</button>
@@ -1620,11 +1614,11 @@
 			}
 		
 			var session = WebRTC.Media; // session is a required global variable if configuring manually. Run before loading main.js but after webrtc.js.
-			session.version = "17.3";
+			session.version = "18.beta";
 			session.streamID = session.generateStreamID(); // randomly generates a streamID for this session. You can set your own programmatically if needed
 			
-			session.defaultPassword = "someEncryptionKey123"; // Disabling improves compatibility and is helpful for debugging.
-			session.salt = location.hostname; // used only if password is not == False.
+			session.defaultPassword = "someEncryptionKey123"; // Change this password if self-deploying for added security/privacy
+			session.salt = location.hostname; // used only if password is not == False. You can change to "session.salt = location.hostname+location.pathname;" for greater deployment isolation
 			
 			// session.configuration = {
 			//	iceServers: [
@@ -1645,21 +1639,25 @@
 
 			// session.configuration.iceTransportPolicy = "relay";  // uncomment to enable "&privacy" and force the TURN server
 
-			///// Different endpoints are available; each isolated from each other.
-			// session.wss = "wss://wss13.obs.ninja:443"; // US-East (Default)
-			// session.wss = "wss://apibackup.obs.ninja:443"; // US-West
-			// session.wss = "wss://jp1wss.obs.ninja:443";  // Japan
-			// session.wss = "wss://au1wss.obs.ninja:443"; // Australia
-			// session.wss = "wss://de1wss.obs.ninja:443"; // Germany
-			// session.wss = "wss://insecure.cam:444"; // China
+				///// Different officially hosted handshake endpoints are available; each isolated from each other.
+				// session.wss = "wss://wss13.obs.ninja:443"; // US-East (Default)
+				// session.wss = "wss://apibackup.obs.ninja:443"; // US-West
+				// session.wss = "wss://jp1wss.obs.ninja:443";  // Japan
+				// session.wss = "wss://au1wss.obs.ninja:443"; // Australia
+				// session.wss = "wss://de1wss.obs.ninja:443"; // Germany
+				// session.wss = "wss://insecure.cam:444"; // China
+				//////
 
-			// session.wss = "wss://wss.contribute.cam:443"; // https://github.com/steveseguin/websocket_server
-			// session.pie=true;
-				
-			/// Or you can use piesocket.com or any echo websocket server to host a server for your yourself.
-			//session.pie = true; // Enable piesocket.com server support (or any basic relay websocket server)
-			//var apiKey = "ZCu96UFf9ezeQeClK7BOCkq6Q0x0lxWAPJcgxjz5";  // get an API key from https://www.piesocket.com/ for a free API server of your own
-			//session.wss = "wss://us-nyc-1.websocket.me/v3/1?api_key="+apiKey;
+				///  If wanting to fully-self-host, uncomment the following and deploy your own websocket server; good for air-gapped deployments
+				// session.wss = "wss://wss.contribute.cam:443"; // https://github.com/steveseguin/websocket_server 
+				// session.pie=true;
+				//////
+					
+				/////// Or you can use piesocket.com if you wish to have a basic free websocket server hosted for you by a third-party
+				//session.pie = true; // Set to true to have Piesocket.com
+				//var apiKey = "ZCu96UFf9ezeQeClK7BOCkq6Q0x0lxWAPJcgxjz5";  // GET YOUR OWN API KEY at piesocket.com, as using this one is a privacy hazard.
+				//session.wss = "wss://us-nyc-1.websocket.me/v3/1?api_key="+apiKey;
+				////////////
 			
 			///// The following lets you set the defaults
 
@@ -1667,20 +1665,20 @@
 			// session.stereo // 0,1,2,3
 			// session.audiobitrate // int in kbps
 			// session.view // "xxxx"
-			// session.remote
-			// session.optimize
+			// session.remote 
+			// session.optimize  
 			// session.disableOBS
 			// session.audio
 			// session.video
 			// session.forceios
 			// session.nocursor
-			// session.codec
+			// session.codec // default codec; maybe h264 is useful? the default is up to the browser normally
 			// session.scale
-			// session.bitrate  // int in kbps
-			// session.totalRoomBitrate = 500; // int, kbps
+			// session.bitrate  // int in kbps -- you can set the default max target bitrate here
+			// session.totalRoomBitrate = 500; // int, kbps -- you can set the default quality of the group room here
 			// session.height // int
 			// session.width // int
-			// session.quality // int
+			// session.quality // int  -- if setting == 0, then than the default resolution will be 1080p, instead of 720p
 			// session.sink
 			// session.offsetChannel // int
 			// session.audioChannels // int

@@ -355,7 +355,7 @@
 							}
 							
 							if (e.data.remoteStats[UUID].retransmitted_kbps){
-								var retransmitted_kbps = e.data.remoteStats[UUID].retransmitted_kbps;
+								var retransmitted_kbps = parseInt(10000*e.data.remoteStats[UUID].retransmitted_kbps/ (e.data.remoteStats[UUID].video_bitrate_kbps-e.data.remoteStats[UUID].retransmitted_kbps))/100;
 								updateData("retransmit", retransmitted_kbps, UUID);
 							} else if (document.getElementById(UUID)){
 								updateData("retransmit", 0, UUID);
@@ -434,7 +434,7 @@
 			</div>
 
 			<div class="graph">
-				<h2>Retransmitted (kbps)</h2>
+				<h2>Retransmitted bytes (%)</h2>
 				<span>0</span>
 				<canvas data-retransmit-graph="true"></canvas>
 			</div>
@@ -464,8 +464,8 @@
 			var retransmit = {
 				element: "retransmit-graph",
 				data: 0,
-				max: 100,
-				target: 100,
+				max: 3,
+				target: 2,
 			};
 
 			function updateData(type, data, UUID) {
@@ -525,6 +525,11 @@
 					grd.addColorStop(0, "#33C433");
 					grd.addColorStop(0.7, "#F3F304");
 					grd.addColorStop(0.9, "#F30404");
+				} else if (type == "retransmit") {
+					// Higher values are red
+					grd.addColorStop(0, "#F30404");
+					grd.addColorStop(0.75, "#F3F304");
+					grd.addColorStop(1.0, "#33C433");
 				} else {
 					// Higher values are red
 					grd.addColorStop(0, "#F30404");
@@ -544,7 +549,7 @@
 				}
 
 				if (type == "retransmit" && stat.data == 0.0) {
-					stat.data = 0.5;
+					stat.data = 0.1;
 				}
 				if (type == "nackrate" && stat.data == 0.0) {
 					stat.data = 0.1;
