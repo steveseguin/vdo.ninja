@@ -8,6 +8,9 @@
 	--olive-accent: #535D32;
 	--regular-margin: 10px;
 	--director-margin: 15px 20px 0 0;
+	--fit-style: contain;
+	--fadein-speed: 0;
+	--video-margin: 0px;
 }
 
 * {
@@ -226,7 +229,7 @@ button.white:active {
 	text-shadow: 0.05em 0.05em 0px rgba(0,0,0,1);
 	width:100%;
 	height:100vh;
-	z-index: 6;
+	z-index: 7;
     vertical-align: top;
     text-align: center;
     top: 0;
@@ -358,13 +361,14 @@ hr {
 }
 
 .tile {
-	object-fit: contain;
+	object-fit: var(--fit-style);
 	background-color: black;
 	width: 100%;
 	height: 100%;
 	border: 0;
 	padding: 0;
-	margin: 0;
+	overflow: hidden;
+	margin: var(--video-margin);
 }
 
 #gridlayout {
@@ -407,10 +411,11 @@ hr {
 }
 
 .directorsgrid .vidcon video {
-	max-width: 100%;
-	padding: 0 5px;
+	margin: 0 5px;
+	padding:0;
 	width: 100%;
 	height: 148px;
+	max-width: 260px;
 }
 
 .directorsgrid .vidcon {
@@ -504,13 +509,14 @@ button.glyphicon-button.active.focus {
 #container.vidcon {
 	height:100%;
 }
+
 @media only screen and (max-width: 640px){
-	#controlButtons {
+	#subControlButtons {
 		transform: scale(0.9) translateY(10%);
 	}
 }
 @media only screen and (max-width: 400px){
-	#controlButtons {
+	#subControlButtons {
 		transform: scale(0.8) translateY(20%);
 	}
 }
@@ -519,6 +525,27 @@ button.glyphicon-button.active.focus {
 		padding: 0px;
 	} 
 }
+
+@media only screen and (max-width: 620px){
+	#obsState {
+		top: 10px !important;
+		transform: scale(0.9);
+	} 
+}
+@media only screen and (max-width: 400px){
+	#obsState {
+		top: 20px !important;
+		transform: scale(0.8);
+	} 
+}
+@media only screen and (max-width: 300px){
+	#obsState {
+		top: 30px !important;
+		transform: scale(0.7);
+	} 
+}
+obsState
+
 /* Node selector to prioritise this selector above .float */
 button.btnArmTransferRoom{
     width:auto;
@@ -1327,7 +1354,7 @@ img {
 }
 .float {
 	opacity: 0.8;
-	width: 45px;
+	min-width: 45px;
 	height: 45px;
 	background-color: #6666;
 	color: #FFF;
@@ -1484,8 +1511,20 @@ img {
 	top:0.5;
 }
 
+.ondeck {
+	border: grey solid 2px !important;
+}
+
+.recording{
+	border: red solid 2px !important;
+}
+
+.onair {
+	display: block !important;
+}
+
 .raisedHand{
-	background-color: #DD1A;
+	background-color: #DD1A !important;
 }
 
 @-webkit-keyframes animatetop {
@@ -1533,6 +1572,41 @@ img {
 	align-items: center;
 	justify-content: center;
 	pointer-events: none;
+}
+
+.fadein {
+  animation: fadeIn var(--fadein-speed);
+  -webkit-animation: fadeIn var(--fadein-speed);
+  -moz-animation: fadeIn var(--fadein-speed);
+  -o-animation: fadeIn var(--fadein-speed);
+  -ms-animation: fadeIn var(--fadein-speed);
+}
+
+
+
+@keyframes fadeIn {
+  0% {opacity:0;}
+  100% {opacity:1;}
+}
+
+@-moz-keyframes fadeIn {
+  0% {opacity:0;}
+  100% {opacity:1;}
+}
+
+@-webkit-keyframes fadeIn {
+  0% {opacity:0;}
+  100% {opacity:1;}
+}
+
+@-o-keyframes fadeIn {
+  0% {opacity:0;}
+  100% {opacity:1;}
+}
+
+@-ms-keyframes fadeIn {
+  0% {opacity:0;}
+  100% {opacity:1;}
 }
 
 video {
@@ -2117,6 +2191,10 @@ input[type=checkbox] {
 	padding: 10px;
 	max-width: 1191px
 }
+@media only screen and (max-width: 390px) {
+	
+}
+
 #directorLinksButton{
 	cursor:pointer;
 }
@@ -2283,7 +2361,7 @@ a#reshare {
 
 /* Tips for guests */
 span#guestTips {
-    margin: 10 auto;
+    margin: 0 auto 15px auto;
     width: 450px;
     display: flex;
     flex-direction: column;
@@ -2564,7 +2642,7 @@ div.message-card.info:before {
 
 .switch {
   position: relative;
-  margin:5px 5px 10px 5px;
+  margin:5px 5px 2px 5px;
   width: 40px;
   height: 24px;
   bottom:20px;
@@ -2616,7 +2694,8 @@ input:checked + .slider:before {
   transform: translateX(16px);
 }
 
-#promptModal {
+
+#promptModal, #roomSettings {
 	position: absolute;
     background-color: rgb(221 221 221);
     box-shadow: 0 0 30px 10px #0000005c;
@@ -2645,6 +2724,14 @@ input:checked + .slider:before {
 	position: relative;
 	padding: 1em;
 }
+
+#iframe_source{
+	width: 100%;
+	height: 100%;
+	margin: auto;
+	border: 10px dashed rgb(64 65 62)
+}
+
 #SafariWarning{
 	display:none;
 	width: 450px;
@@ -2652,10 +2739,8 @@ input:checked + .slider:before {
     background: #fffded;
     padding: 10px;
     align-items: center;
-    margin: 0 auto;
     position: relative;
-    margin: 0 auto;
-    margin-bottom: 20px;
+    margin: 17px auto 20px auto;
     box-shadow: 0px 5px 10px -5px #a9a9a9;
 	text-align: left;
 }

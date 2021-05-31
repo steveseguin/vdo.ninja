@@ -337,6 +337,25 @@ function resetHistory(){
 	lastUrls = [];
 }
 
+(function (w) {
+    w.URLSearchParams = w.URLSearchParams || function (searchString) {
+        var self = this;
+        self.searchString = searchString;
+        self.get = function (name) {
+            var results = new RegExp('[\?&]' + name + '=([^&#]*)').exec(self.searchString);
+            if (results == null) {
+                return null;
+            }
+            else {
+                return decodeURI(results[1]) || 0;
+            }
+        };
+    }
+
+})(window)
+
+var urlParams = new URLSearchParams(window.location.search);
+
 if (navigator.userAgent.indexOf('Mac OS X') != -1){
 	document.getElementById("warning4mac").style.display="block";
 } else if (location.hostname.toLowerCase() == "obs.ninja"){
@@ -447,24 +466,7 @@ function enterPressed(event, callback){
   }
 }
 
-(function (w) {
-    w.URLSearchParams = w.URLSearchParams || function (searchString) {
-        var self = this;
-        self.searchString = searchString;
-        self.get = function (name) {
-            var results = new RegExp('[\?&]' + name + '=([^&#]*)').exec(self.searchString);
-            if (results == null) {
-                return null;
-            }
-            else {
-                return decodeURI(results[1]) || 0;
-            }
-        };
-    }
 
-})(window)
-
-var urlParams = new URLSearchParams(window.location.search);
 var isMobile = false;
 if( /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)){ // does not detect iPad Pros.
 	isMobile=true; // if iOS, default to H264?  meh.  let's not.
