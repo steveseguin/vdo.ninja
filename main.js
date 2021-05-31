@@ -552,7 +552,7 @@ function obsSourceActiveChanged(event){
 	} catch (e){errorlog(e);}
 }
 
-function obsSourceVisibleChanged(event){ // accounts for visible in OBS.Ninja scene AND visible in OBS scene
+function obsSourceVisibleChanged(event){ // accounts for visible in VDO.Ninja scene AND visible in OBS scene
 	warnlog("obsSourceVisibleChanged");
 	warnlog(event.detail);
 	try {
@@ -1074,10 +1074,6 @@ if (/CriOS/i.test(navigator.userAgent) && (iOS || iPad)) {
 			warnUser("Chrome on this device does not support the required technology to use this site.\n\nPlease use Safari instead or update your iOS and browser version.");
 		}
 	}
-}
-
-if (urlParams.has('tips')){
-	getById("guestTips").style.display="flex";
 }
 
 if (urlParams.has('broadcast') || urlParams.has('bc')) {
@@ -2172,7 +2168,7 @@ if (ln_template) { // checking if manual lanuage override enabled
 		errorlog(error);
 		getById("mainmenu").style.opacity = 1;
 	}
-} else if (location.hostname !== "obs.ninja") {
+} else if (location.hostname !== "vdo.ninja") {
 	if (location.hostname === "rtc.ninja"){
 		try {
 			if (session.label === false) {
@@ -2259,7 +2255,7 @@ if (ln_template) { // checking if manual lanuage override enabled
 }
 
 try {
-	if (location.hostname === "rtc.ninja"){ // an extra-brand-free version of OBS.Ninja
+	if (location.hostname === "rtc.ninja"){ // an extra-brand-free version of vdo.ninja
 		if (session.label === false) {
 			document.title = "";
 		}
@@ -2276,7 +2272,7 @@ try {
 		getById("info").style.display = "none";
 		getById("info").style.opacity = 0;
 		getById("chatBody").innerHTML = "";
-	} else if (location.hostname !== "obs.ninja") {
+	} else if (location.hostname !== "vdo.ninja") {
 		if (session.label === false) {
 			document.title = location.hostname;
 		}
@@ -2792,7 +2788,6 @@ if (urlParams.has('turn')) {
 			sdpSemantics: 'unified-plan' // future-proofing
 		};
 	} else if ((turnstring == "false") || (turnstring == "off") || (turnstring == "0")) { // disable TURN servers
-		if (!session.configuration){session.configuration={};}
 		session.configuration = {
 			iceServers: [
 				{ urls: ["stun:stun.l.google.com:19302", "stun:stun4.l.google.com:19302"]} // more than 4 stun+turn servers will cause firefox issues? (2 + 2 for now then)
@@ -2808,12 +2803,14 @@ if (urlParams.has('turn')) {
 				turn.username = turnstring[0]; // myusername
 				turn.credential = turnstring[1]; //mypassword
 				turn.urls = [turnstring[2]]; //  ["turn:turn.obs.ninja:443"];
+				
 				session.configuration = {
 					iceServers: [
 						{ urls: ["stun:stun.l.google.com:19302", "stun:stun4.l.google.com:19302"]} // more than 4 stun+turn servers will cause firefox issues? (2 + 2 for now then)
 					],
 					sdpSemantics: 'unified-plan' // future-proofing
 				};
+				
 				session.configuration.iceServers.push(turn);
 			}
 		} catch (e) {
@@ -2824,7 +2821,7 @@ if (urlParams.has('turn')) {
 		}
 	}
 } else {
-	chooseBestTURN(); // obs.ninja turn servers, if needed.
+	chooseBestTURN(); // vdo.ninja turn servers, if needed.
 }
 
 
@@ -5332,7 +5329,7 @@ function printValues(obj) { // see: printViewStats
 						}
 					}
 					else if (key == 'version') {
-						stat = "OBS.Ninja Version";
+						stat = "VDO.Ninja Version";
 					} else if (key == 'platform') {
 						stat = "Platform (OS)";
 					}
@@ -7089,7 +7086,7 @@ session.publishIFrame = function(iframeURL){
 	}
 	
 	
-	// https://player.twitch.tv/?channel=twitchpresents&parent=obs.ninja
+	// https://player.twitch.tv/?channel=twitchpresents&parent=vdo.ninja
 	
 	session.iframeSrc = iframeURL;
 	
@@ -7235,7 +7232,7 @@ function outboundAudioPipeline(stream) {
 
 			if (session.audioLatency !== false) { // session.audioLatency could be useful for fixing clicking issues?
 				var audioContext = new AudioContext({
-					latencyHint: session.audioLatency / 1000.0 //, // needs to be in seconds, but OBSN user input is via milliseconds
+					latencyHint: session.audioLatency / 1000.0 //, // needs to be in seconds, but VDON user input is via milliseconds
 					// sampleRate: 48000 // not sure this is a great idea, but might as well add this here, versus later on since it is needed anyways.
 				});
 			} else {
@@ -8408,7 +8405,7 @@ function addToGoogleCalendar(){
 	var title = "Live Stream";
 	//var dates = "20180512T230000Z/20180513T030000Z";
 	var linkout = getById("director_block_1").innerText;
-	var details = "Join the live stream as a performer at the following link:<br/><br/>===>   "+linkout+"<br/><br/>To test your connection and camera ahead of time, please visit https://obs.ninja/speedtest<br/><br/>Do not share the details of this invite with others, unless explicitly told to.";
+	var details = "Join the live stream as a performer at the following link:<br/><br/>===>   "+linkout+"<br/><br/>To test your connection and camera ahead of time, please visit https://vdo.ninja/speedtest<br/><br/>Do not share the details of this invite with others, unless explicitly told to.";
 	details = details.split(' ').join('+');
 	details = details.split('&').join('%26');
 	var linkToOpen = "https://calendar.google.com/calendar/r/eventedit?text="+title+"&details="+details;
@@ -8421,7 +8418,7 @@ function addToGoogleCalendar(){
 function addToOutlookCalendar(){
 	var title = "Live Stream";
 	var linkout = getById("director_block_1").innerText;
-	var details = "Join the live stream as a performer at the following link:<br/><br/>===>   "+linkout+"<br/><br/>To test your connection and camera ahead of time, please visit https://obs.ninja/speedtest<br/><br/>Do not share the details of this invite with others, unless explicitly told to.";
+	var details = "Join the live stream as a performer at the following link:<br/><br/>===>   "+linkout+"<br/><br/>To test your connection and camera ahead of time, please visit https://vdo.ninja/speedtest<br/><br/>Do not share the details of this invite with others, unless explicitly told to.";
 	details = details.split(' ').join('%20');
 	details = details.split('&').join('%26');
 	
@@ -8435,7 +8432,7 @@ function addToOutlookCalendar(){
 function addToYahooCalendar(){
 	var title = "Live Stream";
 	var linkout = getById("director_block_1").innerText;
-	var details = "Join the live stream as a performer at the following link:<br/><br/>===>   "+linkout+"<br/><br/>To test your connection and camera ahead of time, please visit https://obs.ninja/speedtest<br/><br/>Do not share the details of this invite with others, unless explicitly told to.";
+	var details = "Join the live stream as a performer at the following link:<br/><br/>===>   "+linkout+"<br/><br/>To test your connection and camera ahead of time, please visit https://vdo.ninja/speedtest<br/><br/>Do not share the details of this invite with others, unless explicitly told to.";
 	details = details.split(' ').join('%20');
 	details = details.split('&').join('%26');
 	var linkToOpen = "https://calendar.yahoo.com?v60&title="+title+"&desc="+details;
@@ -10126,6 +10123,12 @@ function obfuscateURL(input) {
 		input = input.replace('http://obs.ninja/', '');
 	} else if (input.startsWith("obs.ninja/")) {
 		input = input.replace('obs.ninja/', '');
+	} else if (input.startsWith("https://vdo.ninja/")) {
+		input = input.replace('https://vdo.ninja/', '');
+	} else if (input.startsWith("http://vdo.ninja/")) {
+		input = input.replace('http://vdo.ninja/', '');
+	} else if (input.startsWith("vdo.ninja/")) {
+		input = input.replace('vdo.ninja/', '');
 	}
 
 	input = input.replace('&view=', '&v=');
@@ -12829,7 +12832,7 @@ function loadIframe(iframesrc) { // this is pretty important if you want to avoi
 		iframe.style.border = "0";
 	}
 	
-	if (iframesrc.startsWith("https://obs.ninja/")){
+	if (iframesrc.startsWith("https://vdo.ninja/")){
 		iframe.style.border = "0";
 	} else if (iframesrc.startsWith("https://youtube.com/")){
 		iframe.style.border = "0";
@@ -15492,7 +15495,7 @@ document.addEventListener("dragstart", event => {
 	if (session.label !== false) {
 		url += '&layer-name=' + session.label;
 	} else {
-		url += '&layer-name=OBS.Ninja';
+		url += '&layer-name=VDO.Ninja';
 	}
 	if (streamId.length > 1) url += ': ' + streamId[1].split('&')[0];
 	if (label.length > 1) url += ' - ' + decodeURI(label[1].split('&')[0]);
@@ -17315,7 +17318,7 @@ if (session.midiHotkeys || session.midiOut!==false) {
 				}
 			} else if (session.midiOut==parseInt(session.midiOut)){
 				try{
-					var input = WebMidi.inputs[parseInt(session.midiOut)];
+					var input = WebMidi.inputs[parseInt(session.midiOut)-1];
 					input.addListener("midimessage", "all", function(e) {
 						log(e);
 						var msg = {};
@@ -17420,7 +17423,7 @@ if (session.midiHotkeys || session.midiOut!==false) {
 						value: 3 */
 						log(e);
 						if (e.channel!==1){
-							errorlog("OBSN is currently configured for use on channel 1 for MIDI hotkeys");
+							errorlog("VDO.Ninja is currently configured for use on channel 1 for MIDI hotkeys");
 							return;
 						} // channel 1?
 						
@@ -17536,7 +17539,7 @@ function playbackMIDI(msg){
 		}
 	} else if (session.midiIn==parseInt(session.midiIn)){
 		try {
-			var i = parseInt(session.midiIn);
+			var i = parseInt(session.midiIn)-1;
 			if ("d" in msg){
 				WebMidi.outputs[i].send(msg.d[0], [msg.d[1] || 0, msg.d[2] || 0]);
 			}
@@ -17744,13 +17747,13 @@ addEventToAll("#multiselect-trigger3", 'mousedown touchend focusin focusout', fu
 // Warns user about network going down
 window.addEventListener("offline", function (e) {
 	if ((session.view) && (session.permaid === false)) {
-		log( "OBS.Ninja has no network connectivity and can't work properly." );
+		log("VDO.Ninja has no network connectivity and can't work properly." );
 	} else if (session.scene !== false) {
-		log( "OBS.Ninja has no network connectivity and can't work properly." );
+		log("VDO.Ninja has no network connectivity and can't work properly." );
 	} else if (!session.cleanOutput) {
 		warnUser("Network connection lost.");
 	} else {
-		log("OBS.Ninja has no network connectivity and can't work properly.");
+		log("VDO.Ninja has no network connectivity and can't work properly.");
 	}
 });
 
