@@ -5,10 +5,15 @@
 <img src="media/obsNinja_logo_full.png" alt="Logo by brimace" height="150" />
 
 ## What is ~~OBS NINJA~~ **VDO NINJA**
-VDO.Ninja uses peer-to-peer technology to bring remote cameras into OBS or other studio software. In most cases, all video data is transferred directly from peer to peer, without needing to go through any video server. This results in high-quality video with super low latency. In a small number of cases, video data may go through an encrypted TURN server, which is used to facilitate peer connections when otherwise not possible.
+VDO.Ninja uses peer-to-peer technology to bring remote cameras into OBS or other studio software. 
 
-VDO Ninja is not affiliated with OBS. VDO.Ninja is designed to allow content creators to produce real-time live shows using remote media streams. It can also turn smartphones into wireless webcams, with additional Virtualcam software. 
+In most cases, all video data is transferred directly from peer to peer, without needing to go through any video server. This results in high-quality video with super low latency. In a small number of cases, video data may go through an encrypted TURN server, which is used to facilitate peer connections when otherwise not possible.
 
+VDO.Ninja is designed to allow content creators to produce real-time live shows using remote media streams. It can also turn smartphones into wireless webcams, with additional Virtualcam software.
+
+VDO.Ninja is freely available to use as a managed service over at https://vdo.ninja. 
+
+For live support, please join our discord at https://discord.obs.ninja
 Please see the sub-reddit added info: https://reddit.com/r/obsninja  
 Also check out the FAQ for more info: https://github.com/steveseguin/vdoninja/wiki
 
