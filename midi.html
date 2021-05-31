@@ -1,0 +1,84 @@
+<html>
+<head>
+<script src="https://cdn.jsdelivr.net/npm/webmidi"></script>
+</head>
+<body><br />
+check the console debug logs for output;
+<br /><br />virtual midi controller here:<br />
+http://www.tobias-erichsen.de/software/loopmidi.html
+<br /><br /> code referenced from here:<br />
+https://github.com/djipco/webmidi
+<script>
+// Enable WebMidi.js
+WebMidi.enable(function (err) {
+
+  if (err) {
+    console.log("WebMidi could not be enabled.", err);
+  }
+
+  // Viewing available inputs and outputs
+  console.log(WebMidi.inputs);
+  console.log(WebMidi.outputs);
+  
+  // Reacting when a new device becomes available
+  WebMidi.addListener("connected", function(e) {
+    console.log(e);
+  });
+  
+  // Reacting when a device becomes unavailable
+  WebMidi.addListener("disconnected", function(e) {
+    console.log(e);
+  });
+
+  // Display the current time
+  console.log(WebMidi.time);
+
+
+  // Retrieve an input by name, id or index
+ // var input = WebMidi.getInputByName("StreamDeck2Daw");
+ // input = WebMidi.getInputById("1809568182");
+  var input = WebMidi.inputs[0];
+
+  // Listen for a 'note on' message on all channels
+  input.addListener('noteon', "all",
+    function (e) {
+      console.log("Received 'noteon' message (" + e.note.name + e.note.octave + ").");
+    }
+  );
+
+  // Listen to pitch bend message on channel 3
+  input.addListener('pitchbend', 3,
+    function (e) {
+      console.log("Received 'pitchbend' message.", e);
+    }
+  );
+
+  // Listen to control change message on all channels
+  input.addListener('controlchange', "all",
+    function (e) {
+      console.log("Received 'controlchange' message.", e);
+    }
+  );
+  
+  // Listen to NRPN message on all channels
+  input.addListener('nrpn', "all",
+    function (e) {
+      if(e.controller.type === 'entry') {
+        console.log("Received 'nrpn' 'entry' message.", e);
+      }
+      if(e.controller.type === 'decrement') {
+        console.log("Received 'nrpn' 'decrement' message.", e);
+      }
+      if(e.controller.type === 'increment') {
+        console.log("Received 'nrpn' 'increment' message.", e);
+      }
+      console.log("message value: " + e.controller.value + ".", e);
+    }
+  );
+
+  
+
+});
+</script>
+</body>
+</html>
