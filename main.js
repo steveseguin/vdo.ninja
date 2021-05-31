@@ -1076,6 +1076,10 @@ if (/CriOS/i.test(navigator.userAgent) && (iOS || iPad)) {
 	}
 }
 
+if (urlParams.has('tips')){
+	getById("guestTips").style.display="flex";
+}
+
 if (urlParams.has('broadcast') || urlParams.has('bc')) {
 	log("Broadcast flag set");
 	session.broadcast = urlParams.get('broadcast') || urlParams.get('bc') || null;
@@ -2788,6 +2792,7 @@ if (urlParams.has('turn')) {
 			sdpSemantics: 'unified-plan' // future-proofing
 		};
 	} else if ((turnstring == "false") || (turnstring == "off") || (turnstring == "0")) { // disable TURN servers
+		if (!session.configuration){session.configuration={};}
 		session.configuration = {
 			iceServers: [
 				{ urls: ["stun:stun.l.google.com:19302", "stun:stun4.l.google.com:19302"]} // more than 4 stun+turn servers will cause firefox issues? (2 + 2 for now then)
@@ -2803,14 +2808,12 @@ if (urlParams.has('turn')) {
 				turn.username = turnstring[0]; // myusername
 				turn.credential = turnstring[1]; //mypassword
 				turn.urls = [turnstring[2]]; //  ["turn:turn.obs.ninja:443"];
-				
 				session.configuration = {
 					iceServers: [
 						{ urls: ["stun:stun.l.google.com:19302", "stun:stun4.l.google.com:19302"]} // more than 4 stun+turn servers will cause firefox issues? (2 + 2 for now then)
 					],
 					sdpSemantics: 'unified-plan' // future-proofing
 				};
-				
 				session.configuration.iceServers.push(turn);
 			}
 		} catch (e) {

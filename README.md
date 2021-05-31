@@ -33,7 +33,7 @@ Directions on how to deploy a TURN server are listed in the turnserver.md file. 
 ## Server side / API software
 Since OBS.Ninja uses peer-2-peer technology, video connections are made directly between viewer and publisher in 90% of cases. Hosting a TURN server yourself may help improve performance, but less than 1% of users will see any benefit of this. Details on how to deploy a TURN server are provided. For those capable of hosting their own TURN server, that would be appreciated if possible, as TURN servers are the only real cost incurred by OBS.Ninja at present. (other than time, of course)
 
-Other than TURN servers, OBS.Ninja also uses public STUN servers and a hosted handshake server. These are used to facilitate the initial setup of peer connections and are generally not required after a peer connection is established. These servers are free to access and use, even for private deployments. The handshake server's code is currently not available, so basic access to the Internet is still required to use OBS.Ninja even with a private deployment.
+Other than TURN servers, OBS.Ninja also uses public STUN servers and a hosted handshake server. These are used to facilitate the initial setup of peer connections and are generally not required after a peer connection is established. These servers are free to access and use, even for private deployments. As of Version 17.3 of OBS.Ninja, you can host your own handshake server or use a third-party managed one (such as piesocket.com); please see details here: https://github.com/steveseguin/websocket_server
 
 Development builds of OBS.Ninja may include debugging software, but in-production releases have this removed. Double check to ensure "console.re" debugging is disabled before deployment, just to be safe.
 
@@ -62,9 +62,6 @@ http://chat.overlay.ninja/
 ### Steves.app:
 A website designed to also work with OBS.Ninja as a Broadcasting tool. Share your webcam, window, desktop, or video file with friends and family. Peer-2-peer, so privacy can be maintained, but you can also list your broadcasts for others to watch.
 https://steves.app/
-
-### StageTEN.tv
-A browser-based studio solution and simplified alternative to OBS, with built-in OBS.Ninja functionality. It is a server-based approach to group interactions and live production. Steve Seguin is affiliated with StageTEn, yet StageTEN is not affiliated with OBS.Ninja.
 
 ## Privacy
 I try to avoid data collection whenever possible and video streams are generally designed to be private, but use at your own risk. It is best to not share links created with OBS.Ninja with those you do not trust. I've provided instructions on how to deploy a TURN server if IP-address privacy is an issue for you. See: [turnserver.md](turnserver.md) 
