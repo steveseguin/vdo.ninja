@@ -1,5 +1,5 @@
 
-### Notice: We'll be slowly rebranding to VDO.Ninja over the coming weeks. Nothing else will be changing.
+#### Notice: We'll be slowly rebranding to VDO.Ninja over the coming weeks -- nothing else will be changing.
 
 <img src="media/obsNinja_logo_full.png" alt="Logo by brimace" height="150" />
 
