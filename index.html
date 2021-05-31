@@ -55,7 +55,7 @@
 			}
 		</style>
 		<link rel="stylesheet" href="./lineawesome/css/line-awesome.min.css" />
-		<link rel="stylesheet" href="./main.css?ver=62" />
+		<link rel="stylesheet" href="./main.css?ver=63" />
 		<script type="text/javascript" crossorigin="anonymous" src="./thirdparty/adapter.min.js"></script>
 	</head>
 	<body id="main" class="hidden">
@@ -66,8 +66,8 @@
 		<span itemprop="thumbnail" itemscope itemtype="http://schema.org/ImageObject">
 			<link itemprop="url" href="./media/obsNinja_logo_full.png" />
 		</span>
-		<script  type="text/javascript" crossorigin="anonymous"  src="./thirdparty/CodecsHandler.js?ver=32"></script>
-		<script  type="text/javascript" crossorigin="anonymous" src="./webrtc.js?ver=193"></script>
+		<script  type="text/javascript" crossorigin="anonymous"  src="./thirdparty/CodecsHandler.js?ver=33"></script>
+		<script  type="text/javascript" crossorigin="anonymous" src="./webrtc.js?ver=203"></script>
 		<input id="zoomSlider" type="range" style="display: none;" />
 		<div id="header">
 			
@@ -110,7 +110,7 @@
 			
 		</div>
 		<div id="controlButtons" >
-			<div id="obsState" class="advanced" style="border:grey solid 2px;padding:10px;margin:10px;color: white; z-index:2; background-color: #222D;display: block;top: 0;position: fixed;">ACTIVE</div>
+			<div id="obsState" class="advanced" style="border:green solid 2px;padding:10px;margin:10px;color: white; z-index:2; background-color: #222D;display: block;top: 0;position: fixed;">ACTIVE</div>
 			
 			<div id="subControlButtons">
 				<div id="queuebutton" title="Load the next guest in queue" alt="Load the next guest in queue" onmousedown="event.preventDefault(); event.stopPropagation();"  onclick="session.nextQueue()"  tabindex="16" role="button" aria-pressed="false" onkeyup="enterPressedClick(event,this);"  class="advanced float" style="cursor: pointer;" >
@@ -139,9 +139,15 @@
 				<div id="websitesharebutton" onmousedown="event.preventDefault(); event.stopPropagation();"  title="Share a website as an embedded iFRAME" alt="Share a website as an embedded iFRAME" onclick="shareWebsite()" tabindex="21" role="button" aria-pressed="false" onkeyup="enterPressedClick(event,this);"  class="float advanced" style="cursor: pointer;">
 					<i id="websitesharetoggle" onmousedown="event.preventDefault(); event.stopPropagation();"  class="toggleSize las la-window-maximize my-float"></i>
 				</div>
-				<div id="settingsbutton" onmousedown="event.preventDefault(); event.stopPropagation();"  title="Settings"  onclick="toggleSettings()" class="advanced float"  tabindex="22" role="button" aria-pressed="false" onkeyup="enterPressedClick(event,this);" style="cursor: pointer;" alt="Toggle the Settings Menu">
+				
+				<div id="roomsettingsbutton" onmousedown="event.preventDefault(); event.stopPropagation();"  title="Room Settings" onclick="toggleRoomSettings();" class="advanced float"  tabindex="22" role="button" aria-pressed="false" onkeyup="enterPressedClick(event,this);" style="cursor: pointer;" alt="Toggle the Room Settings Menu">
+					<i id="roomsettingstoggle" class="toggleSize las la-users-cog my-float"></i>
+				</div>
+				
+				<div id="settingsbutton" onmousedown="event.preventDefault(); event.stopPropagation();"  title="Your audio and video Settings"  onclick="toggleSettings()" class="advanced float"  tabindex="22" role="button" aria-pressed="false" onkeyup="enterPressedClick(event,this);" style="cursor: pointer;" alt="Toggle Settings Menu">
 					<i id="settingstoggle" class="toggleSize las la-cog my-float"></i>
 				</div>
+				
 				<div id="hangupbutton"  onmousedown="event.preventDefault(); event.stopPropagation();" title="Hangup the Call"  alt="Hangup the Call" onclick="hangup()" class="advanced float"  tabindex="23" role="button" aria-pressed="false" onkeyup="enterPressedClick(event,this);" style="cursor: pointer;" >
 					<i class="toggleSize my-float las la-phone rotate225" aria-hidden="true"></i>
 				</div>
@@ -598,7 +604,9 @@
 							</div>
 						</div>
 						<div>See the 
-							<a style="text-decoration: none; color: blue;" target="_blank" href="https://docs.obs.ninja/advanced-settings">documentation</a> for more options and info.
+							<a style="text-decoration: none; color: blue;" target="_blank" href="https://docs.obs.ninja/advanced-settings">documentation</a> for more options and info.<br /><br />
+							Try out the advanced <a style="text-decoration: none; color: blue;" target="_blank" href="https://invite.obs.ninja/">invite generator</a> here also.
+							
 						</div>
 					</div>
 				</div>
@@ -714,7 +722,7 @@
 							</li>
 							
 							<br />
-							👓🔆 Site Updated on May 19th.   This is the BETA version.
+							🌻 Site Updated on May 28th. The new <a href="https://docs.obs.ninja/release-notes/v18">v18 release notes are here</a>. If new issues occur, the previous version can also be <a href="https://obs.ninja/v17/">found here</a>.
 
 							<br />
 							<br />
@@ -1228,7 +1236,7 @@
 				
 				
 				<font class="tooltip hidden" data-cluster="2" style="height: 0; border: 0;">
-					<input data-action-type="volume" type="range" min="0" max="200" value="100" title="Remotely change the volume of this guest" oninput="remoteVolumeUI(this)" onclick="remoteVolume(this);" style="grid-column: 2; margin:5px; width: 93%; position: relative;top: 0.6em; background-color:#fff0;"/><span class="tooltiptext" style='float: right; overflow: auto;  left: 40px;  width: 2.5em;  top: -13px; margin: 0; position:relative;font-family:"Noto Color Emoji", "Apple Color Emoji", "Segoe UI Emoji", Times, Symbola, Aegyptus,Code2000, Code2001, Code2002, Musica, serif, LastResort;' >100</span>
+					<input data-action-type="volume" type="range" min="0" max="200" value="100" title="Remotely change the volume of this guest" oninput="remoteVolumeUI(this)" ondblclick="this.value=100;remoteVolume(this);remoteVolumeUI(this);" onchange="remoteVolume(this);" style="grid-column: 2; margin:5px; width: 93%; position: relative;top: 0.6em; background-color:#fff0;"/><span class="tooltiptext" style='float: right; overflow: auto;  left: 40px;  width: 2.5em;  top: -13px; margin: 0; position:relative;font-family:"Noto Color Emoji", "Apple Color Emoji", "Segoe UI Emoji", Times, Symbola, Aegyptus,Code2000, Code2001, Code2002, Musica, serif, LastResort;' >100</span>
 				</font>
 				
 				<span class="hidden" data-cluster="2">
@@ -1476,6 +1484,18 @@
 			<button style="width:60px;background-color:#EEE;top: -1px;position: relative;" onclick="sendChatMessage()" data-translate='send-chat'>Send</button>
 		</div>
 		
+		
+		<div id="roomSettings" style="display:none">
+			<div class="promptModalInner">
+				<span class='modalClose' onclick="toggleRoomSettings();">×</span>
+				<span></span>
+				<h3>Change room settings</h3><br />
+				<label title="Increase this at your peril. Changes the total inbound video bitrate per guest; mobile devices excluded. Webp-mode also excluded." for="trbSettingInput">Change room video quality:</label><span style="margin-left: 6px;" id="trbSettingInputFeedback"></span>-kbps
+				<input id="trbSettingInput" type="range" min="0" max="2000" value="500" onchange="changeTRB(this);" oninput="getById('trbSettingInputFeedback').innerHTML = this.value;" style="width:400px;display:block;" />
+				
+			</div>
+		</div>
+		
 		<div id="transferSettingsTemplate" style="display:none">
 			<h3>Change guest settings</h3><br />
 			<label class="switch" title="Cannot see videos">
@@ -1611,10 +1631,12 @@
 		
 			if (window.location.hostname.indexOf("www.obs.ninja") == 0) {
 				window.location = window.location.href.replace("www.obs.ninja","obs.ninja"); // the session.salt is domain specific; let's consolidate www as a result.
+			} else if (window.location.hostname.indexOf("www.vdo.ninja") == 0) {
+				window.location = window.location.href.replace("www.vdo.ninja","vdo.ninja"); // the session.salt is domain specific; let's consolidate www as a result.
 			}
 		
 			var session = WebRTC.Media; // session is a required global variable if configuring manually. Run before loading main.js but after webrtc.js.
-			session.version = "18.beta";
+			session.version = "18.1";
 			session.streamID = session.generateStreamID(); // randomly generates a streamID for this session. You can set your own programmatically if needed
 			
 			session.defaultPassword = "someEncryptionKey123"; // Change this password if self-deploying for added security/privacy
@@ -1695,7 +1717,7 @@
 		<script type="text/javascript" id="main-js" src="./main.js" data-translation="blank"></script>
 		<script type="text/javascript" crossorigin="anonymous" id="mixer-js" src="./mixer.js?ver=2"></script>
 	-->
-		<script type="text/javascript" crossorigin="anonymous" id="main-js" src="./main.js?ver=207"></script>
+		<script type="text/javascript" crossorigin="anonymous" id="main-js" src="./main.js?ver=210"></script>
 		<script type="text/javascript">
 			setTimeout(function(){ // lazy load
 				var script = document.createElement('script');

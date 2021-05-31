@@ -1511,6 +1511,9 @@ img {
 	top:0.5;
 }
 
+.ondeck {
+	border: grey solid 2px !important;
+}
 
 .recording{
 	border: red solid 2px !important;
@@ -2691,7 +2694,8 @@ input:checked + .slider:before {
   transform: translateX(16px);
 }
 
-#promptModal {
+
+#promptModal, #roomSettings {
 	position: absolute;
     background-color: rgb(221 221 221);
     box-shadow: 0 0 30px 10px #0000005c;
