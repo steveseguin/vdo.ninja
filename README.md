@@ -14,7 +14,7 @@ VDO.Ninja is designed to allow content creators to produce real-time live shows 
 VDO.Ninja is freely available to use as a managed service over at https://vdo.ninja. 
 
 For live support, please join our discord at https://discord.obs.ninja
-Please see the sub-reddit added info: https://reddit.com/r/obsninja  
+Please see the sub-reddit added info: https://reddit.com/r/vdoninja  
 Also check out the FAQ for more info: https://github.com/steveseguin/vdoninja/wiki
 
 <img src="https://user-images.githubusercontent.com/2575698/94018108-34b1de00-fd7e-11ea-8c7d-df001253b60d.png" height="300" />
@@ -47,7 +47,7 @@ A design goal of VDO.Ninja is to be serverless and we are 99% of the way there. 
 
 ## Issues? problems? Not working?
 
-Please see the sub-reddit for more support: https://reddit.com/r/obsninja  
+Please see the sub-reddit for more support: https://reddit.com/r/vdoninja  
 
 Also check out the FAQ for common answers: https://github.com/steveseguin/vdoninja/wiki
 
