@@ -1,4 +1,4 @@
-# OBS Ninja Cheat Sheets
+# VDO Ninja Cheat Sheets
 
 VDO Ninja lets you bring remote video feeds into OBS at low latency and with excellent quality
 
