@@ -17,7 +17,7 @@ For live support, please join our discord at https://discord.obs.ninja
 Please see the sub-reddit added info: https://reddit.com/r/vdoninja  
 Also check out the FAQ for more info: https://github.com/steveseguin/vdoninja/wiki
 
-<img src="https://user-images.githubusercontent.com/2575698/120865531-3615e600-c55c-11eb-975c-bf3c27705cb5.png" height="300" />
+<img src="https://user-images.githubusercontent.com/2575698/120865595-56de3b80-c55c-11eb-8b98-60c59ae0f904.png" height="300" />
 
 ## How to use
 I demo the basic usage of VDO.Ninja on YouTube: https://www.youtube.com/watch?v=6R_sQKxFAhg
