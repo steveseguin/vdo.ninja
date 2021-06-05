@@ -44,24 +44,21 @@
 	  outline: none !important;
 	}
 
-	#gobutton{
-		padding: 1em;
-		font-size: 1em;
-		margin: auto auto;
-		height: 100%;
-		font-family: system-ui;
+	#gobutton {
+		font-size: 20px;
 		font-weight: bold;
-		border: 2px solid #6aab23;
+		border: none;
 		background: #6aab23;
 		display: flex;
+		border-radius: 0px;
 		border-top-right-radius: 10px;
 		border-bottom-right-radius: 10px;
-		box-shadow: 0 12px 15px -10px #5ca70b;
-		position: relative;
-		right: 2px;
-		top: 1px;
-		color:white;
-		cursor:pointer;
+		box-shadow: 0 12px 15px -10px #5ca70b, 0 2px 0px #6aab23;
+		color: white;
+		cursor: pointer;
+		box-sizing: border-box;
+		align-items: center;
+		padding: 0 1em;
 	}
 	#header{
 		width:100%;
@@ -73,13 +70,15 @@
 		width: 100%;
 		padding: 1em;
 		font-weight: bold;
-		font-family: system-ui;
 		background: white;
-		border-bottom: 4px solid #6aab23;
-		box-shadow: 0px 30px 40px -32px #6aab23;
+		border: 4px solid white;
+		box-shadow: 0px 30px 40px -32px #6aab23, 0 2px 0px #6aab23;
 		border-top-left-radius: 10px;
 		border-bottom-left-radius: 10px;
 		transition: all 0.2s linear;
+		box-sizing: border-box;
+		border-bottom-right-radius: 0;
+		border-top-right-radius: 0;
 	}
 
 	input#changeText:focus {
@@ -267,37 +266,46 @@
 		background-color: #182031;
 	}
 
+	#inputCombo {
+		display: flex;
+		flex-direction: row;
+		flex-wrap: nowrap;
+		flex-grow: 1;
+	}
+
 	</style>
 </head>
 <body >
 
-<div id="header" style="-webkit-app-region: drag;color:#6f6f6f;font-size:40px; line-height: 40px; padding: 20px; letter-spacing: 3; font-weight: bold;">Electron Capture</div>
-<div class="container" >
+	<div id="header" style="-webkit-app-region: drag;color:#6f6f6f;font-size:40px; line-height: 40px; padding: 20px; letter-spacing: 3; font-weight: bold;">Electron Capture</div>
+	<div class="container" >
+		
+		<div id='warning4mac' style="display:none;"> ✨ Great News! OBS v26.1.2 <a href="https://github.com/obsproject/obs-browser/issues/209#issuecomment-748683083">now supports</a> VDO.Ninja without needing the Electron Capture app! 🥳</div>
+		<div id="electronVersion" style="display:none;">✨ Great News! <a href="https://github.com/steveseguin/electroncapture/releases/latest">Electron Capture <span id="currentElectronVersion"></span></a> is now available!<br>Update yours today to stay up-to-date with security patches.</div>
+		
+		<div id="messageDiv" style='display:block'><br /></div>
+		<div class="container">
+				<div id="urlInput" title="Put the link you want to load here">
+					<label for="changeText">
+						<i class="las la-play"></i>
+					</label>
+					<div id="inputCombo">
+						<input type="text" id="changeText" class="inputfield" value="http://vdo.ninja/?view=" onchange="modURL" onkeyup="enterPressed(event, gohere);" />
+						<button  onclick="gohere();" id="gobutton">GO</button>
+					</div>
+				</div>
+				<div id="audioOutputContainer" title="This option will only work with the official vdo.ninja domain">
+					<label for="audioOutput"><i class="las la-headphones"></i></label><select id="audioOutput"></select>
+				</div>
+				<div id="history" title="History of past links used. You can clear this history using the button to the left">
+					<label for="lastUrls" onclick="resetHistory()">
+						<i class="las la-history"></i>
+					</label>
+					<select id="lastUrls" onchange="setUrl()"></select>
+				</div>
 	
-	<div id='warning4mac' style="display:none;"> ✨ Great News! OBS v26.1.2 <a href="https://github.com/obsproject/obs-browser/issues/209#issuecomment-748683083">now supports</a> VDO.Ninja without needing the Electron Capture app! 🥳</div>
-	<div id="electronVersion" style="display:none;">✨ Great News! <a href="https://github.com/steveseguin/electroncapture/releases/latest">Electron Capture <span id="currentElectronVersion"></span></a> is now available!<br>Update yours today to stay up-to-date with security patches.</div>
-	
-	<div id="messageDiv" style='display:block'><br /></div>
-	<div class="container">
-			<div id="urlInput" title="Put the link you want to load here">
-				<label for="changeText">
-					<i class="las la-play"></i>
-				</label>
-				<input type="text" id="changeText" class="inputfield" value="http://vdo.ninja/?view=" onchange="modURL" onkeyup="enterPressed(event, gohere);" />
-				<button  onclick="gohere();" id="gobutton">GO</button>
-			</div>
-			<div id="audioOutputContainer" title="This option will only work with the official vdo.ninja domain">
-				<label for="audioOutput"><i class="las la-headphones"></i></label><select id="audioOutput"></select>
-			</div>
-			<div id="history" title="History of past links used. You can clear this history using the button to the left">
-				<label for="lastUrls" onclick="resetHistory()">
-					<i class="las la-history"></i>
-				</label>
-				<select id="lastUrls" onchange="setUrl()"></select>
-			</div>
-
+		</div>
 	</div>
-</div>
 
 
 <script>
@@ -356,10 +364,9 @@ function resetHistory(){
 
 var urlParams = new URLSearchParams(window.location.search);
 
-//if (navigator.userAgent.indexOf('Mac OS X') != -1){
-//	document.getElementById("warning4mac").style.display="block";
-//} else 
-if ((location.hostname.toLowerCase() == "obs.ninja") || (location.hostname.toLowerCase() == "vdo.ninja")){
+if (navigator.userAgent.indexOf('Mac OS X') != -1){
+	document.getElementById("warning4mac").style.display="block";
+} else if (location.hostname.toLowerCase() == "obs.ninja"){
 	try {
 		if (navigator.userAgent.toLowerCase().indexOf(' electron/') > -1) { // for now, just PC or Linux versions only.
 			function compareVersions(version){
@@ -523,8 +530,8 @@ function updateURLParameter(url, param, paramVal){
 
 if (urlParams.has('name')){
 	var name  = urlParams.get('name');
-	if ((name!="OBSNinja") || (name!="VDONinja")){
-		document.getElementById('changeText').value = "https://vdo.ninja/?view="+name;
+	if (name!="OBSNinja"){
+		document.getElementById('changeText').value = "https://obs.ninja/?view="+name;
 	}
 } 
 
@@ -544,8 +551,6 @@ function modURL(){
 	var url = document.getElementById('changeText').value;
 	if (url.startsWith("obs.ninja")){
 		url = "https://"+url;
-	} else if (url.startsWith("vdo.ninja")){
-		url = "https://"+url;
 	}
 	console.log(url);
 	return url;
@@ -554,7 +559,7 @@ function gohere(){
 	addUrlToHistory(document.getElementById('changeText').value);
 	localStorage.setItem('lastUrls', JSON.stringify(lastUrls));
 	var url = modURL();
-	if (!(document.getElementById('changeText').value.includes("vdo.ninja")) && (document.getElementById('changeText').value.includes("http"))  && (document.getElementById('changeText').value.includes("&sink"))){
+	if (!(document.getElementById('changeText').value.includes("obs.ninja")) && (document.getElementById('changeText').value.includes("http"))  && (document.getElementById('changeText').value.includes("&sink"))){
 		alert("Notice: The &sink command is domain specific.\nVisit https://YOURDOMAIN.com/electron instead.");
 	}
 	window.location = url;
