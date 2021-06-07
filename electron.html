@@ -530,8 +530,8 @@ function updateURLParameter(url, param, paramVal){
 
 if (urlParams.has('name')){
 	var name  = urlParams.get('name');
-	if (name!="OBSNinja"){
-		document.getElementById('changeText').value = "https://obs.ninja/?view="+name;
+	if (name!="OBSNinja" && name!="VDONinja"){
+		document.getElementById('changeText').value = "https://vdo.ninja/?view="+name;
 	}
 } 
 
@@ -559,7 +559,9 @@ function gohere(){
 	addUrlToHistory(document.getElementById('changeText').value);
 	localStorage.setItem('lastUrls', JSON.stringify(lastUrls));
 	var url = modURL();
-	if (!(document.getElementById('changeText').value.includes("obs.ninja")) && (document.getElementById('changeText').value.includes("http"))  && (document.getElementById('changeText').value.includes("&sink"))){
+	if ((document.getElementById('changeText').value.includes("obs.ninja")) && (document.getElementById('changeText').value.includes("http"))  && (document.getElementById('changeText').value.includes("&sink"))){
+		alert("Notice: OBS.Ninja has been replaced by VDO.Ninja.\n\nPlease update your links accordingly for audio output to work correctly.");
+	} else if (!(document.getElementById('changeText').value.includes(window.location.hostname)) && (document.getElementById('changeText').value.includes("http"))  && (document.getElementById('changeText').value.includes("&sink"))){
 		alert("Notice: The &sink command is domain specific.\nVisit https://YOURDOMAIN.com/electron instead.");
 	}
 	window.location = url;
