@@ -3,9 +3,9 @@ VDO.Ninja lets you bring remote video feeds into OBS at low latency and with exc
 
   Jump to:
 
-* [OBS Ninja Basic Concepts](#basicconcepts)
-* [Getting Started with OBS Ninja](#gettingstarted)
-* [Automating OBSN start-up](#automation)
+* [VDO.Ninja Basic Concepts](#basicconcepts)
+* [Getting Started with VDO.Ninja](#gettingstarted)
+* [Automating VDON start-up](#automation)
 * [Mac: Audio Routing with Loopback (example 1)](#loopbackrouting1)
 
 <a name="basiccomponents"></a>
@@ -18,7 +18,7 @@ To understand VDO.Ninja, you have to understand its three main components:
 * SCENES & SOLO LINKS are a way for the producer/director to add guests to OBS, vMix, etc.
 * The CONTROL CENTER gives the director control over the guests' status. This includes mute/unmute, visibility in scenes or transfers to other rooms.
 
-![OBS Ninja | basic concepts](basicconcepts/OBSN_basic_concepts.jpg)   
+![VDO.Ninja | basic concepts](basicconcepts/OBSN_basic_concepts.jpg)   
 (v1.2, 2021-01-22)
 
 [download JPG](basicconcepts/OBSN_basic_concepts.jpg) |
