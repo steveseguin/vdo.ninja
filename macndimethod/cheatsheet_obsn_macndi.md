@@ -1,5 +1,5 @@
-# OBS Ninja Cheat Sheets
-OBS Ninja lets you bring remote video feeds into OBS at low latency and with excellent quality
+# VDO.Ninja Cheat Sheets
+VDO.Ninja lets you bring remote video feeds into OBS at low latency and with excellent quality
 
   Jump to:
 
@@ -12,7 +12,7 @@ OBS Ninja lets you bring remote video feeds into OBS at low latency and with exc
 
 ## BASIC CONCEPTS
 
-To understand OBS Ninja, you have to understand its three main components: 
+To understand VDO.Ninja, you have to understand its three main components: 
 
 * The GROUP ROOM allows guests to hear and see each other. GROUP ROOMs are automtatically created by guests joining them through an invitation link in a browser (preferably Chrome). No further configuration is required (but possible by adding parameters to the invitation link).
 * SCENES & SOLO LINKS are a way for the producer/director to add guests to OBS, vMix, etc.
@@ -29,7 +29,7 @@ To understand OBS Ninja, you have to understand its three main components:
 
 ## GETTING STARTED
 
-Many of the OBS Ninja behaviour is managed through URL parameters in the form of &parameter=value.  
+Many of the VDO.Ninja behaviour is managed through URL parameters in the form of &parameter=value.  
 This includes things like
 
 * audio and video bit rates
@@ -39,7 +39,7 @@ This includes things like
 * passwords
 * buffering behaviour
 
-![OBS Ninja | cheat-sheet](cheatsheet/OBSN_cheat-sheet.jpg)   
+![VDO.Ninja | cheat-sheet](cheatsheet/OBSN_cheat-sheet.jpg)   
 (v1.1, 2021-01-23)
 
 [download JPG](cheatsheet/OBSN_cheat-sheet.jpg) |
@@ -48,7 +48,7 @@ This includes things like
 
 <a name="automation"></a>
 
-## AUTOMATING OBSN START-UP (currently in beta only)
+## AUTOMATING VDON START-UP (currently in beta only)
 
 For regularly repeated setups you can automate a lot of the parameters:
 
@@ -60,7 +60,7 @@ For regularly repeated setups you can automate a lot of the parameters:
 Depending on your platform, you can put all these into scripts or even apps for easy recall.
 
 
-![OBS Ninja | automating start-up](automation/OBSN_automation_cheat-sheet.jpg)   
+![VDO.Ninja | automating start-up](automation/OBSN_automation_cheat-sheet.jpg)   
 (v1.0, 2021-01-22)
 
 [download JPG](automation/OBSN_automation_cheat-sheet.jpg) |
@@ -74,7 +74,7 @@ Depending on your platform, you can put all these into scripts or even apps for 
 
 Route audio from multiple apps to all guests in a room and record the same audio in OBS while simultaneously being a participant in the room.
 
-![OBS Ninja | mac audio routing example 1](loopbackrouting1/loopbackrouting1.jpg)   
+![VDO.Ninja | mac audio routing example 1](loopbackrouting1/loopbackrouting1.jpg)   
 (v1.0, 2021-02-09)
 
 [download JPG](loopbackrouting1/loopbackrouting1.jpg) |
