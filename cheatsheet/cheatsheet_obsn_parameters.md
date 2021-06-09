@@ -1,10 +1,10 @@
-# OBS Ninja Cheat Sheets
+# VDO.Ninja Cheat Sheets
 
 [⬅ back](../README.md)
 
 ## USING PARAMETERS
 
-Many of the OBS Ninja behaviour is managed through URL parameters in the form of &parameter=value.  
+Many of the VDO.Ninja behaviour is managed through URL parameters in the form of &parameter=value.  
 This includes things like
 
 * audio and video bit rates
@@ -14,7 +14,7 @@ This includes things like
 * passwords
 * buffering behaviour
 
-![OBS Ninja | cheat-sheet](OBSN_cheat-sheet.jpg)   
+![VDO.Ninja | cheat-sheet](OBSN_cheat-sheet.jpg)   
 (v1.1, 2021-01-23)
 
 [download JPG](OBSN_cheat-sheet.jpg) |
