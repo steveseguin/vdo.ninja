@@ -1,4 +1,4 @@
-# OBS Ninja Cheat Sheets
+# VDO.Ninja Cheat Sheets
 
 [⬅ back](../README.md)
 
@@ -14,7 +14,7 @@ For regularly repeated setups you can automate a lot of the parameters:
 Depending on your platform, you can put all these into scripts or even apps for easy recall.
 
 
-![OBS Ninja | automating start-up](OBSN_automation_cheat-sheet.jpg)   
+![VDO Ninja | automating start-up](OBSN_automation_cheat-sheet.jpg)   
 (v1.0, 2021-01-22)
 
 [download JPG](OBSN_automation_cheat-sheet.jpg) |
