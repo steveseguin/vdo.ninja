@@ -18,12 +18,12 @@ To understand VDO.Ninja, you have to understand its three main components:
 * SCENES & SOLO LINKS are a way for the producer/director to add guests to OBS, vMix, etc.
 * The CONTROL CENTER gives the director control over the guests' status. This includes mute/unmute, visibility in scenes or transfers to other rooms.
 
-![VDO.Ninja | basic concepts](basicconcepts/OBSN_basic_concepts.jpg)   
+![VDO.Ninja | basic concepts](../basicconcepts/OBSN_basic_concepts.jpg)   
 (v1.2, 2021-01-22)
 
-[download JPG](basicconcepts/OBSN_basic_concepts.jpg) |
-[download PNG](basicconcepts/OBSN_basic_concepts.png) |
-[download PDF](basicconcepts/OBSN_basic_concepts.pdf) (best for printing)
+[download JPG](../basicconcepts/OBSN_basic_concepts.jpg) |
+[download PNG](../basicconcepts/OBSN_basic_concepts.png) |
+[download PDF](../basicconcepts/OBSN_basic_concepts.pdf) (best for printing)
 
 <a name="gettingstarted"></a>
 
@@ -39,12 +39,12 @@ This includes things like
 * passwords
 * buffering behaviour
 
-![VDO.Ninja | cheat-sheet](cheatsheet/OBSN_cheat-sheet.jpg)   
+![VDO.Ninja | cheat-sheet](../cheatsheet/OBSN_cheat-sheet.jpg)   
 (v1.1, 2021-01-23)
 
-[download JPG](cheatsheet/OBSN_cheat-sheet.jpg) |
-[download PNG](cheatsheet/OBSN_cheat-sheet.png) |
-[download PDF](cheatsheet/OBSN_cheat-sheet.pdf) (best for printing)
+[download JPG](../cheatsheet/OBSN_cheat-sheet.jpg) |
+[download PNG](../cheatsheet/OBSN_cheat-sheet.png) |
+[download PDF](../cheatsheet/OBSN_cheat-sheet.pdf) (best for printing)
 
 <a name="automation"></a>
 
@@ -60,12 +60,12 @@ For regularly repeated setups you can automate a lot of the parameters:
 Depending on your platform, you can put all these into scripts or even apps for easy recall.
 
 
-![VDO.Ninja | automating start-up](automation/OBSN_automation_cheat-sheet.jpg)   
+![VDO.Ninja | automating start-up](../automation/OBSN_automation_cheat-sheet.jpg)   
 (v1.0, 2021-01-22)
 
-[download JPG](automation/OBSN_automation_cheat-sheet.jpg) |
-[download PNG](automation/OBSN_automation_cheat-sheet.png) |
-[download PDF](automation/OBSN_automation_cheat-sheet.pdf) (best for printing)
+[download JPG](../automation/OBSN_automation_cheat-sheet.jpg) |
+[download PNG](../automation/OBSN_automation_cheat-sheet.png) |
+[download PDF](../automation/OBSN_automation_cheat-sheet.pdf) (best for printing)
 
 
 <a name="loopbackrouting1"></a>
@@ -74,9 +74,9 @@ Depending on your platform, you can put all these into scripts or even apps for 
 
 Route audio from multiple apps to all guests in a room and record the same audio in OBS while simultaneously being a participant in the room.
 
-![VDO.Ninja | mac audio routing example 1](loopbackrouting1/loopbackrouting1.jpg)   
+![VDO.Ninja | mac audio routing example 1](../loopbackrouting1/loopbackrouting1.jpg)   
 (v1.0, 2021-02-09)
 
-[download JPG](loopbackrouting1/loopbackrouting1.jpg) |
-[download PNG](loopbackrouting1/loopbackrouting1.png) |
-[download PDF](loopbackrouting1/loopbackrouting1.pdf) (best for printing)
+[download JPG](../loopbackrouting1/loopbackrouting1.jpg) |
+[download PNG](../loopbackrouting1/loopbackrouting1.png) |
+[download PDF](../loopbackrouting1/loopbackrouting1.pdf) (best for printing)
