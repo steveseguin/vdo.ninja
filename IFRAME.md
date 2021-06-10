@@ -300,8 +300,6 @@ eventer(messageEvent, function (e) {
 
 This VDO.Ninja API is developed and expanded based on user feedback and requests. It is by no means complete.
 
-Regarding versioning, I currently host past versions of VDO.Ninja, so using those past versions can ensure some level of consistency and expectation. https://vdo.ninja/v12/ for example is the version 12 hosted version. The active and main production version of VDON of course undergoes constant updates, and while I try to maintain backwards compatibility with changes to the API, it is still early days and changes might happen.
-
-Please feel free to follow me in the VDO.Ninja Discord channel, where I post news about updates and listen to requests. The upcoming version of VDO.Ninja is also often hosted at https://vdo.ninja/beta, where you can explore new features and help crush any unexpected bugs.
+Please feel free to follow me in the VDO.Ninja Discord channel (discord.vdo.ninja) where I post news about updates and listen to requests. The upcoming version of VDO.Ninja is also often hosted at https://vdo.ninja/beta, where you can explore new features and help crush any unexpected bugs.
 
 -steve
