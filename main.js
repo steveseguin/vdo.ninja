@@ -11,7 +11,6 @@
 var formSubmitting = true;
 var activatedPreview = false;
 
-
 // function log(msg){ // uncomment to enable logging.
 	// console.log(msg);
 // }
@@ -386,6 +385,19 @@ var checkStrengthRoom = function() {
 	}
 };
 
+var emojiShortCodes ={":joy:":"😂",":heart:":"❤️",":heart_eyes:":"😍",":sob:":"😭",":blush:":"😊",":unamused:":"😒",":two_hearts:":"💕",":weary:":"😩",":ok_hand:":"👌",":pensive:":"😔",":smirk:":"😏",":grin:":"😁",":wink:":"😉",":thumbsup:":"👍",":pray:":"🙏",":relieved:":"😌",":notes:":"🎶",":flushed:":"😳",":raised_hands:":"🙌",":see_no_evil:":"🙈",":cry:":"😢",":sunglasses:":"😎",":v:":"✌️",":eyes:":"👀",":sweat_smile:":"😅",":sparkles:":"✨",":sleeping:":"😴",":smile:":"😄",":purple_heart:":"💜",":broken_heart:":"💔",":blue_heart:":"💙",":confused:":"😕",":disappointed:":"😞",":yum:":"😋",":neutral_face:":"😐",":sleepy:":"😪",":clap:":"👏",":cupid:":"💘",":heartpulse:":"💗",":kiss:":"💋",":point_right:":"👉",":scream:":"😱",":fire:":"🔥",":rage:":"😡",":smiley:":"😃",":tada:":"🎉",":tired_face:":"😫",":camera:":"📷",":rose:":"🌹",":muscle:":"💪",":skull:":"💀",":sunny:":"☀️",":yellow_heart:":"💛",":triumph:":"😤",":laughing:":"😆",":sweat:":"😓",":point_left:":"👈",":grinning:":"😀",":mask:":"😷",":green_heart:":"💚",":wave:":"👋",":persevere:":"😣",":heartbeat:":"💓",":crown:":"👑",":innocent:":"😇",":headphones:":"🎧",":confounded:":"😖",":angry:":"😠",":grimacing:":"😬",":star2:":"🌟",":gun:":"🔫",":raising_hand:":"🙋",":thumbsdown:":"👎",":dancer:":"💃",":musical_note:":"🎵",":no_mouth:":"😶",":dizzy:":"💫",":fist:":"✊",":point_down:":"👇",":no_good:":"🙅",":boom:":"💥",":tongue:":"👅",":poop:":"💩",":cold_sweat:":"😰",":gem:":"💎",":ok_woman:":"🙆",":pizza:":"🍕",":joy_cat:":"😹",":leaves:":"🍃",":sweat_drops:":"💦",":penguin:":"🐧",":zzz:":"💤",":walking:":"🚶",":airplane:":"✈️",":balloon:":"🎈",":star:":"⭐",":ribbon:":"🎀",":worried:":"😟",":underage:":"🔞",":fearful:":"😨",":hibiscus:":"🌺",":microphone:":"🎤",":open_hands:":"👐",":ghost:":"👻",":palm_tree:":"🌴",":nail_care:":"💅",":alien:":"👽",":bow:":"🙇",":cloud:":"☁",":soccer:":"⚽",":angel:":"👼",":dancers:":"👯",":snowflake:":"❄️",":point_up:":"☝️",":rainbow:":"🌈",":gift_heart:":"💝",":gift:":"🎁",":beers:":"🍻",":anguished:":"😧",":earth_africa:":"🌍",":movie_camera:":"🎥",":anchor:":"⚓",":zap:":"⚡",":runner:":"🏃",":sunflower:":"🌻",":bouquet:":"💐",":dog:":"🐶",":moneybag:":"💰",":herb:":"🌿",":couple:":"👫",":fallen_leaf:":"🍂",":tulip:":"🌷",":birthday:":"🎂",":cat:":"🐱",":coffee:":"☕",":dizzy_face:":"😵",":point_up_2:":"👆",":open_mouth:":"😮",":hushed:":"😯",":basketball:":"🏀",":ring:":"💍",":astonished:":"😲",":hear_no_evil:":"🙉",":dash:":"💨",":cactus:":"🌵",":hotsprings:":"♨️",":telephone:":"☎️",":maple_leaf:":"🍁",":princess:":"👸",":massage:":"💆",":love_letter:":"💌",":trophy:":"🏆",":blossom:":"🌼",":lips:":"👄",":fries:":"🍟",":doughnut:":"🍩",":frowning:":"😦",":ocean:":"🌊",":bomb:":"💣",":cyclone:":"🌀",":rocket:":"🚀",":umbrella:":"☔",":couplekiss:":"💏",":lollipop:":"🍭",":clapper:":"🎬",":pig:":"🐷",":smiling_imp:":"😈",":imp:":"👿",":bee:":"🐝",":kissing_cat:":"😽",":anger:":"💢",":santa:":"🎅",":earth_asia:":"🌏",":football:":"🏈",":guitar:":"🎸",":panda_face:":"🐼",":strawberry:":"🍓",":smirk_cat:":"😼",":banana:":"🍌",":watermelon:":"🍉",":snowman:":"⛄",":smile_cat:":"😸",":eggplant:":"🍆",":crystal_ball:":"🔮",":calling:":"📲",":iphone:":"📱",":partly_sunny:":"⛅",":warning:":"⚠️",":scream_cat:":"🙀",":baby:":"👶",":feet:":"🐾",":footprints:":"👣",":beer:":"🍺",":wine_glass:":"🍷",":video_camera:":"📹",":rabbit:":"🐰",":smoking:":"🚬",":peach:":"🍑",":snake:":"🐍",":turtle:":"🐢",":cherries:":"🍒",":kissing:":"😗",":frog:":"🐸",":milky_way:":"🌌",":closed_book:":"📕",":candy:":"🍬",":hamburger:":"🍔",":bear:":"🐻",":tiger:":"🐯",":icecream:":"🍦",":pineapple:":"🍍",":ear_of_rice:":"🌾",":syringe:":"💉",":tv:":"📺",":pill:":"💊",":octopus:":"🐙",":grapes:":"🍇",":smiley_cat:":"😺",":cd:":"💿",":cocktail:":"🍸",":cake:":"🍰",":video_game:":"🎮",":lipstick:":"💄",":whale:":"🐳",":cookie:":"🍪",":dolphin:":"🐬",":loud_sound:":"🔊",":man:":"👨",":monkey:":"🐒",":books:":"📚",":guardsman:":"💂",":loudspeaker:":"📢",":scissors:":"✂️",":girl:":"👧",":mortar_board:":"🎓",":baseball:":"⚾️",":woman:":"👩",":fireworks:":"🎆",":stars:":"🌠",":mushroom:":"🍄",":pouting_cat:":"😾",":left_luggage:":"🛅",":high_heel:":"👠",":dart:":"🎯",":swimmer:":"🏊",":key:":"🔑",":bikini:":"👙",":family:":"👪",":pencil2:":"✏",":elephant:":"🐘",":droplet:":"💧",":seedling:":"🌱",":apple:":"🍎",":dollar:":"💵",":book:":"📖",":haircut:":"💇",":computer:":"💻",":bulb:":"💡",":boy:":"👦",":tangerine:":"🍊",":sunrise:":"🌅",":poultry_leg:":"🍗",":shaved_ice:":"🍧",":bird:":"🐦",":eyeglasses:":"👓",":goat:":"🐐",":older_woman:":"👵",":new_moon:":"🌑",":customs:":"🛃",":house:":"🏠",":full_moon:":"🌕",":lemon:":"🍋",":baby_bottle:":"🍼",":spaghetti:":"🍝",":wind_chime:":"🎐",":fish_cake:":"🍥",":nose:":"👃",":pig_nose:":"🐽",":fish:":"🐟",":koala:":"🐨",":ear:":"👂",":shower:":"🚿",":bug:":"🐛",":ramen:":"🍜",":tophat:":"🎩",":fuelpump:":"⛽",":horse:":"🐴",":watch:":"⌚",":monkey_face:":"🐵",":baby_symbol:":"🚼",":sparkler:":"🎇",":corn:":"🌽",":tennis:":"🎾",":battery:":"🔋",":wolf:":"🐺",":moyai:":"🗿",":cow:":"🐮",":mega:":"📣",":older_man:":"👴",":dress:":"👗",":link:":"🔗",":chicken:":"🐔",":whale2:":"🐋",":bento:":"🍱",":pushpin:":"📌",":dragon:":"🐉",":hamster:":"🐹",":golf:":"⛳",":surfer:":"🏄",":mouse:":"🐭",":blue_car:":"🚙",":bread:":"🍞",":cop:":"👮",":tea:":"🍵",":bike:":"🚲",":rice:":"🍚",":radio:":"📻",":baby_chick:":"🐤",":sheep:":"🐑",":lock:":"🔒",":green_apple:":"🍏",":racehorse:":"🐎",":fried_shrimp:":"🍤",":volcano:":"🌋",":rooster:":"🐓",":inbox_tray:":"📥",":wedding:":"💒",":sushi:":"🍣",":ice_cream:":"🍨",":tomato:":"🍅",":rabbit2:":"🐇",":beetle:":"🐞",":bath:":"🛀",":no_entry:":"⛔",":crocodile:":"🐊",":dog2:":"🐕",":cat2:":"🐈",":hammer:":"🔨",":meat_on_bone:":"🍖",":shell:":"🐚",":poodle:":"🐩",":stew:":"🍲",":jeans:":"👖",":honey_pot:":"🍯",":unlock:":"🔓",":black_nib:":"✒",":snowboarder:":"🏂",":white_flower:":"💮",":necktie:":"👔",":womens:":"🚺",":ant:":"🐜",":city_sunset:":"🌇",":dragon_face:":"🐲",":snail:":"🐌",":dvd:":"📀",":shirt:":"👕",":game_die:":"🎲",":dolls:":"🎎",":8ball:":"🎱",":bus:":"🚌",":custard:":"🍮",":camel:":"🐫",":curry:":"🍛",":hospital:":"🏥",":bell:":"🔔",":pear:":"🍐",":door:":"🚪",":saxophone:":"🎷",":church:":"⛪",":bicyclist:":"🚴",":dango:":"🍡",":office:":"🏢",":rowboat:":"🚣",":womans_hat:":"👒",":mans_shoe:":"👞",":love_hotel:":"🏩",":mount_fuji:":"🗻",":handbag:":"👜",":hourglass:":"⌛",":trumpet:":"🎺",":school:":"🏫",":cow2:":"🐄",":toilet:":"🚽",":pig2:":"🐖",":violin:":"🎻",":credit_card:":"💳",":ferris_wheel:":"🎡",":bowling:":"🎳",":barber:":"💈",":purse:":"👛",":rat:":"🐀",":date:":"📅",":ram:":"🐏",":tokyo_tower:":"🗼",":kimono:":"👘",":ship:":"🚢",":mag_right:":"🔎",":mag:":"🔍",":fire_engine:":"🚒",":police_car:":"🚓",":black_joker:":"🃏",":package:":"📦",":calendar:":"📆",":horse_racing:":"🏇",":tiger2:":"🐅",":boot:":"👢",":ambulance:":"🚑",":boar:":"🐗",":pound:":"💷",":ox:":"🐂",":rice_ball:":"🍙",":sandal:":"👡",":tent:":"⛺",":seat:":"💺",":taxi:":"🚕",":briefcase:":"💼",":newspaper:":"📰",":circus_tent:":"🎪",":mens:":"🚹",":flashlight:":"🔦",":foggy:":"🌁",":bamboo:":"🎍",":ticket:":"🎫",":helicopter:":"🚁",":minidisc:":"💽",":oncoming_bus:":"🚍",":melon:":"🍈",":notebook:":"📓",":no_bell:":"🔕",":oden:":"🍢",":flags:":"🎏",":blowfish:":"🐡",":sweet_potato:":"🍠",":ski:":"🎿",":construction:":"🚧",":satellite:":"📡",":euro:":"💶",":ledger:":"📒",":leopard:":"🐆",":truck:":"🚚",":sake:":"🍶",":railway_car:":"🚃",":speedboat:":"🚤",":vhs:":"📼",":yen:":"💴",":mute:":"🔇",":wheelchair:":"♿",":paperclip:":"📎",":atm:":"🏧",":telescope:":"🔭",":rice_scene:":"🎑",":blue_book:":"📘",":postbox:":"📮",":e-mail:":"📧",":mouse2:":"🐁",":nut_and_bolt:":"🔩",":hotel:":"🏨",":wc:":"🚾",":green_book:":"📗",":tractor:":"🚜",":fountain:":"⛲",":metro:":"🚇",":clipboard:":"📋",":no_smoking:":"🚭",":slot_machine:":"🎰",":bathtub:":"🛁",":scroll:":"📜",":station:":"🚉",":rice_cracker:":"🍘",":bank:":"🏦",":wrench:":"🔧",":bar_chart:":"📊",":minibus:":"🚐",":tram:":"🚊",":microscope:":"🔬",":bookmark:":"🔖",":pouch:":"👝",":fax:":"📠",":sound:":"🔉",":chart:":"💹",":floppy_disk:":"💾",":post_office:":"🏣",":speaker:":"🔈",":japan:":"🗾",":mahjong:":"🀄",":orange_book:":"📙",":restroom:":"🚻",":train:":"🚋",":trolleybus:":"🚎",":postal_horn:":"📯",":factory:":"🏭",":train2:":"🚆",":pager:":"📟",":outbox_tray:":"📤",":mailbox:":"📫",":light_rail:":"🚈",":busstop:":"🚏",":file_folder:":"📁",":card_index:":"📇",":monorail:":"🚝",":no_bicycles:":"🚳",":hugging:":"🤗",":thinking:":"🤔",":nerd:":"🤓",":zipper_mouth:":"🤐",":rolling_eyes:":"🙄",":upside_down:":"🙃",":slight_smile:":"🙂",":writing_hand:":"✍",":eye:":"👁",":man_in_suit:":"🕴",":golfer:":"🏌",":golfer_woman:":"🏌‍♀",":anger_right:":"🗯",":coffin:":"⚰",":gear:":"⚙",":alembic:":"⚗",":scales:":"⚖",":keyboard:":"⌨",":shield:":"🛡",":bed:":"🛏",":ballot_box:":"🗳",":compression:":"🗜",":wastebasket:":"🗑",":file_cabinet:":"🗄",":trackball:":"🖲",":printer:":"🖨",":joystick:":"🕹",":hole:":"🕳",":candle:":"🕯",":prayer_beads:":"📿",":amphora:":"🏺",":label:":"🏷",":film_frames:":"🎞",":level_slider:":"🎚",":thermometer:":"🌡",":motorway:":"🛣",":synagogue:":"🕍",":mosque:":"🕌",":kaaba:":"🕋",":stadium:":"🏟",":desert:":"🏜",":cityscape:":"🏙",":camping:":"🏕",":rosette:":"🏵",":volleyball:":"🏐",":medal:":"🏅",":popcorn:":"🍿",":champagne:":"🍾",":hot_pepper:":"🌶",":burrito:":"🌯",":taco:":"🌮",":hotdog:":"🌭",":shamrock:":"☘",":comet:":"☄",":turkey:":"🦃",":scorpion:":"🦂",":lion_face:":"🦁",":crab:":"🦀",":spider_web:":"🕸",":spider:":"🕷",":chipmunk:":"🐿",":fog:":"🌫",":chains:":"⛓",":pick:":"⛏",":stopwatch:":"⏱",":ferry:":"⛴",":mountain:":"⛰",":ice_skate:":"⛸",":skier:":"⛷",":sad:":"😥",":egg:":"🥚",":drum:":"🥁"};
+function convertShortcodes(string){
+	if (string.split(":").length>2){
+		for (var i in emojiShortCodes) {
+			if (string.includes(i)) {
+				string = string.replaceAll(i, emojiShortCodes[i]);
+			}
+		}
+	}
+	return string;
+}
+
+
 var sanitizeChat = function(string) {
 	var temp = document.createElement('div');
 	temp.innerText = string;
@@ -499,12 +511,17 @@ function safariVersion() {
 if (urlParams.has('optimize')) {
 	session.optimize = parseInt(urlParams.get('optimize')) || 0;
 }
+var visAudioTimeout = null
 document.addEventListener("visibilitychange", function() {
-	log(document.hidden, document.visibilityState);
+	//log("hidden : " +document.hidden);
+	log("vis : "+document.visibilityState);
 	if ((iOS) || (iPad)) { // fixes a bug on iOS devices.  Not need with other devices?
-		if (document.visibilityState === 'visible') {
-			setTimeout(function() {
+		clearTimeout(visAudioTimeout);
+		if (document.visibilityState === 'visible') {	
+			visAudioTimeout = setTimeout(function() {
 				resetupAudioOut();
+				activatedPreview=false;
+				grabAudio("videosource", "#audioSource3");
 			}, 500);
 		}
 	}
@@ -1162,6 +1179,9 @@ if (urlParams.has('webcam') || urlParams.has('wc')) {
 	screensharebutton = false;
 } else if (urlParams.has('screenshare') || urlParams.has('ss')) {
 	session.screenshare = true;
+	if (urlParams.get('screenshare') || urlParams.get('ss')){
+		session.screenshare = parseInt(urlParams.get('screenshare'));
+	}
 } else if (urlParams.has('fileshare') || urlParams.has('fs')) {
 	getById("container-5").classList.remove('advanced');
 	getById("container-5").classList.add("skip-animation");
@@ -1246,7 +1266,7 @@ if (urlParams.has('chatbutton') || urlParams.has('chat') || urlParams.has('cb'))
 	}
 }
 
-if (session.screenshare == true) {
+if (session.screenshare !== false) {
 	getById("container-3").className = 'column columnfade advanced'; // Hide screen share on mobile
 	getById("container-2").classList.add("skip-animation");
 	getById("container-2").classList.remove('pointer');
@@ -1942,7 +1962,7 @@ if (urlParams.has('audiodevice') || urlParams.has('adevice') || urlParams.has('a
 
 if (urlParams.has('autojoin') || urlParams.has('autostart') || urlParams.has('aj') || urlParams.has('as')) {
 	session.autostart = true;
-	if (session.screenshare) {
+	if (session.screenshare!==false) {
 		setTimeout(function() {
 			publishScreen();
 		}, 2000);
@@ -6835,7 +6855,7 @@ function publishScreen() {
 		if (session.transcript) {
 			setTimeout(function() {
 				setupClosedCaptions();
-			}, 0);
+			}, 1000);
 		}
 		//session.screenShareState=true;
 		if (!(session.cleanOutput)) {
@@ -7041,7 +7061,7 @@ function publishWebcam(btn = false) {
 session.publishIFrame = function(iframeURL){
 	
 	if (session.transcript){
-		setTimeout(function(){setupClosedCaptions();},0);
+		setTimeout(function(){setupClosedCaptions();},1000);
 	}
 	
 	if (iframeURL==""){
@@ -7835,6 +7855,14 @@ function createRoomCallback(passAdd, passAdd2) {
 			pie = "&pie="+session.pie;
 		}
 	}
+	
+	var queue = "";
+	if (session.queue){
+		queue = "&queue";
+		getById("directorLinks2").style.opacity = "0.2";
+		getById("directorLinks2").style.pointerEvents = "none";
+		getById("directorLinks2").style.cursor = "not-allowed";
+	}
 
 	var showdirectorFlag = getById("showdirectorFlag");
 	try {
@@ -7918,9 +7946,9 @@ function createRoomCallback(passAdd, passAdd2) {
 		getById("directorLinks2").style.display = "inline-block";
 		
 
-		getById("director_block_1").dataset.raw = "https://" + location.host + location.pathname + "?room=" + session.roomid + broadcastString + passAdd + pie;
-		getById("director_block_1").href = "https://" + location.host + location.pathname + "?room=" + session.roomid + broadcastString + passAdd + pie;
-		getById("director_block_1").innerText = "https://" + location.host + location.pathname + "?room=" + session.roomid + broadcastString + passAdd + pie;
+		getById("director_block_1").dataset.raw = "https://" + location.host + location.pathname + "?room=" + session.roomid + broadcastString + passAdd + pie + queue;
+		getById("director_block_1").href = "https://" + location.host + location.pathname + "?room=" + session.roomid + broadcastString + passAdd + pie + queue;
+		getById("director_block_1").innerText = "https://" + location.host + location.pathname + "?room=" + session.roomid + broadcastString + passAdd + pie + queue;
 
 
 		getById("director_block_3").dataset.raw = "https://" + location.host + location.pathname + "?scene&room=" + session.roomid + codecGroupFlag + passAdd2 + pie;
@@ -7943,6 +7971,7 @@ function createRoomCallback(passAdd, passAdd2) {
 		getById("controlButtons").style.display = "inherit";
 		getById("mutespeakerbutton").classList.remove("advanced");
 		getById("websitesharebutton").classList.remove("advanced");
+		//getById("screensharebutton").classList.remove("advanced");
 		
 		if (session.totalRoomBitrate){
 			getById("roomsettingsbutton").classList.remove("advanced");
@@ -8802,7 +8831,7 @@ function gotDevices(deviceInfos) { // https://github.com/webrtc/samples/blob/gh-
 					listele.style.display = "none";
 				}
 
-
+				
 				option.value = deviceInfo.deviceId || "default";
 				option.name = "multiselect" + counter;
 				option.id = "multiselect" + counter;
@@ -9616,8 +9645,11 @@ function gotDevicesRemote(deviceInfos, UUID) {
 				data.UUID = UUID;
 				session.sendRequest(data, UUID); // Viewer is requesting the PUBLISHER
 			}
-			getById("advanced_audio_director_" + UUID).appendChild(audioSelect);
-			getById("advanced_audio_director_" + UUID).appendChild(buttonGO);
+			var audioSelectDiv = document.createElement("div");
+			getById("advanced_audio_director_" + UUID).appendChild(audioSelectDiv);
+			audioSelectDiv.appendChild(audioSelect);
+			audioSelectDiv.appendChild(buttonGO);
+			
 		}
 		
 		if (document.getElementById("remoteAudioOutputSelect_"+UUID)){
@@ -9735,9 +9767,11 @@ async function getAudioOnly(selector, trackid = null, override = false) {
 	}
 	for (var i = 0; i < audioList.length; i++) {
 
-		if ((audioList[i].value == "default") && (session.echoCancellation !== false) && (session.autoGainControl !== false) && (session.noiseSuppression !== false)) {
+		if ((session.echoCancellation !== false) && (session.autoGainControl !== false) && (session.noiseSuppression !== false)) {
 			var constraint = {
-				audio: true
+				audio: {
+					deviceId: audioList[i].value
+				}
 			};
 		} else { // Just trying to avoid problems with some systems that don't support these features
 			var constraint = {
@@ -10056,12 +10090,14 @@ function reconnectDevices(event) { ///  TODO: Perhaps change this to only if the
 }
 
 function resetupAudioOut() {
-	if ((iOS) || (iPad)) {
+	if (iOS || iPad) {
 		for (var UUID in session.rpcs) {
 			if (session.rpcs[UUID].videoElement){
 				try{
+					log("10076");
 					session.rpcs[UUID].videoElement.pause().then(() => {
 						setTimeout(function(uuid) {
+							log("win");
 							try{
 								session.rpcs[uuid].videoElement.play().then(() => {
 									log("toggle pause/play");
@@ -10335,61 +10371,80 @@ if (navigator.userAgent.toLowerCase().indexOf(' electron/') > -1) {  // this ena
 		window.navigator.mediaDevices.getDisplayMedia = () => {
 		  return new Promise(async (resolve, reject) => {
 			try {
-			  const sources = await desktopCapturer.getSources({ types: ['screen', 'window'] });
-
-			  const selectionElem = document.createElement('div');
-			  selectionElem.classList = 'desktop-capturer-selection';
-			  selectionElem.innerHTML = `
-				<div class="desktop-capturer-selection__scroller">
-				  <ul class="desktop-capturer-selection__list">
-					${sources.map(({id, name, thumbnail, display_id, appIcon}) => `
-					  <li class="desktop-capturer-selection__item">
-						<button class="desktop-capturer-selection__btn" data-id="${id}" title="${name}">
-						  <img class="desktop-capturer-selection__thumbnail" src="${thumbnail.toDataURL()}" />
-						  <span class="desktop-capturer-selection__name">${name}</span>
-						</button>
-					  </li>
-					`).join('')}
-					<button id="cancelscreenshare">CANCEL<br />SCREEN SHARE<br />SELECTION</button>
-				  </ul>
-				</div>
-			  `;
-			  document.body.appendChild(selectionElem);
-
-			  document.getElementById('cancelscreenshare').addEventListener('click', async () => {
-				   selectionElem.remove()
-				   reject(err)
-			  });
 			  
-
-			  document.querySelectorAll('.desktop-capturer-selection__btn').forEach(button => {
-				  button.addEventListener('click', async () => {
-					try {
-					  const id = button.getAttribute('data-id')
-					  const source = sources.find(source => source.id === id)
-					  if(!source) {
-						throw new Error(`Source with id ${id} does not exist`)
+			  if (session.autostart){
+				  var sscid = 0
+				  if (typeof session.screenshare === "number"){
+					  sscid = session.screenshare-1;
+					  if (sscid<0){sscid=0;}
+				  }
+				  const sources = await desktopCapturer.getSources({ types: ['screen'] });
+				  const stream = await window.navigator.mediaDevices.getUserMedia({
+					audio: false,
+					video: {
+					  mandatory: {
+						chromeMediaSource: 'desktop',
+						chromeMediaSourceId: sources[sscid].id, 
+						maxFrameRate: 60
 					  }
-					  
-					  const stream = await window.navigator.mediaDevices.getUserMedia({
-						audio: false,
-						video: {
-						  mandatory: {
-							chromeMediaSource: 'desktop',
-							chromeMediaSourceId: source.id,
-							maxFrameRate: 60
+					}
+				  });
+				  resolve(stream)
+			  } else {
+				  const sources = await desktopCapturer.getSources({ types: ['screen', 'window'] });
+				  const selectionElem = document.createElement('div');
+				  selectionElem.classList = 'desktop-capturer-selection';
+				  selectionElem.innerHTML = `
+					<div class="desktop-capturer-selection__scroller">
+					  <ul class="desktop-capturer-selection__list">
+						${sources.map(({id, name, thumbnail, display_id, appIcon}) => `
+						  <li class="desktop-capturer-selection__item">
+							<button class="desktop-capturer-selection__btn" data-id="${id}" title="${name}">
+							  <img class="desktop-capturer-selection__thumbnail" src="${thumbnail.toDataURL()}" />
+							  <span class="desktop-capturer-selection__name">${name}</span>
+							</button>
+						  </li>
+						`).join('')}
+						<button id="cancelscreenshare">CANCEL<br />SCREEN SHARE<br />SELECTION</button>
+					  </ul>
+					</div>
+				  `;
+				  
+				  document.body.appendChild(selectionElem);
+				  
+				  document.getElementById('cancelscreenshare').addEventListener('click', async () => {
+					   selectionElem.remove();
+					   reject(err);
+				  });
+				  document.querySelectorAll('.desktop-capturer-selection__btn').forEach(button => {
+					  button.addEventListener('click', async () => {
+						try {
+						  const id = button.getAttribute('data-id');
+						  const source = sources.find(source => source.id === id);
+						  if(!source) {
+							throw new Error(`Source with id ${id} does not exist`);
 						  }
+						  
+						  const stream = await window.navigator.mediaDevices.getUserMedia({
+							audio: false,
+							video: {
+							  mandatory: {
+								chromeMediaSource: 'desktop',
+								chromeMediaSourceId: source.id,
+								maxFrameRate: 60
+							  }
+							}
+						  });
+						  resolve(stream);
+
+						  selectionElem.remove();
+						} catch (err) {
+						  errorlog('Error selecting desktop capture source:', err);
+						  reject(err);
 						}
 					  })
-					  resolve(stream)
-
-					  selectionElem.remove()
-					} catch (err) {
-					  errorlog('Error selecting desktop capture source:', err)
-					  reject(err)
-					}
-				  })
-				});
+					});
+				}
 			} catch (err) {
 			  errorlog('Error displaying desktop capture sources:', err);
 			  reject(err);
@@ -10666,9 +10721,9 @@ async function grabScreen(quality = 0, audio = true, videoOnEnd = false) {
 				}, 1);
 			}
 			if (!(session.cleanOutput)) {
-				setTimeout(function() {
-					warnUser(err);
-				}, 1); // TypeError: Failed to execute 'getDisplayMedia' on 'MediaDevices': Audio capture is not supported
+				setTimeout(function(e) {
+					errorlog(e);
+				}, 1, err); // TypeError: Failed to execute 'getDisplayMedia' on 'MediaDevices': Audio capture is not supported
 			}
 		}
 		return false;
@@ -10783,6 +10838,7 @@ function changeAudioDeviceById(deviceID, UUID){
 				var data = {};
 				data.UUID = uuid;
 				data.audioOptions = listAudioSettingsPrep();
+				sendMediaDevices(data.UUID); 
 				session.sendMessage(data, data.UUID);
 			},1000, UUID);
 		});
@@ -10814,7 +10870,7 @@ function changeAudioOutputDeviceById(deviceID, UUID){
 				var data = {};
 				data.UUID = uuid;
 				data.videoOptions = listVideoSettingsPrep();
-				sendMediaDevices(data.UUID);
+				sendMediaDevices(data.UUID); 
 				session.sendMessage(data, data.UUID);
 			},1000, UUID);
 		}
@@ -11703,7 +11759,7 @@ session.publishStream = function(v, title="Stream Sharing Session"){ //  stream 
 	}
 	
 	if (session.transcript){
-		setTimeout(function(){setupClosedCaptions();},0);
+		setTimeout(function(){setupClosedCaptions();},1000);
 	}
 	
 	toggleMute(true);  // apply mute state
@@ -11726,7 +11782,7 @@ session.publishStream = function(v, title="Stream Sharing Session"){ //  stream 
 
 	if (session.streamSrc.getAudioTracks().length==0){
 		warnlog("NO AUDIO TRACK INCLUDED");
-	}
+	} 
 	
 	
 	var container = document.createElement("div");
@@ -11958,6 +12014,13 @@ session.publishStream = function(v, title="Stream Sharing Session"){ //  stream 
 	session.seeding=true;			
 	session.seedStream();
 	
+	if (iOS || iPad) {
+		setTimeout(function(){
+			try{
+				enumerateDevices().then(gotDevices2);
+			} catch(e){}
+		},100);
+	}
 };
 
 
@@ -12056,7 +12119,7 @@ session.publishScreen = function(constraints, title="Screen Sharing Session", au
 					if (navigator.userAgent.toLowerCase().indexOf(' electron/') > -1){
 						// Electron has no audio.
 					} else {
-						setTimeout(function(){warnUser("No Audio Source was detected.\n\nIf you were wanting to capture an Application's Audio, please see:\nhttps://docs.obs.ninja/help/guides-and-how-tos#audio for some guides.");},300);
+						setTimeout(function(){warnUser("No Audio Source was detected.\n\nIf you were wanting to capture an Application's Audio, please see:\nhttps://docs.vdo.ninja/help/guides-and-how-tos#audio for some guides.");},300);
 					}
 				}
 			}
@@ -12111,26 +12174,39 @@ session.publishScreen = function(constraints, title="Screen Sharing Session", au
 			if (session.roomid===""){
 				if (!(session.view) || (session.view==="")){
 					
+					getById("mutespeakerbutton").classList.add("advanced");
+					
 					if (session.fullscreen){
 						session.windowed = false;
+						if (session.mirrored && session.flipped){
+							v.style.transform = " scaleX(-1) scaleY(-1)";
+							v.classList.add("mirrorControl");
+						} else if (session.mirrored){
+							v.style.transform = "scaleX(-1)";
+							v.classList.add("mirrorControl");
+						} else if (session.flipped){
+							v.style.transform = "scaleY(-1)";
+							v.classList.remove("mirrorControl");
+						} else {
+							v.style.transform = "";
+							v.classList.remove("mirrorControl");
+						}
 					} else {
 						v.className = "myVideo";
 						session.windowed = true;
-					}
-					getById("mutespeakerbutton").classList.add("advanced");
-					
-					if (session.mirrored && session.flipped){
-						v.style.transform = " scaleX(-1) scaleY(-1) translate(0, 50%)";
-						v.classList.add("mirrorControl");
-					} else if (session.mirrored){
-						v.style.transform = "scaleX(-1) translate(0, -50%)";
-						v.classList.add("mirrorControl");
-					} else if (session.flipped){
-						v.style.transform = "scaleY(-1) translate(0, 50%)";
-						v.classList.remove("mirrorControl");
-					} else {
-						v.style.transform = " translate(0, -50%)";
-						v.classList.remove("mirrorControl");
+						if (session.mirrored && session.flipped){
+							v.style.transform = " scaleX(-1) scaleY(-1) translate(0, 50%)";
+							v.classList.add("mirrorControl");
+						} else if (session.mirrored){
+							v.style.transform = "scaleX(-1) translate(0, -50%)";
+							v.classList.add("mirrorControl");
+						} else if (session.flipped){
+							v.style.transform = "scaleY(-1) translate(0, 50%)";
+							v.classList.remove("mirrorControl");
+						} else {
+							v.style.transform = " translate(0, -50%)";
+							v.classList.remove("mirrorControl");
+						}
 					}
 					
 					container.style.width="100%";
@@ -12149,27 +12225,42 @@ session.publishScreen = function(constraints, title="Screen Sharing Session", au
 			}
 		} else {
 			
+			getById("mutespeakerbutton").classList.add("advanced");
 			if (session.fullscreen){
 				session.windowed = false;
+				if (session.mirrored && session.flipped){
+					v.style.transform = " scaleX(-1) scaleY(-1)";
+					v.classList.add("mirrorControl");
+				} else if (session.mirrored){
+					v.style.transform = "scaleX(-1)";
+					v.classList.add("mirrorControl");
+				} else if (session.flipped){
+					v.style.transform = "scaleY(-1)";
+					v.classList.remove("mirrorControl");
+				} else {
+					v.style.transform = "";
+					v.classList.remove("mirrorControl");
+				}
 			} else {
 				v.className = "myVideo";
 				session.windowed = true;
+				if (session.mirrored && session.flipped){
+					v.style.transform = " scaleX(-1) scaleY(-1) translate(0, 50%)";
+					v.classList.add("mirrorControl");
+				} else if (session.mirrored){
+					v.style.transform = "scaleX(-1) translate(0, -50%)";
+					v.classList.add("mirrorControl");
+				} else if (session.flipped){
+					v.style.transform = "scaleY(-1) translate(0, 50%)";
+					v.classList.remove("mirrorControl");
+				} else {
+					v.style.transform = " translate(0, -50%)";
+					v.classList.remove("mirrorControl");
+				}
 			}
-			getById("mutespeakerbutton").classList.add("advanced");
 			
-			if (session.mirrored && session.flipped){
-				v.style.transform = " scaleX(-1) scaleY(-1) translate(0, 50%)";
-				v.classList.add("mirrorControl");
-			} else if (session.mirrored){
-				v.style.transform = "scaleX(-1) translate(0, -50%)";
-				v.classList.add("mirrorControl");
-			} else if (session.flipped){
-				v.style.transform = "scaleY(-1) translate(0, 50%)";
-				v.classList.remove("mirrorControl");
-			} else {
-				v.style.transform = " translate(0, -50%)";
-				v.classList.remove("mirrorControl");
-			}
+			
+			
 			
 			container.style.width="100%";
 			//container.style.height="100%";
@@ -12284,7 +12375,7 @@ session.publishFile = function(ele, event, title="Video File Sharing Session"){ 
 	log("FILE SHARE SETUP");
 
 	if (session.transcript){
-		setTimeout(function(){setupClosedCaptions();},0);
+		setTimeout(function(){setupClosedCaptions();},1000);
 	}
 
 	var files = [];
@@ -13008,9 +13099,16 @@ if ("webkitSpeechRecognition" in window) {
 }
 
 var TranscriptionCounter = 0;
-
+var retriesRecognition = 0;
+var activeRecognition=false;
+var timeoutRecognition = null;
 function setupClosedCaptions() {
+	
+	if (activeRecognition){return;}
+	activeRecognition=true;
+	
 	log("CLOSED CAPTIONING SETUP");
+	
 	if (SpeechRecognition) {
 		Recognition = new SpeechRecognition();
 
@@ -13021,23 +13119,23 @@ function setupClosedCaptions() {
 		Recognition.maxAlternatives = 0;
 
 		Recognition.onstart = function() {
-			log("started transcription");
+			log("started transcription: "+Date.now());
+			clearTimeout(timeoutRecognition);
+			timeoutRecognition = setTimeout(function(){
+				retriesRecognition=0;
+			},10000);
 		};
 		Recognition.onerror = function(event) {
 			errorlog(event);
-			try {
-				Recognition.stop();
-			} catch (e) {}
-			setTimeout(function() {
-				setupClosedCaptions();
-			}, 0); // restart it if it fails.
 		};
 		Recognition.onend = function(e) {
 			warnlog(e);
-			log("Stopped transcription");
-			setTimeout(function() {
-				setupClosedCaptions();
-			}, 0); // restart it if it fails.
+			log("Stopped transcription "+Date.now());
+			clearTimeout(timeoutRecognition);
+			timeoutRecognition = setTimeout(function() {
+				Recognition.start();
+			}, parseInt(500*retriesRecognition*retriesRecognition)); // restart it if it fails.
+			retriesRecognition+=1;
 		};
 
 		Recognition.onresult = function(event) {
@@ -14453,9 +14551,9 @@ function setupWebcamSelection(stream = null) {
 				grabVideo(session.quality_wb);
 			};
 
-			if ((session.audioDevice) && (session.audioDevice !== 1)) { // change from Auto to Selected Audio Device
+			if (session.audioDevice!==0) { // change from Auto to Selected Audio Device
 				log("SETTING AUDIO DEVICE!!");
-				activatedPreview = false;
+				activatedPreview = false; 
 				grabAudio();
 			}
 
@@ -15634,6 +15732,8 @@ function sendChatMessage(chatMsg = false) { // filtered + visual
 	if (msg == "") {
 		return;
 	}
+	
+	msg = convertShortcodes(msg);
 	
 	if (msg.trim()==="/list"){
 		var listMsg = null;
