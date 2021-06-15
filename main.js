@@ -705,7 +705,7 @@ function manageSceneState(data, UUID){
 }
 
 function applySceneState(){
-	
+	if (session.disableOBS){return;}
 	if (session.cleanOutput===false){
 		if (document.getElementById("videosource")){
 			var visibility = false;
@@ -713,12 +713,12 @@ function applySceneState(){
 			var recording = false;
 			for (var uid in session.pcs){
 				
-				if (session.pcs[uid].obsSourceActive && session.pcs[uid].obsVisibility && (session.pcs[uid].sceneDisplay!==false)){
+				if (session.pcs[uid].obsSourceActive!==false && session.pcs[uid].obsVisibility && (session.pcs[uid].sceneDisplay!==false)){
 					visibility=true;
 				} else if (session.pcs[uid].obsVisibility && (session.pcs[uid].sceneDisplay!==false)){
 					ondeck=true;
 				}
-				if ((session.pcs[uid].obsRecording || session.pcs[uid].obsStreaming) && (session.pcs[uid].obsSourceActive && session.pcs[uid].obsVisibility && (session.pcs[uid].sceneDisplay!==false))){ // the scene that is recording must be visible also.
+				if ((session.pcs[uid].obsRecording || session.pcs[uid].obsStreaming) && (session.pcs[uid].obsSourceActive!==false && session.pcs[uid].obsVisibility && (session.pcs[uid].sceneDisplay!==false))){ // the scene that is recording must be visible also.
 					recording=true;
 				}
 			}
@@ -737,16 +737,14 @@ function applySceneState(){
 				getById("obsState").innerHTML = "ACTIVE";
 			}
 
-			if (visibility || ondeck){ // BASIC TALLY LIGHT
+			if (visibility){ // BASIC TALLY LIGHT (on deck disabled)
 				getById("obsState").classList.add("onair"); // LIVE
 			} else {
 				getById("obsState").classList.remove("onair");
 				
 			}
-			
 		}
 	}
-	
 }
 
 window.onload = function winonLoad() { // This just keeps people from killing the live stream accidentally. Also give me a headsup that the stream is ending
@@ -924,7 +922,7 @@ function makeDraggableElement(elmnt) {
 	}
 }
 
-function setStorage(cname, cvalue, exdays=999) { // not actually a cookie
+function setStorage(cname, cvalue, exdays=999){ // not actually a cookie
 	var now = new Date();
 	var item = {
 		value: cvalue,
@@ -1262,7 +1260,6 @@ if (urlParams.has('chatbutton') || urlParams.has('chat') || urlParams.has('cb'))
 	} else {
 		session.chatbutton = true;
 		getById("chatbutton").classList.remove("advanced");
-		getById("controlButtons").style.display = "inherit";
 	}
 }
 
@@ -1299,7 +1296,7 @@ if (urlParams.has('record')) {
 	} else {
 		session.recordLocal = urlParams.get('record');
 
-		if (session.recordLocal !== parseInt(session.recordLocal)) {
+		if (session.recordLocal != parseInt(session.recordLocal)) {
 			session.recordLocal = 6000;
 		} else {
 			session.recordLocal = parseInt(session.recordLocal);
@@ -1819,9 +1816,10 @@ if (urlParams.has('keyframeinterval') || urlParams.has('keyframerate') || urlPar
 	session.keyframerate = parseInt(urlParams.get('keyframeinterval') || urlParams.get('keyframerate') || urlParams.get('keyframe') || urlParams.get('fki')) || 0;
 }
 
-if (urlParams.has('tallyoff') || urlParams.has('obsoff') || urlParams.has('oo')) {
+if (urlParams.has('tallyoff') || urlParams.has('obsoff') || urlParams.has('oo') || urlParams.has('disableobs')) {
 	log("OBS feedback disabled");
 	session.disableOBS = true;
+	getById("obsState").style.display = "none !important";
 }
 
 
@@ -1842,6 +1840,7 @@ if (urlParams.has('margin')) {
 }
 
 if (urlParams.has('fadein')) {
+	session.fadein=true;
 	if (urlParams.get('fadein') || 0){
 		try {
 			var fadeinspeed = parseInt(urlParams.get('fadein') || 0)/1000.0;
@@ -2705,6 +2704,10 @@ if (urlParams.has('effects') || urlParams.has('effect')) {
 	// image = 5
 }
 
+if (urlParams.has('viewereffect') || urlParams.has('viewereffects') || urlParams.has('ve')) {
+	session.viewereffects = parseInt(urlParams.get('viewereffect')) || parseInt(urlParams.get('ve')) || false;
+}
+
 if (urlParams.has('activespeaker') || urlParams.has('speakerview')  || urlParams.has('sas')){
 	session.activeSpeaker = true;
 	session.audioEffects = true;
@@ -3496,6 +3499,9 @@ function setupIncomingVideoTracking(v, UUID){  // video element.
 	}
 	
 	if (session.fadein){
+		v.addEventListener('animationend', function(e) {
+			v.classList.remove("fadein"); // allows the video to fade in.
+		});
 		v.classList.add("fadein"); // allows the video to fade in.
 	}
 	
@@ -3518,7 +3524,7 @@ function updateMixerRun(e=false){  // this is the main auto-mixing code.  It's a
 	}
 	if (session.director){return;}
 	if (session.manual === true){return;}
-	var playarea = getById("gridlayout");
+	
 	var header = getById("header");
 	
 	var hi = header.offsetHeight ;
@@ -3725,7 +3731,6 @@ function updateMixerRun(e=false){  // this is the main auto-mixing code.  It's a
 					}
 					session.requestRateLimit(0, i);
 				}
-				
 				continue;
 			}
 			
@@ -3885,6 +3890,12 @@ function updateMixerRun(e=false){  // this is the main auto-mixing code.  It's a
 	}
 	if (session.director){return;} // director view says go no further :)
 		
+	if (session.broadcastIFrame && session.broadcastIFrame.src){
+		if (!mediaPool.length){
+			mediaPool.push(session.broadcastIFrame);
+		}
+	}
+		
 	if (document.fullscreenElement) {
 		log("FULL SCREEN: "+document.fullscreenElement.id);
 		return; // This is FULL SCREEN, so let's not continue.
@@ -3917,34 +3928,61 @@ function updateMixerRun(e=false){  // this is the main auto-mixing code.  It's a
 		}
 	} else { var rw=1; var rh=1;}
 	
-	
-	if (playarea.getElementsByTagName("iframe").length){
-		
-		var childNodes = playarea.childNodes;
-		
-		for (var n=0;n<childNodes.length;n++){
-			
-			if (childNodes[n].getElementsByTagName("iframe").length==0){
-				playarea.removeChild(childNodes[n]);
-				n--;
-			} else {
-				
-				var iftemp = childNodes[n].getElementsByTagName("iframe")[0];
-				var matched=false;
-				for (var m=0;m<mediaPool.length;m++){
-					if (mediaPool[m]==iftemp){
-						iftemp.alreadyAdded=true;
-						matched=true;
+	var playarea = getById("gridlayout");
+
+	try {
+		if (playarea.querySelector("#guestFeeds")){
+			//errorlog("WIPE MIXER");
+			playarea.innerHTML = "";
+		} else {
+			//errorlog("ALL GOOD");
+			var childNodes = playarea.childNodes;
+
+			for (var n=0;n<childNodes.length;n++){
+				if (childNodes[n].querySelector("video")){
+					var vidtemp = childNodes[n].querySelector("video");
+					var matched = false;
+					for (var m=0;m<mediaPool.length;m++){
+						if (vidtemp.id === mediaPool[m].id){
+							vidtemp.alreadyAdded=true;
+							mediaPool[m] = vidtemp;
+							matched=true;
+							childNodes[n].matched = true;
+							break;
+						}
 					}
-				}
-				if (!matched){
-					playarea.removeChild(childNodes[n]);
-					n--;
+					if (!matched){
+						if (session.fadein){
+							vidtemp.classList.add("fadein");
+						}
+					}
+				} else if (childNodes[n].querySelector("iframe")){
+					var iftemp = childNodes[n].querySelector("iframe");
+					for (var m=0;m<mediaPool.length;m++){
+						if ((mediaPool[m].tagName.toLowerCase()==="iframe") && (mediaPool[m].src) && (iftemp.src === mediaPool[m].src)){
+							iftemp.alreadyAdded=true;
+							iftemp.id = mediaPool[m].id;
+							if (iftemp.dataset.UUID !== session.directorUUID){
+								iftemp.dataset.UUID = mediaPool[m].dataset.UUID;
+								iftemp.dataset.sid = mediaPool[m].dataset.sid;
+							}
+							mediaPool[m] = iftemp;
+							childNodes[n].matched = true;
+							break;
+						}
+					}
 				}
 			}
 		}
-	} else {
-		playarea.innerHTML = "";
+	} catch(e){errorlog(e);}
+
+	for (var n=0;n<childNodes.length;n++){
+		if (!childNodes[n].matched){
+			playarea.removeChild(childNodes[n]);
+			n--;
+		} else {
+			childNodes[n].matched=null;
+		}
 	}
 	
 	if (session.videoElement){
@@ -4000,32 +4038,98 @@ function updateMixerRun(e=false){  // this is the main auto-mixing code.  It's a
 	
 	mediaPool.forEach(vid=>{
 		
-		var container = document.createElement("div");
-
-		container.style.position = "absolute";
-		container.style.display = "flex";
-		container.style.alignItems = "center";
-		offsetx=0;
+		
+		var offsetx=0;
 		
 		if (i!==0){
 			if (Math.ceil((i+0.01)/rw)==rh){
 				if (mediaPool.length%rw){
-					offsetx = ((rw - mediaPool.length%rw)*(window.innerWidth/rw))/2;
+					offsetx = Math.max(((rw - mediaPool.length%rw)*(window.innerWidth/rw))/2,0);
 				}
 			}
 		}
 		
-		offsety = (h- Math.ceil(mediaPool.length/rw)*Math.ceil(h/rh))/2;
+		offsety = Math.max((h- Math.ceil(mediaPool.length/rw)*Math.ceil(h/rh))/2,0);
 		
+		
+
 		if (vid.alreadyAdded && vid.alreadyAdded==true){
-			container = vid.parentNode;
+			var container = vid.parentNode;
+			//container.style = vid.parentNode.style;
+
+			var left = Math.max(offsetx+Math.floor(((i%rw)+0)*w/rw),0); 
+			var top = Math.max(offsety+Math.floor((Math.floor(i/rw)+0)*h/rh + hi),0);
+			var width = Math.ceil(w/rw);
+			var height = Math.ceil(h/rh);
+
+			
+			if (container.move){
+				clearInterval(container.move);
+			}
+
+			container.tleft = left; 
+			container.ttop = top;
+			container.twidth = width;
+			container.theight = height;
+
+			container.move = setInterval(function(CCC){
+				try{
+					if (!CCC){return;}
+					var ww = (parseInt(CCC.style.width) - CCC.twidth);
+					var hh = (parseInt(CCC.style.height) - CCC.theight);
+					var tt = (parseInt(CCC.style.top) - CCC.ttop);
+					var ll = (parseInt(CCC.style.left) - CCC.tleft);
+
+					var skip = true;
+
+					if (ww <=1 && (ww >=-1)){
+						CCC.style.width = CCC.twidth+"px";
+					} else {
+						skip=false;
+						CCC.style.width = parseInt((parseInt(CCC.style.width) - ww/1.5))+"px";
+					}
+
+					if (hh <=1 && (hh >=-1)){
+						CCC.style.height = CCC.theight+"px";
+					} else {
+						skip=false;
+						CCC.style.height = parseInt((parseInt(CCC.style.height) - hh/1.5))+"px";
+					}
+
+					if (tt <=1 && (tt >=-1)){
+						CCC.style.top = CCC.ttop+"px";
+					} else {
+						skip=false;
+						CCC.style.top = parseInt((parseInt(CCC.style.top) - tt/1.5))+"px";
+					}
+
+					if (ll <=1 && (ll >=-1)){
+						CCC.style.left = CCC.tleft+"px";
+					} else {
+						skip=false;
+						CCC.style.left = parseInt((parseInt(CCC.style.left) - ll/1.5))+"px";
+					}
+
+					if (skip){
+						clearInterval(CCC.move);
+						return;
+					}
+				} catch(e){errorlog(e);}
+			}, 30, container);
+			
+		} else {
+			var container = document.createElement("div");
+			container.style.position = "absolute";
+			container.style.display = "flex";
+			container.style.alignItems = "center";
+
+			container.style.left = offsetx+Math.floor(((i%rw)+0)*w/rw)+"px";
+			container.style.top  = offsety+Math.floor((Math.floor(i/rw)+0)*h/rh + hi)+"px";
+			container.style.width = Math.ceil(w/rw)+"px";
+			container.style.height = Math.ceil(h/rh)+"px";
 		}
 		
-		container.style.left = offsetx+Math.floor(((i%rw)+0)*w/rw)+"px";
-		container.style.top  = offsety+Math.floor((Math.floor(i/rw)+0)*h/rh + hi)+"px";
-		container.style.width = Math.ceil(w/rw)+"px";
-		container.style.height = Math.ceil(h/rh)+"px";
-		
+
 		if (vid.alreadyAdded && vid.alreadyAdded==true){
 			vid.alreadyAdded=false;
 			i+=1;
@@ -5132,6 +5236,13 @@ if ((session.roomid) || (urlParams.has('roomid')) || (urlParams.has('r')) || (ur
 		});
 		joinRoom(session.roomid); // this is a scene, so we want high resolutions
 		getById("main").style.overflow = "hidden";
+
+		if (session.chatbutton === true) {
+			getById("chatbutton").classList.remove("advanced");
+			getById("controlButtons").style.display = "inherit";
+		} else if (session.chatbutton === false) {
+			getById("chatbutton").classList.add("advanced");
+		}
 	} else {
 		if ((session.permaid === null) && (session.roomid == "")) {
 			if (!(session.cleanOutput)) {
@@ -5147,6 +5258,12 @@ if ((session.roomid) || (urlParams.has('roomid')) || (urlParams.has('r')) || (ur
 		log("director_room_input:" + director_room_input);
 		createRoom(director_room_input);
 	}
+	if (session.chatbutton === true) {
+		getById("chatbutton").classList.remove("advanced");
+		getById("controlButtons").style.display = "inherit";
+	} else if (session.chatbutton === false) {
+		getById("chatbutton").classList.add("advanced");
+	}
 } else if ((session.view) && (session.permaid === false)) {
 	//if (!session.activeSpeaker){
 	session.audioMeterGuest = false;
@@ -5161,6 +5278,13 @@ if ((session.roomid) || (urlParams.has('roomid')) || (urlParams.has('r')) || (ur
 		setTimeout(updateMixer, 200);
 	});
 	getById("main").style.overflow = "hidden";
+
+	if (session.chatbutton === true) {
+		getById("chatbutton").classList.remove("advanced");
+		getById("controlButtons").style.display = "inherit";
+	} else if (session.chatbutton === false) {
+		getById("chatbutton").classList.add("advanced");
+	}
 }
 
 if (session.audioEffects === null) {
@@ -6503,6 +6627,11 @@ function remoteLowerhands(UUID) {
 	msg.lowerhand = true;
 	msg.UUID = UUID;
 	session.sendRequest(msg, UUID);
+
+	try{
+		getById("hands_"+UUID).style.display="none";
+		session.rpcs[UUID].remoteRaisedHandElement.style.display = "none";
+	} catch(e){}
 }
 
 
@@ -6630,8 +6759,9 @@ function remoteVolume(ele) { // A directing room only is controlled by the Direc
 	}
 }
 
-function clearDirectorSettings(){
+function clearDirectorSettings(){ // make sure to wipe the director's room settings if creating a new room.
 	setStorage("directorCustomize", {});
+	setStorage("directorWebsiteShare", {});
 }
 
 function saveDirectorSettings(){
@@ -6671,8 +6801,8 @@ function saveDirectorSettings(){
 
 function loadDirectorSettings(){
 	var settings = getStorage("directorCustomize");
-	console.log("LOAD DIRECTOR SETTING");
-	
+	log("LOAD DIRECTOR SETTING");
+	warnlog(settings);
 	if (settings.customizeLinks){
 		try{
 			hideDirectorinvites(getById("directorLinksButton"), false);
@@ -6682,35 +6812,42 @@ function loadDirectorSettings(){
 	if (settings.customizeLinks1){
 		var customizeLinks1 = getById("customizeLinks1");
 		Object.keys(settings.customizeLinks1).forEach((key, index) => {
-			customizeLinks1.querySelector('[data-param="'+key+'"]').checked = settings.customizeLinks1[key];
-			customizeLinks1.querySelector('[data-param="'+key+'"]').onchange();
+			if (customizeLinks1.querySelector('[data-param="'+key+'"]').checked != settings.customizeLinks1[key]){
+				customizeLinks1.querySelector('[data-param="'+key+'"]').checked = settings.customizeLinks1[key];
+				customizeLinks1.querySelector('[data-param="'+key+'"]').onchange();
+			}
 		});
 	}
 	
 	if (settings.customizeLinks3){
 		var customizeLinks3 = getById("customizeLinks3");
 		Object.keys(settings.customizeLinks3).forEach((key, index) => {
-			customizeLinks3.querySelector('[data-param="'+key+'"]').checked = settings.customizeLinks3[key];
-			customizeLinks3.querySelector('[data-param="'+key+'"]').onchange();
+			if (customizeLinks3.querySelector('[data-param="'+key+'"]').checked == settings.customizeLinks3[key]){
+				customizeLinks3.querySelector('[data-param="'+key+'"]').checked = settings.customizeLinks3[key];
+				customizeLinks3.querySelector('[data-param="'+key+'"]').onchange();
+			}
 		});
 	}
 	
 	if (settings.directorLinks1){
 		var directorLinks1 = getById("directorLinks1");
 		Object.keys(settings.directorLinks1).forEach((key, index) => {
-			directorLinks1.querySelector('[data-param="'+key+'"]').checked = settings.directorLinks1[key];
-			directorLinks1.querySelector('[data-param="'+key+'"]').onchange();
+			if (directorLinks1.querySelector('[data-param="'+key+'"]').checked == settings.directorLinks1[key]){
+				directorLinks1.querySelector('[data-param="'+key+'"]').checked = settings.directorLinks1[key];
+				directorLinks1.querySelector('[data-param="'+key+'"]').onchange();
+			}
 		});
 	}
 	
 	if (settings.directorLinks2){
 		var directorLinks2 = getById("directorLinks2");
 		Object.keys(settings.directorLinks2).forEach((key, index) => {
-			directorLinks2.querySelector('[data-param="'+key+'"]').checked = settings.directorLinks2[key];
-			directorLinks2.querySelector('[data-param="'+key+'"]').onchange();
+			if (directorLinks2.querySelector('[data-param="'+key+'"]').checked == settings.directorLinks2[key]){
+				directorLinks2.querySelector('[data-param="'+key+'"]').checked = settings.directorLinks2[key];
+				directorLinks2.querySelector('[data-param="'+key+'"]').onchange();
+			}
 		});
 	}
-	
 }
 
 
@@ -7114,9 +7251,7 @@ session.publishIFrame = function(iframeURL){
 	container.id = "container";
 	
 	var iframe = document.createElement("iframe");
-	iframe.allow="autoplay;camera;microphone;fullscreen;picture-in-picture";
-	iframe.allowtransparency="true";
-	iframe.allowfullscreen ="true";
+	iframe.allow = "autoplay;camera;microphone;fullscreen;picture-in-picture;transparency;";
 	iframe.src = session.iframeSrc;
 	iframe.id = "iframe_source"
 	session.iframeEle = iframe;
@@ -7159,6 +7294,9 @@ session.publishIFrame = function(iframeURL){
 		getById("controlButtons").style.display="none";
 	}
 	
+	if (session.chatbutton === false) {
+		getById("chatbutton").classList.add("advanced");
+	}
 	
 	
 	if (session.director){
@@ -8010,8 +8148,19 @@ function createRoomCallback(passAdd, passAdd2) {
 	clearInterval(session.updateLocalStatsInterval);
 	session.updateLocalStatsInterval = setInterval(function(){updateLocalStats();},3000);
 
-	setTimeout(function(){loadDirectorSettings();},100);
+	var directorWebsiteShare = getStorage("directorWebsiteShare"); // {"website":session.iframeSrc, "roomid":session.roomid}
 
+	if (typeof directorWebsiteShare === 'object' && directorWebsiteShare !== null && "website" in directorWebsiteShare){
+		if (directorWebsiteShare.roomid && (directorWebsiteShare.roomid==session.roomid)){
+			session.iframeSrc = directorWebsiteShare.website;
+			getById("websitesharetoggle").classList.remove("la-window-maximize");
+			getById("websitesharetoggle").classList.add("la-window-close");
+			getById("websitesharebutton").classList.add("float2");
+			getById("websitesharebutton").classList.remove("float");
+		}
+	}
+	setTimeout(function(){loadDirectorSettings();},100); 
+	
 	joinRoom(session.roomid); 
 	
 	if (session.autostart){
@@ -8322,7 +8471,7 @@ function createControlBox(UUID, soloLink, streamID) {
 		value='" + soloLink + "' href='" + soloLink + "'/>" + soloLink + "</a>\
 		<button class='pull-right' style='width:100%;background-color:#ecfaff;' onmousedown='copyFunction(this.previousElementSibling)' onclick='popupMessage(event);copyFunction(this.previousElementSibling)'><i class='las la-user'></i> copy Solo link</button>\
 		</div>\
-		<button data-action-type=\"hand-raised\" id='" + handsID + "' style='margin: auto;margin-bottom:10px;display:none;background-color:yellow;' data-value='0' title=\"This guest raised their hand. Click this to clear notification.\" onclick=\"remoteLowerhands('" + UUID + "');this.style.display='none';\">\
+		<button data-action-type=\"hand-raised\" id='" + handsID + "' style='margin: auto;margin-bottom:10px;display:none;background-color:yellow;' data-value='0' title=\"This guest raised their hand. Click this to clear notification.\" onclick=\"remoteLowerhands('" + UUID + "');\">\
 			<i class=\"las la-hand-paper\"></i>\
 			<span data-translate=\"user-raised-hand\">Lower Raised Hand</span>\
 		</button>\
@@ -12412,10 +12561,9 @@ session.publishFile = function(ele, event, title="Video File Sharing Session"){ 
 		} else {
 			log("ROOMID EANBLED");
 			log("Update Mixer Event on REsize SET");
-			window.addEventListener("resize", updateMixer);
-			window.addEventListener("orientationchange", updateMixer);
+			//window.addEventListener("resize", updateMixer);// TODO FIX
+			//window.addEventListener("orientationchange", updateMixer);// TODO FIX
 			getById("head3").className = 'advanced';
-			
 			joinRoom(session.roomid);
 		}
 		
@@ -12449,8 +12597,6 @@ session.publishFile = function(ele, event, title="Video File Sharing Session"){ 
 		bigPlayButton.parentNode.removeChild(bigPlayButton);
 	}
 	
-	
-	
 	v.autoplay = false;
 	v.controls = true;
 	v.muted = false;
@@ -12471,7 +12617,7 @@ session.publishFile = function(ele, event, title="Video File Sharing Session"){ 
 		return;
 	}
 	
-	v.className = "tile clean";
+	v.className = "tile clean fileshare";
 	v.id = "videosource"; // could be set to UUID in the future
 	v.playlist = files;
 	
@@ -12550,7 +12696,7 @@ session.publishFile = function(ele, event, title="Video File Sharing Session"){ 
 	
 	if (session.director){
 	} else if (session.scene!==false){
-		setTimeout(function(){updateMixer();},1);
+		//setTimeout(function(){updateMixer();},1);// TODO FIX
 	} else if (session.roomid!==false){
 		if (session.roomid===""){
 			if (!(session.view) || (session.view==="")){
@@ -12558,7 +12704,7 @@ session.publishFile = function(ele, event, title="Video File Sharing Session"){ 
 				if (session.fullscreen){
 					session.windowed = false;
 				} else {
-					v.className = "myVideo clean";
+					v.className = "myVideo clean fileshare";
 					session.windowed = true;
 				}
 				getById("mutespeakerbutton").classList.add("advanced");
@@ -12576,7 +12722,7 @@ session.publishFile = function(ele, event, title="Video File Sharing Session"){ 
 				session.windowed = false;
 				applyMirror(session.mirrorExclude, 'videosource');
 				play();
-				setTimeout(function(){updateMixer();},1);
+				//setTimeout(function(){updateMixer();},1);// TODO FIX
 			}
 		} else {
 			//session.cbr=0; // we're just going to override it
@@ -12585,7 +12731,7 @@ session.publishFile = function(ele, event, title="Video File Sharing Session"){ 
 			}
 			session.windowed = false;
 			applyMirror(session.mirrorExclude, 'videosource');
-			setTimeout(function(){updateMixer();},1);
+			//setTimeout(function(){updateMixer();},1); // TODO FIX
 		}
 	} else {
 		
@@ -12593,7 +12739,7 @@ session.publishFile = function(ele, event, title="Video File Sharing Session"){ 
 		if (session.fullscreen){
 			session.windowed = false;
 		} else {
-			v.className = "myVideo clean";
+			v.className = "myVideo clean fileshare";
 			session.windowed = true;
 		}
 		getById("mutespeakerbutton").classList.add("advanced");
@@ -12859,9 +13005,7 @@ function dragElement(elmnt) {
 function previewIframe(iframesrc) { // this is pretty important if you want to avoid camera permission popup problems.  You can also call it automatically via: <body onload=>loadIframe();"> , but don't call it before the page loads.
 
 	var iframe = document.createElement("iframe");
-	iframe.allow = "autoplay;camera;microphone";
-	iframe.allowtransparency = "true";
-	iframe.allowfullscreen = "true";
+	iframe.allow = "autoplay;camera;microphone;fullscreen;transparency;picture-in-picture;";
 	iframe.style.width = "100%";
 	iframe.style.height = "100%";
 	iframe.style.border = "10px dashed rgb(64 65 62)";
@@ -12911,9 +13055,7 @@ function previewIframe(iframesrc) { // this is pretty important if you want to a
 function loadIframe(iframesrc) { // this is pretty important if you want to avoid camera permission popup problems.  You can also call it automatically via: <body onload=>loadIframe();"> , but don't call it before the page loads.
 
 	var iframe = document.createElement("iframe");
-	iframe.allow = "autoplay;camera;microphone";
-	iframe.allowtransparency = "true";
-	iframe.allowfullscreen = "true";
+	iframe.allow = "autoplay;camera;microphone;fullscreen;transparency;picture-in-picture;";
 	iframe.style.width = "100%";
 	iframe.style.height = "100%";
 	iframe.style.border = "10px dashed rgb(64 65 62)";
@@ -14628,10 +14770,12 @@ Promise.prototype.timeout = function(ms) {
 
 
 function shareWebsite(autostart=false){
-	
 	if (session.iframeSrc){
 		session.iframeSrc = false;
-		session.iframeEle = null;
+		
+		if (session.director){
+			setStorage("directorWebsiteShare", {"website":session.iframeSrc, "roomid":session.roomid});
+		}
 		getById("websitesharetoggle").classList.add("la-window-maximize");
 		getById("websitesharetoggle").classList.remove("la-window-close");
 		
@@ -14688,18 +14832,10 @@ function shareWebsite(autostart=false){
 		}
 	}
 		
-	
-	
 	session.iframeSrc = iframeURL;
-	
-	var iframe = document.createElement("iframe");
-	iframe.allow="autoplay;camera;microphone;fullscreen;picture-in-picture";
-	iframe.allowtransparency="true";
-	iframe.allowfullscreen ="true";
-	iframe.src = session.iframeSrc;
-	iframe.id = "iframe_source"
-	session.iframeEle = iframe;
-	
+	if (session.director){
+		setStorage("directorWebsiteShare", {"website":session.iframeSrc, "roomid":session.roomid});
+	}
 	getById("websitesharetoggle").classList.remove("la-window-maximize");
 	getById("websitesharetoggle").classList.add("la-window-close");
 	
@@ -14750,7 +14886,7 @@ function createIframePopup() {
 	}
 
 	var iframe = document.createElement("iframe");
-	iframe.allow = "autoplay";
+	iframe.allow = "autoplay;camera;microphone;fullscreen;picture-in-picture;transparency;";
 	iframe.allowtransparency = "true";
 	
 	var extras = "";
@@ -15039,6 +15175,7 @@ function updateLinkWebP(arg, input) {
 }
 
 function updateLink(arg, input) {
+	log("updateLink");
 	log(input.dataset.param);
 	if (input.checked) {
 
@@ -15046,10 +15183,9 @@ function updateLink(arg, input) {
 
 		var string = getById("director_block_" + arg).dataset.raw;
 
-		if (getById("obfuscate_director_" + arg).checked) {
+		if ((arg==1) && (getById("obfuscate_director_" + arg).checked)) {
 			string = obfuscateURL(string);
 		}
-
 
 		getById("director_block_" + arg).href = string;
 		getById("director_block_" + arg).innerText = string;
@@ -15059,7 +15195,7 @@ function updateLink(arg, input) {
 		string = string.substring(0, string.length - 1);
 		getById("director_block_" + arg).dataset.raw = string;
 
-		if (getById("obfuscate_director_" + arg).checked) {
+		if ((arg==1) && (getById("obfuscate_director_" + arg).checked)) {
 			string = obfuscateURL(string);
 		}
 
@@ -15071,6 +15207,7 @@ function updateLink(arg, input) {
 
 
 function updateLinkInverse(arg, input) {
+	log("updateLinkInverse");
 	log(input.dataset.param);
 	if (!(input.checked)) {
 
@@ -15078,7 +15215,7 @@ function updateLinkInverse(arg, input) {
 
 		var string = getById("director_block_" + arg).dataset.raw;
 
-		if (getById("obfuscate_director_" + arg).checked) {
+		if ((arg==1) && (getById("obfuscate_director_" + arg).checked)) {
 			string = obfuscateURL(string);
 		}
 
@@ -15091,7 +15228,7 @@ function updateLinkInverse(arg, input) {
 		string = string.substring(0, string.length - 1);
 		getById("director_block_" + arg).dataset.raw = string;
 
-		if (getById("obfuscate_director_" + arg).checked) {
+		if ((arg==1) && (getById("obfuscate_director_" + arg).checked)) {
 			string = obfuscateURL(string);
 		}
 
@@ -15101,6 +15238,7 @@ function updateLinkInverse(arg, input) {
 }
 
 function updateLinkScene(arg, input) {
+	log("updateLinkScene");
 	var string = getById("director_block_" + arg).dataset.raw;
 
 	if (input.checked) {
@@ -15110,7 +15248,7 @@ function updateLinkScene(arg, input) {
 	}
 	getById("director_block_" + arg).dataset.raw = string;
 
-	if (getById("obfuscate_director_" + arg).checked) {
+	if ((arg==1) && (getById("obfuscate_director_" + arg).checked)) {
 		string = obfuscateURL(string);
 	}
 
@@ -16028,13 +16166,14 @@ function updateClosedCaptions(msg, label, UUID) {
 			var spanOverlay = document.createElement("span");
 			spanOverlay.id = UUID + "_" + msg.counter;
 			textOverlay.appendChild(spanOverlay);
-			textOverlay.style.height = "auto";
+			textOverlay.style.height = "unset";
 			textOverlay.style.textAlign = "left";
 			textOverlay.style.display = "block";
-			textOverlay.style.position = "relative";
+			textOverlay.style.position = "fixed";
+			textOverlay.style.bottom = "0";
+			
 		}
 		spanOverlay.innerHTML = label + transcript + "<br />";
-
 		spanOverlay.style.fontSize = (parseInt(session.labelsize || 100) / 100.0 * 4.5) + "vh";
 		spanOverlay.style.lineHeight = (parseInt(session.labelsize || 100) / 100 * 6) + "vh";
 		spanOverlay.style.margin = (parseInt(session.labelsize || 100) / 100.0 * 0.75) + "vh";

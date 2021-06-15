@@ -67,7 +67,7 @@
 			<link itemprop="url" href="./media/obsNinja_logo_full.png" />
 		</span>
 		<script  type="text/javascript" crossorigin="anonymous"  src="./thirdparty/CodecsHandler.js?ver=33"></script>
-		<script  type="text/javascript" crossorigin="anonymous" src="./webrtc.js?ver=203"></script>
+		<script  type="text/javascript" crossorigin="anonymous" src="./webrtc.js?ver=205"></script>
 		<input id="zoomSlider" type="range" style="display: none;" />
 		<div id="header">
 			
@@ -110,8 +110,7 @@
 			
 		</div>
 		<div id="controlButtons" >
-			<div id="obsState" class="advanced" style="border:green solid 2px;padding:10px;margin:10px;color: white; z-index:2; background-color: #222D;display: block;top: 0;position: fixed;">ACTIVE</div>
-			
+			<div id="obsState" class="advanced" >ACTIVE</div>
 			<div id="subControlButtons">
 				<div id="queuebutton" title="Load the next guest in queue" alt="Load the next guest in queue" onmousedown="event.preventDefault(); event.stopPropagation();"  onclick="session.nextQueue()"  tabindex="16" role="button" aria-pressed="false" onkeyup="enterPressedClick(event,this);"  class="advanced float" style="cursor: pointer;" >
 					<i id="queuetoggle" class="toggleSize las la-stream my-float"></i>
@@ -177,7 +176,7 @@
 		<span
 				id="helpbutton"
 				title="Show Help Info" 
-				onclick="warnUser('For support, please browse https://reddit.com/r/obsninja or join the live chat on Discord at https://discord.obs.ninja.\n\nThe Docs also contains many help guides and advanced settings, located at https://docs.vdo.ninja.\n\nTo access the video stats menu, hold CTRL (command) and Left-Click on a video. Most video issues can be fixed by using Wired Internet instead of Wi-Fi.')"
+				onclick="warnUser('For support, please browse https://reddit.com/r/obsninja or join the live chat on Discord at https://discord.vdo.ninja.\n\nThe Docs also contains many help guides and advanced settings, located at https://docs.vdo.ninja.\n\nTo access the video stats menu, hold CTRL (command) and Left-Click on a video. Most video issues can be fixed by using Wired Internet instead of Wi-Fi.')"
 				style="cursor: pointer; display:none;"
 				alt="How to Use This with OBS"
 			>
@@ -281,7 +280,7 @@
 								<li>Disabling video sharing between guests will improve performance</li>
 								<li>Invite only guests to the room that you trust.</li>
 								<li>The "Recording" option is considered experimental.</li>
-								<li><a href="https://params.obs.ninja" style="color:black;"><u>Advanced URL parameters</u></a> are available to customize rooms.</li>
+								<li><a href="https://params.vdo.ninja" style="color:black;"><u>Advanced URL parameters</u></a> are available to customize rooms.</li>
 							</span>
 						</ul>
 					</div>
@@ -605,7 +604,7 @@
 						</div>
 						<div>See the 
 							<a style="text-decoration: none; color: blue;" target="_blank" href="https://docs.vdo.ninja/advanced-settings">documentation</a> for more options and info.<br /><br />
-							Try out the advanced <a style="text-decoration: none; color: blue;" target="_blank" href="https://invite.obs.ninja/">invite generator</a> here also.
+							Try out the advanced <a style="text-decoration: none; color: blue;" target="_blank" href="https://invite.vdo.ninja/">invite generator</a> here also.
 						</div>
 					</div>
 				</div>
@@ -638,10 +637,7 @@
 					</div>
 					<div class='info message-card'>
 						<h1>File Sharing seems to be broken on Chrome v88.</h1>
-						<p>Using The Electron Capture app instead of Chrome should work:
-							<a href="https://github.com/steveseguin/electroncapture/releases/latest">GET IT HERE</a>
-							<br />
-							You can also <a href="https://github.com/aws/amazon-chime-sdk-js/issues/1031">turn off hardware-accleration</a> in Chrome/Edge to fix the issue.</p>
+						<p>Try <a href="https://github.com/aws/amazon-chime-sdk-js/issues/1031">turning off hardware-accleration</a> in Chrome/Edge to fix the issue, or maybe use a different browser.</p>
 					</div>
 				</div>
 				
@@ -687,7 +683,7 @@
 				<i style="margin-top:30px;font-size:600%;overflow:hidden;" class="las la-tachometer-alt"></i>
 			</div>
 			
-			<div id="container-8" class="column columnfade pointer card advanced" style="overflow: hidden;" onclick="window.location = 'https://guides.obs.ninja';">
+			<div id="container-8" class="column columnfade pointer card advanced" style="overflow: hidden;" onclick="window.location = 'https://guides.vdo.ninja';">
 				<h2><span data-translate="read-the-guides">Browse the Guides</span></h2>
 				<i style="margin-top:30px;font-size:600%;overflow:hidden;" class="las la-book-open"></i>
 			</div>
@@ -724,7 +720,7 @@
 								👋 👀  Welcome to our new domain! We've started to rebrand to VDO.Ninja. 📼  Nothing else is changing and we're staying 100% free.
 							</h4>
 							<br />
-							🌻 Site Updated on June 6th. The new <a href="https://docs.vdo.ninja/release-notes/v18">v18 release notes are here</a>. If new issues occur, the previous version can also be <a href="https://obs.ninja/v17/">found here</a>.
+							🌻 Site Updated on June 9th. The <a href="https://docs.vdo.ninja/release-notes/v18">v18 release notes are here</a>. If new issues occur, the previous version can also be <a href="https://obs.ninja/v17/">found here</a>.
 
 							<br />
 							<br />
@@ -1090,8 +1086,8 @@
 						</div>
 					</div>
 				</div>
-				<a href="https://params.obs.ninja" style="color:#888;" target="_blank" >
-					<div style="display: block;float:right;font-size:70%;z-index:30;bottom:6px;right:10px;position:relative;color:#888;" ><span data-translate="learn-more-about-params">Learn more about URL parameters at </span><font style="text-decoration: underline;">params.obs.ninja</font>
+				<a href="https://params.vdo.ninja" style="color:#888;" target="_blank" >
+					<div style="display: block;float:right;font-size:70%;z-index:30;bottom:6px;right:10px;position:relative;color:#888;" ><span data-translate="learn-more-about-params">Learn more about URL parameters at </span><font style="text-decoration: underline;">params.vdo.ninja</font>
 					</div>
 				</a>
 			</div>
@@ -1614,7 +1610,7 @@
 				<li><a onclick="changeLg('pig');toggle(document.getElementById('languages'));" style="cursor: pointer;">Pig Latin</a></li>
 			</ul>
 			<br />
-			<a href="https://github.com/steveseguin/obsninja/tree/master/translations" target="_blank" rel="noopener noreferrer" data-translate='add-more-here'>Add More Here!</a>
+			<a href="https://github.com/steveseguin/vdoninja/tree/master/translations" target="_blank" rel="noopener noreferrer" data-translate='add-more-here'>Add More Here!</a>
 			<br />
 		</div>
 		<div id="calendar" class="popup-message" style="display: none; right: 0; padding-left:5px; bottom: 25px; position: absolute;">
@@ -1640,7 +1636,7 @@
 			}
 		
 			var session = WebRTC.Media; // session is a required global variable if configuring manually. Run before loading main.js but after webrtc.js.
-			session.version = "18.1";
+			session.version = "18.3";
 			session.streamID = session.generateStreamID(); // randomly generates a streamID for this session. You can set your own programmatically if needed
 			
 			session.defaultPassword = "someEncryptionKey123"; // Change this password if self-deploying for added security/privacy
@@ -1721,7 +1717,8 @@
 		<script type="text/javascript" id="main-js" src="./main.js" data-translation="blank"></script>
 		<script type="text/javascript" crossorigin="anonymous" id="mixer-js" src="./mixer.js?ver=2"></script>
 	-->
-		<script type="text/javascript" crossorigin="anonymous" id="main-js" src="./main.js?ver=226"></script>
+		<script type="text/javascript" crossorigin="anonymous" src="./thirdparty/aes.js"></script>
+		<script type="text/javascript" crossorigin="anonymous" id="main-js" src="./main.js?ver=230"></script>
 		<script type="text/javascript">
 			setTimeout(function(){ // lazy load
 				var script = document.createElement('script');
@@ -1732,11 +1729,6 @@
 					script.src = "./thirdparty/StreamSaver.js"; // dynamically load this only if its needed. Keeps loading time down.
 				};
 				script.src = "./thirdparty/polyfill.min.js"; // dynamically load this only if its needed. Keeps loading time down.
-				setTimeout(function(){
-					var script = document.createElement('script');
-					document.head.appendChild(script);
-					script.src = "./thirdparty/aes.js"; // not really needed right away.
-				},500);
 			},0);
 			
 			var languages = getById('languagesList').querySelectorAll('li a');
