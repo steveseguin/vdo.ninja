@@ -2755,12 +2755,12 @@ input:checked + .slider:before {
 }
 
 
-#promptModal, #roomSettings {
+#promptModal, #roomSettings, .promptModal {
 	position: absolute;
     background-color: rgb(221 221 221);
     box-shadow: 0 0 30px 10px #0000005c;
     color: black;
-    font-size: 1.2em;
+    font-size: 1.0em;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
@@ -2773,9 +2773,9 @@ input:checked + .slider:before {
 }
 
 .largeTextEntry {
-	width:300px;
-	margin: 0 0 0 55px;
-    font-size: 1em;
+	width: 90%;
+    margin: 10px 5%;
+    font-size: .8em;
     padding: 0.4em;
     display: block;
 	
@@ -2783,6 +2783,14 @@ input:checked + .slider:before {
 .promptModalInner {
 	position: relative;
 	padding: 1em;
+	max-width: 400px;
+}
+
+.promptModalMessage {
+	position: relative;
+	display: block;
+	width: 98%;
+    margin: 0 5%;
 }
 
 #iframe_source{

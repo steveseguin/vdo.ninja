@@ -55,8 +55,9 @@
 			}
 		</style>
 		<link rel="stylesheet" href="./lineawesome/css/line-awesome.min.css" />
-		<link rel="stylesheet" href="./main.css?ver=63" />
+		<link rel="stylesheet" href="./main.css?ver=64" />
 		<script type="text/javascript" crossorigin="anonymous" src="./thirdparty/adapter.min.js"></script>
+		<style id="lightbox-animations" type="text/css"></style>
 	</head>
 	<body id="main" class="hidden">
 		<span itemprop="image" itemscope itemtype="image/png">
@@ -67,7 +68,7 @@
 			<link itemprop="url" href="./media/obsNinja_logo_full.png" />
 		</span>
 		<script  type="text/javascript" crossorigin="anonymous"  src="./thirdparty/CodecsHandler.js?ver=33"></script>
-		<script  type="text/javascript" crossorigin="anonymous" src="./webrtc.js?ver=205"></script>
+		<script  type="text/javascript" crossorigin="anonymous" src="./webrtc.js?ver=207"></script>
 		<input id="zoomSlider" type="range" style="display: none;" />
 		<div id="header">
 			
@@ -176,7 +177,7 @@
 		<span
 				id="helpbutton"
 				title="Show Help Info" 
-				onclick="warnUser('For support, please browse https://reddit.com/r/obsninja or join the live chat on Discord at https://discord.vdo.ninja.\n\nThe Docs also contains many help guides and advanced settings, located at https://docs.vdo.ninja.\n\nTo access the video stats menu, hold CTRL (command) and Left-Click on a video. Most video issues can be fixed by using Wired Internet instead of Wi-Fi.')"
+				onclick="warnUser('For support, please browse https://reddit.com/r/vdoninja or join the live chat on Discord at https://discord.vdo.ninja.\n\nThe Docs also contains many help guides and advanced settings, located at https://docs.vdo.ninja.\n\nTo access the video stats menu, hold CTRL (command) and Left-Click on a video. Most video issues can be fixed by using Wired Internet instead of Wi-Fi.')"
 				style="cursor: pointer; display:none;"
 				alt="How to Use This with OBS"
 			>
@@ -725,7 +726,7 @@
 							<br />
 							<br />
 							<h3>
-							   🛠 For support, see the <a href="https://www.reddit.com/r/OBSNinja/">sub-reddit <i class="lab la-reddit-alien"></i></a> or join the <a href="https://discord.gg/T4xpQVv">Discord <i class="lab la-discord"></i></a>. The <a href="https://docs.vdo.ninja/">documentation is here</a> and my personal email is <i>steve@seguin.email</i>
+							   🛠 For support, see the <a href="https://www.reddit.com/r/VDONinja/">sub-reddit <i class="lab la-reddit-alien"></i></a> or join the <a href="https://discord.gg/T4xpQVv">Discord <i class="lab la-discord"></i></a>. The <a href="https://docs.vdo.ninja/">documentation is here</a> and my personal email is <i>steve@seguin.email</i>
 							</h3> 
 								
 						</span>
@@ -1712,45 +1713,12 @@
 			// session.scene
 			// session.title // "zzzz"
 		</script>
+		<script type="text/javascript" crossorigin="anonymous" src="./thirdparty/aes.js"></script>
+		<script type="text/javascript" crossorigin="anonymous" id="lib-js" src="./lib.js?ver=1"></script>
 		<!-- 
 		// If you wish to change branding, blank offers a good clean start.
 		<script type="text/javascript" id="main-js" src="./main.js" data-translation="blank"></script>
-		<script type="text/javascript" crossorigin="anonymous" id="mixer-js" src="./mixer.js?ver=2"></script>
 	-->
-		<script type="text/javascript" crossorigin="anonymous" src="./thirdparty/aes.js"></script>
-		<script type="text/javascript" crossorigin="anonymous" id="main-js" src="./main.js?ver=230"></script>
-		<script type="text/javascript">
-			setTimeout(function(){ // lazy load
-				var script = document.createElement('script');
-				document.head.appendChild(script);
-				script.onload = function() { 
-					var script = document.createElement('script');
-					document.head.appendChild(script);
-					script.src = "./thirdparty/StreamSaver.js"; // dynamically load this only if its needed. Keeps loading time down.
-				};
-				script.src = "./thirdparty/polyfill.min.js"; // dynamically load this only if its needed. Keeps loading time down.
-			},0);
-			
-			var languages = getById('languagesList').querySelectorAll('li a');
-			var timezones = [];
-			
-			languages.forEach(language => {
-				if (language.dataset.tz) {
-					var languageTimezones = language.dataset.tz.split(';'); // each link can have multiple timezones separated by ;
-					languageTimezones.forEach(element => {
-						timezones.push(element);
-					});
-				}
-			});
-			
-			var currentTimezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
-			
-			if (timezones.includes(currentTimezone)) {
-				var el = getById('languagesList').querySelector("li a[data-tz*='" + currentTimezone +"']"); // select language li
-				el.parentElement.removeChild(el); // remove it
-				getById('languagesList').insertBefore(el, getById('languagesList').querySelector('li:nth-child(2)')); // insert it after English
-			}
-			
-		</script> 
+		<script type="text/javascript" crossorigin="anonymous" id="main-js" src="./main.js?ver=231"></script>
 	</body>
 </html>
