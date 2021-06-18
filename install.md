@@ -65,14 +65,20 @@ An example NGINX config file that "hides" the file extensions is as follows.  Up
                 root /var/www/html/obs.ninja;
                 try_files /$1/$2 /$1/$2.html /$1/$2/ /$2 /$2/ /$1/index.html;
                 add_header Access-Control-Allow-Origin *;
+                add_header 'cross-origin-resource-policy' '*';
+                add_header 'Cross-Origin-Embedder-Policy' 'require-corp';
+                add_header 'Cross-Origin-Opener-Policy' 'same-origin';
         }
 
         location / {
-            if ($request_uri ~ ^/(.*)\.html$) {
-                return 302 /$1;
-            }
-            try_files $uri $uri.html $uri/ /index.html;
-            add_header Access-Control-Allow-Origin *;
+                if ($request_uri ~ ^/(.*)\.html$) {
+                        return 302 /$1;
+                }
+                add_header 'cross-origin-resource-policy' '*';
+                add_header 'Cross-Origin-Embedder-Policy' 'require-corp';
+                add_header 'Cross-Origin-Opener-Policy' 'same-origin';
+                try_files $uri $uri.html $uri/ /index.html;
+                add_header Access-Control-Allow-Origin *;
         }
 }
 ```
