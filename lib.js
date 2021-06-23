@@ -397,7 +397,11 @@ function warnUser(message, timeout=false){
 	}
 	
 	zindex = 31 + document.querySelectorAll('.alertModal').length;
-	message = message.replace(/\n/g,"<br />");
+	try{
+		message = message.replace(/\n/g,"<br />");
+	} catch(e){
+		errorlog(message);
+	}
 	modalTemplate =
 	`<div class="alertModal" id="alertModal"  style="z-index:${zindex + 2}">	
 		<div class="alertModalInner">
@@ -2437,6 +2441,14 @@ function updateUserList(){
 	},200);
 }
 
+
+function resetCanvas(){
+	session.streamSrc.getVideoTracks().forEach((track) => {
+		session.canvasSource.width = track.getSettings().width || 1280;
+		session.canvasSource.height = track.getSettings().height || 720;
+	});
+}
+
 var LaunchTFWorkerCallback = false;
 function TFLiteWorker(){
 	if (session.tfliteModule==false){
@@ -2471,6 +2483,8 @@ function TFLiteWorker(){
 	function process(){
 		if (session.tfliteModule.activelyProcessing){return;}
 		session.tfliteModule.activelyProcessing=true;
+
+
 		try{
 			segmentationMaskCtx.drawImage(
 				session.canvasSource,
@@ -3441,7 +3455,7 @@ function directorSendMessage(ele) {
 	inputField.style.margin = "5px 10px 5px 10px";
 	inputField.style.padding = "5px";
 
-	target.appendChild(inputField);
+	
 
 	var sendButton = document.createElement("button");
 	sendButton.innerHTML = "<i class='las la-reply'></i> send message ";
@@ -3501,6 +3515,7 @@ function directorSendMessage(ele) {
 	target.appendChild(closeButton);
 	target.appendChild(sendButton);
 	target.appendChild(overlayMsg);
+	target.appendChild(inputField);
 	ele.parentNode.appendChild(target);
 	inputField.focus();
 	inputField.select();
@@ -4661,7 +4676,7 @@ session.publishIFrame = function(iframeURL){
 	container.id = "container";
 	
 	var iframe = document.createElement("iframe");
-	iframe.allow = "autoplay;camera;microphone;fullscreen;picture-in-picture;transparency;";
+	iframe.allow = "autoplay;camera;microphone;fullscreen;picture-in-picture;";
 	iframe.src = session.iframeSrc;
 	iframe.id = "iframe_source"
 	session.iframeEle = iframe;
@@ -7706,17 +7721,17 @@ function resetupAudioOut() {
 
 function obfuscateURL(input) {
 	if (input.startsWith("https://obs.ninja/")) {
-		input = input.replace('https://obs.ninja/', '');
+		input = input.replace('https://obs.ninja/', 'obs.ninja/');
 	} else if (input.startsWith("http://obs.ninja/")) {
-		input = input.replace('http://obs.ninja/', '');
+		input = input.replace('http://obs.ninja/', 'obs.ninja/');
 	} else if (input.startsWith("obs.ninja/")) {
-		input = input.replace('obs.ninja/', '');
+		input = input.replace('obs.ninja/', 'obs.ninja/');
 	} else if (input.startsWith("https://vdo.ninja/")) {
-		input = input.replace('https://vdo.ninja/', '');
+		input = input.replace('https://vdo.ninja/', 'vdo.ninja/');
 	} else if (input.startsWith("http://vdo.ninja/")) {
-		input = input.replace('http://vdo.ninja/', '');
+		input = input.replace('http://vdo.ninja/', 'vdo.ninja/');
 	} else if (input.startsWith("vdo.ninja/")) {
-		input = input.replace('vdo.ninja/', '');
+		input = input.replace('vdo.ninja/', 'vdo.ninja/');
 	}
 
 	input = input.replace('&view=', '&v=');
@@ -7902,25 +7917,66 @@ if (navigator.userAgent.toLowerCase().indexOf(' electron/') > -1) {  // this ena
 		window.navigator.mediaDevices.getDisplayMedia = () => {
 		  return new Promise(async (resolve, reject) => {
 			try {
-			  
 			  if (session.autostart){
-				  var sscid = 0
-				  if (typeof session.screenshare === "number"){
-					  sscid = session.screenshare-1;
-					  if (sscid<0){sscid=0;}
+				  if (parseInt(session.screenshare)+"" === session.screenshare){
+					    var sscid = parseInt(session.screenshare)-1;
+					    if (sscid<0){sscid=0;}
+						const sources = await desktopCapturer.getSources({ types: ['screen'] });
+						const stream = await window.navigator.mediaDevices.getUserMedia({
+							audio: false,
+							video: {
+							  mandatory: {
+								chromeMediaSource: 'desktop',
+								chromeMediaSourceId: sources[sscid].id, 
+								maxFrameRate: 60
+							  }
+							}
+						});
+						resolve(stream);
+				  } else if (session.screenshare!==true){
+						var sscid=null;
+						const sources = await desktopCapturer.getSources({ types: ['window'] });
+						for (var i=0; i<sources.length;i++){
+							if (sources[i].name.startsWith(session.screenshare)){  // check if anythign starts with
+								sscid=i;
+								break;
+							}
+						}
+						if (sscid===null){
+							sscid = 0; // grab first window if nothing.
+							for (var i=0; i<sources.length;i++){
+								if (sources[i].name.includes(session.screenshare)){ // check if something includes the string; fallback
+									sscid=i;
+									break;
+								}
+							}
+						}
+						const stream = await window.navigator.mediaDevices.getUserMedia({
+							audio: false,
+							video: {
+							  mandatory: {
+								chromeMediaSource: 'desktop',
+								chromeMediaSourceId: sources[sscid].id, 
+								maxFrameRate: 60
+							  }
+							}
+						});
+						resolve(stream);
+				  } else {
+						var sscid = 0;
+						const sources = await desktopCapturer.getSources({ types: ['screen'] });
+						const stream = await window.navigator.mediaDevices.getUserMedia({
+							audio: false,
+							video: {
+							  mandatory: {
+								chromeMediaSource: 'desktop',
+								chromeMediaSourceId: sources[sscid].id, 
+								maxFrameRate: 60
+							  }
+							}
+						});
+						resolve(stream);
 				  }
-				  const sources = await desktopCapturer.getSources({ types: ['screen'] });
-				  const stream = await window.navigator.mediaDevices.getUserMedia({
-					audio: false,
-					video: {
-					  mandatory: {
-						chromeMediaSource: 'desktop',
-						chromeMediaSourceId: sources[sscid].id, 
-						maxFrameRate: 60
-					  }
-					}
-				  });
-				  resolve(stream)
 			  } else {
 				  const sources = await desktopCapturer.getSources({ types: ['screen', 'window'] });
 				  const selectionElem = document.createElement('div');
@@ -7984,7 +8040,7 @@ if (navigator.userAgent.toLowerCase().indexOf(' electron/') > -1) {  // this ena
 		}
 		ElectronDesktopCapture = true;
 	} catch(e){
-		warnlog("couldn't load electron's screen capture; you might need to decrease security permissions a bit.");
+		warnlog("Couldn't load electron's screen capture. Elevate the app's permission to allow it (right-click?)");
 	}
 }
 
@@ -10387,7 +10443,7 @@ function dragElement(elmnt) {
 function previewIframe(iframesrc) { // this is pretty important if you want to avoid camera permission popup problems.  You can also call it automatically via: <body onload=>loadIframe();"> , but don't call it before the page loads.
 
 	var iframe = document.createElement("iframe");
-	iframe.allow = "autoplay;camera;microphone;fullscreen;transparency;picture-in-picture;";
+	iframe.allow = "autoplay;camera;microphone;fullscreen;picture-in-picture;";
 	iframe.style.width = "100%";
 	iframe.style.height = "100%";
 	iframe.style.border = "10px dashed rgb(64 65 62)";
@@ -10437,7 +10493,7 @@ function previewIframe(iframesrc) { // this is pretty important if you want to a
 function loadIframe(iframesrc) { // this is pretty important if you want to avoid camera permission popup problems.  You can also call it automatically via: <body onload=>loadIframe();"> , but don't call it before the page loads.
 
 	var iframe = document.createElement("iframe");
-	iframe.allow = "autoplay;camera;microphone;fullscreen;transparency;picture-in-picture;";
+	iframe.allow = "autoplay;camera;microphone;fullscreen;picture-in-picture;";
 	iframe.style.width = "100%";
 	iframe.style.height = "100%";
 	iframe.style.border = "10px dashed rgb(64 65 62)";
@@ -12268,8 +12324,7 @@ function createIframePopup() {
 	}
 
 	var iframe = document.createElement("iframe");
-	iframe.allow = "autoplay;camera;microphone;fullscreen;picture-in-picture;transparency;";
-	iframe.allowtransparency = "true";
+	iframe.allow = "autoplay;camera;microphone;fullscreen;picture-in-picture;";
 	
 	var extras = "";
 	if (session.password){
@@ -13391,11 +13446,18 @@ function getChatMessage(msg, label = false, director = false, overlay = false) {
 
 function updateClosedCaptions(msg, label, UUID) {
 	msg.counter = parseInt(msg.counter);
-	var transcript = sanitizeChat(msg.transcript); // keep it clean.
+	var temp = document.createElement('div');
+	temp.innerText = msg.transcript;
+	temp.innerText = temp.innerHTML;
+	var transcript = temp.textContent || temp.innerText || "";
+
 	if (transcript == "") {
 		return;
 	}
-	transcript = transcript.toUpperCase();
+
+	transcript = transcript.charAt(0).toUpperCase() + transcript.slice(1);
+	//transcript = transcript.substr(-1, 5000); // keep it from being too long
+
 
 	if (label) {
 		label = sanitizeLabel(label);
@@ -14653,6 +14715,7 @@ function attemptTFLiteJsFileLoad(){
 	if (session.tfliteModule!==false){
 		return true;
 	}
+	warnUser("Loading effects model...");
 	TFLITELOADING=true;
 	session.tfliteModule={};
 		
@@ -14685,7 +14748,8 @@ async function changeTFLiteImage(ev, ele){
 
 
 async function loadTFLiteModel(){
-	try{
+	try {
+		
 		if (session.tfliteModule && (session.tfliteModule.img)){
 			var img = session.tfliteModule.img;
 			session.tfliteModule = await createTFLiteSIMDModule();
@@ -14702,6 +14766,7 @@ async function loadTFLiteModel(){
 		}
 	} catch(e){
 		warnlog("TF-LITE FAILED TO LOAD");
+		closeModal();
 		return;
 	}
 	const modelResponse = await fetch("./thirdparty/tflite/segm_full_v679.tflite");
@@ -14711,6 +14776,7 @@ async function loadTFLiteModel(){
 	session.tfliteModule._loadModel(session.tfliteModule.model.byteLength);
 	session.tfliteModule.activelyProcessing = false;
 	TFLITELOADING = false;
+	closeModal();
 	if ((session.effects>=3) && (session.effects<=5)){
 		if (document.getElementById("videosource")){
 			activatedPreview=false;

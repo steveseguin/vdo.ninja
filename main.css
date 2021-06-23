@@ -368,9 +368,6 @@ hr {
 	padding: 0;
 	overflow: hidden;
 	margin: var(--video-margin);
-	transition-property: all;
-    transition-duration: 1s;
-	transition-timing-function: ease-in;
 }
 
 #gridlayout {

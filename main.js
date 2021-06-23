@@ -286,7 +286,7 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 	} else if (urlParams.has('screenshare') || urlParams.has('ss')) {
 		session.screenshare = true;
 		if (urlParams.get('screenshare') || urlParams.get('ss')){
-			session.screenshare = parseInt(urlParams.get('screenshare'));
+			session.screenshare = urlParams.get('screenshare') || urlParams.get('ss');
 		}
 	} else if (urlParams.has('fileshare') || urlParams.has('fs')) {
 		getById("container-5").classList.remove('advanced');
@@ -2362,16 +2362,18 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 			document.head.appendChild(script4);
 		}
 		script4.onload = function() {
+			closeModal();
 			async function loadModel(){
 				model = await faceLandmarksDetection.load(faceLandmarksDetection.SupportedPackages.mediapipeFacemesh);
 				
 			}
 			loadModel();
 		}
-		script.src = "https://unpkg.com/@tensorflow/tfjs-core@2.4.0/dist/tf-core.js";
-		script2.src = "https://unpkg.com/@tensorflow/tfjs-converter@2.4.0/dist/tf-converter.js";
-		script3.src = "https://unpkg.com/@tensorflow/tfjs-backend-webgl@2.4.0/dist/tf-backend-webgl.js";
-		script4.src = "https://unpkg.com/@tensorflow-models/face-landmarks-detection@0.0.1/dist/face-landmarks-detection.js";
+		script.src = "./thirdparty/tfjs/tf-core.js";
+		script2.src = "./thirdparty/tfjs/tf-converter.js";
+		script3.src = "./thirdparty/tfjs/tf-backend-webgl.js";
+		script4.src = "./thirdparty/tfjs/face-landmarks-detection.js";
+		warnUser("Loading effects model...");
 		
 		script.type = 'text/javascript';script2.type = 'text/javascript';script3.type = 'text/javascript';script4.type = 'text/javascript';
 		document.head.appendChild(script);
