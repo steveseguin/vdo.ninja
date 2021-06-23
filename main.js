@@ -655,9 +655,9 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 
 
 	if (urlParams.has('pie')){
-		session.pie = urlParams.get('pie') || false; // If session.pie == true, then there is no need to set parameters via URL
-		if (session.pie){
-			session.wss = "wss://us-nyc-1.websocket.me/v3/1?api_key="+session.pie; // if URL param is set, it will use the API key.
+		session.customWSS = urlParams.get('pie') || false; // If session.customWSS == true, then there is no need to set parameters via URL
+		if (session.customWSS){
+			session.wss = "wss://us-nyc-1.websocket.me/v3/1?api_key="+session.customWSS; // if URL param is set, it will use the API key.
 		}
 	}
 

@@ -5413,9 +5413,9 @@ function createRoomCallback(passAdd, passAdd2) {
 	}
 	
 	var pie = "";
-	if (session.pie){
-		if (session.pie!==true){
-			pie = "&pie="+session.pie;
+	if (session.customWSS){
+		if (session.customWSS!==true){
+			pie = "&pie="+session.customWSS;
 		}
 	}
 	
@@ -5746,9 +5746,9 @@ function createDirectorOnlyBox() {
 		}
 	}
 	var pie = "";
-	if (session.pie){
-		if (session.pie!==true){
-			pie = "&pie="+session.pie;
+	if (session.customWSS){
+		if (session.customWSS!==true){
+			pie = "&pie="+session.customWSS;
 		}
 	}
 	
@@ -9576,9 +9576,9 @@ session.publishStream = function(v, title="Stream Sharing Session"){ //  stream 
 	}
 	
 	var pie = "";
-	if (session.pie){
-		if (session.pie!==true){
-			pie = "&pie="+session.pie;
+	if (session.customWSS){
+		if (session.customWSS!==true){
+			pie = "&pie="+session.customWSS;
 		}
 	}
 	
@@ -9898,9 +9898,9 @@ session.publishScreen = function(constraints, title="Screen Sharing Session", au
 		} catch (e){}
 		
 		var pie = "";
-		if (session.pie){
-			if (session.pie!==true){
-				pie = "&pie="+session.pie;
+		if (session.customWSS){
+			if (session.customWSS!==true){
+				pie = "&pie="+session.customWSS;
 			}
 		}
 		
@@ -10264,9 +10264,9 @@ session.publishFile = function(ele, event, title="Video File Sharing Session"){ 
 	} catch (e){}
 	
 	var pie = "";
-	if (session.pie){
-		if (session.pie!==true){
-			pie = "&pie="+session.pie;
+	if (session.customWSS){
+		if (session.customWSS!==true){
+			pie = "&pie="+session.customWSS;
 		}
 	}
 	
@@ -12764,9 +12764,9 @@ function generateQRPageCallback(hash) {
 		}
 		
 		var pie = "";
-		if (session.pie){
-			if (session.pie!==true){
-				pie = "&pie="+session.pie;
+		if (session.customWSS){
+			if (session.customWSS!==true){
+				pie = "&pie="+session.customWSS;
 			}
 		}
 
