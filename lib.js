@@ -1537,10 +1537,10 @@ function updateMixerRun(e=false){  // this is the main auto-mixing code.  It's a
 
 	try {
 		if (playarea.querySelector("#guestFeeds")){
-			//errorlog("WIPE MIXER");
+			errorlog("WIPE MIXER");
 			playarea.innerHTML = "";
 		} else {
-			//errorlog("ALL GOOD");
+			errorlog("ALL GOOD");
 			var childNodes = playarea.childNodes;
 
 			for (var n=0;n<childNodes.length;n++){
@@ -1578,18 +1578,18 @@ function updateMixerRun(e=false){  // this is the main auto-mixing code.  It's a
 					}
 				}
 			}
+			
+			for (var n=0;n<childNodes.length;n++){
+				if (!childNodes[n].matched){
+					playarea.removeChild(childNodes[n]);
+					n--;
+				} else {
+					childNodes[n].matched=null;
+				}
+			}	
 		}
 	} catch(e){errorlog(e);}
 
-	for (var n=0;n<childNodes.length;n++){
-		if (!childNodes[n].matched){
-			playarea.removeChild(childNodes[n]);
-			n--;
-		} else {
-			childNodes[n].matched=null;
-		}
-	}
-	
 	if (session.videoElement){
 		if ("playlist" in session.videoElement){
 			playarea.appendChild(session.videoElement);
@@ -1656,71 +1656,81 @@ function updateMixerRun(e=false){  // this is the main auto-mixing code.  It's a
 		
 		offsety = Math.max((h- Math.ceil(mediaPool.length/rw)*Math.ceil(h/rh))/2,0);
 		
-		
 
 		if (vid.alreadyAdded && vid.alreadyAdded==true){
 			var container = vid.parentNode;
 			//container.style = vid.parentNode.style;
 
-			var left = Math.max(offsetx+Math.floor(((i%rw)+0)*w/rw),0); 
-			var top = Math.max(offsety+Math.floor((Math.floor(i/rw)+0)*h/rh + hi),0);
-			var width = Math.ceil(w/rw);
-			var height = Math.ceil(h/rh);
-
-			
 			if (container.move){
 				clearInterval(container.move);
 			}
+			
+			if (session.animatedMoves){
+				
+				var left = Math.max(offsetx+Math.floor(((i%rw)+0)*w/rw),0); 
+				var top = Math.max(offsety+Math.floor((Math.floor(i/rw)+0)*h/rh + hi),0);
+				var width = Math.ceil(w/rw);
+				var height = Math.ceil(h/rh);
+				
+				container.tleft = left; 
+				container.ttop = top;
+				container.twidth = width;
+				container.theight = height;
 
-			container.tleft = left; 
-			container.ttop = top;
-			container.twidth = width;
-			container.theight = height;
+				container.move = setInterval(function(CCC){
+					try{
+						if (!CCC){return;}
+						var ww = (parseInt(CCC.style.width) - CCC.twidth);
+						var hh = (parseInt(CCC.style.height) - CCC.theight);
+						var tt = (parseInt(CCC.style.top) - CCC.ttop);
+						var ll = (parseInt(CCC.style.left) - CCC.tleft);
 
-			container.move = setInterval(function(CCC){
-				try{
-					if (!CCC){return;}
-					var ww = (parseInt(CCC.style.width) - CCC.twidth);
-					var hh = (parseInt(CCC.style.height) - CCC.theight);
-					var tt = (parseInt(CCC.style.top) - CCC.ttop);
-					var ll = (parseInt(CCC.style.left) - CCC.tleft);
+						var skip = true;
 
-					var skip = true;
+						if (ww <=1 && (ww >=-1)){
+							CCC.style.width = CCC.twidth+"px";
+						} else {
+							skip=false;
+							CCC.style.width = parseInt((parseInt(CCC.style.width) - ww/1.5))+"px";
+						}
 
-					if (ww <=1 && (ww >=-1)){
-						CCC.style.width = CCC.twidth+"px";
-					} else {
-						skip=false;
-						CCC.style.width = parseInt((parseInt(CCC.style.width) - ww/1.5))+"px";
-					}
+						if (hh <=1 && (hh >=-1)){
+							CCC.style.height = CCC.theight+"px";
+						} else {
+							skip=false;
+							CCC.style.height = parseInt((parseInt(CCC.style.height) - hh/1.5))+"px";
+						}
 
-					if (hh <=1 && (hh >=-1)){
-						CCC.style.height = CCC.theight+"px";
-					} else {
-						skip=false;
-						CCC.style.height = parseInt((parseInt(CCC.style.height) - hh/1.5))+"px";
-					}
+						if (tt <=1 && (tt >=-1)){
+							CCC.style.top = CCC.ttop+"px";
+						} else {
+							skip=false;
+							CCC.style.top = parseInt((parseInt(CCC.style.top) - tt/1.5))+"px";
+						}
 
-					if (tt <=1 && (tt >=-1)){
-						CCC.style.top = CCC.ttop+"px";
-					} else {
-						skip=false;
-						CCC.style.top = parseInt((parseInt(CCC.style.top) - tt/1.5))+"px";
-					}
+						if (ll <=1 && (ll >=-1)){
+							CCC.style.left = CCC.tleft+"px";
+						} else {
+							skip=false;
+							CCC.style.left = parseInt((parseInt(CCC.style.left) - ll/1.5))+"px";
+						}
 
-					if (ll <=1 && (ll >=-1)){
-						CCC.style.left = CCC.tleft+"px";
-					} else {
-						skip=false;
-						CCC.style.left = parseInt((parseInt(CCC.style.left) - ll/1.5))+"px";
-					}
+						if (skip){
+							clearInterval(CCC.move);
+							return;
+						}
+					} catch(e){errorlog(e);}
+				}, 30, container);
+			} else {
+				container.style.position = "absolute";
+				container.style.display = "flex";
+				container.style.alignItems = "center";
 
-					if (skip){
-						clearInterval(CCC.move);
-						return;
-					}
-				} catch(e){errorlog(e);}
-			}, 30, container);
+				container.style.left = offsetx+Math.floor(((i%rw)+0)*w/rw)+"px";
+				container.style.top  = offsety+Math.floor((Math.floor(i/rw)+0)*h/rh + hi)+"px";
+				container.style.width = Math.ceil(w/rw)+"px";
+				container.style.height = Math.ceil(h/rh)+"px";
+			}
 			
 		} else {
 			var container = document.createElement("div");
@@ -9429,8 +9439,6 @@ session.publishStream = function(v, title="Stream Sharing Session"){ //  stream 
 	} else if (session.roomid!==false){
 		if (session.roomid===""){
 			if (!(session.view) || (session.view==="")){
-				
-				
 				if (session.fullscreen){
 					session.windowed = false;
 				} else {
@@ -9462,7 +9470,6 @@ session.publishStream = function(v, title="Stream Sharing Session"){ //  stream 
 			}
 			session.windowed = false;
 			applyMirror(session.mirrorExclude, 'videosource');
-			
 			setTimeout(function(){updateMixer();},1);
 		}
 	} else {
@@ -9586,7 +9593,6 @@ session.publishStream = function(v, title="Stream Sharing Session"){ //  stream 
 	getById("reshare").text = "https://"+location.host+location.pathname+"?view="+session.streamID+added+pie;
 	getById("reshare").style.width = ((getById("reshare").text.length + 1)*1.15 * 8) + 'px';
 	pokeIframeAPI('started-camera');
-	
 	
 	
 	if (session.videoMutedFlag){

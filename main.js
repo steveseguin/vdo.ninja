@@ -653,6 +653,10 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 		}
 	}
 
+	if (urlParams.has('animated') || urlParams.has('animate')){
+		session.animatedMoves=true;
+	}
+	
 
 	if (urlParams.has('pie')){
 		session.customWSS = urlParams.get('pie') || false; // If session.customWSS == true, then there is no need to set parameters via URL
