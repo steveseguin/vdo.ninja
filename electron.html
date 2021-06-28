@@ -364,11 +364,9 @@ function resetHistory(){
 
 var urlParams = new URLSearchParams(window.location.search);
 
-if (navigator.userAgent.indexOf('Mac OS X') != -1){
-	document.getElementById("warning4mac").style.display="block";
-} else if (location.hostname.toLowerCase() == "obs.ninja"){
+if ((location.hostname.toLowerCase() == "vdo.ninja") || (location.hostname.toLowerCase() == "obs.ninja")){
 	try {
-		if (navigator.userAgent.toLowerCase().indexOf(' electron/') > -1) { // for now, just PC or Linux versions only.
+		if (navigator.userAgent.toLowerCase().indexOf(' electron/') > -1) { 
 			function compareVersions(version){
 				version = version.split(".");
 				fetch('https://api.github.com/repos/steveseguin/electroncapture/releases/latest')

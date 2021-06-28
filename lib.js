@@ -22,6 +22,54 @@ var AltPressed = false;
 
 var translation = false;
 
+var miscTranslations = {
+	"new-display-name":"Enter a new Display Name for this stream",
+	"submit-error-report": "Press OK to submit any error logs to VDO.Ninja. Error logs may contain private information.",
+	"director-redirect-1": "The director wishes to redirect you to the URL: ",
+	"director-redirect-2": "\n\nPress OK to be redirected.",
+	"add-a-label": "Add a label",
+	"audio-processing-disabled": "Audio processing is disabled with this guest. Can't mute or change volume",
+	"not-the-director": "<font color='red'>You are not the director of this room.  You will have limited to no control.  You can try claiming the room after the first director leaves.</font>",
+	"room-is-claimed": "The room is already claimed by someone else.\n\nOnly the first person to join a room is the assigned director.\n\nRefresh after the first director leaves to claim.",
+	"streamid-already-published": "The stream ID you are publishing to is already in use.\n\nPlease try with a different invite link or refresh to retry again.\n\nYou will now be disconnected.",
+	"director": "Director",
+	"unknown-user": "Unknown User",
+	"room-test-not-good": "The room name 'test' is very commonly used and may not be secure.\n\nAre you sure you wish to proceed?",
+	"load-previous-session":"Would you like to load your previous session's settings?",
+	"enter-password" : "Please enter the password below: \n\n(Note: Passwords are case-sensitive and you will not be alerted if it is incorrect.)",
+	"enter-password-2" : "Please enter the password below: \n\n(Note: Passwords are case-sensitive.)",
+	"password-incorrect" : "The password was incorrect.\n\nRefresh and try again.",
+	"enter-display-name" : "Please enter your display name:",
+	"enter-new-display-name" :"Enter a new Display Name for this stream",
+	"what-bitrate":"What bitrate would you like to record at? (kbps)",
+	"enter-website": "Enter a website URL to share",
+	"press-ok-to-record": "Press OK to start recording. Press again to stop and download.\n\nWarning: Keep this browser tab active to continue recording.\n\nYou can change the default video bitrate if desired below (kbps)",
+	"no-streamID-provided": "No streamID was provided; one will be generated randomily.\n\nStream ID: ",
+	"alphanumeric-only": "Info: Only AlphaNumeric characters should be used for the stream ID.\n\nThe offending characters have been replaced by an underscore",
+	"stream-id-too-long": "The Stream ID should be less than 45 alPhaNuMeric characters long.\n\nWe will trim it to length.",
+	"share-with-trusted":"Share only with those you trust",
+	"pass-recommended" : "A password is recommended",
+	"insecure-room-name" : "Insecure room name.",
+	"allowed-chars" : "Allowed chars",
+	"transfer" : "transfer",
+	"armed" : "armed",
+	"transfer-guest-to-room" : "Transfer guests to room:\n\n(Please note rooms must share the same password)",
+	"transfer-guest-to-url" :"Transfer guests to new website URL.\n\n(Guests will be prompted to accept)",
+	"change-url" : "change URL",
+	"mute-in-scene" : "mute in scene",
+	"unmute-guest": "un-mute guest",
+	"undeafen" : "un-deafen",
+	"deafen" : "deafen guest",
+	"unblind" : "un-blind",
+	"blind" : "blind guest",
+	"unmute" : "un-mute",
+	"mute-guest" : "mute guest",
+	"unhide" : "unhide guest",
+	"hide-guest": "hide guest",
+	"confirm-disconnect-users": "Are you sure you wish to disconnect these users?",
+	"confirm-disconnect-user": "Are you sure you wish to disconnect this user?"
+};
+
 // function log(msg){ // uncomment to enable logging.
 	// console.log(msg);
 // }
@@ -170,7 +218,7 @@ function updateURL(param, force = false, cleanUrl = false) {
 	urlParams = new URLSearchParams(window.location.search);
 }
 
-function changeGuestSettings(ele){
+/* function changeGuestSettings(ele){
 	var eles = ele.querySelectorAll('[data-param]');
 	var UUID = ele.dataset.UUID;
 	var settings = {};
@@ -205,7 +253,7 @@ function changeGuestSettings(ele){
 	msg.changeParams = settings;
 	session.sendRequest(msg, UUID);
 	closeModal();
-}
+} */
 
 // proper room migration needs to happen; in sync.
 // updateMixer after settings changed
@@ -220,6 +268,32 @@ function applyNewParams(changeParams){
 	log(changeParams);
 	updateMixer();
 }
+
+function submitDebugLog(msg){
+	try {
+		appendDebugLog({"connection_type": session.stats.network_type});
+		if (navigator.userAgent){
+			var _, userAgent = navigator.userAgent;
+			appendDebugLog({"userAgent": userAgent});
+		}
+		if (navigator.platform){
+			appendDebugLog({"userAgent": navigator.platform});
+		}
+	} catch(e){}
+	window.focus();
+	var res = confirm(miscTranslations["submit-error-report"]);
+	if (res){
+		var request = new XMLHttpRequest();
+		request.open('POST', "https://reports.vdo.ninja/");  //  php, well, whatever.
+		request.send(JSON.stringify(errorReport));
+		errorReport = [];
+		if (document.getElementById("reportbutton")){
+			getById("reportbutton").style.visibility = "hidden";
+		}
+	}
+}
+
+
 
 function promptUser(eleId, UUID=null){
 	if (session.beepToNotify){
@@ -439,19 +513,19 @@ var sanitizeStreamID = function(streamID) {
 	if (streamID.length < 1) {
 		streamID = session.generateStreamID(8);
 		if (!(session.cleanOutput)) {
-			warnUser("No streamID was provided; one will be generated randomily.\n\nStream ID: " + streamID);
+			warnUser(miscTranslations["no-streamID-provided"] + streamID);
 		}
 	}
 	var streamID_sanitized = streamID.replace(/[\W]+/g, "_");
 	if (streamID !== streamID_sanitized) {
 		if (!(session.cleanOutput)) {
-			warnUser("Info: Only AlphaNumeric characters should be used for the stream ID.\n\nThe offending characters have been replaced by an underscore");
+			warnUser(miscTranslations["alphanumeric-only"]);
 		}
 	}
 	if (streamID_sanitized.length > 44) {
 		streamID_sanitized = streamID_sanitized.substring(0, 44);
 		if (!(session.cleanOutput)) {
-			warnUser("The Stream ID should be less than 45 alPhaNuMeric characters long.\n\nWe will trim it to length.");
+			warnUser(miscTranslations["stream-id-too-long"]);
 		}
 	}
 	return streamID_sanitized;
@@ -475,12 +549,12 @@ var checkStrengthRoom = function() {
 	target.style.display = "block";
 	if (result1) {
 		if (result2) {
-			target.innerHTML = "<font style='color:green'>Share only with those you trust</font>";
+			target.innerHTML = "<font style='color:green'>"+miscTranslations["share-with-trusted"]+"</font>";
 		} else {
-			target.innerHTML = "<font style='color:#e67202;'>A password is recommended</font>";
+			target.innerHTML = "<font style='color:#e67202;'>"+miscTranslations["pass-recommended"]+"</font>";
 		}
 	} else {
-		target.innerHTML = "<font style='color:red'>Insecure room name.</font> Allowed chars: <i>A-Z, a-z, 0-9, _</i>";
+		target.innerHTML = "<font style='color:red'>"+miscTranslations["insecure-room-name"]+"</font> "+miscTranslations["allowed-chars"]+": <i>A-Z, a-z, 0-9, _</i>";
 	}
 };
 
@@ -1093,11 +1167,15 @@ function setupIncomingVideoTracking(v, UUID){  // video element.
 		if (session.nocursor==false){ // we do not want to show the controls. This is because MacOS + OBS does not work; so electron app needs this.
 			if (!(session.cleanOutput)){
 				if (!(window.obsstudio)){
-					if (v.controlTimer){
-						clearInterval(v.controlTimer);
+					if (session.scene===false){
+						if (session.permaid!==false){
+							if (v.controlTimer){
+								clearInterval(v.controlTimer);
+							}
+							v.controlTimer = setTimeout(showControlBar.bind(null,v),3000);
+							//v.controlTimer = setTimeout(function (){v.controls=true;},3000); // 3 seconds before I enable the controls automatically. This way it doesn't auto appear during loading.  3s enough, right?
+						}
 					}
-					v.controlTimer = setTimeout(showControlBar.bind(null,v),3000);
-					//v.controlTimer = setTimeout(function (){v.controls=true;},3000); // 3 seconds before I enable the controls automatically. This way it doesn't auto appear during loading.  3s enough, right?
 				}
 			}
 		}
@@ -1113,6 +1191,13 @@ function setupIncomingVideoTracking(v, UUID){  // video element.
 	setTimeout(session.processStats, 1000, UUID);
 	
 }
+
+function showControlBar(vel){
+	try {
+		vel.controls=true;
+	} catch(e){errorlog(e);}
+}
+
 
 function updateMixerRun(e=false){  // this is the main auto-mixing code.  It's a giant function that runs when there are changes to screensize, video track statuses, etc.
 	if (getById("subControlButtons").dragElement){
@@ -1537,10 +1622,10 @@ function updateMixerRun(e=false){  // this is the main auto-mixing code.  It's a
 
 	try {
 		if (playarea.querySelector("#guestFeeds")){
-			errorlog("WIPE MIXER");
+			//errorlog("WIPE MIXER");
 			playarea.innerHTML = "";
 		} else {
-			errorlog("ALL GOOD");
+			//errorlog("ALL GOOD");
 			var childNodes = playarea.childNodes;
 
 			for (var n=0;n<childNodes.length;n++){
@@ -1744,57 +1829,59 @@ function updateMixerRun(e=false){  // this is the main auto-mixing code.  It's a
 			container.style.height = Math.ceil(h/rh)+"px";
 		}
 		
+		try {
 
-		if (vid.alreadyAdded && vid.alreadyAdded==true){
-			vid.alreadyAdded=false;
-			i+=1;
-			return;
-		} else if (vid.dataset.doNotMove){
-			vid.style.position = "absolute";
-			vid.style.left = container.style.left;
-			vid.style.top = container.style.top;
-			vid.style.width = container.style.width;
-			vid.style.height = container.style.height;
-			vid.style.display = "flex";
-			i+=1;
-			return;
-		}
-		
-		
-		playarea.appendChild(container);
-		
-		var wrw = Math.ceil(w/rw);
-		var hrh = Math.ceil(h/rh);
-		
-		if (session.dynamicScale){
-			if (vid.dataset.UUID){
-				if (wrw && hrh){
-					if (session.devicePixelRatio){
-						session.requestResolution(vid.dataset.UUID, wrw * session.devicePixelRatio, hrh * session.devicePixelRatio);
-					} else if (window.devicePixelRatio && parseInt(window.devicePixelRatio) > 1 ){
-						session.requestResolution(vid.dataset.UUID, wrw*window.devicePixelRatio, hrh*window.devicePixelRatio);
-					} else {
-						session.requestResolution(vid.dataset.UUID, wrw, hrh);
+			if (vid.alreadyAdded && vid.alreadyAdded==true){
+				vid.alreadyAdded=false;
+				var holder = container.querySelector('[data-holder]');
+				if (!holder){
+					var holder = document.createElement("div");
+					holder.className = "holder";
+					holder.dataset.holder = true;
+					container.appendChild(holder);
+				} else {
+					holder.innerHTML = "";
+				}
+				//i+=1;
+				//return;
+			} else if (vid.dataset.doNotMove){
+				vid.style.position = "absolute";
+				vid.style.left = container.style.left;
+				vid.style.top = container.style.top;
+				vid.style.width = container.style.width;
+				vid.style.height = container.style.height;
+				vid.style.display = "flex";
+				i+=1;
+				return;
+			} else {
+				playarea.appendChild(container);
+				var holder = document.createElement("div");
+				holder.className = "holder";
+				holder.dataset.holder = true;
+				vid.style.maxWidth = "100%";
+				vid.style.maxHeight = "100%";
+				container.appendChild(vid);
+				container.appendChild(holder);
+			}
+			
+			
+			var wrw = Math.ceil(w/rw);
+			var hrh = Math.ceil(h/rh);
+			
+			if (session.dynamicScale){
+				if (vid.dataset.UUID){
+					if (wrw && hrh){
+						if (session.devicePixelRatio){
+							session.requestResolution(vid.dataset.UUID, wrw * session.devicePixelRatio, hrh * session.devicePixelRatio);
+						} else if (window.devicePixelRatio && parseInt(window.devicePixelRatio) > 1 ){
+							session.requestResolution(vid.dataset.UUID, wrw*window.devicePixelRatio, hrh*window.devicePixelRatio);
+						} else {
+							session.requestResolution(vid.dataset.UUID, wrw, hrh);
+						}
 					}
 				}
 			}
-		}
-		
-		
-		//vid.style.objectFit = "contain"; // set by .tile now
-		//vid.classList="";
-		vid.style.maxWidth = "100%";
-		vid.style.maxHeight = "100%";
-		//vid.style.margin = "auto";
-
-		// Creates relative positioned element, important for label pos
-		var holder = document.createElement("div");
-		holder.className = "holder";
-		//holder.appendChild(vid);
-		container.appendChild(vid);
-		container.appendChild(holder);
-		
-		
+		} catch(e){errorlog(e);}
 		
 		if (vid.videoWidth && vid.videoHeight){
 			var asw = wrw/vid.videoWidth;
@@ -2053,16 +2140,47 @@ function updateMixerRun(e=false){  // this is the main auto-mixing code.  It's a
 }
 
 function miniTranslate(ele, ident = false) {
-	if (ident) {
-		ele.dataset.translate = ident;
-	} else {
-		ident = ele.dataset.translate;
-	}
-	try {
-		if (ident in translation.innerHTML) {
+	
+	if (!translation){return;}
+	
+	if (ident){
+		if (ident in translation.innerHTML){
 			ele.innerHTML = translation.innerHTML[ident];
+			return;
+		} else {
+			warnlog(ident + ": not found in translation file");
 		}
-	} catch (e) {}
+	}
+	
+	var allItems = ele.querySelectorAll('[data-translate]');
+	allItems.forEach(function(ele) {
+		if (ele.dataset.translate in translation.innerHTML) {
+			ele.innerHTML = translation.innerHTML[ele.dataset.translate];
+		} else if (ele.dataset.translate in translation.miscellaneous) {
+			ele.innerHTML = translation.miscellaneous[ele.dataset.translate];
+		}
+	});
+	var allTitles = ele.querySelectorAll('[title]');
+	allTitles.forEach(function(ele) {
+		var key = ele.title.replace(/[\W]+/g, "-").toLowerCase();
+		if (key in translation.titles) {
+			ele.title = translation.titles[key];
+		}
+	});
+	var allPlaceholders = ele.querySelectorAll('[placeholder]');
+	allPlaceholders.forEach(function(ele) {
+		var key = ele.placeholder.replace(/[\W]+/g, "-").toLowerCase();
+		if (key in translation.placeholders) {
+			ele.placeholder = translation.placeholders[key];
+		}
+	});
+	
+	//Object.keys(miscTranslations).forEach(key => {
+	//	if (key in translation.miscellaneous) {
+	//		miscTranslations[key] = translation.miscellaneous[key];
+	//	}
+	//});
+	///
 }
 
 function changeLg(lang) {
@@ -2097,6 +2215,14 @@ function changeLg(lang) {
 					ele.placeholder = trans[key];
 				}
 			});
+			if ("miscellaneous" in data){
+				trans = data.miscellaneous;
+				Object.keys(miscTranslations).forEach(key => {
+					if (key in trans) {
+						miscTranslations[key] = trans[key];
+					}
+				});
+			}
 		});
 	}).catch(function(err) {
 		errorlog(err);
@@ -2422,9 +2548,9 @@ function updateUserList(){
 					if (session.rpcs[UUID].label){
 						insert.innerText = session.rpcs[UUID].label + "";
 					} else if (session.directorUUID === UUID){
-						insert.innerText = "Director";
+						insert.innerText = miscTranslations["director"];
 					} else {
-						insert.innerText = "Unknown User";
+						insert.innerText = miscTranslations["unknown-user"];
 					}
 					getById("userList").appendChild(insert);
 					
@@ -3276,7 +3402,10 @@ function toggleMute(apply = false) { // TODO: I need to have this be MUTE, toggl
 		session.muted = true;
 		getById("mutetoggle").className = "las la-microphone-slash my-float toggleSize";
 		if (!(session.cleanOutput)){
-			getById("mutebutton").className = "float2 red puslate";
+			getById("mutebutton").classList.remove("float"); 
+			getById("mutebutton").classList.add("float2"); 
+			getById("mutebutton").classList.add("red"); 
+			getById("mutebutton").classList.add("puslate"); 
 			getById("header").classList.add('red');
 			
 			if (session.localMuteElement){
@@ -3297,7 +3426,12 @@ function toggleMute(apply = false) { // TODO: I need to have this be MUTE, toggl
 		session.muted = false;
 		getById("mutetoggle").className = "las la-microphone my-float toggleSize";
 		if (!(session.cleanOutput)){
-			getById("mutebutton").className = "float";
+			
+			getById("mutebutton").classList.add("float"); 
+			getById("mutebutton").classList.remove("float2"); 
+			getById("mutebutton").classList.remove("red"); 
+			getById("mutebutton").classList.remove("puslate"); 
+			
 			getById("header").classList.remove('red');
 			
 			if (session.localMuteElement){
@@ -3468,7 +3602,8 @@ function directorSendMessage(ele) {
 	
 
 	var sendButton = document.createElement("button");
-	sendButton.innerHTML = "<i class='las la-reply'></i> send message ";
+	sendButton.innerHTML = "<i class='las la-reply'></i> <span data-translate='send-message'>send message<s/pan> ";
+	miniTranslate(sendButton);
 	sendButton.style.left = "5px";
 	sendButton.style.position = "relative";
 	sendButton.onclick = function() {
@@ -3484,7 +3619,8 @@ function directorSendMessage(ele) {
 
 
 	var closeButton = document.createElement("button");
-	closeButton.innerHTML = "<i class='las la-times'></i> close";
+	closeButton.innerHTML = "<i class='las la-times'></i> <span data-translate='close'>close</span>";
+	miniTranslate(closeButton);
 	closeButton.style.left = "5px";
 	closeButton.style.position = "relative";
 	closeButton.onclick = function() {
@@ -3695,6 +3831,7 @@ function hangup2() {
 		getById("miniPerformer").innerHTML = '<button id="press2talk" onmousedown="event.preventDefault(); event.stopPropagation();" style="width:auto;margin-left:5px;height:45px;border-radius: 38px;" class="float" onclick="press2talk(true);" title="You can also enable the director`s Video Output afterwards by clicking the Setting`s button"><i class="las la-headset"></i><span data-translate="push-to-talk-enable"> enable director`s microphone or video</span></button>';
 	}
 	getById("miniPerformer").className = "";
+	miniTranslate(getById("miniPerformer"));
 }
 
 function hangupComplete() {
@@ -3741,18 +3878,21 @@ function directMigrate(ele, event) { // everyone in the room will hangup this gu
 	log("directMigrate");
 	if (event === false) {
 		if (previousRoom === null) { // user cancelled in previous callback
-			ele.innerHTML = '<i class="las la-paper-plane"></i> <span data-translate="forward-to-room">Transfer</span>';
+			ele.innerHTML = '<i class="las la-paper-plane"></i> <span data-translate="forward-to-room">transfer</span>';
+			miniTranslate(ele);
 			ele.style.backgroundColor = null;
 			return;
 		}
 		if (transferCancelled === true) {
-			ele.innerHTML = '<i class="las la-paper-plane"></i> <span data-translate="forward-to-room">Transfer</span>';
+			ele.innerHTML = '<i class="las la-paper-plane"></i> <span data-translate="forward-to-room">transfer</span>';
+			miniTranslate(ele);
 			ele.style.backgroundColor = null;
 			return;
 		}
 		var migrateRoom = previousRoom
 	} else if ((event.ctrlKey) || (event.metaKey)) {
-		ele.innerHTML = '<i class="las la-check"></i> <span data-translate="forward-to-room">Armed</span>';
+		ele.innerHTML = '<i class="las la-check"></i> <span data-translate="forward-to-room">armed</span>';
+		miniTranslate(ele);
 		ele.style.backgroundColor = "#BF3F3F";
 		transferCancelled = false;
 		//armedTransfer=true;
@@ -3767,11 +3907,12 @@ function directMigrate(ele, event) { // everyone in the room will hangup this gu
 			var migrateRoom = sanitizeRoomName(previousRoom);
 		} else {
 			window.focus();
-			var migrateRoom = prompt("Transfer guests to room:\n\n(Please note rooms must share the same password)", previousRoom);
+			var migrateRoom = prompt(miscTranslations["transfer-guest-to-room"], previousRoom);
 		}
 		stillNeedRoom = true;
 		if (migrateRoom === null) { // user cancelled
-			ele.innerHTML = '<i class="las la-paper-plane"></i> <span data-translate="forward-to-room">Transfer</span>';
+			ele.innerHTML = '<i class="las la-paper-plane"></i> <span data-translate="forward-to-room">transfer</span>';
+			miniTranslate(ele);
 			ele.style.backgroundColor = null;
 			transferCancelled = true;
 			return;
@@ -3782,7 +3923,8 @@ function directMigrate(ele, event) { // everyone in the room will hangup this gu
 		} catch (e) {}
 
 	}
-	ele.innerHTML = '<i class="las la-paper-plane"></i> <span data-translate="forward-to-room">Transfer</span>';
+	ele.innerHTML = '<i class="las la-paper-plane"></i> <span data-translate="forward-to-room">transfer</span>';
+	miniTranslate(ele);
 	ele.style.backgroundColor = null;
 
 	if (migrateRoom) {
@@ -3813,13 +3955,14 @@ function directHangup(ele, event) { // everyone in the room will hangup this gue
 	if (event == false) {
 		if (stillNeedHangupTarget === 1) {
 			window.focus();
-			var confirmHangup = confirm("Are you sure you wish to disconnect these users?");
+			var confirmHangup = confirm(miscTranslations["confirm-disconnect-users"]);
 			stillNeedHangupTarget = confirmHangup;
 		} else {
 			confirmHangup = stillNeedHangupTarget;
 		}
 	} else if ((event.ctrlKey) || (event.metaKey)) {
 		ele.innerHTML = '<i class="las la-skull-crossbones"></i> <span data-translate="disconnect-guest" >ARMED</span>';
+		miniTranslate(ele);
 		ele.style.backgroundColor = "#BF3F3F";
 		stillNeedHangupTarget = 1;
 		Callbacks.push([directHangup, ele, false]);
@@ -3827,7 +3970,7 @@ function directHangup(ele, event) { // everyone in the room will hangup this gue
 		return;
 	} else {
 		window.focus();
-		var confirmHangup = confirm("Are you sure you wish to disconnect this user?");
+		var confirmHangup = confirm(miscTranslations["confirm-disconnect-user"]);
 	}
 
 	if (confirmHangup) {
@@ -3839,6 +3982,7 @@ function directHangup(ele, event) { // everyone in the room will hangup this gue
 		//session.anysend(msg); // send to everyone in the room, so they know if they are on air or not.
 	} else {
 		ele.innerHTML = '<i class="las la-sign-out-alt"></i><span data-translate="disconnect-guest"> Hangup</span>';
+		miniTranslate(ele);
 		ele.style.backgroundColor = null;
 	}
 }
@@ -3907,18 +4051,21 @@ function directPageReload(ele, event) {
 	log("URL Page reload");
 	if (event === false) {
 		if (previousURL === null) { // user cancelled in previous callback
-			ele.innerHTML = '<i class="las la-sync"></i> <span data-translate="change-url">Change URL</span>';
+			ele.innerHTML = '<i class="las la-sync"></i> <span data-translate="change-url">change URL</span>';
+			miniTranslate(ele)
 			ele.style.backgroundColor = null;
 			return;
 		}
 		if (reloadCancelled === true) {
-			ele.innerHTML = '<i class="las la-sync"></i> <span data-translate="change-url">Change URL</span>';
+			ele.innerHTML = '<i class="las la-sync"></i> <span data-translate="change-url">change URL</span>';
+			miniTranslate(ele)
 			ele.style.backgroundColor = null;
 			return;
 		}
 		reloadURL = previousURL
 	} else if ((event.ctrlKey) || (event.metaKey)) {
-		ele.innerHTML = '<i class="las la-check"></i> <span data-translate="button-armed">Armed</span>';
+		ele.innerHTML = '<i class="las la-check"></i> <span data-translate="button-armed">armed</span>';
+		miniTranslate(ele)
 		ele.style.backgroundColor = "#BF3F3F";
 		reloadCancelled = false;
 		armedReload=true;
@@ -3930,10 +4077,11 @@ function directPageReload(ele, event) {
 		reloadURL = previousURL;
 	} else {
 		window.focus();
-		var reloadURL = prompt("Transfer guests to new website URL.\n\n(Guests will be prompted to accept)", previousURL);
+		var reloadURL = prompt(miscTranslations["transfer-guest-to-url"], previousURL);
 		stillNeedURL = true;
 		if (reloadURL === null) { // user cancelled
-			ele.innerHTML = '<i class="las la-sync"></i> <span data-translate="change-url">Change URL</span>';
+			ele.innerHTML = '<i class="las la-sync"></i> <span data-translate="change-url">change URL</span>';
+			miniTranslate(ele)
 			ele.style.backgroundColor = null;
 			reloadCancelled = true;
 			return;
@@ -3943,7 +4091,8 @@ function directPageReload(ele, event) {
 		} catch (e) {}
 
 	}
-	ele.innerHTML = '<i class="las la-sync"></i> <span data-translate="change-url">Change URL</span>';
+	ele.innerHTML = '<i class="las la-sync"></i> <span data-translate="change-url">change URL</span>';
+	miniTranslate(ele)
 	ele.style.backgroundColor = null;
 
 	if (reloadURL) {
@@ -3963,12 +4112,13 @@ function directMute(ele,  event=false) { // A directing room only is controlled 
 		if (ele.dataset.value == 0) {
 			ele.dataset.value = 1;
 			ele.classList.remove("pressed");
-			ele.children[1].innerHTML = "Mute in scene";
+			ele.innerHTML = '<i class="las la-microphone-slash"></i> <span data-translate="mute-scene" >mute in scene</span>';
 		} else {
 			ele.dataset.value = 0;
 			ele.classList.add("pressed");
-			ele.children[1].innerHTML = "Un-mute";
+			ele.innerHTML = '<i class="las la-microphone-slash"></i> <span data-translate="unmute" >un-mute</span>';
 		}
+		miniTranslate(ele);
 	}
 	var msg = {};
 	msg.scene = true; 
@@ -3997,12 +4147,13 @@ function remoteSpeakerMute(ele,  event=false){
 		if (ele.dataset.value == 1) {
 			ele.dataset.value = 0;
 			ele.classList.remove("pressed");
-			ele.children[1].innerHTML = "deafen guest";
+			ele.innerHTML = '<i class="las la-volume-off"></i> <span data-translate="toggle-remote-speaker">deafen guest</span>';
 		} else {
 			ele.dataset.value = 1;
 			ele.classList.add("pressed");
-			ele.children[1].innerHTML = "Un-deafen";
+			ele.innerHTML = '<i class="las la-volume-off"></i> <span data-translate="undeafen">un-deafen</span>';
 		}
+		miniTranslate(ele);
 	}
 
 	var msg = {};
@@ -4020,7 +4171,8 @@ function updateRemoteSpeakerMute(UUID) {
 	if (ele[0]) {
 		ele[0].classList.add("pressed");
 		ele[0].dataset.value = 1;
-		ele[0].children[1].innerHTML = "Un-deafen";
+		ele[0].innerHTML = '<i class="las la-volume-off"></i> <span data-translate="undeafen">un-deafen</span>';
+		miniTranslate(ele[0]);
 	}
 }
 
@@ -4029,7 +4181,8 @@ function updateRemoteDisplayMute(UUID) {
 	if (ele[0]) {
 		ele[0].classList.add("pressed");
 		ele[0].dataset.value = 1;
-		ele[0].children[1].innerHTML = "Un-blind";
+		ele[0].innerHTML = '<i class="las la-eye-slash"></i> <span data-translate="unblind">un-blind</span>';
+		miniTranslate(ele[0]);
 	}
 }
 
@@ -4039,12 +4192,13 @@ function remoteDisplayMute(ele, event=false) {
 		if (ele.dataset.value == 1) {
 			ele.dataset.value = 0;
 			ele.classList.remove("pressed");
-			ele.children[1].innerHTML = "blind guest";
+			ele.innerHTML = '<i class="las la-eye-slash"></i> <span data-translate="toggle-remote-display">blind guest</span>';
 		} else {
 			ele.dataset.value = 1;
 			ele.classList.add("pressed");
-			ele.children[1].innerHTML = "Un-blind";
+			ele.innerHTML = '<i class="las la-eye-slash"></i> <span data-translate="unblind">un-blind</span>';
 		}
+		miniTranslate(ele);
 	}
 
 	var msg = {};
@@ -4076,12 +4230,13 @@ function remoteMute(ele,  event=false) {
 		if (ele.dataset.value == 1) {
 			ele.dataset.value = 0;
 			ele.classList.remove("pressed");
-			ele.children[1].innerHTML = "mute guest";
+			ele.innerHTML = '<i class="las la-microphone-slash" style="color:#900"></i>	<span data-translate="mute-guest" >mute guest</span>';
 		} else {
 			ele.dataset.value = 1;
 			ele.classList.add("pressed");
-			ele.children[1].innerHTML = "Un-mute guest";
+			ele.innerHTML = '<i class="las la-microphone-slash" style="color:#900"></i>	<span data-translate="unmute-guest" >un-mute guest</span>';
 		}
+		miniTranslate(ele);
 	}
 
 	try {
@@ -4106,7 +4261,7 @@ function remoteMuteVideo(ele,  event=false) {
 	log("video mute");
 	
 	if (!event ||  ((event.ctrlKey) || (event.metaKey))) {
-		ele.children[1].innerHTML = "ARMED";
+		ele.children[1].innerHTML = miscTranslations["armed"]
 		ele.style.backgroundColor = "#BF3F3F";
 		Callbacks.push([remoteMuteVideo, ele, false]);
 		log("video queued");
@@ -4115,12 +4270,13 @@ function remoteMuteVideo(ele,  event=false) {
 		if (ele.dataset.value == 1) {
 			ele.dataset.value = 0;
 			ele.classList.remove("pressed");
-			ele.children[1].innerHTML = "hide guest";
+			ele.innerHTML = '<i class="las la-video-slash"></i> <span data-translate="hide-guest" >hide guest</span>';
 		} else {
 			ele.dataset.value = 1;
 			ele.classList.add("pressed");
-			ele.children[1].innerHTML = "Unhide guest";
+			ele.innerHTML = '<i class="las la-video-slash"></i> <span data-translate="unhide-guest" >un-hide</span>';
 		}
+		miniTranslate(ele);
 		ele.style.backgroundColor = null;
 	}
 
@@ -4149,7 +4305,8 @@ function updateDirectorVideoMute(UUID) {
 	if (ele[0]) {
 		ele[0].dataset.value = 1;
 		ele[0].classList.add("pressed");
-		ele[0].children[1].innerHTML = "Unhide guest";
+		ele[0].innerHTML = '<i class="las la-video-slash"></i> <span data-translate="unhide-guest" >un-hide</span>';
+		miniTranslate(ele[0]);
 	}
 }
 
@@ -4430,8 +4587,8 @@ function publishScreen() {
 			}, 1000);
 		}
 		//session.screenShareState=true;
-		if (!(session.cleanOutput)) {
-			getById("mutebutton").className = "float";
+		if (!(session.cleanOutput)) {			
+			getById("mutebutton").classList.remove("float");
 			getById("mutespeakerbutton").classList.remove("advanced");
 			//getById("mutespeakerbutton").className="float";
 			getById("chatbutton").className = "float";
@@ -4568,7 +4725,7 @@ function publishWebcam(btn = false) {
 
 
 	if (!(session.cleanOutput)) {
-		getById("mutebutton").className = "float";
+		getById("mutebutton").classList.remove("advanced");
 		getById("mutespeakerbutton").classList.remove("advanced");
 		//getById("mutespeakerbutton").className="float";
 		getById("chatbutton").className = "float";
@@ -5780,7 +5937,7 @@ function createDirectorOnlyBox() {
 
 	var buttons = "<div class='streamID' style='user-select: none;'>ID: <span style='user-select: text;'>" + session.streamID + "</span>\
 	<i class='las la-copy' data-sid='" + session.streamID + "' onmousedown='copyFunction(this.dataset.sid)' onclick='popupMessage(event);copyFunction(this.dataset.sid)' title='Copy this Stream ID to the clipboard' style='cursor:pointer'></i>\
-	<span id='label_director' title='Click here to edit the label for this stream. Changes will propagate to all viewers of this stream'>Add a label</span>\
+	<span id='label_director' title='Click here to edit the label for this stream. Changes will propagate to all viewers of this stream' data-translate='add-a-label'>"+miscTranslations["add-a-label"]+"</span>\
 	</div><div id='videoContainer_director'></div>";
 
 	controls.innerHTML += "<div>\
@@ -5819,11 +5976,11 @@ function createDirectorOnlyBox() {
 			oldlabel = "";
 		}
 		window.focus();
-		var newlabel = prompt("Enter a new Display Name for this stream", oldlabel);
+		var newlabel = prompt(miscTranslations["enter-new-display-name"], oldlabel);
 		if (newlabel!==null){
 			if (newlabel == ""){
 				newlabel = false;
-				ee.target.innerText = "Add a label";
+				ee.target.innerText = miscTranslations["add-a-label"];
 			} else {
 				ee.target.innerText = newlabel;
 			}
@@ -10786,7 +10943,7 @@ function requestVideoRecord(ele) {
 		msg.requestVideoRecord = true;
 		msg.UUID = UUID;
 		window.focus();
-		var bitrate = prompt("What bitrate would you like to record at? (kbps)", 6000);
+		var bitrate = prompt(miscTranslations["what-bitrate"], 6000);
 		if (bitrate) {
 			msg.value = bitrate;
 			session.sendRequest(msg, msg.UUID);
@@ -12237,7 +12394,7 @@ function shareWebsite(autostart=false){
 	}
 	if (autostart===false){
 		window.focus();
-		var iframeURL = prompt("Enter a website URL to share", "https://www.youtube.com/watch?v=dQw4w9WgXcQ");
+		var iframeURL = prompt(miscTranslations["enter-website"], "https://www.youtube.com/watch?v=dQw4w9WgXcQ");
 	} else {
 		var iframeURL = autostart;
 	}
@@ -12645,6 +12802,15 @@ function updateLink(arg, input) {
 	saveDirectorSettings();
 }
 
+function changeURL(changeURL){
+	window.focus();
+	confirmAlt(miscTranslations["director-redirect-1"]+changeURL+miscTranslations["director-redirect-2"]).then(res=>{
+		if (res){
+			hangup();
+			window.location.href = changeURL;
+		};
+	});
+}
 
 function updateLinkInverse(arg, input) {
 	log("updateLinkInverse");
@@ -13650,7 +13816,7 @@ function recordVideo(target, event, videoKbps = false) { // event.currentTarget,
 		if (defaultRecordingBitrate == false) {
 			videoKbps = 4000; // 4mbps recording bitrate
 			window.focus();
-			videoKbps = prompt("Press OK to start recording. Press again to stop and download.\n\nWarning: Keep this browser tab active to continue recording.\n\nYou can change the default video bitrate if desired below (kbps)", videoKbps);
+			videoKbps = prompt(miscTranslations["press-ok-to-record"], videoKbps);
 			if (videoKbps === null) {
 				//target.style.backgroundColor = null;
 				//target.innerHTML = '<i class="las la-circle"></i><span data-translate="record"> record local</span>';
@@ -13725,6 +13891,7 @@ function recordVideo(target, event, videoKbps = false) { // event.currentTarget,
 		transform: (chunk, ctrl) => chunk.arrayBuffer().then(b => ctrl.enqueue(new Uint8Array(b)))
 	});
 	readable.pipeTo(streamSaver.createWriteStream(filename + '.webm'));
+	
 	var writer = writable.getWriter();
 	video.recorder.writer = writer;
 	video.recorder.stop = function() {
@@ -14126,11 +14293,7 @@ function recordLocalVideo(action = null, videoKbps = 6000) { // event.currentTar
 	if (typeof video.srcObject === "undefined" || !video.srcObject) {
 		return;
 	}
-
-	const {readable, writable} = new TransformStream({
-		transform: (chunk, ctrl) => chunk.arrayBuffer().then(b => ctrl.enqueue(new Uint8Array(b)))
-	});
-
+	
 	var timestamp = Date.now();
 	var filename = "";
 	if (session.label || session.streamID) {
@@ -14140,6 +14303,10 @@ function recordLocalVideo(action = null, videoKbps = 6000) { // event.currentTar
 	}
 
 	filename += "_" + timestamp.toString();
+
+	const {readable, writable} = new TransformStream({
+		transform: (chunk, ctrl) => chunk.arrayBuffer().then(b => ctrl.enqueue(new Uint8Array(b)))
+	});
 	readable.pipeTo(streamSaver.createWriteStream(filename.toString() + '.webm'));
 
 	var writer = writable.getWriter();

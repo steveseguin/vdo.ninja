@@ -81,6 +81,7 @@ const updateList = [
     "pt",
     "ru",
     "tr",
+	"uk",
     "blank"
 ]; // list of languages to update. Update this if you add a new language.
 
@@ -107,10 +108,13 @@ allPlaceholders.forEach((ele) => {
     defaultTransPlaceholders[key] = ele.placeholder;
 });
 
-const combinedTrans = {};
-combinedTrans.titles = defaultTransTitles;
-combinedTrans.innerHTML = defaultTrans;
-combinedTrans.placeholders = defaultTransPlaceholders;
+//const combinedTrans = {};
+//combinedTrans.titles = defaultTransTitles;
+//combinedTrans.innerHTML = defaultTrans;
+//combinedTrans.placeholders = defaultTransPlaceholders;
+
+
+
 
 var counter = 0;
 for (const i in updateList) {
@@ -138,12 +142,30 @@ for (const i in updateList) {
                 const key = ele.dataset.key;
                 newPlaceholders[key] = ele.placeholder;
             });
+			
+			var miscellaneous = {};
+			if ("miscellaneous" in suceess[1]){
+				if (miscTranslations){
+					Object.keys(miscTranslations).forEach(key => {
+						if (key in suceess[1].miscellaneous) {
+							miscellaneous[key] = suceess[1].miscellaneous[key];
+						} else {
+							miscellaneous[key] = miscTranslations[key];
+						}
+					});
+				} else {
+					miscellaneous = suceess[1].miscellaneous;
+				}
+			} else if (miscTranslations){
+				miscellaneous = miscTranslations;
+			}
 
             // //// DOWNLOAD UPDATED TRANSLATION
             const outputTrans = {};
             outputTrans.titles = newTransTitles;
             outputTrans.innerHTML = newTrans;
             outputTrans.placeholders = newPlaceholders;
+			outputTrans.miscellaneous = miscellaneous;
             downloadTranslation(ln, outputTrans);
         }
         // //////// RESET THING BACK

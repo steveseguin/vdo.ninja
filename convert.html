@@ -28,6 +28,14 @@ audio{
 </head>
 <body style='color:white'>
 
+<script>
+
+if (window.location.hostname.indexOf("vdo.ninja") == 0) {
+	window.location = window.location.href.replace("vdo.ninja","isolated.vdo.ninja"); // FFMPEG requires an isolated domain.
+}
+
+</script>
+
 <video id="player" controls style="display:none"></video>
 <audio id="player2" controls style="display:none"></audio>
 <div id="info">
@@ -53,6 +61,8 @@ audio{
 	<hr>
 	
 </div>
+
+
   <script src="./thirdparty/ffmpeg.min.js"></script>
   <script>
   

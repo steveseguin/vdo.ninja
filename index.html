@@ -68,7 +68,7 @@
 			<link itemprop="url" href="./media/obsNinja_logo_full.png" />
 		</span>
 		<script  type="text/javascript" crossorigin="anonymous"  src="./thirdparty/CodecsHandler.js?ver=33"></script>
-		<script  type="text/javascript" crossorigin="anonymous" src="./webrtc.js?ver=208"></script>
+		<script  type="text/javascript" crossorigin="anonymous" src="./webrtc.js?ver=209"></script>
 		<input id="zoomSlider" type="range" style="display: none;" />
 		<div id="header">
 			
@@ -713,7 +713,10 @@
 							</i>
 							<br />
 							<li>
-								If you have	<a href="https://docs.vdo.ninja/common-errors-and-known-issues/video-is-pixelated">"pixel smearing"</a> or corrupted video, try adding <i>&codec=h264</i> or <i>&codec=vp9</i> to the OBS view link. Using Wi-Fi will make the issue worse.
+								Some devices that use H264 hardware encoding can experience video glitching; switching to VP8 or VP9 as a codec can help.
+							</li>
+							<li>
+								If using multiple group scenes at a time, iOS devices may fail to work if the hardware encoders max out. Perhaps try VP8 as a codec instead.
 							</li>
 							<li>
 								A list of less common issues can <a href="https://docs.vdo.ninja/common-errors-and-known-issues/known-issues-browser-bugs-and-more">be found here</a>.
@@ -876,6 +879,7 @@
 						</label>
 						<span data-translate="show-active-speaker">Show active speakers</span>
 						
+						
 					</div>
 					<div  style="display:inline-block;margin-top: 12px; position: relative; margin-right:10px;">
 						<label class="switch" title="Request 1080p60 from the Guest instead of 720p60, if possible">
@@ -915,6 +919,14 @@
 						  <span class="slider"></span>
 						</label>
 						<font class="tooltip" style='cursor: help;position:relative;bottom:2px;font-family:"Noto Color Emoji", "Apple Color Emoji", "Segoe UI Emoji", Times, Symbola, Aegyptus, Code2000, Code2001, Code2002, Musica, serif, LastResort;'>⚠<span class="tooltiptext">Uses more CPU and freezes the video if the guest doesn't keep the tab visible.</span></font> <span data-translate="virtual-backgrounds">Virtual backgrounds</span>
+						
+						<br />
+							
+						<label class="switch" title="Videos use an animated transition when being remixed">
+						  <input type="checkbox" data-param="&animate" onchange="updateLink(1,this);">
+						  <span class="slider"></span>
+						</label>
+						<span data-translate="fade-videos-in">Animate mixing</span>
 						
 					</div>
 					<div  style="display:inline-block;margin-top: 12px; position: relative; margin-right:10px;">
@@ -1019,6 +1031,7 @@
 							</label><font class="tooltip" style='cursor: help;position:relative;bottom:2px;font-family:"Noto Color Emoji", "Apple Color Emoji", "Segoe UI Emoji", Times, Symbola, Aegyptus, Code2000, Code2001, Code2002, Musica, serif, LastResort;'>💉<span class="tooltiptext" style="width: 10em; background-color: #77C"><span data-translate="this-can-reduce-packet-loss">Can reduce packet loss video corruption in OBS on PC</span></span></font> 
 							<span data-translate="use-h264-codec">Use H264 codec</span>
 							
+							
 						</div>
 						
 						<div  style="display:inline-block;margin-top: 12px; position: relative; margin-right:10px; height: 20px;">
@@ -1043,6 +1056,14 @@
 							  <span class="slider"></span>
 							</label>
 							<span data-translate="fade-videos-in">Fade-in videos</span>
+							
+							<br />
+							
+							<label class="switch" title="Videos use an animated transition when being remixed">
+							  <input type="checkbox" data-param="&animate" onchange="updateLink(3,this);">
+							  <span class="slider"></span>
+							</label>
+							<span data-translate="fade-videos-in">Animate mixing</span>
 							
 							
 						</div>
@@ -1339,7 +1360,7 @@
 				
 				<button data-action-type="recorder-local" title="Start Recording this remote stream to this local drive. *experimental*'" onclick="recordLocalVideoToggle();">
 					<i class="las la-circle"></i>
-					<span data-translate="record-local"> Record</span>
+					<span data-translate="record-director-local"> Record</span>
 				</button> 
 				
 				<span>
@@ -1716,11 +1737,11 @@
 			// session.title // "zzzz"
 		</script>
 		<script type="text/javascript" crossorigin="anonymous" src="./thirdparty/aes.js"></script>
-		<script type="text/javascript" crossorigin="anonymous" id="lib-js" src="./lib.js?ver=1"></script>
+		<script type="text/javascript" crossorigin="anonymous" id="lib-js" src="./lib.js?ver=2"></script>
 		<!-- 
 		// If you wish to change branding, blank offers a good clean start.
 		<script type="text/javascript" id="main-js" src="./main.js" data-translation="blank"></script>
 	-->
-		<script type="text/javascript" crossorigin="anonymous" id="main-js" src="./main.js?ver=231"></script>
+		<script type="text/javascript" crossorigin="anonymous" id="main-js" src="./main.js?ver=232"></script>
 	</body>
 </html>

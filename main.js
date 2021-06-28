@@ -8,8 +8,109 @@
 */
 /*jshint esversion: 6 */
 async function main(){ // main asyncronous thread; mostly initializes the user settings.
-
 	var delayedStartupFuncs = [];
+	
+	// translation stuff start ////
+	
+	var ConfigSettings = getById("main-js");
+	var ln_template = false;
+	
+	try {
+		if (ConfigSettings) {
+			ln_template = ConfigSettings.getAttribute('data-translation'); // Translations
+			if (typeof ln_template === "undefined") {
+				ln_template = false;
+			} else if (ln_template === null) {
+				ln_template = false;
+			}
+		}
+
+		if (urlParams.has('ln')) {
+			ln_template = urlParams.get('ln');
+		}
+	} catch (e) {
+		errorlog(e);
+	}
+
+	if (ln_template) { // checking if manual lanuage override enabled
+		try {
+			log("Lang Template: " + ln_template);
+			changeLg(ln_template);
+			getById("mainmenu").style.opacity = 1;
+		} catch (error) {
+			errorlog(error);
+			getById("mainmenu").style.opacity = 1;
+		}
+	} else if (location.hostname !== "vdo.ninja" && location.hostname !== "obs.ninja") {
+		if (location.hostname === "rtc.ninja"){
+			try {
+				if (session.label === false) {
+					document.title = "";
+				}
+				getById("qos").innerHTML = "";
+				getById("logoname").innerHTML = "";
+				getById("helpbutton").style.display = "none";
+				getById("helpbutton").style.opacity = 0;
+				getById("reportbutton").style.display = "none";
+				getById("reportbutton").style.opacity = 0;
+				getById("mainmenu").style.opacity = 1;
+				getById("mainmenu").style.margin = "30px 0";
+				getById("translateButton").style.display = "none";
+				getById("translateButton").style.opacity = 0;
+				getById("info").style.display = "none";
+				getById("info").style.opacity = 0;
+				getById("chatBody").innerHTML = "";
+			} catch (e) {}
+		}
+		try {
+			changeLg("blank");
+			getById("mainmenu").style.opacity = 1;
+			if (session.label === false) {
+				document.title = location.hostname;
+			}
+			getById("qos").innerHTML = location.hostname;
+			getById("logoname").innerHTML = getById("qos").outerHTML;
+			getById("helpbutton").style.display = "none";
+			getById("reportbutton").style.display = "none";
+			getById("chatBody").innerHTML = "";
+		} catch (error) {
+			errorlog(error);
+		}
+	} else { // check if automatic language translation is available
+		getById("mainmenu").style.opacity = 1;
+	}
+
+	try {
+		if (location.hostname === "rtc.ninja"){ // an extra-brand-free version of vdo.ninja
+			if (session.label === false) {
+				document.title = "";
+			}
+			getById("qos").innerHTML = "";
+			getById("logoname").innerHTML = "";
+			getById("helpbutton").style.display = "none";
+			getById("helpbutton").style.opacity = 0;
+			getById("reportbutton").style.display = "none";
+			getById("reportbutton").style.opacity = 0;
+			getById("mainmenu").style.opacity = 1;
+			getById("mainmenu").style.margin = "30px 0";
+			getById("translateButton").style.display = "none";
+			getById("translateButton").style.opacity = 0;
+			getById("info").style.display = "none";
+			getById("info").style.opacity = 0;
+			getById("chatBody").innerHTML = "";
+		} else if (location.hostname !== "vdo.ninja") {
+			if (session.label === false) {
+				document.title = location.hostname;
+			}
+			getById("qos").innerHTML = sanitizeLabel(location.hostname);
+			getById("logoname").innerHTML = getById("qos").outerHTML;
+			getById("helpbutton").style.display = "none";
+			getById("reportbutton").style.display = "none";
+		}
+
+	} catch (e) {}
+	
+	//// translation stuff ends ////
 
 	if (!isIFrame){
 		if (getStorage("redirect") == "yes") {
@@ -18,7 +119,7 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 		} else if (getStorage("settings") != "") {
 			if (!(session.cleanOutput)){
 				window.focus();
-				session.sticky = confirm("Would you like you load your previous session's settings?");
+				session.sticky = confirm(miscTranslations["load-previous-session"]);
 				if (!session.sticky) {
 					setStorage("settings", "", 0);
 					log("deleting cookie as user said no");
@@ -76,12 +177,16 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 	}
 
 	if (urlParams.has('nomicbutton') || urlParams.has('nmb')) {
-		getById("mutebutton").setAttribute('style', "display: none !important");
+		getById("mutebutton").style.setProperty("display", "none", "important");
 	}
 
 
 	if (urlParams.has('novideobutton') || urlParams.has('nvb')) {
-		getById("mutevideobutton").setAttribute('style', "display: none !important");
+		getById("mutevideobutton").style.setProperty("display", "none", "important");
+	}
+	
+	if (urlParams.has('nospeakerbutton') || urlParams.has('nsb')) {
+		getById("mutespeakerbutton").style.setProperty("display", "none", "important");
 	}
 
 	if (urlParams.has('screenshareid') || urlParams.has('ssid')) {
@@ -492,7 +597,7 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 		session.password = urlParams.get('password') || urlParams.get('pass') || urlParams.get('pw') || urlParams.get('p');
 		if (!session.password) {
 			window.focus();
-			session.password = await promptAlt("Please enter the password below: \n\n(Note: Passwords are case-sensitive and you will not be alerted if it is incorrect.)");
+			session.password = await promptAlt(miscTranslations["enter-password"]);
 		} else if (session.password === "false") {
 			session.password = false;
 			session.defaultPassword = false;
@@ -518,7 +623,7 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 		var hash_input = urlParams.get('hash') || urlParams.get('crc') || urlParams.get('check');
 		if (session.password === false) {
 			window.focus();
-			session.password = await promptAlt("Please enter the password below: \n\n(Note: Passwords are case-sensitive.)");
+			session.password = await promptAlt(miscTranslations["enter-password-2"]);
 			session.password = sanitizePassword(session.password);
 			getById("passwordRoom").value = session.password;
 			session.defaultPassword = false;
@@ -529,7 +634,7 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 			if (hash.substring(0, 4) !== hash_input) { // hash crc checks are just first 4 characters.
 				session.taintedSession = true;
 				if (!(session.cleanOutput)) {
-					getById("request_info_prompt").innerHTML = "The password was incorrect.\n\nRefresh and try again.";
+					getById("request_info_prompt").innerHTML = miscTranslations["password-incorrect"];
 					getById("request_info_prompt").style.display = "block";
 					getById("mainmenu").style.display = "none";
 					getById("head1").style.display = "none";
@@ -574,7 +679,7 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 		var updateURLAsNeed = true;
 		if (session.label == null || session.label.length == 0) {
 			window.focus();
-			session.label = await promptAlt("Please enter your display name:");
+			session.label = await promptAlt(miscTranslations["enter-display-name"]);
 		} else {
 			var updateURLAsNeed = false;
 			session.label = decodeURIComponent(session.label);
@@ -715,9 +820,9 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 	}
 
 
-	if (urlParams.has("autogain") || urlParams.has("ag")) {
+	if (urlParams.has("autogain") || urlParams.has("ag") || urlParams.has("agc")) {
 
-		session.autoGainControl = urlParams.get('autogain') || urlParams.get('ag');
+		session.autoGainControl = urlParams.get('autogain') || urlParams.get('ag')  || urlParams.get('agc');
 		if (session.autoGainControl) {
 			session.autoGainControl = session.autoGainControl.toLowerCase();
 		}
@@ -924,10 +1029,15 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 		session.keyframerate = parseInt(urlParams.get('keyframeinterval') || urlParams.get('keyframerate') || urlParams.get('keyframe') || urlParams.get('fki')) || 0;
 	}
 
-	if (urlParams.has('tallyoff') || urlParams.has('obsoff') || urlParams.has('oo') || urlParams.has('disableobs')) {
+	if (urlParams.has('obsoff') || urlParams.has('oo') || urlParams.has('disableobs')) {
 		log("OBS feedback disabled");
 		session.disableOBS = true;
-		getById("obsState").style.display = "none !important";
+		getById("obsState").style.setProperty("display", "none", "important");
+	}
+	
+	if (urlParams.has('tallyoff') || urlParams.has('notally') || urlParams.has('disabletally') || urlParams.has('to')) {
+		log("Tally Light off");
+		getById("obsState").style.setProperty("display", "none", "important");
 	}
 
 	if (window.obsstudio) {
@@ -1288,192 +1398,6 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 		session.dynamicScale = false; // default true
 	}
 
-	var ConfigSettings = getById("main-js");
-	var ln_template = false;
-	
-	try {
-		if (ConfigSettings) {
-			ln_template = ConfigSettings.getAttribute('data-translation'); // Translations
-			if (typeof ln_template === "undefined") {
-				ln_template = false;
-			} else if (ln_template === null) {
-				ln_template = false;
-			}
-		}
-
-		if (urlParams.has('ln')) {
-			ln_template = urlParams.get('ln');
-		}
-	} catch (e) {
-		errorlog(e);
-	}
-
-	if (ln_template) { // checking if manual lanuage override enabled
-		try {
-			log("Template: " + ln_template);
-			fetch("./translations/" + ln_template + '.json').then(function(response) {
-				if (response.status !== 200) {
-					log('Looks like there was a problem. Status Code: ' +
-						response.status);
-					return;
-				}
-				response.json().then(function(data) {
-					log(data);
-					translation = data;
-					var trans = data.innerHTML;
-					var allItems = document.querySelectorAll('[data-translate]');
-					allItems.forEach(function(ele) {
-						if (ele.dataset.translate in trans) {
-							ele.innerHTML = trans[ele.dataset.translate];
-						}
-					});
-					trans = data.titles;
-					var allTitles = document.querySelectorAll('[title]');
-					allTitles.forEach(function(ele) {
-						var key = ele.title.replace(/[\W]+/g, "-").toLowerCase();
-						if (key in trans) {
-							ele.title = trans[key];
-						}
-					});
-					trans = data.placeholders;
-					var allPlaceholders = document.querySelectorAll('[placeholder]');
-					allPlaceholders.forEach(function(ele) {
-						var key = ele.placeholder.replace(/[\W]+/g, "-").toLowerCase();
-						if (key in trans) {
-							ele.placeholder = trans[key];
-						}
-					});
-
-
-					getById("mainmenu").style.opacity = 1;
-				}).catch(function(err) {
-					errorlog(err);
-					getById("mainmenu").style.opacity = 1;
-				});
-			}).catch(function(err) {
-				errorlog(err);
-				getById("mainmenu").style.opacity = 1;
-			});
-
-		} catch (error) {
-			errorlog(error);
-			getById("mainmenu").style.opacity = 1;
-		}
-	} else if (location.hostname !== "vdo.ninja") {
-		if (location.hostname === "rtc.ninja"){
-			try {
-				if (session.label === false) {
-					document.title = "";
-				}
-				getById("qos").innerHTML = "";
-				getById("logoname").innerHTML = "";
-				getById("helpbutton").style.display = "none";
-				getById("helpbutton").style.opacity = 0;
-				getById("reportbutton").style.display = "none";
-				getById("reportbutton").style.opacity = 0;
-				getById("mainmenu").style.opacity = 1;
-				getById("mainmenu").style.margin = "30px 0";
-				getById("translateButton").style.display = "none";
-				getById("translateButton").style.opacity = 0;
-				getById("info").style.display = "none";
-				getById("info").style.opacity = 0;
-				getById("chatBody").innerHTML = "";
-			} catch (e) {}
-		}
-		try {
-			fetch("./translations/blank.json").then(function(response) {
-				if (response.status !== 200) {
-					log('Looks like there was a problem. Status Code: ' +
-						response.status);
-					return;
-				}
-				response.json().then(function(data) {
-					log(data);
-
-					var trans = data.innerHTML;
-					var allItems = document.querySelectorAll('[data-translate]');
-					allItems.forEach(function(ele) {
-						if (ele.dataset.translate in trans) {
-							ele.innerHTML = trans[ele.dataset.translate];
-						}
-					});
-					trans = data.titles;
-					var allTitles = document.querySelectorAll('[title]');
-					allTitles.forEach(function(ele) {
-						var key = ele.title.replace(/[\W]+/g, "-").toLowerCase();
-						if (key in trans) {
-							ele.title = trans[key];
-						}
-					});
-					trans = data.placeholders;
-					var allPlaceholders = document.querySelectorAll('[placeholder]');
-					allPlaceholders.forEach(function(ele) {
-						var key = ele.placeholder.replace(/[\W]+/g, "-").toLowerCase();
-						if (key in trans) {
-							ele.placeholder = trans[key];
-						}
-					});
-
-					if (session.label === false) {
-						document.title = location.hostname;
-					}
-					getById("qos").innerHTML = location.hostname;
-					getById("logoname").innerHTML = getById("qos").outerHTML;
-					getById("helpbutton").style.display = "none";
-					getById("reportbutton").style.display = "none";
-					getById("mainmenu").style.opacity = 1;
-				}).catch(function(err) {
-					errorlog(err);
-					getById("mainmenu").style.opacity = 1;
-				});
-			}).catch(function(err) {
-				errorlog(err);
-				getById("mainmenu").style.opacity = 1;
-			});
-			if (session.label === false) {
-				document.title = location.hostname;
-			}
-			getById("qos").innerHTML = location.hostname;
-			getById("logoname").innerHTML = getById("qos").outerHTML;
-			getById("helpbutton").style.display = "none";
-			getById("reportbutton").style.display = "none";
-			getById("chatBody").innerHTML = "";
-		} catch (error) {
-			errorlog(error);
-		}
-	} else { // check if automatic language translation is available
-		getById("mainmenu").style.opacity = 1;
-	}
-
-	try {
-		if (location.hostname === "rtc.ninja"){ // an extra-brand-free version of vdo.ninja
-			if (session.label === false) {
-				document.title = "";
-			}
-			getById("qos").innerHTML = "";
-			getById("logoname").innerHTML = "";
-			getById("helpbutton").style.display = "none";
-			getById("helpbutton").style.opacity = 0;
-			getById("reportbutton").style.display = "none";
-			getById("reportbutton").style.opacity = 0;
-			getById("mainmenu").style.opacity = 1;
-			getById("mainmenu").style.margin = "30px 0";
-			getById("translateButton").style.display = "none";
-			getById("translateButton").style.opacity = 0;
-			getById("info").style.display = "none";
-			getById("info").style.opacity = 0;
-			getById("chatBody").innerHTML = "";
-		} else if (location.hostname !== "vdo.ninja") {
-			if (session.label === false) {
-				document.title = location.hostname;
-			}
-			getById("qos").innerHTML = sanitizeLabel(location.hostname);
-			getById("logoname").innerHTML = getById("qos").outerHTML;
-			getById("helpbutton").style.display = "none";
-			getById("reportbutton").style.display = "none";
-		}
-
-	} catch (e) {}
 
 	if (isIFrame) {
 		getById("helpbutton").style.display = "none";
@@ -2103,7 +2027,7 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 			if (session.roomid === "test") {
 				if (session.password === session.defaultPassword) {
 					window.focus();
-					var testRoomResponse = confirm("The room name 'test' is very commonly used and may not be secure.\n\nAre you sure you wish to proceed?");
+					var testRoomResponse = confirm(miscTranslations["room-test-not-good"]);
 					if (testRoomResponse == false) {
 						hangup();
 						throw new Error("User requested to not enter room 'room'.");
