@@ -189,27 +189,6 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 		getById("mutespeakerbutton").style.setProperty("display", "none", "important");
 	}
 
-	if (urlParams.has('screenshareid') || urlParams.has('ssid')) {
-		if (urlParams.get('screenshareid') || urlParams.get('ssid')) {
-			session.screenshareid = urlParams.get('screenshareid') || urlParams.get('ssid');
-			session.screenshareid = sanitizeStreamID(session.screenshareid);
-		}
-	}
-
-	if (urlParams.has('screensharefps') || urlParams.has('ssfps')) {
-		if (urlParams.get('screensharefps') || urlParams.get('ssfps')) {
-			session.screensharefps = urlParams.get('screensharefps') || urlParams.get('ssfps');
-			session.screensharefps = parseInt(session.screensharefps) || 2;
-		}
-	}
-
-	if (urlParams.has('screensharequality') || urlParams.has('ssq')) {
-		if (urlParams.get('screensharequality') || urlParams.get('ssq')) {
-			session.screensharequality = urlParams.get('screensharequality') || urlParams.get('ssq');
-			session.screensharequality = parseInt(session.screensharequality) || 1;
-		}
-	}
-
 	if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
 		//session.webcamonly = true;
 		session.mobile = true;
@@ -520,10 +499,12 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 
 	if (urlParams.has('bigbutton')) {
 		session.bigmutebutton = true;
-		getById("mutebutton").style.width = "min(40vh,40vw)";
-		getById("mutebutton").style.height = "min(40vh,40vw)";
-		getById("mutetoggle").style.width = "min(40vh,40vw)";
-		getById("mutetoggle").style.height = "min(40vh,40vw)";
+		getById("mutebutton").style.bottom = "100px";
+		getById("mutebutton").style.padding = "100px";
+		getById("mutebutton").style.position = "fixed";
+		getById("mutetoggle").style.bottom = "20px";
+		getById("mutetoggle").style.right = "0";
+		getById("mutetoggle").style.top = "unset";
 
 	}
 
@@ -597,7 +578,7 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 		session.password = urlParams.get('password') || urlParams.get('pass') || urlParams.get('pw') || urlParams.get('p');
 		if (!session.password) {
 			window.focus();
-			session.password = await promptAlt(miscTranslations["enter-password"]);
+			session.password = await promptAlt(miscTranslations["enter-password"], true);
 		} else if (session.password === "false") {
 			session.password = false;
 			session.defaultPassword = false;
@@ -623,7 +604,7 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 		var hash_input = urlParams.get('hash') || urlParams.get('crc') || urlParams.get('check');
 		if (session.password === false) {
 			window.focus();
-			session.password = await promptAlt(miscTranslations["enter-password-2"]);
+			session.password = await promptAlt(miscTranslations["enter-password-2"], true);
 			session.password = sanitizePassword(session.password);
 			getById("passwordRoom").value = session.password;
 			session.defaultPassword = false;
@@ -679,7 +660,7 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 		var updateURLAsNeed = true;
 		if (session.label == null || session.label.length == 0) {
 			window.focus();
-			session.label = await promptAlt(miscTranslations["enter-display-name"]);
+			session.label = await promptAlt(miscTranslations["enter-display-name"], true);
 		} else {
 			var updateURLAsNeed = false;
 			session.label = decodeURIComponent(session.label);
@@ -933,11 +914,15 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 	if (urlParams.has('nopreview') || urlParams.has('np')) {
 		log("preview OFF");
 		session.nopreview = true;
+		if ((iOS) || (iPad)) {
+			session.nopreview = false;
+			session.minipreview = 3; //
+		}
 	} else if ((urlParams.has('preview')) || (urlParams.has('showpreview'))) {
 		log("preview ON");
 		session.nopreview = false;
 	} else if ((urlParams.has('minipreview')) || (urlParams.has('mini'))) {
-		var mini = urlParams.has('minipreview') || urlParams.has('mini') || true; // 2 is a valid option.
+		var mini = urlParams.has('minipreview') || urlParams.has('mini') || true; // 2 is a valid option. (3 is for iPhone with a hidden preview)
 		log("preview ON");
 		session.nopreview = false;
 		session.minipreview = mini;
@@ -2003,6 +1988,29 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 			} else {
 				getById("head1").innerHTML = '<br /><font style="color:#CCC" data-translate="please-select-which-to-share">- Please select which you wish to share</font>';
 			}
+		}
+	}
+	
+	if (urlParams.has('screenshareid') || urlParams.has('ssid')) {
+		if (urlParams.get('screenshareid') || urlParams.get('ssid')) {
+			session.screenshareid = urlParams.get('screenshareid') || urlParams.get('ssid');
+			session.screenshareid = sanitizeStreamID(session.screenshareid);
+		} else {
+			session.screenshareid = session.streamID + "_screenshare";
+		}
+	}
+
+	if (urlParams.has('screensharefps') || urlParams.has('ssfps')) {
+		if (urlParams.get('screensharefps') || urlParams.get('ssfps')) {
+			session.screensharefps = urlParams.get('screensharefps') || urlParams.get('ssfps');
+			session.screensharefps = parseInt(session.screensharefps) || 2;
+		}
+	}
+
+	if (urlParams.has('screensharequality') || urlParams.has('ssq')) {
+		if (urlParams.get('screensharequality') || urlParams.get('ssq')) {
+			session.screensharequality = urlParams.get('screensharequality') || urlParams.get('ssq');
+			session.screensharequality = parseInt(session.screensharequality) || 1;
 		}
 	}
 

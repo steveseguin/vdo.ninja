@@ -337,7 +337,7 @@ async function delay(ms) {
 }
 
 var Prompts = {};
-async function promptAlt(inputText){
+async function promptAlt(inputText, block=false){
 	var result = null;
 	if (session.beepToNotify){
 		playtone();
@@ -347,45 +347,64 @@ async function promptAlt(inputText){
 		Prompts[promptID] = {};
 		Prompts[promptID].resolve = resolve;
 		Prompts[promptID].reject = reject;
+		
+		var zindex = 30 + document.querySelectorAll('.promptModal').length;
+		
+		if (block){
+			var backdropClass = "opaqueBackdrop";
+		} else {
+			var backdropClass = "modalBackdrop";
+		}
 	
-		inputText = "<font>"+inputText.replace("\n","</font><br /><font style='font-size:0.8em'>");
+		inputText = "<font style='font-size:1.2em'>"+inputText.replace("\n","</font><br /><font>")+"</font>";
 		inputText = inputText.replace(/\n/g,"<br />");
-		zindex = 30 + document.querySelectorAll('#promptModal').length;
 
 		modalTemplate =
 			`<div id="modal_${promptID}" class="promptModal" style="z-index:${zindex + 2}">	
 				<div class="promptModalInner">
 					<span id="close_${promptID}" class='modalClose' data-pid="${promptID}">×</span>
 					<span class='promptModalMessage'>${inputText}</span>
-					<input id="input_${promptID}" type="text" class="largeTextEntry"  />
+					<input id="input_${promptID}" data-pid="${promptID}"  type="text" class="largeTextEntry"  />
 					<button id="submit_${promptID}" data-pid="${promptID}" style="width:120px; background-color: #fff; position: relative;border: 1px solid #999; margin: 0 0 0 55px;" data-translate='ok'>✔ OK</button>
 					<button id="cancel_${promptID}" data-pid="${promptID}" style="width:120px; background-color: #fff; position: relative;border: 1px solid #999; margin: 0;" data-translate='cancel'>❌ Cancel</button>
 				</div>
 			</div>
-			<div id="modalBackdrop_${promptID}" style="z-index:${zindex + 1}"></div>`;
+			<div id="modalBackdrop_${promptID}" class="${backdropClass}" style="z-index:${zindex + 1}"></div>`;
 
 
 		document.body.insertAdjacentHTML("beforeend", modalTemplate); // Insert modal at body end
+		
+		document.getElementById("input_"+promptID).focus();
+		
+		document.getElementById("input_"+promptID).addEventListener("keyup", function(event) {
+			if (event.key === "Enter") {
+				var pid = event.target.dataset.pid;
+				result = document.getElementById("input_"+pid).value;
+				document.getElementById("modal_"+pid).remove();
+				document.getElementById("modalBackdrop_"+pid).remove();
+				Prompts[pid].resolve();
+			}
+		});
 
 		document.getElementById("submit_"+promptID).addEventListener("click", function(event){
 			var pid = event.target.dataset.pid;
 			result = document.getElementById("input_"+pid).value;
-			document.getElementById("modal_"+pid).innerHTML = ''; // Delete modal
 			document.getElementById("modal_"+pid).remove();
+			document.getElementById("modalBackdrop_"+pid).remove();
 			Prompts[pid].resolve();
 		});
 
 		document.getElementById("cancel_"+promptID).addEventListener("click", function(event){
 			var pid = event.target.dataset.pid;
-			document.getElementById("modal_"+pid).innerHTML = ''; // Delete modal
 			document.getElementById("modal_"+pid).remove();
+			document.getElementById("modalBackdrop_"+pid).remove();
 			Prompts[pid].resolve();
 		});
 
 		document.getElementById("close_"+promptID).addEventListener("click", function(event){
 			var pid = event.target.dataset.pid;
-			document.getElementById("modal_"+pid).innerHTML = ''; // Delete modal
 			document.getElementById("modal_"+pid).remove();
+			document.getElementById("modalBackdrop_"+pid).remove();
 			Prompts[pid].resolve();
 		});
 
@@ -398,7 +417,7 @@ async function promptAlt(inputText){
 	return result;
 }
 
-async function confirmAlt(inputText){
+async function confirmAlt(inputText, block=false){
 	var result = null;
 	if (session.beepToNotify){
 		playtone();
@@ -409,9 +428,16 @@ async function confirmAlt(inputText){
 		Prompts[promptID].resolve = resolve;
 		Prompts[promptID].reject = reject;
 	
-		inputText = "<font>"+inputText.replace("\n","</font><br /><font style='font-size:0.8em'>");
+		var zindex = 30 + document.querySelectorAll('.promptModal').length;
+		
+		if (block){
+			var backdropClass = "opaqueBackdrop";
+		} else {
+			var backdropClass = "modalBackdrop";
+		}
+		
+		inputText = "<font style='font-size:1.2em'>"+inputText.replace("\n","</font><br /><font>")+"</font>";
 		inputText = inputText.replace(/\n/g,"<br />");
-		zindex = 30 + document.querySelectorAll('#promptModal').length;
 
 		modalTemplate =
 			`<div id="modal_${promptID}" class="promptModal" style="z-index:${zindex + 2}">	
@@ -422,29 +448,31 @@ async function confirmAlt(inputText){
 					<button id="cancel_${promptID}" data-pid="${promptID}" style="width:120px; background-color: #fff; position: relative;border: 1px solid #999; margin: 0;" data-translate='cancel'>❌ Cancel</button>
 				</div>
 			</div>
-			<div id="modalBackdrop_${promptID}" style="z-index:${zindex + 1}"></div>`;
+			<div id="modalBackdrop_${promptID}" class="${backdropClass}" style="z-index:${zindex + 1}"></div>`;
 
 
 		document.body.insertAdjacentHTML("beforeend", modalTemplate); // Insert modal at body end
 
+		document.getElementById("submit_"+promptID).focus();
+		
 		document.getElementById("submit_"+promptID).addEventListener("click", function(event){
 			var pid = event.target.dataset.pid;
 			result = true;
-			document.getElementById("modal_"+pid).innerHTML = ''; // Delete modal
+			document.getElementById("modalBackdrop_"+pid).remove();
 			document.getElementById("modal_"+pid).remove();
 			Prompts[pid].resolve();
 		});
 
 		document.getElementById("cancel_"+promptID).addEventListener("click", function(event){
 			var pid = event.target.dataset.pid;
-			document.getElementById("modal_"+pid).innerHTML = ''; // Delete modal
+			document.getElementById("modalBackdrop_"+pid).remove();
 			document.getElementById("modal_"+pid).remove();
 			Prompts[pid].resolve();
 		});
 
 		document.getElementById("close_"+promptID).addEventListener("click", function(event){
 			var pid = event.target.dataset.pid;
-			document.getElementById("modal_"+pid).innerHTML = ''; // Delete modal
+			document.getElementById("modalBackdrop_"+pid).remove();
 			document.getElementById("modal_"+pid).remove();
 			Prompts[pid].resolve();
 		});
@@ -1685,6 +1713,20 @@ function updateMixerRun(e=false){  // this is the main auto-mixing code.  It's a
 				if (session.videoElement.srcObject.getVideoTracks().length){
 					if (mpl===0 && session.minipreview===2){
 						mediaPool.push(session.videoElement);
+					} else if (session.minipreview===3){
+						var container = document.createElement("div");
+						container.style.top="-500px";
+						container.style.left="-500px";
+						container.style.width="1px";
+						container.style.height="1px";
+						container.style.display = "flex";
+						container.style.zIndex = "0";
+						container.style.margin="0";
+						container.style.position="absolute";
+						container.style.cursor = "pointer";
+						container.style.border = "0";
+						container.appendChild(session.videoElement);
+						playarea.appendChild(container);
 					} else {
 						var container = document.createElement("div");
 						container.style.top=hi;
@@ -2049,9 +2091,13 @@ function updateMixerRun(e=false){  // this is the main auto-mixing code.  It's a
 		
 		if (!session.cleanOutput && !session.nocursor){
 			if ((session.roomid!==false) && (session.scene===false)){
-				var button = document.createElement("div");
-				button.id = "button_"+vid.id;
 				
+				var button = container.querySelector('[data-button]');
+				if (!button){
+					button = document.createElement("div");
+				}
+				button.id = "button_"+vid.id;
+				button.dataset.button = true;
 				if (session.infocus){
 					button.innerHTML = "<img src='./media/sd.svg' style='background-color:#0007;width:4vh' aria-hidden='true' />";
 					button.title = "Show all active videos togethers";
@@ -4819,16 +4865,30 @@ session.publishIFrame = function(iframeURL){
 				log(iframeURL);
 			}
 		} else if (domain=="www.twitch.tv"){
-			var vidid = iframeURL.split('/').pop().split('#')[0].split('?')[0];
-			if (vidid){
-				iframeURL = "https://player.twitch.tv/?channel="+vidid+"&parent="+location.hostname;
-				log(iframeURL);
+			if (iframeURL.includes("twitch.tv/popout/")){
+				// this is a twitch live chat window
+				iframeURL = iframeURL.replace("/popout/","/embed/");
+				iframeURL = iframeURL.replace("?popout=","?parent="+location.hostname);
+				iframeURL = iframeURL.replace("?popout","?parent="+location.hostname);
+			} else {
+				var vidid = iframeURL.split('/').pop().split('#')[0].split('?')[0];
+				if (vidid){
+					iframeURL = "https://player.twitch.tv/?channel="+vidid+"&parent="+location.hostname;
+					log(iframeURL);
+				}
 			}
 		} else if (domain=="twitch.tv"){
-			var vidid = iframeURL.split('/').pop().split('#')[0].split('?')[0];
-			if (vidid){
-				iframeURL = "https://player.twitch.tv/?channel="+vidid+"&parent="+location.hostname;
-				log(iframeURL);
+			if (iframeURL.includes("twitch.tv/popout/")){
+				// this is a twitch live chat window
+				iframeURL = iframeURL.replace("/popout/","/embed/");
+				iframeURL = iframeURL.replace("?popout=","?parent="+location.hostname);
+				iframeURL = iframeURL.replace("?popout","?parent="+location.hostname);
+			} else {
+				var vidid = iframeURL.split('/').pop().split('#')[0].split('?')[0];
+				if (vidid){
+					iframeURL = "https://player.twitch.tv/?channel="+vidid+"&parent="+location.hostname;
+					log(iframeURL);
+				}
 			}
 		}
 		
@@ -6097,6 +6157,8 @@ function createDirectorCam(vid) {
 	getById("press2talk").dataset.value = 1;
 	session.muted = false;
 	toggleMute(true);
+	
+	getById("mutebutton").classList.remove("advanced");
 	getById("screensharebutton").classList.remove("advanced");
 	getById("hangupbutton2").classList.remove("advanced");
 	setTimeout(function() {
@@ -8462,6 +8524,10 @@ async function grabScreen(quality = 0, audio = true, videoOnEnd = false) {
 				screenShareAudioTrack = track;
 			}
 		});
+		
+		session.applySoloChat(); // mute streams that should be muted if a director
+		session.applyIsolatedChat();
+		
 		applyMirror(true, eleName);
 		return true;
 	}).catch(function(err) {
@@ -9110,7 +9176,6 @@ async function grabAudio(eleName = "previewWebcam", selector = "#audioSource", t
 
 		toggleMute(true);
 		if (session.videoElement.srcObject.getAudioTracks()) {
-
 			for (UUID in session.pcs) {
 				if (session.pcs[UUID].allowAudio == true) {
 					var tracks = session.videoElement.srcObject.getAudioTracks();
@@ -9173,9 +9238,10 @@ async function grabAudio(eleName = "previewWebcam", selector = "#audioSource", t
 							}
 						});
 					}
-
 				}
 			}
+			session.applySoloChat(); // mute streams that should be muted if a director
+			session.applyIsolatedChat();
 		}
 	} catch (e) {
 		errorlog(e);
@@ -10269,6 +10335,10 @@ session.publishFile = function(ele, event, title="Video File Sharing Session"){ 
 			});
 			session.refreshScale();
 		}
+		
+		session.applySoloChat(); // mute streams that should be muted if a director
+		session.applyIsolatedChat();
+			
 		vid.load();
 		log(session.streamSrc);
 		vid.play().then(_ => {
@@ -10630,16 +10700,30 @@ function previewIframe(iframesrc) { // this is pretty important if you want to a
 				log(iframesrc);
 			}
 		} else if (domain=="www.twitch.tv"){
-			var vidid = iframesrc.split('/').pop().split('#')[0].split('?')[0];
-			if (vidid){
-				iframesrc = "https://player.twitch.tv/?channel="+vidid+"&parent="+location.hostname;
-				log(iframesrc);
+			if (iframeURL.includes("twitch.tv/popout/")){
+				// this is a twitch live chat window
+				iframeURL = iframeURL.replace("/popout/","/embed/");
+				iframeURL = iframeURL.replace("?popout=","?parent="+location.hostname);
+				iframeURL = iframeURL.replace("?popout","?parent="+location.hostname);
+			} else {
+				var vidid = iframesrc.split('/').pop().split('#')[0].split('?')[0];
+				if (vidid){
+					iframesrc = "https://player.twitch.tv/?channel="+vidid+"&parent="+location.hostname;
+					log(iframesrc);
+				}
 			}
 		} else if (domain=="twitch.tv"){
-			var vidid = iframesrc.split('/').pop().split('#')[0].split('?')[0];
-			if (vidid){
-				iframesrc = "https://player.twitch.tv/?channel="+vidid+"&parent="+location.hostname;
-				log(iframesrc);
+			if (iframeURL.includes("twitch.tv/popout/")){
+				// this is a twitch live chat window
+				iframeURL = iframeURL.replace("/popout/","/embed/");
+				iframeURL = iframeURL.replace("?popout=","?parent="+location.hostname);
+				iframeURL = iframeURL.replace("?popout","?parent="+location.hostname);
+			} else {
+				var vidid = iframesrc.split('/').pop().split('#')[0].split('?')[0];
+				if (vidid){
+					iframesrc = "https://player.twitch.tv/?channel="+vidid+"&parent="+location.hostname;
+					log(iframesrc);
+				}
 			}
 		}
 		
@@ -12420,16 +12504,33 @@ function shareWebsite(autostart=false){
 			log(iframeURL);
 		}
 	} else if (domain=="www.twitch.tv"){
-		var vidid = iframeURL.split('/').pop().split('#')[0].split('?')[0];
-		if (vidid){
-			iframeURL = "https://player.twitch.tv/?channel="+vidid+"&parent="+location.hostname;
-			log(iframeURL);
+		if (iframeURL.includes("twitch.tv/popout/")){
+				// this is a twitch live chat window
+			//https://www.twitch.tv/embed/complex/chat?parent=vdo.ninja
+			//https://www.twitch.tv/popout/complex/chat?popout=
+			
+			iframeURL = iframeURL.replace("/popout/","/embed/");
+			iframeURL = iframeURL.replace("?popout=","?parent="+location.hostname);
+			iframeURL = iframeURL.replace("?popout","?parent="+location.hostname);
+		} else {
+			var vidid = iframeURL.split('/').pop().split('#')[0].split('?')[0];
+			if (vidid){
+				iframeURL = "https://player.twitch.tv/?channel="+vidid+"&parent="+location.hostname;
+				log(iframeURL);
+			}
 		}
 	} else if (domain=="twitch.tv"){
-		var vidid = iframeURL.split('/').pop().split('#')[0].split('?')[0];
-		if (vidid){
-			iframeURL = "https://player.twitch.tv/?channel="+vidid+"&parent="+location.hostname;
-			log(iframeURL);
+		if (iframeURL.includes("twitch.tv/popout/")){
+				// this is a twitch live chat window
+			iframeURL = iframeURL.replace("/popout/","/embed/");
+			iframeURL = iframeURL.replace("?popout=","?parent="+location.hostname);
+			iframeURL = iframeURL.replace("?popout","?parent="+location.hostname);
+		} else {
+			var vidid = iframeURL.split('/').pop().split('#')[0].split('?')[0];
+			if (vidid){
+				iframeURL = "https://player.twitch.tv/?channel="+vidid+"&parent="+location.hostname;
+				log(iframeURL);
+			}
 		}
 	}
 		

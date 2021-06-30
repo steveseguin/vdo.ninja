@@ -55,7 +55,7 @@
 			}
 		</style>
 		<link rel="stylesheet" href="./lineawesome/css/line-awesome.min.css" />
-		<link rel="stylesheet" href="./main.css?ver=64" />
+		<link rel="stylesheet" href="./main.css?ver=65" />
 		<script type="text/javascript" crossorigin="anonymous" src="./thirdparty/adapter.min.js"></script>
 		<style id="lightbox-animations" type="text/css"></style>
 	</head>
@@ -108,6 +108,7 @@
 				<span data-translate="joining-room">You are in room</span>:
 				<div id="roomid" style="display: inline-block;"></div>
 			</div>
+			<div id="head6" class="advanced" data-translate="only-director-can-hear-you">Only the director can hear you currently</div>
 			
 		</div>
 		<div id="controlButtons" >
@@ -726,7 +727,7 @@
 								👋 👀  Welcome to our new domain! We've started to rebrand to VDO.Ninja. 📼  Nothing else is changing and we're staying 100% free.
 							</h4>
 							<br />
-							🌻 Site Updated on June 9th. The <a href="https://docs.vdo.ninja/release-notes/v18">v18 release notes are here</a>. If new issues occur, the previous version can also be <a href="https://obs.ninja/v17/">found here</a>.
+							🌻 Site Updated on June 29th. The <a href="https://docs.vdo.ninja/release-notes/v18">v18 release notes are here</a>. If new issues occur, the previous version can also be <a href="https://obs.ninja/v17/">found here</a>.
 
 							<br />
 							<br />
@@ -926,7 +927,7 @@
 						  <input type="checkbox" data-param="&animate" onchange="updateLink(1,this);">
 						  <span class="slider"></span>
 						</label>
-						<span data-translate="fade-videos-in">Animate mixing</span>
+						<span data-translate="animate-mixing">Animate mixing</span>
 						
 					</div>
 					<div  style="display:inline-block;margin-top: 12px; position: relative; margin-right:10px;">
@@ -960,12 +961,17 @@
 						</label>
 						<span data-translate="enable-equalizer">Enable equalizer as option</span>
 						<br />
-						<label class="switch">
+						<label class="switch" title="Show some prep suggestions to the guests on connect">
 						  <input type="checkbox" data-param="&tips" onchange="updateLink(1,this);">
 						  <span class="slider"></span>
 						</label>
-						<span data-translate="show-guest-tips" title="Show some prep suggestions to the guests on connect">Show guest setup tips</span>
-							
+						<span data-translate="show-guest-tips">Show guest setup tips</span>
+						<br />
+						<label class="switch" title="Have screen-shares stream ID's use a predictable prefixed value instead of a random one.">
+						  <input type="checkbox" data-param="&ssid" onchange="updateLink(1,this);">
+						  <span class="slider"></span>
+						</label>
+						<span data-translate="prefix-screenshare">Prefix screenshare IDs</span>	
 					</div>
 					<div  style="display:inline-block;margin-top: 12px; position: relative; height: 20px;">
 						<label class="switch" title="This low-fi video codec uses very little CPU, even with dozens of active viewers.">
@@ -1063,7 +1069,7 @@
 							  <input type="checkbox" data-param="&animate" onchange="updateLink(3,this);">
 							  <span class="slider"></span>
 							</label>
-							<span data-translate="fade-videos-in">Animate mixing</span>
+							<span data-translate="animate-mixing">Animate mixing</span>
 							
 							
 						</div>
@@ -1144,10 +1150,10 @@
 					<span data-translate="disconnect-guest" >Hangup</span>
 				</button>
 				
-				<button data-action-type="solo-chat" title="Toggle Solo Voice Chat" onclick="session.toggleSoloChat(this.dataset.UUID);">
+				<button data-action-type="solo-chat" title="Toggle solo voice chat or hold CTRL/CMD when selecting to make it two-way private." onclick="session.toggleSoloChat(this.dataset.UUID, event);">
 					<span data-translate="voice-chat"><i class="las la-microphone" style="color:#090"></i> Solo Talk</span>
 				</button>
-
+				
 				<button data-action-type="addToScene" data-scene="1" title="Add this Video to any remote '&scene=1'" onclick="directEnable(this, event, 1);">
 					<i class="las la-plus-square" style="color:#060"></i>
 					<span data-translate="add-to-scene">add to scene 1</span>
@@ -1514,8 +1520,9 @@
 				<span class='modalClose' onclick="toggleRoomSettings();">×</span>
 				<span></span>
 				<h3>Change room settings</h3><br />
-				<label title="Increase this at your peril. Changes the total inbound video bitrate per guest; mobile devices excluded. Webp-mode also excluded." for="trbSettingInput">Change room video quality:</label><span style="margin-left: 6px;" id="trbSettingInputFeedback"></span>-kbps
-				<input id="trbSettingInput" type="range" min="0" max="2000" value="500" onchange="changeTRB(this);" oninput="getById('trbSettingInputFeedback').innerHTML = this.value;" style="width:400px;display:block;" />
+				<label title="Increase this at your peril. Changes the total inbound video bitrate per guest; mobile devices excluded. Webp-mode also excluded." for="trbSettingInput">Change room video quality:</label>
+				<span style="margin-left: 6px;" id="trbSettingInputFeedback"></span>-kbps
+				<input id="trbSettingInput" type="range" min="0" max="4000" value="500" onchange="changeTRB(this);" oninput="getById('trbSettingInputFeedback').innerHTML = this.value;" style="width:100%;display:block;" />
 				
 			</div>
 		</div>
@@ -1630,7 +1637,8 @@
 				<li><a onclick="changeLg('nl');toggle(document.getElementById('languages'));" style="cursor: pointer;" data-tz="Europe/Amsterdam">Dutch</a></li>
 				<li><a onclick="changeLg('tr');toggle(document.getElementById('languages'));" style="cursor: pointer;" data-tz="Europe/Istanbul">Turkish</a></li>
 				<li><a onclick="changeLg('ja');toggle(document.getElementById('languages'));" style="cursor: pointer;" data-tz="Asia/Tokyo">Japanese</a></li>
-				<li><a onclick="changeLg('cs');toggle(document.getElementById('languages'));" style="cursor: pointer;" data-tz="Europe/Prague">Czech </a></li>
+				<li><a onclick="changeLg('cs');toggle(document.getElementById('languages'));" style="cursor: pointer;" data-tz="Europe/Prague">Czech</a></li>
+				<li><a onclick="changeLg('uk');toggle(document.getElementById('languages'));" style="cursor: pointer;" data-tz="Europe/Ukraine">Ukrainian</a></li>
 				<li><a onclick="changeLg('pig');toggle(document.getElementById('languages'));" style="cursor: pointer;">Pig Latin</a></li>
 			</ul>
 			<br />
@@ -1737,11 +1745,11 @@
 			// session.title // "zzzz"
 		</script>
 		<script type="text/javascript" crossorigin="anonymous" src="./thirdparty/aes.js"></script>
-		<script type="text/javascript" crossorigin="anonymous" id="lib-js" src="./lib.js?ver=2"></script>
+		<script type="text/javascript" crossorigin="anonymous" id="lib-js" src="./lib.js?ver=6"></script>
 		<!-- 
 		// If you wish to change branding, blank offers a good clean start.
 		<script type="text/javascript" id="main-js" src="./main.js" data-translation="blank"></script>
 	-->
-		<script type="text/javascript" crossorigin="anonymous" id="main-js" src="./main.js?ver=232"></script>
+		<script type="text/javascript" crossorigin="anonymous" id="main-js" src="./main.js?ver=237"></script>
 	</body>
 </html>

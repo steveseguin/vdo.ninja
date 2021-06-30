@@ -159,6 +159,10 @@ button.grey {
 	background-color: #840000 !important;
 }
 
+.orange {
+	background-color: #673100 !important;
+}
+
 button.red {
 	-webkit-app-region: no-drag;
 	padding: 10px;
@@ -216,6 +220,15 @@ button.white:active {
     margin-right: 10px;
 	pointer-events: none;
 	float: right;
+}
+#head6 {
+    display: inline-block;
+    text-decoration: none;
+    color: white;
+    text-align: left;
+    margin-left: 10px;
+	pointer-events: none;
+	font-weight: 700;
 }
 
 #overlayMsgs{
@@ -307,6 +320,15 @@ button.white:active {
 
 .pressed {
 	background: #1e0000;
+	-webkit-box-shadow: inset 0px 0px 1px #b90000;
+	-moz-box-shadow: inset 0px 0px 1px #b90000;
+	box-shadow: inset 0px 0px 1px #b90000;
+	outline: none;
+	color: white;
+}
+
+.altpress {
+	background: #673100 !important;
 	-webkit-box-shadow: inset 0px 0px 1px #b90000;
 	-moz-box-shadow: inset 0px 0px 1px #b90000;
 	box-shadow: inset 0px 0px 1px #b90000;
@@ -1401,7 +1423,7 @@ img {
 }
 .float2 {
 	opacity: 0.8;
-	width: 45px;
+	min-width: 45px;
 	height: 45px;
 	background-color: #8888;
 	color: #FFF;
@@ -2900,6 +2922,29 @@ input:checked + .slider:before {
     z-index: 0;
 	opacity: 0.8;
 }
+
+.modalBackdrop {
+	background: var(--background-color);
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 0;
+	opacity: 0.8;
+}
+
+.opaqueBackdrop{
+	background: var(--background-color);
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 0;
+	opacity: 1.0;
+}
+
 
 @media only screen and (max-width: 390px) {
 	.alertModal {
