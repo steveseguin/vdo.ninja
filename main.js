@@ -264,8 +264,8 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 		//}
 		session.minipreview = 2; // full screen if nothing else on screen.
 		session.style = 1;
-		getById("header").style.display = "none";
-		getById("header").style.opacity = 0;
+		//getById("header").style.display = "none";
+		//getById("header").style.opacity = 0;
 		session.showList=false;
 	}
 
@@ -1235,9 +1235,9 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 		}
 	}
 
-	if (urlParams.has('noiframe') || urlParams.has('noiframes') || urlParams.has('nif')) {
+	if (urlParams.has('noiframe') || urlParams.has('noiframes') || urlParams.has('nif') || urlParams.has('nowebsite') ) {
 
-		session.noiframe = urlParams.get('noiframe') || urlParams.get('noiframes') || urlParams.get('nif');
+		session.noiframe = urlParams.get('noiframe') || urlParams.get('noiframes') || urlParams.get('nif')  || urlParams.get('nowebsite');
 
 		if (!(session.noiframe)) {
 			session.noiframe = [];
@@ -1797,6 +1797,9 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 	}
 	if (urlParams.has('speedtest')){ // forces essentially UDP mode, unless TCP is specified, and some other stuff
 		session.speedtest = true;
+		if (urlParams.get('speedtest')){
+			session.speedtest = urlParams.get('speedtest').toLowerCase();
+		}
 	}
 
 	if (urlParams.has('turn')) {
@@ -2975,15 +2978,17 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 	});
 
 	function updateConnectionStatus() {
-		warnlog("Connection type changed from " + session.stats.network_type + " to " + Connection.effectiveType);
-		session.stats.network_type = Connection.effectiveType + " / " + Connection.type;
-		session.ping();
+		try{
+			warnlog("Connection type changed from " + session.stats.network_type + " to " + Connection.effectiveType);
+			session.stats.network_type = Connection.effectiveType + " / " + Connection.type;
+			session.ping();
+		} catch(e){warnlog(e);};
 	}
 	try {
 		var Connection = navigator.connection || navigator.mozConnection || navigator.webkitConnection;
 		session.stats.network_type = Connection.effectiveType + " / " + Connection.type;
 		Connection.addEventListener('change', updateConnectionStatus);
-	} catch (e) {}
+	} catch (e) {warnlog(e);}
 
 	
 	setInterval(function() {

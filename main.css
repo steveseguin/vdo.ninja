@@ -231,6 +231,16 @@ button.white:active {
 	font-weight: 700;
 }
 
+#head7 {
+    display: inline-block;
+    text-decoration: none;
+    color: white;
+    text-align: left;
+    margin-left: 10px;
+	pointer-events: none;
+	font-weight: 700;
+}
+
 #overlayMsgs{
 	margin:0 auto;
 	background-color: #0000;
@@ -2950,6 +2960,14 @@ input:checked + .slider:before {
 	.alertModal {
 		width: 90%;
 	}
+}
+
+.iframeDetails {
+	margin: 10px;
+    position: relative;
+    word-break: break-all;
+    max-height: 500px;
+    overflow: hidden;
 }
 
 .desktop-capturer-selection {
