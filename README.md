@@ -3,7 +3,7 @@
 
 <img src="https://user-images.githubusercontent.com/2575698/124821455-bbfec580-df3c-11eb-9641-3d036cdd6c41.png" data-canonical-src="https://user-images.githubusercontent.com/2575698/124821455-bbfec580-df3c-11eb-9641-3d036cdd6c41.png" width="200"  />
 
-## What is ~~OBS NINJA~~ **VDO NINJA**
+## What is **VDO NINJA**
 VDO.Ninja uses peer-to-peer technology to bring remote cameras into OBS or other studio software. 
 
 In most cases, all video data is transferred directly from peer to peer, without needing to go through any video server. This results in high-quality video with super low latency. In a small number of cases, video data may go through an encrypted TURN server, which is used to facilitate peer connections when otherwise not possible.
