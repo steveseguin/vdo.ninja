@@ -1,7 +1,7 @@
 
 #### ⚠ Notice! We've started our rebranding from OBS.Ninja to VDO.Ninja 🎈 -- nothing else will be changing. ✨
 
-![vdo.ninja.logo](https://user-images.githubusercontent.com/2575698/124821455-bbfec580-df3c-11eb-9641-3d036cdd6c41.png | width=200)
+<img src="https://user-images.githubusercontent.com/2575698/124821455-bbfec580-df3c-11eb-9641-3d036cdd6c41.png" data-canonical-src="https://user-images.githubusercontent.com/2575698/124821455-bbfec580-df3c-11eb-9641-3d036cdd6c41.png" width="200"  />
 
 ## What is ~~OBS NINJA~~ **VDO NINJA**
 VDO.Ninja uses peer-to-peer technology to bring remote cameras into OBS or other studio software. 
