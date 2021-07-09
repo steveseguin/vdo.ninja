@@ -1,5 +1,5 @@
 <head>
-	<link rel="stylesheet" href="./main.css?ver=39" />
+	<link rel="stylesheet" href="./main.css?ver=40" />
 	<style>
 		.container {
 			max-width: 80%;
@@ -84,7 +84,6 @@
 	<div class="container">
 		<div id="info">
 			<h1>Web-based Media Conversion Tools</h1>
-
 			<div class="card">
 				<h2>WebM to MP4 (fixed 1280x720 resolution) <span class='warning'>(very slow!)</span></h2>
 				<div>
@@ -118,7 +117,13 @@
 			</div>
 		</div>
 
-		<script src="https://unpkg.com/@ffmpeg/ffmpeg@0.9.6/dist/ffmpeg.min.js"></script>
+    <script>
+      if (window.location.hostname.indexOf("vdo.ninja") == 0) {
+        window.location = window.location.href.replace("vdo.ninja","isolated.vdo.ninja"); // FFMPEG requires an isolated domain.
+      }
+    </script>
+
+		<script src="./thirdparty/ffmpeg.min.js"></script>
 		<script>
 
 			function download(data, filename) {

@@ -159,6 +159,15 @@ button.grey {
 	background-color: #840000 !important;
 }
 
+.red2 {
+	background-color: #840000 !important;
+}
+
+
+.orange {
+	background-color: #673100 !important;
+}
+
 button.red {
 	-webkit-app-region: no-drag;
 	padding: 10px;
@@ -217,6 +226,25 @@ button.white:active {
 	pointer-events: none;
 	float: right;
 }
+#head6 {
+    display: inline-block;
+    text-decoration: none;
+    color: white;
+    text-align: left;
+    margin-left: 10px;
+	pointer-events: none;
+	font-weight: 700;
+}
+
+#head7 {
+    display: inline-block;
+    text-decoration: none;
+    color: white;
+    text-align: left;
+    margin-left: 10px;
+	pointer-events: none;
+	font-weight: 700;
+}
 
 #overlayMsgs{
 	margin:0 auto;
@@ -232,7 +260,6 @@ button.white:active {
 	z-index: 7;
     vertical-align: top;
     text-align: center;
-    top: 0;
     position: fixed;
 	overflow-wrap: anywhere;
 	padding:2% 3%;
@@ -308,6 +335,15 @@ button.white:active {
 
 .pressed {
 	background: #1e0000;
+	-webkit-box-shadow: inset 0px 0px 1px #b90000;
+	-moz-box-shadow: inset 0px 0px 1px #b90000;
+	box-shadow: inset 0px 0px 1px #b90000;
+	outline: none;
+	color: white;
+}
+
+.altpress {
+	background: #673100 !important;
 	-webkit-box-shadow: inset 0px 0px 1px #b90000;
 	-moz-box-shadow: inset 0px 0px 1px #b90000;
 	box-shadow: inset 0px 0px 1px #b90000;
@@ -483,6 +519,7 @@ button.glyphicon-button.active.focus {
 	-webkit-tap-highlight-color: transparent !important;
 	outline: 0px !important;
 	height:100%;
+	animation: fading 0.2s;
 }
 
 #controlButtons {
@@ -526,25 +563,60 @@ button.glyphicon-button.active.focus {
 	} 
 }
 
+#obsState {
+	border:green solid 2px;
+	padding:2px 5px;
+	color: white; 
+	z-index:2; 
+	background-color: #222D;
+	display: block;
+	top: 0;
+	position: fixed;
+	opacity: 0.7;
+    transform: scale(0.7);
+}
 @media only screen and (max-width: 620px){
 	#obsState {
-		top: 10px !important;
-		transform: scale(0.9);
+		top:20px;
+		transform: scale(0.63);
 	} 
 }
 @media only screen and (max-width: 400px){
 	#obsState {
-		top: 20px !important;
-		transform: scale(0.8);
+		top:30px;
+		transform: scale(0.56);
+		display:none!important;
+		opacity:0;
 	} 
 }
 @media only screen and (max-width: 300px){
 	#obsState {
-		top: 30px !important;
-		transform: scale(0.7);
+		display:none!important;
+		opacity:0;
 	} 
 }
-obsState
+
+@media only screen and (max-height: 400px){
+	#obsState {
+		transform: scale(0.5);
+		display:none!important;
+		opacity:0;
+	} 
+}
+@media only screen and (max-height: 300px){
+	#obsState {
+		transform: scale(0.4);
+		display:none!important;
+		opacity:0;
+	} 
+}
+@media only screen and (max-height: 200px){
+	#obsState {
+		transform: scale(0.3);
+		display:none!important;
+		opacity:0;
+	} 
+}
 
 /* Node selector to prioritise this selector above .float */
 button.btnArmTransferRoom{
@@ -1366,7 +1438,7 @@ img {
 }
 .float2 {
 	opacity: 0.8;
-	width: 45px;
+	min-width: 45px;
 	height: 45px;
 	background-color: #8888;
 	color: #FFF;
@@ -1386,25 +1458,40 @@ img {
 .myVideo {
 	box-shadow: rgb(88, 88, 88) 0px 0px 5px 1px;
 	max-width: 800px !important;
+	max-width: min(800px,100vw) !important;
 	max-height: 100% !important;
 	height: auto !important;
 	display: block !important;
 	margin: auto auto !important;
 	position: relative !important;
 	top: 50% !important;
+	background-color: #FFF1 !important;
 }
 #calendarButton {
 	cursor: pointer;
-	z-index: 6;
+	z-index: 1;
 	display:none;
 }
 #translateButton {
 	cursor: pointer;
-	z-index: 6;
+	z-index: 1;
 }
 #helpButton {
 	cursor: pointer;
-	z-index: 6;
+	z-index: 1;
+}
+
+iframe {
+	z-index: 2;
+}
+
+@media only screen and (max-width: 390px) {
+	#translateButton {
+		display:none;
+	}
+	#helpButton {
+		display:none;
+	}
 }
 
 .popup .menu { margin: 2px; }
@@ -1527,6 +1614,26 @@ img {
 	background-color: #DD1A !important;
 }
 
+.flip {
+  animation: flip180 2s;
+  animation-iteration-count: 1;
+}
+
+@keyframes flip180 {
+  0% {transform: rotate(0);}
+  100% {transform: rotate(180deg);}
+}
+
+.flip2 {
+  animation: flip1802 2s;
+  animation-iteration-count: 1;
+}
+
+@keyframes flip1802 {
+  0% {transform: rotate(180deg)}
+  100% {transform: rotate(360deg);}
+}
+
 @-webkit-keyframes animatetop {
 	from {
 		top: -300px;
@@ -1580,9 +1687,8 @@ img {
   -moz-animation: fadeIn var(--fadein-speed);
   -o-animation: fadeIn var(--fadein-speed);
   -ms-animation: fadeIn var(--fadein-speed);
+  animation-iteration-count: 1;
 }
-
-
 
 @keyframes fadeIn {
   0% {opacity:0;}
@@ -1665,6 +1771,14 @@ video.clean::-webkit-media-controls-timeline {
 
 video.clean::-webkit-media-controls-timeline-container {
 	display: inherit;
+}
+
+audio.fileshare::-webkit-media-controls-overlay-play-button, video.fileshare::-webkit-media-controls-overlay-play-button {
+    display: inherit;
+}
+
+audio.fileshare::-webkit-media-controls-play-button, video.fileshare::-webkit-media-controls-play-button {
+   display: inherit;
 }
 
 .mirrorControl::-webkit-media-controls-enclosure {
@@ -2045,6 +2159,7 @@ input[type=checkbox] {
 	align-self: center;
 	width: 400px;
 	max-width: 100%;
+	z-index:3;
 }
 #chatInput {
 	color: #000;
@@ -2695,12 +2810,12 @@ input:checked + .slider:before {
 }
 
 
-#promptModal, #roomSettings {
+#promptModal, #roomSettings, .promptModal {
 	position: absolute;
     background-color: rgb(221 221 221);
     box-shadow: 0 0 30px 10px #0000005c;
     color: black;
-    font-size: 1.2em;
+    font-size: 1.0em;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
@@ -2713,9 +2828,9 @@ input:checked + .slider:before {
 }
 
 .largeTextEntry {
-	width:300px;
-	margin: 0 0 0 55px;
-    font-size: 1em;
+	width: 90%;
+    margin: 10px 5%;
+    font-size: .8em;
     padding: 0.4em;
     display: block;
 	
@@ -2723,6 +2838,14 @@ input:checked + .slider:before {
 .promptModalInner {
 	position: relative;
 	padding: 1em;
+	max-width: 400px;
+}
+
+.promptModalMessage {
+	position: relative;
+	display: block;
+	width: 98%;
+    margin: 0 5%;
 }
 
 #iframe_source{
@@ -2733,6 +2856,7 @@ input:checked + .slider:before {
 }
 
 #SafariWarning{
+	max-width:100%;
 	display:none;
 	width: 450px;
 	border-left: 4px solid #eff150;
@@ -2836,10 +2960,41 @@ input:checked + .slider:before {
 	opacity: 0.8;
 }
 
+.modalBackdrop {
+	background: var(--background-color);
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 0;
+	opacity: 0.8;
+}
+
+.opaqueBackdrop{
+	background: var(--background-color);
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 0;
+	opacity: 1.0;
+}
+
+
 @media only screen and (max-width: 390px) {
 	.alertModal {
 		width: 90%;
 	}
+}
+
+.iframeDetails {
+	margin: 10px;
+    position: relative;
+    word-break: break-all;
+    max-height: 500px;
+    overflow: hidden;
 }
 
 .desktop-capturer-selection {
