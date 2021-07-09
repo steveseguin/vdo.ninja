@@ -1,5 +1,5 @@
 /*
-*  Copyright (c) 2020 Steve Seguin. All Rights Reserved.
+*  Copyright (c) 2021 Steve Seguin. All Rights Reserved.
 *
 *  Use of this source code is governed by the APGLv3 open-source license
 *  that can be found in the LICENSE file in the root of the source
@@ -41,7 +41,8 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 			errorlog(error);
 			getById("mainmenu").style.opacity = 1;
 		}
-	} else if (location.hostname !== "vdo.ninja" && location.hostname !== "obs.ninja") {
+	}
+	if (location.hostname !== "vdo.ninja" && location.hostname !== "obs.ninja") {
 		if (location.hostname === "rtc.ninja"){
 			try {
 				if (session.label === false) {
@@ -68,11 +69,16 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 			if (session.label === false) {
 				document.title = location.hostname;
 			}
-			getById("qos").innerHTML = location.hostname;
+			getById("qos").innerHTML = '<i class="las la-plug"></i>'
 			getById("logoname").innerHTML = getById("qos").outerHTML;
 			getById("helpbutton").style.display = "none";
 			getById("reportbutton").style.display = "none";
 			getById("chatBody").innerHTML = "";
+			getById("qos").style.color = "#FFF0";
+			getById("qos").style.fontSize = "70%";
+			getById("logoname").style.display = "none";
+			getById("logoname").style.margin = "0 0 0 5px";
+			
 		} catch (error) {
 			errorlog(error);
 		}
@@ -80,35 +86,6 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 		getById("mainmenu").style.opacity = 1;
 	}
 
-	try {
-		if (location.hostname === "rtc.ninja"){ // an extra-brand-free version of vdo.ninja
-			if (session.label === false) {
-				document.title = "";
-			}
-			getById("qos").innerHTML = "";
-			getById("logoname").innerHTML = "";
-			getById("helpbutton").style.display = "none";
-			getById("helpbutton").style.opacity = 0;
-			getById("reportbutton").style.display = "none";
-			getById("reportbutton").style.opacity = 0;
-			getById("mainmenu").style.opacity = 1;
-			getById("mainmenu").style.margin = "30px 0";
-			getById("translateButton").style.display = "none";
-			getById("translateButton").style.opacity = 0;
-			getById("info").style.display = "none";
-			getById("info").style.opacity = 0;
-			getById("chatBody").innerHTML = "";
-		} else if (location.hostname !== "vdo.ninja") {
-			if (session.label === false) {
-				document.title = location.hostname;
-			}
-			getById("qos").innerHTML = sanitizeLabel(location.hostname);
-			getById("logoname").innerHTML = getById("qos").outerHTML;
-			getById("helpbutton").style.display = "none";
-			getById("reportbutton").style.display = "none";
-		}
-
-	} catch (e) {}
 	
 	//// translation stuff ends ////
 
@@ -189,41 +166,10 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 		getById("mutespeakerbutton").style.setProperty("display", "none", "important");
 	}
 
-	if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
-		//session.webcamonly = true;
+	if (iOS || iPad) {
 		session.mobile = true;
-		getById("shareScreenGear").style.display = "none";
-		screensharebutton = false;
-		screensharesupport = false;
-		getById("container-2").className = 'column columnfade advanced'; // Hide screen share on mobile
-		getById("dropButton").style.display = "none";
-		//session.disableWebAudio = true; // default true; might be useful to disable on slow or old computers?
 		session.audioEffects = false; // disable audio inbound effects also.
 		session.audioMeterGuest = false;
-		
-	} else if ((iOS) || (iPad)) {
-		getById("shareScreenGear").style.display = "none";
-		session.mobile = true;
-		screensharebutton = false;
-		screensharesupport = false;
-		getById("container-2").className = 'column columnfade advanced'; // Hide screen share on mobile
-		getById("dropButton").style.display = "none";
-		//session.audiobitrate = false; // iOS devices seem to get distortion with custom audio bitrates.  Disable for now.
-		//session.maxiosbitrate = 10; // this is 10-kbps by default already.
-		//session.disableWebAudio = true; // default true; might be useful to disable on slow or old computers?
-		session.audioEffects = false; // disable audio inbound effects also.
-		session.audioMeterGuest = false;
-	} else {
-		log("MAKE DRAGGABLE");
-		delayedStartupFuncs.push([makeDraggableElement, document.getElementById("subControlButtons")]);
-		
-		if (safariVersion() && !getChromeVersion()){
-			getById("SafariWarning").style.display = "block";
-		}
-	}
-
-
-	if ((iOS) || (iPad)) {
 		window.addEventListener('resize', function() {  // Safari is the new IE.
 			var msg = {};
 			msg.requestSceneUpdate = true;
@@ -241,18 +187,28 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 				}, 1000);
 			}
 		});
-	}
-
-	if (/CriOS/i.test(navigator.userAgent) && (iOS || iPad)) {
-		if (!(session.cleanOutput)) {
-			try {
-				navigator.mediaDevices.getUserMedia;
-			} catch (e) {
-				warnUser("Chrome on this device does not support the required technology to use this site.\n\nPlease use Safari instead or update your iOS and browser version.");
+		
+		if (/CriOS/i.test(navigator.userAgent)) { // if runngin Chrome on iOS
+			if (!(session.cleanOutput)) {
+				try {
+					navigator.mediaDevices.getUserMedia;
+				} catch (e) {
+					warnUser("Chrome on this device does not support the required technology to use this site.\n\nPlease use Safari instead or update your iOS and browser version.");
+				}
 			}
 		}
+	} else if (/Android|Pixel|webOS|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) { // not sure how accurate this is.
+		session.mobile = true;
+		session.audioEffects = false; // disable audio inbound effects also.
+		session.audioMeterGuest = false;
+	} else {
+		log("MAKE DRAGGABLE");
+		delayedStartupFuncs.push([makeDraggableElement, document.getElementById("subControlButtons")]);
+		if (safariVersion() && !getChromeVersion()){ // if desktop Safari, so macOS, give a note saying it sucks
+			getById("SafariWarning").style.display = "block";
+		}
 	}
-
+	
 	
 	if (urlParams.has('broadcast') || urlParams.has('bc')) {
 		log("Broadcast flag set");
@@ -1225,6 +1181,18 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 		getById("headphonesDiv2").style.display = "none";
 		getById("audioScreenShare1").style.display = "none";
 
+	}
+
+	if (session.mobile){
+		getById("shareScreenGear").style.display = "none";
+		getById("dropButton").style.display = "none";
+		getById("container-2").className = 'column columnfade advanced'; // Hide screen share on mobile
+		screensharebutton = false;
+		screensharesupport = false;
+		
+		if (session.audioDevice!==0){
+			getById("flipcamerabutton").classList.remove("advanced");
+		}
 	}
 
 

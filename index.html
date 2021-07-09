@@ -17,7 +17,7 @@
 		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
 		<meta content="text/html;charset=utf-8" http-equiv="Content-Type" />
 		<meta content="utf-8" http-equiv="encoding" />
-		<meta name="copyright" content="&copy; 2020 Steve Seguin" />
+		<meta name="copyright" content="&copy; 2021 Steve Seguin" />
 		<link rel="shortcut icon" href="data:image/x-icon;," type="image/x-icon" />
 		<link rel="icon" type="image/png" sizes="32x32" href="./media/favicon-32x32.png" />
 		<link rel="icon" type="image/png" sizes="16x16" href="./media/favicon-16x16.png" />
@@ -55,7 +55,7 @@
 			}
 		</style>
 		<link rel="stylesheet" href="./lineawesome/css/line-awesome.min.css" />
-		<link rel="stylesheet" href="./main.css?ver=66" />
+		<link rel="stylesheet" href="./main.css?ver=69" />
 		<script type="text/javascript" crossorigin="anonymous" src="./thirdparty/adapter.min.js"></script>
 		<style id="lightbox-animations" type="text/css"></style>
 	</head>
@@ -68,11 +68,11 @@
 			<link itemprop="url" href="./media/obsNinja_logo_full.png" />
 		</span>
 		<script  type="text/javascript" crossorigin="anonymous"  src="./thirdparty/CodecsHandler.js?ver=33"></script>
-		<script  type="text/javascript" crossorigin="anonymous" src="./webrtc.js?ver=213"></script>
+		<script  type="text/javascript" crossorigin="anonymous" src="./webrtc.js?ver=214"></script>
 		<input id="zoomSlider" type="range" style="display: none;" />
 		<div id="header">
 			
-			<a id="logoname" href="./" style="text-decoration: none; color: white; margin: 2px;">
+			<a id="logoname" href="./" style="text-decoration: none; color: white; margin: 0 2px 0px 8px;">
 				<span data-translate="logo-header">
 					<font id="qos">V</font>DO.Ninja 
 				</span>
@@ -98,7 +98,6 @@
 			</div>
 			<div id="head4" style="display: inline-block;" class="advanced">
 				<font style="font-size: 68%; color: white;">
-					&nbsp; 
 					<span data-translate="you-are-in-the-control-center">Control center for room:</span>
 					
 					<div id="dirroomid" style="font-size: 140%; color: #99c; display: inline-block;"></div>
@@ -142,6 +141,10 @@
 					<i id="websitesharetoggle" onmousedown="event.preventDefault(); event.stopPropagation();"  class="toggleSize las la-window-maximize my-float"></i>
 				</div>
 				
+				<div id="flipcamerabutton" onmousedown="event.preventDefault(); event.stopPropagation();"  title="Cycle the Cameras"  onclick="cycleCameras()" class="advanced float"  tabindex="21" role="button" aria-pressed="false" onkeyup="enterPressedClick(event,this);" style="cursor: pointer;" alt="Cycle the Cameras">
+					<i id="settingstoggle" class="toggleSize las la-sync-alt my-float"></i> 
+				</div>
+				
 				<div id="roomsettingsbutton" onmousedown="event.preventDefault(); event.stopPropagation();"  title="Room Settings" onclick="toggleRoomSettings();" class="advanced float"  tabindex="22" role="button" aria-pressed="false" onkeyup="enterPressedClick(event,this);" style="cursor: pointer;" alt="Toggle the Room Settings Menu">
 					<i id="roomsettingstoggle" class="toggleSize las la-users-cog my-float"></i>
 				</div>
@@ -172,7 +175,7 @@
 				id="reportbutton"
 				title="Submit any error logs" 
 				onclick="submitDebugLog();"
-				style="cursor: pointer; visibility: hidden; display:none;z-index:7;"
+				style="cursor: pointer; visibility: hidden; display:none;z-index:3;"
 			>
 			<i style="float: right; bottom: 0px; cursor: pointer; position: fixed; right: 55px; color: #d9e4eb; padding: 2px; margin: 2px 2px 0 0; font-size: 140%;" class="las la-bug" aria-hidden="true"></i>
 		</span>
@@ -308,7 +311,7 @@
 					<button onclick="this.disabled=true;setTimeout(function(){requestBasicPermissions();},20);" id="getPermissions" style="display:none;" data-ready="false" >
 						<span data-translate="ask-for-permissions">Allow Access to Camera/Microphone</span>
 					</button>
-					<button onclick="publishWebcam(this)" title="start streaming" tabindex="15" id="gowebcam" class="gowebcam" alt="Start Streaming" disabled data-ready="false" >
+					<button onclick="publishWebcam(this)" title="start streaming" tabindex="15" id="gowebcam" class="gowebcam" alt="Start Streaming" disabled data-audioready="false" data-ready="false" >
 						<span data-translate="waiting-for-camera">Waiting for Camera to Load</span>
 					</button>
 					<br />
@@ -725,10 +728,10 @@
 							</li>
 							<br />
 							<h4 style="color:#daad09;">
-								👋 👀  Welcome to our new domain! We've started to rebrand to VDO.Ninja. 📼  Nothing else is changing and we're staying 100% free.
+								👋 👀  Welcome to VDO Ninja! We've rebranded! 📼  Nothing else is changing and we're staying 100% free.
 							</h4>
 							<br />
-							🌻 Site Updated on June 29th. The <a href="https://docs.vdo.ninja/release-notes/v18">v18 release notes are here</a>. If new issues occur, the previous version can also be <a href="https://obs.ninja/v17/">found here</a>.
+							🌻 Site Updated on July 8th. The <a href="https://docs.vdo.ninja/release-notes/v18_3">v18.3 release notes are here</a>. If new issues occur, the previous version can also be <a href="https://vdo.ninja/v18/">found here</a>.
 
 							<br />
 							<br />
@@ -1746,11 +1749,11 @@
 			// session.title // "zzzz"
 		</script>
 		<script type="text/javascript" crossorigin="anonymous" src="./thirdparty/aes.js"></script>
-		<script type="text/javascript" crossorigin="anonymous" id="lib-js" src="./lib.js?ver=7"></script>
+		<script type="text/javascript" crossorigin="anonymous" id="lib-js" src="./lib.js?ver=12"></script>
 		<!-- 
 		// If you wish to change branding, blank offers a good clean start.
 		<script type="text/javascript" id="main-js" src="./main.js" data-translation="blank"></script>
 	-->
-		<script type="text/javascript" crossorigin="anonymous" id="main-js" src="./main.js?ver=238"></script>
+		<script type="text/javascript" crossorigin="anonymous" id="main-js" src="./main.js?ver=239"></script>
 	</body>
 </html>

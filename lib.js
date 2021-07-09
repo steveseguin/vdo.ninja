@@ -1,5 +1,5 @@
 /*
-*  Copyright (c) 2020 Steve Seguin. All Rights Reserved.
+*  Copyright (c) 2021 Steve Seguin. All Rights Reserved.
 *
 *  Use of this source code is governed by the APGLv3 open-source license
 *  that can be found in the LICENSE file in the root of the source
@@ -681,11 +681,14 @@ function checkConnection() {
 	if (session.ws === null) {
 		return;
 	}
-	if (document.getElementById("qos")) { // true or false; null might cause problems?
-		if ((session.ws) && (session.ws.readyState === WebSocket.OPEN)) {
-			getById("qos").style.color = "white";
-		} else {
-			getById("qos").style.color = "red";
+	if (!session.cleanOutput){
+		if (document.getElementById("qos")) { // true or false; null might cause problems?
+			getById("logoname").style.display = "unset";
+			if ((session.ws) && (session.ws.readyState === WebSocket.OPEN)) {
+				getById("qos").style.color = "white";
+			} else {
+				getById("qos").style.color = "red";
+			}
 		}
 	}
 }
@@ -870,11 +873,14 @@ window.onpopstate = function() {
 	}
 };
 
+var miniPerformerX = null;
+var miniPerformerY = null;
 function makeMiniDraggableElement(elmnt) {
 	try {
 		elmnt.dragElement = false;
 		elmnt.style.bottom = "auto";
 		elmnt.style.cursor = "grab";
+		
 		elmnt.stashonmouseup = null;
 		elmnt.stashonmousemove = null;
 		
@@ -890,55 +896,96 @@ function makeMiniDraggableElement(elmnt) {
 	
 	var timestamp = false;
 	
-	function dragMouseDown(e) {
-		timestamp = Date.now();
-		
-		e = e || window.event;
-		e.preventDefault();
-		
-		pos3 = e.clientX;
-		pos4 = e.clientY;
-		elmnt.stashonmouseup = document.onmouseup; // I don't want to interfere with other drag events.
-		elmnt.stashonmousemove = document.onmousemove;
-
-		document.onmouseup = closeDragElement;
-		document.onmousemove = elementDrag;
-	}
-	
-	function elementDrag(e) {
-		e = e || window.event;
-		e.preventDefault();
-		e.stopPropagation();
-		timestamp -= 50;
-		
+	function elementDrag(e) { // ON DRAG
+		timestamp = false;
 		if (session.infocus){return;}
-		
-		elmnt.dragElement = true;
-		pos1 = pos3 - e.clientX;
-		pos2 = pos4 - e.clientY;
-		pos3 = e.clientX;
-		pos4 = e.clientY;
+		try {
+			e = e || window.event;
+			
+			if (e.type !== "touchmove"){
+				if (e.button !== 0){return;}
+				
+				e.preventDefault();
+			}
+			e.stopPropagation();
+			
+			elmnt.dragElement = true;
+			
+			if (e.type === "touchmove"){
+				pos1 = pos3 - e.touches[0].clientX;
+				pos2 = pos4 - e.touches[0].clientY;
+				pos3 = e.touches[0].clientX;
+				pos4 = e.touches[0].clientY;
+			} else {
+				pos1 = pos3 - e.clientX;
+				pos2 = pos4 - e.clientY;
+				pos3 = e.clientX;
+				pos4 = e.clientY;
+			}
 
-		var topDrag = (elmnt.offsetTop - pos2 );
-		if (topDrag > (-3 + (window.innerHeight - elmnt.clientHeight))){
-			topDrag = (-3 + (window.innerHeight - elmnt.clientHeight));
+			var topDrag = (elmnt.offsetTop - pos2 );
+			if (topDrag > (-3 + (window.innerHeight - elmnt.clientHeight))){
+				topDrag = (-3 + (window.innerHeight - elmnt.clientHeight));
+			}
+			
+			miniPerformerY = topDrag;
+			miniPerformerX = elmnt.offsetLeft - pos1;
+			
+			if (miniPerformerY > window.innerHeight-elmnt.clientHeight){
+				miniPerformerY = window.innerHeight-elmnt.clientHeight;
+			}
+			if (miniPerformerX > window.innerWidth-elmnt.clientWidth){
+				miniPerformerX = window.innerWidth-elmnt.clientWidth;
+			}
+			
+			miniPerformerX = 100 * miniPerformerX/window.innerWidth;
+			miniPerformerY = 100 * miniPerformerY/window.innerHeight;
+			
+			if (miniPerformerY<0){
+				miniPerformerY=0;
+			} else if (miniPerformerY>100){
+				miniPerformerY=100;
+			}
+			if (miniPerformerX<0){
+				miniPerformerX=0;
+			} else if (miniPerformerX>100){
+				miniPerformerX=100;
+			}
+			
+			elmnt.style.right = "unset";
+			elmnt.style.top = miniPerformerY + "%";
+			elmnt.style.left = miniPerformerX + "%";
+			
+			
+		} catch(e){errorlog(e);}
+	}
+
+	
+	function closeDragElement(e) {	 // TOUCH END
+		e = e || window.event;
+		
+		if (e.type !== "touchend"){
+			if (e.button !== 0){return;}
+			document.onmouseup = elmnt.stashonmouseup;
+			document.onmousemove = elmnt.stashonmousemove;
 		}
 		
-		elmnt.style.top = topDrag + "px";
-		elmnt.style.left = (elmnt.offsetLeft - pos1) + "px";
-		elmnt.style.right = "unset";
-	}
-
-	elmnt.onmousedown = dragMouseDown;
-	function closeDragElement(e) {	
-		document.onmouseup = elmnt.stashonmouseup;
-		document.onmousemove = elmnt.stashonmousemove;
 		
-		if (timestamp && (Date.now()- timestamp>400)){
-			e = e || window.event;
-			e.preventDefault();
+		if (session.infocus){return;}
+		e.preventDefault();
+		
+		if (timestamp && (Date.now()- timestamp>500)){ // long hold, so this is a drag
 			e.stopPropagation();
-		} else {
+			if (e.type === "touchend"){
+				if (session.infocus === true){
+					session.infocus = false;
+				} else {
+					session.infocus = true;
+					log("session: myself");
+				}
+				setTimeout(()=>updateMixer(),10);
+			}
+		} else if (timestamp && (e.type !== "touchend")){
 			if (session.infocus === true){
 				session.infocus = false;
 			} else {
@@ -946,8 +993,40 @@ function makeMiniDraggableElement(elmnt) {
 				log("session: myself");
 			}
 			setTimeout(()=>updateMixer(),10);
-		}
+		} 
 	}
+	
+	function dragMouseDown(e) { ////// TOUCH START
+
+		if (event.ctrlKey || event.metaKey) {return;}
+		
+		timestamp = Date.now();
+		
+		e = e || window.event;
+		if (session.infocus){return;}
+		
+		e.preventDefault();
+		if (e.type === "touchstart"){
+			pos3 = e.touches[0].clientX;
+			pos4 = e.touches[0].clientY;
+			
+			elmnt.ontouchend = closeDragElement;
+			elmnt.ontouchmove = elementDrag;
+		} else {
+			if (e.button !== 0){return;}
+			pos3 = e.clientX;
+			pos4 = e.clientY;
+			elmnt.stashonmouseup = document.onmouseup; // I don't want to interfere with other drag events.
+			elmnt.stashonmousemove = document.onmousemove;
+
+			document.onmouseup = closeDragElement;
+			document.onmousemove = elementDrag;
+		}
+		
+	}
+	
+	elmnt.onmousedown = dragMouseDown;
+	elmnt.ontouchstart = dragMouseDown;
 }
 				
 function makeDraggableElement(elmnt, absolute=false) {
@@ -1832,19 +1911,27 @@ function updateMixerRun(e=false){  // this is the main auto-mixing code.  It's a
 							} catch(e){
 								container.style.top = hi+"px";
 							}
-							container.style.right = "2vw";
+							//
+							if (miniPerformerY !== null){
+								container.style.top = miniPerformerY + "%";
+							}
+							if (miniPerformerX !== null){
+								container.style.left = miniPerformerX + "%";
+							} else {
+								container.style.right = "2vw";
+							}
+							
 							container.appendChild(session.videoElement);
 							playarea.appendChild(container);
 							makeMiniDraggableElement(container);
+							container.id = "minipreview";
 						}
 						
-						container.style.left = "unset";
-						container.id = "minipreview";
 						container.style.width = "18%";
 						container.style.display = "flex";
 						container.style.zIndex = "2";
 						container.style.margin = "0";
-						container.style.position="absolute";
+						container.style.position ="absolute";
 						container.style.cursor = "pointer";
 						container.style.border = "2px #BBB solid";
 						
@@ -2196,94 +2283,132 @@ function updateMixerRun(e=false){  // this is the main auto-mixing code.  It's a
 			
 			if (!session.cleanOutput && !session.nocursor){
 				if ((session.roomid!==false) && (session.scene===false)){
-					
-					var button = container.querySelector('[data-button]');
-					if (!button){
-						button = document.createElement("div");
-					}
-					button.id = "button_"+vid.id;
-					button.dataset.button = true;
-					if (session.infocus){
-						button.innerHTML = "<img src='./media/sd.svg' style='background-color:#0007;width:4vh' aria-hidden='true' />";
-						button.title = "Show all active videos togethers";
-					} else if (mediaPool.length>1){
-						button.innerHTML = "<img src='./media/hd.svg' style='background-color:#0007;width:4vh' aria-hidden='true' />";
-						button.title = "Enlarge video and increase its clarity";
-					} else {
-						button.style.visibility = "hidden";
-					}
-					button.style.transition = "opacity 0.3s"
-					button.style.width ="4vh";
-					button.style.height = "4vh";
-					button.style.maxWidth ="30px";
-					button.style.maxHeight = "30px";
-					button.style.minWidth ="15px";
-					button.style.minHeight = "15px";
-					button.style.position = "absolute";
-					button.style.display="none";
-					//button.style.opacity="10%";
-					button.style.zIndex="6";
-					button.style.right = "4vh";//(Math.ceil(w/rw) -30 - 30 + offsetx+Math.floor(((i%rw)+0)*w/rw))+"px";
-					button.style.top  = "4vh";//(  offsety + 30 + Math.floor((Math.floor(i/rw)+0)*h/rh + hi))+"px";
-					button.style.color = "white";
-					button.style.cursor = "pointer";
-					
-					
-					container.appendChild(button);
-					if (vid.id == "videosource"){
-						button.onclick = function(){
-							var target =  event.currentTarget;
-							log(target);
+					if (!((vid.id === "videosource") && (session.minipreview))){
+						var button = container.querySelector('[data-button]');
+						if (!button){
+							button = document.createElement("div");
+						}
+						button.id = "button_"+vid.id;
+						button.dataset.button = true;
+						if (session.infocus){
+							button.innerHTML = "<img src='./media/sd.svg' style='background-color:#0007;width:4vh' aria-hidden='true' />";
+							button.title = "Show all active videos togethers";
+						} else if (mediaPool.length>1){
+							button.innerHTML = "<img src='./media/hd.svg' style='background-color:#0007;width:4vh' aria-hidden='true' />";
+							button.title = "Enlarge video and increase its clarity";
+						} else {
+							button.style.visibility = "hidden";
+						}
+						button.style.transition = "opacity 0.3s"
+						button.style.width ="4vh";
+						button.style.height = "4vh";
+						button.style.maxWidth ="30px";
+						button.style.maxHeight = "30px";
+						button.style.minWidth ="15px";
+						button.style.minHeight = "15px";
+						button.style.position = "absolute";
+						button.style.display="none";
+						//button.style.opacity="10%";
+						button.style.zIndex="6";
+						button.style.right = "4vh";//(Math.ceil(w/rw) -30 - 30 + offsetx+Math.floor(((i%rw)+0)*w/rw))+"px";
+						button.style.top  = "4vh";//(  offsety + 30 + Math.floor((Math.floor(i/rw)+0)*h/rh + hi))+"px";
+						button.style.color = "white";
+						button.style.cursor = "pointer";
+						
+						
+						container.appendChild(button);
+						if (vid.id == "videosource"){
+							button.onclick = function(event){
+								if (session.infocus === true){
+									session.infocus = false;
+								} else {
+									session.infocus = true;
+									log("session: myself");
+								}
+								setTimeout(()=>updateMixer(),10);
+							};
+							
+						} else {
+							button.dataset.UUID = vid.dataset.UUID;
+							button.onclick = function(event){
+								var target =  event.currentTarget;
+								log("fullscreen");
+								log(target);
+								if (session.infocus === target.dataset.UUID){
+									//target.childNodes[0].className = 'las la-arrows-alt';
+									session.infocus = false;
+								} else {
+									//target.childNodes[0].className = 'las la-compress';
+									session.infocus = target.dataset.UUID;
+									//log("session:"+target.dataset.UUID);
+								}
+								setTimeout(()=>updateMixer(),10);
+							};
+							
+						}
+						vid.onclick = function(event){
+							button.style.display="block";
+							container.style.backgroundColor= "#4444";
+							button.style.opacity="100%";
+						};
+						button.onmouseenter = function(event){
+							button.style.display="block";
+							container.style.backgroundColor= "#4444";
+							setTimeout(function(button){button.style.opacity="100%";},0,button);
+							
+						};
+						container.onmouseenter = function(event){
+							button.style.display="block";
+							container.style.backgroundColor= "#4444";
+							setTimeout(function(button){button.style.opacity="100%";},0,button);
+						};
+						container.onmouseleave = function(event){
+							button.style.display="none";
+							container.style.backgroundColor= null;
+							button.style.opacity="10%";
+						};
+					} else if ((vid.id === "videosource") && session.minipreview && session.infocus==true){
+						var button = container.querySelector('[data-button]');
+						if (!button){
+							button = document.createElement("div");
+						}
+						button.id = "button_videosource";
+						button.dataset.button = true;
+						if (session.infocus){
+							button.innerHTML = "<img src='./media/sd.svg' style='background-color:#0007;width:4vh' aria-hidden='true' />";
+							button.title = "Show all active videos togethers";
+							button.style.display="unset";
+						} else {
+							button.style.visibility = "hidden";
+							button.style.display="none";
+						}
+						button.style.transition = "opacity 0.3s"
+						button.style.width ="4vh";
+						button.style.height = "4vh";
+						button.style.maxWidth ="30px";
+						button.style.maxHeight = "30px";
+						button.style.minWidth ="15px";
+						button.style.minHeight = "15px";
+						button.style.position = "absolute";
+						button.style.zIndex="6";
+						button.style.right = "4vh";//(Math.ceil(w/rw) -30 - 30 + offsetx+Math.floor(((i%rw)+0)*w/rw))+"px";
+						button.style.top  = "4vh";//(  offsety + 30 + Math.floor((Math.floor(i/rw)+0)*h/rh + hi))+"px";
+						button.style.color = "white";
+						button.style.cursor = "pointer";
+						container.appendChild(button);
+						button.onclick = function(event){
+							event.stopPropagation();
+							event.preventDefault();
+							if (!session.infocus){return;}
+							
 							if (session.infocus === true){
 								session.infocus = false;
-								//target.childNodes[0].className = 'las la-arrows-alt';
-							} else {
-								session.infocus = true;
-								log("session: myself");
-								//target.childNodes[0].className = 'las la-compress';
+								setTimeout(()=>updateMixer(),10);
 							}
-							setTimeout(()=>updateMixer(),10);
-						};
-						
-					} else {
-						button.dataset.UUID = vid.dataset.UUID;
-						button.onclick = function(event){
-							var target =  event.currentTarget;
-							log("fullscreen");
-							log(target);
-							if (session.infocus === target.dataset.UUID){
-								//target.childNodes[0].className = 'las la-arrows-alt';
-								session.infocus = false;
-							} else {
-								//target.childNodes[0].className = 'las la-compress';
-								session.infocus = target.dataset.UUID;
-								//log("session:"+target.dataset.UUID);
-							}
-							setTimeout(()=>updateMixer(),10);
+							
 						};
 						
 					}
-					vid.onclick = function(){
-						button.style.display="block";
-						container.style.backgroundColor= "#4444";
-						button.style.opacity="100%";
-					};
-					button.onmouseenter = function(){
-						button.style.display="block";
-						container.style.backgroundColor= "#4444";
-						setTimeout(function(button){button.style.opacity="100%";},0,button);
-						
-					};
-					container.onmouseenter = function(){
-						button.style.display="block";
-						container.style.backgroundColor= "#4444";
-						setTimeout(function(button){button.style.opacity="100%";},0,button);
-					};
-					container.onmouseleave = function(){
-						button.style.display="none";
-						container.style.backgroundColor= null;
-						button.style.opacity="10%";
-					};
 				}
 			}
 			i+=1;
@@ -3829,6 +3954,7 @@ function toggleVideoMute(apply = false) { // TODO: I need to have this be MUTE, 
 		getById("mutevideotoggle").className = "las la-video-slash my-float toggleSize";
 		if (!(session.cleanOutput)){
 			getById("mutevideobutton").className = "float2 red";
+			getById("header").classList.add("red2");
 		}
 		if (session.streamSrc) {
 			session.streamSrc.getVideoTracks().forEach((track) => {
@@ -3842,6 +3968,7 @@ function toggleVideoMute(apply = false) { // TODO: I need to have this be MUTE, 
 		getById("mutevideotoggle").className = "las la-video my-float toggleSize";
 		if (!(session.cleanOutput)){
 			getById("mutevideobutton").className = "float";
+			getById("header").classList.remove("red2");
 		}
 		if (session.streamSrc) {
 			session.streamSrc.getVideoTracks().forEach((track) => {
@@ -6293,6 +6420,61 @@ function createDirectorCam(vid) {
 	}
 }
 
+function cycleCameras(){
+	if (session.screenShareState) {
+		warnUser("Stop the screen-share first.");
+		return;
+	}
+	var videoSelect = document.querySelector("select#videoSource3").options;
+	// don't show flip option if only one camera.
+	// don't show if not a mobile device
+	// don't show if AD=0
+	
+	
+	var matched = false;
+	var maxIndex = parseInt(getById("flipcamerabutton").dataset.maxIndex) || parseInt(videoSelect.length);
+	if (maxIndex > parseInt(videoSelect.length)){
+		maxIndex = parseInt(videoSelect.length);
+	}
+	
+	for(var i = 0; i < maxIndex; i++){
+       var selOption = videoSelect[i];
+       if (selOption.selected) {
+           matched=true;
+       } else if (matched){
+		   if (getById("flipcamerabutton").classList.contains("flip")){
+				getById("flipcamerabutton").classList.remove("flip");
+				getById("flipcamerabutton").classList.add("flip2");
+			} else {
+				getById("flipcamerabutton").classList.remove("flip2");
+				getById("flipcamerabutton").classList.add("flip");
+			}
+		   document.querySelector("select#videoSource3").value = selOption.value;
+		   activatedPreview = false;
+		   grabVideo(session.quality, "videosource", "select#videoSource3");
+		   return;
+	   }
+    }
+	for(var i = 0; i < maxIndex; i++){
+       var selOption = videoSelect[i];
+       if (selOption.selected) {
+           return; // do nothing; the camera that is selected is the only camera available it seems.
+       } else {
+		   if (getById("flipcamerabutton").classList.contains("flip")){
+				getById("flipcamerabutton").classList.remove("flip");
+				getById("flipcamerabutton").classList.add("flip2");
+			} else {
+				getById("flipcamerabutton").classList.remove("flip2");
+				getById("flipcamerabutton").classList.add("flip");
+			}
+		   document.querySelector("select#videoSource3").value = selOption.value;
+		   activatedPreview = false;
+		   grabVideo(session.quality, "videosource", "select#videoSource3");
+		   return;
+	   }
+    }
+}
+
 function press2talk(clean = false) {
 	var ele = getById("press2talk");
 	ele.style.minWidth = "127px";
@@ -7106,10 +7288,12 @@ function addScreenDevices(device) {
 	}
 }
 
+var gotDevices2AlreadyRan = false;
 function gotDevices2(deviceInfos) {
+	gotDevices2AlreadyRan=true;
 	log("got devices!");
 	log(deviceInfos);
-
+	
 	getById("multiselect-trigger3").dataset.state = "0";
 	getById("multiselect-trigger3").classList.add('closed');
 	getById("multiselect-trigger3").classList.remove('open');
@@ -7122,7 +7306,6 @@ function gotDevices2(deviceInfos) {
 		const videoSelect =  getById('videoSource3');
 		const audioOutputSelect =  getById('outputSource3');
 		const selectors = [videoSelect];
-
 
 		[audioInputSelect].forEach(select => {
 			while (select.firstChild) {
@@ -7264,6 +7447,14 @@ function gotDevices2(deviceInfos) {
 			option.value = "default";
 			option.text = "System Default";
 			audioOutputSelect.appendChild(option);
+		}
+		
+		if (videoSelect.childNodes.length <= 1) {
+			getById("flipcamerabutton").style.display = "none"; // don't show the camera cycle button
+			getById("flipcamerabutton").dataset.maxndex = videoSelect.childNodes.length;
+		} else {
+			getById("flipcamerabutton").style.display = "unset";
+			getById("flipcamerabutton").dataset.maxIndex = videoSelect.childNodes.length;
 		}
 
 		////////////
@@ -7688,7 +7879,9 @@ async function getAudioOnly(selector, trackid = null, override = false) {
 		if ((session.echoCancellation !== false) && (session.autoGainControl !== false) && (session.noiseSuppression !== false)) {
 			var constraint = {
 				audio: {
-					deviceId: audioList[i].value
+					deviceId: {
+						exact: audioList[i].value
+					}
 				}
 			};
 		} else { // Just trying to avoid problems with some systems that don't support these features
@@ -7718,7 +7911,7 @@ async function getAudioOnly(selector, trackid = null, override = false) {
 		constraint.video = false;
 		if (override !== false) {
 			try {
-				if (override.audio.deviceId == audioList[i].value) {
+				if (override.audio && override.audio.deviceId && override.audio.deviceId.exact && override.audio.deviceId.exact == audioList[i].value) {
 					constraint = override;
 				}
 			} catch (e) {}
@@ -8889,12 +9082,13 @@ async function grabVideo(quality = 0, eleName = 'previewWebcam', selector = "sel
 			} else {
 				log("4462");
 				updateStats();
-				var gowebcam = getById("gowebcam");
-				if (gowebcam) {
-					gowebcam.disabled = false;
-					gowebcam.dataset.ready = "true";
-					gowebcam.innerHTML = "START";
-					miniTranslate(gowebcam, "start");
+				if (document.getElementById("gowebcam")) {
+					document.getElementById("gowebcam").dataset.ready = "true";
+					if (document.getElementById("gowebcam").dataset.audioready == "true"){
+						document.getElementById("gowebcam").disabled = false;
+						document.getElementById("gowebcam").innerHTML = "START";
+						miniTranslate(document.getElementById("gowebcam"), "start");
+					}
 				}
 			}
 		} else { // If they disabled the video but not in preview mode; but actualy live. We will want to remove the stream from the publishing
@@ -8960,8 +9154,7 @@ async function grabVideo(quality = 0, eleName = 'previewWebcam', selector = "sel
 			}; // Firefox is a dick. Needs it to be exact.
 
 		} else if (videoSelect.options[videoSelect.selectedIndex].text.includes("NDI Video")) { // NDI does not like "EXACT"
-			constraints.video.deviceId = videoSelect.value;
-
+			constraints.video.deviceId = videoSelect.value; // NDI is fucked up
 		} else {
 			constraints.video.deviceId = {
 				exact: videoSelect.value
@@ -9100,12 +9293,13 @@ async function grabVideo(quality = 0, eleName = 'previewWebcam', selector = "sel
 						if (document.getElementById("gear_webcam")) {
 							updateStats(obscam);
 						}
-						var gowebcam = getById("gowebcam");
-						if (gowebcam) {
-							gowebcam.disabled = false;
-							gowebcam.dataset.ready = "true";
-							gowebcam.innerHTML = "START";
-							miniTranslate(gowebcam, "start");
+						if (document.getElementById("gowebcam")) {
+							document.getElementById("gowebcam").dataset.ready = "true";
+							if (document.getElementById("gowebcam").dataset.audioready == "true"){
+								document.getElementById("gowebcam").disabled = false;
+								document.getElementById("gowebcam").innerHTML = "START";
+								miniTranslate(document.getElementById("gowebcam"), "start");
+							}
 						}
 					}
 				} else if (getById("gear_webcam3").style.display === "inline-block") {
@@ -9223,7 +9417,8 @@ async function grabAudio(eleName = "previewWebcam", selector = "#audioSource", t
 	activatedPreview = true;
 	warnlog("GRABBING AUDIO");
 	log("TRACK EXCLUDED:" + trackid);
-
+	
+	//document.getElementById("gowebcam").dataset.audioready = "false";
 
 	try {
 		if (session.videoElement.srcObject) {
@@ -9287,6 +9482,7 @@ async function grabAudio(eleName = "previewWebcam", selector = "#audioSource", t
 
 	var streams = await getAudioOnly(selector, trackid, override); // Get audio streams
 	warnlog(streams);
+	
 	try {
 		for (var i = 0; i < streams.length; i++) {
 			streams[i].getAudioTracks().forEach(function(track) {
@@ -9368,12 +9564,13 @@ async function grabAudio(eleName = "previewWebcam", selector = "#audioSource", t
 	} catch (e) {
 		errorlog(e);
 	}
-	var gowebcam = getById("gowebcam");
-	if (gowebcam) {
-		gowebcam.disabled = false;
-		gowebcam.dataset.ready = "true";
-		gowebcam.innerHTML = "START";
-		miniTranslate(gowebcam, "start");
+	if (document.getElementById("gowebcam")) {
+		document.getElementById("gowebcam").dataset.audioready = true;
+		if (document.getElementById("gowebcam").dataset.ready && (document.getElementById("gowebcam").dataset.ready=="true")){
+			document.getElementById("gowebcam").disabled = false;
+			document.getElementById("gowebcam").innerHTML = "START";
+			miniTranslate(document.getElementById("gowebcam"), "start");
+		}
 	}
 }
 
@@ -9689,6 +9886,8 @@ function statsMenuCreator(){
 	menuCloseBtn.addEventListener('click', function(eve) {
 		clearInterval(menu.interval);
 		eve.currentTarget.parentNode.remove();
+		eve.preventDefault();
+		eve.stopPropagation();
 	});
 	return [menu, innerMenu];
 }
@@ -9826,7 +10025,6 @@ session.publishStream = function(v, title="Stream Sharing Session"){ //  stream 
 		}
 	} else {
 		
-		
 		if (session.fullscreen){
 			session.windowed = false;
 		} else {
@@ -9955,17 +10153,14 @@ session.publishStream = function(v, title="Stream Sharing Session"){ //  stream 
 	clearInterval(session.updateLocalStatsInterval);
 	session.updateLocalStatsInterval = setInterval(function(){updateLocalStats();},3000);	
 	
+	if (!gotDevices2AlreadyRan){
+		enumerateDevices().then(gotDevices2); // this is needed for iOS; was previous set to timeout at 100ms, but would be useful everywhere I think
+	}
+	
 	session.title=title;
 	session.seeding=true;			
 	session.seedStream();
 	
-	if (iOS || iPad) {
-		setTimeout(function(){
-			try{
-				enumerateDevices().then(gotDevices2);
-			} catch(e){}
-		},100);
-	}
 };
 
 
@@ -10923,6 +11118,8 @@ function loadIframe(iframesrc) { // this is pretty important if you want to avoi
 	} else if (iframesrc.startsWith("https://player.twitch.tv/")){
 		iframe.style.border = "0";
 	} else if (iframesrc.startsWith("https://twitch.tv/")){
+		iframe.style.border = "0";
+	} else if (iframesrc.startsWith("https://www.twitch.tv/")){
 		iframe.style.border = "0";
 	} else if (iframesrc.startsWith("https://meshcast.io/")){
 		iframe.style.border = "0";
@@ -12464,28 +12661,26 @@ function setupWebcamSelection(stream = null) {
 
 			audioSelect.onchange = function() {
 
-				var gowebcam = getById("gowebcam");
-				if (gowebcam) {
-					gowebcam.disabled = true;
-					gowebcam.dataset.ready = "true";
-					gowebcam.style.backgroundColor = "#DDDDDD";
-					gowebcam.style.fontWeight = "normal";
-					gowebcam.innerHTML = "Waiting for Camera to load";
-					miniTranslate(gowebcam, "waiting-for-camera-to-load");
+				if (document.getElementById("gowebcam")) {
+					document.getElementById("gowebcam").disabled = true;
+					document.getElementById("gowebcam").dataset.audioready = "false";
+					document.getElementById("gowebcam").style.backgroundColor = "#DDDDDD";
+					document.getElementById("gowebcam").style.fontWeight = "normal";
+					document.getElementById("gowebcam").innerHTML = "Waiting for mic to load";
+					miniTranslate(document.getElementById("gowebcam"), "waiting-for-mic-to-load");
 				}
 				activatedPreview = false;
 				grabAudio();
 			};
 			videoSelect.onchange = function() {
 
-				var gowebcam = getById("gowebcam");
-				if (gowebcam) {
-					gowebcam.disabled = true;
-					gowebcam.dataset.ready = "true";
-					gowebcam.style.backgroundColor = "#DDDDDD";
-					gowebcam.style.fontWeight = "normal";
-					gowebcam.innerHTML = "Waiting for Camera to load";
-					miniTranslate(gowebcam, "waiting-for-camera-to-load");
+				if (document.getElementById("gowebcam")) {
+					document.getElementById("gowebcam").disabled = true;
+					document.getElementById("gowebcam").dataset.ready = "false";
+					document.getElementById("gowebcam").style.backgroundColor = "#DDDDDD";
+					document.getElementById("gowebcam").style.fontWeight = "normal";
+					document.getElementById("gowebcam").innerHTML = "Waiting for Camera to load";
+					miniTranslate(document.getElementById("gowebcam"), "waiting-for-camera-to-load");
 				}
 				warnlog("video source changed");
 
@@ -12521,14 +12716,14 @@ function setupWebcamSelection(stream = null) {
 			}
 
 			getById("webcamquality").onchange = function() {
-				var gowebcam = getById("gowebcam");
-				if (gowebcam) {
-					gowebcam.disabled = true;
-					gowebcam.dataset.ready = "true";
-					gowebcam.style.backgroundColor = "#DDDDDD";
-					gowebcam.style.fontWeight = "normal";
-					gowebcam.innerHTML = "Waiting for Camera to load";
-					miniTranslate(gowebcam, "waiting-for-camera-to-load");
+				
+				if (document.getElementById("gowebcam")) {
+					document.getElementById("gowebcam").disabled = true;
+					document.getElementById("gowebcam").dataset.ready = "false";
+					document.getElementById("gowebcam").style.backgroundColor = "#DDDDDD";
+					document.getElementById("gowebcam").style.fontWeight = "normal";
+					document.getElementById("gowebcam").innerHTML = "Waiting for Camera to load";
+					miniTranslate(document.getElementById("gowebcam"), "waiting-for-camera-to-load");
 				}
 
 				if (parseInt(getById("webcamquality").elements.namedItem("resolution").value) == 2) {
@@ -12546,10 +12741,12 @@ function setupWebcamSelection(stream = null) {
 				grabVideo(session.quality_wb);
 			};
 
-			if (session.audioDevice!==0) { // change from Auto to Selected Audio Device
+			if (session.audioDevice!==0){ // change from Auto to Selected Audio Device
 				log("SETTING AUDIO DEVICE!!");
 				activatedPreview = false; 
 				grabAudio();
+			} else if (document.getElementById("gowebcam")){
+				document.getElementById("gowebcam").dataset.audioready = "true";
 			}
 
 			if (session.videoDevice === 0) {
@@ -12557,12 +12754,13 @@ function setupWebcamSelection(stream = null) {
 					publishWebcam(); // no need to mirror as there is no video...
 					return;
 				} else {
-					var gowebcam = getById("gowebcam");
-					if (gowebcam) {
-						gowebcam.disabled = false;
-						gowebcam.dataset.ready = "true";
-						gowebcam.innerHTML = "START";
-						miniTranslate(gowebcam, "start");
+					if (document.getElementById("gowebcam")) {
+						document.getElementById("gowebcam").dataset.ready = "true";
+						if (document.getElementById("gowebcam").dataset.audioready == "true"){
+							document.getElementById("gowebcam").disabled = false;
+							document.getElementById("gowebcam").innerHTML = "START";
+							miniTranslate(document.getElementById("gowebcam"), "start");
+						}
 					}
 					return;
 				}
@@ -12745,9 +12943,9 @@ function createIframePopup() {
 		return;
 	}
 	
-	if (session.queue || session.transferred){
-		getById("screenshare2button").classList.add("advanced");
-		getById("screensharebutton").classList.remove("advanced");
+	if ((session.queue && !session.transferred) || (session.screenShareState && !session.queue && session.transferred)){ // if (session.queue || session.transferred){
+		//getById("screenshare2button").classList.add("advanced");
+		//getById("screensharebutton").classList.remove("advanced");
 		toggleScreenShare();
 		return;
 	} // can't secondary-screen share if in a queue.
@@ -12878,14 +13076,13 @@ function previewWebcam() {
 			publishWebcam(); // no need to mirror as there is no video...
 			return;
 		} else {
-			var gowebcam = document.getElementById("gowebcam");
 			getById("getPermissions").style.display = "none";
-			if (gowebcam) {
-				gowebcam.style.display = "";
-				gowebcam.disabled = false;
-				gowebcam.dataset.ready = "true";
-				gowebcam.innerHTML = "START";
-				miniTranslate(gowebcam, "start");
+			if (document.getElementById("gowebcam")) {
+				document.getElementById("gowebcam").dataset.ready = "true";
+				document.getElementById("gowebcam").dataset.audioready = "true";
+				document.getElementById("gowebcam").disabled = false;
+				document.getElementById("gowebcam").innerHTML = "START";
+				miniTranslate(document.getElementById("gowebcam"), "start");
 			}
 		}
 		return;

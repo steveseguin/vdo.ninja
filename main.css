@@ -159,6 +159,11 @@ button.grey {
 	background-color: #840000 !important;
 }
 
+.red2 {
+	background-color: #840000 !important;
+}
+
+
 .orange {
 	background-color: #673100 !important;
 }
@@ -1460,6 +1465,7 @@ img {
 	margin: auto auto !important;
 	position: relative !important;
 	top: 50% !important;
+	background-color: #FFF1 !important;
 }
 #calendarButton {
 	cursor: pointer;
@@ -1606,6 +1612,26 @@ img {
 
 .raisedHand{
 	background-color: #DD1A !important;
+}
+
+.flip {
+  animation: flip180 2s;
+  animation-iteration-count: 1;
+}
+
+@keyframes flip180 {
+  0% {transform: rotate(0);}
+  100% {transform: rotate(180deg);}
+}
+
+.flip2 {
+  animation: flip1802 2s;
+  animation-iteration-count: 1;
+}
+
+@keyframes flip1802 {
+  0% {transform: rotate(180deg)}
+  100% {transform: rotate(360deg);}
 }
 
 @-webkit-keyframes animatetop {
@@ -2830,6 +2856,7 @@ input:checked + .slider:before {
 }
 
 #SafariWarning{
+	max-width:100%;
 	display:none;
 	width: 450px;
 	border-left: 4px solid #eff150;
