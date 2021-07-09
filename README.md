@@ -1,10 +1,9 @@
 
 #### ⚠ Notice! We've started our rebranding from OBS.Ninja to VDO.Ninja 🎈 -- nothing else will be changing. ✨
 
+<img src="https://user-images.githubusercontent.com/2575698/124821455-bbfec580-df3c-11eb-9641-3d036cdd6c41.png" data-canonical-src="https://user-images.githubusercontent.com/2575698/124821455-bbfec580-df3c-11eb-9641-3d036cdd6c41.png" width="200"  />
 
-<img src="media/obsNinja_logo_full.png" alt="Logo by brimace" height="150" />
-
-## What is ~~OBS NINJA~~ **VDO NINJA**
+## What is **VDO NINJA**
 VDO.Ninja uses peer-to-peer technology to bring remote cameras into OBS or other studio software. 
 
 In most cases, all video data is transferred directly from peer to peer, without needing to go through any video server. This results in high-quality video with super low latency. In a small number of cases, video data may go through an encrypted TURN server, which is used to facilitate peer connections when otherwise not possible.
@@ -81,3 +80,6 @@ Ideas, feedback, bugs, etc -- all welcomed.  I'm dumping many of my ideas as iss
 
 ## Licence 
 VDO.Ninja is available as 'mostly' open-source; please see the LICENCE.md file for details.
+
+## Credit
+Thank you to everyone who has helped support this project so far. From the moderators, volunteers helping with support, those contributing media assets, the project sponsors, those reporting issues, those offering feedback, and any code submissions. 
