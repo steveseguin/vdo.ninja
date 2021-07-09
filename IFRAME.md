@@ -1,3 +1,7 @@
+This documentation has formally moved to: https://docs.vdo.ninja/guides/iframe-api-documentation
+
+The documentation below is considered now considered depreciated and out-of-date.
+
 ## VDO.Ninja - iFrame API documentation
 
 VDO.Ninja (VDON) is offers here a simple and free solution to quickly enable real-time video streaming in their websites. VDON wishes to make live video streaming development accessible to any developer, even novices, yet still remain flexible and powerful.
