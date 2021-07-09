@@ -1,6 +1,11 @@
+***
 This documentation has formally moved to: https://docs.vdo.ninja/guides/iframe-api-documentation
-
+***
 The documentation below is considered now considered depreciated and out-of-date.
+
+
+
+
 
 ## VDO.Ninja - iFrame API documentation
 
