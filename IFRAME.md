@@ -7,7 +7,7 @@ The documentation below is now considered depreciated and out-of-date.
 
 
 
-## VDO.Ninja - iFrame API documentation (depreciated)
+## VDO.Ninja - iFrame API documentation (depreciated; see above)
 
 VDO.Ninja (VDON) is offers here a simple and free solution to quickly enable real-time video streaming in their websites. VDON wishes to make live video streaming development accessible to any developer, even novices, yet still remain flexible and powerful.
 
