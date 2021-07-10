@@ -7910,11 +7910,11 @@ async function getAudioOnly(selector, trackid = null, override = false) {
 		}
 		constraint.video = false;
 		if (override !== false) {
-			try {
-				if (override.audio && override.audio.deviceId && override.audio.deviceId.exact && override.audio.deviceId.exact == audioList[i].value) {
+			//try {
+			//	if (override.audio && override.audio.deviceId && override.audio.deviceId.exact && override.audio.deviceId.exact == audioList[i].value) {
 					constraint = override;
-				}
-			} catch (e) {}
+			//	}
+			//} catch (e) {}
 		}
 
 		if (session.audioInputChannels) {
@@ -11118,8 +11118,6 @@ function loadIframe(iframesrc) { // this is pretty important if you want to avoi
 	} else if (iframesrc.startsWith("https://player.twitch.tv/")){
 		iframe.style.border = "0";
 	} else if (iframesrc.startsWith("https://twitch.tv/")){
-		iframe.style.border = "0";
-	} else if (iframesrc.startsWith("https://www.twitch.tv/")){
 		iframe.style.border = "0";
 	} else if (iframesrc.startsWith("https://meshcast.io/")){
 		iframe.style.border = "0";
