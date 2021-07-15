@@ -95,9 +95,9 @@ My suggestion? Limit changes to images and perhaps the translation files (maybe 
 
 For those looking to deploy a completely Internet-free option, you'll need to deploy your own STUN services and a handshake server.
 
-There is an experimental option that lets advanced users use a basic/generic websocket service as a personal handshake server; useful for air-gapped private deployments of the service.  A simple socket server has been developed that can be used as a personal handshake server. Documentation with installation instructions included here: https://github.com/steveseguin/websocket_server
+There is an experimental handshake server option that lets advanced users use a basic/generic websocket service as a personal handshake server; useful for air-gapped private deployments of the service.  A simple socket server has been developed that can be used as a personal handshake server. Documentation with installation instructions are included here: https://github.com/steveseguin/websocket_server
 
-Support for piesocket.com has also been added as a third-party handshake-server service option. If using piesocket, you can just do &pie=APKKEY to use that service, without deploying any code or servers yourself. The free tier is quite generous and I have no affiliation with them.
+Support for piesocket.com has also been added as a third-party handshake-server service option, which demonstrates and offers a cheap alternative to a managed hosted alternative of the official handshake service. If using piesocket, you can just do &pie=APKKEY to use that service, without deploying any code or servers yourself. The free tier is quite generous and I have no affiliation with them.
 
 Details on how to deploy your own private STUN server can be Googled online; it's rather out of the scope of this guide's goals.
 
