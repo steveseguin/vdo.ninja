@@ -93,13 +93,17 @@ A newly deployed code deployment should work without any changes to the index.ht
 
 My suggestion? Limit changes to images and perhaps the translation files (maybe add a new one); these are good starting points. If making changes to the main.css style sheet or index.html file, you should be mostly okay too, since these files are designed to be changed; I try to keep that in mind when updating the code at least. Making changes to other files though is strongly not recommend and in some cases discouraged. If you find a bug or need to make a change to other files, it might be best to make a Pull Request with the desired changes and hope it gets adopted into the main codebase.
 
-For those looking to deploy a completely Internet-free option, you'll need to deploy your own STUN services and a handshake server.
+### Internet-free deployments
 
-Details on how to deploy your own private STUN server can be Googled online; it's rather out of the scope of this guide's goals though. Same goes with private SSL certificates and any DNS secure context issues that may arise. VDO.Ninja relies on SSL for security, but this restrictions can be disabled via the Chrome browser's command-line.
+For those looking to deploy a completely Internet-free or fully-isolated option, you'll need to deploy your own STUN services and a handshake server as well.
 
-There is an experimental handshake server option that lets advanced users use a basic/generic websocket service as a personal handshake server; useful for air-gapped private deployments of the service.  A simple socket server has been developed that can be used as a personal handshake server. Documentation with installation instructions are included here: https://github.com/steveseguin/websocket_server
+Details on how to deploy your own private STUN server can be Googled online; it's rather out of the scope of this guide's goals though.  As of this writing, VDO.Ninja uses Google's public STUN servers, but most TURN-servers offers STUN server functionality as well; just takes some added configuration. 
 
-Support for piesocket.com has also been added as a third-party handshake-server service option, which demonstrates and offers a cheap alternative to a managed hosted alternative of the official handshake service. If using piesocket, you can just do &pie=APKKEY to use that service, without deploying any code or servers yourself. The free tier is quite generous and I have no affiliation with them.
+Internet-free deployments will also need to deal with private SSL certificates and any DNS secure context issues that may arise. VDO.Ninja relies on SSL for security, but if you can't figure out how to do private SSL issuance, these SSL restrictions can be disabled via the Chrome browser's command-line. VDO.Ninja may complain about the lack of security if you take this approach though.
+
+Finally, there is an experimental handshake server option that lets advanced users use a basic/generic websocket service as a personal handshake server; useful for air-gapped private deployments of the service.  A simple socket server has been developed that can be used as a personal handshake server. Documentation with installation instructions are included here: https://github.com/steveseguin/websocket_server
+
+Just on a side note, support for piesocket.com has also been added as a third-party handshake-server service option, which demonstrates and offers a cheap alternative to a managed hosted alternative of the official handshake service. If using piesocket, you can just do &pie=APKKEY to use that service, without deploying any code or servers yourself. The free tier is quite generous and I have no affiliation with them, but you'll need the Internet to make use of their service.
 
 Regards,
 Steve
