@@ -1,4 +1,4 @@
-Deploying this code. A guide.  (INITIAL DRAFT VERSION)
+Deploying this code. A guide. 
 
 ### PREFACE
 
