@@ -34,12 +34,29 @@ sudo ufw allow 443/udp # The HTTPS UDP port
 sudo ufw allow 49152:65535/tcp
 sudo ufw allow 49152:65535/udp
 ```
-If we expect heavy usage of this server, like hundreds of connections, you might want to ensure your system supports enough open sockets. I'm not sure if this actually works or is needed, but you can see this article for example on how to increase the number of available sockets on Ubuntu: https://medium.com/@muhammadtriwibowo/set-permanently-ulimit-n-open-files-in-ubuntu-4d61064429a  
+If we expect heavy usage of this server, like hundreds of connections, you might want to ensure your system supports enough open sockets. I'm not sure if this actually works or is needed, but you can see this article for example on how to increase the number of available sockets on Ubuntu: https://medium.com/@muhammadtriwibowo/set-permanently-ulimit-n-open-files-in-ubuntu-4d61064429a 
+
+If you do want to increase the connection limit, for larger systems, it's as follows:
+```
+ulimit -n 65535
+sudo vim /etc/sysctl.conf
+```
+Add the following line to the file anywhere (with vim, press i to insert new text and :wq to save and exit)
+```
+fs.file-max = 65535
+```
+Once saved, you can apply the changes
+```
+sudo sysctl -p
+```
+And that should have set the connection limit to be higher now.
 
 Next, update turnserver.conf with passwords, domain names, and whatever else that needs changing.  Example contents are provided below.  Once you have updated it, start the TURN server and ensure it started correctly.  At the bottom of this page is a sample conf file; I personally use `turnserver3.conf`, which is hosted in the main repo, for quick TURN deployments.
+
 ```
 sudo vi /etc/turnserver.conf
 ```
+Tip: For those doing their own LAN-deployment, you might want to add STUN-support to the TURN server while at it. Refer to the co-turn documentation for help there though.
 
 Next, once we have all the settings and configs setup, we can enable the system service for co-turn to auto-start on boot.
 
