@@ -55,7 +55,7 @@
 			}
 		</style>
 		<link rel="stylesheet" href="./lineawesome/css/line-awesome.min.css" />
-		<link rel="stylesheet" href="./main.css?ver=69" />
+		<link rel="stylesheet" href="./main.css?ver=70" />
 		<script type="text/javascript" crossorigin="anonymous" src="./thirdparty/adapter.min.js"></script>
 		<style id="lightbox-animations" type="text/css"></style>
 	</head>
@@ -68,7 +68,7 @@
 			<link itemprop="url" href="./media/obsNinja_logo_full.png" />
 		</span>
 		<script  type="text/javascript" crossorigin="anonymous"  src="./thirdparty/CodecsHandler.js?ver=33"></script>
-		<script  type="text/javascript" crossorigin="anonymous" src="./webrtc.js?ver=214"></script>
+		<script  type="text/javascript" crossorigin="anonymous" src="./webrtc.js?ver=215"></script>
 		<input id="zoomSlider" type="range" style="display: none;" />
 		<div id="header">
 			
@@ -118,6 +118,12 @@
 					<i id="queuetoggle" class="toggleSize las la-stream my-float"></i>
 					<div id="queueNotification"></div>
 				</div>
+				
+				<div id="sharefilebutton" title="Transfer any file to the group" alt="Transfer any file to the group" onmousedown="event.preventDefault(); event.stopPropagation();"  onclick="toggleFileshare()"  tabindex="16" role="button" aria-pressed="false" onkeyup="enterPressedClick(event,this);"  class="float" style="cursor: pointer;" >
+					<i id="filesharetoggle" class="toggleSize las la-file-upload my-float"></i> 
+					<div id="transferNotification"></div>
+				</div>
+				
 				<div id="chatbutton" title="Toggle the Chat" alt="Toggle the Chat" onmousedown="event.preventDefault(); event.stopPropagation();"  onclick="toggleChat()"  tabindex="16" role="button" aria-pressed="false" onkeyup="enterPressedClick(event,this);"  class="advanced float" style="cursor: pointer;" >
 					<i id="chattoggle" class="toggleSize las la-comment-alt my-float"></i>
 					<div id="chatNotification"></div>
@@ -647,6 +653,9 @@
 						<h1>File Sharing seems to be broken on Chrome v88.</h1>
 						<p>Try <a href="https://github.com/aws/amazon-chime-sdk-js/issues/1031">turning off hardware-accleration</a> in Chrome/Edge to fix the issue, or maybe use a different browser.</p>
 					</div>
+					<br /><br />
+					To host a file for download, rather than for streaming, try the following instead: 
+					<input id="fileselector2" onchange="session.hostFile(this,event);" type="file" title="Transfer any file"/>
 				</div>
 				
 				<div class="outer close">
@@ -731,7 +740,7 @@
 								👋 👀  Welcome to VDO Ninja! We've rebranded! 📼  Nothing else is changing and we're staying 100% free.
 							</h4>
 							<br />
-							🌻 Site Updated on July 8th. The <a href="https://docs.vdo.ninja/release-notes/v18_3">v18.3 release notes are here</a>. If new issues occur, the previous version can also be <a href="https://vdo.ninja/v18/">found here</a>.
+							🌻 Site Updated on July XXth. The <a href="https://docs.vdo.ninja/release-notes/v18_3">v18.3 release notes are here</a>. If new issues occur, the previous version can also be <a href="https://vdo.ninja/v18/">found here</a>.
 
 							<br />
 							<br />
@@ -863,7 +872,7 @@
 						  <input type="checkbox" data-param="&sticky" onchange="updateLink(1,this);">
 						  <span class="slider"></span>
 						</label>
-						<span data-translate="remote-monitoring">Invite saved to cookie</span>
+						<span data-translate="invite-saved-to-cookie">Invite saved to cookie</span>
 						<Br />
 						
 						<label class="switch" title="Guest will be prompted to enter a Display Name">
@@ -1134,7 +1143,7 @@
 				<h4 style='color:#CCC;margin:20px 20px 0 20px;' data-translate='more-than-four-can-join' >These four guest slots are just for demonstration. More than four guests can actually join a room.</h4>
 			</div></div>
 		</div>
-		
+		<div id="overlayClockContainer" data-initial="600" class="advanced"><span id="overlayClock"></span></div>
 		<div id="overlayMsgs" onclick="function(e){e.target.innerHTML = '';}" style="display:none"></div>
 		<div id="bigPlayButton" onclick="function(e){e.target.innerHTML = '';}" style="display:none"></div>
 		<div id="controls_blank" style="display: none;">
@@ -1169,7 +1178,7 @@
 				</button>
 				
 				<!----	  /////// BREAK ////////			-->
-				<hr /><span style="user-select: none;grid-column: 1;width:100%;margin:5px 0 ;font-size:80%; cursor: pointer;" onclick="toggleByDataset('1');getById('chevarrow3').classList.toggle('bottom');getById('chevarrow3').classList.toggle('right');"><i id="chevarrow3" style="padding:0px 7px 0 3px;" class="chevron right" aria-hidden="true"></i><span data-translate="More-scene-options">More scene options</span></span>
+				<span style="user-select: none;grid-column: 1;width:100%;margin:5px 0 ;font-size:80%; cursor: pointer;" onclick="toggleByDataset('1');getById('chevarrow3').classList.toggle('bottom');getById('chevarrow3').classList.toggle('right');"><i id="chevarrow3" style="padding:0px 7px 0 3px;" class="chevron right" aria-hidden="true"></i><span data-translate="More-scene-options">More scene options</span></span>
 				
 				<button data-action-type="addToScene"  class="hidden" data-cluster="1" style="grid-column: 1;" data-scene="2" title="Add this Video to any remote '&scene=2'" onclick="directEnable(this, event, 2);">
 					<i class="las la-plus-square" style="color:#060"></i>
@@ -1215,7 +1224,7 @@
 				</button>
 				
 				<!----	  /////// BREAK ////////			-->
-				<hr /><span style="user-select: none;grid-column: 1;width:100%;margin:5px 0 ;font-size:80%;cursor: pointer;" onclick="toggleByDataset('2');getById('chevarrow4').classList.toggle('bottom');getById('chevarrow4').classList.toggle('right');"><i id="chevarrow4" class="chevron right" aria-hidden="true" style="padding:0px 7px 0 3px;" ></i><span data-translate="additional-controls">Additional controls</span></span>
+				<span style="user-select: none;grid-column: 1;width:100%;margin:5px 0 ;font-size:80%;cursor: pointer;" onclick="toggleByDataset('2');getById('chevarrow4').classList.toggle('bottom');getById('chevarrow4').classList.toggle('right');"><i id="chevarrow4" class="chevron right" aria-hidden="true" style="padding:0px 7px 0 3px;" ></i><span data-translate="additional-controls">Additional controls</span></span>
 				
 				
 				<button class="hidden" data-cluster="2" data-action-type="solo-video" style="grid-column: 1; text-shadow: 0px 0px yellow;" data-value="0" title="Solo this video everywhere" onclick="requestInfocus(this);">
@@ -1228,7 +1237,7 @@
 					<span data-translate="hide-guest" >hide guest</span>
 				</button>
 				
-				<button class="hidden" data-cluster="2" data-action-type="toggle-remote-speaker"	title="Toggle the remote guest's speaker output" onclick="remoteSpeakerMute(this, event);">
+				<button class="hidden" data-cluster="2" data-action-type="toggle-remote-speaker"title="Toggle the remote guest's speaker output" onclick="remoteSpeakerMute(this, event);">
 					<i class="las la-volume-off"></i> <span data-translate="toggle-remote-speaker">Deafen Guest</span>
 				</button>
 				
@@ -1259,6 +1268,8 @@
 					<span data-translate="change-params">URL Params</span>
 				</button>
 				
+				
+				
 				<button class="hidden" data-cluster="2"  data-action-type="recorder-local" title="Start Recording this remote stream to this local drive. *experimental*'" onclick="recordVideo(this, event)">
 					<i class="las la-circle"></i>
 					<span data-translate="record-local"> Record Local</span>
@@ -1266,6 +1277,16 @@
 				<button  class="hidden" data-cluster="2"  data-action-type="recorder-remote" data-value="0" title="The Remote Guest will record their local stream to their local drive. *experimental*" onclick="requestVideoRecord(this)">
 					<i class="las la-circle"></i>
 					<span data-translate="record-remote"> Record Remote</span>
+				</button>
+				
+				<button  class="hidden" data-cluster="2"  data-action-type="open-file-share" data-value="0" title="Allow the guest to select a file to upload to the director. Once shared, it will show in the chat as a download link." onclick="requestFileUpload(this)">
+					<i class="las la-file-upload"></i>
+					<span data-translate="request-upload"> Request File</span>
+				</button>
+				
+				<button class="hidden" data-cluster="2" data-action-type="create-timer" data-value="0" title="Set a countdown timer that this guest sees" onclick="directTimer(this, event);">
+					<i class="las la-clock"></i>
+					<span data-translate="create-timer">Create Timer</span>
 				</button>
 				
 				
@@ -1469,6 +1490,7 @@
 					
 				</span>
 				<button id="shareScreenGear" style="width: 135px; padding:20px;text-align:center;" onclick="grabScreen()"><b>Share Screen</b><br /><i style="padding:5px; font-size:300%;" class="las la-desktop"></i></button>
+				
 				<button id="pIpStartButton" style="width: 135px; background-color:#EFEFEF;padding:20px;text-align:center;display:none;"><b>Preview PiP VIdeo</b><br /><i style="padding:5px; font-size:300%;color:black;" class="las la-compress-arrows-alt"></i></button>
 				<br />
 				
@@ -1669,10 +1691,13 @@
 				window.location = window.location.href.replace("www.obs.ninja","obs.ninja"); // the session.salt is domain specific; let's consolidate www as a result.
 			} else if (window.location.hostname.indexOf("www.vdo.ninja") == 0) {
 				window.location = window.location.href.replace("www.vdo.ninja","vdo.ninja"); // the session.salt is domain specific; let's consolidate www as a result.
+			} else if (("isSecureContext" in window) && (window.isSecureContext===false)){
+				console.error("This site must be run in a secure context; please ensure all links, iframes, and parent windows are using SSL");
 			}
+
 		
 			var session = WebRTC.Media; // session is a required global variable if configuring manually. Run before loading main.js but after webrtc.js.
-			session.version = "18.3";
+			session.version = "18.4b";
 			session.streamID = session.generateStreamID(); // randomly generates a streamID for this session. You can set your own programmatically if needed
 			
 			session.defaultPassword = "someEncryptionKey123"; // Change this password if self-deploying for added security/privacy
@@ -1749,11 +1774,11 @@
 			// session.title // "zzzz"
 		</script>
 		<script type="text/javascript" crossorigin="anonymous" src="./thirdparty/aes.js"></script>
-		<script type="text/javascript" crossorigin="anonymous" id="lib-js" src="./lib.js?ver=12"></script>
+		<script type="text/javascript" crossorigin="anonymous" id="lib-js" src="./lib.js?ver=14"></script>
 		<!-- 
 		// If you wish to change branding, blank offers a good clean start.
 		<script type="text/javascript" id="main-js" src="./main.js" data-translation="blank"></script>
 	-->
-		<script type="text/javascript" crossorigin="anonymous" id="main-js" src="./main.js?ver=239"></script>
+		<script type="text/javascript" crossorigin="anonymous" id="main-js" src="./main.js?ver=237"></script>
 	</body>
 </html>

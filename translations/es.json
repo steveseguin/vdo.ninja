@@ -141,7 +141,10 @@
     "a-direct-solo-view-of-the-video-audio-stream-with-nothing-else-its-audio-can-be-remotely-controlled-from-here": "A direct solo view of the video/audio stream with nothing else. Its audio can be remotely controlled from here",
     "this-guest-raised-their-hand-click-this-to-clear-notification-": "This guest raised their hand. Click this to clear notification.",
     "increase-this-at-your-peril-changes-the-total-inbound-video-bitrate-per-guest-mobile-devices-excluded-webp-mode-also-excluded-": "Increase this at your peril. Changes the total inbound video bitrate per guest; mobile devices excluded. Webp-mode also excluded.",
-    "hide-this-window": "Hide this window"
+    "hide-this-window": "Hide this window",
+    "cycle-the-cameras": "Cycle the Cameras",
+    "have-screen-shares-stream-id-s-use-a-predictable-prefixed-value-instead-of-a-random-one-": "Have screen-shares stream ID's use a predictable prefixed value instead of a random one.",
+    "toggle-solo-voice-chat-or-hold-ctrl-cmd-when-selecting-to-make-it-two-way-private-": "Toggle solo voice chat or hold CTRL/CMD when selecting to make it two-way private."
   },
   "innerHTML": {
     "copy-this-url": "Copia esta URL como fuente \"Navegador\" de OBS",
@@ -282,7 +285,8 @@
     "add-to-outlook-calendar": "Añadir a Calendario Outlook",
     "add-to-yahoo-calendar": "Añadir a Calendario Yahoo",
     "push-to-talk-enable": " enable director`s microphone or video<br>(only guests can see this feed)",
-    "remote-monitoring": "Invite saved to cookie",
+    "remote-monitoring": "Remote Monitoring",
+	"invite-saved-to-cookie": "Invite saved to cookie",
     "fade-videos-in": "Fade videos in",
     "show-guest-tips": "Show guest setup tips",
     "green-background": "Green background",
@@ -297,7 +301,14 @@
     "unblind": "un-blind",
     "close": "close",
     "send-message": "send message<s pan=\"\"> </s>",
-    "record-director-local": " Record"
+    "record-director-local": " Record",
+    "logo-header": "\n\t\t\t\t\t<font id=\"qos\">V</font>DO.Ninja \n\t\t\t\t",
+    "only-director-can-hear-you": "Only the director can hear you currently.",
+    "director-muted-you": "The director has muted you.",
+    "application-audio-capture": "For application-specific audio capture, <a href=\"https://docs.vdo.ninja/audio\" style=\"color: #007AC8;\">see here</a>",
+    "animate-mixing": "Animate mixing",
+    "prefix-screenshare": "Prefix screenshare IDs",
+    "welcome-to-obs-ninja-chat": "\n\t\t\t\t\tWelcome to VDO.Ninja! You can send text messages directly to connected peers from here.\n\t\t\t\t"
   },
   "placeholders": {
     "join-by-room-name-here": "Unirse por Nombre de Sala aquí",

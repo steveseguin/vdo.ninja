@@ -168,6 +168,10 @@ button.grey {
 	background-color: #673100 !important;
 }
 
+.directorBlue {
+	background-color: #5c7785 !important;
+}
+
 button.red {
 	-webkit-app-region: no-drag;
 	padding: 10px;
@@ -245,7 +249,26 @@ button.white:active {
 	pointer-events: none;
 	font-weight: 700;
 }
-
+#overlayClockContainer{
+	margin: 0 auto;
+    background-color: #0000;
+    color: white;
+    font-family: Cousine, monospace;
+    font-size: calc(6vh + 6vw / 2);
+    letter-spacing: 0.0em;
+    text-shadow: 0.05em 0.05em 0px rgb(0 0 0);
+    width: 100%;
+    z-index: 6;
+    vertical-align: top;
+    text-align: center;
+    position: fixed;
+    overflow-wrap: anywhere;
+    pointer-events: none;
+}
+#overlayClock{
+	padding:2px 20px;
+	background-color: #0009;
+}
 #overlayMsgs{
 	margin:0 auto;
 	background-color: #0000;
@@ -467,7 +490,11 @@ hr {
 	background: #999999;
 	width: 90%;
 }
-
+#activeShares>div{
+	font-weight: normal;
+    font-size: 12px;
+	margin: 10px 0 0 0;
+}
 .puslate {
 	border-radius: 50%;
 	box-shadow: 0 0 0 0 rgba(14, 19, 26, 1);

@@ -147,7 +147,10 @@
     "show-labels": "Show labels",
     "transfer-to-a-new-room": "Transfer to a new Room",
     "enable-custom-password": "Enable custom password",
-    "hide-this-window": "Hide this window"
+    "hide-this-window": "Hide this window",
+    "cycle-the-cameras": "Cycle the Cameras",
+    "have-screen-shares-stream-id-s-use-a-predictable-prefixed-value-instead-of-a-random-one-": "Have screen-shares stream ID's use a predictable prefixed value instead of a random one.",
+    "toggle-solo-voice-chat-or-hold-ctrl-cmd-when-selecting-to-make-it-two-way-private-": "Toggle solo voice chat or hold CTRL/CMD when selecting to make it two-way private."
   },
   "innerHTML": {
     "logo-header": "\n\t\t\t\t\t<font id=\"qos\">O</font>BS.Ninja \n\t\t\t\t",
@@ -242,7 +245,8 @@
     "auto-add-guests": "Auto-add guests",
     "pro-audio-mode": "Pro-audio mode",
     "hide-audio-only-sources": "Hide audio-only sources",
-    "remote-monitoring": "Invite saved to cookie",
+    "remote-monitoring": "Remote Monitoring",
+	"invite-saved-to-cookie": "Invite saved to cookie",
     "ask-for-display-name": "Ask for display name",
     "show-display-names": "Show display names",
     "show-active-speaker": "Show active speakers",
@@ -304,7 +308,15 @@
     "add-to-calendar": "Add details to your Calendar:",
     "add-to-google-calendar": "Add to Google Calendar",
     "add-to-outlook-calendar": "Add to Outlook Calendar",
-    "add-to-yahoo-calendar": "Add to Yahoo Calendar"
+    "add-to-yahoo-calendar": "Add to Yahoo Calendar",
+    "only-director-can-hear-you": "Only the director can hear you currently.",
+    "director-muted-you": "The director has muted you.",
+    "use-chrome-instead": "Consider using a Chromium-based browser instead.<br>\n \t\t\t\t\t\tSafari is more prone to having audio issues",
+    "application-audio-capture": "For application-specific audio capture, <a href=\"https://docs.vdo.ninja/audio\" style=\"color: #007AC8;\">see here</a>",
+    "select-the-video-files-to-share": "SELECT THE VIDEO FILES TO SHARE",
+    "enter-the-website-URL-you-wish-to-share": "Enter the URL website you wish to share.",
+    "animate-mixing": "Animate mixing",
+    "prefix-screenshare": "Prefix screenshare IDs"
   },
   "placeholders": {
     "join-by-room-name-here": "приєднано до кімнати тут ",

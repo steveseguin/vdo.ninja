@@ -36,7 +36,7 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 		try {
 			log("Lang Template: " + ln_template);
 			changeLg(ln_template);
-			getById("mainmenu").style.opacity = 1;
+			//getById("mainmenu").style.opacity = 1;
 		} catch (error) {
 			errorlog(error);
 			getById("mainmenu").style.opacity = 1;
@@ -54,7 +54,7 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 				getById("helpbutton").style.opacity = 0;
 				getById("reportbutton").style.display = "none";
 				getById("reportbutton").style.opacity = 0;
-				getById("mainmenu").style.opacity = 1;
+				//getById("mainmenu").style.opacity = 1;
 				getById("mainmenu").style.margin = "30px 0";
 				getById("translateButton").style.display = "none";
 				getById("translateButton").style.opacity = 0;
@@ -65,7 +65,7 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 		}
 		try {
 			changeLg("blank");
-			getById("mainmenu").style.opacity = 1;
+			//getById("mainmenu").style.opacity = 1;
 			if (session.label === false) {
 				document.title = location.hostname;
 			}
@@ -78,8 +78,8 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 			getById("qos").style.fontSize = "70%";
 			getById("logoname").style.display = "none";
 			getById("logoname").style.margin = "0 0 0 5px";
-			
 		} catch (error) {
+			getById("mainmenu").style.opacity = 1;
 			errorlog(error);
 		}
 	} else { // check if automatic language translation is available
@@ -534,7 +534,7 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 		session.password = urlParams.get('password') || urlParams.get('pass') || urlParams.get('pw') || urlParams.get('p');
 		if (!session.password) {
 			window.focus();
-			session.password = await promptAlt(miscTranslations["enter-password"], true);
+			session.password = await promptAlt(miscTranslations["enter-password"], true, true);
 		} else if (session.password === "false") {
 			session.password = false;
 			session.defaultPassword = false;
@@ -553,6 +553,7 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 		session.defaultPassword = false;
 		getById("addPasswordBasic").style.display = "none";
 	}
+	
 
 
 	if (urlParams.has('hash') || urlParams.has('crc') || urlParams.has('check')) { // could be brute forced in theory, so not as safe as just not using a hash check.
@@ -560,13 +561,13 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 		var hash_input = urlParams.get('hash') || urlParams.get('crc') || urlParams.get('check');
 		if (session.password === false) {
 			window.focus();
-			session.password = await promptAlt(miscTranslations["enter-password-2"], true);
+			session.password = await promptAlt(miscTranslations["enter-password-2"], true, true);
 			session.password = sanitizePassword(session.password);
 			getById("passwordRoom").value = session.password;
 			session.defaultPassword = false;
 		}
 
-		session.generateHash(session.password + session.salt, 6).then(function(hash) { // million to one error. 
+		generateHash(session.password + session.salt, 6).then(function(hash) { // million to one error. 
 			log("hash is " + hash);
 			if (hash.substring(0, 4) !== hash_input) { // hash crc checks are just first 4 characters.
 				session.taintedSession = true;
@@ -811,6 +812,16 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 	}
 	if (urlParams.has('outboundvideobitrate') || urlParams.has('ovb')) {
 		session.outboundVideoBitrate = parseInt(urlParams.get('outboundvideobitrate')) || parseInt(urlParams.get('ovb')) || false;
+	}
+	
+	if (urlParams.has('nofileshare') || urlParams.has('nodownloads') || urlParams.has('nofiles')){
+		session.hostedFiles = false;
+		session.nodownloads = true;
+		getById('sharefilebutton').style.display = "none";
+		getById('sharefilebutton').classList.add("advanced");
+	} else if (session.mobile){
+		getById('sharefilebutton').style.display = "none";
+		getById('sharefilebutton').classList.add("advanced");
 	}
 
 	if (urlParams.has('webp')){
@@ -1261,7 +1272,7 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 		session.forceios = true;
 	}
 
-	if (urlParams.has('nocursor')) {
+	if (urlParams.has('nocursor')) { // on the screen, not in screen share
 		session.nocursor = true;
 		log("DISABLE CURSOR");
 		var styletmp = document.createElement('style');
@@ -1276,6 +1287,10 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 		`;
 		document.head.appendChild(styletmp);
 		
+	}
+	
+	if (urlParams.has('cursor') || urlParams.has('screensharecursor')) {
+		session.screensharecursor = true;
 	}
 
 	if (urlParams.has('vbr')) {
@@ -1363,11 +1378,14 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 	if (urlParams.has('beep') || urlParams.has('notify') || urlParams.has('tone')) {
 		session.beepToNotify = true;
 	}
-
 	if (urlParams.has('r2d2')) {
 		getById("testtone").innerHTML = "";
 		getById("testtone").src = "./media/robot.mp3";
 		session.beepToNotify = true;
+	}
+	
+	if (urlParams.has('easyexit') || urlParams.has('ee')) {
+		session.noExitPrompt = true;
 	}
 
 	if (urlParams.has('videobitrate') || urlParams.has('bitrate') || urlParams.has('vb')) {
@@ -1769,6 +1787,39 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 			session.speedtest = urlParams.get('speedtest').toLowerCase();
 		}
 	}
+	
+	var iceServers = [{ urls: ["stun:stun.l.google.com:19302", "stun:stun4.l.google.com:19302"]}]; // google stun servers.
+	
+	if (urlParams.has('stun')) {
+		var stunstring = urlParams.get('stun');
+		stunstring = stunstring.split(";");
+		if (stunstring !== "false") { // false disables the TURN server. Useful for debuggin
+			var stun = {};
+			if (stunstring.length==3){
+				stun.username = stunstring[0]; // myusername
+				stun.credential = stunstring[1]; //mypassword
+				stun.urls = [stunstring[2]]; //  ["turn:turn.obs.ninja:443"];
+			} else if (stunstring.length==1){
+				stun.urls = [stunstring[0]];
+			}
+			iceServers = [stun];
+		} else {
+			iceServers = [];
+		}
+	}
+	if (urlParams.has('addstun')) {
+		var stunstring = urlParams.get('addstun');
+		stunstring = stunstring.split(";");
+		var stun = {};
+		if (stunstring.length==3){
+			stun.username = stunstring[0]; // myusername
+			stun.credential = stunstring[1]; //mypassword
+			stun.urls = [stunstring[2]]; //  ["turn:turn.obs.ninja:443"];
+		} else if (stunstring.length==1){
+			stun.urls = [stunstring[0]];
+		}
+		iceServers = iceServers.concat(stun);
+	} 
 
 	if (urlParams.has('turn')) {
 		var turnstring = urlParams.get('turn');
@@ -1818,9 +1869,7 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 			};
 		} else if ((turnstring == "false") || (turnstring == "off") || (turnstring == "0")) { // disable TURN servers
 			session.configuration = {
-				iceServers: [
-					{ urls: ["stun:stun.l.google.com:19302", "stun:stun4.l.google.com:19302"]} // more than 4 stun+turn servers will cause firefox issues? (2 + 2 for now then)
-				],
+				iceServers: iceServers,
 				sdpSemantics: 'unified-plan' // future-proofing
 			};
 		} else {
@@ -1829,14 +1878,15 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 				turnstring = turnstring.split(";");
 				if (turnstring !== "false") { // false disables the TURN server. Useful for debuggin
 					var turn = {};
-					turn.username = turnstring[0]; // myusername
-					turn.credential = turnstring[1]; //mypassword
-					turn.urls = [turnstring[2]]; //  ["turn:turn.obs.ninja:443"];
-					
+					if (turnstring.length==3){
+						turn.username = turnstring[0]; // myusername
+						turn.credential = turnstring[1]; //mypassword
+						turn.urls = [turnstring[2]]; //  ["turn:turn.obs.ninja:443"];
+					} else if (turnstring.length==1){
+						turn.urls = [turnstring[0]];
+					}
 					session.configuration = {
-						iceServers: [
-							{ urls: ["stun:stun.l.google.com:19302", "stun:stun4.l.google.com:19302"]} // more than 4 stun+turn servers will cause firefox issues? (2 + 2 for now then)
-						],
+						iceServers: iceServers,
 						sdpSemantics: 'unified-plan' // future-proofing
 					};
 					
@@ -1850,7 +1900,7 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 			}
 		}
 	} else {
-		chooseBestTURN(); // vdo.ninja turn servers, if needed.
+		chooseBestTURN(iceServers); // vdo.ninja turn servers, if needed.
 	}
 
 
@@ -2106,6 +2156,24 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 			var director_room_input = urlParams.get('director') || urlParams.get('dir');
 			director_room_input = sanitizeRoomName(director_room_input);
 			log("director_room_input:" + director_room_input);
+			
+			if (urlParams.has('codirector') || urlParams.has('directorpassword') || urlParams.has('dirpass') || urlParams.has('dp')) {
+				session.directorPassword = urlParams.get('codirector') || urlParams.get('directorpassword') || urlParams.get('dirpass') || urlParams.get('dp');
+				if (!session.directorPassword) {
+					window.focus();
+					session.directorPassword = await promptAlt(miscTranslations["enter-director-password"], true);
+				}
+				if (session.directorPassword){
+					await generateHash(session.directorPassword + session.salt + "abc123", 12).then(function(hash) { // million to one error. 
+						log("dir room hash is " + hash);
+						session.directorHash = hash;
+						return;
+					});
+				} else {
+					session.directorPassword = false;
+				}
+			}
+			
 			createRoom(director_room_input);
 		}
 		if (session.chatbutton === true) {
@@ -3026,6 +3094,7 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 
 	window.onload = function winonLoad() { // This just keeps people from killing the live stream accidentally. Also give me a headsup that the stream is ending
 		window.addEventListener("beforeunload", function(e) {
+			
 			try {
 				session.ws.close();
 				if (session.videoElement.recording) {
@@ -3041,9 +3110,14 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 					}
 				}
 			} catch (e) {}
-			//setTimeout(function(){session.hangup();},0);
-			return undefined; // ADDED OCT 29th; get rid of popup. Just close the socket connection if the user is refreshing the page.  It's one or the other.
-
+			
+			if (!session.noExitPrompt && !session.cleanOutput && (session.permaid!==false || session.director)){
+				(e || window.event).returnValue = "Are you sure you want to exit?"; //Gecko + IE
+				return "Are you sure you want to exit?";   
+			} else {
+				//setTimeout(function(){session.hangup();},0);
+				return undefined; // ADDED OCT 29th; get rid of popup. Just close the socket connection if the user is refreshing the page.  It's one or the other.
+			}
 		});
 	};
 
