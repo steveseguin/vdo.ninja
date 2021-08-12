@@ -51,7 +51,7 @@ sudo sysctl -p
 ```
 And that should have set the connection limit to be higher now.
 
-Next, update turnserver.conf with passwords, domain names, and whatever else that needs changing.  Example contents are provided below.  Once you have updated it, start the TURN server and ensure it started correctly.  At the bottom of this page is a sample conf file; I personally use `turnserver3.conf`, which is hosted in the main repo, for quick TURN deployments.
+Next, update turnserver.conf with passwords, domain names, and whatever else that needs changing.  Example contents are provided below.  Once you have updated it, start the TURN server and ensure it started correctly.  At the bottom of this page is a sample conf file; I personally use `turnserver3.conf` (https://github.com/steveseguin/vdo.ninja/blob/master/turnserver3.conf), which is hosted in the main repo, for quick TURN deployments.
 
 ```
 sudo vi /etc/turnserver.conf
