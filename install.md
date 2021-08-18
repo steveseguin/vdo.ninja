@@ -10,13 +10,10 @@ There may be misconceptions that deploying the website code will make the servic
 
 For those looking for a brand-free experience already with a different domain name, I offer https://rtc.ninja, and as well as other alternate domain names, such as:
 
-- https://chromicam.com
 - https://invite.cam (via URL obfuscation option)
 - https://ltt.ninja
 - https://rtc.ninja
 - https://vmix.ninja
-- https://webrtc.party
-- https://callin.ninja
 - https://auxiliary.live (backup hosted)
 - https://backup.vdo.ninja (fully backup hosted)
 
