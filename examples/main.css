@@ -1,17 +1,16 @@
 :root {
-	--background-color: #141926;
-	--container-color: #373737;
-	--button-color: #2A2A2A;
+	--background-color: #551926;
+	--container-color: #376737;
+	--button-color: #2A212A;
 	--blue-accent: #4a4c63;
-	--red-accent: #553737;
+	--red-accent: #553707;
 	--green-accent: #3f4f50;
-	--olive-accent: #535D32;
+	--olive-accent: #535Df2;
 	--regular-margin: 10px;
 	--director-margin: 15px 20px 0 0;
 	--fit-style: contain;
 	--fadein-speed: 0;
 	--video-margin: 0px;
-	--video-rounded: 0px;
 }
 
 * {
@@ -28,15 +27,6 @@ table {
 	margin:10px;
 }
 
-.hideDropMenu{
-	user-select: none;
-	grid-column: 1;
-	width:100%;
-	margin:5px 0;
-	font-size:80%; 
-	cursor: pointer;
-}
-	
 #bigPlayButton {
 	margin:0 auto;
 	background-color: #0000;
@@ -224,6 +214,7 @@ button.white:active {
 	color: white;
 	border: 1px solid black;
 }
+
 #header {
 	width: 100%;
 	padding: 1px;
@@ -236,9 +227,8 @@ button.white:active {
     color: white;
     text-align: right;
     margin-right: 10px;
-	cursor: help;
+	pointer-events: none;
 	float: right;
-	font-size: 90%;
 }
 #head6 {
     display: inline-block;
@@ -435,9 +425,9 @@ hr {
 	width: 100%;
 	height: 100%;
 	border: 0;
+	padding: 0;
 	overflow: hidden;
-	padding: var(--video-margin);
-	border-radius: var(--video-rounded);
+	margin: var(--video-margin);
 }
 
 #gridlayout {
@@ -636,16 +626,22 @@ button.glyphicon-button.active.focus {
 @media only screen and (max-height: 400px){
 	#obsState {
 		transform: scale(0.5);
+		display:none!important;
+		opacity:0;
 	} 
 }
 @media only screen and (max-height: 300px){
 	#obsState {
 		transform: scale(0.4);
+		display:none!important;
+		opacity:0;
 	} 
 }
 @media only screen and (max-height: 200px){
 	#obsState {
 		transform: scale(0.3);
+		display:none!important;
+		opacity:0;
 	} 
 }
 
@@ -861,6 +857,11 @@ body {
 	transition: opacity .1s linear;
 }
 
+.hidden {
+	visibility: hidden;
+	opacity:  0;
+}
+
 .previewWebcam {
 	max-width: 640px;
 	max-width: 83vw;
@@ -940,10 +941,6 @@ body {
 
 .highlight {
 	background-color:#ddeeff;
-}
-
-.green {
-	background-color:#474!important;
 }
 
 /*https://css-tricks.com/styling-cross-browser-compatible-range-inputs-css/*/
@@ -1222,7 +1219,7 @@ input[type=range]:focus::-ms-fill-upper {
 #audioSourceScreenshare {
 	display:block;
 	height: 60px;
-	width: 100%;
+	min-width: 290px;
 	overflow: auto;
 	padding: 5px;
 	resize: both;
@@ -1233,17 +1230,6 @@ p#audioScreenShare1 {
     display: inline-block;
     background: #f3f3f3;
     padding: 4px 10px 10px 10px;
-	text-align: left;
-	min-width:350px;
-}
-#headphonesDiv2{
-	background-color: #f3f3f3; 
-	min-width: 350px;
-	display: none; 
-	padding: 4px 10px 10px 10px;
-	border: 1px solid #ccc; 
-	vertical-align: middle;
-	margin: 10px 0;
 	text-align: left;
 }
 
@@ -2004,11 +1990,10 @@ audio.fileshare::-webkit-media-controls-play-button, video.fileshare::-webkit-me
 }
 
 .hidden {
-	display:none!important;
+	display:none;
 	visibility: hidden;
 	width:0px;
 	height:0px;
-	opacity:  0;
 }
 /* visited link */
 .grabLinks a:visited {
@@ -2389,7 +2374,8 @@ input[type=checkbox] {
 .directorBlock button i {
 	margin-right: 5px;
 }
-a.task {
+.task {
+	color: #808080;
 	width: 100%;
 	margin-top: 10px;
 }
@@ -2398,18 +2384,6 @@ a.task {
 	margin-bottom: 10px;
 	margin-left: 5px;
 	font-size:1.2em;
-}
-.shift {
-    display: inline-block;
-    position: relative;
-    margin: 7px 0 0 4px;
-    padding: 0;
-    width: 27px;
-    font-size: 0.8em;
-    top: -7px;
-}
-.shift>i {
-	cursor:pointer;
 }
 #toggleroomnotes {
 	grid-column: 4;
@@ -2462,14 +2436,10 @@ i.las.la-circle {
 }
 .streamID {
 	text-align: right;
-    margin: 5px 5px 5px 0px;
-    font-size: 0.7em;
-    text-overflow: ellipsis;
+	margin: 5px;
+	font-size: 0.7em;
+	text-overflow: ellipsis;
     overflow: hidden;
-    /* left: 22px; */
-    position: relative;
-    width: 230px;
-    display: inline-block;
 }
 .streamID i {
 	margin-left: 5px;
@@ -2501,14 +2471,7 @@ div#guestFeeds {
 div#guestFeeds:empty {
     display:none;
 }
-#hiddenElements{
-	visibility:hidden;
-	position: absolute;
-	left:-9999;
-	top:-9999;
-	width:0px;
-	height:0px;
-}
+
 #press2talk[data-enabled="true"] {
 	background: #1e0000;
 	-webkit-box-shadow: inset 0px 0px 1px #b90000;
@@ -2919,9 +2882,9 @@ input:checked + .slider:before {
 	border: 10px dashed rgb(64 65 62)
 }
 
-.startupWarning{
+#SafariWarning{
 	max-width:100%;
-	display:block;
+	display:none;
 	width: 450px;
 	border-left: 4px solid #eff150;
     background: #fffded;
@@ -2932,24 +2895,16 @@ input:checked + .slider:before {
     box-shadow: 0px 5px 10px -5px #a9a9a9;
 	text-align: left;
 }
-.startupWarning > p {
+#SafariWarning > p {
 	text-align: left;
 	display:inline-block;
 	padding-left: 38px;
 	
 }
-.startupWarning > i {
+#SafariWarning > i {
 	position: absolute;
 	font-size: 2em;
 	padding: 2px 0 0 0;
-}
-
-#consentWarning{
-	margin: 0 auto 20px auto;
-}
-
-#consentWarning2{
-	margin: 0px auto 10px auto;
 }
 
 #alertModal {

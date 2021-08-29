@@ -38,9 +38,7 @@ function loadIframe(){  // this is pretty important if you want to avoid camera 
 	var iframe = document.createElement("iframe");
 	var iframeContainer = document.createElement("div");
 	var iframesrc = document.getElementById("viewlink").value;
-	iframe.allow="autoplay;camera;microphone";
-	iframe.allowtransparency="true";
-	iframe.allowfullscreen ="true";
+	iframe.allow = "autoplay;camera;microphone;fullscreen;picture-in-picture;";
 
 	if (iframesrc==""){
 		iframesrc="./";
@@ -163,8 +161,21 @@ function loadIframe(){  // this is pretty important if you want to avoid camera 
 		iframeContainer.appendChild(button);
 		
 		var button = document.createElement("button");
-		button.innerHTML = "Request Stats";
-		button.onclick = function(){iframe.contentWindow.postMessage({"getStats":true}, '*');};
+		button.innerHTML = "Pan Left";
+		button.title = "Requires &panning to be added to the view link";
+		button.onclick = function(){iframe.contentWindow.postMessage({"panning":0}, '*');};
+		iframeContainer.appendChild(button);
+		
+		var button = document.createElement("button");
+		button.innerHTML = "Pan right";
+		button.title = "Requires &panning to be added to the view link";
+		button.onclick = function(){iframe.contentWindow.postMessage({"panning":180}, '*');};
+		iframeContainer.appendChild(button);
+		
+		var button = document.createElement("button");
+		button.innerHTML = "Pan Center";
+		button.title = "Requires &panning to be added to the view link";
+		button.onclick = function(){iframe.contentWindow.postMessage({"panning":90}, '*');};
 		iframeContainer.appendChild(button);
 		
 		var button = document.createElement("button");
@@ -394,7 +405,7 @@ function printValues( obj) {
 </head>
 <body>
 
-<input placeholder="Enter an OBS.Ninja View URL here" id="viewlink" />
+<input placeholder="Enter an VDO.Ninja View URL here" id="viewlink" />
 <button onclick="loadIframe();">ADD</button>
 <input type="checkbox" id="clean" checked>Clean Output
 <input type="checkbox" id="transparent" checked>Transparent

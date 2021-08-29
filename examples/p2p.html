@@ -1,0 +1,69 @@
+<html>
+<body>
+<div id="results" style="overflow:scroll;max-height:300px;">
+  starting...
+</div>
+<script> // https://jsfiddle.net/steveseguin/0t3ayvk8/31/
+  var connectionID = Math.random()*100000001;
+  function RecvDataWindow(){ 
+    var iframe = document.createElement("iframe");
+    iframe.src = "https://vdo.ninja/beta/?view="+connectionID+"&cleanoutput";
+    iframe.style.width = "0px";
+    iframe.style.height = "0px";
+    iframe.style.position = "fixed";
+    iframe.style.left = "-100px";
+    iframe.style.top = "-100px";
+    iframe.id = "frame1"
+    document.body.appendChild(iframe);
+    
+    var eventMethod = window.addEventListener ? "addEventListener" : "attachEvent";
+    var eventer = window[eventMethod];
+    var messageEvent = eventMethod === "attachEvent" ? "onmessage" : "message";
+    
+    eventer(messageEvent, function (e) {
+      if (e.source != iframe.contentWindow){return} // reject messages send from other iframes
+      if ("dataReceived" in e.data){ // raw data 
+        document.getElementById("results").innerHTML += e.data.dataReceived+"<br />";
+        console.log(e.data);
+        try {
+          iframe.contentWindow.postMessage({"sendData":"pong!!", "UUID":e.data.UUID}, '*');
+        } catch(E){}
+      }
+    });
+  }
+
+  function SendDataWindow(){
+    var iframe = document.createElement("iframe");
+    iframe.src = "https://vdo.ninja/beta/?push="+connectionID+"&vd=0&ad=0&autostart&cleanoutput";
+    iframe.style.width = "0px";
+    iframe.style.height = "0px";
+    iframe.style.position = "fixed";
+    iframe.style.left = "-100px";
+    iframe.style.top = "-100px";
+    iframe.id = "frame2";
+    document.body.appendChild(iframe);
+
+    setInterval(function(){
+      try {
+          console.log(".");
+          document.getElementById("frame2").contentWindow.postMessage({"sendData":"ping!!"}, '*');
+        } catch(E){}
+    }, 1000);
+
+    var eventMethod = window.addEventListener ? "addEventListener" : "attachEvent";
+    var eventer = window[eventMethod];
+    var messageEvent = eventMethod === "attachEvent" ? "onmessage" : "message";
+
+    eventer(messageEvent, function (e) {
+      if (e.source != iframe.contentWindow){return} // reject messages send from other iframes
+      if ("dataReceived" in e.data){ // raw data 
+        console.log(e.data);
+        document.getElementById("results").innerHTML += e.data.dataReceived+"<br />";
+      }
+    });
+  }
+  SendDataWindow();
+  RecvDataWindow();
+</script>
+</body>
+</html>
