@@ -542,7 +542,8 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 	if (session.webcamonly == true) {
 		if (session.introButton){
 			getById("container-2").className = 'column columnfade advanced'; // Hide screen share
-			getById("head3").className = 'advanced';
+			getById("head3").classList.add('advanced');
+			getById("head3a").classList.add('advanced');
 		} else {
 			getById("container-2").className = 'column columnfade advanced'; // Hide screen share
 			getById("container-3").classList.add("skip-animation");
@@ -875,15 +876,6 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 		session.outboundVideoBitrate = parseInt(urlParams.get('outboundvideobitrate')) || parseInt(urlParams.get('ovb')) || false;
 	}
 	
-	if (urlParams.has('nofileshare') || urlParams.has('nodownloads') || urlParams.has('nofiles')){
-		session.hostedFiles = false;
-		session.nodownloads = true;
-		getById('sharefilebutton').style.display = "none";
-		getById('sharefilebutton').classList.add("advanced");
-	} else if (session.mobile){
-		getById('sharefilebutton').style.display = "none";
-		getById('sharefilebutton').classList.add("advanced");
-	}
 
 	if (urlParams.has('webp')){
 		session.webp = true;
@@ -1632,7 +1624,6 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 		} catch (e) {
 			errorlog(e);
 		}
-
 	}
 
 
@@ -1819,18 +1810,16 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 		session.effects = urlParams.get('effects') || urlParams.get('effect') || null;
 		if (session.effects === null){
 			getById("effectsDiv").style.display = "block";
-			session.effects = 0;
+			session.effects = "0";
 		} else if (session.effects === "0" || session.effects === "false" || session.effects === "off"){
 			session.effects = false;
 			getById("effectSelector3").style.display = "none";
 			getById("effectsDiv3").style.display = "none";
 			getById("effectSelector").style.display = "none";
 			getById("effectsDiv").style.display = "none";
-		} else {
-			session.effects = parseInt(session.effects);
 		}
 		
-		if (session.effects === 5){
+		if (session.effects === "5"){
 			getById("selectImageTFLITE").style.display = "block";
 			getById("selectImageTFLITE3").style.display = "block";
 			getById("effectSelector").style.display = "none";
@@ -2269,7 +2258,8 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 			getById("add_screen").innerHTML = "Share your Screen";
 			miniTranslate(getById("add_screen"), "share-your-screen");
 		}
-		getById("head3").className = 'advanced';
+		getById("head3").classList.add('advanced');
+		getById("head3a").classList.add('advanced');
 
 		if (session.scene !== false) {
 			getById("container-4").className = 'column columnfade';
@@ -2297,7 +2287,8 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 		} else {
 			if ((session.permaid === null) && (session.roomid == "")) {
 				if (!(session.cleanOutput)) {
-					getById("head3").className = '';
+					getById("head3").classList.remove('advanced');
+					getById("head3a").classList.remove('advanced');
 				}
 			}
 		}
@@ -2353,6 +2344,19 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 			getById("chatbutton").classList.add("advanced");
 		}
 	}
+	
+	if (urlParams.has('nofileshare') || urlParams.has('nodownloads') || urlParams.has('nofiles')){
+		session.hostedFiles = false;
+		session.nodownloads = true;
+		getById('sharefilebutton').style.display = "none";
+		getById('sharefilebutton').classList.add("advanced");
+	} else if (session.mobile){
+		getById('sharefilebutton').style.display = "none";
+		getById('sharefilebutton').classList.add("advanced");
+	} else if (session.roomid==false){
+		getById('sharefilebutton').style.display = "none";
+		getById('sharefilebutton').classList.add("advanced");
+	}
 
 	if (session.audioEffects === null) {
 		session.audioEffects = true;
@@ -2402,7 +2406,8 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 		getById("header").className = 'advanced';
 		getById("head1").className = 'advanced';
 		getById("head2").className = 'advanced';
-		getById("head3").className = 'advanced';
+		getById("head3").classList.add('advanced');
+		getById("head3a").classList.add('advanced');
 		
 
 		getById("mainmenu").style.backgroundRepeat = "no-repeat";
@@ -2468,39 +2473,11 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 		delayedStartupFuncs = [];
 	},50);
 
-	if ((session.effects==3) || (session.effects==4) || (session.effects==5)){
+	if ((session.effects=="3") || (session.effects=="4") || (session.effects=="5")){
 		attemptTFLiteJsFileLoad();
-	} else if (session.effects==6){
-		var script = document.createElement('script');
-		var script2 = document.createElement('script');
-		var script3 = document.createElement('script');
-		var script4 = document.createElement('script');
-		model = false;
-		script.onload = function() {
-			document.head.appendChild(script2);
-		}
-		script2.onload = function() {
-			document.head.appendChild(script3);
-		}
-		script3.onload = function() {
-			document.head.appendChild(script4);
-		}
-		script4.onload = function() {
-			closeModal();
-			async function loadModel(){
-				model = await faceLandmarksDetection.load(faceLandmarksDetection.SupportedPackages.mediapipeFacemesh);
-			}
-			loadModel();
-		}
-		script.src = "./thirdparty/tfjs/tf-core.js";
-		script2.src = "./thirdparty/tfjs/tf-converter.js";
-		script3.src = "./thirdparty/tfjs/tf-backend-webgl.js";
-		script4.src = "./thirdparty/tfjs/face-landmarks-detection.js";
-		warnUser("Loading effects model...");
-		
-		script.type = 'text/javascript';script2.type = 'text/javascript';script3.type = 'text/javascript';script4.type = 'text/javascript';
-		document.head.appendChild(script);
-	} else if (session.effects==9){
+	} else if (session.effects=="6"){
+		loadTensorflowJS();
+	} else if (session.effects=="9"){
 		var script = document.createElement('script');
 		script.onload = function() {
 			effectsEngine();
@@ -2508,7 +2485,7 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 		script.src = "./filters/sample.js";
 		document.head.appendChild(script);
 		warnUser("Loading custom effects model...",1000);
-	} else if (session.effects==10){
+	} else if (session.effects=="10"){
 		var script = document.createElement('script');
 		script.onload = function() {
 			effectsEngine();
@@ -2516,14 +2493,9 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 		script.src = "./filters/cube.js";
 		document.head.appendChild(script);
 		warnUser("Loading custom effects model...",1000);
-	} else if (session.effects==11){
-		var script = document.createElement('script');
-		script.onload = function() {
-			effectsEngine();
-		}
-		script.src = "./filters/anon.js";
-		document.head.appendChild(script);
-		warnUser("Loading custom effects model...",1000);
+	} else if (session.effects=="11"){
+		session.effects="anon";
+		//loadEffect(session.effects);
 	}
 
 	if (location.protocol !== 'https:') {

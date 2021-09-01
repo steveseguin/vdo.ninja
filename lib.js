@@ -45,7 +45,7 @@ var miscTranslations = {
 	"password-incorrect" : "The password was incorrect.\n\nRefresh and try again.",
 	"enter-display-name" : "Please enter your display name:",
 	"enter-new-display-name" :"Enter a new Display Name for this stream",
-	"what-bitrate":"What bitrate would you like to record at? (kbps)",
+	"what-bitrate":"What bitrate would you like to record at? (kbps)\n(note: This feature is experimental, so have backup recordings going)",
 	"enter-website": "Enter a website URL to share",
 	"press-ok-to-record": "Press OK to start recording. Press again to stop and download.\n\nWarning: Keep this browser tab active to continue recording.\n\nYou can change the default video bitrate if desired below (kbps)",
 	"no-streamID-provided": "No streamID was provided; one will be generated randomily.\n\nStream ID: ",
@@ -1315,15 +1315,15 @@ function setupIncomingVideoTracking(v, UUID){  // video element.
 		} else {
 			v.controls = true;
 		}
-		if ((session.roomid==="") && (session.bitrate)){
+		//if ((session.roomid==="") && (session.bitrate)){
 			// let's keep the default bitrates, since this isn't a real room and bitrates are specified.
-		} else if (session.novideo !== false){
-			if (session.novideo.includes(session.rpcs[UUID].streamID)){
-				session.requestRateLimit(0,UUID, true);// limit resolution for guests  see ln: 1804 in main.js also
-			}
-		} else {
-			session.requestRateLimit(0,UUID, true);// limit resolution for guests  see ln: 1804 in main.js also
-		}
+		//} //else if (session.novideo !== false){
+		//	if (session.novideo.includes(session.rpcs[UUID].streamID)){ // no video will have muted the video already anyways.
+		//		session.requestRateLimit(0,UUID, false);//  optimizing audio here doesn't later get turned back on.  let the automixer disable audio instead
+		//	}
+		//} //else {
+		//	session.requestRateLimit(0,UUID, false);////  optimizing audio here doesn't later get turned back on.  let the automixer disable audio instead
+		//}
 		setTimeout(function(){updateMixer();},1);
 	} else {
 		v.style.display="block";
@@ -2865,7 +2865,53 @@ function setupCanvas() {
 }
 
 function applyEffects(track) { // video only please. do not touch audio
-	if (session.effects >= 9){
+	if (session.effects == "0" || !session.effects) { // auto align face
+		return track;
+	} else if (session.effects == "1") { // auto align face
+		setupCanvas();
+		session.canvasSource.srcObject.addTrack(track);
+		session.canvasSource.width = track.getSettings().width || 1280;
+		session.canvasSource.height = track.getSettings().height || 720;
+		
+		session.canvas.width = track.getSettings().width || 1280;
+		session.canvas.height = track.getSettings().height || 720;
+		setTimeout(function() {
+			drawFace();
+		}, 100);
+	} else if (session.effects == "2") {  // mirror video at a canvas level
+		setupCanvas();
+		session.canvasSource.srcObject.addTrack(track);
+		session.canvasSource.width = track.getSettings().width || 1280;
+		session.canvasSource.height = track.getSettings().height || 720;
+		
+		session.canvas.width = track.getSettings().width || 1280;
+		session.canvas.height = track.getSettings().height || 720;
+		var drawRate = parseInt(1000 / track.getSettings().frameRate) + 1;
+		if (session.canvasInterval !== null) {
+			clearInterval(session.canvasInterval);
+		}
+		session.canvasInterval = setInterval(function() {
+			drawFrameMirrored();
+		}, drawRate);
+	} else if ((session.effects == "3") || (session.effects == "4") || (session.effects == "5")){   // blur & greenscreen (low and high)
+		setupCanvas();
+		session.canvasSource.srcObject.addTrack(track);
+		session.canvasSource.width = track.getSettings().width || 1280;
+		session.canvasSource.height = track.getSettings().height || 720;
+		
+		session.canvas.width = track.getSettings().width || 1280;
+		session.canvas.height = track.getSettings().height || 720;
+		TFLiteWorker();
+	} else if (session.effects == "6"){
+		setupCanvas();
+		session.canvasSource.srcObject.addTrack(track);
+		session.canvasSource.width = track.getSettings().width || 1280;
+		session.canvasSource.height = track.getSettings().height || 720;
+		
+		session.canvas.width = track.getSettings().width || 1280;
+		session.canvas.height = track.getSettings().height || 720;
+		session.canvasSource.onloadeddata = mainMeshMask;
+	} else {
 		session.canvasSource = createVideoElement();
 		session.canvasSource.width=512;
 		session.canvasSource.height=288;
@@ -2876,35 +2922,23 @@ function applyEffects(track) { // video only please. do not touch audio
 		session.canvasSource.width = track.getSettings().width || 1280;
 		session.canvasSource.height = track.getSettings().height || 720;
 		
+		try {
+			JEELIZFACEFILTER.destroy();
+		} catch(e){}
+		if (session.canvasWebGL){
+			session.canvasWebGL.remove()
+			session.canvasWebGL=null;
+		}
 		session.canvasWebGL = document.createElement("canvas");
 		session.canvasWebGL.width = track.getSettings().width || 1280;
 		session.canvasWebGL.height = track.getSettings().height || 720;
+		session.canvasWebGL.id = "effectsCanvasTarget";
+		session.canvasWebGL.style.position="fixed";
+		session.canvasWebGL.style.top= "-9999px";
+		session.canvasWebGL.style.left= "-9999px";
+		document.body.appendChild(session.canvasWebGL);
+		loadEffect(session.effects);
 		return session.canvasWebGL.captureStream().getVideoTracks()[0];
-	}
-	setupCanvas();
-	session.canvasSource.srcObject.addTrack(track);
-	session.canvasSource.width = track.getSettings().width || 1280;
-	session.canvasSource.height = track.getSettings().height || 720;
-	
-	session.canvas.width = track.getSettings().width || 1280;
-	session.canvas.height = track.getSettings().height || 720;
-	
-	if (session.effects == 1) { // auto align face
-		setTimeout(function() {
-			drawFace();
-		}, 100);
-	} else if (session.effects == 2) {  // mirror video at a canvas level
-		var drawRate = parseInt(1000 / track.getSettings().frameRate) + 1;
-		if (session.canvasInterval !== null) {
-			clearInterval(session.canvasInterval);
-		}
-		session.canvasInterval = setInterval(function() {
-			drawFrameMirrored();
-		}, drawRate);
-	} else if ((session.effects == 3) || (session.effects == 4) || (session.effects == 5)){   // blur & greenscreen (low and high)
-		TFLiteWorker();
-	} else if (session.effects == 6){
-		session.canvasSource.onloadeddata = mainMeshMask;
 	}
 	return session.canvas.captureStream().getVideoTracks()[0];
 }
@@ -3162,7 +3196,7 @@ function TFLiteWorker(){
 	function process(){
 		clearTimeout(session.tfliteModule.timeout);
 		if (session.tfliteModule.activelyProcessing){return;}
-		if (!(session.effects>=3 || session.effects<=5)){
+		if (!(session.effects=="3" || session.effects=="4" || session.effects=="5")){
 			session.tfliteModule.looping=false;
 			return;
 		}
@@ -3370,7 +3404,7 @@ function drawFace() {
 
 		async function detect() {
 
-			if (session.effects !== 1){return;}
+			if (session.effects !== "1"){return;}
 
 			ctx_tmp.drawImage(vid, 0, 0, vid.videoWidth, vid.videoHeight);
 			image.src = canvas_tmp.toDataURL();
@@ -3401,7 +3435,7 @@ function drawFace() {
 
 		function draw() {
 			
-			if (session.effects !== 1){return;}
+			if (session.effects !== "1"){return;}
 			
 			canvas.height = vid.videoHeight;
 			canvas.width = vid.videoWidth;
@@ -5472,12 +5506,13 @@ function publishWebcam(btn = false) {
 					getById("head2").className = '';
 				}
 			}
-			getById("head3").className = 'advanced';
-			
+			getById("head3").classList.add('advanced');
+			getById("head3a").classList.add('advanced');
 		}
 
 	} else {
-		getById("head3").className = '';
+		getById("head3").classList.remove('advanced');
+		getById("head3a").classList.remove('advanced');
 		getById("logoname").style.display = 'none';
 	}
 
@@ -5650,13 +5685,14 @@ session.publishIFrame = function(iframeURL){
 			
 		} else {
 			log("ROOMID EANBLED");
-			getById("head3").className = 'advanced';
-			
+			getById("head3").classList.add('advanced');
+			getById("head3a").classList.add('advanced');
 			joinRoom(session.roomid);
 		}
 		
 	} else {
-		getById("head3").className = '';
+		getById("head3").classList.remove('advanced');
+		getById("head3a").classList.remove('advanced');
 		getById("logoname").style.display = 'none';
 	}
 	getById("head1").className = 'advanced';
@@ -5790,9 +5826,44 @@ function outboundAudioPipeline(stream) {
 			}
 
 			webAudio.audioContext = audioContext;
-			webAudio.mediaStreamSource = audioContext.createMediaStreamSource(stream); // clone to fix iOS issue
 			webAudio.destination = audioContext.createMediaStreamDestination();
-			webAudio.gainNode = audioGainNode(webAudio.mediaStreamSource, audioContext);
+			
+			if (tracks.length>1){ // tries to 
+				try {
+					webAudio.mediaStreamSource = createMediaStream();
+					var maxChannelCount = 2;
+					if (session.stereo===false){
+						maxChannelCount = 1;
+					}
+					var merger = audioContext.createChannelMerger(maxChannelCount);
+					for (var i=0;i<tracks.length;i++){
+						var tempStream = createMediaStream();
+						tempStream.addTrack(tracks[i]);
+						trackStream = audioContext.createMediaStreamSource(tempStream);
+						if (maxChannelCount==2){
+							var splitter = audioContext.createChannelSplitter(2);
+							trackStream.connect(splitter);
+							splitter.connect(merger, 0, 0);
+							try{
+								trackStream.connect(merger, 1, 1);
+							} catch(e){
+								try {
+									trackStream.connect(merger, 0, 1); // hack.
+								} catch(e){errorlog(e);}
+							}
+						} else {
+							trackStream.connect(merger, 0, 0);
+						}
+					}
+					webAudio.gainNode = audioGainNode(merger, audioContext);
+				} catch(e){
+					webAudio.mediaStreamSource = audioContext.createMediaStreamSource(stream);
+					webAudio.gainNode = audioGainNode(webAudio.mediaStreamSource, audioContext);
+				}
+			} else {
+				webAudio.mediaStreamSource = audioContext.createMediaStreamSource(stream); // clone to fix iOS issue
+				webAudio.gainNode = audioGainNode(webAudio.mediaStreamSource, audioContext);
+			}
 
 			var anonNode = webAudio.gainNode;
 			
@@ -5893,7 +5964,7 @@ function outboundAudioPipeline(stream) {
 
 			session.webAudios[webAudio.id] = webAudio;
 
-			stream.getTracks().forEach(function(track) {
+			stream.getVideoTracks().forEach(function(track) {
 				if (webAudio.id != track.id) {
 					webAudio.destination.stream.addTrack(track, stream);
 				}
@@ -5923,10 +5994,8 @@ function outboundAudioPipeline(stream) {
 	}
 }
 
-function changeLowCut(freq, trackid = 0) {
-	if (trackid != 0) {
-		errorlog("EQ Doesn't work for anything but track 0. yet");
-	}
+function changeLowCut(freq, deviceid=null) {
+	
 	log("LOW EQ");
 
 	for (var webAudio in session.webAudios) {
@@ -5949,10 +6018,8 @@ function changeLowCut(freq, trackid = 0) {
 
 }
 
-function changeLowEQ(lowEQ, trackid = 0) {
-	if (trackid != 0) {
-		errorlog("EQ Doesn't work for anything but track 0. yet");
-	}
+function changeLowEQ(lowEQ, deviceid=null) {
+	
 	log("LOW EQ");
 
 	for (var webAudio in session.webAudios) {
@@ -5965,10 +6032,7 @@ function changeLowEQ(lowEQ, trackid = 0) {
 
 }
 
-function changeMidEQ(midEQ, trackid = 0) {
-	if (trackid != 0) {
-		errorlog("EQ Doesn't work for anything but track 0. yet");
-	}
+function changeMidEQ(midEQ, deviceid=null) {
 
 	for (var webAudio in session.webAudios) {
 		if (!session.webAudios[webAudio].midEQ) {
@@ -5980,11 +6044,8 @@ function changeMidEQ(midEQ, trackid = 0) {
 
 }
 
-function changeHighEQ(highEQ, trackid = 0) {
-	if (trackid != 0) {
-		errorlog("EQ Doesn't work for anything but track 0. yet");
-	}
-
+function changeHighEQ(highEQ, deviceid=null) {
+	
 	for (var webAudio in session.webAudios) {
 		if (!session.webAudios[webAudio].highEQ) {
 			errorlog("EQ not setup");
@@ -6448,7 +6509,6 @@ function createRoomCallback(passAdd, passAdd2) {
 
 	getById("head1").className = 'advanced';
 	getById("head2").className = 'advanced';
-	//getById("head3").className = 'advanced';
 	getById("head4").className = '';
 
 	try {
@@ -8456,9 +8516,20 @@ async function getAudioOnly(selector, trackid = null, override = false) {
 		}
 		constraint.video = false;
 		if (override !== false) {
+			if (override.audio && override.audio.deviceId){
+				if (audioList[i].value == override.audio.deviceId){
+					constraint = override;
+				} else {
+					// not the device we want to hack.
+				}
+			} else {
+				constraint = override;
+			}
+			//errorlog(audioList[i]);
+			//errorlog(override);
 			//try {
 			//	if (override.audio && override.audio.deviceId && override.audio.deviceId.exact && override.audio.deviceId.exact == audioList[i].value) {
-					constraint = override;
+			//		constraint = override;
 			//	}
 			//} catch (e) {}
 		}
@@ -9937,7 +10008,7 @@ async function grabVideo(quality = 0, eleName = 'previewWebcam', selector = "sel
 						}
 					} catch(e){errorlog(e);}
 					
-					if (session.effects) {
+					if (session.effects != "0" || !session.effects) {
 						track = applyEffects(track); // updates with the correct track session.streamSrc 
 						if (track){
 							// video tracks are already removed from sources/elements. grabVideo() does that to start with; so time to just add the video!
@@ -10127,7 +10198,6 @@ async function grabAudio(eleName = "previewWebcam", selector = "#audioSource", t
 		return;
 	}
 	activatedPreview = true;
-	warnlog("GRABBING AUDIO");
 	log("TRACK EXCLUDED:" + trackid);
 	
 
@@ -10304,6 +10374,12 @@ async function grabAudio(eleName = "previewWebcam", selector = "#audioSource", t
 			session.applySoloChat(); // mute streams that should be muted if a director
 			session.applyIsolatedChat();
 		}
+		
+		try {
+			if (toggleSettingsState){
+				updateConstraintSliders();
+			}
+		} catch(e){}
 		
 		if (callback){
 			try{
@@ -10930,8 +11006,8 @@ session.publishScreen = function(constraints, audioList=[], audio=true){ // webc
 			if ((session.roomid==="") && ((!(session.view)) || (session.view===""))){
 				
 			} else {
-				getById("head3").className = 'advanced';
-				
+				getById("head3").classList.add('advanced');
+				getById("head3a").classList.add('advanced');
 				log("ROOMID EANBLED");
 				log("Update Mixer Event on REsize SET");
 				window.onresize = updateMixer;
@@ -10940,7 +11016,8 @@ session.publishScreen = function(constraints, audioList=[], audio=true){ // webc
 			}
 			
 		} else {
-			getById("head3").className = '';
+			getById("head3").classList.remove('advanced');
+			getById("head3a").classList.remove('advanced');
 			getById("logoname").style.display = 'none';
 		}
 		
@@ -11418,12 +11495,14 @@ session.hostFile = function(ele, event){ // webcam stream is used to generated a
 			//log("Update Mixer Event on REsize SET");
 			//window.addEventListener("resize", updateMixer);// TODO FIX
 			//window.addEventListener("orientationchange", updateMixer);// TODO FIX
-			getById("head3").className = 'advanced';
+			getById("head3").classList.add('advanced');
+			getById("head3a").classList.add('advanced');
 			joinRoom(session.roomid);
 		}
 		
 	} else {
-		getById("head3").className = '';
+		getById("head3").classList.remove('advanced');
+		getById("head3a").classList.remove('advanced');
 		getById("logoname").style.display = 'none';
 	}
 	getById("head1").className = 'advanced';
@@ -11516,12 +11595,14 @@ session.publishFile = function(ele, event){ // webcam stream is used to generate
 			log("Update Mixer Event on REsize SET");
 			//window.addEventListener("resize", updateMixer);// TODO FIX
 			//window.addEventListener("orientationchange", updateMixer);// TODO FIX
-			getById("head3").className = 'advanced';
+			getById("head3").classList.add('advanced');
+			getById("head3a").classList.add('advanced');
 			joinRoom(session.roomid);
 		}
 		
 	} else {
-		getById("head3").className = '';
+		getById("head3").classList.remove('advanced');
+		getById("head3a").classList.remove('advanced');
 		getById("logoname").style.display = 'none';
 	}
 	getById("head1").className = 'advanced';
@@ -12085,7 +12166,7 @@ function loadIframe(iframesrc) { // this is pretty important if you want to avoi
 	} else if (iframesrc.startsWith("https://www.twitch.tv/")){
 		iframe.style.border = "0";
 	} else if (iframesrc.startsWith("https://meshcast.io/")){
-		iframesrc = iframesrc.replace("//meshcast.io/", "//meshcast.vdo.ninja/");
+		//iframesrc = iframesrc.replace("//meshcast.io/", "//meshcast.vdo.ninja/");
 		iframe.style.border = "0";
 		// iframe.dataset.meshcast = true; // TODO: this was a bit of a fail
 		if (document.domain==="backup.vdo.ninja"){
@@ -12128,7 +12209,7 @@ function updateConstraintSliders() {
 			if ((iOS) || (iPad)){
 			} else {
 				getById("effectsDiv3").style.display = "block";
-				getById("effectSelector3").value = (parseInt(session.effects) || 0) +"";
+				getById("effectSelector3").value = session.effects || "0";
 			}
 		}
 	} else {
@@ -12139,7 +12220,7 @@ function updateConstraintSliders() {
 			if (session.effects!==false){
 				getById("effectsDiv3").style.display = "block";
 				try{
-					getById("effectSelector3").value = (parseInt(session.effects) || 0) +"";
+					getById("effectSelector3").value = session.effects || "0";
 				} catch(E){}
 			}
 		}	
@@ -12229,15 +12310,35 @@ function listAudioSettingsPrep() {
 		if (track0.label) {
 			trackSet.trackLabel = track0.label;
 		}
-
+		if (track0.id) {
+			trackSet.deviceID = track0.id;
+		}
 		if (i == 0) {
 			trackSet.equalizer = session.equalizer; // only supporting the first track at the moment.
+			
+			for (var waid in session.webAudios) { // TODO:  EXCLUDE CURRENT TRACK IF ALREADY EXISTS ... if (track.id === wa.id){..
+				try{
+					trackSet.lowEQ = session.webAudios[waid].lowEQ.gain.value;
+					trackSet.midEQ = session.webAudios[waid].midEQ.gain.value;
+					trackSet.highEQ = session.webAudios[waid].highEQ.gain.value;
+				} catch(e){}
+				break;
+			}
+			
 		} else {
 			trackSet.equalizer = false;
 		}
 
 		if (i == 0) {
 			trackSet.lowcut = session.lowcut; // only supporting the first track at the moment.
+			if (session.lowcut){
+				for (var waid in session.webAudios) { // TODO:  EXCLUDE CURRENT TRACK IF ALREADY EXISTS ... if (track.id === wa.id){..
+					try{
+						trackSet.lowcut = session.webAudios[waid].lowcut1.frequency.value;
+					} catch(e){}
+					break;
+				}
+			}
 		} else {
 			trackSet.lowcut = false;
 		}
@@ -12446,13 +12547,13 @@ function requestVideoHack(keyname, value, UUID) {
 	session.sendRequest(msg, msg.UUID);
 }
 
-function requestAudioHack(keyname, value, UUID, track = 0) { // updateCameraConstraints
+function requestAudioHack(keyname, value, UUID, deviceID = "default") { // updateCameraConstraints
 	var msg = {};
 	msg.requestAudioHack = true;
 	msg.keyname = keyname;
 	msg.value = value;
 	msg.UUID = UUID;
-	msg.track = track;
+	msg.deviceID = deviceID;
 	session.sendRequest(msg, msg.UUID);
 }
 
@@ -12462,7 +12563,7 @@ function requestChangeEQ(keyname, value, UUID, track = 0) { // updateCameraConst
 	msg.keyname = keyname;
 	msg.value = value;
 	msg.UUID = UUID;
-	msg.track = track;
+	msg.track = track; // pointless atm
 	session.sendRequest(msg, msg.UUID);
 }
 
@@ -12471,7 +12572,7 @@ function requestChangeLowcut(value, UUID, track = 0) { // updateCameraConstraint
 	msg.requestChangeLowcut = true;
 	msg.value = value;
 	msg.UUID = UUID;
-	msg.track = track;
+	msg.track = track; // pointless atm
 	session.sendRequest(msg, msg.UUID);
 }
 
@@ -12502,40 +12603,46 @@ function updateDirectorsAudio(dataN, UUID) {
 	if (!dataN.length) {
 		return;
 	}
-
+	
 	for (var n = 0; n < dataN.length; n += 1) {
 		var data = dataN[n];
 
-		if (data.trackLabel) {
-			var label = document.createElement("span");
-			label.innerText = data.trackLabel;
-			label.style.marginBottom = "10px";
-			label.style.display = "block";
-			label.id = "remoteAudioLabel_"+UUID;
-			audioEle.appendChild(label);
-		}
-		if (n !== 0) {
+		if (dataN.length==1) {
+			if (data.trackLabel) {
+				var label = document.createElement("span");
+				label.innerText = data.trackLabel;
+				label.style.marginBottom = "10px";
+				label.style.display = "block";
+				label.id = "remoteAudioLabel_"+UUID;
+				audioEle.appendChild(label);
+			}
+		} 
+		//if (n !== 0) {
 			//var label = document.createElement("span");
 			//label.innerText = "Coming Soon";
 			//audioEle.appendChild(label);
-			continue; // remove to more than one audio device (assuming other fixes are applied)
-		}
+		//	continue; // remove to more than one audio device (assuming other fixes are applied)
+		//}
 
 
-		if (data.lowcut) {
+		if (data.lowcut!==false && n==0) {
 			var label = document.createElement("label");
 			var i = "Low_Cut";
 			label.id = "label_" + i;
 			label.htmlFor = "constraints_" + i;
-			label.innerText = "low cut:";
+			
 
 			var input = document.createElement("input");
 			input.min = 50;
 			input.max = 150;
+			input.value = data.lowcut;
+			
+			input.title = "Previously was: "+input.value;
 
 			input.type = "range";
 			input.dataset.keyname = i;
-			input.dataset.labelname = label.innerText;
+			input.dataset.labelname =  "low cut:";
+			label.innerText = input.dataset.labelname+" "+input.value;
 			input.dataset.track = n;
 			input.dataset.UUID = UUID;
 			input.id = "constraints_" + i;
@@ -12544,6 +12651,7 @@ function updateDirectorsAudio(dataN, UUID) {
 			input.style.margin = "8px 0";
 
 			input.onchange = function(e) {
+				//e.target.title = e.target.value;
 				getById("label_" + e.target.dataset.keyname).innerText = e.target.dataset.labelname + " " + e.target.value;
 				requestChangeLowcut(parseInt(e.target.value), e.target.dataset.UUID, parseInt(e.target.dataset.track));
 			};
@@ -12552,20 +12660,21 @@ function updateDirectorsAudio(dataN, UUID) {
 			audioEle.appendChild(input);
 		}
 
-		if (data.equalizer) {
+		if (data.equalizer && n==0) {
 			var label = document.createElement("label");
 			var i = "Low_EQ";
 			label.id = "label_" + i;
 			label.htmlFor = "constraints_" + i;
-			label.innerText = "low EQ:";
 
 			var input = document.createElement("input");
 			input.min = -50;
 			input.max = 50;
-
+			input.value = data.lowEQ;
+			input.title = "Previously was: "+input.value;
 			input.type = "range";
 			input.dataset.keyname = i;
-			input.dataset.labelname = label.innerText;
+			input.dataset.labelname = "low EQ:"
+			label.innerText = input.dataset.labelname+" "+input.value;
 			input.dataset.track = n;
 			input.dataset.UUID = UUID;
 			input.id = "constraints_" + i;
@@ -12576,6 +12685,7 @@ function updateDirectorsAudio(dataN, UUID) {
 			input.onchange = function(e) {
 				getById("label_" + e.target.dataset.keyname).innerText = e.target.dataset.labelname + " " + e.target.value;
 				//changeLowEQ( e.target.value);
+				//e.target.title = e.target.value;
 				requestChangeEQ("low", parseInt(e.target.value), e.target.dataset.UUID, parseInt(e.target.dataset.track));
 			};
 
@@ -12586,15 +12696,17 @@ function updateDirectorsAudio(dataN, UUID) {
 			var i = "Mid_EQ";
 			label.id = "label_" + i;
 			label.htmlFor = "constraints_" + i;
-			label.innerText = "mid EQ:";
+			
 
 			var input = document.createElement("input");
 			input.min = -50;
 			input.max = 50;
-
+			input.value = data.midEQ;
+			input.title = "Previously was: "+input.value;
 			input.type = "range";
 			input.dataset.keyname = i;
-			input.dataset.labelname = label.innerText;
+			input.dataset.labelname = "mid EQ:";
+			label.innerText = input.dataset.labelname+" "+input.value;
 			input.dataset.track = n;
 			input.dataset.UUID = UUID;
 			input.id = "constraints_" + i;
@@ -12606,6 +12718,7 @@ function updateDirectorsAudio(dataN, UUID) {
 			input.onchange = function(e) {
 				getById("label_" + e.target.dataset.keyname).innerText = e.target.dataset.labelname + " " + e.target.value;
 				//changeMidEQ( e.target.value);
+				//e.target.title = e.target.value;
 				requestChangeEQ("mid", parseInt(e.target.value), e.target.dataset.UUID, parseInt(e.target.dataset.track));
 			};
 
@@ -12617,15 +12730,17 @@ function updateDirectorsAudio(dataN, UUID) {
 			var i = "High_EQ";
 			label.id = "label_" + i;
 			label.htmlFor = "constraints_" + i;
-			label.innerText = "high EQ:";
+			
 
 			var input = document.createElement("input");
 			input.min = -50;
 			input.max = 50;
-
+			input.value = data.highEQ;
+			input.title = "Previously was: "+input.value;
 			input.type = "range";
 			input.dataset.keyname = i;
-			input.dataset.labelname = label.innerText;
+			input.dataset.labelname = "high EQ:";
+			label.innerText = input.dataset.labelname+" "+input.value;
 			input.dataset.track = n;
 			input.dataset.UUID = UUID;
 			input.id = "constraints_" + i;
@@ -12634,6 +12749,7 @@ function updateDirectorsAudio(dataN, UUID) {
 			input.style.margin = "8px 0";
 
 			input.onchange = function(e) {
+				//e.target.title = e.target.value;
 				getById("label_" + e.target.dataset.keyname).innerText = e.target.dataset.labelname + " " + e.target.value;
 				requestChangeEQ("high", parseInt(e.target.value), e.target.dataset.UUID, parseInt(e.target.dataset.track));
 			};
@@ -12641,6 +12757,19 @@ function updateDirectorsAudio(dataN, UUID) {
 			audioEle.appendChild(label);
 			audioEle.appendChild(input);
 		}
+		
+		if (dataN.length>1){ 
+			if (data.trackLabel) {
+				var label = document.createElement("span");
+				label.innerText = data.trackLabel;
+				label.style.margin = "20px 0 10px 0";
+				label.style.display = "block";
+				label.id = "remoteAudioLabel_"+UUID+"_"+n;
+				audioEle.appendChild(label);
+			}
+		}
+		
+		
 		for (var i in data.audioConstraints) {
 			try {
 				log(i);
@@ -12661,15 +12790,19 @@ function updateDirectorsAudio(dataN, UUID) {
 					} else if (i === "channelCount") {
 						continue;
 					}
+					
+					if (!("deviceID" in data.audioConstraints[i])){continue;} // not going to support older versions.
 
 					var label = document.createElement("label");
-					label.id = "label_" + i;
-					label.htmlFor = "constraints_" + i;
+					label.id = "label_" + i + "_"+n;
+					label.htmlFor = "constraints_" + i + "_"+n;
 					label.innerText = i + ":";
 
 					var input = document.createElement("input");
 					input.min = data.audioConstraints[i].min;
 					input.max = data.audioConstraints[i].max;
+					
+					
 
 					if (parseFloat(input.min) == parseFloat(input.max)) {
 						continue;
@@ -12689,16 +12822,18 @@ function updateDirectorsAudio(dataN, UUID) {
 					input.type = "range";
 					input.dataset.keyname = i;
 					input.dataset.track = n;
+					input.dataset.deviceID = data.deviceID;
 					input.dataset.UUID = UUID;
-					input.id = "constraints_" + i;
+					input.id = "constraints_" + i + "_"+n;
 					input.style = "display:block; width:100%;";
-					input.name = "constraints_" + i;
+					input.name = "constraints_" + i + "_"+n;
 
 
 					input.onchange = function(e) {
-						getById("label_" + e.target.dataset.keyname).innerText = e.target.dataset.keyname + ": " + e.target.value;
+						//e.target.title = e.target.value;
+						getById("label_" + e.target.dataset.keyname+"_"+e.target.dataset.track ).innerText = e.target.dataset.keyname + ": " + e.target.value;
 						//updateAudioConstraints(e.target.dataset.keyname, e.target.value);
-						requestAudioHack(e.target.dataset.keyname, e.target.value, e.target.dataset.UUID, e.target.dataset.track);
+						requestAudioHack(e.target.dataset.keyname, e.target.value, e.target.dataset.UUID, e.target.dataset.deviceID);
 					};
 
 					audioEle.appendChild(label);
@@ -12710,13 +12845,13 @@ function updateDirectorsAudio(dataN, UUID) {
 
 					var div = document.createElement("div");
 					var label = document.createElement("label");
-					label.id = "label_" + i;
-					label.htmlFor = "constraints_" + i;
+					label.id = "label_" + i + "_"+n;
+					label.htmlFor = "constraints_" + i + "_"+n;
 					label.innerText = i + ":";
 					label.style = "display:inline-block; padding:0;margin: 5px 0px 9px;";
-					label.dataset.keyname = i;
 					var input = document.createElement("select");
 					var c = document.createElement("option");
+					
 
 					if (data.audioConstraints[i].length > 1) {
 						for (var opts in data.audioConstraints[i]) {
@@ -12738,17 +12873,18 @@ function updateDirectorsAudio(dataN, UUID) {
 						continue;
 					}
 
-					input.id = "constraints_" + i;
+					input.id = "constraints_" + i + "_"+n;
 					input.className = "constraintCameraInput";
-					input.name = "constraints_" + i;
+					input.name = "constraints_" + i + "_"+n;
 					input.style = "display:inline; padding:2px; margin:0 10px;";
 					input.dataset.keyname = i;
 					input.dataset.track = n;
+					input.dataset.deviceID = data.deviceID;
 					input.dataset.UUID = UUID;
 					input.onchange = function(e) {
 						//getById("label_"+e.target.dataset.keyname).innerText =e.target.dataset.keyname+": "+e.target.value;
 						//updateAudioConstraints(e.target.dataset.keyname, e.target.value);
-						requestAudioHack(e.target.dataset.keyname, e.target.value, e.target.dataset.UUID, e.target.dataset.track);
+						requestAudioHack(e.target.dataset.keyname, e.target.value, e.target.dataset.UUID, e.target.dataset.deviceID);
 						log(e.target.dataset.keyname, e.target.value);
 					};
 					audioEle.appendChild(div);
@@ -12758,11 +12894,11 @@ function updateDirectorsAudio(dataN, UUID) {
 
 					var div = document.createElement("div");
 					var label = document.createElement("label");
-					label.id = "label_" + i;
-					label.htmlFor = "constraints_" + i;
+					label.id = "label_" + i + "_"+n;
+					label.htmlFor = "constraints_" + i + "_"+n;
 					label.innerText = i + ":";
 					label.style = "display:inline-block; padding:0;margin: 5px 0px 9px;";
-					label.dataset.keyname = i;
+					label.dataset.keyname = i + "_"+n;
 					var input = document.createElement("select");
 					var c = document.createElement("option");
 
@@ -12771,9 +12907,10 @@ function updateDirectorsAudio(dataN, UUID) {
 					opt = new Option("On", true);
 					input.options.add(opt);
 
-					input.id = "constraints_" + i;
+					input.dataset.deviceID = data.deviceID;
+					input.id = "constraints_" + i + "_"+n;
 					input.className = "constraintCameraInput";
-					input.name = "constraints_" + i;
+					input.name = "constraints_" + i + "_"+n;
 					input.style = "display:inline; padding:2px; margin:0 10px;";
 					input.dataset.keyname = i;
 					input.dataset.track = n;
@@ -12781,7 +12918,7 @@ function updateDirectorsAudio(dataN, UUID) {
 					input.onchange = function(e) {
 						//getById("label_"+e.target.dataset.keyname).innerText =e.target.dataset.keyname+": "+e.target.value;
 						//updateAudioConstraints(e.target.dataset.keyname, e.target.value);
-						requestAudioHack(e.target.dataset.keyname, e.target.value, e.target.dataset.UUID, e.target.dataset.track);
+						requestAudioHack(e.target.dataset.keyname, e.target.value, e.target.dataset.UUID, e.target.dataset.deviceID);
 						log(e.target.dataset.keyname, e.target.value);
 					};
 					audioEle.appendChild(div);
@@ -12841,7 +12978,6 @@ function updateDirectorsVideo(data, UUID) {
 					continue;
 				}
 
-
 				if (i in data.currentCameraConstraints) {
 					input.value = data.currentCameraConstraints[i];
 					label.innerText = i + ": " + data.currentCameraConstraints[i];
@@ -12865,7 +13001,6 @@ function updateDirectorsVideo(data, UUID) {
 					//updateVideoConstraints(e.target.dataset.keyname, e.target.value);
 					requestVideoHack(e.target.dataset.keyname, e.target.value, UUID);
 				};
-
 
 				videoEle.appendChild(label);
 				videoEle.appendChild(input);
@@ -12964,384 +13099,412 @@ function updateDirectorsVideo(data, UUID) {
 
 function listAudioSettings() {
 	getById("popupSelector_constraints_audio").innerHTML = "";
-	try {
-		var track0 = session.streamSrc.getAudioTracks();
-		if (track0.length) {
-			track0 = track0[0];
-			if (track0.getCapabilities) {
-				session.audioConstraints = track0.getCapabilities();
-			} else if (navigator && navigator.userAgent && navigator.userAgent.indexOf("Firefox")>=0){ // let's pretend like Firefox doesn't actually suck
-				session.audioConstraints = {
-					"autoGainControl": [
-						true,
-						false
-					],
-			//		"channelCount": {
-			//			"max": 2,
-			//			"min": 1
-			//		},
-			//		"deviceId": "default",
-					"echoCancellation": [
-						true,
-						false
-					],
-			//		"groupId": "a3cbdec54a9b6ed473fd950415626f7e76f9d1b90f8c768faab572175a355a17",
-			//		"latency": {
-			//			"max": 0.01,
-			//			"min": 0.01
-			//		},
-					"noiseSuppression": [
-						true,
-						false
-					],
-				//	"sampleRate": {
-				//		"max": 48000,
-				//		"min": 48000
-				//	},
-				//	"sampleSize": {
-				//		"max": 16,
-				//		"min": 16
-				///	}
-				};
-			}
-			log(session.audioConstraints);
-		} else {
-			warnlog("session.streamSrc contains no audio tracks");
-			return;
-		}
-	} catch (e) {
+	
+	var tracks = session.streamSrc.getAudioTracks();
+	if (!tracks.length){
 		warnlog("session.streamSrc contains no audio tracks");
-		errorlog(e);
-		return;
+		return
 	}
-	try {
-		if (track0.getSettings) {
-			session.currentAudioConstraints = track0.getSettings();
-		}
-	} catch (e) {
-		errorlog(e);
-	}
-	//////
-
-	if (session.lowcut) {
-		if (getById("popupSelector_constraints_audio").style.display == "none") {
-			getById("advancedOptionsAudio").style.display = "inline-block";
-		}
-
-		var label = document.createElement("label");
-		var i = "Low_Cut";
-		label.id = "label_" + i;
-		label.htmlFor = "constraints_" + i;
-		label.innerText = "Low Cut:";
-
-		var input = document.createElement("input");
-		input.min = 50;
-		input.max = 400;
-
-		input.type = "range";
-		input.dataset.keyname = i;
-		input.dataset.labelname = label.innerHTML;
-		input.id = "constraints_" + i;
-		input.style = "display:block; width:100%;";
-		input.name = "constraints_" + i;
-
-		for (var webAudio in session.webAudios) {
-			if (session.webAudios[webAudio].lowcut1.frequency) {
-				input.value = session.webAudios[webAudio].lowcut1.frequency.value;
-				label.innerHTML += " " + session.webAudios[webAudio].lowcut1.frequency.value;
-			}
-		}
-
-		input.onchange = function(e) {
-			getById("label_" + e.target.dataset.keyname).innerHTML = e.target.dataset.labelname + " " + e.target.value;
-			changeLowCut(e.target.value, 0);
-		};
-
-		getById("popupSelector_constraints_audio").appendChild(label);
-		getById("popupSelector_constraints_audio").appendChild(input);
-	}
-
-	if (session.equalizer) {
-		if (getById("popupSelector_constraints_audio").style.display == "none") {
-			getById("advancedOptionsAudio").style.display = "inline-block";
+	
+	for (var ii = 0; ii< tracks.length; ii++){
+		track0 = tracks[ii];
+		if (track0.getCapabilities) {
+			session.audioConstraints = track0.getCapabilities();
+		} else if (navigator && navigator.userAgent && navigator.userAgent.indexOf("Firefox")>=0){ // let's pretend like Firefox doesn't actually suck
+			session.audioConstraints = {
+				"autoGainControl": [
+					true,
+					false
+				],
+		//		"channelCount": {
+		//			"max": 2,
+		//			"min": 1
+		//		},
+		//		"deviceId": "default",
+				"echoCancellation": [
+					true,
+					false
+				],
+		//		"groupId": "a3cbdec54a9b6ed473fd950415626f7e76f9d1b90f8c768faab572175a355a17",
+		//		"latency": {
+		//			"max": 0.01,
+		//			"min": 0.01
+		//		},
+				"noiseSuppression": [
+					true,
+					false
+				],
+			//	"sampleRate": {
+			//		"max": 48000,
+			//		"min": 48000
+			//	},
+			//	"sampleSize": {
+			//		"max": 16,
+			//		"min": 16
+			///	}
+			};
 		}
 
-		var label = document.createElement("label");
-		var i = "Low_EQ";
-		label.id = "label_" + i;
-		label.htmlFor = "constraints_" + i;
-		label.innerHTML = "Low EQ:";
-
-		var input = document.createElement("input");
-		input.min = -50;
-		input.max = 50;
-
-		input.type = "range";
-		input.dataset.keyname = i;
-		input.dataset.labelname = label.innerHTML;
-		input.id = "constraints_" + i;
-		input.style = "display:block; width:100%;";
-		input.name = "constraints_" + i;
-
-		for (var webAudio in session.webAudios) {
-			if (session.webAudios[webAudio].lowEQ.gain) {
-				input.value = session.webAudios[webAudio].lowEQ.gain.value;
-				label.innerHTML += " " + session.webAudios[webAudio].lowEQ.gain.value;
-			}
-		}
-
-		input.onchange = function(e) {
-			getById("label_" + e.target.dataset.keyname).innerHTML = e.target.dataset.labelname + " " + e.target.value;
-			changeLowEQ(e.target.value, 0);
-		};
-
-		getById("popupSelector_constraints_audio").appendChild(label);
-		getById("popupSelector_constraints_audio").appendChild(input);
-		//
-		if (getById("popupSelector_constraints_audio").style.display == "none") {
-			getById("advancedOptionsAudio").style.display = "inline-block";
-		}
-
-		var label = document.createElement("label");
-		var i = "Mid_EQ";
-		label.id = "label_" + i;
-		label.htmlFor = "constraints_" + i;
-		label.innerHTML = "Mid EQ:";
-
-		var input = document.createElement("input");
-		input.min = -50;
-		input.max = 50;
-
-		input.type = "range";
-		input.dataset.keyname = i;
-		input.dataset.labelname = label.innerHTML;
-		input.id = "constraints_" + i;
-		input.style = "display:block; width:100%;";
-		input.name = "constraints_" + i;
-
-
-		for (var webAudio in session.webAudios) {
-			if (session.webAudios[webAudio].midEQ.gain) {
-				input.value = session.webAudios[webAudio].midEQ.gain.value;
-				label.innerHTML += " " + session.webAudios[webAudio].midEQ.gain.value;
-			}
-		}
-
-
-		input.onchange = function(e) {
-			getById("label_" + e.target.dataset.keyname).innerHTML = e.target.dataset.labelname + " " + e.target.value;
-			changeMidEQ(e.target.value, 0);
-		};
-
-		getById("popupSelector_constraints_audio").appendChild(label);
-		getById("popupSelector_constraints_audio").appendChild(input);
-		//
-		if (getById("popupSelector_constraints_audio").style.display == "none") {
-			getById("advancedOptionsAudio").style.display = "inline-block";
-		}
-
-		var label = document.createElement("label");
-		var i = "High_EQ";
-		label.id = "label_" + i;
-		label.htmlFor = "constraints_" + i;
-		label.innerHTML = "High EQ:";
-
-		var input = document.createElement("input");
-		input.min = -50;
-		input.max = 50;
-
-
-		input.type = "range";
-		input.dataset.keyname = i;
-		input.dataset.labelname = label.innerHTML;
-		input.id = "constraints_" + i;
-		input.style = "display:block; width:100%;";
-		input.name = "constraints_" + i;
-
-		for (var webAudio in session.webAudios) {
-			if (session.webAudios[webAudio].highEQ.gain) {
-				input.value = session.webAudios[webAudio].highEQ.gain.value;
-				label.innerHTML += " " + session.webAudios[webAudio].highEQ.gain.value;
-			}
-		}
-
-
-		input.onchange = function(e) {
-			getById("label_" + e.target.dataset.keyname).innerHTML = e.target.dataset.labelname + " " + e.target.value;
-			changeHighEQ(e.target.value, 0);
-		};
-
-		getById("popupSelector_constraints_audio").appendChild(label);
-		getById("popupSelector_constraints_audio").appendChild(input);
-	}
-	////////
-	for (var i in session.audioConstraints) {
 		try {
-			log(i);
-			log(session.audioConstraints[i]);
-			if ((typeof session.audioConstraints[i] === 'object') && (session.audioConstraints[i] !== null) && ("max" in session.audioConstraints[i]) && ("min" in session.audioConstraints[i])) {
-				if (i === "aspectRatio") {
-					continue;
-				} else if (i === "width") {
-					continue;
-				} else if (i === "height") {
-					continue;
-				} else if (i === "frameRate") {
-					continue;
-				} else if (i === "latency") {
-					continue;
-				} else if (i === "sampleRate") {
-					continue;
-				} else if (i === "channelCount") {
-					continue;
-				}
-
-				var label = document.createElement("label");
-				label.id = "label_" + i;
-				label.htmlFor = "constraints_" + i;
-				label.innerHTML = i + ":";
-
-
-				var input = document.createElement("input");
-				input.min = session.audioConstraints[i].min;
-				input.max = session.audioConstraints[i].max;
-
-				if (parseFloat(input.min) == parseFloat(input.max)) {
-					continue;
-				}
-
-				if (getById("popupSelector_constraints_audio").style.display == "none") {
-					getById("advancedOptionsAudio").style.display = "inline-block";
-				}
-
-
-				if (i in session.currentAudioConstraints) {
-					input.value = session.currentAudioConstraints[i];
-					label.innerHTML = i + ": " + session.currentAudioConstraints[i];
-					label.title = "Previously was:  " + session.currentAudioConstraints[i];
-					input.title = "Previously was:  " + session.currentAudioConstraints[i];
-				} else {
-					label.innerHTML = i;
-				}
-				if ("step" in session.audioConstraints[i]) {
-					input.step = session.audioConstraints[i].step;
-				}
-				input.type = "range";
-				input.dataset.keyname = i;
-				input.id = "constraints_" + i;
-				input.style = "display:block; width:100%;";
-				input.name = "constraints_" + i;
-
-
-				input.onchange = function(e) {
-					getById("label_" + e.target.dataset.keyname).innerHTML = e.target.dataset.keyname + ": " + e.target.value;
-					//updateAudioConstraints(e.target.dataset.keyname, e.target.value);
-					applyAudioHack(e.target.dataset.keyname, e.target.value);
-				};
-
-
-				getById("popupSelector_constraints_audio").appendChild(label);
-				getById("popupSelector_constraints_audio").appendChild(input);
-			} else if ((typeof session.audioConstraints[i] === 'object') && (session.audioConstraints[i] !== null)) {
-				if (i == "resizeMode") {
-					continue;
-				}
-
-				var div = document.createElement("div");
-				var label = document.createElement("label");
-				label.id = "label_" + i;
-				label.htmlFor = "constraints_" + i;
-				label.innerHTML = i + ":";
-				label.style = "display:inline-block; padding:0;margin: 15px 0px 29px;";
-				label.dataset.keyname = i;
-				var input = document.createElement("select");
-				var c = document.createElement("option");
-
-				if (session.audioConstraints[i].length > 1) {
-					for (var opts in session.audioConstraints[i]) {
-						log(opts);
-						var opt = new Option(session.audioConstraints[i][opts], session.audioConstraints[i][opts]);
-						input.options.add(opt);
-
-						if (i in session.currentAudioConstraints) {
-							if (session.audioConstraints[i][opts] == session.currentAudioConstraints[i]) {
-								opt.selected = "true";
-							}
-						}
-
-					}
-				} else if (i.toLowerCase == "torch") {
-					var opt = new Option("Off", false);
-					input.options.add(opt);
-					opt = new Option("On", true);
-					input.options.add(opt);
-				} else {
-					continue;
-				}
-
-				if (getById("popupSelector_constraints_audio").style.display == "none") {
-					getById("advancedOptionsAudio").style.display = "inline-block";
-				}
-
-				input.id = "constraints_" + i;
-				input.className = "constraintCameraInput";
-				input.name = "constraints_" + i;
-				input.style = "display:inline; padding:2px; margin:0 10px;";
-				input.dataset.keyname = i;
-				input.onchange = function(e) {
-					//getById("label_"+e.target.dataset.keyname).innerHTML =e.target.dataset.keyname+": "+e.target.value;
-					//updateAudioConstraints(e.target.dataset.keyname, e.target.value);
-					applyAudioHack(e.target.dataset.keyname, e.target.value);
-					log(e.target.dataset.keyname, e.target.value);
-				};
-				getById("popupSelector_constraints_audio").appendChild(div);
-				div.appendChild(label);
-				div.appendChild(input);
-			} else if (typeof session.audioConstraints[i] === 'boolean') {
-
-				var div = document.createElement("div");
-				var label = document.createElement("label");
-				label.id = "label_" + i;
-				label.htmlFor = "constraints_" + i;
-				label.innerHTML = i + ":";
-				label.style = "display:inline-block; padding:0;margin: 15px 0px 29px;";
-				label.dataset.keyname = i;
-				var input = document.createElement("select");
-				var c = document.createElement("option");
-
-				var opt = new Option("Off", false);
-				input.options.add(opt);
-				opt = new Option("On", true);
-				input.options.add(opt);
-
-				if (getById("popupSelector_constraints_audio").style.display == "none") {
-					getById("advancedOptionsAudio").style.display = "inline-block";
-				}
-
-				input.id = "constraints_" + i;
-				input.className = "constraintCameraInput";
-				input.name = "constraints_" + i;
-				input.style = "display:inline; padding:2px; margin:0 10px;";
-				input.dataset.keyname = i;
-				input.onchange = function(e) {
-					//getById("label_"+e.target.dataset.keyname).innerHTML =e.target.dataset.keyname+": "+e.target.value;
-					//updateAudioConstraints(e.target.dataset.keyname, e.target.value);
-					applyAudioHack(e.target.dataset.keyname, e.target.value);
-					log(e.target.dataset.keyname, e.target.value);
-				};
-				getById("popupSelector_constraints_audio").appendChild(div);
-				div.appendChild(label);
-				div.appendChild(input);
+			if (track0.getSettings) {
+				session.currentAudioConstraints = track0.getSettings();
 			}
 		} catch (e) {
 			errorlog(e);
 		}
+		//////
 
+		if (session.lowcut && ii==0) {  // ii==0 implies only track0 is supported by the web audio pipeline currently (or everything after the mixer node)
+			if (getById("popupSelector_constraints_audio").style.display == "none") {
+				getById("advancedOptionsAudio").style.display = "inline-block";
+			}
+
+			var label = document.createElement("label");
+			var i = "Low_Cut";
+			label.id = "label_" + i;
+			label.htmlFor = "constraints_" + i;
+			label.innerText = "Low Cut:";
+
+			var input = document.createElement("input");
+			input.min = 50;
+			input.max = 400;
+			
+			input.dataset.deviceid = track0.id; // pointless
+
+			input.type = "range";
+			input.dataset.keyname = i;
+			input.dataset.labelname = label.innerHTML;
+			input.id = "constraints_" + i;
+			input.style = "display:block; width:100%;";
+			input.name = "constraints_" + i;
+
+			for (var webAudio in session.webAudios) {
+				if (session.webAudios[webAudio].lowcut1.frequency) {
+					input.value = session.webAudios[webAudio].lowcut1.frequency.value;
+					label.innerHTML += " " + session.webAudios[webAudio].lowcut1.frequency.value;
+					input.title = input.value;
+					break;
+				}
+			}
+
+			input.onchange = function(e) {
+				getById("label_" + e.target.dataset.keyname).innerHTML = e.target.dataset.labelname + " " + e.target.value;
+				changeLowCut(e.target.value, e.target.dataset.deviceid);
+				e.target.title = e.target.value;
+			};
+
+			getById("popupSelector_constraints_audio").appendChild(label);
+			getById("popupSelector_constraints_audio").appendChild(input);
+		}
+
+		if (session.equalizer && ii==0) { // ii==0 implies only track0 is supported by the web audio pipeline currently (or everything after the mixer node)
+			if (getById("popupSelector_constraints_audio").style.display == "none") {
+				getById("advancedOptionsAudio").style.display = "inline-block";
+			}
+
+			var label = document.createElement("label");
+			var i = "Low_EQ";
+			label.id = "label_" + i;
+			label.htmlFor = "constraints_" + i;
+			label.innerHTML = "Low EQ:";
+
+			var input = document.createElement("input");
+			input.min = -50;
+			input.max = 50;
+			
+			input.dataset.deviceid = track0.id;  // pointless
+
+			input.type = "range";
+			input.dataset.keyname = i;
+			input.dataset.labelname = label.innerHTML;
+			input.id = "constraints_" + i;
+			input.style = "display:block; width:100%;";
+			input.name = "constraints_" + i;
+
+			for (var webAudio in session.webAudios) {
+				if (session.webAudios[webAudio].lowEQ.gain) {
+					input.value = session.webAudios[webAudio].lowEQ.gain.value;
+					label.innerHTML += " " + session.webAudios[webAudio].lowEQ.gain.value;
+					input.title = input.value;
+				}
+			}
+
+			input.onchange = function(e) {
+				getById("label_" + e.target.dataset.keyname).innerHTML = e.target.dataset.labelname + " " + e.target.value;
+				changeLowEQ(e.target.value, e.target.dataset.deviceid);
+				e.target.title = e.target.value;
+			};
+
+			getById("popupSelector_constraints_audio").appendChild(label);
+			getById("popupSelector_constraints_audio").appendChild(input);
+			//
+			if (getById("popupSelector_constraints_audio").style.display == "none") {
+				getById("advancedOptionsAudio").style.display = "inline-block";
+			}
+
+			var label = document.createElement("label");
+			var i = "Mid_EQ";
+			label.id = "label_" + i;
+			label.htmlFor = "constraints_" + i;
+			label.innerHTML = "Mid EQ:";
+
+			var input = document.createElement("input");
+			input.min = -50;
+			input.max = 50;
+			
+			input.dataset.deviceid = track0.id;   // pointless
+
+			input.type = "range";
+			input.dataset.keyname = i;
+			input.dataset.labelname = label.innerHTML;
+			input.id = "constraints_" + i;
+			input.style = "display:block; width:100%;";
+			input.name = "constraints_" + i;
+
+
+			for (var webAudio in session.webAudios) {
+				if (session.webAudios[webAudio].midEQ.gain) {
+					input.value = session.webAudios[webAudio].midEQ.gain.value;
+					label.innerHTML += " " + session.webAudios[webAudio].midEQ.gain.value;
+					input.title = input.value;
+				}
+			}
+
+			input.onchange = function(e) {
+				getById("label_" + e.target.dataset.keyname).innerHTML = e.target.dataset.labelname + " " + e.target.value;
+				changeMidEQ(e.target.value, e.target.dataset.deviceid);
+				e.target.title = e.target.value;
+			};
+
+			getById("popupSelector_constraints_audio").appendChild(label);
+			getById("popupSelector_constraints_audio").appendChild(input);
+			//
+			if (getById("popupSelector_constraints_audio").style.display == "none") {
+				getById("advancedOptionsAudio").style.display = "inline-block";
+			}
+
+			var label = document.createElement("label");
+			var i = "High_EQ";
+			label.id = "label_" + i;
+			label.htmlFor = "constraints_" + i;
+			label.innerHTML = "High EQ:";
+
+			var input = document.createElement("input");
+			input.min = -50;
+			input.max = 50;
+
+			input.dataset.deviceid = track0.id;   // pointless
+
+			input.type = "range";
+			input.dataset.keyname = i;
+			input.dataset.labelname = label.innerHTML;
+			input.id = "constraints_" + i;
+			input.style = "display:block; width:100%;";
+			input.name = "constraints_" + i;
+
+			for (var webAudio in session.webAudios) {
+				if (session.webAudios[webAudio].highEQ.gain) {
+					input.value = session.webAudios[webAudio].highEQ.gain.value;
+					label.innerHTML += " " + session.webAudios[webAudio].highEQ.gain.value;
+					input.title = input.value;
+				}
+			}
+
+
+			input.onchange = function(e) {
+				getById("label_" + e.target.dataset.keyname).innerHTML = e.target.dataset.labelname + " " + e.target.value;
+				changeHighEQ(e.target.value,  e.target.dataset.deviceid);
+				e.target.title = e.target.value;
+			};
+
+			getById("popupSelector_constraints_audio").appendChild(label);
+			getById("popupSelector_constraints_audio").appendChild(input);
+		}
+		////////
+		if (tracks.length>1){
+			var label = document.createElement("h4");
+			label.innerHTML = track0.label;
+			label.style = "text-shadow: 0 0 10px #fff3;"
+			getById("popupSelector_constraints_audio").appendChild(label);
+		}
+		
+		for (var i in session.audioConstraints) {
+			try {
+				log(i);
+				log(session.audioConstraints[i]);
+				
+				
+				if ((typeof session.audioConstraints[i] === 'object') && (session.audioConstraints[i] !== null) && ("max" in session.audioConstraints[i]) && ("min" in session.audioConstraints[i])) {
+					if (i === "aspectRatio") {
+						continue;
+					} else if (i === "width") {
+						continue;
+					} else if (i === "height") {
+						continue;
+					} else if (i === "frameRate") {
+						continue;
+					} else if (i === "latency") {
+						continue;
+					} else if (i === "sampleRate") {
+						continue;
+					} else if (i === "channelCount") {
+						continue;
+					}
+
+					var label = document.createElement("label");
+					label.id = "label_" + i + "_"+ii;
+					label.htmlFor = "constraints_" + i + "_"+ii;
+					label.innerHTML = i + ":";
+
+
+					var input = document.createElement("input");
+					input.min = session.audioConstraints[i].min;
+					input.max = session.audioConstraints[i].max;
+					
+					input.dataset.deviceid = track0.id;
+
+					if (parseFloat(input.min) == parseFloat(input.max)) {
+						continue;
+					}
+
+					if (getById("popupSelector_constraints_audio").style.display == "none") {
+						getById("advancedOptionsAudio").style.display = "inline-block";
+					}
+
+					if (i in session.currentAudioConstraints) {
+						input.value = session.currentAudioConstraints[i];
+						label.innerHTML = i + ": " + session.currentAudioConstraints[i];
+						label.title = "Previously was:  " + session.currentAudioConstraints[i];
+						input.title = "Previously was:  " + session.currentAudioConstraints[i];
+					} else {
+						label.innerHTML = i;
+					}
+					if ("step" in session.audioConstraints[i]) {
+						input.step = session.audioConstraints[i].step;
+					}
+					input.type = "range";
+					input.dataset.keyname = i + "_"+ii;
+					input.id = "constraints_" + i + "_"+ii;
+					input.style = "display:block; width:100%;";
+					input.name = "constraints_" + i + "_"+ii;
+
+
+					input.onchange = function(e) {
+						getById("label_" + e.target.dataset.keyname).innerHTML = e.target.dataset.keyname + ": " + e.target.value;
+						//updateAudioConstraints(e.target.dataset.keyname, e.target.value);
+						applyAudioHack(e.target.dataset.keyname, e.target.value, e.target.dataset.deviceid);
+						e.target.title = e.target.value;
+					};
+
+					getById("popupSelector_constraints_audio").appendChild(label);
+					getById("popupSelector_constraints_audio").appendChild(input);
+				} else if ((typeof session.audioConstraints[i] === 'object') && (session.audioConstraints[i] !== null)) {
+					if (i == "resizeMode") {
+						continue;
+					}
+
+					var div = document.createElement("div");
+					var label = document.createElement("label");
+					label.id = "label_" + i + "_"+ii;
+					label.htmlFor = "constraints_" + i + "_"+ii;
+					label.innerHTML = i + ":";
+					label.style = "display:inline-block; padding:0;margin: 15px 0px 29px;";
+					label.dataset.keyname = i + "_"+ii;
+					
+					var input = document.createElement("select");
+					var c = document.createElement("option");
+					
+					input.dataset.deviceid = track0.id;
+
+					if (session.audioConstraints[i].length > 1) {
+						for (var opts in session.audioConstraints[i]) {
+							log(opts);
+							var opt = new Option(session.audioConstraints[i][opts], session.audioConstraints[i][opts]);
+							input.options.add(opt);
+
+							if (i in session.currentAudioConstraints) {
+								if (session.audioConstraints[i][opts] == session.currentAudioConstraints[i]) {
+									opt.selected = "true";
+								}
+							}
+
+						}
+					} else if (i.toLowerCase == "torch") {
+						var opt = new Option("Off", false);
+						input.options.add(opt);
+						opt = new Option("On", true);
+						input.options.add(opt);
+					} else {
+						continue;
+					}
+
+					if (getById("popupSelector_constraints_audio").style.display == "none") {
+						getById("advancedOptionsAudio").style.display = "inline-block";
+					}
+
+					input.id = "constraints_" + i + "_"+ii;
+					input.className = "constraintCameraInput";
+					input.name = "constraints_" + i + "_"+ii;
+					input.style = "display:inline; padding:2px; margin:0 10px;";
+					input.dataset.keyname = i + "_"+ii;
+					input.onchange = function(e) {
+						//getById("label_"+e.target.dataset.keyname).innerHTML =e.target.dataset.keyname+": "+e.target.value;
+						//updateAudioConstraints(e.target.dataset.keyname, e.target.value);
+						applyAudioHack(e.target.dataset.keyname, e.target.value, e.target.dataset.deviceid);
+						log(e.target.dataset.keyname, e.target.value);
+					};
+					getById("popupSelector_constraints_audio").appendChild(div);
+					div.appendChild(label);
+					div.appendChild(input);
+				} else if (typeof session.audioConstraints[i] === 'boolean') {
+
+					var div = document.createElement("div");
+					var label = document.createElement("label");
+					label.id = "label_" + i + "_"+ii;
+					label.htmlFor = "constraints_" + i + "_"+ii;
+					label.innerHTML = i + ":";
+					label.style = "display:inline-block; padding:0;margin: 15px 0px 29px;";
+					label.dataset.keyname = i + "_"+ii;
+					var input = document.createElement("select");
+					var c = document.createElement("option");
+					
+					
+					input.dataset.deviceid = track0.id;
+					
+
+					var opt = new Option("Off", false);
+					input.options.add(opt);
+					opt = new Option("On", true);
+					input.options.add(opt);
+
+					if (getById("popupSelector_constraints_audio").style.display == "none") {
+						getById("advancedOptionsAudio").style.display = "inline-block";
+					}
+
+					input.id = "constraints_" + i + "_"+ii;
+					input.className = "constraintCameraInput";
+					input.name = "constraints_" + i + "_"+ii;
+					input.style = "display:inline; padding:2px; margin:0 10px;";
+					input.dataset.keyname = i + "_"+ii;
+					input.onchange = function(e) {
+						//getById("label_"+e.target.dataset.keyname).innerHTML =e.target.dataset.keyname+": "+e.target.value;
+						//updateAudioConstraints(e.target.dataset.keyname, e.target.value);
+						applyAudioHack(e.target.dataset.keyname, e.target.value, e.target.dataset.deviceid);
+						log(e.target.dataset.keyname, e.target.value);
+					};
+					getById("popupSelector_constraints_audio").appendChild(div);
+					div.appendChild(label);
+					div.appendChild(input);
+				}
+			} catch (e) {
+				errorlog(e);
+			}
+		}
 	}
 }
 
 
-function applyAudioHack(constraint, value = null) {
+function applyAudioHack(constraint, value = null, deviceid="default") {
 	if (value == parseFloat(value)) {
 		value = parseFloat(value);
 		value = {
@@ -13352,12 +13515,19 @@ function applyAudioHack(constraint, value = null) {
 	} else if (value == "false") {
 		value = false;
 	}
-	log(constraint); 
+	warnlog(constraint); 
 	////////////////
 	try {
-		var track0 = session.streamSrc.getAudioTracks();
-		if (track0.length) {
-			track0 = track0[0];
+		var tracks = session.streamSrc.getAudioTracks();
+		if (tracks.length) {
+			var track0 = tracks[0];
+			for (var ii = 0;ii<tracks.length;ii++){
+				if (tracks[ii].id == deviceid){
+					track0 = tracks[ii];
+					break;
+				}
+			}
+			
 			if (track0.getCapabilities) {
 				session.audioConstraints = track0.getCapabilities();
 			} else if (navigator && navigator.userAgent && navigator.userAgent.indexOf("Firefox")>=0){ // let's pretend like Firefox doesn't actually suck
@@ -13370,7 +13540,7 @@ function applyAudioHack(constraint, value = null) {
 			//			"max": 2,
 			//			"min": 1
 			//		},
-			//		"deviceId": "default",
+					"deviceId": deviceid,
 					"echoCancellation": [
 						true,
 						false
@@ -13430,6 +13600,8 @@ function applyAudioHack(constraint, value = null) {
 }
 
 function updateAudioConstraints(constraint, value = null) { // this is what it SHOULD be, but this doesn't work yet.
+
+	// this is probably not used any more?
 	var track0 = session.streamSrc.getAudioTracks();
 	track0 = track0[0];
 	if (value == parseFloat(value)) {
@@ -16546,88 +16718,123 @@ function audioMeterGuest(mediaStreamSource, UUID, trackid){
 
 function effectsDynamicallyUpdate(event, ele, preview=true){
 	
-	var effect = ele.options[ele.selectedIndex].value;
+	session.effects = ele.options[ele.selectedIndex].value;
+	
 	getById("selectImageTFLITE").style.display = "none";
-	if (effect === "0"){
-		session.effects = 0;
+	getById("selectImageTFLITE3").style.display = "none";
+	
+	if (session.effects == "0" || !session.effects){
 		activatedPreview=false;
 		if (preview){
 			grabVideo();
 		} else {
 			grabVideo(session.quality, "videosource", "select#videoSource3");
 		}
-		if (ele.id == "effectSelector"){
-			getById("selectImageTFLITE").style.display = "none";
-		} else {
-			getById("selectImageTFLITE3").style.display = "none";
-		}
 		return;
-	} else if (effect === "3"){
-		if ((session.effects<3) || (session.effects>5)){
-			session.effects = 3;
+	} else if (session.effects === "3" || session.effects === "4"){
+		if (!session.tfliteModule.looping){
+			attemptTFLiteJsFileLoad();
 			activatedPreview=false;
 			if (preview){
 				grabVideo();
 			} else {
 				grabVideo(session.quality, "videosource", "select#videoSource3");
 			}
-		} else {
-			session.effects = 3;
 		}
-	} else if (effect === "4"){
-		if ((session.effects<3) || (session.effects>5)){
-			session.effects = 4;
-			activatedPreview=false;
-			if (preview){
-				grabVideo();
-			} else {
-				grabVideo(session.quality, "videosource", "select#videoSource3");
-			}
-		} else {
-			session.effects = 4;
-		}
-	} else if (effect === "5"){
+	} else if (session.effects === "5"){
+		attemptTFLiteJsFileLoad();
 		if (session.tfliteModule.img){
 			session.tfliteModule.img.src = "./media/bg_sample.webp";
 		}
-		if ((session.effects<3) || (session.effects>5)){
-			session.effects = 5;
+		if (!session.tfliteModule.looping){
 			activatedPreview=false;
 			if (preview){
 				grabVideo();
 			} else {
 				grabVideo(session.quality, "videosource", "select#videoSource3");
 			}
-		} else {
-			session.effects = 5;
 		}
-		if (ele.id == "effectSelector"){
-			getById("selectImageTFLITE").style.display = "block";
-		} else {
-			getById("selectImageTFLITE3").style.display = "block";
-		}
-	} else if (effect === "6"){
-		session.effects = 6;
+		getById("selectImageTFLITE").style.display = "block";
+		getById("selectImageTFLITE3").style.display = "block";
+	} else if (session.effects === "6"){
+		loadTensorflowJS();
 		activatedPreview=false;
 		if (preview){
 			grabVideo();
 		} else {
 			grabVideo(session.quality, "videosource", "select#videoSource3");
 		}
-	} 
-	
-	if (session.effects !== 5){
-		if (ele.id == "effectSelector"){
-			getById("selectImageTFLITE").style.display = "none";
+		
+	}  else {
+		//loadEffect(session.effects);
+		activatedPreview=false;
+		if (preview){
+			grabVideo();
 		} else {
-			getById("selectImageTFLITE3").style.display = "none";
+			grabVideo(session.quality, "videosource", "select#videoSource3");
 		}
 	}
-	
-	if (session.tfliteModule===false){
-		attemptTFLiteJsFileLoad();
-	}
 }
+
+var effectsLoaded = {};
+var JEELIZFACEFILTER = null;
+function loadEffect(effect){
+	warnlog("effect:"+effect);
+	var filename = effect.replace(/\W/g, '');
+	if (effectsLoaded[filename]){
+		effectsLoaded[filename]();
+		return;
+	}
+	warnlog("Loading Effect: "+effect);
+	var script = document.createElement('script');
+	script.onload = function() {
+		effectsLoaded[filename] = effectsEngine(effect);
+		effectsLoaded[filename]();
+	}
+	script.src = "./filters/"+filename+".js";
+	document.head.appendChild(script);
+	warnUser("Loading custom effects model...",1000);
+}
+
+var TFJSLOADING = false;
+function loadTensorflowJS(){
+	if (TFJSLOADING){
+		return;
+	}
+	TFJSLOADING=true;
+	var script = document.createElement('script');
+	var script2 = document.createElement('script');
+	var script3 = document.createElement('script');
+	var script4 = document.createElement('script');
+	model = false;
+	script.onload = function() {
+		document.head.appendChild(script2);
+	}
+	script2.onload = function() {
+		document.head.appendChild(script3);
+	}
+	script3.onload = function() {
+		document.head.appendChild(script4);
+	}
+	script4.onload = function() {
+		closeModal();
+		async function loadModel(){
+			model = await faceLandmarksDetection.load(faceLandmarksDetection.SupportedPackages.mediapipeFacemesh);
+		}
+		loadModel();
+	}
+	script.src = "./thirdparty/tfjs/tf-core.js";
+	script2.src = "./thirdparty/tfjs/tf-converter.js";
+	script3.src = "./thirdparty/tfjs/tf-backend-webgl.js";
+	script4.src = "./thirdparty/tfjs/face-landmarks-detection.js";
+	warnUser("Loading effects model...");
+	
+	script.type = 'text/javascript';script2.type = 'text/javascript';script3.type = 'text/javascript';script4.type = 'text/javascript';
+	document.head.appendChild(script);
+}
+
+
+
 var TFLITELOADING = false;
 function attemptTFLiteJsFileLoad(){
 	if (session.tfliteModule!==false){
@@ -16663,8 +16870,6 @@ async function changeTFLiteImage(ev, ele){
 		session.tfliteModule.img.ready=true;
 	}
 }
-
-
 async function loadTFLiteModel(){
 	try {
 		
@@ -16695,7 +16900,7 @@ async function loadTFLiteModel(){
 	session.tfliteModule.activelyProcessing = false;
 	TFLITELOADING = false;
 	closeModal();
-	if ((session.effects>=3) && (session.effects<=5)){
+	if ((session.effects=="3") || (session.effects=="4") || (session.effects=="5")){
 		if (document.getElementById("videosource")){
 			activatedPreview=false;
 			grabVideo(session.quality, "videosource", "select#videoSource3");

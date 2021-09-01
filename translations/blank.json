@@ -342,7 +342,7 @@
     "password-incorrect": "The password was incorrect.\n\nRefresh and try again.",
     "enter-display-name": "Please enter your display name:",
     "enter-new-display-name": "Enter a new Display Name for this stream",
-    "what-bitrate": "What bitrate would you like to record at? (kbps)",
+    "what-bitrate":"What bitrate would you like to record at? (kbps)\n(note: This feature is experimental, so have backup recordings going)",
     "enter-website": "Enter a website URL to share",
     "press-ok-to-record": "Press OK to start recording. Press again to stop and download.\n\nWarning: Keep this browser tab active to continue recording.\n\nYou can change the default video bitrate if desired below (kbps)",
     "no-streamID-provided": "No streamID was provided; one will be generated randomily.\n\nStream ID: ",
