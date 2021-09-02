@@ -1091,24 +1091,24 @@ function makeDraggableElement(elmnt, absolute=false) {
 		
 		elmnt.onmouseleave = function(event){
 			leaveEventCount+=1;
-			console.log("LEFT MOUSE");
-			console.log(event);
+		//	console.log("LEFT MOUSE");
+		//	console.log(event);
 			elmnt.stopDragTimeout = setTimeout(function(ele,evt1){
-					console.log("CLOSING AFTER TIMER");
+				//	console.log("CLOSING AFTER TIMER");
 					closeDragElement(evt1, ele);}
 				,100, elmnt, event);
 		};
 		elmnt.onmouseenter = function(event){
 			enterEventCount+=1;
-			console.log("ENTER MOUSE");
-			console.log(event);
+			//console.log("ENTER MOUSE");
+		//	console.log(event);
 			if (enterEventCount>=leaveEventCount){
 				if ("stopDragTimeout" in elmnt){clearTimeout(elmnt.stopDragTimeout);}
 			} else {
 				if (("stopDragTimeout" in elmnt) && (elmnt.stopDragTimeout)){
 					clearTimeout(elmnt.stopDragTimeout);
 					elmnt.stopDragTimeout = setTimeout(function(ele,evt1){
-						console.log("CLOSING AFTER TIMER");
+					//	console.log("CLOSING AFTER TIMER");
 						closeDragElement(evt1, ele);}
 					,100, elmnt, event);
 				}
@@ -2008,7 +2008,9 @@ function updateMixerRun(e=false){  // this is the main auto-mixing code.  It's a
 							break;
 						}
 					}
+					
 					if (!matched){
+						vidtemp.isInvisible = false;
 						if (session.fadein){
 							vidtemp.classList.add("fadein");
 						}
@@ -2126,6 +2128,7 @@ function updateMixerRun(e=false){  // this is the main auto-mixing code.  It's a
 		vid.style.height = "0px";
 		vid.style.top = "0px";
 		vid.style.left = "0px";
+		vid.isInvisible = true;
 		//vid.alreadyAdded=false; // what am I doing here? wtf? TODO: this is a typo, right?
 		if (vid.alreadyAdded && vid.alreadyAdded==true){
 			vid.alreadyAdded=false;
@@ -2151,6 +2154,13 @@ function updateMixerRun(e=false){  // this is the main auto-mixing code.  It's a
 					if (mediaPool.length%rw){
 						offsetx = Math.max(((rw - mediaPool.length%rw)*(window.innerWidth/rw))/2,0);
 					}
+				}
+			}
+			
+			if (vid.isInvisible){
+				vid.isInvisible = false;
+				if (session.fadein){
+					vid.classList.add("fadein");
 				}
 			}
 			
@@ -6169,7 +6179,12 @@ function activeSpeaker(border=false) {
 	var someoneElseIfSpeaking = false;
 	for (var UUID in session.rpcs) {
 		if (session.rpcs[UUID].stats._Audio_Loudness_average) {
-			session.rpcs[UUID].stats._Audio_Loudness_average = parseFloat(session.rpcs[UUID].stats.Audio_Loudness*0.2 + session.rpcs[UUID].stats._Audio_Loudness_average*0.8);
+			//console.log(session.rpcs[UUID].stats._Audio_Loudness_average);
+			if (session.rpcs[UUID].stats.Audio_Loudness && (session.rpcs[UUID].stats.Audio_Loudness>10)){
+				session.rpcs[UUID].stats._Audio_Loudness_average = parseFloat(session.rpcs[UUID].stats.Audio_Loudness*0.07 + session.rpcs[UUID].stats._Audio_Loudness_average*0.93);
+			} else {
+				session.rpcs[UUID].stats._Audio_Loudness_average = parseFloat(session.rpcs[UUID].stats._Audio_Loudness_average*0.975);
+			}
 		} else {
 			session.rpcs[UUID].stats._Audio_Loudness_average = 1;
 		}
@@ -6185,7 +6200,7 @@ function activeSpeaker(border=false) {
 				session.rpcs[UUID].activelySpeaking = true;
 				changed = true;
 				lastActiveSpeaker = UUID;
-				session.rpcs[UUID].stats._Audio_Loudness_average+=2000000;
+				session.rpcs[UUID].stats._Audio_Loudness_average+=50;
 			} 
 			
 		} else if (session.rpcs[UUID].stats._Audio_Loudness_average > 6) {
@@ -13383,17 +13398,19 @@ function listAudioSettings() {
 						input.step = session.audioConstraints[i].step;
 					}
 					input.type = "range";
-					input.dataset.keyname = i + "_"+ii;
+					input.dataset.keyname = i;
+					input.dataset.track = ii;
 					input.id = "constraints_" + i + "_"+ii;
 					input.style = "display:block; width:100%;";
 					input.name = "constraints_" + i + "_"+ii;
 
 
 					input.onchange = function(e) {
-						getById("label_" + e.target.dataset.keyname).innerHTML = e.target.dataset.keyname + ": " + e.target.value;
-						//updateAudioConstraints(e.target.dataset.keyname, e.target.value);
-						applyAudioHack(e.target.dataset.keyname, e.target.value, e.target.dataset.deviceid);
-						e.target.title = e.target.value;
+						try {
+							getById("label_" + e.target.dataset.keyname+"_"+ e.target.dataset.track).innerHTML = e.target.dataset.keyname + ": " + e.target.value;
+							applyAudioHack(e.target.dataset.keyname, e.target.value, e.target.dataset.deviceid);
+							e.target.title = e.target.value;
+						}catch(e){errorlog(e);}
 					};
 
 					getById("popupSelector_constraints_audio").appendChild(label);
@@ -13409,7 +13426,7 @@ function listAudioSettings() {
 					label.htmlFor = "constraints_" + i + "_"+ii;
 					label.innerHTML = i + ":";
 					label.style = "display:inline-block; padding:0;margin: 15px 0px 29px;";
-					label.dataset.keyname = i + "_"+ii;
+					label.dataset.keyname = i;
 					
 					var input = document.createElement("select");
 					var c = document.createElement("option");
@@ -13446,10 +13463,8 @@ function listAudioSettings() {
 					input.className = "constraintCameraInput";
 					input.name = "constraints_" + i + "_"+ii;
 					input.style = "display:inline; padding:2px; margin:0 10px;";
-					input.dataset.keyname = i + "_"+ii;
+					input.dataset.keyname = i;
 					input.onchange = function(e) {
-						//getById("label_"+e.target.dataset.keyname).innerHTML =e.target.dataset.keyname+": "+e.target.value;
-						//updateAudioConstraints(e.target.dataset.keyname, e.target.value);
 						applyAudioHack(e.target.dataset.keyname, e.target.value, e.target.dataset.deviceid);
 						log(e.target.dataset.keyname, e.target.value);
 					};
@@ -13464,7 +13479,7 @@ function listAudioSettings() {
 					label.htmlFor = "constraints_" + i + "_"+ii;
 					label.innerHTML = i + ":";
 					label.style = "display:inline-block; padding:0;margin: 15px 0px 29px;";
-					label.dataset.keyname = i + "_"+ii;
+					label.dataset.keyname = i;
 					var input = document.createElement("select");
 					var c = document.createElement("option");
 					
@@ -13485,7 +13500,7 @@ function listAudioSettings() {
 					input.className = "constraintCameraInput";
 					input.name = "constraints_" + i + "_"+ii;
 					input.style = "display:inline; padding:2px; margin:0 10px;";
-					input.dataset.keyname = i + "_"+ii;
+					input.dataset.keyname = i;
 					input.onchange = function(e) {
 						//getById("label_"+e.target.dataset.keyname).innerHTML =e.target.dataset.keyname+": "+e.target.value;
 						//updateAudioConstraints(e.target.dataset.keyname, e.target.value);
@@ -13515,7 +13530,6 @@ function applyAudioHack(constraint, value = null, deviceid="default") {
 	} else if (value == "false") {
 		value = false;
 	}
-	warnlog(constraint); 
 	////////////////
 	try {
 		var tracks = session.streamSrc.getAudioTracks();
@@ -13583,7 +13597,7 @@ function applyAudioHack(constraint, value = null, deviceid="default") {
 	}
 	////////
 	
-	var new_constraints = Object.assign(track0.getSettings(), {
+	var new_constraints = Object.assign(session.currentAudioConstraints, {
 		[constraint]: value
 	}, );
 	new_constraints = {
