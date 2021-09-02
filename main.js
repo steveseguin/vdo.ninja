@@ -743,24 +743,7 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 		}
 	}
 
-	if (urlParams.has('animated') || urlParams.has('animate')){
-		session.animatedMoves = urlParams.get('animated') || urlParams.get('animate');
-		if (session.animatedMoves === "false") {
-			session.animatedMoves = false;
-		} else if (session.animatedMoves === "0") {
-			session.animatedMoves = false;
-		} else if (session.animatedMoves === "no") {
-			session.animatedMoves = false;
-		} else if (session.animatedMoves === "off") {
-			session.animatedMoves = false;
-		} else {
-			session.animatedMoves=true;
-		}
-	} else if (session.mobile){
-		session.animatedMoves=false;
-	} else {
-		session.animatedMoves=true;
-	}
+	
 	
 
 	if (urlParams.has('pie')){
@@ -1142,24 +1125,6 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 		} catch(e){errorlog("variable css failed");}
 		
 	}
-
-	if (urlParams.has('fadein')) {
-		session.fadein=true;
-		if (urlParams.get('fadein') || 0){
-			try {
-				var fadeinspeed = parseInt(urlParams.get('fadein') || 0)/1000.0;
-				fadeinspeed+="s";
-				document.querySelector(':root').style.setProperty('--fadein-speed', fadeinspeed);
-			} catch(e){errorlog("variable css failed");}
-		} else {
-			try {
-				var fadeinspeed = 0.5;
-				fadeinspeed+="s";
-				document.querySelector(':root').style.setProperty('--fadein-speed', fadeinspeed);
-			} catch(e){errorlog("variable css failed");}
-		}
-	}
-
 
 	if (urlParams.has("videodevice") || urlParams.has("vdevice") || urlParams.has('vd') || urlParams.has('device') || urlParams.has('d')) {
 
@@ -1851,13 +1816,52 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 	if (urlParams.has('activespeaker') || urlParams.has('speakerview')  || urlParams.has('sas')){
 		session.activeSpeaker = true;
 		session.audioEffects = true;
-		session.audioMeterGuest = true;
+		session.audioMeterGuest = true; 
+		//session.animatedMoves = false;
+		
+		session.fadein=true;
+		document.querySelector(':root').style.setProperty('--fadein-speed', 0.5);
 		setInterval(function(){activeSpeaker(false);},100);
+		
 	} else if (urlParams.has('noisegate')){
 		session.quietOthers = true;
 		session.audioEffects = true;
 		session.audioMeterGuest = true;
 		setInterval(function(){activeSpeaker(false);},100);
+	}
+	
+	if (urlParams.has('fadein')) {
+		session.fadein=true;
+		if (urlParams.get('fadein') || 0){
+			try {
+				var fadeinspeed = parseInt(urlParams.get('fadein') || 0)/1000.0;
+				fadeinspeed+="s";
+				document.querySelector(':root').style.setProperty('--fadein-speed', fadeinspeed);
+			} catch(e){errorlog("variable css failed");}
+		} else {
+			try {
+				var fadeinspeed = 0.5;
+				fadeinspeed+="s";
+				document.querySelector(':root').style.setProperty('--fadein-speed', fadeinspeed);
+			} catch(e){errorlog("variable css failed");}
+		}
+	}
+
+	if (urlParams.has('animated') || urlParams.has('animate')){
+		session.animatedMoves = urlParams.get('animated') || urlParams.get('animate');
+		if (session.animatedMoves === "false") {
+			session.animatedMoves = false;
+		} else if (session.animatedMoves === "0") {
+			session.animatedMoves = false;
+		} else if (session.animatedMoves === "no") {
+			session.animatedMoves = false;
+		} else if (session.animatedMoves === "off") {
+			session.animatedMoves = false;
+		} else {
+			session.animatedMoves=true;
+		}
+	} else if (session.mobile){
+		session.animatedMoves=false;
 	}
 
 	if (urlParams.has('meter') || urlParams.has('meterstyle')){
