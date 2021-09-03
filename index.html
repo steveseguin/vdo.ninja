@@ -687,11 +687,15 @@
 					<input type="text" autocorrect="off" id="iframeURL" autocapitalize="none" style="margin:10px; border:2px solid; padding:10px; width:400px;" title="Enter an HTTPS URL" multiple/><br />
 					<button onclick="previewIframe(getById('iframeURL').value);" >Preview</button> 
 					<button onclick="this.innerHTML = 'Update'; session.publishIFrame(getById('iframeURL').value);" >Share</button><br />
-					<small class="iframeblob">
+					<div class="message-card info">
+						<h1>Usage information</h1>
+						<p></p>
+						<ul style="text-align: left;">
 						<li>Not all websites will work with this feature as some sites disallow embedding.</li>
 						<li>The site will try to auto-optimize standard Youtube or Twitch links.</li>
 						<li>Remote websites must be CORS/IFrame compatible with full SSL-encryption enabled.</li>
-					</small>
+					</ul>
+					</div>
 					<div id="iFramePreview" style=" width: 1280px; height: 720px; margin: auto; padding: 10px;"></div>
 				</div>
 				<div class="outer close">
