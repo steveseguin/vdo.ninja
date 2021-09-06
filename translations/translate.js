@@ -72,6 +72,7 @@ const updateList = [
     "cs",
     "de",
     "en",
+    "cn",
     "es",
     "fr",
     "it",
@@ -81,7 +82,7 @@ const updateList = [
     "pt",
     "ru",
     "tr",
-	"uk",
+    "uk",
     "blank"
 ]; // list of languages to update. Update this if you add a new language.
 
