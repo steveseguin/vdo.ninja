@@ -158,7 +158,13 @@
     "hide-this-window": "Hide this window",
     "cycle-the-cameras": "Cycle the Cameras",
     "have-screen-shares-stream-id-s-use-a-predictable-prefixed-value-instead-of-a-random-one-": "Have screen-shares stream ID's use a predictable prefixed value instead of a random one.",
-    "toggle-solo-voice-chat-or-hold-ctrl-cmd-when-selecting-to-make-it-two-way-private-": "Toggle solo voice chat or hold CTRL/CMD when selecting to make it two-way private."
+    "toggle-solo-voice-chat-or-hold-ctrl-cmd-when-selecting-to-make-it-two-way-private-": "Toggle solo voice chat or hold CTRL/CMD when selecting to make it two-way private.",
+    "transfer-any-file-to-the-group": "Transfer any file to the group",
+    "transfer-any-file": "Transfer any file",
+    "the-camera-will-load-in-a-default-safe-mode-that-may-work-if-other-modes-fail-": "The camera will load in a default safe-mode that may work if other modes fail.",
+    "disable-animated-transitions-during-video-mixing": "Disable animated transitions during video mixing",
+    "allow-the-guest-to-select-a-file-to-upload-to-the-director-once-shared-it-will-show-in-the-chat-as-a-download-link-": "Allow the guest to select a file to upload to the director. Once shared, it will show in the chat as a download link.",
+    "set-a-countdown-timer-that-this-guest-sees": "Set a countdown timer that this guest sees"
   },
   "innerHTML": {
     "logo-header": "<font id=\"qos\" style=\"color: white;\">O</font>BS.Ninja (RU)",
@@ -315,7 +321,7 @@
     "add-to-outlook-calendar": "Add to Outlook Calendar",
     "add-to-yahoo-calendar": "Add to Yahoo Calendar",
     "remote-monitoring": "Remote Monitoring",
-	"invite-saved-to-cookie": "Invite saved to cookie",
+    "invite-saved-to-cookie": "Invite saved to cookie",
     "fade-videos-in": "Fade videos in",
     "show-guest-tips": "Show guest setup tips",
     "green-background": "Green background",
@@ -335,7 +341,20 @@
     "director-muted-you": "The director has muted you.",
     "application-audio-capture": "For application-specific audio capture, <a href=\"https://docs.vdo.ninja/audio\" style=\"color: #007AC8;\">see here</a>",
     "animate-mixing": "Animate mixing",
-    "prefix-screenshare": "Prefix screenshare IDs"
+    "prefix-screenshare": "Prefix screenshare IDs",
+    "privacy-disabled": "Privacy warning: The director will be able to remotely access your camera and microphone if you continue.",
+    "face-mesh": "Face mesh (slow load)",
+    "anonymous-mask": "Anonymous mask",
+    "dog-face": "Dog ears and nose",
+    "compatibility-mode": "Compatibility mode",
+    "disable-animated-mixing": "Disable animations",
+    "request-upload": " Request File",
+    "create-timer": "Create Timer",
+    "edit-url": "Edit URL manually",
+    "mirror-video": "Mirror",
+    "toggle-control-video": "Toggle control bar",
+    "picture-in-picture": "Picture-in-picture",
+    "chrome-cast": "Cast.."
   },
   "placeholders": {
     "join-by-room-name-here": "Join by Room Name here",
@@ -351,6 +370,7 @@
     "enter-your-message-here": "Enter your message here"
   },
   "miscellaneous": {
+    "start": "START",
     "new-display-name": "Enter a new Display Name for this stream",
     "submit-error-report": "Press OK to submit any error logs to VDO.Ninja. Error logs may contain private information.",
     "director-redirect-1": "The director wishes to redirect you to the URL: ",
@@ -359,6 +379,7 @@
     "audio-processing-disabled": "Audio processing is disabled with this guest. Can't mute or change volume",
     "not-the-director": "<font color='red'>You are not the director of this room.  You will have limited to no control.  You can try claiming the room after the first director leaves.</font>",
     "room-is-claimed": "The room is already claimed by someone else.\n\nOnly the first person to join a room is the assigned director.\n\nRefresh after the first director leaves to claim.",
+    "room-is-claimed-codirector": "The room is already claimed by someone else.\n\nTrying to join as a co-director...",
     "streamid-already-published": "The stream ID you are publishing to is already in use.\n\nPlease try with a different invite link or refresh to retry again.\n\nYou will now be disconnected.",
     "director": "Director",
     "unknown-user": "Unknown User",
@@ -366,6 +387,7 @@
     "load-previous-session": "Would you like to load your previous session's settings?",
     "enter-password": "Please enter the password below: \n\n(Note: Passwords are case-sensitive and you will not be alerted if it is incorrect.)",
     "enter-password-2": "Please enter the password below: \n\n(Note: Passwords are case-sensitive.)",
+    "enter-director-password": "Please enter the director's password:\n\n(Note: Passwords are case-sensitive and you will not be alerted if it is incorrect.)",
     "password-incorrect": "The password was incorrect.\n\nRefresh and try again.",
     "enter-display-name": "Please enter your display name:",
     "enter-new-display-name": "Enter a new Display Name for this stream",
