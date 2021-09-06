@@ -1,4 +1,4 @@
-Welcome to the translation / language section of OBS.Ninja
+Welcome to the translation / language section of VDO.Ninja
 
 You can specify a translation using this code, if deploying the code yourself. blank can be replaced with ru, en, pt, etc..
 ```
