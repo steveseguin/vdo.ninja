@@ -22,7 +22,7 @@
 		<link rel="icon" type="image/png" sizes="32x32" href="./media/favicon-32x32.png" />
 		<link rel="icon" type="image/png" sizes="16x16" href="./media/favicon-16x16.png" />
 		<link rel="icon" href="./media/favicon.ico" />
-		<link itemprop="thumbnailUrl" href="./media/obsNinja_logo_full.png" />
+		<link itemprop="thumbnailUrl" href="./media/vdoNinja_logo_full.png" />
 		<!-- Primary Meta Tags -->
 		<title>VDO.Ninja</title>
 		<meta name="title" content="VDO.Ninja" />
@@ -34,8 +34,8 @@
 		<meta property="og:url" content="https://vdo.ninja/" />
 		<meta property="og:title" content="VDO.Ninja" />
 		<meta property="og:description" content="Bring live video from your smartphone, computer, or friends directly into Studio. 100% free." />
-		<meta property="og:image" itemprop="image" content="https://vdo.ninja/media/obsNinja_logo_full.png" />
-		<meta name="msapplication-TileImage" content="./media/obsNinja_logo_full.png" />
+		<meta property="og:image" itemprop="image" content="https://vdo.ninja/media/vdoNinja_logo_full.png" />
+		<meta name="msapplication-TileImage" content="./media/vdoNinja_logo_full.png" />
 		<meta property="og:image:type" content="image/png" />
 		<meta property="og:image:width" content="1200" />
 		<meta property="og:image:height" content="630" />
@@ -44,7 +44,7 @@
 		<meta property="twitter:url" content="https://vdo.ninja/" />
 		<meta property="twitter:title" content="VDO.Ninja" />
 		<meta property="twitter:description" content="Bring live video from your smartphone, computer, or friends directly into OBS Studio. 100% free." />
-		<meta property="twitter:image" content="./media/obsNinja_logo_full.png" />
+		<meta property="twitter:image" content="./media/vdoNinja_logo_full.png" />
 		<meta name="msapplication-TileColor" content="#da532c" />
 		<meta name="theme-color" content="#ffffff" />
 		<style>
@@ -54,18 +54,17 @@
 				transition: opacity .1s linear;
 			}
 		</style>
-		<link rel="stylesheet" href="./lineawesome/css/line-awesome.min.css" />
-		<link rel="stylesheet" href="./main.css?ver=78" />
+		<link rel="stylesheet" href="./main.css?ver=124" />
 		<script type="text/javascript" crossorigin="anonymous" src="./thirdparty/adapter.min.js"></script>
 		<style id="lightbox-animations" type="text/css"></style>
 	</head>
 	<body id="main" class="hidden">
 		<span itemprop="image" itemscope itemtype="image/png">
-			<link itemprop="url" href="./media/obsNinja_logo_full.png" />
+			<link itemprop="url" href="./media/vdoNinja_logo_full.png" />
 		</span>
-		<link itemprop="thumbnailUrl" href="./media/obsNinja_logo_full.png" />
+		<link itemprop="thumbnailUrl" href="./media/vdoNinja_logo_full.png" />
 		<span itemprop="thumbnail" itemscope itemtype="http://schema.org/ImageObject">
-			<link itemprop="url" href="./media/obsNinja_logo_full.png" />
+			<link itemprop="url" href="./media/vdoNinja_logo_full.png" />
 		</span>
 		<script  type="text/javascript" crossorigin="anonymous"  src="./thirdparty/CodecsHandler.js?ver=34"></script>
 		<script  type="text/javascript" crossorigin="anonymous" src="./webrtc.js?ver=291"></script>
@@ -273,7 +272,7 @@
 						</tr><tr>
 							<th></th>
 							<th  style="text-align:right;">
-								<button onclick="createRoom()" class="gobutton" style="float: left;" alt="Enter the room as the group's director" title="You'll enter as the room's director">
+								<button onclick="createRoom()" class="gobutton" style="float: left;width:100%;" alt="Enter the room as the group's director" title="You'll enter as the room's director">
 									<span data-translate="enter-the-rooms-control">Enter the Room's Control Center</span>
 								</button>
 								<br /><br />
@@ -381,14 +380,14 @@
 						</ul>
 					</div>
 					<br />
-					<span id="headphonesDiv" style="text-align:left; margin:17px 0 0 0; max-width: 550px; min-width: 420px; background-color: #f3f3f3; display: none; padding: 10px 10px; border: 1px solid #ccc; vertical-align: middle;">
+					<span id="headphonesDiv" class="audioMenu">
 						<div class="audioTitle2">
 						<i class="las la-headphones"></i><span data-translate="select-output-source"> Audio Output Destination:
 						</span><button onclick="playtone()" class="white" style="margin:0 0 0 15px;" type="button">Test</button></div>
 						<select id="outputSource" ></select>
 						
 					</span>
-					<div id="effectsDiv" style="user-select: none; font-size:100%; text-align:left; margin: 17px auto; max-width:450px; min-width: 420px; background-color: #f3f3f3; display: none; padding: 10px 10px; border: 1px solid #ccc; vertical-align: middle;">
+					<div id="effectsDiv">
 						<div style="text-align: left;display: inline-block;">
 							<i class="las la-robot"></i><span data-translate="select-digital-effect"> Digital Video Effects: </span>
 						</div>
@@ -397,6 +396,9 @@
 							<option value="3" data-translate="blurred-background">Blurred background</option>
 							<option value="4" data-translate="digital-greenscreen">Digital greenscreen</option>	
 							<option value="5" data-translate="virtual-background">Virtual background</option>
+							<option class="advanced" value="6" data-translate="face-mesh">Face mesh (slow load)</option>
+							<option class="advanced" value="anon" data-translate="anonymous-mask">Anonymous mask</option>
+							<option class="advanced" value="dog" data-translate="dog-face">Dog ears and nose</option>
 						</select>
 						<span data-warnSimdNotice="true" style='display:none; font-size: 140%; margin-left:10px; vertical-align: middle; cursor:pointer' title="Improve performance and quality with this tip" onclick="warnUser(`For improved performance, use Chrome v87 or newer with SIMD support enabled.<br />Enable SIMD here: <a href='chrome://flags/#enable-webassembly-simd' target='_blank' onclick='copyFunction(this,event)' >chrome://flags/#enable-webassembly-simd</a>`);">
 							<i class="las la-info-circle"></i>
@@ -415,19 +417,7 @@
 						</div>
 						
 					</div>
-					<span id="addPasswordBasic" style="width: 450px;
-							white-space: nowrap;
-							overflow: hidden;
-							border-bottom: 0;
-							display: block;
-							text-align: left;
-							margin: 17px auto 0  auto;
-							max-width: 450px;
-							min-width: 420px;
-							background-color: #f3f3f3;
-							padding: 10px 10px;
-							border: 1px solid #ccc;
-							vertical-align: middle;">
+					<span id="addPasswordBasic" >
 						<i class="las la-key"></i><span data-translate="add-a-password"> Add a Password:</span>
 						<input type="text" id="passwordBasicInput" placeholder="optional" style="border: solid 1px #AAA;
 							padding: 4px 6px;
@@ -556,54 +546,60 @@
 							<div class="invite_setting_item">
 								<input type="checkbox" id="invite_bitrate" />
 								<label for="invite_bitrate">
-									<span data-translate="unlock-video-bitrate" title="Ideal for 1080p60 gaming, if your computer and upload are up for it" >Unlock Video Bitrate (20mbps)</span>
+									<span data-translate="unlock-video-bitrate" title="Ideal for 1080p60 gaming, if your computer and upload are up for it" >Unlock the video bitrate (20mbps)</span>
 								</label>
 							</div>
 							<div class="invite_setting_item">
 								<input type="checkbox" id="invite_vp9" />
 								<label for="invite_vp9">
-									<span data-translate="force-vp9-video-codec" title="Better video compression and quality at the cost of increased CPU encoding load">Force VP9 Video Codec</span>
+									<span data-translate="force-vp9-video-codec" title="Better video compression and quality at the cost of increased CPU encoding load">Use the VP9 video codec</span>
 								</label>
 							</div>
 							<div class="invite_setting_item">
 								<input type="checkbox" id="invite_stereo" />
 								<label for="invite_stereo">
-									<span data-translate="enable-stereo-and-pro" title="Disable digital audio-effects and increase audio bitrate">Enable Stereo and Pro HD Audio</span>
+									<span data-translate="enable-stereo-and-pro" title="Disable digital audio-effects and increase audio bitrate">Enable stereo and pro HD audio</span>
 								</label>
 							</div>
 							<div class="invite_setting_item">
-								<label for="invite_quality" data-translate="video-resolution">Video Resolution: </label>
+								<label for="invite_quality" data-translate="video-resolution">Video resolution: </label>
 								<select id="invite_quality" name="invite_quality">
-									<option value="-1" selected>User Selectable</option>
-									<option value="0">Maximum Resolution</option>
+									<option value="-1" selected>User selectable</option>
+									<option value="0">Maximum resolution</option>
 									<option value="1">Balanced</option>
-									<option value="2">Smooth and Cool</option>
+									<option value="2">Smooth and cool</option>
 								</select>
 							</div>
 						</div>
 						<div class="invite_setting_group">
 							<div class="invite_setting_item">
+								<input type="checkbox" id="invite_effects" />
+								<label for="invite_effects">
+									<span data-translate="allow-effects-invite" title="The guest will be able to select digital video effects to apply.">Allow video effects to be used</span>
+								</label>
+							</div>
+							<div class="invite_setting_item">
 								<input type="checkbox" id="invite_automic" />
 								<label for="invite_automic">
-									<span data-translate="hide-mic-selection" title="The guest will not have a choice over audio-options">Force Default Microphone</span>
+									<span data-translate="hide-mic-selection" title="The guest will not have a choice over audio-options">Force select the default microphone</span>
 								</label>
 							</div>
 							<div class="invite_setting_item">
 								<input type="checkbox" id="invite_hidescreen" />
 								<label for="invite_hidescreen">
-									<span data-translate="hide-screen-share" title="The guest will only be able to select their webcam as an option">Hide Screenshare Option</span>
+									<span data-translate="hide-screen-share" title="The guest will only be able to select their webcam as an option">Hide the screenshare option</span>
 								</label>
 							</div>
 							<div class="invite_setting_item">
 								<input type="checkbox" id="invite_remotecontrol" />
 								<label for="invite_remotecontrol">
-									<span data-translate="allow-remote-control" title="Hold CTRL and the mouse wheel to zoom in and out remotely of compatible video streams">Remote Control Camera Zoom (android)</span>
+									<span data-translate="allow-remote-control" title="Hold CTRL and the mouse wheel to zoom in and out remotely of compatible video streams">Remote control of zoom (android)</span>
 								</label>
 							</div>
 							<div class="invite_setting_item">
 								<input type="checkbox" id="invite_obfuscate" />
 								<label for="invite_obfuscate">
-									<span data-translate="obfuscate_url" title="Encode the URL so that it's harder for a guest to modify the settings.">Obfuscate the Invite URL</span>
+									<span data-translate="obfuscate_url" title="Encode the URL so that it's harder for a guest to modify the settings.">Obfuscate the invite URL</span>
 								</label>
 							</div>
 							<div class="invite_setting_item">
@@ -687,15 +683,11 @@
 					<input type="text" autocorrect="off" id="iframeURL" autocapitalize="none" style="margin:10px; border:2px solid; padding:10px; width:400px;" title="Enter an HTTPS URL" multiple/><br />
 					<button onclick="previewIframe(getById('iframeURL').value);" >Preview</button> 
 					<button onclick="this.innerHTML = 'Update'; session.publishIFrame(getById('iframeURL').value);" >Share</button><br />
-					<div class="message-card info">
-						<h1>Usage information</h1>
-						<p></p>
-						<ul style="text-align: left;">
+					<small class="iframeblob">
 						<li>Not all websites will work with this feature as some sites disallow embedding.</li>
 						<li>The site will try to auto-optimize standard Youtube or Twitch links.</li>
 						<li>Remote websites must be CORS/IFrame compatible with full SSL-encryption enabled.</li>
-					</ul>
-					</div>
+					</small>
 					<div id="iFramePreview" style=" width: 1280px; height: 720px; margin: auto; padding: 10px;"></div>
 				</div>
 				<div class="outer close">
@@ -753,7 +745,7 @@
 								👋 👀  Welcome to VDO Ninja! We've rebranded! 📼  Nothing else is changing and we're staying 100% free.
 							</h4>
 							<br />
-							🎁 Site Updated September 1st 🎈🎈 The <a href="https://docs.vdo.ninja/release-notes/v19">v19.0 release notes are here</a>. If new issues occur, the previous version can be <a href="https://vdo.ninja/v183/">found here</a>.
+							🎁 Site updated September 7th. The <a href="https://docs.vdo.ninja/release-notes/v19">v19.0 release notes are here</a>. If new issues occur, the previous version can be <a href="https://vdo.ninja/v183/">found here</a>.
 
 							<br />
 							<br />
@@ -769,14 +761,7 @@
 				<input type="submit" />
 			</form>
 			<div id="credits" class="credits">
-				Icons made by 
-				<a href="https://www.flaticon.com/authors/lucy-g" >Lucy G</a> from 
-				<a href="https://www.flaticon.com/" >www.flaticon.com</a> is licensed by
-				
-				<a href="https://creativecommons.org/licenses/by/3.0/" title="Creative Commons BY 3.0" target="_blank">CC 3.0 BY</a> and by
-				
-				<a href="https://www.flaticon.com/authors/gregor-cresnar">Gregor Cresnar</a> from 
-				<a href="https://www.flaticon.com/" >www.flaticon.com</a>
+				<a href='https://github.com/steveseguin/vdoninja'>VDO.Ninja, by Steve Seguin</a>
 			</div>
 		</div>
 		<span id="electronDragZone" style="pointer-events: none; z-index:-10; position:absolute;top:0;left:0;width:100%;height:5%;-webkit-app-region: drag;min-height:33px;"></span>
@@ -1466,14 +1451,14 @@
 				
 				<br />
 				
-				<div class="form-group multiselect" alt="tip: Hold CTRL (command) to select Multiple" title="tip: Hold CTRL (command) to select Multiple" style="padding: 10px; background-color:#f3f3f3;">
+				<div class="form-group multiselect" alt="tip: Hold CTRL (command) to select Multiple" title="tip: Hold CTRL (command) to select Multiple" >
 					<a id="multiselect-trigger3" class="form-control multiselect-trigger" >
 						<div id="audioTitle2" class="title">
 							<i class="las la-microphone-alt"></i><span data-translate="select-audio-source"> Audio Source(s) </span>
 							<i id="chevarrow2" class="chevron bottom" aria-hidden="true"></i>
 						</div>
 					</a>
-					<ul id="audioSource3" style="background-color:white;"  class="multiselect-contents">
+					<ul id="audioSource3" class="multiselect-contents">
 						<li>
 						</li>
 					</ul>
@@ -1496,6 +1481,9 @@
 						<option value="3" data-translate="blurred-background">Blurred background</option>
 						<option value="4" data-translate="digital-greenscreen">Digital greenscreen</option>	
 						<option value="5" data-translate="virtual-background">Virtual background</option>
+						<option class="advanced" value="6" data-translate="face-mesh">Face mesh (slow load)</option>
+						<option class="advanced" value="anon" data-translate="anonymous-mask">Anonymous mask</option>
+						<option class="advanced"  value="dog" data-translate="dog-face">Dog ears and nose</option>
 					</select>
 					<span data-warnSimdNotice="true" style='display:none; font-size: 140%; margin-left:10px; vertical-align: middle; cursor:pointer' title="Improve performance and quality with this tip" onclick="warnUser(`For improved performance, use Chrome v87 or newer with SIMD support enabled.<br />Enable SIMD here: <a href='chrome://flags/#enable-webassembly-simd' onclick='copyFunction(this,event)' target='_blank'>chrome://flags/#enable-webassembly-simd</a>`);">
 						<i class="las la-info-circle"></i>
@@ -1545,6 +1533,12 @@
 					<a href="#" class="context-menu__link" data-action="Copy">
 						<i class="las la-paperclip"></i>
 						<span data-translate="copy-to-clipboard" >Copy to clipboard</span>
+					</a>
+				</li>
+				<li class="context-menu__item">
+					<a href="#" class="context-menu__link" data-action="Edit">
+						<i class="las la-pen"></i>
+						<span data-translate="edit-url" >Edit URL manually</span>
 					</a>
 				</li>
 			</ul>
@@ -1715,12 +1709,13 @@
 				<li><a onclick="changeLg('nl');toggle(document.getElementById('languages'));" style="cursor: pointer;" data-tz="Europe/Amsterdam">Dutch</a></li>
 				<li><a onclick="changeLg('tr');toggle(document.getElementById('languages'));" style="cursor: pointer;" data-tz="Europe/Istanbul">Turkish</a></li>
 				<li><a onclick="changeLg('ja');toggle(document.getElementById('languages'));" style="cursor: pointer;" data-tz="Asia/Tokyo">Japanese</a></li>
+				<li><a onclick="changeLg('cn');toggle(document.getElementById('languages'));" style="cursor: pointer;" data-tz="Asia/China">Chinese (中文)</a></li>
 				<li><a onclick="changeLg('cs');toggle(document.getElementById('languages'));" style="cursor: pointer;" data-tz="Europe/Prague">Czech</a></li>
 				<li><a onclick="changeLg('uk');toggle(document.getElementById('languages'));" style="cursor: pointer;" data-tz="Europe/Ukraine">Ukrainian</a></li>
 				<li><a onclick="changeLg('pig');toggle(document.getElementById('languages'));" style="cursor: pointer;">Pig Latin</a></li>
 			</ul>
 			<br />
-			<a href="https://github.com/steveseguin/vdoninja/tree/master/translations" target="_blank" rel="noopener noreferrer" data-translate='add-more-here'>Add More Here!</a>
+			<a href="https://github.com/steveseguin/vdoninja/tree/master/translations" style='color:#333;font-style: italic;' target="_blank" rel="noopener noreferrer" data-translate='add-more-here'>Add More Here!</a>
 			<br />
 		</div>
 		<div id="calendar" class="popup-message" style="display: none; right: 0; padding-left:5px; bottom: 25px; position: absolute;">
@@ -1749,7 +1744,7 @@
 
 		
 			var session = WebRTC.Media; // session is a required global variable if configuring manually. Run before loading main.js but after webrtc.js.
-			session.version = "19.0";
+			session.version = "19.1";
 			session.streamID = session.generateStreamID(); // randomly generates a streamID for this session. You can set your own programmatically if needed
 			
 			session.defaultPassword = "someEncryptionKey123"; // Change this password if self-deploying for added security/privacy
@@ -1826,11 +1821,11 @@
 			// session.title // "zzzz"
 		</script>
 		<script type="text/javascript" crossorigin="anonymous" src="./thirdparty/aes.js"></script>
-		<script type="text/javascript" crossorigin="anonymous" id="lib-js" src="./lib.js?ver=59"></script>
+		<script type="text/javascript" crossorigin="anonymous" id="lib-js" src="./lib.js?ver=66"></script>
 		<!-- 
 		// If you wish to change branding, blank offers a good clean start.
 		<script type="text/javascript" id="main-js" src="./main.js" data-translation="blank"></script>
 	-->
-		<script type="text/javascript" crossorigin="anonymous" id="main-js" src="./main.js?ver=249"></script>
+		<script type="text/javascript" crossorigin="anonymous" id="main-js" src="./main.js?ver=251"></script>
 	</body>
 </html>

@@ -64,7 +64,9 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 			} catch (e) {}
 		}
 		try {
-			changeLg("blank");
+			if (!ln_template){
+				changeLg("blank");
+			}
 			//getById("mainmenu").style.opacity = 1;
 			if (session.label === false) {
 				document.title = location.hostname;
@@ -169,6 +171,10 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 	
 	if (urlParams.has('nospeakerbutton') || urlParams.has('nsb')) {
 		getById("mutespeakerbutton").style.setProperty("display", "none", "important");
+	}
+	
+	if (urlParams.has('pusheffectsdata') ) {
+		session.pushEffectsData=true;
 	}
 
 	if (iOS || iPad) {
@@ -1125,7 +1131,35 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 		} catch(e){errorlog("variable css failed");}
 		
 	}
-
+	
+	var darkmode=false;
+	try {
+		if (urlParams.has("darkmode") || urlParams.has("nightmode")){
+			darkmode = urlParams.get("darkmode") || urlParams.get("nightmode") || null;
+			if ((darkmode===null) || (darkmode === "")){
+				darkmode=true;
+			} else if ((darkmode=="false") || (darkmode == "0") || (darkmode == 0) || (darkmode == "off")){
+				darkmode=false;
+			}
+		} else if (urlParams.has("lightmode") || urlParams.has("lightmode")){
+			darkmode = false;
+		} else {
+			darkmode = getComputedStyle(document.querySelector(':root')).getPropertyValue('--color-mode').trim();
+			if (darkmode == "dark"){
+				darkmode = true;
+			} else {
+				darkmode = false;
+			}
+		}
+		if (darkmode){
+			document.body.classList.add("darktheme");
+			document.querySelector(':root').style.setProperty('--background-color',"#02050c" );
+		} else {
+			document.body.classList.remove("darktheme");
+			document.querySelector(':root').style.setProperty('--background-color',"#141926" );
+		}
+	} catch(e){errorlog(e);}
+	
 	if (urlParams.has("videodevice") || urlParams.has("vdevice") || urlParams.has('vd') || urlParams.has('device') || urlParams.has('d')) {
 
 		session.videoDevice = urlParams.get("videodevice") || urlParams.get("vdevice") || urlParams.get("vd") || urlParams.get("device") || urlParams.get("d");
@@ -2594,7 +2628,7 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 			if ("keyframe" in e.data) {
 				session.sendKeyFrameScenes();
 			}
-
+			
 			if ("mute" in e.data) {
 				if (e.data.mute === true) { // unmute
 					session.speakerMuted = true; // set
@@ -2833,7 +2867,7 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 					session.pushEffectsData = e.data.getEffectsData; // which effect do you want the data from? it won't enable the effect necessarily; just the ML pipeline
 					
 					//parent.postMessage({
-					//	"effectsData": loudness,
+					//	"effectsData": effectsData,
 					//	"effectsID": session.pushEffectsData
 					//}, "*");
 					
@@ -2876,7 +2910,6 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 				}
 			}
 
-
 			if ("automixer" in e.data) {
 				if (e.data.automixer == true) {
 					session.manual = false;
@@ -2888,7 +2921,9 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 				}
 			}
 
-			if ("target" in e.data) {
+			if (("action" in e.data) && (e.data.action!="null")) { ///////////////  reuse the Companion API
+				processMessage(e.data); // reuse the companion API
+			} else if ("target" in e.data) {
 				log(e.data);
 				for (var i in session.rpcs) {
 					try {
@@ -2911,7 +2946,7 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 												session.rpcs[i].videoElement.parentNode.parentNode.removeChild(session.rpcs[i].videoElement.parentNode);
 											} catch (e) {}
 										}
-									}
+									} 
 								} catch (e) {
 									errorlog(e);
 								}

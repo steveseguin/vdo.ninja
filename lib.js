@@ -14,7 +14,7 @@ var activatedPreview = false;
 
 var screensharebutton = true;
 var screensharesupport = true;
-var model = null;
+
 
 
 var Callbacks = [];
@@ -2640,13 +2640,20 @@ function updateMixerRun(e=false){  // this is the main auto-mixing code.  It's a
 	});
 }
 
+
+var translationBacklog = [];
+
 function miniTranslate(ele, ident = false) {
 	
-	if (!translation){return;}
+	if (!translation){
+		translationBacklog.push([ele,ident]);
+		log('Translation backlogged');
+		return;}
 	
 	if (ident){
 		if (ident in translation.innerHTML){
 			ele.innerHTML = translation.innerHTML[ident];
+			log("Backed up Translation fixed:"+ele.innerHTML);
 			return;
 		} else {
 			warnlog(ident + ": not found in translation file");
@@ -2685,6 +2692,7 @@ function miniTranslate(ele, ident = false) {
 }
 
 function changeLg(lang) {
+	log("changeLg: "+lang);
 	fetch("./translations/" + lang + '.json').then(function(response) {
 		try{
 			if (response.status !== 200) {
@@ -2693,7 +2701,6 @@ function changeLg(lang) {
 				return;
 			}
 			response.json().then(function(data) {
-				log(data);
 				translation = data; // translation.innerHTML[ele.dataset.translate]
 				var trans = data.innerHTML;
 				var allItems = document.querySelectorAll('[data-translate]');
@@ -2726,6 +2733,15 @@ function changeLg(lang) {
 						}
 					});
 				}
+				if (translationBacklog.length){
+					for (var i=0;i<translationBacklog.length;i++){
+						try{
+							miniTranslate(translationBacklog[i][0], translationBacklog[i][1]);
+						}catch(e){}
+					}
+					translationBacklog=[];
+				}
+				
 				getById("mainmenu").style.opacity = 1;
 			});
 		} catch(e){
@@ -2885,9 +2901,7 @@ function applyEffects(track) { // video only please. do not touch audio
 		
 		session.canvas.width = track.getSettings().width || 1280;
 		session.canvas.height = track.getSettings().height || 720;
-		setTimeout(function() {
-			drawFace();
-		}, 100);
+		setTimeout(function(){drawFace();},10);
 	} else if (session.effects == "2") {  // mirror video at a canvas level
 		setupCanvas();
 		session.canvasSource.srcObject.addTrack(track);
@@ -2914,13 +2928,18 @@ function applyEffects(track) { // video only please. do not touch audio
 		TFLiteWorker();
 	} else if (session.effects == "6"){
 		setupCanvas();
+		
 		session.canvasSource.srcObject.addTrack(track);
 		session.canvasSource.width = track.getSettings().width || 1280;
 		session.canvasSource.height = track.getSettings().height || 720;
-		
+		if (session.canvasSource.readyState >= 3){
+			mainMeshMask();
+		} else {
+			session.canvasSource.onloadeddata = mainMeshMask;
+		}
 		session.canvas.width = track.getSettings().width || 1280;
 		session.canvas.height = track.getSettings().height || 720;
-		session.canvasSource.onloadeddata = mainMeshMask;
+		
 	} else {
 		session.canvasSource = createVideoElement();
 		session.canvasSource.width=512;
@@ -3205,11 +3224,11 @@ function TFLiteWorker(){
 	
 	function process(){
 		clearTimeout(session.tfliteModule.timeout);
-		if (session.tfliteModule.activelyProcessing){return;}
 		if (!(session.effects=="3" || session.effects=="4" || session.effects=="5")){
 			session.tfliteModule.looping=false;
 			return;
 		}
+		if (session.tfliteModule.activelyProcessing){return;}
 		
 		session.tfliteModule.activelyProcessing=true;
 		try{
@@ -3315,48 +3334,102 @@ function TFLiteWorker(){
 
 
 function mainMeshMask() {
-  if (model === false){
-	 setTimeout(function(){mainMeshMask();},1000);
-	 return;
-  }
-  function heatMapColorforValue(value){
-	  var h = parseInt((1.0 - value) * 240);
-	  if (h<0){h=0;}
-	  if (h>240){h=240;}
-	  return "hsl(" + h + ", 100%, 50%)";
-  }
-  async function innerLoop(){
-	  const predictions = await model.estimateFaces({
-		input: session.canvasSource
-	  });
-	  if (session.pushEffectsData){
-		  if (isIFrame){
-			 parent.postMessage({
-				"effectsData": loudness,
-				"effectsID": session.pushEffectsData
-			}, "*");
-		  }
-	  }
-	  if (predictions.length > 0) {
-		for (let j = 0; j < predictions.length; j++) {
-		  const fp = predictions[j].annotations;
-		  session.canvasCtx.fillStyle = "#000000";
-		  session.canvasCtx.fillRect(0, 0, session.canvas.width, session.canvas.height);
-		  const keypoints = predictions[j].scaledMesh
-		  for (let i = 0; i < keypoints.length; i++) {
-			const [x, y, z] = keypoints[i];
-			session.canvasCtx.fillStyle = heatMapColorforValue((z+40)/60);
-			session.canvasCtx.fillRect(parseInt(x), parseInt(y), 5, 5);
-		  }
+	if ((session.TFJSModel === null) || (session.TFJSModel === true)){
+		setTimeout(function(){mainMeshMask();},1000);
+		return;
+	}
+	function heatMapColorforValue(value){
+		var h = parseInt((1.0 - value) * 240);
+		if (h<0){h=0;}
+		if (h>240){h=240;}
+		return "hsl(" + h + ", 100%, 50%)";
+	}
+	async function process(){
+		if (session.TFJSModel.activelyProcessing){return;}
+		session.TFJSModel.activelyProcessing = true;
+		
+		clearTimeout(session.TFJSModel.timeout);
+		
+		if (session.effects!="6"){
+			//session.TFJSModel.looping=false;
+			session.TFJSModel.activelyProcessing = false;
+			return;
 		}
-	  }
-	  window.requestAnimationFrame(innerLoop);
-  }
-  innerLoop();
+		
+		const predictions = await session.TFJSModel.estimateFaces({
+			input: session.canvasSource
+		});
+		
+		var output = [];
+		if (predictions.length > 0) {
+			for (let j = 0; j < predictions.length; j++) {
+			  const fp = predictions[j].annotations;
+			  session.canvasCtx.fillStyle = "#000000";
+			  session.canvasCtx.fillRect(0, 0, session.canvas.width, session.canvas.height);
+			  const keypoints = predictions[j].scaledMesh
+			  for (let i = 0; i < keypoints.length; i++) {
+				var [x,y,z] = keypoints[i];
+				x=parseInt(x);
+				y=parseInt(y);
+				z=parseInt(z);
+				if (session.pushEffectsData){
+					output.push(x);
+					output.push(y);
+				}
+				session.canvasCtx.fillStyle = heatMapColorforValue((z+40)/60);
+				session.canvasCtx.fillRect(x, y, 5, 5);
+			  }
+			}
+		}
+		
+		if (session.pushEffectsData){
+			//output = FastIntegerCompression.compress(output);
+			//log(output);
+			if (isIFrame){
+				 parent.postMessage({
+					"effectsData": output,
+					"eID": session.pushEffectsData
+				}, "*");
+			} else {
+				for (var i in session.pcs){
+					if (!session.pcs[i].sendChannel.bufferedAmount){ // don't overload things.
+						session.sendMessage({"effectsData":  output, "eID":session.effects},i);
+					}
+				}
+			}
+		}
+	  
+	    if (document.hidden) {
+			session.TFJSModel.lastTime = session.TFJSModel.nowTime || new Date().getTime();
+			session.TFJSModel.nowTime = new Date().getTime();
+			var time  = 33 - (session.TFJSModel.nowTime - session.TFJSModel.lastTime);
+			if (time <= 0 ){
+				session.TFJSModel.timeout = setTimeout(function(){process();},0);
+			} else {
+				session.TFJSModel.timeout = setTimeout(function(){process();},time);
+			}
+			session.TFJSModel.activelyProcessing = false;
+		} else {
+			session.TFJSModel.timeout = setTimeout(function(){process();},33);
+			session.TFJSModel.activelyProcessing = false;
+			window.requestAnimationFrame(process);
+		}
+		
+	}
+	process();
 }
-
+var faceAlignment=false;;
 function drawFace() {
-	var faceAlignment = (function() {
+	if (faceAlignment!==false){return;}
+	faceAlignment = (function() {
+		if (!(session.canvasSource && session.canvasSource.srcObject.getVideoTracks().length)){
+			setTimeout(function(){drawFace();},1000);// TODO: this needs a way to prevent the function loading twice 
+			return;
+		}
+		
+		var timers = {};
+		timers.activelyProcessing=false;
+		timers.activelyProcessingDraw = false;
 		var vid = session.canvasSource;
 
 		var canvas = session.canvas;
@@ -3365,137 +3438,125 @@ function drawFace() {
 		var canvas_tmp = document.createElement("canvas");
 		var ctx_tmp = canvas_tmp.getContext('2d');
 
-		//var stream = canvas.captureStream(30);
 
-		var image = new Image();
-		var zoom = 10;
-		var scale = 1;
+		
+		var zoom = 30;
+		
 		var lastFace = {};
-
-		var w = vid.videoWidth;
-		var h = vid.videoHeight;
-		var x = vid.videoWidth / 2;
-		var y = vid.videoHeight / 2;
-
+		var yoffset = 0;
+		
+		
 		lastFace.x = vid.videoWidth / 2;
 		lastFace.y = vid.videoHeight / 2;
 		lastFace.w = vid.videoWidth;
 		lastFace.h = vid.videoHeight;
-		var yoffset = 0;
+		
+		canvas.height = vid.videoHeight;
+		canvas.width = vid.videoWidth;
+		canvas_tmp.height = vid.videoHeight;
+		canvas_tmp.width = vid.videoWidth;
 
+		var image = new Image();
+		
+		function processImg(){
+			try {
+				errorlog("Go to Detector");
+				faceDetector.detect(this).then(faces => {
+					if (faces.length === 0) {
+						log("NO FACES");
+					} else {
+						log("faces!");
+						for (let face of faces) {
+							lastFace.x = face.boundingBox.x;
+							lastFace.y = face.boundingBox.y;
+							lastFace.w = face.boundingBox.width;
+							lastFace.h = face.boundingBox.height;
+						}
+					}
+					setTimeout(function(){draw();},0);
+				}).catch((e) => {
+					console.error("Boo, Face Detection failed: " + e);
+				});
+				
+				if (document.hidden){
+					timers.lastTime = timers.nowTime || new Date().getTime();
+					timers.nowTime = new Date().getTime();
+					var time  = 33 - (timers.nowTime - timers.lastTime);
+					timers.activelyProcessing = false;
+					if (time <= 0 ){
+						timers.timeout = setTimeout(function(){detect();},0);
+					} else {
+						timers.timeout = setTimeout(function(){detect();},time);
+					}
+				} else {
+					timers.timeout = setTimeout(function(){detect();},33);
+					timers.activelyProcessing = false;
+					window.requestAnimationFrame(detect);
+				}
+			}catch(e){errorlog(e);}
+		}
+		
+		function detect(){
+			if (session.effects !== "1"){return;}
+			if (timers.activelyProcessing){return;}
+			clearTimeout(timers.timeout);
+			timers.activelyProcessing = true;
+			
+			if (!vid.videoWidth){
+				timers.timeout = setTimeout(function(){detect();},300);
+				timers.activelyProcessing = false;
+				return
+			}
+			
+			ctx_tmp.drawImage(vid, 0, 0, vid.videoWidth, vid.videoHeight);
+			image.onload = processImg;
+			image.src = canvas_tmp.toDataURL();
+		}
+		
+		function draw() {
+			if (session.effects !== "1"){return;}
+			if (timers.activelyProcessingDraw){return;}
+			clearTimeout(timers.timeoutDraw);
+			timers.activelyProcessingDraw = true;
+			
+			if (!vid.videoWidth){
+				timers.timeoutDraw = setTimeout(function(){draw();},1000);
+				timers.activelyProcessingDraw = false;
+				console.log(vid.videoWidth);
+				return
+			}
+			
+			canvas.height = vid.videoHeight;
+			canvas.width = vid.videoWidth;
+
+			try {
+				ctx.drawImage(vid, parseInt(lastFace.x),  parseInt(lastFace.y),  parseInt(lastFace.w),  parseInt(lastFace.h), 0, 0, vid.videoWidth, vid.videoHeight);
+			}catch(e){}
+
+			if (document.hidden){
+				timers.lastTimeDraw = timers.nowTimeDraw || new Date().getTime();
+				timers.nowTimeDraw = new Date().getTime();
+				var time  = 33 - (timers.nowTimeDraw - timers.lastTimeDraw);
+				if (time <= 0 ){
+					timers.timeoutDraw = setTimeout(function(){draw();},0);
+				} else {
+					timers.timeoutDraw = setTimeout(function(){draw();},time);
+				}
+				timers.activelyProcessingDraw = false;
+			} else {
+				timers.timeoutDraw = setTimeout(function(){draw();},33);
+				timers.activelyProcessingDraw = false;
+				window.requestAnimationFrame(draw);
+			}
+		}
+		
 		if (window.FaceDetector == undefined) {
 			//console.error('Face Detection not supported');
 			var faceDetector = false;
 		} else {
 			var faceDetector = new FaceDetector();
-			setTimeout(function() {
-				detect();
-			}, 300);
-			setTimeout(function() {
-				draw();
-			}, 33);
-		}
-
-		canvas.height = vid.videoHeight;
-		canvas.width = vid.videoWidth;
-		canvas_tmp.height = vid.videoHeight;
-		canvas_tmp.width = vid.videoWidth;
-		image.src = canvas_tmp.toDataURL();
-		scale = canvas.width / image.width;
-		lastFace.x = 0;
-		lastFace.y = 0;
-		lastFace.w = 1280 / 3 / 16 * zoom;
-		lastFace.h = 720 / 3 / 9 * zoom;
-
-		w = 1280 / 5;
-		h = 720 / 5;
-		x = 1280 / 2;
-		y = 720 / 2 - w * 9 / zoom / 2;
-
-		async function detect() {
-
-			if (session.effects !== "1"){return;}
-
-			ctx_tmp.drawImage(vid, 0, 0, vid.videoWidth, vid.videoHeight);
-			image.src = canvas_tmp.toDataURL();
-			await faceDetector.detect(image).then(faces => {
-
-				if (faces.length === 0) {
-					log("NO FACES");
-					setTimeout(function() {
-						detect();
-					}, 10);
-					return;
-				}
-				for (let face of faces) {
-					lastFace.x = (face.boundingBox.x + lastFace.x) / 2 || face.boundingBox.x;
-					lastFace.y = (face.boundingBox.y + lastFace.y) / 2 || face.boundingBox.y;
-					lastFace.w = (face.boundingBox.width + lastFace.w) / 2 || face.boundingBox.width;
-					lastFace.h = (face.boundingBox.height + lastFace.h) / 2 || face.boundingBox.height;
-				}
-
-				setTimeout(function() {
-					detect();
-				}, 300);
-			}).catch((e) => {
-				console.error("Boo, Face Detection failed: " + e);
-			});
-
-		}
-
-		function draw() {
-			
-			if (session.effects !== "1"){return;}
-			
-			canvas.height = vid.videoHeight;
-			canvas.width = vid.videoWidth;
-
-			if (lastFace.w - w < 0.15 * lastFace.w) {
-				w = w * 0.999 + 0.001 * lastFace.w;
-			}
-			if (lastFace.h - h < 0.15 * lastFace.h) {
-				h = h * 0.999 + 0.001 * lastFace.h;
-			}
-			if (Math.abs(x - (lastFace.x + lastFace.w / 2)) > 0.15 * (lastFace.x + lastFace.w / 2.0)) {
-				x = x * 0.999 + 0.001 * (lastFace.x + lastFace.w / 2.0);
-			}
-			if (Math.abs(y - (lastFace.y + lastFace.h / 2)) > 0.15 * (lastFace.y + lastFace.h / 2.0)) {
-				y = y * 0.999 + 0.001 * (lastFace.y + lastFace.h / 2.0);
-			}
-
-			yoffset = w * 9 / zoom / 2;
-
-			var yyy = y - w * 9 / zoom - yoffset;
-			var hhh = w * 3 * 9 / zoom;
-			var www = w * 3 * 16 / zoom;
-			var xxx = x - w * 16 / zoom * 1.5;
-
-			if (www + xxx < 1280) {
-				xxx = 1280 - www;
-			}
-			if (hhh + yyy < 720) {
-				yyy = 720 - hhh;
-			}
-
-			if (www + xxx > 1280) {
-				xxx = 1280 - www;
-			}
-			if (hhh + yyy > 720) {
-				yyy = 720 - hhh;
-			}
-
-			if (yyy < 0) {
-				yyy = 0;
-			}
-			if (xxx < 0) {
-				xxx = 0;
-			}
-
-			ctx.drawImage(vid, xxx, yyy, www, hhh, 0, 0, vid.videoWidth, vid.videoHeight);
-
-			setTimeout(function() {
-				draw();
-			}, 30);
+			setTimeout(function(){detect();},10);
+			setTimeout(function(){draw();},10);
 		}
 	})();
 }
@@ -4342,17 +4403,17 @@ function directorSendMessage(ele) {
 	overlayMsg.style.left = "16px";
 	overlayMsg.style.top = "6px";
 	overlayMsg.style.position = "relative";
-	overlayMsg.innerHTML = "<i class='lar la-bell' style='font-size:170%; color:#FFF; cursor:pointer;'></i>";
+	overlayMsg.innerHTML = "<i class='las la-bell' style='font-size:170%; color:#FFF; cursor:pointer;'></i>";
 	target.overlay = true;
 
 	overlayMsg.onclick = function(e) {
 		log(e.target.parentNode.parentNode);
 		if (e.target.parentNode.parentNode.overlay === true) {
 			e.target.parentNode.parentNode.overlay = false;
-			e.target.parentNode.innerHTML = "<i class='lar la-bell-slash' style='font-size:170%; color:#DDD; cursor:pointer;'></i>";
+			e.target.parentNode.innerHTML = "<i class='las la-bell-slash' style='font-size:170%; color:#DDD; cursor:pointer;'></i>";
 		} else {
 			e.target.parentNode.parentNode.overlay = true;
-			e.target.parentNode.innerHTML = "<i class='lar la-bell' style='font-size:170%; color:#FFF; cursor:pointer;'></i>";
+			e.target.parentNode.innerHTML = "<i class='las la-bell' style='font-size:170%; color:#FFF; cursor:pointer;'></i>";
 		}
 	}
 
@@ -8643,6 +8704,8 @@ function cleanupMediaTracks() {
 				track.stop();
 				log("stopping old track");
 			});
+		} else {
+			session.videoElement.srcObject = session.streamSrc;
 		}
 		activatedPreview = false;
 	} catch (e) {
@@ -9037,21 +9100,10 @@ async function toggleScreenShare(reload = false) { ////////////////////////////
 					track.stop();
 				}
 			});
-			session.streamSrc.getVideoTracks().forEach(function(track) {
-				//errorlog(track);
-				session.streamSrc.removeTrack(track);
-				track.stop();
-			});
-
-			if (session.videoElement.srcObject){
-				session.videoElement.srcObject.getVideoTracks().forEach(function(track) {
-					//errorlog(track);
-					session.videoElement.srcObject.removeTrack(track);
-					track.stop();
-				});
-			} else {
-				session.videoElement.srcObject = session.streamSrc;
-			}
+			
+			cleanupMediaTracks();
+			
+			
 
 			getById("screensharebutton").classList.add("float");
 			getById("screensharebutton").classList.remove("float2");
@@ -9809,6 +9861,7 @@ async function grabVideo(quality = 0, eleName = 'previewWebcam', selector = "sel
 		log("activated preview return 2");
 		return;
 	}
+	
 	activatedPreview = true;
 	log("Grabbing video: " + quality);
 	if (grabVideoTimer) {
@@ -9819,6 +9872,12 @@ async function grabVideo(quality = 0, eleName = 'previewWebcam', selector = "sel
 	var wasDisabled = true;
 	try {
 		if (session.streamSrc) {
+			
+			if (session.canvasWebGL){
+				session.canvasWebGL.remove()
+				session.canvasWebGL=null;
+			}
+			
 			if (session.canvasSource){
 				session.canvasSource.srcObject.getTracks().forEach(function(trk) {
 					session.canvasSource.srcObject.removeTrack(trk);
@@ -10012,65 +10071,26 @@ async function grabVideo(quality = 0, eleName = 'previewWebcam', selector = "sel
 					return;
 				}
 				log("adding video tracks 2412");
+				
+				checkBasicStreamsExist();
+		
 				stream.getVideoTracks().forEach(function(track) {
-					
-					checkBasicStreamsExist();
-					
+					session.streamSrc.addTrack(track);
 					try{
 						track.onended = function(e) {  // hurrah!
 							warnlog(e);
 							refreshVideoDevice();
 						}
 					} catch(e){errorlog(e);}
-					
-					if (session.effects != "0" || !session.effects) {
-						track = applyEffects(track); // updates with the correct track session.streamSrc 
-						if (track){
-							// video tracks are already removed from sources/elements. grabVideo() does that to start with; so time to just add the video!
-							session.streamSrc.addTrack(track);
-							session.videoElement.srcObject.addTrack(track);
-						}
-					} else if (track){
-						session.streamSrc.addTrack(track); // add video track to the preview video
-						session.videoElement.srcObject.addTrack(track);
-					}
-					
-					for (UUID in session.pcs) {
-						try {
-							if (((iOS) || (iPad)) && (session.pcs[UUID].guest == true)) {
-								warnlog("iOS and GUest detected");
-							} else if ((session.pcs[UUID].guest == true) && (session.roombitrate === 0)) {
-								log("room rate restriction detected. No videos will be published to other guests");
-							} else if (session.pcs[UUID].allowVideo == true) { // allow 
-
-								// for any connected peer, update the video they have if connected with a video already.
-								var added = false;
-								session.pcs[UUID].getSenders().forEach((sender) => { // I suppose there could be a race condition between negotiating and updating this. if joining at the same time as changnig streams?
-
-									if (sender.track && sender.track.kind == "video") {
-										sender.replaceTrack(track); // replace may not be supported by all browsers.  eek.
-										sender.track.enabled = true;
-										added = true;
-									}
-								});
-								if (added == false) {
-									session.pcs[UUID].addTrack(track, stream); // can't replace, so adding
-									setTimeout(function(uuid){session.optimizeBitrate(uuid);},session.rampUpTime, UUID); // 3 seconds lets us ramp up the quality a bit and figure out the total bandwidth quicker
-								}
-							}
-						} catch (e) {
-							errorlog(e);
-						}
-					}
-					
-					if (wasDisabled && !session.videoMuted){
-						var msg = {};
-						msg.videoMuted = session.videoMuted;
-						session.sendMessage(msg);
-					}
-					
-					session.refreshScale(); 
 				});
+				
+				updateRenderOutpipe(session.streamSrc);
+				
+				if (wasDisabled && !session.videoMuted){
+					var msg = {};
+					msg.videoMuted = session.videoMuted;
+					session.sendMessage(msg);
+				}
 
 				applyMirror(mirror, eleName);
 
@@ -10204,6 +10224,54 @@ async function grabVideo(quality = 0, eleName = 'previewWebcam', selector = "sel
 			});
 		}, 100, getUserMediaRequestID, callback);
 	}
+}
+
+function updateRenderOutpipe(stream){
+	stream.getVideoTracks().forEach(function(track) {
+		
+		if (session.effects != "0" || !session.effects) {
+			track = applyEffects(track); // updates with the correct track session.streamSrc 
+			if (track){
+				// video tracks are already removed from sources/elements. grabVideo() does that to start with; so time to just add the video!
+				//session.streamSrc.addTrack(track);
+				warnlog("video effects were just applied");
+				session.videoElement.srcObject.addTrack(track);
+			}
+		} else if (track){
+			//session.streamSrc.addTrack(track); // add video track to the preview video
+			session.videoElement.srcObject.addTrack(track);
+		}
+		
+		for (UUID in session.pcs) {
+			try {
+				if (((iOS) || (iPad)) && (session.pcs[UUID].guest == true)) {
+					warnlog("iOS and GUest detected");
+				} else if ((session.pcs[UUID].guest == true) && (session.roombitrate === 0)) {
+					log("room rate restriction detected. No videos will be published to other guests");
+				} else if (session.pcs[UUID].allowVideo == true) { // allow 
+
+					// for any connected peer, update the video they have if connected with a video already.
+					var added = false;
+					session.pcs[UUID].getSenders().forEach((sender) => { // I suppose there could be a race condition between negotiating and updating this. if joining at the same time as changnig streams?
+
+						if (sender.track && sender.track.kind == "video") {
+							sender.replaceTrack(track); // replace may not be supported by all browsers.  eek.
+							sender.track.enabled = true;
+							added = true;
+						}
+					});
+					if (added == false) {
+						session.pcs[UUID].addTrack(track, stream); // can't replace, so adding
+						setTimeout(function(uuid){session.optimizeBitrate(uuid);},session.rampUpTime, UUID); // 3 seconds lets us ramp up the quality a bit and figure out the total bandwidth quicker
+					}
+				}
+			} catch (e) {
+				errorlog(e);
+			}
+		}
+		
+		session.refreshScale(); 
+	});
 }
 
 
@@ -14690,8 +14758,11 @@ function generateQRPageCallback(hash) {
 		if (getById("invite_automic").checked) {
 			sendstr += "&audiodevice=1";
 		}
-		if (getById("invite_hidescreen").checked) {
-			sendstr += "&webcam";
+		if (getById("invite_automic").checked) {
+			sendstr += "&audiodevice=1";
+		}
+		if (getById("invite_effects").checked) {
+			sendstr += "&effects";
 		}
 
 		if (getById("invite_remotecontrol").checked) { //
@@ -14993,11 +15064,20 @@ var vis = (function() {
 		} else if (link.getAttribute("data-action") === "Copy") {
 			copyFunction(taskItemInContext.href);
 		} else if (link.getAttribute("data-action") === "Mirror") {
-			copyFunction(taskItemInContext.href);
+			//copyFunction(taskItemInContext.href);
 		} else if (link.getAttribute("data-action") === "Cast") {
-			copyFunction(taskItemInContext.href);
+			//copyFunction(taskItemInContext.href);
 		} else if (link.getAttribute("data-action") === "Controls") {
-			copyFunction(taskItemInContext.href);
+			//copyFunction(taskItemInContext.href);
+		} else if (link.getAttribute("data-action") === "Edit") {
+			//copyFunction(taskItemInContext.href);
+			var response = prompt("Please note, manual edits to the URL may conflict with the toggles", taskItemInContext.href);
+			if (response){
+				taskItemInContext.href = response;
+				taskItemInContext.dataset.raw = response;
+				taskItemInContext.innerHTML = response;
+				
+			}
 		}
 		log("Task ID - " + taskItemInContext + ", Task action - " + link.getAttribute("data-action"));
 		toggleMenuOff();
@@ -16738,55 +16818,150 @@ function effectsDynamicallyUpdate(event, ele, preview=true){
 	getById("selectImageTFLITE3").style.display = "none";
 	
 	if (session.effects == "0" || !session.effects){
-		activatedPreview=false;
-		if (preview){
-			grabVideo();
-		} else {
-			grabVideo(session.quality, "videosource", "select#videoSource3");
+		if (session.streamSrc){
+			
+			if (session.canvasWebGL){
+				session.canvasWebGL.remove()
+				session.canvasWebGL=null;
+			}
+			
+			if (session.canvasSource){
+				session.canvasSource.srcObject.getTracks().forEach(function(trk) {
+					session.canvasSource.srcObject.removeTrack(trk);
+					//trk.stop();
+				});
+			}
+			if (session.videoElement.srcObject) {
+				session.videoElement.srcObject.getVideoTracks().forEach(function(track) {
+					session.videoElement.srcObject.removeTrack(track);
+					//track.stop();
+					//session.videoElement.load();
+				});
+			} else {
+				session.videoElement.srcObject = outboundAudioPipeline(session.streamSrc);
+			}
+			updateRenderOutpipe(session.streamSrc);
 		}
 		return;
 	} else if (session.effects === "3" || session.effects === "4"){
+		attemptTFLiteJsFileLoad();
 		if (!session.tfliteModule.looping){
-			attemptTFLiteJsFileLoad();
-			activatedPreview=false;
-			if (preview){
-				grabVideo();
-			} else {
-				grabVideo(session.quality, "videosource", "select#videoSource3");
+			if (session.streamSrc){
+				
+				if (session.canvasWebGL){
+					session.canvasWebGL.remove()
+					session.canvasWebGL=null;
+				}
+				
+				if (session.canvasSource){ 
+					session.canvasSource.srcObject.getTracks().forEach(function(trk) {
+						session.canvasSource.srcObject.removeTrack(trk);
+						//trk.stop();
+					});
+				}
+				if (session.videoElement.srcObject) {
+					session.videoElement.srcObject.getVideoTracks().forEach(function(track) {
+						session.videoElement.srcObject.removeTrack(track);
+						//track.stop();
+						//session.videoElement.load();
+					});
+				} else {
+					session.videoElement.srcObject = outboundAudioPipeline(session.streamSrc);
+				}
+				updateRenderOutpipe(session.streamSrc);
 			}
-		}
+		} 
 	} else if (session.effects === "5"){
 		attemptTFLiteJsFileLoad();
 		if (session.tfliteModule.img){
 			session.tfliteModule.img.src = "./media/bg_sample.webp";
 		}
 		if (!session.tfliteModule.looping){
-			activatedPreview=false;
-			if (preview){
-				grabVideo();
-			} else {
-				grabVideo(session.quality, "videosource", "select#videoSource3");
+			if (session.streamSrc){
+				
+				if (session.canvasWebGL){
+					session.canvasWebGL.remove()
+					session.canvasWebGL=null;
+				}
+				
+				if (session.canvasSource){
+					session.canvasSource.srcObject.getTracks().forEach(function(trk) {
+						session.canvasSource.srcObject.removeTrack(trk);
+						//trk.stop();
+					});
+				}
+				if (session.videoElement.srcObject) {
+					session.videoElement.srcObject.getVideoTracks().forEach(function(track) {
+						session.videoElement.srcObject.removeTrack(track);
+						//track.stop();
+						//session.videoElement.load();
+					});
+				} else {
+					session.videoElement.srcObject = outboundAudioPipeline(session.streamSrc);
+				}
+				updateRenderOutpipe(session.streamSrc);
 			}
 		}
 		getById("selectImageTFLITE").style.display = "block";
 		getById("selectImageTFLITE3").style.display = "block";
 	} else if (session.effects === "6"){
 		loadTensorflowJS();
-		activatedPreview=false;
-		if (preview){
-			grabVideo();
-		} else {
-			grabVideo(session.quality, "videosource", "select#videoSource3");
+		if (session.streamSrc){
+			if (session.canvasWebGL){
+				session.canvasWebGL.remove()
+				session.canvasWebGL=null;
+			}
+			
+			if (session.canvasSource){
+				session.canvasSource.srcObject.getTracks().forEach(function(trk) {
+					session.canvasSource.srcObject.removeTrack(trk);
+					//trk.stop();
+				});
+			}
+			if (session.videoElement.srcObject) {
+				session.videoElement.srcObject.getVideoTracks().forEach(function(track) {
+					session.videoElement.srcObject.removeTrack(track);
+					//track.stop();
+					//session.videoElement.load();
+				});
+			} else {
+				session.videoElement.srcObject = outboundAudioPipeline(session.streamSrc);
+			}
+			updateRenderOutpipe(session.streamSrc);
 		}
-		
+		//mainMeshMask();
 	}  else {
 		//loadEffect(session.effects);
-		activatedPreview=false;
-		if (preview){
-			grabVideo();
-		} else {
-			grabVideo(session.quality, "videosource", "select#videoSource3");
+		if (session.streamSrc){
+			
+			if (session.canvasWebGL){
+				session.canvasWebGL.remove()
+				session.canvasWebGL=null;
+			}
+			
+			if (session.canvasSource){
+				session.canvasSource.srcObject.getTracks().forEach(function(trk) {
+					session.canvasSource.srcObject.removeTrack(trk);
+					//trk.stop();
+				});
+			}
+			if (session.videoElement.srcObject) {
+				session.videoElement.srcObject.getVideoTracks().forEach(function(track) {
+					session.videoElement.srcObject.removeTrack(track);
+					//track.stop();
+					//session.videoElement.load();
+				});
+			} else {
+				session.videoElement.srcObject = outboundAudioPipeline(session.streamSrc);
+			}
+			updateRenderOutpipe(session.streamSrc);
 		}
+		//activatedPreview=false;
+		//if (preview){
+		//	grabVideo();
+		//} else {
+		//	grabVideo(session.quality, "videosource", "select#videoSource3");
+		//}
 	}
 }
 
@@ -16805,22 +16980,20 @@ function loadEffect(effect){
 		effectsLoaded[filename] = effectsEngine(effect);
 		effectsLoaded[filename]();
 	}
-	script.src = "./filters/"+filename+".js";
+	script.src = "./filters/"+filename+".js?"+parseInt(1000*Math.random());
 	document.head.appendChild(script);
 	warnUser("Loading custom effects model...",1000);
 }
 
-var TFJSLOADING = false;
 function loadTensorflowJS(){
-	if (TFJSLOADING){
+	if (session.TFJSModel!=null){
 		return;
 	}
-	TFJSLOADING=true;
+	session.TFJSModel=true;
 	var script = document.createElement('script');
 	var script2 = document.createElement('script');
 	var script3 = document.createElement('script');
 	var script4 = document.createElement('script');
-	model = false;
 	script.onload = function() {
 		document.head.appendChild(script2);
 	}
@@ -16831,17 +17004,19 @@ function loadTensorflowJS(){
 		document.head.appendChild(script4);
 	}
 	script4.onload = function() {
-		closeModal();
 		async function loadModel(){
-			model = await faceLandmarksDetection.load(faceLandmarksDetection.SupportedPackages.mediapipeFacemesh);
+			session.TFJSModel = await faceLandmarksDetection.load(faceLandmarksDetection.SupportedPackages.mediapipeFacemesh);
+			closeModal();
+			warnUser("Almost done loading model...",3000);
 		}
 		loadModel();
+		
 	}
 	script.src = "./thirdparty/tfjs/tf-core.js";
 	script2.src = "./thirdparty/tfjs/tf-converter.js";
 	script3.src = "./thirdparty/tfjs/tf-backend-webgl.js";
 	script4.src = "./thirdparty/tfjs/face-landmarks-detection.js";
-	warnUser("Loading effects model...");
+	warnUser("Downloading a big effects model... may take a minute",15000);
 	
 	script.type = 'text/javascript';script2.type = 'text/javascript';script3.type = 'text/javascript';script4.type = 'text/javascript';
 	document.head.appendChild(script);
@@ -16967,12 +17142,12 @@ function targetGuest(guestslot, action, value=null){
 	warnlog("guestslot "+guestslot);
 	warnlog("action "+action);
 	warnlog("value "+value);
-	if (action == 0) {
+	if ((action == 0) || (action == "forward")) {
 		var element = getGuestTarget("forward", guestslot);
 		if (element) {
 			directMigrate(element, true, value); // if value is set, it will auto transfer the guest to that room.
 		}
-	} else if (action == 1) {
+	} else if ((action == 1) || (action == "addScene")) {
 		if (value == "null" || value == null){
 			value = 1;
 		}
@@ -16980,82 +17155,82 @@ function targetGuest(guestslot, action, value=null){
 		if (element) {
 			directEnable(element, true);
 		}
-	} else if (action == 2) {
+	} else if ((action == 2) || (action == "muteScene")) {
 		var element = getGuestTarget("mute-scene", guestslot);
 		if (element) {
 			directMute(element, true);
 		}
-	} else if (action == 3) { 
+	} else if ((action == 3) || (action == "mic")) { 
 		var element = getGuestTarget("mute-guest", guestslot);
 		if (element) {
 			remoteMute(element, true);
 		}
-	}  else if (action == 4) { 
+	}  else if ((action == 4) || (action == "hangup")) { 
 		var element = getGuestTarget("hangup", guestslot);
 		if (element) {
 			directHangup(element, true);
 		}
-	} else if (action == 5) { 
+	} else if ((action == 5) || (action == "soloChat")) { 
 		var element = getGuestTarget("solo-chat", guestslot);
 		if (element) {
 			session.toggleSoloChat(element.dataset.UUID);
 		}
-	} else if (action == 6) {
+	} else if ((action == 6) || (action == "speaker")) {
 		var element = getGuestTarget("toggle-remote-speaker", guestslot);
 		if (element) {
 			remoteSpeakerMute(element);
 		}
-	} else if (action == 7) {
+	} else if ((action == 7) || (action == "display")) {
 		var element = getGuestTarget("toggle-remote-display", guestslot);
 		if (element) {
 			remoteDisplayMute(element);
 		}
-	} else if (action == 12) { 
+	} else if ((action == 12) || (action == "addScene2")) { 
 		var element = getGuestTargetScene(2, guestslot);
 		if (element) {
 			directEnable(element, true)
 		}
-	} else if (action == 13) { 
+	} else if ((action == 13) || (action == "addScene3")) { 
 		var element = getGuestTargetScene(3, guestslot);
 		if (element) {
 			directEnable(element, true)
 		}
-	} else if (action == 14) { 
+	} else if ((action == 14) || (action == "addScene4")) { 
 		var element = getGuestTargetScene(4, guestslot);
 		if (element) {
 			directEnable(element, true)
 		}
-	} else if (action == 15) { 
+	} else if ((action == 15) || (action == "addScene5")) { 
 		var element = getGuestTargetScene(5, guestslot);
 		if (element) {
 			directEnable(element, true)
 		}
-	} else if (action == 16) {
+	} else if ((action == 16) || (action == "addScene6")) {
 		var element = getGuestTargetScene(6, guestslot);
 		if (element) {
 			directEnable(element, true)
 		}
-	} else if (action == 17) {
+	} else if ((action == 17) || (action == "addScene7")) {
 		var element = getGuestTargetScene(7, guestslot);
 		if (element) {
 			directEnable(element, true)
 		}
-	} else if (action == 18) {
+	} else if ((action == 18) || (action == "addScene8")) {
 		var element = getGuestTargetScene(8, guestslot);
 		if (element) {
 			directEnable(element, true)
 		}
-	} else if (action == 19) {
+	} else if ((action == 19) || (action == "forceKeyframe")) {
 		var element = getGuestTarget("force-keyframe", guestslot);
 		if (element) {
 			requestKeyframeScene(element);
 		}
-	} else if (action == 20) {
+	} else if ((action == 20) || (action == "soloVideo")) {
 		var element = getGuestTarget("solo-video", guestslot);
 		if (element) {
 			requestInfocus(element);
 		}
-	} else if (action == 27){
+	} else if ((action == 27) || (action == "volume")){
 		var element = getGuestTarget("volume", guestslot);
 		if (element) {
 			element.value = parseInt(value) || 100;
@@ -17105,15 +17280,18 @@ function oscClient(){ // OSC (websocket / https API hotkey support).  The iFrame
 		
 		socket.addEventListener('message', function (event) {
 			if (event.data){
-				processMessage(event.data);
+				var data = JSON.parse(event.data);
+				if ("msg" in data){
+					data = data.msg
+				}
+				processMessage(data);
 			}
 		});
 	}
-	
 	connect();
-	
-	
-	//button.innerHTML = "Mute Speaker";
+}
+
+function setupCommands(){
 	var commands = {}
 	
 	commands.togglehand = function(value){raisehand();}; 
@@ -17224,41 +17402,39 @@ function oscClient(){ // OSC (websocket / https API hotkey support).  The iFrame
 	}; 
 	
 	commands.sendChat = function(value){sendChat(value);}; 
-
-	function processMessage(data) {
-		try {
-			var data = JSON.parse(data);
-			
-			if ("msg" in data){
-				data = data.msg
-			}
-			warnlog(data);
-			if (("target" in data) && (data.target!="null")) {
-				var target = parseInt(data.target);
-				if ("action" in data){
-					if ("value" in data){
-						targetGuest(target, data.action, data.value);
-					} else {
-						targetGuest(target, data.action, null);
-					}
-				}
-			} else if ("action" in data){
-				if (data.action in commands){
-					if ("value" in data){
-						if (data.value=="true"){
-							data.value=true;
-						} else if (data.value=="false"){
-							data.value=false;
-						}
-						commands[data.action](data.value);
-					} else {
-						commands[data.action]();
-					}
-				}
-			}
-		} catch(e){errorlog(e);}
-	}
+	return commands;
 }
+var Commands = setupCommands();
+	
+
+function processMessage(data) {
+	try {
+		warnlog(data);
+		if (("target" in data) && (data.target !== "null" && data.target !== null)) {
+			if ("action" in data){
+				if ("value" in data){
+					targetGuest(data.target, data.action, data.value);
+				} else {
+					targetGuest(data.target, data.action, null);
+				}
+			}
+		} else if ("action" in data){
+			if (data.action in Commands){
+				if ("value" in data){
+					if (data.value=="true"){
+						data.value=true;
+					} else if (data.value=="false"){
+						data.value=false;
+					}
+					Commands[data.action](data.value);
+				} else {
+					Commands[data.action]();
+				}
+			}
+		}
+	} catch(e){errorlog(e);}
+}
+
 
 function midiHotkeysNote(note, velocity=false){
 	if (session.midiHotkeys==1){
