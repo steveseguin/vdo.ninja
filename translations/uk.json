@@ -156,7 +156,8 @@
     "the-camera-will-load-in-a-default-safe-mode-that-may-work-if-other-modes-fail-": "The camera will load in a default safe-mode that may work if other modes fail.",
     "disable-animated-transitions-during-video-mixing": "Disable animated transitions during video mixing",
     "allow-the-guest-to-select-a-file-to-upload-to-the-director-once-shared-it-will-show-in-the-chat-as-a-download-link-": "Allow the guest to select a file to upload to the director. Once shared, it will show in the chat as a download link.",
-    "set-a-countdown-timer-that-this-guest-sees": "Set a countdown timer that this guest sees"
+    "set-a-countdown-timer-that-this-guest-sees": "Set a countdown timer that this guest sees",
+    "enter-a-room-name-to-quick-join": "Enter a room name to quick join"
   },
   "innerHTML": {
     "logo-header": "\n\t\t\t\t\t<font id=\"qos\">O</font>BS.Ninja \n\t\t\t\t",
@@ -335,7 +336,17 @@
     "mirror-video": "Mirror",
     "toggle-control-video": "Toggle control bar",
     "picture-in-picture": "Picture-in-picture",
-    "chrome-cast": "Cast.."
+    "chrome-cast": "Cast..",
+    "join-room": "Join room",
+    "join-room-with-mic": "Join room with Microphone",
+    "join-room-with-camera": "Join Room with Camera",
+    "share-screen-with-room": "Screenshare with Room",
+    "share-your-mic": "Share your Microphone",
+    "share-your-camera": "Share your Camera",
+    "share-your-screen": "Share your Screen",
+    "click-start-to-join": "Click Start to Join",
+    "waiting-for-mic-to-load": "Waiting for mic to load",
+    "waiting-for-camera-to-load": "Waiting for Camera to load"
   },
   "placeholders": {
     "join-by-room-name-here": "приєднано до кімнати тут ",

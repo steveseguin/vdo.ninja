@@ -164,7 +164,8 @@
     "the-camera-will-load-in-a-default-safe-mode-that-may-work-if-other-modes-fail-": "The camera will load in a default safe-mode that may work if other modes fail.",
     "disable-animated-transitions-during-video-mixing": "Disable animated transitions during video mixing",
     "allow-the-guest-to-select-a-file-to-upload-to-the-director-once-shared-it-will-show-in-the-chat-as-a-download-link-": "Allow the guest to select a file to upload to the director. Once shared, it will show in the chat as a download link.",
-    "set-a-countdown-timer-that-this-guest-sees": "Set a countdown timer that this guest sees"
+    "set-a-countdown-timer-that-this-guest-sees": "Set a countdown timer that this guest sees",
+    "enter-a-room-name-to-quick-join": "Enter a room name to quick join"
   },
   "innerHTML": {
     "logo-header": "<font id=\"qos\" style=\"color: white;\">O</font>BS Ninja",
@@ -354,7 +355,9 @@
     "mirror-video": "Mirror",
     "toggle-control-video": "Toggle control bar",
     "picture-in-picture": "Picture-in-picture",
-    "chrome-cast": "Cast.."
+    "chrome-cast": "Cast..",
+    "join-room": "Join room",
+    "waiting-for-mic-to-load": "Waiting for mic to load"
   },
   "placeholders": {
     "join-by-room-name-here": "Ga binnen met een kamer naam",

@@ -69,10 +69,11 @@ function updateTranslation(filename) { // updates the website with a specific tr
 }
 
 const updateList = [
+	"blank", // must be first
+	"en",
     "cs",
+	"cn",
     "de",
-    "en",
-    "cn",
     "es",
     "fr",
     "it",
@@ -82,8 +83,7 @@ const updateList = [
     "pt",
     "ru",
     "tr",
-    "uk",
-    "blank"
+	"uk"
 ]; // list of languages to update. Update this if you add a new language.
 
 const allItems = document.querySelectorAll('[data-translate]');
@@ -129,6 +129,21 @@ for (const i in updateList) {
                 const key = ele.dataset.translate;//.replace(/[\W]+/g, "-").toLowerCase();
                 newTrans[key] = ele.innerHTML;
             });
+			if (lang == "blank" || lang == "en"){
+				console.log(newTrans);
+				
+				for (var key in newTrans) {
+					if (!(key in defaultTrans)){
+						defaultTrans[key] = newTrans[key];
+					}
+				}
+			}  else {
+				for (var key in defaultTrans){
+					if (!(key in newTrans)){
+						newTrans[key] = defaultTrans[key]
+					}
+				}
+			}
 
             const newTransTitles = suceess[1].titles;
             //const allTitles = document.querySelectorAll('[title]');
@@ -136,6 +151,19 @@ for (const i in updateList) {
                 const key = ele.dataset.key;
                 newTransTitles[key] = ele.title;
             });
+			if (lang == "blank" || lang == "en"){
+				for (var key in newTransTitles) {
+					if (!(key in defaultTransTitles)){
+						defaultTransTitles[key] = newTransTitles[key];
+					}
+				}
+			} else {
+				for (var key in defaultTransTitles){
+					if (!(key in newTransTitles)){
+						newTransTitles[key] = defaultTransTitles[key]
+					}
+				}
+			}
 
             const newPlaceholders = suceess[1].placeholders;
            // const allPlaceholders = document.querySelectorAll('[placeholder]');
@@ -143,6 +171,19 @@ for (const i in updateList) {
                 const key = ele.dataset.key;
                 newPlaceholders[key] = ele.placeholder;
             });
+			if (lang == "blank" || lang == "en"){
+				for (var key in newPlaceholders) {
+					if (!(key in defaultTransPlaceholders)){
+						defaultTransPlaceholders[key] = newPlaceholders[key];
+					}
+				}
+			} else {
+				for (var key in defaultTransPlaceholders){
+					if (!(key in newPlaceholders)){
+						newPlaceholders[key] = defaultTransPlaceholders[key]
+					}
+				}
+			}
 			
 			var miscellaneous = {};
 			if ("miscellaneous" in suceess[1]){

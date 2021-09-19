@@ -1,6 +1,4 @@
 function effectsEngine(effectName){
-	var functions = {};
-
 	function loadScript(url){
 		var script = document.createElement('script');
 		script.type = 'text/javascript';
@@ -13,61 +11,82 @@ function effectsEngine(effectName){
 		}
 		document.head.appendChild(script);
 	}
-	var loadList = [
-		"./thirdparty/jeeliz/jeelizFaceFilter.js",
-		"./thirdparty/jeeliz/three.min.js",
-		"./thirdparty/jeeliz/JeelizThreeHelper.js",
-		'./thirdparty/jeeliz/Tween.min.js'
-	];
-	loadList.reverse();
-	loadScript(loadList.pop());
+	var loadList = [];
+	if (typeof JEELIZFACEFILTER == 'undefined' || JEELIZFACEFILTER==null){
+		loadList.push("./thirdparty/jeeliz/jeelizFaceFilter.js");
+	} 
+	if (typeof THREE == 'undefined' || THREE == null){
+		loadList.push("./thirdparty/jeeliz/three/v112/three.min.js");
+	} else {
+		console.log("typeof THREE:"+typeof THREE);
+	}
+	if (typeof JeelizThreeHelper == 'undefined' || JeelizThreeHelper==null){
+		loadList.push("./thirdparty/jeeliz/JeelizThreeHelper.js");
+	}
+	if (typeof TWEEN == 'undefined' || TWEEN == null){
+		loadList.push("./thirdparty/jeeliz/Tween.min.js");
+	}
+	
+	if (loadList.length){
+		loadList.reverse();
+		loadScript(loadList.pop());
+	}
 
 	// some globals:
 	let THREECAMERA = null; // should be prop of window
 	let ANONYMOUSMESH = null;
 	let ANONYMOUSOBJ3D = null;
 	let isTransformed = false;
+	
+	var pathname = window.location.pathname.split("/");
+	pathname.pop();
+	pathname = window.location.protocol + "//" + window.location.host + pathname.join("/");
 
 
 	// callback: launched if a face is detected or lost.
 	function detect_callback(isDetected) {
-	  if (isDetected) {
-		console.log('INFO in detect_callback(): DETECTED');
-	  } else {
-		console.log('INFO in detect_callback(): LOST');
-	  }
+	 // if (isDetected) {
+	//	console.log('INFO in detect_callback(): DETECTED');
+	 // } else {
+	//	console.log('INFO in detect_callback(): LOST');
+	 // }
 	}
 
 	// entry point:
 	function main(){
 		if (session.canvasSource && document.getElementById("effectsCanvasTarget") && JEELIZFACEFILTER){
-			//try {JEELIZFACEFILTER.destroy();}catch(e){}
 			try {
+				warnlog("LOADING JEELIZ");
+				THREECAMERA = null; // should be prop of window
+				ANONYMOUSMESH = null;
+				ANONYMOUSOBJ3D = null;
+				isTransformed = false;
 				init_faceFilter("effectsCanvasTarget", session.canvasSource);
 			} catch(e){
 			}
 		} else {
 			setTimeout(function(){main();},500);
-			errorlog("...");
+			warnlog("...retrying to load");
 		}
 	}
 
 	function init_faceFilter(canvasId, videoElement){
 	  JEELIZFACEFILTER.init({
 		canvasId: canvasId,
-		NNCPath: 'https://stevesserver.com/neuralNets/',
+		NNCPath: pathname+'/thirdparty/jeeliz/neuralNets/',
 		videoSettings: {
 			videoElement: videoElement
 		},
 		callbackReady: function (errCode, spec) {
 			if (errCode) {
-				console.error(errCode);
-				try{
-					JEELIZFACEFILTER.toggle_pause(true,true); 
-				} catch(e){}
+				errorlog(errCode);
 				try{
 					JEELIZFACEFILTER.destroy();
 				} catch(e){}
+				THREECAMERA = null; // should be prop of window
+				ANONYMOUSMESH = null;
+				ANONYMOUSOBJ3D = null;
+				isTransformed = false;
 				setTimeout(function(){main();},500);
 				return;
 			}
@@ -100,16 +119,17 @@ function effectsEngine(effectName){
 		callbackTrack: function (detectState) {
 			if (effectName !== session.effects){
 				try{
-					JEELIZFACEFILTER.toggle_pause(true,true); // unload the filter when no longer active.
-				} catch(e){}
-				try{
-					JEELIZFACEFILTER.destroy();
-				} catch(e){}
+					JEELIZFACEFILTER.toggle_pause(true,false); // unload the filter when no longer active.  Leaving the track active is required, else it breaks the app
+				} catch(e){errorlog(e);}
+				THREECAMERA = null; // should be prop of window
+				ANONYMOUSMESH = null;
+				ANONYMOUSOBJ3D = null;
+				isTransformed = false;
 				return;
 			}
-			warnlog("FOUND");
+			
 			const isDetected = JeelizThreeHelper.get_isDetected();
-			//if (isDetected && detectState.expressions[0] >= 0.8 && !isTransformed) {
+			//if (isDetected && detectState.expressions[0] >= 0.8 && !isTransformed) { // If the person opens their mouth wide, then activate..
 			if (isDetected && !isTransformed){
 				isTransformed = true;
 				new TWEEN.Tween( ANONYMOUSMESH.material ).to({ opacity: 1}, 700).start(); // animation

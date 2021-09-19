@@ -3349,7 +3349,9 @@ input:checked + .slider:before {
   content: "\f00c"; }
 .la-exclamation:before {
   content: "\f12a"; }
-  
+.la-chevron-down:before {
+  content: "\f078"; }
+
 @media (prefers-color-scheme: dark) {
 	:root {
 		--color-mode: dark;
