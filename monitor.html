@@ -360,11 +360,29 @@
 								updateData("retransmit", 0, UUID);
 							}
 							
-							if (e.data.remoteStats[UUID].info.label){
-								if (!document.getElementById("label_"+UUID)){
-									document.getElementById(UUID).innerHTML = "<h1 class='small' id='label_"+UUID+"'></h1>" + document.getElementById(UUID).innerHTML;
+							var streamID = false;
+							if ("streamID" in e.data) {
+								streamID = e.data.streamID;
+							}
+							if (document.getElementById(UUID)){
+								if ("label" in e.data.remoteStats[UUID].info){
+									if (e.data.remoteStats[UUID].info.label){
+										if (!document.getElementById("label_"+UUID)){
+											document.getElementById(UUID).innerHTML = "<h1 class='small' id='label_"+UUID+"'></h1>" + document.getElementById(UUID).innerHTML;
+										}
+										document.getElementById("label_"+UUID).innerText = e.data.remoteStats[UUID].info.label + ", - a remote viewer of stream ID: "+streamID;
+									} else if (streamID){
+										if (!document.getElementById("label_"+UUID)){
+											document.getElementById(UUID).innerHTML = "<h1 class='small' id='label_"+UUID+"'></h1>" + document.getElementById(UUID).innerHTML;
+										}
+										document.getElementById("label_"+UUID).innerText = "Stats for a remote viewer of stream ID: "+streamID;
+									} else {
+										if (!document.getElementById("label_"+UUID)){
+											document.getElementById(UUID).innerHTML = "<h1 class='small' id='label_"+UUID+"'></h1>" + document.getElementById(UUID).innerHTML;
+										}
+										document.getElementById("label_"+UUID).innerText = "";
+									}
 								}
-								document.getElementById("label_"+UUID).innerText = e.data.remoteStats[UUID].info.label;
 							}
 							
 							

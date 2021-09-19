@@ -92,14 +92,7 @@
 				</div>
 			</div>
 			<div class="card">
-				<h2>MKV to MP4 (no transcoding)</h2>
-				<div>
-					<small>The same as: fmpeg -i INPUTFILE -vcodec copy -acodec copy output.mp4</small>
-					<input type="file" id="uploader2" accept=".mkv" title="Convert MKV to MP4">
-				</div>
-			</div>
-			<div class="card">
-				<h2>WebM MP4 files (no transcoding, attempts to force high resolutions)</h2>
+				<h2>WebM to MP4 files (no transcoding, attempts to force high resolutions)</h2>
 				<div>
 					<input type="file" id="uploader3" accept=".webm" title="Convert WebM to MP4">
 				</div>
@@ -108,6 +101,13 @@
 				<h2>WebM to Audio-only files (opus or wav)</h2>
 				<div>
 					<input type="file" id="uploader4" accept=".webm" title="Convert WebM to OPUS">
+				</div>
+			</div>
+			<div class="card">
+				<h2>MKV to MP4 (no transcoding)</h2>
+				<div>
+					<small>The same as: fmpeg -i INPUTFILE -vcodec copy -acodec copy output.mp4</small>
+					<input type="file" id="uploader2" accept=".mkv" title="Convert MKV to MP4">
 				</div>
 			</div>
 			<div id="processing">

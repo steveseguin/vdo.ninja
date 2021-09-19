@@ -1,0 +1,401 @@
+<html>
+  <head>
+    <script type="text/javascript" src="./thirdparty/obs-websocket.min.js"></script>
+	<link rel="stylesheet" href="https://vdo.ninja/main.css" />
+	<title>OBS Controller Demo using VDO.Ninja</title>
+	<style>
+	
+		.container {
+			max-width: 80%;
+			width: fit-content;
+			margin: 0 auto;
+		}
+
+		h1 {
+			margin-top: 1em;
+			margin-bottom: 1em;
+			padding: 10px;
+		}
+
+		.card {
+			margin: 10px;
+			box-shadow: 0 4px 8px 0 rgb(0 0 0 / 10%);
+			background-color: #ddd;
+			color: black;
+			margin-bottom: 1.5em;
+		}
+
+		.card>div {
+			padding: 10px;
+		}
+
+		.card h2 {
+			font-size: 1.5em;
+			padding: 10px;
+			background-color: #457b9d;
+			color: white;
+			border-bottom: 2px solid #3b6a87;
+		}
+
+		small {
+			font-style: italic;
+			display: block;
+			margin-left: 1em;
+		}
+
+		span.warning {
+			color: rgb(212, 191, 0);
+		}
+
+		input {
+			padding: 10px;
+			display: inline-block;
+			flex-flow: unset;
+			margin: 10px;
+		}
+
+		video {
+			max-width: 640px;
+			max-height: 360px;
+			padding: 20px;
+		}
+
+		audio {
+			max-width: 640px;
+			max-height: 360px;
+			padding: 20px;
+		}
+
+		div#processing {
+			display: none;
+			justify-content: center;
+			place-items: center;
+			position: absolute;
+			inset: 0;
+			font-size: 1.5em;
+			font-weight: bold;
+			background: #141926;
+			flex-direction: column;
+		}
+		button {
+			margin:5px;
+			border:solid black 2px;
+		}
+		
+		body {
+			color:white;
+			display: inline-block;
+			flex-flow: unset;
+		}
+		
+		a {
+			color: #CEF!important;
+		}
+		
+		#info{
+			margin: 20px;
+			max-height: 50%;
+			overflow: auto;
+		}
+		
+		#client {
+			margin:10px;
+			display:block;
+		}
+		label {
+			color:white;
+		}
+		
+	</style>
+</head>
+<body>
+	<div class="container">
+		<h1>OBS remote (server)</h1>
+		<span id='setup'>
+			<label for="address">Websocket Address</label>
+			<input name="address" id="address" placeholder="address (optional)" value="localhost:4444" />
+			<label for="address">Websocket Password</label>
+			<input  name="password" id="password"  placeholder="password here (optional)" />
+			<br />
+			<label for="vdoroomname">Room name to use</label>
+			<input name="vdoroomname" id="vdoroomname" placeholder="vdo room name to use (optional)" />
+			<label for="vdopassword">Room password to use</label>
+			<input name="vdopassword" id="vdopassword"  placeholder="vdo password to use (optional)" />
+			<br />
+			<button id="address_button">Connect</button>
+			<button id="address_button_2">Connect and share OBS Output</button>
+		</span>
+		<a id="client" target="_blank"></a>
+		<div id="info"></div>
+		<small>Code available on GitHub: <a target="_blank" href='https://github.com/steveseguin/remote_ninja'>https://github.com/steveseguin/remote_ninja</a></small>
+	</div>
+	<script>
+
+		var hostname = "vdo.ninja"; // all that's supported as of this moment. 
+
+		const obs = new OBSWebSocket();
+		var scenesData = {};
+		scenesData.scenes = [];
+
+		function sendToOBS(action, data={}){
+			document.getElementById("info").innerHTML = action + "<br />"+document.getElementById("info").innerHTML;
+			obs.sendCallback(action, data, sendCallback)
+		}
+		
+		(function(w) {
+			w.URLSearchParams = w.URLSearchParams || function(searchString) {
+				var self = this;
+				searchString = searchString.replace("??", "?");
+				self.searchString = searchString;
+				self.get = function(name) {
+					var results = new RegExp('[\?&]' + name + '=([^&#]*)').exec(self.searchString);
+					if (results == null) {
+						return null;
+					} else {
+						return decodeURI(results[1]) || 0;
+					}
+				};
+			};
+		})(window);
+
+		var urlEdited = window.location.search.replace(/\?\?/g, "?");
+		urlEdited = urlEdited.replace(/\?/g, "&");
+		urlEdited = urlEdited.replace(/\&/, "?");
+
+		if (urlEdited !== window.location.search){
+			warnlog(window.location.search + " changed to " + urlEdited);
+			window.history.pushState({path: urlEdited.toString()}, '', urlEdited.toString());
+		}
+		var urlParams = new URLSearchParams(urlEdited);
+		
+		var roomname = Math.floor(Math.random() * 1000000);
+		var pwurl = Math.floor(Math.random() * 1000000);
+
+		if (urlParams.get("password")){
+			pwurl = urlParams.get("password");
+			localStorage.setItem('password',pwurl)
+		} else if (localStorage.getItem('password')){
+			pwurl = localStorage.getItem('password');
+		} else {
+			localStorage.setItem('password',pwurl)
+		}
+		
+		if (urlParams.get("room")){
+			roomname = urlParams.get("room")
+			localStorage.setItem('roomname',roomname)
+		} else if (localStorage.getItem('roomname')){
+			roomname = localStorage.getItem('roomname');
+		} else {
+			localStorage.setItem('roomname',roomname)
+		}
+		
+		document.getElementById('vdoroomname').value = roomname;
+		document.getElementById('vdopassword').value = pwurl;
+		
+		
+		if (localStorage.getItem('address')){
+			document.getElementById('address').value = localStorage.getItem('address');
+		} 
+		
+		if (localStorage.getItem('wspass')){
+			document.getElementById('password').value = localStorage.getItem('wspass');
+		} 
+		
+		var iframe = null;
+		function createIFrame(visible=true){
+			iframe = document.createElement("iframe");
+			
+			if (visible){
+				iframe.src = "https://"+hostname+"/?room="+roomname+"&push=mainOBSOutput&od=0&transparent&webcam&vd=obs&view&password="+pwurl+"&label=OBS_"+Math.floor(Math.random() * 1000000);
+				iframe.style.minWidth = "720px";
+				iframe.style.minHeight = "480px";		
+				iframe.style.maxWidth = "50%";
+				iframe.style.maxHeight = "50%";		
+				iframe.style.display = "block";		
+				iframe.style.margin = "auto";
+				iframe.allow = "autoplay;camera;microphone;fullscreen;picture-in-picture;";
+			} else {
+				iframe.src = "https://"+hostname+"/?room="+roomname+"&push&autostart&vd=0&view&ad=0&transparent&cleanoutput&password="+pwurl+"&label=OBS_"+Math.floor(Math.random() * 1000000);
+				iframe.style.opacity = 0;
+				iframe.style.width = 0;
+				iframe.style.height = 0;
+				iframe.style.position = "absolulte";
+				iframe.style.top = "-100px";
+				iframe.style.left = "-100px";
+			}
+			document.getElementById("client").parentNode.insertBefore(iframe, document.getElementById("client").nextSibling);
+
+			var eventMethod = window.addEventListener ? "addEventListener" : "attachEvent";
+			var eventer = window[eventMethod];
+			var messageEvent = eventMethod === "attachEvent" ? "onmessage" : "message";
+			eventer(messageEvent, function (e) {
+				if (e.source != iframe.contentWindow){return} // reject messages send from other iframes
+				console.log(e);
+				if ("dataReceived" in e.data){
+					if ("sendToOBS" in e.data.dataReceived){
+						if ("action" in e.data.dataReceived.sendToOBS){
+							if ("data" in e.data.dataReceived.sendToOBS){
+								sendToOBS(e.data.dataReceived.sendToOBS.action, e.data.dataReceived.sendToOBS.data);
+							}
+						}
+					}
+				} else if ("action" in e.data){
+					if (e.data.action === "new-push-connection"){
+						console.log(e.data);
+						updateSceneList();
+					}
+				}
+			});
+		}
+		
+		function sendCallback(err, data){
+			console.log("CALLBACK TRIGGERED");
+			var msg = {};
+			msg.sentFromOBS = {};
+			msg.sentFromOBS.callbackData = data;
+			msg.sentFromOBS.callbackError = err;
+			try {
+				iframe.contentWindow.postMessage({"sendData":msg}, '*');
+			} catch(e){}
+		}
+		
+		function sendRawData(data){
+			var msg = {};
+			msg.sentFromOBS = {};
+			msg.sentFromOBS.rawData = data;
+			try {
+				iframe.contentWindow.postMessage({"sendData":msg}, '*');
+			} catch(e){}
+		}
+		
+		function heartBeat(){
+			obs.send("GetStats");
+		}
+
+		function updateSceneList(){
+			var msg = {};
+			msg.sentFromOBS = {};
+			msg.sentFromOBS.scenes = scenesData;
+			try {
+				iframe.contentWindow.postMessage({"sendData":msg}, '*');
+			} catch(e){}
+			console.log(msg);
+			obs.send("GetSourcesList");
+			obs.send('GetCurrentScene');
+			obs.send("GetVideoInfo");
+			obs.send("ListOutputs");
+		}
+
+		document.getElementById('address_button').addEventListener('click', e => {
+			connect(e, false);
+		});
+		
+		document.getElementById('address_button_2').addEventListener('click', e => {
+			connect(e, true);
+		});
+		
+		var heartBeatInterval = null;
+		
+		function connect(e, camera){
+			const address = document.getElementById('address').value || "localhost:4444";
+			const password = document.getElementById('password').value;
+			
+			
+			roomname = document.getElementById('vdoroomname').value || Math.floor(Math.random() * 1000000);
+			pwurl = document.getElementById('vdopassword').value || Math.floor(Math.random() * 1000000);
+			localStorage.setItem('roomname',roomname)
+			localStorage.setItem('password',pwurl)
+			
+			createIFrame(camera); // connects to VDO.Ninja's IFRAME API
+			
+			localStorage.setItem('address',address);
+			if (password){
+				localStorage.setItem('wspass',password);
+				var ret = obs.connect({
+				  address: address,
+				  password: password
+				});
+			} else {
+				var ret = obs.connect({
+				  address: address
+				});
+			}
+			
+			ret.then(() => {
+				console.log(`Success!`);
+				return obs.send('GetSceneList');
+			}).then(data => {
+				document.getElementById("setup").style.display = "none";
+				scenesData = data;
+				updateSceneList();
+				var pathname = window.location.pathname.split("/");
+				pathname.pop();
+				pathname = pathname.join("/");
+				var clientLink = window.location.protocol + "//" + window.location.host + pathname + "/interface.html?room="+roomname+"&password="+pwurl;
+				document.getElementById("client").href = clientLink;
+				document.getElementById("client").innerHTML = "<b><font style='color:#70c4ff;'>client link:</font></b> "+clientLink;
+				document.getElementById("info").innerHTML = "<br /><p style='color:#bdffbd;'>Connection to OBS websockets opened.</p>" + document.getElementById("info").innerHTML;
+				try {
+					obs._socket.onmessage2 = obs._socket.onmessage; // hijacking the obs-websocket.js framework
+					obs._socket.onmessage = function(data){
+					console.log(data);
+						obs._socket.onmessage2(data);
+						if (data.type && data.data){
+							if (data.type == "message"){
+								sendRawData(data.data);
+							}
+						}
+					}
+				} catch(e){console.error(e);}
+				
+				clearInterval(heartBeatInterval);
+				heartBeatInterval = setInterval(function(){heartBeat();},3000);
+				
+			}).catch(err => { // Promise convention dicates you have a catch on every chain.
+				console.log(err);
+				document.getElementById("info").innerHTML = "<br />Error trying to connect. Is SSL enabled on your domain?" + document.getElementById("info").innerHTML;
+				if ("error" in err){
+					document.getElementById("info").innerHTML = "<br />"+err.error + document.getElementById("info").innerHTML;
+				}
+			});
+		};
+		
+		// We use the source visibility one and filter visibility web socket commands quite often in shows.
+			
+		obs.on('SwitchScenes', data => {
+			console.log(`New Active Scene: ${data.sceneName}`);
+			scenesData.currentScene = data.sceneName
+			updateSceneList();
+		});
+		obs.on('ConnectionOpened', (data) => function(){
+			document.getElementById("setup").style.display = "none";
+			document.getElementById("info").innerHTML = "<br /><p style='color:#bdffbd;'>Connection to OBS websockets opened.</p>" + document.getElementById("info").innerHTML;
+		});
+		obs.on('ConnectionClosed', (data) => function(){
+			document.getElementById("setup").style.display = "unset";
+			document.getElementById("info").innerHTML = "<br />Connection to OBS websockets closed" + document.getElementById("info").innerHTML;
+		});
+		obs.on('AuthenticationSuccess', (data) => function(){
+			document.getElementById("setup").style.display = "none";
+			document.getElementById("info").innerHTML = "<br />OBS websockets authenticated" + document.getElementById("info").innerHTML;
+		});
+		obs.on('AuthenticationFailure', (data) => function(){
+			document.getElementById("setup").style.display = "unset";
+			document.getElementById("info").innerHTML = "<br />Authentication to OBS websockets failed" + document.getElementById("info").innerHTML;
+		});
+		obs.on('ScenesChanged', (data) => function(){
+			scenesData = data;
+			updateSceneList()
+		});
+		// You must add this handler to avoid uncaught exceptions.
+		obs.on('error', err => {
+			document.getElementById("info").innerHTML = "<br />OBS websockets error" + document.getElementById("info").innerHTML;
+			console.error('socket error:', err);
+			if ("error" in err){
+				document.getElementById("info").innerHTML = "<br />"+err.error + document.getElementById("info").innerHTML;
+			}
+		});
+			
+	</script>
+</body>
+</html>

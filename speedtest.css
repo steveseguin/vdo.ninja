@@ -1,3 +1,20 @@
+:root {
+	--background-color: #141926;
+	--container-color: #373737;
+	--button-color: #2A2A2A;
+	--blue-accent: #4a4c63;
+	--red-accent: #553737;
+	--green-accent: #3f4f50;
+	--olive-accent: #535D32;
+	--regular-margin: 10px;
+	--director-margin: 15px 20px 0 0;
+	--fit-style: contain;
+	--fadein-speed: 0;
+	--video-margin: 0px;
+	--video-rounded: 0px;
+	--button-radius: 2px;
+}
+
 body {
 	-webkit-font-smoothing: antialiased;
 	text-rendering: optimizeLegibility;
@@ -79,6 +96,7 @@ iframe {
     height: 85%;
     width: 100%;
     flex: 1;
+    border: 0;
 }
 
 #controls {
@@ -87,6 +105,9 @@ iframe {
 
 #controls button {
     margin: 5px;
+	padding: 5px 10px;
+    border: 0;
+    border-radius: var(--button-radius);
 }
 
 #controls button.active {
@@ -142,6 +163,7 @@ canvas {
 .graph h2, #log h2 {
     margin: 0px 20px;
     font-size: 1em;
+    color: #cacaca;
 }
 
 .graph > span {
@@ -196,9 +218,9 @@ ol {
 		margin:auto;
 	}
 	
-  }
+}
 
-  #statsdiv {display: none;}
+#statsdiv {display: none;}
 
 
   
