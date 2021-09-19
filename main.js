@@ -583,6 +583,14 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 		getById("main").classList.remove('hidden');
 	}
 
+	if (urlParams.has("base64css") || urlParams.has("b64css")) {
+    var base64Css = urlParams.get("base64css") || urlParams.get("b64css");
+    var css = atob(base64Css);
+    var cssStyleSheet = document.createElement("style");
+    cssStyleSheet.innerText = css;
+    document.querySelector("head").appendChild(cssStyleSheet);
+  };
+
 	if (urlParams.has('password') || urlParams.has('pass') || urlParams.has('pw') || urlParams.has('p')) {
 		session.password = urlParams.get('password') || urlParams.get('pass') || urlParams.get('pw') || urlParams.get('p');
 		if (!session.password) {
