@@ -339,9 +339,23 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 	}
 
 
-	if (urlParams.has('webcam') || urlParams.has('wc')) {
+	if (urlParams.has('webcam') || urlParams.has('wc') || urlParams.has('miconly')) {
 		session.webcamonly = true;
 		screensharebutton = false;
+		if (urlParams.has('miconly')){
+			session.videoDevice=0;
+			getById("add_camera").innerHTML = "Share your Microphone";
+			miniTranslate(getById("add_camera"), "share-your-mic");
+			getById("videoMenu").style.display = "none";
+			//session.autostart = true;
+			getById("mutevideobutton").style.setProperty("display", "none", "important");
+			getById("videoMenu3").style.setProperty("display", "none", "important");
+			//if (session.consent){
+			//	setTimeout(function(){
+			//		warnUser("⚠ Privacy warning: The director of this room can remotely switch your camera or microphone without permission.", 8000);
+			//	}, 1500);
+			//}
+		}
 	} else if (urlParams.has('screenshare') || urlParams.has('ss')) {
 		session.screenshare = true;
 		if (urlParams.get('screenshare') || urlParams.get('ss')){
@@ -471,6 +485,10 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 		session.aspectratio = 1; // 9:16  (default of 0 is 16:9)
 	} else if (urlParams.has('square') || urlParams.has('11')) {
 		session.aspectratio = 2; //1:1 ?
+	}
+
+	if (urlParams.has('forceaspectratio') || urlParams.has('far')) {
+		session.forceAspectRatio = true; // 9:16  (default of 0 is 16:9)
 	}
 
 	if (urlParams.has('cover')) {
@@ -1372,8 +1390,22 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 	}
 
 	if (urlParams.has('order')) {
-		session.order = parseInt(urlParams.get('order')) || 0;
+		session.order = parseInt(urlParams.get('order')) || 1;
 	}
+	
+	if (urlParams.has('slot')) {
+		session.slot = parseInt(urlParams.get('slot')) || 0;
+	}
+	
+	if (urlParams.has('group')) {
+		session.group = urlParams.get('group') || "";
+		session.group = session.group.split(",");
+	}
+	
+	if (urlParams.has('groupaudio') || urlParams.has('ga')) {
+		session.groupAudio = true;
+	}
+	
 	if (urlParams.has('sensors') || urlParams.has('sensor') || urlParams.has('gyro') || urlParams.has('gyros') || urlParams.has('accelerometer')) {
 		session.sensorData = urlParams.get('sensors') || urlParams.get('sensor') || urlParams.get('gyro') || urlParams.get('gyros') || urlParams.get('accelerometer') || 30;
 		session.sensorData = parseInt(session.sensorData);
@@ -1700,6 +1732,15 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 		log("framerate Changed");
 		log(session.framerate);
 	}
+	
+	if (urlParams.has('tz')){
+		session.tz = urlParams.get('tz');
+		if ((session.tz === null) || (session.tz === "")){
+			session.tz = false;
+		} else {
+			session.tz = parseInt(session.tz);
+		}
+	}
 
 	if (urlParams.has('maxframerate') || urlParams.has('mfr') || urlParams.has('mfps')) {
 		session.maxframerate = urlParams.get('maxframerate') || urlParams.get('mfr') || urlParams.get('mfps');
@@ -1720,9 +1761,9 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 	}
 	
 	if (urlParams.has('panning') || urlParams.has('pan')) {
-		session.panning=true;
-		if (urlParams.get('panning') || urlParams.get('pan')){
-			session.panning = urlParams.get('panning') || urlParams.get('pan');
+		session.panning = urlParams.get('panning') || urlParams.get('pan');
+		if (session.panning===""){
+			session.panning=true
 		}
 		session.audioEffects = true;
 	}
@@ -1848,9 +1889,12 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 	}
 
 	if (urlParams.has('activespeaker') || urlParams.has('speakerview')  || urlParams.has('sas')){
-		session.activeSpeaker = true;
+		session.activeSpeaker = urlParams.get('activespeaker') || urlParams.get('speakerview')  || urlParams.get('sas') || 1;
+		session.activeSpeaker = parseInt(session.activeSpeaker);
+		
 		session.audioEffects = true;
 		session.audioMeterGuest = true; 
+		session.minipreview = 2;
 		//session.animatedMoves = false;
 		
 		session.fadein=true;
@@ -1858,7 +1902,8 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 		setInterval(function(){activeSpeaker(false);},100);
 		
 	} else if (urlParams.has('noisegate')){
-		session.quietOthers = true;
+		session.quietOthers = urlParams.get('noisegate') || 1;
+		session.quietOthers = parseInt(session.quietOthers);
 		session.audioEffects = true;
 		session.audioMeterGuest = true;
 		setInterval(function(){activeSpeaker(false);},100);

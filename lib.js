@@ -831,6 +831,18 @@ function manageSceneState(data, UUID){
 	}
 }
 
+function compare_vids( a, b ) {
+  var aa = a.order || 0;
+  var bb = b.order || 0;
+  if ( aa < bb ){
+    return 1;
+  }
+  if ( aa > bb ){
+    return -1;
+  }
+  return 0;
+}
+
 function applySceneState(){
 	if (session.disableOBS){return;}
 	if (session.cleanOutput===false){
@@ -1156,6 +1168,10 @@ function makeDraggableElement(elmnt, absolute=false) {
 	}
 	
 	elmnt.onmousedown = dragMouseDown;
+}
+
+function removeStorage(cname){
+	localStorage.removeItem(cname);
 }
 
 function setStorage(cname, cvalue, exdays=999){ // not actually a cookie
@@ -1561,6 +1577,20 @@ function updateMixerRun(e=false){  // this is the main auto-mixing code.  It's a
 		var mediaPool = [];
 		var mediaPool_invisible = [];
 		
+		
+		if (session.iframeEle && (session.iframeEle.style.display!="none")){  // local feed
+			if (session.order!==false){
+				session.iframeEle.order=session.order;
+			} else {
+				session.iframeEle.order=0;
+			}
+			if (session.activeSpeaker && (!session.activelySpeaking)){
+				mediaPool_invisible.push(session.iframeEle);
+			} else {
+				mediaPool.push(session.iframeEle);
+			}
+		}
+
 		if (session.videoElement && (session.videoElement.src || session.videoElement.srcObject)){ // I, myself, exist
 			if (session.videoElement.style.display!="none"){  // local feed
 				if (session.minipreview && (session.infocus!==true)){
@@ -1582,7 +1612,14 @@ function updateMixerRun(e=false){  // this is the main auto-mixing code.  It's a
 						session.videoElement.order=0;
 					}
 					if (session.activeSpeaker && (!session.activelySpeaking)){
-						mediaPool_invisible.push(session.videoElement);
+						//mediaPool_invisible.push(session.videoElement);
+					//} else if (session.videoElement.srcObject && (session.videoElement.srcObject.getTracks().length === 0)){
+						// do not show a video element if its completely empty.
+					} else if (session.videoElement.srcObject && (session.videoElement.srcObject.getVideoTracks().length === 0)){
+						// do not show a video element if its completely empty.
+						
+					} else if (session.infocus && session.infocus!==true){
+						//
 					} else {
 						mediaPool.push(session.videoElement);
 					}
@@ -1608,21 +1645,7 @@ function updateMixerRun(e=false){  // this is the main auto-mixing code.  It's a
 			}
 		}
 		
-		if (session.iframeEle){ // I, myself, exist
-			if (session.iframeEle.style.display!="none"){  // local feed
-				if (session.order!==false){
-					session.iframeEle.order=session.order;
-				} else {
-					session.iframeEle.order=0;
-				}
-				if (session.activeSpeaker && (!session.activelySpeaking)){
-					mediaPool_invisible.push(session.iframeEle);
-				} else {
-					//errorlog("PUSHED IFRAME");
-					mediaPool.push(session.iframeEle);
-				}
-			}
-		}
+		
 		
 
 		if ((session.infocus) && (session.infocus in session.rpcs)){ // remote guest being full screened; infocus == UUID
@@ -1630,10 +1653,19 @@ function updateMixerRun(e=false){  // this is the main auto-mixing code.  It's a
 			for (var j in session.rpcs){
 				if (j != session.infocus){ // this remote guest is NOT in focus
 					try {
-						if (session.rpcs[j].videoElement.style.display!="none"){  // Add it if not hidden
-							session.requestRateLimit(0, j); // disable the video of non-fullscreen videos
-							mediaPool_invisible.push(session.rpcs[j].videoElement);
-						} else {
+						if (session.rpcs[j].videoElement && session.rpcs[j].videoElement.style.display!="none" ){  // Add it if not hidden
+						
+							if (document.pictureInPictureElement && document.pictureInPictureElement.id && (document.pictureInPictureElement.id == session.rpcs[j].videoElement.id)){
+								var bitratePIP = parseInt(session.zoomedBitrate/4);
+								//warnUser("GOOD");
+								session.requestRateLimit(bitratePIP, j);
+							} else {
+								session.requestRateLimit(0, j); // disable the video of non-fullscreen videos
+							}
+							if (session.rpcs[j].videoElement.srcObject && session.rpcs[j].videoElement.srcObject.getAudioTracks().length){
+								mediaPool_invisible.push(session.rpcs[j].videoElement);
+							}
+						} else if (session.rpcs[j].videoElement){
 							session.requestRateLimit(0, j, true); // disable the video of non-fullscreen videos
 						}
 					} catch(e){errorlog(e);}
@@ -1641,26 +1673,29 @@ function updateMixerRun(e=false){  // this is the main auto-mixing code.  It's a
 					////////
 					try {
 						if (session.rpcs[j].iframeEle){
-							mediaPool_invisible.push(session.rpcs[j].videoElement);
+							if (session.rpcs[j].videoElement && (session.rpcs[j].videoElement.srcObject.getAudioTracks().length)){
+								mediaPool_invisible.push(session.rpcs[j].videoElement);
+							}
 							session.requestRateLimit(0, j);
 							mediaPool.push(session.rpcs[j].iframeEle);
 							continue;
-						}
+						} else if (session.rpcs[j].videoElement){
 						
-						if (session.rpcs[j].order!==false){
-							session.rpcs[j].videoElement.order=session.rpcs[j].order;
-						} else {
-							session.rpcs[j].videoElement.order=0;
-						}
-						///////////
-						if (session.activeSpeaker && (!session.rpcs[j].activelySpeaking)){ // not the active speaker
-							mediaPool_invisible.push(session.rpcs[j].videoElement);
-							session.requestRateLimit(0, j); // keep audio good, but disable video
-						} else {
-							mediaPool.push(session.rpcs[j].videoElement); // active speaker
-							session.rpcs[j].videoElement.style.visibility = "visible";
-							if ((session.rpcs[j].targetBandwidth!==-1) && (session.rpcs[j].targetBandwidth<session.zoomedBitrate)){
-								session.requestRateLimit(session.zoomedBitrate, j); // 1.2mbps is decent, no? in-focus, so higher bitrate
+							if (session.rpcs[j].order!==false){
+								session.rpcs[j].videoElement.order=session.rpcs[j].order;
+							} else {
+								session.rpcs[j].videoElement.order=0;
+							}
+							///////////
+							if (session.activeSpeaker && (!session.rpcs[j].activelySpeaking || !session.rpcs[j].loudest)){ // not the active speaker
+								mediaPool_invisible.push(session.rpcs[j].videoElement);
+								session.requestRateLimit(0, j); // keep audio good, but disable video
+							} else {
+								mediaPool.push(session.rpcs[j].videoElement); // active speaker
+								session.rpcs[j].videoElement.style.visibility = "visible";
+								if ((session.rpcs[j].targetBandwidth!==-1) && (session.rpcs[j].targetBandwidth<session.zoomedBitrate)){
+									session.requestRateLimit(session.zoomedBitrate, j); // 1.2mbps is decent, no? in-focus, so higher bitrate
+								}
 							}
 						}
 					} catch(e){errorlog(e);}
@@ -1670,10 +1705,16 @@ function updateMixerRun(e=false){  // this is the main auto-mixing code.  It's a
 			// already added myself to this as fullscreen
 			for (var j in session.rpcs){
 				try {
-					if (session.rpcs[j].videoElement.style.display!="none"){  // Add it if not hidden
-						session.requestRateLimit(0, j); // other videos are disabled when previewing yourself, but audio retained
+					if (session.rpcs[j].videoElement && (session.rpcs[j].videoElement.style.display!="none")){  // Add it if not hidden
+						if (document.pictureInPictureElement && document.pictureInPictureElement.id && (document.pictureInPictureElement.id == session.rpcs[j].videoElement.id)){
+							var bitratePIP = parseInt(session.zoomedBitrate/4);
+							session.requestRateLimit(bitratePIP, j);
+							//warnUser("GOOD");
+						} else {
+							session.requestRateLimit(0, j); // disable the video of non-fullscreen videos
+						}
 						mediaPool_invisible.push(session.rpcs[j].videoElement);
-					} else {
+					} else if (session.rpcs[j].videoElement){
 						session.requestRateLimit(0, j, true); // other videos are disabled when previewing yourself, but audio retained
 					}
 				} catch(e){errorlog(e);}
@@ -1728,7 +1769,11 @@ function updateMixerRun(e=false){  // this is the main auto-mixing code.  It's a
 				roomQuality = Math.max(session.bitrate, roomQuality);
 			}
 			
-			for (var i in session.rpcs){
+			var i = null;
+			var countOrder = 0;
+			var RPCSkeys = Object.keys(session.rpcs); // default sorting type: time added; //RPCSkeys.sort();
+			for (var keyIndex = 0; keyIndex<RPCSkeys.length; keyIndex++){
+				i = RPCSkeys[keyIndex];
 				if (session.rpcs[i]===null){continue;}
 				if (session.rpcs[i].iframeEle){
 					if (session.rpcs[i].iframeEle.style.display=="none"){
@@ -1744,10 +1789,10 @@ function updateMixerRun(e=false){  // this is the main auto-mixing code.  It's a
 							session.rpcs[i].iframeEle.order=0;
 						}
 						try{
-							if (session.activeSpeaker && (!session.rpcs[i].activelySpeaking)){
-								mediaPool_invisible.push(session.rpcs[i].iframeEle);  // TODO: this needs validation; will the iframe be maintained if activer speaker is going? do we even want this?
+							if (session.activeSpeaker && (!session.rpcs[i].activelySpeaking || !session.rpcs[i].loudest)){
+								mediaPool_invisible.push(session.rpcs[i].iframeEle);  // TODO: this needs validation; will the iframe be maintained if activer speaker is going? do we even want this? 
 								
-							} else if (session.rpcs[i].iframeEle.dataset.meshcast){ //////// MESH CAST ONLY LOGIC
+							/* } else if (session.rpcs[i].iframeEle.dataset.meshcast){ //////// MESH CAST ONLY LOGIC
 								if (session.rpcs[i].iframeEle.contentDocument && session.rpcs[i].iframeEle.contentDocument.querySelectorAll("video").length){
 									if (session.rpcs[i].iframeVideo){
 										mediaPool.push(session.rpcs[i].iframeVideo);
@@ -1783,7 +1828,7 @@ function updateMixerRun(e=false){  // this is the main auto-mixing code.  It's a
 											//errorlog("Does not support contentDocument or something");
 										}
 									}
-								}
+								} */
 							} else {  ///////// MESH CAST LOGIC ENDS HERE
 								//errorlog("not meshcast");
 								mediaPool.push(session.rpcs[i].iframeEle);
@@ -1793,33 +1838,28 @@ function updateMixerRun(e=false){  // this is the main auto-mixing code.  It's a
 				}
 				
 				if (session.rpcs[i].imageElement){
-					//if (session.rpcs[i].videoElement.srcObject.getVideoTracks().length==0){ // video shouldn't be on if images are on.
-					
-						if (session.rpcs[i].videoElement){ // is there audio?
-							mediaPool_invisible.push(session.rpcs[i].videoElement); // include audio as hidden track; 
-						}
-					
-						if (session.rpcs[i].videoMuted){
-							continue;
-						} else if (session.rpcs[i].directorVideoMuted){
-							continue;
-						}
-					
-						if (session.rpcs[i].order!==false){
-							session.rpcs[i].imageElement.order=session.rpcs[i].order;
-						} else {
-							session.rpcs[i].imageElement.order=0;
-						}
-						if (session.activeSpeaker && (!session.rpcs[i].activelySpeaking)){
-							// mediaPool_invisible.push(session.rpcs[i].imageElement);
-						} else {
-							mediaPool.push(session.rpcs[i].imageElement);
-						}
-						
+					if (session.rpcs[i].videoElement && (session.rpcs[i].videoElement.srcObject.getAudioTracks().length)){ // is there audio?
+						mediaPool_invisible.push(session.rpcs[i].videoElement); // include audio as hidden track; 
+					}
+				
+					if (session.rpcs[i].videoMuted){
 						continue;
-				//	} else {
-				//		errorlog("Video track added while in webp streaming mode? wasted bandwidth / cpu ..")
-				//	}
+					} else if (session.rpcs[i].directorVideoMuted){
+						continue;
+					}
+				
+					if (session.rpcs[i].order!==false){
+						session.rpcs[i].imageElement.order=session.rpcs[i].order;
+					} else {
+						session.rpcs[i].imageElement.order=0;
+					}
+					if (session.activeSpeaker && (!session.rpcs[i].activelySpeaking || !session.rpcs[i].loudest)){
+						// mediaPool_invisible.push(session.rpcs[i].imageElement);
+					} else {
+						mediaPool.push(session.rpcs[i].imageElement);
+					}
+					
+					continue;
 				}
 				
 				if (session.rpcs[i].videoElement){ // remote feeds
@@ -1848,7 +1888,7 @@ function updateMixerRun(e=false){  // this is the main auto-mixing code.  It's a
 									session.rpcs[i].canvas.order=0;
 								}
 								
-								if (session.activeSpeaker && (!session.rpcs[i].activelySpeaking)){
+								if (session.activeSpeaker && (!session.rpcs[i].activelySpeaking || !session.rpcs[i].loudest)){
 									mediaPool_invisible.push(session.rpcs[i].canvas);
 								} else {
 									mediaPool.push(session.rpcs[i].canvas);
@@ -1876,6 +1916,49 @@ function updateMixerRun(e=false){  // this is the main auto-mixing code.  It's a
 						continue;
 					}
 					
+					if (session.scene!==false){
+						if (session.sceneType === 3){ // order
+							countOrder+=1;
+							if (session.order === false){
+								if (countOrder==1){
+									session.rpcs[i].videoElement.style.display="block";
+								} else {
+									session.rpcs[i].videoElement.style.display="none";
+								}
+							} else if (session.order === countOrder){
+								session.rpcs[i].videoElement.style.display="block";
+							} else {
+								session.rpcs[i].videoElement.style.display="none";
+							}
+						}
+					}
+					
+					if (session.group.length){
+						try {
+							if (!(session.group.some(item => session.rpcs[i].group.includes(item)))){
+								if (session.scene!==false){
+									if (session.groupAudio){
+										session.requestRateLimit(session.hiddenSceneViewBitrate, i, false);
+									} else {
+										session.requestRateLimit(session.hiddenSceneViewBitrate, i, true);  // hidden. I dont want it to be super low, for video quality reasons.
+									}
+									if (!session.hiddenSceneViewBitrate){ 
+										session.rpcs[i].videoElement.classList.add("nogb");
+									}
+								} else {
+									if (session.groupAudio){
+										session.requestRateLimit(0, i, false);
+									} else {
+										session.requestRateLimit(0, i, true); // w/e   This is not in OBS, so we just set it as low as possible.  Shoudln't exist really unless loading?
+									}
+								}
+									
+								continue;
+							}
+						}catch(e){} 
+					}
+					
+					
 					if (session.rpcs[i].videoElement.style.display=="none"){  // Video is disabled; run at lowest
 						if (session.scene!==false){
 							session.requestRateLimit(session.hiddenSceneViewBitrate, i, true);  // hidden. I dont want it to be super low, for video quality reasons.
@@ -1892,7 +1975,7 @@ function updateMixerRun(e=false){  // this is the main auto-mixing code.  It's a
 						} else {
 							session.rpcs[i].videoElement.order=0;
 						}
-						if (session.activeSpeaker && (!session.rpcs[i].activelySpeaking)){
+						if (session.activeSpeaker && (!session.rpcs[i].activelySpeaking || !session.rpcs[i].loudest)){
 							if (!(session.rpcs[i].videoElement in mediaPool_invisible)){
 								mediaPool_invisible.push(session.rpcs[i].videoElement);
 							} else {
@@ -1907,7 +1990,7 @@ function updateMixerRun(e=false){  // this is the main auto-mixing code.  It's a
 						} else {
 							session.rpcs[i].videoElement.order=0;
 						}
-						if (session.activeSpeaker && (!session.rpcs[i].activelySpeaking)){
+						if (session.activeSpeaker && (!session.rpcs[i].activelySpeaking || !session.rpcs[i].loudest)){
 							if (!(session.rpcs[i].videoElement in mediaPool_invisible)){
 								mediaPool_invisible.push(session.rpcs[i].videoElement);
 							} else {
@@ -1928,7 +2011,7 @@ function updateMixerRun(e=false){  // this is the main auto-mixing code.  It's a
 						} else {
 							session.rpcs[i].videoElement.order=0;
 						}
-						if (session.activeSpeaker && (!session.rpcs[i].activelySpeaking)){
+						if (session.activeSpeaker && (!session.rpcs[i].activelySpeaking || !session.rpcs[i].loudest)){
 							if (!(session.rpcs[i].videoElement in mediaPool_invisible)){
 								mediaPool_invisible.push(session.rpcs[i].videoElement);
 							} else {
@@ -1942,7 +2025,7 @@ function updateMixerRun(e=false){  // this is the main auto-mixing code.  It's a
 				}
 			}
 		}
-		
+
 			
 		if (session.broadcastIFrame && session.broadcastIFrame.src){
 			if (!mediaPool.length){
@@ -1954,6 +2037,7 @@ function updateMixerRun(e=false){  // this is the main auto-mixing code.  It's a
 			log("FULL SCREEN: "+document.fullscreenElement.id);
 			return; // This is FULL SCREEN, so let's not continue.
 		}
+		
 
 		var mpl = mediaPool.length;
 		if (mpl>1){
@@ -1987,12 +2071,11 @@ function updateMixerRun(e=false){  // this is the main auto-mixing code.  It's a
 		errorlog(e);
 	}
 	
+	
 	try {
 		if (playarea.querySelector("#guestFeeds")){
-			//errorlog("WIPE MIXER");
 			playarea.innerHTML = "";
 		} else {
-			//errorlog("ALL GOOD");
 			var childNodes = playarea.childNodes;
 
 			for (var n=0;n<childNodes.length;n++){
@@ -2043,6 +2126,8 @@ function updateMixerRun(e=false){  // this is the main auto-mixing code.  It's a
 			}	
 		}
 	} catch(e){errorlog(e);}
+	
+	
 	if (session.videoElement && (session.videoElement.src || session.videoElement.srcObject)){ // fileshare or stream
 		if ("playlist" in session.videoElement){
 			playarea.appendChild(session.videoElement); // fileshare.
@@ -2121,30 +2206,32 @@ function updateMixerRun(e=false){  // this is the main auto-mixing code.  It's a
 	var i=0;
 	var offset = 0;
 
-	
-	
-	mediaPool_invisible.forEach(vid=>{
-		vid.style.width = "0px";
-		vid.style.height = "0px";
-		vid.style.top = "0px";
-		vid.style.left = "0px";
-		vid.isInvisible = true;
-		//vid.alreadyAdded=false; // what am I doing here? wtf? TODO: this is a typo, right?
-		if (vid.alreadyAdded && vid.alreadyAdded==true){
-			vid.alreadyAdded=false;
-			return;
-		} else if (vid.dataset.doNotMove){
-			return;
-		}
-		playarea.appendChild(vid);
-	});
-	
-	mediaPool.sort(compare_vids);
+	try{
+		mediaPool_invisible.forEach(vid=>{
+			if (vid){
+				try {
+					vid.style.width = "0px";
+					vid.style.height = "0px";
+					vid.style.top = "0px";
+					vid.style.left = "0px";
+					vid.isInvisible = true;
+					//vid.alreadyAdded=false; // what am I doing here? wtf? TODO: this is a typo, right?
+					if (vid.alreadyAdded && vid.alreadyAdded==true){
+						vid.alreadyAdded=false;
+						return;
+					} else if (vid.dataset.doNotMove){
+						return;
+					}
+					playarea.appendChild(vid);
+				} catch(e){errorlog(e);}
+			}
+		});
+		mediaPool.sort(compare_vids); // arrange videos by order. 
+	} catch(e){errorlog(e);}
 	
 	mediaPool.forEach(vid=>{
 		try {
 			if (!vid){
-				errorlog("vid missing");
 				return;
 			}
 			
@@ -2167,33 +2254,69 @@ function updateMixerRun(e=false){  // this is the main auto-mixing code.  It's a
 			offsety = Math.max((h- Math.ceil(mediaPool.length/rw)*Math.ceil(h/rh))/2,0);
 			
 			if (vid.alreadyAdded && vid.alreadyAdded==true){
+				
 				var container = vid.parentNode;
-				//container.style = vid.parentNode.style;
-
 				if (container.move){
 					clearInterval(container.move);
 				}
 				
 				if (session.animatedMoves){
 					
+					
 					var left = Math.max(offsetx+Math.floor(((i%rw)+0)*w/rw),0); 
 					var top = Math.max(offsety+Math.floor((Math.floor(i/rw)+0)*h/rh + hi),0);
 					var width = Math.ceil(w/rw);
 					var height = Math.ceil(h/rh);
 					
+					
 					container.tleft = left; 
 					container.ttop = top;
 					container.twidth = width;
 					container.theight = height;
-
+					container.style.position = "absolute";
+					container.style.display = "flex";
+					container.style.alignItems = "center";
 					container.move = setInterval(function(CCC){
 						try{
-							if (!CCC){return;}
+							
+							if (!CCC){
+								return;}
 							var ww = (parseInt(CCC.style.width) - CCC.twidth);
 							var hh = (parseInt(CCC.style.height) - CCC.theight);
 							var tt = (parseInt(CCC.style.top) - CCC.ttop);
 							var ll = (parseInt(CCC.style.left) - CCC.tleft);
-
+							
+							if (Number.isNaN(ww)){
+								CCC.style.width = CCC.twidth;
+								CCC.style.height = CCC.theight;
+								CCC.style.top = CCC.ttop;
+								CCC.style.left = CCC.tleft;
+								clearInterval(CCC.move);
+								return;
+							} else if (Number.isNaN(hh)){
+								CCC.style.width = CCC.twidth;
+								CCC.style.height = CCC.theight;
+								CCC.style.top = CCC.ttop;
+								CCC.style.left = CCC.tleft;
+								clearInterval(CCC.move);
+								return;
+							} else if (Number.isNaN(tt)){
+								CCC.style.width = CCC.twidth;
+								CCC.style.height = CCC.theight;
+								CCC.style.top = CCC.ttop;
+								CCC.style.left = CCC.tleft;
+								clearInterval(CCC.move);
+								return;
+							} else if (Number.isNaN(ll)){
+								CCC.style.width = CCC.twidth;
+								CCC.style.height = CCC.theight;
+								CCC.style.top = CCC.ttop;
+								CCC.style.left = CCC.tleft;
+								clearInterval(CCC.move);
+								return;
+							}
+							
+							
 							var skip = true;
 
 							if (ww <=1 && (ww >=-1)){
@@ -2286,6 +2409,7 @@ function updateMixerRun(e=false){  // this is the main auto-mixing code.  It's a
 					vid.style.maxHeight = "100%";
 					container.appendChild(vid);
 					container.appendChild(holder);
+					
 				}
 				
 				
@@ -2355,9 +2479,9 @@ function updateMixerRun(e=false){  // this is the main auto-mixing code.  It's a
 			} else {
 				holder.style.width = "100%";
 				holder.style.height = "100%";
-				if (vid.tagName.toLowerCase()=="iframe"){
-					holder.style.width = "100%";
-				}
+				//if (vid.tagName.toLowerCase()=="iframe"){
+				//	holder.style.width = "100%";
+				//}
 				holder.style.left = 0;
 				holder.style.top =  0;
 			}
@@ -2774,7 +2898,8 @@ eventer(messageEvent, function(e) { // this listens for child IFRAMES.
 					postMessageIframe(session.screenShareElement, {"close": true});
 					session.screenShareElement.parentNode.removeChild(session.screenShareElement);
 					session.screenShareElement = false;
-					updateMixer();
+				
+	updateMixer();
 					getById("screenshare2button").classList.add("float");
 					getById("screenshare2button").classList.remove("float2");
 				}
@@ -2802,7 +2927,7 @@ function requestKeyframeScene(ele) {
 	}
 }
 
-function pokeIframeAPI(action, value = null, UUID = null) {
+function pokeIframeAPI(action, value = null, UUID = null, SID=null) {
 	if (!isIFrame){return;}
 	try {
 		var data = {};
@@ -2814,6 +2939,10 @@ function pokeIframeAPI(action, value = null, UUID = null) {
 		}
 		if (UUID !== null) {
 			data.UUID = UUID;
+		}
+		
+		if (SID !== null) {
+			data.streamID = SID;
 		}
 
 		if (isIFrame) {
@@ -4570,6 +4699,7 @@ function toggleSettings(forceShow = false) { // TODO: I need to have this be MUT
 			getById("popupSelector").style.display = "none";
 		}, 200);
 		toggleSettingsState = false;
+		document.getElementById('videoSettings3').style.display = "none";
 	}
 }
 
@@ -5125,6 +5255,23 @@ function remoteMute(ele,  event=false) {
 	session.sendRequest(msg, ele.dataset.UUID);
 }
 
+function toggleQualityGear3(){
+	toggle(document.getElementById('videoSettings3'), inline=false);
+	if (getById("gear_webcam3").style.display === "inline-block") {
+		
+		var videoSelect = document.querySelector("select#videoSource3").options;
+		var obscam = false;
+		log(videoSelect[videoSelect.selectedIndex].text);
+		if (videoSelect[videoSelect.selectedIndex].text.startsWith("OBS-Camera")) { // OBS Virtualcam
+			obscam = true;
+		} else if (videoSelect[videoSelect.selectedIndex].text.startsWith("OBS Virtual Camera")) { // OBS Virtualcam
+			obscam = true;
+		} 
+		
+		updateStats(obscam);
+	}
+}
+
 function remoteMuteVideo(ele,  event=false) {
 	log("video mute");
 	
@@ -5220,8 +5367,8 @@ function remoteVolume(ele) { // A directing room only is controlled by the Direc
 }
 
 function clearDirectorSettings(){ // make sure to wipe the director's room settings if creating a new room.
-	setStorage("directorCustomize", {});
-	setStorage("directorWebsiteShare", {});
+	removeStorage("directorCustomize");
+	removeStorage("directorWebsiteShare");
 }
 
 function saveDirectorSettings(){
@@ -5736,7 +5883,7 @@ session.publishIFrame = function(iframeURL){
 	session.iframeSrc = iframeURL;
 	
 	var container = document.createElement("div");
-	container.id = "container";
+	container.id = "container_iframe";
 	
 	if (session.cover){
 		container.style.setProperty('height', '100%', 'important');
@@ -6160,7 +6307,7 @@ function audioMeter(mediaStreamSource, audioContext) {
 
 	var bufferLength = analyser.frequencyBinCount;
 	var dataArray = new Uint8Array(bufferLength);
-
+	var timer = null;
 
 	function draw() {
 		
@@ -6170,6 +6317,33 @@ function audioMeter(mediaStreamSource, audioContext) {
 			total += dataArray[i];
 		}
 		total = total / 100;
+		if (session.quietOthers && (session.quietOthers==2)){
+			if (total>10){
+				if (session.muted_activeSpeaker==false){
+					session.muted_activeSpeaker=true;
+					session.speakerMuted=true;
+					clearTimeout(timer);
+					toggleSpeakerMute(true);
+				}
+			} else if (session.muted_activeSpeaker==true){
+				session.speakerMuted=false;
+				session.muted_activeSpeaker=false;
+				session.activelySpeaking=false;
+				clearTimeout(timer);
+				timer = setTimeout(function(){toggleSpeakerMute(true);},250);
+			}
+		}// else if (session.activeSpeaker){
+		//	if (total>10){
+		//		if (!session.activelySpeaking){
+		//			session.activelySpeaking=true;
+		//			updateMixer();
+		//		}
+		//	} else if (session.activelySpeaking){
+		//		session.activelySpeaking=false;
+		//		updateMixer();
+		//	}
+		//}
+			
 		
 		if (document.getElementById("meter1")) {
 			if (total == 0) {
@@ -6238,6 +6412,8 @@ function activeSpeaker(border=false) {
 	var lastActiveSpeaker = null;
 	var changed = false;
 	var someoneElseIfSpeaking = false;
+	
+	
 	for (var UUID in session.rpcs) {
 		if (session.rpcs[UUID].stats._Audio_Loudness_average) {
 			//console.log(session.rpcs[UUID].stats._Audio_Loudness_average);
@@ -6250,6 +6426,7 @@ function activeSpeaker(border=false) {
 			session.rpcs[UUID].stats._Audio_Loudness_average = 1;
 		}
 		//log(session.rpcs[UUID].stats._Audio_Loudness_average);
+		
 		if (session.rpcs[UUID].stats._Audio_Loudness_average > 13) {
 			
 			if (border) {
@@ -6262,10 +6439,10 @@ function activeSpeaker(border=false) {
 				changed = true;
 				lastActiveSpeaker = UUID;
 				session.rpcs[UUID].stats._Audio_Loudness_average+=50;
-			} 
+			}
 			
 		} else if (session.rpcs[UUID].stats._Audio_Loudness_average > 6) {
-			
+			//
 		} else {
 			if (border){
 				if (session.rpcs[UUID].videoElement) {
@@ -6278,28 +6455,53 @@ function activeSpeaker(border=false) {
 				lastActiveSpeaker = UUID;
 			}
 		}
-		if (session.rpcs[UUID].activelySpeaking){
-			someoneElseIfSpeaking=true;
+		if ((session.rpcs[UUID].stats.Audio_Loudness > 15) || ((session.rpcs[UUID].stats.Audio_Loudness > 5) && (session.rpcs[UUID].stats._Audio_Loudness_average>5)) || (session.rpcs[UUID].stats._Audio_Loudness_average>30)){
+			someoneElseIfSpeaking = true;
 		}
+			
 	}
 	
+	if (session.activeSpeaker==1){
+		var loudest=null;
+		for (var UUID in session.rpcs) {
+			if (!("_Audio_Loudness_average" in session.rpcs[UUID].stats)){ // never could have been loudest, since no loudness value.
+				continue;
+			}
+			session.rpcs[UUID].loudest = false;
+			if (!loudest){
+				loudest = UUID;
+			} else if (session.rpcs[UUID].stats._Audio_Loudness_average > session.rpcs[loudest].stats._Audio_Loudness_average){
+				loudest = UUID;
+			}
+		}
+		if (loudest){
+			session.rpcs[loudest].loudest = true;
+		}
+	} 
 	
-	if (session.quietOthers){
+	if (session.quietOthers && (session.quietOthers===1)){
 		if (someoneElseIfSpeaking){
-			if (session.muted==false){
-				if (session.muted_activeSpeaker==false){
-					session.muted_activeSpeaker=true;
-					session.muted=true;
-					toggleMute(true);
-				}
-			} 
-		} else {
-			if (session.muted_activeSpeaker==true){
-				session.muted=false;
-				session.muted_activeSpeaker=false;
+			if (session.muted_activeSpeaker==false){
+				session.muted_activeSpeaker=true;
+				session.muted=true;
 				toggleMute(true);
 			}
-			
+		} else if (session.muted_activeSpeaker==true){
+			session.muted=false;
+			session.muted_activeSpeaker=false;
+			toggleMute(true);
+		}
+	} else if (session.quietOthers && (session.quietOthers===3)){ // purely for fun. It's the opposite of a noise-gate I guess.
+		if (someoneElseIfSpeaking){
+			if (session.muted_activeSpeaker==false){
+				session.muted_activeSpeaker=true;
+				session.speakerMuted=true;
+				toggleSpeakerMute(true);
+			}
+		} else if (session.muted_activeSpeaker==true){
+			session.speakerMuted=false;
+			session.muted_activeSpeaker=false;
+			toggleSpeakerMute(true);
 		}
 	}
 	
@@ -6682,8 +6884,11 @@ function createRoomCallback(passAdd, passAdd2) {
 	var directorWebsiteShare = getStorage("directorWebsiteShare"); // {"website":session.iframeSrc, "roomid":session.roomid}
 
 	if (typeof directorWebsiteShare === 'object' && directorWebsiteShare !== null && "website" in directorWebsiteShare){
-		if (directorWebsiteShare.roomid && (directorWebsiteShare.roomid==session.roomid)){
+		if (directorWebsiteShare.website == false){
+			clearDirectorSettings();
+		} else if (directorWebsiteShare.roomid && (directorWebsiteShare.roomid==session.roomid)){
 			session.iframeSrc = directorWebsiteShare.website;
+			session.defaultIframeSrc = directorWebsiteShare.website;
 			getById("websitesharetoggle").classList.remove("la-window-maximize");
 			getById("websitesharetoggle").classList.add("la-window-close");
 			getById("websitesharebutton").classList.add("float2");
@@ -9280,13 +9485,15 @@ if (navigator.userAgent.toLowerCase().indexOf(' electron/') > -1) {  // this ena
 					  <ul class="desktop-capturer-selection__list">
 						${sources.map(({id, name, thumbnail, display_id, appIcon}) => `
 						  <li class="desktop-capturer-selection__item">
-							<button class="desktop-capturer-selection__btn" data-id="${id}" title="${name}">
+							<button class="desktop-capturer-click desktop-capturer-selection__btn" data-id="${id}" title="${name}">
 							  <img class="desktop-capturer-selection__thumbnail" src="${thumbnail.toDataURL()}" />
 							  <span class="desktop-capturer-selection__name">${name}</span>
 							</button>
 						  </li>
 						`).join('')}
-						<button id="cancelscreenshare">CANCEL<br />SCREEN SHARE<br />SELECTION</button>
+						<div style="text-align: center;margin: auto 5px;font-size: 120%;"><i class="las la-music" style="font-size:40px;"></i><br />Include Desktop Audio<br /><input id="alsoCaptureAudio" style="width:20px;height:20px;margin-top: 10px;" type="checkbox" checked></div>
+						<button id="captureDesktopAudio" class="desktop-capturer-click" style="margin: 10px;"><i class="las la-music" style="font-size:40px;"></i><br />Capture ONLY<br />Desktop Audio</button>
+						<button id="cancelscreenshare" style="margin: 10px; background-color: #F88; width: 100px;"><i class="las la-window-close" style="font-size:40px;"></i><br />Cancel</button>
 					  </ul>
 					</div>
 				  `;
@@ -9295,48 +9502,98 @@ if (navigator.userAgent.toLowerCase().indexOf(' electron/') > -1) {  // this ena
 				  
 				  document.getElementById('cancelscreenshare').addEventListener('click', async () => {
 					   selectionElem.remove();
-					   reject(err);
+					   reject(null);
 				  });
-				  document.querySelectorAll('.desktop-capturer-selection__btn').forEach(button => {
+				  document.querySelectorAll('.desktop-capturer-click').forEach(button => {
 					  button.addEventListener('click', async () => {
 						try {
-						    const id = button.getAttribute('data-id');
-						    const source = sources.find(source => source.id === id);
-						    if (!source) {
-								throw new Error(`Source with id ${id} does not exist`);
-						    }
-						  
-							///
-							var new_constraints = {
-								audio: false,
-								video: {
-								  mandatory: {
-									chromeMediaSource: 'desktop',
-									chromeMediaSourceId: source.id
-								  }
+							if (button.id == "captureDesktopAudio"){
+								var new_constraints = {
+									audio: {
+										mandatory: {
+										  chromeMediaSource: 'desktop'
+										}
+									  },
+									video: {
+									  mandatory: {
+										chromeMediaSource: 'desktop',
+									  }
+								    }
 								}
-							};
-							try {
-								if (constraints.video.width.ideal){
-									new_constraints.video.mandatory.maxWidth = constraints.video.width.ideal;
+								new_constraints.video.mandatory.maxFrameRate = 1;
+								warnlog(new_constraints);
+								const stream = await window.navigator.mediaDevices.getUserMedia(new_constraints);
+								if (stream.getVideoTracks().length){
+									var track = stream.getVideoTracks()[0];
+									stream.removeTrack(stream.getVideoTracks()[0]);
+									track.stop();
 								}
-							} catch(e){}
-							try {
-								if (constraints.video.height.ideal){
-									new_constraints.video.mandatory.maxHeight = constraints.video.height.ideal;
+								resolve(stream);
+								selectionElem.remove();
+							} else {
+								var audioStream = false;
+								if (getById("alsoCaptureAudio").checked){
+									var new_constraints = {
+										audio: {
+											mandatory: {
+											  chromeMediaSource: 'desktop'
+											}
+										  },
+										video: {
+										  mandatory: {
+											chromeMediaSource: 'desktop',
+										  }
+										}
+									}
+									new_constraints.video.mandatory.maxFrameRate = 1;
+									warnlog(new_constraints);
+									audioStream = await window.navigator.mediaDevices.getUserMedia(new_constraints);
+									if (audioStream.getVideoTracks().length){
+										var track = audioStream.getVideoTracks()[0];
+										audioStream.removeTrack(audioStream.getVideoTracks()[0]);
+										track.stop();
+									}								
 								}
-							} catch(e){}
-							try {
-								if (constraints.video.frameRate.ideal){
-									new_constraints.video.mandatory.maxFrameRate = constraints.video.frameRate.ideal;
+								
+								const id = button.getAttribute('data-id');
+								const source = sources.find(source => source.id === id);
+								if (!source) {
+									throw new Error(`Source with id ${id} does not exist`);
 								}
-							} catch(e){}
-							///
-							warnlog(new_constraints);
-							const stream = await window.navigator.mediaDevices.getUserMedia(new_constraints);
-							resolve(stream);
-
-							selectionElem.remove();
+								var new_constraints = {
+									audio: false,
+									video: {
+									  mandatory: {
+										chromeMediaSource: 'desktop',
+										chromeMediaSourceId: source.id
+									  }
+									}
+								};
+								try {
+									if (constraints.video.width.ideal){
+										new_constraints.video.mandatory.maxWidth = constraints.video.width.ideal;
+									}
+								} catch(e){}
+								try {
+									if (constraints.video.height.ideal){
+										new_constraints.video.mandatory.maxHeight = constraints.video.height.ideal;
+									}
+								} catch(e){}
+								try {
+									if (constraints.video.frameRate.ideal){
+										new_constraints.video.mandatory.maxFrameRate = constraints.video.frameRate.ideal;
+									}
+								} catch(e){}
+								warnlog(new_constraints);
+								const stream = await window.navigator.mediaDevices.getUserMedia(new_constraints);
+								
+								if (audioStream && audioStream.getAudioTracks().length){
+									stream.addTrack(audioStream.getAudioTracks()[0]);
+								}
+								
+								resolve(stream);
+								selectionElem.remove();
+							}
 						} catch (err) {
 						  errorlog('Error selecting desktop capture source:', err);
 						  reject(err);
@@ -10082,6 +10339,15 @@ async function grabVideo(quality = 0, eleName = 'previewWebcam', selector = "sel
 							refreshVideoDevice();
 						}
 					} catch(e){errorlog(e);}
+					
+					if (session.mobile){
+						if (!(iPad || iOS)){
+							try{
+								updateSavedVideoSettings(track);
+							} catch(e){errorlog(e);}
+						}
+					}
+					
 				});
 				
 				updateRenderOutpipe(session.streamSrc);
@@ -10828,6 +11094,34 @@ session.publishStream = function(v){ //  stream is used to generated an SDP
 		changeAudioOutputDevice(v);
 	}catch(e){errorlog(e);}
 	
+	
+	if (((session.roomid===false || session.roomid==="") && (session.quality===false)) || session.forceMediaSettings){
+		try {
+			if ((session.quality_wb!==false) && (session.quality===false)){
+				getById("webcamquality3").elements.namedItem("resolution").value = session.quality_wb;
+			} else if (session.quality!==false){
+				getById("webcamquality3").elements.namedItem("resolution").value = session.quality;
+			}
+			getById("gear_webcam3").style.display = "inline-block";
+			getById("webcamquality3").onchange = function(event) {
+				if (parseInt(getById("webcamquality3").elements.namedItem("resolution").value) == 2) {
+					if (session.maxframerate===false){
+						session.maxframerate = 30;
+						session.maxframerate_q2 = true;
+					} 
+				} else if (session.maxframerate_q2){
+					session.maxframerate = false;
+					session.maxframerate_q2 = false;
+				}
+				activatedPreview = false;
+				session.quality_wb = parseInt(getById("webcamquality3").elements.namedItem("resolution").value);
+				grabVideo(session.quality_wb, "videosource", "select#videoSource3");
+			};
+		} catch (e) {errorlog(e);}
+	}
+	
+	
+	
 	if (session.mirrored && session.flipped){
 		v.style.transform = "scaleX(1) scaleY(-1) ";
 	} else if (session.mirrored){
@@ -11146,7 +11440,7 @@ session.publishScreen = function(constraints, audioList=[], audio=true){ // webc
 
 
 		var container = document.createElement("div");
-		container.id = "container";
+		container.id = "container_screen";
 		
 		
 		
@@ -11563,7 +11857,7 @@ session.hostFile = function(ele, event){ // webcam stream is used to generated a
 	log(session.hostedFiles);
 	
 	var container = document.createElement("div");
-	container.id = "container";
+	container.id = "container_host";
 	getById("gridlayout").appendChild(container);
 	
 	if (session.cover){
@@ -11650,7 +11944,7 @@ session.publishFile = function(ele, event){ // webcam stream is used to generate
 
 	var fileURL = URL.createObjectURL(files[0]);
 	var container = document.createElement("div");
-	container.id = "container";
+	container.id = "container_file";
 	
 	if (session.cover){
 		container.style.setProperty('height', '100%', 'important');
@@ -12101,11 +12395,14 @@ function dragElement(elmnt) {
 		}
 		input.value = zoom * (input.max - input.min) + input.min;
 		if (input.value != pos0) {
-			track0.applyConstraints({
-				advanced: [{
-					zoom: input.value
-				}]
-			});
+			
+			updateCameraConstraints("zoom", input.value);
+			
+			//track0.applyConstraints({
+			//	advanced: [{
+			//		zoom: input.value
+			//	}]
+			//});
 		}
 	}
 
@@ -12298,6 +12595,7 @@ function updateConstraintSliders() {
 	} else {
 		listAudioSettings();
 		listCameraSettings();
+		
 		if ((iOS) || (iPad)){
 		} else {
 			if (session.effects!==false){
@@ -13744,7 +14042,6 @@ function listCameraSettings() {
 
 		input.onchange = function(e) {
 			getById("label_" + e.target.dataset.keyname).innerHTML = e.target.dataset.keyname + ": " + e.target.value;
-
 			if (e.target.value > session.totalRoomBitrate) {
 				return;
 			} else {
@@ -13752,11 +14049,8 @@ function listCameraSettings() {
 			}
 			updateMixer();
 		};
-
-
 		getById("popupSelector_constraints_video").appendChild(label);
 		getById("popupSelector_constraints_video").appendChild(input);
-
 	}
 	try {
 		var track0 = session.streamSrc.getVideoTracks();
@@ -13764,6 +14058,8 @@ function listCameraSettings() {
 			track0 = track0[0];
 			if (track0.getCapabilities) {
 				session.cameraConstraints = track0.getCapabilities();
+			} else {
+				session.cameraConstraints = {};
 			}
 			log(session.cameraConstraints);
 		}
@@ -13773,14 +14069,13 @@ function listCameraSettings() {
 	}
 
 	try {
-
 		if (track0.getSettings) {
 			session.currentCameraConstraints = track0.getSettings();
 		}
 	} catch (e) {
 		errorlog(e);
 	}
-
+	
 	for (var i in session.cameraConstraints) {
 		try {
 			log(i);
@@ -13796,15 +14091,14 @@ function listCameraSettings() {
 					continue;
 				}
 
-
 				var label = document.createElement("label");
 				label.id = "label_" + i;
 				label.htmlFor = "constraints_" + i;
 				label.innerHTML = i + ":";
 
 				var input = document.createElement("input");
-				input.min = session.cameraConstraints[i].min;
-				input.max = session.cameraConstraints[i].max;
+				input.min = parseFloat(session.cameraConstraints[i].min);
+				input.max = parseFloat(session.cameraConstraints[i].max);
 
 				if (parseFloat(input.min) == parseFloat(input.max)) {
 					continue;
@@ -13815,7 +14109,7 @@ function listCameraSettings() {
 				}
 
 				if (i in session.currentCameraConstraints) {
-					input.value = session.currentCameraConstraints[i];
+					input.value = parseFloat(session.currentCameraConstraints[i]);
 					label.innerHTML = i + ": " + session.currentCameraConstraints[i];
 					label.title = "Previously was:  " + session.currentCameraConstraints[i];
 					input.title = "Previously was:  " + session.currentCameraConstraints[i];
@@ -13831,12 +14125,10 @@ function listCameraSettings() {
 				input.style = "display:block; width:100%;";
 				input.name = "constraints_" + i;
 
-
 				input.onchange = function(e) {
 					getById("label_" + e.target.dataset.keyname).innerHTML = e.target.dataset.keyname + ": " + e.target.value;
 					updateCameraConstraints(e.target.dataset.keyname, e.target.value);
 				};
-
 
 				getById("popupSelector_constraints_video").appendChild(label);
 				getById("popupSelector_constraints_video").appendChild(input);
@@ -13856,14 +14148,23 @@ function listCameraSettings() {
 				var c = document.createElement("option");
 
 				if (session.cameraConstraints[i].length > 1) {
+					var included = false;
 					for (var opts in session.cameraConstraints[i]) {
 						log(opts);
 						var opt = new Option(session.cameraConstraints[i][opts], session.cameraConstraints[i][opts]);
 						input.options.add(opt);
 						if (i in session.currentCameraConstraints) {
-							if (session.cameraConstraints[i][opts] == session.currentCameraConstraints[i]) {
+							if (session.cameraConstraints[i][opts] == session.currentCameraConstraints[i]) {  
 								opt.selected = "true";
+								included = true;
 							}
+						}
+					}
+					if (!included){
+						if (i in session.currentCameraConstraints) {
+							var opt = new Option(session.currentCameraConstraints[i], session.currentCameraConstraints[i]);
+							input.options.add(opt);
+							opt.selected = "true";
 						}
 					}
 				} else if (i.toLowerCase == "torch") {
@@ -13871,6 +14172,64 @@ function listCameraSettings() {
 					input.options.add(opt);
 					opt = new Option("On", true);
 					input.options.add(opt);
+				} else if (session.cameraConstraints[i].length && ("continuous" == session.cameraConstraints[i][0])){
+					var opt = new Option("continuous", "continuous");
+					input.options.add(opt);
+					if (i in session.currentCameraConstraints) {
+						if ("continuous" == session.currentCameraConstraints[i]) {
+							opt.selected = "true";
+							var opt = new Option("manual", "manual");
+							input.options.add(opt);
+							var opt = new Option("none", "none");
+							input.options.add(opt);
+						} else {
+							var opt = new Option(session.currentCameraConstraints[i], session.currentCameraConstraints[i]);
+							input.options.add(opt);
+							opt.selected = "true";
+							if (session.currentCameraConstraints[i]=="none"){
+								var opt = new Option("manual", "manual");
+								input.options.add(opt);
+							} else {
+								var opt = new Option("none", "none");
+								input.options.add(opt);
+							}
+						}
+					} else {
+						opt.selected = "true";
+						var opt = new Option("manual", "manual");
+						input.options.add(opt);
+						var opt = new Option("none", "none");
+						input.options.add(opt);
+					}
+				} else if (session.cameraConstraints[i].length && ("manual" == session.cameraConstraints[i][0])){
+					var opt = new Option("manual", "manual");
+					input.options.add(opt);
+					if (i in session.currentCameraConstraints) {
+						if ("manual" == session.currentCameraConstraints[i]) {
+							opt.selected = "true";
+							var opt = new Option("continuous", "continuous");
+							input.options.add(opt);
+							var opt = new Option("none", "none");
+							input.options.add(opt);
+						} else {
+							var opt = new Option(session.currentCameraConstraints[i], session.currentCameraConstraints[i]);
+							input.options.add(opt);
+							opt.selected = "true";
+							if (session.currentCameraConstraints[i]=="none"){
+								var opt = new Option("continuous", "continuous");
+								input.options.add(opt);
+							} else {
+								var opt = new Option("none", "none");
+								input.options.add(opt);
+							}
+						}
+					} else {
+						opt.selected = "true";
+						var opt = new Option("continuous", "continuous");
+						input.options.add(opt);
+						var opt = new Option("none", "none");
+						input.options.add(opt);
+					}
 				} else {
 					continue;
 				}
@@ -13887,7 +14246,7 @@ function listCameraSettings() {
 				input.onchange = function(e) {
 					//getById("label_"+e.target.dataset.keyname).innerHTML =e.target.dataset.keyname+": "+e.target.value;
 					updateCameraConstraints(e.target.dataset.keyname, e.target.value);
-					log(e.target.dataset.keyname, e.target.value);
+					log(e.target.dataset.keyname + " " + e.target.value);
 				};
 				getById("popupSelector_constraints_video").appendChild(div);
 				div.appendChild(label);
@@ -13930,13 +14289,122 @@ function listCameraSettings() {
 		} catch (e) {
 			errorlog(e);
 		}
-
 	}
+	
+	if (session.currentCameraConstraints.deviceId){
+		if (getStorage("camera_"+session.currentCameraConstraints.deviceId)){
+			var button = document.createElement("button");
+			button.innerHTML = "Reset video settings to default";
+			button.style.display = "block";
+			button.style.padding = "20px";
+			button.style.margin = "32px 20px 20px 20px";
+			button.dataset.deviceId = session.currentCameraConstraints.deviceId;
+			button.onclick = function(){
+				var deviceId = this.dataset.deviceId;
+				var cameraSettings = getStorage("camera_"+deviceId);
+				var constraints = {};
+				if (cameraSettings['default']){
+					if (cameraSettings['current']){
+						for (var i in cameraSettings['default']){ 
+							if (i == "groupId"){
+								continue;
+							} else if (i === "aspectRatio") {
+								continue;
+							} else if (i === "width") {
+								continue;
+							} else if (i === "height") {
+								continue;
+							} else if (i === "frameRate") { // if I include any of these, it will complain about mixing types and fail
+								continue;
+							}
+							
+							if (i in cameraSettings['current']){
+								if (cameraSettings['current'][i] != cameraSettings['default'][i]){
+									if (i in session.cameraConstraints){
+										if ("min" in session.cameraConstraints[i]){
+											if (session.cameraConstraints[i].min>cameraSettings['default'][i]){
+												continue;
+											}
+										}
+										if ("max" in session.cameraConstraints[i]){
+											 if (session.cameraConstraints[i].max<cameraSettings['default'][i]){
+												continue;
+											}
+										}
+										errorlog(session.cameraConstraints[i]);
+									}
+									constraints[i]=cameraSettings['default'][i];
+									errorlog(i +  " " + cameraSettings['default'][i]);
+									warnlog("DIFF: ");
+									
+								}
+							}
+						}
+					}
+				}
+				warnlog(constraints);
+				if (Object.keys(constraints).length){
+					track0.applyConstraints({
+						advanced: [constraints]
+					}).then(() => {
+						//errorlog("deviceId:"+deviceId);
+						removeStorage("camera_"+deviceId);
+						listCameraSettings();
+					  })
+					  .catch(e => {
+						errorlog("Failed to reset to defaults");
+						errorlog(e);
+					  });
+				}
+				
+			};
+			
+			getById("popupSelector_constraints_video").appendChild(button);
+		}
+	}
+}
+
+function updateSavedVideoSettings(track0){ // just applies any saved settings. This then assumes there are already default settings saved, as saved won't be there without the default also.
+	if (track0.getSettings) {
+		session.currentCameraConstraints = track0.getSettings();
+		if ("deviceId" in session.currentCameraConstraints){
+			var deviceId = session.currentCameraConstraints.deviceId;
+			if (getStorage("camera_"+deviceId)){
+				var cameraSettings = getStorage("camera_"+deviceId);
+				var constraints = {};
+				if (cameraSettings['current']){
+					for (var i in session.currentCameraConstraints){
+						if (i in cameraSettings['current']){
+							if (cameraSettings['current'][i] != session.currentCameraConstraints[i]){
+								if (i == "groupId"){continue;}
+								constraints[i]=cameraSettings['current'][i];
+								warnlog("DIFF: "+i);
+							}
+						}
+					}
+				}
+				
+				warnlog(constraints);
+				if (Object.keys(constraints).length){
+					track0.applyConstraints({
+						advanced: [constraints]
+					}).then(() => {
+						warnlog("video settings updated for deviceId:"+deviceId);
+						//removeStorage("camera_"+deviceId);
+						//listCameraSettings();
+					}).catch(e => {
+						errorlog("Failed to reset to defaults");
+					});
+				}
+			}
+		}
+	}
+	
 }
 
 function updateCameraConstraints(constraint, value = null) {
 	var track0 = session.streamSrc.getVideoTracks();
-	track0 = track0[0];
+	track0 = track0[0]; // shoud only be one video track anyways.
 	if (value == parseFloat(value)) {
 		value = parseFloat(value);
 	} else if (value == "true") {
@@ -13949,11 +14417,41 @@ function updateCameraConstraints(constraint, value = null) {
 			[constraint]: value
 		}]
 	});
+	
+	try {
+		if (track0.getSettings){
+			var cameraSettings = {};
+			session.currentCameraConstraints = track0.getSettings();
+			if (session.currentCameraConstraints.deviceId){
+				if (!getStorage("camera_"+session.currentCameraConstraints.deviceId)){
+					cameraSettings['default'] = JSON.parse(JSON.stringify(session.currentCameraConstraints));
+					log(cameraSettings['default']);
+				} else {
+					cameraSettings = getStorage("camera_"+session.currentCameraConstraints.deviceId);
+				}
+			}
+		}
+	} catch(e){errorlog(e);}
+	
 	track0.applyConstraints({
 		advanced: [{
 			[constraint]: value
 		}]
+	}).then(() => {
+		if (track0.getSettings){
+			if (session.currentCameraConstraints.deviceId){
+				cameraSettings['current'] = track0.getSettings(); // this won't let failed settings be stored.
+				//cameraSettings['current'][constraint] = value; // setting value is a problem, as it will allow for failed settings to be stored.
+				setStorage("camera_"+session.currentCameraConstraints.deviceId, cameraSettings);
+				if (toggleSettingsState == true) {
+					listCameraSettings();
+				}
+			}
+		}
+	}).catch(e => {
+		errorlog("coulnd't save defaults"); // this doesn't get triggered when a setting fails for some reason.
 	});
+	
 	return;
 
 }
@@ -14184,7 +14682,8 @@ function shareWebsite(autostart=false, evt=false){
 		session.iframeSrc = false;
 		
 		if (session.director){
-			setStorage("directorWebsiteShare", {"website":session.iframeSrc, "roomid":session.roomid});
+			clearDirectorSettings();
+			//setStorage("directorWebsiteShare", {"website":session.iframeSrc, "roomid":session.roomid});
 		}
 		getById("websitesharetoggle").classList.add("la-window-maximize");
 		getById("websitesharetoggle").classList.remove("la-window-close");
@@ -14206,16 +14705,17 @@ function shareWebsite(autostart=false, evt=false){
 	getById("websitesharebutton").title = "Hold CTRL (or CMD) and click to spotlight this video";
 	if (autostart===false){
 		window.focus();
-		var iframeURL = prompt(miscTranslations["enter-website"], "https://www.youtube.com/watch?v=dQw4w9WgXcQ");
+		var iframeURL = prompt(miscTranslations["enter-website"], session.defaultIframeSrc);
 	} else {
 		var iframeURL = autostart;
 	}
 	if (!iframeURL){
 		return;
-	} 
+	}
 	if (iframeURL == session.iframeSrc){return;}
+	session.defaultIframeSrc = iframeURL;
 	
-	errorlog(iframeURL);
+	warnlog(iframeURL);
 	
 	if (!(iframeURL.startsWith("https://") || iframeURL.startsWith("http://"))){
 		iframeURL = "https://"+iframeURL;
@@ -14273,7 +14773,7 @@ function shareWebsite(autostart=false, evt=false){
 			}
 		}
 	}
-		
+	
 	session.iframeSrc = iframeURL;
 	if (session.director){
 		setStorage("directorWebsiteShare", {"website":session.iframeSrc, "roomid":session.roomid});
@@ -16490,6 +16990,28 @@ function addAudioPipeline(stream, UUID, track){  // INBOUND AUDIO EFFECTS
 		return stream;
 	} catch(e) {errorlog(e);}
 	return stream;
+}
+
+
+function changeGroup(ele){
+	var group = ele.dataset.value;
+	var index = session.rpcs[ele.dataset.UUID].group.indexOf(group);
+	if (ele.classList.contains("pressed")){
+		ele.classList.remove("pressed");
+		if (index > -1){
+			session.rpcs[ele.dataset.UUID].group.splice(index, 1);
+		}
+	} else {
+		ele.classList.add("pressed");
+		if (index === -1){
+			session.rpcs[ele.dataset.UUID].group.push(group);
+		}
+	}
+	if (session.rpcs[ele.dataset.UUID].group.length){
+		session.sendRequest({"group":session.rpcs[ele.dataset.UUID].group.join(",")}, ele.dataset.UUID);
+	} else {
+		session.sendRequest({"group":false}, ele.dataset.UUID);
+	}
 }
 
 function changeChannelOffset(UUID, channel){

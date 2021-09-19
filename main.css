@@ -13,6 +13,7 @@
 	--video-margin: 0px;
 	--video-rounded: 0px;
 	--color-mode: light;
+	--button-radius: 2px;
 }
 
 * {
@@ -2032,19 +2033,19 @@ audio.fileshare::-webkit-media-controls-play-button, video.fileshare::-webkit-me
 	color: black !important;
 }
 #videoSettings3 {
-	margin: 0 auto 15px auto;
 	background-color: #f3f3f3;
-	width: 450px;
+	width: 100%;
 	padding: 7px 10px 1px 10px;
 	border: 1px solid #ccc;
 	font-size: 90%;
+	margin: 10px 0 0 0;
 }
 #videoSource3 {
 	display: inline-block;
 	vertical-align: middle;
 	padding: 3px;
 	font-size: 93%;
-	max-width: 370px;
+	max-width: 240px;
 }
 #outputSource {
 	display: inline-block;
@@ -2084,6 +2085,17 @@ audio.fileshare::-webkit-media-controls-play-button, video.fileshare::-webkit-me
 	border: 1px solid #ccc;
 	vertical-align: middle;
 	text-align: left;
+}
+#videoMenu3{
+	background-color: #f3f3f3;
+	width: 450px;
+	max-width:100%;
+	display: block;
+	padding: 10px 10px;
+	border: 1px solid #ccc;
+	vertical-align: middle;
+	text-align: left;
+	margin: 0 0 15px 0;
 }
 
 .audioMenu{
@@ -3351,7 +3363,9 @@ input:checked + .slider:before {
   content: "\f12a"; }
 .la-chevron-down:before {
   content: "\f078"; }
-
+.la-music:before {
+  content: "\f001"; }
+  
 @media (prefers-color-scheme: dark) {
 	:root {
 		--color-mode: dark;
@@ -3455,40 +3469,43 @@ body.darktheme #webcamstats2{
 	background-color: #949494;
 }
 body.darktheme #audioSourceScreenshare{
-	background-color: #AAA;
+	background-color: #c1c1c1;
 }
 body.darktheme #headphonesDiv2{
 	background-color: #949494;
 }
 body.darktheme #outputSourceScreenshare{
-	background-color: #AAA;
+	background-color: #c1c1c1;
 }
 body.darktheme #audioSource{
-	background-color: #AAA;
+	background-color: #c1c1c1;
 }
 body.darktheme #outputSource{
-	background-color: #AAA;
+	background-color: #c1c1c1;
 }
 body.darktheme #videoSourceSelect{
-	background-color: #AAA;
+	background-color: #c1c1c1;
 }
 body.darktheme #videoSettings{
 	background-color: #949494;
 }
 body.darktheme #effectSelector{
-	background-color: #AAA;
+	background-color: #c1c1c1;
 }
 body.darktheme #effectSelector3{
-	background-color: #AAA;
+	background-color: #c1c1c1;
 }
 body.darktheme #audioSource3{
-	background-color: #AAA;
+	background-color: #c1c1c1;
 }
 body.darktheme #videoSource3{
-	background-color: #AAA;
+	background-color: #c1c1c1;
+}
+body.darktheme #videoMenu3{
+	background-color: #949494;
 }
 body.darktheme #outputSource3{
-	background-color: #AAA;
+	background-color: #c1c1c1;
 }
 body.darktheme #videoSettings3{
 	background-color: #949494;

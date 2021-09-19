@@ -54,7 +54,7 @@
 				transition: opacity .1s linear;
 			}
 		</style>
-		<link rel="stylesheet" href="./main.css?ver=125" />
+		<link rel="stylesheet" href="./main.css?ver=136" />
 		<script type="text/javascript" crossorigin="anonymous" src="./thirdparty/adapter.min.js"></script>
 		<style id="lightbox-animations" type="text/css"></style>
 	</head>
@@ -67,7 +67,7 @@
 			<link itemprop="url" href="./media/vdoNinja_logo_full.png" />
 		</span>
 		<script  type="text/javascript" crossorigin="anonymous"  src="./thirdparty/CodecsHandler.js?ver=34"></script>
-		<script  type="text/javascript" crossorigin="anonymous" src="./webrtc.js?ver=291"></script>
+		<script  type="text/javascript" crossorigin="anonymous" src="./webrtc.js?ver=294"></script>
 		<input id="zoomSlider" type="range" style="display: none;" />
 		<div id="header">
 			
@@ -683,11 +683,15 @@
 					<input type="text" autocorrect="off" id="iframeURL" autocapitalize="none" style="margin:10px; border:2px solid; padding:10px; width:400px;" title="Enter an HTTPS URL" multiple/><br />
 					<button onclick="previewIframe(getById('iframeURL').value);" >Preview</button> 
 					<button onclick="this.innerHTML = 'Update'; session.publishIFrame(getById('iframeURL').value);" >Share</button><br />
-					<small class="iframeblob">
+					<div class="message-card info">
+						<h1>Usage information</h1>
+						<p></p>
+						<ul style="text-align: left;">
 						<li>Not all websites will work with this feature as some sites disallow embedding.</li>
 						<li>The site will try to auto-optimize standard Youtube or Twitch links.</li>
 						<li>Remote websites must be CORS/IFrame compatible with full SSL-encryption enabled.</li>
-					</small>
+					</ul>
+					</div>	
 					<div id="iFramePreview" style=" width: 1280px; height: 720px; margin: auto; padding: 10px;"></div>
 				</div>
 				<div class="outer close">
@@ -1339,6 +1343,32 @@
 					</button>
 				</span>
 				
+				<span id="mixGroup1" class="hidden" data-cluster="2">
+					
+					<button style="width:35.2px;" data-action-type="toggle-group" data-value="1" title="Add/remove from group 1" onclick="changeGroup(this);">
+						<span >G1</span>
+					</button>
+					<button style="width: 35.2px" data-action-type="toggle-group" data-value="2" title="Add/remove from group 2" onclick="changeGroup(this);">
+						<span >G2</span>
+					</button>
+					<button style="width: 35.2px" data-action-type="toggle-group" data-value="3" title="Add/remove from group 3" onclick="changeGroup(this);">
+						<span >G3</span>
+					</button>
+				</span>
+				
+				<span id="mixGroup2" class="hidden" data-cluster="2">
+					
+					<button style="width:35.2px;" data-action-type="toggle-group" data-value="4" title="Add/remove from group 4" onclick="changeGroup(this);">
+						<span >G4</span>
+					</button>
+					<button style="width: 35.2px" data-action-type="toggle-group" data-value="5" title="Add/remove from group 5" onclick="changeGroup(this);">
+						<span >G5</span>
+					</button>
+					<button style="width: 35.2px" data-action-type="toggle-group" data-value="6" title="Add/remove from group 6" onclick="changeGroup(this);">
+						<span >G6</span>
+					</button>
+				</span>
+				
 				
 				<button class="hidden" data-cluster="2" data-action-type="advanced-audio-settings"  data-active="false"  title="Remote Audio Settings" onclick="requestAudioSettings(this);">
 					<span data-translate="advanced-audio-settings"><i class="las la-sliders-h"></i> Audio Settings</span>
@@ -1417,39 +1447,36 @@
 		</div>
 		
 		<div id="popupSelector" style="display:none;">
-				<span id="videoMenu3" class="videoMenu">
+				<span id="videoMenu3">
 					<i class="las la-video"></i><span data-translate="video-source"> Video Source </span>
 					<select id="videoSource3" ></select>			
 					<span id="refreshVideoButton" title="Activate or Reload this video device."><i style="top: 3px; cursor: pointer; font-size: 120%;  position: relative; left: 10px;" class="las la-sync-alt"></i></span>
-					<span id="gear_webcam3" style="display: none; cursor:pointer;" onclick="toggle(document.getElementById('videoSettings3'));">
+					<span id="gear_webcam3" style="display: none; cursor:pointer;" onclick="toggleQualityGear3();">
 						&nbsp;&nbsp;
 						<i class="las la-cog" style="font-size: 135%; top:1px; vertical-align: middle;" aria-hidden="true"></i>
 					</span>
+					<span id="videoSettings3" style="display: none;">
+						<center>
+						<form id="webcamquality3">
+							<input type="radio" id="fullhd3" name="resolution" value="0" />
+							<label for="fullhd3">
+								<span data-translate="max-resolution">Max Resolution</span>
+							</label> |
+							
+							<input type="radio" checked id="halfhd3" name="resolution" value="1" />
+							<label for="halfhd3">
+								<span data-translate="balanced">Balanced</span>
+							</label> |
+							
+							<input type="radio" id="nothd3" name="resolution" value="2" />
+							<label for="nothd3">
+								<span data-translate="smooth-cool">Smooth and Cool</span>
+							</label>
+							<div id="webcamstats3" style="padding: 5px 0 0 0;"></div>
+						</form>
+						</center>
+					</span>
 				</span>
-				<br />
-				<span id="videoSettings3" style="display: none;">
-					<center>
-					<form id="webcamquality3">
-						<input type="radio" id="fullhd3" name="resolution" value="0" />
-						<label for="fullhd3">
-							<span data-translate="max-resolution">Max Resolution</span>
-						</label> |
-						
-						<input type="radio" checked id="halfhd3" name="resolution" value="1" />
-						<label for="halfhd3">
-							<span data-translate="balanced">Balanced</span>
-						</label> |
-						
-						<input type="radio" id="nothd3" name="resolution" value="2" />
-						<label for="nothd3">
-							<span data-translate="smooth-cool">Smooth and Cool</span>
-						</label>
-						<div id="webcamstats3" style="padding: 5px 0 0 0;"></div>
-					</form>
-					</center>
-				</span>
-				
-				<br />
 				
 				<div class="form-group multiselect" alt="tip: Hold CTRL (command) to select Multiple" title="tip: Hold CTRL (command) to select Multiple" >
 					<a id="multiselect-trigger3" class="form-control multiselect-trigger" >
@@ -1505,9 +1532,9 @@
 				
 				<button onclick="toggleSettings()" style="width: 135px; background-color:#EFEFEF;padding:9px 12px 10px 2px;margin: 0px 0px 20px 0"><i class="chevron right" style="font-size:150%;top:3px;position:relative;"></i> <b><span data-translate="close-settings">Close Settings</span></b></button>
 				
-				<button id='advancedOptionsCamera' onclick="this.classList.toggle('highlight');toggle(getById('popupSelector_constraints_video'),false,false);  getById('popupSelector_constraints_loading').style.visibility='visible';" class="advancedToggle"><i class="las la-sliders-h" style="font-size:150%;top:3px;position:relative;"></i> <b><span class="mobileHide" data-translate="advanced">Advanced </span>Video</b></button>
-				
 				<button id='advancedOptionsAudio' onclick="this.classList.toggle('highlight');toggle(getById('popupSelector_constraints_audio'),false,false); getById('popupSelector_constraints_loading').style.visibility='visible';" class="advancedToggle"><i class="las la-sliders-h" style="font-size:150%;top:3px;position:relative;"></i> <b><span class="mobileHide" data-translate="advanced">Advanced </span>Audio</b></button>
+				
+				<button id='advancedOptionsCamera' onclick="this.classList.toggle('highlight');toggle(getById('popupSelector_constraints_video'),false,false);  getById('popupSelector_constraints_loading').style.visibility='visible';" class="advancedToggle"><i class="las la-sliders-h" style="font-size:150%;top:3px;position:relative;"></i> <b><span class="mobileHide" data-translate="advanced">Advanced </span>Video</b></button>
 				
 				
 				<span id="popupSelector_constraints_audio" class="popupSelector_constraints" style="display: none;">
@@ -1744,7 +1771,7 @@
 
 		
 			var session = WebRTC.Media; // session is a required global variable if configuring manually. Run before loading main.js but after webrtc.js.
-			session.version = "19.1";
+			session.version = "19.2";
 			session.streamID = session.generateStreamID(); // randomly generates a streamID for this session. You can set your own programmatically if needed
 			
 			session.defaultPassword = "someEncryptionKey123"; // Change this password if self-deploying for added security/privacy
@@ -1821,11 +1848,11 @@
 			// session.title // "zzzz"
 		</script>
 		<script type="text/javascript" crossorigin="anonymous" src="./thirdparty/aes.js"></script>
-		<script type="text/javascript" crossorigin="anonymous" id="lib-js" src="./lib.js?ver=66"></script>
+		<script type="text/javascript" crossorigin="anonymous" id="lib-js" src="./lib.js?ver=123"></script>
 		<!-- 
 		// If you wish to change branding, blank offers a good clean start.
 		<script type="text/javascript" id="main-js" src="./main.js" data-translation="blank"></script>
 	-->
-		<script type="text/javascript" crossorigin="anonymous" id="main-js" src="./main.js?ver=251"></script>
+		<script type="text/javascript" crossorigin="anonymous" id="main-js" src="./main.js?ver=259"></script>
 	</body>
 </html>
