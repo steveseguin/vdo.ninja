@@ -1,5 +1,5 @@
 
-#### ⚠ Notice! We've started our rebranding from OBS.Ninja to VDO.Ninja 🎈 -- nothing else will be changing. ✨
+#### ⚠ Notice! We've rebranded from OBS.Ninja to VDO.Ninja - still all else the same though  ✨
 
 <img src="https://user-images.githubusercontent.com/2575698/124821455-bbfec580-df3c-11eb-9641-3d036cdd6c41.png" data-canonical-src="https://user-images.githubusercontent.com/2575698/124821455-bbfec580-df3c-11eb-9641-3d036cdd6c41.png" width="200"  />
 
