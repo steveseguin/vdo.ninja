@@ -54,7 +54,7 @@
 				transition: opacity .1s linear;
 			}
 		</style>
-		<link rel="stylesheet" href="./main.css?ver=136" />
+		<link rel="stylesheet" href="./main.css?ver=140" />
 		<script type="text/javascript" crossorigin="anonymous" src="./thirdparty/adapter.min.js"></script>
 		<style id="lightbox-animations" type="text/css"></style>
 	</head>
@@ -67,7 +67,7 @@
 			<link itemprop="url" href="./media/vdoNinja_logo_full.png" />
 		</span>
 		<script  type="text/javascript" crossorigin="anonymous"  src="./thirdparty/CodecsHandler.js?ver=34"></script>
-		<script  type="text/javascript" crossorigin="anonymous" src="./webrtc.js?ver=294"></script>
+		<script  type="text/javascript" crossorigin="anonymous" src="./webrtc.js?ver=297"></script>
 		<input id="zoomSlider" type="range" style="display: none;" />
 		<div id="header">
 			
@@ -101,6 +101,7 @@
 					<span data-translate="you-are-in-the-control-center">Control center for room:</span>
 					
 					<div id="dirroomid" style="font-size: 140%; color: #99c; display: inline-block;"></div>
+					<span id="saveRoom" onclick="saveRoom(this)" style='cursor:pointer;margin-left:10px;' title="Will remember the room, prompting you the next time you visit if you wish to load this director's room again">💾</button>
 				</font>
 			</div>
 			<div id="head2" class="advanced" style="display: inline-block; text-decoration: none; font-size: 60%; color: white;">
@@ -241,16 +242,16 @@
 								<input id="broadcastFlag" type="checkbox" title="For large group rooms, this option can reduce the load on remote guests substantially" />
 							</th><th style="text-align:left;; padding-top: 20px;">
 							<b>
-								<span data-translate="guests-only-see-director" title="For large group rooms, this option can reduce the load on remote guests substantially" >Guests can only see the Director's Video</span>
+								<span data-translate="guests-only-see-director"  style="cursor: help;" title="For large group rooms, this option can reduce the load on remote guests substantially" >Guests can only see the Director's Video</span>
 							</b>
 							</th>	
 						</tr><tr>
 						
 							<th style="text-align:right; padding: 5px;; padding-bottom: 20px;">
-								<input id="showdirectorFlag" type="checkbox" title="The director will be visible in scenes, as if a performer themselves." />
+								<input id="showdirectorFlag" type="checkbox" title="The director will be visible in scenes as if a performer themselves." />
 							</th><th style="text-align:left;; padding-bottom: 20px;">
 							<b>
-								<span data-translate="scenes-can-see-director" title="Useful if you want to perform and direct at the same time" >Director will also be a performer</span>
+								<span data-translate="scenes-can-see-director" style="cursor: help;" title="If checked, the director can be added to scenes as if a guest. Otherwise, the director will never appear in a scene." >Director will be performing; appearing in scenes</span>
 							</b>
 							</th>	
 						</tr><tr>
@@ -383,7 +384,7 @@
 					<span id="headphonesDiv" class="audioMenu">
 						<div class="audioTitle2">
 						<i class="las la-headphones"></i><span data-translate="select-output-source"> Audio Output Destination:
-						</span><button onclick="playtone()" class="white" style="margin:0 0 0 15px;" type="button">Test</button></div>
+						</span><button onclick="playtone()" class="white" style="margin:0 0 0 15px;padding: 2px 10px 0px 10px;" type="button">Test</button></div>
 						<select id="outputSource" ></select>
 						
 					</span>
@@ -396,9 +397,9 @@
 							<option value="3" data-translate="blurred-background">Blurred background</option>
 							<option value="4" data-translate="digital-greenscreen">Digital greenscreen</option>	
 							<option value="5" data-translate="virtual-background">Virtual background</option>
-							<option class="advanced" value="6" data-translate="face-mesh">Face mesh (slow load)</option>
-							<option class="advanced" value="anon" data-translate="anonymous-mask">Anonymous mask</option>
-							<option class="advanced" value="dog" data-translate="dog-face">Dog ears and nose</option>
+							<option value="6" data-translate="face-mesh" title="experimental">Face mesh (slow load) 👨‍🔬</option>
+							<option value="anon" data-translate="anonymous-mask" title="experimental">Anonymous mask 👨‍🔬</option>
+							<option value="dog" data-translate="dog-face" title="experimental">Dog ears and nose 👨‍🔬</option>
 						</select>
 						<span data-warnSimdNotice="true" style='display:none; font-size: 140%; margin-left:10px; vertical-align: middle; cursor:pointer' title="Improve performance and quality with this tip" onclick="warnUser(`For improved performance, use Chrome v87 or newer with SIMD support enabled.<br />Enable SIMD here: <a href='chrome://flags/#enable-webassembly-simd' target='_blank' onclick='copyFunction(this,event)' >chrome://flags/#enable-webassembly-simd</a>`);">
 							<i class="las la-info-circle"></i>
@@ -832,7 +833,7 @@
 				<div class='directorBlock' style="background-color: var(--green-accent);" >
 					<h2 title="Use this link in the OBS Browser Source to capture the video or audio" style="margin-left: 1px;margin-top: 5px;"><i class="las la-th-large director-link-icons" style="margin-right: 6px;" ></i> <span data-translate="capture-a-group-scene">CAPTURE A GROUP SCENE</span></h2>
 					<span style="margin:5px; line-height: 1.6;" data-translate='this-is-obs-browser-source-link'>Use in OBS or other studio software to capture the group video mix</span>
-					<a onclick='copyFunction(this,event)' id="director_block_3" class='task grabLinks' style='cursor:copy;background-color: #0003;'></a>
+					<a onclick='copyFunction(this,event)'  data-drag="1" draggable="true"  id="director_block_3" class='task grabLinks' style='cursor:grab;background-color: #0003;'></a>
 					<span style="display:block;">
 						<span style="bottom: 0; margin: 0 0 0 10px; top: 22px; position: relative;">
 							<label class="switch" title="If disabled, you must manually add a video to a scene for it to appear.">
@@ -1503,14 +1504,14 @@
 						<i class="las la-robot"></i>
 						<span data-translate="select-digital-effect"> Digital Video Effects: </span>
 					</div>
-					<select id="effectSelector3" onchange="effectsDynamicallyUpdate(event, this, false);">
+					<select id="effectSelector3" onchange="effectsDynamicallyUpdate(event, this);">
 						<option value="0" data-translate="no-effects-applied">No effects applied</option>	
 						<option value="3" data-translate="blurred-background">Blurred background</option>
 						<option value="4" data-translate="digital-greenscreen">Digital greenscreen</option>	
 						<option value="5" data-translate="virtual-background">Virtual background</option>
-						<option class="advanced" value="6" data-translate="face-mesh">Face mesh (slow load)</option>
-						<option class="advanced" value="anon" data-translate="anonymous-mask">Anonymous mask</option>
-						<option class="advanced"  value="dog" data-translate="dog-face">Dog ears and nose</option>
+						<option value="6" data-translate="face-mesh" title="experimental">Face mesh (slow load) 👨‍🔬</option>
+						<option value="anon" data-translate="anonymous-mask" title="experimental">Anonymous mask 👨‍🔬</option>
+						<option value="dog" data-translate="dog-face" title="experimental">Dog ears and nose 👨‍🔬</option>
 					</select>
 					<span data-warnSimdNotice="true" style='display:none; font-size: 140%; margin-left:10px; vertical-align: middle; cursor:pointer' title="Improve performance and quality with this tip" onclick="warnUser(`For improved performance, use Chrome v87 or newer with SIMD support enabled.<br />Enable SIMD here: <a href='chrome://flags/#enable-webassembly-simd' onclick='copyFunction(this,event)' target='_blank'>chrome://flags/#enable-webassembly-simd</a>`);">
 						<i class="las la-info-circle"></i>
@@ -1528,8 +1529,10 @@
 				<button id="shareScreenGear" style="width: 135px; padding:20px;text-align:center;" onclick="grabScreen()"><b>Share Screen</b><br /><i style="padding:5px; font-size:300%;" class="las la-desktop"></i></button>
 				
 				<button id="pIpStartButton" style="width: 135px; background-color:#EFEFEF;padding:20px;text-align:center;display:none;"><b>Preview PiP VIdeo</b><br /><i style="padding:5px; font-size:300%;color:black;" class="las la-compress-arrows-alt"></i></button>
-				<br />
 				
+				
+				<div class="advanced" id="grabDirectorSoloLinkParent" title="The solo view link of the Director's video."><i class="las la-user"></i> Director's solo link:<a onclick="copyFunction(this,event)" data-drag="1" draggable="true" id="grabDirectorSoloLink" class="task" ></a></div>
+				<br />
 				<button onclick="toggleSettings()" style="width: 135px; background-color:#EFEFEF;padding:9px 12px 10px 2px;margin: 0px 0px 20px 0"><i class="chevron right" style="font-size:150%;top:3px;position:relative;"></i> <b><span data-translate="close-settings">Close Settings</span></b></button>
 				
 				<button id='advancedOptionsAudio' onclick="this.classList.toggle('highlight');toggle(getById('popupSelector_constraints_audio'),false,false); getById('popupSelector_constraints_loading').style.visibility='visible';" class="advancedToggle"><i class="las la-sliders-h" style="font-size:150%;top:3px;position:relative;"></i> <b><span class="mobileHide" data-translate="advanced">Advanced </span>Audio</b></button>
@@ -1619,8 +1622,8 @@
 				<label title="Increase this at your peril. Changes the total inbound video bitrate per guest; mobile devices excluded. Webp-mode also excluded." for="trbSettingInput">Change room video quality:</label>
 				<span style="margin-left: 6px;" id="trbSettingInputFeedback"></span>-kbps
 				<input id="trbSettingInput" type="range" min="0" max="4000" value="500" onchange="changeTRB(this);" oninput="getById('trbSettingInputFeedback').innerHTML = this.value;" style="width:100%;display:block;" />
-				<span style="margin: 20px 0 0 0;display:block" id='highlightDirectorSpan'>
-					<label for="highlightDirector">Highlight Director</label> 
+				<span style="margin: 20px 0 0 0;display:block" id='highlightDirectorSpan' title="Only the director's video will be visible to guests and within group scenes">
+					<label for="highlightDirector">Highlight Director (only video guests will see)</label> 
 					<input id="highlightDirector" style="width: 15px; height: 15px; margin:10px;" name="highlightDirector" data-value="0" data-action-type="solo-video" type="checkbox" onchange="requestInfocus(this);" />
 				</span>
 			</div>
@@ -1837,7 +1840,7 @@
 			// session.width // int
 			// session.quality // int  -- if setting == 0, then than the default resolution will be 1080p, instead of 720p
 			// session.sink
-			// session.offsetChannel // int
+			// session.offsetChannel /2 int
 			// session.audioChannels // int
 			// session.security
 			// session.framerate // int
@@ -1848,11 +1851,11 @@
 			// session.title // "zzzz"
 		</script>
 		<script type="text/javascript" crossorigin="anonymous" src="./thirdparty/aes.js"></script>
-		<script type="text/javascript" crossorigin="anonymous" id="lib-js" src="./lib.js?ver=123"></script>
+		<script type="text/javascript" crossorigin="anonymous" id="lib-js" src="./lib.js?ver=198"></script>
 		<!-- 
 		// If you wish to change branding, blank offers a good clean start.
 		<script type="text/javascript" id="main-js" src="./main.js" data-translation="blank"></script>
 	-->
-		<script type="text/javascript" crossorigin="anonymous" id="main-js" src="./main.js?ver=259"></script>
+		<script type="text/javascript" crossorigin="anonymous" id="main-js" src="./main.js?ver=271"></script>
 	</body>
 </html>

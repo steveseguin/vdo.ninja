@@ -433,6 +433,14 @@
 				button.onclick = function(){commands[this.dataset.command](false);}
 				target_self.appendChild(button);
 				
+				if (k=="mic" || k=="camera" || k=="record" || k=="speaker"){
+					var button = document.createElement("button");
+					button.innerHTML = k + ":<br />TOGGLE"; 
+					button.dataset.command = k;
+					button.onclick = function(){commands[this.dataset.command]("toggle");}
+					target_self.appendChild(button);
+				} 
+				
 			} // list available commands to console
 			
 			commands.reload = function(){sendSelfCommand("reload",true);};

@@ -116,6 +116,8 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 			//	session.sticky = confirm("Would you allow us to store a cookie to keep your session settings persistent?");
 			//} else {
 			session.sticky = true;
+			
+			getById("saveRoom").style.display = "none";
 			//}
 			//if (session.sticky) {
 			setStorage("permission", "yes", 999);
@@ -220,7 +222,6 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 		}
 	}
 	
-	
 	if (urlParams.has('broadcast') || urlParams.has('bc')) {
 		log("Broadcast flag set");
 		session.broadcast = urlParams.get('broadcast') || urlParams.get('bc') || null;
@@ -249,6 +250,10 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 		} else {
 			session.showList = true;
 		}
+	}
+	
+	if (urlParams.has('meshcast')) {
+		session.meshcast = urlParams.get('meshcast') || "both";
 	}
 	
 	var filename = false;
@@ -313,8 +318,14 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 		getById("rooms").classList.remove('advanced');
 	}
 
-	if (urlParams.has('showdirector')) {
-		session.showDirector = true;
+	if (urlParams.has('showdirector') || urlParams.has('sd')) {
+		session.showDirector = urlParams.get('showdirector') || urlParams.get('sd') || true;
+	}
+	
+	if (urlParams.has('rotate') ) {
+		session.rotate = urlParams.get('rotate') || 90;
+		session.rotate = parseInt(session.rotate);
+		
 	}
 
 	if (urlParams.has('midi') || urlParams.has('hotkeys')) {
@@ -526,8 +537,8 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 
 	}
 
-	if (urlParams.has('scene')) {
-		session.scene = urlParams.get('scene') || 0;
+	if (urlParams.has('scene') || urlParams.has('scn')) {
+		session.scene = urlParams.get('scene') || urlParams.get('scn') || 0;
 		if (typeof session.scene === "string"){
 			session.scene = session.scene.replace(/[\W]+/g, "_");
 		} else {
@@ -600,6 +611,14 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 	} else {
 		getById("main").classList.remove('hidden');
 	}
+	
+	if (urlParams.has("base64css") || urlParams.has("b64css") || urlParams.has("cssbase64") || urlParams.has("cssb64")) {
+		var base64Css = urlParams.get("base64css") || urlParams.get("b64css") || urlParams.get("cssbase64") || urlParams.get("cssb64");
+		var css = decodeURIComponent(atob(base64Css)); // window.btoa(encodeURIComponent("#mainmenu{background-color: pink; ❤" ));
+		var cssStyleSheet = document.createElement("style");
+		cssStyleSheet.innerText = css;
+		document.querySelector("head").appendChild(cssStyleSheet);
+	  };
 
 	if (urlParams.has('password') || urlParams.has('pass') || urlParams.has('pw') || urlParams.has('p')) {
 		session.password = urlParams.get('password') || urlParams.get('pass') || urlParams.get('pw') || urlParams.get('p');
@@ -1397,6 +1416,10 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 		session.slot = parseInt(urlParams.get('slot')) || 0;
 	}
 	
+	if (urlParams.has('debug')){
+		debugStart();
+	}
+	
 	if (urlParams.has('group')) {
 		session.group = urlParams.get('group') || "";
 		session.group = session.group.split(",");
@@ -1872,16 +1895,16 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 		// image = 5
 	}
 	
-	if (!(getChromeVersion()>=57)){
-		getById("effectSelector").disabled=true;
-		getById("effectSelector3").disabled=true;
-		getById("effectSelector").title = "Effects are only support on Chromium-based browsers";
-		getById("effectSelector3").title = "Effects are only support on Chromium-based browsers";
-		var elementsTmp = document.querySelectorAll('[data-effectsNotice]');
-		for (let i = 0; i < elementsTmp.length; i++) {
-			elementsTmp[i].style.display = "inline-block";
-		}
-	} 
+	//if (!(getChromeVersion()>=57)){
+	//	getById("effectSelector").disabled=true;
+	//	getById("effectSelector3").disabled=true;
+	//	getById("effectSelector").title = "Effects are only support on Chromium-based browsers";
+	//	getById("effectSelector3").title = "Effects are only support on Chromium-based browsers";
+	//	var elementsTmp = document.querySelectorAll('[data-effectsNotice]');
+	//	for (let i = 0; i < elementsTmp.length; i++) {
+	//		elementsTmp[i].style.display = "inline-block";
+	//	}
+	//} 
 
 
 	if (urlParams.has('viewereffect') || urlParams.has('viewereffects') || urlParams.has('ve')) {
@@ -1895,8 +1918,9 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 		session.audioEffects = true;
 		session.audioMeterGuest = true; 
 		session.minipreview = 2;
-		//session.animatedMoves = false;
-		
+		if (session.activeSpeaker==1){
+			session.animatedMoves = false;
+		}
 		session.fadein=true;
 		document.querySelector(':root').style.setProperty('--fadein-speed', 0.5);
 		setInterval(function(){activeSpeaker(false);},100);
@@ -2357,7 +2381,16 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 			getById("translateButton").style.display = "none";
 			log("Update Mixer Event on REsize SET");
 			window.onresize = updateMixer;
-			window.onorientationchange = function(){setTimeout(updateMixer, 200);};
+			window.onorientationchange = function(){
+				setTimeout(updateMixer, 200);
+				//if (session.effects){
+				//	if (session.streamSrc){
+				//		setTimeout(function(){
+				//			updateRenderOutpipe(session.streamSrc, true);
+				//		},500);
+				//	}
+				//}
+			};
 			joinRoom(session.roomid); // this is a scene, so we want high resolutions
 			getById("main").style.overflow = "hidden";
 

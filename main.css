@@ -245,6 +245,8 @@ button.white:active {
 	cursor: help;
 	float: right;
 	font-size: 90%;
+	line-height:100%;
+	margin-top:2px;
 }
 #head6 {
     display: inline-block;
@@ -858,7 +860,6 @@ body {
 	-webkit-font-smoothing: antialiased;
 	text-rendering: optimizeLegibility;
 	color: var(--gray90);
-	font-family: "Lato", sans-serif;
 	padding: 0 0px;
 	height: 100%;
 	width: 100%;
@@ -1507,6 +1508,14 @@ img {
 	position: relative;
 	top: 1px;
 }
+
+#previewWebcam.rotate{
+	max-width: 30vh;
+}
+#previewWebcam.rotate{
+	max-width: 30vh;
+}
+
 .myVideo {
 	box-shadow: rgb(88, 88, 88) 0px 0px 5px 1px;
 	max-width: 800px !important;
@@ -1906,7 +1915,7 @@ audio.fileshare::-webkit-media-controls-play-button, video.fileshare::-webkit-me
 }
 .audioTitle2 {
 	text-align: left;
-	padding: 0px 10px 10px 1px;
+	padding: 0px 10px 6px 1px;
 }
 .multiselect .multiselect-trigger:hover {
 	cursor: pointer;
@@ -2032,6 +2041,28 @@ audio.fileshare::-webkit-media-controls-play-button, video.fileshare::-webkit-me
 .grabLinks a:visited {
 	color: black !important;
 }
+
+#grabDirectorSoloLinkParent {
+	text-align: left;
+	margin: 17px 0 0 0;
+	width: 450px;
+	background-color: #f3f3f3;
+	padding: 10px 10px;
+	border: 1px solid #ccc;
+	vertical-align: middle;
+}
+
+#grabDirectorSoloLink{
+	max-width: 100%; 
+	line-break: anywhere;
+	margin:0;
+	display:inline-flex;
+	padding:4px 5px 2px 7px;
+	cursor:grab; 
+	background-color: #FFF; 
+	color:darkblue;
+}
+
 #videoSettings3 {
 	background-color: #f3f3f3;
 	width: 100%;
@@ -2396,7 +2427,7 @@ input[type=checkbox] {
 	background-color:  var(--container-color);
 	width:1191px;
 	padding: 10px;
-	margin: 10px;
+	margin: 5px 10px 10px 10px;
 }
 .directorContainer {
 	background-color: var(--container-color);
@@ -3289,6 +3320,8 @@ input:checked + .slider:before {
   content: "\f518"; }
 .la-caret-down:before {
   content: "\f0d7"; }
+.la-comments:before {
+  content: "\f086"; }
 .la-caret-right:before {
   content: "\f0da"; }
 .la-copy:before {
@@ -3365,7 +3398,9 @@ input:checked + .slider:before {
   content: "\f078"; }
 .la-music:before {
   content: "\f001"; }
-  
+.la-hdd:before {
+  content: "\f0a0"; } 
+ 
 @media (prefers-color-scheme: dark) {
 	:root {
 		--color-mode: dark;
@@ -3402,7 +3437,6 @@ body.darktheme button {
 	filter: brightness(0.70);
 }
 body.darktheme .las {
-	filter: brightness(0.85);
 }
 body.darktheme label {
 	filter: brightness(0.85);
@@ -3520,3 +3554,10 @@ body.darktheme .alertModal{
 body.darktheme .directorContainer{
 	filter: brightness(0.85);
 }
+body.darktheme #grabDirectorSoloLinkParent{
+	background-color: #949494;
+}
+body.darktheme #grabDirectorSoloLink{
+	background-color: #c1c1c1;
+}
+
