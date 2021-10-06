@@ -116,6 +116,8 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 			//	session.sticky = confirm("Would you allow us to store a cookie to keep your session settings persistent?");
 			//} else {
 			session.sticky = true;
+			
+			getById("saveRoom").style.display = "none";
 			//}
 			//if (session.sticky) {
 			setStorage("permission", "yes", 999);
@@ -220,7 +222,6 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 		}
 	}
 	
-	
 	if (urlParams.has('broadcast') || urlParams.has('bc')) {
 		log("Broadcast flag set");
 		session.broadcast = urlParams.get('broadcast') || urlParams.get('bc') || null;
@@ -249,6 +250,10 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 		} else {
 			session.showList = true;
 		}
+	}
+	
+	if (urlParams.has('meshcast')) {
+		session.meshcast = urlParams.get('meshcast') || "both";
 	}
 	
 	var filename = false;
@@ -313,8 +318,14 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 		getById("rooms").classList.remove('advanced');
 	}
 
-	if (urlParams.has('showdirector')) {
-		session.showDirector = true;
+	if (urlParams.has('showdirector') || urlParams.has('sd')) {
+		session.showDirector = urlParams.get('showdirector') || urlParams.get('sd') || true;
+	}
+	
+	if (urlParams.has('rotate') ) {
+		session.rotate = urlParams.get('rotate') || 90;
+		session.rotate = parseInt(session.rotate);
+		
 	}
 
 	if (urlParams.has('midi') || urlParams.has('hotkeys')) {
@@ -339,9 +350,23 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 	}
 
 
-	if (urlParams.has('webcam') || urlParams.has('wc')) {
+	if (urlParams.has('webcam') || urlParams.has('wc') || urlParams.has('miconly')) {
 		session.webcamonly = true;
 		screensharebutton = false;
+		if (urlParams.has('miconly')){
+			session.videoDevice=0;
+			getById("add_camera").innerHTML = "Share your Microphone";
+			miniTranslate(getById("add_camera"), "share-your-mic");
+			getById("videoMenu").style.display = "none";
+			//session.autostart = true;
+			getById("mutevideobutton").style.setProperty("display", "none", "important");
+			getById("videoMenu3").style.setProperty("display", "none", "important");
+			//if (session.consent){
+			//	setTimeout(function(){
+			//		warnUser("⚠ Privacy warning: The director of this room can remotely switch your camera or microphone without permission.", 8000);
+			//	}, 1500);
+			//}
+		}
 	} else if (urlParams.has('screenshare') || urlParams.has('ss')) {
 		session.screenshare = true;
 		if (urlParams.get('screenshare') || urlParams.get('ss')){
@@ -473,6 +498,10 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 		session.aspectratio = 2; //1:1 ?
 	}
 
+	if (urlParams.has('forceaspectratio') || urlParams.has('far')) {
+		session.forceAspectRatio = true; // 9:16  (default of 0 is 16:9)
+	}
+
 	if (urlParams.has('cover')) {
 		session.cover = true;
 		document.documentElement.style.setProperty('--fit-style', 'cover');
@@ -508,8 +537,8 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 
 	}
 
-	if (urlParams.has('scene')) {
-		session.scene = urlParams.get('scene') || 0;
+	if (urlParams.has('scene') || urlParams.has('scn')) {
+		session.scene = urlParams.get('scene') || urlParams.get('scn') || 0;
 		if (typeof session.scene === "string"){
 			session.scene = session.scene.replace(/[\W]+/g, "_");
 		} else {
@@ -582,6 +611,14 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 	} else {
 		getById("main").classList.remove('hidden');
 	}
+	
+	if (urlParams.has("base64css") || urlParams.has("b64css") || urlParams.has("cssbase64") || urlParams.has("cssb64")) {
+		var base64Css = urlParams.get("base64css") || urlParams.get("b64css") || urlParams.get("cssbase64") || urlParams.get("cssb64");
+		var css = decodeURIComponent(atob(base64Css)); // window.btoa(encodeURIComponent("#mainmenu{background-color: pink; ❤" ));
+		var cssStyleSheet = document.createElement("style");
+		cssStyleSheet.innerText = css;
+		document.querySelector("head").appendChild(cssStyleSheet);
+	  };
 
 	if (urlParams.has("base64css") || urlParams.has("b64css")) {
     var base64Css = urlParams.get("base64css") || urlParams.get("b64css");
@@ -1084,10 +1121,9 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 					if ((ver1.length == 3) && (parseInt(ver1[0]) == 2) && (cefVersion < 76) && (navigator.userAgent.indexOf('Mac OS X') != -1)) {
 						updateURL("streamlabs");
 						getById("main").innerHTML = "<div style='background-color:black;color:white;' data-translate='obs-macos-not-supported'><h1>Update OBS Studio to v26.1.2 or newer; older versions and StreamLabs OBS are not supported on macOS.\
-						<br /><i><small><small>download here: <a href='https://github.com/obsproject/obs-studio/releases/tag/26.1.2'>https://github.com/obsproject/obs-studio/releases/tag/26.1.2</a></small></small></i>\
+						<br /><i><small><small>download here: <a href='https://github.com/obsproject/obs-studio/releases'>https://github.com/obsproject/obs-studio/releases</a></small></small></i>\
 						</h1> <br /><br />\
 						<h2>Please use the <a href='https://github.com/steveseguin/electroncapture'>Electron Capture app</a> if there are further problems or if you wish to use StreamLabs on macOS still.</h2>\
-						<br />You can find more details <u><a href='https://github.com/steveseguin/obsninja/wiki/FAQ#mac-os'>within our wiki guide - https://github.com/steveseguin/obsninja/wiki/FAQ#mac-os</a></u></h2>\
 						<br /> You can bypass this error message by refreshing, <a href='" + window.location.href + "'> Clicking Here,</a> or by adding <i>&streamlabs</i> to the URL, but it may still not actually work.\
 						\
 						<br /> Please report this problem to steve@seguin.email if you feel it is an error.\
@@ -1380,8 +1416,26 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 	}
 
 	if (urlParams.has('order')) {
-		session.order = parseInt(urlParams.get('order')) || 0;
+		session.order = parseInt(urlParams.get('order')) || 1;
 	}
+	
+	if (urlParams.has('slot')) {
+		session.slot = parseInt(urlParams.get('slot')) || 0;
+	}
+	
+	if (urlParams.has('debug')){
+		debugStart();
+	}
+	
+	if (urlParams.has('group')) {
+		session.group = urlParams.get('group') || "";
+		session.group = session.group.split(",");
+	}
+	
+	if (urlParams.has('groupaudio') || urlParams.has('ga')) {
+		session.groupAudio = true;
+	}
+	
 	if (urlParams.has('sensors') || urlParams.has('sensor') || urlParams.has('gyro') || urlParams.has('gyros') || urlParams.has('accelerometer')) {
 		session.sensorData = urlParams.get('sensors') || urlParams.get('sensor') || urlParams.get('gyro') || urlParams.get('gyros') || urlParams.get('accelerometer') || 30;
 		session.sensorData = parseInt(session.sensorData);
@@ -1708,6 +1762,15 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 		log("framerate Changed");
 		log(session.framerate);
 	}
+	
+	if (urlParams.has('tz')){
+		session.tz = urlParams.get('tz');
+		if ((session.tz === null) || (session.tz === "")){
+			session.tz = false;
+		} else {
+			session.tz = parseInt(session.tz);
+		}
+	}
 
 	if (urlParams.has('maxframerate') || urlParams.has('mfr') || urlParams.has('mfps')) {
 		session.maxframerate = urlParams.get('maxframerate') || urlParams.get('mfr') || urlParams.get('mfps');
@@ -1728,9 +1791,9 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 	}
 	
 	if (urlParams.has('panning') || urlParams.has('pan')) {
-		session.panning=true;
-		if (urlParams.get('panning') || urlParams.get('pan')){
-			session.panning = urlParams.get('panning') || urlParams.get('pan');
+		session.panning = urlParams.get('panning') || urlParams.get('pan');
+		if (session.panning===""){
+			session.panning=true
 		}
 		session.audioEffects = true;
 	}
@@ -1839,16 +1902,16 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 		// image = 5
 	}
 	
-	if (!(getChromeVersion()>=57)){
-		getById("effectSelector").disabled=true;
-		getById("effectSelector3").disabled=true;
-		getById("effectSelector").title = "Effects are only support on Chromium-based browsers";
-		getById("effectSelector3").title = "Effects are only support on Chromium-based browsers";
-		var elementsTmp = document.querySelectorAll('[data-effectsNotice]');
-		for (let i = 0; i < elementsTmp.length; i++) {
-			elementsTmp[i].style.display = "inline-block";
-		}
-	} 
+	//if (!(getChromeVersion()>=57)){
+	//	getById("effectSelector").disabled=true;
+	//	getById("effectSelector3").disabled=true;
+	//	getById("effectSelector").title = "Effects are only support on Chromium-based browsers";
+	//	getById("effectSelector3").title = "Effects are only support on Chromium-based browsers";
+	//	var elementsTmp = document.querySelectorAll('[data-effectsNotice]');
+	//	for (let i = 0; i < elementsTmp.length; i++) {
+	//		elementsTmp[i].style.display = "inline-block";
+	//	}
+	//} 
 
 
 	if (urlParams.has('viewereffect') || urlParams.has('viewereffects') || urlParams.has('ve')) {
@@ -1856,17 +1919,22 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 	}
 
 	if (urlParams.has('activespeaker') || urlParams.has('speakerview')  || urlParams.has('sas')){
-		session.activeSpeaker = true;
+		session.activeSpeaker = urlParams.get('activespeaker') || urlParams.get('speakerview')  || urlParams.get('sas') || 1;
+		session.activeSpeaker = parseInt(session.activeSpeaker);
+		
 		session.audioEffects = true;
 		session.audioMeterGuest = true; 
-		//session.animatedMoves = false;
-		
+		session.minipreview = 2;
+		if (session.activeSpeaker==1){
+			session.animatedMoves = false;
+		}
 		session.fadein=true;
 		document.querySelector(':root').style.setProperty('--fadein-speed', 0.5);
 		setInterval(function(){activeSpeaker(false);},100);
 		
 	} else if (urlParams.has('noisegate')){
-		session.quietOthers = true;
+		session.quietOthers = urlParams.get('noisegate') || 1;
+		session.quietOthers = parseInt(session.quietOthers);
 		session.audioEffects = true;
 		session.audioMeterGuest = true;
 		setInterval(function(){activeSpeaker(false);},100);
@@ -2320,7 +2388,16 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 			getById("translateButton").style.display = "none";
 			log("Update Mixer Event on REsize SET");
 			window.onresize = updateMixer;
-			window.onorientationchange = function(){setTimeout(updateMixer, 200);};
+			window.onorientationchange = function(){
+				setTimeout(updateMixer, 200);
+				//if (session.effects){
+				//	if (session.streamSrc){
+				//		setTimeout(function(){
+				//			updateRenderOutpipe(session.streamSrc, true);
+				//		},500);
+				//	}
+				//}
+			};
 			joinRoom(session.roomid); // this is a scene, so we want high resolutions
 			getById("main").style.overflow = "hidden";
 
@@ -2916,6 +2993,44 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 				} catch (e) {
 					errorlog(e);
 				}
+			}
+			
+			if ("getDetailedState" in e.data) {
+				var detailedState = {};
+				for (var UUID in session.rpcs){
+					if (!session.rpcs[UUID].streamID){continue;}
+					detailedState[session.rpcs[UUID].streamID] = {};
+					var scenes = getById("container_" + UUID).querySelectorAll('[data-action-type="addToScene"][data-scene][data--u-u-i-d="'+UUID+'"]');
+					var sceneState = {};
+					for (var i=0;i<scenes.length;i++){
+						if (parseInt(scenes[i].dataset.value)){
+							sceneState[scenes[i].dataset.scene] = true;
+						} else {
+							sceneState[scenes[i].dataset.scene] = false;
+						}
+					}
+					detailedState[session.rpcs[UUID].streamID].scenes = sceneState;
+				}
+				
+				if (session.showDirector){
+					if (document.getElementById("container_director")){
+						detailedState[session.streamID] = {};
+						var scenes = getById("container_director").querySelectorAll('[data-action-type="addToScene"][data-scene]');
+						var sceneState = {};
+						for (var i=0;i<scenes.length;i++){
+							if (parseInt(scenes[i].dataset.value)){
+								sceneState[scenes[i].dataset.scene] = true;
+							} else {
+								sceneState[scenes[i].dataset.scene] = false;
+							}
+						}
+						detailedState[session.streamID].scenes = sceneState;
+					}
+				}
+				
+				parent.postMessage({
+					"detailedState": detailedState
+				}, "*");
 			}
 
 			if ("automixer" in e.data) {

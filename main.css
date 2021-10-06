@@ -13,6 +13,7 @@
 	--video-margin: 0px;
 	--video-rounded: 0px;
 	--color-mode: light;
+	--button-radius: 2px;
 }
 
 * {
@@ -244,6 +245,8 @@ button.white:active {
 	cursor: help;
 	float: right;
 	font-size: 90%;
+	line-height:100%;
+	margin-top:2px;
 }
 #head6 {
     display: inline-block;
@@ -857,7 +860,6 @@ body {
 	-webkit-font-smoothing: antialiased;
 	text-rendering: optimizeLegibility;
 	color: var(--gray90);
-	font-family: "Lato", sans-serif;
 	padding: 0 0px;
 	height: 100%;
 	width: 100%;
@@ -1506,6 +1508,14 @@ img {
 	position: relative;
 	top: 1px;
 }
+
+#previewWebcam.rotate{
+	max-width: 30vh;
+}
+#previewWebcam.rotate{
+	max-width: 30vh;
+}
+
 .myVideo {
 	box-shadow: rgb(88, 88, 88) 0px 0px 5px 1px;
 	max-width: 800px !important;
@@ -1905,7 +1915,7 @@ audio.fileshare::-webkit-media-controls-play-button, video.fileshare::-webkit-me
 }
 .audioTitle2 {
 	text-align: left;
-	padding: 0px 10px 10px 1px;
+	padding: 0px 10px 6px 1px;
 }
 .multiselect .multiselect-trigger:hover {
 	cursor: pointer;
@@ -2031,20 +2041,42 @@ audio.fileshare::-webkit-media-controls-play-button, video.fileshare::-webkit-me
 .grabLinks a:visited {
 	color: black !important;
 }
-#videoSettings3 {
-	margin: 0 auto 15px auto;
-	background-color: #f3f3f3;
+
+#grabDirectorSoloLinkParent {
+	text-align: left;
+	margin: 17px 0 0 0;
 	width: 450px;
+	background-color: #f3f3f3;
+	padding: 10px 10px;
+	border: 1px solid #ccc;
+	vertical-align: middle;
+}
+
+#grabDirectorSoloLink{
+	max-width: 100%; 
+	line-break: anywhere;
+	margin:0;
+	display:inline-flex;
+	padding:4px 5px 2px 7px;
+	cursor:grab; 
+	background-color: #FFF; 
+	color:darkblue;
+}
+
+#videoSettings3 {
+	background-color: #f3f3f3;
+	width: 100%;
 	padding: 7px 10px 1px 10px;
 	border: 1px solid #ccc;
 	font-size: 90%;
+	margin: 10px 0 0 0;
 }
 #videoSource3 {
 	display: inline-block;
 	vertical-align: middle;
 	padding: 3px;
 	font-size: 93%;
-	max-width: 370px;
+	max-width: 240px;
 }
 #outputSource {
 	display: inline-block;
@@ -2084,6 +2116,17 @@ audio.fileshare::-webkit-media-controls-play-button, video.fileshare::-webkit-me
 	border: 1px solid #ccc;
 	vertical-align: middle;
 	text-align: left;
+}
+#videoMenu3{
+	background-color: #f3f3f3;
+	width: 450px;
+	max-width:100%;
+	display: block;
+	padding: 10px 10px;
+	border: 1px solid #ccc;
+	vertical-align: middle;
+	text-align: left;
+	margin: 0 0 15px 0;
 }
 
 .audioMenu{
@@ -2384,7 +2427,7 @@ input[type=checkbox] {
 	background-color:  var(--container-color);
 	width:1191px;
 	padding: 10px;
-	margin: 10px;
+	margin: 5px 10px 10px 10px;
 }
 .directorContainer {
 	background-color: var(--container-color);
@@ -3263,6 +3306,10 @@ input:checked + .slider:before {
   content: "\f544"; }
 .la-info-circle:before {
   content: "\f05a"; }
+.la-play:before {
+  content: "\f04b"; }
+.la-play-circle:before {
+  content: "\f144"; }
 .la.la-hdd-o:before {
   content: "\f0a0"; }
 .la-key:before {
@@ -3277,6 +3324,8 @@ input:checked + .slider:before {
   content: "\f518"; }
 .la-caret-down:before {
   content: "\f0d7"; }
+.la-comments:before {
+  content: "\f086"; }
 .la-caret-right:before {
   content: "\f0da"; }
 .la-copy:before {
@@ -3351,7 +3400,11 @@ input:checked + .slider:before {
   content: "\f12a"; }
 .la-chevron-down:before {
   content: "\f078"; }
-
+.la-music:before {
+  content: "\f001"; }
+.la-hdd:before {
+  content: "\f0a0"; } 
+ 
 @media (prefers-color-scheme: dark) {
 	:root {
 		--color-mode: dark;
@@ -3388,7 +3441,6 @@ body.darktheme button {
 	filter: brightness(0.70);
 }
 body.darktheme .las {
-	filter: brightness(0.85);
 }
 body.darktheme label {
 	filter: brightness(0.85);
@@ -3455,40 +3507,43 @@ body.darktheme #webcamstats2{
 	background-color: #949494;
 }
 body.darktheme #audioSourceScreenshare{
-	background-color: #AAA;
+	background-color: #c1c1c1;
 }
 body.darktheme #headphonesDiv2{
 	background-color: #949494;
 }
 body.darktheme #outputSourceScreenshare{
-	background-color: #AAA;
+	background-color: #c1c1c1;
 }
 body.darktheme #audioSource{
-	background-color: #AAA;
+	background-color: #c1c1c1;
 }
 body.darktheme #outputSource{
-	background-color: #AAA;
+	background-color: #c1c1c1;
 }
 body.darktheme #videoSourceSelect{
-	background-color: #AAA;
+	background-color: #c1c1c1;
 }
 body.darktheme #videoSettings{
 	background-color: #949494;
 }
 body.darktheme #effectSelector{
-	background-color: #AAA;
+	background-color: #c1c1c1;
 }
 body.darktheme #effectSelector3{
-	background-color: #AAA;
+	background-color: #c1c1c1;
 }
 body.darktheme #audioSource3{
-	background-color: #AAA;
+	background-color: #c1c1c1;
 }
 body.darktheme #videoSource3{
-	background-color: #AAA;
+	background-color: #c1c1c1;
+}
+body.darktheme #videoMenu3{
+	background-color: #949494;
 }
 body.darktheme #outputSource3{
-	background-color: #AAA;
+	background-color: #c1c1c1;
 }
 body.darktheme #videoSettings3{
 	background-color: #949494;
@@ -3503,3 +3558,10 @@ body.darktheme .alertModal{
 body.darktheme .directorContainer{
 	filter: brightness(0.85);
 }
+body.darktheme #grabDirectorSoloLinkParent{
+	background-color: #949494;
+}
+body.darktheme #grabDirectorSoloLink{
+	background-color: #c1c1c1;
+}
+
