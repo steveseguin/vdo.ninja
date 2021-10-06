@@ -41,7 +41,7 @@
 		var iframe = document.createElement("iframe");
 		var iframeContainer = document.createElement("div");
 		var iframesrc = document.getElementById("viewlink").value;
-		iframe.allow = "autoplay;camera;microphone;fullscreen;picture-in-picture;";
+		iframe.allow = "autoplay;camera;microphone;fullscreen;picture-in-picture;display-capture;";
 
 		if (iframesrc==""){
 			iframesrc="./";
@@ -190,6 +190,11 @@
 		var button = document.createElement("button");
 		button.innerHTML = "Stop Sending Loudness Levels";
 		button.onclick = function(){iframe.contentWindow.postMessage({"getLoudness":false}, '*');};
+		iframeContainer.appendChild(button);
+		
+		var button = document.createElement("button");
+		button.innerHTML = "Get detailed state (if Director)";
+		button.onclick = function(){iframe.contentWindow.postMessage({"getDetailedState":true}, '*');};
 		iframeContainer.appendChild(button);
 		
 		var button = document.createElement("button");
@@ -352,7 +357,13 @@
 					outputWindow.innerHTML += key + " Loudness: " +  e.data.loudness[key] + "\n";          
 				}
 				outputWindow.style.border="1px black";
-				
+			}
+			
+			if ("detailedState" in e.data){
+				var outputWindow = document.createElement("div");
+				outputWindow.innerHTML = "child-page-action: detailedState<br />"+JSON.stringify(e.data.detailedState)+"<br />";
+				outputWindow.style.border="1px dotted black";
+				iframeContainer.appendChild(outputWindow);
 			}
 			
 			if ("sensors" in e.data){

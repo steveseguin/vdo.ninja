@@ -1113,10 +1113,9 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 					if ((ver1.length == 3) && (parseInt(ver1[0]) == 2) && (cefVersion < 76) && (navigator.userAgent.indexOf('Mac OS X') != -1)) {
 						updateURL("streamlabs");
 						getById("main").innerHTML = "<div style='background-color:black;color:white;' data-translate='obs-macos-not-supported'><h1>Update OBS Studio to v26.1.2 or newer; older versions and StreamLabs OBS are not supported on macOS.\
-						<br /><i><small><small>download here: <a href='https://github.com/obsproject/obs-studio/releases/tag/26.1.2'>https://github.com/obsproject/obs-studio/releases/tag/26.1.2</a></small></small></i>\
+						<br /><i><small><small>download here: <a href='https://github.com/obsproject/obs-studio/releases'>https://github.com/obsproject/obs-studio/releases</a></small></small></i>\
 						</h1> <br /><br />\
 						<h2>Please use the <a href='https://github.com/steveseguin/electroncapture'>Electron Capture app</a> if there are further problems or if you wish to use StreamLabs on macOS still.</h2>\
-						<br />You can find more details <u><a href='https://github.com/steveseguin/obsninja/wiki/FAQ#mac-os'>within our wiki guide - https://github.com/steveseguin/obsninja/wiki/FAQ#mac-os</a></u></h2>\
 						<br /> You can bypass this error message by refreshing, <a href='" + window.location.href + "'> Clicking Here,</a> or by adding <i>&streamlabs</i> to the URL, but it may still not actually work.\
 						\
 						<br /> Please report this problem to steve@seguin.email if you feel it is an error.\
@@ -2986,6 +2985,44 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 				} catch (e) {
 					errorlog(e);
 				}
+			}
+			
+			if ("getDetailedState" in e.data) {
+				var detailedState = {};
+				for (var UUID in session.rpcs){
+					if (!session.rpcs[UUID].streamID){continue;}
+					detailedState[session.rpcs[UUID].streamID] = {};
+					var scenes = getById("container_" + UUID).querySelectorAll('[data-action-type="addToScene"][data-scene][data--u-u-i-d="'+UUID+'"]');
+					var sceneState = {};
+					for (var i=0;i<scenes.length;i++){
+						if (parseInt(scenes[i].dataset.value)){
+							sceneState[scenes[i].dataset.scene] = true;
+						} else {
+							sceneState[scenes[i].dataset.scene] = false;
+						}
+					}
+					detailedState[session.rpcs[UUID].streamID].scenes = sceneState;
+				}
+				
+				if (session.showDirector){
+					if (document.getElementById("container_director")){
+						detailedState[session.streamID] = {};
+						var scenes = getById("container_director").querySelectorAll('[data-action-type="addToScene"][data-scene]');
+						var sceneState = {};
+						for (var i=0;i<scenes.length;i++){
+							if (parseInt(scenes[i].dataset.value)){
+								sceneState[scenes[i].dataset.scene] = true;
+							} else {
+								sceneState[scenes[i].dataset.scene] = false;
+							}
+						}
+						detailedState[session.streamID].scenes = sceneState;
+					}
+				}
+				
+				parent.postMessage({
+					"detailedState": detailedState
+				}, "*");
 			}
 
 			if ("automixer" in e.data) {

@@ -3306,6 +3306,10 @@ input:checked + .slider:before {
   content: "\f544"; }
 .la-info-circle:before {
   content: "\f05a"; }
+.la-play:before {
+  content: "\f04b"; }
+.la-play-circle:before {
+  content: "\f144"; }
 .la.la-hdd-o:before {
   content: "\f0a0"; }
 .la-key:before {

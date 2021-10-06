@@ -6051,7 +6051,7 @@ function publishScreen() {
 		}
 		//session.screenShareState=true;
 		if (!(session.cleanOutput)) {			
-			getById("mutebutton").classList.remove("float");
+			getById("mutebutton").classList.remove("advanced");
 			getById("mutespeakerbutton").classList.remove("advanced");
 			//getById("mutespeakerbutton").className="float";
 			getById("chatbutton").className = "float";
@@ -9260,7 +9260,6 @@ function playtone(screen = false, tonename="testtone") {
 					log("changing audio sink:" + session.sink);
 					toneEle.play();
 				}).catch(error => {
-					errolog("couldn't set sink");
 					errorlog(error);
 				});
 			} catch (e) {
@@ -9671,7 +9670,6 @@ function resetupAudioOut() {
 		for (var UUID in session.rpcs) {
 			if (session.rpcs[UUID].videoElement){
 				try{
-					log("10076");
 					session.rpcs[UUID].videoElement.pause().then(() => {
 						setTimeout(function(uuid) {
 							log("win");
@@ -9681,8 +9679,8 @@ function resetupAudioOut() {
 								});
 							} catch(e){errorlog(e);}
 						}, 0, UUID);
-					});
-				} catch(e){errorlog(e);}
+					}).catch(errorlog);
+				} catch(e){warnlog(e);}
 			}
 		}
 		return;
@@ -9836,8 +9834,6 @@ async function toggleScreenShare(reload = false) { ////////////////////////////
 		});
 		return;
 	}
-
-
 	if (session.screenShareState == false) { // adding a screen
 
 		await grabScreen(quality = 0, audio = true, videoOnEnd = true).then(res => {
@@ -9847,63 +9843,67 @@ async function toggleScreenShare(reload = false) { ////////////////////////////
 				getById("screensharebutton").classList.remove("float");
 				enumerateDevices().then(gotDevices2).then(function() {});
 			}
-
 		});
 
 	} else { // removing a screen  . session.screenShareState already true true  /////////////////////////////////
 
-
 		session.screenShareState = false;
 		pokeIframeAPI("screen-share-ended");
-
-		if (beforeScreenShare) {
-
+		
+		if (screenShareAudioTrack){
 			session.streamSrc.getAudioTracks().forEach(function(track) { // previous video track; saving it. Must remove the track at some point.
 				if (screenShareAudioTrack == track) { // since there are more than one audio track, lets see if we can remove JUST the audio track for the screen share.
 					session.streamSrc.removeTrack(track);
 					track.stop();
 				}
 			});
-			
-			cleanupMediaTracks();
-			
-			
-
-			getById("screensharebutton").classList.add("float");
-			getById("screensharebutton").classList.remove("float2");
-
-			session.streamSrc.addTrack(beforeScreenShare); // add back in the video track we had before we started screen sharing.  It should be NULL if we changed the video track else where (such as via the settings). #TODO:
-			session.videoElement.srcObject.addTrack(beforeScreenShare);
-
-			toggleVideoMute(true);
-			for (UUID in session.pcs) {
-				try {
-					if ((session.pcs[UUID].guest == true) && (session.roombitrate === 0)) {
-						log("room rate restriction detected. No videos will be published to other guests");
-					} else if (session.pcs[UUID].allowVideo == true) { // allow 
-						var senders = session.pcs[UUID].getSenders(); // for any connected peer, update the video they have if connected with a video already.
-						var added = false;
-						senders.forEach((sender) => { // I suppose there could be a race condition between negotiating and updating this. if joining at the same time as changnig streams?
-							if (sender.track) {
-								if (sender.track && sender.track.kind == "video") {
-									sender.replaceTrack(beforeScreenShare); // replace may not be supported by all browsers.  eek.
-									sender.track.enabled = true;
-									added = true;
-								}
-							}
-						});
-						if (added == false) {
-							session.pcs[UUID].addTrack(beforeScreenShare, stream);
-							setTimeout(function(uuid){session.optimizeBitrate(uuid);},session.rampUpTime, UUID); // 3 seconds lets us ramp up the quality a bit and figure out the total bandwidth quicker
-						}
-					}
-				} catch (e) {
-					errorlog(e);
+			session.videoElement.srcObject.getAudioTracks().forEach(function(track) {
+				if (screenShareAudioTrack == track) { // since there are more than one audio track, lets see if we can remove JUST the audio track for the screen share.
+					session.streamSrc.removeTrack(track);
+					track.stop();
 				}
-			}
-			session.refreshScale();
-			beforeScreenShare = null;
+			});
 		}
+		
+		getById("screensharebutton").classList.add("float");
+		getById("screensharebutton").classList.remove("float2");
+
+		//if (beforeScreenShare) {
+			
+			//cleanupMediaTracks();
+
+		var addedAlready = false;
+		session.streamSrc.getVideoTracks().forEach(function(track) {
+			if (beforeScreenShare && (track == beforeScreenShare)){
+				addedAlready=true;
+			} else {
+				session.streamSrc.removeTrack(track);
+				track.stop();
+			}
+		});
+		
+		session.videoElement.srcObject.getVideoTracks().forEach(function(track) {
+			if (beforeScreenShare && (track == beforeScreenShare)){
+				addedAlready=true;
+			} else {
+				session.videoElement.srcObject.removeTrack(track);
+				track.stop();
+			}
+		});
+		
+		if (beforeScreenShare){
+			if (addedAlready==false){
+				session.streamSrc.addTrack(beforeScreenShare); // add back in the video track we had before we started screen sharing.  It should be NULL if we changed the video track else where (such as via the settings). #TODO:
+			}
+		}
+		
+		//if (beforeScreenShare || screenShareAudioTrack){
+		session.videoElement.srcObject = outboundAudioPipeline(session.streamSrc); // updateREnderOoutput is just for video if videoElement is already activated.
+		updateRenderOutpipe();
+		//}
+		
+		beforeScreenShare = null;
+		screenShareAudioTrack=null;
 		toggleSettings(forceShow = true);
 		//enumerateDevices().then(gotDevices2).then(function(){
 		//grabVideo();
@@ -10312,74 +10312,55 @@ async function grabScreen(quality = 0, audio = true, videoOnEnd = false) {
 		
 		try {
 			stream.getVideoTracks()[0].onended = function(e) { // if screen share stops, 
-				warnlog(e);
+							warnlog(e);
 
-				session.streamSrc.getVideoTracks().forEach(function(track) {
-					session.streamSrc.removeTrack(track);
-					track.stop();
-					log("stopping video track 3");
-				});
-				if (session.videoElement.srcObject){
-					session.videoElement.srcObject.getVideoTracks().forEach(function(track) {
-						session.videoElement.srcObject.removeTrack(track);
-						track.stop();
-						log("stopping video track 4");
-					});
-				} else {
-					session.videoElement.srcObject = session.streamSrc;
-				}
-
-				session.screenShareState = false;
-				pokeIframeAPI("screen-share-ended");
-
-				getById("screensharebutton").classList.add("float");
-				getById("screensharebutton").classList.remove("float2");
-
-				if (videoOnEnd == true) {
-					//activatedPreview = false;
-
-					if (beforeScreenShare) {
-						session.streamSrc.addTrack(beforeScreenShare);
-						session.videoElement.srcObject.addTrack(beforeScreenShare);
-						if (beforeScreenShare.kind == "video") {
-							toggleVideoMute(true);
-							for (UUID in session.pcs) {
-								try {
-									if ((session.pcs[UUID].guest == true) && (session.roombitrate === 0)) {
-										log("room rate restriction detected. No videos will be published to other guests");
-									} else if (session.pcs[UUID].allowVideo == true) { // allow 
-										var senders = session.pcs[UUID].getSenders(); // for any connected peer, update the video they have if connected with a video already.
-										var added = false;
-										senders.forEach((sender) => { // I suppose there could be a race condition between negotiating and updating this. if joining at the same time as changnig streams?
-											if (sender.track) {
-												if (sender.track && sender.track.kind == "video") {
-													sender.replaceTrack(beforeScreenShare); // replace may not be supported by all browsers.  eek.
-													sender.track.enabled = true;
-													added = true;
-												}
-											}
-										});
-										if (added == false) {
-											session.pcs[UUID].addTrack(beforeScreenShare, stream);
-											setTimeout(function(uuid){session.optimizeBitrate(uuid);},session.rampUpTime, UUID); // 3 seconds lets us ramp up the quality a bit and figure out the total bandwidth quicker
-										}
-									}
-								} catch (e) {
-									errorlog(e);
-								}
+							session.streamSrc.getVideoTracks().forEach(function(track) {
+								session.streamSrc.removeTrack(track);
+								track.stop();
+								log("stopping video track 3");
+							});
+							
+							if (session.videoElement.srcObject){
+								session.videoElement.srcObject.getVideoTracks().forEach(function(track) {
+									session.videoElement.srcObject.removeTrack(track);
+									track.stop();
+									log("stopping video track 4");
+								});
+							} else {
+								session.videoElement.srcObject = session.streamSrc;
 							}
-							session.refreshScale();
-						}
-						beforeScreenShare = null;
-					}
+							
+							if (screenShareAudioTrack){
+								session.streamSrc.getAudioTracks().forEach(function(track) { // previous video track; saving it. Must remove the track at some point.
+									if (screenShareAudioTrack == track) { // since there are more than one audio track, lets see if we can remove JUST the audio track for the screen share.
+										session.streamSrc.removeTrack(track);
+										track.stop();
+									}
+								});
+								screenShareAudioTrack=null;
+								senderAudioUpdate();
+							}
 
-					toggleSettings(forceShow = true);
-					//grabVideo(eleName='videosource', selector="select#videoSource3");  
+							session.screenShareState = false;
+							pokeIframeAPI("screen-share-ended");
 
+							getById("screensharebutton").classList.add("float");
+							getById("screensharebutton").classList.remove("float2");
 
-				} else {
-					grabScreen();
-				}
+							if (videoOnEnd == true) {
+								if (beforeScreenShare) {
+									session.streamSrc.addTrack(beforeScreenShare); // updateRenderOutpipe
+									beforeScreenShare = null;
+								}
+								
+								updateRenderOutpipe();
+									
+								toggleSettings(forceShow = true);
+								//grabVideo(eleName='videosource', selector="select#videoSource3"); 
+
+							} else {
+								grabScreen();
+							}
 			};
 		} catch (e) {
 			log("No Video selected; screensharing?");
@@ -10387,57 +10368,14 @@ async function grabScreen(quality = 0, audio = true, videoOnEnd = false) {
 
 		stream.getTracks().forEach(function(track) {
 			addScreenDevices(track);
-
 			session.streamSrc.addTrack(track, stream); // Lets not add the audio to this preview; echo can be annoying
-			
-			if (session.videoElement.srcObject){
-				session.videoElement.srcObject.addTrack(track, stream); //  I should probably add the remote control to his ; #TODO: 
-			} else {
-				session.videoElement.srcObject = session.streamSrc;
-			}
-
-			if (track.kind == "video") {
-				toggleVideoMute(true);
-				for (UUID in session.pcs) {
-					try {
-						if ((session.pcs[UUID].guest == true) && (session.roombitrate === 0)) {
-							log("room rate restriction detected. No videos will be published to other guests");
-						} else if (session.pcs[UUID].allowVideo == true) { // allow 
-							var senders = session.pcs[UUID].getSenders(); // for any connected peer, update the video they have if connected with a video already.
-							var added = false;
-							senders.forEach((sender) => { // I suppose there could be a race condition between negotiating and updating this. if joining at the same time as changnig streams?
-								if (sender.track) {
-									if (sender.track && sender.track.kind == "video") {
-										sender.replaceTrack(track); // replace may not be supported by all browsers.  eek.
-										sender.track.enabled = true;
-										added = true;
-									}
-								}
-							});
-							if (added == false) {
-								session.pcs[UUID].addTrack(track, stream);
-								setTimeout(function(uuid){session.optimizeBitrate(uuid);},session.rampUpTime, UUID); // 3 seconds lets us ramp up the quality a bit and figure out the total bandwidth quicker
-							}
-						}
-					} catch (e) {
-						errorlog(e);
-					}
-				}
-				session.refreshScale();
-			} else {
-				toggleMute(true); // I might want to move this outside the loop, but whatever
-				for (UUID in session.pcs) {
-					try {
-						if (session.pcs[UUID].allowAudio == true) {
-							session.pcs[UUID].addTrack(track, stream); // If screen sharing, we will add audio; not replace. 
-						}
-					} catch (e) {
-						errorlog(log);
-					}
-				}
-				screenShareAudioTrack = track;
-			}
 		});
+		updateRenderOutpipe();
+		
+		if (stream.getAudioTracks().length){
+			screenShareAudioTrack = stream.getAudioTracks()[0];
+			senderAudioUpdate();
+		}
 		
 		session.applySoloChat(); // mute streams that should be muted if a director
 		session.applyIsolatedChat();
@@ -11091,9 +11029,11 @@ function updateRenderOutpipe(){ // video only.
 				//session.streamSrc.addTrack(track);
 				warnlog("video effects were just applied");
 				session.videoElement.srcObject.addTrack(track);
+				
+				toggleVideoMute(true);
 			}
 			if (session.meshcast){
-				if (session.mc.getSenders){
+				if (session.mc.getSenders){ // should only be 0 or 1 video sender, ever.
 					var added = false;
 					session.mc.getSenders().forEach((sender) => { // I suppose there could be a race condition between negotiating and updating this. if joining at the same time as changnig streams?
 						if (sender.track && sender.track.kind == "video") {
@@ -11137,7 +11077,6 @@ function updateRenderOutpipe(){ // video only.
 			}
 			
 			session.refreshScale(); 
-			
 		});
 	}
 }
@@ -11252,17 +11191,23 @@ async function grabAudio(eleName = "previewWebcam", selector = "#audioSource", t
 				session.streamSrc.addTrack(track); // add video track to the preview video
 			});
 		}
+	} catch(e){errorlog(e);}
+	
+	senderAudioUpdate(callback);
+}
+	
+function senderAudioUpdate(callback=false){
+	try {
 		
 		session.videoElement.srcObject = outboundAudioPipeline(session.streamSrc);
 		toggleMute(true);
-		
 		
 		if (session.videoElement.srcObject.getAudioTracks()) { 
 			var tracks = session.videoElement.srcObject.getAudioTracks();
 			
 			if (session.meshcast){
 				if (session.mc.getSenders){
-					session.mc.getSenders().forEach((sender) => {
+					session.mc.getSenders().forEach((sender) => {  // disable senders that aren't part of the active tracks
 						var good = false;
 						if (sender.track && sender.track.id && (sender.track.kind == "audio")) {
 							tracks.forEach(function(track) {
@@ -11277,13 +11222,13 @@ async function grabAudio(eleName = "previewWebcam", selector = "#audioSource", t
 							return;
 						}
 						sender.track.enabled = false;
-						//session.mc.removeTrack(sender); //  Apparently removeTrack causes renogiation; also kills send/recv.
+						//session.mc.removeTrack(sender); //  Apparently removeTrack causes renogiation; also kills send/recv. avoid
 					});
 
 					if (tracks.length) {
 						tracks.forEach(function(track) {
 							var matched = false;
-							session.mc.getSenders().forEach((sender) => {
+							session.mc.getSenders().forEach((sender) => {   // is the track in the current sender list?
 								if (sender.track && sender.track.id && (sender.track.kind == "audio")) {
 									warnlog(sender.track.id + " " + track.id);
 									if (sender.track.id == track.id) {
@@ -11292,7 +11237,7 @@ async function grabAudio(eleName = "previewWebcam", selector = "#audioSource", t
 									}
 								}
 							});
-							if (matched) {
+							if (matched) { // track already in the current sender list; skip
 								return;
 							}
 							var added = false;
@@ -11300,7 +11245,7 @@ async function grabAudio(eleName = "previewWebcam", selector = "#audioSource", t
 								if (added) {
 									return;
 								}
-								if (sender.track && (sender.track.kind == "audio") && (sender.track.enabled == false)) {
+								if (sender.track && (sender.track.kind == "audio") && (sender.track.enabled == false)) { // replace instead of add new tracks; make sure to enable old tracks being replaced
 									sender.replaceTrack(track);
 									sender.track.enabled = true;
 									added = true;
@@ -11310,11 +11255,11 @@ async function grabAudio(eleName = "previewWebcam", selector = "#audioSource", t
 							if (added) {
 								return;
 							}
-							var sender = session.mc.addTrack(track, session.videoElement.srcObject);
+							var sender = session.mc.addTrack(track, session.videoElement.srcObject);  //  didn't replace , since no old disabled tracks available, so let's add a new track.
 						});
 					} else {
 						if (session.mc.getSenders){
-							session.mc.getSenders().forEach((sender) => {
+							session.mc.getSenders().forEach((sender) => { // disable all senders, since no tracks available.
 								if (sender.track && sender.track.kind == "audio") {
 									sender.track.enabled = false; // (trying this instead)
 									//session.pcs[UUID].removeTrack(sender); //  Apparently removeTrack causes renogiation; also kills send/recv.
@@ -13123,7 +13068,7 @@ function dragElement(elmnt) {
 function previewIframe(iframesrc) { // this is pretty important if you want to avoid camera permission popup problems.  You can also call it automatically via: <body onload=>loadIframe();"> , but don't call it before the page loads.
 
 	var iframe = document.createElement("iframe");
-	iframe.allow = "autoplay;camera;microphone;fullscreen;picture-in-picture;";
+	iframe.allow = "autoplay;camera;microphone;fullscreen;picture-in-picture;display-capture;";
 	iframe.style.width = "100%";
 	iframe.style.height = "100%";
 	iframe.style.border = "10px dashed rgb(64 65 62)";
@@ -13198,7 +13143,7 @@ function previewIframe(iframesrc) { // this is pretty important if you want to a
 function loadIframe(iframesrc) { // this is pretty important if you want to avoid camera permission popup problems.  You can also call it automatically via: <body onload=>loadIframe();"> , but don't call it before the page loads.
 
 	var iframe = document.createElement("iframe");
-	iframe.allow = "autoplay;camera;microphone;fullscreen;picture-in-picture;";
+	iframe.allow = "autoplay;camera;microphone;fullscreen;picture-in-picture;display-capture;";
 	iframe.style.width = "100%";
 	iframe.style.height = "100%";
 	iframe.style.border = "10px dashed rgb(64 65 62)";
@@ -15526,7 +15471,7 @@ function createIframePopup() {
 	}
 
 	var iframe = document.createElement("iframe");
-	iframe.allow = "autoplay;camera;microphone;fullscreen;picture-in-picture;";
+	iframe.allow = "autoplay;camera;microphone;fullscreen;picture-in-picture;display-capture;";
 	
 	var extras = "";
 	if (session.password){
