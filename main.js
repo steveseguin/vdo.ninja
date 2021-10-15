@@ -505,6 +505,8 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 	if (urlParams.has('cover')) {
 		session.cover = true;
 		document.documentElement.style.setProperty('--fit-style', 'cover');
+		document.documentElement.style.setProperty('--myvideo-max-width', '100vw');
+		document.documentElement.style.setProperty('--myvideo-width', '100vw');
 	} 
 
 	if (urlParams.has('record')) {
@@ -548,12 +550,16 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 		session.audioEffects = false;
 		session.audioMeterGuest = false;
 	}
-	if (session.scene!=="1"){ // scene =0 and 1 should load instantly.
-		session.hiddenSceneViewBitrate = 0; // By default this is ~ 400kbps, but if you have 10 scenes, i don't want to kill things.
+	//if (session.scene!=="1"){ // scene =0 and 1 should load instantly.
+	//	session.hiddenSceneViewBitrate = 0; // By default this is ~ 400kbps, but if you have 10 scenes, i don't want to kill things.
+	//}
+	
+	if (urlParams.has('hiddenscenebitrate')) {
+		session.hiddenSceneViewBitrate = parseInt(urlParams.get('hiddenscenebitrate')) || 0;
 	}
 	
 	if (urlParams.has('preloadbitrate')) {
-		session.hiddenSceneViewBitrate = parseInt(urlParams.get('preloadbitrate')) || 500;
+		session.preloadbitrate = parseInt(urlParams.get('preloadbitrate')) || 0; // 1000
 	}
 
 	if (urlParams.has('scenetype') || urlParams.has('type')) {
@@ -728,7 +734,7 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 		}
 	}
 
-	if (urlParams.has('transparent')) { // sets the window to be transparent - useful for IFRAMES?
+	if (urlParams.has('transparent') || urlParams.has('transparency')) { // sets the window to be transparent - useful for IFRAMES?
 		getById("main").style.backgroundColor = "rgba(0,0,0,0)";
 		document.documentElement.style.setProperty('--container-color', '#0000');
 		document.documentElement.style.setProperty('--background-color', '#0000');
@@ -1124,9 +1130,9 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 				}
 			}
 			
-			if (navigator.userAgent.indexOf('Mac OS X') != -1) {
-				session.codec = "h264"; // default the codec to h264 if OBS is on macOS (that's all it supports with hardware)
-			}
+			//if (navigator.userAgent.indexOf('Mac OS X') != -1) {
+			//	session.codec = "h264"; // default the codec to h264 if OBS is on macOS (that's all it supports with hardware) // oct 2021, OBS now supports vp8 and actually breaks with h264 android devices.
+			//}
 			
 			if (session.disableOBS===false){
 				window.addEventListener("obsSourceVisibleChanged", obsSourceVisibleChanged);
@@ -1147,6 +1153,8 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 	if (urlParams.has('chroma')) {
 		log("Chroma ENABLED");
 		getById("main").style.backgroundColor = "#" + (urlParams.get('chroma') || "0F0");
+	} else if (window.obsstudio || (navigator.userAgent.toLowerCase().indexOf(' electron/') > -1)){
+		getById("main").style.backgroundColor = "rgba(0,0,0,0)";
 	}
 
 	if (urlParams.has('margin')) {

@@ -180,8 +180,8 @@ function saveRoom(ele){
 	//this.title = "Quick load settings stored locally";
 	session.sticky = true;
 	ele.parentNode.removeChild(ele);
-	setStorage("permission", "yes", 999);
-	setStorage("settings", encodeURI(window.location.href), 90);
+	setStorage("permission", "yes");
+	setStorage("settings", encodeURI(window.location.href), 999);
 }
 
 function updateURL(param, force = false, cleanUrl = false) {
@@ -225,7 +225,7 @@ function updateURL(param, force = false, cleanUrl = false) {
 		}
 	}
 	if (session.sticky) {
-		setStorage("settings", encodeURI(window.location.href), 90);
+		setStorage("settings", encodeURI(window.location.href), 999);
 	}
 	urlParams = new URLSearchParams(window.location.search);
 }
@@ -1182,11 +1182,11 @@ function removeStorage(cname){
 	localStorage.removeItem(cname);
 }
 
-function setStorage(cname, cvalue, exdays=999){ // not actually a cookie
+function setStorage(cname, cvalue, hours=9999){ // not actually a cookie
 	var now = new Date();
 	var item = {
 		value: cvalue,
-		expiry: now.getTime() + (exdays * 24 * 60 * 60 * 1000),
+		expiry: now.getTime() + (hours * 60 * 60 * 1000),
 	};
 	try{
 		localStorage.setItem(cname, JSON.stringify(item));
@@ -1325,7 +1325,7 @@ function setupIncomingVideoTracking(v, UUID){  // video element.
 			v.style.display="block";
 		} else {  // group scene I guess; needs to be added manually
 			v.style.display="none";
-			v.mutedStateScene = true;
+			session.rpcs[UUID].mutedStateScene = true;
 		}
 		
 		setTimeout(function(){updateMixer();},1);
@@ -1504,7 +1504,7 @@ function updateVolume(update=false){
 			if (session.roomid){
 				var pswd = session.password || "";
 				generateHash(session.streamID + session.roomid + pswd + session.salt, 6).then(function(hash) { 
-					setStorage("micVolume_"+hash, session.audioGain, exdays=999);
+					setStorage("micVolume_"+hash, session.audioGain, hours=6);
 				});
 			}
 			if (session.audioGain == 0){
@@ -5788,8 +5788,8 @@ function applyMuteState(UUID){ // this is the mute state of PLAYBACK audio; not 
 	var muteOutcome = session.rpcs[UUID].mutedState || session.rpcs[UUID].mutedStateMixer || session.rpcs[UUID].mutedStateScene || session.speakerMuted;
 	if (session.rpcs[UUID].videoElement){
 		session.rpcs[UUID].videoElement.muted = muteOutcome;
-	
 	}
+	// session.scene
 	return muteOutcome;
 }
 
@@ -7080,6 +7080,10 @@ function joinRoom(roomname) {
 									if (session.directorList.indexOf(response[i].UUID)>=0){
 										warnlog("PLAYING DIRECTOR");
 										play(streamID, response[i].UUID);
+									} else if (session.view && (session.view === streamID)){
+										play(streamID, response[i].UUID);
+									} else if (session.view_set && session.view_set.includes(streamID)){
+										play(streamID, response[i].UUID);
 									} else if (session.queueList.length<5000){
 										if (!session.queueList.includes(streamID)){
 											session.queueList.push(streamID);
@@ -7106,6 +7110,10 @@ function joinRoom(roomname) {
 								var streamID = session.desaltStreamID(response[i].streamID);
 								if (session.queue){
 									if (session.directorList.indexOf(response[i].UUID)>=0){
+										play(streamID, response[i].UUID);
+									} else if (session.view && (session.view === streamID)){
+										play(streamID,response[i].UUID);
+									} else if (session.view_set && session.view_set.includes(streamID)){
 										play(streamID, response[i].UUID);
 									} else if (session.queueList.length<5000){
 										if (!session.queueList.includes(streamID)){
@@ -11767,7 +11775,7 @@ session.publishStream = function(v){ //  stream is used to generated an SDP
 	if (session.director){ // the director doesn't load a webcam by default anyways.
 		// audio is not mucked with
 	} else if (session.scene!==false){ // it's a scene, and there are no previews in a scene.
-		setTimeout(function(){updateMixer();},1);
+		setTimeout(function(){updateMixer();},10);
 	} else if (session.roomid!==false){
 		if (session.roomid===""){
 			if (!(session.view) || (session.view==="")){
@@ -11793,7 +11801,7 @@ session.publishStream = function(v){ //  stream is used to generated an SDP
 				session.windowed = false;
 				applyMirror(session.mirrorExclude, 'videosource');
 				play();
-				setTimeout(function(){updateMixer();},1);
+				setTimeout(function(){updateMixer();},10);
 			}
 		} else {
 			//session.cbr=0; // we're just going to override it
@@ -11802,7 +11810,7 @@ session.publishStream = function(v){ //  stream is used to generated an SDP
 			}
 			session.windowed = false;
 			applyMirror(session.mirrorExclude, 'videosource');
-			setTimeout(function(){updateMixer();},1);
+			setTimeout(function(){updateMixer();},10);
 		}
 	} else {
 		
@@ -15293,11 +15301,22 @@ Promise.wait = function(ms) {
 Promise.prototype.timeout = function(ms) {
 	return Promise.race([
 		this, Promise.wait(ms).then(function() {
-			var errormsg = new Error("Time Out\nDid you accept camera permissions in time? Please do so first.\n\nOtherwise, do you have NDI Tools installed? Maybe try uninstalling it.\n\nPlease also ensure your camera and audio device are correctly connected and not already in use. You may also need to refresh the page.");
-			errormsg.name = "timedOut";
-			errormsg.message = "Time Out\nDid you accept camera permissions in time? Please do so first.\n\nOtherwise, do you have NDI Tools installed? Maybe try uninstalling it.\n\nPlease also ensure your camera and audio device are correctly connected and not already in use. You may also need to refresh the page."
-			throw errormsg;
-
+			if (iOS || iPad){
+				var errormsg = new Error("Time Out\nDid you accept camera permissions in time? Please do so first.\n\nIf using an iPhone or iPad, try fully closing your browser and open it again; Safari sometimes jams up the camera.");
+				errormsg.name = "timedOut";
+				errormsg.message = "Time Out\nDid you accept camera permissions in time? Please do so first.\n\nIf using an iPhone or iPad, try fully closing your browser and open it again; Safari sometimes jams up the camera."
+				throw errormsg;
+			} else if (session.mobile){
+				var errormsg = new Error("Time Out\nDid you accept camera permissions in time? Please do so first.\n\nMake sure no other application is using the camera already and that you are using a compatible browser. If issues persist, maybe try the official native mobile app.");
+				errormsg.name = "timedOut";
+				errormsg.message = "Time Out\nDid you accept camera permissions in time? Please do so first.\n\nMake sure no other application is using the camera already and that you are using a compatible browser. If issues persist, maybe try the official native mobile app."
+				throw errormsg;
+			} else {
+				var errormsg = new Error("Time Out\nDid you accept camera permissions in time? Please do so first.\n\nOtherwise, do you have NDI Tools installed? Maybe try uninstalling it.\n\nPlease also ensure your camera and audio device are correctly connected and not already in use. You may also need to refresh the page.");
+				errormsg.name = "timedOut";
+				errormsg.message = "Time Out\nDid you accept camera permissions in time? Please do so first.\n\nOtherwise, do you have NDI Tools installed? Maybe try uninstalling it.\n\nPlease also ensure your camera and audio device are correctly connected and not already in use. You may also need to refresh the page."
+				throw errormsg;
+			}
 		})
 	])
 };
@@ -18421,6 +18440,10 @@ function setupCommands(){
 				errorlog(e);
 			}
 		}
+	}; 
+	
+	commands.forceKeyframe = function(value=null){
+		session.forcePLI();
 	}; 
 	
 	commands.panning = function(value){
