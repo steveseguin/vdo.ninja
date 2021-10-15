@@ -626,14 +626,6 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 		document.querySelector("head").appendChild(cssStyleSheet);
 	  };
 
-	if (urlParams.has("base64css") || urlParams.has("b64css")) {
-    var base64Css = urlParams.get("base64css") || urlParams.get("b64css");
-    var css = atob(base64Css);
-    var cssStyleSheet = document.createElement("style");
-    cssStyleSheet.innerText = css;
-    document.querySelector("head").appendChild(cssStyleSheet);
-  };
-
 	if (urlParams.has('password') || urlParams.has('pass') || urlParams.has('pw') || urlParams.has('p')) {
 		session.password = urlParams.get('password') || urlParams.get('pass') || urlParams.get('pw') || urlParams.get('p');
 		if (!session.password) {
@@ -743,13 +735,16 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 	}
 
 	if (urlParams.has('transparent') || urlParams.has('transparency')) { // sets the window to be transparent - useful for IFRAMES?
+		session.transparent=true;
+	}
+	
+	if (session.transparent){
 		getById("main").style.backgroundColor = "rgba(0,0,0,0)";
 		document.documentElement.style.setProperty('--container-color', '#0000');
 		document.documentElement.style.setProperty('--background-color', '#0000');
 		document.documentElement.style.setProperty('--regular-margin', '0');
 		document.documentElement.style.setProperty('--director-margin', '0 25px 0 0');
 		getById("directorLinksButton").style.color = "black";
-		session.transparent=true;
 	}
 
 	if (urlParams.has('stereo') || urlParams.has('s') || urlParams.has('proaudio')) { // both peers need this enabled for HD stereo to be on. If just pub, you get no echo/noise cancellation. if just viewer, you get high bitrate mono 
