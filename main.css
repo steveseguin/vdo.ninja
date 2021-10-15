@@ -14,6 +14,8 @@
 	--video-rounded: 0px;
 	--color-mode: light;
 	--button-radius: 2px;
+	--myvideo-max-width: min(800px,100vw);
+	--myvideo-width:800px;
 }
 
 * {
@@ -46,7 +48,7 @@ table {
 #bigPlayButton {
 	margin:0 auto;
 	background-color: #0000;
-	color: #;
+	cursor:pointer;
 	font-family: Cousine, monospace;
 	font-size: 4em;
 	line-height: 1.5em;
@@ -61,7 +63,6 @@ table {
     position: fixed;
 	overflow-wrap: anywhere;
 	padding:3%;
-	pointer-events: none
 }
 
 #playButton {
@@ -1518,8 +1519,8 @@ img {
 
 .myVideo {
 	box-shadow: rgb(88, 88, 88) 0px 0px 5px 1px;
+	width: var(--myvideo-width);
 	max-width: 800px !important;
-	max-width: min(800px,100vw) !important;
 	max-height: 100% !important;
 	height: auto !important;
 	display: block !important;
@@ -1527,6 +1528,8 @@ img {
 	position: relative !important;
 	top: 50% !important;
 	background-color: #FFF1 !important;
+	object-fit: var(--fit-style);
+	max-width: var(--myvideo-max-width) !important;
 }
 #calendarButton {
 	cursor: pointer;
@@ -3308,6 +3311,8 @@ input:checked + .slider:before {
   content: "\f05a"; }
 .la-play:before {
   content: "\f04b"; }
+.la-square:before {
+  content: "\f0c8"; }
 .la-play-circle:before {
   content: "\f144"; }
 .la.la-hdd-o:before {
