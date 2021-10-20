@@ -141,6 +141,10 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 	if (urlParams.has('cleanoutput') || urlParams.has('clean') || urlParams.has('cleanish')) {
 		session.cleanOutput = true;
 	}
+	
+	if (urlParams.has('cleanviewer') || urlParams.has('cv')) {
+		session.cleanViewer = true;
+	}
 
 	if (urlParams.has('retrytimeout')) {
 		session.retryTimeout = parseInt(urlParams.get('retrytimeout'));
@@ -507,6 +511,7 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 		document.documentElement.style.setProperty('--fit-style', 'cover');
 		document.documentElement.style.setProperty('--myvideo-max-width', '100vw');
 		document.documentElement.style.setProperty('--myvideo-width', '100vw');
+		document.documentElement.style.setProperty('--myvideo-height', '100vh');
 	} 
 
 	if (urlParams.has('record')) {
@@ -1031,8 +1036,6 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 		session.micDelay = parseInt(session.micDelay) || 0;
 		session.disableWebAudio = false;
 	}
-	
-	
 
 	if (urlParams.has('tips')){
 		getById("guestTips").style.display="flex";
@@ -2259,6 +2262,12 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 			} else {
 				getById("head1").innerHTML = '<br /><font style="color:#CCC" data-translate="please-select-which-to-share">- Please select which you wish to share</font>';
 			}
+		}
+	}
+	
+	if (session.cleanViewer){
+		if (session.view && !session.director && session.permaid===false){
+			session.cleanOutput = true;
 		}
 	}
 	

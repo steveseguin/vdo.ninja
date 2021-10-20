@@ -5283,23 +5283,36 @@ function directMigrate(ele, event, room=false) { // everyone in the room will ha
 
 	if (migrateRoom) {
 		previousRoom = migrateRoom;
-
 		var msg = {};
 		msg.request = "migrate";
 		if (session.password) {
 			return generateHash(migrateRoom + session.password + session.salt, 16).then(function(rid) {
 				var msg = {};
-				msg.request = "migrate";
-				msg.roomid = rid;
-				msg.target = ele.dataset.UUID;
-				session.sendMsg(msg); // send to everyone in the room, so they know if they are on air or not.
+				if (session.director && session.directorUUID && (session.directorUUID !==true)){
+					msg.migrate = ele.dataset.UUID;
+					msg.roomid = rid;
+					session.sendRequest(msg, session.directorUUID);
+					log(msg);
+				} else {
+					msg.request = "migrate";
+					msg.roomid = rid;
+					msg.target = ele.dataset.UUID;
+					session.sendMsg(msg); // send to everyone in the room, so they know if they are on air or not.
+				}
 			}).catch(errorlog);
 		} else {
 			var msg = {};
-			msg.request = "migrate";
-			msg.roomid = migrateRoom;
-			msg.target = ele.dataset.UUID;
-			session.sendMsg(msg); // send to everyone in the room, so they know if they are on air or not.
+			if (session.director && session.directorUUID && (session.directorUUID !==true)){
+				msg.migrate = ele.dataset.UUID;
+				msg.roomid = migrateRoom;
+				session.sendRequest(msg, session.directorUUID);
+				log(msg);
+			} else {
+				msg.request = "migrate";
+				msg.roomid = migrateRoom;
+				msg.target = ele.dataset.UUID;
+				session.sendMsg(msg); // send to everyone in the room, so they know if they are on air or not.
+			}
 		}
 	}
 }
@@ -6444,7 +6457,7 @@ session.publishIFrame = function(iframeURL){
 function outboundAudioPipeline(stream) {
 	
 	if (session.disableWebAudio) {
-		if (session.mobile){return stream;} // iOS devices can't remap video tracks, else KABOOM. Might as well do this for android also.
+		//if (session.mobile){return stream;} // iOS devices can't remap video tracks, else KABOOM. Might as well do this for android also.
 		
 		var newStream = createMediaStream();
 		stream.getTracks().forEach(function(track) { // this seems to fix a bug with macbooks. 
@@ -10860,7 +10873,8 @@ async function grabVideo(quality = 0, eleName = 'previewWebcam', selector = "sel
 					
 				});
 				
-				
+				updateRenderOutpipe();  
+				// senderAudioUpdate
 				
 				if (wasDisabled && !session.videoMuted){
 					var msg = {};
@@ -10912,7 +10926,6 @@ async function grabVideo(quality = 0, eleName = 'previewWebcam', selector = "sel
 
 				grabVideoTimer = setTimeout(function(callback3) {
 					
-					updateRenderOutpipe();
 					makeImages(true); 
 					
 					if (getById("popupSelector_constraints_loading")) {
