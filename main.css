@@ -15,7 +15,8 @@
 	--color-mode: light;
 	--button-radius: 2px;
 	--myvideo-max-width: min(800px,100vw);
-	--myvideo-width:800px;
+	--myvideo-width:unset;
+	--myvideo-height:auto;
 }
 
 * {
@@ -1522,7 +1523,7 @@ img {
 	width: var(--myvideo-width);
 	max-width: 800px !important;
 	max-height: 100% !important;
-	height: auto !important;
+	height: var(--myvideo-height) !important;
 	display: block !important;
 	margin: auto auto !important;
 	position: relative !important;
