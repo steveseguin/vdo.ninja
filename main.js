@@ -159,7 +159,7 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 	}
 
 	if (urlParams.has('nosettings') || urlParams.has('ns')) {
-		screensharebutton = false;
+		session.screensharebutton = false;
 		session.showSettings = false;
 	}
 
@@ -356,7 +356,7 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 
 	if (urlParams.has('webcam') || urlParams.has('wc') || urlParams.has('miconly')) {
 		session.webcamonly = true;
-		screensharebutton = false;
+		session.screensharebutton = false;
 		if (urlParams.has('miconly')){
 			session.videoDevice=0;
 			getById("add_camera").innerHTML = "Share your Microphone";
@@ -398,7 +398,7 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 		}
 	} else if (urlParams.has('webcam2') || urlParams.has('wc2')) {
 		session.webcamonly = true;
-		screensharebutton = false;
+		session.screensharebutton = false;
 		session.introButton = true;
 	} else if (urlParams.has('screenshare2') || urlParams.has('ss2')) {
 		session.screenshare = true;
@@ -416,7 +416,7 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 	}
 
 	if (urlParams.has('ssb')) {
-		screensharebutton = true;
+		session.screensharebutton = true;
 	}
 
 	if (urlParams.has('mute') || urlParams.has('muted') || urlParams.has('m')) {
@@ -429,6 +429,14 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 
 	if (urlParams.has('videomute') || urlParams.has('videomuted') || urlParams.has('vm')) {
 		session.videoMutedFlag = true;
+	}
+	
+	if (urlParams.has('layout')) {
+		try {
+			session.layout = JSON.parse(urlParams.has('layout'));
+		} catch(e){
+			session.layout = null
+		}
 	}
 
 
@@ -583,19 +591,6 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 
 	if (urlParams.has('cc') || urlParams.has('closedcaptions') || urlParams.has('captions')) {
 		session.closedCaptions = true;
-	}
-
-	if (session.webcamonly == true) {
-		if (session.introButton){
-			getById("container-2").className = 'column columnfade advanced'; // Hide screen share
-			getById("head3").classList.add('advanced');
-			getById("head3a").classList.add('advanced');
-		} else {
-			getById("container-2").className = 'column columnfade advanced'; // Hide screen share
-			getById("container-3").classList.add("skip-animation");
-			getById("container-3").classList.remove('pointer');
-			delayedStartupFuncs.push([previewWebcam]);
-		}
 	}
 
 	if (urlParams.has('css')){
@@ -1313,7 +1308,7 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 		getById("shareScreenGear").style.display = "none";
 		getById("dropButton").style.display = "none";
 		getById("container-2").className = 'column columnfade advanced'; // Hide screen share on mobile
-		screensharebutton = false;
+		session.screensharebutton = false;
 		screensharesupport = false;
 		
 		if (session.audioDevice!==0){
@@ -2265,6 +2260,41 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 		}
 	}
 	
+	if ((session.roomid) || (urlParams.has('roomid')) || (urlParams.has('r')) || (urlParams.has('room')) || (filename) || (session.permaid !== false)) {
+
+		var roomid = "";
+		if (filename) {
+			roomid = filename;
+		} else if (urlParams.has('room')) {
+			roomid = urlParams.get('room');
+		} else if (urlParams.has('roomid')) {
+			roomid = urlParams.get('roomid');
+		} else if (urlParams.has('r')) {
+			roomid = urlParams.get('r');
+		} else if (session.roomid) {
+			roomid = session.roomid;
+		}
+		session.roomid = sanitizeRoomName(roomid);
+	}
+	
+	if (session.webcamonly == true) {
+		if (session.introButton){
+			getById("container-2").className = 'column columnfade advanced'; // Hide screen share
+			getById("head3").classList.add('advanced');
+			getById("head3a").classList.add('advanced');
+		} else {
+			getById("container-2").className = 'column columnfade advanced'; // Hide screen share
+			getById("container-3").classList.add("skip-animation");
+			getById("container-3").classList.remove('pointer');
+			delayedStartupFuncs.push([previewWebcam]);
+		}
+	}
+	if (session.introOnClean && (session.permaid===false) && (session.roomid===false)){
+		//getById("container-2").className = 'column columnfade advanced'; // Hide screen share
+		getById("head3").classList.add('advanced');
+		getById("head3a").classList.add('advanced');
+	}
+	
 	if (session.cleanViewer){
 		if (session.view && !session.director && session.permaid===false){
 			session.cleanOutput = true;
@@ -2303,23 +2333,8 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 		}
 	}
 
-	if ((session.roomid) || (urlParams.has('roomid')) || (urlParams.has('r')) || (urlParams.has('room')) || (filename) || (session.permaid !== false)) {
-
-		var roomid = "";
-		if (filename) {
-			roomid = filename;
-		} else if (urlParams.has('room')) {
-			roomid = urlParams.get('room');
-		} else if (urlParams.has('roomid')) {
-			roomid = urlParams.get('roomid');
-		} else if (urlParams.has('r')) {
-			roomid = urlParams.get('r');
-		} else if (session.roomid) {
-			roomid = session.roomid;
-		}
-
-		session.roomid = sanitizeRoomName(roomid);
-
+	
+	if (session.roomid!==false){
 		if (!(session.cleanOutput)) {
 			if (session.roomid === "test") {
 				if (session.password === session.defaultPassword) {
@@ -2841,7 +2856,8 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 					session.obsStateSync();
 				}
 			}
-
+			
+			
 			if ("sendMessage" in e.data) { // webrtc send to viewers
 				session.sendMessage(e.data);
 			}
@@ -3055,6 +3071,13 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 					session.manual = true;
 				}
 			}
+			
+			
+			if (("scene" in e.data) && ("layout" in e.data)){
+				warnlog("changing layout request via IFRAME API");
+				issueLayout(e.data.layout, e.data.scene);
+			}
+
 
 			if (("action" in e.data) && (e.data.action!="null")) { ///////////////  reuse the Companion API
 				processMessage(e.data); // reuse the companion API

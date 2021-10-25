@@ -1,0 +1,451 @@
+<html>
+<head>
+	<title>IFRAME Example</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+	<meta content="text/html;charset=utf-8" http-equiv="Content-Type" />
+	<style>
+	body{
+		padding:0;
+		margin:0;
+		background-color: #0000;
+	}
+	iframe {
+		border:0;
+		padding:0;
+		display:block;
+		width:1280px;
+		height:720px;
+		background-color: #111;
+	}
+	#viewlink {
+		width:400px;
+	}
+	#container {
+		display:block;
+		padding:0px;
+	}
+	input{
+		padding:5px;
+		margin:5px;
+	}
+	button{
+		padding:5px;
+		margin:5px;
+	}
+	canvas{
+		padding:10px;
+		cursor:pointer;
+	}
+	.thing {
+		width: 100px;
+		height: 2em;
+		padding: 0.5em;
+		margin: 0.5em;
+		background: rgba(0,0,0,0.8);
+		color: white;
+		font-family: sans-serif;
+		cursor: grab;
+	}
+	.empty {
+		width: 100px;
+		height: 2em;
+		padding: 0.5em;
+		margin: 0.5em;
+		background: rgba(0,0,0,0.8);
+		color: white;
+		font-family: sans-serif;
+		user-select: none;
+	}
+	.col {
+		width: 130px;
+		height: 450px;
+		padding: 1em;
+		border: 1px solid;
+		border-radius: 5px;
+		position: relative;
+		float: left;
+	}
+	
+	</style>
+	<script>
+	
+	function allowDrop(ev) {
+		ev.preventDefault();
+	}
+	
+	function swapNodes(n1, n2) {
+		var p1 = n1.parentNode;
+		var p2 = n2.parentNode;
+		var i1, i2;
+
+		if ( !p1 || !p2 || p1.isEqualNode(n2) || p2.isEqualNode(n1) ) return;
+
+		for (var i = 0; i < p1.children.length; i++) {
+			if (p1.children[i].isEqualNode(n1)) {
+				i1 = i;
+			}
+		}
+		for (var i = 0; i < p2.children.length; i++) {
+			if (p2.children[i].isEqualNode(n2)) {
+				i2 = i;
+			}
+		}
+
+		if ( p1.isEqualNode(p2) && i1 < i2 ) {
+			i2++;
+		}
+		p1.insertBefore(n2, p1.children[i1]);
+		p2.insertBefore(n1, p2.children[i2]);
+	}
+
+	function drag(ev) {
+		ev.dataTransfer.setData("text", ev.target.id);
+	}
+
+	function drop(ev) {
+		ev.preventDefault();
+		var data = ev.dataTransfer.getData("text");
+		var origThing = document.getElementById(data);
+		console.log(origThing);
+		console.log(data);
+		console.log(ev);
+		  //var newThing = origThing.cloneNode(true);
+		if (ev.target.classList.contains("thing")){
+			//ev.target.parentNode.insertBefore(origThing, ev.target.nextSibling);
+			//elem.parentNode.insertBefore(elem, elem.parentNode.firstChild);
+			swapNodes( ev.target, origThing);
+			var slot = origThing.dataset.slot;
+			origThing.dataset.slot = ev.target.dataset.slot;
+			ev.target.dataset.slot = slot;
+			
+		} else if (ev.target.classList.contains("empty")){
+			ev.target.parentNode.insertBefore(origThing, ev.target.nextSibling);
+			origThing.dataset.slot = ev.target.dataset.slot;
+			ev.target.style.display = "none";
+		}
+		origThing.style.backgroundColor = ev.target.style.backgroundColor;
+		
+		
+	}
+	
+	function dropRemove(ev) {
+		ev.preventDefault();
+		var data = ev.dataTransfer.getData("text");
+		var origThing = document.getElementById(data);
+		if (origThing.dataset.slot){
+			document.querySelector(".empty[data-slot='"+origThing.dataset.slot+"']").style.display = "block";
+			delete origThing.dataset.slot;
+		}
+		origThing.style.backgroundColor = "#000";
+		if (ev.target.classList.contains("thing")){
+			ev.target.parentNode.insertBefore(origThing, ev.target.nextSibling);
+		} else {
+			ev.target.appendChild(origThing);
+		}
+		document.getElementById("col2").appendChild(document.getElementById("delete"));
+	}
+	
+	var streamIDs = [];
+	
+	function updateList(){
+		//<div id="col2" ondrop="dropRemove(event)" ondragover="allowDrop(event)">
+		//	<div class="thing" draggable="true" ondragstart="drag(event)" id="thing4">THING 4</div>	
+		//	<div class="thing" draggable="true" ondragstart="drag(event)" id="thing1">THING 1</div>	
+		//</div>
+		for (var i=0;i<streamIDs.length;i++){
+			if (!document.getElementById("sid_"+streamIDs[i])){
+				var thing = document.createElement("div");
+				thing.draggable = true;
+				thing.classList.add("thing");
+				thing.addEventListener("dragstart", drag);
+				thing.dataset.sid = streamIDs[i];
+				thing.id = "sid_"+streamIDs[i];
+				thing.innerText = streamIDs[i];
+				document.getElementById("col2").appendChild(thing);
+			}
+		}
+		
+		document.getElementById("col2").appendChild(document.getElementById("delete"));
+	}
+
+	function loadIframe(){ 
+		
+		document.getElementById("container").innerHTML = "";
+		
+		var iframe = document.createElement("iframe");
+		var iframeContainer = document.createElement("div");
+		iframe.allow = "autoplay;camera;microphone;fullscreen;picture-in-picture;display-capture;";
+
+		var promptRoom = prompt("Enter a room name to use");
+		if (promptRoom){
+			var iframesrc = "https://vdo.ninja/?transparent&cleanoutput&manual&scene=manualtestscene&room="+promptRoom;
+		} else {
+			promptRoom = "testroom123312";
+			var iframesrc = "https://vdo.ninja/?transparent&cleanoutput&manual&scene=manualtestscene&room="+promptRoom;
+		}
+		
+		function activate(){
+			console.log(this.dataset.layout);
+			var layout = JSON.parse(this.dataset.layout);
+			
+			iframe.contentWindow.postMessage({"target":"*", "remove":true}, '*');
+			
+			
+			
+			for (var i=0;i<layout.length;i++){
+			
+				var stream = document.querySelector(".thing[data-slot='"+(i+1)+"'");
+				if (!stream){continue;}
+			
+				var x = layout[i].x|| 0;
+				var y = layout[i].y || 0;
+				var w = layout[i].w || 0;
+				var h = layout[i].h || 0;
+				var cover = layout[i].cover || false;
+				
+				if (!(w && h)){continue;}
+				
+				x = x + "%";
+				y = y + "%";
+				w = w + "%";
+				h = h + "%";
+				
+				if (cover){
+					cover = "object-fit:cover;";
+				} else {
+					cover = "";
+				}
+				
+				iframe.contentWindow.postMessage({"target":stream.dataset.sid, "add":true, "settings":{"style": "width:"+w+";height:"+h+";position:absolute;left:"+x+";top:"+y+";display:block;"+cover}}, '*');
+			}
+		}
+		
+		var button = document.createElement("button");
+		button.innerHTML = "Refresh list"; 
+		button.onclick = function(){iframe.contentWindow.postMessage({"getStreamIDs":true}, '*');};
+		button.style.display = "block";
+		document.getElementById("sources").appendChild(button);
+		
+		var a = document.createElement("a");
+		a.innerHTML = "Invite Guest Link"; 
+		a.href = "https://vdo.ninja/?room="+promptRoom+"&broadcast";
+		a.target = "_blank";
+		document.getElementById("sources").appendChild(a);
+		
+		var colors = [
+			"#00AAAA",
+			"#FF0000",
+			"#0000FF",
+			"#AA00AA",
+			"#00FF00",
+			"#AAAA00"
+		];
+		
+		
+		var slots = document.getElementById("col1").children;
+		for (var i=0;i<slots.length;i++){
+			slots[i].style.backgroundColor = colors[i];
+		}
+			
+		
+		function drawLayout(layout){
+			for (var i=0;i<layout.length;i++){
+				layout[i].i = i;
+			}
+			
+			function compare( a, b ) { // sorts layout based on z-index.
+				var aa = a.z || 0;
+				var bb = b.z || 0;
+				if ( aa > bb ){
+					return 1;
+				}
+				if ( aa < bb ){
+					return -1;
+				}
+				return 0;
+			}
+			layout.sort(compare);
+			
+			
+			
+			
+			var canvas = document.createElement('canvas');
+			canvas.width="80";
+			canvas.height="45";
+			var ctx = canvas.getContext('2d');
+			document.getElementById("container").appendChild(canvas);
+			ctx.beginPath();
+			ctx.rect(0, 0, 80, 45);
+			ctx.fillStyle = "#000";
+			ctx.fill();
+			
+			for (var i=0;i<layout.length;i++){
+					
+				ctx.fillStyle = colors[layout[i].i];
+				ctx.lineWidth = 3;
+				var x = layout[i].x*0.8 || 0;
+				var y = layout[i].y*0.45 || 0;
+				var w = layout[i].w*0.8 || 0;
+				var h = layout[i].h*0.45 || 0;
+				
+				ctx.beginPath();
+				ctx.rect(x, y, w, h);
+				ctx.fill();
+			}
+			
+			canvas.dataset.layout = JSON.stringify(layout);
+			canvas.onclick = activate;
+		}
+		
+		var data = [
+			{x:0, y:0, w:100, h:100}
+		];
+		drawLayout(data);
+		
+		var data = [
+			{x:0, y:0, w:0, h:0},
+			{x:0, y:0, w:100, h:100, cover:true}
+		];
+		drawLayout(data);
+		
+		var data = [
+			{x:0, y:25, w:50, h:50, cover:true},
+			{x:50, y:25, w:50, h:50, cover:true}
+		];
+		drawLayout(data);
+		
+		
+		var data = [
+			{x:70, y:70, w:30, h:30, z:1, cover:false},
+			{x:0, y:0, w:100, h:100,z:0, cover:true}
+		];
+		drawLayout(data);
+		
+		var data = [
+			{x:0, y:0, w:100, h:100,z:0, cover:true},
+			{x:70, y:70, w:30, h:30, z:1, cover:false}
+		];
+		drawLayout(data);
+		
+		var data = [
+			{x:0, y:0, w:20, h:20, z:1, cover:false},
+			{x:0, y:0, w:100, h:100,z:0, cover:true}
+		];
+		drawLayout(data);
+		
+		var data = [
+			{x:0, y:0, w:50, h:50},
+			{x:50, y:0, w:50, h:50},
+			{x:0, y:50, w:50, h:50},
+			{x:50, y:50, w:50, h:50}
+		];
+		drawLayout(data);
+		
+		var data = [
+			{x:0, y:16.667, w:66.667, h:66.667},
+			{x:66.667, y:0, w:33.333, h:33.333},
+			{x:66.667, y:33.333, w:33.333, h:33.333},
+			{x:66.667, y:66.667, w:33.333, h:33.333}
+		];
+		drawLayout(data);
+		
+		var data = [
+			{x:66.667, y:0, w:33.333, h:33.333},
+			{x:0, y:16.667, w:66.667, h:66.667},
+			{x:66.667, y:33.333, w:33.333, h:33.333},
+			{x:66.667, y:66.667, w:33.333, h:33.333}
+		];
+		drawLayout(data);
+		
+		var data = [
+			{x:0, y:0, w:0, h:0},
+			{},
+			{x:0, y:0, w:100, h:100}
+		];
+		drawLayout(data);
+		
+		var data = [
+			{},
+			{},
+			{},
+			{x:0, y:0, w:100, h:100}
+		];
+		drawLayout(data);
+		
+		var data = [
+			{},
+			{},
+			{x:70, y:70, w:30, h:30, z:1, cover:false},
+			{x:0, y:0, w:100, h:100,z:0, cover:true}
+		];
+		drawLayout(data);
+		
+		var data = [
+			{},
+			{},
+			{x:0, y:25, w:50, h:50, cover:true},
+			{x:50, y:25, w:50, h:50, cover:true}
+		];
+		drawLayout(data);
+		
+		
+		iframe.src = iframesrc;
+		iframeContainer.appendChild(iframe);
+		document.getElementById("container").appendChild(iframeContainer);
+		
+		
+		////////////  LISTEN FOR EVENTS
+
+		var eventMethod = window.addEventListener ? "addEventListener" : "attachEvent";
+		var eventer = window[eventMethod];
+		var messageEvent = eventMethod === "attachEvent" ? "onmessage" : "message";
+
+
+		/// If you have a routing system setup, you could have just one global listener for all iframes instead.
+		
+		eventer(messageEvent, function (e) {
+			if (e.source != iframe.contentWindow){return} // reject messages send from other iframes
+			
+			
+			if ("action" in e.data){
+				var outputWindow = document.createElement("div");
+				outputWindow.innerHTML = "event: "+e.data.action+"<br />";
+				outputWindow.style.border="1px dotted black";
+				iframeContainer.appendChild(outputWindow);
+				
+				if (e.data.action === "new-view-connection"){
+					iframe.contentWindow.postMessage({"getStreamIDs":true}, '*');
+				}
+			}
+			
+			
+			if ("streamIDs" in e.data){
+				streamIDs = [];
+				for (var key in e.data.streamIDs){
+					streamIDs.push(key);
+				}
+				updateList();
+				console.log(streamIDs);
+			}
+			
+		});
+	}
+	</script>
+</head>
+<body onload="loadIframe();">
+	<div class="col" id="sources">
+		<div id="col2" ondrop="dropRemove(event)" ondragover="allowDrop(event)">
+			<div class="thing" draggable="false" id="delete" style="background-color:rgb(96 9 9);">REMOVE</div>	
+		</div>
+	</div>
+
+	<div class="col" id="col1" ondrop="drop(event)" ondragover="allowDrop(event)">
+		<div class="empty" data-slot="1">SLOT 1</div>
+		<div class="empty" data-slot="2">SLOT 2</div>
+		<div class="empty" data-slot="3">SLOT 3</div>
+		<div class="empty" data-slot="4">SLOT 4</div>
+	</div>
+	<div id="container">
+	</div>
+</body>
+</html>

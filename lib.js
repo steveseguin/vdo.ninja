@@ -12,7 +12,6 @@
 var formSubmitting = true;
 var activatedPreview = false;
 
-var screensharebutton = true;
 var screensharesupport = true;
 
 
@@ -1482,8 +1481,18 @@ function setupIncomingVideoTracking(v, UUID){  // video element.
 		});
 		v.classList.add("fadein"); // allows the video to fade in.
 	}
+
+	applyMuteState(UUID);;
+	v.dataset.usermuted = false;
 	
-	applyMuteState(UUID);
+	v.addEventListener('volumechange',function(e){
+		var muteState = checkMuteState(UUID);
+		if (this.muted && (this.muted !== muteState)){
+			this.dataset.usermuted = true;
+		} else if (!this.muted){
+			this.dataset.usermuted = false;
+		}
+	});
 	
 	setTimeout(session.processStats, 1000, UUID);
 }
@@ -1507,14 +1516,15 @@ function updateVolume(update=false){
 					setStorage("micVolume_"+hash, session.audioGain, hours=6);
 				});
 			}
-			if (session.audioGain == 0){
-				getById("header").classList.add('orange');
-				getById("head7").classList.remove('advanced');
-			} else {
-				getById("header").classList.remove('orange');
-				getById("head7").classList.add('advanced');
-			}
 		}
+		if (session.audioGain == 0){
+			getById("header").classList.add('orange');
+			getById("head7").classList.remove('advanced');
+		} else {
+			getById("header").classList.remove('orange');
+			getById("head7").classList.add('advanced');
+		}
+		
 	} else {
 		var pswd = session.password || "";
 		generateHash(session.streamID + session.roomid + pswd + session.salt, 6).then(function(hash) {
@@ -2325,15 +2335,51 @@ function updateMixerRun(e=false){  // this is the main auto-mixing code.  It's a
 				var container = vid.parentNode;
 				if (container.move){
 					clearInterval(container.move);
+					container.move = null;
 				}
 				
 				if (session.animatedMoves){
 					
-					
-					var left = Math.max(offsetx+Math.floor(((i%rw)+0)*w/rw),0); 
-					var top = Math.max(offsety+Math.floor((Math.floor(i/rw)+0)*h/rh + hi),0);
-					var width = Math.ceil(w/rw);
-					var height = Math.ceil(h/rh);
+					if ((typeof session.layout === "object") && (session.layout!==null)){
+						if (vid.dataset.sid in session.layout){
+							var left = (window.innerWidth/100*session.layout[vid.dataset.sid].x) || 0;
+							var top = (window.innerHeight/100*session.layout[vid.dataset.sid].y)  || 0;
+							var width = (window.innerWidth/100*session.layout[vid.dataset.sid].w)  || 0;
+							var height = (window.innerHeight/100*session.layout[vid.dataset.sid].h)  || 0;
+							container.style.zIndex = session.layout[vid.dataset.sid].z || 0;
+							if (session.layout[vid.dataset.sid].c){
+								vid.style.objectFit = "cover";
+							} else {
+								vid.style.objectFit = "contain";
+							}
+						} else {
+							container.style.zIndex = 0;
+							if (session.cover){
+								vid.style.objectFit = "cover";
+							} else {
+								vid.style.objectFit = "contain";
+							}
+							container.style.width="0";
+							container.style.height="0";
+							session.requestRateLimit(session.hiddenSceneViewBitrate, i, false); // it's added already, so we know it needs sound.  But lets d
+							return;
+						}
+					} else {
+						container.style.zIndex = 0;
+						var left = Math.max(offsetx+Math.floor(((i%rw)+0)*w/rw),0); 
+						var top = Math.max(offsety+Math.floor((Math.floor(i/rw)+0)*h/rh + hi),0);
+						var width = Math.ceil(w/rw);
+						var height = Math.ceil(h/rh);
+						
+						if (session.layout===null){ // if using layouts, layouts should never be false, but NULL to indicate auto mixing.
+							container.style.zIndex = 0;
+							if (session.cover){
+								vid.style.objectFit = "cover";
+							} else {
+								vid.style.objectFit = "contain";
+							}
+						}
+					}
 					
 					
 					container.tleft = left; 
@@ -2346,8 +2392,7 @@ function updateMixerRun(e=false){  // this is the main auto-mixing code.  It's a
 					container.move = setInterval(function(CCC){
 						try{
 							
-							if (!CCC){
-								return;}
+							if (!CCC){return;}
 							var ww = (parseInt(CCC.style.width) - CCC.twidth);
 							var hh = (parseInt(CCC.style.height) - CCC.theight);
 							var tt = (parseInt(CCC.style.top) - CCC.ttop);
@@ -2431,6 +2476,42 @@ function updateMixerRun(e=false){  // this is the main auto-mixing code.  It's a
 					container.style.height = Math.ceil(h/rh)+"px";
 				}
 				
+			} else if ((typeof session.layout === "object") && (session.layout!==null)){ //////////////////
+				
+				if (vid.dataset.sid in session.layout){
+					
+					var container = document.createElement("div");
+					container.style.position = "absolute";
+					container.style.display = "flex";
+					container.style.alignItems = "center";
+
+					
+					
+					var left = (window.innerWidth/100*session.layout[vid.dataset.sid].x) || 0;
+					var top = (window.innerHeight/100*session.layout[vid.dataset.sid].y)  || 0;
+					var width = (window.innerWidth/100*session.layout[vid.dataset.sid].w)  || 0;
+					var height = (window.innerHeight/100*session.layout[vid.dataset.sid].h)  || 0;
+					
+					container.style.left = left+"px";
+					container.style.top  = top+"px";
+					container.style.width = width+"px";
+					container.style.height = height+"px";
+					
+					container.style.zIndex = session.layout[vid.dataset.sid].z || 0;
+					if (session.layout[vid.dataset.sid].c){
+						vid.style.objectFit = "cover";
+					} else {
+						vid.style.objectFit = "contain";
+					}
+				} else {
+					if (session.cover){
+						vid.style.objectFit = "cover";
+					} else {
+						vid.style.objectFit = "contain";
+					}
+					session.requestRateLimit(session.hiddenSceneViewBitrate, i, false); // it's added already, so we know it needs sound.  But lets d
+					return;
+				}
 			} else {
 				var container = document.createElement("div");
 				container.style.position = "absolute";
@@ -2441,6 +2522,15 @@ function updateMixerRun(e=false){  // this is the main auto-mixing code.  It's a
 				container.style.top  = offsety+Math.floor((Math.floor(i/rw)+0)*h/rh + hi)+"px";
 				container.style.width = Math.ceil(w/rw)+"px";
 				container.style.height = Math.ceil(h/rh)+"px";
+				
+				if (session.layout===null){
+					container.style.zIndex = 0;
+					if (session.cover){
+						vid.style.objectFit = "cover";
+					} else {
+						vid.style.objectFit = "contain";
+					}
+				}
 			}
 			
 			try {
@@ -3039,7 +3129,7 @@ eventer(messageEvent, function(e) { // this listens for child IFRAMES.
 					session.screenShareElement.parentNode.removeChild(session.screenShareElement);
 					session.screenShareElement = false;
 				
-	updateMixer();
+					updateMixer();
 					getById("screenshare2button").classList.add("float");
 					getById("screenshare2button").classList.remove("float2");
 				}
@@ -5412,6 +5502,40 @@ function directEnable(ele, event,  director=false) { // A directing room only is
 	}
 }
 
+
+function issueLayout(layout=false, scene=false) { // A directing room only is controlled by the Director, with the exception of MUTE.
+	log("issueLayout()");
+	var msg = {};
+	msg.action = "layout";
+	msg.value = layout;
+	
+	/* session.layout = {
+		"stevetestA": {
+			x:0,
+			y:0,
+			w:40,
+			h:40,
+			z:0,
+			c:false
+			
+		},
+		"stevetestB": {
+			x:50,
+			y:50,
+			w:40,
+			h:40,
+			z:1,
+			c:true
+		}
+	}; */
+	scene = scene+"";
+	for (var uuid in session.pcs){
+		if (session.pcs[uuid].scene===scene){
+			session.sendMessage(msg, uuid);
+		}
+	}
+}
+
 var previousURL = "";
 var stillNeedURL = true;
 var reloadCancelled = false;
@@ -5800,9 +5924,16 @@ function applyMuteState(UUID){ // this is the mute state of PLAYBACK audio; not 
 	if (!(UUID in session.rpcs)){return;}
 	var muteOutcome = session.rpcs[UUID].mutedState || session.rpcs[UUID].mutedStateMixer || session.rpcs[UUID].mutedStateScene || session.speakerMuted;
 	if (session.rpcs[UUID].videoElement){
+		if (session.rpcs[UUID].videoElement.dataset.usermuted){return;}
 		session.rpcs[UUID].videoElement.muted = muteOutcome;
 	}
 	// session.scene
+	return muteOutcome;
+}
+
+function checkMuteState(UUID){ // this is the mute state of PLAYBACK audio; not the microphone or outbound.
+	if (!(UUID in session.rpcs)){return false;}
+	var muteOutcome = session.rpcs[UUID].mutedState || session.rpcs[UUID].mutedStateMixer || session.rpcs[UUID].mutedStateScene || session.speakerMuted;
 	return muteOutcome;
 }
 
@@ -6079,7 +6210,7 @@ function publishScreen() {
 			if (session.recordLocal !== false) {
 				getById("recordLocalbutton").className = "float";
 			}
-			if (screensharebutton) {
+			if (session.screensharebutton) {
 				getById("screensharebutton").className = "float2";
 			}
 			getById("controlButtons").style.display = "flex";
@@ -6211,7 +6342,7 @@ function publishWebcam(btn = false) {
 		if (session.recordLocal !== false) {
 			getById("recordLocalbutton").className = "float";
 		}
-		if (screensharebutton) {
+		if (session.screensharebutton) {
 			if (session.roomid) {
 				getById("screenshare2button").className = "float";
 				getById("screensharebutton").className = "float advanced";
@@ -6780,14 +6911,14 @@ function audioMeter(mediaStreamSource, audioContext) {
 					session.muted_activeSpeaker=true;
 					session.speakerMuted=true;
 					clearTimeout(timer);
-					toggleSpeakerMute(true);
+					toggleSpeakerMute(true);  // okay, sicne this is quietOthers
 				}
 			} else if (session.muted_activeSpeaker==true){
 				session.speakerMuted=false;
 				session.muted_activeSpeaker=false;
 				session.activelySpeaking=false;
 				clearTimeout(timer);
-				timer = setTimeout(function(){toggleSpeakerMute(true);},250);
+				timer = setTimeout(function(){toggleSpeakerMute(true);},250);  // okay, sicne this is quietOthers
 			}
 		}// else if (session.activeSpeaker){
 		//	if (total>10){
@@ -7029,12 +7160,12 @@ function activeSpeaker(border=false) {
 			if (session.muted_activeSpeaker==false){
 				session.muted_activeSpeaker=true;
 				session.speakerMuted=true;
-				toggleSpeakerMute(true);
+				toggleSpeakerMute(true);  // okay, sicne this is quietOthers
 			}
 		} else if (session.muted_activeSpeaker==true){
 			session.speakerMuted=false;
 			session.muted_activeSpeaker=false;
-			toggleSpeakerMute(true);
+			toggleSpeakerMute(true);  // okay, sicne this is quietOthers
 		}
 	}
 	
@@ -7345,7 +7476,7 @@ function createRoomCallback(passAdd, passAdd2) {
 
 	//getById("mutespeakerbutton").style.display = null;
 	session.speakerMuted = true; // the director will start with audio playback muted.
-	toggleSpeakerMute(true);
+	toggleSpeakerMute(true); // okay since only run on start
 
 
 	if (session.cleanDirector == false && session.cleanOutput==false) {
