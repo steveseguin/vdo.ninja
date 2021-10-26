@@ -795,8 +795,6 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 		}
 	}
 
-	
-	
 
 	if (urlParams.has('pie')){
 		session.customWSS = urlParams.get('pie') || false; // If session.customWSS == true, then there is no need to set parameters via URL
@@ -2293,6 +2291,11 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 		//getById("container-2").className = 'column columnfade advanced'; // Hide screen share
 		getById("head3").classList.add('advanced');
 		getById("head3a").classList.add('advanced');
+	} else if (session.introOnClean){
+		getById("container-2").className = 'column columnfade advanced'; // Hide screen share
+		getById("container-3").classList.add("skip-animation");
+		getById("container-3").classList.remove('pointer');
+		delayedStartupFuncs.push([previewWebcam]);
 	}
 	
 	if (session.cleanViewer){
