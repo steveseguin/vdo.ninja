@@ -2291,7 +2291,7 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 		//getById("container-2").className = 'column columnfade advanced'; // Hide screen share
 		getById("head3").classList.add('advanced');
 		getById("head3a").classList.add('advanced');
-	} else if (session.introOnClean){
+	} else if (session.introOnClean && (session.scene===false) && ((session.permaid!==false || session.roomid!==false))){
 		getById("container-2").className = 'column columnfade advanced'; // Hide screen share
 		getById("container-3").classList.add("skip-animation");
 		getById("container-3").classList.remove('pointer');
