@@ -1483,14 +1483,15 @@ function setupIncomingVideoTracking(v, UUID){  // video element.
 	}
 
 	applyMuteState(UUID);;
-	v.dataset.usermuted = false;
+	v.usermuted = false;
 	
 	v.addEventListener('volumechange',function(e){
+		console.warn("volume changed");
 		var muteState = checkMuteState(UUID);
 		if (this.muted && (this.muted !== muteState)){
-			this.dataset.usermuted = true;
+			this.usermuted = true;
 		} else if (!this.muted){
-			this.dataset.usermuted = false;
+			this.usermuted = false;
 		}
 	});
 	
@@ -1914,10 +1915,13 @@ function updateMixerRun(e=false){  // this is the main auto-mixing code.  It's a
 					//	mediaPool_invisible.push(session.rpcs[i].videoElement); // include audio as hidden track; 
 					}
 				
-					if (session.rpcs[i].videoMuted){
-						continue;
-					} else if (session.rpcs[i].directorVideoMuted){
-						continue;
+					if (session.rpcs[i].videoMuted || session.rpcs[i].directorVideoMuted){
+						if (session.style==4){
+							session.rpcs[i].opacityMuted = "0";
+							session.rpcs[i].videoElement.style.opacity = "0";
+						} else {
+							continue;
+						}
 					}
 				
 					if (session.rpcs[i].order!==false){
@@ -1937,8 +1941,10 @@ function updateMixerRun(e=false){  // this is the main auto-mixing code.  It's a
 				if (session.rpcs[i].videoElement){ // remote feeds
 				
 					//session.rpcs[i].targetBandwidth = -1;
-					if (session.rpcs[i].videoElement.style.opacity==="0"){
-						continue;
+					if (session.style!==4){
+						if (session.rpcs[i].videoElement.style.opacity==="0"){
+							continue;
+						}
 					}
 								
 					try{
@@ -1948,8 +1954,9 @@ function updateMixerRun(e=false){  // this is the main auto-mixing code.  It's a
 					if (session.directorList.indexOf(session.rpcs[i].UUID)>=0){  // director is never audio-only.  Video if need, yes, but not visualized-audio.
 						if (session.rpcs[i].videoElement.srcObject && session.rpcs[i].videoElement.srcObject.getVideoTracks().length==0){
 							//if (session.style==1){ //  avatars and waveforms might be better done elsewhere? as a canvas effect even?
-							continue;
-							//}
+							if (session.style!==4){
+								continue;
+							}
 						}
 					} else if (session.style==2){
 						if (session.rpcs[i].videoElement.srcObject && session.rpcs[i].videoElement.srcObject.getVideoTracks().length==0){
@@ -1976,16 +1983,41 @@ function updateMixerRun(e=false){  // this is the main auto-mixing code.  It's a
 						}
 					} else if (session.scene!==false){
 						if (session.rpcs[i].videoElement.srcObject && session.rpcs[i].videoElement.srcObject.getVideoTracks().length==0){ // unless style==2, then scenes don't show audio.
-							//if (session.style==1){ //  avatars and waveforms might be better done elsewhere? as a canvas effect even?
-							continue;
-							//}
+							if (session.style!==4){
+								continue;
+							}
 						}
 					}
 					
-					if (session.rpcs[i].videoMuted){
-						continue;
-					} else if (session.rpcs[i].directorVideoMuted){
-						continue;
+					if (session.style!==4){
+						session.rpcs[i].opacityMuted = "1";
+						if (session.rpcs[i].opacityDisconnect=="1"){
+							if (session.rpcs[i].videoElement){
+								session.rpcs[i].videoElement.style.opacity = "1";
+							}
+						}
+						if (session.rpcs[i].videoMuted){
+							continue;
+						} else if (session.rpcs[i].directorVideoMuted){
+							continue;
+						}
+					} else if (session.rpcs[i].videoElement.srcObject && session.rpcs[i].videoElement.srcObject.getVideoTracks().length){
+						session.rpcs[i].opacityMuted = "1";
+						if (session.rpcs[i].opacityDisconnect=="1"){
+							if (session.rpcs[i].videoElement){
+								session.rpcs[i].videoElement.style.opacity = "1";
+							}
+						}
+					} else if (!session.rpcs[i].videoMuted && !session.rpcs[i].directorVideoMuted){
+						session.rpcs[i].opacityMuted = "1";
+						if (session.rpcs[i].opacityDisconnect=="1"){
+							if (session.rpcs[i].videoElement){
+								session.rpcs[i].videoElement.style.opacity = "1";
+							}
+						}
+					} else {
+						session.rpcs[i].opacityMuted = "0";
+						session.rpcs[i].videoElement.style.opacity = "0"; // style = 4
 					}
 					
 					if (session.scene!==false){
@@ -4919,7 +4951,7 @@ function toggleSpeakerMute(apply = false) { // TODO: I need to have this be MUTE
 
 	for (var UUID in session.rpcs) {
 		applyMuteState(UUID);
-		postMessageIframe(session.rpcs[UUID].iframeEle, {"mute":session.speakerMuted});
+		postMessageIframe(session.rpcs[UUID].iframeEle, {"mute":session.speakerMuted}); 
 	}
 	
 	
@@ -5921,10 +5953,10 @@ function directVolume(ele) { // NOT USED ANYMORE
 }
 
 function applyMuteState(UUID){ // this is the mute state of PLAYBACK audio; not the microphone or outbound.
-	if (!(UUID in session.rpcs)){return;}
+	if (!(UUID in session.rpcs)){return "UUID not found";}
 	var muteOutcome = session.rpcs[UUID].mutedState || session.rpcs[UUID].mutedStateMixer || session.rpcs[UUID].mutedStateScene || session.speakerMuted;
 	if (session.rpcs[UUID].videoElement){
-		if (session.rpcs[UUID].videoElement.dataset.usermuted){return;}
+		if (session.rpcs[UUID].videoElement && session.rpcs[UUID].videoElement.usermuted===true){return "usermuted true";}
 		session.rpcs[UUID].videoElement.muted = muteOutcome;
 	}
 	// session.scene
