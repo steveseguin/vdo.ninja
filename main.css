@@ -2989,6 +2989,7 @@ input:checked + .slider:before {
 	z-index:31;
 	min-width:500px;
 	max-width:90%;
+	overflow: hidden;
 	overflow-wrap: break-word;
 }
 
