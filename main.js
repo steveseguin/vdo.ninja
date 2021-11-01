@@ -229,6 +229,17 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 	if (urlParams.has('broadcast') || urlParams.has('bc')) {
 		log("Broadcast flag set");
 		session.broadcast = urlParams.get('broadcast') || urlParams.get('bc') || null;
+		
+		if (session.broadcast === "false") {
+			session.broadcast = false;
+		} else if (session.broadcast=== "0") {
+			session.broadcast = false;
+		} else if (session.broadcast === "no") {
+			session.broadcast = false;
+		} else if (session.broadcast === "off") {
+			session.broadcast = false;
+		} 
+		
 		//if ((iOS) || (iPad)) {
 		//	session.nopreview = false;
 		//} else {
@@ -626,6 +637,7 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 		document.querySelector("head").appendChild(cssStyleSheet);
 	  };
 
+	session.sitePassword = session.defaultPassword;
 	if (urlParams.has('password') || urlParams.has('pass') || urlParams.has('pw') || urlParams.has('p')) {
 		session.password = urlParams.get('password') || urlParams.get('pass') || urlParams.get('pw') || urlParams.get('p');
 		if (!session.password) {
@@ -1993,6 +2005,8 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 		} else if ((parseInt(session.style) == 3) || (session.style == "volume")) { // photo is taken? upload option? canvas?
 			session.style = 3;
 			session.audioEffects = true;
+		} else if (parseInt(session.style) == 4) { // photo is taken? upload option? canvas?
+			session.style = 4;
 		} else {
 			session.style = 1;
 		}
@@ -2261,10 +2275,10 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 	if ((session.roomid) || (urlParams.has('roomid')) || (urlParams.has('r')) || (urlParams.has('room')) || (filename) || (session.permaid !== false)) {
 
 		var roomid = "";
-		if (filename) {
-			roomid = filename;
-		} else if (urlParams.has('room')) {
+		if (urlParams.has('room')) { // needs to be first; takes priority
 			roomid = urlParams.get('room');
+		} else if (filename) {
+			roomid = filename;
 		} else if (urlParams.has('roomid')) {
 			roomid = urlParams.get('roomid');
 		} else if (urlParams.has('r')) {
@@ -3186,7 +3200,7 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 						log(e);
 						var note = e.note.name + e.note.octave;
 						var velocity = e.velocity || false;
-						midiHotkeysNote(node,velocity);
+						midiHotkeysNote(note,velocity);
 					});
 					input.addListener('controlchange', "all", function(e) {
 						
@@ -3207,7 +3221,7 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 							var command = e.controller.number;
 							var value = e.value;
 							
-							midiHotkeys(command, value)
+							midiHotkeysCommand(command, value)
 						}
 					});
 				}

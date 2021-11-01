@@ -56,7 +56,7 @@ var miscTranslations = {
 	"allowed-chars" : "Allowed chars",
 	"transfer" : "transfer",
 	"armed" : "armed",
-	"transfer-guest-to-room" : "Transfer guests to room:\n\n(Please note rooms must share the same password)",
+	"transfer-guest-to-room" : "Transfer guests to room:\n\n(Please note: rooms must share the same password)",
 	"transfer-guest-to-url" :"Transfer guests to new website URL.\n\n(Guests will be prompted to accept)",
 	"change-url" : "change URL",
 	"mute-in-scene" : "mute in scene",
@@ -70,7 +70,9 @@ var miscTranslations = {
 	"unhide" : "unhide guest",
 	"hide-guest": "hide guest",
 	"confirm-disconnect-users": "Are you sure you wish to disconnect these users?",
-	"confirm-disconnect-user": "Are you sure you wish to disconnect this user?"
+	"confirm-disconnect-user": "Are you sure you wish to disconnect this user?",
+	"enter-new-codirector-password": "Enter a co-director password to use",
+	"control-room-co-director": "Control Room: Co-Director"
 };
 
 // function log(msg){ // uncomment to enable logging.
@@ -348,7 +350,7 @@ async function delay(ms) {
 }
 
 var Prompts = {};
-async function promptAlt(inputText, block=false, asterix=false){
+async function promptAlt(inputText, block=false, asterix=false, value=false){
 	var result = null;
 	if (session.beepToNotify){
 		playtone();
@@ -373,12 +375,14 @@ async function promptAlt(inputText, block=false, asterix=false){
 		if (asterix){
 			type = "password";
 		}
+		
+		
 		modalTemplate =
 			`<div id="modal_${promptID}" class="promptModal" style="z-index:${zindex + 2}">	
 				<div class="promptModalInner">
 					<span id="close_${promptID}" class='modalClose' data-pid="${promptID}">×</span>
 					<span class='promptModalMessage'>${inputText}</span>
-					<input id="input_${promptID}" data-pid="${promptID}"  type="${type}" class="largeTextEntry"  />
+					<input id="input_${promptID}" data-pid="${promptID}"  type="${type}" class="largeTextEntry" />
 					<button id="submit_${promptID}" data-pid="${promptID}" style="width:120px; background-color: #fff; position: relative;border: 1px solid #999; margin: 0 0 0 55px;" data-translate='ok'>✔ OK</button>
 					<button id="cancel_${promptID}" data-pid="${promptID}" style="width:120px; background-color: #fff; position: relative;border: 1px solid #999; margin: 0;" data-translate='cancel'>❌ Cancel</button>
 				</div>
@@ -389,6 +393,10 @@ async function promptAlt(inputText, block=false, asterix=false){
 		document.body.insertAdjacentHTML("beforeend", modalTemplate); // Insert modal at body end
 		
 		document.getElementById("input_"+promptID).focus();
+		
+		if (value!==false){
+			document.getElementById("input_"+promptID).value = value;
+		}
 		
 		document.getElementById("input_"+promptID).addEventListener("keyup", function(event) {
 			if (event.key === "Enter") {
@@ -406,6 +414,102 @@ async function promptAlt(inputText, block=false, asterix=false){
 			document.getElementById("modal_"+pid).remove();
 			document.getElementById("modalBackdrop_"+pid).remove();
 			Prompts[pid].resolve();
+		});
+
+		document.getElementById("cancel_"+promptID).addEventListener("click", function(event){
+			var pid = event.target.dataset.pid;
+			document.getElementById("modal_"+pid).remove();
+			document.getElementById("modalBackdrop_"+pid).remove();
+			Prompts[pid].resolve();
+		});
+
+		document.getElementById("close_"+promptID).addEventListener("click", function(event){
+			var pid = event.target.dataset.pid;
+			document.getElementById("modal_"+pid).remove();
+			document.getElementById("modalBackdrop_"+pid).remove();
+			Prompts[pid].resolve();
+		});
+
+		getById("modal_"+promptID).addEventListener("click", function(e) {
+			e.stopPropagation();
+			return false;
+		});
+		return;
+	});
+	return result;
+}
+
+async function promptTransfer(value=null, bcmode = null, updateurl = null){
+	var result = {room:null};
+	if (session.beepToNotify){
+		playtone();
+	}
+	await new Promise((resolve, reject) => {
+		var promptID = "pid_"+Math.random().toString(36).substr(2, 9);
+		Prompts[promptID] = {};
+		Prompts[promptID].resolve = resolve;
+		Prompts[promptID].reject = reject;
+		
+		var zindex = 30 + document.querySelectorAll('.promptModal').length;
+		var backdropClass = "modalBackdrop";
+	
+		var inputText = "<font style='font-size:1.2em'>"+(miscTranslations["transfer-guest-to-room"].replace("\n","</font><br /><font>"))+"</font>";
+		inputText = inputText.replace(/\n/g,"<br />");
+		
+		modalTemplate =
+			`<div id="modal_${promptID}" class="promptModal" style="z-index:${zindex + 2}">	
+				<div class="promptModalInner">
+					<span id="close_${promptID}" class='modalClose' data-pid="${promptID}">×</span>
+					<span class='promptModalMessage'>${inputText}</span>
+					<input id="input_${promptID}" data-pid="${promptID}"  type="text" class="largeTextEntry" />
+					<span class='promptModalLabel'><input id="private_${promptID}" data-pid="${promptID}"  type="checkbox" title="Note: this won't work fully if using obfuscated links" /> Allow the guest to rejoin the transfer room on their own</span>
+					<span class='promptModalLabel'><input id="broadcast_${promptID}" data-pid="${promptID}"  type="checkbox" /> Guest will arrive in the new room in <i>broadcast</i> mode</span>
+					<button id="submit_${promptID}" data-pid="${promptID}" style="width:120px; background-color: #fff; position: relative;border: 1px solid #999; margin: 0 0 0 55px;" data-translate='ok'>✔ OK</button>
+					<button id="cancel_${promptID}" data-pid="${promptID}" style="width:120px; background-color: #fff; position: relative;border: 1px solid #999; margin: 0;" data-translate='cancel'>❌ Cancel</button>
+				</div>
+			</div>
+			<div id="modalBackdrop_${promptID}" class="${backdropClass}" style="z-index:${zindex + 1}"></div>`;
+
+
+		document.body.insertAdjacentHTML("beforeend", modalTemplate); // Insert modal at body end
+		
+		document.getElementById("input_"+promptID).focus();
+		
+		if (value!==null){
+			document.getElementById("input_"+promptID).value = value;
+		}
+		
+		if (bcmode!==null){
+			document.getElementById("broadcast_"+promptID).checked = bcmode;
+		}
+		
+		if (updateurl!==null){
+			document.getElementById("private_"+promptID).checked = updateurl;
+		}
+		
+		document.getElementById("input_"+promptID).addEventListener("keyup", function(event) {
+			if (event.key === "Enter") {
+				var pid = event.target.dataset.pid;
+				var room = document.getElementById("input_"+pid).value;
+				var updateurl = document.getElementById("private_"+pid).checked;
+				var broadcast = document.getElementById("broadcast_"+pid).checked;
+				document.getElementById("modal_"+pid).remove();
+				document.getElementById("modalBackdrop_"+pid).remove();
+				Prompts[pid].resolve();
+				result = {roomid:room, updateurl:updateurl, broadcast:broadcast};
+			}
+		});
+
+		document.getElementById("submit_"+promptID).addEventListener("click", function(event){
+			var pid = event.target.dataset.pid;
+			var room = document.getElementById("input_"+pid).value;
+			var updateurl = document.getElementById("private_"+pid).checked;
+			var broadcast = document.getElementById("broadcast_"+pid).checked;
+			
+			document.getElementById("modal_"+pid).remove();
+			document.getElementById("modalBackdrop_"+pid).remove();
+			Prompts[pid].resolve();
+			result = {roomid:room, updateurl:updateurl, broadcast:broadcast};
 		});
 
 		document.getElementById("cancel_"+promptID).addEventListener("click", function(event){
@@ -1788,7 +1892,7 @@ function updateMixerRun(e=false){  // this is the main auto-mixing code.  It's a
 				}
 			}
 			
-			if (session.broadcast!==false){
+			if (session.broadcast !==false){
 				if (roomQuality>0){
 					if (session.nopreview!==false){
 						mediaPool = []; // we don't want to show our self-preview if in broadcast mode and there is a director.
@@ -3217,7 +3321,7 @@ function pokeIframeAPI(action, value = null, UUID = null, SID=null) {
 
 
 
-function jumptoroom(event = null) {
+async function jumptoroom(event = null) {
 
 	if (event) {
 		if (event.which !== 13) {
@@ -3232,7 +3336,7 @@ function jumptoroom(event = null) {
 
 		var passStr = "";
 		window.focus();
-		var pass = prompt("Enter a password if provided, otherwise just click cancel"); //sanitizePassword(session.password);
+		var pass = await promptAlt("Enter a password if provided, otherwise just click cancel", false); //sanitizePassword(session.password);
 		if (pass && pass.length) {
 			session.password = sanitizePassword(pass);
 			passStr = "&password=" + session.password;
@@ -5347,8 +5451,9 @@ var previousRoom = "";
 var stillNeedRoom = true;
 var transferCancelled = false;
 var armedTransfer = false;
+var transferSettings = false;
 
-function directMigrate(ele, event, room=false) { // everyone in the room will hangup this guest also?  I like that idea.  What about the STREAM ID?  I suppose we don't kick out if the viewID matches.
+async function directMigrate(ele, event, room=false) { // everyone in the room will hangup this guest also?  I like that idea.  What about the STREAM ID?  I suppose we don't kick out if the viewID matches.
 	log("directMigrate");
 	if (room){
 		var migrateRoom = room;
@@ -5382,8 +5487,25 @@ function directMigrate(ele, event, room=false) { // everyone in the room will ha
 		if (armedTransfer!==false && previousRoom!==""){
 			var migrateRoom = sanitizeRoomName(previousRoom);
 		} else {
+			var broadcastMode = null;
+			if (transferSettings && ("broadcast" in transferSettings)){
+				broadcastMode = transferSettings.broadcast;
+			} else if (session.rpcs[ele.dataset.UUID] && session.rpcs[ele.dataset.UUID].stats.info && ("broadcast_mode" in session.rpcs[ele.dataset.UUID].stats.info)){
+				broadcastMode = session.rpcs[ele.dataset.UUID].stats.info.broadcast_mode;
+			}
+			
+			var updateurl = null;
+			if (transferSettings && ("updateurl" in transferSettings)){
+				updateurl = transferSettings.updateurl;
+			} 
 			window.focus();
-			var migrateRoom = prompt(miscTranslations["transfer-guest-to-room"], previousRoom);
+			
+			
+			var response = await promptTransfer(previousRoom, broadcastMode, updateurl);
+			var migrateRoom = response.roomid;
+			if (migrateRoom !== null){
+				transferSettings = response;
+			}
 		}
 		stillNeedRoom = true;
 		if (migrateRoom === null) { // user cancelled
@@ -5405,39 +5527,10 @@ function directMigrate(ele, event, room=false) { // everyone in the room will ha
 
 	if (migrateRoom) {
 		previousRoom = migrateRoom;
-		var msg = {};
-		msg.request = "migrate";
-		if (session.password) {
-			return generateHash(migrateRoom + session.password + session.salt, 16).then(function(rid) {
-				var msg = {};
-				if (session.director && session.directorUUID && (session.directorUUID !==true)){
-					msg.migrate = ele.dataset.UUID;
-					msg.roomid = rid;
-					session.sendRequest(msg, session.directorUUID);
-					log(msg);
-				} else {
-					msg.request = "migrate";
-					msg.roomid = rid;
-					msg.target = ele.dataset.UUID;
-					session.sendMsg(msg); // send to everyone in the room, so they know if they are on air or not.
-				}
-			}).catch(errorlog);
-		} else {
-			var msg = {};
-			if (session.director && session.directorUUID && (session.directorUUID !==true)){
-				msg.migrate = ele.dataset.UUID;
-				msg.roomid = migrateRoom;
-				session.sendRequest(msg, session.directorUUID);
-				log(msg);
-			} else {
-				msg.request = "migrate";
-				msg.roomid = migrateRoom;
-				msg.target = ele.dataset.UUID;
-				session.sendMsg(msg); // send to everyone in the room, so they know if they are on air or not.
-			}
-		}
+		session.directMigrateIssue(migrateRoom, transferSettings, ele.dataset.UUID);
 	}
 }
+
 
 var stillNeedHangupTarget = 1;
 function directHangup(ele, event) { // everyone in the room will hangup this guest?  I like that idea.
@@ -5573,7 +5666,7 @@ var stillNeedURL = true;
 var reloadCancelled = false;
 var armedReload = false;
 
-function directPageReload(ele, event) {
+async function directPageReload(ele, event) {
 	log("URL Page reload");
 	if (event === false) {
 		if (previousURL === null) { // user cancelled in previous callback
@@ -5603,7 +5696,7 @@ function directPageReload(ele, event) {
 		reloadURL = previousURL;
 	} else {
 		window.focus();
-		var reloadURL = prompt(miscTranslations["transfer-guest-to-url"], previousURL);
+		var reloadURL = await promptAlt(miscTranslations["transfer-guest-to-url"], false, value=previousURL);
 		stillNeedURL = true;
 		if (reloadURL === null) { // user cancelled
 			ele.innerHTML = '<i class="las la-sync"></i> <span data-translate="change-url">change URL</span>';
@@ -5634,13 +5727,13 @@ function directPageReload(ele, event) {
 
 
 
-function directTimer(ele,  event=false) { // A directing room only is controlled by the Director, with the exception of MUTE.
+async function directTimer(ele,  event=false) { // A directing room only is controlled by the Director, with the exception of MUTE.
 	log("directTimer");
 	if (!ele.dataset.UUID){return;}
 	var msg = {};
 	if (!event || (!((event.ctrlKey) || (event.metaKey)))) {
 		if (ele.dataset.value == 0 || ele.dataset.value == 2) {
-			var getTime = prompt("Time in seconds to count down", parseInt(getById("overlayClockContainer").dataset.initial));
+			var getTime = await promptAlt("Time in seconds to count down", false, value=parseInt(getById("overlayClockContainer").dataset.initial));
 			if (!getTime){return;}
 			getById("overlayClockContainer").dataset.initial = parseInt(getTime) || 600;
 			ele.dataset.value = 1;
@@ -6644,6 +6737,7 @@ function outboundAudioPipeline(stream) {
 			webAudio.analyser = false;
 			webAudio.gainNode = false;
 			webAudio.splitter = false;
+			webAudio.subGainNodes = false;
 
 			webAudio.lowEQ = false;
 			webAudio.midEQ = false;
@@ -6666,6 +6760,7 @@ function outboundAudioPipeline(stream) {
 			webAudio.audioContext = audioContext;
 			webAudio.destination = audioContext.createMediaStreamDestination();
 			
+			
 			if (tracks.length>1){ // tries to 
 				try {
 					webAudio.mediaStreamSource = createMediaStream();
@@ -6673,26 +6768,37 @@ function outboundAudioPipeline(stream) {
 					if (session.stereo===false){
 						maxChannelCount = 1;
 					}
+					
+					webAudio.subGainNodes = {};//
+					
 					var merger = audioContext.createChannelMerger(maxChannelCount);
 					for (var i=0;i<tracks.length;i++){
-						var tempStream = createMediaStream();
-						tempStream.addTrack(tracks[i]);
-						trackStream = audioContext.createMediaStreamSource(tempStream);
-						if (maxChannelCount==2){
-							var splitter = audioContext.createChannelSplitter(2);
-							trackStream.connect(splitter);
-							splitter.connect(merger, 0, 0);
-							try{
-								trackStream.connect(merger, 1, 1);
-							} catch(e){
-								try {
-									trackStream.connect(merger, 0, 1); // hack.
-								} catch(e){errorlog(e);}
+						try {
+							var tempStream = createMediaStream();
+							tempStream.addTrack(tracks[i]);
+							trackStream = audioContext.createMediaStreamSource(tempStream);
+							
+							webAudio.subGainNodes[tracks[i].id] = audioContext.createGain();
+							trackStream.connect(webAudio.subGainNodes[tracks[i].id]);
+							
+							if (maxChannelCount==2){
+								var splitter = audioContext.createChannelSplitter(2);
+								webAudio.subGainNodes[tracks[i].id].connect(splitter);
+								splitter.connect(merger, 0, 0);
+								try{
+									splitter.connect(merger, 1, 1);
+								} catch(e){
+									errorlog(e);
+									try {
+										splitter.connect(merger, 0, 1); // hack.
+									} catch(e){errorlog(e);}
+								}
+							} else {
+								webAudio.subGainNodes[tracks[i].id].connect(merger, 0, 0);
 							}
-						} else {
-							trackStream.connect(merger, 0, 0);
-						}
+						} catch(e){errorlog(e);}
 					}
+					
 					webAudio.gainNode = audioGainNode(merger, audioContext);
 				} catch(e){
 					webAudio.mediaStreamSource = audioContext.createMediaStreamSource(stream);
@@ -6892,6 +6998,43 @@ function changeHighEQ(highEQ, deviceid=null) {
 		session.webAudios[webAudio].highEQ.gain.setValueAtTime(highEQ, session.webAudios[webAudio].audioContext.currentTime);
 	}
 
+}
+
+function changeSubGain(gain, deviceid=null) {
+	if (gain !== false) {
+		gain = parseFloat(gain / 100.0) || 0;
+	} else {
+		gain = 1.0;
+	}
+	for (var webAudio in session.webAudios) {
+		try{
+			if (!session.webAudios[webAudio].subGainNodes) {
+				errorlog("EQ not setup");
+				return;
+			}
+			if (deviceid in session.webAudios[webAudio].subGainNodes){
+				session.webAudios[webAudio].subGainNodes[deviceid].gain.setValueAtTime(gain, session.webAudios[webAudio].audioContext.currentTime);
+			} else {
+				errorlog("NOT FOUND:" + deviceid);
+			}
+			break;
+		} catch(e){errorlog(e);}
+		
+	}
+}
+
+function changeMainGain(gain, deviceid=null) {
+	for (var webAudio in session.webAudios) {
+		if (!session.webAudios[webAudio].gainNode){
+			return;
+		}
+		if (gain !== false) {
+			gain = parseFloat(gain / 100.0) || 0;
+		} else {
+			gain = 1.0;
+		}
+		session.webAudios[webAudio].gainNode.gain.setValueAtTime(gain, session.webAudios[webAudio].audioContext.currentTime);
+	}
 }
 
 
@@ -7401,6 +7544,59 @@ function hideDirectorinvites(ele, skip=true) {
 	}
 }
 
+function toggleCoDirector_changeurl(ele){
+	session.codirector_changeURL = ele.checked; // doesn't do anything yet though.
+}
+
+function toggleCoDirector_transfer(ele){
+	session.codirector_transfer = ele.checked;
+}
+
+async function toggleCoDirector(ele){
+	//session.coDirectorAllowed = ele.checked;
+	if (!ele.checked){
+		getById("codirectorSettings").style.display = "none";
+		return;
+	}
+	if (!session.directorPassword){
+		session.directorPassword = await promptAlt(miscTranslations["enter-new-codirector-password"], false);
+		if (!session.directorPassword){
+			session.directorPassword=false;
+			ele.checked=false;
+			return;
+		}
+	}
+	updateURL("codirector="+session.directorPassword, true, false);
+	getById("coDirectorEnableSpan").style.display = "none";
+	
+	await generateHash(session.directorPassword + session.salt + "abc123", 12).then(function(hash) { // million to one error. 
+		log("dir room hash is " + hash);
+		session.directorHash = hash;
+		return;
+	}).catch(errorlog);
+	
+	if (session.codirector_transfer){
+		getById("codirectorSettings_transfer").checked = true;
+	} else {
+		getById("codirectorSettings_transfer").checked = false;
+	}
+	if (session.codirector_changeURL){
+		getById("codirectorSettings_changeurl").checked = true;
+	} else {
+		getById(codirectorSettings_changeurl).checked = false;
+	}
+	
+	getById("codirectorSettings_invite").value = "https://"+location.host+location.pathname+"?dir="+session.roomid+"&codirector="+session.directorPassword;
+	if (session.password!==session.sitePassword){
+		if (session.password===false){
+			getById("codirectorSettings_invite").value += "&password=false";
+		} else{
+			getById("codirectorSettings_invite").value += "&password";
+		}
+	}
+	
+	getById("codirectorSettings").style.display = "block";
+}
 function createRoomCallback(passAdd, passAdd2) {
 
 	var gridlayout = getById("gridlayout");
@@ -7500,7 +7696,34 @@ function createRoomCallback(passAdd, passAdd2) {
 
 	session.director = true;
 	screensharesupport = false;
-
+	
+	if (session.directorPassword){
+		getById("coDirectorEnable").checked = true;
+		getById("coDirectorEnableSpan").style.display = "none";
+		
+		getById("codirectorSettings_invite").value = "https://"+location.host+location.pathname+"?dir="+session.roomid+"&codirector="+session.directorPassword;
+		if (session.password!==session.sitePassword){
+			if (session.password==false){
+				getById("codirectorSettings_invite").value += "&password=false";
+			} else{
+				getById("codirectorSettings_invite").value += "&password";
+			}
+		} 
+	
+		if (session.codirector_transfer){
+			getById("codirectorSettings_transfer").checked = true;
+		} else {
+			getById("codirectorSettings_transfer").checked = false;
+		}
+		if (session.codirector_changeURL){
+			getById("codirectorSettings_changeurl").checked = true;
+		} else {
+			getById("codirectorSettings_changeurl").checked = false;
+		}
+		getById("codirectorSettings").style.display = "block";
+	}
+	
+	
 	window.onresize = updateMixer;
 	window.onorientationchange = function(){setTimeout(updateMixer, 200);};
 	getById("reshare").parentNode.removeChild(getById("reshare"));
@@ -7768,7 +7991,7 @@ function requestVideoSettings(ele) {
 }
 
 
-function createDirectorOnlyBox() {
+async function createDirectorOnlyBox() {
 	
 	var codecGroupFlag="";
 		
@@ -7840,13 +8063,13 @@ function createDirectorOnlyBox() {
 	
 	var labelID = document.getElementById("label_director");
 	
-	labelID.onclick = function(ee){
+	labelID.onclick = async function(ee){
 		var oldlabel = ee.target.innerText;
 		if (session.label===false){
 			oldlabel = "";
 		}
 		window.focus();
-		var newlabel = prompt(miscTranslations["enter-new-display-name"], oldlabel);
+		var newlabel = await promptAlt(miscTranslations["enter-new-display-name"], false, value=oldlabel);
 		if (newlabel!==null){
 			if (newlabel == ""){
 				newlabel = false;
@@ -13552,6 +13775,16 @@ function listAudioSettingsPrep() {
 		} else {
 			trackSet.lowcut = false;
 		}
+		
+		trackSet.subGain = false;
+		for (var waid in session.webAudios) { // TODO:  EXCLUDE CURRENT TRACK IF ALREADY EXISTS ... if (track.id === wa.id){..
+			try{
+				if (session.webAudios[waid].subGainNodes && (track0.id in session.webAudios[waid].subGainNodes)){
+					trackSet.subGain = session.webAudios[waid].subGainNodes[track0.id].gain.value;
+				}
+				break;
+			} catch(e){}
+		}
 
 		data.push(trackSet);
 	}
@@ -13699,7 +13932,7 @@ function setupClosedCaptions() {
 }
 
 
-function requestVideoRecord(ele) {
+async function requestVideoRecord(ele) {
 	var UUID = ele.dataset.UUID
 	if (ele.classList.contains("pressed")) {
 		var msg = {};
@@ -13712,7 +13945,7 @@ function requestVideoRecord(ele) {
 		msg.requestVideoRecord = true;
 		msg.UUID = UUID;
 		window.focus();
-		var bitrate = prompt(miscTranslations["what-bitrate"], 6000);
+		var bitrate = await promptAlt(miscTranslations["what-bitrate"], false, value=6000);
 		if (bitrate) {
 			msg.value = bitrate;
 			session.sendRequest(msg, msg.UUID);
@@ -13774,6 +14007,16 @@ function requestChangeEQ(keyname, value, UUID, track = 0) { // updateCameraConst
 	msg.value = value;
 	msg.UUID = UUID;
 	msg.track = track; // pointless atm
+	session.sendRequest(msg, msg.UUID);
+}
+
+function requestChangeSubGain(value, UUID, deviceID) { // updateCameraConstraints
+	var msg = {};
+	msg.requestChangeSubGain = true;
+	msg.value = value;
+	msg.UUID = UUID;
+	msg.deviceID = deviceID; // pointless atm
+	log(msg);
 	session.sendRequest(msg, msg.UUID);
 }
 
@@ -13968,6 +14211,7 @@ function updateDirectorsAudio(dataN, UUID) {
 			audioEle.appendChild(input);
 		}
 		
+		
 		if (dataN.length>1){ 
 			if (data.trackLabel) {
 				var label = document.createElement("span");
@@ -14139,6 +14383,41 @@ function updateDirectorsAudio(dataN, UUID) {
 				errorlog(e);
 			}
 		}
+		
+		
+		if (data.subGain!==false) {
+			var label = document.createElement("label");
+			var i = "Gain";
+			label.id = "label_" + i + "_" + n;
+			label.htmlFor = "constraints_" + i + "_" + n;
+
+			var input = document.createElement("input");
+			input.min = 0;
+			input.max = 200;
+			input.value = data.subGain*100;
+			input.title = "Previously was: "+parseInt(input.value);
+			input.type = "range";
+			input.dataset.keyname = i + "_" + n;
+			input.dataset.labelname = "Gain:"
+			label.innerText = input.dataset.labelname+" "+parseInt(input.value);
+			input.dataset.track = data.deviceID;
+			input.dataset.UUID = UUID;
+			input.id = "constraints_" + i + "_" + n;
+			input.style = "display:block; width:100%;";
+			input.name = "constraints_" + i + "_" + n;
+			input.style.margin = "8px 0";
+
+			input.onchange = function(e) {
+				getById("label_" + e.target.dataset.keyname).innerText = e.target.dataset.labelname + " " + e.target.value;
+				//changeLowEQ( e.target.value);
+				//e.target.title = e.target.value;
+				requestChangeSubGain(parseInt(e.target.value), e.target.dataset.UUID, e.target.dataset.track);
+			};
+
+			audioEle.appendChild(label);
+			audioEle.appendChild(input);
+		}
+		
 		getById("advanced_audio_director_" + UUID).appendChild(audioEle);
 	}
 }
@@ -14532,10 +14811,12 @@ function listAudioSettings() {
 		}
 		////////
 		if (tracks.length>1){
+			
 			var label = document.createElement("h4");
 			label.innerHTML = track0.label;
 			label.style = "text-shadow: 0 0 10px #fff3;"
 			getById("popupSelector_constraints_audio").appendChild(label);
+			
 		}
 		
 		for (var i in session.audioConstraints) {
@@ -14708,6 +14989,91 @@ function listAudioSettings() {
 				}
 			} catch (e) {
 				errorlog(e);
+			}
+		}
+		if (tracks.length>1){
+			for (var webAudio in session.webAudios) {
+				if (session.webAudios[webAudio].subGainNodes && (track0.id in session.webAudios[webAudio].subGainNodes)) {
+			
+					if (getById("popupSelector_constraints_audio").style.display == "none") {
+						getById("advancedOptionsAudio").style.display = "inline-block";
+					}
+
+					var label = document.createElement("label");
+					var i = "Gain";
+					label.id = "label_" + i + "_" + track0.id;
+					label.htmlFor = "constraints_" + i + "_" + track0.id;
+					label.innerText = "Gain:";
+
+					var input = document.createElement("input");
+					input.min = 0;
+					input.max = 200;
+					
+					input.dataset.deviceid = track0.id; // pointless
+
+					input.type = "range";
+					input.dataset.keyname = i;
+					input.dataset.labelname = label.innerHTML;
+					input.id = "constraints_" + i+ "_" + track0.id;
+					input.style = "display:block; width:100%;";
+					input.name = "constraints_" + i + "_" + track0.id;
+					
+					input.value = session.webAudios[webAudio].subGainNodes[track0.id].gain.value * 100;
+					label.innerHTML += " " + parseInt(session.webAudios[webAudio].subGainNodes[track0.id].gain.value * 100);
+					input.title = parseInt(input.value);
+					
+					input.onchange = function(e) {
+						getById("label_" + e.target.dataset.keyname).innerHTML = e.target.dataset.labelname + " " + e.target.value;
+						changeSubGain(e.target.value, e.target.dataset.deviceid);
+						e.target.title = e.target.value;
+					};
+
+					getById("popupSelector_constraints_audio").appendChild(label);
+					getById("popupSelector_constraints_audio").appendChild(input);
+					break;
+				}
+			}
+		} else {
+			for (var webAudio in session.webAudios) {
+				if (session.webAudios[webAudio].gainNode) {
+			
+					if (getById("popupSelector_constraints_audio").style.display == "none") {
+						getById("advancedOptionsAudio").style.display = "inline-block";
+					}
+
+					var label = document.createElement("label");
+					var i = "Gain";
+					label.id = "label_" + i;
+					label.htmlFor = "constraints_" + i;
+					label.innerText = "Gain:";
+
+					var input = document.createElement("input");
+					input.min = 0;
+					input.max = 200;
+					
+					input.dataset.deviceid = track0.id; // pointless
+
+					input.type = "range";
+					input.dataset.keyname = i;
+					input.dataset.labelname = label.innerHTML;
+					input.id = "constraints_" + i;
+					input.style = "display:block; width:100%;";
+					input.name = "constraints_" + i;
+					
+					input.value = session.webAudios[webAudio].gainNode.gain.value * 100;
+					label.innerHTML += " " + parseInt(session.webAudios[webAudio].gainNode.gain.value * 100);
+					input.title = parseInt(input.value);
+					
+					input.onchange = function(e) {
+						getById("label_" + e.target.dataset.keyname).innerHTML = e.target.dataset.labelname + " " + e.target.value;
+						changeMainGain(e.target.value, e.target.dataset.deviceid);
+						e.target.title = e.target.value;
+					};
+
+					getById("popupSelector_constraints_audio").appendChild(label);
+					getById("popupSelector_constraints_audio").appendChild(input);
+					break;
+				}
 			}
 		}
 	}
@@ -15498,7 +15864,7 @@ Promise.prototype.timeout = function(ms) {
 };
 
 
-function shareWebsite(autostart=false, evt=false){
+async function shareWebsite(autostart=false, evt=false){
 	if (session.iframeSrc){
 		if (evt && (evt.ctrlKey || evt.metaKey)){
 			if (getById("websitesharebutton").classList.contains("green")){
@@ -15545,7 +15911,7 @@ function shareWebsite(autostart=false, evt=false){
 	getById("websitesharebutton").title = "Hold CTRL (or CMD) and click to spotlight this video";
 	if (autostart===false){
 		window.focus();
-		var iframeURL = prompt(miscTranslations["enter-website"], session.defaultIframeSrc);
+		var iframeURL = await promptAlt(miscTranslations["enter-website"], false, value=session.defaultIframeSrc);
 	} else {
 		var iframeURL = autostart;
 	}
@@ -16410,7 +16776,7 @@ var vis = (function() {
 		}
 	}
 
-	function menuItemListener(link) {
+	async function menuItemListener(link) {
 		if (link.getAttribute("data-action") === "Open") {
 			window.open(taskItemInContext.href);
 		} else if (link.getAttribute("data-action") === "Copy") {
@@ -16423,7 +16789,7 @@ var vis = (function() {
 			//copyFunction(taskItemInContext.href);
 		} else if (link.getAttribute("data-action") === "Edit") {
 			//copyFunction(taskItemInContext.href);
-			var response = prompt("Please note, manual edits to the URL may conflict with the toggles", taskItemInContext.href);
+			var response = await promptAlt("Please note, manual edits to the URL may conflict with the toggles", false, false, taskItemInContext.href);
 			if (response){
 				taskItemInContext.href = response;
 				taskItemInContext.dataset.raw = response;
@@ -17045,7 +17411,7 @@ function showCustomizer(arg, ele) {
 
 var defaultRecordingBitrate = false;
 
-function recordVideo(target, event, videoKbps = false) { // event.currentTarget,this.parentNode.parentNode.dataset.UUID
+async function recordVideo(target, event, videoKbps = false) { // event.currentTarget,this.parentNode.parentNode.dataset.UUID
 
 	var UUID = target.dataset.UUID;
 	var video = session.rpcs[UUID].videoElement;
@@ -17108,7 +17474,7 @@ function recordVideo(target, event, videoKbps = false) { // event.currentTarget,
 		if (defaultRecordingBitrate == false) {
 			videoKbps = 4000; // 4mbps recording bitrate
 			window.focus();
-			videoKbps = prompt(miscTranslations["press-ok-to-record"], videoKbps);
+			videoKbps = await promptAlt(miscTranslations["press-ok-to-record"], false, value=videoKbps);
 			if (videoKbps === null) {
 				//target.style.backgroundColor = null;
 				//target.innerHTML = '<i class="las la-circle"></i><span data-translate="record"> record local</span>';

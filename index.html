@@ -67,7 +67,7 @@
 			<link itemprop="url" href="./media/vdoNinja_logo_full.png" />
 		</span>
 		<script  type="text/javascript" crossorigin="anonymous"  src="./thirdparty/CodecsHandler.js?ver=34"></script>
-		<script  type="text/javascript" crossorigin="anonymous" src="./webrtc.js?ver=327"></script>
+		<script  type="text/javascript" crossorigin="anonymous" src="./webrtc.js?ver=328"></script>
 		<input id="zoomSlider" type="range" style="display: none;" />
 		<div id="header">
 			
@@ -1624,8 +1624,28 @@
 				<span style="margin-left: 6px;" id="trbSettingInputFeedback"></span>-kbps
 				<input id="trbSettingInput" type="range" min="0" max="4000" value="500" onchange="changeTRB(this);" oninput="getById('trbSettingInputFeedback').innerHTML = this.value;" style="width:100%;display:block;" />
 				<span style="margin: 20px 0 0 0;display:block" id='highlightDirectorSpan' title="Only the director's video will be visible to guests and within group scenes">
-					<label for="highlightDirector">Highlight Director (only video guests will see)</label> 
 					<input id="highlightDirector" style="width: 15px; height: 15px; margin:10px;" name="highlightDirector" data-value="0" data-action-type="solo-video" type="checkbox" onchange="requestInfocus(this);" />
+					<label for="highlightDirector">Highlight Director (only video guests will see)</label> 
+				</span>
+				<span style="margin: 5px 0 0 0;display:block" id='enableCodirector' title="Allow for remote co-directors">
+					<span id="coDirectorEnableSpan">
+						<input id="coDirectorEnable" style="width: 15px; height: 15px; margin:10px;" name="coDirectorEnable" data-value="0" data-action-type="codirector" type="checkbox" onchange="toggleCoDirector(this);" />
+						<label for="coDirectorEnable">Allow for remote co-directors</label> 
+					</span>
+					<span style="margin:0;display:none;" id='codirectorSettings'>
+						<div>
+							<input id="codirectorSettings_transfer" style="width: 15px; height: 15px; margin:10px;" name="codirectorSettings_transfer" data-value="0" data-action-type="codirector_transfer" type="checkbox" onchange="toggleCoDirector_transfer(this);" />
+							<label for="codirectorSettings_transfer">Allow co-directors to transfer guests</label> 
+						</div>
+						<div style="display:none;">
+							<input id="codirectorSettings_changeurl" style="width: 15px; height: 15px; margin:10px; " name="codirectorSettings_changeurl" data-value="0" data-action-type="codirector_changeurl" type="checkbox" onchange="toggleCoDirector_changeurl(this);" />
+							<label for="codirectorSettings_changeurl">Allow co-directors to change a guest's URL</label> 
+						</div>
+						<div style="margin:8px;">
+							<label for="codirectorSettings_invite">Basic co-director invite link:</label>
+							<input id="codirectorSettings_invite" style="display:block;width: 100%;margin: 3px 0; padding: 4px 5px 3px 5px; border: 1px solid black;" name="codirectorSettings_invite" value="some URL here" type="text"  />
+						</div>
+					</span>
 				</span>
 			</div>
 		</div>
@@ -1817,41 +1837,41 @@
 			///// The following lets you set the defaults
 
 			// session.webcamonly // true,false
-			// session.stereo // 0,1,2,3
+			// session.stereo // 0,1,2,3,4,5
 			// session.audiobitrate // int in kbps
-			// session.view // "xxxx"
-			// session.remote 
-			// session.optimize  
-			// session.disableOBS
-			// session.audio
-			// session.video
-			// session.forceios
-			// session.nocursor
+			// session.view // "xxxx" ; the stream ID or a list of Stream IDs to Connect to. Not the same as &noaudio/&novideo. Set to "" (empty) if you don't wish to connect to any.
+			// session.remote // See docs, but allows for remote stats monitoring and remote focus/zoom control
+			// session.optimize  // Whether to optimize invisible scenes in OBS. See docs.vdo.ninja
+			// session.disableOBS // If true, will disable any OBS-specific events/functions.
+			// session.noaudio // False by default, otherwise specify a list [] of stream IDs to allow. Listing none allows no incoming audio streams
+			// session.novideo // False by default, otherwise specify a list [] of stream IDs to allow. Listing none allows no incoming video streams
+			// session.forceios // If true, will allow iOS devices to send H264 video to other guests in a room
+			// session.nocursor // hides the cursor using CSS
 			// session.codec // default codec; maybe h264 is useful? the default is up to the browser normally
-			// session.scale
+			// session.scale // By default, scale is self-optimizing, but you can set a value of 1 to 100 to choose the playback scale of all incoming video streams
 			// session.bitrate  // int in kbps -- you can set the default max target bitrate here
 			// session.totalRoomBitrate = 500; // int, kbps -- you can set the default quality of the group room here
-			// session.height // int
-			// session.width // int
-			// session.quality // int  -- if setting == 0, then than the default resolution will be 1080p, instead of 720p
-			// session.sink
-			// session.offsetChannel //2 int
+			// session.height // int  ; height to publish a video stream at.  Will fail if not supported by the camera
+			// session.width // int ; see above
+			// session.quality // int  -- if setting == 0, then than the default resolution will be 1080p, instead of 720p60 (q=1) , while  q=2 = 360p30.
+			// session.sink // Output device to playback audio to. see the docs
+			// session.offsetChannel // int
 			// session.audioChannels // int
-			// session.security
-			// session.framerate // int
-			// session.sync
-			// session.buffer // int in milliseconds
-			// session.roomid // "yyyy"
-			// session.scene
-			// session.title // "zzzz"
+			// session.security // true to disable the wss connection after the first peer connection is made
+			// session.framerate // int ; publishing frame rate. will fail if camera does not support it.
+			// session.sync // see the docs
+			// session.buffer // int in milliseconds ; see the docs
+			// session.roomid // "yyyy"  -- the room name to use.  alphanumeric.
+			// session.scene // the scene name. Scene 0, 1, ... 8, or any custom scene name is supported.  STRING value. Needed to have a clean view link of a guest stream
+			// session.title // "zzzz"   ; sets the title of the browser page.
 			// session.introOnClean = true; // this will load the page with the webcam selection screen if &push or &room is in the URL; no need to use &webcam.
 		</script>
 		<script type="text/javascript" crossorigin="anonymous" src="./thirdparty/aes.js"></script>
-		<script type="text/javascript" crossorigin="anonymous" id="lib-js" src="./lib.js?ver=205"></script>
+		<script type="text/javascript" crossorigin="anonymous" id="lib-js" src="./lib.js?ver=206"></script>
 		<!-- 
 		// If you wish to change branding, blank offers a good clean start.
 		<script type="text/javascript" id="main-js" src="./main.js" data-translation="blank"></script>
 	-->
-		<script type="text/javascript" crossorigin="anonymous" id="main-js" src="./main.js?ver=277"></script>
+		<script type="text/javascript" crossorigin="anonymous" id="main-js" src="./main.js?ver=278"></script>
 	</body>
 </html>

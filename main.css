@@ -46,6 +46,14 @@ table {
 	background-color: #FFF;
 }
 
+.promptModalLabel{
+	cursor: pointer;
+    font-weight: normal;
+    font-size: 1.0em;
+	display:block;
+	margin: 17px 20px 15px 20px;
+}
+
 #bigPlayButton {
 	margin:0 auto;
 	background-color: #0000;
@@ -2979,7 +2987,7 @@ input:checked + .slider:before {
     border-radius: 10px;
     font-weight: bold;
 	z-index:31;
-	min-width:400px;
+	min-width:500px;
 	max-width:90%;
 	overflow-wrap: break-word;
 }
@@ -2995,7 +3003,7 @@ input:checked + .slider:before {
 .promptModalInner {
 	position: relative;
 	padding: 1em;
-	max-width: 400px;
+	max-width: 500px;
 }
 
 .promptModalMessage {
