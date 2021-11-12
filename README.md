@@ -4,6 +4,8 @@ VDO Ninja lets you bring remote video feeds into OBS at low latency and with exc
 
 Here are some cheatsheets to help you get started:
 
+** Please note, obs.ninja has rebranded to vdo.ninja. The two domains are not compatible, so ensure all links used are for one site and not both, else things might fail.
+
 ### [VDO Ninja Basic Concepts Cheatsheet](basicconcepts/cheatsheet_obsn_basic_concepts.md)
 Learn the basic concepts of VDO Ninja: Rooms, Control Center and Scenes   
 [![OBS Ninja | cheat-sheet](basicconcepts/OBSN_basic_concepts_thumbnail.jpg)](basicconcepts/cheatsheet_obsn_basic_concepts.md)
