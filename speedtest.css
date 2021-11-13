@@ -36,7 +36,8 @@ body {
 
 h1 {
     color: white;
-    margin: 20px 0px;
+    margin: 20px auto;
+	width: 80%;
 }
 
 h1 small {

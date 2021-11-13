@@ -320,10 +320,27 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 			directorLanding = false;
 		}
 		session.meterStyle = 1;
+		session.signalMeter = true;
 	} else if (filename === "director") {
 		directorLanding = true;
 		filename = false;
 		session.meterStyle = 1;
+		session.signalMeter = true;
+	}
+
+	if (urlParams.has('signalmeter')) {
+		session.signalMeter = urlParams.get('signalmeter');
+		if (session.signalMeter === "false") {
+			session.signalMeter = false;
+		} else if (session.signalMeter=== "0") {
+			session.signalMeter = false;
+		} else if (session.signalMeter === "no") {
+			session.signalMeter = false;
+		} else if (session.signalMeter === "off") {
+			session.signalMeter = false;
+		} else {
+			session.signalMeter = true;
+		}
 	}
 
 	if (urlParams.has('rooms')) {
@@ -466,7 +483,7 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 	//	session.devicePixelRatio = window.devicePixelRatio; // this annoys me to no end.
 	//}
 
-	if (urlParams.has('speakermute') || urlParams.has('mutespeaker') || urlParams.has('sm') || urlParams.has('ms')) {
+	if (urlParams.has('speakermute') || urlParams.has('speakermuted') || urlParams.has('mutespeaker') || urlParams.has('sm') || urlParams.has('ms')) {
 		session.speakerMuted = true;
 		getById("mutespeakertoggle").className = "las la-volume-mute my-float toggleSize";
 		//getById("mutespeakerbutton").className="advanced float2 red";
@@ -978,6 +995,10 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 	
 	if (urlParams.has('ruler') || urlParams.has('grid') || urlParams.has('thirds')) {
 		session.ruleOfThirds=true;
+	}
+	
+	if (urlParams.has('proxy')) { // routes the wss traffic via an alternative network path. Not
+		session.proxy=true; // only works if session.wss is set to false
 	}
 
 	if (urlParams.has('nopreview') || urlParams.has('np')) {
@@ -1543,6 +1564,11 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 	
 	if (urlParams.has('easyexit') || urlParams.has('ee')) {
 		session.noExitPrompt = true;
+	}
+	
+	if (urlParams.has('entrymsg') || urlParams.has('welcome')) {
+		session.welcomeMessage = urlParams.get('entrymsg') || urlParams.get('welcome');
+		session.welcomeMessage = decodeURIComponent(session.welcomeMessage);
 	}
 
 	if (urlParams.has('videobitrate') || urlParams.has('bitrate') || urlParams.has('vb')) {
@@ -2334,6 +2360,10 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 		} else {
 			session.screenshareid = session.streamID + "_screenshare";
 		}
+	}
+	
+	if (urlParams.has('screensharevideoonly') || urlParams.has('ssvideoonly') || urlParams.has('ssvo')) {
+		session.screenshareVideoOnly = true;
 	}
 
 	if (urlParams.has('screensharefps') || urlParams.has('ssfps')) {
@@ -3221,7 +3251,7 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 							var command = e.controller.number;
 							var value = e.value;
 							
-							midiHotkeysCommand(command, value)
+							midiHotkeysCommand(command, value);
 						}
 					});
 				}
@@ -3275,7 +3305,7 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 				visAudioTimeout = setTimeout(function() {
 					resetupAudioOut();
 					activatedPreview=false;
-					grabAudio("videosource", "#audioSource3");
+					grabAudio("#audioSource3");
 				}, 500);
 			}
 		}
