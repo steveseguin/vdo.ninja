@@ -73,7 +73,8 @@ var miscTranslations = {
 	"confirm-disconnect-user": "Are you sure you wish to disconnect this user?",
 	"enter-new-codirector-password": "Enter a co-director password to use",
 	"control-room-co-director": "Control Room: Co-Director",
-	"signal-meter": "Video packet loss indicator of video preview; green is good, red is bad. Flame implies CPU is overloaded. May not reflect the packet loss seen by scenes or other guests."
+	"signal-meter": "Video packet loss indicator of video preview; green is good, red is bad. Flame implies CPU is overloaded. May not reflect the packet loss seen by scenes or other guests.",
+	"waiting-for-the-stream": "Waiting for the stream. Tip: Adding &cleanoutput to the URL will hide this spinner, or click to retry, which will also hide it."
 };
 
 // function log(msg){ // uncomment to enable logging.
@@ -10768,7 +10769,13 @@ async function grabScreen(quality = 0, audio = true, videoOnEnd = false) {
 	if (!navigator.mediaDevices.getDisplayMedia) {
 		if (!(session.cleanOutput)) {
 			setTimeout(function() {
-				warnUser("Sorry, your browser is not supported. Please use the desktop versions of Firefox or Chrome instead");
+				if (iOS || iPad){
+					warnUser("Sorry, but your iOS browser does not support screen-sharing.\n\nPlease see <a href='https://docs.vdo.ninja/guides/screen-share-your-iphone-ipad' target='_blank'>this guide</a> for an alternative method to do so.");
+				} else if (session.mobile){
+					warnUser("Sorry, your browser does not support screen-sharing.\n\nThe <a href='https://docs.vdo.ninja/getting-started/native-mobile-app-versions#android-download-link' target='_blank'>Android native app</a> should support it though.");
+				} else {
+					warnUser("Sorry, your browser does not support screen-sharing.\n\nPlease use the desktop versions of Firefox or Chrome instead.");
+				}
 			}, 1);
 		}
 		return false;
@@ -12527,7 +12534,15 @@ session.publishStream = function(v){ //  stream is used to generated an SDP
 async function publishScreen2(constraints, audioList=[], audio=true){ // webcam stream is used to generated an SDP
 	log("SCREEN SHARE SETUP");
 	if (!navigator.mediaDevices.getDisplayMedia){
-		setTimeout(function(){warnUser("Sorry, your browser is not supported. Please use the desktop versions of Firefox or Chrome instead");},1);
+		setTimeout(function(){
+			if (iOS || iPad){
+				warnUser("Sorry, but your iOS browser does not support screen-sharing.\n\nPlease see <a href='https://docs.vdo.ninja/guides/screen-share-your-iphone-ipad' target='_blank'>this guide</a> for an alternative method to do so.");
+			} else if (session.mobile){
+				warnUser("Sorry, your browser does not support screen-sharing.\n\nThe <a href='https://docs.vdo.ninja/getting-started/native-mobile-app-versions#android-download-link' target='_blank'>Android native app</a> should support it though.");
+			} else {
+				warnUser("Sorry, your browser does not support screen-sharing.\n\nPlease use the desktop versions of Firefox or Chrome instead.");
+			}
+		},1);
 		return false;
 	}
 	if (navigator.userAgent.toLowerCase().indexOf(' electron/') > -1) {
@@ -17789,9 +17804,32 @@ async function recordVideo(target, event, videoKbps = false) { // event.currentT
 	let options = {};
 
 	if (videoKbps) {
-		options.mimeType = "video/webm";
-		if (session.pcm){
-			options.mimeType += ";codecs=pcm";
+		var tryCodec = false;
+		if (session.recordingVideoCodec){
+			tryCodec = session.recordingVideoCodec;
+		}
+		if (tryCodec && MediaRecorder.isTypeSupported('video/webm;codecs='+tryCodec)) {
+			if (!session.cleanOutput){
+				warnUser("The browser 'says' it supports "+tryCodec);
+			}
+			options.mimeType = 'video/webm;codecs='+tryCodec;
+			if (session.pcm){
+				if (MediaRecorder.isTypeSupported('video/webm;codecs="'+tryCodec+', pcm"')){
+					options.mimeType = 'video/webm;codecs="'+tryCodec+', pcm"';
+				} else {
+					options.mimeType = "video/webm;codecs=pcm";
+				}
+			}
+		} else {
+			if (session.pcm){
+				if (MediaRecorder.isTypeSupported("video/webm;codecs=pcm")) {
+					options.mimeType = "video/webm;codecs=pcm";
+				} else {
+					options.mimeType = "video/webm";
+				}
+			} else {
+				options.mimeType = "video/webm";
+			}
 		}
 		if (videoKbps < 1000) {
 			options.videoBitsPerSecond = parseInt(videoKbps * 1024); // 100 kbps audio
@@ -17800,7 +17838,7 @@ async function recordVideo(target, event, videoKbps = false) { // event.currentT
 		}
 		video.recorder.mediaRecorder = new MediaRecorder(video.srcObject, options);
 	} else {
-		options.mimeType = "audio/webm";
+		options.mimeType = 'audio/webm';
 		if (audioKbps == 0) {
 			if (MediaRecorder.isTypeSupported("audio/webm;codecs=pcm")) {
 				options.mimeType = "audio/webm;codecs=pcm";
@@ -18204,11 +18242,33 @@ function recordLocalVideo(action = null, videoKbps = 6000) { // event.currentTar
 	};
 
 	let options = {};
-
 	if (videoKbps) {
-		options.mimeType = "video/webm";
-		if (session.pcm){
-			options.mimeType += ";codecs=pcm";
+		var tryCodec = false;
+		if (session.recordingVideoCodec){
+			tryCodec = session.recordingVideoCodec;
+		}
+		if (tryCodec && MediaRecorder.isTypeSupported('video/webm;codecs='+tryCodec)) {
+			if (!session.cleanOutput){
+				warnUser("The browser 'says' it supports "+tryCodec);
+			}
+			options.mimeType = 'video/webm;codecs='+tryCodec;
+			if (session.pcm){
+				if (MediaRecorder.isTypeSupported('video/webm;codecs="'+tryCodec+', pcm"')){
+					options.mimeType = 'video/webm;codecs="'+tryCodec+', pcm"';
+				} else {
+					options.mimeType = "video/webm;codecs=pcm";
+				}
+			}
+		} else {
+			if (session.pcm){
+				if (MediaRecorder.isTypeSupported("video/webm;codecs=pcm")) {
+					options.mimeType = "video/webm;codecs=pcm";
+				} else {
+					options.mimeType = "video/webm";
+				}
+			} else {
+				options.mimeType = "video/webm";
+			}
 		}
 		if (videoKbps < 1000) {
 			options.videoBitsPerSecond = parseInt(videoKbps * 1024); // 100 kbps audio
@@ -18229,7 +18289,7 @@ function recordLocalVideo(action = null, videoKbps = 6000) { // event.currentTar
 		video.srcObject.getAudioTracks().forEach((track) => {
 			stream.addTrack(track, video.srcObject);
 		});
-		video.recorder.mediaRecorder = new MediaRecorder(stream, options);
+		video.recorder.mediaRecorder = new MediaRecorder(stream, options);  
 	}
 	log(options);
 
@@ -18376,8 +18436,12 @@ function addAudioPipeline(stream, UUID, track){  // INBOUND AUDIO EFFECTS
 			source.connect(session.rpcs[UUID].inboundAudioPipeline[trackid].destination);
 			stream.getTracks().forEach((trk)=>{
 				if (trackid != trk.id){
-					session.rpcs[UUID].inboundAudioPipeline[trackid].destination.stream.addTrack(trk);
-					log("secondary stream added");
+					if (trk.muted && (trk.kind=="video") && session.director){
+						// if the video track is muted, we don't want to add it.   The unmute event can deal with this if it unmutes.  Director only condition, since not impactful elsewhere.
+					} else {
+						session.rpcs[UUID].inboundAudioPipeline[trackid].destination.stream.addTrack(trk);
+						log("secondary stream added");
+					}
 					log(trk);
 				}
 			});

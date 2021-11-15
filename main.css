@@ -888,6 +888,18 @@ input[type='radio'] { cursor:pointer; }
 	z-index: 10;
 }
 
+.retry-spinner {
+	border: 1vh solid #7f838666;
+    border-top: 1vh solid #f0f0f066;
+    border-radius: 50%;
+    width: 10vh;
+    height: 10vh;
+    animation: spin-animation 3s infinite linear, fadeIn 5s;
+    margin: 44vh auto;
+	cursor: help;
+}
+
+
 @keyframes spin-animation {
 	0% {
 		transform: rotate(0deg);

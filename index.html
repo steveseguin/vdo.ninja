@@ -54,7 +54,7 @@
 				transition: opacity .1s linear;
 			}
 		</style>
-		<link rel="stylesheet" href="./main.css?ver=145" />
+		<link rel="stylesheet" href="./main.css?ver=146" />
 		<script type="text/javascript" crossorigin="anonymous" src="./thirdparty/adapter.min.js"></script>
 		<style id="lightbox-animations" type="text/css"></style>
 	</head>
@@ -817,12 +817,12 @@
 					<span style="margin:5px; line-height: 1.6;" data-translate='invite-users-to-join'>Guests can use the link to join the group room</span>
 					<a onclick='copyFunction(this,event)' id="director_block_1" class='task grabLinks' style='cursor:copy;background-color: #0003;'></a>
 					<span style="display:block;">
-						<span style="bottom: 0; margin: 0 0 0 10px; top: 22px; position: relative;">
+						<span style="bottom: 0; margin: 0 0 0 10px; top: 22px; position: relative; display:inline-block; max-width: 45%;">
 							<label class="switch" title="If disabled, the invited guest will not be able to see or hear anyone in the room.">
 							<input type="checkbox" checked data-param="&view=" onchange="updateLinkInverse(1,this);saveDirectorSettings();">
 							<span class="slider"></span>
 						</label>
-							<span data-translate="guests-hear-others">Guests hear others</span>
+							<span data-translate="guests-hear-others" style="line-height:0;position:relative;top:-3px;">Guests hear others</span>
 						</span>
 						<button class='pull-right grey' style='font-size:1.15em' onclick='copyFunction(getById("director_block_1"),event)'><i class='las la-copy'></i>Copy link</button>
 						<button class='pull-right grey' style='font-size:1.15em' id="showCustomizerButton1"  onclick='showCustomizer(1,this)'><i class='las la-tools'></i>Customize</button>
@@ -836,12 +836,12 @@
 					<span style="margin:5px; line-height: 1.6;" data-translate='this-is-obs-browser-source-link'>Use in OBS or other studio software to capture the group video mix</span>
 					<a onclick='copyFunction(this,event)'  data-drag="1" draggable="true"  id="director_block_3" class='task grabLinks' style='cursor:grab;background-color: #0003;'></a>
 					<span style="display:block;">
-						<span style="bottom: 0; margin: 0 0 0 10px; top: 22px; position: relative;">
+						<span style="bottom: 0; margin: 0 0 0 10px; top: 22px; position: relative; display:inline-block; max-width: 45%;">
 							<label class="switch" title="If disabled, you must manually add a video to a scene for it to appear.">
 							<input type="checkbox" checked data-param="&scene" onchange="updateLinkScene(3,this);saveDirectorSettings();">
 							<span class="slider"></span>
 						</label>
-							<span data-translate="auto-add-guests">Auto-add guests</span>
+							<span data-translate="auto-add-guests" style="line-height:0;position:relative;top:-3px;">Auto-add guests</span>
 						</span>
 						<button class='pull-right grey' style='font-size:1.15em' onclick='copyFunction(getById("director_block_3"),event)'><i class='las la-copy'></i>Copy link</button>
 						<button class='pull-right grey' style='font-size:1.15em' id="showCustomizerButton3"  onclick='showCustomizer(3,this)'><i class='las la-tools'></i>Customize</button>
@@ -992,7 +992,7 @@
 						</label>
 						<span data-translate="prefix-screenshare">Prefix screenshare IDs</span>	
 					</div>
-					<div  style="display:inline-block;margin-top: 12px; position: relative; height: 20px;">
+					<div  style="display:inline-block;margin-top: 12px; position: relative; ">
 						<label class="switch" title="This low-fi video codec uses very little CPU, even with dozens of active viewers.">
 						  <input type="checkbox" data-param="&webp" onchange="updateLinkWebP(1,this);">
 						  <span class="slider"></span>
@@ -1067,7 +1067,7 @@
 							
 						</div>
 						
-						<div  style="display:inline-block;margin-top: 12px; position: relative; margin-right:10px; height: 20px;">
+						<div  style="display:inline-block;margin-top: 12px; position: relative; margin-right:10px; ">
 							
 							<label class="switch" title="The active speakers are made visible automatically">
 							  <input type="checkbox" data-param="&sas" onchange="updateLink(3,this);">
@@ -1101,7 +1101,7 @@
 							
 						</div>
 						
-						<div  style="display:inline-block;margin-top: 12px; position: relative; margin-right:10px; height: 20px;">
+						<div  style="display:inline-block;margin-top: 12px; position: relative; margin-right:10px;">
 							<label class="switch">
 							  <input type="checkbox" data-param="&sl" onchange="updateLink(3,this);">
 							  <span class="slider"></span>
@@ -1122,7 +1122,7 @@
 							<font class="tooltip" style='cursor: help;position:relative;bottom:2px;font-family:"Noto Color Emoji", "Apple Color Emoji", "Segoe UI Emoji", Times, Symbola, Aegyptus, Code2000, Code2001, Code2002, Musica, serif, LastResort;'>⚠<span class="tooltiptext">This can cause video playback to lag</span></font> Unlock Video Bitrate
 						</div>
 						
-						<div  style="display:inline-block;margin-top: 12px; position: relative; height: 20px;">
+						<div  style="display:inline-block;margin-top: 12px; position: relative; ">
 							<label class="switch" title="Playback the video with mono-channel audio">
 							  <input type="checkbox" data-param="&mono" onchange="updateLink(3,this);">
 							  <span class="slider"></span>
@@ -1875,11 +1875,11 @@
 			// session.introOnClean = true; // this will load the page with the webcam selection screen if &push or &room is in the URL; no need to use &webcam.
 		</script>
 		<script type="text/javascript" crossorigin="anonymous" src="./thirdparty/aes.js"></script>
-		<script type="text/javascript" crossorigin="anonymous" id="lib-js" src="./lib.js?ver=228"></script>
+		<script type="text/javascript" crossorigin="anonymous" id="lib-js" src="./lib.js?ver=241"></script>
 		<!-- 
 		// If you wish to change branding, blank offers a good clean start.
 		<script type="text/javascript" id="main-js" src="./main.js" data-translation="blank"></script>
 	-->
-		<script type="text/javascript" crossorigin="anonymous" id="main-js" src="./main.js?ver=281"></script>
+		<script type="text/javascript" crossorigin="anonymous" id="main-js" src="./main.js?ver=283"></script>
 	</body>
 </html>
