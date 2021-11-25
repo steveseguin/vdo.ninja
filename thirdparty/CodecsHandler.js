@@ -28,7 +28,6 @@ Copyright (c) 2012-2020 [Muaz Khan](https://github.com/muaz-khan)
 var CodecsHandler = (function() {
     function preferCodec(sdp, codecName) {
         var info = splitLines(sdp);
-
         if (!info.videoCodecNumbers) {
             return sdp;
         } else if (codecName === 'vp8' && info.vp8LineNumber === info.videoCodecNumbers[0]) {
@@ -134,7 +133,9 @@ var CodecsHandler = (function() {
                 info.h264LineNumber = line.replace('a=rtpmap:', '').split(' ')[0];
             }
 			
-			if (line.indexOf('AV1X/90000') !== -1 && !info.av1LineNumber) {
+            if (line.indexOf('AV1X/90000') !== -1 && !info.av1LineNumber) {
+                info.av1LineNumber = line.replace('a=rtpmap:', '').split(' ')[0];
+            } else if (line.indexOf('AV1/90000') !== -1 && !info.av1LineNumber) {
                 info.av1LineNumber = line.replace('a=rtpmap:', '').split(' ')[0];
             }
 			
