@@ -66,8 +66,8 @@
 		<span itemprop="thumbnail" itemscope itemtype="http://schema.org/ImageObject">
 			<link itemprop="url" href="./media/vdoNinja_logo_full.png" />
 		</span>
-		<script  type="text/javascript" crossorigin="anonymous"  src="./thirdparty/CodecsHandler.js?ver=34"></script>
-		<script  type="text/javascript" crossorigin="anonymous" src="./webrtc.js?ver=334"></script>
+		<script  type="text/javascript" crossorigin="anonymous"  src="./thirdparty/CodecsHandler.js?ver=35"></script>
+		<script  type="text/javascript" crossorigin="anonymous" src="./webrtc.js?ver=336"></script>
 		<input id="zoomSlider" type="range" style="display: none;" />
 		<div id="header">
 			
@@ -745,7 +745,9 @@
 							<li>
 								Chrome v95 with an AMD GPUs have an issue hardware encoding H264 video; this will be fixed in Chrome v96. <a href='https://bugs.chromium.org/p/chromium/issues/detail?id=1252710' target="_blank">Details here</a>.
 							</li>
-							
+							<li>
+								Samsung smartphones (A-series) may fail to publish video with some mobile browsers; try using Firefox or the native <a href='https://docs.vdo.ninja/getting-started/native-mobile-app-versions#android-download-link'>VDO.Ninja Android app</a> in these cases.
+							</li>
 							<br />
 							<h4>
 								<font style="color:#daad09;">Welcome to VDO Ninja! We've rebranded!  Nothing else is changing and we're staying 100% free.</font>
@@ -1804,7 +1806,7 @@
 
 		
 			var session = WebRTC.Media; // session is a required global variable if configuring manually. Run before loading main.js but after webrtc.js.
-			session.version = "19.4";
+			session.version = "20.0-beta";
 			session.streamID = session.generateStreamID(); // randomly generates a streamID for this session. You can set your own programmatically if needed
 			
 			session.defaultPassword = "someEncryptionKey123"; // Change this password if self-deploying for added security/privacy
@@ -1875,11 +1877,11 @@
 			// session.introOnClean = true; // this will load the page with the webcam selection screen if &push or &room is in the URL; no need to use &webcam.
 		</script>
 		<script type="text/javascript" crossorigin="anonymous" src="./thirdparty/aes.js"></script>
-		<script type="text/javascript" crossorigin="anonymous" id="lib-js" src="./lib.js?ver=241"></script>
+		<script type="text/javascript" crossorigin="anonymous" id="lib-js" src="./lib.js?ver=242"></script>
 		<!-- 
 		// If you wish to change branding, blank offers a good clean start.
 		<script type="text/javascript" id="main-js" src="./main.js" data-translation="blank"></script>
 	-->
-		<script type="text/javascript" crossorigin="anonymous" id="main-js" src="./main.js?ver=283"></script>
+		<script type="text/javascript" crossorigin="anonymous" id="main-js" src="./main.js?ver=284"></script>
 	</body>
 </html>

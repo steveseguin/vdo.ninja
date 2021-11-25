@@ -357,7 +357,6 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 	if (urlParams.has('rotate') ) {
 		session.rotate = urlParams.get('rotate') || 90;
 		session.rotate = parseInt(session.rotate);
-		
 	}
 
 	if (urlParams.has('midi') || urlParams.has('hotkeys')) {
@@ -367,20 +366,35 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 	
 	if (urlParams.has('midiremote') || urlParams.has('remotemidi')){
 		if (session.director!==false){
-			session.midiRemote = urlParams.get('midiremote') || urlParams.get ('remotemidi') || 4;
+			session.midiRemote = parseInt(urlParams.get('midiremote')) || parseInt(urlParams.get ('remotemidi')) || 4;
 		} else {
-			session.midiRemote = urlParams.get('midiremote') || urlParams.get ('remotemidi') || 1;
+			session.midiRemote = parseInt(urlParams.get('midiremote')) || parseInt(urlParams.get ('remotemidi')) || 1;
 		}
 	}
 
 	if (urlParams.has('midipush') || urlParams.has('midiout') || urlParams.has('mo')){
-		session.midiOut =  urlParams.get('midipush') ||  urlParams.get('midiout') || urlParams.get('mo') || true;
+		session.midiOut =  parseInt(urlParams.get('midipush')) ||  parseInt(urlParams.get('midiout')) || parseInt(urlParams.get('mo')) || true;
 	}
-
+	
 	if (urlParams.has('midipull') || urlParams.has('midiin') || urlParams.has('mi')){
-		session.midiIn =  urlParams.get('midipull') ||  urlParams.get('midiin') || urlParams.get('mi') || true;
+		session.midiIn = parseInt(urlParams.get('midipull')) ||  parseInt(urlParams.get('midiin')) || parseInt(urlParams.get('mi')) || true;
 	}
 
+	if (urlParams.has('midichannel')){
+		session.midiChannel =  parseInt(urlParams.get('midichannel')) || false;
+	}
+	if (session.midiChannel){
+		session.midiChannel = parseInt(session.midiChannel);
+		if (session.midiChannel>16){session.midiChannel=false;}
+		if (session.midiChannel<1){session.midiChannel=false;}
+	}
+	if (urlParams.has('mididevice')){
+		session.midiDevice =  parseInt(urlParams.get('mididevice')) || false;
+	}
+	if (session.midiDevice){
+		session.midiDevice = parseInt(session.midiDevice);
+	}
+ 
 
 	if (urlParams.has('webcam') || urlParams.has('wc') || urlParams.has('miconly')) {
 		session.webcamonly = true;
@@ -536,6 +550,8 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 		session.aspectratio = 1; // 9:16  (default of 0 is 16:9)
 	} else if (urlParams.has('square') || urlParams.has('11')) {
 		session.aspectratio = 2; //1:1 ?
+	} else if (urlParams.has('43')) {
+		session.aspectratio = 3; //1:1 ?
 	}
 
 	if (urlParams.has('forceaspectratio') || urlParams.has('far')) {
@@ -827,6 +843,46 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 		}
 	}
 
+	if (urlParams.has('screensharestereo') || urlParams.has('sss') || urlParams.has('ssproaudio')) { // both peers need this enabled for HD stereo to be on. If just pub, you get no echo/noise cancellation. if just viewer, you get high bitrate mono 
+		log("screenshare stereo  ENABLED");
+		session.screenshareStereo = urlParams.get('screensharestereo') || urlParams.get('sss') || urlParams.get('ssproaudio');
+
+		if (session.screenshareStereo) {
+			session.screenshareStereo = session.screenshareStereo.toLowerCase();
+		}
+
+		if (session.screenshareStereo === "false") {
+			session.screenshareStereo = 0;
+		} else if (session.screenshareStereo === "0") {
+			session.screenshareStereo = 0;
+		} else if (session.screenshareStereo === "no") {
+			session.screenshareStereo = 0;
+		} else if (session.screenshareStereo === "off") {
+			session.screenshareStereo = 0;
+		} else if (session.screenshareStereo === "1") {
+			session.screenshareStereo = 1;
+		} else if (session.screenshareStereo === "both") {
+			session.screenshareStereo = 1;
+		} else if (session.screenshareStereo === "3") {
+			session.screenshareStereo = 3;
+		} else if (session.screenshareStereo === "out") {
+			session.screenshareStereo = 3;
+		} else if (session.screenshareStereo === "mono") {
+			session.screenshareStereo = 3;
+		} else if (session.screenshareStereo === "4") {
+			session.screenshareStereo = 4;
+		} else if (session.screenshareStereo === "multi") {
+			session.screenshareStereo = 4;
+		} else if (session.screenshareStereo === "2") {
+			session.screenshareStereo = 2;
+		} else if (session.screenshareStereo === "in") {
+			session.screenshareStereo = 2;
+		} else {
+			session.screenshareStereo = 5; // guests; no stereo in, no high bitrate in, but otherwise like stereo=1
+		}
+	}
+
+	
 
 	if (urlParams.has('pie')){
 		session.customWSS = urlParams.get('pie') || false; // If session.customWSS == true, then there is no need to set parameters via URL
@@ -921,6 +977,63 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 			session.noiseSuppression = false;
 		} else {
 			session.noiseSuppression = true;
+		}
+	}
+	
+	if (urlParams.has("screenshareaec") || urlParams.has("ssec")  || urlParams.has("ssaec")) {
+
+		session.screenshareAEC = urlParams.get('screenshareaec') || urlParams.get('ssec')  || urlParams.get("ssaec");
+
+		if (session.screenshareAEC) {
+			session.screenshareAEC = session.screenshareAEC.toLowerCase();
+		}
+		if (session.screenshareAEC == "false") {
+			session.screenshareAEC = false;
+		} else if (session.screenshareAEC == "0") {
+			session.screenshareAEC = false;
+		} else if (session.screenshareAEC == "no") {
+			session.screenshareAEC = false;
+		} else if (session.screenshareAEC == "off") {
+			session.screenshareAEC = false;
+		} else {
+			session.screenshareAEC = true;
+		}
+	}
+	if (urlParams.has("screenshareautogain") || urlParams.has("ssag") || urlParams.has("ssagc")) {
+
+		session.screenshareAutogain = urlParams.get('screenshareautogain') || urlParams.get('ssag')  || urlParams.get('ssagc');
+		if (session.screenshareAutogain) {
+			session.screenshareAutogain = session.screenshareAutogain.toLowerCase();
+		}
+		if (session.screenshareAutogain == "false") {
+			session.screenshareAutogain = false;
+		} else if (session.screenshareAutogain == "0") {
+			session.screenshareAutogain = false;
+		} else if (session.screenshareAutogain == "no") {
+			session.screenshareAutogain = false;
+		} else if (session.screenshareAutogain == "off") {
+			session.screenshareAutogain = false;
+		} else {
+			session.screenshareAutogain = true;
+		}
+	}
+	if (urlParams.has("screensharedenoise") || urlParams.has("ssdn")) {
+
+		session.screenshareDenoise = urlParams.get('screensharedenoise') || urlParams.get('ssdn');
+
+		if (session.screenshareDenoise) {
+			session.screenshareDenoise = session.screenshareDenoise.toLowerCase();
+		}
+		if (session.screenshareDenoise == "false") {
+			session.screenshareDenoise = false;
+		} else if (session.screenshareDenoise == "0") {
+			session.screenshareDenoise = false;
+		} else if (session.screenshareDenoise == "no") {
+			session.screenshareDenoise = false;
+		} else if (session.screenshareDenoise == "off") {
+			session.screenshareDenoise = false;
+		} else {
+			session.screenshareDenoise = true;
 		}
 	}
 
@@ -1624,6 +1737,18 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 	if (urlParams.has('limittotalbitrate') || urlParams.has('ltb')){
 		session.limitTotalBitrate = urlParams.get('limittotalbitrate') || urlParams.get('ltb') || 2500;
 		session.limitTotalBitrate = parseInt(session.limitTotalBitrate);
+	}
+	
+	if (urlParams.has('mcvb') || urlParams.has('meshcastbitrate')){
+		session.meshcastBitrate = urlParams.get('mcvb') || urlParams.get('meshcastbitrate') || 2500;
+		session.meshcastBitrate = parseInt(session.meshcastBitrate);
+	}
+	
+	if (urlParams.has('mccodec') || urlParams.has('meshcastcodec')){
+		session.meshcastCodec = urlParams.get('mccodec') || urlParams.get('meshcastcodec') || false;
+	}
+	if (session.meshcastCodec){
+		session.meshcastCodec = session.meshcastCodec.toLowerCase();
 	}
 
 	if (urlParams.has('height') || urlParams.has('h')) {
@@ -3176,11 +3301,7 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 		
 		var script = document.createElement('script');
 		script.onload = function() {
-			WebMidi.enable(function(err) { // hotkeys
-
-				if (err) {
-					errorlog(err);
-				}
+			WebMidi.enable().then(() =>{
 
 				WebMidi.addListener("connected", function(e) {
 					log(e);
@@ -3194,16 +3315,18 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 				
 				if (session.midiOut===true){
 					for (var i = 0; i < WebMidi.inputs.length; i++) {
+						
 						var input = WebMidi.inputs[i];
 						
-						input.addListener("midimessage", "all", function(e) {
+						input.addListener("midimessage", function(e) {
 							log(e);
 							var msg = {};
 							msg.midi = {};
 							msg.midi.d = e.data;
 							msg.midi.s = e.timestamp;
-							msg.midi.t = e.type;
-							
+							if (e.message && e.message.channel){
+								msg.midi.c = e.message.channel;
+							}
 							for (var UUID in session.pcs){
 								if (session.pcs[UUID].allowMIDI){
 									session.sendMessage(msg, UUID);
@@ -3214,14 +3337,15 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 				} else if (session.midiOut==parseInt(session.midiOut)){
 					try{
 						var input = WebMidi.inputs[parseInt(session.midiOut)-1];
-						input.addListener("midimessage", "all", function(e) {
-							log(e);
+						input.addListener("midimessage", function(e) {
+							console.log(e);
 							var msg = {};
 							msg.midi = {};
 							msg.midi.d = e.data;
-							msg.midi.s = e.timestamp;
-							msg.midi.t = e.type;
-							
+							msg.midi.s = parseInt(10000*e.timestamp)/10000.0;
+							if (e.message && e.message.channel){
+								msg.midi.c = e.message.channel;
+							}
 							for (var UUID in session.pcs){
 								if (session.pcs[UUID].allowMIDI){
 									session.sendMessage(msg, UUID);
@@ -3232,51 +3356,36 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 				}
 				
 				for (var i = 0; i < WebMidi.inputs.length; i++) {
+					
+					if (session.midiDevice && (session.midiDevice!==(i+1))){continue;}
+					
 					var input = WebMidi.inputs[i];
-					input.addListener('noteon', "all", function(e) {
-						log(e);
-						var note = e.note.name + e.note.octave;
-						var velocity = e.velocity || false;
-						midiHotkeysNote(note,velocity);
-					});
-					input.addListener('controlchange', "all", function(e) {
-						
-						if (session.midiHotkeys==4){
-							/* channel: 1
-							controller: {number: 110, name: undefined}
-							data: Uint8Array(3) [176, 110, 3]
-							target: Input {_userHandlers: {…}, _midiInput: MIDIInput, …}
-							timestamp: 98235.34000001382
-							type: "controlchange"
-							value: 3 */
+					if (session.midiChannel){
+						input = input.channels[session.midiChannel];
+					}
+					if (session.midiHotkeys==4){
+						input.addListener('controlchange', function(e) {
 							log(e);
-							if (e.channel!==1){
-								errorlog("VDO.Ninja is currently configured for use on channel 1 for MIDI hotkeys");
-								return;
-							} // channel 1?
-							
-							var command = e.controller.number;
-							var value = e.value;
-							
-							midiHotkeysCommand(command, value);
-						}
-					});
+							midiHotkeysCommand(e.controller.number, e.rawValue);
+						});
+					} else {
+						input.addListener('noteon', function(e) {
+							log(e);
+							var note = e.note.name + e.note.octave;
+							var velocity = e.velocity || false;
+							midiHotkeysNote(note,velocity);
+						});
+					}
 				}
-			});
+			}).catch(errorlog);
 		};
-		script.src = "./thirdparty/webmidi.js"; // dynamically load this only if its needed. Keeps loading time down.
+		script.src = "./thirdparty/webmidi3.js"; // dynamically load this only if its needed. Keeps loading time down.
 		document.head.appendChild(script);
 	} else if (session.midiIn){
 		var script = document.createElement('script');
-		script.src = "./thirdparty/webmidi.js"; // dynamically load this only if its needed. Keeps loading time down.
+		script.src = "./thirdparty/webmidi3.js"; // dynamically load this only if its needed. Keeps loading time down.
 		script.onload = function() {
-			WebMidi.enable(function(err) { // hotkeys
-				if (err) {
-					errorlog(err);
-				}
-				console.log(WebMidi.outputs);
-
-			});
+			WebMidi.enable().then(() => console.log(WebMidi.outputs)).catch(errorlog);
 		}
 		document.head.appendChild(script);
 	}

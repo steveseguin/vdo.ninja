@@ -343,6 +343,19 @@ button.white:active {
 	color: #101020;
 }
 
+
+body.darktheme .credits {
+	color: #707a93;
+}
+
+body.darktheme .credits>a {
+	color: #707a93;
+}
+
+body.darktheme .credits>a:visited {
+	color: #707a93;
+}
+
 .chevron {
 	padding: 0px 6px;
 }
@@ -538,7 +551,7 @@ hr {
     top: 1px;
 	background-color: #FFF2;
 	font-size: 1.5em;
-	display:none;
+	display:block;
 	z-index: 2;
 	cursor: help;
 }
@@ -551,11 +564,15 @@ hr {
 .signal-meter[data-cpu="1"]>.la-signal {
 	display:none;
 }
-.signal-meter[data-cpu="1"]>.la-fire {
+.signal-meter[data-cpu="1"]>.la-fire-alt {
 	display:block;
+}
+.signal-meter[data-cpu="1"] {
+	display:block!important;
 }
 .signal-meter[data-level="0"] {
 	color:#000F;
+	display:none;
 }
 .signal-meter[data-level="1"] {
 	color:#FF1B01;

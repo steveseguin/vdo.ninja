@@ -74,7 +74,8 @@ var miscTranslations = {
 	"enter-new-codirector-password": "Enter a co-director password to use",
 	"control-room-co-director": "Control Room: Co-Director",
 	"signal-meter": "Video packet loss indicator of video preview; green is good, red is bad. Flame implies CPU is overloaded. May not reflect the packet loss seen by scenes or other guests.",
-	"waiting-for-the-stream": "Waiting for the stream. Tip: Adding &cleanoutput to the URL will hide this spinner, or click to retry, which will also hide it."
+	"waiting-for-the-stream": "Waiting for the stream. Tip: Adding &cleanoutput to the URL will hide this spinner, or click to retry, which will also hide it.",
+	"main-director": "Main Director"
 };
 
 // function log(msg){ // uncomment to enable logging.
@@ -1592,7 +1593,6 @@ function setupIncomingVideoTracking(v, UUID){  // video element.
 	v.usermuted = false;
 	
 	v.addEventListener('volumechange',function(e){
-		console.warn("volume changed");
 		var muteState = checkMuteState(UUID);
 		if (this.muted && (this.muted !== muteState)){
 			this.usermuted = true;
@@ -1696,6 +1696,9 @@ function updateMixerRun(e=false){  // this is the main auto-mixing code.  It's a
 			} else if (session.aspectratio==2){
 				arW = 12.0; // square root; cause why not.
 				arH = 12.0;
+			} else if (session.aspectratio==3){
+				arW = 12.0; // square root; cause why not.
+				arH = 9.0;
 			}
 		}
 		
@@ -3051,7 +3054,7 @@ function updateMixerRun(e=false){  // this is the main auto-mixing code.  It's a
 			if (session.signalMeter){
 				if (vid.dataset.UUID && !session.rpcs[vid.dataset.UUID].signalMeter){
 					session.rpcs[vid.dataset.UUID].signalMeter = getById("signalMeterTemplate").cloneNode(true);
-					session.rpcs[vid.dataset.UUID].signalMeter.style.display = "block";
+					//session.rpcs[vid.dataset.UUID].signalMeter.style.display = "block";
 					session.rpcs[vid.dataset.UUID].signalMeter.id = "signalMeter_" + vid.dataset.UUID;
 					session.rpcs[vid.dataset.UUID].signalMeter.dataset.level = 0;
 					session.rpcs[vid.dataset.UUID].signalMeter.title = miscTranslations["signal-meter"];
@@ -4734,6 +4737,11 @@ function printMyStats(menu) { // see: setupStatsMenu
 	}
 	printViewValues(session.stats);
 	menu.innerHTML += "<button onclick='session.forcePLI(null,event);' data-translate='send-keyframe-to-viewer'>Send Keyframe to Viewers</button>";
+	
+	if (session.mc){
+		printViewValues(session.mc.stats);
+		menu.innerHTML += "<hr>";
+	}
 	for (var uuid in session.pcs) {
 		printViewValues(session.pcs[uuid].stats);
 		menu.innerHTML += "<hr>";
@@ -4748,6 +4756,10 @@ function printMyStats(menu) { // see: setupStatsMenu
 }
 
 
+function publisherMeshcastStats(){
+	
+}
+
 function updateLocalStats(){
 	
 	var totalBitrate = 0;
@@ -4757,6 +4769,223 @@ function updateLocalStats(){
 	var totalVideo = 0;
 	var totalAudio = 0;
 	var totalScenes = 0;
+	
+	
+	if (session.mc){
+		try {
+			var atot = 0;
+			var senders = session.mc.getSenders(); // for any connected peer, update the video they have if connected with a video already.
+			senders.forEach((sender) => { // I suppose there could be a race condition between negotiating and updating this. if joining at the same time as changnig streams?
+				if (sender.track && sender.track.kind == "video" && sender.track.enabled) {
+					totalVideo+=1
+				} else if (sender.track && sender.track.kind == "audio" && sender.track.enabled && !session.muted) {
+					atot=1;
+				}
+			});
+			totalAudio += atot;
+			
+			if ("video_bitrate_kbps" in session.mc.stats){
+				totalBitrate+=session.mc.stats.video_bitrate_kbps || 0;
+			}
+			if ("audio_bitrate_kbps" in session.mc.stats){
+				totalBitrate+=session.mc.stats.audio_bitrate_kbps || 0;
+			}
+			if ("total_sending_bitrate_kbps" in session.mc.stats){
+				totalBitrate2+=session.mc.stats.total_sending_bitrate_kbps || 0;
+			}
+			
+			if ("quality_limitation_reason" in session.mc.stats){
+				if (session.mc.stats.quality_limitation_reason == "cpu"){
+					cpuLimited=true;
+				}
+			}
+			
+			setTimeout(function(){
+
+				if (!session.mc){return;}
+				session.mc.getStats().then(function(stats) {
+					if ("audio_bitrate_kbps" in session.mc.stats){
+						session.mc.stats.audio_bitrate_kbps=0;
+					}
+					stats.forEach(stat => {
+						if (stat.type == "transport"){
+							if ("bytesSent" in stat) {
+								if ("_bytesSent" in session.mc.stats){
+									if (session.mc.stats._timestamp){
+										if (stat.timestamp){
+											session.mc.stats.total_sending_bitrate_kbps = parseInt(8*(stat.bytesSent - session.mc.stats._bytesSent)/(stat.timestamp - session.mc.stats._timestamp));
+										}
+									}
+								}
+								session.mc.stats._bytesSent = stat.bytesSent;
+							}
+							if ("timestamp" in stat) {
+								session.mc.stats._timestamp = stat.timestamp;
+							}
+						} else if (stat.type == "outbound-rtp") {
+							if (stat.kind == "video") {
+								
+								if ("framesPerSecond" in stat) {
+									session.mc.stats.resolution = stat.frameWidth + " x " + stat.frameHeight + " @ " + stat.framesPerSecond;
+								}
+								if ("encoderImplementation" in stat) {
+									session.mc.stats.video_encoder = stat.encoderImplementation;
+									if (stat.encoderImplementation=="ExternalEncoder"){
+										session.mc.stats._hardwareEncoder = true; // I won't set this to false again, just because once I know it has one, I just need to assume it could always be used unexpectednly
+										session.mc.encoder = true;
+										
+									} else {
+										session.mc.encoder = false; // this may not be actually accurate, but lets assume so.
+									}
+								}
+								if ("qualityLimitationReason" in stat) {
+									if (session.mc.stats.quality_limitation_reason){
+										if (session.mc.stats.quality_limitation_reason !== stat.qualityLimitationReason){
+											try{
+												var miniInfo = {};
+												miniInfo.qlr = stat.qualityLimitationReason;
+												if ("_hardwareEncoder" in session.mc.stats){
+													miniInfo.hw_enc = session.mc.stats._hardwareEncoder;
+												} else {
+													miniInfo.hw_enc = null;
+												}
+												session.sendMessage({"miniInfo":miniInfo});
+											} catch(e){warnlog(e);}
+										}
+									}
+									session.mc.stats.quality_limitation_reason = stat.qualityLimitationReason;
+								}
+								
+								if ("bytesSent" in stat) {
+									if ("_bytesSentVideo" in session.mc.stats){
+										if (session.mc.stats._timestamp1){
+												session.mc.stats.video_bitrate_kbps = parseInt(8*(stat.bytesSent - session.mc.stats._bytesSentVideo)/(stat.timestamp - session.mc.stats._timestamp1));
+											if (stat.timestamp){
+											}
+										}
+									}
+									session.mc.stats._bytesSentVideo = stat.bytesSent;
+								}
+								
+								if ("nackCount" in stat) {
+									if ("_nackCount" in session.mc.stats){
+										if (session.mc.stats._timestamp1){
+											if (stat.timestamp){
+												session.mc.stats.nacks_per_second = parseInt(10000*(stat.nackCount - session.mc.stats._nackCount)/(stat.timestamp - session.mc.stats._timestamp1))/10;
+											}
+										}
+									}
+								}
+								if ("retransmittedBytesSent" in stat) {
+									if ("_retransmittedBytesSent" in session.mc.stats){
+										if (session.mc.stats._timestamp1){
+											if (stat.timestamp){
+												session.mc.stats.retransmitted_kbps = parseInt(8*(stat.retransmittedBytesSent - session.mc.stats._retransmittedBytesSent)/(stat.timestamp - session.mc.stats._timestamp1));
+											}
+										}
+									}
+								}
+								
+								if ("nackCount" in stat) {
+									session.mc.stats._nackCount = stat.nackCount;
+								}
+								
+								if ("retransmittedBytesSent" in stat) {
+									session.mc.stats._retransmittedBytesSent = stat.retransmittedBytesSent;
+									
+								}
+								
+								if ("timestamp" in stat) {
+									session.mc.stats._timestamp1 = stat.timestamp;
+								}
+								
+								if ("pliCount" in stat) {
+									session.mc.stats.total_pli_count = stat.pliCount;
+								}
+								if ("keyFramesEncoded" in stat) {
+									session.mc.stats.total_key_frames_encoded = stat.keyFramesEncoded;
+								}
+								
+								
+							} else if (stat.kind == "audio") {
+								if ("bytesSent" in stat) {
+									if (session.mc.stats._bytesSentAudio){
+										if (session.mc.stats._timestamp2){
+											if (stat.timestamp){
+												if ("audio_bitrate_kbps" in session.mc.stats){
+													session.mc.stats.audio_bitrate_kbps += parseInt(8*(stat.bytesSent - session.mc.stats._bytesSentAudio)/(stat.timestamp - session.mc.stats._timestamp2));
+												} else {
+													session.mc.stats.audio_bitrate_kbps=0;
+												}
+											}
+										}
+									}
+								}
+								if ("timestamp" in stat) {
+									session.mc.stats._timestamp2 = stat.timestamp;
+								}
+								
+								if ("bytesSent" in stat) {
+									session.mc.stats._bytesSentAudio = stat.bytesSent;
+									
+								}
+							}
+						} else if (stat.type == "remote-candidate") {
+							
+							if ("candidateType" in stat) {
+								session.mc.stats.remote_candidateType = stat.candidateType;
+								if (stat.candidateType === "relay"){
+									if ("ip" in stat) {
+										session.mc.stats.remote_relay_IP = stat.ip;
+									}
+									if ("relayProtocol" in stat) {
+										session.mc.stats.remote_relayProtocol = stat.relayProtocol;	
+									}									
+								} else {
+									try {
+										delete session.mc.stats.remote_relay_IP;
+										delete session.mc.stats.remote_relayProtocol;
+									} catch(e){}
+								}
+							}
+						} else if (stat.type == "local-candidate") {
+							if ("candidateType" in stat) {
+								session.mc.stats.local_candidateType = stat.candidateType;
+								
+								if (stat.candidateType === "relay"){
+									if ("ip" in stat) {
+										session.mc.stats.local_relayIP = stat.ip;
+									}
+									if ("relayProtocol" in stat) {
+										session.mc.stats.local_relayProtocol = stat.relayProtocol;								
+									}
+								} else {
+									try {
+										delete session.mc.stats.local_relayIP;
+										delete session.mc.stats.local_relayProtocol;
+									} catch(e){}
+								}
+								
+							}
+						} else if ((stat.type == "candidate-pair" ) && (stat.nominated)) {
+									
+							if ("availableOutgoingBitrate" in stat){
+								session.mc.stats.available_outgoing_bitrate_kbps = parseInt(stat.availableOutgoingBitrate/1024);
+							}
+							if ("totalRoundTripTime" in stat){
+								if ("responsesReceived" in stat){
+									session.mc.stats.average_roundTripTime_ms = parseInt((stat.totalRoundTripTime/stat.responsesReceived)*1000);
+								}
+							}
+						}
+						return;
+					});
+					return;
+				});
+			}, 0);
+		} catch(e){errorlog(e);}
+	}
+	
 	for (var uuid in session.pcs) {
 		var atot = 0;
 		var senders = session.pcs[uuid].getSenders(); // for any connected peer, update the video they have if connected with a video already.
@@ -4933,35 +5162,54 @@ function updateLocalStats(){
 						}
 					} else if (stat.type == "remote-candidate") {
 						if ("relayProtocol" in stat) {
-							if ("ip" in stat) {
-								session.pcs[UUID].stats.remote_relay_IP = stat.ip;
-							}
-							session.pcs[UUID].stats.remote_relayProtocol = stat.relayProtocol;
+							
 						}
 						if ("candidateType" in stat) {
 							session.pcs[UUID].stats.remote_candidateType = stat.candidateType;
+							if (stat.candidateType === "relay"){
+								if ("ip" in stat) {
+									session.pcs[UUID].stats.remote_relay_IP = stat.ip;
+								}
+								if ("relayProtocol" in stat) {
+									session.pcs[UUID].stats.remote_relayProtocol = stat.relayProtocol;								
+								}
+							} else {
+								try {
+									delete session.pcs[UUID].stats.remote_relay_IP;
+									delete session.pcs[UUID].stats.remote_relayProtocol;
+								} catch(e){}
+							}
 						}
 					} else if (stat.type == "local-candidate") {
-						if ("relayProtocol" in stat) {
-							if ("ip" in stat) {
-								session.pcs[UUID].stats.local_relayIP = stat.ip;
-							}
-							session.pcs[UUID].stats.local_relayProtocol = stat.relayProtocol;
-						}
 						if ("candidateType" in stat) {
 							session.pcs[UUID].stats.local_candidateType = stat.candidateType;
+							
+							if (stat.candidateType === "relay"){
+								if ("ip" in stat) {
+									session.pcs[UUID].stats.local_relayIP = stat.ip;
+								}
+								if ("relayProtocol" in stat) {
+									session.pcs[UUID].stats.local_relayProtocol = stat.relayProtocol;								
+								}
+							} else {
+								try {
+									delete session.pcs[UUID].stats.local_relayIP;
+									delete session.pcs[UUID].stats.local_relayProtocol;
+								} catch(e){}
+							}
+							
 						}
 					} else if ((stat.type == "candidate-pair" ) && (stat.nominated)) {
 								
-								if ("availableOutgoingBitrate" in stat){
-									session.pcs[UUID].stats.available_outgoing_bitrate_kbps = parseInt(stat.availableOutgoingBitrate/1024);
-								}
-								if ("totalRoundTripTime" in stat){
-									if ("responsesReceived" in stat){
-										session.pcs[UUID].stats.average_roundTripTime_ms = parseInt((stat.totalRoundTripTime/stat.responsesReceived)*1000);
-									}
-								}
+						if ("availableOutgoingBitrate" in stat){
+							session.pcs[UUID].stats.available_outgoing_bitrate_kbps = parseInt(stat.availableOutgoingBitrate/1024);
+						}
+						if ("totalRoundTripTime" in stat){
+							if ("responsesReceived" in stat){
+								session.pcs[UUID].stats.average_roundTripTime_ms = parseInt((stat.totalRoundTripTime/stat.responsesReceived)*1000);
 							}
+						}
+					}
 					return;
 				});
 				return;
@@ -5018,7 +5266,7 @@ function updateStats(obsvc = false) {
 				} else {
 					var framerateFPS = track.getSettings().frameRate;
 					if (framerateFPS){
-						getById(wcs).innerHTML = "Current Video Settings: " + (track.getSettings().width || 0) + "x" + (track.getSettings().height || 0) + "@" + (framerateFPS * 10 / 10) + "fps";
+						getById(wcs).innerHTML = "Current Video Settings: " + (track.getSettings().width || 0) + "x" + (track.getSettings().height || 0) + "@" + (parseInt(framerateFPS * 100) / 100.0) + "fps";
 					} else {
 						getById(wcs).innerHTML = "Current Video Settings: " + (track.getSettings().width || 0) + "x" + (track.getSettings().height || 0);
 					}
@@ -8326,7 +8574,7 @@ function createControlBox(UUID, soloLink, streamID) {
 			session.rpcs[UUID].signalMeter = getById("signalMeterTemplate").cloneNode(true);
 			session.rpcs[UUID].signalMeter.id = "signalMeter_" + UUID;
 			session.rpcs[UUID].signalMeter.dataset.level = 0;
-			session.rpcs[UUID].signalMeter.style.display = "block";
+			//session.rpcs[UUID].signalMeter.style.display = "block";
 			session.rpcs[UUID].signalMeter.dataset.UUID = UUID;
 			session.rpcs[UUID].signalMeter.title = miscTranslations["signal-meter"];
 			session.rpcs[UUID].signalMeter.addEventListener('click', function(e) { // show stats of video if double clicked
@@ -11330,7 +11578,7 @@ async function grabVideo(quality = 0, eleName = 'previewWebcam', selector = "sel
 		}
 
 
-		if ((iOS) || (iPad)) { // iOS will not work correctly at 1080p; likely a h264 codec issue.
+		if ((iOS || iPad) && safariVersion()<15) { // iOS will not work correctly at 1080p; likely a h264 codec issue. 
 			if (quality == 0) {
 				quality = 1;
 			}
@@ -11338,7 +11586,7 @@ async function grabVideo(quality = 0, eleName = 'previewWebcam', selector = "sel
 
 		var constraints = {
 			audio: false,
-			video: getUserMediaVideoParams(quality, iOS)
+			video: getUserMediaVideoParams(quality, (iOS || iPad))
 		};
 
 		log("Quality selected:" + quality);
@@ -11635,21 +11883,21 @@ function updateRenderOutpipe(){ // video only.
 				
 				toggleVideoMute(true);
 			}
-			if (session.meshcast){
-				if (session.mc.getSenders){ // should only be 0 or 1 video sender, ever.
-					var added = false;
-					session.mc.getSenders().forEach((sender) => { // I suppose there could be a race condition between negotiating and updating this. if joining at the same time as changnig streams?
-						if (sender.track && sender.track.kind == "video") {
-							sender.replaceTrack(track); // replace may not be supported by all browsers.  eek.
-							sender.track.enabled = true;
-							added = true;
-						}
-					})
-					if (added == false) {
-						session.mc.addTrack(track, session.videoElement.srcObject); // can't replace, so adding
+			
+			if (session.mc && session.mc.getSenders){ // should only be 0 or 1 video sender, ever.
+				var added = false;
+				session.mc.getSenders().forEach((sender) => { // I suppose there could be a race condition between negotiating and updating this. if joining at the same time as changnig streams?
+					if (sender.track && sender.track.kind == "video") {
+						sender.replaceTrack(track); // replace may not be supported by all browsers.  eek.
+						sender.track.enabled = true;
+						added = true;
 					}
+				})
+				if (added == false) {
+					session.mc.addTrack(track, session.videoElement.srcObject); // can't replace, so adding
 				}
 			}
+			
 			
 			for (UUID in session.pcs) {
 				try {
@@ -11809,70 +12057,69 @@ function senderAudioUpdate(callback=false){
 		if (session.videoElement.srcObject.getAudioTracks()) { 
 			var tracks = session.videoElement.srcObject.getAudioTracks();
 			
-			if (session.meshcast){
-				if (session.mc.getSenders){
-					session.mc.getSenders().forEach((sender) => {  // disable senders that aren't part of the active tracks
-						var good = false;
-						if (sender.track && sender.track.id && (sender.track.kind == "audio")) {
-							tracks.forEach(function(track) {
-								if (track.id == sender.track.id) {
-									good = true;
-								}
-							});
-						} else { // video or something else; ignore it.
-							return;
-						}
-						if (good) {
-							return;
-						}
-						sender.track.enabled = false;
-						//session.mc.removeTrack(sender); //  Apparently removeTrack causes renogiation; also kills send/recv. avoid
-					});
-
-					if (tracks.length) {
+			if (session.mc && session.mc.getSenders){
+				session.mc.getSenders().forEach((sender) => {  // disable senders that aren't part of the active tracks
+					var good = false;
+					if (sender.track && sender.track.id && (sender.track.kind == "audio")) {
 						tracks.forEach(function(track) {
-							var matched = false;
-							session.mc.getSenders().forEach((sender) => {   // is the track in the current sender list?
-								if (sender.track && sender.track.id && (sender.track.kind == "audio")) {
-									warnlog(sender.track.id + " " + track.id);
-									if (sender.track.id == track.id) {
-										warnlog("MATCHED 1");
-										matched = true;
-									}
-								}
-							});
-							if (matched) { // track already in the current sender list; skip
-								return;
+							if (track.id == sender.track.id) {
+								good = true;
 							}
-							var added = false;
-							session.mc.getSenders().forEach((sender) => {
-								if (added) {
-									return;
+						});
+					} else { // video or something else; ignore it.
+						return;
+					}
+					if (good) {
+						return;
+					}
+					sender.track.enabled = false;
+					//session.mc.removeTrack(sender); //  Apparently removeTrack causes renogiation; also kills send/recv. avoid
+				});
+
+				if (tracks.length) {
+					tracks.forEach(function(track) {
+						var matched = false;
+						session.mc.getSenders().forEach((sender) => {   // is the track in the current sender list?
+							if (sender.track && sender.track.id && (sender.track.kind == "audio")) {
+								warnlog(sender.track.id + " " + track.id);
+								if (sender.track.id == track.id) {
+									warnlog("MATCHED 1");
+									matched = true;
 								}
-								if (sender.track && (sender.track.kind == "audio") && (sender.track.enabled == false)) { // replace instead of add new tracks; make sure to enable old tracks being replaced
-									sender.replaceTrack(track);
-									sender.track.enabled = true;
-									added = true;
-									warnlog("ADDED 2");
-								}
-							});
+							}
+						});
+						if (matched) { // track already in the current sender list; skip
+							return;
+						}
+						var added = false;
+						session.mc.getSenders().forEach((sender) => {
 							if (added) {
 								return;
 							}
-							var sender = session.mc.addTrack(track, session.videoElement.srcObject);  //  didn't replace , since no old disabled tracks available, so let's add a new track.
+							if (sender.track && (sender.track.kind == "audio") && (sender.track.enabled == false)) { // replace instead of add new tracks; make sure to enable old tracks being replaced
+								sender.replaceTrack(track);
+								sender.track.enabled = true;
+								added = true;
+								warnlog("ADDED 2");
+							}
 						});
-					} else {
-						if (session.mc.getSenders){
-							session.mc.getSenders().forEach((sender) => { // disable all senders, since no tracks available.
-								if (sender.track && sender.track.kind == "audio") {
-									sender.track.enabled = false; // (trying this instead)
-									//session.pcs[UUID].removeTrack(sender); //  Apparently removeTrack causes renogiation; also kills send/recv.
-								}
-							});
+						if (added) {
+							return;
 						}
+						var sender = session.mc.addTrack(track, session.videoElement.srcObject);  //  didn't replace , since no old disabled tracks available, so let's add a new track.
+					});
+				} else {
+					if (session.mc.getSenders){
+						session.mc.getSenders().forEach((sender) => { // disable all senders, since no tracks available.
+							if (sender.track && sender.track.kind == "audio") {
+								sender.track.enabled = false; // (trying this instead)
+								//session.pcs[UUID].removeTrack(sender); //  Apparently removeTrack causes renogiation; also kills send/recv.
+							}
+						});
 					}
 				}
 			}
+			
 			for (UUID in session.pcs) {
 				if (session.pcs[UUID].allowAudio == true) {
 					session.pcs[UUID].getSenders().forEach((sender) => {
@@ -16250,8 +16497,20 @@ function createIframePopup() {
 	}
 	
 	if (session.screensharefps!==false){
-		extras += "&maxframerate="+session.screensharefps;
+		extras += "&maxframerate="+parseInt(session.screensharefps*100)/100.0;
 	} 
+	if (session.screenshareAEC!==false){
+		extras += "&aec=1";
+	} 
+	if (session.screenshareDenoise!==false){
+		extras += "&denoise=1";
+	} 
+	if (session.screenshareAutogain!==false){
+		extras += "&autogain=1";
+	}
+	if (session.screenshareStereo!==false){
+		extras += "&stereo="+session.screenshareStereo;
+	}
 	
 	if (session.muted){
 		iframe.src = "./?audiodevice=1&screenshare&transparent&cleanish&noheader&autostart&view&muted&room=" + session.roomid + "&push=" + iFrameID + extras;
@@ -19436,6 +19695,11 @@ function midiHotkeysCommand(command, value){
 			if (elements[guestslot]) {
 				remoteDisplayMute(elements[guestslot]);
 			}
+		} else if (value == 8) { 
+			var elements = document.querySelectorAll('[data-action-type="force-keyframe"][data--u-u-i-d]');
+			if (elements[guestslot]) {
+				requestKeyframeScene(elements[guestslot]);
+			}
 		} else if (value == 12) { 
 			var elements = document.querySelectorAll('[data-action-type="addToScene"][data-scene="2"][data--u-u-i-d]');
 			if (elements[guestslot]) {
@@ -19492,7 +19756,11 @@ function playbackMIDI(msg){
 		if ("d" in msg){
 			for (var i in WebMidi.outputs){
 				try {
-					WebMidi.outputs[i].send(msg.d[0], [msg.d[1], msg.d[2]]);
+					if ("c" in msg){
+						WebMidi.outputs[i].channels[msg.c].send(msg.d[0], [msg.d[1], msg.d[2]]);
+					} else {
+						WebMidi.outputs[i].send(msg.d[0], [msg.d[1], msg.d[2]]);
+					}
 				} catch(e){errorlog(e);}
 			}
 		}
@@ -19500,7 +19768,11 @@ function playbackMIDI(msg){
 		try {
 			var i = parseInt(session.midiIn)-1;
 			if ("d" in msg){
-				WebMidi.outputs[i].send(msg.d[0], [msg.d[1], msg.d[2]]);
+				if ("c" in msg){
+					WebMidi.outputs[i].channels[msg.c].send(msg.d[0], [msg.d[1], msg.d[2]]);
+				} else {
+					WebMidi.outputs[i].send(msg.d[0], [msg.d[1], msg.d[2]]);
+				}
 			}
 		} catch(e){errorlog(e);};
 	}
