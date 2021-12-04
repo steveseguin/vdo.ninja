@@ -2180,7 +2180,7 @@ function updateMixerRun(e=false){  // this is the main auto-mixing code.  It's a
 				}
 				if (session.rpcs[i].videoElement){ // remote feeds
 					if (session.rpcs[i].videoElement.style.display!="none"){
-						if (session.rpcs[i].videoElement.srcObject.getVideoTracks().length){ // only count videos with actual video tracks; audio-only excluded
+						if (session.rpcs[i].videoElement.srcObject && session.rpcs[i].videoElement.srcObject.getVideoTracks().length){ // only count videos with actual video tracks; audio-only excluded
 							if (session.rpcs[i].videoMuted){
 								// it's video muted
 							//	mediaPool_invisible.push(session.rpcs[i].videoElement); // skipped later on
@@ -3415,7 +3415,7 @@ function updateMixerRun(e=false){  // this is the main auto-mixing code.  It's a
 									
 									var bigPlayButton = document.getElementById("bigPlayButton");
 									if (bigPlayButton){
-										bigPlayButton.innerHTML = '<i id="playButton" class="las la-play-circle"></i>';
+										bigPlayButton.innerHTML = '<span id="playButton"></span>';
 										bigPlayButton.style.display="block";
 									}
 								});
@@ -3819,7 +3819,7 @@ function setupCanvas() {
 		session.canvas = document.createElement("canvas");
 		session.canvas.width = 512;
 		session.canvas.height = 288;
-		session.canvasCtx = session.canvas.getContext('2d', {alpha: false, desynchronized: true});
+		session.canvasCtx = session.canvas.getContext('2d', {alpha: session.alpha, desynchronized: true});
 		//session.canvasCtx.width=288;
 		//session.canvasCtx.height=720;
 		session.canvasCtx.fillStyle = "blue";
@@ -19322,7 +19322,7 @@ function createStyleCanvas(UUID){  // append the delay Node to the track??? WOUL
 		session.rpcs[UUID].canvas = document.createElement("canvas");
 		session.rpcs[UUID].canvas.dataset.UUID = UUID
 		session.rpcs[UUID].canvas.style.pointerEvents = "auto";
-		session.rpcs[UUID].canvasCtx = session.rpcs[UUID].canvas.getContext('2d', { alpha: false });
+		session.rpcs[UUID].canvasCtx = session.rpcs[UUID].canvas.getContext('2d', { alpha: session.alpha });
 		//
 		session.rpcs[UUID].canvas.addEventListener('click', function(e) { // show stats of video if double clicked
 			log("clicked");

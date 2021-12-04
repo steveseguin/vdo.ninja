@@ -1623,6 +1623,11 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 		session.slots = parseInt(urlParams.get('slots')) || 4;
 	}
 	
+	if (urlParams.has('chunked')) {
+		session.chunked = parseInt(urlParams.get('chunked')) || 1;
+		session.alpha = true;
+	}
+	
 	if (urlParams.has('debug')){
 		debugStart();
 	}

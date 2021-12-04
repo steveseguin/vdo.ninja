@@ -75,13 +75,17 @@ table {
 }
 
 #playButton {
-  font-size: 50vh;
-  border-radius: 50vh;
-  font-size: min(50vw, 50vh);
-  cursor:pointer;
-  opacity:100%;
-  margin-top: 20vh;
-  background-color:#444;
+    border-radius: 50vh;
+    width: min(50vw, 50vh);
+    cursor: pointer;
+    opacity: 100%;
+    margin-top: 20vh;
+    background-color: #646262;
+    background-image: url("data:image/svg+xml,%3C%3Fxml version='1.0' encoding='utf-8'%3F%3E%3Csvg version='1.1' id='Layer_1' xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink' x='0px' y='0px' viewBox='0 0 122.88 122.88' style='enable-background:new 0 0 122.88 122.88' xml:space='preserve'%3E%3Cstyle type='text/css'%3E.st0%7Bfill-rule:evenodd;clip-rule:evenodd;%7D%3C/style%3E%3Cg%3E%3Cpath class='st0' d='M61.44,0c33.93,0,61.44,27.51,61.44,61.44s-27.51,61.44-61.44,61.44S0,95.37,0,61.44S27.51,0,61.44,0L61.44,0z M83.31,65.24c3.13-2.02,3.12-4.27,0-6.06L50.98,40.6c-2.55-1.6-5.21-0.66-5.14,2.67l0.1,37.55c0.22,3.61,2.28,4.6,5.32,2.93 L83.31,65.24L83.31,65.24z M61.44,12.48c27.04,0,48.96,21.92,48.96,48.96c0,27.04-21.92,48.96-48.96,48.96S12.48,88.48,12.48,61.44 C12.48,34.4,34.4,12.48,61.44,12.48L61.44,12.48z'/%3E%3C/g%3E%3C/svg%3E");
+    display: inline-block;
+    height: min(50vw, 50vh);
+    background-repeat: no-repeat;
+	border: #646262 7vh solid;
 }
 
 tr {
