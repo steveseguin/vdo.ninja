@@ -138,11 +138,14 @@
 				<div id="mutevideobutton" onmousedown="event.preventDefault(); event.stopPropagation();"  title="Disable the Camera" alt="Disable the Camera" onclick="toggleVideoMute()"   tabindex="19" role="button" aria-pressed="false" onkeyup="enterPressedClick(event,this);"  class="advanced float" style="cursor: pointer;">
 					<i id="mutevideotoggle" onmousedown="event.preventDefault(); event.stopPropagation();"  class="toggleSize las la-video my-float"></i>
 				</div>
-				<div id="screensharebutton" onmousedown="event.preventDefault(); event.stopPropagation();"  title="Share a Screen with others" alt="Share a Screen with others" onclick="toggleScreenShare()" tabindex="20" role="button" aria-pressed="false" onkeyup="enterPressedClick(event,this);"  class="float advanced" style="cursor: pointer;">
+				<div id="screensharebutton" onmousedown="event.preventDefault(); event.stopPropagation();"  title="Share a Screen with others" alt="Share a Screen with others" onclick="screenshareTypeDecider(1)" tabindex="20" role="button" aria-pressed="false" onkeyup="enterPressedClick(event,this);"  class="float advanced" style="cursor: pointer;">
 					<i id="screensharetoggle" onmousedown="event.preventDefault(); event.stopPropagation();"  class="toggleSize las la-desktop my-float"></i>
 				</div>
-				<div id="screenshare2button" onmousedown="event.preventDefault(); event.stopPropagation();"  title="Create a Secondary Stream" alt="Create a Secondary Stream" onclick="createIframePopup()" tabindex="20" role="button" aria-pressed="false" onkeyup="enterPressedClick(event,this);"  class="float advanced" style="cursor: pointer;">
+				<div id="screenshare2button" onmousedown="event.preventDefault(); event.stopPropagation();"  title="Create a Secondary Stream" alt="Create a Secondary Stream" onclick="screenshareTypeDecider(2)" tabindex="20" role="button" aria-pressed="false" onkeyup="enterPressedClick(event,this);"  class="float advanced" style="cursor: pointer;">
 					<i id="screenshare2toggle" onmousedown="event.preventDefault(); event.stopPropagation();"  class="toggleSize las  la-tv my-float"></i>
+				</div>
+				<div id="screenshare3button" onmousedown="event.preventDefault(); event.stopPropagation();"  title="Create a Third Stream" alt="Create a Third Stream" onclick="screenshareTypeDecider(3)" tabindex="20" role="button" aria-pressed="false" onkeyup="enterPressedClick(event,this);"  class="float advanced" style="cursor: pointer;">
+					<i id="screenshare3toggle" onmousedown="event.preventDefault(); event.stopPropagation();"  class="toggleSize las  la-tv my-float"></i>
 				</div>
 				<div id="websitesharebutton" onmousedown="event.preventDefault(); event.stopPropagation();"  title="Share a website as an embedded iFRAME" alt="Share a website as an embedded iFRAME" onclick="shareWebsite(false, event)" tabindex="21" role="button" aria-pressed="false" onkeyup="enterPressedClick(event,this);"  class="float advanced" style="cursor: pointer;">
 					<i id="websitesharetoggle" onmousedown="event.preventDefault(); event.stopPropagation();"  class="toggleSize las la-window-maximize my-float"></i>
@@ -340,6 +343,10 @@
 							&nbsp;&nbsp;
 							<i class="las la-cog" style="font-size: 140%; vertical-align: middle;" aria-hidden="true"></i>
 						</span>
+						<div id="cameraTip1" class="cameraTip advanced">
+							<i class="las la-info-circle"></i>
+							<p><span id="cameraTipContext1"></span></p>
+						</div>
 					</span>
 					<br />
 					<center>
@@ -1166,21 +1173,21 @@
 		<div id="controls_blank" style="display: none;">
 			<div class="controlsGrid">
 			
-				<button data-action-type="forward"  data-value="0" title="Move the user to another room, controlled by another director" onclick="directMigrate(this, event);">
+				<button data-action-type="forward" class="mainonly" data-value="0" title="Move the user to another room, controlled by another director" onclick="directMigrate(this, event);">
 					<i class="las la-paper-plane"></i>
 					<span data-translate="forward-to-room">Transfer</span>
 				</button>
 				
-				<button data-action-type="direct-chat" title="Send a Direct Message to this user." onclick="directorSendMessage(this);">
+				<button data-action-type="direct-chat" class="mainonly" title="Send a Direct Message to this user." onclick="directorSendMessage(this);">
 					<span data-translate="send-direct-chat"><i class="las la-envelope"></i> Message</span>
 				</button>
 				
-				<button data-action-type="hangup" data-value="0" title="Force the user to Disconnect. They can always reconnect." onclick="directHangup(this, event);">
+				<button data-action-type="hangup" class="mainonly" data-value="0" title="Force the user to Disconnect. They can always reconnect." onclick="directHangup(this, event);">
 					<i class="las la-sign-out-alt"  style="color:#900"></i>
 					<span data-translate="disconnect-guest" >Hangup</span>
 				</button>
 				
-				<button data-action-type="solo-chat" title="Toggle solo voice chat or hold CTRL/CMD when selecting to make it two-way private." onclick="session.toggleSoloChat(this.dataset.UUID, event);">
+				<button data-action-type="solo-chat" class="mainonly" title="Toggle solo voice chat or hold CTRL/CMD when selecting to make it two-way private." onclick="session.toggleSoloChat(this.dataset.UUID, event);">
 					<span data-translate="voice-chat"><i class="las la-microphone" style="color:#090"></i> Solo Talk</span>
 				</button>
 				
@@ -1203,8 +1210,8 @@
 					<span data-translate="add-to-scene2">add to scene 2</span>
 				</button>
 				
-				<button data-action-type="mute-scene"  class="hidden"  data-cluster="1" title="Remotely Mute this Audio in all remote '&scene' views" onclick="directMute(this, event);">
-					<i class="las la-microphone-slash"  style="color:#900"></i>
+				<button data-action-type="mute-scene" class="hidden"  data-cluster="1" title="Remotely Mute this Audio in all remote '&scene' views" onclick="directMute(this, event);">
+					<i class="las la-microphone-slash" style="color:#900"></i>
 					<span data-translate="mute-scene" >mute in scene</span>
 				</button>
 				
@@ -1256,11 +1263,11 @@
 					<span data-translate="hide-guest" >hide guest</span>
 				</button>
 				
-				<button class="hidden" data-cluster="2" data-action-type="toggle-remote-speaker"title="Toggle the remote guest's speaker output" onclick="remoteSpeakerMute(this, event);">
+				<button class="hidden mainonly" data-cluster="2" data-action-type="toggle-remote-speaker"title="Toggle the remote guest's speaker output" onclick="remoteSpeakerMute(this, event);">
 					<i class="las la-volume-off"></i> <span data-translate="toggle-remote-speaker">Deafen Guest</span>
 				</button>
 				
-				<button class="hidden" data-cluster="2" data-action-type="toggle-remote-display"   title="Toggle the remote guest's display output" onclick="remoteDisplayMute(this, event);">
+				<button class="hidden mainonly" data-cluster="2" data-action-type="toggle-remote-display"   title="Toggle the remote guest's display output" onclick="remoteDisplayMute(this, event);">
 					<i class="las la-eye-slash"></i> <span data-translate="toggle-remote-display">Blind Guest</span>
 				</button>
 				
@@ -1277,17 +1284,15 @@
 					</button>
 				</span>
 				
-				<button class="hidden" data-cluster="2" data-action-type="change-url"  data-value="0" title="Remotely reload the guest's page with a new URL" onclick="directPageReload(this, event);">
+				<button class="hidden mainonly" data-cluster="2" data-action-type="change-url"  data-value="0" title="Remotely reload the guest's page with a new URL" onclick="directPageReload(this, event);">
 					<i class="las la-sync"></i>
 					<span data-translate="change-url">Change URL</span>
 				</button>
 				
-				<button  class="hidden" data-cluster="2" data-action-type="change-params" style="display:none" title="Change user parameters" onclick="promptUser('transferSettingsTemplate', this.dataset.UUID);">
+				<button  class="hidden mainonly" data-cluster="2" data-action-type="change-params" style="display:none" title="Change user parameters" onclick="promptUser('transferSettingsTemplate', this.dataset.UUID);">
 					<i class="las la-cog"></i>
 					<span data-translate="change-params">URL Params</span>
 				</button>
-				
-				
 				
 				<button class="hidden" data-cluster="2"  data-action-type="recorder-local" title="Start Recording this remote stream to this local drive. *experimental*'" onclick="recordVideo(this, event)">
 					<i class="las la-circle"></i>
@@ -1298,12 +1303,12 @@
 					<span data-translate="record-remote"> Record Remote</span>
 				</button>
 				
-				<button  class="hidden" data-cluster="2"  data-action-type="open-file-share" data-value="0" title="Allow the guest to select a file to upload to the director. Once shared, it will show in the chat as a download link." onclick="requestFileUpload(this)">
+				<button  class="hidden mainonly" data-cluster="2"  data-action-type="open-file-share" data-value="0" title="Allow the guest to select a file to upload to the director. Once shared, it will show in the chat as a download link." onclick="requestFileUpload(this)">
 					<i class="las la-file-upload"></i>
 					<span data-translate="request-upload"> Request File</span>
 				</button>
 				
-				<button class="hidden" data-cluster="2" data-action-type="create-timer" data-value="0" title="Set a countdown timer that this guest sees" onclick="directTimer(this, event);">
+				<button class="hidden mainonly" data-cluster="2" data-action-type="create-timer" data-value="0" title="Set a countdown timer that this guest sees" onclick="directTimer(this, event);">
 					<i class="las la-clock"></i>
 					<span data-translate="create-timer">Create Timer</span>
 				</button>
@@ -1382,7 +1387,7 @@
 				<button class="hidden" data-cluster="2" data-action-type="advanced-audio-settings"  data-active="false"  title="Remote Audio Settings" onclick="requestAudioSettings(this);">
 					<span data-translate="advanced-audio-settings"><i class="las la-sliders-h"></i> Audio Settings</span>
 				</button>
-				<button class="hidden" data-cluster="2" data-action-type="advanced-camera-settings"  data-active="false"  title="Advanced Video Settings" onclick="requestVideoSettings(this);">
+				<button class="hidden mainonly" data-cluster="2" data-action-type="advanced-camera-settings"  data-active="false"  title="Advanced Video Settings" onclick="requestVideoSettings(this);">
 					<span data-translate="advanced-camera-settings"><i class="las la-sliders-h"></i> Video Settings</span>
 				</button>
 				
@@ -1724,9 +1729,9 @@
 			<i class="las la-signal"></i>
 			<i class="las la-fire-alt"></i>
 		</div>
-		<div id="voiceMeterTemplate" class="video-meter">
+		<div id="voiceMeterTemplate" class="video-meter advanced">
 		</div>
-		<div id="voiceMeterTemplate2" class="video-meter2">
+		<div id="voiceMeterTemplate2" class="video-meter2 advanced">
 		</div>
 		<div id="muteStateTemplate" style="display:none;" class="video-mute-state">
 			<i class="las la-microphone-slash"></i>
@@ -1877,7 +1882,7 @@
 			// session.introOnClean = true; // this will load the page with the webcam selection screen if &push or &room is in the URL; no need to use &webcam.
 		</script>
 		<script type="text/javascript" crossorigin="anonymous" src="./thirdparty/aes.js"></script>
-		<script type="text/javascript" crossorigin="anonymous" id="lib-js" src="./lib.js?ver=242"></script>
+		<script type="text/javascript" crossorigin="anonymous" id="lib-js" src="./lib.js?ver=243"></script>
 		<!-- 
 		// If you wish to change branding, blank offers a good clean start.
 		<script type="text/javascript" id="main-js" src="./main.js" data-translation="blank"></script>

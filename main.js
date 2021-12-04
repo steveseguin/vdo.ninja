@@ -407,6 +407,7 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 			//session.autostart = true;
 			getById("mutevideobutton").style.setProperty("display", "none", "important");
 			getById("videoMenu3").style.setProperty("display", "none", "important");
+			getById("previewWebcam").classList.add("miconly");
 			//if (session.consent){
 			//	setTimeout(function(){
 			//		warnUser("⚠ Privacy warning: The director of this room can remotely switch your camera or microphone without permission.", 8000);
@@ -448,7 +449,13 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 		if (urlParams.get('screenshare2') || urlParams.get('ss2')){
 			session.screenshare = urlParams.get('screenshare2') || urlParams.get('ss2');
 		}
+	} 
+	
+	if (urlParams.has('sstype') || urlParams.has('screensharetype')) { // wha type of screen sharing is used; track replace, iframe, or secondary try
+		session.screensharetype = urlParams.get('sstype') || urlParams.get('screensharetype');
+		session.screensharetype = parseInt(session.screensharetype) || false;
 	}
+	
 	if (urlParams.has('intro') || urlParams.has('ib')) {
 		session.introButton = true;
 	}
@@ -460,7 +467,11 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 	if (urlParams.has('ssb')) {
 		session.screensharebutton = true;
 	}
-
+	
+	if (urlParams.has('ssb')) {
+		session.screensharebutton = true;
+	}
+	
 	if (urlParams.has('mute') || urlParams.has('muted') || urlParams.has('m')) {
 		session.muted = true;
 	}
@@ -610,6 +621,18 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 		session.audioEffects = false;
 		session.audioMeterGuest = false;
 	}
+	
+	if (urlParams.has('autoadd')) { // the streams we want to view; if set, but let blank, we will request no streams to watch.  
+		session.autoadd = urlParams.get('autoadd') || null; // this value can be comma seperated for multiple streams to pull
+
+		if (session.autoadd == null) {
+			session.autoadd = false;
+		}
+		if (session.autoadd) {
+			session.autoadd = session.autoadd.split(",");
+		}
+	}
+	
 	//if (session.scene!=="1"){ // scene =0 and 1 should load instantly.
 	//	session.hiddenSceneViewBitrate = 0; // By default this is ~ 400kbps, but if you have 10 scenes, i don't want to kill things.
 	//}
@@ -1101,6 +1124,36 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 			}
 		}
 	}
+	
+	
+	if (session.view_set){
+		session.allowScreen = [];
+		session.allowVideos = [];
+		var i = session.view_set.length;
+		while (i--){
+			var split = session.view_set[i].split(":s");
+			if (split.length>1){
+				session.allowScreen.push(split[0]);
+				session.view_set.splice(i, 1);
+				if (!(split[0] in session.view_set)){
+					session.view_set.push(split[0]);
+				}
+			} else {
+				session.allowVideos.push(split[0]);
+			}
+		}
+		
+	} else if (session.view){
+		session.allowScreen = [];
+		session.allowVideos = [];
+		var split = session.view.split(":s");
+		if (split.length>1){
+			session.allowScreen.push(split[0]);
+			session.view = split[0];
+		} else {
+			session.allowVideos.push(split[0]);
+		}
+	}
 
 	//if (urlParams.has('directorview') || urlParams.has('dv')){
 	//	session.directorView = true;
@@ -1387,16 +1440,10 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 			// whatever the user entered I guess, santitized.
 			session.videoDevice = session.videoDevice.replace(/[\W]+/g, "_").toLowerCase();
 		}
-
-		if (session.videoDevice === 0) {
-			getById("add_camera").innerHTML = "Share your Microphone";
-			miniTranslate(getById("add_camera"), "share-your-mic");
-		}
-
 		getById("videoMenu").style.display = "none";
 		log("session.videoDevice:" + session.videoDevice);
 	}
-
+	
 	// audioDevice
 	if (urlParams.has('audiodevice') || urlParams.has('adevice') || urlParams.has('ad') || urlParams.has('device') || urlParams.has('d')) {
 
@@ -1429,19 +1476,6 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 			session.audioDevice = session.audioDevice.replace(/[\W]+/g, "_").toLowerCase();
 		}
 
-
-		if (session.videoDevice === 0) {
-			if (session.audioDevice === 0) {
-				getById("add_camera").innerHTML = "Click Start to Join";
-				miniTranslate(getById("add_camera"), "click-start-to-join");
-				getById("container-2").className = 'column columnfade advanced'; // Hide screen share on mobile
-				getById("container-3").classList.add("skip-animation");
-				getById("container-3").classList.remove('pointer');
-				delayedStartupFuncs.push([previewWebcam]);
-				session.webcamonly = true;
-			}
-		}
-
 		log("session.audioDevice:" + session.audioDevice);
 
 		getById("audioMenu").style.display = "none";
@@ -1449,6 +1483,21 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 		getById("headphonesDiv2").style.display = "none";
 		getById("audioScreenShare1").style.display = "none";
 
+	}
+	
+	if (session.videoDevice === 0) {
+		getById("add_camera").innerHTML = "Share your Microphone";
+		miniTranslate(getById("add_camera"), "share-your-mic");
+		getById("previewWebcam").classList.add("miconly");
+		if (session.audioDevice === 0) {
+			getById("add_camera").innerHTML = "Click Start to Join";
+			miniTranslate(getById("add_camera"), "click-start-to-join");
+			getById("container-2").className = 'column columnfade advanced'; // Hide screen share on mobile
+			getById("container-3").classList.add("skip-animation");
+			getById("container-3").classList.remove('pointer');
+			delayedStartupFuncs.push([previewWebcam]);
+			session.webcamonly = true;
+		} 
 	}
 
 	if (session.mobile){
@@ -1532,7 +1581,7 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 		}
 		log("disable audio playback");
 	}
-
+	
 	if (urlParams.has('forceios')) {
 		log("allow iOS to work in video group chat; for this user at least");
 		session.forceios = true;
@@ -1552,7 +1601,6 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 		}
 		`;
 		document.head.appendChild(styletmp);
-		
 	}
 	
 	if (urlParams.has('cursor') || urlParams.has('screensharecursor')) {
@@ -1569,6 +1617,10 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 	
 	if (urlParams.has('slot')) {
 		session.slot = parseInt(urlParams.get('slot')) || 0;
+	}
+	
+	if (urlParams.has('slots')) {
+		session.slots = parseInt(urlParams.get('slots')) || 4;
 	}
 	
 	if (urlParams.has('debug')){
@@ -2039,33 +2091,6 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 		log("ICE FILTER ENABLED");
 		session.icefilter = urlParams.get('icefilter');
 	}
-
-
-	if (urlParams.has('effects') || urlParams.has('effect')) {
-		session.effects = urlParams.get('effects') || urlParams.get('effect') || null;
-		if (session.effects === null){
-			getById("effectsDiv").style.display = "block";
-			session.effects = "0";
-		} else if (session.effects === "0" || session.effects === "false" || session.effects === "off"){
-			session.effects = false;
-			getById("effectSelector3").style.display = "none";
-			getById("effectsDiv3").style.display = "none";
-			getById("effectSelector").style.display = "none";
-			getById("effectsDiv").style.display = "none";
-		}
-		
-		if (session.effects === "5"){
-			getById("selectImageTFLITE").style.display = "block";
-			getById("selectImageTFLITE3").style.display = "block";
-			getById("effectSelector").style.display = "none";
-			getById("effectsDiv").style.display = "block";
-		}
-		// mirror == 2
-		// face == 1
-		// blur = 3
-		// green = 4
-		// image = 5
-	}
 	
 	//if (!(getChromeVersion()>=57)){
 	//	getById("effectSelector").disabled=true;
@@ -2139,11 +2164,12 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 		session.animatedMoves=false;
 	}
 
-	if (urlParams.has('meter') || urlParams.has('meterstyle')){
+	if (urlParams.has('meter') || urlParams.has('meterstyle')){ // same as also adding &style=3
 		session.meterStyle = urlParams.get('meter') || urlParams.get('meterstyle') || 1;
+		session.meterStyle = parseInt(session.meterStyle);
+		session.style = 3;
+		session.audioEffects = true;
 	}
-	
-	
 
 	if (urlParams.has('directorchat') || urlParams.has('dc')){
 		session.directorChat = true;
@@ -2156,11 +2182,15 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 		} else if ((parseInt(session.style) == 2) || (session.style == "waveform")) { // audio waveform
 			session.style = 2;
 			session.audioEffects = true; ////!!!!!!! Do I want to enable the audioEffects myself? or do it here?
-		} else if ((parseInt(session.style) == 3) || (session.style == "volume")) { // photo is taken? upload option? canvas?
+		} else if ((parseInt(session.style) == 3) || (session.style == "volume")) { // audio meter ; see &meterstyle , where optios include default(false), 1, and 2.
 			session.style = 3;
 			session.audioEffects = true;
-		} else if (parseInt(session.style) == 4) { // photo is taken? upload option? canvas?
+		} else if (parseInt(session.style) == 4) { // black background
 			session.style = 4;
+		} else if (parseInt(session.style) == 5) { // random colored background
+			session.style = 5;
+		} else if (parseInt(session.style)) {  // 6 is the first letter of the name, surrounded with a colored circle
+			session.style = parseInt(session.style);
 		} else {
 			session.style = 1;
 		}
@@ -2443,6 +2473,40 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 		session.roomid = sanitizeRoomName(roomid);
 	}
 	
+	if ((session.permaid===false) && (session.roomid===false) && (session.view===false) && (session.effects===false) && (session.director===false)){
+		session.effects = null;
+	}
+	
+	
+	if (urlParams.has('effects') || urlParams.has('effect')) {
+		session.effects = urlParams.get('effects') || urlParams.get('effect') || null;
+	}
+	
+	if (session.effects!==false){
+		if (session.effects === null){
+			getById("effectsDiv").style.display = "block";
+			session.effects = "0";
+		} else if (session.effects === "0" || session.effects === "false" || session.effects === "off" || session.effects === 0){
+			session.effects = false;
+			getById("effectSelector3").style.display = "none";
+			getById("effectsDiv3").style.display = "none";
+			getById("effectSelector").style.display = "none";
+			getById("effectsDiv").style.display = "none";
+		}
+		
+		if (session.effects === "5"){
+			getById("selectImageTFLITE").style.display = "block";
+			getById("selectImageTFLITE3").style.display = "block";
+			getById("effectSelector").style.display = "none";
+			getById("effectsDiv").style.display = "block";
+		}
+		// mirror == 2
+		// face == 1
+		// blur = 3
+		// green = 4
+		// image = 5
+	}
+	
 	if (session.webcamonly == true) {
 		if (session.introButton){
 			getById("container-2").className = 'column columnfade advanced'; // Hide screen share
@@ -2455,7 +2519,7 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 			delayedStartupFuncs.push([previewWebcam]);
 		}
 	}
-	if (session.introOnClean && (session.permaid===false) && (session.roomid===false)){
+	if (session.introOnClean && (session.permaid===false) && (session.roomid===false)){ 
 		//getById("container-2").className = 'column columnfade advanced'; // Hide screen share
 		getById("head3").classList.add('advanced');
 		getById("head3a").classList.add('advanced');
@@ -2592,13 +2656,7 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 			window.onresize = updateMixer;
 			window.onorientationchange = function(){
 				setTimeout(updateMixer, 200);
-				//if (session.effects){
-				//	if (session.streamSrc){
-				//		setTimeout(function(){
-				//			updateRenderOutpipe(session.streamSrc, true);
-				//		},500);
-				//	}
-				//}
+				
 			};
 			joinRoom(session.roomid); // this is a scene, so we want high resolutions
 			getById("main").style.overflow = "hidden";
