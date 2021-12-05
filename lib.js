@@ -12033,6 +12033,7 @@ async function grabVideo(quality = 0, eleName = 'previewWebcam', selector = "sel
 			}
 		}
 		var obscam = false;
+		var mirrorcheck = false;
 		log(videoSelect.options[videoSelect.selectedIndex].text);
 		if (videoSelect.options[videoSelect.selectedIndex].text.startsWith("OBS-Camera")) { // OBS Virtualcam
 			mirror = true;
@@ -12064,6 +12065,9 @@ async function grabVideo(quality = 0, eleName = 'previewWebcam', selector = "sel
 				getById("cameraTipContext1").innerHTML = "<i>Tip:</i> A Cam Link may glitch green/purple if accessed elsewhere while already in use.";
 				getById("cameraTip1").classList.remove("advanced");
 			}
+		} else if (session.mobile){
+			mirrorcheck = true;
+			mirror = false;
 		} else {
 			mirror = false;
 		}
@@ -12088,6 +12092,21 @@ async function grabVideo(quality = 0, eleName = 'previewWebcam', selector = "sel
 				checkBasicStreamsExist();
 		
 				stream.getVideoTracks().forEach(function(track) {
+					
+						try{
+							if (mirrorcheck){
+								const capabilities = track.getCapabilities();
+								if ("facingMode" in capabilities){
+									if (capabilities.facingMode == "environment"){
+										mirror=true;
+										session.mirrorExclude = mirror;
+										//applyMirror(mirror, eleName);
+									}
+								}
+							}
+						} catch(e){
+						}
+						
 					session.streamSrc.addTrack(track); // tracks previously removed.
 					try{
 						track.onended = function(e) {  // hurrah!
