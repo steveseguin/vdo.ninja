@@ -667,9 +667,44 @@ button.glyphicon-button.active.focus {
 	height:100%;
 }
 
+.labelSmall {
+	display:none;
+}
+
+.gobutton {
+	font-size: 110%;
+	padding: 10px;
+	border: 3px solid #DDDDDD;
+	cursor: pointer;
+	background-color: #99BFD9;
+	color: black;
+	font-weight: bold;
+	
+}
+
 @media only screen and (max-width: 640px){
 	#subControlButtons {
 		transform: scale(0.9) translateY(10%);
+	}
+	
+	.labelSmall {
+		display:inherit;
+		padding:5px;
+	}
+	
+	.labelLarge {
+		display:none!important;
+	}
+	
+	.gobutton{
+		width: 100vh;
+		margin-left: 10px;
+		margin-right: 10px;
+		max-width: 87%;
+	}
+	
+	.roomnotes{
+		display:none!important;
 	}
 }
 @media only screen and (max-width: 400px){
@@ -680,7 +715,27 @@ button.glyphicon-button.active.focus {
 @media only screen and (max-width: 300px){
 	#subControlButtons {
 		padding: 0px;
-	} 
+	}
+	
+}
+
+.shake {
+  animation: shake 0.5s;
+  animation-iteration-count: once;
+}
+
+@keyframes shake {
+  0% { transform: translate(1px, 1px) rotate(0deg); }
+  10% { transform: translate(-1px, -2px) rotate(-1deg); }
+  20% { transform: translate(-3px, 0px) rotate(1deg); }
+  30% { transform: translate(3px, 2px) rotate(0deg); }
+  40% { transform: translate(1px, -1px) rotate(1deg); }
+  50% { transform: translate(-1px, 2px) rotate(-1deg); }
+  60% { transform: translate(-3px, 1px) rotate(0deg); }
+  70% { transform: translate(3px, 1px) rotate(-1deg); }
+  80% { transform: translate(-1px, -1px) rotate(1deg); }
+  90% { transform: translate(1px, 2px) rotate(0deg); }
+  100% { transform: translate(1px, -2px) rotate(-1deg); }
 }
 
 #obsState {
@@ -995,15 +1050,7 @@ body {
 	display: inherit;
 }
 
-.gobutton {
-	font-size: 110%;
-	padding: 10px;
-	border: 3px solid #DDDDDD;
-	cursor: pointer;
-	background-color: #99BFD9;
-	color: black;
-	font-weight: bold;
-}
+
 
 .infoblob {
 	color: white;
@@ -1978,7 +2025,7 @@ audio.fileshare::-webkit-media-controls-play-button, video.fileshare::-webkit-me
 	display: none;
 	align-text: center;
 	position: absolute;
-	z-index: 21 !important;
+	z-index: 35 !important;
 	padding: 3px !important;
 	min-width: 180px !important;
 	background-color: #fff !important;
@@ -3163,6 +3210,7 @@ input:checked + .slider:before {
     margin: 8px auto 0px auto;
     box-shadow: 0px 5px 10px -5px #a9a9a9;
     text-align: left;
+	font-size: 97%;
 }
 .cameraTip > p {
 	text-align: left;
@@ -3562,6 +3610,13 @@ input:checked + .slider:before {
 	}
 }
 
+body.darktheme  {
+	color: white;
+}
+body.darktheme form>label{
+	color: white;
+}
+    
 body.darktheme .container-inner{
 	background-color: #40444E
 }
@@ -3581,7 +3636,7 @@ body.darktheme .directorsgrid .vidcon > .las {
 	background-color: #646464;
 }
 body.darktheme .form-group  .multiselect {
-	background-color: #949494;
+	background-color: #414141;
 	padding: 10px; background-color:#f3f3f3;
 }
 body.darktheme h2 {
@@ -3599,22 +3654,22 @@ body.darktheme #roomHeader{
 	filter: brightness(0.85);
 }
 body.darktheme div.multiselect {
-	background-color: #949494;
+	background-color: #414141;
 }
 body.darktheme .videoMenu {
-	background-color: #949494;
+	background-color: #414141;
 }
 body.darktheme .audioMenu{
-	background-color: #949494;
+	background-color: #414141;
 }
 body.darktheme #headphonesDiv{
-	background-color: #949494;
+	background-color: #414141;
 }
 body.darktheme #headphonesDiv3{
-	background-color: #949494;
+	background-color: #414141;
 }
 body.darktheme select{
-	background-color: #949494;
+	background-color: #b2b2b2;
 }
 body.darktheme .white {
 	filter: brightness(0.85);
@@ -3630,13 +3685,13 @@ body.darktheme .infoblob{
 	color: #CCC;
 }
 body.darktheme #addPasswordBasic{
-	background-color: #949494;
+	background-color: #414141;
 }
 body.darktheme #effectsDiv{
-	background-color: #949494;
+	background-color: #414141;
 }
 body.darktheme #effectsDiv3{
-	background-color: #949494;
+	background-color: #414141;
 }
 body.darktheme .outMessage{
 	background-color: #7f89a7;
@@ -3651,52 +3706,52 @@ body.darktheme .popup-message{
 	background-color: #9b9b9b !important;
 }
 body.darktheme #audioScreenShare1{
-	background-color: #949494;
+	background-color: #414141;
 }
 body.darktheme #webcamstats2{
-	background-color: #949494;
+	background-color: #414141;
 }
 body.darktheme #audioSourceScreenshare{
-	background-color: #c1c1c1;
+	background-color: #e4e4e4;
 }
 body.darktheme #headphonesDiv2{
-	background-color: #949494;
+	background-color: #414141;
 }
 body.darktheme #outputSourceScreenshare{
-	background-color: #c1c1c1;
+	background-color: #e4e4e4;
 }
 body.darktheme #audioSource{
-	background-color: #c1c1c1;
+	background-color: #e4e4e4;
 }
 body.darktheme #outputSource{
-	background-color: #c1c1c1;
+	background-color: #e4e4e4;
 }
 body.darktheme #videoSourceSelect{
-	background-color: #c1c1c1;
+	background-color: #e4e4e4;
 }
 body.darktheme #videoSettings{
-	background-color: #949494;
+	background-color: #414141;
 }
 body.darktheme #effectSelector{
-	background-color: #c1c1c1;
+	background-color: #e4e4e4;
 }
 body.darktheme #effectSelector3{
-	background-color: #c1c1c1;
+	background-color: #e4e4e4;
 }
 body.darktheme #audioSource3{
-	background-color: #c1c1c1;
+	background-color: #e4e4e4;
 }
 body.darktheme #videoSource3{
-	background-color: #c1c1c1;
+	background-color: #e4e4e4;
 }
 body.darktheme #videoMenu3{
-	background-color: #949494;
+	background-color: #414141;
 }
 body.darktheme #outputSource3{
-	background-color: #c1c1c1;
+	background-color: #e4e4e4;
 }
 body.darktheme #videoSettings3{
-	background-color: #949494;
+	background-color: #414141;
 }
 body.darktheme .promptModalInner{
 	background-color: #ccc;
@@ -3709,9 +3764,21 @@ body.darktheme .directorContainer{
 	filter: brightness(0.85);
 }
 body.darktheme #grabDirectorSoloLinkParent{
-	background-color: #949494;
+	background-color: #414141;
 }
 body.darktheme #grabDirectorSoloLink{
-	background-color: #c1c1c1;
+	background-color: #e4e4e4;
 }
-
+body.darktheme .cameraTip{
+	background-color: #27354b;
+	color: #e5dbdb;
+}
+body.darktheme .invite_setting_group{
+	color: black;
+}
+body.darktheme .invite_setting_item>input{
+	background-color:white;
+}
+body.darktheme .invite_setting_item>select{
+	background-color:white;
+}

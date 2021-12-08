@@ -1641,6 +1641,10 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 		session.groupAudio = true;
 	}
 	
+	if (urlParams.has('host')) {
+		session.roomhost = true;
+	}
+	
 	if (urlParams.has('sensors') || urlParams.has('sensor') || urlParams.has('gyro') || urlParams.has('gyros') || urlParams.has('accelerometer')) {
 		session.sensorData = urlParams.get('sensors') || urlParams.get('sensor') || urlParams.get('gyro') || urlParams.get('gyros') || urlParams.get('accelerometer') || 30;
 		session.sensorData = parseInt(session.sensorData);
@@ -3654,7 +3658,7 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 
 		if (CtrlPressed && event.keyCode) {
 
-			if (event.keyCode == 77) { // m
+			if (event.keyCode == 77) { // M
 				if (event.metaKey) {
 					if (AltPressed) {
 						toggleMute(); // macOS
@@ -3662,10 +3666,20 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 				} else {
 					toggleMute(); // Windows
 				}
-				// } else if (event.keyCode == 69) { // e 
+				// } else if (event.keyCode == 69) { // E
 				//	hangup();
-			} else if (event.keyCode == 66) { // b
+			} else if (event.keyCode == 66) { // B
 				toggleVideoMute();
+			}
+			
+			if (AltPressed){ // CTRL + ALT
+				if (event.keyCode == 70) { // F
+					toggleFileshare()();
+				} else if (event.keyCode == 67) { // C
+					cycleCameras();
+				} else if (event.keyCode == 83) { // S
+					toggleScreenShare()();
+				} 
 			}
 		}
 	});

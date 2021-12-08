@@ -387,7 +387,7 @@ async function promptAlt(inputText, block=false, asterix=false, value=false){
 				<div class="promptModalInner">
 					<span id="close_${promptID}" class='modalClose' data-pid="${promptID}">×</span>
 					<span class='promptModalMessage'>${inputText}</span>
-					<input id="input_${promptID}" data-pid="${promptID}"  type="${type}" class="largeTextEntry" />
+					<input id="input_${promptID}" autocorrect="off" autocapitalize="none" data-pid="${promptID}"  type="${type}" class="largeTextEntry" />
 					<button id="submit_${promptID}" data-pid="${promptID}" style="width:120px; background-color: #fff; position: relative;border: 1px solid #999; margin: 0 0 0 55px;" data-translate='ok'>✔ OK</button>
 					<button id="cancel_${promptID}" data-pid="${promptID}" style="width:120px; background-color: #fff; position: relative;border: 1px solid #999; margin: 0;" data-translate='cancel'>❌ Cancel</button>
 				</div>
@@ -466,7 +466,7 @@ async function promptTransfer(value=null, bcmode = null, updateurl = null){
 				<div class="promptModalInner">
 					<span id="close_${promptID}" class='modalClose' data-pid="${promptID}">×</span>
 					<span class='promptModalMessage'>${inputText}</span>
-					<input id="input_${promptID}" data-pid="${promptID}"  type="text" class="largeTextEntry" />
+					<input id="input_${promptID}" data-pid="${promptID}"  type="text" autocorrect="off" autocapitalize="none" class="largeTextEntry" />
 					<span class='promptModalLabel'><input id="private_${promptID}" data-pid="${promptID}"  type="checkbox" title="Note: this won't work fully if using obfuscated links" /> Allow the guest to rejoin the transfer room on their own</span>
 					<span class='promptModalLabel'><input id="broadcast_${promptID}" data-pid="${promptID}"  type="checkbox" /> Guest will arrive in the new room in <i>broadcast</i> mode</span>
 					<button id="submit_${promptID}" data-pid="${promptID}" style="width:120px; background-color: #fff; position: relative;border: 1px solid #999; margin: 0 0 0 55px;" data-translate='ok'>✔ OK</button>
@@ -3767,6 +3767,33 @@ function pokeIframeAPI(action, value = null, UUID = null, SID=null) {
 	}
 }
 
+async function jumptoroom2() {
+
+	var arr = window.location.href.split('?');
+	
+	var roomname = getById("videoname1").value;
+	roomname = sanitizeRoomName(roomname);
+	if (roomname.length) {
+
+		var pass = getById("passwordRoom").value;
+		pass = sanitizePassword(pass);
+		
+		var passStr = "";
+		if (pass && pass.length) {
+			passStr = "&password=" + pass;
+		}
+		
+		if (arr.length > 1 && arr[1] !== '') {
+			window.location += "&room=" + roomname + passStr + "&host";
+		} else {
+			window.location += "?room=" + roomname + passStr + "&host";
+		}
+	} else {
+		getById("videoname1").focus();
+		getById("videoname1").classList.remove("shake");
+		setTimeout(function(){getById("videoname1").classList.add("shake");},0);
+	}
+}
 
 
 async function jumptoroom(event = null) {
@@ -3784,7 +3811,7 @@ async function jumptoroom(event = null) {
 
 		var passStr = "";
 		window.focus();
-		var pass = await promptAlt("Enter a password if provided, otherwise just click cancel", false, true); //sanitizePassword(session.password);
+		var pass = await promptAlt("Enter a password if provided, otherwise just click Cancel", false, true); //sanitizePassword(session.password);
 		if (pass && pass.length) {
 			session.password = sanitizePassword(pass);
 			passStr = "&password=" + session.password;
@@ -3797,6 +3824,10 @@ async function jumptoroom(event = null) {
 		} else {
 			window.location += "?room=" + roomname + passStr;
 		}
+	} else {
+		getById("joinroomID").focus();
+		getById("joinroomID").classList.remove("shake");
+		setTimeout(function(){getById("joinroomID").classList.add("shake");},0);
 	}
 }
 
@@ -5005,10 +5036,38 @@ function printValues(obj) { // see: printViewStats
 function printMyStats(menu) { // see: setupStatsMenu
 	var scrollLeft = getById("menuStatsBox").scrollLeft;
 	var scrollTop = getById("menuStatsBox").scrollTop;
-	menu.innerHTML = "";
-
+	menu.innerHTML = ""; 
+	
 	session.stats.outbound_connections = Object.keys(session.pcs).length;
 	session.stats.inbound_connections = Object.keys(session.rpcs).length;
+	
+	try {
+		var obscam = false;
+		if (document.querySelector("select#videoSource3")){
+			var videoSelect = document.querySelector("select#videoSource3").options;
+			log(videoSelect[videoSelect.selectedIndex].text);
+			if (videoSelect[videoSelect.selectedIndex].text.startsWith("OBS-Camera")) { // OBS Virtualcam
+				obscam = true;
+			} else if (videoSelect[videoSelect.selectedIndex].text.startsWith("OBS Virtual Camera")) { // OBS Virtualcam
+				obscam = true;
+			} 
+		}
+		
+		if (session.streamSrc && session.streamSrc){
+			session.streamSrc.getVideoTracks().forEach(function(track) {
+				if (obscam && (parseInt(track.getSettings().frameRate) == 30)) {
+					session.stats.video_settings =(track.getSettings().width || 0) + "x" + (track.getSettings().height || 0);
+				} else {
+					var framerateFPS = track.getSettings().frameRate;
+					if (framerateFPS){
+						session.stats.video_settings = (track.getSettings().width || 0) + "x" + (track.getSettings().height || 0) + " @ " + (parseInt(framerateFPS * 100) / 100.0) + "fps";
+					} else {
+						session.stats.video_settings = (track.getSettings().width || 0) + "x" + (track.getSettings().height || 0);
+					}
+				}
+			});
+		}
+	} catch(e){console.error(e);}
 
 	function printViewValues(obj) {
 		
@@ -8113,6 +8172,26 @@ function joinRoom(roomname) {
 			} else {
 				session.joiningRoom = false; // no seeding callback
 			}
+			
+			if (!session.cleanOutput){
+				if (session.roomhost){
+					if (session.defaultPassword===false){
+						if (session.password === false){
+							var invite = "https://"+location.host+location.pathname+"?room="+session.roomid+"&password=false";
+							warnUser("You can invite others with:\n\n<a target='_blank' title='Copy this link to the clipboard' style='cursor:pointer' onclick='copyFunction(this.innerText,event);' href='"+invite+"'>"+invite+"</a>");
+						} else {
+							generateHash(session.password + session.salt, 4).then(function(hash) {
+								var invite = "https://"+location.host+location.pathname+"?room="+session.roomid+"&hash="+hash;
+								warnUser("You can invite others with:\n\n<a target='_blank' title='Copy this link to the clipboard' style='cursor:pointer' onclick='copyFunction(this.innerText,event)' href='"+invite+"'>"+invite+"</a>");
+							});
+						}
+					} else {
+						var invite = "https://"+location.host+location.pathname+"?room="+session.roomid;
+						warnUser("You can invite others with:\n\n<a target='_blank' title='Copy this link to the clipboard' style='cursor:pointer' onclick='copyFunction(this.innerText,event)' href='"+invite+"'>"+invite+"</a>");
+					}
+					
+				}
+			}
 
 			log("Members in Room");
 			log(response);
@@ -8208,9 +8287,14 @@ function createRoom(roomname = false) {
 		}
 	}
 	if (roomname.length == 0) {
-		if (!(session.cleanOutput)) {
-			warnUser("Please enter a room name before continuing");
-		}
+		//if (!(session.cleanOutput)) {
+		//	warnUser("Please enter a room name before continuing");
+		//}
+		 
+		getById("videoname1").focus();
+		getById("videoname1").classList.remove("shake");
+		setTimeout(function(){getById("videoname1").classList.add("shake");},0);
+	
 		return;
 	}
 	log(roomname);
@@ -8810,7 +8894,7 @@ async function createDirectorOnlyBox() {
 			oldlabel = "";
 		}
 		window.focus();
-		var newlabel = await promptAlt(miscTranslations["enter-new-display-name"], false, false, oldlabel);
+		var newlabel = await promptAlt(miscTranslations["enter-new-display-name"], false, false, oldlabel); 
 		if (newlabel!==null){
 			if (newlabel == ""){
 				newlabel = false;
@@ -12056,12 +12140,12 @@ async function grabVideo(quality = 0, eleName = 'previewWebcam', selector = "sel
 		} else if (videoSelect.options[videoSelect.selectedIndex].text.startsWith("Back Camera")) { // iPhone and iOS
 			mirror = true;
 		} else if (videoSelect.options[videoSelect.selectedIndex].text.toLowerCase().includes("c922")) {
-			if ((session.quality!==2) && !session.cleanoutput){
+			if ((session.quality!==2) && !session.cleanOutput){
 				getById("cameraTipContext1").innerHTML = "<i>Tip:</i> To achieve 60-fps with a C922 webcam, low-light compensation needs to be turned off, exposure set to auto, and 720p used.";
 				getById("cameraTip1").classList.remove("advanced");
 			}
 		} else if (videoSelect.options[videoSelect.selectedIndex].text.toLowerCase().includes("cam link")) {
-			if (!session.cleanoutput){
+			if (!session.cleanOutput){
 				getById("cameraTipContext1").innerHTML = "<i>Tip:</i> A Cam Link may glitch green/purple if accessed elsewhere while already in use.";
 				getById("cameraTip1").classList.remove("advanced");
 			}
@@ -12093,19 +12177,19 @@ async function grabVideo(quality = 0, eleName = 'previewWebcam', selector = "sel
 		
 				stream.getVideoTracks().forEach(function(track) {
 					
-						try{
-							if (mirrorcheck){
-								const capabilities = track.getCapabilities();
-								if ("facingMode" in capabilities){
-									if (capabilities.facingMode == "environment"){
-										mirror=true;
-										session.mirrorExclude = mirror;
-										//applyMirror(mirror, eleName);
-									}
+					try{
+						if (mirrorcheck){
+							const capabilities = track.getCapabilities();
+							if ("facingMode" in capabilities){
+								if (capabilities.facingMode == "environment"){
+									mirror=true;
+									session.mirrorExclude = mirror;
+									//applyMirror(mirror, eleName);
 								}
 							}
-						} catch(e){
 						}
+					} catch(e){
+					}
 						
 					session.streamSrc.addTrack(track); // tracks previously removed.
 					try{
@@ -17173,6 +17257,7 @@ function requestBasicPermissions(constraint = {video: true, audio: true}) {
 				});
 				return;
 			}
+			closeModal();
 			setupWebcamSelection(stream);
 		}).catch(function(err) {
 			clearTimeout(timerBasicCheck);
@@ -17735,6 +17820,8 @@ var vis = (function() {
 
 function popupMessage(e, message = "Copied to Clipboard") { // right click menu
 
+	if (session.cleanOutput){return;}
+	
 	var posx = 0;
 	var posy = 0;
 
