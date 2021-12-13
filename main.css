@@ -547,6 +547,38 @@ hr {
 	transform: scale(1);
 	animation: pulse 2s infinite;
 }
+
+.battery {
+	border: 3px solid #4192c5;
+	width: 11px;
+	height: 19px;
+	border-radius: 4px;
+	position: absolute;
+	left: 27px;
+	top: 3px;
+	background-color: #FFF2;
+	font-size: 1.5em;
+	z-index: 2;
+	cursor: help;
+	display:none;
+}
+.battery[data-plugged="0"]{
+	display:block;
+}
+.battery.warn {
+	border: 3px solid #EFAF13; 
+}
+.battery.alert {
+	border: 3px solid #e81309; 
+}
+.battery-level {
+	background: #30b455;  
+	position: absolute;
+	bottom: 0px;
+	left: 0;
+	right: 0;
+}
+
 .signal-meter{
 	width: 22px;
     height: 22px;
@@ -3291,6 +3323,7 @@ input:checked + .slider:before {
 .alertModalInner {
 	position: relative;
 	padding: 2em;
+	user-select: none;
 }
 
 .modalClose {

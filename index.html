@@ -67,7 +67,7 @@
 			<link itemprop="url" href="./media/vdoNinja_logo_full.png" />
 		</span>
 		<script  type="text/javascript" crossorigin="anonymous"  src="./thirdparty/CodecsHandler.js?ver=35"></script>
-		<script  type="text/javascript" crossorigin="anonymous" src="./webrtc.js?ver=336"></script>
+		<script  type="text/javascript" crossorigin="anonymous" src="./webrtc.js?ver=338"></script>
 		<input id="zoomSlider" type="range" style="display: none;" />
 		<div id="header">
 			
@@ -434,8 +434,8 @@
 						</span>
 						
 						<div id="selectImageTFLITE" style="display:none;margin-top:10px;">
-							<img src="./media/bg_sample.webp" style="max-width:130px;max-height:73.5px;display:inline-block:margin:10px;cursor:pointer;" onclick="changeTFLiteImage(event, this);"/>
-							<img src="./media/bg_sample2.webp" style="max-width:130px;max-height:73.5px;display:inline-block:margin:10px;cursor:pointer;"  onclick="changeTFLiteImage(event, this);"/>
+							<img src="./media/bg_sample.webp" loading="lazy" style="max-width:130px;max-height:73.5px;display:inline-block:margin:10px;cursor:pointer;" onclick="changeTFLiteImage(event, this);"/>
+							<img src="./media/bg_sample2.webp" loading="lazy" style="max-width:130px;max-height:73.5px;display:inline-block:margin:10px;cursor:pointer;"  onclick="changeTFLiteImage(event, this);"/>
 							<label style="width:130px;display:inline-block;margin:0 10px; text-align: center; cursor:pointer;">
 							  <i class="las la-hdd" style="font-size: 3em;"></i><br />Select Local Image
 							  <input type="file" onchange="changeTFLiteImage(event, this)" accept="image/*" style="position: fixed; top: -100em; margin-left:10px; border:1px solid #555;"> 
@@ -474,7 +474,7 @@
 				</h2>
 				<div class="container-inner">
 					<span>
-						<video id="screenshare" autoplay="true" muted="true" loop src="./media/screenshare.webm" ></video>
+						<video id="screenshare" autoplay="true" muted="true" loop src="./media/screenshare.webm" class="lazy" style='background-image: unset;'></video>
 					</span>
 					<br />
 					<button class='gobutton' style="padding: 10px; font-size: 120%;" alt="clilck to select you screen to share" onclick="publishScreen()">
@@ -1286,6 +1286,22 @@
 					<i class="las la-eye-slash"></i> <span data-translate="toggle-remote-display">Blind Guest</span>
 				</button>
 				
+				<font class="tooltip hidden" data-cluster="2" style="height: 0; border: 0;">
+					<input data-action-type="volume" type="range" min="0" max="200" value="100" title="Remotely change the volume of this guest" oninput="remoteVolumeUI(this)" ondblclick="this.value=100;remoteVolume(this);remoteVolumeUI(this);" onchange="remoteVolume(this);" style="grid-column: 2; margin:5px; width: 93%; position: relative;top: 0.6em; background-color:#fff0;"/><span class="tooltiptext" style='float: right; overflow: auto;  left: 40px;  width: 2.5em;  top: -13px; margin: 0; position:relative;font-family:"Noto Color Emoji", "Apple Color Emoji", "Segoe UI Emoji", Times, Symbola, Aegyptus,Code2000, Code2001, Code2002, Musica, serif, LastResort;' >100</span>
+				</font>
+				
+				<span class="hidden" data-cluster="2" data-action-type="change-quality">
+					<button style="width: 35.2px" data-action-type="change-quality1" title="Disable Video Preview" onclick="toggleQualityDirector(0, this.dataset.UUID, this);">
+						<span data-translate="change-to-low-quality">&nbsp;&nbsp;<i class="las la-video-slash"></i></span>
+					</button>
+					<button class="pressed" style="width:35.2px;" data-action-type="change-quality2" title="Low-Quality Preview" onclick="toggleQualityDirector(50, this.dataset.UUID, this);">
+						<span data-translate="change-to-medium-quality">&nbsp;&nbsp;<i class="las la-video"></i></span>
+					</button>
+					<button style="width: 35.2px" data-action-type="change-quality3" title="High-Quality Preview" onclick="toggleQualityDirector(1200, this.dataset.UUID, this);">
+						<span data-translate="change-to-high-quality">&nbsp;&nbsp;<i class="las la-binoculars"></i></span>
+					</button>
+				</span>
+				
 				<span class="hidden" data-cluster="2" data-action-type="ordering">
 					<button style="width:34px;" data-action-type="order-down" title="Shift this Video Down in Order"  onclick="changeOrder(-1,this.dataset.UUID);">
 						<span data-translate="order-down"><i class="las la-minus"></i></span>
@@ -1327,23 +1343,6 @@
 					<i class="las la-clock"></i>
 					<span data-translate="create-timer">Create Timer</span>
 				</button>
-				
-				
-				<font class="tooltip hidden" data-cluster="2" style="height: 0; border: 0;">
-					<input data-action-type="volume" type="range" min="0" max="200" value="100" title="Remotely change the volume of this guest" oninput="remoteVolumeUI(this)" ondblclick="this.value=100;remoteVolume(this);remoteVolumeUI(this);" onchange="remoteVolume(this);" style="grid-column: 2; margin:5px; width: 93%; position: relative;top: 0.6em; background-color:#fff0;"/><span class="tooltiptext" style='float: right; overflow: auto;  left: 40px;  width: 2.5em;  top: -13px; margin: 0; position:relative;font-family:"Noto Color Emoji", "Apple Color Emoji", "Segoe UI Emoji", Times, Symbola, Aegyptus,Code2000, Code2001, Code2002, Musica, serif, LastResort;' >100</span>
-				</font>
-				
-				<span class="hidden" data-cluster="2" data-action-type="change-quality">
-					<button style="width: 35.2px" data-action-type="change-quality1" title="Disable Video Preview" onclick="toggleQualityDirector(0, this.dataset.UUID, this);">
-						<span data-translate="change-to-low-quality">&nbsp;&nbsp;<i class="las la-video-slash"></i></span>
-					</button>
-					<button class="pressed" style="width:35.2px;" data-action-type="change-quality2" title="Low-Quality Preview" onclick="toggleQualityDirector(50, this.dataset.UUID, this);">
-						<span data-translate="change-to-medium-quality">&nbsp;&nbsp;<i class="las la-video"></i></span>
-					</button>
-					<button style="width: 35.2px" data-action-type="change-quality3" title="High-Quality Preview" onclick="toggleQualityDirector(1200, this.dataset.UUID, this);">
-						<span data-translate="change-to-high-quality">&nbsp;&nbsp;<i class="las la-binoculars"></i></span>
-					</button>
-				</span>
 				
 				
 				<span id="channelGroup1" class="hidden" data-cluster="2">
@@ -1545,8 +1544,8 @@
 						<i class="las la-info-circle"></i>
 					</span>
 					<div id="selectImageTFLITE3" style="display:none;margin-top:10px;">
-						<img src="./media/bg_sample.webp" style="max-width:130px;max-height:73.5px;display:inline-block:margin:10px;cursor:pointer;" onclick="changeTFLiteImage(event, this);"/>
-						<img src="./media/bg_sample2.webp" style="max-width:130px;max-height:73.5px;display:inline-block:margin:10px;cursor:pointer;"  onclick="changeTFLiteImage(event, this);"/>
+						<img src="./media/bg_sample.webp" loading="lazy" style="max-width:130px;max-height:73.5px;display:inline-block:margin:10px;cursor:pointer;" onclick="changeTFLiteImage(event, this);"/>
+						<img src="./media/bg_sample2.webp" loading="lazy" style="max-width:130px;max-height:73.5px;display:inline-block:margin:10px;cursor:pointer;"  onclick="changeTFLiteImage(event, this);"/>
 						<label style="width:130px;display:inline-block;margin:0 10px; text-align: center; cursor:pointer;">
 						  <i class="las la-hdd" style="font-size: 3em;"></i><br /><span data-translate="select-local-image">Select Local Image</span>
 						  <input type="file"  accept="image/*" onchange="changeTFLiteImage(event, this)" style="position: fixed; top: -100em; margin-left:10px; border:1px solid #555;"> 
@@ -1740,9 +1739,12 @@
 			<div id="userList">
 			</div>
 		</div>
-		<div id="signalMeterTemplate" class="signal-meter" data-cpu="0" data-level="0">
+		<div id="signalMeterTemplate" class="signal-meter advanced" data-cpu="0" data-level="0">
 			<i class="las la-signal"></i>
 			<i class="las la-fire-alt"></i>
+		</div>
+		<div id="batteryMeterTemplate" class="battery advanced" data-plugged="1">
+			<div class="battery-level" style="height:100%;"></div>
 		</div>
 		<div id="voiceMeterTemplate" class="video-meter advanced">
 		</div>
@@ -1763,7 +1765,7 @@
 		</audio>
 		<div class="gone" >
 			<!-- This image is used when dragging elements -->
-			<img src="./media/favicon-32x32.png" id="dragImage" />
+			<img src="./media/favicon-32x32.png" id="dragImage" loading="lazy" />
 		</div>
 		<div id="request_info_prompt" style="display:none">
 		</div>
@@ -1897,11 +1899,11 @@
 			// session.introOnClean = true; // this will load the page with the webcam selection screen if &push or &room is in the URL; no need to use &webcam.
 		</script>
 		<script type="text/javascript" crossorigin="anonymous" src="./thirdparty/aes.js"></script>
-		<script type="text/javascript" crossorigin="anonymous" id="lib-js" src="./lib.js?ver=244"></script>
+		<script type="text/javascript" crossorigin="anonymous" id="lib-js" src="./lib.js?ver=246"></script>
 		<!-- 
 		// If you wish to change branding, blank offers a good clean start.
 		<script type="text/javascript" id="main-js" src="./main.js" data-translation="blank"></script>
 	-->
-		<script type="text/javascript" crossorigin="anonymous" id="main-js" src="./main.js?ver=285"></script>
+		<script type="text/javascript" crossorigin="anonymous" id="main-js" src="./main.js?ver=287"></script>
 	</body>
 </html>

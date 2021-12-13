@@ -271,6 +271,7 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 		session.meshcast = urlParams.get('meshcast') || "both";
 	}
 	
+	
 	var filename = false;
 	try {
 		filename = window.location.pathname.substring(window.location.pathname.lastIndexOf('/') + 1);
@@ -358,6 +359,34 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 		session.rotate = urlParams.get('rotate') || 90;
 		session.rotate = parseInt(session.rotate);
 	}
+	
+	if (urlParams.has('facing') ) {
+		session.facingMode = urlParams.get('facing') || false;
+	}
+	if (session.facingMode){
+		session.facingMode = session.facingMode.toLowerCase();
+		if (session.facingMode == "user"){
+			//
+		} else if (session.facingMode == "environment"){
+			//
+		} else if (session.facingMode == "rear"){
+			session.facingMode = "environment";
+		} else if (session.facingMode == "back"){
+			session.facingMode = "environment";
+		} else if (session.facingMode == "front"){
+			session.facingMode = "user";
+		} else {
+			session.facingMode = false;
+		}
+	}
+	
+	//  session.facingMode }; // user or environment
+	
+	if (urlParams.has('forcelandscape') || urlParams.has('fl')){
+		session.orientation = "landscape";
+	} else if (urlParams.has('forceportrait') || urlParams.has('fp')){
+		session.orientation = "portrait";
+	}
 
 	if (urlParams.has('midi') || urlParams.has('hotkeys')) {
 		session.midiHotkeys = urlParams.get('midi') || urlParams.get ('hotkeys') || 1;
@@ -401,10 +430,12 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 		session.screensharebutton = false;
 		if (urlParams.has('miconly')){
 			session.videoDevice=0;
+			session.miconly = true;
 			getById("add_camera").innerHTML = "Share your Microphone";
 			miniTranslate(getById("add_camera"), "share-your-mic");
 			getById("videoMenu").style.display = "none";
 			//session.autostart = true;
+			getById("flipcamerabutton").style.setProperty("display", "none", "important");
 			getById("mutevideobutton").style.setProperty("display", "none", "important");
 			getById("videoMenu3").style.setProperty("display", "none", "important");
 			getById("previewWebcam").classList.add("miconly");
@@ -1692,6 +1723,12 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 		session.codec = "vp8";
 		warnlog("Defaulting to VP8 manually, as H264 with remote iOS devices is not supported");
 	}
+	
+	if (urlParams.has('h264profile')) {
+		session.h264profile = urlParams.get('h264profile') || "42e01f";
+		session.h264profile = session.h264profile.substring(0, 6);
+		session.h264profile = session.h264profile.toLowerCase();
+	}
 
 	if (urlParams.has('nonacks')){ // disables error control / throttling.
 		session.noNacks = true;
@@ -1800,8 +1837,8 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 		session.limitTotalBitrate = parseInt(session.limitTotalBitrate);
 	}
 	
-	if (urlParams.has('mcvb') || urlParams.has('meshcastbitrate')){
-		session.meshcastBitrate = urlParams.get('mcvb') || urlParams.get('meshcastbitrate') || 2500;
+	if (urlParams.has('mcb') || urlParams.has('mcbitrate') || urlParams.has('meshcastbitrate')){
+		session.meshcastBitrate = urlParams.get('mcb') || urlParams.get('mcbitrate') || urlParams.get('meshcastbitrate') || 2500;
 		session.meshcastBitrate = parseInt(session.meshcastBitrate);
 	}
 	
@@ -3544,6 +3581,33 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 		  );
 		}
 	});
+	
+	document.addEventListener("DOMContentLoaded", function() {
+	  var lazyVideos = [].slice.call(document.querySelectorAll("video.lazy"));
+
+	  if ("IntersectionObserver" in window) {
+		var lazyVideoObserver = new IntersectionObserver(function(entries, observer) {
+		  entries.forEach(function(video) {
+			if (video.isIntersecting) {
+			  for (var source in video.target.children) {
+				var videoSource = video.target.children[source];
+				if (typeof videoSource.tagName === "string" && videoSource.tagName === "SOURCE") {
+				  videoSource.src = videoSource.dataset.src;
+				}
+			  }
+
+			  video.target.load();
+			  video.target.classList.remove("lazy");
+			  lazyVideoObserver.unobserve(video.target);
+			}
+		  });
+		});
+
+		lazyVideos.forEach(function(lazyVideo) {
+		  lazyVideoObserver.observe(lazyVideo);
+		});
+	  }
+	});
 
 	document.addEventListener("dragstart", event => {
 		var url = event.target.href || event.target.value;
@@ -3591,6 +3655,56 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 		//event.dataTransfer.setData("url", encodeURI(url));
 
 	});
+	
+	if (navigator.getBattery){
+		navigator.getBattery().then(function(battery) {
+			session.batteryState = {};
+			if ("level" in battery){
+				session.batteryState.level = battery.level;
+			}
+			if ("charging" in battery){
+				session.batteryState.charging = battery.charging;
+			}
+			
+			if (session.batteryState == {}){
+				session.batteryState = null;
+			}
+			battery.addEventListener('chargingchange', function() {
+				session.batteryState = {};
+				var miniInfo = {};
+				if ("level" in battery){
+					session.batteryState.level = battery.level;
+					miniInfo.bat = battery.level;
+				}
+				if ("charging" in battery){
+					session.batteryState.charging = battery.charging;
+					miniInfo.chrg = battery.charging;
+				}
+				if (session.batteryState == {}){
+					session.batteryState = null;
+				}
+				session.sendMessage({"miniInfo":miniInfo});
+			});
+			
+			battery.addEventListener('levelchange', function(){
+				session.batteryState = {};
+				var miniInfo = {};
+				if ("level" in battery){
+					session.batteryState.level = battery.level;
+					miniInfo.bat = battery.level;
+				}
+				if ("charging" in battery){
+					session.batteryState.charging = battery.charging;
+					miniInfo.chrg = battery.charging;
+				}
+				if (session.batteryState == {}){
+					session.batteryState = null;
+				}
+				session.sendMessage({"miniInfo":miniInfo});
+			});
+
+		});
+	}
 
 	window.onload = function winonLoad() { // This just keeps people from killing the live stream accidentally. Also give me a headsup that the stream is ending
 		window.addEventListener("beforeunload", function(e) {
