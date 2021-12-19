@@ -4,20 +4,15 @@ Deploying this code. A guide.
 
 The code is obvious enough already that someone experienced with NGINX webservers or with basic site deployments should have no problem getting things running.
 
-I'm concerned at times that less experienced users will be deploying the code without really understanding why or properly how to.  There are few cases a person needs to deploy any code. Those reasons are:  wanting custom branding; contributing as a developer to the codebase; or deploying a private TURN server.
+I'm concerned at times that less experienced users will be deploying the code without really understanding why or properly how to.  There are few cases a person needs to deploy any code. Those reasons are:  wanting custom branding; contributing as a developer to the codebase; deploying a private TURN server; or running VDO.Ninja without internet on a private LAN.
 
 There may be misconceptions that deploying the website code will make the service faster; it will not. The service is video peer-to-peer based, so deploying webservers servers will not make it faster. Deploying a TURN server may help in some cases, although using a VPN, a cloud VM (for OBS), or disabling any symmetrical firewall will often provide a better end result than a private TURN server.
 
 For those looking for a brand-free experience already with a different domain name, I offer https://rtc.ninja, and as well as other alternate domain names, such as:
 
 - https://invite.cam (via URL obfuscation option)
-- https://ltt.ninja
-- https://rtc.ninja
-- https://vmix.ninja
-- https://auxiliary.live (backup hosted)
 - https://backup.vdo.ninja (fully backup hosted)
-
-There is also an isolated version specificly designed for use in mainland China, hosted at https://insecure.cam in Hong Kong AWS.
+- https://rtc.ninja (de-branded version of vdo.ninja)
 
 You can also point your domain to the VDO.Ninja IP address (provided on request), which will also rebrand the site automatically to match your domain name. (Requires Cloudflare as DNS server and proxy, Flexible SSL cert on, and HTTPs always on - all free.) 
 
@@ -25,7 +20,7 @@ For those wanting a private TURN server setup, you can load the settings for tho
 
 VDO.Ninja also supports IFRAMES, so you can embed VDO.Ninja into your website and customize it via both URL parameters, but also via the IFRAME API.  You can insert custom CSS styles with this method, giving VDO.Ninja quite a bit of flare.
 
-See more on IFRAMES here: https://github.com/steveseguin/vdo.ninja/blob/master/IFRAME.md
+See more on IFRAMES here: https://docs.vdo.ninja/guides/iframe-api-documentation
 
 Understanding clearly why you need to deploy any code or server is important. Maintaining updated deployed code can be quite hard, as VDO.Ninja updates frequently, so there are good reasons to consider an IFRAME approach instead. Feature requests there are welcomed.
 
@@ -92,15 +87,13 @@ My suggestion? Limit changes to images and perhaps the translation files (maybe 
 
 ### Internet-free deployments
 
-For those looking to deploy a completely Internet-free or fully-isolated option, you'll need to deploy your own STUN services and a handshake server as well.
+For those looking to deploy a completely Internet-free or fully-isolated hosting option, you'll need to also deploy your own STUN/TURN service, as well as a handshake server.
 
-Details on how to deploy your own private STUN server can be Googled online; it's rather out of the scope of this guide's goals though.  As of this writing, VDO.Ninja uses Google's public STUN servers, but most TURN-servers offers STUN server functionality as well; just takes some added configuration. 
+Details on how to deploy your own private STUN server can be Googled online; it's rather out of the scope of this guide's goals though.  As of this writing, VDO.Ninja uses Google's public STUN servers, but most TURN-servers also offer optional STUN server functionality as well. (Details on deploying a TURN server are mentioned previously in this article.)
 
-Internet-free deployments will also need to deal with private SSL certificates and any DNS secure context issues that may arise. VDO.Ninja relies on SSL for security, but if you can't figure out how to do private SSL issuance, these SSL restrictions can be disabled via the Chrome browser's command-line. VDO.Ninja may complain about the lack of security if you take this approach though.
+Internet-free deployments will also need to deal with private SSL certificates and any DNS secure context issues that may arise. VDO.Ninja relies on SSL for security, but if you can't figure out how to do private SSL issuance, these SSL restrictions can be disabled via the Chrome browser's command-line. VDO.Ninja may complain about the lack of security if you take this approach though, but you can edit out those lines of code which trigger those warnings as needed.
 
-Finally, there is an experimental handshake server option that lets advanced users use a basic/generic websocket service as a personal handshake server; useful for air-gapped private deployments of the service.  A simple socket server has been developed that can be used as a personal handshake server. Documentation with installation instructions are included here: https://github.com/steveseguin/websocket_server
-
-Just on a side note, support for piesocket.com has also been added as a third-party handshake-server service option, which demonstrates and offers a cheap alternative to a managed hosted alternative of the official handshake service. If using piesocket, you can just do &pie=APKKEY to use that service, without deploying any code or servers yourself. The free tier is quite generous and I have no affiliation with them, but you'll need the Internet to make use of their service.
+Finally, there is a handshake server hosting option available; advanced users can host their own personal handshake server, which is useful for air-gapped private deployments of the service. Some basic documentation with instructions on setting it up are included here: https://github.com/steveseguin/websocket_server. Please note that despite how simple the provided handshake server appears, it does work quite well as VDO.Ninja was designed to be as serverless as possible. Just be sure that your SSL-certifcates are valid, else it may not work.
 
 Regards,
 Steve
