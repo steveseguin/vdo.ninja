@@ -1,0 +1,32 @@
+---
+description: Defines the link to be treated like a scene, used by a room's director.
+---
+
+# \&scene
+
+## Options
+
+| Value  | Description                                              |
+| ------ | -------------------------------------------------------- |
+| 0      | auto-add all videos to the scene. they can't be removed. |
+| 1      | empty by default; manually add videos in.                |
+| string | like scene 1, but videos are not preloaded               |
+
+## Details
+
+{% hint style="info" %}
+Must be used in conjunction with a room parameter.&#x20;
+{% endhint %}
+
+`scene=0` by default has all videos in the room automatically added to the scene. They cannot be removed.
+
+* `scene=1` by default has no videos added to the scene. Videos need to be added manually by the director. Videos not yet added to the scene are connected, and streaming at around 400-kbps, so when they become active they appear immediately. Bitrate will ramp up after a second to the target bitrate of, normally, 2500-kbps or whatever is set via the URL.
+* `scene=2` is like scene=1, except the video streams that are not yet added to the scene yet are disable with 0-bitrate used. They are connected, but not actively streaming any video data, so it takes a moment longer for videos to appear once added
+* `scene=N`, where N is a string or integer -- it's just like scene=2.  There are buttons marked S3, S4, .. S8  in the director's room to control these scene types. If they are not already there, new buttons for them will be created automatically when used. See the video below.
+* When using a scene, if you manually specify a video via the \&view parameter, it automatically is added to the scene.
+* Audio of videos in scenes can be controlled by the director: volume and mute are options.
+* In v17.2 of VDO.Ninja, if using \&view in a scene link, the director won't be able to remotely control the scene. This applies to Solo links.&#x20;
+* In v18, you can create custom scenes, as per the video below
+
+{% embed url="https://www.youtube.com/embed/axgIqPcHExQ" %}
+
