@@ -1,0 +1,223 @@
+<html>
+	<head>
+		<link rel="stylesheet" href="./lineawesome/css/line-awesome.min.css" />
+		<link rel="stylesheet" href="./main.css?ver=11" />
+		<link rel="stylesheet" href="./supports.css?ver=1" />
+		<meta charset="utf8" />
+	</head>
+	<body id="supports">
+		<div id="header">
+			<a
+				id="logoname"
+				href="./"
+				style="text-decoration: none; color: white; margin: 2px"
+			>
+				<span data-translate="logo-header"> <font id="qos">O</font>BS.Ninja </span>
+			</a>
+		</div>
+		<div class="card">
+			<h1 id="browserSupportedOptionsTitle">💻 Browser supported options</h1>
+			<p style="margin-bottom: 20px">
+				List of options your browser reports as supported. If an option lights up
+				green, your currently selected camera reports that it supports that option.
+			</p>
+			<div id="browserSupportedOptions"></div>
+		</div>
+		<div class="card">
+			<h1>Device to check</h1>
+			<select id="cameraSelector" onchange="changeCamera()"></select>
+		</div>
+		<div class="card">
+			<h1 id="cameraSupportedOptionsTitle">📹 Camera supported options</h1>
+			<div id="cameraSupportedOptions"></div>
+		</div>
+		<div class="card">
+			<h1>📹 Camera settings</h1>
+			<div id="cameraSettings"></div>
+		</div>
+
+		<script>
+		
+			function getChromeVersion() {
+				var raw = navigator.userAgent.match(/Chrom(e|ium)\/([0-9]+)\./);
+				return raw ? parseInt(raw[2], 10) : false;
+			}
+			
+			if (!getChromeVersion() || getChromeVersion < 60){
+				alert("This tool really only works with recent Chromium based browsers; Firefox or Safari are not supported");
+			}
+		
+			function prettyPrintJsonToId(json, element) {
+				var output = "<div class='prettyJson three-col'>";
+
+				Object.entries(json)
+					.sort()
+					.forEach(([key, value]) => {
+						if (value == true) {
+							value = "<i class='las la-check'></i>";
+						}
+						if (value == false) {
+							value = "<i class='las la-times'></i>";
+						}
+						output += "<div class='property' id=" + key + ">";
+						output += "<span>" + key + "</span><span>" + value + "</span>";
+						output += "</div>";
+					});
+				output += "</div>";
+				document.getElementById(element).innerHTML = output;
+			}
+
+			function prettyPrintSupportedOptions(json, element) {
+				long_ass_strings = [json.deviceId, json.groupId];
+				var output = "<div class='prettyJson two-col'>";
+
+				var nestedObjs;
+				delete json.deviceId;
+				delete json.groupId;
+
+				Object.entries(json)
+					.sort()
+					.forEach(([key, value]) => {
+						output += "<div class='supportedOption'>";
+						nestedObjs = "";
+						if (typeof value === "object" && value !== null) {
+							Object.entries(value)
+								.sort()
+								.forEach(([key, value]) => {
+									nestedObjs +=
+										"<div class='subproperty'><span>" +
+										key +
+										"</span><span>" +
+										value +
+										"</span></div>";
+								});
+							output += "<span>" + key + "</span><span>" + nestedObjs + "</span>";
+						} else {
+							output += "<span>" + key + "</span><span>" + value + "</span>";
+						}
+						output += "</div>";
+					});
+				output += "</div>";
+				output += "<div id='longCameraSupportedStrings'><span>IDs</span>";
+				output += "<span>deviceId: " + long_ass_strings[0] + "</span>";
+				output += "<span>groupId: " + long_ass_strings[1] + "</span></div>";
+				document.getElementById(element).innerHTML = output;
+			}
+
+			function changeCamera() {
+				var deviceId = document.getElementById("cameraSelector").value;
+				getCameraDetails(deviceId);
+				
+			}
+
+			function getCameraDetails(deviceId) {
+				console.log(deviceId);
+				navigator.mediaDevices
+					.getUserMedia({
+						video: {
+							deviceId: {exact: deviceId},
+							zoom: true,
+							pan: true,
+							tilt: true
+						},
+						audio: false,
+					})
+					.then(function (mediaStream) {
+						console.log("worked");
+						setTimeout(function () {
+							mediaStream.getVideoTracks().forEach((track) => {
+								try{
+									const capabilities = track.getCapabilities();
+									const settings = track.getSettings();
+									prettyPrintSupportedOptions(capabilities, "cameraSupportedOptions");
+									document
+										.querySelectorAll(".property")
+										.forEach((el) => el.classList.remove("ok"));
+
+									Object.entries(capabilities)
+										.sort()
+										.forEach(([key, value]) => {
+											document.getElementById(key).classList.add("ok");
+										});
+									prettyPrintJsonToId(settings, "cameraSettings");
+								} catch (e){
+									document
+									.querySelectorAll(".property")
+									.forEach((el) => el.classList.remove("ok"));
+								}
+							});
+						}, 1000);
+					}).catch(function(e){
+						setTimeout(function(){getCameraDetailsFallback(deviceId)},0);
+					})
+			}
+			
+			function getCameraDetailsFallback(deviceId) {
+				console.log(deviceId);
+				navigator.mediaDevices
+					.getUserMedia({
+						video: {
+							deviceId: deviceId
+						},
+						audio: false,
+					})
+					.then(function (mediaStream) {
+						console.log("worked");
+						setTimeout(function () {
+							mediaStream.getVideoTracks().forEach((track) => {
+								try{
+									const capabilities = track.getCapabilities();
+									const settings = track.getSettings();
+									prettyPrintSupportedOptions(capabilities, "cameraSupportedOptions");
+									document
+										.querySelectorAll(".property")
+										.forEach((el) => el.classList.remove("ok"));
+
+									Object.entries(capabilities)
+										.sort()
+										.forEach(([key, value]) => {
+											document.getElementById(key).classList.add("ok");
+										});
+									prettyPrintJsonToId(settings, "cameraSettings");
+								} catch (e){
+									document
+									.querySelectorAll(".property")
+									.forEach((el) => el.classList.remove("ok"));
+								}
+							});
+						}, 1000);
+						//updateDeviceList();
+					});
+			}
+			
+			var supports = navigator.mediaDevices.getSupportedConstraints();
+			prettyPrintJsonToId(supports, "browserSupportedOptions");
+			document.getElementById("browserSupportedOptionsTitle").innerText +=
+				" (" + Object.keys(supports).length + ")";
+
+			function updateDeviceList(){
+				navigator.mediaDevices
+					.enumerateDevices()
+					.then(function (devices) {
+						setTimeout(function (devices) {
+							console.log("Listing devices");
+							devices.forEach(function (device) {
+								if (device.kind == "videoinput") {
+									var element = document.createElement("option");
+									element.setAttribute("value", device.deviceId);
+									element.innerText = device.label  || "No Label Available";
+									document.getElementById("cameraSelector").appendChild(element);
+									console.log(device);
+								}
+							});
+							setTimeout(function(){changeCamera();},10);
+						}, 1000, devices);
+					})
+					.catch(function (err) {
+						console.log(err.name + ": " + err.message);
+					});
+			}
+			updateDeviceList();
+		</script>
+	</body>
+</html>

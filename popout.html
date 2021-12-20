@@ -1,0 +1,192 @@
+<html>
+<head>
+<meta name="theme-color" content="#ffffff" />
+<!-- <script src="//console.re/connector.js" data-channel="obsninjadev"  type="text/javascript" id="consolerescript"></script>-->
+<link rel="stylesheet" href="./lineawesome/css/line-awesome.min.css">
+<script type="text/javascript" crossorigin="anonymous" src="./thirdparty/adapter-latest.js"></script>
+<script type="text/javascript" crossorigin="anonymous" src="./thirdparty/qrcode.min.js"></script>
+<script type="text/javascript" src="./thirdparty/jquery.min.js"></script> 
+<link rel="stylesheet" href="./main.css?ver=22" />
+<style>
+#chatModule{
+    bottom: 0px;
+    position: fixed;
+    align-self: center;
+    width: 100%;
+}
+#chatInput{
+    color: #000;
+    background-color: #FFFE;
+    max-width: 700px;
+    min-width: 390px;
+    font-size: 105%;
+    margin-left: 10px;
+    padding: 3px;
+}
+#chatBody {
+    z-index: 12;
+    background-color: #0000;
+    width: 100%;
+    border-radius: 5px;
+    padding: 1px 7px;
+    overflow-y: scroll;
+    overflow-wrap: anywhere;
+    max-height: 800px;
+}
+body{
+	background-color:#EEE;
+}
+</style>
+</head>
+<body>
+<div id="chatModule" >
+	<div id="chatBody"> 
+		<div class="inMessage" data-translate='welcome-to-obs-ninja-chat'>
+			Welcome to OBS.Ninja! You can send text messages directly to connected peers from here.
+		</div>
+		<div class="outMessage" data-translate='names-and-labels-coming-soon'>
+			Names identifying connected peers will be a feature in an upcoming release.
+		</div>
+	</div>
+	<input id="chatInput" placeholder="Enter chat message to send here" onkeypress="EnterButtonChat(event)" />
+	<button style="width:60px;background-color:#ACA;" onclick="sendChatMessage()" data-translate='send-chat'>Send</button>
+</div>
+<script>
+
+
+/// If you have a routing system setup, you could have just one global listener for all iframes instead.
+var chatUpdateTimeout = null;
+var messageList = [];
+
+(function (w) {
+    w.URLSearchParams = w.URLSearchParams || function (searchString) {
+        var self = this;
+        self.searchString = searchString;
+        self.get = function (name) {
+            var results = new RegExp('[\?&]' + name + '=([^&#]*)').exec(self.searchString);
+            if (results == null) {
+                return null;
+            }
+            else {
+                return decodeURI(results[1]) || 0;
+            }
+        };
+    };
+
+})(window);
+var urlParams = new URLSearchParams(window.location.search);
+
+if (urlParams.has("id")){
+ var bid = urlParams.get("id");
+}
+var bc = new BroadcastChannel(bid);
+bc.postMessage({"loaded":true});
+bc.onmessage = function (e) {
+	//if (e.source != iframe.contentWindow){return} // reject messages send from other iframes
+	console.log(e);
+	if ("data" in e){
+		if ("msg" in e.data){
+			messageList.push(e.data);
+			messageList = messageList.slice(-100);
+			updateMessages();
+		} else if ("messageList" in e.data){
+			messageList = e.data.messageList;
+			updateMessages();
+		}
+	}
+};
+function sanitize(string) {
+	var temp = document.createElement('div');
+	temp.textContent = string;
+	return temp.innerHTML;
+}
+
+function EnterButtonChat(event){
+	 // Number 13 is the "Enter" key on the keyboard
+	var key = event.which || event.keyCode;
+	if (key  === 13) {
+		// Cancel the default action, if needed
+		event.preventDefault();
+		// Trigger the button element with a click
+		sendChatMessage();
+	}
+}
+
+function sendChatMessage(chatMsg = false){ // filtered + visual
+	var msg = document.getElementById('chatInput').value;
+	msg = sanitize(msg);
+	if (msg==""){return;}
+	console.log(msg);
+	bc.postMessage({"msg":msg})
+	document.getElementById('chatInput').value = "";
+}
+
+function timeSince(date) {
+
+  var seconds = Math.floor((new Date() - date) / 1000);
+
+  var interval = seconds / 31536000;
+
+  if (interval > 1) {
+    return Math.floor(interval) + " years";
+  }
+  interval = seconds / 2592000;
+  if (interval > 1) {
+    return Math.floor(interval) + " months";
+  }
+  interval = seconds / 86400;
+  if (interval > 1) {
+    return Math.floor(interval) + " days";
+  }
+  interval = seconds / 3600;
+  if (interval > 1) {
+    return Math.floor(interval) + " hours";
+  }
+  interval = seconds / 60;
+  if (interval > 1) {
+    return Math.floor(interval) + " minutes";
+  }
+  return "Seconds ago";
+}
+
+
+
+function updateMessages(){
+	document.getElementById("chatBody").innerHTML = "";
+	for (i in messageList){
+		
+		var time = timeSince(messageList[i].time);
+		var msg = document.createElement("div");
+		////// KEEP THIS IN /////////
+		console.log(messageList[i].msg); // Display Recieved messages for View-Only clients.
+		/////////////////////////////
+		if (messageList[i].type == "sent"){
+			msg.innerHTML = messageList[i].msg + " <i><small> <small>- "+time+"</small></small></i>";
+			msg.classList.add("outMessage");
+		} else if (messageList[i].type == "recv"){
+			var label = "";
+			if (messageList[i].label){
+				label = messageList[i].label;
+			} 
+			msg.innerHTML = label+messageList[i].msg + " <i><small> <small>- "+time+"</small></small></i>";
+			msg.classList.add("inMessage");
+		} else if (messageList[i].type == "alert"){
+			msg.innerHTML = messageList[i].msg + " <i><small> <small>- "+time+"</small></small></i>";
+			msg.classList.add("inMessage");
+		} else {
+			msg.innerHTML = messageList[i].msg + " <i><small> <small>- "+time+"</small></small></i>";
+			msg.classList.add("inMessage");
+		}
+		
+		document.getElementById("chatBody").appendChild(msg);
+	}
+	if (chatUpdateTimeout){
+		clearInterval(chatUpdateTimeout);
+	}
+	document.getElementById("chatBody").scrollTop = document.getElementById("chatBody").scrollHeight;
+	chatUpdateTimeout = setTimeout(function(){updateMessages()},60000);
+}
+
+</script>
+</body>
+</html>

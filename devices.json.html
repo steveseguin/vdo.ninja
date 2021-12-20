@@ -1,0 +1,24 @@
+<html>
+<head><meta charset="UTF-8"></head>
+	<body>
+	<script>
+	var list = [];
+	
+
+	navigator.mediaDevices.enumerateDevices()
+	.then(function(devices) {
+	  devices.forEach(function(device) {
+		console.log(device.kind + ": " + device.label +
+					" id = " + device.deviceId);
+		list.push(device);
+	  });
+	  document.write(JSON.stringify(list, null, 2));
+	})
+	.catch(function(err) {
+	  console.log(err.name + ": " + err.message);
+	});
+	
+	
+</script>
+</body>
+</html>

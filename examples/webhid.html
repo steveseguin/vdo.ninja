@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8" />
+	<title>WebHID Demo</title>
+	<style>
+	body {
+		text-align: center;
+    }
+  
+  .button {
+    background-color: black;
+    border: none;
+    color: #00FF00;
+    padding: 15px 32px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    margin: 4px 2px;
+    cursor: pointer;
+    font-size: 24px;
+  }
+  
+  #connected {
+	font-size: 24px;
+	max-height:700px;
+	overflow-y:scroll
+  }
+  #disconnectButton {
+    font-size: 24px;
+  }
+ 
+  </style>
+</head>
+<body>
+	<h1>STREAMDECK DEMO</h1>
+	<img src="./media/streamdeck.png" /><br />
+	<input class="button" type="button" id="connectButton" value="Connect" />
+	<input class="button" type="button" id="disconnectButton" style="display:none" value="Disconnect" />
+	<div id="connected" style>
+	</div>
+
+    <script>
+		const connectButton = document.getElementById("connectButton");
+		const disconnectButton = document.getElementById("disconnectButton");
+		const connect = document.getElementById("connect");
+		const deviceButtonPressed = document.getElementById("deviceButtonPressed");
+		var lastState = false;
+			//productId: 0x0060,
+			//class: models_1.StreamDeckOriginal,
+		
+			//productId: 0x0063,
+			//class: models_1.StreamDeckMini,
+		
+			//productId: 0x006c,
+			//class: models_1.StreamDeckXL,
+		
+			//productId: 0x006d,
+			//class: models_1.StreamDeckOriginalV2,
+				
+		document.addEventListener('DOMContentLoaded', async () => {
+		  let devices = await navigator.hid.getDevices();
+		  devices.forEach(device => {
+			console.log(`HID: ${device.productName}`);
+		  });
+		});
+		
+		function handleInputReport(e) {
+		  console.log(e.device.productName + ": got input report " + e.reportId);
+		  console.log(new Uint8Array(e.data.buffer));
+		  var data = new Uint8Array(e.data.buffer);
+		  if (lastState!==false){
+			for (var i=0;i<data.length;i++){
+				
+				if (parseInt(data[i])!=data[i]){continue;}
+				if (lastState[i]!==data[i]){
+					if (data[i]){
+						document.getElementById("connected").innerHTML = "<br />Button "+(i+1)+" Pressed"+document.getElementById("connected").innerHTML;
+					} else {
+						document.getElementById("connected").innerHTML = "<br />Button "+(i+1)+" Released"+document.getElementById("connected").innerHTML;
+					}
+				} else {
+					if (data[i]){
+						document.getElementById("connected").innerHTML = "<br />Button "+(i+1)+" Pressed"+document.getElementById("connected").innerHTML;
+					}
+				}
+			}
+		  }
+		  lastState = data;
+		}
+
+		let device;
+		
+		connectButton.onclick = async () => {
+		  navigator.hid.requestDevice({
+			filters: [{ vendorId: 0x0fd9}] // elgato?
+		  }).then((devices)=>{
+			console.log(devices);
+			
+			device = devices[0];
+			
+			console.log(`HID connected: ${device.productName}`);
+			document.getElementById("connected").innerHTML = "<br />Connected" +document.getElementById("connected").innerHTML;
+			document.getElementById("disconnectButton").style.display = "inline-block";
+			device.addEventListener("inputreport", handleInputReport);
+			
+			//device.sendReport(outputReportId, outputReport).then(() => {
+			//  console.log("Sent output report " + outputReportId);
+			//});
+			
+			if (!device.opened){
+				device.open().then(()=>{
+					window.addEventListener("onbeforeunload", async () => {
+					  await device.close();
+					});
+				}).catch(function(err){console.error(err);});
+			}
+		  }).catch(function(err){console.error(err);});
+		  
+		};
+
+		disconnectButton.onclick = async () => {
+		  await device.close();
+
+		  //connected.style.display = "none";
+		  //connectButton.style.display = "initial";
+		  disconnectButton.style.display = "none";
+		};
+		
+	</script>
+</body>
+</html>
+

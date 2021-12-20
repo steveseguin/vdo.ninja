@@ -1,0 +1,127 @@
+#devices {
+    max-width: 80%;
+    width: fit-content;
+    margin: 0 auto;
+}
+
+h1 {
+    font-size: 1.5em;
+    padding:10px;
+    background-color:#457b9d;
+    color:white;
+    border-bottom: 2px solid #3b6a87;
+}
+
+.device {
+    display: flex;
+    flex-direction: column;
+    margin: 10px 0px;
+    font-size: 1rem;
+    padding: 10px;
+    position: relative;
+    user-select: none;
+    background: #d0d0d0;
+    border-radius: 4px;
+}
+
+.device.selected {
+    background-color: #3ea03c;
+}
+
+.device.selected::before {
+    content: "\f00c";
+    font-family: "Line Awesome Free";
+    font-weight: 900;
+    position: absolute;
+    top: 10px;
+    right: 10px;
+}
+
+.device:hover {
+    cursor: pointer;
+}
+
+.device-name{
+    font-weight: bold;
+    margin-bottom: 5px;
+}
+
+.device-id {
+
+}
+
+.card {
+    margin: 10px;
+}
+
+.card > div {
+    padding: 10px;
+}
+
+.notice {
+    background-color: #fff18c;
+    margin: 10px;
+    padding: 20px 20px;
+    font-weight: bold;
+    font-size: 1.2em;
+    text-align: center;
+    line-height: 1.4em;
+}
+
+.notice a {
+    color: #457b9d;
+}
+
+@media only screen
+  and (min-device-width: 375px)
+  and (max-device-width: 812px)
+  and (orientation: portrait) {
+    #devices {
+        width: 100%;
+        max-width: 100%;
+    }
+    .device-id {
+        text-overflow: ellipsis;
+        overflow: hidden;
+    }
+}
+
+
+#sharedDevices {
+    position: fixed;
+    bottom: 20px;
+    width: 80%;
+    left: 10%;
+    color: white;
+    overflow-wrap: anywhere;
+    background: #2c3754;
+    padding: 20px;
+    box-shadow: 0px 0px 10px 5px #00000047;
+    border: 1px solid #333c52;
+}
+
+#sharedDevices span {
+    display: block;
+    margin-bottom: 10px;
+}
+
+#sharedDevices input {
+    width: 100%;
+    padding: 5px;
+
+}
+
+span#close {
+    position: absolute;
+    top: -10px;
+    right: -10px;
+    display: block;
+    width: 20px;
+    height: 20px;
+    background: #457b9d;
+    text-align: center;
+    border-radius: 20px;
+    line-height: 20px;
+    font-size: 20px;
+    cursor: pointer;
+}

@@ -1,0 +1,76 @@
+<html>
+<head><title>Dual Input</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+<meta content="text/html;charset=utf-8" http-equiv="Content-Type" />
+<style>
+body{
+	padding:0;
+	margin:0;
+	background-color:#003;
+	width:100%;
+	height:100%;
+}
+
+iframe {
+	width:100%;
+	height:100%;
+	border:0;
+	margin:0;
+	padding:0;
+	position:absolute;
+	display:block;
+}
+
+
+input{
+	padding:10px;
+	width:80%;
+	font-size:1.2em;
+	z-index: 1000;
+}
+
+</style>
+</head>
+<body>
+
+
+
+<div id="container1" style="width:100%;height:100%;display:none;"></div>
+<div id="container2" style="width: calc(25vh*1.777);height: calc(25vh); display:none; float:left; position: fixed; top: 2%; left: 0%;"></div>
+<input placeholder="Enter a Room name" id="viewlink" type="text" onchange="loadIframes()"/>
+<script>
+
+function loadIframes(url=false){ 
+
+	var roomname = document.getElementById("viewlink").value;
+	
+	document.getElementById("viewlink").parentNode.removeChild(document.getElementById("viewlink"));
+	document.getElementById("container1").style.display="inline-block";
+	document.getElementById("container2").style.display="inline-block";
+	
+	var path = window.location.host+window.location.pathname.split("/").slice(0,-1).join("/");
+	
+	var room1 = "https://"+path+"/?room="+roomname+"&push="+roomname+"_front&webcam&autostart&vd=front&ad=1&exclude="+roomname+"_rear";
+	var room2 = "https://"+path+"/?room="+roomname+"&push="+roomname+"_rear&webcam&autostart&vd=back&ad=0&view&cleanoutput&nosettings&transparent";
+	
+	var iframe = document.createElement("iframe");
+	iframe.allow = "autoplay;camera;microphone;fullscreen;picture-in-picture;";
+	iframe.src = room1;
+	var iframeContainer = document.createElement("div");
+	iframeContainer.appendChild(iframe);
+	document.getElementById("container1").appendChild(iframeContainer);
+	
+	setTimeout(function(){
+		var iframe = document.createElement("iframe");
+		iframe.allow = "autoplay;camera;microphone;fullscreen;picture-in-picture;";
+		iframe.src = room2;
+		var iframeContainer = document.createElement("div");
+		iframeContainer.appendChild(iframe);
+		document.getElementById("container2").appendChild(iframeContainer);
+	},3000);
+	
+}
+
+</script>
+</body>
+</html>

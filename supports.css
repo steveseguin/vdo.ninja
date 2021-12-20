@@ -1,0 +1,139 @@
+#supports .card:nth-child(2){
+	margin-top: 40px;
+}
+
+#supports .card {
+	width: 80%;
+	margin: 0 auto;
+	display: block;
+	padding: 20px;
+}
+
+#supports .card h1 {
+	font-size: 1.5em;
+	margin-bottom: 1em;
+}
+
+.prettyJson {
+    display: grid;
+    row-gap: 0;
+    column-gap: 10%;
+}
+
+
+.prettyJson.two-col {
+	grid-template-columns: 1fr 1fr;
+}
+
+.prettyJson.three-col {
+	grid-template-columns: 1fr 1fr 1fr;
+}
+
+.prettyJson.four-col {
+	grid-template-columns: 1fr 1fr 1fr 1fr;
+}
+
+@media only screen
+  and (min-device-width: 375px)
+  and (max-device-width: 812px)
+  and (orientation: portrait) {
+
+	#supports .card {
+		width: 100%;
+	}
+
+	.prettyJson.two-col,
+	.prettyJson.three-col {
+		grid-template-columns: 1fr;
+	}
+
+	.subproperty {
+		font-size: 2rem;
+	}
+
+}
+
+
+.prettyJson .property {
+    display: grid;
+	grid-template-columns: 2fr 1fr;
+	border-bottom: 1px solid rgb(202, 202, 202);
+	padding: 1px;
+}
+
+.prettyJson > .property > span:nth-child(1) {
+    background: #f3f3f3;
+    padding: 5px;
+}
+
+.prettyJson > .property > span:nth-child(2) {
+    background: #d0d0d0;
+    padding: 5px;
+    white-space: pre-wrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.prettyJson .property.ok > span{
+	background: #40916c;
+	font-weight: bold;
+	color:white;
+}
+
+.supportedOption {
+    background: #f3f3f3;
+    margin: 5px;
+    border: 1px solid #457b9d;
+}
+
+.supportedOption > span:nth-child(1) {
+    font-weight: bold;
+    font-size: 1.3em;
+    background: #457b9d;
+    display: block;
+    padding: 5px;
+    color: white;
+}
+
+.supportedOption > span:nth-child(2) {
+	display: block;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	padding: 5px;
+}
+
+.subproperty {
+	display: flex;
+	padding: 10px;
+}
+
+.subproperty:nth-child(even) {
+    background: gainsboro;
+}
+
+.subproperty span:nth-child(1) {
+    flex: 1;
+}
+
+.subproperty span:nth-child(2) {
+	flex: 2;
+}
+
+div#longCameraSupportedStrings {
+    background: #f3f3f3;
+    border: 1px solid #457b9d;
+    margin: 5px;
+}
+
+#longCameraSupportedStrings > span{
+	display: block;
+	padding: 10px;
+}
+
+#longCameraSupportedStrings > span:nth-child(1) {
+    /* padding: 0px; */
+    background: #457b9d;
+    /* margin: 0; */
+    font-weight: bold;
+    color: white;
+}

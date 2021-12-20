@@ -1,0 +1,235 @@
+<head>
+	<link rel="stylesheet" href="./main.css?ver=40" />
+	<style>
+		.container {
+			max-width: 80%;
+			width: fit-content;
+			margin: 0 auto;
+		}
+
+		h1 {
+			margin-top: 1em;
+			margin-bottom: 1em;
+			padding: 10px;
+		}
+
+		.card {
+			margin: 10px;
+			box-shadow: 0 4px 8px 0 rgb(0 0 0 / 10%);
+			background-color: #ddd;
+			color: black;
+			margin-bottom: 1.5em;
+		}
+
+		.card>div {
+			padding: 10px;
+		}
+
+		.card h2 {
+			font-size: 1.5em;
+			padding: 10px;
+			background-color: #457b9d;
+			color: white;
+			border-bottom: 2px solid #3b6a87;
+		}
+
+		small {
+			font-style: italic;
+			display: block;
+			margin-left: 1em;
+		}
+
+		span.warning {
+			color: rgb(212, 191, 0);
+		}
+
+		input {
+			padding: 10px;
+		}
+
+		video {
+			max-width: 640px;
+			max-height: 360px;
+			padding: 20px;
+		}
+
+		audio {
+			max-width: 640px;
+			max-height: 360px;
+			padding: 20px;
+		}
+
+		div#processing {
+			display: none;
+			justify-content: center;
+			place-items: center;
+			position: absolute;
+			inset: 0;
+			font-size: 1.5em;
+			font-weight: bold;
+			background: #141926;
+			flex-direction: column;
+		}
+	</style>
+</head>
+
+<body style='color:white'>
+	<div id="header">
+		<a id="logoname" href="./" style="text-decoration: none; color: white; margin: 2px">
+			<span data-translate="logo-header">
+				<font id="qos">V</font>DO.Ninja
+			</span>
+		</a>
+	</div>
+	<div class="container">
+		<div id="info">
+			<h1>Web-based Media Conversion Tools</h1>
+			<div class="card">
+				<h2>WebM to MP4 (fixed 1280x720 resolution) <span class='warning'>(very slow!)</span></h2>
+				<div>
+					<small>The same as: fmpeg -i input.webm -vf scale=1280:720 output.mp4</small>
+					<input type="file" id="uploader" title="Convert WebM to MP4">
+				</div>
+			</div>
+			<div class="card">
+				<h2>WebM to MP4 files (no transcoding, attempts to force high resolutions)</h2>
+				<div>
+					<input type="file" id="uploader3" accept=".webm" title="Convert WebM to MP4">
+				</div>
+			</div>
+			<div class="card">
+				<h2>WebM to Audio-only files (opus or wav)</h2>
+				<div>
+					<input type="file" id="uploader4" accept=".webm" title="Convert WebM to OPUS">
+				</div>
+			</div>
+			<div class="card">
+				<h2>MKV to MP4 (no transcoding)</h2>
+				<div>
+					<small>The same as: fmpeg -i INPUTFILE -vcodec copy -acodec copy output.mp4</small>
+					<input type="file" id="uploader2" accept=".mkv" title="Convert MKV to MP4">
+				</div>
+			</div>
+			<div id="processing">
+				<span id="message"></span>
+				<video id="player" controls style="display:none"></video>
+				<audio id="player2" controls style="display:none"></audio>
+			</div>
+		</div>
+
+    <script>
+      if (window.location.hostname.indexOf("vdo.ninja") == 0) {
+        window.location = window.location.href.replace("vdo.ninja","isolated.vdo.ninja"); // FFMPEG requires an isolated domain.
+      }
+    </script>
+
+		<script src="./thirdparty/ffmpeg.min.js"></script>
+		<script>
+
+			function download(data, filename) {
+				const blob = new Blob([data.buffer]);
+				const url = window.URL.createObjectURL(blob);
+				const a = document.createElement('a');
+				a.style.display = 'none';
+				a.href = url;
+				a.download = filename;
+				document.body.appendChild(a);
+				a.click();
+				setTimeout(() => {
+					document.body.removeChild(a);
+					window.URL.revokeObjectURL(url);
+				}, 100);
+			}
+
+			const { createFFmpeg, fetchFile } = FFmpeg;
+			const ffmpeg = createFFmpeg({ log: true });
+
+			const transcode = async ({ target: { files } }) => {
+				const { name } = files[0];
+				document.getElementById('uploader').style.display = "none";
+				document.getElementById('uploader2').style.display = "none";
+				document.getElementById('uploader3').style.display = "none";
+				document.getElementById('message').innerText = "Transcoding file... this will take a while";
+				document.getElementById('processing').style.display = 'flex';
+				await ffmpeg.load();
+				ffmpeg.FS('writeFile', name, await fetchFile(files[0]));
+				await ffmpeg.run('-i', name, '-vf', 'scale=1280:720', 'output.mp4');
+				const data = ffmpeg.FS('readFile', 'output.mp4');
+				const video = document.getElementById('player');
+				video.src = URL.createObjectURL(new Blob([data.buffer], { type: 'video/mp4' }));
+				video.style.display = "block";
+				document.getElementById('message').innerText = "Operation Done. Play video or download it.";
+			}
+			
+			const transmux = async ({ target: { files } }) => {
+				const { name } = files[0];
+				document.getElementById('uploader').style.display = "none";
+				document.getElementById('uploader2').style.display = "none";
+				document.getElementById('uploader3').style.display = "none";
+				document.getElementById('message').innerText = "Transcoding file... this will take a while";
+				document.getElementById('processing').style.display = 'flex';
+				await ffmpeg.load();
+				ffmpeg.FS('writeFile', name, await fetchFile(files[0]));
+				await ffmpeg.run('-i', name, '-vcodec', 'copy', '-acodec', 'copy', 'output.mp4');
+				const data = ffmpeg.FS('readFile', 'output.mp4');
+				const video = document.getElementById('player');
+				video.src = URL.createObjectURL(new Blob([data.buffer], { type: 'video/mp4' }));
+
+				video.style.display = "block";
+				document.getElementById('message').innerText = "Operation Done. Play video or download it.";
+			}
+
+			const force1080 = async ({ target: { files } }) => {
+				const { name } = files[0];
+				const sourceBuffer = await fetch("./media/cap.webm").then(r => r.arrayBuffer());
+				document.getElementById('uploader').style.display = "none";
+				document.getElementById('uploader2').style.display = "none";
+				document.getElementById('uploader3').style.display = "none";
+				document.getElementById('message').innerText = "Tweaking file... this will take a moment";
+				document.getElementById('processing').style.display = 'flex';
+				await ffmpeg.load();
+				ffmpeg.FS('writeFile', name, await fetchFile(files[0]));
+				ffmpeg.FS("writeFile", "cap.webm", new Uint8Array(sourceBuffer, 0, sourceBuffer.byteLength));
+
+				await ffmpeg.run("-i", "concat:cap.webm|" + name, "-safe", "0", "-c", "copy", "-avoid_negative_ts", "1", "-strict", "experimental", "output.mp4");
+				const data = ffmpeg.FS('readFile', 'output.mp4');
+				const video = document.getElementById('player');
+				video.src = URL.createObjectURL(new Blob([data.buffer], { type: 'video/mp4' }));
+				video.style.display = "block";
+				document.getElementById('message').innerText = "Operation Done. Play video or download it.";
+				document.getElementById('processing').style.display = 'flex';
+			}
+
+			const convertToAudioOnly = async ({ target: { files } }) => {
+				const { name } = files[0];
+				document.getElementById('message').innerText = "Transcoding file... this will take a while";
+				document.getElementById('processing').style.display = 'flex';
+				await ffmpeg.load();
+				ffmpeg.FS('writeFile', name, await fetchFile(files[0]));
+				const video = document.getElementById('player');
+
+				await ffmpeg.run('-i', name, '-vn', '-acodec', 'copy', 'output.opus');
+				const data = ffmpeg.FS('readFile', 'output.opus');
+
+				console.log(data.buffer.byteLength);
+				if (data.buffer.byteLength) {
+					video.src = URL.createObjectURL(new Blob([data.buffer], { type: 'audio/opus' }));
+					download(data, name.split(".")[0] + ".opus");
+				} else {
+					await ffmpeg.run('-i', name, '-vn', '-acodec', 'copy', 'output.wav');
+					const data2 = ffmpeg.FS('readFile', 'output.wav');
+					video.src = URL.createObjectURL(new Blob([data.buffer], { type: 'audio/pcm' }));
+					download(data2, name.split(".")[0] + ".wav");
+				}
+
+				video.style.display = "block";
+				document.getElementById('message').innerText = "Operation Done. Play audio or download it.";
+				document.getElementById('processing').style.display = 'flex';
+			}
+
+			document.getElementById('uploader').addEventListener('change', transcode);
+			document.getElementById('uploader2').addEventListener('change', transmux);
+			document.getElementById('uploader3').addEventListener('change', force1080);
+			document.getElementById('uploader4').addEventListener('change', convertToAudioOnly);
+		</script>
+</body>

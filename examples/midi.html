@@ -1,0 +1,555 @@
+<html>
+<head>
+<script src="https://cdn.jsdelivr.net/npm/webmidi"></script>
+<link rel="stylesheet" href="./main.css" />
+<style>
+		.container {
+			max-width: 80%;
+			width: fit-content;
+			margin: 0 auto;
+		}
+
+		h1 {
+			margin-top: 1em;
+			margin-bottom: 1em;
+			padding: 10px;
+		}
+
+		.card {
+			margin: 10px;
+			box-shadow: 0 4px 8px 0 rgb(0 0 0 / 10%);
+			background-color: #ddd;
+			color: black;
+			margin-bottom: 1.5em;
+		}
+
+		.card>div {
+			padding: 10px;
+		}
+
+		.card h2 {
+			font-size: 1.5em;
+			padding: 10px;
+			background-color: #457b9d;
+			color: white;
+			border-bottom: 2px solid #3b6a87;
+		}
+
+		small {
+			font-style: italic;
+			display: block;
+			margin-left: 1em;
+		}
+
+		span.warning {
+			color: rgb(212, 191, 0);
+		}
+
+		input {
+			padding: 10px;
+		}
+
+		video {
+			max-width: 640px;
+			max-height: 360px;
+			padding: 20px;
+		}
+
+		audio {
+			max-width: 640px;
+			max-height: 360px;
+			padding: 20px;
+		}
+
+		div#processing {
+			display: none;
+			justify-content: center;
+			place-items: center;
+			position: absolute;
+			inset: 0;
+			font-size: 1.5em;
+			font-weight: bold;
+			background: #141926;
+			flex-direction: column;
+		}
+		button {
+			margin:5px;
+			border:solid black 2px;
+		}
+		
+		body {
+			color:white;
+		}
+		
+		a {
+			color: #225273!important;
+		}
+		
+		
+		
+	</style>
+	<title>VDO.Ninja MIDI Controller</title>
+</head>
+<body>
+<div id="header">
+	<a id="logoname" href="./" style="text-decoration: none; color: white; margin: 2px">
+		<span data-translate="logo-header">
+			<font id="qos">V</font>DO.Ninja
+		</span>
+	</a>
+</div>
+
+<div class="container">
+	<div id="info">
+		<h1>VDO.Ninja MIDI test app</h1>
+		
+		<div class="card">
+			<h2>About</h2>
+			<div>
+				You can check the console debug logs for added details.
+				<br /><br />You can download a virtual MIDI I/O controller for windwos here:<br />
+				http://www.tobias-erichsen.de/software/loopmidi.html
+				<br /><br />This code uses the WebMIDI.js library, referenced here:<br />
+				https://github.com/djipco/webmidi
+				<br /><br />
+				Below you can test the <a href="https://docs.vdo.ninja/general-settings/midi#midi-pass-through-mode">MIDI hotkey commands</a> for VDO.Ninja below:<br />
+			</div>
+		</div>
+		<div class="card">
+			<h2>Select the MIDI Output device:</h2>
+			<div>	
+				<label for="outputdevice">MIDI Output device:</label>
+				<select name="outputdevice" id="outputdevice">
+				</select>
+			</div>
+		</div>
+		<div class="card">
+			<h2>&midi=1</h2>
+			<div id="container1">
+				
+			</div>
+		</div>
+		<div class="card">
+			<h2>&midi=3</h2>
+			<div id="container2">
+				
+			</div>
+		</div>
+		<div class="card">
+			<h2>&midi=4 ; director</h2>
+			<div id="container3">
+				
+			</div>
+		</div>
+		<div class="card">
+			<h2>&midi=4 ; guest 1</h2>
+			<div id="container4">
+			
+			</div>
+		</div>
+		<div class="card">
+			<h2>&midi=4 ; guest 2</h2>
+			<div id="container5">
+				
+			</div>
+		</div>
+		<div class="card">
+			<h2>Sample Remote Director Control links</h2>
+			<div id="container6">
+				
+			</div>
+		</div>
+	</div>
+</div>
+
+
+
+<div id='commands'>
+
+</div>
+<script>
+// Enable WebMidi.js
+WebMidi.enable(function (err) {
+
+  if (err) {
+    console.log("WebMidi could not be enabled.", err);
+  }
+
+  // Viewing available inputs and outputs
+  console.log(WebMidi.inputs);
+  console.log(WebMidi.outputs);
+  
+  var output = WebMidi.outputs[0];
+  
+  
+  var midiout = 0;
+  var outputdevice = document.getElementById("outputdevice");
+  for (var i=0;i<WebMidi.outputs.length;i++){
+	var opt = document.createElement('option');
+	opt.value = WebMidi.outputs[i].id;
+	opt.innerHTML = WebMidi.outputs[i].name + " (id:"+(1+i)+")";
+	if (i==0){
+		midiout = opt.value;
+		opt.selected = true;
+	}
+	outputdevice.appendChild(opt);
+  }
+  
+  var path = window.location.host+window.location.pathname.split("/").slice(0,-1).join("/");
+  
+  outputdevice.onchange = function(e){
+	midiout = outputdevice.value;
+	output = WebMidi.getOutputById(midiout);
+	console.log("MIDI DEVICE CHANGED: "+midiout);
+	
+	var container = document.getElementById("container6");
+	container.innerHTML = "<br />https://"+path+"/?midiremote=4&director=ROOMNAMEHERE";
+	container.innerHTML += "<br /><br />";
+	container.innerHTML += "https://"+path+"/?room=ROOMNAMEHERE&midiout="+(outputdevice.selectedIndex+1)+"&vd=0&ad=0&push&autostart&label=MIDI_CONTROLLER";
+  }
+  
+  var container = document.getElementById("container6");
+	container.innerHTML = "<br />https://"+path+"/?midiremote=4&director=ROOMNAMEHERE";
+	container.innerHTML += "<br /><br />";
+	container.innerHTML += "https://"+path+"/?room=ROOMNAMEHERE&midiout="+(outputdevice.selectedIndex+1)+"&vd=0&ad=0&push&autostart&label=MIDI_CONTROLLER";
+  
+  // Reacting when a new device becomes available
+  WebMidi.addListener("connected", function(e) {
+    console.log(e);
+  });
+  
+  // Reacting when a device becomes unavailable
+  WebMidi.addListener("disconnected", function(e) {
+    console.log(e);
+  });
+
+  // Display the current time
+  console.log(WebMidi.time);
+
+
+  // Retrieve an input by name, id or index
+ // var input = WebMidi.getInputByName("StreamDeck2Daw");
+ // input = WebMidi.getInputById("1809568182");
+  var input = WebMidi.inputs[1];
+
+  // Listen for a 'note on' message on all channels
+  input.addListener('noteon', "all",
+    function (e) {
+      console.log("Received 'noteon' message (" + e.note.name + e.note.octave + ").");
+	  console.log(e);
+    }
+  );
+
+  // Listen to pitch bend message on channel 3
+  input.addListener('pitchbend', 3,
+    function (e) {
+      console.log("Received 'pitchbend' message.", e);
+    }
+  );
+
+  // Listen to control change message on all channels
+  input.addListener('controlchange', "all",
+    function (e) {
+      console.log("Received 'controlchange' message.", e);
+    }
+  );
+  
+  // Listen to NRPN message on all channels
+  input.addListener('nrpn', "all",
+    function (e) {
+      if(e.controller.type === 'entry') {
+        console.log("Received 'nrpn' 'entry' message.", e);
+      }
+      if(e.controller.type === 'decrement') {
+        console.log("Received 'nrpn' 'decrement' message.", e);
+      }
+      if(e.controller.type === 'increment') {
+        console.log("Received 'nrpn' 'increment' message.", e);
+      }
+      console.log("message value: " + e.controller.value + ".", e);
+    }
+  );
+  
+  
+	
+	var container = document.getElementById("container1");
+	
+	
+	///
+	
+	
+	var button = document.createElement("button");
+	button.innerHTML = "Note G3; Chat";
+	button.onclick = function(){output.playNote("G3");};  // "speaker" also works in the same way.
+	container.appendChild(button);
+	
+	var button = document.createElement("button");
+	button.innerHTML = "Note A3; Mute";
+	button.onclick = function(){output.playNote("A3");};  // "speaker" also works in the same way.
+	container.appendChild(button);
+	
+	var button = document.createElement("button");
+	button.innerHTML = "Note B3; Mute Video";
+	button.onclick = function(){output.playNote("B3");};  // "speaker" also works in the same way.
+	container.appendChild(button);
+	
+	var button = document.createElement("button");
+	button.innerHTML = "Note C4; ScreenShare";
+	button.onclick = function(){output.playNote("C4");};  // "speaker" also works in the same way.
+	container.appendChild(button);
+	
+	var button = document.createElement("button");
+	button.innerHTML = "Note D4; Hangup";
+	button.onclick = function(){output.playNote("D4");};  // "speaker" also works in the same way.
+	container.appendChild(button);
+	
+	var button = document.createElement("button");
+	button.innerHTML = "Note E4; Hands";
+	button.onclick = function(){output.playNote("E4");};  // "speaker" also works in the same way.
+	container.appendChild(button);
+	
+	var button = document.createElement("button");
+	button.innerHTML = "Note F4; Record";
+	button.onclick = function(){output.playNote("F4");};  // "speaker" also works in the same way.
+	container.appendChild(button);
+	
+	var button = document.createElement("button");
+	button.innerHTML = "Note G4; Turn on Dir's Audio";
+	button.onclick = function(){output.playNote("G4");};  // "speaker" also works in the same way.
+	container.appendChild(button);
+	
+	var button = document.createElement("button");
+	button.innerHTML = "Note A4; Stop Dir's Audio";
+	button.onclick = function(){output.playNote("A4");};  // "speaker" also works in the same way.
+	container.appendChild(button);
+	
+	///
+	
+	var container = document.getElementById("container2");
+	
+	///
+	
+	
+	var button = document.createElement("button");
+	button.innerHTML = "Note C1; velocity 0";
+	button.onclick = function(){output.playNote("C1", 1, {velocity: 0});};  // "speaker" also works in the same way.
+	container.appendChild(button);
+	
+	var button = document.createElement("button");
+	button.innerHTML = "Note C1; velocity 1";
+	button.onclick = function(){output.playNote("C1", 1, {velocity: 1});};  // "speaker" also works in the same way.
+	container.appendChild(button);
+	
+	var button = document.createElement("button");
+	button.innerHTML = "Note C1; velocity 2";
+	button.onclick = function(){output.playNote("C1", 1, {velocity: 2});};  // "speaker" also works in the same way.
+	container.appendChild(button);
+	
+	var button = document.createElement("button");
+	button.innerHTML = "Note C1; velocity 3";
+	button.onclick = function(){output.playNote("C1", 1, {velocity: 3});};  // "speaker" also works in the same way.
+	container.appendChild(button);
+	
+	var button = document.createElement("button");
+	button.innerHTML = "Note C1; velocity 4";
+	button.onclick = function(){output.playNote("C1", 1, {velocity: 4});};  // "speaker" also works in the same way.
+	container.appendChild(button);
+	
+	var button = document.createElement("button");
+	button.innerHTML = "Note C1; velocity 5";
+	button.onclick = function(){output.playNote("C1", 1, {velocity: 5});};  // "speaker" also works in the same way.
+	container.appendChild(button);
+	
+	var button = document.createElement("button");
+	button.innerHTML = "Note C1; velocity 6";
+	button.onclick = function(){output.playNote("C1", 1, {velocity: 6});};  // "speaker" also works in the same way.
+	container.appendChild(button);
+	
+	var button = document.createElement("button");
+	button.innerHTML = "Note C1; velocity 7";
+	button.onclick = function(){output.playNote("C1", 1, {velocity: 7});};  // "speaker" also works in the same way.
+	container.appendChild(button);
+	
+	var button = document.createElement("button");
+	button.innerHTML = "Note C1; velocity 8";
+	button.onclick = function(){output.playNote("C1", 1, {velocity: 8});};  // "speaker" also works in the same way.
+	container.appendChild(button);
+	///
+	
+	var container = document.getElementById("container3");
+	
+	
+	///
+	
+	
+	var button = document.createElement("button");
+	button.innerHTML = "channel 110; value 0";
+	button.onclick = function(){output.sendControlChange(110, 0, 1);};  // "speaker" also works in the same way.
+	container.appendChild(button);
+	
+	var button = document.createElement("button");
+	button.innerHTML = "channel 110; value 1";
+	button.onclick = function(){output.sendControlChange(110, 1, 1);};  // "speaker" also works in the same way.
+	container.appendChild(button);
+	
+	var button = document.createElement("button");
+	button.innerHTML = "channel 110; value 2";
+	button.onclick = function(){output.sendControlChange(110, 2, 1);};  // "speaker" also works in the same way.
+	container.appendChild(button);
+	
+	var button = document.createElement("button");
+	button.innerHTML = "channel 110; value 3";
+	button.onclick = function(){output.sendControlChange(110, 3, 1);};  // "speaker" also works in the same way.
+	container.appendChild(button);
+	
+	var button = document.createElement("button");
+	button.innerHTML = "channel 110; value 4";
+	button.onclick = function(){output.sendControlChange(110, 4, 1);};  // "speaker" also works in the same way.
+	container.appendChild(button);
+	
+	var button = document.createElement("button");
+	button.innerHTML = "channel 110; value 5";
+	button.onclick = function(){output.sendControlChange(110, 5, 1);};  // "speaker" also works in the same way.
+	container.appendChild(button);
+	
+	var button = document.createElement("button");
+	button.innerHTML = "channel 110; value 6";
+	button.onclick = function(){output.sendControlChange(110, 6, 1);};  // "speaker" also works in the same way.
+	container.appendChild(button);
+	
+	var button = document.createElement("button");
+	button.innerHTML = "channel 110; value 7";
+	button.onclick = function(){output.sendControlChange(110, 7, 1);};  // "speaker" also works in the same way.
+	container.appendChild(button);
+	
+	var button = document.createElement("button");
+	button.innerHTML = "channel 110; value 8";
+	button.onclick = function(){output.sendControlChange(110, 8, 1);};  // "speaker" also works in the same way.
+	container.appendChild(button);
+	
+	///
+	
+	var container = document.getElementById("container4");
+
+	
+	///
+	
+	var button = document.createElement("button");
+	button.innerHTML = "channel 111; value 0";
+	button.onclick = function(){output.sendControlChange(111, 0, 1);};  // "speaker" also works in the same way.
+	container.appendChild(button);
+	
+	var button = document.createElement("button");
+	button.innerHTML = "channel 111; value 1";
+	button.onclick = function(){output.sendControlChange(111, 1, 1);};  // "speaker" also works in the same way.
+	container.appendChild(button);
+	
+	var button = document.createElement("button");
+	button.innerHTML = "channel 111; value 2";
+	button.onclick = function(){output.sendControlChange(111, 2, 1);};  // "speaker" also works in the same way.
+	container.appendChild(button);
+	
+	var button = document.createElement("button");
+	button.innerHTML = "channel 111; value 3";
+	button.onclick = function(){output.sendControlChange(111, 3, 1);};  // "speaker" also works in the same way.
+	container.appendChild(button);
+	
+	var button = document.createElement("button");
+	button.innerHTML = "channel 111; value 4";
+	button.onclick = function(){output.sendControlChange(111, 4, 1);};  // "speaker" also works in the same way.
+	container.appendChild(button);
+	
+	var button = document.createElement("button");
+	button.innerHTML = "channel 111; value 5";
+	button.onclick = function(){output.sendControlChange(111, 5, 1);};  // "speaker" also works in the same way.
+	container.appendChild(button);
+	
+	
+	///
+	
+	var container = document.getElementById("container5");
+	
+	
+	///
+	
+	
+	var button = document.createElement("button");
+	button.innerHTML = "channel 112; transfer popup";
+	button.onclick = function(){output.sendControlChange(112, 0, 1);};  // "speaker" also works in the same way.
+	container.appendChild(button);
+	
+	var button = document.createElement("button");
+	button.innerHTML = "channel 112; scene 1";
+	button.onclick = function(){output.sendControlChange(112, 1, 1);};  // "speaker" also works in the same way.
+	container.appendChild(button);
+	
+	var button = document.createElement("button");
+	button.innerHTML = "channel 112; mute in scene";
+	button.onclick = function(){output.sendControlChange(112, 2, 1);};  // "speaker" also works in the same way.
+	container.appendChild(button);
+	
+	var button = document.createElement("button");
+	button.innerHTML = "channel 112; mute everywhere";
+	button.onclick = function(){output.sendControlChange(112, 3, 1);};  // "speaker" also works in the same way.
+	container.appendChild(button);
+	
+	var button = document.createElement("button");
+	button.innerHTML = "channel 112; hang up";
+	button.onclick = function(){output.sendControlChange(112, 4, 1);};  // "speaker" also works in the same way.
+	container.appendChild(button);
+	
+	var button = document.createElement("button");
+	button.innerHTML = "channel 112; solo chat";
+	button.onclick = function(){output.sendControlChange(112, 5, 1);};  // "speaker" also works in the same way.
+	container.appendChild(button);
+	
+	var button = document.createElement("button");
+	button.innerHTML = "remote speaker";
+	button.onclick = function(){output.sendControlChange(112, 6, 1);};  // "speaker" also works in the same way.
+	container.appendChild(button);
+	
+	var button = document.createElement("button");
+	button.innerHTML = "remote display";
+	button.onclick = function(){output.sendControlChange(112, 7, 1);};  // "speaker" also works in the same way.
+	container.appendChild(button);
+	
+	var button = document.createElement("button");
+	button.innerHTML = "scene 2";
+	button.onclick = function(){output.sendControlChange(112, 12, 1);};  // "speaker" also works in the same way.
+	container.appendChild(button);
+	
+	var button = document.createElement("button");
+	button.innerHTML = "scene 3";
+	button.onclick = function(){output.sendControlChange(112, 13, 1);};  // "speaker" also works in the same way.
+	container.appendChild(button);
+	
+	var button = document.createElement("button");
+	button.innerHTML = "scene 4";
+	button.onclick = function(){output.sendControlChange(112, 14, 1);};  // "speaker" also works in the same way.
+	container.appendChild(button);
+	
+	var button = document.createElement("button");
+	button.innerHTML = "scene 5";
+	button.onclick = function(){output.sendControlChange(112, 15, 1);};  // "speaker" also works in the same way.
+	container.appendChild(button);
+	
+	var button = document.createElement("button");
+	button.innerHTML = "scene 6";
+	button.onclick = function(){output.sendControlChange(112, 16, 1);};  // "speaker" also works in the same way.
+	container.appendChild(button);
+	
+	var button = document.createElement("button");
+	button.innerHTML = " scene 7";
+	button.onclick = function(){output.sendControlChange(112, 17, 1);};  // "speaker" also works in the same way.
+	container.appendChild(button);
+	
+	var button = document.createElement("button");
+	button.innerHTML = "scene 8";
+	button.onclick = function(){output.sendControlChange(112, 18, 1);};  // "speaker" also works in the same way.
+	container.appendChild(button);
+	
+
+});
+</script>
+</body>
+</html>

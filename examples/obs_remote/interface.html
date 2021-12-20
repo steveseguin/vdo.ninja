@@ -1,0 +1,474 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <script type="text/javascript" src="./thirdparty/obs-websocket.min.js"></script>
+	<link rel="stylesheet" href="https://vdo.ninja/main.css" />
+	<style>
+	
+		.container {
+			max-width: 80%;
+			width: fit-content;
+			margin: 0 auto;
+		}
+
+		h1 {
+			margin-top: 1em;
+			margin-bottom: 1em;
+			padding: 10px;
+		}
+
+		.card {
+			margin: 10px;
+			box-shadow: 0 4px 8px 0 rgb(0 0 0 / 10%);
+			background-color: #ddd;
+			color: black;
+			margin-bottom: 1.5em;
+		}
+
+		.card>div {
+			padding: 10px;
+		}
+
+		.card h2 {
+			font-size: 1.5em;
+			padding: 10px;
+			background-color: #457b9d;
+			color: white;
+			border-bottom: 2px solid #3b6a87;
+		}
+
+		small {
+			font-style: italic;
+			display: block;
+			margin-left: 1em;
+		}
+
+		span.warning {
+			color: rgb(212, 191, 0);
+		}
+
+		input {
+			padding: 10px;
+			display: inline-block;
+			flex-flow: unset;
+			margin: 10px;
+		}
+
+		video {
+			max-width: 640px;
+			max-height: 360px;
+			padding: 20px;
+		}
+
+		audio {
+			max-width: 640px;
+			max-height: 360px;
+			padding: 20px;
+		}
+
+		div#processing {
+			display: none;
+			justify-content: center;
+			place-items: center;
+			position: absolute;
+			inset: 0;
+			font-size: 1.5em;
+			font-weight: bold;
+			background: #141926;
+			flex-direction: column;
+		}
+		button {
+			margin:5px;
+			border:solid black 2px;
+		}
+		
+		body {
+			color:white;
+			display: inline-block;
+			flex-flow: unset;
+		}
+		
+		a {
+			color: #225273!important;
+		}
+		
+		.hidden{
+			display:none !important;
+		}
+		
+		.stat {
+			background-color: black;
+			margin: 7px;
+			padding: 5px;
+		}
+		.stat:nth-child(2n) {
+			background-color: #333;
+		}
+		.stat:empty {
+			display:none;
+		}
+		
+		
+		
+	</style>
+	<title>OBS Controller Demo using VDO.NInja</title>
+</head>
+
+<div class="container">
+	<h1>OBS remote (client)</h1>
+	<div id="info">
+		<div class="card">
+			<h2>Scenes</h2>
+			<div id="scene_list">
+			</div>
+		</div>
+		<div class="card hidden">
+			<h2>General</h2>
+			<div>
+				<button onclick="basicCommand(this);" data-command="GetVersion">GetVersion</button>
+				<button onclick="basicCommand(this);" data-command="GetStats">GetStats</button>
+				<button onclick="basicCommand(this);" data-command="GetVideoInfo">GetVideoInfo</button>
+			</div>
+		</div>
+		<div class="card">
+			<h2>Output</h2>
+			<div id="outputs">
+				<button onclick="basicCommand(this);" data-command="ListOutputs">ListOutputs</button>
+			</div>
+		</div>
+		<div class="card">
+			<h2>Active Sources</h2>
+			<div id="active_source_list">
+			</div>
+		</div>
+		<div class="card">
+			<h2>All Sources</h2>
+			<div id="source_list">
+			</div>
+		</div>
+		<div class="card hidden">
+			<h2>Source debug</h2>
+			<div>
+				<button onclick="basicCommand(this);" data-command="GetMediaSourcesList">GetMediaSourcesList</button>
+				<button onclick="basicCommand(this);" data-command="GetSourcesList">GetSourcesList</button>
+				<button onclick="basicCommand(this);" data-command="GetSourceActive">GetSourceActive</button>
+				<button onclick="basicCommand(this);" data-command="GetAudioActive">GetAudioActive</button>
+			</div>
+		</div>
+		<div id="audio" class="card hidden">
+			<h2>Audio</h2>
+			<div>
+				<button class="hidden"  onclick="basicCommand(this, {source:selectedSource});" data-command="GetVolume">GetVolume</button>
+				<input type='range' min="0" max="100" value="100" onchange="basicCommand(this, {source:selectedSource, volume:parseInt(this.value)/100});" data-command="SetVolume" />
+				<button class="hidden" onclick="basicCommand(this, {source:selectedSource});" data-command="ToggleMute">ToggleMute</button>
+			</div>
+		</div>
+		<div class="card" id='commands'>
+			<h2>Custom Commands</h2>
+			<input id="newCommand"  placeholder="enter a custom command" type='text' /><button id="goCreate" onclick="createCommand()">Create</button>
+			<br />
+			A list of possible commands <a href="https://github.com/Palakis/obs-websocket/blob/4.x-current/docs/generated/protocol.md#requests">available here:</a><br />
+		</div>
+	</div>
+	<div  style="width:100%;display:block;margin:0;padding:0;">
+		<div id='OBSstats' style="width:49%;display:inline-block;vertical-align: top;">
+			<div id="stat-current-profile" class='stat'></div>
+			<div id="stat-current-scene" class='stat'></div>
+			<div id="stat-streaming" class='stat'></div>
+			<div id="stat-memory-usage" class='stat'></div>
+			<div id="stat-recording" class='stat'></div>
+			<div id="stat-recording-paused" class='stat'></div>
+			<div id="stat-average-frame-time" class='stat'></div>
+			<div id="stat-cpu-usage" class='stat'></div>
+			<div id="stat-fps" class='stat'></div>
+			<div id="stat-free-disk-space" class='stat'></div>
+		</div>
+		<div id='OBSsettings'  style="width:49%;display:inline-block;vertical-align: top;">
+			<div id="setting-baseHeight" class='stat'></div>
+			<div id="setting-baseWidth" class='stat'></div>
+			<div id="setting-outputHeight" class='stat'></div>
+			<div id="setting-outputWidth" class='stat'></div>
+			<div id="setting-scaleType" class='stat'></div>
+			<div id="setting-fps" class='stat'></div>
+		</div>
+	</div>
+	
+</div>
+<script>
+
+	function basicCommand(ele, data={}){
+		sendToOBS(ele.dataset.command, data);
+	}
+
+	function createCommand(){
+		var command = document.getElementById("newCommand").value;
+		document.getElementById("newCommand").value = "";
+		var button = document.createElement("button");
+		button.innerText = command;
+		button.dataset.command = command;
+		button.onclick = function(){basicCommand(this);};
+		document.getElementById("commands").appendChild(button);
+	}
+
+	(function(w) {
+	w.URLSearchParams = w.URLSearchParams || function(searchString) {
+		var self = this;
+		searchString = searchString.replace("??", "?");
+		self.searchString = searchString;
+		self.get = function(name) {
+			var results = new RegExp('[\?&]' + name + '=([^&#]*)').exec(self.searchString);
+			if (results == null) {
+				return null;
+			} else {
+				return decodeURI(results[1]) || 0;
+			}
+		};
+	};
+
+	})(window);
+
+	var urlEdited = window.location.search.replace(/\?\?/g, "?");
+	urlEdited = urlEdited.replace(/\?/g, "&");
+	urlEdited = urlEdited.replace(/\&/, "?");
+
+	if (urlEdited !== window.location.search){
+		warnlog(window.location.search + " changed to " + urlEdited);
+		window.history.pushState({path: urlEdited.toString()}, '', urlEdited.toString());
+	}
+	var urlParams = new URLSearchParams(urlEdited);
+
+	if (urlParams.get("password")){
+		var password = urlParams.get("password");
+		localStorage.setItem('password',password)
+	} else if (localStorage.getItem('password')){
+		password = localStorage.getItem('password');
+	}
+	if (urlParams.get("room")){
+		var roomname = urlParams.get("room")
+		localStorage.setItem('roomname',roomname)
+	} else if (localStorage.getItem('roomname')){
+		roomname = localStorage.getItem('roomname');
+	}
+
+	const obs = new OBSWebSocket();
+	var scenesData = {};
+	var selectedSource = null;
+	scenesData.scenes = [];
+	
+	function sendToOBS(action, data){
+		var msg = {};
+		msg.sendToOBS = {};
+		msg.sendToOBS.action = action;
+		msg.sendToOBS.data = data;
+		iframe.contentWindow.postMessage({"sendData":msg}, '*');
+	}
+
+	var iframe = document.createElement("iframe");
+	iframe.src = "https://vdo.ninja/?room="+roomname+"&password="+password+"&push&novideo=mainOBSOutput&noaudio=mainOBSOutput&autostart&vd=0&ad=0&transparent&cleanoutput&label=CLIENT_"+Math.floor(Math.random() * 1000000);
+//	iframe.style.opacity = 0;
+	iframe.style.width = "160px";
+	iframe.style.height = "90px";
+	iframe.style.position = "fixed";
+	iframe.style.top = "10px";
+	iframe.style.right = "170px";
+	document.body.appendChild(iframe)
+
+	var eventMethod = window.addEventListener ? "addEventListener" : "attachEvent";
+	var eventer = window[eventMethod];
+	var messageEvent = eventMethod === "attachEvent" ? "onmessage" : "message";
+	eventer(messageEvent, function (e) {
+		if (e.source != iframe.contentWindow){return} // reject messages send from other iframes
+		if ("dataReceived" in e.data){ 
+			if ("sentFromOBS" in e.data.dataReceived){
+				processIncoming(e.data.dataReceived.sentFromOBS);
+			}
+		}
+	});
+
+	function changeScene(scene){
+		sendToOBS('SetCurrentScene', {
+			'scene-name': scene
+		});
+	}
+	
+	function processIncoming(data){
+		if ("scenes" in data){
+			scenesData = data.scenes;
+			updateSceneList();
+		}
+		if ("callbackData" in data){
+			console.log(data.callbackData);
+		} else if ("callbackError" in data){
+			console.log(data.callbackError);
+		}
+		if ("rawData" in data){
+			var data = JSON.parse(data.rawData);
+			console.log(data);
+			if ("stats" in data){
+				var i = "stats";
+				for (var j in data[i]){
+					if (document.getElementById("stat-"+j)){
+					
+						if (typeof data[i][j] == "number"){
+							data[i][j] = parseInt(data[i][j]*100)/100.0;
+						}
+						if (data[i][j]===true){
+							document.getElementById("stat-"+j).innerHTML = j+ " : <font color='#CFC'>" + data[i][j]+"</font>";
+						} else if (data[i][j] === false){
+							document.getElementById("stat-"+j).innerHTML = j+ " : <font color='#FCC'>" + data[i][j]+"</font>";
+						} else {
+							document.getElementById("stat-"+j).innerHTML = j+ " : <font color='#DDD'>" + data[i][j]+"</font>";
+						}
+					}
+				}
+			} else if ("baseHeight" in data){
+				for (var i in data){
+					if (document.getElementById("setting-"+i)){
+						if (data[i]===true){
+							document.getElementById("setting-"+i).innerHTML = i+ " : <font color='#CFC'>" + data[i]+"</font>";
+						} else if (data[i] === false){
+							document.getElementById("setting-"+i).innerHTML = i+ " : <font color='#FCC'>" + data[i]+"</font>";
+						} else {
+							document.getElementById("setting-"+i).innerHTML = i+ " : <font color='#DDD'>" + data[i]+"</font>";
+						}
+					}
+				}
+			} else if ("sources" in data){
+				if ("name" in data){
+					document.getElementById("active_source_list").innerHTML = "";
+					for (var i =0;i<data.sources.length;i++){
+						var button = document.createElement("button");
+						button.innerText = data.sources[i].name;
+						button.dataset.name = data.sources[i].name;
+						button.dataset.type = "source"
+						button.onclick = function(){
+							console.log("CLICKED: " + this.innerText);
+							selectedSource = this.dataset.name;
+							document.getElementById("audio").classList.add("hidden");
+							var sources = document.querySelectorAll("[data-name");
+							for (var k = 0 ; k<sources.length; k++){
+								sources[k].classList.remove("pressed");
+							}
+							var sources = document.querySelectorAll("[data-name='"+selectedSource+"']");
+							console.log(sources);
+							for (var k = 0 ; k<sources.length; k++){
+								document.getElementById("audio").classList.remove("hidden");
+								sources[k].classList.add("pressed");
+							}
+						};
+						document.getElementById("active_source_list").appendChild(button);
+					}
+					if (selectedSource){
+						var sources = document.querySelectorAll("[data-name");
+						document.getElementById("audio").classList.add("hidden");
+						for (var k = 0 ; k<sources.length; k++){
+							sources[k].classList.remove("pressed");
+						}
+						var sources = document.querySelectorAll("[data-name='"+selectedSource+"']");
+						console.log(sources);
+						for (var k = 0 ; k<sources.length; k++){
+							sources[k].classList.add("pressed");
+							document.getElementById("audio").classList.remove("hidden");
+						}
+					} else {
+						document.getElementById("audio").classList.add("hidden");
+					}
+				} else {
+					document.getElementById("source_list").innerHTML = "";
+					for (var i =0;i<data.sources.length;i++){
+						var button = document.createElement("button");
+						button.innerText = data.sources[i].name;
+						button.dataset.name = data.sources[i].name;
+						button.dataset.type = "source"
+						button.onclick = function(){
+							console.log("CLICKED: " + this.innerText);
+							selectedSource = this.dataset.name;
+							document.getElementById("audio").classList.add("hidden");
+							var sources = document.querySelectorAll("[data-name");
+							for (var k = 0 ; k<sources.length; k++){
+								sources[k].classList.remove("pressed");
+							}
+							var sources = document.querySelectorAll("[data-name='"+selectedSource+"']");
+							console.log(sources);
+							for (var k = 0 ; k<sources.length; k++){
+								sources[k].classList.add("pressed");
+								document.getElementById("audio").classList.remove("hidden");
+							}
+						};
+						document.getElementById("source_list").appendChild(button);
+					}
+					if (selectedSource){
+						var sources = document.querySelectorAll("[data-name");
+						document.getElementById("audio").classList.add("hidden");
+						for (var k = 0 ; k<sources.length; k++){
+							sources[k].classList.remove("pressed");
+						}
+						var sources = document.querySelectorAll("[data-name='"+selectedSource+"']");
+						console.log(sources);
+						for (var k = 0 ; k<sources.length; k++){
+							sources[k].classList.add("pressed");
+							document.getElementById("audio").classList.remove("hidden");
+						}
+					} else {
+						document.getElementById("audio").classList.add("hidden");
+					}
+				}
+				
+				<!-- congestion: 0 -->
+				<!-- droppedFrames: 0 -->
+				<!-- flags: {audio: true, encoded: true, multiTrack: true, rawValue: 31, service: true, …} -->
+				<!-- height: 1080 -->
+				<!-- name: "simple_stream" -->
+				<!-- reconnecting: false -->
+				<!-- settings: {bind_ip: 'default', dyn_bitrate: false, low_latency_mode_enabled: false, new_socket_loop_enabled: false} -->
+				<!-- totalBytes: 351121 -->
+				<!-- totalFrames: 30 -->
+				<!-- type: "rtmp_output" -->
+				<!-- width: 1920 -->
+				
+			} else if ("outputs" in data){
+				document.getElementById("outputs").innerHTML = "";
+				for (var i =0;i<data.outputs.length;i++){
+					var button = document.createElement("button");
+					button.innerText = data.outputs[i].name;
+					button.dataset.output = data.outputs[i].name;
+					button.onclick = function(){
+						console.log("CLICKED: " + this.innerText);
+						var outputName = this.dataset.output;
+						if (this.classList.contains("pressed")){
+							this.classList.remove("pressed");
+							sendToOBS("StopOutput",{outputName:outputName});
+						} else {
+							this.classList.add("pressed");
+							sendToOBS("StartOutput",{outputName:outputName});
+						}
+					};
+					document.getElementById("outputs").appendChild(button);
+				}
+			}
+			
+		} 
+	}
+
+	function updateSceneList(){
+		var scenes = scenesData.scenes;
+		document.getElementById("scene_list").innerHTML = "";
+		scenes.forEach(scene => {
+			var button = document.createElement("button");
+			button.innerText = scene.name;
+			button.onclick = function(){
+				console.log("CLICKED");
+				changeScene(this.innerText);
+			};  // "speaker" also works in the same way.
+			document.getElementById("scene_list").appendChild(button);
+			
+			if (scene.name === scenesData.currentScene) {
+				button.classList.add("pressed");
+			}
+		});
+	}
+	
+		
+    </script>
+  </body>
+</html>

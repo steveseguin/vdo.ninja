@@ -1,0 +1,227 @@
+<html>
+	<head>
+		<link rel="stylesheet" href="./lineawesome/css/line-awesome.min.css" />
+		<link rel="stylesheet" href="./main.css?ver=11" />
+		<link rel="stylesheet" href="./devices.css?ver=1" />
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		<meta charset="utf8" />
+	</head>
+	<body>
+		<div id="header">
+			<a
+				id="logoname"
+				href="./"
+				style="text-decoration: none; color: white; margin: 2px"
+			>
+				<span data-translate="logo-header">
+					<font id="qos">O</font>BS.Ninja
+				</span>
+			</a>
+		</div>
+		<div id="devices">
+			<div class="notice">
+				Device IDs are bound to a combination of domain and browser. <br />If
+				you want to use electron-capture, open this URL on the electron-capture
+				app. <br/>
+				Click device names to preset them. Select multiple audio inputs by clicking multiple devices.
+			</div>
+			<div class="notice">
+				Check for browser and camera capabilities <a href="/supports">here</a>.
+			</div>
+			<div class="card">
+				<h1>🎤 Audio Inputs</h1>
+				<div id="audioInputs"></div>
+			</div>
+			<div class="card">
+				<h1>📹 Video Inputs</h1>
+				<div id="videoInputs"></div>
+			</div>
+			<div class="card">
+				<h1>🔉 Audio Outputs</h1>
+				<div id="audioOutputs"></div>
+			</div>
+		</div>
+		<div id="sharedDevices" style="display: none">
+			<span>Click to copy. Use this URL to preset audio/video devices.</span>
+			<span id="close" onclick="this.parentNode.style.display='none'">×</span>
+			<input id="devicesUrl" value="" />
+		</div>
+
+		<script>
+			const list = [];
+			const url = new URL(document.location.origin);
+			const audioInputDevices = [];
+
+			function isAudioInput(value) {
+				return value.kind === "audioinput";
+			}
+
+			function isAudioOutput(value) {
+				return value.kind === "audiooutput";
+			}
+
+			function isVideoInput(value) {
+				return value.kind === "videoinput";
+			}
+
+			function sanitizeDeviceName(deviceName) {
+				return String(deviceName).toLowerCase().replace(/[\W]+/g, "_");
+			}
+
+			function addDevice(element) {
+				const type = element.dataset.deviceType;
+				const device = sanitizeDeviceName(element.querySelector('span').innerText);
+
+				if (type === "audioinput") {
+					setAudioSearchParams(element);
+				}
+				if (type === "videoinput") {
+					setVideoSearchParams(element);
+				}
+				if (type === "audiooutput") {
+					setAudioOutputSearchParams(element);
+				}
+
+				/*
+					Allows for multiple audio devices to be selected
+					Will be output as a comma separated string to &ad
+				*/
+
+				function setAudioSearchParams(info) {
+					// Device was already selected
+					if (info.className === "device selected") {
+						// Remove device from list of selected devices
+						const index = audioInputDevices.indexOf(device);
+						if (index !== -1) {
+							audioInputDevices.splice(index, 1);
+						}
+
+						// Set the url param to the devices that are left
+						url.searchParams.set("ad", audioInputDevices.join(","));
+						element.className = "device";
+
+						// If no audio devices remained, just remove the param completely
+						if (audioInputDevices.length === 0) {
+							url.searchParams.delete("ad");
+						}
+					} else {
+						// Device is unselected
+						
+						audioInputDevices.push(device);
+						url.searchParams.set("ad", audioInputDevices.join(","));
+						element.className = "device selected";
+					}
+				}
+
+				/*
+				Only allows for a single video device to be selected
+				*/
+				function setVideoSearchParams(info) {
+					// Device was already selected
+					if (info.className === "device selected") {
+						element.className = "device";
+
+
+						// Set the url param to the devices that are left
+						url.searchParams.set("vd", device);
+						element.className = "device";
+
+						// If no devices remained, just remove the param completely
+						if (audioInputDevices.length === 0) {
+							url.searchParams.delete("vd");
+						}
+					} else {
+						// Device is unselected
+						try {
+							element.parentElement.querySelector('.device.selected').className = "device";
+						} catch (error) {
+							console.log("There was no video device already selected.");
+						}
+						
+						url.searchParams.set("vd", device);
+						element.className = "device selected";
+					}
+				}
+				
+				/*
+				Only allows for a single audio output device to be selected
+				*/
+				function setAudioOutputSearchParams(info) {
+					// Device was already selected
+					if (info.className === "device selected") {
+						element.className = "device";
+
+
+						// Set the url param to the devices that are left
+						url.searchParams.set("od", device);
+						element.className = "device";
+
+						// If no devices remained, just remove the param completely
+						if (audioInputDevices.length === 0) {
+							url.searchParams.delete("od");
+						}
+					} else {
+						// Device is unselected
+						try {
+							element.parentElement.querySelector('.device.selected').className = "device";
+						} catch (error) {
+							console.log("There was no video device already selected.");
+						}
+						
+						url.searchParams.set("od", device);
+						element.className = "device selected";
+					}
+				}
+
+				// Update UI
+				showDeviceIdsPopup();
+			}
+
+			function showDeviceIdsPopup() {
+				document.getElementById("devicesUrl").value = decodeURIComponent(url);
+				document.getElementById("sharedDevices").style.display = "block";
+			}
+
+			function prettyPrint(json, element) {
+				let output = "<div class='prettyJson two-col'>";
+				let nestedObjs;
+
+				Object.entries(json)
+					.sort()
+					.forEach(([key, value]) => {
+						output += `
+						<div class='device' onclick='addDevice(this)' data-device-type='${value.kind}'>
+							<span class='device-name'>${value.label}</span>
+							<span class='device-id'>
+								${value.deviceId}
+							</span>
+						</div>`;
+					});
+				output += "</div>";
+				document.getElementById(element).innerHTML = output;
+			}
+
+			document.getElementById("devicesUrl").onclick = (e) => {
+				e.target.select();
+				document.execCommand("copy");
+			};
+
+			navigator.mediaDevices
+				.enumerateDevices()
+				.then((devices) => {
+					devices.forEach((device) => {
+						console.log(
+							`${device.kind}: ${device.label} id = ${device.deviceId}`
+						);
+						list.push(device);
+					});
+					prettyPrint(devices.filter(isAudioInput), "audioInputs");
+					prettyPrint(devices.filter(isAudioOutput), "audioOutputs");
+					prettyPrint(devices.filter(isVideoInput), "videoInputs");
+				})
+				.catch((err) => {
+					console.log(`${err.name}: ${err.message}`);
+				});
+		</script>
+	</body>
+</html>

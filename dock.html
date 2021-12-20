@@ -1,0 +1,298 @@
+<html>
+<head>
+<style>
+body {
+  transform: scale(0.7);
+  transform-origin: 0 0;
+  margin:2px;
+  padding:0;
+  border:0;
+  color: #FFF;
+  background-color:  #1F1E1F;
+  font-family: Arial, Helvetica, sans-serif;
+  width:300px;
+  overflow:hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  min-width:1px;
+}
+
+
+#container-links {
+	z-index:10;
+	width:100%;
+	height:100%;
+	display:none;
+	
+}
+
+#container-setup { 
+	width:100%;
+	height:100%;
+	display:block;
+}
+.red {
+	background-color:#FCC;
+}
+.green {
+	background-color:#CFC;
+}
+.task {
+	cursor:grab;
+	width:100%;
+	padding:5px;
+	border:2px solid black;
+	margin:0;
+}
+button{
+	padding:5px;
+	transform: scale(1.4);
+	transform-origin: 0 0;
+}
+
+.gone {
+	position: absolute;
+	display:inline-block;
+	left: -9999px;
+}
+
+</style>
+</head>
+<body>
+<script>
+function getById(id) {
+   var el = document.getElementById(id);
+   if (!el) {
+	    console.warn(id + " is not defined; skipping.");
+		el = document.createElement("span"); // create a fake element
+   }
+   return el;
+}
+function copyFunction(copyText) {
+  copyText.select();
+  copyText.setSelectionRange(0, 99999);
+  document.execCommand("copy");
+
+}
+function generateStreamID(){
+	var text = "";
+	var possible = "ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnpqrstuvwxyz23456789";
+	for (var i = 0; i < 7; i++){
+		text += possible.charAt(Math.floor(Math.random() * possible.length));
+	}
+	console.log(text);
+	return text;
+};
+function toHexString(byteArray){
+	return Array.prototype.map.call(byteArray, function(byte){
+		return ('0' + (byte & 0xFF).toString(16)).slice(-2);
+	}).join('');
+}
+generateHash = function (str, length=false){
+	var buffer = new TextEncoder("utf-8").encode(str);
+	return crypto.subtle.digest("SHA-256", buffer).then(
+		function (hash) {
+			hash = new Uint8Array(hash);
+			if (length){
+				hash = hash.slice(0, parseInt(parseInt(length)/2));
+			}
+			hash = toHexString(hash);
+			return hash;
+		}
+	);
+};
+
+function generateInvite(){
+	var title = encodeURI(getById("videoname").value.replace(/[\W]+/g,"_"));
+	if (title.length){
+		title = "&label="+title;
+	}
+	var sid = generateStreamID(); 
+	var viewstr = "";
+	var sendstr = "";
+
+	if (getById("invite_bitrate").checked){
+		viewstr+="&bitrate=20000";
+	}
+	if (getById("invite_vp9").checked){
+		viewstr+="&codec=vp9";
+	}
+	if (getById("invite_h264").checked){
+		viewstr+="&codec=h264";
+	}
+	if (getById("invite_stereo").checked){
+		viewstr+="&stereo";
+		sendstr+="&stereo";
+	}
+	//if (getById("invite_secure").checked){
+	//	sendstr+="&secure";
+	//}
+	if (getById("invite_hidescreen").checked){
+		sendstr+="&webcam";
+	}
+
+	//if (getById("invite_remotecontrol").checked){  //
+	//	var remote_gen_id = generateStreamID();
+	//	sendstr+="&remote="+remote_gen_id; // security
+	//	viewstr+="&remote="+remote_gen_id;
+	//}
+
+	if (getById("invite_joinroom").value.trim().length){
+		sendstr+="&room="+getById("invite_joinroom").value.replace(/[\W]+/g,"_");
+		viewstr+="&scene&room="+getById("invite_joinroom").value.replace(/[\W]+/g,"_");
+	}
+
+	if (getById("invite_group_chat_type").value){ //  0 is default
+		if (getById("invite_group_chat_type").value==1){ // no video
+			sendstr+="&novideo";
+		} else if (getById("invite_group_chat_type").value==2){  // no view or audio
+			sendstr+="&view";
+		}
+	}
+
+	if (getById("invite_quality").value){
+		if (getById("invite_quality").value==0){
+			sendstr+="&quality=0";
+		} else if (getById("invite_quality").value==1){
+			sendstr+="&quality=1";
+		} else if (getById("invite_quality").value==2){
+			sendstr+="&quality=2";
+		}
+	}
+	
+	var href = window.location.href;
+	var dir = href.substring(0, href.lastIndexOf('/')) + "/";
+	
+	var salt = location.hostname; // "obs.ninja" is the expected default. You will want to change this if hosting dock.html locally.
+	
+	if (getById("invite_password").value.trim().length){
+		generateHash(getById("invite_password").value.trim().replace(/[\W]+/g,"_")+salt,4).then(function(hash){
+			sendstr+="&hash="+hash;
+			viewstr+="&password="+getById("invite_password").value.trim();
+			sendstr = dir+'?push=' + sid + sendstr;
+			viewstr = dir+'?view=' + sid + viewstr + title;
+			getById("container-setup").style.display="none";
+			getById("container-links").style.display="block";
+			
+			getById("guest-link").value = sendstr;
+			getById("obs-link").value = viewstr;
+		});
+	} else {
+		sendstr = dir+'?push=' + sid + sendstr;
+		viewstr = dir+'?view=' + sid + viewstr + title;
+		getById("container-setup").style.display="none";
+		getById("container-links").style.display="block";
+		
+		getById("guest-link").value = sendstr;
+		getById("obs-link").value = viewstr;
+	}
+	
+	
+}
+
+function goBack(){
+	getById("container-setup").style.display="block";
+	getById("container-links").style.display="none";
+}
+
+document.addEventListener("dragstart", event => {
+	var url = event.target.href || event.target.value;
+	
+	if (!url || !url.startsWith('https://')) return;
+	if (event.target.dataset.drag!="1"){
+		return;
+	}
+	//event.target.ondragend = function(){event.target.blur();}
+	
+	var streamId = url.split('view=');
+	var label = url.split('label=');
+
+	url += '&layer-name=OBSN';
+	if (streamId.length>1) url += ': ' + streamId[1].split('&')[0];
+	if (label.length>1) url += ' - ' + decodeURI(label[1].split('&')[0]);
+	
+
+	url += '&layer-width=1920'; // this isn't always 100% correct, as the resolution can fluxuate, but it is probably good enough
+	url += '&layer-height=1080';
+	
+	event.dataTransfer.setDragImage(document.querySelector('#dragImage'), 24, 24);
+	event.dataTransfer.setData("text/uri-list", encodeURI(url));
+	//event.dataTransfer.setData("url", encodeURI(url));
+	
+	//warnlog(event);
+	
+});
+
+</script>
+
+<div id="container-setup" >
+	<button style="padding:5px;" onclick="generateInvite()" >
+		<span data-translate="generate-invite-link">GENERATE THE INVITE LINK</span>
+	</button>
+	<br /><br />
+	
+	
+	<input type="checkbox" id="invite_bitrate" /><label for="invite_bitrate"> <span data-translate="unlock-video-bitrate">Unlock Video Bitrate (20mbps)</span></label>
+	<br />
+	<input type="checkbox" id="invite_vp9" onclick="getById('invite_h264').checked=false;" /><label for="invite_vp9"> <span data-translate="force-vp9-video-codec">VP9 Video Codec</span></label>
+	<br />
+	<input type="checkbox" id="invite_h264" onclick="getById('invite_vp9').checked=false;" /><label for="invite_h264"> <span data-translate="force-h264-video-codec">H264 Video Codec</span></label>
+	<br />
+	<input type="checkbox" id="invite_stereo" /><label for="invite_stereo"> <span data-translate="enable-stereo-and-pro">Stereo and Pro HD Audio</span></label>
+	<br />
+	<br />
+	<label for="invite_quality" data-translate="video-resolution">Video Resolution: </label>
+	<select id="invite_quality" name="invite_quality">
+		<option value="-1" selected>User Selectable</option>
+		<option value="0">Maximum Resolution</option>
+		<option value="1">Balanced</option>
+		<option value="2">Smooth and Cool</option>
+	</select>
+	<br />
+	<br />
+	<input type="checkbox" id="invite_hidescreen" />
+	<label for="invite_hidescreen"> <span data-translate="hide-screen-share">Hide Screenshare Option</span></label>
+	<br />
+	<br />
+	<label for="videoname">Stream Label:</label>
+	<input id="videoname" placeholder="Give stream a description"  />
+	<br />
+	<br />
+	<span data-translate="add-a-password-to-stream"> Add password:</span>
+	<input id="invite_password" placeholder="Add an optional password" />
+	<br /><br />
+	<span data-translate="add-the-guest-to-a-room"> Add to a room:</span>
+	<input id="invite_joinroom" placeholder="Enter Room name here" oninput="document.getElementById('invitegroupchat').style.display='block';" />
+	<br />
+	<br />
+	<span id="invitegroupchat" style="display:none;">
+	<label for="invite_group_chat_type" data-translate="invite-group-chat-type">This room guest can:</label><br />
+	<select id="invite_group_chat_type" name="invite_group_chat_type">
+		<option value="0" selected data-translate="can-see-and-hear">Can see and hear the group chat</option>
+		<option value="1" data-translate="can-hear-only">Can only hear the group chat</option>
+		<option value="2" data-translate="cant-see-or-hear">Cannot hear or see the group chat</option>
+	</select>
+	</span>
+</div>
+<div id="container-links" >
+	<button  onclick="goBack()" >
+		<span >Go Back</span>
+	</button>
+	<div id="container-links-inner" >
+		<br /><br />
+		<h3>Guest Invite Link:</h3>
+			<input id="guest-link" class="task green" onclick="copyFunction(this)" onmousedown="copyFunction(this)"/>
+			<br /><br />
+		<h3>OBS Browser Source Link:</h3>
+			<input id="obs-link" class="task red" data-drag="1" onmousedown="copyFunction(this)" onclick="copyFunction(this)" />
+			<br />
+			<br />
+			<i>(links are draggable)</i>
+	</div>
+</div>
+<div class="gone" >
+	<!-- This image is used when dragging elements -->
+	<img src="./media/favicon-32x32.png" id="dragImage" />
+</div>
+</body>
+</html>
