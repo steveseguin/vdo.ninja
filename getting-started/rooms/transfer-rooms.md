@@ -36,5 +36,5 @@ There's an option called `&rooms`, which allows the director to list multiple ro
 [rooms.md](../../director-settings/rooms.md)
 {% endcontent-ref %}
 
-![](<../../.gitbook/assets/image (127).png>)
+![](<../../.gitbook/assets/image (127) (1).png>)
 
