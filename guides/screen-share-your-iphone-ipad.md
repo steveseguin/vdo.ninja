@@ -24,7 +24,7 @@ Android users can use the native VDO.Ninja Android app to screen share directly 
 
 3\. From the QuickTime Player menu, select File -> New Movie Recording
 
-![](<../.gitbook/assets/image (90).png>)
+![](<../.gitbook/assets/image (90) (1).png>)
 
 4\. The QuickTime Player may show your laptop's webcam initially, but you can select from the hover-over menu the option to select your iPhone's video and audio as a video source instead.
 
@@ -48,7 +48,7 @@ There are several choices, although the popular ones are [Loopback ](https://rog
 
 6\. We can now start streaming to VDO.Ninja; we just need to visit the site and click Share Screen.  Using Chrome or another Chromium-based browser is required, such as the Electron Capture app.  Safari will not work as it lacks the ability to select a window.
 
-.![](<../.gitbook/assets/image (119).png>)![](<../.gitbook/assets/image (128).png>)
+.![](<../.gitbook/assets/image (119) (1).png>)![](<../.gitbook/assets/image (128) (1).png>)
 
 7\. To start screen sharing, we will want to select "Window" as the capture source, and then select the QuickTime, which should be showing our iPhone.&#x20;
 
