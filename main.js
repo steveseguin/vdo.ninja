@@ -1130,9 +1130,9 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 				}
 			}
 			
-			//if (navigator.userAgent.indexOf('Mac OS X') != -1) {
-			//	session.codec = "h264"; // default the codec to h264 if OBS is on macOS (that's all it supports with hardware)
-			//}
+			if (navigator.userAgent.indexOf('Mac OS X') != -1) {
+				session.codec = "h264"; // default the codec to h264 if OBS is on macOS (that's all it supports with hardware)
+			}
 			
 			if (session.disableOBS===false){
 				window.addEventListener("obsSourceVisibleChanged", obsSourceVisibleChanged);
