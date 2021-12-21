@@ -141,10 +141,6 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 	if (urlParams.has('cleanoutput') || urlParams.has('clean') || urlParams.has('cleanish')) {
 		session.cleanOutput = true;
 	}
-	
-	if (urlParams.has('cleanviewer') || urlParams.has('cv')) {
-		session.cleanViewer = true;
-	}
 
 	if (urlParams.has('retrytimeout')) {
 		session.retryTimeout = parseInt(urlParams.get('retrytimeout'));
@@ -511,7 +507,6 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 		document.documentElement.style.setProperty('--fit-style', 'cover');
 		document.documentElement.style.setProperty('--myvideo-max-width', '100vw');
 		document.documentElement.style.setProperty('--myvideo-width', '100vw');
-		document.documentElement.style.setProperty('--myvideo-height', '100vh');
 	} 
 
 	if (urlParams.has('record')) {
@@ -740,16 +735,13 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 	}
 
 	if (urlParams.has('transparent') || urlParams.has('transparency')) { // sets the window to be transparent - useful for IFRAMES?
-		session.transparent=true;
-	}
-	
-	if (session.transparent){
 		getById("main").style.backgroundColor = "rgba(0,0,0,0)";
 		document.documentElement.style.setProperty('--container-color', '#0000');
 		document.documentElement.style.setProperty('--background-color', '#0000');
 		document.documentElement.style.setProperty('--regular-margin', '0');
 		document.documentElement.style.setProperty('--director-margin', '0 25px 0 0');
 		getById("directorLinksButton").style.color = "black";
+		session.transparent=true;
 	}
 
 	if (urlParams.has('stereo') || urlParams.has('s') || urlParams.has('proaudio')) { // both peers need this enabled for HD stereo to be on. If just pub, you get no echo/noise cancellation. if just viewer, you get high bitrate mono 
@@ -1036,6 +1028,8 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 		session.micDelay = parseInt(session.micDelay) || 0;
 		session.disableWebAudio = false;
 	}
+	
+	
 
 	if (urlParams.has('tips')){
 		getById("guestTips").style.display="flex";
@@ -1136,9 +1130,9 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 				}
 			}
 			
-			//if (navigator.userAgent.indexOf('Mac OS X') != -1) {
-			//	session.codec = "h264"; // default the codec to h264 if OBS is on macOS (that's all it supports with hardware) // oct 2021, OBS now supports vp8 and actually breaks with h264 android devices.
-			//}
+			if (navigator.userAgent.indexOf('Mac OS X') != -1) {
+				session.codec = "h264"; // default the codec to h264 if OBS is on macOS (that's all it supports with hardware)
+			}
 			
 			if (session.disableOBS===false){
 				window.addEventListener("obsSourceVisibleChanged", obsSourceVisibleChanged);
@@ -2265,12 +2259,6 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 		}
 	}
 	
-	if (session.cleanViewer){
-		if (session.view && !session.director && session.permaid===false){
-			session.cleanOutput = true;
-		}
-	}
-	
 	if (urlParams.has('hidescreenshare') || urlParams.has('hidess') || urlParams.has('sshide') || urlParams.has('screensharehide')) { // this way I don't need to remember what it's called. I can just guess. :D
 		session.screenShareElementHidden = true;
 	}
@@ -2299,7 +2287,7 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 	if (urlParams.has('screensharequality') || urlParams.has('ssq')) {
 		if (urlParams.get('screensharequality') || urlParams.get('ssq')) {
 			session.screensharequality = urlParams.get('screensharequality') || urlParams.get('ssq');
-			session.screensharequality = parseInt(session.screensharequality) || 1;
+			session.screensharequality = parseInt(session.screensharequality) || 0;
 		}
 	}
 
@@ -3071,7 +3059,9 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 										}
 									}
 									if ("add" in e.data) {
-										getById("gridlayout").appendChild(session.rpcs[i].videoElement);
+										try {
+											getById("gridlayout").appendChild(session.rpcs[i].videoElement);
+										} catch(e){}
 
 									} else if ("remove" in e.data) {
 										try {
@@ -3160,7 +3150,7 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 						log(e);
 						var note = e.note.name + e.note.octave;
 						var velocity = e.velocity || false;
-						midiHotkeysNote(node,velocity);
+						midiHotkeysNote(note,velocity);
 					});
 					input.addListener('controlchange', "all", function(e) {
 						
@@ -3181,7 +3171,7 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 							var command = e.controller.number;
 							var value = e.value;
 							
-							midiHotkeys(command, value)
+							midiHotkeysCommand(command, value)
 						}
 					});
 				}

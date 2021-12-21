@@ -250,7 +250,7 @@
 		
 		var button = document.createElement("button");
 		button.innerHTML = "Add Target Video"; 
-		button.onclick = function(){iframe.contentWindow.postMessage({"target":"*", "add":true, "settings":{"style":{"width":"640px", "height":"360px", "float":"left", "border":"10px solid red", "display":"block"}}}, '*');}; // target can be a stream ID or * for all.
+		button.onclick = function(){iframe.contentWindow.postMessage({"target":"*", "add":true, "settings": {"style": "width:640px;height:360px;float:left;border:10px solid red;display:block;"}}, '*');}; // target can be a stream ID or * for all.
 		iframeContainer.appendChild(button);
 		
 		var button = document.createElement("button");

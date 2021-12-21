@@ -1707,16 +1707,16 @@ function updateMixerRun(e=false){  // this is the main auto-mixing code.  It's a
 								session.rpcs[j].videoElement.order=0;
 							}
 							///////////
-							if (session.activeSpeaker && (!session.rpcs[j].defaultSpeaker)){ // not the active speaker
+							//if (session.activeSpeaker && (!session.rpcs[j].defaultSpeaker)){ // not the active speaker
 								//mediaPool_invisible.push(session.rpcs[j].videoElement);
-								session.requestRateLimit(0, j); // keep audio good, but disable video
-							} else {
+							//	session.requestRateLimit(0, j); // keep audio good, but disable video
+							//} else {
 								mediaPool.push(session.rpcs[j].videoElement); // active speaker
 								session.rpcs[j].videoElement.style.visibility = "visible";
 								if ((session.rpcs[j].targetBandwidth!==-1) && (session.rpcs[j].targetBandwidth<session.zoomedBitrate)){
 									session.requestRateLimit(session.zoomedBitrate, j); // 1.2mbps is decent, no? in-focus, so higher bitrate
 								}
-							}
+							//}
 						}
 					} catch(e){errorlog(e);}
 				}
@@ -5283,36 +5283,23 @@ function directMigrate(ele, event, room=false) { // everyone in the room will ha
 
 	if (migrateRoom) {
 		previousRoom = migrateRoom;
+
 		var msg = {};
 		msg.request = "migrate";
 		if (session.password) {
 			return generateHash(migrateRoom + session.password + session.salt, 16).then(function(rid) {
 				var msg = {};
-				if (session.director && session.directorUUID && (session.directorUUID !==true)){
-					msg.migrate = ele.dataset.UUID;
-					msg.roomid = rid;
-					session.sendRequest(msg, session.directorUUID);
-					log(msg);
-				} else {
-					msg.request = "migrate";
-					msg.roomid = rid;
-					msg.target = ele.dataset.UUID;
-					session.sendMsg(msg); // send to everyone in the room, so they know if they are on air or not.
-				}
+				msg.request = "migrate";
+				msg.roomid = rid;
+				msg.target = ele.dataset.UUID;
+				session.sendMsg(msg); // send to everyone in the room, so they know if they are on air or not.
 			}).catch(errorlog);
 		} else {
 			var msg = {};
-			if (session.director && session.directorUUID && (session.directorUUID !==true)){
-				msg.migrate = ele.dataset.UUID;
-				msg.roomid = migrateRoom;
-				session.sendRequest(msg, session.directorUUID);
-				log(msg);
-			} else {
-				msg.request = "migrate";
-				msg.roomid = migrateRoom;
-				msg.target = ele.dataset.UUID;
-				session.sendMsg(msg); // send to everyone in the room, so they know if they are on air or not.
-			}
+			msg.request = "migrate";
+			msg.roomid = migrateRoom;
+			msg.target = ele.dataset.UUID;
+			session.sendMsg(msg); // send to everyone in the room, so they know if they are on air or not.
 		}
 	}
 }
@@ -6457,7 +6444,7 @@ session.publishIFrame = function(iframeURL){
 function outboundAudioPipeline(stream) {
 	
 	if (session.disableWebAudio) {
-		//if (session.mobile){return stream;} // iOS devices can't remap video tracks, else KABOOM. Might as well do this for android also.
+		if (session.mobile){return stream;} // iOS devices can't remap video tracks, else KABOOM. Might as well do this for android also.
 		
 		var newStream = createMediaStream();
 		stream.getTracks().forEach(function(track) { // this seems to fix a bug with macbooks. 
@@ -10873,8 +10860,7 @@ async function grabVideo(quality = 0, eleName = 'previewWebcam', selector = "sel
 					
 				});
 				
-				updateRenderOutpipe();  
-				// senderAudioUpdate
+				
 				
 				if (wasDisabled && !session.videoMuted){
 					var msg = {};
@@ -10926,6 +10912,7 @@ async function grabVideo(quality = 0, eleName = 'previewWebcam', selector = "sel
 
 				grabVideoTimer = setTimeout(function(callback3) {
 					
+					updateRenderOutpipe();
 					makeImages(true); 
 					
 					if (getById("popupSelector_constraints_loading")) {
@@ -15314,22 +15301,11 @@ Promise.wait = function(ms) {
 Promise.prototype.timeout = function(ms) {
 	return Promise.race([
 		this, Promise.wait(ms).then(function() {
-			if (iOS || iPad){
-				var errormsg = new Error("Time Out\nDid you accept camera permissions in time? Please do so first.\n\nIf using an iPhone or iPad, try fully closing your browser and open it again; Safari sometimes jams up the camera.");
-				errormsg.name = "timedOut";
-				errormsg.message = "Time Out\nDid you accept camera permissions in time? Please do so first.\n\nIf using an iPhone or iPad, try fully closing your browser and open it again; Safari sometimes jams up the camera."
-				throw errormsg;
-			} else if (session.mobile){
-				var errormsg = new Error("Time Out\nDid you accept camera permissions in time? Please do so first.\n\nMake sure no other application is using the camera already and that you are using a compatible browser. If issues persist, maybe try the official native mobile app.");
-				errormsg.name = "timedOut";
-				errormsg.message = "Time Out\nDid you accept camera permissions in time? Please do so first.\n\nMake sure no other application is using the camera already and that you are using a compatible browser. If issues persist, maybe try the official native mobile app."
-				throw errormsg;
-			} else {
-				var errormsg = new Error("Time Out\nDid you accept camera permissions in time? Please do so first.\n\nOtherwise, do you have NDI Tools installed? Maybe try uninstalling it.\n\nPlease also ensure your camera and audio device are correctly connected and not already in use. You may also need to refresh the page.");
-				errormsg.name = "timedOut";
-				errormsg.message = "Time Out\nDid you accept camera permissions in time? Please do so first.\n\nOtherwise, do you have NDI Tools installed? Maybe try uninstalling it.\n\nPlease also ensure your camera and audio device are correctly connected and not already in use. You may also need to refresh the page."
-				throw errormsg;
-			}
+			var errormsg = new Error("Time Out\nDid you accept camera permissions in time? Please do so first.\n\nOtherwise, do you have NDI Tools installed? Maybe try uninstalling it.\n\nPlease also ensure your camera and audio device are correctly connected and not already in use. You may also need to refresh the page.");
+			errormsg.name = "timedOut";
+			errormsg.message = "Time Out\nDid you accept camera permissions in time? Please do so first.\n\nOtherwise, do you have NDI Tools installed? Maybe try uninstalling it.\n\nPlease also ensure your camera and audio device are correctly connected and not already in use. You may also need to refresh the page."
+			throw errormsg;
+
 		})
 	])
 };

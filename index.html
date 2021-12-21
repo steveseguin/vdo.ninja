@@ -740,18 +740,15 @@
 								Some devices that use H264 hardware encoding can experience video glitching; switching to VP8 or VP9 as a codec can help.
 							</li>
 							<li>
-								Video glitching and random audio-loss can occur when using the OBS browser source. The <a href='https://github.com/steveseguin/electroncapture/blob/master/README.md' target="_blank">Electron Capture app</a> avoids these issues.
+								Video glitching and random audio-loss can occur when using the OBS browser source. The <a href='https://github.com/steveseguin/electroncapture/blob/master/README.md'>Electron Capture app</a> avoids these issues.
 							</li>
-							<li>
-								Chrome v95 with an AMD GPUs have an issue hardware encoding H264 video; this will be fixed in Chrome v96. <a href='https://bugs.chromium.org/p/chromium/issues/detail?id=1252710' target="_blank">Details here</a>.
-							</li>
-							
 							<br />
-							<h4 style="color:#daad09;">
+							<font style="color:#daad09;">
 								👋 👀  Welcome to VDO Ninja! We've rebranded! 📼  Nothing else is changing and we're staying 100% free.
-							</h4>
+							</font>
 							<br />
-							🎁 Site updated October 19th (v19.4). The <a href="https://docs.vdo.ninja/release-notes/v19">v19 release notes are here</a>. If new issues occur, the older v18 can be <a href="https://vdo.ninja/v183/">found here</a>.
+							<br />
+							🎁 Last update was on October 14th (v19.4). The next version, v20, is now available for testing; <a href="https://vdo.ninja/beta/">available here</a>.
 
 							<br />
 							<br />
@@ -1801,18 +1798,25 @@
 
 			// session.configuration.iceTransportPolicy = "relay";  // uncomment to enable "&privacy" and force the TURN server
 
-			// session.wss = "wss://api.vdo.ninja:443"; // US-East (Default)
+				///// Different officially hosted handshake endpoints are available; each isolated from each other.
+				// session.wss = "wss://wss13.obs.ninja:443"; // US-East (Default)
+				// session.wss = "wss://apibackup.obs.ninja:443"; // US-West
+				// session.wss = "wss://jp1wss.obs.ninja:443";  // Japan
+				// session.wss = "wss://au1wss.obs.ninja:443"; // Australia
+				// session.wss = "wss://de1wss.obs.ninja:443"; // Germany
+				// session.wss = "wss://insecure.cam:444"; // China
+				//////
 
-			///  If wanting to fully-self-host, uncomment the following and deploy your own websocket server; good for air-gapped deployments
-			// session.wss = "wss://wss.yourdomainhere.com:443"; // https://github.com/steveseguin/websocket_server 
-			// session.customWSS = true;
-			//////
-				
-			/////// Or you can use piesocket.com if you wish to have a basic free websocket server hosted for you by a third-party
-			//session.customWSS = true; // Set to true to have Piesocket.com
-			//var apiKey = "ZCu96UFf9ezeQeClK7BOCkq6Q0x0lxWAPJcgxjz5";  // GET YOUR OWN API KEY at piesocket.com
-			//session.wss = "wss://us-nyc-1.websocket.me/v3/1?api_key="+apiKey;
-			////////////
+				///  If wanting to fully-self-host, uncomment the following and deploy your own websocket server; good for air-gapped deployments
+				// session.wss = "wss://wss.contribute.cam:443"; // https://github.com/steveseguin/websocket_server 
+				// session.customWSS = true;
+				//////
+					
+				/////// Or you can use piesocket.com if you wish to have a basic free websocket server hosted for you by a third-party
+				//session.customWSS = true; // Set to true to have Piesocket.com
+				//var apiKey = "ZCu96UFf9ezeQeClK7BOCkq6Q0x0lxWAPJcgxjz5";  // GET YOUR OWN API KEY at piesocket.com, as using this one is a privacy hazard.
+				//session.wss = "wss://us-nyc-1.websocket.me/v3/1?api_key="+apiKey;
+				////////////
 			
 			///// The following lets you set the defaults
 
@@ -1835,7 +1839,7 @@
 			// session.width // int
 			// session.quality // int  -- if setting == 0, then than the default resolution will be 1080p, instead of 720p
 			// session.sink
-			// session.offsetChannel //2 int
+			// session.offsetChannel /2 int
 			// session.audioChannels // int
 			// session.security
 			// session.framerate // int
@@ -1846,11 +1850,11 @@
 			// session.title // "zzzz"
 		</script>
 		<script type="text/javascript" crossorigin="anonymous" src="./thirdparty/aes.js"></script>
-		<script type="text/javascript" crossorigin="anonymous" id="lib-js" src="./lib.js?ver=204"></script>
+		<script type="text/javascript" crossorigin="anonymous" id="lib-js" src="./lib.js?ver=202"></script>
 		<!-- 
 		// If you wish to change branding, blank offers a good clean start.
 		<script type="text/javascript" id="main-js" src="./main.js" data-translation="blank"></script>
 	-->
-		<script type="text/javascript" crossorigin="anonymous" id="main-js" src="./main.js?ver=277"></script>
+		<script type="text/javascript" crossorigin="anonymous" id="main-js" src="./main.js?ver=276"></script>
 	</body>
 </html>
