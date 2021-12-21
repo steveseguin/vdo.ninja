@@ -15,7 +15,7 @@ By default, a director normally won't appear in any scene link or group link, an
 
 This URL value can be added to the Director's URL or to the scene link you wish the director to appear in those links.  You can also enable this flag a couple other ways.
 
-![](<../.gitbook/assets/image (109).png>)![](<../.gitbook/assets/image (91) (1).png>)
+![](<../.gitbook/assets/image (109).png>)![](<../.gitbook/assets/image (91) (1) (1).png>)
 
 When a director enables their camera, while in \&showdirector mode, they gain access to following set of options for the director's camera feed specifically:
 

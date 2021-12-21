@@ -58,7 +58,7 @@ If we want to capture audio, we can also select the Blackhole virtual audio devi
 
 8\. Once we start streaming, there is a settings menu that we can use to select audio sources. If we select the Blackhole virtual audio device (or Loopback / VB Cable), we will be sharing our audio that we are capturing from the iPhone.  We can hold down the CMD (⌘) key while selecting audio sources to select and mix more than one audio source.
 
-&#x20;![](<../.gitbook/assets/image (125).png>)
+&#x20;![](<../.gitbook/assets/image (125) (1).png>)
 
 9\. Finally, we can add the VDO.Ninja view link to our remote OBS Studio or share it with friends.&#x20;
 
