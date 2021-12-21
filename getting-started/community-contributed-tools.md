@@ -6,7 +6,7 @@ description: >-
 
 # Community contributed tools
 
-There's some tools out there made by community members that could help with common VDO.Ninja related-tasks. If you want your project listed here, please get in contact with us at the discord. ([discord.vdo.ninja](https://discord.vdo.ninja))
+There's some tools out there made by the greater community that can help with common VDO.Ninja related-tasks. If you want your project listed here, please get in contact with us at the discord. ([discord.vdo.ninja](https://discord.vdo.ninja))&#x20;
 
 | Tool                                                                                                                  | Description                                              | Author                                                                                       |
 | --------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------- | -------------------------------------------------------------------------------------------- |
@@ -24,3 +24,4 @@ There's some tools out there made by community members that could help with comm
 | [Companion Module](https://github.com/bitfocus/companion-module-vdo-ninja)                                            | Remote control VDON via this  plugin for Companion       | [Bryce](https://github.com/bitfocus/companion-module-vdo-ninja/commits?author=bryce-seifert) |
 | [OBS Audio Monitor](https://obsproject.com/forum/resources/audio-monitor.1186/)                                       | Plugin for OBS; adds Audio Monitor dock and filter       | [Exeldro](https://obsproject.com/forum/members/exeldro.128836/)                              |
 
+The video engineering and live streaming community is pretty amazing, so thank you all for being so awesome. ♥
