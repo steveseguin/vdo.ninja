@@ -14,7 +14,7 @@ Within Windows, we can right-click the OBS launch icon or app icon, right click 
 
 We want to add `--enable-media-stream` to the Target field; we want to add this after the quotations, and not inside them. See below for an example.
 
-![](<../.gitbook/assets/image (111).png>)
+![](<../.gitbook/assets/image (111) (1).png>)
 
 From there, we are good to go. We can add a dock to OBS or a browser source, and we should be able to now activate our webcam source, such as the built-in OBS virtual webcam.
 
