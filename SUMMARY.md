@@ -267,7 +267,7 @@
 
 ## Release Notes
 
-* [v20](release-notes/v20.md)
+* [v20 🎁](release-notes/v20.md)
 * [v19 🚀🤯](release-notes/v19.md)
 * [v18.3](release-notes/v18\_3.md)
 * [v18](release-notes/v18.md)
