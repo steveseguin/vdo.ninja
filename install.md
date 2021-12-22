@@ -30,7 +30,7 @@ That all aside, please continue:
 
 There's a community-created video tutorial on setting up here; https://youtu.be/8sDMwBIlgwE  Otherwise, read on.
 
-I use Cloudflare with Flexible SSL enabled and HTTP Rewrites. If you do not use Cloudflare, you will need to deploy SSL certificates onto your website.  You will also have to have Cloudflare or whatever DNS provider you have, point your domain name to the IP address of your webserver. VDO.Ninja REQUIRES a domain name and SSL.
+I use Cloudflare with Flexible SSL enabled and HTTP Rewrites. If you do not use Cloudflare, you will need to deploy SSL certificates onto your website.  You will also have to have Cloudflare or whatever DNS provider you have, point your domain name to the IP address of your webserver. VDO.Ninja REQUIRES a domain name and SSL, unless you modify all  browsers being used to support otherwise. (more on this in the internet-free section below)
 
 For webservers, I use NGINX on a Ubuntu server; smaller the better. I rely on Cloudflare to provide caching and SSL, so my installation of NGINX is pretty simple. 
 ```
@@ -87,13 +87,30 @@ My suggestion? Limit changes to images and perhaps the translation files (maybe 
 
 ### Internet-free deployments
 
-For those looking to deploy a completely Internet-free or fully-isolated hosting option, you'll need to also deploy your own STUN/TURN service, as well as a handshake server.
+For those looking to deploy a completely Internet-free or fully-isolated hosting option, you'll need to deploy your own handshake server, and you may also need to deploy your own STUN/TURN service. STUN/TURN might not be needed on a Local Area Network, and TURN might not be needed at all if you have control over each participant connecting, but adding one isn't too hard and can help with firewall and mobile network issues.
 
-Details on how to deploy your own private STUN server can be Googled online; it's rather out of the scope of this guide's goals though.  As of this writing, VDO.Ninja uses Google's public STUN servers, but most TURN-servers also offer optional STUN server functionality as well. (Details on deploying a TURN server are mentioned previously in this article.)
+As of this writing, VDO.Ninja uses Google's public STUN servers, but most TURN-servers also offer optional STUN server functionality as well. Details on deploying a TURN server are mentioned previously in this article, so following those instructions should suffice if you wish to have a combined STUN/TURN service.
 
-Internet-free deployments will also need to deal with private SSL certificates and any DNS secure context issues that may arise. VDO.Ninja relies on SSL for security, but if you can't figure out how to do private SSL issuance, these SSL restrictions can be disabled via the Chrome browser's command-line. VDO.Ninja may complain about the lack of security if you take this approach though, but you can edit out those lines of code which trigger those warnings as needed.
+Internet-free deployments will also need to deal with private SSL certificates and any DNS secure context issues that may arise. VDO.Ninja relies on SSL for security, but if you can't figure out how to do private SSL issuance, these SSL restrictions can be somewhat disabled via the browser's command-line or sometimes via the Chrome://flags settings. VDO.Ninja may complain about the lack of security if you take this approach though, but you can edit out those lines of code which trigger those warnings as needed. You may still need to issue an SSL certificate, self-signed or what not, but with these flags enabled it doesn't at least need to be valid.
 
-Finally, there is a handshake server hosting option available; advanced users can host their own personal handshake server, which is useful for air-gapped private deployments of the service. Some basic documentation with instructions on setting it up are included here: https://github.com/steveseguin/websocket_server. Please note that despite how simple the provided handshake server appears, it does work quite well as VDO.Ninja was designed to be as serverless as possible. Just be sure that your SSL-certifcates are valid, else it may not work.
+Setting it via command line on Windows,
+```
+"C:\Program Files (x86)\Google\Chrome\Application\chrome.exe" --ignore-certificate-errors
+```
+and on macOS
+```
+/Applications/Google\ Chrome.app/Contents/MacOS/Google\ Chrome --ignore-certificate-errors --ignore-urlfetcher-cert-requests &> /dev/null
+```
+and on some versions of Chromium-based browsers, you can access it via a flag
+```
+chrome://flags/#allow-insecure-localhost
+```
+
+Finally, there is a handshake server hosting option available; advanced users can host their own personal handshake server, which is useful for air-gapped private deployments of the service. Some basic documentation with instructions on setting it up are included here: https://github.com/steveseguin/websocket_server.  Just be sure that your SSL-certifcates are valid or that you modify your browser to support invalid SSL certificates, else it will not work. From there, you just need to modify a couple ilnes in the index.html file of VDO.Ninja to configure things.
+
+Please note that despite how simple the provided handshake server appears, it does work quite well. VDO.Ninja was designed to be as serverless and agnostic as possible, so it will work with 3rd-party signaling services as well, such as piesocket.com, and even certain blockchain networks, IRC, and more (with a bit of added tweaking at course).
+
+WebRTC is very prickly about security, so if you run into issues with things not working, double check your SSL settings first.
 
 Regards,
 Steve
