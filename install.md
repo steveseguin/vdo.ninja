@@ -30,7 +30,7 @@ That all aside, please continue:
 
 There's a community-created video tutorial on setting up here; https://youtu.be/8sDMwBIlgwE  Otherwise, read on.
 
-I use Cloudflare with Flexible SSL enabled and HTTP Rewrites. If you do not use Cloudflare, you will need to deploy SSL certificates onto your website.  You will also have to have Cloudflare or whatever DNS provider you have, point your domain name to the IP address of your webserver. VDO.Ninja REQUIRES a domain name and SSL, unless you modify all  browsers being used to support otherwise. More on this in the [Internet-free section](#internet-free-deployments) below)
+I use Cloudflare with Flexible SSL enabled and HTTP Rewrites. If you do not use Cloudflare, you will need to deploy SSL certificates onto your website.  You will also have to have Cloudflare or whatever DNS provider you have, point your domain name to the IP address of your webserver. VDO.Ninja REQUIRES a domain name and SSL, unless you modify all  browsers being used to support otherwise. (More on this in the [Internet-free section](#internet-free-deployments) below)
 
 For webservers, I use NGINX on a Ubuntu server; smaller the better. I rely on Cloudflare to provide caching and SSL, so my installation of NGINX is pretty simple. 
 ```
@@ -91,7 +91,7 @@ For those looking to deploy a completely Internet-free or fully-isolated hosting
 
 As of this writing, VDO.Ninja uses Google's public STUN servers, but most TURN-servers also offer optional STUN server functionality as well. Details on deploying a TURN server are mentioned previously in this article, so following those instructions should suffice if you wish to have a combined STUN/TURN service.
 
-Internet-free deployments will also need to deal with private SSL certificates and any DNS secure context issues that may arise. VDO.Ninja relies on SSL for security, but if you can't figure out how to do private SSL issuance, these SSL restrictions can be somewhat disabled via the browser's command-line or sometimes via the Chrome://flags settings. VDO.Ninja may complain about the lack of security if you take this approach though, but you can edit out those lines of code which trigger those warnings as needed. You may still need to issue an SSL certificate, self-signed or what not, but with these flags enabled it doesn't at least need to be valid.
+Internet-free deployments will also need to deal with private SSL certificates and any DNS secure context issues that may arise. VDO.Ninja relies on SSL for security, but if you can't figure out how to do private SSL issuance, these SSL restrictions can be somewhat disabled at the browser's command-line or for localhost via the Chrome://flags settings. VDO.Ninja may complain about the lack of security if you take this approach though, but you can edit out those lines of code which trigger those warnings as needed. You may still need to issue an SSL certificate, self-signed or what not, but with these flags enabled it doesn't at least need to be valid.
 
 Setting it via command line on Windows,
 ```
@@ -101,7 +101,7 @@ and on macOS
 ```
 /Applications/Google\ Chrome.app/Contents/MacOS/Google\ Chrome --ignore-certificate-errors --ignore-urlfetcher-cert-requests &> /dev/null
 ```
-and on some versions of Chromium-based browsers, you can access it via a flag
+and if you intend to only access it as a localhost,
 ```
 chrome://flags/#allow-insecure-localhost
 ```
