@@ -18,6 +18,8 @@ function toHexString(byteArray){
 		}).join('');
 	}
 var password = prompt("Please enter the password");
+password = password.trim();
+password = encodeURIComponent(password);
 	
 generateHash(password + location.hostname, 4).then(function(hash) { // million to one error. 
 	alert("hash value: "+hash)
