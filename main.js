@@ -382,9 +382,9 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 	
 	//  session.facingMode }; // user or environment
 	
-	if (urlParams.has('forcelandscape') || urlParams.has('fl')){
+	if (urlParams.has('forcelandscape') || urlParams.has('forcedlandscape') || urlParams.has('fl')){
 		session.orientation = "landscape";
-	} else if (urlParams.has('forceportrait') || urlParams.has('fp')){
+	} else if (urlParams.has('forceportrait') || urlParams.has('forcedportrait')|| urlParams.has('fp')){
 		session.orientation = "portrait";
 	}
 
@@ -499,10 +499,6 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 		session.screensharebutton = true;
 	}
 	
-	if (urlParams.has('ssb')) {
-		session.screensharebutton = true;
-	}
-	
 	if (urlParams.has('mute') || urlParams.has('muted') || urlParams.has('m')) {
 		session.muted = true;
 	}
@@ -540,18 +536,36 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 	//}
 
 	if (urlParams.has('speakermute') || urlParams.has('speakermuted') || urlParams.has('mutespeaker') || urlParams.has('sm') || urlParams.has('ms')) {
-		session.speakerMuted = true;
-		getById("mutespeakertoggle").className = "las la-volume-mute my-float toggleSize";
-		//getById("mutespeakerbutton").className="advanced float2 red";
-		getById("mutespeakerbutton").classList.add("red");
-		getById("mutespeakerbutton").classList.add("float2");
-		getById("mutespeakerbutton").classList.remove("float");
-
-		var sounds = document.getElementsByTagName("video");
-		for (var i = 0; i < sounds.length; ++i) {
-			sounds[i].muted = session.speakerMuted;
+		
+		var checkState = urlParams.get('speakermute') || urlParams.get('speakermuted') || urlParams.get('mutespeaker') || urlParams.get('sm') || urlParams.get('ms') || true;
+		
+		if ( checkState === "false") {
+			session.speakerMuted = false;
+		} else if (checkState === "0") {
+			session.speakerMuted = false;
+		} else if (checkState === "no") {
+			session.speakerMuted = false;
+		} else if (checkState === "off") {
+			session.speakerMuted = false;
+		} else {
+			session.speakerMuted = true;
 		}
-	}
+		
+		session.speakerMuted_default = session.speakerMuted;
+		
+		if (session.speakerMuted){
+			getById("mutespeakertoggle").className = "las la-volume-mute my-float toggleSize";
+			//getById("mutespeakerbutton").className="advanced float2 red";
+			getById("mutespeakerbutton").classList.add("red");
+			getById("mutespeakerbutton").classList.add("float2");
+			getById("mutespeakerbutton").classList.remove("float");
+
+			var sounds = document.getElementsByTagName("video");
+			for (var i = 0; i < sounds.length; ++i) {
+				sounds[i].muted = session.speakerMuted;
+			}
+		}
+	} 
 
 	if (urlParams.has('chatbutton') || urlParams.has('chat') || urlParams.has('cb')) {
 		session.chatbutton = urlParams.get('chatbutton') || urlParams.get('chat') || urlParams.get('cb') || null;
@@ -588,7 +602,7 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 		session.raisehands = true;
 	}
 
-	if (urlParams.has('portrait') || urlParams.has('916') || urlParams.has('vertical')) {
+	if (urlParams.has('portrait') || urlParams.has('916') || urlParams.has('vertical')) { // playback aspect ratio
 		session.aspectratio = 1; // 9:16  (default of 0 is 16:9)
 	} else if (urlParams.has('square') || urlParams.has('11')) {
 		session.aspectratio = 2; //1:1 ?
@@ -596,9 +610,26 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 		session.aspectratio = 3; //1:1 ?
 	}
 
-	if (urlParams.has('forceaspectratio') || urlParams.has('far')) {
-		session.forceAspectRatio = true; // 9:16  (default of 0 is 16:9)
+	
+	if (urlParams.has('aspectratio') || urlParams.has('ar')) {  // capture aspect ratio
+		session.forceAspectRatio = urlParams.get('aspectratio') || urlParams.get('ar') || false;
+		if (session.forceAspectRatio){
+			session.forceAspectRatio=parseFloat(session.forceAspectRatio);
+		}
 	}
+	
+	if (urlParams.has('crop')){
+		var crop = parseInt(urlParams.get('crop')) || 0;
+		if (crop>0){
+			session.forceAspectRatio = 1.7777777778 * (crop/100);
+		} else if (crop<0){
+			session.forceAspectRatio = 1.7777777778 / (crop/100);
+		} else {
+			session.forceAspectRatio = 1.3333333333;
+		}
+	}
+	
+	
 
 	if (urlParams.has('cover')) {
 		session.cover = true;
@@ -730,9 +761,13 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 	session.sitePassword = session.defaultPassword;
 	if (urlParams.has('password') || urlParams.has('pass') || urlParams.has('pw') || urlParams.has('p')) {
 		session.password = urlParams.get('password') || urlParams.get('pass') || urlParams.get('pw') || urlParams.get('p');
+		
 		if (!session.password) {
 			window.focus();
 			session.password = await promptAlt(miscTranslations["enter-password"], true, true);
+			if (session.password){
+				session.password = session.password.trim();
+			}
 		} else if (session.password === "false") {
 			session.password = false;
 			session.defaultPassword = false;
@@ -742,12 +777,14 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 		} else if (session.password === "off") {
 			session.password = false;
 			session.defaultPassword = false;
+		} else {
+			session.password = decodeURIComponent(session.password); // will be re-encoded in a moment.
 		}
 	}
 
 	if (session.password) {
-		session.password = sanitizePassword(session.password);
 		getById("passwordRoom").value = session.password;
+		session.password = sanitizePassword(session.password);
 		session.defaultPassword = false;
 		getById("addPasswordBasic").style.display = "none";
 	}
@@ -847,6 +884,7 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 		document.documentElement.style.setProperty('--regular-margin', '0');
 		document.documentElement.style.setProperty('--director-margin', '0 25px 0 0');
 		getById("directorLinksButton").style.color = "black";
+		getById("main").style.overflow = "hidden";
 	}
 
 	if (urlParams.has('stereo') || urlParams.has('s') || urlParams.has('proaudio')) { // both peers need this enabled for HD stereo to be on. If just pub, you get no echo/noise cancellation. if just viewer, you get high bitrate mono 
@@ -937,8 +975,8 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 	}
 
 	
-
-	if (urlParams.has('pie')){
+	// Deploy your own handshake server for free; see: https://github.com/steveseguin/websocket_server
+	if (urlParams.has('pie')){ // piesocket.com support is to be deprecated after dec/19/21, since piesocket is no longer a free service.
 		session.customWSS = urlParams.get('pie') || false; // If session.customWSS == true, then there is no need to set parameters via URL
 		if (session.customWSS){
 			session.wss = "wss://free3.piesocket.com/v3/1?api_key="+session.customWSS; // if URL param is set, it will use the API key.
@@ -1830,6 +1868,13 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 	} else {
 		session.totalRoomBitrate_default = session.totalRoomBitrate; // trb_default doesn't change dynamically, but trb can (per director I guess)
 	}
+	
+	if (urlParams.has('maxtotalscenebitrate') ||  urlParams.has('totalscenebitrate') || urlParams.has('mtsb') || urlParams.has('tsb')) {
+		session.totalSceneBitrate = urlParams.get('maxtotalscenebitrate') || urlParams.get('totalscenebitrate') || urlParams.get('mtsb') || urlParams.get('tsb') || false;
+		if (session.totalSceneBitrate){
+			session.totalSceneBitrate = parseInt(session.totalSceneBitrate);
+		}
+	}
 
 
 	if (urlParams.has('limittotalbitrate') || urlParams.has('ltb')){
@@ -2528,6 +2573,8 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 		session.effects = urlParams.get('effects') || urlParams.get('effect') || null;
 	}
 	
+	
+	
 	if (session.effects!==false){
 		if (session.effects === null){
 			getById("effectsDiv").style.display = "block";
@@ -2546,12 +2593,24 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 			getById("effectSelector").style.display = "none";
 			getById("effectsDiv").style.display = "block";
 		}
+		if (session.effect === "3a"){ // heavier blur
+			session.effectValue = 5;
+			session.effect = "3";
+		} else if (session.effect === "3"){
+			session.effectValue = 2;
+		}
 		// mirror == 2
 		// face == 1
 		// blur = 3
 		// green = 4
 		// image = 5
 	}
+	
+	if (urlParams.has('effectvalue') || urlParams.has('ev')) {
+		session.effectValue = parseInt(urlParams.get('effectvalue')) || parseInt(urlParams.get('ev')) || 0;
+		session.effectValue_default = session.effectValue;
+	}
+	
 	
 	if (session.webcamonly == true) {
 		if (session.introButton){
@@ -2614,10 +2673,14 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 	if (urlParams.has('screensharequality') || urlParams.has('ssq')) {
 		if (urlParams.get('screensharequality') || urlParams.get('ssq')) {
 			session.screensharequality = urlParams.get('screensharequality') || urlParams.get('ssq');
-			session.screensharequality = parseInt(session.screensharequality) || 1;
+			session.screensharequality = parseInt(session.screensharequality) || 0;
 		}
 	}
-
+	
+	if (urlParams.has('screensharebitrate') || urlParams.has('ssbitrate')) {
+		session.screenShareBitrate = urlParams.get('screensharebitrate') || urlParams.get('ssbitrate');
+		session.screenShareBitrate = parseInt(session.screenShareBitrate) || 2500;
+	}
 	
 	if (session.roomid!==false){
 		if (!(session.cleanOutput)) {
@@ -2772,7 +2835,7 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 		} else if (session.chatbutton === false) {
 			getById("chatbutton").classList.add("advanced");
 		}
-	}
+	} 
 	
 	if (urlParams.has('nofileshare') || urlParams.has('nodownloads') || urlParams.has('nofiles')){
 		session.hostedFiles = false;
@@ -2947,6 +3010,9 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 		errorlog(e);
 	}
 
+
+	//  Please contact steve on discord.vdo.ninja if you'd like this iFRAME tweaked, expanded, etc -- it's updated based on user request
+	
 	if (isIFrame) { // reduce CPU load if not needed. //iframe API 
 		window.onmessage = function(e) { // iFRAME support
 			log(e);
@@ -3061,17 +3127,28 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 			}
 
 
-			if ("volume" in e.data) {
+			if ("volume" in e.data) {  // might not work with iframes or meshcast currently.
 				for (var i in session.rpcs) {
 					try {
-						session.rpcs[i].videoElement.volume = parseFloat(e.data.volume);
+						if (!session.rpcs[i].videoElement){continue;}
+						if ("streamID" in session.rpcs[i]) {
+							if ("target" in e.data) {
+								if ((session.rpcs[i].streamID == e.data.target) || (e.data.target == "*")) { // specify a stream ID or let it apply to all videos
+									session.rpcs[i].videoElement.volume = parseFloat(e.data.volume);
+								}
+							} else {
+								 session.rpcs[i].videoElement.volume = parseFloat(e.data.volume);
+							}
+						} 
 					} catch (e) {
 						errorlog(e);
 					}
 				}
 			}
 			
-			if ("panning" in e.data){
+			
+			
+			if ("panning" in e.data){ // panning adjusts the stereo pan , although current its UUID based. can add stream ID based if requested.
 				if ("UUID" in e.data){
 					try {
 						adjustPan(UUID, e.data.panning);
@@ -3090,20 +3167,36 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 			}
 			
 
-			if ("bitrate" in e.data) {
+			if ("bitrate" in e.data) { /// set a video bitrate for a video; scene or view link; kbps
 				for (var i in session.rpcs) {
 					try {
-						session.requestRateLimit(parseInt(e.data.bitrate), i);
+						if ("streamID" in session.rpcs[i]) {
+							if ("target" in e.data) {
+								if ((session.rpcs[i].streamID == e.data.target) || (e.data.target == "*")) { // specify a stream ID or let it apply to all videos
+									session.requestRateLimit(parseInt(e.data.bitrate), i);
+								}
+							} else {
+								 session.requestRateLimit(parseInt(e.data.bitrate), i); // bitrate = 0 pauses the video
+							}
+						} 
 					} catch (e) {
 						errorlog(e);
 					}
 				}
 			}
 			
-			if ("audiobitrate" in e.data) {
+			if ("audiobitrate" in e.data) { // changes the audio bitrate of a specific or all inbound media tracks. kbps
 				for (var i in session.rpcs) {
 					try {
-						session.requestAudioRateLimit(parseInt(e.data.audiobitrate), i);
+						if ("streamID" in session.rpcs[i]) {
+							if ("target" in e.data) {
+								if ((session.rpcs[i].streamID == e.data.target) || (e.data.target == "*")) { // specify a stream ID or let it apply to all videos
+									session.requestAudioRateLimit(parseInt(e.data.audiobitrate), i);
+								}
+							} else {
+								 session.requestAudioRateLimit(parseInt(e.data.audiobitrate), i); // bitrate = 0 pauses the video
+							}
+						}
 					} catch (e) {
 						errorlog(e);
 					}
@@ -3120,12 +3213,12 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 				changeAudioDevice(e.data.changeAudioDevice);
 			}
 			
-			if ("changeAudioOutputDevice" in e.data) {
+			if ("changeAudioOutputDevice" in e.data) { 
 				warnlog(e.data.changeAudioOutputDevice);
 				changeAudioOutputDeviceById(e.data.changeAudioOutputDevice);
 			}
 			
-			if ("getDeviceList" in e.data) {
+			if ("getDeviceList" in e.data) { // get a list of local camera / audio devices
 				warnlog(e.data.getDeviceList);
 				enumerateDevices().then(function(deviceInfos) {
 					parent.postMessage({
@@ -3140,7 +3233,6 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 				}
 			}
 			
-			
 			if ("sendMessage" in e.data) { // webrtc send to viewers
 				session.sendMessage(e.data);
 			}
@@ -3153,7 +3245,7 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 				session.sendPeers(e.data);
 			}
 
-			if ("reload" in e.data) {
+			if ("reload" in e.data) { // reload the page
 				location.reload();
 			}
 
@@ -3272,7 +3364,7 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 				}
 			}
 
-			if ("getStreamIDs" in e.data) {
+			if ("getStreamIDs" in e.data) { // get a list of stream Ids, with a label if it is present. label = false if not there
 				if (e.data.getStreamIDs == true) {
 					var streamIDs = {};
 					for (var i in session.rpcs) {
@@ -3285,7 +3377,7 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 				}
 			}
 
-			if ("close" in e.data) {
+			if ("close" in e.data) { // disconnect and hangup all inbound streams.
 				for (var i in session.rpcs) {
 					try {
 						session.rpcs[i].close();
@@ -3295,7 +3387,7 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 				}
 			}
 
-			if ("style" in e.data) {
+			if ("style" in e.data) { // insert a custom style sheet
 				try {
 					const style = document.createElement('style');
 					style.textContent = e.data.style;
@@ -3344,7 +3436,7 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 				}, "*");
 			}
 
-			if ("automixer" in e.data) {
+			if ("automixer" in e.data) {  // stop the auto mixer if you want to control the layout and bitrate yourself
 				if (e.data.automixer == true) {
 					session.manual = false;
 					try {
@@ -3371,13 +3463,20 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 						if ("streamID" in session.rpcs[i]) {
 							if ((session.rpcs[i].streamID == e.data.target) || (e.data.target == "*")) {
 								try {
+									
 									if ("settings" in e.data) {
-										for (const property in e.data.settings) {
-											session.rpcs[i].videoElement[property] = e.data.settings[property];
-										}
+										try{
+											for (const property in e.data.settings) {
+												try {
+													session.rpcs[i].videoElement[property] = e.data.settings[property];
+												} catch(e){}
+											}
+										} catch(e){}
 									}
 									if ("add" in e.data) {
-										getById("gridlayout").appendChild(session.rpcs[i].videoElement);
+										try{
+											getById("gridlayout").appendChild(session.rpcs[i].videoElement);
+										} catch(e){warnlog(e);}
 
 									} else if ("remove" in e.data) {
 										try {
@@ -3387,7 +3486,9 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 												session.rpcs[i].videoElement.parentNode.parentNode.removeChild(session.rpcs[i].videoElement.parentNode);
 											} catch (e) {}
 										}
-									} 
+									}  
+									
+									// video and audio bitrate handled else where
 								} catch (e) {
 									errorlog(e);
 								}

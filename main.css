@@ -127,22 +127,15 @@ a:link {
 	color: #B9DFF9;
 }
 
-/* visited link */
-
 a:visited {
 	text-decoration: none;
 	color: #99BFD9;
 }
 
 
-/* mouse over link */
-
 a:hover {
 	color: #048AE8;
 }
-
-
-/* selected link */
 
 a:active {
 	color: #D9E4EB;
@@ -249,6 +242,7 @@ button.white:active {
 	padding: 1px;
 	background-color: #0F131D;
 	color: #FFF;
+	min-height:18.8px;
 }
 #head5 {
     display: inline-block;
@@ -444,7 +438,6 @@ hr {
     position: relative;
 	user-select: none;  
 }
-/* Clear floats after the columns */
 
 .row:after {
 	content: "";
@@ -489,9 +482,6 @@ hr {
 	border: 0;
 	margin: 0;
 }
-
-
-/* Invite link generator */
 
 .invite_setting_group {
 	margin: 20px 0px;
@@ -560,10 +550,10 @@ hr {
 	font-size: 1.5em;
 	z-index: 2;
 	cursor: help;
-	display:none;
-}
-.battery[data-plugged="0"]{
 	display:block;
+}
+.battery[data-plugged="1"]{
+	font-size:0px;
 }
 .battery.warn {
 	border: 3px solid #EFAF13; 
@@ -626,8 +616,39 @@ hr {
 	color:#00FF00;
 }
 
+.togglePreview{
+	border-radius: 11px; 
+	background-color: #00000044;
+	top: calc(19px + 2vh);
+	right: 2vw;
+	cursor: pointer;
+	width: 22px;
+	display: flex;
+	margin: 5px;
+	position: absolute;
+	color: white;
+	font-size: 22px;
+	z-Index:35;
+	height: 22px;
+}
+.togglePreview > .la-eye-slash{
+	display:block;
+}
 
-.mirror {
+.togglePreview > .la-eye{
+	display:none;
+}
+.togglePreview.blinded > .la-eye-slash{
+	display:none!important;
+}
+.togglePreview.blinded > .la-eye{
+	display:block!important;
+}
+.rounded{
+	border-radius: 5px;
+}
+
+.mirror{
 	transform: scaleX(-1);
 }
 
@@ -751,6 +772,10 @@ button.glyphicon-button.active.focus {
 	
 }
 
+.orange{
+	background-color: #8d5e1a
+}
+
 .shake {
   animation: shake 0.5s;
   animation-iteration-count: once;
@@ -819,7 +844,6 @@ button.glyphicon-button.active.focus {
 	} 
 }
 
-/* Node selector to prioritise this selector above .float */
 button.btnArmTransferRoom{
     width:auto;
     margin-left: 2px;
@@ -887,6 +911,9 @@ button.btnArmTransferRoom.selected{
 	#controlButtons {
 		height:50px;
 	} 
+	#header{
+		min-height:0px;
+	}
 }
 @media only screen and (max-height: 300px){
 	#gridlayout>#container.vidcon {
@@ -1123,6 +1150,22 @@ body {
 	background-color:#474!important;
 }
 
+#effectSelector{
+	display: inline-block;
+	vertical-align: middle;
+	font-size: 100%;
+	max-width: 260px;
+}
+#effectSelector3{
+	background-color: #FFF;
+    display: inline-block;
+    vertical-align: middle;
+    padding: 3px;
+    font-size: 93%;
+    max-width: 100%;
+	width: 90%;
+}
+
 /*https://css-tricks.com/styling-cross-browser-compatible-range-inputs-css/*/
 input[type=range] {
   -webkit-appearance: none;
@@ -1334,6 +1377,11 @@ input[type=range]:focus::-ms-fill-upper {
 	.mobileHide{
 		display:none !important;
 	}
+	#effectSelector {
+		max-width: 100%;
+		width: 100%;
+		margin: 4px 0 0 0;
+	}
 }
 
 @media only screen and (max-height: 355px) {
@@ -1367,7 +1415,6 @@ input[type=range]:focus::-ms-fill-upper {
 	background-color: #9d5050;
 	color: #fff;
 	text-align: center;
-	/* padding: 5px 0; */
 	border-radius: 10px;
 	position: absolute;
 	z-index: 1;
@@ -1524,7 +1571,6 @@ label {
     margin: auto;
     background-color: #5555;
     width: 100px;
-    /* padding: 30px; */
     border-radius: 30px;
 	cursor:pointer;
 	color: #636363
@@ -1535,15 +1581,12 @@ label {
 	margin: 0 auto;
 	width: 100%;
 	text-align: center;
-	/* Add shadows to create the "card" effect */
 }
 
 .card {
 	box-shadow: 0 4px 8px 0 rgba(0, 0, 0, .1);
 	background-color: #ddd;
 }
-
-/* Create four equal columns that floats next to each other */
 
 
 .column {
@@ -1553,16 +1596,11 @@ label {
 	width: 20%;
 	padding: 25px;
 	height: 200px;
-	/* Should be removed. Only for demonstration */
-	border-radius: 5px;
 	text-align: center;
 	font-size: 100%;
-	/* Add shadows to create the "card" effect */
 	transition: box-shadow 0.1s ease-in-out;
 }
 
-
-/* On mouse-over, add a deeper shadow */
 
 .column:hover {
 	box-shadow: 0 8px 16px 0 rgba(0, 0, 0, .3);
@@ -1592,16 +1630,12 @@ img {
 	margin: 5px;
 }
 
-/* Empty container that will replace the original container */
 #empty-container {
 	display: inline-block;
-	/*float: left;*/
 	width: 20%;
 	min-width: 300px;
 	padding: 28px;
 	height: 200px;
-	/* Should be removed. Only for demonstration */
-	
 	margin: 1.8%;
 	text-align: center;
 }
@@ -2126,15 +2160,7 @@ audio.fileshare::-webkit-media-controls-play-button, video.fileshare::-webkit-me
 	background-color: #f3f3f3;
 	border: 1px solid #ccc;
 }
-#effectSelector3{
-	background-color: #FFF;
-    display: inline-block;
-    vertical-align: middle;
-    padding: 3px;
-    font-size: 93%;
-    max-width: 100%;
-	width: 90%;
-}
+
 #effectsDiv {
 	user-select: none; 
 	font-size:100%; 
@@ -2180,12 +2206,7 @@ audio.fileshare::-webkit-media-controls-play-button, video.fileshare::-webkit-me
 	font-size: 100%;
 	max-width: 260px;
 }
-#effectSelector{
-	display: inline-block;
-	vertical-align: middle;
-	font-size: 100%;
-	max-width: 260px;
-}
+
 .gone {
 	position: absolute;
 	display: inline-block;
@@ -2217,7 +2238,6 @@ audio.fileshare::-webkit-media-controls-play-button, video.fileshare::-webkit-me
 	height:0px;
 	opacity:  0;
 }
-/* visited link */
 .grabLinks a:visited {
 	color: black !important;
 }
@@ -2396,20 +2416,14 @@ label {
 	font-weight: normal;
 }
 input[type=checkbox] {
-	/* Double-sized Checkboxes */
-	
 	-ms-transform: scale(1.4);
 	/* IE */
-	
 	-moz-transform: scale(1.4);
 	/* FF */
-	
 	-webkit-transform: scale(1.4);
 	/* Safari and Chrome */
-	
 	-o-transform: scale(1.4);
 	/* Opera */
-	
 	transform: scale(1.4);
 	padding: 5px;
 	margin: 0 5px 0 1px;
@@ -2506,13 +2520,11 @@ input[type=checkbox] {
 	border-radius: 10px;
 }
 
-/* Handle */
 .debugStats::-webkit-scrollbar-thumb {
 	background: rgb(119, 119, 119);
 	border-radius: 10px;
 }
 
-/* Handle on hover */
 .debugStats::-webkit-scrollbar-thumb:hover {
 	background: rgb(158, 158, 158);
 	;
@@ -2735,7 +2747,6 @@ i.las.la-circle {
     font-size: 0.7em;
     text-overflow: ellipsis;
     overflow: hidden;
-    /* left: 22px; */
     position: relative;
     width: 230px;
     display: inline-block;
@@ -2786,7 +2797,6 @@ div#guestFeeds:empty {
 	outline: none;
 }
 
-/* Top of the page share link */
 a#reshare {
 	white-space: nowrap;
 	margin: 0;
@@ -2798,7 +2808,6 @@ a#reshare {
 	font-size: 130%;
 }
 
-/* Top of the page Join room input*/
 #joinroomID {
 	border-radius: 0;
 	padding: 5px;
@@ -2807,7 +2816,6 @@ a#reshare {
 	margin: 0px var(--regular-margin);
 }
 
-/* Tips for guests */
 span#guestTips {
     margin: 0 auto 15px auto;
     width: 450px;
@@ -3305,17 +3313,14 @@ input:checked + .slider:before {
   color: blue;
 }
 
-/* visited link */
 #alertModal a:visited {
   color: blue;
 }
 
-/* mouse over link */
 #alertModal a:hover {
   color: blue;
 }
 
-/* selected link */
  #alertModal a:active {
   color: blue;
 }
@@ -3587,6 +3592,8 @@ input:checked + .slider:before {
   content: "\f026"; }
 .la-eye-slash:before {
   content: "\f070"; }
+.la-eye:before {
+  content: "\f06e"; }
 .la-minus:before {
   content: "\f068"; }
 .la-plus:before {

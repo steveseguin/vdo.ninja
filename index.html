@@ -147,8 +147,14 @@
 				<div id="screenshare3button" onmousedown="event.preventDefault(); event.stopPropagation();"  title="Create a Third Stream" alt="Create a Third Stream" onclick="screenshareTypeDecider(3)" tabindex="20" role="button" aria-pressed="false" onkeyup="enterPressedClick(event,this);"  class="float advanced" style="cursor: pointer;">
 					<i id="screenshare3toggle" onmousedown="event.preventDefault(); event.stopPropagation();"  class="toggleSize las  la-tv my-float"></i>
 				</div>
-				<div id="websitesharebutton" onmousedown="event.preventDefault(); event.stopPropagation();"  title="Share a website as an embedded iFRAME" alt="Share a website as an embedded iFRAME" onclick="shareWebsite(false, event)" tabindex="21" role="button" aria-pressed="false" onkeyup="enterPressedClick(event,this);"  class="float advanced" style="cursor: pointer;">
+				<div id="websitesharebutton" onmousedown="event.preventDefault(); event.stopPropagation();"  title="Share a website with your guests (IFRAME)" alt="Share a website with your guests (IFRAME)" onclick="shareWebsite(false, event)" tabindex="21" role="button" aria-pressed="false" onkeyup="enterPressedClick(event,this);"  class="float advanced" style="cursor: pointer;">
 					<i id="websitesharetoggle" onmousedown="event.preventDefault(); event.stopPropagation();"  class="toggleSize las la-window-maximize my-float"></i>
+				</div>
+				<div id="websitesharebutton2" onmousedown="event.preventDefault(); event.stopPropagation();" title="Hold CTRL (or CMD) and click to spotlight this video" alt="Share a website as an embedded iFRAME" onclick="shareWebsite(false, event)" tabindex="21" role="button" aria-pressed="false" onkeyup="enterPressedClick(event,this);" class="float2 orange shake advanced" style="cursor: pointer;max-width: 200px;margin: auto;padding: 0 10px;">
+					<i onmousedown="event.preventDefault(); event.stopPropagation();" class="toggleSize las my-float la-window-close" style="display: inline-block;"></i>
+					<div style="display: inline-block;width: 85px;line-height: 1; font-size: 0.9em;">
+						Stop Sharing Website
+					</div>
 				</div>
 				
 				<div id="flipcamerabutton" onmousedown="event.preventDefault(); event.stopPropagation();"  title="Cycle the Cameras"  onclick="cycleCameras()" class="advanced float"  tabindex="21" role="button" aria-pressed="false" onkeyup="enterPressedClick(event,this);" style="cursor: pointer;" alt="Cycle the Cameras">
@@ -205,7 +211,7 @@
 			<i style="float: right; bottom: 0px; cursor: pointer; position: fixed; right:  33px; color: #d9e4eb; padding: 2px; margin: 2px 2px 0 0; font-size: 140%;" class="las la-calendar" aria-hidden="true"></i>
 		</span>
 		<div id="mainmenu" class="row" style="opacity: 0; align: center;">
-			<div id="container-1" title="Add Group Chat to OBS"  alt="Add Group Chat to OBS" tabindex="2" role="button" aria-pressed="false" onkeyup="enterPressedClick(event,this);" class="column columnfade pointer card" style=" overflow-y: auto;">
+			<div id="container-1" title="Add Group Chat to OBS"  alt="Add Group Chat to OBS" tabindex="2" role="button" aria-pressed="false" onkeyup="enterPressedClick(event,this);" class="column columnfade pointer rounded card" style=" overflow-y: auto;">
 				
 					<h2>
 						<span data-translate="add-group-chat">Create a Room</span>
@@ -326,7 +332,7 @@
 						</div>
 					</div>
 			</div>
-			<div id="container-3"  title="Add your Camera to OBS" onkeyup="enterPressedClick(event,this);"  alt="Add your Camera to OBS" tabindex="3" role="button" aria-pressed="false" class="column columnfade pointer card" onclick="previewWebcam()" style=" overflow-y: auto;">
+			<div id="container-3"  title="Add your Camera to OBS" onkeyup="enterPressedClick(event,this);"  alt="Add your Camera to OBS" tabindex="3" role="button" aria-pressed="false" class="column columnfade pointer rounded card" onclick="previewWebcam()" style=" overflow-y: auto;">
 				<h2 id="add_camera">
 					<span data-translate="add-your-camera">Add your Camera to OBS</span>
 				</h2>
@@ -441,6 +447,10 @@
 							  <input type="file" onchange="changeTFLiteImage(event, this)" accept="image/*" style="position: fixed; top: -100em; margin-left:10px; border:1px solid #555;"> 
 							</label>
 						</div>
+						<div id="selectEffectAmount" style="display:none;margin-top:10px;">
+							<label for="selectEffectAmountInput" style="width: 113px;display: inline-block;">Effect amount:</label>
+							<input id="selectEffectAmountInput" style="display: inline-block;width: 350px; max-width: 60%;margin:6px 0;" name="selectEffectAmountInput" title="Adjust the amount of effect applied" type="range" oninput="changeEffectAmount(event, this)" onchange="changeEffectAmount(event, this)" min="0" step="1" max="20">
+						</div>
 						
 					</div>
 					<span id="addPasswordBasic" >
@@ -468,7 +478,7 @@
 					</div>
 				</div>
 			</div>
-			<div id="container-2" title="Remote Screenshare into OBS" onkeyup="enterPressedClick(event,this);"  alt="Remote Screenshare into OBS"  tabindex="4" role="button" aria-pressed="false" class="column columnfade pointer card" style=" overflow-y: auto;">
+			<div id="container-2" title="Remote Screenshare into OBS" onkeyup="enterPressedClick(event,this);"  alt="Remote Screenshare into OBS"  tabindex="4" role="button" aria-pressed="false" class="column columnfade pointer rounded card" style=" overflow-y: auto;">
 				<h2 id="add_screen">
 					<span data-translate="remote-screenshare-obs">Remote Screenshare into OBS</span>
 				</h2>
@@ -542,7 +552,7 @@
 					</div>
 				</div>
 			</div>
-			<div id="container-4" tabindex="5" alt="Create Reusable Invite" onkeyup="enterPressedClick(event,this);" onclick="loadQR();" title="Create Reusable Invite" role="button" aria-pressed="false" class="column columnfade pointer card" style=" overflow-y: auto;">
+			<div id="container-4" tabindex="5" alt="Create Reusable Invite" onkeyup="enterPressedClick(event,this);" onclick="loadQR();" title="Create Reusable Invite" role="button" aria-pressed="false" class="column columnfade pointer rounded card" style=" overflow-y: auto;">
 				<h2>
 					<span data-translate="create-reusable-invite">Create Reusable Invite</span>
 				</h2>
@@ -664,7 +674,7 @@
 			
 			<div id="dropButton" onclick="dropDownButtonAction()" title="More Options"><i class="las la-chevron-down" ></i></div>
 			
-			<div id="container-5" class="column columnfade pointer card advanced" style=" overflow-y: auto;">
+			<div id="container-5" class="column columnfade pointer rounded card advanced" style=" overflow-y: auto;">
 				<h2><span data-translate="share-local-video-file">Stream Media File</span></h2>
 				<div class="container-inner">
 					
@@ -698,7 +708,7 @@
 				</div>
 			</div>
 			
-			<div id="container-6" class="column columnfade pointer card advanced" style=" overflow-y: auto;">
+			<div id="container-6" class="column columnfade pointer rounded card advanced" style=" overflow-y: auto;">
 				<h2><span data-translate="share-website-iframe">Share Website</span></h2>
 				<i style="margin-top:30px;font-size:560%;overflow:hidden;" class="las la-broadcast-tower"></i>
 				<div class="container-inner">
@@ -730,12 +740,12 @@
 
 			</div>
 			
-			<div id="container-7" class="column columnfade pointer card advanced" style="overflow: hidden;" onclick="window.location = './speedtest.html';">
+			<div id="container-7" class="column columnfade pointer rounded card advanced" style="overflow: hidden;" onclick="window.location = './speedtest.html';">
 				<h2><span data-translate="run-a-speed-test">Run a Speed Test</span></h2>
 				<i style="margin-top:30px;font-size:600%;overflow:hidden;" class="las la-tachometer-alt"></i>
 			</div>
 			
-			<div id="container-8" class="column columnfade pointer card advanced" style="overflow: hidden;" onclick="window.location = 'https://guides.vdo.ninja';">
+			<div id="container-8" class="column columnfade pointer rounded card advanced" style="overflow: hidden;" onclick="window.location = 'https://guides.vdo.ninja';">
 				<h2><span data-translate="read-the-guides">Browse the Guides</span></h2>
 				<i style="margin-top:30px;font-size:600%;overflow:hidden;" class="las la-book-open"></i>
 			</div>
@@ -775,7 +785,7 @@
 								<font style="color:#daad09;">Welcome to VDO Ninja! We've rebranded!  Nothing else is changing and we're staying 100% free.</font>
 							</h4>
 							<br />
-							🎁 Welcome to the v20-beta release. It includes many new features and fixes, and is stable enough for non-critical streaming applications.
+							🎁 Welcome to the v20-beta release. <a target="_blank" href="https://docs.vdo.ninja/release-notes/v20">Release notes are here</a>. It includes many new features and fixes, and is stable enough for non-critical streaming applications.
 
 							<br />
 							<br />
@@ -1532,7 +1542,7 @@
 						<span data-translate="select-digital-effect"> Digital Video Effects: </span>
 					</div>
 					<select id="effectSelector3" onchange="effectsDynamicallyUpdate(event, this);">
-						<option value="0" data-translate="no-effects-applied">No effects applied</option>	
+						<option value="0" data-translate="no-effects-applied">No effects applied</option>
 						<option value="3" data-translate="blurred-background">Blurred background</option>
 						<option value="4" data-translate="digital-greenscreen">Digital greenscreen</option>	
 						<option value="5" data-translate="virtual-background">Virtual background</option>
@@ -1550,6 +1560,10 @@
 						  <i class="las la-hdd" style="font-size: 3em;"></i><br /><span data-translate="select-local-image">Select Local Image</span>
 						  <input type="file"  accept="image/*" onchange="changeTFLiteImage(event, this)" style="position: fixed; top: -100em; margin-left:10px; border:1px solid #555;"> 
 						</label>
+					</div>
+					<div id="selectEffectAmount3" style="display:none;margin-top:10px;">
+						<label for="selectEffectAmountInput" style="width: 113px;display: inline-block;">Effect amount:</label>
+						<input id="selectEffectAmountInput3" style="display: inline-block;width: 350px; max-width: 60%;margin:6px 0;" name="selectEffectAmountInput3" title="Adjust the amount of effect applied" type="range" oninput="changeEffectAmount(event, this)" onchange="changeEffectAmount(event, this)" min="0" step="1" max="20">
 					</div>
 					
 				</span>
@@ -1744,7 +1758,7 @@
 			<i class="las la-fire-alt"></i>
 		</div>
 		<div id="batteryMeterTemplate" class="battery advanced" data-plugged="1">
-			<div class="battery-level" style="height:100%;"></div>
+			<div class="battery-level" style="height:100%;">🔌</div>
 		</div>
 		<div id="voiceMeterTemplate" class="video-meter advanced">
 		</div>
@@ -1859,12 +1873,6 @@
 			// session.wss = "wss://wss.yourdomainhere.com:443"; // https://github.com/steveseguin/websocket_server 
 			// session.customWSS = true;
 			//////
-				
-			/////// Or you can use piesocket.com if you wish to have a basic free websocket server hosted for you by a third-party
-			//session.customWSS = true; // Set to true to have Piesocket.com
-			//var apiKey = "ZCu96UFf9ezeQeClK7BOCkq6Q0x0lxWAPJcgxjz5";  // GET YOUR OWN API KEY at piesocket.com
-			//session.wss = "wss://us-nyc-1.websocket.me/v3/1?api_key="+apiKey;
-			////////////
 			
 			///// The following lets you set the defaults
 
