@@ -1,8 +1,8 @@
 /**
- * WebMidi.js v3.0.0-alpha.25
+ * WebMidi.js v3.0.1
  * A JavaScript library to kickstart your MIDI projects
  * https://webmidijs.org
- * Build generated on November 16th, 2021.
+ * Build generated on November 26th, 2021.
  *
  * © Copyright 2015-2021, Jean-Philippe Côté.
  *
@@ -120,14 +120,16 @@
      */
 static toNoteNumber(e,t=0){if(t=null==t?0:parseInt(t),isNaN(t))throw new RangeError("Invalid 'octaveOffset' value");"string"!=typeof e&&(e="");const n=this.getNoteDetails(e);if(!n)throw new TypeError("Invalid note identifier");let r=12*(n.octave+1+t);if(r+={C:0,D:2,E:4,F:5,G:7,A:9,B:11}[n.name],n.accidental&&(n.accidental.startsWith("b")?r-=n.accidental.length:r+=n.accidental.length),r<0||r>127)throw new RangeError("Invalid octaveOffset value");return r}static getNoteDetails(e){Number.isInteger(e)&&(e=this.toNoteIdentifier(e));const t=e.match(/^([CDEFGAB])(#{0,2}|b{0,2})(-?\d+)$/i);if(!t)throw new TypeError("Invalid note identifier");const n=t[1].toUpperCase(),r=parseInt(t[3]);let s=t[2].toLowerCase();return s=""===s?void 0:s,{accidental:s,identifier:n+(s||"")+r,name:n,octave:r}}static sanitizeChannels(e){let t;if(this.validation)if("all"===e)t=["all"];else if("none"===e)return[];return t=Array.isArray(e)?e:[e],t.indexOf("all")>-1&&(t=r.MIDI_CHANNEL_NUMBERS),t.map((function(e){return parseInt(e)})).filter((function(e){return e>=1&&e<=16}))}static toTimestamp(e){let t=!1;const n=parseFloat(e);return!isNaN(n)&&("string"==typeof e&&"+"===e.substring(0,1)?n>=0&&(t=d.time+n):n>=0&&(t=n),t)}static guessNoteNumber(e,t){t=parseInt(t)||0;let n=!1;if(Number.isInteger(e)&&e>=0&&e<=127)n=parseInt(e);else if(parseInt(e)>=0&&parseInt(e)<=127)n=parseInt(e);else if("string"==typeof e||e instanceof String)try{n=this.toNoteNumber(e.trim(),t)}catch(e){return!1}return n}static toNoteIdentifier(e,t){if(e=parseInt(e),isNaN(e)||e<0||e>127)throw new RangeError("Invalid note number");if(t=null==t?0:parseInt(t),isNaN(t))throw new RangeError("Invalid octaveOffset value");const n=Math.floor(e/12-1)+t;return["C","C#","D","D#","E","F","F#","G","G#","A","A#","B"][e%12]+n.toString()}static buildNote(e,t={}){if(t.octaveOffset=parseInt(t.octaveOffset)||0,e instanceof s)return e;let n=this.guessNoteNumber(e,t.octaveOffset);if(!1===n)throw new TypeError(`The input could not be parsed as a note (${e})`);return t.octaveOffset=void 0,new s(n,t)}static buildNoteArray(e,t={}){let n=[];return Array.isArray(e)||(e=[e]),e.forEach(e=>{n.push(this.buildNote(e,t))}),n}static from7bitToFloat(e){return e===1/0&&(e=127),e=parseInt(e)||0,Math.min(Math.max(e/127,0),1)}static fromFloatTo7Bit(e){return e===1/0&&(e=1),e=parseFloat(e)||0,Math.min(Math.max(Math.round(127*e),0),127)}static fromMsbLsbToFloat(e,t=0){d.validation&&(e=Math.min(Math.max(parseInt(e)||0,0),127),t=Math.min(Math.max(parseInt(t)||0,0),127));const n=((e<<7)+t)/16383;return Math.min(Math.max(n,0),1)}static fromFloatToMsbLsb(e){d.validation&&(e=Math.min(Math.max(parseFloat(e)||0,0),1));const t=Math.round(16383*e);return{msb:t>>7,lsb:127&t}}static offsetNumber(e,t=0,n=0){if(d.validation){if(e=parseInt(e),isNaN(e))throw new Error("Invalid note number");t=parseInt(t)||0,n=parseInt(n)||0}return Math.min(Math.max(e+12*t+n,0),127)}static getPropertyByValue(e,t){return Object.keys(e).find(n=>e[n]===t)}static getCcNameByNumber(e){return a.getPropertyByValue(r.MIDI_CONTROL_CHANGE_MESSAGES,e)}static getChannelModeByNumber(e){if(!(e>=120&&e<=127))return!1;for(let t in r.MIDI_CHANNEL_MODE_MESSAGES)if(r.MIDI_CHANNEL_MODE_MESSAGES.hasOwnProperty(t)&&e===r.MIDI_CHANNEL_MODE_MESSAGES[t])return t;return!1}}
 /**
-   * The `OutputChannel` class represents a single output channel (1-16) from an output device. This
-   * object is derived from the host's MIDI subsystem and cannot be instantiated directly.
+   * The `OutputChannel` class represents a single output MIDI channel. `OutputChannel` objects are
+   * provided by an [`Output`](Output) port which, itself, is made available by a device. The
+   * `OutputChannel` object is derived from the host's MIDI subsystem and should not be instantiated
+   * directly.
    *
    * All 16 `OutputChannel` objects can be found inside the parent output's
-   * [channels]{@link Output#channels} property.
+   * [`channels`]{@link Output#channels} property.
    *
-   * @param {Output} output The output this channel belongs to
-   * @param {number} number The MIDI channel number (1-16)
+   * @param {Output} output The [`Output`](Output) this channel belongs to.
+   * @param {number} number The MIDI channel number (`1` - `16`).
    *
    * @extends EventEmitter
    * @license Apache-2.0
@@ -135,100 +137,99 @@ static toNoteNumber(e,t=0){if(t=null==t?0:parseInt(t),isNaN(t))throw new RangeEr
    */class i extends t{constructor(e,t){super(),this._output=e,this._number=t,this._octaveOffset=0}destroy(){this._output=null,this._number=null,this._octaveOffset=0,this.removeListener()}send(e,t={time:0}){return this.output.send(e,t),this}sendKeyAftertouch(e,t,n={}){if(d.validation){if(n.useRawValue&&(n.rawValue=n.useRawValue),isNaN(parseFloat(t)))throw new RangeError("Invalid key aftertouch value.");if(n.rawValue){if(!(t>=0&&t<=127&&Number.isInteger(t)))throw new RangeError("Key aftertouch raw value must be an integer between 0 and 127.")}else if(!(t>=0&&t<=1))throw new RangeError("Key aftertouch value must be a float between 0 and 1.")}n.rawValue||(t=a.fromFloatTo7Bit(t));const s=d.octaveOffset+this.output.octaveOffset+this.octaveOffset;return Array.isArray(e)||(e=[e]),a.buildNoteArray(e).forEach(e=>{this.send([(r.MIDI_CHANNEL_MESSAGES.keyaftertouch<<4)+(this.number-1),e.getOffsetNumber(s),t],{time:a.toTimestamp(n.time)})}),this}
 /**
      * Sends a MIDI **control change** message to the channel at the scheduled time. The control
-     * change message to send can be specified numerically (0 to 127) or by using one of the following
-     * common names:
+     * change message to send can be specified numerically (`0` to `127`) or by using one of the
+     * following common names:
      *
-     *  * `bankselectcoarse` (#0)
-     *  * `modulationwheelcoarse` (#1)
-     *  * `breathcontrollercoarse` (#2)
-     *  * `footcontrollercoarse` (#4)
-     *  * `portamentotimecoarse` (#5)
-     *  * `dataentrycoarse` (#6)
-     *  * `volumecoarse` (#7)
-     *  * `balancecoarse` (#8)
-     *  * `pancoarse` (#10)
-     *  * `expressioncoarse` (#11)
-     *  * `effectcontrol1coarse` (#12)
-     *  * `effectcontrol2coarse` (#13)
-     *  * `generalpurposeslider1` (#16)
-     *  * `generalpurposeslider2` (#17)
-     *  * `generalpurposeslider3` (#18)
-     *  * `generalpurposeslider4` (#19)
-     *  * `bankselectfine` (#32)
-     *  * `modulationwheelfine` (#33)
-     *  * `breathcontrollerfine` (#34)
-     *  * `footcontrollerfine` (#36)
-     *  * `portamentotimefine` (#37)
-     *  * `dataentryfine` (#38)
-     *  * `volumefine` (#39)
-     *  * `balancefine` (#40)
-     *  * `panfine` (#42)
-     *  * `expressionfine` (#43)
-     *  * `effectcontrol1fine` (#44)
-     *  * `effectcontrol2fine` (#45)
-     *  * `holdpedal` (#64)
-     *  * `portamento` (#65)
-     *  * `sustenutopedal` (#66)
-     *  * `softpedal` (#67)
-     *  * `legatopedal` (#68)
-     *  * `hold2pedal` (#69)
-     *  * `soundvariation` (#70)
-     *  * `resonance` (#71)
-     *  * `soundreleasetime` (#72)
-     *  * `soundattacktime` (#73)
-     *  * `brightness` (#74)
-     *  * `soundcontrol6` (#75)
-     *  * `soundcontrol7` (#76)
-     *  * `soundcontrol8` (#77)
-     *  * `soundcontrol9` (#78)
-     *  * `soundcontrol10` (#79)
-     *  * `generalpurposebutton1` (#80)
-     *  * `generalpurposebutton2` (#81)
-     *  * `generalpurposebutton3` (#82)
-     *  * `generalpurposebutton4` (#83)
-     *  * `reverblevel` (#91)
-     *  * `tremololevel` (#92)
-     *  * `choruslevel` (#93)
-     *  * `celestelevel` (#94)
-     *  * `phaserlevel` (#95)
-     *  * `databuttonincrement` (#96)
-     *  * `databuttondecrement` (#97)
-     *  * `nonregisteredparametercoarse` (#98)
-     *  * `nonregisteredparameterfine` (#99)
-     *  * `registeredparametercoarse` (#100)
-     *  * `registeredparameterfine` (#101)
+     * | Number | Name                          |
+     * |--------|-------------------------------|
+     * | 0      |`bankselectcoarse`             |
+     * | 1      |`modulationwheelcoarse`        |
+     * | 2      |`breathcontrollercoarse`       |
+     * | 4      |`footcontrollercoarse`         |
+     * | 5      |`portamentotimecoarse`         |
+     * | 6      |`dataentrycoarse`              |
+     * | 7      |`volumecoarse`                 |
+     * | 8      |`balancecoarse`                |
+     * | 10     |`pancoarse`                    |
+     * | 11     |`expressioncoarse`             |
+     * | 12     |`effectcontrol1coarse`         |
+     * | 13     |`effectcontrol2coarse`         |
+     * | 18     |`generalpurposeslider3`        |
+     * | 19     |`generalpurposeslider4`        |
+     * | 32     |`bankselectfine`               |
+     * | 33     |`modulationwheelfine`          |
+     * | 34     |`breathcontrollerfine`         |
+     * | 36     |`footcontrollerfine`           |
+     * | 37     |`portamentotimefine`           |
+     * | 38     |`dataentryfine`                |
+     * | 39     |`volumefine`                   |
+     * | 40     |`balancefine`                  |
+     * | 42     |`panfine`                      |
+     * | 43     |`expressionfine`               |
+     * | 44     |`effectcontrol1fine`           |
+     * | 45     |`effectcontrol2fine`           |
+     * | 64     |`holdpedal`                    |
+     * | 65     |`portamento`                   |
+     * | 66     |`sustenutopedal`               |
+     * | 67     |`softpedal`                    |
+     * | 68     |`legatopedal`                  |
+     * | 69     |`hold2pedal`                   |
+     * | 70     |`soundvariation`               |
+     * | 71     |`resonance`                    |
+     * | 72     |`soundreleasetime`             |
+     * | 73     |`soundattacktime`              |
+     * | 74     |`brightness`                   |
+     * | 75     |`soundcontrol6`                |
+     * | 76     |`soundcontrol7`                |
+     * | 77     |`soundcontrol8`                |
+     * | 78     |`soundcontrol9`                |
+     * | 79     |`soundcontrol10`               |
+     * | 80     |`generalpurposebutton1`        |
+     * | 81     |`generalpurposebutton2`        |
+     * | 82     |`generalpurposebutton3`        |
+     * | 83     |`generalpurposebutton4`        |
+     * | 91     |`reverblevel`                  |
+     * | 92     |`tremololevel`                 |
+     * | 93     |`choruslevel`                  |
+     * | 94     |`celestelevel`                 |
+     * | 95     |`phaserlevel`                  |
+     * | 96     |`databuttonincrement`          |
+     * | 97     |`databuttondecrement`          |
+     * | 98     |`nonregisteredparametercoarse` |
+     * | 99     |`nonregisteredparameterfine`   |
+     * | 100    |`registeredparametercoarse`    |
+     * | 101    |`registeredparameterfine`      |
+     * | 120    |`allsoundoff`                  |
+     * | 121    |`resetallcontrollers`          |
+     * | 122    |`localcontrol`                 |
+     * | 123    |`allnotesoff`                  |
+     * | 124    |`omnimodeoff`                  |
+     * | 125    |`omnimodeon`                   |
+     * | 126    |`monomodeon`                   |
+     * | 127    |`polymodeon`                   |
      *
-     *  * `allsoundoff` (#120)
-     *  * `resetallcontrollers` (#121)
-     *  * `localcontrol` (#122)
-     *  * `allnotesoff` (#123)
-     *  * `omnimodeoff` (#124)
-     *  * `omnimodeon` (#125)
-     *  * `monomodeon` (#126)
-     *  * `polymodeon` (#127)
-     *
-     * As you can see above, not all control change message have a matching common name. This
-     * does not mean you cannot use the others. It simply means you will need to use their number
-     * (0-127) instead of their name. While you can still use them, numbers 120 to 127 are usually
-     * reserved for *channel mode* messages. See
-     * [sendChannelMode()]{@link OutputChannel#sendChannelMode} method for more info.
+     * As you can see above, not all control change message have a matching name. This does not mean
+     * you cannot use the others. It simply means you will need to use their number
+     * (`0` to `127`) instead of their name. While you can still use them, numbers `120` to `127` are
+     * usually reserved for *channel mode* messages. See
+     * [`sendChannelMode()`]{@link OutputChannel#sendChannelMode} method for more info.
      *
      * To view a detailed list of all available **control change** messages, please consult "Table 3 -
      * Control Change Messages" from the [MIDI Messages](
      * https://www.midi.org/specifications/item/table-3-control-change-messages-data-bytes-2)
      * specification.
      *
-     * Note: messages #0-31 (MSB) are paired with messages #32-63 (LSB). For example, message #1
-     * (modulationwheelcoarse) can be accompanied by a second control change message for
-     * modulationwheelfine to achieve a greater level of precision. if you want to specify both MSB
-     * and LSB for messages between 0 and 31, you can do so by passing a 2-value array as the second
-     * parameter.
+     * **Note**: messages #0-31 (MSB) are paired with messages #32-63 (LSB). For example, message #1
+     * (`modulationwheelcoarse`) can be accompanied by a second control change message for
+     * `modulationwheelfine` to achieve a greater level of precision. if you want to specify both MSB
+     * and LSB for messages between `0` and `31`, you can do so by passing a 2-value array as the
+     * second parameter.
      *
-     * @param {number|string} controller The MIDI controller name or number (0-127).
+     * @param {number|string} controller The MIDI controller name or number (`0` - `127`).
      *
      * @param {number|number[]} value The value to send (0-127). You can also use a two-position array
      * for controllers 0 to 31. In this scenario, the first value will be sent as usual and the second
-     * calue will be sent to the matching LSB controller (which is obtained by adding 32 to the first
+     * value will be sent to the matching LSB controller (which is obtained by adding 32 to the first
      * controller)
      *
      * @param {object} [options={}]
@@ -236,8 +237,8 @@ static toNoteNumber(e,t=0){if(t=null==t?0:parseInt(t),isNaN(t))throw new RangeEr
      * @param {number|string} [options.time] If `time` is a string prefixed with `"+"` and followed by
      * a number, the message will be delayed by that many milliseconds. If the value is a number, the
      * operation will be scheduled for that time. The current time can be retrieved with
-     * [WebMidi.time]{@link WebMidi#time}. If `options.time` is omitted, or in the past, the operation
-     * will be carried out as soon as possible.
+     * [`WebMidi.time`]{@link WebMidi#time}. If `options.time` is omitted, or in the past, the
+     * operation will be carried out as soon as possible.
      *
      * @throws {RangeError} Controller numbers must be between 0 and 127.
      * @throws {RangeError} Invalid controller name.
@@ -443,5 +444,5 @@ static toNoteNumber(e,t=0){if(t=null==t?0:parseInt(t),isNaN(t))throw new RangeEr
    *
    * @extends EventEmitter
    * @license Apache-2.0
-   */const d=new class extends t{constructor(){super(),this.defaults={note:{attack:a.from7bitToFloat(64),release:a.from7bitToFloat(64),duration:1/0}},this.interface=null,this.validation=!0,this._inputs=[],this._disconnectedInputs=[],this._outputs=[],this._disconnectedOutputs=[],this._stateChangeQueue=[],this._octaveOffset=0}async enable(e={},t=!1){if(this.validation=!1!==e.validation,this.validation&&("function"==typeof e&&(e={callback:e,sysex:t}),t&&(e.sysex=!0)),this.enabled)return"function"==typeof e.callback&&e.callback(),Promise.resolve();const n={timestamp:this.time,target:this,type:"error",error:void 0},r={timestamp:this.time,target:this,type:"midiaccessgranted"},s={timestamp:this.time,target:this,type:"enabled"};try{this.interface=await navigator.requestMIDIAccess({sysex:e.sysex,software:e.software})}catch(t){return n.error=t,this.emit("error",n),"function"==typeof e.callback&&e.callback(t),Promise.reject(t)}this.emit("midiaccessgranted",r),this.interface.onstatechange=this._onInterfaceStateChange.bind(this);try{await this._updateInputsAndOutputs()}catch(t){return n.error=t,this.emit("error",n),"function"==typeof e.callback&&e.callback(t),Promise.reject(t)}return this.emit("enabled",s),"function"==typeof e.callback&&e.callback(),Promise.resolve(this)}async disable(){return this._destroyInputsAndOutputs().then(()=>{"function"==typeof navigator.close&&navigator.close(),this.interface&&(this.interface.onstatechange=void 0),this.interface=null;let e={timestamp:this.time,target:this,type:"disabled"};this.emit("disabled",e),this.removeListener()})}getInputById(e){if(this.validation){if(!this.enabled)throw new Error("WebMidi is not enabled.");if(!e)return!1}for(let t=0;t<this.inputs.length;t++)if(this.inputs[t].id===e.toString())return this.inputs[t];return!1}getInputByName(e){if(this.validation){if(!this.enabled)throw new Error("WebMidi is not enabled.");if(!e)return!1;e=e.toString()}for(let t=0;t<this.inputs.length;t++)if(~this.inputs[t].name.indexOf(e))return this.inputs[t];return!1}getOutputByName(e){if(this.validation){if(!this.enabled)throw new Error("WebMidi is not enabled.");if(!e)return!1;e=e.toString()}for(let t=0;t<this.outputs.length;t++)if(~this.outputs[t].name.indexOf(e))return this.outputs[t];return!1}getOutputById(e){if(this.validation){if(!this.enabled)throw new Error("WebMidi is not enabled.");if(!e)return!1}for(let t=0;t<this.outputs.length;t++)if(this.outputs[t].id===e.toString())return this.outputs[t];return!1}noteNameToNumber(e){return this.validation&&console.warn("The noteNameToNumber() method is deprecated. Use Utilities.toNoteNumber() instead."),a.toNoteNumber(e,this.octaveOffset)}getOctave(e){return this.validation&&(console.warn("The getOctave()is deprecated. Use Utilities.getNoteDetails() instead"),e=parseInt(e)),!isNaN(e)&&e>=0&&e<=127&&a.getNoteDetails(a.offsetNumber(e,this.octaveOffset)).octave}sanitizeChannels(e){return this.validation&&console.warn("The sanitizeChannels() method has been moved to the utilities class."),a.sanitizeChannels(e)}toMIDIChannels(e){return this.validation&&console.warn("The toMIDIChannels() method has been deprecated. Use Utilities.sanitizeChannels() instead."),a.sanitizeChannels(e)}guessNoteNumber(e){return this.validation&&console.warn("The guessNoteNumber() method has been deprecated. Use Utilities.guessNoteNumber() instead."),a.guessNoteNumber(e,this.octaveOffset)}getValidNoteArray(e,t={}){return this.validation&&console.warn("The getValidNoteArray() method has been moved to the Utilities.buildNoteArray()"),a.buildNoteArray(e,t)}convertToTimestamp(e){return this.validation&&console.warn("The convertToTimestamp() method has been moved to Utilities.toTimestamp()."),a.toTimestamp(e)}async _destroyInputsAndOutputs(){let e=[];return this.inputs.forEach(t=>e.push(t.destroy())),this.outputs.forEach(t=>e.push(t.destroy())),Promise.all(e).then(()=>{this._inputs=[],this._outputs=[]})}_onInterfaceStateChange(e){this._updateInputsAndOutputs();let t={timestamp:e.timeStamp,type:e.port.state};"connected"===e.port.state&&"open"===e.port.connection?("output"===e.port.type?(t.port=this.getOutputById(e.port.id),t.target=t.port):"input"===e.port.type&&(t.port=this.getInputById(e.port.id),t.target=t.port),this.emit(e.port.state,t)):"disconnected"===e.port.state&&"pending"===e.port.connection&&(t.port={connection:"closed",id:e.port.id,manufacturer:e.port.manufacturer,name:e.port.name,state:e.port.state,type:e.port.type},t.target=t.port,this.emit(e.port.state,t))}async _updateInputsAndOutputs(){return Promise.all([this._updateInputs(),this._updateOutputs()])}async _updateInputs(){if(!this.interface)return;for(let e=this._inputs.length-1;e>=0;e--){const t=this._inputs[e];Array.from(this.interface.inputs.values()).find(e=>e===t._midiInput)||(this._disconnectedInputs.push(t),this._inputs.splice(e,1))}let e=[];return this.interface.inputs.forEach(t=>{if(!this._inputs.find(e=>e._midiInput===t)){let n=this._disconnectedInputs.find(e=>e._midiInput===t);n||(n=new u(t)),this._inputs.push(n),e.push(n.open())}}),Promise.all(e)}async _updateOutputs(){if(!this.interface)return;for(let e=this._outputs.length-1;e>=0;e--){const t=this._outputs[e];Array.from(this.interface.outputs.values()).find(e=>e===t._midiOutput)||(this._disconnectedOutputs.push(t),this._outputs.splice(e,1))}let e=[];return this.interface.outputs.forEach(t=>{if(!this._outputs.find(e=>e._midiOutput===t)){let n=this._disconnectedOutputs.find(e=>e._midiOutput===t);n||(n=new o(t)),this._outputs.push(n),e.push(n.open())}}),Promise.all(e)}get enabled(){return null!==this.interface}get inputs(){return this._inputs}get isNode(){return"[object process]"===Object.prototype.toString.call("undefined"!=typeof process?process:0)}get isBrowser(){return"undefined"!=typeof window&&void 0!==window.document}get octaveOffset(){return this._octaveOffset}set octaveOffset(e){if(this.validation&&(e=parseInt(e),isNaN(e)))throw new TypeError("The 'octaveOffset' property must be an integer.");this._octaveOffset=e}get outputs(){return this._outputs}get supported(){return"undefined"!=typeof navigator&&navigator.requestMIDIAccess}get sysexEnabled(){return!(!this.interface||!this.interface.sysexEnabled)}get time(){return performance.now()}get version(){return"3.0.0-alpha.25"}get CHANNEL_EVENTS(){return this.validation&&console.warn("The CHANNEL_EVENTS enum has been moved to InputChannel.EVENTS."),h.EVENTS}get MIDI_SYSTEM_MESSAGES(){return this.validation&&console.warn("The MIDI_SYSTEM_MESSAGES enum has been moved to Enumerations.MIDI_SYSTEM_MESSAGES."),r.MIDI_SYSTEM_MESSAGES}get MIDI_CHANNEL_MODE_MESSAGES(){return this.validation&&console.warn("The MIDI_CHANNEL_MODE_MESSAGES enum has been moved to Enumerations.MIDI_CHANNEL_MODE_MESSAGES."),r.MIDI_CHANNEL_MODE_MESSAGES}get MIDI_CONTROL_CHANGE_MESSAGES(){return this.validation&&console.warn("The MIDI_CONTROL_CHANGE_MESSAGES enum has been moved to Enumerations.MIDI_CONTROL_CHANGE_MESSAGES."),r.MIDI_CONTROL_CHANGE_MESSAGES}get MIDI_REGISTERED_PARAMETER(){return this.validation&&console.warn("The MIDI_REGISTERED_PARAMETER enum has been moved to Enumerations.MIDI_REGISTERED_PARAMETERS."),this.MIDI_REGISTERED_PARAMETERS}get NOTES(){return this.validation&&console.warn("The NOTES enum has been deprecated."),["C","C#","D","D#","E","F","F#","G","G#","A","A#","B"]}};d.constructor=null,e.Enumerations=r,e.Forwarder=l,e.Message=c,e.Note=s,e.Utilities=a,e.WebMidi=d}(this.window=this.window||{});
+   */const d=new class extends t{constructor(){super(),this.defaults={note:{attack:a.from7bitToFloat(64),release:a.from7bitToFloat(64),duration:1/0}},this.interface=null,this.validation=!0,this._inputs=[],this._disconnectedInputs=[],this._outputs=[],this._disconnectedOutputs=[],this._stateChangeQueue=[],this._octaveOffset=0}async enable(e={},t=!1){if(this.validation=!1!==e.validation,this.validation&&("function"==typeof e&&(e={callback:e,sysex:t}),t&&(e.sysex=!0)),this.enabled)return"function"==typeof e.callback&&e.callback(),Promise.resolve();const n={timestamp:this.time,target:this,type:"error",error:void 0},r={timestamp:this.time,target:this,type:"midiaccessgranted"},s={timestamp:this.time,target:this,type:"enabled"};try{this.interface=await navigator.requestMIDIAccess({sysex:e.sysex,software:e.software})}catch(t){return n.error=t,this.emit("error",n),"function"==typeof e.callback&&e.callback(t),Promise.reject(t)}this.emit("midiaccessgranted",r),this.interface.onstatechange=this._onInterfaceStateChange.bind(this);try{await this._updateInputsAndOutputs()}catch(t){return n.error=t,this.emit("error",n),"function"==typeof e.callback&&e.callback(t),Promise.reject(t)}return this.emit("enabled",s),"function"==typeof e.callback&&e.callback(),Promise.resolve(this)}async disable(){return this._destroyInputsAndOutputs().then(()=>{"function"==typeof navigator.close&&navigator.close(),this.interface&&(this.interface.onstatechange=void 0),this.interface=null;let e={timestamp:this.time,target:this,type:"disabled"};this.emit("disabled",e),this.removeListener()})}getInputById(e){if(this.validation){if(!this.enabled)throw new Error("WebMidi is not enabled.");if(!e)return!1}for(let t=0;t<this.inputs.length;t++)if(this.inputs[t].id===e.toString())return this.inputs[t];return!1}getInputByName(e){if(this.validation){if(!this.enabled)throw new Error("WebMidi is not enabled.");if(!e)return!1;e=e.toString()}for(let t=0;t<this.inputs.length;t++)if(~this.inputs[t].name.indexOf(e))return this.inputs[t];return!1}getOutputByName(e){if(this.validation){if(!this.enabled)throw new Error("WebMidi is not enabled.");if(!e)return!1;e=e.toString()}for(let t=0;t<this.outputs.length;t++)if(~this.outputs[t].name.indexOf(e))return this.outputs[t];return!1}getOutputById(e){if(this.validation){if(!this.enabled)throw new Error("WebMidi is not enabled.");if(!e)return!1}for(let t=0;t<this.outputs.length;t++)if(this.outputs[t].id===e.toString())return this.outputs[t];return!1}noteNameToNumber(e){return this.validation&&console.warn("The noteNameToNumber() method is deprecated. Use Utilities.toNoteNumber() instead."),a.toNoteNumber(e,this.octaveOffset)}getOctave(e){return this.validation&&(console.warn("The getOctave()is deprecated. Use Utilities.getNoteDetails() instead"),e=parseInt(e)),!isNaN(e)&&e>=0&&e<=127&&a.getNoteDetails(a.offsetNumber(e,this.octaveOffset)).octave}sanitizeChannels(e){return this.validation&&console.warn("The sanitizeChannels() method has been moved to the utilities class."),a.sanitizeChannels(e)}toMIDIChannels(e){return this.validation&&console.warn("The toMIDIChannels() method has been deprecated. Use Utilities.sanitizeChannels() instead."),a.sanitizeChannels(e)}guessNoteNumber(e){return this.validation&&console.warn("The guessNoteNumber() method has been deprecated. Use Utilities.guessNoteNumber() instead."),a.guessNoteNumber(e,this.octaveOffset)}getValidNoteArray(e,t={}){return this.validation&&console.warn("The getValidNoteArray() method has been moved to the Utilities.buildNoteArray()"),a.buildNoteArray(e,t)}convertToTimestamp(e){return this.validation&&console.warn("The convertToTimestamp() method has been moved to Utilities.toTimestamp()."),a.toTimestamp(e)}async _destroyInputsAndOutputs(){let e=[];return this.inputs.forEach(t=>e.push(t.destroy())),this.outputs.forEach(t=>e.push(t.destroy())),Promise.all(e).then(()=>{this._inputs=[],this._outputs=[]})}_onInterfaceStateChange(e){this._updateInputsAndOutputs();let t={timestamp:e.timeStamp,type:e.port.state};"connected"===e.port.state&&"open"===e.port.connection?("output"===e.port.type?(t.port=this.getOutputById(e.port.id),t.target=t.port):"input"===e.port.type&&(t.port=this.getInputById(e.port.id),t.target=t.port),this.emit(e.port.state,t)):"disconnected"===e.port.state&&"pending"===e.port.connection&&(t.port={connection:"closed",id:e.port.id,manufacturer:e.port.manufacturer,name:e.port.name,state:e.port.state,type:e.port.type},t.target=t.port,this.emit(e.port.state,t))}async _updateInputsAndOutputs(){return Promise.all([this._updateInputs(),this._updateOutputs()])}async _updateInputs(){if(!this.interface)return;for(let e=this._inputs.length-1;e>=0;e--){const t=this._inputs[e];Array.from(this.interface.inputs.values()).find(e=>e===t._midiInput)||(this._disconnectedInputs.push(t),this._inputs.splice(e,1))}let e=[];return this.interface.inputs.forEach(t=>{if(!this._inputs.find(e=>e._midiInput===t)){let n=this._disconnectedInputs.find(e=>e._midiInput===t);n||(n=new u(t)),this._inputs.push(n),e.push(n.open())}}),Promise.all(e)}async _updateOutputs(){if(!this.interface)return;for(let e=this._outputs.length-1;e>=0;e--){const t=this._outputs[e];Array.from(this.interface.outputs.values()).find(e=>e===t._midiOutput)||(this._disconnectedOutputs.push(t),this._outputs.splice(e,1))}let e=[];return this.interface.outputs.forEach(t=>{if(!this._outputs.find(e=>e._midiOutput===t)){let n=this._disconnectedOutputs.find(e=>e._midiOutput===t);n||(n=new o(t)),this._outputs.push(n),e.push(n.open())}}),Promise.all(e)}get enabled(){return null!==this.interface}get inputs(){return this._inputs}get isNode(){return"[object process]"===Object.prototype.toString.call("undefined"!=typeof process?process:0)}get isBrowser(){return"undefined"!=typeof window&&void 0!==window.document}get octaveOffset(){return this._octaveOffset}set octaveOffset(e){if(this.validation&&(e=parseInt(e),isNaN(e)))throw new TypeError("The 'octaveOffset' property must be an integer.");this._octaveOffset=e}get outputs(){return this._outputs}get supported(){return"undefined"!=typeof navigator&&navigator.requestMIDIAccess}get sysexEnabled(){return!(!this.interface||!this.interface.sysexEnabled)}get time(){return performance.now()}get version(){return"3.0.1"}get CHANNEL_EVENTS(){return this.validation&&console.warn("The CHANNEL_EVENTS enum has been moved to InputChannel.EVENTS."),h.EVENTS}get MIDI_SYSTEM_MESSAGES(){return this.validation&&console.warn("The MIDI_SYSTEM_MESSAGES enum has been moved to Enumerations.MIDI_SYSTEM_MESSAGES."),r.MIDI_SYSTEM_MESSAGES}get MIDI_CHANNEL_MODE_MESSAGES(){return this.validation&&console.warn("The MIDI_CHANNEL_MODE_MESSAGES enum has been moved to Enumerations.MIDI_CHANNEL_MODE_MESSAGES."),r.MIDI_CHANNEL_MODE_MESSAGES}get MIDI_CONTROL_CHANGE_MESSAGES(){return this.validation&&console.warn("The MIDI_CONTROL_CHANGE_MESSAGES enum has been moved to Enumerations.MIDI_CONTROL_CHANGE_MESSAGES."),r.MIDI_CONTROL_CHANGE_MESSAGES}get MIDI_REGISTERED_PARAMETER(){return this.validation&&console.warn("The MIDI_REGISTERED_PARAMETER enum has been moved to Enumerations.MIDI_REGISTERED_PARAMETERS."),this.MIDI_REGISTERED_PARAMETERS}get NOTES(){return this.validation&&console.warn("The NOTES enum has been deprecated."),["C","C#","D","D#","E","F","F#","G","G#","A","A#","B"]}};d.constructor=null,e.Enumerations=r,e.Forwarder=l,e.Message=c,e.Note=s,e.Utilities=a,e.WebMidi=d}(this.window=this.window||{});
 //# sourceMappingURL=webmidi.iife.min.js.map
