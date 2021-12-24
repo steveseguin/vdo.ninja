@@ -2445,6 +2445,10 @@ function updateMixerRun(e=false){  // this is the main auto-mixing code.  It's a
 							continue;
 							//}
 						}
+					} else if (session.rpcs[i].videoElement.srcObject && ((session.rpcs[i].videoElement.srcObject.getVideoTracks().length==0) || session.rpcs[i].videoMuted)){
+						if (("screenshare" in session.rpcs[i].videoElement) && (session.rpcs[i].videoElement.screenshare)){
+							continue;
+						}
 					}
 					//} else if (!session.directorList.indexOf(i)>=0){  // director is never audio-only.  Video if need, yes, but not visualized-audio.
 					//	if (session.rpcs[i].videoElement.srcObject && ((session.rpcs[i].videoElement.srcObject.getVideoTracks().length==0) || (session.rpcs[i].videoMuted)) && !session.rpcs[i].directorVideoMuted){
@@ -20925,21 +20929,20 @@ function midiHotkeysCommand(command, value){
 	}
 }
 
-function playbackMIDI(msg){
+function playbackMIDI(msg, unsafe=false){
 	if (session.midiIn===false && session.midiRemote===false){return;} // just in case; security
 	else if ((session.midiOut===session.midiIn) && (session.midiRemote===false)){return;}  // avoid feedback loops
 	//msg.midi.d = e.data;
 	//msg.midi.s = e.timestamp;
 	//msg.midi.t = e.type;
-	log(msg);
 	if (session.midiIn===true){
 		if ("d" in msg){
 			for (var i in WebMidi.outputs){
 				try {
 					if ("c" in msg){
-						WebMidi.outputs[i].channels[msg.c].send(msg.d[0], [msg.d[1], msg.d[2]]);
+						WebMidi.outputs[i].channels[msg.c].send(msg.d);
 					} else {
-						WebMidi.outputs[i].send(msg.d[0], [msg.d[1], msg.d[2]]);
+						WebMidi.outputs[i].send(msg.d);
 					}
 				} catch(e){errorlog(e);}
 			}
@@ -20949,13 +20952,16 @@ function playbackMIDI(msg){
 			var i = parseInt(session.midiIn)-1;
 			if ("d" in msg){
 				if ("c" in msg){
-					WebMidi.outputs[i].channels[msg.c].send(msg.d[0], [msg.d[1], msg.d[2]]);
+					WebMidi.outputs[i].channels[msg.c].send(msg.d);
 				} else {
-					WebMidi.outputs[i].send(msg.d[0], [msg.d[1], msg.d[2]]);
+					WebMidi.outputs[i].send(msg.d);
 				}
 			}
 		} catch(e){errorlog(e);};
 	}
+	
+	if (unsafe){return;} // I don't know how midi remote works in reverse, so lets ignore it
+	
 	if (session.midiRemote==4){
 		if (msg.d[0] == 176){
 			midiHotkeysCommand(msg.d[1], msg.d[2]);

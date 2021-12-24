@@ -405,8 +405,8 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 		session.midiOut =  parseInt(urlParams.get('midipush')) ||  parseInt(urlParams.get('midiout')) || parseInt(urlParams.get('mo')) || true;
 	}
 	
-	if (urlParams.has('midipull') || urlParams.has('midiin') || urlParams.has('mi')){
-		session.midiIn = parseInt(urlParams.get('midipull')) ||  parseInt(urlParams.get('midiin')) || parseInt(urlParams.get('mi')) || true;
+	if (urlParams.has('midipull') || urlParams.has('midiin') || urlParams.has('midin') ||  urlParams.has('mi')){
+		session.midiIn = parseInt(urlParams.get('midipull')) ||  parseInt(urlParams.get('midiin')) || parseInt(urlParams.get('midin')) || parseInt(urlParams.get('mi')) || true;
 	}
 
 	if (urlParams.has('midichannel')){
@@ -3532,9 +3532,19 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 							if (e.message && e.message.channel){
 								msg.midi.c = e.message.channel;
 							}
+							var list = [];
 							for (var UUID in session.pcs){
 								if (session.pcs[UUID].allowMIDI){
-									session.sendMessage(msg, UUID);
+									if (session.sendMessage(msg, UUID)){
+										list.push(UUID);
+									}
+								}
+							}
+							for (var UUID in session.rpcs){
+								if (session.rpcs[UUID].allowMIDI){  // specific to gstreamer code aplication
+									if (!list.includes(UUID)){
+										session.sendRequest(msg, UUID)
+									}
 								}
 							}
 						});
@@ -3551,9 +3561,19 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 							if (e.message && e.message.channel){
 								msg.midi.c = e.message.channel;
 							}
+							var list = [];
 							for (var UUID in session.pcs){
 								if (session.pcs[UUID].allowMIDI){
-									session.sendMessage(msg, UUID);
+									if (session.sendMessage(msg, UUID)){
+										list.push(UUID);
+									}
+								}
+							}
+							for (var UUID in session.rpcs){
+								if (session.rpcs[UUID].allowMIDI){ // specific to gstreamer code aplication
+									if (!list.includes(UUID)){
+										session.sendRequest(msg, UUID)
+									}
 								}
 							}
 						});
