@@ -22,6 +22,8 @@ Dealing with feedback is challenging, as the reasons are numerous, but not alway
 
 * If only appearing in the OBS recording or stream, check to make sure you are not capturing the desktop's audio in OBS.  This can happen if not using "Control audio via OBS" in the OBS Browser source, capturing a screen-share into OBS, or trying to record the director's room audio with OBS.
 
+![](<../.gitbook/assets/image (121).png>)
+
 #### Troubleshooting
 
 A good way to troubleshoot is to mute one person at a time in a room, seeing if muting any specific single person solves the issue for everyone else.&#x20;
