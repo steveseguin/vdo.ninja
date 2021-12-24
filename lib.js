@@ -7725,7 +7725,7 @@ function outboundAudioPipeline() {
 	
 	if (session.disableWebAudio) {
 		//if (session.mobile){return session.streamSrc;} // iOS devices can't remap video tracks, else KABOOM. Might as well do this for android also.
-	
+		
 		var newStream = createMediaStream();
 		session.streamSrc.getAudioTracks().forEach(function(track) { // this seems to fix a bug with macbooks. 
 			newStream.addTrack(track, session.streamSrc);
@@ -12566,7 +12566,8 @@ async function grabVideo(quality = 0, eleName = 'previewWebcam', selector = "sel
 					
 				});
 				
-				
+				updateRenderOutpipe();  
+				// senderAudioUpdate
 				
 				if (wasDisabled && !session.videoMuted){
 					var msg = {};
@@ -12621,7 +12622,6 @@ async function grabVideo(quality = 0, eleName = 'previewWebcam', selector = "sel
 					if (getUserMediaRequestID !== gumid) { // new camera selected in this time.
 						return;
 					}
-
 					makeImages(true); 
 					
 					if (getById("popupSelector_constraints_loading")) {
@@ -17255,11 +17255,22 @@ Promise.wait = function(ms) {
 Promise.prototype.timeout = function(ms) {
 	return Promise.race([
 		this, Promise.wait(ms).then(function() {
-			var errormsg = new Error("Time Out\nDid you accept camera permissions in time? Please do so first.\n\nOtherwise, do you have NDI Tools installed? Maybe try uninstalling it.\n\nPlease also ensure your camera and audio device are correctly connected and not already in use. You may also need to refresh the page.");
-			errormsg.name = "timedOut";
-			errormsg.message = "Time Out\nDid you accept camera permissions in time? Please do so first.\n\nOtherwise, do you have NDI Tools installed? Maybe try uninstalling it.\n\nPlease also ensure your camera and audio device are correctly connected and not already in use. You may also need to refresh the page."
-			throw errormsg;
-
+			if (iOS || iPad){
+				var errormsg = new Error("Time Out\nDid you accept camera permissions in time? Please do so first.\n\nIf using an iPhone or iPad, try fully closing your browser and open it again; Safari sometimes jams up the camera.");
+				errormsg.name = "timedOut";
+				errormsg.message = "Time Out\nDid you accept camera permissions in time? Please do so first.\n\nIf using an iPhone or iPad, try fully closing your browser and open it again; Safari sometimes jams up the camera."
+				throw errormsg;
+			} else if (session.mobile){
+				var errormsg = new Error("Time Out\nDid you accept camera permissions in time? Please do so first.\n\nMake sure no other application is using the camera already and that you are using a compatible browser. If issues persist, maybe try the official native mobile app.");
+				errormsg.name = "timedOut";
+				errormsg.message = "Time Out\nDid you accept camera permissions in time? Please do so first.\n\nMake sure no other application is using the camera already and that you are using a compatible browser. If issues persist, maybe try the official native mobile app."
+				throw errormsg;
+			} else {
+				var errormsg = new Error("Time Out\nDid you accept camera permissions in time? Please do so first.\n\nOtherwise, do you have NDI Tools installed? Maybe try uninstalling it.\n\nPlease also ensure your camera and audio device are correctly connected and not already in use. You may also need to refresh the page.");
+				errormsg.name = "timedOut";
+				errormsg.message = "Time Out\nDid you accept camera permissions in time? Please do so first.\n\nOtherwise, do you have NDI Tools installed? Maybe try uninstalling it.\n\nPlease also ensure your camera and audio device are correctly connected and not already in use. You may also need to refresh the page."
+				throw errormsg;
+			}
 		})
 	])
 };
