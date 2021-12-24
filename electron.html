@@ -548,6 +548,7 @@ function addUrlToHistory(url){
 
 function modURL(){
 	var url = document.getElementById('changeText').value;
+	url = url.trim();
 	if (url.startsWith("obs.ninja")){
 		url = "https://"+url;
 	} else if (url.startsWith("youtube.com")){

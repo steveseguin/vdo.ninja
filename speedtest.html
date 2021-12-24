@@ -8,7 +8,7 @@
 	</head>
 	<body onload="loadIframe();">
 		<h1>
-			VDO.Ninja Speed Test
+			VDO.Ninja's video streaming quality test
 		</h1>
 		<div id="container">
 		</div>
@@ -42,22 +42,23 @@
 				<li>Select your camera.</li>
 				<li>Hit start</li>
 				<li>
-					Wait for the video to load side-by-side. *If it does not auto-load
-					within 20s, refresh and try again.*
+					Wait for the video to load side-by-side. *If it does not auto-load within 20s, refresh and try again.*
 				</li>
 				<li>
-					Stats will load on the right-hand side of the page here. (or press
-					CTRL + LeftClick on the new video to open stats that way)
+					Stats will be printed to screen, along with graphs visualizing the most important metrics. You can also hold CTRL (cmd) + Click on the video to access even more stats.
 				</li>
 				<li>
-					Bitrate, Buffer delay, and packet loss are important connection
-					quality metrics
+					Bitrate, Buffer delay, and packet loss are important connection	quality metrics. Monitor them for at least a minute.
 				</li>
 				<li>
-					Change the video bitrate by pressing the buttons below the video. It
-					should approach 6000-kbps if the network allows.
+					Change the video bitrate by pressing the buttons below the video. It should approach 6000-kbps if the network allows.
 				</li>
-				
+				<li>
+					Good packet loss will not exceed 0.1% and bad packet loss will exceed 1%. You can try testing against different global regions with the drop-down menu below.
+				</li>
+				<li>
+					Check out <a href="https://youtu.be/je2ljlvLzlY" target="_blank" style='color:#DEF;'>this Youtube video</a> for more details and solutions to reduce packet loss if suffering from any.
+				</li>
 			</ol>
 			<div id="screen" style="color: #CCC; margin:10px 0;"><a href="./speedtest?screen" style="color: #CCC;">Test screen-sharing performance here</a></div>
 			<div id="remote"></div>
@@ -69,9 +70,10 @@
 			  <option value="fr1">Strasbourg, France</option>
 			  <option value="bra1">São Paulo, Brazil</option>
 			  <option value="cae1">Montreal, Canada</option>
+			  <option value="use1">Virgina, USA</option>
 			  <option value="usc1">Chicago, USA</option>
-			  <option value="usw1">Los Angeles 1, USA</option>
-			  <option value="usw2">Los Angeles 2, USA</option>
+			  <option value="usw1">Los Angeles, USA</option>
+			  <option value="usw2">Oregon, USA</option>
 			  <option value="aus1">Sydney, Australia</option>
 			  <option value="jap1">Tokyo, Japan</option>
 			  <option value="sing1">Singapore</option>
@@ -114,6 +116,7 @@
 			var quality_reason = "";
 			var encoder = "";
 			var Round_Trip_Time_ms = "";
+			var recordResults = false;
 			
 			function copyFunction(copyText) {
 				alert("Log copied to the clipboard.");
@@ -238,6 +241,10 @@
 				if (urlParams.has("buffer")) {
 					srcString = srcString + "&buffer=" + urlParams.get("buffer");
 				}
+				
+				if (urlParams.has("record")) {
+					recordResults = true;
+				}
 
 				iframe.src = srcString;
 
@@ -361,14 +368,12 @@
 						if (out.split("Bitrate_in_kbps").length > 1) {
 							for (var key in e.data.stats.inbound_stats[streamID]) {
 								if (key.startsWith("RTCMediaStreamTrack_receiver")) {
-									var bitrate =
-										e.data.stats.inbound_stats[streamID][key][
+									var bitrate = e.data.stats.inbound_stats[streamID][key][
 											"Bitrate_in_kbps"
 										];
 									updateData("bitrate", bitrate);
 
-									var buffer =
-										e.data.stats.inbound_stats[streamID][key][
+									var buffer = e.data.stats.inbound_stats[streamID][key][
 											"Buffer_Delay_in_ms"
 										];
 									updateData("buffer", buffer);
@@ -379,8 +384,7 @@
 										updateData("packetloss", packetloss);
 									}
 
-									var resolution =
-										e.data.stats.inbound_stats[streamID][key]["Resolution"];
+									var resolution = e.data.stats.inbound_stats[streamID][key]["Resolution"];
 
 									if (previousResolution != resolution) {
 										previousResolution = resolution;
@@ -389,6 +393,12 @@
 								}
 							}
 
+						}
+						
+						if (recordResults){
+							var request = new XMLHttpRequest();
+							request.open('POST', "https://reports.vdo.ninja/record"); 
+							request.send(JSON.stringify(e.data.stats));
 						}
 					}
 				});

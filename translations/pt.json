@@ -165,7 +165,30 @@
     "disable-animated-transitions-during-video-mixing": "Disable animated transitions during video mixing",
     "allow-the-guest-to-select-a-file-to-upload-to-the-director-once-shared-it-will-show-in-the-chat-as-a-download-link-": "Allow the guest to select a file to upload to the director. Once shared, it will show in the chat as a download link.",
     "set-a-countdown-timer-that-this-guest-sees": "Set a countdown timer that this guest sees",
-    "enter-a-room-name-to-quick-join": "Enter a room name to quick join"
+    "enter-a-room-name-to-quick-join": "Enter a room name to quick join",
+    "will-remember-the-room-prompting-you-the-next-time-you-visit-if-you-wish-to-load-this-director-s-room-again": "Will remember the room, prompting you the next time you visit if you wish to load this director's room again",
+    "create-a-third-stream": "Create a Third Stream",
+    "share-a-website-with-your-guests-iframe-": "Share a website with your guests (IFRAME)",
+    "hold-ctrl-or-cmd-and-click-to-spotlight-this-video": "Hold CTRL (or CMD) and click to spotlight this video",
+    "add-group-chat": "Add Group Chat",
+    "if-checked-the-director-can-be-added-to-scenes-as-if-a-guest-otherwise-the-director-will-never-appear-in-a-scene-": "If checked, the director can be added to scenes as if a guest. Otherwise, the director will never appear in a scene.",
+    "add-your-camera": "Add your Camera",
+    "experimental": "experimental",
+    "adjust-the-amount-of-effect-applied": "Adjust the amount of effect applied",
+    "remote-screenshare": "Remote Screenshare",
+    "the-guest-will-be-able-to-select-digital-video-effects-to-apply-": "The guest will be able to select digital video effects to apply.",
+    "use-this-link-as-a-browser-source-to-capture-the-video-or-audio": "Use this link as a Browser Source to capture the video or audio",
+    "show-a-custom-welcome-message-to-the-joining-guest-of-this-invite-link": "Show a custom welcome message to the joining guest of this invite link",
+    "add-remove-from-group-1": "Add/remove from group 1",
+    "add-remove-from-group-2": "Add/remove from group 2",
+    "add-remove-from-group-3": "Add/remove from group 3",
+    "add-remove-from-group-4": "Add/remove from group 4",
+    "add-remove-from-group-5": "Add/remove from group 5",
+    "add-remove-from-group-6": "Add/remove from group 6",
+    "the-solo-view-link-of-the-director-s-video-": "The solo view link of the Director's video.",
+    "only-the-director-s-video-will-be-visible-to-guests-and-within-group-scenes": "Only the director's video will be visible to guests and within group scenes",
+    "allow-for-remote-co-directors": "Allow for remote co-directors",
+    "jump-to-the-documentation": "Jump to the documentation"
   },
   "innerHTML": {
     "logo-header": "<font id=\"qos\" style=\"color: white;\">O</font>BS.Ninja ",
@@ -357,7 +380,10 @@
     "picture-in-picture": "Picture-in-picture",
     "chrome-cast": "Cast..",
     "join-room": "Join room",
-    "waiting-for-mic-to-load": "Waiting for mic to load"
+    "waiting-for-mic-to-load": "Waiting for mic to load",
+    "join-the-room-basic": "Join room as participant",
+    "allow-effects-invite": "Allow video effects to be used",
+    "show-welcome-message": "Show welcome message"
   },
   "placeholders": {
     "join-by-room-name-here": "Introduza aqui numa sala pelo seu nome",
@@ -420,6 +446,17 @@
     "unhide": "unhide guest",
     "hide-guest": "hide guest",
     "confirm-disconnect-users": "Are you sure you wish to disconnect these users?",
-    "confirm-disconnect-user": "Are you sure you wish to disconnect this user?"
+    "confirm-disconnect-user": "Are you sure you wish to disconnect this user?",
+    "enter-new-codirector-password": "Enter a co-director password to use",
+    "control-room-co-director": "Control Room: Co-Director",
+    "signal-meter": "Video packet loss indicator of video preview; green is good, red is bad. Flame implies CPU is overloaded. May not reflect the packet loss seen by scenes or other guests.",
+    "waiting-for-the-stream": "Waiting for the stream. Tip: Adding &cleanoutput to the URL will hide this spinner, or click to retry, which will also hide it.",
+    "main-director": "Main Director",
+    "share-a-screen": "Share a screen",
+    "stop-screen-sharing": "Stop screen sharing",
+    "you-have-been-transferred": "You've been transferred to a different room",
+    "you-are-no-longer-a-co-director": "You are no longer a co-director as you were transferred.",
+    "transferred": "Transferred",
+    "room-changed": "Your room has changed"
   }
 }

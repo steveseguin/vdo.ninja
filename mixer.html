@@ -1,0 +1,1125 @@
+<html>
+<head>
+	<title>Scene Mixer - prototype</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+	<meta content="text/html;charset=utf-8" http-equiv="Content-Type" />
+	<style>
+	body{
+		padding:0;
+		margin:0;
+		background-color: #0000;
+	}
+	iframe {
+		border:0;
+		padding:0;
+		display:block;
+		width: calc(100vw - 330px);
+		height:720px;
+		background-color: #0002;
+		border-radius: 3px;
+	}
+	#viewlink {
+		width:400px;
+	}
+	#container {
+		display:block;
+		padding:0px;
+	}
+	input{
+		padding:5px;
+		margin:5px;
+	}
+	button{
+		padding:5px;
+		margin:5px;
+		border-radius: 3px;
+	}
+	canvas{
+		padding:10px;
+		cursor:pointer;
+		border-radius: 3px;
+	}
+	.thing {
+		width: 100px;
+		height: 2em;
+		padding: 10px 0.5em 0 0.5em;
+		margin: 0.5em;
+		background: rgba(0,0,0,0.8);
+		color: white;
+		font-family: sans-serif;
+		cursor: grab;
+		text-align: center;
+	    border-radius: 3px;
+	}
+	.empty {
+		width: 108px;
+		height: 2em;
+		padding: 10px 0.5em 0 0.5em;
+		margin: 0.5em;
+		background: rgba(0,0,0,0.8);
+		color: white;
+		font-family: sans-serif;
+		user-select: none;
+		text-align: center;
+		font-size: 70%;
+		border-radius: 3px;
+	}
+	.col {
+		width: 130px;
+		height: calc(100vh - 20px);
+		padding: 5px;
+		border: 1px solid;
+		border-radius: 5px;
+		position: relative;
+		float: left;
+		user-select: none;
+	}
+	.pressed{
+		border: solid 2px black;
+		background-color: #FFFA;
+	}
+	a{
+		display:block;
+		margin:5px;
+	}
+	#delete {
+		background-color: rgb(191 191 191);
+		margin: 3px 0 10px 0;
+		text-align: center;
+		padding: 10px 10px 0 15px;    
+		border: 1px solid black;
+	}
+	
+	@keyframes move {
+		100% {
+			transform: translate3d(0, 0, 1px) rotate(360deg);
+		}
+	}
+
+	.background {
+		position: fixed;
+		width: 100vw;
+		height: 100vh;
+		top: 0;
+		left: 0;
+		background: #bfbfbf;
+		overflow: hidden;
+		z-index:-1;
+	}
+
+	.background span {
+		width: 50vmin;
+		height: 50vmin;
+		border-radius: 50vmin;
+		backface-visibility: hidden;
+		position: absolute;
+		animation: move;
+		animation-duration: 7;
+		animation-timing-function: linear;
+		animation-iteration-count: infinite;
+	}
+
+
+	.background span:nth-child(0) {
+		color: #a9a0bb;
+		top: 26%;
+		left: 54%;
+		animation-duration: 133s;
+		animation-delay: -143s;
+		transform-origin: 17vw 23vh;
+		box-shadow: 100vmin 0 13.032236536031524vmin currentColor;
+	}
+	.background span:nth-child(1) {
+		color: #888aa0;
+		top: 32%;
+		left: 60%;
+		animation-duration: 98s;
+		animation-delay: -19s;
+		transform-origin: -9vw -17vh;
+		box-shadow: -100vmin 0 13.361880379427102vmin currentColor;
+	}
+	.background span:nth-child(2) {
+		color: #a9a0bb;
+		top: 76%;
+		left: 30%;
+		animation-duration: 27s;
+		animation-delay: -382s;
+		transform-origin: -21vw -12vh;
+		box-shadow: -100vmin 0 13.29654068929897vmin currentColor;
+	}
+	.background span:nth-child(3) {
+		color: #a9a0bb;
+		top: 13%;
+		left: 3%;
+		animation-duration: 89s;
+		animation-delay: -71s;
+		transform-origin: -5vw -23vh;
+		box-shadow: -100vmin 0 13.269376230706396vmin currentColor;
+	}
+	.background span:nth-child(4) {
+		color: #888aa0;
+		top: 98%;
+		left: 83%;
+		animation-duration: 61s;
+		animation-delay: -57s;
+		transform-origin: 19vw -16vh;
+		box-shadow: 100vmin 0 13.465063933009704vmin currentColor;
+	}
+	.background span:nth-child(5) {
+		color: #4b6477;
+		top: 73%;
+		left: 100%;
+		animation-duration: 312s;
+		animation-delay: -390s;
+		transform-origin: 23vw -6vh;
+		box-shadow: -100vmin 0 12.719463296930117vmin currentColor;
+	}
+	.background span:nth-child(6) {
+		color: #888aa0;
+		top: 6%;
+		left: 84%;
+		animation-duration: 176s;
+		animation-delay: -255s;
+		transform-origin: 16vw 3vh;
+		box-shadow: -100vmin 0 13.358884039462355vmin currentColor;
+	}
+	.background span:nth-child(7) {
+		color: #888aa0;
+		top: 99%;
+		left: 9%;
+		animation-duration: 221s;
+		animation-delay: -385s;
+		transform-origin: -16vw -9vh;
+		box-shadow: 100vmin 0 13.435082385169103vmin currentColor;
+	}
+	.background span:nth-child(8) {
+		color: #a9a0bb;
+		top: 8%;
+		left: 92%;
+		animation-duration: 142s;
+		animation-delay: -99s;
+		transform-origin: -1vw -14vh;
+		box-shadow: -100vmin 0 13.456440775816723vmin currentColor;
+	}
+	.background span:nth-child(9) {
+		color: #a9a0bb;
+		top: 80%;
+		left: 70%;
+		animation-duration: 99s;
+		animation-delay: -124s;
+		transform-origin: 21vw -10vh;
+		box-shadow: 100vmin 0 13.007405893839119vmin currentColor;
+	}
+	.background span:nth-child(10) {
+		color: #888aa0;
+		top: 42%;
+		left: 2%;
+		animation-duration: 70s;
+		animation-delay: -341s;
+		transform-origin: -15vw -23vh;
+		box-shadow: 100vmin 0 13.005431373357645vmin currentColor;
+	}
+	.background span:nth-child(11) {
+		color: #a9a0bb;
+		top: 28%;
+		left: 2%;
+		animation-duration: 244s;
+		animation-delay: -369s;
+		transform-origin: -17vw -16vh;
+		box-shadow: 100vmin 0 13.351086475613746vmin currentColor;
+	}
+	.background span:nth-child(12) {
+		color: #4b6477;
+		top: 80%;
+		left: 50%;
+		animation-duration: 117s;
+		animation-delay: -399s;
+		transform-origin: 24vw 8vh;
+		box-shadow: 100vmin 0 12.979558964166843vmin currentColor;
+	}
+	.background span:nth-child(13) {
+		color: #888aa0;
+		top: 74%;
+		left: 65%;
+		animation-duration: 283s;
+		animation-delay: -50s;
+		transform-origin: 13vw 14vh;
+		box-shadow: 100vmin 0 13.282742227479792vmin currentColor;
+	}
+	.background span:nth-child(14) {
+		color: #888aa0;
+		top: 64%;
+		left: 61%;
+		animation-duration: 194s;
+		animation-delay: -278s;
+		transform-origin: -6vw 4vh;
+		box-shadow: -100vmin 0 13.333280580396286vmin currentColor;
+	}
+	.background span:nth-child(15) {
+		color: #a9a0bb;
+		top: 11%;
+		left: 86%;
+		animation-duration: 403s;
+		animation-delay: -329s;
+		transform-origin: 3vw 0vh;
+		box-shadow: -100vmin 0 13.1162690433691vmin currentColor;
+	}
+	.background span:nth-child(16) {
+		color: #4b6477;
+		top: 14%;
+		left: 59%;
+		animation-duration: 100s;
+		animation-delay: -15s;
+		transform-origin: -23vw 21vh;
+		box-shadow: -100vmin 0 13.30508866110655vmin currentColor;
+	}
+	.background span:nth-child(17) {
+		color: #888aa0;
+		top: 68%;
+		left: 45%;
+		animation-duration: 394s;
+		animation-delay: -137s;
+		transform-origin: 18vw -20vh;
+		box-shadow: -100vmin 0 12.809008306332636vmin currentColor;
+	}
+	.background span:nth-child(18) {
+		color: #a9a0bb;
+		top: 7%;
+		left: 33%;
+		animation-duration: 132s;
+		animation-delay: -346s;
+		transform-origin: -22vw -17vh;
+		box-shadow: -100vmin 0 12.940258664941906vmin currentColor;
+	}
+	.background span:nth-child(19) {
+		color: #a9a0bb;
+		top: 24%;
+		left: 65%;
+		animation-duration: 49s;
+		animation-delay: -44s;
+		transform-origin: 0vw -24vh;
+		box-shadow: -100vmin 0 12.733081490401828vmin currentColor;
+	}
+	.background span:nth-child(20) {
+		color: #888aa0;
+		top: 98%;
+		left: 49%;
+		animation-duration: 204s;
+		animation-delay: -160s;
+		transform-origin: -1vw 3vh;
+		box-shadow: -100vmin 0 13.05844646387434vmin currentColor;
+	}
+	.background span:nth-child(21) {
+		color: #a9a0bb;
+		top: 2%;
+		left: 29%;
+		animation-duration: 294s;
+		animation-delay: -272s;
+		transform-origin: 13vw -18vh;
+		box-shadow: -100vmin 0 12.626917095797205vmin currentColor;
+	}
+	.background span:nth-child(22) {
+		color: #a9a0bb;
+		top: 73%;
+		left: 32%;
+		animation-duration: 424s;
+		animation-delay: -59s;
+		transform-origin: 19vw 3vh;
+		box-shadow: 100vmin 0 13.092155905631065vmin currentColor;
+	}
+	.background span:nth-child(23) {
+		color: #888aa0;
+		top: 45%;
+		left: 93%;
+		animation-duration: 277s;
+		animation-delay: -215s;
+		transform-origin: 0vw -14vh;
+		box-shadow: 100vmin 0 12.768802405913084vmin currentColor;
+	}
+	.background span:nth-child(24) {
+		color: #4b6477;
+		top: 35%;
+		left: 40%;
+		animation-duration: 375s;
+		animation-delay: -205s;
+		transform-origin: -16vw -21vh;
+		box-shadow: -100vmin 0 12.845025825087218vmin currentColor;
+	}
+	.background span:nth-child(25) {
+		color: #a9a0bb;
+		top: 82%;
+		left: 77%;
+		animation-duration: 211s;
+		animation-delay: -150s;
+		transform-origin: 15vw -14vh;
+		box-shadow: 100vmin 0 12.825514275205975vmin currentColor;
+	}
+	.background span:nth-child(26) {
+		color: #4b6477;
+		top: 99%;
+		left: 95%;
+		animation-duration: 342s;
+		animation-delay: -118s;
+		transform-origin: -16vw -10vh;
+		box-shadow: 100vmin 0 13.09952938429165vmin currentColor;
+	}
+	.background span:nth-child(27) {
+		color: #a9a0bb;
+		top: 24%;
+		left: 43%;
+		animation-duration: 191s;
+		animation-delay: -249s;
+		transform-origin: 10vw 25vh;
+		box-shadow: -100vmin 0 12.948079018854608vmin currentColor;
+	}
+	.background span:nth-child(28) {
+		color: #888aa0;
+		top: 35%;
+		left: 83%;
+		animation-duration: 38s;
+		animation-delay: -5s;
+		transform-origin: -15vw 21vh;
+		box-shadow: -100vmin 0 12.884993041770123vmin currentColor;
+	}
+	.background span:nth-child(29) {
+		color: #4b6477;
+		top: 50%;
+		left: 19%;
+		animation-duration: 83s;
+		animation-delay: -367s;
+		transform-origin: -17vw 24vh;
+		box-shadow: 100vmin 0 12.943907699048086vmin currentColor;
+	}
+	.background span:nth-child(30) {
+		color: #4b6477;
+		top: 94%;
+		left: 43%;
+		animation-duration: 139s;
+		animation-delay: -151s;
+		transform-origin: 15vw 13vh;
+		box-shadow: -100vmin 0 13.188888046545854vmin currentColor;
+	}
+	.background span:nth-child(31) {
+		color: #4b6477;
+		top: 1%;
+		left: 30%;
+		animation-duration: 276s;
+		animation-delay: -118s;
+		transform-origin: 20vw -13vh;
+		box-shadow: 100vmin 0 12.67400347628477vmin currentColor;
+	}
+	.background span:nth-child(32) {
+		color: #a9a0bb;
+		top: 62%;
+		left: 91%;
+		animation-duration: 179s;
+		animation-delay: -95s;
+		transform-origin: 21vw 0vh;
+		box-shadow: 100vmin 0 13.078495151792405vmin currentColor;
+	}
+	.background span:nth-child(33) {
+		color: #a9a0bb;
+		top: 62%;
+		left: 24%;
+		animation-duration: 176s;
+		animation-delay: -417s;
+		transform-origin: 11vw 1vh;
+		box-shadow: -100vmin 0 13.180095388225237vmin currentColor;
+	}
+	.background span:nth-child(34) {
+		color: #4b6477;
+		top: 44%;
+		left: 7%;
+		animation-duration: 15s;
+		animation-delay: -23s;
+		transform-origin: -5vw 24vh;
+		box-shadow: -100vmin 0 12.99638150831451vmin currentColor;
+	}
+	.background span:nth-child(35) {
+		color: #888aa0;
+		top: 41%;
+		left: 18%;
+		animation-duration: 52s;
+		animation-delay: -66s;
+		transform-origin: 10vw 18vh;
+		box-shadow: 100vmin 0 12.881618623995024vmin currentColor;
+	}
+	.background span:nth-child(36) {
+		color: #888aa0;
+		top: 32%;
+		left: 75%;
+		animation-duration: 377s;
+		animation-delay: -252s;
+		transform-origin: 19vw -21vh;
+		box-shadow: -100vmin 0 13.235523992130878vmin currentColor;
+	}
+	.background span:nth-child(37) {
+		color: #4b6477;
+		top: 26%;
+		left: 96%;
+		animation-duration: 352s;
+		animation-delay: -359s;
+		transform-origin: -22vw -3vh;
+		box-shadow: 100vmin 0 13.203141789834469vmin currentColor;
+	}
+	.background span:nth-child(38) {
+		color: #4b6477;
+		top: 63%;
+		left: 64%;
+		animation-duration: 9s;
+		animation-delay: -70s;
+		transform-origin: 16vw 10vh;
+		box-shadow: 100vmin 0 12.63072769188053vmin currentColor;
+	}
+	.background span:nth-child(39) {
+		color: #a9a0bb;
+		top: 69%;
+		left: 81%;
+		animation-duration: 56s;
+		animation-delay: -361s;
+		transform-origin: -17vw 11vh;
+		box-shadow: 100vmin 0 13.123746520776026vmin currentColor;
+	}
+	.background span:nth-child(40) {
+		color: #888aa0;
+		top: 54%;
+		left: 33%;
+		animation-duration: 142s;
+		animation-delay: -2s;
+		transform-origin: 4vw 24vh;
+		box-shadow: 100vmin 0 13.216474278399133vmin currentColor;
+	}
+	.background span:nth-child(41) {
+		color: #4b6477;
+		top: 56%;
+		left: 10%;
+		animation-duration: 65s;
+		animation-delay: -105s;
+		transform-origin: 3vw -24vh;
+		box-shadow: 100vmin 0 13.322200697362886vmin currentColor;
+	}
+	.background span:nth-child(42) {
+		color: #4b6477;
+		top: 2%;
+		left: 39%;
+		animation-duration: 213s;
+		animation-delay: -62s;
+		transform-origin: 4vw 10vh;
+		box-shadow: -100vmin 0 12.580279613916804vmin currentColor;
+	}
+	.background span:nth-child(43) {
+		color: #888aa0;
+		top: 100%;
+		left: 49%;
+		animation-duration: 12s;
+		animation-delay: -71s;
+		transform-origin: 9vw -21vh;
+		box-shadow: 100vmin 0 13.356960223158397vmin currentColor;
+	}
+	.background span:nth-child(44) {
+		color: #a9a0bb;
+		top: 75%;
+		left: 59%;
+		animation-duration: 286s;
+		animation-delay: -81s;
+		transform-origin: -6vw 18vh;
+		box-shadow: 100vmin 0 12.718648874626872vmin currentColor;
+	}
+	.background span:nth-child(45) {
+		color: #888aa0;
+		top: 22%;
+		left: 12%;
+		animation-duration: 87s;
+		animation-delay: -298s;
+		transform-origin: -17vw 5vh;
+		box-shadow: 100vmin 0 13.066314361220197vmin currentColor;
+	}
+
+	</style>
+	<script>
+	
+	function allowDrop(ev) {
+		ev.preventDefault();
+	}
+	
+	function swapNodes(n1, n2) {
+		var p1 = n1.parentNode;
+		var p2 = n2.parentNode;
+		var i1, i2;
+
+		if ( !p1 || !p2 || p1.isEqualNode(n2) || p2.isEqualNode(n1) ) return;
+
+		for (var i = 0; i < p1.children.length; i++) {
+			if (p1.children[i].isEqualNode(n1)) {
+				i1 = i;
+			}
+		}
+		for (var i = 0; i < p2.children.length; i++) {
+			if (p2.children[i].isEqualNode(n2)) {
+				i2 = i;
+			}
+		}
+
+		if ( p1.isEqualNode(p2) && i1 < i2 ) {
+			i2++;
+		}
+		p1.insertBefore(n2, p1.children[i1]);
+		p2.insertBefore(n1, p2.children[i2]);
+	}
+
+	function drag(ev) {
+		ev.dataTransfer.setData("text", ev.target.id);
+		var eles = document.querySelectorAll(".thing");
+		for (var i=0;i<eles.length;i++){
+			if (eles[i].id == ev.target.id){continue;}
+			eles[i].style.boxShadow = "0px 0px 8px 2px #Fff";
+		}
+		var eles = document.querySelectorAll(".empty");
+		for (var i=0;i<eles.length;i++){
+			eles[i].style.boxShadow = "0px 0px 8px 2px #Fff";
+		}
+	}
+
+	function drop(ev) {
+		ev.preventDefault();
+		var data = ev.dataTransfer.getData("text");
+		var origThing = document.getElementById(data);
+		console.log(origThing);
+		console.log(data);
+		console.log(ev);
+		ev.target.style.border = "";
+		origThing.style.border = "";
+		  //var newThing = origThing.cloneNode(true);
+		  
+		var eles = document.querySelectorAll(".thing");
+		for (var i=0;i<eles.length;i++){
+			eles[i].style.boxShadow =  "unset";
+		}
+		var eles = document.querySelectorAll(".empty");
+		for (var i=0;i<eles.length;i++){
+			eles[i].style.boxShadow = "unset";
+		}
+		  
+		if (ev.target.classList.contains("thing")){
+			//ev.target.parentNode.insertBefore(origThing, ev.target.nextSibling);
+			//elem.parentNode.insertBefore(elem, elem.parentNode.firstChild);
+			swapNodes( ev.target, origThing);
+			var slot = origThing.dataset.slot;
+			origThing.dataset.slot = ev.target.dataset.slot;
+			ev.target.dataset.slot = slot;
+			var oldColor = origThing.style.backgroundColor;
+			origThing.style.backgroundColor = ev.target.style.backgroundColor;
+			ev.target.style.backgroundColor = oldColor;
+		} else if (ev.target.classList.contains("empty")){
+		
+			if (!ev.target.dataset.slot){return;}
+			if (ev.target.dataset.slot=="undefined"){return;}
+			if (ev.target.dataset.slot=="undefined"){return;}
+			ev.target.parentNode.insertBefore(origThing, ev.target.nextSibling);
+			
+			console.warn(origThing);
+			
+			if (origThing.dataset.slot && (origThing.dataset.slot!=="undefined")){
+				document.querySelector(".empty[data-slot='"+origThing.dataset.slot+"']").style.display = "block";
+			}
+			origThing.dataset.slot = ev.target.dataset.slot;
+			ev.target.style.display = "none";
+			origThing.style.backgroundColor = ev.target.style.backgroundColor;
+		}
+	}
+	
+	function dragenter(event) {
+		event.preventDefault();
+		if ( event.target.classList.contains("thing") ) {
+			event.target.style.border = "3px dotted black";
+		} else if (event.target.classList.contains("empty")){
+			event.target.style.border =  "3px dotted black";
+		}
+	}
+
+	function dragleave(event) {
+		event.preventDefault();
+		if (event.target.classList.contains("thing")){
+			event.target.style.border = "";
+		} else if (event.target.classList.contains("empty")){
+			event.target.style.border = "";
+		}
+	}
+
+	
+	function dropRemove(ev) {
+		ev.preventDefault();
+		var data = ev.dataTransfer.getData("text");
+		var origThing = document.getElementById(data);
+		
+		ev.target.style.border = "";
+		origThing.style.border = "";
+		
+		
+		if (origThing.dataset.slot){
+			document.querySelector(".empty[data-slot='"+origThing.dataset.slot+"']").style.display = "block";
+			delete origThing.dataset.slot;
+		}
+		origThing.style.backgroundColor = "#000";
+		if (ev.target.classList.contains("thing")){
+			ev.target.parentNode.insertBefore(origThing, ev.target.nextSibling);
+		} else {
+			ev.target.appendChild(origThing);
+		}
+		document.getElementById("col2").appendChild(document.getElementById("delete"));
+	}
+	
+	var streamIDs = [];
+	var slotsNeeded = 1;
+	
+	function updateList(){
+		//<div id="col2" ondrop="dropRemove(event)" ondragover="allowDrop(event)">
+		//	<div class="thing" draggable="true" ondragstart="drag(event)" id="thing4">THING 4</div>	
+		//	<div class="thing" draggable="true" ondragstart="drag(event)" id="thing1">THING 1</div>	
+		//</div>
+		for (var i=0;i<streamIDs.length;i++){
+			if (!document.getElementById("sid_"+streamIDs[i])){
+				var thing = document.createElement("div");
+				thing.draggable = true;
+				thing.classList.add("thing");
+				thing.addEventListener("dragstart", drag);
+				
+				thing.dataset.sid = streamIDs[i];
+				thing.id = "sid_"+streamIDs[i];
+				thing.innerText = streamIDs[i];
+				document.getElementById("col2").appendChild(thing);
+			}
+		}
+		
+		document.getElementById("col2").appendChild(document.getElementById("delete"));
+	}
+
+	function loadIframe(){ 
+		
+		document.getElementById("container").innerHTML = "";
+		
+		var iframe = document.createElement("iframe");
+		var iframeContainer = document.createElement("div");
+		iframe.allow = "autoplay;camera;microphone;fullscreen;picture-in-picture;display-capture;";
+
+		var promptRoom = prompt("Enter a room name to use");
+		if (promptRoom){
+			var iframesrc = "./?transparent&cleanoutput&director="+promptRoom;
+		} else {
+			promptRoom = "testroom123312";
+			var iframesrc = "./?transparent&cleanoutput&director="+promptRoom;
+		}
+		
+		function remoteActivate(){
+			if (this.dataset.layout){
+				var layout = JSON.parse(this.dataset.layout);
+				var combined = {};
+				for (var i=0;i<layout.length;i++){
+					//layout[i].z = i;
+					if (!layout[i]){continue;}
+					if (!("i" in layout[i])){continue;}
+					
+					var stream = document.querySelector(".thing[data-slot='"+(layout[i].i+1)+"'");
+					console.log(stream);
+					console.log(i);
+					console.log(layout);
+					if (!stream){continue;}
+					combined[stream.dataset.sid] = layout[i];
+				}
+			} else {
+				var layout = null;
+				combined = false;
+			}
+			console.log(combined);
+			iframe.contentWindow.postMessage({"scene":"0", "layout":combined}, '*');
+			var layoutButtons = document.querySelectorAll("canvas[data-layout]");
+			
+			for (var i = 0;i<layoutButtons.length;i++){
+				layoutButtons[i].classList.remove("pressed");
+			}
+			this.classList.add("pressed");
+		}
+		
+		
+		var button = document.createElement("button");
+		button.innerHTML = "Refresh list"; 
+		button.onclick = function(){iframe.contentWindow.postMessage({"getStreamIDs":true}, '*');};
+		button.style.display = "block";
+		document.getElementById("sources").appendChild(button);
+		
+		var a = document.createElement("a");
+		a.innerHTML = "Invite Guest Link"; 
+		a.href = "./?room="+promptRoom+"&broadcast";
+		a.target = "_blank";
+		document.getElementById("sources").appendChild(a);
+		
+		var a = document.createElement("a");
+		a.innerHTML = "Scene View Link"; 
+		a.href = "./?scene=0&room="+promptRoom;
+		a.target = "_blank";
+		document.getElementById("sources").appendChild(a);
+		
+		
+		
+		var colors = [
+			"#00AAAA",
+			"#FF0000",
+			"#0000FF",
+			"#AA00AA",
+			"#00FF00",
+			"#AAAA00",
+			"#AACC44",
+			"#CCAA44",
+			"#CC44AA",
+			"#44AACC"
+		];
+		
+		
+		var slots = document.getElementById("col1").children;
+		for (var i=0;i<slots.length;i++){
+			slots[i].style.backgroundColor = colors[i];
+			slots[i].style.opacity = "0.9";
+		}
+		
+		function addLayout(){
+			var layout = prompt("Enter your new layout as a JSON string", '[{"x":0,"y":0,"w":100,"h":100}]');
+			layout = JSON.parse(layout);
+			console.log(layout);
+			drawLayout(layout, true);
+		}
+		
+		function drawLayout(layoutOriginal, customlayout=false){
+		
+			var layout = [];
+			for (var i=0;i<layoutOriginal.length;i++){
+				if (!layoutOriginal[i]){
+					continue;
+				}
+				layoutOriginal[i].i = i; // slot index (0 == slot 1)
+				layout.push(layoutOriginal[i]);
+			}
+			
+			function compare( a, b ) { // sorts layout based on z-index.
+				var aa = a.z || 0;
+				var bb = b.z || 0;
+				if ( aa > bb ){
+					return 1;
+				}
+				if ( aa < bb ){
+					return -1;
+				}
+				return 0;
+			}
+			layout.sort(compare);
+			
+			
+			var canvas = document.createElement('canvas');
+			canvas.width="80";
+			canvas.height="45";
+			var ctx = canvas.getContext('2d');
+			if (customlayout){
+				document.getElementById("addlayout").parentNode.insertBefore(canvas, document.getElementById("addlayout"));
+			} else {
+				document.getElementById("container").appendChild(canvas);
+			}
+			ctx.beginPath();
+			ctx.rect(0, 0, 80, 45);
+			ctx.fillStyle = "#000";
+			ctx.fill();
+			
+			for (var i=0;i<layout.length;i++){
+				
+				ctx.fillStyle = colors[layout[i].i];
+				ctx.lineWidth = 3;
+				var x = layout[i].x*0.8 || 0;
+				var y = layout[i].y*0.45 || 0;
+				var w = layout[i].w*0.8 || 0;
+				var h = layout[i].h*0.45 || 0;
+				
+				ctx.beginPath();
+				ctx.rect(x, y, w, h);
+				ctx.fill();
+			}
+			
+			canvas.dataset.layout = JSON.stringify(layout);
+			canvas.onclick = remoteActivate;
+			
+			if (slotsNeeded<layout.length){
+				slotsNeeded = layout.length;
+				for (var i=0;i<slotsNeeded;i++){
+					if (!document.querySelector("div[data-slot='"+(i+1)+"']")){
+						var emptySlot = document.createElement("div");
+						emptySlot.innerHTML = "SLOT "+(i+1);
+						emptySlot.classList.add("empty");
+						emptySlot.dataset.slot = (i+1)+"";
+						emptySlot.style.backgroundColor = colors[i];
+						document.getElementById("col1").appendChild(emptySlot);					
+					}
+				}
+			}
+		}
+		
+		function drawAutoLayout(){
+			
+			var canvas = document.createElement('canvas');
+			canvas.width="80";
+			canvas.height="45";
+			var ctx = canvas.getContext('2d');
+			document.getElementById("container").appendChild(canvas);
+			ctx.beginPath();
+			ctx.rect(0, 0, 80, 45);
+			ctx.fillStyle = "#000";
+			ctx.fill();
+			
+			ctx.fillStyle = "#FFF";
+			ctx.font = "15px Arial";
+			ctx.fillText(" Clear ", 16, 18);
+			ctx.fillText(" Layout ", 12, 35);
+			
+			canvas.dataset.layout = false;
+			canvas.onclick = remoteActivate;
+			
+			
+		}
+		
+		function drawAddNewLayout(){
+			
+			var canvas = document.createElement('canvas');
+			canvas.width="80";
+			canvas.height="45";
+			var ctx = canvas.getContext('2d');
+			document.getElementById("container").appendChild(canvas);
+			ctx.beginPath();
+			ctx.rect(0, 0, 80, 45);
+			ctx.fillStyle = "#000";
+			ctx.fill();
+			
+			ctx.fillStyle = "#FFF";
+			ctx.font = "15px Arial";
+			ctx.fillText(" Add  ", 20, 18);
+			ctx.fillText(" Layout ", 12, 35);
+			canvas.id = "addlayout";
+			canvas.dataset.layout = false;
+			canvas.onclick = addLayout;
+			
+			
+		}
+		
+		drawAutoLayout();
+		
+		
+		var data = [
+			{x:0, y:0, w:100, h:100}
+		];
+		drawLayout(data);
+		
+		
+		var data = [
+			null,
+			{x:0, y:0, w:100, h:100, c:true}
+		];
+		drawLayout(data);
+		
+		
+		var data = [
+			{x:0, y:25, w:50, h:50, c:true},
+			{x:50, y:25, w:50, h:50, c:true}
+		];
+		drawLayout(data);
+		
+		
+		
+		var data = [
+			{x:70, y:70, w:30, h:30, z:1, c:false},
+			{x:0, y:0, w:100, h:100,z:0, c:true}
+		];
+		drawLayout(data);
+		
+		
+		var data = [
+			{x:0, y:0, w:100, h:100,z:0, c:true},
+			{x:70, y:70, w:30, h:30, z:1, c:false}
+		];
+		drawLayout(data);
+		
+		
+		var data = [
+			{x:0, y:0, w:20, h:20, z:1, c:false},
+			{x:0, y:0, w:100, h:100,z:0, c:true}
+		];
+		drawLayout(data);
+		
+		
+		var data = [
+			{x:0, y:0, w:50, h:50},
+			{x:50, y:0, w:50, h:50},
+			{x:0, y:50, w:50, h:50},
+			{x:50, y:50, w:50, h:50}
+		];
+		drawLayout(data);
+		
+		
+		var data = [
+			{x:0, y:16.667, w:66.667, h:66.667},
+			{x:66.667, y:0, w:33.333, h:33.333},
+			{x:66.667, y:33.333, w:33.333, h:33.333},
+			{x:66.667, y:66.667, w:33.333, h:33.333}
+		];
+		drawLayout(data);
+		
+		
+		var data = [
+			{x:66.667, y:0, w:33.333, h:33.333},
+			{x:0, y:16.667, w:66.667, h:66.667},
+			{x:66.667, y:33.333, w:33.333, h:33.333},
+			{x:66.667, y:66.667, w:33.333, h:33.333}
+		];
+		drawLayout(data);
+		
+		
+		var data = [
+			null,
+			null,
+			{x:0, y:0, w:100, h:100}
+		];
+		drawLayout(data);
+		
+		
+		var data = [
+			null,
+			null,
+			null,
+			{x:0, y:0, w:100, h:100}
+		];
+		drawLayout(data);
+		
+		
+		var data = [
+			null,
+			null,
+			{x:70, y:70, w:30, h:30, z:1, c:false},
+			{x:0, y:0, w:100, h:100,z:0, c:true}
+		];
+		drawLayout(data);
+		
+		
+		var data = [
+			null,
+			null,
+			{x:0, y:25, w:50, h:50, c:true},
+			{x:50, y:25, w:50, h:50, c:true}
+		];
+		drawLayout(data);
+		
+		
+		drawAddNewLayout();
+		
+		
+		iframe.src = iframesrc;
+		iframeContainer.appendChild(iframe);
+		document.getElementById("container").appendChild(iframeContainer);
+		
+		
+		////////////  LISTEN FOR EVENTS
+
+		var eventMethod = window.addEventListener ? "addEventListener" : "attachEvent";
+		var eventer = window[eventMethod];
+		var messageEvent = eventMethod === "attachEvent" ? "onmessage" : "message";
+
+
+		/// If you have a routing system setup, you could have just one global listener for all iframes instead.
+		
+		eventer(messageEvent, function (e) {
+			if (e.source != iframe.contentWindow){return} // reject messages send from other iframes
+			
+			
+			if ("action" in e.data){
+				var outputWindow = document.createElement("div");
+				outputWindow.innerHTML = "event: "+e.data.action+"<br />";
+				outputWindow.style.border="1px dotted black";
+				iframeContainer.appendChild(outputWindow);
+				
+				if (e.data.action === "new-view-connection"){
+					iframe.contentWindow.postMessage({"getStreamIDs":true}, '*');
+				}
+			}
+			
+			
+			if ("streamIDs" in e.data){
+				streamIDs = [];
+				for (var key in e.data.streamIDs){
+					streamIDs.push(key);
+				}
+				updateList();
+				console.log(streamIDs);
+			}
+			
+		});
+	}
+	</script>
+</head>
+<body onload="loadIframe();">
+	<div class="col" id="sources">
+		<div id="col2" ondrop="dropRemove(event)" ondragover="allowDrop(event)" ondragenter="dragenter(event)" ondragleave="dragleave(event)">
+			<div class="thing" draggable="false" id="delete">Remove</div>	
+		</div>
+	</div>
+
+	<div class="col" id="col1" ondrop="drop(event)" ondragover="allowDrop(event)" ondragenter="dragenter(event)" ondragleave="dragleave(event)">
+		<div class="empty" data-slot="1">SLOT 1</div>
+		<div class="empty" data-slot="2">SLOT 2</div>
+		<div class="empty" data-slot="3">SLOT 3</div>
+		<div class="empty" data-slot="4">SLOT 4</div>
+	</div>
+	<div id="container">
+	</div>
+	<div class="background">
+   <span></span>
+   <span></span>
+   <span></span>
+   <span></span>
+   <span></span>
+   <span></span>
+   <span></span>
+   <span></span>
+   <span></span>
+   <span></span>
+   <span></span>
+   <span></span>
+   <span></span>
+   <span></span>
+   <span></span>
+   <span></span>
+   <span></span>
+   <span></span>
+   <span></span>
+   <span></span>
+   <span></span>
+   <span></span>
+   <span></span>
+   <span></span>
+   <span></span>
+   <span></span>
+   <span></span>
+   <span></span>
+   <span></span>
+   <span></span>
+   <span></span>
+   <span></span>
+   <span></span>
+   <span></span>
+   <span></span>
+   <span></span>
+   <span></span>
+   <span></span>
+   <span></span>
+   <span></span>
+   <span></span>
+   <span></span>
+   <span></span>
+   <span></span>
+   <span></span>
+   <span></span>
+</div>
+</body>
+</html>

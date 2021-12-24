@@ -43,8 +43,29 @@
 				return raw ? parseInt(raw[2], 10) : false;
 			}
 			
-			if (!getChromeVersion() || getChromeVersion < 60){
-				alert("This tool really only works with recent Chromium based browsers; Firefox or Safari are not supported");
+			function safariVersion() {
+				try {
+					var ver = navigator.appVersion.split("Version/");
+					if (ver.length > 1) {
+						ver = ver[1].split(" Safari");
+					}
+					if (ver.length > 1) {
+						ver = ver[0].split(".");
+					}
+					if (ver.length > 1) {
+						ver = parseInt(ver[0]);
+					} else {
+						ver = 0;
+					}
+				} catch (e) {
+					return 0;
+				}
+				return ver;
+			}
+
+			
+			if (!((safariVersion() && safariVersion()>=15) || (getChromeVersion() || getChromeVersion >=60))){
+				alert("This tool really only works with recent Chromium based browsers; Firefox is not supported: "+ safariVersion());
 			}
 		
 			function prettyPrintJsonToId(json, element) {

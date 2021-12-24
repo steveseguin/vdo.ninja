@@ -2,7 +2,7 @@
 	<head>
 		<meta charset="utf8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1" />
-		<title>OBSN Monitoring</title>
+		<title>VDO.Ninja Monitoring</title>
 		<style>
 		
 		body {
@@ -99,7 +99,9 @@
 
 		canvas {
 			background-color: black;
-			margin: 20px;
+			margin: 1vw;
+			width: 22vw;
+			height: 160px;
 		}
 
 		#log {
@@ -430,14 +432,12 @@
 	<body onload="loadIframe();">
 		<div id="container">
 			<h1 >
-				<span id="streamID_header">OBS.Ninja Remote Monitor</span>
+				<span id="streamID_header">VDO.Ninja Remote Monitor</span>
 			</h1>
 		</div>
 		
 		<div id="graphs" style="display:none">
-		
-			
-			
+
 			<div class="graph">
 				<h2>Bitrate (kbps)</h2>
 				<span>0</span>
@@ -447,7 +447,7 @@
 			<div class="graph">
 				<h2>Reported lost packets (per second)</h2>
 				<span>0</span>
-				<canvas  data-nackrate-graph="true"></canvas>
+				<canvas data-nackrate-graph="true"></canvas>
 			</div>
 
 			<div class="graph">

@@ -135,18 +135,23 @@
 		iframeContainer.appendChild(button);
 		
 		var button = document.createElement("button");
+		button.innerHTML = "0 Bitrate";
+		button.onclick = function(){iframe.contentWindow.postMessage({"bitrate":0, "target": "*"}, '*');};
+		iframeContainer.appendChild(button);
+		
+		var button = document.createElement("button");
 		button.innerHTML = "Low Bitrate";
-		button.onclick = function(){iframe.contentWindow.postMessage({"bitrate":30}, '*');};
+		button.onclick = function(){iframe.contentWindow.postMessage({"bitrate":30, "target": "*"}, '*');};
 		iframeContainer.appendChild(button);
 		
 		var button = document.createElement("button");
 		button.innerHTML = "High Bitrate";
-		button.onclick = function(){iframe.contentWindow.postMessage({"bitrate":5000}, '*');};
+		button.onclick = function(){iframe.contentWindow.postMessage({"bitrate":5000, "target": "*"}, '*');};
 		iframeContainer.appendChild(button);
 		
 		var button = document.createElement("button");
 		button.innerHTML = "Default Bitrate";
-		button.onclick = function(){iframe.contentWindow.postMessage({"bitrate":-1}, '*');};
+		button.onclick = function(){iframe.contentWindow.postMessage({"bitrate":-1, "target": "*"}, '*');};
 		iframeContainer.appendChild(button);
 		
 		var button = document.createElement("button");
