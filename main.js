@@ -141,10 +141,6 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 	if (urlParams.has('cleanoutput') || urlParams.has('clean') || urlParams.has('cleanish')) {
 		session.cleanOutput = true;
 	}
-	
-	if (urlParams.has('cleanviewer') || urlParams.has('cv')) {
-		session.cleanViewer = true;
-	}
 
 	if (urlParams.has('retrytimeout')) {
 		session.retryTimeout = parseInt(urlParams.get('retrytimeout'));
@@ -636,7 +632,6 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 		document.documentElement.style.setProperty('--fit-style', 'cover');
 		document.documentElement.style.setProperty('--myvideo-max-width', '100vw');
 		document.documentElement.style.setProperty('--myvideo-width', '100vw');
-		document.documentElement.style.setProperty('--myvideo-height', '100vh');
 	} 
 
 	if (urlParams.has('record')) {
@@ -874,10 +869,6 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 	}
 
 	if (urlParams.has('transparent') || urlParams.has('transparency')) { // sets the window to be transparent - useful for IFRAMES?
-		session.transparent=true;
-	}
-	
-	if (session.transparent){
 		getById("main").style.backgroundColor = "rgba(0,0,0,0)";
 		document.documentElement.style.setProperty('--container-color', '#0000');
 		document.documentElement.style.setProperty('--background-color', '#0000');
@@ -1300,6 +1291,8 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 		session.micDelay = parseInt(session.micDelay) || 0;
 		session.disableWebAudio = false;
 	}
+	
+	
 
 	if (urlParams.has('tips')){
 		getById("guestTips").style.display="flex";
@@ -1400,9 +1393,9 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 				}
 			}
 			
-			//if (navigator.userAgent.indexOf('Mac OS X') != -1) {
-			//	session.codec = "h264"; // default the codec to h264 if OBS is on macOS (that's all it supports with hardware) // oct 2021, OBS now supports vp8 and actually breaks with h264 android devices.
-			//}
+			if (navigator.userAgent.indexOf('Mac OS X') != -1) {
+				session.codec = "h264"; // default the codec to h264 if OBS is on macOS (that's all it supports with hardware)
+			}
 			
 			if (session.disableOBS===false){
 				window.addEventListener("obsSourceVisibleChanged", obsSourceVisibleChanged);
@@ -2547,6 +2540,7 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 		}
 	}
 	
+
 	if ((session.roomid) || (urlParams.has('roomid')) || (urlParams.has('r')) || (urlParams.has('room')) || (filename) || (session.permaid !== false)) {
 
 		var roomid = "";
@@ -3478,6 +3472,7 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 											getById("gridlayout").appendChild(session.rpcs[i].videoElement);
 										} catch(e){warnlog(e);}
 
+
 									} else if ("remove" in e.data) {
 										try {
 											session.rpcs[i].videoElement.parentNode.removeChild(session.rpcs[i].videoElement);
@@ -3601,6 +3596,7 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 							midiHotkeysNote(note,velocity);
 						});
 					}
+
 				}
 			}).catch(errorlog);
 		};
