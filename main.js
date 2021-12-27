@@ -179,6 +179,10 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 		getById("mutespeakerbutton").style.setProperty("display", "none", "important");
 	}
 	
+	if (urlParams.has('noscale') || urlParams.has('noscaling')) {
+		session.noScaling = true;
+	}
+	
 	if (urlParams.has('pusheffectsdata') ) {
 		session.pushEffectsData=true;
 	}
@@ -2796,8 +2800,11 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 				if (!session.directorPassword) {
 					window.focus();
 					session.directorPassword = await promptAlt(miscTranslations["enter-director-password"], true);
+				} else {
+					session.directorPassword = decodeURIComponent(session.directorPassword);
 				}
 				if (session.directorPassword){
+					session.directorPassword = sanitizePassword(session.directorPassword)
 					await generateHash(session.directorPassword + session.salt + "abc123", 12).then(function(hash) { // million to one error. 
 						log("dir room hash is " + hash);
 						session.directorHash = hash;
@@ -3553,7 +3560,7 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 					try{
 						var input = WebMidi.inputs[parseInt(session.midiOut)-1];
 						input.addListener("midimessage", function(e) {
-							console.log(e);
+							log(e);
 							var msg = {};
 							msg.midi = {};
 							msg.midi.d = e.data;

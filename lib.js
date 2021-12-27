@@ -627,7 +627,7 @@ async function confirmAlt(inputText, block=false){
 	return result;
 }
 
-var warnUserTimeout=null;
+var modalTimeout=null;
 function warnUser(message, timeout=false){
 	// Allows for multiple alerts to stack better.
 	// Every modal and backdrop has an increasing z-index
@@ -657,9 +657,9 @@ function warnUser(message, timeout=false){
 	
 	document.getElementById("modalBackdrop").addEventListener("click", closeModal);
 	
-	clearTimeout(warnUserTimeout);
+	clearTimeout(modalTimeout);
 	if (timeout){
-		warnUserTimeout = setTimeout(closeModal, timeout);
+		modalTimeout = setTimeout(closeModal, timeout);
 	}
 	getById("alertModal").addEventListener("click", function(e) {
 		e.stopPropagation();
@@ -668,6 +668,7 @@ function warnUser(message, timeout=false){
 	
 }
 function closeModal(){
+	clearTimeout(modalTimeout);
 	getById("modalBackdrop").innerHTML = ''; // Delete modal
 	getById("modalBackdrop").remove();
 	getById("alertModal").innerHTML = ''; // Delete modal
@@ -5213,14 +5214,16 @@ function printMyStats(menu) { // see: setupStatsMenu
 		
 		if (session.streamSrc && session.streamSrc){
 			session.streamSrc.getVideoTracks().forEach(function(track) {
-				if (obscam && (parseInt(track.getSettings().frameRate) == 30)) {
-					session.stats.video_settings =(track.getSettings().width || 0) + "x" + (track.getSettings().height || 0);
+				session.currentCameraConstraints = track.getSettings();
+				
+				if (obscam && (parseInt(session.currentCameraConstraints.frameRate) == 30)) {
+					session.stats.video_settings =(session.currentCameraConstraints.width || 0) + "x" + (session.currentCameraConstraints.height || 0);
 				} else {
-					var framerateFPS = track.getSettings().frameRate;
+					var framerateFPS = session.currentCameraConstraints.frameRate;
 					if (framerateFPS){
-						session.stats.video_settings = (track.getSettings().width || 0) + "x" + (track.getSettings().height || 0) + " @ " + (parseInt(framerateFPS * 100) / 100.0) + "fps";
+						session.stats.video_settings = (session.currentCameraConstraints.width || 0) + "x" + (session.currentCameraConstraints.height || 0) + " @ " + (parseInt(framerateFPS * 100) / 100.0) + "fps";
 					} else {
-						session.stats.video_settings = (track.getSettings().width || 0) + "x" + (track.getSettings().height || 0);
+						session.stats.video_settings = (session.currentCameraConstraints.width || 0) + "x" + (session.currentCameraConstraints.height || 0);
 					}
 				}
 			});
@@ -5806,7 +5809,7 @@ function updateStats(obsvc = false) {
 	}
 	
 	try {
-		getById(wcs).innerHTML = "";
+		getById(wcs).innerHTML = ""; 
 		ele.srcObject.getVideoTracks().forEach(
 			function(track) {
 				if ((obsvc) && (parseInt(track.getSettings().frameRate) == 30)) {
@@ -7309,6 +7312,7 @@ function updateForceRotate(){
 			
 			
 			const settings = track.getSettings();
+			session.currentCameraConstraints = settings;
 			if ("width" in settings){
 				if ("height" in settings){
 					if (settings.width < settings.height){
@@ -8630,6 +8634,7 @@ async function toggleCoDirector(ele){
 			ele.checked=false;
 			return;
 		}
+		session.directorPassword = sanitizePassword(session.directorPassword)
 	}
 	updateURL("codirector="+session.directorPassword, true, false);
 	getById("coDirectorEnableSpan").style.display = "none";
@@ -12070,12 +12075,12 @@ async function grabScreen(quality = 0, audio = true, videoOnEnd = false) {
 function toggleRoomSettings(){
 	
 	toggle(getById('roomSettings'));
-	
-	
-	if (document.getElementById("modalBackdrop")){
+	if (getById('roomSettings').style.display=="none"){
 		getById("modalBackdrop").innerHTML = ''; // Delete modal
 		getById("modalBackdrop").remove();
 	} else {
+		getById("modalBackdrop").innerHTML = ''; // Delete modal
+		getById("modalBackdrop").remove();
 		zindex = 25;
 		getById('roomSettings').style.zIndex = 25;
 		var modalTemplate = `<div id="modalBackdrop" style="z-index:24"></div>`;
@@ -12629,8 +12634,28 @@ async function grabVideo(quality = 0, eleName = 'previewWebcam', selector = "sel
 					}
 					if ((eleName == "previewWebcam") && document.getElementById("previewWebcam")){
 						session.videoElement.controls = true;
+						try {
+							var track0 = session.streamSrc.getVideoTracks();
+							if (track0.length) {
+								track0 = track0[0];
+								if (track0.getCapabilities) {
+									session.cameraConstraints = track0.getCapabilities();
+								} else {
+									session.cameraConstraints = {};
+								}
+								log(session.cameraConstraints);
+								if (track0.getSettings) {
+									session.currentCameraConstraints = track0.getSettings();
+								} else {
+									session.currentCameraConstraints = {};
+								}
+								log(session.currentCameraConstraints);
+							}
+						} catch (e) {
+							errorlog(e);
+						}
 					} else {
-						updateConstraintSliders();
+						updateConstraintSliders(); 
 					}
 					if (callback3){
 						try {
@@ -16637,6 +16662,8 @@ function listCameraSettings() {
 	try {
 		if (track0.getSettings) {
 			session.currentCameraConstraints = track0.getSettings();
+		} else {
+			session.currentCameraConstraints = {};
 		}
 	} catch (e) {
 		errorlog(e);
@@ -17481,6 +17508,16 @@ function createIframePopup() {
 		extras += "&privacy"; 
 	}
 	
+	if (session.meshcast){
+		extras += "&meshcast"; 
+	}
+	if (session.meshcastBitrate){
+		extras += "&mcb="+session.meshcastBitrate; 
+	}
+	if (session.meshcastCodec){
+		extras += "&mccodec="+session.meshcastCodec; 
+	}
+	
 	if (session.screensharequality!==false){
 		extras += "&q="+session.screensharequality;
 	} else if (session.quality){
@@ -17492,7 +17529,6 @@ function createIframePopup() {
 	if (session.label){
 		extras += "&label="+encodeURIComponent(session.label);
 	}
-	
 	if (session.screensharefps!==false){
 		extras += "&maxframerate="+parseInt(session.screensharefps*100)/100.0;
 	} 
@@ -17509,6 +17545,11 @@ function createIframePopup() {
 		extras += "&stereo="+session.screenshareStereo;
 	}
 	
+	/* if (session.noScaling){ // session.screenShareState=true already bypasses the optimization logic
+		extras += "&noScaling");
+	}
+	 */
+	 
 	if (session.muted){
 		iframe.src = "./?audiodevice=1&screenshare&transparent&cleanish&noheader&autostart&view&muted&room=" + session.roomid + "&push=" + iFrameID + extras;
 	} else {
@@ -19819,10 +19860,23 @@ function addAudioPipeline(UUID, track){  // INBOUND AUDIO EFFECTS
 }
 
 
-function changeGroup(ele){
-	var group = ele.dataset.value;
+function changeGroup(ele, state=null){
+
+	group = ele.dataset.value;
+	
 	var index = session.rpcs[ele.dataset.UUID].group.indexOf(group);
-	if (ele.classList.contains("pressed")){
+	
+	if (state===true){
+		ele.classList.add("pressed");
+		if (index === -1){
+			session.rpcs[ele.dataset.UUID].group.push(group);
+		}
+	} else if (state === false){
+		ele.classList.remove("pressed");
+		if (index > -1){
+			session.rpcs[ele.dataset.UUID].group.splice(index, 1);
+		}
+	} else if (ele.classList.contains("pressed")){
 		ele.classList.remove("pressed");
 		if (index > -1){
 			session.rpcs[ele.dataset.UUID].group.splice(index, 1);
@@ -20438,6 +20492,20 @@ function getGuestTargetScene(scene, id){
 	}
 	return element;
 }
+function getGuestTargetGroup(group, id){
+	var element = document.querySelectorAll('[data-action-type="toggle-group"][data-value="'+group+'"][data-sid="'+id+'"]'); // data-sid="P5MQpia"
+	if (!element.length){
+		element = document.querySelectorAll('[data-action-type="toggle-group"][data-value="'+group+'"][data--u-u-i-d]');
+		if (element[id]){
+			element = element[id];
+		} else {
+			return false
+		}
+	} else {
+		element = element[0];
+	}
+	return element;
+}
 
 function targetGuest(guestslot, action, value=null){
 	
@@ -20448,8 +20516,6 @@ function targetGuest(guestslot, action, value=null){
 	} else {
 		guestslot=1;
 	}
-	
-	
 	warnlog("guestslot "+guestslot);
 	warnlog("action "+action);
 	warnlog("value "+value);
@@ -20495,6 +20561,14 @@ function targetGuest(guestslot, action, value=null){
 		var element = getGuestTarget("toggle-remote-display", guestslot);
 		if (element) {
 			remoteDisplayMute(element);
+		}
+	} else if ((action == 8) || (action == "group")) {
+		if (value == "null" || value == null){
+			value = 1;
+		}
+		var element = getGuestTargetGroup(value, guestslot);
+		if (element) {
+			changeGroup(element, null, value);
 		}
 	} else if ((action == 12) || (action == "addScene2")) { 
 		var element = getGuestTargetScene(2, guestslot);
