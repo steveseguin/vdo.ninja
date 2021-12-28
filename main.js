@@ -90,6 +90,14 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 
 	
 	//// translation stuff ends ////
+	
+	if (urlParams.has('cleanoutput') || urlParams.has('clean') || urlParams.has('cleanish')) {
+		session.cleanOutput = true;
+	}
+	
+	if (urlParams.has('cleanviewer') || urlParams.has('cv')) {
+		session.cleanViewer = true;
+	}
 
 	if (!isIFrame){
 		if (getStorage("redirect") == "yes") {
@@ -107,6 +115,10 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 					setStorage("redirect", "yes", 1);
 					window.location.replace(cookieSettings);
 				}
+			} else {
+				var cookieSettings = decodeURI(getStorage("settings"));
+				setStorage("redirect", "yes", 1);
+				window.location.replace(cookieSettings);
 			}
 		}
 
@@ -138,13 +150,7 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 		} catch(e){}
 	}
 
-	if (urlParams.has('cleanoutput') || urlParams.has('clean') || urlParams.has('cleanish')) {
-		session.cleanOutput = true;
-	}
 	
-	if (urlParams.has('cleanviewer') || urlParams.has('cv')) {
-		session.cleanViewer = true;
-	}
 
 	if (urlParams.has('retrytimeout')) {
 		session.retryTimeout = parseInt(urlParams.get('retrytimeout'));
@@ -686,6 +692,7 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 		session.disableWebAudio = true;
 		session.audioEffects = false;
 		session.audioMeterGuest = false;
+		session.style = 1;
 	}
 	
 	if (urlParams.has('autoadd')) { // the streams we want to view; if set, but let blank, we will request no streams to watch.  
@@ -837,12 +844,13 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 	if (urlParams.has('showlabels') || urlParams.has('showlabel') || urlParams.has('sl')) {
 		session.showlabels = urlParams.get('showlabels') || urlParams.get('showlabel') || urlParams.get('sl') || "";
 		session.showlabels = sanitizeLabel(session.showlabels.replace(/[\W]+/g, "_").replace(/_+/g, '_'));
+		//session.style = 6;
+		session.showlabels = true;
+		
 		if (session.showlabels == "") {
-			session.showlabels = true;
 			session.labelstyle = false;
 		} else {
 			session.labelstyle = session.showlabels;
-			session.showlabels = true;
 		}
 	}
 
@@ -1450,6 +1458,13 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 		
 	}
 	
+	if (urlParams.has('retry')) {
+		session.forceRetry = parseInt(urlParams.get('retry')) || 30;
+	}
+	if (session.forceRetry){
+		setTimeout(function(){session.retryWatchInterval();},30000);
+	}
+	
 	var darkmode=false;
 	try {
 		if (urlParams.has("darkmode") || urlParams.has("nightmode")){
@@ -1593,6 +1608,9 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 	
 	if (urlParams.has('autojoin') || urlParams.has('autostart') || urlParams.has('aj') || urlParams.has('as')) {
 		session.autostart = true;
+	} 
+	
+	if (session.autostart){
 		if (session.screenshare!==false) {
 			delayedStartupFuncs.push([publishScreen]);
 		}
@@ -1891,6 +1909,11 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 		session.meshcastBitrate = parseInt(session.meshcastBitrate);
 	}
 	
+	if (urlParams.has('mcab') || urlParams.has('mcaudiobitrate') || urlParams.has('meshcastab')){
+		session.meshcastAudioBitrate = urlParams.get('mcab') || urlParams.get('mcaudiobitrate') || urlParams.get('meshcastab') || 32;
+		session.meshcastAudioBitrate = parseInt(session.meshcastAudioBitrate);
+	}
+	
 	if (urlParams.has('mccodec') || urlParams.has('meshcastcodec')){
 		session.meshcastCodec = urlParams.get('mccodec') || urlParams.get('meshcastcodec') || false;
 	}
@@ -1960,6 +1983,17 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 	if (urlParams.has('stats')) {
 		session.statsMenu = true;
 	}
+	
+	if (urlParams.has('datamode')) {
+		session.cleanOutput=true;
+		session.videoDevice = 0;
+		session.audioDevice = 0;
+		session.autostart = true;
+		session.novideo = [];
+		session.noaudio = [];
+		session.noiframe = [];
+		session.webcamonly = true;
+	}
 
 	if (urlParams.has('cleandirector') || urlParams.has('cdv')) {
 		session.cleanDirector = true;
@@ -1976,6 +2010,7 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 		getById("reportbutton").style.opacity = 0;
 		getById("calendarButton").style.display = "none";
 		getById("calendarButton").style.opacity = 0;
+		document.documentElement.style.setProperty('--myvideo-background', '#0000');
 		var styleTmp = document.createElement('style');
 		styleTmp.innerHTML = `
 		video {
@@ -2206,7 +2241,7 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 	if (urlParams.has('activespeaker') || urlParams.has('speakerview')  || urlParams.has('sas')){
 		session.activeSpeaker = urlParams.get('activespeaker') || urlParams.get('speakerview')  || urlParams.get('sas') || 1;
 		session.activeSpeaker = parseInt(session.activeSpeaker);
-		
+		session.style=6;
 		session.audioEffects = true;
 		session.audioMeterGuest = true; 
 		session.minipreview = 2;
@@ -2262,7 +2297,7 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 	if (urlParams.has('meter') || urlParams.has('meterstyle')){ // same as also adding &style=3
 		session.meterStyle = urlParams.get('meter') || urlParams.get('meterstyle') || 1;
 		session.meterStyle = parseInt(session.meterStyle);
-		session.style = 3;
+		session.style=3;
 		session.audioEffects = true;
 	}
 
@@ -2659,7 +2694,7 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 			session.screenshareid = urlParams.get('screenshareid') || urlParams.get('ssid');
 			session.screenshareid = sanitizeStreamID(session.screenshareid);
 		} else {
-			session.screenshareid = session.streamID + "_screenshare";
+			session.screenshareid = session.streamID + "_ss";
 		}
 	}
 	
@@ -2827,6 +2862,9 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 		//if (!session.activeSpeaker){
 		session.audioMeterGuest = false;
 		//}
+		if (session.style===false){
+			session.style = 1;
+		}
 		if (session.audioEffects === null) {
 			session.audioEffects = false;
 		}

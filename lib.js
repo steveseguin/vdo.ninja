@@ -692,8 +692,8 @@ var sanitizeStreamID = function(streamID) {
 			warnUser(miscTranslations["alphanumeric-only"]);
 		}
 	}
-	if (streamID_sanitized.length > 44) {
-		streamID_sanitized = streamID_sanitized.substring(0, 44);
+	if (streamID_sanitized.length >= 49) {
+		streamID_sanitized = streamID_sanitized.substring(0, 50);
 		if (!(session.cleanOutput)) {
 			warnUser(miscTranslations["stream-id-too-long"]);
 		}
@@ -7055,40 +7055,48 @@ function loadDirectorSettings(){
 	if (settings.customizeLinks1){
 		var customizeLinks1 = getById("customizeLinks1");
 		Object.keys(settings.customizeLinks1).forEach((key, index) => {
-			if (customizeLinks1.querySelector('[data-param="'+key+'"]').checked != settings.customizeLinks1[key]){
-				customizeLinks1.querySelector('[data-param="'+key+'"]').checked = settings.customizeLinks1[key];
-				customizeLinks1.querySelector('[data-param="'+key+'"]').onchange();
-			}
+			try {
+				if (customizeLinks1.querySelector('[data-param="'+key+'"]').checked != settings.customizeLinks1[key]){
+					customizeLinks1.querySelector('[data-param="'+key+'"]').checked = settings.customizeLinks1[key];
+					customizeLinks1.querySelector('[data-param="'+key+'"]').onchange();
+				}
+			} catch(e){errorlog(e);}
 		});
 	}
 	
 	if (settings.customizeLinks3){
 		var customizeLinks3 = getById("customizeLinks3");
 		Object.keys(settings.customizeLinks3).forEach((key, index) => {
-			if (customizeLinks3.querySelector('[data-param="'+key+'"]').checked == settings.customizeLinks3[key]){
-				customizeLinks3.querySelector('[data-param="'+key+'"]').checked = settings.customizeLinks3[key];
-				customizeLinks3.querySelector('[data-param="'+key+'"]').onchange();
-			}
+			try {
+				if (customizeLinks3.querySelector('[data-param="'+key+'"]').checked == settings.customizeLinks3[key]){
+					customizeLinks3.querySelector('[data-param="'+key+'"]').checked = settings.customizeLinks3[key];
+					customizeLinks3.querySelector('[data-param="'+key+'"]').onchange();
+				}
+			} catch(e){errorlog(e);}
 		});
 	}
 	
 	if (settings.directorLinks1){
 		var directorLinks1 = getById("directorLinks1");
 		Object.keys(settings.directorLinks1).forEach((key, index) => {
-			if (directorLinks1.querySelector('[data-param="'+key+'"]').checked == settings.directorLinks1[key]){
-				directorLinks1.querySelector('[data-param="'+key+'"]').checked = settings.directorLinks1[key];
-				directorLinks1.querySelector('[data-param="'+key+'"]').onchange();
-			}
+			try {
+				if (directorLinks1.querySelector('[data-param="'+key+'"]').checked == settings.directorLinks1[key]){
+					directorLinks1.querySelector('[data-param="'+key+'"]').checked = settings.directorLinks1[key];
+					directorLinks1.querySelector('[data-param="'+key+'"]').onchange();
+				}
+			} catch(e){errorlog(e);}
 		});
 	}
 	
 	if (settings.directorLinks2){
 		var directorLinks2 = getById("directorLinks2");
 		Object.keys(settings.directorLinks2).forEach((key, index) => {
-			if (directorLinks2.querySelector('[data-param="'+key+'"]').checked == settings.directorLinks2[key]){
-				directorLinks2.querySelector('[data-param="'+key+'"]').checked = settings.directorLinks2[key];
-				directorLinks2.querySelector('[data-param="'+key+'"]').onchange();
-			}
+			try {
+				if (directorLinks2.querySelector('[data-param="'+key+'"]').checked == settings.directorLinks2[key]){
+					directorLinks2.querySelector('[data-param="'+key+'"]').checked = settings.directorLinks2[key];
+					directorLinks2.querySelector('[data-param="'+key+'"]').onchange();
+				}
+			} catch(e){errorlog(e);}
 		});
 	}
 }
@@ -8283,7 +8291,7 @@ function activeSpeaker(border=false) {
 			} else if (lastActiveSpeaker){
 				session.rpcs[lastActiveSpeaker].defaultSpeaker=true;
 				changed=true;
-			} else if (session.scene===false || (session.nopreview===false & session.minipreview!==1)){
+			} else if (session.scene===false || (session.nopreview===false && session.minipreview!==1)){
 				// we don't need to care.
 			} else {
 				for (var UUID in session.rpcs) {
@@ -8339,7 +8347,7 @@ function activeSpeaker(border=false) {
 			} else if (lastActiveSpeaker){
 				session.rpcs[lastActiveSpeaker].defaultSpeaker=true;
 				changed=true;
-			} else if (session.scene===false || (session.nopreview===false & session.minipreview!==1)){
+			} else if (session.scene===false || (session.nopreview===false && session.minipreview!==1)){
 				// we don't need to care.
 			} else {
 				for (var UUID in session.rpcs) {
@@ -15643,6 +15651,7 @@ function updateDirectorsAudio(dataN, UUID) {
 					}
 					if ((i === "height") || (i === "width")){
 						input.title = "Hold CTRL (or cmd) to lock width and height together when changing them";
+						input.min = 16;
 					}
 					
 					if ("step" in data.audioConstraints[i]) {
@@ -15861,6 +15870,7 @@ function updateDirectorsVideo(data, UUID) {
 
 				if ((i === "height") || (i === "width")){
 					input.title = "Hold CTRL (or cmd) to lock width and height together when changing them";
+					input.min = 16;
 				}
 
 
@@ -16264,6 +16274,7 @@ function listAudioSettings() {
 					
 					if ((i === "height") || (i === "width")){
 						input.title = "Hold CTRL (or cmd) to lock width and height together when changing them";
+						input.min = 16;
 					}
 					
 					if ("step" in session.audioConstraints[i]) {
@@ -16711,6 +16722,7 @@ function listCameraSettings() {
 				}
 				if ((i === "height") || (i === "width")){
 					input.title = "Hold CTRL (or cmd) to lock width and height together when changing them";
+					input.min = 16;
 				}
 				if ("step" in session.cameraConstraints[i]) {
 					input.step = session.cameraConstraints[i].step;
@@ -20110,6 +20122,16 @@ function applyStyleEffect(UUID){
 			session.rpcs[UUID].canvasCtx.textAlign = "center";
 			session.rpcs[UUID].canvasCtx.font = parseInt(session.rpcs[UUID].canvas.height/2.11)+"px Arial";
 			session.rpcs[UUID].canvasCtx.fillText(session.rpcs[UUID].label[0].toUpperCase(), parseInt(session.rpcs[UUID].canvas.width/2), parseInt(session.rpcs[UUID].canvas.height*2/3)); 
+		} else {
+			var tmp = getComputedStyle(document.querySelector(':root')).getPropertyValue('--video-background-image').split('"');
+			if (tmp.length===3){
+				var img = new Image();
+				img.onload = function() {
+					session.rpcs[UUID].canvasCtx.fillStyle = "rgb(25,0,0)";
+					session.rpcs[UUID].canvasCtx.drawImage(img, parseInt(session.rpcs[UUID].canvas.width/2-110), parseInt(session.rpcs[UUID].canvas.height/2-110),220,220);
+				}
+				img.src = tmp[1];
+			}
 		}
 		
 	} 

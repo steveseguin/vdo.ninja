@@ -67,7 +67,7 @@
 			<link itemprop="url" href="./media/vdoNinja_logo_full.png" />
 		</span>
 		<script  type="text/javascript" crossorigin="anonymous"  src="./thirdparty/CodecsHandler.js?ver=35"></script>
-		<script  type="text/javascript" crossorigin="anonymous" src="./webrtc.js?ver=338"></script>
+		<script  type="text/javascript" crossorigin="anonymous" src="./webrtc.js?ver=339"></script>
 		<input id="zoomSlider" type="range" style="display: none;" />
 		<div id="header">
 			
@@ -783,7 +783,7 @@
 								<font style="color:#daad09;">Welcome to VDO Ninja! We've rebranded!  Nothing else is changing and we're staying 100% free.</font>
 							</h4>
 							<br />
-							🎁 Welcome to v20, updated December 24th. 🎄 <a target="_blank" href="https://docs.vdo.ninja/release-notes/v20">Release notes are here</a>. The previous version is <a href="https://vdo.ninja/v19/">available here</a> if you have new issues.
+							🎁 Welcome to v20, released December 24th. 🎄 <a target="_blank" href="https://docs.vdo.ninja/release-notes/v20">Release notes are here</a>. The previous version is <a href="https://vdo.ninja/v19/">available here</a> if you have new issues.
 
 							<br />
 							<br />
@@ -1840,7 +1840,7 @@
 
 		
 			var session = WebRTC.Media; // session is a required global variable if configuring manually. Run before loading main.js but after webrtc.js.
-			session.version = "20.0";
+			session.version = "20.1";
 			session.streamID = session.generateStreamID(); // randomly generates a streamID for this session. You can set your own programmatically if needed
 			
 			session.defaultPassword = "someEncryptionKey123"; // Change this password if self-deploying for added security/privacy
@@ -1905,11 +1905,11 @@
 			// session.introOnClean = true; // this will load the page with the webcam selection screen if &push or &room is in the URL; no need to use &webcam.
 		</script>
 		<script type="text/javascript" crossorigin="anonymous" src="./thirdparty/aes.js"></script>
-		<script type="text/javascript" crossorigin="anonymous" id="lib-js" src="./lib.js?ver=246"></script>
+		<script type="text/javascript" crossorigin="anonymous" id="lib-js" src="./lib.js?ver=247"></script>
 		<!-- 
 		// If you wish to change branding, blank offers a good clean start.
 		<script type="text/javascript" id="main-js" src="./main.js" data-translation="blank"></script>
 	-->
-		<script type="text/javascript" crossorigin="anonymous" id="main-js" src="./main.js?ver=287"></script>
+		<script type="text/javascript" crossorigin="anonymous" id="main-js" src="./main.js?ver=288"></script>
 	</body>
 </html>
