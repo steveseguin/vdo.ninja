@@ -692,7 +692,7 @@ var sanitizeStreamID = function(streamID) {
 			warnUser(miscTranslations["alphanumeric-only"]);
 		}
 	}
-	if (streamID_sanitized.length >= 49) {
+	if (streamID_sanitized.length > 44) {
 		streamID_sanitized = streamID_sanitized.substring(0, 50);
 		if (!(session.cleanOutput)) {
 			warnUser(miscTranslations["stream-id-too-long"]);
