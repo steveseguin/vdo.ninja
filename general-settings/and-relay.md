@@ -7,7 +7,7 @@ description: Forces TURN relay server into use.
 ## Aliases
 
 * `&private`
-* `&piracy`
+* `&privacy`
 
 ## Details
 
