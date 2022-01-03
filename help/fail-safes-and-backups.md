@@ -6,11 +6,17 @@ VDO.Ninja acknowledges these risks and attempts to mitigate them when possible.
 
 ## Back-up site
 
-If the main website goes down, [https://backup.vdo.ninja](https://backup.vdo.ninja) is a backup deployment of VDO.Ninja. It is fully-independent of the main service, so if the main site is down for whatever reason, the backup site should still be up.
+If the main website and service goes down, [https://backup.vdo.ninja](https://backup.vdo.ninja) is a backup deployment of VDO.Ninja. It is independent of the main service, so if the main site is down for whatever reason, the backup site should still be up. \
+\
+Both the backup and main site share the same DNS provider; DNS server 1.1.1.1 should be used if there are DNS issues.
+
+There's also the Github version of the code hosted at [https://steveseguin.github.io/vdo.ninja/](https://steveseguin.github.io/vdo.ninja/), if just the website goes down.&#x20;
 
 ## Fixed versions
 
-VDO.Ninja does update the application code every few weeks, and with new code comes potentially new bugs and/or feature changes. To mitigate any surprises, past versions of the app remain hosted long after a new release. For example, version 9 can be found at [https://vdo.ninja/v18/](https://vdo.ninja/v18/) with **the current previous version being listed on the main site**. Most new releases become bug-free within a few days of their release, thanks to prompt user bug reports.
+VDO.Ninja does update the application code every few weeks, and with new code comes potentially new bugs and/or feature changes.\
+\
+To mitigate any surprises, past versions of the app remain hosted long after a new release. For example, version 18 can be found at [https://vdo.ninja/v18/](https://vdo.ninja/v18/) with **the current previous version being listed on the main site**. Most new releases become bug-free within a few days of their release, thanks to prompt user bug reports.
 
 ## Redundant relay servers
 
