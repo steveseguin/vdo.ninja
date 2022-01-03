@@ -14,7 +14,9 @@ For those looking for a brand-free experience already with a different domain na
 - https://backup.vdo.ninja (fully backup hosted)
 - https://rtc.ninja (de-branded version of vdo.ninja)
 
-You can also point your domain to the VDO.Ninja IP address (provided on request), which will also rebrand the site automatically to match your domain name. (Requires Cloudflare as DNS server and proxy, Flexible SSL cert on, and HTTPs always on - all free.) 
+There's also the Github-hosted version, which mirrors the master branch of the code repo. https://steveseguin.github.io/vdo.ninja/  You can use this hosted version or fork VDO.Ninja and host it yourself in the same way via Github Pages; it's free and can be done within minutes.
+
+As well, you can also point your domain to the VDO.Ninja IP address (provided on request), which will also rebrand the site automatically to match your domain name. (Requires Cloudflare as DNS server and proxy, Flexible SSL cert on, and HTTPs always on - all free.) 
 
 For those wanting a private TURN server setup, you can load the settings for those via the URL parameters. If infrequently needing a private TURN, this is a great solution.  You can also use URL forwarding services to load up a customized link to VDO.Ninja, with URL parameters already included, such as https://invite.mypersonaldomain.com , which might secretly resolve to https://vdo.ninja/?room=myRoom&hash=3423&label or such.
 
@@ -24,9 +26,9 @@ See more on IFRAMES here: https://docs.vdo.ninja/guides/iframe-api-documentation
 
 Understanding clearly why you need to deploy any code or server is important. Maintaining updated deployed code can be quite hard, as VDO.Ninja updates frequently, so there are good reasons to consider an IFRAME approach instead. Feature requests there are welcomed.
 
-That all aside, please continue:
+That all aside, please continue for instructions for hosting on your own webserver, turn relay server, and more.
 
-### SETUP
+### Deplying website on an NGINX web server
 
 There's a community-created video tutorial on setting up here; https://youtu.be/8sDMwBIlgwE  Otherwise, read on.
 
@@ -69,8 +71,9 @@ An example NGINX config file that "hides" the file extensions is as follows.  Up
 ```
 You'll want to deploy (copy/clone) the GitHub VDO.Ninja files into your NGINX web folder, that is specified in your NGINX config file. Update the NGINX config file to match your domain and and folder, etc. Restart NGINX after.
 
+### Deploying your own Video Relay Server
 
-As for the TURN server, it can run on a single or dual-core computer. It doesn't take much to host many users -- it mainly just needs a good internet connection.  Most users will not need a TURN server, but since VDO.Ninja handles many different types of users, the TURN server is there as a failsafe for those occasional problem users. I'm assuming you know why you need and want a TURN server -- if not, you may not actually need one.
+As for the TURN relay server, it can run on a single or dual-core computer. It doesn't take much to host many users -- it mainly just needs a good internet connection.  Most users will not need a TURN server, but since VDO.Ninja handles many different types of users, the TURN server is there as a failsafe for those occasional problem users. I'm assuming you know why you need and want a TURN server -- if not, you may not actually need one.
 
 A guide and sample config file for the turn server is here:
 https://github.com/steveseguin/vdo.ninja/blob/master/turnserver.md
@@ -85,7 +88,7 @@ A newly deployed code deployment should work without any changes to the index.ht
 
 My suggestion? Limit changes to images and perhaps the translation files (maybe add a new one); these are good starting points. If making changes to the main.css style sheet or index.html file, you should be mostly okay too, since these files are designed to be changed; I try to keep that in mind when updating the code at least. Making changes to other files though is strongly not recommend and in some cases discouraged. If you find a bug or need to make a change to other files, it might be best to make a Pull Request with the desired changes and hope it gets adopted into the main codebase.
 
-### Internet-free deployments
+### Internet-free deployments 
 
 For those looking to deploy a completely Internet-free or fully-isolated hosting option, you'll need to deploy your own handshake server, and you may also need to deploy your own STUN/TURN service. STUN/TURN might not be needed on a Local Area Network, and TURN might not be needed at all if you have control over each participant connecting, but adding one isn't too hard and can help with firewall and mobile network issues.
 
@@ -105,6 +108,7 @@ and if you intend to only access it as a localhost,
 ```
 chrome://flags/#allow-insecure-localhost
 ```
+### Hand-shake server deployment
 
 Finally, there is a handshake server hosting option available; advanced users can host their own personal handshake server, which is useful for air-gapped private deployments of the service. Some basic documentation with instructions on setting it up are included here: https://github.com/steveseguin/websocket_server.  Just be sure that your SSL-certifcates are valid or that you modify your browser to support invalid SSL certificates, else it will not work. From there, you just need to modify a couple ilnes in the index.html file of VDO.Ninja to configure things.
 
