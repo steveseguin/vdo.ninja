@@ -1034,7 +1034,27 @@ input[type='radio'] { cursor:pointer; }
     margin: 44vh auto;
 	cursor: help;
 }
-
+#retryimage{
+	display: block;
+    margin: 25vh auto;
+    max-width: 50%;
+    max-height: 50%;
+	animation: fadeIn 2s;
+}
+#retrymessage{
+	display: block;
+    margin: 80vh auto;
+    animation: fadeIn 2s;
+    color: white;
+    position: absolute;
+    left: 0;
+    top: 0;
+    float: left;
+    width: 100%;
+    height: 100%;
+    text-align: center;
+    font-size: 2em;
+}
 
 @keyframes spin-animation {
 	0% {

@@ -316,6 +316,156 @@ function submitDebugLog(msg){
 }
 
 
+var iOS = !!navigator.platform && /iPad|iPhone|iPod/.test(navigator.platform);  // used by main.js also
+var iPad = (navigator.maxTouchPoints && navigator.maxTouchPoints > 2 && /MacIntel/.test(navigator.platform));
+
+
+function isAlphaNumeric(str) {
+	var code, i, len;
+	for (i = 0, len = str.length; i < len; i++) {
+		code = str.charCodeAt(i);
+		if (!(code > 47 && code < 58) && // numeric (0-9)
+			!(code > 64 && code < 91) && // upper alpha (A-Z)
+			!(code > 96 && code < 123)) { // lower alpha (a-z)
+			return false;
+		}
+	}
+	return true;
+}
+
+function convertStringToArrayBufferView(str){
+	var bytes = new Uint8Array(str.length);
+	for (var iii = 0; iii < str.length; iii++){
+		bytes[iii] = str.charCodeAt(iii);
+	}
+	return bytes;
+}
+
+function toHexString(byteArray){
+	return Array.prototype.map.call(byteArray, function(byte){
+		return ('0' + (byte & 0xFF).toString(16)).slice(-2);
+	}).join('');
+}
+function toByteArray(hexString){
+	var result = [];
+	for (var i = 0; i < hexString.length; i += 2){
+		result.push(parseInt(hexString.substr(i, 2), 16));
+	}
+	return new Uint8Array(result);
+}
+
+function playAllVideos(){
+	for (var i in session.rpcs){
+		try{
+			if (session.rpcs[i].videoElement){
+				if (session.rpcs[i].videoElement.paused){
+					session.rpcs[i].videoElement.play().then(_ => {
+						log("playing");
+					}).catch(warnlog);
+				}
+			}
+		}catch(e){}
+	}
+}
+
+var videoElements =  Array.from(document.querySelectorAll("video"));
+var audioElements =  Array.from(document.querySelectorAll("audio"));
+var mediaStreamCounter = 0;
+
+
+function createMediaStream(){
+	mediaStreamCounter+=1;
+	return new MediaStream();
+}
+
+function deleteOldMedia(){
+	warnlog("CHECKING FOR OLD MEDIA");
+	var i = videoElements.length;
+	while (i--) {
+		//if ((videoElements[i].id == "videosource") || (videoElements[i].id == "previewWebcam")){continue;} // exclude this one, for safety reasons. (Also, iOS safari blanks the video if streams are detached and moved between video elements)
+		if (videoElements[i].isConnected === false){
+			if ((videoElements[i].srcObject==null) || (videoElements[i].srcObject &&  videoElements[i].srcObject.active === false)){
+				if (videoElements[i].dataset && videoElements[i].dataset.UUID){
+					if (videoElements[i].dataset.UUID in session.rpcs){continue;} // still active, so lets not delete it.
+				}
+				videoElements[i].pause();
+				videoElements[i].removeAttribute("id");
+				videoElements[i].removeAttribute('src'); // empty source
+				videoElements[i].load();
+				videoElements[i].remove();
+				videoElements[i] = null;
+				videoElements.splice(i, 1);
+			}
+		}
+	}
+	i = audioElements.length;
+	while (i--) {
+		if (audioElements[i].isConnected === false){
+			if ((audioElements[i].srcObject==null) || (audioElements[i].srcObject &&  audioElements[i].srcObject.active === false)){
+				if (audioElements[i].dataset && audioElements[i].dataset.UUID){
+					if (audioElements[i].dataset.UUID in session.rpcs){continue;} // still active, so lets not delete it.
+				}
+				audioElements[i].pause();
+				audioElements[i].id = null;
+				audioElements[i].removeAttribute('src'); // empty source
+				audioElements[i].load();
+				audioElements[i].remove();
+				audioElements[i] = null;
+				audioElements.splice(i, 1);
+			}
+		}
+	}
+}
+
+function createAudioElement(){
+	try{
+		deleteOldMedia();
+	} catch(e){errorlog(e);}
+	var a = document.createElement("audio");
+	audioElements.push(a);
+	return a;
+}
+
+function compare_deltas( a, b ) {
+  var aa = a.delta || 0;
+  var bb = b.delta || 0;
+  if ( aa > bb ){
+    return 1;
+  }
+  if ( aa < bb ){
+    return -1;
+  }
+  return 0;
+}
+
+function createVideoElement(){
+	try{
+		deleteOldMedia();
+	} catch(e){errorlog(e);}
+	var v = document.createElement("video");
+	videoElements.push(v);
+	return v;
+}
+
+function getTimezone(){
+	if (session.tz!==false){
+		return session.tz;
+	}
+    const stdTimezoneOffset = () => {
+        var jan = new Date(0, 1);
+        var jul = new Date(6, 1);
+        return Math.max(jan.getTimezoneOffset(), jul.getTimezoneOffset());
+    }
+    var today = new Date();
+    const isDstObserved = (today) => {
+        return today.getTimezoneOffset() < stdTimezoneOffset();
+    }
+    if (isDstObserved(today)) {
+        return today.getTimezoneOffset()+60;
+    } else {
+        return today.getTimezoneOffset();
+    }
+}
 
 function promptUser(eleId, UUID=null){
 	if (session.beepToNotify){
@@ -1337,6 +1487,100 @@ function getStorage(cname) {
 	return item.value;
 }
 
+function play(streamid=null, UUID=false){  // play whatever is in the URL params; or filter by a streamID option
+	log("play stream: "+session.view);
+	if (session.view===""){
+		log("Setting view to null disables all playback");
+	} else if (session.view !== false){
+		var viewlist = session.view.split(",");
+		var played = false;
+		for (var j in viewlist){
+			if (viewlist[j]==""){
+				played=true;
+			// view={blank} implies do not play anything. Useful for setting a default bitrate I guess
+			} else if (streamid===null){ // play what is in the view list ; not a group room probably
+				session.watchStream(viewlist[j]);
+				played=true;
+			} else if (streamid === viewlist[j]){ // plays if the group room list matches the explicit list
+				session.watchStream(viewlist[j]);
+				played=true;
+			} 
+		}
+		if (!played){
+			if (session.scene!==false){
+				if (!session.permaid){
+					if (!session.queue){ // I don't want to deal with queues.
+						if (session.exclude===false || (!session.exclude.includes(streamid))){
+							if (UUID){
+								if (session.directorList.indexOf(UUID)>=0){
+									warnlog("stream ID added to badStreamList: "+streamid);
+									session.badStreamList.push(streamid);
+									session.watchStream(streamid);
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+		
+	} else if (session.exclude !== false){
+		if (session.exclude.includes(streamid)){
+			// we don't play it at all. (if explicity listed as VIDEO, then OKay.)
+		} else {
+			session.watchStream(streamid); // I suppose we do play it.
+		}
+	} else if (streamid){	
+		session.watchStream(streamid);
+	}
+}
+
+function nextQueue(){
+	if (!session.queue){return;}
+	if (!session.director){return;}
+	if (session.queueList.length==0){
+		getById("queuebutton").classList.add("float2");
+		getById("queuebutton").classList.add("red");
+		getById("queuebutton").classList.remove("float");
+		setTimeout(function(){
+			getById("queuebutton").classList.add("float");
+			getById("queuebutton").classList.remove("float2");
+			getById("queuebutton").classList.remove("red");
+		},50);
+		return;
+	}
+	var nextStream = session.queueList.shift();
+	
+	
+	getById("queuebutton").classList.add("float2");
+	getById("queuebutton").classList.remove("float");
+	setTimeout(function(){
+		getById("queuebutton").classList.add("float");
+		getById("queuebutton").classList.remove("float2");
+	},200);
+
+	updateQueue();
+	
+	session.watchStream(nextStream);
+	log("next stream loading: "+nextStream);
+}
+
+function updateQueue(){
+	if (!session.queue){return;}
+	if (!session.director){return;}
+	if (session.queueList.length) {
+		if (session.queueList.length>10){
+			getById("queueNotification").innerHTML = "‼";
+		} else {
+			getById("queueNotification").innerHTML = session.queueList.length;
+		}
+		getById("queueNotification").classList.add("queueNotification");
+	} else {
+		getById("queueNotification").innerHTML = "";
+		getById("queueNotification").classList.remove("queueNotification");
+	}
+}
+
 function setupIncomingScreenTracking(v, UUID){  // SCREEN  element.
 		
 	if (session.directorList.indexOf(UUID)>=0){
@@ -1635,7 +1879,7 @@ function setupIncomingScreenTracking(v, UUID){  // SCREEN  element.
 			
 	}
 	
-	setTimeout(session.processStats, 1000, UUID);
+	setTimeout(processStats, 1000, UUID);
 }
 
 function setupIncomingVideoTracking(v, UUID){  // video element.
@@ -1914,7 +2158,7 @@ function setupIncomingVideoTracking(v, UUID){  // video element.
 		}
 	});
 	
-	setTimeout(session.processStats, 1000, UUID);
+	setTimeout(processStats, 1000, UUID);
 }
 
 function mediaSourceUpdated(UUID, streamID, videoTrack){
@@ -1968,6 +2212,34 @@ function updateVolume(update=false){
 	}
 }
 
+var updateMixerTimer = null;
+var updateMixerActive = false;
+//var cleanupTimeout = null;
+function updateMixer(e=false){
+	clearInterval(updateMixerTimer);
+	if (updateMixerActive){
+		if (session.mobile){
+			updateMixerTimer = setTimeout(function(){updateMixer();},200);
+		} else {
+			updateMixerTimer = setTimeout(function(){updateMixer();},50);
+		}
+		return;
+	}
+	updateMixerActive=true;
+	log("updating mixer");
+	try{
+		updateMixerRun(e);
+	//	clearInterval(cleanupTimeout);
+	//	cleanupTimeout = setTimeout(function(){deleteOldMedia();},60000);
+	
+	} catch(e){}
+	
+	if (session.mobile){
+		setTimeout(function(){updateMixerActive=false;},500);
+	} else {
+		setTimeout(function(){updateMixerActive=false;},100);
+	}
+}
 
 function updateMixerRun(e=false){  // this is the main auto-mixing code.  It's a giant function that runs when there are changes to screensize, video track statuses, etc.
 	try {
@@ -4990,6 +5262,16 @@ function drawFace() {
 }
 ////////  END CANVAS EFFECTS  ///////////////////
 
+
+function getNativeOutputResolution(){
+	var tracks = session.videoElement.srcObject.getVideoTracks();
+	if (tracks.length && tracks[0].getSettings){
+		return tracks[0].getSettings();
+	} else {
+		return false;
+	}
+}
+
 function remoteStats(msg, UUID){
 	if (session.director){
 		var output = "";
@@ -5034,6 +5316,338 @@ function remoteStats(msg, UUID){
 	}
 }
 
+function processStats(UUID){
+			
+	// for (pc in session.pcs){session.pcs[pc].getStats().then(function(stats) {stats.forEach(stat=>{if (stat.id.includes("RTCIce")){console.log(stat)}})})};
+	
+	if (!session.rpcs || !(UUID in session.rpcs)){
+		return;
+	}
+	
+	try {
+		if (session.rpcs[UUID].videoElement.paused){
+			log("trying to play");
+			session.rpcs[UUID].videoElement.play().then(_ => {
+				log("playing");
+				session.firstPlayTriggered=true;
+			}).catch(warnlog);
+		}
+	} catch (e){};
+	
+	if (session.rpcs[UUID].mc){
+		processMeshcastStats(UUID);
+	}
+	
+	try {
+		session.rpcs[UUID].getStats().then(function(stats){
+			if (!(UUID in session.rpcs)){return;}
+			
+			setTimeout(processStats, 3000, UUID);
+			
+			if (!session.rpcs[UUID].stats['Peer-to-Peer Connection']){
+				session.rpcs[UUID].stats['Peer-to-Peer Connection'] = {};
+			}
+				
+			stats.forEach(stat=>{
+				
+				if ((stat.type == "candidate-pair") && (stat.nominated==true)){
+					
+					session.rpcs[UUID].stats['Peer-to-Peer Connection']._local_ice_id = stat.localCandidateId;
+					session.rpcs[UUID].stats['Peer-to-Peer Connection']._remote_ice_id = stat.remoteCandidateId;
+					session.rpcs[UUID].stats['Peer-to-Peer Connection'].Round_Trip_Time_ms = stat.currentRoundTripTime*1000;
+					
+				} else if ((stat.type=="track") && (stat.remoteSource==true)){
+					
+					
+					if (stat.id in session.rpcs[UUID].stats){
+						session.rpcs[UUID].stats[stat.id]._trackID = stat.trackIdentifier;
+						session.rpcs[UUID].stats[stat.id].Buffer_Delay_in_ms = parseInt(1000*(parseFloat(stat.jitterBufferDelay) - session.rpcs[UUID].stats[stat.id]._jitter_delay)/(parseInt(stat.jitterBufferEmittedCount) - session.rpcs[UUID].stats[stat.id]._jitter_count)) || 0;
+						session.rpcs[UUID].stats[stat.id]._jitter_delay = parseFloat(stat.jitterBufferDelay) || 0;
+						session.rpcs[UUID].stats[stat.id]._jitter_count = parseInt(stat.jitterBufferEmittedCount) || 0;
+						if ("frameWidth" in stat){
+							if ("frameHeight" in stat){
+								session.rpcs[UUID].stats[stat.id].Resolution = stat.frameWidth+" x "+stat.frameHeight;
+								session.rpcs[UUID].stats[stat.id]._frameWidth = stat.frameWidth;
+								session.rpcs[UUID].stats[stat.id]._frameHeight = stat.frameHeight;
+							}
+						}
+					} else {
+						var media = {};
+						media._jitter_delay = parseFloat(stat.jitterBufferDelay) || 0;
+						media._jitter_count = parseInt(stat.jitterBufferEmittedCount) || 0;
+						media.Buffer_Delay_in_ms = 0;
+						media._trackID = stat.trackIdentifier;
+						session.rpcs[UUID].stats[stat.id] = media;
+					}
+					
+					
+				} else if (stat.type=="remote-candidate"){
+					
+					if (("_remote_ice_id" in  session.rpcs[UUID].stats['Peer-to-Peer Connection']) && (session.rpcs[UUID].stats['Peer-to-Peer Connection']._remote_ice_id != stat.id )){return;} // not matched to nominated one
+					
+					if ("candidateType" in stat){
+						session.rpcs[UUID].stats['Peer-to-Peer Connection'].remote_candidateType = stat.candidateType;
+						if (stat.candidateType === "relay"){
+							if ("relayProtocol" in stat){
+								session.rpcs[UUID].stats['Peer-to-Peer Connection'].remote_relayProtocol = stat.relayProtocol;
+							}
+							if ("ip" in stat){session.rpcs[UUID].stats['Peer-to-Peer Connection'].remote_relay_IP = stat.ip;}
+						} else {
+							try {
+								delete session.rpcs[UUID].stats['Peer-to-Peer Connection'].local_relayIP;
+								delete session.rpcs[UUID].stats['Peer-to-Peer Connection'].local_relayProtocol;
+							} catch(e){}
+						}
+						
+					}
+					
+					if ("networkType" in stat){
+						session.rpcs[UUID].stats['Peer-to-Peer Connection'].remote_networkType = stat.networkType;
+					}
+					
+					
+				} else if (stat.type=="local-candidate"){
+					
+					if (("_local_ice_id" in  session.rpcs[UUID].stats['Peer-to-Peer Connection']) && (session.rpcs[UUID].stats['Peer-to-Peer Connection']._local_ice_id != stat.id )){return;} // not matched to nominated one
+					
+					if ("candidateType" in stat){
+						session.rpcs[UUID].stats['Peer-to-Peer Connection'].local_candidateType = stat.candidateType;
+						if (stat.candidateType === "relay"){
+							if ("relayProtocol" in stat){
+								session.rpcs[UUID].stats['Peer-to-Peer Connection'].local_relayProtocol = stat.relayProtocol;
+							}
+							if ("ip" in stat){session.rpcs[UUID].stats['Peer-to-Peer Connection'].local_relayIP = stat.ip;}
+						} else {
+							try {
+								delete session.rpcs[UUID].stats['Peer-to-Peer Connection'].local_relayIP;
+								delete session.rpcs[UUID].stats['Peer-to-Peer Connection'].local_relayProtocol;
+							} catch(e){}
+						}
+					}
+					
+					if ("networkType" in stat){
+						session.rpcs[UUID].stats['Peer-to-Peer Connection'].remote_networkType = stat.networkType;
+					}
+					
+				
+				} else if (stat.type == "transport"){
+					if ("bytesReceived" in stat) {
+						if ("_bytesReceived" in session.rpcs[UUID].stats['Peer-to-Peer Connection']){
+							if (session.rpcs[UUID].stats['Peer-to-Peer Connection']._timestamp){
+								if (stat.timestamp){
+									session.rpcs[UUID].stats['Peer-to-Peer Connection'].total_recv_bitrate_kbps = parseInt(8*(stat.bytesReceived - session.rpcs[UUID].stats['Peer-to-Peer Connection']._bytesReceived)/(stat.timestamp - session.rpcs[UUID].stats['Peer-to-Peer Connection']._timestamp));
+								}
+							}
+						}
+						session.rpcs[UUID].stats['Peer-to-Peer Connection']._bytesReceived = stat.bytesReceived;
+					}
+					if ("timestamp" in stat) {
+						session.rpcs[UUID].stats['Peer-to-Peer Connection']._timestamp = stat.timestamp;
+						if (!session.rpcs[UUID].stats['Peer-to-Peer Connection']._timestampStart){
+							session.rpcs[UUID].stats['Peer-to-Peer Connection']._timestampStart = stat.timestamp;
+						} else {
+							session.rpcs[UUID].stats['Peer-to-Peer Connection'].time_active_minutes = parseInt((stat.timestamp - session.rpcs[UUID].stats['Peer-to-Peer Connection']._timestampStart)/600)/100;
+						}
+					}
+				 
+				} else if ((stat.type=="inbound-rtp") && ("trackId" in stat)){
+					
+					session.rpcs[UUID].stats[stat.trackId] = session.rpcs[UUID].stats[stat.trackId] || {};
+					session.rpcs[UUID].stats[stat.trackId].Bitrate_in_kbps =  parseInt(8*(stat.bytesReceived - session.rpcs[UUID].stats[stat.trackId]._last_bytes)/( stat.timestamp - session.rpcs[UUID].stats[stat.trackId]._last_time));
+					session.rpcs[UUID].stats[stat.trackId]._last_bytes = stat.bytesReceived || session.rpcs[UUID].stats[stat.trackId]._last_bytes;
+					session.rpcs[UUID].stats[stat.trackId]._last_time = stat.timestamp || session.rpcs[UUID].stats[stat.trackId]._last_time;
+
+					
+					session.rpcs[UUID].stats._codecId = stat.codecId;
+					session.rpcs[UUID].stats._codecIdTrackId = stat.trackId;
+					
+					if (stat.mediaType=="video"){
+						session.rpcs[UUID].stats[stat.trackId].type = "Video Track"
+						session.rpcs[UUID].stats[stat.trackId]._type = "video";
+						if ((session.obsfix) && ("codec" in session.rpcs[UUID].stats) && (session.rpcs[UUID].stats.codec=="video/VP8")){
+							session.rpcs[UUID].stats[stat.trackId].pliDelta = (stat.pliCount - session.rpcs[UUID].stats[stat.trackId].keyFramesRequested_pli) || 0;
+							session.rpcs[UUID].stats[stat.trackId].nackTrigger = (stat.nackCount - session.rpcs[UUID].stats[stat.trackId].streamErrors_nackCount + session.rpcs[UUID].stats[stat.trackId].nackTrigger) || 0;
+							
+							log("OBS PLI FIX MODE ON");
+							if ((session.rpcs[UUID].stats[stat.trackId].pliDelta===0) && (session.rpcs[UUID].stats[stat.trackId].nackTrigger >= session.obsfix)){ // heavy packet loss with no pliCount?
+								session.requestKeyframe(UUID);
+								session.rpcs[UUID].stats[stat.trackId].nackTrigger = 0;
+								log("TRYING KEYFRAME");
+							} else if (session.rpcs[UUID].stats[stat.trackId].pliDelta>0){
+								session.rpcs[UUID].stats[stat.trackId].nackTrigger = 0;
+							}
+						} else if ((session.obsfix) && ("codec" in session.rpcs[UUID].stats) && (session.rpcs[UUID].stats.codec=="video/VP9")){
+							session.rpcs[UUID].stats[stat.trackId].pliDelta = (stat.pliCount - session.rpcs[UUID].stats[stat.trackId].keyFramesRequested_pli) || 0;
+							session.rpcs[UUID].stats[stat.trackId].nackTrigger = (stat.nackCount - session.rpcs[UUID].stats[stat.trackId].streamErrors_nackCount + session.rpcs[UUID].stats[stat.trackId].nackTrigger) || 0;
+							
+							log("OBS PLI FIX MODE ON");
+							if ((session.rpcs[UUID].stats[stat.trackId].pliDelta===0) && (session.rpcs[UUID].stats[stat.trackId].nackTrigger >= (session.obsfix*4) )){ // heavy packet loss with no pliCount? well, VP9 will trigger hopefully not as often.
+								session.requestKeyframe(UUID);
+								session.rpcs[UUID].stats[stat.trackId].nackTrigger = 0;
+								log("TRYING KEYFRAME");
+							} else if (session.rpcs[UUID].stats[stat.trackId].pliDelta>0){
+								session.rpcs[UUID].stats[stat.trackId].nackTrigger = 0;
+							}
+						}
+						
+						session.rpcs[UUID].stats[stat.trackId].keyFramesRequested_pli = stat.pliCount || 0;
+						session.rpcs[UUID].stats[stat.trackId].streamErrors_nackCount = stat.nackCount || 0;
+						
+						//warnlog(stat);
+						
+						if ("framesPerSecond" in stat){
+							session.rpcs[UUID].stats[stat.trackId].FPS = parseInt(stat.framesPerSecond);
+						} else if (("framesDecoded" in stat) && (stat.timestamp)){
+							
+							var lastFramesDecoded = 0;
+							var lastTimestamp = 0;
+							try{
+								lastFramesDecoded = session.rpcs[UUID].stats[stat.trackId]._framesDecoded;
+								lastTimestamp = session.rpcs[UUID].stats[stat.trackId]._timestamp;
+							} catch(e){}
+							session.rpcs[UUID].stats[stat.trackId].FPS = parseInt(10*(stat.framesDecoded - lastFramesDecoded)/(stat.timestamp/1000 - lastTimestamp))/10;
+							
+							//session.rpcs[UUID].stats[stat.trackId].FPS = parseInt((stat.framesDecoded - lastFramesDecoded)/(stat.timestamp/1000 - lastTimestamp));
+							session.rpcs[UUID].stats[stat.trackId]._framesDecoded = stat.framesDecoded;
+							session.rpcs[UUID].stats[stat.trackId]._timestamp = stat.timestamp/1000;
+							
+						}
+					
+					
+					} else if (stat.mediaType=="audio"){
+						//log("AUDIO LEVEL: "+stat.audioLevel);
+						session.rpcs[UUID].stats[stat.trackId].type = "Audio Track";
+						session.rpcs[UUID].stats[stat.trackId]._type = "audio";
+						if ("audioLevel" in stat){
+							session.rpcs[UUID].stats[stat.trackId].audio_level = parseInt(parseFloat(stat.audioLevel)*10000)/10000.0;
+						}
+					}
+					
+					if ("packetsLost" in stat && "packetsReceived" in stat){
+						
+						if (!("_packetsLost" in session.rpcs[UUID].stats[stat.trackId])){
+							session.rpcs[UUID].stats[stat.trackId]._packetsLost = stat.packetsLost;
+						}
+						if (!("_packetsReceived" in session.rpcs[UUID].stats[stat.trackId])){
+							session.rpcs[UUID].stats[stat.trackId]._packetsReceived = stat.packetsReceived;
+						}
+						
+						if (!("packetLoss_in_percentage" in session.rpcs[UUID].stats[stat.trackId])){
+							session.rpcs[UUID].stats[stat.trackId].packetLoss_in_percentage = 0;
+						}
+						
+						session.rpcs[UUID].stats[stat.trackId].packetLoss_in_percentage = session.rpcs[UUID].stats[stat.trackId].packetLoss_in_percentage*0.35 + 0.65*((stat.packetsLost-session.rpcs[UUID].stats[stat.trackId]._packetsLost)*100.0)/((stat.packetsReceived-session.rpcs[UUID].stats[stat.trackId]._packetsReceived)+(stat.packetsLost-session.rpcs[UUID].stats[stat.trackId]._packetsLost)) || 0;
+						
+						if (session.rpcs[UUID].signalMeter && (session.rpcs[UUID].stats[stat.trackId]._type==="video")){
+							if (session.rpcs[UUID].stats[stat.trackId].packetLoss_in_percentage<0.01){
+								if (session.rpcs[UUID].stats[stat.trackId].Bitrate_in_kbps==0){
+									session.rpcs[UUID].signalMeter.dataset.level = 0;
+								} else {
+									session.rpcs[UUID].signalMeter.dataset.level = 5;
+								}
+							} else if (session.rpcs[UUID].stats[stat.trackId].packetLoss_in_percentage<0.3){
+								session.rpcs[UUID].signalMeter.dataset.level = 4;
+							} else if (session.rpcs[UUID].stats[stat.trackId].packetLoss_in_percentage<1.0){
+								session.rpcs[UUID].signalMeter.dataset.level = 3;
+							} else if (session.rpcs[UUID].stats[stat.trackId].packetLoss_in_percentage<3.5){
+								session.rpcs[UUID].signalMeter.dataset.level = 2;
+							} else {
+								session.rpcs[UUID].signalMeter.dataset.level = 1;
+							} 
+						}
+							
+						session.rpcs[UUID].stats[stat.trackId]._packetsReceived = stat.packetsReceived;
+						session.rpcs[UUID].stats[stat.trackId]._packetsLost = stat.packetsLost; 
+					}
+					
+				} else if (("_codecId" in session.rpcs[UUID].stats) && (stat.id == session.rpcs[UUID].stats._codecId)){
+					
+					if ("mimeType" in stat){
+						if (session.rpcs[UUID].stats[session.rpcs[UUID].stats._codecIdTrackId]){
+							session.rpcs[UUID].stats[session.rpcs[UUID].stats._codecIdTrackId].codec = stat.mimeType;
+						} else {
+							session.rpcs[UUID].stats[session.rpcs[UUID].stats._codecIdTrackId] = {};
+							session.rpcs[UUID].stats[session.rpcs[UUID].stats._codecIdTrackId].codec = stat.mimeType;
+						}
+					}
+					if ("frameHeight" in stat){
+						if ("frameWidth" in stat){
+							session.rpcs[UUID].stats.Resolution = parseInt(stat.frameWidth)+" x "+parseInt(stat.frameHeight);
+						}
+					}
+					
+					
+				}
+			});
+			if (session.buffer!==false){
+				playoutdelay(UUID);
+			}
+			setTimeout(function(){
+				session.directorSpeakerMute();
+				session.directorDisplayMute();
+			},0);
+		});
+	} catch (e){errorlog(e);}
+};
+
+function playoutdelay(UUID){  // applies a delay to all videos
+	try {
+		var target_buffer = session.buffer || 0;
+		target_buffer = parseFloat(target_buffer);
+		
+		if (session.buffer!==false){
+			
+			// if buffer is set, then session.sync will be set; at least to 0.
+			
+			var receivers = getReceivers2(UUID).reverse(); //session.rpcs[UUID].getReceivers().reverse();
+			var video_delay = 0;
+			receivers.forEach(function(receiver){
+				try {
+					for (var tid in session.rpcs[UUID].stats){
+					
+						if ((typeof( session.rpcs[UUID].stats[tid])=="object") && ("_trackID" in session.rpcs[UUID].stats[tid]) && (session.rpcs[UUID].stats[tid]._trackID===receiver.track.id) && ("Buffer_Delay_in_ms" in session.rpcs[UUID].stats[tid])){
+							
+							var sync_offset = 0.0;
+							
+							if (session.rpcs[UUID].stats[tid]._sync_offset){
+								sync_offset = session.rpcs[UUID].stats[tid]._sync_offset;
+							} else {
+								session.rpcs[UUID].stats[tid]._sync_offset = 0;
+							}
+							
+							sync_offset += target_buffer - session.rpcs[UUID].stats[tid].Buffer_Delay_in_ms;                   //  target_Butt
+							
+							if (sync_offset>target_buffer){
+								sync_offset=target_buffer;
+							}
+							
+							if (session.rpcs[UUID].stats[tid]._type=="audio"){
+								if (receiver.track.id in session.rpcs[UUID].delayNode){
+									log("updating audio delay");
+									var audio_delay = video_delay - session.rpcs[UUID].stats[tid].Buffer_Delay_in_ms + session.sync; // video is typically showing greater delay than video
+									if (audio_delay<0){audio_delay=0;}
+									log("audio_delay : "+audio_delay);
+									log("audioCtx : "+ session.audioCtx.currentTime);
+									session.rpcs[UUID].delayNode[receiver.track.id].delayTime.setValueAtTime(parseFloat(audio_delay/1000.0), session.audioCtx.currentTime+1);
+									session.rpcs[UUID].stats[tid].Audio_Sync_Delay_ms = audio_delay;
+									
+								}
+							} else if (session.rpcs[UUID].stats[tid]._type=="video"){
+								//log("THIS SHOULD BE BEFORE AUDIO - video track"+session.rpcs[UUID].stats[tid].type);
+								video_delay = session.rpcs[UUID].stats[tid].Buffer_Delay_in_ms;
+								if(sync_offset<0){sync_offset=0;}
+								session.rpcs[UUID].stats[tid]._sync_offset = sync_offset;
+								receiver.playoutDelayHint = parseFloat(sync_offset/1000);	  // only the video we are going to do the playout delay for; doesn't work well with audio.
+							}
+						}
+					}
+				} catch (e){errorlog(e);}
+			});	
+		}
+	} catch (e){
+		errorlog("device does not support playout delay");
+	}
+};
 
 function printViewStats(menu, UUID) { // Stats for viewing a remote video
 	if (!session.rpcs[UUID]){
@@ -5189,6 +5803,248 @@ function printValues(obj) { // see: printViewStats
 	return out;
 }
 
+function processMeshcastStats(UUID){
+	try {
+		session.rpcs[UUID].mc.getStats().then(function(stats){
+			if (!(UUID in session.rpcs)){return;}
+			
+			if (!session.rpcs[UUID].stats['Meshcast Connection']){
+				session.rpcs[UUID].stats['Meshcast Connection'] = {};
+			}
+				
+			stats.forEach(stat=>{
+				
+				if ((stat.type == "candidate-pair") && (stat.nominated==true)){
+					
+					session.rpcs[UUID].stats['Meshcast Connection']._local_ice_id = stat.localCandidateId;
+					session.rpcs[UUID].stats['Meshcast Connection']._remote_ice_id = stat.remoteCandidateId;
+					session.rpcs[UUID].stats['Meshcast Connection'].Round_Trip_Time_ms = stat.currentRoundTripTime*1000;
+					
+				} else if ((stat.type=="track") && (stat.remoteSource==true)){
+					
+					
+					if (stat.id in session.rpcs[UUID].stats){
+						session.rpcs[UUID].stats[stat.id]._trackID = stat.trackIdentifier;
+						session.rpcs[UUID].stats[stat.id].Buffer_Delay_in_ms = parseInt(1000*(parseFloat(stat.jitterBufferDelay) - session.rpcs[UUID].stats[stat.id]._jitter_delay)/(parseInt(stat.jitterBufferEmittedCount) - session.rpcs[UUID].stats[stat.id]._jitter_count)) || 0;
+						session.rpcs[UUID].stats[stat.id]._jitter_delay = parseFloat(stat.jitterBufferDelay) || 0;
+						session.rpcs[UUID].stats[stat.id]._jitter_count = parseInt(stat.jitterBufferEmittedCount) || 0;
+						if ("frameWidth" in stat){
+							if ("frameHeight" in stat){
+								session.rpcs[UUID].stats[stat.id].Resolution = stat.frameWidth+" x "+stat.frameHeight;
+								session.rpcs[UUID].stats[stat.id]._frameWidth = stat.frameWidth;
+								session.rpcs[UUID].stats[stat.id]._frameHeight = stat.frameHeight;
+							}
+						}
+					} else {
+						var media = {};
+						media._jitter_delay = parseFloat(stat.jitterBufferDelay) || 0;
+						media._jitter_count = parseInt(stat.jitterBufferEmittedCount) || 0;
+						media.Buffer_Delay_in_ms = 0;
+						media._trackID = stat.trackIdentifier;
+						session.rpcs[UUID].stats[stat.id] = media;
+					}
+			
+				} else if (stat.type=="remote-candidate"){
+					
+					if (("_remote_ice_id" in  session.rpcs[UUID].stats['Meshcast Connection']) && (session.rpcs[UUID].stats['Meshcast Connection']._remote_ice_id != stat.id )){return;} // not matched to nominated one
+					
+					if ("candidateType" in stat){
+						session.rpcs[UUID].stats['Meshcast Connection'].remote_candidateType = stat.candidateType;
+						if (stat.candidateType === "relay"){
+							if ("relayProtocol" in stat){
+								session.rpcs[UUID].stats['Meshcast Connection'].remote_relayProtocol = stat.relayProtocol;
+							}
+							if ("ip" in stat){session.rpcs[UUID].stats['Meshcast Connection'].remote_relay_IP = stat.ip;}
+						} else {
+							try {
+								delete session.rpcs[UUID].stats['Meshcast Connection'].local_relayIP;
+								delete session.rpcs[UUID].stats['Meshcast Connection'].local_relayProtocol;
+							} catch(e){}
+						}
+						
+					}
+					
+					if ("networkType" in stat){
+						session.rpcs[UUID].stats['Meshcast Connection'].remote_networkType = stat.networkType;
+					}
+					
+					
+				} else if (stat.type=="local-candidate"){
+					
+					if (("_local_ice_id" in  session.rpcs[UUID].stats['Meshcast Connection']) && (session.rpcs[UUID].stats['Meshcast Connection']._local_ice_id != stat.id )){return;} // not matched to nominated one
+					
+					if ("candidateType" in stat){
+						session.rpcs[UUID].stats['Meshcast Connection'].local_candidateType = stat.candidateType;
+						if (stat.candidateType === "relay"){
+							if ("relayProtocol" in stat){
+								session.rpcs[UUID].stats['Meshcast Connection'].local_relayProtocol = stat.relayProtocol;
+							}
+							if ("ip" in stat){session.rpcs[UUID].stats['Meshcast Connection'].local_relayIP = stat.ip;}
+						} else {
+							try {
+								delete session.rpcs[UUID].stats['Meshcast Connection'].local_relayIP;
+								delete session.rpcs[UUID].stats['Meshcast Connection'].local_relayProtocol;
+							} catch(e){}
+						}
+					}
+					
+					if ("networkType" in stat){
+						session.rpcs[UUID].stats['Meshcast Connection'].remote_networkType = stat.networkType;
+					}
+					
+				
+				} else if (stat.type == "transport"){
+					if ("bytesReceived" in stat) {
+						if ("_bytesReceived" in session.rpcs[UUID].stats['Meshcast Connection']){
+							if (session.rpcs[UUID].stats['Meshcast Connection']._timestamp){
+								if (stat.timestamp){
+									session.rpcs[UUID].stats['Meshcast Connection'].total_recv_bitrate_kbps = parseInt(8*(stat.bytesReceived - session.rpcs[UUID].stats['Meshcast Connection']._bytesReceived)/(stat.timestamp - session.rpcs[UUID].stats['Meshcast Connection']._timestamp));
+								}
+							}
+						}
+						session.rpcs[UUID].stats['Meshcast Connection']._bytesReceived = stat.bytesReceived;
+					}
+					if ("timestamp" in stat) {
+						session.rpcs[UUID].stats['Meshcast Connection']._timestamp = stat.timestamp;
+						if (!session.rpcs[UUID].stats['Meshcast Connection']._timestampStart){
+							session.rpcs[UUID].stats['Meshcast Connection']._timestampStart = stat.timestamp;
+						} else {
+							session.rpcs[UUID].stats['Meshcast Connection'].time_active_minutes = parseInt((stat.timestamp - session.rpcs[UUID].stats['Meshcast Connection']._timestampStart)/600)/100;
+						}
+					}
+				 
+				} else if ((stat.type=="inbound-rtp") && ("trackId" in stat)){
+					
+					session.rpcs[UUID].stats[stat.trackId] = session.rpcs[UUID].stats[stat.trackId] || {};
+					session.rpcs[UUID].stats[stat.trackId].Bitrate_in_kbps =  parseInt(8*(stat.bytesReceived - session.rpcs[UUID].stats[stat.trackId]._last_bytes)/( stat.timestamp - session.rpcs[UUID].stats[stat.trackId]._last_time));
+					session.rpcs[UUID].stats[stat.trackId]._last_bytes = stat.bytesReceived || session.rpcs[UUID].stats[stat.trackId]._last_bytes;
+					session.rpcs[UUID].stats[stat.trackId]._last_time = stat.timestamp || session.rpcs[UUID].stats[stat.trackId]._last_time;
+
+					
+					session.rpcs[UUID].stats._codecId = stat.codecId;
+					session.rpcs[UUID].stats._codecIdTrackId = stat.trackId;
+					
+					if (stat.mediaType=="video"){
+						session.rpcs[UUID].stats[stat.trackId].type = "Video Track"
+						session.rpcs[UUID].stats[stat.trackId]._type = "video";
+						if ((session.obsfix) && ("codec" in session.rpcs[UUID].stats) && (session.rpcs[UUID].stats.codec=="video/VP8")){
+							session.rpcs[UUID].stats[stat.trackId].pliDelta = (stat.pliCount - session.rpcs[UUID].stats[stat.trackId].keyFramesRequested_pli) || 0;
+							session.rpcs[UUID].stats[stat.trackId].nackTrigger = (stat.nackCount - session.rpcs[UUID].stats[stat.trackId].streamErrors_nackCount + session.rpcs[UUID].stats[stat.trackId].nackTrigger) || 0;
+							
+							log("OBS PLI FIX MODE ON");
+							if ((session.rpcs[UUID].stats[stat.trackId].pliDelta===0) && (session.rpcs[UUID].stats[stat.trackId].nackTrigger >= session.obsfix)){ // heavy packet loss with no pliCount?
+								session.requestKeyframe(UUID);
+								session.rpcs[UUID].stats[stat.trackId].nackTrigger = 0;
+								log("TRYING KEYFRAME");
+							} else if (session.rpcs[UUID].stats[stat.trackId].pliDelta>0){
+								session.rpcs[UUID].stats[stat.trackId].nackTrigger = 0;
+							}
+						} else if ((session.obsfix) && ("codec" in session.rpcs[UUID].stats) && (session.rpcs[UUID].stats.codec=="video/VP9")){
+							session.rpcs[UUID].stats[stat.trackId].pliDelta = (stat.pliCount - session.rpcs[UUID].stats[stat.trackId].keyFramesRequested_pli) || 0;
+							session.rpcs[UUID].stats[stat.trackId].nackTrigger = (stat.nackCount - session.rpcs[UUID].stats[stat.trackId].streamErrors_nackCount + session.rpcs[UUID].stats[stat.trackId].nackTrigger) || 0;
+							
+							log("OBS PLI FIX MODE ON");
+							if ((session.rpcs[UUID].stats[stat.trackId].pliDelta===0) && (session.rpcs[UUID].stats[stat.trackId].nackTrigger >= (session.obsfix*4) )){ // heavy packet loss with no pliCount? well, VP9 will trigger hopefully not as often.
+								session.requestKeyframe(UUID);
+								session.rpcs[UUID].stats[stat.trackId].nackTrigger = 0;
+								log("TRYING KEYFRAME");
+							} else if (session.rpcs[UUID].stats[stat.trackId].pliDelta>0){
+								session.rpcs[UUID].stats[stat.trackId].nackTrigger = 0;
+							}
+						}
+						
+						session.rpcs[UUID].stats[stat.trackId].keyFramesRequested_pli = stat.pliCount || 0;
+						session.rpcs[UUID].stats[stat.trackId].streamErrors_nackCount = stat.nackCount || 0;
+						
+						//warnlog(stat);
+						
+						if ("framesPerSecond" in stat){
+							session.rpcs[UUID].stats[stat.trackId].FPS = parseInt(stat.framesPerSecond);
+						} else if (("framesDecoded" in stat) && (stat.timestamp)){
+							
+							var lastFramesDecoded = 0;
+							var lastTimestamp = 0;
+							try{
+								lastFramesDecoded = session.rpcs[UUID].stats[stat.trackId]._framesDecoded;
+								lastTimestamp = session.rpcs[UUID].stats[stat.trackId]._timestamp;
+							} catch(e){}
+							session.rpcs[UUID].stats[stat.trackId].FPS = parseInt(10*(stat.framesDecoded - lastFramesDecoded)/(stat.timestamp/1000 - lastTimestamp))/10;
+							
+							//session.rpcs[UUID].stats[stat.trackId].FPS = parseInt((stat.framesDecoded - lastFramesDecoded)/(stat.timestamp/1000 - lastTimestamp));
+							session.rpcs[UUID].stats[stat.trackId]._framesDecoded = stat.framesDecoded;
+							session.rpcs[UUID].stats[stat.trackId]._timestamp = stat.timestamp/1000;
+							
+						}
+					
+					
+					} else if (stat.mediaType=="audio"){
+						//log("AUDIO LEVEL: "+stat.audioLevel);
+						session.rpcs[UUID].stats[stat.trackId].type = "Audio Track";
+						session.rpcs[UUID].stats[stat.trackId]._type = "audio";
+						if ("audioLevel" in stat){
+							session.rpcs[UUID].stats[stat.trackId].audio_level = parseInt(parseFloat(stat.audioLevel)*10000)/10000.0;
+						}
+					}
+					
+					if ("packetsLost" in stat && "packetsReceived" in stat){
+						
+						if (!("_packetsLost" in session.rpcs[UUID].stats[stat.trackId])){
+							session.rpcs[UUID].stats[stat.trackId]._packetsLost = stat.packetsLost;
+						}
+						if (!("_packetsReceived" in session.rpcs[UUID].stats[stat.trackId])){
+							session.rpcs[UUID].stats[stat.trackId]._packetsReceived = stat.packetsReceived;
+						}
+						
+						if (!("packetLoss_in_percentage" in session.rpcs[UUID].stats[stat.trackId])){
+							session.rpcs[UUID].stats[stat.trackId].packetLoss_in_percentage = 0;
+						}
+						
+						session.rpcs[UUID].stats[stat.trackId].packetLoss_in_percentage = session.rpcs[UUID].stats[stat.trackId].packetLoss_in_percentage*0.35 + 0.65*((stat.packetsLost-session.rpcs[UUID].stats[stat.trackId]._packetsLost)*100.0)/((stat.packetsReceived-session.rpcs[UUID].stats[stat.trackId]._packetsReceived)+(stat.packetsLost-session.rpcs[UUID].stats[stat.trackId]._packetsLost)) || 0;
+						
+						if (session.rpcs[UUID].signalMeter && (session.rpcs[UUID].stats[stat.trackId]._type==="video")){
+							if (session.rpcs[UUID].stats[stat.trackId].packetLoss_in_percentage<0.01){
+								if (session.rpcs[UUID].stats[stat.trackId].Bitrate_in_kbps==0){
+									session.rpcs[UUID].signalMeter.dataset.level = 0;
+								} else {
+									session.rpcs[UUID].signalMeter.dataset.level = 5;
+								}
+							} else if (session.rpcs[UUID].stats[stat.trackId].packetLoss_in_percentage<0.3){
+								session.rpcs[UUID].signalMeter.dataset.level = 4;
+							} else if (session.rpcs[UUID].stats[stat.trackId].packetLoss_in_percentage<1.0){
+								session.rpcs[UUID].signalMeter.dataset.level = 3;
+							} else if (session.rpcs[UUID].stats[stat.trackId].packetLoss_in_percentage<3.5){
+								session.rpcs[UUID].signalMeter.dataset.level = 2;
+							} else {
+								session.rpcs[UUID].signalMeter.dataset.level = 1;
+							} 
+						}
+							
+						session.rpcs[UUID].stats[stat.trackId]._packetsReceived = stat.packetsReceived;
+						session.rpcs[UUID].stats[stat.trackId]._packetsLost = stat.packetsLost; 
+					}
+					
+				} else if (("_codecId" in session.rpcs[UUID].stats) && (stat.id == session.rpcs[UUID].stats._codecId)){
+					
+					if ("mimeType" in stat){
+						if (session.rpcs[UUID].stats[session.rpcs[UUID].stats._codecIdTrackId]){
+							session.rpcs[UUID].stats[session.rpcs[UUID].stats._codecIdTrackId].codec = stat.mimeType;
+						} else {
+							session.rpcs[UUID].stats[session.rpcs[UUID].stats._codecIdTrackId] = {};
+							session.rpcs[UUID].stats[session.rpcs[UUID].stats._codecIdTrackId].codec = stat.mimeType;
+						}
+					}
+					if ("frameHeight" in stat){
+						if ("frameWidth" in stat){
+							session.rpcs[UUID].stats.Resolution = parseInt(stat.frameWidth)+" x "+parseInt(stat.frameHeight);
+						}
+					}
+					
+				}
+			});
+		});
+	} catch (e){errorlog(e);}
+}
+		
 
 function printMyStats(menu) { // see: setupStatsMenu
 	var scrollLeft = getById("menuStatsBox").scrollLeft;
@@ -18932,6 +19788,18 @@ async function recordVideo(target, event, videoKbps = false) { // event.currentT
 
 	var UUID = target.dataset.UUID;
 	var video = session.rpcs[UUID].videoElement;
+	
+	if (video.stopWriter){
+		video.stopWriter();
+		updateLocalRecordButton(UUID, -1);
+		return;
+	} else if (video.startWriter){
+		await video.startWriter();
+		updateLocalRecordButton(UUID, 0);
+		return;
+	}
+	
+	
 	var audioKbps = false;
 
 	if (event === null) {
