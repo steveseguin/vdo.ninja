@@ -100,13 +100,17 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 	}
 
 	if (!isIFrame){
-		if (getStorage("redirect") == "yes") {
+		if (getChromeVersion()===65){
+			 // pass, since probably manycam and that's bugged
+		} else if (getStorage("redirect") == "yes") {
 			setStorage("redirect", "", 0);
 			session.sticky = true;
 		} else if (getStorage("settings") != "") {
-			if (!(session.cleanOutput)){
+			
+			 if (!(session.cleanOutput)){
+				
 				window.focus();
-				session.sticky = confirm(miscTranslations["load-previous-session"]);
+				session.sticky = confirm(getStorage("settings"));
 				if (!session.sticky) {
 					setStorage("settings", "", 0);
 					log("deleting cookie as user said no");
@@ -538,7 +542,13 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 		session.directorDisplayMuted=true; // false == true in this case.
 	}
 
-
+	if (urlParams.has('blindall')) {
+		session.directorBlindButton=true; // false == true in this case.
+	}
+	if (session.directorBlindButton){
+		getById("blindAllGuests").classList.remove("advanced");
+	}
+	
 	if (urlParams.has('dpi') || urlParams.has('dpr')) {
 		session.devicePixelRatio = urlParams.get('dpi') || urlParams.get('dpr') || 2.0;
 	} //else if (window.devicePixelRatio && window.devicePixelRatio!==1){ 

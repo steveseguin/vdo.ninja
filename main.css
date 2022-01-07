@@ -539,6 +539,8 @@ hr {
 	animation: pulse 2s infinite;
 }
 
+
+
 .battery {
 	border: 3px solid #4192c5;
 	width: 11px;
@@ -551,10 +553,20 @@ hr {
 	font-size: 1.5em;
 	z-index: 2;
 	cursor: help;
-	display:block;
+	display:none;
 }
-.battery[data-plugged="1"]{
-	font-size:0px;
+
+.battery-charging{
+	margin: 0;
+	left: -1px;
+	padding: 0;
+	position: absolute;
+	font-size: 0.55em;
+	display: none;
+}
+
+.battery[data-plugged="1"] > .battery-charging {
+	display:block;
 }
 .battery.warn {
 	border: 3px solid #EFAF13; 
@@ -566,8 +578,15 @@ hr {
 	background: #30b455;  
 	position: absolute;
 	bottom: 0px;
-	left: 0;
 	right: 0;
+	left: 0;
+	font-size: 0.7em;
+    margin: 0;
+    padding: 0;
+}
+
+.hasMedia > .battery {
+	display:block;
 }
 
 .signal-meter{
@@ -578,9 +597,12 @@ hr {
     top: 1px;
 	background-color: #FFF2;
 	font-size: 1.5em;
-	display:block;
+	display:none;
 	z-index: 2;
 	cursor: help;
+}
+.hasMedia > .signal-meter {
+	display:block;
 }
 .signal-meter[data-cpu="0"]>.la-signal {
 	display:block;
@@ -2796,7 +2818,7 @@ div#guestFeeds {
 	background: var(--container-color);
 	padding: 5px 0 15px 20px;
 	display: inline-block;
-	margin: 0px var(--regular-margin);
+	margin: 0px var(--regular-margin) 80px var(--regular-margin);
 }
 
 div#guestFeeds:empty {
@@ -2937,7 +2959,7 @@ span#guestTips {
 
 .video-meter {
 	padding:0.5vh;
-	display:block;
+	display:none;
 	width:0.5vh;
 	height:0.5vh;
 	min-width:10px;
@@ -2953,7 +2975,7 @@ span#guestTips {
 
 .video-meter-2 {
 	padding:0;
-	display:block;
+	display:none;
 	width:100%;
 	height:100%;
 	min-width:10px;
@@ -2974,6 +2996,7 @@ span#guestTips {
 	right: 10px;
 }
 .video-meter2 {
+	display:none;
 	padding:0;
 	width: 4px;
 	height:0%;
@@ -2987,6 +3010,18 @@ span#guestTips {
 	border: 1px black solid;
 	transition: height 0.1s ease,  background-color 0.1s ease;
 }
+
+
+.hasMedia > .video-meter2 {
+	display:block;
+}
+.hasMedia > .video-meter-2 {
+	display:block;
+}
+.hasMedia > .video-meter {
+	display:block;
+}
+
 
 #voiceMeterTemplate{
 	display:none;
@@ -3224,7 +3259,7 @@ input:checked + .slider:before {
 .promptModalMessage {
 	position: relative;
 	display: block;
-	width: 98%;
+	width: 93%;
     margin: 0 5%;
 }
 

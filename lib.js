@@ -923,7 +923,7 @@ var sanitizeRoomName = function(roomid) {
 	}
 
 	var sanitized = roomid.replace(/[\W]+/g, "_");
-	if (sanitized !== roomid) {
+	if (roomid.replace(/ /g, "_") !== sanitized) {
 		if (!(session.cleanOutput)) {
 			warnUser("Info: Only AlphaNumeric characters should be used for the room name.\n\nThe offending characters have been replaced by an underscore");
 		}
@@ -1982,6 +1982,7 @@ function setupIncomingVideoTracking(v, UUID){  // video element.
 		v.disablePictureInPicture = false
 		v.setAttribute("controls","controls")
 		container.appendChild(v);
+		container.classList.add("hasMedia");
 		session.requestRateLimit(session.directorViewBitrate,UUID); /// limit resolution for director
 		v.title = "Hold CTRL or CMD (⌘) while clicking the video to open detailed stats";
 		if (session.beepToNotify) {
@@ -7651,13 +7652,58 @@ function updateRemoteSpeakerMute(UUID) {
 	}
 }
 
-function updateRemoteDisplayMute(UUID) {
+function updateRemoteDisplayMute(UUID, blind=true) {
 	var ele = document.querySelectorAll('[data-action-type="toggle-remote-display"][data--u-u-i-d="' + UUID + '"]');
 	if (ele[0]) {
-		ele[0].classList.add("pressed");
-		ele[0].dataset.value = 1;
-		ele[0].innerHTML = '<i class="las la-eye-slash"></i> <span data-translate="unblind">un-blind</span>';
-		miniTranslate(ele[0]);
+		if (blind){
+			ele[0].classList.add("pressed");
+			ele[0].dataset.value = 1;
+			ele[0].innerHTML = '<i class="las la-eye-slash"></i> <span data-translate="unblind">un-blind</span>';
+			miniTranslate(ele[0]);
+		} else {
+			ele[0].classList.remove("pressed");
+			ele[0].dataset.value = 0;
+			ele[0].innerHTML = '<i class="las la-eye"></i> <span data-translate="blind">blind</span>';
+			miniTranslate(ele[0]);
+		}
+	}
+}
+
+function blindAllGuests(ele, event=false){
+	if (!session.director){
+		if (!session.cleanOutput){warnUser("Only a director can mute other guests");}
+		return;
+	} // only a director can use this button.
+	
+	log("blind all display mute");
+	if (!event ||  (!((event.ctrlKey) || (event.metaKey)))) {
+		if (ele.dataset.value == 1) {
+			ele.dataset.value = 0;
+			ele.classList.remove("pressed");
+			ele.classList.remove("red");
+			ele.innerHTML = '<i class="toggleSize las la-eye my-float"></i>';
+		} else {
+			ele.dataset.value = 1;
+			ele.classList.add("pressed");
+			ele.classList.add("red");
+			ele.innerHTML = '<i class="toggleSize las la-eye-slash my-float"></i>';
+		}
+	}
+
+	var msg = {};
+	if (ele.dataset.value == 0) {
+		msg.displayMute = false;
+		session.directorBlindAllGuests = false;
+	} else {
+		msg.displayMute = true;
+		session.directorBlindAllGuests= true;
+	}
+	for (var UUID in session.rpcs){ // doesn't include scenes, as they don't publiish and this is rpcs
+		if (session.directorList.indexOf(UUID)>=0){continue;} // don't try to mute other directors
+		try {
+			session.sendRequest(msg, UUID);
+			updateRemoteDisplayMute(UUID, msg.displayMute);
+		} catch(e){errorlog(e);}
 	}
 }
 
@@ -9376,7 +9422,7 @@ function joinRoom(roomname) {
 					}
 				}
 			}
-			session.updateQueue();
+			updateQueue();
 		}, function(error) {
 			return {};
 		});
