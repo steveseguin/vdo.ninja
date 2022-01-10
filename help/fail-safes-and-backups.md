@@ -34,7 +34,7 @@ While self-hosting on your own servers works, you can also host VDO.Ninja on una
 
 * The website code for VDO.Ninja can be forked and hosted by Github Pages for free or any website provider really.
 * There are companies that offer hosted STUN and TURN services for a fee.
-* VDO.Ninja's handshake server is of an agnostic design and can work with third-party websocket providers, such as piesocket.com
+* VDO.Ninja's handshake server is of an agnostic design and can be replaced with a third-party websocket provider, such as piesocket.com
 
 ## Debugging tools
 
