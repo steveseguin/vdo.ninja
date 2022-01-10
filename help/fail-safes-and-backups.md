@@ -28,6 +28,14 @@ The option to self-host VDO.Ninja is available, to different degrees of isolatio
 \
 Hosting just the website code is the easiest option, providing further customization support, but hosting also the STUN, TURN, and handshake server will provide total hosting independence.
 
+### Third-party managed hosting
+
+While self-hosting on your own servers works, you can also host VDO.Ninja on unaffliated third party services.&#x20;
+
+* The website code for VDO.Ninja can be forked and hosted by Github Pages for free or any website provider really.
+* There are companies that offer hosted STUN and TURN services for a fee.
+* VDO.Ninja's handshake server is of an agnostic design and can work with third-party websocket providers, such as piesocket.com
+
 ## Debugging tools
 
 Speed-tests and Debug tools are provided, either via the Left-Click + CTRL (command) options or at [https://vdo.ninja/speedtest](https://vdo.ninja/speedtest) . These can be useful to diagnose problems, such as whether Packet Loss is a culprit to low-quality video, and remotely determining who is at fault.
