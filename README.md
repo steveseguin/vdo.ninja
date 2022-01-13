@@ -1,5 +1,6 @@
 
-#### ⚠ Notice! We've rebranded from OBS.Ninja to VDO.Ninja - still all else the same though  ✨
+### ⚠ Notice! We've rebranded from OBS.Ninja to VDO.Ninja - still all else the same though  ✨
+OBS.Ninja links will start redirecting to VDO.Ninja automatically on January 14th, 2022. If there are issues, simply refresh both the sender and viewer-side links or rename your links from obs.ninja to vdo.ninja.
 
 <img src="https://user-images.githubusercontent.com/2575698/124821455-bbfec580-df3c-11eb-9641-3d036cdd6c41.png" data-canonical-src="https://user-images.githubusercontent.com/2575698/124821455-bbfec580-df3c-11eb-9641-3d036cdd6c41.png" width="200"  />
 
