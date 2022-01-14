@@ -81,7 +81,10 @@ var miscTranslations = {
 	"you-have-been-transferred": "You've been transferred to a different room",
 	"you-are-no-longer-a-co-director": "You are no longer a co-director as you were transferred.",
 	"transferred": "Transferred",
-	"room-changed": "Your room has changed"
+	"room-changed": "Your room has changed",
+	"headphones-tip": "<i>Tip:</i> Use headphones to avoid audio echo issues.",
+	"camera-tip-c922": "<i>Tip:</i> To achieve 60-fps with a C922 webcam, low-light compensation needs to be turned off, exposure set to auto, and 720p used.",
+	"camera=tip-camlink": "<i>Tip:</i> A Cam Link may glitch green/purple if accessed elsewhere while already in use."
 };
 
 // function log(msg){ // uncomment to enable logging.
@@ -699,7 +702,7 @@ function youveBeenTransferred(){
 	getById("head2").innerHTML =  '<span data-translate="transferred-to-room">'+miscTranslations["room-changed"]+'</span>'; // 
 	if (session.director){
 		getById("head4").innerHTML = miscTranslations["you-are-no-longer-a-co-director"]; //"You are no longer a co-director as you were transferred."; //
-	}
+	} 
 	
 	if (session.label){
 		document.title = session.label + " - " + miscTranslations["transferred"];
@@ -2480,7 +2483,7 @@ function updateMixerRun(e=false){  // this is the main auto-mixing code.  It's a
 							//	mediaPool_invisible.push(session.rpcs[i].videoElement);  // skipped later on
 							} else {
 								roomQuality+=1;
-								if (("screenshare" in session.rpcs[i].videoElement)  && (session.rpcs[i].videoElement.screenshare)){
+								if (session.rpcs[i].screenShareState){
 									screenShareTotal+=1;
 								}
 							}
@@ -2547,7 +2550,7 @@ function updateMixerRun(e=false){  // this is the main auto-mixing code.  It's a
 					} else {
 						screenShareBitrate = false;
 					}
-				} catch(e){console.error(e);}
+				} catch(e){errorlog(e);}
 			} else {
 				roomBitrate = parseInt(totalRoomBitrate/roomQuality);
 				if (session.totalSceneBitrate){
@@ -2720,7 +2723,7 @@ function updateMixerRun(e=false){  // this is the main auto-mixing code.  It's a
 							//}
 						}
 					} else if (session.rpcs[i].videoElement.srcObject && ((session.rpcs[i].videoElement.srcObject.getVideoTracks().length==0) || session.rpcs[i].videoMuted)){
-						if (("screenshare" in session.rpcs[i].videoElement) && (session.rpcs[i].videoElement.screenshare)){
+						if (session.rpcs[i].screenShareState){
 							continue;
 						}
 					}
@@ -2782,9 +2785,9 @@ function updateMixerRun(e=false){  // this is the main auto-mixing code.  It's a
 						}
 					} else if (session.scene!==false){  // max
 						if (sceneBitrate!==false){
-							if ((screenShareBitrate!==false) && ("screenshare" in session.rpcs[i].videoElement) && (session.rpcs[i].videoElement.screenshare)){
+							if ((screenShareBitrate!==false) && session.rpcs[i].screenShareState){
 								session.requestRateLimit(screenShareBitrate, i); // well, screw that. Setting it to room quality.
-								console.log(screenShareBitrate);
+								//console.log(screenShareBitrate);
 							} else {
 								session.requestRateLimit(sceneBitrate, i); // well, screw that. Setting it to room quality.
 							}
@@ -2824,9 +2827,9 @@ function updateMixerRun(e=false){  // this is the main auto-mixing code.  It's a
 							// we will let the URL specified bitrate hold, since this isn't a real room.
 							session.requestRateLimit(-1, i);
 						} else {
-							if ((screenShareBitrate!==false) && ("screenshare" in session.rpcs[i].videoElement) && (session.rpcs[i].videoElement.screenshare)){
+							if ((screenShareBitrate!==false) && session.rpcs[i].screenShareState){
 								session.requestRateLimit(screenShareBitrate, i); // well, screw that. Setting it to room quality.
-								console.log(screenShareBitrate);
+								//console.log(screenShareBitrate);
 							} else {
 								session.requestRateLimit(roomBitrate, i); // well, screw that. Setting it to room quality.
 							}
@@ -2872,7 +2875,8 @@ function updateMixerRun(e=false){  // this is the main auto-mixing code.  It's a
 			}
 		}
 		
-		var sscount = false
+		var sssid = false
+		var sscount = 0;
 		var mpl = session.slots || mediaPool.length;
 		if (mpl>1){
 			var BB = 0;
@@ -2897,37 +2901,49 @@ function updateMixerRun(e=false){  // this is the main auto-mixing code.  It's a
 					rh = NH;
 				}
 				
-				if (mediaPool[NW-1] && ("screenshare" in mediaPool[NW-1]) && (mediaPool[NW-1].screenshare)){
-					sscount = mediaPool[NW-1].dataset.sid;
+				if (mediaPool[NW-1]){
+					//if (mediaPool[NW-1].tagName == "VIDEO"){
+					if (mediaPool[NW-1].dataset.UUID){
+						if (mediaPool[NW-1].dataset.UUID in session.rpcs){
+							if (session.rpcs[mediaPool[NW-1].dataset.UUID].screenShareState){
+								sscount+=1;
+								sssid = mediaPool[NW-1].dataset.sid;
+							}
+						}
+					} else if (("id" in mediaPool[NW-1]) && (mediaPool[NW-1].id == "screensharesource")){
+						sscount+=1;
+						sssid = mediaPool[NW-1].dataset.sid;
+					}
 				}
 			}
 		} else { var rw=1; var rh=1;}
-		
-		
+		if (sscount>1){
+			sssid = false; // lets not maximize if more than one screen share.
+		}
 	} catch(e){
 		errorlog(e);
-		sscount = false
+		sssid = false
 	}
 	var playarea = getById("gridlayout");
 	
 	var customLayout=false;
-	if (sscount && !session.layout){
+	if (sssid && !session.layout){
 		customLayout = {};
-		console.log(sscount);
+		//console.log(sssid);
 		if (mediaPool.length>8){
-			customLayout[sscount] = {"x":0,"y":20,"w":80,"h":80, "c": session.cover};
+			customLayout[sssid] = {"x":0,"y":20,"w":80,"h":80, "c": session.cover};
 		} else if (mediaPool.length>=7){
-			customLayout[sscount] = {"x":0,"y":25,"w":75,"h":75, "c": session.cover};
+			customLayout[sssid] = {"x":0,"y":25,"w":75,"h":75, "c": session.cover};
 		} else if (mediaPool.length==5){
-			customLayout[sscount] = {"x":0,"y":0,"w":75,"h":100, "c": session.cover};
+			customLayout[sssid] = {"x":0,"y":0,"w":75,"h":100, "c": session.cover};
 		} else if (mediaPool.length>5){
-			customLayout[sscount] = {"x":0,"y":33.333,"w":66.667,"h":66.667, "c": session.cover};
+			customLayout[sssid] = {"x":0,"y":33.333,"w":66.667,"h":66.667, "c": session.cover};
 		} else {
-			customLayout[sscount] = {"x":0,"y":0,"w":66.667,"h":100, "c": session.cover};
+			customLayout[sssid] = {"x":0,"y":0,"w":66.667,"h":100, "c": session.cover};
 		}
 		var posCount = 0;
 		for (var i = 0; i<mediaPool.length; i++){
-			if (mediaPool[i].dataset.sid === sscount){continue;}
+			if (mediaPool[i].dataset.sid === sssid){continue;}
 			if (mediaPool.length==2){
 				customLayout[mediaPool[i].dataset.sid] = {"x":66.667,"y":33.333,"w":33.333,"h":33.333, "c":true};
 			} else if (mediaPool.length==3){
@@ -3593,6 +3609,22 @@ function updateMixerRun(e=false){  // this is the main auto-mixing code.  It's a
 			
 			holder.style.position = "absolute";
 			
+			var customSet = false;
+			
+			if (typeof customLayout === "object"){
+				if (vid.dataset.sid in customLayout){
+					var left = (window.innerWidth/100*customLayout[vid.dataset.sid].x) || 0;
+					var top = (window.innerHeight/100*customLayout[vid.dataset.sid].y)  || 0;
+					var width = (window.innerWidth/100*customLayout[vid.dataset.sid].w)  || 0;
+					var height = (window.innerHeight/100*customLayout[vid.dataset.sid].h)  || 0;
+					
+					
+					wrw = width
+					hrh = height
+					customSet=true;
+					
+				}
+			}
 			if (session.cover){
 				holder.style.width = "100%";
 				holder.style.height = "100%";
@@ -3602,7 +3634,19 @@ function updateMixerRun(e=false){  // this is the main auto-mixing code.  It's a
 				if (("rotated" in vid) && ((vid.rotated==90) || (vid.rotated==270))){
 					var asw = wrw/vid.videoHeight;
 					var ash = hrh/vid.videoWidth;
-					if (asw < ash){
+					if (customSet){
+						if (asw < ash){
+							holder.style.width = Math.ceil(vid.videoHeight*asw)+"px";
+							holder.style.height = Math.ceil(vid.videoWidth*asw)+"px";
+							holder.style.left = Math.ceil((width - Math.ceil(vid.videoHeight*asw))/2);
+							holder.style.top =  Math.ceil(( height - Math.ceil(vid.videoWidth*asw))/2);
+						} else {
+							holder.style.width = Math.ceil(vid.videoHeight*ash)+"px";
+							holder.style.height = Math.ceil(vid.videoWidth*ash)+"px";
+							holder.style.left = Math.ceil((width - Math.ceil(vid.videoHeight*ash))/2);
+							holder.style.top =  Math.ceil((height - Math.ceil(vid.videoWidth*ash))/2);
+						}
+					} else if (asw < ash){
 						holder.style.width = Math.ceil(vid.videoHeight*asw)+"px";
 						holder.style.height = Math.ceil(vid.videoWidth*asw)+"px";
 						holder.style.left = Math.ceil((Math.ceil(w/rw) - Math.ceil(vid.videoHeight*asw))/2);
@@ -3650,10 +3694,23 @@ function updateMixerRun(e=false){  // this is the main auto-mixing code.  It's a
 					}
 					//}
 				} else if (("rotated" in vid) && (vid.rotated!==false)){
+					
 					var asw = wrw/vid.videoWidth;
 					var ash = hrh/vid.videoHeight;
 					vid.style.left = "unset";
-					if (asw < ash){
+					if (customSet){
+						if (asw < ash){
+							holder.style.width = Math.ceil(vid.videoWidth*asw)+"px";
+							holder.style.height = Math.ceil(vid.videoHeight*asw)+"px";
+							holder.style.left = Math.ceil((width - Math.ceil(vid.videoWidth*asw))/2);
+							holder.style.top =  Math.ceil(( height - Math.ceil(vid.videoHeight*asw))/2);
+						} else {
+							holder.style.width = Math.ceil(vid.videoWidth*ash)+"px";
+							holder.style.height = Math.ceil(vid.videoHeight*ash)+"px";
+							holder.style.left = Math.ceil((width - Math.ceil(vid.videoWidth*ash))/2);
+							holder.style.top =  Math.ceil((height - Math.ceil(vid.videoHeight*ash))/2);
+						}
+					} else if (asw < ash){
 						holder.style.width = Math.ceil(vid.videoWidth*asw)+"px";
 						holder.style.height = Math.ceil(vid.videoHeight*asw)+"px";
 						holder.style.left = Math.ceil((Math.ceil(w/rw) - Math.ceil(vid.videoWidth*asw))/2);
@@ -3667,7 +3724,19 @@ function updateMixerRun(e=false){  // this is the main auto-mixing code.  It's a
 				} else {
 					var asw = wrw/vid.videoWidth;
 					var ash = hrh/vid.videoHeight;
-					if (asw < ash){
+					if (customSet){
+						if (asw < ash){
+							holder.style.width = Math.ceil(vid.videoWidth*asw)+"px";
+							holder.style.height = Math.ceil(vid.videoHeight*asw)+"px";
+							holder.style.left = Math.ceil((width - Math.ceil(vid.videoWidth*asw))/2);
+							holder.style.top =  Math.ceil((height - Math.ceil(vid.videoHeight*asw))/2);
+						} else {
+							holder.style.width = Math.ceil(vid.videoWidth*ash)+"px";
+							holder.style.height = Math.ceil(vid.videoHeight*ash)+"px";
+							holder.style.left = Math.ceil((width - Math.ceil(vid.videoWidth*ash))/2);
+							holder.style.top =  Math.ceil((height - Math.ceil(vid.videoHeight*ash))/2);
+						}
+					} else if (asw < ash){
 						holder.style.width = Math.ceil(vid.videoWidth*asw)+"px";
 						holder.style.height = Math.ceil(vid.videoHeight*asw)+"px";
 						holder.style.left = Math.ceil((Math.ceil(w/rw) - Math.ceil(vid.videoWidth*asw))/2);
@@ -3682,8 +3751,19 @@ function updateMixerRun(e=false){  // this is the main auto-mixing code.  It's a
 			} else if (vid.width && vid.height){
 				var asw = wrw/vid.width;
 				var ash = hrh/vid.height;
-				
-				if (asw < ash){
+				if (customSet){
+					if (asw < ash){
+						holder.style.width = Math.ceil(vid.width*asw)+"px";
+						holder.style.height = Math.ceil(vid.height*asw)+"px";
+						holder.style.left = Math.ceil((width - Math.ceil(vid.width*asw))/2);
+						holder.style.top =  Math.ceil(( height - Math.ceil(vid.height*asw))/2);
+					} else {
+						holder.style.width = Math.ceil(vid.width*ash)+"px";
+						holder.style.height = Math.ceil(vid.height*ash)+"px";
+						holder.style.left = Math.ceil((width - Math.ceil(vid.width*ash))/2);
+						holder.style.top =  Math.ceil((height - Math.ceil(vid.height*ash))/2);
+					}
+				} else if (asw < ash){
 					holder.style.width = Math.ceil(vid.width*asw)+"px";
 					holder.style.height = Math.ceil(vid.height*asw)+"px";
 					holder.style.left = Math.ceil((Math.ceil(w/rw) - Math.ceil(vid.width*asw))/2);
@@ -5223,7 +5303,7 @@ function drawFace() {
 			if (!vid.videoWidth){
 				timers.timeoutDraw = setTimeout(function(){draw();},1000);
 				timers.activelyProcessingDraw = false;
-				console.log(vid.videoWidth);
+				//console.log(vid.videoWidth);
 				return
 			}
 			
@@ -6085,7 +6165,7 @@ function printMyStats(menu) { // see: setupStatsMenu
 				}
 			});
 		}
-	} catch(e){console.error(e);}
+	} catch(e){errorlog(e);}
 
 	function printViewValues(obj) {
 		
@@ -6702,6 +6782,10 @@ function toggleControlBar() {
 function toggleMute(apply = false) { // TODO: I need to have this be MUTE, toggle, with volume not touched.
 
 	log("muting");
+	log(session.videoElement);
+	log(session.videoElement.muted);
+	log(session.videoElement.volume);
+	session.videoElement.controls = true;
 
 	if (session.director) {
 		if (!session.directorEnabledPPT) {
@@ -10090,6 +10174,7 @@ async function createDirectorOnlyBox() {
 function shiftPC(ele, shift){
 	var UUID = ele.dataset.UUID;
 	var target = document.getElementById("container_"+UUID);
+	target.shifted = true;
 	if (shift==1){
 		if (target.nextSibling){
 			target.parentNode.insertBefore(target.nextSibling, target);
@@ -10097,6 +10182,67 @@ function shiftPC(ele, shift){
 	} else {
 		if (target.previousSibling){
 			target.parentNode.insertBefore(target, target.previousSibling);
+		}
+	}
+	updateLockedElements();
+}
+
+function updateLockedElements(){
+	var eles = getById("guestFeeds").children;
+	for (var i=0;i<eles.length;i++){
+		try {
+			var UUID = eles[i].UUID;
+			var lock = document.getElementById("position_"+UUID).dataset.locked;
+			if (parseInt(lock)){
+				lockPosition(document.getElementById("position_"+UUID),true);
+			}
+		} catch(e){errorlog(e);}
+	}
+}
+
+function lockPosition(ele, apply=false){
+	var UUID = ele.dataset.UUID;
+	if (apply){
+		if (ele.dataset.locked && parseInt(ele.dataset.locked)){
+			if (getById("guestFeeds")){
+				var currentPosition = Array.prototype.indexOf.call(getById("guestFeeds").children, document.getElementById("container_"+UUID))+1;
+				ele.innerHTML = "<b>#"+ele.dataset.locked+"</b>";
+				ele.parentNode.classList.add("locked");
+				
+				while (currentPosition>parseInt(ele.dataset.locked)){
+					var node = document.getElementById("container_"+UUID);
+					parent = node.parentNode,
+					prev = node.previousSibling,
+					oldChild = parent.removeChild(node);
+					parent.insertBefore( oldChild, prev );
+					currentPosition = Array.prototype.indexOf.call(getById("guestFeeds").children, document.getElementById("container_"+UUID))+1;
+				}
+				
+				while ((currentPosition<parseInt(ele.dataset.locked)) && (getById("guestFeeds").children.length>currentPosition)){
+					var node = document.getElementById("container_"+UUID);
+					parent = node.parentNode,
+					next = node.nextSibling,
+					oldChild = parent.removeChild(node);
+					parent.insertBefore(node, next.nextSibling);
+					currentPosition = Array.prototype.indexOf.call(getById("guestFeeds").children, document.getElementById("container_"+UUID))+1;
+				}
+			}
+		} else {
+			ele.dataset.locked = 0;
+			ele.innerHTML = "<i class='las la-lock-open'></i>";
+			ele.parentNode.classList.remove("locked");
+		}
+	} else {
+		if (ele.dataset.locked && parseInt(ele.dataset.locked)){
+			ele.dataset.locked = 0;
+			ele.innerHTML = "<i class='las la-lock-open'></i>";
+			ele.parentNode.classList.remove("locked");
+		} else {
+			if (getById("guestFeeds")){
+				ele.dataset.locked = Array.prototype.indexOf.call(getById("guestFeeds").children, document.getElementById("container_"+UUID))+1;
+				ele.innerHTML = "<b>#"+ele.dataset.locked+"</b>";
+				ele.parentNode.classList.add("locked");
+			}
 		}
 	}
 }
@@ -10109,12 +10255,38 @@ function createControlBox(UUID, soloLink, streamID) {
 
 	var container = document.createElement("div");
 	container.id = "container_" + UUID; // needed to delete on user disconnect
+	container.UUID = UUID;
 	container.className = "vidcon directorMargins";
 	controls.style.display = "block";
 	controls.id = "controls_" + UUID;
-	getById("guestFeeds").appendChild(container);
+	
+	if (session.orderby){
+		try {
+			var added = false;
+			for (var i=0;i<getById("guestFeeds").children.length;i++){
+				if (getById("guestFeeds").children[i].UUID && !getById("guestFeeds").children[i].shifted){
+					if (getById("guestFeeds").children[i].UUID in session.rpcs){
+						if (session.rpcs[getById("guestFeeds").children[i].UUID].streamID.toLowerCase() > streamID.toLowerCase()){
+							getById("guestFeeds").insertBefore(container, getById("guestFeeds").children[i]);
+							added = true;
+							break;
+						}
+					}
+				}
+			
+			}
+			if (!added){
+				getById("guestFeeds").appendChild(container);
+			}
+		} catch(e){
+			getById("guestFeeds").appendChild(container);
+		}
+	} else {
+		getById("guestFeeds").appendChild(container);
+	}
+	
 
-	var buttons = "<div title='Does not impact scene order.' class='shift'><i class='las la-angle-left' data--u-u-i-d='"+UUID+"' onclick='shiftPC(this,-1);'></i><i class='las la-angle-right' data--u-u-i-d='"+UUID+"' onclick='shiftPC(this,1);'></i></div><div class='streamID' style='user-select: none;'>ID: <span style='user-select: text;'>" + streamID + "</span>\
+	var buttons = "<div title='Does not impact scene order.' class='shift'><i class='las la-angle-left' data--u-u-i-d='"+UUID+"' onclick='shiftPC(this,-1);'></i><span onclick='lockPosition(this);' style='cursor:pointer;' data-locked='0' data--u-u-i-d='"+UUID+"' id='position_"+UUID+"'><i class='las la-lock-open'></i></span><i class='las la-angle-right' data--u-u-i-d='"+UUID+"' onclick='shiftPC(this,1);'></i></div><div class='streamID' style='user-select: none;'>ID: <span style='user-select: text;'>" + streamID + "</span>\
 	<i class='las la-copy' data-sid='" + streamID + "' onclick='copyFunction(this.dataset.sid,event)' title='Copy this Stream ID to the clipboard' style='cursor:pointer'></i>\
 	<span id='label_" + UUID + "' title='Click here to edit the label for this stream. Changes will propagate to all viewers of this stream'></span>\
 	</div>";
@@ -10188,6 +10360,8 @@ function createControlBox(UUID, soloLink, streamID) {
 	});
 
 	container.innerHTML = buttons;
+	updateLockedElements();
+	
 	container.appendChild(videoContainer);
 	
 	if (session.signalMeter){
@@ -10248,9 +10422,6 @@ function createControlBox(UUID, soloLink, streamID) {
 			} else {
 				session.rpcs[UUID].batteryMeter.dataset.plugged = "1";
 			}
-			
-			
-			
 		}
 		videoContainer.appendChild(session.rpcs[UUID].batteryMeter);
 	}
@@ -11469,6 +11640,9 @@ function gotDevices2(deviceInfos) {
 				if (session.screenShareState){
 					session.screenShareState = false;
 					pokeIframeAPI("screen-share-ended");
+					var data = {};
+					data.screenShareState = session.screenShareState;
+					session.sendMessage(data);
 				}
 				getById("screensharebutton").classList.add("float");
 				getById("screensharebutton").classList.remove("float2");
@@ -12373,9 +12547,15 @@ async function toggleScreenShare(reload = false) { ////////////////////////////
 		await grabScreen(quality = 0, audio = true, videoOnEnd = true).then(res => {
 			if (res != false) {
 				session.screenShareState = true;
+				var data = {};
+				data.screenShareState = session.screenShareState;
+				session.sendMessage(data);
+				
 				getById("screensharebutton").classList.add("float2");
 				getById("screensharebutton").classList.remove("float");
 				enumerateDevices().then(gotDevices2).then(function() {});
+				
+				
 			}
 
 		});
@@ -12386,9 +12566,15 @@ async function toggleScreenShare(reload = false) { ////////////////////////////
 		await grabScreen(quality = 0, audio = true, videoOnEnd = true).then(res => {
 			if (res != false) {
 				session.screenShareState = true;
+				var data = {};
+				data.screenShareState = session.screenShareState;
+				session.sendMessage(data);
+				
 				getById("screensharebutton").classList.add("float2");
 				getById("screensharebutton").classList.remove("float");
 				enumerateDevices().then(gotDevices2).then(function() {});
+				
+				
 			}
 		});
 
@@ -12396,6 +12582,11 @@ async function toggleScreenShare(reload = false) { ////////////////////////////
 
 		session.screenShareState = false;
 		pokeIframeAPI("screen-share-ended");
+		
+		var data = {};
+		data.screenShareState = session.screenShareState;
+		session.sendMessage(data);
+		
 		
 		if (screenShareAudioTrack){
 			session.streamSrc.getAudioTracks().forEach(function(track) { // previous video track; saving it. Must remove the track at some point.
@@ -12415,9 +12606,7 @@ async function toggleScreenShare(reload = false) { ////////////////////////////
 		getById("screensharebutton").classList.add("float");
 		getById("screensharebutton").classList.remove("float2");
 
-		//if (beforeScreenShare) {
-			
-			//cleanupMediaTracks();
+		
 
 		var addedAlready = false;
 		session.streamSrc.getVideoTracks().forEach(function(track) {
@@ -12452,13 +12641,7 @@ async function toggleScreenShare(reload = false) { ////////////////////////////
 		beforeScreenShare = null;
 		screenShareAudioTrack=null;
 		toggleSettings(forceShow = true);
-		//enumerateDevices().then(gotDevices2).then(function(){
-		//grabVideo();
-		//grabAudio();
-		//	toggleSettings(forceShow=true);
-		//});
-
-
+		
 	}
 }
 
@@ -12923,6 +13106,9 @@ async function grabScreen(quality = 0, audio = true, videoOnEnd = false) {
 
 				session.screenShareState = false;
 				pokeIframeAPI("screen-share-ended");
+				var data = {};
+				data.screenShareState = session.screenShareState;
+				session.sendMessage(data);
 
 				getById("screensharebutton").classList.add("float");
 				getById("screensharebutton").classList.remove("float2");
@@ -13252,7 +13438,7 @@ async function grabVideo(quality = 0, eleName = 'previewWebcam', selector = "sel
 	}
 
 	session.videoElement.controls = false;
-
+	
 	log("selector: " + selector);
 	var videoSelect = document.querySelector(selector);  // document.querySelector("videoSource3").value == "ZZZ"
 	log(videoSelect);
@@ -13407,14 +13593,15 @@ async function grabVideo(quality = 0, eleName = 'previewWebcam', selector = "sel
 			mirror = true;
 		} else if (videoSelect.options[videoSelect.selectedIndex].text.toLowerCase().includes("c922")) {
 			if ((session.quality!==2) && !session.cleanOutput){
-				getById("cameraTipContext1").innerHTML = "<i>Tip:</i> To achieve 60-fps with a C922 webcam, low-light compensation needs to be turned off, exposure set to auto, and 720p used.";
+				getById("cameraTipContext1").innerHTML = miscTranslations["camera-tip-c922"];
 				getById("cameraTip1").classList.remove("advanced");
 			}
 		} else if (videoSelect.options[videoSelect.selectedIndex].text.toLowerCase().includes("cam link")) {
 			if (!session.cleanOutput){
-				getById("cameraTipContext1").innerHTML = "<i>Tip:</i> A Cam Link may glitch green/purple if accessed elsewhere while already in use.";
+				getById("cameraTipContext1").innerHTML = miscTranslations["camera=tip-camlink"];
 				getById("cameraTip1").classList.remove("advanced");
 			}
+			
 		} else if (session.mobile){
 			mirrorcheck = true;
 			mirror = false;
@@ -13531,6 +13718,11 @@ async function grabVideo(quality = 0, eleName = 'previewWebcam', selector = "sel
 				if (getById("popupSelector_constraints_loading")) {
 					getById("popupSelector_constraints_loading").style.display = "";
 				}
+				
+				if (iOS || iPad){ // TEMPORARY: iOS 15.3 beta fix
+					session.videoElement.muted = false;
+					session.videoElement.muted = true;
+				}
 
 				grabVideoTimer = setTimeout(function(callback3, gumid) {
 					
@@ -13578,6 +13770,11 @@ async function grabVideo(quality = 0, eleName = 'previewWebcam', selector = "sel
 					}
 					
 					updateForceRotate();
+					
+					if (iOS || iPad){  // TEMPORARY: iOS 15.3 beta fix
+						session.videoElement.muted = false;
+						session.videoElement.muted = true;
+					}
 					
 					dragElement(session.videoElement);
 				}, 1000, callback2, gumID); // focus
@@ -14696,10 +14893,17 @@ async function publishScreen2(constraints, audioList=[], audio=true){ // webcam 
 		}
 		 /// RETURN stream for preview? rather than jumping right in.
 		session.screenShareState=true;
+		var data = {};
+		data.screenShareState = session.screenShareState;
+		session.sendMessage(data);
+		
 		try {
 			stream.getVideoTracks()[0].onended = function () {
 				session.screenShareState=false;
 				pokeIframeAPI("screen-share-ended");
+				var data = {};
+				data.screenShareState = session.screenShareState;
+				session.sendMessage(data);
 				grabScreen();
 			};
 		} catch(e){log("No Video selected; screensharing?");}
@@ -14968,6 +15172,9 @@ async function publishScreen2(constraints, audioList=[], audio=true){ // webcam 
 			// User Stopped it.
 			session.screenShareState=false;
 			pokeIframeAPI("screen-share-ended");
+			var data = {};
+			data.screenShareState = session.screenShareState;
+			session.sendMessage(data);
 			return false;
 		} else {
 			if (audio==true){
@@ -18428,8 +18635,14 @@ function createIframePopup() {
 	if (session.meshcastBitrate){
 		extras += "&mcb="+session.meshcastBitrate; 
 	}
+	if (session.meshcastScreenShareBitrate){
+		extras += "&mcssbitrate="+session.meshcastScreenShareBitrate;
+	}
 	if (session.meshcastCodec){
 		extras += "&mccodec="+session.meshcastCodec; 
+	}
+	if (session.meshcastScreenShareCodec){
+		extras += "&mcsscodec="+session.meshcastScreenShareCodec; 
 	}
 	
 	if (session.screensharequality!==false){
@@ -18440,9 +18653,14 @@ function createIframePopup() {
 		extras += "&q=0";
 	}
 	
-	if (session.label){
-		extras += "&label="+encodeURIComponent(session.label);
+	if (session.screenShareLabel!==false){
+		if (session.screenShareLabel){
+			extras += "&label="+encodeURIComponent(session.screenShareLabel);
+		} else if (session.label){
+			extras += "&label="+encodeURIComponent(session.label);
+		}
 	}
+	
 	if (session.screensharefps!==false){
 		extras += "&maxframerate="+parseInt(session.screensharefps*100)/100.0;
 	} 
@@ -18474,6 +18692,7 @@ function createIframePopup() {
 	iframe.style.height = "100%";
 	iframe.style.overflow = "hidden";
 	iframe.id = "screensharesource";
+	iframe.dataset.sid = "#screensharesource";
 	iframe.style.zIndex = "0";
 
 
@@ -18531,6 +18750,10 @@ function previewWebcam() {
 			constraint.audio.echoCancellation = true;
 		} else {
 			constraint.audio.echoCancellation = false;
+			if (!session.cleanoutput){
+				getById("headphoneTip1").classList.remove("advanced");
+				getById("headphoneTipContext1").innerHTML = miscTranslations["headphones-tip"];
+			}
 		}
 		if (session.autoGainControl !== false) {
 			constraint.audio.autoGainControl = true;
@@ -21402,12 +21625,7 @@ async function loadTFLiteModel(){
 function getGuestTarget(type, id){
 	var element = document.querySelectorAll('[data-action-type="'+type+'"][data-sid="'+id+'"]'); // data-sid="P5MQpia"
 	if (!element.length){
-		element = document.querySelectorAll('[data-action-type="'+type+'"][data--u-u-i-d]');
-		if (element[id]){
-			element = element[id];
-		} else {
-			return false
-		}
+		return element = getRightOrderedElement('[data-action-type="'+type+'"][data--u-u-i-d]', id);
 	} else {
 		element = element[0];
 	}
@@ -21417,12 +21635,7 @@ function getGuestTarget(type, id){
 function getGuestTargetScene(scene, id){
 	var element = document.querySelectorAll('[data-action-type="addToScene"][data-scene="'+scene+'"][data-sid="'+id+'"]'); // data-sid="P5MQpia"
 	if (!element.length){
-		element = document.querySelectorAll('[data-action-type="addToScene"][data-scene="'+scene+'"][data--u-u-i-d]');
-		if (element[id]){
-			element = element[id];
-		} else {
-			return false
-		}
+		return element = getRightOrderedElement('[data-action-type="addToScene"][data-scene="'+scene+'"][data--u-u-i-d]', id);
 	} else {
 		element = element[0];
 	}
@@ -21431,12 +21644,7 @@ function getGuestTargetScene(scene, id){
 function getGuestTargetGroup(group, id){
 	var element = document.querySelectorAll('[data-action-type="toggle-group"][data-value="'+group+'"][data-sid="'+id+'"]'); // data-sid="P5MQpia"
 	if (!element.length){
-		element = document.querySelectorAll('[data-action-type="toggle-group"][data-value="'+group+'"][data--u-u-i-d]');
-		if (element[id]){
-			element = element[id];
-		} else {
-			return false
-		}
+		return getRightOrderedElement('[data-action-type="toggle-group"][data-value="'+group+'"][data--u-u-i-d]', id);
 	} else {
 		element = element[0];
 	}
@@ -21826,6 +22034,41 @@ function midiHotkeysNote(note, velocity=false){
 		}
 	}
 }
+
+function getRightOrderedElement(selector, guestslot, UUID=false){
+	
+	var elements = getById("guestFeeds").children;
+	if (!UUID){
+		for (var i=0;i<elements.length;i++){
+			try {
+				UUID = elements[i].UUID;
+				var lock = parseInt(document.getElementById("position_"+UUID).dataset.locked);
+				if (lock && (lock==guestslot+1)){
+					return elements[i].querySelector(selector) || false;
+				}
+			} catch(e){}
+		}
+	}
+	
+	if (elements[guestslot]){
+		return elements[guestslot].querySelector(selector) || false;
+	} else {
+		return false;
+	}
+}
+
+function midiHotkeysCommand_offset(command, value, offset=1){
+	//console.log(offset,command);
+	for (var i = 0; i<9;i++){
+		if (command == offset+i) { 
+			var ele =  getRightOrderedElement('[data-action-type="mute-guest"][data--u-u-i-d]', command - offset);
+			if (ele) {
+				remoteMute(ele, true);
+			}
+		}
+	}
+}
+
 function midiHotkeysCommand(command, value){
 	if (command == 110){
 		if (value == 0) {  // open and close the chat window
@@ -21850,90 +22093,90 @@ function midiHotkeysCommand(command, value){
 	} else if (command > 110){
 		var guestslot = command-111;
 		if (value == 0) { 
-			var elements = document.querySelectorAll('[data-action-type="forward"][data--u-u-i-d]');
-			if (elements[guestslot]) {
-				directMigrate(elements[guestslot], true);
+			var ele = getRightOrderedElement('[data-action-type="forward"][data--u-u-i-d]', guestslot);
+			if (ele) {
+				directMigrate(ele, true);
 			}
 		} else if (value == 1) { 
-			var elements = document.querySelectorAll('[data-action-type="addToScene"][data-scene="1"][data--u-u-i-d]');
-			if (elements[guestslot]) {
-				directEnable(elements[guestslot], true);
+			var ele = getRightOrderedElement('[data-action-type="addToScene"][data-scene="1"][data--u-u-i-d]', guestslot);
+			if (ele) {
+				directEnable(ele, true);
 			}
 		} else if (value == 2) { 
-			var elements = document.querySelectorAll('[data-action-type="mute-scene"][data--u-u-i-d]');
-			if (elements[guestslot]) {
-				directMute(elements[guestslot], true);
+			var ele = getRightOrderedElement('[data-action-type="mute-scene"][data--u-u-i-d]', guestslot);
+			if (ele) {
+				directMute(ele, true);
 			}
 		} else if (value == 3) { 
-			var elements = document.querySelectorAll('[data-action-type="mute-guest"][data--u-u-i-d]');
-			if (elements[guestslot]) {
-				remoteMute(elements[guestslot], true);
+			var ele = getRightOrderedElement('[data-action-type="mute-guest"][data--u-u-i-d]', guestslot);
+			if (ele) {
+				remoteMute(ele, true);
 			}
 		}  else if (value == 4) { 
-			var elements = document.querySelectorAll('[data-action-type="hangup"][data--u-u-i-d]');
-			if (elements[guestslot]) {
-				directHangup(elements[guestslot], true);
+			var ele = getRightOrderedElement('[data-action-type="hangup"][data--u-u-i-d]', guestslot);
+			if (ele) {
+				directHangup(ele, true);
 			}
 		} else if (value == 5) { 
-			var elements = document.querySelectorAll('[data-action-type="solo-chat"][data--u-u-i-d]');
-			if (elements[guestslot]) {
-				session.toggleSoloChat(elements[guestslot].dataset.UUID);
+			var ele = getRightOrderedElement('[data-action-type="solo-chat"][data--u-u-i-d]', guestslot);
+			if (ele) {
+				session.toggleSoloChat(ele.dataset.UUID);
 			}
 		} else if (value == 6) { 
-			var elements = document.querySelectorAll('[data-action-type="toggle-remote-speaker"][data--u-u-i-d]');
-			if (elements[guestslot]) {
-				remoteSpeakerMute(elements[guestslot]);
+			var ele = getRightOrderedElement('[data-action-type="toggle-remote-speaker"][data--u-u-i-d]', guestslot);
+			if (ele) {
+				remoteSpeakerMute(ele);
 			}
 		} else if (value == 7) { 
-			var elements = document.querySelectorAll('[data-action-type="toggle-remote-display"][data--u-u-i-d]');
-			if (elements[guestslot]) {
-				remoteDisplayMute(elements[guestslot]);
+			var ele = getRightOrderedElement('[data-action-type="toggle-remote-display"][data--u-u-i-d]', guestslot);
+			if (ele) {
+				remoteDisplayMute(ele);
 			}
 		} else if (value == 8) { 
-			var elements = document.querySelectorAll('[data-action-type="force-keyframe"][data--u-u-i-d]');
-			if (elements[guestslot]) {
-				requestKeyframeScene(elements[guestslot]);
+			var ele = getRightOrderedElement('[data-action-type="force-keyframe"][data--u-u-i-d]', guestslot);
+			if (ele) {
+				requestKeyframeScene(ele);
 			}
 		} else if (value == 12) { 
-			var elements = document.querySelectorAll('[data-action-type="addToScene"][data-scene="2"][data--u-u-i-d]');
-			if (elements[guestslot]) {
-				directEnable(elements[guestslot], true);
+			var ele = getRightOrderedElement('[data-action-type="addToScene"][data-scene="2"][data--u-u-i-d]', guestslot);
+			if (ele) {
+				directEnable(ele, true);
 			}
 		} else if (value == 13) { 
-			var elements = document.querySelectorAll('[data-action-type="addToScene"][data-scene="3"][data--u-u-i-d]');
-			if (elements[guestslot]) {
-				directEnable(elements[guestslot], true);
+			var ele = getRightOrderedElement('[data-action-type="addToScene"][data-scene="3"][data--u-u-i-d]', guestslot);
+			if (ele) {
+				directEnable(ele, true);
 			}
 		} else if (value == 14) { 
-			var elements = document.querySelectorAll('[data-action-type="addToScene"][data-scene="4"][data--u-u-i-d]');
-			if (elements[guestslot]) {
-				directEnable(elements[guestslot], true);
+			var ele = getRightOrderedElement('[data-action-type="addToScene"][data-scene="4"][data--u-u-i-d]', guestslot);
+			if (ele) {
+				directEnable(ele, true);
 			}
 		} else if (value == 15) { 
-			var elements = document.querySelectorAll('[data-action-type="addToScene"][data-scene="5"][data--u-u-i-d]');
-			if (elements[guestslot]) {
-				directEnable(elements[guestslot], true);
+			var ele = getRightOrderedElement('[data-action-type="addToScene"][data-scene="5"][data--u-u-i-d]', guestslot);
+			if (ele) {
+				directEnable(ele, true);
 			}
 		} else if (value == 16) { 
-			var elements = document.querySelectorAll('[data-action-type="addToScene"][data-scene="6"][data--u-u-i-d]');
-			if (elements[guestslot]) {
-				directEnable(elements[guestslot], true);
+			var ele = getRightOrderedElement('[data-action-type="addToScene"][data-scene="6"][data--u-u-i-d]', guestslot);
+			if (ele) {
+				directEnable(ele, true);
 			}
 		} else if (value == 17) { 
-			var elements = document.querySelectorAll('[data-action-type="addToScene"][data-scene="7"][data--u-u-i-d]');
-			if (elements[guestslot]) {
-				directEnable(elements[guestslot], true);
+			var ele = getRightOrderedElement('[data-action-type="addToScene"][data-scene="7"][data--u-u-i-d]', guestslot);
+			if (ele) {
+				directEnable(ele, true);
 			}
 		} else if (value == 18) { 
-			var elements = document.querySelectorAll('[data-action-type="addToScene"][data-scene="8"][data--u-u-i-d]');
-			if (elements[guestslot]) {
-				directEnable(elements[guestslot], true);
+			var ele = getRightOrderedElement('[data-action-type="addToScene"][data-scene="8"][data--u-u-i-d]', guestslot);
+			if (ele) {
+				directEnable(ele, true);
 			}
 		} else if ((value => 27)) { 
-			var elements = document.querySelectorAll('[data-action-type="volume"][data--u-u-i-d]');
-			if (elements[guestslot]) {
-				elements[guestslot].value = parseInt(value-27);
-				remoteVolume(elements[guestslot]);
+			var ele = getRightOrderedElement('[data-action-type="volume"][data--u-u-i-d]', guestslot);
+			if (ele) {
+				ele.value = parseInt(value-27);
+				remoteVolume(ele);
 			}
 		}
 	}
@@ -22437,11 +22680,37 @@ function createControlBoxScreenshare(UUID, soloLink, streamID) {
 
 	var container = document.createElement("div");
 	container.id = "container_" + UUID; // needed to delete on user disconnect
+	container.UUID = UUID;
 	container.className = "vidcon directorMargins";
 	controls.style.display = "block";
 	controls.id = "controls_" + UUID;
 	
-	getById("guestFeeds").appendChild(container);
+	if (session.orderby){
+		try {
+			var added = false;
+			for (var i=0;i<getById("guestFeeds").children.length;i++){
+				if (getById("guestFeeds").children[i].UUID && !getById("guestFeeds").children[i].shifted){
+					if (getById("guestFeeds").children[i].UUID in session.rpcs){
+						if (session.rpcs[getById("guestFeeds").children[i].UUID].streamID.toLowerCase() > streamID.toLowerCase()){
+							getById("guestFeeds").insertBefore(container, getById("guestFeeds").children[i]);
+							added = true;
+							break;
+						}
+					}
+				}
+			
+			}
+			if (!added){
+				getById("guestFeeds").appendChild(container);
+			}
+		} catch(e){
+			getById("guestFeeds").appendChild(container);
+		}
+	} else {
+		getById("guestFeeds").appendChild(container);
+	}
+	
+	
 
 	controls.querySelector(".controlsGrid").classList.add("notmain");
 
@@ -22519,6 +22788,8 @@ function createControlBoxScreenshare(UUID, soloLink, streamID) {
 	});
 
 	container.innerHTML = buttons;
+	updateLockedElements();
+	
 	container.appendChild(videoContainer);
 	
 	if (session.signalMeter){

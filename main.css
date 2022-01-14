@@ -344,6 +344,7 @@ button.white:active {
 }
 
 
+
 body.darktheme .credits {
 	color: #707a93;
 }
@@ -922,9 +923,6 @@ button.btnArmTransferRoom.selected{
 	#head4{
 		display:none;
 	}
-	#head5{
-		display:none;
-	}
 	#head2{
 		display:none;
 	}
@@ -1114,6 +1112,22 @@ body {
 	margin: 0;
 	opacity:  1;
 	transition: opacity .1s linear;
+	scrollbar-color:#666 #201c29;
+}
+
+::-webkit-scrollbar {
+    width: 15px;
+}
+ 
+::-webkit-scrollbar-track {
+    -webkit-box-shadow: inset 0 0 13px rgb(0 0 0 / 90%);
+    border-radius: 4px;
+}
+ 
+::-webkit-scrollbar-thumb {
+    border-radius: 4px;
+    -webkit-box-shadow: inset 0 0 16px rgb(150 150 150 / 100%);
+	border: solid 3px transparent;
 }
 
 .previewWebcam {
@@ -1319,6 +1333,31 @@ input[type=range]:focus::-ms-fill-upper {
 	.close {
 		top: 0px;
 		right: 0px;
+	}
+}
+
+
+@media only screen and (max-width: 1220px) {
+	#fakeguest4{
+		display: none!important;
+	}
+	#fakeguestinfo{
+		display: none!important;
+	}
+}
+@media only screen and (max-width: 933px) {
+	#fakeguest3{
+		display: none!important;
+	}
+}
+@media only screen and (max-width: 641px) {
+	#fakeguest2{
+		display: none!important;
+	}
+}
+@media only screen and (max-width: 292px) {
+	#fakeguest1{
+		display: none!important;
 	}
 }
 
@@ -2726,14 +2765,24 @@ a.task {
 .shift {
     display: inline-block;
     position: relative;
-    margin: 7px 0 0 4px;
+    margin: 0 0 0 4px;
     padding: 0;
-    width: 27px;
+    width: 33px;
     font-size: 0.8em;
-    top: -7px;
+    top: -4.9px;
 }
 .shift>i {
 	cursor:pointer;
+	width: 10px;
+    margin: 0 auto;
+    left: -1.1px;
+    position: relative;
+}
+.shift.locked>i{
+	display:none;
+}
+.shift.locked>span{
+	margin-left: 7px;
 }
 #toggleroomnotes {
 	grid-column: 4;
@@ -2786,19 +2835,19 @@ i.las.la-circle {
 }
 .streamID {
 	text-align: right;
-    margin: 5px 5px 5px 0px;
+    margin: 5px 5px 2px 0px;
     font-size: 0.7em;
     text-overflow: ellipsis;
     overflow: hidden;
     position: relative;
-    width: 230px;
+    width: 227px;
     display: inline-block;
 }
 .streamID i {
 	margin-left: 5px;
 	font-size: 1.3em;
 	position: relative;
-	top: 2px;
+	top: 1px;
 }
 .soloLink {
 	background: none;
@@ -3698,7 +3747,10 @@ input:checked + .slider:before {
   content: "\f0a0"; } 
 .la-signal:before {
   content: "\f012"; }
-  
+.la-unlock:before {
+  content: "\f023"; }
+.la-lock-open:before {
+  content: "\f3c1"; }
 @media (prefers-color-scheme: dark) {
 	:root {
 		--color-mode: dark;
@@ -3708,6 +3760,7 @@ input:checked + .slider:before {
 
 body.darktheme  {
 	color: white;
+	scrollbar-color: #000 #333;
 }
 body.darktheme form>label{
 	color: white;

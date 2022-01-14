@@ -407,6 +407,11 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 		session.midiHotkeys = parseInt(session.midiHotkeys);
 	}
 	
+	if (urlParams.has('midioffset')){
+		session.midiOffset = urlParams.get('midioffset') || 0;
+		session.midiOffset = parseInt(session.midiOffset);
+	}
+	
 	if (urlParams.has('midiremote') || urlParams.has('remotemidi')){
 		if (session.director!==false){
 			session.midiRemote = parseInt(urlParams.get('midiremote')) || parseInt(urlParams.get ('remotemidi')) || 4;
@@ -516,6 +521,11 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 	if (urlParams.has('mute') || urlParams.has('muted') || urlParams.has('m')) {
 		session.muted = true;
 	}
+	
+	if (urlParams.has('hideguest') || urlParams.has('hidden')) {
+		session.directorVideoMuted = true;
+	}
+	
 	
 	if (urlParams.has('safemode')) {
 		session.safemode = true;
@@ -830,20 +840,28 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 		generateHash(session.password + session.salt, 6).then(function(hash) { // million to one error. 
 			log("hash is " + hash);
 			if (hash.substring(0, 4) !== hash_input) { // hash crc checks are just first 4 characters.
-				session.taintedSession = true;
-				if (!(session.cleanOutput)) {
-					getById("request_info_prompt").innerHTML = miscTranslations["password-incorrect"];
-					getById("request_info_prompt").style.display = "block";
-					getById("mainmenu").style.display = "none";
-					getById("head1").style.display = "none";
-					session.cleanOutput = true;
+				generateHash(session.password + "obs.ninja", 6).then(function(hash2) { // million to one error. 
+					log("hash2 is " + hash2);
+					if (hash2.substring(0, 4) !== hash_input) { // hash crc checks are just first 4 characters.
+						session.taintedSession = true;
+						if (!(session.cleanOutput)) {
+							getById("request_info_prompt").innerHTML = miscTranslations["password-incorrect"];
+							getById("request_info_prompt").style.display = "block";
+							getById("mainmenu").style.display = "none";
+							getById("head1").style.display = "none";
+							session.cleanOutput = true;
 
-				} else {
-					getById("request_info_prompt").innerHTML = "";
-					getById("request_info_prompt").style.display = "block";
-					getById("mainmenu").style.display = "none";
-					getById("head1").style.display = "none";
-				}
+						} else {
+							getById("request_info_prompt").innerHTML = "";
+							getById("request_info_prompt").style.display = "block";
+							getById("mainmenu").style.display = "none";
+							getById("head1").style.display = "none";
+						}
+					} else {
+						session.taintedSession = false;
+						session.hash = hash;
+					}
+				}).catch(errorlog);
 			} else {
 				session.taintedSession = false;
 				session.hash = hash;
@@ -1742,6 +1760,10 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 		session.order = parseInt(urlParams.get('order')) || 1;
 	}
 	
+	if (urlParams.has('orderby')) {
+		session.orderby = urlParams.get('orderby') || "id";
+	}
+	
 	if (urlParams.has('slot')) {
 		session.slot = parseInt(urlParams.get('slot')) || 0;
 	}
@@ -1941,6 +1963,18 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 	if (urlParams.has('mcb') || urlParams.has('mcbitrate') || urlParams.has('meshcastbitrate')){
 		session.meshcastBitrate = urlParams.get('mcb') || urlParams.get('mcbitrate') || urlParams.get('meshcastbitrate') || 2500;
 		session.meshcastBitrate = parseInt(session.meshcastBitrate);
+	}
+	
+	if (urlParams.has('mcscreensharebitrate') || urlParams.has('mcssbitrate')){
+		session.meshcastScreenShareBitrate = urlParams.get('mcscreensharebitrate') || urlParams.get('mcssbitrate') || 2500;
+		session.meshcastScreenShareBitrate = parseInt(session.meshcastScreenShareBitrate);
+	}
+	
+	if (urlParams.has('mcscreensharecodec') || urlParams.has('mcsscodec')){
+		session.meshcastScreenShareCodec = urlParams.get('mcscreensharecodec') || urlParams.get('mcsscodec') || false;
+	}
+	if (session.meshcastScreenShareCodec){
+		session.meshcastScreenShareCodec = session.meshcastScreenShareCodec.toLowerCase();
 	}
 	
 	if (urlParams.has('mcab') || urlParams.has('mcaudiobitrate') || urlParams.has('meshcastab')){
@@ -2608,9 +2642,9 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 			getById("mainmenu").classList.add("mainmenuclass");
 			getById("header").style.alignSelf = "center";
 
-			if ((iOS) || (iPad)) {
-				getById("header").style.display = "none"; // just trying to free up space.
-			}
+			//if ((iOS) || (iPad)) {
+				//getById("header").style.display = "none"; // just trying to free up space.
+			//}
 
 			if (session.webcamonly == true) { // mobile or manual flag 'webcam' pflag set
 				getById("head1").innerHTML = '<font style="color:#CCC;" data-translate="please-accept-permissions">- Please accept any camera permissions</font>';
@@ -2753,6 +2787,12 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 	if (urlParams.has('screensharebitrate') || urlParams.has('ssbitrate')) {
 		session.screenShareBitrate = urlParams.get('screensharebitrate') || urlParams.get('ssbitrate');
 		session.screenShareBitrate = parseInt(session.screenShareBitrate) || 2500;
+	}
+	
+	if (urlParams.has('screensharelabel') || urlParams.has('sslabel')) {
+		session.screenShareLabel = urlParams.get('screensharelabel') || urlParams.get('sslabel');
+		session.screenShareLabel = decodeURIComponent(session.screenShareLabel);
+		session.screenShareLabel = session.screenShareLabel.replace(/_/g, " ")
 	}
 	
 	if (session.roomid!==false){
@@ -3687,6 +3727,12 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 							log(e);
 							midiHotkeysCommand(e.controller.number, e.rawValue);
 						});
+					} else if (session.midiHotkeys==5){
+						if (session.midiOffset!==false){
+							input.addListener('controlchange', function(e) {
+								midiHotkeysCommand_offset(e.controller.number, e.rawValue, session.midiOffset);
+							});
+						}
 					} else {
 						input.addListener('noteon', function(e) {
 							log(e);
