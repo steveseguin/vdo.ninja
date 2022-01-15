@@ -6796,12 +6796,6 @@ function toggleControlBar() {
 
 function toggleMute(apply = false) { // TODO: I need to have this be MUTE, toggle, with volume not touched.
 
-	log("muting");
-	log(session.videoElement);
-	log(session.videoElement.muted);
-	log(session.videoElement.volume);
-	session.videoElement.controls = true;
-
 	if (session.director) {
 		if (!session.directorEnabledPPT) {
 			log("Director doesn't have PPT enabled yet");
