@@ -1401,7 +1401,7 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 		session.audioMeterGuest = false;
 		session.audioEffects = false;
 		if (window.obsstudio.pluginVersion){
-			if (navigator.userAgent.indexOf('Mac OS X') !== -1){ // if mac, no fix
+			if (macOS){ // if mac, no fix
 				//session.obsfix = false;
 			} else if (window.obsstudio.pluginVersion=="2.17.4"){ // if obs v27.2 beta, no fix
 				//session.obsfix = false;
@@ -1422,7 +1422,7 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 		}
 		try {
 			log("OBS VERSION:" + window.obsstudio.pluginVersion);
-			log("macOS: " + navigator.userAgent.indexOf('Mac OS X') != -1);
+			log("macOS: " + macOS);
 			log(window.obsstudio);
 			
 			if (typeof document.visibilityState !== "undefined"){
@@ -1449,7 +1449,7 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 				var cefVersion = getChromeVersion();
 
 				if (ver1.length == 3) { // Should be 3, but disabled3
-					if ((ver1.length == 3) && (parseInt(ver1[0]) == 2) && (cefVersion < 76) && (navigator.userAgent.indexOf('Mac OS X') != -1)) {
+					if ((ver1.length == 3) && (parseInt(ver1[0]) == 2) && (cefVersion < 76) && (macOS)) {
 						updateURL("streamlabs");
 						getById("main").innerHTML = "<div style='background-color:black;color:white;' data-translate='obs-macos-not-supported'><h1>Update OBS Studio to v26.1.2 or newer; older versions and StreamLabs OBS are not supported on macOS.\
 						<br /><i><small><small>download here: <a href='https://github.com/obsproject/obs-studio/releases'>https://github.com/obsproject/obs-studio/releases</a></small></small></i>\

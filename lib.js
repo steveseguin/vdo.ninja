@@ -318,9 +318,26 @@ function submitDebugLog(msg){
 	}
 }
 
+function detectGPUSupport() {
+	try {
+		const gl = document.createElement('canvas').getContext('webgl');
+
+		if (!gl) {
+			return false;
+		}
+		const debugInfo = gl.getExtension('WEBGL_debug_renderer_info');
+		if (debugInfo){
+			return gl.getParameter(debugInfo.UNMASKED_RENDERER_WEBGL);
+		}
+	} catch(e){}
+    return false;
+}
 
 var iOS = !!navigator.platform && /iPad|iPhone|iPod/.test(navigator.platform);  // used by main.js also
 var iPad = (navigator.maxTouchPoints && navigator.maxTouchPoints > 2 && /MacIntel/.test(navigator.platform));
+var macOS = navigator.userAgent.indexOf('Mac OS X') != -1;
+var gpgpuSupport = detectGPUSupport();
+log(gpgpuSupport);
 
 
 function isAlphaNumeric(str) {
@@ -4443,8 +4460,6 @@ function applyEffects(track) { // video only please. do not touch audio.  Run up
 		} else {
 			session.canvasSource.onloadeddata = mainMeshMask;
 		}
-		
-		
 	} else {
 		if (session.canvasource){
 			session.canvasSource.srcObject.getVideoTracks().forEach(function(trk) {
@@ -12798,7 +12813,8 @@ if (navigator.userAgent.toLowerCase().indexOf(' electron/') > -1) {  // this ena
 								</button>
 							  </li>
 							`).join('')}
-							<div style="text-align: center;margin: auto 5px;font-size: 120%;"><i class="las la-music" style="font-size:40px;"></i><br />Include Desktop Audio<br /><input id="alsoCaptureAudio" style="width:20px;height:20px;margin-top: 10px;" type="checkbox" checked></div>
+							<div id="alsoCaptureAudioParent1" style="text-align: center;margin: auto 5px;font-size: 120%;"><i class="las la-music" style="font-size:40px;"></i><br />Include Desktop Audio<br /><input id="alsoCaptureAudio" style="width:20px;height:20px;margin-top: 10px;" type="checkbox" checked></div>
+							<div id="alsoCaptureAudioParent2" style="text-align: center;margin: auto 5px;font-size: 120%;display:none;"><i class="las la-music" style="font-size:40px;"></i><br />Audio capture not <br />supported on macOS</div>
 							<button id="captureDesktopAudio" class="desktop-capturer-click" style="margin: 10px;"><i class="las la-music" style="font-size:40px;"></i><br />Capture ONLY<br />Desktop Audio</button>
 							<button id="cancelscreenshare" style="margin: 10px; background-color: #F88; width: 100px;"><i class="las la-window-close" style="font-size:40px;"></i><br />Cancel</button>
 						  </ul>
@@ -12806,6 +12822,13 @@ if (navigator.userAgent.toLowerCase().indexOf(' electron/') > -1) {  // this ena
 					  `;
 				  }
 				  document.body.appendChild(selectionElem);
+				  
+				  if (macOS){
+					  getById("captureDesktopAudio").style.display = "none";
+					  getById("alsoCaptureAudio").checked = false;
+					  getById("alsoCaptureAudioParent1").style.display = "none";
+					  getById("alsoCaptureAudioParent2").style.display = "inline-block";
+				  }
 				  
 				  document.getElementById('cancelscreenshare').addEventListener('click', async () => {
 					   selectionElem.remove();
@@ -12838,7 +12861,7 @@ if (navigator.userAgent.toLowerCase().indexOf(' electron/') > -1) {  // this ena
 								resolve(stream);
 								selectionElem.remove();
 							} else {
-								var audioStream = false;
+								var audioStream = false; 
 								if (getById("alsoCaptureAudio").checked){
 									var new_constraints = {
 										audio: {
@@ -12939,7 +12962,7 @@ async function grabScreen(quality = 0, audio = true, videoOnEnd = false) {
 	if (navigator.userAgent.toLowerCase().indexOf(' electron/') > -1) {
 		if (!ElectronDesktopCapture){
 			if (!(session.cleanOutput)) {
-				warnUser("Your Electron app does not support Screen Capture.<br /><br />Update your Electron Capture app and then enable Elevated Privileges (right click) to access screen-sharing.");
+				warnUser("Enable Elevated Privileges to allow screen-sharing. (right click this window to see that option)");
 			}
 			return false;
 		}
@@ -14823,7 +14846,7 @@ async function publishScreen2(constraints, audioList=[], audio=true){ // webcam 
 	if (navigator.userAgent.toLowerCase().indexOf(' electron/') > -1) {
 		if (!ElectronDesktopCapture){
 			if (!(session.cleanOutput && session.cleanish==false)){
-				warnUser("Your Electron app does not support Screen Capture.<br /><br />Update your Electron Capture app and then enable Elevated Privileges to access screen-sharing.");
+				warnUser("Enable Elevated Privileges to allow screen-sharing. (right click this window to see that option)");
 			}
 		return false;
 		}
@@ -15163,7 +15186,7 @@ async function publishScreen2(constraints, audioList=[], audio=true){ // webcam 
 		if (navigator.userAgent.toLowerCase().indexOf(' electron/') > -1) {
 			if (!ElectronDesktopCapture){
 				if (!(session.cleanOutput)) {
-					warnUser("Your Electron app does not support Screen Capture.<br /><br />Update your Electron Capture app and then enable Elevated Privileges to access screen-sharing.");
+					warnUser("Enable Elevated Privileges to allow screen-sharing. (right click this window to see that option)");
 				}
 				return false;
 			}
@@ -21477,6 +21500,17 @@ function effectsDynamicallyUpdate(event, ele){
 		getById("selectImageTFLITE").style.display = "block";
 		getById("selectImageTFLITE3").style.display = "block";
 	} else if (session.effects === "6"){
+		if (!gpgpuSupport){
+			if (!session.cleanOutput){
+				warnUser("Hardware acceleration isn't detected.<br /><br />This effect will not work",4000);
+				return;
+			}
+		} else if (gpgpuSupport == "Google SwiftShader"){
+			if (!session.cleanOutput){
+				warnUser("Hardware acceleration isn't detected.<br /><br />Please enable it for this effect to work correctly.<br /><br /><i>Settings -> Advanced -> System -> Use hardware-accleration</i>");
+			}
+			return;
+		}
 		loadTensorflowJS();
 		updateRenderOutpipe();
 		//mainMeshMask();
@@ -21502,8 +21536,15 @@ function loadEffect(effect){
 	warnlog("Loading Effect: "+effect);
 	var script = document.createElement('script');
 	script.onload = function() {
+		
 		effectsLoaded[filename] = effectsEngine(effect);
 		effectsLoaded[filename]();
+		
+		if (gpgpuSupport == "Google SwiftShader"){
+			if (!session.cleanOutput){
+				warnUser("Hardware acceleration isn't detected.<br /><br />Please enable it for better performance.<br /><br /><i>Settings -> Advanced -> System -> Use hardware-accleration</i>");
+			}	
+		}
 	}
 	script.src = "./filters/"+filename+".js?"+parseInt(1000*Math.random());
 	document.head.appendChild(script);

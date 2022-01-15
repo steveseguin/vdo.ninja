@@ -54,7 +54,7 @@
 				transition: opacity .1s linear;
 			}
 		</style>
-		<link rel="stylesheet" href="./main.css?ver=148" />
+		<link rel="stylesheet" href="./main.css?ver=150" />
 		<script type="text/javascript" crossorigin="anonymous" src="./thirdparty/adapter.min.js"></script>
 		<style id="lightbox-animations" type="text/css"></style>
 	</head>
@@ -66,8 +66,8 @@
 		<span itemprop="thumbnail" itemscope itemtype="http://schema.org/ImageObject">
 			<link itemprop="url" href="./media/vdoNinja_logo_full.png" />
 		</span>
-		<script  type="text/javascript" crossorigin="anonymous"  src="./thirdparty/CodecsHandler.js?ver=35"></script>
-		<script  type="text/javascript" crossorigin="anonymous" src="./webrtc.js?ver=339"></script>
+		<script  type="text/javascript" crossorigin="anonymous"  src="./thirdparty/CodecsHandler.js?ver=36"></script>
+		<script  type="text/javascript" crossorigin="anonymous" src="./webrtc.js?ver=340"></script>
 		<input id="zoomSlider" type="range" style="display: none;" />
 		<div id="header">
 			
@@ -242,7 +242,7 @@
 										<span data-translate="room-name">Room Name</span>: 
 									</b>
 								</div>
-								<input type="text" autocorrect="off" autocapitalize="none"  id="videoname1" placeholder="Enter a Room Name here" onkeydown="checkStrengthRoom(event, 'securityLevelRoom');" onchange="checkStrengthRoom(event, 'securityLevelRoom');" onkeyup="enterPressed(event, createRoom);" maxlength="30" style="font-size: 110%; padding: 5px;" />
+								<input type="text" autocorrect="off" autocapitalize="none"  id="videoname1" placeholder="Enter a Room Name here" onkeydown="checkStrengthRoom(event, 'securityLevelRoom');" onchange="checkStrengthRoom(event, 'securityLevelRoom');" onkeyup="enterPressed(event, createRoom);" maxlength="30" style="max-width: 512px;width: 100%;font-size: 110%; padding: 5px;" />
 								<div id="securityLevelRoom" style="display:none;margin-top:3px;position:relative;top:3px;font-size:0.8em;"></div>
 							</th>
 							
@@ -260,7 +260,7 @@
 										<span data-translate="password-input-field">Password</span>: 
 									</b>
 								</div>
-								<input type="text" autocorrect="off" autocapitalize="none" id="passwordRoom" placeholder="Optional room password here" onkeydown="checkStrengthRoom(event, 'securityLevelRoom');" onchange="checkStrengthRoom(event, 'securityLevelRoom');"  onkeyup="enterPressed(event, createRoom);" maxlength="30" style="font-size: 110%; padding: 5px;" />
+								<input type="text" autocorrect="off" autocapitalize="none" id="passwordRoom" placeholder="Optional room password here" onkeydown="checkStrengthRoom(event, 'securityLevelRoom');" onchange="checkStrengthRoom(event, 'securityLevelRoom');"  onkeyup="enterPressed(event, createRoom);" maxlength="50" style="max-width: 512px;width: 100%;font-size: 110%; padding: 5px;" />
 							</th>
 						
 						</tr><tr >
@@ -269,7 +269,7 @@
 								<input id="broadcastFlag" type="checkbox" title="For large group rooms, this option can reduce the load on remote guests substantially" />
 							</th><th style="text-align:left;; padding-top: 20px;">
 							<b>
-								<span data-translate="guests-only-see-director"  style="cursor: help;" title="For large group rooms, this option can reduce the load on remote guests substantially" >Guests can only see the Director's Video</span>
+								<span data-translate="guests-only-see-director"  style="cursor: help;" title="For large group rooms, this option can reduce the load on remote guests substantially" >The guests can see the director, but not other guests</span>
 							</b>
 							</th>	
 						</tr><tr>
@@ -278,10 +278,10 @@
 								<input id="showdirectorFlag" type="checkbox" title="The director will be visible in scenes as if a performer themselves." />
 							</th><th style="text-align:left;; padding-bottom: 20px;">
 							<b>
-								<span data-translate="scenes-can-see-director" style="cursor: help;" title="If checked, the director can be added to scenes as if a guest. Otherwise, the director will never appear in a scene." >Director will be performing; appearing in scenes</span>
+								<span data-translate="scenes-can-see-director" style="cursor: help;" title="If checked, the director can be added to scenes as if a guest. Otherwise, the director will never appear in a scene." >The director will be performing alongside guests, appearing in group scene links</span>
 							</b>
 							</th>	
-						</tr><tr>
+						</tr><tr style="display:none;">
 							<th style="text-align:right; padding: 5px;">
 								
 							</th>
@@ -300,11 +300,11 @@
 						</tr>
 						</table>
 						
-						<div style="margin: 0 auto; width: 400px; max-width:100%;">
+						<div style="margin: 0 auto; width: 512px; max-width:100%;">
 							<button onclick="createRoom()" class="gobutton" style="width:100%;" alt="Enter the room as the group's director" title="You'll enter as the room's director">
-								<span data-translate="enter-the-rooms-control">Enter the Room's Control Center</span>
+								<span data-translate="enter-the-rooms-control">Enter the Room's Control Center as the Director role</span>
 							</button>
-							<br /><br />
+							<br />
 							<button class="white roomnotes" style="display: block;" onclick="toggle(document.getElementById('roomnotes'),this);">
 								<span data-translate="show-tips">Show me some tips..</span>
 							</button>
@@ -322,10 +322,10 @@
 								<br />
 								<br />
 							</ul>
-							<br />
+							<br /><br />
 							<i>Looking to just chat and not direct?</i>
 							<button onclick="jumptoroom2()" class="gobutton" style="width:100%;" alt="Enter the room as the group's director" title="You'll enter as the room's director">
-								<span data-translate="join-the-room-basic">Join room as participant</span>
+								<span data-translate="join-the-room-basic">Join the room as guest participant rather than a director</span>
 							</button>
 						</div>
 					</div>
@@ -1917,11 +1917,11 @@
 			// session.introOnClean = true; // this will load the page with the webcam selection screen if &push or &room is in the URL; no need to use &webcam.
 		</script>
 		<script type="text/javascript" crossorigin="anonymous" src="./thirdparty/aes.js"></script>
-		<script type="text/javascript" crossorigin="anonymous" id="lib-js" src="./lib.js?ver=248"></script>
+		<script type="text/javascript" crossorigin="anonymous" id="lib-js" src="./lib.js?ver=250"></script>
 		<!-- 
 		// If you wish to change branding, blank offers a good clean start.
 		<script type="text/javascript" id="main-js" src="./main.js" data-translation="blank"></script>
 	-->
-		<script type="text/javascript" crossorigin="anonymous" id="main-js" src="./main.js?ver=288"></script>
+		<script type="text/javascript" crossorigin="anonymous" id="main-js" src="./main.js?ver=289"></script>
 	</body>
 </html>
