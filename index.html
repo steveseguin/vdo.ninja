@@ -67,7 +67,7 @@
 			<link itemprop="url" href="./media/vdoNinja_logo_full.png" />
 		</span>
 		<script  type="text/javascript" crossorigin="anonymous"  src="./thirdparty/CodecsHandler.js?ver=36"></script>
-		<script  type="text/javascript" crossorigin="anonymous" src="./webrtc.js?ver=340"></script>
+		<script  type="text/javascript" crossorigin="anonymous" src="./webrtc.js?ver=344"></script>
 		<input id="zoomSlider" type="range" style="display: none;" />
 		<div id="header">
 			
@@ -242,7 +242,7 @@
 										<span data-translate="room-name">Room Name</span>: 
 									</b>
 								</div>
-								<input type="text" autocorrect="off" autocapitalize="none"  id="videoname1" placeholder="Enter a Room Name here" onkeydown="checkStrengthRoom(event, 'securityLevelRoom');" onchange="checkStrengthRoom(event, 'securityLevelRoom');" onkeyup="enterPressed(event, createRoom);" maxlength="30" style="max-width: 512px;width: 100%;font-size: 110%; padding: 5px;" />
+								<input type="text" autocorrect="off" autocapitalize="none"  id="videoname1" placeholder="Enter a room name here" onkeydown="checkStrengthRoom(event, 'securityLevelRoom');" onchange="checkStrengthRoom(event, 'securityLevelRoom');" onkeyup="enterPressed(event, createRoom);" maxlength="30" style="max-width: 431px;width: 100%;font-size: 110%; padding: 5px;" />
 								<div id="securityLevelRoom" style="display:none;margin-top:3px;position:relative;top:3px;font-size:0.8em;"></div>
 							</th>
 							
@@ -260,7 +260,7 @@
 										<span data-translate="password-input-field">Password</span>: 
 									</b>
 								</div>
-								<input type="text" autocorrect="off" autocapitalize="none" id="passwordRoom" placeholder="Optional room password here" onkeydown="checkStrengthRoom(event, 'securityLevelRoom');" onchange="checkStrengthRoom(event, 'securityLevelRoom');"  onkeyup="enterPressed(event, createRoom);" maxlength="50" style="max-width: 512px;width: 100%;font-size: 110%; padding: 5px;" />
+								<input type="text" autocorrect="off" autocapitalize="none" id="passwordRoom" placeholder="Optional room password here" onkeydown="checkStrengthRoom(event, 'securityLevelRoom');" onchange="checkStrengthRoom(event, 'securityLevelRoom');"  onkeyup="enterPressed(event, createRoom);" maxlength="50" style="max-width: 431px;width: 100%;font-size: 110%; padding: 5px;" />
 							</th>
 						
 						</tr><tr >
@@ -269,7 +269,7 @@
 								<input id="broadcastFlag" type="checkbox" title="For large group rooms, this option can reduce the load on remote guests substantially" />
 							</th><th style="text-align:left;; padding-top: 20px;">
 							<b>
-								<span data-translate="guests-only-see-director"  style="cursor: help;" title="For large group rooms, this option can reduce the load on remote guests substantially" >The guests can see the director, but not other guests</span>
+								<span data-translate="guests-only-see-director"  style="cursor: help;" title="For large group rooms, this option can reduce the load on remote guests substantially" >The guests can see the director, but not other guests' videos</span>
 							</b>
 							</th>	
 						</tr><tr>
@@ -278,7 +278,7 @@
 								<input id="showdirectorFlag" type="checkbox" title="The director will be visible in scenes as if a performer themselves." />
 							</th><th style="text-align:left;; padding-bottom: 20px;">
 							<b>
-								<span data-translate="scenes-can-see-director" style="cursor: help;" title="If checked, the director can be added to scenes as if a guest. Otherwise, the director will never appear in a scene." >The director will be performing alongside guests, appearing in group scene links</span>
+								<span data-translate="scenes-can-see-director" style="cursor: help;" title="If checked, the director can be added to scenes as if a guest. Otherwise, the director will never appear in a scene." >The director will be performing as well, appearing in group scenes</span>
 							</b>
 							</th>	
 						</tr><tr style="display:none;">
@@ -300,9 +300,9 @@
 						</tr>
 						</table>
 						
-						<div style="margin: 0 auto; width: 512px; max-width:100%;">
+						<div style="margin: 0 auto; width: 470px; max-width:100%;">
 							<button onclick="createRoom()" class="gobutton" style="width:100%;" alt="Enter the room as the group's director" title="You'll enter as the room's director">
-								<span data-translate="enter-the-rooms-control">Enter the Room's Control Center as the Director role</span>
+								<span data-translate="enter-the-rooms-control">Enter the room's Control Center in the director's role</span>
 							</button>
 							<br />
 							<button class="white roomnotes" style="display: block;" onclick="toggle(document.getElementById('roomnotes'),this);">
@@ -325,7 +325,7 @@
 							<br /><br />
 							<i>Looking to just chat and not direct?</i>
 							<button onclick="jumptoroom2()" class="gobutton" style="width:100%;" alt="Enter the room as the group's director" title="You'll enter as the room's director">
-								<span data-translate="join-the-room-basic">Join the room as guest participant rather than a director</span>
+								<span data-translate="join-the-room-basic">Join the room as a Participant, rather than a director</span>
 							</button>
 						</div>
 					</div>
@@ -344,7 +344,7 @@
 				<div class="container-inner">
 					<br />
 					<p>
-						<video id="previewWebcam" class="previewWebcam" oncanplay="updateStats();" controlsList="nodownload" muted autoplay playsinline ></video>
+						<video id="previewWebcam" class="previewWebcam task"  data-menu="context-menu-video" oncanplay="updateStats();" controlsList="nodownload" muted autoplay playsinline ></video>
 					</p>
 					<div id="infof"></div>
 					<button onclick="this.disabled=true;setTimeout(function(){requestBasicPermissions();},20);" id="getPermissions" style="display:none;" data-ready="false" >
@@ -1233,7 +1233,7 @@
 				</button>
 				
 				<font class="tooltip"  style="height: 0; border: 0;">
-					<input data-action-type="volume" type="range" min="0" max="200" value="100" title="Remotely change the volume of this guest" oninput="remoteVolumeUI(this)" ondblclick="this.value=100;remoteVolume(this);remoteVolumeUI(this);" onchange="remoteVolume(this);" style="grid-column: 2; margin:5px; width: 93%; position: relative;top: 0.6em; background-color:#fff0;"/><span class="tooltiptext" style='float: right; overflow: auto;  left: 40px;  width: 2.5em;  top: -13px; margin: 0; position:relative;font-family:"Noto Color Emoji", "Apple Color Emoji", "Segoe UI Emoji", Times, Symbola, Aegyptus,Code2000, Code2001, Code2002, Musica, serif, LastResort;' >100</span>
+					<input data-action-type="volume" type="range" min="0" max="200" value="100" title="Remotely change the volume of this guest" oninput="remoteVolumeUI(this)" ondblclick="this.value=100;remoteVolume(this);remoteVolumeUI(this);" onchange="remoteVolume(this);" style="grid-column: 2; margin:5px; width: 93%; position: relative;top: 0.6em; background-color:#fff0;"/><span class="tooltiptext" style='float: right; overflow: auto;  left: 40px;  width: 3em;  top: -13px; margin: 0; position:relative;font-family:"Noto Color Emoji", "Apple Color Emoji", "Segoe UI Emoji", Times, Symbola, Aegyptus,Code2000, Code2001, Code2002, Musica, serif, LastResort;' >100</span>
 				</font>
 				
 				<button data-action-type="mute-guest" title="Mute this guest everywhere" onclick="remoteMute(this, event);">
@@ -1256,25 +1256,25 @@
 				</button>
 				
 				<span class="hidden" data-cluster="1" data-action-type="sceneCluster1">
-					<button style="width: 35.2px" data-action-type="addToScene" data-scene="3" data-action-type="add-scene-3" title="Add to Scene 3" onclick="directEnable(this, event, 3);">
+					<button style="width: 35.2px" data-action-type="addToScene" data-scene="3" title="Add to Scene 3" onclick="directEnable(this, event, 3);">
 						<span >S3</span>
 					</button>
-					<button style="width:35.2px;" data-action-type="addToScene" data-scene="4" data-action-type="add-scene-4" title="Add to Scene 4" onclick="directEnable(this, event, 4);">
+					<button style="width:35.2px;" data-action-type="addToScene" data-scene="4" title="Add to Scene 4" onclick="directEnable(this, event, 4);">
 						<span >S4</span>
 					</button>
-					<button style="width: 35.2px" data-action-type="addToScene" data-scene="5" data-action-type="add-scene-5" title="Add to Scene 5" onclick="directEnable(this, event, 5);">
+					<button style="width: 35.2px" data-action-type="addToScene" data-scene="5"  title="Add to Scene 5" onclick="directEnable(this, event, 5);">
 						<span >S5</span>
 					</button>
 				</span>
 				
 				<span class="hidden" data-cluster="1" data-action-type="sceneCluster2">
-					<button style="width: 35.2px" data-action-type="addToScene" data-scene="6" data-action-type="add-scene-6" title="Add to Scene 6" onclick="directEnable(this, event, 6);">
+					<button style="width: 35.2px" data-action-type="addToScene" data-scene="6" title="Add to Scene 6" onclick="directEnable(this, event, 6);">
 						<span >S6</span>
 					</button>
-					<button style="width: 35.2px" data-action-type="addToScene" data-scene="7" data-action-type="add-scene-7" title="Add to Scene 7" onclick="directEnable(this, event, 7);">
+					<button style="width: 35.2px" data-action-type="addToScene" data-scene="7" title="Add to Scene 7" onclick="directEnable(this, event, 7);">
 						<span >S7</span>
 					</button>
-					<button style="width: 35.2px" data-action-type="addToScene" data-scene="8" data-action-type="add-scene-8" title="Add to Scene 8" onclick="directEnable(this, event, 8);">
+					<button style="width: 35.2px" data-action-type="addToScene" data-scene="8" title="Add to Scene 8" onclick="directEnable(this, event, 8);">
 						<span >S8</span>
 					</button>
 				</span>
@@ -1364,7 +1364,7 @@
 				</button>
 				
 				
-				<span id="channelGroup1" class="hidden" data-cluster="2">
+				<span class="hidden" data-cluster="2">
 					
 					<button style="width:35.2px;" data-action-type="add-channel" title="Set to Audio Channel 1" onclick="changeChannelOffset(this.dataset.UUID, 0);">
 						<span >C1</span>
@@ -1377,7 +1377,7 @@
 					</button>
 				</span>
 				
-				<span id="channelGroup2" class="hidden" data-cluster="2">
+				<span class="hidden" data-cluster="2">
 					
 					<button style="width:35.2px;" data-action-type="add-channel" title="Set to Audio Channel 4" onclick="changeChannelOffset(this.dataset.UUID,3);">
 						<span >C4</span>
@@ -1390,7 +1390,7 @@
 					</button>
 				</span>
 				
-				<span id="mixGroup1" class="hidden" data-cluster="2">
+				<span class="hidden" data-cluster="2">
 					
 					<button style="width:35.2px;" data-action-type="toggle-group" data-value="1" title="Add/remove from group 1" onclick="changeGroup(this);">
 						<span >G1</span>
@@ -1403,7 +1403,7 @@
 					</button>
 				</span>
 				
-				<span id="mixGroup2" class="hidden" data-cluster="2">
+				<span class="hidden" data-cluster="2">
 					
 					<button style="width:35.2px;" data-action-type="toggle-group" data-value="4" title="Add/remove from group 4" onclick="changeGroup(this);">
 						<span >G4</span>
@@ -1440,26 +1440,52 @@
 				</button>
 				
 				<span>
-					<button style="width: 35.2px" data-scene="2" data-action-type="addToScene" data-action-type="add-scene-2" title="Add to Scene 2" onclick="directEnable(this, event, 2, true);">
+					<button style="width: 35.2px" data-scene="2" data-action-type="addToScene" title="Add to Scene 2" onclick="directEnable(this, event, 2, true);">
 						<span >S2</span>
 					</button>
-					<button style="width:35.2px;" data-scene="3" data-action-type="addToScene" data-action-type="add-scene-3" title="Add to Scene 3" onclick="directEnable(this, event, 3, true);">
+					<button style="width:35.2px;" data-scene="3" data-action-type="addToScene" title="Add to Scene 3" onclick="directEnable(this, event, 3, true);">
 						<span >S3</span>
 					</button>
-					<button style="width: 35.2px" data-scene="4" data-action-type="addToScene" data-action-type="add-scene-4" title="Add to Scene 4" onclick="directEnable(this, event, 4, true);">
+					<button style="width: 35.2px" data-scene="4" data-action-type="addToScene" title="Add to Scene 4" onclick="directEnable(this, event, 4, true);">
 						<span >S4</span>
 					</button>
 				</span>
 				
 				<span >
-					<button style="width: 35.2px" data-scene="5" data-action-type="addToScene" data-action-type="add-scene-5" title="Add to Scene 5" onclick="directEnable(this, event, 5, true);">
+					<button style="width: 35.2px" data-scene="5" data-action-type="addToScene" title="Add to Scene 5" onclick="directEnable(this, event, 5, true);">
 						<span >S5</span>
 					</button>
-					<button style="width: 35.2px" data-scene="6" data-action-type="addToScene" data-action-type="add-scene-6" title="Add to Scene 6" onclick="directEnable(this, event, 6, true);">
+					<button style="width: 35.2px" data-scene="6" data-action-type="addToScene" title="Add to Scene 6" onclick="directEnable(this, event, 6, true);">
 						<span >S6</span>
 					</button>
-					<button style="width: 35.2px" data-scene="7" data-action-type="addToScene" data-action-type="add-scene-7" title="Add to Scene 7" onclick="directEnable(this, event, 7, true);">
+					<button style="width: 35.2px" data-scene="7" data-action-type="addToScene" title="Add to Scene 7" onclick="directEnable(this, event, 7, true);">
 						<span >S7</span>
+					</button>
+				</span>
+				
+				<span>
+					
+					<button style="width:35.2px;" data-action-type="toggle-group" data-value="1" title="Add/remove from group 1" onclick="changeGroupDirector(this);">
+						<span >G1</span>
+					</button>
+					<button style="width: 35.2px" data-action-type="toggle-group" data-value="2" title="Add/remove from group 2" onclick="changeGroupDirector(this);">
+						<span >G2</span>
+					</button>
+					<button style="width: 35.2px" data-action-type="toggle-group" data-value="3" title="Add/remove from group 3" onclick="changeGroupDirector(this);">
+						<span >G3</span>
+					</button>
+				</span>
+				
+				<span>
+					
+					<button style="width:35.2px;" data-action-type="toggle-group" data-value="4" title="Add/remove from group 4" onclick="changeGroupDirector(this);">
+						<span >G4</span>
+					</button>
+					<button style="width: 35.2px" data-action-type="toggle-group" data-value="5" title="Add/remove from group 5" onclick="changeGroupDirector(this);">
+						<span >G5</span>
+					</button>
+					<button style="width: 35.2px" data-action-type="toggle-group" data-value="6" title="Add/remove from group 6" onclick="changeGroupDirector(this);">
+						<span >G6</span>
 					</button>
 				</span>
 				
@@ -1641,12 +1667,6 @@
 					<a href="#" class="context-menu__link" data-action="PiP">
 						<i class="las la-external-link"></i>
 						<span data-translate="picture-in-picture">Picture-in-picture</span>
-					</a>
-				</li>
-				<li class="context-menu__item">
-					<a href="#" class="context-menu__link" data-action="Cast">
-						<i class="las la-external-link"></i>
-						<span data-translate="chrome-cast">Cast..</span>
 					</a>
 				</li>
 			</ul>
@@ -1917,7 +1937,7 @@
 			// session.introOnClean = true; // this will load the page with the webcam selection screen if &push or &room is in the URL; no need to use &webcam.
 		</script>
 		<script type="text/javascript" crossorigin="anonymous" src="./thirdparty/aes.js"></script>
-		<script type="text/javascript" crossorigin="anonymous" id="lib-js" src="./lib.js?ver=250"></script>
+		<script type="text/javascript" crossorigin="anonymous" id="lib-js" src="./lib.js?ver=255"></script>
 		<!-- 
 		// If you wish to change branding, blank offers a good clean start.
 		<script type="text/javascript" id="main-js" src="./main.js" data-translation="blank"></script>

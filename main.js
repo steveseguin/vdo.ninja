@@ -366,7 +366,7 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 	}
 
 	if (urlParams.has('showdirector') || urlParams.has('sd')) {
-		session.showDirector = urlParams.get('showdirector') || urlParams.get('sd') || true;
+		session.showDirector = parseInt(urlParams.get('showdirector')) || parseInt(urlParams.get('sd')) || true; // if 2, video only allowed.  True or 1 will be video + audio allowed.
 	}
 	
 	if (urlParams.has('rotate') ) {

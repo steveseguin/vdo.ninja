@@ -111,7 +111,21 @@ th {
 	background: yellow;
 	transition: all 50ms linear;
 }
-
+.meter3 {
+	display: inline-block;
+	width: 0px;
+	height: 10px;
+	background: red;
+	transition: all 25ms linear;
+}
+.meter4 {
+	display: inline-block;
+	width: 2px;
+	height: 10px;
+	background: black;
+	position:relative;
+	float:left;
+}
 #mynetwork {
 	width: 600px;
 	height: 400px;

@@ -1676,6 +1676,11 @@ function setupIncomingScreenTracking(v, UUID){  // SCREEN  element.
 	v.setAttribute("playsinline","");
 	v.controlTimer = null;
 	
+	v.dataset.menu = "context-menu-video";
+	if (!session.cleanOutput){
+		v.classList.add("task"); // this adds the right-click menu
+	}
+	
 	changeAudioOutputDevice(v);  // if enabled, changes to desired output audio device.
 	
 	if (document.getElementById("mainmenu")){
@@ -1988,6 +1993,11 @@ function setupIncomingVideoTracking(v, UUID){  // video element.
 	v.classList.add("tile");
 	v.setAttribute("playsinline","");
 	v.controlTimer = null;
+	
+	v.dataset.menu = "context-menu-video";
+	if (!session.cleanOutput){
+		v.classList.add("task"); // this adds the right-click menu
+	}
 	
 	changeAudioOutputDevice(v);  // if enabled, changes to desired output audio device.
 	
@@ -6892,38 +6902,65 @@ function toggleSpeakerMute(apply = false) { // TODO: I need to have this be MUTE
 	if (apply) {
 		session.speakerMuted = !session.speakerMuted;
 	}
-	if (session.speakerMuted == false) {
+	if (session.speakerMuted == false) { // mute output
 		session.speakerMuted = true;
 		getById("mutespeakertoggle").className = "las la-volume-mute my-float toggleSize";
 		if (!(session.cleanOutput)){
 			getById("mutespeakerbutton").className = "float2 red";
 		}
 		var sounds = document.getElementsByTagName("video");
-		for (var i = 0; i < sounds.length; ++i) {
-			sounds[i].muted = session.speakerMuted;
+		
+		if (iOS || iPad){
+			for (var i = 0; i < sounds.length; ++i) {
+				sounds[i].muted = !sounds[i].muted;
+				sounds[i].muted = session.speakerMuted;
+			}
+		} else {
+			for (var i = 0; i < sounds.length; ++i) {
+				sounds[i].muted = session.speakerMuted;
+			}
 		}
 
 	} else {
-		session.speakerMuted = false;
+		session.speakerMuted = false;  // unmute output
 
 		getById("mutespeakertoggle").className = "las la-volume-up my-float toggleSize";
 		if (!(session.cleanOutput)){
 			getById("mutespeakerbutton").className = "float";
 		}
-
 		var sounds = document.getElementsByTagName("video");
-		for (var i = 0; i < sounds.length; ++i) {
+		
+		if (iOS || iPad){ // attempting to fix an iOS bug
+			for (var i = 0; i < sounds.length; ++i) {
+				sounds[i].muted = !sounds[i].muted;
+				if (sounds[i].id === "videosource") { // don't unmute ourselves. feedback galore if so.
+					sounds[i].muted = true;
+					continue;
+				} else if (sounds[i].id === "previewWebcam") {
+					sounds[i].muted = true;
+					continue;
+				} else if (sounds[i].id === "screenshare") {
+					sounds[i].muted = true;
+					continue;
+				} else {
+					sounds[i].muted = session.speakerMuted;
+				}
+			}
+		} else {
+			for (var i = 0; i < sounds.length; ++i) {
 
-			if (sounds[i].id === "videosource") { // don't unmute ourselves. feedback galore if so.
-				continue;
-			} else if (sounds[i].id === "previewWebcam") {
-				continue;
-			} else if (sounds[i].id === "screenshare") {
-				continue;
-			} else {
-				sounds[i].muted = session.speakerMuted;
+				if (sounds[i].id === "videosource") { // don't unmute ourselves. feedback galore if so.
+					continue;
+				} else if (sounds[i].id === "previewWebcam") {
+					continue;
+				} else if (sounds[i].id === "screenshare") {
+					continue;
+				} else {
+					sounds[i].muted = session.speakerMuted;
+				}
 			}
 		}
+		
 	}
 
 	for (var UUID in session.rpcs) {
@@ -7982,7 +8019,7 @@ function checkMuteState(UUID){ // this is the mute state of PLAYBACK audio; not 
 }
 
 function remoteVolumeUI(ele){
-	ele.nextSibling.innerHTML = ele.value;
+	ele.nextSibling.innerHTML = ele.value + "%";
 }
 
 function remoteVolume(ele) { // A directing room only is controlled by the Director, with the exception of MUTE.
@@ -9142,19 +9179,7 @@ function audioMeter(mediaStreamSource, audioContext) {
 				clearTimeout(timer);
 				timer = setTimeout(function(){toggleSpeakerMute(true);},250);  // okay, sicne this is quietOthers
 			}
-		}// else if (session.activeSpeaker){
-		//	if (total>10){
-		//		if (!session.activelySpeaking){
-		//			session.activelySpeaking=true;
-		//			updateMixer();
-		//		}
-		//	} else if (session.activelySpeaking){
-		//		session.activelySpeaking=false;
-		//		updateMixer();
-		//	}
-		//}
-			
-		
+		}
 		if (document.getElementById("meter1")) {
 			if (total == 0) {
 				getById("meter1").style.width = "1px";
@@ -9720,7 +9745,7 @@ function createRoomCallback(passAdd, passAdd2) {
 
 	if (showdirectorFlag) {
 		updateURL("showdirector", true, false);
-		session.showDirector = true;
+		session.showDirector = session.showDirector || true;
 		//getById("broadcastSlider").checked=true;
 	}
 
@@ -10113,10 +10138,15 @@ async function createDirectorOnlyBox() {
 	getById("guestFeeds").appendChild(container);
 
 
-	var buttons = "<div class='shift'><i class='las la-angle-left'></i><i class='las la-angle-right'></i></div><div class='streamID' style='user-select: none;'>ID: <span style='user-select: text;'>" + session.streamID + "</span>\
+	var buttons = "<div title='Does not impact scene order.' class='shift'><i class='las la-angle-left' onclick='shiftPC(this,-1, true);'></i><i class='las la-angle-right' onclick='shiftPC(this,1, true)';></i></div><div class='streamID' style='user-select: none;'>ID: <span style='user-select: text;'>" + session.streamID + "</span>\
 	<i class='las la-copy' data-sid='" + session.streamID + "'  onclick='copyFunction(this.dataset.sid,event)' title='Copy this Stream ID to the clipboard' style='cursor:pointer'></i>\
 	<span id='label_director' title='Click here to edit the label for this stream. Changes will propagate to all viewers of this stream' data-translate='add-a-label'>"+miscTranslations["add-a-label"]+"</span>\
 	</div><div id='videoContainer_director'></div>";
+	
+	/* var buttons = "<div title='Does not impact scene order.' class='shift'><i class='las la-angle-left' data--u-u-i-d='"+UUID+"' onclick='shiftPC(this,-1);'></i><span onclick='lockPosition(this);' style='cursor:pointer;' data-locked='0' data--u-u-i-d='"+UUID+"' id='position_"+UUID+"'><i class='las la-lock-open'></i></span><i class='las la-angle-right' data--u-u-i-d='"+UUID+"' onclick='shiftPC(this,1);'></i></div><div class='streamID' style='user-select: none;'>ID: <span style='user-select: text;'>" + streamID + "</span>\
+	<i class='las la-copy' data-sid='" + streamID + "' onclick='copyFunction(this.dataset.sid,event)' title='Copy this Stream ID to the clipboard' style='cursor:pointer'></i>\
+	<span id='label_" + UUID + "' title='Click here to edit the label for this stream. Changes will propagate to all viewers of this stream'></span>\
+	</div>"; */
 
 	if (session.hidesololinks==false){
 		controls.innerHTML += "<div>\
@@ -10124,7 +10154,7 @@ async function createDirectorOnlyBox() {
 			<a class='soloLink' data-drag='1' draggable='true' onclick='copyFunction(this,event)' \
 			value='" + soloLink + "' href='" + soloLink + "'/>" + soloLink + "</a>\
 			<button class='pull-right' style='width:100%;background-color:#ecfaff;' onclick='copyFunction(this.previousElementSibling,event)'><i class='las la-user'></i> copy Solo link</button>\
-			</div><div style='text-align: center;margin:10px;display:block;'><h3>This is you, the director.<br />You are also a performer.</h3></div>";
+			</div><div style='text-align: center;margin:0px 10px 10px 10px;display:block;'><h3>This is you, the director.<br />You are also a performer.</h3></div>";
 	}
 	
 	controls.querySelectorAll('[data-action-type]').forEach((ele) => { // give action buttons some self-reference
@@ -10139,7 +10169,7 @@ async function createDirectorOnlyBox() {
 			if (document.getElementById("container_director")){
 				if (!(getById("container_director").querySelectorAll('[data-scene="'+scene+'"]').length)){
 					var newScene = document.createElement("div");
-					newScene.innerHTML = '<button style="margin: 0 5px 10px 5px;" data-sid="'+session.streamID+'" data-action-type="addToScene" data-scene="'+scene+'" data-action-type="add-scene-'+scene+'" title="Add to Scene '+scene+'" onclick="directEnable(this, event);"><span ><i class="las la-plus-square" style="color:#060"></i> Scene: '+scene+'</span></button>';
+					newScene.innerHTML = '<button style="margin: 0 5px 10px 5px;" data-sid="'+session.streamID+'" data-action-type="addToScene" data-scene="'+scene+'"   title="Add to Scene '+scene+'" onclick="directEnable(this, event);"><span ><i class="las la-plus-square" style="color:#060"></i> Scene: '+scene+'</span></button>';
 					getById("container_director").appendChild(newScene);
 				}
 			}
@@ -10180,9 +10210,12 @@ async function createDirectorOnlyBox() {
 	}
 }
 
-function shiftPC(ele, shift){
-	var UUID = ele.dataset.UUID;
-	var target = document.getElementById("container_"+UUID);
+function shiftPC(ele, shift, director=false){
+	if (director){
+		var target = document.getElementById("container_director");
+	} else {
+		var target = document.getElementById("container_"+ele.dataset.UUID);
+	}
 	target.shifted = true;
 	if (shift==1){
 		if (target.nextSibling){
@@ -12181,6 +12214,19 @@ function applyMirror(mirror) { // true unmirrors as its already mirrored
 	} catch(e){errorlog(e);}
 }
 
+
+function applyMirrorGuest(mirror, videoElement) { // true unmirrors as its already mirrored
+	try {
+		if (mirror) {
+			videoElement.style.transform = "scaleX(-1)";
+			videoElement.classList.add("mirrorControl");
+		} else {
+			videoElement.style.transform = "scaleX(1)";
+			videoElement.classList.remove("mirrorControl");
+		}
+	} catch(e){errorlog(e);}
+}
+
 function cleanupMediaTracks() {
 	getUserMediaRequestID += 1;
 	try {
@@ -13141,9 +13187,9 @@ async function grabScreen(quality = 0, audio = true, videoOnEnd = false) {
 					toggleSettings(forceShow = true);
 					//grabVideo(eleName='videosource', selector="select#videoSource3"); 
 
-				} else {
-					grabScreen();
-				}
+				} //else {
+				//	grabScreen(); // don't ask again.
+				//}
 			};
 		} catch (e) {
 			log("No Video selected; screensharing?");
@@ -13737,8 +13783,7 @@ async function grabVideo(quality = 0, eleName = 'previewWebcam', selector = "sel
 				}
 				
 				if (iOS || iPad){ // TEMPORARY: iOS 15.3 beta fix
-					session.videoElement.muted = false;
-					session.videoElement.muted = true;
+					toggleSpeakerMute(true);
 				}
 
 				grabVideoTimer = setTimeout(function(callback3, gumid) {
@@ -13789,8 +13834,7 @@ async function grabVideo(quality = 0, eleName = 'previewWebcam', selector = "sel
 					updateForceRotate();
 					
 					if (iOS || iPad){  // TEMPORARY: iOS 15.3 beta fix
-						session.videoElement.muted = false;
-						session.videoElement.muted = true;
+						toggleSpeakerMute(true);
 					}
 					
 					dragElement(session.videoElement);
@@ -13938,9 +13982,7 @@ function updateRenderOutpipe(){ // video only.
 			for (UUID in session.pcs) {
 				try {
 					if ("realUUID" in session.pcs[UUID]){continue;}
-					if (((iOS) || (iPad)) && (session.pcs[UUID].guest == true)) {
-						warnlog("iOS and GUest detected");
-					} else if ((session.pcs[UUID].guest == true) && (session.roombitrate === 0)) {
+					if ((session.pcs[UUID].guest == true) && (session.roombitrate === 0)) {
 						log("room rate restriction detected. No videos will be published to other guests");
 					} else if (session.pcs[UUID].allowVideo == true) { // allow 
  
@@ -14595,8 +14637,8 @@ session.publishStream = function(v){ //  stream is used to generated an SDP
 	container.className = "vidcon";
 	getById("gridlayout").appendChild(container);
 	
-	v.className = "tile"; //"tile task"; TODO: get working
-	v.dataset.menu = "context-menu-video";
+	v.className = "tile"; //"tile task"; TODO: get working  (will add task later on instead)
+	
 	
 	v.muted = true;
 	v.autoplay = true;
@@ -14815,6 +14857,11 @@ session.publishStream = function(v){ //  stream is used to generated an SDP
 	
 	if (!gotDevices2AlreadyRan){
 		enumerateDevices().then(gotDevices2); // this is needed for iOS; was previous set to timeout at 100ms, but would be useful everywhere I think
+	}
+	
+	v.dataset.menu = "context-menu-video";
+	if (!session.cleanOutput){
+		v.classList.add("task"); // this adds the right-click menu
 	}
 	
 	session.seeding=true;			
@@ -16182,6 +16229,20 @@ function checkIfPIP() {
 	} catch (e) {
 		errorlog(e);
 	}
+}
+
+function togglePictureInPicture(videoElement) {
+  if (document.pictureInPictureElement) {
+	  if (document.pictureInPictureElement.id == videoElement.id){
+		  document.exitPictureInPicture();
+	  } else {
+		  document.exitPictureInPicture();
+		  videoElement.requestPictureInPicture();
+	  }
+  } else if (document.pictureInPictureEnabled) {
+      videoElement.requestPictureInPicture();
+  }
+  
 }
 
 function listAudioSettingsPrep() {
@@ -17813,10 +17874,6 @@ function listCameraSettings() {
 			if ((typeof session.cameraConstraints[i] === 'object') && (session.cameraConstraints[i] !== null) && ("max" in session.cameraConstraints[i]) && ("min" in session.cameraConstraints[i])) {
 				if (i === "aspectRatio") {
 					continue;
-				} else if (i === "width") {
-				//	continue;
-				} else if (i === "height") {
-				//	continue;
 				} else if (i === "frameRate") {
 					continue;
 				}
@@ -19225,7 +19282,7 @@ function initSceneList(UUID){
 	Object.keys(session.sceneList).forEach((scene, index) => {
 		if (getById("container_" + UUID).querySelectorAll('[data-scene="'+scene+'"]').length){return;} // already exists.
 		var newScene = document.createElement("div");
-		newScene.innerHTML = '<button style="margin: 0 5px 10px 5px;" data-sid="'+session.rpcs[UUID].streamID+'" data--u-u-i-d="'+UUID+'" data-action-type="addToScene" data-scene="'+scene+'" data-action-type="add-scene-'+scene+'" title="Add to Scene '+scene+'" onclick="directEnable(this, event);"><span ><i class="las la-plus-square" style="color:#060"></i> Scene: '+scene+'</span></button>';
+		newScene.innerHTML = '<button style="margin: 0 5px 10px 5px;" data-sid="'+session.rpcs[UUID].streamID+'" data--u-u-i-d="'+UUID+'" data-action-type="addToScene" data-scene="'+scene+'"   title="Add to Scene '+scene+'" onclick="directEnable(this, event);"><span ><i class="las la-plus-square" style="color:#060"></i> Scene: '+scene+'</span></button>';
 		getById("container_" + UUID).appendChild(newScene);
 	});
 }
@@ -19241,14 +19298,14 @@ function updateSceneList(scene){
 	session.sceneList[scene] = true;
 	for (var UUID in session.rpcs){
 		var newScene = document.createElement("span");
-		newScene.innerHTML = '<button style="margin: 0 5px 10px 5px;" data-sid="'+session.rpcs[UUID].streamID+'" data--u-u-i-d="'+UUID+'" data-action-type="addToScene" data-scene="'+scene+'" data-action-type="add-scene-'+scene+'" title="Add to Scene '+scene+'" onclick="directEnable(this, event);"><span ><i class="las la-plus-square" style="color:#060"></i> Scene: '+scene+'</span></button>';
+		newScene.innerHTML = '<button style="margin: 0 5px 10px 5px;" data-sid="'+session.rpcs[UUID].streamID+'" data--u-u-i-d="'+UUID+'" data-action-type="addToScene" data-scene="'+scene+'"  title="Add to Scene '+scene+'" onclick="directEnable(this, event);"><span ><i class="las la-plus-square" style="color:#060"></i> Scene: '+scene+'</span></button>';
 		getById("container_" + UUID).appendChild(newScene);
 	}
 	
 	if (session.showDirector){
 		if (document.getElementById("container_director")){
 			var newScene = document.createElement("div");
-			newScene.innerHTML = '<button style="margin: 0 5px 10px 5px;" data-sid="'+session.streamID+'" data-action-type="addToScene" data-scene="'+scene+'" data-action-type="add-scene-'+scene+'" title="Add to Scene '+scene+'" onclick="directEnable(this, event);"><span ><i class="las la-plus-square" style="color:#060"></i> Scene: '+scene+'</span></button>';
+			newScene.innerHTML = '<button style="margin: 0 5px 10px 5px;" data-sid="'+session.streamID+'" data-action-type="addToScene" data-scene="'+scene+'"  title="Add to Scene '+scene+'" onclick="directEnable(this, event);"><span ><i class="las la-plus-square" style="color:#060"></i> Scene: '+scene+'</span></button>';
 			getById("container_director").appendChild(newScene);
 		}
 	}
@@ -19354,7 +19411,7 @@ var vis = (function() {
 				e.preventDefault();
 				e.stopPropagation();
 				if (taskItemInContext.dataset && taskItemInContext.dataset.menu){
-					toggleMenuOn(taskItemInContext.dataset.menu);
+					toggleMenuOn(taskItemInContext.dataset.menu); 
 				} else {
 					toggleMenuOn();
 				}
@@ -19439,11 +19496,25 @@ var vis = (function() {
 		} else if (link.getAttribute("data-action") === "Copy") {
 			copyFunction(taskItemInContext.href);
 		} else if (link.getAttribute("data-action") === "Mirror") {
-			//copyFunction(taskItemInContext.href);
+			if ((taskItemInContext.id == "videosource") || (taskItemInContext.id == "previewWebcam")){
+				session.mirrored = !session.mirrored;
+				applyMirror(false, taskItemInContext); 
+				console.log("session.mirrored");
+			} else {
+				if ("mirror" in taskItemInContext){
+					taskItemInContext.mirror = !taskItemInContext.mirror;
+					applyMirrorGuest(taskItemInContext.mirror, taskItemInContext); 
+				} else {
+					taskItemInContext.mirror = true;
+					applyMirrorGuest(taskItemInContext.mirror, taskItemInContext); 
+				}
+			}
+		} else if (link.getAttribute("data-action") === "PiP") {
+			togglePictureInPicture(taskItemInContext);
 		} else if (link.getAttribute("data-action") === "Cast") {
 			//copyFunction(taskItemInContext.href);
 		} else if (link.getAttribute("data-action") === "Controls") {
-			//copyFunction(taskItemInContext.href);
+			taskItemInContext.controls = !taskItemInContext.controls;
 		} else if (link.getAttribute("data-action") === "Edit") {
 			//copyFunction(taskItemInContext.href);
 			var response = await promptAlt("Please note, manual edits to the URL may conflict with the toggles", false, false, taskItemInContext.href);
@@ -21025,10 +21096,55 @@ function addAudioPipeline(UUID, track){  // INBOUND AUDIO EFFECTS
 	return track;
 }
 
+/* if (director){
+				if (getById("container_director").querySelectorAll('[data-action-type="addToScene"][data-value="1"]').length==0){
+					getById("container_director").style.backgroundColor = null;
+				}
+			} else {
+				if (getById("container_" + ele.dataset.UUID).querySelectorAll('[data-action-type="addToScene"][data-value="1"]').length==0){
+					getById("container_" + ele.dataset.UUID).style.backgroundColor = null;
+				}
+			} */
+
+function changeGroupDirector(ele, state=null){
+
+	var group = ele.dataset.value;
+	
+	var index = session.group.indexOf(group);
+	
+	if (state===true){
+		ele.classList.add("pressed");
+		if (index === -1){
+			session.group.push(group);
+		}
+	} else if (state === false){
+		ele.classList.remove("pressed");
+		if (index > -1){
+			ssession.group.splice(index, 1);
+		}
+	} else if (ele.classList.contains("pressed")){
+		ele.classList.remove("pressed");
+		if (index > -1){
+			session.group.splice(index, 1);
+		}
+	} else {
+		ele.classList.add("pressed");
+		if (index === -1){
+			session.group.push(group);
+		}
+	}
+	
+	if (session.group.length){
+		session.sendMessage({"group":session.group.join(",")});
+	} else {
+		session.sendMessage({"group":false});
+	}
+}
+
 
 function changeGroup(ele, state=null){
 
-	group = ele.dataset.value;
+	var group = ele.dataset.value;
 	
 	var index = session.rpcs[ele.dataset.UUID].group.indexOf(group);
 	
@@ -22634,12 +22750,10 @@ function createSecondStream2(UUID){
 	session.screenStream.getTracks().forEach(function(track){
 		var added = false;
 		senders.forEach((sender) => { // I suppose there could be a race condition between negotiating and updating this. if joining at the same time as changnig streams?
-			if (added) {
-				return;
-			}
-			if (sender.track && sender.track.kind == "video" && sender.track.enabled==false) {
+			if (added){return;}
+			if (sender.track && (sender.track.kind == track.kind)) {
 				sender.replaceTrack(track); // replace may not be supported by all browsers.  eek.
-				sender.track.enabled = true;
+				sender.track.enabled = true; 
 				added = true;
 			}
 		});
@@ -22652,12 +22766,15 @@ var screenshareTracks = {};
 var screenShareState2 = false;
 var firsttime = true;
 async function createSecondStream() { //////////////////////////// 
-
 	if (screenShareState2 == false) { // adding a screen
 		navigator.mediaDevices.getDisplayMedia({audio:true,video:true}).then(function(stream) {
 			screenShareState2 = true;
-			
-			session.screenStream = stream;
+			session.screenStream = stream; 
+			try {
+				stream.getVideoTracks()[0].onended = function () {
+					stopSecondScreenshare();
+				};
+			} catch(e){log("No Video selected; screensharing?");}
 			
 			session.screenStream.getTracks().forEach(function(track){
 				screenshareTracks[track.id] = true;
@@ -22677,34 +22794,37 @@ async function createSecondStream() { ////////////////////////////
 			getById("screenshare3button").title = miscTranslations["stop-screen-sharing"];
 		});
 	} else { // removing a screen
-		
-		var msg = {};
-		msg.screenStopped = true;
-		session.sendMessage(msg);
-	
-		session.screenStream.getTracks().forEach(function(track) { // previous video track; saving it. Must remove the track at some point.
-			for (UUID in session.pcs){
-				if (!("realUUID" in session.pcs[UUID])){continue;} // not a screen share, so skip
-				var senders = getSenders2(UUID);
-				//warnlog(senders);
-				senders.forEach((sender) => { // I suppose there could be a race condition between negotiating and updating this. if joining at the same time as changnig streams?
-					if (sender.track && sender.track.id == track.id) {
-						sender.track.enabled = false;
-					}
-				});
-			}
-			if (track.id in screenshareTracks) {
-				session.screenStream.removeTrack(track);
-				track.stop();
-				screenshareTracks[track.id] = false;
-			}
-		});
-		session.screenStream = false;
-		screenShareState2 = false;
-		getById("screenshare3button").classList.remove("float2");
-		getById("screenshare3button").classList.add("float");
-		getById("screenshare3button").title = miscTranslations["share-a-screen"];
+		stopSecondScreenshare();
 	}
+}
+
+function stopSecondScreenshare(){
+	var msg = {};
+	msg.screenStopped = true;
+	session.sendMessage(msg);
+
+	session.screenStream.getTracks().forEach(function(track) { // previous video track; saving it. Must remove the track at some point.
+		for (UUID in session.pcs){
+			if (!("realUUID" in session.pcs[UUID])){continue;} // not a screen share, so skip
+			var senders = getSenders2(UUID);
+			senders.forEach((sender) => { // I suppose there could be a race condition between negotiating and updating this. if joining at the same time as changnig streams?
+				if (sender.track && sender.track.kind == "video") {
+					sender.track.enabled = false;
+				}
+			});
+		}
+		if (track.id in screenshareTracks) {
+			session.screenStream.removeTrack(track);
+			track.stop();
+			screenshareTracks[track.id] = false;
+		}
+	});
+	session.screenStream = false;
+	screenShareState2 = false;
+	getById("screenshare3button").classList.remove("float2");
+	getById("screenshare3button").classList.add("float");
+	getById("screenshare3button").title = miscTranslations["share-a-screen"];
+	pokeIframeAPI("screen-share-ended");
 }
 
 function createControlBoxScreenshare(UUID, soloLink, streamID) {
@@ -22749,7 +22869,7 @@ function createControlBoxScreenshare(UUID, soloLink, streamID) {
 
 	controls.querySelector(".controlsGrid").classList.add("notmain");
 
-	var buttons = "<div title='Does not impact scene order.' class='shift'><i class='las la-angle-left' data--u-u-i-d='"+UUID+"' onclick='shiftPC(this,-1);'></i><i class='las la-angle-right' data--u-u-i-d='"+UUID+"' onclick='shiftPC(this,1);'></i></div><div class='streamID' style='user-select: none;'>ID: <span style='user-select: text;'>" + streamID + "</span>\
+	var buttons = "<div title='Does not impact scene order.' class='shift'><i class='las la-angle-left' data--u-u-i-d='"+UUID+"' onclick='shiftPC(this,-1);'></i><span onclick='lockPosition(this);' style='cursor:pointer;' data-locked='0' data--u-u-i-d='"+UUID+"' id='position_"+UUID+"'><i class='las la-lock-open'></i></span><i class='las la-angle-right' data--u-u-i-d='"+UUID+"' onclick='shiftPC(this,1);'></i></div><div class='streamID' style='user-select: none;'>ID: <span style='user-select: text;'>" + streamID + "</span>\
 	<i class='las la-copy' data-sid='" + streamID + "' onclick='copyFunction(this.dataset.sid,event)' title='Copy this Stream ID to the clipboard' style='cursor:pointer'></i>\
 	<span id='label_" + UUID + "' title='Click here to edit the label for this stream. Changes will propagate to all viewers of this stream'></span>\
 	</div>";
