@@ -20,6 +20,8 @@ Dealing with feedback is challenging, as the reasons are numerous, but not alway
 
 * Playing an IFrame within VDO.Ninja (website share) may not have that IFrame's audio cancelled out by the echo-cancellation features.\
 
+* If screen sharing with desktop audio, that will create a feedback issue for guests.\
+
 * If only appearing in the OBS recording or stream, check to make sure you are not capturing the desktop's audio in OBS.  This can happen if not using "Control audio via OBS" in the OBS Browser source, capturing a screen-share into OBS, or trying to record the director's room audio with OBS.
 
 ![](<../.gitbook/assets/image (121).png>)
