@@ -18,6 +18,8 @@ Dealing with feedback is challenging, as the reasons are numerous, but not alway
 
 * Having two browser tabs open (such as one with the Youtube output playing) will cause echo. Echo cancellation only works within the same tab that the audio is played back and captured, and only if the echo is not prolonged.\
 
+* Having two devices connected to VDO.Ninja near each other, or sometimes even in the same house, can create echo. Phones have very sensitive microphones and can pick up the audio of others who might also be on the group call.\
+
 * Playing an IFrame within VDO.Ninja (website share) may not have that IFrame's audio cancelled out by the echo-cancellation features.\
 
 * If screen sharing with desktop audio, that will create a feedback issue for guests.\
