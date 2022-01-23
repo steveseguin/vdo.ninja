@@ -2247,6 +2247,8 @@ var updateMixerTimer = null;
 var updateMixerActive = false;
 //var cleanupTimeout = null;
 function updateMixer(e=false){
+	if (session.windowed){return;}
+	
 	clearInterval(updateMixerTimer);
 	if (updateMixerActive){
 		if (session.mobile){
@@ -2318,6 +2320,21 @@ function updateMixerRun(e=false){  // this is the main auto-mixing code.  It's a
 			}
 		}
 		
+		var soloVideo = false;
+		if (session.infocus===true){
+			soloVideo = true;
+		} else if (session.infocus && (session.infocus!==true) && (session.infocus in session.rpcs)){ // if the infocus stream is connected
+			if (session.group.length){
+				try {
+					if (session.group.some(item => session.rpcs[session.infocus].group.includes(item))){
+						soloVideo = session.infocus;
+					}
+				} catch(e){errorlog(e);}
+			} else {
+				soloVideo = session.infocus;
+			}
+		}
+		
 		var ww = w/arW;
 		var hh = h/arH;
 		
@@ -2340,13 +2357,13 @@ function updateMixerRun(e=false){  // this is the main auto-mixing code.  It's a
 
 		if (session.videoElement && (session.videoElement.src || session.videoElement.srcObject)){ // I, myself, exist
 			if (session.videoElement.style.display!="none"){  // local feed
-				if (session.minipreview && (session.infocus!==true)){
+				if (session.minipreview && (soloVideo!==true)){
 					
 					/* session.videoElement.onclick = function(){
-						if (session.infocus === true){
-							session.infocus = false;
+						if (soloVideo === true){
+							soloVideo = false;
 						} else {
-							session.infocus = true;
+							soloVideo = true;
 							log("session: myself");
 						}
 						setTimeout(()=>updateMixer(),10);
@@ -2365,7 +2382,7 @@ function updateMixerRun(e=false){  // this is the main auto-mixing code.  It's a
 					} else if (session.videoElement.srcObject && (session.videoElement.srcObject.getVideoTracks().length === 0)){
 						// do not show a video element if its completely empty.
 						
-					} else if (session.infocus && session.infocus!==true){
+					} else if (soloVideo && soloVideo!==true){
 						//
 					} else {
 						mediaPool.push(session.videoElement);
@@ -2382,7 +2399,7 @@ function updateMixerRun(e=false){  // this is the main auto-mixing code.  It's a
 					session.screenShareElement.order=0;
 				}
 				
-				if (session.infocus!==false){
+				if (soloVideo!==false){
 					//mediaPool_invisible.push(session.screenShareElement);
 				} else if (session.activeSpeaker && (!session.activelySpeaking)){
 					//mediaPool_invisible.push(session.screenShareElement);
@@ -2395,7 +2412,7 @@ function updateMixerRun(e=false){  // this is the main auto-mixing code.  It's a
 		
 		
 
-		if ((session.infocus) && (session.infocus in session.rpcs)){ // remote guest being full screened; infocus == UUID
+		if ((soloVideo) && (soloVideo in session.rpcs)){ // remote guest being full screened; infocus == UUID
 			mediaPool = []; // remove myself from fullscreen
 			for (var j in session.rpcs){
 				
@@ -2407,7 +2424,7 @@ function updateMixerRun(e=false){  // this is the main auto-mixing code.  It's a
 					} catch(e){errorlog(e);}
 				}
 				
-				if (j != session.infocus){ // this remote guest is NOT in focus
+				if (j != soloVideo){ // this remote guest is NOT in focus
 					try {
 						if (session.rpcs[j].videoElement && session.rpcs[j].videoElement.style.display!="none" ){  // Add it if not hidden
 						
@@ -2457,7 +2474,7 @@ function updateMixerRun(e=false){  // this is the main auto-mixing code.  It's a
 					} catch(e){errorlog(e);}
 				}
 			}
-		} else if ((session.infocus) && (session.infocus === true)){  // well, fullscreen myself. "true" represents me. UUID would be for others.
+		} else if ((soloVideo) && (soloVideo === true)){  // well, fullscreen myself. "true" represents me. UUID would be for others.
 			// already added myself to this as fullscreen
 			for (var j in session.rpcs){
 				if (session.group.length){
@@ -2697,6 +2714,10 @@ function updateMixerRun(e=false){  // this is the main auto-mixing code.  It's a
 					if (session.rpcs[i].videoMuted || session.rpcs[i].directorVideoMuted || session.rpcs[i].virtualHangup){
 						continue;
 					}
+					
+					if (session.rpcs[i].videoElement.style.display=="none"){ // currently this is considered the state of scenes.  pertty dumb on my part.
+						continue;
+					}
 				
 					if (session.rpcs[i].order!==false){
 						session.rpcs[i].imageElement.order=session.rpcs[i].order;
@@ -2727,9 +2748,15 @@ function updateMixerRun(e=false){  // this is the main auto-mixing code.  It's a
 					
 					if (session.style && (session.style >= 2)){
 						if (session.rpcs[i].videoElement.srcObject && ((session.rpcs[i].videoElement.srcObject.getVideoTracks().length==0) || (session.rpcs[i].videoMuted))){
+							
+							if (session.rpcs[i].videoElement.style.display=="none"){ // currently this is considered the state of scenes.  pertty dumb on my part.
+								continue;
+							}
+							
 							if (createStyleCanvas(i)){
 								applyStyleEffect(i);
 							}
+							
 							if (session.rpcs[i].order!==false){
 								session.rpcs[i].canvas.order=session.rpcs[i].order;
 							} else {
@@ -3080,12 +3107,12 @@ function updateMixerRun(e=false){  // this is the main auto-mixing code.  It's a
 			if (session.videoElement.srcObject && session.videoElement.srcObject.getVideoTracks().length){
 				if (session.minipreview){
 					if (mpl===0 && session.minipreview===2){
-						if (session.infocus!==true){
+						if (soloVideo!==true){
 							mediaPool.push(session.videoElement);
 							mpl = 1;
 						}
 					} else if (session.minipreview===3){
-						if (session.infocus!==true){
+						if (soloVideo!==true){
 							var container = document.createElement("div");
 							container.style.top="-500px";
 							container.style.left="-500px";
@@ -3111,7 +3138,7 @@ function updateMixerRun(e=false){  // this is the main auto-mixing code.  It's a
 							playarea.appendChild(togglePreview); */
 							
 						}
-					} else if (session.infocus!==true){
+					} else if (soloVideo!==true){
 						
 						if (document.getElementById("minipreview")){
 							container = document.getElementById("minipreview");
@@ -3176,7 +3203,7 @@ function updateMixerRun(e=false){  // this is the main auto-mixing code.  It's a
 						
 						applyMirror(session.mirrorExclude);
 						
-					} else if (session.infocus===true){
+					} else if (soloVideo===true){
 						if (document.getElementById("minipreview")){
 							container = document.getElementById("minipreview");
 							container.style.height = "100%";
@@ -3979,7 +4006,7 @@ function updateMixerRun(e=false){  // this is the main auto-mixing code.  It's a
 						}
 						button.id = "button_"+vid.id;
 						button.dataset.button = true;
-						if (session.infocus){
+						if (soloVideo){
 							button.innerHTML = "<img src='./media/sd.svg' style='background-color:#0007;width:4vh' aria-hidden='true' />";
 							button.title = "Show all active videos togethers";
 						} else if (mpl>1){
@@ -4008,10 +4035,10 @@ function updateMixerRun(e=false){  // this is the main auto-mixing code.  It's a
 						container.appendChild(button);
 						if (vid.id == "videosource"){
 							button.onclick = function(event){
-								if (session.infocus === true){
-									session.infocus = false;
+								if (soloVideo === true){
+									soloVideo = false;
 								} else {
-									session.infocus = true;
+									soloVideo = true;
 								}
 								setTimeout(()=>updateMixer(),10);
 							};
@@ -4020,12 +4047,12 @@ function updateMixerRun(e=false){  // this is the main auto-mixing code.  It's a
 							button.dataset.UUID = vid.dataset.UUID;
 							button.onclick = function(event){
 								var target =  event.currentTarget;
-								if (session.infocus === target.dataset.UUID){
+								if (soloVideo === target.dataset.UUID){
 									//target.childNodes[0].className = 'las la-arrows-alt';
-									session.infocus = false;
+									soloVideo = false;
 								} else {
 									//target.childNodes[0].className = 'las la-compress';
-									session.infocus = target.dataset.UUID;
+									soloVideo = target.dataset.UUID;
 									//log("session:"+target.dataset.UUID);
 								}
 								setTimeout(()=>updateMixer(),10);
@@ -4057,14 +4084,14 @@ function updateMixerRun(e=false){  // this is the main auto-mixing code.  It's a
 							container.style.backgroundColor= null;
 							button.style.opacity="10%";
 						};
-					} else if ((vid.id === "videosource") && session.minipreview && session.infocus==true){
+					} else if ((vid.id === "videosource") && session.minipreview && soloVideo==true){
 						var button = container.querySelector('[data-button]');
 						if (!button){
 							button = document.createElement("div");
 						}
 						button.id = "button_videosource";
 						button.dataset.button = true;
-						if (session.infocus){
+						if (soloVideo){
 							button.innerHTML = "<img src='./media/sd.svg' style='background-color:#0007;width:4vh' aria-hidden='true' />";
 							button.title = "Show all active videos togethers";
 							button.style.display="unset";
@@ -4089,10 +4116,10 @@ function updateMixerRun(e=false){  // this is the main auto-mixing code.  It's a
 						button.onclick = function(event){
 							event.stopPropagation();
 							event.preventDefault();
-							if (!session.infocus){return;}
+							if (!soloVideo){return;}
 							
-							if (session.infocus === true){
-								session.infocus = false;
+							if (soloVideo === true){
+								soloVideo = false;
 								setTimeout(()=>updateMixer(),10);
 							}
 							
@@ -4234,7 +4261,9 @@ var eventer = window[eventMethod];
 var messageEvent = eventMethod === "attachEvent" ? "onmessage" : "message";
 eventer(messageEvent, function(e) { // this listens for child IFRAMES.
 	try {
-		if ((e.data) && ("action" in e.data)) {
+		if (e.origin == "https://www.youtube.com"){
+			processYoutubeEvent(e);
+		} else if ((e.data) && (typeof e.data == "object") && ("action" in e.data)) {
 			if (e.data.action == "screen-share-ended") {
 				if (session.screenShareElement) {
 					if (e.source == session.screenShareElement.contentWindow) { // reject messages send from other iframes
@@ -4254,7 +4283,7 @@ eventer(messageEvent, function(e) { // this listens for child IFRAMES.
 				toggleSpeakerMute(true);
 				updateMixer(); // harmless to let run.
 			}
-		}
+		} 
 	} catch(e){errorlog(e);}
 });
 
@@ -6740,10 +6769,26 @@ function updateLocalStats(){
 		}
 	} catch(e){}
 	
-	headerStats += ", <span title='Total upload bitrate'>🔼 "+totalBitrate2 + "-kbps</span>";
+	if (totalBitrate2>1000){
+		headerStats += ", <span title='Total upload bitrate'>🔼 "+(Math.round(totalBitrate2/10.24)/100) + "<small>-mbps</small></span>";
+	} else{
+		headerStats += ", <span title='Total upload bitrate'>🔼 "+totalBitrate2 + "<small>-kbps</small></span>";
+	}
 	if (cpuLimited){
 		headerStats += ", <span style='color: #e69a0f;' title='Your CPU is maxed out; this can cause audio, sync, and quality issues.'>🔥 CPU Overloaded</span>";
 	}
+	
+	if (session.cpuLimited!==cpuLimited){
+		session.cpuLimited = cpuLimited;
+		var miniInfo = {}
+		miniInfo.cpu = cpuLimited;
+		for (var uuid in session.pcs) {
+			//if (session.directorList.indexOf(uuid)>=0){
+			session.sendMessage({"miniInfo":miniInfo}, uuid); // lets send it to everyone.
+			//}
+		}
+	}
+	
 	try{
 		if (Object.keys(session.pcs).length){
 			getById("head5").classList.remove("advanced");
@@ -7642,6 +7687,8 @@ async function directTimer(ele,  event=false) { // A directing room only is cont
 	log("directTimer");
 	if (!ele.dataset.UUID){return;}
 	var msg = {};
+	ele.classList.remove("blue");
+	ele.classList.remove("red2");
 	if (!event || (!((event.ctrlKey) || (event.metaKey)))) {
 		if (ele.dataset.value == 0 || ele.dataset.value == 2) {
 			var getTime = await promptAlt("Time in seconds to count down", false, false, parseInt(getById("overlayClockContainer").dataset.initial));
@@ -7654,15 +7701,28 @@ async function directTimer(ele,  event=false) { // A directing room only is cont
 			msg.showClock = true;
 			msg.startClock = true;
 			ele.innerHTML = '<i class="las la-clock"></i><span data-translate="create-timer"> Remove Timer</span>';
+		} else if (ele.dataset.value == 3) {
+			ele.dataset.value = 1;
+			msg.resumeClock = true;
+			ele.classList.add("red2");
 		} else {
 			ele.dataset.value = 2;
 			ele.classList.remove("pressed");
-			ele.classList.remove("red2");
 			msg.stopClock = true;
 			msg.hideClock = true;
 			ele.innerHTML = '<i class="las la-clock"></i><span data-translate="create-timer"> Create Timer</span>';
 		}
 		//miniTranslate(ele);
+	} else if (event.ctrlKey || event.metaKey){
+		if (ele.dataset.value == 1) {
+			ele.dataset.value = 3;
+			msg.pauseClock = true;
+			ele.classList.add("blue");
+		} else if (ele.dataset.value == 3) {
+			ele.dataset.value = 1;
+			msg.resumeClock = true;
+			ele.classList.add("red2");
+		}
 	}
 	session.sendRequest(msg, ele.dataset.UUID);
 }
@@ -8556,51 +8616,61 @@ function publishWebcam(btn = false) {
 		getById("chatbutton").classList.add("advanced");
 	}
 
-	if (urlParams.has('permaid')) {
-		updateURL("permaid=" + session.streamID);
-	} else {
-		updateURL("push=" + session.streamID);
-	}
+	updatePushId()
 	
 	if (!session.streamSrc){
 		session.streamSrc = createMediaStream();
 	}
 	
 	session.publishStream(ele);
-
 }
 
-
-session.publishIFrame = function(iframeURL){
-	
-	if (session.transcript){
-		setTimeout(function(){setupClosedCaptions();},1000);
-	}
-	
+function createYoutubeLink(vidid){
+	return "https://www.youtube.com/embed/"+vidid+"?autoplay=1&modestbranding=1&playsinline=1&enablejsapi=1";
+}
+function parseURL4Iframe(iframeURL){
 	if (iframeURL==""){
 		iframeURL="./";
 	}
-	if (iframeURL === session.iframeSrc){return;}
+	if (iframeURL === session.iframeSrc){return iframeURL;}
 	
 	if (iframeURL.startsWith("http://")){
-		try{
+		try {
 			iframeURL = "https://"+ iframeURL.split("http://")[1];
-		}catch(e){errorlog(e);}
+		} catch(e){errorlog(e);}
 	}
-	
 	
 	if (iframeURL.startsWith("https://") || iframeURL.startsWith("http://")){
 		var domain = (new URL(iframeURL));
 		domain = domain.hostname;
-		log(domain);
-		if ((domain=="www.youtube.com") || (domain=="youtube.com")){
+		
+		if (domain == "youtu.be"){
+			iframeURL  = iframeURL.replace("youtu.be/","youtube.com/watch?v=");
+		}
+		
+		if ((domain == "youtu.be") || (domain=="www.youtube.com") || (domain=="youtube.com")){
 			var regExp = /^.*((youtu.be\/)|(v\/)|(\/u\/\w\/)|(embed\/)|(watch\?))\??v?=?([^#&?]*).*/;
 			var match = iframeURL.match(regExp);
 			var vidid = (match&&match[7].length==11)? match[7] : false;
+			if (vidid){
+				//specialResult = {};
+				//specialResult.originalSrc = iframeURL;
+				//specialResult.parsedSrc = "https://www.youtube.com/embed/"+vidid+"?autoplay=1&modestbranding=1&playsinline=1&enablejsapi=1";
+				//specialResult.handler = "youtube";
+				//specialResult.vid = vidid;
+				//iframeURL = specialResult;
+				iframeURL = createYoutubeLink(vidid);
+			} else { // see if there is a playlist link here or not.
 			
-			if(vidid){
-				iframeURL = "https://www.youtube.com/embed/"+vidid+"?autoplay=1&modestbranding=1";
-				log(iframeURL);
+				// https://youtube.com/playlist?list=PLWodc2tCfAH1l_LDvEyxEqFf42hOBKqQM
+				iframeURL  = iframeURL.replace("playlist?list=","embed/videoseries?list=");
+				
+				var regExp = /^.*((youtu.be\/)|(v\/)|(\/u\/\w\/)|(embed\/)|(videoseries\?))\??list?=?([^#&?]*).*/;
+				var match = iframeURL.match(regExp);
+				var plid = (match&&match[7].length==34)? match[7] : false;
+				if (plid){
+					iframeURL = 'https://www.youtube.com/embed/videoseries?list='+plid+"&autoplay=1&modestbranding=1&playsinline=1&enablejsapi=1";
+				} 
 			}
 		} else if (domain=="www.twitch.tv"){
 			if (iframeURL.includes("twitch.tv/popout/")){
@@ -8613,13 +8683,11 @@ session.publishIFrame = function(iframeURL){
 				} else {
 					iframeURL = iframeURL.replace("?darkpopout","?darkpopout&parent="+location.hostname);
 				}
-				
 			} else {
 				var vidid = iframeURL.split('/').pop().split('#')[0].split('?')[0];
 				if (vidid){
 					iframeURL = "https://player.twitch.tv/?channel="+vidid+"&parent="+location.hostname;
-					log(iframeURL);
-				}
+				} 
 			}
 		} else if (domain=="twitch.tv"){
 			if (iframeURL.includes("twitch.tv/popout/")){
@@ -8636,38 +8704,164 @@ session.publishIFrame = function(iframeURL){
 				var vidid = iframeURL.split('/').pop().split('#')[0].split('?')[0];
 				if (vidid){
 					iframeURL = "https://player.twitch.tv/?channel="+vidid+"&parent="+location.hostname;
-					log(iframeURL);
-				}
+				} 
 			}
 		} else if ((domain=="www.vimeo.com") || (domain=="vimeo.com")){
 			iframeURL = iframeURL.replace("//vimeo.com/","//player.vimeo.com/video/");
 			iframeURL = iframeURL.replace("//www.vimeo.com/","//player.vimeo.com/video/");
-			log(iframeURL);
 		}
 	}
+	return iframeURL;
+}
+
+function YoutubeAPI(iframe, func, args) { // playVideo, pauseVideo, stopVideo
+	if (!(iframe && iframe.contentWindow)){return;}
+	try {
+		iframe.contentWindow.postMessage(JSON.stringify({
+			"event": "command",
+			"func": func,
+			"args": args || [],
+			"id": iframe.id || "unknown"
+		}), "*");
+	} catch(e){}
+}
+
+function YoutubeListen(iframe_id){
+	var iframe = document.getElementById(iframe_id);
+	if (!iframe){return;}
+	if (iframe.loadedYoutubeListen){return;}
+	try {
+		iframe.contentWindow.postMessage(JSON.stringify({"event":"listening","id":iframe_id}),'*'); // 
+	} catch(e){	}
+	setTimeout(function(iframe_id){YoutubeListen(iframe_id);},1000,iframe_id);
+}
+
+var sync = 0;
+function processYoutubeEvent(e){
+	if (!(e.type && (e.type === "message"))){return;}
+	try {
+		var data = JSON.parse(e.data);
+		if ("id" in data){
+			var iframe = document.getElementById(data.id);
+			if (!iframe){return;}
+			if (!iframe.loadedYoutubeListen){
+				iframe.loadedYoutubeListen = true;
+			}
+		}
+		if (!("mediaReferenceTime" in data.info)){
+			return;
+		}
+		
+		var msg = {}; 
+		msg.ifs = {}
+		msg.ifs.t = parseFloat(data.info.mediaReferenceTime+0.01) || 0;
+		
+		if ("playerState" in data.info){ 
+			msg.ifs.s = parseInt(data.info.playerState);
+			if ("videoData" in data.info){
+				msg.ifs.v = data.info.videoData.video_id;
+				var vidSrc = createYoutubeLink(msg.ifs.v);
+				if (vidSrc!==session.iframeSrc){
+					session.iframeSrc = vidSrc;
+					var data = {}
+					data.iframeSrc = session.iframeSrc;
+					if (parseInt(msg.ifs.t)>1){
+						data.iframeSrc += "&start="+parseInt(Math.ceil(msg.ifs.t))+""; 
+					}
+					for (var UUID in session.pcs){
+						if (session.pcs[UUID].allowIframe===true){
+							session.sendMessage(data, UUID);
+						}
+					}
+					return;
+					
+				}
+			}
+		} else if ("videoData" in data.info){
+			msg.ifs.v = data.info.videoData.video_id;
+			session.iframeSrc = createYoutubeLink(msg.ifs.v);
+		} else {
+			if (!iframe.sendOnNewConnect){
+				iframe.sendOnNewConnect = msg;
+			} else {
+				iframe.sendOnNewConnect.ifs.t = msg.ifs.t;
+			}
+			return;
+		}
+		
+		if (("playbackRate" in data.info) && (data.info.playbackRate!==1)){
+			msg.ifs.r = parseFloat(data.info.playbackRate);
+		}
+		iframe.sendOnNewConnect = msg;
+	} catch(e){return;}
+	for (var UUID in session.pcs){
+		if (session.pcs[UUID].allowIframe){
+			session.sendMessage(msg);
+	    }
+	}
+}
+
+function processIframeSyncUpdates(ifs, UUID){
+	// YoutubeAPI("iframe_source", "seekTo", [700]);
+	// YoutubeAPI("iframe_source", "volume", [100]);
+	if (ifs.v){
+		YoutubeAPI(session.rpcs[UUID].iframeEle, "seekTo", [parseFloat(ifs.t)]);
+		YoutubeAPI(session.rpcs[UUID].iframeEle, "playVideo");
+	} 
+	if (ifs.r){ /// setPlaybackRate
+		YoutubeAPI(session.rpcs[UUID].iframeEle, "setPlaybackRate", [parseFloat(ifs.r)]);
+	}
+	if ("s" in ifs){ /// setPlaybackRate
+		 if (ifs.s == -1) {  YoutubeAPI(session.rpcs[UUID].iframeEle, "stopVideo");  }
+		 else if (ifs.s == 0) {  YoutubeAPI(session.rpcs[UUID].iframeEle, "stopVideo"); } // player stops.
+		 else if (ifs.s == 1) {  YoutubeAPI(session.rpcs[UUID].iframeEle, "playVideo");  } //Video is playing
+		 else if (ifs.s == 2) {  YoutubeAPI(session.rpcs[UUID].iframeEle, "pauseVideo"); }  //Video is paused
+		 else if (ifs.s == 3) {  YoutubeAPI(session.rpcs[UUID].iframeEle, "pauseVideo");  } //video is buffering 
+		 else if (ifs.s == 5) { } //Video is cued.
+	}
+}
+
+function updatePushId(){
+	if (urlParams.has('push')){
+		updateURL("push="+session.streamID);
+	} else if (urlParams.has('id')){
+		updateURL("id="+session.streamID);
+	} else if (urlParams.has('permaid')){
+		updateURL("permaid="+session.streamID);
+	} else {
+		updateURL("push="+session.streamID);
+	}
+}
+
+session.publishIFrame = function(iframeURL){
 	
+	if (session.transcript){
+		setTimeout(function(){setupClosedCaptions();},1000);
+	}
 	
-	// https://player.twitch.tv/?channel=twitchpresents&parent=vdo.ninja
+	session.iframeSrc = parseURL4Iframe(iframeURL);
 	
-	session.iframeSrc = iframeURL;
+	var iframe = document.createElement("iframe");
+	iframe.allow = "autoplay;camera;microphone;fullscreen;picture-in-picture;";
+	iframe.src = session.iframeSrc;
+	iframe.id = "iframe_source";
+	iframe.loadedYoutubeListen = false;
+	session.iframeEle = iframe;
 	
 	var container = document.createElement("div");
 	container.id = "container_iframe";
+	container.appendChild(iframe);
+	getById("gridlayout").appendChild(container);
+	
+	if (session.iframeSrc.startsWith("https://www.youtube.com/")){ // special handler.
+		setTimeout(function(iframe_id){YoutubeListen(iframe_id);}, 1000, iframe.id);
+	} 
 	
 	if (session.cover){
 		container.style.setProperty('height', '100%', 'important');
 	}
 	
-	var iframe = document.createElement("iframe");
-	iframe.allow = "autoplay;camera;microphone;fullscreen;picture-in-picture;";
-	iframe.src = session.iframeSrc;
-	iframe.id = "iframe_source"
-	session.iframeEle = iframe;
-	
 	if (session.roomid!==false){
-		
-		window.onresize = updateMixer;
-		
 		if ((session.roomid==="") && ((!(session.view)) || (session.view===""))){
 			
 		} else {
@@ -8684,11 +8878,7 @@ session.publishIFrame = function(iframeURL){
 	}
 	getById("head1").className = 'advanced';
 	
-	if (urlParams.has('permaid')){
-		updateURL("permaid="+session.streamID);
-	} else {
-		updateURL("push="+session.streamID);
-	}
+	updatePushId()
 	
 	getById("head1").className = 'advanced';
 	getById("head2").className = 'advanced';
@@ -8707,22 +8897,21 @@ session.publishIFrame = function(iframeURL){
 		getById("chatbutton").classList.add("advanced");
 	}
 	
-	
 	if (session.director){
+		//
 	} else if (session.scene!==false){
 		updateMixer();
 	} else if (session.roomid!==false){
 		if (session.roomid===""){
 			if (!(session.view) || (session.view==="")){
-				
+				session.windowed = true;
 				
 				getById("mutespeakerbutton").classList.add("advanced");
-				
 				container.style.width="100%";
 				container.style.height="100%";
 				container.style.alignItems = "center";
-				container.style.maxWidth= "1280px";
-				container.style.maxHeight= "720px";
+				container.style.maxWidth= "100%";
+				container.style.maxHeight= "100%";
 				container.style.verticalAlign= "middle";
 				container.style.margin= "auto";
 				container.style.backgroundColor = "#666";
@@ -8730,15 +8919,16 @@ session.publishIFrame = function(iframeURL){
 				
 			} else {
 				session.windowed = false;
+				window.onresize = updateMixer;
 				updateMixer();
 			}
 		} else {
-			
+			window.onresize = updateMixer;
 			session.windowed = false;
 			updateMixer();
 		}
 	} else {
-		
+		window.onresize = updateMixer;
 		container.style.maxHeight= "1280px";
 		container.style.maxWidth= "720px";
 		container.style.verticalAlign= "middle";
@@ -8749,20 +8939,14 @@ session.publishIFrame = function(iframeURL){
 		container.style.backgroundColor = "#666";
 	}
 	
-	
-	getById("gridlayout").innerHTML = "";
-	container.appendChild(iframe);
-	getById("gridlayout").appendChild(container);
-	
-	
 	session.seeding=true;
 	
-	
-
 	updateReshareLink();
 	pokeIframeAPI('started-iframe-share');
-	
 	session.seedStream();
+	
+	return container;
+	
 }
 
 function outboundAudioPipeline() {
@@ -8994,25 +9178,20 @@ function outboundAudioPipeline() {
 			return webAudio.destination.stream;
 		} else {
 			
-			if (session.mobile){return session.streamSrc;} // this avoids issues on mobile?
+			//if (session.mobile){return session.streamSrc;} // this avoids issues on mobile? <- caused problems
+			// there are no audio tracks, given this case. so, skip /* session.streamSrc.getAudioTracks().forEach(function(track) { // this seems to fix a bug with macbooks. 
+			//	newStream.addTrack(track, session.streamSrc);
+			//}); */
 			
-			var newStream = createMediaStream();
-			
-			session.streamSrc.getAudioTracks().forEach(function(track) { // this seems to fix a bug with macbooks. 
-				newStream.addTrack(track, session.streamSrc);
-			});
 			if (session.videoElement.srcObject){
-				session.videoElement.srcObject.getVideoTracks().forEach(function(track) { // this seems to fix a bug with macbooks. 
-					newStream.addTrack(track, session.videoElement.srcObject);
-				});
-			} else {
-				session.streamSrc.getVideoTracks().forEach(function(track) { // this seems to fix a bug with macbooks. 
-					newStream.addTrack(track, session.streamSrc);
-				});
+				return session.videoElement.srcObject;
 			}
 			
+			var newStream = createMediaStream();
+			session.streamSrc.getVideoTracks().forEach(function(track) { // this seems to fix a bug with macbooks. 
+				newStream.addTrack(track, session.streamSrc);
+			});
 			return newStream;
-			//return session.streamSrc; // no audio track
 		}
 	} catch (e) {
 		errorlog(e);
@@ -10414,6 +10593,13 @@ function createControlBox(UUID, soloLink, streamID) {
 			session.rpcs[UUID].signalMeter.classList.remove("advanced");
 			session.rpcs[UUID].signalMeter.dataset.UUID = UUID;
 			session.rpcs[UUID].signalMeter.title = miscTranslations["signal-meter"];
+			
+			if (session.rpcs[UUID].stats.info && session.rpcs[UUID].stats.info.cpuLimited){ // was quality_limitation_reason
+				session.rpcs[UUID].signalMeter.dataset.cpu = "1";
+			} 
+			
+			
+			
 			session.rpcs[UUID].signalMeter.addEventListener('click', function(e) { // show stats of video if double clicked
 				log("clicked signal meter");
 				try {
@@ -12244,7 +12430,7 @@ function cleanupMediaTracks() {
 				log("stopping old track");
 			});
 		} else {
-			session.videoElement.srcObject = session.streamSrc;
+			session.videoElement.srcObject = createMediaStream();
 		}
 		activatedPreview = false;
 	} catch (e) {
@@ -12690,7 +12876,7 @@ async function toggleScreenShare(reload = false) { ////////////////////////////
 		
 		//if (beforeScreenShare || screenShareAudioTrack){
 		session.videoElement.srcObject = outboundAudioPipeline(); // updateREnderOoutput is just for video if videoElement is already activated.
-		updateRenderOutpipe();
+		updateRenderOutpipe(); // this syncs the video
 		//}
 		
 		beforeScreenShare = null;
@@ -13111,7 +13297,7 @@ async function grabScreen(quality = 0, audio = true, videoOnEnd = false) {
 
 		var eleName = "videosource";
 		try {
-			if (session.streamSrc) { 
+			if (session.streamSrc) {
 				session.streamSrc.getVideoTracks().forEach(function(track) {
 					//track.stop();
 					beforeScreenShare = track;
@@ -13125,11 +13311,11 @@ async function grabScreen(quality = 0, audio = true, videoOnEnd = false) {
 						log("stopping video track 2");
 					});
 				} else {
-					session.videoElement.srcObject = session.streamSrc;
+					session.videoElement.srcObject = outboundAudioPipeline();
 				}
 			} else {
 				session.streamSrc = createMediaStream();
-				session.videoElement.srcObject = session.streamSrc;
+				session.videoElement.srcObject = outboundAudioPipeline();
 				log("CREATE NEW STREAM");
 			}
 		} catch (e) {
@@ -13153,7 +13339,8 @@ async function grabScreen(quality = 0, audio = true, videoOnEnd = false) {
 						log("stopping video track 4");
 					});
 				} else {
-					session.videoElement.srcObject = session.streamSrc;
+					//session.videoElement.srcObject = createMediaStream();
+					session.videoElement.srcObject = outboundAudioPipeline();
 				}
 				
 				if (screenShareAudioTrack){
@@ -13493,7 +13680,8 @@ async function grabVideo(quality = 0, eleName = 'previewWebcam', selector = "sel
 			
 		} else {
 			session.streamSrc = createMediaStream();
-			session.videoElement.srcObject = session.streamSrc; // brand new stream; doesn't have audio yet
+			session.videoElement.srcObject = createMediaStream();
+			//session.videoElement.srcObject = outboundAudioPipeline(); // not sure I see the point of this being here
 			log("CREATE NEW STREAM");
 		}
 	} catch (e) {
@@ -13695,11 +13883,8 @@ async function grabVideo(quality = 0, eleName = 'previewWebcam', selector = "sel
 				}
 				log("adding video tracks 2412");
 				
-				
-				
 				checkBasicStreamsExist();
 				
-		
 				stream.getVideoTracks().forEach(function(track) {
 					
 					try{
@@ -13714,6 +13899,7 @@ async function grabVideo(quality = 0, eleName = 'previewWebcam', selector = "sel
 					} catch(e){}
 						
 					session.streamSrc.addTrack(track); // tracks previously removed.
+					
 					try{
 						track.onended = function(e) {  // hurrah!
 							warnlog(e);
@@ -14326,7 +14512,7 @@ session.publishDirector =  async function(clean, vdevice=false, adevice=true){ /
 	v.setAttribute("playsinline","");
 								
 	session.streamSrc = createMediaStream();
-	v.srcObject = session.streamSrc; // blank, no worries. we dont need outbound.
+	v.srcObject = createMediaStream(); 
 	
 	var quality = 1;
 	var framerate = 30;
@@ -14556,11 +14742,7 @@ function createDirectorCam(vid) {
 	
 	toggleSettings();
 	
-	if (urlParams.has('permaid')) {
-		updateURL("permaid=" + session.streamID);
-	} else {
-		updateURL("push=" + session.streamID);
-	}
+	updatePushId()
 }
 
 function statsMenuCreator(){
@@ -14995,11 +15177,7 @@ async function publishScreen2(constraints, audioList=[], audio=true){ // webcam 
 			getById("logoname").style.display = 'none';
 		}
 		
-		if (urlParams.has('permaid')){
-			updateURL("permaid="+session.streamID);
-		} else {
-			updateURL("push="+session.streamID);
-		}
+		updatePushId()
 
 		log("adding tracks");
 		for (var i=0; i<streams.length;i++){
@@ -15471,11 +15649,7 @@ session.hostFile = function(ele, event){ // webcam stream is used to generated a
 	}
 	getById("head1").className = 'advanced';
 	
-	if (urlParams.has('permaid')){
-		updateURL("permaid="+session.streamID);
-	} else {
-		updateURL("push="+session.streamID);
-	}
+	updatePushId()
 	
 	getById("head1").className = 'advanced';
 	getById("head2").className = 'advanced';
@@ -15588,11 +15762,7 @@ session.publishFile = function(ele, event){ // webcam stream is used to generate
 	}
 	getById("head1").className = 'advanced';
 	
-	if (urlParams.has('permaid')){
-		updateURL("permaid="+session.streamID);
-	} else {
-		updateURL("push="+session.streamID);
-	}
+	updatePushId()
 	
 	getById("head1").className = 'advanced';
 	getById("head2").className = 'advanced';
@@ -16015,7 +16185,7 @@ function dragElement(elmnt) {
 	}
 }
 
-function previewIframe(iframesrc) { // this is pretty important if you want to avoid camera permission popup problems.  You can also call it automatically via: <body onload=>loadIframe();"> , but don't call it before the page loads.
+function previewIframe(iframeSrc) { // this is pretty important if you want to avoid camera permission popup problems.  You can also call it automatically via: <body onload=>loadIframe();"> , but don't call it before the page loads.
 
 	var iframe = document.createElement("iframe");
 	iframe.allow = "autoplay;camera;microphone;fullscreen;picture-in-picture;display-capture;";
@@ -16023,70 +16193,13 @@ function previewIframe(iframesrc) { // this is pretty important if you want to a
 	iframe.style.height = "100%";
 	iframe.style.border = "10px dashed rgb(64 65 62)";
 
-	if (iframesrc == "") {
-		iframesrc = "./";
-	}
+	iframeSrc = parseURL4Iframe(iframeSrc);
+	
+	/* if (typeof iframeSrc == "object"){ // special handler.
+		iframeSrc = iframeSrc.parsedSrc;
+	}  */
 
-
-	if (iframesrc.startsWith("https://") || iframesrc.startsWith("http://")){
-		var domain = (new URL(iframesrc));
-		domain = domain.hostname;
-		log(domain);
-		if ((domain=="www.youtube.com") || (domain=="youtube.com")){
-			var regExp = /^.*((youtu.be\/)|(v\/)|(\/u\/\w\/)|(embed\/)|(watch\?))\??v?=?([^#&?]*).*/;
-			var match = iframesrc.match(regExp);
-			var vidid = (match&&match[7].length==11)? match[7] : false;
-			
-			if(vidid){
-				iframesrc = "https://www.youtube.com/embed/"+vidid+"?autoplay=1&modestbranding=1";
-				log(iframesrc);
-			}
-		} else if (domain=="www.twitch.tv"){
-			if (iframesrc.includes("twitch.tv/popout/")){
-				// this is a twitch live chat window
-				iframesrc = iframesrc.replace("/popout/","/embed/");
-				iframesrc = iframesrc.replace("?popout=","?parent="+location.hostname);
-				iframesrc = iframesrc.replace("?popout","?parent="+location.hostname);
-				
-				if (iframesrc.includes("darkpopout=")){
-					iframesrc = iframesrc.replace("?darkpopout=","?darkpopout=&parent="+location.hostname);
-				} else {
-					iframesrc = iframesrc.replace("?darkpopout","?darkpopout&parent="+location.hostname);
-				}
-			} else {
-				var vidid = iframesrc.split('/').pop().split('#')[0].split('?')[0];
-				if (vidid){
-					iframesrc = "https://player.twitch.tv/?channel="+vidid+"&parent="+location.hostname;
-					log(iframesrc);
-				}
-			}
-		} else if (domain=="twitch.tv"){
-			if (iframesrc.includes("twitch.tv/popout/")){
-				// this is a twitch live chat window
-				iframesrc = iframesrc.replace("/popout/","/embed/");
-				iframesrc = iframesrc.replace("?popout=","?parent="+location.hostname);
-				iframesrc = iframesrc.replace("?popout","?parent="+location.hostname);
-				if (iframesrc.includes("darkpopout=")){
-					iframesrc = iframesrc.replace("?darkpopout=","?darkpopout=&parent="+location.hostname);
-				} else {
-					iframesrc = iframesrc.replace("?darkpopout","?darkpopout&parent="+location.hostname);
-				}
-			} else {
-				var vidid = iframesrc.split('/').pop().split('#')[0].split('?')[0];
-				if (vidid){
-					iframesrc = "https://player.twitch.tv/?channel="+vidid+"&parent="+location.hostname;
-					log(iframesrc);
-				}
-			}
-		} else if ((domain=="www.vimeo.com") || (domain=="vimeo.com")){
-			iframesrc = iframesrc.replace("//vimeo.com/","//player.vimeo.com/video/");
-			iframesrc = iframesrc.replace("//www.vimeo.com/","//player.vimeo.com/video/");
-			log(iframesrc);
-		}
-		
-	}
-
-	iframe.src = iframesrc;
+	iframe.src = iframeSrc;
 	getById("previewIframe").innerHTML = "";
 	getById("previewIframe").style.width = "640px";
 	getById("previewIframe").style.height = "360px";
@@ -16094,18 +16207,23 @@ function previewIframe(iframesrc) { // this is pretty important if you want to a
 	getById("previewIframe").appendChild(iframe);
 }
 
-function loadIframe(iframesrc) { // this is pretty important if you want to avoid camera permission popup problems.  You can also call it automatically via: <body onload=>loadIframe();"> , but don't call it before the page loads.
+function loadIframe(iframesrc,  UUID) { // this is pretty important if you want to avoid camera permission popup problems.  You can also call it automatically via: <body onload=>loadIframe();"> , but don't call it before the page loads.
+	/* if (document.getElementById("mainmenu")) {
+		var m = getById("mainmenu");
+		m.remove();
+	} */
+	var iframeID = "iframe_"+UUID;
 
 	var iframe = document.createElement("iframe");
 	iframe.allow = "autoplay;camera;microphone;fullscreen;picture-in-picture;display-capture;";
 	iframe.style.width = "100%";
 	iframe.style.height = "100%";
 	iframe.style.border = "10px dashed rgb(64 65 62)";
-	
-	
+	iframe.id = iframeID;
+	iframe.dataset.UUID = UUID;
 	
 	if (session.director){
-		
+		//
 	} else if (session.scene!==false){
 		if (session.view){ // specific video to be played
 			iframe.style.display="block";
@@ -16115,6 +16233,7 @@ function loadIframe(iframesrc) { // this is pretty important if you want to avoi
 			iframe.style.display="none";
 		}
 	} else if (session.roomid!==false){
+		//
 	} else {
 		iframe.style.display="block";
 	}
@@ -16134,7 +16253,7 @@ function loadIframe(iframesrc) { // this is pretty important if you want to avoi
 		iframe.style.border = "0";
 	} else if (iframesrc.startsWith("https://backup.obs.ninja/")){
 		iframe.style.border = "0";
-	} else if (iframesrc.startsWith("https://youtube.com/")){
+	} else if (iframesrc.startsWith("https://www.youtube.com/")){
 		iframe.style.border = "0";
 	} else if (iframesrc.startsWith("https://www.youtube.com/")){
 		iframe.style.border = "0";
@@ -16163,10 +16282,6 @@ function loadIframe(iframesrc) { // this is pretty important if you want to avoi
 		iframe.style.border = "0";
 	}
 	
-	if (document.getElementById("mainmenu")) {
-		var m = getById("mainmenu");
-		m.remove();
-	}
 	iframe.src = iframesrc;
 	return iframe
 }
@@ -18567,68 +18682,8 @@ async function shareWebsite(autostart=false, evt=false){
 	
 	warnlog(iframeURL);
 	
-	if (!(iframeURL.startsWith("https://") || iframeURL.startsWith("http://"))){
-		iframeURL = "https://"+iframeURL;
-	}
+	session.iframeSrc = parseURL4Iframe(iframeURL);
 	
-	var domain = new URL(iframeURL);
-	domain = domain.hostname;
-	log(domain);
-	if ((domain=="www.youtube.com") || (domain=="youtube.com")){
-		var regExp = /^.*((youtu.be\/)|(v\/)|(\/u\/\w\/)|(embed\/)|(watch\?))\??v?=?([^#&?]*).*/;
-		var match = iframeURL.match(regExp);
-		var vidid = (match&&match[7].length==11)? match[7] : false;
-		
-		if(vidid){
-			iframeURL = "https://www.youtube.com/embed/"+vidid+"?autoplay=1&modestbranding=1";
-			log(iframeURL);
-		}
-	} else if (domain=="www.twitch.tv"){
-		if (iframeURL.includes("twitch.tv/popout/")){
-				// this is a twitch live chat window
-			//https://www.twitch.tv/embed/complex/chat?parent=vdo.ninja
-			//https://www.twitch.tv/popout/complex/chat?popout=
-			
-			iframeURL = iframeURL.replace("/popout/","/embed/");
-			iframeURL = iframeURL.replace("?popout=","?parent="+location.hostname);
-			iframeURL = iframeURL.replace("?popout","?parent="+location.hostname);
-			if (iframeURL.includes("darkpopout=")){
-				iframeURL = iframeURL.replace("?darkpopout=","?darkpopout=&parent="+location.hostname);
-			} else {
-				iframeURL = iframeURL.replace("?darkpopout","?darkpopout&parent="+location.hostname);
-			}
-		} else {
-			var vidid = iframeURL.split('/').pop().split('#')[0].split('?')[0];
-			if (vidid){
-				iframeURL = "https://player.twitch.tv/?channel="+vidid+"&parent="+location.hostname;
-				log(iframeURL);
-			}
-		}
-	} else if (domain=="twitch.tv"){
-		if (iframeURL.includes("twitch.tv/popout/")){
-				// this is a twitch live chat window
-			iframeURL = iframeURL.replace("/popout/","/embed/");
-			iframeURL = iframeURL.replace("?popout=","?parent="+location.hostname);
-			iframeURL = iframeURL.replace("?popout","?parent="+location.hostname);
-			if (iframeURL.includes("darkpopout=")){
-				iframeURL = iframeURL.replace("?darkpopout=","?darkpopout=&parent="+location.hostname);
-			} else {
-				iframeURL = iframeURL.replace("?darkpopout","?darkpopout&parent="+location.hostname);
-			}
-		} else {
-			var vidid = iframeURL.split('/').pop().split('#')[0].split('?')[0];
-			if (vidid){
-				iframeURL = "https://player.twitch.tv/?channel="+vidid+"&parent="+location.hostname;
-				log(iframeURL);
-			}
-		}
-	} else if ((domain=="www.vimeo.com") || (domain=="vimeo.com")){
-		iframeURL = iframeURL.replace("//vimeo.com/","//player.vimeo.com/video/");
-		iframeURL = iframeURL.replace("//www.vimeo.com/","//player.vimeo.com/video/");
-		log(iframeURL);
-	}
-	
-	session.iframeSrc = iframeURL;
 	if (session.director){
 		setStorage("directorWebsiteShare", {"website":session.iframeSrc, "roomid":session.roomid});
 	}
@@ -18637,7 +18692,7 @@ async function shareWebsite(autostart=false, evt=false){
 	getById("websitesharebutton").classList.add("advanced");
 	
 	var data = {};
-	data.iframeSrc = iframeURL;
+	data.iframeSrc = session.iframeSrc;
 	for (var UUID in session.pcs){
 		if (session.pcs[UUID].allowIframe===true){
 			session.sendMessage(data, UUID);
@@ -19499,7 +19554,7 @@ var vis = (function() {
 			if ((taskItemInContext.id == "videosource") || (taskItemInContext.id == "previewWebcam")){
 				session.mirrored = !session.mirrored;
 				applyMirror(false, taskItemInContext); 
-				console.log("session.mirrored");
+				log("session.mirrored");
 			} else {
 				if ("mirror" in taskItemInContext){
 					taskItemInContext.mirror = !taskItemInContext.mirror;
@@ -19838,6 +19893,16 @@ function setClock(initial=false){
 function stopClock(){
 	clearInterval(clockOverlayTimer);
 	setClock();
+}
+function pauseClock(){
+	clearInterval(clockOverlayTimer);
+	var current = Date.now() - parseInt(getById("overlayClockContainer").dataset.timestamp);
+	current = parseInt(getById("overlayClockContainer").dataset.initial) - parseInt(Math.round(current/1000));
+	getById("overlayClockContainer").dataset.initial = current;
+	getById("overlayClock").style.backgroundColor = "#00F9";
+}
+function resumeClock(){
+	startClock();
 }
 function startClock(){
 	clearInterval(clockOverlayTimer);
@@ -22955,6 +23020,11 @@ function createControlBoxScreenshare(UUID, soloLink, streamID) {
 			session.rpcs[UUID].signalMeter.classList.remove("advanced");
 			session.rpcs[UUID].signalMeter.dataset.UUID = UUID;
 			session.rpcs[UUID].signalMeter.title = miscTranslations["signal-meter"];
+			
+			//if (session.rpcs[UUID].stats.info && session.rpcs[UUID].stats.info.cpu_maxed){
+			//	session.rpcs[UUID].signalMeter.dataset.cpu = "1";
+			//} 
+			
 			session.rpcs[UUID].signalMeter.addEventListener('click', function(e) { // show stats of video if double clicked
 				log("clicked signal meter");
 				try {

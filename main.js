@@ -1463,9 +1463,9 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 				}
 			}
 			
-			//if (navigator.userAgent.indexOf('Mac OS X') != -1) {
-			//	session.codec = "h264"; // default the codec to h264 if OBS is on macOS (that's all it supports with hardware) // oct 2021, OBS now supports vp8 and actually breaks with h264 android devices.
-			//}
+			if (navigator.userAgent.indexOf('Mac OS X') != -1) {
+				session.codec = "h264"; // default the codec to h264 if OBS is on macOS (that's all it supports with hardware) // oct 2021, OBS now supports vp8 and actually breaks with h264 android devices.
+			}
 			
 			if (session.disableOBS===false){
 				window.addEventListener("obsSourceVisibleChanged", obsSourceVisibleChanged);
@@ -1481,7 +1481,6 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 			errorlog(e);
 		}
 	}
-
 
 	if (urlParams.has('chroma')) {
 		log("Chroma ENABLED");
@@ -2597,21 +2596,25 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 		session.queue = true;
 	}
 
-	if (urlParams.has('permaid') || urlParams.has('push')) {
-		session.permaid = urlParams.get('push') || urlParams.get('permaid');
+	if (urlParams.has('push') || urlParams.has('id') || urlParams.has('permaid') ) {
+		session.permaid = urlParams.get('push')  || urlParams.get('id') || urlParams.get('permaid');
 
 		if (session.permaid) {
 			session.streamID = sanitizeStreamID(session.permaid);
 		} else {
 			session.permaid = null;
 		}
-
-		if (urlParams.has('permaid')) {
-			updateURL("permaid=" + session.streamID, true, false); // I'm not deleting the permaID first tho...
+		
+		if (urlParams.has('push')){
+			updateURL("push="+session.streamID, true, false);
+		} else if (urlParams.has('id')){
+			updateURL("id="+session.streamID, true, false); // not 'officially' supporting this yet; we'll see.
+		} else if (urlParams.has('permaid')){
+			updateURL("permaid="+session.streamID, true, false);
 		} else {
-			updateURL("push=" + session.streamID, true, false); // I'm not deleting the permaID first tho...
+			updateURL("push="+session.streamID, true, false);
 		}
-
+		
 		if (urlParams.has('director') || urlParams.has('dir')) { // if I do a short form of this, it will cause duplications in the code elsewhere.
 			//var director_room_input = urlParams.get('director');
 			//director_room_input = sanitizeRoomName(director_room_input);

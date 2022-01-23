@@ -54,7 +54,7 @@
 				transition: opacity .1s linear;
 			}
 		</style>
-		<link rel="stylesheet" href="./main.css?ver=150" />
+		<link rel="stylesheet" href="./main.css?ver=151" />
 		<script type="text/javascript" crossorigin="anonymous" src="./thirdparty/adapter.min.js"></script>
 		<style id="lightbox-animations" type="text/css"></style>
 	</head>
@@ -67,7 +67,7 @@
 			<link itemprop="url" href="./media/vdoNinja_logo_full.png" />
 		</span>
 		<script  type="text/javascript" crossorigin="anonymous"  src="./thirdparty/CodecsHandler.js?ver=36"></script>
-		<script  type="text/javascript" crossorigin="anonymous" src="./webrtc.js?ver=344"></script>
+		<script  type="text/javascript" crossorigin="anonymous" src="./webrtc.js?ver=345"></script>
 		<input id="zoomSlider" type="range" style="display: none;" />
 		<div id="header">
 			
@@ -281,7 +281,7 @@
 								<span data-translate="scenes-can-see-director" style="cursor: help;" title="If checked, the director can be added to scenes as if a guest. Otherwise, the director will never appear in a scene." >The director will be performing as well, appearing in group scenes</span>
 							</b>
 							</th>	
-						</tr><tr style="display:none;">
+						</tr><tr>
 							<th style="text-align:right; padding: 5px;">
 								
 							</th>
@@ -344,7 +344,7 @@
 				<div class="container-inner">
 					<br />
 					<p>
-						<video id="previewWebcam" class="previewWebcam task"  data-menu="context-menu-video" oncanplay="updateStats();" controlsList="nodownload" muted autoplay playsinline ></video>
+						<video id="previewWebcam" class="previewWebcam task" title="Right-click this video for additional options" data-menu="context-menu-video" oncanplay="updateStats();" controlsList="nodownload" muted autoplay playsinline ></video>
 					</p>
 					<div id="infof"></div>
 					<button onclick="this.disabled=true;setTimeout(function(){requestBasicPermissions();},20);" id="getPermissions" style="display:none;" data-ready="false" >
@@ -1358,7 +1358,7 @@
 					<span data-translate="request-upload"> Request File</span>
 				</button>
 				
-				<button class="hidden mainonly" data-cluster="2" data-action-type="create-timer" data-value="0" title="Set a countdown timer that this guest sees" onclick="directTimer(this, event);">
+				<button class="hidden mainonly" data-cluster="2" data-action-type="create-timer" data-value="0" title="Set a countdown timer that this guest sees. CTRL (cmd) + click to pause." onclick="directTimer(this, event);">
 					<i class="las la-clock"></i>
 					<span data-translate="create-timer">Create Timer</span>
 				</button>
@@ -1872,7 +1872,7 @@
 
 		
 			var session = WebRTC.Media; // session is a required global variable if configuring manually. Run before loading main.js but after webrtc.js.
-			session.version = "20.2";
+			session.version = "20.3";
 			session.streamID = session.generateStreamID(); // randomly generates a streamID for this session. You can set your own programmatically if needed
 			
 			session.defaultPassword = "someEncryptionKey123"; // Change this password if self-deploying for added security/privacy
@@ -1937,11 +1937,11 @@
 			// session.introOnClean = true; // this will load the page with the webcam selection screen if &push or &room is in the URL; no need to use &webcam.
 		</script>
 		<script type="text/javascript" crossorigin="anonymous" src="./thirdparty/aes.js"></script>
-		<script type="text/javascript" crossorigin="anonymous" id="lib-js" src="./lib.js?ver=255"></script>
+		<script type="text/javascript" crossorigin="anonymous" id="lib-js" src="./lib.js?ver=256"></script>
 		<!-- 
 		// If you wish to change branding, blank offers a good clean start.
 		<script type="text/javascript" id="main-js" src="./main.js" data-translation="blank"></script>
 	-->
-		<script type="text/javascript" crossorigin="anonymous" id="main-js" src="./main.js?ver=289"></script>
+		<script type="text/javascript" crossorigin="anonymous" id="main-js" src="./main.js?ver=290"></script>
 	</body>
 </html>
