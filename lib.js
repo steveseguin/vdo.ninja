@@ -4035,10 +4035,10 @@ function updateMixerRun(e=false){  // this is the main auto-mixing code.  It's a
 						container.appendChild(button);
 						if (vid.id == "videosource"){
 							button.onclick = function(event){
-								if (soloVideo === true){
-									soloVideo = false;
+								if (session.infocus === true){
+									session.infocus = false;
 								} else {
-									soloVideo = true;
+									session.infocus = true;
 								}
 								setTimeout(()=>updateMixer(),10);
 							};
@@ -4047,12 +4047,12 @@ function updateMixerRun(e=false){  // this is the main auto-mixing code.  It's a
 							button.dataset.UUID = vid.dataset.UUID;
 							button.onclick = function(event){
 								var target =  event.currentTarget;
-								if (soloVideo === target.dataset.UUID){
+								if (session.infocus === target.dataset.UUID){
 									//target.childNodes[0].className = 'las la-arrows-alt';
-									soloVideo = false;
+									session.infocus = false;
 								} else {
 									//target.childNodes[0].className = 'las la-compress';
-									soloVideo = target.dataset.UUID;
+									session.infocus = target.dataset.UUID;
 									//log("session:"+target.dataset.UUID);
 								}
 								setTimeout(()=>updateMixer(),10);
@@ -4116,10 +4116,10 @@ function updateMixerRun(e=false){  // this is the main auto-mixing code.  It's a
 						button.onclick = function(event){
 							event.stopPropagation();
 							event.preventDefault();
-							if (!soloVideo){return;}
+							if (!session.infocus){return;}
 							
-							if (soloVideo === true){
-								soloVideo = false;
+							if (session.infocus === true){
+								session.infocus = false;
 								setTimeout(()=>updateMixer(),10);
 							}
 							

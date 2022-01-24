@@ -1418,7 +1418,7 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 						}
 					}
 				}
-			}
+			} 
 		}
 		try {
 			log("OBS VERSION:" + window.obsstudio.pluginVersion);
