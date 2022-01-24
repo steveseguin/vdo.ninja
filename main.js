@@ -100,13 +100,17 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 	}
 
 	if (!isIFrame){
-		if (getStorage("redirect") == "yes") {
+		if (getChromeVersion()===65){
+			 // pass, since probably manycam and that's bugged
+		} else if (getStorage("redirect") == "yes") {
 			setStorage("redirect", "", 0);
 			session.sticky = true;
 		} else if (getStorage("settings") != "") {
-			if (!(session.cleanOutput)){
+			
+			 if (!(session.cleanOutput)){
+				
 				window.focus();
-				session.sticky = confirm(miscTranslations["load-previous-session"]);
+				session.sticky = confirm(getStorage("settings"));
 				if (!session.sticky) {
 					setStorage("settings", "", 0);
 					log("deleting cookie as user said no");
@@ -362,7 +366,7 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 	}
 
 	if (urlParams.has('showdirector') || urlParams.has('sd')) {
-		session.showDirector = urlParams.get('showdirector') || urlParams.get('sd') || true;
+		session.showDirector = parseInt(urlParams.get('showdirector')) || parseInt(urlParams.get('sd')) || true; // if 2, video only allowed.  True or 1 will be video + audio allowed.
 	}
 	
 	if (urlParams.has('rotate') ) {
@@ -401,6 +405,11 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 	if (urlParams.has('midi') || urlParams.has('hotkeys')) {
 		session.midiHotkeys = urlParams.get('midi') || urlParams.get ('hotkeys') || 1;
 		session.midiHotkeys = parseInt(session.midiHotkeys);
+	}
+	
+	if (urlParams.has('midioffset')){
+		session.midiOffset = urlParams.get('midioffset') || 0;
+		session.midiOffset = parseInt(session.midiOffset);
 	}
 	
 	if (urlParams.has('midiremote') || urlParams.has('remotemidi')){
@@ -513,6 +522,11 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 		session.muted = true;
 	}
 	
+	if (urlParams.has('hideguest') || urlParams.has('hidden')) {
+		session.directorVideoMuted = true;
+	}
+	
+	
 	if (urlParams.has('safemode')) {
 		session.safemode = true;
 	}
@@ -538,7 +552,13 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 		session.directorDisplayMuted=true; // false == true in this case.
 	}
 
-
+	if (urlParams.has('blindall')) {
+		session.directorBlindButton=true; // false == true in this case.
+	}
+	if (session.directorBlindButton){
+		getById("blindAllGuests").classList.remove("advanced");
+	}
+	
 	if (urlParams.has('dpi') || urlParams.has('dpr')) {
 		session.devicePixelRatio = urlParams.get('dpi') || urlParams.get('dpr') || 2.0;
 	} //else if (window.devicePixelRatio && window.devicePixelRatio!==1){ 
@@ -717,6 +737,10 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 	if (urlParams.has('preloadbitrate')) {
 		session.preloadbitrate = parseInt(urlParams.get('preloadbitrate')) || 0; // 1000
 	}
+	
+	if (urlParams.has('rampuptime')) {
+		session.rampUpTime = parseInt(urlParams.get('rampuptime')) || 10000;
+	}
 
 	if (urlParams.has('scenetype') || urlParams.has('type')) {
 		session.sceneType = parseInt(urlParams.get('scenetype')) || parseInt(urlParams.get('type')) || false;
@@ -816,20 +840,28 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 		generateHash(session.password + session.salt, 6).then(function(hash) { // million to one error. 
 			log("hash is " + hash);
 			if (hash.substring(0, 4) !== hash_input) { // hash crc checks are just first 4 characters.
-				session.taintedSession = true;
-				if (!(session.cleanOutput)) {
-					getById("request_info_prompt").innerHTML = miscTranslations["password-incorrect"];
-					getById("request_info_prompt").style.display = "block";
-					getById("mainmenu").style.display = "none";
-					getById("head1").style.display = "none";
-					session.cleanOutput = true;
+				generateHash(session.password + "obs.ninja", 6).then(function(hash2) { // million to one error. 
+					log("hash2 is " + hash2);
+					if (hash2.substring(0, 4) !== hash_input) { // hash crc checks are just first 4 characters.
+						session.taintedSession = true;
+						if (!(session.cleanOutput)) {
+							getById("request_info_prompt").innerHTML = miscTranslations["password-incorrect"];
+							getById("request_info_prompt").style.display = "block";
+							getById("mainmenu").style.display = "none";
+							getById("head1").style.display = "none";
+							session.cleanOutput = true;
 
-				} else {
-					getById("request_info_prompt").innerHTML = "";
-					getById("request_info_prompt").style.display = "block";
-					getById("mainmenu").style.display = "none";
-					getById("head1").style.display = "none";
-				}
+						} else {
+							getById("request_info_prompt").innerHTML = "";
+							getById("request_info_prompt").style.display = "block";
+							getById("mainmenu").style.display = "none";
+							getById("head1").style.display = "none";
+						}
+					} else {
+						session.taintedSession = false;
+						session.hash = hash;
+					}
+				}).catch(errorlog);
 			} else {
 				session.taintedSession = false;
 				session.hash = hash;
@@ -1368,10 +1400,29 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 		session.disableWebAudio = true; // default true; might be useful to disable on slow or old computers?
 		session.audioMeterGuest = false;
 		session.audioEffects = false;
-		session.obsfix = 15; // can be manually set via URL.  ; VP8=15, VP9=30. (previous was 20.)
+		if (window.obsstudio.pluginVersion){
+			if (macOS){ // if mac, no fix
+				//session.obsfix = false;
+			} else if (window.obsstudio.pluginVersion=="2.17.4"){ // if obs v27.2 beta, no fix
+				//session.obsfix = false;
+			} else {
+				var ver = window.obsstudio.pluginVersion.split(".");
+				if (ver.length >= 2){
+					if (parseInt(ver[0])<=2){
+						if (parseInt(ver[0])==2){
+							if (parseInt(ver[1])<=16){
+								session.obsfix = 15;
+							} 
+						} else {
+							session.obsfix = 15;
+						}
+					}
+				}
+			} 
+		}
 		try {
 			log("OBS VERSION:" + window.obsstudio.pluginVersion);
-			log("macOS: " + navigator.userAgent.indexOf('Mac OS X') != -1);
+			log("macOS: " + macOS);
 			log(window.obsstudio);
 			
 			if (typeof document.visibilityState !== "undefined"){
@@ -1398,7 +1449,7 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 				var cefVersion = getChromeVersion();
 
 				if (ver1.length == 3) { // Should be 3, but disabled3
-					if ((ver1.length == 3) && (parseInt(ver1[0]) == 2) && (cefVersion < 76) && (navigator.userAgent.indexOf('Mac OS X') != -1)) {
+					if ((ver1.length == 3) && (parseInt(ver1[0]) == 2) && (cefVersion < 76) && (macOS)) {
 						updateURL("streamlabs");
 						getById("main").innerHTML = "<div style='background-color:black;color:white;' data-translate='obs-macos-not-supported'><h1>Update OBS Studio to v26.1.2 or newer; older versions and StreamLabs OBS are not supported on macOS.\
 						<br /><i><small><small>download here: <a href='https://github.com/obsproject/obs-studio/releases'>https://github.com/obsproject/obs-studio/releases</a></small></small></i>\
@@ -1412,9 +1463,9 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 				}
 			}
 			
-			//if (navigator.userAgent.indexOf('Mac OS X') != -1) {
-			//	session.codec = "h264"; // default the codec to h264 if OBS is on macOS (that's all it supports with hardware) // oct 2021, OBS now supports vp8 and actually breaks with h264 android devices.
-			//}
+			if (navigator.userAgent.indexOf('Mac OS X') != -1) {
+				session.codec = "h264"; // default the codec to h264 if OBS is on macOS (that's all it supports with hardware) // oct 2021, OBS now supports vp8 and actually breaks with h264 android devices.
+			}
 			
 			if (session.disableOBS===false){
 				window.addEventListener("obsSourceVisibleChanged", obsSourceVisibleChanged);
@@ -1430,7 +1481,6 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 			errorlog(e);
 		}
 	}
-
 
 	if (urlParams.has('chroma')) {
 		log("Chroma ENABLED");
@@ -1493,9 +1543,9 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 		}
 	} catch(e){errorlog(e);}
 	
-	if (urlParams.has("videodevice") || urlParams.has("vdevice") || urlParams.has('vd') || urlParams.has('device') || urlParams.has('d')) {
+	if (urlParams.has("videodevice") || urlParams.has("vdevice") || urlParams.has('vd') || urlParams.has('device') || urlParams.has('d') || urlParams.has('vdo')) {
 
-		session.videoDevice = urlParams.get("videodevice") || urlParams.get("vdevice") || urlParams.get("vd") || urlParams.get("device") || urlParams.get("d");
+		session.videoDevice = urlParams.get("videodevice") || urlParams.get("vdevice") || urlParams.get("vd") || urlParams.get("device") || urlParams.get("d") || urlParams.get("vdo");
 
 		if (session.videoDevice === null) {
 			session.videoDevice = "1";
@@ -1528,7 +1578,10 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 			// whatever the user entered I guess, santitized.
 			session.videoDevice = session.videoDevice.replace(/[\W]+/g, "_").toLowerCase();
 		}
-		getById("videoMenu").style.display = "none";
+		
+		if (!urlParams.has('vdo')){
+			getById("videoMenu").style.display = "none";
+		}
 		log("session.videoDevice:" + session.videoDevice);
 	}
 	
@@ -1706,6 +1759,10 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 		session.order = parseInt(urlParams.get('order')) || 1;
 	}
 	
+	if (urlParams.has('orderby')) {
+		session.orderby = urlParams.get('orderby') || "id";
+	}
+	
 	if (urlParams.has('slot')) {
 		session.slot = parseInt(urlParams.get('slot')) || 0;
 	}
@@ -1741,6 +1798,14 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 		session.sensorData = parseInt(session.sensorData);
 	}
 
+
+	if (urlParams.has('ptime')) {
+		session.ptime = parseInt(urlParams.get('ptime')) || 20;
+		if (session.ptime<10){
+			session.ptime = 10;
+		}
+	}
+
 	if (urlParams.has('minptime')) {
 		session.minptime = parseInt(urlParams.get('minptime')) || 10;
 		if (session.minptime < 10) {
@@ -1758,16 +1823,6 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 		}
 		if (session.maxptime > 300) {
 			session.maxptime = 300;
-		}
-	}
-
-	if (urlParams.has('ptime')) {
-		session.ptime = parseInt(urlParams.get('ptime')) || 20;
-		if (session.minptime < 10) {
-			session.ptime = 10;
-		}
-		if (session.minptime > 300) {
-			session.ptime = 300;
 		}
 	}
 
@@ -1907,6 +1962,18 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 	if (urlParams.has('mcb') || urlParams.has('mcbitrate') || urlParams.has('meshcastbitrate')){
 		session.meshcastBitrate = urlParams.get('mcb') || urlParams.get('mcbitrate') || urlParams.get('meshcastbitrate') || 2500;
 		session.meshcastBitrate = parseInt(session.meshcastBitrate);
+	}
+	
+	if (urlParams.has('mcscreensharebitrate') || urlParams.has('mcssbitrate')){
+		session.meshcastScreenShareBitrate = urlParams.get('mcscreensharebitrate') || urlParams.get('mcssbitrate') || 2500;
+		session.meshcastScreenShareBitrate = parseInt(session.meshcastScreenShareBitrate);
+	}
+	
+	if (urlParams.has('mcscreensharecodec') || urlParams.has('mcsscodec')){
+		session.meshcastScreenShareCodec = urlParams.get('mcscreensharecodec') || urlParams.get('mcsscodec') || false;
+	}
+	if (session.meshcastScreenShareCodec){
+		session.meshcastScreenShareCodec = session.meshcastScreenShareCodec.toLowerCase();
 	}
 	
 	if (urlParams.has('mcab') || urlParams.has('mcaudiobitrate') || urlParams.has('meshcastab')){
@@ -2529,21 +2596,25 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 		session.queue = true;
 	}
 
-	if (urlParams.has('permaid') || urlParams.has('push')) {
-		session.permaid = urlParams.get('push') || urlParams.get('permaid');
+	if (urlParams.has('push') || urlParams.has('id') || urlParams.has('permaid') ) {
+		session.permaid = urlParams.get('push')  || urlParams.get('id') || urlParams.get('permaid');
 
 		if (session.permaid) {
 			session.streamID = sanitizeStreamID(session.permaid);
 		} else {
 			session.permaid = null;
 		}
-
-		if (urlParams.has('permaid')) {
-			updateURL("permaid=" + session.streamID, true, false); // I'm not deleting the permaID first tho...
+		
+		if (urlParams.has('push')){
+			updateURL("push="+session.streamID, true, false);
+		} else if (urlParams.has('id')){
+			updateURL("id="+session.streamID, true, false); // not 'officially' supporting this yet; we'll see.
+		} else if (urlParams.has('permaid')){
+			updateURL("permaid="+session.streamID, true, false);
 		} else {
-			updateURL("push=" + session.streamID, true, false); // I'm not deleting the permaID first tho...
+			updateURL("push="+session.streamID, true, false);
 		}
-
+		
 		if (urlParams.has('director') || urlParams.has('dir')) { // if I do a short form of this, it will cause duplications in the code elsewhere.
 			//var director_room_input = urlParams.get('director');
 			//director_room_input = sanitizeRoomName(director_room_input);
@@ -2574,9 +2645,9 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 			getById("mainmenu").classList.add("mainmenuclass");
 			getById("header").style.alignSelf = "center";
 
-			if ((iOS) || (iPad)) {
-				getById("header").style.display = "none"; // just trying to free up space.
-			}
+			//if ((iOS) || (iPad)) {
+				//getById("header").style.display = "none"; // just trying to free up space.
+			//}
 
 			if (session.webcamonly == true) { // mobile or manual flag 'webcam' pflag set
 				getById("head1").innerHTML = '<font style="color:#CCC;" data-translate="please-accept-permissions">- Please accept any camera permissions</font>';
@@ -2719,6 +2790,12 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 	if (urlParams.has('screensharebitrate') || urlParams.has('ssbitrate')) {
 		session.screenShareBitrate = urlParams.get('screensharebitrate') || urlParams.get('ssbitrate');
 		session.screenShareBitrate = parseInt(session.screenShareBitrate) || 2500;
+	}
+	
+	if (urlParams.has('screensharelabel') || urlParams.has('sslabel')) {
+		session.screenShareLabel = urlParams.get('screensharelabel') || urlParams.get('sslabel');
+		session.screenShareLabel = decodeURIComponent(session.screenShareLabel);
+		session.screenShareLabel = session.screenShareLabel.replace(/_/g, " ")
 	}
 	
 	if (session.roomid!==false){
@@ -2954,23 +3031,38 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 		getById("mainmenu").innerHTML = '';
 		getById("mainmenu").classList.remove("row");
 
+		var timeout = 5000;
+		if (urlParams.has('waittimeout')){
+			timeout = parseInt(urlParams.get('waittimeout')) || 0;
+		}
 		setTimeout(function() {
 			try {
-				if ((session.view) && (!(session.cleanOutput))) {
+				if ((session.view)) {
 					if (document.getElementById("mainmenu")) {
-						getById("mainmenu").innerHTML += '<div class="retry-spinner" id="retrySpinner"></div>';
-						retrySpinner.title = miscTranslations["waiting-for-the-stream"]
-						retrySpinner.onclick = function(){
-							updateURL("cleanoutput");
-							location.reload();
+						if (urlParams.has('waitimage')){
+							getById("mainmenu").innerHTML += '<img id="retryimage"/>';
+							getById("retryimage").src = decodeURIComponent(urlParams.get('waitimage'));
+							getById("retryimage").onerror = function(){this.style.display='none';};
 							
+						} else if (!(session.cleanOutput)){
+							getById("mainmenu").innerHTML += '<div class="retry-spinner" id="retrySpinner"></div>';
+							getById("retrySpinner").onclick = function(){
+								updateURL("cleanoutput");
+								location.reload();
+							}
+							getById("retrySpinner").title = miscTranslations["waiting-for-the-stream"]
+						}
+						if (urlParams.has('waitmessage')){
+							getById("mainmenu").innerHTML += '<div id="retrymessage"></div>';
+							getById("retrymessage").innerText = urlParams.get('waitmessage');
+							getById("retrySpinner").title = urlParams.get('waitmessage');
 						}
 					}
 				}
 			} catch (e) {
-				errorlog("Error handling QR Code failure");
+				errorlog(e);
 			}
-		}, 5000);
+		}, timeout);
 
 		log("auto playing");
 		var SafariVer = safariVersion();
@@ -3267,7 +3359,7 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 				warnlog(e.data.getDeviceList);
 				enumerateDevices().then(function(deviceInfos) {
 					parent.postMessage({
-						"deviceList": deviceInfos
+						"deviceList": JSON.parse(JSON.stringify(deviceInfos))
 					}, "*");
 				});
 			}
@@ -3638,6 +3730,12 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 							log(e);
 							midiHotkeysCommand(e.controller.number, e.rawValue);
 						});
+					} else if (session.midiHotkeys==5){
+						if (session.midiOffset!==false){
+							input.addListener('controlchange', function(e) {
+								midiHotkeysCommand_offset(e.controller.number, e.rawValue, session.midiOffset);
+							});
+						}
 					} else {
 						input.addListener('noteon', function(e) {
 							log(e);

@@ -111,7 +111,21 @@ th {
 	background: yellow;
 	transition: all 50ms linear;
 }
-
+.meter3 {
+	display: inline-block;
+	width: 0px;
+	height: 10px;
+	background: red;
+	transition: all 25ms linear;
+}
+.meter4 {
+	display: inline-block;
+	width: 2px;
+	height: 10px;
+	background: black;
+	position:relative;
+	float:left;
+}
 #mynetwork {
 	width: 600px;
 	height: 400px;
@@ -187,7 +201,9 @@ button.grey {
 .red2 {
 	background-color: #840000 !important;
 }
-
+.blue {
+	background-color: #000084 !important;
+}
 
 .orange {
 	background-color: #673100 !important;
@@ -342,6 +358,7 @@ button.white:active {
 .credits>a:visited {
 	color: #101020;
 }
+
 
 
 body.darktheme .credits {
@@ -539,6 +556,8 @@ hr {
 	animation: pulse 2s infinite;
 }
 
+
+
 .battery {
 	border: 3px solid #4192c5;
 	width: 11px;
@@ -551,10 +570,20 @@ hr {
 	font-size: 1.5em;
 	z-index: 2;
 	cursor: help;
-	display:block;
+	display:none;
 }
-.battery[data-plugged="1"]{
-	font-size:0px;
+
+.battery-charging{
+	margin: 0;
+	left: -1px;
+	padding: 0;
+	position: absolute;
+	font-size: 0.54em;
+	display: none;
+}
+
+.battery[data-plugged="1"] > .battery-charging {
+	display:block;
 }
 .battery.warn {
 	border: 3px solid #EFAF13; 
@@ -566,8 +595,15 @@ hr {
 	background: #30b455;  
 	position: absolute;
 	bottom: 0px;
-	left: 0;
 	right: 0;
+	left: 0;
+	font-size: 0.7em;
+    margin: 0;
+    padding: 0;
+}
+
+.hasMedia > .battery {
+	display:block;
 }
 
 .signal-meter{
@@ -578,9 +614,12 @@ hr {
     top: 1px;
 	background-color: #FFF2;
 	font-size: 1.5em;
-	display:block;
+	display:none;
 	z-index: 2;
 	cursor: help;
+}
+.hasMedia > .signal-meter {
+	display:block;
 }
 .signal-meter[data-cpu="0"]>.la-signal {
 	display:block;
@@ -760,6 +799,10 @@ button.glyphicon-button.active.focus {
 	.roomnotes{
 		display:none!important;
 	}
+	
+	#head5 {
+		margin-right: 1px;
+	}
 }
 @media only screen and (max-width: 400px){
 	#subControlButtons {
@@ -900,9 +943,6 @@ button.btnArmTransferRoom.selected{
 	#head4{
 		display:none;
 	}
-	#head5{
-		display:none;
-	}
 	#head2{
 		display:none;
 	}
@@ -1034,7 +1074,27 @@ input[type='radio'] { cursor:pointer; }
     margin: 44vh auto;
 	cursor: help;
 }
-
+#retryimage{
+	display: block;
+    margin: 25vh auto;
+    max-width: 50%;
+    max-height: 50%;
+	animation: fadeIn 2s;
+}
+#retrymessage{
+	display: block;
+    margin: 80vh auto;
+    animation: fadeIn 2s;
+    color: white;
+    position: absolute;
+    left: 0;
+    top: 0;
+    float: left;
+    width: 100%;
+    height: 100%;
+    text-align: center;
+    font-size: 2em;
+}
 
 @keyframes spin-animation {
 	0% {
@@ -1072,6 +1132,22 @@ body {
 	margin: 0;
 	opacity:  1;
 	transition: opacity .1s linear;
+	scrollbar-color:#666 #201c29;
+}
+
+::-webkit-scrollbar {
+    width: 15px;
+}
+ 
+::-webkit-scrollbar-track {
+    -webkit-box-shadow: inset 0 0 13px rgb(0 0 0 / 90%);
+    border-radius: 4px;
+}
+ 
+::-webkit-scrollbar-thumb {
+    border-radius: 4px;
+    -webkit-box-shadow: inset 0 0 16px rgb(150 150 150 / 100%);
+	border: solid 3px transparent;
 }
 
 .previewWebcam {
@@ -1277,6 +1353,31 @@ input[type=range]:focus::-ms-fill-upper {
 	.close {
 		top: 0px;
 		right: 0px;
+	}
+}
+
+
+@media only screen and (max-width: 1220px) {
+	#fakeguest4{
+		display: none!important;
+	}
+	#fakeguestinfo{
+		display: none!important;
+	}
+}
+@media only screen and (max-width: 933px) {
+	#fakeguest3{
+		display: none!important;
+	}
+}
+@media only screen and (max-width: 641px) {
+	#fakeguest2{
+		display: none!important;
+	}
+}
+@media only screen and (max-width: 292px) {
+	#fakeguest1{
+		display: none!important;
 	}
 }
 
@@ -2684,14 +2785,24 @@ a.task {
 .shift {
     display: inline-block;
     position: relative;
-    margin: 7px 0 0 4px;
+    margin: 0 0 0 4px;
     padding: 0;
-    width: 27px;
+    width: 33px;
     font-size: 0.8em;
-    top: -7px;
+    top: -4.9px;
 }
 .shift>i {
 	cursor:pointer;
+	width: 10px;
+    margin: 0 auto;
+    left: -1.1px;
+    position: relative;
+}
+.shift.locked>i{
+	display:none;
+}
+.shift.locked>span{
+	margin-left: 7px;
 }
 #toggleroomnotes {
 	grid-column: 4;
@@ -2744,19 +2855,19 @@ i.las.la-circle {
 }
 .streamID {
 	text-align: right;
-    margin: 5px 5px 5px 0px;
+    margin: 5px 5px 2px 0px;
     font-size: 0.7em;
     text-overflow: ellipsis;
     overflow: hidden;
     position: relative;
-    width: 230px;
+    width: 227px;
     display: inline-block;
 }
 .streamID i {
 	margin-left: 5px;
 	font-size: 1.3em;
 	position: relative;
-	top: 2px;
+	top: 1px;
 }
 .soloLink {
 	background: none;
@@ -2776,7 +2887,7 @@ div#guestFeeds {
 	background: var(--container-color);
 	padding: 5px 0 15px 20px;
 	display: inline-block;
-	margin: 0px var(--regular-margin);
+	margin: 0px var(--regular-margin) 80px var(--regular-margin);
 }
 
 div#guestFeeds:empty {
@@ -2954,6 +3065,7 @@ span#guestTips {
 	right: 10px;
 }
 .video-meter2 {
+	display:block;
 	padding:0;
 	width: 4px;
 	height:0%;
@@ -2967,6 +3079,18 @@ span#guestTips {
 	border: 1px black solid;
 	transition: height 0.1s ease,  background-color 0.1s ease;
 }
+
+
+.hasMedia > .video-meter2 {
+	display:block;
+}
+.hasMedia > .video-meter-2 {
+	display:block;
+}
+.hasMedia > .video-meter {
+	display:block;
+}
+
 
 #voiceMeterTemplate{
 	display:none;
@@ -3204,7 +3328,7 @@ input:checked + .slider:before {
 .promptModalMessage {
 	position: relative;
 	display: block;
-	width: 98%;
+	width: 93%;
     margin: 0 5%;
 }
 
@@ -3379,6 +3503,7 @@ input:checked + .slider:before {
 	.alertModal {
 		width: 90%;
 	}
+	
 }
 
 .iframeDetails {
@@ -3643,7 +3768,10 @@ input:checked + .slider:before {
   content: "\f0a0"; } 
 .la-signal:before {
   content: "\f012"; }
-  
+.la-unlock:before {
+  content: "\f023"; }
+.la-lock-open:before {
+  content: "\f3c1"; }
 @media (prefers-color-scheme: dark) {
 	:root {
 		--color-mode: dark;
@@ -3653,6 +3781,7 @@ input:checked + .slider:before {
 
 body.darktheme  {
 	color: white;
+	scrollbar-color: #000 #333;
 }
 body.darktheme form>label{
 	color: white;

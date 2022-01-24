@@ -234,6 +234,11 @@
 		iframeContainer.appendChild(button);
 		
 		var button = document.createElement("button");
+		button.innerHTML = "get media device list"; 
+		button.onclick = function(){iframe.contentWindow.postMessage({"getDeviceList":true}, '*');};
+		iframeContainer.appendChild(button);
+		
+		var button = document.createElement("button");
 		button.innerHTML = "Start AutoMixer"; 
 		button.onclick = function(){iframe.contentWindow.postMessage({"automixer":true}, '*');};
 		iframeContainer.appendChild(button);
@@ -346,6 +351,17 @@
 				outputWindow.style.border="1px dotted black";
 				iframeContainer.appendChild(outputWindow);
 			}
+			
+			if ("deviceList" in e.data){
+				var outputWindow = document.createElement("div");
+				outputWindow.innerHTML = "child-page-action: deviceList<br />";
+				for (var i = 0;i<e.data.deviceList.length;i++){
+					outputWindow.innerHTML += e.data.deviceList[i].label + "<br />";   
+				}
+				outputWindow.style.border="1px dotted black";
+				iframeContainer.appendChild(outputWindow);
+			}
+			
 			
 			if ("loudness" in e.data){
 				console.log(e.data);
