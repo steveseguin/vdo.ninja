@@ -4,7 +4,7 @@ description: Applies effects to the video/audio feeds.
 
 # \&effects
 
-## Alias
+## Aliases
 
 \&effect
 
