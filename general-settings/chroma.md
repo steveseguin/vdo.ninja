@@ -6,10 +6,10 @@ description: Sets the background for the website to a particular hex color.
 
 ## Options
 
-| (Default) | Green background        |
-| --------- | ----------------------- |
-| F0F       | Any RGB format color    |
-| DEDEDE    | Any RRGGBB format color |
+| (no value given) | Green background        |
+| ---------------- | ----------------------- |
+| F0F              | Any RGB format color    |
+| DEDEDE           | Any RRGGBB format color |
 
 {% hint style="info" %}
 Use it to chroma-key out the background on the Electron Capture app.
