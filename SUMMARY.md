@@ -305,3 +305,4 @@
 * [\&stun](stun.md)
 * [\&api](api.md)
 * [\&nofileshare](nofileshare.md)
+* [\&mediasettings](and-mediasettings.md)

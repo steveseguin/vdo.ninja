@@ -27,3 +27,7 @@ Not "strict" and is less likely to give errors than explicit resolution requests
 {% content-ref url="screensharequality.md" %}
 [screensharequality.md](screensharequality.md)
 {% endcontent-ref %}
+
+{% content-ref url="../and-mediasettings.md" %}
+[and-mediasettings.md](../and-mediasettings.md)
+{% endcontent-ref %}
