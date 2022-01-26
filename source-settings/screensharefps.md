@@ -16,7 +16,7 @@ description: Set a target FPS for your screenshare.
 
 ## Details
 
-Set a target FPS for your screenshare.
+Set a target FPS for your screenshare, when you screenshare as a second screen in a room. Use \&framerate
 
 ## Related
 

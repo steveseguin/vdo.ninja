@@ -6,10 +6,11 @@ description: Record functionality for guests.
 
 ## Options
 
-| Value              | Description                                                                                      |
-| ------------------ | ------------------------------------------------------------------------------------------------ |
-| 0                  | No video recorded; audio tentatively recorded as 32bit PCM lossless.                             |
-| (negative integer) | No video recorded; audio recorded as {integer} kbps OPUS file. Eg: -120 - Audio only at 120kbps. |
+| Value              | Description                                                                                       |
+| ------------------ | ------------------------------------------------------------------------------------------------- |
+| 0                  | No video recorded; audio tentatively recorded as 32bit PCM lossless.                              |
+| (negative integer) | No video recorded; audio recorded as {integer} kbps OPUS file. Eg: -120 - Audio only at 120 kbps. |
+| (integer)          | recored video bitrate in kbps                                                                     |
 
 ## Details
 
@@ -21,7 +22,7 @@ description: Record functionality for guests.
 
 Usually up to the browser.&#x20;
 
-Default bitrate will record at around 6000-kbps, but it will still prompt still for value if not set.
+Default bitrate will record at around 6000 kbps, but it will still prompt still for value if not set.
 
 The Director of a room will be notified if a user is recording and they can start/stop the recording.\
 The Director of a room can trigger the record function remotely, even if the \&record parameter has not been added.
@@ -38,10 +39,16 @@ It will automatically capture with Stereo audio and echo cancellation off, if av
 
 | Threshold      | Inbound Audio | Recorded audio |
 | -------------- | ------------- | -------------- |
-| 4000           | 128kpbs       | 128kpbs        |
-| 2500           | 80kbps        | 128kpbs        |
-| Less than 2500 | 32kbps        | 32kbps         |
+| 4000           | 128 kpbs      | 128 kpbs       |
+| 2500           | 80 kbps       | 128 kpbs       |
+| Less than 2500 | 32 kbps       | 32 kbps        |
 
 {% hint style="info" %}
 When recording with PCM, ([`&pcm`](and-pcm.md)) the inbound audio bitrate will be at 256kbps. (regardless of video bitrate)
 {% endhint %}
+
+## Related
+
+{% content-ref url="and-pcm.md" %}
+[and-pcm.md](and-pcm.md)
+{% endcontent-ref %}
