@@ -4,6 +4,10 @@ description: Applies effects to the video/audio feeds.
 
 # \&effects
 
+## Alias
+
+\&effect
+
 ## Options
 
 | Value            | Description                                                    |
