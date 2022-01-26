@@ -23,3 +23,14 @@ description: Quality setting for the &webp option.
 ## Details
 
 You add this parameter to the director (or designated broadcaster) and it then sets the the quality target for the [`&webp`](../advanced-settings.md#webp) mode.
+
+
+
+{% content-ref url="webp.md" %}
+[webp.md](webp.md)
+{% endcontent-ref %}
+
+
+
+
+

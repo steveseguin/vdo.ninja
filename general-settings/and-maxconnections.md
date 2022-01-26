@@ -4,6 +4,10 @@ description: Limits total of view and push connections
 
 # \&maxconnections
 
+## Aliases
+
+\&mc
+
 ## Options
 
 | Value             | Description                     |

@@ -4,8 +4,6 @@ description: Put guests into sub-groups, so they only see others in the same gro
 
 # \&group
 
-## Details
-
 The idea is, you can put guests of a room into sub-groups. When added to a sub group, those guests will only be able to see and hear others in that same sub group.&#x20;
 
 Guests can be assigned to multiple subgroups. Groups can be specified via the URL using `&group=1,5,6` or/and the director can dynamically assign sub-groups, as seen in the below image.&#x20;

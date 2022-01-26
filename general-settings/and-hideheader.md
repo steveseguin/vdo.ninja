@@ -1,5 +1,5 @@
 ---
-description: Hides just the top header-bar
+description: Hides just the top header-bar.
 ---
 
 # \&hideheader
@@ -7,6 +7,7 @@ description: Hides just the top header-bar
 ## Aliases
 
 * `&noheader`
+* `&hh`
 
 ## Details
 

@@ -1,3 +1,7 @@
+---
+description: Makes the background transparent.
+---
+
 # \&transparent
 
 ## Details

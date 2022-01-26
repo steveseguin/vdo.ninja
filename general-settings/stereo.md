@@ -11,6 +11,8 @@ description: >-
 * `&s`
 * `&proaudio`
 
+## Details
+
 Adding \&stereo or \&proaudio to the URL will apply audio-specific setting presets. For inbound audio streams, it can be used to increase the audio bitrate from 32-kbps to 256-kbps. For outbound streams, it will disable echo-cancellation and noise-reduction. When applied to both the outbound and inbound sides of an audio stream, it will also enable stereo audio if available.
 
 There are a variety of different modes that apply different combination of presets. You can also override any preset with other URL parameters, such as \&audiobitrate, \&outboundaudiobitrate, and \&aec=1.&#x20;
@@ -30,7 +32,7 @@ When using this option in a group room, you can't simply just apply this URL opt
 | 4     | enables 5.1-multichannel audio support (Experimental and may require a Chrome flag to be set).         |
 | 5     | This is the default if nothing is set. It behaves like 3 or 1, depending on if you are a guest or not. |
 
-## Details
+## More Details
 
 `&stereo` and `&proaudio` currently do the same thing, so they are just aliases of each other. When used, they can be used to setup the audio transfer pipeline to allow for unprocessed, high-bitrate, stereo audio. &#x20;
 

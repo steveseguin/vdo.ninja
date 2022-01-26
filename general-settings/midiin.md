@@ -1,3 +1,7 @@
+---
+description: Allows for receiving of remote MIDI
+---
+
 # \&midiin
 
 ## Aliases

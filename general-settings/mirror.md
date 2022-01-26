@@ -4,8 +4,6 @@ description: Inverts the video so it is the mirror reflection.
 
 # \&mirror
 
-## Aliases
-
 ## Options
 
 | Value               | Description                                                                                |

@@ -1,8 +1,12 @@
 ---
-description: Sets a display name label
+description: Sets a display name label.
 ---
 
 # \&label
+
+## Aliases
+
+\&l
 
 ## Details
 

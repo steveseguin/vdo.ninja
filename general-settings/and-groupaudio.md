@@ -1,8 +1,14 @@
 ---
-description: Needs to be used in combination with &group
+description: Needs to be used in combination with &group.
 ---
 
 # \&groupaudio
+
+## Aliases
+
+\&ga
+
+## Details
 
 This just enables the guest or scene to not filter out audio streams that are contained in other sub-groups.
 

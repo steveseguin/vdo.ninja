@@ -4,6 +4,8 @@ description: Attempts to show the mouse cursor on screen shares
 
 # \&cursor
 
+## Details
+
 This flag is introduced in v18.4, but it's largely useless currently due to lack of support from most browsers.
 
 The default cursor state in VDO.Ninja is to not show a cursor, but Chrome/Firefox will still add a cursor overlay in regardless.  \

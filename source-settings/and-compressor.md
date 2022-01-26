@@ -12,6 +12,10 @@ The compressor is **off by default**.
 This will enable the audio processing pipeline.
 {% endhint %}
 
+## Aliases
+
+\&comp
+
 ## Details
 
 An audio compressor can help reduce spikes in audio loudness.\
