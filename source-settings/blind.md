@@ -1,5 +1,5 @@
 ---
-description: Video playback is black for guests.
+description: Video playback is black for guests
 ---
 
 # \&blind
@@ -7,3 +7,9 @@ description: Video playback is black for guests.
 ## Details
 
 Video playback is black for guests.
+
+## Related
+
+{% content-ref url="deafen.md" %}
+[deafen.md](deafen.md)
+{% endcontent-ref %}

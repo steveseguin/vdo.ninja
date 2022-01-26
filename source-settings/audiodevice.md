@@ -1,5 +1,5 @@
 ---
-description: Pre-configures the selected audio device.
+description: Pre-configures the selected audio device
 ---
 
 # \&audiodevice
@@ -24,7 +24,7 @@ Useful for helping a remote guest skip-past the complex setup of their camera/au
 \
 You can pass a string name to auto-select an audio device that has a label containing that same string.\
 \
-You can pass a device ID as well; see [obs.ninja/devices](https://obs.ninja/devices) to see the device IDs (specific to obs.ninja's domain)\
+You can pass a device ID as well; see [vdo.ninja/devices](https://vdo.ninja/devices) to see the device IDs (specific to vdo.ninja's domain)\
 \
 Setting this option to `0` will also disable the guest's microphone, potentially allowing for guest connections that have no video or audio. You might do this if you needed midi-only transport, hidden IFRAME control, or just to chatting.
 
@@ -37,4 +37,3 @@ Setting this option to `0` will also disable the guest's microphone, potentially
 {% content-ref url="videodevice.md" %}
 [videodevice.md](videodevice.md)
 {% endcontent-ref %}
-

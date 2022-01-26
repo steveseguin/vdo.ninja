@@ -1,5 +1,5 @@
 ---
-description: Automatic echo-cancellation is ON or OFF.
+description: Automatic echo-cancellation is ON or OFF
 ---
 
 # \&aec
@@ -17,4 +17,10 @@ description: Automatic echo-cancellation is ON or OFF.
 
 ## Details
 
-May need to be disabled to use [`&stereo`](../general-settings/stereo.md) on some older browsers
+May need to be disabled to use [`&stereo`](../general-settings/stereo.md) on some older browsers.
+
+## Related
+
+{% content-ref url="../noisegate.md" %}
+[noisegate.md](../noisegate.md)
+{% endcontent-ref %}

@@ -1,5 +1,5 @@
 ---
-description: Applies a generic audio compressor to the local microphone.
+description: Applies a generic audio compressor to the local microphone
 ---
 
 # \&compressor
@@ -14,8 +14,14 @@ This will enable the audio processing pipeline.
 
 ## Aliases
 
-\&comp
+* `&comp`
 
 ## Details
 
-An audio compressor can help reduce spikes in audio loudness.\
+An audio compressor can help reduce spikes in audio loudness.
+
+## Related
+
+{% content-ref url="and-limiter.md" %}
+[and-limiter.md](and-limiter.md)
+{% endcontent-ref %}

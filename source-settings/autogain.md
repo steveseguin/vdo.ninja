@@ -1,5 +1,5 @@
 ---
-description: Sets whether audio auto-normalization is ON or OFF.
+description: Sets whether audio auto-normalization is ON or OFF
 ---
 
 # \&autogain
@@ -18,3 +18,9 @@ description: Sets whether audio auto-normalization is ON or OFF.
 ## Details
 
 Your browser will try to keep optimum audio levels.
+
+## Related
+
+{% content-ref url="gain.md" %}
+[gain.md](gain.md)
+{% endcontent-ref %}

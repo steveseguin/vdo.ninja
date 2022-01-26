@@ -18,7 +18,7 @@ description: Audio capture device to select N-number of audio channels
 
 ## Details
 
-Audio capture device to select N-number of audio channels
+Audio capture device to select N-number of audio channels.
 
 ## Related
 

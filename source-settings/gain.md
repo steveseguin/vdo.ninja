@@ -1,5 +1,5 @@
 ---
-description: Applies a gain multiplier (as a percentage) to the local microphone.
+description: Applies a gain multiplier (as a percentage) to the local microphone
 ---
 
 # \&audiogain
@@ -31,4 +31,10 @@ Enables the audio processing pipeline.
 
 ## Related
 
-* `&limiter`
+{% content-ref url="and-limiter.md" %}
+[and-limiter.md](and-limiter.md)
+{% endcontent-ref %}
+
+{% content-ref url="autogain.md" %}
+[autogain.md](autogain.md)
+{% endcontent-ref %}

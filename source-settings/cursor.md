@@ -17,9 +17,14 @@ According to the web spec, we should be able to control the visibility of a curs
 You can see this link to tinker with different settings easily, to validate the problem:\
 [https://www.webrtc-experiment.com/getDisplayMedia/](https://www.webrtc-experiment.com/getDisplayMedia/)\
 \
-For information on alternative ideas on how to hide or show the cursor, you can see the following article.  Generally, to have better control of the cursor, maybe instead capture the screen with OBS and bring the video into VDO.Ninja as a virtual camera.
+For information on alternative ideas on how to hide or show the cursor, you can see the following article. Generally, to have better control of the cursor, maybe instead capture the screen with OBS and bring the video into VDO.Ninja as a virtual camera.
+
+## Related
 
 {% content-ref url="../common-errors-and-known-issues/cursor-shows-when-screen-sharing.md" %}
 [cursor-shows-when-screen-sharing.md](../common-errors-and-known-issues/cursor-shows-when-screen-sharing.md)
 {% endcontent-ref %}
 
+{% content-ref url="../general-settings/and-nocursor.md" %}
+[and-nocursor.md](../general-settings/and-nocursor.md)
+{% endcontent-ref %}
