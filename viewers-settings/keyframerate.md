@@ -4,6 +4,12 @@ description: This tells the remote publishers to send keyframes at a specified r
 
 # \&keyframerate
 
+## Aliases
+
+* `&keyframeinterval`
+* `&keyframe`
+* `&kfi`
+
 ## Options
 
 | Value           | Description    |
@@ -12,7 +18,7 @@ description: This tells the remote publishers to send keyframes at a specified r
 
 ## Details
 
-Could be useful if packet loss is causing a lot frame corruption
+Could be useful if packet loss is causing a lot frame corruption.
 
 If you make it less than 1000ms, you will face a pretty steep drop in video quality.
 

@@ -45,7 +45,7 @@ The video quality of those in a group room will appear low to guests, but this i
 
 The director will be able to view the room, without joining it themselves, and they will have controls provided that will let them modify aspects of how the room shows up in their OBS. For example, they will be able to mute certain people so they can't be heard or seen in OBS.
 
-The director can also join the room if needed. Toggle the 'Director will also be a performer' option when creating a room. This can also be done by appending [`&showdirector`](../../viewers-settings/and-showdirector.md) to the director page URL.
+The director can also join the room if needed. Toggle the 'Director will also be a performer' option when creating a room. This can also be done by appending [`&showdirector`](../../general-settings/showdirector.md) to the director page URL.
 
 The director will be provided isolated direct links to each of those video streams in the group room, allowing for fine-grain mixing control in OBS.
 

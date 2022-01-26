@@ -1,8 +1,12 @@
 ---
-description: Same concept as &view, except does the opposite.
+description: Same concept as &view, except does the opposite
 ---
 
 # \&exclude
+
+## Aliases
+
+* `&ex`
 
 ## Details
 

@@ -1,3 +1,9 @@
+---
+description: >-
+  Has the videos fully "cover" their assigned areas, even if it means cropping
+  the video
+---
+
 # \&cover
 
 ## Details

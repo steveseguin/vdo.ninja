@@ -1,7 +1,7 @@
 ---
 description: >-
   Disables all video playback on the local computer, except for any stream ID
-  that is listed.
+  that is listed
 ---
 
 # \&novideo
@@ -10,6 +10,7 @@ description: >-
 
 * `&nv`
 * `&showonly`
+* `&hidevideo`
 
 ## Options
 
@@ -21,10 +22,16 @@ description: >-
 
 Useful for reducing the CPU and network load on other connect peers if voice-chat is sufficient.
 
-* Join a group-room as audio-only, to limit load on the guests
+* Join a group-room as audio-only, to limit load on the guests.
 * Useful for a large group room where you want everyone in the room to see only the OBS Virtualcam output.
-* Consider using \&broadcast option instead of this flag as it is better suited for presenting a single feed to a group than using \&novideo alone.
+* Consider using `&broadcast` option instead of this flag as it is better suited for presenting a single feed to a group than using `&novideo` alone.
 
-When used together with [`noaudio`](../advanced-settings.md#noaudio) (`&novideo&noaudio`), prevents guest room member from seeing or hearing other member's audio or video feeds.
+When used together with [`&noaudio`](noaudio.md) (`&novideo&noaudio`), prevents guest room member from seeing or hearing other member's audio or video feeds.
 
 * Useful for directors who may wish to only issue commands or text chat, but not need to see video or audio.
+
+## Related
+
+{% content-ref url="noaudio.md" %}
+[noaudio.md](noaudio.md)
+{% endcontent-ref %}

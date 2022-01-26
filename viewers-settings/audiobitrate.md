@@ -16,9 +16,9 @@ description: Manually sets the audio bitrate in kbps
 
 ## Details
 
-The default is around 32-kbps per track with a mono-channel (VBR on by default)
+The default is around 32-kbps per track with a mono-channel (VBR on by default).
 
-The audio codec used is OPUS and the target sample rate is 48khz
+The audio codec used is OPUS and the target sample rate is 48khz.
 
 510-kbps is the highest value allowed, with around 300-kbps the highest value for a mono-channel track.
 
@@ -31,3 +31,13 @@ Setting the audio bitrate to be very high can sometimes cause video bitrates on 
 {% hint style="info" %}
 For reference, Spotify uses around 96-kbps for stereo audio on mobile devices
 {% endhint %}
+
+## Related
+
+{% content-ref url="bitrate.md" %}
+[bitrate.md](bitrate.md)
+{% endcontent-ref %}
+
+{% content-ref url="../general-settings/stereo.md" %}
+[stereo.md](../general-settings/stereo.md)
+{% endcontent-ref %}

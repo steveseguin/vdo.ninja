@@ -19,3 +19,13 @@ If you do not know what this is, you definitely don't want to touch it.
 Minimum packet size of audio in ms. 10ms is lowest that you can set in Chromium I think.
 
 Optimized already, but it's available for experimentation and fun if desired.
+
+## Related
+
+{% content-ref url="and-ptime.md" %}
+[and-ptime.md](and-ptime.md)
+{% endcontent-ref %}
+
+{% content-ref url="and-maxptime.md" %}
+[and-maxptime.md](and-maxptime.md)
+{% endcontent-ref %}

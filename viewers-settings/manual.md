@@ -8,9 +8,8 @@ This is an advanced feature, for primarily developers, who wish to utilize their
 
 `session.rpcs` is an object that can be queried for a list of active receiving peer sessions. `session.rpcs[UUID].videoElement.srcObject` contains video/audio data if available.
 
-
+## Related
 
 {% content-ref url="../guides/iframe-api-documentation.md" %}
 [iframe-api-documentation.md](../guides/iframe-api-documentation.md)
 {% endcontent-ref %}
-

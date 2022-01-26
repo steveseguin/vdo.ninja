@@ -24,3 +24,9 @@ If left empty, the stream ID will default to a random one.
 {% hint style="info" %}
 If the stream ID is already in active use, an error will be shown and the stream will not publish.
 {% endhint %}
+
+## Related
+
+{% content-ref url="../viewers-settings/view.md" %}
+[view.md](../viewers-settings/view.md)
+{% endcontent-ref %}

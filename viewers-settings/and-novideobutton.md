@@ -1,5 +1,5 @@
 ---
-description: Disables the video button. Guests can't mute video.
+description: Disables the video button; guests can't mute video
 ---
 
 # \&novideobutton
@@ -14,4 +14,10 @@ Disables the video button. Guests can't mute video.
 
 ## Related
 
-* ``[`&nomicbutton`](nomicbutton.md)``
+{% content-ref url="nomicbutton.md" %}
+[nomicbutton.md](nomicbutton.md)
+{% endcontent-ref %}
+
+{% content-ref url="../and-nospeakerbutton.md" %}
+[and-nospeakerbutton.md](../and-nospeakerbutton.md)
+{% endcontent-ref %}

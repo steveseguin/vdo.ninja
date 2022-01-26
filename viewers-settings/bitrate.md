@@ -1,12 +1,12 @@
 ---
-description: Sets the "desired target" bitrate in kbps.
+description: Sets the "desired target" bitrate in kbps
 ---
 
-# \&bitrate
+# \&videobitrate
 
 ## Aliases
 
-* `&videobitrate`
+* `&bitrate`
 * `&vb`
 
 ## Options
@@ -31,3 +31,8 @@ You might want to increase the bitrate for game streams, to ensure smooth frame 
 Not compatible with **Firefox**.
 {% endhint %}
 
+## Related
+
+{% content-ref url="audiobitrate.md" %}
+[audiobitrate.md](audiobitrate.md)
+{% endcontent-ref %}

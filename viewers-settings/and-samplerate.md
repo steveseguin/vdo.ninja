@@ -1,5 +1,5 @@
 ---
-description: Audio playback sample-rate, in Hz.
+description: Audio playback sample-rate, in hz
 ---
 
 # \&samplerate

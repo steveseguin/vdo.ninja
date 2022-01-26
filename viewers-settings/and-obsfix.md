@@ -1,16 +1,18 @@
 ---
 description: >-
   Disables or adjusts the sensitivity of the VP8/VP9 Codec packet loss 'fix' for
-  OBS.
+  OBS
 ---
 
 # \&obsfix
 
 ## Options
 
-| Value           | Description |
-| --------------- | ----------- |
-| (integer value) |             |
+| Value            | Description    |
+| ---------------- | -------------- |
+| (integer value)  |                |
+| (no value given) | defaults to 15 |
+| 0 \| off         | Turns it off   |
 
 ## Details
 

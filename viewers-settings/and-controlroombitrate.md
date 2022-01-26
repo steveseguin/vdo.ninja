@@ -1,7 +1,7 @@
 ---
 description: >-
   Allows a guest to control their total room video bitrate dynamically from the
-  settings panel (under video settings).
+  settings panel (under video settings)
 ---
 
 # \&controlroombitrate
@@ -18,9 +18,18 @@ This feature could be useful for guests that have limited CPU or Network bandwid
 
 Lowering this slider will reduce the video bitrate of incoming video streams.
 
-It will not allow the guest to increase the room bitrate's limits; only lower them
+It will not allow the guest to increase the room bitrate's limits; only lower them.
 
 I suppose while listed as a 'viewer' setting, you need to be a publisher also to access this value (as the settings button is needed).
 
 Consider using \&totalroombitrate if you wish to increase the bitrate higher than the default max of \~ 500-kbps.
 
+## Related
+
+{% content-ref url="../source-settings/roombitrate.md" %}
+[roombitrate.md](../source-settings/roombitrate.md)
+{% endcontent-ref %}
+
+{% content-ref url="totalroombitrate.md" %}
+[totalroombitrate.md](totalroombitrate.md)
+{% endcontent-ref %}

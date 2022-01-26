@@ -1,5 +1,5 @@
 ---
-description: Sets the codec to encode the video.
+description: Sets the codec to encode the video
 ---
 
 # \&codec
@@ -19,9 +19,7 @@ description: Sets the codec to encode the video.
 ****\
 ****`https://vdo.ninja/?room=xxx7654&scene=1&bitrate=2000`**`&codec=vp9`**\
 ****\
-****The **\&codec** parameter is added to the viewer-side; so the \&view or \&scene link. &#x20;
-
-
+****The **`&codec`** parameter is added to the viewer-side; so the [`&view`](view.md) or [`&scene`](scene.md) link.
 
 ### **Description**
 
@@ -29,7 +27,7 @@ Video that is captured by a camera is compressed and sent over VDO.Ninja. The de
 
 Normally VP8 is selected, which is an older codec that uses little CPU, but isn't as efficient as some others. Some mobile devices may hardware-encoder VP8, such as Google Pixel phones, but the vast majority will use software (CPU) to encode VP8.
 
-H264 is the second most common codec automatically selected, which is popular with Apple-devices and many Android devices.  H264 is commonly hardware-encoded, which \*sometimes\* uses less CPU and battery power, but hardware-encoding is more fickle than software-based encoding.
+H264 is the second most common codec automatically selected, which is popular with Apple-devices and many Android devices. H264 is commonly hardware-encoded, which \*sometimes\* uses less CPU and battery power, but hardware-encoding is more fickle than software-based encoding.
 
 VP9 and AV1 are more modern codecs, with AV1 only supported by Chromium-based browsers using Version 90 or newer, although. VP9 may not be available on older Apple devices, but is becoming more available. It is not common to find VP9 or AV1 hardware encoded currently.
 
@@ -42,13 +40,13 @@ Hardware-encoding has pros and cons. A device generally has limited hardware-enc
 
 ### **H264**
 
-H264 may offer hardware encoding for better battery life with mobile and embedded devices. In these causes, it is often used automatically by VDO.Ninja.  Support for H264 on Android devices is hit and miss though, so if enabling it, be prepared for it to potentially result in no video playback.
+H264 may offer hardware encoding for better battery life with mobile and embedded devices. In these causes, it is often used automatically by VDO.Ninja. Support for H264 on Android devices is hit and miss though, so if enabling it, be prepared for it to potentially result in no video playback.
 
 iOS devices should generally use H264, but the max resolution supported then is 1280x720p30 with iOS 14 and under. With iOS 15, 1080p30 is supported, but I'm not entirely sure if 1080p30 is hardware-encoded as the phone will get quite warm at that resolution.
 
 macOS systems generally prefer H264 and will sometimes hardware-encode. It seems to use less CPU resources decoding H264 versus other codecs, so give it a go if facing CPU issues on your mac.
 
-As for Windows PCs, if using a Chromium-based browsers (Chrome/Edge), your system may choose to use hardware-encoding when using publishing via a H264. This typically happens at 360p or higher resolutions, but it may not always happen.  You can check to see if you are hardware-encoding by checking your video out stats, via CTRL + Clicking on your video: "External Encoder" would likely indicate hardware acceleration of some sort.\
+As for Windows PCs, if using a Chromium-based browsers (Chrome/Edge), your system may choose to use hardware-encoding when using publishing via a H264. This typically happens at 360p or higher resolutions, but it may not always happen. You can check to see if you are hardware-encoding by checking your video out stats, via CTRL + Clicking on your video: "External Encoder" would likely indicate hardware acceleration of some sort.\
 \
 If you have an Nvidia graphics card, you may be limited to two or three H264 hardware encoders, which could cause problems if you intend to use NVEnc for RTMP streaming also. AMD hardware encoders may limit bitrate.
 
@@ -56,15 +54,15 @@ On PC, while H264 encoding will use less CPU than other codecs, hardware-encoder
 
 H264 doesn't seem to offer the picture quality, at least when screen sharing, but it seems more resistant to rainbow puke in OBS 27.1 and older. \
 \
-Firefox on Apple M1 chips may not support H264.  OperaGX may also not support H264.
+Firefox on Apple M1 chips may not support H264. OperaGX may also not support H264.
 
 #### Customizing H264 further
 
 Starting with VDO.Ninja v20, you can specify the flavour of H264 being used with the `&h264profile` flag.\
 \
-Using that parameter without specifying a particular H264 profile ID will trigger the software OpenH264 encoder to be used, blocking any hardware H264 encoder.  On Windows, OpenH264 may actually use less CPU than the a hardware encoder and may side step video glitching issues.&#x20;
+Using that parameter without specifying a particular H264 profile ID will trigger the software OpenH264 encoder to be used, blocking any hardware H264 encoder. On Windows, OpenH264 may actually use less CPU than the a hardware encoder and may side step video glitching issues.&#x20;
 
-Definitely worth trying to use this flag, in combination with \&codec=h264, if you're looking to inch out every bit of performance, but testing is needed if going this direction.
+Definitely worth trying to use this flag, in combination with `&codec=h264`, if you're looking to inch out every bit of performance, but testing is needed if going this direction.
 
 ### **VP8**
 

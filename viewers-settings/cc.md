@@ -1,22 +1,29 @@
 ---
-description: Enables displaying of closed captioning text.
+description: Enables displaying of closed captioning text
 ---
 
-# \&cc  (closed-captions)
+# \&cc (closed-captions)
 
-This command will display the incoming transcribed text-data as an overlay. You will need to use this on the VIEW link, while also using the \&transcribe command on the PUSH link.
+## Aliases
 
-See video for a walk-thru
-
-{% embed url="https://www.youtube.com/embed/3eo85WAXeuk" %}
+* `&closedcaptions`
+* `&captions`
 
 ## Details
 
+
+
+This command will display the incoming transcribed text-data as an overlay. You will need to use this on the VIEW link, while also using the [`&transcribe`](../source-settings/transcribe.md) command on the PUSH link.
+
+See video for a walk-thru:
+
+{% embed url="https://www.youtube.com/embed/3eo85WAXeuk" %}
+
 Overlay text data is pulled from the source with [`&transcribe`](../source-settings/transcribe.md) added.&#x20;
 
-`&fontsize={percent}` can be used to adjust the overlay font-size. 100% is default;&#x20;
+``[`&fontsize={percent}`](fontsize.md) can be used to adjust the overlay font-size. 100% is default;&#x20;
 
-Use can use `&css=somecssfile.css` to further customize the CSS style, or do so in the OBS Browser source style sheet area. You can also set the CSS via a base64 encoded string in the URL, via the `&base64css` parameter.\
+Use can use [`&css=somecssfile.css`](../general-settings/css.md) to further customize the CSS style, or do so in the OBS Browser source style sheet area. You can also set the CSS via a base64 encoded string in the URL, via the [`&base64css`](../general-settings/css.md) parameter.\
 \
 An example of a custom stylesheet for OBS that changes the font-family of the overlay text is the is the following:
 
@@ -39,10 +46,6 @@ body {
 
 Feedback and user requests are welcomed.
 
-{% content-ref url="../general-settings/css.md" %}
-[css.md](../general-settings/css.md)
-{% endcontent-ref %}
-
 ### Example links and  Resources
 
 [https://vdo.ninja/?transcribe](https://vdo.ninja/?transcribe)\
@@ -51,9 +54,12 @@ Feedback and user requests are welcomed.
 [https://vdo.ninja/examples/rainbow.css](https://vdo.ninja/examples/rainbow.css)\
 [https://vdo.ninja/?css=https%3A%2F%2Fvdo.ninja%2Fexamples%2Frainbow.css](https://vdo.ninja/?css=https%3A%2F%2Fvdo.ninja%2Fexamples%2Frainbow.css)
 
+## Related
+
+{% content-ref url="../general-settings/css.md" %}
+[css.md](../general-settings/css.md)
+{% endcontent-ref %}
+
 {% content-ref url="../source-settings/transcribe.md" %}
 [transcribe.md](../source-settings/transcribe.md)
 {% endcontent-ref %}
-
-
-

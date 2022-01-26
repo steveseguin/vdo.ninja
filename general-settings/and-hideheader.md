@@ -12,3 +12,9 @@ description: Hides just the top header-bar
 ## Details
 
 This could be useful for hiding VDO.Ninja branding, making videos a bit larger at times, or for IFRAME use-case applications.
+
+## Related
+
+{% content-ref url="../viewers-settings/and-hidemenu.md" %}
+[and-hidemenu.md](../viewers-settings/and-hidemenu.md)
+{% endcontent-ref %}

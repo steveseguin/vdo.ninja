@@ -18,5 +18,10 @@ If you do not know what this is, you definitely don't want to touch it.
 
 ## Related
 
-* ``[`&maxptime`](and-maxptime.md)``
-* ``[`&minptime`](minptime.md)``
+{% content-ref url="minptime.md" %}
+[minptime.md](minptime.md)
+{% endcontent-ref %}
+
+{% content-ref url="and-maxptime.md" %}
+[and-maxptime.md](and-maxptime.md)
+{% endcontent-ref %}

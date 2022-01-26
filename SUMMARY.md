@@ -85,6 +85,7 @@
 * [\&relay](general-settings/and-relay.md)
 * [\&remote](general-settings/remote.md)
 * [\&room](general-settings/room.md)
+* [\&showdirector](general-settings/showdirector.md)
 * [\&showlabels](general-settings/showlabels.md)
 * [\&showlist](general-settings/showlist.md)
 * [\&stats](general-settings/and-stats.md)
@@ -160,16 +161,15 @@
 ## Viewer's settings
 
 * [\&audiobitrate](viewers-settings/audiobitrate.md)
-* [\&bitrate](viewers-settings/bitrate.md)
+* [\&videobitrate](viewers-settings/bitrate.md)
 * [\&broadcast](viewers-settings/broadcast.md)
 * [\&buffer](viewers-settings/buffer.md)
-* [\&cc  (closed-captions)](viewers-settings/cc.md)
+* [\&cc (closed-captions)](viewers-settings/cc.md)
 * [\&channeloffset](viewers-settings/and-channeloffset.md)
 * [\&channels](viewers-settings/and-channels.md)
 * [\&codec](viewers-settings/codec.md)
 * [\&controlroombitrate](viewers-settings/and-controlroombitrate.md)
 * [\&cover](viewers-settings/cover.md)
-* [\&director](viewers-settings/director.md)
 * [\&dpi](viewers-settings/dpi.md)
 * [\&enhance](viewers-settings/enhance.md)
 * [\&exclude](viewers-settings/and-exclude.md)
@@ -193,9 +193,7 @@
 * [\&samplerate](viewers-settings/and-samplerate.md)
 * [\&scale](viewers-settings/scale.md)
 * [\&scene](viewers-settings/scene.md)
-* [\&scenes](viewers-settings/scenes.md)
 * [\&scenetype](viewers-settings/scenetype.md)
-* [\&showdirector](viewers-settings/and-showdirector.md)
 * [\&sink](viewers-settings/and-sink.md)
 * [\&streamlabs](viewers-settings/streamlabs.md)
 * [\&sync](viewers-settings/sync.md)
@@ -205,13 +203,12 @@
 
 ## Director Settings
 
+* [\&director](director-settings/director.md)
 * [\&cleandirector](director-settings/cleandirector.md)
-* [\&channels](director-settings/channels.md)
 * [\&codirector](director-settings/codirector.md)
 * [\&midiremote](director-settings/midiremote.md)
 * [\&rooms](director-settings/rooms.md)
 * [\&scenes](director-settings/scenes.md)
-* [\&showdirector](director-settings/showdirector.md)
 
 ## Misc options
 
