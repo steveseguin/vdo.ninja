@@ -22,5 +22,7 @@ Audio capture device to select N-number of audio channels
 
 ## Related
 
-* ``[`&channeloffset`](../viewers-settings/and-channeloffset.md)``
+{% content-ref url="../viewers-settings/and-channeloffset.md" %}
+[and-channeloffset.md](../viewers-settings/and-channeloffset.md)
+{% endcontent-ref %}
 

@@ -22,6 +22,8 @@ If you have issues with Webp-mode, or find the quality or CPU savings not suffic
 
 {% embed url="https://www.youtube.com/watch?v=-7QsLChfdsE" %}
 
+## Related
+
 {% content-ref url="webpquality.md" %}
 [webpquality.md](webpquality.md)
 {% endcontent-ref %}
