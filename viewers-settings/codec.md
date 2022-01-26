@@ -54,7 +54,9 @@ If you have an Nvidia graphics card, you may be limited to two or three H264 har
 
 On PC, while H264 encoding will use less CPU than other codecs, hardware-encoders may actually use more CPU than the software-based ones.&#x20;
 
-H264 doesn't seem to offer the picture quality, at least when screen sharing, but it seems more resistant to rainbow puke in OBS 27.1 and older.&#x20;
+H264 doesn't seem to offer the picture quality, at least when screen sharing, but it seems more resistant to rainbow puke in OBS 27.1 and older. \
+\
+Firefox on Apple M1 chips may not support H264.  OperaGX may also not support H264.
 
 #### Customizing H264 further
 
