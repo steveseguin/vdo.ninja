@@ -14,6 +14,6 @@ This will allow the guest to screenshare by being directly asked to share a scre
 
 ## Related
 
-{% content-ref url="screenshareid.md" %}
-[screenshareid.md](screenshareid.md)
+{% content-ref url="and-webcam.md" %}
+[and-webcam.md](and-webcam.md)
 {% endcontent-ref %}
