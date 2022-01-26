@@ -1,19 +1,19 @@
 ---
-description: Lets you specify a custom TURN server or disable all TURN servers.
+description: Lets you specify a custom TURN server or disable all TURN servers
 ---
 
 # \&turn
 
 ## Options
 
-| Value                      | Description                                                                   |
-| -------------------------- | ----------------------------------------------------------------------------- |
-| user;pwd;turnserveraddress | Set this TURN server to turnserveraddress with username user and password pwd |
-| false \| off               | disable the use of the TURN servers                                           |
+| Value                        | Description                                                                   |
+| ---------------------------- | ----------------------------------------------------------------------------- |
+| (user;pwd;turnserveraddress) | Set this TURN server to turnserveraddress with username user and password pwd |
+| false \| off                 | disable the use of the TURN servers                                           |
 
 ## Details
 
-Several TURN servers are provided by Steve for free, for now, and these are automatically selected based on your geographic location. You may wish to use your own privately hosted TURN server instead though, and the \&turn is one flexible way to select it.
+Several TURN servers are provided by Steve for free, for now, and these are automatically selected based on your geographic location. You may wish to use your own privately hosted TURN server instead though, and the `&turn` is one flexible way to select it.
 
 The default OBS.Ninja TURN server network address is `turn:turn.obs.ninja:443`
 
@@ -24,7 +24,7 @@ The default OBS.Ninja TURN server network address is `turn:turn.obs.ninja:443`
 * Chicago
 * Los Angeles
 * France/UK
-* insecure.cam is in Hong Kong
+* [insecure.cam](http://insecure.cam) is in Hong Kong
 
 **Example Usage:**
 
@@ -42,8 +42,7 @@ Using a TURN server can also hide your IP address from other peers. You will nee
 
 [https://obs.ninja/speedtest](https://obs.ninja/speedtest) performs a connection test using the TURN server. It will select the closest public TURN server to you. At peak hours, these TURN servers might have lower performance compared to at off-peak hours, so consider hosting your own TURN server if absolute maximum performance is needed.
 
-You can check to see if you are using the TURN server by checking the connection stats window (Left-Click + CTRL while viewing a video.  In this stats display, "Relay" implies connected to a TURN server. HOST implies connected via a LAN. SRFLX/PRFLX implies connected directly via STUN.\
-
+You can check to see if you are using the TURN server by checking the connection stats window (`Left-Click` + `CTRL` while viewing a video.  In this stats display, "Relay" implies connected to a TURN server. HOST implies connected via a LAN. SRFLX/PRFLX implies connected directly via [STUN](../stun.md).
 
 ### Installing your own TURN server
 
@@ -52,3 +51,13 @@ Details on how to setup and deploy your own TURN server is here, although there 
 [https://github.com/steveseguin/obsninja/blob/master/turnserver.md](https://github.com/steveseguin/obsninja/blob/master/turnserver.md)\
 \
 It is possible to store credentials for your TURN server on a server, pulling them as needed via an API, such as from Twilio's API. It is also possible to hard-code the credentials into the app itself. Both these options require self-deploying the website code however.
+
+## Related
+
+{% content-ref url="and-tcp.md" %}
+[and-tcp.md](and-tcp.md)
+{% endcontent-ref %}
+
+{% content-ref url="../common-errors-and-known-issues/hosted-your-own-turn-server.md" %}
+[hosted-your-own-turn-server.md](../common-errors-and-known-issues/hosted-your-own-turn-server.md)
+{% endcontent-ref %}

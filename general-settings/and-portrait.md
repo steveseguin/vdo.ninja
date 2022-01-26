@@ -1,5 +1,5 @@
 ---
-description: Optimize for vertical video.
+description: Optimize for vertical video
 ---
 
 # \&portrait

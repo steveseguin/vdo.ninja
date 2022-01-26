@@ -12,11 +12,11 @@ For a free handshake-server though, please instead consider hosting your own on 
 
 ## Values
 
-| Value    | Description                                          |
-| -------- | ---------------------------------------------------- |
-| API\_KEY | The only parameter is your own piesocket.com API key |
+| Value      | Description                                          |
+| ---------- | ---------------------------------------------------- |
+| (API\_KEY) | The only parameter is your own piesocket.com API key |
 
 ## Details
 
-Third-party handshake-server service option. If using piesocket, you can just do \&pie=APKKEY to use that service, without deploying any code or servers yourself.&#x20;
+Third-party handshake-server service option. If using piesocket, you can just do `&pie=APKKEY` to use that service, without deploying any code or servers yourself.&#x20;
 

@@ -1,5 +1,5 @@
 ---
-description: Display labels as a video overlay.
+description: Display labels as a video overlay
 ---
 
 # \&showlabels
@@ -11,7 +11,7 @@ description: Display labels as a video overlay.
 
 ## Details
 
-This parameter will display the user's display name or label on screen, as a text overlay.  The label can be set either via the URL using the \&label parameter, or the room's director can set it dynamically via the "Add a label" option. &#x20;
+This parameter will display the user's display name or label on screen, as a text overlay.  The label can be set either via the URL using the [`&label`](label.md) parameter, or the room's director can set it dynamically via the "Add a label" option. &#x20;
 
 This parameter can be used on guest links, view links, or scene links. It will be sticky to the each individual video and not the browser window as a whole.
 
@@ -19,12 +19,6 @@ This parameter can be used on guest links, view links, or scene links. It will b
 Underscores "\_" used in label values will be replaced by spaces, allowing for word separation.
 
 HTML5 Emojis 🎈 and some non-Latin characters are supported.&#x20;
-
-
-
-{% content-ref url="label.md" %}
-[label.md](label.md)
-{% endcontent-ref %}
 
 ## Preset styling options
 
@@ -43,13 +37,9 @@ If no preset option is passed, a default generic style is used.
 
 ### Font size customization
 
-You can change the font-size without using CSS, using the `&fontsize` parameter. CSS is also supported though.
+You can change the font-size without using CSS, using the [`&fontsize`](../viewers-settings/fontsize.md) parameter. CSS is also supported though.
 
 Font-size of labels will adjust slightly based on the window size.
-
-{% content-ref url="../viewers-settings/fontsize.md" %}
-[fontsize.md](../viewers-settings/fontsize.md)
-{% endcontent-ref %}
 
 ## Advanced Customization
 
@@ -94,6 +84,12 @@ Below is another example, this time we target the video tile class, creating a m
 }
 ```
 
+## Related
+
+{% content-ref url="label.md" %}
+[label.md](label.md)
+{% endcontent-ref %}
+
 {% content-ref url="../viewers-settings/fontsize.md" %}
 [fontsize.md](../viewers-settings/fontsize.md)
 {% endcontent-ref %}
@@ -101,4 +97,3 @@ Below is another example, this time we target the video tile class, creating a m
 {% content-ref url="css.md" %}
 [css.md](css.md)
 {% endcontent-ref %}
-

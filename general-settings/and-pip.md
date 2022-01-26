@@ -6,4 +6,4 @@ description: Auto PIP the first loaded video
 
 ## Details
 
-Forces the system-based PIP to trigger on the first video that loads
+Forces the system-based PIP to trigger on the first video that loads.

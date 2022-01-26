@@ -1,5 +1,5 @@
 ---
-description: Forces TURN relay server into use.
+description: Forces TURN relay server into use
 ---
 
 # \&relay

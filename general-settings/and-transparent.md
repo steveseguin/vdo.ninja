@@ -1,5 +1,5 @@
 ---
-description: Makes the background transparent.
+description: Makes the background transparent
 ---
 
 # \&transparent
@@ -19,3 +19,9 @@ body {
     overflow: hidden;
 }
 ```
+
+## Related
+
+{% content-ref url="chroma.md" %}
+[chroma.md](chroma.md)
+{% endcontent-ref %}

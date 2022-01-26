@@ -6,8 +6,8 @@ description: Random video loading order
 
 ## Aliases
 
-\&random
+* `&random`
 
 ## Details
 
-This forces the videos in a room to have a random loading order.
+Forces the videos in a room to have a random loading order.

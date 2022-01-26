@@ -1,5 +1,5 @@
 ---
-description: Quality setting for the &webp option.
+description: Quality setting for the &webp option
 ---
 
 # \&webpquality

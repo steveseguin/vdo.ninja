@@ -1,7 +1,7 @@
 ---
 description: >-
   Styles lets you select how media elements are displayed in OBS and for guests;
-  audio-only elements in particular.
+  audio-only elements in particular
 ---
 
 # \&style
