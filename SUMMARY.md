@@ -237,7 +237,6 @@
 * [Works on WiFi but not on 4G](common-errors-and-known-issues/works-on-wifi-but-not-on-4g.md)
 * [Can't capture an application's audio when screen-sharing](common-errors-and-known-issues/cant-capture-an-applications-audio-when-screen-sharing.md)
 * [Audio Clicking / Popping](common-errors-and-known-issues/audio-clicking-popping.md)
-* [Known third-party caused issues](common-errors-and-known-issues/known-issues-browser-bugs-and-more.md)
 * [Can't share my screen](common-errors-and-known-issues/cant-share-my-screen.md)
 * [Nothing shows up in OBS or it is choppy](common-errors-and-known-issues/obs.ninja-doesnt-show-up-in-obs-or-is-choppy.md)
 * [Blue spinning window](common-errors-and-known-issues/blue-spinning-window.md)
