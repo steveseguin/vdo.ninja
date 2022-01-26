@@ -85,7 +85,7 @@
 * [\&relay](general-settings/and-relay.md)
 * [\&remote](general-settings/remote.md)
 * [\&room](general-settings/room.md)
-* [\&showdirector](general-settings/showdirector.md)
+* [\&showdirector](viewers-settings/and-showdirector.md)
 * [\&showlabels](general-settings/showlabels.md)
 * [\&showlist](general-settings/showlist.md)
 * [\&stats](general-settings/and-stats.md)
@@ -203,12 +203,11 @@
 
 ## Director Settings
 
-* [\&director](director-settings/director.md)
+* [\&director](viewers-settings/director.md)
 * [\&cleandirector](director-settings/cleandirector.md)
 * [\&codirector](director-settings/codirector.md)
 * [\&midiremote](director-settings/midiremote.md)
 * [\&rooms](director-settings/rooms.md)
-* [\&scenes](director-settings/scenes.md)
 
 ## Misc options
 

@@ -4,7 +4,11 @@ description: Remote MIDI control
 
 # \&midiremote
 
+## Aliases
 
+* `&remotemidi`
+
+## Details
 
 {% hint style="info" %}
 This is available for version 19 and higher.
@@ -19,13 +23,14 @@ https://vdo.ninja/beta/?room=ROOMNAMEHERE&midiout=1&vd=0&ad=0&push&autostart&lab
 
 * \&midiremote={reference \&midi's values; 1 to 4}
 
-See below for a link to the \&midi page with more information on available hotkeys
-
-{% content-ref url="../general-settings/midi.md" %}
-[midi.md](../general-settings/midi.md)
-{% endcontent-ref %}
+See [`&midi`](../general-settings/midi.md) for a link to the page with more information on available hotkeys
 
 {% embed url="https://www.youtube.com/watch?v=rnZ8HM9FL4I" %}
 How to remote control with MIDI
 {% endembed %}
 
+## Related
+
+{% content-ref url="../general-settings/midi.md" %}
+[midi.md](../general-settings/midi.md)
+{% endcontent-ref %}

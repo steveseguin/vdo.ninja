@@ -13,7 +13,7 @@ description: Sets a room id for the session to join
 
 Rooms broadcast to all participants who has joined and chat messages
 
-Rooms are complemented by the [`&director={value}`](../director-settings/director.md) function. Directors can have oversight of a room.
+Rooms are complemented by the [`&director={value}`](../viewers-settings/director.md) function. Directors can have oversight of a room.
 
 Rooms limit the viewing bitrate that guests of a room can request. OBS does not have these viewing limits though.
 

@@ -24,10 +24,10 @@ This URL value can be added to the Director's URL (`&director=XXXX&showdirector`
 
 ## Related
 
-{% content-ref url="../director-settings/director.md" %}
-[director.md](../director-settings/director.md)
+{% content-ref url="director.md" %}
+[director.md](director.md)
 {% endcontent-ref %}
 
-{% content-ref url="../viewers-settings/scene.md" %}
-[scene.md](../viewers-settings/scene.md)
+{% content-ref url="scene.md" %}
+[scene.md](scene.md)
 {% endcontent-ref %}

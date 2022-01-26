@@ -22,18 +22,18 @@ description: Enters a room as the director, instead of a guest and have full con
 
 Directors have powers over some aspects of those in a group room and its scenes, such as the ability to hangup remote guests.
 
-In the newer versions there is an option to have multiple directors aka [`&codirector`](codirector.md).
+In the newer versions there is an option to have multiple directors aka [`&codirector`](../director-settings/codirector.md).
 
 ## Related
 
-{% content-ref url="codirector.md" %}
-[codirector.md](codirector.md)
+{% content-ref url="../director-settings/codirector.md" %}
+[codirector.md](../director-settings/codirector.md)
 {% endcontent-ref %}
 
-{% content-ref url="cleandirector.md" %}
-[cleandirector.md](cleandirector.md)
+{% content-ref url="../director-settings/cleandirector.md" %}
+[cleandirector.md](../director-settings/cleandirector.md)
 {% endcontent-ref %}
 
-{% content-ref url="../general-settings/showdirector.md" %}
-[showdirector.md](../general-settings/showdirector.md)
+{% content-ref url="and-showdirector.md" %}
+[and-showdirector.md](and-showdirector.md)
 {% endcontent-ref %}

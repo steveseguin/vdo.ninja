@@ -1,18 +1,18 @@
 ---
 description: >-
   Allow assistant directors to have access to the director's room, with a subset
-  of control.
+  of control
 ---
 
 # \&codirector
 
 Alias:&#x20;
 
-* directorpassword
-* dirpass
-* dp
+* `&directorpassword`
+* `&dirpass`
+* `&dp`
 
-### tl;dr;
+## Details
 
 The basic idea is there is a URL parameter called `&codirector` that you need to add to all the director links used.
 
@@ -40,8 +40,6 @@ The co-director mode is still evolving, and certain things like shared-state bet
 Starting with v20 of VDO.Ninja, a co-director invite link will be available via the room settings button, along with the option to customize permissions.
 {% endhint %}
 
-
-
 ![The co-directors have a special color assigned to them](<../.gitbook/assets/image (31).png>)
 
 ### Warnings
@@ -50,9 +48,14 @@ Do not confuse the Room password with the Director's password; if they are the s
 
 If the main director leaves and re-joins, or a new director joins, all the co-directors will need to be re-checked. It's possible that a network outage could have a co-director and the main director to switch roles, depending on who re-connected.
 
-If you copy and paste the main director's URL to a new browser/tab, be sure to remove the `&push=STREAMID` portion of the URL.  If you do not, you will get an error about the stream ID being already in use.  Each co-director and guest needs their own unique stream ID.
+If you copy and paste the main director's URL to a new browser/tab, be sure to remove the [`&push=STREAMID`](../source-settings/push.md) portion of the URL. If you do not, you will get an error about the stream ID being already in use. Each co-director and guest needs their own unique stream ID.
 
-If using the `&queue` parameter with co-directors, you may need to use `&view=STREAMID` to allow the co-director to bypass the queue, else they won't be able to be validated since they will be stuck in the queue.  There is more info about this in the queue's documentation.
+If using the [`&queue`](../general-settings/queue.md) parameter with co-directors, you may need to use [`&view=STREAMID`](../viewers-settings/view.md) to allow the co-director to bypass the queue, else they won't be able to be validated since they will be stuck in the queue. There is more info about this in the queue's documentation.
 
 This feature required fairly extensive changes to the code base to enable, so please report issues you may encounter.&#x20;
 
+## Related
+
+{% content-ref url="../viewers-settings/director.md" %}
+[director.md](../viewers-settings/director.md)
+{% endcontent-ref %}
