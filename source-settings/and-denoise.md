@@ -1,5 +1,5 @@
 ---
-description: Turn audio noise reduction filter ON or OFF.
+description: Turn audio noise reduction filter ON or OFF
 ---
 
 # \&denoise
@@ -12,9 +12,15 @@ description: Turn audio noise reduction filter ON or OFF.
 
 | Value | Description |
 | ----- | ----------- |
-| 0     | Filter off  |
-| 1     | Filter on   |
+| 0     | Filter Off  |
+| 1     | Filter On   |
 
 ## Details
 
 Turn audio noise reduction filter ON or OFF.
+
+## Related
+
+{% content-ref url="../noisegate.md" %}
+[noisegate.md](../noisegate.md)
+{% endcontent-ref %}

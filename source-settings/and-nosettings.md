@@ -1,5 +1,5 @@
 ---
-description: Disables the local settings button.
+description: Disables the local settings button
 ---
 
 # \&nosettings

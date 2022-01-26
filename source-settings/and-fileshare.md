@@ -16,8 +16,7 @@ It will auto-loop when it ends.
 Supports audio-only files as well as common video formats. Depends on your browser.\
 If you mute the video, it will mute the video for all the viewers as well.\
 It is extremely simple in functionality and is only available when the URL is used.\
-The resolution used will be limited by the video's native resolution.\
-
+The resolution used will be limited by the video's native resolution.
 
 {% hint style="warning" %}
 The video will be **transcoded for each** connected **guest**!

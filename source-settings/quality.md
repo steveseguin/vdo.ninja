@@ -1,5 +1,5 @@
 ---
-description: Presets the quality setting for a guest.
+description: Presets the quality setting for a guest
 ---
 
 # \&quality
@@ -10,7 +10,7 @@ description: Presets the quality setting for a guest.
 
 ## Options
 
-|                      |                                                                   |
+| Value                | Description                                                       |
 | -------------------- | ----------------------------------------------------------------- |
 | 0                    | about 1080p60, depending on hardware                              |
 | 1                    | about 720p60, depending on hardware                               |

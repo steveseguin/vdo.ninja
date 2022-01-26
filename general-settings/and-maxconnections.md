@@ -23,3 +23,7 @@ Limits total of view and push connections to the given value.
 {% content-ref url="../viewers-settings/and-maxpublishers.md" %}
 [and-maxpublishers.md](../viewers-settings/and-maxpublishers.md)
 {% endcontent-ref %}
+
+{% content-ref url="../source-settings/and-maxviewers.md" %}
+[and-maxviewers.md](../source-settings/and-maxviewers.md)
+{% endcontent-ref %}

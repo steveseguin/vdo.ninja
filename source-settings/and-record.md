@@ -1,5 +1,5 @@
 ---
-description: Record functionality for guests.
+description: Record functionality for guests
 ---
 
 # \&record
@@ -10,7 +10,7 @@ description: Record functionality for guests.
 | ------------------ | ------------------------------------------------------------------------------------------------- |
 | 0                  | No video recorded; audio tentatively recorded as 32bit PCM lossless.                              |
 | (negative integer) | No video recorded; audio recorded as {integer} kbps OPUS file. Eg: -120 - Audio only at 120 kbps. |
-| (integer)          | recored video bitrate in kbps                                                                     |
+| (integer)          | Recored video bitrate in kbps.                                                                    |
 
 ## Details
 

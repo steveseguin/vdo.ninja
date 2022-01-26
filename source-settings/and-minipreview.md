@@ -1,5 +1,5 @@
 ---
-description: Mini self preview at the top right corner.
+description: Mini self preview at the top right corner
 ---
 
 # \&minipreview

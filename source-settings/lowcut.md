@@ -6,14 +6,14 @@ description: Adds a low-cut filter
 
 ## Aliases
 
-\&lc\
-\&higpass
+* `&lc`
+* `&higpass`
 
 ## Options
 
-| Value           | Description                                          |
-| --------------- | ---------------------------------------------------- |
-| (integer value) | Sets the cut-off frequency in hz. (default is 100hz) |
+| Value           | Description                                         |
+| --------------- | --------------------------------------------------- |
+| (integer value) | Sets the cut-off frequency in hz (default is 100hz) |
 
 ## Details
 

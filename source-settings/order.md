@@ -1,5 +1,5 @@
 ---
-description: The order priority of a source video when added to the video mixer.
+description: The order priority of a source video when added to the video mixer
 ---
 
 # \&order

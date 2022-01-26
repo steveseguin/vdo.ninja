@@ -1,14 +1,14 @@
 ---
 description: >-
   Provides access to a generic audio equalizer that can be applied to the local
-  microphone.
+  microphone
 ---
 
 # \&equalizer
 
 ## Aliases
 
-\&eq
+* `&eq`
 
 ## Details
 

@@ -1,5 +1,5 @@
 ---
-description: Forces the guest to have a self-preview, overriding &broadcast.
+description: Forces the guest to have a self-preview, overriding &broadcast
 ---
 
 # \&preview
@@ -10,7 +10,7 @@ description: Forces the guest to have a self-preview, overriding &broadcast.
 
 ## Details
 
-Forces the guest to have a self-preview, overriding `&broadcast`.
+Forces the guest to have a self-preview, overriding [`&broadcast`](../viewers-settings/broadcast.md).
 
 ## Related
 

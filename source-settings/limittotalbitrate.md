@@ -16,4 +16,14 @@ description: Limit the total outbound bitrate
 
 ## Details
 
-_Tries_ to limit the total outbound bitrate to some max total value, via the publisher's side. This could be useful if you are broadcasting video as a director to the room, but only have a fixed amount of upload bandwidth or CPU.&#x20;
+_Tries_ to limit the total outbound bitrate to some max total value, via the publisher's side. This could be useful if you are broadcasting video as a director to the room, but only have a fixed amount of upload bandwidth or CPU.
+
+## Related
+
+{% content-ref url="../viewers-settings/totalroombitrate.md" %}
+[totalroombitrate.md](../viewers-settings/totalroombitrate.md)
+{% endcontent-ref %}
+
+{% content-ref url="roombitrate.md" %}
+[roombitrate.md](roombitrate.md)
+{% endcontent-ref %}

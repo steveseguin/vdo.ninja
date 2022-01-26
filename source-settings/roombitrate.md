@@ -1,14 +1,14 @@
 ---
 description: >-
   Limits any guest viewer in the group chat room from pulling the video stream
-  at more than the specified bitrate value.
+  at more than the specified bitrate value
 ---
 
 # \&roombitrate
 
 ## Aliases
 
-\&rbr
+* `&rbr`
 
 ## Options
 
@@ -22,9 +22,8 @@ description: >-
 Limits any guest viewer in the group chat room from pulling the video stream at more than the specified bitrate value.
 
 Does not impact what the director sees and does not limit the quality of what OBS has access to.\
-This is like [`maxbitrate`](../advanced-settings.md#maxbitrate), but `roombitrate` only applies to fellow group room guests.\
-Practically, a guest normally won't pull more than 1200-kbps and that's only if they click the HQ full-window button.\
-
+This is like [`&maxbitrate`](maxbitrate.md) ,but `&roombitrate` only applies to fellow group room guests.\
+Practically, a guest normally won't pull more than 1200-kbps and that's only if they click the HQ full-window button.
 
 {% hint style="info" %}
 Set to 600-kbps, 200-kbps, or 80-kbps if the goal is to reduce CPU load. (2x, 3x, or 4x down-scaling is applied at those bitrate limits)
@@ -38,4 +37,8 @@ Set to 600-kbps, 200-kbps, or 80-kbps if the goal is to reduce CPU load. (2x, 3x
 
 {% content-ref url="../viewers-settings/and-controlroombitrate.md" %}
 [and-controlroombitrate.md](../viewers-settings/and-controlroombitrate.md)
+{% endcontent-ref %}
+
+{% content-ref url="maxbitrate.md" %}
+[maxbitrate.md](maxbitrate.md)
 {% endcontent-ref %}

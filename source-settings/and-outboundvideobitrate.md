@@ -18,7 +18,7 @@ description: Target video bitrate and max bitrate for outgoing video streams
 
 Target video bitrate and max bitrate for outgoing video streams.
 
-Sets the viewer's bitrate and overrides the `&vb` parameter.  It won't override the room's total bitrate parameter, as that's a dynamically set bitrate, so **to get higher bitrate in group rooms you still need to use `&trb`**.&#x20;
+Sets the viewer's bitrate and overrides the [`&vb`](../viewers-settings/bitrate.md) parameter.  It won't override the room's total bitrate parameter, as that's a dynamically set bitrate, so **to get higher bitrate in group rooms you still need to use** [**`&trb`**](../viewers-settings/totalroombitrate.md).&#x20;
 
 ## Related
 

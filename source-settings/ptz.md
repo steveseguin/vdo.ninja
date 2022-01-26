@@ -1,5 +1,5 @@
 ---
-description: Enables pan/tilt control of the device, if compatible.
+description: Enables pan/tilt control of the device, if compatible
 ---
 
 # \&ptz
