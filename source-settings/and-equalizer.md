@@ -6,6 +6,10 @@ description: >-
 
 # \&equalizer
 
+## Aliases
+
+\&eq
+
 ## Details
 
 Provides access to a generic audio equalizer that can be applied to the local microphone.
@@ -18,5 +22,10 @@ Enables the audio processing pipeline.
 
 ## Related
 
-* ``[`&compressor`](and-compressor.md)``
-* ``[`&limiter`](and-limiter.md)``
+{% content-ref url="and-compressor.md" %}
+[and-compressor.md](and-compressor.md)
+{% endcontent-ref %}
+
+{% content-ref url="and-limiter.md" %}
+[and-limiter.md](and-limiter.md)
+{% endcontent-ref %}

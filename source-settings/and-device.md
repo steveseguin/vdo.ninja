@@ -4,12 +4,16 @@ description: Same as &audiodevice or &videodevice, but applies to both.
 
 # \&device
 
+## Aliases
+
+\&d
+
 ## Options
 
 | Value          | Description                                                                                                                             |
 | -------------- | --------------------------------------------------------------------------------------------------------------------------------------- |
-| 0              | disable the audio/video devices. No option to change it during setup is provided.                                                       |
-| 1              | auto-select the default video / audio devices. No option to change it will be allowed.                                                  |
+| 0              | disable the audio and video devices. No option to change it during setup is provided.                                                   |
+| 1              | auto-select the default video and audio devices. No option to change it will be allowed.                                                |
 | (string value) | auto-select a video & audio device that has a label containing that same string. Whitespaces in names can be replaced with underscores. |
 
 ## Details
