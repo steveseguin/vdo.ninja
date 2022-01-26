@@ -1,5 +1,5 @@
 ---
-description: Disable the tally light effects; can be applied to both viewer or publisher.
+description: Disable the tally light effects; can be applied to both viewer or publisher
 ---
 
 # \&obsoff
@@ -16,3 +16,8 @@ Tally lights are represented as a glowing red border around videos. When the lig
 Videos on **first-load** in OBS, even if visible in OBS, **don't glow red**; it requires an **initial visibility change to trigger it**.
 {% endhint %}
 
+## Related
+
+{% content-ref url="../tallyoff.md" %}
+[tallyoff.md](../tallyoff.md)
+{% endcontent-ref %}

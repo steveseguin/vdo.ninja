@@ -18,7 +18,9 @@ Scenes can be put into groups as well, via the URL group option, such `&group=3`
 
 Using this group function is an alternative to transfer rooms, however it's perhaps less secure, as a guest could just tinker with their URL parameters or just refresh their page to perhaps see everyone in the room again.
 
-`&groupaudio` can be used to enable audio in-between different groups, instead of audio being group-specific. Useful for blind-dating show formats or such.
+``[`&groupaudio`](and-groupaudio.md) can be used to enable audio in-between different groups, instead of audio being group-specific. Useful for blind-dating show formats or such.
+
+## Related
 
 {% content-ref url="and-groupaudio.md" %}
 [and-groupaudio.md](and-groupaudio.md)

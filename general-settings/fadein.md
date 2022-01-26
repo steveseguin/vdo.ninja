@@ -13,3 +13,9 @@ description: Has videos fade in smoothly
 ## Details
 
 Also available as a director's room toggle.
+
+## Related
+
+{% content-ref url="../animated.md" %}
+[animated.md](../animated.md)
+{% endcontent-ref %}

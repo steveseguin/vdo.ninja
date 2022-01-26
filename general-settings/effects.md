@@ -1,12 +1,12 @@
 ---
-description: Applies effects to the video/audio feeds.
+description: Applies effects to the video/audio feeds
 ---
 
 # \&effects
 
 ## Aliases
 
-\&effect
+* `&effect`
 
 ## Options
 

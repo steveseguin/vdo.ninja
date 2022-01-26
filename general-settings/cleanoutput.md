@@ -1,5 +1,5 @@
 ---
-description: Keeps the output as clean as possible from UI elements.
+description: Keeps the output as clean as possible from UI elements
 ---
 
 # \&cleanoutput
@@ -10,9 +10,9 @@ description: Keeps the output as clean as possible from UI elements.
 
 ## Details
 
-Hides many of the UI elements and pop-ups that may cause unwanted visual elements not desired in a high-stakes live stream.\
-\
+Hides many of the UI elements and pop-ups that may cause unwanted visual elements not desired in a high-stakes live stream.
 
+## Related
 
 {% content-ref url="cleanish.md" %}
 [cleanish.md](cleanish.md)

@@ -1,8 +1,12 @@
 ---
-description: Global hotkey support via MIDI input and more!
+description: Global hotkey support via MIDI input and more
 ---
 
 # \&midi
+
+## Aliases
+
+* `&hotkeys`
 
 ## Details
 
@@ -101,8 +105,6 @@ In this case, for hotkeying remote guests as a director:
 
 All the above hotkey mappings are purely experimental at this time and will change based on user feedback. These mappings should allow a user to use a StreamDeck with OBS.Ninja.
 
-
-
 ### Configuring MIDI device and channel
 
 By default, any MIDI device on any MIDI channel can trigger the \&midi actions if their command and values match.&#x20;
@@ -164,8 +166,6 @@ https://vdo.ninja/beta/?room=ROOMNAMEHERE&midiout=1&vd=0&ad=0&push&autostart&lab
 Remote controlling demo
 {% endembed %}
 
-
-
 {% content-ref url="../director-settings/midiremote.md" %}
 [midiremote.md](../director-settings/midiremote.md)
 {% endcontent-ref %}
@@ -200,11 +200,7 @@ It's important to not send and receive between two tabs locally if from the same
 
 Check the console log or [https://vdo.ninja/midi](https://vdo.ninja/midi) to see which midi device is what device index.
 
-
-
 ![Example of how to find the midi device order ID](<../.gitbook/assets/image (18).png>)
-
-
 
 While the original MIDI timestamp is transmitted to the remote computer also, it currently isn't included with the output MIDI event itself. I'm just not sure what to use it for currently, but let me know if you need it.
 
@@ -223,6 +219,3 @@ https://www.youtube.com/watch?v=uidN3bLLiVk
 {% embed url="https://www.youtube.com/watch?v=mdAzAZo65Mc" %}
 https://www.youtube.com/watch?v=mdAzAZo65Mc
 {% endembed %}
-
-
-

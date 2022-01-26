@@ -1,5 +1,5 @@
 ---
-description: Audio alerts
+description: Audio alerts for raised hands, chat messages and if somebody joins the room
 ---
 
 # \&notify
@@ -11,4 +11,10 @@ description: Audio alerts
 
 ## Details
 
-Audio alerts for raised-hands and chat messages, and if somebody joins the room (director)
+Audio alerts for raised-hands, chat messages and if somebody joins the room (director).
+
+## Related
+
+{% content-ref url="r2d2.md" %}
+[r2d2.md](r2d2.md)
+{% endcontent-ref %}

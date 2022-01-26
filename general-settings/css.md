@@ -1,5 +1,5 @@
 ---
-description: Loads a custom CSS file.
+description: Loads a custom CSS file
 ---
 
 # \&css
@@ -22,7 +22,7 @@ Link to a remotely hosted CSS style sheet via the URL.\
 You can stylize VDO.Ninja without needing to host anything more than a CSS file.\
 The page elements are not visible until the remote style sheet has been loaded.
 
-#### \&base64css
+`&base64css`
 
 You can pass CSS as a base64-encoded string using the \&base64css parameter.  This needs to be URIComponent encoded first, and then converted to base 64.&#x20;
 

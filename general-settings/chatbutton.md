@@ -1,5 +1,5 @@
 ---
-description: Shows or hides the chat button.
+description: Shows or hides the chat button
 ---
 
 # \&chatbutton

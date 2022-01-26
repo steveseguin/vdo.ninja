@@ -1,5 +1,5 @@
 ---
-description: Hides just the top header-bar.
+description: Hides just the top header-bar
 ---
 
 # \&hideheader

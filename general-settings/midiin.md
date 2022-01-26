@@ -18,10 +18,18 @@ description: Allows for receiving of remote MIDI
 
 ## Details
 
-Allows for receiving of remote MIDI. Device indices starts at 1, where an index of 0 implies "all".\
-
+Allows for receiving of remote MIDI. Device indices starts at 1, where an index of 0 implies "all".
 
 ### Warning:
 
-If testing locally, beware of feedback loops, where the MIDI output is fed back into the MIDI input, causing high CPU usage and a lot of MIDI messages. If testing locally, use two MIDI devices and explicitly select the input and output MIDI devices to avoid these feedback loops&#x20;
+If testing locally, beware of feedback loops, where the MIDI output is fed back into the MIDI input, causing high CPU usage and a lot of MIDI messages. If testing locally, use two MIDI devices and explicitly select the input and output MIDI devices to avoid these feedback loops.
 
+## Related
+
+{% content-ref url="midi.md" %}
+[midi.md](midi.md)
+{% endcontent-ref %}
+
+{% content-ref url="midiout.md" %}
+[midiout.md](midiout.md)
+{% endcontent-ref %}
