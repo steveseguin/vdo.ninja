@@ -8,6 +8,8 @@ description: Keeps the output as clean as possible from UI elements.
 
 * `&clean`
 
+## Details
+
 Hides many of the UI elements and pop-ups that may cause unwanted visual elements not desired in a high-stakes live stream.\
 \
 
