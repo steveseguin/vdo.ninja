@@ -11,9 +11,9 @@ description: Sets the maximum frame rate of the video in frames per second.
 
 ## Options
 
-| Value                         | Description                  |
-| ----------------------------- | ---------------------------- |
-| (some positive integer value) | Frame rate frames per second |
+| Value                         | Description                    |
+| ----------------------------- | ------------------------------ |
+| (some positive integer value) | Frame rate (frames per second) |
 
 ## Details
 

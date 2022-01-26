@@ -20,4 +20,6 @@ It cannot be used along with the [`&compressor`](and-compressor.md) option.
 
 ## Related
 
-* ``[`&compressor`](and-compressor.md)``
+{% content-ref url="and-compressor.md" %}
+[and-compressor.md](and-compressor.md)
+{% endcontent-ref %}

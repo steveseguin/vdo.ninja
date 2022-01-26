@@ -10,9 +10,9 @@ description: Delays the microphone by specified time in ms
 
 ## Options
 
-| Value                    | Description         |
-| ------------------------ | ------------------- |
-| (positive integer value) | Delay to add in ms. |
+| Value                    | Description        |
+| ------------------------ | ------------------ |
+| (positive integer value) | Delay to add in ms |
 
 ## Details
 

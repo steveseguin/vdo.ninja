@@ -4,6 +4,11 @@ description: Adds a low-cut filter
 
 # \&lowcut
 
+## Aliases
+
+\&lc\
+\&higpass
+
 ## Options
 
 | Value           | Description                                          |
@@ -20,6 +25,14 @@ Enables the audio processing pipeline.
 
 ## Related
 
-* ``[`&compressor`](and-compressor.md)``
-* ``[`&limiter`](and-limiter.md)``
-* ``[`&equalizer`](and-equalizer.md)``
+{% content-ref url="and-compressor.md" %}
+[and-compressor.md](and-compressor.md)
+{% endcontent-ref %}
+
+{% content-ref url="and-limiter.md" %}
+[and-limiter.md](and-limiter.md)
+{% endcontent-ref %}
+
+{% content-ref url="and-equalizer.md" %}
+[and-equalizer.md](and-equalizer.md)
+{% endcontent-ref %}

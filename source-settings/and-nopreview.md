@@ -19,4 +19,10 @@ If you don't want to see yourself when in a group chat, this will hide your vide
 
 ## Related
 
-* ``[`&preview`](and-preview.md)``
+{% content-ref url="and-preview.md" %}
+[and-preview.md](and-preview.md)
+{% endcontent-ref %}
+
+{% content-ref url="and-minipreview.md" %}
+[and-minipreview.md](and-minipreview.md)
+{% endcontent-ref %}

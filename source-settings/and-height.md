@@ -31,3 +31,13 @@ You can use \&scale=50 also, as a viewer, to scale down a selected width/height 
 {% hint style="danger" %}
 If the camera cannot support the height, **it will fail**.
 {% endhint %}
+
+## Related
+
+{% content-ref url="and-width.md" %}
+[and-width.md](and-width.md)
+{% endcontent-ref %}
+
+{% content-ref url="quality.md" %}
+[quality.md](quality.md)
+{% endcontent-ref %}

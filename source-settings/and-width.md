@@ -25,3 +25,13 @@ Limiting the width can reduce CPU load.
 {% hint style="danger" %}
 If the camera cannot support the width, **it will fail**.
 {% endhint %}
+
+## Related
+
+{% content-ref url="and-height.md" %}
+[and-height.md](and-height.md)
+{% endcontent-ref %}
+
+{% content-ref url="quality.md" %}
+[quality.md](quality.md)
+{% endcontent-ref %}
