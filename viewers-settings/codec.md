@@ -29,11 +29,11 @@ Video that is captured by a camera is compressed and sent over VDO.Ninja. The de
 
 Normally VP8 is selected, which is an older codec that uses little CPU, but isn't as efficient as some others. Some mobile devices may hardware-encoder VP8, such as Google Pixel phones, but the vast majority will use software (CPU) to encode VP8.
 
-H264 is the second most common codec automatically selected, which is popular with Apple-devices and many Android devices.  H264 is commonly hardware-encoded, which uses less CPU and battery power, but hardware-encoding is more fickle than software-based encoding.
+H264 is the second most common codec automatically selected, which is popular with Apple-devices and many Android devices.  H264 is commonly hardware-encoded, which \*sometimes\* uses less CPU and battery power, but hardware-encoding is more fickle than software-based encoding.
 
-VP9 and AV1 are more modern codecs, with AV1 only support by Chromium-based browsers using Version 90 or newer, although. VP9 may not be available on older Apple devices, but is becoming more available. It is not common to find VP9 or AV1 hardware encoded currently.
+VP9 and AV1 are more modern codecs, with AV1 only supported by Chromium-based browsers using Version 90 or newer, although. VP9 may not be available on older Apple devices, but is becoming more available. It is not common to find VP9 or AV1 hardware encoded currently.
 
-Hardware-encoding has pros and cons. A device generally has limited hardware-encoders, and they are also normally more problematic.&#x20;
+Hardware-encoding has pros and cons. A device generally has limited hardware-encoders, and they are also normally more problematic, including compatibility issues.
 
 **If running into problems with video distortion, switching the codec to VP9 may resolve the issue, although at the cost of higher-CPU load.**\
 ****
