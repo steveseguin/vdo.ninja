@@ -10,7 +10,6 @@ description: Shows or hides the chat button.
 
 ## Options
 
-| Value | Description           |
-| ----- | --------------------- |
-| 0     | Hides the chat button |
-| 1     | Shows the chat button |
+| 0 | Hides the chat button |
+| - | --------------------- |
+| 1 | Shows the chat button |
