@@ -1,3 +1,7 @@
+---
+description: Pre-configures the selected video device
+---
+
 # \&videodevice
 
 ## Aliases
@@ -27,6 +31,8 @@ When combined with `&webcam` and `&autostart`, you can have the camera start pub
 {% hint style="info" %}
 See [vdo.ninja/devices](https://vdo.ninja/devices) to see the device IDs and device names. DeviceIDs are specific to VDO.Ninja's domain, while device names are not. The page will also auto-create links for  you, just by clicking on the respective device.
 {% endhint %}
+
+## Related
 
 {% content-ref url="audiodevice.md" %}
 [audiodevice.md](audiodevice.md)

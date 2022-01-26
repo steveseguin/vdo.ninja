@@ -1,3 +1,7 @@
+---
+description: Only shares a website with viewers.
+---
+
 # \&website
 
 ## Aliases
@@ -6,4 +10,4 @@
 
 ## Details
 
-Only shares a website with viewers.
+Only shares a website with viewers. You can use this to share a YouTube video with the guests.

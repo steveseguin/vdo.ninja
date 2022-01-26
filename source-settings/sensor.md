@@ -4,6 +4,13 @@ description: Access device sensor data at given rate.
 
 # \&sensor
 
+## Aliases
+
+\&sensors\
+\&gyro\
+\&gyros\
+\&accelerometer
+
 ## Options
 
 | Value           | Description                                           |

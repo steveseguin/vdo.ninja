@@ -1,5 +1,5 @@
 ---
-description: Disables Screen-sharing as an option.
+description: Disables screen-sharing as an option.
 ---
 
 # \&webcam
@@ -10,13 +10,13 @@ description: Disables Screen-sharing as an option.
 
 ## Details
 
-Full-screens the Webcam selection window.
+Full-screens the webcam selection window.
 
 {% hint style="danger" %}
 Do not use while on a director page to autostart a camera; `&autostart&vd=video_device` should handle that.
 {% endhint %}
 
-If you would still like the guest to have access to the screen-sharing button once they have joined the call, you can force it to appear with the `&ssb` option.  The `&webcam` option by default will hide the screen-share button otherwise.
+If you would still like the guest to have access to the screen-sharing button once they have joined the call, you can force it to appear with the [`&ssb`](ssb.md) option.  The [`&webcam`](and-webcam.md) option by default will hide the screen-share button otherwise.
 
 {% content-ref url="ssb.md" %}
 [ssb.md](ssb.md)

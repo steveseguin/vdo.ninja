@@ -7,6 +7,7 @@ description: Enables transcription and closed captioning.
 ## Aliases
 
 * `&trans`
+* `&transcript`
 
 ## Options
 
@@ -48,6 +49,8 @@ Certain Android devices may not require internet for the transcription to work.
 {% hint style="danger" %}
 Does not work in Safari!
 {% endhint %}
+
+## Related
 
 {% content-ref url="../viewers-settings/cc.md" %}
 [cc.md](../viewers-settings/cc.md)

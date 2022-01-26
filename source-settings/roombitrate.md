@@ -1,14 +1,10 @@
 ---
 description: >-
   Limits any guest viewer in the group chat room from pulling the video stream
-  at more than the specified bitrate value.
+  at more than the specified bitrate value
 ---
 
 # \&roombitrate
-
-## Aliases
-
-\&rbr
 
 ## Options
 
@@ -29,13 +25,3 @@ Practically, a guest normally won't pull more than 1200-kbps and that's only if 
 {% hint style="info" %}
 Set to 600-kbps, 200-kbps, or 80-kbps if the goal is to reduce CPU load. (2x, 3x, or 4x down-scaling is applied at those bitrate limits)
 {% endhint %}
-
-## Related
-
-{% content-ref url="../viewers-settings/totalroombitrate.md" %}
-[totalroombitrate.md](../viewers-settings/totalroombitrate.md)
-{% endcontent-ref %}
-
-{% content-ref url="../viewers-settings/and-controlroombitrate.md" %}
-[and-controlroombitrate.md](../viewers-settings/and-controlroombitrate.md)
-{% endcontent-ref %}

@@ -1,5 +1,5 @@
 ---
-description: Disables camera-sharing as an option.
+description: Disables Camera-sharing as an option.
 ---
 
 # \&screenshare
@@ -10,10 +10,8 @@ description: Disables camera-sharing as an option.
 
 ## Details
 
-This will allow the guest to screenshare by being directly asked to share a screen or window instead of being take to the camera/screenshare selection screen.
+This will allow the guest to screenshare by being directly asked to share a screen or window instead of being take to the camera / screenshare selection screen.
 
 ## Related
 
-{% content-ref url="screenshareid.md" %}
-[screenshareid.md](screenshareid.md)
-{% endcontent-ref %}
+* ``[`&screenshareid`](screenshareid.md)``

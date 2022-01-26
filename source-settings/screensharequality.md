@@ -22,8 +22,14 @@ Using this parameter will give you control over the quality of the screen share,
 
 ## Details
 
-Set a target quality for your screenshare.
+Set a target quality for your screenshare, when you screenshare as a secondary stream (in a room). Use [\&quality](quality.md) if you want to set the screenshare quality when only screensharing.
 
 ## Related
 
-* ``[`&screenshareid`](screenshareid.md)``
+{% content-ref url="screenshareid.md" %}
+[screenshareid.md](screenshareid.md)
+{% endcontent-ref %}
+
+{% content-ref url="screensharefps.md" %}
+[screensharefps.md](screensharefps.md)
+{% endcontent-ref %}

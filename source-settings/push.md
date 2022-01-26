@@ -10,9 +10,9 @@ description: The stream ID that you are publishing with will be the defined valu
 
 ## Options
 
-| Value    | Description                                                       |
-| -------- | ----------------------------------------------------------------- |
-| (string) | 1 to 49-characters long: aLphaNumEric-characters; case sensitive. |
+| Value  | Description                                                       |
+| ------ | ----------------------------------------------------------------- |
+| string | 1 to 49-characters long: aLphaNumEric-characters; case sensitive. |
 
 ## Details
 

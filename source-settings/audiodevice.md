@@ -28,6 +28,8 @@ You can pass a device ID as well; see [obs.ninja/devices](https://obs.ninja/devi
 \
 Setting this option to `0` will also disable the guest's microphone, potentially allowing for guest connections that have no video or audio. You might do this if you needed midi-only transport, hidden IFRAME control, or just to chatting.
 
+## Related
+
 {% content-ref url="and-nosettings.md" %}
 [and-nosettings.md](and-nosettings.md)
 {% endcontent-ref %}
