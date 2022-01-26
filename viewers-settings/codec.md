@@ -42,15 +42,19 @@ Hardware-encoding has pros and cons. A device generally has limited hardware-enc
 
 ### **H264**
 
-H264 may offer hardware encoding for better battery life with mobile and embedded devices. In these causes, it is often used automatically by VDO.Ninja.
+H264 may offer hardware encoding for better battery life with mobile and embedded devices. In these causes, it is often used automatically by VDO.Ninja.  Support for H264 on Android devices is hit and miss though, so if enabling it, be prepared for it to potentially result in no video playback.
 
-iOS devices should generally use H264, but the max resolution supported then is 1280x720p30 with iOS 14 and under. With iOS 15, 1080p30 is supported.&#x20;
+iOS devices should generally use H264, but the max resolution supported then is 1280x720p30 with iOS 14 and under. With iOS 15, 1080p30 is supported, but I'm not entirely sure if 1080p30 is hardware-encoded as the phone will get quite warm at that resolution.
 
-macOS systems generally prefer H264 and will sometimes hardware-encode.
+macOS systems generally prefer H264 and will sometimes hardware-encode. It seems to use less CPU resources decoding H264 versus other codecs, so give it a go if facing CPU issues on your mac.
 
 As for Windows PCs, if using a Chromium-based browsers (Chrome/Edge), your system may choose to use hardware-encoding when using publishing via a H264. This typically happens at 360p or higher resolutions, but it may not always happen.  You can check to see if you are hardware-encoding by checking your video out stats, via CTRL + Clicking on your video: "External Encoder" would likely indicate hardware acceleration of some sort.\
 \
-If you have an Nvidia graphics card, you may be limited to two or three H264 hardware encoders, which could cause problems if you intend to use NVEnc for RTMP streaming also.&#x20;
+If you have an Nvidia graphics card, you may be limited to two or three H264 hardware encoders, which could cause problems if you intend to use NVEnc for RTMP streaming also. AMD hardware encoders may limit bitrate.
+
+On PC, while H264 encoding will use less CPU than other codecs, hardware-encoders may actually use more CPU than the software-based ones.&#x20;
+
+H264 doesn't seem to offer the picture quality, at least when screen sharing, but it seems more resistant to rainbow puke in OBS 27.1 and older.&#x20;
 
 #### Customizing H264 further
 
@@ -70,7 +74,9 @@ iOS devices can stream at 1080p30 or 720p60 when using VP8, but they get warm in
 
 Google Pixel smartphones may default to VP8, using hardware-encoding, but may also face video distortion with some browsers as a result. Switching to VP9 may fix the issue.
 
-VP8 generally uses more CPU than H264, but not by a lot. Maybe there's a 5 to 15% difference? You may wish to consider using H264 if CPU load is an issue as a result.
+VP8 generally uses more CPU than H264, but not by a lot. Maybe there's a 5 to 15% difference? You may wish to consider using H264 if CPU load is an issue as a result.\
+\
+VP8 is highly compatible these days between devices and browsers.
 
 ### **VP9**
 
@@ -86,6 +92,6 @@ VP9 is often not hardware encoded, so it may solve video distortion issues that 
 
 AV1 is the most advanced codec, but also the most CPU-intensive to use.
 
-Requires Chrome v90 or newer on both publisher and viewer to work. The Electron Capture app 2.6.0 and newer supports AV1, as well. OBS Studio v28 may also support it, but as of the time of this writing, that hasn't been released yet.
+Requires Chrome v90 or newer on both publisher and viewer to work. The Electron Capture app 2.6.0 and newer supports AV1, as well. OBS Studio v27.2 and newer \*may\* also support it, but as of the time of this writing, that hasn't been confirmed.
 
 Experimental at this point in time and may not perform well, but if very bandwidth constrained, it is a worthwhile option.
