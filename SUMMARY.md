@@ -232,6 +232,7 @@
 
 ## Common errors and known issues
 
+* [Known Issues](common-errors-and-known-issues/known-issues.md)
 * [Echo or feedback issues](common-errors-and-known-issues/echo-or-feedback-issues.md)
 * [Works on WiFi but not on 4G](common-errors-and-known-issues/works-on-wifi-but-not-on-4g.md)
 * [Can't capture an application's audio when screen-sharing](common-errors-and-known-issues/cant-capture-an-applications-audio-when-screen-sharing.md)
@@ -305,4 +306,3 @@
 * [\&stun](stun.md)
 * [\&api](api.md)
 * [\&nofileshare](nofileshare.md)
-* [Known Issues](known-issues.md)
