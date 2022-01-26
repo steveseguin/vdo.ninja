@@ -6,9 +6,9 @@ description: Has videos fade in smoothly
 
 ## Values
 
-| Option | Description                           |
-| ------ | ------------------------------------- |
-| number | value in ms for the fade in animation |
+| Option   | Description                           |
+| -------- | ------------------------------------- |
+| (number) | value in ms for the fade in animation |
 
 ## Details
 
