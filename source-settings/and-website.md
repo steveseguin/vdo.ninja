@@ -1,5 +1,5 @@
 ---
-description: Only shares a website with viewers.
+description: Only shares a website with viewers
 ---
 
 # \&website

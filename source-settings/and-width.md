@@ -1,5 +1,5 @@
 ---
-description: Sets the maximum width of the video allowed in pixels.
+description: Sets the maximum width of the video allowed in pixels
 ---
 
 # \&width
@@ -12,7 +12,7 @@ description: Sets the maximum width of the video allowed in pixels.
 
 | Value                         | Description |
 | ----------------------------- | ----------- |
-| (some positive integer value) | Width in px |
+| (some positive integer value) | width in px |
 
 ## Details
 

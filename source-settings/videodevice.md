@@ -26,7 +26,7 @@ You can use this option to also disable a guest's camera, potentially allowing f
 
 For a device like an iPhone, you can pass a string value such as `&vd=back` to specify the back camera by default. For Android, you might try `rear` instead of `back`, but it will depend on the name the manufacture gave the camera.
 
-When combined with `&webcam` and `&autostart`, you can have the camera start publishing instantly, often without any user interaction at all. Keep in mind that some browsers will still need to ask for permissions or require a user-gesture for things to function correctly though.
+When combined with [`&webcam`](and-webcam.md) and [`&autostart`](and-autostart.md), you can have the camera start publishing instantly, often without any user interaction at all. Keep in mind that some browsers will still need to ask for permissions or require a user-gesture for things to function correctly though.
 
 {% hint style="info" %}
 See [vdo.ninja/devices](https://vdo.ninja/devices) to see the device IDs and device names. DeviceIDs are specific to VDO.Ninja's domain, while device names are not. The page will also auto-create links for  you, just by clicking on the respective device.
@@ -50,3 +50,6 @@ See [vdo.ninja/devices](https://vdo.ninja/devices) to see the device IDs and dev
 [and-autostart.md](and-autostart.md)
 {% endcontent-ref %}
 
+{% content-ref url="and-device.md" %}
+[and-device.md](and-device.md)
+{% endcontent-ref %}

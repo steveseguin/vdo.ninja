@@ -1,7 +1,7 @@
 ---
 description: >-
   Disconnects communication with the handshake server as soon as possible and
-  provides verbose feedback.
+  provides verbose feedback
 ---
 
 # \&secure

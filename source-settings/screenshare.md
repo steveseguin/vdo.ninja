@@ -1,5 +1,5 @@
 ---
-description: Disables camera-sharing as an option.
+description: Disables camera-sharing as an option
 ---
 
 # \&screenshare

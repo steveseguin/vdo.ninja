@@ -21,7 +21,6 @@ description: >-
 
 When screen sharing as a guest in a group room, the screen share will now create a second stream for the screen share, keeping your webcam also.
 
-\
 This will preset the ID the screenshare will have, making things easier to predict and prep for.
 
 Without this, the screen share ID is random, which is a decision made to increase security. This complication will be addressed in the future.
@@ -30,4 +29,12 @@ Without this, the screen share ID is random, which is a decision made to increas
 
 {% content-ref url="screenshare.md" %}
 [screenshare.md](screenshare.md)
+{% endcontent-ref %}
+
+{% content-ref url="screensharefps.md" %}
+[screensharefps.md](screensharefps.md)
+{% endcontent-ref %}
+
+{% content-ref url="screensharequality.md" %}
+[screensharequality.md](screensharequality.md)
 {% endcontent-ref %}

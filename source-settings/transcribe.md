@@ -1,5 +1,5 @@
 ---
-description: Enables transcription and closed captioning.
+description: Enables transcription and closed captioning
 ---
 
 # \&transcribe
@@ -20,7 +20,7 @@ description: Enables transcription and closed captioning.
 
 ## Details
 
-The transcription service uses default browser / system mic as a source and cannot be muted.\
+The transcription service uses default browser/system mic as a source and cannot be muted.\
 \
 Generally needs to be used in conjunction with \&cc
 

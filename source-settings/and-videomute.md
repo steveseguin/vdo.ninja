@@ -1,5 +1,5 @@
 ---
-description: Auto mutes guest's video.
+description: Auto mutes guest's video
 ---
 
 # \&videomute
