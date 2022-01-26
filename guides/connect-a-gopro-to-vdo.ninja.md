@@ -54,7 +54,7 @@ it's still a young project, and while things are functional, it's still mainly f
 If building your own, you might find that it can be built so small that you might be able to use it on its own as a wireless camera, and not need a GoPro at all.\
 
 
-![](<../.gitbook/assets/image (124) (1).png>)
+![](<../.gitbook/assets/image (127).png>)
 
 
 

@@ -10,7 +10,7 @@ The idea is, you can put guests of a room into sub-groups. When added to a sub g
 
 Guests can be assigned to multiple subgroups. Groups can be specified via the URL using `&group=1,5,6` or/and the director can dynamically assign sub-groups, as seen in the below image.&#x20;
 
-![](<../.gitbook/assets/image (126) (1) (1).png>)
+![](<../.gitbook/assets/image (129).png>)
 
 If not in a group, that guest will still see/hear everyone, regardless of which group they are in, even if a guest in another group may not be able to see/hear that guest back.&#x20;
 

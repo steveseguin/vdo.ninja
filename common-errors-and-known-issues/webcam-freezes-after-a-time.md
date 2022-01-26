@@ -12,7 +12,7 @@ If using a laptop with a USB camera, it's possible the the system is putting the
 
 One place to is in the Windows Power Options settings, which you can find in the Power and Sleep settings pane.
 
-![](<../.gitbook/assets/image (96).png>)
+![](<../.gitbook/assets/image (96) (1).png>)
 
 You can also try disabling the "Allow the computer to turn off this device to save power" options in the Windows Device Manager for each USB device/host controller. (uncheck them)
 

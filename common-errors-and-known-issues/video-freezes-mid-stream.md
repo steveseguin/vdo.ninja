@@ -10,7 +10,7 @@ As a stop-gap solution, the director has the remote control ability to toggle th
 
 If not using a group room, the publisher of a stream can also refresh their own camera via the settings menu, and clicking the refresh icon next to the camera.
 
-![](<../.gitbook/assets/image (95).png>)\
+![](<../.gitbook/assets/image (97).png>)\
 
 
 To fix the problem though, a bit of troubleshooting may be needed.  More often than not, if using a USB 3.x camera, the cause is a USB-related issue.
@@ -23,7 +23,7 @@ To fix the problem though, a bit of troubleshooting may be needed.  More often t
 * If using an AMD motherboard, update the BIOS of your motherboard, and perhaps set your PCIe lane speed to Gen3, instead of Gen4.
 * If using a laptop in particular, ensure the USB port is not set to go to sleep; this would be a Windows setting. Also, enabling _Performance Mode and being plugged into the wall,_ may help as well.  See the below images:
 
-![](<../.gitbook/assets/image (106).png>)![](<../.gitbook/assets/image (88).png>)
+![](<../.gitbook/assets/image (108).png>)![](<../.gitbook/assets/image (89).png>)
 
 ### Internet /connection issues
 
