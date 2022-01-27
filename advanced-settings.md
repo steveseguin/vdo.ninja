@@ -42,7 +42,7 @@ A stream ID must also not already be in active use, else you will be provided wi
 
 We've broken down the available URL parameters into six parts
 
-* **General Settings**, which tend to settings that impact the app broadly, such as the color of the background
+* **General Settings**, which tend to settings that impact the app broadly, such as the color of the background.
 * **Source Settings**, which are settings specific to publishing, so these are things related to customizing the camera and microphone.
 * **Viewer's Settings**, which are aspects that are controllable by the viewer's side, which includes bitrate, codec, and layouts.
 * **Director Settings**, which are specific to the director's control room and director-specific features.
