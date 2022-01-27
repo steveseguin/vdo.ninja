@@ -1,5 +1,5 @@
 ---
-description: Audio playback is muted for guests
+description: Audio playback is muted
 ---
 
 # \&deafen

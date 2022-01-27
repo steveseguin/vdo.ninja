@@ -42,8 +42,8 @@ There is a website that demos some of the commands available here: [https://comp
 
 You can use this to create your own hotkeys for pretty any device, application, or website.
 
-{% content-ref url="../api.md" %}
-[api.md](../api.md)
+{% content-ref url="../general-settings/api.md" %}
+[api.md](../general-settings/api.md)
 {% endcontent-ref %}
 
 ### IFRAME API

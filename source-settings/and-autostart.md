@@ -16,6 +16,6 @@ Useful for helping a remote guest skip-past the complex setup of their camera/au
 
 ## Related
 
-{% content-ref url="../easyexit.md" %}
-[easyexit.md](../easyexit.md)
+{% content-ref url="easyexit.md" %}
+[easyexit.md](easyexit.md)
 {% endcontent-ref %}

@@ -21,6 +21,6 @@ Turn audio noise reduction filter ON or OFF.
 
 ## Related
 
-{% content-ref url="../noisegate.md" %}
-[noisegate.md](../noisegate.md)
+{% content-ref url="noisegate.md" %}
+[noisegate.md](noisegate.md)
 {% endcontent-ref %}

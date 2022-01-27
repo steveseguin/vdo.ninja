@@ -1,12 +1,12 @@
 ---
-description: Video playback is black for guests
+description: Video playback is disabled
 ---
 
 # \&blind
 
 ## Details
 
-Video playback is black for guests.
+Video playback is disabled for guests.
 
 ## Related
 

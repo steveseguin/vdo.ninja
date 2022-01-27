@@ -21,6 +21,6 @@ May need to be disabled to use [`&stereo`](../general-settings/stereo.md) on som
 
 ## Related
 
-{% content-ref url="../noisegate.md" %}
-[noisegate.md](../noisegate.md)
+{% content-ref url="noisegate.md" %}
+[noisegate.md](noisegate.md)
 {% endcontent-ref %}
