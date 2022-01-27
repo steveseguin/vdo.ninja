@@ -75,7 +75,6 @@
 * [\&password](general-settings/password.md)
 * [\&pie](general-settings/pie.md)
 * [\&pip](general-settings/and-pip.md)
-* [\&portrait](general-settings/and-portrait.md)
 * [\&queue](general-settings/queue.md)
 * [\&r2d2](general-settings/r2d2.md)
 * [\&relay](general-settings/and-relay.md)
@@ -200,6 +199,7 @@
 * [\&optimize](viewers-settings/optimize.md)
 * [\&outputdevice](viewers-settings/and-outputdevice.md)
 * [\&panning](viewers-settings/and-panning.md)
+* [\&portrait](viewers-settings/and-portrait.md)
 * [\&ptime](viewers-settings/and-ptime.md)
 * [\&randomize](viewers-settings/randomize.md)
 * [\&samplerate](viewers-settings/and-samplerate.md)
@@ -235,6 +235,7 @@
 
 * [\&mediasettings](newly-added-parameters/and-mediasettings.md)
 * [\&lightmode](newly-added-parameters/and-lightmode.md)
+* [\&square](newly-added-parameters/and-square.md)
 
 ## Misc options
 
