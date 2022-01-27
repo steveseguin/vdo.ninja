@@ -6,9 +6,9 @@ description: >-
 
 # Sponsor ❤
 
-While VDO.Ninja is a passion project and is free to use, there are some costs involved in providing it. Donating to the maintainer/developer of VDO.Ninja helps directly with subsidizing those costs.
+While [VDO.Ninja](https://vdo.ninja) is a passion project and is free to use, there are some costs involved in providing it. Donating to the maintainer/developer of VDO.Ninja helps directly with subsidizing those costs.
 
-If you'd like to donate,  please visit Steve Seguin's [GitHub Sponsors](https://github.com/sponsors/steveseguin) page.
+If you'd like to donate, please visit Steve Seguin's [GitHub Sponsors](https://github.com/sponsors/steveseguin) page.
 
 While GitHub Sponsors is the main way to donate, there is also [PayPal](https://paypal.me/steveseguin) and [buymeacoffee](https://www.buymeacoffee.com/steveseguin). Some crypto options are also listed on the GitHub Sponsors page, including Bitcoin and Ethereum. If you wish to contribute financially in other ways, please contact Steve directly: [steve@seguin.email](mailto:steve@seguin.email)
 

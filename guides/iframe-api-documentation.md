@@ -4,7 +4,7 @@ description: How to embed VDO.Ninja into your own website with the IFRAME API
 
 # Embed into a site with iFrames
 
-VDO.Ninja (VDON) is offers here a simple and free solution to quickly enable real-time video streaming in their websites. VDON wishes to make live video streaming development accessible to any developer, even novices, yet still remain flexible and powerful.
+[VDO.Ninja](https://vdo.ninja) offers here a simple and free solution to quickly enable real-time video streaming in their websites. VDON wishes to make live video streaming development accessible to any developer, even novices, yet still remain flexible and powerful.
 
 While VDO.Ninja does offer source-code to customize the application and UI at a low level, this isn't for beginners and it is rather hard to maintain. As well, due to the complexity of video streaming in the web, typical approaches for offering API access isn't quite feasible either.
 
@@ -28,11 +28,14 @@ Adding that iframe to the DOM will reveal a simple page for accessing for a user
 
 An example of how this API is used by VDO.Ninja is with its Internet Speedtest, which has two VDO.Ninja IFrames on a single page. One iframe feeds video to the other iframe, and the speed at which it does this is a measure of the system's performance. Detailed stats of the connection are made available to the parent window, which displays the results. [https://vdo.ninja/speedtest](https://vdo.ninja/speedtest)
 
-More community-contributed IFRAME examples can be found here: [https://github.com/steveseguin/vdoninja/tree/master/examples](https://github.com/steveseguin/vdoninja/tree/master/examples)
+More community-contributed IFRAME examples can be found here:\
+[https://github.com/steveseguin/vdoninja/tree/master/examples](https://github.com/steveseguin/vdoninja/tree/master/examples)
 
-A sandbox of options is available at this page, too: [https://vdo.ninja/iframe](https://vdo.ninja/iframe) You can enter an VDO.Ninja URL in the input box to start using it. For developers, viewing the source of that page will reveal examples of how all the available functions work, along with a way to test and play with each of them. You can also see here for the source-code on GitHub: [https://github.com/steveseguin/vdoninja/blob/master/iframe.html](https://github.com/steveseguin/vdoninja/blob/master/iframe.html)
+A sandbox of options is available at this page, too: [https://vdo.ninja/iframe](https://vdo.ninja/iframe) You can enter an VDO.Ninja URL in the input box to start using it. For developers, viewing the source of that page will reveal examples of how all the available functions work, along with a way to test and play with each of them. You can also see here for the source-code on GitHub:\
+[https://github.com/steveseguin/vdoninja/blob/master/iframe.html](https://github.com/steveseguin/vdoninja/blob/master/iframe.html)
 
-I also have an example of how you can transfer virtually any data (JSON, text, small images) via the IFRAME API with just a few lines of code here: [https://gist.github.com/steveseguin/15bba03d1993c88d0bd849f7749ea625](https://gist.github.com/steveseguin/15bba03d1993c88d0bd849f7749ea625) It's a pretty awesome example of how you can securely communicate peer to peer online with virtually zero effort and with no cost.
+I also have an example of how you can transfer virtually any data (JSON, text, small images) via the IFRAME API with just a few lines of code here:\
+[https://gist.github.com/steveseguin/15bba03d1993c88d0bd849f7749ea625](https://gist.github.com/steveseguin/15bba03d1993c88d0bd849f7749ea625) It's a pretty awesome example of how you can securely communicate peer to peer online with virtually zero effort and with no cost.
 
 Please note that since VDO.Ninja requires SSL to be strictly enabled site wide, any website you embed a VDO.Ninja iframe into also will require SSL enabled site wide. Using a service like Cloudflare can provide SSL-enabled caching for websites to make this fairly easy to do.
 
@@ -40,13 +43,13 @@ Something else to note about this iframe API is that it can not only be controll
 
 Some of the more interesting ones primarily for iframe users might include:
 
-* \&webcam
-* \&screenshare
-* \&videodevice=1 or 0
-* \&audiodevice=1 or 0
-* \&autostart
-* \&chroma
-* \&transparency
+* ``[`&webcam`](../source-settings/and-webcam.md)``
+* ``[`&screenshare`](../source-settings/screenshare.md)``
+* ``[`&videodevice`](../source-settings/videodevice.md)`=`1 or 0
+* ``[`&audiodevice`](../source-settings/audiodevice.md)`=`1 or 0
+* ``[`&autostart`](../source-settings/and-autostart.md)``
+* ``[`&chroma`](../general-settings/chroma.md)``
+* ``[`&transparent`](../general-settings/and-transparent.md)``
 * As for API, allow for dynamic messaging, below are examples of the options available:
 * Mute Speaker
 * Mute Mic
@@ -307,25 +310,19 @@ This VDO.Ninja API is developed and expanded based on user feedback and requests
 
 There's some users who wish to have an SDK instead of an IFRAME API. While an SDK may happen eventually, currently the IFRAME API is surprisingly capable.
 
-If you wish to use your own video mixer logic for example, you can disable the existing auto-mixer logic that currently exists using the `&manual` flag. You can then access the `srcObject` of each of the video elements in VDO.Ninja and pull those streams into the parent frame to manipulate or to connect to the parent DOM.&#x20;
+If you wish to use your own video mixer logic for example, you can disable the existing auto-mixer logic that currently exists using the [`&manual`](../viewers-settings/manual.md) flag. You can then access the `srcObject` of each of the video elements in VDO.Ninja and pull those streams into the parent frame to manipulate or to connect to the parent DOM.&#x20;
 
-If you aren't self-hosting the code, you may run into cross origin permission issues. This concept works with different subdomains though, and if you ask, the option to directly reference the VDO.Ninja servers  with your own DNS servers is available. Self-hosting the code in a sub-domain of your own works too.
+If you aren't self-hosting the code, you may run into cross origin permission issues. This concept works with different subdomains though, and if you ask, the option to directly reference the VDO.Ninja servers with your own DNS servers is available. Self-hosting the code in a sub-domain of your own works too.
 
 [https://javascript.info/cross-window-communication#windows-on-subdomains-document-domain](https://javascript.info/cross-window-communication#windows-on-subdomains-document-domain)
 
 See the video below for an advanced demo of the IFRAME API and how videos hosted within VDO.Ninja can be accessed and manipulated by the parent window. Video works well in this fashion; pulling audio from the IFRAME is a bit trickier however.
 
-{% content-ref url="../viewers-settings/manual.md" %}
-[manual.md](../viewers-settings/manual.md)
-{% endcontent-ref %}
-
 {% embed url="https://www.youtube.com/watch?v=SqbufszHKi4&feature=youtu.be" %}
-
-
 
 ### All to happy to support the IFRAME API
 
-Please feel free to follow me in the VDO.Ninja Discord channel (discord.vdo.ninja) where I post news about updates and listen to requests. The upcoming version of VDO.Ninja is also often hosted at [https://vdo.ninja/beta](https://vdo.ninja/beta), where you can explore new features and help crush any unexpected bugs.\
+Please feel free to follow me in the VDO.Ninja Discord channel ([discord.vdo.ninja](https://discord.com/invite/T4xpQVv)) where I post news about updates and listen to requests. The upcoming version of VDO.Ninja is also often hosted at [https://vdo.ninja/beta](https://vdo.ninja/beta), where you can explore new features and help crush any unexpected bugs.\
 \
 I am keen to continue to support the IFRAME API, so please reach out if you have questions or requests.
 

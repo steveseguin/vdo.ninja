@@ -1,6 +1,6 @@
 # Becoming a Ninja, 101
 
-VDO.Ninja is a tool that can be seen as a mediator, negotiating a direct connection between a publishing device and a viewing device (such as OBS; Open Broadcasting Studio).
+VDO.Ninja is a tool that can be seen as a mediator, negotiating a direct connection between a publishing device and a viewing device (such as OBS Studio; Open Broadcaster Software Studio).
 
 There are generally two links involved: one to push (publish) and one to pull (view).
 
@@ -11,4 +11,3 @@ The viewer (receiver) and the publisher (sender) each play their own role in det
 A publisher can have multiple viewers access their video stream, with each viewer having the ability to customize the quality of the stream they receive.
 
 The following guide details the options, syntax, values, and general use of these available settings/parameters; organized into three sections.
-

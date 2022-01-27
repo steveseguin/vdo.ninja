@@ -57,19 +57,16 @@ Text Messages can be broadcast to the room from the director.
 
 ## Isolated Solo links for each Room Guest <a href="#h.208l8vmog36i" id="h.208l8vmog36i"></a>
 
-When you create a room, the guest's feeds will show up in the director’s room;  While multiple people can join the director’s room, only the first director to join has the ability to issue commands. Any one in the director room can access the Isolated solo streams for each guest though.
+When you create a room, the guest's feeds will show up in the director’s room. While multiple people can join the director’s room, only the first director to join has the ability to issue commands. Any one in the director room can access the Isolated solo streams for each guest though.
 
-Appended to the bottom of the video control box for each guest video is a SOLO LINK button and a link. You can copy the link with either the button or the link, or you can just drag the link (on Windows) into OBS.  This gives you an independent window of that guest’s stream, at high quality.\
+Appended to the bottom of the video control box for each guest video is a SOLO LINK button and a link. You can copy the link with either the button or the link, or you can just drag the link (on Windows) into OBS. This gives you an independent window of that guest’s stream, at high quality.\
 \
-The controls in the VDO.Ninja’s director room only will let you adjust the volume (and mute) that solo video.  The ‘add to scene’ links do not apply to solo-links.\
+The controls in the VDO.Ninja’s director room only will let you adjust the volume (and mute) that solo video. The ‘add to scene’ links do not apply to solo-links.\
 \
 You can create a solo link by hand by doing [https://vdo.ninja/?room=RID\&view=SID\&scene](https://vdo.ninja/?room=RID\&view=SID\&scene)
 
 Scene is left blank, while the [`&view`](../../viewers-settings/view.md) value is specified.\
 \
-Every time you view a link, in OBS or elsewhere, you increase the load on the remote guests’s computer.  Pulling more than one HD feed from a remote guest is not advisable, unless they have a capable computer and good internet connection.  As a director, you can disable the preview video in the control box, freeing up a small bit more bandwidth for those connected on very weak connections. (three buttons; video off / video on / binoculars for a HD preview).
-
-If you want to switch seamlessly between two guests, you can use the \&scene=2 option. It’s currently not listed as an option in the director’s room, but just take a Scene Link and replace \&scene=X with \&scene=2.  The last guest who has had “add to scene’ pressed will be the video that becomes in focus and full-screen.
+Every time you view a link, in OBS or elsewhere, you increase the load on the remote guests’s computer. Pulling more than one HD feed from a remote guest is not advisable, unless they have a capable computer and good internet connection. As a director, you can disable the preview video in the control box, freeing up a small bit more bandwidth for those connected on very weak connections. (three buttons; video off / video on / binoculars for a HD preview).
 
 ![](../../.gitbook/assets/image.png)
-

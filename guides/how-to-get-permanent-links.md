@@ -1,8 +1,6 @@
 # How to get permanent links
 
-
-
-If you connect with the "?push=xxxx" URL parameter set, you essentially are telling the system what you want the 'view=' ID to be.
+If you connect with the "`?push=xxxx`" URL parameter set, you essentially are telling the system what you want the 'view=' ID to be.
 
 As long as it is not already in use, you can publish to that 'view=' ID. If the connection fails and does not reconnect automatically, just refresh the page and it will try to connect again.
 

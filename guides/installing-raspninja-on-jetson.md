@@ -1,6 +1,7 @@
 # Installing RaspNinja on Jetson
 
-Download image for your device from [https://developer.nvidia.com/embedded/downloads](https://developer.nvidia.com/embedded/downloads)
+Download image for your device from:\
+[https://developer.nvidia.com/embedded/downloads](https://developer.nvidia.com/embedded/downloads)
 
 ![](<../.gitbook/assets/image (81).png>)
 
@@ -16,7 +17,7 @@ Open the Terminal app or SSH into the Jetson to continue the installation.
 
 ![](<../.gitbook/assets/image (83).png>)
 
-Download Raspberry Ninja and run the installer. This will update your Jetson installation to Ubuntu 20 and install the required components.  It may take some time and may require some prodding if it fails.
+Download Raspberry Ninja and run the installer. This will update your Jetson installation to Ubuntu 20 and install the required components. It may take some time and may require some prodding if it fails.
 
 ```
 git clone https://github.com/steveseguin/raspberry_ninja

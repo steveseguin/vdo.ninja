@@ -6,7 +6,7 @@ description: Understanding URL parameters and custom settings
 
 ## Overview
 
-VDO.Ninja is a tool that can be seen as a mediator, negotiating a direct connection between a publishing device and a viewing device (such as [OBS (Open Broadcasting Studio)](https://obsproject.com)). There are generally two links involved; one to push (publish) and one to pull (view), although links can be made to do both at the same time.
+VDO.Ninja is a tool that can be seen as a mediator, negotiating a direct connection between a publishing device and a viewing device (such as [OBS \[Open Broadcaster Software\]](https://obsproject.com)). There are generally two links involved; one to push (publish) and one to pull (view), although links can be made to do both at the same time.
 
 The viewer (receiver) and the publisher (sender) each play their own role in determining the qualities of a stream, so likewise each side has its own set of parameters available to them. A publisher can have multiple viewers access their video stream, with each viewer having the ability to customize the quality of the stream they receive.
 
@@ -16,15 +16,15 @@ The following guide details the options, syntax, values, and general use of thes
 
 You can customize the playback of videos by adding query string parameters to the VDO.Ninja URL links, along with many other aspects. VDO.Ninja is highly flexible in this regard, letting you achieve your desired outcome without needing to code and without additional software.
 
-For example, a simple viewer URL link such as `https://vdo.ninja/?view=xxxxxxx` could be amended to `https://vdo.ninja/?view=xxxxxxx&bitrate=500`, which will cause the viewer to receive the publisher's video stream at a video bitrate of 500-kbps.
+For example, a simple viewer URL link such as `https://vdo.ninja/?view=xxxxxxx` could be amended to `https://vdo.ninja/?view=xxxxxxx&videobitrate=500`, which will cause the viewer to receive the publisher's video stream at a video bitrate of 500-kbps.
 
-Multiple parameters can be appended together by using the ampersand (`&`) as a separating character. For example, to view the video stream published at stream ID `xxxxxxx` at a video bitrate of 500-kbps and set the [`stereo`](advanced-settings.md#stereo) parameter to `1`:
+Multiple parameters can be appended together by using the ampersand (`&`) as a separating character. For example, to view the video stream published at stream ID `xxxxxxx` at a video bitrate of 500-kbps and set the [`&stereo`](general-settings/stereo.md) parameter to `1`:
 
 ```markup
-http://vdo.ninja/?view=xxxxxxx&bitrate=500&stereo=1
+http://vdo.ninja/?view=xxxxxxx&videobitrate=500&stereo=1
 ```
 
-Some parameters, like [`view`](advanced-settings.md#view) will accept a comma-separated list of valid values, so you can do some rather powerful combos, such as publish a video (using [`push`](advanced-settings.md#push)) while also viewing multiple others videos. VDO.Ninja will auto-mix the videos together into a single layout for you:
+Some parameters, like [`&view`](viewers-settings/view.md) will accept a comma-separated list of valid values, so you can do some rather powerful combos, such as publish a video (using [`&push`](source-settings/push.md)) while also viewing multiple others videos. VDO.Ninja will auto-mix the videos together into a single layout for you:
 
 ```markup
 http://vdo.ninja/?push=aaa&view=bbb,ccc,ddd
@@ -40,7 +40,7 @@ A stream ID must also not already be in active use, else you will be provided wi
 
 ## Navigating the available setting options
 
-We've broken down the available URL parameters into six parts
+We've broken down the available URL parameters into six parts:
 
 * **General Settings**, which tend to settings that impact the app broadly, such as the color of the background.
 * **Source Settings**, which are settings specific to publishing, so these are things related to customizing the camera and microphone.

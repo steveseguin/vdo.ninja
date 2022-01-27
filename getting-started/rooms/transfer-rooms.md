@@ -16,11 +16,11 @@ Only the main director can transfer users; anyone can be the director of a room 
 
 When a guest is transferred to a new room, they do not know which room they are transferred to. This allows for privacy and secrecy, allowing for the main landing room to act like a screening room.
 
-The \&queue command can be used in conjunction with rooms and transfer rooms. When you transfer a user from a queue, they will no longer be in any queue once transferred.  When in queue, the guest will not be able to see anyone, but the director will be able to see them.  When transferred out of the queue, they will be able to see everyone in the room.
+The [`&queue`](../../general-settings/queue.md) command can be used in conjunction with rooms and transfer rooms. When you transfer a user from a queue, they will no longer be in any queue once transferred. When in queue, the guest will not be able to see anyone, but the director will be able to see them. When transferred out of the queue, they will be able to see everyone in the room.
 
 If you transfer someone to a room, the passwords for both rooms need to match. This may change in the future.
 
-If someone in a transfer room disconnects or refresh, they will end up back in the original landing room. This is for privacy and security reasons, as once a user is kicked out or disconnected, the expectation is they cannot enter the room again unless explicitly allowed.  Be sure that any guest who is transferred has a stable connection; unstable mobile connections or connections using VPN services may get booted out every now and then.
+If someone in a transfer room disconnects or refresh, they will end up back in the original landing room. This is for privacy and security reasons, as once a user is kicked out or disconnected, the expectation is they cannot enter the room again unless explicitly allowed. Be sure that any guest who is transferred has a stable connection; unstable mobile connections or connections using VPN services may get booted out every now and then.
 
 ### Alternative option
 
@@ -30,11 +30,6 @@ If you'd like to transfer a user to a new room, along with a new password or set
 
 ### Creating preset room destinations for quick transfers
 
-There's an option called `&rooms`, which allows the director to list multiple room names via the URL. These rooms become buttons that the director can press to pre-arm the transfer button with.&#x20;
-
-{% content-ref url="../../director-settings/rooms.md" %}
-[rooms.md](../../director-settings/rooms.md)
-{% endcontent-ref %}
+There's an option called [`&rooms`](../../director-settings/rooms.md), which allows the director to list multiple room names via the URL. These rooms become buttons that the director can press to pre-arm the transfer button with.&#x20;
 
 ![](<../../.gitbook/assets/image (130).png>)
-

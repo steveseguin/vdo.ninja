@@ -4,12 +4,12 @@ Stream IDs are not magical in any way and can be manually or automatically creat
 
 Use `&push=STREAMID` to publish a video and `&view=STREAMID` to remotely view it. If you don't manually specify a stream ID, VDO.Ninja will sometimes generate one for you. You can reuse the generated stream ID if you wish.
 
-Stream IDs only exist when they are actively used; once you stop using a stream ID, it no longer exists until it is used again.&#x20;
+Stream IDs only exist when they are actively used; once you stop using a stream ID, it no longer exists until it is used again.
 
 ### Additional technical details of stream IDs
 
 {% hint style="info" %}
-When in a group room, a stream ID can only be accessed from within that same room, unless transferred to a new room by the room's director
+When in a group room, a stream ID can only be accessed from within that same room, unless transferred to a new room by the room's director.
 {% endhint %}
 
 {% hint style="info" %}
@@ -23,7 +23,7 @@ This isn't the case when using a password however, as the password AND the strea
 {% endhint %}
 
 {% hint style="info" %}
-You can use the `&label` property to give a name to a stream, rather than using a stream ID to do the same. Using this strategy of using securely-named stream IDs, while using labels to assign a name to a stream, will improve security and unlock new options, like lower-third display name overlays.
+You can use the [`&label`](../general-settings/label.md) property to give a name to a stream, rather than using a stream ID to do the same. Using this strategy of using securely-named stream IDs, while using labels to assign a name to a stream, will improve security and unlock new options, like lower-third display name overlays.
 {% endhint %}
 
 {% hint style="info" %}

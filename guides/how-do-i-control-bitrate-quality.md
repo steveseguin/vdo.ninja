@@ -2,7 +2,7 @@
 
 The bitrate controls are accessible via a URL parameter, along with width/height. Something like [https://VDO.Ninja/?view=yyyyy\&bitrate=10000 ](https://vdo.ninja/?view=yyyyy\&bitrate=10000)will let the viewer request different bitrates. The value is in kilobits per second and the default bitrate is 2500.
 
-Read more here: [`&bitrate`](../viewers-settings/bitrate.md), [`&audiobitrate`](../viewers-settings/audiobitrate.md) , [`&width`](../source-settings/and-width.md), [`&height`](../source-settings/and-height.md)``
+Read more here: [`&videobitrate`](../viewers-settings/bitrate.md), [`&audiobitrate`](../viewers-settings/audiobitrate.md) , [`&width`](../source-settings/and-width.md), [`&height`](../source-settings/and-height.md), [`&quality`](../source-settings/quality.md)``
 
 The viewer sets the bitrates generally, although you can set maximum allowed bitrates as the publisher of a stream. See the advanced settings in the wiki for more help here.
 
