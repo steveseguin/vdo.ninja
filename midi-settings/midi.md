@@ -166,8 +166,8 @@ https://vdo.ninja/beta/?room=ROOMNAMEHERE&midiout=1&vd=0&ad=0&push&autostart&lab
 Remote controlling demo
 {% endembed %}
 
-{% content-ref url="midiremote.md" %}
-[midiremote.md](midiremote.md)
+{% content-ref url="../director-settings/midiremote.md" %}
+[midiremote.md](../director-settings/midiremote.md)
 {% endcontent-ref %}
 
 ## MIDI pass-through mode

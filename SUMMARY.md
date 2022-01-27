@@ -49,7 +49,6 @@
 
 ## General Settings
 
-* [\&api](general-settings/api.md)
 * [\&blind](general-settings/blind.md)
 * [\&chroma](general-settings/chroma.md)
 * [\&cleanish](general-settings/cleanish.md)
@@ -90,6 +89,7 @@
 * [\&style](general-settings/style.md)
 * [\&tcp](general-settings/and-tcp.md)
 * [\&transparent](general-settings/and-transparent.md)
+* [\&api](general-settings/api.md)
 * [\&turn](general-settings/turn.md)
 
 ## Source settings
@@ -226,7 +226,7 @@
 * [\&midi](midi-settings/midi.md)
 * [\&midiin](midi-settings/midiin.md)
 * [\&midiout](midi-settings/midiout.md)
-* [\&midiremote](midi-settings/midiremote.md)
+* [\&midiremote](director-settings/midiremote.md)
 * [\&midichannel](midi-settings/and-midichannel.md)
 * [\&mididevice](midi-settings/and-mididevice.md)
 * [\&midioffset](midi-settings/and-midioffset.md)
