@@ -236,6 +236,7 @@
 * [\&mediasettings](newly-added-parameters/and-mediasettings.md)
 * [\&lightmode](newly-added-parameters/and-lightmode.md)
 * [\&square](newly-added-parameters/and-square.md)
+* [\&bigbutton](newly-added-parameters/and-bigbutton.md)
 
 ## Misc options
 
