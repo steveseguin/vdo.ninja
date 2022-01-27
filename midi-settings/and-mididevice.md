@@ -12,7 +12,7 @@ description: Allows to specify which midi device (1 and up) selected
 
 ## Details
 
-Works in conjunction with `&midi` to allow for specifying which midi device (1 and up) selected. If you don't specify anything, it listens to all midi devices.
+Works in conjunction with [`&midi`](midi.md) to allow for specifying which midi device (1 and up) selected. If you don't specify anything, it listens to all midi devices.
 
 ## Related
 
