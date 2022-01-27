@@ -40,14 +40,13 @@ A stream ID must also not already be in active use, else you will be provided wi
 
 ## Navigating the available setting options
 
-We've broken down the available URL parameters into four parts
+We've broken down the available URL parameters into six parts
 
 * **General Settings**, which tend to settings that impact the app broadly, such as the color of the background
 * **Source Settings**, which are settings specific to publishing, so these are things related to customizing the camera and microphone.
-* **Viewer Settings**, which are aspects that are controllable by the viewer's side, which includes bitrate, codec, and layouts.
+* **Viewer's Settings**, which are aspects that are controllable by the viewer's side, which includes bitrate, codec, and layouts.
 * **Director Settings**, which are specific to the director's control room and director-specific features.
+* **Midi Settings**, which are specific to midi features.
+* **Newly Added Parameters**, which have been recently added to the Docs or to VDO.Ninja.
 
 You can normally find a long list of each command in the left-hand menu of this support system, although you can search for specific commands using the search bar at the top-right as well.
-
-
-
