@@ -49,6 +49,7 @@
 
 ## General Settings
 
+* [\&api](general-settings/api.md)
 * [\&blind](general-settings/blind.md)
 * [\&chroma](general-settings/chroma.md)
 * [\&cleanish](general-settings/cleanish.md)
@@ -89,7 +90,6 @@
 * [\&style](general-settings/style.md)
 * [\&tcp](general-settings/and-tcp.md)
 * [\&transparent](general-settings/and-transparent.md)
-* [\&api](general-settings/api.md)
 * [\&turn](general-settings/turn.md)
 
 ## Source settings
@@ -142,11 +142,11 @@
 * [\&order](source-settings/order.md)
 * [\&outboundaudiobitrate](source-settings/and-outboundaudiobitrate.md)
 * [\&outboundvideobitrate](source-settings/and-outboundvideobitrate.md)
-* [\&ptz](source-settings/ptz.md)
-* [\&quality](source-settings/quality.md)
 * [\&pcm](source-settings/and-pcm.md)
+* [\&ptz](source-settings/ptz.md)
 * [\&preview](source-settings/and-preview.md)
 * [\&pusheffectsdata](source-settings/pusheffectsdata.md)
+* [\&quality](source-settings/quality.md)
 * [\&record](source-settings/and-record.md)
 * [\&roombitrate](source-settings/roombitrate.md)
 * [\&screenshare](source-settings/screenshare.md)
@@ -199,7 +199,7 @@
 * [\&optimize](viewers-settings/optimize.md)
 * [\&outputdevice](viewers-settings/and-outputdevice.md)
 * [\&panning](viewers-settings/and-panning.md)
-* [\&portrait](viewers-settings/and-portrait.md)
+* [\&portrait](general-settings/and-portrait.md)
 * [\&ptime](viewers-settings/and-ptime.md)
 * [\&randomize](viewers-settings/randomize.md)
 * [\&samplerate](viewers-settings/and-samplerate.md)

@@ -11,12 +11,12 @@ description: Optimize for vertical video
 
 ## Details
 
-Optimize the auto-mixer to work with video streams that are in portrait mode (versus landscape). Can be used together with [`&cover`](cover.md) to get a better effect.
+Optimize the auto-mixer to work with video streams that are in portrait mode (versus landscape). Can be used together with [`&cover`](../viewers-settings/cover.md) to get a better effect.
 
 ## Related
 
-{% content-ref url="cover.md" %}
-[cover.md](cover.md)
+{% content-ref url="../viewers-settings/cover.md" %}
+[cover.md](../viewers-settings/cover.md)
 {% endcontent-ref %}
 
 {% content-ref url="../newly-added-parameters/and-square.md" %}

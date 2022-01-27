@@ -12,8 +12,8 @@ Can be used to have a video be zoomed in and cropped, so it fills its window are
 
 ## Related
 
-{% content-ref url="and-portrait.md" %}
-[and-portrait.md](and-portrait.md)
+{% content-ref url="../general-settings/and-portrait.md" %}
+[and-portrait.md](../general-settings/and-portrait.md)
 {% endcontent-ref %}
 
 {% content-ref url="../newly-added-parameters/and-square.md" %}

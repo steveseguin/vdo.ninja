@@ -18,6 +18,6 @@ Optimize the auto-mixer to work with video streams that are in square mode 1:1 (
 [cover.md](../viewers-settings/cover.md)
 {% endcontent-ref %}
 
-{% content-ref url="../viewers-settings/and-portrait.md" %}
-[and-portrait.md](../viewers-settings/and-portrait.md)
+{% content-ref url="../general-settings/and-portrait.md" %}
+[and-portrait.md](../general-settings/and-portrait.md)
 {% endcontent-ref %}
