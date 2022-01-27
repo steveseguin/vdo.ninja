@@ -67,9 +67,6 @@
 * [\&margin](general-settings/margin.md)
 * [\&maxconnections](general-settings/and-maxconnections.md)
 * [\&meterstyle](general-settings/meterstyle.md)
-* [\&midi](general-settings/midi.md)
-* [\&midiin](general-settings/midiin.md)
-* [\&midiout](general-settings/midiout.md)
 * [\&mirror](general-settings/mirror.md)
 * [\&noaudioprocessing](general-settings/noaudioprocessing.md)
 * [\&nocursor](general-settings/and-nocursor.md)
@@ -222,8 +219,17 @@
 * [\&director](viewers-settings/director.md)
 * [\&cleandirector](director-settings/cleandirector.md)
 * [\&codirector](director-settings/codirector.md)
-* [\&midiremote](director-settings/midiremote.md)
 * [\&rooms](director-settings/rooms.md)
+
+## Midi Settings
+
+* [\&midi](midi-settings/midi.md)
+* [\&midiin](midi-settings/midiin.md)
+* [\&midiout](midi-settings/midiout.md)
+* [\&midiremote](midi-settings/midiremote.md)
+* [\&midichannel](midi-settings/and-midichannel.md)
+* [\&mididevice](midi-settings/and-mididevice.md)
+* [\&midioffset](midi-settings/and-midioffset.md)
 
 ## Newly Added Parameters
 

@@ -22,12 +22,12 @@ There are numerous more hotkeys that can be used via MIDI; these are global hotk
 
 MIDI hotkeys are compatible with an Elgato Streamdeck by means of a free Streamdeck MIDI plugin.
 
-{% content-ref url="../general-settings/midi.md" %}
-[midi.md](../general-settings/midi.md)
+{% content-ref url="../midi-settings/midi.md" %}
+[midi.md](../midi-settings/midi.md)
 {% endcontent-ref %}
 
-{% content-ref url="../general-settings/midiout.md" %}
-[midiout.md](../general-settings/midiout.md)
+{% content-ref url="../midi-settings/midiout.md" %}
+[midiout.md](../midi-settings/midiout.md)
 {% endcontent-ref %}
 
 ### Bitfocus Companion
