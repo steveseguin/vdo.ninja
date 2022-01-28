@@ -1,9 +1,9 @@
 # Older releases
 
-* V16.4 (updated March 1st 2021) [https://obs.ninja/v16](https://obs.ninja/v16) [**(release notes)**](https://github.com/steveseguin/obsninja/wiki/v16.4-update-notes)
-* V16.3 (updated Feb 24th 2021) [**(release notes)**](https://github.com/steveseguin/obsninja/wiki/v16.3-update-notes)
-* V16.0 (updated January 30th 2021) [**(release notes)**](https://github.com/steveseguin/obsninja/wiki/v16-release-notes)
-* V15 (updated January 12th 2021) [https://obs.ninja/v15](https://obs.ninja/v15) [**(release notes)**](https://github.com/steveseguin/obsninja/wiki/v15-release-notes)
+* V16.4 (updated March 1st 2021) [https://obs.ninja/v16](https://obs.ninja/v16) [(release notes)](https://github.com/steveseguin/obsninja/wiki/v16.4-update-notes)
+* V16.3 (updated Feb 24th 2021) [(release notes)](https://github.com/steveseguin/obsninja/wiki/v16.3-update-notes)
+* V16.0 (updated January 30th 2021) [(release notes)](https://github.com/steveseguin/obsninja/wiki/v16-release-notes)
+* V15 (updated January 12th 2021) [https://obs.ninja/v15](https://obs.ninja/v15) [(release notes)](https://github.com/steveseguin/obsninja/wiki/v15-release-notes)
 * V14 (updated January 2nd 2021) [https://obs.ninja/v14](https://obs.ninja/v14) [(release notes)](https://github.com/steveseguin/obsninja/wiki/v14-release-notes)
 * V13.4 [https://obs.ninja/v134](https://obs.ninja/v134) [(release notes)](https://www.reddit.com/r/OBSNinja/comments/k02enh/version\_134\_of\_obsninja\_released\_change\_log\_here/)
 * V13 (updated November 16th 2020) [https://obs.ninja/v13](https://obs.ninja/v13) [(release notes)](https://www.reddit.com/r/OBSNinja/comments/jik5fk/version\_13\_released\_change\_log/)

@@ -237,6 +237,9 @@
 * [\&lightmode](newly-added-parameters/and-lightmode.md)
 * [\&square](newly-added-parameters/and-square.md)
 * [\&bigbutton](newly-added-parameters/and-bigbutton.md)
+* [\&meshcast](newly-added-parameters/and-meshcast.md)
+* [\&webcam2](newly-added-parameters/and-webcam2.md)
+* [\&screenshare2](newly-added-parameters/and-screenshare2.md)
 
 ## Misc options
 
