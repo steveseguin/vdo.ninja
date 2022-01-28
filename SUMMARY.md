@@ -240,6 +240,10 @@
 * [\&meshcast](newly-added-parameters/and-meshcast.md)
 * [\&webcam2](newly-added-parameters/and-webcam2.md)
 * [\&screenshare2](newly-added-parameters/and-screenshare2.md)
+* [\&hidesolo](newly-added-parameters/and-hidesolo.md)
+* [\&safemode](newly-added-parameters/and-safemode.md)
+* [\&hiddenscenebitrate](newly-added-parameters/and-hiddenscenebitrate.md)
+* [\&preloadbitrate](newly-added-parameters/and-preloadbitrate.md)
 
 ## Misc options
 
