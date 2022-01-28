@@ -10,4 +10,4 @@
 ### Community Support
 
 **Discord**: [https://discord.vdo.ninja](https://discord.vdo.ninja)\
-**Reddit**: [reddit.com/r/vdoninja](https://reddit.com/r/vdoninja)
+**Reddit**: [https://reddit.com/r/vdoninja](https://reddit.com/r/vdoninja)

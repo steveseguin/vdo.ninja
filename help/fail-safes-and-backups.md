@@ -2,7 +2,7 @@
 
 Low-latency Live streaming is inherently challenging, and as more remote streams that are added to a live production, the more likely a problem will occur.
 
-VDO.Ninja acknowledges these risks and attempts to mitigate them when possible.
+[VDO.Ninja](https://vdo.ninja) acknowledges these risks and attempts to mitigate them when possible.
 
 ## Back-up site
 
@@ -38,11 +38,11 @@ While self-hosting on your own servers works, you can also host VDO.Ninja on una
 
 ## Debugging tools
 
-Speed-tests and Debug tools are provided, either via the Left-Click + CTRL (command) options or at [https://vdo.ninja/speedtest](https://vdo.ninja/speedtest) . These can be useful to diagnose problems, such as whether Packet Loss is a culprit to low-quality video, and remotely determining who is at fault.
+Speed-tests and Debug tools are provided, either via the `Left-Click + CTRL` (command) options or at [https://vdo.ninja/speedtest](https://vdo.ninja/speedtest) . These can be useful to diagnose problems, such as whether Packet Loss is a culprit to low-quality video, and remotely determining who is at fault.
 
 ## Active free support
 
-There is active support on the DISCORD channel [https://discord.gg/sk4caKg](https://discord.gg/sk4caKg), Reddit, and limited support via email: steve@seguin.email If paid support is requested, there are capable users in the community who can be recommended.
+There is active support on the [DISCORD channel](https://discord.gg/sk4caKg), Reddit, and limited support via email: steve@seguin.email If paid support is requested, there are capable users in the community who can be recommended.
 
 ## Listed known issues
 

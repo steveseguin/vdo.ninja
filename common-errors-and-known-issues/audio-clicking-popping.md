@@ -1,10 +1,8 @@
 # Audio Clicking / Popping
 
+Bluetooth microphones can cause clicking/popping.
 
-
-Bluetooth microphones can cause clicking/popping
-
-VDO.Ninja uses 48kHz audio (48000hz), so any software you connect should also use 48-KHz
+[VDO.Ninja](https://vdo.ninja) uses 48kHz audio (48000hz), so any software you connect should also use 48-KHz.
 
 If you have the option with any software being connected, increase the buffer size of your audio pipeline.
 

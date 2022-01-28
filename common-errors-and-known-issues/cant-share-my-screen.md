@@ -18,7 +18,7 @@ If using the Electron Capture app, please consider loading that app with Elevate
 
 If on macOS, please be sure to give your browser system-level access in macOS to access your screen.
 
-Chrome will let you share tabs, windows, and the entire screen, although audio capture is only available via Virtual Audio device (ie: Loopback) or tab-capture. &#x20;
+Chrome will let you share tabs, windows, and the entire screen, although audio capture is only available via Virtual Audio device (ie: Loopback) or tab-capture.
 
 Safari has very limited options; it lets you capture the entire screen, and that is mostly it.
 
@@ -28,7 +28,8 @@ If on iOS, there isn't an option available to screen share from within the brows
 
 Better than Airplay though, if you can connect your iPhone to a mac via USB, QuickTime supports USB-connected access to an iPhone's camera. This does not require any downloads and offers a high-quality stream. Using a virtual audio device, you can even capture IOS audio with this method.
 
-Please refer to this guide for more details: [https://docs.vdo.ninja/guides/screen-share-your-iphone-ipad](https://docs.vdo.ninja/guides/screen-share-your-iphone-ipad)
+Please refer to this guide for more details:\
+[https://docs.vdo.ninja/guides/screen-share-your-iphone-ipad](https://docs.vdo.ninja/guides/screen-share-your-iphone-ipad)
 
 ### Android
 

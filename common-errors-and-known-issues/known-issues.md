@@ -4,12 +4,11 @@ description: Known issues or problems, bugs, and limitations
 
 # Known Issues
 
-Known issues that are most critical and up-to-date are normally listed on the main page of VDO.Ninja.\
+Known issues that are most critical and up-to-date are normally listed on the main page of [VDO.Ninja](https://vdo.ninja).\
 \
 You can also refer to the #report-bugs channel on discord, at https://discord.vdo.ninja, to see recently reported issues. I push bug fixes daily to beta, at https://vdo.ninja/beta, so give that a shot if you find a bug on the main release.
 
-Below are some links to third parties, for a list of known issues that commonly will apply to VDO.Ninja as well.  They might have some issues not yet reported here and are often up to date.\
-
+Below are some links to third parties, for a list of known issues that commonly will apply to VDO.Ninja as well. They might have some issues not yet reported here and are often up to date.
 
 [https://docs.agora.io/en/All/web\_sdk\_compatibility?platform=Web](https://docs.agora.io/en/All/web\_sdk\_compatibility?platform=Web)\
 \
@@ -25,8 +24,8 @@ Time fixes all wounds, even with Apple products.\
 \
 Below are more possible/past issues, although the list is not often curated and can be assumed to be out of date.
 
-* Grey video loaded from guest in room. Try adding \&scale=100 and remove any bitrate limits set. If the issue persists, try a different video codec (\&codec=vp9, for example) or ask the guest to connect with \&q=2 (smooth and cool).
-* All green or all purple video from a mobile device (Pixel, Samsung Galaxy) can sometimes happen with certain resolutions or orientations. Using \&scale=100 or \&scale=95 can sometimes help (viewer side), but also changing the video codec to \&codec=vp8 might help.
+* Grey video loaded from guest in room. Try adding [`&scale=100`](../viewers-settings/scale.md) and remove any bitrate limits set. If the issue persists, try a different video codec ([`&codec=vp9`](../viewers-settings/codec.md), for example) or ask the guest to connect with [`&q=2`](../source-settings/quality.md) (smooth and cool).
+* All green or all purple video from a mobile device (Pixel, Samsung Galaxy) can sometimes happen with certain resolutions or orientations. Using `&scale=100` or `&scale=95` can sometimes help (viewer side), but also changing the video codec to `&codec=vp8` might help.
 * OBS on PC can have video become corrupted if there is moderate or heavy packet loss. Changing the video codec to vp9 or h264 can fix it for moderate packet loss, but for heavy packet loss using the Electron Capture app is suggested. You can also issue keyframes with the rainbow puke button in the Director's room or refresh the viewing page, but it's a temporary fix. Ideally, fixing the packet loss itself is the ideal solution.
 * Streamlabs (SLOBS) on macOS does not currently support VDO.Ninja directly; you'll need to use the Electron Capture app or the normal OBS version instead.
 * OBS on PC can sometimes run into a Max Buffer Limit Reached error, which can cause the audio to become delayed by seconds or simply stop being captured at all. Using the Electron Capture app to capture audio can avoid this problem.
@@ -41,8 +40,3 @@ Below are more possible/past issues, although the list is not often curated and 
 * Setting an audio bitrate to 64-kbps or higher can cause video to get stuck at near-zero bitrate. I've tried to account for this bug, but setting a higher video bitrate seems to help avoid the issue as well.
 * Bluetooth headphones on macOS, especially when using battery power, can cause audio-clicking on outbound audio.
 * Safari on macOS does not have the greatest noise or echo-cancellation, causing poor audio performance. Use a Chromium-based browser instead for the best audio quality.
-
-
-
-\
-\

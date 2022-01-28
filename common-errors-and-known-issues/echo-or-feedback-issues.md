@@ -6,11 +6,11 @@ description: Guests are sometimes able to hear themselves
 
 Dealing with feedback is challenging, as the reasons are numerous, but not always obvious. Below are some common causes:
 
-* Headphones are too loud\
+* Headphones are too loud.\
 
 * Using Safari as it has poor AEC abilities; use Chrome instead.\
 
-* \&proaudio or \&stereo mode is being used. This mode will disable echo-cancellation and so you must use headphones in this mode.\
+* ``[`&proaudio`](../general-settings/stereo.md) or [`&stereo`](../general-settings/stereo.md) mode is being used. This mode will disable echo-cancellation and so you must use headphones in this mode.\
 
 * Screen-sharing the desktop /w audio capture on, especially in the case of a group room, will create nasty feedback for others.\
 
@@ -24,7 +24,7 @@ Dealing with feedback is challenging, as the reasons are numerous, but not alway
 
 * If screen sharing with desktop audio, that will create a feedback issue for guests.\
 
-* If only appearing in the OBS recording or stream, check to make sure you are not capturing the desktop's audio in OBS.  This can happen if not using "Control audio via OBS" in the OBS Browser source, capturing a screen-share into OBS, or trying to record the director's room audio with OBS.
+* If only appearing in the OBS recording or stream, check to make sure you are not capturing the desktop's audio in OBS. This can happen if not using "Control audio via OBS" in the OBS Browser source, capturing a screen-share into OBS, or trying to record the director's room audio with OBS.
 
 ![](<../.gitbook/assets/image (121) (1).png>)
 
