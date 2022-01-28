@@ -24,12 +24,6 @@ The page elements are not visible until the remote style sheet has been loaded.
 
 `&base64css`
 
-You can pass CSS as a base64-encoded string using the `&base64css` parameter. This needs to be URLComponent encoded first, and then converted to base 64.&#x20;
+You can pass CSS as a base64-encoded string using the \&base64css parameter.  This needs to be URIComponent encoded first, and then converted to base 64.&#x20;
 
 The [https://invite.vdo.ninja/](https://invite.vdo.ninja) tool has an option to do these base64 encoding steps under "General Options".
-
-Customizable director's dock for OBS example made:\
-`&css=minidirector.css`
-
-Example:\
-[https://vdo.ninja/?css=minidirector.css\&cleanoutput\&hidesolo\&director=YOURROOMNAMEHERE](https://vdo.ninja/?css=minidirector.css\&cleanoutput\&hidesolo\&director=YOURROOMNAMEHERE)
