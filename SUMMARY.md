@@ -244,6 +244,8 @@
 * [\&safemode](newly-added-parameters/and-safemode.md)
 * [\&hiddenscenebitrate](newly-added-parameters/and-hiddenscenebitrate.md)
 * [\&preloadbitrate](newly-added-parameters/and-preloadbitrate.md)
+* [\&minidirector](newly-added-parameters/and-minidirector.md)
+* [\&tz](newly-added-parameters/and-tz.md)
 
 ## Misc options
 
