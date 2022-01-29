@@ -248,6 +248,7 @@
 * [\&tz](newly-added-parameters/and-tz.md)
 * [\&hash](newly-added-parameters/and-hash.md)
 * [\&addstun](newly-added-parameters/and-addstun.md)
+* [\&screensharehide](newly-added-parameters/and-screensharehide.md)
 
 ## Misc options
 
