@@ -246,6 +246,7 @@
 * [\&preloadbitrate](newly-added-parameters/and-preloadbitrate.md)
 * [\&minidirector](newly-added-parameters/and-minidirector.md)
 * [\&tz](newly-added-parameters/and-tz.md)
+* [\&hash](newly-added-parameters/and-hash.md)
 
 ## Misc options
 
