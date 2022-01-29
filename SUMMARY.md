@@ -249,6 +249,7 @@
 * [\&hash](newly-added-parameters/and-hash.md)
 * [\&addstun](newly-added-parameters/and-addstun.md)
 * [\&screensharehide](newly-added-parameters/and-screensharehide.md)
+* [\&zoomedbitrate](newly-added-parameters/and-zoomedbitrate.md)
 
 ## Misc options
 
