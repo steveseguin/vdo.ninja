@@ -54,7 +54,7 @@
 				transition: opacity .1s linear;
 			}
 		</style>
-		<link rel="stylesheet" href="./main.css?ver=151" />
+		<link rel="stylesheet" href="./main.css?ver=152" />
 		<script type="text/javascript" crossorigin="anonymous" src="./thirdparty/adapter.min.js"></script>
 		<style id="lightbox-animations" type="text/css"></style>
 	</head>
@@ -67,7 +67,7 @@
 			<link itemprop="url" href="./media/vdoNinja_logo_full.png" />
 		</span>
 		<script  type="text/javascript" crossorigin="anonymous"  src="./thirdparty/CodecsHandler.js?ver=36"></script>
-		<script  type="text/javascript" crossorigin="anonymous" src="./webrtc.js?ver=345"></script>
+		<script  type="text/javascript" crossorigin="anonymous" src="./webrtc.js?ver=346"></script>
 		<input id="zoomSlider" type="range" style="display: none;" />
 		<div id="header">
 			
@@ -774,24 +774,30 @@
 							
 							<br />
 							<i>
-								<font style="color: red;">Known issues:</font>
+								<a href="https://docs.vdo.ninja/common-errors-and-known-issues/known-issues" title="For more known issues, click here" target="_blank"><font style="color: red;">Known issues:</font></a>
 							</i>
 							<br />
-							<li>
-								Some devices that use hardware encoding can experience video glitching; switching to VP8 or VP9 as a <a target='_blank' title='Jump to the documentation' href='https://docs.vdo.ninja/viewers-settings/codec'>codec</a> may help.
-							</li>
 							<li>
 								 Windows users, upgrading to OBS 27.2 or newer will fix video glitching issues caused by network packet loss. <a href='https://github.com/obsproject/obs-studio/releases' target="_blank">Grab the newest OBS version here</a>.
 							</li>
 							<li>
 								Samsung smartphones (A-series) may fail to publish video with some mobile browsers; try using Firefox Mobile or the native <a href='https://docs.vdo.ninja/getting-started/native-mobile-app-versions#android-download-link'>Android app</a> in these cases.
 							</li>
+							<li>
+								Some devices that use hardware encoding can experience video issues; switching to VP8 or VP9 as a <a target='_blank' title='Jump to the documentation' href='https://docs.vdo.ninja/viewers-settings/codec'>codec</a> may help.
+							</li>
+							<li>
+								iPhones continue to have random audio issues, such as lowered volume or no audio at all. These are issues that Apple needs to fix.</a>.
+							</li>
+							<li>
+								Audio may drop out in OBS Studio at random times, yet still appear active. Delete the browser source and re-create, or use the <a href="https://github.com/steveseguin/electroncapture">Electron Capture</a> app instead</a>.
+							</li>
 							<br />
 							<h4>
 								<font style="color:#daad09;">Welcome to VDO Ninja! We've rebranded!  Nothing else is changing and we're staying 100% free.</font>
 							</h4>
 							<br />
-							🎁 Welcome to v20, released December 24th. 🎄 <a target="_blank" href="https://docs.vdo.ninja/release-notes/v20">Release notes are here</a>. The previous version is <a href="https://vdo.ninja/v19/">available here</a> if you have new issues.
+							🎁 Welcome to v20, released December 24th. <a target="_blank" href="https://docs.vdo.ninja/release-notes/v20">Release notes are here</a>. The previous version is <a href="https://vdo.ninja/v19/">available here</a> if you have new issues.
 
 							<br />
 							<br />
@@ -1669,6 +1675,24 @@
 						<span data-translate="picture-in-picture">Picture-in-picture</span>
 					</a>
 				</li>
+				<li class="context-menu__item">
+					<a href="#" class="context-menu__link" data-action="fullWindow">
+						<i class="las la-external-link"></i>
+						<span data-translate="full-window">Full-window</span>
+					</a>
+				</li>
+				<li class="context-menu__item">
+					<a href="#" class="context-menu__link" data-action="Pause">
+						<i class="las la-external-link"></i>
+						<span data-translate="pause-stream">Pause stream</span>
+					</a>
+				</li>
+				<li class="context-menu__item">
+					<a href="#" class="context-menu__link" data-action="Record">
+						<i class="las la-external-link"></i>
+						<span data-translate="record-to-disk">Record to disk</span>
+					</a>
+				</li>
 			</ul>
 		</nav>
 		
@@ -1937,11 +1961,11 @@
 			// session.introOnClean = true; // this will load the page with the webcam selection screen if &push or &room is in the URL; no need to use &webcam.
 		</script>
 		<script type="text/javascript" crossorigin="anonymous" src="./thirdparty/aes.js"></script>
-		<script type="text/javascript" crossorigin="anonymous" id="lib-js" src="./lib.js?ver=256"></script>
+		<script type="text/javascript" crossorigin="anonymous" id="lib-js" src="./lib.js?ver=257"></script>
 		<!-- 
 		// If you wish to change branding, blank offers a good clean start.
 		<script type="text/javascript" id="main-js" src="./main.js" data-translation="blank"></script>
-	-->
-		<script type="text/javascript" crossorigin="anonymous" id="main-js" src="./main.js?ver=290"></script>
+		-->
+		<script type="text/javascript" crossorigin="anonymous" id="main-js" src="./main.js?ver=293"></script>
 	</body>
 </html>
