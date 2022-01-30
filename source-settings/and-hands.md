@@ -18,6 +18,6 @@ The director can dismiss the user's action.
 
 ## Related
 
-{% content-ref url="../general-settings/and-notify.md" %}
-[and-notify.md](../general-settings/and-notify.md)
+{% content-ref url="and-notify.md" %}
+[and-notify.md](and-notify.md)
 {% endcontent-ref %}
