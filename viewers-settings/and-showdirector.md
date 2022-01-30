@@ -16,11 +16,11 @@ This URL value can be added to the Director's URL (`&director=XXXX&showdirector`
 * The ability to add/remove the director's camera/audio from scenes becomes available, including a new highlight guest option, the ability to record, re-order, and more.
 * By default, a director normally won't appear in any scene link or group link, and has limited functions available.
 
-![](<../.gitbook/assets/image (109).png>)![](<../.gitbook/assets/image (93).png>)
+![](<../.gitbook/assets/image (109).png>)![](<../.gitbook/assets/image (93) (1).png>)
 
 * When a director enables their camera, while in `&showdirector` mode, they gain access to following set of options for the director's camera feed specifically:
 
-![](<../.gitbook/assets/image (116).png>)
+![](<../.gitbook/assets/image (116) (1).png>)
 
 ## Related
 

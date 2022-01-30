@@ -22,7 +22,9 @@ It will not allow the guest to increase the room bitrate's limits; only lower th
 
 I suppose while listed as a 'viewer' setting, you need to be a publisher also to access this value (as the settings button is needed).
 
-Consider using \&totalroombitrate if you wish to increase the bitrate higher than the default max of \~ 500-kbps.
+Consider using [`&totalroombitrate`](totalroombitrate.md) if you wish to increase the bitrate higher than the default max of \~ 500-kbps.
+
+![](<../.gitbook/assets/image (131).png>)
 
 ## Related
 

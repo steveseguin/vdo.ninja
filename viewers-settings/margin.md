@@ -1,20 +1,20 @@
 ---
-description: adds X px around the videos for some spacing
+description: Adds a margin around the videos in pixel
 ---
 
 # \&margin
 
 ## Options
 
-| Value            | Description        |
-| ---------------- | ------------------ |
-| (integer value)  | margin value in px |
-| (no value given) | 10 px              |
+| Value            | Description         |
+| ---------------- | ------------------- |
+| (integer value)  | margin value in px  |
+| (no value given) | margin value = 10px |
 
 ## Details
 
-Adds px around the videos for some spacing.
+Adds 10px around the videos for some spacing, by default. It can be customized.
 
-Added as a toggle to the director's room and it can be customized.
+It's also available as a toggle to the director's room.
 
-Defaults to 10px if no value is given.
+![](<../.gitbook/assets/image (125).png>)

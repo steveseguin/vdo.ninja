@@ -32,4 +32,4 @@ If you'd like to transfer a user to a new room, along with a new password or set
 
 There's an option called [`&rooms`](../../director-settings/rooms.md), which allows the director to list multiple room names via the URL. These rooms become buttons that the director can press to pre-arm the transfer button with.&#x20;
 
-![](<../../.gitbook/assets/image (130).png>)
+![](<../../.gitbook/assets/image (130) (1).png>)

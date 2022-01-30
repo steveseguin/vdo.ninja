@@ -64,7 +64,6 @@
 * [\&icefilter](general-settings/and-icefilter.md)
 * [\&label](general-settings/label.md)
 * [\&ln](general-settings/and-ln.md)
-* [\&margin](general-settings/margin.md)
 * [\&maxconnections](general-settings/and-maxconnections.md)
 * [\&meterstyle](general-settings/meterstyle.md)
 * [\&mirror](general-settings/mirror.md)

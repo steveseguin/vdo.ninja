@@ -16,6 +16,10 @@ Viewers will automatically attempt to use the server-based feed over the peer-to
 
 Unlike the [`&broadcast`](../viewers-settings/broadcast.md) flag, which uses iframes, this new server-side mode does not; it's more deeply integrated. Echo cancellation should work as a result.
 
+If publishing using `&meshcast`, I don't bother to show the viewer count, as it won't be accurate currently anyways; instead I just say you're broadcasting. I'll try to improve this in the future.
+
+![](<../.gitbook/assets/image (93).png>)
+
 ## Related
 
 * [Meshcast.io](https://meshcast.io)
