@@ -38,11 +38,9 @@ https://vdo.ninja/?room=xxxx&queue
 
 There will be a new button added to the director's view, which when pressed, loads a guest into the director's room. The guest will be able to see the director and only the director then.
 
-\
 The director can add more guests this way, kicking out those they don't want, and continue to cycle thru the queue of guests as they join the room.
 
-\
-The director can then Transfer the guest(s) to another room, and when transferred, the guests are no longer considered in 'a queue' and will be able to see everyone in that new room, and vice versa. The guest will not know which room they were transferred to, and will be unable to rejoin without joining the queue again.  You can use the "change url" button in the director's room if you wish to perma-transfer a guest to a new link.
+The director can then Transfer the guest(s) to another room, and when transferred, the guests are no longer considered in 'a queue' and will be able to see everyone in that new room, and vice versa. The guest will not know which room they were transferred to, and will be unable to rejoin without joining the queue again. You can use the "change url" button in the director's room if you wish to perma-transfer a guest to a new link.
 
 ### Exempt certain connections from the queue automatically
 
@@ -52,7 +50,7 @@ For example,  `https://vdo.ninja/?director=MyRoom123&codirector&queue&push=mainD
 
 `https://vdo.ninja/?director=MyRoom123&codirector&queue&push=coDirectorID123&view=mainDirector123`
 
-The above links allow a co-director join the room, despite the main director and co-director being in Queuing-mode. By specifying each other's stream ID as a listed view value, they can both bypass each other's queue together.
+The above links allows a co-director join the room, despite the main director and co-director being in Queuing-mode. By specifying each other's stream ID as a listed view value, they can both bypass each other's queue together.
 
 `&view` can accept a list of stream IDs.  When in `&queue` mode, `&view` allows connections to join that are not listed, but only if they are brought in via the queue. This makes it a bit of a special case for `&view`, where it otherwise is pretty strict about who connects or not.
 

@@ -12,7 +12,7 @@ This does not hide the mouse cursor for Chrome-based screen capture, as Chrome d
 \
 Works better in Windows than on macOS, due to OS-level limitations.\
 \
-If you're looking to hide the cursor while screen-recording, consider using OBS to capture and OBS Virtualcam as the source into OBS.NInja.  You can also check out: [https://github.com/rdp/screen-capture-recorder-to-video-windows-free](https://github.com/rdp/screen-capture-recorder-to-video-windows-free) as an option to turn a screen into a virtual camera without needing OBS.
+If you're looking to hide the cursor while screen-recording, consider using OBS to capture and OBS Virtualcam as the source into VDO.NInja. You can also check out: [https://github.com/rdp/screen-capture-recorder-to-video-windows-free](https://github.com/rdp/screen-capture-recorder-to-video-windows-free) as an option to turn a screen into a virtual camera without needing OBS.
 
 ## Related
 
