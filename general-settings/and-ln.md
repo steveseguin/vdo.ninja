@@ -6,18 +6,18 @@ description: Sets the interface language
 
 ## Options
 
-| Value            | Description                 |
-| ---------------- | --------------------------- |
-| ru               | Russian                     |
-| fr               | French                      |
-| ja               | Japanese                    |
-| pt               | Portuguese                  |
-| es               | Spanish                     |
-| it               | Italian                     |
-| tr               | Turkish                     |
-| uk               | Ukrainian                   |
-| (no value given) | Less verbose interface      |
-| en               | Default if \&ln not present |
+| Value            | Description                  |
+| ---------------- | ---------------------------- |
+| ru               | Russian                      |
+| fr               | French                       |
+| ja               | Japanese                     |
+| pt               | Portuguese                   |
+| es               | Spanish                      |
+| it               | Italian                      |
+| tr               | Turkish                      |
+| uk               | Ukrainian                    |
+| (no value given) | Less verbose interface       |
+| en               | Default if `&ln` not present |
 
 ## Details
 

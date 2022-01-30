@@ -8,6 +8,12 @@ description: Remote control API (HTTP-GET / WSS-based)
 
 * `&osc`
 
+## Options
+
+| Value | Description                           |
+| ----- | ------------------------------------- |
+| (key) | API KEY to control VDO.Ninja remotely |
+
 ## Details
 
 You can use this parameter to enable the HTTP/WSS remote control API for VDO.Ninja. You pass a API KEY value to the parameter, and if it matches the remote control's API KEY, then the remote control interface will be able to send commands to your VDO.Ninja session.

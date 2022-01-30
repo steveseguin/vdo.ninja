@@ -4,11 +4,13 @@ description: Cleaner output; not as clean as &cleanoutput
 
 # \&cleanish
 
-Same as [\&cleanoutput](cleanoutput.md), except it still shows the play button that allows handling gesture requirements in chrome.
-
 ## Details
 
-Still visible: Director direct overlay messages
+Same as [`&cleanoutput`](cleanoutput.md), except it still shows the play button that allows handling gesture requirements in chrome.
+
+Director direct overlay messages are still visible.
+
+When using `&cleanish` and [`&record`](../source-settings/and-record.md), you'll get the record button showing, but nothing else.
 
 ## Related
 
