@@ -250,6 +250,12 @@
 * [\&addstun](newly-added-parameters/and-addstun.md)
 * [\&screensharehide](newly-added-parameters/and-screensharehide.md)
 * [\&zoomedbitrate](newly-added-parameters/and-zoomedbitrate.md)
+* [\&cleanviewer](newly-added-parameters/and-cleanviewer.md)
+* [\&rotate](newly-added-parameters/and-rotate.md)
+* [\&screensharevideoonly](newly-added-parameters/and-screensharevideoonly.md)
+* [\&proxy](newly-added-parameters/and-proxy.md)
+* [\&signalmeter](newly-added-parameters/and-signalmeter.md)
+* [\&welcome](newly-added-parameters/and-welcome.md)
 
 ## Misc options
 

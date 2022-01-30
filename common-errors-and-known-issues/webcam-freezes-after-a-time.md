@@ -6,13 +6,11 @@ description: >-
 
 # Webcam freezes after a time
 
-If using a laptop with a USB camera, it's possible the the system is putting the camera to sleep for a split second; just enough to cause the video to freeze. This is definitely a possible cause if on a laptop, but might not be an issue for a desktop user.  Enabling performance mode in the Windows power options might help things, but you can also disable USB power savings selectively.
-
-
+If using a laptop with a USB camera, it's possible the the system is putting the camera to sleep for a split second; just enough to cause the video to freeze. This is definitely a possible cause if on a laptop, but might not be an issue for a desktop user. Enabling performance mode in the Windows power options might help things, but you can also disable USB power savings selectively.
 
 One place to is in the Windows Power Options settings, which you can find in the Power and Sleep settings pane.
 
-![](<../.gitbook/assets/image (96) (1).png>)
+![](<../.gitbook/assets/image (96) (1) (1).png>)
 
 You can also try disabling the "Allow the computer to turn off this device to save power" options in the Windows Device Manager for each USB device/host controller. (uncheck them)
 

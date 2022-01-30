@@ -22,6 +22,6 @@ If we use the following VDO.Ninja URL as a dock source, we can have VDO.Ninja au
 
 `https://vdo.ninja?webcam&vd=obs&ad=virtual&autostart&cover`
 
-![Dockable VDO.NInja, with automatic virtual webcam sharing as an option.](<../.gitbook/assets/image (96).png>)
+![Dockable VDO.NInja, with automatic virtual webcam sharing as an option.](<../.gitbook/assets/image (96) (1).png>)
 
 ![](<../.gitbook/assets/image (88).png>)

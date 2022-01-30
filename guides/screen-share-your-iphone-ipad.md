@@ -24,7 +24,7 @@ Android users can use the native VDO.Ninja Android app to screen share directly 
 
 3\. From the QuickTime Player menu, select File -> New Movie Recording.
 
-![](<../.gitbook/assets/image (92).png>)
+![](<../.gitbook/assets/image (92) (1).png>)
 
 4\. The QuickTime Player may show your laptop's webcam initially, but you can select from the hover-over menu the option to select your iPhone's video and audio as a video source instead.
 
@@ -48,7 +48,7 @@ There are several choices, although the popular ones are [Loopback ](https://rog
 
 6\. We can now start streaming to VDO.Ninja; we just need to visit the site and click Share Screen. Using Chrome or another Chromium-based browser is required, such as the Electron Capture app. Safari will not work as it lacks the ability to select a window.
 
-.![](<../.gitbook/assets/image (120).png>)![](<../.gitbook/assets/image (131).png>)
+.![](<../.gitbook/assets/image (120).png>)![](<../.gitbook/assets/image (131) (1).png>)
 
 7\. To start screen sharing, we will want to select "Window" as the capture source, and then select the QuickTime, which should be showing our iPhone.&#x20;
 
@@ -64,7 +64,7 @@ If we want to capture audio, we can also select the Blackhole virtual audio devi
 
 The view link is normally found at the top of the VDO.Ninja page, but it can be formed based on the stream ID found in the site's URL as well. You can customize it the link and add it to OBS, making sure to enable "Control audio via OBS" and ensuring the resolution matches what you want.
 
-![](<../.gitbook/assets/image (132).png>)
+![](<../.gitbook/assets/image (132) (1).png>)
 
 10\. If you want to increase the frame rate and quality of the VDO.Ninja stream, adding [`&videobitrate=6000`](../viewers-settings/bitrate.md) to the URL will increase the quality by more than double. If you're looking to stream a game, you may want to increase this value even higher, although the default bitrate is more than enough for text and basic screen sharing.
 

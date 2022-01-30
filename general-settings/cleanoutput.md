@@ -22,3 +22,6 @@ Hides many of the UI elements and pop-ups that may cause unwanted visual element
 [cleandirector.md](../director-settings/cleandirector.md)
 {% endcontent-ref %}
 
+{% content-ref url="../newly-added-parameters/and-cleanviewer.md" %}
+[and-cleanviewer.md](../newly-added-parameters/and-cleanviewer.md)
+{% endcontent-ref %}

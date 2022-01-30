@@ -15,6 +15,8 @@ Example:\
 
 In the link above, you'll notice the use of [`&css=minidirector.css`](../general-settings/css.md). You can modify that css file, hosting it yourself locally if you wanted to, allowing you to show which buttons you want. Once all setup, you can add the entire director's room as a dock directly to OBS, and even drag/drop solo links into the show with ease.
 
+![](<../.gitbook/assets/image (96).png>)
+
 ## Related
 
 {% content-ref url="../general-settings/css.md" %}
