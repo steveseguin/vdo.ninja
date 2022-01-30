@@ -22,3 +22,7 @@ If you can't hear a sound, click any button in the room. Then the sound is activ
 {% content-ref url="r2d2.md" %}
 [r2d2.md](r2d2.md)
 {% endcontent-ref %}
+
+{% content-ref url="and-hands.md" %}
+[and-hands.md](and-hands.md)
+{% endcontent-ref %}
