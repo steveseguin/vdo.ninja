@@ -255,6 +255,7 @@
 * [\&proxy](newly-added-parameters/and-proxy.md)
 * [\&signalmeter](newly-added-parameters/and-signalmeter.md)
 * [\&welcome](newly-added-parameters/and-welcome.md)
+* [\&audiolatency](newly-added-parameters/and-audiolatency.md)
 
 ## Misc options
 
