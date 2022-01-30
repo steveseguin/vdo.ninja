@@ -14,7 +14,7 @@ description: Audio alerts for raised hands, chat messages and if somebody joins 
 Add this to a guest's/director's URL and you get audio alerts for raised-hands, chat messages and if somebody joins the room.
 
 {% hint style="warning" %}
-If you can't hear a sound, click any button in the room. Then the sound is activated.
+If you can't hear a sound, click any button in the room. Then the sounds will be activated.
 {% endhint %}
 
 ## Related
