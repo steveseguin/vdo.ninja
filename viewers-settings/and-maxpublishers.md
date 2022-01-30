@@ -20,8 +20,8 @@ Limits the number of remote peer connections that are publishers.
 
 ## Related
 
-{% content-ref url="../general-settings/and-maxconnections.md" %}
-[and-maxconnections.md](../general-settings/and-maxconnections.md)
+{% content-ref url="../source-settings/and-maxconnections.md" %}
+[and-maxconnections.md](../source-settings/and-maxconnections.md)
 {% endcontent-ref %}
 
 {% content-ref url="../source-settings/and-maxviewers.md" %}

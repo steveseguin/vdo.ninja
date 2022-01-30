@@ -25,6 +25,6 @@ Useful to prevent publicly shared guest links from being crashed due to too many
 [and-maxpublishers.md](../viewers-settings/and-maxpublishers.md)
 {% endcontent-ref %}
 
-{% content-ref url="../general-settings/and-maxconnections.md" %}
-[and-maxconnections.md](../general-settings/and-maxconnections.md)
+{% content-ref url="and-maxconnections.md" %}
+[and-maxconnections.md](and-maxconnections.md)
 {% endcontent-ref %}
