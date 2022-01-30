@@ -64,6 +64,7 @@
 * [\&icefilter](general-settings/and-icefilter.md)
 * [\&label](general-settings/label.md)
 * [\&ln](general-settings/and-ln.md)
+* [\&meterstyle](general-settings/meterstyle.md)
 * [\&mirror](general-settings/mirror.md)
 * [\&noaudioprocessing](general-settings/noaudioprocessing.md)
 * [\&nocursor](general-settings/and-nocursor.md)
@@ -86,7 +87,6 @@
 * [\&tcp](general-settings/and-tcp.md)
 * [\&transparent](general-settings/and-transparent.md)
 * [\&turn](general-settings/turn.md)
-* [\&meterstyle](general-settings/meterstyle.md)
 
 ## Source settings
 
