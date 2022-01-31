@@ -29,7 +29,9 @@
 * [Hardware-accelerated video encoding](guides/hardware-accelerated-video-encoding.md)
 * [Stream into Zoom without OBS](guides/stream-into-zoom-without-obs.md)
 * [Connecting smartphone to computer via USB](guides/connecting-smartphone-to-computer-via-usb.md)
-* [Hotkey and API support](guides/hotkey-support.md)
+* [Hotkey and API support](guides/hotkey-support/README.md)
+  * [API commands](guides/hotkey-support/api-commands.md)
+  * [How to control VDO.Ninja with Touch Portal](guides/hotkey-support/how-to-control-vdo.ninja-with-touch-portal.md)
 * [Edit an invite after sending it](guides/edit-an-invite-after-sending-it.md)
 * [External guides and how-tos](guides/guides-and-how-tos.md)
 * [Highest quality video for an interview?](guides/highest-quality-video-for-an-interview.md)
@@ -42,7 +44,6 @@
 * [Use the green screen just locally](guides/use-the-green-screen-just-locally.md)
 * [Connect a GoPro to VDO.Ninja](guides/connect-a-gopro-to-vdo.ninja.md)
 * [Installing RaspNinja on Jetson](guides/installing-raspninja-on-jetson.md)
-* [How to control VDO.Ninja with Touch Portal](guides/how-to-control-vdo.ninja-with-touch-portal.md)
 
 ***
 
