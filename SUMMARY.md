@@ -258,6 +258,9 @@
 * [\&audiolatency](newly-added-parameters/and-audiolatency.md)
 * [\&recordcodec](newly-added-parameters/and-recordcodec.md)
 * [&43](newly-added-parameters/and-43.md)
+* [\&screensharetype](newly-added-parameters/and-screensharetype.md)
+* [\&autoadd](newly-added-parameters/and-autoadd.md)
+* [\&slots](newly-added-parameters/and-slots.md)
 
 ## Misc options
 
