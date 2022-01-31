@@ -18,21 +18,9 @@ Thanks to <mark style="color:red;">djlefave</mark> on [Discord](https://discord.
 
 ## More information
 
-The HTTP API uses GET-requests (not POST/PUT), and is structured in a way to be compatible with existing hotkey control software.
-
-`https://api.vdo.ninja/{apiID}/{action}/{target}/{value}`
-
-or
-
-`https://api.vdo.ninja/{apiID}/{action}/{value}`
-
-or
-
-`https://api.vdo.ninja/{apiID}/{action}`
-
-Any field can be replaced with "null", if no value is being passed to it. Double slashes will cause issues though, so avoid those.
-
-You find a list of all the commands here:
+{% content-ref url="./" %}
+[.](./)
+{% endcontent-ref %}
 
 {% content-ref url="api-commands.md" %}
 [api-commands.md](api-commands.md)
@@ -48,8 +36,4 @@ For more API examples, check out these resources:\
 
 {% content-ref url="../../general-settings/api.md" %}
 [api.md](../../general-settings/api.md)
-{% endcontent-ref %}
-
-{% content-ref url="./" %}
-[.](./)
 {% endcontent-ref %}
