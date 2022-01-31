@@ -20,7 +20,7 @@ Android users can use the native VDO.Ninja Android app to screen share directly 
 
 2\. Open the QuickTime Player on your mac.
 
-![](<../.gitbook/assets/image (90).png>)
+![](<../.gitbook/assets/image (90) (1).png>)
 
 3\. From the QuickTime Player menu, select File -> New Movie Recording.
 

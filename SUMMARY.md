@@ -42,6 +42,7 @@
 * [Use the green screen just locally](guides/use-the-green-screen-just-locally.md)
 * [Connect a GoPro to VDO.Ninja](guides/connect-a-gopro-to-vdo.ninja.md)
 * [Installing RaspNinja on Jetson](guides/installing-raspninja-on-jetson.md)
+* [How to control VDO.Ninja with Touch Portal](guides/how-to-control-vdo.ninja-with-touch-portal.md)
 
 ***
 
