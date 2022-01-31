@@ -23,3 +23,13 @@ You can control guests in the director's room, or you can control your local mic
 Please see [https://github.com/steveseguin/Companion-Ninja](https://github.com/steveseguin/Companion-Ninja) for documentation and details of this command. There is a module for Bitfocus's Companion available, along with HTTP and WSS API endpoints.
 
 Please see [https://companion.vdo.ninja](https://companion.vdo.ninja) for a sample interface to test this command out with. The Companion module is available here: [https://github.com/bitfocus/companion-module-vdo-ninja](https://github.com/bitfocus/companion-module-vdo-ninja)
+
+## Related
+
+{% content-ref url="../guides/hotkey-support.md" %}
+[hotkey-support.md](../guides/hotkey-support.md)
+{% endcontent-ref %}
+
+{% content-ref url="../guides/how-to-control-vdo.ninja-with-touch-portal.md" %}
+[how-to-control-vdo.ninja-with-touch-portal.md](../guides/how-to-control-vdo.ninja-with-touch-portal.md)
+{% endcontent-ref %}
