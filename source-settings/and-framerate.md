@@ -17,6 +17,7 @@ description: Sets the maximum frame rate of the video in frames per second
 
 ## Details
 
+Sets the maximum frame rate of the video in frames per second.\
 Actual frame rate could be less.\
 Limiting the frame rate can reduce the CPU load.\
 Limiting the frame rate can reduce bandwidth.

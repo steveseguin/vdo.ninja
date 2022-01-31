@@ -17,7 +17,7 @@ description: Sets whether audio auto-normalization is ON or OFF
 
 ## Details
 
-Your browser will try to keep optimum audio levels.
+Adding `&autogain` to a source link, sets whether audio auto-normalization is ON or OFF. Your browser will try to keep optimum audio levels.
 
 ## Related
 

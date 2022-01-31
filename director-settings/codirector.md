@@ -50,7 +50,7 @@ If the main director leaves and re-joins, or a new director joins, all the co-di
 
 If you copy and paste the main director's URL to a new browser/tab, be sure to remove the [`&push=STREAMID`](../source-settings/push.md) portion of the URL. If you do not, you will get an error about the stream ID being already in use. Each co-director and guest needs their own unique stream ID.
 
-If using the [`&queue`](../source-settings/queue.md) parameter with co-directors, you may need to use [`&view=STREAMID`](../viewers-settings/view.md) to allow the co-director to bypass the queue, else they won't be able to be validated since they will be stuck in the queue. There is more info about this in the queue's documentation.
+If using the [`&queue`](../general-settings/queue.md) parameter with co-directors, you may need to use [`&view=STREAMID`](../viewers-settings/view.md) to allow the co-director to bypass the queue, else they won't be able to be validated since they will be stuck in the queue. There is more info about this in the queue's documentation.
 
 This feature required fairly extensive changes to the code base to enable, so please report issues you may encounter.&#x20;
 

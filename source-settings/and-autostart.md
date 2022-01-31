@@ -1,5 +1,5 @@
 ---
-description: Auto starts when the camera/audio device is ready
+description: Skips the camera/audio device or screenshare selection
 ---
 
 # \&autostart
@@ -12,7 +12,7 @@ description: Auto starts when the camera/audio device is ready
 
 ## Details
 
-Useful for helping a remote guest skip-past the complex setup of their camera/audio.
+Auto starts when the camera/audio device or screenshare is ready. Useful for helping a remote guest skip-past the complex setup of their camera/audio.
 
 ## Related
 

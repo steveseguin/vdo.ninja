@@ -4,6 +4,10 @@ description: Makes the background transparent
 
 # \&transparent
 
+## Aliases
+
+* `&transparency`
+
 ## Details
 
 Makes the background for the website transparent using CSS.

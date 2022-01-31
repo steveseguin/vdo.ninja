@@ -4,6 +4,16 @@ description: Applies a generic audio compressor to the local microphone
 
 # \&compressor
 
+## Aliases
+
+* `&comp`
+
+## Details
+
+Applies a generic audio compressor to the local microphone.
+
+An audio compressor can help reduce spikes in audio loudness.
+
 {% hint style="info" %}
 The compressor is **off by default**.
 {% endhint %}
@@ -11,14 +21,6 @@ The compressor is **off by default**.
 {% hint style="warning" %}
 This will enable the audio processing pipeline.
 {% endhint %}
-
-## Aliases
-
-* `&comp`
-
-## Details
-
-An audio compressor can help reduce spikes in audio loudness.
 
 ## Related
 

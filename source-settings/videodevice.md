@@ -8,6 +8,7 @@ description: Pre-configures the selected video device
 
 * `&vdevice`
 * `&vd`
+* `&vdo`
 
 ## Options
 

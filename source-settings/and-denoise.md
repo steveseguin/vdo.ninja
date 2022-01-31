@@ -17,7 +17,7 @@ description: Turn audio noise reduction filter ON or OFF
 
 ## Details
 
-Turn audio noise reduction filter ON or OFF.
+Adding `&denoise` to a source link turns audio noise reduction filter ON or OFF.
 
 ## Related
 

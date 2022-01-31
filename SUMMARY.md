@@ -143,7 +143,7 @@
 * [\&preview](source-settings/and-preview.md)
 * [\&pusheffectsdata](source-settings/pusheffectsdata.md)
 * [\&quality](source-settings/quality.md)
-* [\&queue](source-settings/queue.md)
+* [\&queue](general-settings/queue.md)
 * [\&r2d2](source-settings/r2d2.md)
 * [\&record](source-settings/and-record.md)
 * [\&roombitrate](source-settings/roombitrate.md)
@@ -197,7 +197,7 @@
 * [\&optimize](viewers-settings/optimize.md)
 * [\&outputdevice](viewers-settings/and-outputdevice.md)
 * [\&panning](viewers-settings/and-panning.md)
-* [\&pip](viewers-settings/and-pip.md)
+* [\&pip](general-settings/and-pip.md)
 * [\&portrait](general-settings/and-portrait.md)
 * [\&ptime](viewers-settings/and-ptime.md)
 * [\&randomize](viewers-settings/randomize.md)
@@ -256,6 +256,8 @@
 * [\&signalmeter](newly-added-parameters/and-signalmeter.md)
 * [\&welcome](newly-added-parameters/and-welcome.md)
 * [\&audiolatency](newly-added-parameters/and-audiolatency.md)
+* [\&recordcodec](newly-added-parameters/and-recordcodec.md)
+* [&43](newly-added-parameters/and-43.md)
 
 ## Misc options
 

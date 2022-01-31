@@ -7,8 +7,9 @@ description: Auto mutes guest's speaker.
 ## Aliases
 
 * `&ms`
-* `speakermute`
+* `&speakermute`
 * `&sm`
+* `&speakermuted`
 
 ## Details
 

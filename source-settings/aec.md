@@ -17,6 +17,8 @@ description: Automatic echo-cancellation is ON or OFF
 
 ## Details
 
+Adding this to a push link, automatic echo-cancellation turns ON or OFF.
+
 May need to be disabled to use [`&stereo`](../general-settings/stereo.md) on some older browsers.
 
 ## Related

@@ -16,6 +16,8 @@ description: Sets the maximum height of the video allowed in pixels
 
 ## Details
 
+Sets the maximum height of the video allowed in pixels.
+
 Actual height may be less based on bandwidth allowances.
 
 Limiting the height can force the camera to use higher frame rates.
