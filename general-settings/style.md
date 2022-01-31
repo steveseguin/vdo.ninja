@@ -24,9 +24,11 @@ description: >-
 
 ## Details
 
+`&style` lets you select how media elements are displayed in OBS and for guests; audio-only elements in particular.
+
 Styles are experimental and will undergo change, tweaks, and likely there are more to come.
 
-The default style depends on numerous factors; the intent is to predict the most desirable for a given situation. Manually setting the style will override the default Defaults may be changed from time to time, based on user feedback.
+The default style depends on numerous factors; the intent is to predict the most desirable for a given situation. Manually setting the style will override the default. Defaults may be changed from time to time, based on user feedback.
 
 ## Related
 

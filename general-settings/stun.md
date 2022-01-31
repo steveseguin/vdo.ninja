@@ -8,7 +8,7 @@ description: Lets you specify a STUN server for webRTC negotiation
 
 This parameter lets you specify a STUN server for webRTC negotiation. The default STUN servers use those provided by Google, at `stun:stun.l.google.com:19302`, but with this command you can set your own.
 
-`&stun` will overwrite the existing STUN values provided by VDO.Ninja. If you wish to keep the existing STUN server options, adding additional options, or if you wish to add multiple custom STUN servers, you can use the related `&addstun` parameter. This is the same idea, but when used it won't overwrite the existing STUN options.
+`&stun` will overwrite the existing STUN values provided by VDO.Ninja. If you wish to keep the existing STUN server options, adding additional options, or if you wish to add multiple custom STUN servers, you can use the related [`&addstun`](../newly-added-parameters/and-addstun.md) parameter. This is the same idea, but when used it won't overwrite the existing STUN options.
 
 Using `&stun` and [`&addstun`](../newly-added-parameters/and-addstun.md) together will let you specify two custom STUN servers.
 

@@ -20,7 +20,7 @@ The default value is 50-pixels. You can pass other integer values to customize t
 This works great for solo-video streams where the video fits the window fully, but may not round the edges of videos that do not fit their container area. To compensate for this, using the [`&cover`](../viewers-settings/cover.md) command as well can force the video to fit the window, and hence, have the rounded edges applied correctly.\
 \
 An example of an aggressive rounded effect is with the following parameters: \
-`&view=streamID123&cover&rounded=1000`
+`https://vdo.ninja/?view=streamID123&cover&rounded=1000`
 
 ![](<../.gitbook/assets/image (79).png>)
 

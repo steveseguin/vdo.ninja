@@ -11,11 +11,10 @@ description: Display labels as a video overlay
 
 ## Details
 
-This parameter will display the user's display name or label on screen, as a text overlay.  The label can be set either via the URL using the [`&label`](label.md) parameter, or the room's director can set it dynamically via the "Add a label" option. &#x20;
+This parameter will display the user's display name or label on screen, as a text overlay. The label can be set either via the URL using the [`&label`](label.md) parameter, or the room's director can set it dynamically via the "Add a label" option. &#x20;
 
-This parameter can be used on guest links, view links, or scene links. It will be sticky to the each individual video and not the browser window as a whole.
+This parameter can be used on guest links, view links, or scene links. It will be sticky to each individual video and not the browser window as a whole.
 
-\
 Underscores "\_" used in label values will be replaced by spaces, allowing for word separation.
 
 HTML5 Emojis 🎈 and some non-Latin characters are supported.&#x20;
@@ -32,6 +31,8 @@ There are some preset style options, which can be passed to the parameter as a v
 | fire       | Fire looking display names           |
 | teams      | Microsoft Teams styled display names |
 | zoom       | Zoom styled display names            |
+
+For example: `https://vdo.ninja/?showlabels=ninjablue`
 
 If no preset option is passed, a default generic style is used.
 

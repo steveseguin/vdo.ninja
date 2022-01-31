@@ -20,7 +20,7 @@ Alternatives to relay mode include:
 
 Uses of relay mode include:
 
-* Can potentially reduce packet loss with some guests on bad connections
+* Can potentially reduce packet loss with some guests on bad connections.
 * Has the advantage of hiding your IP address from peers.
 
 You can [deploy your own TURN server](https://github.com/steveseguin/obsninja/blob/master/turnserver.md) if intending to use this feature a lot.
@@ -32,3 +32,9 @@ TCP/UDP on port 443.
 {% hint style="info" %}
 More information on what is TURN [here](https://en.wikipedia.org/wiki/Traversal\_Using\_Relays\_around\_NAT).
 {% endhint %}
+
+## Related
+
+{% content-ref url="turn.md" %}
+[turn.md](turn.md)
+{% endcontent-ref %}

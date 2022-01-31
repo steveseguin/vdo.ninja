@@ -13,7 +13,7 @@ description: >-
 
 ## Details
 
-Adding `&stereo` to the URL will apply audio-specific setting presets. For inbound audio streams, it can be used to increase the audio bitrate from 32 kbps to 256 kbps. For outbound streams, it will disable echo-cancellation and noise-reduction. When applied to both the outbound and inbound sides of an audio stream, it will also enable stereo audio if available.
+Adding `&stereo` to the URL will apply audio-specific setting presets. For inbound audio streams, it can be used to increase the audio bitrate from 32-kbps to 256-kbps. For outbound streams, it will disable echo-cancellation and noise-reduction. When applied to both the outbound and inbound sides of an audio stream, it will also enable stereo audio if available.
 
 There are a variety of different modes that apply different combination of presets. You can also override any preset with other URL parameters, such as [`&audiobitrate`](../viewers-settings/audiobitrate.md), [`&outboundaudiobitrate`](../source-settings/and-outboundaudiobitrate.md), and [`&aec=1`](../source-settings/aec.md).&#x20;
 
@@ -23,14 +23,15 @@ When using this option in a group room, you can't simply just apply this URL opt
 
 ## Options
 
-| Value | Description                                                                                           |
-| ----- | ----------------------------------------------------------------------------------------------------- |
-| 0     | will try to down-mix your mic to mono. Does not enable any pro-audio settings                         |
-| 1     | enables it for both push and view (if used on both links)                                             |
-| 2     | enables it just for viewing requests and not publishing requests                                      |
-| 3     | enables it for just publishing requests and not viewing requests                                      |
-| 4     | enables 5.1-multichannel audio support (Experimental and may require a Chrome flag to be set)         |
-| 5     | This is the default if nothing is set. It behaves like 3 or 1, depending on if you are a guest or not |
+| Value            | Description                                                                                           |
+| ---------------- | ----------------------------------------------------------------------------------------------------- |
+| 0                | will try to down-mix your mic to mono. Does not enable any pro-audio settings                         |
+| 1                | enables it for both push and view (if used on both links)                                             |
+| 2                | enables it just for viewing requests and not publishing requests                                      |
+| 3                | enables it for just publishing requests and not viewing requests                                      |
+| 4                | enables 5.1-multichannel audio support (Experimental and may require a Chrome flag to be set)         |
+| 5                | This is the default if nothing is set. It behaves like 3 or 1, depending on if you are a guest or not |
+| (no value given) | It behaves like 3 or 1, depending on if you are a guest or not                                        |
 
 ## More Details
 
@@ -63,7 +64,7 @@ If the parameter is used, but left without a value, it is treated as a special c
 
 ## Newbie mode
 
-The default mode when \&proaudio is used alone is \&stereo=5, which acts like either \&stereo=3 or \&stereo=1, depending on whether the link its applied to is a room guest or not. This option will make the most sense for most users.
+The default mode when `&stereo` is used alone is `&stereo=5`, which acts like either `&stereo=3` or `&stereo=1`, depending on whether the link its applied to is a room guest or not. This option will make the most sense for most users.
 
 | Option      | Context     | alias | aec   | autogain | denoise | stereo playback | stereo output | default ab in | max ab out | limited ab in | cbr  |
 | ----------- | ----------- | ----- | ----- | -------- | ------- | --------------- | ------------- | ------------- | ---------- | ------------- | ---- |

@@ -1,5 +1,5 @@
 ---
-description: Let's director perform alongside guests, showing up in scene-view links
+description: Lets the director perform alongside guests, showing up in scene-view links
 ---
 
 # \&showdirector
@@ -10,7 +10,7 @@ description: Let's director perform alongside guests, showing up in scene-view l
 
 ## Details
 
-This URL value can be added to the Director's URL (`&director=XXXX&showdirector`) or to the scene link (`&scene&showdirector`) you wish the director to appear in those links. You can also enable this flag a couple other ways.
+This URL value can be added to the director's URL (`&director=XXXX&showdirector`) or to the scene link (`&scene&showdirector`) when you wish the director to appear in those links. You can also enable this flag a couple other ways.
 
 * As a director, you will now appear as a performer kind of like other performers.
 * The ability to add/remove the director's camera/audio from scenes becomes available, including a new highlight guest option, the ability to record, re-order, and more.

@@ -36,7 +36,6 @@ Remote focus may also work as well by holding `CTRL` (or Command) while using th
 
 To check if a device supports zoom or focus, go to [https://obs.ninja/supports](https://obs.ninja/supports). It will show whether your browser and the selected camera supports focus/zoom.
 
-\
 If you are the one publishing with an Android device, you can hold the screen down and move your finger up or down to zoom in and out as well; you don't need a remote user or the settings menu to do this.
 
 #### Remote Statistics using `&remote`

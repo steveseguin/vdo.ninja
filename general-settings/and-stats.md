@@ -6,8 +6,10 @@ description: Shows the connection/media stats window by default
 
 ## Details
 
-On mobile, you can just rapidly touch the display to trigger the stats window instead.\
-On desktop, you can hold `CTRL` (or `CMD`) and `Left-Click` a video to get it's stats.
+Addings `&stats` to a URL, it shows the connection/media stats window by default.
 
-\
+On desktop, you can hold `CTRL` (or `CMD`) and `Left-Click` a video to get its stats.
+
+On mobile, you can just rapidly touch the display to trigger the stats window instead.
+
 The `&stats` URL parameter is for those like VMix users who might not be able to interact with the browser source.
