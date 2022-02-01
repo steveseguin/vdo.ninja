@@ -6,7 +6,7 @@ If the stream or camera _freezes_ after a while, there could be many reasons. Le
 
 If cycling the camera to a different camera, or refreshing the camera via the settings menu, fixes the issue, then this normally implies the issue is with the camera or its USB connection.
 
-As a stop-gap solution, the director has the remote control ability to toggle the camera of a guest to unfreeze it. This can be done without the guest's permission even if the [`&consent`](../advanced-settings/source-parameters/consent.md) flag is added to the guest's URL ahead of time. In a pinch, this can at least give the director some comfort to go live, fixing any stuck camera within a few seconds themselves, versus asking the guest to refresh their page.
+As a stop-gap solution, the director has the remote control ability to toggle the camera of a guest to unfreeze it. This can be done without the guest's permission even if the [`&consent`](../source-settings/consent.md) flag is added to the guest's URL ahead of time. In a pinch, this can at least give the director some comfort to go live, fixing any stuck camera within a few seconds themselves, versus asking the guest to refresh their page.
 
 If not using a group room, the publisher of a stream can also refresh their own camera via the settings menu, and clicking the refresh icon next to the camera.
 
@@ -40,7 +40,7 @@ Services like [https://speedify.com](https://speedify.cm) can offer a VPN with b
 
 Regarding mobile, iOS users can only send video to 3 viewers at a time if using the H264 hardware encoder. Newer versions of VDO.Ninja will try to keep track of how many H264 streams are being used, and revert to VP8-software-based encoding when the hardware encoders are maxed out, however VP8 encoding can cause iPhones to get very warm. If forcing H264 with an iPhone or iPad, and you max them out, you might cause videos to freeze or go black though.\
 \
-View links and scenes can sometimes can use an iPhone H264's encoder, even if the video isn't visible in OBS. If having issues, try to avoid forcing the H264 encoder or using it sparingly for only the active sources. If using [`&broadcast`](../advanced-settings/viewer-parameters/broadcast.md) mode, only the director and scenes could possibly contribute to using an H264 encoder; other guests won't have access to the guest's video stream, so they won't count towards this H264 encoder total.
+View links and scenes can sometimes can use an iPhone H264's encoder, even if the video isn't visible in OBS. If having issues, try to avoid forcing the H264 encoder or using it sparingly for only the active sources. If using [`&broadcast`](../advanced-settings/view-parameters/broadcast.md) mode, only the director and scenes could possibly contribute to using an H264 encoder; other guests won't have access to the guest's video stream, so they won't count towards this H264 encoder total.
 
 ### H264 specific issues
 

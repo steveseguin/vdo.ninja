@@ -20,13 +20,13 @@ which will cause the viewer to receive the publisher's video stream at a video b
 Multiple parameters can be appended together by using the ampersand (`&`) as a separating character.&#x20;
 {% endhint %}
 
-For example, to view the video stream published at stream ID `xxxxxxx` at a video bitrate of 500-kbps and set the [`&stereo`](../advanced-settings/general-parameters/stereo.md) parameter to `1`:
+For example, to view the video stream published at stream ID `xxxxxxx` at a video bitrate of 500-kbps and set the [`&stereo`](../general-settings/stereo.md) parameter to `1`:
 
 ```
 http://vdo.ninja/?view=xxxxxxx&bitrate=500&stereo=1
 ```
 
-Some parameters, like [`&view`](../advanced-settings/viewer-parameters/view.md) will accept a comma-separated list of valid values, so you can do some rather powerful combos, such as publish a video (using [`&push`](../advanced-settings/source-parameters/push.md)) while also viewing multiple others videos. VDO.Ninja will auto-mix the videos together into a single layout for you:
+Some parameters, like [`&view`](../advanced-settings/view-parameters/view.md) will accept a comma-separated list of valid values, so you can do some rather powerful combos, such as publish a video (using [`&push`](../source-settings/push.md)) while also viewing multiple others videos. VDO.Ninja will auto-mix the videos together into a single layout for you:
 
 ```
 http://vdo.ninja/?push=aaa&view=bbb,ccc,ddd

@@ -43,13 +43,13 @@ Something else to note about this iframe API is that it can not only be controll
 
 Some of the more interesting ones primarily for iframe users might include:
 
-* ``[`&webcam`](../advanced-settings/source-parameters/and-webcam.md)``
-* ``[`&screenshare`](../advanced-settings/source-parameters/screenshare.md)``
-* ``[`&videodevice`](../advanced-settings/source-parameters/videodevice.md)`=`1 or 0
-* ``[`&audiodevice`](../advanced-settings/source-parameters/audiodevice.md)`=`1 or 0
-* ``[`&autostart`](../advanced-settings/source-parameters/and-autostart.md)``
-* ``[`&chroma`](../advanced-settings/general-parameters/chroma.md)``
-* ``[`&transparent`](../advanced-settings/general-parameters/and-transparent.md)``
+* ``[`&webcam`](../source-settings/and-webcam.md)``
+* ``[`&screenshare`](../source-settings/screenshare.md)``
+* ``[`&videodevice`](../source-settings/videodevice.md)`=`1 or 0
+* ``[`&audiodevice`](../source-settings/audiodevice.md)`=`1 or 0
+* ``[`&autostart`](../source-settings/and-autostart.md)``
+* ``[`&chroma`](../general-settings/chroma.md)``
+* ``[`&transparent`](../general-settings/and-transparent.md)``
 * As for API, allow for dynamic messaging, below are examples of the options available:
 * Mute Speaker
 * Mute Mic
@@ -310,7 +310,7 @@ This VDO.Ninja API is developed and expanded based on user feedback and requests
 
 There's some users who wish to have an SDK instead of an IFRAME API. While an SDK may happen eventually, currently the IFRAME API is surprisingly capable.
 
-If you wish to use your own video mixer logic for example, you can disable the existing auto-mixer logic that currently exists using the [`&manual`](../advanced-settings/viewer-parameters/manual.md) flag. You can then access the `srcObject` of each of the video elements in VDO.Ninja and pull those streams into the parent frame to manipulate or to connect to the parent DOM.&#x20;
+If you wish to use your own video mixer logic for example, you can disable the existing auto-mixer logic that currently exists using the [`&manual`](../advanced-settings/view-parameters/manual.md) flag. You can then access the `srcObject` of each of the video elements in VDO.Ninja and pull those streams into the parent frame to manipulate or to connect to the parent DOM.&#x20;
 
 If you aren't self-hosting the code, you may run into cross origin permission issues. This concept works with different subdomains though, and if you ask, the option to directly reference the VDO.Ninja servers with your own DNS servers is available. Self-hosting the code in a sub-domain of your own works too.
 

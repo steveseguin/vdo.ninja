@@ -20,7 +20,7 @@ The rooms feature creates a virtual room where multiple devices can connect to s
 * There is Chrome-imposed limit of about 128 peers while using video and chat connections.
 * You will probably bump into limits sooner, as a function of video decoding processor power on the host computer and (to a lesser degree) network bandwidth.&#x20;
 
-If you want a room that can handle, (lets say 30 people even), it can be done, but everyone in the group needs good internet, a fast computer, or the room needs video previews disabled for guests. The [`&broadcast`](../../advanced-settings/viewer-parameters/broadcast.md) feature can help accomplish this, for example.
+If you want a room that can handle, (lets say 30 people even), it can be done, but everyone in the group needs good internet, a fast computer, or the room needs video previews disabled for guests. The [`&broadcast`](../../advanced-settings/view-parameters/broadcast.md) feature can help accomplish this, for example.
 
 For very large groups, >40, it is generally advised that you use regular server-based chatting service, like Google Meets, and send an VDO.Ninja invite links to each person individually. This way, you can record the individual streams of those in the Google Meet at a high resolution, but still have all the guests be able to see and hear each other.
 
@@ -39,13 +39,13 @@ Guest devices present in the Room will see and hear all other present device vid
 
 Text-chat is available to those in the room
 
-The video quality of those in a group room will appear low to guests, but this is to ensure more bandwidth and CPU resources are made available for the OBS's access to the stream. This can be changed with parameters such as [`&totalroombitrate`](../../advanced-settings/viewer-parameters/totalroombitrate.md) which lets you increase the bitrate of a room.
+The video quality of those in a group room will appear low to guests, but this is to ensure more bandwidth and CPU resources are made available for the OBS's access to the stream. This can be changed with parameters such as [`&totalroombitrate`](../../advanced-settings/view-parameters/totalroombitrate.md) which lets you increase the bitrate of a room.
 
 ### For the director... 🎬
 
 The director will be able to view the room, without joining it themselves, and they will have controls provided that will let them modify aspects of how the room shows up in their OBS. For example, they will be able to mute certain people so they can't be heard or seen in OBS.
 
-The director can also join the room if needed. Toggle the 'Director will also be a performer' option when creating a room. This can also be done by appending [`&showdirector`](../../advanced-settings/general-parameters/showdirector.md) to the director page URL.
+The director can also join the room if needed. Toggle the 'Director will also be a performer' option when creating a room. This can also be done by appending [`&showdirector`](../../viewers-settings/and-showdirector.md) to the director page URL.
 
 The director will be provided isolated direct links to each of those video streams in the group room, allowing for fine-grain mixing control in OBS.
 
@@ -65,7 +65,7 @@ The controls in the VDO.Ninja’s director room only will let you adjust the vol
 \
 You can create a solo link by hand by doing [https://vdo.ninja/?room=RID\&view=SID\&scene](https://vdo.ninja/?room=RID\&view=SID\&scene)
 
-Scene is left blank, while the [`&view`](../../advanced-settings/viewer-parameters/view.md) value is specified.\
+Scene is left blank, while the [`&view`](../../advanced-settings/view-parameters/view.md) value is specified.\
 \
 Every time you view a link, in OBS or elsewhere, you increase the load on the remote guests’s computer. Pulling more than one HD feed from a remote guest is not advisable, unless they have a capable computer and good internet connection. As a director, you can disable the preview video in the control box, freeing up a small bit more bandwidth for those connected on very weak connections. (three buttons; video off / video on / binoculars for a HD preview).
 

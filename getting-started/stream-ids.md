@@ -23,7 +23,7 @@ This isn't the case when using a password however, as the password AND the strea
 {% endhint %}
 
 {% hint style="info" %}
-You can use the [`&label`](../advanced-settings/general-parameters/label.md) property to give a name to a stream, rather than using a stream ID to do the same. Using this strategy of using securely-named stream IDs, while using labels to assign a name to a stream, will improve security and unlock new options, like lower-third display name overlays.
+You can use the [`&label`](../general-settings/label.md) property to give a name to a stream, rather than using a stream ID to do the same. Using this strategy of using securely-named stream IDs, while using labels to assign a name to a stream, will improve security and unlock new options, like lower-third display name overlays.
 {% endhint %}
 
 {% hint style="info" %}

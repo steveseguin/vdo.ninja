@@ -34,6 +34,6 @@ For more API examples, check out these resources:\
 
 ## Related
 
-{% content-ref url="../../advanced-settings/api-and-midi-parameters/api.md" %}
-[api.md](../../advanced-settings/api-and-midi-parameters/api.md)
+{% content-ref url="../../general-settings/api.md" %}
+[api.md](../../general-settings/api.md)
 {% endcontent-ref %}

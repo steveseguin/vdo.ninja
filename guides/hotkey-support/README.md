@@ -26,12 +26,12 @@ When using the Electron Capture app in elevated privilege mode, the keyboard sho
 
 ### MIDI hotkeys
 
-There are numerous more hotkeys that can be used via MIDI; these are global hotkeys, used even if the window is not visible, but they require some additional setup. You can remotely control via MIDI also, using the [`&midiout`](../../advanced-settings/api-and-midi-parameters/midiout.md) and [`&midiin`](../../advanced-settings/api-and-midi-parameters/midiin.md) routing functionality.&#x20;
+There are numerous more hotkeys that can be used via MIDI; these are global hotkeys, used even if the window is not visible, but they require some additional setup. You can remotely control via MIDI also, using the [`&midiout`](../../midi-settings/midiout.md) and [`&midiin`](../../midi-settings/midiin.md) routing functionality.&#x20;
 
 MIDI hotkeys are compatible with an Elgato Streamdeck by means of a free Streamdeck MIDI plugin.
 
-{% content-ref url="../../advanced-settings/api-and-midi-parameters/midi.md" %}
-[midi.md](../../advanced-settings/api-and-midi-parameters/midi.md)
+{% content-ref url="../../midi-settings/midi.md" %}
+[midi.md](../../midi-settings/midi.md)
 {% endcontent-ref %}
 
 ### Bitfocus Companion
@@ -46,8 +46,8 @@ There is a website that demos some of the commands available here: [https://comp
 
 You can use this to create your own hotkeys for pretty any device, application, or website.
 
-{% content-ref url="../../advanced-settings/api-and-midi-parameters/api.md" %}
-[api.md](../../advanced-settings/api-and-midi-parameters/api.md)
+{% content-ref url="../../general-settings/api.md" %}
+[api.md](../../general-settings/api.md)
 {% endcontent-ref %}
 
 ### IFRAME API

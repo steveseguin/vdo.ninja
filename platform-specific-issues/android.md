@@ -30,11 +30,11 @@ For most users, using Chrome on Android is the recommended way of connecting. Th
 
 ### Battery life
 
-If battery life or heat is an issue on Samsung or other Android devices, limiting the frame rate to 30-fps and possibly the resolution to 720p can allow the H264 hardware encoder to work ([`&codec=h264`](../advanced-settings/viewer-parameters/codec.md)). The default target frame rate of 60-fps may prevent H264 from working on some phones, causing heat issues due to software-encoding being used.&#x20;
+If battery life or heat is an issue on Samsung or other Android devices, limiting the frame rate to 30-fps and possibly the resolution to 720p can allow the H264 hardware encoder to work ([`&codec=h264`](../advanced-settings/view-parameters/codec.md)). The default target frame rate of 60-fps may prevent H264 from working on some phones, causing heat issues due to software-encoding being used.&#x20;
 
 ### Firefox
 
-Firefox on Android seems to fix a couple Chrome-specific issues. Chrome will mute the microphone after a minute if the screen is turned off, but Firefox doesn't seem to do that. With Samsung devices, Chrome combined with H264 hardware encoding may have color issues with the OBS Browser source, but that issue isn't present when using Firefox as the mobile browser. So, for Samsung devices, you might find Firefox, with [`&fps=30`](../advanced-settings/source-parameters/and-framerate.md) and `&codec=h264` as parameters (push and view side respectively), may help keep things cool.
+Firefox on Android seems to fix a couple Chrome-specific issues. Chrome will mute the microphone after a minute if the screen is turned off, but Firefox doesn't seem to do that. With Samsung devices, Chrome combined with H264 hardware encoding may have color issues with the OBS Browser source, but that issue isn't present when using Firefox as the mobile browser. So, for Samsung devices, you might find Firefox, with [`&fps=30`](../source-settings/and-framerate.md) and `&codec=h264` as parameters (push and view side respectively), may help keep things cool.
 
 ### Internal Cameras
 
@@ -48,7 +48,7 @@ For iPhone screen sharing, you can refer to this guide: [https://docs.vdo.ninja/
 
 ### Performance issues
 
-Android devices are not powerhouses; disabling video sharing for mobile users in group rooms if there are problems. More than around 7 guests in a room will probably require the Android users add [`&roombitrate=0`](../advanced-settings/source-parameters/roombitrate.md) to their URL invite links, to disable their video sharing to other group members.
+Android devices are not powerhouses; disabling video sharing for mobile users in group rooms if there are problems. More than around 7 guests in a room will probably require the Android users add [`&roombitrate=0`](../source-settings/roombitrate.md) to their URL invite links, to disable their video sharing to other group members.
 
 ### Camera selection page freezes
 
@@ -56,7 +56,7 @@ If using Android 11 and the camera selection page in VDO.Ninja freezes, push the
 
 ### Corrupted video; green or grey pixels
 
-Pixel devices have problems in Portrait mode, where the video may glitch to be all green or such at times. Using `&codec=vp9` on the viewer side or [`&scale=20`](../advanced-settings/viewer-parameters/scale.md) can offer some solutions, maybe though. Try starting the device in landscape mode, then move to portrait, also to see if that helps.
+Pixel devices have problems in Portrait mode, where the video may glitch to be all green or such at times. Using `&codec=vp9` on the viewer side or [`&scale=20`](../advanced-settings/view-parameters/scale.md) can offer some solutions, maybe though. Try starting the device in landscape mode, then move to portrait, also to see if that helps.
 
 ### External audio
 
