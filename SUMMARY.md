@@ -281,6 +281,10 @@
 * [\&hideguest](newly-added-parameters/and-hideguest.md)
 * [\&host](newly-added-parameters/and-host.md)
 
+***
+
+* [Other Parameters](other-parameters.md)
+
 ## Misc options
 
 * [\&sid](misc-options/sid.md)
