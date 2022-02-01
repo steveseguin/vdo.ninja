@@ -223,6 +223,15 @@
 * [\&codirector](director-settings/codirector.md)
 * [\&rooms](director-settings/rooms.md)
 
+## Meshcast Settings
+
+* [\&meshcast](meshcast-settings/and-meshcast.md)
+* [\&meshcastab](meshcast-settings/and-meshcastab.md)
+* [\&meshcastbitrate](meshcast-settings/and-meshcastbitrate.md)
+* [\&meshcastcodec](meshcast-settings/and-meshcastcodec.md)
+* [\&mcscreensharebitrate](meshcast-settings/and-mcscreensharebitrate.md)
+* [\&mcscreensharecodec](meshcast-settings/and-mcscreensharecodec.md)
+
 ## Midi Settings
 
 * [\&midi](midi-settings/midi.md)
@@ -239,7 +248,6 @@
 * [\&lightmode](newly-added-parameters/and-lightmode.md)
 * [\&square](newly-added-parameters/and-square.md)
 * [\&bigbutton](newly-added-parameters/and-bigbutton.md)
-* [\&meshcast](newly-added-parameters/and-meshcast.md)
 * [\&webcam2](newly-added-parameters/and-webcam2.md)
 * [\&screenshare2](newly-added-parameters/and-screenshare2.md)
 * [\&hidesolo](newly-added-parameters/and-hidesolo.md)
