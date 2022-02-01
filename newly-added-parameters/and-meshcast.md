@@ -20,6 +20,10 @@ If publishing using `&meshcast`, I don't bother to show the viewer count, as it 
 
 ![](<../.gitbook/assets/image (93).png>)
 
+Steve made a YouTube video explaining all the meshcast stuff:
+
+{% embed url="https://youtu.be/YxduINMXw1M" %}
+
 ## Related
 
 * [Meshcast.io](https://meshcast.io)

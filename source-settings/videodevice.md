@@ -34,6 +34,10 @@ See [vdo.ninja/devices](https://vdo.ninja/devices) to see the device IDs and dev
 
 ## Related
 
+{% content-ref url="../newly-added-parameters/and-vdo.md" %}
+[and-vdo.md](../newly-added-parameters/and-vdo.md)
+{% endcontent-ref %}
+
 {% content-ref url="audiodevice.md" %}
 [audiodevice.md](audiodevice.md)
 {% endcontent-ref %}

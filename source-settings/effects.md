@@ -31,3 +31,13 @@ description: Applies effects to the video/audio feeds
 Green screen doesn't require SIMD support to work, although it won't work as well without it on. There's a little warning info icon (!) if SIMD is not enabled.
 
 Please do enable Webassembly-SIMD support under `chrome://flags/` if you'd like to see a large reduction in CPU load when using this feature.
+
+## Related
+
+{% content-ref url="../newly-added-parameters/and-effectvalue.md" %}
+[and-effectvalue.md](../newly-added-parameters/and-effectvalue.md)
+{% endcontent-ref %}
+
+{% content-ref url="../newly-added-parameters/and-chunked.md" %}
+[and-chunked.md](../newly-added-parameters/and-chunked.md)
+{% endcontent-ref %}

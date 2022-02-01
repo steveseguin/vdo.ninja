@@ -264,6 +264,22 @@
 * [\&screensharetype](newly-added-parameters/and-screensharetype.md)
 * [\&autoadd](newly-added-parameters/and-autoadd.md)
 * [\&slots](newly-added-parameters/and-slots.md)
+* [\&chunked](newly-added-parameters/and-chunked.md)
+* [\&h264profile](newly-added-parameters/and-h264profile.md)
+* [\&forcelandscape](newly-added-parameters/and-forcelandscape.md)
+* [\&forceportrait](newly-added-parameters/and-forceportrait.md)
+* [\&facing](newly-added-parameters/and-facing.md)
+* [\&maxtotalscenebitrate](newly-added-parameters/and-maxtotalscenebitrate.md)
+* [\&screensharebitrate](newly-added-parameters/and-screensharebitrate.md)
+* [\&effectvalue](newly-added-parameters/and-effectvalue.md)
+* [\&noscale](newly-added-parameters/and-noscale.md)
+* [\&datamode](newly-added-parameters/and-datamode.md)
+* [\&vdo](newly-added-parameters/and-vdo.md)
+* [\&rampuptime](newly-added-parameters/and-rampuptime.md)
+* [\&blindall](newly-added-parameters/and-blindall.md)
+* [\&orderby](newly-added-parameters/and-orderby.md)
+* [\&hideguest](newly-added-parameters/and-hideguest.md)
+* [\&host](newly-added-parameters/and-host.md)
 
 ## Misc options
 

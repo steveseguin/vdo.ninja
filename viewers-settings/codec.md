@@ -19,7 +19,7 @@ description: Sets the codec to encode the video
 ****\
 ****`https://vdo.ninja/?room=xxx7654&scene=1&bitrate=2000`**`&codec=vp9`**\
 ****\
-****The **`&codec`** parameter is added to the viewer-side; so the [`&view`](view.md) or [`&scene`](scene.md) link.
+****The `&codec` parameter is added to the viewer-side; so the [`&view`](view.md) or [`&scene`](scene.md) link.
 
 ### **Description**
 
@@ -46,8 +46,8 @@ iOS devices should generally use H264, but the max resolution supported then is 
 
 macOS systems generally prefer H264 and will sometimes hardware-encode. It seems to use less CPU resources decoding H264 versus other codecs, so give it a go if facing CPU issues on your mac.
 
-As for Windows PCs, if using a Chromium-based browsers (Chrome/Edge), your system may choose to use hardware-encoding when using publishing via a H264. This typically happens at 360p or higher resolutions, but it may not always happen. You can check to see if you are hardware-encoding by checking your video out stats, via CTRL + Clicking on your video: "External Encoder" would likely indicate hardware acceleration of some sort.\
-\
+As for Windows PCs, if using a Chromium-based browsers (Chrome/Edge), your system may choose to use hardware-encoding when using publishing via a H264. This typically happens at 360p or higher resolutions, but it may not always happen. You can check to see if you are hardware-encoding by checking your video out stats, via `CTRL + Left-Click` on your video: "External Encoder" would likely indicate hardware acceleration of some sort.
+
 If you have an Nvidia graphics card, you may be limited to two or three H264 hardware encoders, which could cause problems if you intend to use NVEnc for RTMP streaming also. AMD hardware encoders may limit bitrate.
 
 On PC, while H264 encoding will use less CPU than other codecs, hardware-encoders may actually use more CPU than the software-based ones.&#x20;
@@ -58,8 +58,8 @@ Firefox on Apple M1 chips may not support H264. OperaGX may also not support H26
 
 #### Customizing H264 further
 
-Starting with VDO.Ninja v20, you can specify the flavour of H264 being used with the `&h264profile` flag.\
-\
+Starting with VDO.Ninja v20, you can specify the flavour of H264 being used with the [`&h264profile`](../newly-added-parameters/and-h264profile.md) flag.
+
 Using that parameter without specifying a particular H264 profile ID will trigger the software OpenH264 encoder to be used, blocking any hardware H264 encoder. On Windows, OpenH264 may actually use less CPU than the a hardware encoder and may side step video glitching issues.&#x20;
 
 Definitely worth trying to use this flag, in combination with `&codec=h264`, if you're looking to inch out every bit of performance, but testing is needed if going this direction.
@@ -74,8 +74,8 @@ iOS devices can stream at 1080p30 or 720p60 when using VP8, but they get warm in
 
 Google Pixel smartphones may default to VP8, using hardware-encoding, but may also face video distortion with some browsers as a result. Switching to VP9 may fix the issue.
 
-VP8 generally uses more CPU than H264, but not by a lot. Maybe there's a 5 to 15% difference? You may wish to consider using H264 if CPU load is an issue as a result.\
-\
+VP8 generally uses more CPU than H264, but not by a lot. Maybe there's a 5 to 15% difference? You may wish to consider using H264 if CPU load is an issue as a result.
+
 VP8 is highly compatible these days between devices and browsers.
 
 ### **VP9**
@@ -95,3 +95,17 @@ AV1 is the most advanced codec, but also the most CPU-intensive to use.
 Requires Chrome v90 or newer on both publisher and viewer to work. The Electron Capture app 2.6.0 and newer supports AV1, as well. OBS Studio v27.2 and newer \*may\* also support it, but as of the time of this writing, that hasn't been confirmed.
 
 Experimental at this point in time and may not perform well, but if very bandwidth constrained, it is a worthwhile option.
+
+## Related
+
+{% content-ref url="../newly-added-parameters/and-h264profile.md" %}
+[and-h264profile.md](../newly-added-parameters/and-h264profile.md)
+{% endcontent-ref %}
+
+{% content-ref url="webp.md" %}
+[webp.md](webp.md)
+{% endcontent-ref %}
+
+{% content-ref url="../newly-added-parameters/and-recordcodec.md" %}
+[and-recordcodec.md](../newly-added-parameters/and-recordcodec.md)
+{% endcontent-ref %}
