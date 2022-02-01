@@ -2,7 +2,7 @@
 
 ## Project Information and Support Links
 
-**web service URL**: [https://VDO.Ninja](https://obs.ninja)\
+**web service URL**: [https://vdo.ninja/](https://vdo.ninja)\
 **project development URL**: [https://github.com/steveseguin/vdo.ninja](https://github.com/steveseguin/vdo.ninja)\
 **developer/maintainer**: [steve@seguin.email](mailto:steve@seguin.email)\
 **donations**: [via GitHub Sponsors](https://github.com/steveseguin/obsninja/wiki/Sponsor-%E2%9D%A4)
@@ -10,7 +10,7 @@
 ### Community Support
 
 **Discord**: [https://discord.vdo.ninja](https://discord.vdo.ninja)\
-**Reddit**: [reddit.com/r/vdoninja](https://reddit.com/r/vdoninja)
+**Reddit**: [https://www.reddit.com/r/vdoninja](https://www.reddit.com/r/vdoninja)
 
 ## Where can I get support?
 
@@ -29,7 +29,7 @@ The group chat feature creates a virtual room where multiple devices can connect
 * Guests have their own link to join the chat room. They will be able to see all of those in the chatroom, including themselves. Settings to restrict what sources each group member can see or hear are also available.&#x20;
 * The 'director' will be able to view the chat room, without joining it themselves, and they will have controls provided that will let them modify aspects of how the room shows up in their OBS. For example, they will be able to mute certain people so they can't be heard or seen in OBS.
 * The director will be provided isolated direct links to each of those video streams in the group room, allowing for fine-grain mixing control in OBS.
-* Text-chat is available to those in the group chat
+* Text-chat is available to those in the group chat.
 * Passwords are available to keep rooms secure, but are optional. Passwords are not stored on any server; they are used for client-side end-to-end encryption.
 * Guests present in the Group Chat room will see and hear all other present guests video/audio streams; by default anyways.
 * The video quality of those in a group room will appear low to guests, but this is to ensure more bandwidth and CPU resources are made available for the OBS's access to the stream. You can increase the quality, but with potentially detrimental results.
