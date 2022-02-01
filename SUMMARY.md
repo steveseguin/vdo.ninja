@@ -294,6 +294,11 @@
 * [\&screensharestereo](newly-added-parameters/and-screensharestereo.md)
 * [\&screensharelabel](newly-added-parameters/and-screensharelabel.md)
 
+## Parameters only on beta
+
+* [\&autohide](parameters-only-on-beta/and-autohide.md)
+* [\&sspaused](parameters-only-on-beta/and-sspaused.md)
+
 ***
 
 * [Other Parameters](other-parameters.md)
