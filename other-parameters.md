@@ -12,8 +12,8 @@ There are some more parameters on [VDO.Ninja](https://vdo.ninja) which are curre
 | `&layout`           |                                                                                                  |
 | `&nomouseevents`    |                                                                                                  |
 | `&nonacks`          | tries to force the browser to not send keyframes, but they will be required for good performance |
-| `&nopli`            | tries to find ways to combat frame stutter caused by packet loss.                                |
-| `&noremb`           | deletes the flag for Google' bandwidth estimation tool.                                          |
+| `&nopli`            | tries to find ways to combat frame stutter caused by packet loss                                 |
+| `&noremb`           | deletes the flag for Google' bandwidth estimation tool                                           |
 | `&retry`            |                                                                                                  |
 | `&retrytimeout`     |                                                                                                  |
 | `&slot`             |                                                                                                  |
