@@ -89,3 +89,7 @@ Just for reference, the audio codec used by VDO.Ninja is OPUS (48khz), which can
 {% content-ref url="../source-settings/and-outboundaudiobitrate.md" %}
 [and-outboundaudiobitrate.md](../source-settings/and-outboundaudiobitrate.md)
 {% endcontent-ref %}
+
+{% content-ref url="../newly-added-parameters/and-screensharestereo.md" %}
+[and-screensharestereo.md](../newly-added-parameters/and-screensharestereo.md)
+{% endcontent-ref %}

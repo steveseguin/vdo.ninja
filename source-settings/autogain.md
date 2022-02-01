@@ -24,3 +24,7 @@ Adding `&autogain` to a source link, sets whether audio auto-normalization is ON
 {% content-ref url="gain.md" %}
 [gain.md](gain.md)
 {% endcontent-ref %}
+
+{% content-ref url="../newly-added-parameters/and-screenshareautogain.md" %}
+[and-screenshareautogain.md](../newly-added-parameters/and-screenshareautogain.md)
+{% endcontent-ref %}

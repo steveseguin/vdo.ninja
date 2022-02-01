@@ -8,11 +8,21 @@ description: Sets a display name label
 
 * `&l`
 
+## Options
+
+| Value            | Description                                        |
+| ---------------- | -------------------------------------------------- |
+| (no value given) | It will prompt the user for a Display Name on load |
+| (string)         | Sets the label for the guest/browser tab           |
+
 ## Details
 
-Uses the label in OBS Studio if dragging the link into OBS Studio.\
-Will change the name of the Browser tab to the Label specified.\
-Shows up in the Connection debug Stats window.\
+Uses the label in OBS Studio if dragging the link into OBS Studio.
+
+Will change the name of the Browser tab to the Label specified.
+
+Shows up in the Connection debug Stats window.
+
 If left blank, it will prompt the user for a Display Name on load.
 
 You can use [`&showlabels`](showlabels.md) to show the labels in the video sources.
@@ -21,4 +31,8 @@ You can use [`&showlabels`](showlabels.md) to show the labels in the video sourc
 
 {% content-ref url="showlabels.md" %}
 [showlabels.md](showlabels.md)
+{% endcontent-ref %}
+
+{% content-ref url="../newly-added-parameters/and-screensharelabel.md" %}
+[and-screensharelabel.md](../newly-added-parameters/and-screensharelabel.md)
 {% endcontent-ref %}

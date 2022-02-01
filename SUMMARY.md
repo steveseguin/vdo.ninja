@@ -288,6 +288,11 @@
 * [\&orderby](newly-added-parameters/and-orderby.md)
 * [\&hideguest](newly-added-parameters/and-hideguest.md)
 * [\&host](newly-added-parameters/and-host.md)
+* [\&screenshareaec](newly-added-parameters/and-screenshareaec.md)
+* [\&screensharedenoise](newly-added-parameters/and-screensharedenoise.md)
+* [\&screenshareautogain](newly-added-parameters/and-screenshareautogain.md)
+* [\&screensharestereo](newly-added-parameters/and-screensharestereo.md)
+* [\&screensharelabel](newly-added-parameters/and-screensharelabel.md)
 
 ***
 
