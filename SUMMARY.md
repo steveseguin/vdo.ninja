@@ -357,6 +357,7 @@
 
 ## Release Notes
 
+* [Releases](release-notes/older-releases.md)
 * [v20 🎁](release-notes/v20.md)
 * [v19 🚀🤯](release-notes/v19.md)
   * [v19.1 - 19.4](release-notes/v19/v19.1-19.4.md)
@@ -368,7 +369,6 @@
   * [v16.4](release-notes/v16-release-notes/v16.4-update-notes.md)
 * [v15](release-notes/v15-release-notes.md)
 * [v14](release-notes/v14-release-notes.md)
-* [Older releases](release-notes/older-releases.md)
 
 ***
 
