@@ -41,7 +41,7 @@
   * [Use the green screen just locally](guides/use-the-green-screen-just-locally.md)
   * [Connect a GoPro to VDO.Ninja](guides/connect-a-gopro-to-vdo.ninja.md)
   * [Installing RaspNinja on Jetson](guides/installing-raspninja-on-jetson.md)
-* [Advanced Options](advanced-settings.md)
+* [Advanced Options (URL Parameters)](advanced-settings.md)
   * [General Parameters](advanced-settings/general-parameters/README.md)
     * [\&blind](general-settings/blind.md)
     * [\&chroma](general-settings/chroma.md)
