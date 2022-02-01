@@ -17,12 +17,12 @@ description: Option to change outbound audio bitrate of the &meshcast parameter
 
 ## Details
 
-`&meshcastab` controls the outbound audio bitrate of the [`&meshcast`](and-meshcast.md) parameter. Without it, it will be a variable bitrate, up to 32-kbps per channel. With it added, it will be CBR, at the specified bitrate.
+`&meshcastab` controls the outbound audio bitrate of the [`&meshcast`](../newly-added-parameters/and-meshcast.md) parameter. Without it, it will be a variable bitrate, up to 32-kbps per channel. With it added, it will be CBR, at the specified bitrate.
 
 ## Related
 
-{% content-ref url="and-meshcast.md" %}
-[and-meshcast.md](and-meshcast.md)
+{% content-ref url="../newly-added-parameters/and-meshcast.md" %}
+[and-meshcast.md](../newly-added-parameters/and-meshcast.md)
 {% endcontent-ref %}
 
 {% content-ref url="and-meshcastbitrate.md" %}

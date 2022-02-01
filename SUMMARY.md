@@ -224,7 +224,7 @@
 
 ## Meshcast Settings
 
-* [\&meshcast](meshcast-settings/and-meshcast.md)
+* [\&meshcast](newly-added-parameters/and-meshcast.md)
 * [\&meshcastab](meshcast-settings/and-meshcastab.md)
 * [\&meshcastbitrate](meshcast-settings/and-meshcastbitrate.md)
 * [\&meshcastcodec](meshcast-settings/and-meshcastcodec.md)
@@ -233,14 +233,14 @@
 
 ## API & Midi Settings
 
-* [\&api](api-and-midi-settings/api.md)
-* [\&midi](api-and-midi-settings/midi.md)
-* [\&midiin](api-and-midi-settings/midiin.md)
-* [\&midiout](api-and-midi-settings/midiout.md)
-* [\&midiremote](api-and-midi-settings/midiremote.md)
-* [\&midichannel](api-and-midi-settings/and-midichannel.md)
-* [\&mididevice](api-and-midi-settings/and-mididevice.md)
-* [\&midioffset](api-and-midi-settings/and-midioffset.md)
+* [\&api](general-settings/api.md)
+* [\&midi](midi-settings/midi.md)
+* [\&midiin](midi-settings/midiin.md)
+* [\&midiout](midi-settings/midiout.md)
+* [\&midiremote](director-settings/midiremote.md)
+* [\&midichannel](midi-settings/and-midichannel.md)
+* [\&mididevice](midi-settings/and-mididevice.md)
+* [\&midioffset](midi-settings/and-midioffset.md)
 
 ## Newly Added Parameters
 

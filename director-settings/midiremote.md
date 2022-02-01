@@ -23,7 +23,7 @@ https://vdo.ninja/beta/?room=ROOMNAMEHERE&midiout=1&vd=0&ad=0&push&autostart&lab
 
 * \&midiremote={reference \&midi's values; 1 to 4}
 
-See [`&midi`](midi.md) for a link to the page with more information on available hotkeys
+See [`&midi`](../midi-settings/midi.md) for a link to the page with more information on available hotkeys
 
 {% embed url="https://www.youtube.com/watch?v=rnZ8HM9FL4I" %}
 How to remote control with MIDI
@@ -31,6 +31,6 @@ How to remote control with MIDI
 
 ## Related
 
-{% content-ref url="midi.md" %}
-[midi.md](midi.md)
+{% content-ref url="../midi-settings/midi.md" %}
+[midi.md](../midi-settings/midi.md)
 {% endcontent-ref %}

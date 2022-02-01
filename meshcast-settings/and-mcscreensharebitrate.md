@@ -18,12 +18,12 @@ description: >-
 
 ## Details
 
-`&mcscreensharebitrate` controls the outbound screen-share video bitrate of the [`&meshcast`](and-meshcast.md) parameter while screen-sharing via meshcast. It will override the [`&meshcastbitrate`](and-meshcastbitrate.md) if the video is a screen-share.
+`&mcscreensharebitrate` controls the outbound screen-share video bitrate of the [`&meshcast`](../newly-added-parameters/and-meshcast.md) parameter while screen-sharing via meshcast. It will override the [`&meshcastbitrate`](and-meshcastbitrate.md) if the video is a screen-share.
 
 ## Related
 
-{% content-ref url="and-meshcast.md" %}
-[and-meshcast.md](and-meshcast.md)
+{% content-ref url="../newly-added-parameters/and-meshcast.md" %}
+[and-meshcast.md](../newly-added-parameters/and-meshcast.md)
 {% endcontent-ref %}
 
 {% content-ref url="and-meshcastbitrate.md" %}

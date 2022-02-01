@@ -22,7 +22,7 @@ description: Option to change codec of the &meshcast parameter
 
 ## Details
 
-Adding `&meshcastcodec` to the publisher's side together with [`&meshcast`](and-meshcast.md) gives the option to change the publishing codec for meshcast.
+Adding `&meshcastcodec` to the publisher's side together with [`&meshcast`](../newly-added-parameters/and-meshcast.md) gives the option to change the publishing codec for meshcast.
 
 Example usage: `https://vdo.ninja/?meshcast&meshcastcodec=vp9&mcbitrate=500`
 
@@ -36,8 +36,8 @@ There's 4 codec options currently, including the default option:
 
 ## Related
 
-{% content-ref url="and-meshcast.md" %}
-[and-meshcast.md](and-meshcast.md)
+{% content-ref url="../newly-added-parameters/and-meshcast.md" %}
+[and-meshcast.md](../newly-added-parameters/and-meshcast.md)
 {% endcontent-ref %}
 
 {% content-ref url="and-mcscreensharecodec.md" %}

@@ -22,7 +22,7 @@ description: Option to change codec of the &meshcast parameter while screen-shar
 
 ## Details
 
-Adding `&mcsceensharecodec` to the publisher's side together with [`&meshcast`](and-meshcast.md) gives the option to change the publishing codec while screen-sharing via meshcast.
+Adding `&mcsceensharecodec` to the publisher's side together with [`&meshcast`](../newly-added-parameters/and-meshcast.md) gives the option to change the publishing codec while screen-sharing via meshcast.
 
 Example usage: `https://vdo.ninja/?meshcast&mcscreensharecodec=vp8`
 
@@ -36,8 +36,8 @@ There's 4 codec options currently, including the default option:
 
 ## Related
 
-{% content-ref url="and-meshcast.md" %}
-[and-meshcast.md](and-meshcast.md)
+{% content-ref url="../newly-added-parameters/and-meshcast.md" %}
+[and-meshcast.md](../newly-added-parameters/and-meshcast.md)
 {% endcontent-ref %}
 
 {% content-ref url="and-mcscreensharebitrate.md" %}
