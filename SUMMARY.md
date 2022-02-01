@@ -358,12 +358,14 @@
 ## Release Notes
 
 * [v20 🎁](release-notes/v20.md)
-* [v19 🚀🤯](release-notes/v19.md)
-* [v18](release-notes/v18.md)
+* [v19 🚀🤯](release-notes/v19/README.md)
+  * [v19.1 - 19.4](release-notes/v19/v19.1-19.4.md)
+* [v18](release-notes/v18/README.md)
+  * [v18.3](release-notes/v18/v18.3.md)
 * [v17](release-notes/v17-release-notes.md)
 * [v16](release-notes/v16-release-notes/README.md)
-  * [v16.4](release-notes/v16-release-notes/v16.4-update-notes.md)
   * [v16.3](release-notes/v16-release-notes/v16.3-update-notes.md)
+  * [v16.4](release-notes/v16-release-notes/v16.4-update-notes.md)
 * [v15](release-notes/v15-release-notes.md)
 * [v14](release-notes/v14-release-notes.md)
 * [Older releases](release-notes/older-releases.md)

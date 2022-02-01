@@ -30,7 +30,7 @@ Must be used in conjunction with a room parameter.&#x20;
 * When using a scene, if you manually specify a video via the [`&view`](view.md) parameter, it automatically is added to the scene.
 * Audio of videos in scenes can be controlled by the director: volume and mute are options.
 * In [v17.2](../release-notes/v17-release-notes.md) of VDO.Ninja, if using [`&view`](view.md) in a scene link, the director won't be able to remotely control the scene. This applies to solo links.&#x20;
-* In [v18](../release-notes/v18.md), you can create custom scenes, as per the video below.
+* In [v18](../release-notes/v18/), you can create custom scenes, as per the video below.
 
 {% embed url="https://www.youtube.com/embed/axgIqPcHExQ" %}
 
