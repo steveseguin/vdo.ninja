@@ -44,6 +44,25 @@ body {
 }
 ```
 
+\
+Another example of limiting the captioning-text to only use a fixed height of space when used as an overlay to OBS browser source. Just replace the OBS browser style with this code snippet instead:
+
+```
+body { background-color: rgba(0, 0, 0, 0); margin: 0px auto; overflow: hidden; }
+
+#overlayMsgs{
+    overflow: auto!important;
+    display: flex!important;
+    flex-direction: column-reverse!important;
+    height: 240px!important;
+}
+
+#overlayMsgs span {
+    text-align: left!important;
+}
+```
+
+\
 Feedback and user requests are welcomed.
 
 ### Example links and  Resources
