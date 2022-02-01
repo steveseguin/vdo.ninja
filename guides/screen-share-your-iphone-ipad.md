@@ -1,8 +1,8 @@
 ---
-description: How to screen share your iPhone or iPad to VDO.Ninja
+description: How to screen-share your iPhone or iPad to VDO.Ninja
 ---
 
-# Screen Share your iPhone / iPad
+# Screen-Share your iPhone / iPad
 
 If on iOS, there isn't an option available to screen share from within the browser or native iOS app, but you can wirelessly airplay your screen to a computer, and then window capture that output.
 

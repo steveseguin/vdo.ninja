@@ -27,7 +27,7 @@ Several new TURN servers have been added. These include new locations, such as J
 
 You can use the speed-test to select specific servers to run speed tests against. It's located at [https://vdo.ninja/speedtest](https://vdo.ninja/speedtest) with options to change server location near the bottom of the page.
 
-![](<../.gitbook/assets/image (46).png>)
+![](<../../.gitbook/assets/image (46).png>)
 
 ### Director related 🎬
 
@@ -37,7 +37,7 @@ You can use the speed-test to select specific servers to run speed tests against
 * The microphone gain, when set by the director, will persist after the performer reloads their browser. The saved setting is specific to the room and stream ID used.
 * `&thirds`/`&ruler`/`&grid` will add an overlay to the self-preview in group-mode. a rule of thirds overlay. This only works for guests added to a room or faux-room currently; not basic push-links.
 
-![Rule of Thirds overlay helps guests stay centered](<../.gitbook/assets/image (65).png>)
+![Rule of Thirds overlay helps guests stay centered](<../../.gitbook/assets/image (65).png>)
 
 * Fixed a minor issue where if using `&buffer` or `&sync` in OBS the ability to mute audio in scenes failed. Sync/buffer aren't supported in OBS yet, so using them would previously break some of the audio code needed for muting.
 * Added `&noisegate` as an option, which auto-mutes your mic if someone else is speaking already. The goal of this is to avoid echo and over-speak, so slap it on the annoying guests. Feedback welcomed.
@@ -51,24 +51,24 @@ You can use the speed-test to select specific servers to run speed tests against
   * Links, like solo links, can be dragged from the dock directly into OBS for easy access to feeds.
   * I created an alias for the default mini director stylesheet `&minidirector` if you wish to use the official one. Feedback welcomed.
 
-![](<../.gitbook/assets/image (68).png>)
+![](<../../.gitbook/assets/image (68).png>)
 
 * You can change the order of videos in the director room with these little arrows now.
   * This is not the same as mix-order; this is just for the directors order.&#x20;
   * It will impact the MIDI hotkeys targeting, since that logic is based on the directors order of videos.
 
-![](<../.gitbook/assets/image (64).png>)
+![](<../../.gitbook/assets/image (64).png>)
 
 * The 'mute in scene' director's button will now also mute solo-links; not just group scene links. This seems to align with how people want the button to work. It was trickier to get working than expected, requiring core code changes, so likely will need more testing.
 * Added a "create timer" button to the director's room; this lets you enter a time in seconds, which then appears as a count down timer for that guest. It flashes red/black when it expires. The director can remove the timer anytime.
 
-![](<../.gitbook/assets/image (57).png>)
+![](<../../.gitbook/assets/image (57).png>)
 
 * Fixed a bug with the director's settings not reflecting the correct active audio/video devices always.
 * `&webp` mode now still works if the director minimizes or changes focus on the window, without needing electron.
 * Added the ability for the director to Request a guest to upload a file to them; just them. The idea is, if the director does a remote recording, the guest can upload it after it's done saving.
 
-![](<../.gitbook/assets/image (58).png>)
+![](<../../.gitbook/assets/image (58).png>)
 
 * Fixed a bug with the scene-stats were retransmitted kbps was incorrectly labelled.
 * Added `&hidesolo` ; lets you hide the solo links from showing in the director's room.
@@ -86,7 +86,7 @@ You can use the speed-test to select specific servers to run speed tests against
   * Broadcast mode is still probably more stable, since it blocks video connections completely, but this mode can toggle between videos on and off, so more flexible.&#x20;
   * It won't appear if the director is set to 'director is a performer" mode, as there is a different button for that.
 
-![](<../.gitbook/assets/image (48).png>)
+![](<../../.gitbook/assets/image (48).png>)
 
 * The drop-down selector will select the current audio/video device also; it won't just show the first item in the list, but rather the current active one.
   * Renamed the change-camera/mic "apply" button to "request", to better reflect what's going on when change remote devices, since when you request to change a video/audio device, the remote guest needs to accept the change first.
@@ -94,11 +94,11 @@ You can use the speed-test to select specific servers to run speed tests against
   * Fixed some issues with the remote audio/video selector; when you change devices, it will clear old state more reliably and avoid a race condition so what you see is what you get.
 * If you hover over a video as a director, it provides a reminder that you can `CTRL/CMD + click` on the video for its stats. (local dev)
 
-![](<../.gitbook/assets/image (56).png>)
+![](<../../.gitbook/assets/image (56).png>)
 
 * Added the `&consent` flag, which will let the director remotely change the camera/mic source of a guest without the user's acceptance each time. Instead, it just alerts the user when they join the room. (if using `&autostart`, the message is displayed as an overlay with a message that times out after a few seconds).
 
-![](<../.gitbook/assets/image (54).png>)
+![](<../../.gitbook/assets/image (54).png>)
 
 ### Raspberry Pi, Jetson, and Python support added
 
@@ -112,7 +112,7 @@ You can use the speed-test to select specific servers to run speed tests against
 * Sample code for Linux-desktop systems is available; much more coming soon to the project.
 * [https://github.com/steveseguin/raspberry\_ninja](https://github.com/steveseguin/raspberry\_ninja) and [https://www.youtube.com/watch?v=J0qqXxHNU\_c](https://www.youtube.com/watch?v=J0qqXxHNU\_c)
 
-![](<../.gitbook/assets/image (78).png>)
+![](<../../.gitbook/assets/image (78).png>)
 
 ### General changes, fixes, and new features
 
@@ -139,9 +139,9 @@ You can use the speed-test to select specific servers to run speed tests against
   * These new multi-track setting options are available to both remote director and publisher
   * You can hold `CTRL` (or cmd) to select multiple audio tracks as a publisher.
 
-![Publisher's new settings for multi-track audio](<../.gitbook/assets/image (72).png>)
+![Publisher's new settings for multi-track audio](<../../.gitbook/assets/image (72).png>)
 
-![Director's new remote settings controls of multi-track audio](<../.gitbook/assets/image (73).png>)
+![Director's new remote settings controls of multi-track audio](<../../.gitbook/assets/image (73).png>)
 
 * Using `&wc2` or `&ss2`, or using `&wc` or `&ss` **AND** `&intro` together, will show the "Share your Camera" or "Share your screen" button before asking the user to select camera/screen options. This preps the user for the permissions popup that comes next, but does add an extra button to press.
 * Changed the error message seen for mobile users, if the camera request times out. The other desktop-focused error made no sense for mobile users, so the messaging is more helpful.
@@ -156,7 +156,7 @@ You can use the speed-test to select specific servers to run speed tests against
 * The viewer of a stream has "quality limitation reason" added to the stats page of a video, along with info on when the encoder is hardware-based.
   * This should help debugging of guests , as you'll be able to better tell if issues are caused by packet loss or an overloaded CPU. This info was previously-sender side only.
 
-![](<../.gitbook/assets/image (66).png>)
+![](<../../.gitbook/assets/image (66).png>)
 
 * Added a button that lets a guest share a file with everyone in the group. While I am testing this, the button is shown by default in the control bar, but it can be disabled with `&nofileshare` or `&nodownloads`.
   * When someone shares a file with you, it will be listed in the Chat window as a download link; at least for now.
@@ -164,7 +164,7 @@ You can use the speed-test to select specific servers to run speed tests against
   * The option to share a file (and not as a media stream) is now provided also in the `&fileshare` mode. It's a bit crude at this point, but should work in a pinch. (located at bottom of the _stream media file_ page).
   * If exiting (hangup), the app will prompt you to let you know if there are any active downloads are in progress; it will confirm if you want to stop them and exit.
 
-![](<../.gitbook/assets/image (59).png>)
+![](<../../.gitbook/assets/image (59).png>)
 
 * Audio-optimizations: In scene 1, audio bitrate drops to 16-kbps when not active (video to 400-kbps). In every other scene (2 or custom, etc), when not active, audio and video bitrate drops to 0.
   * You can override all this logic I'm using for pre-loading bitrates of videos in scenes now with `&preloadbitrate=500` or whatever, where the value is in kbps. `0` is off. `-1` is unlocked.
@@ -174,7 +174,7 @@ You can use the speed-test to select specific servers to run speed tests against
 * Added a `&safemode` option for guests. This has the guest's camera start in a rather basic fashion, which might help solve problems with certain camera not being able to use VDO.Ninja.&#x20;
   * Added to the director's customization options as well, under "Compatibility mode".
 
-![](<../.gitbook/assets/image (47).png>)
+![](<../../.gitbook/assets/image (47).png>)
 
 * The existing `&cover` parameter will now additionally force the preview video on mobile devices to fill the entire screen when streaming. Normally, the preview video during streaming is smaller to allow for the control bar to have its own space on the screen. With `&cover` added, the control bar floats on top of the video.&#x20;
 * Added a pop up notification to confirm with the user that they intended to exit/reload the \&push page.&#x20;
@@ -190,7 +190,7 @@ You can use the speed-test to select specific servers to run speed tests against
 * Added `&rounded` as another stylistic function, which rounds the edges of videos, but it currently only works if the window fits the video's aspect ratio correctly, so its a bit half-assed right now.
 * Not sure if this change is great UX, but it should make things more secure. The password-entry field for incoming guests uses asterisks now. I just see so many twitch streamers screen sharing when not realizing it, seems like a requirement.
 
-![](<../.gitbook/assets/image (60).png>)
+![](<../../.gitbook/assets/image (60).png>)
 
 * When a guest shares a screen while in a room, the label of the webcam feed will carry over to the screen share label as well now. This was a requested change; not 100% sure about it, but makes enough sense I guess.
 * Fixed an issue where the mini self preview would get hidden or go all awkward in size when using the `&broadcast` mode.
@@ -205,7 +205,7 @@ You can use the speed-test to select specific servers to run speed tests against
   * Fixed an issue where on android, using the digital video effect caused some android devices problems with changing cameras.
 * Reworked the stats bar; breaking things down into details. Outbound connections, audio out, video out, scenes connected, total upload bitrate, and if you're overloaded, it will say CPU OVERLOADED.
 
-![](<../.gitbook/assets/image (51).png>)
+![](<../../.gitbook/assets/image (51).png>)
 
 * Removed the option to select digital video filters, unless `&effects` is added to the URL.
 * Spatial group-chat audio added via the `&panning` parameter (`&pan`).&#x20;
@@ -218,11 +218,11 @@ You can use the speed-test to select specific servers to run speed tests against
 * Improved the digital video effects/filters so they work more often when the Chrome tab is running in the background. (applies to effects 4, 5, and 6)
 * Added a 3D face effect; I still need to handle 'clean up', in particular when switching between different filters/effects, but the core functionality has been added. THREE.js-based. `&effects=11` is the primary new effect, which is an anonymous face mask. Many more are coming, although this release is largely just a proof of concept; you should be able to add your own effects at some point.
 
-![](<../.gitbook/assets/image (53).png>)
+![](<../../.gitbook/assets/image (53).png>)
 
 * Added beta support to the [invite.vdo.ninja](https://invite.vdo.ninja) link generator; also you can obfuscate view links now.
 
-![](<../.gitbook/assets/image (52).png>)
+![](<../../.gitbook/assets/image (52).png>)
 
 * I updated the MIDI sample page; made it a bit more like the IFRAME sample page, with test buttons and such.&#x20;
   * Check it out at [https://vdo.ninja/midi](https://vdo.ninja/midi)
@@ -232,20 +232,20 @@ You can use the speed-test to select specific servers to run speed tests against
   * Added a few more midi hotkey commands; up to scene 8 is available now.
   * Documentation has been updated and did a Youtube video demoing it all: [https://youtu.be/rnZ8HM9FL4I](https://youtu.be/rnZ8HM9FL4I) (edited)
 
-![](<../.gitbook/assets/image (62).png>)
+![](<../../.gitbook/assets/image (62).png>)
 
 * Created a demo web app for the sensor data parameter, along with an example of how to access video data from the Iframe API. Video included on how to use it.
   * Demos how you can access the video data from a VDO.Ninja child iFrame from the parent window. This demos a rather unknown capability of iFrames, which can be quite powerful.
   * &#x20;[https://vdo.ninja/examples/sensors](https://vdo.ninja/examples/sensors)
   * &#x20;[https://www.youtube.com/watch?v=SqbufszHKi4](https://www.youtube.com/watch?v=SqbufszHKi4)
 
-![Panoramic photo taken in real-time using the gyroscopic sensor and video data obtained from VDO.Ninja](<../.gitbook/assets/image (63).png>)
+![Panoramic photo taken in real-time using the gyroscopic sensor and video data obtained from VDO.Ninja](<../../.gitbook/assets/image (63).png>)
 
 * Based on a request, added the stream ID to the remote monitor stats page.
   * This tool lets you remotely track the video quality of video streams in a graphical way.
   * Previous details on this feature can be found here: [https://docs.vdo.ninja/release-notes/v17-release-notes#remote-monitoring-support-added](https://docs.vdo.ninja/release-notes/v17-release-notes#remote-monitoring-support-added)
 
-![](<../.gitbook/assets/image (67).png>)
+![](<../../.gitbook/assets/image (67).png>)
 
 ### Electron Capture app
 
@@ -258,16 +258,16 @@ The Electron Capture app is made by Steve and is a downloadable app that functio
 * As an experimental addition, `&q=-1` (negative 1) will allow for screen share to capture the display at the same resolution as the display, rather than being capped at 1080p or whatever. This feature is Electron Capture specific.
 * Added the ability for the Electron Capture app to change audio, video, and audio output destinations via the right-click menu, dynamically. Elevated privilege's are needed and only works with VDO.Ninja.
 
-![](<../.gitbook/assets/image (61).png>)
+![](<../../.gitbook/assets/image (61).png>)
 
 * Added 32-bit Windows systems support also to the portable version (for older systems).
 * Added a button for twitch and youtube that full-windows videos, making them ideal for window capture. (not the same as full-screen)
 
-![](<../.gitbook/assets/image (49).png>)
+![](<../../.gitbook/assets/image (49).png>)
 
 * The right click menu now has an option for muting the electron window. Works with any website.
 
-![](<../.gitbook/assets/image (50).png>)
+![](<../../.gitbook/assets/image (50).png>)
 
 ### Companion Ninja (previously OSC.Ninja)
 
@@ -289,11 +289,11 @@ The Electron Capture app is made by Steve and is a downloadable app that functio
 * The option to share the OBS virtual cam is supported, allowing for the remote director to not only control OBS, but see the output in real-time using VDO.Ninja's video streaming.
 * This concept expands on the basic websocket plugin, as it works across firewalls without needing to install anything additionally or having to change networking settings.
 
-![Login and Password for OBS websocket plugin](<../.gitbook/assets/image (69).png>)
+![Login and Password for OBS websocket plugin](<../../.gitbook/assets/image (69).png>)
 
-![Connected to Websocket plugin; leave the window for remote directors to route commands to OBS](<../.gitbook/assets/image (70).png>)
+![Connected to Websocket plugin; leave the window for remote directors to route commands to OBS](<../../.gitbook/assets/image (70).png>)
 
-![The remote director sees this view; options to change scenes, outputs, and settings are available.](<../.gitbook/assets/image (71).png>)
+![The remote director sees this view; options to change scenes, outputs, and settings are available.](<../../.gitbook/assets/image (71).png>)
 
 ### Chat Overlay Ninja
 
@@ -316,90 +316,13 @@ The Electron Capture app is made by Steve and is a downloadable app that functio
 
 * The console shows some developer tips to help with common issues.
 
-![](<../.gitbook/assets/image (55).png>)
+![](<../../.gitbook/assets/image (55).png>)
 
 * Fixed a typo within some of the translation files, regarding a parameter option in the director's room.
 * Minor polish; the "copy this URL into your browser" text fits better on small screens now, leaving more room for the video itself.
 * Added some text to the 'remote record' button to let the director know it's experimental still; should have a backup record going.
 
-### Version 19.x - 19.4 incremental updates
-
-* `&optimize=0` won't cause iPhones to freeze on scene changes.
-* Fixed an issue with scenes.
-* `&cover` should now fill the screen with the preview camera if just sending video; and not just receiving any.
-* Improved the video bitrate preload logic of scenes.
-* Manually adding guests to scenes should have them join with a higher quality than before.&#x20;
-* Scene 1 acts the same as all other scene types now; that is, when a guest is not added to a scene, it's bitrate is 0 (encoder paused if possible). Please provide feedback is you see any regressions with it.&#x20;
-* For the first 4 seconds of a guest connecting and not yet added to a scene, their video will invisibly run at 1000-kbps. It will then fall back to 0 (paused) after that 4 seconds if still not added to the scene. This is what I call "preloading" a video.&#x20;
-* The outcome of this is that the browser (chrome at least) has more time to figure out available bandwidth allowances, so when the video is actually added to the scene, playback can start closer to 1000-kbps, instead of at a blocky 35 to 300-kbps.&#x20;
-* The logic for pausing and adding a video to a scene seems quick enough to me that scene=1 probably doesn't need to have videos always playing the background; testing and feedback is welcomed though.
-* The `&hiddenscenebitrate=400` flag can be used to force videos not added yet to a scene to run at the specified bitrate (400-kbps or whatever; which is what scene=1 was set to previously).
-* The `&preloadbitrate=1000` flag can be used to change the pre-load target bitrate; you can set this higher or lower, or set to 0 to disable pre-loading all together. I'd strongly _avoid_ setting this to 0, as it can cause the video to stall out all together.
-* If using meshcast, you can share the view link into VDO.Ninja or elsewhere, and have the audio be muted by default using the `&muted` (`&mute`) command.
-* Using `&codirector` should now work with `&queue`, so long as the main director has `&view=xxxxxxxx` added to their URL, where xxxxxxx is the co-director's streamID.
-* Using `&queue` with `&view` are now compatible, where `&view` acts a bit like an exemption from the queue, but does not block users from the queue from being pulled in too.
-* When a co-director refreshes their browser page, it should have the main-director re-authorize that co-director within a couple seconds now; instead of having to wait like 10 seconds.
-* I had some requests for branded vdo.ninja stickers or such, so I put up a store for people to order some from: [https://www.redbubble.com/shop/ap/88897940](https://www.redbubble.com/shop/ap/88897940) I'm leaving the commission earning at 0% for now, since profit isn't the motive here.
-* Fixed an issue with windows XP not being compatible as of a few days ago. Just switched SSL providers and it should be resolved now (on production) and made some related change.
-* Fixed an issue where the dedicated screen share mode wasn't showing the mute mic button.
-* [https://vdo.ninja/examples/esports](https://vdo.ninja/examples/esports) did a code example for making your own video switcher of sorts, using the VDO.Ninja iframe. the example was written specifically for esports, where you might want to switch between dozens of face cams in an e-sports tourney, but can be expanded into a custom video mixer.
-* Fixed/improved the `&limittotalbitrate` option; it's a tricky one to do well, but will continue to improve based on feedback. (tries to limit the total outbound bitrate)
-* Basque langauge added&#x20;
-* Added initial support for assisted server-side broadcasting for guests. to use, add the `&meshcast` flag to the guest's URL; viewers will automatically attempt to use the server-based feed over the peer-to-peer feed. Peer to peer is still used to send data though, and it can be optionally be used for sending audio p2p. (lower latency). The hybrid audio/video option is still being developed though..
-  * This feature uses meshcast.io for restreaming, so there are locations in north america and europe currently, and its free to use.
-  * Unlike the `&broadcast` flag, which uses iframes, this new server-side mode does not; it's more deeply integrated. Echo cancellation should work as a result.
-  * Currently the bitrate/codec is fixed though, which is the downside of using servers, along with typically higher latency.
-* Added initial iOS safari support for the digital video effects
-* Added the `&rotate` command; rotates the camera 90-deg by default, or specify =180 or =270 to rotate more. rotates your video for the guests/obs as well. he rotation uses CSS; it will not work in full-screen, and the control-bar gets rotated also. Some browsers might have issues, too.
-* Fixed an issue where if the director highlighted their own director's feed, it would black out scenes.
-* Added an alias for `&showdiector`; `&sd`
-* Added an alias for `&scene`; `&scn`
-* Added the option to grab the director's solo link, when not in \&showdirector mode.
-* Made solo links editable (right-click -> edit)made the group scene draggable into OBS: [https://invite.vdo.ninja/](https://invite.vdo.ninja) The link generator now supports the base64 CSS encoding option. Feature contributed by @jcalado.
-* Fixed the known bugs with the updated \&activespeaker=1 and 2 functions
-* If you add \&showdirector to a scene link, it will allow that scene to include the director's camera, even if the director doesn't have the \&showdirector flag added
-* Added `&base64css` (`&b64css`) as an option, courtesy of @jcalado and requested by @leb. This command lets you add css to VDO.Ninja via the URL, but as a single string, so no external reference to a file is needed. \
-  \
-  Example usage: [https://vdo.ninja/beta/?base64css=JTIzbWFpbm1lbnUlN0JiYWNrZ3JvdW5kLWNvbG9yJTNBJTIwcGluayUzQiUyMCVFMiU5RCVBNA](https://vdo.ninja/beta/?base64css=JTIzbWFpbm1lbnUlN0JiYWNrZ3JvdW5kLWNvbG9yJTNBJTIwcGluayUzQiUyMCVFMiU5RCVBNA) \
-  \
-  You can create the base64 encoding using \
-  \
-  `btoa(encodeURIComponent(csshere))`, \
-  \
-  for example \
-  \
-  `window.btoa(encodeURIComponent("#mainmenu{background-color: pink; ❤" ));` \
-  \
-  will return the base64 encoded string required. Special non-latin characters are supported with this approach; not just latin characters.
-* Added the `&groupaudio`(`&ga`) flag , which is for the \&group feature added recently to beta. This `&groupaudio` flag just allows for inbound audio playback, irrespective of the group a guest/scene is in. Could be useful for a dating-show concept, where you might want two guests to talk to each other, but not see each other until some reveal.
-* Fixed an issue where when sharing a website as a guest to a group, and the director highlighted that website/guest, the iframe window of that shared website wouldn't full screen for guests.
-* Added a new feature that I guess i am calling groups (or sub-groups?). The idea is, you can put guests of a room into sub-groups. When added to a sub group, those guests will only be able to see and hear others in that same sub group. Guests can be assigned to multiple subgroups. Groups can be specified via the URL using `&group=1,5,6` or/and the director can dynamically assign sub-groups, as seen in the attached image. If not in a group, that guest will still see/hear everyone, regardless of which group they are in, even if a guest in another group may not be able to see/hear that guest back. Scenes can be put into groups as well, via the URL group option, such `&group=3` , but the director will not be able to dynamically change which group a scene is in. Not yet at least. Using this group function is an alternative to transfer rooms, however it's perhaps less secure, as a guest could just tinker with their URL parameters or just refresh their page to perhaps see everyone in the room again.
-* Added `&scenetype=3` to beta. Usage is like this: `?scene&room=asdfasdfsdfsf3232&scenetype=3&order=1`, where `&order=N` is optional. This feature isn't set in stone yet, but the general idea is it will only show the video that is in a particular ordered position (default, position = 1), rather than all the videos in the scene. When someone leaves, the spots are recalculated. The order that the positions are based on is calculated via alphanumeric sorting of connection IDs, though I wish to improve this to be probably sync with the director's order. anyways, this feature was a result of a user request.
-* Added the ability to include desktop audio capture with screen share via the Electron Capture app; or even just select the desktop audio without the video capture itself.
-  * By default, audio capture is included when sharing a screen/window, but can be unchecked to not include
-  * This audio is "desktop audio". Window or tab specific audio capture is not supported still.
-* If a user has a remote video in picture-in-picture mode, when they "full window" another video (highlight/focus, etc), the picture-in-picture video will now remain active
-* Improved `&activespeaker`; it now has two modes. `&activespeaker=1` (default) and `&activespeaker=2`
-  * `&activespeaker=1` will only show one speaker at a time; the loudest or last-loud speaker.
-  * `&activespeaker=2` will show whoever is talking; mixed together. If no one is talking, just shows yourself.
-  * In both cases, if someone else is talking/active, your local preview will become a mini-preview in the top right.
-* Improved the `&noisegate` feature; reacts a bit faster now.
-* Added additional noise gate modes:&#x20;
-  * `&noisegate=1` (default) will mute the microphone when someone else is speaking&#x20;
-  * `&noisegate=2` will mute the speakers when you are talking&#x20;
-  * `&noisegate=3` will mute the speakers when someone else is talking (mainly for debugging)
-* Added a "reset to default" for the advanced video settings. If you make change, like to brightness, you can reset to the original state again afterwards.
-* When sharing a website (like as a director), the last website shared is remembered, so when you toggle sharing off and on again, the previously used URL will still be there.
-* Added the option to change video quality (resolution) dynamically via the settings menu.
-* Added `&miconly` as an option, which is just an alias of `&vd=0&webcam` It also hides the option to select a video device via the settings menu and hides the 'mute camera' button.
-* Created a sample IFRAME-based app to demo how to make a custom VDO.Ninja interface for mobile. The app just makes a custom big mute button that overlays the iframe; lets the guest toggle the mic mute state via the iframe API with it. You can make your own custom control bar for guests this way. Tested on iPhone and seems to work fine there. [https://vdo.ninja/examples/bigmutebutton](https://vdo.ninja/examples/bigmutebutton)
-* You can set the dark mode via the URL params now also. ie: [https://vdo.ninja/beta/?darkmode=1](https://vdo.ninja/beta/?darkmode=1), [https://vdo.ninja/beta/?darkmode=0](https://vdo.ninja/beta/?darkmode=0), [https://vdo.ninja/beta/?lightmode](https://vdo.ninja/beta/?lightmode) or the default will be whatever the system is set to.
-* Aligned the IFRAME API and the Companion API, so the IFRAME API now also is fully compatible with the GET/WSS API. This also means there is some documentation for the IFRAME API, along with a slew of Director-specific commands.
-* Added a first pass at a Simplified Chinese translation to beta; using Google translate, so it's not the best. [https://vdo.ninja/beta/?ln=cn](https://vdo.ninja/beta/?ln=cn)
-* Added a dog-ears/nose 3D face effect, an also a mesh-face effect.
-* Manual editing of the URL is possible now; right-click -> edit
-
-### Thank you to all the sponsors, volunteers, and contributors 🥰
+## Thank you to all the sponsors, volunteers, and contributors 🥰
 
 A few of the faces and names are listed below; those who have helped report bugs, provided feedback, answered support questions, contributed code, or sponsored the project -- you're all rock stars to me. 😎\
 \
@@ -407,8 +330,8 @@ Thank you, sincerely,
 
 \~ Steve Seguin
 
-![](<../.gitbook/assets/image (75).png>)
+![](<../../.gitbook/assets/image (75).png>)
 
-![](<../.gitbook/assets/image (77).png>)
+![](<../../.gitbook/assets/image (77).png>)
 
-![](<../.gitbook/assets/image (76).png>)
+![](<../../.gitbook/assets/image (76).png>)

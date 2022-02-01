@@ -22,7 +22,7 @@ description: Version 18 release notes; released May 28th, 2021
 
 * Added a "share website" button to the director's room. In broadcast mode, it will show the website full-screen, and revert back to the webcam once the website is taken down. You do not need to share your mic/cam to start screen sharing.
 
-![Useful for broadcasting the video to the group using a third-party video sharing CDN, such as the provided meshcast.io](<../.gitbook/assets/image (9).png>)
+![Useful for broadcasting the video to the group using a third-party video sharing CDN, such as the provided meshcast.io](<../../.gitbook/assets/image (9).png>)
 
 * Double clicking on the volume slider for a guest will set the gain to 100.
 * Director can now list and change audio/video devices remotely, including speaker output of remote guests. Guests will be prompted to Accept the change-request though, for privacy reasons.
@@ -30,11 +30,11 @@ description: Version 18 release notes; released May 28th, 2021
 * Fixed an issue where sharing a website as a director showed up in the scene.
 * Added a new button to the director's room that lets the director to dynamically change the Total Room Bitrate with a slider. Higher the quality, the more stress the guests and director will face. It will likely need some tweaking.
 
-![](<../.gitbook/assets/image (7).png>)
+![](<../../.gitbook/assets/image (7).png>)
 
 * You can use custom-scene names now, instead of just 0 to 8, and the buttons for these scenes will auto-appear if it detects the scene is available.
 
-![](<../.gitbook/assets/image (8).png>)
+![](<../../.gitbook/assets/image (8).png>)
 
 * ~~the room's broadcast mode publish h264 video by default now, instead of whatever the browser decides (normally vp8). This might reduce CPU load? You can set a codec on the guest's end to override this~~ \[Update: This change has been reverted, as it was using up all the NVidia hardware encoder allowances]
 * When you refresh the director's room, your toggle-settings at the top are kept and restored, so you can refresh the director's room without losing your settings. Creating a new room (via the main page) will clear those saved settings though.
@@ -42,17 +42,17 @@ description: Version 18 release notes; released May 28th, 2021
 * Added `&directorchat` (`&dc`), which will cause chat messages to go to ONLY the director.
 * Added icons for video mute and raised-hands to the director's room.
 
-![](<../.gitbook/assets/image (15).png>)
+![](<../../.gitbook/assets/image (15).png>)
 
 * Added a few more toggles for scenes; portrait mode, chroma-green, 'fit video to area'.&#x20;
 * Improved the blind-feature (added a backup-blinding method call) and provided some messaging for the end-user.
 
-![](<../.gitbook/assets/image (13).png>)
+![](<../../.gitbook/assets/image (13).png>)
 
 * `&cover` can be used to have a video be zoomed in and cropped, so it fills its window area completely. Useful if you don't want any gaps between videos.
 * `&fadein=500` is a new parameter; also available as a director's room toggle. Has videos fade in smoothly; 500 = 500ms fade in time.
 
-![](<../.gitbook/assets/image (12).png>)
+![](<../../.gitbook/assets/image (12).png>)
 
 * `&tips` will show a help-screen on the guest joining (via @jcalado). Also a toggle in the director's room is available to enable this.
 * Got rid of some flicker when removing a guest from a `scenetype=2`.
@@ -60,11 +60,11 @@ description: Version 18 release notes; released May 28th, 2021
 * Just to avoid possible confusion or any unforeseen edge case, the director will get a warning if one of their user-requests get rejected due to a director-permission issue.
 * When Audio Processing is disabled, I now "disable" the mute and volume options. At the moment, these require the audio processing subsystem, so if it's not active, you can't change the gain setting. Depending on much of a problem this is, I can create another method of muting. (gain control strictly needs the web audio node tho, if on the publisher end, and not viewer end)
 
-![](<../.gitbook/assets/image (14).png>)
+![](<../../.gitbook/assets/image (14).png>)
 
 * Added `&margin`, which adds 10px around the videos for some spacing. Added as a toggle to the director's room and it can be customized. Defaults to 10px.
 
-![](<../.gitbook/assets/image (11).png>)
+![](<../../.gitbook/assets/image (11).png>)
 
 * If the director sets `&trb` within their URL, it now will change the total room bitrate dynamically for connected guests in the room to that value. So, `?director=rrr&trb=1000` will have the video quality double (as the default is 500 normally).
 * Added a somewhat experimental flag `&ltb` or `&limittotalbitrate`, which _tries_ to limit the total outbound bitrate to some max total value, via the publisher's side. This could be useful if you are broadcasting video as a director to the room, but only have a fixed amount of upload bandwidth or CPU. \
@@ -84,7 +84,7 @@ description: Version 18 release notes; released May 28th, 2021
 * The last link used is stored in the Electron Capture app now, for easier use.&#x20;
 * Updated electron capture to support 60-fps screen capture.
 
-![The Electron Capture app homepage got a facelift, via @jcalado.](<../.gitbook/assets/image (10).png>)
+![The Electron Capture app homepage got a facelift, via @jcalado.](<../../.gitbook/assets/image (10).png>)
 
 ### Miscellaneous changes
 
@@ -117,8 +117,7 @@ description: Version 18 release notes; released May 28th, 2021
     * `&midiin={midi output device index; defaults to all}` (or `&midipull` / `&mi`) -- allows for receiving of remote midi. Device indeces starts at 1, where an index of 0 implies "all".
     * `&midiout={midi input device index; defaults to all}` (or `&midipush` / `&mo`) -- allows for sending of remote midi. Device indices starts at 1, where an index of 0 implies "all".
     * It's important to not send and receive between two tabs locally if from the same midi device, as that will create a feedback loop; computer won't like it.
-    * Check the console log or [https://vdo.ninja/midi](https://vdo.ninja/midi) to see which midi device is what device index.\
-
+    * Check the console log or [https://vdo.ninja/midi](https://vdo.ninja/midi) to see which midi device is what device index.
 
 ### Personal handshake server option
 
@@ -126,98 +125,3 @@ description: Version 18 release notes; released May 28th, 2021
 * A socket server has been developed and provided that can be used as a personal handshake server for this use case. Documentation included:\
   [https://github.com/steveseguin/websocket\_server](https://github.com/steveseguin/websocket\_server)
 * Support for piesocket.com has also been added as a third-party handshake-server service option. If using piesocket, you can just do `&pie=APIKEY` to use that service, without deploying any code or servers yourself. The free tier is quite generous and I have no affiliation with them.
-
-## v18.3
-
-This release of VDO.Ninja is the culmination of a few weeks of work, with the focus of it being on fixing reported issues and adding general polish.&#x20;
-
-### Feature Highlights
-
-* `&animate` and `&fadein` offer new styling options for scenes, which hint at what's to come in future versions
-* Sharing Iframes within VDO.Ninja, like a Twitch chat window, works much better now.
-* The tally-light system was cleaned up and made less obtrusive.
-* Mobile devices can cycle the camera with a single button press now.
-* The mini preview window, if in broadcast mode, can be dragged around now.
-
-### Updates and features in this release
-
-* Turn server added to Australia, Sydney.
-* Media file-sharing fixes added. ie) play button shows in the control-bar when video-sharing. It's possible to use it in a group room (by adding `&fileshare&view` to an invite link).
-* When a director refreshes their page when sharing an iFrame (website), the guest will not have the iFrame reset also, at least if in broadcast mode. The director can actually disconnect completely, and the existing guests will still be able to watch/engage with the iFrame until the director reconnects and stops the share. Changing rooms or creating a new room manually will delete this saved setting (works as the director store the state of the iFrame sharing if resetting the page, as if it was a room setting).&#x20;
-* Fixed an issue where that chat button showed up too early when `&chatbutton` was used.
-* `&tallyoff`, `&obsoff`, `&oo`, or `&disableobs` will disable the tally light (can be used in either OBS view link or by the publisher/guest).
-* Got rid of "STAND BY" as a tally light state. While I've kept the ACTIVE/ONAIR options, I've made them smaller, less pronounced, and they auto-hide if the window-size is small.
-* The director's ability to lower the hand remotely now correctly clears the little hand icon on the director's view.
-* The help/translate buttons won't cover up the iFrame windows now, so remote videos can be full-screened easier now.
-* Certain types of iFrames were not allowing for full-screening, so I fixed that I think.
-* Meshcast.io should work with Firefox and safari viewers now, if that was an issue for anyone before.
-* Fixed fade-in effects, plus added motion transitions when elements are added/removed/moved.
-* Fixed an issue where the auto-mixer starting state sometimes broke or was delayed.
-* Added the `&animated` (`&animate`) flag, which turns on the animation effect.&#x20;
-* Added the option to animate the scene remixing as an opt-in toggle now. As a reminder, this feature will have videos slide around when the scene gets re-arranged. I think it's slick looking.
-
-![](<../.gitbook/assets/image (20).png>)
-
-* User input prompts and confirm popups are mostly now replaced with HTML-based async versions. This means that passwords, labels, and popups that allow the director to change mic/url/camera won't be blocked by the browser/extensions. It also will allow me to start styling them better.
-* Popups will make a "beep" sound, if you have the `&beep` flag on.
-* Fixed an issue with Electron Capture where on macOS the prompts were hidden behind the main window (due to being always on top).&#x20;
-* You can "inject" custom CSS into the electron capture window via the right-click menu now also.
-* Fixed a superficial issue were scenes would appear as guests in some self-deployed setups.
-* Added a link to the docs for those wanting to capture window-specific audio during screen sharing.
-* Created the subdomain [isolated.vdo.ninja](https://isolated.vdo.ninja), mirrors the main site, but has the webserver's CORS headers set so that 'web isolation' is enabled.
-* [vdo.ninja/convert](https://vdo.ninja/convert) will now redirect to isolated.vdo.ninja/convert. This fixes an issue with FFmpeg running in the browser with Chrome +v91.
-* Fixed an issue where the closed captions broke at 500-characters of constant chat.
-* Closed captions are now no longer all-caps; but a bit more normal capitalized.
-* You can now use `&autostart&screenshare=SomeWindowTitleName` to match and auto start window-capture with the Electron Capture app + VDON. Will match on starts-with or else contains the string. (not just screen support, but window support now)
-* Moved the close/send buttons of the private messaging window to the top, in case director is zoomed in too much.
-* Made a few YouTube videos the past few days, including:
-  * fixed a bug in the self-deployed pie hosted logic
-  * solo scenes were not as solo as I expected
-* Here I'm looking at the performance of Nvidia Jetson Nano and XavierNX mini PCs ($69 and up) with VDO.Ninja. The TLDR; is you can get between 360p and 1080p30 VP8 output working with them. [https://youtu.be/Hcp7MvIKycU](https://youtu.be/Hcp7MvIKycU)
-* Did a mic review video; I'm timestamping a link to the part of the video though where I show how to connect the XLR mic to an iPhone or Android device, and that it can be made to work with VDO.Ninja:&#x20;
-  * [https://youtu.be/Xv2eMO-tkQM?t=545](https://youtu.be/Xv2eMO-tkQM?t=545)&#x20;
-  * Won't work with every mic interface, but it can be made to work with some.
-* Fixed an issue with electron capture's positioning and made it more user tolerant; `elecap -x 0` now works if you want to use it that way, for example. electron capture v2.1.1.
-* I made the video's control bar less likely to appear when you move your mouse over the video, especially if the video is a scene; this wasn't an issue for OBS users, but it should address an issue a Vmix user reported.
-* Added `&nospeakerbutton` or `&nsb` as a URL option; this just hides the speaker mute button from the lower control bar.
-* Added `&disableobs` and `&notally`; so two different commands now.
-* Added some added alias also. (`&to`, `&tallyoff`, `&disabletally`) `&notally` can be added to the guest side to hide the tally light, but not impact OBS-triggered optimizations `&disableobs` will still impact the tally light, but it's mainly for the OBS viewer/scene side, and using it disables both OBS level optimizations and the tally light.
-* Fixed an issue where the tally light was still appearing in some cases, when \&disableobs (I forgot that `ele.style.display ="none!important";` doesn't work).
-* Added about 45 new UI text elements to the language translation files, including the text contained in alert, prompt, and confirm popups, along with some more director buttons. More of the dynamically changing text elements retain the correct translations now.
-* Fixed an issue where if you do `&nopreview` on iOS, the video doesn't actually send. (some odd iOS glitch; the fix that works seems to render the self-preview, but render it off-screen so its not visible)
-* `&ssid` if left blank, will add the __ `_screenshare` suffix to screen shares while in a group room.
-
-![](<../.gitbook/assets/image (21).png>)
-
-![](<../.gitbook/assets/image (22).png>)
-
-* If you hold `CTRL` when clicking solo talk, only the director will be able to hear that guest also. So the director and that selected guest can listen to others, but also talk privately between themselves. Without `CTRL + click`, it works as normal.
-* There's a little status bar that appears for the guest so they know they are in this mode. If the director or guest refresh, things reset back to normal.
-* The director can also now have Multiple solo-modes going, rather than just one at a time now
-* The `&bigbutton` command is slightly improved. I'd like to think it's at least usable now, despite still being something from a nightmare.
-
-![](<../.gitbook/assets/image (23).png>)
-
-* You can now embed twitch stream chat (via the pop up link) into a group room for sharing.&#x20;
-  * This includes support for the dark-mode twitch chat.
-  * When posting in the Twitch pop-up chat link, VDO.Ninja automatically rewrites the link to be embed-compatible.
-* `&screenshareid` is added as a toggle to the director's room
-* The password/label popups now auto-focus on the input field or submit button; pressing enter submits. (easier UX)
-* Fixed an issue with pixel phones and hardware encoding; trying to combat the green screen / tearing problems. also noticed that there are some upcoming challenges with android 12 beta, so trying to prep for those too.
-* The speed-test now lets you select a location to test against; there's a few available to choose from:
-
-![](<../.gitbook/assets/image (25).png>)
-
-* Fixed a couple bugs with iFrame sharing; also making it so the director can see the link being shared.
-* Director can now treat an iFrame as a video source; adding/removing from a scene. Remember that there is `&noiframe` available as a command to block iFrames from loading, for more fine control.
-* By request, when the director mutes you, you get a little banner notice that you were muted by the director.
-* You can drag the mini-preview around; clicking it full-screens.
-* Fixed a bug where the director's `&ad=0` mode wasn't working.&#x20;
-* Added a "change to next camera source" button; only appears on mobile devices though. Animates with a 180-deg spin when it's changing camera sources, as there is some delay between flipping camera sources.
-
-![](<../.gitbook/assets/image (26).png>)
-
-* Fixed a rare bug where if you could click "start" too early (possible if the browser had a non-system default camera selected as its default), causing possible problems.
-* Fixed a bug where Firefox didn't let you change audio sources (a firefox update depreciated some code of mine).
-* If no camera is selected, the little blank basic preview window has a soft semi-transparent background now to make things visually nicer.
-* I hide the site's domain name in the header if not VDO.Ninja's main domain, by request.
