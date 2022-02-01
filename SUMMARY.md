@@ -52,7 +52,6 @@
 
 ## General Settings
 
-* [\&api](general-settings/api.md)
 * [\&blind](general-settings/blind.md)
 * [\&chroma](general-settings/chroma.md)
 * [\&cleanish](general-settings/cleanish.md)
@@ -232,15 +231,16 @@
 * [\&mcscreensharebitrate](meshcast-settings/and-mcscreensharebitrate.md)
 * [\&mcscreensharecodec](meshcast-settings/and-mcscreensharecodec.md)
 
-## Midi Settings
+## API & Midi Settings
 
-* [\&midi](midi-settings/midi.md)
-* [\&midiin](midi-settings/midiin.md)
-* [\&midiout](midi-settings/midiout.md)
-* [\&midiremote](director-settings/midiremote.md)
-* [\&midichannel](midi-settings/and-midichannel.md)
-* [\&mididevice](midi-settings/and-mididevice.md)
-* [\&midioffset](midi-settings/and-midioffset.md)
+* [\&api](api-and-midi-settings/api.md)
+* [\&midi](api-and-midi-settings/midi.md)
+* [\&midiin](api-and-midi-settings/midiin.md)
+* [\&midiout](api-and-midi-settings/midiout.md)
+* [\&midiremote](api-and-midi-settings/midiremote.md)
+* [\&midichannel](api-and-midi-settings/and-midichannel.md)
+* [\&mididevice](api-and-midi-settings/and-mididevice.md)
+* [\&midioffset](api-and-midi-settings/and-midioffset.md)
 
 ## Newly Added Parameters
 

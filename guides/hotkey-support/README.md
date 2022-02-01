@@ -6,11 +6,19 @@ description: Some keyboard hotkeys
 
 ### Basic hotkeys
 
-`CTRL (cmd) + M` will mute your mic
+`CTRL + M` => Mute your mic (audio output)
 
-`CTRL (cmd) + B` will mute your video output
+`CTRL + B` => Mute your video output
 
-`SHIFT + ALT + C` will toggle the control bar that's normally at the bottom of the screen.
+`SHIFT + ALT + C` => Toggle the control bar that's normally at the bottom of the screen.
+
+`CTRL + ALT + F` => Open the file-sharing window
+
+`CTRL + ALT + C` => Cycle the camera to the next camera available
+
+`CTRL + ALT + S` => Open the screen-sharing window
+
+\[On macOS use `CMD` instead of `CTRL`]
 
 When using the above keyboard short-cuts, the tab/window must be actively in focus.
 
@@ -18,12 +26,12 @@ When using the Electron Capture app in elevated privilege mode, the keyboard sho
 
 ### MIDI hotkeys
 
-There are numerous more hotkeys that can be used via MIDI; these are global hotkeys, used even if the window is not visible, but they require some additional setup. You can remotely control via MIDI also, using the [`&midiout`](../../midi-settings/midiout.md) and [`&midiin`](../../midi-settings/midiin.md) routing functionality.&#x20;
+There are numerous more hotkeys that can be used via MIDI; these are global hotkeys, used even if the window is not visible, but they require some additional setup. You can remotely control via MIDI also, using the [`&midiout`](../../api-and-midi-settings/midiout.md) and [`&midiin`](../../api-and-midi-settings/midiin.md) routing functionality.&#x20;
 
 MIDI hotkeys are compatible with an Elgato Streamdeck by means of a free Streamdeck MIDI plugin.
 
-{% content-ref url="../../midi-settings/midi.md" %}
-[midi.md](../../midi-settings/midi.md)
+{% content-ref url="../../api-and-midi-settings/midi.md" %}
+[midi.md](../../api-and-midi-settings/midi.md)
 {% endcontent-ref %}
 
 ### Bitfocus Companion
@@ -38,8 +46,8 @@ There is a website that demos some of the commands available here: [https://comp
 
 You can use this to create your own hotkeys for pretty any device, application, or website.
 
-{% content-ref url="../../general-settings/api.md" %}
-[api.md](../../general-settings/api.md)
+{% content-ref url="../../api-and-midi-settings/api.md" %}
+[api.md](../../api-and-midi-settings/api.md)
 {% endcontent-ref %}
 
 ### IFRAME API
