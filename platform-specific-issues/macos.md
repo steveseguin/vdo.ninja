@@ -4,7 +4,7 @@
 As of January 2021, OBS for macOS now supports VDO.Ninja natively. Update to OBS v26.1.2 for macOS to obtain access.
 {% endhint %}
 
-Please not that only H264 hardware decoding is supported, so you may wish to specify [`&codec=h264`](../viewers-settings/codec.md) in your OBS view links to reduce CPU load.
+Please not that only H264 hardware decoding is supported, so you may wish to specify [`&codec=h264`](../advanced-settings/viewer-parameters/codec.md) in your OBS view links to reduce CPU load.
 
 For those using older versions of OBS or StreamLabs, I recommend instead using the Electron Capture app to assist: [https://github.com/steveseguin/electroncapture](https://github.com/steveseguin/electroncapture). Follow the link for instructions and files.
 
