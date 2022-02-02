@@ -19,9 +19,6 @@ There are some more parameters on [VDO.Ninja](https://vdo.ninja) which are curre
 | `&slot`             |                                                                                                  |
 | `&speedtest`        | forces essentially UDP mode, unless TCP is specified, and some other stuff                       |
 | `&viewereffect`     |                                                                                                  |
-| `&waitimage`        |                                                                                                  |
-| `&waitmessage`      |                                                                                                  |
-| `&waittimeout`      |                                                                                                  |
 | `&wss`              |                                                                                                  |
 
 There is a Google Sheet of all parameters available:\

@@ -38,6 +38,10 @@ To make up a valid stream ID of your own though, choose something with less than
 
 A stream ID must also not already be in active use, else you will be provided with an error.
 
+{% content-ref url="getting-started/cheat-sheet-of-basic-parameters.md" %}
+[cheat-sheet-of-basic-parameters.md](getting-started/cheat-sheet-of-basic-parameters.md)
+{% endcontent-ref %}
+
 ## Navigating the available setting options
 
 We've broken down the available URL parameters into nine parts:
