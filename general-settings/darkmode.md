@@ -1,5 +1,5 @@
 ---
-description: Darkens the website and interface
+description: Darken the website and interface, or force-disable the dark-mode if it enables
 ---
 
 # \&darkmode

@@ -1,3 +1,9 @@
+---
+description: >-
+  Allows you to set a series of buttons on a MIDI controller to be mute controls
+  for those guests
+---
+
 # \&midioffset
 
 ## Options
