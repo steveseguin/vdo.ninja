@@ -1,7 +1,5 @@
 ---
-description: >-
-  Hides the mouse cursor over videos at a CSS level; useful for Electron Capture
-  window capturing purposes.
+description: Hides the mouse cursor over videos at a CSS level
 ---
 
 # \&nocursor
