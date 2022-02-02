@@ -1,5 +1,5 @@
 ---
-description: Applies a generic audio limiter to the local microphone.
+description: Applies a generic audio limiter to the local microphone
 ---
 
 # \&limiter

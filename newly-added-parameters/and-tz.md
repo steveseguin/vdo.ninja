@@ -1,5 +1,7 @@
 ---
-description: Specifies a negative timezone value in minutes for a TURN server
+description: >-
+  Use the &tz command to specify a negative timezone value in minutes for a TURN
+  server
 ---
 
 # \&tz

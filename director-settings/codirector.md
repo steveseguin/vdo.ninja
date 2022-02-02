@@ -1,7 +1,7 @@
 ---
 description: >-
-  Allows assistant directors to have access to the director's room, with a
-  subset of control
+  Allow assistant directors to have access to the director's room, with a subset
+  of control
 ---
 
 # \&codirector

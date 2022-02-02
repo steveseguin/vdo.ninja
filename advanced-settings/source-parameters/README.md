@@ -2,80 +2,80 @@
 
 **Source Settings**, which are settings specific to publishing, so these are things related to customizing the camera and microphone. The parameters can be added to a publishing link, like for example a guest, a director or just a basic push link.
 
-| Parameter                                                                        | Explanation |
-| -------------------------------------------------------------------------------- | ----------- |
-| ``[`&push`](../../source-settings/push.md)``                                     |             |
-| ``[`&aec`](../../source-settings/aec.md)``                                       |             |
-| ``[`&audiodevice`](../../source-settings/audiodevice.md)``                       |             |
-| ``[`&audiogain`](../../source-settings/gain.md)``                                |             |
-| ``[`&autogain`](../../source-settings/autogain.md)``                             |             |
-| ``[`&autostart`](../../source-settings/and-autostart.md)``                       |             |
-| ``[`&channelcount`](../../source-settings/channelcount.md)``                     |             |
-| ``[`&chatbutton`](../../general-settings/chatbutton.md)``                        |             |
-| ``[`&compressor`](../../source-settings/and-compressor.md)``                     |             |
-| ``[`&consent`](../../source-settings/consent.md)``                               |             |
-| ``[`&cursor`](../../source-settings/consent.md)``                                |             |
-| ``[`&denoise`](../../source-settings/and-denoise.md)``                           |             |
-| ``[`&device`](../../source-settings/and-device.md)``                             |             |
-| ``[`&directorchat`](../../source-settings/directorchat.md)``                     |             |
-| ``[`&easyexit`](../../source-settings/easyexit.md)``                             |             |
-| ``[`&effects`](../../source-settings/effects.md)``                               |             |
-| ``[`&equalizer`](../../source-settings/and-equalizer.md)``                       |             |
-| ``[`&fileshare`](../../source-settings/and-fileshare.md)``                       |             |
-| ``[`&forceios`](../../source-settings/and-forceios.md)``                         |             |
-| ``[`&framerate`](../../source-settings/and-framerate.md)``                       |             |
-| ``[`&fullscreen`](../../source-settings/fullscreen.md)``                         |             |
-| ``[`&grid`](../../source-settings/grid.md)``                                     |             |
-| ``[`&hands`](../../source-settings/and-hands.md)``                               |             |
-| ``[`&height`](../../source-settings/and-height.md)``                             |             |
-| ``[`&hidemenu`](../../viewers-settings/and-hidemenu.md)``                        |             |
-| ``[`&intro`](../../source-settings/intro.md)``                                   |             |
-| ``[`&limiter`](../../source-settings/and-limiter.md)``                           |             |
-| ``[`&limittotalbitrate`](../../source-settings/limittotalbitrate.md)``           |             |
-| ``[`&lowcut`](../../source-settings/lowcut.md)``                                 |             |
-| ``[`&maxbitrate`](../../source-settings/maxbitrate.md)``                         |             |
-| ``[`&maxconnections`](../../source-settings/and-maxconnections.md)``             |             |
-| ``[`&maxframerate`](../../source-settings/and-maxframerate.md)``                 |             |
-| ``[`&maxviewers`](../../source-settings/and-maxviewers.md)``                     |             |
-| ``[`&micdelay`](../../source-settings/and-micdelay.md)``                         |             |
-| ``[`&miconly`](../../source-settings/miconly.md)``                               |             |
-| ``[`&minipreview`](../../source-settings/and-minipreview.md)``                   |             |
-| ``[`&mute`](../../source-settings/and-mute.md)``                                 |             |
-| ``[`&mutespeaker`](../../source-settings/and-mutespeaker.md)``                   |             |
-| ``[`&nofileshare`](../../source-settings/nofileshare.md)``                       |             |
-| ``[`&noisegate`](../../source-settings/noisegate.md)``                           |             |
-| ``[`&nomicbutton`](../../viewers-settings/nomicbutton.md)``                      |             |
-| ``[`&nopreview`](../../source-settings/and-nopreview.md)``                       |             |
-| ``[`&nosettings`](../../source-settings/and-nosettings.md)``                     |             |
-| ``[`&nospeakerbutton`](../../source-settings/and-nospeakerbutton.md)``           |             |
-| ``[`&notify`](../../source-settings/and-notify.md)``                             |             |
-| ``[`&novideobutton`](../../viewers-settings/and-novideobutton.md)``              |             |
-| ``[`&nowebsite`](../../source-settings/nowebsite.md)``                           |             |
-| ``[`&order`](../../source-settings/order.md)``                                   |             |
-| ``[`&outboundaudiobitrate`](../../source-settings/and-outboundaudiobitrate.md)`` |             |
-| ``[`&outboundvideobitrate`](../../source-settings/and-outboundvideobitrate.md)`` |             |
-| ``[`&pcm`](../../source-settings/and-pcm.md)``                                   |             |
-| ``[`&ptz`](../../source-settings/ptz.md)``                                       |             |
-| ``[`&preview`](../../source-settings/and-preview.md)``                           |             |
-| ``[`&pusheffectsdata`](../../source-settings/pusheffectsdata.md)``               |             |
-| ``[`&quality`](../../source-settings/quality.md)``                               |             |
-| ``[`&queue`](../../general-settings/queue.md)``                                  |             |
-| ``[`&r2d2`](../../source-settings/r2d2.md)``                                     |             |
-| ``[`&record`](../../source-settings/and-record.md)``                             |             |
-| ``[`&roombitrate`](../../source-settings/roombitrate.md)``                       |             |
-| ``[`&screenshare`](../../source-settings/screenshare.md)``                       |             |
-| ``[`&screensharefps`](../../source-settings/screensharefps.md)``                 |             |
-| ``[`&screenshareid`](../../source-settings/screenshareid.md)``                   |             |
-| ``[`&screensharequality`](../../source-settings/screensharequality.md)``         |             |
-| ``[`&secure`](../../source-settings/secure.md)``                                 |             |
-| ``[`&sensor`](../../source-settings/sensor.md)``                                 |             |
-| ``[`&showlist`](../../source-settings/showlist.md)``                             |             |
-| ``[`&ssb`](../../source-settings/ssb.md)``                                       |             |
-| ``[`&tallyoff`](../../source-settings/tallyoff.md)``                             |             |
-| ``[`&tips`](../../general-settings/tips.md)``                                    |             |
-| ``[`&transcribe`](../../source-settings/transcribe.md)``                         |             |
-| ``[`&videodevice`](../../source-settings/videodevice.md)``                       |             |
-| ``[`&videomute`](../../source-settings/and-videomute.md)``                       |             |
-| ``[`&webcam`](../../source-settings/and-webcam.md)``                             |             |
-| ``[`&website`](../../source-settings/and-website.md)``                           |             |
-| ``[`&width`](../../source-settings/and-width.md)``                               |             |
+| Parameter                                                                        | Explanation                                                                                                           |
+| -------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------- |
+| ``[`&push`](../../source-settings/push.md)``                                     | The stream ID that you are publishing with will be the defined value                                                  |
+| ``[`&aec`](../../source-settings/aec.md)``                                       | Automatic echo-cancellation is ON or OFF                                                                              |
+| ``[`&audiodevice`](../../source-settings/audiodevice.md)``                       | Pre-configures the selected audio device                                                                              |
+| ``[`&audiogain`](../../source-settings/gain.md)``                                | Applies a gain multiplier (as a percentage) to the local microphone                                                   |
+| ``[`&autogain`](../../source-settings/autogain.md)``                             | Sets whether audio auto-normalization is ON or OFF                                                                    |
+| ``[`&autostart`](../../source-settings/and-autostart.md)``                       | Skips the camera/audio device or screenshare selection                                                                |
+| ``[`&channelcount`](../../source-settings/channelcount.md)``                     | Audio capture device to select N-number of audio channels                                                             |
+| ``[`&chatbutton`](../../general-settings/chatbutton.md)``                        | Shows or hides the chat button                                                                                        |
+| ``[`&compressor`](../../source-settings/and-compressor.md)``                     | Applies a generic audio compressor to the local microphone                                                            |
+| ``[`&consent`](../../source-settings/consent.md)``                               | Will ask the user for content to remote change their camera or microphone                                             |
+| ``[`&cursor`](../../source-settings/consent.md)``                                | Attempts to show the mouse cursor on screen shares                                                                    |
+| ``[`&denoise`](../../source-settings/and-denoise.md)``                           | Turn audio noise reduction filter ON or OFF                                                                           |
+| ``[`&device`](../../source-settings/and-device.md)``                             | Same as `&audiodevice` or `&videodevice`, but applies to both                                                         |
+| ``[`&directorchat`](../../source-settings/directorchat.md)``                     | Message ONLY the director                                                                                             |
+| ``[`&easyexit`](../../source-settings/easyexit.md)``                             | Won't ask the user to confirm that they wish to exit or leave the page                                                |
+| ``[`&effects`](../../source-settings/effects.md)``                               | Applies effects to the video/audio feeds                                                                              |
+| ``[`&equalizer`](../../source-settings/and-equalizer.md)``                       | Provides access to a generic audio equalizer that can be applied to the local microphone                              |
+| ``[`&fileshare`](../../source-settings/and-fileshare.md)``                       | Allows the user to select a video or audio file as a source for streaming                                             |
+| ``[`&forceios`](../../source-settings/and-forceios.md)``                         | Forces iOS devices to publish video to this room guest                                                                |
+| ``[`&framerate`](../../source-settings/and-framerate.md)``                       | Sets the maximum frame rate of the video in frames per second                                                         |
+| ``[`&fullscreen`](../../source-settings/fullscreen.md)``                         | The preview video will be fullscreen                                                                                  |
+| ``[`&grid`](../../source-settings/grid.md)``                                     | Applies an rule-of-thirds grid overlay to the self-preview                                                            |
+| ``[`&hands`](../../source-settings/and-hands.md)``                               | Enables a "Raise Hand" button for guests                                                                              |
+| ``[`&height`](../../source-settings/and-height.md)``                             | Sets the maximum height of the video allowed in pixels                                                                |
+| ``[`&hidemenu`](../../viewers-settings/and-hidemenu.md)``                        | Hides the VDO.Ninja-branded menu and header bar                                                                       |
+| ``[`&intro`](../../source-settings/intro.md)``                                   | When combined with the either `&webcam` or `&screenshare`, this option won't auto-load the camera/mic selection page  |
+| ``[`&limiter`](../../source-settings/and-limiter.md)``                           | Applies a generic audio limiter to the local microphone                                                               |
+| ``[`&limittotalbitrate`](../../source-settings/limittotalbitrate.md)``           | Limit the total outbound bitrate                                                                                      |
+| ``[`&lowcut`](../../source-settings/lowcut.md)``                                 | Adds a low-cut filter                                                                                                 |
+| ``[`&maxbitrate`](../../source-settings/maxbitrate.md)``                         | Limits the max video bitrate out for this publisher, per stream out                                                   |
+| ``[`&maxconnections`](../../source-settings/and-maxconnections.md)``             | Limits total of view and push connections                                                                             |
+| ``[`&maxframerate`](../../source-settings/and-maxframerate.md)``                 | Like `&framerate`, except it will allow for lower frame rates if the specific frame rate requested failed             |
+| ``[`&maxviewers`](../../source-settings/and-maxviewers.md)``                     | Limits the number of viewers allowed                                                                                  |
+| ``[`&micdelay`](../../source-settings/and-micdelay.md)``                         | Delays the microphone by specified time in ms                                                                         |
+| ``[`&miconly`](../../source-settings/miconly.md)``                               | Share audio-only; no video publishing allowed                                                                         |
+| ``[`&minipreview`](../../source-settings/and-minipreview.md)``                   | Mini self preview at the top right corner                                                                             |
+| ``[`&mute`](../../source-settings/and-mute.md)``                                 | Starts with the microphone muted by default                                                                           |
+| ``[`&mutespeaker`](../../source-settings/and-mutespeaker.md)``                   | Auto mutes guest's speaker                                                                                            |
+| ``[`&nofileshare`](../../source-settings/nofileshare.md)``                       | Hides the ability for a guest to upload a file                                                                        |
+| ``[`&noisegate`](../../source-settings/noisegate.md)``                           | If someone else is speaking in a group call, the guest's microphone gets muted automatically                          |
+| ``[`&nomicbutton`](../../viewers-settings/nomicbutton.md)``                      | Disables the mic button; guests can't mute audio                                                                      |
+| ``[`&nopreview`](../../source-settings/and-nopreview.md)``                       | Disables the local self video preview                                                                                 |
+| ``[`&nosettings`](../../source-settings/and-nosettings.md)``                     | Disables the local settings button                                                                                    |
+| ``[`&nospeakerbutton`](../../source-settings/and-nospeakerbutton.md)``           | Hides the speaker button                                                                                              |
+| ``[`&notify`](../../source-settings/and-notify.md)``                             | Audio alerts for raised hands, chat messages and if somebody joins the room                                           |
+| ``[`&novideobutton`](../../viewers-settings/and-novideobutton.md)``              | Disables the video button; guests can't mute video                                                                    |
+| ``[`&nowebsite`](../../source-settings/nowebsite.md)``                           | Disables IFRAMEs from loading, such as remotely shared websites by another guest or director                          |
+| ``[`&order`](../../source-settings/order.md)``                                   | The order priority of a source video when added to the video mixer                                                    |
+| ``[`&outboundaudiobitrate`](../../source-settings/and-outboundaudiobitrate.md)`` | Target audio bitrate and max bitrate for outgoing audio streams                                                       |
+| ``[`&outboundvideobitrate`](../../source-settings/and-outboundvideobitrate.md)`` | Target video bitrate and max bitrate for outgoing video streams                                                       |
+| ``[`&pcm`](../../source-settings/and-pcm.md)``                                   | PCM audio recordings                                                                                                  |
+| ``[`&ptz`](../../source-settings/ptz.md)``                                       | Enables pan/tilt control of the device, if compatible                                                                 |
+| ``[`&preview`](../../source-settings/and-preview.md)``                           | Forces the guest to have a self-preview, overriding `&broadcast`                                                      |
+| ``[`&pusheffectsdata`](../../source-settings/pusheffectsdata.md)``               | Makes the data for the active digital effect available to the IFRAME API or a remote guest                            |
+| ``[`&quality`](../../source-settings/quality.md)``                               | Presets the quality setting for a guest                                                                               |
+| ``[`&queue`](../../general-settings/queue.md)``                                  | A basic guest queuing system                                                                                          |
+| ``[`&r2d2`](../../source-settings/r2d2.md)``                                     | Easter egg `&notify` sound                                                                                            |
+| ``[`&record`](../../source-settings/and-record.md)``                             | Record functionality for guests                                                                                       |
+| ``[`&roombitrate`](../../source-settings/roombitrate.md)``                       | Limits any guest viewer in the group chat room from pulling the video stream at more than the specified bitrate value |
+| ``[`&screenshare`](../../source-settings/screenshare.md)``                       | Disables camera-sharing as an option                                                                                  |
+| ``[`&screensharefps`](../../source-settings/screensharefps.md)``                 | Set a target FPS for your screenshare (secondary stream)                                                              |
+| ``[`&screenshareid`](../../source-settings/screenshareid.md)``                   | Pre-sets the screenshare stream id for a screen share if its a secondary stream                                       |
+| ``[`&screensharequality`](../../source-settings/screensharequality.md)``         | Set a custom screenshare quality (secondary stream)                                                                   |
+| ``[`&secure`](../../source-settings/secure.md)``                                 | Disconnects communication with the handshake server as soon as possible and provides verbose feedback                 |
+| ``[`&sensor`](../../source-settings/sensor.md)``                                 | Access device sensor data at given rate                                                                               |
+| ``[`&showlist`](../../source-settings/showlist.md)``                             | Toggles list of hidden guests                                                                                         |
+| ``[`&ssb`](../../source-settings/ssb.md)``                                       | Forces the screen-share button to appear for guests                                                                   |
+| ``[`&tallyoff`](../../source-settings/tallyoff.md)``                             | Disables the Tally Light's visibility for that particular guest                                                       |
+| ``[`&tips`](../../general-settings/tips.md)``                                    | Shows a help-screen on the guest joining                                                                              |
+| ``[`&transcribe`](../../source-settings/transcribe.md)``                         | Enables transcription and closed captioning                                                                           |
+| ``[`&videodevice`](../../source-settings/videodevice.md)``                       | Pre-configures the selected video device                                                                              |
+| ``[`&videomute`](../../source-settings/and-videomute.md)``                       | Auto mutes guest's video                                                                                              |
+| ``[`&webcam`](../../source-settings/and-webcam.md)``                             | Disables screen-sharing as an option                                                                                  |
+| ``[`&website`](../../source-settings/and-website.md)``                           | Only shares a website with viewers                                                                                    |
+| ``[`&width`](../../source-settings/and-width.md)``                               | Sets the maximum width of the video allowed in pixels                                                                 |

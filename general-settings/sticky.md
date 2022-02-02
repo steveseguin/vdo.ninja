@@ -1,5 +1,5 @@
 ---
-description: Allows a user to save and then later restore their streaming session settings
+description: Save session settings
 ---
 
 # \&sticky
