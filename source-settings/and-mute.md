@@ -1,5 +1,5 @@
 ---
-description: Starts with the microphone muted by default
+description: Starts with the microphone muted by default.
 ---
 
 # \&mute
