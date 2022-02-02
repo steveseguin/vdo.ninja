@@ -18,6 +18,6 @@ description: Audio playback sample-rate, in hz
 
 Audio playback sample-rate, in Hz. (not capture or transmission sample-rate).
 
-This is mainly for debugging audio distortion or clicking issues.
+This is mainly for debugging audio distortion or clicking issues
 
-Sometimes it can remove clicking when used, even if set to the typical 48000 value.
+Sometimes it can remove clicking when used, even if set to the typical 48000 value

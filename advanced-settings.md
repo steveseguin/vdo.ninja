@@ -2,7 +2,7 @@
 description: Understanding URL parameters and custom settings
 ---
 
-# Advanced Options
+# Advanced Options (URL Parameters)
 
 ## Overview
 
@@ -38,18 +38,24 @@ To make up a valid stream ID of your own though, choose something with less than
 
 A stream ID must also not already be in active use, else you will be provided with an error.
 
+{% content-ref url="getting-started/cheat-sheet-of-basic-parameters.md" %}
+[cheat-sheet-of-basic-parameters.md](getting-started/cheat-sheet-of-basic-parameters.md)
+{% endcontent-ref %}
+
 ## Navigating the available setting options
 
 We've broken down the available URL parameters into nine parts:
 
-* **General Settings**, which tend to settings that impact the app broadly, such as the color of the background.
-* **Source Settings**, which are settings specific to publishing, so these are things related to customizing the camera and microphone.
-* **Viewer's Settings**, which are aspects that are controllable by the viewer's side, which includes bitrate, codec, and layouts.
-* **Director Settings**, which are specific to the director's control room and director-specific features.
-* **Meshcast Settings**, which are specific to the [`&meshcast`](newly-added-parameters/and-meshcast.md) parameter.
-* **API & Midi Settings**, which are specific to API & midi features.
-* **Newly Added Parameters**, which have been recently added to the Docs or to VDO.Ninja.
-* **Parameters only on beta**, which are parameters only on [VDO.Ninja/beta](https://vdo.ninja/beta/) version at the moment.
+* ****[**General Settings**](advanced-settings/general-parameters/), which tend to settings that impact the app broadly, such as the color of the background.
+* ****[**Source Settings**](advanced-settings/source-parameters/), which are settings specific to publishing, so these are things related to customizing the camera and microphone.
+* ****[**Viewer's Settings**](advanced-settings/view-parameters/), which are aspects that are controllable by the viewer's side, which includes bitrate, codec, and layouts.
+* ****[**Director Settings**](advanced-settings/director-parameters/), which are specific to the director's control room and director-specific features.
+* ****[**Meshcast Settings**](advanced-settings/meshcast-parameters/), which are specific to the [`&meshcast`](newly-added-parameters/and-meshcast.md) parameter.
+* ****[**API & Midi Settings**](advanced-settings/api-and-midi-parameters/), which are specific to API & midi features.
+* ****[**Newly Added Parameters**](advanced-settings/newly-added-parameters/), which have been recently added to the Docs or to VDO.Ninja.
+* ****[**Parameters only on beta**](advanced-settings/parameters-only-on-beta/), which are parameters only on [VDO.Ninja/beta](https://vdo.ninja/beta/) version at the moment.
 * ****[**Other Parameters**](other-parameters.md), which are currently not ready for production or not well-documented.
 
-You can normally find a long list of each command in the left-hand menu of this support system, although you can search for specific commands using the search bar at the top-right as well.
+There is also a [Cheat sheet of basic parameters](getting-started/cheat-sheet-of-basic-parameters.md).
+
+You can search for specific commands using the search bar at the top-right as well.
