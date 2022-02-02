@@ -31,3 +31,7 @@ Some parameters, like [`&view`](../advanced-settings/view-parameters/view.md) wi
 ```
 http://vdo.ninja/?push=aaa&view=bbb,ccc,ddd
 ```
+
+{% content-ref url="../advanced-settings.md" %}
+[advanced-settings.md](../advanced-settings.md)
+{% endcontent-ref %}

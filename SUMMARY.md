@@ -6,7 +6,6 @@
   * [Why use VDO.Ninja over other solutions?](why-use-obs.ninja-over-other-solutions.md)
   * [I'm not using OBS; is VDO.Ninja for me?](im-not-using-obs-is-obs.ninja-for-me.md)
 * [Getting started](getting-started/README.md)
-  * [Becoming a Ninja, 101](getting-started/becoming-a-ninja-101.md)
   * [What are stream IDs?](getting-started/stream-ids.md)
   * [Rooms](getting-started/rooms/README.md)
     * [Transfer rooms](getting-started/rooms/transfer-rooms.md)

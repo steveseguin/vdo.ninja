@@ -1,5 +1,5 @@
 ---
-description: Put guests into sub-groups, so they only see others in the same group
+description: Puts guests into sub-groups, so they only see others in the same group
 ---
 
 # \&group
