@@ -20,7 +20,7 @@ From there, we are good to go. We can add a dock to OBS or a browser source, and
 
 If we use the following VDO.Ninja URL as a dock source, we can have VDO.Ninja auto-start every time, create a new link that you can share with others. This link is setup to auto-select the OBS virtual camera and the first VB virtual audio cable, if one is available.&#x20;
 
-`https://vdo.ninja?webcam&vd=obs&ad=virtual&autostart&cover`
+`https://vdo.ninja/?webcam&vd=obs&ad=virtual&autostart&cover`
 
 ![Dockable VDO.NInja, with automatic virtual webcam sharing as an option.](<../.gitbook/assets/image (96) (1).png>)
 
