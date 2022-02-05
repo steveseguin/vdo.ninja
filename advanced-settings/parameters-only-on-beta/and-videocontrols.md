@@ -18,6 +18,6 @@ This is not the same control bar as the user control bar. Also, be sure to not a
 
 ## Related
 
-{% content-ref url="../newly-added-parameters/and-autohide.md" %}
-[and-autohide.md](../newly-added-parameters/and-autohide.md)
+{% content-ref url="../../parameters-only-on-beta/and-autohide.md" %}
+[and-autohide.md](../../parameters-only-on-beta/and-autohide.md)
 {% endcontent-ref %}

@@ -12,6 +12,6 @@ You can also toggle the control bar with `SHIFT + ALT + C`.
 
 ## Related
 
-{% content-ref url="../../general-settings/cleanoutput.md" %}
-[cleanoutput.md](../../general-settings/cleanoutput.md)
+{% content-ref url="../general-settings/cleanoutput.md" %}
+[cleanoutput.md](../general-settings/cleanoutput.md)
 {% endcontent-ref %}

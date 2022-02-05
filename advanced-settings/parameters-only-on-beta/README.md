@@ -2,8 +2,8 @@
 
 **Parameters only on beta**, which are parameters only on [VDO.Ninja/beta](https://vdo.ninja/beta/) version at the moment.
 
-| Parameter                                                    | Explanation                                                            |
-| ------------------------------------------------------------ | ---------------------------------------------------------------------- |
-| ``[`&autohide`](../newly-added-parameters/and-autohide.md)`` | Auto-hides the control bar after a few moments of the mouse being idle |
-| ``[`&sspaused`](../newly-added-parameters/and-sspaused.md)`` | Starts any screen-share paused                                         |
-| ``[`&videocontrols`](and-videocontrols.md)``                 | Shows the video control bar                                            |
+| Parameter                                    | Explanation                                                                                                           |
+| -------------------------------------------- | --------------------------------------------------------------------------------------------------------------------- |
+| ``[`&bitratecutoff`](and-bitratecutoff.md)`` | If the total bitrate drops below the specified bitrate, the viewer will auto-hide the audio and video for that stream |
+| ``[`&statsinterval`](and-statsinterval.md)`` | Lets you change the default stats update interval from 3-seconds to something else                                    |
+| ``[`&videocontrols`](and-videocontrols.md)`` | Shows the video control bar                                                                                           |
