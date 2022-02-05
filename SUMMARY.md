@@ -41,6 +41,7 @@
   * [Connect a GoPro to VDO.Ninja](guides/connect-a-gopro-to-vdo.ninja.md)
   * [Installing RaspNinja on Jetson](guides/installing-raspninja-on-jetson.md)
 * [Advanced Options (URL Parameters)](advanced-settings.md)
+  * [Most important Parameters](https://docs.vdo.ninja/getting-started/cheat-sheet-of-basic-parameters)
   * [General Parameters](advanced-settings/general-parameters/README.md)
     * [\&blind](general-settings/blind.md)
     * [\&chroma](general-settings/chroma.md)
