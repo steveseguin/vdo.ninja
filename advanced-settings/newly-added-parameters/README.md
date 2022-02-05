@@ -56,3 +56,6 @@
 | ``[`&waitimage`](and-waitimage.md)``                                                    | You can add a custom image which shows up while waiting for the `&view` link                                               |
 | ``[`&waitmessage`](and-waitmessage.md)``                                                | You can add a custom message which shows up while waiting for the `&view` link                                             |
 | ``[`&waittimeout`](and-waittimeout.md)``                                                | Specifies a delay for `&waitimage` and `&waitmessage` while waiting for the `&view` link                                   |
+| ``[`&autohide`](and-autohide.md)``                                                      | Auto-hides the control bar after a few moments of the mouse being idle                                                     |
+| ``[`&sspaused`](and-sspaused.md)``                                                      | Starts any screen-share paused                                                                                             |
+

@@ -8,10 +8,10 @@ description: Inverts the video so it is the mirror reflection
 
 | Value            | Description                                                                               |
 | ---------------- | ----------------------------------------------------------------------------------------- |
-| (no value given) | preview video is mirrored only (excluding rear cameras and OBS Virtualcam/NDI)            |
-| 0                | No mirroring                                                                              |
-| 1                | Inverts the default; local previews are not mirrored, but guests are mirrored             |
-| 2                | Mirroring is forced for all videos                                                        |
+| (no value given) | Mirroring is forced for all videos                                                        |
+| 0                | Preview video is mirrored only (excluding rear cameras and OBS Virtualcam/NDI)            |
+| 1                | Mirroring is forced for all videos                                                        |
+| 2                | Inverts the default; local previews are not mirrored, but guests are mirrored             |
 | 3                | Same as default, except everything is mirrored, including text - useful for teleprompters |
 
 ## Details

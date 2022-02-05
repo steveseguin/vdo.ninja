@@ -1,5 +1,5 @@
 ---
-description: Disables the local self video preview.
+description: Disables the local self video preview
 ---
 
 # \&nopreview

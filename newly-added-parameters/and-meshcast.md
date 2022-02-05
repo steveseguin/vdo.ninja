@@ -1,6 +1,6 @@
 ---
 description: >-
-  Will trigger the service, causing the outbound audio/video stream to be
+  Triggers the service, causing the outbound audio/video stream to be
   transferred to a hosted server
 ---
 

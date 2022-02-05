@@ -1,5 +1,5 @@
 ---
-description: Auto mutes guest's speaker.
+description: Auto mutes guest's speaker
 ---
 
 # \&mutespeaker

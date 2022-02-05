@@ -1,5 +1,5 @@
 ---
-description: support for piesocket.com
+description: Support for piesocket.com
 ---
 
 # \&pie
