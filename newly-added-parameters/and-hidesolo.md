@@ -14,6 +14,6 @@ If you add this to the director's URL you hide the solo guest's links in the dir
 
 ## Related
 
-{% content-ref url="../../director-settings/cleandirector.md" %}
-[cleandirector.md](../../director-settings/cleandirector.md)
+{% content-ref url="../director-settings/cleandirector.md" %}
+[cleandirector.md](../director-settings/cleandirector.md)
 {% endcontent-ref %}

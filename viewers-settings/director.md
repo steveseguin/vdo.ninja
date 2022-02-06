@@ -34,6 +34,6 @@ In the newer versions there is an option to have multiple directors aka [`&codir
 [cleandirector.md](../director-settings/cleandirector.md)
 {% endcontent-ref %}
 
-{% content-ref url="../advanced-settings/director-parameters/showdirector.md" %}
-[showdirector.md](../advanced-settings/director-parameters/showdirector.md)
+{% content-ref url="and-showdirector.md" %}
+[and-showdirector.md](and-showdirector.md)
 {% endcontent-ref %}

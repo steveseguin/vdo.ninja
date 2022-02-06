@@ -54,6 +54,6 @@ The above links allows a co-director join the room, despite the main director an
 
 `&view` can accept a list of stream IDs.  When in `&queue` mode, `&view` allows connections to join that are not listed, but only if they are brought in via the queue. This makes it a bit of a special case for `&view`, where it otherwise is pretty strict about who connects or not.
 
-{% content-ref url="../view-parameters/view.md" %}
-[view.md](../view-parameters/view.md)
+{% content-ref url="../advanced-settings/view-parameters/view.md" %}
+[view.md](../advanced-settings/view-parameters/view.md)
 {% endcontent-ref %}

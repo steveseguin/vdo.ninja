@@ -1,6 +1,6 @@
 # TURN & STUN Parameters
 
-**API & Midi Settings**, which are specific to hotkey features with API & midi features.
+**TURN & STUN Settings**, which are specific to TURN and STUN features.
 
 | Parameter                                                     | Explanation                                                                                                                |
 | ------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------- |
