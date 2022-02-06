@@ -1,6 +1,6 @@
-# API & Midi Parameters
+# API & MIDI Parameters
 
-**API & Midi Settings**, which are specific to hotkey features with API & midi features.
+**API & MIDI Settings**, which are specific to hotkey features with API and MIDI.
 
 | Parameter                                                    | Explanation                                                                                     |
 | ------------------------------------------------------------ | ----------------------------------------------------------------------------------------------- |

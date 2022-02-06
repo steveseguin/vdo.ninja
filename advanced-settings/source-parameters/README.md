@@ -59,6 +59,7 @@
 | ``[`&preview`](../../source-settings/and-preview.md)``                           | Forces the guest to have a self-preview, overriding `&broadcast`                                                      |
 | ``[`&pusheffectsdata`](../../source-settings/pusheffectsdata.md)``               | Makes the data for the active digital effect available to the IFRAME API or a remote guest                            |
 | ``[`&quality`](../../source-settings/quality.md)``                               | Presets the quality setting for a guest                                                                               |
+| ``[`&queue`](../../general-settings/queue.md)``                                  | A basic guest queuing system                                                                                          |
 | ``[`&r2d2`](../../source-settings/r2d2.md)``                                     | Easter egg `&notify` sound                                                                                            |
 | ``[`&record`](../../source-settings/and-record.md)``                             | Record functionality for guests                                                                                       |
 | ``[`&roombitrate`](../../source-settings/roombitrate.md)``                       | Limits any guest viewer in the group chat room from pulling the video stream at more than the specified bitrate value |
@@ -66,6 +67,7 @@
 | ``[`&screensharefps`](../../source-settings/screensharefps.md)``                 | Set a target FPS for your screenshare (secondary stream)                                                              |
 | ``[`&screenshareid`](../../source-settings/screenshareid.md)``                   | Pre-sets the screenshare stream id for a screen share if its a secondary stream                                       |
 | ``[`&screensharequality`](../../source-settings/screensharequality.md)``         | Set a custom screenshare quality (secondary stream)                                                                   |
+| ``[`&secure`](../../source-settings/secure.md)``                                 | Disconnects communication with the handshake server as soon as possible and provides verbose feedback                 |
 | ``[`&sensor`](../../source-settings/sensor.md)``                                 | Access device sensor data at given rate                                                                               |
 | ``[`&showlist`](../../source-settings/showlist.md)``                             | Toggles list of hidden guests                                                                                         |
 | ``[`&ssb`](../../source-settings/ssb.md)``                                       | Forces the screen-share button to appear for guests                                                                   |

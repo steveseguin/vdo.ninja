@@ -48,7 +48,7 @@ We've broken down the available URL parameters into 11 parts:
 * ****[**Viewer's Settings**](advanced-settings/view-parameters/), which are aspects that are controllable by the viewer's side, which includes bitrate, codec, and layouts.
 * ****[**Director Settings**](advanced-settings/director-parameters/), which are specific to the director's control room and director-specific features.
 * ****[**Meshcast Settings**](advanced-settings/meshcast-parameters/), which are specific to the [`&meshcast`](newly-added-parameters/and-meshcast.md) parameter.
-* ****[**API & Midi Settings**](advanced-settings/api-and-midi-parameters/), which are specific to API & midi features.
+* ****[**API & MIDI Settings**](advanced-settings/api-and-midi-parameters/), which are specific to API and MIDI features.
 * [**TURN & STUN Settings**](advanced-settings/turn-and-stun-parameters/), which are specific to TURN and STUN features.
 * ****[**Newly Added Parameters**](advanced-settings/newly-added-parameters/), which have been recently added to the Docs or to VDO.Ninja.
 * ****[**Parameters only on beta**](advanced-settings/parameters-only-on-beta/), which are parameters only on [VDO.Ninja/beta](https://vdo.ninja/beta/) version at the moment.

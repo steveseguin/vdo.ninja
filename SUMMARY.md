@@ -210,7 +210,7 @@
     * [\&meshcastcodec](meshcast-settings/and-meshcastcodec.md)
     * [\&mcscreensharebitrate](meshcast-settings/and-mcscreensharebitrate.md)
     * [\&mcscreensharecodec](meshcast-settings/and-mcscreensharecodec.md)
-  * [API & Midi Parameters](advanced-settings/api-and-midi-parameters/README.md)
+  * [API & MIDI Parameters](advanced-settings/api-and-midi-parameters/README.md)
     * [\&api](general-settings/api.md)
     * [\&midi](midi-settings/midi.md)
     * [\&midiin](midi-settings/midiin.md)
