@@ -59,7 +59,6 @@
 | ``[`&preview`](../../source-settings/and-preview.md)``                           | Forces the guest to have a self-preview, overriding `&broadcast`                                                      |
 | ``[`&pusheffectsdata`](../../source-settings/pusheffectsdata.md)``               | Makes the data for the active digital effect available to the IFRAME API or a remote guest                            |
 | ``[`&quality`](../../source-settings/quality.md)``                               | Presets the quality setting for a guest                                                                               |
-| ``[`&queue`](../../general-settings/queue.md)``                                  | A basic guest queuing system                                                                                          |
 | ``[`&r2d2`](../../source-settings/r2d2.md)``                                     | Easter egg `&notify` sound                                                                                            |
 | ``[`&record`](../../source-settings/and-record.md)``                             | Record functionality for guests                                                                                       |
 | ``[`&roombitrate`](../../source-settings/roombitrate.md)``                       | Limits any guest viewer in the group chat room from pulling the video stream at more than the specified bitrate value |

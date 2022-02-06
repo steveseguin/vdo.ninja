@@ -10,11 +10,9 @@
 | ``[`&bigbutton`](../../newly-added-parameters/and-bigbutton.md)``                       | Makes the microphone mute button a lot bigger                                                                        |
 | ``[`&webcam2`](../../newly-added-parameters/and-webcam2.md)``                           | Will show the "Share your Camera" button before asking the user to select camera options                             |
 | ``[`&screenshare2`](../../newly-added-parameters/and-screenshare2.md)``                 | Will show the "Share your Screen" button before asking the user to select screenshare options                        |
-| ``[`&hidesolo`](../../newly-added-parameters/and-hidesolo.md)``                         | Lets you hide the solo links from showing                                                                            |
 | ``[`&safemode`](../../newly-added-parameters/and-safemode.md)``                         | Tries to load the camera/audio with as little possible complexity as possible                                        |
 | ``[`&hiddenscenebitrate`](../../newly-added-parameters/and-hiddenscenebitrate.md)``     | Can be used to force videos not added yet to a scene to run at the specified bitrate                                 |
 | ``[`&preloadbitrate`](../../newly-added-parameters/and-preloadbitrate.md)``             | Can be used to change the pre-load target bitrate for scenes                                                         |
-| ``[`&minidirector`](../../newly-added-parameters/and-minidirector.md)``                 | Default mini director stylesheet                                                                                     |
 | ``[`&hash`](../../newly-added-parameters/and-hash.md)``                                 | Checks the password                                                                                                  |
 | ``[`&screensharehide`](../../newly-added-parameters/and-screensharehide.md)``           | Hides the local screen-share sub-window that appears when screen sharing in a room                                   |
 | ``[`&zoomedbitrate`](../../newly-added-parameters/and-zoomedbitrate.md)``               | Lets you set the target bitrate for a guest when they 'zoom in' (fullscreen) on a video                              |
@@ -41,8 +39,6 @@
 | ``[`&datamode`](../../newly-added-parameters/and-datamode.md)``                         | Combines a bunch of flags together; no video, no audio, GUI, etc.                                                    |
 | ``[`&vdo`](../../newly-added-parameters/and-vdo.md)``                                   | Like \&videodevice for selecting a default video device, but you can still choose to change the camera               |
 | ``[`&rampuptime`](../../newly-added-parameters/and-rampuptime.md)``                     | When a guest connects, this tries to load video from that guest for a few seconds, even if not yet added to a scene  |
-| ``[`&blindall`](../../newly-added-parameters/and-blindall.md)``                         | It allows the director 'blinding' all the guests at a time with a new button                                         |
-| ``[`&orderby`](../../newly-added-parameters/and-orderby.md)``                           | Orders guest's by their stream ID in the director's room                                                             |
 | ``[`&hideguest`](../../newly-added-parameters/and-hideguest.md)``                       | Has a guest join a group not visible to others                                                                       |
 | ``[`&host`](../../newly-added-parameters/and-host.md)``                                 | Shows a pop up to invite more guests to the room                                                                     |
 | ``[`&screenshareaec`](../../newly-added-parameters/and-screenshareaec.md)``             | Turns automatic echo-cancellation filter for screen-shares ON or OFF                                                 |

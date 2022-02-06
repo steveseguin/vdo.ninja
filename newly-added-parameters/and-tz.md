@@ -10,18 +10,18 @@ Using a TURN server, you can fake your location. So if a certain location is ove
 
 ## Related
 
-{% content-ref url="turn.md" %}
-[turn.md](turn.md)
+{% content-ref url="../general-settings/turn.md" %}
+[turn.md](../general-settings/turn.md)
 {% endcontent-ref %}
 
-{% content-ref url="../../common-errors-and-known-issues/works-on-wifi-but-not-on-4g.md" %}
-[works-on-wifi-but-not-on-4g.md](../../common-errors-and-known-issues/works-on-wifi-but-not-on-4g.md)
+{% content-ref url="../common-errors-and-known-issues/works-on-wifi-but-not-on-4g.md" %}
+[works-on-wifi-but-not-on-4g.md](../common-errors-and-known-issues/works-on-wifi-but-not-on-4g.md)
 {% endcontent-ref %}
 
-{% content-ref url="and-tcp.md" %}
-[and-tcp.md](and-tcp.md)
+{% content-ref url="../general-settings/and-tcp.md" %}
+[and-tcp.md](../general-settings/and-tcp.md)
 {% endcontent-ref %}
 
-{% content-ref url="and-relay.md" %}
-[and-relay.md](and-relay.md)
+{% content-ref url="../general-settings/and-relay.md" %}
+[and-relay.md](../general-settings/and-relay.md)
 {% endcontent-ref %}

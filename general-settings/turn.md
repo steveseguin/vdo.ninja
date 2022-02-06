@@ -58,14 +58,14 @@ It is possible to store credentials for your TURN server on a server, pulling th
 [and-tcp.md](and-tcp.md)
 {% endcontent-ref %}
 
-{% content-ref url="../../common-errors-and-known-issues/hosted-your-own-turn-server.md" %}
-[hosted-your-own-turn-server.md](../../common-errors-and-known-issues/hosted-your-own-turn-server.md)
+{% content-ref url="../common-errors-and-known-issues/hosted-your-own-turn-server.md" %}
+[hosted-your-own-turn-server.md](../common-errors-and-known-issues/hosted-your-own-turn-server.md)
 {% endcontent-ref %}
 
 {% content-ref url="and-relay.md" %}
 [and-relay.md](and-relay.md)
 {% endcontent-ref %}
 
-{% content-ref url="and-tz.md" %}
-[and-tz.md](and-tz.md)
+{% content-ref url="../newly-added-parameters/and-tz.md" %}
+[and-tz.md](../newly-added-parameters/and-tz.md)
 {% endcontent-ref %}

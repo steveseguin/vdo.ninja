@@ -26,7 +26,6 @@
 | ``[`&remote`](../../general-settings/remote.md)``                       | Allows remote operation of the zoom and focus, and access to statistics                   |
 | ``[`&room`](../../general-settings/room.md)``                           | Sets a room id for the session to join                                                    |
 | ``[`&rounded`](../../general-settings/rounded.md)``                     | Rounds the edges of videos                                                                |
-| ``[`&showdirector`](../../viewers-settings/and-showdirector.md)``       | Lets the director perform alongside guests, showing up in scene-view links                |
 | ``[`&showlabels`](../../general-settings/showlabels.md)``               | Display labels as a video overlay                                                         |
 | ``[`&stats`](../../general-settings/and-stats.md)``                     | Shows the connection/media stats window by default                                        |
 | ``[`&stereo`](../../general-settings/stereo.md)``                       | Sets the audio mode to stereo and changes default audio settings to improve audio quality |
