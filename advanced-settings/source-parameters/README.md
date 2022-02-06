@@ -67,7 +67,6 @@
 | ``[`&screensharefps`](../../source-settings/screensharefps.md)``                 | Set a target FPS for your screenshare (secondary stream)                                                              |
 | ``[`&screenshareid`](../../source-settings/screenshareid.md)``                   | Pre-sets the screenshare stream id for a screen share if its a secondary stream                                       |
 | ``[`&screensharequality`](../../source-settings/screensharequality.md)``         | Set a custom screenshare quality (secondary stream)                                                                   |
-| ``[`&secure`](../../source-settings/secure.md)``                                 | Disconnects communication with the handshake server as soon as possible and provides verbose feedback                 |
 | ``[`&sensor`](../../source-settings/sensor.md)``                                 | Access device sensor data at given rate                                                                               |
 | ``[`&showlist`](../../source-settings/showlist.md)``                             | Toggles list of hidden guests                                                                                         |
 | ``[`&ssb`](../../source-settings/ssb.md)``                                       | Forces the screen-share button to appear for guests                                                                   |
