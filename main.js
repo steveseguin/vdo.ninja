@@ -98,6 +98,10 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 	if (urlParams.has('cleanviewer') || urlParams.has('cv')) {
 		session.cleanViewer = true;
 	}
+	
+	if (urlParams.has('controls') || urlParams.has('videocontrols')) {
+		session.showControls = true; // show the video control bar
+	}
 
 	if (!isIFrame){
 		if (ChromeVersion===65){
@@ -141,7 +145,20 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 			//}
 		}
 	}
-
+	
+	if (urlParams.has('pwa')){
+		getById("enterInvite").classList.remove("advanced");
+	} 
+	if ("serviceWorker" in navigator) {
+	  window.addEventListener("load", function() {
+		navigator.serviceWorker
+		  .register("./serviceWorker.js")
+		  .then(res => log("service worker registered"))
+		  .catch(err => warnlog("service worker not registered"))
+	  })
+	}
+	
+	
 	if (navigator.userAgent.toLowerCase().indexOf(' electron/') > -1) {
 		try {
 			getById("electronDragZone").style.cursor="grab";
@@ -154,10 +171,11 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 		} catch(e){}
 	}
 
-	
-
 	if (urlParams.has('retrytimeout')) {
-		session.retryTimeout = parseInt(urlParams.get('retrytimeout'));
+		session.retryTimeout = parseInt(urlParams.get('retrytimeout')) || 5000;
+		if (session.retryTimeout<5000){
+			session.retryTimeout = 5000;
+		}
 	}
 
 	if (urlParams.has('ptz')){
@@ -367,6 +385,14 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 
 	if (urlParams.has('showdirector') || urlParams.has('sd')) {
 		session.showDirector = parseInt(urlParams.get('showdirector')) || parseInt(urlParams.get('sd')) || true; // if 2, video only allowed.  True or 1 will be video + audio allowed.
+	}
+	
+	if (urlParams.has('bitratecutoff') || urlParams.has('bitcut')) {
+		session.lowBitrateCutoff = parseInt(urlParams.get('bitratecutoff')) || parseInt(urlParams.get('bitcut')) || 300; // low bitrate cut off.
+	}
+	
+	if (urlParams.has("statsinterval")){
+		session.statsInterval = parseInt(urlParams.get("statsinterval")) || 3000; // milliseconds.  interval of requesting stats of remote guests
 	}
 	
 	if (urlParams.has('rotate') ) {
@@ -748,7 +774,6 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 	if (urlParams.has('mediasettings')) {
 		session.forceMediaSettings = true;
 	}
-
 
 	if (urlParams.has('transcript') || urlParams.has('transcribe') || urlParams.has('trans')) {
 		session.transcript = urlParams.get('transcript') || urlParams.get('transcribe') || urlParams.get('trans') || "en-US";
@@ -1487,9 +1512,9 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 	if (urlParams.has('chroma')) {
 		log("Chroma ENABLED");
 		getById("main").style.backgroundColor = "#" + (urlParams.get('chroma') || "0F0");
-	} else if (window.obsstudio || (navigator.userAgent.toLowerCase().indexOf(' electron/') > -1)){
-		getById("main").style.backgroundColor = "rgba(0,0,0,0)";
-	}
+	} // else if (window.obsstudio || (navigator.userAgent.toLowerCase().indexOf(' electron/') > -1)){
+	//	getById("main").style.backgroundColor = "rgba(0,0,0,0)";
+	//}
 
 	if (urlParams.has('margin')) {
 		try {
@@ -1774,7 +1799,7 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 	}
 	
 	if (urlParams.has('chunked')) {
-		session.chunked = parseInt(urlParams.get('chunked')) || 1;
+		session.chunked = parseInt(urlParams.get('chunked')) || 3000;
 		session.alpha = true;
 	}
 	
@@ -1888,6 +1913,14 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 		getById("testtone").parentNode.insertBefore(addtone, getById("testtone").nextSibling)
 	}
 	if (urlParams.has('r2d2')) {
+		/* var addtone = createAudioElement();
+		addtone.id = "jointone";
+		addtone.src = "./media/join.mp3";
+		getById("testtone").parentNode.insertBefore(addtone, getById("testtone").nextSibling)
+		var addtone = createAudioElement();
+		addtone.id = "leavetone";
+		addtone.src = "./media/leave.mp3";
+		getById("testtone").parentNode.insertBefore(addtone, getById("testtone").nextSibling) */
 		getById("testtone").innerHTML = "";
 		getById("testtone").src = "./media/robot.mp3";
 		session.beepToNotify = true;
@@ -3551,38 +3584,7 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 			}
 			
 			if ("getDetailedState" in e.data) {
-				var detailedState = {};
-				for (var UUID in session.rpcs){
-					if (!session.rpcs[UUID].streamID){continue;}
-					detailedState[session.rpcs[UUID].streamID] = {};
-					var scenes = getById("container_" + UUID).querySelectorAll('[data-action-type="addToScene"][data-scene][data--u-u-i-d="'+UUID+'"]');
-					var sceneState = {};
-					for (var i=0;i<scenes.length;i++){
-						if (parseInt(scenes[i].dataset.value)){
-							sceneState[scenes[i].dataset.scene] = true;
-						} else {
-							sceneState[scenes[i].dataset.scene] = false;
-						}
-					}
-					detailedState[session.rpcs[UUID].streamID].scenes = sceneState;
-				}
-				
-				if (session.showDirector){
-					if (document.getElementById("container_director")){
-						detailedState[session.streamID] = {};
-						var scenes = getById("container_director").querySelectorAll('[data-action-type="addToScene"][data-scene]');
-						var sceneState = {};
-						for (var i=0;i<scenes.length;i++){
-							if (parseInt(scenes[i].dataset.value)){
-								sceneState[scenes[i].dataset.scene] = true;
-							} else {
-								sceneState[scenes[i].dataset.scene] = false;
-							}
-						}
-						detailedState[session.streamID].scenes = sceneState;
-					}
-				}
-				
+				var detailedState = getDetailedState();
 				parent.postMessage({
 					"detailedState": detailedState
 				}, "*");
@@ -3607,7 +3609,11 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 
 
 			if (("action" in e.data) && (e.data.action!="null")) { ///////////////  reuse the Companion API
-				processMessage(e.data); // reuse the companion API
+				var resp = processMessage(e.data); // reuse the companion API
+				if (resp!==null){
+					log(resp);
+					parent.postMessage(resp, "*");
+				}
 			} else if ("target" in e.data) {
 				log(e.data);
 				for (var i in session.rpcs) {
@@ -3829,11 +3835,17 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 
 	function updateConnectionStatus() {
 		try{
+			if (!session.stats){
+				return;
+			}
+				
 			warnlog("Connection type changed from " + session.stats.network_type + " to " + Connection.effectiveType);
 			session.stats.network_type = Connection.effectiveType + " / " + Connection.type;
 			session.ping();
+			
 		} catch(e){warnlog(e);};
 	}
+	
 	try {
 		var Connection = navigator.connection || navigator.mozConnection || navigator.webkitConnection;
 		if (Connection){
