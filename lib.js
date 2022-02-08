@@ -1636,6 +1636,9 @@ function hideStreamLowBandwidth(bandwidth, UUID){
 		}
 	} else if (session.rpcs[UUID].bandwidthMuted){
 		session.rpcs[UUID].bandwidthMuted = false;
+		if (session.rpcs[UUID].videoElement){
+			session.rpcs[UUID].videoElement.muted = checkMuteState(UUID);
+		}
 		updateMixer();
 	}
 }
@@ -8189,7 +8192,7 @@ function applyMuteState(UUID){ // this is the mute state of PLAYBACK audio; not 
 
 function checkMuteState(UUID){ // this is the mute state of PLAYBACK audio; not the microphone or outbound.
 	if (!(UUID in session.rpcs)){return false;}
-	var muteOutcome = session.rpcs[UUID].mutedState || session.rpcs[UUID].mutedStateMixer || session.rpcs[UUID].mutedStateScene || session.speakerMuted;
+	var muteOutcome = session.rpcs[UUID].mutedState || session.rpcs[UUID].mutedStateMixer || session.rpcs[UUID].mutedStateScene || session.speakerMuted  || session.rpcs[UUID].bandwidthMuted;
 	return muteOutcome;
 }
 
