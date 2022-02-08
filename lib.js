@@ -7279,6 +7279,16 @@ function directorSendMessage(ele) {
 	
 }
 
+function toggleAutoVideoMute(){ // for iOS devices, that tab out.
+	// document.visibilityState
+	if (!session.videoMuted && (session.permaid!==false)){
+		var msg = {};
+		msg.videoMuted = (document.visibilityState === 'hidden') || false;
+		session.sendMessage(msg);
+		pokeIframeAPI('video-mute-state', document.visibilityState);
+	}
+}
+
 function toggleVideoMute(apply = false) { // TODO: I need to have this be MUTE, toggle, with volume not touched.
 	if (apply) {
 		session.videoMuted = !session.videoMuted;

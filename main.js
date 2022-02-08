@@ -3805,6 +3805,7 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 		//log("hidden : " +document.hidden);
 		log("vis : "+document.visibilityState);
 		if ((iOS) || (iPad)) { // fixes a bug on iOS devices.  Not need with other devices?
+			toggleAutoVideoMute();
 			clearTimeout(visAudioTimeout);
 			if (document.visibilityState === 'visible') {	
 				visAudioTimeout = setTimeout(function() {
