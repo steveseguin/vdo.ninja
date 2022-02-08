@@ -79,4 +79,6 @@ If publishing to VDO.Ninja, remember that you can select multiple audio sources 
 ![Example of how things look in VDO.Ninja when selecting OBS Virtualcam + VB Cable](<../.gitbook/assets/image (80).png>)
 
 \
-All done! You can switch between the webcam and the OBS live video as needed.
+All done! You can switch between the webcam and the OBS live video as needed.\
+\
+If you need to listen to your VB-Audio cable at the same time still, you can refer to this help guide for a couple options: [https://docs.vdo.ninja/guides/audio#guide-routing-windows-applications-audio-to-vdo.ninja](https://docs.vdo.ninja/guides/audio#guide-routing-windows-applications-audio-to-vdo.ninja)
