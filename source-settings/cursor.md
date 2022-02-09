@@ -10,7 +10,7 @@ description: Attempts to show the mouse cursor on screen shares
 
 ## Details
 
-Adding `&cursor` to a source link attempts to show the mouse cursor on screen shares.
+Adding `&screensharecursor` to a source link attempts to show the mouse cursor on screen shares.
 
 This flag is introduced in v18.4, but it's largely useless currently due to lack of support from most browsers.
 

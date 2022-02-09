@@ -14,6 +14,6 @@ Using `&43` on the viewer side optimizes the video mixer in a scene for videos w
 [and-portrait.md](../advanced-settings/view-parameters/and-portrait.md)
 {% endcontent-ref %}
 
-{% content-ref url="../advanced-settings/view-parameters/and-square.md" %}
-[and-square.md](../advanced-settings/view-parameters/and-square.md)
+{% content-ref url="and-square.md" %}
+[and-square.md](and-square.md)
 {% endcontent-ref %}
