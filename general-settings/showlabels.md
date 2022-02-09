@@ -91,8 +91,8 @@ Below is another example, this time we target the video tile class, creating a m
 [label.md](label.md)
 {% endcontent-ref %}
 
-{% content-ref url="../advanced-settings/screen-share-parameters/and-screensharelabel.md" %}
-[and-screensharelabel.md](../advanced-settings/screen-share-parameters/and-screensharelabel.md)
+{% content-ref url="../newly-added-parameters/and-screensharelabel.md" %}
+[and-screensharelabel.md](../newly-added-parameters/and-screensharelabel.md)
 {% endcontent-ref %}
 
 {% content-ref url="../advanced-settings/view-parameters/fontsize.md" %}

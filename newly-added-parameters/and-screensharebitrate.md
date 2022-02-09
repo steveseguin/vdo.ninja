@@ -22,6 +22,6 @@ This specified screen-share bitrate will not count towards the total room or sce
 
 ## Related
 
-{% content-ref url="../view-parameters/bitrate.md" %}
-[bitrate.md](../view-parameters/bitrate.md)
+{% content-ref url="../advanced-settings/view-parameters/bitrate.md" %}
+[bitrate.md](../advanced-settings/view-parameters/bitrate.md)
 {% endcontent-ref %}

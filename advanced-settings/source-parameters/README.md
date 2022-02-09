@@ -8,8 +8,10 @@
 | ``[`&aec`](../../source-settings/aec.md)``                                       | Automatic echo-cancellation is ON or OFF                                                                              |
 | ``[`&audiodevice`](../../source-settings/audiodevice.md)``                       | Pre-configures the selected audio device                                                                              |
 | ``[`&audiogain`](../../source-settings/gain.md)``                                | Applies a gain multiplier (as a percentage) to the local microphone                                                   |
+| ``[`&audiolatency`](and-audiolatency.md)``                                       | Adds an audio-latency to the published audio stream                                                                   |
 | ``[`&autogain`](../../source-settings/autogain.md)``                             | Sets whether audio auto-normalization is ON or OFF                                                                    |
 | ``[`&autostart`](../../source-settings/and-autostart.md)``                       | Skips the camera/audio device or screenshare selection                                                                |
+| ``[`&bigbutton`](and-bigbutton.md)``                                             | Makes the microphone mute button a lot bigger                                                                         |
 | ``[`&channelcount`](../../source-settings/channelcount.md)``                     | Audio capture device to select N-number of audio channels                                                             |
 | ``[`&chatbutton`](../../general-settings/chatbutton.md)``                        | Shows or hides the chat button                                                                                        |
 | ``[`&compressor`](../../source-settings/and-compressor.md)``                     | Applies a generic audio compressor to the local microphone                                                            |
@@ -36,6 +38,7 @@
 | ``[`&maxconnections`](../../source-settings/and-maxconnections.md)``             | Limits total of view and push connections                                                                             |
 | ``[`&maxframerate`](../../source-settings/and-maxframerate.md)``                 | Like `&framerate`, except it will allow for lower frame rates if the specific frame rate requested failed             |
 | ``[`&maxviewers`](../../source-settings/and-maxviewers.md)``                     | Limits the number of viewers allowed                                                                                  |
+| ``[`&mediasettings`](and-mediasettings.md)``                                     | Adds the option to change the video quality (resolution) dynamically via the settings menu                            |
 | ``[`&micdelay`](../../source-settings/and-micdelay.md)``                         | Delays the microphone by specified time in ms                                                                         |
 | ``[`&miconly`](../../source-settings/miconly.md)``                               | Share audio-only; no video publishing allowed                                                                         |
 | ``[`&minipreview`](../../source-settings/and-minipreview.md)``                   | Mini self preview at the top right corner                                                                             |

@@ -33,6 +33,6 @@ You can use [`&showlabels`](showlabels.md) to show the labels in the video sourc
 [showlabels.md](showlabels.md)
 {% endcontent-ref %}
 
-{% content-ref url="../advanced-settings/screen-share-parameters/and-screensharelabel.md" %}
-[and-screensharelabel.md](../advanced-settings/screen-share-parameters/and-screensharelabel.md)
+{% content-ref url="../newly-added-parameters/and-screensharelabel.md" %}
+[and-screensharelabel.md](../newly-added-parameters/and-screensharelabel.md)
 {% endcontent-ref %}

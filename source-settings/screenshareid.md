@@ -27,8 +27,8 @@ Without this, the screen share ID is random, which is a decision made to increas
 
 ## Related
 
-{% content-ref url="../../source-settings/screenshare.md" %}
-[screenshare.md](../../source-settings/screenshare.md)
+{% content-ref url="screenshare.md" %}
+[screenshare.md](screenshare.md)
 {% endcontent-ref %}
 
 {% content-ref url="screensharefps.md" %}

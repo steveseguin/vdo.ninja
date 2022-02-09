@@ -27,10 +27,10 @@ For information on alternative ideas on how to hide or show the cursor, you can 
 
 ## Related
 
-{% content-ref url="../../common-errors-and-known-issues/cursor-shows-when-screen-sharing.md" %}
-[cursor-shows-when-screen-sharing.md](../../common-errors-and-known-issues/cursor-shows-when-screen-sharing.md)
+{% content-ref url="../common-errors-and-known-issues/cursor-shows-when-screen-sharing.md" %}
+[cursor-shows-when-screen-sharing.md](../common-errors-and-known-issues/cursor-shows-when-screen-sharing.md)
 {% endcontent-ref %}
 
-{% content-ref url="../../general-settings/and-nocursor.md" %}
-[and-nocursor.md](../../general-settings/and-nocursor.md)
+{% content-ref url="../general-settings/and-nocursor.md" %}
+[and-nocursor.md](../general-settings/and-nocursor.md)
 {% endcontent-ref %}

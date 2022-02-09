@@ -4,22 +4,17 @@
 
 | Parameter                                                                               | Explanation                                                                                                           |
 | --------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------- |
-| ``[`&mediasettings`](../../newly-added-parameters/and-mediasettings.md)``               | Adds the option to change the video quality (resolution) dynamically via the settings menu                            |
 | ``[`&lightmode`](../../newly-added-parameters/and-lightmode.md)``                       | Forces to enable the lightmode / disable the darkmode                                                                 |
-| ``[`&square`](../../newly-added-parameters/and-square.md)``                             | Optimizes the video mixer for videos with 1:1 aspect ratio                                                            |
-| ``[`&bigbutton`](../../newly-added-parameters/and-bigbutton.md)``                       | Makes the microphone mute button a lot bigger                                                                         |
 | ``[`&webcam2`](../../newly-added-parameters/and-webcam2.md)``                           | Will show the "Share your Camera" button before asking the user to select camera options                              |
 | ``[`&screenshare2`](../../newly-added-parameters/and-screenshare2.md)``                 | Will show the "Share your Screen" button before asking the user to select screenshare options                         |
 | ``[`&safemode`](../../newly-added-parameters/and-safemode.md)``                         | Tries to load the camera/audio with as little possible complexity as possible                                         |
 | ``[`&hiddenscenebitrate`](../../newly-added-parameters/and-hiddenscenebitrate.md)``     | Can be used to force videos not added yet to a scene to run at the specified bitrate                                  |
 | ``[`&preloadbitrate`](../../newly-added-parameters/and-preloadbitrate.md)``             | Can be used to change the pre-load target bitrate for scenes                                                          |
-| ``[`&hash`](../../newly-added-parameters/and-hash.md)``                                 | Checks the password                                                                                                   |
 | ``[`&zoomedbitrate`](../../newly-added-parameters/and-zoomedbitrate.md)``               | Lets you set the target bitrate for a guest when they 'zoom in' (fullscreen) on a video                               |
 | ``[`&cleanviewer`](../../newly-added-parameters/and-cleanviewer.md)``                   | Hides many of the UI elements and pop-ups that may cause unwanted visual elements                                     |
 | ``[`&rotate`](../../newly-added-parameters/and-rotate.md)``                             | Rotates the camera                                                                                                    |
 | ``[`&signalmeter`](../../newly-added-parameters/and-signalmeter.md)``                   | Visualizes the packet loss of a guest                                                                                 |
 | ``[`&welcome`](../../newly-added-parameters/and-welcome.md)``                           | Adds a message the guest will see when joining the room                                                               |
-| ``[`&audiolatency`](../../newly-added-parameters/and-audiolatency.md)``                 | Adds an audio-latency to the published audio stream                                                                   |
 | ``[`&recordcodec`](../../newly-added-parameters/and-recordcodec.md)``                   | Lets you set the video recording vodec                                                                                |
 | ``[`&43`](../../newly-added-parameters/and-43.md)``                                     | Optimize the video mixer for 4:3 aspect ratio videos                                                                  |
 | ``[`&autoadd`](../../newly-added-parameters/and-autoadd.md)``                           | Auto-adds the specified stream IDs to the scene                                                                       |
@@ -41,5 +36,5 @@
 | ``[`&waitmessage`](and-waitmessage.md)``                                                | You can add a custom message which shows up while waiting for the `&view` link                                        |
 | ``[`&waittimeout`](and-waittimeout.md)``                                                | Specifies a delay for `&waitimage` and `&waitmessage` while waiting for the `&view` link                              |
 | ``[`&autohide`](../../parameters-only-on-beta/and-autohide.md)``                        | Auto-hides the control bar after a few moments of the mouse being idle                                                |
-| ``[`&bitratecutoff`](and-bitratecutoff.md)``                                            | If the total bitrate drops below the specified bitrate, the viewer will auto-hide the audio and video for that stream |
-| ``[`&statsinterval`](and-statsinterval.md)``                                            | Lets you change the default stats update interval from 3-seconds to something else                                    |
+| ``[`&bitratecutoff`](../parameters-only-on-beta/and-bitratecutoff.md)``                 | If the total bitrate drops below the specified bitrate, the viewer will auto-hide the audio and video for that stream |
+| ``[`&statsinterval`](../parameters-only-on-beta/and-statsinterval.md)``                 | Lets you change the default stats update interval from 3-seconds to something else                                    |

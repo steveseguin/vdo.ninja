@@ -22,6 +22,6 @@ Adding this to a push link, automatic echo-cancellation for screen-shares turns 
 
 ## Related
 
-{% content-ref url="../../source-settings/aec.md" %}
-[aec.md](../../source-settings/aec.md)
+{% content-ref url="../source-settings/aec.md" %}
+[aec.md](../source-settings/aec.md)
 {% endcontent-ref %}

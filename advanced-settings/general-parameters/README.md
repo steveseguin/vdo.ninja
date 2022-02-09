@@ -13,7 +13,8 @@
 | ``[`&deafen`](../../general-settings/deafen.md)``                       | Audio playback is muted                                                                   |
 | ``[`&flip`](../../general-settings/and-flip.md)``                       | Inverts the video so it is upside down                                                    |
 | ``[`&group`](../../general-settings/and-group.md)``                     | Puts guests into sub-groups, so they only see others in the same group                    |
-| ``[`&groupaudio`](../../general-settings/and-groupaudio.md)``           | Needs to be used in combination with \&group                                              |
+| ``[`&groupaudio`](../../general-settings/and-groupaudio.md)``           | Needs to be used in combination with `&group`                                             |
+| ``[`&hash`](and-hash.md)``                                              | Checks the password                                                                       |
 | ``[`&hiheheader`](../../general-settings/and-hideheader.md)``           | Hides just the top header-bar                                                             |
 | ``[`&label`](../../general-settings/label.md)``                         | Sets a display name label                                                                 |
 | ``[`&ln`](../../general-settings/and-ln.md)``                           | Sets the interface language                                                               |

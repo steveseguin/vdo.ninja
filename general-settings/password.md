@@ -26,15 +26,15 @@ Please use alphanumeric-characters only; spaces or other characters may cause th
 {% endhint %}
 
 \
-Adding [`&hash=HASH_VALUE`](../newly-added-parameters/and-hash.md) will act as if `&password=PASSWORD` was added.
+Adding [`&hash=HASH_VALUE`](../advanced-settings/general-parameters/and-hash.md) will act as if `&password=PASSWORD` was added.
 
 Use this link to get the hash for the password:\
 [https://vdo.ninja/examples/changepass.html](https://vdo.ninja/examples/changepass.html)
 
 ## Related
 
-{% content-ref url="../newly-added-parameters/and-hash.md" %}
-[and-hash.md](../newly-added-parameters/and-hash.md)
+{% content-ref url="../advanced-settings/general-parameters/and-hash.md" %}
+[and-hash.md](../advanced-settings/general-parameters/and-hash.md)
 {% endcontent-ref %}
 
 {% content-ref url="../director-settings/codirector.md" %}
