@@ -27,6 +27,6 @@ May need to be disabled to use [`&stereo`](../general-settings/stereo.md) on som
 [noisegate.md](noisegate.md)
 {% endcontent-ref %}
 
-{% content-ref url="../newly-added-parameters/and-screenshareaec.md" %}
-[and-screenshareaec.md](../newly-added-parameters/and-screenshareaec.md)
+{% content-ref url="../advanced-settings/screen-share-parameters/and-screenshareaec.md" %}
+[and-screenshareaec.md](../advanced-settings/screen-share-parameters/and-screenshareaec.md)
 {% endcontent-ref %}

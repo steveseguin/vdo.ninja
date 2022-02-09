@@ -14,7 +14,6 @@
 | ``[`&chatbutton`](../../general-settings/chatbutton.md)``                        | Shows or hides the chat button                                                                                        |
 | ``[`&compressor`](../../source-settings/and-compressor.md)``                     | Applies a generic audio compressor to the local microphone                                                            |
 | ``[`&consent`](../../source-settings/consent.md)``                               | Will ask the user for content to remote change their camera or microphone                                             |
-| ``[`&cursor`](../../source-settings/consent.md)``                                | Attempts to show the mouse cursor on screen shares                                                                    |
 | ``[`&denoise`](../../source-settings/and-denoise.md)``                           | Turn audio noise reduction filter ON or OFF                                                                           |
 | ``[`&device`](../../source-settings/and-device.md)``                             | Same as `&audiodevice` or `&videodevice`, but applies to both                                                         |
 | ``[`&directorchat`](../../source-settings/directorchat.md)``                     | Message ONLY the director                                                                                             |
@@ -59,15 +58,10 @@
 | ``[`&preview`](../../source-settings/and-preview.md)``                           | Forces the guest to have a self-preview, overriding `&broadcast`                                                      |
 | ``[`&pusheffectsdata`](../../source-settings/pusheffectsdata.md)``               | Makes the data for the active digital effect available to the IFRAME API or a remote guest                            |
 | ``[`&quality`](../../source-settings/quality.md)``                               | Presets the quality setting for a guest                                                                               |
-| ``[`&queue`](../../general-settings/queue.md)``                                  | A basic guest queuing system                                                                                          |
 | ``[`&r2d2`](../../source-settings/r2d2.md)``                                     | Easter egg `&notify` sound                                                                                            |
 | ``[`&record`](../../source-settings/and-record.md)``                             | Record functionality for guests                                                                                       |
 | ``[`&roombitrate`](../../source-settings/roombitrate.md)``                       | Limits any guest viewer in the group chat room from pulling the video stream at more than the specified bitrate value |
 | ``[`&screenshare`](../../source-settings/screenshare.md)``                       | Disables camera-sharing as an option                                                                                  |
-| ``[`&screensharefps`](../../source-settings/screensharefps.md)``                 | Set a target FPS for your screenshare (secondary stream)                                                              |
-| ``[`&screenshareid`](../../source-settings/screenshareid.md)``                   | Pre-sets the screenshare stream id for a screen share if its a secondary stream                                       |
-| ``[`&screensharequality`](../../source-settings/screensharequality.md)``         | Set a custom screenshare quality (secondary stream)                                                                   |
-| ``[`&secure`](../../source-settings/secure.md)``                                 | Disconnects communication with the handshake server as soon as possible and provides verbose feedback                 |
 | ``[`&sensor`](../../source-settings/sensor.md)``                                 | Access device sensor data at given rate                                                                               |
 | ``[`&showlist`](../../source-settings/showlist.md)``                             | Toggles list of hidden guests                                                                                         |
 | ``[`&ssb`](../../source-settings/ssb.md)``                                       | Forces the screen-share button to appear for guests                                                                   |

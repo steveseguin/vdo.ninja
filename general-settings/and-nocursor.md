@@ -18,6 +18,6 @@ If you're looking to hide the cursor while screen-recording, consider using OBS 
 [cursor-shows-when-screen-sharing.md](../common-errors-and-known-issues/cursor-shows-when-screen-sharing.md)
 {% endcontent-ref %}
 
-{% content-ref url="../source-settings/cursor.md" %}
-[cursor.md](../source-settings/cursor.md)
+{% content-ref url="../advanced-settings/screen-share-parameters/cursor.md" %}
+[cursor.md](../advanced-settings/screen-share-parameters/cursor.md)
 {% endcontent-ref %}

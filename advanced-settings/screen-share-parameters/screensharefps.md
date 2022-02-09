@@ -16,7 +16,7 @@ description: Set a target FPS for your screenshare (secondary stream)
 
 ## Details
 
-Set a target FPS for your screenshare, when you screenshare as a secondary stream (in a room). Use [`&framerate`](and-framerate.md) if you want to set the screenshare FPS when only screensharing.
+Set a target FPS for your screenshare, when you screenshare as a secondary stream (in a room). Use [`&framerate`](../../source-settings/and-framerate.md) if you want to set the screenshare FPS when only screensharing.
 
 ## Related
 

@@ -14,10 +14,10 @@ description: Starts any screen-share paused
 
 ## Related
 
-{% content-ref url="../newly-added-parameters/and-screensharebitrate.md" %}
-[and-screensharebitrate.md](../newly-added-parameters/and-screensharebitrate.md)
+{% content-ref url="and-screensharebitrate.md" %}
+[and-screensharebitrate.md](and-screensharebitrate.md)
 {% endcontent-ref %}
 
-{% content-ref url="../source-settings/screensharequality.md" %}
-[screensharequality.md](../source-settings/screensharequality.md)
+{% content-ref url="screensharequality.md" %}
+[screensharequality.md](screensharequality.md)
 {% endcontent-ref %}

@@ -25,6 +25,6 @@ Adding `&denoise` to a source link turns audio noise reduction filter ON or OFF.
 [noisegate.md](noisegate.md)
 {% endcontent-ref %}
 
-{% content-ref url="../newly-added-parameters/and-screensharedenoise.md" %}
-[and-screensharedenoise.md](../newly-added-parameters/and-screensharedenoise.md)
+{% content-ref url="../advanced-settings/screen-share-parameters/and-screensharedenoise.md" %}
+[and-screensharedenoise.md](../advanced-settings/screen-share-parameters/and-screensharedenoise.md)
 {% endcontent-ref %}
