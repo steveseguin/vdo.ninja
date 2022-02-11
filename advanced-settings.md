@@ -55,6 +55,4 @@ We've broken down the available URL parameters into 12 parts:
 * ****[**Parameters only on beta**](advanced-settings/parameters-only-on-beta/), which are parameters only on [VDO.Ninja/beta](https://vdo.ninja/beta/) version at the moment.
 * ****[**Other Parameters**](other-parameters.md), which are currently not ready for production or not well-documented.
 
-There is also a [Cheat sheet of basic parameters](getting-started/cheat-sheet-of-basic-parameters.md).
-
 You can search for specific commands using the search bar at the top-right as well.
