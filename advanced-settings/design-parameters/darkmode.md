@@ -19,12 +19,12 @@ description: Darkens the website and interface
 
 Enables the dark-mode stylings of the website.
 
-Conversely, setting [`&lightmode`](../newly-added-parameters/and-lightmode.md), `&darkmode=0` or `&darkmode=false` will disable the dark-mode, forcing the light-mode.
+Conversely, setting [`&lightmode`](and-lightmode.md), `&darkmode=0` or `&darkmode=false` will disable the dark-mode, forcing the light-mode.
 
 The dark-mode will be selected automatically by default if your system is set to dark color mode, so this flag can be used to override that.
 
 ## Related
 
-{% content-ref url="../newly-added-parameters/and-lightmode.md" %}
-[and-lightmode.md](../newly-added-parameters/and-lightmode.md)
+{% content-ref url="and-lightmode.md" %}
+[and-lightmode.md](and-lightmode.md)
 {% endcontent-ref %}

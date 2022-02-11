@@ -22,14 +22,22 @@ Link to a remotely hosted CSS style sheet via the URL.\
 You can stylize VDO.Ninja without needing to host anything more than a CSS file.\
 The page elements are not visible until the remote style sheet has been loaded.
 
-`&base64css`
+### base64css
 
-You can pass CSS as a base64-encoded string using the `&base64css` parameter. This needs to be URLComponent encoded first, and then converted to base 64.&#x20;
+You can pass CSS as a base64-encoded string using the [`&base64css`](and-base64css.md) parameter. This needs to be URLComponent encoded first, and then converted to base 64.&#x20;
 
 The [https://invite.vdo.ninja/](https://invite.vdo.ninja) tool has an option to do these base64 encoding steps under "General Options".
+
+### Customizable director's dock for OBS
 
 Customizable director's dock for OBS example made:\
 `&css=minidirector.css`
 
 Example:\
 [https://vdo.ninja/?css=minidirector.css\&cleanoutput\&hidesolo\&director=YOURROOMNAMEHERE](https://vdo.ninja/?css=minidirector.css\&cleanoutput\&hidesolo\&director=YOURROOMNAMEHERE)
+
+## Related
+
+{% content-ref url="and-base64css.md" %}
+[and-base64css.md](and-base64css.md)
+{% endcontent-ref %}

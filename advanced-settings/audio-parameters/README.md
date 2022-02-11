@@ -1,6 +1,10 @@
+---
+description: Filters, adding delay, bitrate, channels, mono/stereo, muting guests etc.
+---
+
 # Audio Parameters
 
-**Audio Settings**, which are specific to audio features. They are separated in three groups: general options (push and view), source side (push) options and viewer side (view) options.
+They are separated in three groups: [general options](./#general-options) (push and view), [source side](./#source-side-options) (push) options and [viewer side](./#viewer-side-options) (view) options.
 
 ## General options
 

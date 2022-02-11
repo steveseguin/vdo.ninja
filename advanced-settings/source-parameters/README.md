@@ -18,10 +18,8 @@
 | ``[`&forceios`](../../source-settings/and-forceios.md)``                         | Forces iOS devices to publish video to this room guest                                                                |
 | ``[`&framerate`](../../source-settings/and-framerate.md)``                       | Sets the maximum frame rate of the video in frames per second                                                         |
 | ``[`&fullscreen`](../../source-settings/fullscreen.md)``                         | The preview video will be fullscreen                                                                                  |
-| ``[`&grid`](../../source-settings/grid.md)``                                     | Applies an rule-of-thirds grid overlay to the self-preview                                                            |
 | ``[`&hands`](../../source-settings/and-hands.md)``                               | Enables a "Raise Hand" button for guests                                                                              |
 | ``[`&height`](../../source-settings/and-height.md)``                             | Sets the maximum height of the video allowed in pixels                                                                |
-| ``[`&hidemenu`](../../viewers-settings/and-hidemenu.md)``                        | Hides the VDO.Ninja-branded menu and header bar                                                                       |
 | ``[`&intro`](../../source-settings/intro.md)``                                   | When combined with the either `&webcam` or `&screenshare`, this option won't auto-load the camera/mic selection page  |
 | ``[`&limittotalbitrate`](../../source-settings/limittotalbitrate.md)``           | Limit the total outbound bitrate                                                                                      |
 | ``[`&maxbitrate`](../../source-settings/maxbitrate.md)``                         | Limits the max video bitrate out for this publisher, per stream out                                                   |
@@ -53,7 +51,6 @@
 | ``[`&sensor`](../../source-settings/sensor.md)``                                 | Access device sensor data at given rate                                                                               |
 | ``[`&showlist`](../../source-settings/showlist.md)``                             | Toggles list of hidden guests                                                                                         |
 | ``[`&ssb`](../../source-settings/ssb.md)``                                       | Forces the screen-share button to appear for guests                                                                   |
-| ``[`&tallyoff`](../../source-settings/tallyoff.md)``                             | Disables the Tally Light's visibility for that particular guest                                                       |
 | ``[`&tips`](../../general-settings/tips.md)``                                    | Shows a help-screen on the guest joining                                                                              |
 | ``[`&transcribe`](../../source-settings/transcribe.md)``                         | Enables transcription and closed captioning                                                                           |
 | ``[`&videodevice`](../../source-settings/videodevice.md)``                       | Pre-configures the selected video device                                                                              |

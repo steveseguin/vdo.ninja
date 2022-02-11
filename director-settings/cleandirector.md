@@ -20,10 +20,10 @@ Allows for a cleaner looking interface. Useful if using IFRAMES I maybe.
 [director.md](../viewers-settings/director.md)
 {% endcontent-ref %}
 
-{% content-ref url="../general-settings/cleanoutput.md" %}
-[cleanoutput.md](../general-settings/cleanoutput.md)
+{% content-ref url="../advanced-settings/design-parameters/cleanoutput.md" %}
+[cleanoutput.md](../advanced-settings/design-parameters/cleanoutput.md)
 {% endcontent-ref %}
 
-{% content-ref url="../general-settings/cleanish.md" %}
-[cleanish.md](../general-settings/cleanish.md)
+{% content-ref url="../advanced-settings/design-parameters/cleanish.md" %}
+[cleanish.md](../advanced-settings/design-parameters/cleanish.md)
 {% endcontent-ref %}

@@ -48,8 +48,8 @@ Some of the more interesting ones primarily for iframe users might include:
 * ``[`&videodevice`](../source-settings/videodevice.md)`=`1 or 0
 * ``[`&audiodevice`](../source-settings/audiodevice.md)`=`1 or 0
 * ``[`&autostart`](../source-settings/and-autostart.md)``
-* ``[`&chroma`](../general-settings/chroma.md)``
-* ``[`&transparent`](../general-settings/and-transparent.md)``
+* ``[`&chroma`](../advanced-settings/design-parameters/chroma.md)``
+* ``[`&transparent`](../advanced-settings/design-parameters/and-transparent.md)``
 * As for API, allow for dynamic messaging, below are examples of the options available:
 * Mute Speaker
 * Mute Mic

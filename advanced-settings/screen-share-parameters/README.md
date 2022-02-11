@@ -1,6 +1,10 @@
+---
+description: Labels, audio filters, type, bitrate, quality etc.
+---
+
 # Screen-share Parameters
 
-**Screen-share Settings**, which are specific to screen-sharing features. They are separated in source side (push) options and viewer side (view) options.
+They are separated in [source side](./#source-side-options) (push) options and [viewer side](./#viewer-side-options) (view) options.
 
 ## Source side options
 

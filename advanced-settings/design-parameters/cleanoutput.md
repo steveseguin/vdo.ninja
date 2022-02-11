@@ -18,10 +18,10 @@ Hides many of the UI elements and pop-ups that may cause unwanted visual element
 [cleanish.md](cleanish.md)
 {% endcontent-ref %}
 
-{% content-ref url="../director-settings/cleandirector.md" %}
-[cleandirector.md](../director-settings/cleandirector.md)
+{% content-ref url="../../director-settings/cleandirector.md" %}
+[cleandirector.md](../../director-settings/cleandirector.md)
 {% endcontent-ref %}
 
-{% content-ref url="../newly-added-parameters/and-cleanviewer.md" %}
-[and-cleanviewer.md](../newly-added-parameters/and-cleanviewer.md)
+{% content-ref url="and-cleanviewer.md" %}
+[and-cleanviewer.md](and-cleanviewer.md)
 {% endcontent-ref %}

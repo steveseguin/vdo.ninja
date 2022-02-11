@@ -25,6 +25,6 @@ Lets you set font-size of the guest labels or closed captions.
 [cc.md](cc.md)
 {% endcontent-ref %}
 
-{% content-ref url="../../general-settings/showlabels.md" %}
-[showlabels.md](../../general-settings/showlabels.md)
+{% content-ref url="../design-parameters/showlabels.md" %}
+[showlabels.md](../design-parameters/showlabels.md)
 {% endcontent-ref %}

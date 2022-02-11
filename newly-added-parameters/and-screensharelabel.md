@@ -18,6 +18,6 @@ Without it set, screen shares do not have a label applied to them. With it added
 [label.md](../general-settings/label.md)
 {% endcontent-ref %}
 
-{% content-ref url="../general-settings/showlabels.md" %}
-[showlabels.md](../general-settings/showlabels.md)
+{% content-ref url="../advanced-settings/design-parameters/showlabels.md" %}
+[showlabels.md](../advanced-settings/design-parameters/showlabels.md)
 {% endcontent-ref %}

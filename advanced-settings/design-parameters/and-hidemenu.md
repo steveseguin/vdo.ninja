@@ -16,6 +16,6 @@ Useful for making videos larger for guests by freeing up space.
 
 ## Related
 
-{% content-ref url="../general-settings/and-hideheader.md" %}
-[and-hideheader.md](../general-settings/and-hideheader.md)
+{% content-ref url="and-hideheader.md" %}
+[and-hideheader.md](and-hideheader.md)
 {% endcontent-ref %}

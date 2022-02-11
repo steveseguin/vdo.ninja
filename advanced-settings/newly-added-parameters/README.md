@@ -4,14 +4,12 @@
 
 | Parameter                                                                               | Explanation                                                                                                           |
 | --------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------- |
-| ``[`&lightmode`](../../newly-added-parameters/and-lightmode.md)``                       | Forces to enable the lightmode / disable the darkmode                                                                 |
 | ``[`&webcam2`](../../newly-added-parameters/and-webcam2.md)``                           | Will show the "Share your Camera" button before asking the user to select camera options                              |
 | ``[`&screenshare2`](../../newly-added-parameters/and-screenshare2.md)``                 | Will show the "Share your Screen" button before asking the user to select screenshare options                         |
 | ``[`&safemode`](../../newly-added-parameters/and-safemode.md)``                         | Tries to load the camera/audio with as little possible complexity as possible                                         |
 | ``[`&hiddenscenebitrate`](../../newly-added-parameters/and-hiddenscenebitrate.md)``     | Can be used to force videos not added yet to a scene to run at the specified bitrate                                  |
 | ``[`&preloadbitrate`](../../newly-added-parameters/and-preloadbitrate.md)``             | Can be used to change the pre-load target bitrate for scenes                                                          |
 | ``[`&zoomedbitrate`](../../newly-added-parameters/and-zoomedbitrate.md)``               | Lets you set the target bitrate for a guest when they 'zoom in' (fullscreen) on a video                               |
-| ``[`&cleanviewer`](../../newly-added-parameters/and-cleanviewer.md)``                   | Hides many of the UI elements and pop-ups that may cause unwanted visual elements                                     |
 | ``[`&rotate`](../../newly-added-parameters/and-rotate.md)``                             | Rotates the camera                                                                                                    |
 | ``[`&signalmeter`](../../newly-added-parameters/and-signalmeter.md)``                   | Visualizes the packet loss of a guest                                                                                 |
 | ``[`&welcome`](../../newly-added-parameters/and-welcome.md)``                           | Adds a message the guest will see when joining the room                                                               |

@@ -12,12 +12,12 @@ description: >-
 
 ## Details
 
-This is the exact same thing as [`&cleanoutput`](../general-settings/cleanoutput.md), except it only triggers if added to a view-only link.
+This is the exact same thing as [`&cleanoutput`](cleanoutput.md), except it only triggers if added to a view-only link.
 
 Hides many of the UI elements and pop-ups that may cause unwanted visual elements not desired in a high-stakes live stream.
 
 ## Related
 
-{% content-ref url="../general-settings/cleanoutput.md" %}
-[cleanoutput.md](../general-settings/cleanoutput.md)
+{% content-ref url="cleanoutput.md" %}
+[cleanoutput.md](cleanoutput.md)
 {% endcontent-ref %}

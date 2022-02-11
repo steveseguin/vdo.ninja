@@ -26,12 +26,12 @@ body {
 
 ## Related
 
-A video demo of the [`&chunked`](../newly-added-parameters/and-chunked.md) transfer and how to enable support for alpha-channel transparency is available here: [https://youtu.be/SWDlm1Jf-Oo](https://youtu.be/SWDlm1Jf-Oo)
+A video demo of the [`&chunked`](../../newly-added-parameters/and-chunked.md) transfer and how to enable support for alpha-channel transparency is available here: [https://youtu.be/SWDlm1Jf-Oo](https://youtu.be/SWDlm1Jf-Oo)
 
 {% content-ref url="chroma.md" %}
 [chroma.md](chroma.md)
 {% endcontent-ref %}
 
-{% content-ref url="../newly-added-parameters/and-chunked.md" %}
-[and-chunked.md](../newly-added-parameters/and-chunked.md)
+{% content-ref url="../../newly-added-parameters/and-chunked.md" %}
+[and-chunked.md](../../newly-added-parameters/and-chunked.md)
 {% endcontent-ref %}

@@ -5,7 +5,7 @@ description: Quick director access to a list of rooms for transfering guests
 # \&rooms
 
 {% hint style="warning" %}
-If [`&cleanoutput`](../general-settings/cleanoutput.md) is enabled, rooms parameter is ignored.
+If [`&cleanoutput`](../advanced-settings/design-parameters/cleanoutput.md) is enabled, rooms parameter is ignored.
 {% endhint %}
 
 ## Options

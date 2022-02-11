@@ -40,14 +40,15 @@ A stream ID must also not already be in active use, else you will be provided wi
 
 ## Navigating the available setting options
 
-We've broken down the available URL parameters into 13 parts:
+We've broken down the available URL parameters into 14 parts:
 
 * ****[**Most important Parameters**](getting-started/cheat-sheet-of-basic-parameters.md): the basic and most common parameters
-* ****[**General Settings**](advanced-settings/general-parameters/): parameters that impact the app broadly, such as the color of the background
+* ****[**General Settings**](advanced-settings/general-parameters/): parameters that impact the app broadly
 * ****[**Source Settings**](advanced-settings/source-parameters/): parameters specific to publishing, so these are things related to customizing the camera settings
 * ****[**Viewer's Settings**](advanced-settings/view-parameters/): parameters that are controllable by the viewer's side, which includes bitrate, codec, and layouts
-* ****[**Director Settings**](advanced-settings/director-parameters/): specific to the director's control room and director-specific features.
+* ****[**Director Settings**](advanced-settings/director-parameters/): specific to the director's control room and director-specific features
 * ****[**Audio Settings**](advanced-settings/audio-parameters/): filters, adding delay, bitrate, channels, mono/stereo, muting guests etc.
+* ****[**Design Settings**](advanced-settings/design-parameters/): labels, styles, clean output, CSS, mirroring, darkmode, background color, disable tallies etc.
 * ****[**Screen-share Settings**](advanced-settings/screen-share-parameters/): labels, audio filters, type, bitrate, quality etc.
 * ****[**Meshcast Settings**](advanced-settings/meshcast-parameters/): options for the [`&meshcast`](newly-added-parameters/and-meshcast.md) parameter like audio filters, bitrate, screen-share, codecs etc.
 * ****[**API & MIDI Settings**](advanced-settings/api-and-midi-parameters/): hotkey features via API and MIDI

@@ -11,7 +11,7 @@ description: Display labels as a video overlay
 
 ## Details
 
-This parameter will display the user's display name or label on screen, as a text overlay. The label can be set either via the URL using the [`&label`](label.md) parameter, or the room's director can set it dynamically via the "Add a label" option. &#x20;
+This parameter will display the user's display name or label on screen, as a text overlay. The label can be set either via the URL using the [`&label`](../../general-settings/label.md) parameter, or the room's director can set it dynamically via the "Add a label" option. &#x20;
 
 This parameter can be used on guest links, view links, or scene links. It will be sticky to each individual video and not the browser window as a whole.
 
@@ -38,7 +38,7 @@ If no preset option is passed, a default generic style is used.
 
 ### Font size customization
 
-You can change the font-size without using CSS, using the [`&fontsize`](../advanced-settings/view-parameters/fontsize.md) parameter. CSS is also supported though.
+You can change the font-size without using CSS, using the [`&fontsize`](../view-parameters/fontsize.md) parameter. CSS is also supported though.
 
 Font-size of labels will adjust slightly based on the window size.
 
@@ -47,7 +47,7 @@ Font-size of labels will adjust slightly based on the window size.
 CSS of the styles can be set via the OBS browser source stylesheet window.\
 The CSS class name you can customize is called `"video-label"`.
 
-![An example of how to set a custom CSS style for labels](<../.gitbook/assets/image (16).png>)
+![An example of how to set a custom CSS style for labels](<../../.gitbook/assets/image (16).png>)
 
 You can copy the below code, modifying it as you desire, as a starting point. You'll still need to use `&showlabels` to trigger the labels to display though.
 
@@ -66,7 +66,7 @@ You can copy the below code, modifying it as you desire, as a starting point. Yo
 
 Below is another example, this time we target the video tile class, creating a margin above the video elements.  We can then move the display label into that space, creating a label that is not overlaying the video itself, but still attached.
 
-![We can paste the CSS code directly into the OBS browser source, or we can host the style in a file and access it via the \&css parameter](<../.gitbook/assets/image (41).png>)
+![We can paste the CSS code directly into the OBS browser source, or we can host the style in a file and access it via the \&css parameter](<../../.gitbook/assets/image (41).png>)
 
 ```
 .tile {
@@ -87,16 +87,16 @@ Below is another example, this time we target the video tile class, creating a m
 
 ## Related
 
-{% content-ref url="label.md" %}
-[label.md](label.md)
+{% content-ref url="../../general-settings/label.md" %}
+[label.md](../../general-settings/label.md)
 {% endcontent-ref %}
 
-{% content-ref url="../newly-added-parameters/and-screensharelabel.md" %}
-[and-screensharelabel.md](../newly-added-parameters/and-screensharelabel.md)
+{% content-ref url="../../newly-added-parameters/and-screensharelabel.md" %}
+[and-screensharelabel.md](../../newly-added-parameters/and-screensharelabel.md)
 {% endcontent-ref %}
 
-{% content-ref url="../advanced-settings/view-parameters/fontsize.md" %}
-[fontsize.md](../advanced-settings/view-parameters/fontsize.md)
+{% content-ref url="../view-parameters/fontsize.md" %}
+[fontsize.md](../view-parameters/fontsize.md)
 {% endcontent-ref %}
 
 {% content-ref url="css.md" %}
