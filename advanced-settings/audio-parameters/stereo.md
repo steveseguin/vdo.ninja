@@ -15,7 +15,7 @@ description: >-
 
 Adding `&stereo` to the URL will apply audio-specific setting presets. For inbound audio streams, it can be used to increase the audio bitrate from 32-kbps to 256-kbps. For outbound streams, it will disable echo-cancellation and noise-reduction. When applied to both the outbound and inbound sides of an audio stream, it will also enable stereo audio if available.
 
-There are a variety of different modes that apply different combination of presets. You can also override any preset with other URL parameters, such as [`&audiobitrate`](../advanced-settings/view-parameters/audiobitrate.md), [`&outboundaudiobitrate`](../source-settings/and-outboundaudiobitrate.md), and [`&aec=1`](../source-settings/aec.md).&#x20;
+There are a variety of different modes that apply different combination of presets. You can also override any preset with other URL parameters, such as [`&audiobitrate`](audiobitrate.md), [`&outboundaudiobitrate`](and-outboundaudiobitrate.md), and [`&aec=1`](aec.md).&#x20;
 
 If using a microphone, wearing headphones is strongly recommended if using this parameter, along with knowledge of correctly setting your microphone gain settings. Echo and feedback issues can occur if this option is used incorrectly.
 
@@ -41,14 +41,14 @@ Use of this option is generally for advanced users who understand the consequenc
 
 For stereo-channel support to work, you will want both the viewer AND the publisher of the stream to have the respective `&stereo` flag add to their URL.&#x20;
 
-You can customize things further using [`&aec`](../source-settings/aec.md), [`&ag`](../source-settings/autogain.md), [`&dn`](../source-settings/and-denoise.md), [`&ab`](../advanced-settings/view-parameters/audiobitrate.md) and [`&mono`](../advanced-settings/view-parameters/mono.md). These flags will override the presets applied by the `&stereo` flag.  Please note, depending on your browser, enabling `&aec`, `&ag`, or `&dn` can force disable stereo audio.
+You can customize things further using [`&aec`](aec.md), [`&ag`](autogain.md), [`&dn`](and-denoise.md), [`&ab`](audiobitrate.md) and [`&mono`](mono.md). These flags will override the presets applied by the `&stereo` flag.  Please note, depending on your browser, enabling `&aec`, `&ag`, or `&dn` can force disable stereo audio.
 
 The most powerful mode is `stereo=1` , which if enabled:
 
-* Turns off audio normalization or auto-gain when publishing ([`&push`](../source-settings/push.md))
+* Turns off audio normalization or auto-gain when publishing ([`&push`](../../source-settings/push.md))
 * Turns off noise-cancellation when publishing
 * Turns off echo-cancellation when publishing
-* Enables higher audio bitrate playback, up to 256-kbps, when listening ([`&view`](../advanced-settings/view-parameters/view.md))
+* Enables higher audio bitrate playback, up to 256-kbps, when listening ([`&view`](../view-parameters/view.md))
 
 If the parameter is used, but left without a value, it is treated as a special case (either 1 or 3). Please see follow link for more info:&#x20;
 
@@ -82,14 +82,14 @@ Just for reference, the audio codec used by VDO.Ninja is OPUS (48khz), which can
 
 ## Related
 
-{% content-ref url="../advanced-settings/view-parameters/audiobitrate.md" %}
-[audiobitrate.md](../advanced-settings/view-parameters/audiobitrate.md)
+{% content-ref url="audiobitrate.md" %}
+[audiobitrate.md](audiobitrate.md)
 {% endcontent-ref %}
 
-{% content-ref url="../source-settings/and-outboundaudiobitrate.md" %}
-[and-outboundaudiobitrate.md](../source-settings/and-outboundaudiobitrate.md)
+{% content-ref url="and-outboundaudiobitrate.md" %}
+[and-outboundaudiobitrate.md](and-outboundaudiobitrate.md)
 {% endcontent-ref %}
 
-{% content-ref url="../newly-added-parameters/and-screensharestereo.md" %}
-[and-screensharestereo.md](../newly-added-parameters/and-screensharestereo.md)
+{% content-ref url="../../newly-added-parameters/and-screensharestereo.md" %}
+[and-screensharestereo.md](../../newly-added-parameters/and-screensharestereo.md)
 {% endcontent-ref %}

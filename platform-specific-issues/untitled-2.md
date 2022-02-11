@@ -17,4 +17,4 @@ Firefox may lack support for some features like remote zoom and detailed debug s
 
 Firefox supports up to around 2.5-mbps for 720p video and up to around 6-mbps for 1080p. It offers little control over video bitrates.
 
-Firefox does not treat Stereo audio in the same way that Chrome does. Results using [`&stereo`](../general-settings/stereo.md) and Firefox may vary.
+Firefox does not treat Stereo audio in the same way that Chrome does. Results using [`&stereo`](../advanced-settings/audio-parameters/stereo.md) and Firefox may vary.

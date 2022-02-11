@@ -10,6 +10,6 @@ Video playback is disabled for guests.
 
 ## Related
 
-{% content-ref url="deafen.md" %}
-[deafen.md](deafen.md)
+{% content-ref url="../advanced-settings/audio-parameters/deafen.md" %}
+[deafen.md](../advanced-settings/audio-parameters/deafen.md)
 {% endcontent-ref %}

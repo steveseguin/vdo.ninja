@@ -21,6 +21,6 @@ Adding `&screensharedenoise` to a source link turns audio noise reduction filter
 
 ## Related
 
-{% content-ref url="../source-settings/and-denoise.md" %}
-[and-denoise.md](../source-settings/and-denoise.md)
+{% content-ref url="../advanced-settings/audio-parameters/and-denoise.md" %}
+[and-denoise.md](../advanced-settings/audio-parameters/and-denoise.md)
 {% endcontent-ref %}

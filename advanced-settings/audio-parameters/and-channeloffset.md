@@ -20,8 +20,8 @@ Please see here for detailed testing results with different audio devices: [http
 
 ## Related
 
-{% content-ref url="../../source-settings/channelcount.md" %}
-[channelcount.md](../../source-settings/channelcount.md)
+{% content-ref url="channelcount.md" %}
+[channelcount.md](channelcount.md)
 {% endcontent-ref %}
 
 {% content-ref url="and-channels.md" %}

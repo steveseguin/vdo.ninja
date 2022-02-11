@@ -26,12 +26,12 @@ Useful for reducing the CPU and network load on other connect peers if voice-cha
 * Useful for a large group room where you want everyone in the room to see only the OBS Virtualcam output.
 * Consider using `&broadcast` option instead of this flag as it is better suited for presenting a single feed to a group than using `&novideo` alone.
 
-When used together with [`&noaudio`](noaudio.md) (`&novideo&noaudio`), prevents guest room member from seeing or hearing other member's audio or video feeds.
+When used together with [`&noaudio`](../audio-parameters/noaudio.md) (`&novideo&noaudio`), prevents guest room member from seeing or hearing other member's audio or video feeds.
 
 * Useful for directors who may wish to only issue commands or text chat, but not need to see video or audio.
 
 ## Related
 
-{% content-ref url="noaudio.md" %}
-[noaudio.md](noaudio.md)
+{% content-ref url="../audio-parameters/noaudio.md" %}
+[noaudio.md](../audio-parameters/noaudio.md)
 {% endcontent-ref %}

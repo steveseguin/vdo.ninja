@@ -18,10 +18,10 @@ description: Audio capture device to select N-number of audio channels
 
 ## Details
 
-`&channelcount=N` tells the audio capture device explicitly to select N-number of audio channels. This shouldn’t be needed often, but may help with debugging or advanced use canses. Setting [`&stereo=0`](../general-settings/stereo.md) will set `&channecount=1` by default.
+`&channelcount=N` tells the audio capture device explicitly to select N-number of audio channels. This shouldn’t be needed often, but may help with debugging or advanced use canses. Setting [`&stereo=0`](stereo.md) will set `&channecount=1` by default.
 
 ## Related
 
-{% content-ref url="../advanced-settings/view-parameters/and-channeloffset.md" %}
-[and-channeloffset.md](../advanced-settings/view-parameters/and-channeloffset.md)
+{% content-ref url="and-channeloffset.md" %}
+[and-channeloffset.md](and-channeloffset.md)
 {% endcontent-ref %}

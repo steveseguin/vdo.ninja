@@ -18,7 +18,7 @@ You can customize the playback of videos by adding query string parameters to th
 
 For example, a simple viewer URL link such as `https://vdo.ninja/?view=xxxxxxx` could be amended to `https://vdo.ninja/?view=xxxxxxx&videobitrate=500`, which will cause the viewer to receive the publisher's video stream at a video bitrate of 500-kbps.
 
-Multiple parameters can be appended together by using the ampersand (`&`) as a separating character. For example, to view the video stream published at stream ID `xxxxxxx` at a video bitrate of 500-kbps and set the [`&stereo`](general-settings/stereo.md) parameter to `1`:
+Multiple parameters can be appended together by using the ampersand (`&`) as a separating character. For example, to view the video stream published at stream ID `xxxxxxx` at a video bitrate of 500-kbps and set the [`&stereo`](advanced-settings/audio-parameters/stereo.md) parameter to `1`:
 
 ```markup
 http://vdo.ninja/?view=xxxxxxx&videobitrate=500&stereo=1
@@ -54,7 +54,5 @@ We've broken down the available URL parameters into 12 parts:
 * ****[**Newly Added Parameters**](advanced-settings/newly-added-parameters/), which have been recently added to the Docs or to VDO.Ninja.
 * ****[**Parameters only on beta**](advanced-settings/parameters-only-on-beta/), which are parameters only on [VDO.Ninja/beta](https://vdo.ninja/beta/) version at the moment.
 * ****[**Other Parameters**](other-parameters.md), which are currently not ready for production or not well-documented.
-
-There is also a [Cheat sheet of basic parameters](getting-started/cheat-sheet-of-basic-parameters.md).
 
 You can search for specific commands using the search bar at the top-right as well.

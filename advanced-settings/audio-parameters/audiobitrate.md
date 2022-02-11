@@ -34,10 +34,10 @@ For reference, Spotify uses around 96-kbps for stereo audio on mobile devices
 
 ## Related
 
-{% content-ref url="bitrate.md" %}
-[bitrate.md](bitrate.md)
+{% content-ref url="../view-parameters/bitrate.md" %}
+[bitrate.md](../view-parameters/bitrate.md)
 {% endcontent-ref %}
 
-{% content-ref url="../../general-settings/stereo.md" %}
-[stereo.md](../../general-settings/stereo.md)
+{% content-ref url="stereo.md" %}
+[stereo.md](stereo.md)
 {% endcontent-ref %}

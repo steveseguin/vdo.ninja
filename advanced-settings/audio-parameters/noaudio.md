@@ -15,6 +15,6 @@ Delivers video only streams; audio playback is disabled.
 
 ## Related
 
-{% content-ref url="novideo.md" %}
-[novideo.md](novideo.md)
+{% content-ref url="../view-parameters/novideo.md" %}
+[novideo.md](../view-parameters/novideo.md)
 {% endcontent-ref %}

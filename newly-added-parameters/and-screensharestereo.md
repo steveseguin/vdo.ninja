@@ -23,18 +23,18 @@ description: >-
 | 5                | This is the default if nothing is set. It behaves like 3 or 1, depending on if you are a guest or not |
 | (no value given) | It behaves like 3 or 1, depending on if you are a guest or not                                        |
 
-View [`&stereo`](../general-settings/stereo.md) for more details.
+View [`&stereo`](../advanced-settings/audio-parameters/stereo.md) for more details.
 
 ## Details
 
-Like [`&stereo`](../general-settings/stereo.md) but for screen-shares. For more information click here:
+Like [`&stereo`](../advanced-settings/audio-parameters/stereo.md) but for screen-shares. For more information click here:
 
-{% content-ref url="../general-settings/stereo.md" %}
-[stereo.md](../general-settings/stereo.md)
+{% content-ref url="../advanced-settings/audio-parameters/stereo.md" %}
+[stereo.md](../advanced-settings/audio-parameters/stereo.md)
 {% endcontent-ref %}
 
 ## Related
 
-{% content-ref url="../general-settings/stereo.md" %}
-[stereo.md](../general-settings/stereo.md)
+{% content-ref url="../advanced-settings/audio-parameters/stereo.md" %}
+[stereo.md](../advanced-settings/audio-parameters/stereo.md)
 {% endcontent-ref %}
