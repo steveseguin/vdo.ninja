@@ -10,7 +10,7 @@ VDO.Ninja is a tool that can be seen as a mediator, negotiating a direct connect
 
 The viewer (receiver) and the publisher (sender) each play their own role in determining the qualities of a stream, so likewise each side has its own set of parameters available to them. A publisher can have multiple viewers access their video stream, with each viewer having the ability to customize the quality of the stream they receive.
 
-The following guide details the options, syntax, values, and general use of these available settings/parameters; organized into three sections.
+The following guide details the options, syntax, values, and general use of these available settings/parameters.
 
 ## Passing parameters via the URL to achieve your desired stream settings
 
