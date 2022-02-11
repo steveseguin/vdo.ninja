@@ -8,16 +8,22 @@ description: Sets the interface language
 
 | Value            | Description                  |
 | ---------------- | ---------------------------- |
-| ru               | Russian                      |
-| fr               | French                       |
-| ja               | Japanese                     |
-| pt               | Portuguese                   |
+| cn               | Chinese                      |
+| cs               | Czech                        |
+| de               | German                       |
+| en               | Default if `&ln` not present |
 | es               | Spanish                      |
+| eu               | Basque                       |
+| fr               | French                       |
 | it               | Italian                      |
+| ja               | Japanese                     |
+| nl               | Dutch                        |
+| pig              | Pig Latin                    |
+| pt               | Portuguese                   |
+| ru               | Russian                      |
 | tr               | Turkish                      |
 | uk               | Ukrainian                    |
 | (no value given) | Less verbose interface       |
-| en               | Default if `&ln` not present |
 
 ## Details
 
