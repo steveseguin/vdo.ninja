@@ -40,19 +40,20 @@ A stream ID must also not already be in active use, else you will be provided wi
 
 ## Navigating the available setting options
 
-We've broken down the available URL parameters into 12 parts:
+We've broken down the available URL parameters into 13 parts:
 
-* ****[**Most important Parameters**](getting-started/cheat-sheet-of-basic-parameters.md), which are the basich and most common parameters.
-* ****[**General Settings**](advanced-settings/general-parameters/), which tend to settings that impact the app broadly, such as the color of the background.
-* ****[**Source Settings**](advanced-settings/source-parameters/), which are settings specific to publishing, so these are things related to customizing the camera and microphone.
-* ****[**Viewer's Settings**](advanced-settings/view-parameters/), which are aspects that are controllable by the viewer's side, which includes bitrate, codec, and layouts.
-* ****[**Director Settings**](advanced-settings/director-parameters/), which are specific to the director's control room and director-specific features.
-* ****[**Screen-share Settings**](advanced-settings/screen-share-parameters/), which are specific to screen-sharing features.
-* ****[**Meshcast Settings**](advanced-settings/meshcast-parameters/), which are specific to the [`&meshcast`](newly-added-parameters/and-meshcast.md) parameter.
-* ****[**API & MIDI Settings**](advanced-settings/api-and-midi-parameters/), which are specific to API and MIDI features.
-* [**TURN & STUN Settings**](advanced-settings/turn-and-stun-parameters/), which are specific to TURN and STUN features.
-* ****[**Newly Added Parameters**](advanced-settings/newly-added-parameters/), which have been recently added to the Docs or to VDO.Ninja.
-* ****[**Parameters only on beta**](advanced-settings/parameters-only-on-beta/), which are parameters only on [VDO.Ninja/beta](https://vdo.ninja/beta/) version at the moment.
-* ****[**Other Parameters**](other-parameters.md), which are currently not ready for production or not well-documented.
+* ****[**Most important Parameters**](getting-started/cheat-sheet-of-basic-parameters.md): the basic and most common parameters
+* ****[**General Settings**](advanced-settings/general-parameters/): parameters that impact the app broadly, such as the color of the background
+* ****[**Source Settings**](advanced-settings/source-parameters/): parameters specific to publishing, so these are things related to customizing the camera and microphone
+* ****[**Viewer's Settings**](advanced-settings/view-parameters/): parameters that are controllable by the viewer's side, which includes bitrate, codec, and layouts
+* ****[**Director Settings**](advanced-settings/director-parameters/): specific to the director's control room and director-specific features.
+* ****[**Audio Settings**](advanced-settings/audio-parameters/): filters, adding delay, bitrate, channels, mono/stereo, muting guests etc.
+* ****[**Screen-share Settings**](advanced-settings/screen-share-parameters/): labels, audio filters, type, bitrate, quality etc.
+* ****[**Meshcast Settings**](advanced-settings/meshcast-parameters/): options for the [`&meshcast`](newly-added-parameters/and-meshcast.md) parameter like audio filters, bitrate, screen-share, codecs etc.
+* ****[**API & MIDI Settings**](advanced-settings/api-and-midi-parameters/): hotkey features via API and MIDI
+* [**TURN & STUN Settings**](advanced-settings/turn-and-stun-parameters/): options for setting up TURN and STUN servers
+* ****[**Newly Added Parameters**](advanced-settings/newly-added-parameters/): recently added to the Docs or to VDO.Ninja
+* ****[**Parameters only on beta**](advanced-settings/parameters-only-on-beta/): parameters only on [VDO.Ninja/beta](https://vdo.ninja/beta/) version at the moment
+* ****[**Other Parameters**](other-parameters.md): not ready for production, not intended to be used or not well-documented
 
 You can search for specific commands using the search bar at the top-right as well.

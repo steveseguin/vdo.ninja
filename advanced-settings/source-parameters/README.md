@@ -5,15 +5,23 @@
 | Parameter                                                                        | Explanation                                                                                                           |
 | -------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------- |
 | ``[`&push`](../../source-settings/push.md)``                                     | The stream ID that you are publishing with will be the defined value                                                  |
+| ``[`&aec`](../../source-settings/aec.md)``                                       | Automatic echo-cancellation is ON or OFF                                                                              |
 | ``[`&audiodevice`](../../source-settings/audiodevice.md)``                       | Pre-configures the selected audio device                                                                              |
+| ``[`&audiogain`](../../source-settings/gain.md)``                                | Applies a gain multiplier (as a percentage) to the local microphone                                                   |
+| ``[`&audiolatency`](../../newly-added-parameters/and-audiolatency.md)``          | Adds an audio-latency to the published audio stream                                                                   |
+| ``[`&autogain`](../../source-settings/autogain.md)``                             | Sets whether audio auto-normalization is ON or OFF                                                                    |
 | ``[`&autostart`](../../source-settings/and-autostart.md)``                       | Skips the camera/audio device or screenshare selection                                                                |
 | ``[`&bigbutton`](../../newly-added-parameters/and-bigbutton.md)``                | Makes the microphone mute button a lot bigger                                                                         |
+| ``[`&channelcount`](../../source-settings/channelcount.md)``                     | Audio capture device to select N-number of audio channels                                                             |
 | ``[`&chatbutton`](../../general-settings/chatbutton.md)``                        | Shows or hides the chat button                                                                                        |
+| ``[`&compressor`](../../source-settings/and-compressor.md)``                     | Applies a generic audio compressor to the local microphone                                                            |
 | ``[`&consent`](../../source-settings/consent.md)``                               | Will ask the user for content to remote change their camera or microphone                                             |
+| ``[`&denoise`](../../source-settings/and-denoise.md)``                           | Turn audio noise reduction filter ON or OFF                                                                           |
 | ``[`&device`](../../source-settings/and-device.md)``                             | Same as `&audiodevice` or `&videodevice`, but applies to both                                                         |
 | ``[`&directorchat`](../../source-settings/directorchat.md)``                     | Message ONLY the director                                                                                             |
 | ``[`&easyexit`](../../source-settings/easyexit.md)``                             | Won't ask the user to confirm that they wish to exit or leave the page                                                |
 | ``[`&effects`](../../source-settings/effects.md)``                               | Applies effects to the video/audio feeds                                                                              |
+| ``[`&equalizer`](../../source-settings/and-equalizer.md)``                       | Provides access to a generic audio equalizer that can be applied to the local microphone                              |
 | ``[`&fileshare`](../../source-settings/and-fileshare.md)``                       | Allows the user to select a video or audio file as a source for streaming                                             |
 | ``[`&forceios`](../../source-settings/and-forceios.md)``                         | Forces iOS devices to publish video to this room guest                                                                |
 | ``[`&framerate`](../../source-settings/and-framerate.md)``                       | Sets the maximum frame rate of the video in frames per second                                                         |
@@ -23,15 +31,21 @@
 | ``[`&height`](../../source-settings/and-height.md)``                             | Sets the maximum height of the video allowed in pixels                                                                |
 | ``[`&hidemenu`](../../viewers-settings/and-hidemenu.md)``                        | Hides the VDO.Ninja-branded menu and header bar                                                                       |
 | ``[`&intro`](../../source-settings/intro.md)``                                   | When combined with the either `&webcam` or `&screenshare`, this option won't auto-load the camera/mic selection page  |
+| ``[`&limiter`](../../source-settings/and-limiter.md)``                           | Applies a generic audio limiter to the local microphone                                                               |
 | ``[`&limittotalbitrate`](../../source-settings/limittotalbitrate.md)``           | Limit the total outbound bitrate                                                                                      |
+| ``[`&lowcut`](../../source-settings/lowcut.md)``                                 | Adds a low-cut filter                                                                                                 |
 | ``[`&maxbitrate`](../../source-settings/maxbitrate.md)``                         | Limits the max video bitrate out for this publisher, per stream out                                                   |
 | ``[`&maxconnections`](../../source-settings/and-maxconnections.md)``             | Limits total of view and push connections                                                                             |
 | ``[`&maxframerate`](../../source-settings/and-maxframerate.md)``                 | Like `&framerate`, except it will allow for lower frame rates if the specific frame rate requested failed             |
 | ``[`&maxviewers`](../../source-settings/and-maxviewers.md)``                     | Limits the number of viewers allowed                                                                                  |
 | ``[`&mediasettings`](../../newly-added-parameters/and-mediasettings.md)``        | Adds the option to change the video quality (resolution) dynamically via the settings menu                            |
+| ``[`&micdelay`](../../source-settings/and-micdelay.md)``                         | Delays the microphone by specified time in ms                                                                         |
 | ``[`&miconly`](../../source-settings/miconly.md)``                               | Share audio-only; no video publishing allowed                                                                         |
 | ``[`&minipreview`](../../source-settings/and-minipreview.md)``                   | Mini self preview at the top right corner                                                                             |
+| ``[`&mute`](../../source-settings/and-mute.md)``                                 | Starts with the microphone muted by default                                                                           |
+| ``[`&mutespeaker`](../../source-settings/and-mutespeaker.md)``                   | Auto mutes guest's speaker                                                                                            |
 | ``[`&nofileshare`](../../source-settings/nofileshare.md)``                       | Hides the ability for a guest to upload a file                                                                        |
+| ``[`&noisegate`](../../source-settings/noisegate.md)``                           | If someone else is speaking in a group call, the guest's microphone gets muted automatically                          |
 | ``[`&nomicbutton`](../../viewers-settings/nomicbutton.md)``                      | Disables the mic button; guests can't mute audio                                                                      |
 | ``[`&nopreview`](../../source-settings/and-nopreview.md)``                       | Disables the local self video preview                                                                                 |
 | ``[`&nosettings`](../../source-settings/and-nosettings.md)``                     | Disables the local settings button                                                                                    |
@@ -40,6 +54,7 @@
 | ``[`&novideobutton`](../../viewers-settings/and-novideobutton.md)``              | Disables the video button; guests can't mute video                                                                    |
 | ``[`&nowebsite`](../../source-settings/nowebsite.md)``                           | Disables IFRAMEs from loading, such as remotely shared websites by another guest or director                          |
 | ``[`&order`](../../source-settings/order.md)``                                   | The order priority of a source video when added to the video mixer                                                    |
+| ``[`&outboundaudiobitrate`](../../source-settings/and-outboundaudiobitrate.md)`` | Target audio bitrate and max bitrate for outgoing audio streams                                                       |
 | ``[`&outboundvideobitrate`](../../source-settings/and-outboundvideobitrate.md)`` | Target video bitrate and max bitrate for outgoing video streams                                                       |
 | ``[`&pcm`](../../source-settings/and-pcm.md)``                                   | PCM audio recordings                                                                                                  |
 | ``[`&ptz`](../../source-settings/ptz.md)``                                       | Enables pan/tilt control of the device, if compatible                                                                 |
