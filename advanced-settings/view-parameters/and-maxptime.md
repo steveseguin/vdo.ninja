@@ -1,5 +1,5 @@
 ---
-description: Maximum packet size of audio in milliseconds
+description: Maximum packet size of audio
 ---
 
 # \&maxptime
