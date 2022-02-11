@@ -44,7 +44,7 @@ We've broken down the available URL parameters into 13 parts:
 
 * ****[**Most important Parameters**](getting-started/cheat-sheet-of-basic-parameters.md): the basic and most common parameters
 * ****[**General Settings**](advanced-settings/general-parameters/): parameters that impact the app broadly, such as the color of the background
-* ****[**Source Settings**](advanced-settings/source-parameters/): parameters specific to publishing, so these are things related to customizing the camera and microphone
+* ****[**Source Settings**](advanced-settings/source-parameters/): parameters specific to publishing, so these are things related to customizing the camera settings
 * ****[**Viewer's Settings**](advanced-settings/view-parameters/): parameters that are controllable by the viewer's side, which includes bitrate, codec, and layouts
 * ****[**Director Settings**](advanced-settings/director-parameters/): specific to the director's control room and director-specific features.
 * ****[**Audio Settings**](advanced-settings/audio-parameters/): filters, adding delay, bitrate, channels, mono/stereo, muting guests etc.
