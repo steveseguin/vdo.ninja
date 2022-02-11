@@ -7,6 +7,7 @@ description: Disables the tally light effects
 ## Aliases
 
 * `&oo`
+* `&disableobs`
 
 ## Details
 
