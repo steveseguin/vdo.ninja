@@ -20,7 +20,7 @@ which will cause the viewer to receive the publisher's video stream at a video b
 Multiple parameters can be appended together by using the ampersand (`&`) as a separating character.&#x20;
 {% endhint %}
 
-For example, to view the video stream published at stream ID `xxxxxxx` at a video bitrate of 500-kbps and set the [`&stereo`](../advanced-settings/audio-parameters/stereo.md) parameter to `1`:
+For example, to view the video stream published at stream ID `xxxxxxx` at a video bitrate of 500-kbps and set the [`&stereo`](../general-settings/stereo.md) parameter to `1`:
 
 ```
 http://vdo.ninja/?view=xxxxxxx&bitrate=500&stereo=1

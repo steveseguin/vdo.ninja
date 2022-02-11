@@ -10,7 +10,7 @@ Dealing with feedback is challenging, as the reasons are numerous, but not alway
 
 * Using Safari as it has poor AEC abilities; use Chrome instead.\
 
-* ``[`&proaudio`](../advanced-settings/audio-parameters/stereo.md) or [`&stereo`](../advanced-settings/audio-parameters/stereo.md) mode is being used. This mode will disable echo-cancellation and so you must use headphones in this mode.\
+* ``[`&proaudio`](../general-settings/stereo.md) or [`&stereo`](../general-settings/stereo.md) mode is being used. This mode will disable echo-cancellation and so you must use headphones in this mode.\
 
 * Screen-sharing the desktop /w audio capture on, especially in the case of a group room, will create nasty feedback for others.\
 

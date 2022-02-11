@@ -19,7 +19,7 @@ description: Automatic echo-cancellation is ON or OFF
 
 Adding this to a push link, automatic echo-cancellation turns ON or OFF.
 
-May need to be disabled to use [`&stereo`](stereo.md) on some older browsers.
+May need to be disabled to use [`&stereo`](../general-settings/stereo.md) on some older browsers.
 
 ## Related
 
@@ -27,6 +27,6 @@ May need to be disabled to use [`&stereo`](stereo.md) on some older browsers.
 [noisegate.md](noisegate.md)
 {% endcontent-ref %}
 
-{% content-ref url="../../newly-added-parameters/and-screenshareaec.md" %}
-[and-screenshareaec.md](../../newly-added-parameters/and-screenshareaec.md)
+{% content-ref url="../newly-added-parameters/and-screenshareaec.md" %}
+[and-screenshareaec.md](../newly-added-parameters/and-screenshareaec.md)
 {% endcontent-ref %}

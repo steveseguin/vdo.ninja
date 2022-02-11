@@ -22,6 +22,6 @@ Sets the viewer's bitrate and overrides the [`&vb`](../advanced-settings/view-pa
 
 ## Related
 
-{% content-ref url="../advanced-settings/audio-parameters/and-outboundaudiobitrate.md" %}
-[and-outboundaudiobitrate.md](../advanced-settings/audio-parameters/and-outboundaudiobitrate.md)
+{% content-ref url="and-outboundaudiobitrate.md" %}
+[and-outboundaudiobitrate.md](and-outboundaudiobitrate.md)
 {% endcontent-ref %}

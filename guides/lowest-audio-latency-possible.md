@@ -14,18 +14,18 @@ https://vdo.ninja/?push=MystreamID123&view=TheirStreamID123&aec=0&agc=0&denoise=
 
 Looking at the link, let's explore:
 
-``[`&aec=0`](../advanced-settings/audio-parameters/aec.md) disables the echo cancellation; this implies we will need to use headphones
+``[`&aec=0`](../source-settings/aec.md) disables the echo cancellation; this implies we will need to use headphones
 
-``[`&agc=0`](../advanced-settings/audio-parameters/autogain.md) will disable auto-gain, which is preferable if streaming music
+``[`&agc=0`](../source-settings/autogain.md) will disable auto-gain, which is preferable if streaming music
 
-``[`&denoise=0`](../advanced-settings/audio-parameters/and-denoise.md) will disable the noise filter, which is ideal with music applications.
+``[`&denoise=0`](../source-settings/and-denoise.md) will disable the noise filter, which is ideal with music applications.
 
-``[`&ab=16`](../advanced-settings/audio-parameters/audiobitrate.md) gives us a constant audio bitrate of 16-kbps. Consistency will ensure more reliable latencies, and 16-kbps is so light-weight it shouldn't be boggled down on bad connections. You can increase this value depending on the audio fidelity that you want, but higher could introduce more latency.
+``[`&ab=16`](../advanced-settings/view-parameters/audiobitrate.md) gives us a constant audio bitrate of 16-kbps. Consistency will ensure more reliable latencies, and 16-kbps is so light-weight it shouldn't be boggled down on bad connections. You can increase this value depending on the audio fidelity that you want, but higher could introduce more latency.
 
-``[`&enhance`](../advanced-settings/view-parameters/enhance.md), [`&ptime=10`](../advanced-settings/audio-parameters/and-ptime.md), and [`&maxptime=10`](../advanced-settings/audio-parameters/and-maxptime.md) are advanced settings, that tell the system to prioritize audio packets and limit their size to 10ms. This is the lowest we can set them using a browser, but it might be possible to go lower if using something like the Raspberry\_Ninja hardware project that VDO.Ninja has available for advanced users.
+``[`&enhance`](../advanced-settings/view-parameters/enhance.md), [`&ptime=10`](../advanced-settings/view-parameters/and-ptime.md), and [`&maxptime=10`](../advanced-settings/view-parameters/and-maxptime.md) are advanced settings, that tell the system to prioritize audio packets and limit their size to 10ms. This is the lowest we can set them using a browser, but it might be possible to go lower if using something like the Raspberry\_Ninja hardware project that VDO.Ninja has available for advanced users.
 
 ``[`&novideo`](../advanced-settings/view-parameters/novideo.md) disables video, which can make a big impact on latency, as not streaming video will free up a lot of bandwidth, but also not force the audio to stay in sync with the video. You can send the video in a second tab/session if needed, and that way, it won't try to stay in sync.
 
-``[`&noap`](../advanced-settings/audio-parameters/noaudioprocessing.md) just disables any of the advanced web-audio processing, such as compression, gain, level-meters, and panning. This will free up some milliseconds of latency in some cases,
+``[`&noap`](../general-settings/noaudioprocessing.md) just disables any of the advanced web-audio processing, such as compression, gain, level-meters, and panning. This will free up some milliseconds of latency in some cases,
 
 Without much effort, you should be able to achieve 40-milliseconds of latency, or less, with this setup. Achieving between 20- to 30-ms is feasible in cases, but expectations of under 20-ms will require significantly more investment.

@@ -22,6 +22,6 @@ Adding `&screenshareautogain` to a source link, sets whether audio auto-normaliz
 
 ## Related
 
-{% content-ref url="../advanced-settings/audio-parameters/autogain.md" %}
-[autogain.md](../advanced-settings/audio-parameters/autogain.md)
+{% content-ref url="../source-settings/autogain.md" %}
+[autogain.md](../source-settings/autogain.md)
 {% endcontent-ref %}
