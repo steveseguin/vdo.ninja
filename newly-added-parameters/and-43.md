@@ -1,5 +1,5 @@
 ---
-description: Optimizes the video mixer for 4:3 videos
+description: Optimizes the video mixer for 4:3 aspect ratio
 ---
 
 # &43
