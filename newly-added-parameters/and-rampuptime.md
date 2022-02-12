@@ -18,10 +18,10 @@ description: >-
 
 When a guest connects, this just tries to load video from that guest for a few seconds, even if not yet added to a scene. It helps the browser judge total bandwidth availability better, so bitrates can ramp up slightly faster later when actually added needed.
 
-Related to this, the target bitrate for this ramp up period has been increased to 1500kbps, rather than 1000; this could already be changed with [`&preloadbitrate`](and-preloadbitrate.md) (sender side), but based on feedback I'm nudging it up a bit.
+Related to this, the target bitrate for this ramp up period has been increased to 1500kbps, rather than 1000; this could already be changed with [`&preloadbitrate`](../advanced-settings/mixer-scene-parameters/and-preloadbitrate.md) (sender side), but based on feedback I'm nudging it up a bit.
 
 ## Related
 
-{% content-ref url="and-preloadbitrate.md" %}
-[and-preloadbitrate.md](and-preloadbitrate.md)
+{% content-ref url="../advanced-settings/mixer-scene-parameters/and-preloadbitrate.md" %}
+[and-preloadbitrate.md](../advanced-settings/mixer-scene-parameters/and-preloadbitrate.md)
 {% endcontent-ref %}

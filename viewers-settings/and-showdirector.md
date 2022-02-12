@@ -28,6 +28,6 @@ This URL value can be added to the director's URL (`&director=XXXX&showdirector`
 [director.md](director.md)
 {% endcontent-ref %}
 
-{% content-ref url="../advanced-settings/view-parameters/scene.md" %}
-[scene.md](../advanced-settings/view-parameters/scene.md)
+{% content-ref url="../advanced-settings/mixer-scene-parameters/scene.md" %}
+[scene.md](../advanced-settings/mixer-scene-parameters/scene.md)
 {% endcontent-ref %}

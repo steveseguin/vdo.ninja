@@ -41,7 +41,7 @@ You have to add them to the source side ([`&push`](../../source-settings/push.md
 
 ## **Viewer side options**
 
-You have to add them to the viewer side ([`&view`](../view-parameters/view.md) or [`&scene`](../view-parameters/scene.md)).
+You have to add them to the viewer side ([`&view`](../mixer-scene-parameters/view.md) or [`&scene`](../mixer-scene-parameters/scene.md)).
 
 | Parameter                                                       | Explanation                                                                         |
 | --------------------------------------------------------------- | ----------------------------------------------------------------------------------- |

@@ -19,7 +19,7 @@ description: Sets the codec to encode the video
 ****\
 ****`https://vdo.ninja/?room=xxx7654&scene=1&bitrate=2000`**`&codec=vp9`**\
 ****\
-****The `&codec` parameter is added to the viewer-side; so the [`&view`](view.md) or [`&scene`](scene.md) link.
+****The `&codec` parameter is added to the viewer-side; so the [`&view`](../mixer-scene-parameters/view.md) or [`&scene`](../mixer-scene-parameters/scene.md) link.
 
 ### **Description**
 

@@ -65,7 +65,7 @@ The controls in the VDO.Ninja’s director room only will let you adjust the vol
 \
 You can create a solo link by hand by doing [https://vdo.ninja/?room=RID\&view=SID\&scene](https://vdo.ninja/?room=RID\&view=SID\&scene)
 
-Scene is left blank, while the [`&view`](../../advanced-settings/view-parameters/view.md) value is specified.\
+Scene is left blank, while the [`&view`](../../advanced-settings/mixer-scene-parameters/view.md) value is specified.\
 \
 Every time you view a link, in OBS or elsewhere, you increase the load on the remote guests’s computer. Pulling more than one HD feed from a remote guest is not advisable, unless they have a capable computer and good internet connection. As a director, you can disable the preview video in the control box, freeing up a small bit more bandwidth for those connected on very weak connections. (three buttons; video off / video on / binoculars for a HD preview).
 
