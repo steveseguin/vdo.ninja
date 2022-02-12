@@ -1,6 +1,10 @@
+---
+description: Options for &director URLs
+---
+
 # Director Parameters
 
-**Director Settings**, which are specific to the director's control room and director-specific features.
+Parameters specified for the director's control panel; have to be used together with the [`&director`](../../viewers-settings/director.md) parameter.
 
 | Parameter                                                               | Explanation                                                                                |
 | ----------------------------------------------------------------------- | ------------------------------------------------------------------------------------------ |

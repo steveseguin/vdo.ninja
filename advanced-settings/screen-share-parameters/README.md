@@ -4,9 +4,19 @@ description: Labels, audio filters, type, bitrate, quality etc.
 
 # Screen-share Parameters
 
-They are separated in [source side](./#source-side-options) (push) options and [viewer side](./#viewer-side-options) (view) options.
+Screen-share Parameters are separated in [general options](./#general-options), [source side](./#source-side-options) (push) options and [viewer side](./#viewer-side-options) (view) options.
+
+## General options
+
+You can add them to both, source ([`&push`](../../source-settings/push.md)) and viewer ([`&view`](../view-parameters/view.md) or [`&scene`](../view-parameters/scene.md)) sides.
+
+| Parameter                                                                         | Explanation                                                                                                 |
+| --------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------- |
+| ``[`&screensharestereo`](../../newly-added-parameters/and-screensharestereo.md)`` | Sets the audio mode for screen-shares to stereo and changes default audio settings to improve audio quality |
 
 ## Source side options
+
+You can add them to both, source ([`&push`](../../source-settings/push.md)) and viewer ([`&view`](../view-parameters/view.md) or [`&scene`](../view-parameters/scene.md)) sides.
 
 | Parameter                                                                               | Explanation                                                                                                 |
 | --------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------- |
@@ -27,6 +37,8 @@ They are separated in [source side](./#source-side-options) (push) options and [
 | ``[`&ssb`](../../source-settings/ssb.md)``                                              | Forces the screen-share button to appear for guests                                                         |
 
 ## **Viewer side options**
+
+You have to add them to the viewer side ([`&view`](../view-parameters/view.md) or [`&scene`](../view-parameters/scene.md)).
 
 | Parameter                                                                           | Explanation                                               |
 | ----------------------------------------------------------------------------------- | --------------------------------------------------------- |

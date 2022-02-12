@@ -24,7 +24,7 @@ Multiple parameters can be appended together by using the ampersand (`&`) as a s
 http://vdo.ninja/?view=xxxxxxx&videobitrate=500&stereo=1
 ```
 
-Some parameters, like [`&view`](advanced-settings/mixer-scene-parameters/view.md) will accept a comma-separated list of valid values, so you can do some rather powerful combos, such as publish a video (using [`&push`](source-settings/push.md)) while also viewing multiple others videos. VDO.Ninja will auto-mix the videos together into a single layout for you:
+Some parameters, like [`&view`](advanced-settings/view-parameters/view.md) will accept a comma-separated list of valid values, so you can do some rather powerful combos, such as publish a video (using [`&push`](source-settings/push.md)) while also viewing multiple others videos. VDO.Ninja will auto-mix the videos together into a single layout for you:
 
 ```markup
 http://vdo.ninja/?push=aaa&view=bbb,ccc,ddd
@@ -40,7 +40,7 @@ A stream ID must also not already be in active use, else you will be provided wi
 
 ## Navigating the available setting options
 
-We've broken down the available URL parameters into 14 parts:
+We've broken down the available URL parameters into 15 parts:
 
 * ****[**Most important Parameters**](getting-started/cheat-sheet-of-basic-parameters.md): the basic and most common parameters
 * ****[**General Settings**](advanced-settings/general-parameters/): parameters that impact the app broadly
@@ -49,6 +49,7 @@ We've broken down the available URL parameters into 14 parts:
 * ****[**Director Settings**](advanced-settings/director-parameters/): specific to the director's control room and director-specific features
 * ****[**Audio Settings**](advanced-settings/audio-parameters/): filters, adding delay, bitrate, channels, mono/stereo, muting guests etc.
 * ****[**Design Settings**](advanced-settings/design-parameters/): labels, styles, clean output, CSS, mirroring, margin, darkmode, background color, disable tallies etc.
+* [**Mixer/Scene Settings**](advanced-settings/mixer-scene-parameters/): layout and design for the video mixer in rooms/scenes, preload/hidden scene bitrate
 * ****[**Screen-share Settings**](advanced-settings/screen-share-parameters/): labels, audio filters, type, bitrate, quality etc.
 * ****[**Meshcast Settings**](advanced-settings/meshcast-parameters/): options for the [`&meshcast`](newly-added-parameters/and-meshcast.md) parameter like audio filters, bitrate, screen-share, codecs etc.
 * ****[**API & MIDI Settings**](advanced-settings/api-and-midi-parameters/): hotkey features via API and MIDI

@@ -27,6 +27,6 @@ If the stream ID is already in active use, an error will be shown and the stream
 
 ## Related
 
-{% content-ref url="../advanced-settings/mixer-scene-parameters/view.md" %}
-[view.md](../advanced-settings/mixer-scene-parameters/view.md)
+{% content-ref url="../advanced-settings/view-parameters/view.md" %}
+[view.md](../advanced-settings/view-parameters/view.md)
 {% endcontent-ref %}

@@ -23,6 +23,6 @@ It will not work in full-screen, and the control-bar gets rotated also. Some bro
 
 ## Related
 
-{% content-ref url="../mixer-scene-parameters/and-portrait.md" %}
-[and-portrait.md](../mixer-scene-parameters/and-portrait.md)
+{% content-ref url="../view-parameters/and-portrait.md" %}
+[and-portrait.md](../view-parameters/and-portrait.md)
 {% endcontent-ref %}

@@ -19,14 +19,14 @@ Optimize the auto-mixer to work with video streams that are in portrait mode (ve
 [cover.md](cover.md)
 {% endcontent-ref %}
 
-{% content-ref url="and-square.md" %}
-[and-square.md](and-square.md)
+{% content-ref url="../../newly-added-parameters/and-square.md" %}
+[and-square.md](../../newly-added-parameters/and-square.md)
 {% endcontent-ref %}
 
 {% content-ref url="../design-parameters/and-rotate.md" %}
 [and-rotate.md](../design-parameters/and-rotate.md)
 {% endcontent-ref %}
 
-{% content-ref url="and-43.md" %}
-[and-43.md](and-43.md)
+{% content-ref url="../../newly-added-parameters/and-43.md" %}
+[and-43.md](../../newly-added-parameters/and-43.md)
 {% endcontent-ref %}

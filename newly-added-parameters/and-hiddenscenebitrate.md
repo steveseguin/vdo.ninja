@@ -14,12 +14,12 @@ description: >-
 
 ## Details
 
-The `&hiddenscenebitrate` flag can be used to force videos not added yet to a scene to run at the specified bitrate (400-kbps or whatever; which is what [`&scene=1`](scene.md) was set to previously).
+The `&hiddenscenebitrate` flag can be used to force videos not added yet to a scene to run at the specified bitrate (400-kbps or whatever; which is what [`&scene=1`](../advanced-settings/view-parameters/scene.md) was set to previously).
 
 ## Related
 
-{% content-ref url="scene.md" %}
-[scene.md](scene.md)
+{% content-ref url="../advanced-settings/view-parameters/scene.md" %}
+[scene.md](../advanced-settings/view-parameters/scene.md)
 {% endcontent-ref %}
 
 {% content-ref url="and-preloadbitrate.md" %}

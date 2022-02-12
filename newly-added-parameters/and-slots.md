@@ -18,7 +18,7 @@ You can pass `&slots=N` to a scene link and it will force the auto-mixer to have
 
 Example: `https://vdo.ninja/?room=roomname&scene&slots=4`
 
-![](<../../.gitbook/assets/image (114).png>)
+![](<../.gitbook/assets/image (114).png>)
 
 I made positioning sticky when using `&slots`, so videos will stick in place now (slot position wise at least), even if another video before it leaves.
 

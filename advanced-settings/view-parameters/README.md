@@ -1,11 +1,11 @@
 # View Parameters
 
-**Viewer's Settings**, which are aspects that are controllable by the viewer's side, which includes bitrate, codec, and layouts. These parameters are mostly added to [`&view`](../mixer-scene-parameters/view.md) and [`&scene`](../mixer-scene-parameters/scene.md) links. But some of them can also be added to guests and to the director.
+**Viewer's Settings**, which are aspects that are controllable by the viewer's side, which includes bitrate, codec, and layouts. These parameters are mostly added to [`&view`](view.md) and [`&scene`](scene.md) links. But some of them can also be added to guests and to the director.
 
 | Parameter                                              | Explanation                                                                                                                                                                                   |
 | ------------------------------------------------------ | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| ``[`&view`](../mixer-scene-parameters/view.md)``       | Defines the stream or streams you are receiving, by their stream IDs                                                                                                                          |
-| ``[`&scene`](../mixer-scene-parameters/scene.md)``     | Defines the link to be treated like a scene, used by a room's director                                                                                                                        |
+| ``[`&view`](view.md)``                                 | Defines the stream or streams you are receiving, by their stream IDs                                                                                                                          |
+| ``[`&scene`](scene.md)``                               | Defines the link to be treated like a scene, used by a room's director                                                                                                                        |
 | ``[`&animated`](animated.md)``                         | Videos in a group scene will slide around the screen when being re-arranged                                                                                                                   |
 | ``[`&videobitrate`](bitrate.md)``                      | Sets the "desired target" bitrate in kbps                                                                                                                                                     |
 | ``[`&broadcast`](broadcast.md)``                       | A useful flag to allow the director to present their own video to the group, often used in conjunction with a virtual webcam; it can allow for larger groups rooms by reducing load on guests |

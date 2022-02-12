@@ -24,8 +24,8 @@ You can override all this logic I'm using for pre-loading bitrates of videos in 
 
 ## Related
 
-{% content-ref url="scene.md" %}
-[scene.md](scene.md)
+{% content-ref url="../advanced-settings/view-parameters/scene.md" %}
+[scene.md](../advanced-settings/view-parameters/scene.md)
 {% endcontent-ref %}
 
 {% content-ref url="and-hiddenscenebitrate.md" %}

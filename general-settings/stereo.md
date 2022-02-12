@@ -48,7 +48,7 @@ The most powerful mode is `stereo=1` , which if enabled:
 * Turns off audio normalization or auto-gain when publishing ([`&push`](../source-settings/push.md))
 * Turns off noise-cancellation when publishing
 * Turns off echo-cancellation when publishing
-* Enables higher audio bitrate playback, up to 256-kbps, when listening ([`&view`](../advanced-settings/mixer-scene-parameters/view.md))
+* Enables higher audio bitrate playback, up to 256-kbps, when listening ([`&view`](../advanced-settings/view-parameters/view.md))
 
 If the parameter is used, but left without a value, it is treated as a special case (either 1 or 3). Please see follow link for more info:&#x20;
 

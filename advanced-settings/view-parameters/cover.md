@@ -16,8 +16,8 @@ Can be used to have a video be zoomed in and cropped, so it fills its window are
 [and-portrait.md](and-portrait.md)
 {% endcontent-ref %}
 
-{% content-ref url="and-square.md" %}
-[and-square.md](and-square.md)
+{% content-ref url="../../newly-added-parameters/and-square.md" %}
+[and-square.md](../../newly-added-parameters/and-square.md)
 {% endcontent-ref %}
 
 {% content-ref url="../design-parameters/rounded.md" %}
