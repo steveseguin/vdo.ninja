@@ -15,7 +15,7 @@ description: Rotates the camera
 
 Applies to the publisher's side. Rotates the camera 90-deg by default, or specify `&rotate=180` or `&rotate=270` to rotate more.
 
-Rotates your video for the guests/obs as well. The rotation uses CSS.
+Rotates your video for the guests/OBS as well. The rotation uses CSS.
 
 {% hint style="warning" %}
 It will not work in full-screen, and the control-bar gets rotated also. Some browsers might have issues, too.
@@ -23,6 +23,6 @@ It will not work in full-screen, and the control-bar gets rotated also. Some bro
 
 ## Related
 
-{% content-ref url="../advanced-settings/view-parameters/and-portrait.md" %}
-[and-portrait.md](../advanced-settings/view-parameters/and-portrait.md)
+{% content-ref url="../view-parameters/and-portrait.md" %}
+[and-portrait.md](../view-parameters/and-portrait.md)
 {% endcontent-ref %}

@@ -20,6 +20,6 @@ Can be used to have a video be zoomed in and cropped, so it fills its window are
 [and-square.md](../../newly-added-parameters/and-square.md)
 {% endcontent-ref %}
 
-{% content-ref url="../../general-settings/rounded.md" %}
-[rounded.md](../../general-settings/rounded.md)
+{% content-ref url="../design-parameters/rounded.md" %}
+[rounded.md](../design-parameters/rounded.md)
 {% endcontent-ref %}

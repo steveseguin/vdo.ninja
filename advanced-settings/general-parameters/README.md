@@ -14,6 +14,5 @@ You can use them for publisher, viewer and director URLs.
 | ``[`&password`](../../general-settings/password.md)``         | Sets a password to view a stream or to join a room                            |
 | ``[`&remote`](../../general-settings/remote.md)``             | Allows remote operation of the zoom and focus, and access to statistics       |
 | ``[`&room`](../../general-settings/room.md)``                 | Sets a room id for the session to join                                        |
-| ``[`&rounded`](../../general-settings/rounded.md)``           | Rounds the edges of videos                                                    |
 | ``[`&stats`](../../general-settings/and-stats.md)``           | Shows the connection/media stats window by default                            |
 | ``[`&sticky`](../../general-settings/sticky.md)``             | Allows a user to save and then later restore their streaming session settings |

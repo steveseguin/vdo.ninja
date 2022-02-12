@@ -1,7 +1,7 @@
 ---
 description: >-
-  Labels, styles, clean output, CSS, mirroring, darkmode, background color,
-  disable tallies etc.
+  Labels, styles, clean output, CSS, mirroring, margin, darkmode, background
+  color, disable tallies etc.
 ---
 
 # Design Parameters
@@ -24,6 +24,8 @@ You can add them to both, source and viewer sides.
 | ``[`&base64css`](and-base64css.md)``            | Lets you add css to the URL, but as a single string, so no external reference to a file is needed |
 | ``[`&mirror`](mirror.md)``                      | Inverts the video so it is the mirror reflection                                                  |
 | ``[`&flip`](and-flip.md)``                      | Inverts the video so it is upside down                                                            |
+| ``[`&rounded`](rounded.md)``                    | Rounds the edges of videos                                                                        |
+| ``[`&margin`](margin.md)``                      | Adds a margin around the videos in pixel                                                          |
 | ``[`&darkmode`](darkmode.md)``                  | Darkens the website and interface                                                                 |
 | ``[`&lightmode`](and-lightmode.md)``            | Forces to enable the lightmode / disable the darkmode                                             |
 | ``[`&chroma`](chroma.md)``                      | Sets the background for the website to a particular hex color                                     |
@@ -35,6 +37,7 @@ You have to add them to the source side ([`&push`](../../source-settings/push.md
 
 | Parameter                              | Explanation                                                     |
 | -------------------------------------- | --------------------------------------------------------------- |
+| ``[`&rotate`](and-rotate.md)``         | Rotates the camera                                              |
 | ``[`&grid`](grid.md)``                 | Applies an rule-of-thirds grid overlay to the self-preview      |
 | ``[`&hideheader`](and-hideheader.md)`` | Hides just the top header-bar                                   |
 | ``[`&hidemenu`](and-hidemenu.md)``     | Hides the VDO.Ninja-branded menu and header bar                 |
