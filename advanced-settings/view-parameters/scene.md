@@ -1,5 +1,5 @@
 ---
-description: Defines the link to be treated like a scene, used by a room's director
+description: Defines the link to be treated like a scene
 ---
 
 # \&scene

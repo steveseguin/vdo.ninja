@@ -1,5 +1,5 @@
 ---
-description: You can add a custom image which shows up while waiting for the &view link
+description: You can add a custom image which shows up while waiting for the &scene link
 ---
 
 # \&waitimage
@@ -12,7 +12,7 @@ description: You can add a custom image which shows up while waiting for the &vi
 
 ## Details
 
-This is for when waiting for the [`&view`](../view-parameters/view.md) link to load. You can add a custom image which shows up while waiting for the [`&view`](../view-parameters/view.md) link.
+This is for when waiting for the [`&scene`](../view-parameters/scene.md) link to load. You can add a custom image which shows up while waiting for the [`&scene`](../view-parameters/scene.md) link.
 
 Example:\
 [`https://vdo.ninja/?waitmessage=hello&view=N2iLdiZ&waittimeout=0&waitimage=https%3A%2F%2Fvdo.ninja%2Fmedia%2Flogo_cropped.png`](https://vdo.ninja/?waitmessage=hello\&view=N2iLdiZ\&waittimeout=0\&waitimage=https%3A%2F%2Fvdo.ninja%2Fmedia%2Flogo\_cropped.png)``
