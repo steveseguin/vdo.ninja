@@ -18,9 +18,9 @@ You have to add them to [`&scene`](../view-parameters/scene.md) or [`&room`](../
 | ``[`&slots`](../../newly-added-parameters/and-slots.md)``   | Will force the auto-mixer to have that number of slots, even if there are more or less videos available to fill them |
 | ``[`&randomize`](../view-parameters/randomize.md)``         | Random video loading order                                                                                           |
 | ``[`&cover`](../view-parameters/cover.md)``                 | Has the videos fully "cover" their assigned areas, even if it means cropping the video                               |
-| ``[`&43`](../../newly-added-parameters/and-43.md)``         | Optimizes the video mixer for 4:3 aspect ratio                                                                       |
-| ``[`&portrait`](../view-parameters/and-portrait.md)``       | Optimizes the video mixer for 9:16 aspect ratio                                                                      |
-| ``[`&square`](../../newly-added-parameters/and-square.md)`` | Optimizes the video mixer for 1:1 aspect ratio videos                                                                |
+| ``[`&43`](../../newly-added-parameters/and-43.md)``         | Optimizes the video mixer for 4:3 videos                                                                             |
+| ``[`&portrait`](../view-parameters/and-portrait.md)``       | Optimizes the video mixer for 9:16 videos                                                                            |
+| ``[`&square`](../../newly-added-parameters/and-square.md)`` | Optimizes the video mixer for 1:1 videos                                                                             |
 
 ## **Only Scene options**
 
