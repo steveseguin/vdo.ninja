@@ -294,7 +294,7 @@
     * [\&statsinterval](advanced-settings/parameters-only-on-beta/and-statsinterval.md)
     * [\&videocontrols](advanced-settings/newly-added-parameters/and-videocontrols.md)
   * [Parameters only on beta](advanced-settings/parameters-only-on-beta.md)
-  * [Other Parameters](advanced-settings/other-parameters.md)
+  * [Other Parameters](other-parameters.md)
 * [Releases](release-notes/older-releases.md)
   * [v20 🎁](release-notes/v20.md)
   * [v19 🚀🤯](release-notes/v19.md)

@@ -4,10 +4,6 @@ description: Allows remote operation of the zoom and focus, and access to statis
 
 # \&remote
 
-{% hint style="info" %}
-**Android** devices **only**!
-{% endhint %}
-
 ## Aliases
 
 * `&rem`
@@ -20,7 +16,11 @@ description: Allows remote operation of the zoom and focus, and access to statis
 
 ## Details
 
-Must be enabled by both the sender and viewer with identical passcodes in order to work. This is a security precaution.  If you pass no value to `&remote`, it will still work, so long as both sides leave it blank.
+{% hint style="info" %}
+**Android** devices **only**!
+{% endhint %}
+
+Must be enabled by both the sender and viewer with identical passcodes in order to work. This is a security precaution. If you pass no value to `&remote`, it will still work, so long as both sides leave it blank.
 
 In some ways, the `&remote` function gives permissions to a viewer that would otherwise be restricted to a director or the sender themselves.
 
@@ -34,7 +34,7 @@ Use the mouse wheel over the video you wish to zoom in or out of as a viewer. Th
 
 Remote focus may also work as well by holding `CTRL` (or Command) while using the mouse wheel.  The sender needs to support focus for this to work, which often is limited to some webcams and Android devices. It's sometime listed as "focus distance" in the senders video settings menu.
 
-To check if a device supports zoom or focus, go to [https://obs.ninja/supports](https://obs.ninja/supports). It will show whether your browser and the selected camera supports focus/zoom.
+To check if a device supports zoom or focus, go to [https://vdo.ninja/supports](https://vdo.ninja/supports). It will show whether your browser and the selected camera supports focus/zoom.
 
 If you are the one publishing with an Android device, you can hold the screen down and move your finger up or down to zoom in and out as well; you don't need a remote user or the settings menu to do this.
 
