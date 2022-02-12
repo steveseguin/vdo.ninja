@@ -1,5 +1,5 @@
 ---
-description: Optimizes the video mixer for 9:16 aspect ratio
+description: Optimizes the video mixer for 9:16 videos
 ---
 
 # \&portrait
