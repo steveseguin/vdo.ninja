@@ -251,8 +251,8 @@ Version 16.3 and 16.4 release notes were not published to Reddit, as they were n
 
 You can find a list of all previous release notes at:
 
-{% content-ref url="./" %}
-[.](./)
+{% content-ref url="older-releases.md" %}
+[older-releases.md](older-releases.md)
 {% endcontent-ref %}
 
 ### Thank you

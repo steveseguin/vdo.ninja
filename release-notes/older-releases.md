@@ -2,10 +2,11 @@
 
 ## Release Notes
 
-* [V20](v20.md) (updated December 24th 2021) [https://vdo.ninja/](https://vdo.ninja)
-* [V19](v19/) (updated September 1st 2021) [https://vdo.ninja/v19/](https://vdo.ninja/v19/)
+* [V21](../older-releases/v21.md) (updated Feb 14 2022) [https://vdo.ninja/](https://vdo.ninja)
+* [V20](v20.md) (updated December 24th 2021) [https://vdo.ninja/v20/](https://vdo.ninja/v20/)
+* [V19](v19.md) (updated September 1st 2021) [https://vdo.ninja/v19/](https://vdo.ninja/v19/)
 * [V18.3](v18/v18.3.md) (updated July 6th 2021) [https://vdo.ninja/v183/](https://vdo.ninja/v183/)
-* [V18](v18/) (updated May 28th 2021) [https://vdo.ninja/v18/](https://vdo.ninja/v18/)
+* [V18](v18.md) (updated May 28th 2021) [https://vdo.ninja/v18/](https://vdo.ninja/v18/)
 * [V17](v17-release-notes.md) (updated April 20th 2021) [https://obs.ninja/v17/](https://obs.ninja/v17)
 * [V16.4](v16-release-notes/v16.4-update-notes.md) (updated March 3rd 2021) [https://obs.ninja/v164/](https://obs.ninja/v164/)
 * [V16.3](v16-release-notes/v16.3-update-notes.md) (updated Feb 24th 2021)
