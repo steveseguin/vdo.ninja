@@ -29,8 +29,8 @@ Must be used in conjunction with a room parameter.&#x20;
 * `&scene=N`, where N is a string or integer -- it's just like `&scene=2`. There are buttons marked S3, S4, .. S8 in the director's room to control these scene types. If they are not already there, new buttons for them will be created automatically when used. See the video below.
 * When using a scene, if you manually specify a video via the [`&view`](view.md) parameter, it automatically is added to the scene.
 * Audio of videos in scenes can be controlled by the director: volume and mute are options.
-* In [v17.2](../../release-notes/v17-release-notes.md) of VDO.Ninja, if using [`&view`](view.md) in a scene link, the director won't be able to remotely control the scene. This applies to solo links.&#x20;
-* In [v18](../../release-notes/v18.md), you can create custom scenes, as per the video below.
+* In [v17.2](../../releases/v17-release-notes.md) of VDO.Ninja, if using [`&view`](view.md) in a scene link, the director won't be able to remotely control the scene. This applies to solo links.&#x20;
+* In [v18](../../releases/v18/), you can create custom scenes, as per the video below.
 
 {% embed url="https://www.youtube.com/embed/axgIqPcHExQ" %}
 
