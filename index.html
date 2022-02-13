@@ -14,6 +14,13 @@
 			}
 		
 		</script>
+		<style>
+			body {
+				color: #e5e5e5;
+				background-color: #141926;
+				transition: opacity .1s linear;
+			}
+		</style>
 		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
 		<meta content="text/html;charset=utf-8" http-equiv="Content-Type" />
 		<meta content="utf-8" http-equiv="encoding" />
@@ -47,16 +54,21 @@
 		<meta property="twitter:image" content="./media/vdoNinja_logo_full.png" />
 		<meta name="msapplication-TileColor" content="#da532c" />
 		<meta name="theme-color" content="#ffffff" />
-		<style>
-			body {
-				color: #e5e5e5;
-				background-color: #141926;
-				transition: opacity .1s linear;
-			}
-		</style>
-		<link rel="stylesheet" href="./main.css?ver=151" />
+		<link rel="stylesheet" href="./main.css?ver=152" />
 		<script type="text/javascript" crossorigin="anonymous" src="./thirdparty/adapter.min.js"></script>
 		<style id="lightbox-animations" type="text/css"></style>
+		<!-- <link rel="manifest" href="manifest.json" /> -->
+			<!-- ios support 
+			<link rel="apple-touch-icon" href="images/icons/icon-72x72.png" />
+			<link rel="apple-touch-icon" href="images/icons/icon-96x96.png" />
+			<link rel="apple-touch-icon" href="images/icons/icon-128x128.png" />
+			<link rel="apple-touch-icon" href="images/icons/icon-144x144.png" />
+			<link rel="apple-touch-icon" href="images/icons/icon-152x152.png" />
+			<link rel="apple-touch-icon" href="images/icons/icon-192x192.png" />
+			<link rel="apple-touch-icon" href="images/icons/icon-384x384.png" />
+			<link rel="apple-touch-icon" href="images/icons/icon-512x512.png" />
+			<meta name="apple-mobile-web-app-status-bar" content="#db4938" />
+		-->
 	</head>
 	<body id="main" class="hidden">
 		<span itemprop="image" itemscope itemtype="image/png">
@@ -66,8 +78,8 @@
 		<span itemprop="thumbnail" itemscope itemtype="http://schema.org/ImageObject">
 			<link itemprop="url" href="./media/vdoNinja_logo_full.png" />
 		</span>
-		<script  type="text/javascript" crossorigin="anonymous"  src="./thirdparty/CodecsHandler.js?ver=36"></script>
-		<script  type="text/javascript" crossorigin="anonymous" src="./webrtc.js?ver=345"></script>
+		<script  type="text/javascript" crossorigin="anonymous"  src="./thirdparty/CodecsHandler.js?ver=37"></script>
+		<script  type="text/javascript" crossorigin="anonymous" src="./webrtc.js?ver=367"></script>
 		<input id="zoomSlider" type="range" style="display: none;" />
 		<div id="header">
 			
@@ -191,7 +203,6 @@
 				</div>
 			</div>
 		</div>
-		
 		<span
 				id="reportbutton"
 				title="Submit any error logs" 
@@ -216,6 +227,7 @@
 			<i style="float: right; bottom: 0px; cursor: pointer; position: fixed; right:  33px; color: #d9e4eb; padding: 2px; margin: 2px 2px 0 0; font-size: 140%;" class="las la-calendar" aria-hidden="true"></i>
 		</span>
 		<div id="mainmenu" class="row" style="opacity: 0; align: center;">
+			
 			<div id="container-1" title="Add Group Chat to OBS"  alt="Add Group Chat to OBS" tabindex="2" role="button" aria-pressed="false" onkeyup="enterPressedClick(event,this);" class="column columnfade pointer rounded card" style=" overflow-y: auto;">
 				
 					<h2>
@@ -774,24 +786,30 @@
 							
 							<br />
 							<i>
-								<font style="color: red;">Known issues:</font>
+								<a href="https://docs.vdo.ninja/common-errors-and-known-issues/known-issues" title="For more known issues, click here" target="_blank"><font style="color: red;">Known issues:</font></a>
 							</i>
 							<br />
-							<li>
-								Some devices that use hardware encoding can experience video glitching; switching to VP8 or VP9 as a <a target='_blank' title='Jump to the documentation' href='https://docs.vdo.ninja/viewers-settings/codec'>codec</a> may help.
-							</li>
 							<li>
 								 Windows users, upgrading to OBS 27.2 or newer will fix video glitching issues caused by network packet loss. <a href='https://github.com/obsproject/obs-studio/releases' target="_blank">Grab the newest OBS version here</a>.
 							</li>
 							<li>
 								Samsung smartphones (A-series) may fail to publish video with some mobile browsers; try using Firefox Mobile or the native <a href='https://docs.vdo.ninja/getting-started/native-mobile-app-versions#android-download-link'>Android app</a> in these cases.
 							</li>
+							<li>
+								Some devices that use hardware encoding can experience video issues; switching to VP8 or VP9 as a <a target='_blank' title='Jump to the documentation' href='https://docs.vdo.ninja/viewers-settings/codec'>codec</a> may help.
+							</li>
+							<li>
+								iPhones continue to have random audio issues, such as lowered volume or no audio at all. These are issues that Apple needs to fix.</a>.
+							</li>
+							<li>
+								Audio may drop out in OBS Studio at random times, yet still appear active. Delete the browser source and re-create, or use the <a href="https://github.com/steveseguin/electroncapture">Electron Capture</a> app instead</a>.
+							</li>
 							<br />
 							<h4>
 								<font style="color:#daad09;">Welcome to VDO Ninja! We've rebranded!  Nothing else is changing and we're staying 100% free.</font>
 							</h4>
 							<br />
-							🎁 Welcome to v20, released December 24th. 🎄 <a target="_blank" href="https://docs.vdo.ninja/release-notes/v20">Release notes are here</a>. The previous version is <a href="https://vdo.ninja/v19/">available here</a> if you have new issues.
+							🎁 Welcome to v20, released December 24th. <a target="_blank" href="https://docs.vdo.ninja/release-notes/v20">Release notes are here</a>. The previous version is <a href="https://vdo.ninja/v19/">available here</a> if you have new issues.
 
 							<br />
 							<br />
@@ -1660,13 +1678,55 @@
 				<li class="context-menu__item">
 					<a href="#" class="context-menu__link" data-action="Controls">
 						<i class="las la-external-link"></i>
-						<span data-translate="toggle-control-video">Toggle control bar</span>
+						<span data-translate="show-controls-video">Show control bar</span>
+					</a>
+				</li>
+				<li class="context-menu__item advanced">
+					<a href="#" class="context-menu__link" data-action="HideControls">
+						<i class="las la-external-link"></i>
+						<span data-translate="hide-controls-video">Hide control bar</span>
 					</a>
 				</li>
 				<li class="context-menu__item">
 					<a href="#" class="context-menu__link" data-action="PiP">
 						<i class="las la-external-link"></i>
 						<span data-translate="picture-in-picture">Picture-in-picture</span>
+					</a>
+				</li>
+				<li class="context-menu__item">
+					<a href="#" class="context-menu__link" data-action="FullWindow">
+						<i class="las la-external-link"></i>
+						<span data-translate="full-window">Full-window</span>
+					</a>
+				</li>
+				<li class="context-menu__item advanced">
+					<a href="#" class="context-menu__link" data-action="ShrinkWindow">
+						<i class="las la-external-link"></i>
+						<span data-translate="shrink-window">Shrink-window</span>
+					</a>
+				</li>
+				<li class="context-menu__item">
+					<a href="#" class="context-menu__link" data-action="Pause">
+						<i class="las la-external-link"></i>
+						<span data-translate="pause-stream">Pause stream</span>
+					</a>
+				</li>
+				<li class="context-menu__item advanced">
+					<a href="#" class="context-menu__link" data-action="UnPause">
+						<i class="las la-external-link"></i>
+						<span data-translate="resume-stream">Resume stream</span>
+					</a>
+				</li>
+				<li class="context-menu__item">
+					<a href="#" class="context-menu__link" data-action="Record">
+						<i class="las la-external-link"></i>
+						<span data-translate="record-to-disk">Record to disk</span>
+					</a>
+				</li>
+				<li class="context-menu__item advanced">
+					<a href="#" class="context-menu__link" data-action="StopRecording">
+						<i class="las la-external-link"></i>
+						<span data-translate="stop-record-to-disk">Stop Recording</span>
 					</a>
 				</li>
 			</ul>
@@ -1872,7 +1932,7 @@
 
 		
 			var session = WebRTC.Media; // session is a required global variable if configuring manually. Run before loading main.js but after webrtc.js.
-			session.version = "20.4";
+			session.version = "20.7";
 			session.streamID = session.generateStreamID(); // randomly generates a streamID for this session. You can set your own programmatically if needed
 			
 			session.defaultPassword = "someEncryptionKey123"; // Change this password if self-deploying for added security/privacy
@@ -1935,13 +1995,14 @@
 			// session.scene // the scene name. Scene 0, 1, ... 8, or any custom scene name is supported.  STRING value. Needed to have a clean view link of a guest stream
 			// session.title // "zzzz"   ; sets the title of the browser page.
 			// session.introOnClean = true; // this will load the page with the webcam selection screen if &push or &room is in the URL; no need to use &webcam.
+			// session.lowBitrateCutoff = 300; // Set a minimum bitrate (in kbps) before the stream is hidden. Useful for IRL streams maybe
 		</script>
 		<script type="text/javascript" crossorigin="anonymous" src="./thirdparty/aes.js"></script>
-		<script type="text/javascript" crossorigin="anonymous" id="lib-js" src="./lib.js?ver=256"></script>
+		<script type="text/javascript" crossorigin="anonymous" id="lib-js" src="./lib.js?ver=263"></script>
 		<!-- 
 		// If you wish to change branding, blank offers a good clean start.
 		<script type="text/javascript" id="main-js" src="./main.js" data-translation="blank"></script>
-	-->
-		<script type="text/javascript" crossorigin="anonymous" id="main-js" src="./main.js?ver=290"></script>
+		-->
+		<script type="text/javascript" crossorigin="anonymous" id="main-js" src="./main.js?ver=301"></script>
 	</body>
 </html>

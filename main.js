@@ -98,9 +98,13 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 	if (urlParams.has('cleanviewer') || urlParams.has('cv')) {
 		session.cleanViewer = true;
 	}
+	
+	if (urlParams.has('controls') || urlParams.has('videocontrols')) {
+		session.showControls = true; // show the video control bar
+	}
 
 	if (!isIFrame){
-		if (getChromeVersion()===65){
+		if (ChromeVersion===65){
 			 // pass, since probably manycam and that's bugged
 		} else if (getStorage("redirect") == "yes") {
 			setStorage("redirect", "", 0);
@@ -141,7 +145,20 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 			//}
 		}
 	}
-
+	
+	if (urlParams.has('pwa')){
+		getById("enterInvite").classList.remove("advanced");
+	} 
+	if ("serviceWorker" in navigator) {
+	  window.addEventListener("load", function() {
+		navigator.serviceWorker
+		  .register("./serviceWorker.js")
+		  .then(res => log("service worker registered"))
+		  .catch(err => warnlog("service worker not registered"))
+	  })
+	}
+	
+	
 	if (navigator.userAgent.toLowerCase().indexOf(' electron/') > -1) {
 		try {
 			getById("electronDragZone").style.cursor="grab";
@@ -154,10 +171,11 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 		} catch(e){}
 	}
 
-	
-
 	if (urlParams.has('retrytimeout')) {
-		session.retryTimeout = parseInt(urlParams.get('retrytimeout'));
+		session.retryTimeout = parseInt(urlParams.get('retrytimeout')) || 5000;
+		if (session.retryTimeout<5000){
+			session.retryTimeout = 5000;
+		}
 	}
 
 	if (urlParams.has('ptz')){
@@ -235,7 +253,7 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 	} else {
 		log("MAKE DRAGGABLE");
 		delayedStartupFuncs.push([makeDraggableElement, document.getElementById("subControlButtons")]);
-		if (safariVersion() && !getChromeVersion()){ // if desktop Safari, so macOS, give a note saying it sucks
+		if (SafariVersion && !ChromeVersion){ // if desktop Safari, so macOS, give a note saying it sucks
 			getById("SafariWarning").classList.remove("advanced");
 		}
 	}
@@ -367,6 +385,14 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 
 	if (urlParams.has('showdirector') || urlParams.has('sd')) {
 		session.showDirector = parseInt(urlParams.get('showdirector')) || parseInt(urlParams.get('sd')) || true; // if 2, video only allowed.  True or 1 will be video + audio allowed.
+	}
+	
+	if (urlParams.has('bitratecutoff') || urlParams.has('bitcut')) {
+		session.lowBitrateCutoff = parseInt(urlParams.get('bitratecutoff')) || parseInt(urlParams.get('bitcut')) || 300; // low bitrate cut off.
+	}
+	
+	if (urlParams.has("statsinterval")){
+		session.statsInterval = parseInt(urlParams.get("statsinterval")) || 3000; // milliseconds.  interval of requesting stats of remote guests
 	}
 	
 	if (urlParams.has('rotate') ) {
@@ -670,7 +696,7 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 	} 
 
 	if (urlParams.has('record')) {
-		if (safariVersion()) {
+		if (SafariVersion) {
 			if (!(session.cleanOutput)) {
 				warnUser("Your browser or device is not supported. Try Chrome if on macOS.");
 			}
@@ -711,8 +737,7 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 		}
 		session.disableWebAudio = true;
 		session.audioEffects = false;
-		session.audioMeterGuest = false;
-		session.style = 1;
+		session.audioMeterGuest = false; 
 	}
 	
 	if (urlParams.has('autoadd')) { // the streams we want to view; if set, but let blank, we will request no streams to watch.  
@@ -749,7 +774,6 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 	if (urlParams.has('mediasettings')) {
 		session.forceMediaSettings = true;
 	}
-
 
 	if (urlParams.has('transcript') || urlParams.has('transcribe') || urlParams.has('trans')) {
 		session.transcript = urlParams.get('transcript') || urlParams.get('transcribe') || urlParams.get('trans') || "en-US";
@@ -1236,6 +1260,10 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 				session.view_set = session.view.split(",");
 			}
 		}
+		
+		if ((session.scene !== false) && (session.style === false) && window.obsstudio){
+			session.style = 1;
+		}
 	}
 	
 	
@@ -1446,10 +1474,9 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 			if (!(urlParams.has('streamlabs'))) {
 
 				var ver1 = window.obsstudio.pluginVersion.split(".");
-				var cefVersion = getChromeVersion();
 
 				if (ver1.length == 3) { // Should be 3, but disabled3
-					if ((ver1.length == 3) && (parseInt(ver1[0]) == 2) && (cefVersion < 76) && (macOS)) {
+					if ((ver1.length == 3) && (parseInt(ver1[0]) == 2) && (ChromeVersion < 76) && (macOS)) {
 						updateURL("streamlabs");
 						getById("main").innerHTML = "<div style='background-color:black;color:white;' data-translate='obs-macos-not-supported'><h1>Update OBS Studio to v26.1.2 or newer; older versions and StreamLabs OBS are not supported on macOS.\
 						<br /><i><small><small>download here: <a href='https://github.com/obsproject/obs-studio/releases'>https://github.com/obsproject/obs-studio/releases</a></small></small></i>\
@@ -1463,9 +1490,9 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 				}
 			}
 			
-			if (navigator.userAgent.indexOf('Mac OS X') != -1) {
-				session.codec = "h264"; // default the codec to h264 if OBS is on macOS (that's all it supports with hardware) // oct 2021, OBS now supports vp8 and actually breaks with h264 android devices.
-			}
+			//if (navigator.userAgent.indexOf('Mac OS X') != -1) {
+			//	session.codec = "h264"; // default the codec to h264 if OBS is on macOS (that's all it supports with hardware) // oct 2021, OBS now supports vp8 and actually breaks with h264 android devices.
+			//}
 			
 			if (session.disableOBS===false){
 				window.addEventListener("obsSourceVisibleChanged", obsSourceVisibleChanged);
@@ -1485,9 +1512,9 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 	if (urlParams.has('chroma')) {
 		log("Chroma ENABLED");
 		getById("main").style.backgroundColor = "#" + (urlParams.get('chroma') || "0F0");
-	} else if (window.obsstudio || (navigator.userAgent.toLowerCase().indexOf(' electron/') > -1)){
-		getById("main").style.backgroundColor = "rgba(0,0,0,0)";
-	}
+	} // else if (window.obsstudio || (navigator.userAgent.toLowerCase().indexOf(' electron/') > -1)){
+	//	getById("main").style.backgroundColor = "rgba(0,0,0,0)";
+	//}
 
 	if (urlParams.has('margin')) {
 		try {
@@ -1772,7 +1799,7 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 	}
 	
 	if (urlParams.has('chunked')) {
-		session.chunked = parseInt(urlParams.get('chunked')) || 1;
+		session.chunked = parseInt(urlParams.get('chunked')) || 3000;
 		session.alpha = true;
 	}
 	
@@ -1834,13 +1861,13 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 			session.webp = true;
 			session.codec = false;
 		}
-	} else if (isOperaGX()){
+	} else if (OperaGx){
 		session.codec = "vp8";
 		warnlog("Defaulting to VP8 manually, as H264 with remote iOS devices is not supported");
 	}
 	
 	if (urlParams.has('h264profile')) {
-		session.h264profile = urlParams.get('h264profile') || "42e01f";
+		session.h264profile = urlParams.get('h264profile') || "42e01f"; // 42001f
 		session.h264profile = session.h264profile.substring(0, 6);
 		session.h264profile = session.h264profile.toLowerCase();
 	}
@@ -1886,6 +1913,14 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 		getById("testtone").parentNode.insertBefore(addtone, getById("testtone").nextSibling)
 	}
 	if (urlParams.has('r2d2')) {
+		/* var addtone = createAudioElement();
+		addtone.id = "jointone";
+		addtone.src = "./media/join.mp3";
+		getById("testtone").parentNode.insertBefore(addtone, getById("testtone").nextSibling)
+		var addtone = createAudioElement();
+		addtone.id = "leavetone";
+		addtone.src = "./media/leave.mp3";
+		getById("testtone").parentNode.insertBefore(addtone, getById("testtone").nextSibling) */
 		getById("testtone").innerHTML = "";
 		getById("testtone").src = "./media/robot.mp3";
 		session.beepToNotify = true;
@@ -2100,8 +2135,7 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 			errorlog(e);
 		}
 	}
-
-
+	
 	if (urlParams.has('cleanish')) {
 		session.cleanish = true;
 	}
@@ -2194,7 +2228,7 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 	}
 
 	if (urlParams.has('buffer')) { // needs to be before sync
-		if ((getChromeVersion() > 50) && (getChromeVersion()< 78)){
+		if ((ChromeVersion > 50) && (ChromeVersion< 78)){
 			
 		} else {
 			session.buffer = parseFloat(urlParams.get('buffer')) || 0;
@@ -2213,7 +2247,7 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 	}
 
 	if (urlParams.has('sync')) {
-		if ((getChromeVersion() > 50) && (getChromeVersion()< 78)){
+		if ((ChromeVersion > 50) && (ChromeVersion< 78)){
 			
 		} else {
 			session.sync = parseFloat(urlParams.get('sync'));
@@ -2289,7 +2323,7 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 		session.icefilter = urlParams.get('icefilter');
 	}
 	
-	//if (!(getChromeVersion()>=57)){
+	//if (!(ChromeVersion>=57)){
 	//	getById("effectSelector").disabled=true;
 	//	getById("effectSelector3").disabled=true;
 	//	getById("effectSelector").title = "Effects are only support on Chromium-based browsers";
@@ -2373,8 +2407,10 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 	}
 
 	if (urlParams.has('style') || urlParams.has('st')) {
-		session.style = urlParams.get('style') || urlParams.get('st') || 1;
-		if ((parseInt(session.style) == 1) || (session.style == "justvideo")) { // no audio only
+		session.style = urlParams.get('style') || urlParams.get('st');
+		if ((parseInt(session.style) === 0) || (session.style == "controls")) { // no audio only
+			session.style = 0;
+		} else if ((parseInt(session.style) == 1) || (session.style == "justvideo")) { // no audio only
 			session.style = 1;
 		} else if ((parseInt(session.style) == 2) || (session.style == "waveform")) { // audio waveform
 			session.style = 2;
@@ -2585,6 +2621,11 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 		}
 	}
 	
+	if (urlParams.has("bypass")){
+		session.bypass = true;
+		session.customWSS = true;
+	}
+	
 	if (urlParams.has('osc') || urlParams.has('api')) {
 		if (urlParams.get('osc') || urlParams.get('api')) {
 			session.api = urlParams.get('osc') || urlParams.get('api');
@@ -2742,7 +2783,7 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 		getById("container-2").className = 'column columnfade advanced'; // Hide screen share
 		getById("container-3").classList.add("skip-animation");
 		getById("container-3").classList.remove('pointer');
-		delayedStartupFuncs.push([previewWebcam]);
+		delayedStartupFuncs.push([previewWebcam]); 
 	}
 	
 	if (session.cleanViewer){
@@ -2753,6 +2794,10 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 	
 	if (urlParams.has('hidescreenshare') || urlParams.has('hidess') || urlParams.has('sshide') || urlParams.has('screensharehide')) { // this way I don't need to remember what it's called. I can just guess. :D
 		session.screenShareElementHidden = true;
+	}
+	
+	if (urlParams.has('sspaused') || urlParams.has('sspause') || urlParams.has('ssp')) { // this way I don't need to remember what it's called. I can just guess. :D
+		session.screenShareStartPaused = true;
 	}
 	
 	if (urlParams.has('zoomedbitrate') || urlParams.has('zb')) { // this way I don't need to remember what it's called. I can just guess. :D
@@ -2892,14 +2937,15 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 			} else if (session.chatbutton === false) {
 				getById("chatbutton").classList.add("advanced");
 			}
-		} else {
-			if ((session.permaid === null) && (session.roomid == "")) {
-				if (!(session.cleanOutput)) {
-					getById("head3").classList.remove('advanced');
-					getById("head3a").classList.remove('advanced');
-				}
+		} else if ((session.permaid === null) && (session.roomid == "")) {
+			if (!(session.cleanOutput)) {
+				getById("head3").classList.remove('advanced');
+				getById("head3a").classList.remove('advanced');
 			}
+		} else if ((window.obsstudio) && (session.permaid === false) && (session.director === false) && (session.view) &&(session.roomid.length>0)) { // we already know roomid !== false
+			updateURL("scene", true, false); // we also know it's not a scene, but we will assume it is in this specific case.
 		}
+		
 
 	} else if (urlParams.has('director') || urlParams.has('dir')) { // if I do a short form of this, it will cause duplications in the code elsewhere.
 		if (directorLanding == false) {
@@ -2939,7 +2985,7 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 		//if (!session.activeSpeaker){
 		session.audioMeterGuest = false;
 		//}
-		if (session.style===false){
+		if ((session.style===false) && window.obsstudio){
 			session.style = 1;
 		}
 		if (session.audioEffects === null) {
@@ -2992,7 +3038,8 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 		getById("header").style.display = "none";
 		getById("header").style.opacity = 0;
 	}
-
+	
+	
 	
 	if (session.view) {
 		getById("main").className = "";
@@ -3011,6 +3058,7 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 	}
 
 	if ((session.view) && (session.roomid === false)) {
+		
 		getById("container-4").className = 'column columnfade';
 		getById("container-3").className = 'column columnfade';
 		getById("container-2").className = 'column columnfade';
@@ -3065,8 +3113,7 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 		}, timeout);
 
 		log("auto playing");
-		var SafariVer = safariVersion();
-		if ((iPad || iOS) && navigator.userAgent.indexOf('Safari') != -1 && navigator.userAgent.indexOf('Chrome') == -1 && SafariVer > 13) { // Modern iOS doesn't need pop up
+		if ((iPad || iOS) && navigator.userAgent.indexOf('Safari') != -1 && navigator.userAgent.indexOf('Chrome') == -1 && SafariVersion > 13) { // Modern iOS doesn't need pop up
 			play();
 		} else if (navigator.userAgent.indexOf('Safari') != -1 && navigator.userAgent.indexOf('Chrome') == -1) { // Safari on Desktop does require pop up
 			if (!(session.cleanOutput)) {
@@ -3147,12 +3194,18 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 		errorlog(e);
 	}
 
+	if  (urlParams.has('autohide')) {
+		session.autohide=true;
+	}
+	if (session.autohide && !session.mobile && (session.scene===false)){// && (session.roomid!==false)){
+		getById("main").onmouseover = showControl;
+	}
 
 	//  Please contact steve on discord.vdo.ninja if you'd like this iFRAME tweaked, expanded, etc -- it's updated based on user request
 	
 	if (isIFrame) { // reduce CPU load if not needed. //iframe API 
 		window.onmessage = function(e) { // iFRAME support
-			log(e);
+			//log(e);
 			try {
 				if ("function" in e.data) { // these are calling in-app functions, with perhaps a callback -- TODO: add callbacks
 					var ret = null;
@@ -3163,6 +3216,10 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 						ret.innerHTML = e.data.value;
 					} else if (e.data.function === "publishScreen") {
 						ret = publishScreen();
+					} else if (e.data.function === "routeMessage"){
+						try {
+							session.ws.onmessage({data: e.data.value});
+						} catch(e){warnlog("handshake not yet setup");}
 					} else if (e.data.function === "eval") {
 						eval(e.data.value); // eval == evil ; feedback welcomed
 					}
@@ -3536,38 +3593,7 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 			}
 			
 			if ("getDetailedState" in e.data) {
-				var detailedState = {};
-				for (var UUID in session.rpcs){
-					if (!session.rpcs[UUID].streamID){continue;}
-					detailedState[session.rpcs[UUID].streamID] = {};
-					var scenes = getById("container_" + UUID).querySelectorAll('[data-action-type="addToScene"][data-scene][data--u-u-i-d="'+UUID+'"]');
-					var sceneState = {};
-					for (var i=0;i<scenes.length;i++){
-						if (parseInt(scenes[i].dataset.value)){
-							sceneState[scenes[i].dataset.scene] = true;
-						} else {
-							sceneState[scenes[i].dataset.scene] = false;
-						}
-					}
-					detailedState[session.rpcs[UUID].streamID].scenes = sceneState;
-				}
-				
-				if (session.showDirector){
-					if (document.getElementById("container_director")){
-						detailedState[session.streamID] = {};
-						var scenes = getById("container_director").querySelectorAll('[data-action-type="addToScene"][data-scene]');
-						var sceneState = {};
-						for (var i=0;i<scenes.length;i++){
-							if (parseInt(scenes[i].dataset.value)){
-								sceneState[scenes[i].dataset.scene] = true;
-							} else {
-								sceneState[scenes[i].dataset.scene] = false;
-							}
-						}
-						detailedState[session.streamID].scenes = sceneState;
-					}
-				}
-				
+				var detailedState = getDetailedState();
 				parent.postMessage({
 					"detailedState": detailedState
 				}, "*");
@@ -3592,7 +3618,11 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 
 
 			if (("action" in e.data) && (e.data.action!="null")) { ///////////////  reuse the Companion API
-				processMessage(e.data); // reuse the companion API
+				var resp = processMessage(e.data); // reuse the companion API
+				if (resp!==null){
+					log(resp);
+					parent.postMessage(resp, "*");
+				}
 			} else if ("target" in e.data) {
 				log(e.data);
 				for (var i in session.rpcs) {
@@ -3784,6 +3814,7 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 		//log("hidden : " +document.hidden);
 		log("vis : "+document.visibilityState);
 		if ((iOS) || (iPad)) { // fixes a bug on iOS devices.  Not need with other devices?
+			toggleAutoVideoMute();
 			clearTimeout(visAudioTimeout);
 			if (document.visibilityState === 'visible') {	
 				visAudioTimeout = setTimeout(function() {
@@ -3797,11 +3828,20 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 
 	// Warns user about network going down
 	window.addEventListener("offline", function (e) {
+		warnlog("connection lost");
 		if ((session.view) && (session.permaid === false)) {
 			log("VDO.Ninja has no network connectivity and can't work properly." );
 		} else if (session.scene !== false) {
 			log("VDO.Ninja has no network connectivity and can't work properly." );
 		} else if (!session.cleanOutput) {
+			if (iOS || iPad){
+				for (var UUID in session.pcs){
+					session.pcs[UUID].close();
+					delete(session.pcs[UUID]);
+					session.applySoloChat();
+					applySceneState();
+				}
+			}
 			warnUser("Network connection lost.");
 		} else {
 			log("VDO.Ninja has no network connectivity and can't work properly.");
@@ -3809,16 +3849,25 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 	});
 
 	window.addEventListener("online", function (e) {
+		log("Back ONLINE");
 		closeModal();
+		session.ping();
+		
 	});
 
 	function updateConnectionStatus() {
 		try{
+			if (!session.stats){
+				return;
+			}
+				
 			warnlog("Connection type changed from " + session.stats.network_type + " to " + Connection.effectiveType);
 			session.stats.network_type = Connection.effectiveType + " / " + Connection.type;
 			session.ping();
+			
 		} catch(e){warnlog(e);};
 	}
+	
 	try {
 		var Connection = navigator.connection || navigator.mozConnection || navigator.webkitConnection;
 		if (Connection){
@@ -4093,7 +4142,7 @@ setTimeout(function(){ // lazy load
 	script.onload = function() { 
 		var script = document.createElement('script');
 		document.head.appendChild(script);
-		script.src = "./thirdparty/StreamSaver.js"; // dynamically load this only if its needed. Keeps loading time down.
+		script.src = "./thirdparty/StreamSaver.js?t="+Date.now(); // dynamically load this only if its needed. Keeps loading time down.
 	};
 	script.src = "./thirdparty/polyfill.min.js"; // dynamically load this only if its needed. Keeps loading time down.
 },0);

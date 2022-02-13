@@ -1,5 +1,6 @@
 body{
 	zoom: 75%;
+	background-color: #1F1E1F;
 }
 .hidden{
 	display:unset!important;
@@ -70,9 +71,6 @@ span[data-action-type='sceneCluster1']{
 
 #header{
 	display:none!important;
-}
-body {
-	background-color: #000;
 }
 
 button[class="pull-right"]{
