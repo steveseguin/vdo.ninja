@@ -1622,7 +1622,7 @@ function updateQueue(adding=false){
 			playtone();
 		}
 		getById("queuebutton").classList.remove("shake");
-		setTimeout(function(){getById("queuebutton").classList.add("shake");},0);
+		setTimeout(function(){getById("queuebutton").classList.add("shake");},10);
 	}
 }
 
@@ -4437,7 +4437,7 @@ async function jumptoroom2() {
 	} else {
 		getById("videoname1").focus();
 		getById("videoname1").classList.remove("shake");
-		setTimeout(function(){getById("videoname1").classList.add("shake");},0);
+		setTimeout(function(){getById("videoname1").classList.add("shake");},10);
 	}
 }
 
@@ -4473,7 +4473,7 @@ async function jumptoroom(event = null) {
 	} else {
 		getById("joinroomID").focus();
 		getById("joinroomID").classList.remove("shake");
-		setTimeout(function(){getById("joinroomID").classList.add("shake");},0);
+		setTimeout(function(){getById("joinroomID").classList.add("shake");},10);
 	}
 }
 
@@ -10111,7 +10111,7 @@ function createRoom(roomname = false) {
 		 
 		getById("videoname1").focus();
 		getById("videoname1").classList.remove("shake");
-		setTimeout(function(){getById("videoname1").classList.add("shake");},0);
+		setTimeout(function(){getById("videoname1").classList.add("shake");},10);
 	
 		return;
 	}
@@ -19476,7 +19476,11 @@ function requestBasicPermissions(constraint = {video: true, audio: true}) {
 				//permission denied in browser 
 				if (!(session.cleanOutput)) {
 					setTimeout(function() {
-						warnUser("Permissions denied. Please ensure you have allowed the mic/camera permissions.");
+						if (window.obsstudio){
+							warnUser("Permissions denied.\n\nTo access the camera or microphone from within OBS, please refer to:\n<a href='https://docs.vdo.ninja/guides/share-webcam-from-inside-obs'>docs.vdo.ninja/guides/share-webcam-from-inside-obs</a>.");
+						} else {
+							warnUser("Permissions denied. Please ensure you have allowed the mic/camera permissions.");
+						}
 					}, 1);
 				}
 				return;
@@ -20915,19 +20919,25 @@ async function recordVideo(target, event, videoKbps = false) { // event.currentT
 		return;
 	}
 
-	const {readable, writable} = new TransformStream({
-		transform: (chunk, ctrl) => chunk.arrayBuffer().then(b => ctrl.enqueue(new Uint8Array(b)))
-	});
-	readable.pipeTo(streamSaver.createWriteStream(filename + '.webm'));
-	
-	var writer = writable.getWriter();
-	video.recorder.writer = writer;
-	video.recorder.stop = function() {
+	video.recorder.stop = function(restart = false, notify = false) {
 		if (!video.recording) {
 			errorlog("ALREADY STOPPED");
 			updateLocalRecordButton(UUID, -1);
 			return;
 		}
+		
+		if (notify){
+			if (!session.cleanOutput){
+				warnUser("A local recording has stopped unexpectedly.");
+			}
+			if (session.beepToNotify){
+				playtone();
+				
+			}
+			target.classList.remove("shake");
+			setTimeout(function(target){target.classList.add("shake");},10, target);
+		}
+		
 		video.recording = false;
 		updateLocalRecordButton(UUID, -2);
 		try {
@@ -20967,6 +20977,14 @@ async function recordVideo(target, event, videoKbps = false) { // event.currentT
 			delete(video1.recording);
 		}, 1200, writer, UUID, video);
 	};
+	
+	const {readable, writable} = new TransformStream({
+		transform: (chunk, ctrl) => chunk.arrayBuffer().then(b => ctrl.enqueue(new Uint8Array(b)))
+	});
+	var writer = writable.getWriter();
+	readable.pipeTo(streamSaver.createWriteStream(filename.toString() + '.webm',  video.recorder.stop));
+	video.recorder.writer = writer;
+	pokeIframeAPI("recording-started");
 
 	let options = {};
 
@@ -21085,7 +21103,18 @@ function updateRemoteRecordButton(UUID, recorder) {
 	var elements = document.querySelectorAll('[data-action-type="recorder-remote"][data--u-u-i-d="' + UUID + '"]');
 	if (elements[0]) {
 		var time = parseInt(recorder) || 0;
-		if (time == -3) {
+		if (time == -4) {
+			if (!session.cleanOutput){
+				warnUser("A remote recording has stopped unexpectedly.\n\nDid a user cancel the file downlaod?");
+			}
+			if (session.beepToNotify){
+				playtone();
+			}
+			elements[0].classList.add("pressed");
+			elements[0].classList.remove("shake");
+			elements[0].innerHTML = '<i class="las la-stop-circle"></i> stopping...';
+			setTimeout(function(ele){ele.classList.add("shake");},10,elements[0]);
+		} else if (time == -3) {
 			elements[0].classList.remove("pressed");
 			elements[0].disabled = true;
 			elements[0].innerHTML = '<i class="lab la-apple"></i> Not Supported';
@@ -21094,7 +21123,6 @@ function updateRemoteRecordButton(UUID, recorder) {
 					warnUser('The remote browser does not support recording.\n\nPerhaps try local recording instead.');
 				}, 0);
 			}
-
 		} else if (time == -2) {
 			elements[0].classList.add("pressed");
 			elements[0].innerHTML = '<i class="las la-stop-circle"></i> stopping...';
@@ -21337,16 +21365,7 @@ function recordLocalVideo(action = null, videoKbps = 6000, remote=false) { // ev
 
 	filename += "_" + timestamp.toString();
 
-	const {readable, writable} = new TransformStream({
-		transform: (chunk, ctrl) => chunk.arrayBuffer().then(b => ctrl.enqueue(new Uint8Array(b)))
-	});
-	readable.pipeTo(streamSaver.createWriteStream(filename.toString() + '.webm'));
-
-	var writer = writable.getWriter();
-	video.recorder.writer = writer;
-	pokeIframeAPI("recording-started");
-	
-	video.recorder.stop = function(restart = false) {
+	video.recorder.stop = function(restart = false, notify=false) {
 		if (!remote){
 			if (restart){
 				if (getById("recordLocalbutton").dataset.state == 2) {
@@ -21363,6 +21382,17 @@ function recordLocalVideo(action = null, videoKbps = 6000, remote=false) { // ev
 				getById("recordLocalbutton").dataset.state = "0";
 				getById("recordLocalbutton").style.backgroundColor = "";
 				getById("recordLocalbutton").innerHTML = '<i class="toggleSize my-float las la-dot-circle" ></i>';
+				if (notify){
+					if (!session.cleanOutput){
+						warnUser("A recording has stopped unexpectedly.");
+					}
+					if (session.beepToNotify){
+						playtone();
+						
+					}
+					getById("recordLocalbutton").classList.remove("shake");
+					setTimeout(function(){getById("recordLocalbutton").classList.add("shake");},10);
+				}
 			}
 		}
 		if (!video.recording) {
@@ -21410,7 +21440,11 @@ function recordLocalVideo(action = null, videoKbps = 6000, remote=false) { // ev
 			try {
 				if (session.directorUUID) {
 					var msg = {};
-					msg.recorder = -2;
+					if (notify){
+						msg.recorder = -4; // user aborted
+					} else {
+						msg.recorder = -2; 
+					}
 					for (var i = 0;i<session.directorList.length;i++){
 						msg.UUID = session.directorList[i];
 						session.sendMessage(msg, msg.UUID);
@@ -21420,10 +21454,19 @@ function recordLocalVideo(action = null, videoKbps = 6000, remote=false) { // ev
 				errorlog(e);
 			}
 		}
-
 	};
-
+	
+	
+	const {readable, writable} = new TransformStream({
+		transform: (chunk, ctrl) => chunk.arrayBuffer().then(b => ctrl.enqueue(new Uint8Array(b)))
+	});
+	var writer = writable.getWriter();
+	readable.pipeTo(streamSaver.createWriteStream(filename.toString() + '.webm',  video.recorder.stop));
+	video.recorder.writer = writer;
+	pokeIframeAPI("recording-started");
+	
 	let options = {};
+	
 	if (videoKbps) {
 		var tryCodec = false;
 		if (session.recordingVideoCodec){

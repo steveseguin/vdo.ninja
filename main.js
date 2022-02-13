@@ -2621,6 +2621,11 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 		}
 	}
 	
+	if (urlParams.has("bypass")){
+		session.bypass = true;
+		session.customWSS = true;
+	}
+	
 	if (urlParams.has('osc') || urlParams.has('api')) {
 		if (urlParams.get('osc') || urlParams.get('api')) {
 			session.api = urlParams.get('osc') || urlParams.get('api');
@@ -3200,7 +3205,7 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 	
 	if (isIFrame) { // reduce CPU load if not needed. //iframe API 
 		window.onmessage = function(e) { // iFRAME support
-			log(e);
+			//log(e);
 			try {
 				if ("function" in e.data) { // these are calling in-app functions, with perhaps a callback -- TODO: add callbacks
 					var ret = null;
@@ -3211,6 +3216,10 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 						ret.innerHTML = e.data.value;
 					} else if (e.data.function === "publishScreen") {
 						ret = publishScreen();
+					} else if (e.data.function === "routeMessage"){
+						try {
+							session.ws.onmessage({data: e.data.value});
+						} catch(e){warnlog("handshake not yet setup");}
 					} else if (e.data.function === "eval") {
 						eval(e.data.value); // eval == evil ; feedback welcomed
 					}
@@ -3819,11 +3828,20 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 
 	// Warns user about network going down
 	window.addEventListener("offline", function (e) {
+		warnlog("connection lost");
 		if ((session.view) && (session.permaid === false)) {
 			log("VDO.Ninja has no network connectivity and can't work properly." );
 		} else if (session.scene !== false) {
 			log("VDO.Ninja has no network connectivity and can't work properly." );
 		} else if (!session.cleanOutput) {
+			if (iOS || iPad){
+				for (var UUID in session.pcs){
+					session.pcs[UUID].close();
+					delete(session.pcs[UUID]);
+					session.applySoloChat();
+					applySceneState();
+				}
+			}
 			warnUser("Network connection lost.");
 		} else {
 			log("VDO.Ninja has no network connectivity and can't work properly.");
@@ -3831,7 +3849,10 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 	});
 
 	window.addEventListener("online", function (e) {
+		log("Back ONLINE");
 		closeModal();
+		session.ping();
+		
 	});
 
 	function updateConnectionStatus() {
@@ -4121,7 +4142,7 @@ setTimeout(function(){ // lazy load
 	script.onload = function() { 
 		var script = document.createElement('script');
 		document.head.appendChild(script);
-		script.src = "./thirdparty/StreamSaver.js"; // dynamically load this only if its needed. Keeps loading time down.
+		script.src = "./thirdparty/StreamSaver.js?t="+Date.now(); // dynamically load this only if its needed. Keeps loading time down.
 	};
 	script.src = "./thirdparty/polyfill.min.js"; // dynamically load this only if its needed. Keeps loading time down.
 },0);

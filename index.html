@@ -57,7 +57,7 @@
 		<link rel="stylesheet" href="./main.css?ver=152" />
 		<script type="text/javascript" crossorigin="anonymous" src="./thirdparty/adapter.min.js"></script>
 		<style id="lightbox-animations" type="text/css"></style>
-		<link rel="manifest" href="manifest.json" />
+		<!-- <link rel="manifest" href="manifest.json" /> -->
 			<!-- ios support 
 			<link rel="apple-touch-icon" href="images/icons/icon-72x72.png" />
 			<link rel="apple-touch-icon" href="images/icons/icon-96x96.png" />
@@ -79,7 +79,7 @@
 			<link itemprop="url" href="./media/vdoNinja_logo_full.png" />
 		</span>
 		<script  type="text/javascript" crossorigin="anonymous"  src="./thirdparty/CodecsHandler.js?ver=37"></script>
-		<script  type="text/javascript" crossorigin="anonymous" src="./webrtc.js?ver=350"></script>
+		<script  type="text/javascript" crossorigin="anonymous" src="./webrtc.js?ver=367"></script>
 		<input id="zoomSlider" type="range" style="display: none;" />
 		<div id="header">
 			
@@ -1932,7 +1932,7 @@
 
 		
 			var session = WebRTC.Media; // session is a required global variable if configuring manually. Run before loading main.js but after webrtc.js.
-			session.version = "20.6";
+			session.version = "20.7";
 			session.streamID = session.generateStreamID(); // randomly generates a streamID for this session. You can set your own programmatically if needed
 			
 			session.defaultPassword = "someEncryptionKey123"; // Change this password if self-deploying for added security/privacy
@@ -1998,11 +1998,11 @@
 			// session.lowBitrateCutoff = 300; // Set a minimum bitrate (in kbps) before the stream is hidden. Useful for IRL streams maybe
 		</script>
 		<script type="text/javascript" crossorigin="anonymous" src="./thirdparty/aes.js"></script>
-		<script type="text/javascript" crossorigin="anonymous" id="lib-js" src="./lib.js?ver=261"></script>
+		<script type="text/javascript" crossorigin="anonymous" id="lib-js" src="./lib.js?ver=263"></script>
 		<!-- 
 		// If you wish to change branding, blank offers a good clean start.
 		<script type="text/javascript" id="main-js" src="./main.js" data-translation="blank"></script>
 		-->
-		<script type="text/javascript" crossorigin="anonymous" id="main-js" src="./main.js?ver=299"></script>
+		<script type="text/javascript" crossorigin="anonymous" id="main-js" src="./main.js?ver=301"></script>
 	</body>
 </html>
