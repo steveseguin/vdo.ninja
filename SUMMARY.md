@@ -296,6 +296,7 @@
   * [Parameters only on beta](advanced-settings/parameters-only-on-beta.md)
   * [Other Parameters](other-parameters.md)
 * [Releases](release-notes/older-releases.md)
+  * [v21 ❤️](older-releases/v21.md)
   * [v20 🎁](release-notes/v20.md)
   * [v19 🚀🤯](release-notes/v19.md)
     * [v19.1 - 19.4](release-notes/v19/v19.1-19.4.md)
