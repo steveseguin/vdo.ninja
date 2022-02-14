@@ -1,5 +1,5 @@
 /*
-*  Copyright (c) 2021 Steve Seguin. All Rights Reserved.
+*  Copyright (c) 2022 Steve Seguin. All Rights Reserved.
 *
 *  Use of this source code is governed by the APGLv3 open-source license
 *  that can be found in the LICENSE file in the root of the source
@@ -15862,6 +15862,11 @@ async function publishScreen2(constraints, audioList=[], audio=true){ // webcam 
 		
 };
 
+
+
+var transferList = [];
+var msgTransferList = [];
+
 function cancelFile(ele){
 	var idx = ele.dataset.tid;
 	try{
@@ -15870,7 +15875,6 @@ function cancelFile(ele){
 	transferList[idx].status = 5;
 	updateDownloadLink(idx);
 }
-
 
 function requestFile(ele){
 	var idx = ele.dataset.tid;
@@ -15887,8 +15891,11 @@ function requestFile(ele){
 	pokeIframeAPI('request-file', fid, UUID); 
 }
 
-var transferList = [];
-var msgTransferList = [];
+function clearDownloadFile(ele){
+	var idx = ele.dataset.tid;
+	transferList[idx].status = 6;
+	updateDownloadLink(idx);
+}
 
 function addDownloadLink(fileList, UUID, pc){
 	if (session.nodownloads){return;} // downloads are blocked
@@ -15923,9 +15930,9 @@ function addDownloadLink(fileList, UUID, pc){
 		getById("chatNotification").classList.add("notification");
 	}
 	
-	if (session.broadcastChannel !== false) {
-		session.broadcastChannel.postMessage(data); /* send */
-	}
+	//if (session.broadcastChannel !== false) {
+	//	session.broadcastChannel.postMessage(data); /* send */
+	//}
 }
 
 function updateDownloadLink(idx){
@@ -15952,6 +15959,9 @@ function updateDownloadLink(idx){
 			elements[0].innerHTML = "Cancelled";
 			elements[0].onclick  = null;
 			elements[0].disabled = true;
+		} else if (transferList[idx].status === 6){
+			getById("transfer_"+idx).style.display = "none";
+			//delete(transferList[idx]);
 		}
 	}
 }
@@ -15976,9 +15986,9 @@ function fileShareMessage(fileinfo, idx){
 		}
 	}
 	var data = {};
-	
+	data.idx = idx;
 	if (fileinfo.status === 0){
-		data.msg = " has a shared a file with you:<br /><i>"+fileinfo.name+"</i><br />Do you trust them? <button title='file size: "+fileinfo.size+" bytes' data-button-type='download' data-fid='"+fileinfo.id+"' data-tid='"+idx+"' onclick='requestFile(this);'>Download it here</button>";
+		data.msg = " has a shared a file with you:<br /><i>"+fileinfo.name+"</i><br />Do you trust them? <button title='file size: "+fileinfo.size+" bytes' data-button-type='download' data-fid='"+fileinfo.id+"' data-tid='"+idx+"' onclick='requestFile(this);'>Download it here</button><button data-button-type='clear' data-fid='"+fileinfo.id+"' data-tid='"+idx+"' style='margin:10px 0 10px 2px;' onclick='clearDownloadFile(this);'>Clear</button>";
 	} else if (fileinfo.status === 1){
 		data.msg = " has a shared a file with you:<br /><i>"+fileinfo.name+"</i><br /><button title='file size: "+fileinfo.size+" bytes' data-button-type='download' data-fid='"+fileinfo.id+"' data-tid='"+idx+"'>Requested</button>";
 	} else if (fileinfo.status === 2){
@@ -15989,6 +15999,8 @@ function fileShareMessage(fileinfo, idx){
 		data.msg = " has a shared a file with you:<br /><i>"+fileinfo.name+"</i><br /><button title='file size: "+fileinfo.size+" bytes' data-button-type='download' data-fid='"+fileinfo.id+"' data-tid='"+idx+"' disabled >No longer available</button>";
 	} else if (fileinfo.status === 5){
 		data.msg = " has a shared a file with you:<br /><i>"+fileinfo.name+"</i><br /><button title='file size: "+fileinfo.size+" bytes' data-button-type='download' data-fid='"+fileinfo.id+"' data-tid='"+idx+"' disabled >Cancelled</button>";
+	} else if (fileinfo.status === 6){
+		return;
 	}
 	
 	var director=false; // add back in later.
@@ -16003,11 +16015,11 @@ function fileShareMessage(fileinfo, idx){
 			data.label = "<b>" + data.label + "</b>";
 		}
 	} else if (director) {
-		data.label = "<b><i>Director:</i></b> ";
+		data.label = "<b><i>Director</i></b>";
 	} else {
-		data.label = "Someone ";
+		data.label = "Someone";
 	}
-	data.type = "recv";
+	data.type = "action";
 	msgTransferList.push(data);
 }
 
@@ -20264,6 +20276,17 @@ function sendChatMessage(chatMsg = false) { // filtered + visual
 	
 	msg = convertShortcodes(msg);
 	
+	var label = "";
+	if (session.label){
+		if (session.director){
+			label = "<b><i><span class='chat_name'>" + session.label + "</span>:</i></b> ";
+		} else {
+			label = "<b><span class='chat_name'>" + session.label + "</span>:</b> ";
+		}
+	} else if (session.director){
+		label = "<b><i><span class='chat_name'>Director</span>:</i></b> ";
+	}
+	
 	if (msg.trim()==="/list"){
 		var listMsg = null;
 		for (var UUID in session.rpcs){
@@ -20317,7 +20340,7 @@ function sendChatMessage(chatMsg = false) { // filtered + visual
 				var data = {};
 				data.time = Date.now();
 				data.msg = sanitizeChat(msg); // this is what the other person should see
-				data.label = false;
+				data.label = label;
 				data.type = "sent";
 				messageList.push(data);
 				sent=true;
@@ -20326,7 +20349,7 @@ function sendChatMessage(chatMsg = false) { // filtered + visual
 				var data = {};
 				data.time = Date.now();
 				data.msg = sanitizeChat(msg); // this is what the other person should see
-				data.label = false;
+				data.label = label;
 				data.type = "sent";
 				messageList.push(data);
 				sent=true;
@@ -20335,7 +20358,7 @@ function sendChatMessage(chatMsg = false) { // filtered + visual
 				var data = {};
 				data.time = Date.now();
 				data.msg = sanitizeChat(msg); // this is what the other person should see
-				data.label = false;
+				data.label = label;
 				data.type = "sent";
 				messageList.push(data);
 				sent=true;
@@ -20348,7 +20371,7 @@ function sendChatMessage(chatMsg = false) { // filtered + visual
 				var data = {};
 				data.time = Date.now();
 				data.msg = sanitizeChat(msg); // this is what the other person should see
-				data.label = false;
+				data.label = label;
 				data.type = "sent";
 				messageList.push(data);
 				sent=true;
@@ -20357,7 +20380,7 @@ function sendChatMessage(chatMsg = false) { // filtered + visual
 				var data = {};
 				data.time = Date.now();
 				data.msg = sanitizeChat(msg); // this is what the other person should see
-				data.label = false;
+				data.label = label;
 				data.type = "sent";
 				messageList.push(data);
 				sent=true;
@@ -20366,7 +20389,7 @@ function sendChatMessage(chatMsg = false) { // filtered + visual
 				var data = {};
 				data.time = Date.now();
 				data.msg = sanitizeChat(msg); // this is what the other person should see
-				data.label = false;
+				data.label = label;
 				data.type = "sent";
 				messageList.push(data);
 				sent=true;
@@ -20398,7 +20421,7 @@ function sendChatMessage(chatMsg = false) { // filtered + visual
 			var data = {};
 			data.time = Date.now();
 			data.msg = sanitizeChat(msg); // this is what the other person should see
-			data.label = false;
+			data.label = label;
 			data.type = "sent";
 			messageList.push(data);
 		}
@@ -20406,7 +20429,7 @@ function sendChatMessage(chatMsg = false) { // filtered + visual
 		sendChat(msg); // send message to peers
 		data.time = Date.now();
 		data.msg = sanitizeChat(msg); // this is what the other person should see
-		data.label = false;
+		data.label = label;
 		data.type = "sent";
 		messageList.push(data);
 	}
@@ -20540,17 +20563,17 @@ function getChatMessage(msg, label = false, director = false, overlay = false) {
 	if (label) {
 		data.label = label;
 		if (director) {
-			data.label = "<b><i>" + data.label + ":</i></b> ";
+			data.label = "<b><i><span class='chat_director chat_name'>" + data.label + "</span>:</i></b> ";
 		} else {
-			data.label = "<b>" + data.label + ":</b> ";
+			data.label = "<b><span class='chat_name'>" + data.label + "</span>:</b> ";
 		}
-		label = label+":";
+		label = "<span class='chat_name'>"+label+"</span>:"; // label+":";
 	} else if (director) {
-		data.label = "<b><i>Director:</i></b> ";
-		label = "Director:";
+		data.label = "<b><i><span class='chat_director chat_name'>Director</span>:</i></b> ";
+		label = "<span class='chat_director chat_name'>Director</span>:";
 	} else {
 		if (session.director){
-			data.label = "Someone: ";
+			data.label = "<span class='chat_name'>Someone</span>: ";
 		} else {
 			data.label = "";
 		}
@@ -20672,7 +20695,7 @@ function updateClosedCaptions(msg, label, UUID) {
 }
 
 var chatUpdateTimeout = null;
-function updateMessages() {
+function updateMessages(){
 	if (session.chatbutton===false){return;}
 	document.getElementById("chatBody").innerHTML = "";
 	for (var i in messageList) {
@@ -20683,7 +20706,7 @@ function updateMessages() {
 		if (messageList[i].type == "sent") {
 			msg.innerHTML = messageList[i].msg + " <i><small> <small>- " + time + "</small></small></i>";
 			msg.classList.add("outMessage");
-		} else if (messageList[i].type == "recv") {
+		} else if ((messageList[i].type == "recv") || (messageList[i].type == "action")) {
 			var label = "";
 			if (messageList[i].label) {
 				label = messageList[i].label;
@@ -20704,11 +20727,13 @@ function updateMessages() {
 	for (var i in msgTransferList) {
 		var time = timeSince(msgTransferList[i].time) || "";
 		var msg = document.createElement("div");
-		
+		if ("idx" in msgTransferList[i]){
+			msg.id = "transfer_"+msgTransferList[i].idx;
+		}
 		if (msgTransferList[i].type == "sent") {
 			msg.innerHTML = msgTransferList[i].msg + " <i><small> <small>- " + time + "</small></small></i>";
 			msg.classList.add("outMessage");
-		} else if (msgTransferList[i].type == "recv") {
+		} else if ((msgTransferList[i].type == "recv") || (msgTransferList[i].type == "action")) {
 			var label = "";
 			if (msgTransferList[i].label) {
 				label = msgTransferList[i].label;

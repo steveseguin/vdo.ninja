@@ -24,7 +24,7 @@
 		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
 		<meta content="text/html;charset=utf-8" http-equiv="Content-Type" />
 		<meta content="utf-8" http-equiv="encoding" />
-		<meta name="copyright" content="&copy; 2021 Steve Seguin" />
+		<meta name="copyright" content="&copy; 2022 Steve Seguin" />
 		<link rel="shortcut icon" href="data:image/x-icon;," type="image/x-icon" />
 		<link rel="icon" type="image/png" sizes="32x32" href="./media/favicon-32x32.png" />
 		<link rel="icon" type="image/png" sizes="16x16" href="./media/favicon-16x16.png" />
@@ -54,7 +54,7 @@
 		<meta property="twitter:image" content="./media/vdoNinja_logo_full.png" />
 		<meta name="msapplication-TileColor" content="#da532c" />
 		<meta name="theme-color" content="#ffffff" />
-		<link rel="stylesheet" href="./main.css?ver=152" />
+		<link rel="stylesheet" href="./main.css?ver=153" />
 		<script type="text/javascript" crossorigin="anonymous" src="./thirdparty/adapter.min.js"></script>
 		<style id="lightbox-animations" type="text/css"></style>
 		<!-- <link rel="manifest" href="manifest.json" /> -->
@@ -79,7 +79,7 @@
 			<link itemprop="url" href="./media/vdoNinja_logo_full.png" />
 		</span>
 		<script  type="text/javascript" crossorigin="anonymous"  src="./thirdparty/CodecsHandler.js?ver=37"></script>
-		<script  type="text/javascript" crossorigin="anonymous" src="./webrtc.js?ver=367"></script>
+		<script  type="text/javascript" crossorigin="anonymous" src="./webrtc.js?ver=368"></script>
 		<input id="zoomSlider" type="range" style="display: none;" />
 		<div id="header">
 			
@@ -799,9 +799,6 @@
 								Some devices that use hardware encoding can experience video issues; switching to VP8 or VP9 as a <a target='_blank' title='Jump to the documentation' href='https://docs.vdo.ninja/viewers-settings/codec'>codec</a> may help.
 							</li>
 							<li>
-								iPhones continue to have random audio issues, such as lowered volume or no audio at all. These are issues that Apple needs to fix.</a>.
-							</li>
-							<li>
 								Audio may drop out in OBS Studio at random times, yet still appear active. Delete the browser source and re-create, or use the <a href="https://github.com/steveseguin/electroncapture">Electron Capture</a> app instead</a>.
 							</li>
 							<br />
@@ -809,8 +806,7 @@
 								<font style="color:#daad09;">Welcome to VDO Ninja! We've rebranded!  Nothing else is changing and we're staying 100% free.</font>
 							</h4>
 							<br />
-							🎁 Welcome to v20, released December 24th. <a target="_blank" href="https://docs.vdo.ninja/release-notes/v20">Release notes are here</a>. The previous version is <a href="https://vdo.ninja/v19/">available here</a> if you have new issues.
-
+							Site updated February 14th. <a target="_blank" href="https://docs.vdo.ninja/releases/v21">v21 release notes</a>. If having new issues, the previous version <a href="https://vdo.ninja/v20/">is here</a>, and the <a href="https://vdo.ninja/beta/">upcoming next version is here</a>; please test it when possible.
 							<br />
 							<br />
 							<h3>
@@ -1932,7 +1928,7 @@
 
 		
 			var session = WebRTC.Media; // session is a required global variable if configuring manually. Run before loading main.js but after webrtc.js.
-			session.version = "20.7";
+			session.version = "21.0";
 			session.streamID = session.generateStreamID(); // randomly generates a streamID for this session. You can set your own programmatically if needed
 			
 			session.defaultPassword = "someEncryptionKey123"; // Change this password if self-deploying for added security/privacy
@@ -1998,11 +1994,11 @@
 			// session.lowBitrateCutoff = 300; // Set a minimum bitrate (in kbps) before the stream is hidden. Useful for IRL streams maybe
 		</script>
 		<script type="text/javascript" crossorigin="anonymous" src="./thirdparty/aes.js"></script>
-		<script type="text/javascript" crossorigin="anonymous" id="lib-js" src="./lib.js?ver=263"></script>
+		<script type="text/javascript" crossorigin="anonymous" id="lib-js" src="./lib.js?ver=264"></script>
 		<!-- 
 		// If you wish to change branding, blank offers a good clean start.
 		<script type="text/javascript" id="main-js" src="./main.js" data-translation="blank"></script>
 		-->
-		<script type="text/javascript" crossorigin="anonymous" id="main-js" src="./main.js?ver=301"></script>
+		<script type="text/javascript" crossorigin="anonymous" id="main-js" src="./main.js?ver=302"></script>
 	</body>
 </html>

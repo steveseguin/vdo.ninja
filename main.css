@@ -2560,6 +2560,15 @@ input[type=checkbox] {
 	text-align: left;
 	margin: 10px 3px;
 }
+.actionMessage {
+	color: #000;
+	margin: 3px;
+	border-radius: 5px;
+	background: #FFF;
+	padding: 5px;
+	text-align: left;
+	margin: 10px 3px;
+}
 .outMessage {
 	color: #000;
 	margin: 3px;
@@ -3873,6 +3882,9 @@ body.darktheme .outMessage{
 	background-color: #7f89a7;
 }
 body.darktheme .inMessage {
+	background-color: #b1b1b1;
+}
+body.darktheme .actionMessage {
 	background-color: #b1b1b1;
 }
 body.darktheme #chatInput{
