@@ -266,6 +266,7 @@
     * [\&midichannel](midi-settings/and-midichannel.md)
     * [\&mididevice](midi-settings/and-mididevice.md)
     * [\&midioffset](midi-settings/and-midioffset.md)
+    * [\&datamode](https://docs.vdo.ninja/advanced-settings/setup-parameters/and-datamode)
   * [TURN & STUN Parameters](advanced-settings/turn-and-stun-parameters/README.md)
     * [\&turn](general-settings/turn.md)
     * [\&stun](general-settings/stun.md)
