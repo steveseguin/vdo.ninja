@@ -16,10 +16,10 @@ description: >-
 
 ## Details
 
-`&vdo` is just like [`&videodevice`](videodevice.md) for selecting a default video device, but you can still choose to change the camera before joining when using `&vdo`.
+`&vdo` is just like [`&videodevice`](../source-settings/videodevice.md) for selecting a default video device, but you can still choose to change the camera before joining when using `&vdo`.
 
 ## Related
 
-{% content-ref url="videodevice.md" %}
-[videodevice.md](videodevice.md)
+{% content-ref url="../source-settings/videodevice.md" %}
+[videodevice.md](../source-settings/videodevice.md)
 {% endcontent-ref %}

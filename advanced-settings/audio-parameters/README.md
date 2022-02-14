@@ -22,7 +22,7 @@ You have to add them to the source side ([`&push`](../../source-settings/push.md
 
 | Parameter                                                                        | Explanation                                                                                  |
 | -------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------- |
-| ``[`&audiodevice`](../setup-parameters/audiodevice.md)``                         | Pre-configures the selected audio device                                                     |
+| ``[`&audiodevice`](../../source-settings/audiodevice.md)``                       | Pre-configures the selected audio device                                                     |
 | ``[`&aec`](../../source-settings/aec.md)``                                       | Automatic echo-cancellation is ON or OFF                                                     |
 | ``[`&audiogain`](../../source-settings/gain.md)``                                | Applies a gain multiplier (as a percentage) to the local microphone                          |
 | ``[`&autogain`](../../source-settings/autogain.md)``                             | Sets whether audio auto-normalization is ON or OFF                                           |
@@ -43,19 +43,19 @@ You have to add them to the source side ([`&push`](../../source-settings/push.md
 
 You have to add them to the viewer side ([`&view`](../view-parameters/view.md) or [`&scene`](../view-parameters/scene.md)).
 
-| Parameter                                                       | Explanation                                                                          |
-| --------------------------------------------------------------- | ------------------------------------------------------------------------------------ |
-| ``[`&outputdevice`](../setup-parameters/and-outputdevice.md)``  | Like [`&sink`](../setup-parameters/and-sink.md), but selects the audio output device |
-| ``[`&sink`](../setup-parameters/and-sink.md)``                  | Outputs the audio to the specified audio output device, rather than the default      |
-| ``[`&audiobitrate`](../view-parameters/audiobitrate.md)``       | Manually sets the audio bitrate in kbps                                              |
-| ``[`&vbr`](../view-parameters/vbr.md)``                         | Sets the audio bitrate to be variable, instead of constant                           |
-| ``[`&mono`](../view-parameters/mono.md)``                       | Has the inbound audio playback as mono audio                                         |
-| ``[`&noaudio`](../view-parameters/noaudio.md)``                 | Delivers video only streams; audio playback is disabled                              |
-| ``[`&panning`](../view-parameters/and-panning.md)``             | Pans the outgoing audio left or right, allowing for spatial audio group chats        |
-| ``[`&sync`](../view-parameters/sync.md)``                       | Sets an offset (in ms) for the automatic audio sync fix node                         |
-| ``[`&samplerate`](../view-parameters/and-samplerate.md)``       | Audio playback sample-rate, in hz                                                    |
-| ``[`&channels`](../view-parameters/and-channels.md)``           | Specifies the number of output audio channels you wish to mix up or down to          |
-| ``[`&channeloffset`](../view-parameters/and-channeloffset.md)`` | Shifts audio channels 0 and 1 up channels, based on the offset value                 |
-| ``[`&ptime`](../view-parameters/and-ptime.md)``                 | Audio packet size                                                                    |
-| ``[`&maxptime`](../view-parameters/and-maxptime.md)``           | Maximum packet size of audio                                                         |
-| ``[`&minptime`](../view-parameters/minptime.md)``               | Minimum packet size of audio                                                         |
+| Parameter                                                       | Explanation                                                                         |
+| --------------------------------------------------------------- | ----------------------------------------------------------------------------------- |
+| ``[`&outputdevice`](../view-parameters/and-outputdevice.md)``   | Like [`&sink`](../view-parameters/and-sink.md), but selects the audio output device |
+| ``[`&sink`](../view-parameters/and-sink.md)``                   | Outputs the audio to the specified audio output device, rather than the default     |
+| ``[`&audiobitrate`](../view-parameters/audiobitrate.md)``       | Manually sets the audio bitrate in kbps                                             |
+| ``[`&vbr`](../view-parameters/vbr.md)``                         | Sets the audio bitrate to be variable, instead of constant                          |
+| ``[`&mono`](../view-parameters/mono.md)``                       | Has the inbound audio playback as mono audio                                        |
+| ``[`&noaudio`](../view-parameters/noaudio.md)``                 | Delivers video only streams; audio playback is disabled                             |
+| ``[`&panning`](../view-parameters/and-panning.md)``             | Pans the outgoing audio left or right, allowing for spatial audio group chats       |
+| ``[`&sync`](../view-parameters/sync.md)``                       | Sets an offset (in ms) for the automatic audio sync fix node                        |
+| ``[`&samplerate`](../view-parameters/and-samplerate.md)``       | Audio playback sample-rate, in hz                                                   |
+| ``[`&channels`](../view-parameters/and-channels.md)``           | Specifies the number of output audio channels you wish to mix up or down to         |
+| ``[`&channeloffset`](../view-parameters/and-channeloffset.md)`` | Shifts audio channels 0 and 1 up channels, based on the offset value                |
+| ``[`&ptime`](../view-parameters/and-ptime.md)``                 | Audio packet size                                                                   |
+| ``[`&maxptime`](../view-parameters/and-maxptime.md)``           | Maximum packet size of audio                                                        |
+| ``[`&minptime`](../view-parameters/minptime.md)``               | Minimum packet size of audio                                                        |

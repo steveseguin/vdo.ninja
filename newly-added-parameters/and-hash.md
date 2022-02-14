@@ -17,7 +17,7 @@ description: Checks the password
 
 ## Details
 
-You can add `&hash=STRING` this to a guest's URL instead of [`&password`](password.md) if you want to check the password. That means the password turns into another String.
+You can add `&hash=STRING` this to a guest's URL instead of [`&password`](../general-settings/password.md) if you want to check the password. That means the password turns into another String.
 
 The guests' invitations in the director room get 'hashed' automatically. If you want to hash your password manually, you can use this link:\
 [https://vdo.ninja/examples/changepass.html](https://vdo.ninja/examples/changepass.html)\
@@ -30,6 +30,6 @@ For example:\
 
 ## Related
 
-{% content-ref url="password.md" %}
-[password.md](password.md)
+{% content-ref url="../general-settings/password.md" %}
+[password.md](../general-settings/password.md)
 {% endcontent-ref %}

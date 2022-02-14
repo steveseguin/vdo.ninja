@@ -19,6 +19,6 @@ This may also prevent a guest from being able to download files that are shared 
 
 ## Related
 
-{% content-ref url="../advanced-settings/setup-parameters/and-fileshare.md" %}
-[and-fileshare.md](../advanced-settings/setup-parameters/and-fileshare.md)
+{% content-ref url="and-fileshare.md" %}
+[and-fileshare.md](and-fileshare.md)
 {% endcontent-ref %}

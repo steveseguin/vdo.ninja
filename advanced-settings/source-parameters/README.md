@@ -40,7 +40,7 @@
 | ``[`&r2d2`](../../source-settings/r2d2.md)``                                     | Easter egg `&notify` sound                                                                                            |
 | ``[`&record`](../../source-settings/and-record.md)``                             | Record functionality for guests                                                                                       |
 | ``[`&roombitrate`](../../source-settings/roombitrate.md)``                       | Limits any guest viewer in the group chat room from pulling the video stream at more than the specified bitrate value |
-| ``[`&screenshare`](../setup-parameters/screenshare.md)``                         | Disables camera-sharing as an option                                                                                  |
+| ``[`&screenshare`](../../source-settings/screenshare.md)``                       | Disables camera-sharing as an option                                                                                  |
 | ``[`&sensor`](../../source-settings/sensor.md)``                                 | Access device sensor data at given rate                                                                               |
 | ``[`&showlist`](../../source-settings/showlist.md)``                             | Toggles list of hidden guests                                                                                         |
 | ``[`&ssb`](../../source-settings/ssb.md)``                                       | Forces the screen-share button to appear for guests                                                                   |

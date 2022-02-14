@@ -17,7 +17,7 @@ The `&facing` setting lets you specify either the front or rear facing camera as
 \
 Example usage:`https://vdo.ninja/?webcam&facing=rear`\
 \
-`&facing` takes priority over [`&videodevice`](../advanced-settings/setup-parameters/videodevice.md) , but it will fail to [`&videodevice`](../advanced-settings/setup-parameters/videodevice.md) or the default behaviour if the rear/front camera can't be selected automatically. If there are multiple rear or front cameras, it will use the first one. [`&videodevice=0`](../advanced-settings/setup-parameters/videodevice.md) will disable the video outright.
+`&facing` takes priority over [`&videodevice`](../source-settings/videodevice.md) , but it will fail to [`&videodevice`](../source-settings/videodevice.md) or the default behaviour if the rear/front camera can't be selected automatically. If there are multiple rear or front cameras, it will use the first one. [`&videodevice=0`](../source-settings/videodevice.md) will disable the video outright.
 
 ## Related
 
