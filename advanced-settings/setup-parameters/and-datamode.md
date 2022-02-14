@@ -10,6 +10,6 @@ Adding the `&datamode` parameter just combines a bunch of flags together; no vid
 
 ## Related
 
-{% content-ref url="../midi-settings/midi.md" %}
-[midi.md](../midi-settings/midi.md)
+{% content-ref url="../../midi-settings/midi.md" %}
+[midi.md](../../midi-settings/midi.md)
 {% endcontent-ref %}

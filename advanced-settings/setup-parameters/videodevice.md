@@ -34,16 +34,16 @@ See [vdo.ninja/devices](https://vdo.ninja/devices) to see the device IDs and dev
 
 ## Related
 
-{% content-ref url="../newly-added-parameters/and-vdo.md" %}
-[and-vdo.md](../newly-added-parameters/and-vdo.md)
+{% content-ref url="and-vdo.md" %}
+[and-vdo.md](and-vdo.md)
 {% endcontent-ref %}
 
 {% content-ref url="audiodevice.md" %}
 [audiodevice.md](audiodevice.md)
 {% endcontent-ref %}
 
-{% content-ref url="and-nosettings.md" %}
-[and-nosettings.md](and-nosettings.md)
+{% content-ref url="../../source-settings/and-nosettings.md" %}
+[and-nosettings.md](../../source-settings/and-nosettings.md)
 {% endcontent-ref %}
 
 {% content-ref url="and-webcam.md" %}

@@ -20,8 +20,8 @@ You can add them to both, source ([`&push`](../../source-settings/push.md)) and 
 
 | Parameter                                                                               | Explanation                                                                                                 |
 | --------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------- |
-| ``[`&screenshare`](../../source-settings/screenshare.md)``                              | Disables camera-sharing as an option                                                                        |
-| ``[`&screenshare2`](../../newly-added-parameters/and-screenshare2.md)``                 | Will show the "Share your Screen" button before asking the user to select screenshare options               |
+| ``[`&screenshare`](../setup-parameters/screenshare.md)``                                | Disables camera-sharing as an option                                                                        |
+| ``[`&screenshare2`](../setup-parameters/and-screenshare2.md)``                          | Will show the "Share your Screen" button before asking the user to select screenshare options               |
 | ``[`&screenshareaec`](../../newly-added-parameters/and-screenshareaec.md)``             | Turns automatic echo-cancellation filter for screen-shares ON or OFF                                        |
 | ``[`&screenshareautogain`](../../newly-added-parameters/and-screenshareautogain.md)``   | Turns audio auto-normalization filter for screen-shares ON or OFF                                           |
 | ``[`&screensharecursor`](../../source-settings/cursor.md)``                             | Attempts to show the mouse cursor on screen shares                                                          |

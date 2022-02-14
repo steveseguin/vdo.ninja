@@ -60,4 +60,4 @@ In regards to `&sid`, you can pass multiple stream IDs, and so long as each remo
 
 Nacks per second is similar to packet loss, and so a high nack loss rate implies a restriction on network quality.  "quality limitation reason" may also be stated, which can imply whether the CPU or Network is the bottleneck in achieving maximum quality.
 
-If viewers of a stream ID being monitor have a label assigned ([`&label`](label.md)), then that will appear as a label on the monitor page besides the graph, identifying it.
+If viewers of a stream ID being monitor have a label assigned ([`&label`](../advanced-settings/setup-parameters/label.md)), then that will appear as a label on the monitor page besides the graph, identifying it.

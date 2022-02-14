@@ -18,8 +18,8 @@ Just hides the local screen-share sub-window that appears when screen sharing in
 
 ## Related
 
-{% content-ref url="../source-settings/screenshare.md" %}
-[screenshare.md](../source-settings/screenshare.md)
+{% content-ref url="../advanced-settings/setup-parameters/screenshare.md" %}
+[screenshare.md](../advanced-settings/setup-parameters/screenshare.md)
 {% endcontent-ref %}
 
 {% content-ref url="../source-settings/screenshareid.md" %}

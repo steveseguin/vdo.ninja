@@ -40,7 +40,7 @@ A stream ID must also not already be in active use, else you will be provided wi
 
 ## Navigating the available setting options
 
-We've broken down the available URL parameters into 15 parts:
+We've broken down the available URL parameters into 16 parts:
 
 * ****[**Most important Parameters**](getting-started/cheat-sheet-of-basic-parameters.md): the basic and most common parameters
 * ****[**General Settings**](advanced-settings/general-parameters/): parameters that impact the app broadly
@@ -48,6 +48,7 @@ We've broken down the available URL parameters into 15 parts:
 * ****[**Viewer's Settings**](advanced-settings/view-parameters/): parameters that are controllable by the viewer's side, which includes bitrate, codec, and layouts
 * ****[**Director Settings**](advanced-settings/director-parameters/): specific to the director's control room and director-specific features
 * ****[**Audio Settings**](advanced-settings/audio-parameters/): filters, adding delay, bitrate, channels, mono/stereo, muting guests etc.
+* [**Setup Settings**](advanced-settings/setup-parameters/): password, labels, groups, devices, auto-start, welcoming guests, sharing a website/file
 * ****[**Design Settings**](advanced-settings/design-parameters/): labels, styles, clean output, CSS, mirroring, margin, darkmode, background color, disable tallies etc.
 * [**Mixer/Scene Settings**](advanced-settings/mixer-scene-parameters/): layout and design for the video mixer in rooms/scenes, preload/hidden scene bitrate
 * ****[**Screen-share Settings**](advanced-settings/screen-share-parameters/): labels, audio filters, type, bitrate, quality etc.
@@ -55,7 +56,7 @@ We've broken down the available URL parameters into 15 parts:
 * ****[**API & MIDI Settings**](advanced-settings/api-and-midi-parameters/): hotkey features via API and MIDI
 * [**TURN & STUN Settings**](advanced-settings/turn-and-stun-parameters/): options for setting up TURN and STUN servers
 * ****[**Newly Added Parameters**](advanced-settings/newly-added-parameters/): recently added to the Docs or to VDO.Ninja
-* ****[**Parameters only on beta**](advanced-settings/parameters-only-on-beta.md): parameters only on [VDO.Ninja/beta](https://vdo.ninja/beta/) version at the moment
+* ****[**Parameters only on beta**](advanced-settings/parameters-only-on-beta.md): only on [VDO.Ninja/beta](https://vdo.ninja/beta/) version at the moment
 * ****[**Other Parameters**](other-parameters.md): not ready for production, not intended to be used or not well-documented
 
 You can search for specific commands using the search bar at the top-right as well.

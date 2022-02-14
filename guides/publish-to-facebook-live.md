@@ -16,4 +16,4 @@ You can also screen share VDO.Ninja into Facebook, bypassing the need for OBS al
 
 You can use the Electron Capture app instead of Chrome as a screen sharing source, which provides exact resolution and always-on-top options. It also makes it easier to select the virtual audio cable output as the output destination.
 
-With Chrome, you can select the virtual audio cable as the output source by adding [`&od=cable`](../advanced-settings/view-parameters/and-outputdevice.md) to the scene/view link, or by visiting [https://vdo.ninja/electron](https://vdo.ninja/electron) and selecting it from the drop down menu.
+With Chrome, you can select the virtual audio cable as the output source by adding [`&od=cable`](../advanced-settings/setup-parameters/and-outputdevice.md) to the scene/view link, or by visiting [https://vdo.ninja/electron](https://vdo.ninja/electron) and selecting it from the drop down menu.

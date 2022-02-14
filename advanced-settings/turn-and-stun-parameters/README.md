@@ -1,6 +1,8 @@
-# TURN & STUN Parameters
+---
+description: Options for setting up TURN and STUN servers
+---
 
-**TURN & STUN Settings**, which are specific to TURN and STUN features.
+# TURN & STUN Parameters
 
 | Parameter                                                     | Explanation                                                                                                                |
 | ------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------- |

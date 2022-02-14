@@ -6,6 +6,7 @@ description: Starts any screen-share paused
 
 ## Aliases
 
+* `&sspause`
 * `&ssp`
 
 ## Details

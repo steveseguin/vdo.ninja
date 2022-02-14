@@ -11,7 +11,7 @@ description: Display labels as a video overlay
 
 ## Details
 
-This parameter will display the user's display name or label on screen, as a text overlay. The label can be set either via the URL using the [`&label`](../../general-settings/label.md) parameter, or the room's director can set it dynamically via the "Add a label" option. &#x20;
+This parameter will display the user's display name or label on screen, as a text overlay. The label can be set either via the URL using the [`&label`](../setup-parameters/label.md) parameter, or the room's director can set it dynamically via the "Add a label" option. &#x20;
 
 This parameter can be used on guest links, view links, or scene links. It will be sticky to each individual video and not the browser window as a whole.
 
@@ -87,8 +87,8 @@ Below is another example, this time we target the video tile class, creating a m
 
 ## Related
 
-{% content-ref url="../../general-settings/label.md" %}
-[label.md](../../general-settings/label.md)
+{% content-ref url="../setup-parameters/label.md" %}
+[label.md](../setup-parameters/label.md)
 {% endcontent-ref %}
 
 {% content-ref url="../../newly-added-parameters/and-screensharelabel.md" %}
