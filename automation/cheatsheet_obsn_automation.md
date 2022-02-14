@@ -2,7 +2,7 @@
 
 [⬅ back](../README.md)
 
-## AUTOMATING OBSN START-UP
+## AUTOMATING VDO.Ninja START-UP
 
 For regularly repeated setups you can automate a lot of the parameters:
 
