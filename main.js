@@ -1,5 +1,5 @@
 /*
-*  Copyright (c) 2021 Steve Seguin. All Rights Reserved.
+*  Copyright (c) 2022 Steve Seguin. All Rights Reserved.
 *
 *  Use of this source code is governed by the APGLv3 open-source license
 *  that can be found in the LICENSE file in the root of the source
@@ -4142,7 +4142,7 @@ setTimeout(function(){ // lazy load
 	script.onload = function() { 
 		var script = document.createElement('script');
 		document.head.appendChild(script);
-		script.src = "./thirdparty/StreamSaver.js?t="+Date.now(); // dynamically load this only if its needed. Keeps loading time down.
+		script.src = "./thirdparty/StreamSaver.js?v=4"; // dynamically load this only if its needed. Keeps loading time down.
 	};
 	script.src = "./thirdparty/polyfill.min.js"; // dynamically load this only if its needed. Keeps loading time down.
 },0);

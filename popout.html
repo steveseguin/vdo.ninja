@@ -1,11 +1,7 @@
 <html>
 <head>
 <meta name="theme-color" content="#ffffff" />
-<!-- <script src="//console.re/connector.js" data-channel="obsninjadev"  type="text/javascript" id="consolerescript"></script>-->
-<link rel="stylesheet" href="./lineawesome/css/line-awesome.min.css">
-<script type="text/javascript" crossorigin="anonymous" src="./thirdparty/adapter-latest.js"></script>
-<script type="text/javascript" crossorigin="anonymous" src="./thirdparty/qrcode.min.js"></script>
-<script type="text/javascript" src="./thirdparty/jquery.min.js"></script> 
+<!-- <script src="//console.re/connector.js" data-channel="vdoninjadev"  type="text/javascript" id="consolerescript"></script>-->
 <link rel="stylesheet" href="./main.css?ver=22" />
 <style>
 #chatModule{
@@ -41,11 +37,8 @@ body{
 <body>
 <div id="chatModule" >
 	<div id="chatBody"> 
-		<div class="inMessage" data-translate='welcome-to-obs-ninja-chat'>
-			Welcome to OBS.Ninja! You can send text messages directly to connected peers from here.
-		</div>
-		<div class="outMessage" data-translate='names-and-labels-coming-soon'>
-			Names identifying connected peers will be a feature in an upcoming release.
+		<div class="inMessage" data-translate='welcome-to-vdo-ninja-chat'>
+			Welcome to VDO.Ninja! You can send text messages directly to connected peers from here.
 		</div>
 	</div>
 	<input id="chatInput" placeholder="Enter chat message to send here" onkeypress="EnterButtonChat(event)" />
@@ -55,9 +48,8 @@ body{
 
 
 /// If you have a routing system setup, you could have just one global listener for all iframes instead.
-var chatUpdateTimeout = null;
+//var chatUpdateTimeout = null;
 var messageList = [];
-
 (function (w) {
     w.URLSearchParams = w.URLSearchParams || function (searchString) {
         var self = this;
@@ -88,7 +80,7 @@ bc.onmessage = function (e) {
 		if ("msg" in e.data){
 			messageList.push(e.data);
 			messageList = messageList.slice(-100);
-			updateMessages();
+			updateMessages(e.data);
 		} else if ("messageList" in e.data){
 			messageList = e.data.messageList;
 			updateMessages();
@@ -151,40 +143,73 @@ function timeSince(date) {
 
 
 
-function updateMessages(){
-	document.getElementById("chatBody").innerHTML = "";
-	for (i in messageList){
-		
-		var time = timeSince(messageList[i].time);
+function updateMessages(message = false){
+	if (message){
+		var time = timeSince(message.time);
 		var msg = document.createElement("div");
 		////// KEEP THIS IN /////////
-		console.log(messageList[i].msg); // Display Recieved messages for View-Only clients.
+		console.log(message.msg); // Display Recieved messages for View-Only clients.
 		/////////////////////////////
-		if (messageList[i].type == "sent"){
-			msg.innerHTML = messageList[i].msg + " <i><small> <small>- "+time+"</small></small></i>";
+		var label = "";
+		if (message.label){
+			label = message.label;
+		} 
+		
+		if (message.type == "sent"){
+			msg.innerHTML = "<span class='chat_message chat_sent'>"+message.msg + "  </span><i><small> <small>- "+time+"</small></small></i><span style='display:none'>"+label+"</span>";
 			msg.classList.add("outMessage");
-		} else if (messageList[i].type == "recv"){
+		} else if (message.type == "recv"){
+			msg.innerHTML = label+"<span class='chat_message chat_recv'>"+message.msg + " </span><i><small> <small>- "+time+"</small></small></i>";
+			msg.classList.add("inMessage");
+		} else if (message.type == "action"){
+			msg.innerHTML = label+"<span class='chat_message chat_action'>"+message.msg + " </span><i><small> <small>- "+time+"</small></small></i>";
+			msg.classList.add("actionMessage");
+		} else if (message.type == "alert"){
+			msg.innerHTML = "<span class='chat_message chat_alert'>"+message.msg + " </span><i><small> <small>- "+time+"</small></small></i>";
+			msg.classList.add("inMessage");
+		} else {
+			msg.innerHTML = "<span class='chat_message chat_other'>"+message.msg + "  </span><i><small> <small>- "+time+"</small></small></i>";
+			msg.classList.add("inMessage");
+		}
+		document.getElementById("chatBody").appendChild(msg);
+	} else {
+		document.getElementById("chatBody").innerHTML = "";
+		for (i in messageList){
+			var time = timeSince(messageList[i].time);
+			var msg = document.createElement("div");
+			////// KEEP THIS IN /////////
+			console.log(messageList[i].msg); // Display Recieved messages for View-Only clients.
+			/////////////////////////////
 			var label = "";
 			if (messageList[i].label){
 				label = messageList[i].label;
 			} 
-			msg.innerHTML = label+messageList[i].msg + " <i><small> <small>- "+time+"</small></small></i>";
-			msg.classList.add("inMessage");
-		} else if (messageList[i].type == "alert"){
-			msg.innerHTML = messageList[i].msg + " <i><small> <small>- "+time+"</small></small></i>";
-			msg.classList.add("inMessage");
-		} else {
-			msg.innerHTML = messageList[i].msg + " <i><small> <small>- "+time+"</small></small></i>";
-			msg.classList.add("inMessage");
+			
+			if (messageList[i].type == "sent"){
+				msg.innerHTML = "<span class='chat_message chat_sent'>"+messageList[i].msg + "  </span><i><small> <small>- "+time+"</small></small></i><span style='display:none'>"+label+"</span>";
+				msg.classList.add("outMessage");
+			} else if (messageList[i].type == "recv"){
+				msg.innerHTML = label+"<span class='chat_message chat_recv'>"+messageList[i].msg + " </span><i><small> <small>- "+time+"</small></small></i>";
+				msg.classList.add("inMessage");
+			} else if (messageList[i].type == "action"){
+				msg.innerHTML = label+"<span class='chat_message chat_action'>"+messageList[i].msg + " </span><i><small> <small>- "+time+"</small></small></i>";
+				msg.classList.add("actionMessage");
+			} else if (messageList[i].type == "alert"){
+				msg.innerHTML = "<span class='chat_message chat_alert'>"+messageList[i].msg + " </span><i><small> <small>- "+time+"</small></small></i>";
+				msg.classList.add("inMessage");
+			} else {
+				msg.innerHTML = "<span class='chat_message chat_other'>"+messageList[i].msg + "  </span><i><small> <small>- "+time+"</small></small></i>";
+				msg.classList.add("inMessage");
+			}
+			
+			document.getElementById("chatBody").appendChild(msg);
 		}
-		
-		document.getElementById("chatBody").appendChild(msg);
 	}
-	if (chatUpdateTimeout){
-		clearInterval(chatUpdateTimeout);
-	}
+	//if (chatUpdateTimeout){
+	//	clearInterval(chatUpdateTimeout);
+	//}
 	document.getElementById("chatBody").scrollTop = document.getElementById("chatBody").scrollHeight;
-	chatUpdateTimeout = setTimeout(function(){updateMessages()},60000);
+	//chatUpdateTimeout = setTimeout(function(){updateMessages()},60000);
 }
 
 </script>
