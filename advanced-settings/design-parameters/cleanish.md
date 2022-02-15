@@ -10,7 +10,7 @@ Same as [`&cleanoutput`](cleanoutput.md), except it still shows the play button 
 
 Director direct overlay messages are still visible.
 
-When using `&cleanish` and [`&record`](../settings-parameters/and-record.md), you'll get the record button showing, but nothing else.
+When using `&cleanish` and [`&record`](../../source-settings/and-record.md), you'll get the record button showing, but nothing else.
 
 ## Related
 

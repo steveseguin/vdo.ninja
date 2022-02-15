@@ -21,8 +21,8 @@ Useful to prevent publicly shared guest links from being crashed due to too many
 
 ## Related
 
-{% content-ref url="and-maxpublishers.md" %}
-[and-maxpublishers.md](and-maxpublishers.md)
+{% content-ref url="../advanced-settings/view-parameters/and-maxpublishers.md" %}
+[and-maxpublishers.md](../advanced-settings/view-parameters/and-maxpublishers.md)
 {% endcontent-ref %}
 
 {% content-ref url="and-maxconnections.md" %}

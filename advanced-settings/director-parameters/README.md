@@ -18,4 +18,4 @@ Parameters specified for the director's control panel; have to be used together 
 | ``[`&queue`](../../general-settings/queue.md)``                         | A basic guest queuing system                                                               |
 | ``[`&rooms`](../../director-settings/rooms.md)``                        | Quick director access to a list of rooms for transfering guests                            |
 | ``[`&showdirector`](../../viewers-settings/and-showdirector.md)``       | Lets the director perform alongside guests, showing up in scene-view links                 |
-| ``[`&notify`](../settings-parameters/and-notify.md)``                   | Audio alerts for raised hands, chat messages and if somebody joins the room                |
+| ``[`&notify`](../../source-settings/and-notify.md)``                    | Audio alerts for raised hands, chat messages and if somebody joins the room                |

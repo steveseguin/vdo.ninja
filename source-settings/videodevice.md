@@ -42,8 +42,8 @@ See [vdo.ninja/devices](https://vdo.ninja/devices) to see the device IDs and dev
 [audiodevice.md](audiodevice.md)
 {% endcontent-ref %}
 
-{% content-ref url="../advanced-settings/settings-parameters/and-nosettings.md" %}
-[and-nosettings.md](../advanced-settings/settings-parameters/and-nosettings.md)
+{% content-ref url="and-nosettings.md" %}
+[and-nosettings.md](and-nosettings.md)
 {% endcontent-ref %}
 
 {% content-ref url="and-webcam.md" %}

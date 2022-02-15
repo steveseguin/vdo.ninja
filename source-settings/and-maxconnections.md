@@ -20,8 +20,8 @@ Limits total of view and push connections to the given value.
 
 ## Related
 
-{% content-ref url="and-maxpublishers.md" %}
-[and-maxpublishers.md](and-maxpublishers.md)
+{% content-ref url="../advanced-settings/view-parameters/and-maxpublishers.md" %}
+[and-maxpublishers.md](../advanced-settings/view-parameters/and-maxpublishers.md)
 {% endcontent-ref %}
 
 {% content-ref url="and-maxviewers.md" %}

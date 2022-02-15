@@ -18,6 +18,6 @@ Disables the mic button. Guests can't mute audio.
 [and-novideobutton.md](and-novideobutton.md)
 {% endcontent-ref %}
 
-{% content-ref url="and-nospeakerbutton.md" %}
-[and-nospeakerbutton.md](and-nospeakerbutton.md)
+{% content-ref url="../source-settings/and-nospeakerbutton.md" %}
+[and-nospeakerbutton.md](../source-settings/and-nospeakerbutton.md)
 {% endcontent-ref %}

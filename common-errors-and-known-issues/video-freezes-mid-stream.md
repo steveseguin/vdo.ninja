@@ -6,7 +6,7 @@ If the stream or camera _freezes_ after a while, there could be many reasons. Le
 
 If cycling the camera to a different camera, or refreshing the camera via the settings menu, fixes the issue, then this normally implies the issue is with the camera or its USB connection.
 
-As a stop-gap solution, the director has the remote control ability to toggle the camera of a guest to unfreeze it. This can be done without the guest's permission even if the [`&consent`](../advanced-settings/settings-parameters/consent.md) flag is added to the guest's URL ahead of time. In a pinch, this can at least give the director some comfort to go live, fixing any stuck camera within a few seconds themselves, versus asking the guest to refresh their page.
+As a stop-gap solution, the director has the remote control ability to toggle the camera of a guest to unfreeze it. This can be done without the guest's permission even if the [`&consent`](../source-settings/consent.md) flag is added to the guest's URL ahead of time. In a pinch, this can at least give the director some comfort to go live, fixing any stuck camera within a few seconds themselves, versus asking the guest to refresh their page.
 
 If not using a group room, the publisher of a stream can also refresh their own camera via the settings menu, and clicking the refresh icon next to the camera.
 

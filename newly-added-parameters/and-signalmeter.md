@@ -21,4 +21,4 @@ Other modes support the signal-meter, but you need to add `&signalmeter` to the 
 
 The signal meter turns into a flame when the remote computer is being throttled by the CPU, instead of the network. This represents the remote computer is overheating or overloaded. Only supported by guests using Chrome really.\
 \
-![](<../../.gitbook/assets/image (126) (1).png>)![](<../../.gitbook/assets/image (111).png>)
+![](<../.gitbook/assets/image (126) (1).png>)![](<../.gitbook/assets/image (111).png>)

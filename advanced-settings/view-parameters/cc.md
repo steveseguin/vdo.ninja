@@ -13,15 +13,15 @@ description: Enables displaying of closed captioning text
 
 
 
-This command will display the incoming transcribed text-data as an overlay. You will need to use this on the VIEW link, while also using the [`&transcribe`](transcribe.md) command on the PUSH link.
+This command will display the incoming transcribed text-data as an overlay. You will need to use this on the VIEW link, while also using the [`&transcribe`](../../source-settings/transcribe.md) command on the PUSH link.
 
 See video for a walk-thru:
 
 {% embed url="https://www.youtube.com/embed/3eo85WAXeuk" %}
 
-Overlay text data is pulled from the source with [`&transcribe`](transcribe.md) added.&#x20;
+Overlay text data is pulled from the source with [`&transcribe`](../../source-settings/transcribe.md) added.&#x20;
 
-``[`&fontsize={percent}`](../design-parameters/fontsize.md) can be used to adjust the overlay font-size. 100% is default;&#x20;
+``[`&fontsize={percent}`](fontsize.md) can be used to adjust the overlay font-size. 100% is default;&#x20;
 
 Use can use [`&css=somecssfile.css`](../design-parameters/css.md) to further customize the CSS style, or do so in the OBS Browser source style sheet area. You can also set the CSS via a base64 encoded string in the URL, via the [`&base64css`](../design-parameters/css.md) parameter.\
 \
@@ -79,6 +79,6 @@ Feedback and user requests are welcomed.
 [css.md](../design-parameters/css.md)
 {% endcontent-ref %}
 
-{% content-ref url="transcribe.md" %}
-[transcribe.md](transcribe.md)
+{% content-ref url="../../source-settings/transcribe.md" %}
+[transcribe.md](../../source-settings/transcribe.md)
 {% endcontent-ref %}

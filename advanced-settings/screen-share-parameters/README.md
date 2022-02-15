@@ -34,7 +34,7 @@ You can add them to both, source ([`&push`](../../source-settings/push.md)) and 
 | ``[`&screensharestereo`](../../newly-added-parameters/and-screensharestereo.md)``       | Sets the audio mode for screen-shares to stereo and changes default audio settings to improve audio quality |
 | ``[`&screensharetype`](../../newly-added-parameters/and-screensharetype.md)``           | Defines how webcam and screenshare of a guest in a room interacts which each other                          |
 | ``[`&screensharevideoonly`](../../newly-added-parameters/and-screensharevideoonly.md)`` | Lets you disable the option to select audio when screen sharing                                             |
-| ``[`&ssb`](../settings-parameters/ssb.md)``                                             | Forces the screen-share button to appear for guests                                                         |
+| ``[`&ssb`](../../source-settings/ssb.md)``                                              | Forces the screen-share button to appear for guests                                                         |
 
 ## **Viewer side options**
 

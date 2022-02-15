@@ -15,7 +15,7 @@ You have to add them to [`&scene`](../view-parameters/scene.md) or [`&room`](../
 | ``[`&view`](../view-parameters/view.md)``                   | Defines the stream or streams you are receiving, by their stream IDs                                                 |
 | ``[`&exclude`](../view-parameters/and-exclude.md)``         | Same concept as [`&view`](../view-parameters/view.md), except does the opposite                                      |
 | ``[`&activespeaker`](../view-parameters/activespeaker.md)`` | Auto-hides remote guests videos when added, if those guests are not speaking actively                                |
-| ``[`&order`](order.md)``                                    | The order priority of a source video when added to the video mixer                                                   |
+| ``[`&order`](../../source-settings/order.md)``              | The order priority of a source video when added to the video mixer                                                   |
 | ``[`&slots`](../../newly-added-parameters/and-slots.md)``   | Will force the auto-mixer to have that number of slots, even if there are more or less videos available to fill them |
 | ``[`&randomize`](../view-parameters/randomize.md)``         | Random video loading order                                                                                           |
 | ``[`&cover`](../view-parameters/cover.md)``                 | Has the videos fully "cover" their assigned areas, even if it means cropping the video                               |
@@ -23,7 +23,7 @@ You have to add them to [`&scene`](../view-parameters/scene.md) or [`&room`](../
 | ``[`&portrait`](../view-parameters/and-portrait.md)``       | Optimizes the video mixer for 9:16 videos                                                                            |
 | ``[`&square`](../../newly-added-parameters/and-square.md)`` | Optimizes the video mixer for 1:1 videos                                                                             |
 | ``[`&animated`](../view-parameters/animated.md)``           | Videos in a group scene will slide around the screen when being re-arranged                                          |
-| ``[`&manual`](manual.md)``                                  | Disables the auto-mixer, allowing for a custom mixer to be used                                                      |
+| ``[`&manual`](../view-parameters/manual.md)``               | Disables the auto-mixer, allowing for a custom mixer to be used                                                      |
 
 ## **Only Scene options**
 

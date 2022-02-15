@@ -310,7 +310,7 @@ This VDO.Ninja API is developed and expanded based on user feedback and requests
 
 There's some users who wish to have an SDK instead of an IFRAME API. While an SDK may happen eventually, currently the IFRAME API is surprisingly capable.
 
-If you wish to use your own video mixer logic for example, you can disable the existing auto-mixer logic that currently exists using the [`&manual`](../advanced-settings/mixer-scene-parameters/manual.md) flag. You can then access the `srcObject` of each of the video elements in VDO.Ninja and pull those streams into the parent frame to manipulate or to connect to the parent DOM.&#x20;
+If you wish to use your own video mixer logic for example, you can disable the existing auto-mixer logic that currently exists using the [`&manual`](../advanced-settings/view-parameters/manual.md) flag. You can then access the `srcObject` of each of the video elements in VDO.Ninja and pull those streams into the parent frame to manipulate or to connect to the parent DOM.&#x20;
 
 If you aren't self-hosting the code, you may run into cross origin permission issues. This concept works with different subdomains though, and if you ask, the option to directly reference the VDO.Ninja servers with your own DNS servers is available. Self-hosting the code in a sub-domain of your own works too.
 

@@ -30,8 +30,8 @@ Setting this option to `0` will also disable the guest's microphone, potentially
 
 ## Related
 
-{% content-ref url="../advanced-settings/settings-parameters/and-nosettings.md" %}
-[and-nosettings.md](../advanced-settings/settings-parameters/and-nosettings.md)
+{% content-ref url="and-nosettings.md" %}
+[and-nosettings.md](and-nosettings.md)
 {% endcontent-ref %}
 
 {% content-ref url="videodevice.md" %}

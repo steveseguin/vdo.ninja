@@ -49,8 +49,8 @@ When recording with PCM, ([`&pcm`](and-pcm.md)) the inbound audio bitrate will b
 
 ## Related
 
-{% content-ref url="and-recordcodec.md" %}
-[and-recordcodec.md](and-recordcodec.md)
+{% content-ref url="../newly-added-parameters/and-recordcodec.md" %}
+[and-recordcodec.md](../newly-added-parameters/and-recordcodec.md)
 {% endcontent-ref %}
 
 {% content-ref url="and-pcm.md" %}

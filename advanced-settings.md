@@ -54,7 +54,7 @@ We've broken down the available URL parameters into 15 parts:
 * ****[**Meshcast Settings**](advanced-settings/meshcast-parameters/): options for the [`&meshcast`](newly-added-parameters/and-meshcast.md) parameter like audio filters, bitrate, screen-share, codecs etc.
 * ****[**API & MIDI Settings**](advanced-settings/api-and-midi-parameters/): hotkey features via API and MIDI
 * [**TURN & STUN Settings**](advanced-settings/turn-and-stun-parameters/): options for setting up TURN and STUN servers
-* ****[**Newly Added Parameters**](advanced-settings/newly-added-parameters.md): recently added to VDO.Ninja
+* ****[**Newly Added Parameters**](advanced-settings/newly-added-parameters/): recently added to VDO.Ninja
 * ****[**Parameters only on beta**](advanced-settings/parameters-only-on-beta.md): only on [VDO.Ninja/beta](https://vdo.ninja/beta/) version at the moment
 * ****[**Other Parameters**](other-parameters.md): not ready for production, not intended to be used or not well-documented
 

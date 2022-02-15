@@ -23,6 +23,6 @@ description: >-
 [and-bitratecutoff.md](and-bitratecutoff.md)
 {% endcontent-ref %}
 
-{% content-ref url="and-stats.md" %}
-[and-stats.md](and-stats.md)
+{% content-ref url="../../general-settings/and-stats.md" %}
+[and-stats.md](../../general-settings/and-stats.md)
 {% endcontent-ref %}

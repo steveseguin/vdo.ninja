@@ -52,7 +52,7 @@ Does not work in Safari!
 
 ## Related
 
-{% content-ref url="cc.md" %}
-[cc.md](cc.md)
+{% content-ref url="../advanced-settings/view-parameters/cc.md" %}
+[cc.md](../advanced-settings/view-parameters/cc.md)
 {% endcontent-ref %}
 

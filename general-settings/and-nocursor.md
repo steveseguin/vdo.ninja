@@ -14,10 +14,10 @@ If you're looking to hide the cursor while screen-recording, consider using OBS 
 
 ## Related
 
-{% content-ref url="../../common-errors-and-known-issues/cursor-shows-when-screen-sharing.md" %}
-[cursor-shows-when-screen-sharing.md](../../common-errors-and-known-issues/cursor-shows-when-screen-sharing.md)
+{% content-ref url="../common-errors-and-known-issues/cursor-shows-when-screen-sharing.md" %}
+[cursor-shows-when-screen-sharing.md](../common-errors-and-known-issues/cursor-shows-when-screen-sharing.md)
 {% endcontent-ref %}
 
-{% content-ref url="../../source-settings/cursor.md" %}
-[cursor.md](../../source-settings/cursor.md)
+{% content-ref url="../source-settings/cursor.md" %}
+[cursor.md](../source-settings/cursor.md)
 {% endcontent-ref %}

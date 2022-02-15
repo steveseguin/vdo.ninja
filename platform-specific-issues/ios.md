@@ -41,7 +41,7 @@ iOS does not work with the volume visualizer meter; it causes clicking noises wh
 *   If your camera does not load or fails to load, fully close Safari / Chrome, and then try again. There seems to be an issue where old tabs or idle apps can block VDO.Ninja from accessing the camera.
 
 
-* Video shared by an iPhone/iPad to other guests in a group room may be choppy or of low-quality. This is intentional, as otherwise the iPhone would overheat or become too slow to use. Adding [`&forceios`](../advanced-settings/settings-parameters/and-forceios.md) to the URL of a specific guest can force a different, smoother, behavior for them, but use it sparingly.
+* Video shared by an iPhone/iPad to other guests in a group room may be choppy or of low-quality. This is intentional, as otherwise the iPhone would overheat or become too slow to use. Adding [`&forceios`](../source-settings/and-forceios.md) to the URL of a specific guest can force a different, smoother, behavior for them, but use it sparingly.
 
 ### Limited features; no focus/exposure control
 

@@ -48,7 +48,7 @@ Example usage:\
 ``\
 ``Monitoring Link: `https://vdo.ninja/monitor?sid=BaGpHmu,stevetest123`
 
-![](<../../.gitbook/assets/image (39).png>)
+![](<../.gitbook/assets/image (39).png>)
 
 It will pull statistics data from the sender of a video stream and visualize it, allowing for remote monitoring of stream quality. For this command to work though, the publisher needs to add `&remote` to their URL to allow for remote access.\
 \
@@ -60,4 +60,4 @@ In regards to `&sid`, you can pass multiple stream IDs, and so long as each remo
 
 Nacks per second is similar to packet loss, and so a high nack loss rate implies a restriction on network quality.  "quality limitation reason" may also be stated, which can imply whether the CPU or Network is the bottleneck in achieving maximum quality.
 
-If viewers of a stream ID being monitor have a label assigned ([`&label`](../../general-settings/label.md)), then that will appear as a label on the monitor page besides the graph, identifying it.
+If viewers of a stream ID being monitor have a label assigned ([`&label`](label.md)), then that will appear as a label on the monitor page besides the graph, identifying it.
