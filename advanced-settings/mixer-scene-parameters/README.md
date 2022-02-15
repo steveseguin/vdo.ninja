@@ -8,7 +8,7 @@ Mixer/Scene Parameters are viewer side options. You can add them to guest's URLs
 
 ## **Room and Scene options**
 
-You have to add them to [`&scene`](../view-parameters/scene.md) or [`&room`](../setup-parameters/room.md) or [`&view`](../view-parameters/view.md) URLs.
+You have to add them to [`&scene`](../view-parameters/scene.md) or [`&room`](../../general-settings/room.md) or [`&view`](../view-parameters/view.md) URLs.
 
 | Parameter                                                   | Explanation                                                                                                          |
 | ----------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------- |

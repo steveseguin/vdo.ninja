@@ -17,7 +17,7 @@ description: Limits the max video bitrate out for this publisher, per stream out
 
 ## Details
 
-Useful if you are a director and you wish to prevent guests from pulling more than 500-kbps (LQ) or 1200-kbps (HQ) when in [broadcast](../advanced-settings/view-parameters/broadcast.md) mode.
+Useful if you are a director and you wish to prevent guests from pulling more than 500-kbps (LQ) or 1200-kbps (HQ) when in [broadcast](../advanced-settings/video-parameters/broadcast.md) mode.
 
 This is NOT the same as setting the target bitrate as a publisher; this just sets a max limit that viewers can pull video streams at.\
 \

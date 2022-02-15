@@ -20,7 +20,7 @@ The rooms feature creates a virtual room where multiple devices can connect to s
 * There is Chrome-imposed limit of about 128 peers while using video and chat connections.
 * You will probably bump into limits sooner, as a function of video decoding processor power on the host computer and (to a lesser degree) network bandwidth.&#x20;
 
-If you want a room that can handle, (lets say 30 people even), it can be done, but everyone in the group needs good internet, a fast computer, or the room needs video previews disabled for guests. The [`&broadcast`](../../advanced-settings/view-parameters/broadcast.md) feature can help accomplish this, for example.
+If you want a room that can handle, (lets say 30 people even), it can be done, but everyone in the group needs good internet, a fast computer, or the room needs video previews disabled for guests. The [`&broadcast`](../../advanced-settings/video-parameters/broadcast.md) feature can help accomplish this, for example.
 
 For very large groups, >40, it is generally advised that you use regular server-based chatting service, like Google Meets, and send an VDO.Ninja invite links to each person individually. This way, you can record the individual streams of those in the Google Meet at a high resolution, but still have all the guests be able to see and hear each other.
 

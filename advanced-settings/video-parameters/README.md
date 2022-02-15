@@ -1,7 +1,7 @@
 ---
 description: >-
   Resolution, FPS, effects, bitrate, self preview, mute video, PTZ, codec,
-  buffer, scale
+  buffer, broadcast, scale
 ---
 
 # Video Parameters
@@ -37,7 +37,7 @@ You have to add them to the source side ([`&push`](../../source-settings/push.md
 | ``[`&maxbitrate`](../../source-settings/maxbitrate.md)``                         | Limits the max video bitrate out for this publisher, per stream out                                                                                 |
 | ``[`&roombitrate`](../../source-settings/roombitrate.md)``                       | Limits any guest viewer in the group chat room from pulling the video stream at more than the specified bitrate value                               |
 | ``[`&fullscreen`](../../source-settings/fullscreen.md)``                         | The preview video will be fullscreen                                                                                                                |
-| ``[`&preview`](../../source-settings/and-preview.md)``                           | Forces the guest to have a self-preview, overriding [`&broadcast`](../view-parameters/broadcast.md)``                                               |
+| ``[`&preview`](../../source-settings/and-preview.md)``                           | Forces the guest to have a self-preview, overriding [`&broadcast`](broadcast.md)``                                                                  |
 | ``[`&minipreview`](../../source-settings/and-minipreview.md)``                   | Mini self preview at the top right corner                                                                                                           |
 | ``[`&nopreview`](../../source-settings/and-nopreview.md)``                       | Disables the local self video preview                                                                                                               |
 | ``[`&hideguest`](../../newly-added-parameters/and-hideguest.md)``                | Has a guest join a group not visible to others                                                                                                      |
@@ -48,21 +48,22 @@ You have to add them to the source side ([`&push`](../../source-settings/push.md
 
 ## **Viewer side options**
 
-You have to add them to the viewer side ([`&room`](../setup-parameters/room.md) or [`&view`](../view-parameters/view.md) or [`&scene`](../view-parameters/scene.md)).
+You have to add them to the viewer side ([`&room`](../../general-settings/room.md) or [`&view`](../view-parameters/view.md) or [`&scene`](../view-parameters/scene.md)).
 
-| Parameter                                                                               | Explanation                                                                                |
-| --------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------ |
-| ``[`&videobitrate`](../view-parameters/bitrate.md)``                                    | Sets the "desired target" bitrate in kbps                                                  |
-| ``[`&totalroombitrate`](../view-parameters/totalroombitrate.md)``                       | The total bitrate a guest in a room can view video streams with                            |
-| ``[`&maxtotalscenebitrate`](../../newly-added-parameters/and-maxtotalscenebitrate.md)`` | Max. video bitrate a scene uses                                                            |
-| ``[`&zoomedbitrate`](../../newly-added-parameters/and-zoomedbitrate.md)``               | Lets you set the target bitrate for a guest when they 'zoom in' (fullscreen) on a video    |
-| ``[`&optimize`](../view-parameters/optimize.md)``                                       | Video bitrate reduced when the video is not visible in OBS (not active in a scene)         |
-| ``[`&scale`](../view-parameters/scale.md)``                                             | Scales the video resolution of the inbound video by the given percent                      |
-| ``[`&codec`](../view-parameters/codec.md)``                                             | Sets the codec to encode the video                                                         |
-| ``[`&h264profile`](../../newly-added-parameters/and-h264profile.md)``                   | OpenH264 software encoding will be used                                                    |
-| ``[`&buffer`](../view-parameters/buffer.md)``                                           | Sets the video buffer                                                                      |
-| ``[`&fadein`](../view-parameters/fadein.md)``                                           | Has videos fade in smoothly                                                                |
-| ``[`&novideo`](../view-parameters/novideo.md)``                                         | Disables all video playback on the local computer, except for any stream ID that is listed |
-| ``[`&webp`](../view-parameters/webp.md)``                                               | Custom video codec for broadcasts                                                          |
-| ``[`&webpquality`](../view-parameters/webpquality.md)``                                 | Quality setting for the [`&webp`](../view-parameters/webp.md) option                       |
-| ``[`&dpi`](../view-parameters/dpi.md)``                                                 | Override the automatically selected Device Pixel Ratio                                     |
+| Parameter                                                                               | Explanation                                                                                                                                                                                   |
+| --------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| ``[`&videobitrate`](../view-parameters/bitrate.md)``                                    | Sets the "desired target" bitrate in kbps                                                                                                                                                     |
+| ``[`&totalroombitrate`](../view-parameters/totalroombitrate.md)``                       | The total bitrate a guest in a room can view video streams with                                                                                                                               |
+| ``[`&maxtotalscenebitrate`](../../newly-added-parameters/and-maxtotalscenebitrate.md)`` | Max. video bitrate a scene uses                                                                                                                                                               |
+| ``[`&zoomedbitrate`](../../newly-added-parameters/and-zoomedbitrate.md)``               | Lets you set the target bitrate for a guest when they 'zoom in' (fullscreen) on a video                                                                                                       |
+| ``[`&optimize`](../view-parameters/optimize.md)``                                       | Video bitrate reduced when the video is not visible in OBS (not active in a scene)                                                                                                            |
+| ``[`&scale`](../view-parameters/scale.md)``                                             | Scales the video resolution of the inbound video by the given percent                                                                                                                         |
+| ``[`&codec`](../view-parameters/codec.md)``                                             | Sets the codec to encode the video                                                                                                                                                            |
+| ``[`&h264profile`](../../newly-added-parameters/and-h264profile.md)``                   | OpenH264 software encoding will be used                                                                                                                                                       |
+| ``[`&buffer`](../view-parameters/buffer.md)``                                           | Sets the video buffer                                                                                                                                                                         |
+| ``[`&fadein`](../view-parameters/fadein.md)``                                           | Has videos fade in smoothly                                                                                                                                                                   |
+| ``[`&broadcast`](broadcast.md)``                                                        | A useful flag to allow the director to present their own video to the group, often used in conjunction with a virtual webcam; it can allow for larger groups rooms by reducing load on guests |
+| ``[`&novideo`](../view-parameters/novideo.md)``                                         | Disables all video playback on the local computer, except for any stream ID that is listed                                                                                                    |
+| ``[`&webp`](../view-parameters/webp.md)``                                               | Custom video codec for broadcasts                                                                                                                                                             |
+| ``[`&webpquality`](../view-parameters/webpquality.md)``                                 | Quality setting for the [`&webp`](../view-parameters/webp.md) option                                                                                                                          |
+| ``[`&dpi`](../view-parameters/dpi.md)``                                                 | Override the automatically selected Device Pixel Ratio                                                                                                                                        |

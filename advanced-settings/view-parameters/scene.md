@@ -36,6 +36,6 @@ Must be used in conjunction with a room parameter.&#x20;
 
 ## Related
 
-{% content-ref url="../setup-parameters/room.md" %}
-[room.md](../setup-parameters/room.md)
+{% content-ref url="../../general-settings/room.md" %}
+[room.md](../../general-settings/room.md)
 {% endcontent-ref %}

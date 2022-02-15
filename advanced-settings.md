@@ -47,7 +47,7 @@ We've broken down the available URL parameters into 17 parts:
 * ****[**Source Settings**](advanced-settings/source-parameters/): parameters specific to publishing, so these are things related to customizing the camera settings
 * ****[**Viewer's Settings**](advanced-settings/view-parameters/): parameters that are controllable by the viewer's side, which includes bitrate, codec, and layouts
 * ****[**Director Settings**](advanced-settings/director-parameters/): specific to the director's control room and director-specific features
-* ****[**Video Settings**](advanced-settings/video-parameters/): resolution, FPS, effects, bitrate, self preview, mute video, PTZ, codec, buffer, scale
+* ****[**Video Settings**](advanced-settings/video-parameters/): resolution, FPS, effects, bitrate, self preview, mute video, PTZ, codec, buffer, broadcasting, scale
 * ****[**Audio Settings**](advanced-settings/audio-parameters/): filters, adding delay, bitrate, channels, mono/stereo, muting guests etc.
 * [**Setup Settings**](advanced-settings/setup-parameters/): stream ID, create a room, password, labels, groups, devices, auto-start, welcoming guests, sharing a website/file
 * ****[**Design Settings**](advanced-settings/design-parameters/): labels, styles, clean output, CSS, mirroring, margin, darkmode, background color, disable tallies etc.

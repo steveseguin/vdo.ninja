@@ -15,7 +15,7 @@ You can add them to both, source ([`&push`](../../source-settings/push.md)) and 
 | Parameter                                                       | Explanation                                                                            |
 | --------------------------------------------------------------- | -------------------------------------------------------------------------------------- |
 | ``[`&push`](../../source-settings/push.md)``                    | The stream ID that you are publishing with will be the defined value                   |
-| ``[`&room`](room.md)``                                          | Sets a room ID for the session to join                                                 |
+| ``[`&room`](../../general-settings/room.md)``                   | Sets a room ID for the session to join                                                 |
 | ``[`&password`](../../general-settings/password.md)``           | Sets a password to view a stream or to join a room                                     |
 | ``[`&hash`](../../newly-added-parameters/and-hash.md)``         | Checks the password                                                                    |
 | ``[`&label`](../../general-settings/label.md)``                 | Sets a display name label                                                              |

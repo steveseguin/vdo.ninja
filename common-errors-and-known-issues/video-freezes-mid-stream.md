@@ -40,7 +40,7 @@ Services like [https://speedify.com](https://speedify.cm) can offer a VPN with b
 
 Regarding mobile, iOS users can only send video to 3 viewers at a time if using the H264 hardware encoder. Newer versions of VDO.Ninja will try to keep track of how many H264 streams are being used, and revert to VP8-software-based encoding when the hardware encoders are maxed out, however VP8 encoding can cause iPhones to get very warm. If forcing H264 with an iPhone or iPad, and you max them out, you might cause videos to freeze or go black though.\
 \
-View links and scenes can sometimes can use an iPhone H264's encoder, even if the video isn't visible in OBS. If having issues, try to avoid forcing the H264 encoder or using it sparingly for only the active sources. If using [`&broadcast`](../advanced-settings/view-parameters/broadcast.md) mode, only the director and scenes could possibly contribute to using an H264 encoder; other guests won't have access to the guest's video stream, so they won't count towards this H264 encoder total.
+View links and scenes can sometimes can use an iPhone H264's encoder, even if the video isn't visible in OBS. If having issues, try to avoid forcing the H264 encoder or using it sparingly for only the active sources. If using [`&broadcast`](../advanced-settings/video-parameters/broadcast.md) mode, only the director and scenes could possibly contribute to using an H264 encoder; other guests won't have access to the guest's video stream, so they won't count towards this H264 encoder total.
 
 ### H264 specific issues
 
