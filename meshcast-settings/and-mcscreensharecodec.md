@@ -48,10 +48,10 @@ There's 4 codec options currently, including the default option:
 [and-meshcastcodec.md](and-meshcastcodec.md)
 {% endcontent-ref %}
 
-{% content-ref url="../advanced-settings/video-parameters/codec.md" %}
-[codec.md](../advanced-settings/video-parameters/codec.md)
+{% content-ref url="../advanced-settings/view-parameters/codec.md" %}
+[codec.md](../advanced-settings/view-parameters/codec.md)
 {% endcontent-ref %}
 
-{% content-ref url="../advanced-settings/video-parameters/and-h264profile.md" %}
-[and-h264profile.md](../advanced-settings/video-parameters/and-h264profile.md)
+{% content-ref url="../newly-added-parameters/and-h264profile.md" %}
+[and-h264profile.md](../newly-added-parameters/and-h264profile.md)
 {% endcontent-ref %}

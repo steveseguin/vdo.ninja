@@ -24,10 +24,10 @@ Not "strict" and is less likely to give errors than explicit resolution requests
 
 ## Related
 
-{% content-ref url="../../source-settings/screensharequality.md" %}
-[screensharequality.md](../../source-settings/screensharequality.md)
+{% content-ref url="screensharequality.md" %}
+[screensharequality.md](screensharequality.md)
 {% endcontent-ref %}
 
-{% content-ref url="and-mediasettings.md" %}
-[and-mediasettings.md](and-mediasettings.md)
+{% content-ref url="../newly-added-parameters/and-mediasettings.md" %}
+[and-mediasettings.md](../newly-added-parameters/and-mediasettings.md)
 {% endcontent-ref %}

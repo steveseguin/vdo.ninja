@@ -10,7 +10,7 @@ description: Forces the guest to have a self-preview, overriding &broadcast
 
 ## Details
 
-Forces the guest to have a self-preview, overriding [`&broadcast`](../view-parameters/broadcast.md).
+Forces the guest to have a self-preview, overriding [`&broadcast`](../advanced-settings/view-parameters/broadcast.md).
 
 ## Related
 

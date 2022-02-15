@@ -1,8 +1,8 @@
 # Stream 4K video using VDO.Ninja
 
-By default, VDO.Ninja tries to select 720p (1280x720 @ 60 fps) for both screen capture and webcam modes. This is considered [`&quality=1`](../advanced-settings/video-parameters/quality.md).\
+By default, VDO.Ninja tries to select 720p (1280x720 @ 60 fps) for both screen capture and webcam modes. This is considered [`&quality=1`](../source-settings/quality.md).\
 \
-[`&quality=0`](../advanced-settings/video-parameters/quality.md) (High Resolution) tries to do 1080p (1920x1080p60), while [`&quality=2`](../advanced-settings/video-parameters/quality.md) tries to do 360p (640x360p30).
+[`&quality=0`](../source-settings/quality.md) (High Resolution) tries to do 1080p (1920x1080p60), while [`&quality=2`](../source-settings/quality.md) tries to do 360p (640x360p30).
 
 By “trying”, I mean that if the resolution is not available, VDO.Ninja defaults to another resolution that the camera supports instead. This way, no errors are thrown and a compatible stream is sent, even if it’s not exactly what you might have desired.
 

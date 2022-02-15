@@ -21,7 +21,7 @@ You have to add them to [`&scene`](../view-parameters/scene.md) or [`&room`](../
 | ``[`&43`](../../newly-added-parameters/and-43.md)``         | Optimizes the video mixer for 4:3 videos                                                                             |
 | ``[`&portrait`](../view-parameters/and-portrait.md)``       | Optimizes the video mixer for 9:16 videos                                                                            |
 | ``[`&square`](../../newly-added-parameters/and-square.md)`` | Optimizes the video mixer for 1:1 videos                                                                             |
-| ``[`&animated`](animated.md)``                              | Videos in a group scene will slide around the screen when being re-arranged                                          |
+| ``[`&animated`](../view-parameters/animated.md)``           | Videos in a group scene will slide around the screen when being re-arranged                                          |
 
 ## **Only Scene options**
 

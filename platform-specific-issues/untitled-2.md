@@ -9,7 +9,7 @@ Firefox is not fully supported, although we try to maintain basic support for re
 
 Firefox can sometimes work when Chrome does not. With some video camera devices, Chrome may fail to load a camera device, while Firefox will work.
 
-OBS uses Chromium (CEF v75 currently), so there should be fewest issues if you stick to using Chrome or another Chromium-based browser. Chromium v75 is quite dated, so OBS will not have support for things like video buffers (ie: [`&buffer=300`](../advanced-settings/video-parameters/buffer.md)), while if using Chrome for playback, you will. Firefox is much the same; it has support for some features, but many features that are offered in Chrome are not yet available in Firefox.
+OBS uses Chromium (CEF v75 currently), so there should be fewest issues if you stick to using Chrome or another Chromium-based browser. Chromium v75 is quite dated, so OBS will not have support for things like video buffers (ie: [`&buffer=300`](../advanced-settings/view-parameters/buffer.md)), while if using Chrome for playback, you will. Firefox is much the same; it has support for some features, but many features that are offered in Chrome are not yet available in Firefox.
 
 Firefox does not support desktop audio sharing when using screensharing. Chrome does support desktop and tab audio sharing.
 

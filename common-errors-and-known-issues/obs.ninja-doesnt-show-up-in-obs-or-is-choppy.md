@@ -26,7 +26,7 @@ Ensure that the “Enable Browser Source Hardware Acceleration” checkbox is ch
 * Switch the GPU used by OBS if using an NVidia GPU; settings in the Nvidia control center.
 * If using a laptop, check out this article: [https://obsproject.com/wiki/Laptop-Troubleshooting#for-nvidia-based-laptops](https://obsproject.com/wiki/Laptop-Troubleshooting#for-nvidia-based-laptops)
 * Enable Compatibility Mode for OBS; this setting is available via right-clicking the OBS icon and clicking properties.
-* Try a different video codec; perhaps [`&codec=h264`](../advanced-settings/video-parameters/codec.md) or `&codec=vp9`, which can be added to the view links.
+* Try a different video codec; perhaps [`&codec=h264`](../advanced-settings/view-parameters/codec.md) or `&codec=vp9`, which can be added to the view links.
 * In the OBS Settings -> Advanced menu, disable Browser source hardware acceleration, and then restart. If it works then, the above GPU-related options should work. Otherwise, it might be a firewall, VPN, or privacy software.
 * Check to make sure you are not behind a corporate firewall or on a VPN (see Network issues below).
 * Disable any Anti-virus or other security software.

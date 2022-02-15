@@ -23,14 +23,14 @@ The upsides of this mode is that packet loss on a network connection impacts the
 
 In theory, this mode also allows a video stream to be only encoded once, and then it can be shared with multiple viewers, although in this first version of chunked transfer mode, that isn't an option. The same goes with PCM audio; in theory that can now be supported in this chunked transfer mode, but it currently isn't enabled in this first release.
 
-This chunked mode is similar to the previously released [`&webp`](../advanced-settings/video-parameters/webp.md) broadcast mode, which streamed a series of images as a custom-made video protocol, but the [`&webp`](../advanced-settings/video-parameters/webp.md) has poor compression and quality, and would drop frames if the connection couldn't keep up.
+This chunked mode is similar to the previously released [`&webp`](../advanced-settings/view-parameters/webp.md) broadcast mode, which streamed a series of images as a custom-made video protocol, but the [`&webp`](../advanced-settings/view-parameters/webp.md) has poor compression and quality, and would drop frames if the connection couldn't keep up.
 
 The downsides of the chunk-transfer mode is that if the connection stalls out long enough, the video will be forced to pause and buffer. It also has a buffer, which is currently around 3 to 5 seconds on a good question -- so similar to that of Twitch. The chunked-transfer mode might be suitable for doing remote recordings of interviews where the highest quality is desirable, but it isn't suitable for live and interactive chat.&#x20;
 
 Future versions of this feature will include the option to record to a cloud service, the option to use PCM audio, the ability to encode-once, but stream to many, and more advanced protocol logic to lower the latency.
 
 * The option to save the chunked stream as a viewer is to use `&chunked=2` on the sender side. Using just `&chunked` will just enable viewing, and not saving, of the video.
-* `&chunked=2` and [`&maxbitrate`](../advanced-settings/video-parameters/maxbitrate.md) will likely get changed up and moved to the viewer side eventually; currently doing this just for convenience of development/testing. Multiple viewers is not recommended. There seems to be an issue with audio clicking that I'm trying to solve currently.
+* `&chunked=2` and [`&maxbitrate`](../source-settings/maxbitrate.md) will likely get changed up and moved to the viewer side eventually; currently doing this just for convenience of development/testing. Multiple viewers is not recommended. There seems to be an issue with audio clicking that I'm trying to solve currently.
 * A video demo of the chunked transfer and how to enable support for alpha-channel transparency is available here:
 
 {% embed url="https://youtu.be/SWDlm1Jf-Oo" %}

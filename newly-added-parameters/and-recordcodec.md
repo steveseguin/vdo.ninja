@@ -29,8 +29,8 @@ As a guest or source side don't forget to add [`&record`](../source-settings/and
 [and-record.md](../source-settings/and-record.md)
 {% endcontent-ref %}
 
-{% content-ref url="../advanced-settings/video-parameters/codec.md" %}
-[codec.md](../advanced-settings/video-parameters/codec.md)
+{% content-ref url="../advanced-settings/view-parameters/codec.md" %}
+[codec.md](../advanced-settings/view-parameters/codec.md)
 {% endcontent-ref %}
 
 {% content-ref url="../source-settings/and-pcm.md" %}

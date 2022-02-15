@@ -42,7 +42,7 @@ A stream ID must also not already be in active use, else you will be provided wi
 
 We've broken down the available URL parameters into 17 parts:
 
-* ****[**Most important Parameters**](getting-started/cheat-sheet-of-basic-parameters.md): the basic and most common parameters
+* ****[**Most important Parameters**](advanced-settings/cheat-sheet-of-basic-parameters/): the basic and most common parameters
 * ****[**General Settings**](advanced-settings/general-parameters/): parameters that impact the app broadly
 * ****[**Source Settings**](advanced-settings/source-parameters/): parameters specific to publishing, so these are things related to customizing the camera settings
 * ****[**Viewer's Settings**](advanced-settings/view-parameters/): parameters that are controllable by the viewer's side, which includes bitrate, codec, and layouts

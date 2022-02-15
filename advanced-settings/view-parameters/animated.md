@@ -29,6 +29,6 @@ You can force enable this animation effect by adding `&animated` to the URL, or 
 
 ## Related
 
-{% content-ref url="../video-parameters/fadein.md" %}
-[fadein.md](../video-parameters/fadein.md)
+{% content-ref url="fadein.md" %}
+[fadein.md](fadein.md)
 {% endcontent-ref %}

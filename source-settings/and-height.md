@@ -28,7 +28,7 @@ Limiting the height can reduce the CPU load.
 
 [https://webrtchacks.github.io/WebRTC-Camera-Resolution/](https://webrtchacks.github.io/WebRTC-Camera-Resolution/) Is a tool to help you find the resolutions supported by your camera.
 
-You can use [`&scale=50`](scale.md) also, as a viewer, to scale down a selected width/height to something more exact.
+You can use [`&scale=50`](../advanced-settings/view-parameters/scale.md) also, as a viewer, to scale down a selected width/height to something more exact.
 
 {% hint style="danger" %}
 If the camera cannot support the height, **it will fail**.

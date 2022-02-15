@@ -32,6 +32,6 @@ If the camera cannot support this frame rate, **it will fail**.
 [and-maxframerate.md](and-maxframerate.md)
 {% endcontent-ref %}
 
-{% content-ref url="../../source-settings/screensharefps.md" %}
-[screensharefps.md](../../source-settings/screensharefps.md)
+{% content-ref url="screensharefps.md" %}
+[screensharefps.md](screensharefps.md)
 {% endcontent-ref %}

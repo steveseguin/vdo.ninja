@@ -28,8 +28,8 @@ Consider using [`&totalroombitrate`](totalroombitrate.md) if you wish to increas
 
 ## Related
 
-{% content-ref url="roombitrate.md" %}
-[roombitrate.md](roombitrate.md)
+{% content-ref url="../../source-settings/roombitrate.md" %}
+[roombitrate.md](../../source-settings/roombitrate.md)
 {% endcontent-ref %}
 
 {% content-ref url="totalroombitrate.md" %}

@@ -34,10 +34,10 @@ Please do enable Webassembly-SIMD support under `chrome://flags/` if you'd like 
 
 ## Related
 
-{% content-ref url="and-effectvalue.md" %}
-[and-effectvalue.md](and-effectvalue.md)
+{% content-ref url="../newly-added-parameters/and-effectvalue.md" %}
+[and-effectvalue.md](../newly-added-parameters/and-effectvalue.md)
 {% endcontent-ref %}
 
-{% content-ref url="../../newly-added-parameters/and-chunked.md" %}
-[and-chunked.md](../../newly-added-parameters/and-chunked.md)
+{% content-ref url="../newly-added-parameters/and-chunked.md" %}
+[and-chunked.md](../newly-added-parameters/and-chunked.md)
 {% endcontent-ref %}

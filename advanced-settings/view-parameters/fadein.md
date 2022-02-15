@@ -21,6 +21,6 @@ Also available as a director's room toggle.
 
 ## Related
 
-{% content-ref url="../mixer-scene-parameters/animated.md" %}
-[animated.md](../mixer-scene-parameters/animated.md)
+{% content-ref url="animated.md" %}
+[animated.md](animated.md)
 {% endcontent-ref %}

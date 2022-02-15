@@ -8,6 +8,6 @@ description: It allows the director 'blinding' all the guests at a time with a n
 
 ## Related
 
-{% content-ref url="../advanced-settings/video-parameters/blind.md" %}
-[blind.md](../advanced-settings/video-parameters/blind.md)
+{% content-ref url="../general-settings/blind.md" %}
+[blind.md](../general-settings/blind.md)
 {% endcontent-ref %}
