@@ -45,7 +45,7 @@ You can customize things further using [`&aec`](../source-settings/aec.md), [`&a
 
 The most powerful mode is `stereo=1` , which if enabled:
 
-* Turns off audio normalization or auto-gain when publishing ([`&push`](../source-settings/push.md))
+* Turns off audio normalization or auto-gain when publishing ([`&push`](../advanced-settings/setup-parameters/push.md))
 * Turns off noise-cancellation when publishing
 * Turns off echo-cancellation when publishing
 * Enables higher audio bitrate playback, up to 256-kbps, when listening ([`&view`](../advanced-settings/view-parameters/view.md))

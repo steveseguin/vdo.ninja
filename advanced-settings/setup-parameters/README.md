@@ -1,7 +1,7 @@
 ---
 description: >-
-  Password, labels, groups, devices, auto-start, welcoming guests, sharing a
-  website/file
+  Stream ID, password, labels, groups, devices, auto-start, welcoming guests,
+  sharing a website/file
 ---
 
 # Setup Parameters
@@ -10,10 +10,11 @@ They are separated in two groups: [general options](./#general-options) (push an
 
 ## General options
 
-You can add them to both, source ([`&push`](../../source-settings/push.md)) and viewer ([`&view`](../view-parameters/view.md) or [`&scene`](../view-parameters/scene.md)) sides.
+You can add them to both, source ([`&push`](push.md)) and viewer ([`&view`](../view-parameters/view.md) or [`&scene`](../view-parameters/scene.md)) sides.
 
 | Parameter                                                       | Explanation                                                                            |
 | --------------------------------------------------------------- | -------------------------------------------------------------------------------------- |
+| ``[`&push`](push.md)``                                          | The stream ID that you are publishing with will be the defined value                   |
 | ``[`&password`](../../general-settings/password.md)``           | Sets a password to view a stream or to join a room                                     |
 | ``[`&hash`](../../newly-added-parameters/and-hash.md)``         | Checks the password                                                                    |
 | ``[`&label`](../../general-settings/label.md)``                 | Sets a display name label                                                              |
@@ -25,7 +26,7 @@ You can add them to both, source ([`&push`](../../source-settings/push.md)) and 
 
 ## Source side options
 
-You have to add them to the source side ([`&push`](../../source-settings/push.md)).
+You have to add them to the source side ([`&push`](push.md)).
 
 | Parameter                                                               | Explanation                                                                                                                                                                                         |
 | ----------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |

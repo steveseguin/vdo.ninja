@@ -24,7 +24,7 @@ Multiple parameters can be appended together by using the ampersand (`&`) as a s
 http://vdo.ninja/?view=xxxxxxx&videobitrate=500&stereo=1
 ```
 
-Some parameters, like [`&view`](advanced-settings/view-parameters/view.md) will accept a comma-separated list of valid values, so you can do some rather powerful combos, such as publish a video (using [`&push`](source-settings/push.md)) while also viewing multiple others videos. VDO.Ninja will auto-mix the videos together into a single layout for you:
+Some parameters, like [`&view`](advanced-settings/view-parameters/view.md) will accept a comma-separated list of valid values, so you can do some rather powerful combos, such as publish a video (using [`&push`](advanced-settings/setup-parameters/push.md)) while also viewing multiple others videos. VDO.Ninja will auto-mix the videos together into a single layout for you:
 
 ```markup
 http://vdo.ninja/?push=aaa&view=bbb,ccc,ddd
@@ -49,7 +49,7 @@ We've broken down the available URL parameters into 17 parts:
 * ****[**Director Settings**](advanced-settings/director-parameters/): specific to the director's control room and director-specific features
 * ****[**Video Settings**](advanced-settings/video-parameters/): resolution, FPS, effects, bitrate, self preview, mute video, PTZ, codec, buffer, scale
 * ****[**Audio Settings**](advanced-settings/audio-parameters/): filters, adding delay, bitrate, channels, mono/stereo, muting guests etc.
-* [**Setup Settings**](advanced-settings/setup-parameters/): password, labels, groups, devices, auto-start, welcoming guests, sharing a website/file
+* [**Setup Settings**](advanced-settings/setup-parameters/): stream ID, password, labels, groups, devices, auto-start, welcoming guests, sharing a website/file
 * ****[**Design Settings**](advanced-settings/design-parameters/): labels, styles, clean output, CSS, mirroring, margin, darkmode, background color, disable tallies etc.
 * [**Mixer/Scene Settings**](advanced-settings/mixer-scene-parameters/): layout and design for the video mixer in rooms/scenes, preload/hidden scene bitrate
 * ****[**Screen-share Settings**](advanced-settings/screen-share-parameters/): labels, audio filters, type, bitrate, quality etc.

@@ -4,7 +4,7 @@
 
 | Parameter                                                              | Explanation                                                                                  |
 | ---------------------------------------------------------------------- | -------------------------------------------------------------------------------------------- |
-| ``[`&push`](../../source-settings/push.md)``                           | The stream ID that you are publishing with will be the defined value                         |
+| ``[`&push`](../setup-parameters/push.md)``                             | The stream ID that you are publishing with will be the defined value                         |
 | ``[`&bigbutton`](../../newly-added-parameters/and-bigbutton.md)``      | Makes the microphone mute button a lot bigger                                                |
 | ``[`&chatbutton`](../../general-settings/chatbutton.md)``              | Shows or hides the chat button                                                               |
 | ``[`&consent`](../../source-settings/consent.md)``                     | Will ask the user for content to remote change their camera or microphone                    |
