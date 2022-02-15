@@ -14,6 +14,6 @@ This is on by default if you create a room not as a director.
 
 ## Related
 
-{% content-ref url="../general-settings/room.md" %}
-[room.md](../general-settings/room.md)
+{% content-ref url="../advanced-settings/setup-parameters/room.md" %}
+[room.md](../advanced-settings/setup-parameters/room.md)
 {% endcontent-ref %}

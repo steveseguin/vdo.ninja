@@ -10,7 +10,7 @@ They are separated in three groups: [general options](./#general-options) (push 
 
 ## General options
 
-You can add them to both, source ([`&push`](../setup-parameters/push.md)) and viewer ([`&view`](../view-parameters/view.md) or [`&scene`](../view-parameters/scene.md)) sides.
+You can add them to both, source ([`&push`](../../source-settings/push.md)) and viewer ([`&view`](../view-parameters/view.md) or [`&scene`](../view-parameters/scene.md)) sides.
 
 | Parameter                                       | Explanation                |
 | ----------------------------------------------- | -------------------------- |
@@ -18,7 +18,7 @@ You can add them to both, source ([`&push`](../setup-parameters/push.md)) and vi
 
 ## Source side options
 
-You have to add them to the source side ([`&push`](../setup-parameters/push.md)).
+You have to add them to the source side ([`&push`](../../source-settings/push.md)).
 
 | Parameter                                                                        | Explanation                                                                                                                                         |
 | -------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -48,7 +48,7 @@ You have to add them to the source side ([`&push`](../setup-parameters/push.md))
 
 ## **Viewer side options**
 
-You have to add them to the viewer side ([`&room`](../../general-settings/room.md) or [`&view`](../view-parameters/view.md) or [`&scene`](../view-parameters/scene.md)).
+You have to add them to the viewer side ([`&room`](../setup-parameters/room.md) or [`&view`](../view-parameters/view.md) or [`&scene`](../view-parameters/scene.md)).
 
 | Parameter                                                                               | Explanation                                                                                |
 | --------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------ |

@@ -8,7 +8,7 @@ Screen-share Parameters are separated in [general options](./#general-options), 
 
 ## General options
 
-You can add them to both, source ([`&push`](../setup-parameters/push.md)) and viewer ([`&view`](../view-parameters/view.md) or [`&scene`](../view-parameters/scene.md)) sides.
+You can add them to both, source ([`&push`](../../source-settings/push.md)) and viewer ([`&view`](../view-parameters/view.md) or [`&scene`](../view-parameters/scene.md)) sides.
 
 | Parameter                                                                         | Explanation                                                                                                 |
 | --------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------- |
@@ -16,7 +16,7 @@ You can add them to both, source ([`&push`](../setup-parameters/push.md)) and vi
 
 ## Source side options
 
-You can add them to both, source ([`&push`](../setup-parameters/push.md)) and viewer ([`&view`](../view-parameters/view.md) or [`&scene`](../view-parameters/scene.md)) sides.
+You can add them to both, source ([`&push`](../../source-settings/push.md)) and viewer ([`&view`](../view-parameters/view.md) or [`&scene`](../view-parameters/scene.md)) sides.
 
 | Parameter                                                                               | Explanation                                                                                                 |
 | --------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------- |
