@@ -29,7 +29,7 @@ I hope to have `screensharetype=3` become the standard for sharing screens event
 As a viewer or scene link, to specify only loading the `&screensharetype=3` screen-share, you can now use `&view=xxxxx:s` , where `:s` is appended to the end of the stream ID. This tells the system to ignore the webcam/mic feed, and just send over the screen share. You can do `&view=xxxx,xxxx:s` to target both webcam and screen share though. I may change this syntax over time, but for now it works. The solo-links in the director's room has this `:s` applied already where needed.\
 \
 _Note_, the type-3 screen share is still not fully cooked for use in scenes, etc, and it won't yet \
-work with [`&meshcast`](and-meshcast.md), [`&novideo`](../advanced-settings/view-parameters/novideo.md) or [`&noaudio`](../advanced-settings/view-parameters/noaudio.md).
+work with [`&meshcast`](and-meshcast.md), [`&novideo`](../advanced-settings/video-parameters/novideo.md) or [`&noaudio`](../advanced-settings/view-parameters/noaudio.md).
 
 ## Related
 

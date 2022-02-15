@@ -15,8 +15,8 @@ Auto mutes guest's video.
 
 ## Related
 
-{% content-ref url="and-mute.md" %}
-[and-mute.md](and-mute.md)
+{% content-ref url="../../source-settings/and-mute.md" %}
+[and-mute.md](../../source-settings/and-mute.md)
 {% endcontent-ref %}
 
 {% content-ref url="and-videomute.md" %}

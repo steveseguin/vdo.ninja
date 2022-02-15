@@ -19,7 +19,7 @@ description: >-
 
 ## Details
 
-Like [`&framerate`](../advanced-settings.md#framerateframe-rate), except it will allow for lower frame rates if the specific frame rate requested failed.
+Like [`&framerate`](../../advanced-settings.md#framerateframe-rate), except it will allow for lower frame rates if the specific frame rate requested failed.
 
 ## Related
 

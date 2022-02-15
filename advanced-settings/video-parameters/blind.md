@@ -10,6 +10,6 @@ Video playback is disabled for guests.
 
 ## Related
 
-{% content-ref url="deafen.md" %}
-[deafen.md](deafen.md)
+{% content-ref url="../../general-settings/deafen.md" %}
+[deafen.md](../../general-settings/deafen.md)
 {% endcontent-ref %}

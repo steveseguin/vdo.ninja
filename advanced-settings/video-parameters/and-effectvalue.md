@@ -24,6 +24,6 @@ It's best to keep it under 10 and using this flag disables the option to use the
 
 ## Related
 
-{% content-ref url="../source-settings/effects.md" %}
-[effects.md](../source-settings/effects.md)
+{% content-ref url="effects.md" %}
+[effects.md](effects.md)
 {% endcontent-ref %}

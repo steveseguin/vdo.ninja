@@ -33,6 +33,6 @@ Not compatible with **Firefox**.
 
 ## Related
 
-{% content-ref url="audiobitrate.md" %}
-[audiobitrate.md](audiobitrate.md)
+{% content-ref url="../view-parameters/audiobitrate.md" %}
+[audiobitrate.md](../view-parameters/audiobitrate.md)
 {% endcontent-ref %}

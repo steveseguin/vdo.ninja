@@ -20,7 +20,7 @@ Lowering this slider will reduce the video bitrate of incoming video streams.
 
 It will not allow the guest to increase the room bitrate's limits; only lower them.
 
-I suppose while listed as a 'viewer' setting, you need to be a publisher also to access this value (as the settings button is needed).
+You need to be a publisher to access this value (as the settings button is needed).
 
 Consider using [`&totalroombitrate`](totalroombitrate.md) if you wish to increase the bitrate higher than the default max of \~ 500-kbps.
 
@@ -28,8 +28,8 @@ Consider using [`&totalroombitrate`](totalroombitrate.md) if you wish to increas
 
 ## Related
 
-{% content-ref url="../../source-settings/roombitrate.md" %}
-[roombitrate.md](../../source-settings/roombitrate.md)
+{% content-ref url="roombitrate.md" %}
+[roombitrate.md](roombitrate.md)
 {% endcontent-ref %}
 
 {% content-ref url="totalroombitrate.md" %}

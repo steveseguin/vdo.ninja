@@ -24,7 +24,7 @@ Looking at the link, let's explore:
 
 ``[`&enhance`](../advanced-settings/view-parameters/enhance.md), [`&ptime=10`](../advanced-settings/view-parameters/and-ptime.md), and [`&maxptime=10`](../advanced-settings/view-parameters/and-maxptime.md) are advanced settings, that tell the system to prioritize audio packets and limit their size to 10ms. This is the lowest we can set them using a browser, but it might be possible to go lower if using something like the Raspberry\_Ninja hardware project that VDO.Ninja has available for advanced users.
 
-``[`&novideo`](../advanced-settings/view-parameters/novideo.md) disables video, which can make a big impact on latency, as not streaming video will free up a lot of bandwidth, but also not force the audio to stay in sync with the video. You can send the video in a second tab/session if needed, and that way, it won't try to stay in sync.
+``[`&novideo`](../advanced-settings/video-parameters/novideo.md) disables video, which can make a big impact on latency, as not streaming video will free up a lot of bandwidth, but also not force the audio to stay in sync with the video. You can send the video in a second tab/session if needed, and that way, it won't try to stay in sync.
 
 ``[`&noap`](../general-settings/noaudioprocessing.md) just disables any of the advanced web-audio processing, such as compression, gain, level-meters, and panning. This will free up some milliseconds of latency in some cases,
 

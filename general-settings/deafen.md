@@ -14,6 +14,6 @@ Audio playback is muted for guests.
 
 ## Related
 
-{% content-ref url="blind.md" %}
-[blind.md](blind.md)
+{% content-ref url="../advanced-settings/video-parameters/blind.md" %}
+[blind.md](../advanced-settings/video-parameters/blind.md)
 {% endcontent-ref %}

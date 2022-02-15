@@ -40,13 +40,14 @@ A stream ID must also not already be in active use, else you will be provided wi
 
 ## Navigating the available setting options
 
-We've broken down the available URL parameters into 16 parts:
+We've broken down the available URL parameters into 17 parts:
 
 * ****[**Most important Parameters**](getting-started/cheat-sheet-of-basic-parameters.md): the basic and most common parameters
 * ****[**General Settings**](advanced-settings/general-parameters/): parameters that impact the app broadly
 * ****[**Source Settings**](advanced-settings/source-parameters/): parameters specific to publishing, so these are things related to customizing the camera settings
 * ****[**Viewer's Settings**](advanced-settings/view-parameters/): parameters that are controllable by the viewer's side, which includes bitrate, codec, and layouts
 * ****[**Director Settings**](advanced-settings/director-parameters/): specific to the director's control room and director-specific features
+* ****[**Video Settings**](advanced-settings/video-parameters/): resolution, FPS, effects, bitrate, self preview, mute video, PTZ, codec, buffer, scale
 * ****[**Audio Settings**](advanced-settings/audio-parameters/): filters, adding delay, bitrate, channels, mono/stereo, muting guests etc.
 * [**Setup Settings**](advanced-settings/setup-parameters/): password, labels, groups, devices, auto-start, welcoming guests, sharing a website/file
 * ****[**Design Settings**](advanced-settings/design-parameters/): labels, styles, clean output, CSS, mirroring, margin, darkmode, background color, disable tallies etc.

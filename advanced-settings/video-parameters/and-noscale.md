@@ -14,6 +14,6 @@ Adding `&noscale` to a publisher-side flag just disables the publishing resoluti
 
 ## Related
 
-{% content-ref url="../advanced-settings/view-parameters/scale.md" %}
-[scale.md](../advanced-settings/view-parameters/scale.md)
+{% content-ref url="scale.md" %}
+[scale.md](scale.md)
 {% endcontent-ref %}

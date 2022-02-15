@@ -31,12 +31,12 @@ Set to 600-kbps, 200-kbps, or 80-kbps if the goal is to reduce CPU load. (2x, 3x
 
 ## Related
 
-{% content-ref url="../advanced-settings/view-parameters/totalroombitrate.md" %}
-[totalroombitrate.md](../advanced-settings/view-parameters/totalroombitrate.md)
+{% content-ref url="totalroombitrate.md" %}
+[totalroombitrate.md](totalroombitrate.md)
 {% endcontent-ref %}
 
-{% content-ref url="../advanced-settings/view-parameters/and-controlroombitrate.md" %}
-[and-controlroombitrate.md](../advanced-settings/view-parameters/and-controlroombitrate.md)
+{% content-ref url="and-controlroombitrate.md" %}
+[and-controlroombitrate.md](and-controlroombitrate.md)
 {% endcontent-ref %}
 
 {% content-ref url="maxbitrate.md" %}

@@ -8,7 +8,7 @@ Hardware-accelerated video encoding is a tricky topic; it can sometimes work, bu
 
 It generally only works with H264 video, but it may work with other codecs in rare cases.
 
-On a Windows PC, a Chromium-based browser offers your best chance of it working. Every month it seems the support for hardware encoding improves, which is great. The viewer just needs to request H264 video from your computer for it to have a chance of working. [`&codec=h264`](../advanced-settings/view-parameters/codec.md)``
+On a Windows PC, a Chromium-based browser offers your best chance of it working. Every month it seems the support for hardware encoding improves, which is great. The viewer just needs to request H264 video from your computer for it to have a chance of working. [`&codec=h264`](../advanced-settings/video-parameters/codec.md)``
 
 If it works, in the video stats window (`CTRL + Click`), you'll see the video codec type to be listed as External Encoder, if the hardware acceleration is working. CPU load may not decrease always, and there isn't an easy way to tell which encoder is being used, but if it says the codec is `h264`, then it's likely still using just software.\
 

@@ -39,7 +39,7 @@ Guest devices present in the Room will see and hear all other present device vid
 
 Text-chat is available to those in the room
 
-The video quality of those in a group room will appear low to guests, but this is to ensure more bandwidth and CPU resources are made available for the OBS's access to the stream. This can be changed with parameters such as [`&totalroombitrate`](../../advanced-settings/view-parameters/totalroombitrate.md) which lets you increase the bitrate of a room.
+The video quality of those in a group room will appear low to guests, but this is to ensure more bandwidth and CPU resources are made available for the OBS's access to the stream. This can be changed with parameters such as [`&totalroombitrate`](../../advanced-settings/video-parameters/totalroombitrate.md) which lets you increase the bitrate of a room.
 
 ### For the director... 🎬
 

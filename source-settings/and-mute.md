@@ -15,8 +15,8 @@ Starts with the microphone muted by default. The guest can switch on the microph
 
 ## Related
 
-{% content-ref url="and-videomute.md" %}
-[and-videomute.md](and-videomute.md)
+{% content-ref url="../advanced-settings/video-parameters/and-videomute.md" %}
+[and-videomute.md](../advanced-settings/video-parameters/and-videomute.md)
 {% endcontent-ref %}
 
 {% content-ref url="and-mutespeaker.md" %}

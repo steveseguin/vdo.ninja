@@ -17,7 +17,7 @@ description: OpenH264 software encoding will be used
 
 Open264 software encoding can actually use less CPU than the Windows-selected hardware encoder, and in some cases will suffer from less video glitching.\
 \
-Advanced users can also pass a 6-character h264 profile ID to the parameter to get used instead. This flag will not force H264 to be used, but rather configures it in case h264 gets used. You can still use [`&codec`](../advanced-settings/view-parameters/codec.md) to set the codec to h264.\
+Advanced users can also pass a 6-character h264 profile ID to the parameter to get used instead. This flag will not force H264 to be used, but rather configures it in case h264 gets used. You can still use [`&codec`](codec.md) to set the codec to h264.\
 \
 Example: `https://vdo.ninja/?view=xxxxxxx&h264profile=42e01f&codec=h264`
 
@@ -25,6 +25,6 @@ Example: `https://vdo.ninja/?view=xxxxxxx&h264profile=42e01f&codec=h264`
 
 ## Related
 
-{% content-ref url="../advanced-settings/view-parameters/codec.md" %}
-[codec.md](../advanced-settings/view-parameters/codec.md)
+{% content-ref url="codec.md" %}
+[codec.md](codec.md)
 {% endcontent-ref %}
