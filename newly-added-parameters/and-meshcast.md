@@ -14,7 +14,7 @@ Adding `&meshcast` to a guest or director link will trigger the service, causing
 
 Viewers will automatically attempt to use the server-based feed over the peer-to-peer feed. Peer to peer is still used to send data though, and it can be optionally be used for sending audio p2p (lower latency).
 
-Unlike the [`&broadcast`](../advanced-settings/video-parameters/broadcast.md) flag, which uses iframes, this new server-side mode does not; it's more deeply integrated. Echo cancellation should work as a result.
+Unlike the [`&broadcast`](../advanced-settings/view-parameters/broadcast.md) flag, which uses iframes, this new server-side mode does not; it's more deeply integrated. Echo cancellation should work as a result.
 
 If publishing using `&meshcast`, I don't bother to show the viewer count, as it won't be accurate currently anyways; instead I just say you're broadcasting. I'll try to improve this in the future.
 

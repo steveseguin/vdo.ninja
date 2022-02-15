@@ -38,7 +38,7 @@ If no preset option is passed, a default generic style is used.
 
 ### Font size customization
 
-You can change the font-size without using CSS, using the [`&fontsize`](../view-parameters/fontsize.md) parameter. CSS is also supported though.
+You can change the font-size without using CSS, using the [`&fontsize`](fontsize.md) parameter. CSS is also supported though.
 
 Font-size of labels will adjust slightly based on the window size.
 
@@ -95,8 +95,8 @@ Below is another example, this time we target the video tile class, creating a m
 [and-screensharelabel.md](../../newly-added-parameters/and-screensharelabel.md)
 {% endcontent-ref %}
 
-{% content-ref url="../view-parameters/fontsize.md" %}
-[fontsize.md](../view-parameters/fontsize.md)
+{% content-ref url="fontsize.md" %}
+[fontsize.md](fontsize.md)
 {% endcontent-ref %}
 
 {% content-ref url="css.md" %}

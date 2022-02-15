@@ -42,7 +42,7 @@ Every viewer of a stream adds to the heat and load experienced by the publisher 
 
 In the case of an iOS device, since it only has 3 hardware encoders, the device will switch to VP8-software mode or just stop working all together if those get exhausted. iOS devices are rather poor at software-encoding video, especially at higher resolutions, so be careful.
 
-You can force-limit the number of connections and viewers with the [`&maxconnections=1`](../source-settings/and-maxconnections.md) parameter, added to the publisher's URL. If you are accidentally viewing the video stream multiple times, this will help prevent more than one viewer from having access.
+You can force-limit the number of connections and viewers with the [`&maxconnections=1`](../advanced-settings/settings-parameters/and-maxconnections.md) parameter, added to the publisher's URL. If you are accidentally viewing the video stream multiple times, this will help prevent more than one viewer from having access.
 
 ### Start with a full-battery
 

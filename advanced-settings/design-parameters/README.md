@@ -16,6 +16,7 @@ You can add them to both, source ([`&push`](../../source-settings/push.md)) and 
 | ----------------------------------------------- | ------------------------------------------------------------------------------------------------- |
 | ``[`&label`](../../general-settings/label.md)`` | Sets a display name label                                                                         |
 | ``[`&showlabels`](showlabels.md)``              | Display labels as a video overlay                                                                 |
+| ``[`&fontsize`](fontsize.md)``                  | Let you set font-size of the closed captions and stream labels                                    |
 | ``[`&style`](style.md)``                        | Lets you select how audio-only elements are displayed in OBS and for guests                       |
 | ``[`&meterstyle`](meterstyle.md)``              | Optional audio meter style type                                                                   |
 | ``[`&cleanoutput`](cleanoutput.md)``            | Keeps the output as clean as possible from UI elements                                            |
@@ -30,6 +31,7 @@ You can add them to both, source ([`&push`](../../source-settings/push.md)) and 
 | ``[`&lightmode`](and-lightmode.md)``            | Forces to enable the lightmode / disable the darkmode                                             |
 | ``[`&chroma`](chroma.md)``                      | Sets the background for the website to a particular hex color                                     |
 | ``[`&transparent`](and-transparent.md)``        | Makes the background transparent                                                                  |
+| ``[`&nocursor`](and-nocursor.md)``              | Hides the mouse cursor over videos at a CSS level                                                 |
 
 ## Source side options
 

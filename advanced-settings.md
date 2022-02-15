@@ -40,23 +40,21 @@ A stream ID must also not already be in active use, else you will be provided wi
 
 ## Navigating the available setting options
 
-We've broken down the available URL parameters into 17 parts:
+We've broken down the available URL parameters into 15 parts:
 
 * ****[**Most important Parameters**](advanced-settings/cheat-sheet-of-basic-parameters/): the basic and most common parameters
-* ****[**General Settings**](advanced-settings/general-parameters/): parameters that impact the app broadly
-* ****[**Source Settings**](advanced-settings/source-parameters/): parameters specific to publishing, so these are things related to customizing the camera settings
-* ****[**Viewer's Settings**](advanced-settings/view-parameters/): parameters that are controllable by the viewer's side, which includes bitrate, codec, and layouts
-* ****[**Director Settings**](advanced-settings/director-parameters/): specific to the director's control room and director-specific features
+* [**Setup Settings**](advanced-settings/setup-parameters/): stream ID, create a room, password, labels, groups, devices, auto-start, welcoming guests, sharing a website/file
 * ****[**Video Settings**](advanced-settings/video-parameters/): resolution, FPS, effects, bitrate, self preview, mute video, PTZ, codec, buffer, broadcasting, scale
 * ****[**Audio Settings**](advanced-settings/audio-parameters/): filters, adding delay, bitrate, channels, mono/stereo, muting guests etc.
-* [**Setup Settings**](advanced-settings/setup-parameters/): stream ID, create a room, password, labels, groups, devices, auto-start, welcoming guests, sharing a website/file
+* ****[**Settings Settings**](advanced-settings/settings-parameters/): language, save cookies, show/hide buttons, control bar, remote access, record, chunked mode, raise hands, notify, transcription (CC)
 * ****[**Design Settings**](advanced-settings/design-parameters/): labels, styles, clean output, CSS, mirroring, margin, darkmode, background color, disable tallies etc.
 * [**Mixer/Scene Settings**](advanced-settings/mixer-scene-parameters/): layout and design for the video mixer in rooms/scenes, preload/hidden scene bitrate
+* [**Director Settings**](advanced-settings/director-parameters/): specific to the director's control room and director-specific features
 * ****[**Screen-share Settings**](advanced-settings/screen-share-parameters/): labels, audio filters, type, bitrate, quality etc.
 * ****[**Meshcast Settings**](advanced-settings/meshcast-parameters/): options for the [`&meshcast`](newly-added-parameters/and-meshcast.md) parameter like audio filters, bitrate, screen-share, codecs etc.
 * ****[**API & MIDI Settings**](advanced-settings/api-and-midi-parameters/): hotkey features via API and MIDI
 * [**TURN & STUN Settings**](advanced-settings/turn-and-stun-parameters/): options for setting up TURN and STUN servers
-* ****[**Newly Added Parameters**](advanced-settings/newly-added-parameters/): recently added to the Docs or to VDO.Ninja
+* ****[**Newly Added Parameters**](advanced-settings/newly-added-parameters.md): recently added to VDO.Ninja
 * ****[**Parameters only on beta**](advanced-settings/parameters-only-on-beta.md): only on [VDO.Ninja/beta](https://vdo.ninja/beta/) version at the moment
 * ****[**Other Parameters**](other-parameters.md): not ready for production, not intended to be used or not well-documented
 

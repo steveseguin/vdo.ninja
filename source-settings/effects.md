@@ -38,6 +38,6 @@ Please do enable Webassembly-SIMD support under `chrome://flags/` if you'd like 
 [and-effectvalue.md](../newly-added-parameters/and-effectvalue.md)
 {% endcontent-ref %}
 
-{% content-ref url="../newly-added-parameters/and-chunked.md" %}
-[and-chunked.md](../newly-added-parameters/and-chunked.md)
+{% content-ref url="../advanced-settings/settings-parameters/and-chunked.md" %}
+[and-chunked.md](../advanced-settings/settings-parameters/and-chunked.md)
 {% endcontent-ref %}

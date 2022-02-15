@@ -32,7 +32,7 @@ There's also a video below looking at what sort of performance and system load t
 
 {% embed url="https://www.youtube.com/watch?v=VYYG4rZffcM" %}
 
-You can reduce CPU load using the [`&broadcast`](../advanced-settings/video-parameters/broadcast.md) flag, if hosting a larger room.
+You can reduce CPU load using the [`&broadcast`](../advanced-settings/view-parameters/broadcast.md) flag, if hosting a larger room.
 
 You can also [transfer guests between group rooms](../getting-started/rooms/transfer-rooms.md), using the transfer function that the director has.
 

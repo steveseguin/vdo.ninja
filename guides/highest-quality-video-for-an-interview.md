@@ -28,8 +28,8 @@ The biggest impact and limitation is normally the connection itself; please sure
 
 If packet loss is a serious issue, then there is a feature in VDO.Ninja to let you record the video directly on the guest's computer, remotely, bypassing the Internet during the recording itself. It's experimental though, so it might only be useful as a backup, but when it works, it's fantastic!
 
-{% content-ref url="../source-settings/and-record.md" %}
-[and-record.md](../source-settings/and-record.md)
+{% content-ref url="../advanced-settings/settings-parameters/and-record.md" %}
+[and-record.md](../advanced-settings/settings-parameters/and-record.md)
 {% endcontent-ref %}
 
 For this setup, the host can use a single computer for both capture and the interview itself; even a modern MacBook on wired internet would be enough. The remote guest can use anything modern; preferably a well-ventilated 14nm quad-core computer or better; also with wired Internet or bonded cellular.

@@ -6,7 +6,7 @@ description: Custom video codec for broadcasts
 
 ## Details
 
-Must be used with [`&broadcast`](../video-parameters/broadcast.md), but the director doesn't need to be the designated broadcaster.
+Must be used with [`&broadcast`](broadcast.md), but the director doesn't need to be the designated broadcaster.
 
 The Electron Capture app should work to allow for webp-based broadcasting even if the tab is not visible, as tab throttling is disabled with that application.\
 This is essentially a stream of webp-based images sent over the webRTC data-channels.\
@@ -24,8 +24,8 @@ If you have issues with Webp-mode, or find the quality or CPU savings not suffic
 
 ## Related
 
-{% content-ref url="../video-parameters/broadcast.md" %}
-[broadcast.md](../video-parameters/broadcast.md)
+{% content-ref url="broadcast.md" %}
+[broadcast.md](broadcast.md)
 {% endcontent-ref %}
 
 {% content-ref url="webpquality.md" %}

@@ -12,6 +12,6 @@ You can still manual reorder a guest, but when you shift someone up or down the 
 
 ## Related
 
-{% content-ref url="../source-settings/order.md" %}
-[order.md](../source-settings/order.md)
+{% content-ref url="../advanced-settings/mixer-scene-parameters/order.md" %}
+[order.md](../advanced-settings/mixer-scene-parameters/order.md)
 {% endcontent-ref %}
