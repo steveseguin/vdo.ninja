@@ -14,7 +14,10 @@
 	when the worker then receives a stream then the worker will tell the opener
 	to open up a link that will start the download
 -->
+<html>
+<body>
 <script>
+console.log("SERVER WORKING STARTED")
 // This will prevent the sw from restarting
 let keepAlive = () => {
   keepAlive = () => {}
@@ -80,13 +83,6 @@ function onMessage (event) {
   // if we ever (in some feature versoin of streamsaver) would like to
   // redirect back to the page of who initiated a http request
   data.referrer = data.referrer || document.referrer || origin
-
-  // pass along version for possible backwards compatibility in sw.js
-  data.streamSaverVersion = new URLSearchParams(location.search).get('version')
-
-  if (data.streamSaverVersion === '1.2.0') {
-    console.warn('[StreamSaver] please update streamsaver')
-  }
 
   /** @since v2.0.0 */
   if (!data.headers) {
@@ -167,3 +163,5 @@ if (navigator.serviceWorker) {
 }
 
 </script>
+</body>
+</html>

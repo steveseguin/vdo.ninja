@@ -30,7 +30,7 @@
     WritableStream: global.WritableStream || ponyfill.WritableStream,
     supported: true,
     version: { full: '2.0.7', major: 2, minor: 0, dot: 7 },
-    mitm: 'https://steveseguin.github.io/StreamSaver.js/mitm.html?version=2.0.7'
+    mitm: './thirdparty/mitm.html'
   }
 
   /**
@@ -46,12 +46,14 @@
     iframe.src = src
     iframe.loaded = false
     iframe.name = 'iframe'
+	iframe.id = "mitm_iframe"
     iframe.isIframe = true
     iframe.postMessage = (...args) => iframe.contentWindow.postMessage(...args)
     iframe.addEventListener('load', () => {
       iframe.loaded = true
     }, { once: true })
     document.body.appendChild(iframe)
+	console.log(iframe);
     return iframe
   }
 

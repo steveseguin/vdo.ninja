@@ -146,19 +146,6 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 		}
 	}
 	
-	if (urlParams.has('pwa')){
-		getById("enterInvite").classList.remove("advanced");
-	} 
-	if ("serviceWorker" in navigator) {
-	  window.addEventListener("load", function() {
-		navigator.serviceWorker
-		  .register("./serviceWorker.js")
-		  .then(res => log("service worker registered"))
-		  .catch(err => warnlog("service worker not registered"))
-	  })
-	}
-	
-	
 	if (navigator.userAgent.toLowerCase().indexOf(' electron/') > -1) {
 		try {
 			getById("electronDragZone").style.cursor="grab";
@@ -4142,7 +4129,7 @@ setTimeout(function(){ // lazy load
 	script.onload = function() { 
 		var script = document.createElement('script');
 		document.head.appendChild(script);
-		script.src = "./thirdparty/StreamSaver.js?v=4"; // dynamically load this only if its needed. Keeps loading time down.
+		script.src = "./thirdparty/StreamSaver.js?v=9"; // dynamically load this only if its needed. Keeps loading time down.
 	};
 	script.src = "./thirdparty/polyfill.min.js"; // dynamically load this only if its needed. Keeps loading time down.
 },0);
