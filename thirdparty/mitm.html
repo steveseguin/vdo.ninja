@@ -14,10 +14,7 @@
 	when the worker then receives a stream then the worker will tell the opener
 	to open up a link that will start the download
 -->
-<html>
-<body>
 <script>
-console.log("SERVER WORKING STARTED")
 // This will prevent the sw from restarting
 let keepAlive = () => {
   keepAlive = () => {}
@@ -163,5 +160,3 @@ if (navigator.serviceWorker) {
 }
 
 </script>
-</body>
-</html>

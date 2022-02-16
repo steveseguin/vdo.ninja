@@ -46,14 +46,12 @@
     iframe.src = src
     iframe.loaded = false
     iframe.name = 'iframe'
-	iframe.id = "mitm_iframe"
     iframe.isIframe = true
     iframe.postMessage = (...args) => iframe.contentWindow.postMessage(...args)
     iframe.addEventListener('load', () => {
       iframe.loaded = true
     }, { once: true })
     document.body.appendChild(iframe)
-	console.log(iframe);
     return iframe
   }
 
