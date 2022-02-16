@@ -10749,7 +10749,7 @@ async function createDirectorOnlyBox() {
 	if (session.label){
 		labelID.innerText = session.label;
 	}
-	pokeIframeAPI("control-box", true, UUID);
+	pokeIframeAPI("control-box", true, true);
 }
 
 function shiftPC(ele, shift, director=false){
