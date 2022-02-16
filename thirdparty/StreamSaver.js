@@ -30,7 +30,7 @@
     WritableStream: global.WritableStream || ponyfill.WritableStream,
     supported: true,
     version: { full: '2.0.7', major: 2, minor: 0, dot: 7 },
-    mitm: './thirdparty/mitm.html'
+    mitm: './thirdparty/mitm.html?v=2'
   }
 
   /**
