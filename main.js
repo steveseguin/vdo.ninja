@@ -1032,8 +1032,8 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 	
 	// Deploy your own handshake server for free; see: https://github.com/steveseguin/websocket_server
 	if (urlParams.has('pie')){ // piesocket.com support is to be deprecated after dec/19/21, since piesocket is no longer a free service.
-		session.customWSS = urlParams.get('pie') || false; // If session.customWSS == true, then there is no need to set parameters via URL
-		if (session.customWSS){
+		session.customWSS = urlParams.get('pie') || true; // If session.customWSS == true, then there is no need to set parameters via URL
+		if (session.customWSS && (session.customWSS!==true)){
 			session.wss = "wss://free3.piesocket.com/v3/1?api_key="+session.customWSS; // if URL param is set, it will use the API key.
 		}
 	}
@@ -4129,7 +4129,7 @@ setTimeout(function(){ // lazy load
 	script.onload = function() { 
 		var script = document.createElement('script');
 		document.head.appendChild(script);
-		script.src = "./thirdparty/StreamSaver.js?v=9"; // dynamically load this only if its needed. Keeps loading time down.
+		script.src = "./thirdparty/StreamSaver.js?v=10"; // dynamically load this only if its needed. Keeps loading time down.
 	};
 	script.src = "./thirdparty/polyfill.min.js"; // dynamically load this only if its needed. Keeps loading time down.
 },0);
