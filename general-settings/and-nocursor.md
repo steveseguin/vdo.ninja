@@ -6,7 +6,7 @@ description: Hides the mouse cursor over videos at a CSS level
 
 ## Details
 
-This does not hide the mouse cursor for Chrome-based screen capture, as Chrome does not yet support that. This feature is designed for hiding the mouse when using the [Electron Capture](https://github.com/steveseguin/electroncapture) app, to avoid mousing over the capture area by accident.\
+This does not hide the mouse cursor for Chrome-based screen capture, as Chrome [does not yet support that](https://developer.mozilla.org/en-US/docs/Web/API/MediaTrackConstraints/cursor#browser\_compatibility). This feature is designed for hiding the mouse when using the [Electron Capture](https://github.com/steveseguin/electroncapture) app, to avoid mousing over the capture area by accident.\
 \
 Works better in Windows than on macOS, due to OS-level limitations.\
 \
