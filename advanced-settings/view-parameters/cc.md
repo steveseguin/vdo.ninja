@@ -62,6 +62,10 @@ body { background-color: rgba(0, 0, 0, 0); margin: 0px auto; overflow: hidden; }
 }
 ```
 
+If not using OBS, you can still add the above CSS via the URL using the `&b64css` parameter. For example, instead of the above CSS, you can append the following to the URL:
+
+`&b64css=I292ZXJsYXlNc2dzew0KICAgIG92ZXJmbG93OiBhdXRvIWltcG9ydGFudDsNCiAgICBkaXNwbGF5OiBmbGV4IWltcG9ydGFudDsNCiAgICBmbGV4LWRpcmVjdGlvbjogY29sdW1uLXJldmVyc2UhaW1wb3J0YW50Ow0KICAgIGhlaWdodDogMjQwcHghaW1wb3J0YW50Ow0KfQ0KDQojb3ZlcmxheU1zZ3Mgc3BhbiB7DQogICAgdGV4dC1hbGlnbjogbGVmdCFpbXBvcnRhbnQ7DQp9`
+
 \
 Feedback and user requests are welcomed.
 
