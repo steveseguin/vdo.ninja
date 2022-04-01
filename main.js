@@ -414,6 +414,17 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 	} else if (urlParams.has('forceportrait') || urlParams.has('forcedportrait')|| urlParams.has('fp')){
 		session.orientation = "portrait";
 	}
+	
+	if (session.orientation && session.mobile){
+		document.addEventListener('fullscreenchange', event => {
+			
+			if (document.fullscreenElement) {
+				document.exitFullscreen();
+			}
+			alert(JSON.stringify(event));
+		});
+
+	}
 
 	if (urlParams.has('midi') || urlParams.has('hotkeys')) {
 		session.midiHotkeys = urlParams.get('midi') || urlParams.get ('hotkeys') || 1;
@@ -486,6 +497,13 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 		getById("container-5").classList.remove('advanced');
 		getById("container-5").classList.add("skip-animation");
 		getById("container-5").classList.remove('pointer');
+		
+		if (SafariVersion){
+			getById("safari_warning_fileshare").classList.remove('advanced');
+		} else if (!Firefox){
+			getById("chrome_warning_fileshare").classList.remove('advanced');
+		}
+		
 	} else if (directorLanding) {
 		getById("container-1").classList.remove('advanced');
 		getById("container-1").classList.add("skip-animation");
@@ -888,13 +906,14 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 		session.showlabels = urlParams.get('showlabels') || urlParams.get('showlabel') || urlParams.get('sl') || "";
 		session.showlabels = sanitizeLabel(session.showlabels.replace(/[\W]+/g, "_").replace(/_+/g, '_'));
 		//session.style = 6;
-		session.showlabels = true;
 		
 		if (session.showlabels == "") {
 			session.labelstyle = false;
 		} else {
 			session.labelstyle = session.showlabels;
 		}
+		
+		session.showlabels = true;
 	}
 
 	if (urlParams.has('sizelabel') || urlParams.has('labelsize') || urlParams.has('fontsize')) {
@@ -2603,6 +2622,7 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 	}
 
 	if (urlParams.has('wss')) {
+		session.customWSS = true;
 		if (urlParams.get('wss')) {
 			session.wss = "wss://" + urlParams.get('wss');
 		}
@@ -4057,7 +4077,8 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 	});
 	
 	document.addEventListener("keydown", event => {
-
+		
+		
 		if ((event.ctrlKey) || (event.metaKey)) { // detect if CTRL is pressed
 			CtrlPressed = true;
 		} else {
@@ -4069,19 +4090,29 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 			AltPressed = false;
 		}
 
+		if (KeyPressedTimeout){
+			event.preventDefault(); event.stopPropagation();
+			return;
+		}
 
 		if (CtrlPressed && event.keyCode) {
 
 			if (event.keyCode == 77) { // M
 				if (event.metaKey) {
 					if (AltPressed) {
-						toggleMute(); // macOS
+						if (!KeyPressedTimeout){
+							toggleMute(); // macOS
+							KeyPressedTimeout = Date.now();
+						}
 					}
 				} else {
-					toggleMute(); // Windows
+					if (!KeyPressedTimeout){
+						toggleMute(); // Windows
+						KeyPressedTimeout = Date.now();
+					}
 				}
-				// } else if (event.keyCode == 69) { // E
-				//	hangup();
+				
+				
 			} else if (event.keyCode == 66) { // B
 				toggleVideoMute();
 			}
@@ -4099,7 +4130,8 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 	});
 
 	document.addEventListener("keyup", event => {
-		if (!((event.ctrlKey) || (event.metaKey))) {
+		
+		if (!(event.ctrlKey || event.metaKey)) {
 			if (CtrlPressed) {
 				CtrlPressed = false;
 				for (var i in Callbacks) {
@@ -4117,11 +4149,32 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 		if (event.altKey && event.shiftKey && event.keyCode === 67 /* C */) {
 			toggleControlBar();
 		}
-		
+		if (KeyPressedTimeout && ((event.keyCode == 77) || (!(event.ctrlKey || event.metaKey)))) {
+			if (Date.now() - KeyPressedTimeout>300){
+				toggleMute();
+			}
+			if (event.keyCode == 77){
+				KeyPressedTimeout = 0;
+			}
+		}
 	});
 }
 
+
 main(); // asyncronous load
+
+try {
+	navigator.serviceWorker.getRegistrations().then(registrations => { // getting rid of old service workers.
+		try {
+			log(registrations);
+			for(let registration of registrations) {
+				if (registration.scope != "https://"+window.location.hostname+window.location.pathname+"thirdparty/"){
+					registration.unregister();
+				}
+			}
+		} catch(e){}
+	}).catch(errorlog);
+} catch(e){}
 
 setTimeout(function(){ // lazy load
 	var script = document.createElement('script');

@@ -79,7 +79,7 @@
 			<link itemprop="url" href="./media/vdoNinja_logo_full.png" />
 		</span>
 		<script  type="text/javascript" crossorigin="anonymous"  src="./thirdparty/CodecsHandler.js?ver=37"></script>
-		<script  type="text/javascript" crossorigin="anonymous" src="./webrtc.js?ver=390"></script>
+		<script  type="text/javascript" crossorigin="anonymous" src="./webrtc.js?ver=396"></script>
 		<input id="zoomSlider" type="range" style="display: none;" />
 		<div id="header">
 			
@@ -149,7 +149,7 @@
 				<div id="mutespeakerbutton" onmousedown="event.preventDefault(); event.stopPropagation();"  title="Mute the Speaker" onclick="toggleSpeakerMute()"  tabindex="17" role="button" aria-pressed="false" onkeyup="enterPressedClick(event,this);"  class="advanced float" style="cursor: pointer;" alt="Toggle the speaker output.">
 					<i id="mutespeakertoggle" class="toggleSize las la-volume-up my-float" style="position: relative; top: 0.5px;"></i>
 				</div>
-				<div id="mutebutton" onmousedown="event.preventDefault(); event.stopPropagation();"  title="Mute the Mic" onclick="toggleMute()"  tabindex="18" role="button" aria-pressed="false" onkeyup="enterPressedClick(event,this);"  class="advanced float" style="cursor: pointer;" alt="Toggle the mic">
+				<div id="mutebutton" onmousedown="toggleMute(false, event);event.preventDefault(); event.stopPropagation();"  title="Mute the Mic" ontouchstart="toggleMute(false, event);event.preventDefault(); event.stopPropagation();" tabindex="18" role="button" aria-pressed="false" onkeyup="enterPressedClick(event,this);"  class="advanced float" style="cursor: pointer;" alt="Toggle the mic">
 					<i id="mutetoggle" class="toggleSize las la-microphone my-float" style="position: relative; top: 0.5px;"></i>
 				</div>
 				<div id="mutevideobutton" onmousedown="event.preventDefault(); event.stopPropagation();"  title="Disable the Camera" alt="Disable the Camera" onclick="toggleVideoMute()"   tabindex="19" role="button" aria-pressed="false" onkeyup="enterPressedClick(event,this);"  class="advanced float" style="cursor: pointer;">
@@ -272,7 +272,7 @@
 										<span data-translate="password-input-field">Password</span>: 
 									</b>
 								</div>
-								<input type="text" autocorrect="off" autocapitalize="none" id="passwordRoom" placeholder="Optional room password here" onkeydown="checkStrengthRoom(event, 'securityLevelRoom');" onchange="checkStrengthRoom(event, 'securityLevelRoom');"  onkeyup="enterPressed(event, createRoom);" maxlength="50" style="max-width: 431px;width: 100%;font-size: 110%; padding: 5px;" />
+								<input type="text" autocorrect="off" autocapitalize="none" id="passwordRoom" placeholder="Optional room password here" onkeydown="checkStrengthRoom(event, 'securityLevelRoom');" onchange="checkStrengthRoom(event, 'securityLevelRoom');"  onkeyup="enterPressed(event, createRoom);" style="max-width: 431px;width: 100%;font-size: 110%; padding: 5px;" />
 							</th>
 						
 						</tr><tr >
@@ -704,13 +704,13 @@
 						<h1>Warning</h1>
 						<p>Media file streaming is still quite experimental. Please do not rely on it heavily for your productions. Feedback welcome.</p>
 					</div>
-					<div class='warning message-card'>
-						<h1>Chrome users</h1>
-						<p>Keep this tab visible if using Chrome, else the video playback will stop</p>
+					<div class='warning message-card advanced' id='chrome_warning_fileshare'>
+						<h1>Chrome/Edge users</h1>
+						<p>Keep this tab visible, else the video playback will stop</p>
 					</div>
-					<div class='info message-card'>
-						<h1>File Sharing seems to be broken on Chrome v88.</h1>
-						<p>Try <a href="https://github.com/aws/amazon-chime-sdk-js/issues/1031">turning off hardware-accleration</a> in Chrome/Edge to fix the issue, or maybe use a different browser.</p>
+					<div class='warning message-card advanced' id='safari_warning_fileshare'>
+						<h1>Safari Users</h1>
+						<p>Safari does not support this feature. Consider Chrome or Firefox instead.</p>
 					</div>
 					<br /><br />
 					To host a file for download, rather than for streaming, try the following instead: 
@@ -1863,7 +1863,7 @@
 			<source src="./media/tone.mp3" type="audio/mpeg"> 
 			<source src="./media/tone.ogg" type="audio/ogg"> 
 		</audio>
-		<div class="gone" >
+		<div class="gone advanced" >
 			<!-- This image is used when dragging elements -->
 			<img src="./media/favicon-32x32.png" id="dragImage" loading="lazy" />
 		</div>
@@ -1928,7 +1928,7 @@
 
 		
 			var session = WebRTC.Media; // session is a required global variable if configuring manually. Run before loading main.js but after webrtc.js.
-			session.version = "21.2";
+			session.version = "21.3";
 			session.streamID = session.generateStreamID(); // randomly generates a streamID for this session. You can set your own programmatically if needed
 			
 			session.defaultPassword = "someEncryptionKey123"; // Change this password if self-deploying for added security/privacy
@@ -1992,13 +1992,14 @@
 			// session.title // "zzzz"   ; sets the title of the browser page.
 			// session.introOnClean = true; // this will load the page with the webcam selection screen if &push or &room is in the URL; no need to use &webcam.
 			// session.lowBitrateCutoff = 300; // Set a minimum bitrate (in kbps) before the stream is hidden. Useful for IRL streams maybe
+			// session.apiserver = "wss://api.vdo.ninja:443"; // specifiy a custom websocket API URL.
 		</script>
 		<script type="text/javascript" crossorigin="anonymous" src="./thirdparty/aes.js"></script>
-		<script type="text/javascript" crossorigin="anonymous" id="lib-js" src="./lib.js?ver=264"></script>
+		<script type="text/javascript" crossorigin="anonymous" id="lib-js" src="./lib.js?ver=279"></script>
 		<!-- 
 		// If you wish to change branding, blank offers a good clean start.
 		<script type="text/javascript" id="main-js" src="./main.js" data-translation="blank"></script>
 		-->
-		<script type="text/javascript" crossorigin="anonymous" id="main-js" src="./main.js?ver=302"></script>
+		<script type="text/javascript" crossorigin="anonymous" id="main-js" src="./main.js?ver=313"></script>
 	</body>
 </html>

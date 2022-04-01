@@ -163,7 +163,7 @@ function generateInvite(){
 	var href = window.location.href;
 	var dir = href.substring(0, href.lastIndexOf('/')) + "/";
 	
-	var salt = location.hostname; // "obs.ninja" is the expected default. You will want to change this if hosting dock.html locally.
+	var salt = location.hostname; // "vdo.ninja" is the expected default. You will want to change this if hosting dock.html locally.
 	
 	if (getById("invite_password").value.trim().length){
 		generateHash(getById("invite_password").value.trim().replace(/[\W]+/g,"_")+salt,4).then(function(hash){
