@@ -96,6 +96,43 @@
 		ev.preventDefault();
 	}
 	
+	(function(w) {
+		w.URLSearchParams = w.URLSearchParams || function(searchString) {
+			var self = this;
+			searchString = searchString.replace("??", "?");
+			self.searchString = searchString;
+			self.get = function(name) {
+				var results = new RegExp('[\?&]' + name + '=([^&#]*)').exec(self.searchString);
+				if (results == null) {
+					return null;
+				} else {
+					return decodeURI(results[1]) || 0;
+				}
+			};
+		};
+
+	})(window);
+
+	var urlEdited = window.location.search.replace(/\?\?/g, "?");
+	urlEdited = urlEdited.replace(/\?/g, "&");
+	urlEdited = urlEdited.replace(/\&/, "?");
+
+	if (urlEdited !== window.location.search){
+		warnlog(window.location.search + " changed to " + urlEdited);
+		window.history.pushState({path: urlEdited.toString()}, '', urlEdited.toString());
+	}
+	var urlParams = new URLSearchParams(urlEdited);
+	
+	var password = false;
+	if (urlParams.has("password")){
+		password = urlParams.get("password");
+	}
+	
+	var roomname = false;
+	if (urlParams.has("room") || urlParams.has("dir") || urlParams.has("director")){
+		roomname = urlParams.get("room") || urlParams.get("dir") || urlParams.get("director");
+	}
+		
 	function swapNodes(n1, n2) {
 		var p1 = n1.parentNode;
 		var p2 = n2.parentNode;
@@ -256,12 +293,20 @@
 		var iframeContainer = document.createElement("div");
 		iframe.allow = "autoplay;camera;microphone;fullscreen;picture-in-picture;display-capture;";
 
-		var promptRoom = prompt("Enter a room name to use");
+		var additional = "";
+		if (password){
+			additional = "&password="+password;
+		}
+		if (roomname){
+			var promptRoom = roomname;
+		} else {
+			var promptRoom = prompt("Enter a room name to use");
+		}
 		if (promptRoom){
-			var iframesrc = "./?transparent&cleanoutput&director="+promptRoom;
+			var iframesrc = "./?transparent&cleanoutput&director="+promptRoom+additional;
 		} else {
 			promptRoom = "testroom123312";
-			var iframesrc = "./?transparent&cleanoutput&director="+promptRoom;
+			var iframesrc = "./?transparent&cleanoutput&director="+promptRoom+additional;
 		}
 		
 		function remoteActivate(){
@@ -303,13 +348,13 @@
 		
 		var a = document.createElement("a");
 		a.innerHTML = "Invite Guest Link"; 
-		a.href = "./?room="+promptRoom+"&broadcast";
+		a.href = "./?room="+promptRoom+"&broadcast"+additional;
 		a.target = "_blank";
 		document.getElementById("sources").appendChild(a);
 		
 		var a = document.createElement("a");
 		a.innerHTML = "Scene View Link"; 
-		a.href = "./?scene=0&room="+promptRoom;
+		a.href = "./?scene=0&room="+promptRoom+additional;
 		a.target = "_blank";
 		document.getElementById("sources").appendChild(a);
 		
