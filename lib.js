@@ -7322,7 +7322,9 @@ function toggleAutoVideoMute(){ // for iOS devices, that tab out.
 	if (!session.videoMuted && (session.permaid!==false)){
 		var msg = {};
 		msg.videoMuted = (document.visibilityState === 'hidden') || false;
+		//try {
 		session.sendMessage(msg);
+		//} catch(e){errorlog(e);}
 		pokeIframeAPI('video-mute-state', document.visibilityState);
 	}
 }
@@ -9557,8 +9559,7 @@ session.publishIFrame = function(iframeURL){
 	
 }
 
-function outboundAudioPipeline() {
-	
+function outboundAudioPipeline() { // this function isn't letting me change the audio source
 	if (session.disableWebAudio) {
 		//if (session.mobile){return session.streamSrc;} // iOS devices can't remap video tracks, else KABOOM. Might as well do this for android also.
 		
@@ -14562,7 +14563,7 @@ async function grabVideo(quality = 0, eleName = 'previewWebcam', selector = "sel
 				}
 				log("adding video tracks 2412");
 				
-				checkBasicStreamsExist();
+				//checkBasicStreamsExist();
 				
 				stream.getVideoTracks().forEach(function(track) {
 					
@@ -14881,7 +14882,9 @@ function updateRenderOutpipe(){ // video only.
 					
 					if (iOS || iPad){  ///////// THIS IS A FIX FOR iOS 15.4.  When a video is loaded (view/push), the bitrate from iOS devices is stuck low, and resolution needs toggle to fix.
 						// videoAdded value needs to be deleted from above also
-						if (videoAdded){
+						if (SafariVersion && (SafariVersion<=13)){
+							//
+						} else if (videoAdded){
 							setTimeout(function(uuid){
 								session.setScale(uuid, null);
 							}, 2000, UUID);
@@ -14910,7 +14913,6 @@ async function grabAudio(selector = "#audioSource", trackid = null, override = f
 	}
 	activatedPreview = true;
 	log("TRACK EXCLUDED:" + trackid);
-	
 
 	try {
 		if (session.videoElement.srcObject) {
@@ -14987,7 +14989,7 @@ async function grabAudio(selector = "#audioSource", trackid = null, override = f
 function senderAudioUpdate(callback=false){
 	try {
 		
-		checkBasicStreamsExist();  
+		checkBasicStreamsExist();
 		
 		// toggleMute(true); // checkBasicStreamsExist contains toggle
 		
