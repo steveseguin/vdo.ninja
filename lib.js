@@ -14849,6 +14849,7 @@ function updateRenderOutpipe(){ // video only.
 				
 				
 				for (UUID in session.pcs) {
+					var videoAdded = false;
 					try {
 						if ("realUUID" in session.pcs[UUID]){continue;}
 						if ((session.pcs[UUID].guest == true) && (session.roombitrate === 0)) {
@@ -14869,12 +14870,29 @@ function updateRenderOutpipe(){ // video only.
 								}
 							});
 							if (added == false) {
+								videoAdded = true;
 								session.pcs[UUID].addTrack(track, session.videoElement.srcObject); // can't replace, so adding
 								setTimeout(function(uuid){session.optimizeBitrate(uuid);},session.rampUpTime, UUID); // 3 seconds lets us ramp up the quality a bit and figure out the total bandwidth quicker
 							}
 						}
 					} catch (e) {
 						errorlog(e);
+					}
+					
+					if (iOS || iPad){  ///////// THIS IS A FIX FOR iOS 15.4.  When a video is loaded (view/push), the bitrate from iOS devices is stuck low, and resolution needs toggle to fix.
+						// videoAdded value needs to be deleted from above also
+						if (videoAdded){
+							setTimeout(function(uuid){
+								session.setScale(uuid, null);
+							}, 2000, UUID);
+							setTimeout(function(uuid){
+								var scale = 100;session.setScale
+								if (session.pcs[uuid].scale){
+									scale = session.pcs[uuid].scale;
+								}
+								session.setScale(uuid, scale);
+							},5000, UUID);
+						}
 					}
 				}
 				
