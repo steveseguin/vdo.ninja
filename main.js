@@ -1531,14 +1531,32 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 		} catch(e){errorlog("variable css failed");}
 	}
 	
-	if (urlParams.has('rounded')) {
+	if (urlParams.has('rounded') || urlParams.has('round')) {
 		try {
-			var videoRounded = urlParams.get('rounded')  || 50;
+			var videoRounded = urlParams.get('rounded') || urlParams.get('round') || 50;
 			videoRounded = parseInt(videoRounded);
 			videoRounded+="px";
 			document.querySelector(':root').style.setProperty('--video-rounded', videoRounded);
 		} catch(e){errorlog("variable css failed");}
 		
+	}
+	
+	if (urlParams.has('border')) {
+		try {
+			var videoBorder = urlParams.get('border')  || 10;
+			videoBorder = parseInt(videoBorder);
+			session.border = videoBorder;
+			videoBorder+="px";
+			document.querySelector(':root').style.setProperty('--video-border', videoBorder);
+		} catch(e){errorlog("variable css failed");}
+		
+	}
+	
+	if (urlParams.has('bordercolor')) {
+		try {
+			var videoBorderColor = urlParams.get('bordercolor')  || "#444";
+			document.querySelector(':root').style.setProperty('--video-border-color', videoBorderColor);
+		} catch(e){errorlog("variable css failed");}
 	}
 	
 	if (urlParams.has('retry')) {
@@ -1917,6 +1935,13 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 		addtone.id = "leavetone";
 		addtone.src = "./media/leave.mp3";
 		getById("testtone").parentNode.insertBefore(addtone, getById("testtone").nextSibling)
+		
+		if (!Notification) {
+			warnlog('Desktop notifications are not available in your browser.');
+		} else if (Notification.permission !== 'granted') {
+			Notification.requestPermission();
+		}
+		
 	}
 	if (urlParams.has('r2d2')) {
 		/* var addtone = createAudioElement();
@@ -2836,6 +2861,7 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 		if (urlParams.get('screensharequality') || urlParams.get('ssq')) {
 			session.screensharequality = urlParams.get('screensharequality') || urlParams.get('ssq');
 			session.screensharequality = parseInt(session.screensharequality) || 0;
+			getById("gear_screen").parentNode.removeChild(getById("gear_screen"));
 		}
 	}
 	

@@ -12,6 +12,9 @@
 	--fadein-speed: 0;
 	--video-margin: 0px;
 	--video-rounded: 0px;
+	--video-border: 0px;
+	--video-border-color: #444;
+	--video-rounded: 0px;
 	--color-mode: light;
 	--button-radius: 2px;
 	--myvideo-max-width: min(800px,100vw);
@@ -484,10 +487,12 @@ hr {
 	object-fit: var(--fit-style);
 	width: 100%;
 	height: 100%;
-	border: 0;
 	overflow: hidden;
 	padding: var(--video-margin);
 	border-radius: var(--video-rounded);
+	border-width: var(--video-border);
+	border-color: var(--video-border-color);
+	border-style: solid;
 }
 
 #gridlayout {
