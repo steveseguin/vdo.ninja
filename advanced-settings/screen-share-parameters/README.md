@@ -30,7 +30,7 @@ You can add them to both, source ([`&push`](../../source-settings/push.md)) and 
 | ``[`&screensharehide`](../../newly-added-parameters/and-screensharehide.md)``           | Hides the local screen-share sub-window that appears when screen sharing in a room                          |
 | ``[`&screenshareid`](../../source-settings/screenshareid.md)``                          | Pre-sets the screenshare stream id for a screen share if its a secondary stream                             |
 | ``[`&screensharelabel`](../../newly-added-parameters/and-screensharelabel.md)``         | The screen-share of the guest will have the same label as the guest                                         |
-| ``[`&screensharequality`](../../source-settings/screensharequality.md)``                | Set a custom screenshare quality (secondary stream)                                                         |
+| ``[`&screensharequality`](../../source-settings/screensharequality.md)``                | Set a custom screenshare quality                                                                            |
 | ``[`&screensharestereo`](../../newly-added-parameters/and-screensharestereo.md)``       | Sets the audio mode for screen-shares to stereo and changes default audio settings to improve audio quality |
 | ``[`&screensharetype`](../../newly-added-parameters/and-screensharetype.md)``           | Defines how webcam and screenshare of a guest in a room interacts which each other                          |
 | ``[`&screensharevideoonly`](../../newly-added-parameters/and-screensharevideoonly.md)`` | Lets you disable the option to select audio when screen sharing                                             |

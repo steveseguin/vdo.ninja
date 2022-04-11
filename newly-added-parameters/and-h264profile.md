@@ -6,10 +6,11 @@ description: OpenH264 software encoding will be used
 
 ## Options
 
-| Value            | Description                                                                                     |
-| ---------------- | ----------------------------------------------------------------------------------------------- |
-| (no value given) | disables hardware h264 encoding -> OpenH264 software encoding will be used, if H264 is used     |
-| 42e01f           | advanced users can also pass a 6-character h264 profile ID to the parameter to get used instead |
+| Value                        | Description                                                                                     |
+| ---------------------------- | ----------------------------------------------------------------------------------------------- |
+| (no value given)             | disables hardware h264 encoding -> OpenH264 software encoding will be used, if H264 is used     |
+| 42e01f                       | advanced users can also pass a 6-character h264 profile ID to the parameter to get used instead |
+| 0 \| false \| off \| default | has the h264 profile be left as the default browser default when the sender is an android       |
 
 ## Details
 
