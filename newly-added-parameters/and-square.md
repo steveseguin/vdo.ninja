@@ -4,6 +4,8 @@ description: Optimizes the video mixer for 1:1 aspect ratio videos
 
 # \&square
 
+Viewer-Side Option! ([`&view`](../advanced-settings/view-parameters/view.md), [`&scene`](../advanced-settings/view-parameters/scene.md), [`&room`](../general-settings/room.md))
+
 ## Aliases
 
 * `&11`

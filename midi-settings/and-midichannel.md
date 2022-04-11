@@ -4,6 +4,8 @@ description: Allows for specifying which midi channel (1 to 16) to listen on
 
 # \&midichannel
 
+General Option! ([`&push`](../source-settings/push.md), [`&room`](../general-settings/room.md), [`&view`](../advanced-settings/view-parameters/view.md), [`&scene`](../advanced-settings/view-parameters/scene.md))
+
 ## Options
 
 | Value  | Description                               |

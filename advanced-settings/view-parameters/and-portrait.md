@@ -4,6 +4,8 @@ description: Optimizes the video mixer for 9:16 videos
 
 # \&portrait
 
+Viewer-Side Option! ([`&view`](view.md), [`&scene`](scene.md), [`&room`](../../general-settings/room.md))
+
 ## Aliases
 
 * `&916`

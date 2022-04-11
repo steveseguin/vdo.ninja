@@ -4,6 +4,8 @@ description: Appends an added stun server
 
 # \&addstun
 
+General Option! ([`&push`](../source-settings/push.md), [`&room`](../general-settings/room.md), [`&view`](../advanced-settings/view-parameters/view.md), [`&scene`](../advanced-settings/view-parameters/scene.md))
+
 ## Details
 
 `&addstun` just appends an added stun server. So, you can have both google + custom, or two custom stun servers, with these two options.

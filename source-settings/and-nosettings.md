@@ -4,6 +4,8 @@ description: Disables the local settings button
 
 # \&nosettings
 
+Sender-Side Option! ([`&push`](push.md))
+
 ## Aliases
 
 * `&ns`

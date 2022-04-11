@@ -4,6 +4,8 @@ description: Hides the invite URL options in the Director's room
 
 # \&cleandirector
 
+Director Option! ([`&director`](../viewers-settings/director.md))
+
 ## Aliases
 
 * `&cdv`

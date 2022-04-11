@@ -4,6 +4,8 @@ description: Random video loading order
 
 # \&randomize
 
+Viewer-Side Option! ([`&view`](view.md), [`&scene`](scene.md), [`&room`](../../general-settings/room.md))
+
 ## Aliases
 
 * `&random`

@@ -4,6 +4,8 @@ description: Hides the speaker button
 
 # \&nospeakerbutton
 
+Sender-Side Option! ([`&push`](push.md))
+
 ## Aliases
 
 * `&nsb`

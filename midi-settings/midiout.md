@@ -4,6 +4,8 @@ description: Broadcast MIDI commands to a remote computer's virtual MIDI device
 
 # \&midiout
 
+General Option! ([`&push`](../source-settings/push.md), [`&room`](../general-settings/room.md), [`&view`](../advanced-settings/view-parameters/view.md), [`&scene`](../advanced-settings/view-parameters/scene.md))
+
 ## Aliases
 
 * `&midipush`

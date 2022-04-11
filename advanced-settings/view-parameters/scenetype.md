@@ -4,6 +4,8 @@ description: Shows only the last added video to a scene
 
 # \&scenetype
 
+Viewer-Side Option! ([`&view`](view.md), [`&scene`](scene.md))
+
 ## Aliases
 
 * `&type`

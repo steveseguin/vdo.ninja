@@ -4,6 +4,8 @@ description: Hides the VDO.Ninja-branded menu and header bar
 
 # \&hidemenu
 
+Sender-Side Option! ([`&push`](../../source-settings/push.md))
+
 ## Aliases
 
 * `&hm`

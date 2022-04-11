@@ -4,6 +4,8 @@ description: Limits the number of remote peer connections that are publishers
 
 # \&maxpublishers
 
+Viewer-Side Option! ([`&view`](view.md), [`&scene`](scene.md), [`&room`](../../general-settings/room.md))
+
 ## Aliases
 
 * `&mp`

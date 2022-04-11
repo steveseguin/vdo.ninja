@@ -4,6 +4,8 @@ description: Lets you manually set the video bitrate for screen-shares
 
 # \&screensharebitrate
 
+Viewer-Side Option! ([`&view`](../advanced-settings/view-parameters/view.md), [`&scene`](../advanced-settings/view-parameters/scene.md), [`&room`](../general-settings/room.md))
+
 ## Aliases
 
 * `&ssbitrate`

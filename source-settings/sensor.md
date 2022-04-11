@@ -4,6 +4,8 @@ description: Access device sensor data at given rate
 
 # \&sensor
 
+Sender-Side Option! ([`&push`](push.md))
+
 ## Aliases
 
 * `&sensors`

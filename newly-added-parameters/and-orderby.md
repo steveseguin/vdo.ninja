@@ -4,6 +4,8 @@ description: Orders guest's by their stream ID in the director's room
 
 # \&orderby
 
+Director Option! ([`&director`](../viewers-settings/director.md))
+
 ## Details
 
 `&orderby` is a director's URL parameter. While the default ordering of guests in the director's room is by time of joining, if you use `&orderby` it instead orders by guest's stream ID. I'll be adding different ordering options later, but for now it's just by stream ID (case ignored; a to z, etc).

@@ -4,6 +4,8 @@ description: Option to change codec of the &meshcast parameter while screen-shar
 
 # \&mcscreensharecodec
 
+Meshcast Option / Sender-Side Option! ([`&meshcast`](../newly-added-parameters/and-meshcast.md), [`&push`](../source-settings/push.md))
+
 ## Aliases
 
 * `&mcsscodec`

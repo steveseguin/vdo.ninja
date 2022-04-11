@@ -4,6 +4,8 @@ description: Applies an rule-of-thirds grid overlay to the self-preview
 
 # \&grid
 
+Sender-Side Option! ([`&push`](../../source-settings/push.md))
+
 ## Aliases
 
 * `&ruler`

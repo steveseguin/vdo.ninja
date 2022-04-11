@@ -4,6 +4,8 @@ description: Disables the mic button; guests can't mute audio
 
 # \&nomicbutton
 
+Sender-Side Option! ([`&push`](../source-settings/push.md))
+
 ## Aliases
 
 * `&nmb`

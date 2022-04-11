@@ -4,6 +4,8 @@ description: Videos in a group scene will slide around the screen when being re-
 
 # \&animated
 
+Viewer-Side Option! ([`&view`](view.md), [`&scene`](scene.md), [`&room`](../../general-settings/room.md))
+
 ## Aliases
 
 * `&animate`

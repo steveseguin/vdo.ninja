@@ -6,6 +6,8 @@ description: >-
 
 # \&chunked
 
+Sender-Side Option! ([`&push`](../source-settings/push.md))
+
 ## Options
 
 | Value            | Description                                                          |

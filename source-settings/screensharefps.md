@@ -4,6 +4,8 @@ description: Set a target FPS for your screenshare (secondary stream)
 
 # \&screensharefps
 
+Sender-Side Option! ([`&push`](push.md))
+
 ## Aliases
 
 * `&ssfps`

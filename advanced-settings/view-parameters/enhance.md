@@ -6,6 +6,8 @@ description: >-
 
 # \&enhance
 
+Viewer-Side Option! ([`&view`](view.md), [`&scene`](scene.md), [`&room`](../../general-settings/room.md))
+
 ## Details
 
 Tells the remote source that you would like them to prioritize the audio stream over other streams.

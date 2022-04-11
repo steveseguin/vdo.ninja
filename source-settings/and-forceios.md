@@ -4,6 +4,8 @@ description: Forces iOS devices to publish video to this room guest
 
 # \&forceios
 
+Sender-Side Option! ([`&push`](push.md))
+
 ## Details
 
 By default, iOS devices do not publish video to other guests in a group room.

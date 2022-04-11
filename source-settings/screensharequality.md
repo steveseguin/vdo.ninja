@@ -4,6 +4,8 @@ description: Set a custom screenshare quality
 
 # \&screensharequality
 
+Sender-Side Option! ([`&push`](push.md))
+
 ## Aliases
 
 * `&ssq`

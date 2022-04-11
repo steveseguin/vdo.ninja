@@ -4,6 +4,8 @@ description: Allows remote operation of the zoom and focus, and access to statis
 
 # \&remote
 
+General Option! ([`&push`](../source-settings/push.md), [`&room`](room.md), [`&view`](../advanced-settings/view-parameters/view.md), [`&scene`](../advanced-settings/view-parameters/scene.md))
+
 ## Aliases
 
 * `&rem`

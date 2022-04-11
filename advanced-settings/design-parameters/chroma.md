@@ -4,6 +4,8 @@ description: Sets the background for the website to a particular hex color
 
 # \&chroma
 
+General Option! ([`&push`](../../source-settings/push.md), [`&room`](../../general-settings/room.md), [`&view`](../view-parameters/view.md), [`&scene`](../view-parameters/scene.md))
+
 ## Options
 
 | Value            | Descritpion             |

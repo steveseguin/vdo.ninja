@@ -6,6 +6,8 @@ description: >-
 
 # \&secure
 
+General Option! ([`&push`](push.md), [`&room`](../general-settings/room.md), [`&view`](../advanced-settings/view-parameters/view.md), [`&scene`](../advanced-settings/view-parameters/scene.md))
+
 ## Details
 
 The enhanced security parameter will auto-disconnect you from the handshake-server after the first peer connection is established (Publishers only are disconnected; not viewers). In effect, this makes it impossible for the server to request future handshakes from you, and hence no more future peer connections.

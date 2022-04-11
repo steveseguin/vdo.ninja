@@ -4,6 +4,8 @@ description: Shows the connection/media stats window by default
 
 # \&stats
 
+General Option! ([`&push`](../source-settings/push.md), [`&room`](room.md), [`&view`](../advanced-settings/view-parameters/view.md), [`&scene`](../advanced-settings/view-parameters/scene.md))
+
 ## Details
 
 Addings `&stats` to a URL, it shows the connection/media stats window by default.

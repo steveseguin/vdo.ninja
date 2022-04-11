@@ -4,6 +4,8 @@ description: Global hotkey support via MIDI input and more
 
 # \&midi
 
+General Option! ([`&push`](../source-settings/push.md), [`&room`](../general-settings/room.md), [`&view`](../advanced-settings/view-parameters/view.md), [`&scene`](../advanced-settings/view-parameters/scene.md))
+
 ## Aliases
 
 * `&hotkeys`

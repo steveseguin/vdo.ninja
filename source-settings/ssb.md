@@ -4,6 +4,8 @@ description: Forces the screen-share button to appear for guests
 
 # \&ssb
 
+Sender-Side Option! ([`&push`](push.md))
+
 ## Details
 
 Forces the screen-share button to appear for guests.

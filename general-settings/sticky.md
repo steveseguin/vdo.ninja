@@ -4,6 +4,8 @@ description: Allows a user to save and then later restore their streaming sessio
 
 # \&sticky
 
+General Option! ([`&push`](../source-settings/push.md), [`&room`](room.md), [`&view`](../advanced-settings/view-parameters/view.md), [`&scene`](../advanced-settings/view-parameters/scene.md))
+
 ## Details
 
 Allows a user to save and then later restore their streaming session settings via the use of local storage.

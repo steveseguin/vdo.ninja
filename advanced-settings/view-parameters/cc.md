@@ -4,6 +4,8 @@ description: Enables displaying of closed captioning text
 
 # \&cc (closed-captions)
 
+Viewer-Side Option! ([`&view`](view.md), [`&scene`](scene.md), [`&room`](../../general-settings/room.md))
+
 ## Aliases
 
 * `&closedcaptions`

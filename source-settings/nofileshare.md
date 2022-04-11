@@ -4,6 +4,8 @@ description: Hides the ability for a guest to upload a file
 
 # \&nofileshare
 
+Sender-Side Option! ([`&push`](push.md))
+
 ## Aliases
 
 * `&nodownloads`

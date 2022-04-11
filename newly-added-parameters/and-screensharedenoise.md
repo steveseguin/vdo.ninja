@@ -4,6 +4,8 @@ description: Turns audio noise reduction filter for screen-shares ON or OFF
 
 # \&screensharedenoise
 
+Sender-Side Option! ([`&push`](../source-settings/push.md))
+
 ## Aliases
 
 * `&ssdn`

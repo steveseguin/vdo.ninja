@@ -6,6 +6,8 @@ description: >-
 
 # \&screensharehide
 
+Sender-Side Option! ([`&push`](../source-settings/push.md))
+
 ## Aliases
 
 * `&sshide`

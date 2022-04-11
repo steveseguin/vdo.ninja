@@ -4,6 +4,8 @@ description: Shows the video control bar
 
 # \&videocontrols
 
+Sender-Side Option! ([`&push`](../../source-settings/push.md))
+
 ## Aliases
 
 * `&controls`

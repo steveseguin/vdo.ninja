@@ -4,6 +4,8 @@ description: Toggles list of hidden guests
 
 # \&showlist
 
+Sender-Side Option! ([`&push`](push.md))
+
 ## Options
 
 | Value | Description                             |

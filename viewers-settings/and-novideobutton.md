@@ -4,6 +4,8 @@ description: Disables the video button; guests can't mute video
 
 # \&novideobutton
 
+Sender-Side Option! ([`&push`](../source-settings/push.md))
+
 ## Aliases
 
 * `&nvb`

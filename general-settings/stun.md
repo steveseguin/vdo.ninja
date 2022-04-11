@@ -4,6 +4,8 @@ description: Lets you specify a STUN server for webRTC negotiation
 
 # \&stun
 
+General Option! ([`&push`](../source-settings/push.md), [`&room`](room.md), [`&view`](../advanced-settings/view-parameters/view.md), [`&scene`](../advanced-settings/view-parameters/scene.md))
+
 ## Details
 
 This parameter lets you specify a STUN server for webRTC negotiation. The default STUN servers use those provided by Google, at `stun:stun.l.google.com:19302`, but with this command you can set your own.

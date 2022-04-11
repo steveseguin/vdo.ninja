@@ -4,6 +4,8 @@ description: Enables a "Raise Hand" button for guests
 
 # \&hands
 
+Sender-Side Option! ([`&push`](push.md))
+
 ## Aliases
 
 * `&hand`

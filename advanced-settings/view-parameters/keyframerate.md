@@ -4,6 +4,8 @@ description: This tells the remote publishers to send keyframes at a specified r
 
 # \&keyframerate
 
+Viewer-Side Option! ([`&view`](view.md), [`&scene`](scene.md), [`&room`](../../general-settings/room.md))
+
 ## Aliases
 
 * `&keyframeinterval`

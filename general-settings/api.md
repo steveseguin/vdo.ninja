@@ -4,6 +4,8 @@ description: Remote control API (HTTP-GET / WSS-based)
 
 # \&api
 
+General Option! ([`&push`](../source-settings/push.md), [`&room`](room.md), [`&view`](../advanced-settings/view-parameters/view.md), [`&scene`](../advanced-settings/view-parameters/scene.md))
+
 ## Aliases
 
 * `&osc`

@@ -6,7 +6,9 @@ description: >-
 
 # \&codirector
 
-Alias:&#x20;
+Director Option! ([`&director`](../viewers-settings/director.md))
+
+## Aliases
 
 * `&directorpassword`
 * `&dirpass`

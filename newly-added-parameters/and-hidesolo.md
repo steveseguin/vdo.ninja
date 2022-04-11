@@ -4,6 +4,8 @@ description: Lets you hide the solo links from showing
 
 # \&hidesolo
 
+Director Option! ([`&director`](../viewers-settings/director.md))
+
 ## Aliases
 
 * `&hs`

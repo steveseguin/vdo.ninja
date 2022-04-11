@@ -4,6 +4,8 @@ description: Enables transcription and closed captioning
 
 # \&transcribe
 
+Sender-Side Option! ([`&push`](push.md))
+
 ## Aliases
 
 * `&trans`

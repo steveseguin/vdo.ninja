@@ -6,6 +6,8 @@ description: >-
 
 # \&bitratecutoff
 
+Viewer-Side Option! ([`&view`](../view-parameters/view.md), [`&scene`](../view-parameters/scene.md), [`&room`](../../general-settings/room.md))
+
 ## Aliases
 
 * `&bitcut`

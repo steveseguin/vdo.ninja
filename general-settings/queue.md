@@ -4,6 +4,10 @@ description: A basic guest queuing system
 
 # \&queue
 
+Director Option! ([`&director`](../viewers-settings/director.md))
+
+## Details
+
 This option lets the room's director review guests who join a room, and when approved, transfer them to another room.&#x20;
 
 {% embed url="https://www.youtube.com/embed/DDJrhhdNX_c" %}

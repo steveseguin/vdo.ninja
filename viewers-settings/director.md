@@ -4,6 +4,8 @@ description: Enters a room as the director, instead of a guest and have full con
 
 # \&director
 
+Director Option!
+
 ## Aliases
 
 * `&dir`

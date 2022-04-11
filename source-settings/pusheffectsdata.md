@@ -6,6 +6,8 @@ description: >-
 
 # \&pusheffectsdata
 
+General Option! ([`&push`](push.md), [`&room`](../general-settings/room.md), [`&view`](../advanced-settings/view-parameters/view.md), [`&scene`](../advanced-settings/view-parameters/scene.md))
+
 ## Details
 
 Experimental / Under-development. This feature is incomplete and not ready for production use.

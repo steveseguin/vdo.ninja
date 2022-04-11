@@ -4,6 +4,8 @@ description: Auto-hides the control bar after a few moments of the mouse being i
 
 # \&autohide
 
+Sender-Side Option! ([`&push`](../source-settings/push.md))
+
 ## Details
 
 `&autohide` auto-hides the control bar after a few moments of the mouse being idle.

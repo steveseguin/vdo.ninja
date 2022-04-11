@@ -4,6 +4,8 @@ description: Adds a border around the videos
 
 # \&border
 
+General Option! ([`&push`](../../source-settings/push.md), [`&room`](../../general-settings/room.md), [`&view`](../view-parameters/view.md), [`&scene`](../view-parameters/scene.md))
+
 ## Options
 
 | Value            | Description              |

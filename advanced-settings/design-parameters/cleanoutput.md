@@ -4,6 +4,8 @@ description: Keeps the output as clean as possible from UI elements
 
 # \&cleanoutput
 
+General Option! ([`&push`](../../source-settings/push.md), [`&room`](../../general-settings/room.md), [`&view`](../view-parameters/view.md), [`&scene`](../view-parameters/scene.md))
+
 ## Aliases
 
 * `&clean`

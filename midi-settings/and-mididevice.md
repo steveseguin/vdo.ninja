@@ -4,6 +4,8 @@ description: Allows to specify which midi device (1 and up) selected
 
 # \&mididevice
 
+General Option! ([`&push`](../source-settings/push.md), [`&room`](../general-settings/room.md), [`&view`](../advanced-settings/view-parameters/view.md), [`&scene`](../advanced-settings/view-parameters/scene.md))
+
 ## Options
 
 | Value                    | Description               |

@@ -4,6 +4,8 @@ description: Lets the director perform alongside guests, showing up in scene-vie
 
 # \&showdirector
 
+Director Option / Viewer-Side Option! ([`&director`](director.md), [`&scene`](../advanced-settings/view-parameters/scene.md))
+
 ## Aliases
 
 * `&sd`

@@ -6,6 +6,8 @@ description: >-
 
 # \&hiddenscenebitrate
 
+Viewer-Side Option! ([`&view`](../advanced-settings/view-parameters/view.md), [`&scene`](../advanced-settings/view-parameters/scene.md))
+
 ## Options
 
 | Value           | Description                     |

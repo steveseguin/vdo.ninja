@@ -6,6 +6,8 @@ description: >-
 
 # \&rampuptime
 
+Sender-Side Option! ([`&push`](../source-settings/push.md))
+
 ## Options
 
 | Value           | Description        |

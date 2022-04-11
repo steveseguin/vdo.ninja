@@ -4,6 +4,8 @@ description: Lets you select how audio-only elements are displayed in OBS and fo
 
 # \&style
 
+General Option! ([`&push`](../../source-settings/push.md), [`&room`](../../general-settings/room.md), [`&view`](../view-parameters/view.md), [`&scene`](../view-parameters/scene.md))
+
 ## Aliases
 
 * `&st`

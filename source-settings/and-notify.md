@@ -4,6 +4,8 @@ description: Audio alerts for raised hands, chat messages and if somebody joins 
 
 # \&notify
 
+Sender-Side Option / Director Option! ([`&push`](push.md), [`&director`](../viewers-settings/director.md))
+
 ## Aliases
 
 * `&beep`

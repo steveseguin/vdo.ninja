@@ -6,6 +6,8 @@ description: >-
 
 # \&screensharetype
 
+Sender-Side Option! ([`&push`](../source-settings/push.md))
+
 ## Aliases
 
 * `&sstype`

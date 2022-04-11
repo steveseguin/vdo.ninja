@@ -4,6 +4,8 @@ description: Makes the background transparent
 
 # \&transparent
 
+General Option! ([`&push`](../../source-settings/push.md), [`&room`](../../general-settings/room.md), [`&view`](../view-parameters/view.md), [`&scene`](../view-parameters/scene.md))
+
 ## Aliases
 
 * `&transparency`

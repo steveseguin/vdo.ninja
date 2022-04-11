@@ -4,6 +4,8 @@ description: Same concept as &view, except does the opposite
 
 # \&exclude
 
+Viewer-Side Option! ([`&view`](view.md), [`&scene`](scene.md), [`&room`](../../general-settings/room.md))
+
 ## Aliases
 
 * `&ex`

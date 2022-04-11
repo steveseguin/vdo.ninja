@@ -4,6 +4,8 @@ description: Visualizes the packet loss of a guest
 
 # \&signalmeter
 
+Sender-Side Option! ([`&push`](../source-settings/push.md))
+
 ## Options
 
 | Value            | Description                                      |

@@ -4,6 +4,8 @@ description: Specifies a negative timezone value in minutes for a TURN server
 
 # \&tz
 
+General Option! ([`&push`](../source-settings/push.md), [`&room`](../general-settings/room.md), [`&view`](../advanced-settings/view-parameters/view.md), [`&scene`](../advanced-settings/view-parameters/scene.md))
+
 ## Details
 
 Using a TURN server, you can fake your location. So if a certain location is overloaded, you can try to use the TURN servers of a different location. To do so, use the `&tz` command to specify a negative timezone value in minutes, such as: [`https://vdo.ninja/?tz=-480`](https://vdo.ninja/?tz=-480), where ( tz = timezone \* -60)

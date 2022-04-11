@@ -4,6 +4,8 @@ description: Lets you set the video recording vodec
 
 # \&recordcodec
 
+Sender-Side Option! ([`&push`](../source-settings/push.md))
+
 ## Aliases
 
 * `&rc`

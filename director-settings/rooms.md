@@ -4,6 +4,8 @@ description: Quick director access to a list of rooms for transfering guests
 
 # \&rooms
 
+Director Option! ([`&director`](../viewers-settings/director.md))
+
 {% hint style="warning" %}
 If [`&cleanoutput`](../advanced-settings/design-parameters/cleanoutput.md) is enabled, rooms parameter is ignored.
 {% endhint %}
@@ -14,7 +16,7 @@ If [`&cleanoutput`](../advanced-settings/design-parameters/cleanoutput.md) is en
 | -------------- | ------------------------------------------------------------------------ | - |
 | (string value) | adds the rooms to the guest transfer buttons to the director control bar |   |
 
-## Usage
+## Details
 
 ```
 https://vdo.ninja?dir=ROOMID&rooms=ROOMID2,ROOMID3,ROOMID4

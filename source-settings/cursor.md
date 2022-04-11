@@ -4,6 +4,8 @@ description: Attempts to show the mouse cursor on screen shares
 
 # \&screensharecursor
 
+Sender-Side Option! ([`&push`](push.md))
+
 ## Aliases
 
 * `&cursor`

@@ -4,6 +4,8 @@ description: Adds a margin around the videos in pixel
 
 # \&margin
 
+General Option! ([`&push`](../../source-settings/push.md), [`&room`](../../general-settings/room.md), [`&view`](../view-parameters/view.md), [`&scene`](../view-parameters/scene.md))
+
 ## Options
 
 | Value            | Description         |

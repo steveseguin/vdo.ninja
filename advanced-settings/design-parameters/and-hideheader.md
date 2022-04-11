@@ -4,6 +4,8 @@ description: Hides just the top header-bar
 
 # \&hideheader
 
+Sender-Side Option! ([`&push`](../../source-settings/push.md))
+
 ## Aliases
 
 * `&noheader`

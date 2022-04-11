@@ -4,6 +4,8 @@ description: Rotates the camera
 
 # \&rotate
 
+Sender-Side Option! ([`&push`](../../source-settings/push.md))
+
 ## Options
 
 | Value            | Description                                         |

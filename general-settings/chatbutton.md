@@ -4,6 +4,8 @@ description: Shows or hides the chat button
 
 # \&chatbutton
 
+Sender-Side Option! ([`&push`](../source-settings/push.md))
+
 ## Aliases
 
 * `&cb`

@@ -4,6 +4,8 @@ description: Turns automatic echo-cancellation filter for screen-shares ON or OF
 
 # \&screenshareaec
 
+Sender-Side Option! ([`&push`](../source-settings/push.md))
+
 ## Aliases
 
 * `&ssaec`

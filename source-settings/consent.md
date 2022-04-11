@@ -4,6 +4,8 @@ description: Will ask the user for content to remote change their camera or micr
 
 # \&consent
 
+Sender-Side Option! ([`&push`](push.md))
+
 ## Details
 
 Adding to the guest's invite link will either alert the guest or seek permission of the guest to remotely change their camera or mic without further approval.

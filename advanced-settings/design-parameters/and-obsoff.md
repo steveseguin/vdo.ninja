@@ -4,6 +4,8 @@ description: Disables the tally light effects
 
 # \&obsoff
 
+Viewer-Side Option! ([`&view`](../view-parameters/view.md), [`&scene`](../view-parameters/scene.md), [`&room`](../../general-settings/room.md))
+
 ## Aliases
 
 * `&oo`

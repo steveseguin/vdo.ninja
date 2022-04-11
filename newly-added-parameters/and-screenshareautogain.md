@@ -4,6 +4,8 @@ description: Turns audio auto-normalization filter for screen-shares ON or OFF
 
 # \&screenshareautogain
 
+Sender-Side Option! ([`&push`](../source-settings/push.md))
+
 ## Aliases
 
 * `&ssagc`

@@ -6,6 +6,8 @@ description: >-
 
 # \&mcscreensharebitrate
 
+Meshcast Option / Sender-Side Option! ([`&meshcast`](../newly-added-parameters/and-meshcast.md), [`&push`](../source-settings/push.md))
+
 ## Aliases
 
 * `&mcssbitrate`

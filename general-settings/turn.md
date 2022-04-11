@@ -4,6 +4,8 @@ description: Lets you specify a custom TURN server or disable all TURN servers
 
 # \&turn
 
+General Option! ([`&push`](../source-settings/push.md), [`&room`](room.md), [`&view`](../advanced-settings/view-parameters/view.md), [`&scene`](../advanced-settings/view-parameters/scene.md))
+
 ## Options
 
 | Value                        | Description                                                                   |

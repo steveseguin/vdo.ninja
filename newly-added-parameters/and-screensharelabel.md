@@ -4,6 +4,8 @@ description: The screen-share of the guest will have the same label as the guest
 
 # \&screensharelabel
 
+Sender-Side Option! ([`&push`](../source-settings/push.md))
+
 ## Aliases
 
 * `&sslabel`

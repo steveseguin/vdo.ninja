@@ -6,6 +6,8 @@ description: >-
 
 # \&streamlabs
 
+Viewer-Side Option! ([`&view`](view.md), [`&scene`](scene.md), [`&room`](../../general-settings/room.md))
+
 ## Details
 
 Tells VDO.Ninja to not block VDO.Ninja from attempting to run when using Streamlabs for macOS.

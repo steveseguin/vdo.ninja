@@ -4,6 +4,8 @@ description: Lets you disable the option to select audio when screen sharing
 
 # \&screensharevideoonly
 
+Sender-Side Option! ([`&push`](../source-settings/push.md))
+
 ## Aliases
 
 * `&ssvideoonly`

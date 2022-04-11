@@ -6,6 +6,8 @@ description: >-
 
 # \&screenshareid
 
+Sender-Side Option! ([`&push`](push.md))
+
 ## Aliases
 
 * `&ssid`

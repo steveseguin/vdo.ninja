@@ -4,6 +4,8 @@ description: Option to change outbound audio bitrate of the &meshcast parameter
 
 # \&meshcastab
 
+Meshcast Option / Sender-Side Option! ([`&meshcast`](../newly-added-parameters/and-meshcast.md), [`&push`](../source-settings/push.md))
+
 ## Aliases
 
 * `&mcaudiobitrate`

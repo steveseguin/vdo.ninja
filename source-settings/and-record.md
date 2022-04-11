@@ -4,6 +4,8 @@ description: Record functionality for guests
 
 # \&record
 
+Sender-Side Option! ([`&push`](push.md))
+
 ## Options
 
 | Value              | Description                                                                                       |

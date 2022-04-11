@@ -4,6 +4,8 @@ description: Defines the stream or streams you are receiving, by their stream ID
 
 # \&view
 
+Viewer-Side Option! ([`&scene`](scene.md), [`&room`](../../general-settings/room.md))
+
 ## Aliases
 
 * `&streamid`

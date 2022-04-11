@@ -4,11 +4,13 @@ description: Filters ICE candidates
 
 # \&icefilter
 
+General Option! ([`&push`](../source-settings/push.md), [`&room`](room.md), [`&view`](../advanced-settings/view-parameters/view.md), [`&scene`](../advanced-settings/view-parameters/scene.md))
+
 {% hint style="warning" %}
 This is an advanced parameter that can stop your links from working correctly.
 {% endhint %}
 
-## Values
+## Options
 
 | Value | Description                 |
 | ----- | --------------------------- |

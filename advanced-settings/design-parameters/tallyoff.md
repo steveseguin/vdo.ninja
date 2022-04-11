@@ -4,6 +4,8 @@ description: Disables the Tally Light's visibility for that particular guest
 
 # \&tallyoff
 
+Sender-Side Option! ([`&push`](../../source-settings/push.md))
+
 ## Aliases
 
 * `&notally`

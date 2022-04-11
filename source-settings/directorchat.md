@@ -4,6 +4,8 @@ description: Message ONLY the director
 
 # \&directorchat
 
+Sender-Side Option! ([`&push`](push.md))
+
 ## Aliases
 
 * `&dc`

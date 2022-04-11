@@ -4,6 +4,8 @@ description: Limits the number of viewers allowed
 
 # \&maxviewers
 
+Sender-Side Option! ([`&push`](push.md))
+
 ## Aliases
 
 * `&mv`

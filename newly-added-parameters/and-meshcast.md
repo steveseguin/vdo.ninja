@@ -6,6 +6,8 @@ description: >-
 
 # \&meshcast
 
+Sender-Side Option! ([`&push`](../source-settings/push.md))
+
 ## Details
 
 [Meshcast ](https://meshcast.io)is a free-to-use server-based service for broadcasting low-latency video streams. It can be used with VDO.Ninja in a couple different ways, either as an iFrame or as a peer-2-peer replacement for guest and director streams. It can be used to help lower system requirements of VDO.Ninja for some users or use cases.

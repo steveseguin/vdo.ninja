@@ -6,6 +6,8 @@ description: >-
 
 # \&waittimeout
 
+Viewer-Side Option! ([`&view`](../view-parameters/view.md), [`&scene`](../view-parameters/scene.md))
+
 ## Options
 
 | Value           | Description |

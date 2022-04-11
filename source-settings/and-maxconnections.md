@@ -4,6 +4,8 @@ description: Limits total of view and push connections
 
 # \&maxconnections
 
+Sender-Side Option! ([`&push`](push.md))
+
 ## Aliases
 
 * `&mc`

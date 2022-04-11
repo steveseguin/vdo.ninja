@@ -4,6 +4,8 @@ description: Default mini director stylesheet
 
 # \&minidirector
 
+Director Option! ([`&director`](../viewers-settings/director.md))
+
 ## Details
 
 When adding to the director's link, it shows a default mini director stylesheet. Doesn't need to be used with a dock.
