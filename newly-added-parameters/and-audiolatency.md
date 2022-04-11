@@ -4,6 +4,8 @@ description: Adds an audio-latency to the published audio stream
 
 # \&audiolatency
 
+Sender-Side Option! ([`&push`](../source-settings/push.md))
+
 ## Aliases
 
 * `&latency`

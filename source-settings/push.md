@@ -4,6 +4,8 @@ description: The stream ID that you are publishing with will be the defined valu
 
 # \&push
 
+Sender-Side Option!
+
 ## Aliases
 
 * `&permaid`

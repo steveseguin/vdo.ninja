@@ -4,6 +4,8 @@ description: Specifies the number of output audio channels you wish to mix up or
 
 # \&channels
 
+Viewer-Side Option! ([`&view`](view.md), [`&scene`](scene.md), [`&room`](../../general-settings/room.md))
+
 ## Options
 
 | Value           | Description                     |

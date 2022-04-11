@@ -4,6 +4,8 @@ description: Applies a generic audio limiter to the local microphone
 
 # \&limiter
 
+Sender-Side Option! ([`&push`](push.md))
+
 ## Details
 
 A limiter is like an aggressive compressor.\

@@ -4,6 +4,8 @@ description: Disables screen-sharing as an option
 
 # \&webcam
 
+Sender-Side Option! ([`&push`](push.md))
+
 ## Aliases
 
 * `&wc`

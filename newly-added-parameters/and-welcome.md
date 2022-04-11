@@ -4,6 +4,8 @@ description: Adds a message the guest will see when joining the room
 
 # \&welcome
 
+Sender-Side Option! ([`&push`](../source-settings/push.md))
+
 ## Aliases
 
 * `&entrymsg`

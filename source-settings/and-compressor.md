@@ -4,6 +4,8 @@ description: Applies a generic audio compressor to the local microphone
 
 # \&compressor
 
+Sender-Side Option! ([`&push`](push.md))
+
 ## Aliases
 
 * `&comp`

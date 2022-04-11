@@ -6,6 +6,8 @@ description: >-
 
 # \&forcelandscape
 
+Sender-Side Option! ([`&push`](../source-settings/push.md))
+
 ## Aliases
 
 * `&forcedlandscape`

@@ -4,6 +4,8 @@ description: Target audio bitrate and max bitrate for outgoing audio streams
 
 # \&outboundaudiobitrate
 
+Sender-Side Option! ([`&push`](push.md))
+
 ## Aliases
 
 * `&oab`

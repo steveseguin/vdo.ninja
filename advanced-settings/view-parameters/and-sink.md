@@ -6,6 +6,8 @@ description: >-
 
 # \&sink
 
+General Option! ([`&push`](../../source-settings/push.md), [`&room`](../../general-settings/room.md), [`&view`](view.md), [`&scene`](scene.md))
+
 ## Options
 
 | Value          | Description |

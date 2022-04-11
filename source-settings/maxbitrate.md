@@ -4,6 +4,8 @@ description: Limits the max video bitrate out for this publisher, per stream out
 
 # \&maxbitrate
 
+Sender-Side Option! ([`&push`](push.md))
+
 ## Aliases
 
 * `&maxvideobitrate`

@@ -4,6 +4,8 @@ description: Target video bitrate and max bitrate for outgoing video streams
 
 # \&outboundvideobitrate
 
+Sender-Side Option! ([`&push`](push.md))
+
 ## Aliases
 
 * `&ovb`

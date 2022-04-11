@@ -4,6 +4,8 @@ description: Sets whether audio auto-normalization is ON or OFF
 
 # \&autogain
 
+Sender-Side Option! ([`&push`](push.md))
+
 ## Aliases
 
 * `&ag`

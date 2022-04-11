@@ -4,6 +4,8 @@ description: Sets the "desired target" bitrate in kbps
 
 # \&videobitrate
 
+Viewer-Side Option! ([`&view`](view.md), [`&scene`](scene.md), [`&room`](../../general-settings/room.md))
+
 ## Aliases
 
 * `&bitrate`

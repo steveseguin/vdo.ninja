@@ -6,6 +6,8 @@ description: >-
 
 # \&mediasettings
 
+Sender-Side Option! ([`&push`](../source-settings/push.md))
+
 ## Details
 
 Adds the option for a guest to change the video "quality" (resolution) dynamically:

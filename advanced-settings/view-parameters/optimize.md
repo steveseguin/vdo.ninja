@@ -6,6 +6,8 @@ description: >-
 
 # \&optimize
 
+Viewer-Side Option! ([`&view`](view.md), [`&scene`](scene.md), [`&room`](../../general-settings/room.md))
+
 ## Options
 
 | Value            | Description                                                 |

@@ -4,6 +4,8 @@ description: Disables camera-sharing as an option
 
 # \&screenshare
 
+Sender-Side Option! ([`&push`](push.md))
+
 ## Aliases
 
 * `&ss`

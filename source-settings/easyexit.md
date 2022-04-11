@@ -4,6 +4,8 @@ description: Won't ask the user to confirm that they wish to exit or leave the p
 
 # \&easyexit
 
+Sender-Side Option! ([`&push`](push.md))
+
 ## Aliases
 
 * `&ee`

@@ -4,6 +4,8 @@ description: Has the inbound audio playback as mono audio
 
 # \&mono
 
+Viewer-Side Option! ([`&view`](view.md), [`&scene`](scene.md), [`&room`](../../general-settings/room.md))
+
 ## Details
 
 {% hint style="info" %}

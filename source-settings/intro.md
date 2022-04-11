@@ -6,6 +6,8 @@ description: >-
 
 # \&intro
 
+Sender-Side Option! ([`&push`](push.md))
+
 ## Aliases
 
 * `&ib`

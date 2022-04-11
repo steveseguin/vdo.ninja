@@ -4,6 +4,8 @@ description: Sets the maximum width of the video allowed in pixels
 
 # \&width
 
+Sender-Side Option! ([`&push`](push.md))
+
 ## Aliases
 
 * `&w`

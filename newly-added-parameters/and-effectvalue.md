@@ -4,6 +4,8 @@ description: Sets the amount of blur or effect applied
 
 # \&effectvalue
 
+Sender-Side Option! ([`&push`](../source-settings/push.md))
+
 ## Aliases
 
 * `&ev`

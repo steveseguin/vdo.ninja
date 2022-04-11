@@ -4,6 +4,8 @@ description: Delays the microphone by specified time in ms
 
 # \&micdelay
 
+Sender-Side Option! ([`&push`](push.md))
+
 ## Aliases
 
 * `&md`

@@ -4,6 +4,8 @@ description: Audio capture device to select N-number of audio channels
 
 # \&channelcount
 
+Sender-Side Option! ([`&push`](push.md))
+
 ## Aliases
 
 * `&ac`

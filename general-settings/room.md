@@ -4,6 +4,8 @@ description: Sets a room ID for the session to join
 
 # \&room
 
+General Option! ([`&push`](../source-settings/push.md), [`&view`](../advanced-settings/view-parameters/view.md), [`&scene`](../advanced-settings/view-parameters/scene.md))
+
 ## Aliases
 
 * `&roomid`

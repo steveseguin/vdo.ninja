@@ -4,6 +4,8 @@ description: Disables the local self video preview
 
 # \&nopreview
 
+Sender-Side Option! ([`&push`](push.md))
+
 ## Aliases
 
 * `&np`

@@ -4,6 +4,8 @@ description: Lets you specify either the front or rear facing camera as the defa
 
 # \&facing
 
+Sender-Side Option! ([`&push`](../source-settings/push.md))
+
 ## Options
 
 | Value                       | Description         |

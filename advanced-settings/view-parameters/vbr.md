@@ -4,6 +4,8 @@ description: Sets the audio bitrate to be variable, instead of constant
 
 # \&vbr
 
+Viewer-Side Option! ([`&view`](view.md), [`&scene`](scene.md), [`&room`](../../general-settings/room.md))
+
 ## Details
 
 Sets the audio bitrate to be variable, instead of constant, but only when an audio bitrate is manually specified.

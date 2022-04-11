@@ -4,6 +4,8 @@ description: Starts with the microphone muted by default
 
 # \&mute
 
+Sender-Side Option! ([`&push`](push.md))
+
 ## Aliases
 
 * `&muted`

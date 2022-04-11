@@ -4,6 +4,8 @@ description: Turn audio noise reduction filter ON or OFF
 
 # \&denoise
 
+Sender-Side Option! ([`&push`](push.md))
+
 ## Aliases
 
 * `&dn`

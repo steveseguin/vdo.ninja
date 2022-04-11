@@ -4,6 +4,8 @@ description: Has videos fade in smoothly
 
 # \&fadein
 
+Viewer-Side Option! ([`&view`](view.md), [`&scene`](scene.md), [`&room`](../../general-settings/room.md))
+
 ## Values
 
 | Value            | Description                           |

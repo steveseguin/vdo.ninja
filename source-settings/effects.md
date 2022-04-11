@@ -4,6 +4,8 @@ description: Applies effects to the video/audio feeds
 
 # \&effects
 
+Sender-Side Option! ([`&push`](push.md))
+
 ## Aliases
 
 * `&effect`

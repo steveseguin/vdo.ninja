@@ -4,6 +4,8 @@ description: Override the automatically selected Device Pixel Ratio
 
 # \&dpi
 
+Viewer-Side Option! ([`&view`](view.md), [`&scene`](scene.md), [`&room`](../../general-settings/room.md))
+
 ## Aliases
 
 * `&dpr`

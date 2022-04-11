@@ -4,6 +4,8 @@ description: Sets a password to view a stream or to join a room
 
 # \&password
 
+General Option! ([`&push`](../source-settings/push.md), [`&room`](room.md), [`&view`](../advanced-settings/view-parameters/view.md), [`&scene`](../advanced-settings/view-parameters/scene.md))
+
 ## Aliases
 
 * `&pass`

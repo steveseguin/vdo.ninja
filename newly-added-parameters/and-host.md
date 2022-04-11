@@ -4,6 +4,8 @@ description: Shows a pop up to invite more guests to the room
 
 # \&host
 
+Sender-Side Option! ([`&push`](../source-settings/push.md))
+
 ## Details
 
 Adding `&host` to a guest's URL shows a pop up to invite more guests to the room.

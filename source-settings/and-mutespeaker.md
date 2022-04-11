@@ -4,6 +4,8 @@ description: Auto mutes guest's speaker
 
 # \&mutespeaker
 
+Sender-Side Option! ([`&push`](push.md))
+
 ## Aliases
 
 * `&ms`

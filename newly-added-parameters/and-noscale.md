@@ -4,6 +4,8 @@ description: Disables the publishing resolution from being capped
 
 # \&noscale
 
+Sender-Side Option! ([`&push`](../source-settings/push.md))
+
 ## Aliases
 
 * `&noscaling`

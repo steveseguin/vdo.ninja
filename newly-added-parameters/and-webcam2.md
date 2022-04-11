@@ -6,6 +6,8 @@ description: >-
 
 # \&webcam2
 
+Sender-Side Option! ([`&push`](../source-settings/push.md))
+
 ## Aliases
 
 * `&wc2`

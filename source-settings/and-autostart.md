@@ -4,6 +4,8 @@ description: Skips the camera/audio device or screenshare selection
 
 # \&autostart
 
+Sender-Side Option! ([`&push`](push.md))
+
 ## Aliases
 
 * `&autojoin`

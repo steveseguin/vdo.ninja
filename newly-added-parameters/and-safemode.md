@@ -4,6 +4,8 @@ description: Tries to load the camera/audio with as little possible complexity a
 
 # \&safemode
 
+Sender-Side Option! ([`&push`](../source-settings/push.md))
+
 ## Details
 
 Adding `&safemode` to a source/guest link currently just tries to load the camera/audio with as little possible complexity as possible. For cameras that just 'flash' their video preview for a second, but won't work beyond that when setting things up, this might be a solution there.

@@ -4,6 +4,8 @@ description: Quality setting for the &webp option
 
 # \&webpquality
 
+Viewer-Side Option! ([`&view`](view.md), [`&scene`](scene.md), [`&room`](../../general-settings/room.md))
+
 ## Aliases
 
 * `&webpq`

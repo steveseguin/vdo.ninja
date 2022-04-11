@@ -4,6 +4,8 @@ description: Pre-configures the selected video device
 
 # \&videodevice
 
+Sender-Side Option! ([`&push`](push.md))
+
 ## Aliases
 
 * `&vdevice`

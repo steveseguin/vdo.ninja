@@ -6,6 +6,8 @@ description: >-
 
 # \&noisegate
 
+Sender-Side Option! ([`&push`](push.md))
+
 ## Options
 
 | Value                 | Description                                                                |

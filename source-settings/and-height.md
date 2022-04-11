@@ -4,6 +4,8 @@ description: Sets the maximum height of the video allowed in pixels
 
 # \&height
 
+Sender-Side Option! ([`&push`](push.md))
+
 ## Aliases
 
 * `&h`

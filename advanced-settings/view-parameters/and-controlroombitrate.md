@@ -6,6 +6,8 @@ description: >-
 
 # \&controlroombitrate
 
+Sender-Side Option! ([`&push`](../../source-settings/push.md))
+
 ## Aliases
 
 * `&crb`

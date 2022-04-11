@@ -4,6 +4,8 @@ description: Like &sink, but selects the audio output device
 
 # \&outputdevice
 
+General Option! ([`&push`](../../source-settings/push.md), [`&room`](../../general-settings/room.md), [`&view`](view.md), [`&scene`](scene.md))
+
 ## Aliases
 
 * `&od`

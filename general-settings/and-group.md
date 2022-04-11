@@ -4,6 +4,8 @@ description: Puts guests into sub-groups, so they only see others in the same gr
 
 # \&group
 
+General Option! ([`&push`](../source-settings/push.md), [`&room`](room.md), [`&view`](../advanced-settings/view-parameters/view.md), [`&scene`](../advanced-settings/view-parameters/scene.md))
+
 ## Details
 
 The idea is, you can put guests of a room into sub-groups. When added to a sub group, those guests will only be able to see and hear others in that same sub group.&#x20;

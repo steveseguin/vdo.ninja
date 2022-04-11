@@ -4,6 +4,8 @@ description: OpenH264 software encoding will be used
 
 # \&h264profile
 
+Viewer-Side Option! ([`&view`](../advanced-settings/view-parameters/view.md), [`&scene`](../advanced-settings/view-parameters/scene.md), [`&room`](../general-settings/room.md))
+
 ## Options
 
 | Value                        | Description                                                                                     |

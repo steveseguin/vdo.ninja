@@ -4,6 +4,8 @@ description: Sets the codec to encode the video
 
 # \&codec
 
+Viewer-Side Option! ([`&view`](view.md), [`&scene`](scene.md), [`&room`](../../general-settings/room.md))
+
 ## Options
 
 | Value | Description             |

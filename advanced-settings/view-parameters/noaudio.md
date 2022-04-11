@@ -4,6 +4,8 @@ description: Delivers video only streams; audio playback is disabled
 
 # \&noaudio
 
+Viewer-Side Option! ([`&view`](view.md), [`&scene`](scene.md), [`&room`](../../general-settings/room.md))
+
 ## Aliases
 
 * `&na`

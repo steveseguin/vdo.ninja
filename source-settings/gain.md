@@ -4,6 +4,8 @@ description: Applies a gain multiplier (as a percentage) to the local microphone
 
 # \&audiogain
 
+Sender-Side Option! ([`&push`](push.md))
+
 ## Aliases
 
 * `&g`

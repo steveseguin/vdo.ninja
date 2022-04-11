@@ -4,6 +4,8 @@ description: Auto mutes guest's video
 
 # \&videomute
 
+Sender-Side Option! ([`&push`](push.md))
+
 ## Aliases
 
 * `&vm`

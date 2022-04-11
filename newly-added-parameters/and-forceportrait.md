@@ -6,6 +6,8 @@ description: >-
 
 # \&forceportrait
 
+Sender-Side Option! ([`&push`](../source-settings/push.md))
+
 ## Aliases
 
 * `&forcedportrait`

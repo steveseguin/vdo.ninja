@@ -4,6 +4,8 @@ description: Forces the guest to have a self-preview, overriding &broadcast
 
 # \&preview
 
+Sender-Side Option! ([`&push`](push.md))
+
 ## Aliases
 
 * `&showpreview`

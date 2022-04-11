@@ -4,6 +4,8 @@ description: Has a guest join a group not visible to others
 
 # \&hideguest
 
+Sender-Side Option! ([`&push`](../source-settings/push.md))
+
 ## Aliases
 
 * `&hidden`

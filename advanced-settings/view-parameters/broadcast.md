@@ -7,6 +7,8 @@ description: >-
 
 # \&broadcast
 
+Viewer-Side Option! ([`&view`](view.md), [`&scene`](scene.md), [`&room`](../../general-settings/room.md))
+
 ## Aliases
 
 * `&bc`

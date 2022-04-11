@@ -4,6 +4,8 @@ description: Custom video codec for broadcasts
 
 # \&webp
 
+Viewer-Side Option! ([`&view`](view.md), [`&scene`](scene.md), [`&room`](../../general-settings/room.md))
+
 ## Details
 
 Must be used with [`&broadcast`](broadcast.md), but the director doesn't need to be the designated broadcaster.

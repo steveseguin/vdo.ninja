@@ -6,6 +6,8 @@ description: >-
 
 # \&novideo
 
+Viewer-Side Option! ([`&view`](view.md), [`&scene`](scene.md), [`&room`](../../general-settings/room.md))
+
 ## Aliases
 
 * `&nv`

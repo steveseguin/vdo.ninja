@@ -4,6 +4,8 @@ description: Manually sets the audio bitrate in kbps
 
 # \&audiobitrate
 
+Viewer-Side Option! ([`&view`](view.md), [`&scene`](scene.md), [`&room`](../../general-settings/room.md))
+
 ## Aliases
 
 * `&ab`

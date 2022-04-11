@@ -4,6 +4,8 @@ description: Only shares a website with viewers
 
 # \&website
 
+Sender-Side Option! ([`&push`](push.md))
+
 ## Aliases
 
 * `&iframe`

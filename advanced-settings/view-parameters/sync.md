@@ -4,6 +4,8 @@ description: Sets an offset (in ms) for the automatic audio sync fix node
 
 # \&sync
 
+Viewer-Side Option! ([`&view`](view.md), [`&scene`](scene.md), [`&room`](../../general-settings/room.md))
+
 ## Options
 
 | Value           | Description |

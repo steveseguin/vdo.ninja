@@ -4,6 +4,8 @@ description: Presets the quality setting for a guest
 
 # \&quality
 
+Sender-Side Option! ([`&push`](push.md))
+
 ## Aliases
 
 * `&q`

@@ -4,6 +4,8 @@ description: Audio playback sample-rate, in hz
 
 # \&samplerate
 
+Viewer-Side Option! ([`&view`](view.md), [`&scene`](scene.md), [`&room`](../../general-settings/room.md))
+
 ## Aliases
 
 * `&sr`

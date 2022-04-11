@@ -6,6 +6,8 @@ description: >-
 
 # \&equalizer
 
+Sender-Side Option! ([`&push`](push.md))
+
 ## Aliases
 
 * `&eq`

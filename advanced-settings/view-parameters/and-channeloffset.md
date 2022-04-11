@@ -4,6 +4,8 @@ description: Shifts audio channels 0 and 1 up channels, based on the offset valu
 
 # \&channeloffset
 
+Viewer-Side Option! ([`&view`](view.md), [`&scene`](scene.md), [`&room`](../../general-settings/room.md))
+
 ## Options
 
 | Value           | Description |

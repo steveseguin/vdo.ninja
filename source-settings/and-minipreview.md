@@ -4,6 +4,8 @@ description: Mini self preview at the top right corner
 
 # \&minipreview
 
+Sender-Side Option! ([`&push`](push.md))
+
 ## Aliases
 
 * `&mini`

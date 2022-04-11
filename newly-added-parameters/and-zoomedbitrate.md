@@ -6,6 +6,8 @@ description: >-
 
 # \&zoomedbitrate
 
+Viewer-Side Option! ([`&view`](../advanced-settings/view-parameters/view.md), [`&scene`](../advanced-settings/view-parameters/scene.md), [`&room`](../general-settings/room.md))
+
 ## Aliases
 
 * `&zb`

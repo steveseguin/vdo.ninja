@@ -315,7 +315,7 @@
     * [\&tcp](general-settings/and-tcp.md)
     * [\&tz](newly-added-parameters/and-tz.md)
   * [Newly Added Parameters](advanced-settings/newly-added-parameters/README.md)
-  * [Parameters only on alpha](advanced-settings/parameters-only-on-alpha/README.md)
+  * [Parameters only on alpha](advanced-settings/parameters-only-on-beta.md)
     * [\&border](advanced-settings/parameters-only-on-alpha/and-border.md)
     * [\&bordercolor](advanced-settings/parameters-only-on-alpha/and-bordercolor.md)
   * [Other Parameters](other-parameters.md)

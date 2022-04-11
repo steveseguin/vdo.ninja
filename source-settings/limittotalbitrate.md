@@ -4,6 +4,8 @@ description: Limits the total outbound bitrate
 
 # \&limittotalbitrate
 
+Sender-Side Option! ([`&push`](push.md))
+
 ## Aliases
 
 * `&ltb`

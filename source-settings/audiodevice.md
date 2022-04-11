@@ -4,6 +4,8 @@ description: Pre-configures the selected audio device
 
 # \&audiodevice
 
+Sender-Side Option! ([`&push`](push.md))
+
 ## Aliases
 
 * `&adevice`

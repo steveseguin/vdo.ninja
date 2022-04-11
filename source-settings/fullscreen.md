@@ -4,6 +4,8 @@ description: The preview video will be fullscreen
 
 # \&fullscreen
 
+Sender-Side Option! ([`&push`](push.md))
+
 ## Details
 
 If publishing a video outside **of** a room, and not viewing any other video except your own preview, that preview will be windowed. This command will make that preview larger, sized to fit the window.

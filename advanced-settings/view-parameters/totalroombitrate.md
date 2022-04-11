@@ -4,6 +4,8 @@ description: The total bitrate a guest in a room can view video streams with
 
 # \&totalroombitrate
 
+Viewer-Side Option! ([`&view`](view.md), [`&scene`](scene.md), [`&room`](../../general-settings/room.md))
+
 ## Aliases
 
 * `&totalroomvideobitrate`

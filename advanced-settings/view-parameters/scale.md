@@ -4,6 +4,8 @@ description: Scales the video resolution of the inbound video by the given perce
 
 # \&scale
 
+Viewer-Side Option! ([`&view`](view.md), [`&scene`](scene.md), [`&room`](../../general-settings/room.md))
+
 ## Options
 
 | Value                             | Description                                      |

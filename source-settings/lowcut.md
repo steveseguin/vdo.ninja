@@ -4,6 +4,8 @@ description: Adds a low-cut filter
 
 # \&lowcut
 
+Sender-Side Option! ([`&push`](push.md))
+
 ## Aliases
 
 * `&lc`

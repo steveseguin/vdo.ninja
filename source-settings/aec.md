@@ -4,6 +4,8 @@ description: Automatic echo-cancellation is ON or OFF
 
 # \&aec
 
+Sender-Side Option! ([`&push`](push.md))
+
 ## Aliases
 
 * `&ec`

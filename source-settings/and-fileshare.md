@@ -4,6 +4,8 @@ description: Allows the user to select a video or audio file as a source for str
 
 # \&fileshare
 
+Sender-Side Option! ([`&push`](push.md))
+
 ## Aliases
 
 * `&fs`

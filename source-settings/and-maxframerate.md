@@ -6,6 +6,8 @@ description: >-
 
 # \&maxframerate
 
+Sender-Side Option! ([`&push`](push.md))
+
 ## Aliases
 
 * `&mfr`

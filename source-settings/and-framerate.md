@@ -4,6 +4,8 @@ description: Sets the maximum frame rate of the video in frames per second
 
 # \&framerate
 
+Sender-Side Option! ([`&push`](push.md))
+
 ## Aliases
 
 * `&fps`

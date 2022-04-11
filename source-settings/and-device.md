@@ -4,6 +4,8 @@ description: Same as &audiodevice or &videodevice, but applies to both
 
 # \&device
 
+Sender-Side Option! ([`&push`](push.md))
+
 ## Aliases
 
 * `&d`
