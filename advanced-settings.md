@@ -40,15 +40,15 @@ A stream ID must also not already be in active use, else you will be provided wi
 
 ## General/Sender/Viewer Option
 
-All of the available parameters can be seperated in four categories. You find one of th
+All of the available parameters can be seperated in four categories. You find the category on the top of the page of a parameter.
 
-* General Option ([`&push`](source-settings/push.md), [`&room`](general-settings/room.md), [`&view`](advanced-settings/view-parameters/view.md), [`&scene`](advanced-settings/view-parameters/scene.md))\
+* **General Option** ([`&push`](source-settings/push.md), [`&room`](general-settings/room.md), [`&view`](advanced-settings/view-parameters/view.md), [`&scene`](advanced-settings/view-parameters/scene.md))\
   You can use these parameters as a sender or as a viewer as well as in scenes and rooms.
-* Sender-Side Option ([`&push`](source-settings/push.md))\
+* **Sender-Side Option** ([`&push`](source-settings/push.md))\
   You can use these parameters as a sender when you are publishing a video with `&push`. You can use these parameters in rooms when publishing or as a single source. These parameters will affect the outgoing stream.
-* Viewer-Side Option ([`&view`](advanced-settings/view-parameters/view.md), [`&scene`](advanced-settings/view-parameters/scene.md), [`&room`](general-settings/room.md))\
+* **Viewer-Side Option** ([`&view`](advanced-settings/view-parameters/view.md), [`&scene`](advanced-settings/view-parameters/scene.md), [`&room`](general-settings/room.md))\
   You can use these parameters as a viewer of one or more video sources (scenes, as a guest in a room, or a single `&view` stream). These parameters will affect the incoming stream(s).
-* Director Option ([`&director`](viewers-settings/director.md))\
+* **Director Option** ([`&director`](viewers-settings/director.md))\
   These parameters are specifically for the director of a room.
 
 ## Navigating the available setting options
