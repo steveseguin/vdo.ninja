@@ -8,7 +8,7 @@ General Option! ([`&push`](../../source-settings/push.md), [`&room`](../../gener
 
 ## Aliases
 
-* `&round`
+* `&round` (on alpha)
 
 ## Options
 
