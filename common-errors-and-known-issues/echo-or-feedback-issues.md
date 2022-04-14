@@ -12,7 +12,7 @@ Dealing with feedback is challenging, as the reasons are numerous, but not alway
 
 * ``[`&proaudio`](../general-settings/stereo.md) or [`&stereo`](../general-settings/stereo.md) mode is being used. This mode will disable echo-cancellation and so you must use headphones in this mode.\
 
-* Screen-sharing the desktop /w audio capture on, especially in the case of a group room, will create nasty feedback for others.\
+* Screen-sharing the desktop /w audio capture on, especially in the case of a group room, will create nasty feedback for others. You can add `&sstype=3` to the guest's invite link to try to prevent this issue, but otherwise you may need to use a virtual audio cable to limit what application's audio gets recorded. Details on that here: [https://docs.vdo.ninja/guides/audio](https://docs.vdo.ninja/guides/audio)\
 
 * Incorrect OBS configuration is common, especially if the echo is only heard in the RTMP broadcast or recording, and not by those using VDO.Ninja themselves\
 
@@ -21,8 +21,6 @@ Dealing with feedback is challenging, as the reasons are numerous, but not alway
 * Having two devices connected to VDO.Ninja near each other, or sometimes even in the same house, can create echo. Phones have very sensitive microphones and can pick up the audio of others who might also be on the group call.\
 
 * Playing an IFrame within VDO.Ninja (website share) may not have that IFrame's audio cancelled out by the echo-cancellation features.\
-
-* If screen sharing with desktop audio, that will create a feedback issue for guests.\
 
 * If only appearing in the OBS recording or stream, check to make sure you are not capturing the desktop's audio in OBS. This can happen if not using "Control audio via OBS" in the OBS Browser source, capturing a screen-share into OBS, or trying to record the director's room audio with OBS.
 
