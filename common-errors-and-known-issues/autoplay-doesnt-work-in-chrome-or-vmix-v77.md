@@ -18,4 +18,5 @@ A full-screen-sized play button will show up to help accommodate the need for us
 * in Chrome, go to: `chrome://settings/content/sound?search=sound` and add vdo.ninja to the list of "allowed to play sound" list
 * add `&noaudio` to your VDO.Ninja view link, so no audio track loads -- without audio, the video should auto-play.&#x20;
 * try adding `--autoplay-policy=no-user-gesture-required` to the Chrome/Chromium command line to have the auto-play policy changed on load (this may not work with recent versions of Chrome though)
+* make sure there are no Adblockers installed or other extensions install; sometimes these may interfere with auto-playing
 
