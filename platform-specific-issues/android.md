@@ -11,7 +11,10 @@ description: Mobile app version of VDO.Ninja and other Android related topics
 The native mobile app for Android is fairly simple, as it can be only used for one-way publishing. It does support screen-sharing though, so it has its value. The native app requires Android 9.0 or newer, while the web-based version of VDO.Ninja has been tested with Android 5.1 using Chrome.
 
 You can download the Android APK file here:[\
-https://drive.google.com/file/d/1M0kv5nWLtcfl2JOnsAGiG1zUmkeIVLyZ/view?usp=sharing](https://drive.google.com/file/d/1M0kv5nWLtcfl2JOnsAGiG1zUmkeIVLyZ/view?usp=sharing)
+https://drive.google.com/file/d/1M0kv5nWLtcfl2JOnsAGiG1zUmkeIVLyZ/view?usp=sharing](https://drive.google.com/file/d/1M0kv5nWLtcfl2JOnsAGiG1zUmkeIVLyZ/view?usp=sharing)\
+\
+The current beta version of the Android app, with some fixes, is here:\
+[https://drive.google.com/file/d/1Q1FraE2Eq1-UtJ60cT1Ilt8CBWH4f12Z/view?usp=sharing](https://drive.google.com/file/d/1Q1FraE2Eq1-UtJ60cT1Ilt8CBWH4f12Z/view?usp=sharing)
 
 The source-code for the Android app is here:\
 [https://github.com/steveseguin/vdon\_flutter/](https://github.com/steveseguin/vdon\_flutter/)
