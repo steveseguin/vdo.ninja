@@ -82,3 +82,10 @@ If publishing to VDO.Ninja, remember that you can select multiple audio sources 
 All done! You can switch between the webcam and the OBS live video as needed.\
 \
 If you need to listen to your VB-Audio cable at the same time still, you can refer to this help guide for a couple options: [https://docs.vdo.ninja/guides/audio#guide-routing-windows-applications-audio-to-vdo.ninja](https://docs.vdo.ninja/guides/audio#guide-routing-windows-applications-audio-to-vdo.ninja)
+
+## Share webcam directly from OBS
+
+If you wish not to use a third-party browser, but publish video directly from OBS itself, you can load OBS up in a special mode that allows for it.\
+\
+Please see this article for more on that: [https://docs.vdo.ninja/guides/share-webcam-from-inside-obs](https://docs.vdo.ninja/guides/share-webcam-from-inside-obs)
+
