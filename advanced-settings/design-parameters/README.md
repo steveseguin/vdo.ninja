@@ -32,6 +32,7 @@ You can add them to both, source ([`&push`](../../source-settings/push.md)) and 
 | ``[`&chroma`](chroma.md)``                                | Sets the background for the website to a particular hex color                                     |
 | ``[`&transparent`](and-transparent.md)``                  | Makes the background transparent                                                                  |
 | ``[`&nocursor`](../../general-settings/and-nocursor.md)`` | Hides the mouse cursor over videos at a CSS level                                                 |
+| ``[`&js`](and-js.md)``                                    | Lets you pass a third party hosted javascript file URL                                            |
 
 ## Source side options
 

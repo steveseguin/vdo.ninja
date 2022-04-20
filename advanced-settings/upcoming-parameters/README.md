@@ -13,6 +13,7 @@ description: >-
 | `&autorecord`\*\*                        | Records the local video and the remote video(s) automatically on their initial load |
 | `&autorecordlocal`\*\*                   | Records just the local video automatically on their initial load                    |
 | `&autorecordremote`\*\*                  | Records just the remote video(s) automatically on their initial load                |
+| `&avatar`\*                              | Adds the ability to select an image, instead of a video device                      |
 
 \*on [vdo.ninja/alpha](https://vdo.ninja/alpha/)\
-\*\*on local dev for now
+\*\*on [vdo.ninja/beta](https://vdo.ninja/beta/)

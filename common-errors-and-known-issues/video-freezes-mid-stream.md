@@ -10,7 +10,7 @@ As a stop-gap solution, the director has the remote control ability to toggle th
 
 If not using a group room, the publisher of a stream can also refresh their own camera via the settings menu, and clicking the refresh icon next to the camera.
 
-![](<../.gitbook/assets/image (97) (1) (1).png>)\
+<img src="../.gitbook/assets/image (97) (1) (1).png" alt="" data-size="original">\
 
 
 To fix the problem though, a bit of troubleshooting may be needed. More often than not, if using a USB 3.x camera, the cause is a USB-related issue.
