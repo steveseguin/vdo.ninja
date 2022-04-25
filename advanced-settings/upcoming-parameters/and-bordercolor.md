@@ -17,7 +17,7 @@ General Option! ([`&push`](../../source-settings/push.md), [`&room`](../../gener
 
 Defines the color of `&border`.
 
-![](<../../.gitbook/assets/image (103).png>)
+![](<../../.gitbook/assets/image (103) (1).png>)
 
 ## Related
 

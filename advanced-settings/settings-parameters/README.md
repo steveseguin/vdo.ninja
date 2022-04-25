@@ -19,6 +19,7 @@ You can use them for publisher, viewer and director URLs.
 | ``[`&stats`](../../general-settings/and-stats.md)``                | Shows the connection/media stats window by default                                         |
 | ``[`&sticky`](../../general-settings/sticky.md)``                  | Allows a user to save and then later restore their streaming session settings              |
 | ``[`&pusheffectsdata`](../../source-settings/pusheffectsdata.md)`` | Makes the data for the active digital effect available to the IFRAME API or a remote guest |
+| ``[`&disablehotkeys`](and-disablehotkeys.md)``                     | Allows for hotkeys to be disabled (like `CRTL + M`)                                        |
 
 ## Source Side Options
 
@@ -32,6 +33,7 @@ You can use them for publisher, viewer and director URLs.
 | ``[`&novideobutton`](../../viewers-settings/and-novideobutton.md)``    | Disables the video button; guests can't mute video                                                                  |
 | ``[`&nofileshare`](../../source-settings/nofileshare.md)``             | Hides the ability for a guest to upload a file                                                                      |
 | ``[`&ssb`](../../source-settings/ssb.md)``                             | Forces the screen-share button to appear for guests                                                                 |
+| ``[`&nohangupbutton`](and-nohangupbutton.md)``                         | Hides the hang-up button                                                                                            |
 | ``[`&chatbutton`](../../general-settings/chatbutton.md)``              | Shows or hides the chat button                                                                                      |
 | ``[`&bigbutton`](../../newly-added-parameters/and-bigbutton.md)``      | Makes the microphone mute button a lot bigger                                                                       |
 | ``[`&autohide`](../../parameters-only-on-beta/and-autohide.md)``       | Auto-hides the control bar after a few moments of the mouse being idle                                              |

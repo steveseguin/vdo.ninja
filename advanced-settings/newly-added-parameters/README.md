@@ -11,3 +11,6 @@ description: Recently added to VDO.Ninja
 | ``[`&statsinterval`](../parameters-only-on-beta/and-statsinterval.md)`` | Lets you change the default stats update interval from 3-seconds to something else                                    |
 | ``[`&videocontrols`](and-videocontrols.md)``                            | Shows the video control bar                                                                                           |
 | ``[`&js`](../design-parameters/and-js.md)``                             | Lets you pass a third party hosted javascript file URL                                                                |
+| ``[`&disablehotkeys`](../settings-parameters/and-disablehotkeys.md)``   | Allows for hotkeys to be disabled (like `CRTL + M`)                                                                   |
+| ``[`&nohangupbutton`](../settings-parameters/and-nohangupbutton.md)``   | Hides the hang-up button                                                                                              |
+| ``[`&layout`](../mixer-scene-parameters/and-layout.md)``                | Takes a JSON string representing how the video mixer should arrange video elements                                    |
