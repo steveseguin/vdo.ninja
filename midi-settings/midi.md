@@ -54,6 +54,7 @@ There are two MIDI standards; one where value 33 is note A0, and the more common
 | Note F4      | Record Local Video Toggle                    |
 | Note G4      | Enable the Director’s audio \[director only] |
 | Note A4      | Stop the Director’s Audio \[director only]   |
+| Note B4      | Toggle the Local Speaker Output              |
 
 ### **\&midi=2**
 
@@ -68,6 +69,7 @@ There are two MIDI standards; one where value 33 is note A0, and the more common
 | Note F2      | Record Local Video Toggle                    |
 | Note G2      | Enable the Director’s audio \[director only] |
 | Note A2      | Stop the Director’s Audio \[director only]   |
+| Note B2      | Toggle the Local Speaker Output              |
 
 ### **\&midi=3**
 
@@ -82,6 +84,7 @@ There are two MIDI standards; one where value 33 is note A0, and the more common
 | Note C1 + Velocity 6 | Record Local Video Toggle                    |
 | Note C1 + Velocity 7 | Enable the Director’s audio \[director only] |
 | Note C1 + Velocity 8 | Stop the Director’s Audio \[director only]   |
+| Note C1 + Velocity 9 | Toggle the Local Speaker Output              |
 
 ### **\&midi=4**
 
