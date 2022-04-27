@@ -19,7 +19,6 @@ var screensharesupport = true;
 var Callbacks = [];
 var CtrlPressed = false; // global
 var AltPressed = false;
-var KeyPressedTimeout = 0;
 
 var translation = false;
 
@@ -2701,6 +2700,7 @@ function updateMixerRun(e=false){  // this is the main auto-mixing code.  It's a
 				}
 				applyMuteState(i);
 				
+				
 				if (session.rpcs[i].iframeEle){
 					if (session.rpcs[i].iframeEle.style.display=="none"){
 						// pass
@@ -2984,129 +2984,8 @@ function updateMixerRun(e=false){  // this is the main auto-mixing code.  It's a
 			}
 		}
 		
-		if (session.videoElement && (session.videoElement.src || session.videoElement.srcObject)){ // fileshare or stream
-			if ("playlist" in session.videoElement){
-				playarea.appendChild(session.videoElement); // fileshare.
-			} else if (session.videoElement.style.display!="none"){
-				if (session.videoElement.srcObject && session.videoElement.srcObject.getVideoTracks().length){
-					if (session.minipreview){
-						if (mpl===0 && session.minipreview===2){
-							if (soloVideo!==true){
-								mediaPool.push(session.videoElement);
-								mpl = 1;
-							}
-						} else if (session.minipreview===3){
-							if (soloVideo!==true){
-								var container = document.createElement("div");
-								container.style.top="-500px";
-								container.style.left="-500px";
-								container.style.width="1px";
-								container.style.height="1px";
-								container.style.display = "flex";
-								container.style.zIndex = "0";
-								container.style.margin = "0";
-								container.style.position="absolute";
-								container.style.cursor = "pointer";
-								container.style.border = "0";
-								container.appendChild(session.videoElement);
-								playarea.appendChild(container);
-								
-								/* var togglePreview = document.createElement("div");
-								togglePreview.innerHTML = '<i class="las la la-eye-slash" style="color: white;float: right;position: relative;width: 0;height: 0;overflow: visible;right: 27px; top: 5px;font-size: 22px;"></i>';
-								togglePreview.onclick = function(event){
-									event.preventDefault();
-									event.stopPropagation();
-									container.querySelector("video").classList.toggle("advanced");
-									return false;
-								};
-								playarea.appendChild(togglePreview); */
-								
-							}
-						} else if (soloVideo!==true){
-							
-							if (document.getElementById("minipreview")){
-								container = document.getElementById("minipreview");
-							} else {
-								var container = document.createElement("div");
-								var togglePreview = document.createElement("div");
-		
-								togglePreview.className = "togglePreview";
-								
-								try {
-									container.style.top = "calc("+hi+"px + 2vh)";
-									container.style.maxHeight = parseInt(getById("gridlayout").offsetHeight)+"px";
-									togglePreview.style.top = "calc("+hi+"px + 2vh)";
-									togglePreview.style.maxHeight = parseInt(getById("gridlayout").offsetHeight)+"px";
-								} catch(e){
-									container.style.top = hi+"px";
-									togglePreview.style.top = hi+"px";
-								}
-								//
-								if (miniPerformerY !== null){
-									container.style.top = miniPerformerY + "%";
-								}
-								if (miniPerformerX !== null){
-									container.style.left = miniPerformerX + "%";
-								} else {
-									container.style.right = "2vw";
-									togglePreview.style.right = "2vw";
-								}
-								
-								container.appendChild(session.videoElement);
-								playarea.appendChild(container);
-								
-								
-								togglePreview.innerHTML = '<i class="las la la-eye-slash"></i><i class="las la la-eye"></i>';
-								
-								if (!session.previewToggleState){
-									container.classList.toggle("advanced");
-									togglePreview.classList.toggle("blinded");
-								}
-								playarea.appendChild(togglePreview);
-								togglePreview.onclick = function(event){
-									event.preventDefault();
-									event.stopPropagation();
-									container.classList.toggle("advanced");
-									togglePreview.classList.toggle("blinded");
-									session.previewToggleState!=session.previewToggleState;
-									return false;
-								};
-								
-								makeMiniDraggableElement(container);
-								container.id = "minipreview";
-							}
-							
-							container.style.width = "18%";
-							container.style.display = "flex";
-							container.style.zIndex = "3";
-							container.style.margin = "0";
-							container.style.position ="absolute";
-							container.style.cursor = "pointer";
-							container.style.border = "2px #BBB solid";
-							container.style.height = "unset";
-							
-							applyMirror(session.mirrorExclude);
-							
-						} else if (soloVideo===true){
-							if (document.getElementById("minipreview")){
-								container = document.getElementById("minipreview");
-								container.style.height = "100%";
-								//container.style.transform = "unset";
-								//container.style.transformOrigin = "unset";
-							}
-						}
-					}
-				} else if (session.streamSrc && !session.videoElement.srcObject){
-					warnlog("THIS SHOULD NOT HAPPEN; 2067");
-				}
-			}
-		}
-		
-		var sssid = false;
+		var sssid = false
 		var sscount = 0;
-		
-		mediaPool.sort(compare_vids); 
-		
 		var mpl = session.slots || mediaPool.length;
 		if (mpl>1){
 			var BB = 0;
@@ -3276,17 +3155,132 @@ function updateMixerRun(e=false){  // this is the main auto-mixing code.  It's a
 	} catch(e){errorlog(e);}
 	
 	
+	if (session.videoElement && (session.videoElement.src || session.videoElement.srcObject)){ // fileshare or stream
+		if ("playlist" in session.videoElement){
+			playarea.appendChild(session.videoElement); // fileshare.
+		} else if (session.videoElement.style.display!="none"){
+			if (session.videoElement.srcObject && session.videoElement.srcObject.getVideoTracks().length){
+				if (session.minipreview){
+					if (mpl===0 && session.minipreview===2){
+						if (soloVideo!==true){
+							mediaPool.push(session.videoElement);
+							mpl = 1;
+						}
+					} else if (session.minipreview===3){
+						if (soloVideo!==true){
+							var container = document.createElement("div");
+							container.style.top="-500px";
+							container.style.left="-500px";
+							container.style.width="1px";
+							container.style.height="1px";
+							container.style.display = "flex";
+							container.style.zIndex = "0";
+							container.style.margin = "0";
+							container.style.position="absolute";
+							container.style.cursor = "pointer";
+							container.style.border = "0";
+							container.appendChild(session.videoElement);
+							playarea.appendChild(container);
+							
+							/* var togglePreview = document.createElement("div");
+							togglePreview.innerHTML = '<i class="las la la-eye-slash" style="color: white;float: right;position: relative;width: 0;height: 0;overflow: visible;right: 27px; top: 5px;font-size: 22px;"></i>';
+							togglePreview.onclick = function(event){
+								event.preventDefault();
+								event.stopPropagation();
+								container.querySelector("video").classList.toggle("advanced");
+								return false;
+							};
+							playarea.appendChild(togglePreview); */
+							
+						}
+					} else if (soloVideo!==true){
+						
+						if (document.getElementById("minipreview")){
+							container = document.getElementById("minipreview");
+						} else {
+							var container = document.createElement("div");
+							var togglePreview = document.createElement("div");
+    
+							togglePreview.className = "togglePreview";
+							
+							try {
+								container.style.top = "calc("+hi+"px + 2vh)";
+								container.style.maxHeight = parseInt(getById("gridlayout").offsetHeight)+"px";
+								togglePreview.style.top = "calc("+hi+"px + 2vh)";
+								togglePreview.style.maxHeight = parseInt(getById("gridlayout").offsetHeight)+"px";
+							} catch(e){
+								container.style.top = hi+"px";
+								togglePreview.style.top = hi+"px";
+							}
+							//
+							if (miniPerformerY !== null){
+								container.style.top = miniPerformerY + "%";
+							}
+							if (miniPerformerX !== null){
+								container.style.left = miniPerformerX + "%";
+							} else {
+								container.style.right = "2vw";
+								togglePreview.style.right = "2vw";
+							}
+							
+							container.appendChild(session.videoElement);
+							playarea.appendChild(container);
+							
+							
+							togglePreview.innerHTML = '<i class="las la la-eye-slash"></i><i class="las la la-eye"></i>';
+							
+							if (!session.previewToggleState){
+								container.classList.toggle("advanced");
+								togglePreview.classList.toggle("blinded");
+							}
+							playarea.appendChild(togglePreview);
+							togglePreview.onclick = function(event){
+								event.preventDefault();
+								event.stopPropagation();
+								container.classList.toggle("advanced");
+								togglePreview.classList.toggle("blinded");
+								session.previewToggleState!=session.previewToggleState;
+								return false;
+							};
+							
+							makeMiniDraggableElement(container);
+							container.id = "minipreview";
+						}
+						
+						container.style.width = "18%";
+						container.style.display = "flex";
+						container.style.zIndex = "3";
+						container.style.margin = "0";
+						container.style.position ="absolute";
+						container.style.cursor = "pointer";
+						container.style.border = "2px #BBB solid";
+						container.style.height = "unset";
+						
+						applyMirror(session.mirrorExclude);
+						
+					} else if (soloVideo===true){
+						if (document.getElementById("minipreview")){
+							container = document.getElementById("minipreview");
+							container.style.height = "100%";
+							//container.style.transform = "unset";
+							//container.style.transformOrigin = "unset";
+						}
+					}
+				}
+			} else if (session.streamSrc && !session.videoElement.srcObject){
+				warnlog("THIS SHOULD NOT HAPPEN; 2067");
+			}
+		}
+	}
+	
 	
 	try{
+		
+		mediaPool.sort(compare_vids); // arrange videos by order.
 		
 		if (session.slots){
 			var slotArray = [];
 			mediaPool.forEach(vid=>{
-				if (vid.slotBlank){
-					vid.slotBlank=false;
-					vid.slot=0;
-				}
-				
 				if (("slot" in vid) && vid.slot){
 					if (!slotArray.includes(parseInt(vid.slot))){
 						slotArray.push(parseInt(vid.slot));
@@ -3301,25 +3295,21 @@ function updateMixerRun(e=false){  // this is the main auto-mixing code.  It's a
 				}
 			})
 			var slotCounter = 1;
-			mediaPool.reverse()
 			var j = mediaPool.length;
 			while (j--){
-				if (!("slot" in mediaPool[j]) || ( mediaPool[j].slot=="0") || !mediaPool[j].slot){
+				if (!("slot" in mediaPool[j]) || ( mediaPool[j].slot=="0") || ! mediaPool[j].slot){
 					while (slotArray.includes(slotCounter)){
 						slotCounter+=1;
 					}
 					slotArray.push(slotCounter);
-					mediaPool[j].slot = slotCounter;
-					mediaPool[j].slotBlank = true;
+					 mediaPool[j].slot = slotCounter;
 				}
-				if (!("slot" in  mediaPool[j]) || !parseInt(mediaPool[j].slot) || (mediaPool[j].slot=="0") || !mediaPool[j].slot || (session.slots<parseInt( mediaPool[j].slot))){
+				if (!("slot" in  mediaPool[j]) || !parseInt( mediaPool[j].slot) || ( mediaPool[j].slot=="0") || ! mediaPool[j].slot || (session.slots<parseInt( mediaPool[j].slot))){
 					mediaPool_invisible.push( mediaPool[j]);
 					mediaPool.splice(j, 1);
 				}
 			}
-			mediaPool.reverse()
 		}
-		
 		mediaPool_invisible.forEach(vid=>{
 			if (vid){
 				try {
@@ -6372,7 +6362,7 @@ function printMyStats(menu) { // see: setupStatsMenu
 	printViewValues(session.stats);
 	menu.innerHTML += "<button onclick='session.forcePLI(null,event);' data-translate='send-keyframe-to-viewer'>Send Keyframe to Viewers</button>";
 	
-	if (session.mc && session.mc.stats){
+	if (session.mc){
 		printViewValues(session.mc.stats);
 		menu.innerHTML += "<hr>";
 	}
@@ -6405,7 +6395,7 @@ function updateLocalStats(){
 	var totalScenes = 0;
 	var meshcastActive = false;
 	
-	if (session.mc && session.mc.getSenders && session.mc.stats){
+	if (session.mc){
 		try {
 			var atot = 0;
 			var senders = session.mc.getSenders(); // for any connected peer, update the video they have if connected with a video already.
@@ -6953,35 +6943,7 @@ function toggleControlBar() {
 }
 
 
-
-
-function toggleMute(apply = false, event=false) { // TODO: I need to have this be MUTE, toggle, with volume not touched.
-
-	var mouseUp = null;
-	var touchEnd = null;
-	var timeStart = Date.now();
-	if (event){
-		mouseUp = document.onmouseup;
-		touchEnd = document.ontouchend;
-		document.onmouseup = function(){
-			document.onmouseup = mouseUp;
-			document.ontouchend = touchEnd;
-			if (Date.now() - timeStart < 500){
-				return;
-			} else {
-				toggleMute();
-			}
-		}
-		document.ontouchend = function(){
-			document.onmouseup = mouseUp;
-			document.ontouchend = touchEnd;
-			if (Date.now() - timeStart < 300){
-				return;
-			} else {
-				toggleMute();
-			}
-		}
-	}
+function toggleMute(apply = false) { // TODO: I need to have this be MUTE, toggle, with volume not touched.
 
 	if (session.director) {
 		if (!session.directorEnabledPPT) {
@@ -7743,168 +7705,7 @@ function directEnable(ele, event,  director=false) { // A directing room only is
 			session.sendMessage(msg, uuid);
 		}
 	}
-	syncDirectorState(ele);
 }
-
-function syncDirectorState(ele){
-	//if (session.director){ // assumed director, since this is a directEnable sub-function
-	var msg = {};
-	msg.directorState = getDetailedState(ele.dataset.sid); 
-	for (var uuid in session.pcs){
-		if (session.pcs[uuid].coDirector){
-			session.sendMessage(msg, uuid);
-		}
-	}
-	for (var i in session.directorList){
-		var uuid = session.directorList[i];
-		if (session.rpcs[uuid]){
-			session.sendRequest(msg, uuid);
-		}
-	}
-	console.log(ele);
-}
-
-function getDetailedState(sid=false){
-	var streamList = {};
-	
-	for (var UUID in session.rpcs){
-		if (session.rpcs[UUID].streamID){
-			if (sid && (sid!==session.rpcs[UUID].streamID)){continue;}
-			var item = {};
-			item.streamID = session.rpcs[UUID].streamID;
-			item.label = session.rpcs[UUID].label;
-			item.group = session.rpcs[UUID].group;
-			item.iframeSrc = session.rpcs[UUID].iframeSrc;
-			//item.slot = session.rpcs[UUID].slot;
-			item.director = session.rpcs[UUID].director;
-			try {
-				if (document.getElementById("guestFeeds")){
-					var lock = parseInt(document.getElementById("position_"+UUID).dataset.locked);
-					if (lock){
-						item.position = lock; // probably should make a universal function to do this, for all lock requesting
-					} else if (document.getElementById('container_'+UUID)){
-						var child = document.getElementById('container_'+UUID);
-						var parent = child.parentNode;
-						if (parent.id == "guestFeeds"){
-							item.position = Array.prototype.indexOf.call(parent.children, child) + 1;
-						}
-					}
-				}
-				
-				var scenes = getById("container_" + UUID).querySelectorAll('[data-action-type="addToScene"][data-scene][data--u-u-i-d="'+UUID+'"]');
-				var sceneState = {};
-				for (var i=0;i<scenes.length;i++){
-					if (parseInt(scenes[i].dataset.value)){
-						sceneState[scenes[i].dataset.scene] = true;
-					} else {
-						sceneState[scenes[i].dataset.scene] = false;
-					}
-				}
-				item.scenes = sceneState;
-				
-				var others = getById("container_" + UUID).querySelectorAll('[data-action-type][data--u-u-i-d="'+UUID+'"]');
-				var otherState = {};
-				for (var i=0;i<others.length;i++){
-					log(others[i].dataset.actionType + " " +others[i].dataset.value);
-					if ("scene" in others[i].dataset){continue;}
-					if ("toggle-group" == others[i].dataset.actionType){continue;}
-					if ("value" in others[i].dataset){
-						otherState[others[i].dataset.actionType] = others[i].dataset.value;
-					}
-				}
-				item.others = otherState;
-				
-			} catch(e){}
-			streamList[session.rpcs[UUID].streamID] = item;
-		}
-	}
-	
-	if (sid && (sid!==session.streamID)){return streamList;}
-	
-	streamList[session.streamID] = {}; 
-	var scenes = getById("container_director").querySelectorAll('[data-action-type="addToScene"][data-scene]');
-	var sceneState = {};
-	for (var i=0;i<scenes.length;i++){
-		if (parseInt(scenes[i].dataset.value)){
-			sceneState[scenes[i].dataset.scene] = true;
-		} else {
-			sceneState[scenes[i].dataset.scene] = false;
-		}
-	}
-	streamList[session.streamID].label = session.label;
-	streamList[session.streamID].group = session.group;
-	//streamList[session.streamID].slot = session.slot;
-	streamList[session.streamID].scenes = sceneState;
-	streamList[session.streamID].streamID = session.streamID;
-	streamList[session.streamID].iframeSrc = session.iframeSrc;
-	streamList[session.streamID].director = session.director;
-	streamList[session.streamID].localstream = true;
-	return streamList;
-}
-
-function syncOtherState(sid){
-	if (!session.syncState){return;}
-	if (!session.syncState[sid]){return;}
-	var others = session.syncState[sid].others;
-	for (var other in others){
-		if (other == "toggle-group"){continue;}
-		var ele = document.querySelector('[data-sid="'+sid+'"][data-action-type="'+other+'"]');
-		if (ele){
-			if (others[other]){
-				ele.dataset.value = others[other];
-				if (ele.nodeName.toLowerCase() == "input"){
-					ele.value = parseInt(others[other]);
-				} else if (parseInt(others[other])){
-					ele.classList.add("pressed");
-				} else {
-					ele.classList.remove("pressed");
-				}
-			}
-		}
-	}
-	
-	var groups = session.syncState[sid].group;
-	var elements = document.querySelectorAll('[data-action-type="toggle-group"][data-sid="'+sid+'"]');
-		if (elements.length){
-		var UUID = elements[0].dataset.UUID;
-		if (UUID){
-			session.rpcs[UUID].group = groups;
-		}
-		for (var i=0;i<elements.length;i++){
-			elements[i].classList.remove("pressed");
-			for (var g=0;g<session.rpcs[UUID].group.length;g++){
-				if (elements[i].dataset.value === session.rpcs[UUID].group[g]){
-					elements[i].classList.add("pressed");
-				}
-			}
-		}
-	}
-}
-
-function syncSceneState(sid){
-	if (!session.syncState){return;}
-	if (!session.syncState[sid]){return;}
-	var scenes = session.syncState[sid].scenes;
-	for (var scene in scenes){
-		var ele = document.querySelector('[data-sid="'+sid+'"][data-action-type="addToScene"][data-scene="'+scene+'"]');
-		if (ele){
-			if (scenes[scene]){
-				ele.dataset.value = 1;
-				ele.classList.add("pressed");
-				if (ele.children[1]){
-					ele.children[1].innerHTML = "Remove";
-				}
-			} else {
-				ele.dataset.value = 0;
-				ele.classList.remove("pressed");
-				if (ele.children[1]){
-					ele.children[1].innerHTML = "Add to Scene "+scene;
-				}
-			}
-		}
-	}
-}
-
 
 
 function issueLayout(layout=false, scene=false) { // A directing room only is controlled by the Director, with the exception of MUTE.
@@ -8085,12 +7886,12 @@ function updateRemoteTimerButton(UUID, currentTime) {
 function directMute(ele,  event=false) { // A directing room only is controlled by the Director, with the exception of MUTE.
 	log("mute");
 	if (!event || (!((event.ctrlKey) || (event.metaKey)))) {
-		if (ele.dataset.value == 1) {
-			ele.dataset.value = 0;
+		if (ele.dataset.value == 0) {
+			ele.dataset.value = 1;
 			ele.classList.remove("pressed");
 			ele.innerHTML = '<i class="las la-microphone-slash"></i> <span data-translate="mute-scene" >mute in scene</span>';
 		} else {
-			ele.dataset.value = 1;
+			ele.dataset.value = 0;
 			ele.classList.add("pressed");
 			ele.innerHTML = '<i class="las la-microphone-slash"></i> <span data-translate="unmute" >un-mute</span>';
 		}
@@ -8099,7 +7900,7 @@ function directMute(ele,  event=false) { // A directing room only is controlled 
 	var msg = {};
 	msg.scene = true; 
 	msg.action = "mute";
-	msg.value = !ele.dataset.value;
+	msg.value = ele.dataset.value;
 	msg.target = ele.dataset.sid;
 	
 	for (var uuid in session.pcs){
@@ -8115,8 +7916,6 @@ function directMute(ele,  event=false) { // A directing room only is controlled 
 			session.sendMessage(msg, uuid);
 		}
 	}
-	
-	syncDirectorState(ele);
 }
 
 function requestFileUpload(ele){
@@ -8152,14 +7951,13 @@ function remoteSpeakerMute(ele,  event=false){
 	}
 
 	var msg = {};
-	if (ele.dataset.value == 1) {
+	if (ele.dataset.value == 0) {
 		msg.speakerMute = false
 	} else {
 		msg.speakerMute = true;
 	}
 	msg.UUID = ele.dataset.UUID;
 	session.sendRequest(msg, ele.dataset.UUID);
-	syncDirectorState(ele);
 }
 
 function updateRemoteSpeakerMute(UUID) {
@@ -8225,7 +8023,6 @@ function blindAllGuests(ele, event=false){
 			updateRemoteDisplayMute(UUID, msg.displayMute);
 		} catch(e){errorlog(e);}
 	}
-	syncDirectorState(ele);
 }
 
 function remoteDisplayMute(ele, event=false) {
@@ -8251,7 +8048,6 @@ function remoteDisplayMute(ele, event=false) {
 	}
 	msg.UUID = ele.dataset.UUID;
 	session.sendRequest(msg, ele.dataset.UUID);
-	syncDirectorState(ele);
 }
 
 function remoteLowerhands(UUID) {
@@ -8291,14 +8087,13 @@ function remoteMute(ele,  event=false) {
 	}
 
 	var msg = {};
-	if (ele.dataset.value == true) {
+	if (ele.dataset.value == 0) {
 		msg.volume = volume;
 	} else {
 		msg.volume = 0;
 	}
 	msg.UUID = ele.dataset.UUID;
 	session.sendRequest(msg, ele.dataset.UUID);
-	syncDirectorState(ele);
 }
 
 function toggleQualityGear3(){
@@ -8359,7 +8154,6 @@ function remoteMuteVideo(ele,  event=false) {
 		} catch(e){}
 		
 	}
-	syncDirectorState(ele);
 }
 
 function updateDirectorVideoMute(UUID) {
@@ -8393,8 +8187,6 @@ function directVolume(ele) { // NOT USED ANYMORE
 			session.sendMessage(msg, uuid);
 		}
 	}
-	
-	syncDirectorState(ele);
 }
 
 function applyMuteState(UUID){ // this is the mute state of PLAYBACK audio; not the microphone or outbound.
@@ -8422,8 +8214,7 @@ function remoteVolume(ele) { // A directing room only is controlled by the Direc
 	log("volume");
 	var msg = {};
 	var muted = session.rpcs[ele.dataset.UUID].directorMutedState;
-	ele.dataset.value = ele.value;
-	if (muted == true) { // 1 is a string, not an int, so == and not ===. this happens in a few places :/  
+	if (muted == 1) { // 1 is a string, not an int, so == and not ===. this happens in a few places :/  
 		session.rpcs[ele.dataset.UUID].directorVolumeState = ele.value;
 	} else {
 		session.rpcs[ele.dataset.UUID].directorVolumeState = ele.value;
@@ -8431,7 +8222,6 @@ function remoteVolume(ele) { // A directing room only is controlled by the Direc
 		msg.UUID = ele.dataset.UUID;
 		session.sendRequest(msg, ele.dataset.UUID);
 	}
-	syncDirectorState(ele);
 }
 
 function clearDirectorSettings(){ // make sure to wipe the director's room settings if creating a new room.
@@ -8734,22 +8524,6 @@ function publishScreen() {
 	}).catch(() => {});
 }
 
-function getWidth() {
-  return Math.max(
-    document.body.scrollWidth,
-    document.documentElement.scrollWidth,
-    document.body.offsetWidth,
-    document.documentElement.offsetWidth,
-    document.documentElement.clientWidth
-  );
-}
-
-function getHeight() {
-  return Math.max(
-    document.documentElement.clientHeight
-  );
-}
-
 function updateForceRotate(){
 	if (session.orientation){
 		try {
@@ -8764,35 +8538,29 @@ function updateForceRotate(){
 				return;
 			}
 			
-			const capabilities = track.getCapabilities();
+			
 			const settings = track.getSettings();
 			session.currentCameraConstraints = settings;
 			if ("width" in settings){
 				if ("height" in settings){
 					if (settings.width < settings.height){
 						if (session.orientation=="landscape"){
-							if (capabilities.facingMode == "environment"){
-								session.forceRotate=270;
-							} else {
-								session.forceRotate=90;
-							}
+							if (session.forceRotate==270){return;}
+							session.forceRotate=270;
 						} else {
-							//if (!session.forceRotate){return;}
+							if (!session.forceRotate){return;}
 							session.forceRotate = 0;
 						}
 					} else if (settings.width > settings.height){
 						if (session.orientation=="portrait"){
-							if (capabilities.facingMode == "environment"){
-								session.forceRotate=90;
-							} else {
-								session.forceRotate=270;
-							}
+							if (session.forceRotate==90){return;}
+							session.forceRotate=90;
 						} else {
-							//if (!session.forceRotate){return;}
+							if (!session.forceRotate){return;}
 							session.forceRotate = 0;
 						}
 					} else {
-					//	if (!session.forceRotate){return;}
+						if (!session.forceRotate){return;}
 						session.forceRotate = 0;
 					}
 				} else {
@@ -8805,7 +8573,7 @@ function updateForceRotate(){
 			var msg = {};
 			if (session.forceRotate!==false){
 				if (session.rotate){
-					msg.rotate_video = session.forceRotate + parseInt(session.rotate); 
+					msg.rotate_video = session.forceRotate + parseInt(session.rotate);
 				} else {
 					msg.rotate_video = session.forceRotate;
 				}
@@ -8816,31 +8584,15 @@ function updateForceRotate(){
 			if (msg.rotate_video && (msg.rotate_video>=360)){
 				msg.rotate_video-=360;
 			}
+			
 			session.sendMessage(msg);
 			
+			applyMirror(session.mirrorExclude);
+			
 		} catch(e){errorlog(e);}
-		updateForceRotatedCSS()
-		applyMirror(session.mirrorExclude);
 	}
 }
 
-function updateForceRotatedCSS(){
-	if (session.forceRotate==270){
-		document.body.setAttribute( "style", "transform: rotate(270deg);position: absolute;top: "+(getWidth()/4)+"px;left: -"+ (getHeight()/4) + "px;height: 95vw;width: 95vh;");
-	} else if (session.forceRotate==90){
-		document.body.setAttribute( "style", "transform: rotate(90deg);position: absolute;top: "+(getWidth()/4)+"px;left: -"+ (getHeight()/4) + "px;height: 95vw;width: 95vh;");
-	} else {
-		document.body.setAttribute( "style", "");
-	}
-	
-	if (session.forceRotate==270){
-		document.body.setAttribute( "style", "transform: rotate(270deg);position: absolute;top: "+(getWidth()/4)+"px;left: -"+ (getHeight()/4) + "px;height: 95vw;width: 95vh;");
-	} else if (session.forceRotate==90){
-		document.body.setAttribute( "style", "transform: rotate(90deg);position: absolute;top: "+(getWidth()/4)+"px;left: -"+ (getHeight()/4) + "px;height: 95vw;width: 95vh;");
-	} else {
-		document.body.setAttribute( "style", "");
-	}
-}
 function publishWebcam(btn = false) {
 	if (btn) {
 		if (btn.dataset.ready == "false") {
@@ -8995,7 +8747,7 @@ function publishWebcam(btn = false) {
 	updatePushId()
 	
 	if (!session.streamSrc){
-		checkBasicStreamsExist(); // create srcObject + videoElement
+		session.streamSrc = createMediaStream();
 	}
 	
 	session.publishStream(ele);
@@ -10764,7 +10516,7 @@ function handleRoomSelect(room) {
 	}
 }
 
-function getDirectorSettings(scene=false){
+function getDirectorSettings(scene){
 	var settings = {};
 	
 	var eles = document.querySelectorAll('[data-action-type="solo-video"]');
@@ -10778,7 +10530,7 @@ function getDirectorSettings(scene=false){
 		}
 	}
 	if (scene){
-		var eles = document.querySelectorAll('[data-action-type="addToScene"][data-scene="'+scene+'"'); 
+		var eles = document.querySelectorAll('[data-action-type="addToScene"][data-scene="'+scene+'"');
 		settings.scene = {};
 		for (var i=0;i<eles.length;i++) {
 			if (parseInt(eles[i].dataset.value)==1){
@@ -10801,8 +10553,9 @@ function getDirectorSettings(scene=false){
 	settings.mute = {};
 	var eles = document.querySelectorAll('[data-action-type="mute-scene"]');
 	for (var i=0;i<eles.length;i++) {
-		if (parseInt(eles[i].dataset.value)==1){ // if muted
+		if (parseInt(eles[i].dataset.value)==0){ // if muted
 			if (eles[i].dataset.sid){
+				
 				var msg = {};
 				msg.action = "mute";
 				msg.scene = true;
@@ -10851,7 +10604,6 @@ function requestInfocus(ele) {
 			getById("highlightDirector").checked=false;
 		}
 	}
-	syncDirectorState(ele);
 }
 
 
@@ -11271,13 +11023,12 @@ function createControlBox(UUID, soloLink, streamID) {
 	videoContainer.appendChild(session.rpcs[UUID].remoteRaisedHandElement);
 	videoContainer.appendChild(iframeDetails);
 	container.appendChild(controls);
-	
 	initSceneList(UUID);
-	syncSceneState(streamID);
-	syncOtherState(streamID);
 	
 	pokeIframeAPI("control-box", true, UUID);
 }
+
+
 
 function cycleCameras(){
 	if (session.screenShareState) {
@@ -12927,7 +12678,6 @@ async function getAudioOnly(selector, trackid = null, override = false) {
 }
 
 function applyMirror(mirror) { // true unmirrors as its already mirrored
-	if (!session.videoElement){return;}
 	try {
 		var transFlip = "";
 		var transNorm = "";
@@ -12941,11 +12691,7 @@ function applyMirror(mirror) { // true unmirrors as its already mirrored
 		} else if (session.mirrored === 0) {
 			mirror = true;
 		}
-		
-		if (!session.videoElement.style){
-			session.videoElement.style = "";
-		}
-		
+
 		if (mirror) {
 			if (session.mirrored && session.flipped) {
 				session.videoElement.style.transform = "scaleX(-1) scaleY(-1)" + transFlip;
@@ -12979,25 +12725,20 @@ function applyMirror(mirror) { // true unmirrors as its already mirrored
 		var rotate = 0;
 		if (session.forceRotate!==false){
 			if (session.rotate){
-				rotate = (session.forceRotate * -1) + parseInt(session.rotate);
+				rotate = session.forceRotate + parseInt(session.rotate);
 			} else {
-				rotate = session.forceRotate * -1;
+				rotate = session.forceRotate;
 			}
-			if (session.forceRotate){
-				rotate+=180;
-			}	
 		} else {
 			rotate = session.rotate;
 		}
-		
 		if (rotate && (rotate>=360)){
 			rotate-=360;
 		}
-		
 		session.videoElement.rotated = rotate;
 		
-		if (document.getElementById("previewWebcam") || document.getElementById('videosource')){
-			var eleName = document.getElementById("previewWebcam") || document.getElementById('videosource');
+		if (document.getElementById("previewWebcam")){
+			var eleName = document.getElementById("previewWebcam");
 			if (rotate){
 				if (eleName.style.transform){
 					eleName.style.transform += " rotate("+rotate+"deg)";
@@ -13007,15 +12748,10 @@ function applyMirror(mirror) { // true unmirrors as its already mirrored
 				eleName.classList.add("rotate");
 			} else {
 				eleName.classList.remove("rotate");
-			}
+			} 
 		} else if (document.getElementById("container")){
-			if (rotate==0){
-				document.getElementById("container").classList.remove("rotate");
-				document.getElementById("container").style.transform = "unset";
-				document.getElementById("container").style.transformOrigin = "unset";
-			} else {
-				document.getElementById("container").style.transform = "rotate("+rotate+"deg)";
-			}
+			document.getElementById("container").style.transform = "rotate("+rotate+"deg)";
+			
 		} else if (document.getElementById("minipreview")){
 			var eleName = document.getElementById("minipreview");
 			if (rotate==90 ){
@@ -13032,13 +12768,11 @@ function applyMirror(mirror) { // true unmirrors as its already mirrored
 				eleName.style.transform = "rotate(180deg)";
 				eleName.style.transformOrigin = "unset";
 			} else {
-				eleName.classList.remove("rotate");
 				eleName.style.transform = "unset";
 				eleName.style.transformOrigin = "unset";
 			}
 		} 
 		// if not one of these, then it's going to be handled by the automixer automatically for us.
-		
 	} catch(e){errorlog(e);}
 }
 
@@ -13960,10 +13694,12 @@ async function grabScreen(quality = 0, audio = true, videoOnEnd = false) {
 						log("stopping video track 2");
 					});
 				} else {
-					checkBasicStreamsExist();
+					session.videoElement.srcObject = outboundAudioPipeline();
 				}
 			} else {
-				checkBasicStreamsExist(); // create srcObject + videoElement
+				session.streamSrc = createMediaStream();
+				session.videoElement.srcObject = outboundAudioPipeline();
+				log("CREATE NEW STREAM");
 			}
 		} catch (e) {
 			warnlog(e);
@@ -14276,10 +14012,10 @@ function checkBasicStreamsExist(){
 			session.videoElement = document.getElementById("previewWebcam");
 		} else {
 			session.videoElement = createVideoElement();
+			session.videoElement.srcObject = outboundAudioPipeline();
+			toggleMute(true);
 		}
 	}
-	session.videoElement.srcObject = outboundAudioPipeline();
-	toggleMute(true);
 }
 
 var getUserMediaRequestID = 0;
@@ -14332,11 +14068,12 @@ async function grabVideo(quality = 0, eleName = 'previewWebcam', selector = "sel
 					wasDisabled=false;
 				});
 			} else {
-				checkBasicStreamsExist();
+				session.videoElement.srcObject = outboundAudioPipeline();
 			}
 			
 		} else {
-			checkBasicStreamsExist();
+			session.streamSrc = createMediaStream();
+			session.videoElement.srcObject = createMediaStream();
 			//session.videoElement.srcObject = outboundAudioPipeline(); // not sure I see the point of this being here
 			log("CREATE NEW STREAM");
 		}
@@ -14372,17 +14109,6 @@ async function grabVideo(quality = 0, eleName = 'previewWebcam', selector = "sel
 		} else { // If they disabled the video but not in preview mode; but actualy live. We will want to remove the stream from the publishing
 			// we don't want to do this otherwise, as we are "replacing" the track in other cases.
 			// this does cause a problem, as previous bitrate settings & resolutions might not be applied if switched back....  must test
-			
-			if (session.mc && session.mc.getSenders){
-				session.mc.getSenders().forEach((sender) => { // I suppose there could be a race condition between negotiating and updating this. if joining at the same time as changnig streams?
-					if (sender.track && sender.track.kind == "video") {
-						session.mc.canvasStream.getVideoTracks().forEach(trk=>{
-							sender.replaceTrack(trk); // replace may not be supported by all browsers.  eek.
-						});
-					}
-				});
-			}
-			
 			for (UUID in session.pcs) {
 				if ("realUUID" in session.pcs[UUID]){continue;} // do not apply to screen shares.
 				// for any connected peer, update the video they have if connected with a video already.
@@ -14396,12 +14122,11 @@ async function grabVideo(quality = 0, eleName = 'previewWebcam', selector = "sel
 					}
 				});
 			}
-			
 			var msg = {};
 			msg.videoMuted = true;
 			session.sendMessage(msg);
 		}
-		return;
+		// end
 	} else {
 		var sq = 0;
 		if (session.quality === false) {
@@ -14823,64 +14548,68 @@ function updateRenderOutpipe(){ // video only.
 	}
 	
 	if (session.streamSrc){
-		var tracks = session.streamSrc.getVideoTracks();
-		if (tracks.length){
-			tracks.forEach(function(track) {
-				
-				track = applyEffects(track); // updates with the correct track session.streamSrc 
-				
+		session.streamSrc.getVideoTracks().forEach(function(track) {
+			
+			track = applyEffects(track); // updates with the correct track session.streamSrc 
+			if (track){
+				// video tracks are already removed from sources/elements. grabVideo() does that to start with; so time to just add the video!
+				//session.streamSrc.addTrack(track);
 				warnlog("video effects were just applied");
 				session.videoElement.srcObject.addTrack(track);
 				
 				toggleVideoMute(true);
-				if (session.mc && session.mc.getSenders){ // should only be 0 or 1 video sender, ever.
-					//var added = false;
-					session.mc.getSenders().forEach((sender) => { // I suppose there could be a race condition between negotiating and updating this. if joining at the same time as changnig streams?
-						if (sender.track && sender.track.kind == "video") {
-							sender.replaceTrack(track); // replace may not be supported by all browsers.  eek.
-							//sender.track.enabled = true;
-							//added = true;
-						}
-						
-					})
-				} else {
-					meshcast();
-				}
-				
-				
-				for (UUID in session.pcs) {
-					try {
-						if ("realUUID" in session.pcs[UUID]){continue;}
-						if ((session.pcs[UUID].guest == true) && (session.roombitrate === 0)) {
-							log("room rate restriction detected. No videos will be published to other guests");
-						} else if (session.pcs[UUID].allowVideo == true) { // allow 
-	 
-							// for any connected peer, update the video they have if connected with a video already.
-							var added = false;
-							var senders = getSenders2(UUID);
-							senders.forEach((sender) => { // I suppose there could be a race condition between negotiating and updating this. if joining at the same time as changnig streams?
-								if (added) {
-									return;
-								}
-								if (sender.track && sender.track.kind == "video") {
-									sender.replaceTrack(track); // replace may not be supported by all browsers.  eek.
-									sender.track.enabled = true;
-									added = true;
-								}
-							});
-							if (added == false) {
-								session.pcs[UUID].addTrack(track, session.videoElement.srcObject); // can't replace, so adding
-								setTimeout(function(uuid){session.optimizeBitrate(uuid);},session.rampUpTime, UUID); // 3 seconds lets us ramp up the quality a bit and figure out the total bandwidth quicker
-							}
-						}
-					} catch (e) {
-						errorlog(e);
+			}
+			
+			if (session.mc && session.mc.getSenders){ // should only be 0 or 1 video sender, ever.
+				var added = false;
+				session.mc.getSenders().forEach((sender) => { // I suppose there could be a race condition between negotiating and updating this. if joining at the same time as changnig streams?
+					if (added) {
+						return;
 					}
+					if (sender.track && sender.track.kind == "video") {
+						sender.replaceTrack(track); // replace may not be supported by all browsers.  eek.
+						sender.track.enabled = true;
+						added = true;
+					}
+				})
+				if (added == false) {
+					session.mc.addTrack(track, session.videoElement.srcObject); // can't replace, so adding
 				}
-				
-				session.refreshScale(); 
-			});
-		}
+			}
+			
+			
+			for (UUID in session.pcs) {
+				try {
+					if ("realUUID" in session.pcs[UUID]){continue;}
+					if ((session.pcs[UUID].guest == true) && (session.roombitrate === 0)) {
+						log("room rate restriction detected. No videos will be published to other guests");
+					} else if (session.pcs[UUID].allowVideo == true) { // allow 
+ 
+						// for any connected peer, update the video they have if connected with a video already.
+						var added = false;
+						var senders = getSenders2(UUID);
+						senders.forEach((sender) => { // I suppose there could be a race condition between negotiating and updating this. if joining at the same time as changnig streams?
+							if (added) {
+								return;
+							}
+							if (sender.track && sender.track.kind == "video") {
+								sender.replaceTrack(track); // replace may not be supported by all browsers.  eek.
+								sender.track.enabled = true;
+								added = true;
+							}
+						});
+						if (added == false) {
+							session.pcs[UUID].addTrack(track, session.videoElement.srcObject); // can't replace, so adding
+							setTimeout(function(uuid){session.optimizeBitrate(uuid);},session.rampUpTime, UUID); // 3 seconds lets us ramp up the quality a bit and figure out the total bandwidth quicker
+						}
+					}
+				} catch (e) {
+					errorlog(e);
+				}
+			}
+			
+			session.refreshScale(); 
+		});
 	}
 }
 
@@ -14946,7 +14675,41 @@ async function grabAudio(selector = "#audioSource", trackid = null, override = f
 			});
 			
 		} else { // if no stream exists
-			checkBasicStreamsExist();
+			if (!session.streamSrc){ 
+				session.streamSrc = createMediaStream();
+			} else {
+				errorlog("THIS SHOULDNT HAPPEN - audio hybrid exists");
+				var audioSelect = document.querySelector(selector).querySelectorAll("input");
+				var audioExcludeList = [];
+				for (var i = 0; i < audioSelect.length; i++) {
+					try {
+						if ("screen" == audioSelect[i].dataset.type) { // skip already excluded ---------- !!!!!!  DOES THIS MAKE SENSE? TODO: CHECK
+							if (audioSelect[i].checked) {
+								audioExcludeList.push(audioSelect[i]);
+							}
+						}
+					} catch (e) {
+						errorlog(e);
+					}
+				}
+				session.streamSrc.getAudioTracks().forEach(function(track) {
+					for (var i = 0; i < audioExcludeList.length; i++) {
+						try {
+							if (audioExcludeList[i].label == track.label) {
+								warnlog("EXCLUDING TRACK; PROBABLY SCREEN SHARE");
+								return;
+							}
+						} catch (e) {}
+					}
+					if (trackid && (track.id == trackid)) {
+						warnlog("SKIPPED EXCLUDED TRACK?");
+						return;
+					}
+					session.streamSrc.removeTrack(track);
+					track.stop();
+				});
+			}
+			log("CREATE NEW SOURCE FOR AUDIO");
 		}
 	} catch (e) {
 		errorlog(e);
@@ -14969,25 +14732,75 @@ async function grabAudio(selector = "#audioSource", trackid = null, override = f
 function senderAudioUpdate(callback=false){
 	try {
 		
-		checkBasicStreamsExist();  
+		session.videoElement.srcObject = outboundAudioPipeline();
 		
-		// toggleMute(true); // checkBasicStreamsExist contains toggle
+		toggleMute(true);
 		
-		if (session.videoElement.srcObject.getAudioTracks()) {
+		if (session.videoElement.srcObject.getAudioTracks()) { 
 			var tracks = session.videoElement.srcObject.getAudioTracks();
 			
-			if (session.mc && session.mc.getSenders && tracks.length){
-				session.mc.getSenders().forEach((sender) => { // I suppose there could be a race condition between negotiating and updating this. if joining at the same time as changnig streams?
-					if (sender.track && sender.track.kind == "audio") {
-						tracks.forEach(trk=>{
-							sender.replaceTrack(trk);
-						})
+			if (session.mc && session.mc.getSenders){
+				session.mc.getSenders().forEach((sender) => {  // disable senders that aren't part of the active tracks
+					var good = false;
+					if (sender.track && sender.track.id && (sender.track.kind == "audio")) {
+						tracks.forEach(function(track) {
+							if (track.id == sender.track.id) {
+								good = true;
+							}
+						});
+					} else { // video or something else; ignore it.
+						return;
 					}
+					if (good) {
+						return;
+					}
+					sender.track.enabled = false;
+					//session.mc.removeTrack(sender); //  Apparently removeTrack causes renogiation; also kills send/recv. avoid
 				});
-			} else if (tracks.length){
-				meshcast();
+
+				if (tracks.length) {
+					tracks.forEach(function(track) {
+						var matched = false;
+						session.mc.getSenders().forEach((sender) => {   // is the track in the current sender list?
+							if (sender.track && sender.track.id && (sender.track.kind == "audio")) {
+								warnlog(sender.track.id + " " + track.id);
+								if (sender.track.id == track.id) {
+									warnlog("MATCHED 1");
+									matched = true;
+								}
+							}
+						});
+						if (matched) { // track already in the current sender list; skip
+							return;
+						}
+						var added = false;
+						session.mc.getSenders().forEach((sender) => {
+							if (added) {
+								return;
+							}
+							if (sender.track && (sender.track.kind == "audio") && (sender.track.enabled == false)) { // replace instead of add new tracks; make sure to enable old tracks being replaced
+								sender.replaceTrack(track);
+								sender.track.enabled = true;
+								added = true;
+								warnlog("ADDED 2");
+							}
+						});
+						if (added) {
+							return;
+						}
+						var sender = session.mc.addTrack(track, session.videoElement.srcObject);  //  didn't replace , since no old disabled tracks available, so let's add a new track.
+					});
+				} else {
+					if (session.mc.getSenders){
+						session.mc.getSenders().forEach((sender) => { // disable all senders, since no tracks available.
+							if (sender.track && sender.track.kind == "audio") {
+								sender.track.enabled = false; // (trying this instead)
+								//session.pcs[UUID].removeTrack(sender); //  Apparently removeTrack causes renogiation; also kills send/recv.
+							}
+						});
+					}
+				}
 			}
-				
 			
 			for (UUID in session.pcs) {
 				if ("realUUID" in session.pcs[UUID]){continue;} // do not process the screen share audio
@@ -15111,7 +14924,8 @@ session.publishDirector =  async function(clean, vdevice=false, adevice=true){ /
 	v.controls = session.showControls;
 	v.setAttribute("playsinline","");
 								
-	checkBasicStreamsExist();
+	session.streamSrc = createMediaStream();
+	v.srcObject = createMediaStream(); 
 	
 	var quality = 1;
 	var framerate = 30;
@@ -15236,16 +15050,9 @@ session.publishDirector =  async function(clean, vdevice=false, adevice=true){ /
 				});
 				return;
 			}
-			
-			 // create srcObject + videoElement
 			session.streamSrc = stream;
-			checkBasicStreamsExist();
-			
-			// v.srcObject = outboundAudioPipeline(); // not blank, so now we worry
-			//session.videoElement.srcObject = outboundAudioPipeline();
-			updateRenderOutpipe();
-			meshcast();
-			//toggleMute(true); // createDirectorCam does this for us in a second. 
+			v.srcObject = outboundAudioPipeline(); // not blank, so now we worry
+			//toggleMute(true); // createDirectorCam does this for us in a second.
 			
 			for (UUID in session.pcs){
 				try {
@@ -15253,7 +15060,7 @@ session.publishDirector =  async function(clean, vdevice=false, adevice=true){ /
 				} catch(e){errorlog(e);}
 			}
 			try{
-				createDirectorCam(session.videoElement, clean);
+				createDirectorCam(v, clean);
 			} catch(e){errorlog(e);}
 		});
 	}
@@ -15328,7 +15135,7 @@ session.publishDirector =  async function(clean, vdevice=false, adevice=true){ /
 	}
 	
 	session.seeding=true;
-	session.seedStream(); 
+	session.seedStream();
 	
 };
 
@@ -16356,9 +16163,7 @@ session.publishFile = function(ele, event){ // webcam stream is used to generate
 
 	var fileURL = URL.createObjectURL(files[0]);
 	var container = document.createElement("div");
-	container.id = "container";
-	
-	// transform: scaleX(-1) translate(0px, -50%);
+	container.id = "container_file";
 	
 	if (session.cover){
 		container.style.setProperty('height', '100%', 'important');
@@ -16366,7 +16171,6 @@ session.publishFile = function(ele, event){ // webcam stream is used to generate
 	
 	container.className = "vidcon";
 	var v = createVideoElement();
-	
 	if (session.cleanOutput){
 		container.style.height = "100%";
 		v.style.maxWidth = "100%";
@@ -16378,7 +16182,6 @@ session.publishFile = function(ele, event){ // webcam stream is used to generate
 	}
 	
 	getById("gridlayout").appendChild(container);
-	
 	
 	if (session.roomid!==false){
 		if ((session.roomid==="") && ((!(session.view)) || (session.view===""))){
@@ -16433,22 +16236,18 @@ session.publishFile = function(ele, event){ // webcam stream is used to generate
 	v.setAttribute("playsinline","");
 	v.src = fileURL;
 	
-	
-	
 	try {
-		if (Firefox){
-			session.streamSrc = v.mozCaptureStream();
-		} else {
-			session.streamSrc = v.captureStream(); // gaaaaaaaaaaaahhhhhhhh!
-		}
+		session.streamSrc = v.captureStream(); // gaaaaaaaaaaaahhhhhhhh!
 		toggleMute(true);
 	} catch (e){
 		errorlog(e);
 		return;
 	}
 	
+	v.className = "tile clean fileshare";
 	v.id = "videosource"; // could be set to UUID in the future
 	v.playlist = files;
+	
 	v.addEventListener('ended',myHandler,false);  // only fires if the video doesn't loop.
 	
 	
@@ -16459,13 +16258,7 @@ session.publishFile = function(ele, event){ // webcam stream is used to generate
 		vid.playlist.unshift(vid.playlist.pop());
 		vid.src = URL.createObjectURL(vid.playlist[0]);
 		vid.onloadeddata = function(){
-			
-			if (Firefox){
-				session.streamSrc = vid.mozCaptureStream();
-			} else {
-				session.streamSrc = vid.captureStream(); // gaaaaaaaaaaaahhhhhhhh!
-			}
-			
+			session.streamSrc=vid.captureStream();
 			toggleMute(true);
 			session.streamSrc.getTracks().forEach(function(track){ // I'm making an exception I guess -- reversing the role?
 				for (UUID in session.pcs){
@@ -16517,33 +16310,51 @@ session.publishFile = function(ele, event){ // webcam stream is used to generate
 	
 	// no preview doesn't work, so just stop it from doing its thing.
 	
-	v.className = "tile clean fileshare";
-	session.videoElement = v;
+	
 	container.appendChild(v);
 	changeAudioOutputDevice(v);
+	
+	if (session.mirrored && session.flipped){
+		v.style.transform = "scaleX(1) scaleY(-1) ";
+	} else if (session.mirrored){
+		v.style.transform = "scaleX(1) ";
+	} else if (session.flipped){
+		v.style.transform = "scaleY(-1) scaleX(-1)";
+	} else {
+		v.style.transform = "scaleX(-1) ";
+	}
 	
 	session.mirrorExclude=true;
 	
 	if (session.director){
 	} else if (session.scene!==false){
-		
+		//setTimeout(function(){updateMixer();},1);// TODO FIX
 	} else if (session.roomid!==false){
 		if (session.roomid===""){
 			if (!(session.view) || (session.view==="")){
+				
 				if (session.fullscreen){
 					session.windowed = false;
 				} else {
 					v.className = "myVideo clean fileshare";
 					session.windowed = true;
-				} 
+				}
 				getById("mutespeakerbutton").classList.add("advanced");
+				
+				applyMirror(session.mirrorExclude);
+				
 				container.style.width="100%";
+				//container.style.height="100%";
+				
 				container.style.alignItems = "center";
 				container.backgroundColor = "#666";
+				
 				play();
 			} else {
 				session.windowed = false;
+				applyMirror(session.mirrorExclude);
 				play();
+				//setTimeout(function(){updateMixer();},1);// TODO FIX
 			}
 		} else {
 			//session.cbr=0; // we're just going to override it
@@ -16551,9 +16362,12 @@ session.publishFile = function(ele, event){ // webcam stream is used to generate
 				session.stereo=3;
 			}
 			session.windowed = false;
+			applyMirror(session.mirrorExclude);
+			//setTimeout(function(){updateMixer();},1); // TODO FIX
 		}
-		applyMirror(session.mirrorExclude);
 	} else {
+		
+		
 		if (session.fullscreen){
 			session.windowed = false;
 		} else {
@@ -16561,10 +16375,16 @@ session.publishFile = function(ele, event){ // webcam stream is used to generate
 			session.windowed = true;
 		}
 		getById("mutespeakerbutton").classList.add("advanced");
+		
+		applyMirror(session.mirrorExclude);
+		
 		container.style.width="100%";
+		//container.style.height="100%";
+		//container.style.display = "flex";
+		
 		container.style.alignItems = "center";
 		container.backgroundColor = "#666";
-		applyMirror(session.mirrorExclude);
+		
 	}
 	
 	
@@ -16584,6 +16404,7 @@ session.publishFile = function(ele, event){ // webcam stream is used to generate
 			}
 		} catch(e){errorlog(e);}
 	});
+	
 	
 	v.touchTimeOut = null;
 	v.touchLastTap = 0;
@@ -16992,7 +16813,7 @@ function listAudioSettingsPrep() {
 		var tracks = session.streamSrc.getAudioTracks();
 		if (!tracks.length) {
 			warnlog("session.streamSrc contains no audio tracks");
-			return;
+			//return;
 		}
 	} catch (e) {
 		warnlog(e);
@@ -20109,11 +19930,8 @@ function pauseVideo(videoEle, update=true){
 	var windowHeight;
 
 	function contextListener() {
-		document.addEventListener("contextmenu", function(e) {
-			if (navigator.userAgent.toLowerCase().indexOf(' electron/') > -1){
-				if (e && (!(e.ctrlKey || e.metaKey))){return;}
-			} else if (e && (e.ctrlKey || e.metaKey)){return;} // allow for development ease
-			
+		document.addEventListener("contextmenu", function(e) { 
+			if (e && (e.ctrlKey || e.metaKey)){return;} // allow for development ease
 			taskItemInContext = clickInsideElement(e, "task");
 			if (taskItemInContext) {
 				e.preventDefault();
@@ -22065,8 +21883,6 @@ function changeGroup(ele, state=null){
 	} else {
 		session.sendRequest({"group":false}, ele.dataset.UUID);
 	}
-	syncDirectorState(ele);
-
 }
 
 function changeChannelOffset(UUID, channel){
@@ -22671,6 +22487,103 @@ async function loadTFLiteModel(){
 }
 
 
+function getDetailedState(){
+	var streamList = {};
+	
+	for (var UUID in session.rpcs){
+		if (session.rpcs[UUID].streamID){
+			var item = {};
+			item.streamID = session.rpcs[UUID].streamID;
+			item.label = session.rpcs[UUID].label;
+			item.group = session.rpcs[UUID].group;
+			item.iframeSrc = session.rpcs[UUID].iframeSrc;
+			//item.slot = session.rpcs[UUID].slot;
+			item.director = session.rpcs[UUID].director;
+			try {
+				if (document.getElementById("guestFeeds")){
+					var lock = parseInt(document.getElementById("position_"+UUID).dataset.locked);
+					if (lock){
+						item.position = lock; // probably should make a universal function to do this, for all lock requesting
+					} else if (document.getElementById('container_'+UUID)){
+						var child = document.getElementById('container_'+UUID);
+						var parent = child.parentNode;
+						if (parent.id == "guestFeeds"){
+							item.position = Array.prototype.indexOf.call(parent.children, child) + 1;
+						}
+					}
+				}
+				
+				var scenes = getById("container_" + UUID).querySelectorAll('[data-action-type="addToScene"][data-scene][data--u-u-i-d="'+UUID+'"]');
+				var sceneState = {};
+				for (var i=0;i<scenes.length;i++){
+					if (parseInt(scenes[i].dataset.value)){
+						sceneState[scenes[i].dataset.scene] = true;
+					} else {
+						sceneState[scenes[i].dataset.scene] = false;
+					}
+				}
+				item.scenes = sceneState;
+			} catch(e){}
+			streamList[session.rpcs[UUID].streamID] = item;
+		}
+	}
+	
+	streamList[session.streamID] = {}; 
+	var scenes = getById("container_director").querySelectorAll('[data-action-type="addToScene"][data-scene]');
+	var sceneState = {};
+	for (var i=0;i<scenes.length;i++){
+		if (parseInt(scenes[i].dataset.value)){
+			sceneState[scenes[i].dataset.scene] = true;
+		} else {
+			sceneState[scenes[i].dataset.scene] = false;
+		}
+	}
+	streamList[session.streamID].label = session.label;
+	streamList[session.streamID].group = session.group;
+	//streamList[session.streamID].slot = session.slot;
+	streamList[session.streamID].scenes = sceneState;
+	streamList[session.streamID].streamID = session.streamID;
+	streamList[session.streamID].iframeSrc = session.iframeSrc;
+	streamList[session.streamID].director = session.director;
+	streamList[session.streamID].localstream = true;
+	return streamList;
+}
+
+/* function getDetailedState(){
+	var detailedState = {};
+	for (var UUID in session.rpcs){
+		if (!session.rpcs[UUID].streamID){continue;}
+		detailedState[session.rpcs[UUID].streamID] = {};
+		var scenes = getById("container_" + UUID).querySelectorAll('[data-action-type="addToScene"][data-scene][data--u-u-i-d="'+UUID+'"]');
+		var sceneState = {};
+		for (var i=0;i<scenes.length;i++){
+			if (parseInt(scenes[i].dataset.value)){
+				sceneState[scenes[i].dataset.scene] = true;
+			} else {
+				sceneState[scenes[i].dataset.scene] = false;
+			}
+		}
+		detailedState[session.rpcs[UUID].streamID].scenes = sceneState;
+	}
+	
+	if (session.showDirector){
+		if (document.getElementById("container_director")){
+			detailedState[session.streamID] = {};
+			var scenes = getById("container_director").querySelectorAll('[data-action-type="addToScene"][data-scene]');
+			var sceneState = {};
+			for (var i=0;i<scenes.length;i++){
+				if (parseInt(scenes[i].dataset.value)){
+					sceneState[scenes[i].dataset.scene] = true;
+				} else {
+					sceneState[scenes[i].dataset.scene] = false;
+				}
+			}
+			detailedState[session.streamID].scenes = sceneState;
+		}
+	}
+	return detailedState;
+}
+ */
 function getGuestTarget(type, id){
 	var element = document.querySelectorAll('[data-action-type="'+type+'"][data-sid="'+id+'"]'); // data-sid="P5MQpia"
 	if (!element.length){
@@ -22833,7 +22746,7 @@ function oscClient(){ // OSC (websocket / https API hotkey support).  The iFrame
 				socket.close();
 			} catch(e){}
 		}
-		socket = new WebSocket(session.apiserver);
+		socket = new WebSocket("wss://api.vdo.ninja:443");
 		
 		socket.onclose = function (){
 			failedCount+=1;
@@ -22876,8 +22789,7 @@ function oscClient(){ // OSC (websocket / https API hotkey support).  The iFrame
 function setupCommands(){
 	var commands = {}
 	
-	commands.raisehand = function(value){raisehand();};
-	commands.togglehand = function(value){raisehand();};
+	commands.togglehand = function(value){raisehand();}; 
 	commands.togglescreenshare = function(value){toggleScreenShare();}; 
 	commands.chat 		= function(value){toggleChat(value);}; 
 	commands.speaker 	= function(value){
@@ -23054,6 +22966,8 @@ function midiHotkeysNote(note, velocity=false){
 			press2talk(true);
 		} else if (note == "A4") {  // Director cut's their audio/video output
 			hangup2();
+		} else if (note == "B4") { // start/stop local recording
+			toggleSpeakerMute();
 		}
 	} else if (session.midiHotkeys==2){
 		if (note == "G1") {  // open and close the chat window
@@ -23074,27 +22988,31 @@ function midiHotkeysNote(note, velocity=false){
 			press2talk(true);
 		} else if (note == "A2") {  // Director cut's their audio/video output
 			hangup2();
+		} else if (note == "B2") { // start/stop local recording
+			toggleSpeakerMute();
 		}
 	} else if (session.midiHotkeys==3){
 		if (note == "C1"){
 			if (velocity == "0") {  // open and close the chat window
 				toggleChat();
-			} else if (note == "1") { // mute your audio output
+			} else if (velocity == "1") { // mute your audio output
 				toggleMute();
-			} else if (note == "2") { // mute your video output
+			} else if (velocity == "2") { // mute your video output
 				toggleVideoMute();
-			} else if (note == "3") { // enable / disable screenshare
+			} else if (velocity == "3") { // enable / disable screenshare
 				toggleScreenShare();
-			} else if (note == "4") { // completely kill your connection/session
+			} else if (velocity == "4") { // completely kill your connection/session
 				hangup();
-			} else if (note == "5") { // raise your hand; director sees this
+			} else if (velocity == "5") { // raise your hand; director sees this
 				raisehand();
-			} else if (note == "6") { // start/stop local recording
+			} else if (velocity == "6") { // start/stop local recording
 				recordLocalVideoToggle();
-			} else if (note == "7") {  // Director Enables their Audio output
+			} else if (velocity == "7") {  // Director Enables their Audio output
 				press2talk(true);
-			} else if (note == "8") {  // Director cut's their audio/video output
+			} else if (velocity == "8") {  // Director cut's their audio/video output
 				hangup2();
+			} else if (velocity == "9") { // toggle speaker
+				toggleSpeakerMute();
 			}
 		}
 	}

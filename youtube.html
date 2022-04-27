@@ -1,0 +1,129 @@
+<html>
+<head><title>YouTube Chat + VDON</title>
+<meta name="viewport" content="width=device-width, initial-scale=0.7, maximum-scale=1.0, user-scalable=yes" />
+<meta content="text/html;charset=utf-8" http-equiv="Content-Type" />
+<style>
+body{
+	padding:0;
+	margin:0;
+	background-color:#003;
+	width:100%;
+	height:100%;
+	color:white;
+	font-family: arial;
+}
+
+iframe {
+	width:100%;
+	height:100%;
+	border:0;
+	margin:0;
+	padding:0;
+	position:absolute;
+	display:block;
+}
+
+
+input{
+	padding:10px;
+	width:80%;
+	font-size:1.2em;
+	z-index: 1000;
+	color:black;
+}
+
+
+@media screen and (orientation:portrait) {
+	#container2{
+		width:100%;height:100%;display:none;
+	}
+	#container1{
+		width: 50vw;height: 50vh; display:none; float:left; position: fixed; top: 0; right: 0%;
+	}
+	iframe{
+		width:100%;
+	}
+}
+
+@media screen and (orientation:landscape) {
+	#container2{
+		width:60vw;height:100%;display:none;
+		z-index:5;
+	}
+	#container1{
+		width: 50vw;height: 80vh; display:none; float:left; position: fixed; top: 0; right: -10vw;
+	}
+	iframe{
+		max-width:60vw;
+	}
+}
+
+</style>
+</head>
+<body>
+
+
+
+<div id="container2"></div>
+<div id="container1" ></div>
+<div id="clean">
+	<input placeholder="Enter a VDON stream ID" id="vdonlink" onchange="updateLink(event);" type="text" />
+	<input placeholder="Enter the Youtube Video ID" id="youtube" type="text" />
+	<button onclick="loadIframes()" style="display:block;padding:10px;margin:10px;">START</button>
+	<div id="viewLink">
+		
+	</div>
+</div>
+<script>
+
+window.addEventListener("orientationchange", function() {
+  // Announce the new orientation number
+ // alert(window.orientation);
+}, false);
+
+function updateLink(event){
+	var streamid = document.getElementById("vdonlink").value;
+	
+	
+	var path = window.location.host+window.location.pathname.split("/").slice(0,-1).join("/");
+	path = path.replace("/examples","");
+	
+	var viewLink = "https://"+path+"/?view="+streamid;
+	document.getElementById("viewLink").innerHTML = "View link is: "+viewLink;
+}
+
+function loadIframes(url=false){ 
+
+	var streamid = document.getElementById("vdonlink").value;
+	var youtube = document.getElementById("youtube").value;
+	
+	document.getElementById("clean").parentNode.removeChild(document.getElementById("clean"));
+	document.getElementById("container1").style.display="inline-block";
+	document.getElementById("container2").style.display="inline-block";
+	
+	var path = window.location.host+window.location.pathname.split("/").slice(0,-1).join("/");
+	path = path.replace("/examples","");
+	
+	var room1 = "https://"+path+"/?push="+streamid+"&webcam&autostart&vd=front&ad=1&transparent&noheader";
+	var room2 = "https://www.youtube.com/live_chat?is_popout=1&v="+youtube+"&embed_domain="+location.hostname;
+	var iframe = document.createElement("iframe");
+	iframe.allow = "autoplay;camera;microphone;fullscreen;picture-in-picture;";
+	iframe.src = room1;
+	var iframeContainer = document.createElement("div");
+	iframeContainer.appendChild(iframe);
+	document.getElementById("container1").appendChild(iframeContainer);
+	
+	setTimeout(function(){
+		var iframe = document.createElement("iframe");
+		iframe.allow = "autoplay;camera;microphone;fullscreen;picture-in-picture;";
+		iframe.src = room2;
+		var iframeContainer = document.createElement("div");
+		iframeContainer.appendChild(iframe);
+		document.getElementById("container2").appendChild(iframeContainer);
+	},3000);
+	
+}
+
+</script>
+</body>
+</html>

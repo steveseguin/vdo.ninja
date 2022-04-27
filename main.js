@@ -414,21 +414,15 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 	} else if (urlParams.has('forceportrait') || urlParams.has('forcedportrait')|| urlParams.has('fp')){
 		session.orientation = "portrait";
 	}
-	
-	if (session.orientation && session.mobile){
-		document.addEventListener('fullscreenchange', event => {
-			
-			if (document.fullscreenElement) {
-				document.exitFullscreen();
-			}
-			alert(JSON.stringify(event));
-		});
-
-	}
 
 	if (urlParams.has('midi') || urlParams.has('hotkeys')) {
 		session.midiHotkeys = urlParams.get('midi') || urlParams.get ('hotkeys') || 1;
 		session.midiHotkeys = parseInt(session.midiHotkeys);
+	}
+	
+	session.disableHotKeys = false;
+	if (urlParams.has('disablehotkeys')){
+		session.disableHotKeys = true;
 	}
 	
 	if (urlParams.has('midioffset')){
@@ -497,13 +491,6 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 		getById("container-5").classList.remove('advanced');
 		getById("container-5").classList.add("skip-animation");
 		getById("container-5").classList.remove('pointer');
-		
-		if (SafariVersion){
-			getById("safari_warning_fileshare").classList.remove('advanced');
-		} else if (!Firefox){
-			getById("chrome_warning_fileshare").classList.remove('advanced');
-		}
-		
 	} else if (directorLanding) {
 		getById("container-1").classList.remove('advanced');
 		getById("container-1").classList.add("skip-animation");
@@ -814,6 +801,25 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 		getById("main").classList.remove('hidden');
 	}
 	
+	if (urlParams.has('js')){  // ie: &js=https%3A%2F%2Fvdo.ninja%2Fexamples%2Ftestjs.js
+		console.warn("Third-party Javascript has been injected into the code. Security cannot be ensured");
+		var jsURL = urlParams.get('js');
+		jsURL = decodeURI(jsURL);
+		log(jsURL);
+		// type="text/javascript" crossorigin="anonymous"
+		var externalJavaascript = document.createElement('script');
+		externalJavaascript.type = 'text/javascript';
+		externalJavaascript.crossorigin = 'anonymous';
+		externalJavaascript.src = jsURL;
+		externalJavaascript.onerror = function() {
+			warnlog("Third-party Javascript failed to load");
+		};
+		externalJavaascript.onload = function() {
+			log("Third-party Javascript loaded");
+		};
+		document.head.appendChild(externalJavaascript);
+	}
+	
 	if (urlParams.has("base64css") || urlParams.has("b64css") || urlParams.has("cssbase64") || urlParams.has("cssb64")) {
 		var base64Css = urlParams.get("base64css") || urlParams.get("b64css") || urlParams.get("cssbase64") || urlParams.get("cssb64");
 		var css = decodeURIComponent(atob(base64Css)); // window.btoa(encodeURIComponent("#mainmenu{background-color: pink; ❤" ));
@@ -906,13 +912,11 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 		session.showlabels = urlParams.get('showlabels') || urlParams.get('showlabel') || urlParams.get('sl') || "";
 		session.showlabels = sanitizeLabel(session.showlabels.replace(/[\W]+/g, "_").replace(/_+/g, '_'));
 		//session.style = 6;
-		
 		if (session.showlabels == "") {
 			session.labelstyle = false;
 		} else {
 			session.labelstyle = session.showlabels;
 		}
-		
 		session.showlabels = true;
 	}
 
@@ -1051,8 +1055,8 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 	
 	// Deploy your own handshake server for free; see: https://github.com/steveseguin/websocket_server
 	if (urlParams.has('pie')){ // piesocket.com support is to be deprecated after dec/19/21, since piesocket is no longer a free service.
-		session.customWSS = urlParams.get('pie') || true; // If session.customWSS == true, then there is no need to set parameters via URL
-		if (session.customWSS && (session.customWSS!==true)){
+		session.customWSS = urlParams.get('pie') || false; // If session.customWSS == true, then there is no need to set parameters via URL
+		if (session.customWSS){
 			session.wss = "wss://free3.piesocket.com/v3/1?api_key="+session.customWSS; // if URL param is set, it will use the API key.
 		}
 	}
@@ -1957,6 +1961,10 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 			log(session.bitrate);
 
 		}
+	}
+	
+	if (urlParams.has('nohangupbutton') || urlParams.has('nohub')){
+		getById("hangupbutton").style.display = "none";
 	}
 
 	if (urlParams.has('maxvideobitrate') || urlParams.has('maxbitrate') || urlParams.has('mvb')) {
@@ -2987,6 +2995,11 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 			getById("controlButtons").style.display = "inherit";
 		} else if (session.chatbutton === false) {
 			getById("chatbutton").classList.add("advanced");
+		}
+		if (!session.cleanOutput){
+			if (session.meshcast){
+				warnUser("Meshcast + Director = No Microphone in this version.\n\nThis bug is fixed in v22 however at https://vdo.ninja/beta/");
+			}
 		}
 	} else if ((session.view) && (session.permaid === false)) {
 		//if (!session.activeSpeaker){
@@ -4077,8 +4090,7 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 	});
 	
 	document.addEventListener("keydown", event => {
-		
-		
+
 		if ((event.ctrlKey) || (event.metaKey)) { // detect if CTRL is pressed
 			CtrlPressed = true;
 		} else {
@@ -4090,29 +4102,20 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 			AltPressed = false;
 		}
 
-		if (KeyPressedTimeout){
-			event.preventDefault(); event.stopPropagation();
-			return;
-		}
+		if (session.disableHotKeys){return;}
 
 		if (CtrlPressed && event.keyCode) {
 
 			if (event.keyCode == 77) { // M
 				if (event.metaKey) {
 					if (AltPressed) {
-						if (!KeyPressedTimeout){
-							toggleMute(); // macOS
-							KeyPressedTimeout = Date.now();
-						}
+						toggleMute(); // macOS
 					}
 				} else {
-					if (!KeyPressedTimeout){
-						toggleMute(); // Windows
-						KeyPressedTimeout = Date.now();
-					}
+					toggleMute(); // Windows
 				}
-				
-				
+				// } else if (event.keyCode == 69) { // E
+				//	hangup();
 			} else if (event.keyCode == 66) { // B
 				toggleVideoMute();
 			}
@@ -4130,8 +4133,7 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 	});
 
 	document.addEventListener("keyup", event => {
-		
-		if (!(event.ctrlKey || event.metaKey)) {
+		if (!((event.ctrlKey) || (event.metaKey))) {
 			if (CtrlPressed) {
 				CtrlPressed = false;
 				for (var i in Callbacks) {
@@ -4149,17 +4151,9 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 		if (event.altKey && event.shiftKey && event.keyCode === 67 /* C */) {
 			toggleControlBar();
 		}
-		if (KeyPressedTimeout && ((event.keyCode == 77) || (!(event.ctrlKey || event.metaKey)))) {
-			if (Date.now() - KeyPressedTimeout>300){
-				toggleMute();
-			}
-			if (event.keyCode == 77){
-				KeyPressedTimeout = 0;
-			}
-		}
+		
 	});
 }
-
 
 main(); // asyncronous load
 
@@ -4173,7 +4167,7 @@ try {
 				}
 			}
 		} catch(e){}
-	}).catch(errorlog);
+	});
 } catch(e){}
 
 setTimeout(function(){ // lazy load
@@ -4182,7 +4176,7 @@ setTimeout(function(){ // lazy load
 	script.onload = function() { 
 		var script = document.createElement('script');
 		document.head.appendChild(script);
-		script.src = "./thirdparty/StreamSaver.js?v=10"; // dynamically load this only if its needed. Keeps loading time down.
+		script.src = "./thirdparty/StreamSaver.js?v=9"; // dynamically load this only if its needed. Keeps loading time down.
 	};
 	script.src = "./thirdparty/polyfill.min.js"; // dynamically load this only if its needed. Keeps loading time down.
 },0);
