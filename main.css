@@ -13,7 +13,7 @@
 	--video-margin: 0px;
 	--video-rounded: 0px;
 	--video-border: 0px;
-	--video-border-color: #444;
+	--video-border-color: #0000;
 	--video-rounded: 0px;
 	--color-mode: light;
 	--button-radius: 2px;
@@ -488,11 +488,7 @@ hr {
 	width: 100%;
 	height: 100%;
 	overflow: hidden;
-	padding: var(--video-margin);
 	border-radius: var(--video-rounded);
-	border-width: var(--video-border);
-	border-color: var(--video-border-color);
-	border-style: solid;
 }
 
 #gridlayout {
@@ -1671,7 +1667,9 @@ label {
 .outer:hover .inner:after {
 	bottom: 0;
 }
-
+.microphoneBackground{
+	background-image: url("data:image/svg+xml,%0A%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Cpath d='M 13 4 C 11.90625 4 11 4.90625 11 6 L 11 18 C 11 19.09375 11.90625 20 13 20 L 19 20 C 20.09375 20 21 19.09375 21 18 L 21 6 C 21 4.90625 20.09375 4 19 4 Z M 13 6 L 19 6 L 19 18 L 13 18 Z M 7 14 L 7 18 C 7 21.300781 9.699219 24 13 24 L 15 24 L 15 26 L 11 26 L 11 28 L 21 28 L 21 26 L 17 26 L 17 24 L 19 24 C 22.300781 24 25 21.300781 25 18 L 25 14 L 23 14 L 23 18 C 23 20.21875 21.21875 22 19 22 L 13 22 C 10.78125 22 9 20.21875 9 18 L 9 14 Z'/%3E%3C/svg%3E")!important;
+}
 .advanced {
 	display: none !important;
 }
@@ -1736,11 +1734,6 @@ label {
 	100% {
 		opacity: 0
 	}
-}
-
-img {
-	border-radius: 5px 5px 0 0;
-	margin: 5px;
 }
 
 #empty-container {
@@ -1895,6 +1888,7 @@ iframe {
 img {
 	max-width: 100%;
 }
+
 .in-animation {
 	animation: inlightbox 0.5s forwards;
 	position: fixed !important;
@@ -2061,12 +2055,17 @@ img {
 	height: 100%;
 	max-width: 100%;
 	max-height: 100%;
-	margin: auto;
 	object-fit: contain;
+	overflow:hidden;
 	display: flex;
 	align-items: center;
 	justify-content: center;
-	pointer-events: none;
+	margin: var(--video-margin);
+	border-radius: var(--video-rounded);
+	border-width: var(--video-border);
+	border-color: var(--video-border-color);
+	background-color: var(--video-border-color);
+	border-style: solid;
 }
 
 .fadein {
@@ -2273,7 +2272,23 @@ audio.fileshare::-webkit-media-controls-play-button, video.fileshare::-webkit-me
 	background-color: #f3f3f3;
 	border: 1px solid #ccc;
 }
-
+.selected {
+	border: solid 3px black;
+	padding: 4px;
+}
+#avatarDiv {
+	user-select: none; 
+	font-size:100%; 
+	text-align:left; 
+	margin: 17px auto; 
+	max-width:450px; 
+	min-width: 420px; 
+	background-color: #f3f3f3; 
+	display: block; 
+	padding: 10px 10px; 
+	border: 1px solid #ccc; 
+	vertical-align: middle;
+}
 #effectsDiv {
 	user-select: none; 
 	font-size:100%; 
@@ -2288,6 +2303,15 @@ audio.fileshare::-webkit-media-controls-play-button, video.fileshare::-webkit-me
 	vertical-align: middle;
 }
 #effectsDiv3 {
+	text-align: left;
+	width: 450px;
+	background-color: #f3f3f3;
+	padding: 10px 10px;
+	border: 1px solid #ccc;
+	vertical-align: middle;
+	margin: 17px 0 0 0;
+}
+#avatarDiv3 {
 	text-align: left;
 	width: 450px;
 	background-color: #f3f3f3;
@@ -3742,6 +3766,8 @@ input:checked + .slider:before {
   content: "\f06e"; }
 .la-minus:before {
   content: "\f068"; }
+.la-minus-circle:before {
+  content: "\f056"; }
 .la-plus:before {
   content: "\f067"; }
 .la-sync:before {

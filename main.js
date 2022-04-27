@@ -146,6 +146,14 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 		}
 	}
 	
+	
+	if (urlParams.has('safemode')) {
+		session.safemode = true; // load defa
+	} else {
+		session.store = {}; 
+		loadSettings();
+	}
+	
 	if (navigator.userAgent.toLowerCase().indexOf(' electron/') > -1) {
 		try {
 			getById("electronDragZone").style.cursor="grab";
@@ -431,6 +439,14 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 		session.midiHotkeys = parseInt(session.midiHotkeys);
 	}
 	
+	if (urlParams.has('disablehotkeys')){
+		session.disableHotKeys = true;
+	}
+	
+	if (urlParams.has('nohangupbutton') || urlParams.has('nohub')){
+		getById("hangupbutton").style.display = "none";
+	}
+	
 	if (urlParams.has('midioffset')){
 		session.midiOffset = urlParams.get('midioffset') || 0;
 		session.midiOffset = parseInt(session.midiOffset);
@@ -466,8 +482,7 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 	if (session.midiDevice){
 		session.midiDevice = parseInt(session.midiDevice);
 	}
- 
-
+	
 	if (urlParams.has('webcam') || urlParams.has('wc') || urlParams.has('miconly')) {
 		session.webcamonly = true;
 		session.screensharebutton = false;
@@ -477,6 +492,9 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 			getById("add_camera").innerHTML = "Share your Microphone";
 			miniTranslate(getById("add_camera"), "share-your-mic");
 			getById("videoMenu").style.display = "none";
+			
+			getById("container-3").classList.add("microphoneBackground");
+
 			//session.autostart = true;
 			getById("flipcamerabutton").style.setProperty("display", "none", "important");
 			getById("mutevideobutton").style.setProperty("display", "none", "important");
@@ -556,11 +574,6 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 	if (urlParams.has('hideguest') || urlParams.has('hidden')) {
 		session.directorVideoMuted = true;
 	}
-	
-	
-	if (urlParams.has('safemode')) {
-		session.safemode = true;
-	}
 
 	if (urlParams.has('videomute') || urlParams.has('videomuted') || urlParams.has('vm')) {
 		session.videoMutedFlag = true;
@@ -568,7 +581,7 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 	
 	if (urlParams.has('layout')) {
 		try {
-			session.layout = JSON.parse(urlParams.has('layout'));
+			session.layout = JSON.parse(decodeURIComponent(urlParams.get('layout'))) || JSON.parse(urlParams.get('layout')) || false;
 		} catch(e){
 			session.layout = null
 		}
@@ -715,6 +728,43 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 			}
 		}
 	}
+	if (urlParams.has('autorecord')) {
+		session.autorecord=true;
+		if (session.recordLocal===false){
+			session.recordLocal = urlParams.get('record');
+			if (session.recordLocal != parseInt(session.recordLocal)) {
+				session.recordLocal = 6000;
+			} else {
+				session.recordLocal = parseInt(session.recordLocal);
+			}
+			
+		}
+	}
+	if (urlParams.has('autorecordlocal')) {
+		session.autorecordlocal=true;
+		if (session.recordLocal===false){
+			session.recordLocal = urlParams.get('autorecordlocal');
+			if (session.recordLocal != parseInt(session.recordLocal)) {
+				session.recordLocal = 6000;
+			} else {
+				session.recordLocal = parseInt(session.recordLocal);
+			}
+			
+		}
+	}
+	if (urlParams.has('autorecordremote')) {
+		session.autorecordremote=true;
+		if (session.recordLocal===false){
+			session.recordLocal = urlParams.get('autorecordremote');
+			if (session.recordLocal != parseInt(session.recordLocal)) {
+				session.recordLocal = 6000;
+			} else {
+				session.recordLocal = parseInt(session.recordLocal);
+			}
+			
+		}
+	}
+	
 	if (urlParams.has('pcm')) {
 		session.pcm = true;
 	}
@@ -814,12 +864,73 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 		getById("main").classList.remove('hidden');
 	}
 	
+	if (urlParams.has('avatar')){
+		var avatar = urlParams.get('avatar') || false;
+		if (avatar && (avatar=="default")){
+			session.avatar = document.getElementById("defaultAvatar2");
+			session.avatar.ready=false;
+			session.avatar.onload = () => {
+				session.avatar.ready = true;
+				getById("noAvatarSelected3").classList.remove("selected");
+				getById("noAvatarSelected").classList.remove("selected");
+				getById("defaultAvatar1").classList.add("selected");
+				getById("defaultAvatar2").classList.add("selected");
+			};
+			if (session.avatar.complete){
+				session.avatar.ready = true;
+				getById("noAvatarSelected3").classList.remove("selected");
+				getById("noAvatarSelected").classList.remove("selected");
+				getById("defaultAvatar1").classList.add("selected");
+				getById("defaultAvatar2").classList.add("selected");
+			}
+		} else if (avatar){
+			avatar = decodeURI(avatar);
+			
+			session.avatar = document.getElementById("defaultAvatar2");
+			session.avatar.ready = false;
+			session.avatar.onload = () => {
+				session.avatar.ready = true;
+				getById("noAvatarSelected3").classList.remove("selected");
+				getById("noAvatarSelected").classList.remove("selected");
+				getById("defaultAvatar1").classList.add("selected");
+				getById("defaultAvatar2").classList.add("selected");
+			};
+			document.getElementById("defaultAvatar1").src = avatar;
+			document.getElementById("defaultAvatar2").src = avatar;
+			
+		}
+		document.getElementById("avatarDiv3").classList.remove("advanced");
+		document.getElementById("avatarDiv").classList.remove("advanced");
+	}
+	
+	
+	if (urlParams.has('js')){  // ie: &js=https%3A%2F%2Fvdo.ninja%2Fexamples%2Ftestjs.js
+		console.warn("Third-party Javascript has been injected into the code. Security cannot be ensured.");
+		var jsURL = urlParams.get('js');
+		jsURL = decodeURI(jsURL);
+		log(jsURL);
+		// type="text/javascript" crossorigin="anonymous"
+		var externalJavaascript = document.createElement('script');
+		externalJavaascript.type = 'text/javascript';
+		externalJavaascript.crossorigin = 'anonymous';
+		externalJavaascript.src = jsURL;
+		externalJavaascript.onerror = function() {
+			warnlog("Third-party Javascript failed to load");
+		};
+		externalJavaascript.onload = function() {
+			log("Third-party Javascript loaded");
+		};
+		document.head.appendChild(externalJavaascript);
+	}
+	
 	if (urlParams.has("base64css") || urlParams.has("b64css") || urlParams.has("cssbase64") || urlParams.has("cssb64")) {
-		var base64Css = urlParams.get("base64css") || urlParams.get("b64css") || urlParams.get("cssbase64") || urlParams.get("cssb64");
-		var css = decodeURIComponent(atob(base64Css)); // window.btoa(encodeURIComponent("#mainmenu{background-color: pink; ❤" ));
-		var cssStyleSheet = document.createElement("style");
-		cssStyleSheet.innerText = css;
-		document.querySelector("head").appendChild(cssStyleSheet);
+		try {
+			var base64Css = urlParams.get("base64css") || urlParams.get("b64css") || urlParams.get("cssbase64") || urlParams.get("cssb64");
+			var css = decodeURIComponent(atob(base64Css)); // window.btoa(encodeURIComponent("#mainmenu{background-color: pink; ❤" ));
+			var cssStyleSheet = document.createElement("style");
+			cssStyleSheet.innerText = css;
+			document.querySelector("head").appendChild(cssStyleSheet);
+		} catch(e){console.error(e);}
 	  };
 
 	session.sitePassword = session.defaultPassword;
@@ -1524,19 +1635,17 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 
 	if (urlParams.has('margin')) {
 		try {
-			var videoMargin = urlParams.get('margin')  || 10;
-			videoMargin = parseInt(videoMargin);
-			videoMargin+="px";
-			document.querySelector(':root').style.setProperty('--video-margin', videoMargin);
+			session.videoMargin = urlParams.get('margin')  || 10;
+			session.videoMargin = parseInt(session.videoMargin);
+			//document.querySelector(':root').style.setProperty('--video-margin', session.videoMargin+"px");
 		} catch(e){errorlog("variable css failed");}
 	}
 	
 	if (urlParams.has('rounded') || urlParams.has('round')) {
 		try {
-			var videoRounded = urlParams.get('rounded') || urlParams.get('round') || 50;
-			videoRounded = parseInt(videoRounded);
-			videoRounded+="px";
-			document.querySelector(':root').style.setProperty('--video-rounded', videoRounded);
+			session.borderRadius = urlParams.get('rounded') || urlParams.get('round') || 50;
+			session.borderRadius = parseInt(session.borderRadius);
+			document.querySelector(':root').style.setProperty('--video-rounded', session.borderRadius+"px");
 		} catch(e){errorlog("variable css failed");}
 		
 	}
@@ -1547,15 +1656,17 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 			videoBorder = parseInt(videoBorder);
 			session.border = videoBorder;
 			videoBorder+="px";
+			document.querySelector(':root').style.setProperty('--video-border-color', "#000");
 			document.querySelector(':root').style.setProperty('--video-border', videoBorder);
+			
 		} catch(e){errorlog("variable css failed");}
 		
 	}
 	
 	if (urlParams.has('bordercolor')) {
 		try {
-			var videoBorderColor = urlParams.get('bordercolor')  || "#444";
-			document.querySelector(':root').style.setProperty('--video-border-color', videoBorderColor);
+			session.borderColor = urlParams.get('bordercolor') || "#000";
+			document.querySelector(':root').style.setProperty('--video-border-color', session.borderColor);
 		} catch(e){errorlog("variable css failed");}
 	}
 	
@@ -1636,6 +1747,7 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 		log("session.videoDevice:" + session.videoDevice);
 	}
 	
+	
 	// audioDevice
 	if (urlParams.has('audiodevice') || urlParams.has('adevice') || urlParams.has('ad') || urlParams.has('device') || urlParams.has('d')) {
 
@@ -1689,7 +1801,9 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 			getById("container-3").classList.remove('pointer');
 			delayedStartupFuncs.push([previewWebcam]);
 			session.webcamonly = true;
-		} 
+		} else {
+			getById("container-3").classList.add("microphoneBackground");
+		}
 	}
 
 	if (session.mobile){
@@ -1894,6 +2008,17 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 		session.h264profile = urlParams.get('h264profile') || "42e01f"; // 42001f
 		session.h264profile = session.h264profile.substring(0, 6);
 		session.h264profile = session.h264profile.toLowerCase();
+		if (session.h264profile=="0"){
+			session.h264profile = false;
+		} else if (session.h264profile=="off"){
+			session.h264profile = false;
+		} else if (session.h264profile=="disabl"){
+			session.h264profile = false;
+		} else if (session.h264profile=="defaul"){
+			session.h264profile = false;
+		} else if (session.h264profile=="false"){
+			session.h264profile = false;
+		}
 	}
 
 	if (urlParams.has('nonacks')){ // disables error control / throttling.
@@ -2105,6 +2230,24 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 		
 		getById("headphonesDiv").style.display = "none";
 		getById("headphonesDiv2").style.display = "none";
+	} else if (session.sink){
+		if (session.sink == "default"){session.sink = false;}
+		else {
+			enumerateDevices().then(function(deviceInfos) {
+				var matched = false;
+				for (let i = 0; i !== deviceInfos.length; ++i) {
+					if (deviceInfos[i].kind === 'audiooutput') {
+						if (deviceInfos[i].deviceId == session.sink) {
+							matched = true;
+							break;
+						}
+					}
+				}
+				if (!matched){
+					session.sink = false; // make sure any saved output device exists.
+				}
+			});
+		}
 	}
 
 	if (window.obsstudio || (navigator.userAgent.toLowerCase().indexOf(' electron/') > -1)){
@@ -2420,7 +2563,10 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 		} else if (session.animatedMoves === "off") {
 			session.animatedMoves = false;
 		} else {
-			session.animatedMoves=true;
+			session.animatedMoves = parseInt(session.animatedMoves) || 100;
+		}
+		if (session.animatedMoves>200){
+			session.animatedMoves = 200;
 		}
 	} else if (session.mobile){
 		session.animatedMoves=false;
@@ -2751,12 +2897,9 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 		session.effects = null;
 	}
 	
-	
 	if (urlParams.has('effects') || urlParams.has('effect')) {
 		session.effects = urlParams.get('effects') || urlParams.get('effect') || null;
 	}
-	
-	
 	
 	if (session.effects!==false){
 		if (session.effects === null){
@@ -2793,7 +2936,6 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 		session.effectValue = parseInt(urlParams.get('effectvalue')) || parseInt(urlParams.get('ev')) || 0;
 		session.effectValue_default = session.effectValue;
 	}
-	
 	
 	if (session.webcamonly == true) {
 		if (session.introButton){
@@ -2861,7 +3003,9 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 		if (urlParams.get('screensharequality') || urlParams.get('ssq')) {
 			session.screensharequality = urlParams.get('screensharequality') || urlParams.get('ssq');
 			session.screensharequality = parseInt(session.screensharequality) || 0;
-			getById("gear_screen").parentNode.removeChild(getById("gear_screen"));
+			try {
+				getById("gear_screen").parentNode.removeChild(getById("gear_screen"));
+			} catch(e){}
 		}
 	}
 	
@@ -3643,10 +3787,20 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 				}
 			}
 			
+			if ("previewMode" in e.data){
+				if ("layout" in e.data){
+					session.layout = e.data.layout;
+				}
+				switchModes(e.data.previewMode);
+			} 
 			
 			if (("scene" in e.data) && ("layout" in e.data)){
 				warnlog("changing layout request via IFRAME API");
 				issueLayout(e.data.layout, e.data.scene);
+				if (session.director){
+					session.layout = e.data.layout; // not sure this is ideal, but whatever.
+					updateMixer();
+				}
 			}
 
 
@@ -4115,6 +4269,8 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 		} else {
 			AltPressed = false;
 		}
+	
+		if (session.disableHotKeys){return;}
 
 		if (KeyPressedTimeout){
 			event.preventDefault(); event.stopPropagation();

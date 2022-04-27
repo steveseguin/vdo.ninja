@@ -272,6 +272,12 @@
 		flex-wrap: nowrap;
 		flex-grow: 1;
 	}
+	#version{
+		margin: 0 auto;
+		font-size: 30%;
+		display: inline-block;
+		color: #000A;
+	}
 
 	</style>
 </head>
@@ -306,6 +312,7 @@
 	
 		</div>
 	</div>
+	<div id="version"></div>
 
 
 <script>
@@ -368,6 +375,7 @@ if ((location.hostname.toLowerCase() == "vdo.ninja") || (location.hostname.toLow
 	try {
 		if (navigator.userAgent.toLowerCase().indexOf(' electron/') > -1) { 
 			function compareVersions(version){
+			    document.getElementById("version").innerHTML = "Current version: "+version;
 				version = version.split(".");
 				fetch('https://api.github.com/repos/steveseguin/electroncapture/releases/latest')
 				  .then(response => response.json())
@@ -375,7 +383,7 @@ if ((location.hostname.toLowerCase() == "vdo.ninja") || (location.hostname.toLow
 					console.log("recentVersion: "+data.tag_name);
 					var recentVersion = data.tag_name.split(".");
 					var ood = false;
-					if (recentVersion[0]>version[0]){
+					if (recentVersion[0]>version[0]){ 
 						ood = true;
 					} else if (recentVersion[0]==version[0]) {
 						if (recentVersion[1]>version[1]){
@@ -392,19 +400,16 @@ if ((location.hostname.toLowerCase() == "vdo.ninja") || (location.hostname.toLow
 					}
 				  }).catch(console.error);
 			}
-			if (urlParams.has('version')){
-				var ver = urlParams.get('version');
+			if (urlParams.has('version') || urlParams.has('ver')){
+				var ver = urlParams.get('version') || urlParams.get('ver');
 				console.log("version: "+ver);
 				compareVersions(ver);
 			} else{
-				var checkVersion = setTimeout(function(){ // pre 1.5.2
-					compareVersions("0.0.0");
-				},500);
+				document.getElementById("version").innerHTML = "Elevate app privilleges to see current version";
 				try{
 					const ipcRenderer = require('electron').ipcRenderer;
 					console.log("ELECTRON DETECTED");
 					ipcRenderer.on('appVersion', function(event, version) {
-						clearTimeout(checkVersion);
 						console.log("version: "+version);
 						compareVersions(version);
 					})
