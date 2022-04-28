@@ -3082,6 +3082,10 @@ function updateMixerRun(e=false){  // this is the main auto-mixing code.  It's a
 			session.guestFeeds = playarea.querySelector("#guestFeeds");
 			playarea.innerHTML = "";
 			skip = true;
+		} else {
+			for (var m=0;m<mediaPool.length;m++){
+				mediaPool[m].alreadyAdded=false;
+			}
 		}
 		
 		mediaPool.sort(compare_vids);
@@ -3217,12 +3221,6 @@ function updateMixerRun(e=false){  // this is the main auto-mixing code.  It's a
 					
 					if (!matched){
 						vidtemp.isInvisible = false;
-					//	if (session.fadein){
-					//		vidtemp.classList.add("fadein");
-					//		if (vidtemp.holder){
-					//			vidtemp.holder.classList.add("fadein");
-					//		}
-					//	}
 					}
 				} else if (childNodes[n].querySelector("iframe")){
 					var iftemp = childNodes[n].querySelector("iframe");
