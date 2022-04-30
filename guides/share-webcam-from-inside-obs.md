@@ -6,6 +6,12 @@ description: >-
 
 # Share webcam from inside OBS
 
+{% hint style="warning" %}
+This guide works for OBS Studio v27.1.3, but some users have had issues with v27.2. &#x20;
+{% endhint %}
+
+
+
 By default, you can't select your webcam in an OBS dock or browser source. This can be changed by adding a command-line parameter to the OBS launch shortcut.
 
 Within Windows, we can right-click the OBS launch icon or app icon, right click the "OBS Studio" option, and then click Properties. This will provide us the launch properties window.
