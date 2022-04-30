@@ -188,7 +188,11 @@
     "the-solo-view-link-of-the-director-s-video-": "The solo view link of the Director's video.",
     "only-the-director-s-video-will-be-visible-to-guests-and-within-group-scenes": "Only the director's video will be visible to guests and within group scenes",
     "allow-for-remote-co-directors": "Allow for remote co-directors",
-    "jump-to-the-documentation": "Jump to the documentation"
+    "jump-to-the-documentation": "Jump to the documentation",
+    "blind-all-guests-in-room-toggle-": "Blind all guests in room (toggle)",
+    "right-click-this-video-for-additional-options": "Right-click this video for additional options",
+    "make-the-invite-url-encoded-so-parameters-are-harder-to-tinker-with-by-guests-this-also-debrands-the-interface-and-gives-it-a-new-domain-name-": "Make the invite URL encoded, so parameters are harder to tinker with by guests. This also debrands the interface and gives it a new domain name.",
+    "set-a-countdown-timer-that-this-guest-sees-ctrl-cmd-click-to-pause-": "Set a countdown timer that this guest sees. CTRL (cmd) + click to pause."
   },
   "innerHTML": {
     "logo-header": "<font id=\"qos\" style=\"color: white;\">O</font>BS.Ninja ",
@@ -383,7 +387,16 @@
     "waiting-for-mic-to-load": "Waiting for mic to load",
     "join-the-room-basic": "Join room as participant",
     "allow-effects-invite": "Allow video effects to be used",
-    "show-welcome-message": "Show welcome message"
+    "show-welcome-message": "Show welcome message",
+    "please-select-option-to-join": "Please select an option to join.",
+    "show-controls-video": "Show control bar",
+    "hide-controls-video": "Hide control bar",
+    "full-window": "Full-window",
+    "shrink-window": "Shrink-window",
+    "pause-stream": "Pause stream",
+    "resume-stream": "Resume stream",
+    "record-to-disk": "Record to disk",
+    "stop-record-to-disk": "Stop Recording"
   },
   "placeholders": {
     "join-by-room-name-here": "Připojit se s názvem místnosti zde",
@@ -457,6 +470,10 @@
     "you-have-been-transferred": "You've been transferred to a different room",
     "you-are-no-longer-a-co-director": "You are no longer a co-director as you were transferred.",
     "transferred": "Transferred",
-    "room-changed": "Your room has changed"
+    "room-changed": "Your room has changed",
+    "headphones-tip": "<i>Tip:</i> Use headphones to avoid audio echo issues.",
+    "camera-tip-c922": "<i>Tip:</i> To achieve 60-fps with a C922 webcam, low-light compensation needs to be turned off, exposure set to auto, and 720p used.",
+    "camera-tip-camlink": "<i>Tip:</i> A Cam Link may glitch green/purple if accessed elsewhere while already in use.",
+    "samsung-a-series": "Samsung A-series phones may have issues with Chrome; if so, try Firefox Mobile instead or switch video codecs."
   }
 }

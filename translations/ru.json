@@ -209,7 +209,10 @@
     "-8-": "Добавить в 8 сцену ",
     "-1-": "Установить 1 аудио-каналом",
     "-2-": "Добавить в 2 сцену",
-    "-webp-": "Увеличивайте на свой страх и риск. Изменяет размер входящего видеопотока для каждого гостя, мобильные устройства исключаются, webp-режим тоже. "
+    "-webp-": "Увеличивайте на свой страх и риск. Изменяет размер входящего видеопотока для каждого гостя, мобильные устройства исключаются, webp-режим тоже. ",
+    "right-click-this-video-for-additional-options": "Right-click this video for additional options",
+    "make-the-invite-url-encoded-so-parameters-are-harder-to-tinker-with-by-guests-this-also-debrands-the-interface-and-gives-it-a-new-domain-name-": "Make the invite URL encoded, so parameters are harder to tinker with by guests. This also debrands the interface and gives it a new domain name.",
+    "set-a-countdown-timer-that-this-guest-sees-ctrl-cmd-click-to-pause-": "Set a countdown timer that this guest sees. CTRL (cmd) + click to pause."
   },
   "innerHTML": {
     "join-room": "Подключиться",
@@ -379,11 +382,11 @@
     "enter-the-website-URL-you-wish-to-share": "Поделиться ссылкой на сайт.",
     "run-a-speed-test": "Запустить тест скорости",
     "read-the-guides": "Ознакомиться с руководством",
-    "info-blob": "",
+    "info-blob": "Пожалуйста, сделайте все возможное, чтобы немедленно остановить эту кровавую войну! Иначе завтра может не быть!",
     "animate-mixing": "Анимированный переход",
     "prefix-screenshare": "Prefix screenshare IDs",
     "more-than-four-can-join": "Этот шаблон на 4 гостей только для демонстрации. Гостей может быть больше.",
-    "welcome-to-obs-ninja-chat": "\n\t\t\t\t\tПривествуем! Вы можете слать личные сообщения подключившимся.\n\t\t\t\t",
+    "welcome-to-obs-ninja-chat": "Пожалуйста, сделайте все возможное, чтобы немедленно остановить эту кровавую войну! Иначе завтра может не быть",
     "privacy-disabled": "Ведущий сможет удаленно управлять вашим микрофоном и камерой.",
     "face-mesh": "Face mesh (slow load)",
     "anonymous-mask": "Маска анонимуса",
@@ -399,7 +402,16 @@
     "chrome-cast": "Показать видео через..",
     "allow-effects-invite": "Разрешить использование видео-эффектов",
     "join-the-room-basic": "Войти в комнату как участник",
-    "show-welcome-message": "Show welcome message"
+    "show-welcome-message": "Show welcome message",
+    "please-select-option-to-join": "Please select an option to join.",
+    "show-controls-video": "Show control bar",
+    "hide-controls-video": "Hide control bar",
+    "full-window": "Full-window",
+    "shrink-window": "Shrink-window",
+    "pause-stream": "Pause stream",
+    "resume-stream": "Resume stream",
+    "record-to-disk": "Record to disk",
+    "stop-record-to-disk": "Stop Recording"
   },
   "placeholders": {
     "join-by-room-name-here": "Подключиться по названию комнаты",
@@ -477,6 +489,7 @@
     "room-changed": "Комната сменена на другую",
     "headphones-tip": "Используйте наушники чтобы избегать «эха»",
     "camera-tip-c922": "60fps в вебкамере C922 возможно при отключении компенсации низкой освещенности, перевода экспозиции в «авто», и разрешении 720p.",
-    "camera=tip-camlink": "Elgato Cam link может давать зелено-фиолетовую картинку, если во время использования попытаться к нему обратиться в другой программе"
+    "camera-tip-camlink": "<i>Tip:</i> A Cam Link may glitch green/purple if accessed elsewhere while already in use.",
+    "samsung-a-series": "Samsung A-series phones may have issues with Chrome; if so, try Firefox Mobile instead or switch video codecs."
   }
 }
