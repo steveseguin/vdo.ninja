@@ -26,6 +26,21 @@ Split between the number of streams that guest is viewing
 
 So for example, with 6-guests in a room, the default of 500-kbps will have each guest requesting 100-kbps from each other. 5 streams x 100-kbps.
 
+
+
+{% hint style="info" %}
+Please note the difference between `&totalroombitrate` and `&maxtotalscenebitrate.   &trb`controls what the total bitratef or guests in a room is limited to. `&maxtotalscenebitrate, on the other hand,` is what you will want if you want to do the same for a view-link, added to OBS, for example.&#x20;
+
+\
+For more information, see:  [https://docs.vdo.ninja/advanced-settings/video-parameters/and-maxtotalscenebitrate](https://docs.vdo.ninja/advanced-settings/video-parameters/and-maxtotalscenebitrate)
+
+
+{% endhint %}
+
+
+
+
+
 ### Limitations
 
 Total room bitrate does not override any limits other guests in the room may have set to limit their outbound bandwidth.\
