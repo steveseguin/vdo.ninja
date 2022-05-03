@@ -83,6 +83,24 @@ All done! You can switch between the webcam and the OBS live video as needed.\
 \
 If you need to listen to your VB-Audio cable at the same time still, you can refer to this help guide for a couple options: [https://docs.vdo.ninja/guides/audio#guide-routing-windows-applications-audio-to-vdo.ninja](https://docs.vdo.ninja/guides/audio#guide-routing-windows-applications-audio-to-vdo.ninja)
 
+### Having issues with frame rates or aspect ratios?&#x20;
+
+{% hint style="info" %}
+If you aren't getting 60-fps from the OBS Virtual Camera into `&framerate=60` to the sender's URL.  The OBS Virtual Camera doesn't always report what framerates it can handle correctly to the browser, but if you manually specify it, it should work.
+{% endhint %}
+
+{% hint style="info" %}
+It's sometimes important to activate the OBS Virtual Camera in OBS before selecting it with VDO.Ninja.  If you start the Virtual Camera \*after\* it has been selected, settings may not correctly work, such as the correct aspect ratio
+{% endhint %}
+
+{% hint style="info" %}
+If looking to do custom aspect-ratios with the OBS Virtual Camera into VDO.Ninja, you can specify the exact width and height via the URL in VDO.Ninja; `&width=720&height=1280,` for example.\
+\
+It's important that the resolution be exactly the same as what is specified in OBS video settings; deviations will cause issues.\
+\
+It is also important that you activate the OBS Virtual Camera in OBS before select it in VDO.Ninja. If you do it after, the aspect ratio may not work correctly.
+{% endhint %}
+
 ## Share webcam directly from OBS
 
 If you wish not to use a third-party browser, but publish video directly from OBS itself, you can load OBS up in a special mode that allows for it.\
