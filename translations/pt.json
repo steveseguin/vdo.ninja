@@ -430,7 +430,7 @@
     "pass-recommended": "A password is recommended",
     "insecure-room-name": "Insecure room name.",
     "allowed-chars": "Allowed chars",
-    "transfer": "transfer",
+    "transfer": "transferir",
     "armed": "armed",
     "transfer-guest-to-room": "Transfer guests to room:\n\n(Please note rooms must share the same password)",
     "transfer-guest-to-url": "Transfer guests to new website URL.\n\n(Guests will be prompted to accept)",
@@ -451,12 +451,12 @@
     "control-room-co-director": "Control Room: Co-Director",
     "signal-meter": "Video packet loss indicator of video preview; green is good, red is bad. Flame implies CPU is overloaded. May not reflect the packet loss seen by scenes or other guests.",
     "waiting-for-the-stream": "Waiting for the stream. Tip: Adding &cleanoutput to the URL will hide this spinner, or click to retry, which will also hide it.",
-    "main-director": "Main Director",
-    "share-a-screen": "Share a screen",
-    "stop-screen-sharing": "Stop screen sharing",
+    "main-director": "Realizador Principal",
+    "share-a-screen": "Partilhar um ecrã",
+    "stop-screen-sharing": "Paarar de partilhar o ecrã",
     "you-have-been-transferred": "You've been transferred to a different room",
     "you-are-no-longer-a-co-director": "You are no longer a co-director as you were transferred.",
-    "transferred": "Transferred",
-    "room-changed": "Your room has changed"
+    "transferred": "Transferido",
+    "room-changed": "A sua sala foi alterada"
   }
 }
