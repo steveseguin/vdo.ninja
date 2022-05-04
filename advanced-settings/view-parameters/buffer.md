@@ -41,3 +41,8 @@ The Electron Capture app also supports the \&buffer command, along with VMix usi
 {% hint style="warning" %}
 Using the \&buffer command may stop Echo Cancellation from working due to the audio delay this feature produces.
 {% endhint %}
+
+{% hint style="info" %}
+You can refer to the `&sync` command if you wish to delay the audio, relative to the video.  `&buffer` will try to keep the audio and video in sync, which might always be desired.
+{% endhint %}
+
