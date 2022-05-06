@@ -209,7 +209,14 @@
     "-8-": "Добавить в 8 сцену ",
     "-1-": "Установить 1 аудио-каналом",
     "-2-": "Добавить в 2 сцену",
-    "-webp-": "Увеличивайте на свой страх и риск. Изменяет размер входящего видеопотока для каждого гостя, мобильные устройства исключаются, webp-режим тоже. "
+    "-webp-": "Увеличивайте на свой страх и риск. Изменяет размер входящего видеопотока для каждого гостя, мобильные устройства исключаются, webp-режим тоже. ",
+    "number-of-outbound-connections": "Number of outbound connections",
+    "number-of-outbound-audio-streams": "Number of outbound audio streams",
+    "number-of-outbound-video-streams": "Number of outbound video streams",
+    "number-of-scenes-": "Number of scenes.",
+    "total-upload-bitrate": "Total upload bitrate",
+    "make-the-invite-url-encoded-so-parameters-are-harder-to-tinker-with-by-guests-this-also-debrands-the-interface-and-gives-it-a-new-domain-name-": "Make the invite URL encoded, so parameters are harder to tinker with by guests. This also debrands the interface and gives it a new domain name.",
+    "set-a-countdown-timer-that-this-guest-sees-ctrl-cmd-click-to-pause-": "Set a countdown timer that this guest sees. CTRL (cmd) + click to pause."
   },
   "innerHTML": {
     "join-room": "Подключиться",
@@ -399,7 +406,28 @@
     "chrome-cast": "Показать видео через..",
     "allow-effects-invite": "Разрешить использование видео-эффектов",
     "join-the-room-basic": "Войти в комнату как участник",
-    "show-welcome-message": "Show welcome message"
+    "show-welcome-message": "Show welcome message",
+    "copy-link": "Copy link",
+    "customize": "Customize",
+    "guest-1": "Guest 1",
+    "guest-2": "Guest 2",
+    "guest-3": "Guest 3",
+    "guest-4": "Guest 4",
+    "show-controls-video": "Show control bar",
+    "hide-controls-video": "Hide control bar",
+    "full-window": "Full-window",
+    "shrink-window": "Shrink-window",
+    "pause-stream": "Pause stream",
+    "resume-stream": "Resume stream",
+    "record-to-disk": "Record to disk",
+    "stop-record-to-disk": "Stop Recording",
+    "change-room-settings": "Change room settings",
+    "highlight-director-only-video-guests-will-see": "Highlight Director (only video guests will see)",
+    "allow-for-remote-co-directors": "Allow for remote co-directors",
+    "allow-co-directors-to-transfer-guests": "Allow co-directors to transfer guests",
+    "allow-co-directors-to-change-a-guests-url": "Allow co-directors to change a guest's URL",
+    "basic-co-director-invite-link": "Basic co-director invite link:",
+    "change-room-video-quality": "Change room video quality:"
   },
   "placeholders": {
     "join-by-room-name-here": "Подключиться по названию комнаты",
@@ -477,6 +505,7 @@
     "room-changed": "Комната сменена на другую",
     "headphones-tip": "Используйте наушники чтобы избегать «эха»",
     "camera-tip-c922": "60fps в вебкамере C922 возможно при отключении компенсации низкой освещенности, перевода экспозиции в «авто», и разрешении 720p.",
-    "camera=tip-camlink": "Elgato Cam link может давать зелено-фиолетовую картинку, если во время использования попытаться к нему обратиться в другой программе"
+    "camera-tip-camlink": "<i>Tip:</i> A Cam Link may glitch green/purple if accessed elsewhere while already in use.",
+    "samsung-a-series": "Samsung A-series phones may have issues with Chrome; if so, try Firefox Mobile instead or switch video codecs."
   }
 }

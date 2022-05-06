@@ -37,7 +37,6 @@
     "advanced-settings-and-remote-control": "Opções avançadas e Controlo Remoto",
     "toggle-voice-chat-with-this-guest": "Ativar/desativar conversa de voz com este convidado",
     "join-by-room-name-here": "Introduza o nome de uma sala",
-    "join-room": "Entrar na sala",
     "share-a-screen-with-others": "Partilhar o ecrã",
     "alert-the-host-you-want-to-speak": "Avise o anfitrião que deseja falar",
     "record-your-stream-to-disk": "Guarde o seu stream para o disco",
@@ -188,7 +187,16 @@
     "the-solo-view-link-of-the-director-s-video-": "O link para visualizção solo do vídeo do realizador.",
     "only-the-director-s-video-will-be-visible-to-guests-and-within-group-scenes": "Apenas o vídeo do realizador será visto pelos convidados e dentro de cenas de grupo",
     "allow-for-remote-co-directors": "Permitir assistentes de realizador remotos",
-    "jump-to-the-documentation": "Saltar para a documentação"
+    "jump-to-the-documentation": "Saltar para a documentação",
+    "join-room": "Juntar-se à sala",
+    "number-of-outbound-connections": "Número de ligações de saída",
+    "number-of-outbound-audio-streams": "Número de streams de áudio de saída",
+    "number-of-outbound-video-streams": "Número de streams de vídeo de saída",
+    "number-of-scenes-": "Número de cenas.",
+    "total-upload-bitrate": "Bitrate de upload total",
+    "blind-all-guests-in-room-toggle-": "Desativar vídeo em todos os convidados da sala (alternar)",
+    "make-the-invite-url-encoded-so-parameters-are-harder-to-tinker-with-by-guests-this-also-debrands-the-interface-and-gives-it-a-new-domain-name-": "Make the invite URL encoded, so parameters are harder to tinker with by guests. This also debrands the interface and gives it a new domain name.",
+    "set-a-countdown-timer-that-this-guest-sees-ctrl-cmd-click-to-pause-": "Set a countdown timer that this guest sees. CTRL (cmd) + click to pause."
   },
   "innerHTML": {
     "logo-header": "<font id=\"qos\" style=\"color: white;\">O</font>BS.Ninja ",
@@ -383,7 +391,28 @@
     "waiting-for-mic-to-load": "À espera que o microfone esteja disponível",
     "join-the-room-basic": "Entrar na sala como participante",
     "allow-effects-invite": "Permitir a utilização de efeitos de vídeo",
-    "show-welcome-message": "Mostrar mensagem de boas vindas"
+    "show-welcome-message": "Mostrar mensagem de boas vindas",
+    "copy-link": "Copiar link",
+    "customize": "Configurar",
+    "guest-1": "Convidado 1",
+    "guest-2": "Convidado 2",
+    "guest-3": "Convidado 3",
+    "guest-4": "Convidado 4",
+    "show-controls-video": "Mostrar barra de controlos",
+    "hide-controls-video": "Esconder barra de controlos",
+    "full-window": "Janela inteira",
+    "shrink-window": "Encolher janela",
+    "pause-stream": "Pausar stream",
+    "resume-stream": "Continuar stream",
+    "record-to-disk": "Gravar para o disco",
+    "stop-record-to-disk": "Parar Gravação",
+    "change-room-settings": "Mudar configurações da sala",
+    "highlight-director-only-video-guests-will-see": "Destacar o Realizador (apenas convidados com vídeo)",
+    "allow-for-remote-co-directors": "Permitir assistentes de realizador remotos",
+    "allow-co-directors-to-transfer-guests": "Permitir aos assistentes de realizador transferir convidados",
+    "allow-co-directors-to-change-a-guests-url": "Permitir aos assistentes de realizador mudar o URL de um convidado",
+    "basic-co-director-invite-link": "Link básico para o assistente de realizador:",
+    "change-room-video-quality": "Mudar a qualidade de vídeo da sala:"
   },
   "placeholders": {
     "join-by-room-name-here": "Introduza aqui numa sala pelo seu nome",
@@ -457,6 +486,10 @@
     "you-have-been-transferred": "Foi transferido para uma sala diferente.",
     "you-are-no-longer-a-co-director": "Deixou de ser assistente do realizador porque foi transferido.",
     "transferred": "Transferido",
-    "room-changed": "A sua sala foi alterada"
+    "room-changed": "A sua sala foi alterada",
+    "headphones-tip": "<i>Dica:</i> Use auscultadores para evitar eco no som.",
+    "camera-tip-c922": "<i>Dica:</i> Para alcançar 60-fps com uma webcam C922, a compensação de baixa luminosidade tem de estar desligada, exposição configurada para auto, e usar 720p.",
+    "camera-tip-camlink": "<i>Dica:</i> Cam Links podem ter imagem verde/roxa se acedidas de outro sítio quando já estão em uso.",
+    "samsung-a-series": "Telemóveis Samsung da série A podem ter problemas com o Chrome; nesse caso, experimente o Firefox Mobile ou mude de codec de vídeo."
   }
 }

@@ -878,8 +878,8 @@
 						</label>
 							<span data-translate="guests-hear-others" style="line-height:0;position:relative;top:-3px;">Guests hear others</span>
 						</span>
-						<button class='pull-right grey' style='font-size:1.15em' onclick='copyFunction(getById("director_block_1"),event)'><i class='las la-copy'></i>Copy link</button>
-						<button class='pull-right grey' style='font-size:1.15em' id="showCustomizerButton1"  onclick='showCustomizer(1,this)'><i class='las la-tools'></i>Customize</button>
+						<button class='pull-right grey' style='font-size:1.15em' onclick='copyFunction(getById("director_block_1"),event)'><i class='las la-copy'></i><span data-translate="copy-link">Copy link</span></button>
+						<button class='pull-right grey' style='font-size:1.15em' id="showCustomizerButton1"  onclick='showCustomizer(1,this)'><i class='las la-tools'></i><span data-translate="customize">Customize</span></button>
 					<span>
 				</div>
 			</div>
@@ -897,8 +897,8 @@
 						</label>
 							<span data-translate="auto-add-guests" style="line-height:0;position:relative;top:-3px;">Auto-add guests</span>
 						</span>
-						<button class='pull-right grey' style='font-size:1.15em' onclick='copyFunction(getById("director_block_3"),event)'><i class='las la-copy'></i>Copy link</button>
-						<button class='pull-right grey' style='font-size:1.15em' id="showCustomizerButton3"  onclick='showCustomizer(3,this)'><i class='las la-tools'></i>Customize</button>
+						<button class='pull-right grey' style='font-size:1.15em' onclick='copyFunction(getById("director_block_3"),event)'><i class='las la-copy'></i><span data-translate="copy-link">Copy link</span></button>
+						<button class='pull-right grey' style='font-size:1.15em' id="showCustomizerButton3"  onclick='showCustomizer(3,this)'><i class='las la-tools'></i><span data-translate="customize">Customize</span></button>
 					<span>
 				</div>
 				
@@ -1204,10 +1204,10 @@
 			</div>
 			<div></div>
 			<div id='guestFeeds' style="display:none"><div id='deleteme'>
-				<div class='vidcon directorMargins' id='fakeguest1' style='min-height: 300px;text-align: center;'><h2>Guest 1</h2><i class='las la-user-circle' style='font-size:8em; margin: 20px 0px;' aria-hidden='true'></i></div>
-				<div class='vidcon directorMargins' id='fakeguest2' style='min-height: 300px;text-align: center;'><h2>Guest 2</h2><i class='las la-user-circle' style='font-size:8em; margin: 20px 0px;' aria-hidden='true'></i></div>
-				<div class='vidcon directorMargins' id='fakeguest3' style='min-height: 300px;text-align: center;'><h2>Guest 3</h2><i class='las la-user-circle' style='font-size:8em; margin: 20px 0px;' aria-hidden='true'></i></div>
-				<div class='vidcon directorMargins' id='fakeguest4' style='min-height: 300px;text-align: center;'><h2>Guest 4</h2><i class='las la-user-circle' style='font-size:8em; margin: 20px 0px;' aria-hidden='true'></i></div>
+				<div class='vidcon directorMargins' id='fakeguest1' style='min-height: 300px;text-align: center;'><h2><span data-translate="guest-1">Guest 1</span></h2><i class='las la-user-circle' style='font-size:8em; margin: 20px 0px;' aria-hidden='true'></i></div>
+				<div class='vidcon directorMargins' id='fakeguest2' style='min-height: 300px;text-align: center;'><h2><span data-translate="guest-2">Guest 2</span></h2><i class='las la-user-circle' style='font-size:8em; margin: 20px 0px;' aria-hidden='true'></i></div>
+				<div class='vidcon directorMargins' id='fakeguest3' style='min-height: 300px;text-align: center;'><h2><span data-translate="guest-3">Guest 3</span></h2><i class='las la-user-circle' style='font-size:8em; margin: 20px 0px;' aria-hidden='true'></i></div>
+				<div class='vidcon directorMargins' id='fakeguest4' style='min-height: 300px;text-align: center;'><h2><span data-translate="guest-4">Guest 4</span></h2><i class='las la-user-circle' style='font-size:8em; margin: 20px 0px;' aria-hidden='true'></i></div>
 				<h4 style='color:#CCC;margin:20px 20px 0 20px;' id='fakeguestinfo'  data-translate='more-than-four-can-join' >These four guest slots are just for demonstration. More than four guests can actually join a room.</h4>
 			</div></div>
 		</div>
@@ -1744,30 +1744,30 @@
 			<div class="promptModalInner">
 				<span class='modalClose' onclick="toggleRoomSettings();">×</span>
 				<span></span>
-				<h3>Change room settings</h3><br />
-				<label title="Increase this at your peril. Changes the total inbound video bitrate per guest; mobile devices excluded. Webp-mode also excluded." for="trbSettingInput">Change room video quality:</label>
+				<h3 data-translate="change-room-settings">Change room settings</h3><br />
+				<label title="Increase this at your peril. Changes the total inbound video bitrate per guest; mobile devices excluded. Webp-mode also excluded." for="trbSettingInput" data-translate="change-room-video-quality">Change room video quality:</label>
 				<span style="margin-left: 6px;" id="trbSettingInputFeedback"></span>-kbps
 				<input id="trbSettingInput" type="range" min="0" max="4000" value="500" onchange="changeTRB(this);" oninput="getById('trbSettingInputFeedback').innerHTML = this.value;" style="width:100%;display:block;" />
 				<span style="margin: 20px 0 0 0;display:block" id='highlightDirectorSpan' title="Only the director's video will be visible to guests and within group scenes">
 					<input id="highlightDirector" style="width: 15px; height: 15px; margin:10px;" name="highlightDirector" data-value="0" data-action-type="solo-video" type="checkbox" onchange="requestInfocus(this);" />
-					<label for="highlightDirector">Highlight Director (only video guests will see)</label> 
+					<label for="highlightDirector" data-translate="highlight-director-only-video-guests-will-see">Highlight Director (only video guests will see)</label> 
 				</span>
 				<span style="margin: 5px 0 0 0;display:block" id='enableCodirector' title="Allow for remote co-directors">
 					<span id="coDirectorEnableSpan">
 						<input id="coDirectorEnable" style="width: 15px; height: 15px; margin:10px;" name="coDirectorEnable" data-value="0" data-action-type="codirector" type="checkbox" onchange="toggleCoDirector(this);" />
-						<label for="coDirectorEnable">Allow for remote co-directors</label> 
+						<label for="coDirectorEnable" data-translate="allow-for-remote-co-directors">Allow for remote co-directors</label> 
 					</span>
 					<span style="margin:0;display:none;" id='codirectorSettings'>
 						<div>
 							<input id="codirectorSettings_transfer" style="width: 15px; height: 15px; margin:10px;" name="codirectorSettings_transfer" data-value="0" data-action-type="codirector_transfer" type="checkbox" onchange="toggleCoDirector_transfer(this);" />
-							<label for="codirectorSettings_transfer">Allow co-directors to transfer guests</label> 
+							<label for="codirectorSettings_transfer" data-translate="allow-co-directors-to-transfer-guests">Allow co-directors to transfer guests</label> 
 						</div>
 						<div style="display:none;">
 							<input id="codirectorSettings_changeurl" style="width: 15px; height: 15px; margin:10px; " name="codirectorSettings_changeurl" data-value="0" data-action-type="codirector_changeurl" type="checkbox" onchange="toggleCoDirector_changeurl(this);" />
-							<label for="codirectorSettings_changeurl">Allow co-directors to change a guest's URL</label> 
+							<label for="codirectorSettings_changeurl" data-translate="allow-co-directors-to-change-a-guests-url">Allow co-directors to change a guest's URL</label> 
 						</div>
 						<div style="margin:8px;">
-							<label for="codirectorSettings_invite">Basic co-director invite link:</label>
+							<label for="codirectorSettings_invite" data-translate="basic-co-director-invite-link">Basic co-director invite link:</label>
 							<input id="codirectorSettings_invite" style="display:block;width: 100%;margin: 3px 0; padding: 4px 5px 3px 5px; border: 1px solid black;" name="codirectorSettings_invite" value="some URL here" type="text"  />
 						</div>
 					</span>
