@@ -347,7 +347,7 @@
     "More-scene-options": "Mais opções de cena",
     "additional-controls": "Mais controlos",
     "select-local-image": "Selecionar Imagem local",
-    "close-settings": "Fechar Definições",
+    "close-settings": "Fechar",
     "advanced": "Avançado ",
     "invisible-guests": "Invisível",
     "add-to-google-calendar": "Adicionar ao Calendário Google",
@@ -416,7 +416,11 @@
     "basic-co-director-invite-link": "Link básico para o assistente de realizador:",
     "change-room-video-quality": "Mudar a qualidade de vídeo da sala:",
     "looking-to-just-chat-and-not-direct": "Quer apenas conversar sem ser realizador?",
-    "invite-a-guest": "CONVIDE ALGUÉM"
+    "invite-a-guest": "CONVIDE ALGUÉM",
+    "for-the-best-possible-experience-make-sure": "Para a melhor experiência, confirme",
+    "your-device-is-powered": "O seu aparelho está ligado à tomada",
+    "your-connection-is-hardwired-instead-of-wifi": "A sua ligação à Internet é com cabo em vez de wifi",
+    "you-are-using-headphones-earphones": "Está a usar headphones / earphones"
   },
   "placeholders": {
     "join-by-room-name-here": "Introduza aqui numa sala pelo seu nome",

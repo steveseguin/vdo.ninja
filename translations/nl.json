@@ -415,7 +415,12 @@
     "basic-co-director-invite-link": "Basic co-director invite link:",
     "change-room-video-quality": "Change room video quality:",
     "looking-to-just-chat-and-not-direct": "Looking to just chat and not direct?",
-    "invite-a-guest": "INVITE A GUEST"
+    "invite-a-guest": "INVITE A GUEST",
+    "please-select-option-to-join": "Please select an option to join.",
+    "for-the-best-possible-experience-make-sure": "For the best possible experience, make sure",
+    "your-device-is-powered": "Your device is powered",
+    "your-connection-is-hardwired-instead-of-wifi": "Your connection is hardwired instead of wifi",
+    "you-are-using-headphones-earphones": "You are using headphones / earphones"
   },
   "placeholders": {
     "join-by-room-name-here": "Ga binnen met een kamer naam",
