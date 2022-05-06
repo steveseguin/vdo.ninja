@@ -196,7 +196,8 @@
     "total-upload-bitrate": "Total upload bitrate",
     "blind-all-guests-in-room-toggle-": "Blind all guests in room (toggle)",
     "make-the-invite-url-encoded-so-parameters-are-harder-to-tinker-with-by-guests-this-also-debrands-the-interface-and-gives-it-a-new-domain-name-": "Make the invite URL encoded, so parameters are harder to tinker with by guests. This also debrands the interface and gives it a new domain name.",
-    "set-a-countdown-timer-that-this-guest-sees-ctrl-cmd-click-to-pause-": "Set a countdown timer that this guest sees. CTRL (cmd) + click to pause."
+    "set-a-countdown-timer-that-this-guest-sees-ctrl-cmd-click-to-pause-": "Set a countdown timer that this guest sees. CTRL (cmd) + click to pause.",
+    "right-click-this-video-for-additional-options": "Right-click this video for additional options"
   },
   "innerHTML": {
     "logo-header": "<font id=\"qos\" style=\"color: white;\">O</font>BS Ninja",
@@ -412,7 +413,9 @@
     "allow-co-directors-to-transfer-guests": "Allow co-directors to transfer guests",
     "allow-co-directors-to-change-a-guests-url": "Allow co-directors to change a guest's URL",
     "basic-co-director-invite-link": "Basic co-director invite link:",
-    "change-room-video-quality": "Change room video quality:"
+    "change-room-video-quality": "Change room video quality:",
+    "looking-to-just-chat-and-not-direct": "Looking to just chat and not direct?",
+    "invite-a-guest": "INVITE A GUEST"
   },
   "placeholders": {
     "join-by-room-name-here": "Raum über Namen betreten",

@@ -181,7 +181,8 @@
     "blind-all-guests-in-room-toggle-": "Blind all guests in room (toggle)",
     "make-the-invite-url-encoded-so-parameters-are-harder-to-tinker-with-by-guests-this-also-debrands-the-interface-and-gives-it-a-new-domain-name-": "Make the invite URL encoded, so parameters are harder to tinker with by guests. This also debrands the interface and gives it a new domain name.",
     "set-a-countdown-timer-that-this-guest-sees-ctrl-cmd-click-to-pause-": "Set a countdown timer that this guest sees. CTRL (cmd) + click to pause.",
-    "enter-a-room-name-to-quick-join": "Enter a room name to quick join"
+    "enter-a-room-name-to-quick-join": "Enter a room name to quick join",
+    "right-click-this-video-for-additional-options": "Right-click this video for additional options"
   },
   "innerHTML": {
     "join-room": "加入房间",
@@ -315,7 +316,7 @@
     "default-codec-select": "首选视频编解码器:  ",
     "enter-the-rooms-control": "进入房间的控制中心",
     "show-tips": "告诉我一些提示..",
-    "added-notes": "\n<u>\n<i>重要提示：</i><br><br>\n</u>\n<li>禁用客人之间的视频共享将提高性能</li>\n<li>只邀请客人到你信任的房间。</li>\n<li>“录制”选项被认为是实验性的。</li>\n<li><a href=\"https://params.vdo.ninja\" style=\"color:black;\"><u>高级 URL 参数可用于自定义房间。</li>\n",
+    "added-notes": "\n<u>\n<i>重要提示：</i><br><br>\n</u>\n<li>禁用客人之间的视频共享将提高性能</li>\n<li>只邀请客人到你信任的房间。</li>\n<li>“录制”选项被认为是实验性的。</li>\n<li><a href=\"https://params.vdo.ninja\" style=\"color:black;\"><u>高级 URL 参数可用于自定义房间。</u></a></li><a href=\"https://params.vdo.ninja\" style=\"color:black;\"><u>\n</u></a>",
     "back": "后退",
     "add-your-camera": "添加您的相机",
     "ask-for-permissions": "允许访问相机/麦克风",
@@ -392,7 +393,9 @@
     "allow-co-directors-to-transfer-guests": "Allow co-directors to transfer guests",
     "allow-co-directors-to-change-a-guests-url": "Allow co-directors to change a guest's URL",
     "basic-co-director-invite-link": "Basic co-director invite link:",
-    "change-room-video-quality": "Change room video quality:"
+    "change-room-video-quality": "Change room video quality:",
+    "looking-to-just-chat-and-not-direct": "Looking to just chat and not direct?",
+    "invite-a-guest": "INVITE A GUEST"
   },
   "placeholders": {
     "join-by-room-name-here": "在此用房间名称加入",
