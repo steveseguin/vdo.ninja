@@ -48,25 +48,35 @@ On the computer that will be using Zoom or Google Hangouts to broadcast, please 
 
 Generate an VDO.Ninja invite. You will get an Invite link and a Browser Source link.\
 \
-The Invite Link is what you send to a person who you wish to join your live stream in OBS.\
+The <mark style="color:red;">Guest Invite Link</mark> is what you send to a person who you wish to join your live stream in OBS. \
 \
-The Browser Source link is what we will be putting into OBS to capture our guest’s video stream with.
+The <mark style="color:green;">OBS Browser Source link</mark> is what we will be putting into OBS to capture our guest’s video stream with.
 
-For ease of setup, the "Generate Invite Link" button found at vdo.ninja can provide you with both a PUSH link and an VIEW link\
 
 
 ![](https://lh6.googleusercontent.com/m\_qUTD6GQ0eJRv7-b0SfqbGQwGLkzKE4PsrDCYCc6qN2Q\_fDIoGQIiMzqVWQFX4udKAKLiKmDWGZZdRyWo9oe8Uc-9cuayr55Itn8ZxCdipFdz5n6RHWd\_FK9SC2k6Up3Ad-owd3ymJccbk\_Lw)
 
-![](<../.gitbook/assets/image (121).png>)
+![A QR-code is provided to make connecting your phone as a camera source easy](<../.gitbook/assets/image (121).png>)
 
 ### Step 2.
 
-Create a Scene and then a Browser Source in OBS. Give it a name and we will fill out the details in the next step.\
+For ease of setup, the "Generate Invite Link" button found at [vdo.ninja](https://vdo.ninja) can provide you with both a <mark style="color:red;">PUSH (</mark><mark style="color:red;">**Guest Invite**</mark><mark style="color:red;">) link</mark> and an <mark style="color:green;">VIEW (</mark><mark style="color:green;">**OBS Source**</mark><mark style="color:green;">) link.</mark> &#x20;
 
+We will want to send the PUSH link to our guest, or if using a mobile phone, use the QR code to open the link. We can select our camera, microphone, and then click START.
 
-![](https://lh3.googleusercontent.com/piBkBuRIVMOmOQ35CisMz-cq0WUxdqKMxQhptnKFwUGAUT75eDZkoRXE52f1KFOpBFQ5l6XkjzFQZXTzwGXJ152n0bDa7iVnDd\_B8EIewpjiEEEsxJnADnaToOi391fPZQ9SUNxSaCLsvaA1DA)
+![](<../.gitbook/assets/image (101).png>)
 
 ### Step 3.
+
+Once we have our PUSH link setup to stream our camera, we can move on to pulling that video stream into OBS using the VIEW link.
+
+\
+To setup our OBS Studio, create a Scene and then add a Browser Source in OBS Studio. Give it a name and we will fill out the details in the next step.\
+
+
+![We want to load our VIEW link in OBS as a Browser source](https://lh3.googleusercontent.com/piBkBuRIVMOmOQ35CisMz-cq0WUxdqKMxQhptnKFwUGAUT75eDZkoRXE52f1KFOpBFQ5l6XkjzFQZXTzwGXJ152n0bDa7iVnDd\_B8EIewpjiEEEsxJnADnaToOi391fPZQ9SUNxSaCLsvaA1DA)
+
+### Step 4.
 
 In the properties for the Browser Source, we need to fill out a few fields and then hit OK.
 
@@ -78,13 +88,13 @@ In the properties for the Browser Source, we need to fill out a few fields and t
 
 * "<mark style="color:green;">**Control audio via OBS**</mark>" should be checked. This is quite important.
 
-![](<../.gitbook/assets/image (108).png>)
+![When you hit OK, you should see your remote camera source appear in OBS](<../.gitbook/assets/image (108).png>)
 
 {% hint style="info" %}
 _SECRET TIP:_ Some links in VDO.Ninja can be dragged and dropped directly into OBS from the Chrome browser, avoiding the tedious parts of step 2 and 3. You will still need to select “Control audio via OBS” however, if you wish audio to function.
 {% endhint %}
 
-### Step 4.
+### Step 5.
 
 The video should appear and auto-play. There should be no audio feedback if you selected the Control audio via OBS option.
 
@@ -92,14 +102,14 @@ Now we just need to stretch the video to fill the full scene. It should snap int
 
 ![](https://lh6.googleusercontent.com/e5RL8KoBiICqkUWzhawTwXfZrnaiG\_NYbmOyIyjRD24Z07ePD2zv-iLB3t\_8xb6HMv5FVh99W7WhREFyEQavUPzsZ0Ybrf6iIzs5Vkj59tSYrsRawf0EW1\_kexAk0B3zoKzBUoc-auK6TIvfmw)
 
-### Step 5
+### Step 6.
 
 Start the OBS Virtual camera ; located under the Start Recording button
 
 ![](https://lh3.googleusercontent.com/zOShyv0F0uvhQ3PlI7mjCe8C6vZsGRUpq2mhFEuZzl8wGUvFkz1od6wYtSHsoPR8aXlG-oRHI9MTlFiOoouvJUtl0Bs96SrOwnug9MpuyYUE9sYJTAsJPAByYwG4we-cMenOQ79DBf\_PO233sg)\
 
 
-### Step 6 (optional)
+### Step 7. (optional)
 
 We will now configure OBS to output audio from the Browser Source to the Virtual Audio Cable.  In the OBS settings, under Advanced, we select the Monitoring Device to be our Virtual Audio device. (CABLE Input).  \
 \
@@ -107,7 +117,7 @@ We also want to disable Windows audio ducking.
 
 ![](https://lh6.googleusercontent.com/JVL8m6M4M3r3VUBKbas9-7plk2hiozPz9q4ZkooARU639q2j9JHZjzqJrFv8V9znfe9uybgDJCdcdJ1hN-N0HzDTZxS2bQH3K2hpIqq5DmmFRDpdW180ILVL2C11OFzbQX11xRWEH-U150YPuQ)
 
-### Step 7 (Optional)
+### Step 8. (Optional)
 
 In our last configuration step, we want to go into the Advanced Audio Properties in OBS. When there, we want to set the audio sources we want to output have its Audio Monitoring setting be set to Monitor and Output.\
 \
@@ -119,7 +129,7 @@ If you intend to feed audio from OBS back into an VDO.Ninja group call, you can 
 
 ![](https://lh3.googleusercontent.com/Y0KGvcDsbj-X4KP0S8HQNGo3IbPvRSr7XYlqK4Yoj916XFLZXWeAcYNKJUFQzA2APuSaWfiBPhyjzjcXX1JnLr2LIR3CztDYeatNEoPtYj4minUkIXf1HhVDjYZW1jLZFmwt8146pU-gAu0yGQ)
 
-### Step 8
+### Step 9.
 
 We’re READY to go!  Using this setup in VDO.Ninja or Zoom or Google Hangouts is just like selecting a second Webcam and microphone.
 

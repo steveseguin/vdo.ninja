@@ -24,7 +24,7 @@ Example:\
 
 You can use [vdo.ninja/alpha/mixer](https://vdo.ninja/alpha/mixer) to create JSON strings.&#x20;
 
-![](<../../.gitbook/assets/image (101).png>)
+![](<../../.gitbook/assets/image (101) (1).png>)
 
 ## Related
 
