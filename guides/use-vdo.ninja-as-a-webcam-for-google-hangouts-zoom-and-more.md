@@ -139,4 +139,8 @@ If publishing to VDO.Ninja, remember that you can select multiple audio sources 
 
 And that should be it! You can switch between the webcam and the OBS live video as needed.
 
-If you need to increase the video quality, it is possible to&#x20;
+If you need to increase the video quality from the defaults, all that is possible in the next section, linked below:
+
+{% content-ref url="how-do-i-control-bitrate-quality.md" %}
+[how-do-i-control-bitrate-quality.md](how-do-i-control-bitrate-quality.md)
+{% endcontent-ref %}
