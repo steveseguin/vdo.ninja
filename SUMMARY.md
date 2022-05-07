@@ -16,6 +16,7 @@
   * [Native mobile app versions](getting-started/native-mobile-app-versions.md)
   * [Sponsor ❤](getting-started/sponsor.md)
 * [Guides](guides/README.md)
+  * [Use VDO.Ninja as a webcam for Google Hangouts, Zoom, and more](guides/use-vdo.ninja-as-a-webcam-for-google-hangouts-zoom-and-more.md)
   * [How do I control bitrate/quality?](guides/how-do-i-control-bitrate-quality.md)
   * [How to get permanent links](guides/how-to-get-permanent-links.md)
   * [Capture an application's audio](guides/audio.md)

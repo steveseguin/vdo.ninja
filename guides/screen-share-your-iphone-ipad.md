@@ -54,7 +54,7 @@ There are several choices, although the popular ones are [Loopback ](https://rog
 
 If we want to capture audio, we can also select the Blackhole virtual audio device from the Audio Sources menu in VDO.Ninja, but we can also do this after we start streaming. We can also select our local macBook microphone if we wanted.
 
-![](<../.gitbook/assets/image (121).png>)
+![](<../.gitbook/assets/image (121) (1).png>)
 
 8\. Once we start streaming, there is a settings menu that we can use to select audio sources. If we select the Blackhole virtual audio device (or Loopback / VB Cable), we will be sharing our audio that we are capturing from the iPhone. We can hold down the `CMD` (⌘) key while selecting audio sources to select and mix more than one audio source.
 
