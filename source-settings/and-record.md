@@ -49,6 +49,12 @@ It will automatically capture with Stereo audio and echo cancellation off, if av
 When recording with PCM, ([`&pcm`](and-pcm.md)) the inbound audio bitrate will be at 256kbps. (regardless of video bitrate)
 {% endhint %}
 
+{% hint style="warning" %}
+Safari browsers and iOS devices may struggle with media recording.\
+\
+Enabling Safari's _MediaRecorder_ under E_xperimental webKit Features_ may be needed. As well, users may be asked to download a file once the recording ends, for the webM media file to be saved correctly to disk.
+{% endhint %}
+
 ## Related
 
 {% content-ref url="../newly-added-parameters/and-recordcodec.md" %}
