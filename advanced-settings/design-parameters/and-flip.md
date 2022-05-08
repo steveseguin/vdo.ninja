@@ -12,7 +12,7 @@ Inverts the video so it is upside down. That's it. It doesn't change the viewer'
 
 
 
-#### Alternative option to rotating and flipping
+#### Alternative method for mirroring and flipping
 
 If  you are looking for a form of rotation and flipping that rotates the actual video, rather than relying on CSS to achieve it, you can check out the sender-side \&effects options.\
 \
