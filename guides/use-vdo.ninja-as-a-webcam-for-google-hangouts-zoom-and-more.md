@@ -48,9 +48,9 @@ On the computer that will be using Zoom or Google Hangouts to broadcast, please 
 
 Generate an VDO.Ninja invite. You will get an Invite link and a Browser Source link.\
 \
-The <mark style="color:red;">Guest Invite Link</mark> is what you send to a person who you wish to join your live stream in OBS. \
+The <mark style="color:red;">Guest Invite Link</mark> is what you send to a person who you wish to join your live stream in OBS.  We will also be calling this a PUSH link, as it contains \&push in the URL. \
 \
-The <mark style="color:green;">OBS Browser Source link</mark> is what we will be putting into OBS to capture our guest’s video stream with.
+The <mark style="color:green;">OBS Browser Source link</mark> is what we will be putting into OBS to capture our guest’s video stream with.  We will also be calling this a VIEW link, as it contains \&view in the URL.
 
 
 

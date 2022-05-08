@@ -1,7 +1,8 @@
 # Guides
 
 * [How do I control bitrate/quality?](how-do-i-control-bitrate-quality.md)
-* [How to get permanent links](how-to-get-permanent-links.md)
+* [Use your smartphone as a webcam](https://docs.vdo.ninja/guides/use-vdo.ninja-as-a-webcam-for-google-hangouts-zoom-and-more)&#x20;
+* [How to get permanent links](use-vdo.ninja-as-a-webcam-for-google-hangouts-zoom-and-more.md)
 * [Capture an application's audio](audio.md)
 * [Publish from OBS into VDO.Ninja](publish-from-obs-into-vdo.ninja.md)
 * [Screen-share your iPhone / iPad](screen-share-your-iphone-ipad.md)
