@@ -22,8 +22,13 @@ Mirroring does not work if using the browser's native video full-screen button. 
 
 Try `F11` or the Electron Capture app (right-click → fullscreen) to hide the browser menu instead.
 
-## Related
 
-{% content-ref url="and-flip.md" %}
-[and-flip.md](and-flip.md)
-{% endcontent-ref %}
+
+#### Alternative method for mirroring and flipping
+
+If  you are looking for a form of rotation and flipping that rotates the actual video, rather than relying on CSS to achieve it, you can check out the sender-side \&effects options.\
+\
+`https://vdo.ninja/beta/?effects=-1`,  which will flip the video `https://vdo.ninja/beta/?effects=-2`,  which will flip and mirror the video\
+`https://vdo.ninja/beta/?effects=2`,  which will mirror the video\
+\
+Effects however may increase CPU/GPU usage, and could cause frame rate instability, especially if the browser tab is not in active focus.&#x20;
