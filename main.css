@@ -2455,7 +2455,6 @@ div.multiselect {
 	overflow: hidden;
 	margin: auto auto;
 	border: 1px solid #ccc;
-	border-bottom: 0;
 	display: inline-block;
 	padding: 4px 10px 10px 10px;
 	background-color: #f3f3f3;
