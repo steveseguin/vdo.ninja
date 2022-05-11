@@ -8,7 +8,9 @@ description: '"Vee-Dee-Oh" .. oh, video!'
 
 In its simplest form, [VDO.Ninja](https://vdo.ninja) brings live video from a smartphone, tablet, or remote computer, directly into OBS Studio or other browser-enabled software. VDO.Ninja is offered as a free web service, but it's also available as customizable and deployable code. Some have called it the modern Swiss Army knife of audio and video transmission. 🛠
 
-{% embed url="https://www.youtube.com/embed/videoseries?list=PLWodc2tCfAH1WHjl4WAOOoRSscJ8CHACe" %}
+{% embed url="https://www.youtube.com/watch?index=1&list=PLWodc2tCfAH1l_LDvEyxEqFf42hOBKqQM&v=ukWzekxZwSI" %}
+What is VDO.Ninja
+{% endembed %}
 
 ## Getting Started
 
