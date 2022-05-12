@@ -8,13 +8,21 @@ description: Mobile app version of VDO.Ninja and other Android related topics
 
 ### Native Android app
 
-The native mobile app for Android is fairly simple, as it can be only used for one-way publishing. It does support screen-sharing though, so it has its value. The native app requires Android 9.0 or newer, while the web-based version of VDO.Ninja has been tested with Android 5.1 using Chrome.
-
-You can download the Android APK file here:[\
-https://drive.google.com/file/d/1M0kv5nWLtcfl2JOnsAGiG1zUmkeIVLyZ/view?usp=sharing](https://drive.google.com/file/d/1M0kv5nWLtcfl2JOnsAGiG1zUmkeIVLyZ/view?usp=sharing)\
+The native mobile app for Android is fairly simple, as it can be only used for one-way publishing. It does support screen-sharing though, so it has its value.  It will also work while in the background, and sometimes works on certain devices when the browser-version won't.\
 \
-The current beta version of the Android app, with some fixes, is here:\
-[https://drive.google.com/file/d/1Q1FraE2Eq1-UtJ60cT1Ilt8CBWH4f12Z/view?usp=sharing](https://drive.google.com/file/d/1Q1FraE2Eq1-UtJ60cT1Ilt8CBWH4f12Z/view?usp=sharing)
+Please note, the native app requires a modern version of Android, while the web-based version of VDO.Ninja has been tested with Android 5.1 using Chrome.
+
+The Google Play Store hosted version is here: \
+[https://play.google.com/store/apps/details?id=flutter.vdo.ninja](https://play.google.com/store/apps/details?id=flutter.vdo.ninja)  \
+(It will auto-update when I push new releases.)
+
+The v1 Android APK file here: [\
+https://drive.google.com/file/d/1M0kv5nWLtcfl2JOnsAGiG1zUmkeIVLyZ/view?usp=sharing](https://drive.google.com/file/d/1M0kv5nWLtcfl2JOnsAGiG1zUmkeIVLyZ/view?usp=sharing)\
+(Requires manual updating)\
+\
+The v2 beta version of the Android app, with some fixes, is here:\
+[https://drive.google.com/file/d/1Q1FraE2Eq1-UtJ60cT1Ilt8CBWH4f12Z/view?usp=sharing](https://drive.google.com/file/d/1Q1FraE2Eq1-UtJ60cT1Ilt8CBWH4f12Z/view?usp=sharing)\
+(Requires manual updating)
 
 The source-code for the Android app is here:\
 [https://github.com/steveseguin/vdon\_flutter/](https://github.com/steveseguin/vdon\_flutter/)
