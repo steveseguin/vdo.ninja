@@ -370,7 +370,7 @@
   * [Can't screen-share from certain devices](common-errors-and-known-issues/why-cant-i-screen-share-from-certain-devices.md)
   * [Cursor shows when screen-sharing](common-errors-and-known-issues/cursor-shows-when-screen-sharing.md)
   * [Getting “Overconstrained" Camera Error](common-errors-and-known-issues/getting-overconstrained-camera-error.md)
-  * [Autoplay doesn't work in Chrome or Vmix v77](common-errors-and-known-issues/autoplay-doesnt-work-in-chrome-or-vmix-v77.md)
+  * [Autoplay doesn't work in Chrome or vMix v77](common-errors-and-known-issues/autoplay-doesnt-work-in-chrome-or-vmix-v77.md)
   * [Low frame rates](common-errors-and-known-issues/low-frame-rates.md)
   * [There are black borders around the video in OBS](common-errors-and-known-issues/there-are-black-borders-around-the-video-in-obs..md)
   * [LAN vs WAN - VDO.Ninja traffic diagram, by saimiri31](https://drive.google.com/file/d/1oI7NYIlf\_RurYoM0TEgJtzBJRV\_wohuh/view)
