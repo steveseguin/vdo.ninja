@@ -21,7 +21,7 @@ Use the Electron Capture app if you are using a non-compatible version of OBS. >
 Ensure that the “Enable Browser Source Hardware Acceleration” checkbox is checked in the advanced settings. If you still get just black video when it’s checked, then you can try:
 
 * Uncheck the Hardware Acceleration checkbox -- does it work now? If so, it may be choppy and will use more CPU, but perhaps still usable. If the problem is that it's choppy, ensure that hardware-acceleration is checked.&#x20;
-* If using an Android mobile smartphone as a camera source, try using Firefox Mobile or a few different browsers. If that fails, try the [native Android app version](../platform-specific-issues/android.md), if your needs are simple. This is often the case with Samsung A-series smartphones, although the Galaxy A12 especially seems to have issues.
+* If using an Android mobile smartphone as a camera source, try using Firefox Mobile or a few different browsers. If that fails, try the [native Android app version](https://docs.vdo.ninja/platform-specific-issues/android), if your needs are simple. This is often the case with Samsung A-series smartphones, although the Galaxy A12 especially seems to have issues.
 * Updating your graphics card drivers.
 * Run OBS Studio as an Administrator.
 * If your computer is running at 100% CPU / GPU load, try lowering the resolution of the browser source element to 1280x720 or lower; 640x360 should use little CPU, even if hardware-acceleration is disabled.  H264 as a codec will also use less CPU / GPU than other options, normally.
