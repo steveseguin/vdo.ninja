@@ -8,13 +8,13 @@ Something like [https://VDO.Ninja/?view=yyyyy\&bitrate=10000 ](https://vdo.ninja
 
 The viewer sets the bitrate generally, although you can set maximum allowed bitrates as the publisher of a stream. See the advanced settings in the wiki for more help here; there are many options available.
 
-When in a group room, the guests will generally get a very low-quality preview of the stream. This can be changed with the `&totalroombitrate` parameter or via the room's director settings menu. The higher the room bitrate however, the more CPU and Network load will be placed on those in the room.
+When in a group room, the guests will generally get a very low-quality preview of the stream. This can be changed with the [`&totalroombitrate`](../advanced-settings/view-parameters/totalroombitrate.md) parameter or via the room's director settings menu. The higher the room bitrate however, the more CPU and Network load will be placed on those in the room.
 
-When dealing with a group scene link, you can use `&bitrate` as normal, or `&totalbitrate.`
+When dealing with a group scene link, you can use [`&bitrate`](../advanced-settings/view-parameters/bitrate.md) as normal, or `&totalbitrate.`
 
 ### Resolution
 
-Camera resolution by default is captured at 1280x720.  You can increase this by changing the quality setting when selecting your camera, or by adding `&quality=0` to the URL. The `&quality` parameter acts as a preset, where \&quality=0 is preset for 1920x1080 @ 60-fps, \&quality=1 is 720p60, and \&quality=2 is a gentle 360p30.
+Camera resolution by default is captured at 1280x720. You can increase this by changing the quality setting when selecting your camera, or by adding `&quality=0` to the URL. The [`&quality`](../source-settings/quality.md) parameter acts as a preset, where \&quality=0 is preset for 1920x1080 @ 60-fps, `&quality=1` is 720p60, and `&quality=2` is a gentle 360p30.
 
 You can manually set the video resolution via the URL, using `&width=1920&height=1080`, and this might be helpful when dealing with non-standard aspect-ratios.
 
@@ -32,9 +32,6 @@ VDO.Ninja may still scale the video down however, although only if the connectio
 
 You can improve audio quality in the same way, by increasing the [`&audiobitrate`](../advanced-settings/view-parameters/audiobitrate.md), but you can get better results by just disabling noise and echo cancellation instead.
 
-`&proaudio` is flag that presets many audio options, which can be added to both the sender's and viewser's link to enable stereo audio with no audio processing and a very high audio bitrate set. You may need to be using headphones, especially if in a group room, if using `&proaudio` or if disabling the echo cancellation features.
-
-
+``[`&proaudio`](../general-settings/stereo.md) is flag that presets many audio options, which can be added to both the sender's and viewser's link to enable stereo audio with no audio processing and a very high audio bitrate set. You may need to be using headphones, especially if in a group room, if using [`&proaudio`](../general-settings/stereo.md) or if disabling the echo cancellation features.
 
 Read more here: [`&videobitrate`](../advanced-settings/view-parameters/bitrate.md), [`&audiobitrate`](../advanced-settings/view-parameters/audiobitrate.md) , [`&width`](../source-settings/and-width.md), [`&height`](../source-settings/and-height.md), [`&quality`](../source-settings/quality.md)``
-
