@@ -20,9 +20,7 @@ Also check out the FAQ for more info: https://github.com/steveseguin/vdoninja/wi
 <img src="https://user-images.githubusercontent.com/2575698/120865595-56de3b80-c55c-11eb-8b98-60c59ae0f904.png" height="300" />
 
 ## How to use
-I demo the basic usage of VDO.Ninja on YouTube: https://www.youtube.com/watch?v=6R_sQKxFAhg
-
-Here is a podcast series showing how to use different basic VDO.Ninja features, including macOS support: https://www.youtube.com/watch?v=XfSqufuoV74&list=PLWodc2tCfAH1l_LDvEyxEqFf42hOBKqQM
+A video demo and playlist of the basic usage of VDO.Ninja on YouTube can be found here: https://www.youtube.com/watch?v=QaA_6aOP9z8&list=PLWodc2tCfAH1l_LDvEyxEqFf42hOBKqQM&index=1.
 
 And Here is another video series touching on some more advanced settings: https://www.youtube.com/watch?v=mQ1Jdhf5aYg&list=PL8VJWj2-XLFpFu3G35Hdm1nKZ2xn9_0_8
 
@@ -61,9 +59,9 @@ https://github.com/steveseguin/electroncapture
 ### CAPTION.Ninja
 A free AI-based closed-captioning tool to add speech-to-text overlays to OBS Studio. It's browser-based with an easy OBS or VMix integration. Developed by Steve as well! https://caption.ninja
 
-### Chat.Overlay.Ninja
-A free Chrome extension that lets you select Youtube Live Chat comments, with those comments then appearing directly in OBS or VMix as an overlay. No chroma-keying needed and the styling is pretty easy to customize without needing to modify the Chrome extension itself.
-http://chat.overlay.ninja/
+### Social Stream Ninja
+A free Chrome extension that lets you stream and feature chat comments from Youtube, Twitch, Facebook, and more. Featured comments will appear directly in OBS or VMix as an overlay, or as a stream list of comments. It also includes a dock for more advanced function, such as text-to-speech, sentiment analysis, and saving to disk. No chroma-keying needed and the styling is pretty easy to customize without needing to modify the Chrome extension itself.
+http://socialstream.ninja
 
 ### Steves.app:
 A website designed to also work with VDO.Ninja as a Broadcasting tool. Share your webcam, window, desktop, or video file with friends and family. Peer-2-peer, so privacy can be maintained, but you can also list your broadcasts for others to watch.
