@@ -16,13 +16,9 @@ The Google Play Store hosted version is here: \
 [https://play.google.com/store/apps/details?id=flutter.vdo.ninja](https://play.google.com/store/apps/details?id=flutter.vdo.ninja)  \
 (It will auto-update when I push new releases.)
 
-The v1 Android APK file here: [\
+The Android APK file for direct-downloading is hosted here: [\
 https://drive.google.com/file/d/1M0kv5nWLtcfl2JOnsAGiG1zUmkeIVLyZ/view?usp=sharing](https://drive.google.com/file/d/1M0kv5nWLtcfl2JOnsAGiG1zUmkeIVLyZ/view?usp=sharing)\
-(Requires manual updating)\
-\
-The v2 beta version of the Android app, with some fixes, is here:\
-[https://drive.google.com/file/d/1Q1FraE2Eq1-UtJ60cT1Ilt8CBWH4f12Z/view?usp=sharing](https://drive.google.com/file/d/1Q1FraE2Eq1-UtJ60cT1Ilt8CBWH4f12Z/view?usp=sharing)\
-(Requires manual updating)
+(Manually installing will requires manual updating, as well)
 
 The source-code for the Android app is here:\
 [https://github.com/steveseguin/vdon\_flutter/](https://github.com/steveseguin/vdon\_flutter/)
