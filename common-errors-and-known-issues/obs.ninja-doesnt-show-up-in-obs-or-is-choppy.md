@@ -20,10 +20,11 @@ Use the Electron Capture app if you are using a non-compatible version of OBS. >
 
 Ensure that the “Enable Browser Source Hardware Acceleration” checkbox is checked in the advanced settings. If you still get just black video when it’s checked, then you can try:
 
-* Uncheck the Hardware Acceleration checkbox -- does it work now? If so, it may be choppy, but perhaps still usable.
+* Uncheck the Hardware Acceleration checkbox -- does it work now? If so, it may be choppy and will use more CPU, but perhaps still usable. If the problem is that it's choppy, ensure that hardware-acceleration is checked.&#x20;
 * If using an Android mobile smartphone as a camera source, try using Firefox Mobile or a few different browsers. If that fails, try the [native Android app version](../platform-specific-issues/android.md), if your needs are simple. This is often the case with Samsung A-series smartphones, although the Galaxy A12 especially seems to have issues.
 * Updating your graphics card drivers.
 * Run OBS Studio as an Administrator.
+* If your computer is running at 100% CPU / GPU load, try lowering the resolution of the browser source element to 1280x720 or lower; 640x360 should use little CPU, even if hardware-acceleration is disabled.  H264 as a codec will also use less CPU / GPU than other options, normally.
 * Go to the windows setting for “Graphics Settings”. You may see OBS or SLOBS under programs listed for “graphics performance preference”. Make sure OBS or SLOBS is set to “high performance”. Turn on hardware accelerated GPU scheduling.
 * Update OBS Studio to the newest version. When doing so, fully uninstall the old version before installing the new version. If you are up to date, try the beta release or just re-install.
 * If using OBS 64-bit, try installing the 32-bit version instead of OBS.
@@ -33,7 +34,8 @@ Ensure that the “Enable Browser Source Hardware Acceleration” checkbox is ch
 * Try a different video codec; perhaps [`&codec=h264`](../advanced-settings/view-parameters/codec.md) or `&codec=vp9`, which can be added to the view links. Android phones in particular might have problems.
 * In the OBS Settings -> Advanced menu, disable Browser source hardware acceleration, and then restart. If it works then, the above GPU-related options should work. Otherwise, it might be a firewall, VPN, or privacy software.
 * Check to make sure you are not behind a corporate firewall or on a VPN (see Network issues below). Sometimes using a Firewall can actually help, such as if the guest is in mainland China, where a VPN service (like ExpressVPN) has been able to bypass the Great Firewall of China.
-* Disable any anti-virus or other security software. If using PFSense firewall, ensure you are whitelisting the IP address of the remote camera source or allowing webRTC-related UDP traffic.
+* Disable any anti-virus or other security software. If using PFSense firewall, ensure you are whitelisting the IP address of the remote camera source or allowing webRTC-related UDP traffic. While use PFSense may still work, if you do not open the correct ports, frame loss may be significant if relying on the public TURN servers for high-bandwidth data transit.
+* If the video is choppy, be sure there is no packet loss. Adding `&stats` to the VDO.Ninja URL link will display the stats in the OBS Browser source, on top of the video.  A high-packet loss, higher than 0.3%, can result in signifcant frame loss, while 3% packet loss is nearly unusable.
 * You can also download the Electron Capture app, and use that instead of OBS browser source: [https://github.com/steveseguin/electroncapture](https://www.google.com/url?q=https://github.com/steveseguin/electroncapture\&sa=D\&source=editors\&ust=1619943104618000\&usg=AOvVaw2vbHW2zTdxaCofB42QQ\_fT)
 * Make sure you have not disabled webRTC with your browser; you can confirm you have webRTC disabled with your browser(s) here: [https://browserleaks.com/webrtc](https://browserleaks.com/webrtc)
 * As a final resort, consider using a Cloud-hosted version of OBS instead, such as on Paperspace or AWS /w Parsec installed.
@@ -42,6 +44,6 @@ If the hardware-acceleration checkbox is not checked, check it and restart. Does
 
 ## Network issues
 
-We provide a speed test to see if the connection works at all,[ https://obs.ninja/speedtest ](https://obs.ninja/speedtest) You should be able to see your video streamed back at you. If not, there might be a network problem.\
+We provide a speed test to see if the connection works at all,[ https://vdo.ninja/speedtest ](https://vdo.ninja/speedtest) You should be able to see your video streamed back at you. If not, there might be a network problem.\
 \
-You can visit [https://test.webrtc.org](https://test.webrtc.org) or [https://networktest.twilio.com/](https://networktest.twilio.com) for tools to help debug issues that might be impacting your network, such as Firewalls or incompatible browsers.
+You can visit [https://browserleaks.com/webrtc](https://browserleaks.com/webrtc) or [https://networktest.twilio.com/](https://networktest.twilio.com) for tools to help debug issues that might be impacting your network, such as Firewalls or incompatible browsers.
