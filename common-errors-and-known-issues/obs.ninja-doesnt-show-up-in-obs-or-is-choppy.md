@@ -1,5 +1,7 @@
 ---
-description: Some options and information for those not seeing video show up in OBS Studio
+description: >-
+  OBS Studio is just black in the browser source; potentially you hear audio,
+  but nothing else.
 ---
 
 # Nothing shows up in OBS or it is choppy
@@ -19,9 +21,9 @@ Use the Electron Capture app if you are using a non-compatible version of OBS. >
 Ensure that the “Enable Browser Source Hardware Acceleration” checkbox is checked in the advanced settings. If you still get just black video when it’s checked, then you can try:
 
 * Uncheck the Hardware Acceleration checkbox -- does it work now? If so, it may be choppy, but perhaps still usable.
-* If using an Android mobile smartphone as a camera source, try using Firefox Mobile or a few different browsers. If that fails, try the [native Android app version](../platform-specific-issues/android.md), if your needs are simple.
+* If using an Android mobile smartphone as a camera source, try using Firefox Mobile or a few different browsers. If that fails, try the [native Android app version](../platform-specific-issues/android.md), if your needs are simple. This is often the case with Samsung A-series smartphones, although the Galaxy A12 especially seems to have issues.
 * Updating your graphics card drivers.
-* Run OBS as an Administrator.
+* Run OBS Studio as an Administrator.
 * Go to the windows setting for “Graphics Settings”. You may see OBS or SLOBS under programs listed for “graphics performance preference”. Make sure OBS or SLOBS is set to “high performance”. Turn on hardware accelerated GPU scheduling.
 * Update OBS Studio to the newest version. When doing so, fully uninstall the old version before installing the new version. If you are up to date, try the beta release or just re-install.
 * If using OBS 64-bit, try installing the 32-bit version instead of OBS.
