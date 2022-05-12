@@ -6,7 +6,7 @@ description: >-
 
 # Nothing shows up in OBS or it is choppy
 
-![](<../.gitbook/assets/image (1).png>)
+![Disabling or enabling the hardware acceleration in OBS can sometimes fix choppy or missing video.](<../.gitbook/assets/image (1).png>)
 
 ## macOS
 
