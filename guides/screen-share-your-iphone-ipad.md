@@ -36,7 +36,7 @@ For this to work, your iPhone needs to be connected and turned on. It will not w
 
 There are several choices, although the popular ones are [Loopback ](https://rogueamoeba.com/loopback/)(\$$), [Blackhole ](https://blackhole.soullabs.com/horizon/dashboard)(Free), and [VB Cable](https://vb-audio.com/Cable/) (Free). Install one of your choice; in this walk-thru we are using Blackhole.
 
-![](<../.gitbook/assets/image (115) (1).png>)
+![](<../.gitbook/assets/image (115) (1) (1).png>)
 
 5b. OPTIONAL: If using Loopback, you will have the ability to customize the audio routing, but with Blackhole we will just output all the system's audio to the virtual audio cable. In the macOS audio settings, we just need to select the Blackhole audio device as the audio output destination.
 

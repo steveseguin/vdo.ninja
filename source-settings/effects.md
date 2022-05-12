@@ -17,7 +17,9 @@ Sender-Side Option! ([`&push`](push.md))
 | (no value given) | Shows a "Digital video effects" panel when setting up devices |
 | 0                | Disables effects                                              |
 | 1                | Face tracker                                                  |
+| -1               | Flip image                                                    |
 | 2                | Mirror image                                                  |
+| -2               | Flip + mirror image                                           |
 | 3                | Background blur                                               |
 | 4                | Virtual greenscreen                                           |
 | 5                | Background replacement                                        |

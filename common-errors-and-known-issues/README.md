@@ -11,6 +11,7 @@
 * [Packet Loss](packet-loss.md)
 * [Overheating](overheating.md)
 * [Audio is delayed in OBS](audio-is-delayed-in-obs.md)
+* [vMix High CPU](vmix-high-cpu.md)
 * [OBS Virtual Camera has low FPS](obs-virtual-camera-low-has-fps.md)
 * [Video is pixelated](video-is-pixelated.md)
 * [Video freezes mid-stream](video-freezes-mid-stream.md)

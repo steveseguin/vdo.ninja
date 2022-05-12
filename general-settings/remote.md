@@ -63,3 +63,9 @@ In regards to `&sid`, you can pass multiple stream IDs, and so long as each remo
 Nacks per second is similar to packet loss, and so a high nack loss rate implies a restriction on network quality.  "quality limitation reason" may also be stated, which can imply whether the CPU or Network is the bottleneck in achieving maximum quality.
 
 If viewers of a stream ID being monitor have a label assigned ([`&label`](label.md)), then that will appear as a label on the monitor page besides the graph, identifying it.
+
+### Remote on Basic Push and View Links
+
+When using the `&remote` control option, the viewer can now remotely hang-up the sender via the right-click menu. The sender needs to remote control enabled for this to work of course.
+
+`&remote`, if used on a push link without a password added, it will now allow the remote viewer limited control (hangup, focus, zoom, detailed stats), even if they don't have `&remote` added to their URL also. When using `&remote`, the option to "reload" the remote browser is now available, so you can potentially reload a remote unattended session that contains`&autostart&webcam`.![](<../.gitbook/assets/image (115).png>)``
