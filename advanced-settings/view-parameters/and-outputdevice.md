@@ -22,11 +22,13 @@ General Option! ([`&push`](../../source-settings/push.md), [`&room`](../../gener
 
 Matches on "string contains"; lower case, with underscores marking special characters or spaces.
 
-[`&sink`](and-sink.md) takes priority, if used, and [`&sink`](and-sink.md) is more strict in matching.
+[`&sink`](and-sink.md) takes priority, if used, and [`&sink`](and-sink.md) is more strict in matching.  While `&outputdevice` matches on the device name, `&sink` matches on the device ID.
 
 `&outputdevice=labelname` is consistent across domains / cookie sessions, while [`&sink=deviceid`](and-sink.md) isn't.
 
 if parameter's value is left blank, it hides the option to change the output device, including under the settings cog.
+
+There is a site available that generates the `&outputdevice` value for you, based on devices found on your local system. Find that web-based tool here: [https://vdo.ninja/devices](https://vdo.ninja/devices)
 
 ## Related
 
