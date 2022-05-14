@@ -30,6 +30,16 @@ You can pass a device ID as well; see [vdo.ninja/devices](https://vdo.ninja/devi
 \
 Setting this option to `0` will also disable the guest's microphone, potentially allowing for guest connections that have no video or audio. You might do this if you needed midi-only transport, hidden IFRAME control, or just to chatting.
 
+
+
+{% hint style="info" %}
+See [vdo.ninja/devices](https://vdo.ninja/devices) to see the device IDs and device names. DeviceIDs are specific to VDO.Ninja's domain, while device names are not. \
+\
+This web-based tool will also auto-create links for you, just by clicking on the respective device.
+{% endhint %}
+
+##
+
 ## Related
 
 {% content-ref url="and-nosettings.md" %}

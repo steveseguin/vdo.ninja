@@ -1,5 +1,5 @@
 ---
-description: Like &sink, but selects the audio output device
+description: Like &sink, but selects the default audio output device
 ---
 
 # \&outputdevice
@@ -20,7 +20,9 @@ General Option! ([`&push`](../../source-settings/push.md), [`&room`](../../gener
 
 ## Details
 
-Matches on "string contains"; lower case, with underscores marking special characters or spaces.
+This option lets you set the default audio output device, based on its name.
+
+Matches on "string contains", so a partial string of the device name is enough. Use lower case, with underscores replacing special characters or spaces.
 
 [`&sink`](and-sink.md) takes priority, if used, and [`&sink`](and-sink.md) is more strict in matching.  While `&outputdevice` matches on the device name, `&sink` matches on the device ID.
 
@@ -28,7 +30,15 @@ Matches on "string contains"; lower case, with underscores marking special chara
 
 if parameter's value is left blank, it hides the option to change the output device, including under the settings cog.
 
-There is a site available that generates the `&outputdevice` value for you, based on devices found on your local system. Find that web-based tool here: [https://vdo.ninja/devices](https://vdo.ninja/devices)
+{% hint style="info" %}
+Visit [vdo.ninja/devices](https://vdo.ninja/devices) to find the available device IDs and device names on your system. \
+\
+Device IDs are specific to VDO.Ninja's domain, while device names are not. \
+\
+This web-based tool will also auto-create links for you, just by clicking on the respective device.
+{% endhint %}
+
+
 
 ## Related
 
