@@ -42,7 +42,7 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 			getById("mainmenu").style.opacity = 1;
 		}
 	}
-	if (location.hostname !== "vdo.ninja" && location.hostname !== "obs.ninja") {
+	if (location.hostname !== "vdo.ninja" && location.hostname !== "backup.vdo.ninja" && location.hostname !== "obs.ninja") {
 		if (location.hostname === "rtc.ninja"){
 			try {
 				if (session.label === false) {
@@ -101,6 +101,17 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 	
 	if (urlParams.has('controls') || urlParams.has('videocontrols')) {
 		session.showControls = true; // show the video control bar
+		
+		if (urlParams.get('controls') === "false"){
+			session.showControls = false;
+		} else if (urlParams.get('controls') === "0"){
+			session.showControls = false;
+		} else if (urlParams.get('controls') === "off"){
+			session.showControls = false;
+		}
+	}
+	if (urlParams.has('nocontrols')) {
+		session.showControls = false; // show the video control bar
 	}
 
 	if (!isIFrame){
@@ -161,7 +172,6 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 			window.prompt = function(title, val){
 			  return ipcRenderer.sendSync('prompt', {title, val});
 			};
-			
 			ipcRenderer.sendSync('prompt', {title, val});
 		} catch(e){}
 	}
@@ -188,6 +198,19 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 
 	if (urlParams.has('nomicbutton') || urlParams.has('nmb')) {
 		getById("mutebutton").style.setProperty("display", "none", "important");
+	}
+	
+	if (urlParams.has('bgimage')) { // URL or data:base64 image. Becomes local to this viewer only.  This is like &avatar, but slightly different. Just CSS in this case
+		var avatarImg = urlParams.get('bgimage') || false; 
+		if (avatarImg){
+			try {
+				avatarImg = decodeURIComponent(avatarImg);
+			} catch(e){}
+			try {
+				avatarImg = 'url("'+avatarImg+'")';
+				document.documentElement.style.setProperty('--video-background-image', avatarImg);
+			} catch(e){}
+		}
 	}
 	
 	if (urlParams.has('nomouseevents') || urlParams.has('nme')) {
@@ -355,6 +378,12 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 		session.meterStyle = 1;
 		session.signalMeter = true;
 	}
+	
+	session.slotmode = false; // temporary; remove in the future TODO: ## -----------------------
+	if (urlParams.has('slotmode')){
+		session.slotmode = true;
+	}
+	
 
 	if (urlParams.has('signalmeter')) {
 		session.signalMeter = urlParams.get('signalmeter');
@@ -423,16 +452,17 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 		session.orientation = "portrait";
 	}
 	
-	if (session.orientation && session.mobile){
-		document.addEventListener('fullscreenchange', event => {
-			
+	
+	document.addEventListener('fullscreenchange', event => {
+		log("full screen change event");
+		if (session.orientation && session.mobile){
 			if (document.fullscreenElement) {
 				document.exitFullscreen();
 			}
-			alert(JSON.stringify(event));
-		});
-
-	}
+		} else {
+			updateMixer();
+		}
+	});
 
 	if (urlParams.has('midi') || urlParams.has('hotkeys')) {
 		session.midiHotkeys = urlParams.get('midi') || urlParams.get ('hotkeys') || 1;
@@ -489,13 +519,11 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 		if (urlParams.has('miconly')){
 			session.videoDevice=0;
 			session.miconly = true;
-			getById("add_camera").innerHTML = "Share your Microphone";
-			miniTranslate(getById("add_camera"), "share-your-mic");
-			getById("videoMenu").style.display = "none";
+			miniTranslate(getById("add_camera"), "share-your-mic", "Share your Microphone");
+			getById("container-3").title = getById("add_camera").innerText;
 			
+			getById("videoMenu").style.display = "none";
 			getById("container-3").classList.add("microphoneBackground");
-
-			//session.autostart = true;
 			getById("flipcamerabutton").style.setProperty("display", "none", "important");
 			getById("mutevideobutton").style.setProperty("display", "none", "important");
 			getById("videoMenu3").style.setProperty("display", "none", "important");
@@ -605,6 +633,7 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 	
 	if (urlParams.has('dpi') || urlParams.has('dpr')) {
 		session.devicePixelRatio = urlParams.get('dpi') || urlParams.get('dpr') || 2.0;
+		session.devicePixelRatio = parseFloat(session.devicePixelRatio);
 	} //else if (window.devicePixelRatio && window.devicePixelRatio!==1){ 
 	//	session.devicePixelRatio = window.devicePixelRatio; // this annoys me to no end.
 	//}
@@ -693,7 +722,7 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 	}
 	
 	if (urlParams.has('crop')){
-		var crop = parseInt(urlParams.get('crop')) || 0;
+		var crop = parseFloat(urlParams.get('crop')) || 0;
 		if (crop>0){
 			session.forceAspectRatio = 1.7777777778 * (crop/100);
 		} else if (crop<0){
@@ -702,9 +731,6 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 			session.forceAspectRatio = 1.3333333333;
 		}
 	}
-	
-	
-
 	if (urlParams.has('cover')) {
 		session.cover = true;
 		document.documentElement.style.setProperty('--fit-style', 'cover');
@@ -714,18 +740,27 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 	} 
 
 	if (urlParams.has('record')) {
-		if (SafariVersion) {
-			if (!(session.cleanOutput)) {
-				warnUser("Your browser or device is not supported. Try Chrome if on macOS.");
+		if (!(session.cleanOutput)) {
+			if (SafariVersion && !MediaRecorder) {
+				if (macOS){
+					warnUser("Your browser may not support local media recording.\n\nTry Chrome instead if on macOS.");
+				} else {
+					warnUser("Your browser or device may not support local media recording.\n\nSafari sometimes allows the feature to be enabled via its experimental settings.");
+				}
+			} else if (SafariVersion){
+				if (macOS){
+					warnUser("It is recommended to use Chrome instead of Safari if doing local media recordings.");
+				} else {
+					warnUser("Local media recordings are an experimental feature on Apple devices.\n\nPlease at least test it out a few times first.");
+				}
 			}
-		} else {
-			session.recordLocal = urlParams.get('record');
+		} 
+		session.recordLocal = urlParams.get('record');
 
-			if (session.recordLocal != parseInt(session.recordLocal)) {
-				session.recordLocal = 6000;
-			} else {
-				session.recordLocal = parseInt(session.recordLocal);
-			}
+		if (session.recordLocal != parseInt(session.recordLocal)) {
+			session.recordLocal = 6000;
+		} else {
+			session.recordLocal = parseInt(session.recordLocal);
 		}
 	}
 	if (urlParams.has('autorecord')) {
@@ -737,7 +772,6 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 			} else {
 				session.recordLocal = parseInt(session.recordLocal);
 			}
-			
 		}
 	}
 	if (urlParams.has('autorecordlocal')) {
@@ -749,7 +783,6 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 			} else {
 				session.recordLocal = parseInt(session.recordLocal);
 			}
-			
 		}
 	}
 	if (urlParams.has('autorecordremote')) {
@@ -761,7 +794,6 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 			} else {
 				session.recordLocal = parseInt(session.recordLocal);
 			}
-			
 		}
 	}
 	
@@ -884,7 +916,7 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 				getById("defaultAvatar2").classList.add("selected");
 			}
 		} else if (avatar){
-			avatar = decodeURI(avatar);
+			avatar = decodeURIComponent(avatar);
 			
 			session.avatar = document.getElementById("defaultAvatar2");
 			session.avatar.ready = false;
@@ -903,6 +935,9 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 		document.getElementById("avatarDiv").classList.remove("advanced");
 	}
 	
+	if (urlParams.has('prompt') || urlParams.has('validate') || urlParams.has('approve')){
+		session.promptAccess = true;
+	}
 	
 	if (urlParams.has('js')){  // ie: &js=https%3A%2F%2Fvdo.ninja%2Fexamples%2Ftestjs.js
 		console.warn("Third-party Javascript has been injected into the code. Security cannot be ensured.");
@@ -1413,12 +1448,9 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 		}
 	}
 
-	//if (urlParams.has('directorview') || urlParams.has('dv')){
-	//	session.directorView = true;
-	//	if (!session.view){
-	//		session.view = true;
-	//	}
-	//}
+	if (urlParams.has('directorview') || urlParams.has('dv')){
+		session.directorView = true;
+	}
 	
 	if (urlParams.has('ruler') || urlParams.has('grid') || urlParams.has('thirds')) {
 		session.ruleOfThirds=true;
@@ -1471,8 +1503,7 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 
 	if (urlParams.has('remote') || urlParams.has('rem')) {
 		log("remote ENABLED");
-		session.remote = urlParams.get('remote') || urlParams.get('rem') || "nosecurity";
-		session.remote = session.remote.trim();
+		session.remote = urlParams.get('remote') || urlParams.get('rem') || true;
 	}
 
 	if (urlParams.has('latency') || urlParams.has('al') || urlParams.has('audiolatency')) {
@@ -1481,7 +1512,6 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 		session.audioLatency = parseInt(session.audioLatency) || 0;
 		session.disableWebAudio = false;
 	}
-
 
 	if (urlParams.has('micdelay') || urlParams.has('delay') || urlParams.has('md')) {
 		log("audio gain  ENABLED");
@@ -1670,6 +1700,8 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 		} catch(e){errorlog("variable css failed");}
 	}
 	
+	
+	
 	if (urlParams.has('retry')) {
 		session.forceRetry = parseInt(urlParams.get('retry')) || 30;
 	}
@@ -1677,26 +1709,25 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 		setTimeout(function(){session.retryWatchInterval();},30000);
 	}
 	
-	var darkmode=false;
 	try {
 		if (urlParams.has("darkmode") || urlParams.has("nightmode")){
-			darkmode = urlParams.get("darkmode") || urlParams.get("nightmode") || null;
-			if ((darkmode===null) || (darkmode === "")){
-				darkmode=true;
+			session.darkmode = urlParams.get("darkmode") || urlParams.get("nightmode") || null;
+			if ((session.darkmode===null) || (session.darkmode === "")){
+				session.darkmode=true;
 			} else if ((darkmode=="false") || (darkmode == "0") || (darkmode == 0) || (darkmode == "off")){
-				darkmode=false;
+				session.darkmode=false;
 			}
 		} else if (urlParams.has("lightmode") || urlParams.has("lightmode")){
-			darkmode = false;
+			session.darkmode = false;
 		} else {
-			darkmode = getComputedStyle(document.querySelector(':root')).getPropertyValue('--color-mode').trim();
-			if (darkmode == "dark"){
-				darkmode = true;
+			session.darkmode = getComputedStyle(document.querySelector(':root')).getPropertyValue('--color-mode').trim();
+			if (session.darkmode == "dark"){
+				session.darkmode = true;
 			} else {
-				darkmode = false;
+				session.darkmode = false;
 			}
 		}
-		if (darkmode){
+		if (session.darkmode){
 			document.body.classList.add("darktheme");
 			document.querySelector(':root').style.setProperty('--background-color',"#02050c" );
 		} else {
@@ -1790,20 +1821,20 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 	}
 	
 	if (session.videoDevice === 0) {
-		getById("add_camera").innerHTML = "Share your Microphone";
-		miniTranslate(getById("add_camera"), "share-your-mic");
+		
 		getById("previewWebcam").classList.add("miconly");
 		if (session.audioDevice === 0) {
-			getById("add_camera").innerHTML = "Click Start to Join";
-			miniTranslate(getById("add_camera"), "click-start-to-join");
+			miniTranslate(getById("add_camera"), "click-start-to-join", "Click Start to Join");
 			getById("container-2").className = 'column columnfade advanced'; // Hide screen share on mobile
 			getById("container-3").classList.add("skip-animation");
 			getById("container-3").classList.remove('pointer');
 			delayedStartupFuncs.push([previewWebcam]);
 			session.webcamonly = true;
 		} else {
+			miniTranslate(getById("add_camera"), "share-your-mic", "Share your Microphone");
 			getById("container-3").classList.add("microphoneBackground");
 		}
+		getById("container-3").title = getById("add_camera").innerText;
 	}
 
 	if (session.mobile){
@@ -1994,15 +2025,34 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 
 	if (urlParams.has('codec')) {
 		log("CODEC CHANGED");
-		session.codec = urlParams.get('codec').toLowerCase();
-		if (session.codec=="webp"){
-			session.webp = true;
-			session.codec = false;
+		session.codec = urlParams.get('codec') || false;
+		if (session.codec){
+			session.codec = session.codec.toLowerCase();
+			if (session.codec=="webp"){
+				session.webp = true;
+				session.codec = false;
+			}
 		}
 	} else if (OperaGx){
 		session.codec = "vp8";
 		warnlog("Defaulting to VP8 manually, as H264 with remote iOS devices is not supported");
 	}
+	
+	if (urlParams.has('scenelinkcodec')){ // this is mainly for a niche iframe API use
+		log("codecGroupFlag CHANGED");
+		session.codecGroupFlag = urlParams.get('scenelinkcodec') || false;
+		if (session.codecGroupFlag){
+			session.codecGroupFlag = "&codec="+session.codecGroupFlag.toLowerCase();
+		}
+	}
+	if (urlParams.has('scenelinkbitrate')){  // this is mainly for a niche iframe API use
+		log("bitrateGroupFlag CHANGED");
+		session.bitrateGroupFlag = urlParams.get('scenelinkbitrate') || false;
+		if (session.bitrateGroupFlag){
+			session.bitrateGroupFlag = "&totalbitrate="+parseInt(session.bitrateGroupFlag);
+		}
+	}
+	
 	
 	if (urlParams.has('h264profile')) {
 		session.h264profile = urlParams.get('h264profile') || "42e01f"; // 42001f
@@ -2120,8 +2170,8 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 		log(session.maxvideobitrate);
 	}
 
-	if (urlParams.has('totalroombitrate') || urlParams.has('totalroomvideobitrate') || urlParams.has('trb')) {
-		session.totalRoomBitrate = urlParams.get('totalroombitrate') || urlParams.get('totalroomvideobitrate') || urlParams.get('trb');
+	if (urlParams.has('totalroombitrate') || urlParams.has('totalroomvideobitrate') || urlParams.has('trb') || urlParams.has('totalbitrate') || urlParams.has('tb')) {
+		session.totalRoomBitrate = urlParams.get('totalroombitrate') || urlParams.get('totalroomvideobitrate') || urlParams.get('trb') || urlParams.get('totalbitrate') || urlParams.get('tb') || 0;
 		session.totalRoomBitrate = parseInt(session.totalRoomBitrate);
 
 		if (session.totalRoomBitrate < 1) {
@@ -2137,8 +2187,8 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 		session.totalRoomBitrate_default = session.totalRoomBitrate; // trb_default doesn't change dynamically, but trb can (per director I guess)
 	}
 	
-	if (urlParams.has('maxtotalscenebitrate') ||  urlParams.has('totalscenebitrate') || urlParams.has('mtsb') || urlParams.has('tsb')) {
-		session.totalSceneBitrate = urlParams.get('maxtotalscenebitrate') || urlParams.get('totalscenebitrate') || urlParams.get('mtsb') || urlParams.get('tsb') || false;
+	if (urlParams.has('maxtotalscenebitrate') || urlParams.has('totalscenebitrate') || urlParams.has('mtsb') || urlParams.has('tsb') || urlParams.has('totalbitrate') || urlParams.has('tb')) {
+		session.totalSceneBitrate = urlParams.get('maxtotalscenebitrate') || urlParams.get('totalscenebitrate') || urlParams.get('mtsb') || urlParams.get('tsb') || urlParams.get('totalbitrate') || urlParams.get('tb') || false;
 		if (session.totalSceneBitrate){
 			session.totalSceneBitrate = parseInt(session.totalSceneBitrate);
 		}
@@ -2260,7 +2310,7 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 		session.statsMenu = true;
 	}
 	
-	if (urlParams.has('datamode')) {
+	if (urlParams.has('datamode') || urlParams.has('dataonly')) {
 		session.cleanOutput=true;
 		session.videoDevice = 0;
 		session.audioDevice = 0;
@@ -2269,6 +2319,7 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 		session.noaudio = [];
 		session.noiframe = [];
 		session.webcamonly = true;
+		session.dataMode = true;
 	}
 
 	if (urlParams.has('cleandirector') || urlParams.has('cdv')) {
@@ -2846,14 +2897,13 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 
 			getById("info").innerHTML = "";
 			if (session.videoDevice === 0) {
-				getById("add_camera").innerHTML = "Share your Microphone";
-				miniTranslate(getById("add_camera"), "share-your-mic");
+				miniTranslate(getById("add_camera"), "share-your-mic", "Share your Microphone");
 			} else {
-				getById("add_camera").innerHTML = "Share your Camera";
-				miniTranslate(getById("add_camera"), "share-your-camera");
+				miniTranslate(getById("add_camera"), "share-your-camera", "Share your Camera");
 			}
-			getById("add_screen").innerHTML = "Share your Screen";
-			miniTranslate(getById("add_screen"), "share-your-screen");
+			miniTranslate(getById("add_screen"), "share-your-screen", "Share your Screen");
+			getById("container-2").title = getById("add_screen").innerText;
+			getById("container-3").title = getById("add_camera").innerText;
 
 			getById("passwordRoom").value = "";
 			getById("videoname1").value = "";
@@ -2960,6 +3010,11 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 		delayedStartupFuncs.push([previewWebcam]); 
 	}
 	
+	//if (!session.director && ((ChromeVersion == 86) || (ChromeVersion == 77) || (ChromeVersion == 62) || (ChromeVersion == 51)) && (((session.permaid===false) && session.view) || (session.scene!==false))){
+	//	session.studioSoftware = true; // vmix
+	if (window.obsstudio){
+		session.studioSoftware = true;
+	}
 	if (session.cleanViewer){
 		if (session.view && !session.director && session.permaid===false){
 			session.cleanOutput = true;
@@ -3047,8 +3102,13 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 		getById("roomid").innerText = session.roomid;
 		getById("container-1").className = 'column columnfade advanced';
 		getById("container-4").className = 'column columnfade advanced';
+		// container 5 is share media file; 6 is share website
 		getById("container-7").style.display = 'none';
 		getById("container-8").style.display = 'none';
+		getById("container-9").style.display = 'none';
+		getById("container-10").style.display = 'none';
+		getById("container-11").style.display = 'none';
+		getById("container-12").style.display = 'none';
 		getById("mainmenu").style.alignSelf = "center";
 		getById("mainmenu").classList.add("mainmenuclass");
 		getById("header").style.alignSelf = "center";
@@ -3062,31 +3122,26 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 		if (session.roomid.length > 0) {
 			if (session.videoDevice === 0) {
 				if (session.audioDevice === 0) {
-					getById("add_camera").innerHTML = "Join room";
-					miniTranslate(getById("add_camera"), "join-room");
+					miniTranslate(getById("add_camera"), "join-room", "Join room");
 				} else {
-					getById("add_camera").innerHTML = "Join room with Microphone";
-					miniTranslate(getById("add_camera"), "join-room-with-mic");
+					miniTranslate(getById("add_camera"), "join-room-with-mic", "Join room with Microphone");
 				}
 			} else {
-				getById("add_camera").innerHTML = "Join Room with Camera";
-				miniTranslate(getById("add_camera"), "join-room-with-camera");
+				miniTranslate(getById("add_camera"), "join-room-with-camera", "Join Room with Camera");
 			}
-			getById("add_screen").innerHTML = "Screenshare with Room";
-			miniTranslate(getById("add_screen"), "share-screen-with-room");
+			miniTranslate(getById("add_screen"), "share-screen-with-room", "Screenshare with Room");
 		} else {
 			if (session.videoDevice === 0) {
-				getById("add_camera").innerHTML = "Share your Microphone";
-				miniTranslate(getById("add_camera"), "share-your-mic");
+				miniTranslate(getById("add_camera"), "share-your-mic", "Share your Microphone");
 			} else {
-				getById("add_camera").innerHTML = "Share your Camera";
-				miniTranslate(getById("add_camera"), "share-your-camera");
+				miniTranslate(getById("add_camera"), "share-your-camera",  "Share your Camera");
 			}
-			getById("add_screen").innerHTML = "Share your Screen";
-			miniTranslate(getById("add_screen"), "share-your-screen");
+			miniTranslate(getById("add_screen"), "share-your-screen", "Share your Screen");
 		}
 		getById("head3").classList.add('advanced');
 		getById("head3a").classList.add('advanced');
+		getById("container-2").title = getById("add_screen").innerText;
+		getById("container-3").title = getById("add_camera").innerText;
 
 		if (session.scene !== false) {
 			getById("container-4").className = 'column columnfade';
@@ -3361,6 +3416,8 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 		}
 	}
 	
+	
+	
 	if (session.sensorData) {
 		setupSensorData(parseInt(session.sensorData));
 	}
@@ -3421,6 +3478,12 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 				if (!ret){warnlog("Not connected yet or no peers available");}
 				return;
 			}
+			
+			if ("PPT" in e.data){
+				log("PTT activated-webmain");
+				toggleMute(true);
+				return; // this is a high-load call, so lets skip the rest of the checks to save cpu.
+			}
 
 			if ("sendChat" in e.data) {
 				sendChat(e.data.sendChat); // sends to all peers; more options down the road
@@ -3428,6 +3491,7 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 			}
 			// Chat out gets called via getChatMessage function
 			// Related code: parent.postMessage({"chat": {"msg":-----,"type":----,"time":---} }, "*");
+
 
 			if ("mic" in e.data) { // this should work for the director's mic mute button as well. Needs to be manually enabled the first time still tho.
 				if (e.data.mic === true) { // unmute
@@ -3611,13 +3675,30 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 			if ("sendRequest" in e.data) { // webrtc send to publishers
 				session.sendRequest(e.data);
 			}
+			
+			if ("sendRawMIDI" in e.data) { // webrtc send to publishers
+				//var msg = {};
+				//msg.midi = {};
+				//msg.midi.d = e.data.sendRawMIDI.data; aka [d1,d2,d3];
+				//msg.midi.c = e.data.sendRawMIDI.channel;
+				//msg.midi.s = e.data.sendRawMIDI.timestamp;
+				// e.data.UUID or e.data.streamID or leave empty to send to all
+				if ("UUID" in e.data){
+					sendRawMIDI(e.data.sendRawMIDI, e.data.UUID); // send to connection
+				} else if (e.data.streamID){
+					sendRawMIDI(e.data.sendRawMIDI, false, e.data.streamID); // send to connection
+				} else {
+					sendRawMIDI(e.data.sendRawMIDI); // send to all
+				}
+				return; // make it send faster.
+			}
 
 			if ("sendPeers" in e.data) { // webrtc send message to every connected peer; like send and request; a hammer vs a knife.
 				session.sendPeers(e.data);
 			}
 
 			if ("reload" in e.data) { // reload the page
-				location.reload();
+				reloadRequested(); // location.reload();, but with no user prompt (force reload)
 			}
 
 			if ("getStats" in e.data) {
@@ -3698,7 +3779,19 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 			}
 			
 			if ("getRemoteStats" in e.data) {
-				session.sendRequest({"requestStats":true, "remote":session.remote});
+				if (session.remote){
+					session.sendRequest({"requestStats":true, "remote":session.remote});
+				} else {
+					session.sendRequest({"requestStats":true});
+				}
+			}
+			
+			if ("requestStatsContinuous" in e.data) {
+				if (session.remote){
+					session.sendRequest({"requestStatsContinuous":e.data.requestStatsContinuous, "remote":session.remote});
+				} else {
+					session.sendRequest({"requestStatsContinuous":e.data.requestStatsContinuous});
+				}
 			}
 
 			if ("getLoudness" in e.data) {
@@ -3794,6 +3887,13 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 				switchModes(e.data.previewMode);
 			} 
 			
+			if ("requestStream" in e.data){ 
+				if (e.data.requestStream){ // load a specific stream ID
+					log("requestStream iframe api");
+					session.requestStream(e.data.requestStream);
+				} // don't use if the stream is in your room (as not needed)
+			}  // you can load a stream ID from inside a room that exists outside any room
+			
 			if (("scene" in e.data) && ("layout" in e.data)){
 				warnlog("changing layout request via IFRAME API");
 				issueLayout(e.data.layout, e.data.scene);
@@ -3802,7 +3902,6 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 					updateMixer();
 				}
 			}
-
 
 			if (("action" in e.data) && (e.data.action!="null")) { ///////////////  reuse the Companion API
 				var resp = processMessage(e.data); // reuse the companion API
@@ -3854,7 +3953,8 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 				}
 			}
 		};
-	}
+	} 
+	
 
 	if (session.midiHotkeys || session.midiOut!==false) {
 		
@@ -3874,62 +3974,23 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 				
 				if (session.midiOut===true){
 					for (var i = 0; i < WebMidi.inputs.length; i++) {
-						
-						var input = WebMidi.inputs[i];
-						
-						input.addListener("midimessage", function(e) {
-							log(e);
-							var msg = {};
-							msg.midi = {};
-							msg.midi.d = e.data;
-							msg.midi.s = e.timestamp;
-							if (e.message && e.message.channel){
-								msg.midi.c = e.message.channel;
-							}
-							var list = [];
-							for (var UUID in session.pcs){
-								if (session.pcs[UUID].allowMIDI){
-									if (session.sendMessage(msg, UUID)){
-										list.push(UUID);
-									}
-								}
-							}
-							for (var UUID in session.rpcs){
-								if (session.rpcs[UUID].allowMIDI){  // specific to gstreamer code aplication
-									if (!list.includes(UUID)){
-										session.sendRequest(msg, UUID)
-									}
-								}
-							}
-						});
+						try {
+							var input = WebMidi.inputs[i];
+							input.addListener("midimessage", function(e) {
+								sendRawMIDI(e);
+								//var msg = {};
+								//msg.midi = {};
+								//msg.midi.d = e.data; aka [d1,d2,d3];
+								//msg.midi.c = e.channel;
+								//msg.midi.s = e.timestamp;
+							});
+						} catch(e){}
 					}
 				} else if (session.midiOut==parseInt(session.midiOut)){
 					try{
 						var input = WebMidi.inputs[parseInt(session.midiOut)-1];
 						input.addListener("midimessage", function(e) {
-							log(e);
-							var msg = {};
-							msg.midi = {};
-							msg.midi.d = e.data;
-							msg.midi.s = parseInt(10000*e.timestamp)/10000.0;
-							if (e.message && e.message.channel){
-								msg.midi.c = e.message.channel;
-							}
-							var list = [];
-							for (var UUID in session.pcs){
-								if (session.pcs[UUID].allowMIDI){
-									if (session.sendMessage(msg, UUID)){
-										list.push(UUID);
-									}
-								}
-							}
-							for (var UUID in session.rpcs){
-								if (session.rpcs[UUID].allowMIDI){ // specific to gstreamer code aplication
-									if (!list.includes(UUID)){
-										session.sendRequest(msg, UUID)
-									}
-								}
-							}
+							sendRawMIDI(e);
 						});
 					} catch(e){errorlog(e);};
 				}
@@ -4152,7 +4213,6 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 
 		event.dataTransfer.setDragImage( getById('dragImage'), 24, 24);
 		event.dataTransfer.setData("text/uri-list", encodeURI(url));
-		//event.dataTransfer.setData("url", encodeURI(url));
 
 	});
 	
@@ -4205,19 +4265,9 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 
 		});
 	}
-
+	
 	window.onload = function winonLoad() { // This just keeps people from killing the live stream accidentally. Also give me a headsup that the stream is ending
-		window.addEventListener("beforeunload", function(e) {
-			
-			if (!session.noExitPrompt && !session.cleanOutput && (session.permaid!==false || session.director)){
-				(e || window.event).returnValue = "Are you sure you want to exit?"; //Gecko + IE
-				return "Are you sure you want to exit?";   
-			} else {
-				//setTimeout(function(){session.hangup();},0);
-				return undefined; // ADDED OCT 29th; get rid of popup. Just close the socket connection if the user is refreshing the page.  It's one or the other.
-			}
-		});
-		
+		window.addEventListener("beforeunload", confirmUnload);
 		window.addEventListener("unload", function(e) {
 			try {
 				session.ws.close();
@@ -4257,7 +4307,10 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 	});
 	
 	document.addEventListener("keydown", event => {
-		
+		keyDownEvent(event);
+	});
+	
+	function keyDownEvent(event){
 		
 		if ((event.ctrlKey) || (event.metaKey)) { // detect if CTRL is pressed
 			CtrlPressed = true;
@@ -4269,56 +4322,114 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 		} else {
 			AltPressed = false;
 		}
-	
+		
 		if (session.disableHotKeys){return;}
+		
+		if (PPTHotkey){
+			if (event.target && (event.target.tagName == "INPUT")){
+				// skip, since an input field is selected
+			} else if ((PPTHotkey.ctrl === event.ctrlKey) &&  (PPTHotkey.alt === AltPressed) && (PPTHotkey.meta === event.metaKey) && ((PPTHotkey.key===false) || ((PPTHotkey.key!==false) && (PPTHotkey.key === event.key)))){
+				if (session.muted && !PPTKeyPressed){
+					session.muted = false;
+					PPTKeyPressed = true;
+					getById("mutebutton").classList.add("PPTActive");
+					toggleMute(true);
+				} else if (!PPTKeyPressed){
+					PPTKeyPressed = true;
+					getById("mutebutton").classList.add("PPTActive");
+				}
+				event.preventDefault(); 
+				event.stopPropagation();
+				return;
+			} else if (PPTKeyPressed){
+				PPTKeyPressed = false;
+				getById("mutebutton").classList.remove("PPTActive");
+				if (!session.muted){
+					session.muted = true;
+					toggleMute(true);
+					
+				}
+				event.preventDefault(); 
+				event.stopPropagation();
+				return;
+			}
+		}
 
-		if (KeyPressedTimeout){
-			event.preventDefault(); event.stopPropagation();
+		if (KeyPressedTimeout || PPTKeyPressed){
+			event.preventDefault(); 
+			event.stopPropagation();
 			return;
 		}
 
 		if (CtrlPressed && event.keyCode) {
-
 			if (event.keyCode == 77) { // M
 				if (event.metaKey) {
 					if (AltPressed) {
 						if (!KeyPressedTimeout){
 							toggleMute(); // macOS
 							KeyPressedTimeout = Date.now();
+							event.preventDefault(); 
+							event.stopPropagation();
+							return;
 						}
 					}
 				} else {
 					if (!KeyPressedTimeout){
 						toggleMute(); // Windows
 						KeyPressedTimeout = Date.now();
+						event.preventDefault(); 
+						event.stopPropagation();
+						return;
 					}
 				}
 				
-				
 			} else if (event.keyCode == 66) { // B
 				toggleVideoMute();
+				event.preventDefault(); 
+				event.stopPropagation();
+				return;
 			}
 			
 			if (AltPressed){ // CTRL + ALT
 				if (event.keyCode == 70) { // F
 					toggleFileshare()();
+					event.preventDefault(); 
+					event.stopPropagation();
+					return;
 				} else if (event.keyCode == 67) { // C
 					cycleCameras();
+					event.preventDefault(); 
+					event.stopPropagation();
+					return;
 				} else if (event.keyCode == 83) { // S
 					toggleScreenShare()();
-				} 
+					event.preventDefault(); 
+					event.stopPropagation();
+					return;
+				}
 			}
 		}
-	});
+	}
 
 	document.addEventListener("keyup", event => {
+		
+		if (PPTKeyPressed){
+			PPTKeyPressed = false;
+			getById("mutebutton").classList.remove("PPTActive");
+			if (!session.muted){
+				session.muted = true;
+				toggleMute(true);
+			}
+			event.preventDefault(); 
+			event.stopPropagation();
+			return;
+		}
 		
 		if (!(event.ctrlKey || event.metaKey)) {
 			if (CtrlPressed) {
 				CtrlPressed = false;
 				for (var i in Callbacks) {
 					var cb = Callbacks[i];
-					log(cb.slice(1));
 					cb[0](...cb.slice(1)); // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Spread_syntax#A_better_apply
 				}
 				Callbacks = [];

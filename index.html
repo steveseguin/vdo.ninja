@@ -55,7 +55,7 @@
 		<meta property="twitter:image" content="./media/vdoNinja_logo_full.png" />
 		<meta name="msapplication-TileColor" content="#da532c" />
 		<meta name="theme-color" content="#ffffff" />
-		<link rel="stylesheet" href="./main.css?ver=153" />
+		<link rel="stylesheet" href="./main.css?ver=155" />
 		<script type="text/javascript" crossorigin="anonymous" src="./thirdparty/adapter.min.js"></script>
 		<style id="lightbox-animations" type="text/css"></style>
 		<!-- <link rel="manifest" href="manifest.json" /> -->
@@ -80,7 +80,7 @@
 			<link itemprop="url" href="./media/vdoNinja_logo_full.png" />
 		</span>
 		<script  type="text/javascript" crossorigin="anonymous"  src="./thirdparty/CodecsHandler.js?ver=37"></script>
-		<script  type="text/javascript" crossorigin="anonymous" src="./webrtc.js?ver=438"></script>
+		<script  type="text/javascript" crossorigin="anonymous" src="./webrtc.js?ver=445"></script>
 		<input id="zoomSlider" type="range" style="display: none;" />
 		<div id="header">
 			
@@ -336,7 +336,7 @@
 								<br />
 							</ul>
 							<br /><br />
-							<i>Looking to just chat and not direct?</i>
+							<i data-translate="looking-to-just-chat-and-not-direct">Looking to just chat and not direct?</i>
 							<button onclick="jumptoroom2()" class="gobutton" style="width:100%;" alt="Enter the room as the group's director" title="You'll enter as the room's director">
 								<span data-translate="join-the-room-basic">Join the room as a Participant, rather than a director</span>
 							</button>
@@ -373,10 +373,10 @@
 						<p><span data-translate="privacy-disabled">Privacy warning: The director will be able to remotely change your camera and microphone.</span></p>
 					</div>
 					<span id="guestTips" style="display:none">
-						<p>For the best possible experience, make sure</p>
-						<span><i class="las la-plug"></i><span>Your device is powered</span></span>
-						<span><i class="las la-ethernet"></i><span>Your connection is hardwired instead of wifi</span></span>
-						<span><i class="las la-headphones"></i><span>You are using headphones / earphones</span></span>
+						<p data-translate="for-the-best-possible-experience-make-sure">For the best possible experience, make sure</p>
+						<span><i class="las la-plug"></i><span data-translate="your-device-is-powered">Your device is powered</span></span>
+						<span><i class="las la-ethernet"></i><span data-translate="your-connection-is-hardwired-instead-of-wifi">Your connection is hardwired instead of wifi</span></span>
+						<span><i class="las la-headphones"></i><span data-translate="you-are-using-headphones-earphones">You are using headphones / earphones</span></span>
 					</span>
 					<span id="videoMenu" class="videoMenu">
 						<i class="las la-video"></i><span data-translate="video-source"> Video Source </span>
@@ -782,9 +782,29 @@
 				<i style="margin-top:30px;font-size:600%;overflow:hidden;" class="las la-tachometer-alt"></i>
 			</div>
 			
-			<div id="container-8" class="column columnfade pointer rounded card advanced" style="overflow: hidden;" onclick="window.location = 'https://guides.vdo.ninja';">
-				<h2><span data-translate="read-the-guides">Browse the Guides</span></h2>
+			<div id="container-8" class="column columnfade pointer rounded card advanced" style="overflow: hidden;" onclick="window.location = './mixer.html';">
+				<h2><span data-translate="try-the-mixer-out">Try out the Mixer</span></h2>
+				<i style="margin-top:30px;font-size:600%;overflow:hidden;" class="las la-blender"></i>
+			</div>
+			
+			<div id="container-9" class="column columnfade pointer rounded card advanced" style="overflow: hidden;" onclick="window.location = 'https://guides.vdo.ninja';">
+				<h2><span data-translate="read-the-guides">Basic Usage Guides</span></h2>
 				<i style="margin-top:30px;font-size:600%;overflow:hidden;" class="las la-book-open"></i>
+			</div>
+			
+			<div id="container-10" class="column columnfade pointer rounded card advanced" style="overflow: hidden;" onclick="window.location = 'https://docs.vdo.ninja';">
+				<h2><span data-translate="get-full-documentation">Full Documentation</span></h2>
+				<i style="margin-top:30px;font-size:600%;overflow:hidden;" class="las la-info"></i>
+			</div>
+			
+			<div id="container-11" class="column columnfade pointer rounded card advanced" style="overflow: hidden;" onclick="window.location = 'https://github.vdo.ninja';">
+				<h2><span data-translate="get-the-source-code">Source Code</span></h2>
+				<i style="margin-top:30px;font-size:600%;overflow:hidden;" class="las la-code-branch"></i>
+			</div>
+			
+			<div id="container-12" class="column columnfade pointer rounded card advanced" style="overflow: hidden;" onclick="window.location = 'https://docs.vdo.ninja/getting-started/sponsor';">
+				<h2><span data-translate="show-your-support">Show Your Support</span></h2>
+				<i style="margin-top:30px;font-size:600%;overflow:hidden;" class="las la-heartbeat"></i>
 			</div>
 			
 			<p></p>
@@ -800,7 +820,7 @@
 							<br />
 							<li>Youtube video 
 								<i class="lab la-youtube"></i>
-								<a href="https://www.youtube.com/watch?v=vLpRzMjUDaE&list=PLWodc2tCfAH1WHjl4WAOOoRSscJ8CHACe&index=2" alt="Youtube video demoing VDO.Ninja">Demoing it here</a>
+								<a href="https://www.youtube.com/watch?v=QaA_6aOP9z8&list=PLWodc2tCfAH1l_LDvEyxEqFf42hOBKqQM&index=1" alt="Youtube video demoing VDO.Ninja">Demoing it here</a>
 							</li>
 							
 							<br />
@@ -886,7 +906,7 @@
 			<div class='directorContainer half' id='directorLinks1' style='display:none;margin-top:0;'>
 			
 				<div class='directorBlock'>
-					<h2 title="Invite a guest or camera source to publish into the group room" style="margin-top: 5px;"><i class="las la-video director-link-icons" ></i> INVITE A GUEST</h2>
+					<h2 title="Invite a guest or camera source to publish into the group room" style="margin-top: 5px;"><i class="las la-video director-link-icons" ></i><span data-translate="invite-a-guest">INVITE A GUEST</span></h2>
 					<span style="margin:5px; line-height: 1.6;" data-translate='invite-users-to-join'>Guests can use the link to join the group room</span>
 					<a onclick='copyFunction(this,event)' id="director_block_1" class='task grabLinks' style='cursor:copy;background-color: #0003;'></a>
 					<span style="display:block;">
@@ -897,8 +917,8 @@
 						</label>
 							<span data-translate="guests-hear-others" style="line-height:0;position:relative;top:-3px;">Guests hear others</span>
 						</span>
-						<button class='pull-right grey' style='font-size:1.15em' onclick='copyFunction(getById("director_block_1"),event)'><i class='las la-copy'></i>Copy link</button>
-						<button class='pull-right grey' style='font-size:1.15em' id="showCustomizerButton1"  onclick='showCustomizer(1,this)'><i class='las la-tools'></i>Customize</button>
+						<button class='pull-right grey' style='font-size:1.15em' onclick='copyFunction(getById("director_block_1"),event)'><i class='las la-copy'></i><span data-translate="copy-link">Copy link</span></button>
+						<button class='pull-right grey' style='font-size:1.15em' id="showCustomizerButton1"  onclick='showCustomizer(1,this)'><i class='las la-tools'></i><span data-translate="customize">Customize</span></button>
 					<span>
 				</div>
 			</div>
@@ -916,8 +936,8 @@
 						</label>
 							<span data-translate="auto-add-guests" style="line-height:0;position:relative;top:-3px;">Auto-add guests</span>
 						</span>
-						<button class='pull-right grey' style='font-size:1.15em' onclick='copyFunction(getById("director_block_3"),event)'><i class='las la-copy'></i>Copy link</button>
-						<button class='pull-right grey' style='font-size:1.15em' id="showCustomizerButton3"  onclick='showCustomizer(3,this)'><i class='las la-tools'></i>Customize</button>
+						<button class='pull-right grey' style='font-size:1.15em' onclick='copyFunction(getById("director_block_3"),event)'><i class='las la-copy'></i><span data-translate="copy-link">Copy link</span></button>
+						<button class='pull-right grey' style='font-size:1.15em' id="showCustomizerButton3"  onclick='showCustomizer(3,this)'><i class='las la-tools'></i><span data-translate="customize">Customize</span></button>
 					<span>
 				</div>
 				
@@ -1223,11 +1243,10 @@
 			</div>
 			<div></div>
 			<div id='guestFeeds' style="display:none"><div id='deleteme'>
-				<div class='vidcon directorMargins' id='fakeguest1' style='min-height: 300px;text-align: center;'><h2>Guest 1</h2><i class='las la-user-circle' style='font-size:8em; margin: 20px 0px;' aria-hidden='true'></i></div>
-				<div class='vidcon directorMargins' id='fakeguest2' style='min-height: 300px;text-align: center;'><h2>Guest 2</h2><i class='las la-user-circle' style='font-size:8em; margin: 20px 0px;' aria-hidden='true'></i></div>
-				<div class='vidcon directorMargins' id='fakeguest3' style='min-height: 300px;text-align: center;'><h2>Guest 3</h2><i class='las la-user-circle' style='font-size:8em; margin: 20px 0px;' aria-hidden='true'></i></div>
-				<div class='vidcon directorMargins' id='fakeguest4' style='min-height: 300px;text-align: center;'><h2>Guest 4</h2><i class='las la-user-circle' style='font-size:8em; margin: 20px 0px;' aria-hidden='true'></i></div>
-				<h4 style='color:#CCC;margin:20px 20px 0 20px;' id='fakeguestinfo'  data-translate='more-than-four-can-join' >These four guest slots are just for demonstration. More than four guests can actually join a room.</h4>
+				<div class='vidcon directorMargins' id='fakeguest1' style='min-height: 300px;text-align: center;'><h2><span data-translate="guest-1">Guest 1</span></h2><i class='las la-user-circle' style='font-size:8em; margin: 20px 0px;' aria-hidden='true'></i></div>
+				<div class='vidcon directorMargins' id='fakeguest2' style='min-height: 300px;text-align: center;'><h2><span data-translate="guest-2">Guest 2</span></h2><i class='las la-user-circle' style='font-size:8em; margin: 20px 0px;' aria-hidden='true'></i></div>
+				<div class='vidcon directorMargins' id='fakeguest3' style='min-height: 300px;text-align: center;'><h2><span data-translate="guest-3">Guest 3</span></h2><i class='las la-user-circle' style='font-size:8em; margin: 20px 0px;' aria-hidden='true'></i></div>
+				<div class='vidcon directorMargins' id='fakeguest4' style='min-height: 300px;text-align: center;'><h2><span data-translate="guest-4">Guest 4</span></h2><i class='las la-user-circle' style='font-size:8em; margin: 20px 0px;' aria-hidden='true'></i></div>
 			</div></div>
 		</div>
 		<div id="hiddenElements"></div>
@@ -1316,10 +1335,22 @@
 					<span data-translate="force-keyframe">Rainbow Puke Fix</span>
 				</button>
 				
-				<button  class="hidden" data-cluster="1" data-action-type="stats-remote" data-value="0" title="Request the statistics of this video in any active scene" onclick="session.sendRequest({'requestStats':'true', }, this.dataset.UUID);">
+				<button  class="hidden" data-cluster="1" data-action-type="stats-remote" data-value="0" title="Request the statistics of this video in any active scene" onclick="toggleSceneStats(this);">
 					<i class="las la-info-circle"></i>
 					<span data-translate="stats-remote"> Scene Stats</span>
 				</button>
+				
+				<span class="graphSection hidden" data-cluster="1" data-action-type="stats-graphs-bitrate" data-value="0">
+					<span class="hidden" data-no-scenes="true">No scenes active</span>
+				</span>
+				<span class="graphSection hidden" data-cluster="1" data-action-type="stats-graphs-details" data-value="0">
+					<span data-action-type="stats-graphs-details-container" class="hidden">
+						<span class="hidden" data-scene-name="true">scene</span>
+						<span class="hidden" data-bitrate="true">bitrate (kbps)</span>
+						<span class="hidden" data-resolution="true">resolution</span>
+						<span class="hidden" data-video-codec="true">video codec</span>
+					</span>
+				</span>
 				
 				<!----	  /////// BREAK ////////			-->
 				<span class="hideDropMenu" onclick="toggleByDataset('2');getById('chevarrow4').classList.toggle('bottom');getById('chevarrow4').classList.toggle('right');"><i id="chevarrow4" class="chevron right" aria-hidden="true" style="padding:0px 7px 0 3px;" ></i><span data-translate="additional-controls">Additional controls</span></span>
@@ -1362,7 +1393,7 @@
 						<div style="text-align: center;font-size: 150%;" data-action-type="order-value" title="Current Index Order of this Video" >0</div>
 						Mix Order
 					</span>
-					<button style="width:34px;margin-left:0;" data-action-type="order-up" title="Shift this Video Up in Order"  onclick="changeOrder(1,this.dataset.UUID);">
+					<button style="width:34px;margin-left:0;height: 29px;" data-action-type="order-up" title="Shift this Video Up in Order"  onclick="changeOrder(1,this.dataset.UUID);">
 						<span data-translate="order-up"><i class="las la-plus"></i></span>
 					</button>
 				</span>
@@ -1660,12 +1691,18 @@
 				
 				<div class="advanced" id="grabDirectorSoloLinkParent" title="The solo view link of the Director's video."><i class="las la-user"></i> Director's solo link:<a onclick="copyFunction(this,event)" data-drag="1" draggable="true" id="grabDirectorSoloLink" class="task" ></a></div>
 				<br />
-				<button onclick="toggleSettings()" style="width: 135px; background-color:#EFEFEF;padding:9px 12px 10px 2px;margin: 0px 0px 20px 0"><i class="chevron right" style="font-size:150%;top:3px;position:relative;"></i> <b><span data-translate="close-settings">Close Settings</span></b></button>
+				<button onclick="toggleSettings()" class="toggleSettings"><i class="chevron right" style="font-size:150%;top:3px;position:relative;"></i> <b><span data-translate="close-settings">Close Settings</span></b></button>
 				
-				<button id='advancedOptionsAudio' onclick="this.classList.toggle('highlight');toggle(getById('popupSelector_constraints_audio'),false,false); getById('popupSelector_constraints_loading').style.visibility='visible';" class="advancedToggle"><i class="las la-sliders-h" style="font-size:150%;top:3px;position:relative;"></i> <b><span class="mobileHide" data-translate="advanced">Advanced </span>Audio</b></button>
+				<button id='advancedOptionsAudio' onclick="this.classList.toggle('highlight');toggle(getById('popupSelector_constraints_audio'),false,false); getById('popupSelector_constraints_loading').style.visibility='visible';" class="advancedToggle">
+				<i class="las la-sliders-h" style="font-size:150%;top:3px;position:relative;"></i> <b>Audio</b></button>
 				
-				<button id='advancedOptionsCamera' onclick="this.classList.toggle('highlight');toggle(getById('popupSelector_constraints_video'),false,false);  getById('popupSelector_constraints_loading').style.visibility='visible';" class="advancedToggle"><i class="las la-sliders-h" style="font-size:150%;top:3px;position:relative;"></i> <b><span class="mobileHide" data-translate="advanced">Advanced </span>Video</b></button>
+				<button id='advancedOptionsCamera' onclick="this.classList.toggle('highlight');toggle(getById('popupSelector_constraints_video'),false,false);  getById('popupSelector_constraints_loading').style.visibility='visible';" class="advancedToggle">
+				<i class="las la-sliders-h" style="font-size:150%;top:3px;position:relative;"></i> <b>Video</b></button>
 				
+				<span class="mobileHide">
+					<button id='advancedOptionsGeneral' onclick="this.classList.toggle('highlight');toggle(getById('popupSelector_user_settings'),false,false);  getById('popupSelector_user_settings').style.visibility='visible';" style='padding: 10px 12px 12px 8px;margin: 0px 0px 0px 10px;'>
+					<i class="las la-user-cog" style="font-size:150%;top:1.5px;position:relative;"></i> <b><span data-translate="user">User</span></b></button>
+				</span>
 				
 				<span id="popupSelector_constraints_audio" class="popupSelector_constraints" style="display: none;">
 				
@@ -1676,7 +1713,12 @@
 				<span id="popupSelector_constraints_loading" style="display: none; visibility:hidden">
 					<i class='las la-spinner icn-spinner' style='margin:30px;font-size:400%;color:white;'></i>
 				</span>
-			
+				
+				<span id="popupSelector_user_settings" style="display: none; visibility:hidden">
+					<label title="Choose a hotkey for Hold-to-Talk. If using Electron Capture, elevate privilleges to have it become global">Hold-to-Talk Hot-key</label>
+					<input type="text" id="pptHotKey"  placeholder="press a key here" style="padding-left: 7px;" onkeypress="event.preventDefault;event.stopPropagation();return false;" onkeyup="event.preventDefault;event.stopPropagation();return false;" onkeydown="setHotKey();"/>
+					<button onclick="setHotKey(false);" style="margin: 0 0 0 4px; border-radius: 5px; padding: 3px 3px;">Clear</button>
+				</span>
 		</div>
 		<nav id="context-menu" class="context-menu">
 			<ul class="context-menu__items">
@@ -1768,6 +1810,18 @@
 						<span data-translate="show-video-stats">Show Stats</span>
 					</a>
 				</li>
+				<li class="context-menu__item advanced" id="RemoteHangupContextOption">
+					<a href="#" class="context-menu__link" data-action="RemoteHangup">
+						<i class="las la-external-link"></i>
+						<span data-translate="remote-hangup-connection">Remote Hang-up</span>
+					</a>
+				</li>
+				<li class="context-menu__item advanced" id="RemoteReloadContextOption">
+					<a href="#" class="context-menu__link" data-action="RemoteReload">
+						<i class="las la-external-link"></i>
+						<span data-translate="remote-reload-connection">Remote Reload Page</span>
+					</a>
+				</li>
 			</ul>
 		</nav>
 		
@@ -1787,30 +1841,30 @@
 			<div class="promptModalInner">
 				<span class='modalClose' onclick="toggleRoomSettings();">×</span>
 				<span></span>
-				<h3>Change room settings</h3><br />
-				<label title="Increase this at your peril. Changes the total inbound video bitrate per guest; mobile devices excluded. Webp-mode also excluded." for="trbSettingInput">Change room video quality:</label>
+				<h3 data-translate="change-room-settings">Change room settings</h3><br />
+				<label title="Increase this at your peril. Changes the total inbound video bitrate per guest; mobile devices excluded. Webp-mode also excluded." for="trbSettingInput" data-translate="change-room-video-quality">Change room video quality:</label>
 				<span style="margin-left: 6px;" id="trbSettingInputFeedback"></span>-kbps
 				<input id="trbSettingInput" type="range" min="0" max="4000" value="500" onchange="changeTRB(this);" oninput="getById('trbSettingInputFeedback').innerHTML = this.value;" style="width:100%;display:block;" />
 				<span style="margin: 20px 0 0 0;display:block" id='highlightDirectorSpan' title="Only the director's video will be visible to guests and within group scenes">
 					<input id="highlightDirector" style="width: 15px; height: 15px; margin:10px;" name="highlightDirector" data-value="0" data-action-type="solo-video" type="checkbox" onchange="requestInfocus(this);" />
-					<label for="highlightDirector">Highlight Director (only video guests will see)</label> 
+					<label for="highlightDirector" data-translate="highlight-director-only-video-guests-will-see">Highlight Director (only video guests will see)</label> 
 				</span>
 				<span style="margin: 5px 0 0 0;display:block" id='enableCodirector' title="Allow for remote co-directors">
 					<span id="coDirectorEnableSpan">
 						<input id="coDirectorEnable" style="width: 15px; height: 15px; margin:10px;" name="coDirectorEnable" data-value="0" data-action-type="codirector" type="checkbox" onchange="toggleCoDirector(this);" />
-						<label for="coDirectorEnable">Allow for remote co-directors</label> 
+						<label for="coDirectorEnable" data-translate="allow-for-remote-co-directors">Allow for remote co-directors</label> 
 					</span>
 					<span style="margin:0;display:none;" id='codirectorSettings'>
 						<div>
 							<input id="codirectorSettings_transfer" style="width: 15px; height: 15px; margin:10px;" name="codirectorSettings_transfer" data-value="0" data-action-type="codirector_transfer" type="checkbox" onchange="toggleCoDirector_transfer(this);" />
-							<label for="codirectorSettings_transfer">Allow co-directors to transfer guests</label> 
+							<label for="codirectorSettings_transfer" data-translate="allow-co-directors-to-transfer-guests">Allow co-directors to transfer guests</label> 
 						</div>
 						<div style="display:none;">
 							<input id="codirectorSettings_changeurl" style="width: 15px; height: 15px; margin:10px; " name="codirectorSettings_changeurl" data-value="0" data-action-type="codirector_changeurl" type="checkbox" onchange="toggleCoDirector_changeurl(this);" />
-							<label for="codirectorSettings_changeurl">Allow co-directors to change a guest's URL</label> 
+							<label for="codirectorSettings_changeurl" data-translate="allow-co-directors-to-change-a-guests-url">Allow co-directors to change a guest's URL</label> 
 						</div>
 						<div style="margin:8px;">
-							<label for="codirectorSettings_invite">Basic co-director invite link:</label>
+							<label for="codirectorSettings_invite" data-translate="basic-co-director-invite-link">Basic co-director invite link:</label>
 							<input id="codirectorSettings_invite" style="display:block;width: 100%;margin: 3px 0; padding: 4px 5px 3px 5px; border: 1px solid black;" name="codirectorSettings_invite" value="some URL here" type="text"  />
 						</div>
 					</span>
@@ -1881,6 +1935,7 @@
 			<div id="userList">
 			</div>
 		</div>
+		
 		<div id="signalMeterTemplate" class="signal-meter advanced" data-cpu="0" data-level="0">
 			<i class="las la-signal"></i>
 			<i class="las la-fire-alt"></i>
@@ -1906,7 +1961,7 @@
 			<source src="./media/tone.mp3" type="audio/mpeg"> 
 			<source src="./media/tone.ogg" type="audio/ogg"> 
 		</audio>
-		<div class="gone advanced" >
+		<div class="gone" >
 			<!-- This image is used when dragging elements -->
 			<img src="./media/favicon-32x32.png" id="dragImage" loading="lazy" />
 		</div>
@@ -2036,13 +2091,14 @@
 			// session.introOnClean = true; // this will load the page with the webcam selection screen if &push or &room is in the URL; no need to use &webcam.
 			// session.lowBitrateCutoff = 300; // Set a minimum bitrate (in kbps) before the stream is hidden. Useful for IRL streams maybe
 			// session.apiserver = "wss://api.vdo.ninja:443"; // specifiy a custom websocket API URL.
+			// session.darkmode = false; // enable or disable the dark style theme as the default
 		</script>
 		<script type="text/javascript" crossorigin="anonymous" src="./thirdparty/aes.js"></script>
-		<script type="text/javascript" crossorigin="anonymous" id="lib-js" src="./lib.js?ver=294"></script>
+		<script type="text/javascript" crossorigin="anonymous" id="lib-js" src="./lib.js?ver=320"></script>
 		<!-- 
 		// If you wish to change branding, blank offers a good clean start.
 		<script type="text/javascript" id="main-js" src="./main.js" data-translation="blank"></script>
 		-->
-		<script type="text/javascript" crossorigin="anonymous" id="main-js" src="./main.js?ver=322"></script>
+		<script type="text/javascript" crossorigin="anonymous" id="main-js" src="./main.js?ver=348"></script>
 	</body>
 </html>

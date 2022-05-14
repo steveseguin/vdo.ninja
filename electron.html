@@ -155,9 +155,6 @@
 		}
 	}
 
-	
-	
-	
 	#messageDiv {
 		font-size: .7em;
 		color: #DDD;
@@ -313,8 +310,6 @@
 		</div>
 	</div>
 	<div id="version"></div>
-
-
 <script>
 /*
 *  Copyright (c) 2020 Steve Seguin. All Rights Reserved.
@@ -371,7 +366,7 @@ function resetHistory(){
 
 var urlParams = new URLSearchParams(window.location.search);
 
-if ((location.hostname.toLowerCase() == "vdo.ninja") || (location.hostname.toLowerCase() == "obs.ninja")){
+if (location.hostname.toLowerCase() == "vdo.ninja"){
 	try {
 		if (navigator.userAgent.toLowerCase().indexOf(' electron/') > -1) { 
 			function compareVersions(version){
@@ -383,13 +378,13 @@ if ((location.hostname.toLowerCase() == "vdo.ninja") || (location.hostname.toLow
 					console.log("recentVersion: "+data.tag_name);
 					var recentVersion = data.tag_name.split(".");
 					var ood = false;
-					if (recentVersion[0]>version[0]){ 
+					if (parseInt(recentVersion[0])>parseInt(version[0])){ 
 						ood = true;
-					} else if (recentVersion[0]==version[0]) {
-						if (recentVersion[1]>version[1]){
+					} else if (parseInt(recentVersion[0])==parseInt(version[0])) {
+						if (parseInt(recentVersion[1])>parseInt(version[1])){
 							ood = true;
-						} else if (recentVersion[1]==version[1]) {
-							if (recentVersion[2]>version[2]){
+						} else if (parseInt(recentVersion[1])==parseInt(version[1])) {
+							if (parseInt(recentVersion[2])>parseInt(version[2])){
 								ood = true;
 							} 
 						}
@@ -401,9 +396,11 @@ if ((location.hostname.toLowerCase() == "vdo.ninja") || (location.hostname.toLow
 				  }).catch(console.error);
 			}
 			if (urlParams.has('version') || urlParams.has('ver')){
-				var ver = urlParams.get('version') || urlParams.get('ver');
+				var ver = urlParams.get('version') || urlParams.get('ver') || false;
 				console.log("version: "+ver);
-				compareVersions(ver);
+				if (ver){
+					compareVersions(ver);
+				}
 			} else{
 				document.getElementById("version").innerHTML = "Elevate app privilleges to see current version";
 				try{

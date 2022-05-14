@@ -17,6 +17,7 @@
 	<style>
 	:root{
 		--aspect-ratio: 1.7777777777;
+		--chat-width: 450px;
 	}
 	
 	body{
@@ -40,27 +41,113 @@
 		width: 1280px;
 		
 		max-height: calc(100vh - 80px);
-		max-width: calc(100vw - 290px);
 	
 		background-color: #0002;
 		border-radius: 3px;
 		position: absolute;
 		left: 0;
 		top: 0;
+		transition: background-color 0.05s ease-out;
 	}
 	iframe.aspectRatio{
-		max-height: min(calc(100vh - 80px), calc((100vw - 290px) / var(--aspect-ratio)));
-		max-width: min(calc((100vh - 80px) *  var(--aspect-ratio)),  calc(100vw - 290px));
+		max-height: min(calc(100vh - 80px), calc((100vw - 160px) / var(--aspect-ratio)));
+		max-width: min(calc((100vh - 80px) *  var(--aspect-ratio)),  calc(100vw - 160px));
 		height: 720px;
 		width: 1280px;
 	}
-	
+	.gone {
+		position:absolute;
+		top: -150px;
+	}
+	.message{
+		background: #3e3e3e00;
+		color: #FCFCFC;
+		vertical-align: top;
+		border: 1px solid #2e445c;
+		border-radius: 10px;
+		background: #2e445c;
+		box-shadow: 5px 5px 10px #121620, -5px -5px 10px #162a36;
+	}
+	.inMessage {
+		color: #000;
+		margin: 3px;
+		border-radius: 5px;
+		background: #FFF;
+		padding: 5px;
+		text-align: left;
+	}
+	.actionMessage {
+		color: #000;
+		margin: 3px;
+		border-radius: 5px;
+		background: #FFF;
+		padding: 5px;
+		text-align: left;
+	}
+	.outMessage {
+		color: #000;
+		margin: 3px;
+		border-radius: 5px;
+		background: #BCF;
+		padding: 5px;
+		text-align: right;
+	}
+	#chatBody {
+		background-color: #0004;
+		margin: 0 10px 10px 0;
+		border-radius: 5px;
+		overflow-y:scroll;
+		overflow-wrap: anywhere;
+		bottom: 45px;
+		position: absolute;
+	}
+
+	#chatBody::-webkit-scrollbar {
+		width: 0px;
+		background: transparent; /* make scrollbar transparent */
+	}
+
+	#chatModule {
+		bottom: 0;
+		position: fixed;
+		margin: 10px;
+		align-self: center;
+		width: 400px;
+		max-width: 100%;
+		z-index:3;
+		height: calc(100vh - 40px);
+		overflow: hidden;
+		right:0;
+		border: solid 2px #0005;
+		border-radius: 10px;
+		padding: 10px;
+		transition: all .05s ease-in-out; 
+	}
+	#chatInput {
+		display: inline-block;
+		color: #000;
+		background-color: #FFFE;
+		width: 324px;
+		font-size: 105%;
+		margin-left: 7px;
+	}
+	#chatSendBar{
+		display: inline-block;
+		bottom: 0px;
+		position:absolute;
+	}
+	#savedroompassword{
+		width:50px;
+	}
+	button[data-state='true']{
+		background-color:#CEF !important;
+	}
 	#inviteOptions{
 		border: 0;
 		padding: 0;
 		display: block;
 		height: calc(100vh - 80px);
-		width: calc(100vw - 290px);
+		width: calc(100vw - 160px);
 		max-width:100%;
 		padding: 20px;
 		margin:0;
@@ -71,6 +158,23 @@
 		background: #5b748f;
 		box-shadow: inset 20px 20px 40px #556c85,
 					inset -20px -20px 40px #617c99;
+	}
+	input[type="checkbox"] {
+		width: 20px;
+		height: 20px;
+		text-align: center;
+		vertical-align: middle;
+		transition: all .2s ease-in-out; 
+	}
+	input[type="checkbox"]:checked { 
+		transform: scale(1.1);
+	}
+	
+	
+	label {
+		margin: 0 0px 6px 0;
+		display: inline-block;
+		font-weight: 600;
 	}
 	.ui-widget-header{
 		background: rgb(225,225,225); /* Old browsers */
@@ -83,18 +187,23 @@
 		overflow-x: auto;
 		overflow-y: hidden;
 		position: absolute;
-		left: 290px;
-		width: calc(100vw - 290px);
+		left: 160px;
+		width: calc(100vw - 160px - var(--chat-width));
 		display: flex;
 		top: 0;
 		height: 80px;
 	}
 	#iframeContainer{
 		position: absolute;
-		left: 290px;
+		left: 160px;
 		top: 80px;
 		height: 100%;
 	}
+	#vdoninja {
+		max-width: calc(100vw - 160px - var(--chat-width));
+		width: 100vw;
+	}
+	
 	#viewlink {
 		width:400px;
 	}
@@ -115,8 +224,29 @@
 		animation: horizontalShake 2s;
 		animation-iteration-count: once;
 	}
+	#col1>.thing:hover{
+		animation: enlargeAnimation 2s;
+		animation-iteration-count: once;
+	}
+	#col1>.thing:active{
+		transform: scale(1.05);
+		animation:none;
+	}
+	.thing:active{
+		animation:none;
+		transform: translate(7px, 0px) rotate(0deg);
+	}
 	#delete:hover{
 		animation: none!important;
+	}
+	#delete:active{
+		transform: none!important;
+	}
+	@keyframes enlargeAnimation {
+	  0% { transform: scale(1.01); }
+	  20% { transform: scale(1.03); }
+	  80% { transform: scale(1.05); }
+	  100% { transform: scale(1.06); }
 	}
 	@keyframes horizontalShake {
 	  0% { transform: translate(3px, 0px) rotate(0deg); }
@@ -156,6 +286,7 @@
 		cursor:pointer;
 		background: linear-gradient(135deg, rgba(238,238,238,1) 60%,rgb(225, 225, 225, 1) 80%,rgb(210, 209, 209, 1) 100%);
 	}
+	
 	canvas{
 		padding:10px;
 		cursor:pointer;
@@ -226,7 +357,7 @@
 	
 	#sceneSettings{
 		height: calc(100vh - 80px);
-		width: calc(100vw - 290px);
+		width: calc(100vw - 160px);
 		padding: 20px;
 		margin:0;
 		border:0; 
@@ -258,6 +389,10 @@
 		visibility: hidden;
 		opacity: 0;
 		transition: visibility 0s 0.5s, opacity 0.5s linear;
+	}
+	.fade2black{
+		background-color: 000F;
+		transition: background-color 0.5s linear;
 	}
 	.hidden2{
 		display:none!important;
@@ -352,6 +487,7 @@
 		cursor: crosshair;
 		margin: 5.5px;
 		border-radius: 0px;
+		display:none;
 	}
 	
 	.modal {
@@ -537,6 +673,7 @@
 	#demoDrop{
 		background-color: #30892c;
 		cursor: help;
+		display:none;
 	}
 	.demoThing{
 		width: 100px;
@@ -551,6 +688,11 @@
 	    border-radius: 6px;
 		word-wrap: break-word;
 		box-shadow: inset 6px 6px 6px #dadada1c, inset -6px -6px 6px #27272724;
+		display:none;
+	}
+	#sendChat{
+		bottom: 1px;
+		position: relative;
 	}
 	</style>
 </head>
@@ -562,7 +704,7 @@
 		</div>
 	</div>
 
-	<div class="col" id="col1" ondrop="drop(event)" ondragover="allowDrop(event)" ondragenter="dragenter(event)" title="Drag a stream ID here, to the desired slot, then activate the desired layout" ondragleave="dragleave(event)">
+	<div class="col hidden" id="col1" ondrop="drop(event)" ondragover="allowDrop(event)" ondragenter="dragenter(event)" title="Drag a stream ID here, to the desired slot, then activate the desired layout" ondragleave="dragleave(event)">
 		<div class="empty" data-slot="1" >SLOT 1</div>
 		<div class="empty" data-slot="2">SLOT 2</div>
 		<div class="empty" data-slot="3">SLOT 3</div>
@@ -580,17 +722,39 @@
 			<button onclick="closeScene();">❌ Close Scene Maker</button>
 		</div>
 	</div>
+	<div id="chatModuleButton" class="hidden" onclick="toggleChat();" style="user-select: none;position: fixed;top: 10px;right: 10px;cursor: pointer;" title="Show the chat window">💬</div>
+	<div id="chatModule" class="hidden">
+		<div style="float: right;cursor: pointer;user-select: none;" onclick="toggleChat();" title="Hide the chat window">x</div>
+		<div id="chatBody" class="message"> 
+			<div class="inMessage" data-translate='welcome-to-vdo-ninja-chat'>
+				Welcome to VDO.Ninja! You can send text messages directly to connected peers from here.
+			</div>
+		</div>
+		<div id="chatSendBar">
+			<input id="chatInput" placeholder="Enter chat message to send here" onkeypress="EnterButtonChat(event)" />
+			<button onclick="sendChatMessage()" id='sendChat'>Send</button>
+		</div>
+	</div>
 	<div id="welcomeWindow">
 		<div class="center-content">
 			<div class="title"><h1 class="main-heading">Mixer App</h1><h2>Video chat with custom <b>layouts</b></h2></div>
 			
-			<label for="roomname"><input name="roomname" id="roomname" type="text" placeholder="Room Name" />
+			<label for="roomname"><input name="roomname" id="roomname" type="text" placeholder="Room Name" /></label>
 			<font class="tooltip">
 				<button onclick="randomRoomName();" class="randomRoomName"></button><span class="tooltiptext">Generate a random room name</span>
 			</font>
 			<br />
-			<label for="roompassword"><input name="roompassword" id="roompassword" type="text" placeholder="Room Password (optional)"/><br />
+			<label for="roompassword"><input name="roompassword" id="roompassword" type="text" placeholder="Room Password (optional)"/></label><br />
 			<button onclick="startRoom();">Get started!</button><br /><br />
+			<span id="lastSavedRoom" class="hidden">
+				<br /><br />
+				<label for="savedroomname">
+					<input name="savedroomname" id="savedroomname" type="text" disabled placeholder="Room Name" /></label>
+				<label for="savedroompassword" id="savedpasswordlabel"><br />
+					<input name="savedroompassword" id="savedroompassword" disabled type="password" placeholder="Room Password"/></label>
+				<button onclick="startLastRoom();">Restore last room</button>
+			</span>
+			<br /><br />
 			<div class="footer">
 				<div>
 					<a href="https://discord.vdo.ninja" class="discord" target="_blank"></a>
@@ -615,6 +779,8 @@
 			
 			<h4>Remove all Layouts</h4>
 			<button onclick="wipeLayouts();">This will remove all the scene layouts from the current session.</button><br />
+			<h4>Load Default Layouts</h4>
+			<button onclick="resetLayouts();">This will replace all current scene layouts with the initial defaults.</button><br />
 			
 			<h4>Export settings</h4>
 			<button onclick="exportSession();">Export all scenes and settings to disk</button><br />
@@ -631,13 +797,19 @@
 		<div id='inviteOptions' class="hidden">
 			<h2>Invite options</h2>
 			<h4>Your room name is:  <b class="roomname">ROOMNAME</b></h4>
-			<h4>Create new invite</h4>
-			<a class="inviteLink">Invite Link</a>
+			<h3>Create new invite</h3>
+			<a class="inviteLink" target="_blank">Invite Link</a><i class="inviteLink"></i><br />
+			<span class="hidden">
+				<input type="checkbox" /><label>Prompt user for a display name?</label><br />
+				<input type="checkbox" /><label>Guest can see other guests? (higher CPU for guest)</label><br />
+				<input type="checkbox" /><label>Guest will join muted? (director can remotely unmute)</label><br />
+			</span>
+			<i>You can manually customize the invite link further; see the documentation at <a href="docs.vdo.ninja" target="_blank">docs.vdo.ninja</a></i>
 			<br /><br />
 			<button onclick="modal.style.display = 'none';">Close</button>
 		</div>
 	</div>
-	<div id="modal" class="modal">
+	<div id="modal" class="modal" >
 	  <div class="modal-content">
 		<span class="close-btn">&times;</span>
 		<div id="modal-content">
@@ -645,7 +817,10 @@
 		</div>
 	  </div>
 	</div>
-	
+	<div class="gone" >
+		<!-- This image is used when dragging elements -->
+		<img src="./media/favicon-32x32.png" style="pointer-events: none;" id="dragImage" loading="lazy" />
+	</div>
 	<script>
 	
 	function allowDrop(ev) {
@@ -677,6 +852,16 @@
 	}
 	function log(msg){
 		console.log(msg);
+	}
+	
+	function toggleChat(){
+		document.getElementById("chatModule").classList.toggle("fadeout");
+		document.getElementById("chatModuleButton").classList.toggle("hidden");
+		if (document.getElementById("chatModule").classList.contains("fadeout")){
+			document.documentElement.style.setProperty('--chat-width', "0px");
+		} else {
+			document.documentElement.style.setProperty('--chat-width', "450px");
+		}
 	}
 	
 	function sanitizeRoomName(roomid) {
@@ -721,12 +906,29 @@
 		roomname = urlParams.get("room") || urlParams.get("dir") || urlParams.get("director");
 		roomname = sanitizeRoomName(roomname);
 	}
+	var savedLastRoom = getStorage("savedRoom");
 	
-	function randomRoomName(){
-		var rndroom = generateString(8);
-		document.getElementById("roomname").value = rndroom;
+	if (savedLastRoom){
+		if ("roomname" in savedLastRoom && savedLastRoom.roomname!==false){
+			document.getElementById("savedroomname").value = savedLastRoom.roomname;
+			document.getElementById("lastSavedRoom").classList.remove("hidden");
+			if ("password" in savedLastRoom && savedLastRoom.password!==false){
+				document.getElementById("savedpasswordlabel").classList.remove("hidden");
+				document.getElementById("savedroompassword").value = savedLastRoom.password;
+			} else {
+				document.getElementById("savedpasswordlabel").classList.add("hidden");
+			}
+		} 
 	}
-	
+	function randomRoomName(){
+		document.getElementById("roomname").value = generateString(8);
+	}
+	function startLastRoom(){
+		document.getElementById("roomname").value = document.getElementById("savedroomname").value;
+		document.getElementById("roompassword").type = "password";
+		document.getElementById("roompassword").value = document.getElementById("savedroompassword").value;
+		startRoom();
+	}
 	function startRoom(){
 		var pid = document.getElementById("roompassword").value.trim();
 		if (pid){
@@ -753,6 +955,138 @@
 			document.getElementById("roomname").classList.remove("shake");
 			setTimeout(function(){document.getElementById("roomname").classList.add("shake");},10);
 		}
+	}
+	
+	function sanitize(string) {
+		var temp = document.createElement('div');
+		temp.textContent = string;
+		return temp.innerHTML;
+	}
+
+	function EnterButtonChat(event){
+		 // Number 13 is the "Enter" key on the keyboard
+		var key = event.which || event.keyCode;
+		if (key  === 13) {
+			// Cancel the default action, if needed
+			event.preventDefault();
+			// Trigger the button element with a click
+			sendChatMessage();
+		}
+	}
+
+	function sendChatMessage(){ // filtered + visual
+		var msg = document.getElementById('chatInput').value;
+		msg = sanitize(msg);
+		if (msg==""){return;}
+		console.log(msg);
+		iframe.contentWindow.postMessage({ sendChat: msg }, "*"); 
+		document.getElementById('chatInput').value = "";
+		
+		var message = {};
+		message.label = "You:";
+		message.type = "sent";
+		message.msg = msg;
+		
+		updateMessages(message);
+	}
+
+	function timeSince(date) {
+
+	  var seconds = Math.floor((new Date() - date) / 1000);
+
+	  var interval = seconds / 31536000;
+
+	  if (interval > 1) {
+		return Math.floor(interval) + " years";
+	  }
+	  interval = seconds / 2592000;
+	  if (interval > 1) {
+		return Math.floor(interval) + " months";
+	  }
+	  interval = seconds / 86400;
+	  if (interval > 1) {
+		return Math.floor(interval) + " days";
+	  }
+	  interval = seconds / 3600;
+	  if (interval > 1) {
+		return Math.floor(interval) + " hours";
+	  }
+	  interval = seconds / 60;
+	  if (interval > 1) {
+		return Math.floor(interval) + " minutes";
+	  }
+	  return "Seconds ago";
+	}
+
+
+
+	function updateMessages(message = false){
+		if (message){
+			var time = timeSince(message.time);
+			var msg = document.createElement("div");
+			////// KEEP THIS IN /////////
+			console.log(message.msg); // Display Recieved messages for View-Only clients.
+			/////////////////////////////
+			var label = "";
+			if (message.label){
+				label = message.label;
+			} 
+			
+			if (message.type == "sent"){
+				msg.innerHTML = "<span class='chat_message chat_sent'>"+message.msg + "  </span><i><small> <small>- "+time+"</small></small></i><span style='display:none'>"+label+"</span>";
+				msg.classList.add("outMessage");
+			} else if (message.type == "recv"){
+				msg.innerHTML = label+"<span class='chat_message chat_recv'>"+message.msg + " </span><i><small> <small>- "+time+"</small></small></i>";
+				msg.classList.add("inMessage");
+			} else if (message.type == "action"){
+				msg.innerHTML = label+"<span class='chat_message chat_action'>"+message.msg + " </span><i><small> <small>- "+time+"</small></small></i>";
+				msg.classList.add("actionMessage");
+			} else if (message.type == "alert"){
+				msg.innerHTML = "<span class='chat_message chat_alert'>"+message.msg + " </span><i><small> <small>- "+time+"</small></small></i>";
+				msg.classList.add("inMessage");
+			} else {
+				msg.innerHTML = "<span class='chat_message chat_other'>"+message.msg + "  </span><i><small> <small>- "+time+"</small></small></i>";
+				msg.classList.add("inMessage");
+			}
+			document.getElementById("chatBody").appendChild(msg);
+		} else {
+			document.getElementById("chatBody").innerHTML = "";
+			for (i in messageList){
+				var time = timeSince(messageList[i].time);
+				var msg = document.createElement("div");
+				////// KEEP THIS IN /////////
+				console.log(messageList[i].msg); // Display Recieved messages for View-Only clients.
+				/////////////////////////////
+				var label = "";
+				if (messageList[i].label){
+					label = messageList[i].label;
+				} 
+				
+				if (messageList[i].type == "sent"){
+					msg.innerHTML = "<span class='chat_message chat_sent'>"+messageList[i].msg + "  </span><i><small> <small>- "+time+"</small></small></i><span style='display:none'>"+label+"</span>";
+					msg.classList.add("outMessage");
+				} else if (messageList[i].type == "recv"){
+					msg.innerHTML = label+"<span class='chat_message chat_recv'>"+messageList[i].msg + " </span><i><small> <small>- "+time+"</small></small></i>";
+					msg.classList.add("inMessage");
+				} else if (messageList[i].type == "action"){
+					msg.innerHTML = label+"<span class='chat_message chat_action'>"+messageList[i].msg + " </span><i><small> <small>- "+time+"</small></small></i>";
+					msg.classList.add("actionMessage");
+				} else if (messageList[i].type == "alert"){
+					msg.innerHTML = "<span class='chat_message chat_alert'>"+messageList[i].msg + " </span><i><small> <small>- "+time+"</small></small></i>";
+					msg.classList.add("inMessage");
+				} else {
+					msg.innerHTML = "<span class='chat_message chat_other'>"+messageList[i].msg + "  </span><i><small> <small>- "+time+"</small></small></i>";
+					msg.classList.add("inMessage");
+				}
+				
+				document.getElementById("chatBody").appendChild(msg);
+			}
+		}
+		//if (chatUpdateTimeout){
+		//	clearInterval(chatUpdateTimeout);
+		//}
+		document.getElementById("chatBody").scrollTop = document.getElementById("chatBody").scrollHeight;
+		//chatUpdateTimeout = setTimeout(function(){updateMessages()},60000);
 	}
 	
 	function errorlog(e,a=null,b=null){
@@ -911,6 +1245,7 @@
 		} else {
 			ev.target.appendChild(origThing);
 		}
+		document.getElementById("col2").appendChild(document.getElementById("demoDrop"));
 		document.getElementById("col2").appendChild(document.getElementById("delete"));
 		
 		var eles = document.querySelectorAll(".thing");
@@ -936,7 +1271,7 @@
 	var slotsNeeded = 1;
 	var lastLayout = false;
 	
-	function updateList(){
+	function updateList(autoadd=false){
 		//<div id="col2" ondrop="dropRemove(event)" ondragover="allowDrop(event)">
 		//	<div class="thing" draggable="true" ondragstart="drag(event)" id="thing4">THING 4</div>	
 		//	<div class="thing" draggable="true" ondragstart="drag(event)" id="thing1">THING 1</div>	
@@ -1022,7 +1357,14 @@
 		}catch(e){}
 		document.getElementById("col2").appendChild(document.getElementById("delete"));
 		
-		
+		if (autoadd){
+			var event = new MouseEvent('dblclick', {
+				'view': window,
+				'bubbles': true,
+				'cancelable': true
+			  });
+			document.getElementById("sid_"+autoadd).dispatchEvent(event);
+		}
 	}
 	
 	var colors = [
@@ -1039,115 +1381,97 @@
 	];
 	
 	var savedSession = getStorage("savedSession");
+	
+	var initialLayouts = {};
+	initialLayouts.layouts = [];
+	var data = [
+		{x:0, y:0, w:100, h:100}
+	];
+	initialLayouts.layouts.push(data);
+	var data = [
+		null,
+		{x:0, y:0, w:100, h:100}
+	];
+	initialLayouts.layouts.push(data);
+	var data = [
+		null,
+		null,
+		{x:0, y:0, w:100, h:100}
+	];
+	initialLayouts.layouts.push(data);
+	var data = [
+		null,
+		null,
+		null,
+		{x:0, y:0, w:100, h:100}
+	];
+	initialLayouts.layouts.push(data);
+	var data = [
+		{x:0, y:0, w:50, h:100, c:false},
+		{x:50, y:0, w:50, h:100, c:false}
+	];
+	initialLayouts.layouts.push(data);
+
+	var data = [
+		{x:70, y:70, w:30, h:30, z:1, c:true},
+		{x:0, y:0, w:100, h:100,z:0, c:false}
+	];
+	initialLayouts.layouts.push(data);
+
+//	var data = [
+//		{x:0, y:0, w:100, h:100,z:0, c:true},
+//		{x:70, y:70, w:30, h:30, z:1, c:false}
+//	];
+//	initialLayouts.layouts.push(data);
+///	var data = [
+//		{x:0, y:0, w:20, h:20, z:1, c:true},
+//		{x:0, y:0, w:100, h:100,z:0, c:false}
+//	];
+//	initialLayouts.layouts.push(data);
+	var data = [
+		{x:0, y:0, w:50, h:50, c:true},
+		{x:50, y:0, w:50, h:50, c:true},
+		{x:0, y:50, w:50, h:50, c:true},
+		{x:50, y:50, w:50, h:50, c:true}
+	];
+	initialLayouts.layouts.push(data);
+	var data = [
+		{x:0, y:16.667, w:66.667, h:66.667, c:true},
+		{x:66.667, y:0, w:33.333, h:33.333, c:true},
+		{x:66.667, y:33.333, w:33.333, h:33.333, c:true},
+		{x:66.667, y:66.667, w:33.333, h:33.333, c:true}
+	];
+	initialLayouts.layouts.push(data);
+//	var data = [
+//		{x:66.667, y:0, w:33.333, h:33.333},
+//		{x:0, y:16.667, w:66.667, h:66.667},
+//		{x:66.667, y:33.333, w:33.333, h:33.333},
+//		{x:66.667, y:66.667, w:33.333, h:33.333}
+//	];
+//	initialLayouts.layouts.push(data);
+
+//	var data = [
+//		null,
+//		null,
+//		{x:70, y:70, w:30, h:30, z:1, c:true},
+//		{x:0, y:0, w:100, h:100,z:0, c:false}
+//	];
+//	initialLayouts.layouts.push(data);
+	//var data = [
+	//	null,
+	//	null,
+//		{x:0, y:25, w:50, h:50, c:true},
+	//	{x:50, y:25, w:50, h:50, c:true}
+	//];
+	//initialLayouts.layouts.push(data);
+	
 	if (savedSession){
 		savedSession = JSON.parse(savedSession);
 	} else {
-		savedSession = {};
-		savedSession.layouts = [];
-		
-		var data = [
-			{x:0, y:0, w:100, h:100}
-		];
-		savedSession.layouts.push(data);
-		
-		
-		var data = [
-			null,
-			{x:0, y:0, w:100, h:100}
-		];
-		savedSession.layouts.push(data);
-		
-		
-		var data = [
-			{x:0, y:25, w:50, h:50, c:false},
-			{x:50, y:25, w:50, h:50, c:false}
-		];
-		savedSession.layouts.push(data);
-		
-		
-		
-		var data = [
-			{x:70, y:70, w:30, h:30, z:1, c:true},
-			{x:0, y:0, w:100, h:100,z:0, c:false}
-		];
-		savedSession.layouts.push(data);
-		
-		
-		var data = [
-			{x:0, y:0, w:100, h:100,z:0, c:true},
-			{x:70, y:70, w:30, h:30, z:1, c:false}
-		];
-		savedSession.layouts.push(data);
-		
-		
-		var data = [
-			{x:0, y:0, w:20, h:20, z:1, c:true},
-			{x:0, y:0, w:100, h:100,z:0, c:false}
-		];
-		savedSession.layouts.push(data);
-		
-		
-		var data = [
-			{x:0, y:0, w:50, h:50},
-			{x:50, y:0, w:50, h:50},
-			{x:0, y:50, w:50, h:50},
-			{x:50, y:50, w:50, h:50}
-		];
-		savedSession.layouts.push(data);
-		
-		
-		var data = [
-			{x:0, y:16.667, w:66.667, h:66.667},
-			{x:66.667, y:0, w:33.333, h:33.333},
-			{x:66.667, y:33.333, w:33.333, h:33.333},
-			{x:66.667, y:66.667, w:33.333, h:33.333}
-		];
-		savedSession.layouts.push(data);
-		
-		
-		var data = [
-			{x:66.667, y:0, w:33.333, h:33.333},
-			{x:0, y:16.667, w:66.667, h:66.667},
-			{x:66.667, y:33.333, w:33.333, h:33.333},
-			{x:66.667, y:66.667, w:33.333, h:33.333}
-		];
-		savedSession.layouts.push(data);
-		
-		
-		var data = [
-			null,
-			null,
-			{x:0, y:0, w:100, h:100}
-		];
-		savedSession.layouts.push(data);
-		
-		
-		var data = [
-			null,
-			null,
-			null,
-			{x:0, y:0, w:100, h:100}
-		];
-		savedSession.layouts.push(data);
-		
-		
-		var data = [
-			null,
-			null,
-			{x:70, y:70, w:30, h:30, z:1, c:true},
-			{x:0, y:0, w:100, h:100,z:0, c:false}
-		];
-		savedSession.layouts.push(data);
-		
-		
-		var data = [
-			null,
-			null,
-			{x:0, y:25, w:50, h:50, c:true},
-			{x:50, y:25, w:50, h:50, c:true}
-		];
-		savedSession.layouts.push(data);
+		savedSession = initialLayouts;
 	}
+	
+	var guestPositions = {};
 	
 	function exportSession() {
 		var content = JSON.stringify(savedSession);
@@ -1189,6 +1513,23 @@
 	 
 	}
 	
+	function resetLayouts(){
+		var yes = confirm("Are you sure? This will reset all the layouts.");
+		if (!yes){return;}
+	
+		document.getElementById("containermenu").innerHTML = "";
+	
+		drawAddNewLayout2();
+		drawAddNewLayout3();
+		
+		savedSession.layouts = initialLayouts.layouts;
+		
+		for (var i in savedSession.layouts){
+			drawLayout(savedSession.layouts[i]);
+		}
+		saveSession();
+	}
+	
 	function wipeLayouts(){
 	
 		var yes = confirm("Are you sure? This will delete all the layouts.");
@@ -1203,6 +1544,7 @@
 		for (var i in savedSession.layouts){
 			drawLayout(savedSession.layouts[i]);
 		}
+		saveSession();
 	}
 	
 	var injectCSS = `
@@ -1268,9 +1610,10 @@
 	
 	var iframe = null;
 	
-	function loadIframe(){ 
-
-	
+	function loadIframe(){
+		if (iframe){return;}
+		iframe = document.createElement("iframe");
+		
 		var additional = "";
 		if (password){
 			additional = "&password="+password;
@@ -1278,15 +1621,20 @@
 		
 		roomname = sanitizeRoomName(roomname);
 	
-		iframe = document.createElement("iframe");
+		
 		var iframeContainer = document.getElementById("iframeContainer");
 		iframe.allow = "autoplay;camera;microphone;fullscreen;picture-in-picture;display-capture;";
+		iframe.id = "vdoninja";
 		
 		if (roomname){
-			var iframesrc = "./index.html?ltb=350&transparent&cleanoutput&director="+roomname+additional+"&b64css="+injectCSS;
+			var iframesrc = "./index.html?ltb=350&transparent&cleanoutput&slotmode&director="+roomname+additional+"&b64css="+injectCSS;
 		} else {
 			roomname = generateString(10);
-			var iframesrc = "./index.html?ltb=350&transparent&cleanoutput&director="+roomname+additional;
+			var iframesrc = "./index.html?ltb=350&transparent&cleanoutput&slotmode&director="+roomname+additional+"&b64css="+injectCSS;
+		}
+		
+		if (roomname!==false){
+			setStorage("savedRoom", {roomname:roomname,password:password}, 9999);
 		}
 		
 		document.title = "Mixer: "+roomname;
@@ -1318,11 +1666,13 @@
 			if (this.state){
 				this.innerHTML = "Director View &#x21bb;"; 
 				iframe.classList.add("aspectRatio");
+				iframe.classList.add("fade2black");
 				this.title = "Switch to the director room mode";
 			} else {
 				this.innerHTML = "Scene Preview &#x21bb;"; 
 				this.title = "Switch to scene preview mode";
 				iframe.classList.remove("aspectRatio"); 
+				iframe.classList.remove("fade2black");
 			}
 			
 		};
@@ -1357,7 +1707,7 @@
 				}
 			}
 		};
-		button.style.display = "block";
+		button.style.display = "none";
 		document.getElementById("sources").appendChild(button);
 		
 		
@@ -1373,7 +1723,7 @@
 		
 		var a = document.createElement("a");
 		a.innerHTML = "Invite Guest Link 📎"; 
-		a.href = "./index.html?room="+roomname+"&broadcast"+additional;
+		a.href = "./index.html?room="+roomname+"&sstype=3&thirds&broadcast"+additional;
 		a.target = "_blank";
 		document.getElementById("sources").appendChild(a);
 		
@@ -1399,6 +1749,8 @@
 			drawLayout(savedSession.layouts[i]);
 		}
 		
+		document.getElementById("chatModule").classList.remove("hidden");
+		
 		iframe.src = iframesrc;
 		iframeContainer.appendChild(iframe);
 		document.getElementById("container").appendChild(iframeContainer);
@@ -1417,46 +1769,52 @@
 		eventer(messageEvent, function (e) {
 			if (e.source != iframe.contentWindow){return} // reject messages send from other iframes
 			
+			console.log(e.data);
+			
 			if ("action" in e.data){
 				///var outputWindow = document.createElement("div");
 				//outputWindow.innerHTML = "event: "+e.data.action+"<br />";
 				//outputWindow.style.border="1px dotted black";
 				//iframeContainer.appendChild(outputWindow);
 				//console.log(e.data.action);
-				if (e.data.action === "view-connection"){
-					if (e.data.value){
-						iframe.contentWindow.postMessage({"getStreamIDs":true}, '*');
-					} else if (e.data.streamID){
-						for (var i = 0; i < streamIDs.length; i++){ 
-							if (e.data.streamID == streamIDs[i]){
-								streamIDs.splice(i,1);
-								if (document.getElementById("sid_"+e.data.streamID)){
-									document.getElementById("sid_"+e.data.streamID).classList.add("disconnected");
-									document.getElementById("sid_"+e.data.streamID).title = "Not currently connected, but can still be placed";
-								}
-							}
-						}
-						updateList();
-					}
-				}
+				<!-- if (e.data.action === "view-connection"){ -->
+					<!-- if (e.data.value){ -->
+						<!-- iframe.contentWindow.postMessage({"getStreamIDs":true}, '*'); -->
+					<!-- } else if (e.data.streamID){ -->
+						<!-- for (var i = 0; i < streamIDs.length; i++){  -->
+							<!-- if (e.data.streamID == streamIDs[i]){ -->
+								<!-- streamIDs.splice(i,1); -->
+								<!-- if (document.getElementById("sid_"+e.data.streamID)){ -->
+									<!-- document.getElementById("sid_"+e.data.streamID).classList.add("disconnected"); -->
+									<!-- document.getElementById("sid_"+e.data.streamID).title = "Not currently connected, but can still be placed"; -->
+								<!-- } -->
+							<!-- } -->
+						<!-- } -->
+						<!-- updateList(e.data.streamID); -->
+					<!-- } -->
+				<!-- } -->
 				
+				if (e.data.action === "slot-updated"){
+					guestPositions[e.data.value] = e.data.streamID; // value is slot ID
+				}
 			}
 			
-			console.log(e.data);
+			
 			if (e.data.action && (e.data.action == "scene-connected")){
 				if (lastLayout && lastLayout.scene == e.data.value){
 					iframe.contentWindow.postMessage(lastLayout, '*');
 				}
 			}
 			
-			if ("streamIDs" in e.data){
-				streamIDs = [];
-				for (var key in e.data.streamIDs){
-					streamIDs.push(key);
-				}
-				updateList();
-				console.log(streamIDs);
-			}
+			<!-- if ("streamIDs" in e.data){ -->
+				<!-- streamIDs = []; -->
+				<!-- for (var key in e.data.streamIDs){ -->
+					<!-- streamIDs.push(key); -->
+					<!-- updateList(key); -->
+				<!-- } -->
+				
+				<!-- console.log(streamIDs); -->
+			<!-- } -->
 		});
 	}
 	
@@ -1512,8 +1870,12 @@
 			ele.innerText = roomname;
 		});
 		
-		document.querySelectorAll("a.inviteLink").forEach(ele=>{
-			ele.href = "./index.html?room="+roomname+"&broadcast"+additional;
+		document.querySelectorAll(".inviteLink").forEach(ele=>{
+			if (ele.tagName == "A"){
+				ele.href = "./index.html?room="+roomname+"&broadcast"+additional;
+			} else if (ele.tagName == "I"){
+				ele.innerHTML = "URL + ?room="+roomname+"&broadcast"+additional;
+			}
 		});
 		
 	
@@ -2013,18 +2375,12 @@
 			console.log(layout);
 			var combined = {};
 			for (var i=0;i<layout.length;i++){
-				//layout[i].z = i;
 				if (!layout[i]){continue;}
 				if (!("slot" in layout[i])){
-					//console.log("no slot");
-					//if (!(null in combined)){
-					//	combined[null] = [];
-					//}
-					//combined[null].push(layout[i]);
 					continue;
 				}
 				try {
-					var stream = document.querySelector(".thing[data-slot='"+(parseInt(layout[i].slot)+1)+"'");
+					var stream = guestPositions[parseInt(layout[i].slot)+1]; // slot 1 is index of 0, but slot 0 is considered NULL; I need to stream line this a bit
 				} catch(e){
 					errorlog(e);
 					continue;
@@ -2035,13 +2391,11 @@
 				
 				if (!stream){
 					if (layout[i].defaultStreamID){
-						if (!document.querySelector(".thing[data-slot][data-sid='"+layout[i].defaultStreamID+"']")){
-							combined[layout[i].defaultStreamID] = layout[i];
-						}
+						combined[layout[i].defaultStreamID] = layout[i];
 					}
 					continue;
 				}
-				combined[stream.dataset.sid] = layout[i];
+				combined[stream] = layout[i];
 			}
 		} else {
 			var layout = null;
