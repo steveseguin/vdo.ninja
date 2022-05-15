@@ -476,6 +476,9 @@
 			margin:0;
 			padding:0;
 		}
+		.debugStats{
+			padding: 20px 20px 100px 20px;
+		}
 		.directorsgrid .vidcon {
 			display: inline-block !important;
 			width: 293.7px !important;
@@ -613,9 +616,9 @@
 					//if (e.data.value){
 					//	iframe.contentWindow.postMessage({"getStreamIDs":true}, '*');
 					if (e.data.streamID){
+						updateStreams();
 						if (streamIDs.includes(e.data.streamID)){return;}
 						streamIDs.push(e.data.streamID);
-						updateStreams();
 					}
 				} else if (e.data.action == "requested-stream"){
 					if (streamIDs.includes(e.data.value)){return;}
