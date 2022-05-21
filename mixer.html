@@ -49,6 +49,7 @@
 		top: 0;
 		transition: background-color 0.05s ease-out;
 	}
+	
 	iframe.aspectRatio{
 		max-height: min(calc(100vh - 80px), calc((100vw - 160px) / var(--aspect-ratio)));
 		max-width: min(calc((100vh - 80px) *  var(--aspect-ratio)),  calc(100vw - 160px));
@@ -188,16 +189,18 @@
 		overflow-y: hidden;
 		position: absolute;
 		left: 160px;
-		width: calc(100vw - 160px - var(--chat-width));
+		width: calc(100vw - var(--chat-width) - 160px);
 		display: flex;
 		top: 0;
 		height: 80px;
 	}
+	
 	#iframeContainer{
 		position: absolute;
 		left: 160px;
-		top: 80px;
 		height: 100%;
+		width: calc(100vw - var(--chat-width) - 160px);
+		box-shadow: 1px 1px 3px #1b1b1b, -1px -1px 3px #1d1d1d;
 	}
 	#vdoninja {
 		max-width: calc(100vw - 160px - var(--chat-width));
@@ -222,11 +225,11 @@
 	}
 	.thing:hover{
 		animation: horizontalShake 2s;
-		animation-iteration-count: once;
+		animation-iteration-count: 1;
 	}
 	#col1>.thing:hover{
 		animation: enlargeAnimation 2s;
-		animation-iteration-count: once;
+		animation-iteration-count: 1;
 	}
 	#col1>.thing:active{
 		transform: scale(1.05);
@@ -256,7 +259,7 @@
 	}
 	.shake {
 	  animation: shake 0.5s;
-	  animation-iteration-count: once;
+	  animation-iteration-count: 1;
 	}
 	@keyframes shake {
 	  0% { transform: translate(1px, 1px) rotate(0deg); }
@@ -280,6 +283,7 @@
 		 width: 92%;
 	}
 	button{
+		user-select: none;
 		padding:5px;
 		margin:5px;
 		border-radius: 3px;
@@ -296,6 +300,7 @@
 	h2 {
 		text-shadow: 0 0 2px #a7a7a7;
 		color: #000b3a;
+		user-select: none;
 	}
 	.inline{
 		display:inline-block;
@@ -325,8 +330,82 @@
 	#containerMenu2 {
 		width: calc(100vw - 300px);
 		position: absolute;
-		left: 300px;
+		left: 155px;
 		margin: 20px 0;
+		top: 60px;
+	}
+	
+	.tFadeOut{
+		animation-duration: 1s;
+		animation-name: tFadeOut;
+		transition: top 1s;
+		top: 92px;
+	}
+	.tFadeIn{
+		animation-duration: 1s;
+		animation-name: tFadeIn;
+		transition: top 1s;
+		top: 122px;
+	}
+	.tFadeOut{
+		animation-duration: 1s;
+		animation-name: tFadeOut;
+		transition: top 1s;
+		top: 92px;
+	}
+	.tFadeStart{
+		top: 92px;
+	}
+	
+	@keyframes tFadeOut {
+	  from {
+		top: 122px;
+	  }
+	  to {
+		top: 92px; 
+	  }
+	}
+	@keyframes tFadeIn {
+	  from {
+		top: 92px; 
+	  }
+	  to {
+		top: 122px;
+	  }
+	}
+	
+	.hFadeOut{
+		overflow:hidden;
+		animation-duration: 1s;
+		animation-name: hFadeOut;
+		transition: height 1s;
+		height:0;
+	}
+	
+	@keyframes hFadeOut {
+	  from {
+		height: 43px;
+	  }
+	  to {
+		height: 0; 
+	  }
+	}
+	
+	.hFadeIn{
+		overflow:hidden;
+		animation-duration: 1s;
+		animation-name: hFadeIn;
+		transition: height 1s;
+		height:43px;
+	}
+	
+	@keyframes hFadeIn {
+	  from {
+		height: 0; 
+	  }
+	  to {
+		height: 43px;
+	  }
 	}
   
 	.draggable { width: 150px; height: 150px; padding: 0; margin:0; border:0; }
@@ -448,9 +527,18 @@
 	}
 	.editButton{
 		display:none;
-		position:absolute;
-		margin: 20px 14px;
-		z-index:2;
+		position: absolute;
+		z-index: 2;
+		padding: 6px 0;
+		width: 28px;
+		height: 28px;
+		line-height: 0px;
+		border-radius: 14px;
+	}
+	.editButton[data-state="active"]{
+		display:block!important;
+		background: #defffd;
+		border: #166b49 solid 2px;
 	}
 	.setButton{
 		display:none;
@@ -464,9 +552,23 @@
 	.canvasContainer>canvas{
 		transform: scale(calc(  var(--aspect-ratio) / (16 / 9)), 1);
 	}
-	.pressed>button{
-		display:inline-block;
+	.canvasContainer:hover>canvas{
+		box-shadow: 0 0 6px #273a4e, 0 0px 6px #fffC;
 	}
+	
+	.canvasContainer:hover>button{
+		display:inline-block;
+		padding: 3.2px;
+		opacity: 80%;
+	}
+	
+	.canvasContainer>button:hover{
+		display:inline-block;
+		padding: 3.2px;
+		opacity: 100!important;
+		box-shadow:  2px 2px 2px #918c8c7c, -2px -2px 2px #27272774
+	}
+	
 	b {
 		text-shadow: 0 0 1px #f4f4f4;
 	}
@@ -521,6 +623,7 @@
 	  color: lightgray; 
 	  font-size: 24px;  
 	  font-weight: bold;
+	  user-select: none;
 	}
 	.close-btn:hover {
 	  color: darkgray;
@@ -573,6 +676,48 @@
 		align-items: center;
 	}
 	
+	.popup-message {
+		display: none;
+		align-text: center;
+		position: absolute;
+		z-index: 35 !important;
+		padding: 5px !important;
+		border-radius: 3px;
+		min-width: 180px !important;
+		background-color: #fff !important;
+		border: solid 1px #dfdfdf !important;
+		box-shadow: 1px 1px 2px #cfcfcf !important;
+	}
+	.context-menu--active {
+		display: block !important;
+	}
+	.context-menu__items {
+		list-style: none !important;
+		margin: 0;
+		padding: 0;
+	}
+	.context-menu__item {
+		display: block;
+		margin-bottom: 4px !important;
+	}
+	.context-menu__item:last-child {
+		margin-bottom: 0 !important;
+	}
+	.context-menu__link {
+		display: block;
+		padding: 4px 12px;
+		color: #0066aa !important;
+		text-decoration: none;
+	}
+	button.menuButtons{
+		background-color: #b4c5ca !important;
+		background: linear-gradient(135deg, #c2d2d7 60%,#c7d3d7 80%, #a3b5ba 100%)
+	}
+	.context-menu__link:hover {
+		color: #fff !important;
+		background-color: #0066aa !important;
+	}
+		
 	.discord{
 		background-image: url("data:image/svg+xml,%3Csvg width='71' height='55' viewBox='0 0 71 55' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cg clip-path='url(%23clip0)'%3E%3Cpath d='M60.1045 4.8978C55.5792 2.8214 50.7265 1.2916 45.6527 0.41542C45.5603 0.39851 45.468 0.440769 45.4204 0.525289C44.7963 1.6353 44.105 3.0834 43.6209 4.2216C38.1637 3.4046 32.7345 3.4046 27.3892 4.2216C26.905 3.0581 26.1886 1.6353 25.5617 0.525289C25.5141 0.443589 25.4218 0.40133 25.3294 0.41542C20.2584 1.2888 15.4057 2.8186 10.8776 4.8978C10.8384 4.9147 10.8048 4.9429 10.7825 4.9795C1.57795 18.7309 -0.943561 32.1443 0.293408 45.3914C0.299005 45.4562 0.335386 45.5182 0.385761 45.5576C6.45866 50.0174 12.3413 52.7249 18.1147 54.5195C18.2071 54.5477 18.305 54.5139 18.3638 54.4378C19.7295 52.5728 20.9469 50.6063 21.9907 48.5383C22.0523 48.4172 21.9935 48.2735 21.8676 48.2256C19.9366 47.4931 18.0979 46.6 16.3292 45.5858C16.1893 45.5041 16.1781 45.304 16.3068 45.2082C16.679 44.9293 17.0513 44.6391 17.4067 44.3461C17.471 44.2926 17.5606 44.2813 17.6362 44.3151C29.2558 49.6202 41.8354 49.6202 53.3179 44.3151C53.3935 44.2785 53.4831 44.2898 53.5502 44.3433C53.9057 44.6363 54.2779 44.9293 54.6529 45.2082C54.7816 45.304 54.7732 45.5041 54.6333 45.5858C52.8646 46.6197 51.0259 47.4931 49.0921 48.2228C48.9662 48.2707 48.9102 48.4172 48.9718 48.5383C50.038 50.6034 51.2554 52.5699 52.5959 54.435C52.6519 54.5139 52.7526 54.5477 52.845 54.5195C58.6464 52.7249 64.529 50.0174 70.6019 45.5576C70.6551 45.5182 70.6887 45.459 70.6943 45.3942C72.1747 30.0791 68.2147 16.7757 60.1968 4.9823C60.1772 4.9429 60.1437 4.9147 60.1045 4.8978ZM23.7259 37.3253C20.2276 37.3253 17.3451 34.1136 17.3451 30.1693C17.3451 26.225 20.1717 23.0133 23.7259 23.0133C27.308 23.0133 30.1626 26.2532 30.1066 30.1693C30.1066 34.1136 27.28 37.3253 23.7259 37.3253ZM47.3178 37.3253C43.8196 37.3253 40.9371 34.1136 40.9371 30.1693C40.9371 26.225 43.7636 23.0133 47.3178 23.0133C50.9 23.0133 53.7545 26.2532 53.6986 30.1693C53.6986 34.1136 50.9 37.3253 47.3178 37.3253Z' fill='%23ffffff'/%3E%3C/g%3E%3Cdefs%3E%3CclipPath id='clip0'%3E%3Crect width='71' height='55' fill='white'/%3E%3C/clipPath%3E%3C/defs%3E%3C/svg%3E");
 		background-size: contain;
@@ -694,6 +839,7 @@
 		bottom: 1px;
 		position: relative;
 	}
+	
 	</style>
 </head>
 <body>
@@ -714,11 +860,11 @@
 		<div id="containermenu"></div>
 		<div id="containermenu2" class="hidden">
 			<button onclick="addElement();">➕ Add Item</button>
-			<button onclick="saveScene(false);">💾 Save Scene</button>
-			<button onclick="saveScene(true);">🆕 Save As New Scene</button>
+			<button onclick="saveScene(false, event);">💾 Save Scene</button>
+			<button onclick="saveScene(true, event);">💾<span style="position:relative;right:12px;top:2px;width:12px;display: inline-block;">💾</span>Duplicate</button>
 			<button onclick="copyJSON();" title="This can be used with &format directly in VDO.Ninja without the mixer app.">Show as JSON</button>
 			<button onclick="removeScene();">🗑️ Remove Scene</button>
-			<button onclick="saveScene(false);closeScene();">💾❌ Save and Close</button>
+			<button id="saveAndClose" onclick="saveScene(false, event);closeScene();">💾❌ Save and Close</button>
 			<button onclick="closeScene();">❌ Close Scene Maker</button>
 		</div>
 	</div>
@@ -766,7 +912,7 @@
 			</div>
 		</div>
 	</div>
-	<div id="iframeContainer">
+	<div id="iframeContainer" class="tFadeStart">
 		<div id='canvas' class="hidden">
 		</div>
 		<div id='sceneSettings' class="hidden2">
@@ -777,16 +923,22 @@
 			<input type="checkbox" class="aspectbutton" onchange="changeAspectRatio(1.0, this);">1:1
 			<br /><small><i>This just impacts the aspect ratio of the local preview.</i></small><br />
 			
-			<h4>Remove all Layouts</h4>
+			<h4>Layout switching</h4>
+			<input type="checkbox" title="When a user is assigned a slot or switches slots, the last active layout is re-applied automatically" id="updateOnSlotChange" checked onchange="submitChange(this)";>Update layout on a slot change
+			
+			<h4>Show advanced controls</h4>
+			<input type="checkbox" title="Shows more director control options" onchange="toggleAdvanced(this)";>Show the advanced director control options
+			
+			<h4>🗑 Remove all Layouts </h4>
 			<button onclick="wipeLayouts();">This will remove all the scene layouts from the current session.</button><br />
-			<h4>Load Default Layouts</h4>
+			<h4>🚿 Load Default Layouts </h4>
 			<button onclick="resetLayouts();">This will replace all current scene layouts with the initial defaults.</button><br />
 			
-			<h4>Export settings</h4>
+			<h4>📤 Export settings </h4>
 			<button onclick="exportSession();">Export all scenes and settings to disk</button><br />
-			<h4>Import settings</h4>
+			<h4>📥 Import settings </h4>
 			Import scenes and settings from local file:<br /><input type="file" accept=".json" onchange="importSession(event);"/><br /><br />
-			<button onclick="modal.style.display = 'none';">Close Settings</button>
+			<button onclick="getById('modal-content').innerHTML = '';modal.style.display = 'none';">Close Settings</button>
 		</div>
 		<div id='roomSettings' class="hidden2">
 			<h2>Room Setup</h2>
@@ -806,7 +958,7 @@
 			</span>
 			<i>You can manually customize the invite link further; see the documentation at <a href="docs.vdo.ninja" target="_blank">docs.vdo.ninja</a></i>
 			<br /><br />
-			<button onclick="modal.style.display = 'none';">Close</button>
+			<button onclick="getById('modal-content').innerHTML = '';modal.style.display = 'none';">Close</button>
 		</div>
 	</div>
 	<div id="modal" class="modal" >
@@ -821,6 +973,7 @@
 		<!-- This image is used when dragging elements -->
 		<img src="./media/favicon-32x32.png" style="pointer-events: none;" id="dragImage" loading="lazy" />
 	</div>
+	<div id="messagePopup" class="popup-message"></div>
 	<script>
 	
 	function allowDrop(ev) {
@@ -852,6 +1005,16 @@
 	}
 	function log(msg){
 		console.log(msg);
+	}
+	
+	function getById(id){
+		var ele = document.getElementById(id);
+		if (!ele){
+			console.warn(id+" not found.");
+			return document.createElement("span");
+		} else {
+			return ele;
+		}
 	}
 	
 	function toggleChat(){
@@ -892,6 +1055,13 @@
 		window.history.pushState({path: urlEdited.toString()}, '', urlEdited.toString());
 	}
 	var urlParams = new URLSearchParams(urlEdited);
+	
+	
+	var streamIDs = [];
+	var slotsNeeded = 1;
+	var lastLayout = false;
+	var lastLayoutRaw = false;
+	var updateOnSlotChange = true;
 	
 	var password = false;
 	if (urlParams.has("password")){
@@ -1267,9 +1437,7 @@
 		}
 	}
 	
-	var streamIDs = [];
-	var slotsNeeded = 1;
-	var lastLayout = false;
+	
 	
 	function updateList(autoadd=false){
 		//<div id="col2" ondrop="dropRemove(event)" ondragover="allowDrop(event)">
@@ -1380,7 +1548,6 @@
 		"#44AACC"
 	];
 	
-	var savedSession = getStorage("savedSession");
 	
 	var initialLayouts = {};
 	initialLayouts.layouts = [];
@@ -1418,16 +1585,6 @@
 	];
 	initialLayouts.layouts.push(data);
 
-//	var data = [
-//		{x:0, y:0, w:100, h:100,z:0, c:true},
-//		{x:70, y:70, w:30, h:30, z:1, c:false}
-//	];
-//	initialLayouts.layouts.push(data);
-///	var data = [
-//		{x:0, y:0, w:20, h:20, z:1, c:true},
-//		{x:0, y:0, w:100, h:100,z:0, c:false}
-//	];
-//	initialLayouts.layouts.push(data);
 	var data = [
 		{x:0, y:0, w:50, h:50, c:true},
 		{x:50, y:0, w:50, h:50, c:true},
@@ -1442,37 +1599,50 @@
 		{x:66.667, y:66.667, w:33.333, h:33.333, c:true}
 	];
 	initialLayouts.layouts.push(data);
-//	var data = [
-//		{x:66.667, y:0, w:33.333, h:33.333},
-//		{x:0, y:16.667, w:66.667, h:66.667},
-//		{x:66.667, y:33.333, w:33.333, h:33.333},
-//		{x:66.667, y:66.667, w:33.333, h:33.333}
-//	];
-//	initialLayouts.layouts.push(data);
-
-//	var data = [
-//		null,
-//		null,
-//		{x:70, y:70, w:30, h:30, z:1, c:true},
-//		{x:0, y:0, w:100, h:100,z:0, c:false}
-//	];
-//	initialLayouts.layouts.push(data);
-	//var data = [
-	//	null,
-	//	null,
-//		{x:0, y:25, w:50, h:50, c:true},
-	//	{x:50, y:25, w:50, h:50, c:true}
-	//];
-	//initialLayouts.layouts.push(data);
+	
+	function applySettings(){
+		if (savedSession.settings && ("updateOnSlotChange" in savedSession.settings)){
+			updateOnSlotChange = savedSession.settings.updateOnSlotChange;
+			if (!updateOnSlotChange){
+				getById("updateOnSlotChange").value = "off";
+				getById("updateOnSlotChange").checked = false;
+				getById("updateOnSlotChange").removeAttribute('checked');
+			}
+		}
+	}
+	
+	var savedSession = getStorage("savedSession");
 	
 	if (savedSession){
 		savedSession = JSON.parse(savedSession);
+		applySettings();
 	} else {
 		savedSession = initialLayouts;
 	}
 	
 	var guestPositions = {};
 	
+	function submitChange(element){
+		if (element.checked){
+			updateOnSlotChange=true;
+		} else {
+			element.removeAttribute('checked');
+			updateOnSlotChange=false;
+		}
+		saveSession();
+	}
+	
+	function toggleAdvanced(element){
+		if (element.checked){
+			iframe.contentWindow.postMessage({"advancedMode":true}, '*');
+		} else {
+			element.removeAttribute('checked');
+			iframe.contentWindow.postMessage({"advancedMode":false}, '*');
+		}
+	}
+	
+	
+
 	function exportSession() {
 		var content = JSON.stringify(savedSession);
 		var fileName = roomname + ".json";
@@ -1560,9 +1730,111 @@
 			background: #2e445c;
 			box-shadow: 20px 20px 60px #182430, -20px -20px 60px #283c52;
 		}
+		label {
+			color: #fff;
+		}
 	`;
 	
 	injectCSS = encodeURIComponent(btoa(injectCSS));
+	
+	function copyFunction(copyText, evt = false) {
+		if (evt){
+			if ("buttons" in evt) {
+				if (evt.buttons !== 0){return;}
+			} else if ("which" in evt){
+				if (evt.which !== 0){return;}
+			}
+			popupMessage(evt);
+			evt.preventDefault();
+			evt.stopPropagation();
+		}
+
+		try {
+			copyText.select();
+			copyText.setSelectionRange(0, 99999);
+			document.execCommand("copy");
+		} catch (e) {
+			var dummy = document.createElement('input');
+			document.body.appendChild(dummy);
+			dummy.value = copyText;
+			dummy.select();
+			document.execCommand('copy');
+			document.body.removeChild(dummy);
+		}
+		return false;
+	}
+	
+	
+	
+	function popupMessage(e, message = "Copied to Clipboard") { // right click menu
+
+		var posx = 0;
+		var posy = 0;
+
+		if (!e) var e = window.event;
+
+		if (e.pageX || e.pageY) {
+			posx = e.pageX;
+			posy = e.pageY;
+		} else if (e.clientX || e.clientY) {
+			posx = e.clientX + document.body.scrollLeft + document.documentElement.scrollLeft;
+			posy = e.clientY + document.body.scrollTop + document.documentElement.scrollTop;
+		}
+
+		posx += 10;
+
+
+		var menu = getById("messagePopup");
+		menu.innerHTML = "<center>" + message + "</center>";
+		var menuState = 0;
+		var menuWidth;
+		var menuHeight;
+		var menuPosition;
+		var menuPositionX;
+		var menuPositionY;
+
+		var windowWidth;
+		var windowHeight;
+
+		if (menuState !== 1) {
+			menuState = 1;
+			menu.classList.add("context-menu--active");
+		}
+
+		menuWidth = menu.offsetWidth + 4;
+		menuHeight = menu.offsetHeight + 4;
+
+		windowWidth = window.innerWidth;
+		windowHeight = window.innerHeight;
+
+		if ((windowWidth - posx) < menuWidth) {
+			menu.style.left = windowWidth - menuWidth + "px";
+		} else {
+			menu.style.left = posx + "px";
+		}
+
+		if ((windowHeight - posy) < menuHeight) {
+			menu.style.top = windowHeight - menuHeight + "px";
+		} else {
+			menu.style.top = posy + "px";
+		}
+
+		function toggleMenuOff() {
+			if (menuState !== 0) {
+				menuState = 0;
+				menu.classList.remove("context-menu--active");
+			}
+		}
+		menu.classList.remove("fadeout");
+		
+		setTimeout(function() {
+			menu.classList.add("fadeout");
+		}, 500);
+		
+		setTimeout(function() {
+			toggleMenuOff();
+		}, 1500);
+	}
 	
 	function generateString(LLL = 7){
 		var text = "";
@@ -1591,7 +1863,7 @@
 	};
 	
 	function hotkeyCheck(event){
-		
+		if (event.target && (event.target.tagName == "INPUT")){warnlog("input in focus; return");return;}
 		var value = parseInt(event.key);
 		if (value == event.key){
 			console.log(value);
@@ -1627,10 +1899,10 @@
 		iframe.id = "vdoninja";
 		
 		if (roomname){
-			var iframesrc = "./index.html?ltb=350&transparent&cleanoutput&slotmode&director="+roomname+additional+"&b64css="+injectCSS;
+			var iframesrc = "./index.html?novice&ltb=350&transparent&cleanoutput&slotmode&director="+roomname+additional+"&b64css="+injectCSS;
 		} else {
 			roomname = generateString(10);
-			var iframesrc = "./index.html?ltb=350&transparent&cleanoutput&slotmode&director="+roomname+additional+"&b64css="+injectCSS;
+			var iframesrc = "./index.html?novice&ltb=350&transparent&cleanoutput&slotmode&director="+roomname+additional+"&b64css="+injectCSS;
 		}
 		
 		if (roomname!==false){
@@ -1712,7 +1984,7 @@
 		
 		
 		var button = document.createElement("button");
-		button.innerHTML = "Invite Guest"; 
+		button.innerHTML = "Invite Settings"; 
 		button.classList.add("menuButton");
 		button.state = false;
 		button.dataset.state = button.state;
@@ -1723,7 +1995,7 @@
 		
 		var a = document.createElement("a");
 		a.innerHTML = "Invite Guest Link 📎"; 
-		a.href = "./index.html?room="+roomname+"&sstype=3&thirds&broadcast"+additional;
+		a.href = "./index.html?room="+roomname+"&sstype=3&broadcast"+additional;
 		a.target = "_blank";
 		document.getElementById("sources").appendChild(a);
 		
@@ -1795,7 +2067,15 @@
 				<!-- } -->
 				
 				if (e.data.action === "slot-updated"){
+					for (var i in guestPositions){
+						if (guestPositions[i] === e.data.streamID){
+							delete guestPositions[i];
+						}
+					}
 					guestPositions[e.data.value] = e.data.streamID; // value is slot ID
+					if (updateOnSlotChange){
+						remoteActivate(false, lastLayoutRaw);
+					}
 				}
 			}
 			
@@ -1854,6 +2134,7 @@
 	
 	function showSettings(){
 		document.getElementById("modal").style.display = "block";
+		applySettings();
 		document.getElementById("modal-content").innerHTML = document.getElementById("sceneSettings").innerHTML;
 	}
 	
@@ -1889,24 +2170,45 @@
 	}
 	
 	function addLayout2(item=false){
-		document.getElementById("containermenu").classList.add("hidden");
+		//document.getElementById("containermenu").classList.add("hidden");
 		iframe.classList.add("hidden");
+		document.getElementById("containermenu2").classList.add("hFadeIn");
+		document.getElementById("containermenu2").classList.remove("hFadeOut");
 		document.getElementById("containermenu2").classList.remove("hidden");
+		
+		//document.getElementById("canvas").classList.remove("shake");
+		document.getElementById("iframeContainer").classList.remove("tFadeStart");
+		document.getElementById("iframeContainer").classList.add("tFadeIn");
+		document.getElementById("iframeContainer").classList.remove("tFadeout");
+		
+		
 		document.getElementById("canvas").classList.remove("hidden");
 		try {
 			var tar = item.parentNode.querySelector("canvas").sceneName;
 			document.getElementById("canvas").sceneName = tar;
 		} catch(e){
+			document.querySelectorAll(".editButton").forEach(ele=>{
+				ele.dataset.state = "inactive";
+			});
 			addOldElement({});
 			addElement();
 		}
 	}
 	
 	function closeScene(){
-		document.getElementById("containermenu").classList.remove("hidden");
+		//document.getElementById("containermenu").classList.remove("hidden");
 		iframe.classList.remove("hidden");
-		document.getElementById("containermenu2").classList.add("hidden");
+		document.getElementById("containermenu2").classList.remove("hFadeIn");
+		document.getElementById("containermenu2").classList.add("hFadeOut");
+		//document.getElementById("containermenu2").classList.add("hidden");
 		document.getElementById("canvas").classList.add("hidden");
+		
+		document.getElementById("iframeContainer").classList.remove("tFadeIn");
+		document.getElementById("iframeContainer").classList.add("tFadeout");
+		
+		document.querySelectorAll(".editButton").forEach(ele=>{
+			ele.dataset.state = "inactive";
+		});
 	}
 	
 	function drawLayout(layoutOriginal, sceneName=false){
@@ -1916,7 +2218,7 @@
 			if (!layoutOriginal[i]){
 				continue;
 			}
-			if (!("slot" in layoutOriginal[i])){
+			if (!("slot" in layoutOriginal[i])){ 
 				layoutOriginal[i].slot = i;
 			}
 			layout.push(layoutOriginal[i]);
@@ -1934,7 +2236,6 @@
 			return 0;
 		}
 		layout.sort(compare);
-		
 		
 		var canvas = document.createElement('canvas');
 		canvas.width="80";
@@ -1979,11 +2280,21 @@
 		}
 		
 		var editButton = document.createElement("button");
-		editButton.innerHTML = "Edit";
+		editButton.innerHTML = "🔧";
 		editButton.classList.add("editButton");
-		
+		editButton.title = "Edit this layout";
+		editButton.dataset.state = "inactive";
 		editButton.onclick = function(){
-			addLayout2(this);
+			
+			getById("saveAndClose").classList.remove("shake");
+			if (this.dataset.state == "active"){
+				setTimeout(function(){getById("saveAndClose").classList.add("shake");},10);
+			}
+			document.querySelectorAll(".editButton").forEach(ele=>{
+				ele.dataset.state = "inactive";
+			});
+			this.dataset.state = "active";
+			addLayout2(this); 
 			addOldElement(JSON.parse(this.parentNode.querySelector("canvas").layout));
 		}
 		
@@ -1992,7 +2303,7 @@
 		setButton.classList.add("setButton");
 		
 		setButton.onclick = function(e){
-			remoteActivate(e, setButton.parentNode.querySelector("canvas"));
+			remoteActivate(e, setButton.parentNode.querySelector("canvas").layout);
 		}
 		
 		var hotkey = document.createElement("div");
@@ -2002,10 +2313,11 @@
 			sceneName = parseInt(Math.random()*1000000);
 		}	
 		canvas.sceneName = sceneName;
+		canvas.title = "Activate this layout; the view scene link will be updated";
 		
 		var canvasContainer = document.createElement("div");
 		canvasContainer.appendChild(editButton);
-		canvasContainer.appendChild(setButton);
+		//canvasContainer.appendChild(setButton);
 		canvasContainer.appendChild(canvas);
 		canvasContainer.appendChild(hotkey);
 		canvasContainer.classList.add("canvasContainer");
@@ -2025,6 +2337,7 @@
 		//} else {
 		document.getElementById("containermenu").appendChild(canvasContainer);
 		//}
+		return canvasContainer;
 		
 	}
 	
@@ -2088,12 +2401,14 @@
 		var ctx = canvas.getContext('2d');
 		var container = document.createElement('div');
 		container.classList.add("inline");
+		//container.classList.add("canvasContainer");
+		 
 		container.appendChild(canvas);
 		document.getElementById("containermenu").appendChild(container);
 		ctx.beginPath();
 		ctx.rect(0, 0, 80, 45);
 		ctx.fillStyle = "#000";
-		ctx.fill();
+		ctx.fill(); 
 		
 		ctx.fillStyle = "#FFF";
 		ctx.font = "15px Arial";
@@ -2116,6 +2431,7 @@
 		var ctx = canvas.getContext('2d');
 		var container = document.createElement('div');
 		container.classList.add("inline");
+		//container.classList.add("canvasContainer");
 		container.appendChild(canvas);
 		document.getElementById("containermenu").appendChild(container);
 		ctx.beginPath();
@@ -2172,7 +2488,7 @@
 		
 		for (var i=0;i<object.length;i++){
 			if (object[i] == null){continue;}
-			var slot = parseInt(object[i].slot) || i;
+			var slot = parseInt(object[i].slot) || 0;
 			<!-- ele.w = parseInt(compute.width)/1280*100; -->
 			<!-- ele.h = parseInt(compute.height)/720*100; -->
 			<!-- ele.x = parseInt(compute.left)/1280*100; -->
@@ -2366,14 +2682,26 @@
 		});
    }
    
-   function remoteActivate(event, ele=false){
-		if (!ele){
-			ele = this;
+   function remoteActivate(event=null, layout=null){
+		console.log(this);
+		console.log(event);
+		console.log(layout);
+		if (event.target && layout===null){
+			layout = event.target.layout;
+			var layoutButtons = document.querySelectorAll(".pressed");
+			for (var i = 0;i<layoutButtons.length;i++){
+				layoutButtons[i].classList.remove("pressed");
+			}
+			event.target.parentNode.classList.add("pressed");
 		}
-		if (ele.layout){
-			var layout = JSON.parse(ele.layout);
+		
+		var combined = false;
+		lastLayoutRaw = layout;
+		
+		if (layout){
+			layout = JSON.parse(layout);
 			console.log(layout);
-			var combined = {};
+			combined = {};
 			for (var i=0;i<layout.length;i++){
 				if (!layout[i]){continue;}
 				if (!("slot" in layout[i])){
@@ -2397,19 +2725,15 @@
 				}
 				combined[stream] = layout[i];
 			}
-		} else {
-			var layout = null;
-			var combined = false;
 		}
+		
 		console.log(combined);
 		currentLayout = combined; // global current state
 		lastLayout = {"scene":"0", "layout":combined};
+		
 		iframe.contentWindow.postMessage({"scene":"0", "layout":combined}, '*');
-		var layoutButtons = document.querySelectorAll(".pressed");
-		for (var i = 0;i<layoutButtons.length;i++){
-			layoutButtons[i].classList.remove("pressed");
-		}
-		ele.parentNode.classList.add("pressed");
+		
+		
 	}
 	
 	function deleteElement(event){
@@ -2423,7 +2747,6 @@
 			parent.setting.classList.toggle("hidden");
 			return;
 		}
-		errorlog(parent);
 		
 		var setEle = document.createElement("div");
 		parent.appendChild(setEle);
@@ -2647,7 +2970,7 @@
 		prompt("Layout as URL-encoded JSON. StreamIDs are based on current and default values.", encodeURIComponent(JSON.stringify(combined)));
 	}
   
-	function saveScene(makenew=false){
+	function saveScene(makenew=false, event=null){
 		var scene = [];
 		
 		var hh = parseInt(document.getElementById("canvas").style.height);
@@ -2686,9 +3009,22 @@
 		var sceneName = document.getElementById("canvas").sceneName || parseInt(Math.random()*1000000);
 		console.log("'sceneName: "+sceneName);
 		if (makenew){
-			drawLayout(scene, false);
+			var canvasContainer = drawLayout(scene, false); 
+			popupMessage(event, "Saved as a new scene");
+			
+			document.querySelectorAll(".editButton").forEach(ele=>{
+				ele.dataset.state = "inactive";
+			});
+			try {
+				canvasContainer.focus();
+				canvasContainer.querySelector(".editButton").dataset.state = "active";
+				canvasContainer.classList.remove("shake");
+				setTimeout(function(canvasContainer){canvasContainer.classList.add("shake");},10,canvasContainer);
+			} catch(e){}
+			
 		} else {
 			drawLayout(scene, sceneName);
+			popupMessage(event, "Scene saved");
 		}
 		
 		saveSession();
@@ -2706,6 +3042,7 @@
 				}
 			}
 		}
+		popupMessage(event, "Scene removed");
 		closeScene();
 		saveSession();
 	}
@@ -2713,8 +3050,17 @@
 	function saveSession(){
 		var layouts = document.querySelectorAll(".canvasContainer>canvas");
 		savedSession.layouts = [];
+		savedSession.settings = {};
+		savedSession.settings.updateOnSlotChange = updateOnSlotChange;
+		savedSession.version = 1;
+		
 		for (var i=0;i<layouts.length;i++){
-			savedSession.layouts.push(JSON.parse(layouts[i].layout));
+			if (!layouts[i].layout){continue;}
+			try {
+				savedSession.layouts.push(JSON.parse(layouts[i].layout));
+			} catch(e){
+				errorlog(e);
+			}
 		}
 		setStorage("savedSession", JSON.stringify(savedSession));
 		console.log(getStorage("savedSession"));
@@ -2733,12 +3079,21 @@
 	let modal = document.querySelector("#modal");
 	let closeBtn = document.querySelector(".close-btn");
 	closeBtn.onclick = function(){
-	  modal.style.display = "none";
+		document.getElementById("modal-content").innerHTML = "";
+		modal.style.display = "none";
 	}
 	window.onclick = function(e){
-	  if (e.target == modal){
-		modal.style.display = "none";
-	  }
+		if (e.target == modal){
+			document.getElementById("modal-content").innerHTML = "";
+			modal.style.display = "none";
+		}
+	}
+	
+	modal.onclick = function(e){
+		if (e.target == modal){
+			document.getElementById("modal-content").innerHTML = "";
+			modal.style.display = "none";
+		}
 	}
 	
 	if (roomname){ 
