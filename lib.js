@@ -13213,17 +13213,21 @@ async function toggleScreenShare(reload = false) { ////////////////////////////
 		
 		if (screenShareAudioTrack){
 			session.streamSrc.getAudioTracks().forEach(function(track) { // previous video track; saving it. Must remove the track at some point.
-				if (screenShareAudioTrack == track) { // since there are more than one audio track, lets see if we can remove JUST the audio track for the screen share.
+				if (screenShareAudioTrack.id == track.id) { // since there are more than one audio track, lets see if we can remove JUST the audio track for the screen share.
 					session.streamSrc.removeTrack(track);
 					track.stop();
 				}
 			});
 			session.videoElement.srcObject.getAudioTracks().forEach(function(track) {
-				if (screenShareAudioTrack == track) { // since there are more than one audio track, lets see if we can remove JUST the audio track for the screen share.
+				if (screenShareAudioTrack.id == track.id) { // since there are more than one audio track, lets see if we can remove JUST the audio track for the screen share.
 					session.streamSrc.removeTrack(track);
 					track.stop();
 				}
 			});
+			
+			session.videoElement.srcObject = outboundAudioPipeline(); // updateREnderOoutput is just for video if videoElement is already activated.
+			screenShareAudioTrack=null;
+			senderAudioUpdate();
 		}
 		
 		getById("screensharebutton").classList.add("float");
@@ -13233,7 +13237,7 @@ async function toggleScreenShare(reload = false) { ////////////////////////////
 
 		var addedAlready = false;
 		session.streamSrc.getVideoTracks().forEach(function(track) {
-			if (beforeScreenShare && (track == beforeScreenShare)){
+			if (beforeScreenShare && (track.id == beforeScreenShare.id)){
 				addedAlready=true;
 			} else {
 				session.streamSrc.removeTrack(track);
@@ -13242,7 +13246,7 @@ async function toggleScreenShare(reload = false) { ////////////////////////////
 		});
 		
 		session.videoElement.srcObject.getVideoTracks().forEach(function(track) {
-			if (beforeScreenShare && (track == beforeScreenShare)){
+			if (beforeScreenShare && (track.id == beforeScreenShare.id)){
 				addedAlready=true;
 			} else {
 				session.videoElement.srcObject.removeTrack(track);
@@ -13257,12 +13261,10 @@ async function toggleScreenShare(reload = false) { ////////////////////////////
 		}
 		
 		//if (beforeScreenShare || screenShareAudioTrack){
-		session.videoElement.srcObject = outboundAudioPipeline(); // updateREnderOoutput is just for video if videoElement is already activated.
+		//session.videoElement.srcObject = outboundAudioPipeline(); // updateREnderOoutput is just for video if videoElement is already activated.
+		beforeScreenShare = null;
 		updateRenderOutpipe(); // this syncs the video 
 		//}
-		
-		beforeScreenShare = null;
-		screenShareAudioTrack=null;
 		toggleSettings(forceShow = true);
 		
 		updateMixer();
