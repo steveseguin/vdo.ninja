@@ -107,7 +107,7 @@
 			<h2>About</h2>
 			<div>
 				You can check the console debug logs for added of input/output events and device details.
-				<br /><br />You can download a virtual MIDI I/O controller for windwos here:<br />
+				<br /><br />You can download a virtual MIDI I/O controller for Windows here:<br />
 				http://www.tobias-erichsen.de/software/loopmidi.html
 				<br /><br />This code uses the WebMIDI.js library, referenced here:<br />
 				https://github.com/djipco/webmidi
@@ -285,7 +285,7 @@ WebMidi.enable(function (err) {
 	
 	var button = document.createElement("button");
 	button.innerHTML = "Note G3; Chat";
-	button.onclick = function(){output.playNote("G3");};  // "speaker" also works in the same way.
+	button.onclick = function(){console.log("G3");output.playNote("G3");};  // "speaker" also works in the same way.
 	container.appendChild(button);
 	
 	var button = document.createElement("button");

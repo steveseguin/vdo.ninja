@@ -1,0 +1,959 @@
+<html>
+<head>
+	<title>Mixer app</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+	<meta content="text/html;charset=utf-8" http-equiv="Content-Type" />
+	<script src="./thirdparty/jquery/jquery-3.6.0.js?asdf"></script>
+    <script src="./thirdparty/jquery/jquery-ui.js"></script>
+	<link rel="stylesheet" href="./thirdparty/jquery/jquery-ui.css">
+	<link rel="stylesheet" href="./stats.css" >
+	<link rel="shortcut icon" href="data:image/x-icon;," type="image/x-icon" />
+	<link rel="icon" type="image/png" sizes="32x32" href="./media/favicon-32x32.png" />
+	<link rel="icon" type="image/png" sizes="16x16" href="./media/favicon-16x16.png" />
+	<link rel="icon" href="./media/favicon.ico" />
+	<link itemprop="thumbnailUrl" href="./media/vdoNinja_logo_full.png" />
+	<link rel="preconnect" href="https://fonts.googleapis.com">
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link href="https://fonts.googleapis.com/css2?family=Sora:wght@200;400;700&display=swap" rel="stylesheet">
+</head>
+<body>
+	<div id="container">
+		<header style="align-items: center;display:flex;">
+			<span style="margin-right: 17px;">
+				<div class="roomname" id="roomtitle">ROOMNAME HERE</div>
+				<div><div id="streamsConnected">0</div> connections</div>
+			</span>
+			<span>
+				<span><button class="menuButtons" onclick="copyFunction(this.value, event);" id="inviteLink" value="test">Copy Invite Link</button></span>
+				<span><button class="menuButtons" onclick="getStreamModal();">Add a Stream Manually</button></span>
+			</span>
+		</header>
+		<div id="iframeContainer">
+			<div id='canvas' class="hidden">
+			</div>
+			<div id='sceneSettings' class="hidden2">
+				<h2>General Settings</h2>
+				<h4>Aspect Ratio</h4>
+				<input type="checkbox" class="aspectbutton" onchange="changeAspectRatio(16/9.0, this);">16:9
+				<input type="checkbox" class="aspectbutton" onchange="changeAspectRatio(9.0/16, this);">9:16
+				<input type="checkbox" class="aspectbutton" onchange="changeAspectRatio(1.0, this);">1:1
+				<br /><small><i>This just impacts the aspect ratio of the local preview.</i></small><br />
+				
+				<h4>Export settings</h4>
+				<button onclick="exportSession();">Export all scenes and settings to disk</button><br />
+				<h4>Import settings</h4>
+				Import scenes and settings from local file:<br /><input type="file" accept=".json" onchange="importSession(event);"/><br /><br />
+				<button onclick="modal.style.display = 'none';">Close Settings</button>
+			</div>
+			<div id='roomSettings' class="hidden2">
+				<h2>Room Setup</h2>
+				
+				<br /><br />
+				<button onclick="showSettings();">Close</button>
+			</div>
+			<div id='inviteOptions' class="hidden">
+				<h2>Invite options</h2>
+				<h4>Your room name is:  <b class="roomname">ROOMNAME</b></h4>
+				<h3>Create new invite</h3>
+				<a class="inviteLink" target="_blank">Invite Link</a><i class="inviteLink"></i><br />
+				
+				<input type="checkbox" /><label>Prompt user for a display name?</label><br />
+				<input type="checkbox" /><label>Guest can see other guests? (higher CPU for guest)</label><br />
+				<input type="checkbox" /><label>Guest will join muted? (director can remotely unmute)</label><br />
+				<i>You can manually customize the invite link further; see the documentation at <a href="docs.vdo.ninja" target="_blank">docs.vdo.ninja</a></i>
+				<br /><br />
+				<button onclick="modal.style.display = 'none';">Close</button>
+			</div>
+			<div id='manualStream' class="hidden">
+				<h2>Add a stream manually</h2>
+				<h4>Your room password must match the password of the stream being requested</h4>
+				<label>Enter the stream ID:</label><br /><input type="text" data-id="manualStreamID" /><button onclick="requestStreamManually();" />Add stream</button><br /><br />
+				<button onclick="modal.style.display = 'none';">Close</button>
+			</div>
+			
+		</div>
+		<div id="chatModuleButton" class="hidden" onclick="toggleChat();" style="user-select: none;position: absolute;top: 10px;right: 10px;cursor: pointer;" title="Show the chat window">💬</div>
+		<div id="chatModule" class="hidden">
+			<div style="float: right;cursor: pointer;user-select: none;" onclick="toggleChat();" title="Hide the chat window">x</div>
+			<div id="chatBody" class="message"> 
+				<div class="inMessage" data-translate='welcome-to-vdo-ninja-chat'>
+					Welcome to VDO.Ninja! You can send text messages directly to connected peers from here.
+				</div>
+			</div>
+			<div id="chatSendBar">
+				<input id="chatInput" placeholder="Enter chat message to send here" onkeypress="EnterButtonChat(event)" />
+				<button onclick="sendChatMessage()" id='send-chat'>Send</button>
+			</div>
+		</div>
+			
+	</div>
+	<div id="welcomeWindow">
+		<div class="center-content">
+			<div class="title"><h1 class="main-heading">Monitor Streams</h1><h2>Quality and performance statistics</h2></div>
+			
+			<label for="roomname"><input name="roomname" id="roomname" type="text" placeholder="Room Name" /></label>
+			<br />
+			<label for="roompassword"><input name="roompassword" id="roompassword" type="text" placeholder="Room Password"/></label>
+			<font class="tooltip">
+				<button onclick="randomPassword();" class="randomPassword"></button><span class="tooltiptext">Generate a random password</span>
+			</font>
+			<br />
+			<button onclick="startRoom();">Continue</button>
+			<div id="lastSavedRoom" class="hidden">
+				<br /><br />
+				<label for="savedroomname">
+					<input name="savedroomname" id="savedroomname" type="text" disabled placeholder="Room Name" /></label>
+				<label for="savedroompassword" id="savedpasswordlabel"><br />
+					<input name="savedroompassword" id="savedroompassword" disabled type="password" placeholder="Room Password"/></label>
+				<button onclick="startLastRoom();">Restore last room</button>
+			</div>
+			<br /><br />
+			<div class="footer">
+				<div>
+					<a href="https://discord.vdo.ninja" class="discord" target="_blank"></a>
+				</div>
+				<div>
+					<a class="github" href="https://github.com/steveseguin/vdoninja" rel="noopener" target="_blank" title="Star steveseguin/vdoninja on GitHub"></a>
+				</div>
+				<div style="cursor:pointer;" onclick="window.open('https://vdo.ninja');">For use with VDO.Ninja</div>
+			</div>
+		</div>
+	</div>
+	<div id="graphTemplate" display="none">
+		<div class="graph">
+			<div class='graphTitle'>Bitrate (kbps)</div>
+			<canvas data-bitrate-graph="true"></canvas>
+		</div>
+		<div class="graph">
+			<div class='graphTitle'>Reported lost packets (per second)</div>
+			<span>0</span>
+			<canvas data-nackrate-graph="true"></canvas>
+		</div>
+		<div data-log="true" onclick="copyFunction(this.innerText)" style="max-height:400px;display:inline-block;">
+			<ul></ul>
+		</div>
+	</div>
+	<div id="modal" class="modal">
+	  <div class="modal-content">
+		<span class="close-btn">&times;</span>
+		<div id="modal-content">
+			<p>this is the text inside the modal</p>
+		</div>
+	  </div>
+	</div>
+	<div id="messagePopup" class="popup-message"></div>
+	<script>
+	
+	function allowDrop(ev) {
+		ev.preventDefault();
+	}
+	
+	(function(w) {
+		w.URLSearchParams = w.URLSearchParams || function(searchString) {
+			var self = this;
+			searchString = searchString.replace("??", "?");
+			self.searchString = searchString;
+			self.get = function(name) {
+				var results = new RegExp('[\?&]' + name + '=([^&#]*)').exec(self.searchString);
+				if (results == null) {
+					return null;
+				} else {
+					return decodeURI(results[1]) || 0;
+				}
+			};
+		};
+
+	})(window);
+	
+	function warnlog(msg){
+		console.warn(msg);
+	}
+	function errorlog(msg){
+		console.error(msg);
+	}
+	function log(msg){
+		console.log(msg);
+	}
+	
+	function toggleChat(){
+		document.getElementById("chatModule").classList.toggle("fadeout");
+		document.getElementById("chatModuleButton").classList.toggle("hidden");
+		if (document.getElementById("chatModule").classList.contains("fadeout")){
+			document.documentElement.style.setProperty('--chat-width', "0px");
+		} else {
+			document.documentElement.style.setProperty('--chat-width', "450px");
+		}
+	}
+	
+	function sanitizeRoomName(roomid) {
+		if (!roomid){
+			return false;
+		}
+		roomid = roomid.trim();
+		if (roomid === "") {
+			return false;
+		} else if (!roomid) {
+			return false;
+		} else if (roomid=="test") {
+			return false;
+		}
+		var roomid = roomid.replace(/[\W]+/g, "_");
+		if (roomid.length > 50) {
+			roomid = roomid.substring(0, 50);
+		}
+		return roomid;
+	}
+	
+	function copyFunction(copyText, evt = false) {
+		if (evt){
+			if ("buttons" in evt) {
+				if (evt.buttons !== 0){return;}
+			} else if ("which" in evt){
+				if (evt.which !== 0){return;}
+			}
+			popupMessage(evt);
+			evt.preventDefault();
+			evt.stopPropagation();
+		}
+
+		try {
+			copyText.select();
+			copyText.setSelectionRange(0, 99999);
+			document.execCommand("copy");
+		} catch (e) {
+			var dummy = document.createElement('input');
+			document.body.appendChild(dummy);
+			dummy.value = copyText;
+			dummy.select();
+			document.execCommand('copy');
+			document.body.removeChild(dummy);
+		}
+		return false;
+	}
+	
+	function getById(id){
+		var ele = document.getElementById(id);
+		if (!ele){
+			console.warn(id+" not found.");
+			return document.createElement("span");
+		} else {
+			return ele;
+		}
+	}
+	
+	function popupMessage(e, message = "Copied to Clipboard") { // right click menu
+
+		var posx = 0;
+		var posy = 0;
+
+		if (!e) var e = window.event;
+
+		if (e.pageX || e.pageY) {
+			posx = e.pageX;
+			posy = e.pageY;
+		} else if (e.clientX || e.clientY) {
+			posx = e.clientX + document.body.scrollLeft + document.documentElement.scrollLeft;
+			posy = e.clientY + document.body.scrollTop + document.documentElement.scrollTop;
+		}
+
+		posx += 10;
+
+
+		var menu = getById("messagePopup");
+		menu.innerHTML = "<center>" + message + "</center>";
+		var menuState = 0;
+		var menuWidth;
+		var menuHeight;
+		var menuPosition;
+		var menuPositionX;
+		var menuPositionY;
+
+		var windowWidth;
+		var windowHeight;
+
+		if (menuState !== 1) {
+			menuState = 1;
+			menu.classList.add("context-menu--active");
+		}
+
+		menuWidth = menu.offsetWidth + 4;
+		menuHeight = menu.offsetHeight + 4;
+
+		windowWidth = window.innerWidth;
+		windowHeight = window.innerHeight;
+
+		if ((windowWidth - posx) < menuWidth) {
+			menu.style.left = windowWidth - menuWidth + "px";
+		} else {
+			menu.style.left = posx + "px";
+		}
+
+		if ((windowHeight - posy) < menuHeight) {
+			menu.style.top = windowHeight - menuHeight + "px";
+		} else {
+			menu.style.top = posy + "px";
+		}
+
+		function toggleMenuOff() {
+			if (menuState !== 0) {
+				menuState = 0;
+				menu.classList.remove("context-menu--active");
+			}
+		}
+		menu.classList.remove("fadeout");
+		
+		setTimeout(function() {
+			menu.classList.add("fadeout");
+		}, 500);
+		
+		setTimeout(function() {
+			toggleMenuOff();
+		}, 1500);
+	}
+
+	var urlEdited = window.location.search.replace(/\?\?/g, "?");
+	urlEdited = urlEdited.replace(/\?/g, "&");
+	urlEdited = urlEdited.replace(/\&/, "?");
+
+	if (urlEdited !== window.location.search){
+		warnlog(window.location.search + " changed to " + urlEdited);
+		window.history.pushState({path: urlEdited.toString()}, '', urlEdited.toString());
+	}
+	var urlParams = new URLSearchParams(urlEdited);
+	
+	var password = false;
+	if (urlParams.has("password") || urlParams.has("pw") || urlParams.has("p")){
+		password = urlParams.get("password") || urlParams.get("pw") || urlParams.get("p") || false;
+		if (password===false){
+			password = prompt("Please enter a password") || false;
+		}
+	}
+	
+	var viewList = false;
+	if (urlParams.has("view") || urlParams.has("v")){
+		viewList = urlParams.get("view") || urlParams.get("v") || false;
+	}
+	if (viewList){
+		viewList = viewList.split(",");
+	}
+	
+	var aspectRatio = 16/9.0;
+	document.documentElement.style.setProperty('--aspect-ratio', aspectRatio);
+	
+	var roomname = false;
+	if (urlParams.has("room") || urlParams.has("dir") || urlParams.has("director") || urlParams.has("r")){
+		roomname = urlParams.get("room") || urlParams.get("dir") || urlParams.get("director") || urlParams.get("r");;
+		roomname = sanitizeRoomName(roomname);
+	}
+	var savedLastRoom = getStorage("savedRoom");
+	
+	if (savedLastRoom){
+		if ("roomname" in savedLastRoom && savedLastRoom.roomname!==false){
+			document.getElementById("savedroomname").value = savedLastRoom.roomname;
+			document.getElementById("lastSavedRoom").classList.remove("hidden");
+			if ("password" in savedLastRoom && savedLastRoom.password!==false){
+				document.getElementById("savedpasswordlabel").classList.remove("hidden");
+				document.getElementById("savedroompassword").value = savedLastRoom.password;
+			} else {
+				document.getElementById("savedpasswordlabel").classList.add("hidden");
+			}
+		} 
+	}
+	function randomPassword(){
+		document.getElementById("roompassword").value = generateString(8);
+	}
+	
+	function startLastRoom(){
+		document.getElementById("roomname").value = document.getElementById("savedroomname").value;
+		document.getElementById("roompassword").type = "password";
+		document.getElementById("roompassword").value = document.getElementById("savedroompassword").value;
+		
+		if (!viewList){
+			viewList = [];
+		}
+		if (savedLastRoom.viewlist){
+			for (var i = 0;i<savedLastRoom.viewlist.length;i++){
+				if (viewList.includes(savedLastRoom.viewlist[i])){continue;}
+				viewList.push(savedLastRoom.viewlist[i]);
+			}
+		}
+		viewList = viewList.slice(0,40); // I don't want to slam the server; 40 is already a lot
+		startRoom();
+	}
+	
+	function startRoom(){
+		var pid = document.getElementById("roompassword").value.trim();
+		if (pid){
+			password = pid;
+		}
+	
+		var rid = document.getElementById("roomname").value.trim();
+		if (rid == "test"){
+			alert("Please enter a unique room name");
+		}
+		rid = sanitizeRoomName(rid);
+		
+		if (!rid){
+			rid = generateString(10);
+		}
+		if (rid){
+			if (this){
+				this.disabled = true;
+				this.onclick = null;
+			}
+			roomname = rid;
+			loadIframe();
+			document.getElementById("welcomeWindow").classList.add("fadeout");
+			setTimeout(function(){
+				document.getElementById("welcomeWindow").classList.add("hidden");
+			},500);
+			
+			document.querySelectorAll(".roomname").forEach(ele=>{
+				ele.innerHTML = roomname;
+			});
+			
+		} else {
+			document.getElementById("roomname").classList.remove("shake");
+			setTimeout(function(){document.getElementById("roomname").classList.add("shake");},10);
+		}
+	}
+	
+	function errorlog(e,a=null,b=null){
+		console.error(e);
+	}
+	var streamIDs = [];
+	var slotsNeeded = 1;
+	var lastLayout = false;
+
+	var colors = [
+		"#00AAAA",
+		"#FF0000",
+		"#0000FF",
+		"#AA00AA",
+		"#00FF00",
+		"#AAAA00",
+		"#AACC44",
+		"#CCAA44",
+		"#CC44AA",
+		"#44AACC"
+	];
+	
+	var savedSession = getStorage("savedSession");
+	if (savedSession){
+		savedSession = JSON.parse(savedSession);
+	} else {
+		savedSession = {};
+	}
+	
+	function exportSession() {
+		var content = JSON.stringify(savedSession);
+		var fileName = roomname + ".json";
+		var a = document.createElement("a");
+		var file = new Blob([content], {type: 'text/plain'});
+		a.href = URL.createObjectURL(file);
+		a.download = fileName;
+		a.click();
+	}
+	
+	function importSession(event){
+		
+		var reader = new FileReader();
+		reader.onload = function(event){
+			try {
+				var obj = JSON.parse(event.target.result);
+			} catch(e){
+				alert("File is not a valid JSON file");
+				return;
+			}
+		};
+		reader.readAsText(event.target.files[0]);
+	 
+	}
+	
+	
+	var injectCSS = `
+		div#guestFeeds{
+			margin:0;
+			padding:0;
+		}
+		.debugStats{
+			padding: 20px 20px 100px 20px;
+		}
+		.directorsgrid .vidcon {
+			display: inline-block !important;
+			width: 293.7px !important;
+			background: #3e3e3e00;
+			color: #FCFCFC;
+			vertical-align: top;
+			border: 1px solid #2e445c;
+			margin: 20px;
+			padding: 10px;
+			border-radius: 10px;
+			background: #2e445c;
+			box-shadow: 5px 5px 10px #121620, -5px -5px 10px #162a36;
+		}
+		.soloLink, .shift,.controlsGrid {
+			display:none !important;
+		}
+		.streamID{
+			width: 267px;
+		}
+		.soloButton{
+		    margin: 0 0px;
+			padding: 0 5px;
+		}
+		.soloButton>button{
+			background-color: #b4c5ca !important; #b4c5cal
+			background: linear-gradient(135deg, #c2d2d7 60%,#c7d3d7 80%,#a3b5ba 100%)
+		}
+		.customScene {
+			display: none;
+		}
+		.addALabel {
+			display: none;
+		}
+		span[data-action-type="stats-graphs-details-container"]{
+			position: relative;
+			top: -55px;
+			font-size: 9px;
+			display: block;
+			margin: 1px 0 0 7px;
+			text-shadow: 0 0 1px black;
+			height: 0;
+		}
+	`;
+	
+	injectCSS = btoa(encodeURIComponent(injectCSS));
+	
+	function generateString(LLL = 7){
+		var text = "";
+		var words = ["the","of","to","and","a","in","is","it","you","that","he","was","for","on","are","with","as","I","his","they","be","at","one","have","this","from","or","had","by","word","but","what","some","we","can","out","other","were","all","there","when","up","use","your","how","said","an","each","she","which","do","their","time","if","will","way","about","many","then","them","write","would","like","so","these","her","long","make","thing","see","him","two","has","look","more","day","could","go","come","did","number","sound","no","most","people","my","over","know","water","than","call","first","who","may","down","side","been","now","find","any","new","work","part","take","get","place","made","live","where","after","back","little","only","round","man","year","came","show","every","good","me","give","our","under","name","very","through","just","form","sentence","great","think","say","help","low","line","differ","turn","cause","much","mean","before","move","right","boy","old","too","same","tell","does","set","three","want","air","well","also","play","small","end","put","home","read","hand","port","large","spell","add","even","land","here","must","big","high","such","follow","act","why","ask","men","change","went","light","kind","off","need","house","picture","try","us","again","animal","point","mother","world","near","build","self","earth","father","head","stand","own","page","should","country","found","answer","school","grow","study","still","learn","plant","cover","food","sun","four","between","state","keep","eye","never","last","let","thought","city","tree","cross","farm","hard","start","might","story","saw","far","sea","draw","left","late","run","don't","while","press","close","night","real","life","few","north","open","seem","together","next","white","children","begin","got","walk","example","ease","paper","group","always","music","those","both","mark","often","letter","until","mile","river","car","feet","care","second","book","carry","took","science","eat","room","friend","began","idea","fish","mountain","stop","once","base","hear","horse","cut","sure","watch","color","face","wood","main","enough","plain","girl","usual","young","ready","above","ever","red","list","though","feel","talk","bird","soon","body","dog","family","direct","pose","leave","song","measure","door","product","black","short","numeral","class","wind","question","happen","complete","ship","area","half","rock","order","fire","south","problem","piece","told","knew","pass","since","top","whole","king","space","heard","best","hour","better","true .","during","hundred","five","remember","step","early","hold","west","ground","interest","reach","fast","verb","sing","listen","six","table","travel","less","morning","ten","simple","several","vowel","toward","war","lay","against","pattern","slow","center","love","person","money","serve","appear","road","map","rain","rule","govern","pull","cold","notice","voice","unit","power","town","fine","certain","fly","fall","lead","cry","dark","machine","note","wait","plan","figure","star","box","noun","field","rest","correct","able","pound","done","beauty","drive","stood","contain","front","teach","week","final","gave","green","oh","quick","develop","ocean","warm","free","minute","strong","special","mind","behind","clear","tail","produce","fact","street","inch","multiply","nothing","course","stay","wheel","full","force","blue","object","decide","surface","deep","moon","island","foot","system","busy","test","record","boat","common","gold","possible","plane","stead","dry","wonder","laugh","thousand","ago","ran","check","game","shape","equate","hot","miss","brought","heat","snow","tire","bring","yes","distant","fill","east","paint","language","among","grand","ball","yet","wave","drop","heart","am","present","heavy","dance","engine","position","arm","wide","sail","material","size","vary","settle","speak","weight","general","ice","matter","circle","pair","include","divide","syllable","felt","perhaps","pick","sudden","count","square","reason","length","represent","art","subject","region","energy","hunt","probable","bed","brother","egg","ride","cell","believe","fraction","forest","sit","race","window","store","summer","train","sleep","prove","lone","leg","exercise","wall","catch","mount","wish","sky","board","joy","winter","sat","written","wild","instrument","kept","glass","grass","cow","job","edge","sign","visit","past","soft","fun","bright","gas","weather","month","million","bear","finish","happy","hope","flower","clothe","strange","gone","jump","baby","eight","village","meet","root","buy","raise","solve","metal","whether","push","seven","paragraph","third","shall","held","hair","describe","cook","floor","either","result","burn","hill","safe","cat","century","consider","type","law","bit","coast","copy","phrase","silent","tall","sand","soil","roll","temperature","finger","industry","value","fight","lie","beat","excite","natural","view","sense","ear","else","quite","broke","case","middle","kill","son","lake","moment","scale","loud","spring","observe","child","straight","consonant","nation","dictionary","milk","speed","method","organ","pay","age","section","dress","cloud","surprise","quiet","stone","tiny","climb","cool","design","poor","lot","experiment","bottom","key","iron","single","stick","flat","twenty","skin","smile","crease","hole","trade","melody","trip","office","receive","row","mouth","exact","symbol","die","least","trouble","shout","except","wrote","seed","tone","join","suggest","clean","break","lady","yard","rise","bad","blow","oil","blood","touch","grew","cent","mix","team","wire","cost","lost","brown","wear","garden","equal","sent","choose","fell","fit","flow","fair","bank","collect","save","control","decimal","gentle","woman","captain","practice","separate","difficult","doctor","please","protect","noon","whose","locate","ring","character","insect","caught","period","indicate","radio","spoke","atom","human","history","effect","electric","expect","crop","modern","element","hit","student","corner","party","supply","bone","rail","imagine","provide","agree","thus","capital","won't","chair","danger","fruit","rich","thick","soldier","process","operate","guess","necessary","sharp","wing","create","neighbor","wash","bat","rather","crowd","corn","compare","poem","string","bell","depend","meat","rub","tube","famous","dollar","stream","fear","sight","thin","triangle","planet","hurry","chief","colony","clock","mine","tie","enter","major","fresh","search","send","yellow","gun","allow","print","dead","spot","desert","suit","current","lift","rose","continue","block","chart","hat","sell","success","company","subtract","event","particular","deal","swim","term","opposite","wife","shoe","shoulder","spread","arrange","camp","invent","cotton","born","determine","quart","nine","truck","noise","level","chance","gather","shop","stretch","throw","shine","property","column","molecule","select","wrong","gray","repeat","require","broad","prepare","salt","nose","plural","anger","claim","continent","oxygen","sugar","death","pretty","skill","women","season","solution","magnet","silver","thank","branch","match","suffix","especially","fig","afraid","huge","sister","steel","discuss","forward","similar","guide","experience","score","apple","bought","led","pitch","coat","mass","card","band","rope","slip","win","dream","evening","condition","feed","tool","total","basic","smell","valley","nor","double","seat","arrive","master","track","parent","shore","division","sheet","substance","favor","connect","post","spend","chord","fat","glad","original","share","station","dad","bread","charge","proper","bar","offer","segment","slave","duck","instant","market","degree","populate","chick","dear","enemy","reply","drink","occur","support","speech","nature","range","steam","motion","path","liquid","log","meant","quotient","teeth","shell","neck"];
+		
+		for (var i=0;i<2;i++){
+			try{
+				var rndint = parseInt(Math.random()*1000);
+				text += words[rndint];
+			} catch(e){}
+		}
+		var possible = "ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnpqrstuvwxyz23456789";
+		text += possible.charAt(Math.floor(Math.random() * possible.length));
+		while (text.length<LLL){
+			text += possible.charAt(Math.floor(Math.random() * possible.length));
+		}
+		try{
+			text = text.replaceAll('AD', 'vDAv'); // avoiding adblockers
+			text = text.replaceAll('Ad', 'vdAv');
+			text = text.replaceAll('ad', 'vdav');
+			text = text.replaceAll('aD', 'vDav');
+		} catch(e){errorlog(e);}
+		
+		return text;
+	};
+	
+	function hotkeyCheck(event){
+		var value = parseInt(event.key);
+		if (value == event.key){
+			log(value);
+		}
+	}
+	
+	var iframe = null;
+	
+	function loadIframe(){ 
+
+		var additional = "";
+		if (password){
+			additional = "&password="+password;
+		}
+		
+		roomname = sanitizeRoomName(roomname);
+	
+		iframe = document.createElement("iframe");
+		var iframeContainer = document.getElementById("iframeContainer");
+		iframe.allow = "autoplay;camera;microphone;fullscreen;picture-in-picture;display-capture;";
+		
+		if (!roomname){
+			roomname = generateString(10);
+		}
+		
+		var pathname = window.location.pathname.split('/');
+		pathname.pop();
+		pathname = pathname.join("/");
+		getById("inviteLink").value = "https://"+window.location.host+pathname+"/?room="+roomname+additional+"&label&quality&view";
+		
+		if (roomname!==false){
+			setStorage("savedRoom", {roomname:roomname,password:password,viewlist:viewList}, 9999);
+		}
+		
+		document.title = "Stats for "+roomname;
+		
+		document.querySelectorAll(".roomname").forEach(ele=>{
+			ele.innerHTML = roomname;
+		});
+		
+		iframe.src = "./index.html?graphs&lightmode&ltb=350&transparent&cleanoutput&directorview&label=Stats_Monitor&scenelinkcodec=h264&scenelinkbitrate=12000&director="+roomname+additional+"&b64css="+injectCSS;
+		iframeContainer.appendChild(iframe);
+		//document.getElementById("container").appendChild(iframeContainer);
+		
+		iframe.contentWindow.addEventListener("keydown", hotkeyCheck);
+		document.addEventListener("keydown", hotkeyCheck);
+		document.getElementById("chatModule").classList.remove("hidden");
+		////////////  LISTEN FOR EVENTS
+
+		var eventMethod = window.addEventListener ? "addEventListener" : "attachEvent";
+		var eventer = window[eventMethod];
+		var messageEvent = eventMethod === "attachEvent" ? "onmessage" : "message";
+		var messageList = [];
+		/// If you have a routing system setup, you could have just one global listener for all iframes instead.
+		
+		eventer(messageEvent, function (e) {
+			if (e.source != iframe.contentWindow){return} // reject messages send from other iframes
+			if ("action" in e.data){
+				if (e.data.action === "view-connection"){
+					//if (e.data.value){
+					//	iframe.contentWindow.postMessage({"getStreamIDs":true}, '*');
+					if (e.data.streamID){
+						updateStreams();
+						if (streamIDs.includes(e.data.streamID)){return;}
+						streamIDs.push(e.data.streamID);
+					}
+				} else if (e.data.action == "requested-stream"){
+					if (streamIDs.includes(e.data.value)){return;}
+					streamIDs.push(e.data.value);
+				} else if (e.data.action == "joined-room-complete"){
+					setTimeout(function(){
+						if (viewList){
+							for (var i =0;i<viewList.length;i++){
+								if (streamIDs.includes(viewList[i])){continue;}
+								iframe.contentWindow.postMessage({ requestStream: viewList[i] }, "*");  // request streams that are manually requested; not already in the room
+							}
+						}
+					},500);
+				}
+			}
+			
+			if ("gotChat" in e.data){
+				messageList.push(e.data.gotChat);
+				messageList = messageList.slice(-100);
+				updateMessages(e.data.gotChat);
+			} else if ("messageList" in e.data){
+				messageList = e.data.messageList;
+				updateMessages();
+			}
+			
+			//
+			if ("remoteStats" in e.data) {
+				var UUID = e.data.UUID;
+				for (var uuid in e.data.remoteStats) {
+					if (e.data.remoteStats[uuid].video_bitrate_kbps){
+						var video_bitrate_kbps = e.data.remoteStats[uuid].video_bitrate_kbps;
+						updateData("bitrate", video_bitrate_kbps,  UUID, uuid);
+					} else if (document.getElementById(uuid)){
+						updateData("bitrate", 0,  UUID, uuid);
+					}
+					
+					if (e.data.remoteStats[uuid].nacks_per_second){
+						var nacks_per_second = e.data.remoteStats[uuid].nacks_per_second;
+						updateData("nackrate", nacks_per_second, UUID, uuid);
+					} else if (document.getElementById(uuid)){
+						updateData("nackrate", 0, UUID, uuid);
+					}
+				}
+			}
+					
+			//if ("streamIDs" in e.data){
+			//	streamIDs = [];
+			//	for (var key in e.data.streamIDs){
+			//		streamIDs.push(key);
+			//	}
+			//	updateStreams();
+			//	console.log(streamIDs);
+			//}
+		});
+	}
+	
+	function updateStreams(){
+		document.getElementById("streamsConnected").innerHTML = streamIDs.length;
+		if (iframe){
+			iframe.contentWindow.postMessage({ requestStatsContinuous: true }, "*"); 
+		}
+	}
+	
+	
+	var bitrate = {
+		element: "bitrate-graph",
+		data: 0,
+		max: 6000,
+		target: 3000,
+	};
+	var frames;
+	var nackrate = {
+		element: "nackrate-graph",
+		data: 0,
+		max: 15,
+		target: 15,
+	};
+
+	function updateData(type, data, UUID, uuid) {
+		if (type == "bitrate") {
+			bitrate.data = data;
+			plotData("bitrate", bitrate, UUID, uuid);
+		}
+
+		if (type == "nackrate") {
+			nackrate.data = data;
+			plotData("nackrate", nackrate, UUID, uuid);
+		}
+	}
+
+	function plotData(type, stat, UUID, uuid){
+		iframe.contentWindow.document.body.querySelector("#container_"+UUID).querySelectorAll(".graphSection>[data-uid='"+uuid+"']").forEach(ele=>{
+			iframe.contentWindow.document.body.querySelector("#container_"+UUID).appendChild(ele);
+			ele.classList.remove("hidden");
+		});
+		return;
+	}
+	
+	function removeStorage(cname){
+		localStorage.removeItem(cname);
+	}
+
+	function setStorage(cname, cvalue, hours=9999){ // not actually a cookie
+		var now = new Date();
+		var item = {
+			value: cvalue,
+			expiry: now.getTime() + (hours * 60 * 60 * 1000),
+		};
+		try{
+			localStorage.setItem(cname, JSON.stringify(item));
+		}catch(e){errorlog(e);}
+	}
+
+	function getStorage(cname) {
+		try {
+			var itemStr = localStorage.getItem(cname);
+		} catch(e){
+			errorlog(e);
+			return;
+		}
+		if (!itemStr) {
+			return "";
+		}
+		var item = JSON.parse(itemStr);
+		var now = new Date();
+		if (now.getTime() > item.expiry) {
+			localStorage.removeItem(cname);
+			return "";
+		}
+		return item.value;
+	}
+	
+	function showInviteOptions(){
+		document.getElementById("modal").style.display = "block";
+		document.getElementById("modal-content").innerHTML = document.getElementById("inviteOptions").innerHTML;
+		
+		var additional = "";
+		if (password){
+			additional = "&password="+password;
+		}
+		
+		document.querySelectorAll(".roomname").forEach(ele=>{
+			ele.innerText = roomname;
+		});
+		
+		document.querySelectorAll(".inviteLink").forEach(ele=>{
+			if (ele.tagName == "A"){
+				ele.href = "./index.html?room="+roomname+"&broadcast"+additional;
+			} else if (ele.tagName == "I"){
+				ele.innerHTML = "URL + ?room="+roomname+"&broadcast"+additional;
+			}
+		});
+	}
+	
+	function getStreamModal(){
+		document.getElementById("modal").style.display = "block";
+		document.getElementById("modal-content").innerHTML = document.getElementById("manualStream").innerHTML;
+		document.getElementById("modal-content").querySelector("[data-id='manualStreamID']").focus();
+		document.getElementById("modal-content").querySelector("[data-id='manualStreamID']").id = "manualStreamID";
+	}
+	
+	var sanitizeStreamID = function(streamID) {
+		streamID = streamID.trim();
+
+		if (streamID.length < 1) {
+			return false;
+		}
+		var streamID_sanitized = streamID.replace(/[\W]+/g, "_");
+		if (streamID !== streamID_sanitized) {
+			return false;
+		}
+		if (streamID_sanitized.length >= 50) {
+			return false;
+		}
+		return streamID_sanitized;
+	};
+	
+	function requestStreamManually(){
+		var streamID = sanitizeStreamID(getById("manualStreamID").value);
+		
+		if (streamID && !(viewList.includes(streamID))){
+			viewList.push(streamID);
+			setStorage("savedRoom", {roomname:roomname,password:password,viewlist:viewList}, 9999);
+		}
+		
+		if (iframe && streamID && !(streamID in streamIDs)){ // don't request what we already have requested.
+			iframe.contentWindow.postMessage({ requestStream: streamID }, "*"); 
+			console.log("Sending request for stream");
+			document.getElementById("modal").style.display = "none";
+		} else {
+			console.log(iframe);
+			console.log(streamID);
+		}
+	}
+
+	let modal = document.querySelector("#modal");
+	let closeBtn = document.querySelector(".close-btn");
+	closeBtn.onclick = function(){
+	  modal.style.display = "none";
+	}
+	window.onclick = function(e){
+	  if (e.target == modal){
+		modal.style.display = "none";
+	  }
+	}
+	
+	if (roomname){ 
+		loadIframe();
+	} else {
+		document.getElementById("welcomeWindow").style.display = "block";
+	}
+	
+	function sanitize(string) {
+		var temp = document.createElement('div');
+		temp.textContent = string;
+		return temp.innerHTML;
+	}
+
+	function EnterButtonChat(event){
+		 // Number 13 is the "Enter" key on the keyboard
+		var key = event.which || event.keyCode;
+		if (key  === 13) {
+			// Cancel the default action, if needed
+			event.preventDefault();
+			// Trigger the button element with a click
+			sendChatMessage();
+		}
+	}
+
+	function sendChatMessage(){ // filtered + visual
+		var msg = document.getElementById('chatInput').value;
+		msg = sanitize(msg);
+		if (msg==""){return;}
+		iframe.contentWindow.postMessage({ sendChat: msg }, "*"); 
+		document.getElementById('chatInput').value = "";
+		
+		var message = {};
+		message.label = "You:";
+		message.type = "sent";
+		message.msg = msg;
+		
+		updateMessages(message);
+	}
+
+	function timeSince(date) {
+
+	  var seconds = Math.floor((new Date() - date) / 1000);
+
+	  var interval = seconds / 31536000;
+
+	  if (interval > 1) {
+		return Math.floor(interval) + " years";
+	  }
+	  interval = seconds / 2592000;
+	  if (interval > 1) {
+		return Math.floor(interval) + " months";
+	  }
+	  interval = seconds / 86400;
+	  if (interval > 1) {
+		return Math.floor(interval) + " days";
+	  }
+	  interval = seconds / 3600;
+	  if (interval > 1) {
+		return Math.floor(interval) + " hours";
+	  }
+	  interval = seconds / 60;
+	  if (interval > 1) {
+		return Math.floor(interval) + " minutes";
+	  }
+	  return "Seconds ago";
+	}
+
+
+
+	function updateMessages(message = false){
+		if (message){
+			var time = timeSince(message.time);
+			var msg = document.createElement("div");
+			
+			var label = "";
+			if (message.label){
+				label = message.label;
+			} 
+			
+			if (message.type == "sent"){
+				msg.innerHTML = "<span class='chat_message chat_sent'>"+message.msg + "  </span><i><small> <small>- "+time+"</small></small></i><span style='display:none'>"+label+"</span>";
+				msg.classList.add("outMessage");
+			} else if (message.type == "recv"){
+				msg.innerHTML = label+"<span class='chat_message chat_recv'>"+message.msg + " </span><i><small> <small>- "+time+"</small></small></i>";
+				msg.classList.add("inMessage");
+			} else if (message.type == "action"){
+				msg.innerHTML = label+"<span class='chat_message chat_action'>"+message.msg + " </span><i><small> <small>- "+time+"</small></small></i>";
+				msg.classList.add("actionMessage");
+			} else if (message.type == "alert"){
+				msg.innerHTML = "<span class='chat_message chat_alert'>"+message.msg + " </span><i><small> <small>- "+time+"</small></small></i>";
+				msg.classList.add("inMessage");
+			} else {
+				msg.innerHTML = "<span class='chat_message chat_other'>"+message.msg + "  </span><i><small> <small>- "+time+"</small></small></i>";
+				msg.classList.add("inMessage");
+			}
+			document.getElementById("chatBody").appendChild(msg);
+		} else {
+			document.getElementById("chatBody").innerHTML = "";
+			for (i in messageList){
+				var time = timeSince(messageList[i].time);
+				var msg = document.createElement("div");
+				
+				var label = "";
+				if (messageList[i].label){
+					label = messageList[i].label;
+				} 
+				
+				if (messageList[i].type == "sent"){
+					msg.innerHTML = "<span class='chat_message chat_sent'>"+messageList[i].msg + "  </span><i><small> <small>- "+time+"</small></small></i><span style='display:none'>"+label+"</span>";
+					msg.classList.add("outMessage");
+				} else if (messageList[i].type == "recv"){
+					msg.innerHTML = label+"<span class='chat_message chat_recv'>"+messageList[i].msg + " </span><i><small> <small>- "+time+"</small></small></i>";
+					msg.classList.add("inMessage");
+				} else if (messageList[i].type == "action"){
+					msg.innerHTML = label+"<span class='chat_message chat_action'>"+messageList[i].msg + " </span><i><small> <small>- "+time+"</small></small></i>";
+					msg.classList.add("actionMessage");
+				} else if (messageList[i].type == "alert"){
+					msg.innerHTML = "<span class='chat_message chat_alert'>"+messageList[i].msg + " </span><i><small> <small>- "+time+"</small></small></i>";
+					msg.classList.add("inMessage");
+				} else {
+					msg.innerHTML = "<span class='chat_message chat_other'>"+messageList[i].msg + "  </span><i><small> <small>- "+time+"</small></small></i>";
+					msg.classList.add("inMessage");
+				}
+				
+				document.getElementById("chatBody").appendChild(msg);
+			}
+		}
+		//if (chatUpdateTimeout){
+		//	clearInterval(chatUpdateTimeout);
+		//}
+		document.getElementById("chatBody").scrollTop = document.getElementById("chatBody").scrollHeight;
+		//chatUpdateTimeout = setTimeout(function(){updateMessages()},60000);
+	}
+</script>
+</body>
+</html>
