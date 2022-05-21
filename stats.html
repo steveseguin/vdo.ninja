@@ -572,11 +572,8 @@
 		var iframeContainer = document.getElementById("iframeContainer");
 		iframe.allow = "autoplay;camera;microphone;fullscreen;picture-in-picture;display-capture;";
 		
-		if (roomname){
-			var iframesrc = "./index.html?ltb=350&transparent&cleanoutput&directorview&label=Stats_Monitor&scenelinkcodec=h264&scenelinkbitrate=12000&director="+roomname+additional+"&b64css="+injectCSS;
-		} else {
+		if (!roomname){
 			roomname = generateString(10);
-			var iframesrc = "./index.html?ltb=350&transparent&cleanoutput&directorview&scenelinkcodec=h264&scenelinkbitrate=12000&label=Stats_Monitordirector="+roomname+additional+"&b64css="+injectCSS;
 		}
 		
 		var pathname = window.location.pathname.split('/');
@@ -594,7 +591,7 @@
 			ele.innerHTML = roomname;
 		});
 		
-		iframe.src = iframesrc;
+		iframe.src = "./index.html?graphs&lightmode&ltb=350&transparent&cleanoutput&directorview&label=Stats_Monitor&scenelinkcodec=h264&scenelinkbitrate=12000&director="+roomname+additional+"&b64css="+injectCSS;
 		iframeContainer.appendChild(iframe);
 		//document.getElementById("container").appendChild(iframeContainer);
 		
