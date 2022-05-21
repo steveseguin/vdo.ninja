@@ -33,11 +33,11 @@ Most users might find the Github Pages deployment option easiest and quickest.
 
 ### Deplying to a NGINX web server
 
-For advanced users, NGINX might be more appropriate than using Github Pages, so find written directions are below. There's also a community-created video tutorial on setting up on AWS + Nginx here; https://youtu.be/8sDMwBIlgwE, but it's not an official install guide.
+For advanced users, NGINX might be more appropriate than using Github Pages, so find written directions below. There's also a community-created video tutorial on setting up on AWS + Nginx here; https://youtu.be/8sDMwBIlgwE, but it's not an official install guide.
 
-Please consider the below directions just loose guidelines; you may need to change things up depending on factors like firewalls, operating system versions, and other factors.  This NGINX install guide makes some assumptions that you know the basics of NGINX, running Linux servers, domain name setup, and code deployments,
+Please consider the below directions just loose guidelines; you may need to change things up depending on factors like firewalls, operating system versions, and other factors.  This NGINX install guide makes some assumptions that you know the basics of NGINX, running Linux servers, domain name setup, and code deployments. Most users getting stuck do because of the SSL requirement, or because of overly complicated firewall/VPS setups.
 
-Also please note, VDO.Ninja REQUIRES a domain name and SSL, unless you modify all browsers being used to support otherwise. (More on this in the [Internet-free section](#internet-free-deployments) below)  As a result, getting VDO.Ninja working can be quite challenging, as setting up domain names and SSL can be tricky for some. 
+Please note, VDO.Ninja REQUIRES a domain name and SSL, unless you modify all browsers being used to support otherwise. (More on this in the [Internet-free section](#internet-free-deployments) below)  As a result, getting VDO.Ninja working can be quite challenging, as setting up domain names and SSL can be tricky for some. 
 
 The following commands will setup NGINX, assuming you are running on a standard Ubuntu server. 
 ```
@@ -48,13 +48,14 @@ sudo systemctl restart nginx
 ```
 
 If you need to download the code for VDO.Ninja, the basic idea is something like this:
+
 ```
 sudo apt-get install git -y
 cd /var/www/html
 git clone https://github.com/steveseguin/vdo.ninja
 ```
 
-Steve generally recommends using Cloudflare to provide caching and SSL, but you can google `Certbot` for another free SSL option. The below NGINX config assumes you are using Cloudflare's flexible SSL option, which is the simpliest way to get started.  You'll need to also add the VDO.Ninja code to the /var/www/html/vdo.ninja folder (or whatever you set it to) and modify the port/SSL/domain-name settings as needed.
+To keep things easy, Steve generally recommends using Cloudflare to provide caching and SSL, but you can google `Certbot` for another free SSL option. The below NGINX config assumes you are using Cloudflare's flexible SSL option, which is the simpliest way to get started.  You'll need to also add the VDO.Ninja code to the /var/www/html/vdo.ninja folder (or whatever you set it to) and modify the port/SSL/domain-name settings as needed.
 
 ```server {
         listen 80;
@@ -91,18 +92,18 @@ You can find many settings for VDO.Ninja at the bottom of the `index.html` file,
 
 ### Deploying your own media relay TURN Server
 
-As for the TURN relay server, as basic one can run on a single or dual-core computer; 2GB of RAM or more recommended. It doesn't take much to host a few users -- it mainly just needs a good internet connection.  Most users will not need a TURN server, but since VDO.Ninja handles many different types of users, the TURN server is there as a failsafe for those occasional problem users. I'm assuming you know why you need and want a TURN server -- if not, you may not actually need one.
+As for the TURN relay server, a basic one can run on a single or dual-core computer; 2GB of RAM or more recommended though. It doesn't take much of a server to host a few users -- it mainly just needs a good internet connection.  Most users will not need a TURN server, but since VDO.Ninja handles many different types of users, the TURN server is there as a failsafe for those occasional problem users. I'm assuming you know why you need and want a TURN server -- if not, you may not actually need one.
 
 A guide and sample config file for the turn server is here:
 https://github.com/steveseguin/vdo.ninja/blob/master/turnserver.md
 
-If deploying to GCP or AWS, you might need to make some tweaks to the IP address values to include the internet local IP as well as the external. Please see online guides no setting up a TURN server for your particular setup. Setups will vary.
+If deploying to GCP or AWS, you might need to make some tweaks to the IP address values to include the internet local IP as well as the external. Please see online guides no setting up a TURN server for your particular setup. Setups will vary, especially if you need a TURN server that has TLS, IPv6 support, or token-based auth support.
 
-Once you have your TURN server setup, you can update the index.html of the VDO.Ninja code. Nightly or official releases should be fine to pull. You probably will want to uncomment the lines linked below once deployed, adjusting the default values to your liking and updating the server location address and credentials of your TURN server (if you deployed one that is).  Unless your TURN server also provides STUN capabilities, you may want to also use the Google STUN servers, so uncomment that stuff too.  
+Once you have your TURN server setup, you can update the index.html of the VDO.Ninja code (near the bottom) with your TURN/STUN settings.
 
 https://github.com/steveseguin/vdo.ninja/blob/df6c147311b9e7d19659ddbb1799d6598f59aa0d/index.html#L644
 
-Also note: There are third-party providers offering TURN services, if you would like a managed third party provider, although they are often quite expensive. Some example code on using Twillio as a TURN provider, with auth logic, can be found in the main.js file.
+Also note: There are third-party providers offering TURN services, if you would like a managed third party provider, although they are often quite expensive. Some example code on using Twillio as a TURN provider, with auth logic, can be found in the main.js file. 
 
 ### Further customization of the website code
 
