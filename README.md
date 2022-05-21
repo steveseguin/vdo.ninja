@@ -59,7 +59,7 @@ If urgent, join me on discord: https://discord.vdo.ninja or email me at steve@se
 
 ## Related Projects
 ### VDO.Ninja's Electron Capture:
-A better way to perform "Window Capturing" on desktop if OBS Browser Sources fails you. A downloadable tool designed to enhance VDO.Ninja.
+A better way to perform "Window Capturing" on desktop if OBS Browser Sources fails you. A downloadable tool designed to enhance VDO.Ninja, but has been expanded to have additional functionality for content creators in general
 https://github.com/steveseguin/electroncapture
 
 ### CAPTION.Ninja
