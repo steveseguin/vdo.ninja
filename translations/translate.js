@@ -132,7 +132,6 @@ for (const i in updateList) {
             });
 			if (lang == "blank" || lang == "en"){
 				console.log(newTrans);
-				
 				for (var key in newTrans) {
 					if (!(key in defaultTrans)){
 						defaultTrans[key] = newTrans[key];
@@ -205,9 +204,24 @@ for (const i in updateList) {
 
             // //// DOWNLOAD UPDATED TRANSLATION
             const outputTrans = {};
-            outputTrans.titles = newTransTitles;
+			outputTrans.titles = defaultTransTitles;
+			outputTrans.innerHTML = defaultTrans;
+			outputTrans.placeholders = defaultTransPlaceholders;
+			
+			
+			for (var key in newTrans) {
+				outputTrans.innerHTML[key] = newTrans[key];
+			}
+			for (var key in newTransTitles) {
+				outputTrans.titles[key] = newTransTitles[key];
+			}
+			for (var key in newPlaceholders) {
+				outputTrans.placeholders[key] = newPlaceholders[key];
+			}
+			
+			outputTrans.titles = newTransTitles;
             outputTrans.innerHTML = newTrans;
-            outputTrans.placeholders = newPlaceholders;
+			outputTrans.placeholders = newPlaceholders;
 			outputTrans.miscellaneous = miscellaneous;
             downloadTranslation(ln, outputTrans);
         }
