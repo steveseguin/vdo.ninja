@@ -15,7 +15,7 @@ VDO.Ninja is freely available to use as a managed service over at https://vdo.ni
 
 For live support, please join our discord at https://discord.obs.ninja
 Please see the sub-reddit added info: https://reddit.com/r/vdoninja  
-Also check out the FAQ for more info: https://github.com/steveseguin/vdoninja/wiki
+Also check out the user documentation at: https://docs.vdo.ninja
 
 <img src="https://user-images.githubusercontent.com/2575698/120865595-56de3b80-c55c-11eb-8b98-60c59ae0f904.png" height="300" />
 
@@ -27,21 +27,27 @@ And Here is another video series touching on some more advanced settings: https:
 Check the subreddit for added use cases, advanced features, and support. Advanced features includes high-quality audio modes, custom video resolutions, and more.
 
 ## What's in this repo
-This repo contains software for VDO.Ninja, including the HTML landing page for its Electron Capture app offering. A sample config file and instructions for setting up a TURN server (video relay server), is also provided. You may also find [the Wiki](https://github.com/steveseguin/vdoninja/wiki) for the project in this repo, which contains added information on how to use the software.
+This repo contains the web client software for VDO.Ninja, along with many sample apps that leverage its IFRAME API. A sample config file and instructions for setting up an optional TURN video relay server is also provided here. The user documentation for VDO.Ninja itself is found at docs.vdo.ninja.
 
 ## How to Deploy this Repo
-To use, just download and host the files on a HTTPS-enabled webserver. You may want to hide the .html extensions within your HTTP server as well, else the generated links will not work. See [here](https://github.com/steveseguin/vdoninja/blob/master/install.md) for added details and alternative install options.
+VDO.Ninja is available as a free-to-use hosted service at https://vdo.ninja, so deploying is optional. If you do wish to self-deploy the service however, details are provided below.
 
-Directions on how to deploy a TURN server are listed in the turnserver.md file. You may wish to do so, although not all use cases will not need one. Only about 10% of remote guests, those often connected via 4G LTE, will require a TURN server. While VDO.Ninja does host some TURN servers, they are quite expensive to operate and not really for private deployment use. If you are deploying your own version of VDO.Ninja, I'd ask you use your own TURN servers instead. 
+Hosting a private deployment can be as simple as hosting the files in this repository on a HTTPS-enabled webserver. For a very simple method on how to do this, there's a video guide here: https://www.youtube.com/watch?v=uYLKkX2_flY
+
+For more advanced users, you can see the [install.md](https://github.com/steveseguin/vdoninja/blob/master/install.md) file for alternative hosting options and more details on deploying additional system components. Limited technical support is provided for self-deployments, mainly due to how time-consuming such requests are, but the details to fully-deploy all system components are provided in the install.md file.
+
+If self-hosting, you might also wish to host your own video relay TURN server.  Directions on how to deploy a TURN server are listed in the turnserver.md file. Only about ~ 5% of remote guests usually will need a TURN server, often those connected via 4G LTE or those behind a strict firewall, but most other users don't need one. While VDO.Ninja does host some pubiic TURN servers, they are quite expensive to operate, so please try to avoid abusing if possible. If you are deploying your own version of VDO.Ninja, I'd ask you to use your own TURN servers if you are capable of doing so; it's understandable if you aren't able to though.
 
 ## Server side / API software
-Since VDO.Ninja uses peer-2-peer technology, video connections are made directly between viewer and publisher in 90% of cases. Hosting a TURN server yourself may help improve performance, but less than 1% of users will see any benefit of this. Details on how to deploy a TURN server are provided. For those capable of hosting their own TURN server, that would be appreciated if possible, as TURN servers are the only real cost incurred by VDO.Ninja at present. (other than time, of course)
+Since VDO.Ninja uses peer-2-peer technology, video connections are made directly between viewer and publisher in 95% of cases. Hosting a TURN server yourself may help improve performance, but less than 1% of users will see an improvement to video quality by using one. They also will not help lower bandwidth usage or CPU usage, so generally you wish to avoid using them if possible.
+
+Details on how to deploy a TURN server are provided; see: turnserver.md. For those capable of hosting their own TURN server, that would be appreciated if possible, as TURN servers are the largest cost incurred by VDO.Ninja at present. (other than time, of course)
 
 Other than TURN servers, VDO.Ninja also uses public STUN servers and a hosted handshake server. These are used to facilitate the initial setup of peer connections and are generally not required after a peer connection is established. These servers are free to access and use, even for private deployments. As of Version 17.3 of VDO.Ninja, you can host your own handshake server or use a third-party managed one (such as piesocket.com); please see details here: https://github.com/steveseguin/websocket_server
 
-Development builds of VDO.Ninja may include debugging software, but in-production releases have this removed. Double check to ensure "console.re" debugging is disabled before deployment, just to be safe.
+Development builds of VDO.Ninja may sometimes include debugging software or features, but production releases have this removed
 
-A design goal of VDO.Ninja is to be serverless and we are 99% of the way there. This design objective ensures VDO.Ninja can be offered for free, along with providing increased levels of security and privacy. 
+A design goal of VDO.Ninja is to be serverless and we are near 99% of the way there. This design objective ensures VDO.Ninja can be offered for free, along with providing increased levels of security and privacy. 
 
 ## Issues? problems? Not working?
 
@@ -49,7 +55,7 @@ Please see the sub-reddit for more support: https://reddit.com/r/vdoninja
 
 Also check out the FAQ for common answers: https://github.com/steveseguin/vdoninja/wiki
 
-If urgent, join me on discord: https://discord.gg/EksyhGA or email me at steve@seguin.email
+If urgent, join me on discord: https://discord.vdo.ninja or email me at steve@seguin.email  (Steve may not respond to emails if deemed unimportant)
 
 ## Related Projects
 ### VDO.Ninja's Electron Capture:
@@ -63,9 +69,9 @@ A free AI-based closed-captioning tool to add speech-to-text overlays to OBS Stu
 A free Chrome extension that lets you stream and feature chat comments from Youtube, Twitch, Facebook, and more. Featured comments will appear directly in OBS or VMix as an overlay, or as a stream list of comments. It also includes a dock for more advanced function, such as text-to-speech, sentiment analysis, and saving to disk. No chroma-keying needed and the styling is pretty easy to customize without needing to modify the Chrome extension itself.
 http://socialstream.ninja
 
-### Steves.app:
-A website designed to also work with VDO.Ninja as a Broadcasting tool. Share your webcam, window, desktop, or video file with friends and family. Peer-2-peer, so privacy can be maintained, but you can also list your broadcasts for others to watch.
-https://steves.app/
+### Rasbperry Ninja
+Use a Raspberry Pi, NVidia Jetson, or Linux box as a dedicated camera for VDO.Ninja. This project can use the hardware encoder of the RPi or Jetson to enable 1080p30 or even 4K video capture and webRTC-based broadcasting. Support for USB, CSI, and HDMI video sources is available. Python-based.
+[http://socialstream.ninja](https://github.com/steveseguin/raspberry_ninja)
 
 ## Privacy
 I try to avoid data collection whenever possible and video streams are generally designed to be private, but use at your own risk. It is best to not share links created with VDO.Ninja with those you do not trust. I've provided instructions on how to deploy a TURN server if IP-address privacy is an issue for you. See: [turnserver.md](turnserver.md) 
