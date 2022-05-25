@@ -21,33 +21,32 @@ There are some limitations to the native mobile app versions though.
 
 ## Download the Android app
 
-### The **Google Play Store** <img src="../.gitbook/assets/image (116).png" alt="" data-size="line"> hosted version is here:&#x20;
+You have a few different ways to download and install the Android app for VDO.Ninja. Installing the Google Play Store version is recommended, as it can auto-update with patches and new features automatically.
 
-
+#### The **Google Play Store** <img src="../.gitbook/assets/image (116).png" alt="" data-size="line"> hosted version is here:&#x20;
 
 {% embed url="https://play.google.com/store/apps/details?id=flutter.vdo.ninja" %}
+_(It will auto-update when I push new releases.)_
+{% endembed %}
 
-### &#x20;[https://play.google.com/store/apps/details?id=flutter.vdo.ninja](https://play.google.com/store/apps/details?id=flutter.vdo.ninja)  _(It will auto-update when I push new releases.)_ 
-
-As well, the Android APK file for direct-downloading is hosted here:
+You can also download and install the Android APK file manually:
 
 {% embed url="https://drive.google.com/file/d/1M0kv5nWLtcfl2JOnsAGiG1zUmkeIVLyZ/view?usp=sharing" %}
 Download the APK directly from Google Drive, without using the Google Play store\
 _(Manually installing will requires manual updating, as well.  APK last updated May 12, 2022)_
 {% endembed %}
 
-\
-Source-code for building the Android app is here:
+Lastly, you can also download the source-code for the Android app, allowing you to build and install the app yourself.
 
 {% embed url="https://github.com/steveseguin/vdon_flutter/" %}
-
-
+GitHub repository for the app
+{% endembed %}
 
 ### iOS Download Link _****** **<mark style="color:red;">**\[currently not available]**</mark>_
 
 If looking to screen-share from an iPhone or iPad, there is a guide on how to do so here: [https://docs.vdo.ninja/guides/screen-share-your-iphone-ipad](https://docs.vdo.ninja/guides/screen-share-your-iphone-ipad)
 
-The native app for iOS is not currently available, but it will be back soon.
+The native app for iOS is not currently available, but it will be back soon. There is a test-flight version of the app available, on request, but it lacks screen-sharing support and offers little advantage over the mobile web app version.
 
 {% embed url="https://testflight.apple.com/join/KnzvY7JO" %}
 There is a BETA version of the iOS app available on request, but it lacks screen-share support currently.
@@ -55,7 +54,9 @@ There is a BETA version of the iOS app available on request, but it lacks screen
 
 ### Raspberry Pi system images (and code)
 
-If you have a Raspberry Pi, Nvidia Jetson, or a Linux system, you can use those devices to connect UVC-compatible cameras and microphones to VDO.Ninja. This is much cheaper than using a mobile phone and this solution won't overheat when streaming 1080p video after hours. The code is written in Python, so it is accessible for novice developers to use.
+If you have a Raspberry Pi, Nvidia Jetson, or a Linux system, you can use those devices to connect UVC-compatible cameras and microphones to VDO.Ninja. It's a great way to make a cheap mobile stream encoder.
+
+This is much cheaper than using a mobile phone and this solution won't overheat when streaming 1080p video after hours. The code is written in Python, so it is accessible for novice developers to use, and it supports hardware-accelerated video encoding.
 
 {% embed url="https://github.com/steveseguin/raspberry_ninja" %}
 Stream live video from your embedded SBC or Linux system!
