@@ -68,9 +68,7 @@ There are native Android and iOS app versions of VDO.Ninja, but they are very li
 
 Until the native apps are further developed, they are not great options for most users. They may still however use less CPU and may generate less heat though, just due to how basic they are in function.
 
-The android app APK is here: [https://drive.google.com/file/d/1M0kv5nWLtcfl2JOnsAGiG1zUmkeIVLyZ/view?usp=sharing](https://drive.google.com/file/d/1M0kv5nWLtcfl2JOnsAGiG1zUmkeIVLyZ/view?usp=sharing)\
-\
-The iOS app is available in the App store here: [https://apps.apple.com/il/app/capture-for-obs-ninja/id1553645446](https://apps.apple.com/il/app/capture-for-obs-ninja/id1553645446)
+Download the mobile app versions here: [https://docs.vdo.ninja/getting-started/native-mobile-app-versions](https://docs.vdo.ninja/getting-started/native-mobile-app-versions)
 
 Please contact steve at `steve@seguin.email` or via discord ([discord.vdo.ninja](https://discord.vdo.ninja)) if you'd like to contribute to development of these native versions. The cost, time, and skill requirements for their continued development are quite steep.
 
