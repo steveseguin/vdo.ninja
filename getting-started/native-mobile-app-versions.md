@@ -42,7 +42,7 @@ Lastly, you can also download the source-code for the Android app, allowing you 
 GitHub repository for the app
 {% endembed %}
 
-### iOS Download Link _****** **<mark style="color:red;">**\[currently not available]**</mark>_
+### Apple iOS Download Link _****** **<mark style="color:red;">**\[currently not available]**</mark>_
 
 If looking to screen-share from an iPhone or iPad, there is a guide on how to do so here: [https://docs.vdo.ninja/guides/screen-share-your-iphone-ipad](https://docs.vdo.ninja/guides/screen-share-your-iphone-ipad)
 
