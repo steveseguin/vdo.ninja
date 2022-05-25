@@ -6,7 +6,7 @@ description: >-
 
 # Sponsor ❤
 
-While [VDO.Ninja](https://vdo.ninja) is a passion project and is free to use, there are some costs involved in providing it. Donating to the maintainer/developer of VDO.Ninja helps directly with subsidizing those costs.
+While [VDO.Ninja](https://vdo.ninja/) is a passion project and is free to use, there are some costs involved in providing it. Donating to the maintainer/developer of VDO.Ninja helps directly with subsidizing those costs.
 
 If you'd like to donate, please visit Steve Seguin's [GitHub Sponsors](https://github.com/sponsors/steveseguin) page.
 

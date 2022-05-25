@@ -57,7 +57,7 @@ This is a free to use service that can work in conjunction with VDO.Ninja. It's 
 
 ## Caption.Ninja
 
-[https://caption.ninja/](https://caption.ninja)
+[https://caption.ninja/](https://caption.ninja/)
 
 Although VDO.Ninja supports captions, sometimes you need something simple yet flexible. Caption.Ninja lets you use the browser's built in speech-to-text service to provide overlay captions for your live stream.\
 \

@@ -43,6 +43,6 @@ While the \&broadcast flag is great for reducing the load on guests in a room, i
 * If you would like the guests to see even higher quality video, consider using [`&trb=2500`](totalroombitrate.md) as an option to greatly improve the video quality. This also will greatly also increase the load on the director, so good internet and a powerful CPU will be needed
 * Using a service like meshcast.io, along with the [`&website`](../../source-settings/and-website.md) parameter, can also greatly reduce load on the director and guests, but this comes at the cost of added latency usually.
 
-If you'd like to understand how [Meshcast.io](https://meshcast.io) can help reduce CPU load greatly, leveraging VDO.Ninja's group broadcast-feature, you can see this video:&#x20;
+If you'd like to understand how [Meshcast.io](https://meshcast.io/) can help reduce CPU load greatly, leveraging VDO.Ninja's group broadcast-feature, you can see this video:&#x20;
 
 {% embed url="https://www.youtube.com/watch?v=-7QsLChfdsE" %}

@@ -10,7 +10,7 @@ Sender-Side Option! ([`&push`](../source-settings/push.md))
 
 ## Details
 
-[Meshcast ](https://meshcast.io)is a free-to-use server-based service for broadcasting low-latency video streams. It can be used with VDO.Ninja in a couple different ways, either as an iFrame or as a peer-2-peer replacement for guest and director streams. It can be used to help lower system requirements of VDO.Ninja for some users or use cases.
+[Meshcast ](https://meshcast.io/)is a free-to-use server-based service for broadcasting low-latency video streams. It can be used with VDO.Ninja in a couple different ways, either as an iFrame or as a peer-2-peer replacement for guest and director streams. It can be used to help lower system requirements of VDO.Ninja for some users or use cases.
 
 Adding `&meshcast` to a guest or director link will trigger the service, causing the outbound audio/video stream to be transferred to a hosted server, which then distributes the stream to all the viewers. This adds a bit of latency to the stream and reduces the theoretical privacy, but it implies the guest/director does not need to encode and upload multiple videos, lowering CPU load and bandwidth usage.
 
@@ -28,4 +28,4 @@ Steve made a YouTube video explaining all the meshcast stuff:
 
 ## Related
 
-* [Meshcast.io](https://meshcast.io)
+* [Meshcast.io](https://meshcast.io/)

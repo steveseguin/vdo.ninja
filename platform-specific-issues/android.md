@@ -4,7 +4,7 @@ description: Mobile app version of VDO.Ninja and other Android related topics
 
 # Android
 
-[VDO.Ninja](https://vdo.ninja) generally works quite well with VDO.Ninja; even older Android devices tend to work reasonable well. The browser-based version of VDO.Ninja is recommend for most users, although there is an native mobile app version for Android that solves some limitations of the web-version.
+[VDO.Ninja](https://vdo.ninja/) generally works quite well with VDO.Ninja; even older Android devices tend to work reasonable well. The browser-based version of VDO.Ninja is recommend for most users, although there is an native mobile app version for Android that solves some limitations of the web-version.
 
 ### Native Android app
 
@@ -12,15 +12,19 @@ The native mobile app for Android is fairly simple, as it can be only used for o
 \
 Please note, the native app requires a modern version of Android, while the web-based version of VDO.Ninja has been tested with Android 5.1 using Chrome.
 
-The Google Play Store hosted version is here: \
+
+
+The **Google Play Store** <img src="../.gitbook/assets/image (116).png" alt="" data-size="line"> hosted version is here: \
 [https://play.google.com/store/apps/details?id=flutter.vdo.ninja](https://play.google.com/store/apps/details?id=flutter.vdo.ninja)  \
 (It will auto-update when I push new releases.)
 
-The Android APK file for direct-downloading is hosted here:[\
+
+
+As well, the Android APK file for direct-downloading is hosted here:[\
 https://drive.google.com/file/d/1M0kv5nWLtcfl2JOnsAGiG1zUmkeIVLyZ/view?usp=sharing](https://drive.google.com/file/d/1M0kv5nWLtcfl2JOnsAGiG1zUmkeIVLyZ/view?usp=sharing)\
 (Manually installing will requires manual updating, as well.  APK last updated May 12, 2022)
 
-The source-code for the Android app is here:\
+Source-code for building the Android app is here:\
 [https://github.com/steveseguin/vdon\_flutter/](https://github.com/steveseguin/vdon\_flutter/)
 
 ### External camera support

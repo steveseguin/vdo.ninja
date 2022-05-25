@@ -19,7 +19,7 @@ description: >-
 * Use as a remote low-latency teleprompter feed.
 * Recording remote or local video at high quality without needing any downloads.
 * Remotely streaming MIDI device output, such as MIDI keyboards or production control boards.
-* Controlling OBS remotely from any computer on the Internet using [VDO.Ninja](https://vdo.ninja) as a p2p bridge.
+* Controlling OBS remotely from any computer on the Internet using [VDO.Ninja](https://vdo.ninja/) as a p2p bridge.
 * Recording remote participates during interviews directly to their own computer; perfect recordings.
 * Applying green screens, digital face effects, and other advanced video filters to video streams.
 * Real-time closed-captions and transcriptions.

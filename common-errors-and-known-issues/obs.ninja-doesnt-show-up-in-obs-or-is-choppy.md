@@ -46,4 +46,4 @@ If the hardware-acceleration checkbox is not checked, check it and restart. Does
 
 We provide a speed test to see if the connection works at all,[ https://vdo.ninja/speedtest ](https://vdo.ninja/speedtest) You should be able to see your video streamed back at you. If not, there might be a network problem.\
 \
-You can visit [https://browserleaks.com/webrtc](https://browserleaks.com/webrtc) or [https://networktest.twilio.com/](https://networktest.twilio.com) for tools to help debug issues that might be impacting your network, such as Firewalls or incompatible browsers.
+You can visit [https://browserleaks.com/webrtc](https://browserleaks.com/webrtc) or [https://networktest.twilio.com/](https://networktest.twilio.com/) for tools to help debug issues that might be impacting your network, such as Firewalls or incompatible browsers.

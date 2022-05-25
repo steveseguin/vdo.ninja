@@ -6,7 +6,7 @@ description: >-
 
 # Capture an application's audio
 
-#### Guide: Routing Windows application’s audio to [VDO.Ninja](https://vdo.ninja)
+#### Guide: Routing Windows application’s audio to [VDO.Ninja](https://vdo.ninja/)
 
 (For macOS users, you can use [Loopback by Roguemedia](https://www.google.com/url?q=https://rogueamoeba.com/loopback/\&sa=D\&source=editors\&ust=1622130763272000\&usg=AOvVaw09b4uk6dZqBTznSzHMJcul) instead, or check out this list of free options: [https://docs.vdo.ninja/platform-specific-issues/macos#capturing-audio](https://docs.vdo.ninja/platform-specific-issues/macos#capturing-audio))
 

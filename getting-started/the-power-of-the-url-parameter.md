@@ -1,6 +1,6 @@
 # The power of the URL parameter
 
-You can customize the playback of videos by adding query string parameters to the [VDO.Ninja](https://vdo.ninja) URL links, along with many other aspects. VDO.Ninja is highly flexible in this regard, letting you achieve your desired outcome without needing to code and without additional software.
+You can customize the playback of videos by adding query string parameters to the [VDO.Ninja](https://vdo.ninja/) URL links, along with many other aspects. VDO.Ninja is highly flexible in this regard, letting you achieve your desired outcome without needing to code and without additional software.
 
 For example, a simple viewer URL link such as
 

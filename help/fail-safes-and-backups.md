@@ -2,7 +2,7 @@
 
 Low-latency Live streaming is inherently challenging, and as more remote streams that are added to a live production, the more likely a problem will occur.
 
-[VDO.Ninja](https://vdo.ninja) acknowledges these risks and attempts to mitigate them when possible.
+[VDO.Ninja](https://vdo.ninja/) acknowledges these risks and attempts to mitigate them when possible.
 
 ## Back-up site
 

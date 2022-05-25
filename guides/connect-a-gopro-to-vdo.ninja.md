@@ -1,6 +1,6 @@
 # Connect a GoPro to VDO.Ninja
 
-A GoPro itself doesn't support streaming directly to [VDO.Ninja](https://vdo.ninja) on its own, but there are some indirect ways to do it currently.
+A GoPro itself doesn't support streaming directly to [VDO.Ninja](https://vdo.ninja/) on its own, but there are some indirect ways to do it currently.
 
 #### Using a GoPro Hero 8 Black or newer as a USB webcam
 

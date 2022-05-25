@@ -26,7 +26,7 @@ The default VDO.Ninja TURN server network address is `turn:turn.obs.ninja:443`
 * Chicago
 * Los Angeles
 * France/UK
-* [insecure.cam](http://insecure.cam) is in Hong Kong
+* [insecure.cam](http://insecure.cam/) is in Hong Kong
 
 **Example Usage:**
 

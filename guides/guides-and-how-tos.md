@@ -19,7 +19,7 @@
 ## URL Parameters for power users
 
 * [Passing parameters via the URL to achieve your desired stream settings](https://github.com/steveseguin/obsninja/wiki/Advanced-Settings)
-* [How do I obfuscate (hide) the URL parameters for guest links?](http://invite.cam)
+* [How do I obfuscate (hide) the URL parameters for guest links?](http://invite.cam/)
 
 ## Screen sharing
 
@@ -39,7 +39,7 @@
 
 ## Video
 
-* [Add custom backgrounds and live video effects](https://snapcamera.snapchat.com)
+* [Add custom backgrounds and live video effects](https://snapcamera.snapchat.com/)
 * [Improving your video quality with some better lighting tricks](https://docs.google.com/document/d/e/2PACX-1vTs0So9I7Gx33IKLgxBlMPBTpvhc5JzLi3iFLxSeHEcGRJeSePkzyrStojFN3lEmlVmuPY9MID5DFbJ/pub)
 * [How to stream 4K video using VDO.Ninja](https://docs.google.com/document/d/e/2PACX-1vSx8NGDDOEnsOJPwvFneq2O1vVe5xNOFbwPbsYFkz3v\_TisoBeZ57siYgmcQGLti1mCsByqSsmmmkHY/pub)
 * [How do I get the highest quality video stream?](https://docs.google.com/document/d/e/2PACX-1vSR\_J\_n65\_TEttaH1m4djpxO1VftQI30Dp1oXoTKxLAMTyR6LqB-Eq25rGEDuYaI9Yo-Xfrfaqh8X7B/pub)
@@ -52,7 +52,7 @@
 
 ## Captions
 
-* [How do I add automatic Closed-Captioning to OBS? ](https://caption.ninja)
+* [How do I add automatic Closed-Captioning to OBS? ](https://caption.ninja/)
 * [How to add closed captions to guests within VDO.Ninja itself](https://docs.vdo.ninja/source-settings/transcribe)
 
 ## Self hosted
@@ -73,6 +73,6 @@
 * [Giving the Director of a group room a way to speak](https://docs.google.com/document/d/e/2PACX-1vQsR24UNvfMRDgJkAN1B4QenIEAO8A2rkJlE0f2m-eXSPfOmNfNKQyY1KpFls84wWj93Yng\_0hNQK2O/pub)
 * [How to stream to a Raspberry Pi and use as a remote monitor](https://awesomeopensource.com/project/futurice/chilipie-kiosk)
 * [3rd-party written How-To Guide for VDO.Ninja](https://photography.tutsplus.com/articles/how-to-easily-add-a-remote-source-to-streaming-video-with-obs-and-obsninja--cms-35885)
-* [A tool to create editable URL invite links](https://short.io)
-* [A version of VDO.Ninja that works in Mainland China (中国)](https://insecure.cam)
+* [A tool to create editable URL invite links](https://short.io/)
+* [A version of VDO.Ninja that works in Mainland China (中国)](https://insecure.cam/)
 * [There is a very basic native Android app for download here](https://drive.google.com/file/d/1B3WfNEW-HHA4tg22V-Gl1Kx4X8mDfSMv/view?usp=sharing)

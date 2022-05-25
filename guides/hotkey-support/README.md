@@ -42,7 +42,7 @@ There is also Bitfocus Companion control compatibility, available here: [https:/
 
 The Bitfocus Companion plugin makes use of a HTTP and Websocket API, that allows for lots of remote control functionality.
 
-There is a website that demos some of the commands available here: [https://companion.vdo.ninja/](https://companion.vdo.ninja) Details on the API itself is here: [https://github.com/steveseguin/Companion-Ninja](https://github.com/steveseguin/Companion-Ninja)
+There is a website that demos some of the commands available here: [https://companion.vdo.ninja/](https://companion.vdo.ninja/) Details on the API itself is here: [https://github.com/steveseguin/Companion-Ninja](https://github.com/steveseguin/Companion-Ninja)
 
 You can use this to create your own hotkeys for pretty any device, application, or website.
 

@@ -24,7 +24,7 @@ To capture audio on macOS using the Electron Capture app, you'll need a virtual 
 | Audiohijack   | _Paid_       | [https://rogueamoeba.com/audiohijack](https://rogueamoeba.com/audiohijack)                                                                                                           |
 | iShowU        | _Paid_       | [https://obsproject.com/forum/resources/os-x-capture-audio-with-ishowu-audio-capture.505/](https://obsproject.com/forum/resources/os-x-capture-audio-with-ishowu-audio-capture.505/) |
 | Soundflower   | **Free**     | [https://rogueamoeba.com/freebies/soundflower/](https://rogueamoeba.com/freebies/soundflower/)                                                                                       |
-| GroundControl | **Free**     | [https://www.gingeraudio.com/](https://www.gingeraudio.com)                                                                                                                          |
+| GroundControl | **Free**     | [https://www.gingeraudio.com/](https://www.gingeraudio.com/)                                                                                                                         |
 
 With the above software, you can also share and stream your macOS desktop audio: [Guide Here](https://kast.zendesk.com/hc/en-us/articles/360031463111-How-to-stream-computer-audio-on-a-Mac)
 

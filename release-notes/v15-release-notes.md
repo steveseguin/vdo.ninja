@@ -48,7 +48,7 @@
 
 * The Director can now STOP audio/video publishing after they have started it; screen share also now available for Directors.
 * Director can dynamically edit/add a label for a remote guest in the control room.
-* Link obfuscation is available as a toggle now in the Director's room and create-reusable invite link page ([invite.cam](https://invite.cam)).
+* Link obfuscation is available as a toggle now in the Director's room and create-reusable invite link page ([invite.cam](https://invite.cam/)).
 * Director's room has been stylized; invite and scene link options have been consolidated a bit.
 
 ## Other New parameters

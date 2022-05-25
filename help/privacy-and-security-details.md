@@ -4,7 +4,7 @@ description: Privacy, Policies, and Data-collection
 
 # Privacy and security details
 
-[VDO.Ninja](https://vdo.ninja) is a peer-to-peer network, which implies it naturally will share your IP address with the remote guests you are connecting with. There are ways to prevent this, such as using VPNs, TURN-servers, and/or enabling IP-leak protection in your browser, but this is not the default behavior. In no way does VDO.Ninja accept responsibility if your IP address is leaked. Connecting only with trusted peers, such as people you know and trust, is recommended for most use cases.
+[VDO.Ninja](https://vdo.ninja/) is a peer-to-peer network, which implies it naturally will share your IP address with the remote guests you are connecting with. There are ways to prevent this, such as using VPNs, TURN-servers, and/or enabling IP-leak protection in your browser, but this is not the default behavior. In no way does VDO.Ninja accept responsibility if your IP address is leaked. Connecting only with trusted peers, such as people you know and trust, is recommended for most use cases.
 
 VDO.Ninja does not store IP addresses or other personal information for longer than is needed to provide the service. This might include for purposes of TURN relay server, error reporting, or for Denial of Service abuse prevention (anti-flooding). There are no user-accounts, although you may use third-party services such as Discord, Reddit, Email, or Youtube to communicate with the VDO.Ninja developers, support, and community.
 
@@ -18,7 +18,7 @@ Deploying the VDO.Ninja website code yourself will still reveal your IP address 
 \
 The option to host your own STUN, TURN and WSS servers exists, allowing for fully isolated hosting, but limited support is available for users choosing this route. Please see the VDO.Ninja Github repo for information on deploying server-side software, where links to code and detailed instructions are provided.\
 \
-Some third-party services, such as [Meshcast.io](https://meshcast.io), may be used with VDO.Ninja by means of IFRAMES, but those third-party services are out of the scope of this privacy document. VDO.Ninja does have a domain-isolated hosted version to block such services though from being used in VDO.Ninja, located at https://isolated.vdo.ninja, which blocks third-party domains from functioning within VDO.Ninja's website code.
+Some third-party services, such as [Meshcast.io](https://meshcast.io/), may be used with VDO.Ninja by means of IFRAMES, but those third-party services are out of the scope of this privacy document. VDO.Ninja does have a domain-isolated hosted version to block such services though from being used in VDO.Ninja, located at https://isolated.vdo.ninja, which blocks third-party domains from functioning within VDO.Ninja's website code.
 
 When using the VDO.Ninja service, stream ID values and room names should be kept secure and treated like passwords when possible. Actual passwords are available additionally though, which are used to enable a client-side encryption mechanism that ensure two peers are unable to connect if passwords do not match. Passwords are not shared with any server and remain client-side. Passwords also are used to encrypt room names, salt stream IDs, and to further encrypt IP-containing initial handshake connection data.\
 \

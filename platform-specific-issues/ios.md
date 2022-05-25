@@ -6,7 +6,7 @@ description: >-
 
 # iOS (iPhone/iPad)
 
-[VDO.Ninja](https://vdo.ninja) has been tested with iOS v12 thru v15, but iOS v10 and under is strictly not supported. Older iPad and iPhone devices as a result are not compatible and likely never will be; an iPhone 5 for example will never be supported.
+[VDO.Ninja](https://vdo.ninja/) has been tested with iOS v12 thru v15, but iOS v10 and under is strictly not supported. Older iPad and iPhone devices as a result are not compatible and likely never will be; an iPhone 5 for example will never be supported.
 
 Please upgrade your iOS to at least v13.4 to avoid some critical bugs, although even newer is generally better.&#x20;
 

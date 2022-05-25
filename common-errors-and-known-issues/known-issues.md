@@ -4,7 +4,7 @@ description: Known issues or problems, bugs, and limitations
 
 # Known issues
 
-Known issues that are most critical and up-to-date are normally listed on the main page of [VDO.Ninja](https://vdo.ninja).\
+Known issues that are most critical and up-to-date are normally listed on the main page of [VDO.Ninja](https://vdo.ninja/).\
 \
 You can also refer to the #report-bugs channel on discord, at https://discord.vdo.ninja, to see recently reported issues. I push bug fixes daily to beta, at https://vdo.ninja/beta, so give that a shot if you find a bug on the main release.
 

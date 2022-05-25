@@ -22,7 +22,7 @@ The documentation that you are reading here contains details of advanced setting
 There are some cheat sheet and quick-start guides here: [https://github.com/steveseguin/vdoninja/blob/quickstart/README.md](https://github.com/steveseguin/vdoninja/blob/quickstart/README.md)\
 \
 There are a few basic guides for beginners here as well:\
-[https://guides.obs.ninja/](https://guides.obs.ninja)
+[https://guides.obs.ninja/](https://guides.obs.ninja/)
 
 ## Need help or support?
 

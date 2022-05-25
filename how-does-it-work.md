@@ -1,6 +1,6 @@
 # How does it work
 
-[VDO.Ninja](https://vdo.ninja) relies heavily on [webRTC](https://webrtc.org), a secure peer-to-peer streaming technology that exists in most modern web browsers. Most of the VDO.Ninja code runs completely within your browser, although some server-side components are hosted to help facilitate an initial ‘handshake’ between connecting peers.
+[VDO.Ninja](https://vdo.ninja) relies heavily on [webRTC](https://webrtc.org/), a secure peer-to-peer streaming technology that exists in most modern web browsers. Most of the VDO.Ninja code runs completely within your browser, although some server-side components are hosted to help facilitate an initial ‘handshake’ between connecting peers.
 
 As video data is streamed directly from one peer to the other, extremely low-latency and very high video quality is possible; there are few limits. If both peers are on the same local area network, data transfer will still local to your network, saving your upload bandwidth.
 

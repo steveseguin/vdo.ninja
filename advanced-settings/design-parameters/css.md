@@ -28,7 +28,7 @@ The page elements are not visible until the remote style sheet has been loaded.
 
 You can pass CSS as a base64-encoded string using the [`&base64css`](and-base64css.md) parameter. This needs to be URLComponent encoded first, and then converted to base 64.&#x20;
 
-The [https://invite.vdo.ninja/](https://invite.vdo.ninja) tool has an option to do these base64 encoding steps under "General Options".
+The [https://invite.vdo.ninja/](https://invite.vdo.ninja/) tool has an option to do these base64 encoding steps under "General Options".
 
 ### Customizable director's dock for OBS
 

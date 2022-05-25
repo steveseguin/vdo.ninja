@@ -4,7 +4,7 @@ description: Not ready for production, not intended to be used or not well-docum
 
 # Other Parameters
 
-There are some more parameters on [VDO.Ninja](https://vdo.ninja) which are currently not ready for production, not intended to be used, or not well-documented.
+There are some more parameters on [VDO.Ninja](https://vdo.ninja/) which are currently not ready for production, not intended to be used, or not well-documented.
 
 | Parameter           | Explanation                                                                                                                                                                                                                                                                                                          |
 | ------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |

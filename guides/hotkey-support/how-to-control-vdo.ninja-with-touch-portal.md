@@ -14,7 +14,7 @@ Replacing the APIKEY with a string of your choosing.&#x20;
 
 ![](<../../.gitbook/assets/image (109).png>)
 
-Thanks to <mark style="color:red;">djlefave</mark> on [Discord](https://discord.vdo.ninja) for this guide.
+Thanks to <mark style="color:red;">djlefave</mark> on [Discord](https://discord.vdo.ninja/) for this guide.
 
 ## More information
 

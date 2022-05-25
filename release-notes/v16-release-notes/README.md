@@ -104,7 +104,7 @@ The previous method of switching video sources to that of a screen share (rather
 ## UI/UX ☑
 
 * iOS devices will no longer auto-capitalize room and password fields.
-* If I detect the site is within an IFRAME, I now hide the info-button, the report-error button, and I clear the chat's welcome message. This also applies to obfuscated links via [invite.cam](https://invite.cam) and the [rtc.ninja](https://rtc.ninja) debranded website.
+* If I detect the site is within an IFRAME, I now hide the info-button, the report-error button, and I clear the chat's welcome message. This also applies to obfuscated links via [invite.cam](https://invite.cam/) and the [rtc.ninja](https://rtc.ninja) debranded website.
 *   If a guest mutes, it shows a little mute icon to signify that; appears for both guests and the director.
 
     ![](https://imgur.com/mz8vhHW.png)
@@ -154,7 +154,7 @@ The previous method of switching video sources to that of a screen share (rather
 * `&channelcount=N` (or `&ac=N`) tells the audio capture device explicitly to select N-number of audio channels. This shouldn’t be needed often, but may help with debugging or advanced use canses. Setting `&stereo=0` will set `&channecount=1` by default.
 * Added the `&speakermute`, (`&mutespeaker`, `&ms`, `&sm`) parameter. Sets the speaker to be muted by default for a guest.
 * Added `&chatbutton`={ 1 | 0 | true | false }, aka `&chat` or `&cb`. Shows the chat button or hides the chat button. You can use this on view links I guess, if you happen to want chat with view-only links. Or if you want to hide chat for some reason, like with push only links.
-* I have hosted a fully-isolated version of VDO.Ninja in Hong Kong (AWS); I'm trying to see if I can expand access into mainland china. We'll see if it works or not. It uses 'compromised' TLS encryption, so to reflect this, I named it: [https://insecure.cam/](https://insecure.cam)
+* I have hosted a fully-isolated version of VDO.Ninja in Hong Kong (AWS); I'm trying to see if I can expand access into mainland china. We'll see if it works or not. It uses 'compromised' TLS encryption, so to reflect this, I named it: [https://insecure.cam/](https://insecure.cam/)
 * Added the ability to send custom commands to the IFRAME; not just what has been pre-configured. This uses post-messaging + eval. Not sure I see a huge problem with this, but I'll revisit as needed. This gives IFRAME developers full control to do whatever they want, even if CORS blocks their creativity. Sample button of it working on beta: [https://vdo.ninja/iframe](https://vdo.ninja/iframe)
 * Added 'beep' noises as an optional URL flag for raised-hand and chat messages. `&beep` or `&notify` or `&tone` or `&r2d2`.
 * Added `&showdirector`, which lets scenes see a director's feed (add to the director's URL to enable for everyone).
