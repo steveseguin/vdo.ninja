@@ -17,8 +17,6 @@ There are some limitations to the native mobile app versions though.
 * UVC camera and mic support is not yet available, but we're working on it. UVC devices are supported via the Raspberry Pi and Nvidia Jetson devices however (see bottom).
 * The native app requires a modern version of Android, while the web-based version of VDO.Ninja has been tested with Android 5.1 using Chrome.
 
-
-
 ## Download the Android app
 
 You have a few different ways to download and install the Android app for VDO.Ninja. Installing the Google Play Store version is recommended, as it can auto-update with patches and new features automatically.
@@ -42,15 +40,23 @@ Lastly, you can also download the source-code for the Android app, allowing you 
 GitHub repository for the app
 {% endembed %}
 
-### Apple iOS Download Link _****** **<mark style="color:red;">**\[currently not available]**</mark>_
+### Apple iOS Download Link
 
-If looking to screen-share from an iPhone or iPad, there is a guide on how to do so here: [https://docs.vdo.ninja/guides/screen-share-your-iphone-ipad](https://docs.vdo.ninja/guides/screen-share-your-iphone-ipad)
+The native iOS app for VDO.Ninja is again available on the Apple App Store.&#x20;
 
-The native app for iOS is not currently available, but it will be back soon. There is a test-flight version of the app available, on request, but it lacks screen-sharing support and offers little advantage over the mobile web app version.
-
-{% embed url="https://testflight.apple.com/join/KnzvY7JO" %}
-There is a BETA version of the iOS app available on request, but it lacks screen-share support currently.
+{% embed url="https://apps.apple.com/us/app/vdo-ninja/id1607609685" %}
+Download from the Apple App Store - It's Free
 {% endembed %}
+
+The native App Store app is very basic, but It does support the ability to stream your camera's output to a remote computer, with the option to enable the Torch light.\
+\
+While screen share support is available in-app, it currently only works when the app is open, making it a bit useless if you need to switch apps. If you're looking to screen-share from an iPhone or iPad with VDO.Ninja, other ways to do it exist.  See this guide here:&#x20;
+
+{% embed url="https://docs.vdo.ninja/guides/screen-share-your-iphone-ipad" %}
+How to screen capture your iPhone or iPad with VDO.Ninja
+{% endembed %}
+
+Room support and passwords are not supported yet in the native mobile apps.
 
 ### Raspberry Pi system images (and code)
 
