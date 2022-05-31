@@ -29,7 +29,7 @@ Setting [`&stereo=0`](../general-settings/stereo.md) will set `&channecount=1` b
 
 If using \`\&proaudio\` or `&stereo=1` , you want want to disable stereo-audio capture, particularly if you are using an XLR to USB microphone preamp that has two channels, but only one microphone connected.
 
-For example, if a guest joins and you can only hear them in the left or right channel, either add `&mono` to the view-link or add `&ac=1` to the respective guest invite-link.
+For example, if a guest joins and you can only hear them in the left or right channel, either add [`&mono`](../advanced-settings/view-parameters/mono.md) to the view-link or add `&ac=1` to the respective guest invite-link.
 
 ### Mono-specific alias
 
