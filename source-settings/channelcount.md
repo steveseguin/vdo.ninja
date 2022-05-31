@@ -31,8 +31,6 @@ If using \`\&proaudio\` or `&stereo=1` , you want want to disable stereo-audio c
 
 For example, if a guest joins and you can only hear them in the left or right channel, either add `&mono` to the view-link or add `&ac=1` to the respective guest invite-link.
 
-## Related
+### Mono-specific alias
 
-{% content-ref url="../advanced-settings/view-parameters/and-channeloffset.md" %}
-[and-channeloffset.md](../advanced-settings/view-parameters/and-channeloffset.md)
-{% endcontent-ref %}
+If looking for a memorable parameter to set a guest's audio input to mono (1-channel), `&monomic` is the same as `&ac=1`. This was added in VDO.Ninja v22.
