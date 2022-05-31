@@ -24,6 +24,12 @@ Designed to be used with [`&channeloffset`](../../advanced-settings.md#channelof
 
 Please see here for detailed testing results with different audio devices: [https://docs.google.com/spreadsheets/d/1R-y7xZ2BCn-GzTlwqq63H8lorXecO02DU9Hu4twuhuA/](https://docs.google.com/spreadsheets/d/1R-y7xZ2BCn-GzTlwqq63H8lorXecO02DU9Hu4twuhuA/)
 
+
+
+{% hint style="info" %}
+If looking to set the number of input channels, rather than output, please see [\&channelcount](../../source-settings/channelcount.md) instead.
+{% endhint %}
+
 ## Related
 
 {% content-ref url="and-channeloffset.md" %}
