@@ -86,7 +86,7 @@ Just for reference, the audio codec used by VDO.Ninja is OPUS (48khz), which can
 
 ### Disabling stereo when using \&proaudio
 
-If you want to use the `&proaudio` parameter but wish the output to still be mono (1-channel), there's a couple options.
+If you want to use the `&proaudio` parameter but wish the output to still be mono (1-channel), there's some options.
 
 * [\&channelcount=1](../source-settings/channelcount.md) (\&ac=1) can be used on the sender's side, which will force their audio-capture device (microphone) to only capture in mono.
 * [\&mono](../advanced-settings/view-parameters/mono.md) can be added to the viewer's side, which will try to playback incoming audio as mono.
