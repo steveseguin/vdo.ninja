@@ -24,18 +24,18 @@ Sender-Side Option! ([`&push`](push.md))
 
 Usually up to the browser.&#x20;
 
-Default bitrate will record at around 6000 kbps, but it will still prompt still for value if not set.
+Default bitrate will record at around 4000 kbps, but it will still prompt still for value if not set.
 
 The Director of a room will be notified if a user is recording and they can start/stop the recording.\
 The Director of a room can trigger the record function remotely, even if the \&record parameter has not been added.
 
 The video/audio will be saved in real-time to the guest's local download folder.
 
-Do not close the browser or turn off the computer while it is recording; you may lose the file or have a partial capture.
+Do not force-close the browser or turn off the computer while it is recording; you may lose the file or have a partial capture.
 
-The recording should stop automatically when the guest hangs-ups manually.
+The recording should stop automatically when the guest hangs-ups manually. I try my best to do the same when the browser is closed, but it's best to still purposefully stop recording first.
 
-It will automatically capture with Stereo audio and echo cancellation off, if available. You can use [https://obs.ninja/convert](https://obs.ninja/convert) to convert from WebM file formats to opus or wav file formats, **without transcoding and without downloads**.
+It will automatically capture with stereo audio and echo cancellation off, if available. You can use [https://vdo.ninja/convert](https://vdo.ninja/convert) to convert from WebM file formats to opus or wav file formats, **without transcoding and without downloads**.&#x20;
 
 ### Bitrate Thresholds
 
@@ -45,8 +45,20 @@ It will automatically capture with Stereo audio and echo cancellation off, if av
 | 2500           | 80 kbps       | 128 kpbs       |
 | Less than 2500 | 32 kbps       | 32 kbps        |
 
+### When using \&chunked mode
+
+When the sender of a stream is using the \&chunked mode, recording their video will save the inbound video directly to disk without transcoding. Not needing to transcode the saved video in the browser is only possible with the \&chunked mode. Of course, you also don't have the option to increase the bitrate or change codecs when using this mode; at least not as the viewer.
+
+The chunked mode (as of June 2022) is still a maturing feature. Please report any issues and provide feedback.
+
+### Please note:
+
 {% hint style="info" %}
 When recording with PCM, ([`&pcm`](and-pcm.md)) the inbound audio bitrate will be at 256kbps. (regardless of video bitrate)
+{% endhint %}
+
+{% hint style="warning" %}
+If recording with an Nvidia/AMD graphics card installed on your computer, ensure your drivers are up to date or try recording with VP8-codec instead. Hardware-encoding might reduce CPU load, but it can also result in discolored video if the driver is buggy.
 {% endhint %}
 
 {% hint style="warning" %}
