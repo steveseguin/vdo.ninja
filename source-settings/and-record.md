@@ -37,6 +37,10 @@ The recording should stop automatically when the guest hangs-ups manually. I try
 
 It will automatically capture with stereo audio and echo cancellation off, if available. You can use [https://vdo.ninja/convert](https://vdo.ninja/convert) to convert from WebM file formats to opus or wav file formats, **without transcoding and without downloads**.&#x20;
 
+### Recording option available to Director by default
+
+![](<../.gitbook/assets/image (102).png>)![](<../.gitbook/assets/image (101).png>)
+
 ### Bitrate Thresholds
 
 | Threshold      | Inbound Audio | Recorded audio |

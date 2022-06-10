@@ -64,7 +64,7 @@ For ease of setup, the "Generate Invite Link" button found at [vdo.ninja](https:
 
 We will want to send the PUSH link to our guest, or if using a mobile phone, use the QR code to open the link. We can select our camera, microphone, and then click START.
 
-![](<../.gitbook/assets/image (101).png>)
+![](<../.gitbook/assets/image (101) (1).png>)
 
 ### Step 3.
 
