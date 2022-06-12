@@ -11,7 +11,7 @@ General Option! ([`&push`](../source-settings/push.md), [`&room`](room.md), [`&v
 ## Aliases
 
 * `&s`
-* `&proaudio`
+* ``[`&proaudio`](../advanced-settings/audio-parameters/and-proaudio.md)``
 
 ## Details
 
@@ -81,16 +81,6 @@ The default mode when `&stereo` is used alone is `&stereo=5`, which acts like ei
 | iOS devices |       | on  | on       | on      | _off_           | _off_         | 32            | 32         | 32            | _no_ |
 
 Just for reference, the audio codec used by VDO.Ninja is OPUS (48khz), which can provide high-fidelity music transfer when the audio bitrate is set to 80-kbps per channel or higher. The default audio bitrate used is 32-kbps VBR, which is sufficient for most voice applications. Increasing the audio bitrate to a near-lossless 500-kbps or something may end up causing more problems than anything, but that is supported if needed.
-
-
-
-### Disabling stereo when using \&proaudio
-
-If you want to use the `&proaudio` parameter but wish the output to still be mono (1-channel), there's some options.
-
-* [\&channelcount=1](../source-settings/channelcount.md) (\&ac=1) can be used on the sender's side, which will force their audio-capture device (microphone) to only capture in mono.
-* [\&mono](../advanced-settings/view-parameters/mono.md) can be added to the viewer's side, which will try to playback incoming audio as mono.
-* If using OBS, in the audio settings, you can set the browser-source's audio to be mono.
 
 ## Related
 
