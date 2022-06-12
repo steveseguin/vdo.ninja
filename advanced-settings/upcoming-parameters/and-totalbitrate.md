@@ -19,14 +19,9 @@ Viewer-Side Option! ([`&scene`](../view-parameters/scene.md), [`&room`](../../ge
 
 ## Details
 
-Optional if you are publishing a stream using [`&push`](../../source-settings/push.md).\
-If the `&view` parameter is not added, the default behaviour will occur.\
-If the `&view` parameter is provided, it will try to play any stream listed.\
-If the `&view` parameter is provided, but no values are provided, no streams will play; only publishing will be allowed.
+`&totalbitrate` sets both [`&maxtotalscenebitrate`](../../newly-added-parameters/and-maxtotalscenebitrate.md) and [`&totalroombitrate`](../view-parameters/totalroombitrate.md) flags. Not quite sure how well it will work, but since a scene and a guest are exclusive possibilities, it's a bit of a flexible way to just learn one flag to do it all, as I realize all the options can get confusing.
 
-This is useful is you wish to publish a video into a group chat room, but only view video from specific known participants.\
-This is also useful if you wish to create ad-hoc group chat sessions without using a group room.\
-Videos will auto-load when they are available if not already.
+``[`&maxtotalscenebitrate`](../../newly-added-parameters/and-maxtotalscenebitrate.md) and [`&totalroombitrate`](../view-parameters/totalroombitrate.md) limit the total incoming bitrate, dividing up the bandwidth available to each video being played back. There are nuances in differences, with the main one being [`&totalroombitrate`](../view-parameters/totalroombitrate.md) is for a guest link and [`&maxtotalscenebitrate`](../../newly-added-parameters/and-maxtotalscenebitrate.md) is for a scene/view link.
 
 ## Related
 

@@ -37,10 +37,6 @@ For more information, see:  [https://docs.vdo.ninja/advanced-settings/video-para
 
 {% endhint %}
 
-
-
-
-
 ### Limitations
 
 Total room bitrate does not override any limits other guests in the room may have set to limit their outbound bandwidth.\
@@ -63,6 +59,10 @@ The director can also dynamically change their total room bitrate value using a 
 
 {% content-ref url="../../source-settings/roombitrate.md" %}
 [roombitrate.md](../../source-settings/roombitrate.md)
+{% endcontent-ref %}
+
+{% content-ref url="../upcoming-parameters/and-totalbitrate.md" %}
+[and-totalbitrate.md](../upcoming-parameters/and-totalbitrate.md)
 {% endcontent-ref %}
 
 {% content-ref url="and-controlroombitrate.md" %}
