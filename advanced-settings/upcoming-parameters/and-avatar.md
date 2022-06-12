@@ -25,3 +25,7 @@ Sender-Side Option! ([`&push`](../../source-settings/push.md))\
 {% content-ref url="../newly-added-parameters/and-waitimage.md" %}
 [and-waitimage.md](../newly-added-parameters/and-waitimage.md)
 {% endcontent-ref %}
+
+{% content-ref url="and-bgimage.md" %}
+[and-bgimage.md](and-bgimage.md)
+{% endcontent-ref %}

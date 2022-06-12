@@ -21,9 +21,9 @@ description: >-
 | ``[`&maxbandwidth`](and-maxbandwidth.md)\*           | Judges the available bandwidth of a sender's connection                                                                                                               |
 | ``[`&showall`](and-showall.md)\*                     | Includes non-media-based push connections as video elements in a group room                                                                                           |
 | ``[`&nopush`](and-nopush.md)\*                       | Blocks outbound publishing connections                                                                                                                                |
-| `&imagelist`\*                                       | Can be used to pass a list of background images via the URL                                                                                                           |
-| `&viewheight`\*                                      | Does the same thing as [`&scale`](../view-parameters/scale.md) but you pass the height in pixels                                                                      |
-| `&viewwidth`\*                                       | Does the same thing as [`&scale`](../view-parameters/scale.md) but you pass the width in pixels                                                                       |
+| ``[`&imagelist`](and-imagelist.md)\*                 | Can be used to pass a list of background images via the URL                                                                                                           |
+| ``[`&viewheight`](and-viewheight.md)\*               | Does the same thing as [`&scale`](../view-parameters/scale.md) but you pass the height in pixels                                                                      |
+| ``[`&viewwidth`](and-viewwidth.md)\*                 | Does the same thing as [`&scale`](../view-parameters/scale.md) but you pass the width in pixels                                                                       |
 | `&meshcastscale`\*                                   | Scales down the meshcast video output via the URL                                                                                                                     |
 | `&sensorfilter`\*                                    | An option to explicitly list what sensor data you want to capture and transmit                                                                                        |
 
