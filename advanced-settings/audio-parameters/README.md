@@ -10,12 +10,11 @@ They are separated in three groups: [general options](./#general-options) (push 
 
 You can add them to both, source ([`&push`](../../source-settings/push.md)) and viewer ([`&view`](../view-parameters/view.md) or [`&scene`](../view-parameters/scene.md)) sides.
 
-| Parameter                                                               | Explanation                                                                                  |
-| ----------------------------------------------------------------------- | -------------------------------------------------------------------------------------------- |
-| ``[`&proaudio`](and-proaudio.md)``                                      | Improves the audio quality, changes default audio settings and sets the audio mode to stereo |
-| ``[`&stereo`](../../general-settings/stereo.md)``                       | Sets the audio mode to stereo and changes default audio settings to improve audio quality    |
-| ``[`&deafen`](../../general-settings/deafen.md)``                       | Audio playback is muted                                                                      |
-| ``[`&noaudioprocessing`](../../general-settings/noaudioprocessing.md)`` | Disables all webaudio audio-processing pipelines                                             |
+| Parameter                                                               | Explanation                                                                               |
+| ----------------------------------------------------------------------- | ----------------------------------------------------------------------------------------- |
+| ``[`&deafen`](../../general-settings/deafen.md)``                       | Audio playback is muted                                                                   |
+| ``[`&noaudioprocessing`](../../general-settings/noaudioprocessing.md)`` | Disables all webaudio audio-processing pipelines                                          |
+| ``[`&stereo`](../../general-settings/stereo.md)``                       | Sets the audio mode to stereo and changes default audio settings to improve audio quality |
 
 ## Source side options
 

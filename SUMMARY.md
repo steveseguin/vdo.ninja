@@ -49,7 +49,7 @@
     * [\&videodevice](https://docs.vdo.ninja/advanced-settings/setup-parameters/videodevice)
     * [\&effects](https://docs.vdo.ninja/advanced-settings/video-parameters/effects)
     * [\&label](https://docs.vdo.ninja/advanced-settings/setup-parameters/label)
-    * [\&stereo](https://docs.vdo.ninja/advanced-settings/audio-parameters/stereo)
+    * [\&proaudio](https://docs.vdo.ninja/advanced-settings/audio-parameters/and-proaudio)
     * [\&view](https://docs.vdo.ninja/advanced-settings/mixer-scene-parameters/view)
     * [\&videobitrate](https://docs.vdo.ninja/advanced-settings/video-parameters/bitrate)
     * [\&audiobitrate](https://docs.vdo.ninja/advanced-settings/audio-parameters/audiobitrate)
