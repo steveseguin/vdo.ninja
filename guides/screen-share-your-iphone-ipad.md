@@ -16,7 +16,7 @@ Android users can use the native VDO.Ninja Android app to screen share directly 
 
 1. Connect your iPhone to your mac via a USB cable. You may need a USB to USB-C adapter if you do not have a lightning to USB-C adapter already.
 
-![](<../.gitbook/assets/image (106).png>)
+![](<../.gitbook/assets/image (106) (1).png>)
 
 2\. Open the QuickTime Player on your mac.
 

@@ -18,7 +18,7 @@ Sender-Side Option! ([`&push`](../../source-settings/push.md))\
 
 `&avatar` adds the ability to select an image, instead of a video device. The image will trigger when the video is muted or no video device is selected. A default avatar image is provided, but you can select your own from disk. `&avatar=default` will pre-select the default avatar, rather than leaving it un-selected.
 
-![](<../../.gitbook/assets/image (104).png>)
+![](<../../.gitbook/assets/image (104) (1).png>)
 
 ## Related
 
