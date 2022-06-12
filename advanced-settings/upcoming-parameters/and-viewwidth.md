@@ -1,5 +1,5 @@
 ---
-description: Does the same thing as &scale but you pass the height in pixels
+description: Does the same thing as &scale but you pass the width in pixels
 ---
 
 # \&viewwidth

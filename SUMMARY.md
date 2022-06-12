@@ -337,6 +337,8 @@
     * [\&imagelist](advanced-settings/upcoming-parameters/and-imagelist.md)
     * [\&viewheight](advanced-settings/upcoming-parameters/and-viewheight.md)
     * [\&viewwidth](advanced-settings/upcoming-parameters/and-viewwidth.md)
+    * [\&meshcastscale](advanced-settings/upcoming-parameters/and-meshcastscale.md)
+    * [\&sensorfilter](advanced-settings/upcoming-parameters/and-sensorfilter.md)
   * [Other Parameters](other-parameters.md)
 * [Releases](release-notes/older-releases.md)
   * [v21 ❤️](older-releases/v21.md)
