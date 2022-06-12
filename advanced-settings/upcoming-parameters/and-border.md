@@ -4,7 +4,8 @@ description: Adds a border around the videos
 
 # \&border
 
-General Option! ([`&push`](../../source-settings/push.md), [`&room`](../../general-settings/room.md), [`&view`](../view-parameters/view.md), [`&scene`](../view-parameters/scene.md))
+General Option! ([`&push`](../../source-settings/push.md), [`&room`](../../general-settings/room.md), [`&view`](../view-parameters/view.md), [`&scene`](../view-parameters/scene.md))\
+\* on [https://vdo.ninja/beta/](https://vdo.ninja/beta/)
 
 ## Options
 

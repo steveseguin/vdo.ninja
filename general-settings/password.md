@@ -42,3 +42,7 @@ Use this link to get the hash for the password:\
 {% content-ref url="../director-settings/codirector.md" %}
 [codirector.md](../director-settings/codirector.md)
 {% endcontent-ref %}
+
+{% content-ref url="../advanced-settings/upcoming-parameters/and-prompt.md" %}
+[and-prompt.md](../advanced-settings/upcoming-parameters/and-prompt.md)
+{% endcontent-ref %}

@@ -4,7 +4,8 @@ description: Adds the ability to select an image, instead of a video device
 
 # \&avatar
 
-Sender-Side Option! ([`&push`](../../source-settings/push.md))
+Sender-Side Option! ([`&push`](../../source-settings/push.md))\
+\* on [https://vdo.ninja/beta/](https://vdo.ninja/beta/)
 
 ## Options
 

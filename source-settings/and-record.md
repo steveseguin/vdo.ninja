@@ -37,7 +37,13 @@ The recording should stop automatically when the guest hangs-ups manually. I try
 
 It will automatically capture with stereo audio and echo cancellation off, if available. You can use [https://vdo.ninja/convert](https://vdo.ninja/convert) to convert from WebM file formats to opus or wav file formats, **without transcoding and without downloads**.&#x20;
 
-### Recording option available to Director by default
+### Recording as the director
+
+When recording as the director, the button and option to record each guest is available by default.  It's hidden behind Advanced controls.  You have the option to record locally, to your own disk, or record remotely, directly to the remote guest's local storage.\
+\
+When recording to the guest's local storage, quality should be near pristine, given as its not being sent via the Internet first.  Recording locally, the video may have dynamic resolutions and varying quality, due to the low latency transmission. (\&chunked-mode excepted)
+
+Anyone can also access the recording options via right-clicking a video. This option is available as of VDO.Ninja v22.
 
 ![](<../.gitbook/assets/image (102).png>)![](<../.gitbook/assets/image (101).png>)
 
@@ -75,6 +81,10 @@ Enabling Safari's _MediaRecorder_ under E_xperimental webKit Features_ may be ne
 
 {% content-ref url="../newly-added-parameters/and-recordcodec.md" %}
 [and-recordcodec.md](../newly-added-parameters/and-recordcodec.md)
+{% endcontent-ref %}
+
+{% content-ref url="../advanced-settings/upcoming-parameters/and-autorecord.md" %}
+[and-autorecord.md](../advanced-settings/upcoming-parameters/and-autorecord.md)
 {% endcontent-ref %}
 
 {% content-ref url="and-pcm.md" %}

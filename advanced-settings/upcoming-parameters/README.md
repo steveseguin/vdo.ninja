@@ -6,18 +6,26 @@ description: >-
 
 # Upcoming Parameters
 
-|                                          |                                                                                                                                                                       |
-| ---------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| ``[`&border`](and-border.md)\*           | Adds a border around the videos                                                                                                                                       |
-| ``[`&bordercolor`](and-bordercolor.md)\* | Defines the color of [`&border`](and-border.md)``                                                                                                                     |
-| `&autorecord`\*\*                        | Records the local video and the remote video(s) automatically on their initial load                                                                                   |
-| `&autorecordlocal`\*\*                   | Records just the local video automatically on their initial load                                                                                                      |
-| `&autorecordremote`\*\*                  | Records just the remote video(s) automatically on their initial load                                                                                                  |
-| ``[`&avatar`](and-avatar.md)\*           | Adds the ability to select an image, instead of a video device                                                                                                        |
-| `&prompt`\*\*                            | Another security option, for those concerned about random spying of their streams                                                                                     |
-| `&totalbitrate`\*\*\*                    | Sets both [`&maxtotalscenebitrate`](../../newly-added-parameters/and-maxtotalscenebitrate.md) and [`&totalroombitrate` ](../view-parameters/totalroombitrate.md)flags |
-| `&bgimage`\*\*\*                         | Can be used to set the default image avatar, when using [`&style=0` ](../design-parameters/style.md)or [`&style=6`](../design-parameters/style.md)``                  |
-| `&nocontrols`\*\*\*                      | Will force hide the video control bar                                                                                                                                 |
+|                                                      |                                                                                                                                                                       |
+| ---------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| ``[`&border`](and-border.md)\*\*                     | Adds a border around the videos                                                                                                                                       |
+| ``[`&bordercolor`](and-bordercolor.md)\*\*           | Defines the color of [`&border`](and-border.md)``                                                                                                                     |
+| ``[`&autorecord`](and-autorecord.md)\*\*             | Records the local video and the remote video(s) automatically on their initial load                                                                                   |
+| ``[`&autorecordlocal`](and-autorecordlocal.md)\*\*   | Records just the local video automatically on their initial load                                                                                                      |
+| ``[`&autorecordremote`](and-autorecordremote.md)\*\* | Records just the remote video(s) automatically on their initial load                                                                                                  |
+| ``[`&avatar`](and-avatar.md)\*\*                     | Adds the ability to select an image, instead of a video device                                                                                                        |
+| ``[`&prompt`](and-prompt.md)\*\*                     | Another security option, for those concerned about random spying of their streams                                                                                     |
+| `&totalbitrate`\*\*                                  | Sets both [`&maxtotalscenebitrate`](../../newly-added-parameters/and-maxtotalscenebitrate.md) and [`&totalroombitrate` ](../view-parameters/totalroombitrate.md)flags |
+| `&bgimage`\*\*                                       | Can be used to set the default image avatar, when using [`&style=0` ](../design-parameters/style.md)or [`&style=6`](../design-parameters/style.md)``                  |
+| `&nocontrols`\*\*                                    | Will force hide the video control bar                                                                                                                                 |
+| `&maxbandwidth`\*                                    | Judges the available bandwidth of a sender's connection                                                                                                               |
+| `&showall`\*                                         | Includes non-media-based push connections as video elements in a group room                                                                                           |
+| `&nopush`\*                                          | Blocks outbound publishing connections                                                                                                                                |
+| `&imagelist`\*                                       | Can be used to pass a list of background images via the URL                                                                                                           |
+| `&viewheight`\*                                      | Does the same thing as [`&scale`](../view-parameters/scale.md) but you pass the height in pixels                                                                      |
+| `&viewwidth`\*                                       | Does the same thing as [`&scale`](../view-parameters/scale.md) but you pass the width in pixels                                                                       |
+| `&meshcastscale`\*                                   | Scales down the meshcast video output via the URL                                                                                                                     |
+| `&sensorfilter`\*                                    | An option to explicitly list what sensor data you want to capture and transmit                                                                                        |
 
 \*on [vdo.ninja/alpha](https://vdo.ninja/alpha/)\
 \*\*on [vdo.ninja/beta](https://vdo.ninja/beta/)\
