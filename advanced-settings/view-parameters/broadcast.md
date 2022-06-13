@@ -23,7 +23,7 @@ Viewer-Side Option! ([`&view`](view.md), [`&scene`](scene.md), [`&room`](../../g
 
 This command is like using [`&novideo=directorsStreamID`](novideo.md) but with some extras tweaks that might be appropriate to a larger group room.\
 \
-In essence, \&broadcast only allows the playback of video-tracks and [shared-websites](../../source-settings/and-website.md) that originate from the main director. You may not know the stream ID of the main director ahead of time, so this parameter handles that for you automatically as well.
+In essence, `&broadcast` only allows the playback of video-tracks and [shared-websites](../../source-settings/and-website.md) that originate from the main director. You may not know the stream ID of the main director ahead of time, so this parameter handles that for you automatically as well.
 
 You can pass a stream ID as a value, which will specify the video source to be from a guest (or co-director), rather than the main director. You cannot pass multiple stream IDs to the `&broadcast` flag; just one. If needing more, consider using the [`&novideo`](novideo.md) flag instead
 
@@ -31,7 +31,7 @@ You add `&broadcast` to the guest invite links. You do not add this to the direc
 
 #### Why might you want to use this option?
 
-In \&broadcast mode, only the director is sharing video to the guests of the group room, so only the director has the burden of encoding multiple video streams and uploading them to guests. This is great if your guests are primarily on mobile-devices, have slow-Internet, or it is a larger room; otherwise each guest would be sharing video with each other guest as well.
+In `&broadcast` mode, only the director is sharing video to the guests of the group room, so only the director has the burden of encoding multiple video streams and uploading them to guests. This is great if your guests are primarily on mobile-devices, have slow-Internet, or it is a larger room; otherwise each guest would be sharing video with each other guest as well.
 
 When used with Meshcast, the director can reduce their own system burden even further. You can achieve fairly large group rooms with modest system requirements this way.
 
