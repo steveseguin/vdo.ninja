@@ -44,10 +44,10 @@ See this video on Meshcast
 #### Default settings and styles that are applied when \&broadcast is used
 
 * The guest's self-preview becomes a mini-preview, rather than the normal large self-preview. You can disable the preview all together by using [`&nopreview`.](../../source-settings/and-nopreview.md)
-* While \&broadcast disables the video from other guests, it does not disable or impact their audio, so guests should still be able to hear each other.
+* While `&broadcast` disables the video from other guests, it does not disable or impact their audio, so guests should still be able to hear each other.
 * ``[`&showlist`](../../source-settings/showlist.md) is enabled by default for the guests, which provides a list of those in the room to the guests. `&showlist=0` can hide this, when added to the guest link; useful if you want a cleaner output for the guests.
 * The header bar, with basic stats, is shown by default. [`&noheader`](../design-parameters/and-hideheader.md) can be added to the guest links, which will hide this top bar, room name and the stats.
-* It hides the audio-only playback elements of other guests in the room, so it's not possible to mute or control the volume, as a guest, or other guests, when \&broadcast is set. This is akin to having [`&style=1`](../../advanced-settings.md#style)set.
+* It hides the audio-only playback elements of other guests in the room, so it's not possible to mute or control the volume, as a guest, or other guests, when `&broadcast` is set. This is akin to having [`&style=1`](../../advanced-settings.md#style)set.
 
 You can some-what imitate the `&broadcast` parameter using something like :&#x20;
 
@@ -55,7 +55,7 @@ You can some-what imitate the `&broadcast` parameter using something like :&#x20
 
 #### Performance considerations
 
-While the \&broadcast flag is great for reducing the load on guests in a room, it will put all the load onto the director instead. &#x20;
+While the `&broadcast` flag is great for reducing the load on guests in a room, it will put all the load onto the director instead. &#x20;
 
 * Consider using NVEnc or other hardware-encoders to encode any RTMP streams in your studio software to reduce CPU load there. This frees up more CPU for VDO.Ninja.
 * Make sure you have a capable computer; an AMD 5900x CPU is recommend for most users using this mode without Meshcast, allowing for medium-sized group rooms with some headroom to spare.&#x20;
@@ -66,13 +66,13 @@ While the \&broadcast flag is great for reducing the load on guests in a room, i
 
 * Using a service like meshcast.io, along with the [`&website`](../../source-settings/and-website.md) sharing option, can also greatly reduce load on the director and guests. The website sharing function works with other video content delivery networks, not just Meshcast.io, so you have choices.
 * When the director shares a website, their own low-latency VDO.Ninja audio remains active, so audio doubling could happen if the website contains their audio also. You'll want to mute either the website's audio or the director's VDO.Ninja audio, to avoid this issue. To also avoid echo-cancellation issues and audio delays, it is recommended to mute the website audio, as VDO.Ninja's audio will have not have those issues.
-* You may want to add `&novideo` to the guest invite links if you only intend to share video via the website sharing function. This ensures the director's VDO.Ninja video-track doesn't appear, as VDO.Ninja can't always tell if a website contains a video track or not, and so may show the director's video alongside the shared website in some cases otherwise.
-* In more recent versions of VDO.Ninja (v22), Meshcast is available built-into VDO.Ninja via the [\&meshcast](../../newly-added-parameters/and-meshcast.md) parameter, which sends both audio and video over meshcast in sync, without concerns of echo cancellation or audio doubling. Just add \&meshcast to the director's URL to use this mode; the director's audio and video will auto-publish via Meshcast without needing to visit meshcast.io.
-* The director's ability to share a website (meshcast.io link) is via a button found in the director's control bar. The director doesn't need to use `&website` parameter since a website sharing functionality has its own dedicated button in the director's control room.
+* You may want to add [`&novideo`](novideo.md) to the guest invite links if you only intend to share video via the website sharing function. This ensures the director's VDO.Ninja video-track doesn't appear, as VDO.Ninja can't always tell if a website contains a video track or not, and so may show the director's video alongside the shared website in some cases otherwise.
+* In more recent versions of VDO.Ninja (v22), Meshcast is available built-into VDO.Ninja via the [`&meshcast`](../../newly-added-parameters/and-meshcast.md) parameter, which sends both audio and video over meshcast in sync, without concerns of echo cancellation or audio doubling. Just add `&meshcast` to the director's URL to use this mode; the director's audio and video will auto-publish via Meshcast without needing to visit meshcast.io.
+* The director's ability to share a website (meshcast.io link) is via a button found in the director's control bar. The director doesn't need to use [`&website`](../../source-settings/and-website.md) parameter since a website sharing functionality has its own dedicated button in the director's control room.
 
 ![The button used to share a website as the director](<../../.gitbook/assets/image (93).png>)
 
-* If using meshcast.io and the website share functionality, rather than `&meshcast`, you will want to mute the Meshcast source to avoid echo cancellation or audio-doubling. The meshcast.io source page has options to do so there, but you can also add \&mute to the meshcast.io when sharing it, to have it auto-mute on playback for the guests.
+* If using meshcast.io and the website share functionality, rather than `&meshcast`, you will want to mute the Meshcast source to avoid echo cancellation or audio-doubling. The meshcast.io source page has options to do so there, but you can also add [`&mute`](../../source-settings/and-mute.md) to the meshcast.io when sharing it, to have it auto-mute on playback for the guests.
 
 {% embed url="https://www.youtube.com/watch?v=-7QsLChfdsE" %}
 An older video, but it gets some basics across still about \&broadcast mode
