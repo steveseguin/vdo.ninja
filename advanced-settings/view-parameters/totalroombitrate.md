@@ -22,7 +22,7 @@ Viewer-Side Option! ([`&view`](view.md), [`&scene`](scene.md), [`&room`](../../g
 
 The total bitrate a guest in a room can view video streams with; their combined bitrate total of all inbound video streams.
 
-Split between the number of streams that guest is viewing
+Split between the number of streams that guest is viewing.
 
 So for example, with 6-guests in a room, the default of 500-kbps will have each guest requesting 100-kbps from each other. 5 streams x 100-kbps.
 
