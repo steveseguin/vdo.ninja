@@ -45,7 +45,7 @@ When recording to the guest's local storage, quality should be near pristine, gi
 
 Anyone can also access the recording options via right-clicking a video. This option is available as of VDO.Ninja v22.
 
-![](<../.gitbook/assets/image (102).png>)![](<../.gitbook/assets/image (101) (1).png>)
+![](<../.gitbook/assets/image (102) (1).png>)![](<../.gitbook/assets/image (101) (1).png>)
 
 ### Bitrate Thresholds
 

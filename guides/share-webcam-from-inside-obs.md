@@ -16,7 +16,7 @@ By default, you can't select your webcam in an OBS dock or browser source. This 
 
 Within Windows, we can right-click the OBS launch icon or app icon, right click the "OBS Studio" option, and then click Properties. This will provide us the launch properties window.
 
-![](<../.gitbook/assets/image (103) (1) (1).png>)
+![](<../.gitbook/assets/image (103) (1) (1) (1).png>)
 
 We want to add `--enable-media-stream` to the Target field; we want to add this after the quotations, and not inside them. See below for an example.
 

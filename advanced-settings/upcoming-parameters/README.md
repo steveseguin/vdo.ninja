@@ -26,6 +26,7 @@ description: >-
 | ``[`&viewwidth`](and-viewwidth.md)\*                 | Does the same thing as [`&scale`](../view-parameters/scale.md) but you pass the width in pixels                                                                       |
 | ``[`&meshcastscale`](and-meshcastscale.md)\*         | Scales down the meshcast video output via the URL                                                                                                                     |
 | ``[`&sensorfilter`](and-sensorfilter.md)\*           | An option to explicitly list what [`&sensor` ](../../source-settings/sensor.md)data you want to capture and transmit                                                  |
+| ``[`&aspectratio`](and-aspectratio.md)\*             | Defines the aspect ratio of the publishing side                                                                                                                       |
 
 \*on [vdo.ninja/alpha](https://vdo.ninja/alpha/)\
 \*\*on [vdo.ninja/beta](https://vdo.ninja/beta/)\
