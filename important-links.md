@@ -10,16 +10,6 @@
 | Previous Versions             | [https://docs.vdo.ninja/releases](https://docs.vdo.ninja/releases)                   |
 | Project Development on GitHub | [https://github.com/steveseguin/vdo.ninja](https://github.com/steveseguin/vdo.ninja) |
 
-### Guides and Tutorials
-
-| Guides                         | [https://docs.vdo.ninja/guides](https://docs.vdo.ninja/guides)                                                                                                                                       |
-| ------------------------------ | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Most common Parameters         | [https://docs.vdo.ninja/advanced-settings/cheat-sheet-of-basic-parameters](https://docs.vdo.ninja/advanced-settings/cheat-sheet-of-basic-parameters)                                                 |
-| Cheat Sheets                   | [https://github.com/steveseguin/vdo.ninja/blob/quickstart/README.md](https://github.com/steveseguin/vdo.ninja/blob/quickstart/README.md)                                                             |
-| Getting started with VDO.Ninja | [https://guides.vdo.ninja/](https://guides.vdo.ninja/)                                                                                                                                               |
-| Pro Audio Matrix               | [https://docs.google.com/spreadsheets/d/1onfIh1hNR1Gh\_mthkhmezzWNUMYKMGKPrwx7T428\_hc/edit#gid=0](https://docs.google.com/spreadsheets/d/1onfIh1hNR1Gh\_mthkhmezzWNUMYKMGKPrwx7T428\_hc/edit#gid=0) |
-| Jon Myer YouTube Videos        | [https://www.youtube.com/playlist?list=PL8VJWj2-XLFpFu3G35Hdm1nKZ2xn9\_0\_8](https://www.youtube.com/playlist?list=PL8VJWj2-XLFpFu3G35Hdm1nKZ2xn9\_0\_8)                                             |
-
 ### VDO.Ninja Link Generators
 
 | Wizard-style                 | [https://linkgen.vdo.ninja/](https://linkgen.vdo.ninja/)                                                                                         |

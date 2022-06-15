@@ -1,9 +1,5 @@
 # Mobile phone camera into webcam
 
-Dec 17, 2020 • • basic • basics
-
-
-
 This set of instructions will work for Windows, Mac[1](broken-reference) and Linux[2](broken-reference).
 
 ### How to use

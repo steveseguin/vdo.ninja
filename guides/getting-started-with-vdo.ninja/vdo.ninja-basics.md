@@ -11,15 +11,15 @@ VDO.Ninja needs 2 thinks to work:
 
 3.Select your camera and audio device from the list of devices
 
-![](<../.gitbook/assets/camera picker>)Camera picker window in VDO.Ninja
+![](<../../.gitbook/assets/camera picker>)Camera picker window in VDO.Ninja
 
 You will see the video feed of the device on screen, and at the top of the screen a ‘view’ link.
 
 Copy this view link and send it to someone you want to have access to this feed, or place it inside a OBS browser source.
 
-![](<../.gitbook/assets/view link>)
+![](<../../.gitbook/assets/view link>)
 
-![](../.gitbook/assets/obs)
+![](../../.gitbook/assets/obs)
 
 ### Cheat Sheet
 

@@ -30,6 +30,7 @@
 
 ## Audio
 
+* [Pro Audio Matrix for \&proaudio or \&stereo](https://docs.google.com/spreadsheets/d/1onfIh1hNR1Gh\_mthkhmezzWNUMYKMGKPrwx7T428\_hc/edit#gid=0)
 * [How to capture AUDIO from Games or other Apps](https://docs.google.com/document/d/e/2PACX-1vQWAXQ-xHqU6vSdmavXPmnexZKArlA2RBGWrkfShhZeMyXGSZpxPjbRp9kIXk4nLElPE8uWeyxSQy\_g/pub)
 * [Slightly out of date guide to Troubleshooting Audio](https://docs.google.com/document/d/e/2PACX-1vSoNdCLYCuJylojEdEAkcMO9r5\_c-RUBMl7eMl\_dUtvc0-xet4KKD9AB7CcZbd7ISMIhIB3MxqOm9LT/pub)
 * [Steve's personal top 3 mic recommendations for podcasting](https://docs.google.com/document/d/e/2PACX-1vSNcKW88bFYg2kNl-3ufrvidhp9z139jH7nR7FC9rsaBRwCStvTJtE9rMa8RrzgTBw8WkAqbaN7o4fb/pub)
@@ -64,6 +65,10 @@
 * [Test your Internet connection quality with a video-echo test, here](https://obs.ninja/speedtest)
 * [Host your own RTSP server for VDO.Ninja by using OBS with the OBS-RTSP-Server plugin](https://obsproject.com/forum/resources/obs-rtspserver.1037/)
 * [How to Improve Streaming performance and reliability with a Speedify](https://support.speedify.com/article/725-how-to-improve-streaming-via-obs-with-speedify)
+
+## YouTube Videos
+
+* [Jon Myer VDO.Ninja Playlist](https://www.youtube.com/playlist?list=PL8VJWj2-XLFpFu3G35Hdm1nKZ2xn9\_0\_8)
 
 ## Other
 

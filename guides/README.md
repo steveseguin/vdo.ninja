@@ -1,5 +1,6 @@
 # Guides
 
+* [Getting started with VDO.Ninja](getting-started-with-vdo.ninja/)
 * [Use VDO.Ninja as a webcam for Google Hangouts, Zoom, and more](use-vdo.ninja-as-a-webcam-for-google-hangouts-zoom-and-more.md)
 * [How do I control bitrate/quality?](how-do-i-control-bitrate-quality.md)
 * [How to get permanent links](use-vdo.ninja-as-a-webcam-for-google-hangouts-zoom-and-more.md)

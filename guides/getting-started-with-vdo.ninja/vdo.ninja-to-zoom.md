@@ -1,4 +1,4 @@
-# OBS.Ninja to Zoom
+# VDO.Ninja to Zoom
 
 This guide will take you from having a single or multiple guests in a room and have the output fed to zoom. This includes routing video and audio and managing your guests.
 
@@ -10,39 +10,39 @@ Go to https://VDO.Ninja
 
 Click the Add Group Chat to OBS button.
 
-![Group Chat](<../.gitbook/assets/obs group chat>)
+![Group Chat](<../../.gitbook/assets/obs group chat>)
 
 ### Step 3
 
 Enter a room name and then click the Enter the Room’s control Center.\
 This is the “director’s control center”.
 
-![Create room](<../.gitbook/assets/create room>)
+![Create room](<../../.gitbook/assets/create room>)
 
 ### Step 4
 
 Click the **COPY LINK** button for the **GUEST INVITE** box. We want to send this link to our guests. The can use this link to **JOIN** the room with their camera
 
-![Copy link room](<../.gitbook/assets/room copy link>)
+![Copy link room](<../../.gitbook/assets/room copy link>)
 
 ### Step 5
 
 As guests join the room, they will see each other and be able to talk to each other.\
 The director of the room will also see each guest in the control center as they join.
 
-![Copy link room](<../.gitbook/assets/room add to scene>)
+![Copy link room](<../../.gitbook/assets/room add to scene>)
 
 ### Step 6
 
 The **SCENE LINK: MANUAL** is the **OUTPUT** of the show that we want to capture. We can copy this link and press the ADD TO SCENE button in the control center for each guest. As we press the button, the guests will appear in the SCENE link that we just opened.
 
-![Copy link room](<../.gitbook/assets/room scene link manual>)
+![Copy link room](<../../.gitbook/assets/room scene link manual>)
 
 ### Step 7
 
 If we open the **SCENE LINK** in chrome we can view it to confirm it worked. We can close it and **REMOVE** the guests from the scene as well.
 
-![Copy link room](<../.gitbook/assets/room scene link>)
+![Copy link room](<../../.gitbook/assets/room scene link>)
 
 ### Step 8
 
@@ -58,7 +58,7 @@ We also want to download and install a Virtual Audio device: https://rogueamoeba
 
 We now can put our SCENE link in Electron Capture (and close the previous SCENE link page we opened). The AUDIO OUTPUT DESTINATION needs to point to the Virtual Audio Cable. Press GO when ready.
 
-![Copy link room](<../.gitbook/assets/electron size>)
+![Copy link room](<../../.gitbook/assets/electron size>)
 
 ### Step 11
 
