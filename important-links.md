@@ -61,11 +61,12 @@
 | A tool for letting you publish into VDO.Ninja, but then full-screen the window once setup, allowing for window-capturing into zoom. | [https://vdo.ninja/examples/zoom.html](https://vdo.ninja/examples/zoom.html)                                   |
 | Also hosted on github elsewhere, but it's an example of how to remotely control OBS using VDO.Ninja's tunneling abilities           | [https://vdo.ninja/examples/obs\_remote/index](https://vdo.ninja/examples/obs\_remote/index)                   |
 
-### Discord/Reddit
+### Discord/Reddit/YouTube
 
-| Discord Sever | [https://discord.vdo.ninja/](https://discord.vdo.ninja/)       |
-| ------------- | -------------------------------------------------------------- |
-| Reddit        | [https://reddit.com/r/vdoninja](https://reddit.com/r/vdoninja) |
+| Discord Sever   | [https://discord.vdo.ninja/](https://discord.vdo.ninja/)                           |
+| --------------- | ---------------------------------------------------------------------------------- |
+| Reddit          | [https://reddit.com/r/vdoninja](https://reddit.com/r/vdoninja)                     |
+| Steve's YouTube | [https://www.youtube.com/c/SteveSeguin82](https://www.youtube.com/c/SteveSeguin82) |
 
 ### [Steve's Other Projects](getting-started/steves-helper-apps.md)
 

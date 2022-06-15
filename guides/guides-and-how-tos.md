@@ -69,6 +69,8 @@
 ## YouTube Videos
 
 * [Jon Myer VDO.Ninja Playlist](https://www.youtube.com/playlist?list=PL8VJWj2-XLFpFu3G35Hdm1nKZ2xn9\_0\_8)
+* [Nilson1489 (German Tutorial) Basics](https://youtu.be/KX\_pYQoYWgA)
+* [Nilson1489 (German Tutorial) Rooms](https://youtu.be/6nDOAW\_lzUs)
 
 ## Other
 
