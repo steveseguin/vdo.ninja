@@ -34,6 +34,10 @@ If the camera cannot support the width, **it will fail**.
 [and-height.md](and-height.md)
 {% endcontent-ref %}
 
+{% content-ref url="../advanced-settings/upcoming-parameters/and-aspectratio.md" %}
+[and-aspectratio.md](../advanced-settings/upcoming-parameters/and-aspectratio.md)
+{% endcontent-ref %}
+
 {% content-ref url="quality.md" %}
 [quality.md](quality.md)
 {% endcontent-ref %}

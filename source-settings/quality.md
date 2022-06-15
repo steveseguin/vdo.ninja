@@ -33,3 +33,11 @@ Not "strict" and is less likely to give errors than explicit resolution requests
 {% content-ref url="../newly-added-parameters/and-mediasettings.md" %}
 [and-mediasettings.md](../newly-added-parameters/and-mediasettings.md)
 {% endcontent-ref %}
+
+{% content-ref url="and-width.md" %}
+[and-width.md](and-width.md)
+{% endcontent-ref %}
+
+{% content-ref url="and-height.md" %}
+[and-height.md](and-height.md)
+{% endcontent-ref %}
