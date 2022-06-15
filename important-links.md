@@ -63,9 +63,9 @@
 
 ### Discord/Reddit
 
-| Discord Sever | [https://discord.vdo.ninja/](https://discord.vdo.ninja/)                                                         |
-| ------------- | ---------------------------------------------------------------------------------------------------------------- |
-| Reddit        | [https://github.com/bitfocus/companion-module-vdo-ninja](https://github.com/bitfocus/companion-module-vdo-ninja) |
+| Discord Sever | [https://discord.vdo.ninja/](https://discord.vdo.ninja/)       |
+| ------------- | -------------------------------------------------------------- |
+| Reddit        | [https://reddit.com/r/vdoninja](https://reddit.com/r/vdoninja) |
 
 ### [Steve's Other Projects](getting-started/steves-helper-apps.md)
 
