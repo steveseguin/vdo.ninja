@@ -1,7 +1,7 @@
 # Guides
 
+* [Use VDO.Ninja as a webcam for Google Hangouts, Zoom, and more](use-vdo.ninja-as-a-webcam-for-google-hangouts-zoom-and-more.md)
 * [How do I control bitrate/quality?](how-do-i-control-bitrate-quality.md)
-* [Use your smartphone as a webcam](https://docs.vdo.ninja/guides/use-vdo.ninja-as-a-webcam-for-google-hangouts-zoom-and-more)&#x20;
 * [How to get permanent links](use-vdo.ninja-as-a-webcam-for-google-hangouts-zoom-and-more.md)
 * [Capture an application's audio](audio.md)
 * [Publish from OBS into VDO.Ninja](publish-from-obs-into-vdo.ninja.md)
@@ -22,5 +22,6 @@
 * [Record multiple sources in OBS](https://obsproject.com/forum/resources/source-record.1285/)
 * [Publish to Facebook Live](publish-to-facebook-live.md)
 * [Embed into a site with iFrames](iframe-api-documentation.md)
+* [Use the green screen just locally](use-the-green-screen-just-locally.md)
 * [Connect a GoPro to VDO.Ninja](connect-a-gopro-to-vdo.ninja.md)
 * [Installing RaspNinja on Jetson](installing-raspninja-on-jetson.md)

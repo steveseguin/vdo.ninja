@@ -35,8 +35,6 @@
 * [Steve's personal top 3 mic recommendations for podcasting](https://docs.google.com/document/d/e/2PACX-1vSNcKW88bFYg2kNl-3ufrvidhp9z139jH7nR7FC9rsaBRwCStvTJtE9rMa8RrzgTBw8WkAqbaN7o4fb/pub)
 * [How do I capture an Application's audio when screen-sharing on Windows?](https://docs.google.com/document/d/e/2PACX-1vQWAXQ-xHqU6vSdmavXPmnexZKArlA2RBGWrkfShhZeMyXGSZpxPjbRp9kIXk4nLElPE8uWeyxSQy\_g/pub)
 
-
-
 ## Video
 
 * [Add custom backgrounds and live video effects](https://snapcamera.snapchat.com/)
@@ -75,4 +73,3 @@
 * [3rd-party written How-To Guide for VDO.Ninja](https://photography.tutsplus.com/articles/how-to-easily-add-a-remote-source-to-streaming-video-with-obs-and-obsninja--cms-35885)
 * [A tool to create editable URL invite links](https://short.io/)
 * [A version of VDO.Ninja that works in Mainland China (中国)](https://insecure.cam/)
-* [There is a very basic native Android app for download here](https://drive.google.com/file/d/1B3WfNEW-HHA4tg22V-Gl1Kx4X8mDfSMv/view?usp=sharing)

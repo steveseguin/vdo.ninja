@@ -84,6 +84,8 @@ Mobile native app versions of VDO.Ninja can be found behind the link below. Thes
 
 ## Consolidated social live chat tool
 
+[https://github.com/steveseguin/social\_stream#readme](https://github.com/steveseguin/social\_stream#readme)
+
 Consolidate your live social messaging streams, including Youtube and Twitch, into a single chat stream that can be docked into OBS and be used to to select featured chat messages as an overlay.
 
 Very much like Chat Overlay Ninja, except is purely for live chat and has a focus on consolidation of chat messages, instead of just featured chat.
