@@ -63,7 +63,7 @@
 
 ### Discord/Reddit/YouTube
 
-| Discord Sever   | [https://discord.vdo.ninja/](https://discord.vdo.ninja/)                           |
+| Discord Server  | [https://discord.vdo.ninja/](https://discord.vdo.ninja/)                           |
 | --------------- | ---------------------------------------------------------------------------------- |
 | Reddit          | [https://reddit.com/r/vdoninja](https://reddit.com/r/vdoninja)                     |
 | Steve's YouTube | [https://www.youtube.com/c/SteveSeguin82](https://www.youtube.com/c/SteveSeguin82) |
