@@ -403,6 +403,7 @@
   * [There are black borders around the video in OBS](common-errors-and-known-issues/there-are-black-borders-around-the-video-in-obs..md)
   * [LAN vs WAN - VDO.Ninja traffic diagram, by saimiri31](https://drive.google.com/file/d/1oI7NYIlf\_RurYoM0TEgJtzBJRV\_wohuh/view)
   * [Virtual cam not working on Mac](common-errors-and-known-issues/virtual-cam-not-working-on-mac.md)
+  * [Mic's volume keeps changing](common-errors-and-known-issues/mics-volume-keeps-changing.md)
 * [Platform specific issues](platform-specific-issues/README.md)
   * [Android](platform-specific-issues/android.md)
   * [macOS](platform-specific-issues/macos.md)
