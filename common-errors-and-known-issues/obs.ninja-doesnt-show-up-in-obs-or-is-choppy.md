@@ -25,6 +25,7 @@ Ensure that the “Enable Browser Source Hardware Acceleration” checkbox is ch
 * Updating your graphics card drivers.
 * Run OBS Studio as an Administrator.
 * If your computer is running at 100% CPU / GPU load, try lowering the resolution of the browser source element to 1280x720 or lower; 640x360 should use little CPU, even if hardware-acceleration is disabled.  H264 as a codec will also use less CPU / GPU than other options, normally.
+* Try specifying a custom frame rate of 30 in the browser source options in OBS
 * Go to the windows setting for “Graphics Settings”. You may see OBS or SLOBS under programs listed for “graphics performance preference”. Make sure OBS or SLOBS is set to “high performance”. Turn on hardware accelerated GPU scheduling.
 * Update OBS Studio to the newest version. When doing so, fully uninstall the old version before installing the new version. If you are up to date, try the beta release or just re-install.
 * If using OBS 64-bit, try installing the 32-bit version instead of OBS.
