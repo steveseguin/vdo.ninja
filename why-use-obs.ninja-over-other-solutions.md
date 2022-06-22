@@ -10,7 +10,7 @@ In some cases, the functionality of [VDO.Ninja](https://vdo.ninja) may overlap w
 * Video does not go thru a server, so there is less latency as there is less distance to travel. I'm talking as low as 30ms, and normally it never goes higher than 200ms.
 * There are no downloads required for sharing video -- just send the web link to a guest and they can access the service on nearly any device.
 * The interface is open-source, so you can white-label, stylize, tweak, and deploy the website code however you want.
-* Playback of video has been tested to even work on LG's CX OLED displays using Amazon Silk browser
+* Playback of video has been tested to work on using Amazon's Firestick's with Silk browser, along with a Tesla's Model 3's infotainment display.
 * No plugin additional plugins are needed for OBS -- just drag the selected link into OBS (v25 or newer on PC\*) and it auto generates the OBS Browser source with the correct resolution. (\*[MacOS](https://github.com/steveseguin/obsninja/wiki/FAQ#MacOS) users need to update to OBS v26.1.2 to access support for VDO.Ninja natively.)
 * **QR Code support for invite links**, which allows for easy ingestion of mobile devices without needing to use the keyboard.
 * **Reusable invite links**, so **OBS Browser sources don't need to be re-created** or changed once created and shared.
