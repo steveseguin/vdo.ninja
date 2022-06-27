@@ -22,6 +22,3 @@ There are some more parameters on [VDO.Ninja](https://vdo.ninja/) which are curr
 | `&speedtest`        | Forces essentially UDP mode, unless TCP is specified, and some other stuff.                                                                                                                                                                                                                                   |
 | `&viewereffect`     | Not currently an active feature.                                                                                                                                                                                                                                                                              |
 | `&wss`              | Specify the handshake server address to use.                                                                                                                                                                                                                                                                  |
-
-There is a Google Sheet of all parameters available:\
-[https://docs.google.com/spreadsheets/d/1rNPus\_c6fLwNIKOr1WCZZVMRWtlNJttUNtvvelInuRU/edit#gid=1565581695](https://docs.google.com/spreadsheets/d/1rNPus\_c6fLwNIKOr1WCZZVMRWtlNJttUNtvvelInuRU/edit#gid=1565581695)
