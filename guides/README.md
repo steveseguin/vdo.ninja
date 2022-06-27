@@ -1,6 +1,7 @@
 # Guides
 
 * [Getting started with VDO.Ninja](getting-started-with-vdo.ninja/)
+* [Cheat Sheet of Basic Parameters](https://github.com/steveseguin/vdo.ninja/blob/quickstart/README.md)
 * [Use VDO.Ninja as a webcam for Google Hangouts, Zoom, and more](use-vdo.ninja-as-a-webcam-for-google-hangouts-zoom-and-more.md)
 * [How do I control bitrate/quality?](how-do-i-control-bitrate-quality.md)
 * [How to get permanent links](use-vdo.ninja-as-a-webcam-for-google-hangouts-zoom-and-more.md)
