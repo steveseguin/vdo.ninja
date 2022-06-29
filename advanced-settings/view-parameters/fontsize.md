@@ -9,7 +9,7 @@ General Option! ([`&push`](../../source-settings/push.md), [`&room`](../../gener
 ## Aliases
 
 * `&labelsize`
-* `&fontsize`
+* `&sizelabel`
 
 ## Options
 
