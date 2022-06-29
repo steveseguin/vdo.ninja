@@ -27,6 +27,8 @@ description: >-
 | ``[`&meshcastscale`](and-meshcastscale.md)\*         | Scales down the meshcast video output via the URL                                                                                                                     |
 | ``[`&sensorfilter`](and-sensorfilter.md)\*           | An option to explicitly list what [`&sensor` ](../../source-settings/sensor.md)data you want to capture and transmit                                                  |
 | ``[`&aspectratio`](and-aspectratio.md)\*             | Changes the aspect ratio on the publisher side                                                                                                                        |
+| ``[`&include`](and-include.md)\*                     | Includes streams that do not exist in the room                                                                                                                        |
+| ``[`&flagship`](and-flagship.md)\*                   | Will optimize the mobile experience for more capable smartphones                                                                                                      |
 
 \*on [vdo.ninja/alpha](https://vdo.ninja/alpha/)\
 \*\*on [vdo.ninja/beta](https://vdo.ninja/beta/)\

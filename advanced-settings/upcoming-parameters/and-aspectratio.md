@@ -16,7 +16,7 @@ Sender-Side Option! ([`&push`](../../source-settings/push.md))\
 | Value            | Description                     |
 | ---------------- | ------------------------------- |
 | landscape        | aspect ratio of 16:9 (1.777777) |
-| portrait         | aaspect ratio of 9:16 (0.5625)  |
+| portrait         | aspect ratio of 9:16 (0.5625)   |
 | square           | aspect ratio of 1:1 (1)         |
 | 1.33333          | aspect ratio of 4:3             |
 | (decimal number) | aspect ratio                    |
