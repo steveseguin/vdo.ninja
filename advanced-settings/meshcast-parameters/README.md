@@ -15,4 +15,4 @@ description: >-
 | ``[`&meshcastbitrate`](../../meshcast-settings/and-meshcastbitrate.md)``           | Option to change outbound video bitrate of the `&meshcast` parameter                               |
 | ``[`&meshcastcodec`](../../meshcast-settings/and-meshcastcodec.md)``               | Option to change codec of the `&meshcast` parameter                                                |
 | ``[`&mcscreensharebitrate`](../../meshcast-settings/and-mcscreensharebitrate.md)`` | Option to change outbound screen-share video bitrate of the `&meshcast` parameter                  |
-| ``[`&mcscreensharecodec`](../../meshcast-settings/and-mcscreensharecodec.md)``     | Option to change codec of the `&meshcas`t parameter while screen-sharing                           |
+| ``[`&mcscreensharecodec`](../../meshcast-settings/and-mcscreensharecodec.md)``     | Option to change codec of the `&meshcast` parameter while screen-sharing                           |
