@@ -37,3 +37,7 @@ The image will scale in size to cover the VDO.Ninja app's background. [`&chroma`
 {% content-ref url="../design-parameters/chroma.md" %}
 [chroma.md](../design-parameters/chroma.md)
 {% endcontent-ref %}
+
+{% content-ref url="../newly-added-parameters/and-waitimage.md" %}
+[and-waitimage.md](../newly-added-parameters/and-waitimage.md)
+{% endcontent-ref %}

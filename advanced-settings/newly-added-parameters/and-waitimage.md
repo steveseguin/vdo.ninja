@@ -34,3 +34,7 @@ It overrides [`&cleanoutput`](../design-parameters/cleanoutput.md).
 {% content-ref url="../upcoming-parameters/and-bgimage.md" %}
 [and-bgimage.md](../upcoming-parameters/and-bgimage.md)
 {% endcontent-ref %}
+
+{% content-ref url="../upcoming-parameters/and-background.md" %}
+[and-background.md](../upcoming-parameters/and-background.md)
+{% endcontent-ref %}

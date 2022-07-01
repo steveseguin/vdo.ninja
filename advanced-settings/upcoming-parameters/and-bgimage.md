@@ -36,3 +36,7 @@ Viewer-Side Option! ([`&scene`](../view-parameters/scene.md), [`&room`](../../ge
 {% content-ref url="../newly-added-parameters/and-waitimage.md" %}
 [and-waitimage.md](../newly-added-parameters/and-waitimage.md)
 {% endcontent-ref %}
+
+{% content-ref url="and-background.md" %}
+[and-background.md](and-background.md)
+{% endcontent-ref %}
