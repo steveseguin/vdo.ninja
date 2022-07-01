@@ -12,3 +12,9 @@ General Option! ([`&push`](../../source-settings/push.md), [`&room`](../../gener
 
 Example:\
 [https://vdo.ninja/?js=https%3A%2F%2Fvdo.ninja%2Fexamples%2Ftestjs.js](https://vdo.ninja/?js=https%3A%2F%2Fvdo.ninja%2Fexamples%2Ftestjs.js)
+
+## Related
+
+{% content-ref url="../upcoming-parameters/and-b64js.md" %}
+[and-b64js.md](../upcoming-parameters/and-b64js.md)
+{% endcontent-ref %}

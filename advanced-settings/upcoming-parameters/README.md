@@ -29,6 +29,7 @@ description: >-
 | ``[`&aspectratio`](and-aspectratio.md)\*             | Changes the aspect ratio on the publisher side                                                                                                                        |
 | ``[`&include`](and-include.md)\*                     | Includes streams that do not exist in the room                                                                                                                        |
 | ``[`&flagship`](and-flagship.md)\*                   | Will optimize the mobile experience for more capable smartphones                                                                                                      |
+| ``[`&b64js`](and-b64js.md)\*                         | Lets a user add raw javascript to the URL to run on page load                                                                                                         |
 
 \*on [vdo.ninja/alpha](https://vdo.ninja/alpha/)\
 \*\*on [vdo.ninja/beta](https://vdo.ninja/beta/)\
