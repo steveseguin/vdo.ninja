@@ -1006,12 +1006,25 @@
 	
 	var startTime = false;
 	
+	/////////// This is a very simple sample, of sending Note C0 to Channel 1
+	//function sendC0(channel=1){ // channel 1
+	//	var msg = {};
+	//	msg.sendRawMIDI = {};
+	//  // ** Midi C0 is MIDI value 12.
+	//	msg.sendRawMIDI.data = [143+channel,12,64]; // [143+channel , note-value , velocity value]
+	//	// msg.UUID = xxx; // lets you specify a specific peer connection
+	//	// msg.streamID = yyy; // lets you specify a specific stream ID
+	//	iframe.contentWindow.postMessage(msg, '*');
+	//}
+    // sendC0();
+	///////////////////////////
+	
 	function sendMIDI(e){
 		if (!this.data){console.log("no data");console.log(this);return;} // needs data array
 		var msg = {};
 		msg.sendRawMIDI = {};
-		msg.sendRawMIDI.timestamp = Date.now() - startTime;
-		msg.sendRawMIDI.channel = this.channel || false;
+		msg.sendRawMIDI.timestamp = Date.now() - startTime; // optional
+		msg.sendRawMIDI.channel = this.channel || false; // this doesn't do much
 		msg.sendRawMIDI.data = this.data;
 		if (this.data[2].length){
 			msg.sendRawMIDI.data[2] = parseInt(this.value);

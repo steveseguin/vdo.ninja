@@ -60,6 +60,9 @@
 		position:absolute;
 		top: -150px;
 	}
+	#modal{
+		overflow:auto;
+	}
 	.message{
 		background: #3e3e3e00;
 		color: #FCFCFC;
@@ -772,7 +775,7 @@
 		content: "8";
 		color: #a4a4a4;
 	}
-	#containermenu>div:nth-child(9)>div::before {
+	#containermenu>div:nth-child(10)>div::before {
 		content: "9";
 		color: #a4a4a4;
 	}
@@ -2865,7 +2868,11 @@
 		var checkbox = document.createElement("input");
 		checkbox.type = "checkbox";
 		setEle.appendChild(checkbox);
-		checkbox.checked = parent.cover || false;
+		if ("cover" in parent){
+			checkbox.checked = parent.cover || false;
+		} else {
+			checkbox.checked = true;
+		}
 		checkbox.onchange = function(){
 			parent.cover = this.checked;
 		}
