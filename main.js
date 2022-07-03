@@ -4128,31 +4128,34 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 			if (e.data.scale === false){
 				session.dynamicScale = true; // disable manual scaling
 				updateMixer();
+				var scale = false;
 			} else {
 				session.dynamicScale = false;
 				var scale = parseInt(e.data.scale) || 100;
-				if (e.data.UUID){
-					session.sendRequest({scale:scale}, UUID);
-				} else if (e.data.target){
-					for (var i in session.rpcs) {
-						try {
-							if ("streamID" in session.rpcs[i]) {
-								if ("target" in e.data) {
-									if ((session.rpcs[i].streamID == e.data.target) || (e.data.target == "*")) { // specify a stream ID or let it apply to all videos
-										session.sendRequest({scale:scale}, i);
-									}
-								} else {
-									 session.sendRequest({scale:scale}, i);
-								}
-							} 
-						} catch (e) {
-							errorlog(e);
-						}
-					}
-				} else {
-					session.sendRequest({scale:scale});
-				}
 			}
+
+			if (e.data.UUID){
+				session.sendRequest({scale:scale}, UUID);
+			} else if (e.data.target){
+				for (var i in session.rpcs) {
+					try {
+						if ("streamID" in session.rpcs[i]) {
+							if ("target" in e.data) {
+								if ((session.rpcs[i].streamID == e.data.target) || (e.data.target == "*")) { // specify a stream ID or let it apply to all videos
+									session.sendRequest({scale:scale}, i);
+								}
+							} else {
+								 session.sendRequest({scale:scale}, i);
+							}
+						} 
+					} catch (e) {
+						errorlog(e);
+					}
+				}
+			} else {
+				session.sendRequest({scale:scale});
+			}
+			
 		}
 		
 		

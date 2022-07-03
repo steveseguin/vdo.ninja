@@ -14718,7 +14718,11 @@ var beforeScreenShare = null; // video
 var screenShareAudioTrack = null;
 async function toggleScreenShare(reload = false) { ////////////////////////////
 
-	var quality = session.quality_ss || 0;
+	var quality = session.quality_ss;
+
+	if (quality === false){
+		quality = session.quality_wb;
+	}
 	
 	if (session.quality !== false){
 		quality = session.quality;
@@ -15728,6 +15732,13 @@ async function grabVideo(quality = 0, eleName = 'previewWebcam', selector = "sel
 				updateRenderOutpipe();
 				return;
 			}
+
+			if (session.chunked){
+				for (UUID in session.pcs) {
+					session.chunkedStream(UUID); // make sure we check that this connection allows video / audio
+				}
+				return;
+			}
 			
 			
 			if (session.mc && session.mc.getSenders){
@@ -16257,6 +16268,14 @@ function updateRenderOutpipe(){ // video only.
 }
 
 function pushOutVideoTrack(track){
+
+	if (session.chunked){
+		for (UUID in session.pcs) {
+			session.chunkedStream(UUID); // make sure we check that this connection allows video / audio
+		}
+		return;
+	}
+
 	if (session.mc && session.mc.getSenders){ // should only be 0 or 1 video sender, ever.
 		//var added = false;
 		session.mc.getSenders().forEach((sender) => { // I suppose there could be a race condition between negotiating and updating this. if joining at the same time as changnig streams?
@@ -26145,7 +26164,11 @@ async function createSecondStream() { ////////////////////////////
 	
 		var video = {}
 		
-		var quality = session.quality_ss || 0;
+		var quality = session.quality_ss;
+
+		if (quality === false){
+			quality = session.quality_wb;
+		}
 		
 		if (session.quality !== false){
 			quality = session.quality;
