@@ -13,4 +13,4 @@ That said, there are things to try still if Wifi is needed or packet loss persis
 * Turning down the audio bitrate ([`&ab=128`](../advanced-settings/view-parameters/audiobitrate.md)) will be less prone to issues vs something high, like 256kbps.- You can add [\&enhance](../advanced-settings/view-parameters/enhance.md) on the viewer side to try to prioritize the audio over the video.
 * Host your OBS and VDO.Ninja on a cloud server, like Amazon AWS Workspaces or Google GCP.
 
-I have a video talking about packet loss, with details on how to setup Speedify as well: [https://www.youtube.com/watch?v=je2ljlvLzlYAnd](https://www.youtube.com/watch?v=je2ljlvLzlYAnd) there is a speedtest that the user can try out here to give them feedback on their packet loss: [https://obs.ninja/speedtest ](https://obs.ninja/speedtest%C2%A0)
+I have a video talking about packet loss, with details on how to setup Speedify as well: [https://www.youtube.com/watch?v=je2ljlvLzlYAnd](https://www.youtube.com/watch?v=je2ljlvLzlYAnd) there is a speedtest that the user can try out here to give them feedback on their packet loss: [https://vdo.ninja/speedtest ](https://vdo.ninja/speedtest)
