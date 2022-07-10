@@ -12,7 +12,9 @@ description: >-
 
 Please be aware that OBS v24 to v26.0 does not natively support VDO.Ninja, but version 26.1.2 and newer does.\
 \
-StreamLabs OBS for macOS also does not support VDO.Ninja as of yet, but it should in the future after it updates.\
+If using an Android smartphone, try using Firefox instead of Chrome, or a different browser in general.\
+\
+If you're in Iran or China, WebRTC may be blocked; try using a VPN.\
 \
 Use the Electron Capture app if you are using a non-compatible version of OBS. > [Get it here](https://github.com/steveseguin/electroncapture) <
 
@@ -22,7 +24,11 @@ Ensure that the “Enable Browser Source Hardware Acceleration” checkbox is ch
 
 * Uncheck the Hardware Acceleration checkbox -- does it work now? If so, it may be choppy and will use more CPU, but perhaps still usable. If the problem is that it's choppy, ensure that hardware-acceleration is checked.&#x20;
 * If using an Android mobile smartphone as a camera source, try using Firefox Mobile or a few different browsers. If that fails, try the [native Android app version](https://docs.vdo.ninja/platform-specific-issues/android), if your needs are simple. This is often the case with Samsung A-series smartphones, although the Galaxy A12 especially seems to have issues.
-* Updating your graphics card drivers.
+* If you're in Iran, China or another sanctioned/censored country, WebRTC may be blocked; try using a VPN.
+* If on cellular, try switching to a different network.
+* If behind a corporate firewall, try using cellular instead.
+* If you're using PFSense or a PiHole for home network security, try bypassing it or using a different network; most users using PFSense have security set to overkill, blocking everything.
+* Updating your graphics card drivers, especially after a fresh install, can sometimes help.
 * Run OBS Studio as an Administrator.
 * If your computer is running at 100% CPU / GPU load, try lowering the resolution of the browser source element to 1280x720 or lower; 640x360 should use little CPU, even if hardware-acceleration is disabled.  H264 as a codec will also use less CPU / GPU than other options, normally.
 * Try specifying a custom frame rate of 30 in the browser source options in OBS
