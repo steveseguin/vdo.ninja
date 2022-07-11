@@ -275,6 +275,7 @@
     * [\&pip](advanced-settings/design-parameters/and-pip.md)
   * [Director Parameters](advanced-settings/director-parameters/README.md)
     * [\&director](viewers-settings/director.md)
+    * [\&totalroombitrate](https://docs.vdo.ninja/advanced-settings/video-parameters/totalroombitrate)
     * [\&blindall](newly-added-parameters/and-blindall.md)
     * [\&cleandirector](director-settings/cleandirector.md)
     * [\&codirector](director-settings/codirector.md)

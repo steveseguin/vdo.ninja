@@ -9,6 +9,7 @@ Parameters specified for the director's control panel; have to be used together 
 | Parameter                                                               | Explanation                                                                                |
 | ----------------------------------------------------------------------- | ------------------------------------------------------------------------------------------ |
 | ``[`&director`](../../viewers-settings/director.md)``                   | Enters a room as the director, instead of a guest and have full control                    |
+| ``[`&totalroombitrate`](../view-parameters/totalroombitrate.md)``       | The total bitrate a guest in a room can view video streams with                            |
 | ``[`&blindall`](../../newly-added-parameters/and-blindall.md)``         | It allows the director 'blinding' all the guests at a time with a new button               |
 | ``[`&cleandirector`](../../director-settings/cleandirector.md)``        | Hides the invite URL options in the Director's room                                        |
 | ``[`&codirector`](../../director-settings/codirector.md)``              | Allows assistant directors to have access to the director's room, with a subset of control |
