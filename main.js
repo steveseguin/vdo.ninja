@@ -35,7 +35,7 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 	if (ln_template) { // checking if manual lanuage override enabled
 		try {
 			log("Lang Template: " + ln_template);
-			changeLg(ln_template);
+			await changeLg(ln_template);
 			//getById("mainmenu").style.opacity = 1;
 		} catch (error) {
 			errorlog(error);

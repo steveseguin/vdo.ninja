@@ -29,7 +29,11 @@ input{
 	z-index: 1000;
 }
 
-
+h1{
+	color: white;
+    font-family: verdana;
+    margin: 10px;
+}
 @media screen and (orientation:portrait) {
 	#container2{
 		width:100%;height:100%;display:none;
@@ -64,7 +68,8 @@ input{
 <div id="container2"></div>
 <div id="container1" ></div>
 <div id="clean">
-	<input placeholder="Enter a VDON stream ID" id="viewlink" type="text" />
+	<h1>Use VDO.Ninja and Twitch chat at the same time</h1>
+	<input placeholder="Enter a VDON stream ID or VDON URL" id="viewlink" type="text" />
 	<input placeholder="Enter the Twitch channel name" id="twitch" type="text" />
 	<button onclick="loadIframes()" style="display:block;padding:10px;margin:10px;">START</button>
 </div>
@@ -74,6 +79,46 @@ window.addEventListener("orientationchange", function() {
   // Announce the new orientation number
  // alert(window.orientation);
 }, false);
+
+function removeStorage(cname){
+	localStorage.removeItem(cname);
+}
+
+function setStorage(cname, cvalue, hours=9999){ // not actually a cookie
+	var now = new Date();
+	var item = {
+		value: cvalue,
+		expiry: now.getTime() + (hours * 60 * 60 * 1000),
+	};
+	try{
+		localStorage.setItem(cname, JSON.stringify(item));
+	}catch(e){errorlog(e);}
+}
+
+function getStorage(cname) {
+	try {
+		var itemStr = localStorage.getItem(cname);
+	} catch(e){
+		errorlog(e);
+		return;
+	}
+	if (!itemStr) {
+		return "";
+	}
+	var item = JSON.parse(itemStr);
+	var now = new Date();
+	if (now.getTime() > item.expiry) {
+		localStorage.removeItem(cname);
+		return "";
+	}
+	return item.value;
+}
+if (getStorage("twitchChatLink")){
+	document.getElementById("twitch").value = getStorage("twitchChatLink");
+}
+if (getStorage("vdoNinjaTwitchURL")){
+	document.getElementById("viewlink").value = getStorage("vdoNinjaTwitchURL");
+}
 
 function loadIframes(url=false){ 
 
@@ -87,7 +132,11 @@ function loadIframes(url=false){
 	var path = window.location.host+window.location.pathname.split("/").slice(0,-1).join("/");
 	path = path.replace("/examples","");
 	
-	var room1 = "https://"+path+"/?push="+roomname+"&webcam&autostart&vd=front&ad=1&transparent&noheader";
+	if (roomname.startsWith("https://")){
+		var room1 = roomname;
+	} else {
+		var room1 = "https://"+path+"/?push="+roomname+"&webcam&autostart&vd=front&ad=1&transparent&noheader";
+	}
 	var room2 = "https://www.twitch.tv/embed/"+twitch+"/chat?parent="+location.hostname;
 	var iframe = document.createElement("iframe");
 	iframe.allow = "autoplay;camera;microphone;fullscreen;picture-in-picture;";
@@ -95,6 +144,12 @@ function loadIframes(url=false){
 	var iframeContainer = document.createElement("div");
 	iframeContainer.appendChild(iframe);
 	document.getElementById("container1").appendChild(iframeContainer);
+	
+	
+	setStorage("twitchChatLink", room2);
+
+	setStorage("vdoNinjaTwitchURL", room1);
+	
 	
 	setTimeout(function(){
 		var iframe = document.createElement("iframe");

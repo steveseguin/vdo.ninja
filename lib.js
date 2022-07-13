@@ -4258,16 +4258,16 @@ function showControl(e){
 	}, 5000);
 }
 
-function changeLg(lang) {
+async function changeLg(lang) {
 	log("changeLg: "+lang);
-	fetch("./translations/" + lang + '.json').then(function(response) {
+	await fetch("./translations/" + lang + '.json').then(async function(response) {
 		try{
 			if (response.status !== 200) {
 				logerror('Language translation file not found.' + response.status);
 				getById("mainmenu").style.opacity = 1;
 				return;
 			}
-			response.json().then(function(data) {
+			await response.json().then(async function(data) {
 				translation = data; // translation.innerHTML[ele.dataset.translate]
 				var trans = data.innerHTML;
 				var allItems = document.querySelectorAll('[data-translate]');
@@ -20798,8 +20798,8 @@ function showCustomizer(arg, ele) {
 }
 
 
+var recordingBitratePromise = false;
 var defaultRecordingBitrate = false;
-
 async function recordVideo(target, event, videoKbps = false) { // event.currentTarget,this.parentNode.parentNode.dataset.UUID
 
 	var UUID = target.dataset.UUID;
@@ -20832,9 +20832,11 @@ async function recordVideo(target, event, videoKbps = false) { // event.currentT
 		Callbacks.push([recordVideo, target, null, false]);
 		log("Record Video queued");
 		defaultRecordingBitrate = false;
+		recordingBitratePromise = false;
 		return;
 	} else {
 		defaultRecordingBitrate = false;
+		recordingBitratePromise = false;
 	}
 
 	log("Record Video Clicked");
@@ -20874,8 +20876,13 @@ async function recordVideo(target, event, videoKbps = false) { // event.currentT
 	if (videoKbps == false) {
 		if (defaultRecordingBitrate == false) {
 			videoKbps = 4000; // 4mbps recording bitrate
-			window.focus();
-			videoKbps = await promptAlt(miscTranslations["press-ok-to-record"], false, false, videoKbps);
+			
+			if (!recordingBitratePromise){
+				window.focus();
+				recordingBitratePromise = promptAlt(miscTranslations["press-ok-to-record"], false, false, videoKbps);
+			}
+			videoKbps = await recordingBitratePromise;
+			//log("videoKbps: "+videoKbps+", UUID:"+UUID);
 			if (videoKbps === null) {
 				//target.style.backgroundColor = null;
 				//target.innerHTML = '<i class="las la-circle"></i><span data-translate="record"> record local</span>';
@@ -21309,6 +21316,20 @@ function setupSensorData(pollrate = 30) {
 			session.sensors.data.lin.t = parseInt(Math.round(session.sensors.LinearAccelerationSensor.timestamp));
 		});
 		session.sensors.LinearAccelerationSensor.start();
+	}
+	if (navigator.geolocation){
+		navigator.geolocation.watchPosition(function(pos){
+			try {
+				session.sensors.data.pos = {};
+				session.sensors.data.pos.speed = pos.coords.speed;
+				session.sensors.data.pos.alt = pos.coords.altitude;
+				session.sensors.data.pos.t = pos.timestamp;
+			}catch(e){}
+		}, errorlog, {
+		  enableHighAccuracy: true,
+		  timeout: 5000,
+		  maximumAge: 0
+		});
 	}
 	setInterval(function() {
 		session.sendMessage(session.sensors.data);
