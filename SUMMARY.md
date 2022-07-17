@@ -358,6 +358,8 @@
     * [\&flagship](advanced-settings/upcoming-parameters/and-flagship.md)
     * [\&b64js](advanced-settings/upcoming-parameters/and-b64js.md)
     * [\&background](advanced-settings/upcoming-parameters/and-background.md)
+    * [\&postimage](advanced-settings/upcoming-parameters/and-postimage.md)
+    * [\&postinterval](advanced-settings/upcoming-parameters/and-postinterval.md)
   * [Other Parameters](other-parameters.md)
 * [Releases](release-notes/older-releases.md)
   * [v21 ❤️](older-releases/v21.md)

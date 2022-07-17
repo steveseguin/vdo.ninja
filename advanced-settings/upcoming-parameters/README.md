@@ -31,6 +31,8 @@ description: >-
 | ``[`&flagship`](and-flagship.md)\*                   | Will optimize the mobile experience for more capable smartphones                                                                                                      |
 | ``[`&b64js`](and-b64js.md)\*                         | Lets a user add raw javascript to the URL to run on page load                                                                                                         |
 | ``[`&background`](and-background.md)\*               | Accepts a URL-encoded image URL to make as the app's default background                                                                                               |
+| ``[`&postimage`](and-postimage.md)\*                 | Post a snapshot of your local camera to a HTTPS/POST URL                                                                                                              |
+| ``[`&postinterval`](and-postinterval.md)\*           | Time interval in seconds for \&postimage                                                                                                                              |
 
 \*on [vdo.ninja/alpha](https://vdo.ninja/alpha/)\
 \*\*on [vdo.ninja/beta](https://vdo.ninja/beta/)\
