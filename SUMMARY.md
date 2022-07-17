@@ -33,6 +33,7 @@
   * [Capture an application's audio](guides/audio.md)
   * [Publish from OBS into VDO.Ninja](guides/publish-from-obs-into-vdo.ninja.md)
   * [Screen-Share your iPhone / iPad](guides/screen-share-your-iphone-ipad.md)
+  * [Viewing Twitch chat while using VDO.Ninja on mobile](https://vdo.ninja/twitch)
   * [Hardware-accelerated video encoding](guides/hardware-accelerated-video-encoding.md)
   * [Stream into Zoom without OBS](guides/stream-into-zoom-without-obs.md)
   * [Connecting smartphone to computer via USB](guides/connecting-smartphone-to-computer-via-usb.md)
