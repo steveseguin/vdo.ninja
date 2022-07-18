@@ -16,15 +16,15 @@ Sender-Side Option! ([`&push`](push.md))
 
 Starting with [v19](../release-notes/v19.md) of VDO.Ninja, there is also the [`&screenshare2`](../newly-added-parameters/and-screenshare2.md) option; a minor UI variant that requires an additional button press, but more clearly preps the guest to the fact they will be sharing their screen.
 
-#### Using \&screenshare with the [Electron App](https://github.com/steveseguin/electroncapture)
+#### Using `&screenshare` with the [Electron Capture App](https://github.com/steveseguin/electroncapture)
 
-When using the [Electron App](https://github.com/steveseguin/electroncapture) to screen share a window/screen you have to "Elevate Privilege" via the command line with `--node true` or starting it manually via `Right-Click` -> `Elevate Privilege`.
+When using the [Electron Capture App](https://github.com/steveseguin/electroncapture) you have to "Elevate Privileges" to be able to share a window or screen. You can enable Elevated Privileges for the Electron App via the command line with `--node true` or in the app by right-clicking and selecting "Elevate Privileges" from the context-menu.
 
-In the [Electron App](https://github.com/steveseguin/electroncapture) you can pre define the window or screen you want to share.\
+One unique feature about the [Electron Capture App](https://github.com/steveseguin/electroncapture) is that it can auto-select a screen or window when screen-sharing with VDO.Ninja, without user-input.\
 For example:\
-`&screenshare=chrome` chooses the Chrome Browser\
-`&screenshare=1` chooses your main screen\
-`&screenshare=2` chooses your second screen
+`&screenshare=1` for the main display\
+`&screenshare=2` for the second display\
+`&screenshare=chrome` for the Chrome Browser
 
 ## Related
 
