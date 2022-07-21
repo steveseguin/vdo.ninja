@@ -6,6 +6,8 @@ description: >-
 
 # Upcoming Parameters
 
+You can use/test these parameters on [vdo.ninja/alpha](https://vdo.ninja/alpha/)
+
 |                                                      |                                                                                                                                                                       |
 | ---------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | ``[`&border`](and-border.md)\*\*                     | Adds a border around the videos                                                                                                                                       |
