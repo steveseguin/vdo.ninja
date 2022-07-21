@@ -20,6 +20,9 @@ Sender-Side Option! ([`&push`](../../source-settings/push.md))\
 
 ![](<../../.gitbook/assets/image (104) (1).png>)
 
+You can toggle it for the guest's invite link in the director's room:\
+![](<../../.gitbook/assets/image (118).png>)
+
 ## Related
 
 {% content-ref url="../newly-added-parameters/and-waitimage.md" %}

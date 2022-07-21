@@ -18,7 +18,7 @@ General Option! ([`&push`](../../source-settings/push.md), [`&room`](../../gener
 
 Adds a border around the videos.
 
-![](<../../.gitbook/assets/image (103) (1) (1).png>)
+![](<../../.gitbook/assets/image (103) (1) (1) (1).png>)
 
 ## Related
 

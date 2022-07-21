@@ -20,8 +20,13 @@ As of [v19.0](../../release-notes/v19.md), this only works for guests of a room 
 {% endhint %}
 
 {% hint style="info" %}
-As of v23, it now works in non-room mode:\
+As of v23, it now works in non-room mode (basic push links):\
 [https://vdo.ninja/alpha/?push\&grid](https://vdo.ninja/alpha/?push\&grid)
+
+You can now also toggle it in the director's room to add it to the guest's link:\
+![](<../../.gitbook/assets/image (103).png>)
 {% endhint %}
+
+
 
 ![](<../../.gitbook/assets/image (92).png>)
