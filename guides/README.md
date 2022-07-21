@@ -28,3 +28,4 @@
 * [Use the green screen just locally](use-the-green-screen-just-locally.md)
 * [Connect a GoPro to VDO.Ninja](connect-a-gopro-to-vdo.ninja.md)
 * [Installing RaspNinja on Jetson](installing-raspninja-on-jetson.md)
+* [Transfer guests to other rooms](transfer-rooms.md)

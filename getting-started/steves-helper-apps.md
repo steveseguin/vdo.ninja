@@ -93,3 +93,5 @@ Very much like Chat Overlay Ninja, except is purely for live chat and has a focu
 ![](<../.gitbook/assets/image (98) (1) (1).png>)
 
 {% embed url="https://social.overlay.ninja" %}
+[https://github.com/steveseguin/social\_stream#readme](https://github.com/steveseguin/social\_stream#readme)
+{% endembed %}

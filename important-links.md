@@ -42,6 +42,7 @@
 | Quality and performance statistics | [https://vdo.ninja/alpha/stats](https://vdo.ninja/alpha/stats)                                                       |
 | MIDI Controller App                | [https://vdo.ninja/alpha/remotemidi](https://vdo.ninja/alpha/remotemidi)                                             |
 | Example for multiple rooms         | [https://vdo.ninja/examples/multi?rooms=room1,room2,room3](https://vdo.ninja/examples/multi?rooms=room1,room2,room3) |
+| VDO.Ninja shop                     | [https://zero.vdo.ninja](https://zero.vdo.ninja)                                                                     |
 
 ### VDO.Ninja Tech Demonstrations
 
@@ -60,6 +61,14 @@
 | Webhid demonstrates how to interface with a USB device, like a streamdeck (mouse/keyboard not supported)                            | [https://vdo.ninja/examples/webhid.html](https://vdo.ninja/examples/webhid.html)                               |
 | A tool for letting you publish into VDO.Ninja, but then full-screen the window once setup, allowing for window-capturing into zoom. | [https://vdo.ninja/examples/zoom.html](https://vdo.ninja/examples/zoom.html)                                   |
 | Also hosted on github elsewhere, but it's an example of how to remotely control OBS using VDO.Ninja's tunneling abilities           | [https://vdo.ninja/examples/obs\_remote/index](https://vdo.ninja/examples/obs\_remote/index)                   |
+
+### Sponsor
+
+| Buy Steve a coffee | [https://www.buymeacoffee.com/steveseguin](https://www.buymeacoffee.com/steveseguin)       |
+| ------------------ | ------------------------------------------------------------------------------------------ |
+|                    |                                                                                            |
+| PayPal             | [https://www.paypal.com/paypalme/steveseguin](https://www.paypal.com/paypalme/steveseguin) |
+|                    |                                                                                            |
 
 ### Discord/Reddit/YouTube
 
