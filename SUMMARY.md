@@ -360,6 +360,7 @@
     * [\&background](advanced-settings/upcoming-parameters/and-background.md)
     * [\&postimage](advanced-settings/upcoming-parameters/and-postimage.md)
     * [\&postinterval](advanced-settings/upcoming-parameters/and-postinterval.md)
+    * [\&smallshare](advanced-settings/upcoming-parameters/and-smallshare.md)
   * [Other Parameters](other-parameters.md)
 * [Releases](release-notes/older-releases.md)
   * [v21 ❤️](older-releases/v21.md)

@@ -20,7 +20,7 @@ Unlike the [`&broadcast`](../advanced-settings/view-parameters/broadcast.md) fla
 
 If publishing using `&meshcast`, I don't bother to show the viewer count, as it won't be accurate currently anyways; instead I just say you're broadcasting. I'll try to improve this in the future.
 
-![](<../.gitbook/assets/image (93) (1).png>)
+![](<../.gitbook/assets/image (93) (1) (1).png>)
 
 Steve made a YouTube video explaining all the meshcast stuff:
 

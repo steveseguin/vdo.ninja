@@ -33,6 +33,7 @@ description: >-
 | ``[`&background`](and-background.md)\*               | Accepts a URL-encoded image URL to make as the app's default background                                                                                               |
 | ``[`&postimage`](and-postimage.md)\*                 | Post a snapshot of your local camera to a HTTPS/POST URL                                                                                                              |
 | ``[`&postinterval`](and-postinterval.md)\*           | Time interval in seconds for [`&postimage`](and-postimage.md)``                                                                                                       |
+| ``[`&smallshare`](and-smallshare.md)\*               | Makes the screen share behave like a webcam share                                                                                                                     |
 
 \*on [vdo.ninja/alpha](https://vdo.ninja/alpha/)\
 \*\*on [vdo.ninja/beta](https://vdo.ninja/beta/)\

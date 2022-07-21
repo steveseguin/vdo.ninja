@@ -25,7 +25,7 @@ Some third-party applications support Browser Sources as an input, negating the 
 
 Please find below a diagram explaining the basic premise of what we are intending to do in this guide. We will go through it all, one step at a time.
 
-![](<../.gitbook/assets/image (100).png>)
+![](<../.gitbook/assets/image (100) (1).png>)
 
 ### **Step 0. - Installing dependencies**
 
@@ -56,7 +56,7 @@ The <mark style="color:green;">OBS Browser Source link</mark> is what we will be
 
 ![](https://lh6.googleusercontent.com/m\_qUTD6GQ0eJRv7-b0SfqbGQwGLkzKE4PsrDCYCc6qN2Q\_fDIoGQIiMzqVWQFX4udKAKLiKmDWGZZdRyWo9oe8Uc-9cuayr55Itn8ZxCdipFdz5n6RHWd\_FK9SC2k6Up3Ad-owd3ymJccbk\_Lw)
 
-![A QR-code is provided to make connecting your phone as a camera source easy](<../.gitbook/assets/image (121).png>)
+![A QR-code is provided to make connecting your phone as a camera source easy](<../.gitbook/assets/image (121) (1).png>)
 
 ### Step 2.
 
