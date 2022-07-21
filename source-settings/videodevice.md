@@ -34,8 +34,13 @@ When combined with [`&webcam`](and-webcam.md) and [`&autostart`](and-autostart.m
 See [vdo.ninja/devices](https://vdo.ninja/devices) to see the device IDs and device names. DeviceIDs are specific to VDO.Ninja's domain, while device names are not. The page will also auto-create links for  you, just by clicking on the respective device.
 {% endhint %}
 
-There is a toggle in the director's room which adds `&vd` to the guest's invite link.\
+#### Director's room toggles
+
+Auto-selects the default camera of a guest by adding `&vd` to the guest's invite link.\
 ![](<../.gitbook/assets/image (126).png>)
+
+Disables the guest's camera by adding `&vd=0` to the guest's invite link.\
+![](<../.gitbook/assets/image (122).png>)
 
 ## Related
 

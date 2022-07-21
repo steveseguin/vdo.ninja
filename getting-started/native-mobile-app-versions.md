@@ -21,7 +21,7 @@ There are some limitations to the native mobile app versions though.
 
 You have a few different ways to download and install the Android app for VDO.Ninja. Installing the Google Play Store version is recommended, as it can auto-update with patches and new features automatically.
 
-#### The **Google Play Store** <img src="../.gitbook/assets/image (116).png" alt="" data-size="line"> hosted version is here:&#x20;
+#### The **Google Play Store** <img src="../.gitbook/assets/image (116) (1).png" alt="" data-size="line"> hosted version is here:&#x20;
 
 {% embed url="https://play.google.com/store/apps/details?id=flutter.vdo.ninja" %}
 _(It will auto-update when I push new releases.)_

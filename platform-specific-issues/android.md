@@ -14,11 +14,9 @@ Please note, the native app requires a modern version of Android, while the web-
 
 
 
-The **Google Play Store** <img src="../.gitbook/assets/image (116).png" alt="" data-size="line"> hosted version is here: \
+The **Google Play Store** <img src="../.gitbook/assets/image (116) (1).png" alt="" data-size="line"> hosted version is here: \
 [https://play.google.com/store/apps/details?id=flutter.vdo.ninja](https://play.google.com/store/apps/details?id=flutter.vdo.ninja)  \
 (It will auto-update when I push new releases.)
-
-
 
 As well, the Android APK file for direct-downloading is hosted here:[\
 https://drive.google.com/file/d/1M0kv5nWLtcfl2JOnsAGiG1zUmkeIVLyZ/view?usp=sharing](https://drive.google.com/file/d/1M0kv5nWLtcfl2JOnsAGiG1zUmkeIVLyZ/view?usp=sharing)\

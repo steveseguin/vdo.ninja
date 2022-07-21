@@ -22,7 +22,7 @@ This URL value can be added to the director's URL (`&director=XXXX&showdirector`
 
 * When a director enables their camera, while in `&showdirector` mode, they gain access to following set of options for the director's camera feed specifically:
 
-![](<../.gitbook/assets/image (116) (1) (1).png>)
+![](<../.gitbook/assets/image (116) (1) (1) (1).png>)
 
 ## Related
 
