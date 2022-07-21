@@ -12,7 +12,7 @@ Adding to the guest's invite link will either alert the guest or seek permission
 
 For privacy reasons, without this flag a director of a room will need to have the guest approve a remote camera or microphone change. With this flag added however, the consent to do so will be obtained on the initial connection, allowing the director to change cameras or mics of the guest without blockers.
 
-![](<../.gitbook/assets/image (102) (1) (1).png>)
+![](<../.gitbook/assets/image (102) (1) (1) (1).png>)
 
 ## Related
 

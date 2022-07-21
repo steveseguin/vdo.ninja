@@ -27,6 +27,10 @@ Split between the number of streams that guest is viewing.
 
 So for example, with 6-guests in a room, the default of 500-kbps will have each guest requesting 100-kbps from each other. 5 streams x 100-kbps.
 
+There is a toggle in the director's room which adds `&trb=2000` to the guest's invite link.
+
+![](<../../.gitbook/assets/image (94).png>)
+
 {% hint style="info" %}
 Please note the difference between `&totalroombitrate` and [`&maxtotalscenebitrate`](../../newly-added-parameters/and-maxtotalscenebitrate.md). `&totalroombitrate`controls what the total bitrate for guests in a room is limited to. [`&maxtotalscenebitrate`](../../newly-added-parameters/and-maxtotalscenebitrate.md), on the other hand, is what you will want if you want to do the same for a view-link, added to OBS, for example.&#x20;
 

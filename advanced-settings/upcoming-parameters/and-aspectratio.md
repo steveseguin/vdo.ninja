@@ -26,7 +26,7 @@ Sender-Side Option! ([`&push`](../../source-settings/push.md))\
 `&aspectratio` changes the aspect ratio on the publisher side. Floating point value; 1.777777 is common; not supported by all browsers.
 
 [https://vdo.ninja/alpha/?webcam\&aspectratio=1.33333](https://vdo.ninja/alpha/?webcam\&aspectratio=1.33333)\
-![](<../../.gitbook/assets/image (102).png>)
+![](<../../.gitbook/assets/image (102) (1).png>)
 
 You can also change the aspect ratio via the video settings menu.
 
