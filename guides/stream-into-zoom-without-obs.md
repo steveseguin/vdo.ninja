@@ -59,6 +59,6 @@ description: Stream from VDO.NInja into Zoom using the Electron Capture app
 
 More information about rooms:
 
-{% content-ref url="../getting-started/rooms.md" %}
-[rooms.md](../getting-started/rooms.md)
+{% content-ref url="../getting-started/rooms/" %}
+[rooms](../getting-started/rooms/)
 {% endcontent-ref %}

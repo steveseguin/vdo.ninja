@@ -2,7 +2,7 @@
 description: A powerful tool that allows a director to move guests to a different room
 ---
 
-# Transfer rooms
+# Transfer guests to other rooms
 
 Sometimes you will want to move a user from one room to another. This is often the case if wanting to pre-screen users, or if you want to create break-out rooms. It also is a way to ensure when you kick a user out of a room, they cannot be allowed back in without express permission.
 

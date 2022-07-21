@@ -28,7 +28,7 @@ An alternative to a `&room` is a _faux-room_, which can be done with:\
 
 ## Additional info
 
-There's a documentation page dedicated to rooms [here](../getting-started/rooms.md).
+There's a documentation page dedicated to rooms [here](../getting-started/rooms/).
 
 There's also a video below looking at what sort of performance and system load there is when using an unoptimized group room.
 
@@ -36,16 +36,16 @@ There's also a video below looking at what sort of performance and system load t
 
 You can reduce CPU load using the [`&broadcast`](../advanced-settings/view-parameters/broadcast.md) flag, if hosting a larger room.
 
-You can also [transfer guests between group rooms](../guides/transfer-rooms.md), using the transfer function that the director has.
+You can also [transfer guests between group rooms](../getting-started/rooms/transfer-rooms.md), using the transfer function that the director has.
 
 ## Related
 
-{% content-ref url="../getting-started/rooms.md" %}
-[rooms.md](../getting-started/rooms.md)
+{% content-ref url="../getting-started/rooms/" %}
+[rooms](../getting-started/rooms/)
 {% endcontent-ref %}
 
-{% content-ref url="../guides/transfer-rooms.md" %}
-[transfer-rooms.md](../guides/transfer-rooms.md)
+{% content-ref url="../getting-started/rooms/transfer-rooms.md" %}
+[transfer-rooms.md](../getting-started/rooms/transfer-rooms.md)
 {% endcontent-ref %}
 
 {% content-ref url="../viewers-settings/director.md" %}

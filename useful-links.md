@@ -1,4 +1,4 @@
-# Important Links
+# Useful Links
 
 ### VDO.Ninja Versions
 
@@ -62,13 +62,12 @@
 | A tool for letting you publish into VDO.Ninja, but then full-screen the window once setup, allowing for window-capturing into zoom. | [https://vdo.ninja/examples/zoom.html](https://vdo.ninja/examples/zoom.html)                                   |
 | Also hosted on github elsewhere, but it's an example of how to remotely control OBS using VDO.Ninja's tunneling abilities           | [https://vdo.ninja/examples/obs\_remote/index](https://vdo.ninja/examples/obs\_remote/index)                   |
 
-### Sponsor
+### Sponsor ❤
 
-| Buy Steve a coffee | [https://www.buymeacoffee.com/steveseguin](https://www.buymeacoffee.com/steveseguin)       |
+| GitHub Sponsors    | [https://github.com/sponsors/steveseguin](https://github.com/sponsors/steveseguin)         |
 | ------------------ | ------------------------------------------------------------------------------------------ |
-|                    |                                                                                            |
+| Buy Steve a coffee | [https://www.buymeacoffee.com/steveseguin](https://www.buymeacoffee.com/steveseguin)       |
 | PayPal             | [https://www.paypal.com/paypalme/steveseguin](https://www.paypal.com/paypalme/steveseguin) |
-|                    |                                                                                            |
 
 ### Discord/Reddit/YouTube
 

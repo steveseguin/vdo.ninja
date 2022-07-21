@@ -34,10 +34,10 @@ Arming can be disabled by clicking the room name again. If the current room is i
 [room.md](../general-settings/room.md)
 {% endcontent-ref %}
 
-{% content-ref url="../getting-started/rooms.md" %}
-[rooms.md](../getting-started/rooms.md)
+{% content-ref url="../getting-started/rooms/" %}
+[rooms](../getting-started/rooms/)
 {% endcontent-ref %}
 
-{% content-ref url="../guides/transfer-rooms.md" %}
-[transfer-rooms.md](../guides/transfer-rooms.md)
+{% content-ref url="../getting-started/rooms/transfer-rooms.md" %}
+[transfer-rooms.md](../getting-started/rooms/transfer-rooms.md)
 {% endcontent-ref %}
