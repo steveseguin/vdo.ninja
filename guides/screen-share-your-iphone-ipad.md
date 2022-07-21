@@ -30,7 +30,7 @@ Android users can use the native VDO.Ninja Android app to screen share directly 
 
 For this to work, your iPhone needs to be connected and turned on. It will not work if locked and sleeping.
 
-![](<../.gitbook/assets/image (123).png>)
+![](<../.gitbook/assets/image (123) (1).png>)
 
 5a. OPTIONAL: If you want to capture audio from your iPhone, you will need to install a virtual audio driver.
 
@@ -40,7 +40,7 @@ There are several choices, although the popular ones are [Loopback ](https://rog
 
 5b. OPTIONAL: If using Loopback, you will have the ability to customize the audio routing, but with Blackhole we will just output all the system's audio to the virtual audio cable. In the macOS audio settings, we just need to select the Blackhole audio device as the audio output destination.
 
-![](<../.gitbook/assets/image (95) (1).png>)
+![](<../.gitbook/assets/image (95) (1) (1).png>)
 
 5.c. OPTIONAL: Assuming QuickTime Player is capturing audio from the iPhone, we simply just need to unmute the QuickTime Player. You won't hear audio playback, as it is being streamed to the Blackhole virtual audio device instead, but you should be able to see the audio meter bouncing around if there is audio.
 

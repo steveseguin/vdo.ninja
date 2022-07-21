@@ -23,7 +23,7 @@ To fix the problem though, a bit of troubleshooting may be needed. More often th
 * If using an AMD motherboard, update the BIOS of your motherboard, and perhaps set your PCIe lane speed to Gen3, instead of Gen4.
 * If using a laptop in particular, ensure the USB port is not set to go to sleep; this would be a Windows setting. Also, enabling _Performance Mode and being plugged into the wall,_ may help as well. See the below images:
 
-![](<../.gitbook/assets/image (108) (1).png>)![](<../.gitbook/assets/image (89).png>)
+![](<../.gitbook/assets/image (108) (1) (1).png>)![](<../.gitbook/assets/image (89).png>)
 
 ### Internet /connection issues
 

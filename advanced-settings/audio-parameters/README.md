@@ -21,24 +21,24 @@ You can add them to both, source ([`&push`](../../source-settings/push.md)) and 
 
 You have to add them to the source side ([`&push`](../../source-settings/push.md)).
 
-| Parameter                                                                        | Explanation                                                                                  |
-| -------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------- |
-| ``[`&audiodevice`](../../source-settings/audiodevice.md)``                       | Pre-configures the selected audio device                                                     |
-| ``[`&aec`](../../source-settings/aec.md)``                                       | Automatic echo-cancellation is ON or OFF                                                     |
-| ``[`&audiogain`](../../source-settings/gain.md)``                                | Applies a gain multiplier (as a percentage) to the local microphone                          |
-| ``[`&autogain`](../../source-settings/autogain.md)``                             | Sets whether audio auto-normalization is ON or OFF                                           |
-| ``[`&compressor`](../../source-settings/and-compressor.md)``                     | Applies a generic audio compressor to the local microphone                                   |
-| ``[`&denoise`](../../source-settings/and-denoise.md)``                           | Turn audio noise reduction filter ON or OFF                                                  |
-| ``[`&equalizer`](../../source-settings/and-equalizer.md)``                       | Provides access to a generic audio equalizer that can be applied to the local microphone     |
-| ``[`&limiter`](../../source-settings/and-limiter.md)``                           | Applies a generic audio limiter to the local microphone                                      |
-| ``[`&lowcut`](../../source-settings/lowcut.md)``                                 | Adds a low-cut filter                                                                        |
-| ``[`&noisegate`](../../source-settings/noisegate.md)``                           | If someone else is speaking in a group call, the guest's microphone gets muted automatically |
-| ``[`&audiolatency`](../../newly-added-parameters/and-audiolatency.md)``          | Adds an audio-latency to the published audio stream                                          |
-| ``[`&micdelay`](../../source-settings/and-micdelay.md)``                         | Delays the microphone by specified time in ms                                                |
-| ``[`&mute`](../../source-settings/and-mute.md)``                                 | Starts with the microphone muted by default                                                  |
-| ``[`&mutespeaker`](../../source-settings/and-mutespeaker.md)``                   | Auto mutes guest's speaker                                                                   |
-| ``[`&outboundaudiobitrate`](../../source-settings/and-outboundaudiobitrate.md)`` | Target audio bitrate and max bitrate for outgoing audio streams                              |
-| ``[`&channelcount`](../../source-settings/channelcount.md)``                     | Audio capture device to select N-number of audio channels                                    |
+| Parameter                                                                        | Explanation                                                                              |
+| -------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------- |
+| ``[`&audiodevice`](../../source-settings/audiodevice.md)``                       | Pre-configures the selected audio device                                                 |
+| ``[`&aec`](../../source-settings/aec.md)``                                       | Automatic echo-cancellation is ON or OFF                                                 |
+| ``[`&audiogain`](../../source-settings/gain.md)``                                | Applies a gain multiplier (as a percentage) to the local microphone                      |
+| ``[`&autogain`](../../source-settings/autogain.md)``                             | Sets whether audio auto-normalization is ON or OFF                                       |
+| ``[`&compressor`](../../source-settings/and-compressor.md)``                     | Applies a generic audio compressor to the local microphone                               |
+| ``[`&denoise`](../../source-settings/and-denoise.md)``                           | Turn audio noise reduction filter ON or OFF                                              |
+| ``[`&equalizer`](../../source-settings/and-equalizer.md)``                       | Provides access to a generic audio equalizer that can be applied to the local microphone |
+| ``[`&limiter`](../../source-settings/and-limiter.md)``                           | Applies a generic audio limiter to the local microphone                                  |
+| ``[`&lowcut`](../../source-settings/lowcut.md)``                                 | Adds a low-cut filter                                                                    |
+| ``[`&noisegate`](../../source-settings/noisegate.md)``                           | Lowers your mic volume to 10% of its current value based on volume-level activity        |
+| ``[`&audiolatency`](../../newly-added-parameters/and-audiolatency.md)``          | Adds an audio-latency to the published audio stream                                      |
+| ``[`&micdelay`](../../source-settings/and-micdelay.md)``                         | Delays the microphone by specified time in ms                                            |
+| ``[`&mute`](../../source-settings/and-mute.md)``                                 | Starts with the microphone muted by default                                              |
+| ``[`&mutespeaker`](../../source-settings/and-mutespeaker.md)``                   | Auto mutes guest's speaker                                                               |
+| ``[`&outboundaudiobitrate`](../../source-settings/and-outboundaudiobitrate.md)`` | Target audio bitrate and max bitrate for outgoing audio streams                          |
+| ``[`&channelcount`](../../source-settings/channelcount.md)``                     | Audio capture device to select N-number of audio channels                                |
 
 ## **Viewer side options**
 

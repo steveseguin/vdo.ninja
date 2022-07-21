@@ -13,3 +13,6 @@ Adding `&safemode` to a source/guest link currently just tries to load the camer
 This has the guest's camera start in a rather basic fashion, which might help solve problems with certain camera not being able to use VDO.Ninja.&#x20;
 
 It's available under director's customization options as well, under "Compatibility mode".
+
+There is a toggle in the director's room which adds `&safemode` to the guest's invite link.\
+![](<../.gitbook/assets/image (99).png>)

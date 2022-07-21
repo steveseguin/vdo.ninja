@@ -13,11 +13,11 @@ Sender-Side Option! ([`&push`](push.md))
 
 ## Options
 
-| Value         | Description                                                                                                          |
-| ------------- | -------------------------------------------------------------------------------------------------------------------- |
-| 0             | disable audio source automatically. No option to change it during setup is provided.                                 |
-| 1             | auto-select the default audio. No option to change it will be allowed.                                               |
-| cable\_output | will match against "CABLE Output (VB-Audio Virtual Cable). Use any other string to match against other device names. |
+| Value                 | Description                                                                                                          |
+| --------------------- | -------------------------------------------------------------------------------------------------------------------- |
+| 0                     | disable audio source automatically. No option to change it during setup is provided.                                 |
+| 1 \| (no value given) | auto-select the default audio. No option to change it will be allowed.                                               |
+| cable\_output         | will match against "CABLE Output (VB-Audio Virtual Cable). Use any other string to match against other device names. |
 
 ## Details
 
@@ -30,15 +30,13 @@ You can pass a device ID as well; see [vdo.ninja/devices](https://vdo.ninja/devi
 \
 Setting this option to `0` will also disable the guest's microphone, potentially allowing for guest connections that have no video or audio. You might do this if you needed midi-only transport, hidden IFRAME control, or just to chatting.
 
-
-
 {% hint style="info" %}
 See [vdo.ninja/devices](https://vdo.ninja/devices) to see the device IDs and device names. DeviceIDs are specific to VDO.Ninja's domain, while device names are not. \
 \
 This web-based tool will also auto-create links for you, just by clicking on the respective device.
 {% endhint %}
 
-##
+There is a toggle in the director's room which adds `&ad` to the guest's invite link.![](<../.gitbook/assets/image (95).png>)
 
 ## Related
 

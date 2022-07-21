@@ -13,11 +13,11 @@ Sender-Side Option! ([`&push`](push.md))
 
 ## Options
 
-| Value          | Description                                                                                                                                |
-| -------------- | ------------------------------------------------------------------------------------------------------------------------------------------ |
-| 0              | disable the video camera automatically. No option to change it during setup is provided.                                                   |
-| 1              | auto-select the default video camera. No option to change it will be allowed.                                                              |
-| (string value) | auto-select a video device that has a label containing that same string / deviceID. Whitespaces in names can be replaced with underscores. |
+| Value                 | Description                                                                                                                                |
+| --------------------- | ------------------------------------------------------------------------------------------------------------------------------------------ |
+| 0                     | disable the video camera automatically. No option to change it during setup is provided.                                                   |
+| 1 \| (no value given) | auto-select the default video camera. No option to change it will be allowed.                                                              |
+| (string value)        | auto-select a video device that has a label containing that same string / deviceID. Whitespaces in names can be replaced with underscores. |
 
 ## Details
 
@@ -33,6 +33,9 @@ When combined with [`&webcam`](and-webcam.md) and [`&autostart`](and-autostart.m
 {% hint style="info" %}
 See [vdo.ninja/devices](https://vdo.ninja/devices) to see the device IDs and device names. DeviceIDs are specific to VDO.Ninja's domain, while device names are not. The page will also auto-create links for  you, just by clicking on the respective device.
 {% endhint %}
+
+There is a toggle in the director's room which adds `&vd` to the guest's invite link.\
+![](<../.gitbook/assets/image (126).png>)
 
 ## Related
 

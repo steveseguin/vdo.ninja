@@ -18,6 +18,8 @@ It will do nothing if the room does not have a director in it.
 
 The director can dismiss the user's action.
 
+There is a toggle in the director's room which adds `&hand` to the guest's invite link.![](<../.gitbook/assets/image (107).png>)
+
 ## Related
 
 {% content-ref url="and-notify.md" %}

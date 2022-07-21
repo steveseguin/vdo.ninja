@@ -18,6 +18,8 @@ If you don't want to see yourself when in a group chat, this will hide your vide
 **iOS users:** This flag will break stuff; You must have a preview if using those devices and wanting to publish.
 {% endhint %}
 
+There is a toggle in the director's room which adds `&np` to the guest's invite link.![](<../.gitbook/assets/image (109).png>)
+
 ## Related
 
 {% content-ref url="and-preview.md" %}

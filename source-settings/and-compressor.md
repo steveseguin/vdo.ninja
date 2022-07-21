@@ -24,6 +24,9 @@ The compressor is **off by default**.
 This will enable the audio processing pipeline.
 {% endhint %}
 
+There is a toggle in the director's room which adds `&comp` to the guest's invite link.\
+![](<../.gitbook/assets/image (108).png>)
+
 ## Related
 
 {% content-ref url="and-limiter.md" %}

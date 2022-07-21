@@ -24,7 +24,7 @@ If using a microphone, wearing headphones is strongly recommended if using this 
 When using this option in a group room, you can't simply just apply this URL option to the director and have it apply to all guests. You will need to add the flag to each guest and to each scene-link to enable the pro-audio stereo mode. Depending on the value you pass to the URL parameter, you will get slightly different outcomes.
 
 There is a director's room toggle for guest's invite link and for scene links:\
-![](<../../.gitbook/assets/image (95).png>)
+![](<../../.gitbook/assets/image (95) (1).png>)
 
 ## Options
 
