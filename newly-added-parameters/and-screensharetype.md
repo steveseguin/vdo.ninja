@@ -39,3 +39,10 @@ work with [`&meshcast`](and-meshcast.md), [`&novideo`](../advanced-settings/view
 [screenshareid.md](../source-settings/screenshareid.md)
 {% endcontent-ref %}
 
+{% content-ref url="../advanced-settings/upcoming-parameters/and-smallshare.md" %}
+[and-smallshare.md](../advanced-settings/upcoming-parameters/and-smallshare.md)
+{% endcontent-ref %}
+
+{% content-ref url="../source-settings/screenshare.md" %}
+[screenshare.md](../source-settings/screenshare.md)
+{% endcontent-ref %}
