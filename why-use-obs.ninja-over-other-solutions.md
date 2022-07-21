@@ -19,7 +19,7 @@ In some cases, the functionality of [VDO.Ninja](https://vdo.ninja) may overlap w
 * There are no overlays and no windows to crop -- VDO.Ninja auto-fills the window an if there is a black border, it becomes a transparent layer.
 * **Control over audio denoise**, **echo-cancellation**, and **auto-gain** is available, along with custom audio bitrates, and **stereo-sound**. It is an exceptional tool for podcasters and live streaming DJs.
 * In group chat (rooms) there is an "auto-mix" mode, making for easy management of dynamic group chat sessions.
-* Free TURN servers are hosted for VDO.Ninja users, which normally are quite costly, but are kindly subsidized by community sponsors and by Steve, the developer of the application. [Sponsor ❤](sponsor.md)&#x20;
+* Free TURN servers are hosted for VDO.Ninja users, which normally are quite costly, but are kindly subsidized by community sponsors and by Steve, the developer of the application. [Sponsor ❤](getting-started/sponsor.md)&#x20;
 * Group rooms and streams can be **password protected** and given extra security.
 * **Tally-light** support is offered when VDO.Ninja is used in conjunction with OBS.
 * The group-room director has a **"push to talk"** capability, along with text-chat being available.

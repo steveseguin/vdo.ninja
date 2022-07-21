@@ -1,5 +1,7 @@
 # Getting started with VDO.Ninja
 
+Bring remote video and audio streams into your video production software for free. Low-latency and high-quality, VDO.Ninja is flexible tool ideal for the COVID era of remote participation.
+
 {% embed url="https://guides.vdo.ninja/" %}
 guides.vdo.ninja
 {% endembed %}
