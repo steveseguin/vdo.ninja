@@ -25,7 +25,7 @@ It's important to note, that due to flexibility to request width/heights that ar
 
 Similarly, also added the option to the IFRAME API to request different down-scaled resolutions dynamically, per connection, if you want greater programmatic control vs static URL options.
 
-![](<../../.gitbook/assets/image (105).png>)
+![](<../../.gitbook/assets/image (105) (1).png>)
 
 ![](<../../.gitbook/assets/image (104) (1).png>)
 
