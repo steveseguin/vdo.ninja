@@ -70,7 +70,7 @@ While the `&broadcast` flag is great for reducing the load on guests in a room, 
 * In more recent versions of VDO.Ninja (v22), Meshcast is available built-into VDO.Ninja via the [`&meshcast`](../../newly-added-parameters/and-meshcast.md) parameter, which sends both audio and video over meshcast in sync, without concerns of echo cancellation or audio doubling. Just add `&meshcast` to the director's URL to use this mode; the director's audio and video will auto-publish via Meshcast without needing to visit meshcast.io.
 * The director's ability to share a website (meshcast.io link) is via a button found in the director's control bar. The director doesn't need to use [`&website`](../../source-settings/and-website.md) parameter since a website sharing functionality has its own dedicated button in the director's control room.
 
-![The button used to share a website as the director](<../../.gitbook/assets/image (93) (1).png>)
+![The button used to share a website as the director](<../../.gitbook/assets/image (93) (1) (1).png>)
 
 * If using meshcast.io and the website share functionality, rather than `&meshcast`, you will want to mute the Meshcast source to avoid echo cancellation or audio-doubling. The meshcast.io source page has options to do so there, but you can also add [`&mute`](../../source-settings/and-mute.md) to the meshcast.io when sharing it, to have it auto-mute on playback for the guests.
 

@@ -22,7 +22,7 @@ There's nothing stopping a disconnected viewer from re-joining and re-asking, ca
 
 In the future, I can add this control to the director, rather than just the senders, and add additional ways to check identities. For now though, it's a start.
 
-![](<../../.gitbook/assets/image (117).png>)
+![](<../../.gitbook/assets/image (117) (1).png>)
 
 ## Related
 

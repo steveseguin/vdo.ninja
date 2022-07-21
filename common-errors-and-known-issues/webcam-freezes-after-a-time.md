@@ -14,7 +14,7 @@ One place to is in the Windows Power Options settings, which you can find in the
 
 You can also try disabling the "Allow the computer to turn off this device to save power" options in the Windows Device Manager for each USB device/host controller. (uncheck them)
 
-![](<../.gitbook/assets/image (117) (1).png>)
+![](<../.gitbook/assets/image (117) (1) (1).png>)
 
 If the problem isn't resolved, you can still reload the camera with the refresh button in the VDO.Ninja settings menu when it happens. This just reloads the camera and should fix the problem until it happens again.
 
