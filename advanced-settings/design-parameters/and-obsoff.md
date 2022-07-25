@@ -19,7 +19,13 @@ Disables the tally light effects; can be applied to both viewer or publisher. Ta
 Videos on **first-load** in OBS, even if visible in OBS, **don't glow red**; it requires an **initial visibility change to trigger it**.
 {% endhint %}
 
+`&obsoff` can be used to set permissions to fully off (also disables tally light and scene optimizations tho) when added to the OBS browser source link.
+
 ## Related
+
+{% content-ref url="../upcoming-parameters/and-obs.md" %}
+[and-obs.md](../upcoming-parameters/and-obs.md)
+{% endcontent-ref %}
 
 {% content-ref url="tallyoff.md" %}
 [tallyoff.md](tallyoff.md)
