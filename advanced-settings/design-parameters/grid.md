@@ -24,7 +24,7 @@ As of v23, it now works in non-room mode (basic push links):\
 [https://vdo.ninja/alpha/?push\&grid](https://vdo.ninja/alpha/?push\&grid)
 
 You can now also toggle it in the director's room to add it to the guest's link:\
-![](<../../.gitbook/assets/image (103).png>)
+![](<../../.gitbook/assets/image (103) (1).png>)
 {% endhint %}
 
 

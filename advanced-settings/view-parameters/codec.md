@@ -8,12 +8,13 @@ Viewer-Side Option! ([`&view`](view.md), [`&scene`](scene.md), [`&room`](../../g
 
 ## Options
 
-| Value | Description             |
-| ----- | ----------------------- |
-| h264  | request the h264 codec  |
-| vp8   | request the VP8 codec   |
-| vp9   | request the VP9 codec   |
-| av1   | request the AV1 codec   |
+| Value           | Description             |
+| --------------- | ----------------------- |
+| h264            | request the h264 codec  |
+| vp8             | request the VP8 codec   |
+| vp9             | request the VP9 codec   |
+| av1             | request the AV1 codec   |
+| [webp](webp.md) | request the webp codec  |
 
 ### Example usage
 
@@ -35,8 +36,7 @@ VP9 and AV1 are more modern codecs, with AV1 only supported by Chromium-based br
 
 Hardware-encoding has pros and cons. A device generally has limited hardware-encoders, and they are also normally more problematic, including compatibility issues.
 
-**If running into problems with video distortion, switching the codec to VP9 may resolve the issue, although at the cost of higher-CPU load.**\
-****
+**If running into problems with video distortion, switching the codec to VP9 may resolve the issue, although at the cost of higher-CPU load.**
 
 ## Details
 
@@ -97,6 +97,12 @@ AV1 is the most advanced codec, but also the most CPU-intensive to use.
 Requires Chrome v90 or newer on both publisher and viewer to work. The Electron Capture app 2.6.0 and newer supports AV1, as well. OBS Studio v27.2 and newer \*may\* also support it, but as of the time of this writing, that hasn't been confirmed.
 
 Experimental at this point in time and may not perform well, but if very bandwidth constrained, it is a worthwhile option.
+
+### WEBP
+
+{% content-ref url="webp.md" %}
+[webp.md](webp.md)
+{% endcontent-ref %}
 
 ## Related
 

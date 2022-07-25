@@ -45,6 +45,8 @@ You have to add them to the source side ([`&push`](../../source-settings/push.md
 | ``[`&ptz`](../../source-settings/ptz.md)``                                       | Enables pan/tilt control of the device, if compatible                                                                                               |
 | ``[`&forcelandscape`](../../newly-added-parameters/and-forcelandscape.md)``      | Forces the video output to landscape mode, regardless of how the phone is rotated                                                                   |
 | ``[`&forceportrait`](../../newly-added-parameters/and-forceportrait.md)``        | Forces the video output to portrait mode, regardless of how the phone is rotated                                                                    |
+| ``[`&webp`](../view-parameters/webp.md)``                                        | Custom video codec for broadcasts                                                                                                                   |
+| ``[`&webpquality`](../view-parameters/webpquality.md)``                          | Quality setting for the [`&webp`](../view-parameters/webp.md) option                                                                                |
 
 ## **Viewer side options**
 
@@ -64,6 +66,4 @@ You have to add them to the viewer side ([`&room`](../../general-settings/room.m
 | ``[`&fadein`](../view-parameters/fadein.md)``                                           | Has videos fade in smoothly                                                                                                                                                                            |
 | ``[`&broadcast`](../view-parameters/broadcast.md)``                                     | A useful flag to allow the director to present their own video to the group, often used in conjunction with a virtual webcam or Meshcast. It allows for larger groups rooms by reducing load on guests |
 | ``[`&novideo`](../view-parameters/novideo.md)``                                         | Disables all video playback on the local computer, except for any stream ID that is listed                                                                                                             |
-| ``[`&webp`](../view-parameters/webp.md)``                                               | Custom video codec for broadcasts                                                                                                                                                                      |
-| ``[`&webpquality`](../view-parameters/webpquality.md)``                                 | Quality setting for the [`&webp`](../view-parameters/webp.md) option                                                                                                                                   |
 | ``[`&dpi`](../view-parameters/dpi.md)``                                                 | Override the automatically selected Device Pixel Ratio                                                                                                                                                 |

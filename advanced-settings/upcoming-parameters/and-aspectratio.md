@@ -30,7 +30,7 @@ Sender-Side Option! ([`&push`](../../source-settings/push.md))\
 
 You can also change the aspect ratio via the video settings menu.
 
-![](<../../.gitbook/assets/image (103) (1).png>)
+![](<../../.gitbook/assets/image (103) (1) (1).png>)
 
 If using `&aspectratio`, it will keep the [height](../../source-settings/and-height.md) constant, and vary width, unless [`&width`](../../source-settings/and-width.md) is set, which will then be the fixed constant.
 

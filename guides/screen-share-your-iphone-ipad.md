@@ -48,13 +48,13 @@ There are several choices, although the popular ones are [Loopback ](https://rog
 
 6\. We can now start streaming to VDO.Ninja; we just need to visit the site and click Share Screen. Using Chrome or another Chromium-based browser is required, such as the Electron Capture app. Safari will not work as it lacks the ability to select a window.
 
-.![](<../.gitbook/assets/image (120) (1).png>)![](<../.gitbook/assets/image (131) (1).png>)
+.![](<../.gitbook/assets/image (120) (1) (1).png>)![](<../.gitbook/assets/image (131) (1).png>)
 
 7\. To start screen sharing, we will want to select "Window" as the capture source, and then select the QuickTime, which should be showing our iPhone.&#x20;
 
 If we want to capture audio, we can also select the Blackhole virtual audio device from the Audio Sources menu in VDO.Ninja, but we can also do this after we start streaming. We can also select our local macBook microphone if we wanted.
 
-![](<../.gitbook/assets/image (121) (1) (1).png>)
+![](<../.gitbook/assets/image (121) (1) (1) (1).png>)
 
 8\. Once we start streaming, there is a settings menu that we can use to select audio sources. If we select the Blackhole virtual audio device (or Loopback / VB Cable), we will be sharing our audio that we are capturing from the iPhone. We can hold down the `CMD` (⌘) key while selecting audio sources to select and mix more than one audio source.
 

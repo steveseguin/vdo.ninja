@@ -36,6 +36,7 @@ You can use/test these parameters on [vdo.ninja/alpha](https://vdo.ninja/alpha/)
 | ``[`&postimage`](and-postimage.md)\*                 | Post a snapshot of your local camera to a HTTPS/POST URL                                                                                                              |
 | ``[`&postinterval`](and-postinterval.md)\*           | Time interval in seconds for [`&postimage`](and-postimage.md)``                                                                                                       |
 | ``[`&smallshare`](and-smallshare.md)\*               | Makes the screen share behave like a webcam share                                                                                                                     |
+| ``[`&slideshow`](and-slideshow.md)\*                 | Plays video back as a series of full-window images                                                                                                                    |
 
 \*on [vdo.ninja/alpha](https://vdo.ninja/alpha/)\
 \*\*on [vdo.ninja/beta](https://vdo.ninja/beta/)\

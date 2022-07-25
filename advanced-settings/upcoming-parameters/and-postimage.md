@@ -34,3 +34,7 @@ This feature could be useful to checking out a stream before actually connecting
 {% content-ref url="and-postinterval.md" %}
 [and-postinterval.md](and-postinterval.md)
 {% endcontent-ref %}
+
+{% content-ref url="and-slideshow.md" %}
+[and-slideshow.md](and-slideshow.md)
+{% endcontent-ref %}

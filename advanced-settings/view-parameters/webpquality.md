@@ -6,6 +6,10 @@ description: Quality setting for the &webp option
 
 Viewer-Side Option! ([`&view`](view.md), [`&scene`](scene.md), [`&room`](../../general-settings/room.md))
 
+{% hint style="info" %}
+V23: Sender-Side Option! ([`&push`](../../source-settings/push.md))
+{% endhint %}
+
 ## Aliases
 
 * `&webpq`
@@ -15,12 +19,12 @@ Viewer-Side Option! ([`&view`](view.md), [`&scene`](scene.md), [`&room`](../../g
 
 | Value | Description            |
 | ----- | ---------------------- |
-| 5     | 270p @ 15fps (default) |
-| 4     | 270p @ 35fps           |
-| 3     | 270p @ 50fps           |
-| 2     | 360p                   |
-| 1     | 720p                   |
 | 0     | 1080p                  |
+| 1     | 720p                   |
+| 2     | 360p                   |
+| 3     | 270p @ 50fps           |
+| 4     | 270p @ 35fps           |
+| 5     | 270p @ 15fps (default) |
 
 ## Details
 

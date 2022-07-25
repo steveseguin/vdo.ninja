@@ -23,7 +23,7 @@ If publishing using `&meshcast`, I don't bother to show the viewer count, as it 
 ![](<../.gitbook/assets/image (93) (1) (1) (1).png>)
 
 There is a toggle in the director's room which adds `&meshcast` to the guest's invite link.\
-![](<../.gitbook/assets/image (105).png>)
+![](<../.gitbook/assets/image (105) (1).png>)
 
 Steve made a YouTube video explaining all the meshcast stuff:
 

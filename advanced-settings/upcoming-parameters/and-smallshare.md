@@ -17,7 +17,7 @@ Layout if using `&smallshare`:
 
 Layout if NOT using `&smallshare`:
 
-![](<../../.gitbook/assets/image (121).png>)
+![](<../../.gitbook/assets/image (121) (1).png>)
 
 ## Related
 
