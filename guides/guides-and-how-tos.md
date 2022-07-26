@@ -20,7 +20,6 @@
 
 * [How to add custom backgrounds and live video effects](https://snapcamera.snapchat.com/)
 * [How to improve your video quality with some better lighting tricks](https://docs.google.com/document/d/e/2PACX-1vTs0So9I7Gx33IKLgxBlMPBTpvhc5JzLi3iFLxSeHEcGRJeSePkzyrStojFN3lEmlVmuPY9MID5DFbJ/pub)
-* [How to mirror a video while Full-Screen - For iPads, Teleprompters](https://docs.google.com/document/d/e/2PACX-1vTcu1bsSLSSWZDAp6Csrbs9WHeYnNSobbY6sVzVATVrOFfzygDzCBrAyXynzHACbO7U4aLUlPdUnrsd/pub)
 * [How to see your camera's max resolution limit, and if it supports manual focus/zoom](https://obs.ninja/supports)
 * [How to send output of your webcam only and not the entire output from OBS into VDO.Ninja](https://github.com/exeldro/obs-virtual-cam-filter)
 * [How to apply a green screen to VDO.Ninja streams](https://medium.com/@lordfloofen/free-virtual-green-screen-4c27d04fc731)
@@ -52,11 +51,9 @@
 
 ## Other
 
-* [How to find a cheat-sheet reference guide](https://github.com/steveseguin/obsninja/tree/quickstart)
 * [How to give the Director of a group room a way to speak](https://docs.google.com/document/d/e/2PACX-1vQsR24UNvfMRDgJkAN1B4QenIEAO8A2rkJlE0f2m-eXSPfOmNfNKQyY1KpFls84wWj93Yng\_0hNQK2O/pub)
 * [How to stream to a Raspberry Pi and use as a remote monitor](https://awesomeopensource.com/project/futurice/chilipie-kiosk)
 * [How to obfuscate (hide) the URL parameters for guest links](http://invite.cam/)
 * [How to do VDO.Ninja to NDI output](https://docs.google.com/document/d/e/2PACX-1vR9p03eK7dXMo0izaXwh4YGkBHtLgXmzOpSYMQlB-VT2s2FjlxY\_vpUzCkRZqXdqhnQLQPSoH6NZlG2/pub)
 * [3rd-party written How-To Guide for VDO.Ninja](https://photography.tutsplus.com/articles/how-to-easily-add-a-remote-source-to-streaming-video-with-obs-and-obsninja--cms-35885)
 * [A tool to create editable URL invite links](https://short.io/)
-* [A version of VDO.Ninja that works in Mainland China (中国)](https://insecure.cam/)

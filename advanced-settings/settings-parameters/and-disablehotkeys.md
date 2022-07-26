@@ -12,6 +12,6 @@ This option disables hotkeys (like `CRTL + M`).
 
 ## Related
 
-{% content-ref url="../../guides/hotkey-support.md" %}
-[hotkey-support.md](../../guides/hotkey-support.md)
+{% content-ref url="../../guides/hotkey-support/" %}
+[hotkey-support](../../guides/hotkey-support/)
 {% endcontent-ref %}
