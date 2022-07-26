@@ -1,12 +1,12 @@
 <html>
 <head>
-	<title>Mixer app</title>
+	<title>Versus.cam</title>
 	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
 	<meta content="text/html;charset=utf-8" http-equiv="Content-Type" />
 	<script src="./thirdparty/jquery/jquery-3.6.0.js?asdf"></script>
     <script src="./thirdparty/jquery/jquery-ui.js"></script>
 	<link rel="stylesheet" href="./thirdparty/jquery/jquery-ui.css">
-	<link rel="stylesheet" href="./stats.css" >
+	<link rel="stylesheet" href="./versus.css" >
 	<link rel="shortcut icon" href="data:image/x-icon;," type="image/x-icon" />
 	<link rel="icon" type="image/png" sizes="32x32" href="./media/favicon-32x32.png" />
 	<link rel="icon" type="image/png" sizes="16x16" href="./media/favicon-16x16.png" />
@@ -24,10 +24,12 @@
 				<div><div id="streamsConnected">0</div> connections</div>
 			</span>
 			<span>
-				<span><button class="menuButtons" onclick="copyFunction(this.value, event);" id="inviteLink" value="test">Copy Invite Link</button></span>
+				<span><button class="menuButtons" onclick="copyFunction(this.value, event);" id="inviteLink" value="test"><img src="data:image/svg+xml,%0A%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Cpath d='M 15 3 C 13.742188 3 12.847656 3.890625 12.40625 5 L 5 5 L 5 28 L 13 28 L 13 30 L 27 30 L 27 14 L 25 14 L 25 5 L 17.59375 5 C 17.152344 3.890625 16.257813 3 15 3 Z M 15 5 C 15.554688 5 16 5.445313 16 6 L 16 7 L 19 7 L 19 9 L 11 9 L 11 7 L 14 7 L 14 6 C 14 5.445313 14.445313 5 15 5 Z M 7 7 L 9 7 L 9 11 L 21 11 L 21 7 L 23 7 L 23 14 L 13 14 L 13 26 L 7 26 Z M 15 16 L 25 16 L 25 28 L 15 28 Z'/%3E%3C/svg%3E" class="icon"> Copy Invite Link</button></span>
 				<span><button class="menuButtons" onclick="getStreamModal();">Add a Stream Manually</button></span>
 			</span>
 		</header>
+		<div id="mainContainer">
+		</div>
 		<div id="iframeContainer">
 			<div id='canvas' class="hidden">
 			</div>
@@ -119,20 +121,6 @@
 			</div>
 		</div>
 	</div>
-	<div id="graphTemplate" display="none">
-		<div class="graph">
-			<div class='graphTitle'>Bitrate (kbps)</div>
-			<canvas data-bitrate-graph="true"></canvas>
-		</div>
-		<div class="graph">
-			<div class='graphTitle'>Reported lost packets (per second)</div>
-			<span>0</span>
-			<canvas data-nackrate-graph="true"></canvas>
-		</div>
-		<div data-log="true" onclick="copyFunction(this.innerText)" style="max-height:400px;display:inline-block;">
-			<ul></ul>
-		</div>
-	</div>
 	<div id="modal" class="modal">
 	  <div class="modal-content">
 		<span class="close-btn">&times;</span>
@@ -142,6 +130,28 @@
 	  </div>
 	</div>
 	<div id="messagePopup" class="popup-message"></div>
+	<div id="graphTemplate" class="container hidden fadein">
+		<span class="video" data-action-type="video-container">
+		</span>
+		<div class='right-side'>
+			<span class="streamTitle">
+				<button data-sololink="false" title="Copy the view link for this video to your clipboard" onclick="copyFunction(this.dataset.sololink, event);"><img src="data:image/svg+xml,%0A%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Cpath d='M 15 3 C 13.742188 3 12.847656 3.890625 12.40625 5 L 5 5 L 5 28 L 13 28 L 13 30 L 27 30 L 27 14 L 25 14 L 25 5 L 17.59375 5 C 17.152344 3.890625 16.257813 3 15 3 Z M 15 5 C 15.554688 5 16 5.445313 16 6 L 16 7 L 19 7 L 19 9 L 11 9 L 11 7 L 14 7 L 14 6 C 14 5.445313 14.445313 5 15 5 Z M 7 7 L 9 7 L 9 11 L 21 11 L 21 7 L 23 7 L 23 14 L 13 14 L 13 26 L 7 26 Z M 15 16 L 25 16 L 25 28 L 15 28 Z'/%3E%3C/svg%3E" class='icon'> View Link</button>
+			</span>
+			<span class="graphSection" data-action-type="stats-graphs-bitrate" data-value="0">
+				<span class="hidden" data-message="true" data-no-scenes="true"></span>
+			</span>
+			<span class="graphSection" data-action-type="stats-graphs-details" data-value="0">
+				<span class="hidden" data-no-scenes="true"></span>
+				<span class="stats-container" data-action-type="stats-graphs-details-container">
+					<span class="hidden stats-sub-container" data-scene-name="true">scene</span>
+					<span class="hidden stats-sub-container" data-bitrate="true">bitrate (kbps)</span>
+					<span class="hidden stats-sub-container" data-resolution="true">resolution</span>
+					<span class="hidden stats-sub-container" style="display:none; word-break: break-all;" data-video-codec="true">video codec</span>
+				</span>
+			</span>
+		
+		</div>
+		</div>
 	<script>
 	
 	function allowDrop(ev) {
@@ -321,13 +331,7 @@
 	}
 	var urlParams = new URLSearchParams(urlEdited);
 	
-	var password = false;
-	if (urlParams.has("password") || urlParams.has("pw") || urlParams.has("p")){
-		password = urlParams.get("password") || urlParams.get("pw") || urlParams.get("p") || false;
-		if (password===false){
-			password = prompt("Please enter a password") || false;
-		}
-	}
+	
 	
 	var viewList = false;
 	if (urlParams.has("view") || urlParams.has("v")){
@@ -336,6 +340,21 @@
 	if (viewList){
 		viewList = viewList.split(",");
 	}
+	
+	var password = false;
+	if (urlParams.has("password") || urlParams.has("pw") || urlParams.has("p")){
+		password = urlParams.get("password") || urlParams.get("pw") || urlParams.get("p") || false;
+		if (password===false){
+			password = prompt("Please enter a password") || false;
+		}
+	}
+	
+	var additional = "";
+	if (password){
+		additional = "&password="+password;
+	}
+	
+	var iframe = null;
 	
 	var aspectRatio = 16/9.0;
 	document.documentElement.style.setProperty('--aspect-ratio', aspectRatio);
@@ -424,6 +443,7 @@
 	var streamIDs = [];
 	var slotsNeeded = 1;
 	var lastLayout = false;
+	var session = false;
 
 	var colors = [
 		"#00AAAA",
@@ -444,6 +464,11 @@
 	} else {
 		savedSession = {};
 	}
+	
+	
+	var pathname = window.location.pathname.split('/');
+	pathname.pop();
+	pathname = pathname.join("/");
 	
 	function exportSession() {
 		var content = JSON.stringify(savedSession);
@@ -557,15 +582,8 @@
 		}
 	}
 	
-	var iframe = null;
-	
 	function loadIframe(){ 
 
-		var additional = "";
-		if (password){
-			additional = "&password="+password;
-		}
-		
 		roomname = sanitizeRoomName(roomname);
 	
 		iframe = document.createElement("iframe");
@@ -575,11 +593,12 @@
 		if (!roomname){
 			roomname = generateString(10);
 		}
+		// &viewonly&showall&bitrate=35
+		var iframesrc = "./index.html?graphs&lightmode&bitrate=300&viewheight=180&viewwidth=320&transparent&cleanoutput&label=Stats_Monitor&scenelinkcodec=h264&manual&nopush&showall&scenelinkbitrate=12000&room="+roomname+additional+"&b64css="+injectCSS;
+		// note: it's possible to set the width/height dyanmically via the IFRAME API also now. just call on video track load.
 		
-		var pathname = window.location.pathname.split('/');
-		pathname.pop();
-		pathname = pathname.join("/");
-		getById("inviteLink").value = "https://"+window.location.host+pathname+"/?room="+roomname+additional+"&label&quality&view";
+		getById("inviteLink").value = "https://"+window.location.host+pathname+"/?room="+roomname+additional+"&label&quality&maxbandwidth&view";
+
 		
 		if (roomname!==false){
 			setStorage("savedRoom", {roomname:roomname,password:password,viewlist:viewList}, 9999);
@@ -591,7 +610,13 @@
 			ele.innerHTML = roomname;
 		});
 		
-		iframe.src = "./index.html?graphs&lightmode&ltb=350&transparent&cleanoutput&directorview&label=Stats_Monitor&scenelinkcodec=h264&scenelinkbitrate=12000&director="+roomname+additional+"&b64css="+injectCSS;
+		iframe.src = iframesrc;
+		
+		iframe.onload = function(){
+			session = iframe.contentWindow['session'];
+			console.log(session);
+		};
+		
 		iframeContainer.appendChild(iframe);
 		//document.getElementById("container").appendChild(iframeContainer);
 		
@@ -608,14 +633,24 @@
 		
 		eventer(messageEvent, function (e) {
 			if (e.source != iframe.contentWindow){return} // reject messages send from other iframes
+			console.log(e.data);
+			
+			if (!session){
+				session = iframe.contentWindow['session'];
+			}
+			
 			if ("action" in e.data){
 				if (e.data.action === "view-connection"){
-					//if (e.data.value){
-					//	iframe.contentWindow.postMessage({"getStreamIDs":true}, '*');
-					if (e.data.streamID){
-						updateStreams();
-						if (streamIDs.includes(e.data.streamID)){return;}
-						streamIDs.push(e.data.streamID);
+					if (e.data.value){ // connected
+						if (e.data.streamID){
+							updateStreams();
+							if (streamIDs.includes(e.data.streamID)){return;}
+							streamIDs.push(e.data.streamID);
+						}
+					} else { // disconnected
+						try {
+							getById("container_"+e.data.UUID).remove();
+						} catch(e){console.error(e);}
 					}
 				} else if (e.data.action == "requested-stream"){
 					if (streamIDs.includes(e.data.value)){return;}
@@ -629,6 +664,32 @@
 							}
 						}
 					},500);
+				} else if (e.data.action == "control-box-video-updated"){
+					var container = getContainer(e.data.UUID, e.data.streamID);
+						
+					getById("container_"+e.data.UUID).classList.remove("greyout");
+					var video = container.querySelector("#videoContainer_"+e.data.UUID);
+					
+					if (!video && iframe){
+						try {
+							video = iframe.contentDocument.body.querySelector("#videoContainer_"+e.data.UUID);
+							container.querySelector('[data-action-type="video-container"]').appendChild(video);
+						} catch(e){errorlog(e);}
+					}
+				} else if (e.data.action == "video-element-created"){
+					var container = getContainer(e.data.UUID, e.data.streamID);
+						
+					getById("container_"+e.data.UUID).classList.remove("greyout");
+					var video = container.querySelector("#videoContainer_"+e.data.UUID);
+					
+					if (!video && iframe){
+						try {
+							video = session.rpcs[e.data.UUID].videoElement;
+							if (video){
+								container.querySelector('[data-action-type="video-container"]').appendChild(video);
+							}
+						} catch(e){errorlog(e);}
+					}
 				}
 			}
 			
@@ -640,36 +701,26 @@
 				messageList = e.data.messageList;
 				updateMessages();
 			}
-			
-			//
 			if ("remoteStats" in e.data) {
-				var UUID = e.data.UUID;
-				for (var uuid in e.data.remoteStats) {
-					if (e.data.remoteStats[uuid].video_bitrate_kbps){
-						var video_bitrate_kbps = e.data.remoteStats[uuid].video_bitrate_kbps;
-						updateData("bitrate", video_bitrate_kbps,  UUID, uuid);
-					} else if (document.getElementById(uuid)){
-						updateData("bitrate", 0,  UUID, uuid);
-					}
-					
-					if (e.data.remoteStats[uuid].nacks_per_second){
-						var nacks_per_second = e.data.remoteStats[uuid].nacks_per_second;
-						updateData("nackrate", nacks_per_second, UUID, uuid);
-					} else if (document.getElementById(uuid)){
-						updateData("nackrate", 0, UUID, uuid);
-					}
-				}
+				remoteStats(e.data.remoteStats, e.data.UUID, e.data.streamID)
 			}
-					
-			//if ("streamIDs" in e.data){
-			//	streamIDs = [];
-			//	for (var key in e.data.streamIDs){
-			//		streamIDs.push(key);
-			//	}
-			//	updateStreams();
-			//	console.log(streamIDs);
-			//}
+				
 		});
+	}
+	
+	function getContainer(UUID, streamID){
+		var container = document.getElementById("container_" + UUID);
+		if (!container){
+			container = document.getElementById('graphTemplate').cloneNode(true);
+			container.id = "container_"+UUID;
+			container.sid = streamID;
+			container.UUID = UUID;
+			container.classList.remove("hidden");
+			document.getElementById("mainContainer").append(container);
+			container.sololink = "https://"+window.location.host+pathname+"/?scene&room="+roomname+additional+"&bitrate=20000&codec=h264&view="+container.sid+"&label=solo_link"
+			container.querySelector("[data-sololink]").dataset.sololink = container.sololink;
+		}
+		return container;
 	}
 	
 	function updateStreams(){
@@ -679,39 +730,261 @@
 		}
 	}
 	
-	
-	var bitrate = {
-		element: "bitrate-graph",
-		data: 0,
-		max: 6000,
-		target: 3000,
-	};
-	var frames;
-	var nackrate = {
-		element: "nackrate-graph",
-		data: 0,
-		max: 15,
-		target: 15,
-	};
-
-	function updateData(type, data, UUID, uuid) {
-		if (type == "bitrate") {
-			bitrate.data = data;
-			plotData("bitrate", bitrate, UUID, uuid);
-		}
-
-		if (type == "nackrate") {
-			nackrate.data = data;
-			plotData("nackrate", nackrate, UUID, uuid);
-		}
+	function getColor(value) {
+	  var hue = ((value) * 120).toString(10);
+	  return ["hsl(", hue, ",100%,50%)"].join("");
 	}
 
-	function plotData(type, stat, UUID, uuid){
-		iframe.contentWindow.document.body.querySelector("#container_"+UUID).querySelectorAll(".graphSection>[data-uid='"+uuid+"']").forEach(ele=>{
-			iframe.contentWindow.document.body.querySelector("#container_"+UUID).appendChild(ele);
-			ele.classList.remove("hidden");
+	function plotData(info, UUID, uuid) { // type = "bitrate" or "nacks"
+		log("plot data");
+
+		var container = getById("container_" + UUID).querySelector('[data-action-type="stats-graphs-bitrate"]');
+		
+		if (!container){
+			log("container not found");
+			return;
+		}
+		var canvas = getById("container_" + UUID).querySelector('canvas[data-uid="'+uuid+'"]');
+		var canvasNew = false
+		if (!canvas){
+			canvasNew = true;
+			canvas = document.createElement("canvas");
+			canvas.height = 100;
+			canvas.width = 200;
+			canvas.className = "canvasStats";
+			canvas.history_nacks = [];
+			canvas.history_bitrate = [];
+			canvas.target = 4000;
+			if (info.scene){
+				canvas.title = "Scene: "+info.scene+". Red/orange implies packet loss. Y-axis is 0 to 4000-kbps.";
+			} else if (info.label){
+				canvas.title = "Label: "+info.label+". Red/orange implies packet loss. Y-axis is 0 to 4000-kbps.";
+			} else {
+				canvas.title = "Red/orange implies packet loss. Y-axis is 0 to 4000-kbps.";
+			}
+			canvas.dataset.uid = uuid;
+			container.appendChild(canvas);
+		}
+		
+		selfDestructElement(UUID, uuid);
+		
+		var context = canvas.getContext("2d");
+
+		var bitrate = 0;
+		if ("video_bitrate_kbps" in info){
+			bitrate = info.video_bitrate_kbps;
+		}
+		
+		if (isNaN(bitrate)) {
+			bitrate = 0;
+		}
+		
+		if (bitrate<0){bitrate = 0;}
+		
+		var nacks = 0;
+		if ("nacks_per_second" in info){
+			nacks = info.nacks_per_second;
+		}
+		if (isNaN(nacks)) {
+			nacks = 0;
+		}
+		if (nacks<0){nacks = 0;}
+
+		var height = context.canvas.height;
+		var width = context.canvas.width;
+		
+		canvas.history_nacks.push(nacks);
+		canvas.history_bitrate.push(bitrate);
+
+		canvas.history_nacks = canvas.history_nacks.slice(-1 * canvas.width);
+		canvas.history_bitrate = canvas.history_bitrate.slice(-1 * canvas.width);
+		
+		var maxBitrate = Math.max(...canvas.history_bitrate, (info.available_outgoing_bitrate_kbps || 0));
+		
+		var target = canvas.target || 4000;
+		if (target && (maxBitrate > target)){
+			
+			canvas.target = maxBitrate*1.5; // set it higher than it needs to be, so it doens't jump around a lot
+			var yScale = height / canvas.target;
+			context.clearRect(0, 0, width, height);
+			var w = 1;
+			var x = width - w;
+			
+			
+			for (var i = 0; i<canvas.history_bitrate.length;i++){
+				
+				var nacks = canvas.history_nacks[i];
+				var bitrate = canvas.history_bitrate[i];
+				
+				var val = (10-nacks)/10;
+				if (val>1){val=1;}
+				else if (val<0){val=0;}
+				var color = getColor(val);
+				var y = height - bitrate * yScale;
+				context.fillStyle = color;
+				context.fillRect(x, y, w, height);
+				context.fillStyle = "#DDD5";
+				context.fillRect(x, y-2, w, 4);
+				
+				if (y-5>0){
+					context.fillStyle = "#FFF3";
+					context.fillRect(x, y+2, w, 1);
+				}
+
+				var imageData = context.getImageData(w, 0, x, height);
+				context.putImageData(imageData, 0, 0);
+				context.clearRect(x, 0, w, height);
+			}
+			
+			for (var tt = 2500; tt<canvas.target;tt+=2500){
+				var y = parseInt(height - tt * yScale);
+				context.fillStyle = "#0555";
+				context.fillRect(0, y, width, 1);
+			}
+			log("finished plotting a new y-axis");
+			return;
+		}
+		//if (info.available_outgoing_bitrate_kbps){
+			// limit target, but requires a history
+		//}
+		var val = (10-nacks)/10;
+		if (val>1){val=1;}
+		else if (val<0){val=0;}
+		var color = getColor(val);
+
+		var yScale = height / target;
+
+		var w = 1;
+		var x = width - w;
+		var y = height - bitrate * yScale;
+		
+		context.fillStyle = color;
+		context.fillRect(x, y, w, height);
+		context.fillStyle = "#DDD5";
+		context.fillRect(x, y-2, w, 4);
+		
+		if (y-5>0){
+			context.fillStyle = "#FFF3";
+			context.fillRect(x, y+2, w, 1);
+		}
+		
+		context.fillStyle = "#0555";
+		if (canvasNew){
+			for (var tt = 2500; tt<target;tt+=2500){
+				var y = parseInt(height - tt * yScale);
+				context.fillRect(0, y, width, 1);
+			}
+		} else {
+			for (var tt = 2500; tt<target;tt+=2500){
+				var y = parseInt(height - tt * yScale);
+				context.fillRect(x, y, w, 1);
+			}
+		}
+		
+		var imageData = context.getImageData(w, 0, x, height);
+		context.putImageData(imageData, 0, 0);
+		context.clearRect(x, 0, w, height);
+		
+		log("finished plotting");
+	}
+
+	function selfDestructElement(UUID, uid){
+		getById("container_" + UUID).querySelectorAll('[data-uid="'+uid+'"]').forEach(ele=>{
+		
+			ele.classList.remove("greyout");
+			clearTimeout(ele.selfFadeout);
+			ele.selfFadeout = setTimeout(function(ele){
+				ele.classList.add("greyout");
+			}, 4000, ele);
+			
+			clearTimeout(ele.selfDestruct);
+			ele.selfDestruct = setTimeout(function(ele){
+				try {
+					ele.remove();
+				} catch(e){console.error(e);}
+			}, 10000, ele);
 		});
-		return;
+	}
+
+	function remoteStats(data, UUID, streamID){
+		
+		var container = getContainer(UUID, streamID);
+		
+		var size = 0;
+		for (var key in data) {
+			if (data.hasOwnProperty(key)){
+				size++;
+			}
+		}
+		
+		if (!size){
+			container.querySelectorAll('[data-no-scenes]').forEach(ele=>{
+				ele.classList.remove("hidden"); 
+				if (ele.dataset.message){
+					ele.innerHTML = "<h3>No viewers active yet</h3>Statistics for this stream will be available once its view or scene link becomes active";
+				}
+			});
+			
+			log("zero size");
+			return;
+		}
+		container.querySelectorAll('[data-no-scenes]').forEach(ele=>{
+			ele.classList.add("hidden");
+		});
+		
+		for (var uuid in data){
+			var container2 = container.querySelector('[data-action-type="stats-graphs-details-container"][data-uid="'+uuid+'"]');
+			if (!container2){
+				container2 = document.querySelector('[data-action-type="stats-graphs-details-container"]').cloneNode(true);
+				container2.dataset.uid = uuid;
+				container2.classList.remove("hidden");
+			}
+			plotData(data[uuid], UUID, uuid);
+			if (("video_bitrate_kbps" in data[uuid]) && (data[uuid].video_bitrate_kbps!=="video_bitrate_kbps")){
+				var span = container.querySelector('[data-bitrate]');
+				if (span){
+					span.classList.remove("hidden");
+					span.innerHTML = "video bitrate:<br />"+numberWithCommas(parseInt(data[uuid].video_bitrate_kbps)) + " (kbps)";
+				}
+			}
+			var span = container.querySelector('[data-scene-name]');
+			if (span && ("label" in data[uuid]) && data[uuid].label){
+				span.classList.remove("hidden");
+				span.innerHTML = "stats for:<br />" + data[uuid].label;
+			} else if (span && ("scene" in data[uuid]) && (data[uuid].scene !==false)){
+				span.classList.remove("hidden");
+				span.innerHTML = "stats for:<br />scene" + data[uuid].scene;
+			} else if (uuid==="meshcast"){
+				span.classList.remove("hidden");
+				span.innerHTML = "stats for:<br />meshcast";
+				span.title = "You can use &label=xxxx to give your view links a unique label";
+			} else {
+				span.classList.remove("hidden");
+				span.innerHTML = "stats for:<br />a viewer";
+				span.title = "You can use &label=xxxx to give your view links a unique label";
+			}
+			
+			if ("resolution" in data[uuid]){
+				var span = container.querySelector('[data-resolution]');
+				if (span){
+					span.classList.remove("hidden");
+					span.innerHTML = "res: "+data[uuid].resolution.replace(" @ ","<br />fps: ");
+				}
+			}
+			
+			if ("video_encoder" in data[uuid]){
+				var span = container.querySelector('[data-video-codec]');
+				if (span){
+					span.classList.remove("hidden");
+					span.innerHTML = "video codec:<br />"+data[uuid].video_encoder;
+				}
+			}
+		}
+		
+	}
+	
+	function numberWithCommas(x) {
+		return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
 	}
 	
 	function removeStorage(cname){

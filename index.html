@@ -57,7 +57,7 @@
 		<meta property="twitter:image" content="./media/vdoNinja_logo_full.png" />
 		<meta name="msapplication-TileColor" content="#da532c" />
 		<meta name="theme-color" content="#ffffff" />
-		<link rel="stylesheet" href="./main.css?ver=165" />
+		<link rel="stylesheet" href="./main.css?ver=169" />
 		<script type="text/javascript" crossorigin="anonymous" src="./thirdparty/adapter.min.js"></script>
 		<style id="lightbox-animations" type="text/css"></style>
 		<!-- <link rel="manifest" href="manifest.json" /> -->
@@ -82,7 +82,7 @@
 			<link itemprop="url" href="./media/vdoNinja_logo_full.png" />
 		</span>
 		<script  type="text/javascript" crossorigin="anonymous"  src="./thirdparty/CodecsHandler.js?ver=37"></script>
-		<script  type="text/javascript" crossorigin="anonymous" src="./webrtc.js?ver=473"></script>
+		<script  type="text/javascript" crossorigin="anonymous" src="./webrtc.js?ver=486"></script>
 		<input id="zoomSlider" type="range" style="display: none;" />
 		<span id="electronDragZone" style="pointer-events: none; z-index:-10; position:absolute;top:0;left:0;width:100%;height:2%;-webkit-app-region: drag;min-height:20px;"></span>
 		<div id="header">
@@ -180,6 +180,10 @@
 				
 				<div id="flipcamerabutton" onmousedown="event.preventDefault(); event.stopPropagation();"  title="Cycle the Cameras"  onclick="cycleCameras()" class="hidden float"  tabindex="21" role="button" aria-pressed="false" onkeyup="enterPressedClick(event,this);" style="cursor: pointer;" alt="Cycle the Cameras">
 					<i id="settingstoggle" class="toggleSize las la-sync-alt my-float"></i> 
+				</div>
+				
+				<div id="obscontrolbutton" onmousedown="event.preventDefault(); event.stopPropagation();"  title="OBS Remote Controller; start/stop and change scenes." onclick="toggleOBSControls();" class="hidden float"  tabindex="22" role="button" aria-pressed="false" onkeyup="enterPressedClick(event,this);" style="cursor: pointer;" alt="Toggle the Remote OBS Controls Menu">
+					<i id="obscontroltoggle" class="toggleSize las la-gamepad my-float"></i>
 				</div>
 				
 				<div id="roomsettingsbutton" onmousedown="event.preventDefault(); event.stopPropagation();"  title="Room Settings" onclick="toggleRoomSettings();" class="hidden float"  tabindex="22" role="button" aria-pressed="false" onkeyup="enterPressedClick(event,this);" style="cursor: pointer;" alt="Toggle the Room Settings Menu">
@@ -1050,6 +1054,16 @@
 						</label>
 						<span data-translate="disable-animated-mixing">Disable animations</span>
 						
+						<Br />
+						<label class="switch" title="This mode encodes the video and audio into chunks, which are shared with multiple viewers. Limited browser support. Can potentially reduce CPU and improve video quality, but will rely on a buffer.">
+						  <input type="checkbox" data-param="&chunked=500" onchange="updateLink(1,this);">
+						  <span class="slider"></span>
+						</label>
+						<font class="tooltip" style='cursor: help;position:relative;bottom:2px;font-family:"Noto Color Emoji", "Apple Color Emoji", "Segoe UI Emoji", Times, Symbola, Aegyptus, Code2000, Code2001, Code2002, Musica, serif, LastResort;'>⚠<span class="tooltiptext">Pretty experimental and limited browser support, though relatively low CPU usage.</span></font>
+						<span data-translate="chunked-mode">P2P Chunked-mode</span>
+						
+						
+						
 					</div>
 					<div  style="display:inline-block;margin-top: 12px; position: relative; margin-right:10px;">
 						<label class="switch" title="Increase video quality that guests in room see.">
@@ -1093,16 +1107,15 @@
 						  <span class="slider"></span>
 						</label>
 						<span data-translate="prefix-screenshare">Prefix screenshare IDs</span>	
-					</div>
-					<div  style="display:inline-block;margin-top: 12px; position: relative; ">
-						<label class="switch" title="This mode encodes the video and audio into chunks, which are shared with multiple viewers. Limited browser support. Can potentially reduce CPU and improve video quality, but will rely on a buffer.">
-						  <input type="checkbox" data-param="&chunked=500" onchange="updateLink(1,this);">
+						<Br />
+						<label class="switch" title="Allow the guest to select an avatar image for when they hide their camera">
+						  <input type="checkbox" data-param="&avatar" onchange="updateLink(1,this);">
 						  <span class="slider"></span>
 						</label>
-						<font class="tooltip" style='cursor: help;position:relative;bottom:2px;font-family:"Noto Color Emoji", "Apple Color Emoji", "Segoe UI Emoji", Times, Symbola, Aegyptus, Code2000, Code2001, Code2002, Musica, serif, LastResort;'>⚠<span class="tooltiptext">Pretty experimental and limited browser support, though relatively low CPU usage.</span></font>
-						<span data-translate="chunked-mode">P2P Chunked-mode</span>
+						<span data-translate="avatar-selection">Can select an Avatar image</span>
+					</div>
+					<div  style="display:inline-block;margin-top: 12px; position: relative; ">
 						
-						<Br />
 						<label class="switch" title="Use Meshcast servers to restream video data from this guest to its viewers, reducing the CPU and upload load in some cases. Will increase latency a bit.">
 						  <input type="checkbox" data-param="&meshcast" onchange="updateLink(1,this);">
 						  <span class="slider"></span>
@@ -1116,6 +1129,13 @@
 						  <span class="slider"></span>
 						</label>
 						<span data-translate="mini-self-preview">Mini self-preview</span>
+						
+						<Br />
+						<label class="switch" title="Show an ovelaid grid on the guest's preview video to help with self-centering of the guest.">
+						  <input type="checkbox" data-param="&grid" onchange="updateLink(1,this);">
+						  <span class="slider"></span>
+						</label>
+						<span data-translate="rule-of-thirds">Show rule-of-thirds grid</span>
 						
 						<Br />
 						<label class="switch" title="The guest can only see the Director's video, if provided">
@@ -1208,7 +1228,6 @@
 							</label>
 							<span data-translate="animate-mixing">Animate mixing</span>
 							
-							
 						</div>
 						
 						<div  style="display:inline-block;margin-top: 12px; position: relative; margin-right:10px;">
@@ -1230,6 +1249,14 @@
 							  <span class="slider"></span>
 							</label>
 							<font class="tooltip" style='cursor: help;position:relative;bottom:2px;font-family:"Noto Color Emoji", "Apple Color Emoji", "Segoe UI Emoji", Times, Symbola, Aegyptus, Code2000, Code2001, Code2002, Musica, serif, LastResort;'>⚠<span class="tooltiptext">This can cause video playback to lag</span></font> Unlock Video Bitrate
+							
+							<br />
+							
+							<label class="switch" title="Disable fit-to-window optmized video scaling for added sharpness; increases CPU / Network load though.">
+							  <input type="checkbox" data-param="&scale=100" onchange="updateLink(3,this);">
+							  <span class="slider"></span>
+							</label>
+							<span data-translate="disable-downscaling">Viewer-side downscaling</span>
 						</div>
 						
 						<div  style="display:inline-block;margin-top: 12px; position: relative; ">
@@ -1642,12 +1669,14 @@
 						<div id="audioTitle2" class="title">
 							<i class="las la-microphone-alt"></i><span data-translate="select-audio-source"> Audio Source(s) </span>
 							<i id="chevarrow2" class="chevron bottom" aria-hidden="true"></i>
+							<div class="meter" id="meter3"></div><div class="meter2" id="meter4"></div>
 						</div>
 					</a>
 					<ul id="audioSource3" class="multiselect-contents">
 						<li>
 						</li>
 					</ul>
+					
 				</div>
 				<br />
 				<span id="headphonesDiv3" style="display: block;">
@@ -1872,12 +1901,12 @@
 		</div>
 		
 		
-		<div id="roomSettings" style="display:none; user-select: none;">
+		<div id="roomSettings" class="customModelPopup" style="display:none; user-select: none;">
 			<div class="promptModalInner">
 				<span class='modalClose' onclick="toggleRoomSettings();">×</span>
 				<span></span>
 				<h3 data-translate="change-room-settings">Change room settings</h3><br />
-				<label title="Increase this at your peril. Changes the total inbound video bitrate per guest; mobile devices excluded. Webp-mode also excluded." for="trbSettingInput" data-translate="change-room-video-quality">Change room video quality:</label>
+				<label title="Increase this at your peril. Changes the total inbound video bitrate per guest; mobile devices excluded." for="trbSettingInput" data-translate="change-room-video-quality">Change room video quality:</label>
 				<span style="margin-left: 6px;" id="trbSettingInputFeedback"></span>-kbps
 				<input id="trbSettingInput" type="range" min="0" max="4000" value="500" onchange="changeTRB(this);" oninput="getById('trbSettingInputFeedback').innerHTML = this.value;" style="width:100%;display:block;" />
 				<span style="margin: 20px 0 0 0;display:block" id='highlightDirectorSpan' title="Only the director's video will be visible to guests and within group scenes">
@@ -1904,6 +1933,30 @@
 						</div>
 					</span>
 				</span>
+			</div>
+		</div>
+		
+		<div id="remoteOBSControl" class="customModelPopup" style="display:none; user-select: none;">
+			<div class="promptModalInner">
+				<span class='modalClose' onclick="toggleOBSControls();">×</span>
+				<span></span>
+				<h3 data-translate="remote-control-obs-menu">Remote Controller for OBS Studio</h3><br />
+				<div id="obsControlHelp" class="hidden" style="margin: 10px 0;display:block" >
+					No remote controllable instances of OBS Studio were found
+				</div>
+				<div id="obsControlButtons" style="margin: 10px 0;display:block" >
+				</div>
+				<div id="obsSceneNames" style="margin: 10px 0;display:block" >
+				</div>
+				<div id="obsRemotePassword" class="hidden" style="margin: 10px 0;display:block;" >
+					<font style="font-size:117%"><i class="las la-key" style="margin: 10px;"></i>Remote OBS passcode:</font>
+					<input style="margin:0 10px;display:inline-block;padding: 8px 10px 6px 10px;" placeholder="Enter the remote OBS password here" />
+				</div>
+				<small style="margin: 20px 0 0 0;display:block;" >
+					See the <a href="https://docs.vdo.ninja/advanced-settings/upcoming-parameters/and-obs" style="color:#314350; cursor:pointer;" target="_blank">documentation</a> for help on using the remote OBS controller
+				</small>
+				<div id="debugRemoteOBSControl" class="hidden">
+				</div>
 			</div>
 		</div>
 		
@@ -2142,7 +2195,7 @@
 			// session.offsetChannel // int
 			// session.audioChannels // int
 			// session.security // true to disable the wss connection after the first peer connection is made
-			// session.framerate // int ; publishing frame rate. will fail if camera does not support it.
+			// session.frameRate // int ; publishing frame rate. will fail if camera does not support it.
 			// session.sync // see the docs
 			// session.buffer // int in milliseconds ; see the docs
 			// session.roomid // "yyyy"  -- the room name to use.  alphanumeric.
@@ -2155,11 +2208,11 @@
 			// session.defaultBackgroundImages = ["./media/bg_sample1.webp", "./media/bg_sample2.webp"]; // for &effects=5 (virtual backgrounds)
 		</script>
 		<script type="text/javascript" crossorigin="anonymous" src="./thirdparty/aes.js"></script>
-		<script type="text/javascript" crossorigin="anonymous" id="lib-js" src="./lib.js?ver=362"></script>
+		<script type="text/javascript" crossorigin="anonymous" id="lib-js" src="./lib.js?ver=377"></script>
 		<!-- 
 		// If you wish to change branding, blank offers a good clean start.
 		<script type="text/javascript" id="main-js" src="./main.js" data-translation="blank"></script>
 		-->
-		<script type="text/javascript" crossorigin="anonymous" id="main-js" src="./main.js?ver=376"></script>
+		<script type="text/javascript" crossorigin="anonymous" id="main-js" src="./main.js?ver=389"></script>
 	</body>
 </html>

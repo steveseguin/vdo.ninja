@@ -1454,10 +1454,9 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 	if (urlParams.has('outboundvideobitrate') || urlParams.has('ovb')) {
 		session.outboundVideoBitrate = parseInt(urlParams.get('outboundvideobitrate')) || parseInt(urlParams.get('ovb')) || false;
 	}
-	
 
-	if (urlParams.has('webp')){
-		session.webp = true;
+	if (urlParams.has('webp') || urlParams.has('images')){ // deprecicating this.  chunked mode will replace it.
+		session.webp = urlParams.get('webp') || urlParams.get('images') || "webp";
 	}
 
 	if (urlParams.has('webpquality') || urlParams.has('webpq') || urlParams.has('wq')){
@@ -1553,6 +1552,14 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 	
 	if (urlParams.has('ruler') || urlParams.has('grid') || urlParams.has('thirds')) {
 		session.ruleOfThirds=true;
+		session.fullscreen = true;
+		if (!session.manual){
+			session.manual = false;
+		}
+	}
+	
+	if (urlParams.has('smallshare')){
+		session.notifyScreenShare = false;
 	}
 	
 	if (urlParams.has('proxy')) { // routes the wss traffic via an alternative network path. Not
@@ -1610,6 +1617,18 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 		session.remote = urlParams.get('remote') || urlParams.get('rem') || true;
 	}
 
+	if (urlParams.has("slideshow")){ // stream labs mobile fix ?
+		var ssinterval = parseInt(urlParams.get("slideshow")) || 25;
+		ssinterval = 1000/ssinterval;
+		session.manual = true;
+		session.dynamicScale = false;
+		setInterval(function(){
+			try {
+				slideshowHack();
+			} catch(e){errorlog(e);}
+		},ssinterval);
+	}
+
 	if (urlParams.has('latency') || urlParams.has('al') || urlParams.has('audiolatency')) {
 		log("latency  ENABLED");
 		session.audioLatency = urlParams.get('latency') || urlParams.get('al') || urlParams.get('audiolatency');
@@ -1659,15 +1678,38 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 		//innerHTML = 
 	}
 
-	if (urlParams.has('keyframeinterval') || urlParams.has('keyframerate') || urlParams.has('keyframe') || urlParams.has('fki')) {
-		log("keyframerate ENABLED");
-		session.keyframerate = parseInt(urlParams.get('keyframeinterval') || urlParams.get('keyframerate') || urlParams.get('keyframe') || urlParams.get('fki')) || 0;
+	if (urlParams.has('keyframeinterval') || urlParams.has('keyframeRate') || urlParams.has('keyframe') || urlParams.has('fki')) {
+		log("keyframeRate ENABLED");
+		session.keyframeRate = parseInt(urlParams.get('keyframeinterval') || urlParams.get('keyframeRate') || urlParams.get('keyframe') || urlParams.get('fki')) || 0;
 	}
 
 	if (urlParams.has('obsoff') || urlParams.has('oo') || urlParams.has('disableobs')) {
 		log("OBS feedback disabled");
 		session.disableOBS = true;
 		getById("obsState").style.setProperty("display", "none", "important");
+	} 
+	
+	if (urlParams.has('obscontrols') || urlParams.has('remoteobs') || urlParams.has('obsremote') || urlParams.has('obs') || urlParams.has('controlobs')) {
+		session.obsControls = urlParams.get('obscontrols') || urlParams.get('remoteobs') || urlParams.get('obsremote') || urlParams.get('obs') || urlParams.get('controlobs');
+		if (session.obsControls) { // whether to show the button or not; that's it.
+			session.obsControls = session.obsControls.toLowerCase();
+		}
+		if (session.obsControls == "false") {
+			session.obsControls = false;
+		} else if (session.obsControls == "0") {
+			session.obsControls = false;
+		} else if (session.obsControls == "no") {
+			session.obsControls = false;
+		} else if (session.obsControls == "off") {
+			session.obsControls = false;
+		} else if (session.obsControls){
+			session.obsControls = session.obsControls.toLowerCase();
+		} else {
+			session.obsControls = true;
+		}
+	} 
+	if (session.obsControls){
+		getById("obscontrolbutton").classList.remove("hidden");
 	}
 	
 	if (urlParams.has('tallyoff') || urlParams.has('notally') || urlParams.has('disabletally') || urlParams.has('to')) {
@@ -1704,24 +1746,6 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 			log("macOS: " + macOS);
 			log(window.obsstudio);
 			
-			if (typeof document.visibilityState !== "undefined"){
-				session.obsState.visibility = document.visibilityState==="visible";
-				//session.obsState.sourceActive = session.obsState.visibility;
-			}
-			
-			window.obsstudio.getStatus(function(obsStatus) {
-				log("OBS STATUS:");
-				log(obsStatus);
-				// TODO: update state here
-				if ("recording" in obsStatus){
-					session.obsState.recording = obsStatus.recording;
-				}
-				if ("streaming" in obsStatus){
-					session.obsState.streaming = obsStatus.streaming;
-				}
-				
-			});
-			
 			if (!(urlParams.has('streamlabs'))) {
 
 				var ver1 = window.obsstudio.pluginVersion.split(".");
@@ -1746,6 +1770,12 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 			//}
 			
 			if (session.disableOBS===false){
+				if (typeof document.visibilityState !== "undefined"){
+					session.obsState.visibility = document.visibilityState==="visible";
+				}
+			
+				getOBSDetails();
+				
 				window.addEventListener("obsSourceVisibleChanged", obsSourceVisibleChanged);
 				window.addEventListener("obsSourceActiveChanged", obsSourceActiveChanged);
 				window.addEventListener("obsSceneChanged", obsSceneChanged);
@@ -1753,6 +1783,8 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 				window.addEventListener("obsStreamingStopped", obsStreamingStopped);
 				window.addEventListener("obsRecordingStarted", obsRecordingStarted);
 				window.addEventListener("obsRecordingStopped", obsRecordingStopped);
+				window.addEventListener("obsVirtualcamStarted", obsVirtualcamStarted);
+				window.addEventListener("obsVirtualcamStopped", obsVirtualcamStopped);
 			}
 			
 		} catch (e) {
@@ -2096,6 +2128,7 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 	}
 	
 	if (urlParams.has('debug')){
+		session.debug=true;
 		debugStart();
 	}
 	
@@ -2154,10 +2187,6 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 		session.codec = urlParams.get('codec') || false;
 		if (session.codec){
 			session.codec = session.codec.toLowerCase();
-			if (session.codec=="webp"){
-				session.webp = true;
-				session.codec = false;
-			}
 		}
 	} else if (OperaGx){
 		session.codec = "vp8";
@@ -2213,12 +2242,15 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 			session.scale = parseFloat(urlParams.get('scale')) || 100;
 		}
 		session.dynamicScale = false; // default true
-	} else if (urlParams.has('viewwidth') || urlParams.has('vw')) {
-		session.viewwidth = urlParams.get('viewwidth') || urlParams.get('vw') ||false;
-		session.dynamicScale = false; // default true
-	} else if (urlParams.has('viewheight') || urlParams.has('vh')) {
-		session.viewheight = urlParams.get('viewheight') || urlParams.get('vh') ||false;
-		session.dynamicScale = false; // default true
+	} else {
+		if (urlParams.has('viewwidth') || urlParams.has('vw')) {
+			session.viewwidth = urlParams.get('viewwidth') || urlParams.get('vw') ||false;
+			session.dynamicScale = false; // default true
+		}
+		if (urlParams.has('viewheight') || urlParams.has('vh')) {
+			session.viewheight = urlParams.get('viewheight') || urlParams.get('vh') ||false;
+			session.dynamicScale = false; // default true
+		}
 	}
 	
 	if (urlParams.has('mcscale') || urlParams.has('meshcastscale')) {
@@ -2315,12 +2347,16 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 		}
 		log("totalRoomBitrate ENABLED");
 		log(session.totalRoomBitrate);
-		
 	}
+	
 	if (session.totalRoomBitrate===false){
 		session.totalRoomBitrate = session.totalRoomBitrate_default;
 	} else {
 		session.totalRoomBitrate_default = session.totalRoomBitrate; // trb_default doesn't change dynamically, but trb can (per director I guess)
+	}
+	
+	if (session.totalRoomBitrate_default>4000){
+		getById("trbSettingInput").max = Math.ceil(session.totalRoomBitrate_default);
 	}
 	
 	if (urlParams.has('maxtotalscenebitrate') || urlParams.has('totalscenebitrate') || urlParams.has('mtsb') || urlParams.has('tsb') || urlParams.has('totalbitrate') || urlParams.has('tb')) {
@@ -2491,6 +2527,23 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 		}
 	}
 	
+	
+	if (urlParams.has('postinterval')){ // interval to post snapimage images 
+		session.postInterval = urlParams.get('postinterval') || session.postInterval;
+		session.postInterval = parseInt(session.postInterval) || 60;
+		if (session.postInterval<5){
+			session.postInterval = 5;
+		}
+	}
+	if (urlParams.has('postimage')){
+		var postURL = decodeURIComponent(urlParams.get('postimage')) || session.postURL; // default will post to https://temp.vdo.ninja/images/STREAMIDHERE.jpg
+		setInterval(function(postURL){
+			try {
+				uploadImageSnapshot(postURL);
+			} catch(e){}
+		}, session.postInterval*1000 , postURL);
+	}
+	
 	if (urlParams.has('cleanish')) {
 		session.cleanish = true;
 	}
@@ -2511,6 +2564,11 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 		//if (parseInt(urlParams.get('enhance')>0){
 		session.enhance = true; //parseInt(urlParams.get('enhance'));
 		//}
+	}
+
+	if (urlParams.has('degrade')) {
+		session.degrade = urlParams.get('degrade') || true; // Firefox, and maybe Safari, supported I think.
+		// the possible values are maintain-framerate, maintain-resolution, or balanced. The default value is balanced
 	}
 
 	if (urlParams.has('maxviewers') || urlParams.has('mv')) {
@@ -2559,11 +2617,11 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 		session.randomize = true;
 	}
 
-	if (urlParams.has('framerate') || urlParams.has('fr') || urlParams.has('fps')) {
-		session.framerate = urlParams.get('framerate') || urlParams.get('fr') || urlParams.get('fps');
-		session.framerate = parseInt(session.framerate);
-		log("framerate Changed");
-		log(session.framerate);
+	if (urlParams.has('frameRate') || urlParams.has('fr') || urlParams.has('fps')) {
+		session.frameRate = urlParams.get('frameRate') || urlParams.get('fr') || urlParams.get('fps');
+		session.frameRate = parseInt(session.frameRate);
+		log("frameRate Changed");
+		log(session.frameRate);
 	}
 	
 	if (urlParams.has('tz')){
@@ -2575,11 +2633,11 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 		}
 	}
 
-	if (urlParams.has('maxframerate') || urlParams.has('mfr') || urlParams.has('mfps')) {
-		session.maxframerate = urlParams.get('maxframerate') || urlParams.get('mfr') || urlParams.get('mfps');
-		session.maxframerate = parseInt(session.maxframerate);
-		log("max framerate assigned");
-		log(session.maxframerate);
+	if (urlParams.has('maxframeRate') || urlParams.has('mfr') || urlParams.has('mfps')) {
+		session.maxframeRate = urlParams.get('maxframeRate') || urlParams.get('mfr') || urlParams.get('mfps');
+		session.maxframeRate = parseInt(session.maxframeRate);
+		log("max frameRate assigned");
+		log(session.maxframeRate);
 	}
 
 	if (urlParams.has('buffer')) { // needs to be before sync
@@ -2708,12 +2766,29 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 		document.querySelector(':root').style.setProperty('--fadein-speed', 0.5);
 		setInterval(function(){activeSpeaker(false);},100);
 		
-	} else if (urlParams.has('noisegate')){
-		session.quietOthers = urlParams.get('noisegate') || 1;
+	} else if (urlParams.has('noisegate') || urlParams.has('gating') ||  urlParams.has('gate') ||urlParams.has('ng')){
+		session.quietOthers = urlParams.get('noisegate') || urlParams.get('gating') || urlParams.get('gate') ||  urlParams.get('ng') || 1;
 		session.quietOthers = parseInt(session.quietOthers);
-		session.audioEffects = true;
-		session.audioMeterGuest = true;
-		setInterval(function(){activeSpeaker(false);},100);
+		
+		if (session.quietOthers == 1){
+			session.quietOthers = false;
+			session.noisegate = true;
+			session.audioEffects = true;
+			session.audioMeterGuest = true;
+		} else if (session.quietOthers == 4){
+			session.quietOthers = 1;
+			session.audioEffects = true;
+			session.audioMeterGuest = true;
+			setInterval(function(){activeSpeaker(false);},100);
+		} else if (!session.quietOthers){
+			session.noisegate = false;
+			session.quietOthers = false;
+		} else {
+			session.audioEffects = true;
+			session.audioMeterGuest = true;
+			setInterval(function(){activeSpeaker(false);},100);
+		}
+		
 	}
 	
 	if (urlParams.has('fadein')) {
@@ -2809,6 +2884,9 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 		session.disableWebAudio = true; // default true; might be useful to disable on slow or old computers?
 		session.audioEffects = false; // disable audio inbound effects also.
 		session.audioMeterGuest = false;
+		if (session.noisegate===null){
+			session.noisegate = false;
+		}
 	}
 	
 	// For info, see this: https://developer.mozilla.org/en-US/docs/Web/API/RTCIceCandidatePairStats/availableOutgoingBitrate
@@ -2822,6 +2900,26 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 		}
 	}
 
+	if (urlParams.has('iframetarget')) {
+		session.iframetarget = urlParams.get('iframetarget'); // speciifies the IFRAME Hostname target
+		if (session.iframetarget){
+			session.iframetarget = decodeURIComponent(session.iframetarget);
+		} else {
+			session.iframetarget = window.location.hostname;
+		}
+	}
+
+
+	if (urlParams.has('sendframes')) {
+		session.sendframes = urlParams.get('sendframes');
+		if(session.sendframes){
+			session.sendframes = decodeURIComponent(session.sendframes);
+		} else {
+			session.sendframes = session.iframetarget || "*";
+		}
+		
+	}
+	
 	if (urlParams.has('tcp')){ // forces the TURN servers to use TCP mode; still need to add &private to force TURN also tho
 		session.forceTcpMode = true;
 	}
@@ -3856,7 +3954,7 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 			enumerateDevices().then(function(deviceInfos) {
 				parent.postMessage({
 					"deviceList": JSON.parse(JSON.stringify(deviceInfos))
-				}, "*");
+				}, session.iframetarget);
 			});
 		}
 		
@@ -3972,7 +4070,7 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 				}
 				parent.postMessage({
 					"stats": stats
-				}, "*");
+				}, session.iframetarget);
 			}, 1000);
 		}
 		
@@ -4004,7 +4102,7 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 				
 				parent.postMessage({
 					"loudness": loudness
-				}, "*");
+				}, session.iframetarget);
 				
 			} else {
 				session.pushLoudness = false;
@@ -4019,7 +4117,7 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 				//parent.postMessage({
 				//	"effectsData": effectsData,
 				//	"effectsID": session.pushEffectsData
-				//}, "*");
+				//}, session.iframetarget);
 				
 			} else {
 				session.pushEffectsData = false;
@@ -4034,20 +4132,24 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 				}
 				parent.postMessage({
 					"streamIDs": streamIDs
-				}, "*");
+				}, session.iframetarget);
 
 			}
 		}
 
-		if ("close" in e.data) { // disconnect and hangup all inbound streams.
-			for (var i in session.rpcs) {
-				try {
-					session.rpcs[i].close();
-				} catch (e) {
-					errorlog(e);
-				}
+		if (("close" in e.data) || ("hangup" in e.data)) { // disconnect and hangup all inbound streams.
+			var tmp = e.data.close || e.data.hangup;
+			if (tmp == "estop"){  // try to stop the video recording even if not complete; if you can't wait even ms before a reload/exit.
+				console.log("ESTOP");
+				session.hangup(false,true);
+			} else if (tmp == "reload"){  // stop and reload the page safely.
+				session.hangup(true);
+			} else { // just hangup, but can take up to 1-second to do so fully.
+				session.hangup();
 			}
-			hangup();
+		}
+		if ("hangup" in e.data) { // disconnect and hangup all inbound streams.
+			session.hangup();
 		}
 
 		if ("style" in e.data) { // insert a custom style sheet
@@ -4065,7 +4167,7 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 			var detailedState = getDetailedState();
 			parent.postMessage({
 				"detailedState": detailedState
-			}, "*");
+			}, session.iframetarget);
 		}
 
 		if ("automixer" in e.data) {  // stop the auto mixer if you want to control the layout and bitrate yourself
@@ -4163,7 +4265,7 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 			var resp = processMessage(e.data); // reuse the companion API
 			if (resp!==null){
 				log(resp);
-				parent.postMessage(resp, "*");
+				parent.postMessage(resp, session.iframetarget);
 			}
 		} else if ("target" in e.data) {
 			log(e.data);
@@ -4369,7 +4471,7 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 				return;
 			}
 				
-			warnlog("Connection type changed from " + session.stats.network_type + " to " + Connection.effectiveType);
+			log("Connection type changed from " + session.stats.network_type + " to " + Connection.effectiveType);
 			session.stats.network_type = Connection.effectiveType + " / " + Connection.type;
 			session.ping();
 			
