@@ -1,4 +1,4 @@
-# Publish to Facebook Live
+# How to publish to Facebook Live
 
 There's a video guide on how to publish from VDO.Ninja to Facebook Live here: [https://www.youtube.com/watch?v=Zk345qg0U6U](https://www.youtube.com/watch?v=Zk345qg0U6U)
 

@@ -4,7 +4,7 @@ description: >-
   inside OBS
 ---
 
-# Share webcam from inside OBS
+# How to share webcam from inside OBS
 
 {% hint style="warning" %}
 This guide works for OBS Studio v27.1.3, but some users have had issues with v27.2. &#x20;

@@ -1,4 +1,4 @@
-# Connect a GoPro to VDO.Ninja
+# How to connect a GoPro to VDO.Ninja
 
 A GoPro itself doesn't support streaming directly to [VDO.Ninja](https://vdo.ninja/) on its own, but there are some indirect ways to do it currently.
 

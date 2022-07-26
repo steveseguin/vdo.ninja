@@ -1,16 +1,17 @@
 # Guides
 
 * [Getting started with VDO.Ninja](getting-started-with-vdo.ninja/)
-* [Cheat Sheet of Basic Parameters](https://github.com/steveseguin/vdo.ninja/blob/quickstart/README.md)
+* [Cheat Sheets](https://github.com/steveseguin/vdo.ninja/blob/quickstart/README.md)
 * [Hardware-accelerated video encoding](hardware-accelerated-video-encoding.md)
 * [Basic hotkeys](hotkey-support.md)
 * [MIDI, API and WebHID support](midi-api-and-webhid-support.md)
-* [External guides and how-tos](guides-and-how-tos.md)
+* [External guides and how-to's](guides-and-how-tos.md)
 
-## How-To's
+## How-to's
 
 * [How to use VDO.Ninja as a webcam for Google Hangouts, Zoom, and more](use-vdo.ninja-as-a-webcam-for-google-hangouts-zoom-and-more.md)
 * [How to control bitrate/quality](how-do-i-control-bitrate-quality.md)
+* [How to send the audio/video output of one OBS to another OBS using VDO.Ninja](how-to-send-the-audio-video-output-of-one-obs-to-another-obs-using-vdo.ninja.md)
 * [How to get permanent links](use-vdo.ninja-as-a-webcam-for-google-hangouts-zoom-and-more.md)
 * [How to capture an application's audio](audio.md)
 * [How to control VDO.Ninja with Touch Portal](how-to-control-vdo.ninja-with-touch-portal.md)

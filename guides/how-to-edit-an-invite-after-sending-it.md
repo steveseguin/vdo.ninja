@@ -4,7 +4,7 @@ description: >-
   flexible
 ---
 
-# Edit an invite after sending it
+# How to edit an invite after sending it
 
 You can use services like [https://short.io](https://short.io) to create aliases of your invite links, leveraging those service platforms to also keep track of invites you have sent out, how many times they have been opened, and also change the VDO.Ninja settings contained in the invite after sending it.
 
