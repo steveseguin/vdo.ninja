@@ -19,10 +19,15 @@ There is a playlist of videos above that will demonstrate some of the basics. Yo
 
 The documentation that you are reading here contains details of advanced settings (URL parameters), support information, starting guides, and more. Using the search-box is a great way to navigate it for specific topics.
 
-There are some cheat sheet and quick-start guides here: [https://github.com/steveseguin/vdoninja/blob/quickstart/README.md](https://github.com/steveseguin/vdoninja/blob/quickstart/README.md)\
+There are some cheat sheet and quick-start guides here:
+
 \
-There are a few basic guides for beginners here as well:\
-[https://guides.vdo.ninja/](https://guides.vdo.ninja/)
+\
+There are a few basic guides for beginners here as well:
+
+{% content-ref url="guides/getting-started-with-vdo.ninja/" %}
+[getting-started-with-vdo.ninja](guides/getting-started-with-vdo.ninja/)
+{% endcontent-ref %}
 
 ## Need help or support?
 
