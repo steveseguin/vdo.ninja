@@ -4,10 +4,17 @@ description: >-
   streaming/directing
 ---
 
-# \&obs
+# \&controlobs
 
 General Option! ([`&push`](../../source-settings/push.md), [`&room`](../../general-settings/room.md), [`&view`](../view-parameters/view.md), [`&scene`](../view-parameters/scene.md))\
 \* on [https://vdo.ninja/alpha/](https://vdo.ninja/alpha/)
+
+## Aliases
+
+* `&obscontrols`
+* `&remoteobs`
+* `&obsremote`
+* `&obs`
 
 ## Remotely Control OBS Studio
 
