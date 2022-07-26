@@ -11,6 +11,7 @@ Sender-Side Option! ([`&push`](push.md))
 ## Aliases
 
 * `&ac`
+* `&inputchannels`
 
 ## Options
 

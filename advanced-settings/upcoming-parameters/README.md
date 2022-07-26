@@ -31,13 +31,13 @@ You can use/test these parameters on [vdo.ninja/alpha](https://vdo.ninja/alpha/)
 | ``[`&aspectratio`](and-aspectratio.md)\*             | Changes the aspect ratio on the publisher side                                                                                                                        |
 | ``[`&include`](and-include.md)\*                     | Includes streams that do not exist in the room                                                                                                                        |
 | ``[`&flagship`](and-flagship.md)\*                   | Will optimize the mobile experience for more capable smartphones                                                                                                      |
-| ``[`&b64js`](and-b64js.md)\*                         | Lets a user add raw javascript to the URL to run on page load                                                                                                         |
+| ``[`&base64js`](and-base64js.md)\*                   | Lets a user add raw javascript to the URL to run on page load                                                                                                         |
 | ``[`&background`](and-background.md)\*               | Accepts a URL-encoded image URL to make as the app's default background                                                                                               |
 | ``[`&postimage`](and-postimage.md)\*                 | Post a snapshot of your local camera to a HTTPS/POST URL                                                                                                              |
 | ``[`&postinterval`](and-postinterval.md)\*           | Time interval in seconds for [`&postimage`](and-postimage.md)``                                                                                                       |
 | ``[`&smallshare`](and-smallshare.md)\*               | Makes the screen share behave like a webcam share                                                                                                                     |
 | ``[`&slideshow`](and-slideshow.md)\*                 | Plays video back as a series of full-window images                                                                                                                    |
-| ``[`&controlobs`](and-controlobs.md)\*               | The ability for VDO.Ninja to Remotely Control OBS Studio while streaming/directing                                                                                    |
+| ``[`&controlobs`](and-obs.md)\*                      | The ability for VDO.Ninja to Remotely Control OBS Studio while streaming/directing                                                                                    |
 
 \*on [vdo.ninja/alpha](https://vdo.ninja/alpha/)\
 \*\*on [vdo.ninja/beta](https://vdo.ninja/beta/)\

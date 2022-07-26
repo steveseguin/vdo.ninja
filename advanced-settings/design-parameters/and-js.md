@@ -15,6 +15,6 @@ Example:\
 
 ## Related
 
-{% content-ref url="../upcoming-parameters/and-b64js.md" %}
-[and-b64js.md](../upcoming-parameters/and-b64js.md)
+{% content-ref url="../upcoming-parameters/and-base64js.md" %}
+[and-base64js.md](../upcoming-parameters/and-base64js.md)
 {% endcontent-ref %}

@@ -24,7 +24,7 @@ The menu button to control OBS auto-shows in the director's view or push-mode, i
 
 ![](<../../.gitbook/assets/image (103).png>)
 
-The menu button can also be added manually, for even guests, using `&obs`. [`&obsoff`](../design-parameters/and-obsoff.md) can be used to set permissions to fully off (also disables tally light and scene optimizations tho) when added to the OBS browser source link.
+The menu button can also be added manually, for even guests, using `&controlobs`. [`&obsoff`](../design-parameters/and-obsoff.md) can be used to set permissions to fully off (also disables tally light and scene optimizations tho) when added to the OBS browser source link.
 
 The OBS instance still needs [`&remote=optional-passcode-here`](../../general-settings/remote.md) added to the URL for remote commands to work. If [`&remote`](../../general-settings/remote.md) is left blank, it gives anyone permissions to control it. If a value is passed to [`&remote`](../../general-settings/remote.md), the sender needs to have a matching [`&remote` ](../../general-settings/remote.md)value or they need to manually enter the passcode in the pop up control menu.
 
@@ -37,12 +37,12 @@ It supports multiple OBS instances and will label them according to the [`&label
 ## How to set it up (example)
 
 1\. Add a browser source to OBS Studio with this URL:\
-`https://vdo.ninja/alpha/?view=streamid12345&remote&obs`
+`https://vdo.ninja/alpha/?view=streamid12345&remote&controlobs`
 
 2\. Give page permissions to the browser source (Full access to OBS) like on the image below\
 ![](<../../.gitbook/assets/image (111).png>)
 
-3\. Open this Push Link: [https://vdo.ninja/alpha/?push=streamid12345\&wc\&autostart\&obs\&remote](https://vdo.ninja/alpha/?push=streamid12345\&wc\&autostart\&obs\&remote)
+3\. Open this Push Link: [https://vdo.ninja/alpha/?push=streamid12345\&wc\&as\&controlobs\&remote](https://vdo.ninja/alpha/?push=streamid12345\&wc\&as\&controlobs\&remote)
 
 4\. Click on this button\
 ![](<../../.gitbook/assets/image (118).png>)

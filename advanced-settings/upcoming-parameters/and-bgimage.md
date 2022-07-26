@@ -10,6 +10,7 @@ Viewer-Side Option! ([`&scene`](../view-parameters/scene.md), [`&room`](../../ge
 ## Aliases
 
 * `&bgimg`
+* `&avatarimg`
 
 ## Options
 
