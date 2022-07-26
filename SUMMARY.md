@@ -27,7 +27,7 @@
     * [Gallery](guides/getting-started-with-vdo.ninja/gallery.md)
   * [Cheat Sheet of Basic Parameters](https://github.com/steveseguin/vdo.ninja/blob/quickstart/README.md)
   * [Use VDO.Ninja as a webcam for Google Hangouts, Zoom, and more](guides/use-vdo.ninja-as-a-webcam-for-google-hangouts-zoom-and-more.md)
-  * [How do I control bitrate/quality?](guides/how-do-i-control-bitrate-quality.md)
+  * [How to control bitrate/quality](guides/how-do-i-control-bitrate-quality.md)
   * [How to get permanent links](guides/how-to-get-permanent-links.md)
   * [Capture an application's audio](guides/audio.md)
   * [Publish from OBS into VDO.Ninja](guides/publish-from-obs-into-vdo.ninja.md)
