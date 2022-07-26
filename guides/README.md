@@ -29,3 +29,5 @@
 * [Connect a GoPro to VDO.Ninja](connect-a-gopro-to-vdo.ninja.md)
 * [Installing RaspNinja on Jetson](installing-raspninja-on-jetson.md)
 * [Transfer guests to other rooms](../getting-started/rooms/transfer-rooms.md)
+* [How to set up a simple chat room](how-to-set-up-a-simple-chat-room.md)
+* [How to screen share in 1080p](how-to-screen-share-in-1080p.md)

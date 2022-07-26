@@ -8,7 +8,7 @@ Electron download link: [https://github.com/steveseguin/electroncapture/releases
 \
 Getting this working is not complex; pretty easy once you do it once actually. Sample URL to enter into VDO.Ninja:
 
-`https://vdo.ninja/?cleanoutput&webcam&effects=4`
+``[`https://vdo.ninja/?cleanoutput&webcam&effects=4`](https://vdo.ninja/?cleanoutput\&webcam\&effects=4)``
 
 ![](<../.gitbook/assets/image (32).png>)
 
