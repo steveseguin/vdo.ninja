@@ -27,22 +27,23 @@
 
 ### VDO.Ninja Related
 
-| Scene Mixer                        | [https://vdo.ninja/mixer](https://vdo.ninja/mixer)                                                                   |
-| ---------------------------------- | -------------------------------------------------------------------------------------------------------------------- |
-| Scene Mixer Beta                   | [https://vdo.ninja/beta/mixer](https://vdo.ninja/beta/mixer)                                                         |
-| Scene Mixer Alpha                  | [https://vdo.ninja/alpha/mixer](https://vdo.ninja/alpha/mixer)                                                       |
-| Invite Dock for OBS                | [https://vdo.ninja/dock](https://vdo.ninja/dock)                                                                     |
-| Device Support                     | [https://vdo.ninja/supports](https://vdo.ninja/supports)                                                             |
-| Device IDs                         | [https://vdo.ninja/devices](https://vdo.ninja/devices)                                                               |
-| Web-based Media Conversion Tools   | [https://isolated.vdo.ninja/convert](https://isolated.vdo.ninja/convert)                                             |
-| Electron                           | [https://vdo.ninja/electron](https://vdo.ninja/electron)                                                             |
-| Video streaming quality test       | [https://vdo.ninja/speedtest](https://vdo.ninja/speedtest)                                                           |
-| Remote Monitor                     | [https://vdo.ninja/monitor](https://vdo.ninja/monitor)                                                               |
-| Companion                          | [https://companion.vdo.ninja/](https://companion.vdo.ninja/)                                                         |
-| Quality and performance statistics | [https://vdo.ninja/alpha/stats](https://vdo.ninja/alpha/stats)                                                       |
-| MIDI Controller App                | [https://vdo.ninja/alpha/remotemidi](https://vdo.ninja/alpha/remotemidi)                                             |
-| Example for multiple rooms         | [https://vdo.ninja/examples/multi?rooms=room1,room2,room3](https://vdo.ninja/examples/multi?rooms=room1,room2,room3) |
-| VDO.Ninja shop                     | [https://zero.vdo.ninja](https://zero.vdo.ninja)                                                                     |
+| Scene Mixer                        | [https://vdo.ninja/mixer](https://vdo.ninja/mixer)                                                                                                     |
+| ---------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| Scene Mixer Beta                   | [https://vdo.ninja/beta/mixer](https://vdo.ninja/beta/mixer)                                                                                           |
+| Scene Mixer Alpha                  | [https://vdo.ninja/alpha/mixer](https://vdo.ninja/alpha/mixer)                                                                                         |
+| Invite Dock for OBS                | [https://vdo.ninja/dock](https://vdo.ninja/dock)                                                                                                       |
+| Device Support                     | [https://vdo.ninja/supports](https://vdo.ninja/supports)                                                                                               |
+| Device IDs                         | [https://vdo.ninja/devices](https://vdo.ninja/devices)                                                                                                 |
+| Web-based Media Conversion Tools   | [https://isolated.vdo.ninja/convert](https://isolated.vdo.ninja/convert)                                                                               |
+| Electron                           | [https://vdo.ninja/electron](https://vdo.ninja/electron)                                                                                               |
+| Video streaming quality test       | [https://vdo.ninja/speedtest](https://vdo.ninja/speedtest)                                                                                             |
+| Remote Monitor                     | [https://vdo.ninja/monitor](https://vdo.ninja/monitor)                                                                                                 |
+| Companion                          | [https://companion.vdo.ninja/](https://companion.vdo.ninja/)                                                                                           |
+| Quality and performance statistics | [https://vdo.ninja/alpha/stats](https://vdo.ninja/alpha/stats)                                                                                         |
+| MIDI Controller App                | [https://vdo.ninja/alpha/remotemidi](https://vdo.ninja/alpha/remotemidi)                                                                               |
+| Example for multiple rooms         | [https://vdo.ninja/examples/multi?rooms=room1,room2,room3](https://vdo.ninja/examples/multi?rooms=room1,room2,room3)                                   |
+| VDO.Ninja shop                     | [https://zero.vdo.ninja](https://zero.vdo.ninja)                                                                                                       |
+| Logos and media assets             | [https://drive.google.com/drive/folders/1gYfxKEvFbKl\_UgHBT5PeGc5PJ-8yrGqW](https://drive.google.com/drive/folders/1gYfxKEvFbKl\_UgHBT5PeGc5PJ-8yrGqW) |
 
 ### VDO.Ninja Tech Demonstrations
 
