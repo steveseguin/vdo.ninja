@@ -563,7 +563,7 @@ function modURL(){
 	} else if (url.startsWith("https://")){
 		// pass
 	} else if (url.startsWith("file:")){
-		// pass
+		alert("Warning:\n\nFor security purposes, local files need to be loaded via the command-line or via the right-click context menu -> Edit URL.\n\nThis is supported in Electron Capture 2.15.2 and newer.");
 	} else {
 		url = "https://"+url;
 	}

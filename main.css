@@ -1054,9 +1054,6 @@ button.btnArmTransferRoom.selected{
 	#logoname{
 		display:none;
 	}
-	#head1{
-		display:none;
-	}
 	#head4{
 		display:none;
 	}
@@ -2524,6 +2521,12 @@ button.toggleSettings{
 	vertical-align: middle;
 	font-size: 100%;
 }
+
+#minipreview > #videosource {
+	height:auto!important;
+	width:auto!important;;
+}
+
 #videoSourceSelect {
 	display: inline-block;
 	vertical-align: middle;
@@ -3529,8 +3532,11 @@ input:checked + .slider:before {
 	transform: translateX(16px);
 }
 
-
-#promptModal, #roomSettings, .promptModal {
+#remoteOBSControl  button {
+	margin:5px;
+	padding:10px;
+}
+#promptModal, .customModelPopup, .promptModal {
 	position: absolute;
 	background-color: rgb(221 221 221);
 	box-shadow: 0 0 30px 10px #0000005c;
@@ -3875,7 +3881,9 @@ input:checked + .slider:before {
 .la-cog:before {
 	content: "\f013"; }
 .la-phone:before {
-	content: "\f095"; }
+	content: "\f095"; } 
+.la-gamepad:before {
+	content: "\f11b"; }
 .la-skull-crossbones:before {
 	content: "\f714"; }
 .la-hand-paper:before {
