@@ -2,135 +2,34 @@
 
 /* global chrome location ReadableStream define MessageChannel TransformStream */
 
-;((name, definition) => {
-  typeof module !== 'undefined'
-    ? module.exports = definition()
-    : typeof define === 'function' && typeof define.amd === 'object'
-      ? define(definition)
-      : this[name] = definition()
-})('streamSaver', () => {
+function streamSaverFunction(){
   'use strict'
 
-  const global = typeof window === 'object' ? window : this
+  const global = typeof window === 'object' ? window : this;
   if (!global.HTMLElement) console.warn('streamsaver is meant to run on browsers main thread')
 
-  let mitmTransporter = null
-  let supportsTransferable = false
-  const test = fn => { try { fn() } catch (e) {} }
-  const ponyfill = global.WebStreamsPolyfill || {}
-  const isSecureContext = global.isSecureContext
+  let mitmTransporter = null;
+  let supportsTransferable = false;
+  const test = fn => { try { fn() } catch (e) {} };
+  const ponyfill = global.WebStreamsPolyfill || {};
+  const isSecureContext = global.isSecureContext;
+  
+  //console.log(ponyfill);
+  //console.log(isSecureContext);
+  
   // TODO: Must come up with a real detection test (#69)
-  let useBlobFallback = /constructor/i.test(global.HTMLElement) || !!global.safari || !!global.WebKitPoint
+  let useBlobFallback = /constructor/i.test(global.HTMLElement) || !!global.safari || !!global.WebKitPoint;
+  
+  //console.log(useBlobFallback);
+  
   const downloadStrategy = isSecureContext || 'MozAppearance' in document.documentElement.style
     ? 'iframe'
-    : 'navigate'
-
-  const streamSaver = {
-    createWriteStream,
-    WritableStream: global.WritableStream || ponyfill.WritableStream,
-    supported: true,
-    version: { full: '2.0.7', major: 2, minor: 0, dot: 7 },
-    mitm: './thirdparty/mitm.html?v=2'
-  }
-
-  /**
-   * create a hidden iframe and append it to the DOM (body)
-   *
-   * @param  {string} src page to load
-   * @return {HTMLIFrameElement} page to load
-   */
-  function makeIframe (src) {
-    if (!src) throw new Error('meh')
-    const iframe = document.createElement('iframe')
-    iframe.hidden = true
-    iframe.src = src
-    iframe.loaded = false
-    iframe.name = 'iframe'
-    iframe.isIframe = true
-    iframe.postMessage = (...args) => iframe.contentWindow.postMessage(...args)
-    iframe.addEventListener('load', () => {
-      iframe.loaded = true
-    }, { once: true })
-    document.body.appendChild(iframe)
-    return iframe
-  }
-
-  /**
-   * create a popup that simulates the basic things
-   * of what a iframe can do
-   *
-   * @param  {string} src page to load
-   * @return {object}     iframe like object
-   */
-  function makePopup (src) {
-    const options = 'width=200,height=100'
-    const delegate = document.createDocumentFragment()
-    const popup = {
-      frame: global.open(src, 'popup', options),
-      loaded: false,
-      isIframe: false,
-      isPopup: true,
-      remove () { popup.frame.close() },
-      addEventListener (...args) { delegate.addEventListener(...args) },
-      dispatchEvent (...args) { delegate.dispatchEvent(...args) },
-      removeEventListener (...args) { delegate.removeEventListener(...args) },
-      postMessage (...args) { popup.frame.postMessage(...args) }
-    }
-
-    const onReady = evt => {
-      if (evt.source === popup.frame) {
-        popup.loaded = true
-        global.removeEventListener('message', onReady)
-        popup.dispatchEvent(new Event('load'))
-      }
-    }
-
-    global.addEventListener('message', onReady)
-
-    return popup
-  }
-
-  try {
-    // We can't look for service worker since it may still work on http
-    new Response(new ReadableStream())
-    if (isSecureContext && !('serviceWorker' in navigator)) {
-      useBlobFallback = true
-    }
-  } catch (err) {
-    useBlobFallback = true
-  }
-
-  test(() => {
-    // Transferable stream was first enabled in chrome v73 behind a flag
-    const { readable } = new TransformStream()
-    const mc = new MessageChannel()
-    mc.port1.postMessage(readable, [readable])
-    mc.port1.close()
-    mc.port2.close()
-    supportsTransferable = true
-    // Freeze TransformStream object (can only work with native)
-    Object.defineProperty(streamSaver, 'TransformStream', {
-      configurable: false,
-      writable: false,
-      value: TransformStream
-    })
-  })
-
-  function loadTransporter () {
-    if (!mitmTransporter) {
-      mitmTransporter = isSecureContext
-        ? makeIframe(streamSaver.mitm)
-        : makePopup(streamSaver.mitm)
-    }
-  }
-
-  /**
-   * @param  {string} filename filename that should be used
-   * @param  {object} options  [description]
-   * @param  {number} size     deprecated
-   * @return {WritableStream<Uint8Array>}
-   */
+    : 'navigate';
+	
+  //console.log(downloadStrategy);
+	
   function createWriteStream (filename, stopStream){
+	//console.log("createWriteStream");
     let opts = {
       size: null,
       pathname: null,
@@ -200,6 +99,7 @@
       }
 
       channel.port1.onmessage = evt => {
+		console.log(evt);
         // Service worker sent us a link that we should open.
         if (evt.data.download) {
           // Special treatment for popup...
@@ -309,5 +209,109 @@
     }, opts.writableStrategy)
   }
 
+  const streamSaver = {
+    createWriteStream,
+    WritableStream: global.WritableStream || ponyfill.WritableStream,
+    supported: true,
+    version: { full: '2.0.7', major: 2, minor: 0, dot: 7 },
+    mitm: './thirdparty/mitm.html?v=2'
+  }
+  
+  //console.log(streamSaver);
+
+  /**
+   * create a hidden iframe and append it to the DOM (body)
+   *
+   * @param  {string} src page to load
+   * @return {HTMLIFrameElement} page to load
+   */
+  function makeIframe (src) {
+    if (!src) throw new Error('meh')
+    const iframe = document.createElement('iframe')
+    iframe.hidden = true
+    iframe.src = src
+    iframe.loaded = false
+    iframe.name = 'iframe'
+    iframe.isIframe = true
+    iframe.postMessage = (...args) => iframe.contentWindow.postMessage(...args)
+    iframe.addEventListener('load', () => {
+      iframe.loaded = true
+    }, { once: true })
+    document.body.appendChild(iframe)
+    return iframe
+  }
+
+  /**
+   * create a popup that simulates the basic things
+   * of what a iframe can do
+   *
+   * @param  {string} src page to load
+   * @return {object}     iframe like object
+   */
+  function makePopup (src) {
+    const options = 'width=200,height=100'
+    const delegate = document.createDocumentFragment()
+    const popup = {
+      frame: global.open(src, 'popup', options),
+      loaded: false,
+      isIframe: false,
+      isPopup: true,
+      remove () { popup.frame.close() },
+      addEventListener (...args) { delegate.addEventListener(...args) },
+      dispatchEvent (...args) { delegate.dispatchEvent(...args) },
+      removeEventListener (...args) { delegate.removeEventListener(...args) },
+      postMessage (...args) { popup.frame.postMessage(...args) }
+    }
+
+    const onReady = evt => {
+      if (evt.source === popup.frame) {
+        popup.loaded = true
+        global.removeEventListener('message', onReady)
+        popup.dispatchEvent(new Event('load'))
+      }
+    }
+
+    global.addEventListener('message', onReady)
+
+    return popup
+  }
+
+  try {
+    // We can't look for service worker since it may still work on http
+    new Response(new ReadableStream())
+    if (isSecureContext && !('serviceWorker' in navigator)) {
+      useBlobFallback = true
+    }
+  } catch (err) {
+    useBlobFallback = true
+  }
+  
+  //console.log("useBlobFallback: "+useBlobFallback);
+
+  test(() => {
+    // Transferable stream was first enabled in chrome v73 behind a flag
+    const { readable } = new TransformStream()
+    const mc = new MessageChannel()
+    mc.port1.postMessage(readable, [readable])
+    mc.port1.close()
+    mc.port2.close()
+    supportsTransferable = true
+    // Freeze TransformStream object (can only work with native)
+    Object.defineProperty(streamSaver, 'TransformStream', {
+      configurable: false,
+      writable: false,
+      value: TransformStream
+    })
+  })
+
+  function loadTransporter () {
+    if (!mitmTransporter) {
+      mitmTransporter = isSecureContext
+        ? makeIframe(streamSaver.mitm)
+        : makePopup(streamSaver.mitm)
+    }
+  }
+
   return streamSaver
-})
+};
+var streamSaver = streamSaverFunction();
