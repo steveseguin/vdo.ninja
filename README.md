@@ -38,14 +38,20 @@ For more advanced users, you can see the [install.md](https://github.com/stevese
 
 If self-hosting, you might also wish to host your own video relay TURN server.  Directions on how to deploy a TURN server are listed in the turnserver.md file. Only about ~ 5% of remote guests usually will need a TURN server, often those connected via 4G LTE or those behind a strict firewall, but most other users don't need one. While VDO.Ninja does host some pubiic TURN servers, they are quite expensive to operate, so please try to avoid abusing if possible. If you are deploying your own version of VDO.Ninja, I'd ask you to use your own TURN servers if you are capable of doing so; it's understandable if you aren't able to though.
 
+### Develop vs Release versions
+
+The develop branch is a bit like the preview or nightly version of VDO.Ninja. It's intended to be functional, but it may not be that well tested or there could be incomplete features. This version aligns closely with what is normally on vdo.ninja/beta/ or vdo.ninja/alpha/, which is well suited for those wishing to submit code changes or to gain access to experimental new features.
+
+Release versions of VDO.Ninja have their own branches though, with the newest release being hosted at https://vdo.ninja/.  These latest release branch will be updated to fix bugs or critical issues as needed, but are otherwise unchanged. https://github.com/steveseguin/vdo.ninja/branches
+
+Due to the nature of live video production, where unexpected changes to the app are not welcomed usually, I don't update https://vdo.ninja/ all that often. As well, constant updates to the primary hosted app makes supporting users challenging, as its hard to tell if an issue is with the code or with the user. For this reason, VDO.Ninja does infrequent updates to the primary hosted production version.  Users wanting newer features, or who have greater risk tolerance, should use the beta version (vdo.ninja/beta/). The alpha version is usually updated daily, whereas beta is usually updated weekly.
+
 ## Server side / API software
 Since VDO.Ninja uses peer-2-peer technology, video connections are made directly between viewer and publisher in 95% of cases. Hosting a TURN server yourself may help improve performance, but less than 1% of users will see an improvement to video quality by using one. They also will not help lower bandwidth usage or CPU usage, so generally you wish to avoid using them if possible.
 
 Details on how to deploy a TURN server are provided; see: turnserver.md. For those capable of hosting their own TURN server, that would be appreciated if possible, as TURN servers are the largest cost incurred by VDO.Ninja at present. (other than time, of course)
 
 Other than TURN servers, VDO.Ninja also uses public STUN servers and a hosted handshake server. These are used to facilitate the initial setup of peer connections and are generally not required after a peer connection is established. These servers are free to access and use, even for private deployments. As of Version 17.3 of VDO.Ninja, you can host your own handshake server or use a third-party managed one (such as piesocket.com); please see details here: https://github.com/steveseguin/websocket_server
-
-Development builds of VDO.Ninja may sometimes include debugging software or features, but production releases have this removed
 
 A design goal of VDO.Ninja is to be serverless and we are near 99% of the way there. This design objective ensures VDO.Ninja can be offered for free, along with providing increased levels of security and privacy. 
 
