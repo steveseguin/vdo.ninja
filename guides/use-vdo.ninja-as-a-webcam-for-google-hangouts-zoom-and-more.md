@@ -145,7 +145,7 @@ If publishing to VDO.Ninja, remember that you can select multiple audio sources 
 
 ![](https://lh5.googleusercontent.com/uVrtV18j6fyGt6DS9-iKmvp5-k8ps-6hICvB1wdJEZyIoM-I6CVtRnT5VGS72Q1pTygzH7iWbBzuAXyTIC18PbkH\_Hb9jf0DROj0tnrGbbVz-JE8vUcu4B5RJv6ZpgutwhvP4Be5N6b8XWnVMQ)
 
-### All done !
+### All done!
 
 And that should be it! You can switch between the webcam and the OBS live video as needed.
 

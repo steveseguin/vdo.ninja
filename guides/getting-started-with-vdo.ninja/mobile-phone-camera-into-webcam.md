@@ -4,10 +4,10 @@ This set of instructions will work for Windows, Mac1 and Linux2.
 
 ### How to use
 
-1. Bring your VDO.Ninja ‘view’ link into OBS. Drag and drop the link into a scene, and resize it to fit. Make sure OBS has audio control
+1. Bring your VDO.Ninja ‘view’ link into OBS. Drag and drop the link into a scene, and resize it to fit. Make sure OBS has audio control.
 2. Take your scene and make it the ‘program’ output in OBS if in studio mode.
-3. On the main UI press “Start Virtual Camera”
-4. Open your 3rd party program and choose “OBS-Camera” as a Video input
+3. On the main UI press “Start Virtual Camera”.
+4. Open your 3rd party program and choose “OBS-Camera” as a Video input.
 
 ### Use Cases
 

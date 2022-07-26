@@ -20,5 +20,5 @@ Learn how to automate starting up VDO.Ninja, automatically join rooms and scenes
 
 #### [VDO.Ninja Mac Audio Routing w Loopback Cheatsheet (example 1)](https://github.com/steveseguin/vdo.ninja/blob/quickstart/loopbackrouting1/cheatsheet\_obsn\_loopback\_routing1.md)
 
-Learn how to route guest and application audio on the Mac using Loopback.\
+Learn how to route guest and application audio on the Mac using Loopback\
 [![OBS Ninja | cheat-sheet](https://github.com/steveseguin/vdo.ninja/raw/quickstart/loopbackrouting1/loopbackrouting1\_thumbnail.jpg)](https://github.com/steveseguin/vdo.ninja/blob/quickstart/loopbackrouting1/cheatsheet\_obsn\_loopback\_routing1.md)
