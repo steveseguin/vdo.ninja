@@ -21,8 +21,10 @@ The documentation that you are reading here contains details of advanced setting
 
 There are some cheat sheet and quick-start guides here:
 
-\
-\
+{% content-ref url="guides/cheat-sheets.md" %}
+[cheat-sheets.md](guides/cheat-sheets.md)
+{% endcontent-ref %}
+
 There are a few basic guides for beginners here as well:
 
 {% content-ref url="guides/getting-started-with-vdo.ninja/" %}
