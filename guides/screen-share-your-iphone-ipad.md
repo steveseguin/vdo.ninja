@@ -24,7 +24,7 @@ Android users can use the native VDO.Ninja Android app to screen share directly 
 
 3\. From the QuickTime Player menu, select File -> New Movie Recording.
 
-![](<../.gitbook/assets/image (92) (1).png>)
+![](<../.gitbook/assets/image (92) (1) (1).png>)
 
 4\. The QuickTime Player may show your laptop's webcam initially, but you can select from the hover-over menu the option to select your iPhone's video and audio as a video source instead.
 

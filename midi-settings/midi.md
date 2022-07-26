@@ -140,7 +140,7 @@ For macOS, one Streamdeck plugin available is [https://github.com/tsbkelly/Strea
 
 For PC, there's this one [https://trevligaspel.se/streamdeck/midi/index.html](https://trevligaspel.se/streamdeck/midi/index.html)
 
-![](<../.gitbook/assets/image (110) (1) (1) (1).png>)
+![](<../.gitbook/assets/image (110) (1) (1) (1) (1).png>)
 
 You will also need a Virtual MIDI loopback interface on your computer, if intending to send MIDI commands to VDO.Ninja.  There's free options available, such as:
 

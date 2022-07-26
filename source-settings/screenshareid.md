@@ -26,7 +26,7 @@ When screen sharing as a guest in a group room, the screen share will now create
 `&screenshareid` will preset the ID the screenshare will have, making things easier to predict and prep for.
 
 Example (`&room=roomname&push=streamid&screenshareid`)\
-![](<../.gitbook/assets/image (110) (1).png>)
+![](<../.gitbook/assets/image (110) (1) (1).png>)
 
 Without this, the screen share ID is random, which is a decision made to increase security. This complication will be addressed in the future.
 

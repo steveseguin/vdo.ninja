@@ -29,4 +29,4 @@ You can now also toggle it in the director's room to add it to the guest's link:
 
 
 
-![](<../../.gitbook/assets/image (92).png>)
+![](<../../.gitbook/assets/image (92) (1).png>)

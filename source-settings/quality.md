@@ -26,7 +26,7 @@ Presets the "quality" setting for a guest.\
 Not "strict" and is less likely to give errors than explicit resolution requests.
 
 There is a toggle in the director's room guest's invite link customization:\
-![](<../.gitbook/assets/image (98).png>)
+![](<../.gitbook/assets/image (98) (1).png>)
 
 ## Related
 
