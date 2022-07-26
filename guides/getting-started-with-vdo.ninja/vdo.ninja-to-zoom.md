@@ -4,7 +4,7 @@ This guide will take you from having a single or multiple guests in a room and h
 
 ### Step 1
 
-Go to https://VDO.Ninja
+Go to [https://vdo.ninja/](https://vdo.ninja/)
 
 ### Step 2
 
@@ -52,7 +52,7 @@ The Electron Capture will let us share our video into Zoom without any borders a
 
 ### Step 9
 
-We also want to download and install a Virtual Audio device: https://rogueamoeba.com/loopback/ (macOS & non-free, but excellent) and [https://existential.audio/blackhole](https://existential.audio/blackhole) (macOS & free) [https://vb-audio.com/Cable](https://vb-audio.com/Cable) VB Cable for Windows or macOS - (Donationware)
+We also want to download and install a Virtual Audio device: https://rogueamoeba.com/loopback/ (macOS & non-free, but excellent) and [https://existential.audio/blackhole](https://existential.audio/blackhole) (macOS & free) [https://vb-audio.com/cable](https://vb-audio.com/Cable) VB Cable for Windows or macOS - (Donationware)
 
 ### Step 10
 
@@ -82,8 +82,10 @@ We can now use the Director Room to control who is in the scene, who is muted, a
 
 ### More information
 
-More on the **ROOM** here: [Getting started: The Room (VDO Ninja Podcast ep02)](https://www.youtube.com/watch?v=m1cIT1kdlEo\&list=PLWodc2tCfAH1WHjl4WAOOoRSscJ8CHACe\&index=5)
+More on the **ROOM** here:
 
-More on **Advanced settings** here: [Getting started: Power Parameters (VDO Ninja Podcast ep06)](https://www.youtube.com/watch?v=l9BNTTNY08s\&list=PLWodc2tCfAH1WHjl4WAOOoRSscJ8CHACe\&index=9)
+[Getting started: The Room (OBS Ninja Podcast ep02)](https://youtu.be/m1cIT1kdlEo)
 
-And [https://params.obs.ninja](https://params.obs.ninja/)
+More on **Advanced settings** here:
+
+[Getting started: Power Parameters (OBS Ninja Podcast ep06)](https://youtu.be/l9BNTTNY08s)

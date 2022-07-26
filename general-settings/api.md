@@ -28,10 +28,10 @@ Please see [https://companion.vdo.ninja](https://companion.vdo.ninja) for a samp
 
 ## Related
 
-{% content-ref url="../guides/hotkey-support/" %}
-[hotkey-support](../guides/hotkey-support/)
+{% content-ref url="../guides/hotkey-support.md" %}
+[hotkey-support.md](../guides/hotkey-support.md)
 {% endcontent-ref %}
 
-{% content-ref url="../guides/hotkey-support/how-to-control-vdo.ninja-with-touch-portal.md" %}
-[how-to-control-vdo.ninja-with-touch-portal.md](../guides/hotkey-support/how-to-control-vdo.ninja-with-touch-portal.md)
+{% content-ref url="../guides/how-to-control-vdo.ninja-with-touch-portal.md" %}
+[how-to-control-vdo.ninja-with-touch-portal.md](../guides/how-to-control-vdo.ninja-with-touch-portal.md)
 {% endcontent-ref %}

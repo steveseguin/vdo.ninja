@@ -2,7 +2,7 @@
 description: How to screen-share your iPhone or iPad to VDO.Ninja
 ---
 
-# Screen-Share your iPhone / iPad
+# How to screen share your iPhone/iPad
 
 If on iOS, there isn't an option available to screen share from within the browser or native iOS app, but you can wirelessly airplay your screen to a computer, and then window capture that output.
 
@@ -20,7 +20,7 @@ Android users can use the native VDO.Ninja Android app to screen share directly 
 
 2\. Open the QuickTime Player on your mac.
 
-![](<../.gitbook/assets/image (90) (1).png>)
+![](<../.gitbook/assets/image (90) (1) (1).png>)
 
 3\. From the QuickTime Player menu, select File -> New Movie Recording.
 

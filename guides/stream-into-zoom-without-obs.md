@@ -2,9 +2,9 @@
 description: Stream from VDO.NInja into Zoom using the Electron Capture app
 ---
 
-# Stream into Zoom without OBS
+# How to stream into Zoom without OBS
 
-## Stream from VDO.NInja into Zoom, without OBS <a href="#h.1qc55rh0mkw2" id="h.1qc55rh0mkw2"></a>
+## Stream from VDO.Ninja into Zoom, without OBS <a href="#h.1qc55rh0mkw2" id="h.1qc55rh0mkw2"></a>
 
 * 1\) Go to [https://vdo.ninja](https://vdo.ninja).
 

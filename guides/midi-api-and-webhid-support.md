@@ -1,37 +1,13 @@
----
-description: Some keyboard hotkeys
----
-
-# Hotkey and API support
-
-### Basic hotkeys
-
-`CTRL + M` => Mute your mic (audio output)
-
-`CTRL + B` => Mute your video output
-
-`SHIFT + ALT + C` => Toggle the control bar that's normally at the bottom of the screen.
-
-`CTRL + ALT + F` => Open the file-sharing window
-
-`CTRL + ALT + C` => Cycle the camera to the next camera available
-
-`CTRL + ALT + S` => Open the screen-sharing window
-
-\[On macOS use `CMD` instead of `CTRL`]
-
-When using the above keyboard short-cuts, the tab/window must be actively in focus.
-
-When using the Electron Capture app in elevated privilege mode, the keyboard shortcuts are global.
+# MIDI, API and WebHID support
 
 ### MIDI hotkeys
 
-There are numerous more hotkeys that can be used via MIDI; these are global hotkeys, used even if the window is not visible, but they require some additional setup. You can remotely control via MIDI also, using the [`&midiout`](../../midi-settings/midiout.md) and [`&midiin`](../../midi-settings/midiin.md) routing functionality.&#x20;
+There are numerous more hotkeys that can be used via MIDI; these are global hotkeys, used even if the window is not visible, but they require some additional setup. You can remotely control via MIDI also, using the [`&midiout`](../midi-settings/midiout.md) and [`&midiin`](../midi-settings/midiin.md) routing functionality.&#x20;
 
 MIDI hotkeys are compatible with an Elgato Streamdeck by means of a free Streamdeck MIDI plugin.
 
-{% content-ref url="../../midi-settings/midi.md" %}
-[midi.md](../../midi-settings/midi.md)
+{% content-ref url="../midi-settings/midi.md" %}
+[midi.md](../midi-settings/midi.md)
 {% endcontent-ref %}
 
 ### Bitfocus Companion
@@ -46,8 +22,8 @@ There is a website that demos some of the commands available here: [https://comp
 
 You can use this to create your own hotkeys for pretty any device, application, or website.
 
-{% content-ref url="../../general-settings/api.md" %}
-[api.md](../../general-settings/api.md)
+{% content-ref url="../general-settings/api.md" %}
+[api.md](../general-settings/api.md)
 {% endcontent-ref %}
 
 ### IFRAME API
@@ -56,8 +32,8 @@ The HTTP and websocket make use of a server to route API calls. If you'd like to
 
 The IFRAME API is the most powerful option, but it requires some basic coding on your own part to have it provide hotkey functionality for your specific requirement.
 
-{% content-ref url="../iframe-api-documentation.md" %}
-[iframe-api-documentation.md](../iframe-api-documentation.md)
+{% content-ref url="iframe-api-documentation.md" %}
+[iframe-api-documentation.md](iframe-api-documentation.md)
 {% endcontent-ref %}
 
 ### WebHID
