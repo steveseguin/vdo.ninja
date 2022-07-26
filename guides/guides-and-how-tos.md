@@ -9,7 +9,6 @@
 
 * [How to share Desktop Audio on macOS, such as when screen sharing](https://kast.zendesk.com/hc/en-us/articles/360031463111-How-to-stream-computer-audio-on-a-Mac)
 * [How to turn your mobile phone camera into a webcam with VDO.Ninja (Quick Guide)](https://docs.google.com/document/d/e/2PACX-1vSttd6fJYHe9fzMIaa7z4YEwEArgxyBNPNSLk-3zm63Kdk0fJbR1uSyjjVxyIorA9Y\_gSnYfBbZnx0Y/pub)
-* [How to share a screen AND a webcam at the SAME time](https://docs.google.com/document/d/e/2PACX-1vTBBGShOJFdzcvRmcu0fxgzJYytfsjyQ5kTopJaNGH2r7wJp3qAtAFexdTYAEzWnqiRsaGUIVO4i0py/pub)
 
 ## Audio
 
