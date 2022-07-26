@@ -25,6 +25,12 @@ Time fixes all wounds, even with Apple products.\
 Below are more possible/past issues, although the list is not often curated and can be assumed to be out of date.
 
 * Grey video loaded from guest in room. Try adding [`&scale=100`](../advanced-settings/view-parameters/scale.md) and remove any bitrate limits set. If the issue persists, try a different video codec ([`&codec=vp9`](../advanced-settings/view-parameters/codec.md), for example) or ask the guest to connect with [`&q=2`](../source-settings/quality.md) (smooth and cool).
+*   OBS browser sources crash, turning all black. This can happen after refreshing/editing a browser source URL or just randomly.  Restarting OBS can fix the issue, but to prevent the issue, try using:\
+    \
+    &#x20;`"C:\Program Files\obs-studio\bin\64bit\obs64.exe" --enable-media-stream --disable-gpu-process-crash-limit`
+
+    \
+    You can add \`--`` disable-gpu-process-crash-limit` `` to the OBS start up properties as a way to avoid this.  There will still be an issue. You can also use the Electron Capture app instead of the OBS browser source.
 * All green or all purple video from a mobile device (Pixel, Samsung Galaxy) can sometimes happen with certain resolutions or orientations. Using `&scale=100` or `&scale=95` can sometimes help (viewer side), but also changing the video codec to `&codec=vp8` might help.
 * OBS on PC can have video become corrupted if there is moderate or heavy packet loss. Changing the video codec to vp9 or h264 can fix it for moderate packet loss, but for heavy packet loss using the Electron Capture app is suggested. You can also issue keyframes with the rainbow puke button in the Director's room or refresh the viewing page, but it's a temporary fix. Ideally, fixing the packet loss itself is the ideal solution.
 * Streamlabs (SLOBS) on macOS does not currently support VDO.Ninja directly; you'll need to use the Electron Capture app or the normal OBS version instead.
