@@ -12,7 +12,7 @@ VDO.Ninja is designed to allow content creators to produce real-time live shows 
 
 VDO.Ninja is freely available to use as a managed service over at https://vdo.ninja. 
 
-For live support, please join our discord at https://discord.obs.ninja
+For live support, please join our discord at https://discord.vdo.ninja
 Please see the sub-reddit added info: https://reddit.com/r/vdoninja  
 Also check out the user documentation at: https://docs.vdo.ninja
 
