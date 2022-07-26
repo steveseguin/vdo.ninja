@@ -26,7 +26,7 @@ To test:\
 
 The image will scale in size to cover the VDO.Ninja app's background. [`&chroma`](../design-parameters/chroma.md) can still be used to set the background color, if using transparencies. There already exists [`&bgimage`](and-bgimage.md), which will set the default background image for videos; this however will set a background image for the entire page.
 
-![](<../../.gitbook/assets/image (110) (1).png>)
+![](<../../.gitbook/assets/image (110) (1) (1).png>)
 
 ## Related
 
