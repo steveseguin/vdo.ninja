@@ -2,7 +2,7 @@
 
 * [Getting started with VDO.Ninja](getting-started-with-vdo.ninja/)
 * [Cheat Sheets](cheat-sheets.md)
-* [How Group Chat works](how-does-group-chat-work.md)
+* [How Group Chat works](../help/how-does-group-chat-work.md)
 * [Basic hotkeys](hotkey-support/)
 * [MIDI, API and WebHID support](midi-api-and-webhid-support.md)
 * [Hardware-accelerated video encoding](hardware-accelerated-video-encoding.md)

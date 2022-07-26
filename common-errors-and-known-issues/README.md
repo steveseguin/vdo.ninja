@@ -23,7 +23,6 @@
 * [Getting "Overconstrained" Camera Error](getting-overconstrained-camera-error.md)
 * [Autoplay doesn't work in Chrome or Vmix v77](autoplay-doesnt-work-in-chrome-or-vmix-v77.md)
 * [Low frame rates](low-frame-rates.md)
-* [There are black borders around the videos in OBS](there-are-black-borders-around-the-video-in-obs..md)
-* [LAN vs WAN - VDO.Ninja traffic diagram, by saimiri31](https://drive.google.com/file/d/1oI7NYIlf\_RurYoM0TEgJtzBJRV\_wohuh/view)
+* [Black borders around the videos in OBS](there-are-black-borders-around-the-video-in-obs..md)
 * [Virtual cam not working on Mac](virtual-cam-not-working-on-mac.md)
 * [Mic's volume keeps changing](mics-volume-keeps-changing.md)

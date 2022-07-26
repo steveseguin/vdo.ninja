@@ -2,7 +2,7 @@
 description: Group Chat (aka, a room)
 ---
 
-# How does Group Chat work?
+# How Group Chat works
 
 The group chat feature creates a virtual room where multiple devices can connect to share audio and video. It offers echo-cancellation and text-chat support as well. A room's ‘director’ can manage the guests from the control room, easily accessing individual sources for integration into OBS.
 

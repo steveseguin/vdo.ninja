@@ -42,6 +42,7 @@
 * [How to test your Internet connection quality with a video-echo test](https://obs.ninja/speedtest)
 * [How to host your own RTSP server for VDO.Ninja by using OBS with the OBS-RTSP-Server plugin](https://obsproject.com/forum/resources/obs-rtspserver.1037/)
 * [How to improve streaming performance and reliability with a Speedify](https://support.speedify.com/article/725-how-to-improve-streaming-via-obs-with-speedify)
+* [LAN vs WAN - VDO.Ninja traffic diagram ](https://drive.google.com/file/d/1oI7NYIlf\_RurYoM0TEgJtzBJRV\_wohuh/view)- by saimiri 31
 
 ## YouTube Videos
 
