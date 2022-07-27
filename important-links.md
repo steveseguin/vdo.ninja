@@ -19,7 +19,7 @@
 | Trampoline                   | [https://rse.github.io/vdo-ninja-trampoline/](https://rse.github.io/vdo-ninja-trampoline/)                            |
 | URL Obfuscator for VDO.Ninja | [https://invite.cam/](https://invite.cam/)                                                                            |
 
-### Mobile Apps
+### [Mobile Apps](getting-started/native-mobile-app-versions.md)
 
 | iOS     | [https://apps.apple.com/us/app/vdo-ninja/id1607609685](https://apps.apple.com/us/app/vdo-ninja/id1607609685)                       |
 | ------- | ---------------------------------------------------------------------------------------------------------------------------------- |
@@ -63,7 +63,7 @@
 | A tool for letting you publish into VDO.Ninja, but then full-screen the window once setup, allowing for window-capturing into zoom. | [https://vdo.ninja/examples/zoom.html](https://vdo.ninja/examples/zoom.html)                                   |
 | Also hosted on github elsewhere, but it's an example of how to remotely control OBS using VDO.Ninja's tunneling abilities           | [https://vdo.ninja/examples/obs\_remote/index](https://vdo.ninja/examples/obs\_remote/index)                   |
 
-### Sponsor ❤
+### [Sponsor ❤](getting-started/sponsor.md)
 
 | GitHub Sponsors    | [https://github.com/sponsors/steveseguin](https://github.com/sponsors/steveseguin)         |
 | ------------------ | ------------------------------------------------------------------------------------------ |
@@ -89,7 +89,7 @@
 | Raspberry Ninja                                         | [https://github.com/steveseguin/raspberry\_ninja](https://github.com/steveseguin/raspberry\_ninja)                                         |
 | YouTube, Twitch chat and social comment Overlays plugin | [https://github.com/steveseguin/twitch-youtube-restream-chat-overlay](https://github.com/steveseguin/twitch-youtube-restream-chat-overlay) |
 
-### Community contributed tools
+### [Community contributed tools](getting-started/community-contributed-tools.md)
 
 | Vingester (ingest web pages as NDI-multicasted streams)              | [https://vingester.app/](https://vingester.app/)                                                                 |
 | -------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------- |
