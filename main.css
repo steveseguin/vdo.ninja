@@ -3531,6 +3531,12 @@ input:checked + .slider:before {
 	-ms-transform: translateX(16px);
 	transform: translateX(16px);
 }
+#remoteOBSControl {
+	user-select: none;
+    z-index: 25;
+    max-height: calc(100vh - 116px);
+    overflow-y: auto;
+}
 
 #remoteOBSControl  button {
 	margin:5px;

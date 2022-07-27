@@ -1262,8 +1262,6 @@ function toggleOBSControls(){
 	} else {
 		getById("modalBackdrop").innerHTML = ''; // Delete modal
 		getById("modalBackdrop").remove();
-		zindex = 25;
-		getById('remoteOBSControl').style.zIndex = 25;
 		var modalTemplate = `<div id="modalBackdrop" style="z-index:24"></div>`;
 		document.body.insertAdjacentHTML("beforeend", modalTemplate); // Insert modal at body end
 		document.getElementById("modalBackdrop").addEventListener("click", toggleOBSControls);
@@ -1551,10 +1549,10 @@ function manageSceneState(data, UUID){ // incoming obs details
 			if (session.pcs[UUID].obsState.virtualcam){
 				controlButton.classList.add("pressed");
 				controlButton.dataset.obsAction = "stopVirtualcam";
-				controlButton.innerText = "💻 stop virtual cam";
+				controlButton.innerText = "💻 stop virtualcam";
 			} else {
 				controlButton.dataset.obsAction = "startVirtualcam";
-				controlButton.innerText = "💻 start virtual cam";
+				controlButton.innerText = "💻 start virtualcam";
 			}
 			
 			if (control<5){
@@ -1654,6 +1652,7 @@ function processOBSCommand(msg){
 			if (msg.UUID && msg.obsCommand.action){
 				var data = {}
 				data.rejected = "obsCommand";
+				//data.debug = msg.remote;
 				session.sendRequest(data, msg.UUID); // this skips the server
 			}
 			warnlog("Denied access; remote does not match");
@@ -1663,6 +1662,7 @@ function processOBSCommand(msg){
 		if (msg.UUID && msg.obsCommand.action){
 			var data = {}
 			data.rejected = "obsCommand";
+			//data.debug = "no remote code provided";
 			session.sendRequest(data, msg.UUID); // this skips the server
 		}
 		return false;
@@ -5364,12 +5364,47 @@ async function tapToFocus(x,y, force=false){
 	sharpnessToolActive = false;
 }
 
+session.remoteZoom = function(zoom){
+	try {
+		var track0 = session.streamSrc.getVideoTracks();
+		track0 = track0[0];
+		if (track0.getCapabilities){
+			var capabilities = track0.getCapabilities();
+			if (!capabilities.zoom){
+				warnlog("No zoom supported on this device");
+				return;
+			}
+			if (session.zoom==false){
+				session.zoom = capabilities.zoom.min;
+			}
+			session.zoom+=zoom;
+			if (session.zoom>capabilities.zoom.max){
+				session.zoom = capabilities.zoom.max;
+			} else if (session.zoom<capabilities.zoom.min){
+				session.zoom = capabilities.zoom.min;
+			}
+			//updateCameraConstraints("zoom", session.zoom); // TODO: I should align the remote zoom and focus with the local one.
+			track0.applyConstraints({advanced: [ {zoom: session.zoom} ]});
+		}
+	} catch(e){
+		errorlog(e);
+	}
+};
+
 session.remoteFocus = async function(focusDistance){
 	try {
 		var track0 = session.streamSrc.getVideoTracks();
 		track0 = track0[0];
 		if (track0.getCapabilities){
 			var capabilities = track0.getCapabilities();
+			
+			if (!capabilities.focusDistance){
+				warnlog("No Focus supported on this device");
+				return;
+			} else if (!("min" in capabilities.focusDistance)){
+				return;
+			}
+			
 			if (session.focusDistance==false){
 				session.focusDistance = capabilities.focusDistance.min;
 			}
@@ -5769,6 +5804,7 @@ async function makeImages(startup=false){
 		var width = 480;
 		var height = 270;
 		var timeout = 100; // the answer to everything.
+		var quality = 0.66;
 		
 		if (session.webPquality===0){
 			width = 1920;
@@ -5779,21 +5815,21 @@ async function makeImages(startup=false){
 			height = 720;
 			timeout = 33;
 		} else if (session.webPquality===2){
-			width = 640;
-			height = 360;
+			width = 960;
+			height = 540;
 			timeout = 33;
 		} else if (session.webPquality===3){
-			width = 480;
-			height = 270;
+			width = 640;
+			height = 360;
 			timeout = 33;
 		} else if (session.webPquality===4){
 			width = 480;
 			height = 270;
-			timeout = 67;
+			timeout = 33;
 		} else if (session.webPquality===5){
 			width = 480;
 			height = 270;
-			timeout = 100;
+			timeout = 67;
 		} else if (session.webPquality===6){
 			width = 480;
 			height = 270;
@@ -5810,6 +5846,7 @@ async function makeImages(startup=false){
 		session.webPcanvas.width = width;
 		session.webPcanvas.height = height;
 		session.webPcanvas.timeout = timeout;
+		session.webPcanvas.quality = quality;
 		session.webPcanvasCtx = session.webPcanvas.getContext('2d', {alpha: false, desynchronized: true});
 		session.webPcanvasCtx.fillStyle = "black";
 		session.webPcanvasCtx.fillRect(0, 0, width, height);
@@ -5859,7 +5896,7 @@ async function makeImages(startup=false){
 					if (!session.pcs[i].sendChannel.bufferedAmount){
 						if (!arrayBuffer){
 							session.webPcanvasCtx.drawImage(session.videoElement, 0, 0, session.webPcanvas.width, session.webPcanvas.height);
-							arrayBuffer = dataURItoArraybuffer(session.webPcanvas.toDataURL("image/"+session.webp, 0.6));
+							arrayBuffer = dataURItoArraybuffer(session.webPcanvas.toDataURL("image/"+session.webp, session.webPcanvas.quality));
 						}
 						session.pcs[i].sendChannel.send(arrayBuffer);
 					} 
@@ -8186,16 +8223,16 @@ function updateLocalStats(){
 					if (stat.type == "transport"){
 						if ("bytesSent" in stat) {
 							if ("_bytesSent" in session.pcs[UUID].stats){
-								if (session.pcs[UUID].stats._timestamp){
+								if (session.pcs[UUID].stats._timestamp3){
 									if (stat.timestamp){
-										session.pcs[UUID].stats.total_sending_bitrate_kbps = parseInt(8*(stat.bytesSent - session.pcs[UUID].stats._bytesSent)/(stat.timestamp - session.pcs[UUID].stats._timestamp));
+										session.pcs[UUID].stats.total_sending_bitrate_kbps = parseInt(8*(stat.bytesSent - session.pcs[UUID].stats._bytesSent)/(stat.timestamp - session.pcs[UUID].stats._timestamp3));
 									}
 								}
 							}
 							session.pcs[UUID].stats._bytesSent = stat.bytesSent;
 						}
 						if ("timestamp" in stat) {
-							session.pcs[UUID].stats._timestamp = stat.timestamp;
+							session.pcs[UUID].stats._timestamp3 = stat.timestamp;
 						}
 					} else if (stat.type == "outbound-rtp") {
 						if (stat.kind == "video") {
@@ -8211,9 +8248,9 @@ function updateLocalStats(){
 										lastFramesEncoded = session.pcs[UUID].stats._framesEncoded;
 										lastTimestamp = session.pcs[UUID].stats._timestamp;
 									} catch(e){}
-									session.pcs[UUID].stats._FPS = parseInt(10*(stat.framesEncoded - lastFramesEncoded)/(stat.timestamp/1000 - lastTimestamp))/10;
+									session.pcs[UUID].stats._FPS = parseInt(10*(stat.framesEncoded - lastFramesEncoded)/(stat.timestamp - lastTimestamp))/10;
 									session.pcs[UUID].stats._framesEncoded = stat.framesEncoded;
-									session.pcs[UUID].stats._timestamp = stat.timestamp/1000;
+									session.pcs[UUID].stats._timestamp = stat.timestamp;
 									session.pcs[UUID].stats.resolution = stat.frameWidth + " x " + stat.frameHeight + " @ " + session.pcs[UUID].stats._FPS;
 								} else {
 									session.pcs[UUID].stats.resolution = stat.frameWidth + " x " + stat.frameHeight;
@@ -8253,8 +8290,8 @@ function updateLocalStats(){
 							if ("bytesSent" in stat) {
 								if ("_bytesSentVideo" in session.pcs[UUID].stats){
 									if (session.pcs[UUID].stats._timestamp1){
-											session.pcs[UUID].stats.video_bitrate_kbps = parseInt(8*(stat.bytesSent - session.pcs[UUID].stats._bytesSentVideo)/(stat.timestamp - session.pcs[UUID].stats._timestamp1));
 										if (stat.timestamp){
+											session.pcs[UUID].stats.video_bitrate_kbps = parseInt(8*(stat.bytesSent - session.pcs[UUID].stats._bytesSentVideo)/(stat.timestamp - session.pcs[UUID].stats._timestamp1));
 										}
 									}
 								}

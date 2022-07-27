@@ -2,7 +2,7 @@
 	<link rel="stylesheet" href="./main.css?ver=40" />
 	<style>
 		.container {
-			max-width: 80%;
+			max-width: min(80%,875px);
 			width: fit-content;
 			margin: 0 auto;
 		}
@@ -13,6 +13,18 @@
 			padding: 10px;
 		}
 
+		a {
+			color: #00538c;
+		}
+		
+		a:link {
+			color: #00538c;
+		}
+		
+		a:visited {
+			color: #00538c;
+		}
+		
 		.card {
 			margin: 10px;
 			box-shadow: 0 4px 8px 0 rgb(0 0 0 / 10%);
@@ -85,29 +97,43 @@
 		<div id="info">
 			<h1>Web-based Media Conversion Tools</h1>
 			<div class="card">
-				<h2>WebM to MP4 (fixed 1280x720 resolution) <span class='warning'>(very slow!)</span></h2>
+				<h2>WebM (or MKV/FLV) to MP4 (fixed 1280x720 resolution) <span class='warning'>(very slow!)</span></h2>
 				<div>
-					<small>The same as: fmpeg -i input.webm -vf scale=1280:720 output.mp4</small>
-					<input type="file" id="uploader" title="Convert WebM to MP4">
+					<small>The same as: <i>fmpeg -i input.webm -vf scale="1280:720" output.mp4</i></small>
+					<input type="file" accept=".mkv, .flv, .webm" id="uploader" title="Convert WebM to MP4">
 				</div>
 			</div>
 			<div class="card">
-				<h2>WebM to MP4 files (no transcoding, attempts to force high resolutions)</h2>
+				<h2>WebM to MP4 files (no transcoding, *attempts* to force high resolutions)</h2>
 				<div>
+					<small>The same as:  <i>ffmpeg.exe -i concat:"<a href='cap.webm'  target="_blank">cap.webm</a>|input.webm" -safe 0 -c copy -avoid_negative_ts 1 -strict experimental output.mp4</i></small>
 					<input type="file" id="uploader3" accept=".webm" title="Convert WebM to MP4">
 				</div>
 			</div>
 			<div class="card">
 				<h2>WebM to Audio-only files (opus or wav)</h2>
 				<div>
-					<input type="file" id="uploader4" accept=".webm" title="Convert WebM to OPUS">
+					<small>The same as:  <i>fmpeg -i input.webm -vn -acodec copy output.wav</i></small>
+					<input type="file" id="uploader4" accept=".webm" title="Convert WebM to OPUS (or WAV)">
 				</div>
 			</div>
 			<div class="card">
-				<h2>MKV (or FLV) to MP4 (no transcoding)</h2>
+				<h2>MKV (or FLV/WebM) to MP4 (no transcoding)</h2>
 				<div>
-					<small>The same as: fmpeg -i INPUTFILE -vcodec copy -acodec copy output.mp4</small>
+					<small>The same as:  <i>fmpeg -i INPUTFILE -vcodec copy -acodec copy output.mp4</i></small>
 					<input type="file" id="uploader2" accept=".mkv, .flv, .webm" title="Convert MKV (or FLV) to MP4">
+				</div>
+			</div>
+			<div class="card">
+				<h2>Having problems?</h2>
+				<div>
+					For larger files, over 2-gigabytes in size, the browser may not be able to properly process the video in memory.
+				</div>
+				<div>
+					Please consider using FFmpeg <a href='https://ffmpeg.org/download.html' target="_blank">[get it free here]</a> to run these processes from the command-line instead. The corresponding commands are provided above, where you need to replace input.webm with your own file.
+				</div>
+				<div>
+					Other users who find FFmpeg too challenging have had luck using the graphical <a href="https://handbrake.fr/"  target="_blank">Handbrake</a> application instead.
 				</div>
 			</div>
 			<div id="processing">
@@ -125,6 +151,13 @@
 
 		<script src="./thirdparty/ffmpeg.min.js"></script>
 		<script>
+
+			window.onerror = function backupErr(errorMsg, url=false, lineNumber=false) {
+				console.error(errorMsg);
+				alert("An error occured.\n\nIf your file is larger than 2-GB, you may need to run the FFmpeg commands locally or use Handbrake instead.");
+				return false;
+			};
+
 
 			function download(data, filename) {
 				const blob = new Blob([data.buffer]);
@@ -146,6 +179,11 @@
 
 			const transcode = async ({ target: { files } }) => {
 				const { name } = files[0];
+				console.log(files[0]);
+				if (files[0].size>2147483648){
+					alert("Warning: The largest file size currently supported is 2-GB.\n\nFor larger files, please instead consider using the FFmpeg commands locally or use Handbrake. ");
+					return;
+				}
 				document.getElementById('uploader').style.display = "none";
 				document.getElementById('uploader2').style.display = "none";
 				document.getElementById('uploader3').style.display = "none";
@@ -163,6 +201,10 @@
 			
 			const transmux = async ({ target: { files } }) => {
 				const { name } = files[0];
+				if (files[0].size>2147483648){
+					alert("Warning: The largest file size currently supported is 2-GB.\n\nFor larger files, please instead consider using the FFmpeg commands locally or use Handbrake. ");
+					return;
+				}
 				document.getElementById('uploader').style.display = "none";
 				document.getElementById('uploader2').style.display = "none";
 				document.getElementById('uploader3').style.display = "none";
@@ -181,6 +223,10 @@
 
 			const force1080 = async ({ target: { files } }) => {
 				const { name } = files[0];
+				if (files[0].size>2147483648){
+					alert("Warning: The largest file size currently supported is 2-GB.\n\nFor larger files, please instead consider using the FFmpeg commands locally or use Handbrake. ");
+					return;
+				}
 				const sourceBuffer = await fetch("./media/cap.webm").then(r => r.arrayBuffer());
 				document.getElementById('uploader').style.display = "none";
 				document.getElementById('uploader2').style.display = "none";
@@ -202,6 +248,10 @@
 
 			const convertToAudioOnly = async ({ target: { files } }) => {
 				const { name } = files[0];
+				if (files[0].size>2147483648){
+					alert("Warning: The largest file size currently supported is 2-GB.\n\nFor larger files, please instead consider using the FFmpeg commands locally or use Handbrake. ");
+					return;
+				}
 				document.getElementById('message').innerText = "Transcoding file... this will take a while";
 				document.getElementById('processing').style.display = 'flex';
 				await ffmpeg.load();

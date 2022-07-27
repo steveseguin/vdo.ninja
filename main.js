@@ -882,8 +882,19 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 	}
 	
 	
+	if (urlParams.has('fakeuser')) {
+		log("ICE FILTER ENABLED");
+		session.fakeUser = true;
+		session.dataMode = true;
+		session.autostart = true;
+	}
+	
 	
 	if (urlParams.has('datamode') || urlParams.has('dataonly')) { // this disables all media in/out.
+		session.dataMode = true;
+	}
+	
+	if (session.dataMode){
 		session.cleanOutput=true;
 		session.videoDevice = 0;
 		session.audioDevice = 0;
@@ -892,7 +903,6 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 		session.noaudio = [];
 		session.noiframe = [];
 		//session.webcamonly = true;
-		session.dataMode = true;
 	} 
 	
 	
@@ -2735,6 +2745,8 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 		log("ICE FILTER ENABLED");
 		session.icefilter = urlParams.get('icefilter');
 	}
+	
+	
 	
 	//if (!(ChromeVersion>=57)){
 	//	getById("effectSelector").disabled=true;
