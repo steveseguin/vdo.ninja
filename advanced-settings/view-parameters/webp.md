@@ -41,6 +41,18 @@ Based on my testing, the webp mode is only efficient if you are keeping the bitr
 
 If you have issues with Webp-mode, or find the quality or CPU savings not sufficient, you can check out the [Meshcast.io](https://meshcast.io/) integration instead. It's a relatively new supported addition to VDO.Ninja
 
+
+
+#### Details
+
+Default quality is 270p @ 10-fps webp. You can change this with \&webpquality to increase resolution and max frame rate.
+
+The default frame rate is a target, but if the connection cannot keep up, a lower frame rate will be used. This ensures the lowest latency possible.\
+\
+Compression quality is set to 66% in all cases.  This seems the best bang for buck.\
+\
+This mode can work with audio, which uses the normal audio mode for transport.  Audio and these motion images stay roughly in sync.
+
 {% content-ref url="../../guides/iframe-api-documentation.md" %}
 [iframe-api-documentation.md](../../guides/iframe-api-documentation.md)
 {% endcontent-ref %}
