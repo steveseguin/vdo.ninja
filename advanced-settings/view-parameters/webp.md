@@ -29,9 +29,9 @@ The `&webp` mode has been modified a bit. Main change is that you now enable it 
 
 I've removed the toggle in the director's room for this `&webp` feature, as [`&chunked`](../../newly-added-parameters/and-chunked.md) mode is replacing its purpose there, but you might still want to use this mode when the viewer-side does not support video playback or hardware acceleration. Specifically, this option lets you bring motion images (aka, crude video) into the streamlabs mobile app, as a browser source, where other forms of video decoding is not supported.
 
-#### Version 22 and backwards
+#### Version 21 and backwards
 
-In Version 22 and backwards it must be used with [`&broadcast`](broadcast.md) on the viewer side but the director doesn't need to be the designated broadcaster.
+In Version 21 and backwards it must be used with [`&broadcast`](broadcast.md) on the viewer side but the director doesn't need to be the designated broadcaster.
 
 The Electron Capture app should work to allow for webp-based broadcasting even if the tab is not visible, as tab throttling is disabled with that application.\
 This is essentially a stream of webp-based images sent over the webRTC data-channels.\
