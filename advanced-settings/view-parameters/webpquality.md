@@ -7,7 +7,7 @@ description: Quality setting for the &webp option
 Viewer-Side Option! ([`&view`](view.md), [`&scene`](scene.md), [`&room`](../../general-settings/room.md))
 
 {% hint style="info" %}
-V23: Sender-Side Option! ([`&push`](../../source-settings/push.md))
+V22: Sender-Side Option! ([`&push`](../../source-settings/push.md))
 {% endhint %}
 
 ## Aliases
@@ -17,18 +17,25 @@ V23: Sender-Side Option! ([`&push`](../../source-settings/push.md))
 
 ## Options
 
-| Value | Description            |
-| ----- | ---------------------- |
-| 0     | 1080p                  |
-| 1     | 720p                   |
-| 2     | 360p                   |
-| 3     | 270p @ 50fps           |
-| 4     | 270p @ 35fps           |
-| 5     | 270p @ 15fps (default) |
+| Value | Description    |
+| ----- | -------------- |
+| 0     | 1080p          |
+| 1     | 720p           |
+| 2     | 540p           |
+| 3     | 360p           |
+| 4     | 270p           |
+| 5     | 270p @ 15-fps  |
+| 6     | 270p @ 5-fps   |
+| 7     | 270p @ 2.5-fps |
+| 8     | 360p @ 1-fps   |
 
 ## Details
 
 You add this parameter to the director (or designated broadcaster) and it then sets the the quality target for the [`&webp`](../../advanced-settings.md#webp) mode.
+
+Default is 270p @ 10-fps.
+
+Compression quality is set to 66% in all cases. This seems the best bang for buck. Unless specified, this is also webp.
 
 ## Related
 

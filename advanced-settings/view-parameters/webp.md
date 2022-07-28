@@ -7,7 +7,7 @@ description: Custom video codec for broadcasts
 Viewer-Side Option! ([`&view`](view.md), [`&scene`](scene.md), [`&room`](../../general-settings/room.md))
 
 {% hint style="info" %}
-V23: Sender-Side Option! ([`&push`](../../source-settings/push.md))
+V22: Sender-Side Option! ([`&push`](../../source-settings/push.md))
 {% endhint %}
 
 ## Aliases
@@ -23,15 +23,15 @@ V23: Sender-Side Option! ([`&push`](../../source-settings/push.md))
 
 ## Details
 
-#### Changes on Version 23 of VDO.Ninja
+#### Changes on Version 22 of VDO.Ninja
 
 The `&webp` mode has been modified a bit. Main change is that you now enable it by add `&webp` to the sender's URL, and [`&codec=webp`](codec.md) to the viewer's URL (otherwise, it falls back to normal video mode). No need for [`&broadcast`](broadcast.md) anymore. (as a reminder, this mode sends the video as a series of low-quality images, rather than a more efficient video stream).&#x20;
 
 I've removed the toggle in the director's room for this `&webp` feature, as [`&chunked`](../../newly-added-parameters/and-chunked.md) mode is replacing its purpose there, but you might still want to use this mode when the viewer-side does not support video playback or hardware acceleration. Specifically, this option lets you bring motion images (aka, crude video) into the streamlabs mobile app, as a browser source, where other forms of video decoding is not supported.
 
-#### Version 22 and backwards
+#### Version 21 and backwards
 
-In Version 22 and backwards it must be used with [`&broadcast`](broadcast.md) on the viewer side but the director doesn't need to be the designated broadcaster.
+In Version 21 and backwards it must be used with [`&broadcast`](broadcast.md) on the viewer side but the director doesn't need to be the designated broadcaster.
 
 The Electron Capture app should work to allow for webp-based broadcasting even if the tab is not visible, as tab throttling is disabled with that application.\
 This is essentially a stream of webp-based images sent over the webRTC data-channels.\
@@ -39,18 +39,16 @@ The quality by default is limited in both frame rate and resolution, as this cus
 
 Based on my testing, the webp mode is only efficient if you are keeping the bitrates under like 2 mbps, so the higher qualities make little sense IMO outside of some niche use cases as they use up a lot of bandwidth.
 
-If you have issues with Webp-mode, or find the quality or CPU savings not sufficient, you can check out the [Meshcast.io](https://meshcast.io/) integration instead. It's a relatively new supported addition to VDO.Ninja
-
-
+If you have issues with Webp-mode, or find the quality or CPU savings not sufficient, you can check out the [`&meshcast`](../../newly-added-parameters/and-meshcast.md) integration instead. It's a relatively new supported addition to VDO.Ninja.
 
 #### Details
 
-Default quality is 270p @ 10-fps webp. You can change this with \&webpquality to increase resolution and max frame rate.
+Default quality is 270p @ 10-fps webp. You can change this with [`&webpquality`](webpquality.md) to increase resolution and max frame rate.
 
-The default frame rate is a target, but if the connection cannot keep up, a lower frame rate will be used. This ensures the lowest latency possible.\
-\
-Compression quality is set to 66% in all cases.  This seems the best bang for buck.\
-\
+The default frame rate is a target, but if the connection cannot keep up, a lower frame rate will be used. This ensures the lowest latency possible.
+
+Compression quality is set to 66% in all cases. This seems the best bang for buck.
+
 This mode can work with audio, which uses the normal audio mode for transport.  Audio and these motion images stay roughly in sync.
 
 {% content-ref url="../../guides/iframe-api-documentation.md" %}
