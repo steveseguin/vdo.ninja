@@ -19,7 +19,7 @@ Sender-Side Option! ([`&push`](push.md))
 
 ## Details
 
-Adding `&autogain` to a source link, sets whether audio auto-normalization is ON or OFF. Your browser will try to keep optimum audio levels.
+Auto-normalization is on by default in VDO.Ninja. You can switch it oon or off via the audio settings. Adding `&autogain` to a source link, sets whether audio auto-normalization is ON or OFF. Your browser will try to keep optimum audio levels.
 
 ## Related
 
