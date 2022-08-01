@@ -86,6 +86,7 @@
 | Steve's App                                             | [https://steves.app/](https://steves.app/)                                                                                                 |
 | Social Stream                                           | [https://github.com/steveseguin/social\_stream/](https://github.com/steveseguin/social\_stream/)                                           |
 | Captioning Tool                                         | [https://caption.ninja/](https://caption.ninja/)                                                                                           |
+| Translation Tool                                        | [https://caption.ninja/translate](https://caption.ninja/translate)                                                                         |
 | Raspberry Ninja                                         | [https://github.com/steveseguin/raspberry\_ninja](https://github.com/steveseguin/raspberry\_ninja)                                         |
 | YouTube, Twitch chat and social comment Overlays plugin | [https://github.com/steveseguin/twitch-youtube-restream-chat-overlay](https://github.com/steveseguin/twitch-youtube-restream-chat-overlay) |
 
