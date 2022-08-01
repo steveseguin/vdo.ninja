@@ -39,6 +39,6 @@ You can use/test these parameters on [vdo.ninja/alpha](https://vdo.ninja/alpha/)
 | ``[`&slideshow`](and-slideshow.md)\*                 | Plays video back as a series of full-window images                                                                                                                    |
 | ``[`&controlobs`](and-obs.md)\*                      | The ability for VDO.Ninja to Remotely Control OBS Studio while streaming/directing                                                                                    |
 
-\*on [vdo.ninja/alpha](https://vdo.ninja/alpha/)\
-\*\*on [vdo.ninja/beta](https://vdo.ninja/beta/)\
+\*only on [vdo.ninja/alpha](https://vdo.ninja/alpha/)\
+\*\*on [vdo.ninja/beta](https://vdo.ninja/beta/) and [vdo.ninja/alpha](https://vdo.ninja/alpha/)\
 \*\*\*on local dev
