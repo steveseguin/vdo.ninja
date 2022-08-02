@@ -1,5 +1,5 @@
 ---
-description: A guide on how to use Audio Filters in VDO.Ninja
+description: A guide on how to use Audio Filters & Bitrate in VDO.Ninja
 ---
 
 # Audio Filters & Bitrate
@@ -35,7 +35,7 @@ the [`&proaudio`](../advanced-settings/audio-parameters/and-proaudio.md) paramet
 
 Adding [`&proaudio`](../advanced-settings/audio-parameters/and-proaudio.md) to a source link disables [Auto Gain](../source-settings/autogain.md), [Echo Cancellation](../source-settings/aec.md) and [Noise Suppression](../source-settings/and-denoise.md), sets the audio to stereo and the possible outbound audio bitrate to 256-kbps.
 
-There is a very useful google doc sheet with a matrix for the [`&proaudio`](../advanced-settings/audio-parameters/and-proaudio.md) ([`&stereo`](../general-settings/stereo.md)) parameter:
+There is a very useful google sheet with a matrix for the [`&proaudio`](../advanced-settings/audio-parameters/and-proaudio.md) ([`&stereo`](../general-settings/stereo.md)) parameter:
 
 {% embed url="https://docs.google.com/spreadsheets/d/1onfIh1hNR1Gh_mthkhmezzWNUMYKMGKPrwx7T428_hc/edit#gid=0" %}
 [https://docs.google.com/spreadsheets/d/1onfIh1hNR1Gh\_mthkhmezzWNUMYKMGKPrwx7T428\_hc/edit#gid=0](https://docs.google.com/spreadsheets/d/1onfIh1hNR1Gh\_mthkhmezzWNUMYKMGKPrwx7T428\_hc/edit#gid=0)
