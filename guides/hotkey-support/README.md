@@ -22,4 +22,4 @@ When using the above keyboard short-cuts, the tab/window must be actively in foc
 
 When using the Electron Capture app in elevated privilege mode, the keyboard shortcuts are global.
 
-![](<../../.gitbook/assets/image (90).png>)
+![](<../../.gitbook/assets/image (90) (2).png>)

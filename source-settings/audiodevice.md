@@ -36,7 +36,7 @@ See [vdo.ninja/devices](https://vdo.ninja/devices) to see the device IDs and dev
 This web-based tool will also auto-create links for you, just by clicking on the respective device.
 {% endhint %}
 
-There is a toggle in the director's room which adds `&ad` to the guest's invite link.![](<../.gitbook/assets/image (95).png>)
+There is a toggle in the director's room which adds `&ad` to the guest's invite link.![](<../.gitbook/assets/image (95) (2).png>)
 
 ## Related
 

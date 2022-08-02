@@ -17,4 +17,4 @@ This will not work if the site is wrapped as an IFRAME.
 The user will be prompted with a pop-up when they return to the site, after using `&sticky`, to see if they wish to recover their previous settings. These settings are those stored in the URL only, so it essentially loads the previously used URL.
 
 There is a toggle in the director's room which adds `&sticky` to the guest's invite link.\
-![](<../.gitbook/assets/image (94).png>)
+![](<../.gitbook/assets/image (94) (2).png>)

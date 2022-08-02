@@ -14,9 +14,11 @@ Sender-Side Option! ([`&push`](push.md))
 
 ## Details
 
-Provides access to a generic audio equalizer that can be applied to the local microphone.
+Adding `&equalizer` to a source link, it provides access to a generic audio equalizer that can be applied to the local microphone.
 
-It can be accessed via the Settings page or the Director can remotely adjust it.
+It can be accessed via the Audio Settings page or the Director can remotely adjust it.
+
+![](<../.gitbook/assets/image (104).png>)
 
 {% hint style="warning" %}
 Enables the audio processing pipeline.

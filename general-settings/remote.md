@@ -28,7 +28,7 @@ In some ways, the `&remote` function gives permissions to a viewer that would ot
 
 A director of a room can remotely change focus/zoom of a participant without needing the `&remote` command. This applies to both the main director and any co-director, and that's accessible via their per-guest video settings options.
 
-There is a toggle in the director's room which adds `&remote` to the guest's invite link.![](<../.gitbook/assets/image (104).png>)
+There is a toggle in the director's room which adds `&remote` to the guest's invite link.![](<../.gitbook/assets/image (104) (2).png>)
 
 ### Remote Zooming using `&remote`
 

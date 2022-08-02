@@ -12,7 +12,7 @@ Sender-Side Option! ([`&push`](push.md))
 
 ## Details
 
-Applies a generic audio compressor to the local microphone.
+By adding `&compressor` to a source link, it applies a generic audio compressor to the local microphone.
 
 An audio compressor can help reduce spikes in audio loudness.
 
