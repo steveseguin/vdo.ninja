@@ -16,7 +16,7 @@ Sender-Side Option! ([`&push`](push.md))
 ## Options
 
 {% hint style="info" %}
-Updated on v23
+Updated on v22
 {% endhint %}
 
 | Value                 | Description                                                                |
@@ -29,7 +29,7 @@ Updated on v23
 
 ## Details
 
-#### Update on v23
+#### Update on v22
 
 The default setting is OFF. You can switch on the noise gate in the audio settings:\
 ![](<../.gitbook/assets/image (91) (1).png>)
