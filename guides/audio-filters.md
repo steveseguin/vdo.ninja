@@ -26,14 +26,13 @@ So for example:\
 | Lowcut                 | ``[`&lowcut`](../source-settings/lowcut.md)``                            | off        | `&lowcut=XX` (in hz)         |
 | Microphone Delay       | ``[`&micdelay`](../source-settings/and-micdelay.md)``                    | 0-ms       | `&micdelay=XX` (in ms)       |
 
-Default settings of VDO.Ninja:\
-![](<../.gitbook/assets/image (109).png>)
-
 {% hint style="info" %}
-the [`&proaudio`](../advanced-settings/audio-parameters/and-proaudio.md) parameter is the same as the [`&stereo`](../general-settings/stereo.md) parameter
+* Adding [`&proaudio`](../advanced-settings/audio-parameters/and-proaudio.md) to a source link disables [Auto Gain](../source-settings/autogain.md), [Echo Cancellation](../source-settings/aec.md) and [Noise Suppression](../source-settings/and-denoise.md), sets the audio to stereo and the possible outbound audio bitrate to 256-kbps
+* the [`&proaudio`](../advanced-settings/audio-parameters/and-proaudio.md) parameter is the same as the [`&stereo`](../general-settings/stereo.md) parameter
 {% endhint %}
 
-Adding [`&proaudio`](../advanced-settings/audio-parameters/and-proaudio.md) to a source link disables [Auto Gain](../source-settings/autogain.md), [Echo Cancellation](../source-settings/aec.md) and [Noise Suppression](../source-settings/and-denoise.md), sets the audio to stereo and the possible outbound audio bitrate to 256-kbps.
+Default settings of VDO.Ninja:\
+![](<../.gitbook/assets/image (109).png>)
 
 There is a very useful google sheet with a matrix for the [`&proaudio`](../advanced-settings/audio-parameters/and-proaudio.md) ([`&stereo`](../general-settings/stereo.md)) parameter:
 
