@@ -12,7 +12,7 @@ General Option! ([`&push`](../source-settings/push.md), [`&room`](room.md), [`&v
 
 ## Details
 
-Audio playback is muted for guests.
+Audio playback is muted in VDO.Ninja.
 
 ## Related
 
