@@ -2,7 +2,9 @@
 description: A guide on how to use Audio Filters in VDO.Ninja
 ---
 
-# Audio Filters
+# Audio Filters & Bitrate
+
+## Filter Options
 
 There are several Audio Filters in VDO.Ninja. Some of them are turned on by default, some are not. To activate these Audio Filters you have to add them to the source side.\
 So for example:\
@@ -31,12 +33,55 @@ Default settings of VDO.Ninja:\
 the [`&proaudio`](../advanced-settings/audio-parameters/and-proaudio.md) parameter is the same as the [`&stereo`](../general-settings/stereo.md) parameter
 {% endhint %}
 
-Adding [`&proaudio`](../advanced-settings/audio-parameters/and-proaudio.md) to a source link disables [Auto Gain](../source-settings/autogain.md), [Echo Cancellation](../source-settings/aec.md) and [Noise Suppression](../source-settings/and-denoise.md), sets the audio to stereo and the outbound audio bitrate to 256-kbps. To get the 256-kbps you have to add [`&proaudio`](../advanced-settings/audio-parameters/and-proaudio.md) to the view link (OBS for example) too.
-
-``[`&audiobitrate`](../advanced-settings/view-parameters/audiobitrate.md) on the view link overrides the audio bitrate setting of the [`&proaudio`](../advanced-settings/audio-parameters/and-proaudio.md) parameter.
+Adding [`&proaudio`](../advanced-settings/audio-parameters/and-proaudio.md) to a source link disables [Auto Gain](../source-settings/autogain.md), [Echo Cancellation](../source-settings/aec.md) and [Noise Suppression](../source-settings/and-denoise.md), sets the audio to stereo and the possible outbound audio bitrate to 256-kbps.
 
 There is a very useful google doc sheet with a matrix for the [`&proaudio`](../advanced-settings/audio-parameters/and-proaudio.md) ([`&stereo`](../general-settings/stereo.md)) parameter:
 
 {% embed url="https://docs.google.com/spreadsheets/d/1onfIh1hNR1Gh_mthkhmezzWNUMYKMGKPrwx7T428_hc/edit#gid=0" %}
 [https://docs.google.com/spreadsheets/d/1onfIh1hNR1Gh\_mthkhmezzWNUMYKMGKPrwx7T428\_hc/edit#gid=0](https://docs.google.com/spreadsheets/d/1onfIh1hNR1Gh\_mthkhmezzWNUMYKMGKPrwx7T428\_hc/edit#gid=0)
 {% endembed %}
+
+## Audio Bitrate
+
+Options to control the audio bitrate:
+
+1. Add `&proaudio` to the source AND view link to get 256-kbps (echo cancellation, noise suppression and auto gain are then DISABLED)
+2. Add `&proaudio` to the view link to get 256-kbps (echo cancellation, noise suppression and auto gain are still ENABLED)
+3. Add [`&oab=100`](../source-settings/and-outboundaudiobitrate.md) to the source link to get 100-kbps
+4. Add [`&audiobitrate=200`](../advanced-settings/view-parameters/audiobitrate.md) to the view link to get 200-kbps
+
+{% hint style="info" %}
+* `&proaudio` overrides the bitrate of `&oab` if set on the source AND view link or only on the view link -> you get 256-kbps.
+* `&audiobitrate` overrides `&proaudio` and `&oab`
+{% endhint %}
+
+This also works for [`&room`](../general-settings/room.md) on the source side and [`&scene`](../advanced-settings/view-parameters/scene.md) on the view side if you are in a room.
+
+Some examples:
+
+1\)\
+[https://vdo.ninja/?push=SOMESTREAMID](https://vdo.ninja/?push=SOMESTREAMID)\
+[https://vdo.ninja/?view=SOMESTREAMID\&proaudio](https://vdo.ninja/?view=SOMESTREAMID\&proaudio)\
+\-> 256-kbps
+
+2\)\
+[https://vdo.ninja/?push=SOMESTREAMID\&oab=100](https://vdo.ninja/?push=SOMESTREAMID\&oab=100)\
+[https://vdo.ninja/?view=SOMESTREAMID\&audiobitrate=200](https://vdo.ninja/?view=SOMESTREAMID\&audiobitrate=200)\
+\-> 200-kbps
+
+3\)\
+[https://vdo.ninja/?push=SOMESTREAMID\&proaudio](https://vdo.ninja/?push=SOMESTREAMID\&proaudio)\
+[https://vdo.ninja/?view=SOMESTREAMID](https://vdo.ninja/?view=SOMESTREAMID)\
+\-> 32-kbps
+
+4\)\
+[https://vdo.ninja/?push=SOMESTREAMID\&proaudio](https://vdo.ninja/?push=SOMESTREAMID\&proaudio)\
+[https://vdo.ninja/?view=SOMESTREAMID\&audiobitrate=96](https://vdo.ninja/?view=SOMESTREAMID\&audiobitrate=96)\
+\-> 96-kbps
+
+{% hint style="info" %}
+To see the audio bitrate\
+`Right-Click -> Show Stats` or\
+`Control (Command) + Left-Click`\
+``on a video source
+{% endhint %}

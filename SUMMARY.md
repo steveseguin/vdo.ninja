@@ -29,7 +29,7 @@
   * [Basic hotkeys](guides/hotkey-support/README.md)
   * [MIDI, API and WebHID support](guides/midi-api-and-webhid-support.md)
   * [Hardware-accelerated video encoding](guides/hardware-accelerated-video-encoding.md)
-  * [Audio Filters](guides/audio-filters.md)
+  * [Audio Filters & Bitrate](guides/audio-filters-and-bitrate.md)
   * [External guides and how-tos](guides/guides-and-how-tos.md)
   * [How to use VDO.Ninja as a webcam for Google Hangouts, Zoom, and more](guides/use-vdo.ninja-as-a-webcam-for-google-hangouts-zoom-and-more.md)
   * [How to control bitrate/quality](guides/how-do-i-control-bitrate-quality.md)
