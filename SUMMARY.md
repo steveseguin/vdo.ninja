@@ -367,6 +367,7 @@
     * [\&smallshare](advanced-settings/upcoming-parameters/and-smallshare.md)
     * [\&slideshow](advanced-settings/upcoming-parameters/and-slideshow.md)
     * [\&controlobs](advanced-settings/upcoming-parameters/and-obs.md)
+    * [\&volume](advanced-settings/upcoming-parameters/and-volume.md)
   * [Other Parameters](other-parameters.md)
 * [Releases](release-notes/older-releases.md)
   * [v21 ❤️](older-releases/v21.md)

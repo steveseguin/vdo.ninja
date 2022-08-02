@@ -23,10 +23,14 @@ Auto-normalization is on by default in VDO.Ninja. You can switch it oon or off v
 
 ## Related
 
+{% content-ref url="../newly-added-parameters/and-screenshareautogain.md" %}
+[and-screenshareautogain.md](../newly-added-parameters/and-screenshareautogain.md)
+{% endcontent-ref %}
+
 {% content-ref url="gain.md" %}
 [gain.md](gain.md)
 {% endcontent-ref %}
 
-{% content-ref url="../newly-added-parameters/and-screenshareautogain.md" %}
-[and-screenshareautogain.md](../newly-added-parameters/and-screenshareautogain.md)
+{% content-ref url="../advanced-settings/upcoming-parameters/and-volume.md" %}
+[and-volume.md](../advanced-settings/upcoming-parameters/and-volume.md)
 {% endcontent-ref %}
