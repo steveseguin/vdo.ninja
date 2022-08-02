@@ -21,4 +21,4 @@ Alias:\
 | ``[`&cleanoutput`](../advanced-settings/design-parameters/cleanoutput.md)`` | keeps the room as clean as possible from UI elements |
 | ``[`&label`](../general-settings/label.md)``                                | asks for a name when joining the room                |
 
-![](<../.gitbook/assets/image (109).png>)
+![](<../.gitbook/assets/image (109) (2).png>)

@@ -1,6 +1,10 @@
+---
+description: A guide on how to use Audio Filters in VDO.Ninja
+---
+
 # Audio Filters
 
-There are several audio filter in VDO.Ninja. Some of them are turned on by default, some are not. These audio filters are all on the source side.\
+There are several Audio Filters in VDO.Ninja. Some of them are turned on by default, some are not. To activate these Audio Filters you have to add them to the source side.\
 So for example:\
 [https://vdo.ninja/?push](https://vdo.ninja/?push) (for a basic push link)\
 [https://vdo.ninja/?room=SOMEROOMNAME](https://vdo.ninja/?room=SOMEROOMNAME) (for a guest in a room)
@@ -12,7 +16,7 @@ So for example:\
 | Master Gain            | ``[`&audiogain`](../source-settings/gain.md)``                           | 100%       | `&audiogain=XX` (0-200 in %) |
 | Auto Gain Control      | ``[`&autogain`](../source-settings/autogain.md)``                        | on         | `&autogain=0`                |
 | Echo Cancellation      | ``[`&aec`](../source-settings/aec.md)``                                  | on         | `&aec=0`                     |
-| Noise Suppression      | ``[`&denoise`](../source-settings/and-denoise.md)``                      | on         | `&dn=0`                      |
+| Noise Suppression      | ``[`&denoise`](../source-settings/and-denoise.md)``                      | on         | `&denoise=0`                 |
 | Noise Gating           | ``[`&noisegate`](../source-settings/noisegate.md)``                      | off        | `&noisegate`                 |
 | Compressor             | ``[`&compressor`](../source-settings/and-compressor.md)``                | off        | `&compressor`                |
 | Limiter                | ``[`&limiter`](../source-settings/and-limiter.md)``                      | off        | `&limiter`                   |
@@ -21,7 +25,7 @@ So for example:\
 | Microphone Delay       | ``[`&micdelay`](../source-settings/and-micdelay.md)``                    | 0-ms       | `&micdelay=XX` (in ms)       |
 
 Default settings of VDO.Ninja:\
-![](../.gitbook/assets/image.png)
+![](<../.gitbook/assets/image (109).png>)
 
 {% hint style="info" %}
 the [`&proaudio`](../advanced-settings/audio-parameters/and-proaudio.md) parameter is the same as the [`&stereo`](../general-settings/stereo.md) parameter
