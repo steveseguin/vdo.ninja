@@ -5,20 +5,20 @@ So for example:\
 [https://vdo.ninja/?push](https://vdo.ninja/?push) (for a basic push link)\
 [https://vdo.ninja/?room=SOMEROOMNAME](https://vdo.ninja/?room=SOMEROOMNAME) (for a guest in a room)
 
-| Name                   | Parameter                                                                | By default | Change the default setting |
-| ---------------------- | ------------------------------------------------------------------------ | ---------- | -------------------------- |
-| Outbound Audio Bitrate | ``[`&oab`](../source-settings/and-outboundaudiobitrate.md)               | 32-kbps    | `&oab=XX`                  |
-| Pro Audio              | ``[`&proaudio`](../advanced-settings/audio-parameters/and-proaudio.md)`` | off        | `&proaudio`                |
-| Master Gain            | ``[`&audiogain`](../source-settings/gain.md)``                           | 100 %      | `&audiogain=XX`            |
-| Auto Gain Control      | ``[`&autogain`](../source-settings/autogain.md)``                        | on         | `&autogain=0`              |
-| Echo Cancellation      | ``[`&aec`](../source-settings/aec.md)``                                  | on         | `&aec=0`                   |
-| Noise Suppression      | ``[`&denoise`](../source-settings/and-denoise.md)``                      | on         | `&dn=0`                    |
-| Noise Gating           | ``[`&noisegate`](../source-settings/noisegate.md)``                      | off        | `&noisegate`               |
-| Compressor             | ``[`&compressor`](../source-settings/and-compressor.md)``                | off        | `&compressor`              |
-| Limiter                | ``[`&limiter`](../source-settings/and-limiter.md)``                      | off        | `&limiter`                 |
-| Equalizer              | ``[`&equalizer`](../source-settings/and-equalizer.md)``                  | off        | `&equalizer`               |
-| Lowcut                 | ``[`&lowcut`](../source-settings/lowcut.md)``                            | off        | `&lowcut=XX` (in hz)       |
-| Microphone Delay       | ``[`&micdelay`](../source-settings/and-micdelay.md)``                    | 0 ms       | `&micdelay=XX`             |
+| Name                   | Parameter                                                                | By default | Change the default setting   |
+| ---------------------- | ------------------------------------------------------------------------ | ---------- | ---------------------------- |
+| Outbound Audio Bitrate | ``[`&oab`](../source-settings/and-outboundaudiobitrate.md)               | 32-kbps    | `&oab=XX` (0-510; in kbps)   |
+| Pro Audio              | ``[`&proaudio`](../advanced-settings/audio-parameters/and-proaudio.md)`` | off        | `&proaudio`                  |
+| Master Gain            | ``[`&audiogain`](../source-settings/gain.md)``                           | 100%       | `&audiogain=XX` (0-200 in %) |
+| Auto Gain Control      | ``[`&autogain`](../source-settings/autogain.md)``                        | on         | `&autogain=0`                |
+| Echo Cancellation      | ``[`&aec`](../source-settings/aec.md)``                                  | on         | `&aec=0`                     |
+| Noise Suppression      | ``[`&denoise`](../source-settings/and-denoise.md)``                      | on         | `&dn=0`                      |
+| Noise Gating           | ``[`&noisegate`](../source-settings/noisegate.md)``                      | off        | `&noisegate`                 |
+| Compressor             | ``[`&compressor`](../source-settings/and-compressor.md)``                | off        | `&compressor`                |
+| Limiter                | ``[`&limiter`](../source-settings/and-limiter.md)``                      | off        | `&limiter`                   |
+| Equalizer              | ``[`&equalizer`](../source-settings/and-equalizer.md)``                  | off        | `&equalizer`                 |
+| Lowcut                 | ``[`&lowcut`](../source-settings/lowcut.md)``                            | off        | `&lowcut=XX` (in hz)         |
+| Microphone Delay       | ``[`&micdelay`](../source-settings/and-micdelay.md)``                    | 0-ms       | `&micdelay=XX` (in ms)       |
 
 Default settings of VDO.Ninja:\
 ![](../.gitbook/assets/image.png)
