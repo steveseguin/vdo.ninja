@@ -18,7 +18,7 @@ So for example:\
 | Limiter                | ``[`&limiter`](../source-settings/and-limiter.md)``                      | off        | `&limiter`                 |
 | Equalizer              | ``[`&equalizer`](../source-settings/and-equalizer.md)``                  | off        | `&equalizer`               |
 | Lowcut                 | ``[`&lowcut`](../source-settings/lowcut.md)``                            | off        | `&lowcut=XX` (in hz)       |
-| Microphone Delay       | ``[`&micdelay`](../source-settings/and-micdelay.md)``                    | 0 ms       | &`micdelay=XX`             |
+| Microphone Delay       | ``[`&micdelay`](../source-settings/and-micdelay.md)``                    | 0 ms       | `&micdelay=XX`             |
 
 Default settings of VDO.Ninja:\
 ![](../.gitbook/assets/image.png)
