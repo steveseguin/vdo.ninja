@@ -25,7 +25,7 @@ You can turn off auto-normalization by adding `&autogain=0` to a source link (gu
 
 You can also switch it on or off via the audio settings. If you want the guests to be able to change the audio settings by themselves, use [`&mediasettings`](../newly-added-parameters/and-mediasettings.md) on the guests' link, as per default only the director can change the audio settings of the guests.
 
-![](<../.gitbook/assets/image (90) (2).png>)
+![](<../.gitbook/assets/image (90).png>)
 
 Your browser will try to keep optimum audio levels.
 
