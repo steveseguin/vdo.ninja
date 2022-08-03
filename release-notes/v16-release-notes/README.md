@@ -69,7 +69,7 @@ For reference at this time, available sets are:
 | Note C1 + Velocity 7 | Enable the Director’s audio \[director only] |
 | Note C1 + Velocity 8 | Stop the Director’s Audio \[director only]   |
 
-### `midi=4`, control change-based
+### `&midi=4`, control change-based
 
 | MIDI message    | Function                                                   |
 | --------------- | ---------------------------------------------------------- |
