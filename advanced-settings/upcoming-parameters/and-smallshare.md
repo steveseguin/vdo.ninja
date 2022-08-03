@@ -13,7 +13,7 @@ Sender-Side Option! ([`&push`](../../source-settings/push.md))\
 
 Layout if using `&smallshare`:
 
-![](<../../.gitbook/assets/image (100).png>)
+![](<../../.gitbook/assets/image (100) (2).png>)
 
 Layout if NOT using `&smallshare`:
 
