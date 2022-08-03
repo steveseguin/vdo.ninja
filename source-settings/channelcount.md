@@ -1,17 +1,17 @@
 ---
 description: >-
   Audio capture device to select N-number of audio channels; force mono or
-  stereo capture.
+  stereo capture
 ---
 
-# \&channelcount
+# \&inputchannels
 
 Sender-Side Option! ([`&push`](push.md))
 
 ## Aliases
 
 * `&ac`
-* `&inputchannels`
+* `&channelcount`
 
 ## Options
 
@@ -24,14 +24,28 @@ Sender-Side Option! ([`&push`](push.md))
 
 ## Details
 
-`&channelcount=N` tells the audio capture device explicitly to select N-number of audio channels.&#x20;
+`&inputchannels=N` tells the audio capture device explicitly to select N-number of audio channels.&#x20;
 
-Setting [`&stereo=0`](../general-settings/stereo.md) will set `&channelcount=1` by default.
+Setting [`&stereo=0`](../general-settings/stereo.md) will set `&inputchannels=1` by default.
 
 If using [`&proaudio`](../advanced-settings/audio-parameters/and-proaudio.md) or [`&stereo=1`](../general-settings/stereo.md), you want want to disable stereo-audio capture, particularly if you are using an XLR to USB microphone preamp that has two channels, but only one microphone connected.
 
-For example, if a guest joins and you can only hear them in the left or right channel, either add [`&mono`](../advanced-settings/view-parameters/mono.md) to the view-link or add `&channelcount=1` to the respective guest invite-link.
+For example, if a guest joins and you can only hear them in the left or right channel, either add [`&mono`](../advanced-settings/view-parameters/mono.md) to the view-link or add `&inputchannels=1` to the respective guest invite-link.
 
 ### Mono-specific alias
 
-If looking for a memorable parameter to set a guest's audio input to mono (1-channel), `&monomic` is the same as `&channelcount=1`. This was added in VDO.Ninja v22.
+If looking for a memorable parameter to set a guest's audio input to mono (1-channel), [`&monomic`](../advanced-settings/upcoming-parameters/and-monomic.md) is the same as `&inputchannels=1`. This was added in VDO.Ninja v22.
+
+## Related
+
+{% content-ref url="../advanced-settings/upcoming-parameters/and-monomic.md" %}
+[and-monomic.md](../advanced-settings/upcoming-parameters/and-monomic.md)
+{% endcontent-ref %}
+
+{% content-ref url="../advanced-settings/view-parameters/mono.md" %}
+[mono.md](../advanced-settings/view-parameters/mono.md)
+{% endcontent-ref %}
+
+{% content-ref url="../general-settings/stereo.md" %}
+[stereo.md](../general-settings/stereo.md)
+{% endcontent-ref %}

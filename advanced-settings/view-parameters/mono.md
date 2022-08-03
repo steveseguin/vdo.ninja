@@ -16,7 +16,13 @@ If using [`&stereo`](../../general-settings/stereo.md), this will retain the pub
 
 Audio bitrates may be reduced from 256-kbps to 128-kbps, if not explicitly stated, in some cases.
 
+To set the source to mono, see [`&monomic`](../upcoming-parameters/and-monomic.md).
+
 ## Related
+
+{% content-ref url="../upcoming-parameters/and-monomic.md" %}
+[and-monomic.md](../upcoming-parameters/and-monomic.md)
+{% endcontent-ref %}
 
 {% content-ref url="../../general-settings/stereo.md" %}
 [stereo.md](../../general-settings/stereo.md)

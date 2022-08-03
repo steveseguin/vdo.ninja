@@ -151,7 +151,7 @@ The previous method of switching video sources to that of a screen share (rather
 
 ## New features 🆕
 
-* `&channelcount=N` (or `&ac=N`) tells the audio capture device explicitly to select N-number of audio channels. This shouldn’t be needed often, but may help with debugging or advanced use canses. Setting `&stereo=0` will set `&channecount=1` by default.
+* `&inputchannels=N` (or `&ac=N`) tells the audio capture device explicitly to select N-number of audio channels. This shouldn’t be needed often, but may help with debugging or advanced use canses. Setting `&stereo=0` will set `&inputchannels=1` by default.
 * Added the `&speakermute`, (`&mutespeaker`, `&ms`, `&sm`) parameter. Sets the speaker to be muted by default for a guest.
 * Added `&chatbutton`={ 1 | 0 | true | false }, aka `&chat` or `&cb`. Shows the chat button or hides the chat button. You can use this on view links I guess, if you happen to want chat with view-only links. Or if you want to hide chat for some reason, like with push only links.
 * I have hosted a fully-isolated version of VDO.Ninja in Hong Kong (AWS); I'm trying to see if I can expand access into mainland china. We'll see if it works or not. It uses 'compromised' TLS encryption, so to reflect this, I named it: [https://insecure.cam/](https://insecure.cam/)

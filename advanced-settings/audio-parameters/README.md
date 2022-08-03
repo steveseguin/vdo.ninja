@@ -38,7 +38,7 @@ You have to add them to the source side ([`&push`](../../source-settings/push.md
 | ``[`&mute`](../../source-settings/and-mute.md)``                                 | Starts with the microphone muted by default                                              |
 | ``[`&mutespeaker`](../../source-settings/and-mutespeaker.md)``                   | Auto mutes guest's speaker                                                               |
 | ``[`&outboundaudiobitrate`](../../source-settings/and-outboundaudiobitrate.md)`` | Target audio bitrate and max bitrate for outgoing audio streams                          |
-| ``[`&channelcount`](../../source-settings/channelcount.md)``                     | Audio capture device to select N-number of audio channels                                |
+| ``[`&inputchannels`](../../source-settings/channelcount.md)``                    | Audio capture device to select N-number of audio channels                                |
 
 ## **Viewer side options**
 
