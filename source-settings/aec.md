@@ -9,6 +9,7 @@ Sender-Side Option! ([`&push`](push.md))
 ## Aliases
 
 * `&ec`
+* `&echocancellation` (only on [alpha](https://vdo.ninja/alpha/))
 
 ## Options
 
