@@ -10,8 +10,8 @@ Sender-Side Option! ([`&push`](push.md))
 
 ## Aliases
 
-* `&ac`
 * `&channelcount`
+* `&ac`
 
 ## Options
 

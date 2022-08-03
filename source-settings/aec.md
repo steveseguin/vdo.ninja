@@ -26,7 +26,7 @@ You can turn off echo-cancellation by adding `&aec=0` to a source link (guest). 
 
 You can also switch it on or off via the audio settings. If you want the guests to be able to change the audio settings by themselves, use [`&mediasettings`](../newly-added-parameters/and-mediasettings.md) on the link of the guests, as per default only the director can change the audio settings of the guests.
 
-![](<../.gitbook/assets/image (92).png>)
+![](<../.gitbook/assets/image (92) (3).png>)
 
 May need to be disabled to use [`&proaudio`](../advanced-settings/audio-parameters/and-proaudio.md) on some older browsers.
 
