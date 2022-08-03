@@ -1,5 +1,7 @@
 # Two person chat
 
+![](../../.gitbook/assets/image.png)
+
 While you can achieve a multi-person chat with a group room, you can also do it without it.
 
 For example, `https://vdo.ninja/?view=xxxxxxx&push=yyyyyy`
