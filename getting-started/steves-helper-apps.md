@@ -32,16 +32,21 @@ This Chrome browser extension turns your social chat and comments section into s
 
 This Chat overlay extensions will forward the selected chat message over a web-socket connection to a secondary webpage, which can be used in OBS-Studio as a simple browser source. This makes capturing the chat messages from a live video stream very easy and fast -- no Chroma keying or window-capturing needed. It also makes customizing the style pretty easy, with no Chrome extension development needed.
 
-**Supported sites as of August 2021 (requests welcomed)**
+**Supported sites as of August 2022 (requests welcomed)**
 
 * glimesh.tv (pop-out chat)
 * youtube.com (pop-out chat)
 * twitch.tv (pop-out chat)
-* facebook.com (live video chat)
 * restream.io (go here: [https://chat.restream.io/chat](https://chat.restream.io/chat))
 * trovo.live (pop-out chat)
-* Instagram (posts and replies)
-* Twitter (tweets and replies)
+* Instagram (posts) (trigger it with a button)
+* Instagram Live (click on chat messages)
+* Twitter (works with tweets and replies)
+* Facebook Live chat (no pop up option; does not support Mobile/4G/LTE - wifi or ethernet only)
+* Crowdcast.io
+* Zoom.us (text chat and polls)
+* polleverywhere.com ([https://www.polleverywhere.com/discourses/xxxxx](https://www.polleverywhere.com/discourses/xxxxx) question page)
+* Trovo (open the chat pop-up page: [https://trovo.live/chat/xxxxxx](https://trovo.live/chat/xxxxxx))
 
 📺 Video demoing how to install and use here: [https://youtu.be/UOg3RvHO-xk](https://youtu.be/UOg3RvHO-xk)
 
@@ -54,6 +59,8 @@ This Chat overlay extensions will forward the selected chat message over a web-s
 This is a free to use service that can work in conjunction with VDO.Ninja. It's a low latency video CDN (content delivery network), which can be used to host larger group rooms in VDO.Ninja. It's not designed for mass broadcast, not at present anyways, but it can handle upwards of 100-viewers without taxing your CPU or network.
 
 {% embed url="https://www.youtube.com/watch?v=-7QsLChfdsE" %}
+[https://youtu.be/-7QsLChfdsE](https://youtu.be/-7QsLChfdsE)
+{% endembed %}
 
 ## Caption.Ninja
 
@@ -92,7 +99,7 @@ Turn your Raspberry Pi or Nvidia Jetson into a Ninja-cam with hardware-accelerat
 
 ## Native mobile app versions for VDO.Ninja
 
-Mobile native app versions of VDO.Ninja can be found behind the link below. These are mainly backup options for when the browser-based versions fail to work or lack a certain feature due to system restrictions.&#x20;
+Mobile native app versions of VDO.Ninja can be found behind the link below. These are mainly backup options for when the browser-based versions fail to work or lack a certain feature due to system restrictions.
 
 {% content-ref url="native-mobile-app-versions.md" %}
 [native-mobile-app-versions.md](native-mobile-app-versions.md)
@@ -112,4 +119,32 @@ Very much like Chat Overlay Ninja, except is purely for live chat and has a focu
 [https://github.com/steveseguin/social\_stream#readme](https://github.com/steveseguin/social\_stream#readme)
 {% endembed %}
 
-## Versus.Cam
+## Versus.cam
+
+[https://versus.cam/](https://versus.cam/)
+
+Versus.cam is the upcoming and standalone replacement for the [vdo.ninja/monitor](https://vdo.ninja/monitor) page. Versus.cam has some interesting features that are specific to the upcoming version of VDO.Ninja, so at the moment it only works in conjunction with [vdo.ninja/alpha](https://vdo.ninja/alpha/).
+
+### Details
+
+* It contains a larger and dedicated graph per scene/view link than what the [vdo.ninja/beta/'s ](https://vdo.ninja/beta/)director room has under scene-stats. Both color code to indicate packet loss, where red is bad, and green is good.&#x20;
+* It is setup to use a group room by default, with a very simple interface to login and get started without visiting vdo.ninja itself.&#x20;
+* Despite having a group room by default, it works with standalone push/view links as well, via the "Add a stream manually" button, which lets you include normal view links that exist outside rooms.
+* All the scene links and invite links are preconfigured for E-Sports , where video is set to pull around 20-mbps for smooth 1080p60 game play. The idea is, if you choose to use this page for creating links, it's all already setup to be used for ingestion.
+* The room is configured so that guests cannot see or talk to each other. All guests can do is text-chat with the versus host.
+
+![](../.gitbook/assets/image.png)
+
+* Versus.cam is compatible with a director and the director room, so you can use a director room AND the Versus.cam room at the same time, without conflict.
+* A new feature that Versus.cam has, that will also soon be coming to the normal VDO.Ninja directors' room, is the ability to **dynamically change the resolution and bitrate of remote scenes**. This works by means of the [`&remote`](../general-settings/remote.md) control feature, which is preconfigured in the links already, so no director is needed when using versus. This will then also work with non-room links, so long as [`&remote`](../general-settings/remote.md) is included in their URL.
+* I don't intend to add many advanced features to this site.
+* It's designed to be very simple, elegant, and hyper focused on a single use case and user type.
+* E-Sports and one-way ingestion of very high quality video. I'll likely be making more scenario-specific interfaces in the future like this, to make VDO.Ninja easier and less cluttered for common use cases.
+* Versus.cam is built using the VDO.Ninja IFRAME API, which I hope demonstrates the flexibility of it.
+* Versus.cam is only supported by Chrome/Chromium-based browsers; it isn't yet compatible with Firefox/Safari (they lack the features needed for it to operate).
+
+Please report bugs. It's a first release, using the alpha version of VDO.Ninja, so bugs are kind of expected.
+
+{% embed url="https://versus.cam/" %}
+[https://versus.cam/](https://versus.cam/)
+{% endembed %}

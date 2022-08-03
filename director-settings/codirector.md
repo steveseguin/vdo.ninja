@@ -61,3 +61,7 @@ This feature required fairly extensive changes to the code base to enable, so pl
 {% content-ref url="../viewers-settings/director.md" %}
 [director.md](../viewers-settings/director.md)
 {% endcontent-ref %}
+
+{% content-ref url="../advanced-settings/upcoming-parameters/and-hidecodirectors.md" %}
+[and-hidecodirectors.md](../advanced-settings/upcoming-parameters/and-hidecodirectors.md)
+{% endcontent-ref %}

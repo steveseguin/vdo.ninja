@@ -39,6 +39,7 @@ You can use/test these parameters on [vdo.ninja/alpha](https://vdo.ninja/alpha/)
 | ``[`&slideshow`](and-slideshow.md)\*                 | Plays video back as a series of full-window images                                                                                                                    |
 | ``[`&controlobs`](and-obs.md)\*                      | The ability for VDO.Ninja to Remotely Control OBS Studio while streaming/directing                                                                                    |
 | ``[`&volume`](and-volume.md)\*                       | Sets the 'default' playback volume for all video elements                                                                                                             |
+| `&hidecodirectors`\*                                 | Hides the co-directors from appearing in the director's room                                                                                                          |
 
 \*only on [vdo.ninja/alpha](https://vdo.ninja/alpha/)\
 \*\*on [vdo.ninja/beta](https://vdo.ninja/beta/) and [vdo.ninja/alpha](https://vdo.ninja/alpha/)\
