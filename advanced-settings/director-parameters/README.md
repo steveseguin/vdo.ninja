@@ -20,3 +20,4 @@ Parameters specified for the director's control panel; have to be used together 
 | ``[`&rooms`](../../director-settings/rooms.md)``                        | Quick director access to a list of rooms for transfering guests                            |
 | ``[`&showdirector`](../../viewers-settings/and-showdirector.md)``       | Lets the director perform alongside guests, showing up in scene-view links                 |
 | ``[`&notify`](../../source-settings/and-notify.md)``                    | Audio alerts for raised hands, chat messages and if somebody joins the room                |
+| ``[`&mutespeaker=0`](../../source-settings/and-mutespeaker.md)``        | Can be used to have the director join unmuted                                              |

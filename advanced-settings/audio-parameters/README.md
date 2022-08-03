@@ -14,6 +14,7 @@ You can add them to both, source ([`&push`](../../source-settings/push.md)) and 
 | ----------------------------------------------------------------------- | -------------------------------------------------------------------------------------------- |
 | ``[`&proaudio`](and-proaudio.md)``                                      | Improves the audio quality, changes default audio settings and sets the audio mode to stereo |
 | ``[`&stereo`](../../general-settings/stereo.md)``                       | Sets the audio mode to stereo and changes default audio settings to improve audio quality    |
+| ``[`&mutespeaker`](../../source-settings/and-mutespeaker.md)``          | Auto mutes the speaker                                                                       |
 | ``[`&deafen`](../../general-settings/deafen.md)``                       | Audio playback is muted                                                                      |
 | ``[`&noaudioprocessing`](../../general-settings/noaudioprocessing.md)`` | Disables all webaudio audio-processing pipelines                                             |
 
@@ -36,7 +37,6 @@ You have to add them to the source side ([`&push`](../../source-settings/push.md
 | ``[`&audiolatency`](../../newly-added-parameters/and-audiolatency.md)``          | Adds an audio-latency to the published audio stream                                      |
 | ``[`&micdelay`](../../source-settings/and-micdelay.md)``                         | Delays the microphone by specified time in ms                                            |
 | ``[`&mute`](../../source-settings/and-mute.md)``                                 | Starts with the microphone muted by default                                              |
-| ``[`&mutespeaker`](../../source-settings/and-mutespeaker.md)``                   | Auto mutes guest's speaker                                                               |
 | ``[`&outboundaudiobitrate`](../../source-settings/and-outboundaudiobitrate.md)`` | Target audio bitrate and max bitrate for outgoing audio streams                          |
 | ``[`&inputchannels`](../../source-settings/channelcount.md)``                    | Audio capture device to select N-number of audio channels                                |
 
