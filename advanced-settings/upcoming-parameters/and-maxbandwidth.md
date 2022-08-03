@@ -19,7 +19,10 @@ Made a new bitrate option called `&maxbandwidth`, which differs from other comma
 
 So the notion is, if you want to set the invite link bitrate to 50-mbps, but one guest only has only a 20-mbps connection, `&maxbandwidth=80` will try to limit the bitrate to around 16-mbps. I sometimes will tell people to set the bit rate to about 80% of what their connection can allow, as higher than that can result in some frame stutter when there is packet loss, since the connection lacks headroom to recover. This command will try to do it automatically, for all the viewers of a stream.
 
-My goal here is to use it with the mixer or stats app, so eSports users can crank out high bitrates with less tinkering per guest. I have no idea how well it will work in practice so far.
+My goal here is to use it with the [mixer](https://vdo.ninja/alpha/mixer) or [stats app](https://versus.cam/), so eSports users can crank out high bitrates with less tinkering per guest. I have no idea how well it will work in practice so far.
+
+The upcoming and standalone recplacement vor vdo.ninja/monitor:\
+[https://versus.cam/](https://versus.cam/)
 
 ## Related
 
