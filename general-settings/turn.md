@@ -30,7 +30,7 @@ The default VDO.Ninja TURN server network address is `turn:turn.obs.ninja:443`
 
 **Example Usage:**
 
-`https://vdo.ninja/?turn=steve;setupYourOwnPlease;turn.obs.ninja:443&relay`
+`https://vdo.ninja/?turn=steve;setupYourOwnPlease;turn.vdo.ninja:443&relay`
 
 **More Info**\
 ****\
