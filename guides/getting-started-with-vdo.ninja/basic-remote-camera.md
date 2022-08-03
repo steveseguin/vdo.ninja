@@ -1,6 +1,6 @@
 # Basic remote camera
 
-You can customize the playback of videos by added parameters to the OBS.Ninja URL links, along with many other aspects. OBS.Ninja is highly flexible in this regard, letting you achieve your desired outcome without needing to code and without additional software.
+You can customize the playback of videos by added parameters to the VDO.Ninja URL links, along with many other aspects. VDO.Ninja is highly flexible in this regard, letting you achieve your desired outcome without needing to code and without additional software.
 
 For example, `https://vdo.ninja/?view=xxxxxxx`, could be amended to `https://vdo.ninja/?view=xxxxxxx&bitrate=500`, which will target a video bitrate of 500kbps.
 

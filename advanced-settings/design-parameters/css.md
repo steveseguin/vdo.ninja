@@ -13,7 +13,7 @@ Any url-encoded url that links to a CSS file.
 Example:
 
 ```
-https://vdo.ninja/?css=https%3A%2F%2Fbackup.obs.ninja%2Fdev4321%2Fexamples%2Fmain.css
+https://vdo.ninja/?css=https%3A%2F%2Fbackup.vdo.ninja%2Fdev4321%2Fexamples%2Fmain.css
 ```
 
 You can use this tool to encode the URL you want to link to [https://meyerweb.com/eric/tools/dencoder/](https://meyerweb.com/eric/tools/dencoder/)
