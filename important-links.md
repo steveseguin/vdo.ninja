@@ -9,6 +9,7 @@
 | BackUp Version                | [https://backup.vdo.ninja/](https://backup.vdo.ninja/)                               |
 | Previous Versions             | [https://docs.vdo.ninja/releases](https://docs.vdo.ninja/releases)                   |
 | Project Development on GitHub | [https://github.com/steveseguin/vdo.ninja](https://github.com/steveseguin/vdo.ninja) |
+| Development Progress          | [https://updates.vdo.ninja/](https://updates.vdo.ninja/)                             |
 
 ### VDO.Ninja Link Generators
 

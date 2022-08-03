@@ -383,6 +383,7 @@
     * [v16.4](release-notes/v16-release-notes/v16.4-update-notes.md)
   * [v15](release-notes/v15-release-notes.md)
   * [v14](release-notes/v14-release-notes.md)
+* [Development Progress](https://updates.vdo.ninja/)
 * [Help!](help/README.md)
   * [Fail safes and Backups](help/fail-safes-and-backups.md)
   * [Privacy and security details](help/privacy-and-security-details.md)
