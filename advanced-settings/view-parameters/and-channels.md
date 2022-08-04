@@ -27,7 +27,7 @@ Please see here for detailed testing results with different audio devices: [http
 
 
 {% hint style="info" %}
-If looking to set the number of input channels, rather than output, please see [\&channelcount](../../source-settings/channelcount.md) instead.
+If looking to set the number of input channels, rather than output, please see [\&channelcount](../audio-parameters/and-inputchannels.md) instead.
 {% endhint %}
 
 ## Related
@@ -36,6 +36,6 @@ If looking to set the number of input channels, rather than output, please see [
 [and-channeloffset.md](and-channeloffset.md)
 {% endcontent-ref %}
 
-{% content-ref url="../../source-settings/channelcount.md" %}
-[channelcount.md](../../source-settings/channelcount.md)
+{% content-ref url="../audio-parameters/and-inputchannels.md" %}
+[and-inputchannels.md](../audio-parameters/and-inputchannels.md)
 {% endcontent-ref %}

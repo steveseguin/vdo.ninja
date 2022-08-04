@@ -38,7 +38,7 @@ You have to add them to the source side ([`&push`](../../source-settings/push.md
 | ``[`&micdelay`](../../source-settings/and-micdelay.md)``                         | Delays the microphone by specified time in ms                                            |
 | ``[`&mute`](../../source-settings/and-mute.md)``                                 | Starts with the microphone muted by default                                              |
 | ``[`&outboundaudiobitrate`](../../source-settings/and-outboundaudiobitrate.md)`` | Target audio bitrate and max bitrate for outgoing audio streams                          |
-| ``[`&inputchannels`](../../source-settings/channelcount.md)``                    | Audio capture device to select N-number of audio channels                                |
+| ``[`&inputchannels`](and-inputchannels.md)``                                     | Audio capture device to select N-number of audio channels                                |
 
 ## **Viewer side options**
 

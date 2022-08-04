@@ -170,7 +170,7 @@
     * [\&micdelay](source-settings/and-micdelay.md)
     * [\&mute](source-settings/and-mute.md)
     * [\&outboundaudiobitrate](source-settings/and-outboundaudiobitrate.md)
-    * [\&inputchannels](source-settings/channelcount.md)
+    * [\&inputchannels](advanced-settings/audio-parameters/and-inputchannels.md)
     * [\&audiobitrate](advanced-settings/view-parameters/audiobitrate.md)
     * [\&outputdevice](https://docs.vdo.ninja/advanced-settings/view-parameters/and-outputdevice)
     * [\&sink](https://docs.vdo.ninja/advanced-settings/view-parameters/and-sink)
