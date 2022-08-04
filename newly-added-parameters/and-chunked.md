@@ -14,6 +14,7 @@ Sender-Side Option! ([`&push`](../source-settings/push.md))
 | ---------------- | -------------------------------------------------------------------- |
 | (no value given) | will just enable viewing, and not saving, of the video               |
 | 2                | the option to save the chunked stream as a viewer on the sender side |
+| (integer value)  | bitrate in kbps                                                      |
 
 ## Details
 
