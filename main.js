@@ -25,8 +25,8 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 			}
 		}
 
-		if (urlParams.has('ln')) {
-			ln_template = urlParams.get('ln') || null;
+		if (urlParams.has('ln') || urlParams.has('language')) {
+			ln_template = urlParams.get('ln') || urlParams.get('language') || null;
 		}
 	} catch (e) {
 		errorlog(e);
@@ -273,7 +273,14 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 		session.pushEffectsData=true;
 	}
 
-	if (iOS || iPad) {
+
+	if (urlParams.has('notmobile')){
+		session.mobile = false;
+	} else if (urlParams.has('mobile')){
+		session.mobile = true;
+		session.audioEffects = false; // disable audio inbound effects also.
+		session.audioMeterGuest = false;
+	} else if (iOS || iPad) {
 		session.mobile = true;
 		session.audioEffects = false; // disable audio inbound effects also.
 		session.audioMeterGuest = false;
@@ -315,6 +322,11 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 			getById("SafariWarning").classList.remove("hidden");
 		}
 	}
+	
+	
+	// flagship
+	
+	
 	
 	if (urlParams.has('broadcast') || urlParams.has('bc')) {
 		log("Broadcast flag set");
@@ -517,6 +529,10 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 		getById("hangupbutton").style.display = "none";
 	}
 	
+	if (urlParams.has('socialstream')){
+		session.socialstream = urlParams.get('socialstream') || false;
+	}
+	
 	if (urlParams.has('midioffset')){
 		session.midiOffset = urlParams.get('midioffset') || 0;
 		session.midiOffset = parseInt(session.midiOffset);
@@ -632,7 +648,7 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 		session.hidesololinks=true;
 	}
 
-	if (urlParams.has('ssb')) {
+	if (urlParams.has('ssb') || urlParams.has('screensharebutton')) {
 		session.screensharebutton = true;
 	}
 	
@@ -1097,6 +1113,9 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 		getById("addPasswordBasic").style.display = "none";
 	}
 	
+	if (urlParams.has('salt') && urlParams.get('salt')){
+		session.salt = urlParams.get('salt');
+	}
 
 
 	if (urlParams.has('hash') || urlParams.has('crc') || urlParams.has('check')) { // could be brute forced in theory, so not as safe as just not using a hash check.
@@ -1331,9 +1350,9 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 	}
 
 
-	if (urlParams.has("aec") || urlParams.has("ec")) {
+	if (urlParams.has("echocancellation") || urlParams.has("aec") || urlParams.has("ec")) {
 
-		session.echoCancellation = urlParams.get('aec') || urlParams.get('ec');
+		session.echoCancellation = urlParams.get("echocancellation") || urlParams.get('aec') || urlParams.get('ec');
 
 		if (session.echoCancellation) {
 			session.echoCancellation = session.echoCancellation.toLowerCase();
@@ -1663,6 +1682,12 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 		session.audioGain = parseInt(session.audioGain) || 0;
 		session.disableWebAudio = false;
 	} 
+	if (urlParams.has('volume') || urlParams.has('vol') ) {  // This sets the default volume for all new video playback elements; 0 to 100. 
+		log("setting default volume for playback");
+		session.volume = urlParams.get('volume') || urlParams.get('vol') || 100;
+		session.volume = parseInt(session.volume) || 0;
+		session.volume = session.volume/100; // 0 to 1.0
+	} 
 	if (urlParams.has('compressor') || urlParams.has('comp')) {
 		log("audio gain  ENABLED");
 		session.compressor = 1;
@@ -1698,6 +1723,10 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 		session.disableOBS = true;
 		getById("obsState").style.setProperty("display", "none", "important");
 	} 
+	
+	if (urlParams.has('hidecodirectors')){
+		document.querySelector(':root').style.setProperty("--show-codirectors", "none", "important");
+	}
 	
 	if (urlParams.has('obscontrols') || urlParams.has('remoteobs') || urlParams.has('obsremote') || urlParams.has('obs') || urlParams.has('controlobs')) {
 		session.obsControls = urlParams.get('obscontrols') || urlParams.get('remoteobs') || urlParams.get('obsremote') || urlParams.get('obs') || urlParams.get('controlobs');
@@ -2399,8 +2428,8 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 		session.meshcastScreenShareCodec = session.meshcastScreenShareCodec.toLowerCase();
 	}
 	
-	if (urlParams.has('mcab') || urlParams.has('mcaudiobitrate') || urlParams.has('meshcastab')){
-		session.meshcastAudioBitrate = urlParams.get('mcab') || urlParams.get('mcaudiobitrate') || urlParams.get('meshcastab') || 32;
+	if (urlParams.has('mcab') || urlParams.has('mcaudiobitrate') || urlParams.has('meshcastab')  || urlParams.has('meshcastaudiobitrate ')){
+		session.meshcastAudioBitrate = urlParams.get('mcab') || urlParams.get('mcaudiobitrate') || urlParams.get('meshcastab') || urlParams.get('meshcastaudiobitrate ') || 32;
 		session.meshcastAudioBitrate = parseInt(session.meshcastAudioBitrate);
 	}
 	
@@ -2929,7 +2958,6 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 		} else {
 			session.sendframes = session.iframetarget || "*";
 		}
-		
 	}
 	
 	if (urlParams.has('tcp')){ // forces the TURN servers to use TCP mode; still need to add &private to force TURN also tho
@@ -3516,7 +3544,7 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 		} else if (session.chatbutton === false) {
 			getById("chatbutton").classList.add("hidden");
 		}
-	} 
+	}
 	
 	if (urlParams.has('nofileshare') || urlParams.has('nodownloads') || urlParams.has('nofiles')){
 		session.hostedFiles = false;
@@ -3693,7 +3721,7 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 
 	if (location.protocol !== 'https:') {
 		if (!(session.cleanOutput)) {
-			warnUser("SSL (https) is not enabled. This site will not work without it!<br /><br /><a href='https://"+window.location.host+window.location.pathname+window.location.search+"'>Try accessing the site from here instead.</a>");
+			warnUser("SSL (https) is not enabled. This site will not work without it!<br /><br /><a href='https://"+window.location.host+window.location.pathname+window.location.search+"'>Try accessing the site from here instead.</a>", false, false);
 		}
 	}
 	
@@ -3723,6 +3751,12 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 		session.limitTotalBitrate = session.totalRoomBitrate_default; // 500, with the max per guest stream out at maxMobileBitrate (350kbps) or 35-kbps if more than X in the room.
 	}
 	
+	if (urlParams.has('maxmobilebitrate')) {
+		session.maxMobileBitrate = parseInt(urlParams.has('maxmobilebitrate')) || 0;
+	}
+	if (urlParams.has('lowmobilebitrate')) {
+		session.lowMobileBitrate = parseInt(urlParams.has('lowmobilebitrate')) || 0;
+	}
 
 	//  Please contact steve on discord.vdo.ninja if you'd like this iFRAME tweaked, expanded, etc -- it's updated based on user request
 	
@@ -3871,16 +3905,25 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 
 
 		if ("volume" in e.data) {  // might not work with iframes or meshcast currently.
+			session.volume = parseFloat(e.data.volume) || 0;
+			if (session.volume > 1.0){ // this is a bit quasi improper.  But the API is official 0 to 1.0; not 0 to 100, so this is mainly a catch for those not using the API right.
+				session.volume = session.volume/100.0;
+			}
+			if (!("target" in e.data) || (e.data.target == "*")){
+				if (session.videoElement){
+					session.videoElement.volume = session.volume;
+				}
+			}
 			for (var i in session.rpcs) {
 				try {
 					if (!session.rpcs[i].videoElement){continue;}
 					if ("streamID" in session.rpcs[i]) {
 						if ("target" in e.data) {
 							if ((session.rpcs[i].streamID == e.data.target) || (e.data.target == "*")) { // specify a stream ID or let it apply to all videos
-								session.rpcs[i].videoElement.volume = parseFloat(e.data.volume);
+								session.rpcs[i].videoElement.volume = session.volume;
 							}
 						} else {
-							 session.rpcs[i].videoElement.volume = parseFloat(e.data.volume);
+							 session.rpcs[i].videoElement.volume = session.volume;
 						}
 					} 
 				} catch (e) {
@@ -3909,17 +3952,92 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 			}
 		}
 		
+		if (("targetBitrate" in e.data) || ("targetAudioBitrate" in e.data)) { // this sets the fundemental bitrate target, but does not necessarily "lock" .
 
-		if ("bitrate" in e.data) { /// set a video bitrate for a video; scene or view link; kbps
+			var msg = {};
+			if ("targetBitrate" in e.data){
+				msg.targetBitrate = e.data.targetBitrate;
+			}
+			if ("targetAudioBitrate" in e.data){
+				msg.targetAudioBitrate = e.data.targetAudioBitrate;
+			}
+			if (e.data.requestAs){
+				msg.requestAs = e.data.requestAs;
+			}
+			if (e.data.remote){
+				msg.remote = e.data.remote;
+			}
 			for (var i in session.rpcs) {
 				try {
 					if ("streamID" in session.rpcs[i]) {
 						if ("target" in e.data) {
 							if ((session.rpcs[i].streamID == e.data.target) || (e.data.target == "*")) { // specify a stream ID or let it apply to all videos
-								session.requestRateLimit(parseInt(e.data.bitrate), i);
+								session.sendRequest(msg, i);
+							}
+						} else if (e.data.UUID && (e.data.UUID===i)) {
+							session.sendRequest(msg, i);
+						} else if (e.data.streamID) {
+							if (session.rpcs[i].streamID == e.data.streamID) { // specify a stream ID or let it apply to all videos
+								session.sendRequest(msg, i);
 							}
 						} else {
-							 session.requestRateLimit(parseInt(e.data.bitrate), i); // bitrate = 0 pauses the video
+							 session.sendRequest(msg, i); // bitrate = 0 pauses the video
+						}
+					} 
+				} catch (e) {
+					errorlog(e);
+				}
+			}
+		}
+		
+		if ("manualBitrate" in e.data){
+			for (var i in session.rpcs) {
+				try {
+					if ("streamID" in session.rpcs[i]) {
+						if ("target" in e.data) {
+							if ((session.rpcs[i].streamID == e.data.target) || (e.data.target == "*")) { // specify a stream ID or let it apply to all videos
+								session.rpcs[i].manualBitrate = e.data.manualBitrate;
+								session.requestRateLimit(false, i);
+							}
+						} else if (e.data.UUID && (e.data.UUID===i)) {
+							session.rpcs[i].manualBitrate = e.data.manualBitrate;
+							session.requestRateLimit(false, i);
+						} else if (e.data.streamID) {
+							if (session.rpcs[i].streamID == e.data.streamID) { // specify a stream ID or let it apply to all videos
+								session.rpcs[i].manualBitrate = e.data.manualBitrate
+								session.requestRateLimit(false, i);
+							}
+						} else {
+							session.rpcs[i].manualBitrate = e.data.manualBitrate;
+							session.requestRateLimit(false, i);
+						}
+					} 
+				} catch (e) {
+					errorlog(e);
+				}
+			}
+		}
+
+		if ("bitrate" in e.data) { /// set a video bitrate for a video; scene or view link; kbps
+			var lock = true;
+			if ("lock" in e.data){ // since this is the iframe API, we're going to assume the default is manual over-ride. VDO.Ninja's automixer logic won't override a locked bitrate.
+				lock = e.data.lock;
+			}
+			for (var i in session.rpcs) { 
+				try {
+					if ("streamID" in session.rpcs[i]) {  // we only target publishers with this call
+						if ("target" in e.data) {
+							if ((session.rpcs[i].streamID == e.data.target) || (e.data.target == "*")) { // specify a stream ID or let it apply to all videos
+								session.requestRateLimit(e.data.bitrate, i, false, lock);
+							}
+						} else if (e.data.UUID && (e.data.UUID===i)) {
+							session.requestRateLimit(e.data.bitrate, i, false, lock);
+						} else if (e.data.streamID) {
+							if (session.rpcs[i].streamID == e.data.streamID) { // specify a stream ID or let it apply to all videos
+								session.requestRateLimit(e.data.bitrate, i, false, lock);
+							}
+						} else {
+							 session.requestRateLimit(e.data.bitrate, i, false, lock); // bitrate = 0 pauses the video
 						}
 					} 
 				} catch (e) {
@@ -3929,17 +4047,27 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 		}
 		
 		if ("audiobitrate" in e.data) { // changes the audio bitrate of a specific or all inbound media tracks. kbps
+			var lock = true;
+			if ("lock" in e.data){ // since this is the iframe API, we're going to assume the default is manual over-ride. VDO.Ninja's automixer logic won't override a locked bitrate.
+				lock = e.data.lock;
+			}
 			for (var i in session.rpcs) {
 				try {
-					if ("streamID" in session.rpcs[i]) {
+					if ("streamID" in session.rpcs[i]) {  // we only target publishers with this call
 						if ("target" in e.data) {
 							if ((session.rpcs[i].streamID == e.data.target) || (e.data.target == "*")) { // specify a stream ID or let it apply to all videos
-								session.requestAudioRateLimit(parseInt(e.data.audiobitrate), i);
+								session.requestAudioRateLimit(parseInt(e.data.bitrate), i, lock);
+							}
+						} else if (e.data.UUID && (e.data.UUID===i)) {
+							session.requestAudioRateLimit(parseInt(e.data.bitrate), i, lock);
+						} else if (e.data.streamID) {
+							if (session.rpcs[i].streamID == e.data.streamID) { // specify a stream ID or let it apply to all videos
+								session.requestAudioRateLimit(parseInt(e.data.bitrate), i, lock);
 							}
 						} else {
-							 session.requestAudioRateLimit(parseInt(e.data.audiobitrate), i); // bitrate = 0 pauses the video
+							 session.requestAudioRateLimit(parseInt(e.data.bitrate), i, lock); // bitrate = 0 pauses the video
 						}
-					}
+					} 
 				} catch (e) {
 					errorlog(e);
 				}
@@ -4137,7 +4265,7 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 		}
 
 		if ("getStreamIDs" in e.data) { // get a list of stream Ids, with a label if it is present. label = false if not there
-			if (e.data.getStreamIDs == true) {
+			if (e.data.getStreamIDs) {
 				var streamIDs = {};
 				for (var i in session.rpcs) {
 					streamIDs[session.rpcs[i].streamID] = session.rpcs[i].label;
@@ -4145,7 +4273,27 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 				parent.postMessage({
 					"streamIDs": streamIDs
 				}, session.iframetarget);
-
+			}
+		}
+		
+		if ("getStreamInfo" in e.data) { // get a list of stream Ids, with a label if it is present. label = false if not there
+			try {
+				var UUIDS = {};
+				for (var i in session.rpcs){
+					UUIDS[i] = {};
+					UUIDS[i].label = session.rpcs[i].label || false;
+					UUIDS[i].streamID = session.rpcs[i].streamID || false;
+					if (session.rpcs[i].stats && session.rpcs[i].stats.info){
+						UUIDS[i].info = session.rpcs[i].stats.info;
+					} else {
+						UUIDS[i].info = {};
+					}
+				}
+				parent.postMessage({
+					"streamInfo": UUIDS
+				}, session.iframetarget);
+			} catch(e){
+				errorlog(e);
 			}
 		}
 
@@ -4234,7 +4382,11 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 		}
 		 // session.viewheight or session.viewwidth
 		if ((targetWidth || targetHeight)  && e.data.UUID){
-			session.requestResolution(e.data.UUID, wrw || 4096 , hrh || 2160 ); // this is fine.
+			var requestAs = false;
+			if (e.data.requestAs){
+				requestAs = e.data.requestAs;
+			}
+			session.requestResolution(e.data.UUID, targetWidth || 4096 , targetHeight || 2160 , false, requestAs); // this is fine.
 		}
 		////////////////
 		

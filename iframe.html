@@ -37,6 +37,11 @@
 		max-width:300px;
 		max-height:100px;
 	}
+	.container{
+		max-height: 900px;
+		overflow-y: auto;
+		overflow-x: auto;
+	}
 	</style>
 	<script>
 
@@ -44,6 +49,7 @@
 		
 		var iframe = document.createElement("iframe");
 		var iframeContainer = document.createElement("div");
+		iframeContainer.classList.add("container");
 		var iframesrc = document.getElementById("viewlink").value;
 		iframe.allow = "document-domain;encrypted-media;sync-xhr;usb;web-share;cross-origin-isolated;accelerometer;midi;geolocation;autoplay;camera;microphone;fullscreen;picture-in-picture;display-capture;";
 
