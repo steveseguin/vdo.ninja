@@ -17358,7 +17358,265 @@ async function grabAudio(selector = "#audioSource", trackid = null, override = f
 	
 	senderAudioUpdate(callback);
 }
+
+session.toggleSoloChat = function(UUID, event=false){ // ==> applyIsolatedChat -- this should be trigger by the director only I think
+	if (session.director){
+		if (!session.directorEnabledPPT){
+			warnUser("Enable the director's microphone first.");
+			return false;
+		}
+	} 
 	
+	var msg = {};
+	msg.micIsolate = false;
+	
+	if (session.soloChatUUID.includes(UUID)){ // already added, so lets toggle off
+		session.soloChatUUID.splice(session.soloChatUUID.indexOf(UUID), 1);        // Toggles.  Adds target to soloChatUUID list
+		msg.lowerVolume = false;
+	} else {
+		session.soloChatUUID.push(UUID); //not added, so lets toggle on
+		msg.lowerVolume = true;
+	}
+	
+	
+	if (event){
+		if ( event.ctrlKey || event.metaKey){
+			if (session.soloChatUUID.includes(UUID)){
+				msg.micIsolate = 1;
+			}
+		}
+	}
+	session.sendRequest(msg, UUID);
+	
+	var elements = document.querySelectorAll('[data-action-type="solo-chat"]'); // [data--u-u-i-d="'+UUID+'"]  // this all just updates the buttons
+	for (var i = 0; i< elements.length; i++){
+		if ((elements[i].dataset.UUID == UUID) && (session.soloChatUUID.includes(elements[i].dataset.UUID))){
+			if (msg.micIsolate){
+				elements[i].classList.add("altpress"); // we will do this later.
+			}
+		} else if (elements[i].dataset.UUID == UUID){
+			elements[i].classList.remove("pressed");
+			elements[i].classList.remove("altpress");
+		}
+	}
+	
+	session.applySoloChat(false); 
+	return msg.micIsolate;
+};
+///////////////////////
+
+session.togglePrivateChat = function(ele){
+	var msg = {};
+	warnlog(ele);
+	if (ele.value == 0) {
+		msg.micIsolate = true;
+		ele.value = 1;
+		ele.classList.add("pressed");
+	} else {
+		msg.micIsolate = false;
+		ele.value = 0;
+		ele.classList.remove("pressed");
+	}
+	session.sendRequest(msg, ele.dataset.UUID);
+	warnlog(msg);
+};
+
+// we call this via session.applyIsolatedChat, just in case
+session.applyIsolatedVolume = function(){ //  mutes outbound mic audio; for guests, and not the director
+	
+	var i = session.lowerVolume.length;
+	while (i--){
+		if (!(session.lowerVolume[i] in session.rpcs)){ // clean up dead connections
+			session.lowerVolume.splice(i, 1);
+		}
+	}
+	
+	var soloMode = false;
+	
+	/* if (!(session.cleanOutput)){
+		if (session.lowerVolume.length){
+			getById("header").classList.add('orange');
+			getById("head6").classList.remove('hidden');
+		} else if (session.audioGain === 0){
+			// do nothing.
+		} else {
+			getById("header").classList.remove('orange');
+			getById("head6").classList.add('hidden');
+		}
+	} */
+	
+	if (session.lowerVolume.length){
+		soloMode = true;
+	}
+	
+	if (soloMode){
+		for (var UUID in session.rpcs){
+			if (session.lowerVolume.includes(UUID)){
+				if (session.rpcs[UUID].videoElement && (session.rpcs[UUID].savedVolume!==false)){ // isolated
+					session.rpcs[UUID].videoElement.volume = session.rpcs[UUID].savedVolume;
+					session.rpcs[UUID].savedVolume = false;
+				}
+				continue;
+			}
+			if (session.rpcs[UUID].videoElement && (session.rpcs[UUID].savedVolume==false)){ // not isolated
+				session.rpcs[UUID].savedVolume = session.rpcs[UUID].videoElement.volume;
+				session.rpcs[UUID].videoElement.volume = session.rpcs[UUID].savedVolume*0.25;
+			}
+		}
+	} else {
+		for (var UUID in session.rpcs){
+			if (session.rpcs[UUID].videoElement && (session.rpcs[UUID].savedVolume!==false)){  // isolated
+				session.rpcs[UUID].videoElement.volume = session.rpcs[UUID].savedVolume;
+				session.rpcs[UUID].savedVolume = false;
+			}
+		}
+	}
+}
+
+session.applyIsolatedChat = function(){ //  mutes outbound mic audio; for guests, and not the director
+	
+	session.applyIsolatedVolume(); // this toggle the speaker output
+	
+	var i = session.micIsolated.length;
+	while (i--){
+		if (!(session.micIsolated[i] in session.pcs) && !(session.micIsolated[i] in session.rpcs)){
+			session.micIsolated.splice(i, 1);
+		}
+	}
+	
+	var soloMode = false;
+	
+	if (!(session.cleanOutput)){
+		if (session.micIsolated.length){
+			getById("header").classList.add('orange');
+			getById("head6").classList.remove('hidden');
+		} else if (session.audioGain === 0){
+			// do nothing.
+		} else {
+			getById("header").classList.remove('orange');
+			getById("head6").classList.add('hidden');
+		}
+	}
+	
+	if (session.micIsolated.length){
+		soloMode = true;
+	}
+	
+	/////
+	if (session.directorSpeakerMuted!==null){
+		for (var uuid in session.rpcs){
+			try{
+				var receivers = getReceivers2(uuid);//session.rpcs[uuid].getReceivers();
+				for (var i=0; i<receivers.length; i++){
+					if (receivers[i].track.kind == "audio"){
+						receivers[i].track.enabled = !session.directorSpeakerMuted;
+					}
+				}
+			} catch(e){}
+		}
+		if (session.directorSpeakerMuted){
+			getById("videosource").muted = true;
+		}
+	}
+	//////////////
+	
+	for (var UUID in session.pcs){
+		try {
+			var senders = getSenders2(UUID);
+			senders.forEach((sender) => {
+				if (!sender.track){return;}
+				if (sender.track.kind !== "audio"){return;}
+				
+				const params = sender.getParameters();
+				if (!params.encodings) {
+					params.encodings = [{ }];
+				} else if (!params.encodings.length){
+					return;
+				}
+				if (!soloMode){
+					params.encodings[0].active = true;
+					sender.setParameters(params).then(() => {}).catch(warnlog);
+				} else if (session.micIsolated.indexOf(UUID)>=0){
+					params.encodings[0].active = true;
+					sender.setParameters(params).then(() => {}).catch(warnlog);
+				} else { 
+					params.encodings[0].active = false;
+					sender.setParameters(params).then(() => {}).catch(warnlog);
+				} 
+			});
+		} catch(e){errorlog(e);}
+	}
+}
+
+session.applySoloChat = function(apply=true){ // mutes outbound mic audio; ;;  does the actual solo chat muting for the director
+	if (session.director===false){
+		session.applyIsolatedChat();
+		return;
+	} else if (!session.directorEnabledPPT){
+		return;
+	}
+	
+	var i = session.soloChatUUID.length;
+	while (i--){
+		if (!(session.soloChatUUID[i] in session.pcs)){
+			session.soloChatUUID.splice(i, 1);
+		}
+	}
+	
+	for (var uuid in session.pcs){  // not sure what to do here wrt to screen tracks
+		try {
+			var senders = getSenders2(uuid);
+			senders.forEach((sender) => {
+				if (!sender.track){return;}
+				if (sender.track.kind !== "audio"){return;}
+				
+				const params = sender.getParameters();
+				if (!params.encodings) {
+					params.encodings = [{ }];
+				} else if (!params.encodings.length){
+					return;//params.encodings = [{ }];
+				}
+				if (session.soloChatUUID.length && (session.soloChatUUID.includes(uuid))){ 
+					//sender.track.enabled = true;
+					params.encodings[0].active = true;
+					setTimeout(function(uuid,params,sender){
+						sender.setParameters(params).then(() => {
+							document.querySelectorAll('[data-action-type="solo-chat"][data--u-u-i-d="'+uuid+'"]')[0].classList.add("pressed");
+						}).catch(warnlog);
+					},0,uuid,params,sender);
+				} else if (session.soloChatUUID.length==0){
+					params.encodings[0].active = true;
+					sender.setParameters(params).then(() => {}).catch(warnlog);
+				} else {
+					params.encodings[0].active = false;
+					setTimeout( function(uuid,params,sender){
+						sender.setParameters(params).then().catch((e) => {
+							warnlog(e);
+							document.querySelectorAll('[data-action-type="solo-chat"][data--u-u-i-d="'+uuid+'"]')[0].classList.add("pressed");
+						});
+					},0,uuid,params,sender);
+				}
+			});
+			
+		} catch(e){errorlog(e);}
+	}
+	if (apply==false){
+		if (session.soloChatUUID.length){
+			session.muted_savedState=session.muted;
+			session.muted=false;
+			data = {};
+			data.muteState = session.muted;
+			for (var i=0;i<session.soloChatUUID.length;i++){
+				session.sendMessage(data, session.soloChatUUID[i]);
+			}
+		} else {
+			session.muted = session.muted_savedState;
+		}
+		toggleMute(true);
+	}
+};
+
+
 function senderAudioUpdate(callback=false){
 	try {
 		
