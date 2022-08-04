@@ -19,15 +19,11 @@ General Option! ([`&push`](../source-settings/push.md), [`&room`](room.md), [`&v
 
 ## Details
 
-Uses the label in OBS Studio if dragging the link into OBS Studio.
-
-Will change the name of the Browser tab to the Label specified.
-
-Shows up in the Connection debug Stats window.
-
-If left blank, it will prompt the user for a Display Name on load.
-
-You can use [`&showlabels`](../advanced-settings/design-parameters/showlabels.md) to show the labels in the video sources.
+* Uses the label in OBS Studio if dragging the link into OBS Studio.
+* Will change the name of the Browser tab to the Label specified.
+* Shows up in the Connection debug Stats window.
+* If left blank, it will prompt the user for a Display Name on load.
+* You can use [`&showlabels`](../advanced-settings/design-parameters/showlabels.md) to show the labels in the video sources.
 
 ## Related
 

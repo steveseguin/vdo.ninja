@@ -8,7 +8,7 @@ General Option! ([`&push`](../source-settings/push.md), [`&room`](room.md), [`&v
 
 ## Details
 
-Video playback is disabled for guests.
+Video playback is disabled in VDO.Ninja.
 
 ## Related
 

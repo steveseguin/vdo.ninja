@@ -18,6 +18,8 @@ Sender-Side Option! ([`&push`](push.md))
 
 ## Details
 
+Sets the maximum width of the video allowed in pixels.
+
 Actual width may be less based on bandwidth allowances.
 
 Limiting the width can force the camera to use higher frame rates.

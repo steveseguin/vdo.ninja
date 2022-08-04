@@ -27,7 +27,6 @@ Please use alphanumeric-characters only; spaces or other characters may cause th
 **Passwords are CASE-SENSITIVE**; mobile users should watch-out for auto-capitalization when entering them.
 {% endhint %}
 
-\
 Adding [`&hash=HASH_VALUE`](../newly-added-parameters/and-hash.md) will act as if `&password=PASSWORD` was added.
 
 Use this link to get the hash for the password:\
