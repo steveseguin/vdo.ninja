@@ -221,7 +221,7 @@
     * [\&rampuptime](newly-added-parameters/and-rampuptime.md)
     * [\&forceios](source-settings/and-forceios.md)
     * [\&sensor](source-settings/sensor.md)
-    * [\&cc (closed-captions)](advanced-settings/view-parameters/cc.md)
+    * [\&closedcaptions](advanced-settings/settings-parameters/and-closedcaptions.md)
     * [\&enhance](advanced-settings/view-parameters/enhance.md)
     * [\&bitratecutoff](advanced-settings/parameters-only-on-beta/and-bitratecutoff.md)
     * [\&statsinterval](advanced-settings/parameters-only-on-beta/and-statsinterval.md)

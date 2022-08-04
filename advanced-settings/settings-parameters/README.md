@@ -63,7 +63,7 @@ You can use them for publisher, viewer and director URLs.
 
 | Parameter                                                               | Explanation                                                                                                           |
 | ----------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------- |
-| ``[`&cc`](../view-parameters/cc.md)``                                   | Enables displaying of closed captioning text                                                                          |
+| ``[`&closedcaptions`](and-closedcaptions.md)                            | Enables displaying of closed captioning text                                                                          |
 | ``[`&enhance`](../view-parameters/enhance.md)``                         | Tells the remote source that you would like them to prioritize the audio stream over other streams                    |
 | ``[`&bitratecutoff`](../parameters-only-on-beta/and-bitratecutoff.md)`` | If the total bitrate drops below the specified bitrate, the viewer will auto-hide the audio and video for that stream |
 | ``[`&statsinterval`](../parameters-only-on-beta/and-statsinterval.md)`` | Lets you change the default stats update interval from 3-seconds to something else                                    |

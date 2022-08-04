@@ -2,18 +2,16 @@
 description: Enables displaying of closed captioning text
 ---
 
-# \&cc (closed-captions)
+# \&closedcaptions
 
-Viewer-Side Option! ([`&view`](view.md), [`&scene`](scene.md), [`&room`](../../general-settings/room.md))
+Viewer-Side Option! ([`&view`](../view-parameters/view.md), [`&scene`](../view-parameters/scene.md), [`&room`](../../general-settings/room.md))
 
 ## Aliases
 
-* `&closedcaptions`
+* `&cc`
 * `&captions`
 
 ## Details
-
-
 
 This command will display the incoming transcribed text-data as an overlay. You will need to use this on the VIEW link, while also using the [`&transcribe`](../../source-settings/transcribe.md) command on the PUSH link.
 
@@ -23,7 +21,7 @@ See video for a walk-thru:
 
 Overlay text data is pulled from the source with [`&transcribe`](../../source-settings/transcribe.md) added.&#x20;
 
-``[`&fontsize={percent}`](fontsize.md) can be used to adjust the overlay font-size. 100% is default;&#x20;
+``[`&fontsize={percent}`](../view-parameters/fontsize.md) can be used to adjust the overlay font-size. 100% is default;&#x20;
 
 Use can use [`&css=somecssfile.css`](../design-parameters/css.md) to further customize the CSS style, or do so in the OBS Browser source style sheet area. You can also set the CSS via a base64 encoded string in the URL, via the [`&base64css`](../design-parameters/css.md) parameter.\
 \

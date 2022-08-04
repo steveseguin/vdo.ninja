@@ -25,7 +25,7 @@
 
 * Transcription /w Closed Captioning overlay has been added, although experimental. Uses default system mic as a source and cannot be muted.
   * `&transcribe=en-US` (or just `&trans`; added to the publisher).
-  * `&cc` (will display the incoming text).
+  * `&closedcaptions` (will display the incoming text).
   * Won't work with Safari.
   * `&fontsize=100` can let you set font-size of the closed captions&#x20;
 

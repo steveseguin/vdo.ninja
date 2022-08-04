@@ -24,7 +24,7 @@ Sender-Side Option! ([`&push`](push.md))
 
 The transcription service uses default browser/system mic as a source and cannot be muted.\
 \
-Generally needs to be used in conjunction with \&cc
+Generally needs to be used in conjunction with [`&closedcaptions`](../advanced-settings/settings-parameters/and-closedcaptions.md).
 
 {% hint style="warning" %}
 The transcription audio source will be the default microphone of the browser, which often is the same as the system's default input source.\
@@ -54,7 +54,6 @@ Does not work in Safari!
 
 ## Related
 
-{% content-ref url="../advanced-settings/view-parameters/cc.md" %}
-[cc.md](../advanced-settings/view-parameters/cc.md)
+{% content-ref url="../advanced-settings/settings-parameters/and-closedcaptions.md" %}
+[and-closedcaptions.md](../advanced-settings/settings-parameters/and-closedcaptions.md)
 {% endcontent-ref %}
-
