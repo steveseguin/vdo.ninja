@@ -25,5 +25,5 @@ Disabling audio processing will disable many features, such as audio-visualizers
 {% endhint %}
 
 {% hint style="warning" %}
-The ability to remotely mute a guest as a director (along with [`&audiogain=0`](../source-settings/gain.md)) will not work if audio processing is disabled.
+The ability to remotely mute a guest as a director (along with [`&audiogain=0`](../advanced-settings/audio-parameters/and-audiogain.md)) will not work if audio processing is disabled.
 {% endhint %}

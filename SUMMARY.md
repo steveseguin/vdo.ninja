@@ -158,7 +158,7 @@
     * [\&noaudioprocessing](general-settings/noaudioprocessing.md)
     * [\&audiodevice](https://docs.vdo.ninja/advanced-settings/source-parameters/audiodevice)
     * [\&aec](source-settings/aec.md)
-    * [\&audiogain](source-settings/gain.md)
+    * [\&audiogain](advanced-settings/audio-parameters/and-audiogain.md)
     * [\&autogain](source-settings/autogain.md)
     * [\&compressor](source-settings/and-compressor.md)
     * [\&denoise](source-settings/and-denoise.md)

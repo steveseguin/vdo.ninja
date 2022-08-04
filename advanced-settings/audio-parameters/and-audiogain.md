@@ -4,7 +4,7 @@ description: Applies a gain multiplier (as a percentage) to the local microphone
 
 # \&audiogain
 
-Sender-Side Option! ([`&push`](push.md))
+Sender-Side Option! ([`&push`](../../source-settings/push.md))
 
 ## Aliases
 
@@ -29,8 +29,8 @@ Adding `&audiogain=50` to a source link sets the audio gain of the source to 50%
 * If audio processing is on, then this should be available by default for the director to remotely control.
 * The gain function will NOT work if web-audio node processing cannot be enabled
 
-In Version 22 you can control the audio gain in the Audio Settings. If you want the guests to be able to change it by themselves, you can add [`&mediasettings`](../newly-added-parameters/and-mediasettings.md) to the guests' link.\
-![](<../.gitbook/assets/image (93).png>)
+In Version 22 you can control the audio gain in the Audio Settings. If you want the guests to be able to change it by themselves, you can add [`&mediasettings`](../../newly-added-parameters/and-mediasettings.md) to the guests' link.\
+![](<../../.gitbook/assets/image (93).png>)
 
 {% hint style="warning" %}
 Enables the audio processing pipeline.
@@ -38,14 +38,14 @@ Enables the audio processing pipeline.
 
 ## Related
 
-{% content-ref url="../advanced-settings/upcoming-parameters/and-volume.md" %}
-[and-volume.md](../advanced-settings/upcoming-parameters/and-volume.md)
+{% content-ref url="../upcoming-parameters/and-volume.md" %}
+[and-volume.md](../upcoming-parameters/and-volume.md)
 {% endcontent-ref %}
 
-{% content-ref url="autogain.md" %}
-[autogain.md](autogain.md)
+{% content-ref url="../../source-settings/autogain.md" %}
+[autogain.md](../../source-settings/autogain.md)
 {% endcontent-ref %}
 
-{% content-ref url="and-limiter.md" %}
-[and-limiter.md](and-limiter.md)
+{% content-ref url="../../source-settings/and-limiter.md" %}
+[and-limiter.md](../../source-settings/and-limiter.md)
 {% endcontent-ref %}
