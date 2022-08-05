@@ -273,6 +273,9 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 		session.pushEffectsData=true;
 	}
 
+	if (urlParams.has('pushloudness') || urlParams.has('getloudness')) { // this sets the loudness IFRAME API output, if available.
+		session.pushLoudness = true;
+	}
 
 	if (urlParams.has('notmobile')){
 		session.mobile = false;
@@ -4233,9 +4236,17 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 		if ("getLoudness" in e.data) {
 			log("GOT LOUDNESS REQUEST");
 			if (e.data.getLoudness == true) {
-				session.pushLoudness = true;
-				var loudness = {};
 				
+				if (!session.pushLoudness && (session.audioEffects!==true)){
+					session.pushLoudness = true;
+					for (var i in session.rpcs) {
+						updateIncomingAudioElement(i); // this can be called when turning on/off inbound audio processing.
+					}
+				} else {
+					session.pushLoudness = true;
+				}
+				
+				var loudness = {};
 				for (var i in session.rpcs) {
 					loudness[session.rpcs[i].streamID] = session.rpcs[i].stats.Audio_Loudness;
 				}
@@ -4245,7 +4256,14 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 				}, session.iframetarget);
 				
 			} else {
-				session.pushLoudness = false;
+				if (session.pushLoudness && !session.audioEffects){ // turn off audio processing
+					session.pushLoudness = false;
+					for (var i in session.rpcs) {
+						updateIncomingAudioElement(i)
+					}
+				} else {
+					session.pushLoudness = false; // can't turn off audio processing
+				}
 			}
 		}
 		

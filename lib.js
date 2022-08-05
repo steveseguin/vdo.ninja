@@ -25476,65 +25476,74 @@ function updateIncomingVideoElement(UUID, video=true, audio=true){
 			}
 		});
 	}
-	
 	if (audio){
-		if (session.audioEffects===true){
-			var tracks = session.rpcs[UUID].streamSrc.getAudioTracks();
-			if (tracks.length){
-				var track = tracks[0];
-				track = addAudioPipeline(UUID, track)
-				
-				var added = false;
-				var tracks2 = session.rpcs[UUID].videoElement.srcObject.getAudioTracks();
-				tracks2.forEach(trk2 =>{
-					if (trk2.label && (trk2.label == "MediaStreamAudioDestinationNode")){ // an old morphed node; delete it.
-						session.rpcs[UUID].videoElement.srcObject.removeTrack(trk2);
-					} else if (track.id == trk2.id){ // maybe it didn't morph; already added either way
-						added = true;
-					} else if ((trk2.id == tracks[0].id) && (track.id != tracks[0].id)){ // remove original audio track that is now morphed
-						session.rpcs[UUID].videoElement.srcObject.removeTrack(trk2);
-					}
-				});
-				if (!added){
-					session.rpcs[UUID].videoElement.srcObject.addTrack(track);
+		updateIncomingAudioElement(UUID) // do the same for audio now.
+	}
+}
+
+function updateIncomingAudioElement(UUID){ // this can be called when turning on/off inbound audio processing.
+	if (!session.rpcs[UUID] || !session.rpcs[UUID].videoElement || !session.rpcs[UUID].streamSrc){return;}
+	
+	if (!session.rpcs[UUID].videoElement.srcObject) {
+		session.rpcs[UUID].videoElement.srcObject = createMediaStream();
+	}
+
+	if ((session.audioEffects===true) || session.pushLoudness){
+		var tracks = session.rpcs[UUID].streamSrc.getAudioTracks();
+		if (tracks.length){
+			var track = tracks[0];
+			track = addAudioPipeline(UUID, track)
+			
+			var added = false;
+			var tracks2 = session.rpcs[UUID].videoElement.srcObject.getAudioTracks();
+			tracks2.forEach(trk2 =>{
+				if (trk2.label && (trk2.label == "MediaStreamAudioDestinationNode")){ // an old morphed node; delete it.
+					session.rpcs[UUID].videoElement.srcObject.removeTrack(trk2);
+				} else if (track.id == trk2.id){ // maybe it didn't morph; already added either way
+					added = true;
+				} else if ((trk2.id == tracks[0].id) && (track.id != tracks[0].id)){ // remove original audio track that is now morphed
+					session.rpcs[UUID].videoElement.srcObject.removeTrack(trk2);
 				}
-				
-			} else {
-				session.rpcs[UUID].videoElement.srcObject.getAudioTracks().forEach(trk=>{ // make sure to remove all tracks.
-					session.rpcs[UUID].videoElement.srcObject.remove(trk);
-				});
+			});
+			if (!added){
+				session.rpcs[UUID].videoElement.srcObject.addTrack(track);
 			}
 			
 		} else {
-			var expected = [];
-			tracks = session.rpcs[UUID].videoElement.srcObject.getAudioTracks();  // add audio tracks
-			session.rpcs[UUID].streamSrc.getAudioTracks().forEach((trk)=>{
-				var added = false;
-				tracks.forEach(trk2 =>{
-					if (trk2.id == trk.id){
-						added=true;
-						expected.push(trk2); // 
-					}
-				});
-				if (!added){
-					session.rpcs[UUID].videoElement.srcObject.addTrack(trk);
-				}
-			});
-			tracks.forEach((trk)=>{
-				var added = false;
-				expected.forEach((trk2)=>{
-					if (trk2.id == trk.id){
-						added=true;
-					}
-				});
-				if (!added){ // not expected. so lets delete. 
-					warnlog("this shouldn't happen that often, audio track orphaned. removing it");
-					session.rpcs[UUID].videoElement.srcObject.removeTrack(trk);
-				}
+			session.rpcs[UUID].videoElement.srcObject.getAudioTracks().forEach(trk=>{ // make sure to remove all tracks.
+				session.rpcs[UUID].videoElement.srcObject.remove(trk);
 			});
 		}
-		resetupAudioOut(session.rpcs[UUID].videoElement, true);
+		
+	} else {
+		var expected = [];
+		tracks = session.rpcs[UUID].videoElement.srcObject.getAudioTracks();  // add audio tracks
+		session.rpcs[UUID].streamSrc.getAudioTracks().forEach((trk)=>{
+			var added = false;
+			tracks.forEach(trk2 =>{
+				if (trk2.id == trk.id){
+					added=true;
+					expected.push(trk2); // 
+				}
+			});
+			if (!added){
+				session.rpcs[UUID].videoElement.srcObject.addTrack(trk);
+			}
+		});
+		tracks.forEach((trk)=>{
+			var added = false;
+			expected.forEach((trk2)=>{
+				if (trk2.id == trk.id){
+					added=true;
+				}
+			});
+			if (!added){ // not expected. so lets delete. 
+				warnlog("this shouldn't happen that often, audio track orphaned. removing it");
+				session.rpcs[UUID].videoElement.srcObject.removeTrack(trk);
+			}
+		});
 	}
+	resetupAudioOut(session.rpcs[UUID].videoElement, true); 
 }
 
 
@@ -25584,6 +25593,8 @@ function addAudioPipeline(UUID, track){  // INBOUND AUDIO EFFECTS
 			source = audioMeterGuest(source, UUID, trackid);
 		} else if (session.quietOthers){
 			log("adding a loudness meter node to audio");
+			source = audioMeterGuest(source, UUID, trackid);
+		} else if (session.pushLoudness){
 			source = audioMeterGuest(source, UUID, trackid);
 		}
 		
