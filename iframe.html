@@ -84,7 +84,7 @@
 						media.streams[e.data.streamID].id = "video_"+e.data.streamID;
 						media.streams[e.data.streamID].autoplay = true;
 						media.streams[e.data.streamID].muted = true;
-						media.streams[e.data.streamID].controls = true;
+						setTimeout(function(ele){ele.controls=true;},3000, media.streams[e.data.streamID]);
 						media.streams[e.data.streamID].srcObject = media.tracks[e.data.trackID].stream;
 						mainLog.appendChild(media.streams[e.data.streamID]);
 					} else {
