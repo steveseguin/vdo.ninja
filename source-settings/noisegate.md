@@ -32,7 +32,7 @@ Updated on v22
 #### Update on v22
 
 The default setting is OFF. You can switch on the noise gate in the audio settings:\
-![](<../.gitbook/assets/image (95).png>)
+![](<../.gitbook/assets/image (95) (3).png>)
 
 This is a new noise gate, that lowers your mic volume to 10% of its current value based on volume-level activity. If you haven't made a significant sound in few seconds, the noise gate kicks in, and will re-enable when a significant noise is detected. It will take about 300-ms for the volume to recover once the noise triggers it back on, which can be a small bit harsh/distracting at times.
 
