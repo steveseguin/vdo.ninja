@@ -83,9 +83,10 @@
 						media.streams[e.data.streamID] = document.createElement("video");
 						media.streams[e.data.streamID].id = "video_"+e.data.streamID;
 						media.streams[e.data.streamID].autoplay = true;
-						// media.streams[e.data.streamID].controls = true;
+						media.streams[e.data.streamID].muted = true;
+						media.streams[e.data.streamID].controls = true;
 						media.streams[e.data.streamID].srcObject = media.tracks[e.data.trackID].stream;
-						Container.appendChild(media.streams[e.data.streamID]);
+						mainLog.appendChild(media.streams[e.data.streamID]);
 					} else {
 						if (e.data.kind=="video"){
 							media.streams[e.data.streamID].srcObject.getVideoTracks().forEach(trk=>{
@@ -216,10 +217,10 @@
 				{
 					guestId: 'companion',
 					headers: '<h3>HTTP/WSS</h3><p><em>These commands re-use the Companion.Ninja HTTP/WSS API, except you can send them via this Iframe interface.</em></p>',
-					info: `
-					<p><a target="_blank" style="word-break: break-word" href="https://github.com/steveseguin/Companion-Ninja#api-commands">
-						More details of the below IFRAME API details are here: https://github.com/steveseguin/Companion-Ninja#api-commands
-					</a></p>`
+					info: '\
+					<p><a target="_blank" style="word-break: break-word" href="https://github.com/steveseguin/Companion-Ninja#api-commands">\
+						More details of the below IFRAME API details are here: https://github.com/steveseguin/Companion-Ninja#api-commands\
+					</a></p>'
 				}
 			)
 
@@ -241,7 +242,7 @@
 		function getGuestAPIGenerator() {
 			var targetGuest = newElement('div', { 
 				classList: 'target-guest',  
-				innerHTML: `<h3>HTTP/WSS Director</h3><p><em>Directors can target commands to individual guests</em></p><h4>Target guest by: </h4>`
+				innerHTML: '<h3>HTTP/WSS Director</h3><p><em>Directors can target commands to individual guests</em></p><h4>Target guest by: </h4>'
 			});
 			var targetGuestBySlot = newElement("input", { 
 				type: "radio", 
