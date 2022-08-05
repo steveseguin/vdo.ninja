@@ -6,6 +6,10 @@ description: Sets the interface language
 
 General Option! ([`&push`](../source-settings/push.md), [`&room`](room.md), [`&view`](../advanced-settings/view-parameters/view.md), [`&scene`](../advanced-settings/view-parameters/scene.md))
 
+## Aliases
+
+* `&language` (on alpha)
+
 ## Options
 
 | Value            | Language                               |

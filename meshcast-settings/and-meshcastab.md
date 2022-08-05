@@ -10,6 +10,7 @@ Meshcast Option / Sender-Side Option! ([`&meshcast`](../newly-added-parameters/a
 
 * `&mcaudiobitrate`
 * `&mcab`
+* `&meshcastaudiobitrate` (on alpha)
 
 ## Options
 

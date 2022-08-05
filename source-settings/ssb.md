@@ -6,6 +6,10 @@ description: Forces the screen-share button to appear for guests
 
 Sender-Side Option! ([`&push`](push.md))
 
+## Aliases
+
+* `&screensharebutton` (on alpha)
+
 ## Details
 
 Forces the screen-share button to appear for guests.
