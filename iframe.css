@@ -1,0 +1,200 @@
+body {
+    padding: 10px;
+    margin: 0;
+    background-color: #e1e8fc;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+iframe {
+    border: 0;
+    margin: 0;
+    padding: 0;
+    display: block;
+    width: 100%;
+    height: 100%;
+}
+
+p {
+    margin-top: 0;
+}
+
+h3 {
+    margin-top: 0;
+    font-size: 20px;
+    font-weight: 300;
+}
+
+h4 {
+    margin-top: 5px;
+    margin-bottom: 5px;
+}
+
+input {
+    padding: 5px;
+    margin-bottom: 5px;
+    margin-right: 5px;
+}
+
+button {
+    padding: 5px;
+    background: white;
+    border: solid;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-bottom: 5px;
+}
+
+button:not(:last-child) {
+    margin-right: 5px;
+}
+
+video {
+    max-width: 300px;
+    max-height: 100px;
+}
+
+#viewlink {
+    width: 400px;
+}
+
+#container {
+    display: flex;
+    padding: 0;
+    flex-direction: column;
+}
+
+.api-section {
+    padding: 10px;
+    border-bottom: solid 1px;
+}
+
+.api-section > h4:first-child {
+    margin-top: 0;
+}
+
+.api-section-header {
+    display: flex;
+    width: 100%;
+    padding: 10px;
+    border-bottom: solid 1px;
+    justify-content: space-between;
+    box-sizing: border-box;
+    align-items: center;
+}
+
+.custom-post {
+    display: flex;
+}
+
+.custom-post > * {
+    margin: 0;
+}
+
+.custom-post > button {
+    border-radius: 0;
+    border: 0;
+    padding: 0 20px;
+    font-size: 16px;
+    font-family: monospace;
+}
+
+.custom-post-input {
+    width: 100%;
+    padding: 10px;
+    border: solid 5px #4d66a8;
+    font-family: monospace;
+}
+
+.controls {
+    overflow: auto;
+    background: white;
+    width: 350px; 
+    flex-shrink: 0;
+    box-sizing: border-box;
+    height: 100%;
+}
+
+.example-body {
+    display: flex; 
+    width: 100%; 
+    height: 700px;
+}
+
+.example-header {
+    display: flex; 
+    width: 100%; 
+    background: #4d66a8; 
+    color: white;
+    padding: 10px; 
+    box-sizing: border-box;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 22px;
+}
+
+.example-header > button {
+    margin: 0;
+}
+
+.hidden {
+    display: none;
+}
+
+.iframe-example {
+    display: flex; 
+    flex-direction: column;
+    margin-bottom: 20px;
+    border: solid #4d66a8 2px;
+}
+
+.main-log {
+    width: 100%;
+    padding: 10px;
+    flex-shrink: 0;
+    height: 200px;
+    display: flex;
+    flex-direction: column;
+    overflow: auto;
+    background: #0b0e15;
+    color: white;
+    border-top: solid 1px #6e6e6e;
+    font-family: monospace;
+    box-sizing: border-box;
+}
+
+.output-container {
+    position: relative;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+}
+
+.post-log {
+    background: #273047;
+    padding: 4px;
+    margin-top: 10px;
+}
+
+.sensors-log {
+    padding: 10px;
+    width: 200px;
+}
+
+.stream-data-logs {
+    height: 100%;
+    background: black;
+    color: white;
+    font-family: monospace;
+    font-size: 12px;
+    flex-shrink: 0;
+}
+
+.target-guest {
+    padding: 10px;
+    border-bottom: solid 1px;
+}
+
+.target-guest-inputs {
+    margin-top: 5px;
+}
