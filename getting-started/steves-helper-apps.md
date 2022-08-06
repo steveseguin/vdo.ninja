@@ -26,11 +26,11 @@ Lastly, since playback is agnostic, you can window-capture the same video multip
 
 ## YouTube, Twitch chat and social comment Overlays plugin
 
-[https://github.com/steveseguin/twitch-youtube-restream-chat-overlay](https://github.com/steveseguin/twitch-youtube-restream-chat-overlay)
+[https://chat.overlay.ninja](https://chat.overlay.ninja)
 
 This Chrome browser extension turns your social chat and comments section into selectable social overlays for OBS Studio or other studio production software.
 
-This Chat overlay extensions will forward the selected chat message over a web-socket connection to a secondary webpage, which can be used in OBS-Studio as a simple browser source. This makes capturing the chat messages from a live video stream very easy and fast -- no Chroma keying or window-capturing needed. It also makes customizing the style pretty easy, with no Chrome extension development needed.
+This chat overlay extension will forward the selected chat message over a web-socket connection to a secondary webpage, which can be used in OBS-Studio as a simple browser source. This makes capturing the chat messages from a live video stream very easy and fast -- no Chroma keying or window-capturing needed. It also makes customizing the style pretty easy, with no Chrome extension development needed.
 
 **Supported sites as of August 2022 (requests welcomed)**
 
@@ -90,7 +90,7 @@ I welcome feedback.
 
 ## Raspberry Ninja
 
-[https://github.com/steveseguin/raspberry\_ninja](https://github.com/steveseguin/raspberry\_ninja)
+[https://raspberry.ninja](https://raspberry.ninja)
 
 Turn your Raspberry Pi or Nvidia Jetson into a Ninja-cam with hardware-acceleration enabled! Publish live streaming video to VDO.Ninja on the cheap at very high resolutions! The script for the Nvidia Jetson ($69 and up) is setup to plug in a $10 1080p30 HDMI to USB adapter and go, while the Raspberry Pi is setup as a quick-deploy image that can work with the official Raspicam.\
 
@@ -105,13 +105,13 @@ Mobile native app versions of VDO.Ninja can be found behind the link below. Thes
 [native-mobile-app-versions.md](native-mobile-app-versions.md)
 {% endcontent-ref %}
 
-## Consolidated social live chat tool
+## Social Stream
 
-[https://github.com/steveseguin/social\_stream#readme](https://github.com/steveseguin/social\_stream#readme)
+[https://socialstream.ninja](https://socialstream.ninja)
 
-Consolidate your live social messaging streams, including Youtube and Twitch, into a single chat stream that can be docked into OBS and be used to to select featured chat messages as an overlay.
+Consolidate your live social messaging streams, including Youtube, Twitch, and more, into a single chat stream that can be docked into OBS and be used to to select featured chat messages as an overlay.
 
-Very much like Chat Overlay Ninja, except is purely for live chat and has a focus on consolidation of chat messages, instead of just featured chat.
+Very much like Chat Overlay Ninja, except is purely for live chat and has a focus on consolidation of chat messages, instead of just featured chat. Has many features and supported sites at this point.
 
 ![](<../.gitbook/assets/image (98) (1) (1) (1).png>)
 
@@ -133,7 +133,7 @@ Versus.cam is the upcoming and standalone replacement for the [vdo.ninja/monitor
 * All the scene links and invite links are preconfigured for E-Sports , where video is set to pull around 20-mbps for smooth 1080p60 game play. The idea is, if you choose to use this page for creating links, it's all already setup to be used for ingestion.
 * The room is configured so that guests cannot see or talk to each other. All guests can do is text-chat with the versus host.
 
-![](<../.gitbook/assets/image (1).png>)
+![](<../.gitbook/assets/image (1) (2).png>)
 
 * Versus.cam is compatible with a director and the director room, so you can use a director room AND the Versus.cam room at the same time, without conflict.
 * A new feature that Versus.cam has, that will also soon be coming to the normal VDO.Ninja directors' room, is the ability to **dynamically change the resolution and bitrate of remote scenes**. This works by means of the [`&remote`](../general-settings/remote.md) control feature, which is preconfigured in the links already, so no director is needed when using versus. This will then also work with non-room links, so long as [`&remote`](../general-settings/remote.md) is included in their URL.
