@@ -85,6 +85,7 @@
   * [How to control VDO.Ninja with Touch Portal](guides/hotkey-support/how-to-control-vdo.ninja-with-touch-portal.md)
   * [How to publish from OBS into VDO.Ninja](guides/publish-from-obs-into-vdo.ninja.md)
   * [How to screen share your iPhone/iPad](guides/screen-share-your-iphone-ipad.md)
+  * [How to get iPhones to output 1080p Videos](guides/how-to-get-iphones-to-output-1080p-videos.md)
   * [How to view Twitch chat while using VDO.Ninja on mobile devices](https://vdo.ninja/twitch)
   * [How to stream into Zoom without OBS](guides/how-to-stream-into-zoom-without-obs.md)
   * [How to connect a smartphone to computer via USB](guides/connecting-smartphone-to-computer-via-usb.md)

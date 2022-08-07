@@ -8,7 +8,6 @@
 ## Screen sharing
 
 * [How to share Desktop Audio on macOS, such as when screen sharing](https://kast.zendesk.com/hc/en-us/articles/360031463111-How-to-stream-computer-audio-on-a-Mac)
-* [How to turn your mobile phone camera into a webcam with VDO.Ninja (Quick Guide)](https://docs.google.com/document/d/e/2PACX-1vSttd6fJYHe9fzMIaa7z4YEwEArgxyBNPNSLk-3zm63Kdk0fJbR1uSyjjVxyIorA9Y\_gSnYfBbZnx0Y/pub)
 
 ## Audio
 
@@ -22,13 +21,7 @@
 * [How to see your camera's max resolution limit, and if it supports manual focus/zoom](https://obs.ninja/supports)
 * [How to send output of your webcam only and not the entire output from OBS into VDO.Ninja](https://github.com/exeldro/obs-virtual-cam-filter)
 * [How to apply a green screen to VDO.Ninja streams](https://medium.com/@lordfloofen/free-virtual-green-screen-4c27d04fc731)
-* [How to get iPhones to output 1080p video](https://docs.google.com/document/d/e/2PACX-1vT19aHm0ZCQtdT8rNvn8czoOOz2tQbqMyA-Ooa1do4RTKfmqvPpb7zb5f8LXDfsTTjmxOitcRjrlYlT/pub)
 * [Info on using "chrome.exe --autoplay-policy=no-user-gesture-required" to force Auto-play in Chrome](https://developers.google.com/web/updates/2017/09/autoplay-policy-changes)
-
-## Captions
-
-* [How to add automatic Closed-Captioning to OBS ](https://caption.ninja/)
-* [How to add closed captions to guests within VDO.Ninja itself](https://docs.vdo.ninja/source-settings/transcribe)
 
 ## Self hosted
 
@@ -51,7 +44,6 @@
 
 ## Other
 
-* [How to give the Director of a group room a way to speak](https://docs.google.com/document/d/e/2PACX-1vQsR24UNvfMRDgJkAN1B4QenIEAO8A2rkJlE0f2m-eXSPfOmNfNKQyY1KpFls84wWj93Yng\_0hNQK2O/pub)
 * [How to stream to a Raspberry Pi and use as a remote monitor](https://awesomeopensource.com/project/futurice/chilipie-kiosk)
 * [How to obfuscate (hide) the URL parameters for guest links](http://invite.cam/)
 * [How to do VDO.Ninja to NDI output](https://docs.google.com/document/d/e/2PACX-1vR9p03eK7dXMo0izaXwh4YGkBHtLgXmzOpSYMQlB-VT2s2FjlxY\_vpUzCkRZqXdqhnQLQPSoH6NZlG2/pub)

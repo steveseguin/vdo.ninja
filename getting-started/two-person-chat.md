@@ -1,6 +1,6 @@
 # Two person chat
 
-![](<../.gitbook/assets/image (33).png>)
+![](<../.gitbook/assets/image (17).png>)
 
 While you can achieve a multi-person chat with a [group room](rooms/), you can also do it without it.
 
