@@ -145,6 +145,6 @@ Versus.cam is the upcoming and standalone replacement for the [vdo.ninja/monitor
 
 Please report bugs. It's a first release, using the alpha version of VDO.Ninja, so bugs are kind of expected.
 
-{% embed url="https://versus.cam/" %}
-[https://versus.cam/](https://versus.cam/)
+{% embed url="https://youtu.be/I12ASNWHPPI" %}
+[https://youtu.be/I12ASNWHPPI](https://youtu.be/I12ASNWHPPI)
 {% endembed %}
