@@ -4,6 +4,14 @@ description: Where do I find the native mobile app versions?
 
 # Native mobile app versions
 
+{% embed url="https://play.google.com/store/apps/details?id=flutter.vdo.ninja" %}
+Android
+{% endembed %}
+
+{% embed url="https://apps.apple.com/us/app/vdo-ninja/id1607609685" %}
+iOs
+{% endembed %}
+
 At present, the native mobile app versions of VDO.Ninja are fairly basic, but they can be useful for a couple of reasons.
 
 * The native Android app supports screen-sharing, while the browser-based version of VDO.Ninja does not.
@@ -40,7 +48,7 @@ Lastly, you can also download the source-code for the Android app, allowing you 
 GitHub repository for the app
 {% endembed %}
 
-## Apple iOS Download Link
+## Download the iOS app
 
 The native iOS app for VDO.Ninja is again available on the Apple App Store.&#x20;
 
