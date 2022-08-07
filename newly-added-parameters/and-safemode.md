@@ -15,4 +15,4 @@ This has the guest's camera start in a rather basic fashion, which might help so
 It's available under director's customization options as well, under "Compatibility mode".
 
 There is a toggle in the director's room which adds `&safemode` to the guest's invite link.\
-![](<../.gitbook/assets/image (99).png>)
+![](<../.gitbook/assets/image (99) (2).png>)
