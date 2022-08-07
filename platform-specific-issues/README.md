@@ -1,7 +1,7 @@
 # Platform specific issues
 
-* [Android](android.md)
-* [macOS](macos.md)
-* [iOS (iPhone/iPad)](ios.md)
-* [Firefox](untitled-2.md)
-* [Opera GX](opera-gx.md)
+* [android.md](android.md "mention")
+* [macos.md](macos.md "mention")
+* [ios.md](ios.md "mention")
+* [untitled-2.md](untitled-2.md "mention")
+* [opera-gx.md](opera-gx.md "mention")
