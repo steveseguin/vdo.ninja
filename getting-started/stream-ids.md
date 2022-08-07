@@ -2,7 +2,7 @@
 
 Stream IDs are not magical in any way and can be manually or automatically created and reused.
 
-Use [`&push=STREAMID`](../source-settings/push.md) to publish a video and [`&view=STREAMID`](../advanced-settings/view-parameters/view.md) to remotely view it. If you don't manually specify a stream ID, VDO.Ninja will sometimes generate one for you. You can reuse the generated stream ID if you wish.
+Use [`https://vdo.ninja/?&push=STREAMID`](https://vdo.ninja/?\&push=STREAMID) to publish a video and [`https://vdo.ninja/?&view=STREAMID`](https://vdo.ninja/?\&view=STREAMID) to remotely view it. If you don't manually specify a stream ID, VDO.Ninja will sometimes generate one for you. You can reuse the generated stream ID if you wish.
 
 Stream IDs only exist when they are actively used; once you stop using a stream ID, it no longer exists until it is used again.
 
