@@ -5,7 +5,7 @@
 * [How Group Chat works](../help/how-does-group-chat-work.md)
 * [Basic hotkeys](hotkey-support/)
 * [MIDI, API and WebHID support](midi-api-and-webhid-support.md)
-*
+* [API commands](api-commands/)
 * [Hardware-accelerated video encoding](hardware-accelerated-video-encoding.md)
 * [Audio Filters & Bitrate](audio-filters.md)
 * [External guides and how-to's](guides-and-how-tos.md)
