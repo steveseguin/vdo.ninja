@@ -1,6 +1,5 @@
 # Guides
 
-* [Getting started with VDO.Ninja](getting-started-with-vdo.ninja/)
 * [Cheat Sheets](cheat-sheets.md)
 * [How Group Chat works](../help/how-does-group-chat-work.md)
 * [Basic hotkeys](hotkey-support/)
@@ -22,7 +21,7 @@
 * [How to publish from OBS into VDO.Ninja](publish-from-obs-into-vdo.ninja.md)
 * [How to screen share your iPhone/iPad](screen-share-your-iphone-ipad.md)
 * [How to view Twitch chat while using VDO.Ninja on mobile](https://vdo.ninja/twitch)
-* [How to stream into Zoom without OBS](stream-into-zoom-without-obs.md)
+* [How to stream into Zoom without OBS](how-to-stream-into-zoom-without-obs.md)
 * [How to connect a smartphone to computer via USB](connecting-smartphone-to-computer-via-usb.md)
 * [How to edit an invite after sending it](edit-an-invite-after-sending-it.md)
 * [How to get highest video quality (for an interview)](highest-quality-video-for-an-interview.md)

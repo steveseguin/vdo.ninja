@@ -2,11 +2,11 @@
 
 You can customize the playback of videos by added parameters to the VDO.Ninja URL links, along with many other aspects. The default video bitrate of most modern browsers is around 2500-kbps, which is okay, but we can achieve higher video quality if we manually set this to something even higher.
 
-`https://vdo.ninja/?view=xxxxxxx&videobitrate=6000`
+`https://vdo.ninja/?view=streamid&videobitrate=6000`
 
-You’ll notice that we added [`&videobitrate=6000`](../../advanced-settings/view-parameters/bitrate.md) to the viewer’s side and not the publishing side. The viewer gets to control the bitrate; every viewer can set their own custom video bitrate in fact.
+You’ll notice that we added [`&videobitrate=6000`](../advanced-settings/view-parameters/bitrate.md) to the viewer’s side and not the publishing side. The viewer gets to control the bitrate; every viewer can set their own custom video bitrate in fact.
 
-On the publishing side, the default target resolution is already a high 1280x720 @ 60-fps, but we can set this higher by adding [`&quality=0`](../../source-settings/quality.md) to the push link. This will have the publisher’s side try to make available a 1920x1080 video stream, if their camera or video device supports it. If not, it will fall back to 720p. `https://vdo.ninja/?push=xxxxxxx&quality=0`
+On the publishing side, the default target resolution is already a high 1280x720 @ 60-fps, but we can set this higher by adding [`&quality=0`](../source-settings/quality.md) to the push link. This will have the publisher’s side try to make available a 1920x1080 video stream, if their camera or video device supports it. If not, it will fall back to 720p. `https://vdo.ninja/?push=streamid&quality=0`
 
 For 1080p60 gaming, you’ll want to set the video bitrate to 12000-kbps or higher, as lower bitrates might cause the frame rate to be quite low otherwise. Otherwise, for talking head-type videos, the default video bitrate is often going to be adequate.
 

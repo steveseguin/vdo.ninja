@@ -13,7 +13,7 @@ On a Windows PC, a Chromium-based browser offers your best chance of it working.
 If it works, in the video stats window (`CTRL + Click`), you'll see the video codec type to be listed as External Encoder, if the hardware acceleration is working. CPU load may not decrease always, and there isn't an easy way to tell which encoder is being used, but if it says the codec is `h264`, then it's likely still using just software.\
 
 
-![Sample of the H264 Hardware Encoder working with VDO.Ninja](<../.gitbook/assets/image (17) (1).png>)
+![Sample of the H264 Hardware Encoder working with VDO.Ninja](<../.gitbook/assets/image (17).png>)
 
 Despite software using a lot of CPU, it offers better compatibility, fewer glitches, and technically can still handle dozens of video streams at a time if you CPU is fast enough. Hardware however can be finicky, where glitching is common and a hardware encoder typically can only support three video encoding sessions at a time.
 

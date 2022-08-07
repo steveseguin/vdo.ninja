@@ -40,7 +40,7 @@ Lastly, you can also download the source-code for the Android app, allowing you 
 GitHub repository for the app
 {% endembed %}
 
-### Apple iOS Download Link
+## Apple iOS Download Link
 
 The native iOS app for VDO.Ninja is again available on the Apple App Store.&#x20;
 
@@ -58,7 +58,7 @@ How to screen capture your iPhone or iPad with VDO.Ninja
 
 Room support and passwords are not supported yet in the native mobile apps.
 
-### Raspberry Pi system images (and code)
+## Raspberry Pi system images (and code)
 
 If you have a Raspberry Pi, Nvidia Jetson, or a Linux system, you can use those devices to connect UVC-compatible cameras and microphones to VDO.Ninja. It's a great way to make a cheap mobile stream encoder.
 

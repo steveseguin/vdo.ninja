@@ -1,6 +1,6 @@
 # Social Stream
 
-[https://socialstream.ninja](https://socialstream.ninja)
+{% embed url="https://socialstream.ninja" %}
 
 Consolidate your live social messaging streams, including Youtube, Twitch, and more, into a single chat stream that can be docked into OBS and be used to to select featured chat messages as an overlay.
 

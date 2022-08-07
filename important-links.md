@@ -93,7 +93,7 @@
 | Raspberry Ninja                                         | [https://raspberry.ninja/](https://raspberry.ninja/)                                                                   |
 | YouTube, Twitch chat and social comment Overlays plugin | [https://chat.overlay.ninja/](https://chat.overlay.ninja)                                                              |
 
-### [Community contributed tools](getting-started/community-contributed-tools.md)
+### [Community contributed tools](steves-helper-apps/community-contributed-tools.md)
 
 | Vingester (ingest web pages as NDI-multicasted streams)              | [https://vingester.app/](https://vingester.app/)                                                                 |
 | -------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------- |

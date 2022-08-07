@@ -1,6 +1,6 @@
 # Electron Capture
 
-[https://github.com/steveseguin/electroncapture](https://github.com/steveseguin/electroncapture)
+{% embed url="https://github.com/steveseguin/electroncapture" %}
 
 Created for [VDO.Ninja](https://vdo.ninja) users, it can provide users a clean way of window capturing websites. In the case of [VDO.Ninja](https://vdo.ninja), it may offer a more flexible and reliable method of capturing live video than the browser source plugin built into OBS.
 

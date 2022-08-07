@@ -27,8 +27,8 @@ There are some cheat sheet and quick-start guides here:
 
 There are a few basic guides for beginners here as well:
 
-{% content-ref url="guides/getting-started-with-vdo.ninja/" %}
-[getting-started-with-vdo.ninja](guides/getting-started-with-vdo.ninja/)
+{% content-ref url="broken-reference" %}
+[Broken link](broken-reference)
 {% endcontent-ref %}
 
 ## Need help or support?

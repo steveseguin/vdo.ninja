@@ -2,7 +2,7 @@
 
 ## Caption
 
-[https://caption.ninja/](https://caption.ninja/)
+{% embed url="https://caption.ninja/" %}
 
 Although VDO.Ninja supports captions, sometimes you need something simple yet flexible. Caption.Ninja lets you use the browser's built in speech-to-text service to provide overlay captions for your live stream.\
 \

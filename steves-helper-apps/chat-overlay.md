@@ -1,6 +1,6 @@
 # Chat Overlay
 
-[https://chat.overlay.ninja](https://chat.overlay.ninja)
+{% embed url="https://chat.overlay.ninja" %}
 
 This Chrome browser extension turns your social chat and comments section into selectable social overlays for OBS Studio or other studio production software.
 

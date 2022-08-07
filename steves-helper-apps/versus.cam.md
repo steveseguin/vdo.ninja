@@ -1,6 +1,6 @@
 # Versus.cam
 
-[https://versus.cam/](https://versus.cam/)
+{% embed url="https://versus.cam/" %}
 
 Versus.cam is the upcoming and standalone replacement for the [vdo.ninja/monitor](https://vdo.ninja/monitor) page. Versus.cam has some interesting features that are specific to the upcoming version of VDO.Ninja, so at the moment it only works in conjunction with [vdo.ninja/alpha](https://vdo.ninja/alpha/).
 

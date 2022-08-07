@@ -1,6 +1,6 @@
 # Meshcast.io
 
-[https://meshcast.io](https://meshcast.io)
+{% embed url="https://meshcast.io" %}
 
 This is a free to use service that can work in conjunction with VDO.Ninja. It's a low latency video CDN (content delivery network), which can be used to host larger group rooms in VDO.Ninja. It's not designed for mass broadcast, not at present anyways, but it can handle upwards of 100-viewers without taxing your CPU or network.
 
