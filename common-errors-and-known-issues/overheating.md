@@ -78,7 +78,7 @@ Older 2011-era Apple notebooks are prone to overheating. Even newer generation M
 
 Ensure you are not running a laptop at 100% CPU load, make sure it has plenty of cool ventilation, ensure the fans are clean and not full of dust, start with a full battery and keep the computer plugged in
 
-![](<../.gitbook/assets/image (5).png>)
+![](<../.gitbook/assets/image (5) (1).png>)
 
 ### Raspberry Pi, Nvidia Jetson, and dedicated hardware-encoders
 
