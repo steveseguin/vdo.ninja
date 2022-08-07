@@ -80,7 +80,7 @@
 | Reddit          | [https://reddit.com/r/vdoninja](https://reddit.com/r/vdoninja)                     |
 | Steve's YouTube | [https://www.youtube.com/c/SteveSeguin82](https://www.youtube.com/c/SteveSeguin82) |
 
-### [Steve's Other Projects](getting-started/steves-helper-apps.md)
+### [Steve's Other Projects](steves-helper-apps.md)
 
 | Overview                                                | [https://docs.vdo.ninja/getting-started/steves-helper-apps](https://docs.vdo.ninja/getting-started/steves-helper-apps) |
 | ------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------- |

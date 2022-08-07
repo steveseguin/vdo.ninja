@@ -4,13 +4,22 @@ description: List of apps and helper tools Steve has created to be used with VDO
 
 # Steve's helper apps & tools
 
+* [#electron-capture](steves-helper-apps.md#electron-capture "mention")
+* [#youtube-twitch-chat-and-social-comment-overlays-plugin](steves-helper-apps.md#youtube-twitch-chat-and-social-comment-overlays-plugin "mention")
+* [#meshcast.io](steves-helper-apps.md#meshcast.io "mention")
+* [#caption.ninja](steves-helper-apps.md#caption.ninja "mention")
+* [#raspberry-ninja](steves-helper-apps.md#raspberry-ninja "mention")
+* [#native-mobile-app-versions-for-vdo.ninja](steves-helper-apps.md#native-mobile-app-versions-for-vdo.ninja "mention")
+* [#social-stream](steves-helper-apps.md#social-stream "mention")
+* [#versus.cam](steves-helper-apps.md#versus.cam "mention")
+
 ## Electron Capture
 
 [https://github.com/steveseguin/electroncapture](https://github.com/steveseguin/electroncapture)
 
 Created for [VDO.Ninja](https://vdo.ninja) users, it can provide users a clean way of window capturing websites. In the case of [VDO.Ninja](https://vdo.ninja), it may offer a more flexible and reliable method of capturing live video than the browser source plugin built into OBS.
 
-![](<../.gitbook/assets/image (36).png>)
+![](<.gitbook/assets/image (36).png>)
 
 ### Why ?
 
@@ -24,7 +33,7 @@ The Electron Capture app uses recent versions of Chromium, which is more resista
 
 Lastly, since playback is agnostic, you can window-capture the same video multiple times, using one copy in a mixed-down live stream, while using a window-capture to record a clean full-resolution isolated video stream.
 
-## YouTube, Twitch chat and social comment Overlays plugin
+## Chat Overlay
 
 [https://chat.overlay.ninja](https://chat.overlay.ninja)
 
@@ -50,7 +59,7 @@ This chat overlay extension will forward the selected chat message over a web-so
 
 📺 Video demoing how to install and use here: [https://youtu.be/UOg3RvHO-xk](https://youtu.be/UOg3RvHO-xk)
 
-![](<../.gitbook/assets/image (35).png>)
+![](<.gitbook/assets/image (35).png>)
 
 ## Meshcast.io
 
@@ -64,7 +73,7 @@ This is a free to use service that can work in conjunction with VDO.Ninja. It's 
 
 ## Caption.Ninja
 
-#### Caption
+### Caption
 
 [https://caption.ninja/](https://caption.ninja/)
 
@@ -74,7 +83,7 @@ Captions are streamed via a web-socket service to your OBS or other studio softw
 
 Transcriptions can be saved by means of copy and paste when done, multiple languages are supported, and even **manual** user-entered captions support is provided at [https://caption.ninja/manual](https://caption.ninja/manual)
 
-#### Translation
+### Translation
 
 [https://caption.ninja/translate](https://caption.ninja/translate)
 
@@ -95,14 +104,14 @@ I welcome feedback.
 Turn your Raspberry Pi or Nvidia Jetson into a Ninja-cam with hardware-acceleration enabled! Publish live streaming video to VDO.Ninja on the cheap at very high resolutions! The script for the Nvidia Jetson ($69 and up) is setup to plug in a $10 1080p30 HDMI to USB adapter and go, while the Raspberry Pi is setup as a quick-deploy image that can work with the official Raspicam.\
 
 
-![An Nvidia Jetson NX pushing 1080p video to VDO.Ninja, captured with a $10 HDMI to USB adapter](<../.gitbook/assets/image (38).png>)
+![An Nvidia Jetson NX pushing 1080p video to VDO.Ninja, captured with a $10 HDMI to USB adapter](<.gitbook/assets/image (38).png>)
 
 ## Native mobile app versions for VDO.Ninja
 
 Mobile native app versions of VDO.Ninja can be found behind the link below. These are mainly backup options for when the browser-based versions fail to work or lack a certain feature due to system restrictions.
 
-{% content-ref url="native-mobile-app-versions.md" %}
-[native-mobile-app-versions.md](native-mobile-app-versions.md)
+{% content-ref url="getting-started/native-mobile-app-versions.md" %}
+[native-mobile-app-versions.md](getting-started/native-mobile-app-versions.md)
 {% endcontent-ref %}
 
 ## Social Stream
@@ -113,7 +122,7 @@ Consolidate your live social messaging streams, including Youtube, Twitch, and m
 
 Very much like Chat Overlay Ninja, except is purely for live chat and has a focus on consolidation of chat messages, instead of just featured chat. Has many features and supported sites at this point.
 
-![](<../.gitbook/assets/image (98) (1) (1) (1).png>)
+![](<.gitbook/assets/image (98) (1) (1) (1).png>)
 
 {% embed url="https://social.overlay.ninja" %}
 [https://github.com/steveseguin/social\_stream#readme](https://github.com/steveseguin/social\_stream#readme)
@@ -133,10 +142,10 @@ Versus.cam is the upcoming and standalone replacement for the [vdo.ninja/monitor
 * All the scene links and invite links are preconfigured for E-Sports , where video is set to pull around 20-mbps for smooth 1080p60 game play. The idea is, if you choose to use this page for creating links, it's all already setup to be used for ingestion.
 * The room is configured so that guests cannot see or talk to each other. All guests can do is text-chat with the versus host.
 
-![](<../.gitbook/assets/image (1) (2).png>)
+![](<.gitbook/assets/image (1).png>)
 
 * Versus.cam is compatible with a director and the director room, so you can use a director room AND the Versus.cam room at the same time, without conflict.
-* A new feature that Versus.cam has, that will also soon be coming to the normal VDO.Ninja directors' room, is the ability to **dynamically change the resolution and bitrate of remote scenes**. This works by means of the [`&remote`](../general-settings/remote.md) control feature, which is preconfigured in the links already, so no director is needed when using versus. This will then also work with non-room links, so long as [`&remote`](../general-settings/remote.md) is included in their URL.
+* A new feature that Versus.cam has, that will also soon be coming to the normal VDO.Ninja directors' room, is the ability to **dynamically change the resolution and bitrate of remote scenes**. This works by means of the [`&remote`](general-settings/remote.md) control feature, which is preconfigured in the links already, so no director is needed when using versus. This will then also work with non-room links, so long as [`&remote`](general-settings/remote.md) is included in their URL.
 * I don't intend to add many advanced features to this site.
 * It's designed to be very simple, elegant, and hyper focused on a single use case and user type.
 * E-Sports and one-way ingestion of very high quality video. I'll likely be making more scenario-specific interfaces in the future like this, to make VDO.Ninja easier and less cluttered for common use cases.
