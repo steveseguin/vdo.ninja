@@ -20,7 +20,7 @@
 | Trampoline                   | [https://rse.github.io/vdo-ninja-trampoline/](https://rse.github.io/vdo-ninja-trampoline/)                            |
 | URL Obfuscator for VDO.Ninja | [https://invite.cam/](https://invite.cam/)                                                                            |
 
-### [Mobile Apps](getting-started/native-mobile-app-versions.md)
+### [Mobile Apps](steves-helper-apps/native-mobile-app-versions.md)
 
 | iOS     | [https://apps.apple.com/us/app/vdo-ninja/id1607609685](https://apps.apple.com/us/app/vdo-ninja/id1607609685)                       |
 | ------- | ---------------------------------------------------------------------------------------------------------------------------------- |
@@ -80,7 +80,7 @@
 | Reddit          | [https://reddit.com/r/vdoninja](https://reddit.com/r/vdoninja)                     |
 | Steve's YouTube | [https://www.youtube.com/c/SteveSeguin82](https://www.youtube.com/c/SteveSeguin82) |
 
-### [Steve's Other Projects](steves-helper-apps.md)
+### [Steve's Other Projects](steves-helper-apps/)
 
 | Overview                                                | [https://docs.vdo.ninja/getting-started/steves-helper-apps](https://docs.vdo.ninja/getting-started/steves-helper-apps) |
 | ------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------- |
