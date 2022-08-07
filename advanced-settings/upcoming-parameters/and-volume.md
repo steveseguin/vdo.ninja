@@ -21,7 +21,7 @@ Viewer-Side Option! ([`&scene`](../view-parameters/scene.md), [`&room`](../../ge
 
 `&volume` can set the 'default' playback volume for all video elements in VDO.Ninja. Currently the range is 0 to 100 and other volume commands or mute states may override this value. The default is 100.
 
-![](../../.gitbook/assets/image.png)
+![](<../../.gitbook/assets/image (25).png>)
 
 `&volume=50`
 
