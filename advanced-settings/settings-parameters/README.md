@@ -1,7 +1,7 @@
 ---
 description: >-
   Language, save cookies, show/hide buttons, control bar, remote access, record,
-  chunked mode, raise hands, notify, transcription (CC)
+  chunked mode, raise hands, notify, transcription, closed captions
 ---
 
 # Settings Parameters

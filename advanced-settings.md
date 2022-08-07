@@ -55,20 +55,20 @@ All of the available parameters can be seperated in four categories. You find th
 
 We've broken down the available URL parameters into 15 parts:
 
-* ****[**Most important Parameters**](advanced-settings/cheat-sheet-of-basic-parameters/): the basic and most common parameters
-* [**Setup Settings**](advanced-settings/setup-parameters/): stream ID, create a room, password, labels, groups, devices, auto-start, welcoming guests, sharing a website/file
-* ****[**Video Settings**](advanced-settings/video-parameters/): resolution, FPS, effects, bitrate, self preview, mute video, PTZ, codec, buffer, broadcasting, scale
-* ****[**Audio Settings**](advanced-settings/audio-parameters/): filters, adding delay, bitrate, channels, mono/stereo, muting guests etc.
-* ****[**Settings Settings**](advanced-settings/settings-parameters/): language, save cookies, show/hide buttons, control bar, remote access, record, chunked mode, raise hands, notify, transcription (CC)
-* ****[**Design Settings**](advanced-settings/design-parameters/): labels, styles, clean output, CSS, mirroring, margin, darkmode, background color, disable tallies etc.
-* [**Mixer/Scene Settings**](advanced-settings/mixer-scene-parameters/): layout and design for the video mixer in rooms/scenes, preload/hidden scene bitrate
-* [**Director Settings**](advanced-settings/director-parameters/): specific to the director's control room and director-specific features
-* ****[**Screen-share Settings**](advanced-settings/screen-share-parameters/): labels, audio filters, type, bitrate, quality etc.
-* ****[**Meshcast Settings**](advanced-settings/meshcast-parameters/): options for the [`&meshcast`](newly-added-parameters/and-meshcast.md) parameter like audio filters, bitrate, screen-share, codecs etc.
-* ****[**API & MIDI Settings**](advanced-settings/api-and-midi-parameters/): hotkey features via API and MIDI
-* [**TURN & STUN Settings**](advanced-settings/turn-and-stun-parameters/): options for setting up TURN and STUN servers
-* ****[**Newly Added Parameters**](advanced-settings/newly-added-parameters/): recently added to VDO.Ninja
-* ****[**Upcoming Parameters**](advanced-settings/upcoming-parameters/): only on [VDO.Ninja/beta](https://vdo.ninja/beta/) or [VDO.Ninja/alpha](https://vdo.ninja/alpha/) version at the moment
-* ****[**Other Parameters**](other-parameters.md): not ready for production, not intended to be used or not well-documented
+* [cheat-sheet-of-basic-parameters](advanced-settings/cheat-sheet-of-basic-parameters/ "mention") (the basic and most common parameters)
+* [setup-parameters](advanced-settings/setup-parameters/ "mention") (stream ID, create a room, password, labels, groups, devices, auto-start, welcoming guests, sharing a website/file)
+* [video-parameters](advanced-settings/video-parameters/ "mention") (resolution, FPS, effects, bitrate, self preview, mute video, PTZ, codec, buffer, broadcasting, scale)
+* [audio-parameters](advanced-settings/audio-parameters/ "mention") (filters, adding delay, bitrate, channels, mono/stereo, muting guests, etc.)
+* [settings-parameters](advanced-settings/settings-parameters/ "mention") (language, save cookies, show/hide buttons, control bar, remote access, record, chunked mode, raise hands, notify, transcription, closed captions)
+* [design-parameters](advanced-settings/design-parameters/ "mention") (labels, styles, clean output, CSS, mirroring, margin, darkmode, background color, disable tallies, etc.)
+* [mixer-scene-parameters](advanced-settings/mixer-scene-parameters/ "mention") (layout and design for the video mixer in rooms/scenes, preload/hidden scene bitrate)
+* [director-parameters](advanced-settings/director-parameters/ "mention") (specific to the director's control room and director-specific features)
+* [screen-share-parameters](advanced-settings/screen-share-parameters/ "mention") (labels, audio filters, type, bitrate, quality, etc.)
+* [meshcast-parameters](advanced-settings/meshcast-parameters/ "mention") (options for the [`&meshcast`](newly-added-parameters/and-meshcast.md) parameter like audio filters, bitrate, screen-share, codecs, etc.)
+* [api-and-midi-parameters](advanced-settings/api-and-midi-parameters/ "mention") (hotkey features via API and MIDI)
+* [turn-and-stun-parameters](advanced-settings/turn-and-stun-parameters/ "mention") (options for setting up TURN and STUN servers)
+* [newly-added-parameters](advanced-settings/newly-added-parameters/ "mention") (recently added to VDO.Ninja)
+* [upcoming-parameters](advanced-settings/upcoming-parameters/ "mention") (only on [VDO.Ninja/beta](https://vdo.ninja/beta/) or [VDO.Ninja/alpha](https://vdo.ninja/alpha/) version at the moment)
+* [other-parameters.md](other-parameters.md "mention") (not ready for production, not intended to be used or not well-documented)
 
 You can search for specific commands using the search bar at the top-right as well.
