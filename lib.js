@@ -25693,6 +25693,8 @@ function changeGroupDirectorAPI(group, state=null, update=true){
 		if (ele){
 			if (update){
 				ele.click();
+			} else if (state===true){
+				ele.classList.add("pressed");
 			}
 			if (session.group.indexOf(group)===-1){
 				return false;
