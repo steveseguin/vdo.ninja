@@ -27,16 +27,16 @@ There are some cheat sheet and quick-start guides here:
 
 There are a few basic guides for beginners here as well:
 
-{% content-ref url="broken-reference" %}
-[Broken link](broken-reference)
+{% content-ref url="getting-started/" %}
+[getting-started](getting-started/)
 {% endcontent-ref %}
 
 ## Need help or support?
 
-The preferred support mechanism is via [Reddit](https://www.reddit.com/r/vdoninja) or [Discord](https://discord.gg/T4xpQVv), which offer community-assisted support. Discord is very active, so check it out. As well, development issues, feature requests, and bugs are tracked on [Github](https://github.com/steveseguin/obsninja).&#x20;
+The preferred support mechanism is via [Reddit](https://www.reddit.com/r/vdoninja) or [Discord](https://discord.gg/feenJm8HTa), which offer community-assisted support. Discord is very active, so check it out. As well, development issues, feature requests, and bugs are tracked on [Github](https://github.com/steveseguin/obsninja).&#x20;
 
 For mission critical support issues, or business-related inquiries, you can contact Steve directly. Please don't make it a habit.
 
 ## Bug reports
 
-It is most helpful to report bugs via the official [Github](https://github.com/steveseguin/obsninja). While we monitor the [Reddit](https://www.reddit.com/r/vdoninja) and [Discord](https://discord.gg/T4xpQVv) channels, it is easy to miss issues/details that occur in comments and older threads.
+It is most helpful to report bugs via the official [Github](https://github.com/steveseguin/obsninja). While we monitor the [Reddit](https://www.reddit.com/r/vdoninja) and [Discord](https://discord.gg/qWDshMsTar) channels, it is easy to miss issues/details that occur in comments and older threads.
