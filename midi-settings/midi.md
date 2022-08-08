@@ -205,7 +205,7 @@ It's important to not send and receive between two tabs locally if from the same
 
 Check the console log or [https://vdo.ninja/midi](https://vdo.ninja/midi) to see which midi device is what device index.
 
-![Example of how to find the midi device order ID](<../.gitbook/assets/image (18).png>)
+![Example of how to find the midi device order ID](<../.gitbook/assets/image (18) (1).png>)
 
 While the original MIDI timestamp is transmitted to the remote computer also, it currently isn't included with the output MIDI event itself. I'm just not sure what to use it for currently, but let me know if you need it.
 
