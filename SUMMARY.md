@@ -27,6 +27,8 @@
   * [Versus.cam](steves-helper-apps/versus.cam.md)
   * [Native mobile app versions](steves-helper-apps/native-mobile-app-versions.md)
   * [Tech Demonstrations](steves-helper-apps/tech-demonstrations.md)
+  * [VDO Applications](steves-helper-apps/vdo-applications.md)
+  * [Invite Link Generators](steves-helper-apps/invite-link-generators.md)
   * [Community contributed tools](steves-helper-apps/community-contributed-tools.md)
 * [Guides](guides/README.md)
   * [Cheat Sheets](guides/cheat-sheets.md)
