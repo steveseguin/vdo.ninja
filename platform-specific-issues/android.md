@@ -41,7 +41,7 @@ If battery life or heat is an issue on Samsung or other Android devices, limitin
 
 ### Firefox
 
-Firefox on Android seems to fix a couple Chrome-specific issues. Chrome will mute the microphone after a minute if the screen is turned off, but Firefox doesn't seem to do that. With Samsung devices, Chrome combined with H264 hardware encoding may have color issues with the OBS Browser source, but that issue isn't present when using Firefox as the mobile browser. So, for Samsung devices, you might find Firefox, with [`&fps=30`](../source-settings/and-framerate.md) and `&codec=h264` as parameters (push and view side respectively), may help keep things cool.
+Firefox on Android seems to fix a couple Chrome-specific issues. Chrome will mute the microphone after a minute if the screen is turned off, but Firefox doesn't seem to do that. With Samsung devices, Chrome combined with H264 hardware encoding may have color issues with the OBS Browser source, but that issue isn't present when using Firefox as the mobile browser. So, for Samsung devices, you might find Firefox, with [`&fps=30`](../source-settings/and-framerate.md) and [`&codec=h264`](../advanced-settings/view-parameters/codec.md) as parameters (push and view side respectively), may help keep things cool.
 
 ### Internal Cameras
 
@@ -51,7 +51,7 @@ Not all cameras may appear as options when using a mobile device; this comes dow
 
 Screen sharing on mobile devices is not support via the Browser, although Android devices can screen sharing using the native Android app (linked previously). The screen sharing function may not include audio, or at least it might be unstable, and this will hopefully be addressed over time with additional development of the mobile app.
 
-For iPhone screen sharing, you can refer to this guide: [https://docs.vdo.ninja/guides/screen-share-your-iphone-ipad](https://docs.vdo.ninja/guides/screen-share-your-iphone-ipad)  It conceptually might also work for Android users, if the native app provided by VDO.Ninja does not work.
+For iPhone screen sharing, you can refer to [this guide](../guides/screen-share-your-iphone-ipad.md). It conceptually might also work for Android users, if the native app provided by VDO.Ninja does not work.
 
 ### Performance issues
 
@@ -63,7 +63,7 @@ If using Android 11 and the camera selection page in VDO.Ninja freezes, push the
 
 ### Corrupted video; green or grey pixels
 
-Pixel devices have problems in Portrait mode, where the video may glitch to be all green or such at times. Using `&codec=vp9` on the viewer side or [`&scale=20`](../advanced-settings/view-parameters/scale.md) can offer some solutions, maybe though. Try starting the device in landscape mode, then move to portrait, also to see if that helps.
+Pixel devices have problems in Portrait mode, where the video may glitch to be all green or such at times. Using [`&codec=vp9`](../advanced-settings/view-parameters/codec.md) on the viewer side or [`&scale=20`](../advanced-settings/view-parameters/scale.md) can offer some solutions, maybe though. Try starting the device in landscape mode, then move to portrait, also to see if that helps.
 
 ### External audio
 
@@ -75,4 +75,4 @@ On-screen overlay apps may cause some Android devices to get errors when trying 
 
 ### Supported Android versions
 
-VDO.Ninja has been tested to work on a Nexus 9 running Android 5.1 and Chrome. Performance wasn't great, but usable as a remote webcam.&#x20;
+VDO.Ninja has been tested to work on a Nexus 9 running Android 5.1 and Chrome. Performance wasn't great, but usable as a remote webcam.
