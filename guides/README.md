@@ -4,7 +4,6 @@
 * [how-does-group-chat-work.md](../help/how-does-group-chat-work.md "mention")
 * [hotkey-support](hotkey-support/ "mention")
 * [midi-api-and-webhid-support.md](midi-api-and-webhid-support.md "mention")
-* [Broken link](broken-reference "mention")
 * [hardware-accelerated-video-encoding.md](hardware-accelerated-video-encoding.md "mention")
 * [audio-filters.md](audio-filters.md "mention")
 * [guides-and-how-tos.md](guides-and-how-tos.md "mention")

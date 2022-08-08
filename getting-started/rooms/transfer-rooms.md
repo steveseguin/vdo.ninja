@@ -24,7 +24,7 @@ If someone in a transfer room disconnects or refresh, they will end up back in t
 
 ### Alternative option
 
-![An alternative to the transfer feature is the change URL function.](<../../.gitbook/assets/image (3) (1).png>)
+![An alternative to the transfer feature is the change URL function.](<../../.gitbook/assets/image (3).png>)
 
 If you'd like to transfer a user to a new room, along with a new password or setting, you can use the Change URL option instead; as seen in the image above. The guest transferred in this fashion WILL be able to see the room they were transferred to, along with any new password. If they get disconnected or if they refresh, they will stay in the new room. This is quite useful if privacy and security are not urgently needed, as it allows for more robust options.
 

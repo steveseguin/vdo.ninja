@@ -14,7 +14,6 @@
   * [3-person chat](getting-started/3-person-chat.md)
   * [Rooms](getting-started/rooms/README.md)
   * [High quality camera](getting-started/high-quality-camera.md)
-  * [4K](getting-started/4k.md)
   * [Mobile phone camera into webcam](getting-started/mobile-phone-camera-into-webcam.md)
   * [Cheat sheet of basic parameters](https://docs.vdo.ninja/getting-started/cheat-sheet-of-basic-parameters)
 * [Steve's helper apps & tools](steves-helper-apps/README.md)
