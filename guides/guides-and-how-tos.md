@@ -41,11 +41,13 @@
 * [Jon Myer VDO.Ninja Playlist](https://www.youtube.com/playlist?list=PL8VJWj2-XLFpFu3G35Hdm1nKZ2xn9\_0\_8)
 * [Nilson1489 (German Tutorial) Basics](https://youtu.be/KX\_pYQoYWgA)
 * [Nilson1489 (German Tutorial) Rooms](https://youtu.be/6nDOAW\_lzUs)
+* [Record multiple sources in OBS Studio](https://youtu.be/OEHgNa49f6c)
 
 ## Other
 
 * [How to stream to a Raspberry Pi and use as a remote monitor](https://awesomeopensource.com/project/futurice/chilipie-kiosk)
 * [How to obfuscate (hide) the URL parameters for guest links](http://invite.cam/)
 * [How to do VDO.Ninja to NDI output](https://docs.google.com/document/d/e/2PACX-1vR9p03eK7dXMo0izaXwh4YGkBHtLgXmzOpSYMQlB-VT2s2FjlxY\_vpUzCkRZqXdqhnQLQPSoH6NZlG2/pub)
+* [How to view Twitch chat while using VDO.Ninja on mobile devices](https://vdo.ninja/twitch)
 * [3rd-party written How-To Guide for VDO.Ninja](https://photography.tutsplus.com/articles/how-to-easily-add-a-remote-source-to-streaming-video-with-obs-and-obsninja--cms-35885)
 * [A tool to create editable URL invite links](https://short.io/)
