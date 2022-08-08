@@ -6,8 +6,6 @@ Consolidate your live social messaging streams, including Youtube, Twitch, and m
 
 Very much like Chat Overlay Ninja, except is purely for live chat and has a focus on consolidation of chat messages, instead of just featured chat. Has many features and supported sites at this point.
 
-![](<../.gitbook/assets/image (98) (1) (1) (1).png>)
+Get support here if you have any problems: [https://discord.gg/6Wbu848w94](https://discord.gg/6Wbu848w94)
 
-{% embed url="https://social.overlay.ninja" %}
-[https://github.com/steveseguin/social\_stream#readme](https://github.com/steveseguin/social\_stream#readme)
-{% endembed %}
+![](<../.gitbook/assets/image (98) (1) (1) (1).png>)
