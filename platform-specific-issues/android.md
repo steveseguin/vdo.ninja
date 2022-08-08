@@ -4,15 +4,13 @@ description: Mobile app version of VDO.Ninja and other Android related topics
 
 # Android
 
-[VDO.Ninja](https://vdo.ninja/) generally works quite well with VDO.Ninja; even older Android devices tend to work reasonable well. The browser-based version of VDO.Ninja is recommend for most users, although there is an native mobile app version for Android that solves some limitations of the web-version.
+[VDO.Ninja](https://vdo.ninja/) generally works quite well with Android; even older Android devices tend to work reasonable well. The browser-based version of VDO.Ninja is recommend for most users, although there is an native mobile app version for Android that solves some limitations of the web-version.
 
 ### Native Android app
 
 The native mobile app for Android is fairly simple, as it can be only used for one-way publishing. It does support screen-sharing though, so it has its value.  It will also work while in the background, and sometimes works on certain devices when the browser-version won't.\
 \
 Please note, the native app requires a modern version of Android, while the web-based version of VDO.Ninja has been tested with Android 5.1 using Chrome.
-
-
 
 The **Google Play Store** <img src="../.gitbook/assets/image (116) (1).png" alt="" data-size="line"> hosted version is here: \
 [https://play.google.com/store/apps/details?id=flutter.vdo.ninja](https://play.google.com/store/apps/details?id=flutter.vdo.ninja)  \

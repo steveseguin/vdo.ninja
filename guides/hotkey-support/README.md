@@ -4,7 +4,7 @@ description: Some keyboard hotkeys
 
 # Basic hotkeys
 
-| Hotkey            | Description                                                        |
+| Hotkeys           | Description                                                        |
 | ----------------- | ------------------------------------------------------------------ |
 | `CTRL + M`        | Mute your mic (audio output)                                       |
 | `CTRL + B`        | Mute your video output                                             |
