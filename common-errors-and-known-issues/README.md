@@ -1,6 +1,6 @@
 # Common errors and known issues
 
-* [Known issues](known-issues.md)
+* [known-issues.md](known-issues.md "mention")
 * [Echo or feedback issues](echo-or-feedback-issues.md)
 * [Works on WiFi but not on 4G](works-on-wifi-but-not-on-4g.md)
 * [Can't capture an application's audio when screen-sharing](cant-capture-an-applications-audio-when-screen-sharing.md)
