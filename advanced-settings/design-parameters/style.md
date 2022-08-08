@@ -31,7 +31,7 @@ Styles are experimental and will undergo change, tweaks, and likely there are mo
 
 The default style depends on numerous factors; the intent is to predict the most desirable for a given situation. Manually setting the style will override the default. Defaults may be changed from time to time, based on user feedback.
 
-There is a toggle in the director's room which adds `&st` to the guest's invite link.![](<../../.gitbook/assets/image (123) (2).png>)
+There is a toggle in the director's room which adds `&st` to the guest's invite link.![](<../../.gitbook/assets/image (123).png>)
 
 ## Related
 

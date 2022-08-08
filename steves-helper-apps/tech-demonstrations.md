@@ -4,8 +4,9 @@ description: Useful tools that could help you make your stream better
 
 # Tech Demonstrations
 
-| [Overview](https://vdo.ninja/examples/)                                        | Overview of all the Tech Demonstrations                                                                                             |
+| Tool                                                                           | Description                                                                                                                         |
 | ------------------------------------------------------------------------------ | ----------------------------------------------------------------------------------------------------------------------------------- |
+| [Overview](https://vdo.ninja/examples/)                                        | Overview of all the Tech Demonstrations                                                                                             |
 | [P2P](https://vdo.ninja/examples/p2p.html)                                     | How to use VDO.Ninja as a data transport tunneling service                                                                          |
 | [Twitch](https://vdo.ninja/twitch)                                             | How to have a twitch live chat side-by-side with VDO.Ninja on the same screen (viewing Twitch chat while using VDO.Ninja on mobile) |
 | [YouTube](https://vdo.ninja/examples/youtube.html)                             | How to have a youtube live chat side-by-side with VDO.Ninja on the same screen                                                      |

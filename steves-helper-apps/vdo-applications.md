@@ -4,8 +4,9 @@ description: Useful tools that could help you make your stream better
 
 # VDO Applications
 
-| Scene Mixer                             | [https://vdo.ninja/mixer](https://vdo.ninja/mixer)                                                                   |
+| Tool                                    | URL                                                                                                                  |
 | --------------------------------------- | -------------------------------------------------------------------------------------------------------------------- |
+| Scene Mixer                             | [https://vdo.ninja/mixer](https://vdo.ninja/mixer)                                                                   |
 | Scene Mixer Beta                        | [https://vdo.ninja/beta/mixer](https://vdo.ninja/beta/mixer)                                                         |
 | Scene Mixer Alpha                       | [https://vdo.ninja/alpha/mixer](https://vdo.ninja/alpha/mixer)                                                       |
 | Device Support                          | [https://vdo.ninja/supports](https://vdo.ninja/supports)                                                             |
