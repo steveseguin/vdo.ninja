@@ -26,6 +26,7 @@
   * [Raspberry.Ninja](steves-helper-apps/raspberry.ninja.md)
   * [Versus.cam](steves-helper-apps/versus.cam.md)
   * [Native mobile app versions](steves-helper-apps/native-mobile-app-versions.md)
+  * [Tech Demonstrations](steves-helper-apps/tech-demonstrations.md)
   * [Community contributed tools](steves-helper-apps/community-contributed-tools.md)
 * [Guides](guides/README.md)
   * [Cheat Sheets](guides/cheat-sheets.md)

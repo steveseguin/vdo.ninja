@@ -1,10 +1,10 @@
 # Help!
 
-* [Fail safes and Backups](fail-safes-and-backups.md)
-* [Privacy and security details](privacy-and-security-details.md)
-* [Project Contact Info](project-contact-info.md)
-* [Where can I report a bug?](report-a-bug.md)
-* [Where can I get support?](where-can-i-get-support.md)
-* [Feature Requests](feature-requests.md)
-* [Logos and media assets](logos-and-media-assets.md)
-* [What does VDO stand for?](what-does-vdo-stand-for.md)
+* [fail-safes-and-backups.md](fail-safes-and-backups.md "mention")
+* [privacy-and-security-details.md](privacy-and-security-details.md "mention")
+* [project-contact-info.md](project-contact-info.md "mention")
+* [report-a-bug.md](report-a-bug.md "mention")
+* [where-can-i-get-support.md](where-can-i-get-support.md "mention")
+* [feature-requests.md](feature-requests.md "mention")
+* [logos-and-media-assets.md](logos-and-media-assets.md "mention")
+* [what-does-vdo-stand-for.md](what-does-vdo-stand-for.md "mention")

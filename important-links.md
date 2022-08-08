@@ -46,7 +46,7 @@
 | VDO.Ninja shop                          | [https://zero.vdo.ninja](https://zero.vdo.ninja)                                                                                                       |
 | Logos and media assets                  | [https://drive.google.com/drive/folders/1gYfxKEvFbKl\_UgHBT5PeGc5PJ-8yrGqW](https://drive.google.com/drive/folders/1gYfxKEvFbKl\_UgHBT5PeGc5PJ-8yrGqW) |
 | Replacement for vdo.ninja/monitor       | [https://versus.cam/](https://versus.cam/)                                                                                                             |
-| API / IFRAME sandbox page for developer | [ https://vdo.ninja/alpha/iframe](https://vdo.ninja/alpha/iframe)                                                                                      |
+| API / IFRAME sandbox page for developer | [https://vdo.ninja/alpha/iframe](https://vdo.ninja/alpha/iframe)                                                                                       |
 
 ### VDO.Ninja Tech Demonstrations
 
@@ -82,16 +82,16 @@
 
 ### [Steve's Other Projects](steves-helper-apps/)
 
-| Overview                                                | [https://docs.vdo.ninja/getting-started/steves-helper-apps](https://docs.vdo.ninja/getting-started/steves-helper-apps) |
-| ------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------- |
-| Live stream to multiple people                          | [https://meshcast.io/](https://meshcast.io/)                                                                           |
-| Electron Capture App                                    | [https://github.com/steveseguin/electroncapture](https://github.com/steveseguin/electroncapture)                       |
-| Steve's App                                             | [https://steves.app/](https://steves.app/)                                                                             |
-| Social Stream                                           | [https://socialstream.ninja/](https://socialstream.ninja/)                                                             |
-| Captioning Tool                                         | [https://caption.ninja/](https://caption.ninja/)                                                                       |
-| Translation Tool                                        | [https://caption.ninja/translate](https://caption.ninja/translate)                                                     |
-| Raspberry Ninja                                         | [https://raspberry.ninja/](https://raspberry.ninja/)                                                                   |
-| YouTube, Twitch chat and social comment Overlays plugin | [https://chat.overlay.ninja/](https://chat.overlay.ninja)                                                              |
+| Overview                                                | [https://docs.vdo.ninja/steves-helper-apps](https://docs.vdo.ninja/steves-helper-apps)           |
+| ------------------------------------------------------- | ------------------------------------------------------------------------------------------------ |
+| Live stream to multiple people                          | [https://meshcast.io/](https://meshcast.io/)                                                     |
+| Electron Capture App                                    | [https://github.com/steveseguin/electroncapture](https://github.com/steveseguin/electroncapture) |
+| Steve's App                                             | [https://steves.app/](https://steves.app/)                                                       |
+| Social Stream                                           | [https://socialstream.ninja/](https://socialstream.ninja/)                                       |
+| Captioning Tool                                         | [https://caption.ninja/](https://caption.ninja/)                                                 |
+| Translation Tool                                        | [https://caption.ninja/translate](https://caption.ninja/translate)                               |
+| Raspberry Ninja                                         | [https://raspberry.ninja/](https://raspberry.ninja/)                                             |
+| YouTube, Twitch chat and social comment Overlays plugin | [https://chat.overlay.ninja/](https://chat.overlay.ninja)                                        |
 
 ### [Community contributed tools](steves-helper-apps/community-contributed-tools.md)
 
