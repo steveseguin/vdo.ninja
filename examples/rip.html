@@ -1,0 +1,94 @@
+<html>
+<head><title>Video with sensor overlayed data</title>
+<style>
+body{
+	padding:0;
+	margin:0;
+	background-color: #0000;
+}
+iframe {
+	border:0;
+	margin:0;
+	padding:0;
+	display:block;
+	width:100%;
+	height:100%;
+}
+
+#container {
+	border:0;
+	margin:0;
+	padding:0;
+	display:block;
+	width:50%;
+	height:50%;
+	position:absolute;
+	top:0;
+	left:0;
+}
+
+button{
+	border:0;
+	margin:0;
+	padding:0;
+	display:block;
+	position:absolute;
+	bottom:0;
+	right:0;
+	z-index: 10;
+}
+
+</style>
+</head>
+<body id="main">
+	<div id="container"></div>
+	<button onclick="dosomething();">SOMETHING</button>
+<script>
+var iframe = document.createElement("iframe");
+function dosomething(){
+	var video = iframe.contentWindow.document.body.querySelector("video");
+	var mediastream = new MediaStream();
+	video.muted=true;
+	video.style.display = "none";
+	video.captureStream().getTracks().forEach(trk=>{
+		mediastream.addTrack(trk);
+	});
+	video.onended = function(){
+		mediastream = null;
+	}
+	video.load();
+	
+}
+function loadIframe(url=false){ 
+	
+	if (url){
+		var iframesrc = url;
+	} else {
+		var iframesrc = document.getElementById("viewlink").value;
+	}
+	
+	iframe.allow = "autoplay;camera;microphone;fullscreen;picture-in-picture;";
+
+	if (iframesrc==""){
+		iframesrc="./";
+	}
+	
+	iframe.src = iframesrc;
+	document.body.appendChild(iframe);
+
+	////////////  LISTEN FOR EVENTS
+
+	var eventMethod = window.addEventListener ? "addEventListener" : "attachEvent";
+	var eventer = window[eventMethod];
+	var messageEvent = eventMethod === "attachEvent" ? "onmessage" : "message";
+
+	eventer(messageEvent, function (e) {
+		if (e.source != iframe.contentWindow){return} // reject messages send from other iframes
+	});
+}
+
+loadIframe("https://youtu.be/XOJMKdwpTZE");
+
+</script>
+</body>
+</html>
