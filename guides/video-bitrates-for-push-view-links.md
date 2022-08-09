@@ -65,7 +65,7 @@ The view link is setting the target and maximum video bitrate per incoming strea
 \
 The view link is setting the bitrate per incoming stream (in this case 2000-kbps). So if you have a view link with three incoming video feeds: `&view=stream1,stream2,stream3` - every source is pushing 2000-kbps as `&vb=2000` and the view link has a combined bitrate of 6000-kbps.
 
-### The view link sets the total video bitrate for all incoming streams
+### The view link sets the total video bitrate for all incoming streams combined
 
 ``[`&totalscenebitrate (&tsb)`](../newly-added-parameters/and-maxtotalscenebitrate.md)\
 This is similar to [`&vb`](video-bitrates-for-push-view-links.md#the-view-link-sets-the-video-bitrate-per-stream-in) but it sets the target and maximum bitrate for all incoming streams combined.
