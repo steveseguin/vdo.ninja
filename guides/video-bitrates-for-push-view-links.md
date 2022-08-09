@@ -19,7 +19,7 @@ There are five parameters we will take a look at:
 2. [\&maxvideobitrate (\&mvb)](../source-settings/maxbitrate.md) -> push side
 3. [\&limittotalbitrate (\&ltb)](../source-settings/limittotalbitrate.md) -> push side
 4. [\&videobitrate (\&vb)](../advanced-settings/view-parameters/bitrate.md) -> view side
-5. [\&totalscenebitrate (\&mtsb)](../newly-added-parameters/and-maxtotalscenebitrate.md) -> view side
+5. [\&totalscenebitrate (\&tsb)](../newly-added-parameters/and-maxtotalscenebitrate.md) -> view side
 
 ## On the source side ([\&push](../source-settings/push.md))
 
