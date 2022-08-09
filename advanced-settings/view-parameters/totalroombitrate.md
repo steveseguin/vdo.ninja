@@ -32,7 +32,7 @@ There is a toggle in the director's room which adds `&trb=2000` to the guest's i
 ![](<../../.gitbook/assets/image (94) (1).png>)
 
 {% hint style="info" %}
-Please note the difference between `&totalroombitrate` and [`&maxtotalscenebitrate`](../../newly-added-parameters/and-maxtotalscenebitrate.md). `&totalroombitrate`controls what the total bitrate for guests in a room is limited to. [`&maxtotalscenebitrate`](../../newly-added-parameters/and-maxtotalscenebitrate.md), on the other hand, is what you will want if you want to do the same for a view-link, added to OBS, for example.&#x20;
+Please note the difference between `&totalroombitrate` and [`&maxtotalscenebitrate`](../video-parameters/and-totalscenebitrate.md). `&totalroombitrate`controls what the total bitrate for guests in a room is limited to. [`&maxtotalscenebitrate`](../video-parameters/and-totalscenebitrate.md), on the other hand, is what you will want if you want to do the same for a view-link, added to OBS, for example.&#x20;
 
 \
 For more information, see:  [https://docs.vdo.ninja/advanced-settings/video-parameters/and-maxtotalscenebitrate](https://docs.vdo.ninja/advanced-settings/video-parameters/and-maxtotalscenebitrate)
