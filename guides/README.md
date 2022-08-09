@@ -2,6 +2,7 @@
 
 * [cheat-sheets.md](cheat-sheets.md "mention")
 * [how-does-group-chat-work.md](../help/how-does-group-chat-work.md "mention")
+* [video-bitrates-for-push-view-links.md](video-bitrates-for-push-view-links.md "mention")
 * [hotkey-support](hotkey-support/ "mention")
 * [midi-api-and-webhid-support.md](midi-api-and-webhid-support.md "mention")
 * [hardware-accelerated-video-encoding.md](hardware-accelerated-video-encoding.md "mention")

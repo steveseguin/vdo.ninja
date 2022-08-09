@@ -2,13 +2,13 @@
 description: Limits the max video bitrate out for this publisher, per stream out
 ---
 
-# \&maxvideobitrate
+# \&maxbitrate
 
 Sender-Side Option! ([`&push`](push.md))
 
 ## Aliases
 
-* `&maxbitrate`
+* `&maxvideobitrate`
 * `&mvb`
 
 ## Options

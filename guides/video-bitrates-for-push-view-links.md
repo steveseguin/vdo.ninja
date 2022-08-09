@@ -1,5 +1,5 @@
 ---
-description: How to control video bitrates for push/view links
+description: How to control video bitrates for basic push/view links
 ---
 
 # Video bitrates for push/view links
