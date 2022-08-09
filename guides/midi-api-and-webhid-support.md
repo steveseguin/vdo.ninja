@@ -1,6 +1,6 @@
 # MIDI, API and WebHID support
 
-### MIDI hotkeys
+## MIDI hotkeys
 
 There are numerous more hotkeys that can be used via MIDI; these are global hotkeys, used even if the window is not visible, but they require some additional setup. You can remotely control via MIDI also, using the [`&midiout`](../midi-settings/midiout.md) and [`&midiin`](../midi-settings/midiin.md) routing functionality.&#x20;
 
@@ -10,11 +10,11 @@ MIDI hotkeys are compatible with an Elgato Streamdeck by means of a free Streamd
 [midi.md](../midi-settings/midi.md)
 {% endcontent-ref %}
 
-### Bitfocus Companion
+## Bitfocus Companion
 
 There is also Bitfocus Companion control compatibility, available here: [https://github.com/bitfocus/companion-module-vdo-ninja](https://github.com/bitfocus/companion-module-vdo-ninja)
 
-### HTTP / Websocket API
+## HTTP / Websocket API
 
 The Bitfocus Companion plugin makes use of a HTTP and Websocket API, that allows for lots of remote control functionality.
 
@@ -26,7 +26,7 @@ You can use this to create your own hotkeys for pretty any device, application, 
 [api.md](../general-settings/api.md)
 {% endcontent-ref %}
 
-### IFRAME API
+## IFRAME API
 
 The HTTP and websocket make use of a server to route API calls. If you'd like to create your own API server or don't need remote hotkey support, you can used the provide IFRAME API and send commands instead to VDO.Ninja via an IFRAME wrapper.&#x20;
 
@@ -36,11 +36,11 @@ The IFRAME API is the most powerful option, but it requires some basic coding on
 [iframe-api-documentation.md](iframe-api-documentation.md)
 {% endcontent-ref %}
 
-### WebHID
+## WebHID
 
 There is also webHID support, but it's not fully implemented at this time. User requests are welcomed though and there's a demo here: [https://vdo.ninja/webhid](https://vdo.ninja/webhid)\
 It should be improved upon in the future, assuming the feature does not get depreciated by the browser first.
 
-#### Feature requests and feedback
+## Feature requests and feedback
 
 It's easy enough to add new hotkeys or features; please make a request as needed. The hotkey and API commands are organically development, based on user needs and feedback. Most simple requests can be accommodated within minutes.
