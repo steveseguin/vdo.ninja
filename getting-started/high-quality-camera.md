@@ -2,7 +2,7 @@
 
 You can customize the playback of videos by added parameters to the VDO.Ninja URL links, along with many other aspects. The default video bitrate of most modern browsers is around 2500-kbps, which is okay, but we can achieve higher video quality if we manually set this to something even higher.
 
-`https://vdo.ninja/?view=streamid&videobitrate=6000`
+``[`https://vdo.ninja/?view=streamid&videobitrate=6000`](https://vdo.ninja/?view=streamid\&videobitrate=6000)``
 
 You’ll notice that we added [`&videobitrate=6000`](../advanced-settings/view-parameters/bitrate.md) to the viewer’s side and not the publishing side. The viewer gets to control the bitrate; every viewer can set their own custom video bitrate in fact.
 
