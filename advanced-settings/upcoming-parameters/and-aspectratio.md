@@ -28,13 +28,19 @@ Sender-Side Option! ([`&push`](../../source-settings/push.md))\
 [https://vdo.ninja/alpha/?webcam\&aspectratio=1.33333](https://vdo.ninja/alpha/?webcam\&aspectratio=1.33333)\
 ![](<../../.gitbook/assets/image (102) (1).png>)
 
-You can also change the aspect ratio via the video settings menu.
-
-![](<../../.gitbook/assets/image (103) (1) (1).png>)
+You can also change the aspect ratio via the video settings menu.![](<../../.gitbook/assets/image (103) (1) (1).png>)
 
 If using `&aspectratio`, it will keep the [height](../../source-settings/and-height.md) constant, and vary width, unless [`&width`](../../source-settings/and-width.md) is set, which will then be the fixed constant.
 
+### Screen-share
+
+`&aspectratio` works with screen-shares, so you can force crop an incoming screen-share to be a certain aspect ratio. If [`&screenshareaspectratio`](and-screenshareaspectratio.md) is used it will apply to just screen-shares. If [`&screenshareaspectratio`](and-screenshareaspectratio.md) does not have a value passed, it's assumed to be set as "default", which overrides `&aspectratio` option, if used also.
+
 ## Related
+
+{% content-ref url="and-screenshareaspectratio.md" %}
+[and-screenshareaspectratio.md](and-screenshareaspectratio.md)
+{% endcontent-ref %}
 
 {% content-ref url="../../source-settings/quality.md" %}
 [quality.md](../../source-settings/quality.md)
