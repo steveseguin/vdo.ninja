@@ -2,20 +2,20 @@
 description: Limits the max video bitrate out for this publisher, per stream out
 ---
 
-# \&maxbitrate
+# \&maxvideobitrate
 
 Sender-Side Option! ([`&push`](push.md))
 
 ## Aliases
 
-* `&maxvideobitrate`
+* `&maxbitrate`
 * `&mvb`
 
 ## Options
 
-| Value                    | Description               |
-| ------------------------ | ------------------------- |
-| (positive integer value) | max allowed guest bitrate |
+| Value                    | Description                              |
+| ------------------------ | ---------------------------------------- |
+| (positive integer value) | max allowed video bitrate per stream out |
 
 ## Details
 
@@ -31,10 +31,18 @@ Set to 600-kbps, 200-kbps, or 80-kbps if the goal is to reduce CPU load also. (2
 
 ## Related
 
-{% content-ref url="../advanced-settings/view-parameters/totalroombitrate.md" %}
-[totalroombitrate.md](../advanced-settings/view-parameters/totalroombitrate.md)
+{% content-ref url="and-outboundvideobitrate.md" %}
+[and-outboundvideobitrate.md](and-outboundvideobitrate.md)
 {% endcontent-ref %}
 
 {% content-ref url="limittotalbitrate.md" %}
 [limittotalbitrate.md](limittotalbitrate.md)
+{% endcontent-ref %}
+
+{% content-ref url="../advanced-settings/view-parameters/bitrate.md" %}
+[bitrate.md](../advanced-settings/view-parameters/bitrate.md)
+{% endcontent-ref %}
+
+{% content-ref url="../advanced-settings/view-parameters/totalroombitrate.md" %}
+[totalroombitrate.md](../advanced-settings/view-parameters/totalroombitrate.md)
 {% endcontent-ref %}

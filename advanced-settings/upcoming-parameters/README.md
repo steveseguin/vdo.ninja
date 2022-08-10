@@ -1,5 +1,7 @@
 ---
-description: Upcoming parameters which are currently on vdo.ninja/alpha
+description: >-
+  Upcoming parameters which are currently on vdo.ninja/alpha, vdo.ninja/beta or
+  local dev
 ---
 
 # Upcoming Parameters
@@ -44,4 +46,5 @@ You can use/test these parameters on [vdo.ninja/alpha](https://vdo.ninja/alpha/)
 | ``[`&screenshareaspectratio`](and-screenshareaspectratio.md)\* | Sets the aspect ratio for screen-shares on the publisher side                                                                                                      |
 
 \*only on [vdo.ninja/alpha](https://vdo.ninja/alpha/)\
-\*\*on [vdo.ninja/beta](https://vdo.ninja/beta/) and [vdo.ninja/alpha](https://vdo.ninja/alpha/)
+\*\*on [vdo.ninja/beta](https://vdo.ninja/beta/) and [vdo.ninja/alpha](https://vdo.ninja/alpha/)\
+\*\*\*on local dev
