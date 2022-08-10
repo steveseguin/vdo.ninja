@@ -1,6 +1,6 @@
 # How to control bitrate/quality
 
-### Video Bitrate
+## Video Bitrate
 
 The bitrate controls are accessible via a URL parameter that can be added to the VIEW link.
 
@@ -12,7 +12,7 @@ When in a group room, the guests will generally get a very low-quality preview o
 
 When dealing with a group scene link, you can use [`&bitrate`](../advanced-settings/view-parameters/bitrate.md) as normal, or `&totalbitrate.`
 
-### Resolution
+## Resolution
 
 Camera resolution by default is captured at 1280x720. You can increase this by changing the quality setting when selecting your camera, or by adding `&quality=0` to the URL. The [`&quality`](../source-settings/quality.md) parameter acts as a preset, where \&quality=0 is preset for 1920x1080 @ 60-fps, `&quality=1` is 720p60, and `&quality=2` is a gentle 360p30.
 
@@ -28,10 +28,18 @@ By default, VDO.Ninja will try to optimize and scale down the incoming resolutio
 
 VDO.Ninja may still scale the video down however, although only if the connection between the two peers is having network issues, if the sender's encoder is having issues, or if the set bitrate is too low to sustain the higher resolution.
 
-### Audio
+## Audio
 
 You can improve audio quality in the same way, by increasing the [`&audiobitrate`](../advanced-settings/view-parameters/audiobitrate.md), but you can get better results by just disabling noise and echo cancellation instead.
 
-``[`&proaudio`](../general-settings/stereo.md) is flag that presets many audio options, which can be added to both the sender's and viewser's link to enable stereo audio with no audio processing and a very high audio bitrate set. You may need to be using headphones, especially if in a group room, if using [`&proaudio`](../general-settings/stereo.md) or if disabling the echo cancellation features.
+[`&proaudio`](../general-settings/stereo.md) is flag that presets many audio options, which can be added to both the sender's and viewser's link to enable stereo audio with no audio processing and a very high audio bitrate set. You may need to be using headphones, especially if in a group room, if using [`&proaudio`](../general-settings/stereo.md) or if disabling the echo cancellation features.
 
-Read more here: [`&videobitrate`](../advanced-settings/view-parameters/bitrate.md), [`&audiobitrate`](../advanced-settings/view-parameters/audiobitrate.md) , [`&width`](../source-settings/and-width.md), [`&height`](../source-settings/and-height.md), [`&quality`](../source-settings/quality.md)``
+## More Details
+
+{% content-ref url="video-bitrates-for-push-view-links.md" %}
+[video-bitrates-for-push-view-links.md](video-bitrates-for-push-view-links.md)
+{% endcontent-ref %}
+
+{% content-ref url="audio-filters.md" %}
+[audio-filters.md](audio-filters.md)
+{% endcontent-ref %}
