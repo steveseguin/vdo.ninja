@@ -26,7 +26,7 @@ Meshcast Option / Sender-Side Option! ([`&meshcast`](../newly-added-parameters/a
 
 Adding `&meshcastcodec` to the publisher's side together with [`&meshcast`](../newly-added-parameters/and-meshcast.md) gives the option to change the publishing codec for meshcast.
 
-Example usage: `https://vdo.ninja/?meshcast&meshcastcodec=vp9&mcbitrate=500`
+Example usage: `https://vdo.ninja/?meshcast&meshcastcodec=vp9`
 
 There's 4 codec options currently, including the default option:
 

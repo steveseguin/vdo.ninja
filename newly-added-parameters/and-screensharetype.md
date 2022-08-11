@@ -22,9 +22,11 @@ Sender-Side Option! ([`&push`](../source-settings/push.md))
 
 ## Details
 
-This parameter can be used to specify which type of screen-sharing logic is used. \
-`screensharetype=1` replaces the webcam screen with the screen share,\
-`screensharetype=2` creates a totally new connection for the screen share, `screensharetype=3` reuses the existing connection, adding a second video track.
+This parameter can be used to specify which type of screen-sharing logic is used.&#x20;
+
+* `screensharetype=1` replaces the webcam screen with the screen share
+* `screensharetype=2` creates a totally new connection for the screen share
+* `screensharetype=3` reuses the existing connection, adding a second video track; also doesn't show the local screen-share window
 
 I hope to have `screensharetype=3` become the standard for sharing screens eventually, but for now it will remain optional, until the issues are all worked out.
 

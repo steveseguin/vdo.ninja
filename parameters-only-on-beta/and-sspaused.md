@@ -15,6 +15,8 @@ Viewer-Side Option! ([`&view`](../advanced-settings/view-parameters/view.md), [`
 
 `&sspaused` starts any screen-share paused (0-kbps bitrate for audio and video). A play button overlay can be clicked to start it playing as normal.
 
+![](../.gitbook/assets/image.png)
+
 ## Related
 
 {% content-ref url="../newly-added-parameters/and-screensharebitrate.md" %}
