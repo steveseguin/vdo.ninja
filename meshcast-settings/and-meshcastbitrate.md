@@ -21,7 +21,7 @@ Meshcast Option / Sender-Side Option! ([`&meshcast`](../newly-added-parameters/a
 
 Adding `&meshcastbitrate` to the publisher's side together with [`&meshcast`](../newly-added-parameters/and-meshcast.md) gives the option to change the video bitrate for meshcast.
 
-Example usage: `https://vdo.ninja/?meshcast&meshcastbitrate=2000`
+Example usage: `https://vdo.ninja/?meshcast&mccodec=vp9&meshcastbitrate=500`
 
 Increased the default bitrate of [`&meshcast`](../newly-added-parameters/and-meshcast.md) from like 500-kbps to max of 3200-kbps; will probably change as the feature evolves and becomes more customizable.
 

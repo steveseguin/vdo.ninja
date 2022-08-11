@@ -6,7 +6,7 @@ description: >-
 
 # \&intro
 
-Sender-Side Option! ([`&push`](push.md))
+Sender-Side Option! ([`&push`](push.md),[`&webcam`](and-webcam.md),[`&screenshare`](screenshare.md))
 
 ## Aliases
 
