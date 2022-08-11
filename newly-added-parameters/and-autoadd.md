@@ -4,7 +4,7 @@ description: Auto-adds the specified stream IDs to the scene
 
 # \&autoadd
 
-Viewer-Side Option! ([`&view`](../advanced-settings/view-parameters/view.md), [`&scene`](../advanced-settings/view-parameters/scene.md))
+Viewer-Side Option! ([`&scene`](../advanced-settings/view-parameters/scene.md))
 
 ## Options
 

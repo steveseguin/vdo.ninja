@@ -4,7 +4,7 @@ description: You can add a custom message which shows up while waiting for the &
 
 # \&waitmessage
 
-Viewer-Side Option! ([`&view`](../view-parameters/view.md), [`&scene`](../view-parameters/scene.md))
+Viewer-Side Option! ([`&scene`](../view-parameters/scene.md))
 
 ## Options
 

@@ -4,7 +4,7 @@ description: Can be used to change the pre-load target bitrate for scenes
 
 # \&preloadbitrate
 
-Viewer-Side Option! ([`&view`](../advanced-settings/view-parameters/view.md), [`&scene`](../advanced-settings/view-parameters/scene.md))
+Viewer-Side Option! ([`&scene`](../advanced-settings/view-parameters/scene.md))
 
 ## Options
 

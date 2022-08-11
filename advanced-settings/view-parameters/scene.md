@@ -4,7 +4,7 @@ description: Defines the link to be treated like a scene
 
 # \&scene
 
-Viewer-Side Option! ([`&view`](view.md), [`&room`](../../general-settings/room.md))
+Viewer-Side Option! ([`&room`](../../general-settings/room.md))
 
 ## Aliases
 

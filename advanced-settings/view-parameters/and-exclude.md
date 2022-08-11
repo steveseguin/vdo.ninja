@@ -16,7 +16,7 @@ Any stream ID listed as a value will **NOT** be played or requested.
 
 Example usage:
 
-`vdo.ninja/?room=myroom123&exclude=stream121,sidestream321`
+`https://vdo.ninja/?room=myroom123&exclude=stream121,sidestream321`
 
 {% hint style="warning" %}
 Excluding a stream ID will prevent even a peer connection.\
