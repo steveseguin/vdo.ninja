@@ -34,3 +34,6 @@ General Option! ([`&push`](../source-settings/push.md), [`&room`](room.md), [`&v
 ## Details
 
 You can [contribute new or update existing translations](https://github.com/steveseguin/obsninja/tree/master/translations).
+
+You can also change the language of VDO.Ninja dynamically on the bottom right.\
+![](../.gitbook/assets/image.png)
