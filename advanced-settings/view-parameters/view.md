@@ -14,11 +14,14 @@ Viewer-Side Option! ([`&scene`](scene.md), [`&room`](../../general-settings/room
 
 ## Options
 
-| Value          | Description                                            |
-| -------------- | ------------------------------------------------------ |
-| (string value) | streamid to view; can be a comma-separated list of ids |
+| Value            | Description                                                      |
+| ---------------- | ---------------------------------------------------------------- |
+| (string value)   | streamid to view; can be a comma-separated list of ids           |
+| (no value given) | in a room, you don't see any other guests including the director |
 
 ## Details
+
+`&view` defines the stream or streams you are receiving, by their stream IDs.
 
 Optional if you are publishing a stream using [`&push`](../../source-settings/push.md).\
 If the `&view` parameter is not added, the default behaviour will occur.\
@@ -33,6 +36,10 @@ Videos will auto-load when they are available if not already.
 
 {% content-ref url="../../source-settings/push.md" %}
 [push.md](../../source-settings/push.md)
+{% endcontent-ref %}
+
+{% content-ref url="scene.md" %}
+[scene.md](scene.md)
 {% endcontent-ref %}
 
 {% content-ref url="../upcoming-parameters/and-include.md" %}
