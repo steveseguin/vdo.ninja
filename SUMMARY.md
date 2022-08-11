@@ -196,7 +196,6 @@
     * [\&remote](general-settings/remote.md)
     * [\&stats](general-settings/and-stats.md)
     * [\&sticky](general-settings/sticky.md)
-    * [\&pusheffectsdata](source-settings/pusheffectsdata.md)
     * [\&disablehotkeys](advanced-settings/settings-parameters/and-disablehotkeys.md)
     * [\&nosettings](source-settings/and-nosettings.md)
     * [\&nomicbutton](viewers-settings/nomicbutton.md)
