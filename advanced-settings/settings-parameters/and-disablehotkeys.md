@@ -1,5 +1,5 @@
 ---
-description: Allows for hotkeys to be disabled (like CRTL + M)
+description: Disables hotkeys (like CRTL + M)
 ---
 
 # \&disablehotkeys

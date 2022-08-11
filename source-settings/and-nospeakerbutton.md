@@ -14,6 +14,8 @@ Sender-Side Option! ([`&push`](push.md))
 
 Hides the button that can mute the speaker.
 
+![](<../.gitbook/assets/image (140).png>)
+
 ## Related
 
 {% content-ref url="../viewers-settings/nomicbutton.md" %}

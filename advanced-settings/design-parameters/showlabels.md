@@ -68,7 +68,7 @@ You can copy the below code, modifying it as you desire, as a starting point. Yo
 
 Below is another example, this time we target the video tile class, creating a margin above the video elements.  We can then move the display label into that space, creating a label that is not overlaying the video itself, but still attached.
 
-![We can paste the CSS code directly into the OBS browser source, or we can host the style in a file and access it via the \&css parameter](<../../.gitbook/assets/image (41).png>)
+![We can paste the CSS code directly into the OBS browser source, or we can host the style in a file and access it via the \&css parameter](<../../.gitbook/assets/image (41) (1).png>)
 
 ```
 .tile {

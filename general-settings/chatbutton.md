@@ -22,6 +22,8 @@ Sender-Side Option! ([`&push`](../source-settings/push.md))
 
 Adding `&chatbutton=0` or `1` hides or shows the chat button on the control bar.
 
+![](<../.gitbook/assets/image (145).png>)
+
 ## Related
 
 {% content-ref url="../viewers-settings/nomicbutton.md" %}

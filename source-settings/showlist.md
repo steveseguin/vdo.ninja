@@ -15,6 +15,10 @@ Sender-Side Option! ([`&push`](push.md))
 
 ## Details
 
-Should list user's labels in a list, along with whether they are video-muted or not, etc.\
-Includes microphone mute states and voice activity meters in the list.\
+Should list user's labels in a list, along with whether they are video-muted or not.&#x20;
+
+Includes microphone mute states and voice activity meters in the list.
+
 Isn't visible by default in scenes, faux rooms, or when using [`&broadcast`](../advanced-settings/view-parameters/broadcast.md) mode.
+
+![](<../.gitbook/assets/image (136).png>)

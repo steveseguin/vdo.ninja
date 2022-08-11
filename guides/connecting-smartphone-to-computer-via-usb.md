@@ -4,7 +4,7 @@ description: >-
   adapter-type instead.
 ---
 
-# Connecting smartphone to computer via USB
+# How to connect a smartphone to computer via USB
 
 Connecting your smartphone to your laptop via USB seems quite appealing, but it's not always the easiest option. Below I provided three options for tethering your phone to better Internet, some of which might be easier and still just as functional.&#x20;
 
@@ -14,7 +14,7 @@ Connecting your smartphone to your laptop via USB seems quite appealing, but it'
 
 One easy option is to buy a smartphone to Ethernet adapter; this can be either USB-C, micro-USB, or Lightning port-based smartphones. These then can connect directly to your router via an Ethernet cable.
 
-![](<../.gitbook/assets/image (45).png>)
+![](<../.gitbook/assets/image (45) (1).png>)
 
 You can find details on how to buy and connect such an adapter here: [https://www.pcmag.com/how-to/connect-phone-tablet-to-internet-ethernet-cable](https://www.pcmag.com/how-to/connect-phone-tablet-to-internet-ethernet-cable)
 

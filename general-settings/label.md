@@ -19,10 +19,15 @@ General Option! ([`&push`](../source-settings/push.md), [`&room`](room.md), [`&v
 
 ## Details
 
+`&label` sets a display name label to the stream ID.
+
 * Uses the label in OBS Studio if dragging the link into OBS Studio.
-* Will change the name of the Browser tab to the Label specified.
-* Shows up in the Connection debug Stats window.
-* If left blank, it will prompt the user for a Display Name on load.
+* Will change the name of the Browser tab to the Label specified.\
+  ![](<../.gitbook/assets/image (141).png>)
+* Shows up in the connection debug Stats window.\
+  ![](<../.gitbook/assets/image (114).png>)
+* If left blank, it will prompt the user for a Display Name on load.\
+  ![](<../.gitbook/assets/image (75).png>)
 * You can use [`&showlabels`](../advanced-settings/design-parameters/showlabels.md) to show the labels in the video sources.
 
 ## Related

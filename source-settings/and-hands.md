@@ -12,7 +12,12 @@ Sender-Side Option! ([`&push`](push.md))
 
 ## Details
 
-If pressed, and the user is in a room, the room's director will get a notification that the user pressed the button.
+Adds a button for guests to raise their hands.
+
+![](<../.gitbook/assets/image (60).png>)
+
+If pressed, and the user is in a room, the room's director will get a notification that the user pressed the button.\
+![](<../.gitbook/assets/image (139).png>)
 
 It will do nothing if the room does not have a director in it.
 

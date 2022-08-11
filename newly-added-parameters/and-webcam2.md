@@ -14,7 +14,7 @@ Sender-Side Option! ([`&push`](../source-settings/push.md))
 
 ## Details
 
-Using `&webcam2` or using `&wc&intro`, will show the "Share your Camera" button before asking the user to select camera options. This preps the user for the permissions popup that comes next, simplies the landing page experience for iFRAME integrations. It's basically the same as [`&webcam`](../source-settings/and-webcam.md), but you get the "Share your Camera" button before selecting camera options.
+Using `&webcam2` or using `&webcam&intro`, will show the "Share your Camera" button before asking the user to select camera options. This preps the user for the permissions popup that comes next, simplies the landing page experience for iFRAME integrations. It's basically the same as [`&webcam`](../source-settings/and-webcam.md), but you get the "Share your Camera" button before selecting camera options.
 
 ## Related
 

@@ -23,3 +23,5 @@ The resolution used will be limited by the video's native resolution.
 {% hint style="warning" %}
 The video will be **transcoded for each** connected **guest**!
 {% endhint %}
+
+![](<../.gitbook/assets/image (51).png>)

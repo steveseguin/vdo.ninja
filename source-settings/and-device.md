@@ -20,7 +20,8 @@ Sender-Side Option! ([`&push`](push.md))
 
 ## Details
 
-If you set `&device=0`, you disable audio and video inputs, but chat is still available.\
+If you set `&device=0`, you disable audio and video inputs, but chat is still available.
+
 Chat-only guests can access a group-room this way.
 
 ## Related

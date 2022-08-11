@@ -18,7 +18,8 @@ Sender-Side Option! ([`&push`](push.md))
 
 ## Details
 
-Useful for iOS devices that might explode if more than 3 video viewers connect.\
+Useful for iOS devices that might explode if more than 3 video viewers connect.
+
 Useful to prevent publicly shared guest links from being crashed due to too many viewer requests.
 
 ## Related

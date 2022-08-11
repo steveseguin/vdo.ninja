@@ -1,4 +1,4 @@
-# Installing RaspNinja on Jetson
+# How to install RaspNinja on Jetson
 
 Download image for your device from:\
 [https://developer.nvidia.com/embedded/downloads](https://developer.nvidia.com/embedded/downloads)
@@ -27,4 +27,4 @@ chmod +x advanced_installer.sh
 ./advanced_installer.sh
 ```
 
-![](<../.gitbook/assets/image (84).png>)
+![](<../.gitbook/assets/image (84) (1).png>)

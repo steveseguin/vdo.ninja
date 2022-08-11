@@ -14,13 +14,12 @@ General Option! ([`&push`](../source-settings/push.md), [`&room`](room.md), [`&v
 
 ## Details
 
-{% hint style="warning" %}
-No error is provided if the password fails or is incorrect; it will just not work.
-{% endhint %}
+If no password value is provided via the URL parameter, the system will prompt for one when connecting.
 
-If no password value is provided via the URL parameter, the system will prompt for one when connecting.\
-You will want to add the password value to the URL if loading it into OBS.\
-Passwords apply to both Stream IDs and Room IDs.\
+You will want to add the password value to the URL if loading it into OBS.
+
+Passwords apply to both Stream IDs and Room IDs.
+
 Please use alphanumeric-characters only; spaces or other characters may cause the mechanism to fail.
 
 {% hint style="info" %}

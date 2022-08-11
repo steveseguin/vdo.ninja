@@ -20,6 +20,8 @@ Sender-Side Option! ([`&push`](../source-settings/push.md))
 
 `&vdo` is just like [`&videodevice`](../source-settings/videodevice.md) for selecting a default video device, but you can still choose to change the camera before joining when using `&vdo`.
 
+![](<../.gitbook/assets/image (45).png>)
+
 ## Related
 
 {% content-ref url="../source-settings/videodevice.md" %}

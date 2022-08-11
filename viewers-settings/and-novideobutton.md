@@ -12,7 +12,9 @@ Sender-Side Option! ([`&push`](../source-settings/push.md))
 
 ## Details
 
-Disables the video button. Guests can't mute video.
+Disables the video button. Guests can't mute their video input.
+
+![](<../.gitbook/assets/image (58).png>)
 
 ## Related
 

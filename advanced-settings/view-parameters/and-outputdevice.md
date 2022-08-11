@@ -31,13 +31,18 @@ Matches on "string contains", so a partial string of the device name is enough. 
 if parameter's value is left blank, it hides the option to change the output device, including under the settings cog.
 
 {% hint style="info" %}
-Visit [vdo.ninja/devices](https://vdo.ninja/devices) to find the available device IDs and device names on your system. \
-\
-Device IDs are specific to VDO.Ninja's domain, while device names are not. \
-\
+Visit [vdo.ninja/devices](https://vdo.ninja/devices) to find the available device IDs and device names on your system.
+
+Device IDs are specific to VDO.Ninja's domain, while device names are not.
+
 This web-based tool will also auto-create links for you, just by clicking on the respective device.
 {% endhint %}
 
+You can change the output device dynamically via the settings menu.\
+![](<../../.gitbook/assets/image (137).png>)
+
+In Version 22 of VDO.Ninja you can change the output device of each video feed individually via `Right-Click -> Audio Destination` on the video feed.\
+![](<../../.gitbook/assets/image (147).png>)\
 
 
 ## Related

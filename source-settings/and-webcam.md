@@ -12,7 +12,8 @@ Sender-Side Option! ([`&push`](push.md))
 
 ## Details
 
-Full-screens the webcam selection window.
+Automatically selects the Share your Camera option and hides the screen-share button in the control bar.\
+![](<../.gitbook/assets/image (38).png>)
 
 {% hint style="danger" %}
 Do not use while on a director page to autostart a camera; `&autostart&vd=video_device` should handle that.

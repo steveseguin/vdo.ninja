@@ -14,6 +14,8 @@ Sender-Side Option! ([`&push`](../../source-settings/push.md))
 
 This option hides the hang-up button, so it can't be accidentally clicked.
 
+![](<../../.gitbook/assets/image (142).png>)
+
 ## Related
 
 {% content-ref url="../../viewers-settings/nomicbutton.md" %}

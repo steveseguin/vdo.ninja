@@ -10,6 +10,10 @@ General Option! ([`&push`](push.md), [`&room`](../general-settings/room.md), [`&
 
 ## Details
 
-Experimental / Under-development. This feature is incomplete and not ready for production use.
+{% hint style="info" %}
+Experimental / Under-development
+{% endhint %}
+
+This feature is incomplete and not ready for production use.
 
 Makes the data for the active digital effect available to the IFRAME API or a remote guest.

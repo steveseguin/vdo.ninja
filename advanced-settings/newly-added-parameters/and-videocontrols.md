@@ -25,6 +25,8 @@ Sender-Side Option! ([`&push`](../../source-settings/push.md))
 This is not the same control bar as the user control bar. Also, be sure to not accidentally unmute yourself -- echo feedback galore.
 {% endhint %}
 
+![](<../../.gitbook/assets/image (133).png>)
+
 ## Related
 
 {% content-ref url="../upcoming-parameters/and-nocontrols.md" %}

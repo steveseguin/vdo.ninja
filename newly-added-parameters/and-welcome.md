@@ -22,7 +22,7 @@ You can set a message on the guest-invite link that appears as an overlay, appea
 
 example: `https://vdo.ninja/?welcome=hello`
 
-![](<../.gitbook/assets/image (133).png>)
+![](<../.gitbook/assets/image (26).png>)
 
 The message can be URL encoded, to allow for spaces and special characters. recommended. You can do so with this tool: [https://www.urlencoder.org](https://www.urlencoder.org/)
 

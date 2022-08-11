@@ -33,7 +33,7 @@ The downsides of the chunk-transfer mode is that if the connection stalls out lo
 Future versions of this feature will include the option to record to a cloud service, the option to use PCM audio, the ability to encode-once, but stream to many, and more advanced protocol logic to lower the latency.
 
 * The option to save the chunked stream as a viewer is to use `&chunked=2` on the sender side. Using just `&chunked` will just enable viewing, and not saving, of the video.
-* `&chunked=2` and [`&maxbitrate`](../source-settings/maxbitrate.md) will likely get changed up and moved to the viewer side eventually; currently doing this just for convenience of development/testing. Multiple viewers is not recommended. There seems to be an issue with audio clicking that I'm trying to solve currently.
+* `&chunked=2` and [`&maxvideobitrate`](../source-settings/maxbitrate.md) will likely get changed up and moved to the viewer side eventually; currently doing this just for convenience of development/testing. Multiple viewers is not recommended. There seems to be an issue with audio clicking that I'm trying to solve currently.
 * A video demo of the chunked transfer and how to enable support for alpha-channel transparency is available here:
 
 {% embed url="https://youtu.be/SWDlm1Jf-Oo" %}

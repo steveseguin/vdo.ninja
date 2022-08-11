@@ -66,13 +66,12 @@ If not using OBS, you can still add the above CSS via the URL using the `&b64css
 
 `&b64css=I292ZXJsYXlNc2dzew0KICAgIG92ZXJmbG93OiBhdXRvIWltcG9ydGFudDsNCiAgICBkaXNwbGF5OiBmbGV4IWltcG9ydGFudDsNCiAgICBmbGV4LWRpcmVjdGlvbjogY29sdW1uLXJldmVyc2UhaW1wb3J0YW50Ow0KICAgIGhlaWdodDogMjQwcHghaW1wb3J0YW50Ow0KfQ0KDQojb3ZlcmxheU1zZ3Mgc3BhbiB7DQogICAgdGV4dC1hbGlnbjogbGVmdCFpbXBvcnRhbnQ7DQp9`
 
-\
 Feedback and user requests are welcomed.
 
 ### Example links and  Resources
 
 [https://vdo.ninja/?transcribe](https://vdo.ninja/?transcribe)\
-[https://vdo.ninja/?view=abc123\&cc](https://vdo.ninja/?view=abc123\&cc)\
+[https://vdo.ninja/?view=abc123\&closedcaptions](https://vdo.ninja/?view=abc123\&closedcaptions)\
 [https://meyerweb.com/eric/tools/dencoder/](https://meyerweb.com/eric/tools/dencoder/)\
 [https://vdo.ninja/examples/rainbow.css](https://vdo.ninja/examples/rainbow.css)\
 [https://vdo.ninja/?css=https%3A%2F%2Fvdo.ninja%2Fexamples%2Frainbow.css](https://vdo.ninja/?css=https%3A%2F%2Fvdo.ninja%2Fexamples%2Frainbow.css)

@@ -21,13 +21,14 @@ Sender-Side Option! ([`&push`](push.md))
 
 ## Details
 
-It can be changed after the connection has been established. Useful for helping a remote guest skip-past the complex setup of their camera/audio.
+It can be changed after the connection has been established. Useful for helping a remote guest skip-past the complex setup of their camera/audio.\
+![](<../.gitbook/assets/image (138).png>)
 
 You can pass a string name to auto-select an audio device that has a label containing that same string.
 
 You can pass a device ID as well; see [vdo.ninja/devices](https://vdo.ninja/devices) to see the device IDs (specific to VDO.Ninja's domain).
 
-Setting this option to `&ad=0` will also disable the guest's microphone, potentially allowing for guest connections that have no video or audio. You might do this if you needed midi-only transport, hidden IFRAME control, or just to chatting.
+Setting this option to `&audiodevice=0` will also disable the guest's microphone, potentially allowing for guest connections that have no video or audio. You might do this if you needed midi-only transport, hidden IFRAME control, or just to chatting.
 
 {% hint style="info" %}
 See [vdo.ninja/devices](https://vdo.ninja/devices) to see the device IDs and device names. DeviceIDs are specific to VDO.Ninja's domain, while device names are not. \

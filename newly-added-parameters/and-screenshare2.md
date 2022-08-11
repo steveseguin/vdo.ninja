@@ -14,7 +14,7 @@ Sender-Side Option! ([`&push`](../source-settings/push.md))
 
 ## Details
 
-Using `&screenshare2` or using `&ss&intro`, will show the "Share your Screen" button before asking the user to select screenshare options. This preps the user for the permissions popup that comes next, simplies the landing page experience for iFRAME integrations. It's basically the same as [`&screenshare`](../source-settings/screenshare.md), but you get the "Share your Screen" button before selecting screenshare options.
+Using `&screenshare2` or using `&screenshare&intro`, will show the "Share your Screen" button before asking the user to select screenshare options. This preps the user for the permissions popup that comes next, simplies the landing page experience for iFRAME integrations. It's basically the same as [`&screenshare`](../source-settings/screenshare.md), but you get the "Share your Screen" button before selecting screenshare options.
 
 ## Related
 

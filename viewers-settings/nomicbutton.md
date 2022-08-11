@@ -12,7 +12,9 @@ Sender-Side Option! ([`&push`](../source-settings/push.md))
 
 ## Details
 
-Disables the mic button. Guests can't mute audio.
+Disables the mic button. Guests can't mute their audio input.
+
+![](<../.gitbook/assets/image (73).png>)
 
 ## Related
 

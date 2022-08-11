@@ -19,7 +19,7 @@ You can use them for publisher, viewer and director URLs.
 | ``[`&stats`](../../general-settings/and-stats.md)``                | Shows the connection/media stats window by default                                         |
 | ``[`&sticky`](../../general-settings/sticky.md)``                  | Allows a user to save and then later restore their streaming session settings              |
 | ``[`&pusheffectsdata`](../../source-settings/pusheffectsdata.md)`` | Makes the data for the active digital effect available to the IFRAME API or a remote guest |
-| ``[`&disablehotkeys`](and-disablehotkeys.md)``                     | Allows for hotkeys to be disabled (like `CRTL + M`)                                        |
+| ``[`&disablehotkeys`](and-disablehotkeys.md)``                     | Disables hotkeys (like `CRTL + M`)                                                         |
 
 ## Source Side Options
 
