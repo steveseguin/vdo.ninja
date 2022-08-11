@@ -32,7 +32,7 @@ Current TURN servers are deployed in North America and Germany.\
 TCP/UDP on port 443.
 
 {% hint style="info" %}
-More information on what is TURN [here](https://en.wikipedia.org/wiki/Traversal\_Using\_Relays\_around\_NAT).
+More information on what TURN is [here](https://en.wikipedia.org/wiki/Traversal\_Using\_Relays\_around\_NAT)
 {% endhint %}
 
 ## Related

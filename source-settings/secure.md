@@ -21,12 +21,12 @@ This can help prevent someone from destroying a live stream due to accidentally 
 ## Technical Benefits
 
 * The handshake server has no way of talking to the publisher after the stream starts. Fully decentralized once initialized.
-* The publisher cannot be spammed by "Watch Stream" requests if the invite link gets shared accidentally
+* The publisher cannot be spammed by "Watch Stream" requests if the invite link gets shared accidentally.
 * The publisher can clearly see when someone has joined and when someone has disconnected
 * Increased security and privacy, with just some minor added inconveniences.
 
-### Alternatives
+## Alternatives
 
-* If you wish to host your own handshake server, there is one available that is adequate for private for personal use here: [https://github.com/steveseguin/websocket\_server/](https://github.com/steveseguin/websocket\_server/)&#x20;
+* If you wish to host your own handshake server, there is one available that is adequate for private for personal use here: [https://github.com/steveseguin/websocket\_server/](https://github.com/steveseguin/websocket\_server/)
 * If interesting in hiding your IP address from a remote guest, you can use `&privacy` instead, which will use a TURN server to connect with remote guests, acting as a middleman for the peer connection.
 * While it should be tested, you can also perhaps try `&icefilter=host` which will attempt to filter out connections with remote guests that are behind a firewall.  Feedback and test results welcomed.

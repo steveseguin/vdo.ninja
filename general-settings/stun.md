@@ -20,7 +20,7 @@ If your STUN server requires a password, you can pass the STUN server address wi
 
 Basic sample usage of `&stun`:
 
-`https://vdo.ninja/?push&stun=stun:stun4.l.google.com:19302`&#x20;
+[`https://vdo.ninja/?push&stun=stun:stun4.l.google.com:19302`](https://vdo.ninja/?push\&stun=stun:stun4.l.google.com:19302)``
 
 ## Related
 
