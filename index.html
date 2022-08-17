@@ -2109,7 +2109,7 @@
 			session.version = "22.5🇦";
 			session.streamID = session.generateStreamID(); // randomly generates a streamID for this session. You can set your own programmatically if needed
 			
-			session.defaultPassword = "someEncryptionKey123"; // Change this password if self-deploying for added security/privacy
+			session.defaultPassword = "someEncryptionKey12"; // Change this password if self-deploying for added security/privacy
 			session.salt = location.hostname; // used only if password is not == False. You can change to "session.salt = location.hostname+location.pathname;" for greater deployment isolation
 			
 			session.stunServers = [{ urls: ["stun:stun.l.google.com:19302", "stun:stun4.l.google.com:19302"]}]; // google stun servers. default
