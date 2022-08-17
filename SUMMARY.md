@@ -380,6 +380,7 @@
     * [\&mobile](advanced-settings/upcoming-parameters/and-mobile.md)
     * [\&notmobile](advanced-settings/upcoming-parameters/and-notmobile.md)
     * [\&screenshareaspectratio](advanced-settings/upcoming-parameters/and-screenshareaspectratio.md)
+    * [\&solo](advanced-settings/upcoming-parameters/and-solo.md)
   * [Other Parameters](other-parameters.md)
 * [Releases](release-notes/older-releases.md)
   * [v21 ❤️](older-releases/v21.md)

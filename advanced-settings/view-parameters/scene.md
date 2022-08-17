@@ -47,3 +47,7 @@ By adding `&scene` to a room URL, it tells VDO.Ninja that this is no [`&push`](.
 {% content-ref url="../../general-settings/room.md" %}
 [room.md](../../general-settings/room.md)
 {% endcontent-ref %}
+
+{% content-ref url="../upcoming-parameters/and-solo.md" %}
+[and-solo.md](../upcoming-parameters/and-solo.md)
+{% endcontent-ref %}
