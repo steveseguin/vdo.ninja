@@ -32,16 +32,10 @@ iOS does not work with the volume visualizer meter; it causes clicking noises wh
 
 ### Random issues
 
-*   If full-screening a video on iOS devices, sometimes that can cause the outbound video to freeze.
-
-
-*   Video out from an iOS device may initially be choppy; this usually smooths out over the course of seconds to a minute. If not, try to lower the resolution.
-
-
-*   If your camera does not load or fails to load, fully close Safari / Chrome, and then try again. There seems to be an issue where old tabs or idle apps can block VDO.Ninja from accessing the camera.
-
-
-* Video shared by an iPhone/iPad to other guests in a group room may be choppy or of low-quality. This is intentional, as otherwise the iPhone would overheat or become too slow to use. Adding [`&forceios`](../source-settings/and-forceios.md) to the URL of a specific guest can force a different, smoother, behavior for them, but use it sparingly.
+* If full-screening a video on iOS devices, sometimes that can cause the outbound video to freeze.
+* Video out from an iOS device may initially be choppy; this usually smooths out over the course of seconds to a minute. If not, try to lower the resolution.
+* If your camera does not load or fails to load, fully close Safari / Chrome, and then try again. There seems to be an issue where old tabs or idle apps can block VDO.Ninja from accessing the camera.
+* Video shared by an iPhone/iPad to other guests in a group room may be choppy or of low-quality. This is intentional, as otherwise the iPhone would overheat or become too slow to use. Adding [`&forceios`](../advanced-settings/mobile-parameters/and-forceios.md) to the URL of a specific guest can force a different, smoother, behavior for them, but use it sparingly.
 
 ### Limited features; no focus/exposure control
 

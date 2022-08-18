@@ -27,7 +27,7 @@ Similarly, also added the option to the IFRAME API to request different down-sca
 
 ![](<../../.gitbook/assets/image (107) (1).png>)
 
-![](<../../.gitbook/assets/image (106) (2).png>)
+![](<../../.gitbook/assets/image (106).png>)
 
 ## Related
 

@@ -53,7 +53,7 @@ All of the available parameters can be seperated in four categories. You find th
 
 ## Navigating the available setting options
 
-We've broken down the available URL parameters into 15 parts:
+We've broken down the available URL parameters into 16 parts:
 
 * [cheat-sheet-of-basic-parameters](advanced-settings/cheat-sheet-of-basic-parameters/ "mention") (the basic and most common parameters)
 * [setup-parameters](advanced-settings/setup-parameters/ "mention") (stream ID, create a room, password, labels, groups, devices, auto-start, welcoming guests, sharing a website/file)
@@ -65,6 +65,7 @@ We've broken down the available URL parameters into 15 parts:
 * [director-parameters](advanced-settings/director-parameters/ "mention") (specific to the director's control room and director-specific features)
 * [screen-share-parameters](advanced-settings/screen-share-parameters/ "mention") (labels, audio filters, type, bitrate, quality, etc.)
 * [meshcast-parameters](advanced-settings/meshcast-parameters/ "mention") (options for the [`&meshcast`](newly-added-parameters/and-meshcast.md) parameter like audio filters, bitrate, screen-share, codecs, etc.)
+* [mobile-parameters](advanced-settings/mobile-parameters/ "mention") (options to specify push links and guest invite links for mobile phones)
 * [api-and-midi-parameters](advanced-settings/api-and-midi-parameters/ "mention") (hotkey features via API and MIDI)
 * [turn-and-stun-parameters](advanced-settings/turn-and-stun-parameters/ "mention") (options for setting up TURN and STUN servers)
 * [newly-added-parameters](advanced-settings/newly-added-parameters/ "mention") (recently added to VDO.Ninja)

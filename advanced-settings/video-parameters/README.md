@@ -43,8 +43,6 @@ You have to add them to the source side ([`&push`](../../source-settings/push.md
 | ``[`&hideguest`](../../newly-added-parameters/and-hideguest.md)``                | Has a guest join a group not visible to others                                                                                                      |
 | ``[`&videomute`](../../source-settings/and-videomute.md)``                       | Auto mutes guest's video                                                                                                                            |
 | ``[`&ptz`](../../source-settings/ptz.md)``                                       | Enables pan/tilt control of the device, if compatible                                                                                               |
-| ``[`&forcelandscape`](../../newly-added-parameters/and-forcelandscape.md)``      | Forces the video output to landscape mode, regardless of how the phone is rotated                                                                   |
-| ``[`&forceportrait`](../../newly-added-parameters/and-forceportrait.md)``        | Forces the video output to portrait mode, regardless of how the phone is rotated                                                                    |
 | ``[`&webp`](../view-parameters/webp.md)``                                        | Custom video codec for broadcasts                                                                                                                   |
 | ``[`&webpquality`](../view-parameters/webpquality.md)``                          | Quality setting for the [`&webp`](../view-parameters/webp.md) option                                                                                |
 

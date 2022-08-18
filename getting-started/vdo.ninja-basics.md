@@ -11,7 +11,7 @@ VDO.Ninja needs two thinks to work:
    You will see the video feed of the device on screen, and at the top of the screen a ‘view’ link
 4. Copy this view link and send it to someone you want to have access to this feed, or place it inside a OBS browser source.
 
-![](<../.gitbook/assets/image (1) (2) (1).png>)
+![](<../.gitbook/assets/image (1) (2) (1) (1).png>)
 
 ![](../.gitbook/assets/obs)
 

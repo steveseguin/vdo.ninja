@@ -53,7 +53,6 @@ You can use them for publisher, viewer and director URLs.
 | ``[`&pcm`](../../source-settings/and-pcm.md)``                         | PCM audio recordings                                                                                                |
 | ``[`&chunked`](../../newly-added-parameters/and-chunked.md)``          | Does not use webRTC's video streaming protocols; rather it uses a custom-made protocol                              |
 | ``[`&rampuptime`](../../newly-added-parameters/and-rampuptime.md)``    | When a guest connects, this tries to load video from that guest for a few seconds, even if not yet added to a scene |
-| ``[`&forceios`](../../source-settings/and-forceios.md)``               | Forces iOS devices to publish video to this room guest                                                              |
 | ``[`&sensor`](../../source-settings/sensor.md)``                       | Access device sensor data at given rate                                                                             |
 
 ## Viewer Side Options

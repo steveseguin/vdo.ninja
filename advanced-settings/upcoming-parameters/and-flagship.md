@@ -25,6 +25,6 @@ I've also modified the non-flagship mode, for low-end mobile devices, to use the
 [and-notmobile.md](and-notmobile.md)
 {% endcontent-ref %}
 
-{% content-ref url="../../source-settings/and-forceios.md" %}
-[and-forceios.md](../../source-settings/and-forceios.md)
+{% content-ref url="../mobile-parameters/and-forceios.md" %}
+[and-forceios.md](../mobile-parameters/and-forceios.md)
 {% endcontent-ref %}

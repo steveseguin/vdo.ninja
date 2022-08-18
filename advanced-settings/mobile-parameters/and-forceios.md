@@ -1,10 +1,10 @@
 ---
-description: Forces iOS devices to publish video to this room guest
+description: Forces iOS devices to publish video to this room
 ---
 
 # \&forceios
 
-Sender-Side Option! ([`&push`](push.md))
+Sender-Side Option! ([`&push`](../../source-settings/push.md))
 
 ## Details
 

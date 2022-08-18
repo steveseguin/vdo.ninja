@@ -13,7 +13,7 @@ Sender-Side Option! ([`&push`](../../source-settings/push.md))\
 
 ``[`&mobile`](and-mobile.md) will optimize a guest/push link for a mobile device. It might help reduce CPU issues.
 
-There are [`&flagship`](and-flagship.md) and [`&forceios`](../../source-settings/and-forceios.md) as two options to configure mobile devices, but `&mobile` and [`&notmobile`](and-notmobile.md) are more generic options.
+There are [`&flagship`](and-flagship.md) and [`&forceios`](../mobile-parameters/and-forceios.md) as two options to configure mobile devices, but `&mobile` and [`&notmobile`](and-notmobile.md) are more generic options.
 
 ## Related
 
