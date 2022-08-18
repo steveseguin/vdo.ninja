@@ -6,7 +6,7 @@ description: >-
 
 # \&layout
 
-Viewer-Side Option! ([`&scene`](../view-parameters/scene.md))
+Viewer-Side Option! ([`&scene`](../view-parameters/scene.md), [`&room`](../../general-settings/room.md))
 
 ## Options
 
