@@ -22,7 +22,7 @@ Versus.cam is the upcoming and standalone replacement for the [vdo.ninja/monitor
 * Versus.cam is built using the VDO.Ninja IFRAME API, which I hope demonstrates the flexibility of it.
 * Versus.cam is only supported by Chrome/Chromium-based browsers; it isn't yet compatible with Firefox/Safari (they lack the features needed for it to operate).
 
-Please report bugs. It's a first release, using the alpha version of VDO.Ninja, so bugs are kind of expected.
+[Please report bugs](https://discord.gg/qWDshMsTar). It's a first release, using the alpha version of VDO.Ninja, so bugs are kind of expected.
 
 {% embed url="https://youtu.be/I12ASNWHPPI" %}
 [https://youtu.be/I12ASNWHPPI](https://youtu.be/I12ASNWHPPI)
