@@ -132,7 +132,7 @@
     * [\&controlroombitrate](advanced-settings/view-parameters/and-controlroombitrate.md)
     * [\&roombitrate](source-settings/roombitrate.md)
     * [\&fullscreen](source-settings/fullscreen.md)
-    * [\&showpreview](advanced-settings/video-parameters/and-showpreview.md)
+    * [\&showpreview](source-settings/and-preview.md)
     * [\&minipreview](source-settings/and-minipreview.md)
     * [\&nopreview](source-settings/and-nopreview.md)
     * [\&hideguest](newly-added-parameters/and-hideguest.md)
