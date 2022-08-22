@@ -1,7 +1,7 @@
 ---
 description: >-
-  Like &framerate, except it will allow for lower frame rates if the specific
-  frame rate requested failed
+  Like &fps, except it will allow for lower frame rates if the specific frame
+  rate requested failed
 ---
 
 # \&maxframerate

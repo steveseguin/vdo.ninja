@@ -19,10 +19,10 @@ Sender-Side Option! ([`&push`](push.md))
 
 ## Details
 
-Sets the maximum frame rate of the video in frames per second on the publisher side. The actual frame rate could be less. Limiting the frame rate can reduce the CPU load and the bandwidth.
+`&fps` sets the maximum frame rate of the video in frames per second on the publisher side. The actual frame rate could be less. Limiting the frame rate can reduce the CPU load and the bandwidth.
 
 {% hint style="danger" %}
-If the camera cannot support this frame rate, **it will fail**.
+If the camera cannot support this frame rate, **it will fail**. Use [`&maxframerate`](and-maxframerate.md) instead then.
 {% endhint %}
 
 ## Related
