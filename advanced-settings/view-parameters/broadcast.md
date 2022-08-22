@@ -21,11 +21,11 @@ Viewer-Side Option! ([`&view`](view.md), [`&scene`](scene.md), [`&room`](../../g
 
 ## Details
 
-This command is like using [`&novideo=directorsStreamID`](novideo.md) but with some extras tweaks that might be appropriate to a larger group room.\
-\
+This command is like using [`&showonly=directorsStreamID`](../video-parameters/novideo.md) but with some extras tweaks that might be appropriate to a larger group room.
+
 In essence, `&broadcast` only allows the playback of video-tracks and [shared-websites](../../source-settings/and-website.md) that originate from the main director. You may not know the stream ID of the main director ahead of time, so this parameter handles that for you automatically as well.
 
-You can pass a stream ID as a value, which will specify the video source to be from a guest (or co-director), rather than the main director. You cannot pass multiple stream IDs to the `&broadcast` flag; just one. If needing more, consider using the [`&novideo`](novideo.md) flag instead
+You can pass a stream ID as a value, which will specify the video source to be from a guest (or co-director), rather than the main director. You cannot pass multiple stream IDs to the `&broadcast` flag; just one. If needing more, consider using the [`&showonly`](../video-parameters/novideo.md) flag instead.
 
 You add `&broadcast` to the guest invite links. You do not add this to the director or scene links.
 
@@ -66,7 +66,7 @@ While the `&broadcast` flag is great for reducing the load on guests in a room, 
 
 * Using a service like meshcast.io, along with the [`&website`](../../source-settings/and-website.md) sharing option, can also greatly reduce load on the director and guests. The website sharing function works with other video content delivery networks, not just Meshcast.io, so you have choices.
 * When the director shares a website, their own low-latency VDO.Ninja audio remains active, so audio doubling could happen if the website contains their audio also. You'll want to mute either the website's audio or the director's VDO.Ninja audio, to avoid this issue. To also avoid echo-cancellation issues and audio delays, it is recommended to mute the website audio, as VDO.Ninja's audio will have not have those issues.
-* You may want to add [`&novideo`](novideo.md) to the guest invite links if you only intend to share video via the website sharing function. This ensures the director's VDO.Ninja video-track doesn't appear, as VDO.Ninja can't always tell if a website contains a video track or not, and so may show the director's video alongside the shared website in some cases otherwise.
+* You may want to add [`&novideo`](../video-parameters/novideo-1.md) to the guest invite links if you only intend to share video via the website sharing function. This ensures the director's VDO.Ninja video-track doesn't appear, as VDO.Ninja can't always tell if a website contains a video track or not, and so may show the director's video alongside the shared website in some cases otherwise.
 * In more recent versions of VDO.Ninja (v22), Meshcast is available built-into VDO.Ninja via the [`&meshcast`](../../newly-added-parameters/and-meshcast.md) parameter, which sends both audio and video over meshcast in sync, without concerns of echo cancellation or audio doubling. Just add `&meshcast` to the director's URL to use this mode; the director's audio and video will auto-publish via Meshcast without needing to visit meshcast.io.
 * The director's ability to share a website (meshcast.io link) is via a button found in the director's control bar. The director doesn't need to use [`&website`](../../source-settings/and-website.md) parameter since a website sharing functionality has its own dedicated button in the director's control room.
 
@@ -77,3 +77,9 @@ While the `&broadcast` flag is great for reducing the load on guests in a room, 
 {% embed url="https://www.youtube.com/watch?v=-7QsLChfdsE" %}
 An older video, but it gets some basics across still about \&broadcast mode
 {% endembed %}
+
+## Related
+
+{% content-ref url="../video-parameters/novideo.md" %}
+[novideo.md](../video-parameters/novideo.md)
+{% endcontent-ref %}

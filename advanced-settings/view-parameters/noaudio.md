@@ -29,6 +29,6 @@ If you want to be able to unmute the speaker button during production, use [`&mu
 [deafen.md](../../general-settings/deafen.md)
 {% endcontent-ref %}
 
-{% content-ref url="novideo.md" %}
-[novideo.md](novideo.md)
+{% content-ref url="../video-parameters/novideo-1.md" %}
+[novideo-1.md](../video-parameters/novideo-1.md)
 {% endcontent-ref %}

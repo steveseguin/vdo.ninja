@@ -21,7 +21,7 @@ Rooms limit the viewing bitrate that guests of a room can request. OBS does not 
 
 Rooms have no forced limit on the number of guests allowed, but practically 10 is about the limit I'd recommend.
 
-Adding [`&showonly=xxx`](../advanced-settings/view-parameters/novideo.md) and [`&roombitrate=0`](../source-settings/roombitrate.md) to the guest's URL can be used to help increase the capacity of rooms to 30 or more.
+Adding [`&showonly=xxx`](../advanced-settings/video-parameters/novideo-1.md) and [`&roombitrate=0`](../source-settings/roombitrate.md) to the guest's URL can be used to help increase the capacity of rooms to 30 or more.
 
 An alternative to a `&room` is a [_faux-room_](../getting-started/3-person-chat.md), which can be done with:\
 `https://vdo.ninja/?push=aaa&view=bbb,ccc,ddd`

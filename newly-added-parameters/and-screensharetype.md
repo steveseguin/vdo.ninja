@@ -34,7 +34,7 @@ As a viewer or scene link, to specify only loading the `&screensharetype=3` scre
 
 {% hint style="warning" %}
 The type-3 screen share is still not fully cooked for use in scenes, etc, and it won't yet \
-work with [`&meshcast`](and-meshcast.md), [`&novideo`](../advanced-settings/view-parameters/novideo.md) or [`&noaudio`](../advanced-settings/view-parameters/noaudio.md).
+work with [`&meshcast`](and-meshcast.md), [`&novideo`](../advanced-settings/video-parameters/novideo-1.md) or [`&noaudio`](../advanced-settings/view-parameters/noaudio.md).
 {% endhint %}
 
 ## Related

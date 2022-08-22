@@ -2,13 +2,13 @@
 description: Sets the maximum frame rate of the video in frames per second
 ---
 
-# \&framerate
+# \&fps
 
 Sender-Side Option! ([`&push`](push.md))
 
 ## Aliases
 
-* `&fps`
+* `&framerate`
 * `&fr`
 
 ## Options
@@ -19,10 +19,7 @@ Sender-Side Option! ([`&push`](push.md))
 
 ## Details
 
-Sets the maximum frame rate of the video in frames per second.\
-Actual frame rate could be less.\
-Limiting the frame rate can reduce the CPU load.\
-Limiting the frame rate can reduce bandwidth.
+Sets the maximum frame rate of the video in frames per second on the publisher side. The actual frame rate could be less. Limiting the frame rate can reduce the CPU load and the bandwidth.
 
 {% hint style="danger" %}
 If the camera cannot support this frame rate, **it will fail**.
