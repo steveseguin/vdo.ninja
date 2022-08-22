@@ -83,31 +83,30 @@ ie: `/list`
 * Should list user's labels in a list, along with whether they are video-muted or not, etc.&#x20;
 * Includes mic mute states and voice activity meters in the list.
 * Isn't visible by default in scenes, faux rooms, or when using `&broadcast` mode.
-* `&showlist=1` will force show it and `&showlist=0` will force hide it.
+* ``[`&showlist=1`](../source-settings/showlist.md) will force show it and [`&showlist=0`](../source-settings/showlist.md) will force hide it.
 * Feedback welcomed.
 
-![image](https://user-images.githubusercontent.com/2575698/115191919-19ab1080-a0b8-11eb-882e-86b5d22f3914.png)
+![](https://user-images.githubusercontent.com/2575698/115191919-19ab1080-a0b8-11eb-882e-86b5d22f3914.png)
 
 ### New Stats added
 
 * Time since connected and a "total" bitrate value. This includes data-channel and overhead data ; not just audio/video.
 * The browser type used by a guest is more clearly stated.
-*   Total round trip time is a browser stat; the sender didn't have any sort of latency stat, so I added this in. Judge for yourself how well it works; this will not include the viewer's buffer delay I believe. Just transport delay?
-
-    \-available outgoing bandwidth, which is the value the browser uses to judge how much upload room it has. By default, Chrome seems to have this max out at around 4500 or so; my guess is Chrome just doesn't see a need to test higher if the default video bitrate is around 2500. The `&videobitrate=` command of course forces Chrome to test much higher. I suppose you could use this value to get an estimate on what the total bandwidth of a connection is, and then you'd be best served keep the `&videobitrate` target to be no more than 80% of that.
+* Total round trip time is a browser stat; the sender didn't have any sort of latency stat, so I added this in. Judge for yourself how well it works; this will not include the viewer's buffer delay I believe. Just transport delay?
+* Available outgoing bandwidth, which is the value the browser uses to judge how much upload room it has. By default, Chrome seems to have this max out at around 4500 or so; my guess is Chrome just doesn't see a need to test higher if the default video bitrate is around 2500. The `&videobitrate=` command of course forces Chrome to test much higher. I suppose you could use this value to get an estimate on what the total bandwidth of a connection is, and then you'd be best served keep the `&videobitrate` target to be no more than 80% of that.
 * Added audio bitrate to the director's stats.
 * Fixed a screensharing bug, where the screenshare didn't go away always when it was stopped using the browser-force stop option.
 * Safari desktop users get a hint now to switch to something else when connecting as a guest.
 * Broadcast mode will now use the `&minipreview` option by default, with the slight twist; the guest will see themselves full screen if the broadcast hasn't started yet. `&nopreview` can disable it and `&minipreview` can force always-pip for the preview.&#x20;
-* added a couple new bitrate commands that should be quite valuable when using the `&broadcast` option.
+* Added a couple new bitrate commands that should be quite valuable when using the `&broadcast` option.
 
 `&outboundaudiobitrate` or `&oab`, along with `&outboundvideobitrate` or `&ovb`.
 
 These can be applied to the PUBLISHER's end, and they will set a default target bitrate and max bitrate for outgoing audio and video streams.
 
-For audio, it was added to allow the Director to set their outbound audio bitrate to be shared with guests at something like 160-kbps, while having the guests still be able to share their audio between other guests at the default audio bitrate of around 32-kbps. If the guest sets the audio bitrate (`&stereo=1` or `&ab=200`), it will override the publisher's `&oab` parameter.
+For audio, it was added to allow the Director to set their outbound audio bitrate to be shared with guests at something like 160-kbps, while having the guests still be able to share their audio between other guests at the default audio bitrate of around 32-kbps. If the guest sets the audio bitrate (`&proaudio=1` or `&ab=200`), it will override the publisher's `&oab` parameter.
 
-For video, the `&ovb` is similar, except if set it sets the viewer's bitrate and overrides the `&videobitrate` parameter. It won't override the room's total bitrate parameter, as that's a dynamically set bitrate, so to get higher bitrate in group rooms you still need to use `&trb`.
+For video, the `&ovb` is similar, except if set it sets the viewer's bitrate and overrides the `&videobitrate` parameter. It won't override the room's total bitrate parameter, as that's a dynamically set bitrate, so to get higher bitrate in group rooms you still need to use `&totalroombitrate`.
 
 Mainly did this work to allow for more control over audio bitrates in the `&broadcast` situation, where guest to guest you might want to have a different audio bitrate versus the director's audio bitrate output.
 
@@ -138,7 +137,7 @@ You can use this tool to encode the URL you want to link to [https://meyerweb.co
 ### Scene changes
 
 * Added `&scenetype` (aka, `&type`). This is replacing `&scene=2` with `&scenetype=2`. `&scenetype=2` just shows the last guest that was added in the scene; it does a basic mute of the last guest also. `&scenetype=1` does the same thing, but doesn't mute. It's not super sophisticated logic, but it should work in a pinch.
-* Director has access to more scene types by default (`&scene=5`, etc). You must manually create scene links for OBS to use these extended scene options, as links for `&scene=0` and `&scene=1` are the only ones provided by default still. You can use these added scene links to create dedicated "slots" for guests in an OBS layout.&#x20;
+* Director has access to more scene types by default (`&scene=5`, etc). You must manually create scene links for OBS to use these extended scene options, as links for `&scene=0` and `&scene=1` are the only ones provided by default still. You can use these added scene links to create dedicated "slots" for guests in an OBS layout.
 * If using `&scene=2` or greater, for performance reasons, videos won't load immediately in the background when the scene becomes active; only once the video has been added to the scene will the video stream be loaded. Videos will still preload however if using `&scene=1`, (up to 500kbps anyways). This is a required performance optimization, imo, and it shouldn't impact existing use cases of VDO.Ninja.
 
 ### Changes to the built-in video "record" logic
