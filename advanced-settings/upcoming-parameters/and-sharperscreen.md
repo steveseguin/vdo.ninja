@@ -9,7 +9,7 @@ Viewer-Side Option! ([`&scene`](../view-parameters/scene.md), [`&room`](../../ge
 
 ## Details
 
-As an alternative to [`&sharper`](and-sharper.md), I've also added `&sharperscreen`, which sets [`&scale=100`](../view-parameters/scale.md), but _only_ for screen-shares (virtual cameras not included). This is probably even more efficient than [`&scale=100`](../view-parameters/scale.md) or `&sharper`, and it's designed for when screen-sharing a lot of text. Text looks a bit soft when streaming video at 1:1 pixel resolution.
+As an alternative to [`&sharper`](and-sharper.md), I've also added `&sharperscreen`, which sets [`&scale=100`](../view-parameters/scale.md), but _only_ for screen-shares (virtual cameras not included). This is probably even more efficient than [`&scale=100`](../view-parameters/scale.md) or [`&sharper`](and-sharper.md), and it's designed for when screen-sharing a lot of text. Text looks a bit soft when streaming video at 1:1 pixel resolution.
 
 It's recommended to only use these parameters within the context of a scene link, and not on guest links, due to the higher CPU / bandwidth it may use.
 
