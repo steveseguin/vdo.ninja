@@ -59,14 +59,14 @@ This mode can work with audio, which uses the normal audio mode for transport.  
 
 ## Related
 
+{% content-ref url="webpquality.md" %}
+[webpquality.md](webpquality.md)
+{% endcontent-ref %}
+
 {% content-ref url="codec.md" %}
 [codec.md](codec.md)
 {% endcontent-ref %}
 
 {% content-ref url="../../newly-added-parameters/and-chunked.md" %}
 [and-chunked.md](../../newly-added-parameters/and-chunked.md)
-{% endcontent-ref %}
-
-{% content-ref url="webpquality.md" %}
-[webpquality.md](webpquality.md)
 {% endcontent-ref %}

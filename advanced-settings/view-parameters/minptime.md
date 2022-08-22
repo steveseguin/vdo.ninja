@@ -18,7 +18,7 @@ Viewer-Side Option! ([`&view`](view.md), [`&scene`](scene.md), [`&room`](../../g
 If you do not know what this is, you definitely don't want to touch it.
 {% endhint %}
 
-Minimum packet size of audio in ms. 10ms is lowest that you can set in Chromium I think.
+Minimum packet size of audio in ms. 10-ms is lowest that you can set in Chromium I think.
 
 Optimized already, but it's available for experimentation and fun if desired.
 

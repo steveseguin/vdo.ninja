@@ -15,9 +15,9 @@ Viewer-Side Option! ([`&view`](view.md), [`&scene`](scene.md), [`&room`](../../g
 
 ## Details
 
-Has videos fade in smoothly. You can pass a custom fade in time in milliseconds.
+Has videos fade in smoothly in 500-ms. You can pass a custom fade in time in milliseconds.
 
-Also available as a director's room toggle.
+Also available as a director's room toggle for scenes.
 
 ![](<../../.gitbook/assets/image (130).png>)
 

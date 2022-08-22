@@ -8,13 +8,13 @@ Viewer-Side Option! ([`&view`](view.md), [`&scene`](scene.md), [`&room`](../../g
 
 ## Details
 
-{% hint style="info" %}
-Will not work with Firefox; Firefox's playback will still be in stereo if the source is stereo.
-{% endhint %}
-
-If using [`&stereo`](../../general-settings/stereo.md), this will retain the publishing benefits of [`&stereo`](../../general-settings/stereo.md), while keeping the audio as mono instead of stereo.
+If using [`&proaudio`](../audio-parameters/and-proaudio.md), this will retain the publishing benefits of [`&proaudio`](../audio-parameters/and-proaudio.md), while keeping the audio as mono instead of stereo.
 
 Audio bitrates may be reduced from 256-kbps to 128-kbps, if not explicitly stated, in some cases.
+
+{% hint style="warning" %}
+Will not work with Firefox; Firefox's playback will still be in stereo if the source is stereo.
+{% endhint %}
 
 To set the source to mono, see [`&monomic`](../upcoming-parameters/and-monomic.md).
 

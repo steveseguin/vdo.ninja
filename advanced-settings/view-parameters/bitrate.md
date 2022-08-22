@@ -19,11 +19,15 @@ Viewer-Side Option! ([`&view`](view.md), [`&scene`](scene.md), [`&room`](../../g
 
 ## Details
 
+`&videobitrate` sets the target video bitrate of a video feed in a solo link or the video feeds in a scene.
+
+This parameter is only for scenes and solo links. Use [`&totalroombitrate`](totalroombitrate.md) for example to set up the video bitrate for guests in a room.
+
 {% hint style="info" %}
-Default value will target around around **2500** to **4000**.
+Default value will target around **2500**-kbps.
 {% endhint %}
 
-The maximum achievable bitrate is around 60,000-kbps (60mbps)
+The maximum achievable bitrate is around 60,000-kbps (60-mbps).
 
 **Lowering** the bitrate can sometimes **reduce CPU load**, **bandwidth**, and **stuttering** issues
 
@@ -34,6 +38,10 @@ Not compatible with **Firefox**.
 {% endhint %}
 
 ## Related
+
+{% content-ref url="../../guides/video-bitrates-for-push-view-links.md" %}
+[video-bitrates-for-push-view-links.md](../../guides/video-bitrates-for-push-view-links.md)
+{% endcontent-ref %}
 
 {% content-ref url="audiobitrate.md" %}
 [audiobitrate.md](audiobitrate.md)

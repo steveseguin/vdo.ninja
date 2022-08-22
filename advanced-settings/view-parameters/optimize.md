@@ -10,18 +10,19 @@ Viewer-Side Option! ([`&view`](view.md), [`&scene`](scene.md), [`&room`](../../g
 
 ## Options
 
-| Value            | Description                                                 |
-| ---------------- | ----------------------------------------------------------- |
-| (integer value)  | value in kbps                                               |
-| (no value given) | 600                                                         |
-| 0                | disables the video track when not considered visible in OBS |
+| Value            | Description                                                           |
+| ---------------- | --------------------------------------------------------------------- |
+| (integer value)  | value in kbps                                                         |
+| (no value given) | 600                                                                   |
+| 0                | disables the video track when not considered visible in a scene (OBS) |
 
 ## Details
 
-Video bitrate reduced when the video is not visible in OBS (not active in a scene).\
-This is mainly there to help with reducing load for OBS and for guests.\
-This does not work with iPhone-sourced video streams.\
-Can take a few seconds for the bitrate to ramp back up after it becomes active again.
+`&optimize` reduces the video bitrate to 600-kbps when the video is not visible in OBS (not active in a scene). This is mainly there to help with reducing load for OBS and for guests. It can take a few seconds for the bitrate to ramp back up after it becomes active again.
+
+{% hint style="warning" %}
+This does not work with iPhone-sourced video streams.
+{% endhint %}
 
 ## Related
 

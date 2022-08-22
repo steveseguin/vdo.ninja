@@ -69,4 +69,4 @@ Scene is left blank, while the [`&view`](../../advanced-settings/view-parameters
 \
 Every time you view a link, in OBS or elsewhere, you increase the load on the remote guests’s computer. Pulling more than one HD feed from a remote guest is not advisable, unless they have a capable computer and good internet connection. As a director, you can disable the preview video in the control box, freeing up a small bit more bandwidth for those connected on very weak connections. (three buttons; video off / video on / binoculars for a HD preview).
 
-![](<../../.gitbook/assets/image (2) (2) (1).png>)
+![](<../../.gitbook/assets/image (2) (2).png>)

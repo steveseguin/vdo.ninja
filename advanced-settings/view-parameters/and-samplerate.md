@@ -18,7 +18,7 @@ Viewer-Side Option! ([`&view`](view.md), [`&scene`](scene.md), [`&room`](../../g
 
 ## Details
 
-Audio playback sample-rate, in Hz. (not capture or transmission sample-rate).
+`&samplerate` sets the audio playback sample-rate in Hz (not capture or transmission sample-rate).
 
 This is mainly for debugging audio distortion or clicking issues.
 

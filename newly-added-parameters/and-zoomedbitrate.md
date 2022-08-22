@@ -23,9 +23,9 @@ Viewer-Side Option! ([`&view`](../advanced-settings/view-parameters/view.md), [`
 
 Lets you set the target bitrate for a guest in a room when they 'zoom in' on a video using the full-window icon in the top-right of a video.
 
-The idea is, you might want to still have a group call, but occasionally share a high resolution screen. This will increase the load a lot on the guest who is being zoomed-in on, but it's an option if increasing [`&trb`](../advanced-settings/view-parameters/totalroombitrate.md) is not acceptable.
+The idea is, you might want to still have a group call, but occasionally share a high resolution screen. This will increase the load a lot on the guest who is being zoomed-in on, but it's an option if increasing [`&totalroombitrate`](../advanced-settings/view-parameters/totalroombitrate.md) is not acceptable.
 
-Using the flag unset increases the bitrate from 600 to 2500; or you can set your own.
+Using the flag unset increases the bitrate from 600-kbps to 2500-kbps.
 
 ## Related
 

@@ -14,7 +14,7 @@ Sender-Side Option! ([`&push`](push.md))
 
 | Value            | Description                                                   |
 | ---------------- | ------------------------------------------------------------- |
-| (no value given) | Shows a "Digital video effects" panel when setting up devices |
+| (no value given) | Shows a "Digital Video Effects" panel when setting up devices |
 | 0                | Disables effects                                              |
 | 1                | Face tracker                                                  |
 | -1               | Flip image                                                    |
