@@ -1,5 +1,5 @@
 ---
-description: Forces the guest to have a self-preview, overriding &broadcast
+description: Forces the guest to have a self-preview
 ---
 
 # \&showpreview
@@ -12,7 +12,7 @@ Sender-Side Option! ([`&push`](../../source-settings/push.md))
 
 ## Details
 
-Forces the guest to have a self-preview, overriding [`&broadcast`](../view-parameters/broadcast.md).
+Forces the guest to have a self-preview.
 
 ## Related
 

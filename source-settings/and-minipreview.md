@@ -1,5 +1,5 @@
 ---
-description: Mini self preview at the top right corner
+description: Mini self-preview at the top right corner
 ---
 
 # \&minipreview
@@ -14,7 +14,7 @@ Sender-Side Option! ([`&push`](push.md))
 
 Shows the mini self preview at the top right corner. This is the default behavior when [`&broadcast`](../advanced-settings/view-parameters/broadcast.md) mode is on.
 
-![](<../.gitbook/assets/image (3).png>)
+![](../.gitbook/assets/image.png)
 
 ## Related
 
