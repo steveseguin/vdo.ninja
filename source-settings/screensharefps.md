@@ -18,7 +18,7 @@ Sender-Side Option! ([`&push`](push.md))
 
 ## Details
 
-Set a target FPS for your screenshare, when you screenshare as a secondary stream (in a room). Use [`&fps`](and-framerate.md) if you want to set the screenshare FPS when only screensharing.
+Set a target FPS for your screenshare, when you screenshare as a secondary stream (in a room). Use [`&fps`](../advanced-settings/video-parameters/and-fps.md) if you want to set the screenshare FPS when only screensharing.
 
 ## Related
 

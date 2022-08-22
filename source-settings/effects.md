@@ -30,7 +30,20 @@ Sender-Side Option! ([`&push`](push.md))
 
 ## Details
 
+Adding `&effects` to a guest link enables the drop-down menu for Digital Video Effects. The guest can then choose the digital video effect via the drop-down menu.\
+![](../.gitbook/assets/image.png)
+
+This is on by default when using a basic push link outside of a room.
+
+You can pre-select the digital video effect by adding `&effects=X` (see [Options](effects.md#options) above) to a guest/push link.
+
+You can change the digital video effect dynamically via the video settings panel if you have added `&effects` to the guest's URL.
+
+You can also pre-select the effect value by adding [`&effectvalue`](../newly-added-parameters/and-effectvalue.md) to the URL. ie: the amount of blur.
+
 ### Green screen performance
+
+`&effects=4` enables a virtual green screen on the publisher side.
 
 Green screen doesn't require SIMD support to work, although it won't work as well without it on. There's a little warning info icon (!) if SIMD is not enabled.
 

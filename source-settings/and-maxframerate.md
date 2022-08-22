@@ -25,6 +25,6 @@ Like [`&fps`](../advanced-settings.md#framerateframe-rate), except it will allow
 
 ## Related
 
-{% content-ref url="and-framerate.md" %}
-[and-framerate.md](and-framerate.md)
+{% content-ref url="../advanced-settings/video-parameters/and-fps.md" %}
+[and-fps.md](../advanced-settings/video-parameters/and-fps.md)
 {% endcontent-ref %}

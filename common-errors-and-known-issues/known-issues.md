@@ -24,7 +24,7 @@ Time fixes all wounds, even with Apple products.\
 \
 Below are more possible/past issues, although the list is not often curated and can be assumed to be out of date.
 
-* Grey video loaded from guest in room. Try adding [`&scale=100`](../advanced-settings/view-parameters/scale.md) and remove any bitrate limits set. If the issue persists, try a different video codec ([`&codec=vp9`](../advanced-settings/view-parameters/codec.md), for example) or ask the guest to connect with [`&q=2`](../source-settings/quality.md) (smooth and cool).
+* Grey video loaded from guest in room. Try adding [`&scale=100`](../advanced-settings/view-parameters/scale.md) and remove any bitrate limits set. If the issue persists, try a different video codec ([`&codec=vp9`](../advanced-settings/view-parameters/codec.md), for example) or ask the guest to connect with [`&q=2`](../advanced-settings/video-parameters/and-quality.md) (smooth and cool).
 *   OBS browser sources crash, turning all black. This can happen after refreshing/editing a browser source URL or just randomly.  Restarting OBS can fix the issue, but to prevent the issue, try using:\
     \
     &#x20;`"C:\Program Files\obs-studio\bin\64bit\obs64.exe" --enable-media-stream --disable-gpu-process-crash-limit`

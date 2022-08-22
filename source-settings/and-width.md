@@ -40,6 +40,6 @@ If the camera cannot support the width, **it will fail**.
 [and-aspectratio.md](../advanced-settings/upcoming-parameters/and-aspectratio.md)
 {% endcontent-ref %}
 
-{% content-ref url="quality.md" %}
-[quality.md](quality.md)
+{% content-ref url="../advanced-settings/video-parameters/and-quality.md" %}
+[and-quality.md](../advanced-settings/video-parameters/and-quality.md)
 {% endcontent-ref %}

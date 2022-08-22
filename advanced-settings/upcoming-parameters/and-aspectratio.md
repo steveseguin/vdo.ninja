@@ -42,8 +42,8 @@ If using `&aspectratio`, it will keep the [height](../../source-settings/and-hei
 [and-screenshareaspectratio.md](and-screenshareaspectratio.md)
 {% endcontent-ref %}
 
-{% content-ref url="../../source-settings/quality.md" %}
-[quality.md](../../source-settings/quality.md)
+{% content-ref url="../video-parameters/and-quality.md" %}
+[and-quality.md](../video-parameters/and-quality.md)
 {% endcontent-ref %}
 
 {% content-ref url="../../source-settings/and-width.md" %}

@@ -41,7 +41,7 @@ If battery life or heat is an issue on Samsung or other Android devices, limitin
 
 ### Firefox
 
-Firefox on Android seems to fix a couple Chrome-specific issues. Chrome will mute the microphone after a minute if the screen is turned off, but Firefox doesn't seem to do that. With Samsung devices, Chrome combined with H264 hardware encoding may have color issues with the OBS Browser source, but that issue isn't present when using Firefox as the mobile browser. So, for Samsung devices, you might find Firefox, with [`&fps=30`](../source-settings/and-framerate.md) and [`&codec=h264`](../advanced-settings/view-parameters/codec.md) as parameters (push and view side respectively), may help keep things cool.
+Firefox on Android seems to fix a couple Chrome-specific issues. Chrome will mute the microphone after a minute if the screen is turned off, but Firefox doesn't seem to do that. With Samsung devices, Chrome combined with H264 hardware encoding may have color issues with the OBS Browser source, but that issue isn't present when using Firefox as the mobile browser. So, for Samsung devices, you might find Firefox, with [`&fps=30`](../advanced-settings/video-parameters/and-fps.md) and [`&codec=h264`](../advanced-settings/view-parameters/codec.md) as parameters (push and view side respectively), may help keep things cool.
 
 ### Internal Cameras
 

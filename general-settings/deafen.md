@@ -24,6 +24,6 @@ Audio playback is muted in VDO.Ninja. If you just want to mute the speaker butto
 [noaudio.md](../advanced-settings/view-parameters/noaudio.md)
 {% endcontent-ref %}
 
-{% content-ref url="blind.md" %}
-[blind.md](blind.md)
+{% content-ref url="../advanced-settings/video-parameters/and-blind.md" %}
+[and-blind.md](../advanced-settings/video-parameters/and-blind.md)
 {% endcontent-ref %}

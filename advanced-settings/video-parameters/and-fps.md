@@ -4,7 +4,7 @@ description: Sets the maximum frame rate of the video in frames per second
 
 # \&fps
 
-Sender-Side Option! ([`&push`](push.md))
+Sender-Side Option! ([`&push`](../../source-settings/push.md))
 
 ## Aliases
 
@@ -22,15 +22,15 @@ Sender-Side Option! ([`&push`](push.md))
 `&fps` sets the maximum frame rate of the video in frames per second on the publisher side. The actual frame rate could be less. Limiting the frame rate can reduce the CPU load and the bandwidth.
 
 {% hint style="danger" %}
-If the camera cannot support this frame rate, **it will fail**. Use [`&maxframerate`](and-maxframerate.md) instead then.
+If the camera cannot support this frame rate, **it will fail**. Use [`&maxframerate`](../../source-settings/and-maxframerate.md) instead then.
 {% endhint %}
 
 ## Related
 
-{% content-ref url="and-maxframerate.md" %}
-[and-maxframerate.md](and-maxframerate.md)
+{% content-ref url="../../source-settings/and-maxframerate.md" %}
+[and-maxframerate.md](../../source-settings/and-maxframerate.md)
 {% endcontent-ref %}
 
-{% content-ref url="screensharefps.md" %}
-[screensharefps.md](screensharefps.md)
+{% content-ref url="../../source-settings/screensharefps.md" %}
+[screensharefps.md](../../source-settings/screensharefps.md)
 {% endcontent-ref %}

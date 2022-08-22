@@ -5,7 +5,7 @@
 ``[`https://vdo.ninja/?push=SOMESTREAMID&screenshare&quality=0`](https://vdo.ninja/?push=SOMESTREAMID\&screenshare\&quality=0)``\
 ``Alias:\
 [`https://vdo.ninja/?push=SOMESTREAMID&ss&q=0`](https://vdo.ninja/?push=SOMESTREAMID\&ss\&q=0)``\
-``Copy one of the two links above and change SOMESTREAMID into a different name. You could add [`&fps=60`](../source-settings/and-framerate.md) to the link, but the default is already 60-fps.
+``Copy one of the two links above and change SOMESTREAMID into a different name. You could add [`&fps=60`](../advanced-settings/video-parameters/and-fps.md) to the link, but the default is already 60-fps.
 
 ### View Link (Viewer)
 
@@ -21,7 +21,7 @@
 | Push Link                                                                    |                                                                             |
 | ``[`&push=SOMESTREAMID`](../source-settings/push.md)``                       | sets a unique stream ID                                                     |
 | ``[`&screenshare`](../source-settings/screenshare.md)``                      | selects screen sharing instead of webcam                                    |
-| ``[`&quality=0`](../source-settings/quality.md)``                            | sets the resolution to 1920x1080p                                           |
+| ``[`&quality=0`](../advanced-settings/video-parameters/and-quality.md)``     | sets the resolution to 1920x1080p                                           |
 | View Link                                                                    |                                                                             |
 | ``[`&view=SOMESTREAMID`](../advanced-settings/view-parameters/view.md)``     | selects the stream ID                                                       |
 | ``[`&videobitrate=10000`](../advanced-settings/view-parameters/bitrate.md)`` | sets the video bitrate to 10,000-kbps, you can change the value if you want |

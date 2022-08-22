@@ -16,10 +16,10 @@ Adds the option for a guest to change the video "quality" (resolution) dynamical
 * Balanced (1280x720p)
 * Smooth and Cool (720x360p)
 
-Outside of a room it is enabled by default. You can preset the resolution with [`&quality`](../source-settings/quality.md).
+Outside of a room it is enabled by default. You can preset the resolution with [`&quality`](../advanced-settings/video-parameters/and-quality.md).
 
 ## Related
 
-{% content-ref url="../source-settings/quality.md" %}
-[quality.md](../source-settings/quality.md)
+{% content-ref url="../advanced-settings/video-parameters/and-quality.md" %}
+[and-quality.md](../advanced-settings/video-parameters/and-quality.md)
 {% endcontent-ref %}

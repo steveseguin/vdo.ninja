@@ -14,7 +14,7 @@ When dealing with a group scene link, you can use [`&bitrate`](../advanced-setti
 
 ## Resolution
 
-Camera resolution by default is captured at 1280x720. You can increase this by changing the quality setting when selecting your camera, or by adding `&quality=0` to the URL. The [`&quality`](../source-settings/quality.md) parameter acts as a preset, where \&quality=0 is preset for 1920x1080 @ 60-fps, `&quality=1` is 720p60, and `&quality=2` is a gentle 360p30.
+Camera resolution by default is captured at 1280x720. You can increase this by changing the quality setting when selecting your camera, or by adding `&quality=0` to the URL. The [`&quality`](../advanced-settings/video-parameters/and-quality.md) parameter acts as a preset, where \&quality=0 is preset for 1920x1080 @ 60-fps, `&quality=1` is 720p60, and `&quality=2` is a gentle 360p30.
 
 You can manually set the video resolution via the URL, using `&width=1920&height=1080`, and this might be helpful when dealing with non-standard aspect-ratios.
 

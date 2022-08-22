@@ -6,7 +6,7 @@ You can customize the playback of videos by added parameters to the VDO.Ninja UR
 
 You’ll notice that we added [`&videobitrate=6000`](../advanced-settings/view-parameters/bitrate.md) to the viewer’s side and not the publishing side. The viewer gets to control the bitrate; every viewer can set their own custom video bitrate in fact.
 
-On the publishing side, the default target resolution is already a high 1280x720 @ 60-fps, but we can set this higher by adding [`&quality=0`](../source-settings/quality.md) to the push link. This will have the publisher’s side try to make available a 1920x1080 video stream, if their camera or video device supports it. If not, it will fall back to 720p. `https://vdo.ninja/?push=streamid&quality=0`
+On the publishing side, the default target resolution is already a high 1280x720 @ 60-fps, but we can set this higher by adding [`&quality=0`](../advanced-settings/video-parameters/and-quality.md) to the push link. This will have the publisher’s side try to make available a 1920x1080 video stream, if their camera or video device supports it. If not, it will fall back to 720p. `https://vdo.ninja/?push=streamid&quality=0`
 
 For 1080p60 gaming, you’ll want to set the video bitrate to 12000-kbps or higher, as lower bitrates might cause the frame rate to be quite low otherwise. Otherwise, for talking head-type videos, the default video bitrate is often going to be adequate.
 
