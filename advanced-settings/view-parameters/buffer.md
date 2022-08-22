@@ -18,8 +18,8 @@ This feature will increase the size of the audio and video _playout delay_ by me
 
 This can effectively be used as a way to delay the incoming video and audio by upwards of around 15-seconds. It's compatible with modern Chromium-based browsers.
 
-While in theory this option can also help to improve video and audio quality, as a larger playback buffer can help reduce the effects of network jitter and packet loss, it's not a miracle solution in this regard. Adding 200-ms of buffer delay using this feature is worth trying however, as some users have reported it has helped improve their connections.\
-\
+While in theory this option can also help to improve video and audio quality, as a larger playback buffer can help reduce the effects of network jitter and packet loss, it's not a miracle solution in this regard. Adding 200-ms of buffer delay using this feature is worth trying however, as some users have reported it has helped improve their connections.
+
 While one might think adding 10-seconds of buffer would then only improve the connection further, at this point it doesn't really. Work is being done to change this however, such as the work related to the `&chunked` transfer mode, which will work quite well with extended buffer times.
 
 #### Example values
@@ -31,18 +31,21 @@ While one might think adding 10-seconds of buffer would then only improve the co
 `&buffer=200` can help reduce video problems, such as frame jitter, with 200-ms of added delay.
 
 {% hint style="warning" %}
-This feature will only work if playing the video in Chrome or Chromium-based browsers of around version 80 and newer.\
-\
-OBS v27.1.3 or older (on PC) uses v75 though, so you will need to update to OBS 27.2 or newer to use it there.\
-\
-The Electron Capture app also supports the \&buffer command, along with VMix using a compatible Chromium version.
-{% endhint %}
+This feature will only work if playing the video in Chrome or Chromium-based browsers of around version 80 and newer.
 
-{% hint style="warning" %}
-Using the \&buffer command may stop Echo Cancellation from working due to the audio delay this feature produces.
+OBS v27.1.3 or older (on PC) uses v75 though, so you will need to update to OBS 27.2 or newer to use it there.
+
+The Electron Capture app also supports the `&buffer` command, along with vMix using a compatible Chromium version.
+
+Using the `&buffer` command may stop [Echo Cancellation](../../source-settings/aec.md) from working due to the audio delay this feature produces.
 {% endhint %}
 
 {% hint style="info" %}
-You can refer to the `&sync` command if you wish to delay the audio, relative to the video.  `&buffer` will try to keep the audio and video in sync, which might always be desired.
+You can refer to the [`&sync`](sync.md) command if you wish to delay the audio, relative to the video. `&buffer` will try to keep the audio and video in sync, which might always be desired.
 {% endhint %}
 
+## Related
+
+{% content-ref url="sync.md" %}
+[sync.md](sync.md)
+{% endcontent-ref %}
