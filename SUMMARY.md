@@ -122,7 +122,7 @@
     * [\&height](source-settings/and-height.md)
     * [\&mediasettings](newly-added-parameters/and-mediasettings.md)
     * [\&noscale](newly-added-parameters/and-noscale.md)
-    * [\&framerate](source-settings/and-framerate.md)
+    * [\&fps](source-settings/and-framerate.md)
     * [\&maxframerate](source-settings/and-maxframerate.md)
     * [\&effects](source-settings/effects.md)
     * [\&effectvalue](newly-added-parameters/and-effectvalue.md)
