@@ -43,6 +43,8 @@ You can use/test these parameters on [vdo.ninja/alpha](https://vdo.ninja/alpha/)
 | ``[`&notmobile`](and-notmobile.md)\*                           | Optimizes a guest/push link for a mobile device to improve video quality                                                                                           |
 | ``[`&screenshareaspectratio`](and-screenshareaspectratio.md)\* | Sets the aspect ratio for screen-shares on the publisher side                                                                                                      |
 | ``[`&solo`](and-solo.md)\*                                     | Similar to [`&scene`](../view-parameters/scene.md), but tells the system to be a solo-link                                                                         |
+| ``[`&sharper`](and-sharper.md)\*                               | Should 'up to' double the amount of playback video resolution                                                                                                      |
+| ``[`&sharperscreen`](and-sharperscreen.md)\*                   | Sets [`&scale=100`](../view-parameters/scale.md), but only for screen-shares                                                                                       |
 
 \*only on [vdo.ninja/alpha](https://vdo.ninja/alpha/)\
 \*\*on [vdo.ninja/beta](https://vdo.ninja/beta/) and [vdo.ninja/alpha](https://vdo.ninja/alpha/)

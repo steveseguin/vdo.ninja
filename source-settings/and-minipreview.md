@@ -12,16 +12,20 @@ Sender-Side Option! ([`&push`](push.md))
 
 ## Details
 
-Mini self preview at the top right corner.
+Shows the mini self preview at the top right corner. This is the default behavior when [`&broadcast`](../advanced-settings/view-parameters/broadcast.md) mode is on.
 
-Default behavior when broadcast mode is on.
+![](<../.gitbook/assets/image (3).png>)
 
 ## Related
 
-{% content-ref url="and-preview.md" %}
-[and-preview.md](and-preview.md)
+{% content-ref url="../advanced-settings/video-parameters/and-showpreview.md" %}
+[and-showpreview.md](../advanced-settings/video-parameters/and-showpreview.md)
 {% endcontent-ref %}
 
 {% content-ref url="and-nopreview.md" %}
 [and-nopreview.md](and-nopreview.md)
+{% endcontent-ref %}
+
+{% content-ref url="../advanced-settings/view-parameters/broadcast.md" %}
+[broadcast.md](../advanced-settings/view-parameters/broadcast.md)
 {% endcontent-ref %}

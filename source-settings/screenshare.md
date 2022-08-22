@@ -13,7 +13,7 @@ Sender-Side Option! ([`&push`](push.md))
 ## Details
 
 `&screenshare` will allow the guest to screen share by being directly asked to share a screen or window instead of being taken to the camera/screenshare selection screen.\
-![](<../.gitbook/assets/image (1).png>)
+![](<../.gitbook/assets/image (1) (1).png>)
 
 Starting with [v19](../release-notes/v19.md) of VDO.Ninja, there is also the [`&screenshare2`](../newly-added-parameters/and-screenshare2.md) option; a minor UI variant that requires an additional button press, but more clearly preps the guest to the fact they will be sharing their screen.
 

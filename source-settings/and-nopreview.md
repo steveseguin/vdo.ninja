@@ -22,8 +22,8 @@ There is a toggle in the director's room which adds `&np` to the guest's invite 
 
 ## Related
 
-{% content-ref url="and-preview.md" %}
-[and-preview.md](and-preview.md)
+{% content-ref url="../advanced-settings/video-parameters/and-showpreview.md" %}
+[and-showpreview.md](../advanced-settings/video-parameters/and-showpreview.md)
 {% endcontent-ref %}
 
 {% content-ref url="and-minipreview.md" %}

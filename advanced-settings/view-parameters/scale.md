@@ -21,3 +21,17 @@ The nice thing about this is that it doesn't matter which resolution their camer
 This can help a viewer reduce frame stuttering, cpu load, and improve frame rates, without having to have the guest rejoin the stream.
 
 Requires the publisher of the stream to support dynamic scaling; Firefox and Chrome should be supported.
+
+## Related
+
+{% content-ref url="../upcoming-parameters/and-sharper.md" %}
+[and-sharper.md](../upcoming-parameters/and-sharper.md)
+{% endcontent-ref %}
+
+{% content-ref url="../upcoming-parameters/and-sharperscreen.md" %}
+[and-sharperscreen.md](../upcoming-parameters/and-sharperscreen.md)
+{% endcontent-ref %}
+
+{% content-ref url="dpi.md" %}
+[dpi.md](dpi.md)
+{% endcontent-ref %}
