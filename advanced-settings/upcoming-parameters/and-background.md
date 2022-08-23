@@ -19,14 +19,15 @@ General Option! ([`&push`](../../source-settings/push.md), [`&room`](../../gener
 
 ## Details
 
-Accepts a URL-encoded image URL to make as the app's default background.\
-You can encode the URL here\
-[https://www.urlencoder.org/](https://www.urlencoder.org/)
+Accepts a URL-encoded image URL to make as the app's default background.
 
 To test:\
 [`https://vdo.ninja/alpha/?background=./media/logo_cropped.png`](https://vdo.ninja/alpha/?background=./media/logo\_cropped.png)``
 
 The image will scale in size to cover the VDO.Ninja app's background. [`&chroma`](../design-parameters/chroma.md) can still be used to set the background color, if using transparencies. There already exists [`&bgimage`](and-bgimage.md), which will set the default background image for videos; this however will set a background image for the entire page.
+
+You can encode and decode a URL here:\
+[https://www.urlencoder.org/](https://www.urlencoder.org/)
 
 ![](<../../.gitbook/assets/image (110) (1) (1) (1).png>)
 
