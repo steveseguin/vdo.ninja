@@ -99,7 +99,8 @@ var miscTranslations = {
 	"no-screen-share-supported": "Sorry, your browser does not support screen-sharing.\n\nPlease use the desktop versions of Firefox or Chrome instead.",
 	"speech-not-suppoted": "⚠ Speech Recognition is not supported by this browser",
 	"blue-yeti-tip": "<i>Tip:</i> Blue Yeti microphones may experience issues being overly loud. <a href='https://support.google.com/chrome/thread/7542181?hl=en&msgid=79691143'>Please see here</a> for a solution or disable auto-gain in VDO.Ninja.",
-	"site-not-responsive": "<h3>Notice: The system cannot be accessed or is currently slow to respond.</h3>\nIf a routing issue, try adding <i title='or try visiting https://proxy.vdo.ninja/'>&proxy</i> to the URL; you can also try <i>https://proxy.vdo.ninja</i> or a VPN if the service is blocked in your country.\n\nIf the main service is down, a backup version is also available here: <i>https://backup.vdo.ninja</i>\n\nContact steve@seguin.email for added help.\n\nThis service requires the use of Websockets over port 443."
+	"site-not-responsive": "<h3>Notice: The system cannot be accessed or is currently slow to respond.</h3>\nIf a routing issue, try adding <i title='or try visiting https://proxy.vdo.ninja/'>&proxy</i> to the URL; you can also try <i>https://proxy.vdo.ninja</i> or a VPN if the service is blocked in your country.\n\nIf the main service is down, a backup version is also available here: <i>https://backup.vdo.ninja</i>\n\nContact steve@seguin.email for added help.\n\nThis service requires the use of Websockets over port 443.",
+	"no-audio-source-detected": "No Audio Source was detected.\n\nIf you were wanting to capture an Application's Audio, please see:\nhttps://docs.vdo.ninja/help/guides-and-how-tos#audio for some guides."
 };
 
 
@@ -886,6 +887,8 @@ function warnUser(message, timeout=false, sanitize=true){
 	// Allows for multiple alerts to stack better.
 	// Every modal and backdrop has an increasing z-index
 	// to block the previous modal
+	if (!message){return;}
+	
 	if (document.getElementById("modalBackdrop")){
 		getById("alertModal").innerHTML = ''; // Delete modal
 		getById("alertModal").remove();
@@ -18551,7 +18554,7 @@ async function publishScreen2(constraints, audioList=[], audio=true, overrideFra
 					if (navigator.userAgent.toLowerCase().indexOf(' electron/') > -1){
 						// Electron has no audio.
 					} else {
-						setTimeout(function(){warnUser("No Audio Source was detected.\n\nIf you were wanting to capture an Application's Audio, please see:\nhttps://docs.vdo.ninja/help/guides-and-how-tos#audio for some guides.");},300);
+						setTimeout(function(){warnUser(miscTranslations["no-audio-source-detected"]);},300);
 					}
 				}
 			}
