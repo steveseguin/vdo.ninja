@@ -20,12 +20,12 @@
 		--chat-width: 450px;
 	}
 	
-	body{
+	body {
 		padding:0;
 		margin:0;
 		background-color: #c9c9c9;
 		font-family: 'Sora', sans-serif;
-		overflow: hidden;
+		overflow: auto;
 		position: absolute;
 		border-radius: 50px;
 		background: #2e445c;
@@ -60,7 +60,7 @@
 		position:absolute;
 		top: -150px;
 	}
-	#modal{
+	.modal{
 		overflow:auto;
 	}
 	.message{
@@ -111,6 +111,16 @@
 		background: transparent; /* make scrollbar transparent */
 	}
 
+
+	.xbutton{
+		float: right;
+		cursor: pointer;
+		user-select: none;
+		color: white;
+		font-size: 150%;
+		font-family: Verdana;
+		line-height: 14px;
+	}
 	#chatModule {
 		bottom: 0;
 		position: fixed;
@@ -122,6 +132,7 @@
 		height: calc(100vh - 40px);
 		overflow: hidden;
 		right:0;
+		background:#0001;
 		border: solid 2px #0005;
 		border-radius: 10px;
 		padding: 10px;
@@ -146,23 +157,7 @@
 	button[data-state='true']{
 		background-color:#CEF !important;
 	}
-	#inviteOptions{
-		border: 0;
-		padding: 0;
-		display: block;
-		height: calc(100vh - 80px);
-		width: calc(100vw - 160px);
-		max-width:100%;
-		padding: 20px;
-		margin:0;
-		border:0; 
-		display: inline-block;
-		background-color: #DDD;
-		border-radius: 18px;
-		background: #5b748f;
-		box-shadow: inset 20px 20px 40px #556c85,
-					inset -20px -20px 40px #617c99;
-	}
+	
 	input[type="checkbox"] {
 		width: 20px;
 		height: 20px;
@@ -201,13 +196,12 @@
 	#iframeContainer{
 		position: absolute;
 		left: 160px;
-		height: 100%;
-		width: calc(100vw - var(--chat-width) - 160px);
 		box-shadow: 1px 1px 3px #1b1b1b, -1px -1px 3px #1d1d1d;
 	}
 	#vdoninja {
 		max-width: calc(100vw - 160px - var(--chat-width));
 		width: 100vw;
+		height: calc(100vh - 90px);
 	}
 	
 	#viewlink {
@@ -437,23 +431,7 @@
 		display: inline-block;
 	}
 	
-	#sceneSettings{
-		height: calc(100vh - 80px);
-		width: calc(100vw - 160px);
-		padding: 20px;
-		margin:0;
-		border:0; 
-		display: inline-block;
-		background-color: #DDD;
-		border-radius: 18px;
-		background: #5b748f;
-		box-shadow: inset 20px 20px 40px #556c85,
-					inset -20px -20px 40px #617c99;
-	}
 	
-	#sceneSettings > h2{
-		margin: 4px;
-	}
 	
 	.settings {
 		display: block;
@@ -596,7 +574,6 @@
 	}
 	
 	.modal {
-	  display: none;
 	  position: fixed; 
 	  padding-top: 50px;
 	  left: 0; 
@@ -606,12 +583,12 @@
 	  background-color: rgb(0, 0, 0);
 	  background-color: rgba(0, 0, 0, 0.5);
 	  z-Index: 20;
-	  
 	}
 	.modal-content {
 	  position: relative; 
 	  padding: 20px; 
-	  margin: auto; 
+	  margin: auto;
+	  margin-bottom: 100px;
 	  width: 75%;  
 	  -webkit-animation-name: animatetop;
 	  -webkit-animation-duration: 0.4s;
@@ -622,15 +599,17 @@
 	  background-image: url("data:image/svg+xml,%3Csvg width='6' height='6' viewBox='0 0 6 6' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%239C92AC' fill-opacity='0.1' fill-rule='evenodd'%3E%3Cpath d='M5 0h1L0 6V5zM6 5v1H5z'/%3E%3C/g%3E%3C/svg%3E");
 	}
 	.close-btn {
-	  float: right; 
-	  color: lightgray; 
+	  color: #333;
 	  font-size: 24px;  
 	  font-weight: bold;
 	  user-select: none;
 	}
 	.close-btn:hover {
-	  color: darkgray;
+	  color: black;
 	  cursor:pointer;
+	}
+	span.close-btn {
+	  float: right; 
 	}
 	@-webkit-keyframes animatetop {
 	  from {top:-300px; opacity:0} 
@@ -862,9 +841,9 @@
 	<div id="container">
 		<div id="containermenu"></div>
 		<div id="containermenu2" class="hidden">
-			<button onclick="addElement();">➕ Add Item</button>
+			<button onclick="addElement();">➕ Add Element to Scene</button>
 			<button onclick="saveScene(false, event);">💾 Save Scene</button>
-			<button onclick="saveScene(true, event);">💾<span style="position:relative;right:12px;top:2px;width:12px;display: inline-block;">💾</span>Duplicate</button>
+			<button onclick="saveScene(true, event);">💾<span style="position:relative;right:12px;top:2px;width:12px;display: inline-block;">💾</span>Duplicate Scene</button>
 			<button onclick="copyJSON();" title="This can be used with &format directly in VDO.Ninja without the mixer app.">Show as JSON</button>
 			<button onclick="removeScene();">🗑️ Remove Scene</button>
 			<button id="saveAndClose" onclick="saveScene(false, event);closeScene();">💾❌ Save and Close</button>
@@ -873,7 +852,7 @@
 	</div>
 	<div id="chatModuleButton" class="hidden" onclick="toggleChat();" style="user-select: none;position: fixed;top: 10px;right: 10px;cursor: pointer;" title="Show the chat window">💬</div>
 	<div id="chatModule" class="hidden">
-		<div style="float: right;cursor: pointer;user-select: none;" onclick="toggleChat();" title="Hide the chat window">x</div>
+		<div class="xbutton" onclick="toggleChat();" title="Hide the chat window">x</div>
 		<div id="chatBody" class="message"> 
 			<div class="inMessage" data-translate='welcome-to-vdo-ninja-chat'>
 				Welcome to VDO.Ninja! You can send text messages directly to connected peers from here.
@@ -918,17 +897,32 @@
 	<div id="iframeContainer" class="tFadeStart">
 		<div id='canvas' class="hidden">
 		</div>
-		<div id='sceneSettings' class="hidden2">
+	</div>
+	<!--
+	<div class="modal" >
+	 
+		<span class="close-btn">&times;</span>
+		<div id="modal-content">
+			<p>this is the text inside the modal</p>
+		</div>
+	  </div>
+	</div>
+	
+	-->
+	<div id='sceneSettings' class="hidden modal">
+		<div class="modal-content">
+			<span class="close-btn">&times;</span>
 			<h2>General Settings</h2>
 			<h4>Aspect Ratio</h4>
-			<input type="checkbox" class="aspectbutton" onchange="changeAspectRatio(16/9.0, this);">16:9
+			<input type="checkbox" checked class="aspectbutton" onchange="changeAspectRatio(16/9.0, this);">16:9
 			<input type="checkbox" class="aspectbutton" onchange="changeAspectRatio(9.0/16, this);">9:16
 			<input type="checkbox" class="aspectbutton" onchange="changeAspectRatio(1.0, this);">1:1
 			<br /><small><i>This just impacts the aspect ratio of the local preview.</i></small><br />
 			
 			<h4>Layout switching</h4>
 			<input type="checkbox" title="When a user is assigned a slot or switches slots, the last active layout is re-applied automatically" id="updateOnSlotChange" checked onchange="submitChange(this)";>Update layout on a slot change
-			
+			<h4>Slot assignment</h4>
+			<input type="checkbox" title="A guest is assigned a slot when they join, automatically. If disabled, they must be assigned a slot manually." id="assignSlotToGuest" checked onchange="submitChange2(this)";>Assign a slot to new guests automatically
 			<h4>Show advanced controls</h4>
 			<input type="checkbox" title="Shows more director control options" onchange="toggleAdvanced(this)";>Show the advanced director control options
 			
@@ -941,36 +935,35 @@
 			<button onclick="exportSession();">Export all scenes and settings to disk</button><br />
 			<h4>📥 Import settings </h4>
 			Import scenes and settings from local file:<br /><input type="file" accept=".json" onchange="importSession(event);"/><br /><br />
-			<button onclick="getById('modal-content').innerHTML = '';modal.style.display = 'none';">Close Settings</button>
+			<button class='close-btn'>Close Settings</button>
 		</div>
-		<div id='roomSettings' class="hidden2">
+	</div>
+	<div id='roomSettings' class="hidden modal">
+		<div class="modal-content">
+			<span class="close-btn">&times;</span>
 			<h2>Room Setup</h2>
 			
 			<br /><br />
 			<button onclick="showSettings();">Close</button>
 		</div>
-		<div id='inviteOptions' class="hidden">
+	</div>
+	<div id='inviteOptions' class="hidden modal">
+		<div class="modal-content">
+			<span class="close-btn">&times;</span>
 			<h2>Invite options</h2>
 			<h4>Your room name is:  <b class="roomname">ROOMNAME</b></h4>
-			<h3>Create new invite</h3>
-			<a class="inviteLink" target="_blank">Invite Link</a><i class="inviteLink"></i><br />
-			<span class="hidden">
-				<input type="checkbox" /><label>Prompt user for a display name?</label><br />
-				<input type="checkbox" /><label>Guest can see other guests? (higher CPU for guest)</label><br />
-				<input type="checkbox" /><label>Guest will join muted? (director can remotely unmute)</label><br />
-			</span>
-			<i>You can manually customize the invite link further; see the documentation at <a href="docs.vdo.ninja" target="_blank">docs.vdo.ninja</a></i>
+			<h3>Copy invite to clipboard</h3>
+			<a class="inviteLink" target="_blank">Invite Link</a><i class="inviteLink"></i>
 			<br /><br />
-			<button onclick="getById('modal-content').innerHTML = '';modal.style.display = 'none';">Close</button>
+			<h3>Customize invite link</h3>
+			<span >
+				<input type="checkbox" id="toggleLabel" onclick="updateInviteLinks(event)" /><label>Prompt user for a display name</label><br />
+				<input type="checkbox" id="toggleBroadcast" onclick="updateInviteLinks(event)"/><label>Guest can see other guests and the active layout <small>(higher CPU for guest)</small></label><br />
+			</span>
+			<i>You can manually customize the invite link further; see the documentation at <a href="https://docs.vdo.ninja" target="_blank">docs.vdo.ninja</a></i>
+			<br /><br />
+			<button class='close-btn'>Close</button>
 		</div>
-	</div>
-	<div id="modal" class="modal" >
-	  <div class="modal-content">
-		<span class="close-btn">&times;</span>
-		<div id="modal-content">
-			<p>this is the text inside the modal</p>
-		</div>
-	  </div>
 	</div>
 	<div class="gone" >
 		<!-- This image is used when dragging elements -->
@@ -1048,6 +1041,7 @@
 		}
 		return roomid;
 	}
+	
 
 	var urlEdited = window.location.search.replace(/\?\?/g, "?");
 	urlEdited = urlEdited.replace(/\?/g, "&");
@@ -1059,24 +1053,33 @@
 	}
 	var urlParams = new URLSearchParams(urlEdited);
 	
+	var api = false;
+	if (urlParams.has('osc') || urlParams.has('api')) {
+		if (urlParams.get('osc') || urlParams.get('api')) {
+			api = urlParams.get('osc') || urlParams.get('api');
+		}
+	}
 	
 	var streamIDs = [];
 	var slotsNeeded = 1;
-	var lastLayout = false;
+	var lastLayout = {"scene":"0", "layout":false};
 	var lastLayoutRaw = false;
 	var updateOnSlotChange = true;
+	var assignSlotToGuest = true;
+	var toggleLabel = false;
+	var toggleBroadcast = true;
 	
 	var password = false;
-	if (urlParams.has("password")){
-		password = urlParams.get("password");
+	if (urlParams.has('password') || urlParams.has('pass') || urlParams.has('pw') || urlParams.has('p')) {
+		password = urlParams.get('password') || urlParams.get('pass') || urlParams.get('pw') || urlParams.get('p');
 	}
 	
 	var aspectRatio = 16/9.0;
 	document.documentElement.style.setProperty('--aspect-ratio', aspectRatio);
 	
 	var roomname = false;
-	if (urlParams.has("room") || urlParams.has("dir") || urlParams.has("director")){
-		roomname = urlParams.get("room") || urlParams.get("dir") || urlParams.get("director");
+	if (urlParams.has("room") || urlParams.has("r") ||urlParams.has("dir") || urlParams.has("director")){
+		roomname = urlParams.get("room") || urlParams.get("r") ||urlParams.get("dir") || urlParams.get("director");
 		roomname = sanitizeRoomName(roomname);
 	}
 	var savedLastRoom = getStorage("savedRoom");
@@ -1190,8 +1193,6 @@
 	  }
 	  return "Seconds ago";
 	}
-
-
 
 	function updateMessages(message = false){
 		if (message){
@@ -1558,17 +1559,20 @@
 		{x:0, y:0, w:100, h:100}
 	];
 	initialLayouts.layouts.push(data);
+	
 	var data = [
 		null,
 		{x:0, y:0, w:100, h:100}
 	];
 	initialLayouts.layouts.push(data);
+	
 	var data = [
 		null,
 		null,
 		{x:0, y:0, w:100, h:100}
 	];
 	initialLayouts.layouts.push(data);
+	
 	var data = [
 		null,
 		null,
@@ -1576,6 +1580,7 @@
 		{x:0, y:0, w:100, h:100}
 	];
 	initialLayouts.layouts.push(data);
+	
 	var data = [
 		{x:0, y:0, w:50, h:100, c:false},
 		{x:50, y:0, w:50, h:100, c:false}
@@ -1584,7 +1589,7 @@
 
 	var data = [
 		{x:70, y:70, w:30, h:30, z:1, c:true},
-		{x:0, y:0, w:100, h:100,z:0, c:false}
+		{x:0, y:0, w:100, h:100, z:0, c:false}
 	];
 	initialLayouts.layouts.push(data);
 
@@ -1595,6 +1600,7 @@
 		{x:50, y:50, w:50, h:50, c:true}
 	];
 	initialLayouts.layouts.push(data);
+	
 	var data = [
 		{x:0, y:16.667, w:66.667, h:66.667, c:true},
 		{x:66.667, y:0, w:33.333, h:33.333, c:true},
@@ -1610,6 +1616,42 @@
 				getById("updateOnSlotChange").value = "off";
 				getById("updateOnSlotChange").checked = false;
 				getById("updateOnSlotChange").removeAttribute('checked');
+			} else {
+				getById("updateOnSlotChange").value = "on";
+				getById("updateOnSlotChange").checked = true;
+			}
+		}
+		if (savedSession.settings && ("assignSlotToGuest" in savedSession.settings)){
+			assignSlotToGuest = savedSession.settings.assignSlotToGuest;
+			if (!assignSlotToGuest){
+				getById("assignSlotToGuest").value = "off";
+				getById("assignSlotToGuest").checked = false;
+				getById("assignSlotToGuest").removeAttribute('checked');
+			} else {
+				getById("assignSlotToGuest").value = "on";
+				getById("assignSlotToGuest").checked = true;
+			}
+		}
+		if (savedSession.settings && ("toggleLabel" in savedSession.settings)){
+			toggleLabel = savedSession.settings.toggleLabel;
+			if (!toggleLabel){
+				getById("toggleLabel").value = "off";
+				getById("toggleLabel").checked = false;
+				getById("toggleLabel").removeAttribute('checked');
+			} else {
+				getById("toggleLabel").value = "on";
+				getById("toggleLabel").checked = true;
+			}
+		}
+		if (savedSession.settings && ("toggleBroadcast" in savedSession.settings)){
+			toggleBroadcast = savedSession.settings.toggleBroadcast;
+			if (!toggleBroadcast){
+				getById("toggleBroadcast").value = "off";
+				getById("toggleBroadcast").checked = false;
+				getById("toggleBroadcast").removeAttribute('checked');
+			} else {
+				getById("toggleBroadcast").value = "on";
+				getById("toggleBroadcast").checked = true;
 			}
 		}
 	}
@@ -1621,6 +1663,10 @@
 		applySettings();
 	} else {
 		savedSession = initialLayouts;
+	}
+	
+	if (iframe){
+		iframe.contentWindow.postMessage({ layouts: savedSession.layouts }, "*"); 
 	}
 	
 	var guestPositions = {};
@@ -1635,6 +1681,19 @@
 		saveSession();
 	}
 	
+	function submitChange2(element){
+		if (element.checked){
+			assignSlotToGuest=true;
+			iframe.contentWindow.postMessage({"slotmode":1}, '*');
+		} else { // do not assign guests to slots automatically
+			element.removeAttribute('checked');
+			assignSlotToGuest=false
+			iframe.contentWindow.postMessage({"slotmode":2}, '*');;
+		}
+		
+		saveSession();
+	}
+	
 	function toggleAdvanced(element){
 		if (element.checked){
 			iframe.contentWindow.postMessage({"advancedMode":true}, '*');
@@ -1644,8 +1703,6 @@
 		}
 	}
 	
-	
-
 	function exportSession() {
 		var content = JSON.stringify(savedSession);
 		var fileName = roomname + ".json";
@@ -1732,9 +1789,6 @@
 			border-radius: 10px;
 			background: #2e445c;
 			box-shadow: 20px 20px 60px #182430, -20px -20px 60px #283c52;
-		}
-		label {
-			color: #fff;
 		}
 	`;
 	
@@ -1880,20 +1934,27 @@
 		}
 	}
 	
-	
-	
-	
 	var iframe = null;
 	
 	function loadIframe(){
 		if (iframe){return;}
 		iframe = document.createElement("iframe");
 		
-		var additional = "";
+		var additional = ""; // guest/scene links also
 		if (password){
 			additional = "&password="+password;
 		}
 		
+		var additional2 = ""; // this iframe only
+		if (api){
+			additional2 += "&api="+api;
+		}
+		
+		if (assignSlotToGuest){
+			additional2+="&slotmode";
+		} else {
+			additional2+="&slotmode=2";
+		}
 		roomname = sanitizeRoomName(roomname);
 	
 		
@@ -1901,12 +1962,11 @@
 		iframe.allow = "autoplay;camera;microphone;fullscreen;picture-in-picture;display-capture;";
 		iframe.id = "vdoninja";
 		
-		if (roomname){
-			var iframesrc = "./index.html?novice&ltb=350&transparent&cleanoutput&slotmode&director="+roomname+additional+"&b64css="+injectCSS;
-		} else {
+		if (!roomname){
 			roomname = generateString(10);
-			var iframesrc = "./index.html?novice&ltb=350&transparent&cleanoutput&slotmode&director="+roomname+additional+"&b64css="+injectCSS;
 		}
+		
+		var iframesrc = "./index.html?novice&ltb=350&transparent&hideheader&hidetranslate&cleandirector&chatbutton=0&director="+roomname+additional+additional2+"&b64css="+injectCSS;
 		
 		if (roomname!==false){
 			setStorage("savedRoom", {roomname:roomname,password:password}, 9999);
@@ -1937,7 +1997,7 @@
 		button.onclick = function(){
 			this.state = !this.state; 
 			this.dataset.state = this.state;
-			iframe.contentWindow.postMessage({"previewMode":this.state, "layout":currentLayout, "bitrate":35, "target": "*"}, '*');
+			iframe.contentWindow.postMessage({"previewMode":this.state, "layout":currentLayout.layouts, "bitrate":35, "target": "*"}, '*');
 			if (this.state){
 				this.innerHTML = "Director View &#x21bb;"; 
 				iframe.classList.add("aspectRatio");
@@ -1998,14 +2058,16 @@
 		
 		var a = document.createElement("a");
 		a.innerHTML = "Invite Guest Link 📎"; 
-		a.href = "./index.html?room="+roomname+"&sstype=3&broadcast"+additional;
+		a.href = "./?room="+roomname+"&sstype=3&broadcast"+additional;
 		a.target = "_blank";
+		a.onclick = function(evt){copyFunction(this, evt);};
 		document.getElementById("sources").appendChild(a);
 		
 		var a = document.createElement("a");
-		a.innerHTML = "Scene View Link 📎"; 
-		a.href = "./index.html?scene=0&layout=%7B%7D&room="+roomname+additional;
+		a.innerHTML = "Scene View Link 📎";
+		a.href = "./?scene=0&layout&room="+roomname+additional;
 		a.target = "_blank";
+		a.onclick = function(evt){copyFunction(this, evt);};
 		document.getElementById("sources").appendChild(a);
 		
 		
@@ -2026,6 +2088,10 @@
 		
 		document.getElementById("chatModule").classList.remove("hidden");
 		
+		iframe.onload = function(){
+			iframe.contentWindow.postMessage({ layouts: savedSession.layouts }, "*"); 
+		}
+		
 		iframe.src = iframesrc;
 		iframeContainer.appendChild(iframe);
 		document.getElementById("container").appendChild(iframeContainer);
@@ -2044,7 +2110,7 @@
 		eventer(messageEvent, function (e) {
 			if (e.source != iframe.contentWindow){return} // reject messages send from other iframes
 			
-			console.log(e.data);
+			//console.log(e.data);
 			
 			if ("action" in e.data){
 				///var outputWindow = document.createElement("div");
@@ -2085,6 +2151,23 @@
 			
 			if (e.data.action && (e.data.action == "scene-connected")){
 				if (lastLayout && lastLayout.scene == e.data.value){
+					var layoutIssue = {};
+					layoutIssue.layout = lastLayout.layout;
+					if (e.data.UUID){
+						layoutIssue.UUID = e.data.UUID;
+					}
+					layoutIssue.scene = lastLayout.scene
+					iframe.contentWindow.postMessage(lastLayout, '*');
+				}
+			}
+			
+			if (e.data.action && (e.data.action == "guest-connected")){
+				if (lastLayout){
+					var layoutIssue = {};
+					layoutIssue.layout = lastLayout.layout;
+					if (e.data.UUID){
+						layoutIssue.UUID = e.data.UUID;
+					}
 					iframe.contentWindow.postMessage(lastLayout, '*');
 				}
 			}
@@ -2136,18 +2219,37 @@
 	}
 	
 	function showSettings(){
-		document.getElementById("modal").style.display = "block";
 		applySettings();
-		document.getElementById("modal-content").innerHTML = document.getElementById("sceneSettings").innerHTML;
+		document.getElementById("sceneSettings").classList.remove("hidden");
 	}
 	
-	function showInviteOptions(){
-		document.getElementById("modal").style.display = "block";
-		document.getElementById("modal-content").innerHTML = document.getElementById("inviteOptions").innerHTML;
-		
+				
+	function showInviteOptions(event=false){
+		document.getElementById("inviteOptions").classList.remove("hidden");
+		updateInviteLinks();
+	}
+	var toggleBroadcast = false;
+	
+	function updateInviteLinks(event=false){	
 		var additional = "";
+		
 		if (password){
-			additional = "&password="+password;
+			additional += "&password="+password;
+		}
+		
+		if (document.getElementById("toggleLabel").checked){
+			additional += "&label";
+			toggleLabel = true;
+		} else {
+			toggleLabel= false;
+		}
+		
+		if (!document.getElementById("toggleBroadcast").checked){
+			additional += "&broadcast";
+			toggleBroadcast = true;
+		} else {
+			additional += "&layout";
+			toggleBroadcast = false;
 		}
 		
 		document.querySelectorAll(".roomname").forEach(ele=>{
@@ -2156,15 +2258,24 @@
 		
 		document.querySelectorAll(".inviteLink").forEach(ele=>{
 			if (ele.tagName == "A"){
-				ele.href = "./index.html?room="+roomname+"&broadcast"+additional;
+				ele.href = "./?room="+roomname+additional;
 			} else if (ele.tagName == "I"){
-				ele.innerHTML = "URL + ?room="+roomname+"&broadcast"+additional;
+				ele.innerHTML = "URL + ?room="+roomname+additional;
 			}
+			ele.onclick = function(evt){copyFunction(this, evt);};
 		});
-		
 	
+		if (event){
+			document.querySelectorAll(".inviteLink").forEach(ele=>{
+				ele.classList.remove("shake");
+				ele.classList.add("shake");
+				setTimeout(function(ele){ele.classList.remove("shake");},500,ele);
+			});
+			saveSession();
+		}
 	}
-
+	
+	
 	function addLayout(){
 		var layout = prompt("Enter your new layout as a JSON string", '[{"x":0,"y":0,"w":100,"h":100}]');
 		layout = JSON.parse(layout);
@@ -2214,9 +2325,22 @@
 		});
 	}
 	
+	function compareZ( a, b ) { // sorts layout based on z-index.
+		var aa = a.z || a.zIndex || 0;
+		var bb = b.z || b.zIndex || 0;
+		if ( aa > bb ){
+			return 1;
+		}
+		if ( aa < bb ){
+			return -1;
+		}
+		return 0;
+	}
+	
 	function drawLayout(layoutOriginal, sceneName=false){
 	
 		var layout = [];
+		
 		for (var i=0;i<layoutOriginal.length;i++){
 			if (!layoutOriginal[i]){
 				continue;
@@ -2227,18 +2351,7 @@
 			layout.push(layoutOriginal[i]);
 		}
 		
-		function compare( a, b ) { // sorts layout based on z-index.
-			var aa = a.z || 0;
-			var bb = b.z || 0;
-			if ( aa > bb ){
-				return 1;
-			}
-			if ( aa < bb ){
-				return -1;
-			}
-			return 0;
-		}
-		layout.sort(compare);
+		layout.sort(compareZ);
 		
 		var canvas = document.createElement('canvas');
 		canvas.width="80";
@@ -2492,27 +2605,21 @@
 		for (var i=0;i<object.length;i++){
 			if (object[i] == null){continue;}
 			var slot = parseInt(object[i].slot) || 0;
-			<!-- ele.w = parseInt(compute.width)/1280*100; -->
-			<!-- ele.h = parseInt(compute.height)/720*100; -->
-			<!-- ele.x = parseInt(compute.left)/1280*100; -->
-			<!-- ele.y = parseInt(compute.top)/720*100; -->
-			
-			<!-- ele.z = object[i].zIndex; -->
-			<!-- ele.bg = object[i].backgroundColor; -->
-			<!-- ele.bt = object[i].borderThickness; -->
-			<!-- ele.bc = object[i].borderColor; -->
-			<!-- ele.bm = object[i].backgroundMedia; -->
-			<!-- ele.margin = object[i].margin; -->
-			<!-- ele.r = object[i].rounded; -->
-			<!-- ele.m = object[i].muted; -->
 			
 			var color = colors[slot];
 			var container = document.createElement("div");
 			
 			container.className = "widget ui-widget-content draggable resizable";
 			container.slot = slot;
-			container.cover = object[i].cover || false;
-			container.zIndex = parseInt(object[i].z) || 0;
+			
+			if ("cover" in object[i]){
+				container.cover = object[i].cover || false;
+			} else if ("c" in object[i]){
+				container.cover = object[i].c || false;
+			} else {
+				container.cover = true;
+			}
+			container.zIndex = parseInt(object[i].zIndex) || parseInt(object[i].z) || 0;
 			//container.backgroundColor = object[i].backgroundColor || "#000";
 			container.borderThickness = object[i].borderThickness || 0;
 			container.animated = object[i].animated || 0;
@@ -2613,7 +2720,7 @@
 		}
 		
 		var color = colors[slot];
-		var container = document.createElement("div");
+		var container = document.createElement("div"); // we use the long-form of meta attributes for container elements.
 		container.className = "widget ui-widget-content draggable resizable";
 		container.slot = slot;
 		
@@ -2683,7 +2790,36 @@
 		$(function(){
 			$(".resizable").resizable({ snap: true , grid: [ 10, 10] });
 		});
-   }
+    }
+   
+    function combinedLayout(layout){
+		var combined = {};
+		console.log(layout);
+		
+		for (var i=0;i<layout.length;i++){
+			console.log(i);
+			if (!layout[i]){continue;}
+			if (!("slot" in layout[i])){
+				continue;
+			}
+			try {
+				var stream = guestPositions[parseInt(layout[i].slot)+1]; // slot 1 is index of 0, but slot 0 is considered NULL; I need to stream line this a bit
+			} catch(e){
+				errorlog(e);
+				continue;
+			}
+			console.log(stream);
+			if (!stream){
+				if (layout[i].defaultStreamID){
+					combined[layout[i].defaultStreamID] = layout[i];
+				}
+				continue;
+			}
+			combined[stream] = layout[i];
+		}
+		console.log(combined);
+		return combined;
+	}
    
    function remoteActivate(event=null, layout=null){
 		console.log(this);
@@ -2698,45 +2834,19 @@
 			event.target.parentNode.classList.add("pressed");
 		}
 		
-		var combined = false;
+		
 		lastLayoutRaw = layout;
 		
+		var combined = false;
 		if (layout){
 			layout = JSON.parse(layout);
-			console.log(layout);
-			combined = {};
-			for (var i=0;i<layout.length;i++){
-				if (!layout[i]){continue;}
-				if (!("slot" in layout[i])){
-					continue;
-				}
-				try {
-					var stream = guestPositions[parseInt(layout[i].slot)+1]; // slot 1 is index of 0, but slot 0 is considered NULL; I need to stream line this a bit
-				} catch(e){
-					errorlog(e);
-					continue;
-				}
-				console.log(stream);
-				console.log(i);
-				console.log(layout);
-				
-				if (!stream){
-					if (layout[i].defaultStreamID){
-						combined[layout[i].defaultStreamID] = layout[i];
-					}
-					continue;
-				}
-				combined[stream] = layout[i];
-			}
+			combined = combinedLayout(layout);
 		}
 		
-		console.log(combined);
 		currentLayout = combined; // global current state
 		lastLayout = {"scene":"0", "layout":combined};
 		
 		iframe.contentWindow.postMessage({"scene":"0", "layout":combined}, '*');
-		
-		
 	}
 	
 	function deleteElement(event){
@@ -2927,9 +3037,16 @@
 			ele.y = parseFloat(compute.top)/hh*100;
 			
 			try {
+				ele.z = parseInt(eles[i].zIndex) || 0;
+			
 			    ele.slot = parseInt(eles[i].slot) || i;
 				ele.cover = eles[i].cover || false;
-				ele.zIndex = parseInt(eles[i].zIndex) || 0;
+				
+				if ("cover" in eles[i]){
+					ele.cover = eles[i].cover || false;
+				} else {
+					ele.cover = true;
+				}
 				
 				//ele.backgroundColor = eles[i].backgroundColor || "#000";
 				ele.borderThickness = parseInt(eles[i].borderThickness) || 0;
@@ -2943,37 +3060,9 @@
 			} catch(e){errorlog(e);}
 			layout.push(ele);
 		}
-		var combined = {};
-		for (var i=0;i<layout.length;i++){
-			//layout[i].z = i;
-			if (!layout[i]){continue;}
-			if (!("slot" in layout[i])){
-				//console.log("no slot");
-				//if (!(null in combined)){
-				//	combined[null] = [];
-				//}
-				//combined[null].push(layout[i]);
-				continue;
-			}
-			try {
-				var stream = document.querySelector(".thing[data-slot='"+(parseInt(layout[i].slot)+1)+"'");
-			} catch(e){
-				errorlog(e);
-				continue;
-			}
-			console.log(stream);
-			console.log(i);
-			console.log(layout);
-			if (!stream){
-				if (layout[i].defaultStreamID){
-					if (!document.querySelector(".thing[data-slot][data-sid='"+layout[i].defaultStreamID+"']")){
-						combined[layout[i].defaultStreamID] = layout[i];
-					}
-				}
-				continue;
-			}
-			combined[stream.dataset.sid] = layout[i];
-		}
+		
+		var combined = combinedLayout(layout);
+		
 		prompt("Layout as URL-encoded JSON. StreamIDs are based on current and default values.", encodeURIComponent(JSON.stringify(combined)));
 	}
   
@@ -2994,8 +3083,14 @@
 			ele.y = parseFloat(eles[i].style.top)/hh*100;
 			
 			try {
-			    ele.slot = parseInt(eles[i].slot) || i;
-				ele.cover = eles[i].cover || false;
+				if ("slot" in eles[i]){
+					ele.slot = parseInt(eles[i].slot);
+				}
+				if ("cover" in eles[i]){
+					ele.cover = eles[i].cover || false;
+				} else {
+					ele.cover = true;
+				}
 				ele.zIndex = parseInt(eles[i].zIndex) || 0;
 				
 				//ele.backgroundColor = eles[i].backgroundColor || "#000";
@@ -3054,11 +3149,14 @@
 		saveSession();
 	}
 	
-	function saveSession(){
+	function saveSession(){ 
 		var layouts = document.querySelectorAll(".canvasContainer>canvas");
 		savedSession.layouts = [];
 		savedSession.settings = {};
 		savedSession.settings.updateOnSlotChange = updateOnSlotChange;
+		savedSession.settings.assignSlotToGuest = assignSlotToGuest;
+		savedSession.settings.toggleLabel = toggleLabel;
+		savedSession.settings.toggleBroadcast = toggleBroadcast;
 		savedSession.version = 1;
 		
 		for (var i=0;i<layouts.length;i++){
@@ -3070,6 +3168,10 @@
 			}
 		}
 		setStorage("savedSession", JSON.stringify(savedSession));
+		
+		if (iframe){
+			iframe.contentWindow.postMessage({ layouts: savedSession.layouts }, "*"); 
+		}
 		console.log(getStorage("savedSession"));
 	}
 	
@@ -3083,25 +3185,21 @@
 		document.documentElement.style.setProperty('--aspect-ratio', ar);
 	}
 	
-	let modal = document.querySelector("#modal");
-	let closeBtn = document.querySelector(".close-btn");
-	closeBtn.onclick = function(){
-		document.getElementById("modal-content").innerHTML = "";
-		modal.style.display = "none";
-	}
-	window.onclick = function(e){
-		if (e.target == modal){
-			document.getElementById("modal-content").innerHTML = "";
-			modal.style.display = "none";
+	//let modal = document.querySelector("#modal");
+	document.querySelectorAll(".close-btn").forEach(ele2=>{
+		ele2.onclick = function(){
+			document.querySelectorAll(".modal").forEach(ele=>{
+				ele.classList.add("hidden");
+			});
 		}
-	}
-	
-	modal.onclick = function(e){
-		if (e.target == modal){
-			document.getElementById("modal-content").innerHTML = "";
-			modal.style.display = "none";
+	});
+	document.querySelectorAll(".modal").forEach(ele=>{
+		ele.onclick = function(e){
+			if (e.target.classList.contains("modal")){
+				e.target.classList.add("hidden");
+			}
 		}
-	}
+	});
 	
 	if (roomname){ 
 		loadIframe();
