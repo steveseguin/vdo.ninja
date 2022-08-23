@@ -24,7 +24,7 @@ example: `https://vdo.ninja/?welcome=hello`
 
 ![](<../.gitbook/assets/image (26).png>)
 
-The message can be URL encoded, to allow for spaces and special characters. recommended. You can do so with this tool: [https://www.urlencoder.org](https://www.urlencoder.org/)
+The message can be URL encoded, to allow for spaces and special characters. You can do so with this tool: [https://www.urlencoder.org](https://www.urlencoder.org/)
 
 You can also activate the welcome message as a director via a new toggle option. When selected, it offers the director an input text prompt and then auto-encodes the message for the director to the guest invite link.\
 \

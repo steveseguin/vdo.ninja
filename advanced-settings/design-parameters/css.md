@@ -16,13 +16,12 @@ Example:
 https://vdo.ninja/?css=https%3A%2F%2Fbackup.vdo.ninja%2Fdev4321%2Fexamples%2Fmain.css
 ```
 
-You can use this tool to encode the URL you want to link to [https://meyerweb.com/eric/tools/dencoder/](https://meyerweb.com/eric/tools/dencoder/)
+You can use this tool to encode the URL you want to link to\
+[https://www.urlencoder.org/](https://www.urlencoder.org/)
 
 ## Details
 
-Link to a remotely hosted CSS style sheet via the URL.\
-You can stylize VDO.Ninja without needing to host anything more than a CSS file.\
-The page elements are not visible until the remote style sheet has been loaded.
+Link to a remotely hosted CSS style sheet via the URL. You can stylize VDO.Ninja without needing to host anything more than a CSS file. The page elements are not visible until the remote style sheet has been loaded.
 
 ### base64css
 

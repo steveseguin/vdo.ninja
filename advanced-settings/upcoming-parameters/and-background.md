@@ -19,7 +19,9 @@ General Option! ([`&push`](../../source-settings/push.md), [`&room`](../../gener
 
 ## Details
 
-Accepts a URL-encoded image URL to make as the app's default background.
+Accepts a URL-encoded image URL to make as the app's default background.\
+You can encode the URL here\
+[https://www.urlencoder.org/](https://www.urlencoder.org/)
 
 To test:\
 [`https://vdo.ninja/alpha/?background=./media/logo_cropped.png`](https://vdo.ninja/alpha/?background=./media/logo\_cropped.png)``
