@@ -1,0 +1,54 @@
+<html>
+<body>
+	<button onclick="togglePlayer('STREAM123a')" >toggle video 1</button>
+	<button onclick="togglePlayer('STREAM123b')" >toggle video 2</button>
+	<iframe id="scene"
+		style="position: relative; display:block; width:100%; height: calc(100vh - 50px);"
+		allow="document-domain;encrypted-media;sync-xhr;cross-origin-isolated;accelerometer;midi;autoplay;fullscreen;picture-in-picture;display-capture;"
+		src="https://vdo.ninja/alpha/?room=ROOMHERE123&cleanoutput&transparent&noaudio&controls=0&noap&optimize=0&scale=100&scene&manual&b64css=dmlkZW97CiAgICBwb3NpdGlvbjogYWJzb2x1dGU7CiAgICBsZWZ0OiAwOwogICAgdG9wOiAwOwp9"
+	></iframe>
+<script>
+  
+	// you can remotely switch between video streams A and B, instead of using the toggle buttons.  You'll need your own API service to switch, but that's up to you.
+  
+	// https://vdo.ninja/alpha/?room=ROOMHERE123&push=STREAM123a&view <= invite guest-a
+	// https://vdo.ninja/alpha/?room=ROOMHERE123&push=STREAM123b&view <= invite guest-b
+  
+	// &b64css=dmlkZW97CiAgICBwb3NpdGlvbjogYWJzb2x1dGU7CiAgICBsZWZ0OiAwOwogICAgdG9wOiAwOwp9" -- makes sure all videos added align to the top-left corner, overlapping other videos if needed
+	// we do not use &fadein=0, as that can cause flicker
+	// &manual disables the auto mixer for scene=0, so we can manually add/remove elements to the scene via the IFRAME  API instead
+   var scene = document.getElementById("scene");
+   
+   ////////////  LISTEN FOR EVENTS
+	var eventMethod = window.addEventListener ? "addEventListener" : "attachEvent";
+	var eventer = window[eventMethod];
+	var messageEvent = eventMethod === "attachEvent" ? "onmessage" : "message";
+	eventer(messageEvent, function (e) {
+		if (scene && e.source == scene.contentWindow){
+			if (e.data.action === 'view-connection') {
+				console.log(e.data);
+			} else if (e.data.action === 'end-view-connection') {
+				console.log(e.data);
+			}
+		}
+	})
+
+	var activeVideo = null;
+	async function togglePlayer(video){
+		activeVideo = video;
+		scene.contentWindow.postMessage({
+			add: true, 
+			target: activeVideo
+		}, '*');
+		
+		setTimeout(function(){
+			scene.contentWindow.postMessage({
+				replace: true, // this replaces all videos in the current scene with the target stream ID. We coudl use `remove` instead, but that requires specifying the streamID to remove
+				target: activeVideo
+			}, '*');
+		},500);
+	}
+
+</script>
+</body>
+</html>

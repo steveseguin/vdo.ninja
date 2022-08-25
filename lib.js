@@ -12999,7 +12999,19 @@ async function createDirectorOnlyBox() {
 				var newScene = document.createElement("div");
 				newScene.innerHTML = '<button style="margin: 0 5px 10px 5px;" data-sid="'+session.streamID+'" data-action-type="addToScene" data-scene="'+scene+'"   title="Add to Scene '+scene+'" onclick="directEnable(this, event);"><span ><i class="las la-plus-square" style="color:#060"></i> Scene: '+scene+'</span></button>';
 				newScene.classList.add("customScene");
-				getById("container_director").appendChild(newScene);
+				//getById("container_director").appendChild(newScene);
+				
+				var added = false;
+				getById("container_director").querySelectorAll('.customScene>[data-scene]').forEach(ele=>{
+					if (!added && ele.dataset.scene>scene+""){
+						ele.parentNode.parentNode.insertBefore(newScene, ele.parentNode);
+						added = true;
+					}
+				});
+				if (!added){
+					getById("container_director").appendChild(newScene);
+				}
+				
 			}
 		}
 	});
@@ -15188,9 +15200,7 @@ async function getAudioOnly(selector, trackid = null, override = false) {
 		log("CONSTRAINT");
 		log(constraint);
 		var stream = await navigator.mediaDevices.getUserMedia(constraint).then(function(stream2) {
-			
 			pokeIframeAPI("local-microphone-event");
-			
 			return stream2;
 		}).catch(function(err) {
 			warnlog(err);
@@ -16834,9 +16844,21 @@ async function grabVideo(quality = 0, eleName = 'previewWebcam', selector = "sel
 			if (session.mc && session.mc.getSenders){
 				session.mc.getSenders().forEach((sender) => { // I suppose there could be a race condition between negotiating and updating this. if joining at the same time as changnig streams?
 					if (sender.track && sender.track.kind == "video") {
-						session.mc.canvasStream.getVideoTracks().forEach(trk=>{
-							sender.replaceTrack(trk); // replace may not be supported by all browsers.  eek.
-						});
+						var trk = getMeshcastCanvasTrack();
+						if (session.screenShareState && session.screenshareContentHint && (trk.kind === "video")){
+							try {
+								trk.contentHint = session.screenshareContentHint;
+							} catch(e){
+								errorlog(e);
+							}
+						} else if (session.contentHint && (trk.kind === "video")){
+							try {
+								trk.contentHint = session.contentHint;
+							} catch(e){
+								errorlog(e);
+							}
+						}
+						sender.replaceTrack(trk); // replace may not be supported by all browsers.  eek.
 					}
 				});
 			}
@@ -17365,6 +17387,28 @@ function pushOutVideoTrack(track){
 		}
 		return;
 	}
+	
+	if (session.audioContentHint && (track.kind === "audio")){
+		try {
+			track.contentHint = session.audioContentHint;
+		} catch(e){
+			errorlog(e);
+		}
+	}
+	if (session.screenShareState && session.screenshareContentHint && (track.kind === "video")){
+		try {
+			track.contentHint = session.screenshareContentHint;
+		} catch(e){
+			errorlog(e);
+		}
+	} else if (session.contentHint && (track.kind === "video")){
+		try {
+			track.contentHint = session.contentHint;
+		} catch(e){
+			errorlog(e);
+		}
+	}
+	
 
 	if (session.mc && session.mc.getSenders){ // should only be 0 or 1 video sender, ever.
 		//var added = false;
@@ -17779,6 +17823,16 @@ function senderAudioUpdate(callback=false){
 		
 		if (session.videoElement.srcObject.getAudioTracks()) {
 			var tracks = session.videoElement.srcObject.getAudioTracks();
+			
+			if (session.audioContentHint && tracks.length){
+				tracks.forEach(trk=>{
+					try {
+						trk.contentHint = session.audioContentHint;
+					} catch(e){
+						errorlog(e);
+					}
+				});
+			}
 			
 			if (session.mc && session.mc.getSenders && tracks.length){
 				session.mc.getSenders().forEach((sender) => { // I suppose there could be a race condition between negotiating and updating this. if joining at the same time as changnig streams?
@@ -19212,7 +19266,6 @@ session.publishFile = function(ele, event){ // webcam stream is used to generate
 	v.src = fileURL;
 	
 	
-	
 	try {
 		if (Firefox){
 			session.streamSrc = v.mozCaptureStream();
@@ -19244,44 +19297,12 @@ session.publishFile = function(ele, event){ // webcam stream is used to generate
 				session.streamSrc = vid.captureStream(); // gaaaaaaaaaaaahhhhhhhh!
 			}
 			
-			toggleMute(true);
-			session.streamSrc.getTracks().forEach(function(track){ // I'm making an exception I guess -- reversing the role?
-				for (UUID in session.pcs){
-					if ("realUUID" in session.pcs[UUID]){continue;}
-					var senders = getSenders2(UUID);
-					log(track);
-					if (track.kind == "video"){
-						try {
-							if ((session.pcs[UUID].guest==true) && (session.roombitrate===0)) {
-								log("room rate restriction detected. No videos will be published to other guests");
-							} else if (session.pcs[UUID].allowVideo==true){  // allow
-								 // for any connected peer, update the video they have if connected with a video already.
-								var added=false;
-								senders.forEach((sender) => { // I suppose there could be a race condition between negotiating and updating this. if joining at the same time as changnig streams?
-									if (added) {
-										return;
-									}
-									if (sender.track && sender.track.kind == "video"){
-										sender.replaceTrack(track);  // replace may not be supported by all browsers.  eek.
-										added=true;
-									}
-									
-								});
-								if (added==false){
-									session.pcs[UUID].addTrack(track, session.streamSrc);
-									setTimeout(function(uuid){session.optimizeBitrate(uuid);},session.rampUpTime, UUID); // 3 seconds lets us ramp up the quality a bit and figure out the total bandwidth quicker
-								}
-							}
-						} catch (e){
-							errorlog(e);
-						}
-						
-					} else {
-						session.pcs[UUID].addTrack(track, session.streamSrc);
-					}
-				}
-			});
-			session.refreshScale();
+			var tracks = session.streamSrc.getVideoTracks();
+			if (tracks.length){
+				pushOutVideoTrack(tracks[0]);
+			}
+			var tracks = session.streamSrc.getAudioTracks();
+			senderAudioUpdate();
 		}
 		
 		session.applySoloChat(); // mute streams that should be muted if a director
@@ -22817,6 +22838,16 @@ function createScreenShareURL(transparent=true){
 		extras += "&smallshare";
 	}
 	
+	if (session.screenshareContentHint){
+		extras += "&sshint="+session.screenshareContentHint;
+	} else if (session.contentHint){
+		extras += "&sshint="+session.contentHint;
+	}
+	
+	if (session.audioContentHint){
+		extras += "&audiohint="+session.audioContentHint;
+	}
+	
 	if (session.meshcastScreenShareCodec){
 		extras += "&mccodec="+session.meshcastScreenShareCodec; 
 	} else if (session.meshcastCodec){
@@ -23467,7 +23498,18 @@ function initSceneList(UUID){
 		var newScene = document.createElement("div");
 		newScene.innerHTML = '<button style="margin: 0 5px 10px 5px;" data-sid="'+session.rpcs[UUID].streamID+'" data--u-u-i-d="'+UUID+'" data-action-type="addToScene" data-scene="'+scene+'"   title="Add to Scene '+scene+'" onclick="directEnable(this, event);"><span ><i class="las la-plus-square" style="color:#060"></i> Scene: '+scene+'</span></button>';
 		newScene.classList.add("customScene");
-		getById("container_" + UUID).appendChild(newScene);
+		
+		var added = false;
+		getById("container_" + UUID).querySelectorAll('.customScene>[data-scene]').forEach(ele=>{
+			log(ele);
+			if (!added && ele.dataset.scene>scene+""){
+				ele.parentNode.parentNode.insertBefore(newScene, ele.parentNode);
+				added = true;
+			}
+		});
+		if (!added){
+			getById("container_" + UUID).appendChild(newScene);
+		}
 	});
 }
 
@@ -23484,15 +23526,37 @@ function updateSceneList(scene){
 		var newScene = document.createElement("div");
 		newScene.innerHTML = '<button style="margin: 0 5px 10px 5px;" data-sid="'+session.rpcs[UUID].streamID+'" data--u-u-i-d="'+UUID+'" data-action-type="addToScene" data-scene="'+scene+'"  title="Add to Scene '+scene+'" onclick="directEnable(this, event);"><span ><i class="las la-plus-square" style="color:#060"></i> Scene: '+scene+'</span></button>';
 		newScene.classList.add("customScene");
-		getById("container_" + UUID).appendChild(newScene);
+		var added = false;
+		getById("container_" + UUID).querySelectorAll('.customScene>[data-scene]').forEach(ele=>{
+			log(ele);
+			if (!added && ele.dataset.scene>scene+""){
+				ele.parentNode.parentNode.insertBefore(newScene, ele.parentNode);
+				added = true;
+			}
+		});
+		if (!added){
+			getById("container_" + UUID).appendChild(newScene);
+		}
 	}
+	
 	
 	if (session.showDirector){
 		if (document.getElementById("container_director")){
 			var newScene = document.createElement("div");
 			newScene.innerHTML = '<button style="margin: 0 5px 10px 5px;" data-sid="'+session.streamID+'" data-action-type="addToScene" data-scene="'+scene+'"  title="Add to Scene '+scene+'" onclick="directEnable(this, event);"><span ><i class="las la-plus-square" style="color:#060"></i> Scene: '+scene+'</span></button>';
 			newScene.classList.add("customScene");
-			getById("container_director").appendChild(newScene);
+			//getById("container_director").appendChild(newScene);
+			
+			var added = false;
+			getById("container_director").querySelectorAll('.customScene>[data-scene]').forEach(ele=>{
+				if (!added && ele.dataset.scene>scene+""){
+					ele.parentNode.parentNode.insertBefore(newScene, ele.parentNode);
+					added = true;
+				}
+			});
+			if (!added){
+				getById("container_director").appendChild(newScene);
+			}
 		}
 	}
 }
@@ -27960,8 +28024,42 @@ function createSecondStream2(UUID){
 		}
 	}
 	
+	/* if (session.audioContentHint && tracks.length){
+		tracks.forEach(trk=>{
+			try {
+				
+				trk.contentHint = session.audioContentHint;
+			} catch(e){
+				errorlog(e);
+			}
+		});
+	} */
+	
 	var senders = getSenders2(UUID+"_screen");
 	session.screenStream.getTracks().forEach(function(track){
+		
+		if (session.audioContentHint && (track.kind === "audio")){
+			try {
+				track.contentHint = session.audioContentHint;
+			} catch(e){
+				errorlog(e);
+			}
+		}
+		
+		if (session.screenshareContentHint && (track.kind === "video")){
+			try {
+				track.contentHint = session.screenshareContentHint;
+			} catch(e){
+				errorlog(e);
+			}
+		} else if (session.contentHint && (track.kind === "video")){
+			try {
+				track.contentHint = session.contentHint;
+			} catch(e){
+				errorlog(e);
+			}
+		}
+		
 		var added = false;
 		senders.forEach((sender) => { // I suppose there could be a race condition between negotiating and updating this. if joining at the same time as changnig streams?
 			if (added){return;}

@@ -31,11 +31,7 @@
 				<canvas id="packetloss-graph"></canvas>
 			</div>
 		</div>
-		<div id="log" onclick="copyFunction(this.innerText)">
-			<h2>Log <i class="las la-clipboard"></i></h2>
-			<ul></ul>
-		</div>
-
+		
 		<div id="explanation">
 			<h2>How to use</h2>
 			<ol>
@@ -155,12 +151,10 @@
 				return out;
 			}
 
+			var logged = [];
 			function logData(type, data) {
-				var log = document.getElementById("log").getElementsByTagName("ul")[0];
-				var entry = document.createElement('li');
-				entry.textContent =
-					"[" + new Date().toLocaleTimeString() + "] " + type + " : " + data;
-				log.prepend(entry);
+				data.timestamp  = new Date().now();
+				logged.push(data);
 			}
 		
 			function reloadTurn(){

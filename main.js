@@ -2263,6 +2263,18 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 		}
 	}
 
+	if (urlParams.has('contenthint') || urlParams.has('contenttype') || urlParams.has('content') || urlParams.has('hint')) {
+		session.contentHint = urlParams.get('contenthint') || urlParams.get('contenttype') || urlParams.get('content') || urlParams.get('hint') || "detail";
+	}
+	
+	if (urlParams.has('audiocontenthint') || urlParams.has('audiocontenttype') || urlParams.has('audiocontent') || urlParams.has('audiohint')) {
+		session.audioContentHint = urlParams.get('audiocontenthint') || urlParams.get('audiocontenttype') || urlParams.get('audiocontent') || urlParams.get('audiohint') || "music";
+	}
+	
+	if (urlParams.has('screensharecontenthint') || urlParams.has('sscontenthint')  || urlParams.has('screensharecontenttype') || urlParams.has('sscontent') || urlParams.has('sshint')) {
+		session.screenshareContentHint = urlParams.get('screensharecontenthint') || urlParams.get('sscontenthint') || urlParams.get('screensharecontenttype') || urlParams.get('sscontent') || urlParams.get('sshint') || "detail";
+	}
+
 
 	if (urlParams.has('codec')) {
 		log("CODEC CHANGED");
@@ -4199,77 +4211,81 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 			reloadRequested(); // location.reload();, but with no user prompt (force reload)
 		}
 
-		if ("getStats" in e.data) {
-
+		if (("getStats" in e.data)){
 			var stats = {};
-			stats.total_outbound_connections = Object.keys(session.pcs).length;
-			stats.total_inbound_connections = Object.keys(session.rpcs).length;
-			stats.inbound_stats = {};
-			for (var i in session.rpcs) {
-				stats.inbound_stats[session.rpcs[i].streamID] = session.rpcs[i].stats;
-			}
+			try {
+				stats.inbound_stats = {};
+				stats.total_outbound_connections = Object.keys(session.pcs).length;
+				stats.total_inbound_connections = Object.keys(session.rpcs).length;
+				for (var i in session.rpcs) {
+					stats.inbound_stats[session.rpcs[i].streamID] = session.rpcs[i].stats;
+				}
+				for (var uuid in session.pcs) {
+					setTimeout(function(UUID) {
+						session.pcs[UUID].getStats().then(function(stats) {
+							stats.forEach(stat => {
+								if (stat.type == "outbound-rtp") {
+									if (stat.kind == "video") {
 
-			for (var uuid in session.pcs) {
-				setTimeout(function(UUID) {
-					session.pcs[UUID].getStats().then(function(stats) {
-						stats.forEach(stat => {
-							if (stat.type == "outbound-rtp") {
-								if (stat.kind == "video") {
+										if ("qualityLimitationReason" in stat) {
 
-									if ("qualityLimitationReason" in stat) {
-
-										session.pcs[UUID].stats.quality_limitation_reason = stat.qualityLimitationReason;
+											session.pcs[UUID].stats.quality_limitation_reason = stat.qualityLimitationReason;
+										}
+										if ("framesPerSecond" in stat) {
+											session.pcs[UUID].stats.resolution = stat.frameWidth + " x " + stat.frameHeight + " @ " + stat.framesPerSecond;
+										}
+										if ("encoderImplementation" in stat) {
+											session.pcs[UUID].stats.encoder = stat.encoderImplementation;
+										}
 									}
-									if ("framesPerSecond" in stat) {
-										session.pcs[UUID].stats.resolution = stat.frameWidth + " x " + stat.frameHeight + " @ " + stat.framesPerSecond;
+								} else if (stat.type == "remote-candidate") {
+									if ("relayProtocol" in stat) {
+										if ("ip" in stat) {
+											session.pcs[UUID].stats.remote_relay_IP = stat.ip;
+										}
+										session.pcs[UUID].stats.remote_relayProtocol = stat.relayProtocol;
 									}
-									if ("encoderImplementation" in stat) {
-										session.pcs[UUID].stats.encoder = stat.encoderImplementation;
+									if ("candidateType" in stat) {
+										session.pcs[UUID].stats.remote_candidateType = stat.candidateType;
 									}
-								}
-							} else if (stat.type == "remote-candidate") {
-								if ("relayProtocol" in stat) {
-									if ("ip" in stat) {
-										session.pcs[UUID].stats.remote_relay_IP = stat.ip;
+								} else if (stat.type == "local-candidate") {
+									if ("relayProtocol" in stat) {
+										if ("ip" in stat) {
+											session.pcs[UUID].stats.local_relayIP = stat.ip;
+										}
+										session.pcs[UUID].stats.local_relayProtocol = stat.relayProtocol;
 									}
-									session.pcs[UUID].stats.remote_relayProtocol = stat.relayProtocol;
-								}
-								if ("candidateType" in stat) {
-									session.pcs[UUID].stats.remote_candidateType = stat.candidateType;
-								}
-							} else if (stat.type == "local-candidate") {
-								if ("relayProtocol" in stat) {
-									if ("ip" in stat) {
-										session.pcs[UUID].stats.local_relayIP = stat.ip;
+									if ("candidateType" in stat) {
+										session.pcs[UUID].stats.local_candidateType = stat.candidateType;
 									}
-									session.pcs[UUID].stats.local_relayProtocol = stat.relayProtocol;
-								}
-								if ("candidateType" in stat) {
-									session.pcs[UUID].stats.local_candidateType = stat.candidateType;
-								}
-							} else if ((stat.type == "candidate-pair" ) && (stat.nominated)) {
-								
-								if ("availableOutgoingBitrate" in stat){
-									session.pcs[UUID].stats.available_outgoing_bitrate_kbps = parseInt(stat.availableOutgoingBitrate/1024);
-								}
-								if ("totalRoundTripTime" in stat){
-									if ("responsesReceived" in stat){
-										session.pcs[UUID].stats.average_roundTripTime_ms = parseInt((stat.totalRoundTripTime/stat.responsesReceived)*1000);
-									} 
+								} else if ((stat.type == "candidate-pair" ) && (stat.nominated)) {
 									
+									if ("availableOutgoingBitrate" in stat){
+										session.pcs[UUID].stats.available_outgoing_bitrate_kbps = parseInt(stat.availableOutgoingBitrate/1024);
+									}
+									if ("totalRoundTripTime" in stat){
+										if ("responsesReceived" in stat){
+											session.pcs[UUID].stats.average_roundTripTime_ms = parseInt((stat.totalRoundTripTime/stat.responsesReceived)*1000);
+										} 
+										
+									}
 								}
-							}
+								return;
+							});
 							return;
 						});
-						return;
-					});
-				}, 0, uuid);
+					}, 0, uuid);
+				}
+			} catch(e){
+				// disconnected probably
 			}
 			setTimeout(function() {
 				stats.outbound_stats = {};
-				for (var i in session.pcs) {
-					stats.outbound_stats[i] = session.pcs[i].stats;
-				}
+				try {
+					for (var i in session.pcs) {
+						stats.outbound_stats[i] = session.pcs[i].stats;
+					}
+				} catch(e){}
 				parent.postMessage({
 					"stats": stats
 				}, session.iframetarget);
@@ -4555,9 +4571,16 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 											session.rpcs[i].videoElement.parentNode.parentNode.removeChild(session.rpcs[i].videoElement.parentNode);
 										} catch (e) {}
 									}
+								} else if ("replace" in e.data) { // should allow for a cleaner cut between two video streams.
+									try {
+										getById("gridlayout").appendChild(session.rpcs[i].videoElement);
+										getById("gridlayout").childNodes.forEach(ele=>{
+											if ((!ele.id) || (ele.id !== session.rpcs[i].videoElement.id)){
+												getById("gridlayout").removeChild(ele);
+											}
+										});
+									} catch(e){}
 								}  
-								
-								// video and audio bitrate handled else where
 							} catch (e) {
 								errorlog(e);
 							}
