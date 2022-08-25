@@ -45,9 +45,6 @@ You can use/test these parameters on [vdo.ninja/alpha](https://vdo.ninja/alpha/)
 | ``[`&solo`](and-solo.md)\*                                     | Similar to [`&scene`](../view-parameters/scene.md), but tells the system to be a solo-link                                                                         |
 | ``[`&sharper`](and-sharper.md)\*                               | Should 'up to' double the amount of playback video resolution                                                                                                      |
 | ``[`&sharperscreen`](and-sharperscreen.md)\*                   | Sets [`&scale=100`](../view-parameters/scale.md), but only for screen-shares                                                                                       |
-| ``[`&contenthint`](and-contenthint.md)\*                       | `=motion` prioritizes resolution; `=detail` prioritizes frame rate                                                                                                 |
-| ``[`&screensharecontenthint`](and-screensharecontenthint.md)\* | `=motion` prioritizes screen-share resolution; `=detail` prioritizes screen-share frame rate                                                                       |
-| ``[`&audiocontenthint`](and-audiocontenthint.md)\*             | `=music` fixed bitrate; `=speech` bitrate is variable                                                                                                              |
 
 \*only on [vdo.ninja/alpha](https://vdo.ninja/alpha/)\
 \*\*on [vdo.ninja/beta](https://vdo.ninja/beta/) and [vdo.ninja/alpha](https://vdo.ninja/alpha/)
