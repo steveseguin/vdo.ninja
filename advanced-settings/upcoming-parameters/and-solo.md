@@ -4,7 +4,7 @@ description: Similar to &scene, but tells the system to be a solo-link
 
 # \&solo
 
-Viewer-Side Option! ([`&room`](../../general-settings/room.md))\
+Viewer-Side Option! ([`&room`](../../general-settings/room.md), [`&view`](../view-parameters/view.md))\
 \* on [https://vdo.ninja/alpha/](https://vdo.ninja/alpha/)
 
 ## Details
