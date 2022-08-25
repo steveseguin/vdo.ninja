@@ -4,7 +4,7 @@ description: Records just the remote video(s) automatically on their initial loa
 
 # \&autorecordremote
 
-General Option! ([`&push`](../../source-settings/push.md), [`&room`](../../general-settings/room.md), [`&view`](../view-parameters/view.md), [`&scene`](../view-parameters/scene.md))\
+General Option! ([`&push`](../../source-settings/push.md), [`&room`](../../general-settings/room.md), [`&view`](../view-parameters/view.md), [`&scene`](../view-parameters/scene.md),[`&solo`](and-solo.md))\
 \* on [https://vdo.ninja/beta/](https://vdo.ninja/beta/)
 
 ## Options

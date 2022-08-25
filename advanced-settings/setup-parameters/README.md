@@ -22,7 +22,7 @@ You can add them to both, source ([`&push`](../../source-settings/push.md)) and 
 | ``[`&group`](../../general-settings/and-group.md)``             | Puts guests into sub-groups, so they only see others in the same group                 |
 | ``[`&groupaudio`](../../general-settings/and-groupaudio.md)``   | Needs to be used in combination with [`&group`](../../general-settings/and-group.md)`` |
 | ``[`&datamode`](../../newly-added-parameters/and-datamode.md)`` | Combines a bunch of flags together; no video, no audio, GUI, etc.                      |
-| ``[`&outputdevice`](../view-parameters/and-outputdevice.md)``   | Like [`&sink`](../view-parameters/and-sink.md), but selects the audio output device    |
+| ``[`&audiooutput`](and-audiooutput.md)``                        | Like [`&sink`](../view-parameters/and-sink.md), but selects the audio output device    |
 | ``[`&sink`](../view-parameters/and-sink.md)``                   | Outputs the audio to the specified audio output device, rather than the default        |
 
 ## Source side options

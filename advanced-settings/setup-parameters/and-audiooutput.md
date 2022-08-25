@@ -2,14 +2,14 @@
 description: Like &sink, but selects the default audio output device
 ---
 
-# \&outputdevice
+# \&audiooutput
 
-General Option! ([`&push`](../../source-settings/push.md), [`&room`](../../general-settings/room.md), [`&view`](view.md), [`&scene`](scene.md))
+General Option! ([`&push`](../../source-settings/push.md), [`&room`](../../general-settings/room.md), [`&view`](../view-parameters/view.md), [`&scene`](../view-parameters/scene.md))
 
 ## Aliases
 
+* `&outputdevice`
 * `&od`
-* `&audiooutput`
 
 ## Options
 
@@ -20,13 +20,13 @@ General Option! ([`&push`](../../source-settings/push.md), [`&room`](../../gener
 
 ## Details
 
-This option lets you set the default audio output device, based on its name.
+`&audiooutput` lets you set the default audio output device, based on its name.
 
 Matches on "string contains", so a partial string of the device name is enough. Use lower case, with underscores replacing special characters or spaces.
 
-[`&sink`](and-sink.md) takes priority, if used, and [`&sink`](and-sink.md) is more strict in matching.  While `&outputdevice` matches on the device name, `&sink` matches on the device ID.
+[`&sink`](../view-parameters/and-sink.md) takes priority, if used, and [`&sink`](../view-parameters/and-sink.md) is more strict in matching.  While `&audiooutput` matches on the device name, `&sink` matches on the device ID.
 
-`&outputdevice=labelname` is consistent across domains / cookie sessions, while [`&sink=deviceid`](and-sink.md) isn't.
+`&audiooutput=labelname` is consistent across domains / cookie sessions, while [`&sink=deviceid`](../view-parameters/and-sink.md) isn't.
 
 if parameter's value is left blank, it hides the option to change the output device, including under the settings cog.
 
@@ -42,11 +42,10 @@ You can change the output device dynamically via the settings menu.\
 ![](<../../.gitbook/assets/image (137).png>)
 
 In Version 22 of VDO.Ninja you can change the output device of each video feed individually via `Right-Click -> Audio Destination` on the video feed.\
-![](<../../.gitbook/assets/image (147).png>)\
-
+![](<../../.gitbook/assets/image (147).png>)
 
 ## Related
 
-{% content-ref url="and-sink.md" %}
-[and-sink.md](and-sink.md)
+{% content-ref url="../view-parameters/and-sink.md" %}
+[and-sink.md](../view-parameters/and-sink.md)
 {% endcontent-ref %}

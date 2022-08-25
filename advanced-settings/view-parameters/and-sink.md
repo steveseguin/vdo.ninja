@@ -28,6 +28,6 @@ You can find out the string value of your audio output device here: [https://vdo
 
 ## Related
 
-{% content-ref url="and-outputdevice.md" %}
-[and-outputdevice.md](and-outputdevice.md)
+{% content-ref url="../setup-parameters/and-audiooutput.md" %}
+[and-audiooutput.md](../setup-parameters/and-audiooutput.md)
 {% endcontent-ref %}

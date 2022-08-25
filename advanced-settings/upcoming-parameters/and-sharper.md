@@ -4,7 +4,7 @@ description: Should 'up to' double the amount of playback video resolution
 
 # \&sharper
 
-Viewer-Side Option! ([`&scene`](../view-parameters/scene.md), [`&room`](../../general-settings/room.md), [`&view`](../view-parameters/view.md))\
+Viewer-Side Option! ([`&scene`](../view-parameters/scene.md), [`&room`](../../general-settings/room.md), [`&view`](../view-parameters/view.md),[`&solo`](and-solo.md))\
 \* on [https://vdo.ninja/alpha/](https://vdo.ninja/alpha/)
 
 ## Aliases

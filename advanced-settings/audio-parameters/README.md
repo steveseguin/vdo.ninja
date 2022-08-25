@@ -46,7 +46,7 @@ You have to add them to the viewer side ([`&view`](../view-parameters/view.md) o
 
 | Parameter                                                       | Explanation                                                                         |
 | --------------------------------------------------------------- | ----------------------------------------------------------------------------------- |
-| ``[`&outputdevice`](../view-parameters/and-outputdevice.md)``   | Like [`&sink`](../view-parameters/and-sink.md), but selects the audio output device |
+| ``[`&audiooutput`](../setup-parameters/and-audiooutput.md)``    | Like [`&sink`](../view-parameters/and-sink.md), but selects the audio output device |
 | ``[`&sink`](../view-parameters/and-sink.md)``                   | Outputs the audio to the specified audio output device, rather than the default     |
 | ``[`&audiobitrate`](../view-parameters/audiobitrate.md)``       | Manually sets the audio bitrate in kbps                                             |
 | ``[`&vbr`](../view-parameters/vbr.md)``                         | Sets the audio bitrate to be variable, instead of constant                          |

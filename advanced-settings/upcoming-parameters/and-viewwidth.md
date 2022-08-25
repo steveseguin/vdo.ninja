@@ -4,7 +4,7 @@ description: Does the same thing as &scale but you pass the width in pixels
 
 # \&viewwidth
 
-Viewer-Side Option! ([`&scene`](../view-parameters/scene.md), [`&room`](../../general-settings/room.md), [`&view`](../view-parameters/view.md))\
+Viewer-Side Option! ([`&scene`](../view-parameters/scene.md), [`&room`](../../general-settings/room.md), [`&view`](../view-parameters/view.md),[`&solo`](and-solo.md))\
 \* on [https://vdo.ninja/alpha/](https://vdo.ninja/alpha/)
 
 ## Aliases

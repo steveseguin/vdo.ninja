@@ -4,7 +4,7 @@ description: Sets both &totalscenebitrate and &totalroombitrate flags
 
 # \&totalbitrate
 
-Viewer-Side Option! ([`&scene`](../view-parameters/scene.md), [`&room`](../../general-settings/room.md), [`&view`](../view-parameters/view.md))\
+Viewer-Side Option! ([`&scene`](../view-parameters/scene.md), [`&room`](../../general-settings/room.md), [`&view`](../view-parameters/view.md),[`&solo`](and-solo.md))\
 \* on [https://vdo.ninja/beta/](https://vdo.ninja/beta/)
 
 ## Aliases
