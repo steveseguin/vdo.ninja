@@ -4,7 +4,7 @@ description: Scales down the meshcast video output via the URL
 
 # \&meshcastscale
 
-Sender-Side Option! ([`&push`](../../source-settings/push.md))\
+Meshcast Option / Sender-Side Option! ([`&meshcast`](../../newly-added-parameters/and-meshcast.md), [`&push`](../../source-settings/push.md))\
 \* on [https://vdo.ninja/alpha/](https://vdo.ninja/alpha/)
 
 ## Aliases
