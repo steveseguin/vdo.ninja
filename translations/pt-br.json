@@ -106,7 +106,7 @@
     "hide-setting-buttons": "Ocultar botão de configurações",
     "hide-the-links": " LINKS (CONVITES &amp; CENAS)",
     "highlight-director-only-video-guests-will-see": "Destacar diretor (somente os convidados do vídeo verão)",
-    "info-blob": "",
+    "info-blob": "\n<h2>O que é o VDO.Ninja</h2>\n<br>\n<li>100% <b>gratuito</b>; sem downloads; sem coleta de dados pessoais; sem login</li>\n<li>Traga vídeo ao vivo do seu smartphone, computador remoto ou amigos diretamente para o OBS ou outro software de estúdio.</li>\n<li>Usamos tecnologia de encaminhamento peer-to-peer de ponta que oferece privacidade e latência ultrabaixa</li>\n<br>\n<li>\n<i class=\"lab la-youtube\"></i>\n<a href=\"https://www.youtube.com/watch?v=QaA_6aOP9z8&amp;list=PLWodc2tCfAH1WHjl4WAOOoRSscJ8CHACe&amp;index=1\" alt=\"Vídeo do YouTube demonstrando o VDO.Ninja\">Demonstração de uso do VDO.Ninja</a>\n</li>\n\n<br>\n<br>\n<h3>\n   🛠 Para suporte, veja o <a href=\"https://www.reddit.com/r/VDONinja/\">sub-reddit <i class=\"lab la-reddit-alien\"></i></a> ou participe do <a href=\"https://discord.gg/T4xpQVv\">Discord <i class=\"lab la-discord\"></i></a>. Consulte também a <a href=\"https://docs.vdo.ninja/\">documentação</a> e meu e-mail pessoal é <i>steve@seguin.email</i>\n</h3> \n\n",
     "invisible-guests": "Não visível",
     "invite-a-guest": "CONVIDAR UMA PESSOA",
     "invite-group-chat-type": "Este convidado da sala pode:",
