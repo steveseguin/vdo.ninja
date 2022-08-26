@@ -6,9 +6,6 @@ description: Useful tools that could help you make your stream better
 
 | Tool                                    | URL                                                                                                                  |
 | --------------------------------------- | -------------------------------------------------------------------------------------------------------------------- |
-| Scene Mixer                             | [https://vdo.ninja/mixer](https://vdo.ninja/mixer)                                                                   |
-| Scene Mixer Beta                        | [https://vdo.ninja/beta/mixer](https://vdo.ninja/beta/mixer)                                                         |
-| Scene Mixer Alpha                       | [https://vdo.ninja/alpha/mixer](https://vdo.ninja/alpha/mixer)                                                       |
 | Device Support                          | [https://vdo.ninja/supports](https://vdo.ninja/supports)                                                             |
 | Device IDs                              | [https://vdo.ninja/devices](https://vdo.ninja/devices)                                                               |
 | Web-based Media Conversion Tools        | [https://isolated.vdo.ninja/convert](https://isolated.vdo.ninja/convert)                                             |
