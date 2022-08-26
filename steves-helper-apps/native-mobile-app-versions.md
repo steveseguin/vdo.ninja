@@ -9,7 +9,7 @@ Android
 {% endembed %}
 
 {% embed url="https://apps.apple.com/us/app/vdo-ninja/id1607609685" %}
-iOs
+iOS
 {% endembed %}
 
 At present, the native mobile app versions of VDO.Ninja are fairly basic, but they can be useful for a couple of reasons.
