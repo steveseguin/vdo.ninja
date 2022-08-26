@@ -7,6 +7,12 @@ description: '=music fixed bitrate; =speech bitrate is variable'
 Sender-Side Option! ([`&push`](../../source-settings/push.md))\
 \* on [https://vdo.ninja/alpha/](https://vdo.ninja/alpha/)
 
+## Aliases
+
+* `&audiohint`
+* `&audiocontenttype`
+* `&audiocontent`
+
 ## Options
 
 | Value    | Description                                                 |

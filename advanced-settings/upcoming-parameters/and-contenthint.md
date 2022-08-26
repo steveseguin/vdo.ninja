@@ -10,6 +10,8 @@ Sender-Side Option! ([`&push`](../../source-settings/push.md))\
 ## Aliases
 
 * `&hint`
+* `&contenttype`
+* `&content`
 
 ## Options
 

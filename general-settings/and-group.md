@@ -6,13 +6,17 @@ description: Puts guests into sub-groups, so they only see others in the same gr
 
 General Option! ([`&push`](../source-settings/push.md), [`&room`](room.md), [`&view`](../advanced-settings/view-parameters/view.md), [`&scene`](../advanced-settings/view-parameters/scene.md))
 
+## Aliases
+
+* `&groups`
+
 ## Options
 
-| Value   | Description                                       |
-| ------- | ------------------------------------------------- |
-| 1       | adds the guest or director to group 1             |
-| 2       | adds the guest or director to group 2             |
-| 3,4,5,6 | adds the guest or director to group 3, 4, 5 and 6 |
+| Value     | Description                                       |
+| --------- | ------------------------------------------------- |
+| `1`       | adds the guest or director to group 1             |
+| `2`       | adds the guest or director to group 2             |
+| `3,4,5,6` | adds the guest or director to group 3, 4, 5 and 6 |
 
 ## Details
 

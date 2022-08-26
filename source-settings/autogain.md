@@ -8,6 +8,7 @@ Sender-Side Option! ([`&push`](push.md))
 
 ## Aliases
 
+* `&agc`
 * `&ag`
 
 ## Options

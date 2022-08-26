@@ -21,7 +21,7 @@ There are currently 3 versions of the Video Mixer. The newest version with all t
 | Beta       | [https://vdo.ninja/beta/mixer](https://vdo.ninja/beta/mixer)   |
 | Production | [https://vdo.ninja/mixer](https://vdo.ninja/mixer)             |
 
-<figure><img src="../.gitbook/assets/image.png" alt=""><figcaption><p>Layout of the Video Mixer</p></figcaption></figure>
+<figure><img src="../.gitbook/assets/image (6).png" alt=""><figcaption><p>Layout of the Video Mixer</p></figcaption></figure>
 
 If you find some bugs, have feature requests, ideas or feedback, please contact us on the [Discord channel](https://discord.gg/qWDshMsTar).
 

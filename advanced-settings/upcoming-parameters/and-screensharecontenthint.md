@@ -9,6 +9,13 @@ description: >-
 Sender-Side Option! ([`&push`](../../source-settings/push.md))\
 \* on [https://vdo.ninja/alpha/](https://vdo.ninja/alpha/)
 
+## Aliases
+
+* `&sscontenthint`
+* `&screensharecontenttype`
+* `&sscontent`
+* `&sshint`
+
 ## Options
 
 | Value    | Description                                                 |
