@@ -10,6 +10,7 @@ description: List of apps and helper tools Steve has created to be used with VDO
 * [meshcast.io.md](meshcast.io.md "mention") ([https://meshcast.io](https://meshcast.io))
 * [caption.ninja.md](caption.ninja.md "mention") ([https://caption.ninja/](https://caption.ninja/))
 * [raspberry.ninja.md](raspberry.ninja.md "mention") ([https://raspberry.ninja](https://raspberry.ninja))
+* [video-mixer.md](video-mixer.md "mention") ([https://vdo.ninja/alpha/mixer](https://vdo.ninja/alpha/mixer))
 * [versus.cam.md](versus.cam.md "mention") ([https://versus.cam/](https://versus.cam/))
 * [native-mobile-app-versions.md](native-mobile-app-versions.md "mention") ([Android](https://play.google.com/store/apps/details?id=flutter.vdo.ninja) | [iOS](https://apps.apple.com/us/app/vdo-ninja/id1607609685))
 * [vdo-applications.md](vdo-applications.md "mention")
