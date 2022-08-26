@@ -378,7 +378,7 @@
     "close": "Cerrar",
     "send-message": "enviar mensaje<s pan=\"\"> </s>",
     "record-director-local": " Grabar",
-    "logo-header": "\n\t<font id=\"qos\">V</font>DO.Ninja \n",
+    "logo-header": "\n<font id=\"qos\">V</font>DO.Ninja \n",
     "only-director-can-hear-you": "Solo el direcctor puede escucharte actualmente.",
     "director-muted-you": "El Director te ha sileciado",
     "application-audio-capture": "Para capturar el audio especifico de una aplicación, <a href=\"https://docs.vdo.ninja/audio\" style=\"color: #007AC8;\">vea aquí</a>",
