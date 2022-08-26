@@ -13,10 +13,10 @@ General Option! ([`&push`](../../source-settings/push.md), [`&room`](../../gener
 
 ## Options
 
-| Value          | Description                                                                                                         |
-| -------------- | ------------------------------------------------------------------------------------------------------------------- |
-| (string value) | partial string that matches the device's label/name                                                                 |
-| Cable\_Input   | will match against "CABLE Input (VB-Audio Virtual Cable). Use any other string to match against other device names. |
+| Value          | Description                                                                                                          |
+| -------------- | -------------------------------------------------------------------------------------------------------------------- |
+| (string value) | partial string that matches the device's label/name                                                                  |
+| Cable\_Input   | will match against "CABLE Input" (VB-Audio Virtual Cable). Use any other string to match against other device names. |
 
 ## Details
 
