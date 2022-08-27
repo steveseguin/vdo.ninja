@@ -8,8 +8,8 @@ Viewer-Side Option! ([`&view`](../view-parameters/view.md), [`&scene`](../view-p
 
 ## Aliases
 
-* `&cc`
 * `&captions`
+* `&cc`
 
 ## Details
 
@@ -19,9 +19,9 @@ See video for a walk-thru:
 
 {% embed url="https://www.youtube.com/embed/3eo85WAXeuk" %}
 
-Overlay text data is pulled from the source with [`&transcribe`](../../source-settings/transcribe.md) added.&#x20;
+Overlay text data is pulled from the source with [`&transcribe`](../../source-settings/transcribe.md) added.
 
-``[`&fontsize={percent}`](../view-parameters/fontsize.md) can be used to adjust the overlay font-size. 100% is default;&#x20;
+``[`&fontsize={percent}`](../view-parameters/fontsize.md) can be used to adjust the overlay font-size. 100% is default;
 
 Use can use [`&css=somecssfile.css`](../design-parameters/css.md) to further customize the CSS style, or do so in the OBS Browser source style sheet area. You can also set the CSS via a base64 encoded string in the URL, via the [`&base64css`](../design-parameters/css.md) parameter.\
 \
@@ -44,7 +44,6 @@ body {
 }
 ```
 
-\
 Another example of limiting the captioning-text to only use a fixed height of space when used as an overlay to OBS browser source. Just replace the OBS browser style with this code snippet instead:
 
 ```
@@ -62,9 +61,9 @@ body { background-color: rgba(0, 0, 0, 0); margin: 0px auto; overflow: hidden; }
 }
 ```
 
-If not using OBS, you can still add the above CSS via the URL using the `&b64css` parameter. For example, instead of the above CSS, you can append the following to the URL:
+If not using OBS, you can still add the above CSS via the URL using the [`&base64css`](../design-parameters/and-base64css.md) parameter. For example, instead of the above CSS, you can append the following to the URL:
 
-`&b64css=I292ZXJsYXlNc2dzew0KICAgIG92ZXJmbG93OiBhdXRvIWltcG9ydGFudDsNCiAgICBkaXNwbGF5OiBmbGV4IWltcG9ydGFudDsNCiAgICBmbGV4LWRpcmVjdGlvbjogY29sdW1uLXJldmVyc2UhaW1wb3J0YW50Ow0KICAgIGhlaWdodDogMjQwcHghaW1wb3J0YW50Ow0KfQ0KDQojb3ZlcmxheU1zZ3Mgc3BhbiB7DQogICAgdGV4dC1hbGlnbjogbGVmdCFpbXBvcnRhbnQ7DQp9`
+`&base64css=I292ZXJsYXlNc2dzew0KICAgIG92ZXJmbG93OiBhdXRvIWltcG9ydGFudDsNCiAgICBkaXNwbGF5OiBmbGV4IWltcG9ydGFudDsNCiAgICBmbGV4LWRpcmVjdGlvbjogY29sdW1uLXJldmVyc2UhaW1wb3J0YW50Ow0KICAgIGhlaWdodDogMjQwcHghaW1wb3J0YW50Ow0KfQ0KDQojb3ZlcmxheU1zZ3Mgc3BhbiB7DQogICAgdGV4dC1hbGlnbjogbGVmdCFpbXBvcnRhbnQ7DQp9`
 
 Feedback and user requests are welcomed.
 

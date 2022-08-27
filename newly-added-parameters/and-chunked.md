@@ -13,14 +13,14 @@ Sender-Side Option! ([`&push`](../source-settings/push.md))
 | Value            | Description                                                          |
 | ---------------- | -------------------------------------------------------------------- |
 | (no value given) | will just enable viewing, and not saving, of the video               |
-| 2                | the option to save the chunked stream as a viewer on the sender side |
+| `2`              | the option to save the chunked stream as a viewer on the sender side |
 | (integer value)  | bitrate in kbps                                                      |
 
 ## Details
 
 ### Chunked video transfer mode
 
-Version 20 introduces the option to enable a chunked-video transfer mode, which is similar to how Twitch or YouTube Live broadcasts videos. This still uses VDO.Ninja's peer to peer connections to distribute video to viewers, except it does not use webRTC's video streaming protocols; rather it uses a custom-made protocol.
+[Version 20](../release-notes/v20.md) introduces the option to enable a chunked-video transfer mode, which is similar to how Twitch or YouTube Live broadcasts videos. This still uses VDO.Ninja's peer to peer connections to distribute video to viewers, except it does not use webRTC's video streaming protocols; rather it uses a custom-made protocol.
 
 The upsides of this mode is that packet loss on a network connection impacts the video stream less, so the quality can be higher. It also makes it easier to record the stream to disk on the viewer's end with no added quality loss and with lower CPU usage. It also supports video transparency, which wasn't really feasible before.
 
@@ -28,7 +28,7 @@ In theory, this mode also allows a video stream to be only encoded once, and the
 
 This chunked mode is similar to the previously released [`&webp`](../advanced-settings/view-parameters/webp.md) broadcast mode, which streamed a series of images as a custom-made video protocol, but the [`&webp`](../advanced-settings/view-parameters/webp.md) has poor compression and quality, and would drop frames if the connection couldn't keep up.
 
-The downsides of the chunk-transfer mode is that if the connection stalls out long enough, the video will be forced to pause and buffer. It also has a buffer, which is currently around 3 to 5 seconds on a good question -- so similar to that of Twitch. The chunked-transfer mode might be suitable for doing remote recordings of interviews where the highest quality is desirable, but it isn't suitable for live and interactive chat.&#x20;
+The downsides of the chunk-transfer mode is that if the connection stalls out long enough, the video will be forced to pause and buffer. It also has a buffer, which is currently around 3 to 5 seconds on a good question - so similar to that of Twitch. The chunked-transfer mode might be suitable for doing remote recordings of interviews where the highest quality is desirable, but it isn't suitable for live and interactive chat.
 
 Future versions of this feature will include the option to record to a cloud service, the option to use PCM audio, the ability to encode-once, but stream to many, and more advanced protocol logic to lower the latency.
 

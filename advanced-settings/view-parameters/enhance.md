@@ -20,4 +20,5 @@ Tells the remote source that you would like them to prioritize the audio stream 
 
 For advanced users, this sets the following of the audio's stream: `networkPriority = "high";` `priority = "high";` `adaptivePtime = true;`
 
-For more details, please see: [https://www.w3.org/TR/webrtc-priority/#dom-rtcrtpencodingparameters-networkpriority](https://www.w3.org/TR/webrtc-priority/#dom-rtcrtpencodingparameters-networkpriority)
+For more details, please see:\
+[https://www.w3.org/TR/webrtc-priority/#dom-rtcrtpencodingparameters-networkpriority](https://www.w3.org/TR/webrtc-priority/#dom-rtcrtpencodingparameters-networkpriority)

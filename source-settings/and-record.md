@@ -10,9 +10,9 @@ Sender-Side Option! ([`&push`](push.md))
 
 | Value              | Description                                                                                       |
 | ------------------ | ------------------------------------------------------------------------------------------------- |
-| 0                  | No video recorded; audio tentatively recorded as 32bit PCM lossless.                              |
+| `0`                | No video recorded; audio tentatively recorded as 32bit PCM lossless.                              |
 | (negative integer) | No video recorded; audio recorded as {integer} kbps OPUS file. Eg: -120 - Audio only at 120 kbps. |
-| (integer)          | Recored video bitrate in kbps.                                                                    |
+| (positive integer) | Recored video bitrate in kbps.                                                                    |
 
 ## Details
 
@@ -22,7 +22,7 @@ Sender-Side Option! ([`&push`](push.md))
 
 **`File Codec:`**` ``H264 or VP8 for video; OPUS or PCM for audio.` &#x20;
 
-Usually up to the browser.&#x20;
+Usually up to the browser.
 
 Default bitrate will record at around 4000 kbps, but it will still prompt still for value if not set.
 
@@ -35,13 +35,13 @@ Do not force-close the browser or turn off the computer while it is recording; y
 
 The recording should stop automatically when the guest hangs-ups manually. I try my best to do the same when the browser is closed, but it's best to still purposefully stop recording first.
 
-It will automatically capture with stereo audio and echo cancellation off, if available. You can use [https://isolated.vdo.ninja/convert](https://isolated.vdo.ninja/convert) to convert from WebM file formats to opus or wav file formats, **without transcoding and without downloads**.&#x20;
+It will automatically capture with stereo audio and echo cancellation off, if available. You can use [https://isolated.vdo.ninja/convert](https://isolated.vdo.ninja/convert) to convert from WebM file formats to opus or wav file formats, **without transcoding and without downloads**.
 
 ### Recording as the director
 
-When recording as the director, the button and option to record each guest is available by default.  It's hidden behind Advanced controls.  You have the option to record locally, to your own disk, or record remotely, directly to the remote guest's local storage.\
+When recording as the director, the button and option to record each guest is available by default.  It's hidden behind Advanced controls. You have the option to record locally, to your own disk, or record remotely, directly to the remote guest's local storage.\
 \
-When recording to the guest's local storage, quality should be near pristine, given as its not being sent via the Internet first.  Recording locally, the video may have dynamic resolutions and varying quality, due to the low latency transmission. (\&chunked-mode excepted)
+When recording to the guest's local storage, quality should be near pristine, given as its not being sent via the Internet first.  Recording locally, the video may have dynamic resolutions and varying quality, due to the low latency transmission. ([`&chunked`](../newly-added-parameters/and-chunked.md)-mode excepted)
 
 Anyone can also access the recording options via right-clicking a video. This option is available as of VDO.Ninja v22.
 
@@ -55,7 +55,7 @@ Anyone can also access the recording options via right-clicking a video. This op
 | 2500           | 80 kbps       | 128 kpbs       |
 | Less than 2500 | 32 kbps       | 32 kbps        |
 
-### When using [\&chunked](../newly-added-parameters/and-chunked.md) mode
+### When using [`&chunked`](../newly-added-parameters/and-chunked.md) mode
 
 When the sender of a stream is using the `&chunked` mode, recording their video will save the inbound video directly to disk without transcoding. Not needing to transcode the saved video in the browser is only possible with the `&chunked` mode. Of course, you also don't have the option to increase the bitrate or change codecs when using this mode; at least not as the viewer.
 

@@ -12,10 +12,10 @@ Sender-Side Option! ([`&push`](../../source-settings/push.md))
 
 ## Options
 
-| Value             | Description                 |
-| ----------------- | --------------------------- |
-| (no value given)  | Shows the video control bar |
-| 0 \| false \| off | Hides the video control bar |
+| Value                   | Description                 |
+| ----------------------- | --------------------------- |
+| (no value given)        | Shows the video control bar |
+| `0` \| `false` \| `off` | Hides the video control bar |
 
 ## Details
 

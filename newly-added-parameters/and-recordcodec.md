@@ -4,7 +4,7 @@ description: Lets you set the video recording vodec
 
 # \&recordcodec
 
-Sender-Side Option! ([`&push`](../source-settings/push.md))
+Sender-Side Option / Director Option! ([`&push`](../source-settings/push.md), [`&director`](../viewers-settings/director.md))
 
 ## Aliases
 
@@ -12,12 +12,12 @@ Sender-Side Option! ([`&push`](../source-settings/push.md))
 
 ## Options
 
-| Value | Description             |
-| ----- | ----------------------- |
-| h264  | request the h264 codec  |
-| vp8   | request the VP8 codec   |
-| vp9   | request the VP9 codec   |
-| av1   | request the AV1 codec   |
+| Value  | Description             |
+| ------ | ----------------------- |
+| `h264` | request the h264 codec  |
+| `vp8`  | request the VP8 codec   |
+| `vp9`  | request the VP9 codec   |
+| `av1`  | request the AV1 codec   |
 
 ## Details
 

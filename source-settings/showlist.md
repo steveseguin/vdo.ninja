@@ -10,8 +10,8 @@ Sender-Side Option! ([`&push`](push.md))
 
 | Value | Description                             |
 | ----- | --------------------------------------- |
-| 0     | Force disable the list of hidden guests |
-| 1     | Force enable the list of hidden guests  |
+| `0`   | Force disable the list of hidden guests |
+| `1`   | Force enable the list of hidden guests  |
 
 ## Details
 

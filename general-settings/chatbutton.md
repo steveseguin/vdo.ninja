@@ -15,8 +15,8 @@ Sender-Side Option! ([`&push`](../source-settings/push.md))
 
 | Value | Description           |
 | ----- | --------------------- |
-| 0     | hides the chat button |
-| 1     | shows the chat button |
+| `0`   | hides the chat button |
+| `1`   | shows the chat button |
 
 ## Details
 

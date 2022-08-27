@@ -11,7 +11,7 @@ Sender-Side Option! ([`&push`](../source-settings/push.md))
 | Value            | Description                                      |
 | ---------------- | ------------------------------------------------ |
 | (no value given) | Adds a signal-meter per guest                    |
-| false            | Disables the signal-meter in the director's room |
+| `false`          | Disables the signal-meter in the director's room |
 
 ## Details
 

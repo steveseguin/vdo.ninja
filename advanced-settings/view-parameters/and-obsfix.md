@@ -10,11 +10,11 @@ Viewer-Side Option! ([`&view`](view.md), [`&scene`](scene.md), [`&room`](../../g
 
 ## Options
 
-| Value            | Description    |
-| ---------------- | -------------- |
-| (integer value)  |                |
-| (no value given) | defaults to 15 |
-| 0 \| off         | Turns it off   |
+| Value            | Description                                             |
+| ---------------- | ------------------------------------------------------- |
+| (integer value)  | adjust the sensitivity of the packet loss 'fix' for OBS |
+| (no value given) | defaults to 15                                          |
+| `0` \| `off`     | Turns it off                                            |
 
 ## Details
 

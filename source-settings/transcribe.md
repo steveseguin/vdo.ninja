@@ -15,9 +15,9 @@ Sender-Side Option! ([`&push`](push.md))
 
 | Value                   | Description                                                                                              |
 | ----------------------- | -------------------------------------------------------------------------------------------------------- |
-| en-US                   | American English                                                                                         |
-| de-DE                   | German                                                                                                   |
-| pt-PT                   | Portuguese                                                                                               |
+| `en-US`                 | American English                                                                                         |
+| `de-DE`                 | German                                                                                                   |
+| `pt-PT`                 | Portuguese                                                                                               |
 | any xx-XX language code | You can check for additional language codes [here](https://www.science.co.il/language/Locale-codes.php). |
 
 ## Details

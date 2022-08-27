@@ -12,6 +12,8 @@ Sender-Side Option! ([`&push`](push.md))
 
 ## Details
 
+`&nosettings` disables the local settings button.
+
 You won't be able to change video or audio feeds after initially selecting them. This prevents guests accidentally changing their webcam or microphone after entering a room.
 
 Hides the screen-share button as well.
