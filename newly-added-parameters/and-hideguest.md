@@ -14,4 +14,4 @@ Sender-Side Option! ([`&push`](../source-settings/push.md))
 
 Adding `&hideguest` to a guest's URL has the guest join a room not visible to others, as if the director had pressed 'hide guest' on that guest. You can change this setting dynamically in the director's control room in the guest's setting "Additional controls".
 
-![](<../.gitbook/assets/image (8).png>)
+![](<../.gitbook/assets/image (8) (3).png>)

@@ -25,7 +25,7 @@ You have to add them to the source side ([`&push`](../../source-settings/push.md
 | ``[`&quality`](and-quality.md)``                                                 | Presets the quality setting for a guest                                                                               |
 | ``[`&width`](../../source-settings/and-width.md)``                               | Sets the maximum width of the video allowed in pixels                                                                 |
 | ``[`&height`](../../source-settings/and-height.md)``                             | Sets the maximum height of the video allowed in pixels                                                                |
-| ``[`&mediasettings`](../../newly-added-parameters/and-mediasettings.md)``        | Adds the option to change the video quality (resolution) dynamically via the settings menu                            |
+| ``[`&mediasettings`](../../newly-added-parameters/and-mediasettings.md)``        | Adds the option to change the video and audio settings dynamically via the settings menu                              |
 | ``[`&noscale`](../../newly-added-parameters/and-noscale.md)``                    | Disables the publishing resolution from being capped                                                                  |
 | ``[`&fps`](and-fps.md)``                                                         | Sets the maximum frame rate of the video in frames per second                                                         |
 | ``[`&maxframerate`](../../source-settings/and-maxframerate.md)``                 | Like [`&fps`](and-fps.md), except it will allow for lower frame rates if the specific frame rate requested failed     |

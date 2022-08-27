@@ -17,11 +17,13 @@ Sender-Side Option! ([`&push`](push.md))
 
 | Value                    | Description                    |
 | ------------------------ | ------------------------------ |
-| (positive integer value) | FPS value in frames per second |
+| (positive integer value) | Frame rate (frames per second) |
 
 ## Details
 
 Like [`&fps`](../advanced-settings.md#framerateframe-rate), except it will allow for lower frame rates if the specific frame rate requested failed.
+
+You can set `&maxframerate=60` and the system automatically selects 30 if your camera doesn't support a frame rate of 60.
 
 ## Related
 

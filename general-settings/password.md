@@ -18,7 +18,7 @@ To make your stream or your room more secure, you can set a password by adding `
 
 If no password value is provided via the URL parameter, the system will prompt for one when connecting.
 
-![](../.gitbook/assets/image.png)
+![](<../.gitbook/assets/image (8).png>)
 
 You will want to add the password value to the URL if loading it into OBS.
 

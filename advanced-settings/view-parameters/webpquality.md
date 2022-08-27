@@ -19,19 +19,19 @@ V22: Sender-Side Option! ([`&push`](../../source-settings/push.md))
 
 | Value | Description    |
 | ----- | -------------- |
-| 0     | 1080p          |
-| 1     | 720p           |
-| 2     | 540p           |
-| 3     | 360p           |
-| 4     | 270p           |
-| 5     | 270p @ 15-fps  |
-| 6     | 270p @ 5-fps   |
-| 7     | 270p @ 2.5-fps |
-| 8     | 360p @ 1-fps   |
+| `0`   | 1080p          |
+| `1`   | 720p           |
+| `2`   | 540p           |
+| `3`   | 360p           |
+| `4`   | 270p           |
+| `5`   | 270p @ 15-fps  |
+| `6`   | 270p @ 5-fps   |
+| `7`   | 270p @ 2.5-fps |
+| `8`   | 360p @ 1-fps   |
 
 ## Details
 
-You add this parameter to the director (or designated broadcaster) and it then sets the the quality target for the [`&webp`](../../advanced-settings.md#webp) mode.
+You add this parameter to the director (or designated broadcaster) and it then sets the quality target for the [`&webp`](../../advanced-settings.md#webp) mode.
 
 Default is 270p @ 10-fps.
 

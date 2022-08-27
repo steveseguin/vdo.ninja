@@ -30,7 +30,7 @@ I've provided links to some guides. If these guides are helpful for you, I'll of
    &#x20;    \- To remove an existing exception or permission: To the right of the site, click Delete\
    &#x20;    \- To allow a site that you already blocked: Under "Not allowed," select the site's name and change the camera or microphone permission to "Allow."
 
-![](<../.gitbook/assets/image (2) (1) (2).png>)
+![](<../.gitbook/assets/image (2) (1).png>)
 
 ### **Firefox**
 

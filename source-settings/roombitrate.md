@@ -10,13 +10,14 @@ Sender-Side Option! ([`&push`](push.md))
 
 ## Aliases
 
+* `&roomvideobitrate`
 * `&rbr`
 
 ## Options
 
 | Value                         | Description                                                    |
 | ----------------------------- | -------------------------------------------------------------- |
-| 0                             | disables access to your video for other guests in a group room |
+| `0`                           | disables access to your video for other guests in a group room |
 | (some positive integer value) | max. allowed bitrate                                           |
 
 ## Details

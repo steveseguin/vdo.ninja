@@ -14,9 +14,9 @@ Viewer-Side Option! ([`&view`](view.md), [`&scene`](scene.md), [`&room`](../../g
 
 | Value             | Description                 |
 | ----------------- | --------------------------- |
-| 1                 | Set Device Pixel Ratio to 1 |
-| 2                 | Set Device Pixel Ratio to 2 |
-| 3                 | Set Device Pixel Ratio to 3 |
+| `1`               | Set Device Pixel Ratio to 1 |
+| `2`               | Set Device Pixel Ratio to 2 |
+| `3`               | Set Device Pixel Ratio to 3 |
 | (integer value X) | Set Device Pixel Ratio to X |
 
 ## Details

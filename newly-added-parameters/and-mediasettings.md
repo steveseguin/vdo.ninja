@@ -1,6 +1,6 @@
 ---
 description: >-
-  Adds the option to change the video quality (resolution) dynamically via the
+  Adds the option to change the video and audio settings dynamically via the
   settings menu
 ---
 
@@ -10,13 +10,11 @@ Sender-Side Option! ([`&push`](../source-settings/push.md))
 
 ## Details
 
-Adds the option for a guest to change the video "quality" (resolution) dynamically:
+Adds the option for a guest to change the video and audio settings dynamically. Usually only the director can change the settings for a guest.
 
-* Max Resolution (1920x1080p)
-* Balanced (1280x720p)
-* Smooth and Cool (720x360p)
+Outside of a room it is enabled by default.
 
-Outside of a room it is enabled by default. You can preset the resolution with [`&quality`](../advanced-settings/video-parameters/and-quality.md).
+![](<../.gitbook/assets/image (2).png>)
 
 ## Related
 

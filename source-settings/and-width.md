@@ -30,6 +30,8 @@ Limiting the width can reduce CPU load.
 If the camera cannot support the width, **it will fail**.
 {% endhint %}
 
+You can get [4K](../guides/how-to-stream-4k-video-using-vdo.ninja.md) by adding `&width=3840&height=2160` to the source link if the camera supports it.
+
 ## Related
 
 {% content-ref url="and-height.md" %}

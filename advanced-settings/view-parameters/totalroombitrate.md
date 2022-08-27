@@ -17,11 +17,14 @@ Director Option! ([`&director`](../../viewers-settings/director.md))
 | Value           | Description                                    |
 | --------------- | ---------------------------------------------- |
 | (integer value) | set this to be the total combined room bitrate |
-| 500             | default value                                  |
 
 ## Description
 
 The total bitrate a guest in a room can view video streams with; their combined bitrate total of all inbound video streams.
+
+{% hint style="info" %}
+The default value is 500-kbps.
+{% endhint %}
 
 Split between the number of streams that guest is viewing.
 
@@ -32,19 +35,17 @@ There is a toggle in the director's room which adds `&trb=2000` to the guest's i
 ![](<../../.gitbook/assets/image (94) (1).png>)
 
 {% hint style="info" %}
-Please note the difference between `&totalroombitrate` and [`&maxtotalscenebitrate`](../../newly-added-parameters/and-maxtotalscenebitrate.md). `&totalroombitrate`controls what the total bitrate for guests in a room is limited to. [`&maxtotalscenebitrate`](../../newly-added-parameters/and-maxtotalscenebitrate.md), on the other hand, is what you will want if you want to do the same for a view-link, added to OBS, for example.&#x20;
-
-For more information, see: [https://docs.vdo.ninja/advanced-settings/video-parameters/and-totalscenebitrate](https://docs.vdo.ninja/advanced-settings/video-parameters/and-totalscenebitrate)
+Please note the difference between `&totalroombitrate` and [`&totalscenebitrate`](../../newly-added-parameters/and-maxtotalscenebitrate.md). `&totalroombitrate`controls what the total bitrate for guests in a room is limited to. [`&totalscenebitrate`](../../newly-added-parameters/and-maxtotalscenebitrate.md), on the other hand, is what you will want if you want to do the same for a view-link, added to OBS, for example.
 {% endhint %}
 
 ### Limitations
 
-Total room bitrate does not override any limits other guests in the room may have set to limit their outbound bandwidth.\
-\
+Total room bitrate does not override any limits other guests in the room may have set to limit their outbound bandwidth.
+
 Mobile devices are also coded to typically refuse requests of higher bitrates by other guests, even with a high total room bitrate set. Mobile devices will quickly overheat if publishing to many guests using software-encoding, so they are treated somewhat special.
 
-In general, setting a high total room bitrate will increase the CPU and network requirements of the group room. Higher bitrates mean higher resolution, which means higher compute loads, so some computers may become overloaded. The default of 500-kbps seems low, but it was carefully selected to reduce such issues as much as reasonable.\
-\
+In general, setting a high total room bitrate will increase the CPU and network requirements of the group room. Higher bitrates mean higher resolution, which means higher compute loads, so some computers may become overloaded. The default of 500-kbps seems low, but it was carefully selected to reduce such issues as much as reasonable.
+
 Consider using [`&broadcast`](broadcast.md), combined with either a powerful host computer or a service like [Meshcast.io](https://meshcast.io/) if you'd like to share high quality video to a larger room. A high total room bitrate value may cause severe problems in large rooms or on slower computers.
 
 ### Director's ability to control

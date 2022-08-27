@@ -12,20 +12,23 @@ Sender-Side Option! ([`&push`](../../source-settings/push.md))
 
 ## Options
 
-| Value                | Description                                                       |
-| -------------------- | ----------------------------------------------------------------- |
-| (no value given)     | about 1080p60, depending on hardware                              |
-| 0                    | about 1080p60, depending on hardware                              |
-| 1                    | about 720p60, depending on hardware                               |
-| 2                    | about 360p30, depending on hardware                               |
-| -1 (for screenshare) | will allow the screen share at the same resolution as the display |
+| Value                   | Description                                                       |
+| ----------------------- | ----------------------------------------------------------------- |
+| `0` \| (no value given) | about 1080p60, depending on hardware                              |
+| `1`                     | about 720p60, depending on hardware                               |
+| `2`                     | about 360p30, depending on hardware                               |
+| `-1` (for screenshare)  | will allow the screen share at the same resolution as the display |
 
 ## Details
 
-Presets the "quality" setting for a guest.\
-Not "strict" and is less likely to give errors than explicit resolution requests.
+Presets the "quality" setting for a guest. Not "strict" and is less likely to give errors than explicit resolution requests.
 
-There is a toggle in the director's room guest's invite link customization:\
+Without using `&quality` on the URL a guest can change the "quality" when setting up the camera:\
+![](<../../.gitbook/assets/image (4).png>)
+
+Use [`&width`](../../source-settings/and-width.md) and [`&height`](../../source-settings/and-height.md) to get a higher resolution than 1920x1080.
+
+There is a toggle in the director's room guest's invite link customization which adds `&q`:\
 ![](<../../.gitbook/assets/image (98) (1).png>)
 
 ## Related

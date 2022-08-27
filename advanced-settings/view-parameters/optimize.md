@@ -13,8 +13,8 @@ Viewer-Side Option! ([`&view`](view.md), [`&scene`](scene.md), [`&room`](../../g
 | Value            | Description                                                           |
 | ---------------- | --------------------------------------------------------------------- |
 | (integer value)  | value in kbps                                                         |
-| (no value given) | 600                                                                   |
-| 0                | disables the video track when not considered visible in a scene (OBS) |
+| (no value given) | 600-kbps                                                              |
+| `0`              | disables the video track when not considered visible in a scene (OBS) |
 
 ## Details
 

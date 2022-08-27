@@ -10,6 +10,8 @@ General Option! ([`&push`](../../source-settings/push.md), [`&room`](../../gener
 
 Video playback is disabled in VDO.Ninja.
 
+![](<../../.gitbook/assets/image (10).png>)
+
 ## Related
 
 {% content-ref url="../../general-settings/deafen.md" %}

@@ -10,8 +10,8 @@ Viewer-Side Option! ([`&view`](view.md), [`&scene`](scene.md), [`&room`](../../g
 
 | Value            | Description                           |
 | ---------------- | ------------------------------------- |
-| (number)         | value in ms for the fade in animation |
 | (no value given) | fades in video in 500-ms              |
+| (value in ms)    | value in ms for the fade in animation |
 
 ## Details
 

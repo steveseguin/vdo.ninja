@@ -15,23 +15,23 @@ Sender-Side Option! ([`&push`](push.md))
 | Value            | Description                                                   |
 | ---------------- | ------------------------------------------------------------- |
 | (no value given) | Shows a "Digital Video Effects" panel when setting up devices |
-| 0                | Disables effects                                              |
-| 1                | Face tracker                                                  |
-| -1               | Flip image                                                    |
-| 2                | Mirror image                                                  |
-| -2               | Flip + mirror image                                           |
-| 3                | Background blur                                               |
-| 4                | Virtual greenscreen                                           |
-| 5                | Background replacement                                        |
-| 6                | Avatar                                                        |
-| 9                | Face tracking                                                 |
-| 10               | Face tracking                                                 |
-| 11               | Anonymous face mask                                           |
+| `0`              | Disables effects                                              |
+| `1`              | Face tracker                                                  |
+| `-1`             | Flip image                                                    |
+| `2`              | Mirror image                                                  |
+| `-2`             | Flip + mirror image                                           |
+| `3`              | Background blur                                               |
+| `4`              | Virtual greenscreen                                           |
+| `5`              | Background replacement                                        |
+| `6`              | Avatar                                                        |
+| `9`              | Face tracking                                                 |
+| `10`             | Face tracking                                                 |
+| `11`             | Anonymous face mask                                           |
 
 ## Details
 
 Adding `&effects` to a guest link enables the drop-down menu for Digital Video Effects. The guest can then choose the digital video effect via the drop-down menu.\
-![](<../.gitbook/assets/image (7).png>)
+![](<../.gitbook/assets/image (11).png>)
 
 This is on by default when using a basic push link outside of a room.
 

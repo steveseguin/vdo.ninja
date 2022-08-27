@@ -36,6 +36,8 @@ You can use [`&scale=50`](../advanced-settings/view-parameters/scale.md) also, a
 If the camera cannot support the height, **it will fail**.
 {% endhint %}
 
+You can get [4K](../guides/how-to-stream-4k-video-using-vdo.ninja.md) by adding `&width=3840&height=2160` to the source link if the camera supports it.
+
 ## Related
 
 {% content-ref url="and-width.md" %}

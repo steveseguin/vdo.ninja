@@ -19,13 +19,13 @@ V22: Sender-Side Option! ([`&push`](../../source-settings/push.md))
 | Value            | Description       |
 | ---------------- | ----------------- |
 | (no value given) | webp image format |
-| jpeg             | jpeg image format |
+| `jpeg`           | jpeg image format |
 
 ## Details
 
 #### Changes on Version 22 of VDO.Ninja
 
-The `&webp` mode has been modified a bit. Main change is that you now enable it by add `&webp` to the sender's URL, and [`&codec=webp`](codec.md) to the viewer's URL (otherwise, it falls back to normal video mode). No need for [`&broadcast`](broadcast.md) anymore. (as a reminder, this mode sends the video as a series of low-quality images, rather than a more efficient video stream).&#x20;
+The `&webp` mode has been modified a bit. Main change is that you now enable it by add `&webp` to the sender's URL, and [`&codec=webp`](codec.md) to the viewer's URL (otherwise, it falls back to normal video mode). No need for [`&broadcast`](broadcast.md) anymore. (as a reminder, this mode sends the video as a series of low-quality images, rather than a more efficient video stream).
 
 I've removed the toggle in the director's room for this `&webp` feature, as [`&chunked`](../../newly-added-parameters/and-chunked.md) mode is replacing its purpose there, but you might still want to use this mode when the viewer-side does not support video playback or hardware acceleration. Specifically, this option lets you bring motion images (aka, crude video) into the streamlabs mobile app, as a browser source, where other forms of video decoding is not supported.
 

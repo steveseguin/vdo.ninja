@@ -15,9 +15,10 @@ Viewer-Side Option! ([`&view`](view.md), [`&scene`](scene.md), [`&room`](../../g
 
 ## Options
 
-| Value    | Description                                                                                                                                                         |
-| -------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| (string) | <p>You can pass an optional stream-ID to specify the stream's source manually.<br>If no value is passed, the source will be the room's director video out feed.</p> |
+| Value            | Description                                                                                                                                                         |
+| ---------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| (no value given) | Only play-back the director's stream                                                                                                                                |
+| (string)         | <p>You can pass an optional stream-ID to specify the stream's source manually.<br>If no value is passed, the source will be the room's director video out feed.</p> |
 
 ## Details
 
@@ -51,18 +52,18 @@ See this video on Meshcast
 
 You can some-what imitate the `&broadcast` parameter using something like :&#x20;
 
-`&novideo=DirectorStreamID&noiframe=DirectorStreamID&minipreview&style=1`
+`&showonly=DirectorStreamID&noiframe=DirectorStreamID&minipreview&style=1`
 
 #### Performance considerations
 
-While the `&broadcast` flag is great for reducing the load on guests in a room, it will put all the load onto the director instead. &#x20;
+While the `&broadcast` flag is great for reducing the load on guests in a room, it will put all the load onto the director instead.
 
 * Consider using NVEnc or other hardware-encoders to encode any RTMP streams in your studio software to reduce CPU load there. This frees up more CPU for VDO.Ninja.
-* Make sure you have a capable computer; an AMD 5900x CPU is recommend for most users using this mode without Meshcast, allowing for medium-sized group rooms with some headroom to spare.&#x20;
+* Make sure you have a capable computer; an AMD 5900x CPU is recommend for most users using this mode without Meshcast, allowing for medium-sized group rooms with some headroom to spare.
 * A quad-core computer might only be able to support 1 or 2 guests adequately in this mode, although using Meshcast can help overcome that limitation.
-* If you would like the guests to see even higher quality video, consider using [`&trb=2500`](totalroombitrate.md) as an option to greatly improve the video quality. This also will greatly also increase the load on the director, so good internet and a powerful CPU will be needed.&#x20;
+* If you would like the guests to see even higher quality video, consider using [`&totalroombitrate=2500`](totalroombitrate.md) as an option to greatly improve the video quality. This also will greatly also increase the load on the director, so good internet and a powerful CPU will be needed.
 
-#### Using \&broadcast mode with Meshcast as a source
+#### Using `&broadcast` mode with Meshcast as a source
 
 * Using a service like meshcast.io, along with the [`&website`](../../source-settings/and-website.md) sharing option, can also greatly reduce load on the director and guests. The website sharing function works with other video content delivery networks, not just Meshcast.io, so you have choices.
 * When the director shares a website, their own low-latency VDO.Ninja audio remains active, so audio doubling could happen if the website contains their audio also. You'll want to mute either the website's audio or the director's VDO.Ninja audio, to avoid this issue. To also avoid echo-cancellation issues and audio delays, it is recommended to mute the website audio, as VDO.Ninja's audio will have not have those issues.

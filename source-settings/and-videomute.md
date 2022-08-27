@@ -15,7 +15,7 @@ Sender-Side Option! ([`&push`](push.md))
 
 Auto mutes the guest's video when connecting.
 
-![](<../.gitbook/assets/image (3) (2).png>)
+![](<../.gitbook/assets/image (3) (1).png>)
 
 ## Related
 

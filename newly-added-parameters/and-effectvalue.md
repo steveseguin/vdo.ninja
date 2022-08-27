@@ -20,8 +20,12 @@ Sender-Side Option! ([`&push`](../source-settings/push.md))
 
 Adding `&effectvalue` to a sender-side can take an integer. This can set the amount of blur (or effect) applied.
 
-{% hint style="info" %}
-It's best to keep it under 10 and using this flag disables the option to use the slider.
+If not using `&effectvalue` you can change it dynamically via the settings menu.
+
+![](<../.gitbook/assets/image (9).png>)
+
+{% hint style="warning" %}
+It's best to keep the value under 10 and using this flag disables the option to use the slider.
 {% endhint %}
 
 ## Related

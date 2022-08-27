@@ -14,6 +14,8 @@ Sender-Side Option! ([`&push`](../../source-settings/push.md))
 
 ## Details
 
+Allows a guest to control their total room video bitrate dynamically from the settings panel (under video settings).
+
 A slider appears in the guest’s settings menu.
 
 This feature could be useful for guests that have limited CPU or Network bandwidth to self-regulate.
