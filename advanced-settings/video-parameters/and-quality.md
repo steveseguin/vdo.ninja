@@ -24,7 +24,7 @@ Sender-Side Option! ([`&push`](../../source-settings/push.md))
 Presets the "quality" setting for a guest. Not "strict" and is less likely to give errors than explicit resolution requests.
 
 Without using `&quality` on the URL a guest can change the "quality" when setting up the camera:\
-![](<../../.gitbook/assets/image (4).png>)
+![](<../../.gitbook/assets/image (4) (1).png>)
 
 Use [`&width`](../../source-settings/and-width.md) and [`&height`](../../source-settings/and-height.md) to get a higher resolution than 1920x1080.
 

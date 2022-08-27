@@ -54,7 +54,7 @@ Professional cameras do often include a small fan inside them to reduce heat. Co
 
 Sometimes a thick protective case can insulate a smartphone, making it hotter than needed, too.&#x20;
 
-![](<../.gitbook/assets/image (4) (1).png>)
+![](<../.gitbook/assets/image (4) (1) (1).png>)
 
 ### Web apps are intentionally limited on mobile devices
 

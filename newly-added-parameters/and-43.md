@@ -8,7 +8,7 @@ Viewer-Side Option! ([`&view`](../advanced-settings/view-parameters/view.md), [`
 
 ## Details
 
-Using `&43` on the viewer side optimizes the video mixer in a scene for videos with 4:3 aspect ratio. You can also use this together with [`&cover`](../advanced-settings/view-parameters/cover.md).
+Using `&43` on the viewer side optimizes the video mixer in a scene for videos with 4:3 aspect ratio. You can also use this combined with [`&cover`](../advanced-settings/view-parameters/cover.md).
 
 ## Related
 
