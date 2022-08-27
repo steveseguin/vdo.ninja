@@ -13,10 +13,11 @@ General Option! ([`&push`](../../source-settings/push.md), [`&room`](../../gener
 
 ## Options
 
-| Value          | Description                                                                                                          |
-| -------------- | -------------------------------------------------------------------------------------------------------------------- |
-| (string value) | partial string that matches the device's label/name                                                                  |
-| Cable\_Input   | will match against "CABLE Input" (VB-Audio Virtual Cable). Use any other string to match against other device names. |
+| Value            | Description                                                                                                          |
+| ---------------- | -------------------------------------------------------------------------------------------------------------------- |
+| (string value)   | partial string that matches the device's label/name                                                                  |
+| `Cable_Input`    | will match against "CABLE Input" (VB-Audio Virtual Cable). Use any other string to match against other device names. |
+| (no value given) | hides the option to change the output device, including under the settings cog                                       |
 
 ## Details
 
@@ -28,7 +29,7 @@ Matches on "string contains", so a partial string of the device name is enough. 
 
 `&audiooutput=labelname` is consistent across domains / cookie sessions, while [`&sink=deviceid`](../view-parameters/and-sink.md) isn't.
 
-if parameter's value is left blank, it hides the option to change the output device, including under the settings cog.
+If the parameter's value is left blank, it hides the option to change the output device, including under the settings cog.
 
 {% hint style="info" %}
 Visit [vdo.ninja/devices](https://vdo.ninja/devices) to find the available device IDs and device names on your system.
@@ -38,10 +39,10 @@ Device IDs are specific to VDO.Ninja's domain, while device names are not.
 This web-based tool will also auto-create links for you, just by clicking on the respective device.
 {% endhint %}
 
-You can change the output device dynamically via the settings menu.\
+You can change the audio output device dynamically via the settings menu.\
 ![](<../../.gitbook/assets/image (137).png>)
 
-In Version 22 of VDO.Ninja you can change the output device of each video feed individually via `Right-Click -> Audio Destination` on the video feed.\
+In Version 22 of VDO.Ninja you can change the audio output device of each video feed individually via `Right-Click -> Audio Destination` on the video feed.\
 ![](<../../.gitbook/assets/image (147).png>)
 
 ## Related

@@ -26,9 +26,9 @@ Guests can be assigned to multiple subgroups. Groups can be specified via the UR
 
 ![](<../.gitbook/assets/image (129).png>)
 
-If not in a group, that guest will still see/hear everyone, regardless of which group they are in, even if a guest in another group may not be able to see/hear that guest back.&#x20;
+If not in a group, that guest will still see/hear everyone, regardless of which group they are in, even if a guest in another group may not be able to see/hear that guest back.
 
-Scenes can be put into groups as well, via the URL group option, such `&group=3`, but the director will not be able to dynamically change which group a scene is in. Not yet at least.&#x20;
+Scenes can be put into groups as well, via the URL group option, such `&group=3`, but the director will not be able to dynamically change which group a scene is in. Not yet at least.
 
 Using this group function is an alternative to transfer rooms, however it's perhaps less secure, as a guest could just tinker with their URL parameters or just refresh their page to perhaps see everyone in the room again.
 
@@ -38,4 +38,8 @@ Using this group function is an alternative to transfer rooms, however it's perh
 
 {% content-ref url="and-groupaudio.md" %}
 [and-groupaudio.md](and-groupaudio.md)
+{% endcontent-ref %}
+
+{% content-ref url="../director-settings/rooms.md" %}
+[rooms.md](../director-settings/rooms.md)
 {% endcontent-ref %}

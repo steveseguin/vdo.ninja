@@ -4,7 +4,7 @@ description: Sets a room ID for the session to join
 
 # \&room
 
-General Option! ([`&push`](../source-settings/push.md), [`&view`](../advanced-settings/view-parameters/view.md), [`&scene`](../advanced-settings/view-parameters/scene.md))
+General Option! ([`&push`](../source-settings/push.md), [`&scene`](../advanced-settings/view-parameters/scene.md))
 
 ## Aliases
 
@@ -13,9 +13,9 @@ General Option! ([`&push`](../source-settings/push.md), [`&view`](../advanced-se
 
 ## Details
 
-Rooms broadcast to all participants who has joined and chat messages.
+Rooms broadcast to all participants who have joined.
 
-Rooms are complemented by the [`&director={value}`](../viewers-settings/director.md) function. Directors can have oversight of a room.
+Rooms are complemented by the [`&director=roomname`](../viewers-settings/director.md) function. Directors can have oversight of a room.
 
 Rooms limit the viewing bitrate that guests of a room can request. OBS does not have these viewing limits though.
 

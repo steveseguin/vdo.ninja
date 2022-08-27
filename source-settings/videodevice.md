@@ -13,11 +13,11 @@ Sender-Side Option! ([`&push`](push.md))
 
 ## Options
 
-| Value                 | Description                                                                                                                                |
-| --------------------- | ------------------------------------------------------------------------------------------------------------------------------------------ |
-| 0                     | disable the video camera automatically. No option to change it during setup is provided.                                                   |
-| 1 \| (no value given) | auto-select the default video camera. No option to change it will be allowed.                                                              |
-| (string value)        | auto-select a video device that has a label containing that same string / deviceID. Whitespaces in names can be replaced with underscores. |
+| Value                   | Description                                                                                                                                |
+| ----------------------- | ------------------------------------------------------------------------------------------------------------------------------------------ |
+| `0`                     | disable the video camera automatically. No option to change it during setup is provided.                                                   |
+| `1` \| (no value given) | auto-select the default video camera. No option to change it will be allowed.                                                              |
+| (string value)          | auto-select a video device that has a label containing that same string / deviceID. Whitespaces in names can be replaced with underscores. |
 
 ## Details
 
@@ -26,7 +26,7 @@ It can be changed after the connection has been established.\
 
 Useful for helping a remote guest skip-past the complex setup of their camera/audio.
 
-You can use this option to also disable a guest's camera, potentially allowing for guest connections that have no video or audio.  This is a great option if you want to use midi-only transport, add some hidden IFRAME control, or just wanted to text chat.
+You can use this option to also disable a guest's camera, potentially allowing for guest connections that have no video or audio. This is a great option if you want to use midi-only transport, add some hidden IFRAME control, or just wanted to text chat.
 
 For a device like an iPhone, you can pass a string value such as `&videodevice=back` to specify the back camera by default. For Android, you might try `rear` instead of `back`, but it will depend on the name the manufacture gave the camera.
 

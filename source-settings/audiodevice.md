@@ -13,11 +13,11 @@ Sender-Side Option! ([`&push`](push.md))
 
 ## Options
 
-| Value                 | Description                                                                                                          |
-| --------------------- | -------------------------------------------------------------------------------------------------------------------- |
-| 0                     | disable audio source automatically. No option to change it during setup is provided.                                 |
-| 1 \| (no value given) | auto-select the default audio. No option to change it will be allowed.                                               |
-| cable\_output         | will match against "CABLE Output (VB-Audio Virtual Cable). Use any other string to match against other device names. |
+| Value                   | Description                                                                                                          |
+| ----------------------- | -------------------------------------------------------------------------------------------------------------------- |
+| `0`                     | disable audio source automatically; no option to change it during setup is provided.                                 |
+| `1` \| (no value given) | auto-select the default audio; no option to change it will be allowed.                                               |
+| `cable_output`          | will match against "CABLE Output (VB-Audio Virtual Cable). Use any other string to match against other device names. |
 
 ## Details
 

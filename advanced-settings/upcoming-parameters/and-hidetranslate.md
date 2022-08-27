@@ -11,7 +11,7 @@ General Option! ([`&push`](../../source-settings/push.md), [`&room`](../../gener
 
 `&hidetranslate` hides the button at the bottom right of VDO.Ninja to select a different language. If you want to change the language via URL you can use [`&ln`](../../general-settings/and-ln.md).
 
-![](../../.gitbook/assets/image.png)
+![](<../../.gitbook/assets/image (1).png>)
 
 ## Related
 

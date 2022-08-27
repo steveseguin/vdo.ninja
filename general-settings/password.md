@@ -4,7 +4,7 @@ description: Sets a password to view a stream or to join a room
 
 # \&password
 
-General Option! ([`&push`](../source-settings/push.md), [`&room`](room.md), [`&view`](../advanced-settings/view-parameters/view.md), [`&scene`](../advanced-settings/view-parameters/scene.md),[`&director`](../viewers-settings/director.md))
+General Option! ([`&push`](../source-settings/push.md), [`&room`](room.md), [`&view`](../advanced-settings/view-parameters/view.md), [`&scene`](../advanced-settings/view-parameters/scene.md), [`&director`](../viewers-settings/director.md))
 
 ## Aliases
 
@@ -14,7 +14,11 @@ General Option! ([`&push`](../source-settings/push.md), [`&room`](room.md), [`&v
 
 ## Details
 
+To make your stream or your room more secure, you can set a password by adding `&password=xxx` to the URL.
+
 If no password value is provided via the URL parameter, the system will prompt for one when connecting.
+
+![](../.gitbook/assets/image.png)
 
 You will want to add the password value to the URL if loading it into OBS.
 

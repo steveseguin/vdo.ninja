@@ -12,6 +12,8 @@ Mostly just an alias of `&videodevice=0&webcam`, but it also further hides the o
 
 This is a useful option for when you want a guest to join a room and only publish audio, with no opportunity to share video.
 
+![](<../.gitbook/assets/image (3).png>)
+
 ## Related
 
 {% content-ref url="videodevice.md" %}

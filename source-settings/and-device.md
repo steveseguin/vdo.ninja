@@ -12,11 +12,11 @@ Sender-Side Option! ([`&push`](push.md))
 
 ## Options
 
-| Value          | Description                                                                                                                             |
-| -------------- | --------------------------------------------------------------------------------------------------------------------------------------- |
-| 0              | disable the audio and video devices; no option to change it during setup is provided.                                                   |
-| 1              | auto-select the default video and audio devices; no option to change it will be allowed.                                                |
-| (string value) | auto-select a video & audio device that has a label containing that same string; whitespaces in names can be replaced with underscores. |
+| Value          | Description                                                                                                                               |
+| -------------- | ----------------------------------------------------------------------------------------------------------------------------------------- |
+| `0`            | disable the audio and video devices; no option to change it during setup is provided.                                                     |
+| `1`            | auto-select the default video and audio devices; no option to change it will be allowed.                                                  |
+| (string value) | auto-select a video and audio device that has a label containing that same string; whitespaces in names can be replaced with underscores. |
 
 ## Details
 

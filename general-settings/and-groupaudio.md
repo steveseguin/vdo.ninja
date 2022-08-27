@@ -1,5 +1,5 @@
 ---
-description: Needs to be used in combination with &group
+description: Tells the system to not filter out audio streams when using &group
 ---
 
 # \&groupaudio
@@ -21,4 +21,3 @@ By default a stream assigned to one group won't be visible or audible to those i
 {% content-ref url="and-group.md" %}
 [and-group.md](and-group.md)
 {% endcontent-ref %}
-

@@ -12,8 +12,8 @@ Sender-Side Option! ([`&push`](../source-settings/push.md))
 
 | Value          | Description                                                                                                                                |
 | -------------- | ------------------------------------------------------------------------------------------------------------------------------------------ |
-| 0              | disable the video camera automatically. No option to change it during setup is provided.                                                   |
-| 1              | auto-select the default video camera. No option to change it will be allowed.                                                              |
+| `0`            | disable the video camera automatically                                                                                                     |
+| `1`            | auto-select the default video camera                                                                                                       |
 | (string value) | auto-select a video device that has a label containing that same string / deviceID. Whitespaces in names can be replaced with underscores. |
 
 ## Details
