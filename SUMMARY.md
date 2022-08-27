@@ -394,6 +394,7 @@
     * [\&screensharecontenthint](advanced-settings/upcoming-parameters/and-screensharecontenthint.md)
     * [\&audiocontenthint](advanced-settings/upcoming-parameters/and-audiocontenthint.md)
     * [\&slotmode](advanced-settings/upcoming-parameters/and-slotmode.md)
+    * [\&hidetranslate](advanced-settings/upcoming-parameters/and-hidetranslate.md)
   * [Other Parameters](other-parameters.md)
 * [Releases](release-notes/older-releases.md)
   * [v21 ❤️](older-releases/v21.md)

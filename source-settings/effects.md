@@ -31,7 +31,7 @@ Sender-Side Option! ([`&push`](push.md))
 ## Details
 
 Adding `&effects` to a guest link enables the drop-down menu for Digital Video Effects. The guest can then choose the digital video effect via the drop-down menu.\
-![](../.gitbook/assets/image.png)
+![](<../.gitbook/assets/image (3).png>)
 
 This is on by default when using a basic push link outside of a room.
 

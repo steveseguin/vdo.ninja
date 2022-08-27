@@ -49,6 +49,7 @@ You can use/test these parameters on [vdo.ninja/alpha](https://vdo.ninja/alpha/)
 | ``[`&screensharecontenthint`](and-screensharecontenthint.md)\* | `=motion` prioritizes screen-share resolution; `=detail` prioritizes screen-share frame rate                                                                       |
 | ``[`&audiocontenthint`](and-audiocontenthint.md)\*             | `=music` fixed bitrate; `=speech` bitrate is variable                                                                                                              |
 | ``[`&slotmode`](and-slotmode.md)\*\*                           | Gives you the possibility to assign slots to the connected guests                                                                                                  |
+| ``[`&hidetranslate`](and-hidetranslate.md)\*                   | Hides the option to translate VDO.Ninja                                                                                                                            |
 
 \*only on [vdo.ninja/alpha](https://vdo.ninja/alpha/)\
 \*\*on [vdo.ninja/beta](https://vdo.ninja/beta/) and [vdo.ninja/alpha](https://vdo.ninja/alpha/)
