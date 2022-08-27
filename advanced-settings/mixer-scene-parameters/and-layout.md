@@ -10,10 +10,10 @@ Viewer-Side Option! ([`&scene`](../view-parameters/scene.md), [`&room`](../../ge
 
 ## Options
 
-| Value            | Description                                                                                                    |
-| ---------------- | -------------------------------------------------------------------------------------------------------------- |
-| (no value given) | Shows the guest the return feed (current layout) of the [Video Mixer](../../steves-helper-apps/video-mixer.md) |
-| (JSON string)    | Defines the layout of a scene                                                                                  |
+| Value            | Description                                                                                                  |
+| ---------------- | ------------------------------------------------------------------------------------------------------------ |
+| (no value given) | Shows the guest the return feed (current layout) of the [Video Mixer](../../steves-helper-apps/mixer-app.md) |
+| (JSON string)    | Defines the layout of a scene                                                                                |
 
 ## Details
 

@@ -23,7 +23,7 @@
   * [Meshcast.io](steves-helper-apps/meshcast.io.md)
   * [Caption.Ninja](steves-helper-apps/caption.ninja.md)
   * [Raspberry.Ninja](steves-helper-apps/raspberry.ninja.md)
-  * [Video Mixer](steves-helper-apps/video-mixer.md)
+  * [Mixer App](steves-helper-apps/mixer-app.md)
   * [Versus.cam](steves-helper-apps/versus.cam.md)
   * [Native mobile app versions](steves-helper-apps/native-mobile-app-versions.md)
   * [VDO Applications](steves-helper-apps/vdo-applications.md)

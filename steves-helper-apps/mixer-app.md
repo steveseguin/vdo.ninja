@@ -5,15 +5,15 @@ description: >-
   compared to other methods.
 ---
 
-# Video Mixer
+# Mixer App
 
 {% embed url="https://vdo.ninja/alpha/mixer" %}
 https://vdo.ninja/alpha/mixer
 {% endembed %}
 
-The Video Mixer is an alternative to the director's control center of VDO.Ninja. It gives you the full power to customize scenes, layouts and positions of the video feeds dynamically.
+The Mixer App is an alternative to the director's control center of VDO.Ninja. It gives you the full power to customize scenes, layouts and positions of the video feeds dynamically.
 
-There are currently 3 versions of the Video Mixer. The newest version with all the current updates is Alpha.
+There are currently 3 versions of the Mixer App. The newest version with all the current updates is Alpha.
 
 | Version    | Link                                                           |
 | ---------- | -------------------------------------------------------------- |
@@ -25,7 +25,7 @@ There are currently 3 versions of the Video Mixer. The newest version with all t
 
 If you find some bugs, have feature requests, ideas or feedback, please contact us on the [Discord channel](https://discord.gg/qWDshMsTar).
 
-There is a YouTube video from Steve (December 2021) about the Video Mixer. It's slightly out of date though.
+There is a YouTube video from Steve (December 2021) about the Mixer App. It's slightly out of date though.
 
 {% embed url="https://youtu.be/9xdZq4SCBoA" %}
 [https://youtu.be/9xdZq4SCBoA](https://youtu.be/9xdZq4SCBoA)
