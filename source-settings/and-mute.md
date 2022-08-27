@@ -15,6 +15,8 @@ Sender-Side Option! ([`&push`](push.md))
 
 Starts with the microphone muted by default. The guest can switch on the microphone.
 
+![](<../.gitbook/assets/image (1).png>)
+
 ## Related
 
 {% content-ref url="and-videomute.md" %}

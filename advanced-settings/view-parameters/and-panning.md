@@ -12,18 +12,18 @@ Viewer-Side Option! ([`&view`](view.md), [`&scene`](scene.md), [`&room`](../../g
 
 ## Options
 
-| Value                  | Description                                                   |
-| ---------------------- | ------------------------------------------------------------- |
-| (no value given) \| 90 | has the audio centered, but published as a mono-stereo stream |
-| (0-89)                 | pans the audio left                                           |
-| (91-180)               | pans the audio right                                          |
-| -1                     | panning will be randomized                                    |
+| Value                    | Description                                                   |
+| ------------------------ | ------------------------------------------------------------- |
+| (no value given) \| `90` | has the audio centered, but published as a mono-stereo stream |
+| (0-89)                   | pans the audio left                                           |
+| (91-180)                 | pans the audio right                                          |
+| `-1`                     | panning will be randomized                                    |
 
 ## Details
 
 The default, if no value is passed, is to have the audio centered, but published as a mono-stereo stream.&#x20;
 
-To pan the audio left, pass a value of 0 to 89.&#x20;
+To pan the audio left, pass a value of 0 to 89.
 
 To center, pass 90 or leave blank.
 

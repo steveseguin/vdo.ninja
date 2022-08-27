@@ -15,7 +15,7 @@ Sender-Side Option! ([`&push`](../source-settings/push.md))
 
 | Value            | Description   |
 | ---------------- | ------------- |
-| (no value given) | 10 ms latency |
+| (no value given) | 10-ms latency |
 | (integer value)  | latency in ms |
 
 ## Details
@@ -24,4 +24,14 @@ This is an audio buffer for the microphone. Can be applied to the publisher of a
 
 Default is 10-ms (lowest also) and higher than like 100-ms is probably a bad idea (causes, not reduces, clicking).
 
-That will upscale the sample rate and add a small latency buffer at the same time, so I hope that will help such issues before even hitting the webRTC pipeline
+That will upscale the sample rate and add a small latency buffer at the same time, so I hope that will help such issues before even hitting the webRTC pipeline.
+
+## Related
+
+{% content-ref url="../source-settings/and-micdelay.md" %}
+[and-micdelay.md](../source-settings/and-micdelay.md)
+{% endcontent-ref %}
+
+{% content-ref url="../advanced-settings/view-parameters/sync.md" %}
+[sync.md](../advanced-settings/view-parameters/sync.md)
+{% endcontent-ref %}

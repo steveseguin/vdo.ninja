@@ -17,7 +17,7 @@ General Option! ([`&push`](../../source-settings/push.md), [`&room`](../../gener
 
 Adding `&proaudio` to the URL will apply audio-specific setting presets. For inbound audio streams, it can be used to increase the audio bitrate from 32-kbps to 256-kbps. For outbound streams, it will disable echo-cancellation and noise-reduction. When applied to both the outbound and inbound sides of an audio stream, it will also enable stereo audio if available.
 
-There are a variety of different modes that apply different combination of presets. You can also override any preset with other URL parameters, such as [`&audiobitrate`](../view-parameters/audiobitrate.md), [`&outboundaudiobitrate`](../../source-settings/and-outboundaudiobitrate.md), and [`&aec=1`](../../source-settings/aec.md).&#x20;
+There are a variety of different modes that apply different combination of presets. You can also override any preset with other URL parameters, such as [`&audiobitrate`](../view-parameters/audiobitrate.md), [`&outboundaudiobitrate`](../../source-settings/and-outboundaudiobitrate.md), and [`&aec=1`](../../source-settings/aec.md).
 
 If using a microphone, wearing headphones is strongly recommended if using this parameter, along with knowledge of correctly setting your microphone gain settings. Echo and feedback issues can occur if this option is used incorrectly.
 
@@ -30,21 +30,21 @@ There is a director's room toggle for guest's invite link and for scene links:\
 
 | Value            | Description                                                                                           |
 | ---------------- | ----------------------------------------------------------------------------------------------------- |
-| 0                | will try to down-mix your mic to mono. Does not enable any pro-audio settings                         |
-| 1                | enables it for both push and view (if used on both links)                                             |
-| 2                | enables it just for viewing requests and not publishing requests                                      |
-| 3                | enables it for just publishing requests and not viewing requests                                      |
-| 4                | enables 5.1-multichannel audio support (Experimental and may require a Chrome flag to be set)         |
-| 5                | This is the default if nothing is set. It behaves like 3 or 1, depending on if you are a guest or not |
 | (no value given) | It behaves like 3 or 1, depending on if you are a guest or not                                        |
+| `0`              | will try to down-mix your mic to mono. Does not enable any pro-audio settings                         |
+| `1`              | enables it for both push and view (if used on both links)                                             |
+| `2`              | enables it just for viewing requests and not publishing requests                                      |
+| `3`              | enables it for just publishing requests and not viewing requests                                      |
+| `4`              | enables 5.1-multichannel audio support (Experimental and may require a Chrome flag to be set)         |
+| `5`              | This is the default if nothing is set. It behaves like 3 or 1, depending on if you are a guest or not |
 
 ## More Details
 
-`&stereo` and `&proaudio` currently do the same thing, so they are just aliases of each other. When used, they can be used to setup the audio transfer pipeline to allow for unprocessed, high-bitrate, stereo audio. &#x20;
+`&stereo` and `&proaudio` currently do the same thing, so they are just aliases of each other. When used, they can be used to setup the audio transfer pipeline to allow for unprocessed, high-bitrate, stereo audio.
 
 Use of this option is generally for advanced users who understand the consequences of enabling this. High-quality audio can cause audio clicking, reduced video quality, feedback issues, low volume levels, and higher background noise levels.
 
-For stereo-channel support to work, you will want both the viewer AND the publisher of the stream to have the respective `&proaudio` flag add to their URL.&#x20;
+For stereo-channel support to work, you will want both the viewer AND the publisher of the stream to have the respective `&proaudio` flag add to their URL.
 
 You can customize things further using [`&aec`](../../source-settings/aec.md), [`&ag`](../../source-settings/autogain.md), [`&dn`](../../source-settings/and-denoise.md), [`&ab`](../view-parameters/audiobitrate.md) and [`&mono`](../view-parameters/mono.md). These flags will override the presets applied by the `&proaudio` flag.  Please note, depending on your browser, enabling `&aec`, `&ag`, or `&dn` can force disable stereo audio.
 
@@ -55,7 +55,7 @@ The most powerful mode is `proaudio=1` , which if enabled:
 * Turns off echo-cancellation when publishing
 * Enables higher audio bitrate playback, up to 256-kbps, when listening ([`&view`](../view-parameters/view.md))
 
-If the parameter is used, but left without a value, it is treated as a special case (either 1 or 3). Please see follow link for more info:&#x20;
+If the parameter is used, but left without a value, it is treated as a special case (either 1 or 3). Please see follow link for more info:
 
 [https://docs.google.com/spreadsheets/d/e/2PACX-1vS7Up5jgXPcmg\_tN52JLgXBZG3wfHB3pZDQWimzxixiuRIDbeMdmU11fgrMpdYFT6yy4Igrkc9hnReY/pubhtml](https://docs.google.com/spreadsheets/d/e/2PACX-1vS7Up5jgXPcmg\_tN52JLgXBZG3wfHB3pZDQWimzxixiuRIDbeMdmU11fgrMpdYFT6yy4Igrkc9hnReY/pubhtml)
 
@@ -89,7 +89,7 @@ Just for reference, the audio codec used by VDO.Ninja is OPUS (48khz), which can
 
 If you want to use the `&proaudio` parameter but wish the output to still be mono (1-channel), there's some options.
 
-* ``[`&inputchannels=1`](and-inputchannels.md) (`&ac=1`) can be used on the sender's side, which will force their audio-capture device (microphone) to only capture in mono.
+* ``[`&inputchannels=1`](and-inputchannels.md) or [`&monomic`](../upcoming-parameters/and-monomic.md) can be used on the sender's side, which will force their audio-capture device (microphone) to only capture in mono.
 * ``[`&mono`](../view-parameters/mono.md) can be added to the viewer's side, which will try to playback incoming audio as mono.
 * If using OBS, in the audio settings, you can set the browser-source's audio to be mono.
 

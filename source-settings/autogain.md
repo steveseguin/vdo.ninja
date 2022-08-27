@@ -13,14 +13,14 @@ Sender-Side Option! ([`&push`](push.md))
 
 ## Options
 
-| Value | Description |
-| ----- | ----------- |
-| 0     | Off         |
-| 1     | On          |
+| Value | Description                  |
+| ----- | ---------------------------- |
+| `0`   | audio auto-normalization off |
+| `1`   | audio auto-normalization On  |
 
 ## Details
 
-Auto-normalization is ON by default in VDO.Ninja.
+Audio auto-normalization is ON by default in VDO.Ninja.
 
 You can turn off auto-normalization by adding `&autogain=0` to a source link (guest). If you are using [`&proaudio`](../advanced-settings/audio-parameters/and-proaudio.md), auto-normalization gets turned off. You can enable it again with `&proaudio&autogain=1`.
 

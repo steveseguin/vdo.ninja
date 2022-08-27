@@ -8,9 +8,9 @@ Viewer-Side Option! ([`&view`](view.md), [`&scene`](scene.md), [`&room`](../../g
 
 ## Options
 
-| Value          | Description               |
-| -------------- | ------------------------- |
-| (string value) | minimum audio packet size |
+| Value           | Description               |
+| --------------- | ------------------------- |
+| (integer value) | minimum audio packet size |
 
 ## Details
 

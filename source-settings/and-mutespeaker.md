@@ -18,12 +18,12 @@ General Option! ([`&push`](push.md), [`&room`](../general-settings/room.md), [`&
 | Value            | Description                                                           |
 | ---------------- | --------------------------------------------------------------------- |
 | (no value given) | the default behavior of this option is to mute inbound audio playback |
-| 0 \| false       | will have the speaker button unmuted                                  |
-| 1 \| true        | will have the speaker button muted                                    |
+| `0` \| `false`   | will have the speaker button unmuted                                  |
+| `1` \| `true`    | will have the speaker button muted                                    |
 
 ## Details
 
-Sets the speaker to be muted (or unmuted) by default for a push-link, guest, director or view/scene link. &#x20;
+Sets the speaker to be muted (or unmuted) by default for a push-link, guest, director or view/scene link.
 
 If no value is passed, the default behavior of this option is to mute inbound audio playback. The user can still unmute the audio via the speaker-icon button in their lower control bar.
 
@@ -31,7 +31,7 @@ If looking to mute the audio playback of a view or scene link, [`&noaudio`](../a
 
 ### Unmuting the director's speaker by default
 
-You can also use this parameter to have a director join the room with their speaker output unmuted by default.&#x20;
+You can also use this parameter to have a director join the room with their speaker output unmuted by default.
 
 Set the `&mutespeaker` value to `false` or `0` to have the mute button start unmuted. By default, the director joins with their speaker output muted, so this option can be used to have the director join unmuted instead.
 

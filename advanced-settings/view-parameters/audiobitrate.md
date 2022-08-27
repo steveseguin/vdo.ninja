@@ -26,12 +26,12 @@ The audio codec used is OPUS and the target sample rate is 48khz.
 
 When an audio bitrate is manually specified, CBR is enabled by default.
 
-If you do not disable [Echo-Cancellation (`aec`)](../../advanced-settings.md#aec) and [`denoise`](../../advanced-settings.md#denoise), audio quality will still be stuck at telephone quality.
+If you do not disable [Echo-Cancellation (`&aec`)](../../source-settings/aec.md) and [`&denoise`](../../source-settings/and-denoise.md), audio quality will still be stuck at telephone quality.
 
 Setting the audio bitrate to be very high can sometimes cause video bitrates on weak connections to become stuck at around 30-kbps.
 
 {% hint style="info" %}
-For reference, Spotify uses around 96-kbps for stereo audio on mobile devices
+For reference, Spotify uses around 96-kbps for stereo audio on mobile devices.
 {% endhint %}
 
 ## Related

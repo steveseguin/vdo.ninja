@@ -14,8 +14,8 @@ Sender-Side Option! ([`&push`](push.md))
 
 | Value | Description |
 | ----- | ----------- |
-| 0     | Filter Off  |
-| 1     | Filter On   |
+| `0`   | Filter Off  |
+| `1`   | Filter On   |
 
 ## Details
 

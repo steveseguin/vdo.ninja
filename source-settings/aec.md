@@ -15,8 +15,8 @@ Sender-Side Option! ([`&push`](push.md))
 
 | Value | Description                               |
 | ----- | ----------------------------------------- |
-| 0     | Turns OFF the automatic echo-cancellation |
-| 1     | Turns ON the automatic echo-cancellation  |
+| `0`   | Turns OFF the automatic echo-cancellation |
+| `1`   | Turns ON the automatic echo-cancellation  |
 
 ## Details
 

@@ -19,13 +19,13 @@ Sender-Side Option! ([`&push`](push.md))
 Updated on v22
 {% endhint %}
 
-| Value                 | Description                                                                |
-| --------------------- | -------------------------------------------------------------------------- |
-| 0                     | hides it from the menu                                                     |
-| 1 \| (no value given) | enables the new noise gate (see Details)                                   |
-| 2                     | will mute the speakers when you are talking                                |
-| 3                     | will mute the speakers when someone else is talking (mainly for debugging) |
-| 4                     | will mute the microphone when someone else is speaking                     |
+| Value                   | Description                                                                |
+| ----------------------- | -------------------------------------------------------------------------- |
+| `0`                     | hides it from the menu                                                     |
+| `1` \| (no value given) | enables the new noise gate (see Details)                                   |
+| `2`                     | will mute the speakers when you are talking                                |
+| `3`                     | will mute the speakers when someone else is talking (mainly for debugging) |
+| `4`                     | will mute the microphone when someone else is speaking                     |
 
 ## Details
 

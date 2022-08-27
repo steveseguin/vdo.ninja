@@ -18,7 +18,7 @@ Total channels is assumed to be 8 if this is used and not otherwise specified.
 
 Does not work with all audio output devices and may require experimentation.
 
-Best to use this with a mono input, as stereo channel shifting can cause issues. Simpler that way.
+Best to use this with a mono input, as stereo channel shifting can cause issues - simpler that way.
 
 Please see here for detailed testing results with different audio devices: [https://docs.google.com/spreadsheets/d/1R-y7xZ2BCn-GzTlwqq63H8lorXecO02DU9Hu4twuhuA/](https://docs.google.com/spreadsheets/d/1R-y7xZ2BCn-GzTlwqq63H8lorXecO02DU9Hu4twuhuA/)
 

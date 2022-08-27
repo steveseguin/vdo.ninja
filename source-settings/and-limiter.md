@@ -8,8 +8,10 @@ Sender-Side Option! ([`&push`](push.md))
 
 ## Details
 
-A limiter is like an aggressive compressor.\
-\
+`&limiter` applies a generic audio limiter to the local microphone.
+
+A limiter is like an aggressive compressor.
+
 The limiter is **off by default**.
 
 {% hint style="warning" %}
