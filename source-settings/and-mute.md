@@ -15,7 +15,7 @@ Sender-Side Option! ([`&push`](push.md))
 
 Starts with the microphone muted by default. The guest can switch on the microphone.
 
-![](<../.gitbook/assets/image (1) (5).png>)
+![](<../.gitbook/assets/image (1) (2).png>)
 
 ## Related
 

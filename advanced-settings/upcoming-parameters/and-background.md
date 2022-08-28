@@ -13,9 +13,9 @@ General Option! ([`&push`](../../source-settings/push.md), [`&room`](../../gener
 
 ## Options
 
-| Value                     | Description           |
-| ------------------------- | --------------------- |
-| ./media/logo\_cropped.png | URL-encoded image URL |
+| Value                      | Description           |
+| -------------------------- | --------------------- |
+| `./media/logo_cropped.png` | URL-encoded image URL |
 
 ## Details
 

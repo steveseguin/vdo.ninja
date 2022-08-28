@@ -10,6 +10,6 @@ Getting this working is not complex; pretty easy once you do it once actually. S
 
 ``[`https://vdo.ninja/?cleanoutput&webcam&effects=4`](https://vdo.ninja/?cleanoutput\&webcam\&effects=4)``
 
-![](<../.gitbook/assets/image (32) (1).png>)
+![](<../.gitbook/assets/image (32).png>)
 
 Cheers.

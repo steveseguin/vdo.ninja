@@ -35,10 +35,10 @@ There are some preset style options, which can be passed to the parameter as a v
 | `zoom`       | Zoom styled display names            |
 
 For example: `https://vdo.ninja/?showlabels=fire`\
-``![](<../../.gitbook/assets/image (17).png>)``
+``![](<../../.gitbook/assets/image (54).png>)``
 
 If no preset option is passed, a default generic style is used:\
-![](<../../.gitbook/assets/image (9).png>)
+![](<../../.gitbook/assets/image (119).png>)
 
 ### Font size customization
 
@@ -51,7 +51,7 @@ Font-size of labels will adjust slightly based on the window size.
 CSS of the styles can be set via the OBS browser source stylesheet window.\
 The CSS class name you can customize is called `video-label`.
 
-![An example of how to set a custom CSS style for labels](<../../.gitbook/assets/image (16) (1).png>)
+![An example of how to set a custom CSS style for labels](<../../.gitbook/assets/image (16).png>)
 
 You can copy the below code, modifying it as you desire, as a starting point. You'll still need to use `&showlabels` to trigger the labels to display though.
 

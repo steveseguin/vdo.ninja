@@ -15,7 +15,7 @@ Viewer-Side Option! ([`&view`](../advanced-settings/view-parameters/view.md), [`
 ## Details
 
 The director can change this value remotely, changing the order of a video in a mixed scene of videos.\
-![](<../.gitbook/assets/image (4).png>)
+![](<../.gitbook/assets/image (4) (1).png>)
 
 If two videos have the same order value, the mixer will decide on its own which is drawn first of the two.
 

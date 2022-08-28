@@ -17,10 +17,10 @@ Sender-Side Option! ([`&push`](../../source-settings/push.md))\
 | ---------------- | ---------------------------------------------------------------------------------------------------- |
 | (no value given) | overrides [`&aspectratio`](and-aspectratio.md) and sets the screen-share to the default aspect ratio |
 | (decimal number) | sets the screen-share aspect ratio                                                                   |
-| landscape        | screen-share aspect ratio of 16:9 (1.777777)                                                         |
-| portrait         | screen-share aspect ratio of 9:16 (0.5625)                                                           |
-| square           | screen-share aspect ratio of 1:1 (1)                                                                 |
-| 1.33333          | screen-share aspect ratio of 4:3                                                                     |
+| `landscape`      | screen-share aspect ratio of 16:9 (1.777777)                                                         |
+| `portrait`       | screen-share aspect ratio of 9:16 (0.5625)                                                           |
+| `square`         | screen-share aspect ratio of 1:1 (1)                                                                 |
+| `1.33333`        | screen-share aspect ratio of 4:3                                                                     |
 
 ## Details
 

@@ -21,7 +21,7 @@ General Option! ([`&push`](../../source-settings/push.md), [`&room`](../../gener
 
 ## Details
 
-`&base64js` lets a user add raw javascript to the URL to run on page load.
+`&base64js` lets a user add raw java script to the URL to run on page load.
 
 To test:\
 [`https://vdo.ninja/alpha/?b64js=YWxlcnQoJ2hpJyk=`](https://vdo.ninja/alpha/?b64js=YWxlcnQoJ2hpJyk=)``

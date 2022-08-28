@@ -10,7 +10,7 @@ Director Option! ([`&director`](../viewers-settings/director.md))
 
 When adding to the director's link, it shows a default mini director style sheet. Doesn't need to be used with a dock.
 
-`https://vdo.ninja/?director=roomname&minidirector`![](../.gitbook/assets/image.png)
+`https://vdo.ninja/?director=roomname&minidirector`![](<../.gitbook/assets/image (155).png>)
 
 ### minidirector.css
 

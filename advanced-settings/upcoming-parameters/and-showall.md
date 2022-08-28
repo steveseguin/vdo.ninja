@@ -15,7 +15,7 @@ General Option! ([`&push`](../../source-settings/push.md), [`&room`](../../gener
 
 Added `&showall` (or [`&style=7`](../design-parameters/style.md)), which will include non-media-based push connections as video elements in a group room. This can include guests that joined without audio/video, directors, or a data-only connection, like maybe MIDI-output source.
 
-To help avoid some types of connections showing up when using `&showall`, I've also added a [`&nopush`](and-nopush.md) mode, which blocks outbound publishing connections. This acts a bit like a scene=1 link, so unless `&showall` is added, you'll need to use the IFRAME API to show/hide videos in it.
+To help avoid some types of connections showing up when using `&showall`, I've also added a [`&nopush`](and-nopush.md) mode, which blocks outbound publishing connections. This acts a bit like a `&scene=1` link, so unless `&showall` is added, you'll need to use the IFRAME API to show/hide videos in it.
 
 ## Related
 

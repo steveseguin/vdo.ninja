@@ -11,7 +11,7 @@ General Option! ([`&push`](../source-settings/push.md), [`&room`](room.md), [`&v
 | Value                        | Description                                                                   |
 | ---------------------------- | ----------------------------------------------------------------------------- |
 | (user;pwd;turnserveraddress) | Set this TURN server to turnserveraddress with username user and password pwd |
-| false \| off                 | Disable the use of the TURN servers                                           |
+| `false` \| `off`             | Disable the use of the TURN servers                                           |
 
 ## Details
 
@@ -38,7 +38,7 @@ TURN Servers are designed to help certain users connect when they are behind a f
 
 Sometimes, rarely, using your own TURN server can improve video quality for some users, if the public network routing is very bad and the TURN server is hosted on a high-quality private network, like Google Cloud. Details are provided in the code repo no how to deploy your own (turnserver.md).
 
-TURN servers are NOT something you can use to share one video stream with multiple viewers. (That is an SFU server, which is out of scope of this article.) A TURN server acts like a middle-man, routing the encrypted data between two peers, mainly when those two peers are unable to speak directly themselves**.**
+TURN servers are NOT something you can use to share one video stream with multiple viewers. (That is an SFU server, which is out of scope of this article.) A TURN server acts like a middle-man, routing the encrypted data between two peers, mainly when those two peers are unable to speak directly themselves.
 
 Using a TURN server can also hide your IP address from other peers. You will need to use [`&relay`](and-relay.md) to FORCE the TURN server to be enabled, as otherwise the system will still try to use a direct p2p connection, instead of the TURN server. You may want to add turn and relay flags to both the viewer and the sender side, to ensure things are correctly set.
 

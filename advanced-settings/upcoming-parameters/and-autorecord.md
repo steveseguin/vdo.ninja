@@ -13,9 +13,9 @@ General Option! ([`&push`](../../source-settings/push.md), [`&room`](../../gener
 
 | Value              | Description                                                                                       |
 | ------------------ | ------------------------------------------------------------------------------------------------- |
-| 0                  | No video recorded; audio tentatively recorded as 32bit PCM lossless.                              |
-| (negative integer) | No video recorded; audio recorded as {integer} kbps OPUS file. Eg: -120 - Audio only at 120 kbps. |
-| (integer)          | Recored video bitrate in kbps.                                                                    |
+| `0`                | No video recorded; audio tentatively recorded as 32bit PCM lossless.                              |
+| (negative integer) | No video recorded; audio recorded as {integer} kbps OPUS file. eg: -120 - Audio only at 120 kbps. |
+| (positive integer) | Recorded video bitrate in kbps.                                                                   |
 
 ## Details
 

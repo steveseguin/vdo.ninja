@@ -17,7 +17,7 @@ Sender-Side Option! ([`&push`](../../source-settings/push.md))
 
 It hides this:
 
-<figure><img src="../../.gitbook/assets/image (8).png" alt=""><figcaption></figcaption></figure>
+<figure><img src="../../.gitbook/assets/image (149).png" alt=""><figcaption></figcaption></figure>
 
 ## Related
 

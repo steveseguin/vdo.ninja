@@ -15,7 +15,7 @@ Sender-Side Option! ([`&push`](../../source-settings/push.md))\
 
 ## Details
 
-`&monomic` sets a guest's audio input to mono (1-channel). `&monomic` is the same as [`&channelcount=1`](../audio-parameters/and-inputchannels.md).
+`&monomic` sets a guest's audio input to mono (1-channel). `&monomic` is the same as [`&inputchannels=1`](../audio-parameters/and-inputchannels.md).
 
 There is [`&mono`](../view-parameters/mono.md) to set the audio output to mono on the viewer's side.
 

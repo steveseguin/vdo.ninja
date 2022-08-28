@@ -10,4 +10,4 @@ Viewer-Side Option! ([`&view`](../view-parameters/view.md), [`&scene`](../view-p
 
 Adding this to a guest's link in a room, it forces the system-based PIP to trigger on the first video that loads.
 
-![](<../../.gitbook/assets/image (2).png>)
+![](<../../.gitbook/assets/image (122).png>)

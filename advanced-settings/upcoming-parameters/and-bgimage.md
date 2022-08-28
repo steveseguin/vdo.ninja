@@ -14,9 +14,9 @@ Viewer-Side Option! ([`&scene`](../view-parameters/scene.md), [`&room`](../../ge
 
 ## Options
 
-| Value                                           | Description                  |
-| ----------------------------------------------- | ---------------------------- |
-| https%3A%2F%2Fvdo.ninja%2Fmedia%2Fold\_icon.png | URL or base64 data image/svg |
+| Value                                            | Description                  |
+| ------------------------------------------------ | ---------------------------- |
+| `https%3A%2F%2Fvdo.ninja%2Fmedia%2Fold_icon.png` | URL or base64 data image/svg |
 
 ## Details
 

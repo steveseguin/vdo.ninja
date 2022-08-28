@@ -11,8 +11,8 @@ Sender-Side Option! ([`&push`](../../source-settings/push.md))\
 
 | Value            | Description                                                            |
 | ---------------- | ---------------------------------------------------------------------- |
-| default          | will pre-select the default avatar, rather than leaving it un-selected |
 | (no value given) | adds the ability to select an image, instead of a video device         |
+| `default`        | will pre-select the default avatar, rather than leaving it un-selected |
 
 ## Details
 

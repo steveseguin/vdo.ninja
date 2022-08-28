@@ -9,9 +9,9 @@ Sender-Side Option! ([`&push`](../../source-settings/push.md))\
 
 ## Options
 
-| Value | Description     |
-| ----- | --------------- |
-| value | time in seconds |
+| Value   | Description     |
+| ------- | --------------- |
+| (value) | time in seconds |
 
 ## Details
 

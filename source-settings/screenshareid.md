@@ -31,7 +31,7 @@ Example (`&room=roomname&push=streamid&screenshareid`)\
 Without this, the screen share ID is random, which is a decision made to increase security. This complication will be addressed in the future.
 
 There is a toggle in the director's room which adds `&ssid` to the guest's invite link.\
-![](<../.gitbook/assets/image (117).png>)
+![](<../.gitbook/assets/image (117) (2).png>)
 
 ## Related
 

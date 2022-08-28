@@ -10,7 +10,7 @@ Director Option! ([`&director`](../viewers-settings/director.md))
 
 `&queue` lets the room's director review guests who join a room, and when approved, transfer them to another room.
 
-<figure><img src="../.gitbook/assets/image (40).png" alt=""><figcaption></figcaption></figure>
+<figure><img src="../.gitbook/assets/image (10).png" alt=""><figcaption></figcaption></figure>
 
 {% embed url="https://www.youtube.com/embed/DDJrhhdNX_c" %}
 

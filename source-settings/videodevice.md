@@ -42,7 +42,7 @@ Auto-selects the default camera of a guest by adding `&vd` to the guest's invite
 ![](<../.gitbook/assets/image (126).png>)
 
 Disables the guest's camera by adding `&vd=0` to the guest's invite link.\
-![](<../.gitbook/assets/image (122).png>)
+![](<../.gitbook/assets/image (122) (2).png>)
 
 ## Related
 

@@ -21,7 +21,7 @@ Director Option!
 
 Directors have powers over some aspects of those in a group room and its scenes.
 
-<figure><img src="../.gitbook/assets/image (18).png" alt=""><figcaption></figcaption></figure>
+<figure><img src="../.gitbook/assets/image (153).png" alt=""><figcaption></figcaption></figure>
 
 {% hint style="warning" %}
 **First** director **to join** a room **claims the room**. There can be ONLY ONE! (1)
