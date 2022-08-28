@@ -16,7 +16,7 @@
 * [V14](https://github.com/steveseguin/obsninja/wiki/v14-release-notes) (updated January 2nd 2021) [https://obs.ninja/v14](https://obs.ninja/v14)
 * [V13.4](../releases/v13/v13.4.md) (updated November 24th 2020) [https://obs.ninja/v134](https://obs.ninja/v134)
 * [V13](../releases/v13/) (updated November 16th 2020) [https://obs.ninja/v13](https://obs.ninja/v13)
-* [V12](https://www.reddit.com/r/OBSNinja/comments/irz5be/obsninja\_version\_12\_released\_change\_log\_here/) (updated September 12th 2020) [https://obs.ninja/v12](https://obs.ninja/v12)
+* [V12](../releases/v12.md) (updated September 12th 2020) [https://obs.ninja/v12](https://obs.ninja/v12)
 * V11 (updated August 30th 2020) [https://obs.ninja/v11](https://obs.ninja/v11)
 * [V10](https://www.reddit.com/r/OBSNinja/comments/ib7vhk/version\_10\_released\_text\_chat\_and\_more\_added\_see/) (updated August 17th 2020) [https://obs.ninja/v10](https://obs.ninja/v10)
 * V9 (updated July 20th 2020) [https://obs.ninja/v9](https://obs.ninja/v9)
