@@ -1,3 +1,7 @@
+---
+description: November 16th 2020
+---
+
 # v13
 
 Version 13 just released. 🎈
@@ -47,10 +51,10 @@ Thank you to the sponsors who have been generous to help me afford to offer VDO.
 * Got rid of the \&scene=1 in the solo links for guests in the Director's view. It is now just "\&scene", without the added value.
 * If the app needs to change/santitize a user's input (password, room name, etc), the app will alert the user to the change. Remember, AlphaNumeric characters are supported; other characters might be replaced with an UnderScore or nothing.
 * Improved the sanitization of user inputs. More consistency and simplicity should allow for less chance of a mismatch in complex user-entered passwords, for example.
-* took a stab at making some IFRAME documentation, although it's pretty awful currently: [https://github.com/steveseguin/obsninja/blob/iframe-api-docs/IFRAME.md](https://github.com/steveseguin/obsninja/blob/iframe-api-docs/IFRAME.md)
-* Unless \&password=0 is set, passwords are enabled by default now, even if it doesn't look like it. This is because a default password is now set and that can be changed is self-deploying the code. There is also an added new "salt" value, which is dervived by the domain name of the OBSN deployment. This means that every deployment of OBSN will have its own unique encryption applied automatically. Due to the default password, handsshake messaging is now client-side encrypted by default, improving privacy and security.
-* Stream IDs and Room names are salted and hashed if using a password, meaning that if doing a self-deployment of OBSN, the chance of a stream ID or Room name collision should be virtually impossible with other deployments, even if using a silly stream ID like "test".
-* if you specify a custom password manually, it will be used to isolate the stream ID on OBSN, not just within the room. The previous behaviour had room-names hashed when passwords were used, but now this applies to stream IDs as well. This increases privacy and security.
+* took a stab at making some IFRAME documentation, although it's pretty awful currently: https://github.com/steveseguin/vdoninja/blob/iframe-api-docs/IFRAME.md
+* Unless \&password=0 is set, passwords are enabled by default now, even if it doesn't look like it. This is because a default password is now set and that can be changed is self-deploying the code. There is also an added new "salt" value, which is dervived by the domain name of the VDO.Ninja deployment. This means that every deployment of VDO.Ninja will have its own unique encryption applied automatically. Due to the default password, handsshake messaging is now client-side encrypted by default, improving privacy and security.
+* Stream IDs and Room names are salted and hashed if using a password, meaning that if doing a self-deployment of VDO.Ninja, the chance of a stream ID or Room name collision should be virtually impossible with other deployments, even if using a silly stream ID like "test".
+* if you specify a custom password manually, it will be used to isolate the stream ID on VDO.Ninja, not just within the room. The previous behaviour had room-names hashed when passwords were used, but now this applies to stream IDs as well. This increases privacy and security.
 * The Director can use the hotkey CTRL-M (command-M) to toggle the mic on and off, once the director's mic option has been enabled.
 * The Director's voice-of-god audio cannot be easily muted by guests in a room.
 * Improved the \&webcam/\&screenshare so they bypass the first button and just load directly in. No animations or close buttons; just straight to it. This is helpful for IFRAME API development uses.
@@ -79,13 +83,13 @@ Thank you to the sponsors who have been generous to help me afford to offer VDO.
 * Fixed an issue with video disconnecting on Beta when audio sources changed
 * implemented code to 'beef up' the video bandwidth if the audio is set very high. There was a bug that caused the video bitrate to drop if the audio bitrate was too high.
 * Improved the error messaging for when NDI craps out on Chrome. (10 second timeout before error now; vs 15s)
-* Created several more Youtube videos related to [OBS.Ninja](https://obs.ninja/), such as guides. A playlist can be found here: [https://www.youtube.com/watch?v=6R\_sQKxFAhg\&list=PLWodc2tCfAH1WHjl4WAOOoRSscJ8CHACe](https://www.youtube.com/watch?v=6R\_sQKxFAhg\&list=PLWodc2tCfAH1WHjl4WAOOoRSscJ8CHACe)
+* Created several more YouTube videos related to VDO.Ninja, such as guides. A playlist can be found here: [https://www.youtube.com/watch?v=6R\_sQKxFAhg\&list=PLWodc2tCfAH1WHjl4WAOOoRSscJ8CHACe](https://www.youtube.com/watch?v=6R\_sQKxFAhg\&list=PLWodc2tCfAH1WHjl4WAOOoRSscJ8CHACe)
 * added the ability to select audio and video device via the URL, by specifying a text phrase. Spaces can be represented by a "\_" underscore character. Capitalization does not matter. \&audiodevice=usb\_preamp or something I guess
 * Figured out the bug that was causing the audio device to fail if the video device also failed on load.
 * updated the style for the preview video element; height is now consistent despite device selected.
 * Added the ability to change the background color to a HEX color code: \&chroma=0fa or \&chroma=ff00aa (black by default)
 * added a viewer-side keyframe control param. This essentially tells the remote publishers to send keyframes at a specified rate. ie) \&keyframerate={milliseconds between forced keyframes} You don't need to be using OBS or VP8 to use it, and it is disabled by default, but it will reduce visual quality if set to a short interval. Useful if packet loss is really bad I guess?
-* added support for Firefox drag-in-drop LINKs from the director's room into OBS
+* added support for Firefox drag-in-drop LINKs from the director's room into OBS.
 * Added a visual icon to let you know drag and drop is working; Chrome specific. Not all links are draggable; just those that can be used in OBS.
 * [captions.ninja](https://captions.ninja/) -> [caption.ninja](https://caption.ninja/) (bought the domain ; forwards, to avoid mistyping) Also fixed a few styling issues with the site.
 * You can set the TITLE of the Tab now using the \&label command: ie) https://vdo.ninja/?label=SomeNameGoes\_here
@@ -100,7 +104,7 @@ Thank you to the sponsors who have been generous to help me afford to offer VDO.
 * ordered a 6-channel mic source to let me do more troubleshooting on the 5.1 multi channel audio support. Still working to improve multi-channel audio support.
 * Increased the time before retrying to connect to a stream if the publisher disconnects. This avoids a potential race condition.
 * Added some new actions to the IFRAME page. Events for:\
-  \-starting to pubilsh a camera\
+  \-starting to publish a camera\
   \-starting to publish a screen share\
   \-having a new inbound connection start\
   \-having a new outbound connection start\
