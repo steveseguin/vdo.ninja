@@ -1942,7 +1942,7 @@ span[data-action-type="stats-graphs-details-container"]>span{
 
 .container-inner {
 	display: none;
-	background-color: rgb(221, 221, 221);
+	background-color: #3c162f;
 	max-height: 100%;
 	min-height: 90%;
 }
