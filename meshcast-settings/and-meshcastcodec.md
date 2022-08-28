@@ -14,17 +14,17 @@ Meshcast Option / Sender-Side Option! ([`&meshcast`](../newly-added-parameters/a
 
 | Value      | Description      |
 | ---------- | ---------------- |
-| h264       | h264 codec       |
-| vp8        | vp8 codec        |
-| vp9        | vp9 codec        |
-| 42e01f\*   | open h264 codec  |
+| `h264`     | h264 codec       |
+| `vp8`      | vp8 codec        |
+| `vp9`      | vp9 codec        |
+| `42e01f`\* | open h264 codec  |
 | (xxxxxx)\* | h264 profile IDs |
 
-\*on beta
+\*on beta and alpha
 
 ## Details
 
-Adding `&meshcastcodec` to the publisher's side together with [`&meshcast`](../newly-added-parameters/and-meshcast.md) gives the option to change the publishing codec for meshcast.
+Adding `&meshcastcodec` to the publisher's side together with [`&meshcast`](../newly-added-parameters/and-meshcast.md) gives the option to change the publishing codec for Meshcast.
 
 Example usage: `https://vdo.ninja/?meshcast&meshcastcodec=vp9`
 

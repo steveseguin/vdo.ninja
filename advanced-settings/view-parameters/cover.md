@@ -12,6 +12,9 @@ Viewer-Side Option! ([`&view`](view.md), [`&scene`](scene.md), [`&room`](../../g
 
 Can be used to have a video be zoomed in and cropped, so it fills its window area completely. Useful if you don't want any gaps between videos.
 
+On the left you see two video feeds in a scene without using `&cover` and on the right with using `&cover`:\
+![](<../../.gitbook/assets/image (16).png>)![](<../../.gitbook/assets/image (28).png>)
+
 ## Related
 
 {% content-ref url="and-portrait.md" %}

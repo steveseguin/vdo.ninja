@@ -16,13 +16,13 @@ Sender-Side Option! ([`&push`](../source-settings/push.md))
 
 | Value | Description                                                 |
 | ----- | ----------------------------------------------------------- |
-| 1     | Replaces the webcam screen with the screen share            |
-| 2     | Creates a totally new connection for the screen share       |
-| 3     | Reuses the existing connection, adding a second video track |
+| `1`   | Replaces the webcam screen with the screen share            |
+| `2`   | Creates a totally new connection for the screen share       |
+| `3`   | Reuses the existing connection, adding a second video track |
 
 ## Details
 
-This parameter can be used to specify which type of screen-sharing logic is used.&#x20;
+This parameter can be used to specify which type of screen-sharing logic is used.
 
 * `screensharetype=1` replaces the webcam screen with the screen share
 * `screensharetype=2` creates a totally new connection for the screen share

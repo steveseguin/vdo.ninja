@@ -14,13 +14,13 @@ Meshcast Option / Sender-Side Option! ([`&meshcast`](../newly-added-parameters/a
 
 | Value      | Description      |
 | ---------- | ---------------- |
-| h264       | h264 codec       |
-| vp8        | vp8 codec        |
-| vp9        | vp9 codec        |
-| 42e01f\*   | open h264 codec  |
+| `h264`     | h264 codec       |
+| `vp8`      | vp8 codec        |
+| `vp9`      | vp9 codec        |
+| `42e01f`\* | open h264 codec  |
 | (xxxxxx)\* | h264 profile IDs |
 
-\*on beta
+\*on beta and alpha
 
 ## Details
 

@@ -6,10 +6,6 @@ description: Quick director access to a list of rooms for transfering guests
 
 Director Option! ([`&director`](../viewers-settings/director.md))
 
-{% hint style="warning" %}
-If [`&cleanoutput`](../advanced-settings/design-parameters/cleanoutput.md) is enabled, rooms parameter is ignored.
-{% endhint %}
-
 ## Options
 
 | Value          | Description                                                              |   |
@@ -18,15 +14,21 @@ If [`&cleanoutput`](../advanced-settings/design-parameters/cleanoutput.md) is en
 
 ## Details
 
-```
-https://vdo.ninja?dir=ROOMID&rooms=ROOMID2,ROOMID3,ROOMID4
-```
+[https://vdo.ninja/?director=ROOMID\&rooms=ROOMID2,ROOMID3,ROOMID4](https://vdo.ninja/?director=ROOMID\&rooms=ROOMID2,ROOMID3,ROOMID4)
 
 The link above would add "_ROOMID2_", "_ROOMID3_", "_ROOMID4_" guest transfer buttons to the director control bar.
 
+<figure><img src="../.gitbook/assets/image (49).png" alt=""><figcaption></figcaption></figure>
+
 Pressing any of these buttons will arm the transfer buttons beneath each caller with the chosen room name, allowing callers to be quickly moved from one room to another.
 
+![](<../.gitbook/assets/image (3).png>)
+
 Arming can be disabled by clicking the room name again. If the current room is in the list it will be ignored.
+
+{% hint style="warning" %}
+If [`&cleanoutput`](../advanced-settings/design-parameters/cleanoutput.md) is enabled, rooms parameter is ignored.
+{% endhint %}
 
 ## Related
 

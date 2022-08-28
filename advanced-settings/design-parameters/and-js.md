@@ -8,7 +8,7 @@ General Option! ([`&push`](../../source-settings/push.md), [`&room`](../../gener
 
 ## Details
 
-`&js` lets you pass a third party hosted javascript file URL (URL-encoded), allowing for a custom code injection without self-hosting, iframes or chrome extensions.
+`&js` lets you pass a third party hosted java script file URL (URL-encoded), allowing for a custom code injection without self-hosting, IFrames or chrome extensions.
 
 Example:\
 [https://vdo.ninja/?js=https%3A%2F%2Fvdo.ninja%2Fexamples%2Ftestjs.js](https://vdo.ninja/?js=https%3A%2F%2Fvdo.ninja%2Fexamples%2Ftestjs.js)

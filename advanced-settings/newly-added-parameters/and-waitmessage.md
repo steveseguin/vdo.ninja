@@ -1,10 +1,12 @@
 ---
-description: You can add a custom message which shows up while waiting for the &scene link
+description: >-
+  You can add a custom message which shows up while waiting for the &scene or
+  &view link
 ---
 
 # \&waitmessage
 
-Viewer-Side Option! ([`&scene`](../view-parameters/scene.md))
+Viewer-Side Option! ([`&scene`](../view-parameters/scene.md), [`&view`](../view-parameters/view.md))
 
 ## Options
 
@@ -14,10 +16,10 @@ Viewer-Side Option! ([`&scene`](../view-parameters/scene.md))
 
 ## Details
 
-This is for when waiting for the [`&scene`](../view-parameters/scene.md) link to load. You can add a custom message which shows up while waiting for the [`&scene`](../view-parameters/scene.md) link.
+This is for when waiting for the [`&scene`](../view-parameters/scene.md) or [`&view`](../view-parameters/view.md) link to load. You can add a custom message which shows up while waiting for the [`&scene`](../view-parameters/scene.md) or [`&view`](../view-parameters/view.md) link.
 
 Example:\
-[`https://vdo.ninja/?waitmessage=hello&view=N2iLdiZ&waittimeout=0&waitimage=https%3A%2F%2Fvdo.ninja%2Fmedia%2Flogo_cropped.png`](https://vdo.ninja/?waitmessage=hello\&view=N2iLdiZ\&waittimeout=0\&waitimage=https%3A%2F%2Fvdo.ninja%2Fmedia%2Flogo\_cropped.png)``
+[`https://vdo.ninja/?view=streamid&waitmessage=hello&waittimeout=0&waitimage=https%3A%2F%2Fvdo.ninja%2Fmedia%2Flogo_cropped.png`](https://vdo.ninja/?view=streamid\&waitmessage=hello\&waittimeout=0\&waitimage=https%3A%2F%2Fvdo.ninja%2Fmedia%2Flogo\_cropped.png)``
 
 It overrides [`&cleanoutput`](../design-parameters/cleanoutput.md).
 

@@ -14,7 +14,7 @@ General Option! ([`&push`](../../source-settings/push.md), [`&room`](../../gener
 
 | Value            | Description            |
 | ---------------- | ---------------------- |
-| 0 \| false       | disables the dark-mode |
+| `0` \| `false`   | disables the dark-mode |
 | (no value given) | enables the dark-mode  |
 
 ## Details

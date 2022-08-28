@@ -13,7 +13,11 @@ Sender-Side Option! ([`&push`](../../source-settings/push.md))
 
 ## Details
 
-This could be useful for hiding VDO.Ninja branding, making videos a bit larger at times, or for IFRAME use-case applications.
+`&hideheader` could be useful for hiding VDO.Ninja branding, making videos a bit larger at times, or for IFRAME use-case applications.
+
+It hides this:
+
+<figure><img src="../../.gitbook/assets/image (8).png" alt=""><figcaption></figcaption></figure>
 
 ## Related
 

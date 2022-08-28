@@ -24,9 +24,9 @@ Example: `https://vdo.ninja/?room=roomname&scene&slots=4`
 
 I made positioning sticky when using `&slots`, so videos will stick in place now (slot position wise at least), even if another video before it leaves.
 
-If a video is made invisible, it gives up its slot position, which allows a new video to take its spot potentially. When the original video becomes visible again though, the mix-order takes priority. If the mix order is the same, then the connection order takes priority. Dislodged videos are treated like newly joining videos, wrt. to slot positioning.
+If a video is made invisible, it gives up its slot position, which allows a new video to take its spot potentially. When the original video becomes visible again though, the mix-order takes priority. If the mix order is the same, then the connection order takes priority. Dislodged videos are treated like newly joining videos in terms of positioning in the slot.
 
 Screen sharing and highlighting a guest may still break the slotted layout.
 
-If you want more control over position, layout, and all that -- consider trying out the mixer app instead, and give some feedback:\
+If you want more control over position, layout, and all that - consider trying out the [Mixer App](../steves-helper-apps/mixer-app.md) instead, and give some feedback:\
 [https://vdo.ninja/alpha/mixer](https://vdo.ninja/alpha/mixer)

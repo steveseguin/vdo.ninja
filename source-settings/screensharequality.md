@@ -12,11 +12,10 @@ Sender-Side Option! ([`&push`](push.md))
 
 ## Options
 
-| Value | Description |
-| ----- | ----------- |
-| 0     | 1080p       |
-| 1     | 720p        |
-| 2     | 360p        |
+| `0` | 1080p |
+| --- | ----- |
+| `1` | 720p  |
+| `2` | 360p  |
 
 ## Details
 
@@ -25,11 +24,11 @@ Update on V22:\
 `&screensharequality` applies now to both primary and secondary types of screen-shares. Before [`&quality`](../advanced-settings/video-parameters/and-quality.md) was needed for primary screen share quality setting.
 {% endhint %}
 
-When a guest shares their screen during a group chat, it creates a secondary VDO.Ninja session to share that screen, alongside their active webcam. Two streams as a result.\
-\
+When a guest shares their screen during a group chat, it creates a secondary VDO.Ninja session to share that screen, alongside their active webcam. Two streams as a result.
+
 Using this parameter will give you control over the quality of the screen share, specifically, overriding what you might have set with [`&quality`](../advanced-settings/video-parameters/and-quality.md). It will not impact the webcam quality.
 
-Set a target quality for your screenshare, when you screenshare as a secondary stream (in a room). Use [`&quality`](../advanced-settings/video-parameters/and-quality.md) if you want to set the screenshare quality when only screensharing.
+Set a target quality for your screen share, when you screen share as a secondary stream (in a room). Use [`&quality`](../advanced-settings/video-parameters/and-quality.md) if you want to set the screen share quality when only screen sharing.
 
 ## Related
 

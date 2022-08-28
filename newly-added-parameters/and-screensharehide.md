@@ -16,7 +16,7 @@ Sender-Side Option! ([`&push`](../source-settings/push.md))
 
 ## Details
 
-Just hides the local screen-share sub-window that appears when screen sharing in a room. You can use this if you want to screenshare in a room, but you don't want to see your own screenshare.
+Just hides the local screen-share sub-window that appears when screen sharing in a room. You can use this if you want to screen share in a room, but you don't want to see your own screen share.
 
 Using [`&screensharetype=3`](and-screensharetype.md) also hides the local screen-share window.
 

@@ -8,10 +8,10 @@ Sender-Side Option! ([`&push`](../../source-settings/push.md))
 
 ## Options
 
-| Value                       | Description         |
-| --------------------------- | ------------------- |
-| rear \| environment \| back | rear-facing camera  |
-| front \| user               | front-facing camera |
+| Value                             | Description         |
+| --------------------------------- | ------------------- |
+| `rear` \| `environment` \| `back` | rear-facing camera  |
+| `front` \| `user`                 | front-facing camera |
 
 ## Details
 
@@ -19,7 +19,7 @@ The `&facing` setting lets you specify either the front or rear facing camera as
 \
 Example usage:[`https://vdo.ninja/?webcam&facing=rear`](https://vdo.ninja/?webcam\&facing=rear)\
 \
-`&facing` takes priority over [`&videodevice`](../../source-settings/videodevice.md) , but it will fail to [`&videodevice`](../../source-settings/videodevice.md) or the default behaviour if the rear/front camera can't be selected automatically. If there are multiple rear or front cameras, it will use the first one. [`&videodevice=0`](../../source-settings/videodevice.md) will disable the video outright.
+`&facing` takes priority over [`&videodevice`](../../source-settings/videodevice.md), but it will fail to [`&videodevice`](../../source-settings/videodevice.md) or the default behaviour if the rear/front camera can't be selected automatically. If there are multiple rear or front cameras, it will use the first one. [`&videodevice=0`](../../source-settings/videodevice.md) will disable the video outright.
 
 ![](<../../.gitbook/assets/image (43).png>)
 

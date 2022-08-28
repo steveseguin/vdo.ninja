@@ -17,25 +17,25 @@ General Option! ([`&push`](../source-settings/push.md), [`&room`](../general-set
 
 | Value            | Description                                                                                           |
 | ---------------- | ----------------------------------------------------------------------------------------------------- |
-| 0                | will try to down-mix the screen-share to mono. Does not enable any pro-audio settings                 |
-| 1                | enables it for both push and view (if used on both links)                                             |
-| 2                | enables it just for viewing requests and not publishing requests                                      |
-| 3                | enables it for just publishing requests and not viewing requests                                      |
-| 4                | enables 5.1-multichannel audio support (Experimental and may require a Chrome flag to be set)         |
-| 5                | This is the default if nothing is set. It behaves like 3 or 1, depending on if you are a guest or not |
 | (no value given) | It behaves like 3 or 1, depending on if you are a guest or not                                        |
+| `0`              | will try to down-mix the screen-share to mono. Does not enable any pro-audio settings                 |
+| `1`              | enables it for both push and view (if used on both links)                                             |
+| `2`              | enables it just for viewing requests and not publishing requests                                      |
+| `3`              | enables it for just publishing requests and not viewing requests                                      |
+| `4`              | enables 5.1-multichannel audio support (Experimental and may require a Chrome flag to be set)         |
+| `5`              | This is the default if nothing is set. It behaves like 3 or 1, depending on if you are a guest or not |
 
-View [`&stereo`](../general-settings/stereo.md) for more details.
+View [`&proaudio`](../advanced-settings/audio-parameters/and-proaudio.md) for more details.
 
 ## Details
 
-Like [`&stereo`](../general-settings/stereo.md) but for screen-shares. For more information click here:
-
-{% content-ref url="../general-settings/stereo.md" %}
-[stereo.md](../general-settings/stereo.md)
-{% endcontent-ref %}
+Like [`&proaudio`](../advanced-settings/audio-parameters/and-proaudio.md) but for screen-shares. For more information click here:
 
 ## Related
+
+{% content-ref url="../advanced-settings/audio-parameters/and-proaudio.md" %}
+[and-proaudio.md](../advanced-settings/audio-parameters/and-proaudio.md)
+{% endcontent-ref %}
 
 {% content-ref url="../general-settings/stereo.md" %}
 [stereo.md](../general-settings/stereo.md)

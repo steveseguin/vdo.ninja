@@ -8,7 +8,7 @@ General Option! ([`&push`](../source-settings/push.md), [`&room`](room.md), [`&v
 
 ## Details
 
-Addings `&stats` to a URL, it shows the connection/media stats window by default.
+Adding `&stats` to a URL shows the connection/media stats window.
 
 On desktop, you can hold `CTRL` (or `CMD`) and `Left-Click` a video to get its stats.\
 On Version 22 you can `Right-Click` -> Stats on a video feed to get its stats.

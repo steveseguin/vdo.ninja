@@ -1,4 +1,4 @@
-# Use the green screen just locally
+# How to use the green screen just locally
 
 Since OBS is using a very old browser inside, the green screen effect inside [VDO.Ninja](https://vdo.ninja/) wouldn't really run well within OBS itself, and even if it did, accessing the camera from a browser-source is a hassle to setup.
 
@@ -10,6 +10,6 @@ Getting this working is not complex; pretty easy once you do it once actually. S
 
 ``[`https://vdo.ninja/?cleanoutput&webcam&effects=4`](https://vdo.ninja/?cleanoutput\&webcam\&effects=4)``
 
-![](<../.gitbook/assets/image (32).png>)
+![](<../.gitbook/assets/image (32) (1).png>)
 
 Cheers.

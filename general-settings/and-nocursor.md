@@ -8,11 +8,11 @@ General Option! ([`&push`](../source-settings/push.md), [`&room`](room.md), [`&v
 
 ## Details
 
-This does not hide the mouse cursor for Chrome-based screen capture, as Chrome [does not yet support that](https://developer.mozilla.org/en-US/docs/Web/API/MediaTrackConstraints/cursor#browser\_compatibility). This feature is designed for hiding the mouse when using the [Electron Capture](https://github.com/steveseguin/electroncapture) app, to avoid mousing over the capture area by accident.\
-\
-Works better in Windows than on macOS, due to OS-level limitations.\
-\
-If you're looking to hide the cursor while screen-recording, consider using OBS to capture and OBS Virtualcam as the source into VDO.NInja. You can also check out: [https://github.com/rdp/screen-capture-recorder-to-video-windows-free](https://github.com/rdp/screen-capture-recorder-to-video-windows-free) as an option to turn a screen into a virtual camera without needing OBS.
+This does not hide the mouse cursor for Chrome-based screen capture, as Chrome [does not yet support that](https://developer.mozilla.org/en-US/docs/Web/API/MediaTrackConstraints/cursor#browser\_compatibility). This feature is designed for hiding the mouse when using the [Electron Capture](../steves-helper-apps/electron-capture.md) app, to avoid mousing over the capture area by accident.
+
+Works better in Windows than on macOS, due to OS-level limitations.
+
+If you're looking to hide the cursor while screen-recording, consider using OBS to capture and OBS Virtual Cam as the source into VDO.Ninja. You can also check out: [https://github.com/rdp/screen-capture-recorder-to-video-windows-free](https://github.com/rdp/screen-capture-recorder-to-video-windows-free) as an option to turn a screen into a virtual camera without needing OBS.
 
 ## Related
 

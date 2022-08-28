@@ -23,7 +23,7 @@ Sender-Side Option! ([`&push`](push.md))
 
 When screen sharing as a guest in a group room, the screen share will now create a second stream for the screen share, keeping your webcam also.
 
-`&screenshareid` will preset the ID the screenshare will have, making things easier to predict and prep for.
+`&screenshareid` will preset the ID the screen share will have, making things easier to predict and prep for.
 
 Example (`&room=roomname&push=streamid&screenshareid`)\
 ![](<../.gitbook/assets/image (110) (1) (1).png>)

@@ -19,7 +19,7 @@ General Option! ([`&push`](../../source-settings/push.md), [`&room`](../../gener
 
 ## Details
 
-Lets you set font-size of the guest labels or closed captions.
+Lets you set font-size of the [guest labels](../design-parameters/showlabels.md) or [closed captions](../settings-parameters/and-closedcaptions.md).
 
 ## Related
 

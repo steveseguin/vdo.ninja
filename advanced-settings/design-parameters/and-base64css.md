@@ -22,7 +22,7 @@ General Option! ([`&push`](../../source-settings/push.md), [`&room`](../../gener
 
 ## Details
 
-This command lets you add css to VDO.Ninja via the URL, but as a single string, so no external reference to a file is needed.&#x20;
+This command lets you add CSS to VDO.Ninja via the URL, but as a single string, so no external reference to a file is needed.
 
 Example usage:\
 [`https://vdo.ninja/beta/?base64css=JTIzbWFpbm1lbnUlN0JiYWNrZ3JvdW5kLWNvbG9yJTNBJTIwcGluayUzQiUyMCVFMiU5RCVBNA`](https://vdo.ninja/beta/?base64css=JTIzbWFpbm1lbnUlN0JiYWNrZ3JvdW5kLWNvbG9yJTNBJTIwcGluayUzQiUyMCVFMiU5RCVBNA)\

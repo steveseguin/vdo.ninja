@@ -14,7 +14,7 @@ Viewer-Side Option! ([`&scene`](../advanced-settings/view-parameters/scene.md))
 
 ## Details
 
-`&autoadd` can be added to a scene link, passing to it a comma-separated list of stream IDs. If any of those streamIDs connect, they will be auto-added to that specific scene page. The director won't see that they were added to the scene page, but the director can still toggle the add-to-scene button to remove them. This is just an alternative to using [`&view=`](../advanced-settings/view-parameters/view.md) to auto-add a guest to a scene, as [`&view`](../advanced-settings/view-parameters/view.md) filters out non-listed stream IDs as well, while `&autoadd` will not.
+`&autoadd` can be added to a scene link, passing to it a comma-separated list of stream IDs. If any of those stream IDs connect, they will be auto-added to that specific scene page. The director won't see that they were added to the scene page, but the director can still toggle the add-to-scene button to remove them. This is just an alternative to using [`&view=`](../advanced-settings/view-parameters/view.md) to auto-add a guest to a scene, as [`&view`](../advanced-settings/view-parameters/view.md) filters out non-listed stream IDs as well, while `&autoadd` will not.
 
 ## Related
 

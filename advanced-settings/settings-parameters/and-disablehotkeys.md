@@ -8,7 +8,7 @@ General Option! ([`&push`](../../source-settings/push.md), [`&room`](../../gener
 
 ## Details
 
-This option disables hotkeys (like `CRTL + M`).
+`&disablehotkeys` disables hotkeys (like `CRTL + M`).
 
 ## Related
 

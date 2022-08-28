@@ -14,6 +14,8 @@ Director Option! ([`&director`](../viewers-settings/director.md))
 
 If you add this to the director's URL you hide the solo guest's links in the director's panel from showing.
 
+![](<../.gitbook/assets/image (13).png>)
+
 ## Related
 
 {% content-ref url="../director-settings/cleandirector.md" %}

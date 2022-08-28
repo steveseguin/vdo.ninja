@@ -14,8 +14,8 @@ Sender-Side Option! ([`&push`](../source-settings/push.md))
 
 | Value | Description                                       |
 | ----- | ------------------------------------------------- |
-| 0     | Turns OFF audio noise reduction for screen-shares |
-| 1     | Turns ON audio noise reduction for screen-shares  |
+| `0`   | Turns OFF audio noise reduction for screen-shares |
+| `1`   | Turns ON audio noise reduction for screen-shares  |
 
 ## Details
 

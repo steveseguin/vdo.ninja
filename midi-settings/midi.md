@@ -20,7 +20,7 @@ The MIDI capabilities of VDO.Ninja go beyond just controlling VDO.Ninja though. 
 
 More information, details, guides, and tools can be found closer to the bottom of this page.
 
-{% hint style="info" %}
+{% hint style="warning" %}
 Currently a Chromium-browser, like Google Chrome, is recommended when using the MIDI features. Other browsers may not be compatible at this time.
 {% endhint %}
 
@@ -36,10 +36,10 @@ There are two MIDI standards; one where value 33 is note A0, and the more common
 
 | \&midi=N | Description of MIDI                                                                                                                          |
 | -------- | -------------------------------------------------------------------------------------------------------------------------------------------- |
-| 1        | Hotkeys using A3 to G4 notes                                                                                                                 |
-| 2        | Hotkeys using A1 to G2 notes                                                                                                                 |
-| 3        | Hotkeys using Note C1 + velocities                                                                                                           |
-| 4        | <p>Hotkeys using control-change inputs.</p><p></p><p>Designed mainly for the director to control multiple guests, as well as themselves.</p> |
+| `1`      | Hotkeys using A3 to G4 notes                                                                                                                 |
+| `2`      | Hotkeys using A1 to G2 notes                                                                                                                 |
+| `3`      | Hotkeys using Note C1 + velocities                                                                                                           |
+| `4`      | <p>Hotkeys using control-change inputs.</p><p></p><p>Designed mainly for the director to control multiple guests, as well as themselves.</p> |
 
 ### **\&midi=1**
 
@@ -108,7 +108,7 @@ In this case, for hotkeying remote guests as a director:
 | Value 8        | Fixes Rainbow Puke of this guest in scenes |
 | Value 12 to 18 | Add/remove from scene 2 to 8               |
 
-All the above hotkey mappings are purely experimental at this time and will change based on user feedback. These mappings should allow a user to use a StreamDeck with OBS.Ninja.
+All the above hotkey mappings are purely experimental at this time and will change based on user feedback. These mappings should allow a user to use a StreamDeck with VDO.Ninja.
 
 ### Configuring MIDI device and channel
 
@@ -205,7 +205,7 @@ It's important to not send and receive between two tabs locally if from the same
 
 Check the console log or [https://vdo.ninja/midi](https://vdo.ninja/midi) to see which midi device is what device index.
 
-![Example of how to find the midi device order ID](<../.gitbook/assets/image (18).png>)
+![Example of how to find the midi device order ID](<../.gitbook/assets/image (18) (1).png>)
 
 While the original MIDI timestamp is transmitted to the remote computer also, it currently isn't included with the output MIDI event itself. I'm just not sure what to use it for currently, but let me know if you need it.
 

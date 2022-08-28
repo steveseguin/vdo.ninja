@@ -38,7 +38,7 @@ A transparent PNG or an SVG file are the recommended options.
 
 It will stretch to cover the camera preview-area, so probably best to keep things 16:9 aspect if needed.
 
-URL can be url-encoded, for more complex URLs. Simple URLs might work without.
+URL can be URL-encoded, for more complex URLs. Simple URLs might work without.
 
 Technically this can be used as an overlay for other things, but it only works with the self-preview.
 

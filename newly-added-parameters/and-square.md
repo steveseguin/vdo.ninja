@@ -12,7 +12,9 @@ Viewer-Side Option! ([`&view`](../advanced-settings/view-parameters/view.md), [`
 
 ## Details
 
-Optimize the auto-mixer to work with video streams that are in square mode 1:1 (versus landscape). Can be used together with [`&cover`](../advanced-settings/view-parameters/cover.md) to get a better effect.
+Optimize the auto-mixer to work with video streams that are in square mode 1:1 (versus landscape).
+
+Can be used together with [`&cover`](../advanced-settings/view-parameters/cover.md) to get a better effect.
 
 ## Related
 

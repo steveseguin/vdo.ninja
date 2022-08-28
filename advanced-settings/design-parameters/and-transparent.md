@@ -14,6 +14,8 @@ General Option! ([`&push`](../../source-settings/push.md), [`&room`](../../gener
 
 Makes the background for the website transparent using CSS.
 
+The browser source in OBS already has a transparent background by default.
+
 This is useful for embedding VDO.Ninja as an [IFRAME](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/iframe).\
 Not helpful with the Electron Capture app.\
 Not needed for OBS if using default OBS CSS stylesheet:

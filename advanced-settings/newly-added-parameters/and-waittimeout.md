@@ -1,12 +1,12 @@
 ---
 description: >-
   Specifies a delay for &waitimage and &waitmessage while waiting for the &scene
-  link
+  or &view link
 ---
 
 # \&waittimeout
 
-Viewer-Side Option! ([`&scene`](../view-parameters/scene.md))
+Viewer-Side Option! ([`&scene`](../view-parameters/scene.md), [`&view`](../view-parameters/view.md))
 
 ## Options
 
@@ -16,10 +16,10 @@ Viewer-Side Option! ([`&scene`](../view-parameters/scene.md))
 
 ## Details
 
-This is for when waiting for the [`&scene`](../view-parameters/scene.md) link to load. It specifies a delay for [`&waitimage`](and-waitimage.md) and [`&waitmessage`](and-waitmessage.md) while waiting for the [`&scene`](../view-parameters/scene.md) link.
+This is for when waiting for the [`&scene`](../view-parameters/scene.md) or [`&view`](../view-parameters/view.md) link to load. It specifies a delay for [`&waitimage`](and-waitimage.md) and [`&waitmessage`](and-waitmessage.md) while waiting for the [`&scene`](../view-parameters/scene.md) or [`&view`](../view-parameters/view.md) link.
 
 Example:\
-[`https://vdo.ninja/?waitmessage=hello&view=N2iLdiZ&waittimeout=0&waitimage=https%3A%2F%2Fvdo.ninja%2Fmedia%2Flogo_cropped.png`](https://vdo.ninja/?waitmessage=hello\&view=N2iLdiZ\&waittimeout=0\&waitimage=https%3A%2F%2Fvdo.ninja%2Fmedia%2Flogo\_cropped.png)``
+[`https://vdo.ninja/?view=streamid&waitmessage=hello&waittimeout=0&waitimage=https%3A%2F%2Fvdo.ninja%2Fmedia%2Flogo_cropped.png`](https://vdo.ninja/?view=streamid\&waitmessage=hello\&waittimeout=0\&waitimage=https%3A%2F%2Fvdo.ninja%2Fmedia%2Flogo\_cropped.png)``
 
 It overrides [`&cleanoutput`](../design-parameters/cleanoutput.md).
 

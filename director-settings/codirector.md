@@ -37,16 +37,16 @@ The first director to join the room is the main director, and so their password 
 A co-director cannot force-disconnect the main director.
 
 {% hint style="info" %}
-The co-director mode is still evolving, and certain things like shared-state between all the directors may still be missing.&#x20;
+The co-director mode is still evolving, and certain things like shared-state between all the directors may still be missing.
 
-Starting with v20 of VDO.Ninja, a co-director invite link will be available via the room settings button, along with the option to customize permissions.
+Starting with [v20](../release-notes/v20.md) of VDO.Ninja, a co-director invite link will be available via the room settings button, along with the option to customize permissions.
 {% endhint %}
 
 ![The co-directors have a special color assigned to them](<../.gitbook/assets/image (31).png>)
 
 ### Warnings
 
-Do not confuse the Room password with the Director's password; if they are the same, you potentially allow a mischievous guest to have access that they should not have.
+Do not confuse the room password with the director's password; if they are the same, you potentially allow a mischievous guest to have access that they should not have.
 
 If the main director leaves and re-joins, or a new director joins, all the co-directors will need to be re-checked. It's possible that a network outage could have a co-director and the main director to switch roles, depending on who re-connected.
 
@@ -54,7 +54,7 @@ If you copy and paste the main director's URL to a new browser/tab, be sure to r
 
 If using the [`&queue`](../general-settings/queue.md) parameter with co-directors, you may need to use [`&view=STREAMID`](../advanced-settings/view-parameters/view.md) to allow the co-director to bypass the queue, else they won't be able to be validated since they will be stuck in the queue. There is more info about this in the queue's documentation.
 
-This feature required fairly extensive changes to the code base to enable, so please report issues you may encounter.&#x20;
+This feature required fairly extensive changes to the code base to enable, so please report issues you may encounter.
 
 ## Related
 

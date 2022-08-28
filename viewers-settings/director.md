@@ -12,17 +12,20 @@ Director Option!
 
 ## Options
 
-| Value          | Description                        |
-| -------------- | ---------------------------------- |
-| (string value) | room name to enter as the director |
+| Value            | Description                        |
+| ---------------- | ---------------------------------- |
+| (no value given) | opens the director page            |
+| (room name)      | room name to enter as the director |
 
 ## Details
+
+Directors have powers over some aspects of those in a group room and its scenes.
+
+<figure><img src="../.gitbook/assets/image (18).png" alt=""><figcaption></figcaption></figure>
 
 {% hint style="warning" %}
 **First** director **to join** a room **claims the room**. There can be ONLY ONE! (1)
 {% endhint %}
-
-Directors have powers over some aspects of those in a group room and its scenes, such as the ability to hangup remote guests.
 
 In the newer versions there is an option to have multiple directors aka [`&codirector`](../director-settings/codirector.md).
 

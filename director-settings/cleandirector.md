@@ -12,9 +12,11 @@ Director Option! ([`&director`](../viewers-settings/director.md))
 
 ## Details
 
-Hides the invite URL options in the Director's room.
+Hides the invite URL options in the Director's control center.
 
-Allows for a cleaner looking interface. Useful if using IFRAMES I maybe.
+Allows for a cleaner looking interface. Useful if using IFrames maybe.
+
+![](<../.gitbook/assets/image (38).png>)
 
 ## Related
 

@@ -13,7 +13,12 @@ Viewer-Side Option! ([`&view`](view.md), [`&scene`](scene.md), [`&room`](../../g
 
 ## Details
 
-Optimize the auto-mixer to work with video streams that are in portrait mode (versus landscape). Can be used together with [`&cover`](cover.md) to get a better effect.
+Optimize the auto-mixer to work with video streams that are in portrait mode (versus landscape).
+
+Can be used together with [`&cover`](cover.md) to get a better effect.\
+For example:\
+`https://vdo.ninja/?scene&room=roomname&portrait&cover`\
+![](<../../.gitbook/assets/image (6).png>)
 
 ## Related
 

@@ -15,8 +15,9 @@ General Option! ([`&push`](../../source-settings/push.md), [`&room`](../../gener
 
 ## Details
 
-Adds 10px around the videos for some spacing, by default. It can be customized.
+Adds 10px around the videos for some spacing, by default. It can be customized.\
+`https://vdo.ninja/?scene&room=roomname&margin=100`\
+![](<../../.gitbook/assets/image (42).png>)
 
-It's also available as a toggle to the director's room.
-
+It's also available as a toggle to the director's room.\
 ![](<../../.gitbook/assets/image (125).png>)

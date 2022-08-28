@@ -19,7 +19,7 @@ Meshcast Option / Sender-Side Option! ([`&meshcast`](../newly-added-parameters/a
 
 ## Details
 
-Adding `&meshcastbitrate` to the publisher's side together with [`&meshcast`](../newly-added-parameters/and-meshcast.md) gives the option to change the video bitrate for meshcast.
+Adding `&meshcastbitrate` to the publisher's side together with [`&meshcast`](../newly-added-parameters/and-meshcast.md) gives the option to change the video bitrate for Meshcast.
 
 Example usage: `https://vdo.ninja/?meshcast&meshcastbitrate=2000`
 

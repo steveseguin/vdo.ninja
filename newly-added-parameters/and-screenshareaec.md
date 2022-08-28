@@ -15,8 +15,8 @@ Sender-Side Option! ([`&push`](../source-settings/push.md))
 
 | Value | Description                                                 |
 | ----- | ----------------------------------------------------------- |
-| 0     | Turns OFF the automatic echo-cancellation for screen-shares |
-| 1     | Turns ON the automatic echo-cancellation for screen-shares  |
+| `0`   | Turns OFF the automatic echo-cancellation for screen-shares |
+| `1`   | Turns ON the automatic echo-cancellation for screen-shares  |
 
 ## Details
 
