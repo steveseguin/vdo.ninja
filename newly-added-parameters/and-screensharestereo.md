@@ -29,7 +29,7 @@ View [`&proaudio`](../advanced-settings/audio-parameters/and-proaudio.md) for mo
 
 ## Details
 
-Like [`&proaudio`](../advanced-settings/audio-parameters/and-proaudio.md) but for screen-shares. For more information click here:
+Like [`&proaudio`](../advanced-settings/audio-parameters/and-proaudio.md) but for screen-shares.
 
 ## Related
 
