@@ -14,6 +14,8 @@ Viewer-Side Option! ([`&view`](view.md), [`&scene`](scene.md), [`&room`](../../g
 
 ## Details
 
+`&channeloffset` shifts audio channels 0 and 1 up channels, based on the offset value you set.
+
 Total channels is assumed to be 8 if this is used and not otherwise specified.
 
 Does not work with all audio output devices and may require experimentation.
