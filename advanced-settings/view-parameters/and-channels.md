@@ -20,7 +20,7 @@ Left and right is available for most users; channels 1 and 2
 * On Windows, you might need to select 5.1 surround sound with your device in the Windows audio settings
 * On macOS, you might want to consider using SoundFlower, as it seems the most correct with its routing.
 
-Designed to be used with [`&channeloffset`](../../advanced-settings.md#channeloffset).
+Designed to be used with [`&channeloffset`](and-channeloffset.md).
 
 Please see here for detailed testing results with different audio devices: [https://docs.google.com/spreadsheets/d/1R-y7xZ2BCn-GzTlwqq63H8lorXecO02DU9Hu4twuhuA/](https://docs.google.com/spreadsheets/d/1R-y7xZ2BCn-GzTlwqq63H8lorXecO02DU9Hu4twuhuA/)
 
