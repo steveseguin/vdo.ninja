@@ -17,7 +17,7 @@ Viewer-Side Option! ([`&view`](view.md), [`&scene`](scene.md), [`&room`](../../g
 Left and right is available for most users; channels 1 and 2
 
 * Up to 6-channels is possible, if your output device supports it.
-* On Windows, you might need to select 5.1 surround sound with your device in the Windows audio settings
+* On Windows, you might need to select 5.1 surround sound with your device in the Windows audio settings.
 * On macOS, you might want to consider using SoundFlower, as it seems the most correct with its routing.
 
 Designed to be used with [`&channeloffset`](and-channeloffset.md).
