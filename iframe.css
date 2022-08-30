@@ -33,20 +33,7 @@ input {
     padding: 5px;
     margin-bottom: 5px;
     margin-right: 5px;
-}
 
-button {
-    padding: 5px;
-    background: white;
-    border: solid;
-    border-radius: 5px;
-    cursor: pointer;
-    margin-bottom: 5px;
-}
-
-button:not(:last-child) {
-    margin-right: 5px;
-}
 
 video {
     max-width: 300px;
@@ -88,15 +75,7 @@ video {
 
 .custom-post > * {
     margin: 0;
-}
 
-.custom-post > button {
-    border-radius: 0;
-    border: 0;
-    padding: 0 20px;
-    font-size: 16px;
-    font-family: monospace;
-}
 
 .custom-post-input {
     width: 100%;
@@ -130,11 +109,7 @@ video {
     justify-content: space-between;
     align-items: center;
     font-size: 22px;
-}
 
-.example-header > button {
-    margin: 0;
-}
 
 .hidden {
     display: none;
