@@ -431,7 +431,7 @@
   * [Can't capture an application's audio when screen-sharing](common-errors-and-known-issues/cant-capture-an-applications-audio-when-screen-sharing.md)
   * [Audio Clicking / Popping](common-errors-and-known-issues/audio-clicking-popping.md)
   * [Can't share my screen](common-errors-and-known-issues/cant-share-my-screen.md)
-  * [Nothing shows up in OBS or it is choppy](common-errors-and-known-issues/obs.ninja-doesnt-show-up-in-obs-or-is-choppy.md)
+  * [Nothing shows up in OBS or it is choppy](common-errors-and-known-issues/nothing-shows-up-in-obs-or-it-is-choppy.md)
   * [Blue spinning window](common-errors-and-known-issues/blue-spinning-window.md)
   * [Packet Loss](common-errors-and-known-issues/packet-loss.md)
   * [Overheating](common-errors-and-known-issues/overheating.md)

@@ -6,7 +6,7 @@
 * [cant-capture-an-applications-audio-when-screen-sharing.md](cant-capture-an-applications-audio-when-screen-sharing.md "mention")
 * [audio-clicking-popping.md](audio-clicking-popping.md "mention")
 * [cant-share-my-screen.md](cant-share-my-screen.md "mention")
-* [obs.ninja-doesnt-show-up-in-obs-or-is-choppy.md](obs.ninja-doesnt-show-up-in-obs-or-is-choppy.md "mention")
+* [nothing-shows-up-in-obs-or-it-is-choppy.md](nothing-shows-up-in-obs-or-it-is-choppy.md "mention")
 * [blue-spinning-window.md](blue-spinning-window.md "mention")
 * [packet-loss.md](packet-loss.md "mention")
 * [overheating.md](overheating.md "mention")
