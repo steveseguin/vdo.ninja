@@ -412,6 +412,8 @@
   * [v13](releases/v13/README.md)
     * [v13.4](releases/v13/v13.4.md)
   * [v12](releases/v12.md)
+  * [v10](releases/v10.md)
+  * [v8](releases/v8.md)
 * [Development Progress](https://updates.vdo.ninja/)
 * [Help!](help/README.md)
   * [Fail safes and Backups](help/fail-safes-and-backups.md)
