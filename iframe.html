@@ -54,10 +54,7 @@
 		iframeExample.append(exampleHeader, exampleBody);
 		container.prepend(iframeExample);
 
-		////////////  LISTEN FOR EVENTS
-		var eventMethod = window.addEventListener ? "addEventListener" : "attachEvent";
-		var eventer = window[eventMethod];
-		var messageEvent = eventMethod === "attachEvent" ? "onmessage" : "message";
+		
 
 		var media = {};
 		media.tracks = {};
@@ -66,6 +63,11 @@
 		window.addEventListener('messageerror', e => {
 			console.error(e);
 		});
+		
+		////////////  LISTEN FOR EVENTS
+		var eventMethod = window.addEventListener ? "addEventListener" : "attachEvent";
+		var eventer = window[eventMethod];
+		var messageEvent = eventMethod === "attachEvent" ? "onmessage" : "message";
 		
 		eventer(messageEvent, function (e) {
 			if (e.source != iframe.contentWindow){return} // reject messages send from other iframes

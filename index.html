@@ -57,7 +57,7 @@
 		<meta property="twitter:image" content="./media/vdoNinja_logo_full.png" />
 		<meta name="msapplication-TileColor" content="#da532c" />
 		<meta name="theme-color" content="#ffffff" />
-		<link rel="stylesheet" href="./main.css?ver=174" />
+		<link rel="stylesheet" href="./main.css?ver=177" />
 		<script type="text/javascript" crossorigin="anonymous" src="./thirdparty/adapter.min.js"></script>
 		<style id="lightbox-animations" type="text/css"></style>
 		<!-- <link rel="manifest" href="manifest.json" /> -->
@@ -82,7 +82,7 @@
 			<link itemprop="url" href="./media/vdoNinja_logo_full.png" />
 		</span>
 		<script  type="text/javascript" crossorigin="anonymous"  src="./thirdparty/CodecsHandler.js?ver=37"></script>
-		<script  type="text/javascript" crossorigin="anonymous" src="./webrtc.js?ver=495"></script>
+		<script  type="text/javascript" crossorigin="anonymous" src="./webrtc.js?ver=508"></script>
 		<input id="zoomSlider" type="range" style="display: none;" />
 		<span id="electronDragZone" style="pointer-events: none; z-index:-10; position:absolute;top:0;left:0;width:100%;height:2%;-webkit-app-region: drag;min-height:20px;"></span>
 		<div id="header">
@@ -159,13 +159,13 @@
 				<div id="mutevideobutton" onmousedown="event.preventDefault(); event.stopPropagation();"  title="Disable the Camera" alt="Disable the Camera" onclick="toggleVideoMute()"   tabindex="19" role="button" aria-pressed="false" onkeyup="enterPressedClick(event,this);"  class="hidden float" style="cursor: pointer;">
 					<i id="mutevideotoggle" onmousedown="event.preventDefault(); event.stopPropagation();"  class="toggleSize las la-video my-float"></i>
 				</div>
-				<div id="screensharebutton" onmousedown="event.preventDefault(); event.stopPropagation();"  title="Share a Screen with others" alt="Share a Screen with others" onclick="screenshareTypeDecider(1)" tabindex="20" role="button" aria-pressed="false" onkeyup="enterPressedClick(event,this);"  class="float hidden" style="cursor: pointer;">
+				<div id="screensharebutton" onmousedown="event.preventDefault(); event.stopPropagation();"  title="Share a Screen with others" alt="Share a Screen with others" onclick="screenshareTypeDecider(1)" tabindex="20" role="button" aria-pressed="false" onkeyup="enterPressedClick(event,this);"  class="float hidden task" data-menu="context-menu-screen-share" style="cursor: pointer;">
 					<i id="screensharetoggle" onmousedown="event.preventDefault(); event.stopPropagation();"  class="toggleSize las la-desktop my-float"></i>
 				</div>
-				<div id="screenshare2button" onmousedown="event.preventDefault(); event.stopPropagation();"  title="Create a Secondary Stream" alt="Create a Secondary Stream" onclick="screenshareTypeDecider(2)" tabindex="20" role="button" aria-pressed="false" onkeyup="enterPressedClick(event,this);"  class="float hidden" style="cursor: pointer;">
+				<div id="screenshare2button" onmousedown="event.preventDefault(); event.stopPropagation();"  title="Create a Secondary Stream" alt="Create a Secondary Stream" onclick="screenshareTypeDecider(2)" tabindex="20" role="button" aria-pressed="false" onkeyup="enterPressedClick(event,this);"  class="float hidden task" data-menu="context-menu-screen-share"  style="cursor: pointer;">
 					<i id="screenshare2toggle" onmousedown="event.preventDefault(); event.stopPropagation();"  class="toggleSize las  la-tv my-float"></i>
 				</div>
-				<div id="screenshare3button" onmousedown="event.preventDefault(); event.stopPropagation();"  title="Create a Third Stream" alt="Create a Third Stream" onclick="screenshareTypeDecider(3)" tabindex="20" role="button" aria-pressed="false" onkeyup="enterPressedClick(event,this);"  class="float hidden" style="cursor: pointer;">
+				<div id="screenshare3button" onmousedown="event.preventDefault(); event.stopPropagation();"  title="Create a Third Stream" alt="Create a Third Stream" onclick="screenshareTypeDecider(3)" tabindex="20" role="button" aria-pressed="false" onkeyup="enterPressedClick(event,this);"  class="float hidden task" data-menu="context-menu-screen-share"  style="cursor: pointer;">
 					<i id="screenshare3toggle" onmousedown="event.preventDefault(); event.stopPropagation();"  class="toggleSize las  la-tv my-float"></i>
 				</div>
 				<div id="websitesharebutton" onmousedown="event.preventDefault(); event.stopPropagation();"  title="Share a website with your guests (IFRAME)" alt="Share a website with your guests (IFRAME)" onclick="shareWebsite(false, event)" tabindex="21" role="button" aria-pressed="false" onkeyup="enterPressedClick(event,this);"  class="float hidden" style="cursor: pointer;">
@@ -962,7 +962,7 @@
 						<label class="switch" title="Disables Echo Cancellation and improves audio quality">
 						<input type="checkbox" data-param="&s" onchange="updateLink(1,this);">
 						<span class="slider"></span>
-						</label><font class="tooltip" style='cursor: help;position:relative;bottom:2px;font-family:"Noto Color Emoji", "Apple Color Emoji", "Segoe UI Emoji", Times, Symbola, Aegyptus, Code2000, Code2001, Code2002, Musica, serif, LastResort;'>⚠<span class="tooltiptext" style="width: 16em;">This can cause guests to be too quiet or cause feedback issues</span></font> <span data-translate="pro-audio-mode">Pro-audio mode</span>
+						</label><font class="tooltip" style='cursor: help;position:relative;bottom:2px;font-family:"Noto Color Emoji", "Apple Color Emoji", "Segoe UI Emoji", Times, Symbola, Aegyptus, Code2000, Code2001, Code2002, Musica, serif, LastResort;'>⚠<span class="tooltiptext" style="width: 16em;">This can cause guests to be too quiet or have feedback/echo issues</span></font> <span data-translate="pro-audio-mode">Pro-audio mode</span>
 						<Br />
 						<label class="switch" title="Audio-only sources are visually hidden from scenes">
 						  <input type="checkbox" data-param="&st" onchange="updateLink(1,this);">
@@ -1015,7 +1015,7 @@
 						  <input type="checkbox" data-param="&q" onchange="updateLink(1,this);">
 						  <span class="slider"></span>
 						</label>
-						<font class="tooltip" style='cursor: help;position:relative;bottom:2px;font-family:"Noto Color Emoji", "Apple Color Emoji", "Segoe UI Emoji", Times, Symbola, Aegyptus, Code2000, Code2001, Code2002, Musica, serif, LastResort;'>⚠<span class="tooltiptext">This can cause video playback to lag</span></font> 1080p60 Video if Available
+						<font class="tooltip" style='cursor: help;position:relative;bottom:2px;font-family:"Noto Color Emoji", "Apple Color Emoji", "Segoe UI Emoji", Times, Symbola, Aegyptus, Code2000, Code2001, Code2002, Musica, serif, LastResort;'>⚠<span class="tooltiptext">This can cause video playback to lag</span></font><span data-translate="1080p60-if-available">1080p60 Video if Available</span>
 						<Br />
 						<label class="switch" title="The default microphone will be pre-selected for the guest">
 						  <input type="checkbox" data-param="&ad" onchange="updateLink(1,this);">
@@ -1175,29 +1175,27 @@
 						<div style="display:inline-block;margin-top: 12px;   position: relative;">
 						
 						<label class="switch">
-							  <input type="checkbox" data-param="&st" onchange="updateLink(3,this);">
+							  <input type="checkbox" data-param="&st" onchange="updateLink(3,this, true);">
 							  <span class="slider"></span>
 							</label>
 							<span data-translate="hide-audio-only-sources">Hide audio-only sources</span>
 							<br />
 							
 							<label class="switch">
-								<input type="checkbox" data-param="&s" onchange="updateLink(3,this);">
+								<input type="checkbox" data-param="&s" onchange="updateLink(3,this, true);">
 								<span class="slider"></span>
 							</label><font class="tooltip" style='cursor: help;position:relative;bottom:2px;font-family:"Noto Color Emoji", "Apple Color Emoji", "Segoe UI Emoji", Times, Symbola, Aegyptus, Code2000, Code2001, Code2002, Musica, serif, LastResort;'>⚠<span class="tooltiptext" style="width: 10em;">This can cause audio clicking issues</span></font> 
 							<span data-translate="pro-audio-mode">Pro-audio mode</span>
 							<br />
 							
 							<label class="switch">
-								<input type="checkbox" id="codech264toggle" data-param="&codec=h264" onchange="updateLink(3,this);">
+								<input type="checkbox" id="codech264toggle" data-param="&codec=h264" onchange="updateLink(3,this, true);">
 								<span class="slider"></span>
 							</label><font class="tooltip" style='cursor: help;position:relative;bottom:2px;font-family:"Noto Color Emoji", "Apple Color Emoji", "Segoe UI Emoji", Times, Symbola, Aegyptus, Code2000, Code2001, Code2002, Musica, serif, LastResort;'>💉<span class="tooltiptext" style="width: 10em; background-color: #77C"><span data-translate="this-can-reduce-packet-loss">Can reduce packet loss video corruption in OBS on PC</span></span></font> 
 							<span data-translate="use-h264-codec">Use H264 codec</span>
 							
-							
 						</div>
-						
-						<div  style="display:inline-block;margin-top: 12px; position: relative; margin-right:10px; ">
+						<div style="display:inline-block;margin-top: 12px; position: relative; margin-right:10px; ">
 							
 							<label class="switch" title="The active speakers are made visible automatically">
 							  <input type="checkbox" data-param="&sas" onchange="updateLink(3,this);">
@@ -1207,19 +1205,17 @@
 							<br />
 							
 							<label class="switch" title="Set the background color to bright green">
-							  <input type="checkbox" data-param="&chroma" onchange="updateLink(3,this);">
+							  <input type="checkbox" data-param="&chroma" onchange="updateLink(3,this, true);">
 							  <span class="slider"></span>
 							</label>
 							<span data-translate="green-background">Green background</span>
-							
 							<br />
 							
 							<label class="switch" title="Fade videos in over 500ms">
-							  <input type="checkbox" data-param="&fadein" onchange="updateLink(3,this);">
+							  <input type="checkbox" data-param="&fadein" onchange="updateLink(3,this, true);">
 							  <span class="slider"></span>
 							</label>
 							<span data-translate="fade-videos-in">Fade-in videos</span>
-							
 							<br />
 							
 							<label class="switch" title="Videos use an animated transition when being remixed">
@@ -1232,7 +1228,7 @@
 						
 						<div  style="display:inline-block;margin-top: 12px; position: relative; margin-right:10px;">
 							<label class="switch">
-							  <input type="checkbox" data-param="&sl" onchange="updateLink(3,this);">
+							  <input type="checkbox" data-param="&sl" onchange="updateLink(3,this, true);">
 							  <span class="slider"></span>
 							</label>
 							<span data-translate="show-display-names">Show display names</span>
@@ -1244,36 +1240,40 @@
 							</label>
 							<span data-translate="add-margin">Add margin to videos</span>
 							<br />
+							
 							<label class="switch">
-							  <input type="checkbox" data-param="&vb=20000" onchange="updateLink(3,this);">
+							  <input type="checkbox" data-param="&vb=20000" onchange="updateLink(3,this, true);">
 							  <span class="slider"></span>
 							</label>
-							<font class="tooltip" style='cursor: help;position:relative;bottom:2px;font-family:"Noto Color Emoji", "Apple Color Emoji", "Segoe UI Emoji", Times, Symbola, Aegyptus, Code2000, Code2001, Code2002, Musica, serif, LastResort;'>⚠<span class="tooltiptext">This can cause video playback to lag</span></font> Unlock Video Bitrate
-							
+							<font class="tooltip" style='cursor: help;position:relative;bottom:2px;font-family:"Noto Color Emoji", "Apple Color Emoji", "Segoe UI Emoji", Times, Symbola, Aegyptus, Code2000, Code2001, Code2002, Musica, serif, LastResort;'>⚠<span class="tooltiptext">This can cause video playback to lag</span></font>
+							<span data-translate="unlock-video-bitrate">unlock Video Bitrate</span>
 							<br />
 							
 							<label class="switch" title="Disable fit-to-window optmized video scaling for added sharpness; increases CPU / Network load though.">
-							  <input type="checkbox" data-param="&scale=100" onchange="updateLink(3,this);">
+							  <input type="checkbox" data-param="&scale=100" onchange="updateLink(3,this, true);">
 							  <span class="slider"></span>
 							</label>
-							<span data-translate="disable-downscaling">Viewer-side downscaling</span>
+							<font class="tooltip" style='cursor: help;position:relative;bottom:2px;font-family:"Noto Color Emoji", "Apple Color Emoji", "Segoe UI Emoji", Times, Symbola, Aegyptus, Code2000, Code2001, Code2002, Musica, serif, LastResort;'>⚠<span class="tooltiptext">This can cause higher CPU load for everyone in the room</span></font>
+							<span data-translate="disable-downscaling">Increase sharpness</span>
 						</div>
 						
 						<div  style="display:inline-block;margin-top: 12px; position: relative; ">
 							<label class="switch" title="Playback the video with mono-channel audio">
-							  <input type="checkbox" data-param="&mono" onchange="updateLink(3,this);">
+							  <input type="checkbox" data-param="&mono" onchange="updateLink(3,this, true);">
 							  <span class="slider"></span>
 							</label>
 							<span data-translate="force-mono-audio">Force mono audio</span>
 							<br />
+							
 							<label class="switch" title="Have the videos fit their respective areas, even if it means cropping a bit">
-							  <input type="checkbox" data-param="&cover" onchange="updateLink(3,this);">
+							  <input type="checkbox" data-param="&cover" onchange="updateLink(3,this, true);">
 							  <span class="slider"></span>
 							</label>
 							<span data-translate="fill-video-space">Crop video to fit</span>
 							<br />
+							
 							<label class="switch" title="Have videos be aligned with sizing designed for vertical video">
-							  <input type="checkbox" data-param="&916" onchange="updateLink(3,this);">
+							  <input type="checkbox" data-param="&916" onchange="updateLink(3,this, true);">
 							  <span class="slider"></span>
 							</label>
 							<span data-translate="vertical-aspect-ratio">Vertical video mode</span>
@@ -1794,6 +1794,34 @@
 				</li>
 			</ul>
 		</nav>
+		<nav id="context-menu-screen-share" class="context-menu">
+			<ul class="context-menu__items">
+				<li class="context-menu__item">
+					<a href="#" class="context-menu__link" data-action="SSNewTab">
+						<i class="las la-external-link"></i>
+						<span data-translate="open-ss-in-new-tab">Share from a new tab</span>
+					</a>
+				</li>
+				<li class="context-menu__item hidden">
+					<a href="#" class="context-menu__link" data-action="ss1">
+						1📷
+						<span data-translate="ss-mode-1" >Screen Share Mode 1</span>
+					</a>
+				</li>
+				<li class="context-menu__item hidden">
+					<a href="#" class="context-menu__link" data-action="ss2">
+						2📷
+						<span data-translate="ss-mode-2" >Screen Share Mode 2</span>
+					</a>
+				</li>
+				<li class="context-menu__item hidden">
+					<a href="#" class="context-menu__link" data-action="ss3">
+						3📷
+						<span data-translate="ss-mode-3" >Screen Share Mode 3</span>
+					</a>
+				</li>
+			</ul>
+		</nav>
 		<nav id="context-menu-video" class="context-menu">
 			<ul class="context-menu__items">
 				<li class="context-menu__item">
@@ -2090,7 +2118,8 @@
 				<li><a onclick="changeLg('en');toggle(document.getElementById('languages'));" style="cursor: pointer;">English</a></li>
 				<li><a onclick="changeLg('ru');toggle(document.getElementById('languages'));" style="cursor: pointer;" data-tz="Europe/Moscow">Russian</a></li>
 				<li><a onclick="changeLg('fr');toggle(document.getElementById('languages'));" style="cursor: pointer;" data-tz="Europe/Paris">French</a></li>
-				<li><a onclick="changeLg('pt');toggle(document.getElementById('languages'));" style="cursor: pointer;" data-tz="Europe/Lisbon;America/Araguaina">Portuguese</a></li>
+				<li><a onclick="changeLg('pt');toggle(document.getElementById('languages'));" style="cursor: pointer;" data-tz="Europe/Lisbon;">Portuguese (Europe)</a></li>
+				<li><a onclick="changeLg('pt-br');toggle(document.getElementById('languages'));" style="cursor: pointer;" data-tz="America/Araguaina">Portuguese (Brazil)</a></li>
 				<li><a onclick="changeLg('it');toggle(document.getElementById('languages'));" style="cursor: pointer;" data-tz="Europe/Rome">Italian</a></li>
 				<li><a onclick="changeLg('de');toggle(document.getElementById('languages'));" style="cursor: pointer;" data-tz="Europe/Berlin">German</a></li>
 				<li><a onclick="changeLg('es');toggle(document.getElementById('languages'));" style="cursor: pointer;" data-tz="Europe/Madrid">Spanish</a></li>
@@ -2140,7 +2169,7 @@
 			session.streamID = session.generateStreamID(); // randomly generates a streamID for this session. You can set your own programmatically if needed
 			
 			session.defaultPassword = "someEncryptionKey123"; // Change this password if self-deploying for added security/privacy
-			session.salt = location.hostname; // used only if password is not == False. You can change to "session.salt = location.hostname+location.pathname;" for greater deployment isolation
+			// session.salt = location.hostname; // used only if password is not == False. You can change to "session.salt = location.hostname+location.pathname;" for greater deployment isolation
 			
 			session.stunServers = [{ urls: ["stun:stun.l.google.com:19302", "stun:stun4.l.google.com:19302"]}]; // google stun servers. default
 			
@@ -2208,11 +2237,11 @@
 			// session.defaultBackgroundImages = ["./media/bg_sample1.webp", "./media/bg_sample2.webp"]; // for &effects=5 (virtual backgrounds)
 		</script>
 		<script type="text/javascript" crossorigin="anonymous" src="./thirdparty/aes.js"></script>
-		<script type="text/javascript" crossorigin="anonymous" id="lib-js" src="./lib.js?ver=390"></script>
+		<script type="text/javascript" crossorigin="anonymous" id="lib-js" src="./lib.js?ver=408"></script>
 		<!-- 
 		// If you wish to change branding, blank offers a good clean start.
 		<script type="text/javascript" id="main-js" src="./main.js" data-translation="blank"></script>
 		-->
-		<script type="text/javascript" crossorigin="anonymous" id="main-js" src="./main.js?ver=404"></script>
+		<script type="text/javascript" crossorigin="anonymous" id="main-js" src="./main.js?ver=418"></script>
 	</body>
 </html>

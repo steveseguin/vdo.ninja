@@ -208,10 +208,22 @@
     "previously-was-29-970029830932617": "Previously was:  29.970029830932617",
     "previously-was-720": "Previously was:  720",
     "hold-ctrl-or-cmd-to-lock-width-and-height-together-when-changing-them": "Hold CTRL (or cmd) to lock width and height together when changing them",
-    "previously-was-1280": "Previously was:  1280"
+    "previously-was-1280": "Previously was:  1280",
+    "obs-remote-controller-start-stop-and-change-scenes-": "OBS Remote Controller; start/stop and change scenes.",
+    "generate-a-random-room-name": "Generate a random room name",
+    "link-out-to-the-vdo-ninja-help-guide-for-obs-studio": "link out to the vdo.ninja help guide for OBS Studio",
+    "this-mode-encodes-the-video-and-audio-into-chunks-which-are-shared-with-multiple-viewers-limited-browser-support-can-potentially-reduce-cpu-and-improve-video-quality-but-will-rely-on-a-buffer-": "This mode encodes the video and audio into chunks, which are shared with multiple viewers. Limited browser support. Can potentially reduce CPU and improve video quality, but will rely on a buffer.",
+    "allow-the-guest-to-select-an-avatar-image-for-when-they-hide-their-camera": "Allow the guest to select an avatar image for when they hide their camera",
+    "use-meshcast-servers-to-restream-video-data-from-this-guest-to-its-viewers-reducing-the-cpu-and-upload-load-in-some-cases-will-increase-latency-a-bit-": "Use Meshcast servers to restream video data from this guest to its viewers, reducing the CPU and upload load in some cases. Will increase latency a bit.",
+    "show-an-ovelaid-grid-on-the-guest-s-preview-video-to-help-with-self-centering-of-the-guest-": "Show an ovelaid grid on the guest's preview video to help with self-centering of the guest.",
+    "disable-fit-to-window-optmized-video-scaling-for-added-sharpness-increases-cpu-network-load-though-": "Disable fit-to-window optmized video scaling for added sharpness; increases CPU / Network load though.",
+    "remotely-change-the-volume-of-this-guest-updates-on-release-dbl-click-to-reset-": "Remotely change the volume of this guest; updates on release. Dbl-click to reset.",
+    "choose-a-hotkey-for-hold-to-talk-if-using-electron-capture-elevate-privilleges-to-have-it-become-global": "Choose a hotkey for Hold-to-Talk. If using Electron Capture, elevate privilleges to have it become global",
+    "increase-this-at-your-peril-changes-the-total-inbound-video-bitrate-per-guest-mobile-devices-excluded-": "Increase this at your peril. Changes the total inbound video bitrate per guest; mobile devices excluded.",
+    "select-a-location-that-is-closest-to-both-you-and-your-audience-": "Select a location that is closest to both you and your audience."
   },
   "innerHTML": {
-    "logo-header": "<font id=\"qos\" style=\"color: white;\">V</font>DO.Ninja ",
+    "logo-header": "\n<font id=\"qos\">V</font>DO.Ninja \n",
     "copy-this-url": "Zkopírujte tuhle URL do OBS \"Browser Source\"",
     "you-are-in-the-control-center": "Jsi v administraci místnosti",
     "joining-room": "Připojujete se",
@@ -274,7 +286,7 @@
     "copy-to-clipboard": "Kopírovat do schránky",
     "click-for-quick-room-overview": "❔ Klidni zde pro krátký přehled o funkcích",
     "push-to-talk-enable": "🔊 Povolit administrátorovi Push-to-Talk mód",
-    "welcome-to-control-room": "Welcome. This is the control-room for the group-chat. There are different things you can use this room for:<br><br>\t<li>You can host a group chat with friends using a room. Share the blue link to invite guests who will join the chat automatically.</li>\t<li>A group room can handle around 4 to 30 guests, depending on numerous factors, including CPU and available bandwidth of all guests in the room.</li>\t<li>Solo-views of each video are offered under videos as they load. These can be used within an OBS Browser Source.</li>\t<li>You can use the auto-mixing Group Scene, the green link, to auto arrange multiple videos for you in OBS.</li>\t<li>You can use this control room to record isolated video or audio streams, but it is an experimental feature still.</li>\t<li>Videos in the Director's room will be of low quality on purpose; to save bandwidth/CPU</li>\t<li>Guest's in the room will see each other's videos at a very limited quality to conserve bandwidth/CPU.</li>\t<li>OBS will see a guest's video in high-quality; the default video bitrate is 2500kbps.</li>\t<br>\tAs guests join, their videos will appear below. You can bring their video streams into OBS as solo-scenes or you can add them to the Group Scene.\t<br>The Group Scene auto-mixes videos that have been added to the group scene. Please note that the Auto-Mixer requires guests be manually added to it for them to appear in it; they are not added automatically.<br><br>Apple mobile devices, such as iPhones and iPads, do not fully support Video Group Chat. This is a hardware constraint.<br><br>\tFor advanced options and parameters, <a href=\"https://github.com/steveseguin/obsninja/wiki/Guides-and-How-to's#urlparameters\">see the Wiki.</a>",
+    "welcome-to-control-room": "Welcome. This is the control-room for the group-chat. There are different things you can use this room for:<br><br>\t<li>You can host a group chat with friends using a room. Share the blue link to invite guests who will join the chat automatically.</li>\t<li>A group room can handle around 4 to 30 guests, depending on numerous factors, including CPU and available bandwidth of all guests in the room.</li>\t<li>Solo-views of each video are offered under videos as they load. These can be used within an OBS Browser Source.</li>\t<li>You can use the auto-mixing Group Scene, the green link, to auto arrange multiple videos for you in OBS.</li>\t<li>You can use this control room to record isolated video or audio streams, but it is an experimental feature still.</li>\t<li>Videos in the Director's room will be of low quality on purpose; to save bandwidth/CPU</li>\t<li>Guest's in the room will see each other's videos at a very limited quality to conserve bandwidth/CPU.</li>\t<li>OBS will see a guest's video in high-quality; the default video bitrate is 2500kbps.</li>\t<br>\tAs guests join, their videos will appear below. You can bring their video streams into OBS as solo-scenes or you can add them to the Group Scene.\t<br>The Group Scene auto-mixes videos that have been added to the group scene. Please note that the Auto-Mixer requires guests be manually added to it for them to appear in it; they are not added automatically.<br><br>Apple mobile devices, such as iPhones and iPads, do not fully support Video Group Chat. This is a hardware constraint.<br><br>\tFor advanced options and parameters, <a href=\"https://github.com/steveseguin/vdo.ninja/wiki/Guides-and-How-to's#urlparameters\">see the Wiki.</a>",
     "more-than-four-can-join": "Tyto čtyři sloty pro hosty slouží pouze k předvedení. K místnosti se mohou skutečně připojit více než čtyři hosté.",
     "welcome-to-obs-ninja-chat": "\n\tVítejte na VDO.Ninja! můžete ihned poslat zprávy ostatním členům této místnosti\n",
     "names-and-labels-coming-soon": "\n\tJména členů bude jedna z budoucích funkcí VDO.ninja.\n",
@@ -438,7 +450,24 @@
     "for-the-best-possible-experience-make-sure": "For the best possible experience, make sure",
     "your-device-is-powered": "Your device is powered",
     "your-connection-is-hardwired-instead-of-wifi": "Your connection is hardwired instead of wifi",
-    "you-are-using-headphones-earphones": "You are using headphones / earphones"
+    "you-are-using-headphones-earphones": "You are using headphones / earphones",
+    "wizard-link-generator": "Wizard Link Generator",
+    "1080p60-if-available": "1080p60 Video if Available",
+    "chunked-mode": "P2P Chunked-mode",
+    "avatar-selection": "Can select an Avatar image",
+    "meshcast-mode": "Stream via server",
+    "rule-of-thirds": "Show rule-of-thirds grid",
+    "disable-downscaling": "Increase sharpness",
+    "user": "User",
+    "show-qr-code": "Show as QR Code",
+    "open-ss-in-new-tab": "Share from a new tab",
+    "ss-mode-1": "Screen Share Mode 1",
+    "ss-mode-2": "Screen Share Mode 2",
+    "ss-mode-3": "Screen Share Mode 3",
+    "custom-audio-output": "Audio Destination",
+    "remote-reload-connection": "Remote Reload Page",
+    "hold-ctrl": "tip:  <b>CTRL</b>(⌘) + <b>Click</b> for alt-menu",
+    "remote-control-obs-menu": "Remote Controller for OBS Studio"
   },
   "placeholders": {
     "join-by-room-name-here": "Připojit se s názvem místnosti zde",
@@ -451,7 +480,9 @@
     "optional": "optional",
     "enter-the-room-name-here": "Enter the room name here",
     "enter-the-room-password-here": "Enter the room password here",
-    "enter-your-message-here": "Enter your message here"
+    "enter-your-message-here": "Enter your message here",
+    "press-a-key-here": "press a key here",
+    "enter-the-remote-obs-password-here": "Enter the remote OBS password here"
   },
   "miscellaneous": {
     "start": "START",
@@ -519,6 +550,16 @@
     "samsung-a-series": "Samsung A-series phones may have issues with Chrome; if so, try Firefox Mobile instead or switch video codecs.",
     "screen-permissions-denied": "Permission to capture denied. Ensure your browser has screen record system permissions\n\n1.On your Mac, choose Apple menu  > System Preferences, click Security & Privacy , then click Privacy.\n2.Select Screen Recording.\n3.Select the checkbox next to your browser to allow it to record your screen.",
     "change-audio-output-device": "Audio could not be captured. Please make sure you have an audio output device available.\n\nSome gaming headsets (ie: Corsair) may need to be set to 2-channel output to work, as surround sound drivers may cause problems.",
-    "prompt-access-request": " is trying to view your stream. Allow them?"
+    "prompt-access-request": " is trying to view your stream. Allow them?",
+    "confirm-reload-user": "Are you sure you wish to reload this user's browser?",
+    "webrtc-is-blocked": "⚠ This browser has either blocked WebRTC or does not support it.\n\nThis site will not work without it.\n\nDisable any browser extensions or privacy settings that may be blocking WebRTC, or try a different browser.",
+    "not-clean-session": "Video effects or canvas rendering failed.\n\nCheck to ensure any remotely hosted images are cross-origin allowed.",
+    "ios-no-screen-share": "Sorry, but your iOS browser does not support screen-sharing.\n\nPlease see <a href='https://docs.vdo.ninja/guides/screen-share-your-iphone-ipad' target='_blank'>this guide</a> for an alternative method to do so.",
+    "android-no-screen-share": "Sorry, your mobile browser does not support screen-sharing.\n\nThe <a href='https://docs.vdo.ninja/getting-started/native-mobile-app-versions' target='_blank'>Android native app</a> does offer basic support for it though.",
+    "no-screen-share-supported": "Sorry, your browser does not support screen-sharing.\n\nPlease use the desktop versions of Firefox or Chrome instead.",
+    "speech-not-suppoted": "⚠ Speech Recognition is not supported by this browser",
+    "blue-yeti-tip": "<i>Tip:</i> Blue Yeti microphones may experience issues being overly loud. <a href='https://support.google.com/chrome/thread/7542181?hl=en&msgid=79691143'>Please see here</a> for a solution or disable auto-gain in VDO.Ninja.",
+    "site-not-responsive": "<h3>Notice: The system cannot be accessed or is currently slow to respond.</h3>\nIf a routing issue, try adding <i title='or try visiting https://proxy.vdo.ninja/'>&proxy</i> to the URL; you can also try <i>https://proxy.vdo.ninja</i> or a VPN if the service is blocked in your country.\n\nIf the main service is down, a backup version is also available here: <i>https://backup.vdo.ninja</i>\n\nContact steve@seguin.email for added help.\n\nThis service requires the use of Websockets over port 443.",
+    "no-audio-source-detected": "No Audio Source was detected.\n\nIf you were wanting to capture an Application's Audio, please see:\nhttps://docs.vdo.ninja/help/guides-and-how-tos#audio for some guides."
   }
 }

@@ -92,4 +92,9 @@ Ideas, feedback, bugs, etc -- all welcomed.  I'm dumping many of my ideas as iss
 VDO.Ninja is available as 'mostly' open-source; please see the LICENCE.md file for details.
 
 ## Credit
-Thank you to everyone who has helped support this project so far. From the moderators, volunteers helping with support, those contributing media assets, the project sponsors, those reporting issues, those offering feedback, and any code submissions. 
+Thank you to everyone who has helped support this project so far. From the moderators, volunteers helping with support, those contributing media assets, the project sponsors, those reporting issues, those offering feedback, and any code submissions.
+
+## Contributors of this repo
+<a href="https://github.com/steveseguin/vdoninja/graphs/contributors">
+  <img src="https://contrib.rocks/image?repo=steveseguin/vdoninja" />
+</a>
