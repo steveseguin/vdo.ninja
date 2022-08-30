@@ -4,9 +4,9 @@ description: Known issues or problems, bugs, and limitations
 
 # Known issues
 
-Known issues that are most critical and up-to-date are normally listed on the main page of [VDO.Ninja](https://vdo.ninja/).\
-\
-You can also refer to the #report-bugs channel on discord, at https://discord.vdo.ninja, to see recently reported issues. I push bug fixes daily to beta, at https://vdo.ninja/beta, so give that a shot if you find a bug on the main release.
+Known issues that are most critical and up-to-date are normally listed on the main page of [VDO.Ninja](https://vdo.ninja/).
+
+You can also refer to the #report-bugs channel on [Discord](https://discord.com/invite/cKkj5nN8pH), to see recently reported issues. I push bug fixes daily to beta, at [https://vdo.ninja/beta](https://vdo.ninja/beta), so give that a shot if you find a bug on the main release.
 
 Below are some links to third parties, for a list of known issues that commonly will apply to VDO.Ninja as well. They might have some issues not yet reported here and are often up to date.
 
@@ -20,17 +20,17 @@ Below are some links to third parties, for a list of known issues that commonly 
 \
 [https://bugs.chromium.org/p/chromium/issues/list?q=webrtc%20type%3DBug\&can=2\&sort=-pri](https://bugs.chromium.org/p/chromium/issues/list?q=webrtc%20type%3DBug\&can=2\&sort=-pri)
 
-Time fixes all wounds, even with Apple products.\
-\
+Time fixes all wounds, even with Apple products.
+
 Below are more possible/past issues, although the list is not often curated and can be assumed to be out of date.
 
-* Grey video loaded from guest in room. Try adding [`&scale=100`](../advanced-settings/view-parameters/scale.md) and remove any bitrate limits set. If the issue persists, try a different video codec ([`&codec=vp9`](../advanced-settings/view-parameters/codec.md), for example) or ask the guest to connect with [`&q=2`](../advanced-settings/video-parameters/and-quality.md) (smooth and cool).
-*   OBS browser sources crash, turning all black. This can happen after refreshing/editing a browser source URL or just randomly.  Restarting OBS can fix the issue, but to prevent the issue, try using:\
+* Grey video loaded from guest in room. Try adding [`&scale=100`](../advanced-settings/view-parameters/scale.md) and remove any bitrate limits set. If the issue persists, try a different video codec ([`&codec=vp9`](../advanced-settings/view-parameters/codec.md), for example) or ask the guest to connect with [`&quality=2`](../advanced-settings/video-parameters/and-quality.md) (smooth and cool).
+*   OBS browser sources crash, turning all black. This can happen after refreshing/editing a browser source URL or just randomly. Restarting OBS can fix the issue, but to prevent the issue, try using:\
     \
     &#x20;`"C:\Program Files\obs-studio\bin\64bit\obs64.exe" --enable-media-stream --disable-gpu-process-crash-limit`
 
     \
-    You can add \`--`` disable-gpu-process-crash-limit` `` to the OBS start up properties as a way to avoid this.  There will still be an issue. You can also use the Electron Capture app instead of the OBS browser source.
+    You can add \`--`` disable-gpu-process-crash-limit` `` to the OBS start up properties as a way to avoid this. There will still be an issue. You can also use the Electron Capture app instead of the OBS browser source.
 * All green or all purple video from a mobile device (Pixel, Samsung Galaxy) can sometimes happen with certain resolutions or orientations. Using `&scale=100` or `&scale=95` can sometimes help (viewer side), but also changing the video codec to `&codec=vp8` might help.
 * OBS on PC can have video become corrupted if there is moderate or heavy packet loss. Changing the video codec to vp9 or h264 can fix it for moderate packet loss, but for heavy packet loss using the Electron Capture app is suggested. You can also issue keyframes with the rainbow puke button in the Director's room or refresh the viewing page, but it's a temporary fix. Ideally, fixing the packet loss itself is the ideal solution.
 * Streamlabs (SLOBS) on macOS does not currently support VDO.Ninja directly; you'll need to use the Electron Capture app or the normal OBS version instead.
