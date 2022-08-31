@@ -17,3 +17,9 @@ Windows users may find it beneficial too, as it offers support for VDO.Ninja's [
 The Electron Capture app uses recent versions of Chromium, which is more resistant to desync, video smearing, and other issues that might exist in the native OBS browser source capture method. [More benefits listed here](https://github.com/steveseguin/electroncapture/blob/master/BENEFITS.md)
 
 Lastly, since playback is agnostic, you can window-capture the same video multiple times, using one copy in a mixed-down live stream, while using a window-capture to record a clean full-resolution isolated video stream.
+
+## Updates
+
+{% content-ref url="../updates/electron-capture-app-updates.md" %}
+[electron-capture-app-updates.md](../updates/electron-capture-app-updates.md)
+{% endcontent-ref %}
