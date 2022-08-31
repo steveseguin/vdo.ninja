@@ -12,6 +12,6 @@ Get support on the Discord if you have any problems: [💬│chat․overlay-supp
 
 ## Updates
 
-{% content-ref url="../updates/social-stream-and-chat-overlay-updates.md" %}
-[social-stream-and-chat-overlay-updates.md](../updates/social-stream-and-chat-overlay-updates.md)
+{% content-ref url="../updates/updates-social-stream-and-chat-overlay.md" %}
+[updates-social-stream-and-chat-overlay.md](../updates/updates-social-stream-and-chat-overlay.md)
 {% endcontent-ref %}

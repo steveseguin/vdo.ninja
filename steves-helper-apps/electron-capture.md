@@ -20,6 +20,6 @@ Lastly, since playback is agnostic, you can window-capture the same video multip
 
 ## Updates
 
-{% content-ref url="../updates/electron-capture-app-updates.md" %}
-[electron-capture-app-updates.md](../updates/electron-capture-app-updates.md)
+{% content-ref url="../updates/updates-electron-capture-app.md" %}
+[updates-electron-capture-app.md](../updates/updates-electron-capture-app.md)
 {% endcontent-ref %}
