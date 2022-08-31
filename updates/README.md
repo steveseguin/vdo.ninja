@@ -4,7 +4,6 @@ description: What is new
 
 # Updates
 
-* [Development Progress](https://updates.vdo.ninja/)
-* [Upcoming Parameters for VDO.Ninja](../advanced-settings/upcoming-parameters/)
-* [Social Stream & Chat Overlay](social-stream-and-chat-overlay-updates.md)
-* [Electron Capture App](electron-capture-app-updates.md)
+* [upcoming-parameters](../advanced-settings/upcoming-parameters/ "mention")
+* [social-stream-and-chat-overlay-updates.md](social-stream-and-chat-overlay-updates.md "mention")
+* [electron-capture-app-updates.md](electron-capture-app-updates.md "mention")
