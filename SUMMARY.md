@@ -419,6 +419,7 @@
   * [Development Progress](https://updates.vdo.ninja/)
   * [Upcoming Parameters for VDO.Ninja](https://docs.vdo.ninja/advanced-settings/upcoming-parameters)
   * [Social Stream & Chat Overlay Updates](updates/social-stream-and-chat-overlay-updates.md)
+  * [Electron Capture App Updates](updates/electron-capture-app-updates.md)
 * [Help!](help/README.md)
   * [Fail safes and Backups](help/fail-safes-and-backups.md)
   * [Privacy and security details](help/privacy-and-security-details.md)
