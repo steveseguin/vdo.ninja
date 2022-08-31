@@ -23,7 +23,7 @@ Videos in a group scene will slide around the screen when being re-arranged, suc
 
 {% hint style="info" %}
 In the newest version of VDO.Ninja `&animated` is on by default. You can disable it with `&animated=0`. There is also a toggle in the director's room to disable it in the guest's invite URL.\
-![](<../../.gitbook/assets/image (1).png>)
+![](<../../.gitbook/assets/image (1) (5).png>)
 {% endhint %}
 
 Mobile phone users will not have this effect enabled by default, but most other guest and scene types will.
