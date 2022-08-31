@@ -11,6 +11,7 @@ Sender-Side Option! ([`&push`](push.md))
 ## Aliases
 
 * `&gating`
+* `&gate`
 * `&ng`
 
 ## Options
@@ -29,7 +30,7 @@ Updated on v22
 
 ## Details
 
-#### Update on v22
+### Update on v22
 
 The default setting is OFF. You can switch on the noise gate in the audio settings:\
 ![](<../.gitbook/assets/image (95).png>)
@@ -42,7 +43,24 @@ This is a very hard and aggressive noise filter, and a guest won't be audible to
 
 User feedback on this feature welcomed.
 
+### Noise Gate Settings
+
+``[`&noisegatesettings`](../advanced-settings/upcoming-parameters/and-noisegatesettings.md) is used in conjunction with `&noisegate`. This feature lets you tweak the noise-gate's variables, making it more or less aggressive as needed.
+
+It takes a comma separated list:
+
+* First value is target gain (0 to 100), although 0 to 40 is probably the recommended range here.
+* Second value is the threshold value where the gate is triggered if below it. \~ 100 is loudly speaking, \~ 20 is light background noise levels, and under 5 is quiet background levels.
+* Third value is how 'sticky' the gate-open position is, in milliseconds. Having this set to a few seconds should prevent someone from being cut off while speaking or if taking a short pause.
+
+Example:\
+[`https://vdo.ninja/alpha/?noisegate&noisegatesettings=10,25,3000`](https://vdo.ninja/alpha/?noisegate\&noisegatesettings=10,25,3000)
+
 ## Related
+
+{% content-ref url="../advanced-settings/upcoming-parameters/and-noisegatesettings.md" %}
+[and-noisegatesettings.md](../advanced-settings/upcoming-parameters/and-noisegatesettings.md)
+{% endcontent-ref %}
 
 {% content-ref url="and-denoise.md" %}
 [and-denoise.md](and-denoise.md)
