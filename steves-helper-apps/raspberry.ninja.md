@@ -8,3 +8,9 @@ Get support on the Discord if you have any problems: [🏮│raspberry․ninja](
 
 
 ![An Nvidia Jetson NX pushing 1080p video to VDO.Ninja, captured with a $10 HDMI to USB adapter](<../.gitbook/assets/image (38) (1).png>)
+
+## Updates
+
+{% content-ref url="../updates/updates-raspberry.ninja.md" %}
+[updates-raspberry.ninja.md](../updates/updates-raspberry.ninja.md)
+{% endcontent-ref %}
