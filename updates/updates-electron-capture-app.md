@@ -91,7 +91,7 @@ description: All the updates for the Electron Capture App
 
 #### January 15
 
-* Screen.share fix for MacOS compatibility
+* Screen-share fix for MacOS compatibility
 * Improved support for screen-sharing of Electron Capture on MacOS ; added a work around for a MacOS limitation.
 
 #### January 5
