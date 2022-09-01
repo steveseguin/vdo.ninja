@@ -2,7 +2,7 @@
 description: All the updates for the Electron Capture App
 ---
 
-# Electron Capture App Updates
+# Updates - Electron Capture App
 
 * [electron-capture.md](../steves-helper-apps/electron-capture.md "mention")
 
@@ -65,3 +65,37 @@ description: All the updates for the Electron Capture App
 #### May 10
 
 * Update to support "clean video output" for more websites; not just youtube and twitch. This lets you window-capture clean video from a site like Facebook, without UI/overlays. It will full-window the largest video on the page when the feature is activated via the context-menu [https://github.com/steveseguin/electroncapture/releases/tag/2.11.0](https://github.com/steveseguin/electroncapture/releases/tag/2.11.0) (window build added; mac build can be added on request)
+
+#### May 8
+
+* Added support to Hold-to-Talk to the Electron Capture app, so when used with elevated app privileges, the selected hotkey works system-wide, so you don't need the app-in focus for it to function. [https://github.com/steveseguin/electroncapture/releases/tag/2.10.0](https://github.com/steveseguin/electroncapture/releases/tag/2.10.0)
+
+#### April 23
+
+* Updated Electron Capture to v2.9.0, which includes a signed MacOS build and uses chromium v100. [https://github.com/steveseguin/electroncapture/releases/tag/2.9.0](https://github.com/steveseguin/electroncapture/releases/tag/2.9.0)
+
+#### April 12
+
+* Fixed a minor 'newer version available' error; on production. Also, the current electron app version is now listed on the landing page, at the very bottom-center of the page in dim small letters:\
+  ![Bild](https://media.discordapp.net/attachments/701232125831151697/963417004876898375/unknown.png)
+
+#### March 5
+
+* If using the electron capture app, hold `CTRL` when right-clicking will show the VDO.Ninja menu rather than the Electron menu.
+
+#### February 2
+
+* Updated the Windows version of electron capture app to the newest electron/chromium version, hoping to resolve a user reported issue: [https://github.com/steveseguin/electroncapture/releases/tag/2.7.0](https://github.com/steveseguin/electroncapture/releases/tag/2.7.0)
+
+#### January 28
+
+* Pushed out a signed version of Electron Capture for MacOS. This hopefully will solve issues a couple users have had with no mic/cam access since upgrading their MacOS version. (This also means that I have bit the bullet and have bought a new apple dev account)
+
+#### January 15
+
+* Screen.share fix for MacOS compatibility
+* Improved support for screen-sharing of Electron Capture on MacOS ; added a work around for a MacOS limitation.
+
+#### January 5
+
+* Updated to support a global hotkey page refresh (`CTRL + SHIFT + R`)  v2.6.2 I think
