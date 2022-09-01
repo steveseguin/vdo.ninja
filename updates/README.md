@@ -10,3 +10,4 @@ description: What is new
 * [updates-raspberry.ninja.md](updates-raspberry.ninja.md "mention")
 * [updates-versus.cam.md](updates-versus.cam.md "mention")
 * [updates-mixer-app.md](updates-mixer-app.md "mention")
+* [updates-native-mobile-apps.md](updates-native-mobile-apps.md "mention")

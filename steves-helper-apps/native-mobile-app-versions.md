@@ -66,12 +66,8 @@ How to screen capture your iPhone or iPad with VDO.Ninja
 
 Room support and passwords are not supported yet in the native mobile apps.
 
-## Raspberry Pi system images (and code)
+## Updates
 
-If you have a Raspberry Pi, Nvidia Jetson, or a Linux system, you can use those devices to connect UVC-compatible cameras and microphones to VDO.Ninja. It's a great way to make a cheap mobile stream encoder.
-
-This is much cheaper than using a mobile phone and this solution won't overheat when streaming 1080p video after hours. The code is written in Python, so it is accessible for novice developers to use, and it supports hardware-accelerated video encoding.
-
-{% embed url="https://github.com/steveseguin/raspberry_ninja" %}
-Stream live video from your embedded SBC or Linux system!
-{% endembed %}
+{% content-ref url="../updates/updates-native-mobile-apps.md" %}
+[updates-native-mobile-apps.md](../updates/updates-native-mobile-apps.md)
+{% endcontent-ref %}
