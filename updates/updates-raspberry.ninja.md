@@ -1,7 +1,3 @@
----
-description: All the updates for Raspberry.Ninja
----
-
 # Updates - Raspberry.Ninja
 
 * [raspberry.ninja.md](../steves-helper-apps/raspberry.ninja.md "mention")

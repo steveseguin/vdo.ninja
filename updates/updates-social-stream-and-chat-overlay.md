@@ -1,7 +1,3 @@
----
-description: All the updates for Social Stream & Chat Overlay
----
-
 # Updates - Social Stream & Chat Overlay
 
 * [social-stream.md](../steves-helper-apps/social-stream.md "mention")

@@ -1,7 +1,3 @@
----
-description: All the updates for the Electron Capture App
----
-
 # Updates - Electron Capture App
 
 * [electron-capture.md](../steves-helper-apps/electron-capture.md "mention")
