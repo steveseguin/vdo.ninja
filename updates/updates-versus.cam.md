@@ -9,7 +9,7 @@
 * It contains a larger and dedicated graph per scene/view link than what the vdo.ninja/beta/'s director room has under scene-stats. Both color code to indicate packet loss, where red is bad, and green is good.
 * It is setup to use a group room by default, with a very simple interface to login and get started without visiting vdo.ninja itself.
 * Despite having a group room by default, it works with standalone push/view links as well, via the "Add a stream manually" button, which lets you include normal view links that exist outside rooms.
-* All the scene links and invite links are preconfigured for E-Sports , where video is set to pull around 20-mbps for smooth 1080p60 game play. The idea is, if you choose to use this page for creating links, it's all already setup to be used for ingestion.
+* All the scene links and invite links are preconfigured for E-Sports, where video is set to pull around 20-mbps for smooth 1080p60 game play. The idea is, if you choose to use this page for creating links, it's all already setup to be used for ingestion.
 * The room is configured so that guests cannot see or talk to each other. All guests can do is text-chat with the versus host.\
   ![Bild](https://media.discordapp.net/attachments/701232125831151697/1004209653623832576/unknown.png?width=400\&height=209)
 * Versus.cam is compatible with a director and the director room, so you can use a director room AND the versus.cam room at the same time, without conflict.
