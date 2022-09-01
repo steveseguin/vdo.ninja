@@ -30,3 +30,9 @@ There is a YouTube video from Steve (December 2021) about the Mixer App. It's sl
 {% embed url="https://youtu.be/9xdZq4SCBoA" %}
 [https://youtu.be/9xdZq4SCBoA](https://youtu.be/9xdZq4SCBoA)
 {% endembed %}
+
+## Updates
+
+{% content-ref url="../updates/updates-mixer-app.md" %}
+[updates-mixer-app.md](../updates/updates-mixer-app.md)
+{% endcontent-ref %}

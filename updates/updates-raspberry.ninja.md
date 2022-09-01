@@ -8,7 +8,7 @@ description: All the updates for Raspberry.Ninja
 
 #### August 9
 
-* You can wire up an LED to the Raspberry Ninja project now, on a RPi, to use as a connection-status indicator. see `https://raspberry.ninja/raspberry_pi/`![Bild](https://media.discordapp.net/attachments/701232125831151697/1006385249577598976/unknown.png?width=385\&height=300)
+* You can wire up an LED to the Raspberry Ninja project now, on a RPI, to use as a connection-status indicator. see [`https://raspberry.ninja/raspberry_pi/`](https://raspberry.ninja/raspberry\_pi/)``![Bild](https://media.discordapp.net/attachments/701232125831151697/1006385249577598976/unknown.png?width=385\&height=300)
 
 #### August 6
 
@@ -29,4 +29,12 @@ description: All the updates for Raspberry.Ninja
 #### March 17
 
 * Added basic room support to raspberry\_ninja. Use: `--room ROOMNAME --multiviewer`
-* Fixed a couple glitches with the raspberry\_ninja project when self hosting with multiple cameras and related fixes/improvements (like not needing to refresh the viewer page to trigger it to play). Updates on GitHub\
+* Fixed a couple glitches with the raspberry\_ninja project when self hosting with multiple cameras and related fixes/improvements (like not needing to refresh the viewer page to trigger it to play). Updates on GitHub
+
+#### March 15
+
+* Added the ability to customize the audio bitrate with raspberry\_ninja `--audiobitrate 256`
+
+#### January 24
+
+* The raspberry\_ninja project had a major update; new RPI image (v3), which enables USB video to now hardware encode properly at 1080p30. Also, HDMI to CSI adapter support added (audio support still needs some work tho). This project lets you stream HD video at sub-second latency to VDO.Ninja using a raspberry pi or Jetson from the command line and headless.\

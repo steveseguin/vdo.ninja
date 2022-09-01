@@ -27,3 +27,9 @@ Versus.cam is the upcoming and standalone replacement for the [vdo.ninja/monitor
 {% embed url="https://youtu.be/I12ASNWHPPI" %}
 [https://youtu.be/I12ASNWHPPI](https://youtu.be/I12ASNWHPPI)
 {% endembed %}
+
+## Updates
+
+{% content-ref url="../updates/updates-versus.cam.md" %}
+[updates-versus.cam.md](../updates/updates-versus.cam.md)
+{% endcontent-ref %}

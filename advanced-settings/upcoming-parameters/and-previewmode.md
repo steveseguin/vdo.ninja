@@ -13,7 +13,7 @@ There is a new button in the director's room. It lets you toggle between a Previ
 
 Useful if you want to switch to a guest-like mode as a director, and then switch back as needed to the director's room to make adjustments. To enter this mode by default,`&previewmode` can be used by the director.
 
-<figure><img src="../../.gitbook/assets/image.png" alt=""><figcaption></figcaption></figure>
+<figure><img src="../../.gitbook/assets/image (1).png" alt=""><figcaption></figcaption></figure>
 
 ## Related
 

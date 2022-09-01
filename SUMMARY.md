@@ -422,6 +422,7 @@
   * [Updates - Electron Capture App](updates/updates-electron-capture-app.md)
   * [Updates - Raspberry.Ninja](updates/updates-raspberry.ninja.md)
   * [Updates - Versus.cam](updates/updates-versus.cam.md)
+  * [Updates - Mixer App](updates/updates-mixer-app.md)
 * [Development Progress](https://updates.vdo.ninja/)
 * [Help!](help/README.md)
   * [Fail safes and Backups](help/fail-safes-and-backups.md)
