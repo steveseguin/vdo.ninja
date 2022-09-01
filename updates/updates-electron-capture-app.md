@@ -26,10 +26,8 @@ description: All the updates for the Electron Capture App
 
 * Added support for Chrome extensions.\
   [https://github.com/steveseguin/electroncapture/releases/tag/2.15.0](https://github.com/steveseguin/electroncapture/releases/tag/2.15.0)\
-  \
-  If you have Chrome installed, those extensions will be available via the right-click menu. (You may need to reload the window after selecting one, if required by the extension,) This works for BTTV, FFZ, 7TV ,etc.\
-  \
-  (I might eventually build SocialStream directly into it, but for now, that's not really something that works)
+  If you have Chrome installed, those extensions will be available via the right-click menu. (You may need to reload the window after selecting one, if required by the extension.) This works for BTTV, FFZ, 7TV, etc.\
+  (I might eventually build SocialStream directly into it, but for now, that's not really something that works.)
 
 #### June 7
 
