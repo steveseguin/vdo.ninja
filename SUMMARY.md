@@ -420,6 +420,7 @@
   * [Upcoming Parameters for VDO.Ninja](https://docs.vdo.ninja/advanced-settings/upcoming-parameters)
   * [Updates - Social Stream & Chat Overlay](updates/updates-social-stream-and-chat-overlay.md)
   * [Updates - Electron Capture App](updates/updates-electron-capture-app.md)
+  * [Updates - Raspberry.Ninja](updates/updates-raspberry.ninja.md)
 * [Development Progress](https://updates.vdo.ninja/)
 * [Help!](help/README.md)
   * [Fail safes and Backups](help/fail-safes-and-backups.md)
