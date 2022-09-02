@@ -13,7 +13,7 @@
 * Changes to how layouts are issued have been updated -- you'll need to do a hard browser refresh (particularly in OBS) for things to work now, if using alpha + mixer.
 * Invite/scene links in the mixer get copied to the clipboard when pressed, rather than open.
 * Added some options for customizing guest links in the mixer app -- one of them is to disable the `&broadcast` mode. For the time being, guests not in `&broadcast` mode will have director-issued layouts apply to them. (I may change this to a custom flag instead in the future, as I am still exploring ideas currently to make things intuitive yet flexible)\
-  ![](../.gitbook/assets/image.png)
+  ![](<../.gitbook/assets/image (2).png>)
 * If a guest is using [`&minipreview`](../source-settings/and-minipreview.md) and is issued a layout, the mini preview only shows now if they are not in the current layout.
 
 #### August 11

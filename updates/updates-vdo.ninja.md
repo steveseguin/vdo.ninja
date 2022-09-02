@@ -1,11 +1,13 @@
 # Updates - VDO.Ninja
 
+
+
 * [upcoming-parameters](../advanced-settings/upcoming-parameters/ "mention")
 
 #### **August 31** <a href="#august-31" id="august-31"></a>
 
 * Added a button in the director's room. It lets you toggle between a Preview layout and the normal Director layout; the Preview layout will mirror what a basic [`&scene=0`](../advanced-settings/view-parameters/scene.md) link would look like. Useful if you want to switch to a guest-like mode as a director, and then switch back as needed to the director's room to make adjustments. - to enter this mode by default, [`&previewmode`](../advanced-settings/upcoming-parameters/and-previewmode.md) can be used by the director \*\* on alpha at vdo.ninja/alpha/\
-  ![](<../.gitbook/assets/image (1).png>)
+  ![](<../.gitbook/assets/image (1) (2).png>)
 * ``[`&noisegatesettings`](../advanced-settings/upcoming-parameters/and-noisegatesettings.md) has been added to vdo.ninja/alpha/, which is used in conjunction with [`&noisegate`](../source-settings/noisegate.md). This feature lets you tweak the noise-gate's variables, making it more or less aggressive as needed. example:\
   `https://vdo.ninja/alpha/?noisegate&noisegatesettings=10,25,3000`\
   ``It takes a comma separated list:\
@@ -26,7 +28,7 @@
 
 * Updated the translation files on GitHub and on vdo.ninja/alpha/, so recently added UI elements can have alternative translations added
 * Custom scenes will now be sorted based on alphanumerical value. (rather than order of connection). \*\* on alpha\
-  ![Bild](https://media.discordapp.net/attachments/701232125831151697/1011485085167534230/unknown.png?width=133\&height=300)
+  ![](<../.gitbook/assets/image (1).png>)
 
 #### August 22
 
@@ -47,10 +49,5 @@
   \-- leave the passed value empty if you wish to have the white basic rule-of-thirds show as default.\
   example: `https://vdo.ninja/alpha/?thirds=./media/thirdshead.svg`\
   ``\*\* on alpha.\
-  ![Bild](https://media.discordapp.net/attachments/701232125831151697/1009498257833082922/unknown.png?width=400\&height=224)
-*   Added [`proxy.vdo.ninja/alpha/`](https://proxy.vdo.ninja/alpha/) as an alternative to `vdo.ninja/?proxy`. If's a more user-friendly version of [`&proxy`](../newly-added-parameters/and-proxy.md). \*\* Just on alpha for now
-
-    \
-
-
-    \
+  ![](../.gitbook/assets/image.png)
+* Added [`proxy.vdo.ninja/alpha/`](https://proxy.vdo.ninja/alpha/) as an alternative to `vdo.ninja/?proxy`. If's a more user-friendly version of [`&proxy`](../newly-added-parameters/and-proxy.md). \*\* Just on alpha for now\

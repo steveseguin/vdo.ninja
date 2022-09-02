@@ -47,7 +47,7 @@ You can select the Meshcast server via URL Parameter. If you don't set it, the b
 Full server list: [https://meshcast.io/servers.json](https://meshcast.io/servers.json)
 
 As a director you can select the Meshcast server on the bottom left of the director's control center\
-![](<../.gitbook/assets/image (2).png>)
+![](<../.gitbook/assets/image (2) (3).png>)
 
 ## Related
 
