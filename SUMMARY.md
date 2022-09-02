@@ -417,7 +417,7 @@
   * [v10](releases/v10.md)
   * [v8](releases/v8.md)
 * [Updates](updates/README.md)
-  * [Upcoming Parameters for VDO.Ninja](https://docs.vdo.ninja/advanced-settings/upcoming-parameters)
+  * [Updates - VDO.Ninja](updates/updates-vdo.ninja.md)
   * [Updates - Social Stream & Chat Overlay](updates/updates-social-stream-and-chat-overlay.md)
   * [Updates - Electron Capture App](updates/updates-electron-capture-app.md)
   * [Updates - Raspberry.Ninja](updates/updates-raspberry.ninja.md)

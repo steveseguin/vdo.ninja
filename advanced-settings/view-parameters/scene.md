@@ -34,7 +34,7 @@ By adding `&scene` to a room URL, it tells VDO.Ninja that this is no [`&push`](.
 *   `&scene=N`, where `N` is a string or integer - it's just like `&scene=2`. There are buttons marked S3, S4, .. S8 in the director's room to control these scene types. If they are not already there, new buttons for them will be created automatically when used. See the video below.\
 
 
-    <img src="../../.gitbook/assets/image (1) (2) (1).png" alt="" data-size="original">
+    <img src="../../.gitbook/assets/image (1) (2) (1) (1).png" alt="" data-size="original">
 * When using a scene, if you manually specify a video via the [`&view`](view.md) parameter, it automatically is added to the scene.
 * Audio of videos in scenes can be controlled by the director: volume and mute are options.
 * In [v17.2](../../release-notes/v17-release-notes.md) of VDO.Ninja, if using [`&view`](view.md) in a scene link, the director won't be able to remotely control the scene. This applies to solo links.

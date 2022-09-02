@@ -39,7 +39,7 @@
 * Fewer issues with the reload/edit page not working in electron capture. (some bug with electron.js?; added a workaround)\
   A test build of the new Electron Capture app for Windows is available here:\
   [https://github.com/steveseguin/electroncapture/releases/tag/2.14.0](https://github.com/steveseguin/electroncapture/releases/tag/2.14.0)\
-  ![](<../.gitbook/assets/image (2).png>)
+  ![](<../.gitbook/assets/image (2) (2).png>)
 
 #### June 1
 
