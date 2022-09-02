@@ -1,8 +1,14 @@
 # Updates - VDO.Ninja
 
-
-
 * [upcoming-parameters](../advanced-settings/upcoming-parameters/ "mention")
+
+#### **September 2** <a href="#august-31" id="august-31"></a>
+
+* [Noise gate](../source-settings/noisegate.md) remote control has been tweaked a bit; the correct state is loaded now on a director's page refresh
+* Added an option to control the [compressor](../source-settings/and-compressor.md) remotely (3 states for the compressor; Off/On/Limiter)\
+  ![](<../.gitbook/assets/image (3).png>)
+* Fixed issues on alpha, including now where the [labels](../general-settings/label.md) for guests were not always positioning correct if audio-only
+* \*\* changes on alpha @ vdo.ninja/alpha/
 
 #### **August 31** <a href="#august-31" id="august-31"></a>
 
@@ -49,5 +55,5 @@
   \-- leave the passed value empty if you wish to have the white basic rule-of-thirds show as default.\
   example: `https://vdo.ninja/alpha/?thirds=./media/thirdshead.svg`\
   ``\*\* on alpha.\
-  ![](../.gitbook/assets/image.png)
+  ![](<../.gitbook/assets/image (7).png>)
 * Added [`proxy.vdo.ninja/alpha/`](https://proxy.vdo.ninja/alpha/) as an alternative to `vdo.ninja/?proxy`. If's a more user-friendly version of [`&proxy`](../newly-added-parameters/and-proxy.md). \*\* Just on alpha for now\

@@ -25,7 +25,7 @@ Do not include the # character with the hex value.
 Can be 3 or 6 characters in length, 0 to F, in RGB or RRGGBB format.
 
 [https://vdo.ninja/?scene\&room=roomname\&chroma](https://vdo.ninja/?scene\&room=roomname\&chroma)\
-![](<../../.gitbook/assets/image (3).png>)
+![](<../../.gitbook/assets/image (3) (1).png>)
 
 ## Related
 

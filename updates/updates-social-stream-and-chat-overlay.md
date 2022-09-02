@@ -3,6 +3,10 @@
 * [social-stream.md](../steves-helper-apps/social-stream.md "mention")
 * [chat-overlay.md](../steves-helper-apps/chat-overlay.md "mention")
 
+#### **September 2**
+
+* Socialstream bug fixes, along with donation support added to Mixcloud.
+
 #### **August 31**
 
 * New MIDI control feature for Social Stream: - the option to select a file containing text-strings for use with the MIDI-command option is available - sample file is included in the extension folder; edit it and select it from the extension menu (JSON format) - you shouldn't have to reload the file each time you open the browser; just when you reload the extension or when you want to update the commands with a newer file.\
