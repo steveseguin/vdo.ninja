@@ -42,6 +42,7 @@
 * [Nilson1489 (German Tutorial) Basics](https://youtu.be/KX\_pYQoYWgA)
 * [Nilson1489 (German Tutorial) Rooms](https://youtu.be/6nDOAW\_lzUs)
 * [Record multiple sources in OBS Studio](https://youtu.be/OEHgNa49f6c)
+* [Control OBS using SocialStream using Touch Portal](https://youtu.be/UNAgm8HmiMk)
 
 ## Other
 
