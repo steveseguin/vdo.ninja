@@ -43,6 +43,8 @@
 * [Nilson1489 (German Tutorial) Rooms](https://youtu.be/6nDOAW\_lzUs)
 * [Record multiple sources in OBS Studio](https://youtu.be/OEHgNa49f6c)
 * [Control OBS using SocialStream using Touch Portal](https://youtu.be/UNAgm8HmiMk)
+* [Control VDO.Ninja with Bitfocus Companion](https://youtu.be/O08mAYkXdOE)
+* [Control VDO.Ninja via Touch Portal](https://youtu.be/B\_0WBkHmjqI)
 
 ## Other
 
