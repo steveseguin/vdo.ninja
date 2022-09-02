@@ -31,6 +31,24 @@ Steve made a YouTube video explaining all the Meshcast stuff:
 [https://youtu.be/YxduINMXw1M](https://youtu.be/YxduINMXw1M)
 {% endembed %}
 
+## Options
+
+You can select the Meshcast server via URL Parameter. If you don't set it, the best one will be chosen automatically.
+
+| Value        | Description     |
+| ------------ | --------------- |
+| (servercode) | Meshcast server |
+| `cae1`       | Canada-East     |
+| `use1`       | USA-East        |
+| `usw1`       | USA-West        |
+| `fr1`        | France          |
+| `de1`        | Germany         |
+
+Full server list: [https://meshcast.io/servers.json](https://meshcast.io/servers.json)
+
+As a director you can select the Meshcast server on the bottom left of the director's control center\
+![](../.gitbook/assets/image.png)
+
 ## Related
 
 {% content-ref url="../advanced-settings/meshcast-parameters/" %}

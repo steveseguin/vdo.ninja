@@ -53,6 +53,7 @@ description: All useful links you might take a look at
 | API / IFRAME sandbox page for developer                                           | [https://vdo.ninja/alpha/iframe](https://vdo.ninja/alpha/iframe)                                                                                       |
 | A more user-friendly version of [`&proxy`](newly-added-parameters/and-proxy.md)`` | [https://proxy.vdo.ninja/alpha/](https://proxy.vdo.ninja/alpha/)                                                                                       |
 | RTC.Ninja                                                                         | [https://rtc.ninja/](https://rtc.ninja/)                                                                                                               |
+| Meshcast Server List                                                              | [https://meshcast.io/servers.json](https://meshcast.io/servers.json)                                                                                   |
 
 ### VDO.Ninja Tech Demonstrations
 
