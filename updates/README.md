@@ -11,3 +11,4 @@ description: What is new
 * [updates-versus.cam.md](updates-versus.cam.md "mention")
 * [updates-mixer-app.md](updates-mixer-app.md "mention")
 * [updates-native-mobile-apps.md](updates-native-mobile-apps.md "mention")
+* [updates-caption.ninja.md](updates-caption.ninja.md "mention")

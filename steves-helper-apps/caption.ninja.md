@@ -23,3 +23,9 @@ Added a "translation" component to caption.ninja, so you can convert speakers to
 [https://caption.ninja/?room=ufv3QaH\&lang=en-US](https://caption.ninja/?room=ufv3QaH\&lang=en-US) (to capture as english) and [https://caption.ninja/overlay?room=ufv3QaH\&translate=fr](https://caption.ninja/overlay?room=ufv3QaH\&translate=fr) (viewer-side, which converts to french).
 
 I welcome feedback.
+
+## Updates
+
+{% content-ref url="../updates/updates-caption.ninja.md" %}
+[updates-caption.ninja.md](../updates/updates-caption.ninja.md)
+{% endcontent-ref %}
