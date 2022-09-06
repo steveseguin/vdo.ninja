@@ -15613,7 +15613,7 @@ async function publishScreen2(constraints, audioList=[], audio=true){ // webcam 
 					if (navigator.userAgent.toLowerCase().indexOf(' electron/') > -1){
 						// Electron has no audio.
 					} else {
-						setTimeout(function(){warnUser("No Audio Source was detected.\n\nIf you were wanting to capture an Application's Audio, please see:\nhttps://docs.vdo.ninja/help/guides-and-how-tos#audio for some guides.");},300);
+						setTimeout(function(){warnUser("Notice: No Audio Source was detected.");},300);
 					}
 				}
 			}
@@ -22699,6 +22699,13 @@ function targetGuest(guestslot, action, value=null){
 		if (element) {
 			changeGroup(element, null, value);
 		}
+	} else if ((action == 9) || (action == "soloChatBidirectional")) { 
+		var element = getGuestTarget("solo-chat", guestslot);
+		if (element) {
+			var ctrl = {};
+			ctrl.ctrlKey = true;
+			return session.toggleSoloChat(element.dataset.UUID, ctrl);
+		}
 	} else if ((action == 12) || (action == "addScene2")) { 
 		var element = getGuestTargetScene(2, guestslot);
 		if (element) {
@@ -22800,8 +22807,11 @@ function oscClient(){ // OSC (websocket / https API hotkey support).  The iFrame
 				}
 				var resp = processMessage(data);
 				if (resp!==null){
-					socket.send(JSON.stringify(resp));
-					log(JSON.stringify(resp));
+					var ret = {};
+					data.result = resp;
+					ret.callback = data;
+					log(ret);
+					socket.send(JSON.stringify(ret));
 				}
 			}
 		});
