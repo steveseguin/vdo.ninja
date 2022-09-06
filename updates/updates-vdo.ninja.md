@@ -2,6 +2,14 @@
 
 * [upcoming-parameters](../advanced-settings/upcoming-parameters/ "mention")
 
+#### **September 6** <a href="#august-31" id="august-31"></a>
+
+{% hint style="danger" %}
+A general notice to users, on beta and alpha, the echo cancellation isn't working at the moment. It is working on the main production version however.\
+If using vdo.ninja/beta/ or vdo.ninja/alpha/, switch to just vdo.ninja/ if having echo problems or wear headphones at low volume.\
+I'm working on a fix, but I don't have an ETA. Will update when fixed.
+{% endhint %}
+
 #### **September 2** <a href="#august-31" id="august-31"></a>
 
 * [Noise gate](../source-settings/noisegate.md) remote control has been tweaked a bit; the correct state is loaded now on a director's page refresh
