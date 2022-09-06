@@ -4,11 +4,20 @@
 
 #### **September 6** <a href="#august-31" id="august-31"></a>
 
+* `&showconnections` will display the total number of p2p connections of a remote stream. Works with the director's room and the automixer. Might help give comfort over privacy/security during a stream.
+* Total number of p2p remote connections (viewers) of a stream source will also appear in the stats menu, even without `&showconnections`. Could be useful for debugging CPU/bandwidth issues.
+* Connections may represent video/audio streams, or just a data-connection. Meshcast-hosted streams might not be accounted for, depending on how the viewer is connecting.\
+  ![](<../.gitbook/assets/image (1).png>)
+* Added `showChat` and `showDirectorChat` as HTTP/WSS API options for sending messages to guest(s). Useful if you want to hotkey a streamdeck command with some welcome message for guests. - Added events notifications relating to the director's guest-mute, guest-video-mute, and guest-position-change actions, along with any remote-video-mute updates to the HTTP/WSS API (by request for the bitfocus companion app)\
+  \*\* on alpha
+
 {% hint style="danger" %}
 A general notice to users, on beta and alpha, the echo cancellation isn't working at the moment. It is working on the main production version however.\
 If using vdo.ninja/beta/ or vdo.ninja/alpha/, switch to just vdo.ninja/ if having echo problems or wear headphones at low volume.\
 I'm working on a fix, but I don't have an ETA. Will update when fixed.
 {% endhint %}
+
+``
 
 #### **September 2** <a href="#august-31" id="august-31"></a>
 
@@ -106,7 +115,7 @@ I'm working on a fix, but I don't have an ETA. Will update when fixed.
 #### August 1
 
 * Chat messages that contain URLs will now have those URLs be clickable (opens into a new window)\
-  ![](<../.gitbook/assets/image (1) (1).png>)
+  ![](<../.gitbook/assets/image (1) (1) (2).png>)
 * The pop-out chat feature has had a bug fixed and minor polish applied
 * When using the IFrame API to control bitrates, I have added an optional called "lock" that lets you affix the bitrate you set so the rest of VDO.Ninja doesn't try to constantly override it. `{bitrate: 2500, lock:true}` for example. I also assume `lock=true` by default, so no changes are needed really to start benefiting from this. (previously you had to disable the auto-mixer to lock a bitrate).
 * Also added `{manualBitrate: xxx}` to the IFrame API , which is a bit like `bitrate`, but keeps track of what the current target bitrate should be. When you set `manualBitrate=false`, it will apply the expected target value. Also, it won't work when used in conjunction with custom audio bitrates, whereas bitrate will.
