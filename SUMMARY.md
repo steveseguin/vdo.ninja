@@ -397,6 +397,7 @@
     * [\&hidetranslate](advanced-settings/upcoming-parameters/and-hidetranslate.md)
     * [\&noisegatesettings](advanced-settings/upcoming-parameters/and-noisegatesettings.md)
     * [\&previewmode](advanced-settings/upcoming-parameters/and-previewmode.md)
+    * [\&showconnections](advanced-settings/upcoming-parameters/and-showconnections.md)
   * [Other Parameters](other-parameters.md)
 * [Releases](release-notes/older-releases.md)
   * [v21 ❤️](older-releases/v21.md)

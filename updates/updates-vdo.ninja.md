@@ -10,13 +10,14 @@ I'm working on a fix, but I don't have an ETA. Will update when fixed.
 
 #### **September 6** <a href="#august-31" id="august-31"></a>
 
-* `&showconnections` will display the total number of p2p connections of a remote stream. Works with the director's room and the automixer. Might help give comfort over privacy/security during a stream.
-* Total number of p2p remote connections (viewers) of a stream source will also appear in the stats menu, even without `&showconnections`. Could be useful for debugging CPU/bandwidth issues.
+* ``[`&showconnections`](../advanced-settings/upcoming-parameters/and-showconnections.md) will display the total number of p2p connections of a remote stream. Works with the director's room and the automixer. Might help give comfort over privacy/security during a stream.
+* Total number of p2p remote connections (viewers) of a stream source will also appear in the stats menu, even without [`&showconnections`](../advanced-settings/upcoming-parameters/and-showconnections.md). Could be useful for debugging CPU/bandwidth issues.
 * Connections may represent video/audio streams, or just a data-connection. Meshcast-hosted streams might not be accounted for, depending on how the viewer is connecting.\
   ![](../.gitbook/assets/image.png)
 * Added `showChat` and `showDirectorChat` as HTTP/WSS API options for sending messages to guest(s). Useful if you want to hotkey a streamdeck command with some welcome message for guests.
-* Added events notifications relating to the director's guest-mute, guest-video-mute, and guest-position-change actions, along with any remote-video-mute updates to the HTTP/WSS API (by request for the bitfocus companion app)\
-  \*\* on alpha
+* Added events notifications relating to the director's guest-mute, guest-video-mute, and guest-position-change actions, along with any remote-video-mute updates to the HTTP/WSS API (by request for the bitfocus companion app)
+
+\*\* on alpha
 
 #### **September 2** <a href="#august-31" id="august-31"></a>
 
@@ -88,7 +89,7 @@ I'm working on a fix, but I don't have an ETA. Will update when fixed.
 #### August 11
 
 * Right clicking the screen-share icon will give you an option to open the screen share in a new tab, all pre-configuerd. Useful if you want to share multiple windows while in a group room, or don't want to see your own screen share while talking to others.\
-  ![](<../.gitbook/assets/image (3).png>)
+  ![](<../.gitbook/assets/image (3) (3).png>)
 * Bugs with [`&screensharetype=3`](../newly-added-parameters/and-screensharetype.md) have been resolved, I think. (this mode supports desktop-audio capture without echo issues)
 
 #### August 9
