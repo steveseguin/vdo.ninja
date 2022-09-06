@@ -6,6 +6,8 @@
 A general notice to users, on beta and alpha, the echo cancellation isn't working at the moment. It is working on the main production version however.\
 If using vdo.ninja/beta/ or vdo.ninja/alpha/, switch to just vdo.ninja/ if having echo problems or wear headphones at low volume.\
 I'm working on a fix, but I don't have an ETA. Will update when fixed.
+
+_\*\*_ UPDATE: I hot-patched beta and alpha with a fix. This fix disables the option to select custom audio output destinations, but resolves the echo issue. If using a self-deployed instance, you can instead add [`&noap`](../general-settings/noaudioprocessing.md) to the URLs to fix it as well; you can also enable `chrome://flags/#chrome-wide-echo-cancellation`, patch the code, or just use headphones.
 {% endhint %}
 
 #### **September 6** <a href="#august-31" id="august-31"></a>
