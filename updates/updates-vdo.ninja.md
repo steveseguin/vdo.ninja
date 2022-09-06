@@ -14,7 +14,8 @@ I'm working on a fix, but I don't have an ETA. Will update when fixed.
 * Total number of p2p remote connections (viewers) of a stream source will also appear in the stats menu, even without `&showconnections`. Could be useful for debugging CPU/bandwidth issues.
 * Connections may represent video/audio streams, or just a data-connection. Meshcast-hosted streams might not be accounted for, depending on how the viewer is connecting.\
   ![](../.gitbook/assets/image.png)
-* Added `showChat` and `showDirectorChat` as HTTP/WSS API options for sending messages to guest(s). Useful if you want to hotkey a streamdeck command with some welcome message for guests. - Added events notifications relating to the director's guest-mute, guest-video-mute, and guest-position-change actions, along with any remote-video-mute updates to the HTTP/WSS API (by request for the bitfocus companion app)\
+* Added `showChat` and `showDirectorChat` as HTTP/WSS API options for sending messages to guest(s). Useful if you want to hotkey a streamdeck command with some welcome message for guests.
+* Added events notifications relating to the director's guest-mute, guest-video-mute, and guest-position-change actions, along with any remote-video-mute updates to the HTTP/WSS API (by request for the bitfocus companion app)\
   \*\* on alpha
 
 #### **September 2** <a href="#august-31" id="august-31"></a>
