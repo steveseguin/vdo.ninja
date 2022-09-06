@@ -100,6 +100,9 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 		session.cleanViewer = true;
 	}
 	
+	if (urlParams.has('previewmode')){
+		session.switchMode = true;
+	}
 	
 	if (urlParams.has('director') || urlParams.has('dir')) {
 		session.director = urlParams.get('director') || urlParams.get('dir') || true;
@@ -378,6 +381,7 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 	
 	if (urlParams.has('meshcast')) {
 		session.meshcast = urlParams.get('meshcast') || "any";
+		meshcast(true);
 	}
 	
 	
@@ -1155,7 +1159,10 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 	if (urlParams.has('salt') && urlParams.get('salt')){
 		session.salt = urlParams.get('salt');
 	}
-
+	
+	if (urlParams.has('showconnections')){
+		session.showConnections = true; // shows remote guest connections as a stat
+	}
 
 	if (urlParams.has('hash') || urlParams.has('crc') || urlParams.has('check')) { // could be brute forced in theory, so not as safe as just not using a hash check.
 		session.taintedSession = null; // waiting to see if valid or not.
@@ -2407,6 +2414,10 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 		session.welcomeMessage = decodeURIComponent(session.welcomeMessage);
 	}
 
+	if (urlParams.has('mixminus')){
+		session.mixMinus = true;
+	}
+
 	if (urlParams.has('videobitrate') || urlParams.has('bitrate') || urlParams.has('vb')) {
 		session.bitrate = urlParams.get('videobitrate') || urlParams.get('bitrate') || urlParams.get('vb');
 		if (session.bitrate) {
@@ -2900,7 +2911,11 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 			session.audioMeterGuest = true;
 			setInterval(function(){activeSpeaker(false);},100);
 		}
-		
+	}
+	
+	if (urlParams.has('noisegatesettings')){
+		 session.noisegateSettings = urlParams.get('noisegatesettings');
+		 session.noisegateSettings = session.noisegateSettings.split(",");
 	}
 	
 	if (urlParams.has('fadein')) {
@@ -3199,8 +3214,6 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 			}
 		}
 	}
-	
-	
 
 	if (urlParams.has('wss')) {
 		session.customWSS = true;
@@ -3219,8 +3232,10 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 	
 	if (urlParams.has('osc') || urlParams.has('api')) {
 		if (urlParams.get('osc') || urlParams.get('api')) {
-			session.api = urlParams.get('osc') || urlParams.get('api');
-			setTimeout(function(){oscClient();},1000);
+			session.api = urlParams.get('osc') || urlParams.get('api') || false;
+			if (session.api){
+				setTimeout(function(){oscClient();},1000);
+			}
 		}
 	}
 
@@ -3809,7 +3824,8 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 		session.autohide=true;
 	}
 	if (session.autohide && !session.mobile && (session.scene===false)){// && (session.roomid!==false)){
-		getById("main").onmouseover = session.showControls;
+		getById("main").onmouseover = showControl; // this is correct. (it's not session.showControls)
+		getById("controlButtons").classList.add("zeroHeight");
 	}
 	
 	if (urlParams.has('flagship')) {

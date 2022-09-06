@@ -31,7 +31,10 @@
 				<canvas id="packetloss-graph"></canvas>
 			</div>
 		</div>
-		
+		<div id="log" onclick="copyFunction(this.innerText)">
+			<h2>Log <i class="las la-clipboard"></i></h2>
+			<ul></ul>
+		</div>
 		<div id="explanation">
 			<h2>How to use</h2>
 			<ol>
@@ -151,10 +154,12 @@
 				return out;
 			}
 
-			var logged = [];
 			function logData(type, data) {
-				data.timestamp  = new Date().now();
-				logged.push(data);
+				var log = document.getElementById("log").getElementsByTagName("ul")[0];
+				var entry = document.createElement('li');
+				entry.textContent =
+					"[" + new Date().toLocaleTimeString() + "] " + type + " : " + data;
+				log.prepend(entry);
 			}
 		
 			function reloadTurn(){
@@ -444,7 +449,7 @@
 
 			
 		
-			var testType= "webcam";
+			var testType= "webcam&css=speedtest.css";
 			if (urlParams.has("screen") || urlParams.has("ss") || urlParams.has("screenshare") || urlParams.has("screentest")) {
 				document.getElementById("screen").innerHTML = '<a href="./speedtest" style="color: #CCC;">Test webcam-streaming performance here</a>';
 				testType = "quality=0&screenshare&css=speedtest.css"

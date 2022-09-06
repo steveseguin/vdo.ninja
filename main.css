@@ -271,9 +271,13 @@ button.white:active {
 	color: white;
 	border: 1px solid black;
 }
+#meshcastMenu{
+	display: inline-block;
+    color: #e0dfdf;
+}
 #header {
 	width: 100%;
-	padding: 1px;
+	margin: 1px;
 	background-color: #0F131D;
 	color: #FFF;
 	-webkit-app-region: drag;
@@ -456,6 +460,10 @@ body.darktheme .credits>a:visited {
 	background-color: black;
 }
 
+.darktheme .advDirectGuestSettings label {
+	color: #FFF;
+}
+
 .pressed {
 	background: #1e0000;
 	-webkit-box-shadow: inset 0px 0px 1px #b90000;
@@ -526,7 +534,7 @@ hr {
 	border-radius: var(--video-rounded);
 }
 
-#gridlayout {
+#gridlayout,#directorlayout {
 	padding: 0;
 	width: 100%;
 	height: 100%;
@@ -728,7 +736,18 @@ hr {
 	cursor: pointer;
 	font-size:12px;
 }
-
+.rem-con-count{
+	position: absolute;
+	left: 49px;
+	top: 0px;
+	color: white;
+	background-color: #0006;
+	font-size: 1em;
+	z-index: 2;
+	cursor: help;
+	border-radius: 4px;
+	padding: 1px 4px 1px 0px;
+}
 .signal-meter{
 	width: 22px;
 	height: 22px;
@@ -860,6 +879,7 @@ button.glyphicon-button.active.focus {
 	background-repeat: no-repeat;
 	background-attachment: fixed;
 	background-position: center;
+	overflow-x: hidden;
 }
 
 #controlButtons {
@@ -886,6 +906,8 @@ button.glyphicon-button.active.focus {
 #container.vidcon {
 	height:100%;
 }
+
+
 
 .labelSmall {
 	display:none;
@@ -1334,10 +1356,6 @@ body {
 	-webkit-app-region: no-drag;
 }
 
-#popupSelector{
-	-webkit-app-region: no-drag;
-}
-
 select{
 	-webkit-app-region: no-drag;
 }
@@ -1358,6 +1376,8 @@ select{
 .green {
 	background-color:#474!important;
 }
+
+
 
 #effectSelector{
 	display: inline-block;
@@ -1693,7 +1713,8 @@ input[type=range]:focus::-ms-fill-upper {
 	width: 505px;
 	right: -400px;
 	overflow: auto;
-	z-index: 3;
+	z-index: 4;
+	-webkit-app-region: no-drag;
 }
 
 #audioSourceScreenshare {
@@ -1859,6 +1880,12 @@ label {
 	animation: fadeout 1s;
 	opacity: 0!important;
 }
+.zeroHeight {
+	max-height:0!important;
+	height:0!important;
+	bottom:30px!important;
+}
+
 .partialFadeout{
 	opacity: .1 !important;
 }
@@ -2931,10 +2958,13 @@ div#chatBody a {
 }
 .debugStats li span:first-child {
 	flex: 1;
+	white-space: nowrap;
 }
 .debugStats li span:last-child {
 	flex: 1;
 	text-align: right;
+	max-height: 49px;
+    overflow: auto;
 }
 .debugStats .close {
 	font-weight: bold;
@@ -4108,7 +4138,7 @@ body.darktheme .multiselect .multiselect-contents {
 	background-color:unset;
 }
 body.darktheme .directorsgrid .vidcon > .las {
-	background-color: #646464;
+	background-color: #424242;
 }
 body.darktheme .form-group .multiselect {
 	background-color: #414141;
@@ -4260,4 +4290,10 @@ body.darktheme .invite_setting_item>input{
 }
 body.darktheme .invite_setting_item>select{
 	background-color:white;
+}
+.containerGreen{
+	background-color: #649166!important;
+}
+body.darktheme .containerGreen{
+	background-color: #243824!important;
 }

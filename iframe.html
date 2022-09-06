@@ -72,6 +72,11 @@
 		eventer(messageEvent, function (e) {
 			if (e.source != iframe.contentWindow){return} // reject messages send from other iframes
 			
+			if (typeof e.data !== "object"){
+				console.log(e.data);
+				return;
+			}
+			
 			if (e.data.frame){  // add `&sendframes` to the view link to trigger this event; it lets you capture video/audio from the parent window
 				if (!media.tracks[e.data.trackID]){
 					media.tracks[e.data.trackID] = {};
@@ -109,7 +114,8 @@
 				return;
 			} // end of video/audio capture
 			
-			if ("stats" in e.data) {
+			var consolelog = true;
+			if (e.data.stats){
 				console.log(e.data.stats);
 
 				var out = "<br />total_inbound_connections:"+e.data.stats.total_inbound_connections;
@@ -120,10 +126,11 @@
 					out += printValues(e.data.stats.inbound_stats[streamID]);
 				}
 				logOutput(out)
-			}
+				consolelog = false;
+			} 
 			
-			if ("gotChat" in e.data){
-				logOutput(e.data.gotChat.msg)
+			if (e.data.gotChat){
+				logOutput(e.data.gotChat)
 			}
 
 			if ("action" in e.data && e.data.action !== "loudness") {
@@ -161,6 +168,7 @@
 					out += key + " Loudness: " + e.data.loudness[key] + "\n";          
 				}
 				logOutput(out, { window: loudnessOutput, replace: true, style: { paddingBottom: '20px', borderBottom: 'dotted 1px #4d66a8' } });
+				consolelog = false;
 			}
 			
 			if ("detailedState" in e.data){
@@ -201,6 +209,15 @@
 				function roundSensorData(data) {
 					return Math.round(data * 100000) / 100000
 				}
+				consolelog = false;
+			}
+			
+			if (("action" in e.data) && (e.data.action === "view-stats-updated")){
+				consolelog = false;
+			}
+			
+			if (consolelog){
+				console.log(e.data);
 			}
 		});
 

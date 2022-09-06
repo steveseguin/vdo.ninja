@@ -51,8 +51,8 @@
 	}
 	
 	iframe.aspectRatio{
-		max-height: min(calc(100vh - 80px), calc((100vw - 160px) / var(--aspect-ratio)));
-		max-width: min(calc((100vh - 80px) *  var(--aspect-ratio)),  calc(100vw - 160px));
+		max-height: min(calc(100vh - 80px), calc(100vw - 160px - var(--chat-width)) / var(--aspect-ratio))) !important;
+		max-width: min(calc((100vh - 80px) *  var(--aspect-ratio)), calc(100vw - 160px - var(--chat-width))) !important;
 		height: 720px;
 		width: 1280px;
 	}
@@ -1413,7 +1413,7 @@
 			delete origThing.dataset.slot;
 		}
 		
-		origThing.style.backgroundColor = "#000";
+		origThing.style.backgroundColor = "#000"; 
 		if (ev.target.classList.contains("thing")){
 			ev.target.parentNode.insertBefore(origThing, ev.target.nextSibling);
 		} else {
@@ -2620,10 +2620,10 @@
 				container.cover = true;
 			}
 			container.zIndex = parseInt(object[i].zIndex) || parseInt(object[i].z) || 0;
-			//container.backgroundColor = object[i].backgroundColor || "#000";
+			//container.backgroundColor = object[i].backgroundColor || "#0000";
 			container.borderThickness = object[i].borderThickness || 0;
 			container.animated = object[i].animated || 0;
-			container.borderColor = object[i].borderColor || "#000";
+			container.borderColor = object[i].borderColor || "#0000";
 			container.backgroundMedia = object[i].backgroundMedia || "";
 			container.defaultStreamID = object[i].defaultStreamID || "";
 			container.margin = object[i].margin || 0;
@@ -2949,7 +2949,7 @@
 		input.type = "text";
 		input.style.width = "80px";
 		setEle.appendChild(input);
-		input.value = parent.borderColor || "#000";
+		input.value = parent.borderColor || "#0000";
 		input.onchange = function(){
 			parent.borderColor = this.value;
 		}
@@ -3051,7 +3051,7 @@
 				//ele.backgroundColor = eles[i].backgroundColor || "#000";
 				ele.borderThickness = parseInt(eles[i].borderThickness) || 0;
 				ele.animated = eles[i].animated || 0;
-				ele.borderColor = eles[i].borderColor || "#000";
+				ele.borderColor = eles[i].borderColor || "#0000";
 				ele.backgroundMedia = eles[i].backgroundMedia || "";
 				ele.defaultStreamID = eles[i].defaultStreamID || "";
 				ele.margin = parseInt(eles[i].margin) || 0;
@@ -3096,7 +3096,7 @@
 				//ele.backgroundColor = eles[i].backgroundColor || "#000";
 				ele.borderThickness = parseInt(eles[i].borderThickness) || 0;
 				ele.animated = eles[i].animated || 0;
-				ele.borderColor = eles[i].borderColor || "#000";
+				ele.borderColor = eles[i].borderColor || "#0000";
 				ele.backgroundMedia = eles[i].backgroundMedia || "";
 				ele.defaultStreamID = eles[i].defaultStreamID || "";
 				ele.margin = parseInt(eles[i].margin) || 0;

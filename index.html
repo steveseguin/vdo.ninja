@@ -57,7 +57,7 @@
 		<meta property="twitter:image" content="./media/vdoNinja_logo_full.png" />
 		<meta name="msapplication-TileColor" content="#da532c" />
 		<meta name="theme-color" content="#ffffff" />
-		<link rel="stylesheet" href="./main.css?ver=177" />
+		<link rel="stylesheet" href="./main.css?ver=190" />
 		<script type="text/javascript" crossorigin="anonymous" src="./thirdparty/adapter.min.js"></script>
 		<style id="lightbox-animations" type="text/css"></style>
 		<!-- <link rel="manifest" href="manifest.json" /> -->
@@ -82,7 +82,7 @@
 			<link itemprop="url" href="./media/vdoNinja_logo_full.png" />
 		</span>
 		<script  type="text/javascript" crossorigin="anonymous"  src="./thirdparty/CodecsHandler.js?ver=37"></script>
-		<script  type="text/javascript" crossorigin="anonymous" src="./webrtc.js?ver=508"></script>
+		<script  type="text/javascript" crossorigin="anonymous" src="./webrtc.js?ver=515"></script>
 		<input id="zoomSlider" type="range" style="display: none;" />
 		<span id="electronDragZone" style="pointer-events: none; z-index:-10; position:absolute;top:0;left:0;width:100%;height:2%;-webkit-app-region: drag;min-height:20px;"></span>
 		<div id="header">
@@ -118,6 +118,7 @@
 					
 					<div id="dirroomid" style="font-size: 140%; color: #99c; display: inline-block;"></div>
 					<span id="saveRoom" onclick="saveRoom(this)" style='cursor:pointer;margin-left:10px;' title="Will remember the room, prompting you the next time you visit if you wish to load this director's room again">💾</span>
+					<span id="togglePreviewMode" onclick="switchModes()" style='cursor:pointer;margin-left:2px;' title="Toggle between the director control-room view and a scene preview-mode.">🪟</span>
 				</font>
 			</div>
 			<div id="head2" class="hidden" style="display: inline-block; text-decoration: none; font-size: 60%; color: white;">
@@ -877,7 +878,7 @@
 				<a href='https://github.com/steveseguin/vdoninja'>VDO.Ninja, by Steve Seguin</a>
 			</div>
 		</div>
-		<div id="gridlayout" >
+		<div id="directorlayout" class="hidden directorsgrid">
 			<div id="roomHeader" style="display:none">
 				<div  class="hideLinksClass">
 					<span style='color:white' id="directorLinksButton" onclick="hideDirectorinvites(this);">
@@ -917,7 +918,6 @@
 			</div>
 			
 			<div class='directorContainer half' id='directorLinks1' style='display:none;margin-top:0;'>
-			
 				<div class='directorBlock'>
 					<h2 title="Invite a guest or camera source to publish into the group room" style="margin-top: 5px;"><i class="las la-video director-link-icons" ></i><span data-translate="invite-a-guest">INVITE A GUEST</span></h2>
 					<span style="margin:5px; line-height: 1.6;" data-translate='invite-users-to-join'>Guests can use the link to join the group room</span>
@@ -935,8 +935,8 @@
 					<span>
 				</div>
 			</div>
-			<div class='directorContainer half' id='directorLinks2' style='margin-left: 5px;display:none;margin-top:0;'>	
-				
+			
+			<div class='directorContainer half' id='directorLinks2' style='margin-left: 5px;display:none;margin-top:0;'>
 				<div class='directorBlock' style="background-color: var(--green-accent);" >
 					<h2 title="Use this link in the OBS Browser Source to capture the video or audio" style="margin-left: 1px;margin-top: 5px;"><i class="las la-th-large director-link-icons" style="margin-right: 6px;" ></i> <span data-translate="capture-a-group-scene">CAPTURE A GROUP SCENE</span></h2>
 					<span style="margin:5px; line-height: 1.6;" data-translate='this-is-obs-browser-source-link'>Use in OBS or other studio software to capture the group video mix</span>
@@ -953,9 +953,8 @@
 						<button class='pull-right grey' style='font-size:1.15em' id="showCustomizerButton3"  onclick='showCustomizer(3,this)'><i class='las la-tools'></i><span data-translate="customize">Customize</span></button>
 					<span>
 				</div>
-				
-				
 			</div>
+			
 			<div class='directorContainer' id="customizeLinks" style='display:none;margin-top:0;padding-top:15px'>
 				<div class='directorBlock' id="customizeLinks1" style='display:none;margin-top:0;padding-bottom:0;'>
 					<div style="display:inline-block;margin-top: 12px;   position: relative;  margin-right:10px;">
@@ -1286,13 +1285,16 @@
 				</a>
 			</div>
 			<div></div>
-			<div id='guestFeeds' style="display:none"><div id='deleteme'>
-				<div class='vidcon directorMargins' id='fakeguest1' style='min-height: 300px;text-align: center;'><h2><span data-translate="guest-1">Guest 1</span></h2><i class='las la-user-circle' style='font-size:8em; margin: 20px 0px;' aria-hidden='true'></i></div>
-				<div class='vidcon directorMargins' id='fakeguest2' style='min-height: 300px;text-align: center;'><h2><span data-translate="guest-2">Guest 2</span></h2><i class='las la-user-circle' style='font-size:8em; margin: 20px 0px;' aria-hidden='true'></i></div>
-				<div class='vidcon directorMargins' id='fakeguest3' style='min-height: 300px;text-align: center;'><h2><span data-translate="guest-3">Guest 3</span></h2><i class='las la-user-circle' style='font-size:8em; margin: 20px 0px;' aria-hidden='true'></i></div>
-				<div class='vidcon directorMargins' id='fakeguest4' style='min-height: 300px;text-align: center;'><h2><span data-translate="guest-4">Guest 4</span></h2><i class='las la-user-circle' style='font-size:8em; margin: 20px 0px;' aria-hidden='true'></i></div>
-			</div></div>
+			<div id='guestFeeds' style="display:none">
+				<div id='deleteme'>
+					<div class='vidcon directorMargins' id='fakeguest1' style='min-height: 300px;text-align: center;'><h2><span data-translate="guest-1">Guest 1</span></h2><i class='las la-user-circle' style='font-size:8em; margin: 20px 0px;' aria-hidden='true'></i></div>
+					<div class='vidcon directorMargins' id='fakeguest2' style='min-height: 300px;text-align: center;'><h2><span data-translate="guest-2">Guest 2</span></h2><i class='las la-user-circle' style='font-size:8em; margin: 20px 0px;' aria-hidden='true'></i></div>
+					<div class='vidcon directorMargins' id='fakeguest3' style='min-height: 300px;text-align: center;'><h2><span data-translate="guest-3">Guest 3</span></h2><i class='las la-user-circle' style='font-size:8em; margin: 20px 0px;' aria-hidden='true'></i></div>
+					<div class='vidcon directorMargins' id='fakeguest4' style='min-height: 300px;text-align: center;'><h2><span data-translate="guest-4">Guest 4</span></h2><i class='las la-user-circle' style='font-size:8em; margin: 20px 0px;' aria-hidden='true'></i></div>
+				</div>
+			</div>
 		</div>
+		
 		<div id="hiddenElements"></div>
 		<div id="overlayClockContainer" data-initial="600" class="hidden"><span id="overlayClock"></span></div>
 		<div id="overlayMsgs" onclick="this.innerHTML = '';" style="display:none"></div>
@@ -2051,7 +2053,6 @@
 			<div id="userList">
 			</div>
 		</div>
-		
 		<div id="signalMeterTemplate" class="signal-meter hidden" data-cpu="0" data-level="0">
 			<i class="las la-signal"></i>
 			<i class="las la-fire-alt"></i>
@@ -2093,6 +2094,7 @@
 				<input type="file"  accept="image/*" onchange="changeTFLiteImage(event, this)" style="position: fixed; top: -100em; margin-left:10px; border:1px solid #555;"> 
 			</label>
 		</div>
+		<div id="gridlayout"></div>
 		<audio id="testtone" style="display:none;" preload="none">
 			<source src="./media/tone.mp3" type="audio/mpeg"> 
 			<source src="./media/tone.ogg" type="audio/ogg"> 
@@ -2109,7 +2111,6 @@
 				<a style="text-decoration: none; color: blue;" target="_blank" href="https://docs.vdo.ninja/advanced-settings">documentation</a> for more options and info.
 			</div>
 		</div>
-		
 		<div id="messagePopup" class="popup-message"></div>
 		<div id="languages" class="popup-message" style="display: none; right: 0; bottom: 25px; position: absolute;">
 			<b data-translate='available-languages'>Available Languages:</b>
@@ -2151,7 +2152,7 @@
 			</u>
 		</div>
 		<div id="meshcastMenu" class="hidden">
-			Publishing Region: <select name="edgelist" id="edgelist" onchange="reloadEdge();" title="Select a location that is closest to both you and your audience."></select>
+			Publishing Region: <select name="edgelist" id="edgelist" onchange="selectMeshcast(this);" title="Select a location that is closest to both you and your audience."></select>
 		</div>
 		<script>
 		
@@ -2237,11 +2238,11 @@
 			// session.defaultBackgroundImages = ["./media/bg_sample1.webp", "./media/bg_sample2.webp"]; // for &effects=5 (virtual backgrounds)
 		</script>
 		<script type="text/javascript" crossorigin="anonymous" src="./thirdparty/aes.js"></script>
-		<script type="text/javascript" crossorigin="anonymous" id="lib-js" src="./lib.js?ver=408"></script>
+		<script type="text/javascript" crossorigin="anonymous" id="lib-js" src="./lib.js?ver=440"></script>
 		<!-- 
 		// If you wish to change branding, blank offers a good clean start.
 		<script type="text/javascript" id="main-js" src="./main.js" data-translation="blank"></script>
 		-->
-		<script type="text/javascript" crossorigin="anonymous" id="main-js" src="./main.js?ver=418"></script>
+		<script type="text/javascript" crossorigin="anonymous" id="main-js" src="./main.js?ver=432"></script>
 	</body>
 </html>
