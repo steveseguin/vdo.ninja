@@ -54,6 +54,7 @@ description: All useful links you might take a look at
 | A more user-friendly version of [`&proxy`](newly-added-parameters/and-proxy.md)`` | [https://proxy.vdo.ninja/alpha/](https://proxy.vdo.ninja/alpha/)                                                                                       |
 | RTC.Ninja                                                                         | [https://rtc.ninja/](https://rtc.ninja/)                                                                                                               |
 | Meshcast Server List                                                              | [https://meshcast.io/servers.json](https://meshcast.io/servers.json)                                                                                   |
+| Speed Test                                                                        | [https://vdo.ninja/alpha/check](https://vdo.ninja/alpha/check)                                                                                         |
 
 ### VDO.Ninja Tech Demonstrations
 
