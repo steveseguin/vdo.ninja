@@ -1,7 +1,5 @@
 # Updates - VDO.Ninja
 
-[upcoming-parameters](../advanced-settings/upcoming-parameters/ "mention")
-
 {% hint style="danger" %}
 A general notice to users, on beta and alpha, the echo cancellation isn't working at the moment. It is working on the main production version however.\
 If using vdo.ninja/beta/ or vdo.ninja/alpha/, switch to just vdo.ninja/ if having echo problems or wear headphones at low volume.\
