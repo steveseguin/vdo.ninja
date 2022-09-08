@@ -149,4 +149,6 @@ proc-group=root
 
 ```
 
-Setting this all up is easier said then done. good luck!
+For those who are using Certificates with their coturn installations, you can use `sudo systemctl --signal=SIGUSR2 kill coturn` to reload the certs in coturn without restarting and disconnecting current users. This can be especially useful for certbot users, who need to update every few months; triggering the command after certbot runs could make life easy.
+
+Anyways, setting this all up is easier said then done. My suggestion is to start simple, get that working, and if needed, improve from there. good luck!
