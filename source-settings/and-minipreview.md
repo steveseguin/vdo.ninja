@@ -14,7 +14,7 @@ Sender-Side Option! ([`&push`](push.md))
 
 Shows the mini self-preview at the top right corner. This is the default behavior when [`&broadcast`](../advanced-settings/view-parameters/broadcast.md) mode is on.
 
-![](<../.gitbook/assets/image (12).png>)
+![](<../.gitbook/assets/image (12) (1).png>)
 
 ## Related
 

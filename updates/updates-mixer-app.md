@@ -1,6 +1,6 @@
 # Updates - Mixer App
 
-* [mixer-app.md](../steves-helper-apps/mixer-app.md "mention")
+[mixer-app.md](../steves-helper-apps/mixer-app.md "mention")
 
 #### August 17
 

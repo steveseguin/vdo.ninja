@@ -1,6 +1,6 @@
 # Updates - VDO.Ninja
 
-* [upcoming-parameters](../advanced-settings/upcoming-parameters/ "mention")
+[upcoming-parameters](../advanced-settings/upcoming-parameters/ "mention")
 
 {% hint style="danger" %}
 A general notice to users, on beta and alpha, the echo cancellation isn't working at the moment. It is working on the main production version however.\
@@ -10,12 +10,20 @@ I'm working on a fix, but I don't have an ETA. Will update when fixed.
 _\*\*_ UPDATE: I hot-patched beta and alpha with a fix. This fix disables the option to select custom audio output destinations, but resolves the echo issue. If using a self-deployed instance, you can instead add [`&noap`](../general-settings/noaudioprocessing.md) to the URLs to fix it as well; you can also enable `chrome://flags/#chrome-wide-echo-cancellation`, patch the code, or just use headphones.
 {% endhint %}
 
+#### **September 7** <a href="#august-31" id="august-31"></a>
+
+* **A**dded some notice icons to the PTZ controls, which show a tooltip on hover that explains remote PTZ only works if the remote window is visible.\
+  ![](<../.gitbook/assets/image (1).png>)
+* made the audio / video director control settings scrollable (max height \~500px), so you can more easily see the video while making changes to it.\
+  ![](<../.gitbook/assets/image (8).png>)
+* Increased the size of Canadian and German turn relay servers (4x larger), and completed other backend maintenance.
+
 #### **September 6** <a href="#august-31" id="august-31"></a>
 
 * ``[`&showconnections`](../advanced-settings/upcoming-parameters/and-showconnections.md) will display the total number of p2p connections of a remote stream. Works with the director's room and the automixer. Might help give comfort over privacy/security during a stream.
 * Total number of p2p remote connections (viewers) of a stream source will also appear in the stats menu, even without [`&showconnections`](../advanced-settings/upcoming-parameters/and-showconnections.md). Could be useful for debugging CPU/bandwidth issues.
 * Connections may represent video/audio streams, or just a data-connection. Meshcast-hosted streams might not be accounted for, depending on how the viewer is connecting.\
-  ![](../.gitbook/assets/image.png)
+  ![](<../.gitbook/assets/image (10).png>)
 * Added `showChat` and `showDirectorChat` as HTTP/WSS API options for sending messages to guest(s). Useful if you want to hotkey a streamdeck command with some welcome message for guests.
 * Added events notifications relating to the director's guest-mute, guest-video-mute, and guest-position-change actions, along with any remote-video-mute updates to the HTTP/WSS API (by request for the bitfocus companion app)
 
@@ -86,7 +94,7 @@ _\*\*_ UPDATE: I hot-patched beta and alpha with a fix. This fix disables the op
 * Solo links are setup to use [`&solo`](../advanced-settings/upcoming-parameters/and-solo.md) instead of `&scene` now; it's the same outcome, except `&solo` tells the system not to apply custom 'layouts' to them. Links updates in the director's room and the mixer app.\
   \*\* changes on the alpha version of VDO.Ninja at [https://vdo.ninja/alpha/](https://vdo.ninja/alpha/)
 * Added details on how to fix camera permissions denied, improving the messaging with an image and doc link. \* on alpha\
-  ![](<../.gitbook/assets/image (1).png>)
+  ![](<../.gitbook/assets/image (1) (7).png>)
 
 #### August 11
 

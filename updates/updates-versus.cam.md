@@ -1,6 +1,6 @@
 # Updates - Versus.cam
 
-* [versus.cam.md](../steves-helper-apps/versus.cam.md "mention")
+[versus.cam.md](../steves-helper-apps/versus.cam.md "mention")
 
 #### August 3
 

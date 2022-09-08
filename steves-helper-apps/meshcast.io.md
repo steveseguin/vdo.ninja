@@ -15,3 +15,9 @@ This is a free to use service that can work in conjunction with VDO.Ninja. It's 
 {% content-ref url="../advanced-settings/meshcast-parameters/" %}
 [meshcast-parameters](../advanced-settings/meshcast-parameters/)
 {% endcontent-ref %}
+
+## Updates
+
+{% content-ref url="../updates/updates-meshcast.io.md" %}
+[updates-meshcast.io.md](../updates/updates-meshcast.io.md)
+{% endcontent-ref %}

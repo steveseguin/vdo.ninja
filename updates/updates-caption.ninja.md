@@ -1,6 +1,6 @@
 # Updates - Caption.Ninja
 
-* [caption.ninja.md](../steves-helper-apps/caption.ninja.md "mention")
+[caption.ninja.md](../steves-helper-apps/caption.ninja.md "mention")
 
 #### July 29
 

@@ -1,6 +1,6 @@
 # Updates - Native mobile apps
 
-* [native-mobile-app-versions.md](../steves-helper-apps/native-mobile-app-versions.md "mention")
+[native-mobile-app-versions.md](../steves-helper-apps/native-mobile-app-versions.md "mention")
 
 #### May 27
 

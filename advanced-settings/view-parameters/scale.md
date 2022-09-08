@@ -24,7 +24,7 @@ This can help a viewer reduce frame stuttering, CPU load, and improve frame rate
 Requires the publisher of the stream to support dynamic scaling; Firefox and Chrome should be supported.
 
 There is a toggle in the director's room to add `&scale=100` to the scene URL:\
-![](<../../.gitbook/assets/image (10) (1).png>)
+![](<../../.gitbook/assets/image (10) (1) (1).png>)
 
 ## Related
 
