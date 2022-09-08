@@ -31,7 +31,7 @@ There is a toggle in the director's room which adds `&comp` to the guest's invit
 
 There is now an option to control the compressor remotely (3 states for the compressor; Off/On/Limiter)
 
-![](<../.gitbook/assets/image (2).png>)
+![](<../.gitbook/assets/image (2) (4).png>)
 
 ## Related
 

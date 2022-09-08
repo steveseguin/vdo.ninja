@@ -9,7 +9,7 @@
 #### January 9
 
 * Added screen sharing support; just select it from the list. If using Chrome/Edge/Brave, you can select desktop or tab audio along with the screen-share. Resolution is left up to the browser to decide.\
-  ![](<../.gitbook/assets/image (5).png>)
+  ![](<../.gitbook/assets/image (5) (2).png>)
 
 ### 2021
 
@@ -39,7 +39,7 @@
 * Updated a bit, including adding some new servers and replacing some others. Applies to the [`&meshcast`](../newly-added-parameters/and-meshcast.md) flag as well.
 * There's a drop down to select different regions; it automatically tries to select the closest though.
 *   Info on whether a region is overloaded or not is present; should always read "good", but who knows.\
-    ![](<../.gitbook/assets/image (12).png>)
+    ![](<../.gitbook/assets/image (12) (1).png>)
 
     Things are more responsive with the updated code, but its new code -- let me know if any bugs occur.
 

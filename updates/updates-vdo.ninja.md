@@ -80,7 +80,7 @@ _\*\*_ UPDATE: I hot-patched beta and alpha with a fix. This fix disables the op
   \-- leave the passed value empty if you wish to have the white basic rule-of-thirds show as default.\
   example: `https://vdo.ninja/alpha/?thirds=./media/thirdshead.svg`\
   ``\*\* on alpha.\
-  ![](<../.gitbook/assets/image (7).png>)
+  ![](<../.gitbook/assets/image (7) (1).png>)
 * Added [`proxy.vdo.ninja/alpha/`](https://proxy.vdo.ninja/alpha/) as an alternative to `vdo.ninja/?proxy`. If's a more user-friendly version of [`&proxy`](../newly-added-parameters/and-proxy.md). \*\* Just on alpha for now
 
 #### August 16
@@ -128,3 +128,55 @@ _\*\*_ UPDATE: I hot-patched beta and alpha with a fix. This fix disables the op
 * When using the IFrame API to control bitrates, I have added an optional called "lock" that lets you affix the bitrate you set so the rest of VDO.Ninja doesn't try to constantly override it. `{bitrate: 2500, lock:true}` for example. I also assume `lock=true` by default, so no changes are needed really to start benefiting from this. (previously you had to disable the auto-mixer to lock a bitrate).
 * Also added `{manualBitrate: xxx}` to the IFrame API , which is a bit like `bitrate`, but keeps track of what the current target bitrate should be. When you set `manualBitrate=false`, it will apply the expected target value. Also, it won't work when used in conjunction with custom audio bitrates, whereas bitrate will.
 * There's a third new bitrate option, which is `targetBitrate`, which lets the automixer keep doing its thing, but it sets a new max target bitrate. The target bitrate will still be applied when set, but the automixer may lower it if needed when it decides to, but it's the new target for 'unlocked' max speed. Some browser will ignore it though, if it's set higher than the bitrate that was manually set the via URL, so it's probably something you don't want to use along with `&bitrate`.
+
+#### July 27
+
+* Fixed the new OBS [`&remote=xx`](../general-settings/remote.md) not working correctly when a password was set (on alpha and GitHub)
+
+#### July 24
+
+* Fixed a bug where if the director is highlighted, newly loaded scenes would be blank.
+* Added two-way solo talk as an option to the http/wss VDO.Ninja API.
+* Also, - added the ability for VDO.Ninja to _**Remotely Control OBS Studio**_ while streaming/directing; useful for IRL maybe?\
+  \-- The menu button to control OBS auto-shows in the director's view or push-mode, if OBS Studio is set to give VDO.Ninja "full" permissions.\
+  \-- The menu button can also be added manually, for even guests, using [`&controlobs`](../advanced-settings/upcoming-parameters/and-obs.md)``\
+  ``-- [`&obsoff`](../advanced-settings/design-parameters/and-obsoff.md) can be used to set permissions to fully off (also disables tally light and scene optimizations tho) when added to the OBS browser source link.\
+  \-- The OBS instance still needs [`&remote={optional-passcode-here}`](../general-settings/remote.md) added to the URL for remote commands to work. If \&remote is left blank, it gives anyone permissions to control it. If a value is passed to `&remote`, the sender needs to have a matching \&remote value or manually enter they need to manually enter passcode in the pop up control menu.\
+  \-- If the OBS browser source has its permissions set to something other than full (lower than level 5), the control menu will still show what info it has -- current scene, recording/streaming state, etc; depending on level. The lower the level, the less info is available to show; can't remotely change anything though.\
+  \-- It supports multiple OBS instances and will label them according to the [`&label=xxx`](../general-settings/label.md) value set on the scene/view link, or whatever the unique connection ID is.\
+  \
+  All this is on alpha, at [https://vdo.ninja/alpha/](https://vdo.ninja/alpha/)\
+  ![](<../.gitbook/assets/image (2).png>)![](<../.gitbook/assets/image (3).png>)
+
+#### July 23
+
+* The [`&webp`](../advanced-settings/view-parameters/webp.md) mode has been modified a bit. Main change is that you now enable it by add `&webp` to the sender's URL, and [`&codec=webp`](../advanced-settings/view-parameters/codec.md) to the viewer's URL (otherwise, it falls back to normal video mode). No need for \&broadcast anymore. (as a reminder, this mode sends the video as a series of low-quality images, rather than a more efficient video stream).
+* I've removed the toggle in the director's room for this `&webp` feature, as [`&chunked`](../newly-added-parameters/and-chunked.md) mode is replacing its purpose there, but you might still want to use this mode when the viewer-side does not support video playback or hardware acceleration. Specifically, this option lets you bring motion images (aka, crude video) into the Streamlabs mobile app, as a browser source, where other forms of video decoding is not supported.
+* I've also created a new viewer-side option called [`&slideshow`](../advanced-settings/upcoming-parameters/and-slideshow.md) . This option decodes incoming video (first video to load), but plays them back as series of full-window images. That is, a single image element, that gets updated 24 times a second, instead of playing the video back within an efficient video element. I have no idea why you might want this option, as it pretty crude up and uses up a lot of CPU, but you can right-click to save a single frame from the video to disk, as a PNG file. This might be useful if you need to take a lot of snap shots of some video and don't want to have to hassle with cropping a window-grab. Quality of the images is pretty high; near lossless.\
+  \*\* on alpha\
+  ![](<../.gitbook/assets/image (5).png>)
+
+#### July 21
+
+* The [`&grid`](../advanced-settings/design-parameters/grid.md) overlay option now works in non-room mode
+* Added the toggles for `&grid` and [`&avatar`](../advanced-settings/upcoming-parameters/and-avatar.md) to the director's link customization section.
+* Added [`&smallshare`](../advanced-settings/upcoming-parameters/and-smallshare.md) as a new option, which makes the screen share behave like a webcam share. ie: not larger in size vs other windows, for the publisher or the viewers. This is a push-side parameter. This is useful if a VR guests screen sharing an app of themselves, versus using a virtual camera. It can also be useful for gaming, where a larger screen share might bog down the system of the sender more than needed.\
+  \*\*\* on alpha at vdo.ninja/alpha/
+
+#### July 20
+
+* Updated the local audio controls to have a NOISE GATE option.\
+  \-- This is a new noise gate, that lowers your mic volume to 10% of its current value based on volume-level activity. If you haven't made a significant sound in few seconds, the noise gate kicks in, and will re-enable when a significant noise is detected. It will take about 300-ms for the volume to recover once the noise triggers it back on, which can be a small bit harsh/distracting at times.\
+  \-- [`&noisegate`](../source-settings/noisegate.md) or `&noisegate=1` (`&gating`/`&ng`) will enable it by default (if using it in a room, currently); and `&noisegate=0` will hide the option from the menu.\
+  \-- The older existing `&noisegate=1` option I moved to `&noisegate=4`, as this new version is replacing it. I'm keeping the older version around as an option though.\
+  ![](<../.gitbook/assets/image (7).png>)
+* Fixed some of the labels for the local audio labels; camel-case is replaced with words, and true/false replaced with on/off.
+*   Fixed an issue where iPhones's video output would freeze when the director would feature-highlight any other participant.
+
+    \*\* on alpha at vdo.ninja/alpha
+
+#### July 19
+
+* Added the ability to "tap to focus" when a camera supports focusing. You'll want to switch the camera over to manual focus (via settings->video->focusMode) before it will be active, but then you can just touch on the screen to have it auto-focus on that spot. Note: It's a bit slow and not 100% accurate and may conflict with the zoom, if used. **on alpha at vdo.ninja/alpha**
+* Improved the advanced video settings; focus, exposure, white-balance. The auto and manual modes are now a checkbox, and I worked out a few of the odd behaviour issues that Chrome + Logitech webcams were having when try to set modes/values. \*\*\* on alpha at vdo.ninja/alpha\
+  ![](../.gitbook/assets/image.png)

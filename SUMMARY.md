@@ -427,6 +427,7 @@
   * [Updates - Native mobile apps](updates/updates-native-mobile-apps.md)
   * [Updates - Caption.Ninja](updates/updates-caption.ninja.md)
   * [Updates - Meshcast.io](updates/updates-meshcast.io.md)
+  * [Updates - Miscellaneous](updates/updates-miscellaneous.md)
 * [Development Progress](https://updates.vdo.ninja/)
 * [Help!](help/README.md)
   * [Fail safes and Backups](help/fail-safes-and-backups.md)
