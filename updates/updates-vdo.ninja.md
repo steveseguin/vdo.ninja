@@ -10,7 +10,7 @@ _\*\*_ UPDATE: I hot-patched beta and alpha with a fix. This fix disables the op
 
 #### **September 7** <a href="#august-31" id="august-31"></a>
 
-* Added some notice icons to the PTZ controls, which show a tooltip on hover that explains remote PTZ only works if the remote window is visible.\
+* **A**dded some notice icons to the PTZ controls, which show a tooltip on hover that explains remote PTZ only works if the remote window is visible.\
   ![](<../.gitbook/assets/image (1).png>)
 * made the audio / video director control settings scrollable (max height \~500px), so you can more easily see the video while making changes to it.\
   ![](<../.gitbook/assets/image (8).png>)
