@@ -10,7 +10,7 @@ _\*\*_ UPDATE: I hot-patched beta and alpha with a fix. This fix disables the op
 
 #### **September 9** <a href="#august-31" id="august-31"></a>
 
-* **A**dded mobile touch support to the tap-to-focus (only mouse support previously).
+* Added mobile touch support to the tap-to-focus (only mouse support previously).
 * Minor issue with drag-to-zoom fixed.
 * Fixed issue with not being able to reset video settings to default after changing them.
 * [`&autohide`](../parameters-only-on-beta/and-autohide.md) works better now; also on mobile, the `&autohide` makes the control bar transparent on timeout, to avoid conflicts with tap-to-zoom/focus logic.
