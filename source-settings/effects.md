@@ -37,7 +37,7 @@ This is on by default when using a basic push link outside of a room.
 
 You can pre-select the digital video effect by adding `&effects=X` (see [Options](effects.md#options) above) to a guest/push link.
 
-You can change the digital video effect dynamically via the video settings panel if you have added `&effects` to the guest's URL.
+The guest can change the digital video effect dynamically via the video settings panel if you have added `&effects` to the guest's URL.
 
 You can also pre-select the effect value by adding [`&effectvalue`](../newly-added-parameters/and-effectvalue.md) to the URL. ie: the amount of blur.
 
