@@ -8,9 +8,19 @@ I'm working on a fix, but I don't have an ETA. Will update when fixed.
 _\*\*_ UPDATE: I hot-patched beta and alpha with a fix. This fix disables the option to select custom audio output destinations, but resolves the echo issue. If using a self-deployed instance, you can instead add [`&noap`](../general-settings/noaudioprocessing.md) to the URLs to fix it as well; you can also enable `chrome://flags/#chrome-wide-echo-cancellation`, patch the code, or just use headphones.
 {% endhint %}
 
+#### **September 9** <a href="#august-31" id="august-31"></a>
+
+* **A**dded mobile touch support to the tap-to-focus (only mouse support previously).
+* Minor issue with drag-to-zoom fixed.
+* Fixed issue with not being able to reset video settings to default after changing them.
+* [`&autohide`](../parameters-only-on-beta/and-autohide.md) works better now; also on mobile, the `&autohide` makes the control bar transparent on timeout, to avoid conflicts with tap-to-zoom/focus logic.
+* It's easy to adjust video settings on mobile, as there is a large space to scroll without accidentally clicking a setting slider. Also more bottom padding, making it easier to click close in landscape mode.
+* Made the [`&sticky`](../general-settings/sticky.md) redirect confirmation prompt less ugly, and I now don't ask if the URL already matches the saved session's URL.
+* Made some changes/fixes to the recently new switchMode ([`&previewmode`](../advanced-settings/upcoming-parameters/and-previewmode.md)) function of the director room (hopefully no bugs?).
+
 #### **September 7** <a href="#august-31" id="august-31"></a>
 
-* **A**dded some notice icons to the PTZ controls, which show a tooltip on hover that explains remote PTZ only works if the remote window is visible.\
+* Added some notice icons to the PTZ controls, which show a tooltip on hover that explains remote PTZ only works if the remote window is visible.\
   ![](<../.gitbook/assets/image (1).png>)
 * made the audio / video director control settings scrollable (max height \~500px), so you can more easily see the video while making changes to it.\
   ![](<../.gitbook/assets/image (8).png>)
