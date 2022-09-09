@@ -16,7 +16,8 @@ _\*\*_ UPDATE: I hot-patched beta and alpha with a fix. This fix disables the op
 * [`&autohide`](../parameters-only-on-beta/and-autohide.md) works better now; also on mobile, the `&autohide` makes the control bar transparent on timeout, to avoid conflicts with tap-to-zoom/focus logic.
 * It's easy to adjust video settings on mobile, as there is a large space to scroll without accidentally clicking a setting slider. Also more bottom padding, making it easier to click close in landscape mode.
 * Made the [`&sticky`](../general-settings/sticky.md) redirect confirmation prompt less ugly, and I now don't ask if the URL already matches the saved session's URL.
-* Made some changes/fixes to the recently new switchMode ([`&previewmode`](../advanced-settings/upcoming-parameters/and-previewmode.md)) function of the director room (hopefully no bugs?).
+* Made some changes/fixes to the recently new switchMode ([`&previewmode`](../advanced-settings/upcoming-parameters/and-previewmode.md)) function of the director room (hopefully no bugs?).\
+  \*\* changes on alpha @ vdo.ninja/alpha/
 
 #### **September 7** <a href="#august-31" id="august-31"></a>
 
