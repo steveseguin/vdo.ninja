@@ -14,7 +14,7 @@ Adds the option for a guest to change the video and audio settings dynamically. 
 
 Outside of a room it is enabled by default.
 
-![](<../.gitbook/assets/image (2) (1).png>)
+![](<../.gitbook/assets/image (2) (1) (1).png>)
 
 ## Related
 

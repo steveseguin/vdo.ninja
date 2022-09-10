@@ -3,6 +3,13 @@
 [social-stream.md](../steves-helper-apps/social-stream.md "mention")\
 [chat-overlay.md](../steves-helper-apps/chat-overlay.md "mention")
 
+#### **September 10**
+
+* Using `&beep` or the bell icon will trigger audio 'beeps' when new messages appear in the Socialstream dock. Requires user-interaction with the page in chrome for the audio to work.\
+  ![](../.gitbook/assets/image.png)
+* Support for @mention added to Mixcloud for Socialstream+touch, by means of providing the username that scripts can respond to (by user request).
+* `&alignbottom` added to the Socialstream dock; this aligns the message stream to the bottom by default, rather than top.
+
 #### **September 2**
 
 * Socialstream bug fixes, along with donation support added to Mixcloud.
