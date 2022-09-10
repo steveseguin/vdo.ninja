@@ -9,6 +9,7 @@
   ![](../.gitbook/assets/image.png)
 * Support for @mention added to Mixcloud for Socialstream+touch, by means of providing the username that scripts can respond to (by user request).
 * `&alignbottom` added to the Socialstream dock; this aligns the message stream to the bottom by default, rather than top.
+* Added `&transparent` (versus the new `&hideshadow`), which can be useful for loading Socialstream into non-OBS studios.
 
 #### **September 2**
 
