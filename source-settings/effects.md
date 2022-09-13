@@ -27,7 +27,7 @@ Sender-Side Option! ([`&push`](push.md))
 | `7` \| `zoom`\*         | Zoom                                                          |
 | `9`                     | Face tracking                                                 |
 | `10`                    | Face tracking                                                 |
-| `11`                    | Anonymous face mask                                           |
+| `11` \| `anon`          | Anonymous face mask                                           |
 
 \*on alpha
 
