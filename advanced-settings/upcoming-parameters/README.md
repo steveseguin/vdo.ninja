@@ -53,6 +53,7 @@ You can use/test these parameters on [vdo.ninja/alpha](https://vdo.ninja/alpha/)
 | ``[`&noisegatesettings`](and-noisegatesettings.md)\*           | Lets you tweak the [`&noisegate`](../../source-settings/noisegate.md) variables, making it more or less aggressive as needed                                       |
 | ``[`&previewmode`](and-previewmode.md)\*                       | Activates the Preview layout for the director's room by default                                                                                                    |
 | ``[`&showconnections`](and-showconnections.md)\*               | Displays the total number of p2p connections of a remote stream                                                                                                    |
+| ``[`&getfaces`](and-getfaces.md)\*                             | Will request a continuous stream of face bounding boxes                                                                                                            |
 
 \*only on [vdo.ninja/alpha](https://vdo.ninja/alpha/)\
 \*\*on [vdo.ninja/beta](https://vdo.ninja/beta/) and [vdo.ninja/alpha](https://vdo.ninja/alpha/)
