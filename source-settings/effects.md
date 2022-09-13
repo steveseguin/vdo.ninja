@@ -12,22 +12,22 @@ Sender-Side Option! ([`&push`](push.md))
 
 ## Options
 
-| Value                 | Description                                                   |
-| --------------------- | ------------------------------------------------------------- |
-| (no value given)      | Shows a "Digital Video Effects" panel when setting up devices |
-| `0`                   | Disables effects                                              |
-| `1` \| `facetracking` | Face tracker                                                  |
-| `-1`                  | Flip image                                                    |
-| `2`                   | Mirror image                                                  |
-| `-2`                  | Flip + mirror image                                           |
-| `3`                   | Background blur                                               |
-| `4`                   | Virtual Greenscreen                                           |
-| `5`                   | Background replacement                                        |
-| `6`                   | Avatar                                                        |
-| `7` \| `zoom`\*       | Zoom                                                          |
-| `9`                   | Face tracking                                                 |
-| `10`                  | Face tracking                                                 |
-| `11`                  | Anonymous face mask                                           |
+| Value                   | Description                                                   |
+| ----------------------- | ------------------------------------------------------------- |
+| (no value given)        | Shows a "Digital Video Effects" panel when setting up devices |
+| `0` \| `false` \| `off` | Disables effects                                              |
+| `1` \| `facetracking`   | Face tracker                                                  |
+| `-1`                    | Flip image                                                    |
+| `2`                     | Mirror image                                                  |
+| `-2`                    | Flip + mirror image                                           |
+| `3`                     | Background blur                                               |
+| `4`                     | Virtual Greenscreen                                           |
+| `5`                     | Background replacement                                        |
+| `6`                     | Avatar                                                        |
+| `7` \| `zoom`\*         | Zoom                                                          |
+| `9`                     | Face tracking                                                 |
+| `10`                    | Face tracking                                                 |
+| `11`                    | Anonymous face mask                                           |
 
 \*on alpha
 
