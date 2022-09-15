@@ -55,6 +55,7 @@ description: All useful links you might take a look at
 | RTC.Ninja                                                                         | [https://rtc.ninja/](https://rtc.ninja/)                                                                                                               |
 | Meshcast Server List                                                              | [https://meshcast.io/servers.json](https://meshcast.io/servers.json)                                                                                   |
 | Speed Test                                                                        | [https://vdo.ninja/alpha/check](https://vdo.ninja/alpha/check)                                                                                         |
+| Testing regions for vdo.ninja/alpha/check                                         | [https://vdo.ninja/alpha/regions](https://vdo.ninja/alpha/regions)                                                                                     |
 
 ### VDO.Ninja Tech Demonstrations
 
