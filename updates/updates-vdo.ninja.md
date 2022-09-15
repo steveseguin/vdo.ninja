@@ -11,7 +11,7 @@ _\*\*_ UPDATE: I hot-patched beta and alpha with a fix. This fix disables the op
 #### **September 12** <a href="#august-31" id="august-31"></a>
 
 * Added [`&effects=7`](../source-settings/effects.md) (or `&effects=zoom`), which will provide a manual zoom option in the effects menu. (you can also select the zoom mode via the effects menu, if available)\
-  ![](../.gitbook/assets/image.png)
+  ![](<../.gitbook/assets/image (2).png>)
 * Added [`&getfaces`](../advanced-settings/upcoming-parameters/and-getfaces.md) on the viewer link (or `{getFaces:true}` via the IFrame API), which will request a continuous stream of face bounding boxes, for all inbound videos and all faces contained within. The data is transmitted to the parent IFRAME, and this data can be used for moving the IFrame window around, if you wish to make your own custom face-tracker or whatever else.\
   ![](<../.gitbook/assets/image (11) (1).png>)
 * ``[`&effects=1`](../source-settings/effects.md) on the sender side (or `&effects=facetracking`) will auto-center the user's face in the center of their video, zooming in as needed. It takes a moment to initiate, but it offers a gentle PTZ-like effect.\
@@ -34,7 +34,7 @@ _\*\*_ UPDATE: I hot-patched beta and alpha with a fix. This fix disables the op
 #### **September 7** <a href="#august-31" id="august-31"></a>
 
 * Added some notice icons to the PTZ controls, which show a tooltip on hover that explains remote PTZ only works if the remote window is visible.\
-  ![](<../.gitbook/assets/image (1).png>)
+  ![](<../.gitbook/assets/image (1) (1).png>)
 * made the audio / video director control settings scrollable (max height \~500px), so you can more easily see the video while making changes to it.\
   ![](<../.gitbook/assets/image (8) (2).png>)
 * Increased the size of Canadian and German turn relay servers (4x larger), and completed other backend maintenance.
@@ -146,7 +146,7 @@ _\*\*_ UPDATE: I hot-patched beta and alpha with a fix. This fix disables the op
 #### August 1
 
 * Chat messages that contain URLs will now have those URLs be clickable (opens into a new window)\
-  ![](<../.gitbook/assets/image (1) (1).png>)
+  ![](<../.gitbook/assets/image (1) (1) (2).png>)
 * The pop-out chat feature has had a bug fixed and minor polish applied
 * When using the IFrame API to control bitrates, I have added an optional called "lock" that lets you affix the bitrate you set so the rest of VDO.Ninja doesn't try to constantly override it. `{bitrate: 2500, lock:true}` for example. I also assume `lock=true` by default, so no changes are needed really to start benefiting from this. (previously you had to disable the auto-mixer to lock a bitrate).
 * Also added `{manualBitrate: xxx}` to the IFrame API , which is a bit like `bitrate`, but keeps track of what the current target bitrate should be. When you set `manualBitrate=false`, it will apply the expected target value. Also, it won't work when used in conjunction with custom audio bitrates, whereas bitrate will.
@@ -169,7 +169,7 @@ _\*\*_ UPDATE: I hot-patched beta and alpha with a fix. This fix disables the op
   \-- It supports multiple OBS instances and will label them according to the [`&label=xxx`](../general-settings/label.md) value set on the scene/view link, or whatever the unique connection ID is.\
   \
   All this is on alpha, at [https://vdo.ninja/alpha/](https://vdo.ninja/alpha/)\
-  ![](<../.gitbook/assets/image (2) (1).png>)![](<../.gitbook/assets/image (3).png>)
+  ![](<../.gitbook/assets/image (2) (1) (4).png>)![](<../.gitbook/assets/image (3).png>)
 
 #### July 23
 
@@ -202,4 +202,4 @@ _\*\*_ UPDATE: I hot-patched beta and alpha with a fix. This fix disables the op
 
 * Added the ability to "tap to focus" when a camera supports focusing. You'll want to switch the camera over to manual focus (via settings->video->focusMode) before it will be active, but then you can just touch on the screen to have it auto-focus on that spot. Note: It's a bit slow and not 100% accurate and may conflict with the zoom, if used. **on alpha at vdo.ninja/alpha**
 * Improved the advanced video settings; focus, exposure, white-balance. The auto and manual modes are now a checkbox, and I worked out a few of the odd behaviour issues that Chrome + Logitech webcams were having when try to set modes/values. \*\*\* on alpha at vdo.ninja/alpha\
-  ![](<../.gitbook/assets/image (2).png>)
+  ![](<../.gitbook/assets/image (2) (1).png>)

@@ -8,7 +8,7 @@ description: >-
 # Mixer App
 
 {% embed url="https://vdo.ninja/alpha/mixer" %}
-https://vdo.ninja/alpha/mixer
+[https://vdo.ninja/alpha/mixer](https://vdo.ninja/alpha/mixer)
 {% endembed %}
 
 The Mixer App is an alternative to the director's control center of VDO.Ninja. It gives you the full power to customize scenes, layouts and positions of the video feeds dynamically.

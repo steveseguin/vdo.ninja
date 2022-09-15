@@ -16,4 +16,3 @@ description: Useful tools that could help you make your stream better
 | MIDI Controller App                     | [https://vdo.ninja/alpha/remotemidi](https://vdo.ninja/alpha/remotemidi)                                             |
 | Example for multiple rooms              | [https://vdo.ninja/examples/multi?rooms=room1,room2,room3](https://vdo.ninja/examples/multi?rooms=room1,room2,room3) |
 | API / IFRAME sandbox page for developer | [https://vdo.ninja/alpha/iframe](https://vdo.ninja/alpha/iframe)                                                     |
-| Speed Test                              | [https://vdo.ninja/alpha/check](https://vdo.ninja/alpha/check)                                                       |

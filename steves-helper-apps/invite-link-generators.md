@@ -1,3 +1,7 @@
+---
+description: Link generators to create invite links for VDO.Ninja
+---
+
 # Invite Link Generators
 
 | Tool                         | URL                                                                                                                   |

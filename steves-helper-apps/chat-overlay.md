@@ -1,6 +1,16 @@
+---
+description: >-
+  Turns your social chat and comments section into selectable social overlays
+  for OBS Studio or other studio production software
+---
+
 # Chat Overlay
 
+
+
 {% embed url="https://chat.overlay.ninja" %}
+[https://github.com/steveseguin/twitch-youtube-restream-chat-overlay#readme](https://github.com/steveseguin/twitch-youtube-restream-chat-overlay#readme)
+{% endembed %}
 
 This Chrome browser extension turns your social chat and comments section into selectable social overlays for OBS Studio or other studio production software.
 

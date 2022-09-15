@@ -1,11 +1,19 @@
+---
+description: >-
+  Lets you use the browser's built in speech-to-text service to provide overlay
+  captions for your live stream
+---
+
 # Caption.Ninja
 
 ## Caption
 
 {% embed url="https://caption.ninja/" %}
+[https://caption.ninja/](https://caption.ninja/)
+{% endembed %}
 
-Although VDO.Ninja supports captions, sometimes you need something simple yet flexible. Caption.Ninja lets you use the browser's built in speech-to-text service to provide overlay captions for your live stream.\
-\
+Although VDO.Ninja supports captions, sometimes you need something simple yet flexible. Caption.Ninja lets you use the browser's built in speech-to-text service to provide overlay captions for your live stream.
+
 Captions are streamed via a web-socket service to your OBS or other studio software, where they can be shown over your video.
 
 Transcriptions can be saved by means of copy and paste when done, multiple languages are supported, and even **manual** user-entered captions support is provided at [https://caption.ninja/manual](https://caption.ninja/manual)

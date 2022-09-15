@@ -25,6 +25,7 @@
   * [Raspberry.Ninja](steves-helper-apps/raspberry.ninja.md)
   * [Mixer App](steves-helper-apps/mixer-app.md)
   * [Versus.cam](steves-helper-apps/versus.cam.md)
+  * [Speed Test](steves-helper-apps/speed-test.md)
   * [Native mobile app versions](steves-helper-apps/native-mobile-app-versions.md)
   * [VDO Applications](steves-helper-apps/vdo-applications.md)
   * [Tech Demonstrations](steves-helper-apps/tech-demonstrations.md)

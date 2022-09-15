@@ -1,6 +1,12 @@
+---
+description: Publish live streaming video to VDO.Ninja at very high resolutions
+---
+
 # Raspberry.Ninja
 
 {% embed url="https://raspberry.ninja" %}
+[https://raspberry.ninja/](https://raspberry.ninja/)
+{% endembed %}
 
 Turn your Raspberry Pi or Nvidia Jetson into a Ninja-cam with hardware-acceleration enabled! Publish live streaming video to VDO.Ninja on the cheap at very high resolutions! The script for the Nvidia Jetson ($69 and up) is setup to plug in a $10 1080p30 HDMI to USB adapter and go, while the Raspberry Pi is setup as a quick-deploy image that can work with the official Raspicam.
 

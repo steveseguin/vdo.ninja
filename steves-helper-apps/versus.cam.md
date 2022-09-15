@@ -1,3 +1,7 @@
+---
+description: Focus on ease of use and high-bitrate / e-sports streams
+---
+
 # Versus.cam
 
 {% embed url="https://versus.cam/" %}
