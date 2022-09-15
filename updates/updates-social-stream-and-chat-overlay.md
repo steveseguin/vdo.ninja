@@ -3,6 +3,11 @@
 [social-stream.md](../steves-helper-apps/social-stream.md "mention")\
 [chat-overlay.md](../steves-helper-apps/chat-overlay.md "mention")
 
+#### **September 15**
+
+* `&random` added to SocialStream; it can be used with the dock to randomize where messages appear on screen.\
+  ****![](../.gitbook/assets/image.png)****
+
 #### **September 10**
 
 * Using `&beep` or the bell icon will trigger audio 'beeps' when new messages appear in the Socialstream dock. Requires user-interaction with the page in chrome for the audio to work.\
