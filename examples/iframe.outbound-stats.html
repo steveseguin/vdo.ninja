@@ -1,12 +1,12 @@
 <html>
 
 <head>
-    <title>OBS.Ninja IFRAME Outgoing Stats Example</title>
+    <title>VDO.Ninja IFRAME Outgoing Stats Example</title>
     <link rel="shortcut icon" href="data:image/x-icon;," type="image/x-icon" />
-    <link rel="icon" type="image/png" sizes="32x32" href="./images/favicon-32x32.png" />
-    <link rel="icon" type="image/png" sizes="16x16" href="./images/favicon-16x16.png" />
-    <link rel="icon" href="./images/favicon.ico" />
-    <link itemprop="thumbnailUrl" href="./images/obsNinja_logo_full.png" />
+    <link rel="icon" type="image/png" sizes="32x32" href="../media//favicon-32x32.png" />
+    <link rel="icon" type="image/png" sizes="16x16" href="../media/favicon-16x16.png" />
+    <link rel="icon" href=".../media/favicon.ico" />
+    <link itemprop="thumbnailUrl" href="../media/vdoNinja_logo_full.png" />
     <link rel="stylesheet" type="text/css" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <style>
         body {
@@ -43,7 +43,7 @@
     <div class="container-fluid">
         <div class="row controls" style="margin-bottom:15px;border-bottom:1px solid black;">
             <div class="col-8">
-                <input type="text" class="form-control" style="width:95%;margin:10px auto;" placeholder="Enter an OBS.Ninja View URL here" value="" id="viewlink" />
+                <input type="text" class="form-control" style="width:95%;margin:10px auto;" placeholder="Enter an VDO.Ninja View URL here" value="" id="viewlink" />
             </div>
             <div class="col-4">
                 <div class="row">
@@ -61,8 +61,8 @@
             <div class="col-5" id="sourcecontrols">
                 <div class="row text-light" style="margin-top:15px;">
                     <div class="col">
-                        <p>This example will show all connections to the stream generated from this page using statistics gathered using the <a href="https://github.com/steveseguin/obsninja/blob/master/IFRAME.md">iFrame API</a>.</p>
-                        <p>Click start to generate a stream using the OBS.Ninja URL shown. If you use the example URL shown, you can <a id="aView" href="" target="_blank">click here</a> to connect to this stream as a viewer in a new window/tab, this will then show in the table below. Expired connections will be removed after a short delay.</p>
+                        <p>This example will show all connections to the stream generated from this page using statistics gathered using the <a href="https://github.com/steveseguin/vdoninja/blob/master/IFRAME.md">iFrame API</a>.</p>
+                        <p>Click start to generate a stream using the VDO.Ninja URL shown. If you use the example URL shown, you can <a id="aView" href="" target="_blank">click here</a> to connect to this stream as a viewer in a new window/tab, this will then show in the table below. Expired connections will be removed after a short delay.</p>
                     </div>
                 </div>
                 <div class="row" style="margin-top:5px;">
@@ -129,11 +129,11 @@
                 var now = new Date(); //Used for "Added" column and to remove stale viewers
                 for (var viewer in e.data.stats.outbound_stats) {
                     //Check to see if a row exists for this viewier, if not then its a new viewer and we should create a row
-                    if ($("#obsn_viewer_" + viewer).length == 0) {
+                    if ($("#vdon_viewer_" + viewer).length == 0) {
                         var h = now.getHours();
                         var m = now.getMinutes();
                         var s = now.getSeconds();
-                        $('#viewers tbody').append('<tr id="obsn_viewer_' + viewer + '"><th class="obsn_viewer_label" scope="row"></th><td class="obsn_viewer_added">' + ("0" + h).slice(-2) + ':' + ("0" + m).slice(-2) + ':' + ("0" + s).slice(-2) + '</td><td class="obsn_viewer_qlr"></td><td class="obsn_viewer_resolution"></td><td class="obsn_viewer_platform"></td><td class="obsn_viewer_encoder"></td><td class="obsn_viewer_useragent"></td></tr>');
+                        $('#viewers tbody').append('<tr id="vdon_viewer_' + viewer + '"><th class="vdon_viewer_label" scope="row"></th><td class="vdon_viewer_added">' + ("0" + h).slice(-2) + ':' + ("0" + m).slice(-2) + ':' + ("0" + s).slice(-2) + '</td><td class="vdon_viewer_qlr"></td><td class="vdon_viewer_resolution"></td><td class="vdon_viewer_platform"></td><td class="vdon_viewer_encoder"></td><td class="vdon_viewer_useragent"></td></tr>');
                     }
                     //Insert/update stats
                     //Initially objects can be available but without any attributes, check they exist and ignore till the basics are available
@@ -141,24 +141,24 @@
                     if (e.data.stats.outbound_stats[viewer].info == undefined) continue;
                     //Checking these exist as not all attributes are available straight away when stats are created
                     if (e.data.stats.outbound_stats[viewer].info.label != undefined) {
-                        $("#obsn_viewer_" + viewer).find('.obsn_viewer_label').text(e.data.stats.outbound_stats[viewer].info.label);
+                        $("#vdon_viewer_" + viewer).find('.vdon_viewer_label').text(e.data.stats.outbound_stats[viewer].info.label);
                     }
                     if (e.data.stats.outbound_stats[viewer].quality_Limitation_Reason != undefined) {
-                        $("#obsn_viewer_" + viewer).find('.obsn_viewer_qlr').text(e.data.stats.outbound_stats[viewer].quality_Limitation_Reason);
+                        $("#vdon_viewer_" + viewer).find('.vdon_viewer_qlr').text(e.data.stats.outbound_stats[viewer].quality_Limitation_Reason);
                     }
                     if (e.data.stats.outbound_stats[viewer].resolution != undefined) {
-                        $("#obsn_viewer_" + viewer).find('.obsn_viewer_resolution').text(e.data.stats.outbound_stats[viewer].resolution);
+                        $("#vdon_viewer_" + viewer).find('.vdon_viewer_resolution').text(e.data.stats.outbound_stats[viewer].resolution);
                     }
                     if (e.data.stats.outbound_stats[viewer].info.platform != undefined) {
-                        $("#obsn_viewer_" + viewer).find('.obsn_viewer_platform').text(e.data.stats.outbound_stats[viewer].info.platform);
+                        $("#vdon_viewer_" + viewer).find('.vdon_viewer_platform').text(e.data.stats.outbound_stats[viewer].info.platform);
                     }
                     if (e.data.stats.outbound_stats[viewer].encoder != undefined) {
-                        $("#obsn_viewer_" + viewer).find('.obsn_viewer_encoder').text(e.data.stats.outbound_stats[viewer].encoder);
+                        $("#vdon_viewer_" + viewer).find('.vdon_viewer_encoder').text(e.data.stats.outbound_stats[viewer].encoder);
                     }
                     if (e.data.stats.outbound_stats[viewer].info.useragent != undefined) {
-                        $("#obsn_viewer_" + viewer).find('.obsn_viewer_useragent').text(e.data.stats.outbound_stats[viewer].info.useragent);
+                        $("#vdon_viewer_" + viewer).find('.vdon_viewer_useragent').text(e.data.stats.outbound_stats[viewer].info.useragent);
                     }
-                    $("#obsn_viewer_" + viewer).data('last', now.getTime()); //Used below to remove old viewers
+                    $("#vdon_viewer_" + viewer).data('last', now.getTime()); //Used below to remove old viewers
                 }
                 //Mark and then remove viewers who have not been seen for a while
                 $('#viewers tbody tr').each(function(el) {
@@ -243,7 +243,7 @@
             //Add in random ID and password strings to URL's, the below is purely for the purposes of this example
             var pushid = makeid();
             var password = makeid();
-            var baseUrl = "https://obs.ninja/";
+            var baseUrl = "https://vdo.ninja/";
             $('#aView').attr('href', baseUrl + '?view=' + pushid + '&password=' + password + '&label=Test_Link');
             $('#viewlink').val(baseUrl + '?push=' + pushid + '&password=' + password + '&autostart&turn=false&fps=25&maxbitrate=1000&cleanoutput&audiobitrate=32&aec=0&denoise=0&webcam');
         });

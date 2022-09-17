@@ -278,9 +278,8 @@
 
 	</style>
 </head>
-<body >
-
-	<div id="header" style="-webkit-app-region: drag;color:#6f6f6f;font-size:40px; line-height: 40px; padding: 5px 10px; letter-spacing: 3; font-weight: bold;">Electron Capture</div>
+<body>
+	<div id="header" style="-webkit-app-region: drag; color:#6f6f6f;font-size:20px; line-height: 20px; padding: 5px 10px; letter-spacing: 3; font-weight: bold;">Electron Capture</div>
 	<div class="container" >
 		
 		<div id='warning4mac' style="display:none;"> ✨ Great News! OBS v26.1.2 <a href="https://github.com/obsproject/obs-browser/issues/209#issuecomment-748683083">now supports</a> VDO.Ninja without needing the Electron Capture app! 🥳</div>
@@ -564,7 +563,7 @@ function modURL(){
 	} else if (url.startsWith("https://")){
 		// pass
 	} else if (url.startsWith("file:")){
-		// pass
+		alert("Warning:\n\nFor security purposes, local files need to be loaded via the command-line or via the right-click context menu -> Edit URL.\n\nThis is supported in Electron Capture 2.15.2 and newer.");
 	} else {
 		url = "https://"+url;
 	}

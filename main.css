@@ -23,6 +23,8 @@
 	--myvideo-background: #FFF1;
 	--video-background-image: url("data:image/svg+xml,%3Csvg viewBox='-42 0 512 512.002' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='m210.351562 246.632812c33.882813 0 63.222657-12.152343 87.195313-36.128906 23.972656-23.972656 36.125-53.304687 36.125-87.191406 0-33.875-12.152344-63.210938-36.128906-87.191406-23.976563-23.96875-53.3125-36.121094-87.191407-36.121094-33.886718 0-63.21875 12.152344-87.191406 36.125s-36.128906 53.308594-36.128906 87.1875c0 33.886719 12.15625 63.222656 36.132812 87.195312 23.976563 23.96875 53.3125 36.125 87.1875 36.125zm0 0'/%3E%3Cpath d='m426.128906 393.703125c-.691406-9.976563-2.089844-20.859375-4.148437-32.351563-2.078125-11.578124-4.753907-22.523437-7.957031-32.527343-3.308594-10.339844-7.808594-20.550781-13.371094-30.335938-5.773438-10.15625-12.554688-19-20.164063-26.277343-7.957031-7.613282-17.699219-13.734376-28.964843-18.199219-11.226563-4.441407-23.667969-6.691407-36.976563-6.691407-5.226563 0-10.28125 2.144532-20.042969 8.5-6.007812 3.917969-13.035156 8.449219-20.878906 13.460938-6.707031 4.273438-15.792969 8.277344-27.015625 11.902344-10.949219 3.542968-22.066406 5.339844-33.039063 5.339844-10.972656 0-22.085937-1.796876-33.046874-5.339844-11.210938-3.621094-20.296876-7.625-26.996094-11.898438-7.769532-4.964844-14.800782-9.496094-20.898438-13.46875-9.75-6.355468-14.808594-8.5-20.035156-8.5-13.3125 0-25.75 2.253906-36.972656 6.699219-11.257813 4.457031-21.003906 10.578125-28.96875 18.199219-7.605469 7.28125-14.390625 16.121094-20.15625 26.273437-5.558594 9.785157-10.058594 19.992188-13.371094 30.339844-3.199219 10.003906-5.875 20.945313-7.953125 32.523437-2.058594 11.476563-3.457031 22.363282-4.148437 32.363282-.679688 9.796875-1.023438 19.964844-1.023438 30.234375 0 26.726562 8.496094 48.363281 25.25 64.320312 16.546875 15.746094 38.441406 23.734375 65.066406 23.734375h246.53125c26.625 0 48.511719-7.984375 65.0625-23.734375 16.757813-15.945312 25.253906-37.585937 25.253906-64.324219-.003906-10.316406-.351562-20.492187-1.035156-30.242187zm0 0'/%3E%3C/svg%3E");
 	--advanced-mode: inline-block;
+	--background-main-image: unset;
+	--show-codirectors: inline-block;
 }
 
 * {
@@ -154,18 +156,17 @@ th {
 	direction: rtl;
 	user-select: none;
 }
-
+a {
+	-webkit-app-region: no-drag;
+}
 a:link {
 	text-decoration: none;
 	color: #B9DFF9;
 }
-
 a:visited {
 	text-decoration: none;
 	color: #99BFD9;
 }
-
-
 a:hover {
 	color: #048AE8;
 }
@@ -250,7 +251,6 @@ button {
 
 
 button.white {
-	-webkit-app-region: no-drag;
 	padding: 6px 10px 4px 9px;
 	;
 	margin: 10px 0px;
@@ -262,7 +262,6 @@ button.white {
 }
 
 button.white:active {
-	-webkit-app-region: no-drag;
 	padding: 6px 10px 4px 9px;
 	;
 	margin: 10px 0px;
@@ -272,14 +271,43 @@ button.white:active {
 	color: white;
 	border: 1px solid black;
 }
+#meshcastMenu{
+	display: inline-block;
+    color: #e0dfdf;
+}
 #header {
 	width: 100%;
-	padding: 1px;
+	margin: 1px;
 	background-color: #0F131D;
 	color: #FFF;
-	min-height:18.8px;
+	-webkit-app-region: drag;
+}
+#head1{
+	display: inline-block; 
+	padding:1px; 
+	position: relative; 
+	-webkit-app-region: no-drag;
+}
+.randomRoomName{
+	width: 20px;
+	height: 20px;
+	background-size: contain;
+	background-repeat: no-repeat;
+	border-radius: 5px;
+	background: rgb(238,238,238);
+	background-image: url("data:image/svg+xml,%0A%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 29 29'%3E%3Cpath d='M18 9v-3c-1 0-3.308-.188-4.506 2.216l-4.218 8.461c-1.015 2.036-3.094 3.323-5.37 3.323h-3.906v-2h3.906c1.517 0 2.903-.858 3.58-2.216l4.218-8.461c1.356-2.721 3.674-3.323 6.296-3.323v-3l6 4-6 4zm-9.463 1.324l1.117-2.242c-1.235-2.479-2.899-4.082-5.748-4.082h-3.906v2h3.906c2.872 0 3.644 2.343 4.631 4.324zm15.463 8.676l-6-4v3c-3.78 0-4.019-1.238-5.556-4.322l-1.118 2.241c1.021 2.049 2.1 4.081 6.674 4.081v3l6-4z'/%3E%3C/svg%3E"), linear-gradient(135deg, rgba(238,238,238,1) 0%,rgba(204,204,204,1) 100%);
+	position: absolute;
+    margin: 6px;
+}
+.randomRoomName:active{
+	animation: shake 0.2s;
+	animation-iteration-count: once;
+}
+.randomRoomName:hover{
+	-webkit-box-shadow: 0px 0px 4px #000;
 }
 #head5 {
+	-webkit-app-region: no-drag;
 	display: inline-block;
 	text-decoration: none;
 	color: white;
@@ -432,6 +460,10 @@ body.darktheme .credits>a:visited {
 	background-color: black;
 }
 
+.darktheme .advDirectGuestSettings label {
+	color: #FFF;
+}
+
 .pressed {
 	background: #1e0000;
 	-webkit-box-shadow: inset 0px 0px 1px #b90000;
@@ -502,7 +534,7 @@ hr {
 	border-radius: var(--video-rounded);
 }
 
-#gridlayout {
+#gridlayout,#directorlayout {
 	padding: 0;
 	width: 100%;
 	height: 100%;
@@ -547,11 +579,21 @@ hr {
 }
 
 .directorsgrid .vidcon {
-	display: inline-block !important;
+	display: inline-block;
 	width: 269.7px !important;
 	background: #7E7E7E;
 	color: #FCFCFC;
 	vertical-align: top;
+}
+
+.directorBox {
+	background-color: #606383 !important;
+	display: var(--show-codirectors) !important;
+}
+
+.directorBlue {
+	background-color: #5c7785 !important;
+	display: var(--show-codirectors) !important;
 }
 
 .directorsgrid .vidcon>.las {
@@ -694,7 +736,18 @@ hr {
 	cursor: pointer;
 	font-size:12px;
 }
-
+.rem-con-count{
+	position: absolute;
+	left: 49px;
+	top: 0px;
+	color: white;
+	background-color: #0006;
+	font-size: 1em;
+	z-index: 2;
+	cursor: help;
+	border-radius: 4px;
+	padding: 1px 4px 1px 0px;
+}
 .signal-meter{
 	width: 22px;
 	height: 22px;
@@ -703,7 +756,6 @@ hr {
 	top: 1px;
 	background-color: #FFF2;
 	font-size: 1.5em;
-	display:none;
 	z-index: 2;
 	cursor: help;
 }
@@ -822,6 +874,12 @@ button.glyphicon-button.active.focus {
 	outline: 0px !important;
 	height:100%;
 	animation: fadeIn 0.2s;
+	background-size: cover;
+	background-image: var(--background-main-image);
+	background-repeat: no-repeat;
+	background-attachment: fixed;
+	background-position: center;
+	overflow-x: hidden;
 }
 
 #controlButtons {
@@ -848,6 +906,8 @@ button.glyphicon-button.active.focus {
 #container.vidcon {
 	height:100%;
 }
+
+
 
 .labelSmall {
 	display:none;
@@ -1024,9 +1084,6 @@ button.btnArmTransferRoom.selected{
 		transform: scale(0.85);
 	}
 	#logoname{
-		display:none;
-	}
-	#head1{
 		display:none;
 	}
 	#head4{
@@ -1299,6 +1356,9 @@ body {
 	-webkit-app-region: no-drag;
 }
 
+select{
+	-webkit-app-region: no-drag;
+}
 .advancedToggle {
 	display:none;
 	background-color:#EFEFEF;
@@ -1316,6 +1376,8 @@ body {
 .green {
 	background-color:#474!important;
 }
+
+
 
 #effectSelector{
 	display: inline-block;
@@ -1651,7 +1713,8 @@ input[type=range]:focus::-ms-fill-upper {
 	width: 505px;
 	right: -400px;
 	overflow: auto;
-	z-index: 3;
+	z-index: 4;
+	-webkit-app-region: no-drag;
 }
 
 #audioSourceScreenshare {
@@ -1817,6 +1880,12 @@ label {
 	animation: fadeout 1s;
 	opacity: 0!important;
 }
+.zeroHeight {
+	max-height:0!important;
+	height:0!important;
+	bottom:30px!important;
+}
+
 .partialFadeout{
 	opacity: .1 !important;
 }
@@ -2489,13 +2558,25 @@ button.toggleSettings{
 	vertical-align: middle;
 	font-size: 100%;
 }
+
+#minipreview > #videosource {
+	height:auto!important;
+	width:auto!important;
+	max-height:100%!important;
+	max-width:100%!important;
+}
+
 #videoSourceSelect {
 	display: inline-block;
 	vertical-align: middle;
 	font-size: 100%;
 	max-width: 260px;
 }
-
+#gear_webcam{
+    cursor: pointer;
+	display: inline-block;
+	padding: 0 0 0 3px;
+}
 .gone {
 	position:absolute;
 	top: -150px;
@@ -2564,7 +2645,7 @@ button.toggleSettings{
 	vertical-align: middle;
 	padding: 3px;
 	font-size: 93%;
-	max-width: 240px;
+	max-width: 235px;
 }
 #outputSource {
 	display: inline-block;
@@ -2600,7 +2681,7 @@ button.toggleSettings{
 	background-color: #f3f3f3;
 	width: 450px;
 	display: inline-block;
-	padding: 10px 10px;
+	padding: 5px 10px 10px 10px;
 	border: 1px solid #ccc;
 	vertical-align: middle;
 	text-align: left;
@@ -2766,6 +2847,7 @@ input[type=checkbox] {
 	overflow-y:scroll;
 	overflow-wrap: anywhere;
 	max-height: 800px;
+    line-height: 22px;
 }
 
 #chatBody::-webkit-scrollbar {
@@ -2773,12 +2855,23 @@ input[type=checkbox] {
 	background: transparent; /* make scrollbar transparent */
 }
 
+div#chatBody a {
+    color: blue;
+    text-decoration: underline;
+    background-color: #c9c9c9;
+    border: 2px solid black;
+    padding: 2px 10px;
+    border-radius: 6px;
+    cursor: pointer;
+}
+
 #chatModule {
 	bottom: 50px;
 	position: fixed;
 	margin: 10px;
 	align-self: center;
-	width: 400px;
+	width: 574px;
+	min-width: 300px;
 	max-width: 100%;
 	z-index:3;
 }
@@ -2787,11 +2880,19 @@ input[type=checkbox] {
 	background-color: #FFFE;
 	max-width: 700px;
 	min-width: 320px;
+	width: calc(100% - 89px);
 	font-size: 105%;
-	margin-left: 7px;
 	padding: 3px;
 	border: 3px solid black;
 }
+.chatBarInputButton {
+	width:60px;
+	background-color:#EEE;
+	top: -1px;
+	position: relative;
+	margin-right: 10px;
+}
+    
 .debugStats {
 	font-size: 0.8rem;
 	list-style-type: none;
@@ -2807,6 +2908,8 @@ input[type=checkbox] {
 	color: white;
 	padding: 20px;
 	border: 2px solid #1d1d1d;
+	padding-bottom: 100px!important;
+	margin-bottom: 100px!important;
 }
 .debugStats::-webkit-scrollbar {
 	width: 0.5em;
@@ -2855,10 +2958,13 @@ input[type=checkbox] {
 }
 .debugStats li span:first-child {
 	flex: 1;
+	white-space: nowrap;
 }
 .debugStats li span:last-child {
 	flex: 1;
 	text-align: right;
+	max-height: 49px;
+    overflow: auto;
 }
 .debugStats .close {
 	font-weight: bold;
@@ -3371,7 +3477,18 @@ div.message-card a {
 	border-left: 4px solid #aacefd;
 	background: #e6e8f0;
 }
-
+.darktheme #guestTips {
+	background-color: #414141;
+}
+.darktheme #guestTips .las {
+	color: #FFF;
+}
+.darktheme .message-card {
+    background-color: #000;
+}
+.darktheme input[type='file'] {  
+	background-color: #000;
+}
 .message-card h1 {
 	display: block;
 	font-size: 110%;
@@ -3487,9 +3604,18 @@ input:checked + .slider:before {
 	-ms-transform: translateX(16px);
 	transform: translateX(16px);
 }
+#remoteOBSControl {
+	user-select: none;
+    z-index: 25;
+    max-height: calc(100vh - 116px);
+    overflow-y: auto;
+}
 
-
-#promptModal, #roomSettings, .promptModal {
+#remoteOBSControl  button {
+	margin:5px;
+	padding:10px;
+}
+#promptModal, .customModelPopup, .promptModal {
 	position: absolute;
 	background-color: rgb(221 221 221);
 	box-shadow: 0 0 30px 10px #0000005c;
@@ -3606,8 +3732,6 @@ input:checked + .slider:before {
 	border-radius: 10px;
 	font-weight: bold;
 	z-index:32;
-	min-width:360px;
-	max-width:90%;
 	overflow-wrap: break-word;
 }
 
@@ -3694,13 +3818,10 @@ input:checked + .slider:before {
 	opacity: 1.0;
 }
 
-
-@media only screen and (max-width: 390px) {
-	.alertModal {
-		width: 90%;
-	}
-	
+.alertModalMessage>select{
+	font-size: 100%;
 }
+
 
 .iframeDetails {
 	margin: 10px;
@@ -3831,7 +3952,9 @@ input:checked + .slider:before {
 .la-cog:before {
 	content: "\f013"; }
 .la-phone:before {
-	content: "\f095"; }
+	content: "\f095"; } 
+.la-gamepad:before {
+	content: "\f11b"; }
 .la-skull-crossbones:before {
 	content: "\f714"; }
 .la-hand-paper:before {
@@ -3948,9 +4071,11 @@ input:checked + .slider:before {
 	content: "\f1de"; }
 .la-compress-arrows-alt:before {
 	content: "\f78c"; }
+.la-users:before {
+	content: "\f0c0"; }
 .la-spinner:before {
 	content: "\f110"; }
-.la.la-external-link:before {
+.la-external-link:before {
 	content: "\f35d"; }
 .la-pen:before {
 	content: "\f304"; }
@@ -4013,7 +4138,7 @@ body.darktheme .multiselect .multiselect-contents {
 	background-color:unset;
 }
 body.darktheme .directorsgrid .vidcon > .las {
-	background-color: #646464;
+	background-color: #424242;
 }
 body.darktheme .form-group .multiselect {
 	background-color: #414141;
@@ -4025,7 +4150,8 @@ body.darktheme h2 {
 body.darktheme button {
 	filter: brightness(0.70);
 }
-body.darktheme .las {
+body.darktheme .column .las {
+	color: black;
 }
 body.darktheme label {
 	filter: brightness(0.85);
@@ -4164,4 +4290,10 @@ body.darktheme .invite_setting_item>input{
 }
 body.darktheme .invite_setting_item>select{
 	background-color:white;
+}
+.containerGreen{
+	background-color: #649166!important;
+}
+body.darktheme .containerGreen{
+	background-color: #243824!important;
 }

@@ -1,5 +1,5 @@
 <html>
-<head><title>Twitch + Video</title>
+<head><title>SocialStream + Video</title>
 <meta name="viewport" content="width=device-width, initial-scale=0.7, maximum-scale=1.0, user-scalable=yes" />
 <meta content="text/html;charset=utf-8" http-equiv="Content-Type" />
 <style>
@@ -34,43 +34,61 @@ h1{
     font-family: verdana;
     margin: 10px;
 }
+
+#container2{
+	width:100vw;
+	height:100vh;
+	position: fixed; 
+	top: 0;
+	left:0;
+	display:none;
+	z-index:2;
+}
+#container1{
+	width:100vw;
+	height:100vh;
+	position: fixed; 
+	top: 0;
+	left:0;
+	display:none;
+}
+iframe{
+	width:100vw;
+	height:100vh;
+}
+	
 @media screen and (orientation:portrait) {
 	#container2{
-		width:100%;height:100%;display:none;
 	}
 	#container1{
-		width: 50vw;height: 50vh; display:none; float:left; position: fixed; top: 0; right: 0%;
 	}
 	iframe{
-		width:100%;
 	}
 }
 
 @media screen and (orientation:landscape) {
 	#container2{
-		width:60vw;height:100%;display:none;
-		z-index:5;
 	}
 	#container1{
-		width: 50vw;height: 80vh; display:none; float:left; position: fixed; top: 0; right: -10vw;
 	}
 	iframe{
-		max-width:60vw;
 	}
 }
 
 </style>
 </head>
 <body>
-
-
-
 <div id="container2"></div>
 <div id="container1" ></div>
+<div id="selectChatSource">
+	<h1>Which social integration are you adding?</h1>
+	
+	
+</div>
 <div id="clean">
-	<h1>Use VDO.Ninja and Twitch chat at the same time</h1>
+	<h1>Use VDO.Ninja and SocialStream chat at the same time</h1>
 	<input placeholder="Enter a VDON stream ID or VDON URL" id="viewlink" type="text" />
-	<input placeholder="Enter the Twitch channel name" id="twitch" type="text" />
+	<input placeholder="Enter the SocialStream URL" id="social" type="text" />
 	<button onclick="loadIframes()" style="display:block;padding:10px;margin:10px;">START</button>
 </div>
 <script>
@@ -113,17 +131,17 @@ function getStorage(cname) {
 	}
 	return item.value;
 }
-if (getStorage("twitchChatLink")){
-	document.getElementById("twitch").value = getStorage("twitchChatLink");
+if (getStorage("SocialStreamChatLink")){
+	document.getElementById("social").value = getStorage("SocialStreamChatLink");
 }
-if (getStorage("vdoNinjaTwitchURL")){
-	document.getElementById("viewlink").value = getStorage("vdoNinjaTwitchURL");
+if (getStorage("vdoNinjaSocialStreamURL")){
+	document.getElementById("viewlink").value = getStorage("vdoNinjaSocialStreamURL");
 }
 
 function loadIframes(url=false){ 
 
 	var roomname = document.getElementById("viewlink").value;
-	var twitch = document.getElementById("twitch").value;
+	var room2 = document.getElementById("social").value;
 	
 	document.getElementById("clean").parentNode.removeChild(document.getElementById("clean"));
 	document.getElementById("container1").style.display="inline-block";
@@ -137,7 +155,7 @@ function loadIframes(url=false){
 	} else {
 		var room1 = "https://"+path+"/?push="+roomname+"&webcam&autostart&vd=front&ad=1&transparent&noheader";
 	}
-	var room2 = "https://www.twitch.tv/embed/"+twitch+"/chat?parent="+location.hostname;
+	
 	var iframe = document.createElement("iframe");
 	iframe.allow = "autoplay;camera;microphone;fullscreen;picture-in-picture;";
 	iframe.src = room1;
@@ -146,9 +164,9 @@ function loadIframes(url=false){
 	document.getElementById("container1").appendChild(iframeContainer);
 	
 	
-	setStorage("twitchChatLink", room2);
+	setStorage("SocialStreamChatLink", room2);
 
-	setStorage("vdoNinjaTwitchURL", room1);
+	setStorage("vdoNinjaSocialStreamURL", room1);
 	
 	
 	setTimeout(function(){

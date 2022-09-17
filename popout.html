@@ -1,7 +1,6 @@
 <html>
 <head>
 <meta name="theme-color" content="#ffffff" />
-<!-- <script src="//console.re/connector.js" data-channel="vdoninjadev"  type="text/javascript" id="consolerescript"></script>-->
 <link rel="stylesheet" href="./main.css?ver=22" />
 <style>
 #chatModule{
@@ -68,6 +67,58 @@ var messageList = [];
 })(window);
 var urlParams = new URLSearchParams(window.location.search);
 
+
+function replaceURLs(message) {
+	if(!message) return;
+	var urlRegex = /(((https?:\/\/)|(www\.))[^\s]+)/g;
+	return message.replace(urlRegex, function (url) {
+		url = url.replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/["']/g, ""); // try to sanitize things, just in case.
+		
+		var punc = "";
+		while (url[url.length-1] === "."){
+			url = url.slice(0,-1);
+			punc += ".";
+		}
+		while (url[url.length-1] === ";"){
+			url = url.slice(0,-1);
+			punc += ";";
+		}
+		while (url[url.length-1] === ","){
+			url = url.slice(0,-1);
+			punc += ",";
+		}
+		while (url[url.length-1] === "!"){
+			url = url.slice(0,-1);
+			punc += "!";
+		}
+		while (url[url.length-1] === ":"){
+			url = url.slice(0,-1);
+			punc += ":";
+		}
+		while (url[url.length-1] === "*"){
+			url = url.slice(0,-1);
+			punc += "*";
+		}
+		while (url[url.length-1] === ")"){
+			url = url.slice(0,-1);
+			punc += ")";
+		}
+		while (url[url.length-1] === "?"){
+			url = url.slice(0,-1);
+			punc += "?";
+		}
+		
+		var hyperlink = url;
+		if (!hyperlink.match('^https?:\/\/')) {
+			hyperlink = 'http://' + hyperlink;
+		}
+		if (url.length>35){
+			url = url.substring(0, 35)+"...";
+		}
+		return '<a href="' + hyperlink + '" title="Click to open the link in a new tab" target="_blank" rel="noopener noreferrer">' + url + '</a>'+punc;
+	});
+}
+
 if (urlParams.has("id")){
  var bid = urlParams.get("id");
 }
@@ -111,6 +162,10 @@ function sendChatMessage(chatMsg = false){ // filtered + visual
 	console.log(msg);
 	bc.postMessage({"msg":msg})
 	document.getElementById('chatInput').value = "";
+	
+	messageList.push({"msg":msg, type: "sent"});
+	messageList = messageList.slice(-100);
+	updateMessages({"msg":msg, type: "sent"});
 }
 
 function timeSince(date) {
@@ -155,6 +210,8 @@ function updateMessages(message = false){
 			label = message.label;
 		} 
 		
+		message.msg = replaceURLs(message.msg);
+		
 		if (message.type == "sent"){
 			msg.innerHTML = "<span class='chat_message chat_sent'>"+message.msg + "  </span><i><small> <small>- "+time+"</small></small></i><span style='display:none'>"+label+"</span>";
 			msg.classList.add("outMessage");
@@ -185,20 +242,22 @@ function updateMessages(message = false){
 				label = messageList[i].label;
 			} 
 			
+			var message = replaceURLs(messageList[i].msg);
+			
 			if (messageList[i].type == "sent"){
-				msg.innerHTML = "<span class='chat_message chat_sent'>"+messageList[i].msg + "  </span><i><small> <small>- "+time+"</small></small></i><span style='display:none'>"+label+"</span>";
+				msg.innerHTML = "<span class='chat_message chat_sent'>"+message + "  </span><i><small> <small>- "+time+"</small></small></i><span style='display:none'>"+label+"</span>";
 				msg.classList.add("outMessage");
 			} else if (messageList[i].type == "recv"){
-				msg.innerHTML = label+"<span class='chat_message chat_recv'>"+messageList[i].msg + " </span><i><small> <small>- "+time+"</small></small></i>";
+				msg.innerHTML = label+"<span class='chat_message chat_recv'>"+message + " </span><i><small> <small>- "+time+"</small></small></i>";
 				msg.classList.add("inMessage");
 			} else if (messageList[i].type == "action"){
-				msg.innerHTML = label+"<span class='chat_message chat_action'>"+messageList[i].msg + " </span><i><small> <small>- "+time+"</small></small></i>";
+				msg.innerHTML = label+"<span class='chat_message chat_action'>"+message + " </span><i><small> <small>- "+time+"</small></small></i>";
 				msg.classList.add("actionMessage");
 			} else if (messageList[i].type == "alert"){
-				msg.innerHTML = "<span class='chat_message chat_alert'>"+messageList[i].msg + " </span><i><small> <small>- "+time+"</small></small></i>";
+				msg.innerHTML = "<span class='chat_message chat_alert'>"+message + " </span><i><small> <small>- "+time+"</small></small></i>";
 				msg.classList.add("inMessage");
 			} else {
-				msg.innerHTML = "<span class='chat_message chat_other'>"+messageList[i].msg + "  </span><i><small> <small>- "+time+"</small></small></i>";
+				msg.innerHTML = "<span class='chat_message chat_other'>"+message + "  </span><i><small> <small>- "+time+"</small></small></i>";
 				msg.classList.add("inMessage");
 			}
 			

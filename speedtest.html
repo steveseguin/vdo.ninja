@@ -35,7 +35,6 @@
 			<h2>Log <i class="las la-clipboard"></i></h2>
 			<ul></ul>
 		</div>
-
 		<div id="explanation">
 			<h2>How to use</h2>
 			<ol>
@@ -69,15 +68,17 @@
 			  <option value="de2">Frankfurt, Germany</option>
 			  <option value="fr1">Strasbourg, France</option>
 			  <option value="bra1">São Paulo, Brazil</option>
+			  <option value="pol1">Warsaw, Poland</option>
 			  <option value="cae1">Montreal, Canada</option>
 			  <option value="use1">Virgina, USA</option>
-			  <option value="usc1">Chicago, USA</option>
-			  <option value="usw1">Los Angeles, USA</option>
+			  <option disabled value="usc1">Chicago, USA</option>
+			  <option disabled value="usw1">Los Angeles, USA</option>
 			  <option value="usw2">Oregon, USA</option>
 			  <option value="aus1">Sydney, Australia</option>
 			  <option value="jap1">Tokyo, Japan</option>
 			  <option value="sing1">Singapore</option>
 			  <option value="ind1">Mumbai, India</option>
+			  <option value="pol1">Warsaw, Poland</option>
 			</select>
 			<br /><br /><br />
 		</div>
@@ -165,6 +166,34 @@
 				console.log("Reloading to change TURN servers");
 				loadIframe(document.getElementById("turnlist").value);
 			}
+			
+			function updateTurnlist(value){
+				var select = document.getElementById("turnlist");
+				var selected = select.value;
+				
+				select.innerHTML = "";
+				
+				var opt = document.createElement("option");
+				opt.value = ""
+				opt.title = "Choose the closest location automatically";
+				opt.innerHTML = "Automatic";
+				select.appendChild(opt);
+				if (selected == ""){
+					opt.selected = true;
+				}
+				
+				for (var i =0;i<value.length;i++){
+					var opt = document.createElement("option");
+					opt.value = value[i].locale;
+					opt.title = value[i].name;
+					opt.innerHTML = value[i].name;
+					select.appendChild(opt);
+					if (selected == opt.value){
+						opt.selected = true;
+					}
+				}
+			}
+			
 
 			function loadIframe(zone="") {
 				// this is pretty important if you want to avoid camera permission popup problems. YOu need to load the iFRAME after  you load the parent body. A quick solution is like: <body onload=>loadIframe();"> !!!
@@ -224,16 +253,19 @@
 				document.getElementById("container").appendChild(feeds);
 				document.getElementById("feeds").appendChild(iframeContainer);
 
-
 				setInterval(function (iframe1) {
-					iframe1.contentWindow.postMessage({ getStats: true }, "*");
+					try {
+						iframe1.contentWindow.postMessage({ getStats: true }, "*");
+					} catch(e){
+						clearInterval(this);
+					}
 				}, 1000, iframe);
 
 				var iframe = document.createElement("iframe");
 				var iframeContainer = document.createElement("span");
 
 				iframe.allow = "autoplay";
-				var srcString = "./?view=" + streamID + "&cleanoutput&privacy&noaudio&scale=0&speedtest="+zone;
+				var srcString = "./?view=" + streamID + "&cleanoutput&privacy&noaudio&scale=0&speedtest="+zone; // No TURN servers set on the reciever. Don't want to query for TURN servers needlessly.
 
 				if (urlParams.has("turn")) {
 					srcString = srcString + "&turn=" + urlParams.get("turn");
@@ -301,9 +333,13 @@
 
 				document.getElementById("container").appendChild(buttonContainer);
 
-				setInterval(function () {
-					iframe.contentWindow.postMessage({ getStats: true }, "*");
-				}, 1000);
+				setInterval(function (iframe1) {
+					try {
+						iframe1.contentWindow.postMessage({ getStats: true }, "*");
+					} catch(e){
+						clearInterval(this);
+					}
+				}, 1000, iframe);
 
 				var eventMethod = window.addEventListener
 					? "addEventListener"
@@ -314,7 +350,13 @@
 
 				eventer(messageEvent, function (e) {
 					if ("action" in e.data) {
-						logData(e.data.action, e.data.value || "");
+					
+						if (e.data.action == "available-speedtest-servers"){
+							console.warn("Speedtest server list loaded");
+							updateTurnlist(e.data.value);
+						} else {
+							logData(e.data.action, e.data.value);
+						}
 
 						if (e.data.action == "new-view-connection") {
 							buttonContainer.querySelectorAll(
@@ -407,7 +449,7 @@
 
 			
 		
-			var testType= "webcam";
+			var testType= "webcam&css=speedtest.css";
 			if (urlParams.has("screen") || urlParams.has("ss") || urlParams.has("screenshare") || urlParams.has("screentest")) {
 				document.getElementById("screen").innerHTML = '<a href="./speedtest" style="color: #CCC;">Test webcam-streaming performance here</a>';
 				testType = "quality=0&screenshare&css=speedtest.css"

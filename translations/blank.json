@@ -192,7 +192,19 @@
     "previously-was-29-970029830932617": "Previously was:  29.970029830932617",
     "previously-was-720": "Previously was:  720",
     "hold-ctrl-or-cmd-to-lock-width-and-height-together-when-changing-them": "Hold CTRL (or cmd) to lock width and height together when changing them",
-    "previously-was-1280": "Previously was:  1280"
+    "previously-was-1280": "Previously was:  1280",
+    "obs-remote-controller-start-stop-and-change-scenes-": "OBS Remote Controller; start/stop and change scenes.",
+    "generate-a-random-room-name": "Generate a random room name",
+    "link-out-to-the-vdo-ninja-help-guide-for-obs-studio": "link out to the help guide",
+    "this-mode-encodes-the-video-and-audio-into-chunks-which-are-shared-with-multiple-viewers-limited-browser-support-can-potentially-reduce-cpu-and-improve-video-quality-but-will-rely-on-a-buffer-": "This mode encodes the video and audio into chunks, which are shared with multiple viewers. Limited browser support. Can potentially reduce CPU and improve video quality, but will rely on a buffer.",
+    "allow-the-guest-to-select-an-avatar-image-for-when-they-hide-their-camera": "Allow the guest to select an avatar image for when they hide their camera",
+    "use-meshcast-servers-to-restream-video-data-from-this-guest-to-its-viewers-reducing-the-cpu-and-upload-load-in-some-cases-will-increase-latency-a-bit-": "Use Meshcast servers to restream video data from this guest to its viewers, reducing the CPU and upload load in some cases. Will increase latency a bit.",
+    "show-an-ovelaid-grid-on-the-guest-s-preview-video-to-help-with-self-centering-of-the-guest-": "Show an ovelaid grid on the guest's preview video to help with self-centering of the guest.",
+    "disable-fit-to-window-optmized-video-scaling-for-added-sharpness-increases-cpu-network-load-though-": "Disable fit-to-window optmized video scaling for added sharpness; increases CPU / Network load though.",
+    "remotely-change-the-volume-of-this-guest-updates-on-release-dbl-click-to-reset-": "Remotely change the volume of this guest; updates on release. Dbl-click to reset.",
+    "choose-a-hotkey-for-hold-to-talk-if-using-electron-capture-elevate-privilleges-to-have-it-become-global": "Choose a hotkey for Hold-to-Talk. If using Electron Capture, elevate privilleges to have it become global",
+    "increase-this-at-your-peril-changes-the-total-inbound-video-bitrate-per-guest-mobile-devices-excluded-": "Increase this at your peril. Changes the total inbound video bitrate per guest; mobile devices excluded.",
+    "select-a-location-that-is-closest-to-both-you-and-your-audience-": "Select a location that is closest to both you and your audience."
   },
   "innerHTML": {
     "join-room": "Join room",
@@ -326,7 +338,7 @@
     "default-codec-select": "Preferred Video Codec:  ",
     "enter-the-rooms-control": "Enter the Room's Control Center",
     "show-tips": "Show me some tips..",
-    "added-notes": "\n<u>\n<i>Important Tips:</i><br><br>\n</u>\n<li>Disabling video sharing between guests will improve performance</li>\n<li>Invite only guests to the room that you trust.</li>\n<li>The \"Recording\" option is considered experimental.</li>\n<li><a href=\"https://params.vdo.ninja\" style=\"color:black;\"><u>Advanced URL parameters</u></a> are available to customize rooms.</li>\n",
+    "added-notes": "\n<u>\n<i>Important Tips:</i><br><br>\n</u>\n<li>Disabling video sharing between guests will improve performance</li>\n<li>Invite only guests to the room that you trust.</li>\n<li>The \"Recording\" option is considered experimental.</li>",
     "back": "Back",
     "add-your-camera": "Add your Camera",
     "ask-for-permissions": "Allow Access to Camera/Microphone",
@@ -337,7 +349,7 @@
     "remote-screenshare-obs": "Remote Screenshare",
     "select-screen-to-share": "SELECT SCREEN TO SHARE",
     "audio-sources": "Audio Sources",
-    "application-audio-capture": "For application-specific audio capture, <a href=\"https://docs.vdo.ninja/audio\" style=\"color: #007AC8;\">see here</a>",
+    "application-audio-capture": "",
     "create-reusable-invite": "Create Reusable Invite",
     "here-you-can-pre-generate": "Here you can pre-generate a reusable Browser Source link and a related guest invite link.",
     "generate-invite-link": "GENERATE THE INVITE LINK",
@@ -417,7 +429,24 @@
     "for-the-best-possible-experience-make-sure": "For the best possible experience, make sure",
     "your-device-is-powered": "Your device is powered",
     "your-connection-is-hardwired-instead-of-wifi": "Your connection is hardwired instead of wifi",
-    "you-are-using-headphones-earphones": "You are using headphones / earphones"
+    "you-are-using-headphones-earphones": "You are using headphones / earphones",
+    "wizard-link-generator": "Wizard Link Generator",
+    "1080p60-if-available": "1080p60 Video if Available",
+    "chunked-mode": "P2P Chunked-mode",
+    "avatar-selection": "Can select an Avatar image",
+    "meshcast-mode": "Stream via server",
+    "rule-of-thirds": "Show rule-of-thirds grid",
+    "disable-downscaling": "Increase sharpness",
+    "user": "User",
+    "show-qr-code": "Show as QR Code",
+    "open-ss-in-new-tab": "Share from a new tab",
+    "ss-mode-1": "Screen Share Mode 1",
+    "ss-mode-2": "Screen Share Mode 2",
+    "ss-mode-3": "Screen Share Mode 3",
+    "custom-audio-output": "Audio Destination",
+    "remote-reload-connection": "Remote Reload Page",
+    "hold-ctrl": "tip:  <b>CTRL</b>(⌘) + <b>Click</b> for alt-menu",
+    "remote-control-obs-menu": "Remote Controller for OBS Studio"
   },
   "placeholders": {
     "join-by-room-name-here": "Join by Room Name here",
@@ -430,7 +459,9 @@
     "optional": "optional",
     "give-this-media-source-a-name-optional-": "Give this media source a name (optional)",
     "add-an-optional-password": "Add an optional password",
-    "enter-room-name-here": "Enter Room name here"
+    "enter-room-name-here": "Enter Room name here",
+    "press-a-key-here": "press a key here",
+    "enter-the-remote-obs-password-here": "Enter the remote OBS password here"
   },
   "miscellaneous": {
     "start": "START",
@@ -440,7 +471,7 @@
     "director-redirect-2": "\n\nPress OK to be redirected.",
     "add-a-label": "Add a label",
     "audio-processing-disabled": "Audio processing is disabled with this guest. Can't mute or change volume",
-    "not-the-director": "<font color='red'>You are not the director of this room. You will have limited to no control. See <a target='_blank' href='https://docs.vdo.ninja/director-settings/codirector'>&codirector</a> on how to become a co-director.</font>",
+    "not-the-director": "<font color='red'>You are not the director of this room. You will have limited to no control.</font>",
     "room-is-claimed": "The room is already claimed by someone else.\n\nOnly the first person to join a room is the assigned director.\n\nRefresh after the first director leaves to claim.",
     "room-is-claimed-codirector": "The room is already claimed by someone else.\n\nTrying to join as a co-director...",
     "streamid-already-published": "The stream ID you are publishing to is already in use.\n\nPlease try with a different invite link or refresh to retry again.\n\nYou will now be disconnected.",
@@ -498,6 +529,16 @@
     "samsung-a-series": "Samsung A-series phones may have issues with Chrome; if so, try Firefox Mobile instead or switch video codecs.",
     "screen-permissions-denied": "Permission to capture denied. Ensure your browser has screen record system permissions\n\n1.On your Mac, choose Apple menu  > System Preferences, click Security & Privacy , then click Privacy.\n2.Select Screen Recording.\n3.Select the checkbox next to your browser to allow it to record your screen.",
     "change-audio-output-device": "Audio could not be captured. Please make sure you have an audio output device available.\n\nSome gaming headsets (ie: Corsair) may need to be set to 2-channel output to work, as surround sound drivers may cause problems.",
-    "prompt-access-request": " is trying to view your stream. Allow them?"
+    "prompt-access-request": " is trying to view your stream. Allow them?",
+    "confirm-reload-user": "Are you sure you wish to reload this user's browser?",
+    "webrtc-is-blocked": "⚠ This browser has either blocked WebRTC or does not support it.\n\nThis site will not work without it.\n\nDisable any browser extensions or privacy settings that may be blocking WebRTC, or try a different browser.",
+    "not-clean-session": "Video effects or canvas rendering failed.\n\nCheck to ensure any remotely hosted images are cross-origin allowed.",
+    "ios-no-screen-share": "Sorry, but your iOS browser does not support screen-sharing.",
+    "android-no-screen-share": "Sorry, your mobile browser does not support screen-sharing.",
+    "no-screen-share-supported": "Sorry, your browser does not support screen-sharing.\n\nPlease use the desktop versions of Firefox or Chrome instead.",
+    "speech-not-suppoted": "⚠ Speech Recognition is not supported by this browser",
+    "blue-yeti-tip": "<i>Tip:</i> Blue Yeti microphones may experience issues being overly loud. <a href='https://support.google.com/chrome/thread/7542181?hl=en&msgid=79691143'>Please see here</a> for a solution or disable auto-gain.",
+    "site-not-responsive": "<h3>Notice: The system cannot be accessed or is currently slow to respond.</h3>\n\nContact steve@seguin.email for added help.\n\nThis service requires the use of Websockets over port 443.",
+    "no-audio-source-detected": "Notice: No Audio Source was detected"
   }
 }

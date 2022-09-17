@@ -64,7 +64,7 @@
 			var button = document.createElement("a");
 			button.innerHTML = "Invite "+listOfStreamIDs[i];
 			button.target = "_blank";
-			button.href = "../?room=teststeve123&password=1234&broadcast&transparent&autostart&nmb&nvb&gain=0&webcam&l=stevetest&push="+listOfStreamIDs[i]+"_pov";
+			button.href = "../?room=teststeve123&password=1234&broadcast&transparent&autostart&nmb&nvb&gain=0&webcam&l=stevetest&push="+listOfStreamIDs[i];
 			iframeContainer.appendChild(button);
 			
 			var button = document.createElement("button");
@@ -74,12 +74,12 @@
 				  iframe.contentWindow.postMessage({
 					  action: "addScene",
 					  value: "1",
-					  target: listOfStreamIDs[i],
+					  target: this.dataset.sid
 				  }, '*');
 				  iframe.contentWindow.postMessage({
 					  action: "mic",
 					  value: true,
-					  target: listOfStreamIDs[i],
+					  target: this.dataset.sid
 				  }, '*');
 			
 			}; // target can be a stream ID or * for all.
@@ -126,7 +126,19 @@
 
 
 <div id="container">
+
 	<button onclick="loadIframe();">Go to Directors Room</button>
+	<br />
+	The password for guests is 1234<br />
+	<br />
+	<br />
+	Custom guest invites and toggles for add/removing from scene=1 are on the bottom.
+	<br />
+	<br />
+	Scene=1 link: <a target="_blank" href="https://vdo.ninja/?scene=1&room=teststeve123&password=1234">https://vdo.ninja/?scene=1&room=teststeve123&password=1234</a>
+	
+	
+	
 	
 </div>
 </body>

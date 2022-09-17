@@ -33,9 +33,12 @@ span{
 iframe {
 	border: 0;
 	padding: 0;
-	display: block;
-	height: 100%;
-	width:  100%;
+	display: none;
+	height: 0%;
+	width: 0%;
+	position: absolute;
+	left: -100px;
+	top: -100px;
 }
 
 .popup-message {

@@ -29,7 +29,18 @@ body {
 	transition: opacity .1s linear;
     background-color: #141926;
 }
-
+.container-inner{
+	background-color: #0000!important;
+}
+.card{
+	background-color: #0000!important;
+}
+#container-3{
+	background-image:unset;
+}
+.column>h2{
+	color:white!important;
+}
 #add_screen{
 	display:none;
 }
@@ -201,17 +212,20 @@ ol {
     }
 
     #feeds h3 {
-        font-size:50%;
+        font-size:100%;
     }
 	
 	h1{
 		color: white;
-		margin: 2px;
-		font-size:70%
+		font-size:1.4em;
+	}
+	h2{
+		color: white;
+		font-size:1.2em;
 	}
 	
 	#feeds span{
-		height: 50%;
+		height: :calc(100% - 100px);
 		width:100%;
 		display: inline-block;
 	}
