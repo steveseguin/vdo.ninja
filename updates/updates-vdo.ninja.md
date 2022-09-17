@@ -8,6 +8,12 @@ I'm working on a fix, but I don't have an ETA. Will update when fixed.
 _\*\*_ UPDATE: I hot-patched beta and alpha with a fix. This fix disables the option to select custom audio output destinations, but resolves the echo issue. If using a self-deployed instance, you can instead add [`&noap`](../general-settings/noaudioprocessing.md) to the URLs to fix it as well; you can also enable `chrome://flags/#chrome-wide-echo-cancellation`, patch the code, or just use headphones.
 {% endhint %}
 
+#### **September 16** <a href="#august-31" id="august-31"></a>
+
+**S**implified the connection type wording in the stat's menu , plus made the publisher's connection type available to the viewer's side so you can more clearly see now if a guest has ignored your request to use Ethernet.\
+![](<../.gitbook/assets/image (16).png>)\
+\*\*\* Changes on alpha at vdo.ninja/alpha/
+
 #### **September 12** <a href="#august-31" id="august-31"></a>
 
 * Added [`&effects=7`](../source-settings/effects.md) (or `&effects=zoom`), which will provide a manual zoom option in the effects menu. (you can also select the zoom mode via the effects menu, if available)\

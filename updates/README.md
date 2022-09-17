@@ -13,4 +13,5 @@ description: What is new
 * [updates-native-mobile-apps.md](updates-native-mobile-apps.md "mention")
 * [updates-caption.ninja.md](updates-caption.ninja.md "mention")
 * [updates-meshcast.io.md](updates-meshcast.io.md "mention")
+* [updates-speed-test.md](updates-speed-test.md "mention")
 * [updates-miscellaneous.md](updates-miscellaneous.md "mention")

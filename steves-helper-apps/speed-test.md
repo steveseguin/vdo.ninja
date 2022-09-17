@@ -32,3 +32,9 @@ Testing regions for vdo.ninja/alpha/check\
 
 There is also another Speed Test option here:\
 [https://vdo.ninja/speedtest](https://vdo.ninja/speedtest)
+
+## Updates
+
+{% content-ref url="../updates/updates-speed-test.md" %}
+[updates-speed-test.md](../updates/updates-speed-test.md)
+{% endcontent-ref %}
