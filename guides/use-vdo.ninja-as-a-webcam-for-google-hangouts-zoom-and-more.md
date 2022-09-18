@@ -19,7 +19,7 @@ Some third-party applications support Browser Sources as an input, negating the 
     * [https://www.vb-audio.com/Cable/](https://www.google.com/url?q=https://www.vb-audio.com/Cable/\&sa=D\&source=editors\&ust=1651965669921223\&usg=AOvVaw32Nu8pxk1d3BG6A39I2slb)\
 
   * For macOS, you have a few choices:
-    * &#x20;[https://github.com/steveseguin/obsninja/wiki/FAQ#how-to-capture-audio-on-mac](https://www.google.com/url?q=https://github.com/steveseguin/obsninja/wiki/FAQ%23how-to-capture-audio-on-mac\&sa=D\&source=editors\&ust=1651965669921993\&usg=AOvVaw2rGr6mdu0b1BnbSK6JOTYk)
+    * &#x20;[https://github.com/steveseguin/vdo.ninja/wiki/FAQ#how-to-capture-audio-on-mac](https://github.com/steveseguin/vdo.ninja/wiki/FAQ#how-to-capture-audio-on-mac)
 
 **Basic Workflow Diagram**
 
