@@ -16,9 +16,9 @@ _\*\*_ UPDATE: I hot-patched beta and alpha with a fix. This fix disables the op
 
 #### **September 16** <a href="#august-31" id="august-31"></a>
 
-**S**implified the connection type wording in the stat's menu , plus made the publisher's connection type available to the viewer's side so you can more clearly see now if a guest has ignored your request to use Ethernet.\
-![](<../.gitbook/assets/image (16).png>)\
-\*\*\* Changes on alpha at vdo.ninja/alpha/
+* Simplified the connection type wording in the stat's menu , plus made the publisher's connection type available to the viewer's side so you can more clearly see now if a guest has ignored your request to use Ethernet.\
+  ![](<../.gitbook/assets/image (16).png>)\
+  \*\*\* Changes on alpha at vdo.ninja/alpha/
 
 #### **September 12** <a href="#august-31" id="august-31"></a>
 
