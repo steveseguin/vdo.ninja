@@ -6,7 +6,7 @@
 #### **September 17**
 
 * Added the option to show "only" the queued messages in the dock\
-  ![](<../.gitbook/assets/image (1).png>)
+  ![](<../.gitbook/assets/image (1) (8).png>)
 * Fixed an issue where queued messages would become hidden once it hit the visual limit
 * Fixed a discord not-working issue
 * Fixed a twitch doubling up message issue
@@ -15,7 +15,7 @@
 #### **September 15**
 
 * `&random` added to SocialStream; it can be used with the dock to randomize where messages appear on screen.\
-  ****![](../.gitbook/assets/image.png)****
+  ****![](<../.gitbook/assets/image (13).png>)****
 
 #### **September 10**
 

@@ -261,7 +261,7 @@ _\*\*_ UPDATE: I hot-patched beta and alpha with a fix. This fix disables the op
 
 * The WSS API (wss://api.vdo.ninja) has been expanded to include hang up events for publishers, along with viewer-side events for incoming connections/streams. These efforts will lead to a richer StreamDeck integration.
 * Add [`&background`](../advanced-settings/upcoming-parameters/and-background.md), which accepts a URL-encoded image URL to make as the app's default background. For example, [`https://vdo.ninja/alpha/?appbg=./media/logo_cropped.png`](https://vdo.ninja/alpha/?appbg=./media/logo\_cropped.png) . The image will scale in size to cover the VDO.Ninja app's background. [`&chroma`](../advanced-settings/design-parameters/chroma.md) can still be used to set the background color, if using transparencies. There already exists [`&bgimage`](../advanced-settings/upcoming-parameters/and-bgimage.md), which will set the default background image for videos; this however will set a background image for the entire page.\
-  ![](<../.gitbook/assets/image (2).png>)\
+  ![](<../.gitbook/assets/image (2) (5).png>)\
   \
   \*\* These changes are on alpha
 
@@ -299,3 +299,71 @@ _\*\*_ UPDATE: I hot-patched beta and alpha with a fix. This fix disables the op
 #### June 9
 
 * Viewers of [`&meshcast`](../newly-added-parameters/and-meshcast.md) streams can use [`&buffer=500`](../advanced-settings/view-parameters/buffer.md) now; on alpha
+
+#### June 8
+
+*   When screen sharing, if the resolution that's requested by the viewer is roughly 100% full scale, (a value based on their window viewing size), the system will now snap the resolution up to 100% (like [`&scale=100`](../advanced-settings/view-parameters/scale.md)). This should help with video sharpness (text, etc), when the added burden of slightly more CPU load is worth it. Won't snap if the different is great though.
+
+    \
+    For example, if a viewer is on a 720p display, watching 1080p content from a director, that's not close enough to make it worthwhile for the director to send 1080p. But if the viewer's window was 1050p, then sending the full 1080p video is worthwhile. This is mainly because scaling seems look nicer when done on the viewer's end, instead of the sender's side.
+
+    \
+    Only applies to screen shares, as text-scaling is kind of ugly, and it seems to be commonly desired to make fonts less ugly when screen-sharing. Scaling will still occur, but it won't be as ugly when done by the viewer. Sending 100% all the time works too, via `&scale=100`, but is pretty inefficient and needlessly heavy on the CPU in most cases.
+* Fixed on issue where is screen sharing as a director, before turning on your camera, didn't show the screen for guests always.
+* If the director isn't a performer, I've added the option to still add a director to/from groups. The group buttons show up in the control bar; where you can add them either via \&groups=1,2 or via the api.vdo.ninja / companion service.\
+  \--- Toggling the director in/out of a group via the API is new. (NULL targets director).\
+  \--- If [`&showdirector`](../viewers-settings/and-showdirector.md) is used, it will not use the control-bar for group buttons 1 to 8\
+  \--- It technically is possible to use groups via the API or URL other than 1 to 8, but I only offer buttons to add guests to groups 1 to 8.\
+  ![](<../.gitbook/assets/image (84).png>)
+* Using the [`&api`](../general-settings/api.md) remote API option, you now can get STATE values as the reply to a GET/POST/WSS request.\
+  So if you do `https://api.vdo.ninja/c6sWHN9zzX/group/null/1`, with `&api=c6sWHN9zzX` added to the director's URL, you will toggle the director in and out of GROUP 1.\
+  The response of the HTTP GET request though will be `true` or `false` or `timeout`, based on whether the director was added to the group, removed from the group, or whether it failed. This new feature can be used with a Streamdeck (or other controller) to have the button's color of the Streamdeck match the state of the action.\
+  [https://github.com/steveseguin/Companion-Ninja/blob/main/README.md#callbacks--state-responses](https://github.com/steveseguin/Companion-Ninja/blob/main/README.md#callbacks--state-responses)\
+  ![](<../.gitbook/assets/image (15).png>)\
+  \
+  \*\*\* This is only supported on vdo.ninja/alpha/ currently
+
+#### June 7
+
+* When holding `CTRL` and selecting multiple videos to record as a director (in control room), it won't ask for the video bitrates multiple times now; just once for all the selected videos. (this hot fix has been applied to production and beta). This feature is useful for recording multiple videos in sync.
+
+#### June 6
+
+* Fixed an issue where if you did `right-click -> record` of a inbound-video, and then hung up without stopping the recording, the recording wouldn't stop and finalize. (on alpha)
+
+#### June 4
+
+*   Added the ability to have multiple unique audio output destinations per VDO.Ninja instance.
+
+    \
+    To use at the moment, right-click a VDO.Ninja video in chrome/edge/electroncapture, (on the alpha-version of VDO.Ninja), and you'll see a menu option to change the audio output destination. This selected output destination overrides the default audio output destination set in the VDO settings menu, and it's specific to just the video that you right-clicked.
+
+    \
+    This option allows you to have one audio stream output to a virtual cable, and another output to your headset, for example.
+
+    \
+    Over the next few days I will probably change up how the menu works, as its pretty crude right now,. This feature also doesn't work in Safari/Mobile or if audio processing is disabled, so that UX aspect needs work. Hoping it's a good start for now though; testing welcomed.\
+    ![](<../.gitbook/assets/image (57).png>)\
+    \*\* on vdo.ninja/alpha/
+
+#### June 2
+
+* [`&sensor`](../source-settings/sensor.md) now also includes speed and altitude data (on production)
+* Added a demo/sample on how to overlay speed + acceleration on top of video playback (compatible with a mobile phone sender) `vdo.ninja/examples/sensoroverlay?view=STREAMID`
+* Added a new option to explicitly list what sensor data you want to capture and transmit, when using `&sensor` [`&sensorfilter=gyro,lin,acc,mag,pos,ori`](../advanced-settings/upcoming-parameters/and-sensorfilter.md) For the above demo, you can use [`&sensorfilter=pos,lin`](../advanced-settings/upcoming-parameters/and-sensorfilter.md) to just send the data you need, reducing the load on the phone/network. (on alpha)
+* Right-clicking a link in VDO.Ninja will now offer the option to show the link as a QR Code. This makes it easy to copy any link over to a your mobile phone or to create a shareable QR code with guests. (on alpha)\
+  ![](../.gitbook/assets/image.png)![](<../.gitbook/assets/image (1).png>)
+* Implemented a workaround for a novel Chrome bug where specifying a custom audio channel in the director's room (C1, C2, etc) would break the custom audio output device support. \* Fix pushed to alpha.
+
+#### June 1
+
+* Added the [`&meshcastscale`](../advanced-settings/upcoming-parameters/and-meshcastscale.md) (`&mcscale`) parameter; this will scale down the Meshcast video output via the URL, post camera capture setup. Because of how Meshcast works, this is a sender-side parameter. You may wish to use this to lower the resolution if your camera has a fixed capture resolution. (Alternatively, if you need to dynamically adjust the resolution, that option already exists via camera settings via width/height slider adjustments) `https://vdo.ninja/alpha/?meshcast&mcscale=50`
+* Fixed a conflict when using [`&director`](../viewers-settings/director.md) parameter + [`&webcam`](../source-settings/and-webcam.md)/[`&website`](../source-settings/and-website.md)/[`&screenshare`](../source-settings/screenshare.md) parameters at the same time (the later parameters get disabled now, avoiding conflicts)
+* If using a view-push link combo, just to be safe, I have the viewer re-request unloaded streams automatically at a interval now. For unattended viewing sessions.
+* Pausing a video while it is in 'full window' mode, will actually pause it now.
+* Added a "channelCount" option to the audio controls, which will let the director/sender toggle between Stereo and Mono audio channels, _IF_ [`&stereo`](../general-settings/stereo.md)/[`&proaudio`](../advanced-settings/audio-parameters/and-proaudio.md) is added to the sender's URL and the sender supports +2-channels. So, if you're using `&stereo` on your guests, and you can only hear one of your guests on the left or right channel, you can use this to down-mix their microphone to a mono channel only.\
+  \
+  Due to some tricky technical challenges, this feature involves down mixing with web-audio nodes, and stereo can't be enabled if `&stereo` isn't in the URL. It might also make all audio from that guest mono at the moment. (adding [`&mono`](../advanced-settings/view-parameters/mono.md) to the view URL also works, but that will make all sources in the view link mono)\
+  ![](<../.gitbook/assets/image (2).png>)\
+  \
+  \*\* all updates on alpha at [`https://vdo.ninja/alpha`](https://vdo.ninja/alpha)``
