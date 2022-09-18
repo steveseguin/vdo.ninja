@@ -3,6 +3,11 @@
 [social-stream.md](../steves-helper-apps/social-stream.md "mention")\
 [chat-overlay.md](../steves-helper-apps/chat-overlay.md "mention")
 
+#### **September 18**
+
+* Added an option to save incoming chat messages to an excel-file within SocialStream's menu (by request)\
+  ![](<../.gitbook/assets/image (1).png>)
+
 #### **September 17**
 
 * Added the option to show "only" the queued messages in the dock\
