@@ -21,6 +21,8 @@ This is for when waiting for the [`&scene`](../view-parameters/scene.md) or [`&v
 Example:\
 [`https://vdo.ninja/?view=streamid&waitmessage=hello&waittimeout=0&waitimage=https%3A%2F%2Fvdo.ninja%2Fmedia%2Flogo_cropped.png`](https://vdo.ninja/?view=streamid\&waitmessage=hello\&waittimeout=0\&waitimage=https%3A%2F%2Fvdo.ninja%2Fmedia%2Flogo\_cropped.png)``
 
+It fits to the screen, and [`&cover`](../view-parameters/cover.md) will have it 'cover' the screen.
+
 It overrides [`&cleanoutput`](../design-parameters/cleanoutput.md).
 
 ## Related
