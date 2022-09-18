@@ -2,6 +2,12 @@
 
 [electron-capture.md](../steves-helper-apps/electron-capture.md "mention")
 
+#### September 18
+
+* The Electron Capture app has had an issue fixed where on windows "keep on top" wasn't always working.\
+  [https://github.com/steveseguin/electroncapture/releases/tag/2.16.2](https://github.com/steveseguin/electroncapture/releases/tag/2.16.2)\
+  This is PC-release only, since issue is PC-specific.
+
 #### July 21
 
 * Update with a fix for video recordings that don't complete when you fail to stop the recording before the guest leaves or before you stop the recording manually first. Binary builds for mac and windows are up now, with some previous fixes included with this release as well: [https://github.com/steveseguin/electroncapture/releases/tag/2.16.1](https://github.com/steveseguin/electroncapture/releases/tag/2.16.1)
