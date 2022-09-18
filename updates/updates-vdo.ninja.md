@@ -264,3 +264,38 @@ _\*\*_ UPDATE: I hot-patched beta and alpha with a fix. This fix disables the op
   ![](<../.gitbook/assets/image (2).png>)\
   \
   \*\* These changes are on alpha
+
+#### June 30
+
+* Fixed a bug with [`&statsinterval=100`](../advanced-settings/parameters-only-on-beta/and-statsinterval.md) not updating on sender side (only viewer side before). This updates how frequent the stats updates.
+* Added the ability to dynamically change the scale of a video to the IFRAME API. accepts scale, plus optionally uuid or a stream ID as a a target.
+* Added [`&base64js`](../advanced-settings/upcoming-parameters/and-base64js.md), which lets a user add raw java script to the URL to run on page load. `https://vdo.ninja/alpha/?jsb64=YWxlcnQoJ2hpJyk=` to test.\
+  \
+  \*\* changes on alpha
+
+#### June 28
+
+* Added support for [`&buffer`](../advanced-settings/view-parameters/buffer.md) and [`&sync`](../advanced-settings/view-parameters/sync.md) to the viewer when using [`&chunked`](../newly-added-parameters/and-chunked.md) mode on the sender. If on an unstable connection, setting the buffer to a few seconds can help avoid pauses in the video playback, as there will be some buffer to use. (a bit experimental still -- so it might be more a WIP still ).
+* Added a new url param called [`&include`](../advanced-settings/upcoming-parameters/and-include.md), which is like [`&view`](../advanced-settings/view-parameters/view.md), except it's for including streams that do not exist in the room you are in, assuming those streams are not in another room and have matching passwords. So, useful for adding basic push-streams that you might want to be in multiple rooms at the same time, but not actually be locked to any room. (`&view`, conversely, is pretty exclusive; that or nothing.)
+* Been playing around a new flag called [`&flagship`](../advanced-settings/upcoming-parameters/and-flagship.md), which will optimize the mobile experience for more capable smartphones; essentially, streaming higher quality video to other guests versus the normal mobile-performance mode.
+* I've also modified the non-flagship mode, for low-end mobile devices, to use the [`&limittotalbitrate`](../source-settings/limittotalbitrate.md) flag by default (500-kbps). [`&limittotalbitrate`](../source-settings/limittotalbitrate.md) hasn't been that heavily tested yet, but it's part of v22 and might be better than [`&totalroombitrate`](../advanced-settings/view-parameters/totalroombitrate.md); currently I'll increasingly use them together I think though. They are both the same concept, except one is viewer-side controlled, and the other is sender-side controlled; both limit the bitrate that guests in the room see based on the number of guests in the room.\
+  \
+  \*\* changes to alpha, at [https://vdo.ninja/alpha/](https://vdo.ninja/alpha/)
+
+#### June 25
+
+* The api.vdo.ninja remote control API is expanded to send push event notifications to web-socket listeners when the local mic/speaker/camera is muted. This was added on request for making the bitfocus companion app smarter about keeping track of mute states. (on alpha)
+
+#### June 16
+
+* Option to randomly generate a room name has been added to the room-creation page - minor fixes to the mixer have been applied; (lots more to do)
+* [`&aspectratio`](../advanced-settings/upcoming-parameters/and-aspectratio.md) + [`&crop`](../other-parameters.md) (sender side options) has been updated to work with more camera/sources. If you do `vdo.ninja/alpha/?webcam&aspectratio=0.5625` for example, you'll get portrait mode. Not compatible with Safari though.
+* Video/audio stats for Firefox have been improved; resolution, framerate, codec, bitrate.
+* [`&meshcastcodec=h264`](../meshcast-settings/and-meshcastcodec.md) won't fail when using Firefox and Meshcast
+* [`&chunked`](../newly-added-parameters/and-chunked.md) recording in the director's room works correctly\
+  \
+  \*\* These changes are on beta @ vdo.ninja/beta
+
+#### June 9
+
+* Viewers of [`&meshcast`](../newly-added-parameters/and-meshcast.md) streams can use [`&buffer=500`](../advanced-settings/view-parameters/buffer.md) now; on alpha
