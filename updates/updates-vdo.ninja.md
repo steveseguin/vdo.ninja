@@ -23,7 +23,7 @@ _\*\*_ UPDATE: I hot-patched beta and alpha with a fix. This fix disables the op
 #### **September 12** <a href="#august-31" id="august-31"></a>
 
 * Added [`&effects=7`](../source-settings/effects.md) (or `&effects=zoom`), which will provide a manual zoom option in the effects menu. (you can also select the zoom mode via the effects menu, if available)\
-  ![](<../.gitbook/assets/image (2).png>)
+  ![](<../.gitbook/assets/image (2) (4).png>)
 * Added [`&getfaces`](../advanced-settings/upcoming-parameters/and-getfaces.md) on the viewer link (or `{getFaces:true}` via the IFrame API), which will request a continuous stream of face bounding boxes, for all inbound videos and all faces contained within. The data is transmitted to the parent IFRAME, and this data can be used for moving the IFrame window around, if you wish to make your own custom face-tracker or whatever else.\
   ![](<../.gitbook/assets/image (11) (1).png>)
 * ``[`&effects=1`](../source-settings/effects.md) on the sender side (or `&effects=facetracking`) will auto-center the user's face in the center of their video, zooming in as needed. It takes a moment to initiate, but it offers a gentle PTZ-like effect.\
@@ -94,7 +94,7 @@ _\*\*_ UPDATE: I hot-patched beta and alpha with a fix. This fix disables the op
 
 * Updated the translation files on GitHub and on vdo.ninja/alpha/, so recently added UI elements can have alternative translations added
 * Custom scenes will now be sorted based on alphanumerical value. (rather than order of connection). \*\* on alpha\
-  ![](<../.gitbook/assets/image (1) (2).png>)
+  ![](<../.gitbook/assets/image (1) (2) (5).png>)
 
 #### August 22
 
@@ -215,3 +215,52 @@ _\*\*_ UPDATE: I hot-patched beta and alpha with a fix. This fix disables the op
 * Added the ability to "tap to focus" when a camera supports focusing. You'll want to switch the camera over to manual focus (via settings->video->focusMode) before it will be active, but then you can just touch on the screen to have it auto-focus on that spot. Note: It's a bit slow and not 100% accurate and may conflict with the zoom, if used. **on alpha at vdo.ninja/alpha**
 * Improved the advanced video settings; focus, exposure, white-balance. The auto and manual modes are now a checkbox, and I worked out a few of the odd behaviour issues that Chrome + Logitech webcams were having when try to set modes/values. \*\*\* on alpha at vdo.ninja/alpha\
   ![](<../.gitbook/assets/image (2) (1).png>)
+
+#### July 16
+
+*   Added an option to post a snapshot of your local camera to a HTTPS/POST URL (blob/jpeg)\
+
+
+    ```
+    https://vdo.ninja/alpha/?postimage=URL_TO_POST_IMAGE_TO_AS_BLOCK&postinterval=INTERVAL_IN_SEC
+    ```
+
+    \
+    so, for example, [`https://vdo.ninja/alpha/?postimage=https%3A%2F%2Ftemp.vdo.ninja%2F&postinterval=30`](https://vdo.ninja/alpha/?postimage=https%3A%2F%2Ftemp.vdo.ninja%2F\&postinterval=30) posts to a sample test server I have up. The URL is URL encoded, but not always necessary.\
+    \
+    If posting to my test server, the image can be accessed at `https://temp.vdo.ninja/images/STREAMID.jpg`. There's caching enabled mind you, so you'll want to post-fix the current timestamp to the URL to disable that per request.\
+    \
+    For example, `https://temp.vdo.ninja/images/yiMkpMg.jpg?t=3412341234`\
+    \
+    This feature could be useful to checking out a stream before actually connecting to it, as that's my intent with it, but it is also something you can use with Octoprint, where you need an IP camera jpeg source as input.\
+    \
+    \*\* on alpha, at [`https://vdo.ninja/alpha/`](https://vdo.ninja/alpha/)``
+
+#### July 14
+
+* The [`&website`](../source-settings/and-website.md) function now lets you start/stop and change website sources; no longer is it just one site and that's it. (only the director previously could change websites constantly). I suppose you could use this to remotely change inputs in an OBS browser source via a remote website, as I think the YouTube implementation supports synced playback/scrubbing.
+* There's toggle in the director's room now to add [`&scale=100`](../advanced-settings/view-parameters/scale.md) to the scene links. Might improve sharpness a bit, at the cost of increased CPU/network load.
+* Fixed an issue where if a guest was viewing the director in full-window mode, and the director changed the total room bitrate value, the new [`&totalroombitrate`](../advanced-settings/view-parameters/totalroombitrate.md) value would be ignored by that guest until they exited the full-window mode.
+* Also fixed an issue where if setting a custom total room bitrate value higher than 4000 via the URL ([`&totalroombitrate`](../advanced-settings/view-parameters/totalroombitrate.md)), the slider to adjust the TRB value will be extended so the max range is that of the URL value if higher than 4000.\
+  \
+  \*\* on vdo.ninja/alpha/ for testing.
+
+#### July 10
+
+* Tweaked the mic meter on vdo.ninja/alpha (3x more intense) and added a visual meter to the settings menu; should help judging if you're mic is active easier. (by request)
+* In case curious, I've been working on quite a few core-components and larger new features for VDO.Ninja this week. ie: chunked video improvements, IFrame API enhancements, refactoring code for future ui dev efforts, and some invite management features. I'll probably update more on those things once they are further along or complete.
+
+#### July 3
+
+* Unless manually specified ([`&screensharequality`](../source-settings/screensharequality.md) or [`&screenshare`](../source-settings/screenshare.md)), I have the screen share resolution matching the webcam resolution now. This avoids a sudden CPU spike when screen sharing; still room for improvement tho.
+* For the time being, I have [`&limittotalbitrate`](../source-settings/limittotalbitrate.md) only applying to guests, rather than all viewers. I need to revisit this at some point soon.\
+  \
+  \*\* changes on alpha
+
+#### July 1
+
+* The WSS API (wss://api.vdo.ninja) has been expanded to include hang up events for publishers, along with viewer-side events for incoming connections/streams. These efforts will lead to a richer StreamDeck integration.
+* Add [`&background`](../advanced-settings/upcoming-parameters/and-background.md), which accepts a URL-encoded image URL to make as the app's default background. For example, [`https://vdo.ninja/alpha/?appbg=./media/logo_cropped.png`](https://vdo.ninja/alpha/?appbg=./media/logo\_cropped.png) . The image will scale in size to cover the VDO.Ninja app's background. [`&chroma`](../advanced-settings/design-parameters/chroma.md) can still be used to set the background color, if using transparencies. There already exists [`&bgimage`](../advanced-settings/upcoming-parameters/and-bgimage.md), which will set the default background image for videos; this however will set a background image for the entire page.\
+  ![](<../.gitbook/assets/image (2).png>)\
+  \
+  \*\* These changes are on alpha

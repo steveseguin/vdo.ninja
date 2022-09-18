@@ -24,4 +24,4 @@
   I'd still recommend you do a proper tech check before the stream regardless, but this 'pre-tech-check' can help in cases of larger groups.\
   \
   At some point I'll add a dashboard or notification system to make managing invite links easier, but that will probably be for another day.\
-  ![](<../.gitbook/assets/image (1).png>)
+  ![](<../.gitbook/assets/image (1) (2).png>)

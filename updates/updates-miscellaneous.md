@@ -14,3 +14,7 @@
 #### July 27
 
 * Improved the messaging at [vdo.ninja/convert](https://isolated.vdo.ninja/convert); warns if file is too large and offers ffmpeg/handbreak alternatives in those cases. (also more input file formats supported)
+
+#### July 11
+
+* Updated [https://vdo.ninja/twitch](https://vdo.ninja/twitch) so that it saves the last entered Twitch ID and VDO.Ninja URL/ID, so you don't need to re-enter each time on load. (fyi, this page is an option for IRL streamers to see post video to VDO.Ninja while also viewing twitch chat)
