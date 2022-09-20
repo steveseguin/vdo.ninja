@@ -10,7 +10,7 @@ General Option! ([`&push`](../../source-settings/push.md), [`&room`](../../gener
 
 ## Aliases
 
-* ``[`&stereo`](../../general-settings/stereo.md)``
+* [`&stereo`](../../general-settings/stereo.md)``
 * `&s`
 
 ## Details

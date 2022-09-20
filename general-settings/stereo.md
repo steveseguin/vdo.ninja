@@ -11,7 +11,7 @@ General Option! ([`&push`](../source-settings/push.md), [`&room`](room.md), [`&v
 ## Aliases
 
 * `&s`
-* ``[`&proaudio`](../advanced-settings/audio-parameters/and-proaudio.md)``
+* [`&proaudio`](../advanced-settings/audio-parameters/and-proaudio.md)``
 
 ## Details
 
