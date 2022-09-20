@@ -19,7 +19,7 @@ _\*\*_ UPDATE: I hot-patched beta and alpha with a fix. This fix disables the op
   \-- The guest can toggle it on and off in the settings, without needing to go into any advanced audio settings\
   \-- The remote director can still use the existing "channel count' in the advanced audio settings to override this button, unless the guest toggles it back on\
   \-- There's several other ways to set mono mode of course, including [`&monomic`](../advanced-settings/upcoming-parameters/and-monomic.md), [`&inputchannels=1`](../advanced-settings/audio-parameters/and-inputchannels.md), [`&stereo=3`](../general-settings/stereo.md), channelCount, [`&mono`](../advanced-settings/view-parameters/mono.md) (playback), [`&ec&dn&ag`](../guides/audio-filters.md), and within OBS/Windows itself.\
-  ![](../.gitbook/assets/image.png)![](<../.gitbook/assets/image (1).png>)\
+  ![](<../.gitbook/assets/image (3).png>)![](<../.gitbook/assets/image (1) (1).png>)\
   \
   \*\* updated on to alpha at vdo.ninja/alpha/
 
@@ -367,7 +367,7 @@ _\*\*_ UPDATE: I hot-patched beta and alpha with a fix. This fix disables the op
 * Added a demo/sample on how to overlay speed + acceleration on top of video playback (compatible with a mobile phone sender) `vdo.ninja/examples/sensoroverlay?view=STREAMID`
 * Added a new option to explicitly list what sensor data you want to capture and transmit, when using `&sensor` [`&sensorfilter=gyro,lin,acc,mag,pos,ori`](../advanced-settings/upcoming-parameters/and-sensorfilter.md) For the above demo, you can use [`&sensorfilter=pos,lin`](../advanced-settings/upcoming-parameters/and-sensorfilter.md) to just send the data you need, reducing the load on the phone/network. (on alpha)
 * Right-clicking a link in VDO.Ninja will now offer the option to show the link as a QR Code. This makes it easy to copy any link over to a your mobile phone or to create a shareable QR code with guests. (on alpha)\
-  ![](<../.gitbook/assets/image (2).png>)![](<../.gitbook/assets/image (1) (9).png>)
+  ![](<../.gitbook/assets/image (2) (6).png>)![](<../.gitbook/assets/image (1) (9).png>)
 * Implemented a workaround for a novel Chrome bug where specifying a custom audio channel in the director's room (C1, C2, etc) would break the custom audio output device support. \* Fix pushed to alpha.
 
 #### June 1
@@ -382,3 +382,122 @@ _\*\*_ UPDATE: I hot-patched beta and alpha with a fix. This fix disables the op
   ![](<../.gitbook/assets/image (2) (5).png>)\
   \
   \*\* all updates on alpha at [`https://vdo.ninja/alpha`](https://vdo.ninja/alpha)``
+
+#### May 27
+
+* Improved logic for determining best turn server to use, if needed. (on alpha)
+
+#### May 23
+
+* Deployed a new turn server in Poland; it's only yet available on alpha. `https://vdo.ninja/alpha/speedtest`\
+  ``![](<../.gitbook/assets/image (159).png>)``
+* Two large broadcast servers enabled on production, in France and Canada.\
+  ![](<../.gitbook/assets/image (163).png>)
+
+#### May 21
+
+* Added new viewer-side parameters that can be used in place of `&scale`; [`&viewheight`](../advanced-settings/upcoming-parameters/and-viewheight.md)=180[`&viewwidth`](../advanced-settings/upcoming-parameters/and-viewwidth.md)=320, (aka `&vw`/`&vh`) which effectively does the same thing as `&scale`, but instead you pass a resolution.\
+  \-- It's important to note, that due to flexibility to request width/heights that are not aspect-ratio compatible, and due to bitrate/quality resolution limitations, these values are just 'max' target resolution values; the actual resolution you get could be still less. They also do not impact the actual capture resolution of the remote sender's camera, so its purely for requesting a specific downscaled resolution. This command applies to all video elements in a view port, and it disables the auto-scaler functionality.\
+  \-- Similarly, also added the option to the IFRAME API to request different down-scaled resolutions dynamically, per connection, if you want greater programmatic control vs static URL options.\
+  This is on alpha at vdo.ninja/alpha/?vw=300
+
+#### May 20
+
+* Added options to host your own default background images for the virtual background effect;\
+  \-- [`&imagelist=xxxx`](../advanced-settings/upcoming-parameters/and-imagelist.md) can be used to pass a list of images via the URL. Code to generate the list properly can be found here: [https://jsfiddle.net/steveseguin/w7z28kgb/](https://jsfiddle.net/steveseguin/w7z28kgb/) (images must be cross origin enabled)\
+  \-- At the base of index.html, if self-hosting VDO.Ninja, you can hard-code the list of images as well.\
+  \-- Related: when selecting a background image, you'll get a gentle glow around the selected image now. There's also a horizontal scroll bar, if the number of images listed are too much to fit.\
+  \*\* changes on alpha at [https://vdo.ninja/alpha/](https://vdo.ninja/alpha/)\
+  ![](<../.gitbook/assets/image (161).png>)
+
+#### May 19
+
+* Made a new bitrate option called [`&maxbandwidth`](../advanced-settings/upcoming-parameters/and-maxbandwidth.md), which differs from other commands as it leverages a chromium (chrome/edge/brave/electron) feature to judge the available bandwidth of a sender's connection. Passing a value to it as the sender (a percentage; 1 to 100 ideally), you can try to ensure the connection never uses more than that amount of the available reported bandwidth. (on alpha) So the notion is, if you want to set the invite link bitrate to 50-mbps, but one guest only has only a 20-mbps connection, `&maxbandwidth=80` will try to limit the bitrate to around 16-mbps. I sometimes will tell people to set the bit rate to about 80% of what their connection can allow, as higher than that can result in some frame stutter when there is packet loss, since the connection lacks headroom to recover. This command will try to do it automatically, for all the viewers of a stream. My goal here is to use it with the mixer or stats app, so eSports users can crank out high bitrates with less tinkering per guest. I have no idea how well it will work in practice so far.
+* Fixed an issue where the director's mic audio could cut out after stopping the screen share, depending on how the screen-share was cancelled. - added [`&showall`](../advanced-settings/upcoming-parameters/and-showall.md) (or [`&style=7`](../advanced-settings/design-parameters/style.md)), which will include non-media-based push connections as video elements in a group room. This can include guests that joined without audio/video, directors, or a data-only connection, like maybe MIDI-output source. - to help avoid some types of connections showing up when using `&showall`, I've also added a [`&nopush`](../advanced-settings/upcoming-parameters/and-nopush.md) mode, which blocks outbound publishing connections. This acts a bit like a `&scene=1` link, so unless `&showall` is added, you'll need to use the IFRAME API to show/hide videos in it. (also just on alpha atm)
+
+#### May 16
+
+*   Stats for Meshcast will now appear in the director's scene stats section and the new stats page; by request
+
+    (unlike normal stats, these Meshcast stats are just for the meshcast ingest, and not for the re-broadcast to the viewers. it also means you will see the meshcast stats even if no viewer/scene is yet connected.)\
+    ![](<../.gitbook/assets/image (168).png>)
+* You can now also close the scene-options section, but have the stats stay visible (if active), as a director now also. (freeing up some space)\
+  ![](<../.gitbook/assets/image (170).png>)
+
+#### May 15
+
+* Beta updated with all recent updates and new mixer updates. Find it at: vdo.ninja/beta/
+
+#### May 14
+
+* I now try to alert the user when they have disabled webRTC; some privacy extensions or nanny-guard software might do it in a way that I can detect.\
+  ![](<../.gitbook/assets/image (164).png>)
+
+#### May 11
+
+* ``[`&remote`](../general-settings/remote.md), if used on a push link without a password added, it will now allow the remote viewer limited control (hangup, focus, zoom, detailed stats), even if they don't have `&remote` added to their URL also.
+* When using [`&remote`](../general-settings/remote.md), the option to "reload" the remote browser is now available, so you can potentially reload a remote unattended session that contains [`&autostart`](../source-settings/and-autostart.md)``[`&webcam`](../source-settings/and-webcam.md)``\
+  ``![](<../.gitbook/assets/image (2).png>)``\
+  ``\
+  ``\*\* all changes on alpha @ vdo.ninja/alpha/
+
+#### May 8
+
+*   Had a request to add mirror + flipping of video itself, rather than just via CSS. (as full-screen support was needed). I already had [`&effects=2`](../source-settings/effects.md) for mirroring the actual video itself, so I've added two more modes that can flip and flip+mirror. Might be useful for teleprompter work.
+
+    ```
+    https://vdo.ninja/beta/?effects=-1 flips
+    https://vdo.ninja/beta/?effects=-2 flips + mirrors
+    https://vdo.ninja/beta/?effects=2 mirrors
+    ```
+* I've added experimental support for local Media Recordings to iPhone/iPad devices. ([`&record`](../source-settings/and-record.md) may work now, etc)
+* The iPad/IPhone needs to have "MediaRecorder" enabled in its "experimental webkit features" Safari settings section
+* The user will have to click "download" once the recording has finished to actual save the file -- The resulting file is still a webM file, which the iPhone itself won't be able to play, but will play fine elsewhere.\
+  ![](<../.gitbook/assets/image (156).png>)
+*   I've included numerous pop-up warning messages to ensure the 'experimental' part is communicated\
+
+
+    \*\* on vdo.ninja/beta/ (all current code is up to date on beta)
+* ``[`&bgimage=`](../advanced-settings/upcoming-parameters/and-bgimage.md) can be used to set the default image avatar, when using [`&style=0`](../advanced-settings/design-parameters/style.md) or `&style=6`. This only impacts what the person with the parameter added sees and must be either a URL or a base64 data image/SVG. URL-encoded values. on alpha ie: [https://vdo.ninja/alpha/?view=aSmexM6\&style=0\&nocontrols\&bgimage=https%3A%2F%2Fvdo.ninja%2Fmedia%2Fold\_icon.png](https://vdo.ninja/alpha/?view=aSmexM6\&style=0\&nocontrols\&bgimage=https%3A%2F%2Fvdo.ninja%2Fmedia%2Fold\_icon.png)\
+  ![](<../.gitbook/assets/image (157).png>)
+* ``[`&controls=0`](../advanced-settings/newly-added-parameters/and-videocontrols.md) \[`off`/`false`] or [`&nocontrols`](../advanced-settings/upcoming-parameters/and-nocontrols.md), will force hide the video control bar. (on local dev atm)
+* Added the option to set a dedicated hold-to-talk key to VDO.Ninja; `CTRL+M` can work in place of this still by default, but this lets you set a custom combo/key that doesn't act as a mute toggle at all (if just tapped accidentally) \*\* This is on alpha\
+  ![](<../.gitbook/assets/image (169).png>)
+
+#### May 5
+
+* When using the [`&remote`](../general-settings/remote.md) control option, the viewer can now remotely hang-up the sender via the right-click menu. The sender needs to remote control enabled for this to work of course. \*\* on local dev, coming to beta soon.\
+  ![](../.gitbook/assets/image.png)
+
+#### May 4
+
+* When you "full screen" a video using the native browser-full screen button, it will now behave the same way as the full-window solo button now. (increases the resolution of the target video, and lowers the bitrate of the others, now hidden, videos.). \* on beta/dev branches
+
+#### May 3
+
+* Made [`&totalbitrate`](../advanced-settings/upcoming-parameters/and-totalbitrate.md) (`&tb`) set both [`&totalscenebitrate`](../newly-added-parameters/and-maxtotalscenebitrate.md) and [`&totalroombitrate`](../advanced-settings/view-parameters/totalroombitrate.md) flags. Not quite sure how well it will work, but since a scene and a guest are exclusive possibilities, it's a bit of a flexible way to just learn one flag to do it all, as I realize all the options can get confusing.\
+  \
+  `&trb` and `&tsb` limit the total incoming bitrate, dividing up the bandwidth available to each video being played back. There are nuances in differences, with the main one being `&trb` is for a guest link and `&tsb` is for a scene/view link.\
+  (on local dev for now, pending more testing)
+* Added another security option, for those concerned about random spying of their streams. Add [`&prompt`](../advanced-settings/upcoming-parameters/and-prompt.md) to the push link to enable. (or `&approve`/`&validate`)\
+  \
+  What it is: After a new peer viewer connection is established, but before the video/audio streams start getting sent to that new viewer, a prompt will appear asking the publisher if they wish to send their stream to that viewer. If they say no, the remote viewer is disconnected and no video/audio is sent to them. If they have `&label=xxx` added to their view link, that label will appear as the display name. Otherwise, if no label is available, a random ID representing that connection is shown.\
+  \
+  There's nothing stopping a disconnected viewer from re-joining and re-asking, causing some grief, and spoofing an identify isn't too hard, but it gives you some control and warning to block unexpected viewers.\
+  \
+  In the future, I can add this control to the director, rather than just the senders, and add additional ways to check identities. For now though, it's a start.\
+  ![](<../.gitbook/assets/image (166).png>)\
+  \
+  \*\* on vdo.ninja/alpha/ for testing
+
+#### May 2
+
+* Added graphs to the director room; one graph for each scene a guest is connected to. If video isn't active/visible, the bitrate should be zero, implying VDO.Ninja has it paused/disabled, but on standby. You can see the graphs via the "scene stats" button. Toggling the button will enable and disable the stats.\
+  ![](<../.gitbook/assets/image (165).png>)
+* The graph is color coded; red/yellow implies packet loss, but otherwise green. Currently the graph is capped to like 4-mbps; higher than that isn't display atm.\
+  ![](<../.gitbook/assets/image (1).png>)\
+  \
+  \*\* alpha updated. Test it out at [https://vdo.ninja/alpha](https://vdo.ninja/alpha)
+* Fixed a more recent bug in VDO.Ninja where the special [`&sstype=3`](../newly-added-parameters/and-screensharetype.md) screen share mode did not work as solo links; stats for it were not always cleaned up either, so that's fixed too. (on dev)
+* Added manual-input fields for the camera/audio setting sliders. Both for director + push links. You can enter by hand values, rather than using the sliders. Also made "aspect ratio" and "frame rate" available options. \*\* on vdo.ninja/alpha\
+  ![](<../.gitbook/assets/image (158).png>)![](<../.gitbook/assets/image (162).png>)
