@@ -25,7 +25,7 @@ I'd still recommend you do a proper tech check before the stream regardless, but
 
 At some point I'll add a dashboard or notification system to make managing invite links easier, but that will probably be for another day.
 
-<figure><img src="../.gitbook/assets/image (1) (1).png" alt=""><figcaption></figcaption></figure>
+<figure><img src="../.gitbook/assets/image (1) (1) (4).png" alt=""><figcaption></figcaption></figure>
 
 Testing regions for vdo.ninja/alpha/check\
 [https://vdo.ninja/alpha/regions](https://vdo.ninja/alpha/regions)

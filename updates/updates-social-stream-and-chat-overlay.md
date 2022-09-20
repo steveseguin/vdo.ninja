@@ -6,9 +6,9 @@
 #### **September 18**
 
 * The WSS/HTTPS APi for Socialstream has have had a few new commands added: next-in-queue, clear-featured-overlay, and an event that alerts the user to the size of the queue.\
-  ![](../.gitbook/assets/image.png)
+  ![](<../.gitbook/assets/image (3).png>)
 * Added an option to save incoming chat messages to an excel-file within SocialStream's menu (by request)\
-  ![](<../.gitbook/assets/image (1).png>)
+  ![](<../.gitbook/assets/image (1) (1).png>)
 
 #### **September 17**
 

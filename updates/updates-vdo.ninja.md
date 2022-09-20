@@ -8,6 +8,21 @@ I'm working on a fix, but I don't have an ETA. Will update when fixed.
 _\*\*_ UPDATE: I hot-patched beta and alpha with a fix. This fix disables the option to select custom audio output destinations, but resolves the echo issue. If using a self-deployed instance, you can instead add [`&noap`](../general-settings/noaudioprocessing.md) to the URLs to fix it as well; you can also enable `chrome://flags/#chrome-wide-echo-cancellation`, patch the code, or just use headphones.
 {% endhint %}
 
+#### **September 19** <a href="#august-31" id="august-31"></a>
+
+* With VDO.Ninja, if using [`&stereo`](../general-settings/stereo.md), `&s` , `stereo=5`, or [`&proaudio`](../advanced-settings/audio-parameters/and-proaudio.md), I'm now showing a little check-box that the guests themselves can check to set their mic input to MONO mode.\
+  \
+  While there's a few different ways to set a mic to mono mode, they aren't always obvious to people I'm finding, especially when using `&proaudio`/`&stereo` mode. For example, some guests will appear in the left or right-audio channel, due to their mic/interface setup. It's not always obvious on how to fix this when about to go live, so I'm hoping this helps avoids those situations.\
+  \
+  \-- It won't interfere with the screen share modes, so they will be stereo still\
+  \-- It won't show if using `&stereo=1`, as that is explicitly stereo since a value is passed.\
+  \-- The guest can toggle it on and off in the settings, without needing to go into any advanced audio settings\
+  \-- The remote director can still use the existing "channel count' in the advanced audio settings to override this button, unless the guest toggles it back on\
+  \-- There's several other ways to set mono mode of course, including [`&monomic`](../advanced-settings/upcoming-parameters/and-monomic.md), [`&inputchannels=1`](../advanced-settings/audio-parameters/and-inputchannels.md), [`&stereo=3`](../general-settings/stereo.md), channelCount, [`&mono`](../advanced-settings/view-parameters/mono.md) (playback), [`&ec&dn&ag`](../guides/audio-filters.md), and within OBS/Windows itself.\
+  ![](../.gitbook/assets/image.png)![](<../.gitbook/assets/image (1).png>)\
+  \
+  \*\* updated on to alpha at vdo.ninja/alpha/
+
 #### **September 17** <a href="#august-31" id="august-31"></a>
 
 * [`&waitimage`](../advanced-settings/newly-added-parameters/and-waitimage.md) now has its wait image 'fit' to the screen, and [`&cover`](../advanced-settings/view-parameters/cover.md) will have it 'cover' the screen.
@@ -181,7 +196,7 @@ _\*\*_ UPDATE: I hot-patched beta and alpha with a fix. This fix disables the op
   \-- It supports multiple OBS instances and will label them according to the [`&label=xxx`](../general-settings/label.md) value set on the scene/view link, or whatever the unique connection ID is.\
   \
   All this is on alpha, at [https://vdo.ninja/alpha/](https://vdo.ninja/alpha/)\
-  ![](<../.gitbook/assets/image (2) (1) (4).png>)![](<../.gitbook/assets/image (3).png>)
+  ![](<../.gitbook/assets/image (2) (1) (4).png>)![](<../.gitbook/assets/image (3) (5).png>)
 
 #### July 23
 
