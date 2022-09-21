@@ -6,19 +6,23 @@ description: Guests are sometimes able to hear themselves
 
 Dealing with feedback is challenging, as the reasons are numerous, but not always obvious. Below are some common causes:
 
-* Headphones are too loud.\
+* Headphones are too loud. This is especially true if you've disabled echo cancellation or enabled the proaudio/stereo modes.\
 
-* Using Safari as it has poor AEC abilities; use Chrome instead.\
+* Using Safari as it has poor AEC abilities; use Chrome instead. Safari struggles when a room has bad reverb issues, so changing locations might also help, if forced to use Safari.\
 
-* ``[`&proaudio`](../general-settings/stereo.md) or [`&stereo`](../general-settings/stereo.md) mode is being used. This mode will disable echo-cancellation and so you must use headphones in this mode.\
+* ``[`&proaudio`](../general-settings/stereo.md) or [`&stereo`](../general-settings/stereo.md) mode is being used. This mode will disable echo-cancellation and so you must use headphones in this mode. As noted above, if using this mode, lower your headphone volume or/and use closed-back headphones.\
 
 * Screen-sharing the desktop /w audio capture on, especially in the case of a group room, will create nasty feedback for others. You can add `&sstype=3` to the guest's invite link to try to prevent this issue, but otherwise you may need to use a virtual audio cable to limit what application's audio gets recorded. Details on that here: [https://docs.vdo.ninja/guides/audio](https://docs.vdo.ninja/guides/audio)\
 
 * Incorrect OBS configuration is common, especially if the echo is only heard in the RTMP broadcast or recording, and not by those using VDO.Ninja themselves\
 
 * Having two browser tabs open (such as one with the Youtube output playing) will cause echo. Echo cancellation only works within the same tab that the audio is played back and captured, and only if the echo is not prolonged.\
+  \
+  You can use an experimental Chrome feature to solve this issue though. Go to [chrome://flags/#chrome-wide-echo-cancellation](chrome://flags/#chrome-wide-echo-cancellation) and enable Chrome Wide Echo Cancellation, to see if it helps.\
 
 * Having two devices connected to VDO.Ninja near each other, or sometimes even in the same house, can create echo. Phones have very sensitive microphones and can pick up the audio of others who might also be on the group call.\
+
+* Enabling certain advanced web-audio effects, such as per-video-specific audio output destinations can break echo cancellation.\
 
 * Playing an IFrame within VDO.Ninja (website share) may not have that IFrame's audio cancelled out by the echo-cancellation features.\
 
@@ -35,3 +39,4 @@ Normally the person who isn't hearing any echo or feedback is the cause.
 If you identify that person, triple check that they are using Chrome and not Safari, make sure they are wearing headphones and that the audio is correctly playing into them, and have them close all other browser tabs and applications.
 
 If the issue is only within OBS, this is likely an issue with OBS and not VDO.Ninja. Try disabling all global audio devices, muting audio devices in OBS one at a time, and double checking the advanced audio mixing settings.
+
