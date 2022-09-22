@@ -23,6 +23,8 @@ Example:\
 
 It fits to the screen, and [`&cover`](../view-parameters/cover.md) will have it 'cover' the screen.
 
+When using `&waitimage`, the specified 'waiting to connect' image will appear after all connections end.
+
 It overrides [`&cleanoutput`](../design-parameters/cleanoutput.md).
 
 ## Related

@@ -12,13 +12,14 @@ description: Some keyboard hotkeys
 | `CTRL + ALT + F`  | Open the file-sharing window                                       |
 | `CTRL + ALT + C`  | Cycle the camera to the next camera available                      |
 | `CTRL + ALT + S`  | Open the screen-sharing window                                     |
+| `CTRL + ALT + D`  | Enable Draw-on-Screen                                              |
 
 {% hint style="info" %}
-On macOS use `CMD` instead of `CTRL`
+On MacOS use `CMD` instead of `CTRL`
 {% endhint %}
 
 When using the above keyboard short-cuts, the tab/window must be actively in focus.
 
-When using the [Electron Capture app](../../steves-helper-apps/electron-capture.md) in elevated privilege mode, the keyboard shortcuts are global.
+When using the [Electron Capture App](../../steves-helper-apps/electron-capture.md) in elevated privilege mode, the keyboard shortcuts are global.
 
 ![](<../../.gitbook/assets/image (90) (2).png>)

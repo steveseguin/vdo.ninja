@@ -8,6 +8,15 @@ I'm working on a fix, but I don't have an ETA. Will update when fixed.
 _\*\*_ UPDATE: I hot-patched beta and alpha with a fix. This fix disables the option to select custom audio output destinations, but resolves the echo issue. If using a self-deployed instance, you can instead add [`&noap`](../general-settings/noaudioprocessing.md) to the URLs to fix it as well; you can also enable `chrome://flags/#chrome-wide-echo-cancellation`, patch the code, or just use headphones.
 {% endhint %}
 
+#### **September 21** <a href="#august-31" id="august-31"></a>
+
+* When using [`&waitimage`](../advanced-settings/newly-added-parameters/and-waitimage.md), the specified 'waiting to connect' image will appear after all connections end. This is a bit different than the default behaviour of the spinner, which doesn't re-appear, but I assume if you're advanced enough to use the `&waitimage` option, you're okay with this.
+*   Added the option to "draw on the screen", which might be a useful tool for niche use cases where you might need to take notes, etc. It doesn't affix to videos themselves, but rather it's just a full-window transparent canvas overlay, You can start/stop/clear and select a couple style-types with this feature, via the settings -> User menu. You can also do `CTRL + ALT + D` to toggle this as needed.\
+    ![](../.gitbook/assets/image.png)\
+
+
+    \*\* on alpha at vdo.ninja/alpha
+
 #### **September 19** <a href="#august-31" id="august-31"></a>
 
 * With VDO.Ninja, if using [`&stereo`](../general-settings/stereo.md), `&s` , `stereo=5`, or [`&proaudio`](../advanced-settings/audio-parameters/and-proaudio.md), I'm now showing a little check-box that the guests themselves can check to set their mic input to MONO mode.\
@@ -437,7 +446,7 @@ _\*\*_ UPDATE: I hot-patched beta and alpha with a fix. This fix disables the op
 
 * ``[`&remote`](../general-settings/remote.md), if used on a push link without a password added, it will now allow the remote viewer limited control (hangup, focus, zoom, detailed stats), even if they don't have `&remote` added to their URL also.
 * When using [`&remote`](../general-settings/remote.md), the option to "reload" the remote browser is now available, so you can potentially reload a remote unattended session that contains [`&autostart`](../source-settings/and-autostart.md)``[`&webcam`](../source-settings/and-webcam.md)``\
-  ``![](<../.gitbook/assets/image (2).png>)``\
+  ``![](<../.gitbook/assets/image (2) (7).png>)``\
   ``\
   ``\*\* all changes on alpha @ vdo.ninja/alpha/
 
@@ -467,7 +476,7 @@ _\*\*_ UPDATE: I hot-patched beta and alpha with a fix. This fix disables the op
 #### May 5
 
 * When using the [`&remote`](../general-settings/remote.md) control option, the viewer can now remotely hang-up the sender via the right-click menu. The sender needs to remote control enabled for this to work of course. \*\* on local dev, coming to beta soon.\
-  ![](../.gitbook/assets/image.png)
+  ![](<../.gitbook/assets/image (2).png>)
 
 #### May 4
 
