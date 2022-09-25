@@ -13,7 +13,7 @@ If using [`&proaudio`](../audio-parameters/and-proaudio.md), this will retain th
 Audio bitrates may be reduced from 256-kbps to 128-kbps, if not explicitly stated, in some cases.
 
 {% hint style="warning" %}
-Will not work with Firefox; Firefox's playback will still be in stereo if the source is stereo.
+In Version 22 `&mono` also works with Firefox.
 {% endhint %}
 
 To set the source to mono, see [`&monomic`](../upcoming-parameters/and-monomic.md).
