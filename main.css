@@ -460,6 +460,12 @@ body.darktheme .credits>a:visited {
 	background-color: black;
 }
 
+.advDirectGuestSettings {
+	padding: 10px;
+    max-height: 400px;
+    overflow-y: auto;
+}
+
 .darktheme .advDirectGuestSettings label {
 	color: #FFF;
 }
@@ -907,7 +913,9 @@ button.glyphicon-button.active.focus {
 	height:100%;
 }
 
-
+.nocontrolbar #container.vidcon {
+	height:100%!important;
+}
 
 .labelSmall {
 	display:none;
@@ -1222,10 +1230,13 @@ input[type='radio'] { cursor:pointer; }
 }
 #retryimage{
 	display: block;
-	margin: 25vh auto;
-	max-width: 50%;
-	max-height: 50%;
+	margin: auto;
+	max-width: 100%;
+	max-height: 100%;
+	width: 100%;
+	height: 100%;
 	animation: fadeIn 2s;
+	object-fit: contain;
 }
 #retrymessage{
 	display: block;
@@ -1327,7 +1338,9 @@ body {
 	color: black;
 	font-weight: bold !important;;
 }
-
+#mainmenu {
+	height:100vh;
+}
 .mainmenuclass {
 	display: inherit;
 }
@@ -1482,6 +1495,18 @@ input[type=range]:focus::-ms-fill-upper {
 	background: #367ebd;
 }
 
+
+.popupSelector_constraints{
+	margin:25px 9% 0 7%;
+}
+.popupSelector_constraints label{
+	color:white;
+	text-shadow: 0px 0px 6px #000000FF;
+	font-weight: 700;
+	
+}
+
+
 @media only screen and (max-height: 650px) {
 	body {
 		font-size: 0.9em;
@@ -1628,6 +1653,9 @@ input[type=range]:focus::-ms-fill-upper {
 		font-size: 92%;
 		width: 385px !important
 	}
+	.popupSelector_constraints{
+		margin:25px 15% 0 1%;
+	}
 	.mobileHide{
 		display:none !important;
 	}
@@ -1638,27 +1666,25 @@ input[type=range]:focus::-ms-fill-upper {
 	}
 }
 
+
 @media only screen and (max-height: 355px) {
+	
+	.popupSelector_constraints{
+		margin:20px 12% 0 2%;
+	}
+
 	#popupSelector {
-		padding: 0 !important;
+		padding: 0 0 20px 0 !important;
 	}
 }
+
 @media only screen and (max-height: 330px) {
 	#popupSelector {
-		padding: 0 !important;
 		font-size: 92%;
 	}
 }
 
-.popupSelector_constraints{
-	margin:30px 9% 0 7%;
-}
-.popupSelector_constraints label{
-	color:white;
-	text-shadow: 0px 0px 6px #000000FF;
-	font-weight: 700;
-	
-}
+
 #popupSelector_user_settings label{
 	color:white;
 	text-shadow: 0px 0px 6px #000000FF;
@@ -1887,7 +1913,7 @@ label {
 }
 
 .partialFadeout{
-	opacity: .1 !important;
+	opacity: 0.2 !important;
 }
 
 .greyout {
@@ -1967,11 +1993,16 @@ span[data-action-type="stats-graphs-details-container"]>span{
 	background-image: url(data:image/svg+xml;utf8;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0idXRmLTgiPz4KPHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHhtbG5zOnhsaW5rPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5L3hsaW5rIiB2ZXJzaW9uPSIxLjEiIHZpZXdCb3g9IjAgMCAxMjkgMTI5IiBlbmFibGUtYmFja2dyb3VuZD0ibmV3IDAgMCAxMjkgMTI5IiB3aWR0aD0iNTEycHgiIGhlaWdodD0iNTEycHgiPgogIDxnPgogICAgPGc+CiAgICAgIDxwYXRoIGQ9Im0xOC43LDEyMi41aDkxLjZjMi4zLDAgNC4xLTEuOCA0LjEtNC4xdi0xMDcuOWMwLTIuMy0xLjgtNC4xLTQuMS00LjFoLTY4LjdjLTAuMywwLTAuNywwLTEsMC4xLTAuMSwwLTAuMiwwLjEtMC4yLDAuMS0wLjMsMC4xLTAuNSwwLjItMC44LDAuMy0wLjEsMC4xLTAuMiwwLjEtMC4zLDAuMi0wLjMsMC4yLTAuNiwwLjQtMC44LDAuN2wtMjIuOSwyN2MtMC4zLDAuMy0wLjUsMC43LTAuNywxLjEtMC4xLDAuMS0wLjEsMC4zLTAuMSwwLjQtMC4xLDAuMy0wLjEsMC42LTAuMiwwLjkgMCwwLjEgMCwwLjEgMCwwLjJ2ODAuOWMtMS4wNjU4MWUtMTQsMi40IDEuOSw0LjIgNC4xLDQuMnptMTguOC0xMDAuOHYxMS44aC0xMGwxMC0xMS44em0tMTQuNywxOS45aDE4LjhjMi4zLDAgNC4xLTEuOCA0LjEtNC4xdi0yMi45aDYwLjV2OTkuN2gtODMuNHYtNzIuN3oiIGZpbGw9IiMwMDAwMDAiLz4KICAgICAgPHBhdGggZD0ibTk0LDUwLjVoLTU5Yy0yLjMsMC00LjEsMS44LTQuMSw0LjEgMCwyLjMgMS44LDQuMSA0LjEsNC4xaDU5YzIuMywwIDQuMS0xLjggNC4xLTQuMSAwLTIuMy0xLjgtNC4xLTQuMS00LjF6IiBmaWxsPSIjMDAwMDAwIi8+CiAgICAgIDxwYXRoIGQ9Im05NCw3MC4zaC01OWMtMi4zLDAtNC4xLDEuOC00LjEsNC4xIDAsMi4zIDEuOCw0LjEgNC4xLDQuMWg1OWMyLjMsMCA0LjEtMS44IDQuMS00LjEgMC0yLjItMS44LTQuMS00LjEtNC4xeiIgZmlsbD0iIzAwMDAwMCIvPgogICAgPC9nPgogIDwvZz4KPC9zdmc+Cg==)
 }
 
+.controlVideoBox {
+	position:relative;
+}
+
 .container-inner {
 	display: none;
 	background-color: rgb(221, 221, 221);
 	max-height: 100%;
 	min-height: 90%;
+	margin-bottom:30px;
 }
 .canvasStats{
 	background-color: black;
@@ -1984,6 +2015,7 @@ span[data-action-type="stats-graphs-details-container"]>span{
 	display: inline-block;
 	overflow: scroll;
 	padding: 1px 0 0 5px;
+	margin-top: 14px;
 	margin-left: 5px;
 }
 #add_screen {
@@ -2472,6 +2504,25 @@ audio.fileshare::-webkit-media-controls-play-button, video.fileshare::-webkit-me
 	border-bottom: 1px solid #ccc;
 	border-bottom-left-radius: 4px;
 	border-bottom-right-radius: 4px;
+}
+.gear_microphone{
+	user-select: none;
+	float: right;
+	height: 0;
+	padding: 0;
+	top: 6px;
+	position: relative;
+}
+.gear_microphone.gearflat{
+	top: -1px;
+}
+.gear_microphone>input{
+	top: 1px;
+    position: relative;
+}
+#micStereoMonoInput3{
+	width: 10px;
+    height: 11px;
 }
 #headphonesDiv3 {
 	text-align: left;

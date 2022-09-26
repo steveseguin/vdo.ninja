@@ -1,22 +1,18 @@
-function effectsEngine(){
+async function effectsEngine(){
 	console.log('LOADED SAMPLE');
-	function loadScript(url, callback=false){
-		var script = document.createElement('script');
-		script.type = 'text/javascript';
-		script.src = url;
-		script.onload = function(){this.remove();if(callback){callback();}}
-		document.head.appendChild(script);
-		
+	var loadList = [];
+	loadList.push("./thirdparty/jeeliz/jeelizFaceFilter.js");
+	loadList.push("./thirdparty/jeeliz/helpers/JeelizCanvas2DHelper.js");
+
+	if (loadList.length){
+		loadList.reverse();
+		while (loadList.length){
+			await loadScript(loadList.pop());
+		}
 	}
 
-	loadScript("./thirdparty/jeeliz/jeelizFaceFilter.js", 
-		function(){
-			loadScript("./thirdparty/jeeliz/helpers/JeelizCanvas2DHelper.js");
-		}
-	);
-
 	function main(){ // entry point
-		console.log(".");
+		console.log("LOADED MAIN OF SAMPLE");
 		if (session.canvasSource && session.canvasSource.videoWidth && session.canvasSource.videoHeight && session.canvasWebGL){
 			if (session.canvasWebGL && !(document.getElementById("effectsCanvasTarget"))){
 				session.canvasWebGL.id = "effectsCanvasTarget";

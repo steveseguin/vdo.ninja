@@ -1,16 +1,5 @@
-function effectsEngine(effectName){
-	function loadScript(url){
-		var script = document.createElement('script');
-		script.type = 'text/javascript';
-		script.src = url;
-		script.onload = function(){
-			this.remove();
-			if (loadList.length){
-				loadScript(loadList.pop());
-			}
-		}
-		document.head.appendChild(script);
-	}
+async function effectsEngine(effectName){
+	
 	var loadList = [];
 	if (typeof JEELIZFACEFILTER == 'undefined' || JEELIZFACEFILTER==null){
 		loadList.push("./thirdparty/jeeliz/jeelizFaceFilter.js");
@@ -29,8 +18,12 @@ function effectsEngine(effectName){
 	
 	if (loadList.length){
 		loadList.reverse();
-		loadScript(loadList.pop());
+		while (loadList.length){
+			await loadScript(loadList.pop());
+		}
 	}
+
+	log("finished loading anon effect");
 
 	// some globals:
 	let THREECAMERA = null; // should be prop of window
@@ -63,6 +56,7 @@ function effectsEngine(effectName){
 				isTransformed = false;
 				init_faceFilter("effectsCanvasTarget", session.canvasSource);
 			} catch(e){
+				errorlog(e);
 			}
 		} else {
 			setTimeout(function(){main();},500);
@@ -117,7 +111,7 @@ function effectsEngine(effectName){
 			threeStuffs.scene.add(dirLight);
 		},
 		callbackTrack: function (detectState) {
-			if (effectName !== session.effects){
+			if (effectName !== session.effect){
 				try{
 					JEELIZFACEFILTER.toggle_pause(true,false); // unload the filter when no longer active.  Leaving the track active is required, else it breaks the app
 				} catch(e){errorlog(e);}

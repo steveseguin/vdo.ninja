@@ -87,6 +87,8 @@
 					<canvas id="packetloss-graph"></canvas>
 				</div>
 			</div>
+			<div id="details">
+			</div>
 			
 		</div>
 
@@ -184,7 +186,7 @@
 				element: "bitrate-graph",
 				data: 0,
 				max: 6000,
-				target: 3000,
+				target: 2500,
 			};
 			var frames;
 			var buffer = {
@@ -225,6 +227,9 @@
 							counter += 1;
 						}
 					}
+					if ("target" in data){
+						updateData("target", data.target);
+					}
 					if ("buffer" in data){
 						updateData("buffer", data.buffer);
 						if (data.buffer!==null){
@@ -254,12 +259,28 @@
 					}
 					if ("info" in data){
 						if (data.info.Browser){
-							document.getElementById("container").innerHTML += "<br />Browser used: "+data.info.Browser+"<br />";
+							document.getElementById("details").innerHTML += "<br /><b>Browser used:</b> "+data.info.Browser+"<br />";
 							if (!data.info.Browser.startsWith("Chromium")){
-								document.getElementById("container").innerHTML += "<h3>A Chromium-based browser is recommended.</h3>";
-							} else {
-								document.getElementById("container").innerHTML += "<br />";
+								document.getElementById("details").innerHTML += "<h3>A Chromium-based browser is recommended.</h3>";
+							} 
+						}
+						if ("plugged_in" in data.info){
+							if (!data.info.plugged_in){
+								document.getElementById("details").innerHTML += "<h3>The user's power is not plugged in</h3>";
 							}
+						}
+						if (data.info.platform){
+							document.getElementById("details").innerHTML += "<br /><b>Platform (os):</b> "+data.info.platform+"<br />";
+						}
+						if (data.info.gpGPU){
+							document.getElementById("details").innerHTML += "<br /><b>GPU:</b> "+data.info.gpGPU+"<br />";
+						}
+						if (data.info.conn_type){
+							document.getElementById("details").innerHTML += "<br /><b>Connection type:</b> "+data.info.conn_type+"<br />";
+							if (data.info.conn_type == "wifi"){
+								document.getElementById("details").innerHTML += "<h3>Avoid using WiFi if at all possible</h3>";
+							}
+							
 						}
 					}
 				});
@@ -341,6 +362,11 @@
 			
 			
 			function updateData(type, data) {
+			
+				if (type == "target"){
+					bitrate.target = data;
+				}
+				
 				if (type == "bitrate") {
 					bitrate.data = data;
 					plotData("bitrate", bitrate);
@@ -387,10 +413,24 @@
 				var grd = context.createLinearGradient(0, 0, 0, height);
 
 				if (type == "bitrate") {
-					// Higher values are green
-					grd.addColorStop(0, "#33C433");
-					grd.addColorStop(0.7, "#F3F304");
-					grd.addColorStop(0.9, "#F30404");
+					
+					if (stat.target <= 3000){
+						grd.addColorStop(0, "#33C433");
+						grd.addColorStop(0.7, "#33C433");
+						grd.addColorStop(0.8, "#F3F304");
+						grd.addColorStop(0.92, "#F30404");
+					} else if (stat.target <= 4000){
+						grd.addColorStop(0, "#33C433");
+						grd.addColorStop(0.5, "#33C433");
+						grd.addColorStop(0.8, "#F3F304");
+						grd.addColorStop(0.92, "#F30404");
+					} else {
+						grd.addColorStop(0, "#33C433");
+						grd.addColorStop(0.3, "#33C433");
+						grd.addColorStop(0.8, "#F3F304");
+						grd.addColorStop(0.92, "#F30404");
+					}
+					
 				} else {
 					// Higher values are red
 					grd.addColorStop(0, "#F30404");
@@ -403,15 +443,16 @@
 				//context.fillStyle = "#009933";
 				//context.imageSmoothingEnabled = true;
 
-				yScale = height / stat.target;
+				yScale = height / stat.max;
 
-				if (stat.data > stat.target) {
-					stat.data = stat.target;
+				if (stat.data > stat.max) {
+					stat.data = stat.max;
 				}
 
 				if (type == "packetloss" && stat.data == 0.0) {
 					stat.data = 0.1;
 				}
+
 
 				var x = width - 1;
 				var y = height - stat.data * yScale;
