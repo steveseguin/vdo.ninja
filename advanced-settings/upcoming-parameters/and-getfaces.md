@@ -7,6 +7,10 @@ description: Will request a continuous stream of face bounding boxes
 Viewer-Side Option! ([`&scene`](../view-parameters/scene.md), [`&room`](../../general-settings/room.md), [`&view`](../view-parameters/view.md),[`&solo`](and-solo.md))\
 \* on [https://vdo.ninja/alpha/](https://vdo.ninja/alpha/)
 
+## Aliases
+
+* `&pushfaces`
+
 ## Details
 
 `&getfaces` on the viewer link will request a continuous stream of face bounding boxes, for all inbound videos and all faces contained within. The data is transmitted to the parent IFRAME, and this data can be used for moving the IFrame window around, if you wish to make your own custom face-tracker or whatever else.
