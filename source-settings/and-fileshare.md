@@ -22,4 +22,4 @@ Supports audio-only files as well as common video formats. Depends on your brows
 The video will be **transcoded for each** connected **guest**!
 {% endhint %}
 
-<figure><img src="../.gitbook/assets/image (5) (1).png" alt=""><figcaption></figcaption></figure>
+<figure><img src="../.gitbook/assets/image (5) (1) (1).png" alt=""><figcaption></figcaption></figure>

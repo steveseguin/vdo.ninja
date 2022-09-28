@@ -8,11 +8,30 @@ I'm working on a fix, but I don't have an ETA. Will update when fixed.
 _\*\*_ UPDATE: I hot-patched beta and alpha with a fix. This fix disables the option to select custom audio output destinations, but resolves the echo issue. If using a self-deployed instance, you can instead add [`&noap`](../general-settings/noaudioprocessing.md) to the URLs to fix it as well; you can also enable `chrome://flags/#chrome-wide-echo-cancellation`, patch the code, or just use headphones.
 {% endhint %}
 
+#### **September 27** <a href="#august-31" id="august-31"></a>
+
+* Updated the 'create reusable link' page a bit; added the option for "generate host link also", which sets things up for a simple two-way interview format.\
+  ![](<../.gitbook/assets/image (1).png>)
+* ``[`&welcomeimage`](../advanced-settings/upcoming-parameters/and-welcomeimage.md) added; this lets you specify a welcome image (URL) that appears for a few seconds before fading away once a guest joins.\
+  ie: `https://vdo.ninja/alpha/?welcomeimage=https://vdo.ninja/alpha/media/old_logo.png&webcam`\
+  ``\
+  ``\*\* on alpha
+
+#### **September 26** <a href="#august-31" id="august-31"></a>
+
+* Updated the screen-share layouts to have a larger screen, relative to the other videos: It now targets an average of around 80% screen real-estate for the main screen share.
+*   Up to 20-videos on screen now are supported in the screen-share view; before after around 12-videos they started to be hidden
+
+    ![](<../.gitbook/assets/image (3).png>)![](../.gitbook/assets/image.png)\
+    ![](<../.gitbook/assets/image (2).png>)![](<../.gitbook/assets/image (4).png>)\
+    \
+    \*\*changes on alpha (vdo.ninja/alpha/) and github
+
 #### **September 23** <a href="#august-31" id="august-31"></a>
 
 * Firefox won't playback stereo audio as stereo by default now; it will require the [`&stereo`](../general-settings/stereo.md)/[`&proaudio`](../advanced-settings/audio-parameters/and-proaudio.md) flag to enable stereo playback. [`&mono`](../advanced-settings/view-parameters/mono.md) also works with Firefox now, allowing you to use `&proaudio&mono` with Firefox. (this was just a quirk of Firefox's default settings vs Chrome that I long needed to address)
 *   **M**ade the little upload arrow in the top-right color coded in response to the detected 'average' upload connection quality; won't be supported by all browsers, but most.\
-    ![](../.gitbook/assets/image.png)
+    ![](<../.gitbook/assets/image (5).png>)
 
     \
     \*\* updated both alpha and beta.
@@ -21,7 +40,7 @@ _\*\*_ UPDATE: I hot-patched beta and alpha with a fix. This fix disables the op
 
 * When using [`&waitimage`](../advanced-settings/newly-added-parameters/and-waitimage.md), the specified 'waiting to connect' image will appear after all connections end. This is a bit different than the default behaviour of the spinner, which doesn't re-appear, but I assume if you're advanced enough to use the `&waitimage` option, you're okay with this.
 *   Added the option to "draw on the screen", which might be a useful tool for niche use cases where you might need to take notes, etc. It doesn't affix to videos themselves, but rather it's just a full-window transparent canvas overlay, You can start/stop/clear and select a couple style-types with this feature, via the settings -> User menu. You can also do `CTRL + ALT + D` to toggle this as needed.\
-    ![](<../.gitbook/assets/image (2).png>)\
+    ![](<../.gitbook/assets/image (2) (1).png>)\
 
 
     \*\* on alpha at vdo.ninja/alpha
@@ -37,7 +56,7 @@ _\*\*_ UPDATE: I hot-patched beta and alpha with a fix. This fix disables the op
   \-- The guest can toggle it on and off in the settings, without needing to go into any advanced audio settings\
   \-- The remote director can still use the existing "channel count' in the advanced audio settings to override this button, unless the guest toggles it back on\
   \-- There's several other ways to set mono mode of course, including [`&monomic`](../advanced-settings/upcoming-parameters/and-monomic.md), [`&inputchannels=1`](../advanced-settings/audio-parameters/and-inputchannels.md), [`&stereo=3`](../general-settings/stereo.md), channelCount, [`&mono`](../advanced-settings/view-parameters/mono.md) (playback), [`&ec&dn&ag`](../guides/audio-filters.md), and within OBS/Windows itself.\
-  ![](<../.gitbook/assets/image (3).png>)![](<../.gitbook/assets/image (1) (1).png>)\
+  ![](<../.gitbook/assets/image (3) (1).png>)![](<../.gitbook/assets/image (1) (1) (1).png>)\
   \
   \*\* updated on to alpha at vdo.ninja/alpha/
 
@@ -61,7 +80,7 @@ _\*\*_ UPDATE: I hot-patched beta and alpha with a fix. This fix disables the op
   ![](<../.gitbook/assets/image (11) (1).png>)
 * ``[`&effects=1`](../source-settings/effects.md) on the sender side (or `&effects=facetracking`) will auto-center the user's face in the center of their video, zooming in as needed. It takes a moment to initiate, but it offers a gentle PTZ-like effect.\
   \-- note: I previously had `&effects=1`, but it wasn't that good, so this is a more polished attempt. It's also available from the effects drop down menu now as a selectable option, as before I was hiding it.\
-  ![](<../.gitbook/assets/image (3) (1).png>)\
+  ![](<../.gitbook/assets/image (3) (1) (1).png>)\
   \-- important note: Both `&getfaces` and `&effects=1` requires the use of the Chromium experimental face detection API, as I'm using the built-in browser face-tracking model for this. You can enable the API flag here: `chrome://flags/#enable-experimental-web-platform-features` My hope is that this feature will eventually be enabled by default within Chromium, as loading a large ML model to do face detection otherwise is a bit heavy; you may need to enable this within the OBS CLI if wishing to use it there?\
   \*\*\* Changes on alpha at vdo.ninja/alpha/
 
@@ -222,7 +241,7 @@ _\*\*_ UPDATE: I hot-patched beta and alpha with a fix. This fix disables the op
 * I've removed the toggle in the director's room for this `&webp` feature, as [`&chunked`](../newly-added-parameters/and-chunked.md) mode is replacing its purpose there, but you might still want to use this mode when the viewer-side does not support video playback or hardware acceleration. Specifically, this option lets you bring motion images (aka, crude video) into the Streamlabs mobile app, as a browser source, where other forms of video decoding is not supported.
 * I've also created a new viewer-side option called [`&slideshow`](../advanced-settings/upcoming-parameters/and-slideshow.md) . This option decodes incoming video (first video to load), but plays them back as series of full-window images. That is, a single image element, that gets updated 24 times a second, instead of playing the video back within an efficient video element. I have no idea why you might want this option, as it pretty crude up and uses up a lot of CPU, but you can right-click to save a single frame from the video to disk, as a PNG file. This might be useful if you need to take a lot of snap shots of some video and don't want to have to hassle with cropping a window-grab. Quality of the images is pretty high; near lossless.\
   \*\* on alpha\
-  ![](<../.gitbook/assets/image (5).png>)
+  ![](<../.gitbook/assets/image (5) (1).png>)
 
 #### July 21
 
@@ -485,7 +504,7 @@ _\*\*_ UPDATE: I hot-patched beta and alpha with a fix. This fix disables the op
 #### May 5
 
 * When using the [`&remote`](../general-settings/remote.md) control option, the viewer can now remotely hang-up the sender via the right-click menu. The sender needs to remote control enabled for this to work of course. \*\* on local dev, coming to beta soon.\
-  ![](<../.gitbook/assets/image (2) (1).png>)
+  ![](<../.gitbook/assets/image (2) (1) (1).png>)
 
 #### May 4
 
@@ -513,7 +532,7 @@ _\*\*_ UPDATE: I hot-patched beta and alpha with a fix. This fix disables the op
 * Added graphs to the director room; one graph for each scene a guest is connected to. If video isn't active/visible, the bitrate should be zero, implying VDO.Ninja has it paused/disabled, but on standby. You can see the graphs via the "scene stats" button. Toggling the button will enable and disable the stats.\
   ![](<../.gitbook/assets/image (165).png>)
 * The graph is color coded; red/yellow implies packet loss, but otherwise green. Currently the graph is capped to like 4-mbps; higher than that isn't display atm.\
-  ![](<../.gitbook/assets/image (1).png>)\
+  ![](<../.gitbook/assets/image (1) (1).png>)\
   \
   \*\* alpha updated. Test it out at [https://vdo.ninja/alpha](https://vdo.ninja/alpha)
 * Fixed a more recent bug in VDO.Ninja where the special [`&sstype=3`](../newly-added-parameters/and-screensharetype.md) screen share mode did not work as solo links; stats for it were not always cleaned up either, so that's fixed too. (on dev)

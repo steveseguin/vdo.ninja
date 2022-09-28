@@ -28,3 +28,9 @@ The message can be URL encoded, to allow for spaces and special characters. You 
 
 You can also activate the welcome message as a director via a new toggle option. When selected, it offers the director an input text prompt and then auto-encodes the message for the director to the guest invite link.\
 ![](<../.gitbook/assets/image (127) (1) (1).png>)
+
+## Related
+
+{% content-ref url="../advanced-settings/upcoming-parameters/and-welcomeimage.md" %}
+[and-welcomeimage.md](../advanced-settings/upcoming-parameters/and-welcomeimage.md)
+{% endcontent-ref %}

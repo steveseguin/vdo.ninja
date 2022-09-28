@@ -22,7 +22,7 @@ The link above would add "_ROOMID2_", "_ROOMID3_", "_ROOMID4_" guest transfer bu
 
 Pressing any of these buttons will arm the transfer buttons beneath each caller with the chosen room name, allowing callers to be quickly moved from one room to another.
 
-![](<../.gitbook/assets/image (4).png>)
+![](<../.gitbook/assets/image (4) (2).png>)
 
 Arming can be disabled by clicking the room name again. If the current room is in the list it will be ignored.
 
