@@ -195,7 +195,7 @@ _\*\*_ UPDATE: I hot-patched beta and alpha with a fix. This fix disables the op
 
 * The API / IFRAME sandbox page for developer using VDO.Ninja got a style update and facelift by @Sam MacKinnon Ty,\
   \* it's on alpha at [https://vdo.ninja/alpha/iframe](https://vdo.ninja/alpha/iframe) and GitHub.\
-  ![](<../.gitbook/assets/image (6).png>)
+  ![](<../.gitbook/assets/image (6) (4).png>)
 
 #### August 5
 
