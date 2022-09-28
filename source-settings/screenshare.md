@@ -21,11 +21,12 @@ Starting with [v19](../release-notes/v19.md) of VDO.Ninja, there is also the [`&
 
 When using the Electron Capture App you have to "Elevate Privileges" to be able to share a window or screen. You can enable Elevated Privileges for the Electron App via the command line with `--node true` or in the app by right-clicking and selecting "Elevate Privileges" from the context-menu.
 
-One unique feature about the [Electron Capture App](https://github.com/steveseguin/electroncapture) is that it can auto-select a screen or window when screen-sharing with VDO.Ninja, without user-input.\
+One unique feature about the [Electron Capture App](../steves-helper-apps/electron-capture.md) is that it can auto-select a screen or window when screen-sharing with VDO.Ninja, without user-input.\
 For example:\
 `&screenshare=1` for the main display\
 `&screenshare=2` for the second display\
-`&screenshare=chrome` for the Chrome Browser
+`&screenshare=discord` for the Discord application\
+`&screenshare=googlechrome` for the Chrome Browser
 
 ## Related
 
