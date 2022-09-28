@@ -22,15 +22,19 @@ Sender-Side Option! ([`&push`](../source-settings/push.md))
 
 ## Details
 
-This parameter can be used to specify which type of screen-sharing logic is used.
+This parameter can be used to specify which type of screen sharing logic is used.
 
 * `screensharetype=1` replaces the webcam screen with the screen share
 * `screensharetype=2` creates a totally new connection for the screen share
-* `screensharetype=3` reuses the existing connection, adding a second video track; also doesn't show the local screen-share window
+* `screensharetype=3` reuses the existing connection, adding a second video track; also doesn't show the local screen share window
 
 I hope to have `screensharetype=3` become the standard for sharing screens eventually, but for now it will remain optional, until the issues are all worked out.
 
-As a viewer or scene link, to specify only loading the `&screensharetype=3` screen-share, you can now use `&view=xxxx:s` , where `:s` is appended to the end of the stream ID. This tells the system to ignore the webcam/mic feed, and just send over the screen share. You can do `&view=xxxx,xxxx:s` to target both webcam and screen share though. I may change this syntax over time, but for now it works. The solo-links in the director's room has this `:s` applied already where needed.
+As a viewer or scene link, to specify only loading the `&screensharetype=3` screen share, you can now use `&view=xxxx:s`, where `:s` is appended to the end of the stream ID. This tells the system to ignore the webcam/mic feed, and just send over the screen share. You can do `&view=xxxx,xxxx:s` to target both webcam and screen share though. I may change this syntax over time, but for now it works. The solo-links in the director's room has this `:s` applied already where needed.
+
+{% hint style="info" %}
+If using `&screensharetype=3` the parameter [`&screenshareid`](../source-settings/screenshareid.md) doesn't do anything.
+{% endhint %}
 
 {% hint style="warning" %}
 The type-3 screen share is still not fully cooked for use in scenes, etc, and it won't yet \

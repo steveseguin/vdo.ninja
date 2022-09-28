@@ -33,6 +33,10 @@ Without this, the screen share ID is random, which is a decision made to increas
 There is a toggle in the director's room which adds `&ssid` to the guest's invite link.\
 ![](<../.gitbook/assets/image (117) (2).png>)
 
+{% hint style="info" %}
+`&screenshareid` doesn't work with [`&screensharetype=3`](../newly-added-parameters/and-screensharetype.md). When using `&screensharetype=3` the screen share gets the appendix `:s` added to the stream ID of the guest.
+{% endhint %}
+
 ## Related
 
 {% content-ref url="screenshare.md" %}
