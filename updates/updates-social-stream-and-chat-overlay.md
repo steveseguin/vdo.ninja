@@ -3,6 +3,10 @@
 [social-stream.md](../steves-helper-apps/social-stream.md "mention")\
 [chat-overlay.md](../steves-helper-apps/chat-overlay.md "mention")
 
+#### **September 30**
+
+* Glimesh.tv support added to Socialstream
+
 #### **September 18**
 
 * The WSS/HTTPS APi for Socialstream has have had a few new commands added: next-in-queue, clear-featured-overlay, and an event that alerts the user to the size of the queue.\
