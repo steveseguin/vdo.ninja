@@ -57,7 +57,7 @@
 		<meta property="twitter:image" content="./media/vdoNinja_logo_full.png" />
 		<meta name="msapplication-TileColor" content="#da532c" />
 		<meta name="theme-color" content="#ffffff" />
-		<link rel="stylesheet" href="./main.css?ver=209" />
+		<link rel="stylesheet" href="./main.css?ver=213" />
 		<script type="text/javascript" crossorigin="anonymous" src="./thirdparty/adapter.min.js"></script>
 		<style id="lightbox-animations" type="text/css"></style>
 		<!-- <link rel="manifest" href="manifest.json" /> -->
@@ -82,7 +82,7 @@
 			<link itemprop="url" href="./media/vdoNinja_logo_full.png" />
 		</span>
 		<script  type="text/javascript" crossorigin="anonymous"  src="./thirdparty/CodecsHandler.js?ver=37"></script>
-		<script  type="text/javascript" crossorigin="anonymous" src="./webrtc.js?ver=520"></script>
+		<script  type="text/javascript" crossorigin="anonymous" src="./webrtc.js?ver=521"></script>
 		<input id="zoomSlider" type="range" style="display: none;" />
 		<span id="electronDragZone" style="pointer-events: none; z-index:-10; position:absolute;top:0;left:0;width:100%;height:2%;-webkit-app-region: drag;min-height:20px;"></span>
 		<div id="header">
@@ -628,7 +628,7 @@
 					<div style="margin: 20px; max-width: 400px; text-align: left; margin: auto auto;">
 						<div class="invite_setting_group">
 							<h4>
-								<span data-translate="advanced-paramaters">Advanced Options</span>
+								<span data-translate="quality-paramaters">Quality settings</span>
 							</h4>
 							<div class="invite_setting_item">
 								<input type="checkbox" id="invite_bitrate" />
@@ -649,16 +649,19 @@
 								</label>
 							</div>
 							<div class="invite_setting_item">
-								<label for="invite_quality" data-translate="video-resolution">Video resolution: </label>
+								<label for="invite_quality" data-translate="video-resolution">Target video resolution: </label>
 								<select id="invite_quality" name="invite_quality">
 									<option value="-1" selected>User selectable</option>
-									<option value="0">Maximum resolution</option>
-									<option value="1">Balanced</option>
-									<option value="2">Smooth and cool</option>
+									<option value="0">1080p (high-quality)</option>
+									<option value="1">720p (balanced)</option>
+									<option value="2">360p (older computers)</option>
 								</select>
 							</div>
 						</div>
 						<div class="invite_setting_group">
+							<h4>
+								<span data-translate="general-paramaters">User options</span>
+							</h4>
 							<div class="invite_setting_item">
 								<input type="checkbox" id="invite_effects" />
 								<label for="invite_effects">
@@ -678,12 +681,6 @@
 								</label>
 							</div>
 							<div class="invite_setting_item">
-								<input type="checkbox" id="invite_remotecontrol" />
-								<label for="invite_remotecontrol">
-									<span data-translate="allow-remote-control" title="Hold CTRL and the mouse wheel to zoom in and out remotely of compatible video streams">Remote control of zoom (android)</span>
-								</label>
-							</div>
-							<div class="invite_setting_item">
 								<input type="checkbox" id="invite_obfuscate" />
 								<label for="invite_obfuscate">
 									<span data-translate="obfuscate_url" title="Encode the URL so that it's harder for a guest to modify the settings.">Obfuscate the invite URL</span>
@@ -692,6 +689,17 @@
 							<div class="invite_setting_item">
 								<span data-translate="add-a-password-to-stream" title="Add a password to make the stream inaccessible to those without the password"> Add a password:</span>
 								<input type="text" autocorrect="off" autocapitalize="none" id="invite_password" placeholder="Add an optional password" />
+							</div>
+						</div>
+						<div class="invite_setting_group">
+							<h4>
+								<span data-translate="interview-paramaters">Two-way chat</span>
+							</h4>
+							<div class="invite_setting_item">
+								<input type="checkbox" id="invite_hostlink" />
+								<label for="invite_hostlink">
+									<span data-translate="generate-host-link" title="Generate host link to chat with guest; 2-way interview chat.">Generate host link also</span>
+								</label>
 							</div>
 							<div class="invite_setting_item">
 								<span data-translate="add-the-guest-to-a-room" title="Add the guest to a group-chat room; it will be created automatically if needed."> Add the guest to a room:</span>
@@ -709,8 +717,8 @@
 							</div>
 						</div>
 						<div>See the 
-							<a style="text-decoration: none; color: blue;" target="_blank" href="https://docs.vdo.ninja/advanced-settings">documentation</a> for more options and info.<br /><br />
-							Try out the advanced <a style="text-decoration: none; color: blue;" target="_blank" href="https://invite.vdo.ninja/">invite generator</a> here also.
+							<a style="text-decoration: none; color: blue;" target="_blank" href="https://docs.vdo.ninja/advanced-settings">documentation</a> for a list of all options and details.<br /><br />
+							Try out the advanced <a style="text-decoration: none; color: blue;" target="_blank" href="https://invite.vdo.ninja/">invite generator</a> here as well.
 						</div>
 					</div>
 				</div>
@@ -1250,7 +1258,7 @@
 							  <span class="slider"></span>
 							</label>
 							<font class="tooltip" style='cursor: help;position:relative;bottom:2px;font-family:"Noto Color Emoji", "Apple Color Emoji", "Segoe UI Emoji", Times, Symbola, Aegyptus, Code2000, Code2001, Code2002, Musica, serif, LastResort;'>⚠<span class="tooltiptext">This can cause video playback to lag</span></font>
-							<span data-translate="unlock-video-bitrate">unlock Video Bitrate</span>
+							<span data-translate="unlock-video-bitrate">Unlock video bitrate</span>
 							<br />
 							
 							<label class="switch" title="Disable fit-to-window optmized video scaling for added sharpness; increases CPU / Network load though.">
@@ -1777,7 +1785,7 @@
 					<input type="text" id="pptHotKey"  placeholder="press a key here" style="padding-left: 7px;" onkeypress="event.preventDefault;event.stopPropagation();return false;" onkeyup="event.preventDefault;event.stopPropagation();return false;" onkeydown="setHotKey();"/>
 					<button onclick="setHotKey(false);" style="margin: 0 0 0 4px; border-radius: 5px; padding: 3px 3px;">Clear</button>
 					<br /><br />
-					<label title="Enable Draw on Screen">Enable Draw-on-Screen</label>
+					<label title="Draw on the Screen">Draw-on-Screen</label>
 					<button id='startDrawScreen' title="CTRL (cmd) + ALT + D to toggle" onclick="drawOnScreen();" style="margin: 0 0 0 4px; border-radius: 5px; padding: 3px 3px;">Enable</button>
 					<button class='hidden drawActive' onclick="drawOnScreenObject.erase();" style="margin: 0 0 0 4px; border-radius: 5px; padding: 3px 3px;">Clear</button>
 					<button class='hidden drawActive' onclick="drawOnScreenObject.stop();" style="margin: 0 0 0 4px; border-radius: 5px; padding: 3px 3px;" title="CTRL (cmd) + ALT + D to toggle" >Stop</button>
@@ -2258,11 +2266,11 @@
 			// session.defaultBackgroundImages = ["./media/bg_sample1.webp", "./media/bg_sample2.webp"]; // for &effects=5 (virtual backgrounds)
 		</script>
 		<script type="text/javascript" crossorigin="anonymous" src="./thirdparty/aes.js"></script>
-		<script type="text/javascript" crossorigin="anonymous" id="lib-js" src="./lib.js?ver=478"></script>
+		<script type="text/javascript" crossorigin="anonymous" id="lib-js" src="./lib.js?ver=483"></script>
 		<!-- 
 		// If you wish to change branding, blank offers a good clean start.
 		<script type="text/javascript" id="main-js" src="./main.js" data-translation="blank"></script>
 		-->
-		<script type="text/javascript" crossorigin="anonymous" id="main-js" src="./main.js?ver=442"></script>
+		<script type="text/javascript" crossorigin="anonymous" id="main-js" src="./main.js?ver=445"></script>
 	</body>
 </html>

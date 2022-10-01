@@ -1344,6 +1344,13 @@ body {
 .mainmenuclass {
 	display: inherit;
 }
+#welcomeImage{
+	object-fit:cover;
+	width:100%;
+	height:100%;
+	display:block;
+	z-index:10;
+}
 
 .infoblob {
 	color: white;

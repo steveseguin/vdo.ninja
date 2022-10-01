@@ -9170,8 +9170,6 @@ function updateLocalStats(){
 		uploadQuality = "title='Severe connection issues' style='color: transparent; text-shadow: 0 0 0 #F00;'";
 	} 
 	
-	console.log("upq "+uploadQuality);
-	
 	if (Firefox && (totalBitrate===0 && totalBitrate2===0)){
 		// does not support the current stats system
 	} else if (totalBitrate > totalBitrate2){
@@ -19303,11 +19301,27 @@ session.publishStream = function(v){ //  stream is used to generated an SDP
 	
 }; // publishStream
 
-session.postPublish = function(){
+session.postPublish = async function(){
 	log("Post publish");
 	if (session.welcomeMessage){
 		getChatMessage(session.welcomeMessage, false, true, true);
 	}
+	
+	if (session.welcomeImage){
+		var welcomeoverlay = document.createElement("img");
+		welcomeoverlay.src = session.welcomeImage;
+		welcomeoverlay.className = "fadein";
+		welcomeoverlay.id = "welcomeImage";
+		document.body.appendChild(welcomeoverlay);
+		await sleep(2000);
+		setTimeout(function(welcomeoverlay){
+			welcomeoverlay.style = "animation: fadeout 1s;"
+			setTimeout(function(welcomeoverlay){
+				welcomeoverlay.remove();
+			},990,welcomeoverlay);
+		}, 1000, welcomeoverlay);
+	}
+	
 	clearInterval(session.updateLocalStatsInterval);
 	session.updateLocalStatsInterval = setInterval(function(){updateLocalStats();},session.statsInterval);	
 	
@@ -24540,7 +24554,7 @@ function generateQRPageCallback(hash) {
 		}
 
 		if (getById("invite_joinroom").value.trim().length) {
-			sendstr += "&room=" + getById("invite_joinroom").value.trim();
+			sendstr += "&ssid&room=" + getById("invite_joinroom").value.trim();
 			viewstr += "&solo&room=" + getById("invite_joinroom").value.trim();
 		}
 
@@ -24548,8 +24562,7 @@ function generateQRPageCallback(hash) {
 			sendstr += "&hash=" + hash;
 			viewstr += "&password=" + sanitizePassword(getById("invite_password").value.trim());
 		}
-
-
+		
 		if (getById("invite_group_chat_type").value) { //  0 is default
 			if (getById("invite_group_chat_type").value == 1) { // no video
 				sendstr += "&novideo";
@@ -24569,15 +24582,22 @@ function generateQRPageCallback(hash) {
 		}
 		
 		var wss = "";
-	if (session.customWSS){
-		if (session.customWSS!==true){
-			wss = "&pie="+session.customWSS;
-		} else {
-			wss = "&wss="+session.wss;
+		
+		if (session.customWSS){
+			if (session.customWSS!==true){
+				wss = "&pie="+session.customWSS;
+			} else {
+				wss = "&wss="+session.wss;
+			}
 		}
-	}
-
-		sendstr = 'https://' + location.host + location.pathname + '?push=' + sid + sendstr + title + wss;
+		
+		var hoststr = "";
+		if (getById("invite_hostlink").checked) {
+			hoststr = 'https://' + location.host + location.pathname + '?push=' + sid + "_hostlink" + "&view="+ sid + sendstr + "&bitrate=500" + title + wss;
+			sendstr = 'https://' + location.host + location.pathname + '?push=' + sid + "&view="+sid + "_hostlink" + sendstr + "&bitrate=1200" + title + wss;
+		} else {
+			sendstr = 'https://' + location.host + location.pathname + '?push=' + sid + sendstr + title + wss;
+		}
 
 		if (getById("invite_obfuscate").checked) {
 			sendstr = obfuscateURL(sendstr);
@@ -24587,14 +24607,28 @@ function generateQRPageCallback(hash) {
 		getById("gencontent").style.display = "none";
 		getById("gencontent").className = ""; //
 		getById("gencontent2").style.display = "block";
-		getById("gencontent2").className = "container-inner"; //
+		getById("gencontent2").className = "container-inner"; 
+		
 		getById("gencontent2").innerHTML = '<br /><div id="qrcode" style="background-color:white;display:inline-block;color:black;max-width:380px;padding:35px 40px 40px 40px;">\
-		<h2 style="margin:0 0 8px 0;color:black"  data-translate="invite-link">Guest Invite Link:</h2>\
-		<a class="task grabLinks" title="Click to copy guest invite link to clipboard" onclick="copyFunction(this,event)"   \
-		style="word-break: break-all;cursor:copy;background-color:#CFC;border: 2px solid black;width:300px;padding:8px;margin:0px;color:#000;"  href="' + sendstr + '" >' + sendstr + ' <i class="las la-paperclip" style="cursor:pointer"></i></a><br /><br /></div>\
-			<br /><br />and don\'t forget the<h2 style="color:black">OBS Browser Source Link:</h2><a class="task grabLinks" title="Click to copy or just Drag the link directly into OBS" data-drag="1"  onclick="copyFunction(this,event)"  style="word-break: break-all;margin:0px;cursor:grab;background-color:#FCC;width:380px;padding:10px;border:2px solid black;margin:5px;color:#000;" href="' + viewstr + '" >' + viewstr + ' <i class="las la-paperclip" style="cursor:pointer"></i></a> \
-			<br /><br />\
-		<span data-translate="please-note-invite-ingestion-link">This invite link and OBS ingestion link are reusable. Only one person may use a specific invite at a time.</span><br /><br /><button onclick="resetGen();" style="font-size:1.2em;paddding:5px;"><i class="las la-redo-alt"></i> Create Another Invite Link</button>';
+			<h2 style="margin:0 0 8px 0;color:black"  data-translate="invite-link">Guest Invite Link:</h2>\
+			<a class="task grabLinks" title="Click to copy guest invite link to clipboard" onclick="copyFunction(this,event)"   \
+			style="word-break: break-all;cursor:copy;background-color:#CFC;border: 2px solid black;width:300px;padding:8px;margin:0px;color:#000;"  href="' + sendstr + '" >' + sendstr + ' <i class="las la-paperclip" style="cursor:pointer"></i></a><br /><br /></div>\
+			<br /><br />and don\'t forget the<h2 style="color:black">OBS Browser Source Link:</h2><a class="task grabLinks" title="Click to copy or just Drag the link directly into OBS" data-drag="1" onclick="copyFunction(this,event)"  style="word-break: break-all;margin:0px;cursor:grab;background-color:#FCC;width:380px;padding:10px;border:2px solid black;margin:5px;color:#000;" href="' + viewstr + '" >' + viewstr + ' <i class="las la-paperclip" style="cursor:pointer"></i></a> \
+			';
+			
+		if (hoststr){
+			getById("gencontent2").innerHTML += '<br /><br /><h2 style="color:black">Host Chat Link:</h2><a class="task" title="Click to copy"  onclick="copyFunction(this,event)"  style="font-weight: bold;display: inline-flex;word-break: break-all;margin:0px;cursor:grab;background-color:#cce1ff;width:380px;padding:10px;border:2px solid black;margin:5px;color:#000;" href="' + hoststr + '" >' + hoststr + ' <i class="las la-paperclip" style="cursor:pointer"></i></a>';
+		}			
+		
+		getById("gencontent2").innerHTML += '<br /><br />\
+			<span data-translate="please-note-invite-ingestion-link">\
+				<li>This invite link and OBS ingestion link are reusable.</li>\
+				<li>Only one person may use a specific invite at a time.</li>\
+				<li>The stream ID can be changed manually to something else; keep it unique and alphanumeric.</li>\
+				<li>Nothing is stored server-side; links do not expire, nor is there anything to delete.</li>\
+			</span><br /><br />\
+			<button onclick="resetGen();" style="font-size:1.2em;paddding:5px;"><i class="las la-redo-alt"></i> Create Another Invite Link</button>';
+			
 		var qrcode = new QRCode(getById("qrcode"), {
 			width: 300
 			, height: 300
@@ -28046,21 +28080,39 @@ function targetGuest(target, action, value=null){
 			directMigrate(element, true, value); // if value is set, it will auto transfer the guest to that room. 
 		}
 	} else if ((action == 1) || (action == "addScene")) {
-		if (value == "null" || value == null){
-			value = 1;
+		var scene = 1;
+		if (value == "null" || value == null || value == "toggle"){
+			scene = 1;
+		} else if ((value !== true) && (value !== false)){
+			scene = value;
 		}
-		var element = getGuestTargetScene(value, target); // oscid/action/target/value   1/1/scene
+		var element = getGuestTargetScene(scene, target); // oscid/action/target/value   1/1/scene
 		if (element) {
+			if (value===true){
+				element.value = 1;
+			} else if (value===false){
+				element.value = 0;
+			}
 			return directEnable(element, true); // false or true return
 		}
 	} else if ((action == 2) || (action == "muteScene")) {
 		var element = getGuestTarget("mute-scene", target);
 		if (element) {
+			if (value===true){
+				element.value = 1;
+			} else if (value===false){
+				element.value = 0;
+			}
 			return directMute(element, true); // false/true
 		}
 	} else if ((action == 3) || (action == "mic")) { 
 		var element = getGuestTarget("mute-guest", target);
 		if (element) {
+			if (value===true){
+				element.value = 1;
+			} else if (value===false){
+				element.value = 0;
+			}
 			return remoteMute(element, true); // false/true
 		}
 	}  else if ((action == 4) || (action == "hangup")) { 
@@ -28071,16 +28123,31 @@ function targetGuest(target, action, value=null){
 	} else if ((action == 5) || (action == "soloChat")) {  // see soloChatBidirectional action=9 for two-way
 		var element = getGuestTarget("solo-chat", target);
 		if (element) {
+			if (value===true){
+				element.value = 1;
+			} else if (value===false){
+				element.value = 0;
+			}
 			return session.toggleSoloChat(element.dataset.UUID);
 		}
 	} else if ((action == 6) || (action == "speaker")) {
-		var element = getGuestTarget("toggle-remote-speaker", target);
+		var element = getGuestTarget("toggle-remote-speaker", target); 
 		if (element) {
+			if (value===true){
+				element.value = 1;
+			} else if (value===false){
+				element.value = 0;
+			}
 			return remoteSpeakerMute(element); 
 		}
 	} else if ((action == 7) || (action == "display")) {
 		var element = getGuestTarget("toggle-remote-display", target);
 		if (element) {
+			if (value===true){
+				element.value = 1;
+			} else if (value===false){
+				element.value = 0;
+			}
 			return remoteDisplayMute(element);
 		}
 	} else if ((action == 8) || (action == "group")) {
@@ -28096,41 +28163,81 @@ function targetGuest(target, action, value=null){
 		if (element) {
 			var ctrl = {};
 			ctrl.ctrlKey = true;
+			if (value===true){
+				element.value = 1;
+			} else if (value===false){
+				element.value = 0;
+			}
 			return session.toggleSoloChat(element.dataset.UUID, ctrl);
 		}
 	} else if ((action == 12) || (action == "addScene2")) { 
 		var element = getGuestTargetScene(2, target);
 		if (element) {
+			if (value===true){
+				element.value = 1;
+			} else if (value===false){
+				element.value = 0;
+			}
 			return directEnable(element, true)
 		}
 	} else if ((action == 13) || (action == "addScene3")) { 
 		var element = getGuestTargetScene(3, target);
 		if (element) {
+			if (value===true){
+				element.value = 1;
+			} else if (value===false){
+				element.value = 0;
+			}
 			return directEnable(element, true)
 		}
 	} else if ((action == 14) || (action == "addScene4")) { 
 		var element = getGuestTargetScene(4, target);
 		if (element) {
+			if (value===true){
+				element.value = 1;
+			} else if (value===false){
+				element.value = 0;
+			}
 			return directEnable(element, true)
 		}
 	} else if ((action == 15) || (action == "addScene5")) { 
 		var element = getGuestTargetScene(5, target);
 		if (element) {
+			if (value===true){
+				element.value = 1;
+			} else if (value===false){
+				element.value = 0;
+			}
 			return directEnable(element, true)
 		}
 	} else if ((action == 16) || (action == "addScene6")) {
 		var element = getGuestTargetScene(6, target);
 		if (element) {
+			if (value===true){
+				element.value = 1;
+			} else if (value===false){
+				element.value = 0;
+			}
 			return directEnable(element, true)
 		}
 	} else if ((action == 17) || (action == "addScene7")) {
 		var element = getGuestTargetScene(7, target);
 		if (element) {
+			if (value===true){
+				element.value = 1;
+			} else if (value===false){
+				element.value = 0;
+			}
 			return directEnable(element, true)
 		}
 	} else if ((action == 18) || (action == "addScene8")) {
 		var element = getGuestTargetScene(8, target);
 		if (element) {
+			if (value===true){
+				element.value = 1;
+			} else if (value===false){
+				element.value = 0;
+			}
 			return directEnable(element, true)
 		}
 	} else if ((action == 19) || (action == "forceKeyframe")) {
@@ -28141,6 +28248,11 @@ function targetGuest(target, action, value=null){
 	} else if ((action == 20) || (action == "soloVideo")) {
 		var element = getGuestTarget("solo-video", target);
 		if (element) {
+			if (value===true){
+				element.value = 1;
+			} else if (value===false){
+				element.value = 0;
+			}
 			return requestInfocus(element);
 		}
 	} else if ((action == 21) || (action == "sendChat")) {
