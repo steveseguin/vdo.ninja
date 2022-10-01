@@ -7,17 +7,14 @@ Update: I also have created a video guide on how to output from OBS to VDO.Ninja
 #### Requirements
 
 * OBS Studio (goes for both local and remote systems)
-* OBS VirtualCam
-* Built into the PC version of OBS already
-* There is a Mac version also, if not yet available for mac natively:
-* [https://github.com/johnboiles/obs-mac-virtualcam](https://www.google.com/url?q=https://github.com/johnboiles/obs-mac-virtualcam\&sa=D\&source=editors\&ust=1658835550127477\&usg=AOvVaw2v9rmYwIDIrxC3iq05yI5p)
-* Virtual Audio Cable Software               &#x20;
-* For Windows, use VB-CABLE Virtual Audio
-* This is recommended software as it enables proper audio support
-* The software is Donationware
-* [https://www.vb-audio.com/cable/](https://www.google.com/url?q=https://www.vb-audio.com/Cable/\&sa=D\&source=editors\&ust=1658835550127888\&usg=AOvVaw1mgCACykvK7pkvmteZz-Mj)
-* For macOS, you have a few choices:
-* &#x20;[https://github.com/steveseguin/obsninja/wiki/FAQ#how-to-capture-audio-on-mac](https://www.google.com/url?q=https://github.com/steveseguin/obsninja/wiki/FAQ%23how-to-capture-audio-on-mac\&sa=D\&source=editors\&ust=1658835550128112\&usg=AOvVaw07GMfUuAZJy6FI8EYhOdd1)
+  * OBS Virtual Camera should be included with OBS
+* A virtual audio cable&#x20;
+  * For Windows, use VB-CABLE Virtual Audio
+    * This is recommended software as it enables proper audio support
+    * The software is Donationware
+    * [https://www.vb-audio.com/cable/](https://www.google.com/url?q=https://www.vb-audio.com/Cable/\&sa=D\&source=editors\&ust=1658835550127888\&usg=AOvVaw1mgCACykvK7pkvmteZz-Mj)
+  * For macOS, you have a few choices:
+    * &#x20;[https://github.com/steveseguin/obsninja/wiki/FAQ#how-to-capture-audio-on-mac](https://www.google.com/url?q=https://github.com/steveseguin/obsninja/wiki/FAQ%23how-to-capture-audio-on-mac\&sa=D\&source=editors\&ust=1658835550128112\&usg=AOvVaw07GMfUuAZJy6FI8EYhOdd1)
 
 #### Basic Workflow Diagram
 
