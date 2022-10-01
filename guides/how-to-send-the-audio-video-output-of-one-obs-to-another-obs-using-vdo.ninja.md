@@ -7,7 +7,7 @@ Update: I also have created a video guide on how to output from OBS to VDO.Ninja
 #### Requirements
 
 * OBS Studio (goes for both local and remote systems)
-  * OBS Virtual Camera should be included with OBS
+  * For some Linux or older systems, you may need a virtual camera plugin as well
 * A virtual audio cable&#x20;
   * For Windows, use VB-CABLE Virtual Audio
     * This is recommended software as it enables proper audio support
@@ -42,7 +42,7 @@ On the computer that will be using Zoom or Google Hangouts to broadcast, please 
 
 We now need to create a virtual webcam so we can connect OBS to VDO.Ninja. If we followed the initial software setup of Step 0 correctly, this should be all smooth sailing.
 
-Just press START VIRTUAL CAM in OBS v26 or see the install instructions for macOS Virtualcam.
+Just press START VIRTUAL CAM in OBS v26 or newer
 
 #### Step 2
 
@@ -60,7 +60,9 @@ In our last configuration step, we want to go into the Advanced Audio Properties
 
 #### Step 4
 
-We’re ready to now create our VDO.Ninja stream.  There are many ways to do this, but the EASIEST way is to go to VDO.Ninja, click Add your Camera to OBS, and select from the options OBS Virtualcam.  This option will set you up with the default settings, such as with audio echo-cancellation on, although you can use URL parameters when visiting VDO.Ninja to customize the settings more.
+We’re ready to now create our VDO.Ninja stream. &#x20;
+
+There are many ways to do this, but the EASIEST way is to go to VDO.Ninja, click Add your Camera to OBS, and select from the options OBS Virtualcam.  This option will set you up with the default settings, such as with audio echo-cancellation on, although you can use URL parameters when visiting VDO.Ninja to customize the settings more.
 
 {% hint style="info" %}
 A popular advanced URL option at this point might be with the stereo flag, so visit [https://vdo.ninja/?stereo](https://www.google.com/url?q=https://obs.ninja/?stereo\&sa=D\&source=editors\&ust=1658835550131077\&usg=AOvVaw3TvstSvtK37tviTW4G\_ywm) instead of just [https://vdo.ninja](https://www.google.com/url?q=https://obs.ninja\&sa=D\&source=editors\&ust=1658835550131141\&usg=AOvVaw09hXp6SUUDSI\_BU4qhxA9-).  You can also set your own custom stream ID values, so [https://vdo.ninja/?push=myCustomStreamId123](https://www.google.com/url?q=https://obs.ninja/?push%3DmyCustomStreamId123\&sa=D\&source=editors\&ust=1658835550131223\&usg=AOvVaw0E0onBS8nFQP4unVBbsZEw)  , and then give your remote OBS user the link [https://vdo.ninja/?view=myCustomStreamId123](https://www.google.com/url?q=https://obs.ninja/?view%3DmyCustomStreamId123\&sa=D\&source=editors\&ust=1658835550131306\&usg=AOvVaw2Eg\_uxriWbU9YgmonoRNxa) ![](https://lh3.googleusercontent.com/NuZ8o9ot8Uqcm2SsCSP-X11N4aPkcHYaV0enXMsDdgYdfddXsKbt320HHWM-eK-WjDzxxeXEMx75idJnJKmpxIxnC9DcMeyZ2sy35i6gka2lSGn\_mdsURHGmK3jMNSK\_I3b9C\_1Ck5IEZrU)
@@ -68,19 +70,27 @@ A popular advanced URL option at this point might be with the stereo flag, so vi
 
 #### Step 5
 
-You can select the Virtual Audio Cable from the audio choices, or instead, you can select your local microphone or multiple audio input sources.  VDO.Ninja will auto-mix if more than one option is selected. Hold CTRL (or command) to select more than one option.
+You can select the Virtual Audio Cable from the audio choices, or instead, you can select your local microphone or multiple audio input sources.
+
+VDO.Ninja will auto-mix if more than one option is selected. Hold CTRL (or command) to select more than one option.
 
 ![](https://lh4.googleusercontent.com/IK0U5Drf61V28WYGWLPrxN2gjRan-tX\_NNHdZV3xcKSoFwzuzPZl1nNuTlPyWxcrh0kM7rDJAO4WPGG6HUbhO8Fhh3zwdP5JRKLlJCXZmN5bn-flY175uD4IOCx3Q4RnhcyLoRmrdGuP5Dc)
 
 #### Step 6
 
-Press the green button when ready. You’ll see a preview of your video stream and a link.  This link is what we want to send to our remote OBS studio as an input source.  We can modify this link if we wish to have higher bitrates, for example, [https://vdo.ninja/?view=xxxxx\&videobitrate=20000](https://vdo.ninja/?view=xxxxx\&videobitrate=20000) to set a target video bitrate of 20-mbps.
+Press the green button when ready.
+
+You’ll see a preview of your video stream and a link.  This link is what we want to send to our remote OBS studio as an input source.&#x20;
+
+We can modify this link if we wish to have higher bitrates, for example, [https://vdo.ninja/?view=xxxxx\&videobitrate=20000](https://vdo.ninja/?view=xxxxx\&videobitrate=20000) to set a target video bitrate of 20-mbps.
 
 ![](https://lh5.googleusercontent.com/y4-K-FYPET5a-TEswgl\_FE-2IU5oSIMXH9o2lyjydhNZAqdIvussPvXS19BUmW2lte8fxDfw8dMyt5JT9H8TslLhNJfO5KTJB4xmsHbwSU7Ofq5xP2NU7fuxlPsZkgT82P6T1JxV5MzXdrM)
 
 #### Step 7
 
-We send this VDO.Ninja view URL to our remote OBS Studio computer and now we use it to ingest the feed into the OBS there. To do this, we create a scene and then a Browser Source in OBS. Give it a name and we will fill out the details in the next step.
+We send this VDO.Ninja view URL to our remote OBS Studio computer and now we use it to ingest the feed into the OBS there.
+
+To do this, we create a scene and then a Browser Source in OBS. Give it a name and we will fill out the details in the next step.
 
 ![](https://lh3.googleusercontent.com/-FvXnmuJ3YnuARZCWSh7HvXCjypC3\_aUrynSj\_7\_w7s4aeC\_67qGK5GfResjT91ol1D3wftGZrMwjtF1jVEtruVs0JA1GwUMGzip44NC2CuiE3G3T7a\_M\_udNYt4yJnfOk42JiRwzTj34c8)\
 
@@ -92,11 +102,11 @@ In the properties for the Browser Source, we need to fill out a few fields and t
 * The URL needs to be set to the address we created earlier,  ie: [https://vdo.ninja/?view=q3QCScW](https://vdo.ninja/?view=q3QCScW)
 * Width needs to match the input video resolution, so likely 1280
 * The height also needs to match, so likely 720
-* Control audio via OBS should be checked (older versions of OBS lack this option)
+* _**Control audio via OBS**_ should be checked, for audio capture to function&#x20;
 
 ![](https://lh6.googleusercontent.com/72c\_PKWSl2peJ3L8cGnBqZcl9YAv9xvFfgzp3PXjsSpRPq0k1Ahbka3XKO27LK3DMglV0WP8APNYPdjCumRTUiJw\_V19CvWFcIKRH-Hi218IwWLGsssFSxHmRiOXBfTU44HSHf2P1hyKe3s)
 
-SECRET TIP: Some links on VDO.Ninja can be dragged and dropped directly into OBS, avoiding the tedious parts of this step. Requires OBS v25 or newer and links need to be dragged directly from VDO.Ninja.
+SECRET TIP: Some links on VDO.Ninja can be dragged and dropped directly into OBS, avoiding the tedious parts of this step.
 
 #### Step 9
 
@@ -108,8 +118,6 @@ Now we just need to stretch the video to fill the full scene. It should snap int
 
 All done! And that should be it! Problems?
 
-\
-In this following document I show how you can use Stageten.tv instead of VDO.Ninja as an input or output of OBS, which may be an option if a user is on macOS, as OBS on macOS isn’t friendly.\
-[https://docs.google.com/document/d/e/2PACX-1vSRnMkWjuFusYuRBPHBeIHtAhLHK3cH9iuUq9DH9-AVITdxZh4Z3Bj9r4L5qMkzr9aZnydBh\_qX2g96/pub](https://docs.google.com/document/d/e/2PACX-1vSRnMkWjuFusYuRBPHBeIHtAhLHK3cH9iuUq9DH9-AVITdxZh4Z3Bj9r4L5qMkzr9aZnydBh\_qX2g96/pub)
+
 
 You can also ask for help on [Discord](https://discord.vdo.ninja/); usually help can be provided within minutes, if not usually within half a day.
