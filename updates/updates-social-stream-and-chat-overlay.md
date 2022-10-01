@@ -3,6 +3,11 @@
 [social-stream.md](../steves-helper-apps/social-stream.md "mention")\
 [chat-overlay.md](../steves-helper-apps/chat-overlay.md "mention")
 
+#### **October 1**
+
+* **F**ixed an issue re: settings not saving in socialstream
+* Added `&hidebots` as a toggle option to Socialstream, which hides messages from bots, hosts, or specified names from appearing in the chat stream.
+
 #### **September 30**
 
 * Glimesh.tv support added to Socialstream
