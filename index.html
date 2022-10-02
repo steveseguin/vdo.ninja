@@ -57,7 +57,7 @@
 		<meta property="twitter:image" content="./media/vdoNinja_logo_full.png" />
 		<meta name="msapplication-TileColor" content="#da532c" />
 		<meta name="theme-color" content="#ffffff" />
-		<link rel="stylesheet" href="./main.css?ver=190" />
+		<link rel="stylesheet" href="./main.css?ver=213" />
 		<script type="text/javascript" crossorigin="anonymous" src="./thirdparty/adapter.min.js"></script>
 		<style id="lightbox-animations" type="text/css"></style>
 		<!-- <link rel="manifest" href="manifest.json" /> -->
@@ -82,7 +82,7 @@
 			<link itemprop="url" href="./media/vdoNinja_logo_full.png" />
 		</span>
 		<script  type="text/javascript" crossorigin="anonymous"  src="./thirdparty/CodecsHandler.js?ver=37"></script>
-		<script  type="text/javascript" crossorigin="anonymous" src="./webrtc.js?ver=515"></script>
+		<script  type="text/javascript" crossorigin="anonymous" src="./webrtc.js?ver=521"></script>
 		<input id="zoomSlider" type="range" style="display: none;" />
 		<span id="electronDragZone" style="pointer-events: none; z-index:-10; position:absolute;top:0;left:0;width:100%;height:2%;-webkit-app-region: drag;min-height:20px;"></span>
 		<div id="header">
@@ -163,7 +163,7 @@
 				<div id="screensharebutton" onmousedown="event.preventDefault(); event.stopPropagation();"  title="Share a Screen with others" alt="Share a Screen with others" onclick="screenshareTypeDecider(1)" tabindex="20" role="button" aria-pressed="false" onkeyup="enterPressedClick(event,this);"  class="float hidden task" data-menu="context-menu-screen-share" style="cursor: pointer;">
 					<i id="screensharetoggle" onmousedown="event.preventDefault(); event.stopPropagation();"  class="toggleSize las la-desktop my-float"></i>
 				</div>
-				<div id="screenshare2button" onmousedown="event.preventDefault(); event.stopPropagation();"  title="Create a Secondary Stream" alt="Create a Secondary Stream" onclick="screenshareTypeDecider(2)" tabindex="20" role="button" aria-pressed="false" onkeyup="enterPressedClick(event,this);"  class="float hidden task" data-menu="context-menu-screen-share"  style="cursor: pointer;">
+				<div id="screenshare2button" onmousedown="event.preventDefault(); event.stopPropagation();"  title="Add a Screen Share" alt="Add a Screen Share" onclick="screenshareTypeDecider(2)" tabindex="20" role="button" aria-pressed="false" onkeyup="enterPressedClick(event,this);"  class="float hidden task" data-menu="context-menu-screen-share"  style="cursor: pointer;">
 					<i id="screenshare2toggle" onmousedown="event.preventDefault(); event.stopPropagation();"  class="toggleSize las  la-tv my-float"></i>
 				</div>
 				<div id="screenshare3button" onmousedown="event.preventDefault(); event.stopPropagation();"  title="Create a Third Stream" alt="Create a Third Stream" onclick="screenshareTypeDecider(3)" tabindex="20" role="button" aria-pressed="false" onkeyup="enterPressedClick(event,this);"  class="float hidden task" data-menu="context-menu-screen-share"  style="cursor: pointer;">
@@ -423,6 +423,9 @@
 						</span>
 					</center>
 					<div id="audioMenu" class="form-group multiselect" alt="tip: Hold CTRL (command) to select Multiple" title="tip: Hold CTRL (command) to select Multiple">
+						<span class='gear_microphone hidden'>
+							<input type="checkbox" id='micStereoMonoInput' onchange="toggleMonoStereoMic(this);">Mono
+						</span>
 						<a id="multiselect-trigger" class="form-control multiselect-trigger" >
 							<div  class="audioTitle">
 								<i class="las la-microphone-alt"></i><span data-translate="select-audio-source"> Audio Source(s) </span>
@@ -482,8 +485,10 @@
 							<option value="4" data-translate="digital-greenscreen">Digital greenscreen</option>	
 							<option value="5" data-translate="virtual-background">Virtual background</option>
 							<option value="6" data-translate="face-mesh" title="experimental">Face mesh (slow load) 👨‍🔬</option>
+							<option value="7" data-translate="digital-zoom">Digital zoom</option>
 							<option value="anon" data-translate="anonymous-mask" title="experimental">Anonymous mask 👨‍🔬</option>
 							<option value="dog" data-translate="dog-face" title="experimental">Dog ears and nose 👨‍🔬</option>
+							<option value="1" disabled title='Enable the Chrome experimental features flag to use: chrome://flags/#enable-experimental-web-platform-features' class='facetracker' data-translate="face-tracker">Face Tracker</option>
 						</select>
 						<span data-warnSimdNotice="true" style='display:none; font-size: 140%; margin-left:10px; vertical-align: middle; cursor:pointer' title="Improve performance and quality with this tip" onclick="smdInfo();">
 							<i class="las la-info-circle"></i>
@@ -623,7 +628,7 @@
 					<div style="margin: 20px; max-width: 400px; text-align: left; margin: auto auto;">
 						<div class="invite_setting_group">
 							<h4>
-								<span data-translate="advanced-paramaters">Advanced Options</span>
+								<span data-translate="quality-paramaters">Quality settings</span>
 							</h4>
 							<div class="invite_setting_item">
 								<input type="checkbox" id="invite_bitrate" />
@@ -644,16 +649,19 @@
 								</label>
 							</div>
 							<div class="invite_setting_item">
-								<label for="invite_quality" data-translate="video-resolution">Video resolution: </label>
+								<label for="invite_quality" data-translate="video-resolution">Target video resolution: </label>
 								<select id="invite_quality" name="invite_quality">
 									<option value="-1" selected>User selectable</option>
-									<option value="0">Maximum resolution</option>
-									<option value="1">Balanced</option>
-									<option value="2">Smooth and cool</option>
+									<option value="0">1080p (high-quality)</option>
+									<option value="1">720p (balanced)</option>
+									<option value="2">360p (older computers)</option>
 								</select>
 							</div>
 						</div>
 						<div class="invite_setting_group">
+							<h4>
+								<span data-translate="general-paramaters">User options</span>
+							</h4>
 							<div class="invite_setting_item">
 								<input type="checkbox" id="invite_effects" />
 								<label for="invite_effects">
@@ -673,12 +681,6 @@
 								</label>
 							</div>
 							<div class="invite_setting_item">
-								<input type="checkbox" id="invite_remotecontrol" />
-								<label for="invite_remotecontrol">
-									<span data-translate="allow-remote-control" title="Hold CTRL and the mouse wheel to zoom in and out remotely of compatible video streams">Remote control of zoom (android)</span>
-								</label>
-							</div>
-							<div class="invite_setting_item">
 								<input type="checkbox" id="invite_obfuscate" />
 								<label for="invite_obfuscate">
 									<span data-translate="obfuscate_url" title="Encode the URL so that it's harder for a guest to modify the settings.">Obfuscate the invite URL</span>
@@ -687,6 +689,17 @@
 							<div class="invite_setting_item">
 								<span data-translate="add-a-password-to-stream" title="Add a password to make the stream inaccessible to those without the password"> Add a password:</span>
 								<input type="text" autocorrect="off" autocapitalize="none" id="invite_password" placeholder="Add an optional password" />
+							</div>
+						</div>
+						<div class="invite_setting_group">
+							<h4>
+								<span data-translate="interview-paramaters">Two-way chat</span>
+							</h4>
+							<div class="invite_setting_item">
+								<input type="checkbox" id="invite_hostlink" />
+								<label for="invite_hostlink">
+									<span data-translate="generate-host-link" title="Generate host link to chat with guest; 2-way interview chat.">Generate host link also</span>
+								</label>
 							</div>
 							<div class="invite_setting_item">
 								<span data-translate="add-the-guest-to-a-room" title="Add the guest to a group-chat room; it will be created automatically if needed."> Add the guest to a room:</span>
@@ -704,8 +717,8 @@
 							</div>
 						</div>
 						<div>See the 
-							<a style="text-decoration: none; color: blue;" target="_blank" href="https://docs.vdo.ninja/advanced-settings">documentation</a> for more options and info.<br /><br />
-							Try out the advanced <a style="text-decoration: none; color: blue;" target="_blank" href="https://invite.vdo.ninja/">invite generator</a> here also.
+							<a style="text-decoration: none; color: blue;" target="_blank" href="https://docs.vdo.ninja/advanced-settings">documentation</a> for a list of all options and details.<br /><br />
+							Try out the advanced <a style="text-decoration: none; color: blue;" target="_blank" href="https://invite.vdo.ninja/">invite generator</a> here as well.
 						</div>
 					</div>
 				</div>
@@ -1245,7 +1258,7 @@
 							  <span class="slider"></span>
 							</label>
 							<font class="tooltip" style='cursor: help;position:relative;bottom:2px;font-family:"Noto Color Emoji", "Apple Color Emoji", "Segoe UI Emoji", Times, Symbola, Aegyptus, Code2000, Code2001, Code2002, Musica, serif, LastResort;'>⚠<span class="tooltiptext">This can cause video playback to lag</span></font>
-							<span data-translate="unlock-video-bitrate">unlock Video Bitrate</span>
+							<span data-translate="unlock-video-bitrate">Unlock video bitrate</span>
 							<br />
 							
 							<label class="switch" title="Disable fit-to-window optmized video scaling for added sharpness; increases CPU / Network load though.">
@@ -1667,6 +1680,9 @@
 				</span>
 				
 				<div class="form-group multiselect" alt="tip: Hold CTRL (command) to select Multiple" title="tip: Hold CTRL (command) to select Multiple" >
+					<span class='gear_microphone gearflat hidden'>
+						<input type="checkbox" id='micStereoMonoInput3' onchange="toggleMonoStereoMic(this);">Mono
+					</span>
 					<a id="multiselect-trigger3" class="form-control multiselect-trigger" >
 						<div id="audioTitle2" class="title">
 							<i class="las la-microphone-alt"></i><span data-translate="select-audio-source"> Audio Source(s) </span>
@@ -1717,8 +1733,10 @@
 						<option value="4" data-translate="digital-greenscreen">Digital greenscreen</option>	
 						<option value="5" data-translate="virtual-background">Virtual background</option>
 						<option value="6" data-translate="face-mesh" title="experimental">Face mesh (slow load) 👨‍🔬</option>
+						<option value="7" data-translate="digital-zoom">Digital zoom</option>
 						<option value="anon" data-translate="anonymous-mask" title="experimental">Anonymous mask 👨‍🔬</option>
 						<option value="dog" data-translate="dog-face" title="experimental">Dog ears and nose 👨‍🔬</option>
+						<option value="1" disabled title='Face Detection API not detected; you may be able to enable it here: chrome://flags/#enable-experimental-web-platform-features' class='facetracker' data-translate="face-tracker">Face tracker</option>
 					</select>
 					<span data-warnSimdNotice="true" style='display:none; font-size: 140%; margin-left:10px; vertical-align: middle; cursor:pointer' title="Improve performance and quality with this tip" onclick="smdInfo();">
 						<i class="las la-info-circle"></i>
@@ -1766,6 +1784,16 @@
 					<label title="Choose a hotkey for Hold-to-Talk. If using Electron Capture, elevate privilleges to have it become global">Hold-to-Talk Hot-key</label>
 					<input type="text" id="pptHotKey"  placeholder="press a key here" style="padding-left: 7px;" onkeypress="event.preventDefault;event.stopPropagation();return false;" onkeyup="event.preventDefault;event.stopPropagation();return false;" onkeydown="setHotKey();"/>
 					<button onclick="setHotKey(false);" style="margin: 0 0 0 4px; border-radius: 5px; padding: 3px 3px;">Clear</button>
+					<br /><br />
+					<label title="Draw on the Screen">Draw-on-Screen</label>
+					<button id='startDrawScreen' title="CTRL (cmd) + ALT + D to toggle" onclick="drawOnScreen();" style="margin: 0 0 0 4px; border-radius: 5px; padding: 3px 3px;">Enable</button>
+					<button class='hidden drawActive' onclick="drawOnScreenObject.erase();" style="margin: 0 0 0 4px; border-radius: 5px; padding: 3px 3px;">Clear</button>
+					<button class='hidden drawActive' onclick="drawOnScreenObject.stop();" style="margin: 0 0 0 4px; border-radius: 5px; padding: 3px 3px;" title="CTRL (cmd) + ALT + D to toggle" >Stop</button>
+					<button class='hidden drawActive' onclick="drawOnScreenObject.color(this);" data-color='red' style="background-color:red; margin: 0 0 0 4px; border-radius: 5px; padding: 3px 3px;">✏️</button>
+					<button class='hidden drawActive' onclick="drawOnScreenObject.color(this);" data-color='blue' style="background-color:blue; margin: 0 0 0 4px; border-radius: 5px; padding: 3px 3px;">✏️</button>
+					<button class='hidden drawActive' onclick="drawOnScreenObject.color(this);" data-color='green' style="background-color:green; margin: 0 0 0 4px; border-radius: 5px; padding: 3px 3px;">✏️</button>
+					<button class='hidden drawActive' onclick="drawOnScreenObject.color(this);" data-color='black' style="background-color:black; margin: 0 0 0 4px; border-radius: 5px; padding: 3px 3px;">✏️</button>
+					<button class='hidden drawActive' onclick="drawOnScreenObject.color(this);" data-color='white' style="background-color:white; margin: 0 0 0 4px; border-radius: 5px; padding: 3px 3px;">🎨</button>
 				</span>
 		</div>
 		<nav id="context-menu" class="context-menu">
@@ -2166,7 +2194,7 @@
 
 		
 			var session = WebRTC.Media; // session is a required global variable if configuring manually. Run before loading main.js but after webrtc.js.
-			session.version = "22.3🇺🇦";
+			session.version = "22.4";
 			session.streamID = session.generateStreamID(); // randomly generates a streamID for this session. You can set your own programmatically if needed
 			
 			session.defaultPassword = "someEncryptionKey123"; // Change this password if self-deploying for added security/privacy
@@ -2238,11 +2266,11 @@
 			// session.defaultBackgroundImages = ["./media/bg_sample1.webp", "./media/bg_sample2.webp"]; // for &effects=5 (virtual backgrounds)
 		</script>
 		<script type="text/javascript" crossorigin="anonymous" src="./thirdparty/aes.js"></script>
-		<script type="text/javascript" crossorigin="anonymous" id="lib-js" src="./lib.js?ver=440"></script>
+		<script type="text/javascript" crossorigin="anonymous" id="lib-js" src="./lib.js?ver=483"></script>
 		<!-- 
 		// If you wish to change branding, blank offers a good clean start.
 		<script type="text/javascript" id="main-js" src="./main.js" data-translation="blank"></script>
 		-->
-		<script type="text/javascript" crossorigin="anonymous" id="main-js" src="./main.js?ver=432"></script>
+		<script type="text/javascript" crossorigin="anonymous" id="main-js" src="./main.js?ver=445"></script>
 	</body>
 </html>

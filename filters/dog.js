@@ -1,16 +1,5 @@
-function effectsEngine(effectName){
-	function loadScript(url){
-		var script = document.createElement('script');
-		script.type = 'text/javascript';
-		script.src = url;
-		script.onload = function(){
-			this.remove();
-			if (loadList.length){
-				loadScript(loadList.pop());
-			}
-		}
-		document.head.appendChild(script);
-	}
+async function effectsEngine(effectName){
+
 	var loadList = [];
 	if (typeof JEELIZFACEFILTER == 'undefined' || JEELIZFACEFILTER==null){
 		loadList.push("./thirdparty/jeeliz/jeelizFaceFilter.js");
@@ -32,8 +21,11 @@ function effectsEngine(effectName){
 	
 	if (loadList.length){
 		loadList.reverse();
-		loadScript(loadList.pop());
+		while (loadList.length){
+			await loadScript(loadList.pop());
+		}
 	}
+	
 	
 	
 	var pathname = window.location.pathname.split("/");
@@ -267,9 +259,9 @@ function effectsEngine(effectName){
 				isTransformed = false;
 				DOGOBJ3D = new THREE.Object3D();
 				FRAMEOBJ3D = new THREE.Object3D();
-				
 				init_faceFilter("effectsCanvasTarget", session.canvasSource);
 			} catch(e){
+				errorlog(e);
 			}
 		} else {
 			setTimeout(function(){main();},500);
@@ -301,7 +293,7 @@ function effectsEngine(effectName){
 			init_threeScene(spec);
 		},
 		callbackTrack: function (detectState) {
-			if (effectName !== session.effects){
+			if (effectName !== session.effect){
 				try{
 					JEELIZFACEFILTER.toggle_pause(true,false); // unload the filter when no longer active.  Leaving the track active is required, else it breaks the app
 				} catch(e){errorlog(e);}
@@ -353,5 +345,6 @@ function effectsEngine(effectName){
 		}
 	  }); 
 	}
+	log("returning main");
 	return main;
 }

@@ -169,13 +169,13 @@
 			function next2(){
 				document.getElementById("page2").classList.add("hidden");
 				document.getElementById("page3").classList.remove("hidden");
-				loadIframe();
+				loadIframe(region);
 			}
 			
 			function next3(){
 				document.getElementById("page3").classList.add("hidden");
 				document.getElementById("mainapp").classList.remove("hidden");
-				loadIframe();
+				loadIframe(region);
 			}
 		
 			(function (w) {
@@ -414,7 +414,33 @@
 			
 			if (urlParams.has("sid")) {
 				streamID = urlParams.get("sid");
+			} else if (urlParams.has("push")) {
+				streamID = urlParams.get("push");
 			}
+			
+			var region = "";
+			if (urlParams.has("location")) {
+				region = urlParams.get("location");
+			} else if (urlParams.has("region")) {
+				region = urlParams.get("region");
+			}
+			
+			<!-- <option selected value="">Automatic</option> -->
+			<!-- <option value="de1">Saarbruecken, Germany</option> -->
+			<!-- <option value="de2">Frankfurt, Germany</option> -->
+			<!-- <option value="fr1">Strasbourg, France</option> -->
+			<!-- <option value="bra1">São Paulo, Brazil</option> -->
+			<!-- <option value="pol1">Warsaw, Poland</option> -->
+			<!-- <option value="cae1">Montreal, Canada</option> -->
+			<!-- <option value="use1">Virgina, USA</option> -->
+			<!-- <option disabled value="usc1">Chicago, USA</option> -->
+			<!-- <option disabled value="usw1">Los Angeles, USA</option> -->
+			<!-- <option value="usw2">Oregon, USA</option> -->
+			<!-- <option value="aus1">Sydney, Australia</option> -->
+			<!-- <option value="jap1">Tokyo, Japan</option> -->
+			<!-- <option value="sing1">Singapore</option> -->
+			<!-- <option value="ind1">Mumbai, India</option> -->
+			<!-- <option value="pol1">Warsaw, Poland</option> -->
 
 			var iframe1 = document.createElement("iframe");
 			
@@ -496,6 +522,8 @@
 				
 				if (urlParams.has("id")) {
 					recordResults = urlParams.get("id") || false;
+				} else if (urlParams.has("session")) {
+					recordResults = urlParams.get("session") || false;
 				}
 
 				iframe.src = srcString;
@@ -566,6 +594,16 @@
 						clearInterval(interval);
 						return;
 					}
+					if (timer == 30){
+						iframe.contentWindow.postMessage({ bitrate: 4000 }, "*");
+						bitrate.target = 4000;
+						updateData("target", bitrate.target);
+					}
+					if (timer == 60){
+						iframe.contentWindow.postMessage({ bitrate: 6000 }, "*");
+						bitrate.target = 6000;
+						updateData("target", bitrate.target);
+					}
 					
 					if (timer!==null){
 						timer+=1
@@ -591,8 +629,8 @@
 			var bitrate = {
 				element: "bitrate-graph",
 				data: 0,
-				max: 6000,
-				target: 3000,
+				max: 6500,
+				target: 2500,
 			};
 			var frames;
 			var buffer = {
@@ -654,13 +692,28 @@
 				var offset = borderWidth * 2;
 
 				// Create gradient
+				
 				var grd = context.createLinearGradient(0, 0, 0, height);
-
+				
 				if (type == "bitrate") {
-					// Higher values are green
-					grd.addColorStop(0, "#33C433");
-					grd.addColorStop(0.7, "#F3F304");
-					grd.addColorStop(0.9, "#F30404");
+					
+					if (stat.target == 2500){
+						grd.addColorStop(0, "#33C433");
+						grd.addColorStop(0.7, "#33C433");
+						grd.addColorStop(0.8, "#F3F304");
+						grd.addColorStop(0.92, "#F30404");
+					} else if (stat.target == 4000){
+						grd.addColorStop(0, "#33C433");
+						grd.addColorStop(0.5, "#33C433");
+						grd.addColorStop(0.8, "#F3F304");
+						grd.addColorStop(0.92, "#F30404");
+					} else if (stat.target == 6000){
+						grd.addColorStop(0, "#33C433");
+						grd.addColorStop(0.3, "#33C433");
+						grd.addColorStop(0.8, "#F3F304");
+						grd.addColorStop(0.92, "#F30404");
+					}
+					
 				} else {
 					// Higher values are red
 					grd.addColorStop(0, "#F30404");
@@ -673,10 +726,10 @@
 				//context.fillStyle = "#009933";
 				//context.imageSmoothingEnabled = true;
 
-				yScale = height / stat.target;
+				yScale = height / stat.max;
 
-				if (stat.data > stat.target) {
-					stat.data = stat.target;
+				if (stat.data > stat.max) {
+					stat.data = stat.max;
 				}
 
 				if (type == "packetloss" && stat.data == 0.0) {

@@ -37,6 +37,7 @@ body {
 }
 #container-3{
 	background-image:unset;
+	overflow:hidden!important;
 }
 .column>h2{
 	color:white!important;
