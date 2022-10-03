@@ -3,6 +3,13 @@
 [social-stream.md](../steves-helper-apps/social-stream.md "mention")\
 [chat-overlay.md](../steves-helper-apps/chat-overlay.md "mention")
 
+#### **October 2**
+
+* Updated Socialstream to support custom themes/templates. I've provided an example theme that you can use or base your own themes on. see: [https://github.com/steveseguin/social\_stream/tree/main/themes](https://github.com/steveseguin/social\_stream/tree/main/themes) for more.\
+  ![](<../.gitbook/assets/image (7).png>)
+* Added more animated style options for how messages appear into the chat stream, such as slide in, fade in, and drop in.\
+  ![](<../.gitbook/assets/image (8).png>)
+
 #### **October 1**
 
 * **F**ixed an issue re: settings not saving in socialstream
@@ -36,7 +43,7 @@
 #### **September 10**
 
 * Using `&beep` or the bell icon will trigger audio 'beeps' when new messages appear in the Socialstream dock. Requires user-interaction with the page in chrome for the audio to work.\
-  ![](<../.gitbook/assets/image (8).png>)
+  ![](<../.gitbook/assets/image (8) (1).png>)
 * Support for @mention added to Mixcloud for Socialstream+touch, by means of providing the username that scripts can respond to (by user request).
 * `&alignbottom` added to the Socialstream dock; this aligns the message stream to the bottom by default, rather than top.
 * Added `&transparent` (versus the new `&hideshadow`), which can be useful for loading Socialstream into non-OBS studios.

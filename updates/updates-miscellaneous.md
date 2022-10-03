@@ -1,5 +1,14 @@
 # Updates - Miscellaneous
 
+#### October 1
+
+*   I'll be having to start white-listing domains that [invite.cam](https://invite.cam/) can use, due to abuse of the service by phishing scammers. This won't impact VDO.Ninja users, but it may impact users who have been using it for non-VDO.Ninja related things.
+
+    \-- vdo.ninja, rtc.ninja, etc, will all still work as normal. I'll be happy to whitelist other domains for community members who reach out to me that need it.\
+    \-- Untrusted domains will still work, but I will be prompting visitors to such links to proceed only if they trust the creator of the link. Nothing threatening, but I hope it's enough to discourage abuse.\
+    \-- I've had to start a blacklist of sites due to reports of phishing abuse that I am accountable for blocking.\
+    ![](../.gitbook/assets/image.png)
+
 #### September 9
 
 * Fixed an issue with with passwords containing special characters being used at invite.vdo.ninja

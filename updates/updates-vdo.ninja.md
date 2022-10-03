@@ -8,6 +8,12 @@ I'm working on a fix, but I don't have an ETA. Will update when fixed.
 _\*\*_ UPDATE: I hot-patched beta and alpha with a fix. This fix disables the option to select custom audio output destinations, but resolves the echo issue. If using a self-deployed instance, you can instead add [`&noap`](../general-settings/noaudioprocessing.md) to the URLs to fix it as well; you can also enable `chrome://flags/#chrome-wide-echo-cancellation`, patch the code, or just use headphones.
 {% endhint %}
 
+#### **October 2** <a href="#august-31" id="august-31"></a>
+
+* Fixed a couple minor bugs with VDO.Ninja, such as the [`&consent`](../source-settings/consent.md) message on dark-mode not being easily read.
+* Improved the API for remote controlling mute/add2scene/etc for guests. True/false and 'toggle' work as values now; before just toggle worked for guest-specific calls.\
+  (changes on alpha)
+
 #### **September 27** <a href="#august-31" id="august-31"></a>
 
 * Updated the 'create reusable link' page a bit; added the option for "generate host link also", which sets things up for a simple two-way interview format.\
@@ -22,7 +28,7 @@ _\*\*_ UPDATE: I hot-patched beta and alpha with a fix. This fix disables the op
 * Updated the screen-share layouts to have a larger screen, relative to the other videos: It now targets an average of around 80% screen real-estate for the main screen share.
 *   Up to 20-videos on screen now are supported in the screen-share view; before after around 12-videos they started to be hidden
 
-    ![](<../.gitbook/assets/image (3).png>)![](../.gitbook/assets/image.png)\
+    ![](<../.gitbook/assets/image (3).png>)![](<../.gitbook/assets/image (5).png>)\
     ![](<../.gitbook/assets/image (2).png>)![](<../.gitbook/assets/image (4).png>)\
     \
     \*\*changes on alpha (vdo.ninja/alpha/) and github
@@ -31,7 +37,7 @@ _\*\*_ UPDATE: I hot-patched beta and alpha with a fix. This fix disables the op
 
 * Firefox won't playback stereo audio as stereo by default now; it will require the [`&stereo`](../general-settings/stereo.md)/[`&proaudio`](../advanced-settings/audio-parameters/and-proaudio.md) flag to enable stereo playback. [`&mono`](../advanced-settings/view-parameters/mono.md) also works with Firefox now, allowing you to use `&proaudio&mono` with Firefox. (this was just a quirk of Firefox's default settings vs Chrome that I long needed to address)
 *   **M**ade the little upload arrow in the top-right color coded in response to the detected 'average' upload connection quality; won't be supported by all browsers, but most.\
-    ![](<../.gitbook/assets/image (5).png>)
+    ![](<../.gitbook/assets/image (5) (1).png>)
 
     \
     \*\* updated both alpha and beta.
@@ -167,7 +173,7 @@ _\*\*_ UPDATE: I hot-patched beta and alpha with a fix. This fix disables the op
   \-- leave the passed value empty if you wish to have the white basic rule-of-thirds show as default.\
   example: `https://vdo.ninja/alpha/?thirds=./media/thirdshead.svg`\
   ``\*\* on alpha.\
-  ![](<../.gitbook/assets/image (7) (1).png>)
+  ![](<../.gitbook/assets/image (7) (1) (1).png>)
 * Added [`proxy.vdo.ninja/alpha/`](https://proxy.vdo.ninja/alpha/) as an alternative to `vdo.ninja/?proxy`. If's a more user-friendly version of [`&proxy`](../newly-added-parameters/and-proxy.md). \*\* Just on alpha for now
 
 #### August 16
@@ -241,7 +247,7 @@ _\*\*_ UPDATE: I hot-patched beta and alpha with a fix. This fix disables the op
 * I've removed the toggle in the director's room for this `&webp` feature, as [`&chunked`](../newly-added-parameters/and-chunked.md) mode is replacing its purpose there, but you might still want to use this mode when the viewer-side does not support video playback or hardware acceleration. Specifically, this option lets you bring motion images (aka, crude video) into the Streamlabs mobile app, as a browser source, where other forms of video decoding is not supported.
 * I've also created a new viewer-side option called [`&slideshow`](../advanced-settings/upcoming-parameters/and-slideshow.md) . This option decodes incoming video (first video to load), but plays them back as series of full-window images. That is, a single image element, that gets updated 24 times a second, instead of playing the video back within an efficient video element. I have no idea why you might want this option, as it pretty crude up and uses up a lot of CPU, but you can right-click to save a single frame from the video to disk, as a PNG file. This might be useful if you need to take a lot of snap shots of some video and don't want to have to hassle with cropping a window-grab. Quality of the images is pretty high; near lossless.\
   \*\* on alpha\
-  ![](<../.gitbook/assets/image (5) (1).png>)
+  ![](<../.gitbook/assets/image (5) (1) (2).png>)
 
 #### July 21
 
@@ -256,7 +262,7 @@ _\*\*_ UPDATE: I hot-patched beta and alpha with a fix. This fix disables the op
   \-- This is a new noise gate, that lowers your mic volume to 10% of its current value based on volume-level activity. If you haven't made a significant sound in few seconds, the noise gate kicks in, and will re-enable when a significant noise is detected. It will take about 300-ms for the volume to recover once the noise triggers it back on, which can be a small bit harsh/distracting at times.\
   \-- [`&noisegate`](../source-settings/noisegate.md) or `&noisegate=1` (`&gating`/`&ng`) will enable it by default (if using it in a room, currently); and `&noisegate=0` will hide the option from the menu.\
   \-- The older existing `&noisegate=1` option I moved to `&noisegate=4`, as this new version is replacing it. I'm keeping the older version around as an option though.\
-  ![](<../.gitbook/assets/image (7).png>)
+  ![](<../.gitbook/assets/image (7) (1).png>)
 * Fixed some of the labels for the local audio labels; camel-case is replaced with words, and true/false replaced with on/off.
 *   Fixed an issue where iPhones's video output would freeze when the director would feature-highlight any other participant.
 
