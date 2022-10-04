@@ -2,6 +2,10 @@
 
 [speed-test.md](../steves-helper-apps/speed-test.md "mention")
 
+#### October 3
+
+* Fixed a couple issues with the speedtest and [vdo.ninja/alpha/check](https://vdo.ninja/alpha/check) pages -- a recent chrome update deprecated (broke) some stats APIs I was using, along with a new race condition issue caused results to not always save. (It's funny how working code starts to 'rust' over time)
+
 #### September 16
 
 * Added more details to the tech-check test's result page (vdo.ninja/alpha/results?id=xxx), including system detail and the network type. WiFi is of course isn't advised, so if it detects that, it points it out as seen in the photo.\
