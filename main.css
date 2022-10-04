@@ -3744,6 +3744,15 @@ input:checked + .slider:before {
 	padding: 2px 0 0 0;
 }
 
+
+.darktheme .startupWarning{
+	background: black!important;
+	box-shadow: 0px 5px 10px -5px #a5a566;
+	color: white!important;
+}
+
+
+
 .cameraTip {
 	width: 100%;
 	display: block;
@@ -3776,6 +3785,9 @@ input:checked + .slider:before {
 
 #consentWarning2{
 	margin: 0px auto 10px auto;
+}
+
+.darktheme .startupWarning{
 }
 
 #alertModal {
@@ -4354,4 +4366,7 @@ body.darktheme .invite_setting_item>select{
 }
 body.darktheme .containerGreen{
 	background-color: #243824!important;
+}
+body.darktheme .startupWarning>.las  {
+	color:white!important;
 }

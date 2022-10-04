@@ -1020,7 +1020,7 @@ var sanitizeLabel = function(string) {
 	temp.innerText = string;
 	temp.innerText = temp.innerHTML;
 	temp = temp.textContent || temp.innerText || "";
-	temp = temp.substring(0, Math.min(temp.length, 50));
+	temp = temp.substring(0, Math.min(temp.length, 100));
 	return temp.trim();
 };
 
@@ -21635,6 +21635,13 @@ function updateDirectorsAudio(dataN, UUID) {
 						input.options.add(opt);
 						opt = new Option("On", true);
 						input.options.add(opt);
+						try{
+							if (i in data.currentAudioConstraints) {
+								if (data.audioConstraints[i]['torch'] == true) {
+									opt.selected = "true";
+								}
+							}
+						} catch(e){}
 					} else {
 						continue;
 					}
@@ -21672,6 +21679,12 @@ function updateDirectorsAudio(dataN, UUID) {
 					input.options.add(opt);
 					opt = new Option("On", true);
 					input.options.add(opt);
+
+					 try{
+						if (data.audioConstraints[i] === true){
+							opt.selected = "true";
+						}
+					} catch(e){} 
 
 					input.dataset.deviceId = data.deviceId;
 					input.id = "constraints_" + i + "_"+n;
@@ -21885,6 +21898,13 @@ function updateDirectorsVideo(data, UUID) {
 					input.options.add(opt);
 					opt = new Option("On", true);
 					input.options.add(opt);
+					try{
+						if (i in data.currentCameraConstraints) {
+							if (data.cameraConstraints[i]['torch'] == true) {
+								opt.selected = "true";
+							}
+						}
+					} catch(e){}
 				} else {
 					continue;
 				}
@@ -21923,6 +21943,12 @@ function updateDirectorsVideo(data, UUID) {
 				input.options.add(opt);
 				opt = new Option("On", true);
 				input.options.add(opt);
+				
+				try{
+					if (data.audioConstraints[i] === true){
+						opt.selected = "true";
+					}
+				} catch(e){}
 
 				input.id = "constraints_" + i;
 				input.className = "constraintCameraInput";

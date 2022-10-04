@@ -2430,6 +2430,11 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 		session.welcomeMessage = urlParams.get('entrymsg') || urlParams.get('welcome');
 		session.welcomeMessage = decodeURIComponent(session.welcomeMessage);
 	}
+	
+	if (urlParams.has('welcomeimage') || urlParams.has('welcomeimg')) {
+		session.welcomeImage = urlParams.get('welcomeimage') || urlParams.get('welcomeimg');
+		session.welcomeImage = decodeURIComponent(session.welcomeImage);
+	}
 
 	if (urlParams.has('mixminus')){
 		session.mixMinus = true;
@@ -3719,7 +3724,6 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 		session.waitImage = urlParams.get('waitimage') || false;
 	}
 	
-
 	if (((session.view) && (session.roomid === false)) || (session.waitImage && (session.scene!==false))) {
 		
 		getById("container-4").className = 'column columnfade';
@@ -4310,6 +4314,7 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 				stats.total_inbound_connections = Object.keys(session.rpcs).length;
 				for (var i in session.rpcs) {
 					stats.inbound_stats[session.rpcs[i].streamID] = session.rpcs[i].stats;
+					console.log(stats);
 				}
 				for (var uuid in session.pcs) {
 					setTimeout(function(UUID) {

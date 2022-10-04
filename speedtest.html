@@ -349,6 +349,7 @@
 				var previousResolution;
 
 				eventer(messageEvent, function (e) {
+					//console.log(e.data);
 					if ("action" in e.data) {
 					
 						if (e.data.action == "available-speedtest-servers"){
@@ -410,7 +411,7 @@
 
 						if (out.split("Bitrate_in_kbps").length > 1) {
 							for (var key in e.data.stats.inbound_stats[streamID]) {
-								if (key.startsWith("RTCMediaStreamTrack_receiver")) {
+								if (key.startsWith("RTCMediaStreamTrack_receiver") || key.startsWith("DEPRECATED_RTCMediaStreamTrack_receiver")) {
 									var bitrate = e.data.stats.inbound_stats[streamID][key][
 											"Bitrate_in_kbps"
 										];
