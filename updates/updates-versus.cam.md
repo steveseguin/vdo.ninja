@@ -2,6 +2,10 @@
 
 [versus.cam.md](../steves-helper-apps/versus.cam.md "mention")
 
+#### October 5
+
+* Fixed an issue where the bitrate in rare cases could hit 200-mbps (instead of being capped at 20-mbps). \*\* applies to vdo.ninja/alpha/ invite links
+
 #### August 3
 
 * I think I finally got [https://versus.cam/](https://versus.cam/) done as a first-version, which is the upcoming and standalone replacement for the vdo.ninja/monitor page.\
