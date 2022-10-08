@@ -8,6 +8,14 @@ I'm working on a fix, but I don't have an ETA. Will update when fixed.
 _\*\*_ UPDATE: I hot-patched beta and alpha with a fix. This fix disables the option to select custom audio output destinations, but resolves the echo issue. If using a self-deployed instance, you can instead add [`&noap`](../general-settings/noaudioprocessing.md) to the URLs to fix it as well; you can also enable `chrome://flags/#chrome-wide-echo-cancellation`, patch the code, or just use headphones.
 {% endhint %}
 
+#### **October 8** <a href="#august-31" id="august-31"></a>
+
+* Custom groups used by remote guests now show in the director's view, just like custom scenes do.\
+  \-- If you use [`&groups=group,test,vdo`](../general-settings/and-group.md), new group buttons will appear\
+  \-- By default, groups 1 to 6 are there\
+  \-- If you use `&groups=1,2,3` , you'll auto-join groups 1, 2 and 3\
+  ![](<../.gitbook/assets/image (171).png>)
+
 #### **October 2** <a href="#august-31" id="august-31"></a>
 
 * Fixed a couple minor bugs with VDO.Ninja, such as the [`&consent`](../source-settings/consent.md) message on dark-mode not being easily read.
@@ -17,7 +25,7 @@ _\*\*_ UPDATE: I hot-patched beta and alpha with a fix. This fix disables the op
 #### **September 27** <a href="#august-31" id="august-31"></a>
 
 * Updated the 'create reusable link' page a bit; added the option for "generate host link also", which sets things up for a simple two-way interview format.\
-  ![](<../.gitbook/assets/image (1).png>)
+  ![](<../.gitbook/assets/image (1) (9).png>)
 * ``[`&welcomeimage`](../advanced-settings/upcoming-parameters/and-welcomeimage.md) added; this lets you specify a welcome image (URL) that appears for a few seconds before fading away once a guest joins.\
   ie: `https://vdo.ninja/alpha/?welcomeimage=https://vdo.ninja/alpha/media/old_logo.png&webcam`\
   ``\
@@ -410,7 +418,7 @@ _\*\*_ UPDATE: I hot-patched beta and alpha with a fix. This fix disables the op
 * Added a demo/sample on how to overlay speed + acceleration on top of video playback (compatible with a mobile phone sender) `vdo.ninja/examples/sensoroverlay?view=STREAMID`
 * Added a new option to explicitly list what sensor data you want to capture and transmit, when using `&sensor` [`&sensorfilter=gyro,lin,acc,mag,pos,ori`](../advanced-settings/upcoming-parameters/and-sensorfilter.md) For the above demo, you can use [`&sensorfilter=pos,lin`](../advanced-settings/upcoming-parameters/and-sensorfilter.md) to just send the data you need, reducing the load on the phone/network. (on alpha)
 * Right-clicking a link in VDO.Ninja will now offer the option to show the link as a QR Code. This makes it easy to copy any link over to a your mobile phone or to create a shareable QR code with guests. (on alpha)\
-  ![](<../.gitbook/assets/image (2) (6).png>)![](<../.gitbook/assets/image (1) (9).png>)
+  ![](<../.gitbook/assets/image (2) (6).png>)![](<../.gitbook/assets/image (1) (9) (1).png>)
 * Implemented a workaround for a novel Chrome bug where specifying a custom audio channel in the director's room (C1, C2, etc) would break the custom audio output device support. \* Fix pushed to alpha.
 
 #### June 1
