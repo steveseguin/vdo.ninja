@@ -677,3 +677,7 @@ February 23
 
 * Pushed v21.0 to GitHub: [https://github.com/steveseguin/vdo.ninja/tree/v21-dev](https://github.com/steveseguin/vdo.ninja/tree/v21-dev)
 * v21 pushed into production. Cached cleared. v20.4 is still available at [https://vdo.ninja/v20/](https://vdo.ninja/v20/) if you prefer that.
+
+#### **Previous updates**
+
+{% embed url="https://docs.vdo.ninja/releases" %}
