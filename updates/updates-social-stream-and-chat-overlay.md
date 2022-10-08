@@ -8,7 +8,7 @@
 * Updated Socialstream to support custom themes/templates. I've provided an example theme that you can use or base your own themes on. see: [https://github.com/steveseguin/social\_stream/tree/main/themes](https://github.com/steveseguin/social\_stream/tree/main/themes) for more.\
   ![](<../.gitbook/assets/image (7).png>)
 * Added more animated style options for how messages appear into the chat stream, such as slide in, fade in, and drop in.\
-  ![](<../.gitbook/assets/image (8).png>)
+  ![](<../.gitbook/assets/image (8) (1).png>)
 
 #### **October 1**
 
@@ -43,7 +43,7 @@
 #### **September 10**
 
 * Using `&beep` or the bell icon will trigger audio 'beeps' when new messages appear in the Socialstream dock. Requires user-interaction with the page in chrome for the audio to work.\
-  ![](<../.gitbook/assets/image (8) (1).png>)
+  ![](<../.gitbook/assets/image (8) (1) (1).png>)
 * Support for @mention added to Mixcloud for Socialstream+touch, by means of providing the username that scripts can respond to (by user request).
 * `&alignbottom` added to the Socialstream dock; this aligns the message stream to the bottom by default, rather than top.
 * Added `&transparent` (versus the new `&hideshadow`), which can be useful for loading Socialstream into non-OBS studios.
@@ -55,7 +55,7 @@
 #### **August 31**
 
 * New MIDI control feature for Social Stream: - the option to select a file containing text-strings for use with the MIDI-command option is available - sample file is included in the extension folder; edit it and select it from the extension menu (JSON format) - you shouldn't have to reload the file each time you open the browser; just when you reload the extension or when you want to update the commands with a newer file.\
-  ![](<../.gitbook/assets/image (10) (1).png>)
+  ![](<../.gitbook/assets/image (10) (1) (2).png>)
 * Social Stream has had it's pop-out menu UI updated, courtesy of the one and only [@jcalado](https://github.com/jcalado) (there's dark-mode support now, also) #pretty\
   ![](<../.gitbook/assets/image (1) (1) (1) (2).png>)
 * Added workplace.com support to Social Stream
@@ -121,7 +121,7 @@
 #### July 3
 
 * socialstream.ninja was updated to support horizontal scrolling for the dock page (`&horizontal`) and extra-large emojis (`&emoji`)\
-  ![](<../.gitbook/assets/image (9).png>)
+  ![](<../.gitbook/assets/image (9) (4).png>)
 
 #### June 28
 

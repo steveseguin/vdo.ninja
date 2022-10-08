@@ -7,7 +7,7 @@
     \-- vdo.ninja, rtc.ninja, etc, will all still work as normal. I'll be happy to whitelist other domains for community members who reach out to me that need it.\
     \-- Untrusted domains will still work, but I will be prompting visitors to such links to proceed only if they trust the creator of the link. Nothing threatening, but I hope it's enough to discourage abuse.\
     \-- I've had to start a blacklist of sites due to reports of phishing abuse that I am accountable for blocking.\
-    ![](../.gitbook/assets/image.png)
+    ![](<../.gitbook/assets/image (2).png>)
 
 #### September 9
 
@@ -41,3 +41,11 @@
   Buttons can currently be set using MIDI byte values or with an input learning function; there's lots of room for improvement of course, so I am considering this a prototype for now.\
   It's on alpha at [https://vdo.ninja/alpha/remotemidi](https://vdo.ninja/alpha/remotemidi)\
   ![](<../.gitbook/assets/image (167).png>)
+
+#### April 19
+
+*   Coded up a quick demo of how to combine multiple rooms into one, as a director using the IFRAME API:
+
+    ```
+    https://vdo.ninja/examples/multi?rooms=room1,room2,room3
+    ```

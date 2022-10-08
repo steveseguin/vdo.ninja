@@ -49,6 +49,6 @@
 #### August 16
 
 * So I spent a few hours fixing up the Closed Captioning translation tool. It's set to English only [https://obs.ninja/speechin](https://obs.ninja/speechin)\
-  ![](<../.gitbook/assets/image (11).png>)
+  ![](<../.gitbook/assets/image (11) (1).png>)
 * There is a link provided for the OBS overlay window. I have it set so you can save the results after with copy/paste pretty easily. And I also changed things up so there are private rooms used by default.
 * While I don't log / store anything sent via the server, the transcription logs do get sent via server in this version. Eventually I'll move this to p2p and add full encryption, but for now its still mostly a MVP.

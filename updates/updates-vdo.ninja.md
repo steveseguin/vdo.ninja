@@ -28,8 +28,8 @@ _\*\*_ UPDATE: I hot-patched beta and alpha with a fix. This fix disables the op
 * Updated the screen-share layouts to have a larger screen, relative to the other videos: It now targets an average of around 80% screen real-estate for the main screen share.
 *   Up to 20-videos on screen now are supported in the screen-share view; before after around 12-videos they started to be hidden
 
-    ![](<../.gitbook/assets/image (3).png>)![](<../.gitbook/assets/image (5).png>)\
-    ![](<../.gitbook/assets/image (2).png>)![](<../.gitbook/assets/image (4).png>)\
+    ![](<../.gitbook/assets/image (3) (1).png>)![](<../.gitbook/assets/image (5).png>)\
+    ![](<../.gitbook/assets/image (2) (2).png>)![](<../.gitbook/assets/image (4).png>)\
     \
     \*\*changes on alpha (vdo.ninja/alpha/) and github
 
@@ -62,7 +62,7 @@ _\*\*_ UPDATE: I hot-patched beta and alpha with a fix. This fix disables the op
   \-- The guest can toggle it on and off in the settings, without needing to go into any advanced audio settings\
   \-- The remote director can still use the existing "channel count' in the advanced audio settings to override this button, unless the guest toggles it back on\
   \-- There's several other ways to set mono mode of course, including [`&monomic`](../advanced-settings/upcoming-parameters/and-monomic.md), [`&inputchannels=1`](../advanced-settings/audio-parameters/and-inputchannels.md), [`&stereo=3`](../general-settings/stereo.md), channelCount, [`&mono`](../advanced-settings/view-parameters/mono.md) (playback), [`&ec&dn&ag`](../guides/audio-filters.md), and within OBS/Windows itself.\
-  ![](<../.gitbook/assets/image (3) (1).png>)![](<../.gitbook/assets/image (1) (1) (1).png>)\
+  ![](<../.gitbook/assets/image (3) (1) (1).png>)![](<../.gitbook/assets/image (1) (1) (1).png>)\
   \
   \*\* updated on to alpha at vdo.ninja/alpha/
 
@@ -83,10 +83,10 @@ _\*\*_ UPDATE: I hot-patched beta and alpha with a fix. This fix disables the op
 * Added [`&effects=7`](../source-settings/effects.md) (or `&effects=zoom`), which will provide a manual zoom option in the effects menu. (you can also select the zoom mode via the effects menu, if available)\
   ![](<../.gitbook/assets/image (2) (4).png>)
 * Added [`&getfaces`](../advanced-settings/upcoming-parameters/and-getfaces.md) on the viewer link (or `{getFaces:true}` via the IFrame API), which will request a continuous stream of face bounding boxes, for all inbound videos and all faces contained within. The data is transmitted to the parent IFRAME, and this data can be used for moving the IFrame window around, if you wish to make your own custom face-tracker or whatever else.\
-  ![](<../.gitbook/assets/image (11) (1).png>)
+  ![](<../.gitbook/assets/image (11) (1) (2).png>)
 * ``[`&effects=1`](../source-settings/effects.md) on the sender side (or `&effects=facetracking`) will auto-center the user's face in the center of their video, zooming in as needed. It takes a moment to initiate, but it offers a gentle PTZ-like effect.\
   \-- note: I previously had `&effects=1`, but it wasn't that good, so this is a more polished attempt. It's also available from the effects drop down menu now as a selectable option, as before I was hiding it.\
-  ![](<../.gitbook/assets/image (3) (1) (1).png>)\
+  ![](<../.gitbook/assets/image (3) (1) (1) (2).png>)\
   \-- important note: Both `&getfaces` and `&effects=1` requires the use of the Chromium experimental face detection API, as I'm using the built-in browser face-tracking model for this. You can enable the API flag here: `chrome://flags/#enable-experimental-web-platform-features` My hope is that this feature will eventually be enabled by default within Chromium, as loading a large ML model to do face detection otherwise is a bit heavy; you may need to enable this within the OBS CLI if wishing to use it there?\
   \*\*\* Changes on alpha at vdo.ninja/alpha/
 
@@ -114,7 +114,7 @@ _\*\*_ UPDATE: I hot-patched beta and alpha with a fix. This fix disables the op
 * ``[`&showconnections`](../advanced-settings/upcoming-parameters/and-showconnections.md) will display the total number of p2p connections of a remote stream. Works with the director's room and the automixer. Might help give comfort over privacy/security during a stream.
 * Total number of p2p remote connections (viewers) of a stream source will also appear in the stats menu, even without [`&showconnections`](../advanced-settings/upcoming-parameters/and-showconnections.md). Could be useful for debugging CPU/bandwidth issues.
 * Connections may represent video/audio streams, or just a data-connection. Meshcast-hosted streams might not be accounted for, depending on how the viewer is connecting.\
-  ![](<../.gitbook/assets/image (10).png>)
+  ![](<../.gitbook/assets/image (10) (1).png>)
 * Added `showChat` and `showDirectorChat` as HTTP/WSS API options for sending messages to guest(s). Useful if you want to hotkey a streamdeck command with some welcome message for guests.
 * Added events notifications relating to the director's guest-mute, guest-video-mute, and guest-position-change actions, along with any remote-video-mute updates to the HTTP/WSS API (by request for the bitfocus companion app)
 
@@ -544,3 +544,84 @@ _\*\*_ UPDATE: I hot-patched beta and alpha with a fix. This fix disables the op
 * Fixed a more recent bug in VDO.Ninja where the special [`&sstype=3`](../newly-added-parameters/and-screensharetype.md) screen share mode did not work as solo links; stats for it were not always cleaned up either, so that's fixed too. (on dev)
 * Added manual-input fields for the camera/audio setting sliders. Both for director + push links. You can enter by hand values, rather than using the sliders. Also made "aspect ratio" and "frame rate" available options. \*\* on vdo.ninja/alpha\
   ![](<../.gitbook/assets/image (158).png>)![](<../.gitbook/assets/image (162).png>)
+
+#### April 26
+
+* \*\* Beta updated will all recent changes, including mixer. (vdo.ninja/beta) I'm considering this upcoming release as version 22.
+
+#### April 25
+
+* [`&midi`](../midi-settings/midi.md) offers the option to mute the local speaker output now (deafen yourself). Change is on production as a hot patch. Specifics here: [https://docs.vdo.ninja/advanced-settings/api-and-midi-parameters/midi#and-midi-1](https://docs.vdo.ninja/advanced-settings/api-and-midi-parameters/midi#and-midi-1)
+
+#### April 23
+
+* Added [`&disablehotkeys`](../advanced-settings/settings-parameters/and-disablehotkeys.md) to VDO.Ninja (hot patched), to allow for hotkeys (like `CTRL + M`) to be disabled.
+* [`&notify`](../source-settings/and-notify.md) works with basic view/push link combos; before it only beeped when a guest joined a room. (on alpha)
+* [`&nohangupbutton`](../advanced-settings/settings-parameters/and-nohangupbutton.md) (aka, `&nohub`), has been added to VDO.Ninja (hot patched). This option hides the hang-up button, so it can't be accidentally clicked.
+
+#### April 19
+
+* Selected audio and video devices are remembered automatically on reload/refresh, without needing a URL parameter. On alpha for now. [https://vdo.ninja/alpha/](https://vdo.ninja/alpha/)
+* Added the ability to select an image, instead of a video device. The image will trigger when the video is muted or no video device is selected. A default avatar image is provided, but you can select your own from disk. [`&avatar`](../advanced-settings/upcoming-parameters/and-avatar.md) is the flag that enables this option. - `&avatar=default` will pre-select the default avatar, rather than leaving it un-selected [https://vdo.ninja/alpha/?avatar](https://vdo.ninja/alpha/?avatar) (on alpha for now)\
+  ![](../.gitbook/assets/image.png)
+* [`&js`](../advanced-settings/design-parameters/and-js.md) is a new parameter for VDO.Ninja that lets you pass a third party hosted Javascript file URL (URL-encoded), allowing for custom code injection without self-hosting, IFrames or chrome extensions. On VDO.Ninja, by user request.
+
+#### April 18
+
+* Deployed a TURN server to Mumbai, India.
+
+#### April 17
+
+* [`&minipreview`](../source-settings/and-minipreview.md) and [`&grid`](../advanced-settings/design-parameters/grid.md) (rule of thirds) parameters work together now (local dev of VDO.Ninja)
+
+#### April 12
+
+* [`&mcsscodec=h264`](../meshcast-settings/and-mcscreensharecodec.md) should now work correctly independently of [`&meshcastcodec`](../meshcast-settings/and-meshcastcodec.md). (These features let you select the codec / profile ID of the encoder that gets used when publishing video to Meshcast via VDO.Ninja.) \*\* code updated on beta (vdo.ninja/beta)
+* Added [`&autorecordlocal`](../advanced-settings/upcoming-parameters/and-autorecordlocal.md) and [`&autorecordremote`](../advanced-settings/upcoming-parameters/and-autorecordremote.md), which will record just the local video or the remote videos, respectively, automatically on their initial load. Using just [`&autorecord`](../advanced-settings/upcoming-parameters/and-autorecord.md) will do both. This all applies to the director, guest, scenes, and whatever really.\
+  \-- You can stop/restart recordings as needed via the right-click menu per each video for now, until I can design a nicer UI for managing multi-recording state at least.\
+  \-- You can pass the default recording bitrate as a value to the parameter, like you might if using [`&record`](../source-settings/and-record.md). (\*\*on beta)
+
+#### April 10
+
+* Setting [`&h264profile=0`](../newly-added-parameters/and-h264profile.md) (or `false`/`off`/`default`), will now have the h264 profile be left as the default browser default when the sender is an android. (currently I rewrite the h264 profile for android devices when h264 is used, but advanced users might want the default)
+* I rewrote a large part of the auto-mixer to support borders around videos ([`&border=10`](../advanced-settings/upcoming-parameters/and-border.md)), as well as fixed the [`&rounded=10`](../advanced-settings/design-parameters/rounded.md) parameter to crop videos better. Also, I added [`&bordercolor=FFFFFF`](../advanced-settings/upcoming-parameters/and-bordercolor.md) (hex or color name), to allow for changing the color of the border.\
+  ![](<../.gitbook/assets/image (11).png>)\
+  \
+  \*changes on alpha, [https://vdo.ninja/alpha](https://vdo.ninja/alpha) (on alpha, since it was a large code rewrite and so needs a bit more testing, but it has been lightly tested)
+
+#### April 7
+
+* Added chrome notification popups when guests join the room (when using [`&notify`](../source-settings/and-notify.md)). This requires both Windows + Chrome notification permissions to be allowed (Chrome will ask, but Windows will not, if already disabled). \*on alpha (vdo.ninja/alpha) as a code preview and committed to a branch on GitHub (by request)
+
+#### April 6
+
+* The [`&screensharequality`](../source-settings/screensharequality.md) parameter applies to all three types of screen sharing types, not just secondary-share. Before [`&quality`](../advanced-settings/video-parameters/and-quality.md) was needed for primary screen share quality setting.
+* When the user selects the screen share quality via the gear icon (primary share), it will remember that setting in case a secondary screen share is started later in that session.
+* Added a "show stats" option to the right-click menu (so you don't need to hold CTRL to get it, making it more discoverable for new users I guess)\
+  ![](<../.gitbook/assets/image (9).png>)\
+  \*changes on beta (vdo.ninja/beta/)
+
+#### April 5
+
+* Added messaging for mac users who try to screen share and get denied; MacOS instructions are added on how to setup permissions.\
+  ![](<../.gitbook/assets/image (10).png>)
+* Added messaging for those with surround gaming headsets or using VMs on how to handle no-audio-capture errors when screen sharing.\
+  ![](<../.gitbook/assets/image (3).png>)
+* Tweaked [`&screensharetype=3`](../newly-added-parameters/and-screensharetype.md) a bit; [`&aec`](../source-settings/aec.md) and such will impact it now.
+*   Fixed an issue where the screen share's audio didn't get correctly stopped in cases where it should have been.
+
+    \
+    (changes on vdo.ninja/beta)
+
+#### April 4
+
+* Screen share in a group room won't crop to fit the assigned window space anymore, even if [`&cover`](../advanced-settings/view-parameters/cover.md) is used. \*on beta at vdo.ninja/beta
+* Fixed an issue on beta where if you changed the audio device, the audio would stop.
+* Spanish language file updated (via community contribution; thank you)
+* An issue where iOS 15.4 devices get stuck at low bitrates has been patched; available on vdo.ninja/beta.
+
+#### April 1
+
+* Fixed an issue with passwords in some places not allowing for longer than 30-characters
+* Fixed a password issue with the vdo.ninja/mixer (passwords can be set via the URL now)
+* Published v21.3 of VDO.Ninja to the GitHub main branch (currently what has been on vdo.ninja/beta for a couple weeks now)
