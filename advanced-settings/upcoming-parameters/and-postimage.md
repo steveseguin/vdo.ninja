@@ -5,7 +5,7 @@ description: Post a snapshot of your local camera to a HTTPS/POST URL
 # \&postimage
 
 Sender-Side Option! ([`&push`](../../source-settings/push.md))\
-\* on [https://vdo.ninja/alpha/](https://vdo.ninja/alpha/)
+\* on [https://vdo.ninja/beta/](https://vdo.ninja/beta/) and [https://vdo.ninja/alpha/](https://vdo.ninja/alpha/)
 
 ## Options
 
