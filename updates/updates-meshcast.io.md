@@ -9,7 +9,7 @@
 #### January 9
 
 * Added screen sharing support; just select it from the list. If using Chrome/Edge/Brave, you can select desktop or tab audio along with the screen-share. Resolution is left up to the browser to decide.\
-  ![](<../.gitbook/assets/image (5) (2).png>)
+  ![](<../.gitbook/assets/image (5) (2) (1).png>)
 
 ### 2021
 

@@ -14,4 +14,5 @@ description: What is new
 * [updates-caption.ninja.md](updates-caption.ninja.md "mention")
 * [updates-meshcast.io.md](updates-meshcast.io.md "mention")
 * [updates-speed-test.md](updates-speed-test.md "mention")
+* [updates-comms.md](updates-comms.md "mention")
 * [updates-miscellaneous.md](updates-miscellaneous.md "mention")

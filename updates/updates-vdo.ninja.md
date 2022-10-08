@@ -36,7 +36,7 @@ _\*\*_ UPDATE: I hot-patched beta and alpha with a fix. This fix disables the op
 * Updated the screen-share layouts to have a larger screen, relative to the other videos: It now targets an average of around 80% screen real-estate for the main screen share.
 *   Up to 20-videos on screen now are supported in the screen-share view; before after around 12-videos they started to be hidden
 
-    ![](<../.gitbook/assets/image (3) (1).png>)![](<../.gitbook/assets/image (5).png>)\
+    ![](<../.gitbook/assets/image (3) (1).png>)![](<../.gitbook/assets/image (5) (2).png>)\
     ![](<../.gitbook/assets/image (2) (2).png>)![](<../.gitbook/assets/image (4).png>)\
     \
     \*\*changes on alpha (vdo.ninja/alpha/) and github
@@ -571,7 +571,7 @@ _\*\*_ UPDATE: I hot-patched beta and alpha with a fix. This fix disables the op
 
 * Selected audio and video devices are remembered automatically on reload/refresh, without needing a URL parameter. On alpha for now. [https://vdo.ninja/alpha/](https://vdo.ninja/alpha/)
 * Added the ability to select an image, instead of a video device. The image will trigger when the video is muted or no video device is selected. A default avatar image is provided, but you can select your own from disk. [`&avatar`](../advanced-settings/upcoming-parameters/and-avatar.md) is the flag that enables this option. - `&avatar=default` will pre-select the default avatar, rather than leaving it un-selected [https://vdo.ninja/alpha/?avatar](https://vdo.ninja/alpha/?avatar) (on alpha for now)\
-  ![](../.gitbook/assets/image.png)
+  ![](<../.gitbook/assets/image (3).png>)
 * [`&js`](../advanced-settings/design-parameters/and-js.md) is a new parameter for VDO.Ninja that lets you pass a third party hosted Javascript file URL (URL-encoded), allowing for custom code injection without self-hosting, IFrames or chrome extensions. On VDO.Ninja, by user request.
 
 #### April 18
@@ -614,7 +614,7 @@ _\*\*_ UPDATE: I hot-patched beta and alpha with a fix. This fix disables the op
 * Added messaging for mac users who try to screen share and get denied; MacOS instructions are added on how to setup permissions.\
   ![](<../.gitbook/assets/image (10).png>)
 * Added messaging for those with surround gaming headsets or using VMs on how to handle no-audio-capture errors when screen sharing.\
-  ![](<../.gitbook/assets/image (3).png>)
+  ![](<../.gitbook/assets/image (3) (2).png>)
 * Tweaked [`&screensharetype=3`](../newly-added-parameters/and-screensharetype.md) a bit; [`&aec`](../source-settings/aec.md) and such will impact it now.
 *   Fixed an issue where the screen share's audio didn't get correctly stopped in cases where it should have been.
 
