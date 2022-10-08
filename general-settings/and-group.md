@@ -12,11 +12,12 @@ General Option! ([`&push`](../source-settings/push.md), [`&room`](room.md), [`&v
 
 ## Options
 
-| Value     | Description                                       |
-| --------- | ------------------------------------------------- |
-| `1`       | adds the guest or director to group 1             |
-| `2`       | adds the guest or director to group 2             |
-| `3,4,5,6` | adds the guest or director to group 3, 4, 5 and 6 |
+| Value     | Description                                          |
+| --------- | ---------------------------------------------------- |
+| `1`       | adds the guest or director to group 1                |
+| `2`       | adds the guest or director to group 2                |
+| `3,4,5,6` | adds the guest or director to group 3, 4, 5 and 6    |
+| string    | creates/adds the guest or director to a custom group |
 
 ## Details
 
@@ -33,6 +34,11 @@ Scenes can be put into groups as well, via the URL group option, such `&group=3`
 Using this group function is an alternative to transfer rooms, however it's perhaps less secure, as a guest could just tinker with their URL parameters or just refresh their page to perhaps see everyone in the room again.
 
 [`&groupaudio`](and-groupaudio.md) can be used to enable audio in-between different groups, instead of audio being group-specific. Useful for blind-dating show formats or such.
+
+### Update Version 22
+
+Custom groups used by remote guests now show in the director's view, just like custom scenes do. If you use `&groups=group,test,vdo`, new group buttons will appear.\
+![](<../.gitbook/assets/image (171).png>)
 
 ## Related
 
