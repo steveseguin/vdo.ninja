@@ -49,3 +49,12 @@
     ```
     https://vdo.ninja/examples/multi?rooms=room1,room2,room3
     ```
+
+#### February 15
+
+* Did a YT video demoing the web3.vdo.ninja concept; rambled about it for a while\
+  [https://youtu.be/HXTC458sllM](https://youtu.be/HXTC458sllM)
+
+#### February 14
+
+* [https://invite.cam/](https://invite.cam/) was updated to fully embrace the VDO.Ninja over the older one; old links will still work tho. The GitHub for the site was updated also.

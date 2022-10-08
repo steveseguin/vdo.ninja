@@ -625,3 +625,55 @@ _\*\*_ UPDATE: I hot-patched beta and alpha with a fix. This fix disables the op
 * Fixed an issue with passwords in some places not allowing for longer than 30-characters
 * Fixed a password issue with the vdo.ninja/mixer (passwords can be set via the URL now)
 * Published v21.3 of VDO.Ninja to the GitHub main branch (currently what has been on vdo.ninja/beta for a couple weeks now)
+
+#### March 15
+
+* Fixed an issue with [`&showlabels=STYLENAME`](../advanced-settings/design-parameters/showlabels.md)``
+
+#### March 9
+
+* Updated the co-director feature of VDO.Ninja to SYNC the state between the directors. Syncs on refresh and on button change; this includes scenes, volume, mute, groups, etc. The only catch at the moment is the main director won't sync with a co-director; just co-directors sync with the main director. \*On beta at vdo.ninja/beta
+
+#### March 4
+
+* Improved [`&forcelandscape`](../advanced-settings/mobile-parameters/and-forcelandscape.md) (`&fl`) on beta.
+
+#### March 3
+
+* Fixed an issue where [`&maxvideobitrate`](../source-settings/maxbitrate.md) would sometimes increase the default bitrate as well. (was impacting the speedtest a bit. on local dev atm)
+
+#### February 26
+
+* An issue with [`&fileshare`](../source-settings/and-fileshare.md) has been fixed and pushed to beta.
+* Added support for [`&fileshare`](../source-settings/and-fileshare.md) support to Firefox and added browser-specific help notices.
+
+February 23
+
+* Posted the code for self hosting the companion hotkey API: [https://github.com/steveseguin/Companion-Ninja/tree/main/server](https://github.com/steveseguin/Companion-Ninja/tree/main/server)
+* Added `session.apiserver=` as a way to easily specify your own companion server address via index.html (on just my local dev at the moment)
+
+#### February 22
+
+* [`&slots=N`](../newly-added-parameters/and-slots.md) and mix-ordering/[`&order`](../source-settings/order.md) now can work together; on alpha
+
+#### February 21
+
+* Added "Hold to talk" to the mute button. Hold the mic toggle button with the mouse for more than 300-milliseconds to have it become Hold to talk. You can also do `CTRL (cmd) + M` for more than 300-ms to also enter the hold-to-talk mode.\
+  \
+  I'm not calling this push-to-talk because if you just push for less than 300-ms or click the button, it will instead just toggle the mute state as it is now.\
+  \
+  This is on ALPHA, [https://vdo.ninja/alpha/](https://vdo.ninja/alpha/), since there are a few video styling issues with the current code I need to fix still.
+* Applied a hotfix to production to further improve the [`&record`](../source-settings/and-record.md) situation that a few users still were having.
+
+#### February 20
+
+* Applied some fixes for the director + Meshcast support; the changes are on alpha for now, pending more testing [https://vdo.ninja/alpha](https://vdo.ninja/alpha)
+
+#### February 15
+
+* OBS 27.2 has been officially released; this fixes some issues experienced by some VDO.Ninja users, such as rainbow puke.
+
+#### February 14
+
+* Pushed v21.0 to GitHub: [https://github.com/steveseguin/vdo.ninja/tree/v21-dev](https://github.com/steveseguin/vdo.ninja/tree/v21-dev)
+* v21 pushed into production. Cached cleared. v20.4 is still available at [https://vdo.ninja/v20/](https://vdo.ninja/v20/) if you prefer that.
