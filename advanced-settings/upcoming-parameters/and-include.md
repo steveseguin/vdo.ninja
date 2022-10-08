@@ -5,7 +5,7 @@ description: Includes streams that do not exist in the room
 # \&include
 
 Viewer-Side Option! ([`&scene`](../view-parameters/scene.md), [`&room`](../../general-settings/room.md))\
-\* on [https://vdo.ninja/beta/](https://vdo.ninja/beta/) and [https://vdo.ninja/alpha/](https://vdo.ninja/alpha/)
+\* on [https://vdo.ninja/alpha/](https://vdo.ninja/alpha/)
 
 ## Options
 

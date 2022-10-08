@@ -4,8 +4,8 @@ description: Can be used to set the default image avatar, when using &style=0 or
 
 # \&bgimage
 
-Viewer-Side Option! ([`&scene`](../view-parameters/scene.md), [`&room`](../../general-settings/room.md), [`&view`](../view-parameters/view.md), [`&solo`](and-solo.md))\
-\* on [https://vdo.ninja/beta/](https://vdo.ninja/beta/) and [https://vdo.ninja/alpha/](https://vdo.ninja/alpha/)
+Viewer-Side Option! ([`&scene`](../view-parameters/scene.md), [`&room`](../../general-settings/room.md), [`&view`](../view-parameters/view.md),[`&solo`](and-solo.md))\
+\* on [https://vdo.ninja/beta/](https://vdo.ninja/beta/)
 
 ## Aliases
 

@@ -4,8 +4,8 @@ description: Includes non-media-based push connections as video elements in a gr
 
 # \&showall
 
-General Option! ([`&push`](../../source-settings/push.md), [`&room`](../../general-settings/room.md), [`&view`](../view-parameters/view.md), [`&scene`](../view-parameters/scene.md), [`&solo`](and-solo.md))\
-\* on [https://vdo.ninja/beta/](https://vdo.ninja/beta/) and [https://vdo.ninja/alpha/](https://vdo.ninja/alpha/)
+General Option! ([`&push`](../../source-settings/push.md), [`&room`](../../general-settings/room.md), [`&view`](../view-parameters/view.md), [`&scene`](../view-parameters/scene.md),[`&solo`](and-solo.md))\
+\* on [https://vdo.ninja/alpha/](https://vdo.ninja/alpha/)
 
 ## Aliases
 

@@ -5,7 +5,7 @@ description: Judges the available bandwidth of a sender's connection
 # \&maxbandwidth
 
 Sender-Side Option! ([`&push`](../../source-settings/push.md))\
-\* on [https://vdo.ninja/beta/](https://vdo.ninja/beta/) and [https://vdo.ninja/alpha/](https://vdo.ninja/alpha/)
+\* on [https://vdo.ninja/alpha/](https://vdo.ninja/alpha/)
 
 ## Options
 

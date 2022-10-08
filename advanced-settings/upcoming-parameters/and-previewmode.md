@@ -5,7 +5,7 @@ description: Activates the Preview layout for the director's room by default
 # \&previewmode
 
 Director Option! ([`&director`](../../viewers-settings/director.md))\
-\* on [https://vdo.ninja/beta/](https://vdo.ninja/beta/) and [https://vdo.ninja/alpha/](https://vdo.ninja/alpha/)
+\* on [https://vdo.ninja/alpha/](https://vdo.ninja/alpha/)
 
 ## Details
 

@@ -5,7 +5,7 @@ description: '=motion prioritizes resolution; =detail prioritizes frame rate'
 # \&contenthint
 
 Sender-Side Option! ([`&push`](../../source-settings/push.md))\
-\* on [https://vdo.ninja/beta/](https://vdo.ninja/beta/) and [https://vdo.ninja/alpha/](https://vdo.ninja/alpha/)
+\* on [https://vdo.ninja/alpha/](https://vdo.ninja/alpha/)
 
 ## Aliases
 

@@ -7,6 +7,10 @@ description: Lets you specify an image that appears for a few seconds once a gue
 Sender-Side Option! ([`&push`](../../source-settings/push.md))\
 \* on [https://vdo.ninja/alpha/](https://vdo.ninja/alpha/)
 
+## Aliases
+
+* `&welcomeimg`
+
 ## Options
 
 | Value | Description      |

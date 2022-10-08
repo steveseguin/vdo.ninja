@@ -5,7 +5,7 @@ description: Optimizes a guest/push link for a mobile device to improve video qu
 # \&notmobile
 
 Sender-Side Option! ([`&push`](../../source-settings/push.md))\
-\* on [https://vdo.ninja/beta/](https://vdo.ninja/beta/) and [https://vdo.ninja/alpha/](https://vdo.ninja/alpha/)
+\* on [https://vdo.ninja/alpha/](https://vdo.ninja/alpha/)
 
 ## Details
 
