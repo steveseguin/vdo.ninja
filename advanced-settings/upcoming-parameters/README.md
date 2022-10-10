@@ -56,6 +56,7 @@ You can use/test these parameters on [vdo.ninja/alpha](https://vdo.ninja/alpha/)
 | ``[`&getfaces`](and-getfaces.md)\*\*                             | Will request a continuous stream of face bounding boxes                                                                                                            |
 | ``[`&novice`](and-novice.md)\*\*                                 | Hides some advanced guest options in the director's control center                                                                                                 |
 | ``[`&welcomeimage`](and-welcomeimage.md)\*                       | Lets you specify an image that appears for a few seconds once a guest joins                                                                                        |
+| ``[`&layouts`](and-layouts.md)\*                                 | An ordered array of layouts, which can be used to switch between using the API                                                                                     |
 
 \*only on [vdo.ninja/alpha](https://vdo.ninja/alpha/)\
 \*\*on [vdo.ninja/beta](https://vdo.ninja/beta/) and [vdo.ninja/alpha](https://vdo.ninja/alpha/)

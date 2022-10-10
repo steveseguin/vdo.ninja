@@ -403,6 +403,7 @@
     * [\&getfaces](advanced-settings/upcoming-parameters/and-getfaces.md)
     * [\&novice](advanced-settings/upcoming-parameters/and-novice.md)
     * [\&welcomeimage](advanced-settings/upcoming-parameters/and-welcomeimage.md)
+    * [\&layouts](advanced-settings/upcoming-parameters/and-layouts.md)
   * [Other Parameters](other-parameters.md)
 * [Releases](release-notes/older-releases.md)
   * [v21 ❤️](older-releases/v21.md)

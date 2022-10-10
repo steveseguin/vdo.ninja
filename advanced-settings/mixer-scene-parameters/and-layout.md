@@ -27,6 +27,10 @@ You can use [vdo.ninja/alpha/mixer](https://vdo.ninja/alpha/mixer) to create JSO
 
 ## Related
 
+{% content-ref url="../upcoming-parameters/and-layouts.md" %}
+[and-layouts.md](../upcoming-parameters/and-layouts.md)
+{% endcontent-ref %}
+
 {% embed url="https://vdo.ninja/alpha/mixer" %}
 vdo.ninja/alpha/mixer
 {% endembed %}

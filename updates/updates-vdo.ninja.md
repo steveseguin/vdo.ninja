@@ -10,7 +10,7 @@ _\*\*_ UPDATE: I hot-patched beta and alpha with a fix. This fix disables the op
 
 #### **October 10** <a href="#august-31" id="august-31"></a>
 
-* Added `&layouts=[[{xxxxxx}]]` as a URL parameter option, where you can pass a set of different layouts (as a URL-encoded ordered array) to VDO.Ninja (\*\* on alpha)\
+* Added [`&layouts=[[{xxxxxx}]]`](../advanced-settings/upcoming-parameters/and-layouts.md) as a URL parameter option, where you can pass a set of different layouts (as a URL-encoded ordered array) to VDO.Ninja. (\*\* on alpha)\
   \
   This is akin to using the [vdo.ninja/beta/mixer](https://vdo.ninja/beta/mixer), to visually set layouts, but instead you are just manually setting all the available layouts directly, bypassing the mixer app.\
   \
