@@ -8,6 +8,29 @@ I'm working on a fix, but I don't have an ETA. Will update when fixed.
 _\*\*_ UPDATE: I hot-patched beta and alpha with a fix. This fix disables the option to select custom audio output destinations, but resolves the echo issue. If using a self-deployed instance, you can instead add [`&noap`](../general-settings/noaudioprocessing.md) to the URLs to fix it as well; you can also enable `chrome://flags/#chrome-wide-echo-cancellation`, patch the code, or just use headphones.
 {% endhint %}
 
+#### **October 10** <a href="#august-31" id="august-31"></a>
+
+* Added `&layouts=[[{xxxxxx}]]` as a URL parameter option, where you can pass a set of different layouts (as a URL-encoded ordered array) to VDO.Ninja (\*\* on alpha)\
+  \
+  This is akin to using the [vdo.ninja/beta/mixer](https://vdo.ninja/beta/mixer), to visually set layouts, but instead you are just manually setting all the available layouts directly, bypassing the mixer app.\
+  \
+  Once you have set the layouts, the "layout" API feature becomes a bit more useful, as you can remotely activate any of those layouts with a simple API command.\
+  \
+  I documented the 'layout' API option a bit here, but the tl;dr; is that you can either use this API call to set a layout from within the array of layouts that are set, or you can pass a full-fledge layout-object, for on-the-fly custom layouts.\
+  \
+  ie: `{action:'layout',value':5}` or `{action:'layout',value':[{xxxx.layout-stuff-here.xxxx]]}`\
+  \
+  fyi, the layout and the API in general work with the [vdo.ninja/beta/mixer](https://vdo.ninja/beta/mixer) page, so you can use it to create the layouts, and then manually switch between them via the API. The API is streamdeck-friendly.\
+  \
+  [https://github.com/steveseguin/Companion-Ninja/blob/main/README.md#custom-layout-switching-](https://github.com/steveseguin/Companion-Ninja/blob/main/README.md#custom-layout-switching-)
+* [`&meshcastbitrate`](../meshcast-settings/and-meshcastbitrate.md) works again; some recent chrome updates I think broke it a bit, but it's fixed now. This lets you set the Meshcast bitrate higher than 2500-kbps via VDO.Ninja. (Please set sparingly, with targets limited to just what's needed)
+* The director's "request" microphone/output change button has a "refresh" option now, which doesn't require a user's permission to use. It will "refresh" the currently active microphone/speaker output, which might solve issues with unexplained sudden audio loss. (the 'refresh' will reconnect the audio pipeline for that device, so if it crashes, this can potentially fix it\
+  \-- fyi, this already was an option for the video device.\
+  \-- if using the [`&consent`](../source-settings/consent.md), then the buttons will now say "apply", instead of "request", as you don't need to request a change in that case.
+* Fixed some niche audio issues where if loading canvas-only view links (no video, just audio) are loaded in Chrome/Firefox, with [`&style=2`](../advanced-settings/design-parameters/style.md) set, the audio didn't play due to auto-play problems. With this fix it will now play the audio, although you'll still need to click the screen first. Before it got a bit stuck, even if clicking the screen.\
+  \
+  \*\* changes on alpha at vdo.ninja/alpha/
+
 #### **October 8** <a href="#august-31" id="august-31"></a>
 
 * Custom groups used by remote guests now show in the director's view, just like custom scenes do.\
