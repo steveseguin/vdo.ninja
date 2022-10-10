@@ -41,6 +41,10 @@ fyi, the layout and the API in general work with the [vdo.ninja/beta/mixer](http
 [and-layout.md](../mixer-scene-parameters/and-layout.md)
 {% endcontent-ref %}
 
+{% content-ref url="and-slotmode.md" %}
+[and-slotmode.md](and-slotmode.md)
+{% endcontent-ref %}
+
 {% content-ref url="../../general-settings/api.md" %}
 [api.md](../../general-settings/api.md)
 {% endcontent-ref %}
