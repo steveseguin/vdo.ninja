@@ -78,7 +78,7 @@ Using these URLs change the layout of your scene in OBS. The URL you should use 
 
 [https://docs.google.com/spreadsheets/d/1cHBTfni-Os3SAITsXrrNJ3qVCMVjunuW3xugvw1dykw/edit#gid=151839312](https://docs.google.com/spreadsheets/d/1cHBTfni-Os3SAITsXrrNJ3qVCMVjunuW3xugvw1dykw/edit#gid=151839312)\
 \
-Download it and save it as .xlsx - then you can create custom layouts and use it with the `&layouts` parameter.
+Download it and save it as .xlsx - then you can edit it and create custom layouts for the `&layouts` parameter.
 
 ## Related
 
