@@ -35,7 +35,7 @@ You can assign guests to custom slots when using [`&slotmode`](and-slotmode.md) 
 
 <figure><img src="../../.gitbook/assets/image (5).png" alt=""><figcaption></figcaption></figure>
 
-### Example
+### URL example
 
 [https://vdo.ninja/alpha/?director=roomname\&slotmode\&api=xxx\&layouts=\[\[{"x":0,"y":0,"w":100,"h":100,"slot":0}\],\[{"x":0,"y":0,"w":100,"h":100,"slot":1}\],\[{"x":0,"y":0,"w":100,"h":100,"slot":2}\],\[{"x":0,"y":0,"w":100,"h":100,"slot":3}\],\[{"x":0,"y":0,"w":50,"h":100,"c":false,"slot":0},{"x":50,"y":0,"w":50,"h":100,"c":false,"slot":1}\],\[{"x":0,"y":0,"w":100,"h":100,"z":0,"c":false,"slot":1},{"x":70,"y":70,"w":30,"h":30,"z":1,"c":true,"slot":0}\],\[{"x":0,"y":0,"w":50,"h":50,"c":true,"slot":0},{"x":50,"y":0,"w":50,"h":50,"c":true,"slot":1},{"x":0,"y":50,"w":50,"h":50,"c":true,"slot":2},{"x":50,"y":50,"w":50,"h":50,"c":true,"slot":3}\],\[{"x":0,"y":16.667,"w":66.667,"h":66.667,"c":true,"slot":0},{"x":66.667,"y":0,"w":33.333,"h":33.333,"c":true,"slot":1},{"x":66.667,"y":33.333,"w":33.333,"h":33.333,"c":true,"slot":2},{"x":66.667,"y":66.667,"w":33.333,"h":33.333,"c":true,"slot":3}\]\]](https://vdo.ninja/alpha/?director=roomname\&slotmode\&api=xxx\&layouts=\[\[\{%22x%22:0,%22y%22:0,%22w%22:100,%22h%22:100,%22slot%22:0}],\[\{%22x%22:0,%22y%22:0,%22w%22:100,%22h%22:100,%22slot%22:1}],\[\{%22x%22:0,%22y%22:0,%22w%22:100,%22h%22:100,%22slot%22:2}],\[\{%22x%22:0,%22y%22:0,%22w%22:100,%22h%22:100,%22slot%22:3}],\[\{%22x%22:0,%22y%22:0,%22w%22:50,%22h%22:100,%22c%22:false,%22slot%22:0},\{%22x%22:50,%22y%22:0,%22w%22:50,%22h%22:100,%22c%22:false,%22slot%22:1}],\[\{%22x%22:0,%22y%22:0,%22w%22:100,%22h%22:100,%22z%22:0,%22c%22:false,%22slot%22:1},\{%22x%22:70,%22y%22:70,%22w%22:30,%22h%22:30,%22z%22:1,%22c%22:true,%22slot%22:0}],\[\{%22x%22:0,%22y%22:0,%22w%22:50,%22h%22:50,%22c%22:true,%22slot%22:0},\{%22x%22:50,%22y%22:0,%22w%22:50,%22h%22:50,%22c%22:true,%22slot%22:1},\{%22x%22:0,%22y%22:50,%22w%22:50,%22h%22:50,%22c%22:true,%22slot%22:2},\{%22x%22:50,%22y%22:50,%22w%22:50,%22h%22:50,%22c%22:true,%22slot%22:3}],\[\{%22x%22:0,%22y%22:16.667,%22w%22:66.667,%22h%22:66.667,%22c%22:true,%22slot%22:0},\{%22x%22:66.667,%22y%22:0,%22w%22:33.333,%22h%22:33.333,%22c%22:true,%22slot%22:1},\{%22x%22:66.667,%22y%22:33.333,%22w%22:33.333,%22h%22:33.333,%22c%22:true,%22slot%22:2},\{%22x%22:66.667,%22y%22:66.667,%22w%22:33.333,%22h%22:33.333,%22c%22:true,%22slot%22:3}]])
 
@@ -74,7 +74,7 @@ Using these URLs change the layout of your scene in OBS. The URL you should use 
 
 [https://vdo.ninja/alpha/?scene\&room=roomname](https://vdo.ninja/alpha/?scene\&room=roomname)
 
-### Excel-based String Generator
+### Excel-based Layout Generator
 
 [https://docs.google.com/spreadsheets/d/1cHBTfni-Os3SAITsXrrNJ3qVCMVjunuW3xugvw1dykw/edit#gid=151839312](https://docs.google.com/spreadsheets/d/1cHBTfni-Os3SAITsXrrNJ3qVCMVjunuW3xugvw1dykw/edit#gid=151839312)\
 \
