@@ -13,4 +13,3 @@ description: Recently added to VDO.Ninja in v21
 | ``[`&js`](../design-parameters/and-js.md)``                             | Lets you pass a third party hosted javascript file URL                                                                |
 | ``[`&disablehotkeys`](../settings-parameters/and-disablehotkeys.md)``   | Disables hotkeys (like `CRTL + M`)                                                                                    |
 | ``[`&nohangupbutton`](../settings-parameters/and-nohangupbutton.md)``   | Hides the hang-up button                                                                                              |
-| ``[`&layout`](../mixer-scene-parameters/and-layout.md)``                | Takes a JSON string representing how the video mixer should arrange video elements                                    |

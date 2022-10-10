@@ -23,7 +23,6 @@ You have to add them to [`&scene`](../view-parameters/scene.md) or [`&room`](../
 | ``[`&portrait`](../view-parameters/and-portrait.md)``       | Optimizes the video mixer for 9:16 videos                                                                            |
 | ``[`&square`](../../newly-added-parameters/and-square.md)`` | Optimizes the video mixer for 1:1 videos                                                                             |
 | ``[`&animated`](../view-parameters/animated.md)``           | Videos in a group scene will slide around the screen when being re-arranged                                          |
-| ``[`&layout`](and-layout.md)``                              | Takes a JSON string representing how the video mixer should arrange video elements                                   |
 | ``[`&manual`](../view-parameters/manual.md)``               | Disables the auto-mixer, allowing for a custom mixer to be used                                                      |
 
 ## **Only Scene options**

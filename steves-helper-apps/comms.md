@@ -21,7 +21,7 @@ ie: [`https://vdo.ninja/alpha/comms?group=backstage,directors,onairgroup,steve12
 \
 or just go to [https://vdo.ninja/alpha/comms](https://vdo.ninja/alpha/comms) to quick start without presetting anything
 
-<figure><img src="../.gitbook/assets/image (5).png" alt=""><figcaption></figcaption></figure>
+<figure><img src="../.gitbook/assets/image (5) (3).png" alt=""><figcaption></figcaption></figure>
 
 ## Updates
 

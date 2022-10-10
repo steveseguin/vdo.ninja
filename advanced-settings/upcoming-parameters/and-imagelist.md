@@ -5,7 +5,7 @@ description: Can be used to pass a list of background images via the URL
 # \&imagelist
 
 Sender-Side Option! ([`&push`](../../source-settings/push.md))\
-\* on [https://vdo.ninja/alpha/](https://vdo.ninja/alpha/)
+\* on [https://vdo.ninja/beta/](https://vdo.ninja/beta/) and [https://vdo.ninja/alpha/](https://vdo.ninja/alpha/)
 
 ## Options
 
