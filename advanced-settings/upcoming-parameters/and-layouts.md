@@ -11,9 +11,9 @@ Director Option! ([`&director`](../../viewers-settings/director.md))\
 
 ## Options
 
-| Value                       | Description              |
-| --------------------------- | ------------------------ |
-| (URL-encoded ordered array) | structure of the layouts |
+| Value                  | Description                 |
+| ---------------------- | --------------------------- |
+| \[layout1,layout2,...] | (URL-encoded ordered array) |
 
 ## Details
 
