@@ -64,11 +64,11 @@ Layout1:\
 
 You need to add [`&api=xxx`](../../general-settings/api.md) to the director's URL to control the layouts via Streamdeck.
 
-| HTTP Get                                                                 | Description                         |
-| ------------------------------------------------------------------------ | ----------------------------------- |
-| [https://api.vdo.ninja/xxx/layout/0](https://api.vdo.ninja/xxx/layout/0) | Disables the layouts -> Auto-mixing |
-| [https://api.vdo.ninja/xxx/layout/1](https://api.vdo.ninja/xxx/layout/1) | Select Layout 1                     |
-| [https://api.vdo.ninja/xxx/layout/2](https://api.vdo.ninja/xxx/layout/2) | Select Layout 2                     |
+| HTTP Get                           | Description                         |
+| ---------------------------------- | ----------------------------------- |
+| https://api.vdo.ninja/xxx/layout/0 | Disables the layouts -> Auto-mixing |
+| https://api.vdo.ninja/xxx/layout/1 | Select Layout 1                     |
+| https://api.vdo.ninja/xxx/layout/2 | Select Layout 2                     |
 
 Using these URLs change the layout of your scene in OBS. The URL you should use in OBS is the default one:
 
