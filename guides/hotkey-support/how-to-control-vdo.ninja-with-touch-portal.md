@@ -16,15 +16,17 @@ Replacing the APIKEY with a string of your choosing.&#x20;
 
 Thanks to <mark style="color:red;">djlefave</mark> on [Discord](https://discord.vdo.ninja/) for this guide.
 
-## More information
+## Switching the layout of a scene in OBS
 
-{% content-ref url="./" %}
-[.](./)
-{% endcontent-ref %}
+`https://api.vdo.ninja/APIKEY/layout/[{"x":0,"y":0,"w":50,"h":100,"c":true,"slot":0},{"x":50,"y":0,"w":50,"h":100,"c":false,"slot":1}]`
 
-{% content-ref url="broken-reference" %}
-[Broken link](broken-reference)
-{% endcontent-ref %}
+![](<../../.gitbook/assets/image (11).png>)
+
+You can also use Touch Portal to switch the layout of [`&scene=0`](../../advanced-settings/view-parameters/scene.md) without using the [Mixer App](../../steves-helper-apps/mixer-app.md).
+
+[https://docs.google.com/spreadsheets/d/1cHBTfni-Os3SAITsXrrNJ3qVCMVjunuW3xugvw1dykw/edit#gid=151839312](https://docs.google.com/spreadsheets/d/1cHBTfni-Os3SAITsXrrNJ3qVCMVjunuW3xugvw1dykw/edit#gid=151839312)
+
+You can download this google sheet and use it to create your own layouts.
 
 ## Examples and resources
 

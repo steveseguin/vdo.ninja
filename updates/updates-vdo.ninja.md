@@ -114,7 +114,7 @@ _\*\*_ UPDATE: I hot-patched beta and alpha with a fix. This fix disables the op
 * Added [`&effects=7`](../source-settings/effects.md) (or `&effects=zoom`), which will provide a manual zoom option in the effects menu. (you can also select the zoom mode via the effects menu, if available)\
   ![](<../.gitbook/assets/image (2) (4).png>)
 * Added [`&getfaces`](../advanced-settings/upcoming-parameters/and-getfaces.md) on the viewer link (or `{getFaces:true}` via the IFrame API), which will request a continuous stream of face bounding boxes, for all inbound videos and all faces contained within. The data is transmitted to the parent IFRAME, and this data can be used for moving the IFrame window around, if you wish to make your own custom face-tracker or whatever else.\
-  ![](<../.gitbook/assets/image (11) (1) (2).png>)
+  ![](<../.gitbook/assets/image (11) (1) (2) (1).png>)
 * ``[`&effects=1`](../source-settings/effects.md) on the sender side (or `&effects=facetracking`) will auto-center the user's face in the center of their video, zooming in as needed. It takes a moment to initiate, but it offers a gentle PTZ-like effect.\
   \-- note: I previously had `&effects=1`, but it wasn't that good, so this is a more polished attempt. It's also available from the effects drop down menu now as a selectable option, as before I was hiding it.\
   ![](<../.gitbook/assets/image (3) (1) (1) (2).png>)\
@@ -616,7 +616,7 @@ _\*\*_ UPDATE: I hot-patched beta and alpha with a fix. This fix disables the op
 
 * Setting [`&h264profile=0`](../newly-added-parameters/and-h264profile.md) (or `false`/`off`/`default`), will now have the h264 profile be left as the default browser default when the sender is an android. (currently I rewrite the h264 profile for android devices when h264 is used, but advanced users might want the default)
 * I rewrote a large part of the auto-mixer to support borders around videos ([`&border=10`](../advanced-settings/upcoming-parameters/and-border.md)), as well as fixed the [`&rounded=10`](../advanced-settings/design-parameters/rounded.md) parameter to crop videos better. Also, I added [`&bordercolor=FFFFFF`](../advanced-settings/upcoming-parameters/and-bordercolor.md) (hex or color name), to allow for changing the color of the border.\
-  ![](<../.gitbook/assets/image (11).png>)\
+  ![](<../.gitbook/assets/image (11) (1).png>)\
   \
   \*changes on alpha, [https://vdo.ninja/alpha](https://vdo.ninja/alpha) (on alpha, since it was a large code rewrite and so needs a bit more testing, but it has been lightly tested)
 
