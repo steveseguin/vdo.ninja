@@ -3,6 +3,11 @@
 [social-stream.md](../steves-helper-apps/social-stream.md "mention")\
 [chat-overlay.md](../steves-helper-apps/chat-overlay.md "mention")
 
+#### **October 15**
+
+* Refined Socialstream's dock style a bit, along with fixed some issues with the remote wss/http API
+* omlet.gg added to Socialstream
+
 #### **October 2**
 
 * Updated Socialstream to support custom themes/templates. I've provided an example theme that you can use or base your own themes on. see: [https://github.com/steveseguin/social\_stream/tree/main/themes](https://github.com/steveseguin/social\_stream/tree/main/themes) for more.\

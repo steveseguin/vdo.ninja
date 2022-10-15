@@ -2,15 +2,25 @@
 
 [raspberry.ninja.md](../steves-helper-apps/raspberry.ninja.md "mention")
 
+#### October 15
+
+* RTMP support added to Raspberry\_Ninja:\
+  [https://youtu.be/8JOn2sK4GfQ](https://youtu.be/8JOn2sK4GfQ)
+
+#### October 14
+
+* Setting up mobile (IRL) streaming with Raspberry\_Ninja:\
+  [https://youtu.be/eqC2SRXoPK4](https://youtu.be/eqC2SRXoPK4)
+
 #### August 9
 
-* You can wire up an LED to the Raspberry Ninja project now, on a RPI, to use as a connection-status indicator. see [`https://raspberry.ninja/raspberry_pi/`](https://raspberry.ninja/raspberry\_pi/)``![Bild](https://media.discordapp.net/attachments/701232125831151697/1006385249577598976/unknown.png?width=385\&height=300)
+* You can wire up an LED to the Raspberry\_Ninja project now, on a RPI, to use as a connection-status indicator. see [`https://raspberry.ninja/raspberry_pi/`](https://raspberry.ninja/raspberry\_pi/)``![Bild](https://media.discordapp.net/attachments/701232125831151697/1006385249577598976/unknown.png?width=385\&height=300)
 
 #### August 6
 
-* New URL for the Raspberry\_ninja project: [https://raspberry.ninja/](https://raspberry.ninja/) (rather than having to scour GitHub to find it). And it's prettier than it used to be.\
+* New URL for the Raspberry\_Ninja project: [https://raspberry.ninja/](https://raspberry.ninja/) (rather than having to scour GitHub to find it). And it's prettier than it used to be.\
   ![Bild](https://media.discordapp.net/attachments/701232125831151697/1005272561493491843/unknown.png?width=272\&height=300)
-* Created a new uSD image for the Nvidia Jetson and the Raspberry Ninja project; might help with audio issues. Might also work with newer Jetson boards. Compatible with uSD cards of size 16-GB and greater now.
+* Created a new uSD image for the Nvidia Jetson and the Raspberry\_Ninja project; might help with audio issues. Might also work with newer Jetson boards. Compatible with uSD cards of size 16-GB and greater now.
 
 #### March 25
 
@@ -20,7 +30,7 @@
 
 #### March 24
 
-* Added the ability to rotate the camera (via command line ) on the raspberry\_ninja. Portrait mode or flipped video can be supported as a result.
+* Added the ability to rotate the camera (via command line ) on the Raspberry\_Ninja. Portrait mode or flipped video can be supported as a result.
 
 #### March 17
 

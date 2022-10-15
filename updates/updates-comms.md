@@ -2,6 +2,11 @@
 
 [comms.md](../steves-helper-apps/comms.md "mention")
 
+#### October 15
+
+* Updated the Comms app to be mobile friendly
+* Created an experimental very simple voice-chat-room app based on the new Comms app here: [https://vdo.ninja/alpha/meet](https://vdo.ninja/alpha/meet)
+
 #### October 8
 
 * Created a page called "Comms", which is designed for audio-only production.
