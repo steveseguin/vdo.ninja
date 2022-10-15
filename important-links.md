@@ -6,14 +6,14 @@ description: All useful links you might take a look at
 
 ### VDO.Ninja Versions
 
-| Official Version              | [https://vdo.ninja/](https://vdo.ninja/)                                             |
-| ----------------------------- | ------------------------------------------------------------------------------------ |
-| Beta Version                  | [https://vdo.ninja/beta/](https://vdo.ninja/beta/)                                   |
-| Alpha Version                 | [https://vdo.ninja/alpha/](https://vdo.ninja/alpha/)                                 |
-| BackUp Version                | [https://backup.vdo.ninja/](https://backup.vdo.ninja/)                               |
-| Previous Versions             | [https://docs.vdo.ninja/releases](https://docs.vdo.ninja/releases)                   |
-| Project Development on GitHub | [https://github.com/steveseguin/vdo.ninja](https://github.com/steveseguin/vdo.ninja) |
-| Development Progress          | [https://updates.vdo.ninja/](https://updates.vdo.ninja/)                             |
+| Official Version              | [https://vdo.ninja/](https://vdo.ninja/)                                                             |
+| ----------------------------- | ---------------------------------------------------------------------------------------------------- |
+| Beta Version                  | [https://vdo.ninja/beta/](https://vdo.ninja/beta/)                                                   |
+| Alpha Version                 | [https://vdo.ninja/alpha/](https://vdo.ninja/alpha/)                                                 |
+| BackUp Version                | [https://backup.vdo.ninja/](https://backup.vdo.ninja/)                                               |
+| Previous Versions             | [https://docs.vdo.ninja/releases](https://docs.vdo.ninja/releases)                                   |
+| Project Development on GitHub | [https://github.com/steveseguin/vdo.ninja](https://github.com/steveseguin/vdo.ninja)                 |
+| Development Progress          | [https://docs.vdo.ninja/updates/updates-vdo.ninja](https://docs.vdo.ninja/updates/updates-vdo.ninja) |
 
 ### VDO.Ninja Link Generators
 
