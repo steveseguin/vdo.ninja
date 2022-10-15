@@ -23,8 +23,12 @@ or just go to [https://vdo.ninja/alpha/comms](https://vdo.ninja/alpha/comms) to 
 
 <figure><img src="../.gitbook/assets/image (5) (3).png" alt=""><figcaption></figcaption></figure>
 
+## Voice-chat-room app
+
+An experimental very simple voice-chat-room app based on the new Comms app: [https://vdo.ninja/alpha/meet](https://vdo.ninja/alpha/meet)
+
 ## Updates
 
-{% content-ref url="../updates/updates-speed-test.md" %}
-[updates-speed-test.md](../updates/updates-speed-test.md)
+{% content-ref url="../updates/updates-comms.md" %}
+[updates-comms.md](../updates/updates-comms.md)
 {% endcontent-ref %}
