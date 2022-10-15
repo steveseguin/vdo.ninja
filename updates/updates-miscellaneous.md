@@ -58,3 +58,13 @@
 #### February 14
 
 * [https://invite.cam/](https://invite.cam/) was updated to fully embrace the VDO.Ninja over the older one; old links will still work tho. The GitHub for the site was updated also.
+
+#### February 13
+
+* Experimented a bit with the notion of making VDO.Ninja even more 'web 3.0', so in this case decentralizing the handshake server. I think I finally have a proof of concept of VDO.Ninja working over the IOTA crypto blockchain.\
+  \
+  It's not serverless, as you still need a blockchain server to talk to, but it's decentralized, meaning every guest can connect via a different server end points. This allows for abstracted communication of each peer with each other by a common public ledger. Once the handshake is complete, it's all peer to peer, and the blockchain connection can be removed.\
+  \
+  To try it out, just open this site in two tabs, enter the same room name when prompted, and wait a minute or two: [https://vdo.ninja/beta/iota/](https://vdo.ninja/beta/iota/) If it doesn't work, refresh and wait a couple minutes. You can also use [`&room=ROOMNAME`](../general-settings/room.md) as a URL parameter to affix the room name to the link.\
+  \
+  I've identified numerous issues and concerns with using the blockchain as an API, but the most blatant one users will notice is how much slower it takes to connect. Solutions abound though, so I'll keep chipping at the problems over the coming months.

@@ -708,6 +708,14 @@ February 23
 
 * Pushed v21.0 to GitHub: [https://github.com/steveseguin/vdo.ninja/tree/v21-dev](https://github.com/steveseguin/vdo.ninja/tree/v21-dev)
 * v21 pushed into production. Cached cleared. v20.4 is still available at [https://vdo.ninja/v20/](https://vdo.ninja/v20/) if you prefer that.
+* Added a 'clear' button to the download links in the chat.![Bild](https://media.discordapp.net/attachments/701232125831151697/942652225455534090/unknown.png?width=400\&height=205)
+
+#### February 13
+
+* I'm going to consider v20.8 as v21.0 going forward, which is currently on beta ([https://vdo.ninja/beta/](https://vdo.ninja/beta/))
+* I've archived v20.4 of VDO.Ninja to [https://vdo.ninja/v20/](https://vdo.ninja/v20/), so if you've had continued problems this last week with production, which aren't now resolved on beta, you can give that a go instead of [v19](../release-notes/v19.md). v21 will include changes from v20.5 and onwards (the last couple weeks of code changes).
+* Please note: I am intending to push v21 to production tonight, around midnight EST, which should not cause disruptions; it's small changes compared to what's on production now. The goal of pushing it is to allow for v20.4 to be archived, creating a clear division in versions to be made. v21 has been mainly bug fixes and tweaks, but i'll work on its release notes still.
+* Any testing of beta today though would be VERY welcomed. If you are able to demonstrate an issue that exists in beta (v21) that does not exist in v20.4, please provide me the details of how you are able to replicate it. Android/iOS has had their group-room performance/quality allowances tweaked, and Android has had its h264 encoder profile tweaked to avoid it failing on some devices. I've had a few users mention higher CPU loads and audio sync issues since v20.4, but I am unable to reproduce any higher CPU load myself.
 
 #### **Previous updates**
 

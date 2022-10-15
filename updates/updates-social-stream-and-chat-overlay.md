@@ -242,3 +242,23 @@
 *   Added support for VDO.Ninja's pop out chat to socialstream.ninja.
 
     ![Bild](https://media.discordapp.net/attachments/701232125831151697/942657349066301570/unknown.png?width=400\&height=86)
+
+#### February 13
+
+* Fixed an issue with chat.overlay.ninja and its twitter integration
+
+#### February 9
+
+* Added more Facebook support to the Socialstream extension, such pop-up chat support, producer-side auto commenting, and a bit of message anti-duplication code.
+* Added `&fade` and `&swipe` as two new transition styles for the Social Stream featured chat overlay; messages can be configured to fade-in without moving or slide in from the left-side of the screen. (instead of popping up from the bottom)
+* Added some CSS class names to make setting custom CSS easier and cleaned up some of the code; very much overdue.
+
+#### February 7
+
+* Added support for Instagram live to Socialstream
+* Added support for TikTok live to Socialstream
+* Updated Socialstream to auto-feature-select incoming messages. Button toggle or URL parameter to enabled it via the dock. Updates at a rate of 2 per 3 seconds max.
+
+#### January 31
+
+* By request, made a simple tool that lets you enter a VDO.Ninja group scene link and a featured chat overlay link; you'll get a single combined link in return. When using that combined link, when a featured chat is active, the group scene link is made smaller to make room for the chat message. When that message clears, the group chat returns to full screen. This can be found at: [socialstream.ninja/automix](https://socialstream.ninja/automix) or [chat.overlay.ninja/automix](https://chat.overlay.ninja/automix); feedback welcomed.
