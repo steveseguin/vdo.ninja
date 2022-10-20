@@ -2,6 +2,10 @@
 
 [mixer-app.md](../steves-helper-apps/mixer-app.md "mention")
 
+#### October 19
+
+* [vdo.ninja/alpha/mixer](https://vdo.ninja/alpha/mixer) was updated to have the director be included as a slot option, so you can include yourself in the video layouts now.
+
 #### August 17
 
 * Added a setting to disable auto-slot assignment to the mixer. (requires a hard browser cache refresh of all VDO.Ninja links for the mixer to work properly with this change) \* on alpha @ vdo.ninja/alpha/mixer\
