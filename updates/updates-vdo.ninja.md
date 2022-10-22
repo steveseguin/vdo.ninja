@@ -60,7 +60,7 @@ _\*\*_ UPDATE: I hot-patched beta and alpha with a fix. This fix disables the op
 *   Up to 20-videos on screen now are supported in the screen-share view; before after around 12-videos they started to be hidden
 
     ![](<../.gitbook/assets/image (3) (1).png>)![](<../.gitbook/assets/image (5) (2).png>)\
-    ![](<../.gitbook/assets/image (2) (2).png>)![](<../.gitbook/assets/image (4).png>)\
+    ![](<../.gitbook/assets/image (2) (2).png>)![](<../.gitbook/assets/image (4) (1).png>)\
     \
     \*\*changes on alpha (vdo.ninja/alpha/) and github
 

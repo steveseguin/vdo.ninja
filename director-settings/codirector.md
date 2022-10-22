@@ -36,6 +36,8 @@ The first director to join the room is the main director, and so their password 
 
 A co-director cannot force-disconnect the main director.
 
+If the main director does not have \&codirector={somepassword} in their URL, nor enabled co-director mode via the room-settings menu, then remote co-directors will not be able to join.
+
 {% hint style="info" %}
 The co-director mode is still evolving, and certain things like shared-state between all the directors may still be missing.
 
@@ -44,17 +46,25 @@ Starting with [v20](../release-notes/v20.md) of VDO.Ninja, a co-director invite 
 
 ![The co-directors have a special color assigned to them](<../.gitbook/assets/image (31).png>)
 
+### Optional - Enable via Room Settings
+
+You can also enable the co-director mode by checking the "Add co-directors .." option in the room settings menu. This will provide you a link with the \&codirector invite link already generated.\
+\
+This will only work while the check-box is selected, so be sure to re-enable it if reloading the page without \&codirector added to your own link.
+
+### ![](../.gitbook/assets/image.png)
+
 ### Warnings
 
 Do not confuse the room password with the director's password; if they are the same, you potentially allow a mischievous guest to have access that they should not have.
+
+Co-directors will not be able to join as co-directors unless the main director has enabled the co-director option via the room setting's checkbox or by having a matching \&codirector=xxx parameter in their own link.
 
 If the main director leaves and re-joins, or a new director joins, all the co-directors will need to be re-checked. It's possible that a network outage could have a co-director and the main director to switch roles, depending on who re-connected.
 
 If you copy and paste the main director's URL to a new browser/tab, be sure to remove the [`&push=STREAMID`](../source-settings/push.md) portion of the URL. If you do not, you will get an error about the stream ID being already in use. Each co-director and guest needs their own unique stream ID.
 
 If using the [`&queue`](../general-settings/queue.md) parameter with co-directors, you may need to use [`&view=STREAMID`](../advanced-settings/view-parameters/view.md) to allow the co-director to bypass the queue, else they won't be able to be validated since they will be stuck in the queue. There is more info about this in the queue's documentation.
-
-This feature required fairly extensive changes to the code base to enable, so please report issues you may encounter.
 
 ## Related
 
