@@ -1,7 +1,5 @@
 ---
-description: >-
-  Details and links if interested in making a gift to the developer of
-  VDO.Ninja.
+description: Details and links if interested in making a gift to the developer of VDO.Ninja
 ---
 
 # Sponsor ❤
