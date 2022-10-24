@@ -40,10 +40,16 @@ Using this group function is an alternative to transfer rooms, however it's perh
 Custom groups used by remote guests now show in the director's view, just like custom scenes do. If you use `&groups=group,test,vdo`, new group buttons will appear.\
 ![](<../.gitbook/assets/image (171).png>)
 
+With [`&groupmode`](../advanced-settings/upcoming-parameters/and-groupmode.md) added to your URL, when not assigned to a group, you don't hear or see anything. This also goes for remote participants who are not in a group - you will not see or hear them if they are not in a group, even if you also are not in a group.
+
 ## Related
 
 {% content-ref url="and-groupaudio.md" %}
 [and-groupaudio.md](and-groupaudio.md)
+{% endcontent-ref %}
+
+{% content-ref url="../advanced-settings/upcoming-parameters/and-groupmode.md" %}
+[and-groupmode.md](../advanced-settings/upcoming-parameters/and-groupmode.md)
 {% endcontent-ref %}
 
 {% content-ref url="../director-settings/rooms.md" %}

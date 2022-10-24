@@ -21,3 +21,7 @@ By default a stream assigned to one group won't be visible or audible to those i
 {% content-ref url="and-group.md" %}
 [and-group.md](and-group.md)
 {% endcontent-ref %}
+
+{% content-ref url="../advanced-settings/upcoming-parameters/and-groupmode.md" %}
+[and-groupmode.md](../advanced-settings/upcoming-parameters/and-groupmode.md)
+{% endcontent-ref %}

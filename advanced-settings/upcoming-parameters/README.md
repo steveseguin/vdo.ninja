@@ -58,6 +58,7 @@ You can use/test these parameters on [vdo.ninja/alpha](https://vdo.ninja/alpha/)
 | ``[`&welcomeimage`](and-welcomeimage.md)\*                       | Lets you specify an image that appears for a few seconds once a guest joins                                                                                        |
 | ``[`&layout`](and-layout.md)\*\*                                 | Shows the guest a return feed of the current mixer layout when using the Mixer App                                                                                 |
 | ``[`&layouts`](and-layouts.md)\*                                 | An ordered array of layouts, which can be used to switch between using the API                                                                                     |
+| ``[`&groupmode`](and-groupmode.md)\*                             | Added to the URL, when not assigned to a group, you don't hear or see anything                                                                                     |
 
 \*only on [vdo.ninja/alpha](https://vdo.ninja/alpha/)\
 \*\*on [vdo.ninja/beta](https://vdo.ninja/beta/) and [vdo.ninja/alpha](https://vdo.ninja/alpha/)

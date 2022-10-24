@@ -10,7 +10,7 @@ _\*\*_ UPDATE: I hot-patched beta and alpha with a fix. This fix disables the op
 
 #### **October 24** <a href="#august-31" id="august-31"></a>
 
-* Added `&groupmode` to VDO.Ninja, which changes the way groups work when not in a group. \
+* Added [`&groupmode`](../advanced-settings/upcoming-parameters/and-groupmode.md) to VDO.Ninja, which changes the way groups work when not in a group. \
   \
   With `&groupmode` added to your URL, when not assigned to a group, you don't hear or see anything. This also goes for remote participants who are not in a group - you will not see or hear them if they are not in a group, even if you also are not in a group.\
   \
