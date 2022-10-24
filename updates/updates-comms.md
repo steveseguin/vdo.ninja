@@ -2,6 +2,14 @@
 
 [comms.md](../steves-helper-apps/comms.md "mention")
 
+#### October 24
+
+* Made a custom domain for the Comms app; [https://comms.cam/](https://comms.cam/)\
+  It uses vdo.ninja/alpha via the IFrame API, so its cross compatible. I'm not entirely sure if I'll keep it spun off like this, rather than just hosted on the VDO.Ninja domain itself, but I'm open to feedback/ideas on which direction I should go. (better domain names also are welcomed, if I can afford them)
+* The Comms app has been updated to use `&groupmode` by default
+* Lets you share video now; you need to select it via the settings menu - when sharing video via the Comms app, the video-mute button and mini-preview appears\
+  ![](<../.gitbook/assets/image (9).png>)
+
 #### October 15
 
 * Updated the Comms app to be mobile friendly

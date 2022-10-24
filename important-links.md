@@ -33,12 +33,12 @@ description: All useful links you might take a look at
 
 ### VDO.Ninja Related
 
-| E-Sports App                                                                      | [https://versus.cam/](https://versus.cam/)                                                                                                             |
+| Versus - E-Sports App                                                             | [https://versus.cam/](https://versus.cam/)                                                                                                             |
 | --------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------ |
 | Mixer App                                                                         | [https://vdo.ninja/mixer](https://vdo.ninja/mixer)                                                                                                     |
 | Mixer App Beta                                                                    | [https://vdo.ninja/beta/mixer](https://vdo.ninja/beta/mixer)                                                                                           |
 | Mixer App Alpha                                                                   | [https://vdo.ninja/alpha/mixer](https://vdo.ninja/alpha/mixer)                                                                                         |
-| Multi-group audio chat                                                            | [https://vdo.ninja/alpha/comms](https://vdo.ninja/alpha/comms)                                                                                         |
+| Comms - Multi-group audio chat                                                    | [https://comms.cam/](https://comms.cam/)                                                                                                               |
 | Voice-chat-room app                                                               | [https://vdo.ninja/alpha/meet](https://vdo.ninja/alpha/meet)                                                                                           |
 | Device Support                                                                    | [https://vdo.ninja/supports](https://vdo.ninja/supports)                                                                                               |
 | Device IDs                                                                        | [https://vdo.ninja/devices](https://vdo.ninja/devices)                                                                                                 |

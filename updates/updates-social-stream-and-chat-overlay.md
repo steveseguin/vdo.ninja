@@ -3,6 +3,10 @@
 [social-stream.md](../steves-helper-apps/social-stream.md "mention")\
 [chat-overlay.md](../steves-helper-apps/chat-overlay.md "mention")
 
+#### **October 22**
+
+* piczel.tv support added to Socialstream
+
 #### **October 15**
 
 * Refined Socialstream's dock style a bit, along with fixed some issues with the remote wss/http API

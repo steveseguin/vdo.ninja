@@ -8,6 +8,16 @@ I'm working on a fix, but I don't have an ETA. Will update when fixed.
 _\*\*_ UPDATE: I hot-patched beta and alpha with a fix. This fix disables the option to select custom audio output destinations, but resolves the echo issue. If using a self-deployed instance, you can instead add [`&noap`](../general-settings/noaudioprocessing.md) to the URLs to fix it as well; you can also enable `chrome://flags/#chrome-wide-echo-cancellation`, patch the code, or just use headphones.
 {% endhint %}
 
+#### **October 24** <a href="#august-31" id="august-31"></a>
+
+* Added `&groupmode` to VDO.Ninja, which changes the way groups work when not in a group. \
+  \
+  With `&groupmode` added to your URL, when not assigned to a group, you don't hear or see anything. This also goes for remote participants who are not in a group - you will not see or hear them if they are not in a group, even if you also are not in a group.\
+  \
+  The default normally with VDO.Ninja is that if not in a group, you see and hear everyone. This remains true if not using `&groupmode`, even if others in the room are. Others may not be able to see or hear you though, if they have `&groupmode` enabled, and you haven't picked a group. So, `&groupmode` only impacts the local user, and will not impact remote connections.\
+  \
+  \*\* changes are on alpha. Please report bugs.
+
 #### **October 10** <a href="#august-31" id="august-31"></a>
 
 * Added [`&layouts=[[{xxxxxx}]]`](../advanced-settings/upcoming-parameters/and-layouts.md) as a URL parameter option, where you can pass a set of different layouts (as a URL-encoded ordered array) to VDO.Ninja. (\*\* on alpha)\
@@ -629,7 +639,7 @@ _\*\*_ UPDATE: I hot-patched beta and alpha with a fix. This fix disables the op
 * The [`&screensharequality`](../source-settings/screensharequality.md) parameter applies to all three types of screen sharing types, not just secondary-share. Before [`&quality`](../advanced-settings/video-parameters/and-quality.md) was needed for primary screen share quality setting.
 * When the user selects the screen share quality via the gear icon (primary share), it will remember that setting in case a secondary screen share is started later in that session.
 * Added a "show stats" option to the right-click menu (so you don't need to hold CTRL to get it, making it more discoverable for new users I guess)\
-  ![](<../.gitbook/assets/image (9).png>)\
+  ![](<../.gitbook/assets/image (9) (5).png>)\
   \*changes on beta (vdo.ninja/beta/)
 
 #### April 5
