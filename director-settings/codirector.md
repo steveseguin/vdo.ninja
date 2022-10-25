@@ -52,7 +52,7 @@ You can also enable the co-director mode by checking the "Add co-directors .." o
 
 This will only work while the check-box is selected, so be sure to re-enable it if reloading the page without `&codirector` added to your own link.
 
-### ![](../.gitbook/assets/image.png)
+### ![](<../.gitbook/assets/image (12).png>)
 
 ### Warnings
 

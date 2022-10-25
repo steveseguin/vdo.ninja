@@ -12,13 +12,14 @@ They are separated in three groups: [general options](./#general-options) (push 
 
 You can use them for publisher, viewer and director URLs.
 
-| Parameter                                           | Explanation                                                                   |
-| --------------------------------------------------- | ----------------------------------------------------------------------------- |
-| ``[`&ln`](../../general-settings/and-ln.md)``       | Sets the interface language                                                   |
-| ``[`&remote`](../../general-settings/remote.md)``   | Allows remote operation of the zoom and focus, and access to statistics       |
-| ``[`&stats`](../../general-settings/and-stats.md)`` | Shows the connection/media stats window by default                            |
-| ``[`&sticky`](../../general-settings/sticky.md)``   | Allows a user to save and then later restore their streaming session settings |
-| ``[`&disablehotkeys`](and-disablehotkeys.md)``      | Disables hotkeys (like `CRTL + M`)                                            |
+| Parameter                                            | Explanation                                                                   |
+| ---------------------------------------------------- | ----------------------------------------------------------------------------- |
+| ``[`&ln`](../../general-settings/and-ln.md)``        | Sets the interface language                                                   |
+| ``[`&remote`](../../general-settings/remote.md)``    | Allows remote operation of the zoom and focus, and access to statistics       |
+| ``[`&stats`](../../general-settings/and-stats.md)``  | Shows the connection/media stats window by default                            |
+| ``[`&sticky`](../../general-settings/sticky.md)``    | Allows a user to save and then later restore their streaming session settings |
+| ``[`&disablehotkeys`](and-disablehotkeys.md)``       | Disables hotkeys (like `CRTL + M`)                                            |
+| ``[`&showlist`](../../source-settings/showlist.md)`` | Shows list of hidden guests                                                   |
 
 ## Source Side Options
 
@@ -39,7 +40,6 @@ You can use them for publisher, viewer and director URLs.
 | ``[`&videocontrols`](../newly-added-parameters/and-videocontrols.md)`` | Shows the video control bar                                                                                         |
 | ``[`&transcribe`](../../source-settings/transcribe.md)``               | Enables transcription and closed captioning                                                                         |
 | ``[`&nowebsite`](../../source-settings/nowebsite.md)``                 | Disables IFRAMEs from loading, such as remotely shared websites by another guest or director                        |
-| ``[`&showlist`](../../source-settings/showlist.md)``                   | Toggles list of hidden guests                                                                                       |
 | ``[`&signalmeter`](../../newly-added-parameters/and-signalmeter.md)``  | Visualizes the packet loss of a guest                                                                               |
 | ``[`&consent`](../../source-settings/consent.md)``                     | Will ask the user for content to remote change their camera or microphone                                           |
 | ``[`&hands`](../../source-settings/and-hands.md)``                     | Enables a "Raise Hand" button for guests                                                                            |
