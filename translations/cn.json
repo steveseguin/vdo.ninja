@@ -394,7 +394,7 @@
     "animate-mixing": "动画合成",
     "prefix-screenshare": "前缀屏幕共享 ID",
     "more-than-four-can-join": "这四个客人位置仅用于演示。一个房间可以容纳四位以上的客人。",
-    "welcome-to-obs-ninja-chat": "\n欢迎！您可以从此处直接向连接的对等方发送文本信息。\n",
+    "welcome-to-vdo-ninja-chat": "\n欢迎！您可以从此处直接向连接的对等方发送文本信息。\n",
     "privacy-disabled": "隐私警告：如果您继续，房管将能够远程访问您的摄像头和麦克风。",
     "face-mesh": "面网格（缓慢加载）",
     "anonymous-mask": "匿名面具",

@@ -345,10 +345,6 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 	}
 	
 	
-	// flagship
-	
-	
-	
 	if (urlParams.has('broadcast') || urlParams.has('bc')) {
 		log("Broadcast flag set");
 		session.broadcast = urlParams.get('broadcast') || urlParams.get('bc') || null;
@@ -389,6 +385,9 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 			session.showList = true;
 		}
 	}
+	if (session.showList===true){
+		getById("hideusers").classList.add("hidden");
+	}
 	
 	if (urlParams.has('meshcast')) {
 		session.meshcast = urlParams.get('meshcast') || "any";
@@ -398,37 +397,39 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 	
 	var filename = false;
 	try {
-		filename = window.location.pathname.substring(window.location.pathname.lastIndexOf('/') + 1);
-		filename = filename.replace("??", "?");
-		filename2 = filename.split("?")[0];
-		// split at ???
-		if (filename.split(".").length == 1) {
-			if (filename2.length < 2) { // easy win
-				filename = false;
-			} else if (filename.startsWith("&")) { // easy win
-				var tmpHref = window.location.href.substring(0, window.location.href.lastIndexOf('/')) + "/?" + filename.split("&").slice(1).join("&");
-				log("TMP " + tmpHref);
-				updateURL(filename.split("&")[1], true, tmpHref);
-				filename = false;
-			} else if (filename2.split("&")[0].includes("=")) {
-				log("asdf  " + filename.split("&")[0]);
-				if (history.pushState) {
-					var tmpHref = window.location.href.substring(0, window.location.href.lastIndexOf('/'));
-					tmpHref = tmpHref + "/?" + filename;
+		if (!session.decrypted){
+			filename = window.location.pathname.substring(window.location.pathname.lastIndexOf('/') + 1);
+			filename = filename.replace("??", "?");
+			filename2 = filename.split("?")[0];
+			// split at ???
+			if (filename.split(".").length == 1) {
+				if (filename2.length < 2) { // easy win
 					filename = false;
-					//warnUser("Please ensure your URL is correctly formatted.");
-					window.history.pushState({path: tmpHref.toString()}, '', tmpHref.toString());
+				} else if (filename.startsWith("&")) { // easy win
+					var tmpHref = window.location.href.substring(0, window.location.href.lastIndexOf('/')) + "/?" + filename.split("&").slice(1).join("&");
+					log("TMP " + tmpHref);
+					updateURL(filename.split("&")[1], true, tmpHref);
+					filename = false;
+				} else if (filename2.split("&")[0].includes("=")) {
+					log("asdf  " + filename.split("&")[0]);
+					if (history.pushState) {
+						var tmpHref = window.location.href.substring(0, window.location.href.lastIndexOf('/'));
+						tmpHref = tmpHref + "/?" + filename;
+						filename = false;
+						//warnUser("Please ensure your URL is correctly formatted.");
+						window.history.pushState({path: tmpHref.toString()}, '', tmpHref.toString());
+					}
+				} else {
+					filename = filename2.split("&")[0];
+					if (filename2 != filename) {
+						warnUser("Warning: Please ensure your URL is correctly formatted.");
+					}
 				}
 			} else {
-				filename = filename2.split("&")[0];
-				if (filename2 != filename) {
-					warnUser("Warning: Please ensure your URL is correctly formatted.");
-				}
+				filename = false;
 			}
-		} else {
-			filename = false;
+			log(filename);
 		}
-		log(filename);
 	} catch (e) {
 		errorlog(e);
 	}
@@ -454,8 +455,8 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 	}
 	
 	session.slotmode = false; // temporary; remove in the future TODO: ## -----------------------
-	if (urlParams.has('slotmode')){
-		session.slotmode = parseInt(urlParams.get('slotmode')) || 1;
+	if (urlParams.has('slotmode') || urlParams.has('slotsmode')){
+		session.slotmode = parseInt(urlParams.get('slotmode')) || parseInt(urlParams.get('slotsmode')) || 1;
 	}
 	
 
@@ -695,6 +696,19 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 				session.layout = JSON.parse(urlParams.get('layout')) || {};
 			} catch(e){
 				session.layout = {};
+			}
+		}
+	}
+	
+	if (urlParams.has('layouts')) { // an ordered array of layouts, which can be used to switch between using the API layouts action.
+		// ie: ?layouts=[[{"x":0,"y":0,"w":100,"h":100,"slot":0}],[{"x":0,"y":0,"w":100,"h":100,"slot":1}],[{"x":0,"y":0,"w":100,"h":100,"slot":2}],[{"x":0,"y":0,"w":100,"h":100,"slot":3}],[{"x":0,"y":0,"w":50,"h":100,"c":false,"slot":0},{"x":50,"y":0,"w":50,"h":100,"c":false,"slot":1}],[{"x":0,"y":0,"w":100,"h":100,"z":0,"c":false,"slot":1},{"x":70,"y":70,"w":30,"h":30,"z":1,"c":true,"slot":0}],[{"x":0,"y":0,"w":50,"h":50,"c":true,"slot":0},{"x":50,"y":0,"w":50,"h":50,"c":true,"slot":1},{"x":0,"y":50,"w":50,"h":50,"c":true,"slot":2},{"x":50,"y":50,"w":50,"h":50,"c":true,"slot":3}],[{"x":0,"y":16.667,"w":66.667,"h":66.667,"c":true,"slot":0},{"x":66.667,"y":0,"w":33.333,"h":33.333,"c":true,"slot":1},{"x":66.667,"y":33.333,"w":33.333,"h":33.333,"c":true,"slot":2},{"x":66.667,"y":66.667,"w":33.333,"h":33.333,"c":true,"slot":3}]]
+		try {
+			session.layouts = JSON.parse(decodeURIComponent(urlParams.get('layouts'))) || JSON.parse(urlParams.get('layouts')) || {};
+		} catch(e){
+			try {
+				session.layouts = JSON.parse(urlParams.get('layouts')) || false;
+			} catch(e){
+				session.layouts = false;
 			}
 		}
 	}
@@ -1261,6 +1275,28 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 				}
 			}
 		}
+	} else if (urlParams.has('labelsuggestion') || urlParams.has('ls')) {
+		session.label = urlParams.get('labelsuggestion') || urlParams.get('ls') || null;
+		var updateURLAsNeed = true;
+		window.focus();
+		var label = await promptAlt(miscTranslations["enter-display-name"], true);
+		if (label) {
+			session.label = sanitizeLabel(label); // alphanumeric was too strict. 
+		} else {
+			session.label = sanitizeLabel(session.label);
+			updateURLAsNeed = false;
+		}
+		
+		document.title = session.label; // what the result is.
+
+		if (updateURLAsNeed) {
+			var label = encodeURIComponent(session.label);
+			if (urlParams.has('l')) {
+				updateURL("l=" + label, true, false);
+			} else {
+				updateURL("label=" + label, true, false);
+			}
+		}
 	}
 
 	if (urlParams.has('transparent') || urlParams.has('transparency')) { // sets the window to be transparent - useful for IFRAMES?
@@ -1778,10 +1814,10 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 		//session.manual=true;
 		//innerHTML = 
 	}
-
-	if (urlParams.has('keyframeinterval') || urlParams.has('keyframeRate') || urlParams.has('keyframe') || urlParams.has('fki')) {
+	
+	if (urlParams.has('keyframeinterval') || urlParams.has('keyframerate') || urlParams.has('keyframe') || urlParams.has('fki')) {
 		log("keyframeRate ENABLED");
-		session.keyframeRate = parseInt(urlParams.get('keyframeinterval') || urlParams.get('keyframeRate') || urlParams.get('keyframe') || urlParams.get('fki')) || 0;
+		session.keyframeRate = parseInt(urlParams.get('keyframeinterval') || urlParams.get('keyframerate') || urlParams.get('keyframe') || urlParams.get('fki')) || 0;
 	}
 
 	if (urlParams.has('obsoff') || urlParams.has('oo') || urlParams.has('disableobs')) {
@@ -2245,6 +2281,10 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 	
 	if (urlParams.has('groupaudio') || urlParams.has('ga')) {
 		session.groupAudio = true;
+	}
+	
+	if (urlParams.has('groupmode') || urlParams.has('gm')) {
+		session.allowNoGroup = true;
 	}
 	
 	if (urlParams.has('host')) {
@@ -3329,21 +3369,20 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 			}
 		}
 	}
-	
 	if (session.roomid || urlParams.has('roomid') || urlParams.has('r') || urlParams.has('room') || filename || (session.permaid !== false)) {
 
 		var roomid = "";
 		if (urlParams.has('room')) { // needs to be first; takes priority
 			roomid = urlParams.get('room');
-		} else if (filename) {
-			roomid = filename;
 		} else if (urlParams.has('roomid')) {
 			roomid = urlParams.get('roomid');
 		} else if (urlParams.has('r')) {
 			roomid = urlParams.get('r');
 		} else if (session.roomid) {
 			roomid = session.roomid;
-		}
+		} else if (filename) {
+			roomid = filename;
+		} 
 		session.roomid = sanitizeRoomName(roomid);
 	}
 	
@@ -3544,6 +3583,8 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 		getById("container-11").style.display = 'none';
 		getById("container-12").style.display = 'none';
 		getById("container-13").style.display = 'none';
+		getById("container-14").style.display = 'none';
+		getById("container-15").style.display = 'none';
 		getById("mainmenu").style.alignSelf = "center";
 		getById("mainmenu").classList.add("mainmenuclass");
 		getById("header").style.alignSelf = "center";
@@ -4016,6 +4057,58 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 		}
 		
 		
+		if ("groups" in e.data) {
+			if (typeof e.data.groups == "object"){
+				session.group = e.data.groups || [];
+			} else if (!e.data.group){
+				session.group = [];
+			} else {
+				session.group = e.data.groups.split(",");
+			}
+			var eleGroup = getById("groups");
+			eleGroup.querySelectorAll('[data-action-type="toggle-group"][data-group]').forEach(group=>{
+				if (!(session.group && session.group.includes(group))){
+					group.remove("green");
+				}
+			});
+			
+			if (session.group){
+				session.group.forEach(group =>{
+					
+					var ele = eleGroup.querySelector('[data-action-type="toggle-group"][data-group="'+group+'"');
+					if (!ele){
+						ele = document.createElement("div");
+						ele.dataset.actionType = "toggle-group";
+						ele.dataset.group = group;
+						ele.classList.add('float');
+						ele.style.display = "inline-block";
+						ele.role = "button";
+						ele.innerHTML = '<i class="my-float las la-users" aria-hidden="true"></i><br />'+group;
+						eleGroup.appendChild(ele);
+						ele.onclick = function(){
+							changeGroupDirectorAPI(this.dataset.group);
+						}
+					} 
+					ele.classList.add("green");
+				});
+			}
+			
+			updateMixer();
+			
+			if (session.group.length || session.allowNoGroup){
+				session.sendMessage({"group":session.group.join(",")});
+				if (session.screenShareState && (session.screenshareType ===3)){
+					session.sendMessage({"group":session.group.join(","), altUUID:true});
+				}
+			} else {
+				session.sendMessage({"group":false});
+				if (session.screenShareState && (session.screenshareType ===3)){
+					session.sendMessage({"group":false, altUUID:true});
+				}
+			}
+			
+		}
+		
 		if ("mute" in e.data) {
 			if (e.data.mute === true) { // unmute
 				session.speakerMuted = true; // set
@@ -4314,7 +4407,6 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 				stats.total_inbound_connections = Object.keys(session.rpcs).length;
 				for (var i in session.rpcs) {
 					stats.inbound_stats[session.rpcs[i].streamID] = session.rpcs[i].stats;
-					console.log(stats);
 				}
 				for (var uuid in session.pcs) {
 					setTimeout(function(UUID) {

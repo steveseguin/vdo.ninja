@@ -300,6 +300,8 @@ var CodecsHandler = (function() {
         if (!codecPayload) {
             return defaultBitrate;
         }
+		
+		var codecDetails = findLine(sdpLines, 'a=fmtp:'+codecPayload);
 
         var rtxIndex = findLine(sdpLines, 'a=rtpmap', 'rtx/90000');
         var rtxPayload;
@@ -311,13 +313,23 @@ var CodecsHandler = (function() {
             return defaultBitrate;
         }
 
-        var rtxFmtpLineIndex = findLine(sdpLines, 'a=fmtp:' + rtxPayload.toString());
+        var rtxFmtpLineIndex = findLine(sdpLines, 'a=fmtp:' + codecPayload.toString());
         if (rtxFmtpLineIndex !== null) {
             try {
                 var maxBitrate = parseInt(sdpLines[rtxFmtpLineIndex].split("x-google-max-bitrate=")[1].split(";")[0]);
                 var minBitrate = parseInt(sdpLines[rtxFmtpLineIndex].split("x-google-min-bitrate=")[1].split(";")[0]);
             } catch(e){
-                return defaultBitrate;
+                rtxFmtpLineIndex = findLine(sdpLines, 'a=fmtp:' + codecPayload.toString());
+				if (rtxFmtpLineIndex !== null) {
+					try {
+						var maxBitrate = parseInt(sdpLines[rtxFmtpLineIndex].split("x-google-max-bitrate=")[1].split(";")[0]);
+						var minBitrate = parseInt(sdpLines[rtxFmtpLineIndex].split("x-google-min-bitrate=")[1].split(";")[0]);
+					} catch(e){
+						return defaultBitrate;
+					}
+				} else {
+					return defaultBitrate;
+				}
             }
            
            if (minBitrate>maxBitrate){
@@ -328,12 +340,9 @@ var CodecsHandler = (function() {
         } else {
             return defaultBitrate;
         }
-
-        
-        
     }
 
-    function setVideoBitrates(sdp, params, codec) {  // modified + Improved by Steve.
+    function setVideoBitrates(sdp, params = false, codec=false) {  // modified + Improved by Steve.
         
         if (codec){
             codec = codec.toUpperCase();
@@ -358,9 +367,15 @@ var CodecsHandler = (function() {
         codec = codecName || codec; // Try to find first Codec; else use expected/default
         
         params = params || {};
-        var min_bitrate = params.min.toString() || '30';
-        var max_bitrate = params.max.toString() || '2500';
 		
+		var min_bitrate = "30";
+		if (params.min){
+			min_bitrate = params.min.toString() || '30';
+		} 
+		var max_bitrate = "2500";
+		if (params.max){
+			max_bitrate = params.max.toString() || '2500';
+		}
 
         var codecIndex = findLine(sdpLines, 'a=rtpmap', codec+'/90000');
         var codecPayload;
