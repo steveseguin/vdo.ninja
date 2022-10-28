@@ -6,7 +6,7 @@
 
 * The Comms app now shows the total number of users in each group\
   \*\* at vdo.ninja/alpha/comms\
-  ![](<../.gitbook/assets/image (2).png>)
+  ![](../.gitbook/assets/image.png)
 
 #### October 24
 

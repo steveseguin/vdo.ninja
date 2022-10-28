@@ -31,7 +31,7 @@
 * Captions.ninja -> caption.ninja (bought the domain ; forwards, to avoid mistyping)
 * Updated an issue on caption.ninja related to capital URL values
 * Also fixed an issue with capitalization of links on Caption.ninja\
-  ![](<../.gitbook/assets/image (1) (3).png>)
+  ![](<../.gitbook/assets/image (1) (3) (2).png>)
 
 #### September 10
 

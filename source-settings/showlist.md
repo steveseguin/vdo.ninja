@@ -21,4 +21,4 @@ Includes microphone mute states and voice activity meters in the list.
 
 Is visible by default when using [`&broadcast`](../advanced-settings/view-parameters/broadcast.md) mode.
 
-![](../.gitbook/assets/image.png)
+![](<../.gitbook/assets/image (1).png>)
