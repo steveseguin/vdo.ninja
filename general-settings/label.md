@@ -39,3 +39,7 @@ General Option! ([`&push`](../source-settings/push.md), [`&room`](room.md), [`&v
 {% content-ref url="../newly-added-parameters/and-screensharelabel.md" %}
 [and-screensharelabel.md](../newly-added-parameters/and-screensharelabel.md)
 {% endcontent-ref %}
+
+{% content-ref url="../advanced-settings/upcoming-parameters/and-labelsuggestion.md" %}
+[and-labelsuggestion.md](../advanced-settings/upcoming-parameters/and-labelsuggestion.md)
+{% endcontent-ref %}

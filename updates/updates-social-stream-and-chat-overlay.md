@@ -3,6 +3,10 @@
 [social-stream.md](../steves-helper-apps/social-stream.md "mention")\
 [chat-overlay.md](../steves-helper-apps/chat-overlay.md "mention")
 
+#### **October 26**
+
+* clouthub added to Socialstream
+
 #### **October 22**
 
 * piczel.tv support added to Socialstream

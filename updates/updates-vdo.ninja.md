@@ -8,6 +8,19 @@ I'm working on a fix, but I don't have an ETA. Will update when fixed.
 _\*\*_ UPDATE: I hot-patched beta and alpha with a fix. This fix disables the option to select custom audio output destinations, but resolves the echo issue. If using a self-deployed instance, you can instead add [`&noap`](../general-settings/noaudioprocessing.md) to the URLs to fix it as well; you can also enable `chrome://flags/#chrome-wide-echo-cancellation`, patch the code, or just use headphones.
 {% endhint %}
 
+#### **October 26** <a href="#august-31" id="august-31"></a>
+
+* Added [`&labelsuggestion=defaultnamehere`](../advanced-settings/upcoming-parameters/and-labelsuggestion.md) (aka, `&ls`)\
+  \
+  This is the same as [`&label`](../general-settings/label.md), except it asks the user still for a user name. If they leave it blank or cancel the prompt asking for a name, it will use the default label.\
+  [https://vdo.ninja/alpha/?ls=guest\&webcam](https://vdo.ninja/alpha/?ls=guest\&webcam)\
+  \
+  Once the user enters their label, `&label=username` is added to the URL, so if they reload, they won't be asked again for the label. `&label` takes priority over `&defaultlabel`.\
+  \
+  This is on vdo.ninja/alpha for testing/feedback
+* Fixed an issue where [`&activespeaker`](../advanced-settings/view-parameters/activespeaker.md) and [`&showlist`](../source-settings/showlist.md) and [`&style=6`](../advanced-settings/design-parameters/style.md) wasn't working together as expected
+* Updated vdo.ninja/beta/ , so it's now in sync with alpha
+
 #### **October 24** <a href="#august-31" id="august-31"></a>
 
 * Added [`&groupmode`](../advanced-settings/upcoming-parameters/and-groupmode.md) to VDO.Ninja, which changes the way groups work when not in a group. \
@@ -87,7 +100,7 @@ _\*\*_ UPDATE: I hot-patched beta and alpha with a fix. This fix disables the op
 
 * When using [`&waitimage`](../advanced-settings/newly-added-parameters/and-waitimage.md), the specified 'waiting to connect' image will appear after all connections end. This is a bit different than the default behaviour of the spinner, which doesn't re-appear, but I assume if you're advanced enough to use the `&waitimage` option, you're okay with this.
 *   Added the option to "draw on the screen", which might be a useful tool for niche use cases where you might need to take notes, etc. It doesn't affix to videos themselves, but rather it's just a full-window transparent canvas overlay, You can start/stop/clear and select a couple style-types with this feature, via the settings -> User menu. You can also do `CTRL + ALT + D` to toggle this as needed.\
-    ![](<../.gitbook/assets/image (2) (1).png>)\
+    ![](<../.gitbook/assets/image (2) (1) (2).png>)\
 
 
     \*\* on alpha at vdo.ninja/alpha

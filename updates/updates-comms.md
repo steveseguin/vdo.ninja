@@ -2,6 +2,12 @@
 
 [comms.md](../steves-helper-apps/comms.md "mention")
 
+#### October 26
+
+* The Comms app now shows the total number of users in each group\
+  \*\* at vdo.ninja/alpha/comms\
+  ![](<../.gitbook/assets/image (2).png>)
+
 #### October 24
 
 * Made a custom domain for the Comms app; [https://comms.cam/](https://comms.cam/)\
