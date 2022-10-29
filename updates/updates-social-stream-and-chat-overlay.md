@@ -3,6 +3,10 @@
 [social-stream.md](../steves-helper-apps/social-stream.md "mention")\
 [chat-overlay.md](../steves-helper-apps/chat-overlay.md "mention")
 
+#### **October 28**
+
+* Added `&nooutline` to Socialstream.ninja's dock, which disables the text-outlining of fonts
+
 #### **October 26**
 
 * clouthub added to Socialstream

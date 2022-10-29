@@ -9,6 +9,7 @@ General Option! ([`&push`](../../source-settings/push.md), [`&room`](../../gener
 
 ## Aliases
 
+* `&defaultlabel`
 * `&ls`
 
 ## Options

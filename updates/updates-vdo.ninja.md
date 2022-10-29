@@ -8,6 +8,11 @@ I'm working on a fix, but I don't have an ETA. Will update when fixed.
 _\*\*_ UPDATE: I hot-patched beta and alpha with a fix. This fix disables the option to select custom audio output destinations, but resolves the echo issue. If using a self-deployed instance, you can instead add [`&noap`](../general-settings/noaudioprocessing.md) to the URLs to fix it as well; you can also enable `chrome://flags/#chrome-wide-echo-cancellation`, patch the code, or just use headphones.
 {% endhint %}
 
+#### **October 28** <a href="#august-31" id="august-31"></a>
+
+* Added more 'visually impaired' meta data to help with assisted readers\
+  \*\* on vdo.ninja/alpha/
+
 #### **October 26** <a href="#august-31" id="august-31"></a>
 
 * Added [`&labelsuggestion=defaultnamehere`](../advanced-settings/upcoming-parameters/and-labelsuggestion.md) (aka, `&ls`)\
@@ -15,7 +20,7 @@ _\*\*_ UPDATE: I hot-patched beta and alpha with a fix. This fix disables the op
   This is the same as [`&label`](../general-settings/label.md), except it asks the user still for a user name. If they leave it blank or cancel the prompt asking for a name, it will use the default label.\
   [https://vdo.ninja/alpha/?ls=guest\&webcam](https://vdo.ninja/alpha/?ls=guest\&webcam)\
   \
-  Once the user enters their label, `&label=username` is added to the URL, so if they reload, they won't be asked again for the label. `&label` takes priority over `&defaultlabel`.\
+  Once the user enters their label, `&label=username` is added to the URL, so if they reload, they won't be asked again for the label. `&label` takes priority over `&labelsuggestion`.\
   \
   This is on vdo.ninja/alpha for testing/feedback
 * Fixed an issue where [`&activespeaker`](../advanced-settings/view-parameters/activespeaker.md) and [`&showlist`](../source-settings/showlist.md) and [`&style=6`](../advanced-settings/design-parameters/style.md) wasn't working together as expected

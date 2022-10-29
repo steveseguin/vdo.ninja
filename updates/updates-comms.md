@@ -2,6 +2,10 @@
 
 [comms.md](../steves-helper-apps/comms.md "mention")
 
+#### October 28
+
+* Fixed a bug with mobile support on the Comms app
+
 #### October 26
 
 * The Comms app now shows the total number of users in each group\
