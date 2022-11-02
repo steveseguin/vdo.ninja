@@ -10,7 +10,7 @@
 
 * The Comms app now shows the total number of users in each group\
   \*\* at vdo.ninja/alpha/comms\
-  ![](../.gitbook/assets/image.png)
+  ![](<../.gitbook/assets/image (12).png>)
 
 #### October 24
 
@@ -41,4 +41,4 @@
     or just go to [https://vdo.ninja/alpha/comms](https://vdo.ninja/alpha/comms) to quick start without presetting anything\
 
 
-    <figure><img src="../.gitbook/assets/image (4).png" alt=""><figcaption></figcaption></figure>
+    <figure><img src="../.gitbook/assets/image (4) (3).png" alt=""><figcaption></figcaption></figure>

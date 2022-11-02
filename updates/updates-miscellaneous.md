@@ -7,7 +7,7 @@
     \-- vdo.ninja, rtc.ninja, etc, will all still work as normal. I'll be happy to whitelist other domains for community members who reach out to me that need it.\
     \-- Untrusted domains will still work, but I will be prompting visitors to such links to proceed only if they trust the creator of the link. Nothing threatening, but I hope it's enough to discourage abuse.\
     \-- I've had to start a blacklist of sites due to reports of phishing abuse that I am accountable for blocking.\
-    ![](<../.gitbook/assets/image (2).png>)
+    ![](<../.gitbook/assets/image (2) (6).png>)
 
 #### September 9
 

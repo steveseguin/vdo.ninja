@@ -406,6 +406,8 @@
     * [\&layouts](advanced-settings/upcoming-parameters/and-layouts.md)
     * [\&groupmode](advanced-settings/upcoming-parameters/and-groupmode.md)
     * [\&labelsuggestion](advanced-settings/upcoming-parameters/and-labelsuggestion.md)
+    * [\&controlbarspace](advanced-settings/upcoming-parameters/and-controlbarspace.md)
+    * [\&volumecontrol](advanced-settings/upcoming-parameters/and-volumecontrol.md)
   * [Other Parameters](other-parameters.md)
 * [Releases](release-notes/older-releases.md)
   * [v21 ❤️](older-releases/v21.md)

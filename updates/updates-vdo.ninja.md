@@ -8,6 +8,16 @@ I'm working on a fix, but I don't have an ETA. Will update when fixed.
 _\*\*_ UPDATE: I hot-patched beta and alpha with a fix. This fix disables the option to select custom audio output destinations, but resolves the echo issue. If using a self-deployed instance, you can instead add [`&noap`](../general-settings/noaudioprocessing.md) to the URLs to fix it as well; you can also enable `chrome://flags/#chrome-wide-echo-cancellation`, patch the code, or just use headphones.
 {% endhint %}
 
+#### **November 1** <a href="#august-31" id="august-31"></a>
+
+* ``[`&controlbarspace`](../advanced-settings/upcoming-parameters/and-controlbarspace.md) forces the bottom control bar to be in its own dedicated space, regardless of screen size.
+* ``[`&volumecontrol`](../advanced-settings/upcoming-parameters/and-volumecontrol.md) (alias, `&vc`) shows a dedicated local audio-volume control bar for canvas or image elements. Video elements already have a control-bar with volume, so I don't show it there currently. I'll likely tweak this more over time.\
+  ![](<../.gitbook/assets/image (8).png>)
+* Fixed an issue with [`&screensharetype=3`](../newly-added-parameters/and-screensharetype.md) crashing the browser when specifying an audio track to share.\
+  \
+  \*\* changes are at vdo.ninja/alpha/\
+  The [Comms app](../steves-helper-apps/comms.md) is a good demonstrator of the features @[vdo.ninja/alpha/comms](https://vdo.ninja/alpha/comms)
+
 #### **October 30** <a href="#august-31" id="august-31"></a>
 
 * Deployed a turn server to Seoul, SK. on beta & alpha
@@ -473,7 +483,7 @@ _\*\*_ UPDATE: I hot-patched beta and alpha with a fix. This fix disables the op
 * Added a demo/sample on how to overlay speed + acceleration on top of video playback (compatible with a mobile phone sender) `vdo.ninja/examples/sensoroverlay?view=STREAMID`
 * Added a new option to explicitly list what sensor data you want to capture and transmit, when using `&sensor` [`&sensorfilter=gyro,lin,acc,mag,pos,ori`](../advanced-settings/upcoming-parameters/and-sensorfilter.md) For the above demo, you can use [`&sensorfilter=pos,lin`](../advanced-settings/upcoming-parameters/and-sensorfilter.md) to just send the data you need, reducing the load on the phone/network. (on alpha)
 * Right-clicking a link in VDO.Ninja will now offer the option to show the link as a QR Code. This makes it easy to copy any link over to a your mobile phone or to create a shareable QR code with guests. (on alpha)\
-  ![](<../.gitbook/assets/image (2) (6).png>)![](<../.gitbook/assets/image (1) (9) (1).png>)
+  ![](<../.gitbook/assets/image (2) (6) (1).png>)![](<../.gitbook/assets/image (1) (9) (1).png>)
 * Implemented a workaround for a novel Chrome bug where specifying a custom audio channel in the director's room (C1, C2, etc) would break the custom audio output device support. \* Fix pushed to alpha.
 
 #### June 1
@@ -498,7 +508,7 @@ _\*\*_ UPDATE: I hot-patched beta and alpha with a fix. This fix disables the op
 * Deployed a new turn server in Poland; it's only yet available on alpha. `https://vdo.ninja/alpha/speedtest`\
   ``![](<../.gitbook/assets/image (159).png>)``
 * Two large broadcast servers enabled on production, in France and Canada.\
-  ![](<../.gitbook/assets/image (163).png>)
+  ![](<../.gitbook/assets/image (163) (1).png>)
 
 #### May 21
 
@@ -601,7 +611,7 @@ _\*\*_ UPDATE: I hot-patched beta and alpha with a fix. This fix disables the op
 * Added graphs to the director room; one graph for each scene a guest is connected to. If video isn't active/visible, the bitrate should be zero, implying VDO.Ninja has it paused/disabled, but on standby. You can see the graphs via the "scene stats" button. Toggling the button will enable and disable the stats.\
   ![](<../.gitbook/assets/image (165).png>)
 * The graph is color coded; red/yellow implies packet loss, but otherwise green. Currently the graph is capped to like 4-mbps; higher than that isn't display atm.\
-  ![](<../.gitbook/assets/image (1) (1).png>)\
+  ![](<../.gitbook/assets/image (1) (1) (6).png>)\
   \
   \*\* alpha updated. Test it out at [https://vdo.ninja/alpha](https://vdo.ninja/alpha)
 * Fixed a more recent bug in VDO.Ninja where the special [`&sstype=3`](../newly-added-parameters/and-screensharetype.md) screen share mode did not work as solo links; stats for it were not always cleaned up either, so that's fixed too. (on dev)

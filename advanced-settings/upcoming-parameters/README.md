@@ -60,6 +60,8 @@ You can use/test these parameters on [vdo.ninja/alpha](https://vdo.ninja/alpha/)
 | ``[`&layouts`](and-layouts.md)\*\*                               | An ordered array of layouts, which can be used to switch between using the API                                                                                     |
 | ``[`&groupmode`](and-groupmode.md)\*\*                           | Added to the URL, when not assigned to a group, you don't hear or see anything                                                                                     |
 | ``[`&labelsuggestion`](and-labelsuggestion.md)\*                 | The same as [`&label`](../../general-settings/label.md), except it asks the user still for a user name                                                             |
+| ``[`&controlbarspace`](and-controlbarspace.md)\*                 | Forces the bottom control bar to be in its own dedicated space                                                                                                     |
+| ``[`&volumecontrol`](and-volumecontrol.md)\*                     | Shows a dedicated local audio-volume control bar for canvas or image elements                                                                                      |
 
 \*only on [vdo.ninja/alpha](https://vdo.ninja/alpha/)\
 \*\*on [vdo.ninja/beta](https://vdo.ninja/beta/) and [vdo.ninja/alpha](https://vdo.ninja/alpha/)
