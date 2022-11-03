@@ -8,6 +8,15 @@ I'm working on a fix, but I don't have an ETA. Will update when fixed.
 _\*\*_ UPDATE: I hot-patched beta and alpha with a fix. This fix disables the option to select custom audio output destinations, but resolves the echo issue. If using a self-deployed instance, you can instead add [`&noap`](../general-settings/noaudioprocessing.md) to the URLs to fix it as well; you can also enable `chrome://flags/#chrome-wide-echo-cancellation`, patch the code, or just use headphones.
 {% endhint %}
 
+#### **November 3** <a href="#august-31" id="august-31"></a>
+
+* Fixed a bunch of co-director sync logic, which was a bit buggy before, but I think I got the issues out.
+* Updated the video stats code with the newest spec; Chrome was deprecating the API I was using.
+* Added stats support for Firefox, including support for it in the speed-test, the guest check app, and stats pop-up.
+* `CTRL + click` support to access the stats pop-up added to Firefox (before you had to right click and select "show stats" from the menu)\
+  \
+  \*\* changes applied to alpha at [https://vdo.ninja/alpha/](https://vdo.ninja/alpha/)
+
 #### **November 1** <a href="#august-31" id="august-31"></a>
 
 * ``[`&controlbarspace`](../advanced-settings/upcoming-parameters/and-controlbarspace.md) forces the bottom control bar to be in its own dedicated space, regardless of screen size.
