@@ -13,7 +13,7 @@ _\*\*_ UPDATE: I hot-patched beta and alpha with a fix. This fix disables the op
 * Fixed a bunch of co-director sync logic, which was a bit buggy before, but I think I got the issues out.
 * Updated the video stats code with the newest spec; Chrome was deprecating the API I was using.
 * Added stats support for Firefox, including support for it in the speed-test, the guest check app, and stats pop-up.
-* `CTRL + click` support to access the stats pop-up added to Firefox (before you had to right click and select "show stats" from the menu)\
+* `CTRL + click` support to access the stats pop-up added to Firefox (before you had to right click and select "show stats" from the menu).\
   \
   \*\* changes applied to alpha at [https://vdo.ninja/alpha/](https://vdo.ninja/alpha/)
 
