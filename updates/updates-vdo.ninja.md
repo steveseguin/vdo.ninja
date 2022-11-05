@@ -8,6 +8,16 @@ I'm working on a fix, but I don't have an ETA. Will update when fixed.
 _\*\*_ UPDATE: I hot-patched beta and alpha with a fix. This fix disables the option to select custom audio output destinations, but resolves the echo issue. If using a self-deployed instance, you can instead add [`&noap`](../general-settings/noaudioprocessing.md) to the URLs to fix it as well; you can also enable `chrome://flags/#chrome-wide-echo-cancellation`, patch the code, or just use headphones.
 {% endhint %}
 
+#### **November 5** <a href="#august-31" id="august-31"></a>
+
+* Fixed an issue where the transfer-function for co-directors wasn't a bit broken; transfers were only partially completed. The fix for this should be on alpha now at [https://vdo.ninja/alpha](https://vdo.ninja/alpha)
+
+#### **November 4** <a href="#august-31" id="august-31"></a>
+
+* Pushed a workaround for a nasty iOS bug that is impacting iPhone 14 Pros.\
+  Fix is on production and alpha; [https://vdo.ninja/alpha/](https://vdo.ninja/alpha/)\
+  Please report any issues it might cause.
+
 #### **November 3** <a href="#august-31" id="august-31"></a>
 
 * Fixed a bunch of co-director sync logic, which was a bit buggy before, but I think I got the issues out.
