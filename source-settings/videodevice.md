@@ -36,6 +36,8 @@ When combined with [`&webcam`](and-webcam.md) and [`&autostart`](and-autostart.m
 See [vdo.ninja/devices](https://vdo.ninja/devices) to see the device IDs and device names. DeviceIDs are specific to VDO.Ninja's domain, while device names are not. The page will also auto-create links for  you, just by clicking on the respective device.
 {% endhint %}
 
+When using `&videodevice=videoDevice`, the name matching order sorts based on "NameStartsWith", then "ExactDeviceID", and then finally "NameIncludes". This should avoid the Streamlabs OBS Virtual Cam being selected when you actually want the OBS Virtual Camera being selected, as the two devices both contain `obs virtual camera` in their name.
+
 #### Director's room toggles
 
 Auto-selects the default camera of a guest by adding `&vd` to the guest's invite link.\

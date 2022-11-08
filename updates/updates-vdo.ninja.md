@@ -8,6 +8,15 @@ I'm working on a fix, but I don't have an ETA. Will update when fixed.
 _\*\*_ UPDATE: I hot-patched beta and alpha with a fix. This fix disables the option to select custom audio output destinations, but resolves the echo issue. If using a self-deployed instance, you can instead add [`&noap`](../general-settings/noaudioprocessing.md) to the URLs to fix it as well; you can also enable `chrome://flags/#chrome-wide-echo-cancellation`, patch the code, or just use headphones.
 {% endhint %}
 
+#### **November 7** <a href="#august-31" id="august-31"></a>
+
+* Fixed some issues with the 'last used' audio output device saving feature, as it was not always triggering fully on page reload. The selected output device didn't always match the actual output device, in some cases, after a page reload.\
+  \-- note: I don't load the last-used 'saved' output device if loading a scene/view link, unless its set in URL param, as I just found it was too confusing as there was no obvious way to check what the default audio output device was in that case.
+* When using [`&vd=videoDevice`](../source-settings/videodevice.md), the name matching order now sorts based on NameStartsWith, then ExactDeviceID, and then finally NameIncludes. This should avoid the Streamlabs OBS Virtual Cam being selected when you actually want the OBS Virtual Camera being selected, as the two devices both contain `obs virtual camera` in their name. It was causing me grief at least.
+* Couple minor bugs, like the right-click "show control bar" option not toggling the menu option in the UI properly when the control bar is visible.\
+  \
+  \*\*\* changes on alpha for testing and feedback. Thank you
+
 #### **November 5** <a href="#august-31" id="august-31"></a>
 
 * Fixed an issue where the transfer-function for co-directors wasn't a bit broken; transfers were only partially completed. The fix for this should be on alpha now at [https://vdo.ninja/alpha](https://vdo.ninja/alpha)
