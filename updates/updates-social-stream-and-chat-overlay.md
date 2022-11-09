@@ -3,6 +3,10 @@
 [social-stream.md](../steves-helper-apps/social-stream.md "mention")\
 [chat-overlay.md](../steves-helper-apps/chat-overlay.md "mention")
 
+#### **November 8**
+
+* bilibili.tv support added to Socialstream
+
 #### **October 28**
 
 * Added `&nooutline` to Socialstream.ninja's dock, which disables the text-outlining of fonts

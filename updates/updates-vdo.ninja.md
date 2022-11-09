@@ -8,6 +8,17 @@ I'm working on a fix, but I don't have an ETA. Will update when fixed.
 _\*\*_ UPDATE: I hot-patched beta and alpha with a fix. This fix disables the option to select custom audio output destinations, but resolves the echo issue. If using a self-deployed instance, you can instead add [`&noap`](../general-settings/noaudioprocessing.md) to the URLs to fix it as well; you can also enable `chrome://flags/#chrome-wide-echo-cancellation`, patch the code, or just use headphones.
 {% endhint %}
 
+#### **November 8** <a href="#august-31" id="august-31"></a>
+
+* Added a 'cycle visual styles' button to the "users" settings menu in VDO.Ninja (and [Comms app](../steves-helper-apps/comms.md)) \
+  \
+  This lets you toggle the [`&style=N`](../advanced-settings/design-parameters/style.md) options, between 1,2,4,5,6 I think?\
+  \
+  So if you find it distracting, the waveform in the [Comms app](../steves-helper-apps/comms.md) or such, you can toggle as a guest.\
+  ![](<../.gitbook/assets/image (1).png>)\
+  \
+  \*\* Change is on alpha at [vdo.ninja/alpha/](https://vdo.ninja/alpha/)
+
 #### **November 7** <a href="#august-31" id="august-31"></a>
 
 * Fixed some issues with the 'last used' audio output device saving feature, as it was not always triggering fully on page reload. The selected output device didn't always match the actual output device, in some cases, after a page reload.\
@@ -317,7 +328,7 @@ _\*\*_ UPDATE: I hot-patched beta and alpha with a fix. This fix disables the op
 #### August 1
 
 * Chat messages that contain URLs will now have those URLs be clickable (opens into a new window)\
-  ![](<../.gitbook/assets/image (1) (1) (2).png>)
+  ![](<../.gitbook/assets/image (1) (1) (2) (1).png>)
 * The pop-out chat feature has had a bug fixed and minor polish applied
 * When using the IFrame API to control bitrates, I have added an optional called "lock" that lets you affix the bitrate you set so the rest of VDO.Ninja doesn't try to constantly override it. `{bitrate: 2500, lock:true}` for example. I also assume `lock=true` by default, so no changes are needed really to start benefiting from this. (previously you had to disable the auto-mixer to lock a bitrate).
 * Also added `{manualBitrate: xxx}` to the IFrame API , which is a bit like `bitrate`, but keeps track of what the current target bitrate should be. When you set `manualBitrate=false`, it will apply the expected target value. Also, it won't work when used in conjunction with custom audio bitrates, whereas bitrate will.
