@@ -664,12 +664,21 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 	} 
 	
 	if (urlParams.has('sstype') || urlParams.has('screensharetype')) { // wha type of screen sharing is used; track replace, iframe, or secondary try
-		session.screensharetype = urlParams.get('sstype') || urlParams.get('screensharetype');
-		session.screensharetype = parseInt(session.screensharetype) || false;
+		session.screenshareType = urlParams.get('sstype') || urlParams.get('screensharetype');
+		session.screenshareType = parseInt(session.screenshareType) || false;
 	}
 	
 	if (urlParams.has('intro') || urlParams.has('ib')) {
 		session.introButton = true;
+	}
+	
+	if (urlParams.has('volumecontrol') || urlParams.has('volumecontrols')  || urlParams.has('vc')) {
+		if (!(iOS || iPad)){
+			session.volumeControl = true;
+		}
+	}
+	if (urlParams.has('controlbarspace')){
+		session.dedicatedControlBarSpace = true;
 	}
 	
 	if (urlParams.has('hidesolo') || urlParams.has('hs')){
@@ -1275,8 +1284,8 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 				}
 			}
 		}
-	} else if (urlParams.has('labelsuggestion') || urlParams.has('ls')) {
-		session.label = urlParams.get('labelsuggestion') || urlParams.get('ls') || null;
+	} else if (urlParams.has('defaultlabel') || urlParams.has('labelsuggestion') || urlParams.has('ls')) {
+		session.label = urlParams.get('defaultlabel') || urlParams.get('labelsuggestion') || urlParams.get('ls') || null;
 		var updateURLAsNeed = true;
 		window.focus();
 		var label = await promptAlt(miscTranslations["enter-display-name"], true);
@@ -3060,6 +3069,10 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 			session.style = 1;
 		}
 	}
+	//if (session.style){
+	//	getById("toggleWaveformButton").classList.remove("hidden");
+	//}
+	
 	if (urlParams.has('showall')){ // just an alternative; might be compoundable
 		session.showall = true;
 	}
@@ -4412,6 +4425,9 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 					setTimeout(function(UUID) {
 						session.pcs[UUID].getStats().then(function(stats) {
 							stats.forEach(stat => {
+								
+								if (stat.id && stat.id.startsWith("DEPRECATED_")){return;}
+								
 								if (stat.type == "outbound-rtp") {
 									if (stat.kind == "video") {
 

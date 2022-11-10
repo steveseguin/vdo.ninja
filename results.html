@@ -99,10 +99,6 @@
 				return raw ? parseInt(raw[2], 10) : false;
 			}
 			
-			if (!getChromeVersion()){
-				alert("This speedtest is optimized for Chromium-based browsers; graphs will not work for Firefox or Safari browsers.");
-			}
-			
 			function next1(){
 				document.getElementById("page1").classList.add("hidden");
 				document.getElementById("page2").classList.remove("hidden");

@@ -803,6 +803,20 @@ hr {
 	color:#00FF00;
 }
 
+.volume-control {
+	height: 44px;
+	position: absolute;
+	left: 0px;
+	bottom: 0px;
+	font-size: 1.5em;
+	z-index: 2;
+	cursor: help;
+	padding: 18px 5% !important;
+	background: #555A;
+	border-radius: 0 !important;
+	margin: 0!important;
+}
+
 .togglePreview{
 	border-radius: 11px;
 	background-color: #00000044;

@@ -17,7 +17,8 @@
 	<style>
 	:root{
 		--aspect-ratio: 1.7777777777;
-		--chat-width: 450px;
+		--chat-width: 400px;
+		--chat-filler: 0px;
 	}
 	
 	body {
@@ -117,16 +118,19 @@
 		cursor: pointer;
 		user-select: none;
 		color: white;
-		font-size: 150%;
+		font-size: 250%;
 		font-family: Verdana;
-		line-height: 14px;
+		line-height: 30px;
+		z-index:20;
 	}
+	
 	#chatModule {
 		bottom: 0;
 		position: fixed;
 		margin: 10px;
+		margin-left:0;
 		align-self: center;
-		width: 400px;
+		width: var(--chat-width);
 		max-width: calc(100% - 40px);
 		z-index:3;
 		height: calc(100vh - 40px);
@@ -137,6 +141,7 @@
 		border-radius: 10px;
 		padding: 10px;
 		transition: all .05s ease-in-out; 
+		max-height: 95vh;
 	}
 	#chatInput {
 		display: inline-block;
@@ -207,7 +212,7 @@
 		box-shadow: 1px 1px 3px #1b1b1b, -1px -1px 3px #1d1d1d;
 	}
 	#vdoninja {
-		max-width: calc(100vw - 4px - var(--chat-width));
+		max-width: calc(100vw - 54px - var(--chat-width) + var(--chat-filler));
 		width: 100vw;
 		height: calc(100vh - 117px);
 	}
@@ -534,9 +539,11 @@
 	}
 	.groupContainer{
 		display:inline-block;
+		max-width: 50%;
 	}
 	.groupContainer>.group{
 		transform: scale(calc(  var(--aspect-ratio) / (16 / 9)), 1);
+		max-width: 35vw;
 	}
 	.groupContainer:hover>.group{
 		box-shadow: 0 0 6px #273a4e, 0 0px 6px #fffC;
@@ -887,6 +894,7 @@
 		position: fixed;
 		bottom: 10px;
 		top: unset;
+		font-size: 150%;
 	}
 	
 	</style>
@@ -990,12 +998,16 @@
 	}
 	
 	function toggleChat(){
-		document.getElementById("chatModule").classList.toggle("fadeout");
+		document.getElementById("chatModule").classList.toggle("hidden");
 		document.getElementById("chatModuleButton").classList.toggle("hidden");
-		if (document.getElementById("chatModule").classList.contains("fadeout")){
+		
+		if (document.getElementById("chatModule").classList.contains("hidden")){
 			document.documentElement.style.setProperty('--chat-width', "0px");
+			document.documentElement.style.setProperty('--chat-filler', "33px");
+			
 		} else {
-			document.documentElement.style.setProperty('--chat-width', "450px");
+			document.documentElement.style.setProperty('--chat-width', "400px");
+			document.documentElement.style.setProperty('--chat-filler', "0px");
 		}
 	}
 	
@@ -1056,10 +1068,17 @@
 	} else if (urlParams.has('mobile')){
 		mobile = true;
 	}
-	if (mobile){
-		toggleChat();
-		document.body.classList.add("mobile");
+	
+	if (screen.height && screen.width && (screen.height*screen.width<400000)){
+		mobile = true;
 	}
+	
+	if (mobile){
+		//toggleChat();
+		document.body.classList.add("mobile");
+		//getById("chatModule").classList.add("hidden");
+	}
+	
 	
 	var password = false;
 	if (urlParams.has('password') || urlParams.has('pass') || urlParams.has('pw') || urlParams.has('p')) {
@@ -1715,13 +1734,19 @@
 		}
 		
 		if (mobile){
-			additional2 += "&ad=1";
+			additional2 += "&ad=1&chatbutton=1";
+		} else {
+			additional2 += "&chatbutton=0";
 		}
 		
 		var chatmsg = "Welcome to the Comms app. Select a group to participate in.";
 		chatmsg = encodeURIComponent(chatmsg);
 		
-		var iframesrc = "./index.html?groupmode&novice&ltb=350&minipreview&transparent&hideheader&margin&rounded&hidetranslate&cleandirector&chatbutton=0&vd=0&webcam&nvb&sstype=3&ssb&showlabel=skype&style=2&room="+roomname+additional+additional2+"&b64css="+injectCSS+streamID+label+"&chatmsg="+chatmsg;
+		if (window.location.hostname == "comms.cam"){
+			var iframesrc = "https://vdo.ninja/alpha/?controlbarspace&volumecontrol&sharperscreen&groupmode&novice&ltb=350&minipreview&transparent&hideheader&margin&rounded&hidetranslate&cleandirector&vd=0&webcam&nvb&sstype=3&ssb&showlabel=toprounded&labelsize=85&style=2&room="+roomname+additional+additional2+"&b64css="+injectCSS+streamID+label+"&chatmsg="+chatmsg;
+		} else {
+			var iframesrc = "./index.html?controlbarspace&volumecontrol&sharperscreen&groupmode&novice&ltb=350&minipreview&transparent&hideheader&margin&rounded&hidetranslate&cleandirector&vd=0&webcam&nvb&sstype=3&ssb&showlabel=toprounded&labelsize=85&style=2&room="+roomname+additional+additional2+"&b64css="+injectCSS+streamID+label+"&chatmsg="+chatmsg;
+		}
 		
 		
 		if (roomname!==false){
@@ -1734,7 +1759,9 @@
 			drawGroup(savedSession.groups[i]);
 		}
 		
-		document.getElementById("chatModule").classList.remove("hidden");
+		if (!mobile){
+			document.getElementById("chatModule").classList.remove("hidden");
+		}
 		
 		iframe.onload = function(){
 			iframe.contentWindow.postMessage({ groups: savedSession.groups }, "*"); 
@@ -1761,7 +1788,6 @@
 			if (e.source != iframe.contentWindow){return} // reject messages send from other iframes
 			
 			
-			console.log(e.data);
 			if ("gotChat" in e.data){
 				messageList.push(e.data.gotChat);
 				messageList = messageList.slice(-100);
@@ -1878,9 +1904,6 @@
 				}
 				
 			}
-			
-		
-		
 		});
 	}
 	

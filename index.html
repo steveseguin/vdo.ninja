@@ -57,7 +57,7 @@
 		<meta property="twitter:image" content="./media/vdoNinja_logo_full.png" />
 		<meta name="msapplication-TileColor" content="#da532c" />
 		<meta name="theme-color" content="#ffffff" />
-		<link rel="stylesheet" href="./main.css?ver=221" />
+		<link rel="stylesheet" href="./main.css?ver=223" />
 		<script type="text/javascript" crossorigin="anonymous" src="./thirdparty/adapter.js"></script>
 		<style id="lightbox-animations" type="text/css"></style>
 		<!-- <link rel="manifest" href="manifest.json" /> -->
@@ -83,7 +83,7 @@
 		</span>
 		<script type="text/javascript" crossorigin="anonymous"  src="./thirdparty/CodecsHandler.js?ver=39"></script>
 		<script type="text/javascript" crossorigin="anonymous" src="./thirdparty/aes.js"></script>
-		<script type="text/javascript" crossorigin="anonymous" src="./webrtc.js?ver=529"></script>
+		<script type="text/javascript" crossorigin="anonymous" src="./webrtc.js?ver=539"></script>
 		<input id="zoomSlider" type="range" style="display: none;" />
 		<span id="electronDragZone" style="pointer-events: none; z-index:-10; position:absolute;top:0;left:0;width:100%;height:2%;-webkit-app-region: drag;min-height:20px;"></span>
 		<div id="header">
@@ -236,7 +236,7 @@
 		<span title="Add to Calendar" onclick="toggle(document.getElementById('calendar'));" id="calendarButton">
 			<i style="float: right; bottom: 0px; cursor: pointer; position: fixed; right:  33px; color: #d9e4eb; padding: 2px; margin: 2px 2px 0 0; font-size: 140%;" class="las la-calendar" aria-hidden="true"></i>
 		</span>
-		<div id="mainmenu" class="row" style="opacity: 0; align: center;">
+		<div id="mainmenu" class="row" style="opacity: 0;">
 			
 			<div id="container-1" title="Add Group Chat to OBS"  alt="Add Group Chat to OBS" tabindex="2" role="button" aria-pressed="false" onkeyup="enterPressedClick(event,this);" class="column columnfade pointer rounded card" style=" overflow-y: auto;">
 				
@@ -547,7 +547,7 @@
 						<i class="las la-cog" style="font-size: 170%; vertical-align: middle;" aria-hidden="true"></i>
 					</span>
 					<center>
-						<span id="videoSettings2" style="margin: auto auto; display: none;  vertical-aligh: middle; border: 3px solid #ccc; max-width: 500px; padding: 10px 10px 5px 10px; margin: 0px 0px 10px;">
+						<span id="videoSettings2" style="margin: auto auto; display: none; border: 3px solid #ccc; max-width: 500px; padding: 10px 10px 5px 10px; margin: 0px 0px 10px;">
 							<form id="webcamquality2">
 								<input type="radio" id="fullhd2" name="resolution2" value="0" />
 								<label for="fullhd">
@@ -1355,11 +1355,11 @@
 				</button>
 				
 				<font class="tooltip" style="height: 0; border: 0;">
-					<input data-action-type="volume" type="range" min="0" max="200" value="100" title="Remotely change the volume of this guest; updates on release. Dbl-click to reset." oninput="remoteVolumeUI(this)" ondblclick="this.value=100;remoteVolume(this);remoteVolumeUI(this);" onchange="remoteVolume(this);" style="grid-column: 2; margin:5px; width: 93%; position: relative;top: 0.6em; background-color:#fff0;"/>
+					<input data-action-type="volume" type="range" min="0" max="200" value="100" title="Remotely change the volume of this guest; updates on release. Dbl-click to reset." oninput="remoteVolumeUI(this)" onchange="remoteVolume(this);" ondblclick="this.value=100;remoteVolume(this);remoteVolumeUI(this);"  style="grid-column: 2; margin:5px; width: 93%; position: relative;top: 0.6em; background-color:#fff0;"/>
 					<span class="tooltiptext" style='float: right; overflow: auto;  left: 40px;  width: 3em;  top: -13px; margin: 0; position:relative;font-family:"Noto Color Emoji", "Apple Color Emoji", "Segoe UI Emoji", Times, Symbola, Aegyptus,Code2000, Code2001, Code2002, Musica, serif, LastResort;' >100</span>
 				</font>
 				
-				<button data-action-type="mute-guest"  title="Mute this guest everywhere" onclick="remoteMute(this, event);">
+				<button data-action-type="mute-guest" value="0" title="Mute this guest everywhere" onclick="remoteMute(this, event);">
 					<i class="las la-microphone-slash" style="color:#900"></i>
 					<span data-translate="mute-guest" >mute guest</span>
 				</button>
@@ -1805,6 +1805,9 @@
 					<button class='hidden drawActive' onclick="drawOnScreenObject.color(this);" data-color='green' style="background-color:green; margin: 0 0 0 4px; border-radius: 5px; padding: 3px 3px;">✏️</button>
 					<button class='hidden drawActive' onclick="drawOnScreenObject.color(this);" data-color='black' style="background-color:black; margin: 0 0 0 4px; border-radius: 5px; padding: 3px 3px;">✏️</button>
 					<button class='hidden drawActive' onclick="drawOnScreenObject.color(this);" data-color='white' style="background-color:white; margin: 0 0 0 4px; border-radius: 5px; padding: 3px 3px;">🎨</button>
+					<br /><br />
+					<button onclick="cycleStyleOptions();" id='toggleWaveformButton' title="Audio-only sources can be stylized in different ways" style="margin: 0 0 0 4px; border-radius: 5px; padding: 3px 3px;">Cycle between several audio-visualizations styles</button>
+					
 				</span>
 		</div>
 		<nav id="context-menu" class="context-menu">
@@ -2112,6 +2115,7 @@
 			<i class="las la-signal"></i>
 			<i class="las la-fire-alt"></i>
 		</div>
+		<input type='range' id="volumeControlTemplate" class="volume-control hidden" min="0" max="100" value="100">
 		<div id="batteryMeterTemplate" class="battery hidden" data-plugged="1">
 			<div class="battery-level" style="height:100%;"></div>
 			<div class="battery-charging">+</div>
@@ -2221,7 +2225,7 @@
 
 		
 			var session = WebRTC.Media; // session is a required global variable if configuring manually. Run before loading main.js but after webrtc.js.
-			session.version = "22.5";
+			session.version = "22.6b";
 			session.streamID = session.generateStreamID(); // randomly generates a streamID for this session. You can set your own programmatically if needed
 			
 			session.defaultPassword = "someEncryptionKey123"; // Change this password if self-deploying for added security/privacy
@@ -2292,11 +2296,11 @@
 			// session.darkmode = false; // enable or disable the dark style theme as the default
 			// session.defaultBackgroundImages = ["./media/bg_sample1.webp", "./media/bg_sample2.webp"]; // for &effects=5 (virtual backgrounds)
 		</script>
-		<script type="text/javascript" crossorigin="anonymous" id="lib-js" src="./lib.js?ver=511"></script>
+		<script type="text/javascript" crossorigin="anonymous" id="lib-js" src="./lib.js?ver=530"></script>
 		<!-- 
 		// If you wish to change branding, blank offers a good clean start.
 		<script type="text/javascript" id="main-js" src="./main.js" data-translation="blank"></script>
 		-->
-		<script type="text/javascript" crossorigin="anonymous" id="main-js" src="./main.js?ver=461"></script>
+		<script type="text/javascript" crossorigin="anonymous" id="main-js" src="./main.js?ver=472"></script>
 	</body>
 </html>

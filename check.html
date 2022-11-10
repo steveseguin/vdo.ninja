@@ -157,10 +157,6 @@
 				return raw ? parseInt(raw[2], 10) : false;
 			}
 			
-			if (!getChromeVersion()){
-				alert("This speedtest is optimized for Chromium-based browsers; graphs will not work for Firefox or Safari browsers.");
-			}
-			
 			function next1(){
 				document.getElementById("page1").classList.add("hidden");
 				document.getElementById("page2").classList.remove("hidden");
@@ -285,8 +281,6 @@
 			var statsSent = false;
 
 			eventer(messageEvent, function (e) {
-			
-				console.log(e.data);
 				if ("action" in e.data) {
 				
 					if (e.data.action == "available-speedtest-servers"){
@@ -346,50 +340,55 @@
 				if ("stats" in e.data) {
 					var out = "";
 					
-					for (var streamID in e.data.stats.inbound_stats) {
-						out += printValues(e.data.stats.inbound_stats[streamID]);
-						if (e.data.stats.inbound_stats[streamID]){
+					for (var someValue in e.data.stats.inbound_stats) {
+						out += printValues(e.data.stats.inbound_stats[someValue]);
+						if (e.data.stats.inbound_stats[someValue]){
 							if (!statsSent){
-								statsSent = e.data.stats.inbound_stats[streamID];
+								statsSent = e.data.stats.inbound_stats[someValue];
 							}
 						}
 					}
 					
-					for (var streamID in e.data.stats.outbound_stats) {
-						if (e.data.stats.outbound_stats[streamID].quality_limitation_reason){
-							if (quality_reason != e.data.stats.outbound_stats[streamID].quality_limitation_reason) {
-								quality_reason = e.data.stats.outbound_stats[streamID].quality_limitation_reason;
+					for (var someValue in e.data.stats.outbound_stats) {
+						if (e.data.stats.outbound_stats[someValue].quality_limitation_reason){
+							if (quality_reason != e.data.stats.outbound_stats[someValue].quality_limitation_reason) {
+								quality_reason = e.data.stats.outbound_stats[someValue].quality_limitation_reason;
 								logData({"QLR": quality_reason});
 							}
 						}
 						
-						if (e.data.stats.outbound_stats[streamID].encoder){
-							if (encoder != e.data.stats.outbound_stats[streamID].encoder) {
-								encoder = e.data.stats.outbound_stats[streamID].encoder;
+						if (e.data.stats.outbound_stats[someValue].encoder){
+							if (encoder != e.data.stats.outbound_stats[someValue].encoder) {
+								encoder = e.data.stats.outbound_stats[someValue].encoder;
+								logData({"encoder":encoder});
+							}
+						} else if (e.data.stats.outbound_stats[someValue].video_codec){
+							if (encoder != e.data.stats.outbound_stats[someValue].video_codec) {
+								encoder = e.data.stats.outbound_stats[someValue].video_codec;
 								logData({"encoder":encoder});
 							}
 						}
 					}
 
-					if (out.split("Bitrate_in_kbps").length > 1) {
-						for (var key in e.data.stats.inbound_stats[streamID]) {
-							if (key.startsWith("RTCMediaStreamTrack_receiver") || key.startsWith("DEPRECATED_RTCMediaStreamTrack_receiver") ) {
-								var bitrate = e.data.stats.inbound_stats[streamID][key][
-										"Bitrate_in_kbps"
-									];
+					for (var key in e.data.stats.inbound_stats[streamID]){
+						if (typeof e.data.stats.inbound_stats[streamID][key] == "object"){
+							if ("Bitrate_in_kbps" in e.data.stats.inbound_stats[streamID][key]){
+								var bitrate = e.data.stats.inbound_stats[streamID][key]["Bitrate_in_kbps"];
 								updateData("bitrate", bitrate);
-
-								var buffer = e.data.stats.inbound_stats[streamID][key][
-										"Buffer_Delay_in_ms"
-									];
+							}
+							if ("Buffer_Delay_in_ms" in e.data.stats.inbound_stats[streamID][key]){
+								var buffer = e.data.stats.inbound_stats[streamID][key]["Buffer_Delay_in_ms"];
 								updateData("buffer", buffer);
-
+							}
+							if ("packetLoss_in_percentage" in e.data.stats.inbound_stats[streamID][key]){
 								var packetloss = e.data.stats.inbound_stats[streamID][key]["packetLoss_in_percentage"];
 								if (packetloss != undefined) {
 									packetloss = packetloss.toFixed(2);
 									updateData("packetloss", packetloss);
 								}
+							}
 
+							if ("Resolution" in e.data.stats.inbound_stats[streamID][key]){
 								var resolution = e.data.stats.inbound_stats[streamID][key]["Resolution"];
 
 								if (previousResolution != resolution) {
@@ -397,10 +396,9 @@
 									logData({"resolution": resolution});
 								}
 							}
+							
 						}
-
 					}
-					
 				}
 			});
 

@@ -117,9 +117,10 @@
 		cursor: pointer;
 		user-select: none;
 		color: white;
-		font-size: 150%;
+		font-size: 250%;
 		font-family: Verdana;
-		line-height: 14px;
+		line-height: 30px;
+		z-index:20;
 	}
 	#chatModule {
 		bottom: 0;
@@ -137,6 +138,7 @@
 		border-radius: 10px;
 		padding: 10px;
 		transition: all .05s ease-in-out; 
+		max-height: 95vh;
 	}
 	#chatInput {
 		display: inline-block;
@@ -863,6 +865,7 @@
 		position: fixed;
 		bottom: 10px;
 		top: unset;
+		display:none;
 	}
 	
 	</style>
@@ -876,7 +879,7 @@
 		<div class="xbutton" onclick="toggleChat();" title="Hide the chat window">x</div>
 		<div id="chatBody" class="message"> 
 			<div class="inMessage" data-translate='welcome-to-vdo-ninja-chat'>
-				Welcome to VDO.Ninja! You can send text messages directly to connected peers from here.
+				Welcome to the Meet app! You can send text messages directly to connected peers from here.
 			</div>
 		</div>
 		<div id="chatSendBar">
@@ -1032,10 +1035,14 @@
 	} else if (urlParams.has('mobile')){
 		mobile = true;
 	}
+	if (screen.height && screen.width && (screen.height*screen.width<400000)){
+		mobile = true;
+	}
+	
 	if (mobile){
 		toggleChat();
 		document.body.classList.add("mobile");
-	}
+	}	
 	
 	var password = false;
 	if (urlParams.has('password') || urlParams.has('pass') || urlParams.has('pw') || urlParams.has('p')) {
@@ -1697,15 +1704,17 @@
 		if (mobile){
 			additional2 += "&ad=1";
 		}
-		
-		var iframesrc = "./index.html?novideo&nopreview&novice&ltb=350&transparent&hideheader&margin&rounded&hidetranslate&cleandirector&chatbutton=0&vd=0&webcam&nvb&showlabel=skype&style=2&room="+roomname+additional+additional2+"&b64css="+injectCSS+streamID+label;
-		
+		if (mobile){
+			var iframesrc = "./index.html?novice&ltb=350&minipreview&transparent&hideheader&margin&rounded&hidetranslate&cleandirector&chatbutton&vd=0&webcam&nvb&sstype=3&ssb&showlabel=skype&style=2&room="+roomname+additional+additional2+"&b64css="+injectCSS+streamID+label;
+		} else {
+			var iframesrc = "./index.html?novice&ltb=350&minipreview&transparent&hideheader&margin&rounded&hidetranslate&cleandirector&chatbutton=0&vd=0&webcam&nvb&sstype=3&ssb&showlabel=skype&style=2&room="+roomname+additional+additional2+"&b64css="+injectCSS+streamID+label;
+		}
 		
 		if (roomname!==false){
 			setStorage("savedRoom_comms", {roomname:roomname,password:password}, 9999);
 		}
 		
-		document.title = "Mixer: "+roomname;
+		document.title = "Room: "+roomname;
 		
 		//for (var i in savedSession.groups){
 		//	drawGroup(savedSession.groups[i]);
@@ -1731,6 +1740,9 @@
 		var eventer = window[eventMethod];
 		var messageEvent = eventMethod === "attachEvent" ? "onmessage" : "message";
 		var setupYet = false;
+		var showingVideoButton = false;
+		
+		/// If you have a routing system setup		 
 		/// If you have a routing system setup, you could have just one global listener for all iframes instead.
 		
 		eventer(messageEvent, function (e) {
@@ -1746,6 +1758,12 @@
 			}
 			
 			if (e.data.action && "action" in e.data){
+				if (e.data.action === "local-camera-event"){
+					if (!showingVideoButton){
+						showingVideoButton = true;
+						iframe.contentWindow.postMessage({"function":"eval", "value":'getById("mutevideobutton").style.setProperty("display", "block", "important");'}, '*');
+					}
+				} 									
 				
 				if ("joining-room" == e.data.action){
 					if (!setupYet){
@@ -1923,6 +1941,15 @@
 		}
 	}
 	
+	function changeAspectRatio(ar, button){
+		document.querySelectorAll(".aspectbutton").forEach(ele=>{
+			if (ele == button){return;}
+			ele.checked = false;
+			ele.value = false;
+		});
+		aspectRatio = ar;
+		document.documentElement.style.setProperty('--aspect-ratio', ar);
+	}									
 	//let modal = document.querySelector("#modal");
 	document.querySelectorAll(".close-btn").forEach(ele2=>{
 		ele2.onclick = function(){

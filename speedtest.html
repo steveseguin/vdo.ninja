@@ -99,9 +99,9 @@
 				return raw ? parseInt(raw[2], 10) : false;
 			}
 			
-			if (!getChromeVersion()){
-				alert("This speedtest is optimized for Chromium-based browsers; graphs will not work for Firefox or Safari browsers.");
-			}
+			//if (!getChromeVersion()){
+			//	alert("This speedtest is optimized for Chromium-based browsers; graphs will not work for Firefox or Safari browsers.");
+			//}
 		
 			(function (w) {
 				w.URLSearchParams =
@@ -357,14 +357,22 @@
 				var previousResolution;
 
 				eventer(messageEvent, function (e) {
-					//console.log(e.data);
 					if ("action" in e.data) {
 					
+					
+						if (e.data.action == "view-stats-updated"){
+							return;
+						}
+						
+						if (e.data.action == "setVideoBitrate"){
+							logData("Target Video Bitrate",e.data.value);
+						}
+						
 						if (e.data.action == "available-speedtest-servers"){
-							console.warn("Speedtest server list loaded");
+							//console.warn("Speedtest server list loaded");
 							updateTurnlist(e.data.value);
 						} else {
-							logData(e.data.action, e.data.value);
+							//logData(e.data.action, e.data.value);
 						}
 
 						if (e.data.action == "new-view-connection") {
@@ -397,54 +405,60 @@
 					if ("stats" in e.data) {
 						var out = "";
 						
-						for (var streamID in e.data.stats.inbound_stats) {
-							out += printValues(e.data.stats.inbound_stats[streamID]);
+						for (var someValue in e.data.stats.inbound_stats) {
+							out += printValues(e.data.stats.inbound_stats[someValue]);
 						}
 						
-						for (var streamID in e.data.stats.outbound_stats) {
-							if (e.data.stats.outbound_stats[streamID].quality_limitation_reason){
-								if (quality_reason != e.data.stats.outbound_stats[streamID].quality_limitation_reason) {
-									quality_reason = e.data.stats.outbound_stats[streamID].quality_limitation_reason;
-									logData("Quality Limitation Reason:", quality_reason);
+						for (var someValue in e.data.stats.outbound_stats) {
+							if (e.data.stats.outbound_stats[someValue].quality_limitation_reason){
+								if (quality_reason != e.data.stats.outbound_stats[someValue].quality_limitation_reason) {
+									quality_reason = e.data.stats.outbound_stats[someValue].quality_limitation_reason;
+									logData("Quality Limitation Reason", quality_reason);
 								}
 							}
 							
-							if (e.data.stats.outbound_stats[streamID].encoder){
-								if (encoder != e.data.stats.outbound_stats[streamID].encoder) {
-									encoder = e.data.stats.outbound_stats[streamID].encoder;
-									logData("Encoder used:", encoder);
+							if (e.data.stats.outbound_stats[someValue].encoder){
+								if (encoder != e.data.stats.outbound_stats[someValue].encoder) {
+									encoder = e.data.stats.outbound_stats[someValue].encoder;
+									logData("Encoder used", encoder);
+								}
+							} else if (e.data.stats.outbound_stats[someValue].video_codec){
+								if (encoder != e.data.stats.outbound_stats[someValue].video_codec) {
+									encoder = e.data.stats.outbound_stats[someValue].video_codec;
+									logData("Encoder used", encoder);
 								}
 							}
 						}
 
-						if (out.split("Bitrate_in_kbps").length > 1) {
-							for (var key in e.data.stats.inbound_stats[streamID]) {
-								if (key.startsWith("RTCMediaStreamTrack_receiver") || key.startsWith("DEPRECATED_RTCMediaStreamTrack_receiver")) {
-									var bitrate = e.data.stats.inbound_stats[streamID][key][
-											"Bitrate_in_kbps"
-										];
+						for (var key in e.data.stats.inbound_stats[streamID]){
+							if (typeof e.data.stats.inbound_stats[streamID][key] == "object"){
+								//console.error(e.data.stats.inbound_stats[streamID][key]);
+								if ("Bitrate_in_kbps" in e.data.stats.inbound_stats[streamID][key]){
+									var bitrate = e.data.stats.inbound_stats[streamID][key]["Bitrate_in_kbps"];
 									updateData("bitrate", bitrate);
+								}
 
-									var buffer = e.data.stats.inbound_stats[streamID][key][
-											"Buffer_Delay_in_ms"
-										];
+
+								if ("Buffer_Delay_in_ms" in e.data.stats.inbound_stats[streamID][key]){
+									var buffer = e.data.stats.inbound_stats[streamID][key]["Buffer_Delay_in_ms"];
 									updateData("buffer", buffer);
-
+								}
+								if ("packetLoss_in_percentage" in e.data.stats.inbound_stats[streamID][key]){
 									var packetloss = e.data.stats.inbound_stats[streamID][key]["packetLoss_in_percentage"];
 									if (packetloss != undefined) {
 										packetloss = packetloss.toFixed(2);
 										updateData("packetloss", packetloss);
 									}
+								}
 
+								if ("Resolution" in e.data.stats.inbound_stats[streamID][key]){
 									var resolution = e.data.stats.inbound_stats[streamID][key]["Resolution"];
-
 									if (previousResolution != resolution) {
 										previousResolution = resolution;
 										logData("Resolution", resolution);
 									}
 								}
 							}
-
 						}
 						
 						if (recordResults){
