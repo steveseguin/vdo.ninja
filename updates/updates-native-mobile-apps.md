@@ -2,6 +2,12 @@
 
 [native-mobile-app-versions.md](../steves-helper-apps/native-mobile-app-versions.md "mention")
 
+#### November 14
+
+* I updated the native Android app for VDO.Ninja to include support for publishing into a VDO.Ninja room, and fixed a couple UI bugs, along with improved 1080p toggle support.\
+  \-- Note: If using a room, you will need to still add [`&password=false`](../general-settings/password.md) (`&p=0`) to all the guests/scenes, as I haven't added password support to the native app yet.\
+  \-- You can download it directly here for now: [https://drive.google.com/file/d/1M0kv5nWLtcfl2JOnsAGiG1zUmkeIVLyZ/view?usp=share\_link](https://drive.google.com/file/d/1M0kv5nWLtcfl2JOnsAGiG1zUmkeIVLyZ/view?usp=share\_link) (I'll update the Google Play store after a bit more testing)
+
 #### May 27
 
 * Got the native iOS app into the app store. (crude, but finally got it accepted.) [https://apps.apple.com/us/app/vdo-ninja/id1607609685](https://apps.apple.com/us/app/vdo-ninja/id1607609685)
