@@ -78,6 +78,7 @@ description: All useful links you might take a look at
 | Webhid demonstrates how to interface with a USB device, like a streamdeck (mouse/keyboard not supported)                            | [https://vdo.ninja/webhid](https://vdo.ninja/webhid)                                                           |
 | A tool for letting you publish into VDO.Ninja, but then full-screen the window once setup, allowing for window-capturing into zoom. | [https://vdo.ninja/examples/zoom.html](https://vdo.ninja/examples/zoom.html)                                   |
 | Also hosted on github elsewhere, but it's an example of how to remotely control OBS using VDO.Ninja's tunneling abilities           | [https://vdo.ninja/examples/obs\_remote/index](https://vdo.ninja/examples/obs\_remote/index)                   |
+| Create a sample of how to apply a custom full-page overlay on top of VDO.Ninja                                                      | [https://vdo.ninja/alpha/examples/overlay](https://vdo.ninja/alpha/examples/overlay)                           |
 
 ### [Sponsor ❤](getting-started/sponsor.md)
 

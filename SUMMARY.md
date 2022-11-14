@@ -408,6 +408,7 @@
     * [\&labelsuggestion](advanced-settings/upcoming-parameters/and-labelsuggestion.md)
     * [\&controlbarspace](advanced-settings/upcoming-parameters/and-controlbarspace.md)
     * [\&volumecontrol](advanced-settings/upcoming-parameters/and-volumecontrol.md)
+    * [\&directoronly](advanced-settings/upcoming-parameters/and-directoronly.md)
   * [Other Parameters](other-parameters.md)
 * [Releases](release-notes/older-releases.md)
   * [v21 ❤️](older-releases/v21.md)

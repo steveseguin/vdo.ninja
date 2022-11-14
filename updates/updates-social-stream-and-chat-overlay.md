@@ -3,6 +3,11 @@
 [social-stream.md](../steves-helper-apps/social-stream.md "mention")\
 [chat-overlay.md](../steves-helper-apps/chat-overlay.md "mention")
 
+#### **November 13**
+
+* Added the `&js` command to Socialstream by request, so you can inject custom javascript into the dock or overlay pages. Just make sure its URL encoded. Example use: [https://socialstream.ninja/index.html?session=test123\&js=https%3A%2F%2Fvdo.ninja%2Fexamples%2Ftestjs.js](https://socialstream.ninja/index.html?session=test123\&js=https%3A%2F%2Fvdo.ninja%2Fexamples%2Ftestjs.js)\
+  More details here: [https://github.com/steveseguin/social\_stream/blob/main/README.md#custom-javascript](https://github.com/steveseguin/social\_stream/blob/main/README.md#custom-javascript)
+
 #### **November 8**
 
 * bilibili.tv support added to Socialstream
@@ -59,7 +64,7 @@
 #### **September 15**
 
 * `&random` added to SocialStream; it can be used with the dock to randomize where messages appear on screen.\
-  ****![](<../.gitbook/assets/image (13).png>)****
+  ****![](<../.gitbook/assets/image (13) (2).png>)****
 
 #### **September 10**
 

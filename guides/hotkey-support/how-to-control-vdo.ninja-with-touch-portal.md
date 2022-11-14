@@ -20,7 +20,7 @@ Thanks to <mark style="color:red;">djlefave</mark> on [Discord](https://discord.
 
 `https://api.vdo.ninja/APIKEY/layout/[{"x":0,"y":0,"w":50,"h":100,"c":true,"slot":0},{"x":50,"y":0,"w":50,"h":100,"c":false,"slot":1}]`
 
-![](<../../.gitbook/assets/image (11).png>)
+![](<../../.gitbook/assets/image (11) (2).png>)
 
 You can also use Touch Portal to switch the layout of [`&scene=0`](../../advanced-settings/view-parameters/scene.md) without using the [Mixer App](../../steves-helper-apps/mixer-app.md).
 

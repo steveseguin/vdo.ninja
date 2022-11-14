@@ -9,7 +9,7 @@
 #### September 16
 
 * Added more details to the tech-check test's result page (vdo.ninja/alpha/results?id=xxx), including system detail and the network type. WiFi is of course isn't advised, so if it detects that, it points it out as seen in the photo.\
-  ![](<../.gitbook/assets/image (15) (2).png>)![](<../.gitbook/assets/image (17).png>)
+  ![](<../.gitbook/assets/image (15) (2) (1).png>)![](<../.gitbook/assets/image (17).png>)
 
 #### September 14
 
@@ -28,4 +28,4 @@
   I'd still recommend you do a proper tech check before the stream regardless, but this 'pre-tech-check' can help in cases of larger groups.\
   \
   At some point I'll add a dashboard or notification system to make managing invite links easier, but that will probably be for another day.\
-  ![](<../.gitbook/assets/image (1) (2).png>)
+  ![](<../.gitbook/assets/image (1) (2) (6).png>)

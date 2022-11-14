@@ -2,6 +2,38 @@
 
 [mixer-app.md](../steves-helper-apps/mixer-app.md "mention")
 
+#### November 13
+
+*   Added the option to change OBS scenes whenever you change layouts in the Mixer App.\
+    For this to work:
+
+    1. ``[`&remote`](../general-settings/remote.md) needs to be on the scene link (should be there if using the provided scene link)
+    2. Needs to be enabled in the Mixer's settings\
+       ![](<../.gitbook/assets/image (2).png>)
+    3. An OBS scene name needs to be specified for a layout in the mixer app (And make sure you click "save scene" after)\
+       ![](<../.gitbook/assets/image (11).png>)
+    4. OBS's browser source needs level 4 or 5 enabled for at least one of the VDO.Ninja scenes that you added to OBS (or set to all scenes, if you disable sources when inactive)\
+       ![](<../.gitbook/assets/image (5).png>)
+
+    The idea here is that you can have OBS overlays/mixer apply in sync to your VDO.Ninja custom mix layouts, and even control your show remotely without OBS even on the same computer.
+* If you hold CTRL down while dragging/resizing elements in the Mixer App, grid-snapping mode is disabled, allowing for fine-grain pixel-level accuracy.\
+  ![](<../.gitbook/assets/image (6).png>)\
+  \
+  \*\* on alpha at [https://vdo.ninja/alpha/mixer](https://vdo.ninja/alpha/mixer) (could be some bugs here or there, so please report issues as you find them).
+
+#### November 12
+
+* Added the option in the mixer app to use 1080p as the canvas size (instead of 720p) to make it easy to get pixel perfection at full HD.\
+  ![](<../.gitbook/assets/image (1).png>)
+* Added the option to save scenes in the editor with pixel-units instead of relative percentiles. Not recommended for most users, but can make it easy to manually edit an exported layout (pixels vs fractions). The little thumbnails will update.
+* Added support to VDO.Ninja so that layouts can be expressed as a relative percentile or pixel specific (for advanced users). VDO.Ninja will assume wp,hp,xp, and yp are "pixel" based units for x,y,h,w. If you canvas/browser is too big or small, things may overflow or not fit correctly.\
+  \-- please note: w,h,x,y take priority over wp,hp,xp,yp, if both are present in a layout file.
+*   JSON export is "prettified" so its easier to edit with notepad (rather than being a single long line).\
+    ![](<../.gitbook/assets/image (15).png>)
+
+    \
+    \*\*\* Changes on alpha at [vdo.ninja/alpha/mixer](https://vdo.ninja/alpha/mixer) for testing and feedback.
+
 #### October 19
 
 * [vdo.ninja/alpha/mixer](https://vdo.ninja/alpha/mixer) was updated to have the director be included as a slot option, so you can include yourself in the video layouts now.

@@ -1,5 +1,12 @@
 # Updates - Miscellaneous
 
+#### November 12
+
+* Create a sample of how to apply a custom full-page overlay on top of VDO.Ninja: [https://vdo.ninja/alpha/examples/overlay](https://vdo.ninja/alpha/examples/overlay)\
+  \
+  For example, the default (leave field blank option) shows how to apply a logo on top of a guest invite. It isn't clickable, so it won't interfere with the app itself (other than make it harder to see things).\
+  ![](<../.gitbook/assets/image (12).png>)
+
 #### October 1
 
 *   I'll be having to start white-listing domains that [invite.cam](https://invite.cam/) can use, due to abuse of the service by phishing scammers. This won't impact VDO.Ninja users, but it may impact users who have been using it for non-VDO.Ninja related things.
@@ -7,7 +14,7 @@
     \-- vdo.ninja, rtc.ninja, etc, will all still work as normal. I'll be happy to whitelist other domains for community members who reach out to me that need it.\
     \-- Untrusted domains will still work, but I will be prompting visitors to such links to proceed only if they trust the creator of the link. Nothing threatening, but I hope it's enough to discourage abuse.\
     \-- I've had to start a blacklist of sites due to reports of phishing abuse that I am accountable for blocking.\
-    ![](<../.gitbook/assets/image (2) (6).png>)
+    ![](<../.gitbook/assets/image (2) (6) (2).png>)
 
 #### September 9
 

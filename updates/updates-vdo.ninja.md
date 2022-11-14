@@ -8,6 +8,23 @@ I'm working on a fix, but I don't have an ETA. Will update when fixed.
 _\*\*_ UPDATE: I hot-patched beta and alpha with a fix. This fix disables the option to select custom audio output destinations, but resolves the echo issue. If using a self-deployed instance, you can instead add [`&noap`](../general-settings/noaudioprocessing.md) to the URLs to fix it as well; you can also enable `chrome://flags/#chrome-wide-echo-cancellation`, patch the code, or just use headphones.
 {% endhint %}
 
+#### **November 11** <a href="#august-31" id="august-31"></a>
+
+*   Added a new URL parameter. [`&directoronly`](../advanced-settings/upcoming-parameters/and-directoronly.md) (`&do`). This is just the same as doing [`&view=DirectorStreamID`](../advanced-settings/view-parameters/view.md), but without having to know the stream ID for the director.
+
+    \-- It will actually connect to any director, including co-directors, not just the main one.
+
+    \-- [`&view`](../advanced-settings/view-parameters/view.md), [`&include`](../advanced-settings/upcoming-parameters/and-include.md), [`&exclude`](../advanced-settings/view-parameters/and-exclude.md) have a lower priority to `&directoronly`. So if there are two directors, you can do `&directoronly&exclude=coDirector123`, so that the [codirector](../director-settings/codirector.md) doesn't connect.
+
+    \-- I changed the toggle in the director's room for "Guests hear others" from [`&view=`](../advanced-settings/view-parameters/view.md) to [`&directoronly`](../advanced-settings/upcoming-parameters/and-directoronly.md). The point of this change is that the director can now still talk to those in the room.
+
+    \-- Purpose of change: I had a user who wanted [`&broadcast`](../advanced-settings/view-parameters/broadcast.md), but also not have the guests hear each other. It's a bit of a hassle to do [`&view=DirectorStreamID`](../advanced-settings/view-parameters/view.md), and the toggle is labelled to be misleading by saying "guests", not "everyone".
+
+    \-- You can use `&directoronly` to replace [`&broadcast`](../advanced-settings/view-parameters/broadcast.md) if you don't want the guests hearing each other.\
+    ![](../.gitbook/assets/image.png)\
+    \
+    \*\* change is on alpha for testing and feedback. [https://vdo.ninja/alpha/?directoronly](https://vdo.ninja/alpha/?directoronly)
+
 #### **November 8** <a href="#august-31" id="august-31"></a>
 
 * Added a 'cycle visual styles' button to the "users" settings menu in VDO.Ninja (and [Comms app](../steves-helper-apps/comms.md)) \
@@ -15,7 +32,7 @@ _\*\*_ UPDATE: I hot-patched beta and alpha with a fix. This fix disables the op
   This lets you toggle the [`&style=N`](../advanced-settings/design-parameters/style.md) options, between 1,2,4,5,6 I think?\
   \
   So if you find it distracting, the waveform in the [Comms app](../steves-helper-apps/comms.md) or such, you can toggle as a guest.\
-  ![](<../.gitbook/assets/image (1).png>)\
+  ![](<../.gitbook/assets/image (1) (2).png>)\
   \
   \*\* Change is on alpha at [vdo.ninja/alpha/](https://vdo.ninja/alpha/)
 
@@ -149,7 +166,7 @@ _\*\*_ UPDATE: I hot-patched beta and alpha with a fix. This fix disables the op
 
 * Firefox won't playback stereo audio as stereo by default now; it will require the [`&stereo`](../general-settings/stereo.md)/[`&proaudio`](../advanced-settings/audio-parameters/and-proaudio.md) flag to enable stereo playback. [`&mono`](../advanced-settings/view-parameters/mono.md) also works with Firefox now, allowing you to use `&proaudio&mono` with Firefox. (this was just a quirk of Firefox's default settings vs Chrome that I long needed to address)
 *   **M**ade the little upload arrow in the top-right color coded in response to the detected 'average' upload connection quality; won't be supported by all browsers, but most.\
-    ![](<../.gitbook/assets/image (5) (1).png>)
+    ![](<../.gitbook/assets/image (5) (1) (3).png>)
 
     \
     \*\* updated both alpha and beta.
@@ -489,7 +506,7 @@ _\*\*_ UPDATE: I hot-patched beta and alpha with a fix. This fix disables the op
   So if you do `https://api.vdo.ninja/c6sWHN9zzX/group/null/1`, with `&api=c6sWHN9zzX` added to the director's URL, you will toggle the director in and out of GROUP 1.\
   The response of the HTTP GET request though will be `true` or `false` or `timeout`, based on whether the director was added to the group, removed from the group, or whether it failed. This new feature can be used with a Streamdeck (or other controller) to have the button's color of the Streamdeck match the state of the action.\
   [https://github.com/steveseguin/Companion-Ninja/blob/main/README.md#callbacks--state-responses](https://github.com/steveseguin/Companion-Ninja/blob/main/README.md#callbacks--state-responses)\
-  ![](<../.gitbook/assets/image (15).png>)\
+  ![](<../.gitbook/assets/image (15) (2).png>)\
   \
   \*\*\* This is only supported on vdo.ninja/alpha/ currently
 
