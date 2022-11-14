@@ -1177,6 +1177,9 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 		} else {
 			session.password = decodeURIComponent(session.password); // will be re-encoded in a moment.
 		}
+	} else if (urlParams.has('nopassword') || urlParams.has('nopass') || urlParams.has('nopw')) {
+		session.password = false;
+		session.defaultPassword = false;
 	}
 
 	if (session.password) {
@@ -1645,6 +1648,11 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 			session.style = 1;
 		}
 	}
+	
+	if (urlParams.has('directoronly') || urlParams.has('do')){
+		session.viewDirectorOnly = true;
+	}
+	
 	
 	if (session.view!==false) {
 		session.view_set = session.view.split(",");
@@ -4653,6 +4661,7 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 			} // don't use if the stream is in your room (as not needed)
 		}  // you can load a stream ID from inside a room that exists outside any room
 		
+		
 		if ("previewMode" in e.data){
 			if ("layout" in e.data){
 				session.layout = e.data.layout;
@@ -4663,19 +4672,27 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 			warnlog("changing layout request via IFRAME API");
 			session.layout = e.data.layout;
 			pokeIframeAPI("layout-updated", session.layout);
-			if (session.director){
-				if ("scene" in e.data){
-					if ("UUID" in e.data){
-						issueLayout(e.data.layout, e.data.scene, e.data.UUID);
-					} else {
-						issueLayout(e.data.layout, e.data.scene);
+			
+			if (e.data.obsCommand){
+				issueLayoutOBS(e.data);
+			} else {
+				if (session.director){
+					if ("scene" in e.data){
+						if ("UUID" in e.data){
+							issueLayout(e.data.layout, e.data.scene, e.data.UUID);
+						} else {
+							issueLayout(e.data.layout, e.data.scene);
+						}
+					} else if ("UUID" in e.data){
+						issueLayout(e.data.layout, false, e.data.UUID);
 					}
-				} else if ("UUID" in e.data){
-					issueLayout(e.data.layout, false, e.data.UUID);
 				}
 			}
 			updateMixer();
+		} else if (e.data.obsCommand){
+			errorlog("obsCommand via iframe API currently needs a layout..");
 		}
+		
 		
 		if ("slotmode" in e.data){
 			if (session.slotmode){

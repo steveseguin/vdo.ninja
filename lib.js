@@ -1571,7 +1571,7 @@ function manageSceneState(data, UUID){ // incoming obs details
 			} else {
 				controlButton.onclick = async function(){
 					var msg = {};
-					msg.obsCommand = {}
+					msg.obsCommand = {};
 					msg.obsCommand.action = this.dataset.obsAction;
 					msg.UUID = this.dataset.UUID;
 					if (document.querySelector("#obsRemotePassword>input").value){
@@ -2122,6 +2122,17 @@ function getStorage(cname) {
 
 function play(streamid=null, UUID=false){  // play whatever is in the URL params; or filter by a streamID option
 	log("play stream: "+session.view+ " " +streamid);
+	
+	if (session.viewDirectorOnly){
+		if (!(UUID || streamid)){
+			warnlog("No UUID and StreamID");
+			return;
+		} else if (session.directorList.indexOf(UUID)==-1){
+			warnlog("Not a director");
+			return;
+		}
+	}
+	
 	if (session.view_set){
 		var played = false;
 		for (var j in session.view_set){
@@ -4298,11 +4309,11 @@ function updateMixerRun(e=false){  // this is the main auto-mixing code.  It's a
 			
 			// ANIMATED  - CONTAINER ; width/height/z-index/cover///////////////
 			if (layout){
-				var left = (w/100*layout[vid.dataset.sid].x) || 0;
-				var top = (h/100*layout[vid.dataset.sid].y) || 0;
+				var left = (w/100*layout[vid.dataset.sid].x) || layout[vid.dataset.sid].xp || 0;
+				var top = (h/100*layout[vid.dataset.sid].y) || layout[vid.dataset.sid].yp || 0;
 				top+=hi;
-				var width = (w/100*layout[vid.dataset.sid].w) || 0;
-				var height = (h/100*layout[vid.dataset.sid].h) || 0;
+				var width = (w/100*layout[vid.dataset.sid].w) || layout[vid.dataset.sid].wp || 0;
+				var height = (h/100*layout[vid.dataset.sid].h) || layout[vid.dataset.sid].hp || 0;
 				if (layout[vid.dataset.sid].cover || layout[vid.dataset.sid].c){  // this should be true/false
 					vid.style.objectFit = "cover";
 					cover = true;
@@ -8060,11 +8071,13 @@ function playoutdelay(UUID){  // applies a delay to all videos
 								receiver.playoutDelayHint = parseFloat(sync_offset/1000);
 
 								var audio_delay = session.sync || 0; // video is typically showing greater delay than video
-								if (receiver.track.id in session.rpcs[UUID].delayNode){
-									log("session.sync audio delay");
-									if (audio_delay<0){audio_delay=0;}
-									session.rpcs[UUID].delayNode[receiver.track.id].delayTime.setValueAtTime(parseFloat(audio_delay/1000.0), session.audioCtx.currentTime+1);
-									session.rpcs[UUID].stats[tid].Audio_Sync_Delay_ms = audio_delay;
+								audio_delay += target_buffer - session.rpcs[UUID].stats[tid].Buffer_Delay_in_ms
+								if (receiver.track.id in session.rpcs[UUID].inboundAudioPipeline){
+									if (session.rpcs[UUID].inboundAudioPipeline[receiver.track.id] && session.rpcs[UUID].inboundAudioPipeline[receiver.track.id].delayNode){
+										if (audio_delay<0){audio_delay=0;}
+										session.rpcs[UUID].inboundAudioPipeline[receiver.track.id].delayNode.delayTime.setValueAtTime(parseFloat(audio_delay/1000.0), session.audioCtx.currentTime+1);
+										session.rpcs[UUID].stats[tid].Audio_Sync_Delay_ms = audio_delay;
+									}
 								}
 							} else if (session.rpcs[UUID].stats[tid]._type=="video"){
 								if(sync_offset<0){sync_offset=0;}
@@ -10607,6 +10620,60 @@ function issueLayout(layout=false, scene=false, UUID=false) { // A directing roo
 	}
 }
 
+async function issueLayoutOBS(data) { // A directing room only is controlled by the Director, with the exception of MUTE.
+
+	var layout = data.layout || false;
+	var scene = data.scene || false;
+	var UUID = data.UUID || false;
+	var obsCommand = data.obsCommand || false;
+	
+	log("issueLayoutOBS() called");
+	var msg = {};
+	msg.layout = layout;
+	msg.obsCommand = obsCommand;
+	
+	if (data.remote){
+		msg.remote = data.remote;
+	} else {
+		msg.remote = session.remote || true;
+	}
+	msg = await session.encodeRemote(msg);
+
+	if (UUID){
+		
+		try {
+			log("CONTROL STATE" + session.pcs[UUID].obsState.details.controlLevel);
+		} catch(e){			
+		}
+		
+		if (session.pcs[UUID] && (scene!==false) && (session.pcs[UUID].scene===(scene+""))){
+			if (!session.pcs[UUID].solo){
+				session.sendMessage(msg, UUID);
+			}
+		} else if (session.pcs[UUID] && session.pcs[UUID].layout){
+			session.sendMessage(msg, UUID);
+			log("broadcast");
+		}
+	} else {
+		for (var uuid in session.pcs){
+			
+			try {
+				log("CONTROL STATE" + session.pcs[UUID].obsState.details.controlLevel);
+			} catch(e){			
+			}
+			
+			if ((scene!==false) && (session.pcs[uuid].scene===(scene+""))){
+				if (!session.pcs[uuid].solo){
+					session.sendMessage(msg, uuid);
+				}
+			} else if (session.pcs[uuid].layout){
+				session.sendMessage(msg, uuid);
+				log("broadcast");
+			}
+		}
+	}
+}
+
 var previousURL = "";
 var stillNeedURL = true;
 var reloadCancelled = false;
@@ -11238,7 +11305,10 @@ function loadDirectorSettings(){
 					directorLinks1.querySelector('[data-param="'+key+'"]').checked = settings.directorLinks1[key];
 					directorLinks1.querySelector('[data-param="'+key+'"]').onchange();
 				}
-			} catch(e){errorlog(e);}
+			} catch(e){
+				errorlog("key :"+key);
+				errorlog(e);
+			}
 		});
 	}
 	
@@ -11250,7 +11320,10 @@ function loadDirectorSettings(){
 					directorLinks2.querySelector('[data-param="'+key+'"]').checked = settings.directorLinks2[key];
 					directorLinks2.querySelector('[data-param="'+key+'"]').onchange();
 				}
-			} catch(e){errorlog(e);}
+			} catch(e){
+				errorlog("key :"+key);
+				errorlog(e);
+			}
 		});
 	}
 }
@@ -27578,12 +27651,13 @@ function addAudioPipeline(UUID, track){  // INBOUND AUDIO EFFECTS
 			delete session.rpcs[UUID].inboundAudioPipeline[tid]; // get rid of old nodes.
 		}
 		var trackid = track.id;
+		
 		session.rpcs[UUID].inboundAudioPipeline[trackid] = {};
 		
 		session.rpcs[UUID].inboundAudioPipeline[trackid].mediaStream = createMediaStream();
 		session.rpcs[UUID].inboundAudioPipeline[trackid].mediaStream.addTrack(track);
 		
-		if (ChromeVersion && (ChromeVersion<106)){ // I'm going to deprecate this.
+		if (ChromeVersion){ // I'm going to deprecate this. -> re investigate this
 			session.rpcs[UUID].inboundAudioPipeline[trackid].mutedAudio = createAudioElement(); // TODO: I don't know if this mutedAudio thing matters any more, in recent versions of Chrome, since it won't play even if muted.
 			session.rpcs[UUID].inboundAudioPipeline[trackid].mutedAudio.muted = true;
 			session.rpcs[UUID].inboundAudioPipeline[trackid].mutedAudio.playsinline = true; // ## Added Oct 9th 2022. Not sure it's does anything, but might help with iPhones?
@@ -27659,6 +27733,7 @@ function addAudioPipeline(UUID, track){  // INBOUND AUDIO EFFECTS
 		}
 		
 		if (screwedUp){
+			
 			if (session.rpcs[UUID].inboundAudioPipeline[trackid].destination===false){
 				session.rpcs[UUID].inboundAudioPipeline[trackid].destination = session.audioCtx.createMediaStreamDestination();
 			}

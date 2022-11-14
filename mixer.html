@@ -18,6 +18,8 @@
 	:root{
 		--aspect-ratio: 1.7777777777;
 		--chat-width: 450px;
+		--iframe-width: 1280px;
+		--iframe-height: 720px;
 	}
 	
 	body {
@@ -38,7 +40,7 @@
 		display: block;
 		
 		height: 100%;
-		width: 1280px;
+		width: var(--iframe-width);
 		
 		max-height: calc(100vh - 80px);
 	
@@ -51,10 +53,10 @@
 	}
 	
 	iframe.aspectRatio{
-		max-height: min(calc(100vh - 80px), calc(100vw - 160px - var(--chat-width)) / var(--aspect-ratio))) !important;
+		max-height: min(calc(100vh - 80px), calc(100vw - 160px - var(--chat-width)) / var(--aspect-ratio)) !important;
 		max-width: min(calc((100vh - 80px) *  var(--aspect-ratio)), calc(100vw - 160px - var(--chat-width))) !important;
-		height: 720px;
-		width: 1280px;
+		height: var(--iframe-height) !important;
+		width: var(--iframe-width) !important;
 	}
 	.gone {
 		position:absolute;
@@ -120,6 +122,9 @@
 		font-size: 150%;
 		font-family: Verdana;
 		line-height: 14px;
+	}
+	#sceneSettings{
+		font-size: 80%;
 	}
 	#chatModule {
 		bottom: 0;
@@ -423,15 +428,17 @@
 	}
 	#canvas{
 		background-color: #000;
-		width: 1280px;
-		height: 720px;
+		width: var(--iframe-width);
+		height: var(--iframe-height);
 		margin:0;
 		padding:0;
 		border:0; 
 		display: inline-block;
 	}
 	
-	
+	h3 {
+	    margin-bottom: 6px;
+	}
 	
 	.settings {
 		display: block;
@@ -844,7 +851,8 @@
 			<button onclick="addElement();">➕ Add Element to Scene</button>
 			<button onclick="saveScene(false, event);">💾 Save Scene</button>
 			<button onclick="saveScene(true, event);">💾<span style="position:relative;right:12px;top:2px;width:12px;display: inline-block;">💾</span>Duplicate Scene</button>
-			<button onclick="copyJSON();" title="This can be used with &format directly in VDO.Ninja without the mixer app.">Show as JSON</button>
+			<button onclick="setobsSceneName();" title="When this layout is triggered, OBS will change to the specified scene as well">Link OBS Scene</button>
+			<button onclick="copyJSON();" title="This can be used with &format directly in VDO.Ninja without the mixer app. Requires a guest being active.">Show as JSON</button>
 			<button onclick="removeScene();">🗑️ Remove Scene</button>
 			<button id="saveAndClose" onclick="saveScene(false, event);closeScene();">💾❌ Save and Close</button>
 			<button onclick="closeScene();">❌ Close Scene Maker</button>
@@ -913,27 +921,37 @@
 		<div class="modal-content">
 			<span class="close-btn">&times;</span>
 			<h2>General Settings</h2>
-			<h4>Aspect Ratio</h4>
-			<input type="checkbox" checked class="aspectbutton" onchange="changeAspectRatio(16/9.0, this);">16:9
-			<input type="checkbox" class="aspectbutton" onchange="changeAspectRatio(9.0/16, this);">9:16
-			<input type="checkbox" class="aspectbutton" onchange="changeAspectRatio(1.0, this);">1:1
+			<h3>Aspect Ratio</h3>
+			<input type="checkbox" checked class="aspectbutton" data-value="169"  onchange="changeAspectRatio(16/9.0, this);">16:9
+			<input type="checkbox" class="aspectbutton" data-value="0.5625" onchange="changeAspectRatio(9.0/16, this);">9:16
+			<input type="checkbox" class="aspectbutton" data-value="1" onchange="changeAspectRatio(1.0, this);">1:1
 			<br /><small><i>This just impacts the aspect ratio of the local preview.</i></small><br />
 			
-			<h4>Layout switching</h4>
-			<input type="checkbox" title="When a user is assigned a slot or switches slots, the last active layout is re-applied automatically" id="updateOnSlotChange" checked onchange="submitChange(this)";>Update layout on a slot change
-			<h4>Slot assignment</h4>
-			<input type="checkbox" title="A guest is assigned a slot when they join, automatically. If disabled, they must be assigned a slot manually." id="assignSlotToGuest" checked onchange="submitChange2(this)";>Assign a slot to new guests automatically
-			<h4>Show advanced controls</h4>
-			<input type="checkbox" title="Shows more director control options" onchange="toggleAdvanced(this)";>Show the advanced director control options
+			<h3 title="Does not impact the output; just increases pixel accuracy">Canvas Size</h3>
+			<input type="checkbox" checked class="pixeldensity" data-value="720" onchange="changePixelDensity(720, this);">720p
+			<input type="checkbox" class="pixeldensity" data-value="1080" onchange="changePixelDensity(1080, this);">1080p
 			
-			<h4>🗑 Remove all Layouts </h4>
+			<h3>Unit type for saved scene edits 📏</h3>
+			<input type="checkbox" checked class="absolutePosition" data-value="false" onchange="changeAbsolutePosition(false, this);">Relative (Percentage)
+			<input type="checkbox" class="absolutePosition" data-value="true" onchange="changeAbsolutePosition(true, this);">Absolute (Pixels)
+			
+			<h3>Layout switching</h3>
+			<input type="checkbox" title="When a user is assigned a slot or switches slots, the last active layout is re-applied automatically" id="updateOnSlotChange" checked onchange="submitChange(this)";>Update layout on a slot change
+			<h3>Linked OBS scenes</h3>
+			<input type="checkbox" title="When a user is assigned a slot or switches slots, the last active layout is re-applied automatically" id="syncOBS" onchange="submitChange3(this)";>Activate linked OBS scene on layout change
+			<h3>Slot assignment</h3>
+			<input type="checkbox" title="A guest is assigned a slot when they join, automatically. If disabled, they must be assigned a slot manually." id="assignSlotToGuest" checked onchange="submitChange2(this)";>Assign a slot to new guests automatically
+			<h3>Show advanced controls</h3>
+			<input type="checkbox" title="Shows more director control options" id="advancedMode" onchange="toggleAdvanced(this)";>Show the advanced director control options
+			
+			<h3>🗑 Remove all Layouts</h3>
 			<button onclick="wipeLayouts();">This will remove all the scene layouts from the current session.</button><br />
-			<h4>🚿 Load Default Layouts </h4>
+			<h3>🚿 Load Default Layouts</h3>
 			<button onclick="resetLayouts();">This will replace all current scene layouts with the initial defaults.</button><br />
 			
-			<h4>📤 Export settings </h4>
+			<h3>📤 Export settings </h3>
 			<button onclick="exportSession();">Export all scenes and settings to disk</button><br />
-			<h4>📥 Import settings </h4>
+			<h3>📥 Import settings </h3>
 			Import scenes and settings from local file:<br /><input type="file" accept=".json" onchange="importSession(event);"/><br /><br />
 			<button class='close-btn'>Close Settings</button>
 		</div>
@@ -993,11 +1011,11 @@
 
 	})(window);
 	
+	function errorlog(e,a=null,b=null){
+		console.error(e);
+	}
 	function warnlog(msg){
 		console.warn(msg);
-	}
-	function errorlog(msg){
-		console.error(msg);
 	}
 	function log(msg){
 		console.log(msg);
@@ -1042,7 +1060,42 @@
 		return roomid;
 	}
 	
-
+	var CtrlPressed = false;
+	document.addEventListener("keydown", event => {
+		if ((event.ctrlKey) || (event.metaKey)) { // detect if CTRL is pressed
+			if (!CtrlPressed){
+				CtrlPressed = true;
+				$(function(){
+				//	$(".draggable").unbind();
+					$(".draggable").draggable({ snap: false , grid: [ 1,1 ] });
+				});
+				$(function(){
+					//$(".resizable").unbind();
+					$(".resizable").resizable({ snap: false , grid: [ 1,1 ] });
+				});
+				//errorlog("CtrlPressed :"+CtrlPressed);
+			}
+		}
+	});
+	
+	document.addEventListener("keyup", event => {
+		if ((event.ctrlKey) || (event.metaKey)) { // detect if CTRL is pressed
+		//
+		} else if (CtrlPressed){
+			CtrlPressed = false;
+			$(function(){
+			//	$(".draggable").unbind();
+				$(".draggable").draggable({ snap: true  , grid: [ 10,10 ] });
+			});
+			$(function(){
+				//$(".resizable").unbind();
+				$(".resizable").resizable({ snap: true , grid: [ 10, 10] });
+			});
+			//errorlog("CtrlPressed :"+CtrlPressed);
+		}
+	});
+	
+	
 	var urlEdited = window.location.search.replace(/\?\?/g, "?");
 	urlEdited = urlEdited.replace(/\?/g, "&");
 	urlEdited = urlEdited.replace(/\&/, "?");
@@ -1070,12 +1123,23 @@
 	var toggleBroadcast = true;
 	var messageList = [];
 	var password = false;
+	var syncOBS = false;
 	if (urlParams.has('password') || urlParams.has('pass') || urlParams.has('pw') || urlParams.has('p')) {
 		password = urlParams.get('password') || urlParams.get('pass') || urlParams.get('pw') || urlParams.get('p');
 	}
 	
 	var aspectRatio = 16/9.0;
+	var pixelDensity = 720;
 	document.documentElement.style.setProperty('--aspect-ratio', aspectRatio);
+	
+	var absolutePixel = false; 
+	var advancedMode = false;
+	var hh = pixelDensity;
+	var ww = parseInt((pixelDensity*16/9) * (aspectRatio/(16/9)));
+	
+	document.documentElement.style.setProperty('--iframe-width', ww);
+	document.documentElement.style.setProperty('--iframe-height',hh);
+		
 	
 	var roomname = false;
 	if (urlParams.has("room") || urlParams.has("r") ||urlParams.has("dir") || urlParams.has("director")){
@@ -1154,7 +1218,6 @@
 		var msg = document.getElementById('chatInput').value;
 		msg = sanitize(msg);
 		if (msg==""){return;}
-		console.log(msg);
 		iframe.contentWindow.postMessage({ sendChat: msg }, "*"); 
 		document.getElementById('chatInput').value = "";
 		
@@ -1263,9 +1326,7 @@
 		//chatUpdateTimeout = setTimeout(function(){updateMessages()},60000);
 	}
 	
-	function errorlog(e,a=null,b=null){
-		console.error(e);
-	}
+	
 	
 	var currentLayout = {};
 	
@@ -1332,9 +1393,6 @@
 		ev.preventDefault();
 		var data = ev.dataTransfer.getData("text");
 		var origThing = document.getElementById(data);
-		console.log(origThing);
-		console.log(data);
-		console.log(ev);
 		ev.target.style.border = "";
 		origThing.style.border = "";
 		
@@ -1355,8 +1413,6 @@
 			if (ev.target.dataset.slot=="undefined"){return;}
 			
 			ev.target.parentNode.insertBefore(origThing, ev.target.nextSibling);
-			
-			console.warn(origThing);
 			
 			if (origThing.dataset.slot && (origThing.dataset.slot!=="undefined")){
 				document.querySelectorAll("[data-slot='"+origThing.dataset.slot+"']").forEach(ele=>{ele.style.display = "block";})
@@ -1455,12 +1511,9 @@
 				thing.classList.add("thing");
 				thing.ondblclick = function(ev){
 					var origThing = ev.target;
-					console.log(ev);
 					if (origThing.parentNode.id == "col1"){return;}
 					ev.preventDefault();
 					var target = document.querySelector("[data-slot][class='empty']:not([class='hidden'])");
-					console.log(origThing);
-					console.log(target);
 					origThing.style.border = "";
 					  
 					var eles = document.querySelectorAll(".thing");
@@ -1488,8 +1541,6 @@
 						if (target.dataset.slot=="undefined"){return;}
 						if (target.dataset.slot=="undefined"){return;}
 						target.parentNode.insertBefore(origThing, target.nextSibling);
-						
-						console.warn(origThing);
 						
 						if (origThing.dataset.slot && (origThing.dataset.slot!=="undefined")){
 							document.querySelector("[data-slot='"+origThing.dataset.slot+"']").style.display = "block";
@@ -1654,6 +1705,103 @@
 				getById("toggleBroadcast").checked = true;
 			}
 		}
+		if (savedSession.settings && ("syncOBS" in savedSession.settings)){
+			syncOBS = savedSession.settings.syncOBS;
+			if (!syncOBS){
+				getById("syncOBS").value = "off";
+				getById("syncOBS").checked = false;
+				getById("syncOBS").removeAttribute('checked');
+			} else {
+				getById("syncOBS").value = "on";
+				getById("syncOBS").checked = true;
+			}
+		}
+		if (savedSession.settings && ("aspectRatio" in savedSession.settings)){
+			aspectRatio = savedSession.settings.aspectRatio;
+			document.documentElement.style.setProperty('--aspect-ratio', aspectRatio);
+			
+			document.querySelectorAll(".aspectbutton").forEach(ele=>{
+				if ((ele.dataset.value == "169") && (aspectRatio == 16/9.0)){
+					ele.checked = true;
+					ele.value = true;
+				} else if (ele.dataset.value == aspectRatio){
+					ele.checked = true;
+					ele.value = true;
+				} else {
+					ele.checked = false;
+					ele.value = false;
+				}
+			});
+		}
+		if (savedSession.settings && ("advancedMode" in savedSession.settings)){
+			advancedMode = savedSession.settings.advancedMode;
+			if (!advancedMode){
+				getById("advancedMode").value = "off";
+				getById("advancedMode").checked = false;
+				getById("advancedMode").removeAttribute('checked');
+			} else {
+				getById("advancedMode").value = "on";
+				getById("advancedMode").checked = true;
+			}
+			if (iframe && iframe.contentWindow){
+				iframe.contentWindow.postMessage({"advancedMode":advancedMode}, '*');
+			}
+		}
+		if (savedSession.settings && ("absolutePixel" in savedSession.settings)){
+			absolutePixel = savedSession.settings.absolutePixel;
+			
+			document.querySelectorAll(".absolutePosition").forEach(ele=>{
+			
+				if (ele.dataset.value == "true"){
+					if (true == absolutePixel){
+						ele.checked = true;
+						ele.value = true;
+					} else {
+						ele.checked = false;
+						ele.value = false;
+					}
+				} else {
+					if (false == absolutePixel){
+						ele.checked = true;
+						ele.value = true;
+					} else {
+						ele.checked = false;
+						ele.value = false;
+					}
+				}
+			
+			});
+		}
+		
+		
+		if (savedSession.settings && ("pixelDensity" in savedSession.settings)){
+			pixelDensity = savedSession.settings.pixelDensity;
+			if (pixelDensity==1080){
+			
+				document.querySelectorAll(".pixeldensity").forEach(ele=>{
+					if (ele.dataset.value == pixelDensity){
+						ele.checked = true;
+						ele.value = true;
+					} else {
+						ele.checked = false;
+						ele.value = false;
+					}
+				});
+		
+				var hh = pixelDensity;
+				var ww = parseInt((pixelDensity*16/9) * (aspectRatio/(16/9)));
+				
+				document.documentElement.style.setProperty('--aspect-ratio', aspectRatio);
+				document.documentElement.style.setProperty('--iframe-width', ww+"px");
+				document.documentElement.style.setProperty('--iframe-height', hh+"px");
+				
+				
+			
+			//	getById("syncOBS").value = "off";
+			//	getById("syncOBS").checked = false;
+			//	getById("syncOBS").removeAttribute('checked');
+			}
+		}
 	}
 	
 	var savedSession = getStorage("savedSession");
@@ -1690,21 +1838,33 @@
 			assignSlotToGuest=false
 			iframe.contentWindow.postMessage({"slotmode":2}, '*');;
 		}
-		
+		saveSession();
+	}
+	
+	function submitChange3(element){
+		if (element.checked){
+			syncOBS=true;
+		} else { // do not assign guests to slots automatically
+			element.removeAttribute('checked');
+			syncOBS=false
+		}
 		saveSession();
 	}
 	
 	function toggleAdvanced(element){
 		if (element.checked){
 			iframe.contentWindow.postMessage({"advancedMode":true}, '*');
+			advancedMode = true;
 		} else {
 			element.removeAttribute('checked');
 			iframe.contentWindow.postMessage({"advancedMode":false}, '*');
+			advancedMode = false;
 		}
+		saveSession();
 	}
 	
 	function exportSession() {
-		var content = JSON.stringify(savedSession);
+		var content = JSON.stringify(savedSession,null,2);
 		var fileName = roomname + ".json";
 		var a = document.createElement("a");
 		var file = new Blob([content], {type: 'text/plain'});
@@ -1714,10 +1874,9 @@
 	}
 	
 	function importSession(event){
-		
 		var reader = new FileReader();
 		reader.onload = function(event){
-			console.log(event.target.result);
+			log(event.target.result);
 			try {
 				var obj = JSON.parse(event.target.result);
 			} catch(e){
@@ -1731,8 +1890,13 @@
 				document.getElementById("containermenu").innerHTML = "";
 				drawAddNewLayout2();
 				drawAddNewLayout3();
+				
 				for (var i in savedSession.layouts){
-					drawLayout(savedSession.layouts[i]);
+					if (savedSession.obsScenes && savedSession.obsScenes[i]){
+						drawLayout(savedSession.layouts[i], false, savedSession.obsScenes[i]);
+					} else {
+						drawLayout(savedSession.layouts[i]);
+					}
 				}
 				alert("The saved session has been imported and loaded.");
 			} else {
@@ -1752,6 +1916,7 @@
 		drawAddNewLayout2();
 		drawAddNewLayout3();
 		
+		savedSession.obsScenes = []; 
 		savedSession.layouts = initialLayouts.layouts;
 		
 		for (var i in savedSession.layouts){
@@ -1759,6 +1924,29 @@
 		}
 		saveSession();
 	}
+	
+	function updateLayouts(){
+		document.getElementById("containermenu").innerHTML = "";
+		
+		var slots = document.getElementById("col1").children;
+		for (var i=0;i<slots.length;i++){
+			slots[i].style.backgroundColor = colors[i];
+			slots[i].style.opacity = "0.9";
+		}
+		
+		drawAddNewLayout2();
+		drawAddNewLayout3();
+		
+		for (var i in savedSession.layouts){
+			if (savedSession.obsScenes && savedSession.obsScenes[i]){
+				drawLayout(savedSession.layouts[i], false, savedSession.obsScenes[i]);
+			} else {
+				drawLayout(savedSession.layouts[i]);
+			}
+		}
+	}
+	
+	
 	
 	function wipeLayouts(){
 	
@@ -1769,7 +1957,7 @@
 	
 		drawAddNewLayout2();
 		drawAddNewLayout3();
-		
+		savedSession.obsScenes = [];
 		savedSession.layouts = [];
 		for (var i in savedSession.layouts){
 			drawLayout(savedSession.layouts[i]);
@@ -1923,7 +2111,7 @@
 		if (event.target && (event.target.tagName == "INPUT")){warnlog("input in focus; return");return;}
 		var value = parseInt(event.key);
 		if (value == event.key){
-			console.log(value);
+			log(value);
 			try {
 				if (document.querySelector("#containermenu").children[value]){
 					document.querySelector("#containermenu").children[value].querySelector("canvas").click();
@@ -1957,6 +2145,10 @@
 		}
 		roomname = sanitizeRoomName(roomname);
 	
+		if (!advancedMode){
+			additional2+="&novice";
+		}
+	
 		
 		var iframeContainer = document.getElementById("iframeContainer");
 		iframe.allow = "autoplay;camera;microphone;fullscreen;picture-in-picture;display-capture;";
@@ -1966,7 +2158,7 @@
 			roomname = generateString(10);
 		}
 		
-		var iframesrc = "./index.html?novice&showdirector&ltb=350&transparent&hideheader&hidetranslate&cleandirector&chatbutton=0&director="+roomname+additional+additional2+"&b64css="+injectCSS;
+		var iframesrc = "./index.html?showdirector&ltb=350&transparent&hideheader&hidetranslate&cleandirector&chatbutton=0&director="+roomname+additional+additional2+"&b64css="+injectCSS;
 		
 		if (roomname!==false){
 			setStorage("savedRoom", {roomname:roomname,password:password}, 9999);
@@ -2065,7 +2257,7 @@
 		
 		var a = document.createElement("a");
 		a.innerHTML = "Scene View Link 📎";
-		a.href = "./?scene=0&layout&room="+roomname+additional;
+		a.href = "./?scene=0&layout&remote&room="+roomname+additional;
 		a.target = "_blank";
 		a.onclick = function(evt){copyFunction(this, evt);};
 		document.getElementById("sources").appendChild(a);
@@ -2077,13 +2269,16 @@
 			slots[i].style.opacity = "0.9";
 		}
 		
-		//drawAddNewLayout();
 		drawAddNewLayout2();
-		//drawAutoLayout();
 		drawAddNewLayout3();
-		
-		for (var i in savedSession.layouts){
-			drawLayout(savedSession.layouts[i]);
+		 
+		 
+		 for (var i in savedSession.layouts){
+			if (savedSession.obsScenes && savedSession.obsScenes[i]){
+				drawLayout(savedSession.layouts[i], false, savedSession.obsScenes[i]);
+			} else {
+				drawLayout(savedSession.layouts[i]);
+			}
 		}
 		
 		document.getElementById("chatModule").classList.remove("hidden");
@@ -2109,8 +2304,6 @@
 		
 		eventer(messageEvent, function (e) {
 			if (e.source != iframe.contentWindow){return} // reject messages send from other iframes
-			
-			//console.log(e.data);
 			
 			if ("gotChat" in e.data){
 				messageList.push(e.data.gotChat);
@@ -2288,7 +2481,7 @@
 	function addLayout(){
 		var layout = prompt("Enter your new layout as a JSON string", '[{"x":0,"y":0,"w":100,"h":100}]');
 		layout = JSON.parse(layout);
-		console.log(layout);
+		log(layout);
 		drawLayout(layout);
 	}
 	
@@ -2306,6 +2499,15 @@
 		
 		
 		document.getElementById("canvas").classList.remove("hidden");
+		
+		try {
+			var obsSceneName = item.parentNode.querySelector("canvas").obsSceneName;
+			document.getElementById("canvas").obsSceneName = obsSceneName;
+		} catch(e){
+			document.getElementById("canvas").obsSceneName = "";
+			errorlog(e);
+		}
+		
 		try {
 			var tar = item.parentNode.querySelector("canvas").sceneName;
 			document.getElementById("canvas").sceneName = tar;
@@ -2346,7 +2548,7 @@
 		return 0;
 	}
 	
-	function drawLayout(layoutOriginal, sceneName=false){
+	function drawLayout(layoutOriginal, sceneName=false, obsSceneName = ""){
 	
 		var layout = [];
 		
@@ -2375,18 +2577,18 @@
 		
 		for (var i=0;i<layout.length;i++){
 			
-			ctx.fillStyle = colors[parseInt(layout[i].slot)];
+			ctx.fillStyle = colors[parseInt(layout[i].slot)]; 
 			ctx.lineWidth = 3;
-			var x = layout[i].x*0.8 || 0;
-			var y = layout[i].y*0.45 || 0;
-			var w = layout[i].w*0.8 || 0;
-			var h = layout[i].h*0.45 || 0;
+			
+			var x = layout[i].x*0.8 || parseFloat(100*layout[i].xp/(pixelDensity*16/9)*0.8) ||  0;
+			var y = layout[i].y*0.45 || parseFloat(100*layout[i].yp/(pixelDensity*16/9)*0.8) ||  0;
+			var w = layout[i].w*0.8 || parseFloat(100*layout[i].wp/(pixelDensity*16/9)*0.8) ||  0;
+			var h = layout[i].h*0.45 || parseFloat(100*layout[i].hp/(pixelDensity*16/9)*0.8) ||  0;
 			
 			ctx.beginPath();
 			ctx.rect(x, y, w, h);
 			ctx.fill();
 		}
-		
 		canvas.layout = JSON.stringify(layout);
 		canvas.onclick = remoteActivate;
 		
@@ -2438,6 +2640,9 @@
 			sceneName = parseInt(Math.random()*1000000);
 		}	
 		canvas.sceneName = sceneName;
+		
+		canvas.obsSceneName = obsSceneName;
+		
 		canvas.title = "Activate this layout; the view scene link will be updated";
 		
 		var canvasContainer = document.createElement("div");
@@ -2584,7 +2789,6 @@
 		this.parentNode.dimensions.innerHTML = parseInt(this.parentNode.style.width) +"x"+parseInt(this.parentNode.style.height);
 		this.parentNode.dimensions.innerHTML += " : " + parseInt(this.parentNode.style.left) +"x"+parseInt(this.parentNode.style.top);
 		this.parentNode.dimensions.innerHTML += " , layer: "+parseInt(this.parentNode.style.zIndex);
-		
 	} 
 	
 	function pushDown(event){
@@ -2604,11 +2808,11 @@
 	function addOldElement(object){
 		document.getElementById("canvas").innerHTML = "";
 		
-		var hh = 720;
-		var ww = parseInt(1280 * (aspectRatio/(16/9)));
+		var hh = pixelDensity;
+		var ww = parseInt((pixelDensity*16/9) * (aspectRatio/(16/9)));
 		
-		document.getElementById('canvas').style.width = ww+"px";
-		document.getElementById('canvas').style.height = hh+"px";
+		document.documentElement.style.setProperty('--iframe-width', ww+"px");
+		document.documentElement.style.setProperty('--iframe-height',hh+"px");
 		
 		
 		for (var i=0;i<object.length;i++){
@@ -2639,19 +2843,20 @@
 			container.muted = object[i].muted || false;
 			container.rounded = object[i].rounded || 0;
 			
-			var hh = 720;
-			var ww = 1280 * (aspectRatio/(16/9));
+			var hh = pixelDensity;
+			var ww = (pixelDensity*16/9) * (aspectRatio/(16/9));
 			
-			var yoffset =  object[i].y*hh/100;
-			var xoffset =object[i].x*ww/100;
-			var w = object[i].w*ww/100;
-			var h = object[i].h*hh/100;
+			var yoffset = object[i].y*hh/100 || object[i].yp || 0;
+			var xoffset = object[i].x*ww/100 || object[i].xp || 0;
+			var w = object[i].w*ww/100 || object[i].wp || 0;
+			var h = object[i].h*hh/100 || object[i].hp || 0;
 			
 			container.style = "z-index:"+container.zIndex+";left:"+xoffset+"px;top:"+yoffset+"px;width:"+w+"px;height:"+h+"px;background-color:"+color+";";
 			
 			var h3 = document.createElement("h3");
 			h3.className = "ui-widget-header";
 			h3.innerHTML = "drag/resize me";
+			h3.title = "Drag with your mouse to move. Tip: Hold CTRL (cmd) to disable grid snapping";
 			container.appendChild(h3);
 			
 			var button = document.createElement("button");
@@ -2741,6 +2946,7 @@
 		var h3 = document.createElement("h3");
 		h3.className = "ui-widget-header";
 		h3.innerHTML = "drag/resize me";
+		h3.title = "Drag with your mouse to move. Tip: Hold CTRL (cmd) to disable grid snapping";
 		container.appendChild(h3);
 		
 		var button = document.createElement("button");
@@ -2803,10 +3009,8 @@
    
     function combinedLayout(layout){
 		var combined = {};
-		console.log(layout);
 		
 		for (var i=0;i<layout.length;i++){
-			console.log(i);
 			if (!layout[i]){continue;}
 			if (!("slot" in layout[i])){
 				continue;
@@ -2817,7 +3021,6 @@
 				errorlog(e);
 				continue;
 			}
-			console.log(stream);
 			if (!stream){
 				if (layout[i].defaultStreamID){
 					combined[layout[i].defaultStreamID] = layout[i];
@@ -2826,15 +3029,13 @@
 			}
 			combined[stream] = layout[i];
 		}
-		console.log(combined);
+		log(combined);
 		return combined;
 	}
    
    function remoteActivate(event=null, layout=null){
-		console.log(this);
-		console.log(event);
-		console.log(layout);
-		if (event.target && layout===null){
+   
+		if (event.target && event.target.layout && layout===null){
 			layout = event.target.layout;
 			var layoutButtons = document.querySelectorAll(".pressed");
 			for (var i = 0;i<layoutButtons.length;i++){
@@ -2855,7 +3056,14 @@
 		currentLayout = combined; // global current state
 		lastLayout = {"scene":"0", "layout":combined};
 		
-		iframe.contentWindow.postMessage({"scene":"0", "layout":combined}, '*');
+		if (event.target && event.target.obsSceneName && syncOBS){
+			var obsCommand = {"action": "setCurrentScene", "value": event.target.obsSceneName};
+			log({"scene":"0", "layout":combined, "obsCommand": obsCommand});
+			iframe.contentWindow.postMessage({"scene":"0", "layout":combined, "obsCommand": obsCommand}, '*');
+		} else {
+			log({"scene":"0", "layout":combined});
+			iframe.contentWindow.postMessage({"scene":"0", "layout":combined}, '*');
+		}
 	}
 	
 	function deleteElement(event){
@@ -3037,13 +3245,20 @@
 		
 		var eles = document.querySelectorAll(".widget");
 		for (var i=0;i<eles.length;i++){
-			console.log(eles);
 			var compute = window.getComputedStyle(eles[i]);
 			var ele = {};
-			ele.w = parseFloat(compute.width)/ww*100;
-			ele.h = parseFloat(compute.height)/hh*100;
-			ele.x = parseFloat(compute.left)/ww*100;
-			ele.y = parseFloat(compute.top)/hh*100;
+			
+			if (absolutePixel){
+				ele.wp = parseFloat(compute.width);
+				ele.hp = parseFloat(compute.height);
+				ele.xp = parseFloat(compute.left);
+				ele.yp = parseFloat(compute.top);
+			} else {
+				ele.w = parseFloat(compute.width)/ww*100;
+				ele.h = parseFloat(compute.height)/hh*100;
+				ele.x = parseFloat(compute.left)/ww*100;
+				ele.y = parseFloat(compute.top)/hh*100;
+			}
 			
 			try {
 				ele.z = parseInt(eles[i].zIndex) || 0;
@@ -3074,22 +3289,43 @@
 		
 		prompt("Layout as URL-encoded JSON. StreamIDs are based on current and default values.", encodeURIComponent(JSON.stringify(combined)));
 	}
+	
+	function setobsSceneName(){
+		var obsSceneName = document.getElementById("canvas").obsSceneName || "";
+		var input = prompt("Enter the OBS scene you want to trigger", obsSceneName);
+		if (input !==null){
+			document.getElementById("canvas").obsSceneName = input;
+		}
+	}
   
 	function saveScene(makenew=false, event=null){
 		var scene = [];
 		
-		var hh = parseInt(document.getElementById("canvas").style.height);
-		var ww = parseInt(document.getElementById("canvas").style.width);
+		var compute = window.getComputedStyle(document.getElementById("canvas"));
+		
+		var hh = parseInt(compute.height);
+		var ww = parseInt(compute.width);
 		
 		var eles = document.querySelectorAll(".widget");
 		for (var i=0;i<eles.length;i++){
-			console.log(eles);
-			var compute = window.getComputedStyle(eles[i]);
 			var ele = {};
-			ele.w = parseFloat(eles[i].style.width)/ww*100;
-			ele.h = parseFloat(eles[i].style.height)/hh*100;
-			ele.x = parseFloat(eles[i].style.left)/ww*100;
-			ele.y = parseFloat(eles[i].style.top)/hh*100;
+			
+			if (absolutePixel){
+				ele.wp = parseFloat(eles[i].style.width) || 0;
+				ele.hp = parseFloat(eles[i].style.height) || 0;
+				ele.xp = parseFloat(eles[i].style.left) || 0;
+				ele.yp = parseFloat(eles[i].style.top) || 0;
+			} else {
+				ele.w = parseFloat(eles[i].style.width)/ww*100 || 0;
+				ele.h = parseFloat(eles[i].style.height)/hh*100 || 0;
+				ele.x = parseFloat(eles[i].style.left)/ww*100 || 0;
+				ele.y = parseFloat(eles[i].style.top)/hh*100 || 0;
+			}
+			
+			//ele.w = parseFloat(eles[i].style.width)/ww*100;
+			//ele.h = parseFloat(eles[i].style.height)/hh*100;
+			//ele.x = parseFloat(eles[i].style.left)/ww*100;
+			//ele.y = parseFloat(eles[i].style.top)/hh*100;
 			
 			try {
 				if ("slot" in eles[i]){
@@ -3112,15 +3348,14 @@
 				ele.rounded = parseInt(eles[i].rounded) || 0;
 				ele.muted = eles[i].muted || false;
 			} catch(e){errorlog(e);}
+			
 			scene.push(ele);
 			//scene[sid] = ele;
 		}
 		console.log(scene);
 		
-		var sceneName = document.getElementById("canvas").sceneName || parseInt(Math.random()*1000000);
-		console.log("'sceneName: "+sceneName);
 		if (makenew){
-			var canvasContainer = drawLayout(scene, false); 
+			var canvasContainer = drawLayout(scene); 
 			popupMessage(event, "Saved as a new scene");
 			
 			document.querySelectorAll(".editButton").forEach(ele=>{
@@ -3134,7 +3369,10 @@
 			} catch(e){}
 			
 		} else {
-			drawLayout(scene, sceneName);
+			var sceneName = document.getElementById("canvas").sceneName || parseInt(Math.random()*1000000000);
+			var obsSceneName = document.getElementById("canvas").obsSceneName || "";
+			console.log("'sceneName: "+sceneName);
+			drawLayout(scene, sceneName, obsSceneName);
 			popupMessage(event, "Scene saved");
 		}
 		
@@ -3166,12 +3404,22 @@
 		savedSession.settings.assignSlotToGuest = assignSlotToGuest;
 		savedSession.settings.toggleLabel = toggleLabel;
 		savedSession.settings.toggleBroadcast = toggleBroadcast;
+		savedSession.settings.syncOBS = syncOBS;
+		savedSession.settings.aspectRatio = aspectRatio;
+		savedSession.settings.pixelDensity = pixelDensity;
+		savedSession.settings.absolutePixel = absolutePixel;
+		
+		savedSession.settings.advancedMode = advancedMode;
+		
 		savedSession.version = 1;
+		savedSession.obsScenes = [];
 		
 		for (var i=0;i<layouts.length;i++){
 			if (!layouts[i].layout){continue;}
 			try {
 				savedSession.layouts.push(JSON.parse(layouts[i].layout));
+				var obs = layouts[i].obsSceneName || false;
+				savedSession.obsScenes.push(obs);
 			} catch(e){
 				errorlog(e);
 			}
@@ -3181,7 +3429,7 @@
 		if (iframe){
 			iframe.contentWindow.postMessage({ layouts: savedSession.layouts }, "*"); 
 		}
-		console.log(getStorage("savedSession"));
+		log(getStorage("savedSession"));
 	}
 	
 	function changeAspectRatio(ar, button){
@@ -3191,7 +3439,41 @@
 			ele.value = false;
 		});
 		aspectRatio = ar;
+		saveSession();
 		document.documentElement.style.setProperty('--aspect-ratio', ar);
+	}
+	
+	function changeAbsolutePosition(value, button){
+		document.querySelectorAll(".absolutePosition").forEach(ele=>{
+			if (ele == button){return;}
+			ele.checked = false;
+			ele.value = false;
+		});
+		absolutePixel = value;
+		saveSession();
+		updateLayouts();
+	}
+	
+	function changePixelDensity(pd, button){  
+		document.querySelectorAll(".pixeldensity").forEach(ele=>{
+			if (ele == button){return;}
+			ele.checked = false;
+			ele.value = false;
+		});
+		pixelDensity = pd; 
+		saveSession();
+		
+		var hh = pixelDensity;
+		var ww = parseInt((pixelDensity*16/9) * (aspectRatio/(16/9)));
+		
+		document.documentElement.style.setProperty('--aspect-ratio', aspectRatio);
+		document.documentElement.style.setProperty('--iframe-width', ww+"px");
+		document.documentElement.style.setProperty('--iframe-height', hh+"px");
+		
+		updateLayouts();
+		//document.getElementById('canvas').style.width = ww+"px";
+		//document.getElementById('canvas').style.height = hh+"px";
+		
 	}
 	
 	//let modal = document.querySelector("#modal");
