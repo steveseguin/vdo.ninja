@@ -10,6 +10,15 @@ _\*\*_ UPDATE: I hot-patched beta and alpha with a fix. This fix disables the op
 
 #### **November 15** <a href="#august-31" id="august-31"></a>
 
+* Added the [`&clock`](../advanced-settings/upcoming-parameters/and-clock.md) parameter, which shows the current time in the lower right; this can be applied to pretty much all link types.\
+  ![](<../.gitbook/assets/image (1).png>)\
+  \-- The director has a button that lets them enable the clock for everyone in the room (via the director's room settings button).\
+  \-- [`&clock=false`](../advanced-settings/upcoming-parameters/and-clock.md) or [`&cleanoutput`](../advanced-settings/design-parameters/cleanoutput.md) will force-disable the clock from being remotely triggerable.\
+  \-- The director has a button that lets them also enable a global count-down timer. Holding CTRL + click will let the director pause the timer. If someone joins the room or reloads, the timer will also be reloaded, in sync. Button also in the room settings menu.\
+  ![](<../.gitbook/assets/image (3).png>)\
+  \-- This count down timer is the same concept as the per-guest timer the director already has, and will actually conflict with it if both are used, since it uses the same state/variable to keep track of time remaining.\
+  \-- The director will see the global count down timer also; it will just be a bit smaller on screen.\
+  ![](../.gitbook/assets/image.png)
 * For VDO.Ninja, right-clicking a video and selecting "audio output destination" should work again. I had to disable that feature for a bit, as some users were reporting audio issues with it enabled. It might have some compatibilities issues, but it won't activate now unless used.
 * When using the special [`&screensharetype=3`](../newly-added-parameters/and-screensharetype.md) screen share mode (screen share with better echo cancellation), support for recording that local screen share, at the same time as as the main video, has been added. You'll need to use the [`&autorecord`](../advanced-settings/upcoming-parameters/and-autorecord.md) feature to trigger the recording, and when it does start recording, a button will appear specific to stopping that screen recording if needed.\
   ![](<../.gitbook/assets/image (14).png>)
@@ -32,7 +41,7 @@ _\*\*_ UPDATE: I hot-patched beta and alpha with a fix. This fix disables the op
     \-- Purpose of change: I had a user who wanted [`&broadcast`](../advanced-settings/view-parameters/broadcast.md), but also not have the guests hear each other. It's a bit of a hassle to do [`&view=DirectorStreamID`](../advanced-settings/view-parameters/view.md), and the toggle is labelled to be misleading by saying "guests", not "everyone".
 
     \-- You can use `&directoronly` to replace [`&broadcast`](../advanced-settings/view-parameters/broadcast.md) if you don't want the guests hearing each other.\
-    ![](../.gitbook/assets/image.png)\
+    ![](<../.gitbook/assets/image (8).png>)\
     \
     \*\* change is on alpha for testing and feedback. [https://vdo.ninja/alpha/?directoronly](https://vdo.ninja/alpha/?directoronly)
 
@@ -79,7 +88,7 @@ _\*\*_ UPDATE: I hot-patched beta and alpha with a fix. This fix disables the op
 
 * ``[`&controlbarspace`](../advanced-settings/upcoming-parameters/and-controlbarspace.md) forces the bottom control bar to be in its own dedicated space, regardless of screen size.
 * ``[`&volumecontrol`](../advanced-settings/upcoming-parameters/and-volumecontrol.md) (alias, `&vc`) shows a dedicated local audio-volume control bar for canvas or image elements. Video elements already have a control-bar with volume, so I don't show it there currently. I'll likely tweak this more over time.\
-  ![](<../.gitbook/assets/image (8).png>)
+  ![](<../.gitbook/assets/image (8) (2).png>)
 * Fixed an issue with [`&screensharetype=3`](../newly-added-parameters/and-screensharetype.md) crashing the browser when specifying an audio track to share.\
   \
   \*\* changes are at vdo.ninja/alpha/\
@@ -244,9 +253,9 @@ _\*\*_ UPDATE: I hot-patched beta and alpha with a fix. This fix disables the op
 #### **September 7** <a href="#august-31" id="august-31"></a>
 
 * Added some notice icons to the PTZ controls, which show a tooltip on hover that explains remote PTZ only works if the remote window is visible.\
-  ![](<../.gitbook/assets/image (1) (1) (3).png>)
+  ![](<../.gitbook/assets/image (1) (1) (3) (1).png>)
 * made the audio / video director control settings scrollable (max height \~500px), so you can more easily see the video while making changes to it.\
-  ![](<../.gitbook/assets/image (8) (2).png>)
+  ![](<../.gitbook/assets/image (8) (2) (1).png>)
 * Increased the size of Canadian and German turn relay servers (4x larger), and completed other backend maintenance.
 
 #### **September 6** <a href="#august-31" id="august-31"></a>
@@ -330,7 +339,7 @@ _\*\*_ UPDATE: I hot-patched beta and alpha with a fix. This fix disables the op
 #### August 11
 
 * Right clicking the screen-share icon will give you an option to open the screen share in a new tab, all pre-configuerd. Useful if you want to share multiple windows while in a group room, or don't want to see your own screen share while talking to others.\
-  ![](<../.gitbook/assets/image (3) (3).png>)
+  ![](<../.gitbook/assets/image (3) (3) (1).png>)
 * Bugs with [`&screensharetype=3`](../newly-added-parameters/and-screensharetype.md) have been resolved, I think. (this mode supports desktop-audio capture without echo issues)
 
 #### August 9
@@ -703,7 +712,7 @@ _\*\*_ UPDATE: I hot-patched beta and alpha with a fix. This fix disables the op
 
 * Selected audio and video devices are remembered automatically on reload/refresh, without needing a URL parameter. On alpha for now. [https://vdo.ninja/alpha/](https://vdo.ninja/alpha/)
 * Added the ability to select an image, instead of a video device. The image will trigger when the video is muted or no video device is selected. A default avatar image is provided, but you can select your own from disk. [`&avatar`](../advanced-settings/upcoming-parameters/and-avatar.md) is the flag that enables this option. - `&avatar=default` will pre-select the default avatar, rather than leaving it un-selected [https://vdo.ninja/alpha/?avatar](https://vdo.ninja/alpha/?avatar) (on alpha for now)\
-  ![](<../.gitbook/assets/image (3).png>)
+  ![](<../.gitbook/assets/image (3) (3).png>)
 * [`&js`](../advanced-settings/design-parameters/and-js.md) is a new parameter for VDO.Ninja that lets you pass a third party hosted Javascript file URL (URL-encoded), allowing for custom code injection without self-hosting, IFrames or chrome extensions. On VDO.Ninja, by user request.
 
 #### April 18
