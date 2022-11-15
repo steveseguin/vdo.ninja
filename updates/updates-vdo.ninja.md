@@ -10,9 +10,9 @@ _\*\*_ UPDATE: I hot-patched beta and alpha with a fix. This fix disables the op
 
 #### **November 15** <a href="#august-31" id="august-31"></a>
 
-* For vdo.ninja, right-clicking a video and selecting "audio output destination" should work again. I had to disable that feature for a bit, as some users were reporting audio issues with it enabled. It might have some compatibilities issues, but it won't activate now unless used.
+* For VDO.Ninja, right-clicking a video and selecting "audio output destination" should work again. I had to disable that feature for a bit, as some users were reporting audio issues with it enabled. It might have some compatibilities issues, but it won't activate now unless used.
 * When using the special [`&screensharetype=3`](../newly-added-parameters/and-screensharetype.md) screen share mode (screen share with better echo cancellation), support for recording that local screen share, at the same time as as the main video, has been added. You'll need to use the [`&autorecord`](../advanced-settings/upcoming-parameters/and-autorecord.md) feature to trigger the recording, and when it does start recording, a button will appear specific to stopping that screen recording if needed.\
-  ![](<../.gitbook/assets/image (1).png>)
+  ![](<../.gitbook/assets/image (14).png>)
 * I improve the [`&buffer`](../advanced-settings/view-parameters/buffer.md) and [`&sync`](../advanced-settings/view-parameters/sync.md) feature a bit -- it will activate and sync up faster now, which might be helpful on unstable connections.
 * I haven't been able to validate it works, but I think I added support for H265 (HEVC) to VDO.Ninja; the catch is it might only work between two iPhones running the experimental H265 WebRTC support currently; maybe [Raspberry Ninja](../steves-helper-apps/raspberry.ninja.md) in the future. I haven't managed to make it work yet though, so its just hypothetical support.\
   \
@@ -31,7 +31,7 @@ _\*\*_ UPDATE: I hot-patched beta and alpha with a fix. This fix disables the op
     \-- Purpose of change: I had a user who wanted [`&broadcast`](../advanced-settings/view-parameters/broadcast.md), but also not have the guests hear each other. It's a bit of a hassle to do [`&view=DirectorStreamID`](../advanced-settings/view-parameters/view.md), and the toggle is labelled to be misleading by saying "guests", not "everyone".
 
     \-- You can use `&directoronly` to replace [`&broadcast`](../advanced-settings/view-parameters/broadcast.md) if you don't want the guests hearing each other.\
-    ![](<../.gitbook/assets/image (2).png>)\
+    ![](../.gitbook/assets/image.png)\
     \
     \*\* change is on alpha for testing and feedback. [https://vdo.ninja/alpha/?directoronly](https://vdo.ninja/alpha/?directoronly)
 
