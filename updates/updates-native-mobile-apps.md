@@ -6,7 +6,10 @@
 
 * I updated the native Android app for VDO.Ninja to include support for publishing into a VDO.Ninja room, and fixed a couple UI bugs, along with improved 1080p toggle support.\
   \-- Note: If using a room, you will need to still add [`&password=false`](../general-settings/password.md) (`&p=0`) to all the guests/scenes, as I haven't added password support to the native app yet.\
-  \-- You can download it directly here for now: [https://drive.google.com/file/d/1M0kv5nWLtcfl2JOnsAGiG1zUmkeIVLyZ/view?usp=share\_link](https://drive.google.com/file/d/1M0kv5nWLtcfl2JOnsAGiG1zUmkeIVLyZ/view?usp=share\_link) (I'll update the Google Play store after a bit more testing)
+  \-- You can download it directly here: [https://drive.google.com/file/d/1M0kv5nWLtcfl2JOnsAGiG1zUmkeIVLyZ/view?usp=share\_link](https://drive.google.com/file/d/1M0kv5nWLtcfl2JOnsAGiG1zUmkeIVLyZ/view?usp=share\_link)\
+  or in the Google Play Store:\
+  [https://play.google.com/store/apps/details?id=flutter.vdo.ninja\&hl=gsw\&gl=US\&pli=1](https://play.google.com/store/apps/details?id=flutter.vdo.ninja\&hl=gsw\&gl=US\&pli=1)\
+  ![](../.gitbook/assets/image.png)&#x20;
 
 #### May 27
 

@@ -9,7 +9,7 @@
 
     1. ``[`&remote`](../general-settings/remote.md) needs to be on the scene link (should be there if using the provided scene link)
     2. Needs to be enabled in the Mixer's settings\
-       ![](<../.gitbook/assets/image (2).png>)
+       ![](<../.gitbook/assets/image (2) (3).png>)
     3. An OBS scene name needs to be specified for a layout in the mixer app (And make sure you click "save scene" after)\
        ![](<../.gitbook/assets/image (11).png>)
     4. OBS's browser source needs level 4 or 5 enabled for at least one of the VDO.Ninja scenes that you added to OBS (or set to all scenes, if you disable sources when inactive)\
@@ -24,7 +24,7 @@
 #### November 12
 
 * Added the option in the mixer app to use 1080p as the canvas size (instead of 720p) to make it easy to get pixel perfection at full HD.\
-  ![](<../.gitbook/assets/image (1).png>)
+  ![](<../.gitbook/assets/image (1) (4).png>)
 * Added the option to save scenes in the editor with pixel-units instead of relative percentiles. Not recommended for most users, but can make it easy to manually edit an exported layout (pixels vs fractions). The little thumbnails will update.
 * Added support to VDO.Ninja so that layouts can be expressed as a relative percentile or pixel specific (for advanced users). VDO.Ninja will assume wp,hp,xp, and yp are "pixel" based units for x,y,h,w. If you canvas/browser is too big or small, things may overflow or not fit correctly.\
   \-- please note: w,h,x,y take priority over wp,hp,xp,yp, if both are present in a layout file.
