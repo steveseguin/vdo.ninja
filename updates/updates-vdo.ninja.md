@@ -17,6 +17,7 @@ _\*\*_ UPDATE: I hot-patched beta and alpha with a fix. This fix disables the op
 * I haven't been able to validate it works, but I think I added support for H265 (HEVC) to VDO.Ninja; the catch is it might only work between two iPhones running the experimental H265 WebRTC support currently; maybe [Raspberry Ninja](../steves-helper-apps/raspberry.ninja.md) in the future. I haven't managed to make it work yet though, so its just hypothetical support.\
   \
   \*\* This is all on alpha, at [https://vdo.ninja/alpha/](https://vdo.ninja/alpha/). I'm definitely feeling its time to push this code into production soon, so if you get a chance to do any tests on alpha (maybe mobile / load testing?), it will help speed up the release. Thank you.
+* Applied a small hotfix to production related to iPhones, specifically in response to iPhone 14 issues. If anyone encounters problems with using iPhones on production, including issues with muting, let me know.
 
 #### **November 11** <a href="#august-31" id="august-31"></a>
 
