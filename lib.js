@@ -28483,8 +28483,14 @@ function adjustPan(UUID, value){
 
 function addDelayNode(source, UUID, trackid){  // append the delay Node to the track??? WOULD THIS WORK?
 	
-	var delay = parseFloat(session.sync/1000);
+	var delay = parseFloat(session.sync) || 0;
 	if (delay<0){delay=0;}
+	
+	if (session.buffer && (session.buffer>0)){
+		delay += parseFloat(session.buffer);
+	}
+	
+	delay = delay/1000;
 	
 	session.rpcs[UUID].inboundAudioPipeline[trackid].delayNode = session.audioCtx.createDelay(delay+5);// 5 seconds additionally added for the purpose of flexibility
 	

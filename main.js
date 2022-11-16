@@ -1653,7 +1653,7 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 		}
 	}
 	
-	if (urlParams.has('directoronly') || urlParams.has('do')){
+	if (urlParams.has('directoronly') || urlParams.has('directorsonly') || urlParams.has('do')){
 		session.viewDirectorOnly = true;
 	}
 	

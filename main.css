@@ -34,6 +34,10 @@
 	border: 0;
 }
 
+::selection {
+	background-color: #0447c888;
+	color: #FFF;
+}
 
 table {
 	display: inline-block;
@@ -578,7 +582,7 @@ hr {
 .invite_setting_group {
 	margin: 20px 0px;
 	background-color: #d2d2d2;
-	padding: 10px;
+	padding: 10px 30px;
 }
 
 .invite_setting_group h4 {
@@ -587,6 +591,10 @@ hr {
 
 .invite_setting_item {
 	margin: 10px 0px;
+}
+
+.invite_setting_item > input[type="text"], .invite_setting_item  > select{
+	padding: 6px;
 }
 
 .directorsgrid {
@@ -922,6 +930,7 @@ button.glyphicon-button.active.focus {
 	background-position: center;
 	overflow-x: hidden;
 }
+
 
 #controlButtons {
 	position: fixed;
@@ -1368,10 +1377,18 @@ body {
 	margin: 20px;
 	padding: 10px 50px;
 }
+@-webkit-keyframes pulsate {
+    0%   { box-shadow: 0 0 31px #244e1c44; transform: scale(1.0);}
+    50%  { box-shadow: 0 0 17px #0004; transform: scale(0.99);}
+    100% { box-shadow: 0 0 31px #244e1c44; transform: scale(1.0);}
+}
 .gowebcam:enabled {
-	background-color: #3C3 !important;
+	background-color: #26e726 !important;
+	background: radial-gradient(#26e726, #2EeF2E);
 	color: black;
-	font-weight: bold !important;;
+	font-weight: bold !important;
+	box-shadow: 0 0 31px 0px #244e1c44;
+    animation: pulsate 2s ease-out infinite;
 }
 #mainmenu {
 	height:100vh;
@@ -1644,34 +1661,11 @@ input[type=range]:focus::-ms-fill-upper {
 		float: none !important;
 		padding: 15px 10px 1px 10px !important;
 	}
-	#videoSettings {
+	div.multiselect, .videoMenu, #videoSettings {
 		max-width: 100% !important;
 		min-width: 100% !important;
 	}
-	.videoMenu {
-		max-width: 100% !important;
-		min-width: 100% !important;
-	}
-	div.multiselect {
-		max-width: 100% !important;
-		min-width: 100% !important;
-	}
-	#headphonesDiv3 {
-		max-width: 100% !important;
-		min-width: 100% !important;
-		overflow: hidden !important;
-	}
-	#effectsDiv3 {
-		max-width: 100% !important;
-		min-width: 100% !important;
-		overflow: hidden !important;
-	}
-	#effectsDiv {
-		max-width: 100% !important;
-		min-width: 100% !important;
-		overflow: hidden !important;
-	}
-	#headphonesDiv {
+	#addPasswordBasic, #headphonesDiv, #effectsDiv, #effectsDiv3, #headphonesDiv3  {
 		max-width: 100% !important;
 		min-width: 100% !important;
 		overflow: hidden !important;
@@ -1682,12 +1676,7 @@ input[type=range]:focus::-ms-fill-upper {
 	#outputSource3 {
 		width: 100% !important;
 	}
-	#audioSourceScreenshare {
-		max-width: 90% !important;
-		min-width: 90% !important;
-		overflow: hidden !important;
-	}
-	#videoSettings2 {
+	#audioSourceScreenshare, #videoSettings2 {
 		max-width: 90% !important;
 		min-width: 90% !important;
 		overflow: hidden !important;
@@ -1796,14 +1785,7 @@ input[type=range]:focus::-ms-fill-upper {
 	resize: both;
 }
 
-p#audioScreenShare1 {
-	border: 1px solid #ccc;
-	display: inline-block;
-	background: #f3f3f3;
-	padding: 4px 10px 10px 10px;
-	text-align: left;
-	min-width:350px;
-}
+
 #headphonesDiv2{
 	background-color: #f3f3f3;
 	min-width: 350px;
@@ -1814,7 +1796,14 @@ p#audioScreenShare1 {
 	margin: 10px 0;
 	text-align: left;
 }
-
+#audioScreenShare1 {
+	border: 1px solid #ccc;
+	display: inline-block;
+	background: #f3f3f3;
+	padding: 4px 10px 10px 10px;
+	text-align: left;
+	min-width:350px;
+}
 #audioScreenShare1 > i {
 	display: inline-block;
 }
@@ -1897,15 +1886,22 @@ label {
 	background-image: url("data:image/svg+xml,%0A%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Cpath d='M 13 4 C 11.90625 4 11 4.90625 11 6 L 11 18 C 11 19.09375 11.90625 20 13 20 L 19 20 C 20.09375 20 21 19.09375 21 18 L 21 6 C 21 4.90625 20.09375 4 19 4 Z M 13 6 L 19 6 L 19 18 L 13 18 Z M 7 14 L 7 18 C 7 21.300781 9.699219 24 13 24 L 15 24 L 15 26 L 11 26 L 11 28 L 21 28 L 21 26 L 17 26 L 17 24 L 19 24 C 22.300781 24 25 21.300781 25 18 L 25 14 L 23 14 L 23 18 C 23 20.21875 21.21875 22 19 22 L 13 22 C 10.78125 22 9 20.21875 9 18 L 9 14 Z'/%3E%3C/svg%3E")!important;
 }
 
+
+.container-inner > div, .container-inner > span > div, .container-inner button:not(.gowebcam), .message-card, .cameraTip {
+    border-radius: 5px;
+    box-shadow: 10px 8px 32px -10px #8883;
+}
+
 #dropButton{
 	font-size: 2em;
 	display: block;
 	margin: auto;
 	background-color: #5555;
-	width: 100px;
 	border-radius: 30px;
 	cursor:pointer;
-	color: #636363
+	color: #636363;
+	padding: 3px;
+	width: 100px;
 }
 .fullcolumn {
 	float: left;
@@ -3140,9 +3136,6 @@ div#chatBody a {
 	padding: 10px;
 	max-width: 1191px
 }
-@media only screen and (max-width: 390px) {
-	
-}
 
 #directorLinksButton{
 	cursor:pointer;
@@ -4101,6 +4094,8 @@ input:checked + .slider:before {
 	content: "\f05a"; }
 .la-play:before {
 	content: "\f04b"; }
+.la-gamepad:before {
+	content: "\f11b"; }
 .la-blender:before {
 	content: "\f517"; }
 .la-heartbeat:before {
