@@ -18,7 +18,7 @@ _\*\*_ UPDATE: I hot-patched beta and alpha with a fix. This fix disables the op
   ![](<../.gitbook/assets/image (4).png>)
 * I think I fixed an issue with Firefox where not all the audio-output devices were available to choose from, at least on desktop, and so I've added the custom logic Firefox requires to get it working. On Firefox, you'll now need to select "Show more options" in the audio drop down menu, where Firefox will prompt you to select the audio output device with its own prompt.\
   ![](<../.gitbook/assets/image (9).png>)
-* Added an option called `&hidehome`, which hides the VDO.Ninja homepage and many links that lead to it. You can also enable at a code level with `session.hidehome=true;`, which is useful if doing a self-deployment, where you don't want anyone to stumble onto the site and start using it. You'll still be able to join push links and create rooms via URL parameters, but that's about it.\
+* Added an option called [`&hidehome`](../advanced-settings/upcoming-parameters/and-hidehome.md), which hides the VDO.Ninja homepage and many links that lead to it. You can also enable at a code level with `session.hidehome=true;`, which is useful if doing a self-deployment, where you don't want anyone to stumble onto the site and start using it. You'll still be able to join push links and create rooms via URL parameters, but that's about it.\
   \
   \*\* updated alpha (vdo.ninja/alpha) and GitHub with all changes.
 
