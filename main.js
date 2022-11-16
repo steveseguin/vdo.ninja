@@ -1595,8 +1595,8 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 	if ( urlParams.has('outboundaudiobitrate') || urlParams.has('oab')) {
 		session.outboundAudioBitrate = parseInt(urlParams.get('outboundaudiobitrate')) || parseInt(urlParams.get('oab')) || false;
 	}
-	if (urlParams.has('outboundvideobitrate') || urlParams.has('ovb')) {
-		session.outboundVideoBitrate = parseInt(urlParams.get('outboundvideobitrate')) || parseInt(urlParams.get('ovb')) || false;
+	if (urlParams.has('outboundvideobitrate') || urlParams.has('outboundbitrate') || urlParams.has('ovb')) {
+		session.outboundVideoBitrate = parseInt(urlParams.get('outboundvideobitrate')) || parseInt(urlParams.get('outboundbitrate')) ||  parseInt(urlParams.get('ovb')) || false;
 	}
 
 	if (urlParams.has('webp') || urlParams.has('images')){ // deprecicating this.  chunked mode will replace it.
