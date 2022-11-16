@@ -88,7 +88,6 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 	} else { // check if automatic language translation is available
 		getById("mainmenu").style.opacity = 1;
 	}
-
 	
 	//// translation stuff ends ////
 	
@@ -99,6 +98,11 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 	if (urlParams.has('cleanviewer') || urlParams.has('cv')) {
 		session.cleanViewer = true;
 	}
+	
+	if (urlParams.has('hidehome')){
+		session.hidehome = true;
+	}
+	hideHomeCheck();
 	
 	if (urlParams.has('previewmode')){
 		session.switchMode = true;
@@ -1177,7 +1181,7 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 		} else {
 			session.password = decodeURIComponent(session.password); // will be re-encoded in a moment.
 		}
-	} else if (urlParams.has('nopassword') || urlParams.has('nopass') || urlParams.has('nopw')) {
+	} else if (urlParams.has('nopassword') || urlParams.has('nopass') || urlParams.has('nopw') || urlParams.has('p0')) {
 		session.password = false;
 		session.defaultPassword = false;
 	}
@@ -1786,7 +1790,7 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 
 	if (urlParams.has('micdelay') || urlParams.has('delay') || urlParams.has('md')) {
 		log("audio gain  ENABLED");
-		session.micDelay = urlParams.get('micdelay') || urlParams.get('delay') || urlParams.get('md');
+		session.micDelay = urlParams.get('micdelay') || urlParams.get('delay') || urlParams.get('md') || 0;
 		session.micDelay = parseInt(session.micDelay) || 0;
 		session.disableWebAudio = false;
 	}
@@ -3514,6 +3518,17 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 			session.cleanOutput = true;
 		}
 	}
+	if (urlParams.has('clock')){
+		if (urlParams.get('clock') === "false"){
+			session.showTime = false;
+		} else if (urlParams.get('clock') === "0"){
+			session.showTime = false;
+		} else {
+			session.showTime = true;
+		}
+	} else if (session.cleanOutput){
+		session.showTime = false;
+	}
 	
 	if (urlParams.has('hidescreenshare') || urlParams.has('hidess') || urlParams.has('sshide') || urlParams.has('screensharehide')) { // this way I don't need to remember what it's called. I can just guess. :D
 		session.screenShareElementHidden = true;
@@ -3764,7 +3779,6 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 		getById("mainmenu").style.opacity = 0;
 		getById("header").style.opacity = 0;
 	}
-
 	
 	if (session.view) {
 		getById("main").className = "";
@@ -3879,6 +3893,9 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 		};
 
 	}
+	
+	hideHomeCheck();
+	
 	setTimeout(function(){
 		for (var i in delayedStartupFuncs) {
 			var cb = delayedStartupFuncs[i];
@@ -4817,8 +4834,6 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 	if (isIFrame) { // reduce CPU load if not needed. //iframe API 
 		window.onmessage = session.remoteInterfaceAPI;
 	}
-	
-	
 
 	if (session.midiHotkeys || session.midiOut!==false) {
 		

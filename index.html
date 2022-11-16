@@ -57,7 +57,7 @@
 		<meta property="twitter:image" content="./media/vdoNinja_logo_full.png" />
 		<meta name="msapplication-TileColor" content="#da532c" />
 		<meta name="theme-color" content="#ffffff" />
-		<link rel="stylesheet" href="./main.css?ver=223" />
+		<link rel="stylesheet" href="./main.css?ver=226" />
 		<script type="text/javascript" crossorigin="anonymous" src="./thirdparty/adapter.js"></script>
 		<style id="lightbox-animations" type="text/css"></style>
 		<!-- <link rel="manifest" href="manifest.json" /> -->
@@ -81,9 +81,9 @@
 		<span itemprop="thumbnail" itemscope itemtype="http://schema.org/ImageObject">
 			<link itemprop="url" href="./media/vdoNinja_logo_full.png" />
 		</span>
-		<script type="text/javascript" crossorigin="anonymous"  src="./thirdparty/CodecsHandler.js?ver=39"></script>
+		<script type="text/javascript" crossorigin="anonymous"  src="./thirdparty/CodecsHandler.js?ver=41"></script>
 		<script type="text/javascript" crossorigin="anonymous" src="./thirdparty/aes.js"></script>
-		<script type="text/javascript" crossorigin="anonymous" src="./webrtc.js?ver=539"></script>
+		<script type="text/javascript" crossorigin="anonymous" src="./webrtc.js?ver=542"></script>
 		<input id="zoomSlider" type="range" style="display: none;" />
 		<span id="electronDragZone" style="pointer-events: none; z-index:-10; position:absolute;top:0;left:0;width:100%;height:2%;-webkit-app-region: drag;min-height:20px;"></span>
 		<div id="header">
@@ -204,6 +204,9 @@
 				</div>
 				<div id="recordLocalbutton" onmousedown="event.preventDefault(); event.stopPropagation();"  data-state="0" title="Record your stream to disk" aria-label="Record your stream to disk" alt="Record your stream to disk" tabindex="25" role="button" aria-pressed="false" onkeyup="enterPressedClick(event,this);" onclick="recordLocalVideoToggle();" class="hidden float" style="cursor: pointer;">
 					<i class="toggleSize my-float las la-dot-circle" style="position: relative;" aria-hidden="true"></i>
+				</div>
+				<div id="recordLocalScreenbutton" onmousedown="event.preventDefault(); event.stopPropagation();"  data-state="0" title="Stop screen share recording" aria-label="Stop screen share recording" alt="Stop screen recording" tabindex="25" role="button" aria-pressed="false" onkeyup="enterPressedClick(event,this);" onclick="recordLocalScreenStopRecord();" class="hidden float" style="cursor: pointer;">
+					<small>Stop<br>Screen<br>Record</small>
 				</div>
 				<span id="miniPerformer" style="pointer-events: auto;" class="hidden"></span>
 				<span id="rooms" class="hidden" style="padding-top:3px;padding-left:6px;pointer-events: auto;color:#fff;"></span>
@@ -594,7 +597,7 @@
 						</select>
 					</span>
 					<br />
-					<span data-translate="application-audio-capture">For application-specific audio capture, <a href='https://docs.vdo.ninja/audio' style='color: #007AC8;'>see here</a></span>
+					<span id="audioScreenCaptureDocs" data-translate="application-audio-capture">For application-specific audio capture, <a href='https://docs.vdo.ninja/audio' style='color: #007AC8;'>see here</a></span>
 				</div>
 				<div class="outer close">
 					<div class="inner">
@@ -1321,6 +1324,7 @@
 		
 		<div id="hiddenElements"></div>
 		<div id="overlayClockContainer" data-initial="600" class="hidden"><span id="overlayClock"></span></div>
+		<div id="overlayClockContainer2" data-initial="600" class="hidden"><span id="overlayClock2"></span></div>
 		<div id="overlayMsgs" onclick="this.innerHTML = '';" style="display:none"></div>
 		<div id="bigPlayButton" onclick="this.innerHTML = '';" style="display:none"></div>
 		<div id="controls_blank" style="display: none;">
@@ -1934,7 +1938,7 @@
 						<span data-translate="show-video-stats">Show Stats</span>
 					</a>
 				</li>
-				<li class="context-menu__item">
+				<li class="context-menu__item" title="Using this may cause audio-issues on some systems">
 					<a href="#" class="context-menu__link" data-action="OutputAudio">
 						<i class="las la-external-link"></i>
 						<span data-translate="custom-audio-output">Audio Destination</span>
@@ -1965,7 +1969,7 @@
 			<a target="popup" id="popOutChat" style="cursor:pointer;text-align:right;color:#B3C7F9;" onclick="createPopoutChat();"><i class="las la-external-link-alt"></i></a>
 			<div id="chatBody"> 
 				<div class="inMessage" id="welcomeMsg" data-translate='welcome-to-vdo-ninja-chat'>
-					Welcome to VDO.Ninja! You can send text messages directly to connected peers from here.
+					Welcome to the chat! You can send text messages directly to connected peers from here.
 				</div>
 			</div>
 			<input type="text" id="chatInput" placeholder="Enter chat message to send here" onkeypress="EnterButtonChat(event)" />
@@ -1987,15 +1991,11 @@
 				</span>
 				
 				<span style="margin: 20px 0 0 0;display:block" id='globalTimerDirectorSpan'>
-					<button data-action-type="create-timer-global" title="Set a countdown timer that this guest sees. CTRL (cmd) + click to pause." onclick="directTimer(this, event);">
+					<button data-action-type="create-timer-global" title="Set a countdown timer that this guest sees. CTRL (cmd) + click to pause." onclick="directRoomTimer(this, event);">
 						<i class="las la-clock"></i>
 						<span data-translate="create-global-timer">Create Global Count-down Timer</span>
 					</button>
-					<button data-action-type="create-timer-up-global" title="Set a count-up timer that this guest sees. CTRL (cmd) + click to pause." onclick="directTimer(this, event);">
-						<i class="las la-clock"></i>
-						<span data-translate="create-global-up-timer">Create Global Count-up Timer</span>
-					</button>
-					<button data-action-type="create-clock-global" title="Set a count-up timer that this guest sees. CTRL (cmd) + click to pause." onclick="directTimer(this, event);">
+					<button data-action-type="create-clock-global" title="Set a count-up timer that this guest sees. CTRL (cmd) + click to pause." onclick="directRoomClock(this, event);">
 						<i class="las la-clock"></i>
 						<span data-translate="create-clock-timer">Toggle Room Clock</span>
 					</button>
@@ -2295,12 +2295,13 @@
 			// session.apiserver = "wss://api.vdo.ninja:443"; // specifiy a custom websocket API URL.
 			// session.darkmode = false; // enable or disable the dark style theme as the default
 			// session.defaultBackgroundImages = ["./media/bg_sample1.webp", "./media/bg_sample2.webp"]; // for &effects=5 (virtual backgrounds)
+			// session.hidehome = true; // If used, 'hide home' will make the landing page inaccessible, along with hiding a few go-home elements.
 		</script>
-		<script type="text/javascript" crossorigin="anonymous" id="lib-js" src="./lib.js?ver=535"></script>
+		<script type="text/javascript" crossorigin="anonymous" id="lib-js" src="./lib.js?ver=544"></script>
 		<!-- 
 		// If you wish to change branding, blank offers a good clean start.
 		<script type="text/javascript" id="main-js" src="./main.js" data-translation="blank"></script>
 		-->
-		<script type="text/javascript" crossorigin="anonymous" id="main-js" src="./main.js?ver=476"></script>
+		<script type="text/javascript" crossorigin="anonymous" id="main-js" src="./main.js?ver=482"></script>
 	</body>
 </html>

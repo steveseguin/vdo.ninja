@@ -358,6 +358,27 @@ button.white:active {
 	padding:2px 20px;
 	background-color: #0009;
 }
+#overlayClockContainer2{
+	margin: 0 auto;
+	background-color: #0000;
+	color: white;
+	font-family: Cousine, monospace;
+	font-size: calc(3vh + 3vw / 2);
+	letter-spacing: 0.0em;
+	text-shadow: 0.05em 0.05em 0px rgb(0 0 0);
+	z-index: 6;
+	vertical-align: top;
+	text-align: right;
+	position: fixed;
+	right:0;
+	bottom:0;
+	overflow-wrap: anywhere;
+	pointer-events: none;
+}
+#overlayClock2{
+	padding:0 5px;
+	background-color: #0009;
+}
 #overlayMsgs{
 	margin:0 auto;
 	background-color: #0000;
@@ -2685,6 +2706,18 @@ button.toggleSettings{
 }
 .grabLinks a:visited {
 	color: black !important;
+}
+
+.permahide {
+	display: none!important;
+	visibility: hidden;
+	width:0px;
+	height:0px;
+	opacity: 0; 
+	background: #0000;
+	color: #0000;
+	font-size: 0em;
+	pointer-events:none;
 }
 
 #grabDirectorSoloLinkParent {

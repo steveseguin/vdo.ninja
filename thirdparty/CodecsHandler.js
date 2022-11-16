@@ -27,6 +27,7 @@ Copyright (c) 2012-2020 [Muaz Khan](https://github.com/muaz-khan)
 
 var CodecsHandler = (function() {
     function preferCodec(sdp, codecName) {
+		
         var info = splitLines(sdp);
         if (!info.videoCodecNumbers) {
             return sdp;
@@ -35,6 +36,8 @@ var CodecsHandler = (function() {
         } else if (codecName === 'vp9' && info.vp9LineNumber === info.videoCodecNumbers[0]) {
             return sdp;
         } else if (codecName === 'h264' && info.h264LineNumber === info.videoCodecNumbers[0]) {
+            return sdp;
+		} else if (codecName === 'h265' && info.h265LineNumber === info.videoCodecNumbers[0]) {
             return sdp;
         } else if (codecName === 'av1' && info.av1LineNumber === info.videoCodecNumbers[0]) {
             return sdp;
@@ -69,7 +72,11 @@ var CodecsHandler = (function() {
                 return sdp;
             }
             preferCodecNumber = info.h264LineNumber;
-			
+		} else if (codec === 'h265') {
+            if (!info.h265LineNumber) {
+                return sdp;
+            }
+            preferCodecNumber = info.h265LineNumber;	
         } else if (codec === 'av1') {
             if (!info.av1LineNumber) {
                 return sdp;
@@ -131,6 +138,10 @@ var CodecsHandler = (function() {
 
             if (line.indexOf('H264/90000') !== -1 && !info.h264LineNumber) {
                 info.h264LineNumber = line.replace('a=rtpmap:', '').split(' ')[0];
+            }
+			
+			if (line.indexOf('H265/90000') !== -1 && !info.h265LineNumber) {
+                info.h265LineNumber = line.replace('a=rtpmap:', '').split(' ')[0];
             }
 			
             if (line.indexOf('AV1X/90000') !== -1 && !info.av1LineNumber) {
