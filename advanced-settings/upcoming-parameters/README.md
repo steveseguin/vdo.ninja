@@ -64,6 +64,7 @@ You can use/test these parameters on [vdo.ninja/alpha](https://vdo.ninja/alpha/)
 | ``[`&volumecontrol`](and-volumecontrol.md)\*                     | Shows a dedicated local audio-volume control bar for canvas or image elements                                                                                      |
 | ``[`&directoronly`](and-directoronly.md)\*                       | Will show the audio and the video of the director but not of the guests                                                                                            |
 | ``[`&clock`](and-clock.md)\*                                     | Shows the current time in the lower right                                                                                                                          |
+| ``[`&hidehome`](and-hidehome.md)\*                               | Hides the VDO.Ninja homepage and many links that lead to it                                                                                                        |
 
 \*only on [vdo.ninja/alpha](https://vdo.ninja/alpha/)\
 \*\*on [vdo.ninja/beta](https://vdo.ninja/beta/) and [vdo.ninja/alpha](https://vdo.ninja/alpha/)

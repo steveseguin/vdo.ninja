@@ -20,7 +20,7 @@ It will actually connect to any director, including co-directors, not just the m
 [`&view`](../view-parameters/view.md), [`&include`](and-include.md), [`&exclude`](../view-parameters/and-exclude.md) have a lower priority to `&directoronly`. So if there are two directors, you can do `&directoronly&exclude=coDirector123`, so that the codirector doesn't connect.
 
 I changed the toggle in the director's room for "Guests hear others" from [`&view=`](../view-parameters/view.md) to `&directoronly`. The point of this change is that the [director](../../viewers-settings/director.md) can now still talk to those in the room.\
-![](<../../.gitbook/assets/image (9).png>)
+![](<../../.gitbook/assets/image (9) (2).png>)
 
 Purpose of change: I had a user who wanted [`&broadcast`](../view-parameters/broadcast.md), but also not have the guests hear each other. It's a bit of a hassle to do [`&view=DirectorStreamID`](../view-parameters/view.md), and the toggle is labelled to be misleading by saying "guests", not "everyone".
 

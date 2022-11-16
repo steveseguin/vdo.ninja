@@ -11,7 +11,7 @@
     2. Needs to be enabled in the Mixer's settings\
        ![](<../.gitbook/assets/image (2).png>)
     3. An OBS scene name needs to be specified for a layout in the mixer app (And make sure you click "save scene" after)\
-       ![](<../.gitbook/assets/image (11).png>)
+       ![](<../.gitbook/assets/image (11) (3).png>)
     4. OBS's browser source needs level 4 or 5 enabled for at least one of the VDO.Ninja scenes that you added to OBS (or set to all scenes, if you disable sources when inactive)\
        ![](<../.gitbook/assets/image (5).png>)
 

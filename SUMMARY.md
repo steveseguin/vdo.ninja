@@ -410,6 +410,7 @@
     * [\&volumecontrol](advanced-settings/upcoming-parameters/and-volumecontrol.md)
     * [\&directoronly](advanced-settings/upcoming-parameters/and-directoronly.md)
     * [\&clock](advanced-settings/upcoming-parameters/and-clock.md)
+    * [\&hidehome](advanced-settings/upcoming-parameters/and-hidehome.md)
   * [Other Parameters](other-parameters.md)
 * [Releases](release-notes/older-releases.md)
   * [v21 ❤️](older-releases/v21.md)

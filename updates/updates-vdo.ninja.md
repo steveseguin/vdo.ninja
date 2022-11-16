@@ -8,6 +8,20 @@ I'm working on a fix, but I don't have an ETA. Will update when fixed.
 _\*\*_ UPDATE: I hot-patched beta and alpha with a fix. This fix disables the option to select custom audio output destinations, but resolves the echo issue. If using a self-deployed instance, you can instead add [`&noap`](../general-settings/noaudioprocessing.md) to the URLs to fix it as well; you can also enable `chrome://flags/#chrome-wide-echo-cancellation`, patch the code, or just use headphones.
 {% endhint %}
 
+#### **November 16** <a href="#august-31" id="august-31"></a>
+
+* Added the "[mic delay](../source-settings/and-micdelay.md)" option as a slider to the director's control; it's available by default, with up to 500-ms of delay ready. If you make use of it, it will "enable" the [`&micdelay`](../source-settings/and-micdelay.md) web audio node remotely if not yet on, which might cause a clicking sound. Hoping that this though can help with problematic guests who might be out of sync. This is not the same as [`&buffer`](../advanced-settings/view-parameters/buffer.md) or [`&sync`](../advanced-settings/view-parameters/sync.md) delay, which are a view-side parameters.
+
+![](<../.gitbook/assets/image (3).png>)
+
+* [`&micdelay`](../source-settings/and-micdelay.md), if used on a basic push link, will show the mic delay as a slider now also. So you can adjust it as needed. I don't show the slider by default unless using the URL parameter, as I don't think its a commonly used feature.\
+  ![](<../.gitbook/assets/image (4).png>)
+* I think I fixed an issue with Firefox where not all the audio-output devices were available to choose from, at least on desktop, and so I've added the custom logic Firefox requires to get it working. On Firefox, you'll now need to select "Show more options" in the audio drop down menu, where Firefox will prompt you to select the audio output device with its own prompt.\
+  ![](<../.gitbook/assets/image (9).png>)
+* Added an option called `&hidehome`, which hides the VDO.Ninja homepage and many links that lead to it. You can also enable at a code level with `session.hidehome=true;`, which is useful if doing a self-deployment, where you don't want anyone to stumble onto the site and start using it. You'll still be able to join push links and create rooms via URL parameters, but that's about it.\
+  \
+  \*\* updated alpha (vdo.ninja/alpha) and GitHub with all changes.
+
 #### **November 15** <a href="#august-31" id="august-31"></a>
 
 * Added the [`&clock`](../advanced-settings/upcoming-parameters/and-clock.md) parameter, which shows the current time in the lower right; this can be applied to pretty much all link types.\
@@ -15,7 +29,7 @@ _\*\*_ UPDATE: I hot-patched beta and alpha with a fix. This fix disables the op
   \-- The director has a button that lets them enable the clock for everyone in the room (via the director's room settings button).\
   \-- [`&clock=false`](../advanced-settings/upcoming-parameters/and-clock.md) or [`&cleanoutput`](../advanced-settings/design-parameters/cleanoutput.md) will force-disable the clock from being remotely triggerable.\
   \-- The director has a button that lets them also enable a global count-down timer. Holding CTRL + click will let the director pause the timer. If someone joins the room or reloads, the timer will also be reloaded, in sync. Button also in the room settings menu.\
-  ![](<../.gitbook/assets/image (3).png>)\
+  ![](<../.gitbook/assets/image (3) (3).png>)\
   \-- This count down timer is the same concept as the per-guest timer the director already has, and will actually conflict with it if both are used, since it uses the same state/variable to keep track of time remaining.\
   \-- The director will see the global count down timer also; it will just be a bit smaller on screen.\
   ![](../.gitbook/assets/image.png)
@@ -178,7 +192,7 @@ _\*\*_ UPDATE: I hot-patched beta and alpha with a fix. This fix disables the op
 *   Up to 20-videos on screen now are supported in the screen-share view; before after around 12-videos they started to be hidden
 
     ![](<../.gitbook/assets/image (3) (1).png>)![](<../.gitbook/assets/image (5) (2).png>)\
-    ![](<../.gitbook/assets/image (2) (2).png>)![](<../.gitbook/assets/image (4) (1).png>)\
+    ![](<../.gitbook/assets/image (2) (2).png>)![](<../.gitbook/assets/image (4) (1) (1).png>)\
     \
     \*\*changes on alpha (vdo.ninja/alpha/) and github
 
@@ -339,7 +353,7 @@ _\*\*_ UPDATE: I hot-patched beta and alpha with a fix. This fix disables the op
 #### August 11
 
 * Right clicking the screen-share icon will give you an option to open the screen share in a new tab, all pre-configuerd. Useful if you want to share multiple windows while in a group room, or don't want to see your own screen share while talking to others.\
-  ![](<../.gitbook/assets/image (3) (3) (1).png>)
+  ![](<../.gitbook/assets/image (3) (3) (1) (1).png>)
 * Bugs with [`&screensharetype=3`](../newly-added-parameters/and-screensharetype.md) have been resolved, I think. (this mode supports desktop-audio capture without echo issues)
 
 #### August 9
@@ -712,7 +726,7 @@ _\*\*_ UPDATE: I hot-patched beta and alpha with a fix. This fix disables the op
 
 * Selected audio and video devices are remembered automatically on reload/refresh, without needing a URL parameter. On alpha for now. [https://vdo.ninja/alpha/](https://vdo.ninja/alpha/)
 * Added the ability to select an image, instead of a video device. The image will trigger when the video is muted or no video device is selected. A default avatar image is provided, but you can select your own from disk. [`&avatar`](../advanced-settings/upcoming-parameters/and-avatar.md) is the flag that enables this option. - `&avatar=default` will pre-select the default avatar, rather than leaving it un-selected [https://vdo.ninja/alpha/?avatar](https://vdo.ninja/alpha/?avatar) (on alpha for now)\
-  ![](<../.gitbook/assets/image (3) (3).png>)
+  ![](<../.gitbook/assets/image (3) (3) (1).png>)
 * [`&js`](../advanced-settings/design-parameters/and-js.md) is a new parameter for VDO.Ninja that lets you pass a third party hosted Javascript file URL (URL-encoded), allowing for custom code injection without self-hosting, IFrames or chrome extensions. On VDO.Ninja, by user request.
 
 #### April 18

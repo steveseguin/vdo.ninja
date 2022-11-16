@@ -22,7 +22,7 @@ Adding `&effectvalue` to a sender-side can take an integer. This can set the amo
 
 If not using `&effectvalue` you can change it dynamically via the settings menu.
 
-![](<../.gitbook/assets/image (9) (2).png>)
+![](<../.gitbook/assets/image (9) (2) (1).png>)
 
 {% hint style="warning" %}
 It's best to keep the value under 10 and using this flag disables the option to use the slider.
