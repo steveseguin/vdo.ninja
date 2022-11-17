@@ -4579,8 +4579,10 @@ function updateMixerRun(e=false){  // this is the main auto-mixing code.  It's a
 				holder.paused.className = "hidden";
 			}
 			
-			var vw = vid.videoWidth || vid.naturalWidth;
-			var vh = vid.videoHeight || vid.naturalHeight;
+			var vw =  vid.naturalWidth || vid.videoWidth;
+			var vh = vid.naturalHeight || vid.videoHeight;
+			
+			// log(vw + " : "+vh);
 			
 			if ((vw && vh) || (vid.width && vid.height)){
 				if (("rotated" in vid) && ((vid.rotated==90) || (vid.rotated==270))){
@@ -8095,13 +8097,20 @@ function playoutdelay(UUID){  // applies a delay to all videos
 								if (sync_offset<0){sync_offset=0;}
 								session.rpcs[UUID].stats[tid]._sync_offset = sync_offset;
 								receiver.playoutDelayHint = parseFloat(sync_offset/1000);
-								var audio_delay = session.sync || 0; // video is typically showing greater delay than video
-								audio_delay += target_buffer - session.rpcs[UUID].stats[tid].Buffer_Delay_in_ms
-								if (receiver.track.id in session.rpcs[UUID].inboundAudioPipeline){
-									if (session.rpcs[UUID].inboundAudioPipeline[receiver.track.id] && session.rpcs[UUID].inboundAudioPipeline[receiver.track.id].delayNode){
-										if (audio_delay<0){audio_delay=0;}
-										session.rpcs[UUID].inboundAudioPipeline[receiver.track.id].delayNode.delayTime.setValueAtTime(parseFloat(audio_delay/1000.0), session.audioCtx.currentTime+1);
-										session.rpcs[UUID].stats[tid].Audio_Sync_Delay_ms = audio_delay;
+								
+								if (session.sync!==false){
+									var audio_delay = session.sync || 0; // video is typically showing greater delay than video
+									audio_delay += target_buffer - session.rpcs[UUID].stats[tid].Buffer_Delay_in_ms
+									if (receiver.track.id in session.rpcs[UUID].inboundAudioPipeline){
+										if (session.rpcs[UUID].inboundAudioPipeline[receiver.track.id] && session.rpcs[UUID].inboundAudioPipeline[receiver.track.id].delayNode){
+											if (audio_delay<0){audio_delay=0;}
+											try {
+												session.rpcs[UUID].inboundAudioPipeline[receiver.track.id].delayNode.delayTime.linearRampToValueAtTime(parseFloat(audio_delay/1000.0), session.audioCtx.currentTime + parseFloat(session.statsInterval/3000)); 
+											} catch(e){
+												session.rpcs[UUID].inboundAudioPipeline[receiver.track.id].delayNode.delayTime.setValueAtTime(parseFloat(audio_delay/1000.0), session.audioCtx.currentTime+1); 
+											}
+											session.rpcs[UUID].stats[tid].Audio_Sync_Delay_ms = audio_delay;
+										}
 									}
 								}
 							} else if (session.rpcs[UUID].stats[tid]._type=="video"){
@@ -18619,6 +18628,7 @@ async function grabVideo(quality = 0, eleName = 'previewWebcam', selector = "sel
 					}
 				});
 				
+				
 				updateRenderOutpipe();  
 				// senderAudioUpdate
 				
@@ -18651,7 +18661,7 @@ async function grabVideo(quality = 0, eleName = 'previewWebcam', selector = "sel
 						}
 					}
 				} else if (getById("gear_webcam3").style.display === "inline-block") {
-					updateStats(obscam);
+					updateStats(obscam); 
 				}
 
 				// Once crbug.com/711524 is fixed, we won't need to wait anymore. This is
@@ -18715,9 +18725,9 @@ async function grabVideo(quality = 0, eleName = 'previewWebcam', selector = "sel
 						} catch (e) {
 							errorlog(e);
 						}
-					} else {
+					} else if (toggleSettingsState) {
 						log("16047");
-						updateConstraintSliders();
+						updateConstraintSliders();//listCameraSettings();
 					}
 					if (callback3){
 						try {
@@ -18746,8 +18756,12 @@ async function grabVideo(quality = 0, eleName = 'previewWebcam', selector = "sel
 						session.setResolution(); // this runs already when updateCameraConstraints succeeds
 					}
 					
-					//log("16075");
+					//log("16075"); 
 					updateForceRotate();
+					
+					if (iOS || iPad){  
+						updateMixer(); // if we don't do this, portrait videos may be detected as horizontal
+					}
 					
 					 // this will reset scaling for all viewers of this stream. I also call it when aspect ratio, width, or height is changed via applyConstraints
 					
@@ -18897,7 +18911,7 @@ function updateRenderOutpipe(){ // video only.
 }
 
 function pushOutVideoTrack(track){
-
+	log("pushOutVideoTrack");
 	if (session.chunked){
 		for (UUID in session.pcs) {
 			session.chunkedStream(UUID); // make sure we check that this connection allows video / audio

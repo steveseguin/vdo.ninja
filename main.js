@@ -2855,8 +2855,8 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 		} else {
 			session.buffer = parseFloat(urlParams.get('buffer')) || 0;
 			log("buffer Changed: " + session.buffer);
-			session.sync = 0;
-			session.audioEffects = true;
+			//session.sync = 0;
+			//session.audioEffects = true;
 		}
 	}
 	
