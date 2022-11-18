@@ -47,6 +47,7 @@ You can use them for publisher, viewer and director URLs.
 | ``[`&nowebsite`](../../source-settings/nowebsite.md)``                 | Disables IFRAMEs from loading, such as remotely shared websites by another guest or director                        |
 | ``[`&signalmeter`](../../newly-added-parameters/and-signalmeter.md)``  | Visualizes the packet loss of a guest                                                                               |
 | ``[`&consent`](../../source-settings/consent.md)``                     | Will ask the user for content to remote change their camera or microphone                                           |
+| ``[`&prompt`](and-prompt.md)\*                                         | Another security option, for those concerned about random spying of their streams                                   |
 | ``[`&hands`](../../source-settings/and-hands.md)``                     | Enables a "Raise Hand" button for guests                                                                            |
 | ``[`&notify`](../../source-settings/and-notify.md)``                   | Audio alerts for raised hands, chat messages and if somebody joins the room                                         |
 | ``[`&r2d2`](../../source-settings/r2d2.md)``                           | Easter egg `&notify` sound                                                                                          |
@@ -59,6 +60,8 @@ You can use them for publisher, viewer and director URLs.
 | ``[`&chunked`](../../newly-added-parameters/and-chunked.md)``          | Does not use webRTC's video streaming protocols; rather it uses a custom-made protocol                              |
 | ``[`&rampuptime`](../../newly-added-parameters/and-rampuptime.md)``    | When a guest connects, this tries to load video from that guest for a few seconds, even if not yet added to a scene |
 | ``[`&sensor`](../../source-settings/sensor.md)``                       | Access device sensor data at given rate                                                                             |
+
+\*NEW IN VERSION 22
 
 ## Viewer Side Options
 

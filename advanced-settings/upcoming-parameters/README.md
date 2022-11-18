@@ -8,7 +8,6 @@ You can use/test these parameters on [vdo.ninja/alpha](https://vdo.ninja/alpha/)
 
 | Parameter                                                        | Explanation                                                                                                                                                        |
 | ---------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| ``[`&prompt`](and-prompt.md)\*\*                                 | Another security option, for those concerned about random spying of their streams                                                                                  |
 | ``[`&totalbitrate`](and-totalbitrate.md)\*\*                     | Sets both [`&totalscenebitrate`](../../newly-added-parameters/and-maxtotalscenebitrate.md) and [`&totalroombitrate` ](../view-parameters/totalroombitrate.md)flags |
 | ``[`&bgimage`](and-bgimage.md)\*\*                               | Can be used to set the default image avatar, when using [`&style=0` ](../design-parameters/style.md)or [`&style=6`](../design-parameters/style.md)``               |
 | ``[`&nocontrols`](and-nocontrols.md)\*\*                         | Will force hide the video control bar                                                                                                                              |

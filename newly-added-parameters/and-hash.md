@@ -39,6 +39,6 @@ For example:\
 [password.md](../general-settings/password.md)
 {% endcontent-ref %}
 
-{% content-ref url="../advanced-settings/upcoming-parameters/and-prompt.md" %}
-[and-prompt.md](../advanced-settings/upcoming-parameters/and-prompt.md)
+{% content-ref url="../advanced-settings/settings-parameters/and-prompt.md" %}
+[and-prompt.md](../advanced-settings/settings-parameters/and-prompt.md)
 {% endcontent-ref %}

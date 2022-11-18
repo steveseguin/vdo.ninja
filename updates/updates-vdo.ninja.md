@@ -694,7 +694,7 @@ _\*\*_ UPDATE: I hot-patched beta and alpha with a fix. This fix disables the op
   \
   `&trb` and `&tsb` limit the total incoming bitrate, dividing up the bandwidth available to each video being played back. There are nuances in differences, with the main one being `&trb` is for a guest link and `&tsb` is for a scene/view link.\
   (on local dev for now, pending more testing)
-* Added another security option, for those concerned about random spying of their streams. Add [`&prompt`](../advanced-settings/upcoming-parameters/and-prompt.md) to the push link to enable. (or `&approve`/`&validate`)\
+* Added another security option, for those concerned about random spying of their streams. Add [`&prompt`](../advanced-settings/settings-parameters/and-prompt.md) to the push link to enable. (or `&approve`/`&validate`)\
   \
   What it is: After a new peer viewer connection is established, but before the video/audio streams start getting sent to that new viewer, a prompt will appear asking the publisher if they wish to send their stream to that viewer. If they say no, the remote viewer is disconnected and no video/audio is sent to them. If they have `&label=xxx` added to their view link, that label will appear as the display name. Otherwise, if no label is available, a random ID representing that connection is shown.\
   \
