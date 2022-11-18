@@ -4,8 +4,6 @@ description: Recently added to VDO.Ninja
 
 # New Parameters in Version 22
 
-## Recently added Parameters in Version 22
-
 | Parameter                                                                            | Explanation                                                                                                                                                  |
 | ------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------ |
 | ``[`&border`](design-parameters/and-border.md)                                       | Adds a border around the videos                                                                                                                              |
