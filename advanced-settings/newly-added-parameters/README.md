@@ -6,7 +6,7 @@ description: Recently added to VDO.Ninja in v22
 
 New Parameters in Version 22 of VDO.Ninja
 
-|                                                                                     |                                                                                                                                                                    |
+| Parameter                                                                           | Explanation                                                                                                                                                        |
 | ----------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
 | ``[`&border`](../design-parameters/and-border.md)                                   | Adds a border around the videos                                                                                                                                    |
 | ``[`&bordercolor`](../design-parameters/and-bordercolor.md)                         | Defines the color of [`&border`](../design-parameters/and-border.md)``                                                                                             |
