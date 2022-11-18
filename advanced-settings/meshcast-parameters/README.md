@@ -16,6 +16,6 @@ description: >-
 | ``[`&meshcastcodec`](../../meshcast-settings/and-meshcastcodec.md)``               | Option to change codec of the `&meshcast` parameter                                                |
 | ``[`&mcscreensharebitrate`](../../meshcast-settings/and-mcscreensharebitrate.md)`` | Option to change outbound screen-share video bitrate of the `&meshcast` parameter                  |
 | ``[`&mcscreensharecodec`](../../meshcast-settings/and-mcscreensharecodec.md)``     | Option to change codec of the `&meshcast` parameter while screen-sharing                           |
-| ``[`&meshcastscale`](../upcoming-parameters/and-meshcastscale.md)\*                | Scales down the meshcast video output via the URL                                                  |
+| ``[`&meshcastscale`](and-meshcastscale.md)\*                                       | Scales down the Meshcast video output via the URL                                                  |
 
-\*currently only on [vdo.ninja/alpha/](https://vdo.ninja/alpha/)
+\*NEW IN VERSION 22
