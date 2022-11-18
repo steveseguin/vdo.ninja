@@ -8,11 +8,20 @@ I'm working on a fix, but I don't have an ETA. Will update when fixed.
 _\*\*_ UPDATE: I hot-patched beta and alpha with a fix. This fix disables the option to select custom audio output destinations, but resolves the echo issue. If using a self-deployed instance, you can instead add [`&noap`](../general-settings/noaudioprocessing.md) to the URLs to fix it as well; you can also enable `chrome://flags/#chrome-wide-echo-cancellation`, patch the code, or just use headphones.
 {% endhint %}
 
+#### **November 18** <a href="#august-31" id="august-31"></a>
+
+* ![](<../.gitbook/assets/image (3).png>)\
+  For better or worse, I updated Production (VDO.Ninja) to version v22.6 ... up from v21.4.\
+  IF HAVING PROBLEMS suddenly, please do a hard-browser refresh. This includes in your browser and the OBS browser source, if using that. The previous v21 release can still be found at [https://vdo.ninja/v21/](https://vdo.ninja/v21/), if you want to go back. Release notes coming soon.
+* I separated [`&sync`](../advanced-settings/view-parameters/sync.md) and [`&buffer`](../advanced-settings/view-parameters/buffer.md), so audio-sync isn't auto-enabled when `&buffer` is specified in the URL. I was finding `&sync` was causing some audio clicking issues, as adjusting audio playback speed isn't easy; you have a choice now. Use `&buffer` and `&sync` together or standalone items.
+* Fixed an issue with iPhones where changing the camera caused your own preview video to go small.
+* ``[`&screensharebitrate`](../newly-added-parameters/and-screensharebitrate.md) now works outside of group rooms, even with basic push/view links.
+
 #### **November 16** <a href="#august-31" id="august-31"></a>
 
 * Added the "[mic delay](../source-settings/and-micdelay.md)" option as a slider to the director's control; it's available by default, with up to 500-ms of delay ready. If you make use of it, it will "enable" the [`&micdelay`](../source-settings/and-micdelay.md) web audio node remotely if not yet on, which might cause a clicking sound. Hoping that this though can help with problematic guests who might be out of sync. This is not the same as [`&buffer`](../advanced-settings/view-parameters/buffer.md) or [`&sync`](../advanced-settings/view-parameters/sync.md) delay, which are a view-side parameters.
 
-![](<../.gitbook/assets/image (3).png>)
+![](<../.gitbook/assets/image (3) (1).png>)
 
 * [`&micdelay`](../source-settings/and-micdelay.md), if used on a basic push link, will show the mic delay as a slider now also. So you can adjust it as needed. I don't show the slider by default unless using the URL parameter, as I don't think its a commonly used feature.\
   ![](<../.gitbook/assets/image (4).png>)
@@ -25,14 +34,14 @@ _\*\*_ UPDATE: I hot-patched beta and alpha with a fix. This fix disables the op
 #### **November 15** <a href="#august-31" id="august-31"></a>
 
 * Added the [`&clock`](../advanced-settings/upcoming-parameters/and-clock.md) parameter, which shows the current time in the lower right; this can be applied to pretty much all link types.\
-  ![](<../.gitbook/assets/image (1).png>)\
+  ![](<../.gitbook/assets/image (1) (8).png>)\
   \-- The director has a button that lets them enable the clock for everyone in the room (via the director's room settings button).\
   \-- [`&clock=false`](../advanced-settings/upcoming-parameters/and-clock.md) or [`&cleanoutput`](../advanced-settings/design-parameters/cleanoutput.md) will force-disable the clock from being remotely triggerable.\
   \-- The director has a button that lets them also enable a global count-down timer. Holding CTRL + click will let the director pause the timer. If someone joins the room or reloads, the timer will also be reloaded, in sync. Button also in the room settings menu.\
   ![](<../.gitbook/assets/image (3) (3).png>)\
   \-- This count down timer is the same concept as the per-guest timer the director already has, and will actually conflict with it if both are used, since it uses the same state/variable to keep track of time remaining.\
   \-- The director will see the global count down timer also; it will just be a bit smaller on screen.\
-  ![](../.gitbook/assets/image.png)
+  ![](<../.gitbook/assets/image (1).png>)
 * For VDO.Ninja, right-clicking a video and selecting "audio output destination" should work again. I had to disable that feature for a bit, as some users were reporting audio issues with it enabled. It might have some compatibilities issues, but it won't activate now unless used.
 * When using the special [`&screensharetype=3`](../newly-added-parameters/and-screensharetype.md) screen share mode (screen share with better echo cancellation), support for recording that local screen share, at the same time as as the main video, has been added. You'll need to use the [`&autorecord`](../advanced-settings/upcoming-parameters/and-autorecord.md) feature to trigger the recording, and when it does start recording, a button will appear specific to stopping that screen recording if needed.\
   ![](<../.gitbook/assets/image (14).png>)
@@ -191,7 +200,7 @@ _\*\*_ UPDATE: I hot-patched beta and alpha with a fix. This fix disables the op
 * Updated the screen-share layouts to have a larger screen, relative to the other videos: It now targets an average of around 80% screen real-estate for the main screen share.
 *   Up to 20-videos on screen now are supported in the screen-share view; before after around 12-videos they started to be hidden
 
-    ![](<../.gitbook/assets/image (3) (1).png>)![](<../.gitbook/assets/image (5) (2).png>)\
+    ![](<../.gitbook/assets/image (3) (1) (3).png>)![](<../.gitbook/assets/image (5) (2).png>)\
     ![](<../.gitbook/assets/image (2) (2).png>)![](<../.gitbook/assets/image (4) (1) (1).png>)\
     \
     \*\*changes on alpha (vdo.ninja/alpha/) and github

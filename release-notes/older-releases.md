@@ -2,8 +2,8 @@
 
 ## Release Notes
 
-* [V22](../advanced-settings/upcoming-parameters/) (coming soon) [https://vdo.ninja/alpha/](https://vdo.ninja/alpha/)&#x20;
-* [V21](../older-releases/v21.md) (updated February 14th 2022) [https://vdo.ninja/](https://vdo.ninja/)
+* V22 (updated November 18th 2022) [https://vdo.ninja/](https://vdo.ninja/)
+* [V21](../older-releases/v21.md) (updated February 14th 2022) [https://vdo.ninja/v21/](https://vdo.ninja/v21/)
 * [V20](v20.md) (updated December 24th 2021) [https://vdo.ninja/v20/](https://vdo.ninja/v20/)
 * [V19](v19.md) (updated September 1st 2021) [https://vdo.ninja/v19/](https://vdo.ninja/v19/)
 * [V18.3](v18/v18.3.md) (updated July 6th 2021) [https://vdo.ninja/v183/](https://vdo.ninja/v183/)

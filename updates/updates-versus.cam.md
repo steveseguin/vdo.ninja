@@ -2,6 +2,10 @@
 
 [versus.cam.md](../steves-helper-apps/versus.cam.md "mention")
 
+#### November 18
+
+* The Versus.cam app now points to the production version of VDO.Ninja, rather than beta or alpha.
+
 #### October 5
 
 * Fixed an issue where the bitrate in rare cases could hit 200-mbps (instead of being capped at 20-mbps). \*\* applies to vdo.ninja/alpha/ invite links

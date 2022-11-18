@@ -55,7 +55,7 @@
 #### **September 17**
 
 * Added the option to show "only" the queued messages in the dock\
-  ![](<../.gitbook/assets/image (1) (8).png>)
+  ![](<../.gitbook/assets/image (1) (8) (1).png>)
 * Fixed an issue where queued messages would become hidden once it hit the visual limit
 * Fixed a discord not-working issue
 * Fixed a twitch doubling up message issue

@@ -18,7 +18,7 @@ General Option! ([`&push`](../../source-settings/push.md), [`&room`](../../gener
 
 `&clock` shows the current time in the lower right; this can be applied to pretty much all link types.
 
-<figure><img src="../../.gitbook/assets/image (1).png" alt=""><figcaption></figcaption></figure>
+<figure><img src="../../.gitbook/assets/image (1) (8).png" alt=""><figcaption></figcaption></figure>
 
 The director has a button that lets them enable the clock for everyone in the room (via the director's room settings button).
 
@@ -32,4 +32,4 @@ This count down timer is the same concept as the per-guest timer the director al
 
 The director will see the global count down timer also; it will just be a bit smaller on screen.
 
-![](../../.gitbook/assets/image.png)
+![](<../../.gitbook/assets/image (1).png>)

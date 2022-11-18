@@ -2,6 +2,11 @@
 
 [comms.md](../steves-helper-apps/comms.md "mention")
 
+#### November 18
+
+* The Comms App hosted on alpha `(https://vdo.ninja/alpha/comms)` now redirects to the official home for it. [https://comms.cam/](https://comms.cam/). URL parameters are passed as part of the redirect.
+* The Comms app now points to the production version of VDO.Ninja, rather than beta or alpha.
+
 #### October 28
 
 * Fixed a bug with mobile support on the Comms app
