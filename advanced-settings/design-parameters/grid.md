@@ -16,9 +16,7 @@ Sender-Side Option! ([`&push`](../../source-settings/push.md))
 | Value            | Descritpion                             |
 | ---------------- | --------------------------------------- |
 | (no value given) | adds a white rule-of-thirs grid overlay |
-| (URL)\*          | adds an image as a overlay              |
-
-\*new in Version 22 (currently /alpha)
+| (URL)            | adds an image as a overlay              |
 
 ## Details
 
@@ -30,7 +28,7 @@ As of [v19.0](../../release-notes/v19.md), this only works for guests of a room 
 
 ![default version of \&grid](<../../.gitbook/assets/image (92) (1).png>)
 
-### Changes in Version 22 (currently alpha)
+### Changes in Version 22
 
 Added the option to customize the `&grid` effect by passing an image link (can help center guests).
 
@@ -42,13 +40,13 @@ URL can be URL-encoded, for more complex URLs. Simple URLs might work without.
 
 Technically this can be used as an overlay for other things, but it only works with the self-preview.
 
-Example: [`https://vdo.ninja/alpha/?push&grid=./media/thirdshead.svg`](https://vdo.ninja/alpha/?push\&grid=./media/thirdshead.svg)``
+Example: [`https://vdo.ninja/?push&grid=./media/thirdshead.svg`](https://vdo.ninja/?push\&grid=./media/thirdshead.svg)``
 
 Leave the passed value empty if you wish to have the white basic rule-of-thirds show as default.
 
 {% hint style="info" %}
 * As of v22, it now works in non-room mode (basic push links):\
-  [https://vdo.ninja/alpha/?push\&grid](https://vdo.ninja/alpha/?push\&grid)
+  [https://vdo.ninja/?push\&grid](https://vdo.ninja/?push\&grid)
 * You can now also toggle it in the director's room to add it to the guest's link:\
   ![](<../../.gitbook/assets/image (103) (1).png>)
 {% endhint %}

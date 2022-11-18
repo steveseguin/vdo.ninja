@@ -8,9 +8,6 @@ You can use/test these parameters on [vdo.ninja/alpha](https://vdo.ninja/alpha/)
 
 | Parameter                                                        | Explanation                                                                                                                                                        |
 | ---------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| ``[`&autorecord`](and-autorecord.md)\*\*                         | Records the local video and the remote video(s) automatically on their initial load                                                                                |
-| ``[`&autorecordlocal`](and-autorecordlocal.md)\*\*               | Records just the local video automatically on their initial load                                                                                                   |
-| ``[`&autorecordremote`](and-autorecordremote.md)\*\*             | Records just the remote video(s) automatically on their initial load                                                                                               |
 | ``[`&avatar`](and-avatar.md)\*\*                                 | Adds the ability to select an image, instead of a video device                                                                                                     |
 | ``[`&prompt`](and-prompt.md)\*\*                                 | Another security option, for those concerned about random spying of their streams                                                                                  |
 | ``[`&totalbitrate`](and-totalbitrate.md)\*\*                     | Sets both [`&totalscenebitrate`](../../newly-added-parameters/and-maxtotalscenebitrate.md) and [`&totalroombitrate` ](../view-parameters/totalroombitrate.md)flags |

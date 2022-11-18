@@ -1,11 +1,12 @@
 ---
-description: Records just the local video automatically on their initial load
+description: >-
+  Records the local video and the remote video(s) automatically on their initial
+  load
 ---
 
-# \&autorecordlocal
+# \&autorecord
 
-General Option! ([`&push`](../../source-settings/push.md), [`&room`](../../general-settings/room.md), [`&view`](../view-parameters/view.md), [`&scene`](../view-parameters/scene.md), [`&solo`](and-solo.md))\
-\* on [https://vdo.ninja/beta/](https://vdo.ninja/beta/) and [https://vdo.ninja/alpha/](https://vdo.ninja/alpha/)
+General Option! ([`&push`](../../source-settings/push.md), [`&room`](../../general-settings/room.md), [`&view`](../view-parameters/view.md), [`&scene`](../view-parameters/scene.md), [`&solo`](../upcoming-parameters/and-solo.md))
 
 ## Options
 
@@ -17,7 +18,7 @@ General Option! ([`&push`](../../source-settings/push.md), [`&room`](../../gener
 
 ## Details
 
-`&autorecordlocal` will record the local video automatically on their initial load. This applies to the director, guest, scenes, and whatever really.
+`&autorecord` will record the local and remote videos automatically on their initial load. This applies to the director, guest, scenes, and whatever really.
 
 You can stop/restart recordings as needed via the right-click menu per each video for now, until I can design a nicer UI for managing multi-recording state at least.
 
@@ -29,8 +30,8 @@ You can pass the default recording bitrate as a value to the parameter, like you
 [and-record.md](../../source-settings/and-record.md)
 {% endcontent-ref %}
 
-{% content-ref url="and-autorecord.md" %}
-[and-autorecord.md](and-autorecord.md)
+{% content-ref url="and-autorecordlocal.md" %}
+[and-autorecordlocal.md](and-autorecordlocal.md)
 {% endcontent-ref %}
 
 {% content-ref url="and-autorecordremote.md" %}

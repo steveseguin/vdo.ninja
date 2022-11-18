@@ -70,7 +70,7 @@ We've broken down the available URL parameters into 16 parts:
 * [mobile-parameters](advanced-settings/mobile-parameters/ "mention") (options to specify push links and guest invite links for mobile phones)
 * [api-and-midi-parameters](advanced-settings/api-and-midi-parameters/ "mention") (hotkey features via API and MIDI)
 * [turn-and-stun-parameters](advanced-settings/turn-and-stun-parameters/ "mention") (options for setting up TURN and STUN servers)
-* [newly-added-parameters](advanced-settings/newly-added-parameters/ "mention") (recently added to VDO.Ninja)
+* [new-parameters-in-version-22.md](advanced-settings/new-parameters-in-version-22.md "mention") (recently added to VDO.Ninja)
 * [upcoming-parameters](advanced-settings/upcoming-parameters/ "mention") (only on [VDO.Ninja/beta](https://vdo.ninja/beta/) or [VDO.Ninja/alpha](https://vdo.ninja/alpha/) version at the moment)
 * [other-parameters.md](other-parameters.md "mention") (not ready for production, not intended to be used or not well-documented)
 

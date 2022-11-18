@@ -35,7 +35,7 @@ Using this group function is an alternative to transfer rooms, however it's perh
 
 [`&groupaudio`](and-groupaudio.md) can be used to enable audio in-between different groups, instead of audio being group-specific. Useful for blind-dating show formats or such.
 
-### Update Version 22
+### New in Version 22
 
 Custom groups used by remote guests now show in the director's view, just like custom scenes do. If you use `&groups=group,test,vdo`, new group buttons will appear.\
 ![](<../.gitbook/assets/image (171).png>)

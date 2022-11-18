@@ -24,12 +24,10 @@ Sender-Side Option! ([`&push`](push.md))
 | `4`                     | Virtual Greenscreen                                           |
 | `5`                     | Background replacement                                        |
 | `6`                     | Avatar                                                        |
-| `7` \| `zoom`\*         | Zoom                                                          |
+| `7` \| `zoom`           | Zoom                                                          |
 | `9`                     | Face tracking                                                 |
 | `10`                    | Face tracking                                                 |
 | `11` \| `anon`          | Anonymous face mask                                           |
-
-\*on alpha
 
 ## Details
 

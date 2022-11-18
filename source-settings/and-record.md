@@ -79,8 +79,8 @@ When recording with PCM, ([`&pcm`](and-pcm.md)) the inbound audio bitrate will b
 [and-recordcodec.md](../newly-added-parameters/and-recordcodec.md)
 {% endcontent-ref %}
 
-{% content-ref url="../advanced-settings/upcoming-parameters/and-autorecord.md" %}
-[and-autorecord.md](../advanced-settings/upcoming-parameters/and-autorecord.md)
+{% content-ref url="../advanced-settings/settings-parameters/and-autorecord.md" %}
+[and-autorecord.md](../advanced-settings/settings-parameters/and-autorecord.md)
 {% endcontent-ref %}
 
 {% content-ref url="and-pcm.md" %}

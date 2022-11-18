@@ -12,14 +12,17 @@ They are separated in three groups: [general options](./#general-options) (push 
 
 You can use them for publisher, viewer and director URLs.
 
-| Parameter                                            | Explanation                                                                   |
-| ---------------------------------------------------- | ----------------------------------------------------------------------------- |
-| ``[`&language`](and-language.md)``                   | Sets the interface language                                                   |
-| ``[`&remote`](../../general-settings/remote.md)``    | Allows remote operation of the zoom and focus, and access to statistics       |
-| ``[`&stats`](../../general-settings/and-stats.md)``  | Shows the connection/media stats window by default                            |
-| ``[`&sticky`](../../general-settings/sticky.md)``    | Allows a user to save and then later restore their streaming session settings |
-| ``[`&disablehotkeys`](and-disablehotkeys.md)``       | Disables hotkeys (like `CRTL + M`)                                            |
-| ``[`&showlist`](../../source-settings/showlist.md)`` | Shows list of hidden guests                                                   |
+| Parameter                                            | Explanation                                                                         |
+| ---------------------------------------------------- | ----------------------------------------------------------------------------------- |
+| ``[`&language`](and-language.md)``                   | Sets the interface language                                                         |
+| ``[`&remote`](../../general-settings/remote.md)``    | Allows remote operation of the zoom and focus, and access to statistics             |
+| ``[`&stats`](../../general-settings/and-stats.md)``  | Shows the connection/media stats window by default                                  |
+| ``[`&sticky`](../../general-settings/sticky.md)``    | Allows a user to save and then later restore their streaming session settings       |
+| ``[`&disablehotkeys`](and-disablehotkeys.md)``       | Disables hotkeys (like `CRTL + M`)                                                  |
+| ``[`&showlist`](../../source-settings/showlist.md)`` | Shows list of hidden guests                                                         |
+| ``[`&autorecord`](and-autorecord.md)``               | Records the local video and the remote video(s) automatically on their initial load |
+| ``[`&autorecordlocal`](and-autorecordlocal.md)``     | Records just the local video automatically on their initial load                    |
+| ``[`&autorecordremote`](and-autorecordremote.md)``   | Records just the remote video(s) automatically on their initial load                |
 
 ## Source Side Options
 
