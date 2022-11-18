@@ -18,7 +18,7 @@ Viewer-Side Option! ([`&scene`](../view-parameters/scene.md), [`&room`](../../ge
 
 It will actually connect to any director, including co-directors, not just the main one.
 
-[`&view`](../view-parameters/view.md), [`&include`](and-include.md), [`&exclude`](../view-parameters/and-exclude.md) have a lower priority to `&directoronly`. So if there are two directors, you can do `&directoronly&exclude=coDirector123`, so that the codirector doesn't connect.
+[`&view`](../view-parameters/view.md), [`&include`](../mixer-scene-parameters/and-include.md), [`&exclude`](../view-parameters/and-exclude.md) have a lower priority to `&directoronly`. So if there are two directors, you can do `&directoronly&exclude=coDirector123`, so that the codirector doesn't connect.
 
 I changed the toggle in the director's room for "Guests hear others" from [`&view=`](../view-parameters/view.md) to `&directoronly`. The point of this change is that the [director](../../viewers-settings/director.md) can now still talk to those in the room.\
 ![](<../../.gitbook/assets/image (9) (2).png>)

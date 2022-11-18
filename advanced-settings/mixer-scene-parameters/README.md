@@ -13,6 +13,7 @@ You have to add them to [`&scene`](../view-parameters/scene.md) or [`&room`](../
 | Parameter                                                   | Explanation                                                                                                          |
 | ----------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------- |
 | ``[`&view`](../view-parameters/view.md)``                   | Defines the stream or streams you are receiving, by their stream IDs                                                 |
+| ``[`&include`](and-include.md)\*                            | Includes streams that do not exist in the room                                                                       |
 | ``[`&exclude`](../view-parameters/and-exclude.md)``         | Same concept as [`&view`](../view-parameters/view.md), except does the opposite                                      |
 | ``[`&activespeaker`](../view-parameters/activespeaker.md)`` | Auto-hides remote guests videos when added, if those guests are not speaking actively                                |
 | ``[`&order`](../../source-settings/order.md)``              | The order priority of a source video when added to the video mixer                                                   |
@@ -24,6 +25,8 @@ You have to add them to [`&scene`](../view-parameters/scene.md) or [`&room`](../
 | ``[`&square`](../../newly-added-parameters/and-square.md)`` | Optimizes the video mixer for 1:1 videos                                                                             |
 | ``[`&animated`](../view-parameters/animated.md)``           | Videos in a group scene will slide around the screen when being re-arranged                                          |
 | ``[`&manual`](../view-parameters/manual.md)``               | Disables the auto-mixer, allowing for a custom mixer to be used                                                      |
+
+\*NEW IN VERSION 22
 
 ## **Only Scene options**
 

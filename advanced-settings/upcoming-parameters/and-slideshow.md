@@ -15,6 +15,6 @@ This option decodes incoming video (first video to load), but plays them back as
 
 ## Related
 
-{% content-ref url="and-postimage.md" %}
-[and-postimage.md](and-postimage.md)
+{% content-ref url="../settings-parameters/and-postimage.md" %}
+[and-postimage.md](../settings-parameters/and-postimage.md)
 {% endcontent-ref %}

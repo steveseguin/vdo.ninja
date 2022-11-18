@@ -57,7 +57,7 @@ _\*\*_ UPDATE: I hot-patched beta and alpha with a fix. This fix disables the op
 
     \-- It will actually connect to any director, including co-directors, not just the main one.
 
-    \-- [`&view`](../advanced-settings/view-parameters/view.md), [`&include`](../advanced-settings/upcoming-parameters/and-include.md), [`&exclude`](../advanced-settings/view-parameters/and-exclude.md) have a lower priority to `&directoronly`. So if there are two directors, you can do `&directoronly&exclude=coDirector123`, so that the [codirector](../director-settings/codirector.md) doesn't connect.
+    \-- [`&view`](../advanced-settings/view-parameters/view.md), [`&include`](../advanced-settings/mixer-scene-parameters/and-include.md), [`&exclude`](../advanced-settings/view-parameters/and-exclude.md) have a lower priority to `&directoronly`. So if there are two directors, you can do `&directoronly&exclude=coDirector123`, so that the [codirector](../director-settings/codirector.md) doesn't connect.
 
     \-- I changed the toggle in the director's room for "Guests hear others" from [`&view=`](../advanced-settings/view-parameters/view.md) to [`&directoronly`](../advanced-settings/upcoming-parameters/and-directoronly.md). The point of this change is that the director can now still talk to those in the room.
 
@@ -367,7 +367,7 @@ _\*\*_ UPDATE: I hot-patched beta and alpha with a fix. This fix disables the op
 
 #### August 9
 
-* ``[`&aspectratio`](../advanced-settings/upcoming-parameters/and-aspectratio.md) now works with screen shares, so you can force crop an incoming screen share to be a certain aspect ratio. If [`&screenshareaspectratio`](../advanced-settings/upcoming-parameters/and-screenshareaspectratio.md) is used, (`&ssar`), it will apply to just screen shares. If `&ssar` does not have a value passed, it's assumed to be set as "default", which overrides `&aspectratio` option, if used also. \*\* on alpha, ie: vdo.ninja/alpha/?ar=2.0
+* ``[`&aspectratio`](../advanced-settings/video-parameters/and-aspectratio.md) now works with screen shares, so you can force crop an incoming screen share to be a certain aspect ratio. If [`&screenshareaspectratio`](../advanced-settings/upcoming-parameters/and-screenshareaspectratio.md) is used, (`&ssar`), it will apply to just screen shares. If `&ssar` does not have a value passed, it's assumed to be set as "default", which overrides `&aspectratio` option, if used also. \*\* on alpha, ie: vdo.ninja/alpha/?ar=2.0
 
 #### August 6
 
@@ -490,7 +490,7 @@ _\*\*_ UPDATE: I hot-patched beta and alpha with a fix. This fix disables the op
 #### July 1
 
 * The WSS API (wss://api.vdo.ninja) has been expanded to include hang up events for publishers, along with viewer-side events for incoming connections/streams. These efforts will lead to a richer StreamDeck integration.
-* Add [`&background`](../advanced-settings/upcoming-parameters/and-background.md), which accepts a URL-encoded image URL to make as the app's default background. For example, [`https://vdo.ninja/alpha/?appbg=./media/logo_cropped.png`](https://vdo.ninja/alpha/?appbg=./media/logo\_cropped.png) . The image will scale in size to cover the VDO.Ninja app's background. [`&chroma`](../advanced-settings/design-parameters/chroma.md) can still be used to set the background color, if using transparencies. There already exists [`&bgimage`](../advanced-settings/design-parameters/and-bgimage.md), which will set the default background image for videos; this however will set a background image for the entire page.\
+* Add [`&background`](../advanced-settings/design-parameters/and-background.md), which accepts a URL-encoded image URL to make as the app's default background. For example, [`https://vdo.ninja/alpha/?appbg=./media/logo_cropped.png`](https://vdo.ninja/alpha/?appbg=./media/logo\_cropped.png) . The image will scale in size to cover the VDO.Ninja app's background. [`&chroma`](../advanced-settings/design-parameters/chroma.md) can still be used to set the background color, if using transparencies. There already exists [`&bgimage`](../advanced-settings/design-parameters/and-bgimage.md), which will set the default background image for videos; this however will set a background image for the entire page.\
   ![](<../.gitbook/assets/image (2) (5) (1).png>)\
   \
   \*\* These changes are on alpha
@@ -499,14 +499,14 @@ _\*\*_ UPDATE: I hot-patched beta and alpha with a fix. This fix disables the op
 
 * Fixed a bug with [`&statsinterval=100`](../advanced-settings/parameters-only-on-beta/and-statsinterval.md) not updating on sender side (only viewer side before). This updates how frequent the stats updates.
 * Added the ability to dynamically change the scale of a video to the IFRAME API. accepts scale, plus optionally uuid or a stream ID as a a target.
-* Added [`&base64js`](../advanced-settings/upcoming-parameters/and-base64js.md), which lets a user add raw java script to the URL to run on page load. `https://vdo.ninja/alpha/?jsb64=YWxlcnQoJ2hpJyk=` to test.\
+* Added [`&base64js`](../advanced-settings/design-parameters/and-base64js.md), which lets a user add raw java script to the URL to run on page load. `https://vdo.ninja/alpha/?jsb64=YWxlcnQoJ2hpJyk=` to test.\
   \
   \*\* changes on alpha
 
 #### June 28
 
 * Added support for [`&buffer`](../advanced-settings/view-parameters/buffer.md) and [`&sync`](../advanced-settings/view-parameters/sync.md) to the viewer when using [`&chunked`](../newly-added-parameters/and-chunked.md) mode on the sender. If on an unstable connection, setting the buffer to a few seconds can help avoid pauses in the video playback, as there will be some buffer to use. (a bit experimental still -- so it might be more a WIP still ).
-* Added a new url param called [`&include`](../advanced-settings/upcoming-parameters/and-include.md), which is like [`&view`](../advanced-settings/view-parameters/view.md), except it's for including streams that do not exist in the room you are in, assuming those streams are not in another room and have matching passwords. So, useful for adding basic push-streams that you might want to be in multiple rooms at the same time, but not actually be locked to any room. (`&view`, conversely, is pretty exclusive; that or nothing.)
+* Added a new url param called [`&include`](../advanced-settings/mixer-scene-parameters/and-include.md), which is like [`&view`](../advanced-settings/view-parameters/view.md), except it's for including streams that do not exist in the room you are in, assuming those streams are not in another room and have matching passwords. So, useful for adding basic push-streams that you might want to be in multiple rooms at the same time, but not actually be locked to any room. (`&view`, conversely, is pretty exclusive; that or nothing.)
 * Been playing around a new flag called [`&flagship`](../advanced-settings/upcoming-parameters/and-flagship.md), which will optimize the mobile experience for more capable smartphones; essentially, streaming higher quality video to other guests versus the normal mobile-performance mode.
 * I've also modified the non-flagship mode, for low-end mobile devices, to use the [`&limittotalbitrate`](../source-settings/limittotalbitrate.md) flag by default (500-kbps). [`&limittotalbitrate`](../source-settings/limittotalbitrate.md) hasn't been that heavily tested yet, but it's part of v22 and might be better than [`&totalroombitrate`](../advanced-settings/view-parameters/totalroombitrate.md); currently I'll increasingly use them together I think though. They are both the same concept, except one is viewer-side controlled, and the other is sender-side controlled; both limit the bitrate that guests in the room see based on the number of guests in the room.\
   \
@@ -519,7 +519,7 @@ _\*\*_ UPDATE: I hot-patched beta and alpha with a fix. This fix disables the op
 #### June 16
 
 * Option to randomly generate a room name has been added to the room-creation page - minor fixes to the mixer have been applied; (lots more to do)
-* [`&aspectratio`](../advanced-settings/upcoming-parameters/and-aspectratio.md) + [`&crop`](../other-parameters.md) (sender side options) has been updated to work with more camera/sources. If you do `vdo.ninja/alpha/?webcam&aspectratio=0.5625` for example, you'll get portrait mode. Not compatible with Safari though.
+* [`&aspectratio`](../advanced-settings/video-parameters/and-aspectratio.md) + [`&crop`](../other-parameters.md) (sender side options) has been updated to work with more camera/sources. If you do `vdo.ninja/alpha/?webcam&aspectratio=0.5625` for example, you'll get portrait mode. Not compatible with Safari though.
 * Video/audio stats for Firefox have been improved; resolution, framerate, codec, bitrate.
 * [`&meshcastcodec=h264`](../meshcast-settings/and-meshcastcodec.md) won't fail when using Firefox and Meshcast
 * [`&chunked`](../newly-added-parameters/and-chunked.md) recording in the director's room works correctly\
@@ -580,7 +580,7 @@ _\*\*_ UPDATE: I hot-patched beta and alpha with a fix. This fix disables the op
 
 * [`&sensor`](../source-settings/sensor.md) now also includes speed and altitude data (on production)
 * Added a demo/sample on how to overlay speed + acceleration on top of video playback (compatible with a mobile phone sender) `vdo.ninja/examples/sensoroverlay?view=STREAMID`
-* Added a new option to explicitly list what sensor data you want to capture and transmit, when using `&sensor` [`&sensorfilter=gyro,lin,acc,mag,pos,ori`](../advanced-settings/upcoming-parameters/and-sensorfilter.md) For the above demo, you can use [`&sensorfilter=pos,lin`](../advanced-settings/upcoming-parameters/and-sensorfilter.md) to just send the data you need, reducing the load on the phone/network. (on alpha)
+* Added a new option to explicitly list what sensor data you want to capture and transmit, when using `&sensor` [`&sensorfilter=gyro,lin,acc,mag,pos,ori`](../advanced-settings/settings-parameters/and-sensorfilter.md) For the above demo, you can use [`&sensorfilter=pos,lin`](../advanced-settings/settings-parameters/and-sensorfilter.md) to just send the data you need, reducing the load on the phone/network. (on alpha)
 * Right-clicking a link in VDO.Ninja will now offer the option to show the link as a QR Code. This makes it easy to copy any link over to a your mobile phone or to create a shareable QR code with guests. (on alpha)\
   ![](<../.gitbook/assets/image (2) (6) (1).png>)![](<../.gitbook/assets/image (1) (9) (1).png>)
 * Implemented a workaround for a novel Chrome bug where specifying a custom audio channel in the director's room (C1, C2, etc) would break the custom audio output device support. \* Fix pushed to alpha.
@@ -611,7 +611,7 @@ _\*\*_ UPDATE: I hot-patched beta and alpha with a fix. This fix disables the op
 
 #### May 21
 
-* Added new viewer-side parameters that can be used in place of `&scale`; [`&viewheight`](../advanced-settings/upcoming-parameters/and-viewheight.md)=180[`&viewwidth`](../advanced-settings/upcoming-parameters/and-viewwidth.md)=320, (aka `&vw`/`&vh`) which effectively does the same thing as `&scale`, but instead you pass a resolution.\
+* Added new viewer-side parameters that can be used in place of `&scale`; [`&viewheight`](../advanced-settings/video-parameters/and-viewheight.md)=180[`&viewwidth`](../advanced-settings/video-parameters/and-viewwidth.md)=320, (aka `&vw`/`&vh`) which effectively does the same thing as `&scale`, but instead you pass a resolution.\
   \-- It's important to note, that due to flexibility to request width/heights that are not aspect-ratio compatible, and due to bitrate/quality resolution limitations, these values are just 'max' target resolution values; the actual resolution you get could be still less. They also do not impact the actual capture resolution of the remote sender's camera, so its purely for requesting a specific downscaled resolution. This command applies to all video elements in a view port, and it disables the auto-scaler functionality.\
   \-- Similarly, also added the option to the IFRAME API to request different down-scaled resolutions dynamically, per connection, if you want greater programmatic control vs static URL options.\
   This is on alpha at vdo.ninja/alpha/?vw=300
@@ -619,7 +619,7 @@ _\*\*_ UPDATE: I hot-patched beta and alpha with a fix. This fix disables the op
 #### May 20
 
 * Added options to host your own default background images for the virtual background effect;\
-  \-- [`&imagelist=xxxx`](../advanced-settings/upcoming-parameters/and-imagelist.md) can be used to pass a list of images via the URL. Code to generate the list properly can be found here: [https://jsfiddle.net/steveseguin/w7z28kgb/](https://jsfiddle.net/steveseguin/w7z28kgb/) (images must be cross origin enabled)\
+  \-- [`&imagelist=xxxx`](../advanced-settings/video-parameters/and-imagelist.md) can be used to pass a list of images via the URL. Code to generate the list properly can be found here: [https://jsfiddle.net/steveseguin/w7z28kgb/](https://jsfiddle.net/steveseguin/w7z28kgb/) (images must be cross origin enabled)\
   \-- At the base of index.html, if self-hosting VDO.Ninja, you can hard-code the list of images as well.\
   \-- Related: when selecting a background image, you'll get a gentle glow around the selected image now. There's also a horizontal scroll bar, if the number of images listed are too much to fit.\
   \*\* changes on alpha at [https://vdo.ninja/alpha/](https://vdo.ninja/alpha/)\
@@ -628,7 +628,7 @@ _\*\*_ UPDATE: I hot-patched beta and alpha with a fix. This fix disables the op
 #### May 19
 
 * Made a new bitrate option called [`&maxbandwidth`](../advanced-settings/video-parameters/and-maxbandwidth.md), which differs from other commands as it leverages a chromium (chrome/edge/brave/electron) feature to judge the available bandwidth of a sender's connection. Passing a value to it as the sender (a percentage; 1 to 100 ideally), you can try to ensure the connection never uses more than that amount of the available reported bandwidth. (on alpha) So the notion is, if you want to set the invite link bitrate to 50-mbps, but one guest only has only a 20-mbps connection, `&maxbandwidth=80` will try to limit the bitrate to around 16-mbps. I sometimes will tell people to set the bit rate to about 80% of what their connection can allow, as higher than that can result in some frame stutter when there is packet loss, since the connection lacks headroom to recover. This command will try to do it automatically, for all the viewers of a stream. My goal here is to use it with the mixer or stats app, so eSports users can crank out high bitrates with less tinkering per guest. I have no idea how well it will work in practice so far.
-* Fixed an issue where the director's mic audio could cut out after stopping the screen share, depending on how the screen-share was cancelled. - added [`&showall`](../advanced-settings/upcoming-parameters/and-showall.md) (or [`&style=7`](../advanced-settings/design-parameters/style.md)), which will include non-media-based push connections as video elements in a group room. This can include guests that joined without audio/video, directors, or a data-only connection, like maybe MIDI-output source. - to help avoid some types of connections showing up when using `&showall`, I've also added a [`&nopush`](../advanced-settings/upcoming-parameters/and-nopush.md) mode, which blocks outbound publishing connections. This acts a bit like a `&scene=1` link, so unless `&showall` is added, you'll need to use the IFRAME API to show/hide videos in it. (also just on alpha atm)
+* Fixed an issue where the director's mic audio could cut out after stopping the screen share, depending on how the screen-share was cancelled. - added [`&showall`](../advanced-settings/design-parameters/and-showall.md) (or [`&style=7`](../advanced-settings/design-parameters/style.md)), which will include non-media-based push connections as video elements in a group room. This can include guests that joined without audio/video, directors, or a data-only connection, like maybe MIDI-output source. - to help avoid some types of connections showing up when using `&showall`, I've also added a [`&nopush`](../advanced-settings/settings-parameters/and-nopush.md) mode, which blocks outbound publishing connections. This acts a bit like a `&scene=1` link, so unless `&showall` is added, you'll need to use the IFRAME API to show/hide videos in it. (also just on alpha atm)
 
 #### May 16
 

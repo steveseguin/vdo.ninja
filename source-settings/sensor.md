@@ -42,6 +42,6 @@ Added a demo/sample on how to overlay speed + acceleration on top of video playb
 
 ## Related
 
-{% content-ref url="../advanced-settings/upcoming-parameters/and-sensorfilter.md" %}
-[and-sensorfilter.md](../advanced-settings/upcoming-parameters/and-sensorfilter.md)
+{% content-ref url="../advanced-settings/settings-parameters/and-sensorfilter.md" %}
+[and-sensorfilter.md](../advanced-settings/settings-parameters/and-sensorfilter.md)
 {% endcontent-ref %}

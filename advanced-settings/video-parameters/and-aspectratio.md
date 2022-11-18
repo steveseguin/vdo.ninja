@@ -4,8 +4,7 @@ description: Changes the aspect ratio on the publisher side
 
 # \&aspectratio
 
-Sender-Side Option! ([`&push`](../../source-settings/push.md))\
-\* on [https://vdo.ninja/beta/](https://vdo.ninja/beta/) and [https://vdo.ninja/alpha/](https://vdo.ninja/alpha/)
+Sender-Side Option! ([`&push`](../../source-settings/push.md))
 
 ## Aliases
 
@@ -25,7 +24,7 @@ Sender-Side Option! ([`&push`](../../source-settings/push.md))\
 
 `&aspectratio` changes the aspect ratio on the publisher side. Floating point value; 1.777777 is common; not supported by all browsers.
 
-[https://vdo.ninja/alpha/?webcam\&aspectratio=1.33333](https://vdo.ninja/alpha/?webcam\&aspectratio=1.33333)\
+[https://vdo.ninja/?webcam\&aspectratio=1.33333](https://vdo.ninja/?webcam\&aspectratio=1.33333)\
 ![](<../../.gitbook/assets/image (102) (1).png>)
 
 You can also change the aspect ratio via the video settings menu.![](<../../.gitbook/assets/image (103) (1) (1).png>)
@@ -34,16 +33,16 @@ If using `&aspectratio`, it will keep the [height](../../source-settings/and-hei
 
 ### Screen-share
 
-`&aspectratio` works with screen-shares, so you can force crop an incoming screen-share to be a certain aspect ratio. If [`&screenshareaspectratio`](and-screenshareaspectratio.md) is used it will apply to just screen-shares. If [`&screenshareaspectratio`](and-screenshareaspectratio.md) does not have a value passed, it's assumed to be set as "default", which overrides `&aspectratio` option, if used also.
+`&aspectratio` works with screen-shares, so you can force crop an incoming screen-share to be a certain aspect ratio. If [`&screenshareaspectratio`](../upcoming-parameters/and-screenshareaspectratio.md) is used it will apply to just screen-shares. If [`&screenshareaspectratio`](../upcoming-parameters/and-screenshareaspectratio.md) does not have a value passed, it's assumed to be set as "default", which overrides `&aspectratio` option, if used also.
 
 ## Related
 
-{% content-ref url="and-screenshareaspectratio.md" %}
-[and-screenshareaspectratio.md](and-screenshareaspectratio.md)
+{% content-ref url="../upcoming-parameters/and-screenshareaspectratio.md" %}
+[and-screenshareaspectratio.md](../upcoming-parameters/and-screenshareaspectratio.md)
 {% endcontent-ref %}
 
-{% content-ref url="../video-parameters/and-quality.md" %}
-[and-quality.md](../video-parameters/and-quality.md)
+{% content-ref url="and-quality.md" %}
+[and-quality.md](and-quality.md)
 {% endcontent-ref %}
 
 {% content-ref url="../../source-settings/and-width.md" %}

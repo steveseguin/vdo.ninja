@@ -41,6 +41,6 @@ It overrides [`&cleanoutput`](../design-parameters/cleanoutput.md).
 [and-bgimage.md](../design-parameters/and-bgimage.md)
 {% endcontent-ref %}
 
-{% content-ref url="../upcoming-parameters/and-background.md" %}
-[and-background.md](../upcoming-parameters/and-background.md)
+{% content-ref url="../design-parameters/and-background.md" %}
+[and-background.md](../design-parameters/and-background.md)
 {% endcontent-ref %}

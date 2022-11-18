@@ -10,18 +10,6 @@ You can use/test these parameters on [vdo.ninja/alpha](https://vdo.ninja/alpha/)
 
 | Parameter                                                        | Explanation                                                                                                                  |
 | ---------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------- |
-| ``[`&showall`](and-showall.md)\*\*                               | Includes non-media-based push connections as video elements in a group room                                                  |
-| ``[`&nopush`](and-nopush.md)\*\*                                 | Blocks outbound publishing connections                                                                                       |
-| ``[`&imagelist`](and-imagelist.md)\*\*                           | Can be used to pass a list of background images via the URL                                                                  |
-| ``[`&viewheight`](and-viewheight.md)\*\*                         | Does the same thing as [`&scale`](../view-parameters/scale.md) but you pass the height in pixels                             |
-| ``[`&viewwidth`](and-viewwidth.md)\*\*                           | Does the same thing as [`&scale`](../view-parameters/scale.md) but you pass the width in pixels                              |
-| ``[`&sensorfilter`](and-sensorfilter.md)\*\*                     | An option to explicitly list what [`&sensor` ](../../source-settings/sensor.md)data you want to capture and transmit         |
-| ``[`&aspectratio`](and-aspectratio.md)\*\*                       | Changes the aspect ratio on the publisher side                                                                               |
-| ``[`&include`](and-include.md)\*\*                               | Includes streams that do not exist in the room                                                                               |
-| ``[`&base64js`](and-base64js.md)\*\*                             | Lets a user add raw javascript to the URL to run on page load                                                                |
-| ``[`&background`](and-background.md)\*\*                         | Accepts a URL-encoded image URL to make as the app's default background                                                      |
-| ``[`&postimage`](and-postimage.md)\*\*                           | Post a snapshot of your local camera to a HTTPS/POST URL                                                                     |
-| ``[`&postinterval`](and-postinterval.md)\*\*                     | Time interval in seconds for [`&postimage`](and-postimage.md)``                                                              |
 | ``[`&smallshare`](and-smallshare.md)\*\*                         | Makes the screen share behave like a webcam share                                                                            |
 | ``[`&slideshow`](and-slideshow.md)\*\*                           | Plays video back as a series of full-window images                                                                           |
 | ``[`&controlobs`](and-obs.md)\*\*                                | The ability for VDO.Ninja to Remotely Control OBS Studio while streaming/directing                                           |

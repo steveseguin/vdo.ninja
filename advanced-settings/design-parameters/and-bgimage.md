@@ -37,6 +37,6 @@ General Option! ([`&push`](../../source-settings/push.md), [`&room`](../../gener
 [and-waitimage.md](../newly-added-parameters/and-waitimage.md)
 {% endcontent-ref %}
 
-{% content-ref url="../upcoming-parameters/and-background.md" %}
-[and-background.md](../upcoming-parameters/and-background.md)
+{% content-ref url="and-background.md" %}
+[and-background.md](and-background.md)
 {% endcontent-ref %}

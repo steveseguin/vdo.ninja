@@ -33,6 +33,6 @@ Can be 3 or 6 characters in length, 0 to F, in RGB or RRGGBB format.
 [and-transparent.md](and-transparent.md)
 {% endcontent-ref %}
 
-{% content-ref url="../upcoming-parameters/and-background.md" %}
-[and-background.md](../upcoming-parameters/and-background.md)
+{% content-ref url="and-background.md" %}
+[and-background.md](and-background.md)
 {% endcontent-ref %}

@@ -43,6 +43,6 @@ There is a toggle in the director's room which adds `&st` to the guest's invite 
 [and-bgimage.md](and-bgimage.md)
 {% endcontent-ref %}
 
-{% content-ref url="../upcoming-parameters/and-showall.md" %}
-[and-showall.md](../upcoming-parameters/and-showall.md)
+{% content-ref url="and-showall.md" %}
+[and-showall.md](and-showall.md)
 {% endcontent-ref %}

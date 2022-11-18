@@ -38,8 +38,8 @@ You can get [4K](../guides/how-to-stream-4k-video-using-vdo.ninja.md) by adding 
 [and-height.md](and-height.md)
 {% endcontent-ref %}
 
-{% content-ref url="../advanced-settings/upcoming-parameters/and-aspectratio.md" %}
-[and-aspectratio.md](../advanced-settings/upcoming-parameters/and-aspectratio.md)
+{% content-ref url="../advanced-settings/video-parameters/and-aspectratio.md" %}
+[and-aspectratio.md](../advanced-settings/video-parameters/and-aspectratio.md)
 {% endcontent-ref %}
 
 {% content-ref url="../advanced-settings/video-parameters/and-quality.md" %}

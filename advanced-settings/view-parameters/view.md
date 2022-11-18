@@ -52,6 +52,6 @@ You can use `&view` in a room combined with [`&scene`](scene.md) or [`&solo`](..
 [scene.md](scene.md)
 {% endcontent-ref %}
 
-{% content-ref url="../upcoming-parameters/and-include.md" %}
-[and-include.md](../upcoming-parameters/and-include.md)
+{% content-ref url="../mixer-scene-parameters/and-include.md" %}
+[and-include.md](../mixer-scene-parameters/and-include.md)
 {% endcontent-ref %}
