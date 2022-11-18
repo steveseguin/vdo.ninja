@@ -690,7 +690,7 @@ _\*\*_ UPDATE: I hot-patched beta and alpha with a fix. This fix disables the op
 
 #### May 3
 
-* Made [`&totalbitrate`](../advanced-settings/upcoming-parameters/and-totalbitrate.md) (`&tb`) set both [`&totalscenebitrate`](../newly-added-parameters/and-maxtotalscenebitrate.md) and [`&totalroombitrate`](../advanced-settings/view-parameters/totalroombitrate.md) flags. Not quite sure how well it will work, but since a scene and a guest are exclusive possibilities, it's a bit of a flexible way to just learn one flag to do it all, as I realize all the options can get confusing.\
+* Made [`&totalbitrate`](../advanced-settings/video-parameters/and-totalbitrate.md) (`&tb`) set both [`&totalscenebitrate`](../newly-added-parameters/and-maxtotalscenebitrate.md) and [`&totalroombitrate`](../advanced-settings/view-parameters/totalroombitrate.md) flags. Not quite sure how well it will work, but since a scene and a guest are exclusive possibilities, it's a bit of a flexible way to just learn one flag to do it all, as I realize all the options can get confusing.\
   \
   `&trb` and `&tsb` limit the total incoming bitrate, dividing up the bandwidth available to each video being played back. There are nuances in differences, with the main one being `&trb` is for a guest link and `&tsb` is for a scene/view link.\
   (on local dev for now, pending more testing)

@@ -62,8 +62,8 @@ The director can also dynamically change their total room bitrate value using a 
 [roombitrate.md](../../source-settings/roombitrate.md)
 {% endcontent-ref %}
 
-{% content-ref url="../upcoming-parameters/and-totalbitrate.md" %}
-[and-totalbitrate.md](../upcoming-parameters/and-totalbitrate.md)
+{% content-ref url="../video-parameters/and-totalbitrate.md" %}
+[and-totalbitrate.md](../video-parameters/and-totalbitrate.md)
 {% endcontent-ref %}
 
 {% content-ref url="and-controlroombitrate.md" %}

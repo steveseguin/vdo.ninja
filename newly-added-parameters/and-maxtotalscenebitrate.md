@@ -30,8 +30,8 @@ This is similar to [`&totalroombitrate`](../advanced-settings/view-parameters/to
 [totalroombitrate.md](../advanced-settings/view-parameters/totalroombitrate.md)
 {% endcontent-ref %}
 
-{% content-ref url="../advanced-settings/upcoming-parameters/and-totalbitrate.md" %}
-[and-totalbitrate.md](../advanced-settings/upcoming-parameters/and-totalbitrate.md)
+{% content-ref url="../advanced-settings/video-parameters/and-totalbitrate.md" %}
+[and-totalbitrate.md](../advanced-settings/video-parameters/and-totalbitrate.md)
 {% endcontent-ref %}
 
 {% content-ref url="../advanced-settings/view-parameters/bitrate.md" %}
