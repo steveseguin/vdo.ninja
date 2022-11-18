@@ -39,8 +39,8 @@ There is a toggle in the director's room which adds `&st` to the guest's invite 
 [meterstyle.md](meterstyle.md)
 {% endcontent-ref %}
 
-{% content-ref url="../upcoming-parameters/and-bgimage.md" %}
-[and-bgimage.md](../upcoming-parameters/and-bgimage.md)
+{% content-ref url="and-bgimage.md" %}
+[and-bgimage.md](and-bgimage.md)
 {% endcontent-ref %}
 
 {% content-ref url="../upcoming-parameters/and-showall.md" %}

@@ -29,6 +29,6 @@ You can toggle it for the guest's invite link in the director's room:\
 [and-waitimage.md](../newly-added-parameters/and-waitimage.md)
 {% endcontent-ref %}
 
-{% content-ref url="../upcoming-parameters/and-bgimage.md" %}
-[and-bgimage.md](../upcoming-parameters/and-bgimage.md)
+{% content-ref url="../design-parameters/and-bgimage.md" %}
+[and-bgimage.md](../design-parameters/and-bgimage.md)
 {% endcontent-ref %}

@@ -4,8 +4,7 @@ description: Can be used to set the default image avatar, when using &style=0 or
 
 # \&bgimage
 
-Viewer-Side Option! ([`&scene`](../view-parameters/scene.md), [`&room`](../../general-settings/room.md), [`&view`](../view-parameters/view.md), [`&solo`](and-solo.md))\
-\* on [https://vdo.ninja/beta/](https://vdo.ninja/beta/) and [https://vdo.ninja/alpha/](https://vdo.ninja/alpha/)
+General Option! ([`&push`](../../source-settings/push.md), [`&room`](../../general-settings/room.md), [`&view`](../view-parameters/view.md), [`&scene`](../view-parameters/scene.md), [`&solo`](../upcoming-parameters/and-solo.md))
 
 ## Aliases
 
@@ -20,7 +19,7 @@ Viewer-Side Option! ([`&scene`](../view-parameters/scene.md), [`&room`](../../ge
 
 ## Details
 
-`&bgimage` can be used to set the default image avatar, when using [`&style=0`](../design-parameters/style.md) or [`&style=6`](../design-parameters/style.md). This only impacts what the person with the parameter added sees and must be either a URL or a base64 data image/svg. URL-encoded values.
+`&bgimage` can be used to set the default image avatar, when using [`&style=0`](style.md) or [`&style=6`](style.md). This only impacts what the person with the parameter added sees and must be either a URL or a base64 data image/svg. URL-encoded values.
 
 > [`https://vdo.ninja/alpha/?view=aSmexM6&style=0&nocontrols&bgimage=https%3A%2F%2Fvdo.ninja%2Fmedia%2Fold_icon.png`](https://vdo.ninja/alpha/?view=aSmexM6\&style=0\&nocontrols\&bgimage=https%3A%2F%2Fvdo.ninja%2Fmedia%2Fold\_icon.png)
 
@@ -30,14 +29,14 @@ Viewer-Side Option! ([`&scene`](../view-parameters/scene.md), [`&room`](../../ge
 [and-avatar.md](../video-parameters/and-avatar.md)
 {% endcontent-ref %}
 
-{% content-ref url="../design-parameters/style.md" %}
-[style.md](../design-parameters/style.md)
+{% content-ref url="style.md" %}
+[style.md](style.md)
 {% endcontent-ref %}
 
 {% content-ref url="../newly-added-parameters/and-waitimage.md" %}
 [and-waitimage.md](../newly-added-parameters/and-waitimage.md)
 {% endcontent-ref %}
 
-{% content-ref url="and-background.md" %}
-[and-background.md](and-background.md)
+{% content-ref url="../upcoming-parameters/and-background.md" %}
+[and-background.md](../upcoming-parameters/and-background.md)
 {% endcontent-ref %}

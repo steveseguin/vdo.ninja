@@ -37,8 +37,8 @@ It overrides [`&cleanoutput`](../design-parameters/cleanoutput.md).
 [and-waittimeout.md](and-waittimeout.md)
 {% endcontent-ref %}
 
-{% content-ref url="../upcoming-parameters/and-bgimage.md" %}
-[and-bgimage.md](../upcoming-parameters/and-bgimage.md)
+{% content-ref url="../design-parameters/and-bgimage.md" %}
+[and-bgimage.md](../design-parameters/and-bgimage.md)
 {% endcontent-ref %}
 
 {% content-ref url="../upcoming-parameters/and-background.md" %}
