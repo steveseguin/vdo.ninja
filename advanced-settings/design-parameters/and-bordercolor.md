@@ -4,8 +4,7 @@ description: Defines the color of &border
 
 # \&bordercolor
 
-General Option! ([`&push`](../../source-settings/push.md), [`&room`](../../general-settings/room.md), [`&view`](../view-parameters/view.md), [`&scene`](../view-parameters/scene.md), [`&solo`](and-solo.md))\
-\* on [https://vdo.ninja/beta/](https://vdo.ninja/beta/) and [https://vdo.ninja/alpha/](https://vdo.ninja/alpha/)
+General Option! ([`&push`](../../source-settings/push.md), [`&room`](../../general-settings/room.md), [`&view`](../view-parameters/view.md), [`&scene`](../view-parameters/scene.md), [`&solo`](../upcoming-parameters/and-solo.md))
 
 ## Options
 
@@ -26,10 +25,10 @@ Defines the color of `&border`.
 [and-border.md](and-border.md)
 {% endcontent-ref %}
 
-{% content-ref url="../design-parameters/margin.md" %}
-[margin.md](../design-parameters/margin.md)
+{% content-ref url="margin.md" %}
+[margin.md](margin.md)
 {% endcontent-ref %}
 
-{% content-ref url="../design-parameters/rounded.md" %}
-[rounded.md](../design-parameters/rounded.md)
+{% content-ref url="rounded.md" %}
+[rounded.md](rounded.md)
 {% endcontent-ref %}

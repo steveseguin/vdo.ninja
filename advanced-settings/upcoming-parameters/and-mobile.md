@@ -4,8 +4,7 @@ description: Optimizes a guest/push link for a mobile device to help reduce CPU 
 
 # \&mobile
 
-Sender-Side Option! ([`&push`](../../source-settings/push.md))\
-\* on [https://vdo.ninja/beta/](https://vdo.ninja/beta/) and [https://vdo.ninja/alpha/](https://vdo.ninja/alpha/)
+Sender-Side Option! ([`&push`](../../source-settings/push.md))
 
 ## Details
 
@@ -13,7 +12,7 @@ Sender-Side Option! ([`&push`](../../source-settings/push.md))\
 
 There are [`&flagship`](and-flagship.md) and [`&forceios`](../mobile-parameters/and-forceios.md) as two options to configure mobile devices, but `&mobile` and [`&notmobile`](and-notmobile.md) are more generic options.
 
-``[`&notmobile`](and-notmobile.md) might be able to improve video quality (in case you want to override the automatic defaults, which already detects if a device is mobile or not).
+[`&notmobile`](and-notmobile.md) might be able to improve video quality (in case you want to override the automatic defaults, which already detects if a device is mobile or not).
 
 ## Related
 

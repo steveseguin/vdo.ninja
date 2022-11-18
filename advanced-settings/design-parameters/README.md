@@ -25,6 +25,8 @@ You can add them to both, source ([`&push`](../../source-settings/push.md)) and 
 | ``[`&base64css`](and-base64css.md)``                      | Lets you add css to the URL, but as a single string, so no external reference to a file is needed |
 | ``[`&mirror`](mirror.md)``                                | Inverts the video so it is the mirror reflection                                                  |
 | ``[`&flip`](and-flip.md)``                                | Inverts the video so it is upside down                                                            |
+| ``[`&border`](and-border.md)\*                            | Adds a border around the videos                                                                   |
+| ``[`&bordercolor`](and-bordercolor.md)\*                  | Defines the color of [`&border`](and-border.md)``                                                 |
 | ``[`&rounded`](rounded.md)``                              | Rounds the edges of videos                                                                        |
 | ``[`&margin`](margin.md)``                                | Adds a margin around the videos in pixel                                                          |
 | ``[`&darkmode`](darkmode.md)``                            | Darkens the website and interface                                                                 |
@@ -33,6 +35,8 @@ You can add them to both, source ([`&push`](../../source-settings/push.md)) and 
 | ``[`&transparent`](and-transparent.md)``                  | Makes the background transparent                                                                  |
 | ``[`&nocursor`](../../general-settings/and-nocursor.md)`` | Hides the mouse cursor over videos at a CSS level                                                 |
 | ``[`&js`](and-js.md)``                                    | Lets you pass a third party hosted javascript file URL                                            |
+
+\*NEW IN VERSION 22
 
 ## Source side options
 

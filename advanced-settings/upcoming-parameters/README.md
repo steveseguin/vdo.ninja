@@ -8,8 +8,6 @@ You can use/test these parameters on [vdo.ninja/alpha](https://vdo.ninja/alpha/)
 
 | Parameter                                                        | Explanation                                                                                                                                                        |
 | ---------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| ``[`&border`](and-border.md)\*\*                                 | Adds a border around the videos                                                                                                                                    |
-| ``[`&bordercolor`](and-bordercolor.md)\*\*                       | Defines the color of [`&border`](and-border.md)``                                                                                                                  |
 | ``[`&autorecord`](and-autorecord.md)\*\*                         | Records the local video and the remote video(s) automatically on their initial load                                                                                |
 | ``[`&autorecordlocal`](and-autorecordlocal.md)\*\*               | Records just the local video automatically on their initial load                                                                                                   |
 | ``[`&autorecordremote`](and-autorecordremote.md)\*\*             | Records just the remote video(s) automatically on their initial load                                                                                               |

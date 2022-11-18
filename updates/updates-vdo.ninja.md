@@ -756,7 +756,7 @@ _\*\*_ UPDATE: I hot-patched beta and alpha with a fix. This fix disables the op
 #### April 10
 
 * Setting [`&h264profile=0`](../newly-added-parameters/and-h264profile.md) (or `false`/`off`/`default`), will now have the h264 profile be left as the default browser default when the sender is an android. (currently I rewrite the h264 profile for android devices when h264 is used, but advanced users might want the default)
-* I rewrote a large part of the auto-mixer to support borders around videos ([`&border=10`](../advanced-settings/upcoming-parameters/and-border.md)), as well as fixed the [`&rounded=10`](../advanced-settings/design-parameters/rounded.md) parameter to crop videos better. Also, I added [`&bordercolor=FFFFFF`](../advanced-settings/upcoming-parameters/and-bordercolor.md) (hex or color name), to allow for changing the color of the border.\
+* I rewrote a large part of the auto-mixer to support borders around videos ([`&border=10`](../advanced-settings/design-parameters/and-border.md)), as well as fixed the [`&rounded=10`](../advanced-settings/design-parameters/rounded.md) parameter to crop videos better. Also, I added [`&bordercolor=FFFFFF`](../advanced-settings/design-parameters/and-bordercolor.md) (hex or color name), to allow for changing the color of the border.\
   ![](<../.gitbook/assets/image (11) (1).png>)\
   \
   \*changes on alpha, [https://vdo.ninja/alpha](https://vdo.ninja/alpha) (on alpha, since it was a large code rewrite and so needs a bit more testing, but it has been lightly tested)

@@ -4,8 +4,7 @@ description: Scales down the meshcast video output via the URL
 
 # \&meshcastscale
 
-Meshcast Option! / Sender-Side Option! ([`&meshcast`](../../newly-added-parameters/and-meshcast.md), [`&push`](../../source-settings/push.md))\
-\* on [https://vdo.ninja/beta/](https://vdo.ninja/beta/) and [https://vdo.ninja/alpha/](https://vdo.ninja/alpha/)
+Meshcast Option! / Sender-Side Option! ([`&meshcast`](../../newly-added-parameters/and-meshcast.md), [`&push`](../../source-settings/push.md))
 
 ## Aliases
 
@@ -19,13 +18,13 @@ Meshcast Option! / Sender-Side Option! ([`&meshcast`](../../newly-added-paramete
 
 ## Details
 
-The `&meshcastscale` parameter will scale down the meshcast video output via the URL, post camera capture setup. Because of how Meshcast works, this is a sender-side parameter. You may wish to use this to lower the resolution if your camera has a fixed capture resolution.&#x20;
+The `&meshcastscale` parameter will scale down the Meshcast video output via the URL, post camera capture setup. Because of how Meshcast works, this is a sender-side parameter. You may wish to use this to lower the resolution if your camera has a fixed capture resolution.&#x20;
 
 {% hint style="info" %}
 Alternatively, if you need to dynamically adjust the resolution, that option already exists via camera settings via width/height slider adjustments.
 {% endhint %}
 
-[https://vdo.ninja/alpha/?meshcast\&meshcastscale=50](https://vdo.ninja/alpha/?meshcast\&meshcastscale=50)
+[https://vdo.ninja/?meshcast\&meshcastscale=50](https://vdo.ninja/?meshcast\&meshcastscale=50)
 
 ## Related
 
