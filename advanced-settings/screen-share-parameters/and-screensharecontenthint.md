@@ -6,8 +6,7 @@ description: >-
 
 # \&screensharecontenthint
 
-Sender-Side Option! ([`&push`](../../source-settings/push.md))\
-\* on [https://vdo.ninja/beta/](https://vdo.ninja/beta/) and [https://vdo.ninja/alpha/](https://vdo.ninja/alpha/)
+Sender-Side Option! ([`&push`](../../source-settings/push.md))
 
 ## Aliases
 
@@ -33,7 +32,7 @@ The two options are `detail` or `motion`. Screen-shares generally tend towards `
 If using [`&codec=vp9`](../view-parameters/codec.md) on the viewer side, the frame rate may drop as low as even 5-fps.
 {% endhint %}
 
-There is [`&contenthint`](and-contenthint.md) if you want the parameter to affect all kinds of video sources. You can also use both, `&screensharecontenthint` will override [`&contenthint`](and-contenthint.md) for just screen-shares if set also.
+There is [`&contenthint`](../video-parameters/and-contenthint.md) if you want the parameter to affect all kinds of video sources. You can also use both, `&screensharecontenthint` will override [`&contenthint`](../video-parameters/and-contenthint.md) for just screen-shares if set also.
 
 {% hint style="warning" %}
 This parameter has been tested on Chrome, but other browsers may vary in behavior. Safari seems to just ignore things, for example.
@@ -41,6 +40,6 @@ This parameter has been tested on Chrome, but other browsers may vary in behavio
 
 ## Related
 
-{% content-ref url="and-contenthint.md" %}
-[and-contenthint.md](and-contenthint.md)
+{% content-ref url="../video-parameters/and-contenthint.md" %}
+[and-contenthint.md](../video-parameters/and-contenthint.md)
 {% endcontent-ref %}

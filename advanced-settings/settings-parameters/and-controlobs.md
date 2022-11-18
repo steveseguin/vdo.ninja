@@ -6,8 +6,7 @@ description: >-
 
 # \&controlobs
 
-General Option! ([`&push`](../../source-settings/push.md), [`&room`](../../general-settings/room.md), [`&view`](../view-parameters/view.md), [`&scene`](../view-parameters/scene.md), [`&solo`](and-solo.md))\
-\* on [https://vdo.ninja/beta/](https://vdo.ninja/beta/) and [https://vdo.ninja/alpha/](https://vdo.ninja/alpha/)
+General Option! ([`&push`](../../source-settings/push.md), [`&room`](../../general-settings/room.md), [`&view`](../view-parameters/view.md), [`&scene`](../view-parameters/scene.md), [`&solo`](../mixer-scene-parameters/and-solo.md))
 
 ## Aliases
 
@@ -37,12 +36,12 @@ It supports multiple OBS instances and will label them according to the [`&label
 ## How to set it up (example)
 
 1\. Add a browser source to OBS Studio with this URL:\
-`https://vdo.ninja/alpha/?view=streamid12345&remote&controlobs`
+`https://vdo.ninja/?view=streamid12345&remote&controlobs`
 
 2\. Give page permissions to the browser source (Full access to OBS) like on the image below\
 ![](<../../.gitbook/assets/image (111).png>)
 
-3\. Open this Push Link: [https://vdo.ninja/alpha/?push=streamid12345\&wc\&as\&controlobs\&remote](https://vdo.ninja/alpha/?push=streamid12345\&wc\&as\&controlobs\&remote)
+3\. Open this Push Link: [https://vdo.ninja/?push=streamid12345\&wc\&as\&controlobs\&remote](https://vdo.ninja/?push=streamid12345\&wc\&as\&controlobs\&remote)
 
 4\. Click on this button\
 ![](<../../.gitbook/assets/image (118).png>)

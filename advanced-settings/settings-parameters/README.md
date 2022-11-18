@@ -16,6 +16,7 @@ You can use them for publisher, viewer and director URLs.
 | ---------------------------------------------------- | ----------------------------------------------------------------------------------- |
 | ``[`&language`](and-language.md)``                   | Sets the interface language                                                         |
 | ``[`&remote`](../../general-settings/remote.md)``    | Allows remote operation of the zoom and focus, and access to statistics             |
+| ``[`&controlobs`](and-controlobs.md)\*               | The ability for VDO.Ninja to Remotely Control OBS Studio while streaming/directing  |
 | ``[`&stats`](../../general-settings/and-stats.md)``  | Shows the connection/media stats window by default                                  |
 | ``[`&sticky`](../../general-settings/sticky.md)``    | Allows a user to save and then later restore their streaming session settings       |
 | ``[`&disablehotkeys`](and-disablehotkeys.md)``       | Disables hotkeys (like `CRTL + M`)                                                  |

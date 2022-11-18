@@ -34,11 +34,16 @@ You have to add them to the source side ([`&push`](../../source-settings/push.md
 | ``[`&limiter`](../../source-settings/and-limiter.md)``                           | Applies a generic audio limiter to the local microphone                                  |
 | ``[`&lowcut`](../../source-settings/lowcut.md)``                                 | Adds a low-cut filter                                                                    |
 | ``[`&noisegate`](../../source-settings/noisegate.md)``                           | Lowers your mic volume to 10% of its current value based on volume-level activity        |
+| ``[`&noisegatesettings`](and-noisegatesettings.md)\*                             | Lets you tweak the \&noisegate variables, making it more or less aggressive as needed    |
+| ``[`&audiocontenthint`](and-audiocontenthint.md)\*                               | `=music` fixed bitrate; `=speech` bitrate is variable                                    |
 | ``[`&audiolatency`](../../newly-added-parameters/and-audiolatency.md)``          | Adds an audio-latency to the published audio stream                                      |
 | ``[`&micdelay`](../../source-settings/and-micdelay.md)``                         | Delays the microphone by specified time in ms                                            |
 | ``[`&mute`](../../source-settings/and-mute.md)``                                 | Starts with the microphone muted by default                                              |
 | ``[`&outboundaudiobitrate`](../../source-settings/and-outboundaudiobitrate.md)`` | Target audio bitrate and max bitrate for outgoing audio streams                          |
 | ``[`&inputchannels`](and-inputchannels.md)``                                     | Audio capture device to select N-number of audio channels                                |
+| ``[`&monomic`](and-monomic.md)\*                                                 | Sets a guest's audio input to mono (1-channel)                                           |
+
+\*NEW IN VERSION 22
 
 ## **Viewer side options**
 
@@ -48,6 +53,7 @@ You have to add them to the viewer side ([`&view`](../view-parameters/view.md) o
 | --------------------------------------------------------------- | ----------------------------------------------------------------------------------- |
 | ``[`&audiooutput`](../setup-parameters/and-audiooutput.md)``    | Like [`&sink`](../view-parameters/and-sink.md), but selects the audio output device |
 | ``[`&sink`](../view-parameters/and-sink.md)``                   | Outputs the audio to the specified audio output device, rather than the default     |
+| ``[`&volume`](and-volume.md)\*                                  | Sets the 'default' playback volume for all video elements                           |
 | ``[`&audiobitrate`](../view-parameters/audiobitrate.md)``       | Manually sets the audio bitrate in kbps                                             |
 | ``[`&vbr`](../view-parameters/vbr.md)``                         | Sets the audio bitrate to be variable, instead of constant                          |
 | ``[`&mono`](../view-parameters/mono.md)``                       | Has the inbound audio playback as mono audio                                        |
@@ -60,3 +66,5 @@ You have to add them to the viewer side ([`&view`](../view-parameters/view.md) o
 | ``[`&ptime`](../view-parameters/and-ptime.md)``                 | Audio packet size                                                                   |
 | ``[`&maxptime`](../view-parameters/and-maxptime.md)``           | Maximum packet size of audio                                                        |
 | ``[`&minptime`](../view-parameters/minptime.md)``               | Minimum packet size of audio                                                        |
+
+\*NEW IN VERSION 22

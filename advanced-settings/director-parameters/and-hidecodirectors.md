@@ -4,8 +4,7 @@ description: Hides the co-directors from appearing in the director's room
 
 # \&hidecodirectors
 
-Director Option! ([`&director`](../../viewers-settings/director.md))\
-\* on [https://vdo.ninja/beta/](https://vdo.ninja/beta/) and [https://vdo.ninja/alpha/](https://vdo.ninja/alpha/)
+Director Option! ([`&director`](../../viewers-settings/director.md))
 
 ## Details
 

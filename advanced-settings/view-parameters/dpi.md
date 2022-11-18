@@ -29,12 +29,12 @@ Changing this value can provide for higher quality or lower quality video on pla
 
 ## Related
 
-{% content-ref url="../upcoming-parameters/and-sharper.md" %}
-[and-sharper.md](../upcoming-parameters/and-sharper.md)
+{% content-ref url="../video-parameters/and-sharper.md" %}
+[and-sharper.md](../video-parameters/and-sharper.md)
 {% endcontent-ref %}
 
-{% content-ref url="../upcoming-parameters/and-sharperscreen.md" %}
-[and-sharperscreen.md](../upcoming-parameters/and-sharperscreen.md)
+{% content-ref url="../screen-share-parameters/and-sharperscreen.md" %}
+[and-sharperscreen.md](../screen-share-parameters/and-sharperscreen.md)
 {% endcontent-ref %}
 
 {% content-ref url="scale.md" %}

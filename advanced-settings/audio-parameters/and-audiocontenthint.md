@@ -4,8 +4,7 @@ description: '=music fixed bitrate; =speech bitrate is variable'
 
 # \&audiocontenthint
 
-Sender-Side Option! ([`&push`](../../source-settings/push.md))\
-\* on [https://vdo.ninja/beta/](https://vdo.ninja/beta/) and [https://vdo.ninja/alpha/](https://vdo.ninja/alpha/)
+Sender-Side Option! ([`&push`](../../source-settings/push.md))
 
 ## Aliases
 
@@ -34,6 +33,6 @@ This parameter has been tested on Chrome, but other browsers may vary in behavio
 [vbr.md](../view-parameters/vbr.md)
 {% endcontent-ref %}
 
-{% content-ref url="and-contenthint.md" %}
-[and-contenthint.md](and-contenthint.md)
+{% content-ref url="../video-parameters/and-contenthint.md" %}
+[and-contenthint.md](../video-parameters/and-contenthint.md)
 {% endcontent-ref %}

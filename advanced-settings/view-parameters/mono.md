@@ -16,12 +16,12 @@ Audio bitrates may be reduced from 256-kbps to 128-kbps, if not explicitly state
 In Version 22 `&mono` also works with Firefox.
 {% endhint %}
 
-To set the source to mono, see [`&monomic`](../upcoming-parameters/and-monomic.md).
+To set the source to mono, see [`&monomic`](../audio-parameters/and-monomic.md).
 
 ## Related
 
-{% content-ref url="../upcoming-parameters/and-monomic.md" %}
-[and-monomic.md](../upcoming-parameters/and-monomic.md)
+{% content-ref url="../audio-parameters/and-monomic.md" %}
+[and-monomic.md](../audio-parameters/and-monomic.md)
 {% endcontent-ref %}
 
 {% content-ref url="../../general-settings/stereo.md" %}

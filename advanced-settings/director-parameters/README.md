@@ -14,6 +14,7 @@ Parameters specified for the director's control panel; have to be used together 
 | ``[`&blindall`](../../newly-added-parameters/and-blindall.md)``         | It allows the director 'blinding' all the guests at a time with a new button                  |
 | ``[`&cleandirector`](../../director-settings/cleandirector.md)``        | Hides the invite URL options in the Director's room                                           |
 | ``[`&hidesolo`](../../newly-added-parameters/and-hidesolo.md)``         | Lets you hide the solo links from showing                                                     |
+| ``[`&hidecodirectors`](and-hidecodirectors.md)\*                        | Hides the co-directors from appearing in the director's room                                  |
 | ``[`&minidirector`](../../newly-added-parameters/and-minidirector.md)`` | Default mini director stylesheet                                                              |
 | ``[`&orderby`](../../newly-added-parameters/and-orderby.md)``           | Orders guest's by their stream ID in the director's room                                      |
 | ``[`&queue`](../../general-settings/queue.md)``                         | A basic guest queuing system                                                                  |
@@ -21,11 +22,10 @@ Parameters specified for the director's control panel; have to be used together 
 | ``[`&showdirector`](../../viewers-settings/and-showdirector.md)``       | Lets the director perform alongside guests, showing up in scene-view links                    |
 | ``[`&notify`](../../source-settings/and-notify.md)``                    | Audio alerts for raised hands, chat messages and if somebody joins the room                   |
 | ``[`&mutespeaker=0`](../../source-settings/and-mutespeaker.md)``        | Can be used to have the director join unmuted                                                 |
-| ``[`&hidecodirectors`](../upcoming-parameters/and-hidecodirectors.md)\* | Hides the co-directors from appearing in the director's room                                  |
-| ``[`&slotmode`](../upcoming-parameters/and-slotmode.md)\*               | Gives you the possibility to assign slots to the connected guests                             |
+| ``[`&slotmode`](and-slotmode.md)\*                                      | Gives you the possibility to assign slots to the connected guests                             |
 | ``[`&previewmode`](../upcoming-parameters/and-previewmode.md)\*         | Activates the Preview layout for the director's room by default                               |
 | ``[`&showconnections`](../upcoming-parameters/and-showconnections.md)\* | Displays the total number of p2p connections of a remote stream                               |
 | ``[`&novice`](../upcoming-parameters/and-novice.md)\*                   | Hides some advanced guest options in the director's control center                            |
 | ``[`&layouts`](../upcoming-parameters/and-layouts.md)\*                 | An ordered array of layouts, which can be used to switch between using the API layouts action |
 
-\*currently only on [vdo.ninja/alpha/](https://vdo.ninja/alpha/)
+\*NEW IN VERSION 22

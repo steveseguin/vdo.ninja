@@ -4,7 +4,7 @@ description: The same as &label, except it asks the user still for a user name
 
 # \&labelsuggestion
 
-General Option! ([`&push`](../../source-settings/push.md), [`&room`](../../general-settings/room.md), [`&view`](../view-parameters/view.md), [`&scene`](../view-parameters/scene.md), [`&solo`](and-solo.md))\
+General Option! ([`&push`](../../source-settings/push.md), [`&room`](../../general-settings/room.md), [`&view`](../view-parameters/view.md), [`&scene`](../view-parameters/scene.md), [`&solo`](../mixer-scene-parameters/and-solo.md))\
 \* on [https://vdo.ninja/alpha/](https://vdo.ninja/alpha/)
 
 ## Aliases

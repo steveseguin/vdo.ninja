@@ -4,7 +4,7 @@ description: Shows a dedicated local audio-volume control bar for canvas or imag
 
 # \&volumecontrol
 
-Viewer-Side Option! ([`&scene`](../view-parameters/scene.md), [`&room`](../../general-settings/room.md), [`&view`](../view-parameters/view.md), [`&solo`](and-solo.md))\
+Viewer-Side Option! ([`&scene`](../view-parameters/scene.md), [`&room`](../../general-settings/room.md), [`&view`](../view-parameters/view.md), [`&solo`](../mixer-scene-parameters/and-solo.md))\
 \* on [https://vdo.ninja/alpha/](https://vdo.ninja/alpha/)
 
 ## Aliases
@@ -22,8 +22,8 @@ The [Comms app](../../steves-helper-apps/comms.md) is a good demonstrator of the
 
 ## Related
 
-{% content-ref url="and-volume.md" %}
-[and-volume.md](and-volume.md)
+{% content-ref url="../audio-parameters/and-volume.md" %}
+[and-volume.md](../audio-parameters/and-volume.md)
 {% endcontent-ref %}
 
 {% content-ref url="../audio-parameters/and-audiogain.md" %}

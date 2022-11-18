@@ -35,6 +35,6 @@ If the camera cannot support this frame rate, **it will fail**. Use [`&maxframer
 [screensharefps.md](../../source-settings/screensharefps.md)
 {% endcontent-ref %}
 
-{% content-ref url="../upcoming-parameters/and-contenthint.md" %}
-[and-contenthint.md](../upcoming-parameters/and-contenthint.md)
+{% content-ref url="and-contenthint.md" %}
+[and-contenthint.md](and-contenthint.md)
 {% endcontent-ref %}

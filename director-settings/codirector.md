@@ -72,6 +72,6 @@ If using the [`&queue`](../general-settings/queue.md) parameter with co-director
 [director.md](../viewers-settings/director.md)
 {% endcontent-ref %}
 
-{% content-ref url="../advanced-settings/upcoming-parameters/and-hidecodirectors.md" %}
-[and-hidecodirectors.md](../advanced-settings/upcoming-parameters/and-hidecodirectors.md)
+{% content-ref url="../advanced-settings/director-parameters/and-hidecodirectors.md" %}
+[and-hidecodirectors.md](../advanced-settings/director-parameters/and-hidecodirectors.md)
 {% endcontent-ref %}

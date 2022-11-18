@@ -4,13 +4,12 @@ description: Similar to &scene, but tells the system to be a solo-link
 
 # \&solo
 
-Viewer-Side Option! ([`&room`](../../general-settings/room.md))\
-\* on [https://vdo.ninja/beta/](https://vdo.ninja/beta/) and [https://vdo.ninja/alpha/](https://vdo.ninja/alpha/)
+Viewer-Side Option! ([`&room`](../../general-settings/room.md))
 
 ## Details
 
 `&solo` is used to bring a solo-link of a guest in a room into OBS Studio.\
-[https://vdo.ninja/alpha/?view=streamid1\&room=roomname\&solo](https://vdo.ninja/alpha/?view=streamid1\&room=roomname\&solo)
+[https://vdo.ninja/?view=streamid1\&room=roomname\&solo](https://vdo.ninja/?view=streamid1\&room=roomname\&solo)
 
 This tells the system to only view `streamid1` in the specified room. `&solo` and [`&scene`](../view-parameters/scene.md) also tells the system not to be a publisher, but a viewer.
 

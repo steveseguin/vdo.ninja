@@ -36,7 +36,7 @@ If left empty, the stream ID will default to a random one.
 If the stream ID is already in active use, an error will be shown and the stream will not publish.
 {% endhint %}
 
-If using a [`&room`](../general-settings/room.md) URL and not using [`&scene`](../advanced-settings/view-parameters/scene.md) or [`&solo`](../advanced-settings/upcoming-parameters/and-solo.md), VDO.Ninja will automatically generate a `&push` ID.
+If using a [`&room`](../general-settings/room.md) URL and not using [`&scene`](../advanced-settings/view-parameters/scene.md) or [`&solo`](../advanced-settings/mixer-scene-parameters/and-solo.md), VDO.Ninja will automatically generate a `&push` ID.
 
 ## Related
 

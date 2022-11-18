@@ -45,7 +45,7 @@
 
 #### August 16
 
-* Solo links are setup to use [`&solo`](../advanced-settings/upcoming-parameters/and-solo.md) instead of [`&scene`](../advanced-settings/view-parameters/scene.md) now; it's the same outcome, except `&solo` tells the system not to apply custom 'layouts' to them. Links updates in the director's room and the mixer app.
+* Solo links are setup to use [`&solo`](../advanced-settings/mixer-scene-parameters/and-solo.md) instead of [`&scene`](../advanced-settings/view-parameters/scene.md) now; it's the same outcome, except `&solo` tells the system not to apply custom 'layouts' to them. Links updates in the director's room and the mixer app.
 * Changes to how layouts are issued have been updated -- you'll need to do a hard browser refresh (particularly in OBS) for things to work now, if using alpha + mixer.
 * Invite/scene links in the mixer get copied to the clipboard when pressed, rather than open.
 * Added some options for customizing guest links in the mixer app -- one of them is to disable the `&broadcast` mode. For the time being, guests not in `&broadcast` mode will have director-issued layouts apply to them. (I may change this to a custom flag instead in the future, as I am still exploring ideas currently to make things intuitive yet flexible)\
@@ -68,7 +68,7 @@
 #### May 15
 
 * The Mixer App ([https://vdo.ninja/beta/mixer](https://vdo.ninja/beta/mixer)) has been updated with changes. While the mixer is still under exploratory development, it uses a new UX/UI approach to assigning guests to slots. Much less drag/drop-based. These changes were based on user-feedback; lots more feedback to still dig thru.
-* Side note: It should be possible to assign slots to videos within the normal director mode. Adding [`&slotmode`](../advanced-settings/upcoming-parameters/and-slotmode.md) enables it for the director. While the layout switching options of the mixer will be missing when doing this as a normal director, you can still specify [`&layout`](../advanced-settings/upcoming-parameters/and-layout.md) via he URL for multiple scenes that will obey the slot assignments. (might interest advanced users or inspire user suggestions).\
+* Side note: It should be possible to assign slots to videos within the normal director mode. Adding [`&slotmode`](../advanced-settings/director-parameters/and-slotmode.md) enables it for the director. While the layout switching options of the mixer will be missing when doing this as a normal director, you can still specify [`&layout`](../advanced-settings/upcoming-parameters/and-layout.md) via he URL for multiple scenes that will obey the slot assignments. (might interest advanced users or inspire user suggestions).\
   ![Bild](https://media.discordapp.net/attachments/701232125831151697/975293518572576828/unknown.png?width=400\&height=225)![Bild](https://media.discordapp.net/attachments/701232125831151697/975293518841016330/unknown.png?width=400\&height=279)
 
 #### April 27

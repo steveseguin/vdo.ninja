@@ -35,7 +35,7 @@ This is useful is you wish to publish a video into a group chat room, but only v
 This is also useful if you wish to create ad-hoc group chat sessions without using a group room.\
 Videos will auto-load when they are available if not already.
 
-You can use `&view` in a room combined with [`&scene`](scene.md) or [`&solo`](../upcoming-parameters/and-solo.md) to watch one or more specified video feeds of the room:\
+You can use `&view` in a room combined with [`&scene`](scene.md) or [`&solo`](../mixer-scene-parameters/and-solo.md) to watch one or more specified video feeds of the room:\
 `https://vdo.ninja/?room=roomname&scene&view=streamid1,streamid2`
 
 ## Related

@@ -38,8 +38,8 @@ For example:\
 [and-screenshare2.md](../newly-added-parameters/and-screenshare2.md)
 {% endcontent-ref %}
 
-{% content-ref url="../advanced-settings/upcoming-parameters/and-smallshare.md" %}
-[and-smallshare.md](../advanced-settings/upcoming-parameters/and-smallshare.md)
+{% content-ref url="../advanced-settings/screen-share-parameters/and-smallshare.md" %}
+[and-smallshare.md](../advanced-settings/screen-share-parameters/and-smallshare.md)
 {% endcontent-ref %}
 
 {% embed url="https://github.com/steveseguin/electroncapture" %}

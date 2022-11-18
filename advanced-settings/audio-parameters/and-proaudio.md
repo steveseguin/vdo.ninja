@@ -89,7 +89,7 @@ Just for reference, the audio codec used by VDO.Ninja is OPUS (48khz), which can
 
 If you want to use the `&proaudio` parameter but wish the output to still be mono (1-channel), there's some options.
 
-* ``[`&inputchannels=1`](and-inputchannels.md) or [`&monomic`](../upcoming-parameters/and-monomic.md) can be used on the sender's side, which will force their audio-capture device (microphone) to only capture in mono.
+* ``[`&inputchannels=1`](and-inputchannels.md) or [`&monomic`](and-monomic.md) can be used on the sender's side, which will force their audio-capture device (microphone) to only capture in mono.
 * ``[`&mono`](../view-parameters/mono.md) can be added to the viewer's side, which will try to playback incoming audio as mono.
 * If using OBS, in the audio settings, you can set the browser-source's audio to be mono.
 

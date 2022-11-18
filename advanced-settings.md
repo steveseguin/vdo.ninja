@@ -42,11 +42,11 @@ A stream ID must also not already be in active use, else you will be provided wi
 
 All of the available parameters can be seperated in five categories. You find the category on the top of the page of a parameter.
 
-* **General Option** ([`&push`](source-settings/push.md), [`&room`](general-settings/room.md), [`&view`](advanced-settings/view-parameters/view.md), [`&scene`](advanced-settings/view-parameters/scene.md),[`&solo`](advanced-settings/upcoming-parameters/and-solo.md),[`&director`](viewers-settings/director.md))\
+* **General Option** ([`&push`](source-settings/push.md), [`&room`](general-settings/room.md), [`&view`](advanced-settings/view-parameters/view.md), [`&scene`](advanced-settings/view-parameters/scene.md),[`&solo`](advanced-settings/mixer-scene-parameters/and-solo.md),[`&director`](viewers-settings/director.md))\
   You can use these parameters as a sender or as a viewer as well as in scenes, solo-links and rooms or even as a director.
 * **Sender-Side Option** ([`&push`](source-settings/push.md))\
   You can use these parameters as a sender when you are publishing a video with `&push`. You can use these parameters in rooms ([`&room`](general-settings/room.md)) when publishing or as a basic push link outside a room. These parameters will affect the outgoing stream.
-* **Viewer-Side Option** ([`&view`](advanced-settings/view-parameters/view.md), [`&scene`](advanced-settings/view-parameters/scene.md), [`&room`](general-settings/room.md),[`&solo`](advanced-settings/upcoming-parameters/and-solo.md))\
+* **Viewer-Side Option** ([`&view`](advanced-settings/view-parameters/view.md), [`&scene`](advanced-settings/view-parameters/scene.md), [`&room`](general-settings/room.md),[`&solo`](advanced-settings/mixer-scene-parameters/and-solo.md))\
   You can use these parameters as a viewer of one or more video sources (scenes and solo-links in a room, as a guest in a room, or a basic `&view` stream). These parameters will affect the incoming stream(s).
 * **Director Option** ([`&director`](viewers-settings/director.md))\
   These parameters are specifically for the director of a room.

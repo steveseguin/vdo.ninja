@@ -4,7 +4,7 @@ description: Sets both &totalscenebitrate and &totalroombitrate flags
 
 # \&totalbitrate
 
-Viewer-Side Option! ([`&scene`](../view-parameters/scene.md), [`&room`](../../general-settings/room.md), [`&view`](../view-parameters/view.md), [`&solo`](../upcoming-parameters/and-solo.md))
+Viewer-Side Option! ([`&scene`](../view-parameters/scene.md), [`&room`](../../general-settings/room.md), [`&view`](../view-parameters/view.md), [`&solo`](../mixer-scene-parameters/and-solo.md))
 
 ## Aliases
 

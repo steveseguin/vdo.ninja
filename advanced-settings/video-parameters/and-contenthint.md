@@ -4,8 +4,7 @@ description: '=motion prioritizes resolution; =detail prioritizes frame rate'
 
 # \&contenthint
 
-Sender-Side Option! ([`&push`](../../source-settings/push.md))\
-\* on [https://vdo.ninja/beta/](https://vdo.ninja/beta/) and [https://vdo.ninja/alpha/](https://vdo.ninja/alpha/)
+Sender-Side Option! ([`&push`](../../source-settings/push.md))
 
 ## Aliases
 
@@ -30,7 +29,7 @@ The two options for video are `detail` or `motion`. Screen-shares generally tend
 If using [`&codec=vp9`](../view-parameters/codec.md) on the viewer side, the frame rate may drop as low as even 5-fps.
 {% endhint %}
 
-There is [`&screensharecontenthint`](and-screensharecontenthint.md) if you want the parameter to only affect screen-shares.
+There is [`&screensharecontenthint`](../screen-share-parameters/and-screensharecontenthint.md) if you want the parameter to only affect screen-shares.
 
 {% hint style="warning" %}
 This parameter has been tested on Chrome, but other browsers may vary in behavior. Safari seems to just ignore things, for example.
@@ -38,6 +37,6 @@ This parameter has been tested on Chrome, but other browsers may vary in behavio
 
 ## Related
 
-{% content-ref url="and-screensharecontenthint.md" %}
-[and-screensharecontenthint.md](and-screensharecontenthint.md)
+{% content-ref url="../screen-share-parameters/and-screensharecontenthint.md" %}
+[and-screensharecontenthint.md](../screen-share-parameters/and-screensharecontenthint.md)
 {% endcontent-ref %}

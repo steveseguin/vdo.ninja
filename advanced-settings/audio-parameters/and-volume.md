@@ -4,8 +4,7 @@ description: Sets the 'default' playback volume for all video elements
 
 # \&volume
 
-Viewer-Side Option! ([`&scene`](../view-parameters/scene.md), [`&room`](../../general-settings/room.md), [`&view`](../view-parameters/view.md), [`&solo`](and-solo.md))\
-\* on [https://vdo.ninja/beta/](https://vdo.ninja/beta/) and [https://vdo.ninja/alpha/](https://vdo.ninja/alpha/)
+Viewer-Side Option! ([`&scene`](../view-parameters/scene.md), [`&room`](../../general-settings/room.md), [`&view`](../view-parameters/view.md), [`&solo`](../mixer-scene-parameters/and-solo.md))
 
 ## Aliases
 
@@ -27,14 +26,14 @@ Viewer-Side Option! ([`&scene`](../view-parameters/scene.md), [`&room`](../../ge
 
 ## Related
 
-{% content-ref url="../audio-parameters/and-audiogain.md" %}
-[and-audiogain.md](../audio-parameters/and-audiogain.md)
+{% content-ref url="and-audiogain.md" %}
+[and-audiogain.md](and-audiogain.md)
 {% endcontent-ref %}
 
 {% content-ref url="../../source-settings/autogain.md" %}
 [autogain.md](../../source-settings/autogain.md)
 {% endcontent-ref %}
 
-{% content-ref url="and-volumecontrol.md" %}
-[and-volumecontrol.md](and-volumecontrol.md)
+{% content-ref url="../upcoming-parameters/and-volumecontrol.md" %}
+[and-volumecontrol.md](../upcoming-parameters/and-volumecontrol.md)
 {% endcontent-ref %}

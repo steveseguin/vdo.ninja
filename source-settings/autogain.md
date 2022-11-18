@@ -40,6 +40,6 @@ Your browser will try to keep optimum audio levels.
 [and-audiogain.md](../advanced-settings/audio-parameters/and-audiogain.md)
 {% endcontent-ref %}
 
-{% content-ref url="../advanced-settings/upcoming-parameters/and-volume.md" %}
-[and-volume.md](../advanced-settings/upcoming-parameters/and-volume.md)
+{% content-ref url="../advanced-settings/audio-parameters/and-volume.md" %}
+[and-volume.md](../advanced-settings/audio-parameters/and-volume.md)
 {% endcontent-ref %}

@@ -4,7 +4,7 @@ description: Displays the total number of p2p connections of a remote stream
 
 # \&showconnections
 
-Viewer-Side Option! / Director Option! ([`&scene`](../view-parameters/scene.md), [`&room`](../../general-settings/room.md), [`&view`](../view-parameters/view.md), [`&solo`](and-solo.md), [`&director`](../../viewers-settings/director.md))\
+Viewer-Side Option! / Director Option! ([`&scene`](../view-parameters/scene.md), [`&room`](../../general-settings/room.md), [`&view`](../view-parameters/view.md), [`&solo`](../mixer-scene-parameters/and-solo.md), [`&director`](../../viewers-settings/director.md))\
 \* on [https://vdo.ninja/beta/](https://vdo.ninja/beta/) and [https://vdo.ninja/alpha/](https://vdo.ninja/alpha/)
 
 ## Details

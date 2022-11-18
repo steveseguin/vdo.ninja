@@ -38,8 +38,8 @@ Enables the audio processing pipeline.
 
 ## Related
 
-{% content-ref url="../upcoming-parameters/and-volume.md" %}
-[and-volume.md](../upcoming-parameters/and-volume.md)
+{% content-ref url="and-volume.md" %}
+[and-volume.md](and-volume.md)
 {% endcontent-ref %}
 
 {% content-ref url="../../source-settings/autogain.md" %}

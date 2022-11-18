@@ -31,7 +31,7 @@ fyi, the layout and the API in general work with the [vdo.ninja/beta/mixer](http
 
 {% embed url="https://github.com/steveseguin/Companion-Ninja/blob/main/README.md#custom-layout-switching-" %}
 
-You can assign guests to custom slots when using [`&slotmode`](and-slotmode.md) on the director's URL.
+You can assign guests to custom slots when using [`&slotmode`](../director-parameters/and-slotmode.md) on the director's URL.
 
 <figure><img src="../../.gitbook/assets/image (5) (1).png" alt=""><figcaption></figcaption></figure>
 
@@ -85,8 +85,8 @@ Download it and save it as .xlsx - then you can edit it and create custom layout
 
 ## Related
 
-{% content-ref url="and-slotmode.md" %}
-[and-slotmode.md](and-slotmode.md)
+{% content-ref url="../director-parameters/and-slotmode.md" %}
+[and-slotmode.md](../director-parameters/and-slotmode.md)
 {% endcontent-ref %}
 
 {% content-ref url="../../general-settings/api.md" %}

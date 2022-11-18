@@ -33,12 +33,12 @@ If using `&aspectratio`, it will keep the [height](../../source-settings/and-hei
 
 ### Screen-share
 
-`&aspectratio` works with screen-shares, so you can force crop an incoming screen-share to be a certain aspect ratio. If [`&screenshareaspectratio`](../upcoming-parameters/and-screenshareaspectratio.md) is used it will apply to just screen-shares. If [`&screenshareaspectratio`](../upcoming-parameters/and-screenshareaspectratio.md) does not have a value passed, it's assumed to be set as "default", which overrides `&aspectratio` option, if used also.
+`&aspectratio` works with screen-shares, so you can force crop an incoming screen-share to be a certain aspect ratio. If [`&screenshareaspectratio`](../screen-share-parameters/and-screenshareaspectratio.md) is used it will apply to just screen-shares. If [`&screenshareaspectratio`](../screen-share-parameters/and-screenshareaspectratio.md) does not have a value passed, it's assumed to be set as "default", which overrides `&aspectratio` option, if used also.
 
 ## Related
 
-{% content-ref url="../upcoming-parameters/and-screenshareaspectratio.md" %}
-[and-screenshareaspectratio.md](../upcoming-parameters/and-screenshareaspectratio.md)
+{% content-ref url="../screen-share-parameters/and-screenshareaspectratio.md" %}
+[and-screenshareaspectratio.md](../screen-share-parameters/and-screenshareaspectratio.md)
 {% endcontent-ref %}
 
 {% content-ref url="and-quality.md" %}
