@@ -43,6 +43,7 @@ You can use them for publisher, viewer and director URLs.
 | ``[`&bigbutton`](../../newly-added-parameters/and-bigbutton.md)``      | Makes the microphone mute button a lot bigger                                                                       |
 | ``[`&autohide`](../../parameters-only-on-beta/and-autohide.md)``       | Auto-hides the control bar after a few moments of the mouse being idle                                              |
 | ``[`&videocontrols`](../newly-added-parameters/and-videocontrols.md)`` | Shows the video control bar                                                                                         |
+| ``[`&nocontrols`](and-nocontrols.md)\*                                 | Will force hide the video control bar                                                                               |
 | ``[`&transcribe`](../../source-settings/transcribe.md)``               | Enables transcription and closed captioning                                                                         |
 | ``[`&nowebsite`](../../source-settings/nowebsite.md)``                 | Disables IFRAMEs from loading, such as remotely shared websites by another guest or director                        |
 | ``[`&signalmeter`](../../newly-added-parameters/and-signalmeter.md)``  | Visualizes the packet loss of a guest                                                                               |

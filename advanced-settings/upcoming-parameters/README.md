@@ -10,8 +10,6 @@ You can use/test these parameters on [vdo.ninja/alpha](https://vdo.ninja/alpha/)
 
 | Parameter                                                        | Explanation                                                                                                                  |
 | ---------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------- |
-| ``[`&nocontrols`](and-nocontrols.md)\*\*                         | Will force hide the video control bar                                                                                        |
-| ``[`&maxbandwidth`](and-maxbandwidth.md)\*\*                     | Judges the available bandwidth of a sender's connection                                                                      |
 | ``[`&showall`](and-showall.md)\*\*                               | Includes non-media-based push connections as video elements in a group room                                                  |
 | ``[`&nopush`](and-nopush.md)\*\*                                 | Blocks outbound publishing connections                                                                                       |
 | ``[`&imagelist`](and-imagelist.md)\*\*                           | Can be used to pass a list of background images via the URL                                                                  |

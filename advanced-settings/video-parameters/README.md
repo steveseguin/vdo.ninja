@@ -37,6 +37,7 @@ You have to add them to the source side ([`&push`](../../source-settings/push.md
 | ``[`&limittotalbitrate`](../../source-settings/limittotalbitrate.md)``           | Limits the total outbound bitrate                                                                                     |
 | ``[`&controlroombitrate`](../view-parameters/and-controlroombitrate.md)``        | Allows a guest to control their total room video bitrate dynamically from the settings panel (under video settings)   |
 | ``[`&roombitrate`](../../source-settings/roombitrate.md)``                       | Limits any guest viewer in the group chat room from pulling the video stream at more than the specified bitrate value |
+| ``[`&maxbandwidth`](and-maxbandwidth.md)\*                                       | Judges the available bandwidth of a sender's connection                                                               |
 | ``[`&fullscreen`](../../source-settings/fullscreen.md)``                         | The preview video will be fullscreen                                                                                  |
 | ``[`&showpreview`](../../source-settings/and-preview.md)``                       | Forces the guest to have a self-preview                                                                               |
 | ``[`&minipreview`](../../source-settings/and-minipreview.md)``                   | Mini self-preview at the top right corner                                                                             |
