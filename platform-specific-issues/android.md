@@ -29,13 +29,11 @@ UVC-based video devices are not supported currently with most Android devices, b
 
 ### USB audio device support
 
-USB-based audio devices have limited support with VDO.Ninja on Android. Some Android devices will support USB audio using Chrome, although many will not. Firefox mobile seems to support USB audio devices fairly often, so give Firefox a go if looking for support there.\
-\
-If nothing works, using a 3.5mm to USB adapter will sometimes work, if your audio device has 3.5mm mic out as an option.  You may also need a TRRS/TRS adapter. Below are a couple that I use  successfully on my Google Pixel smartphone:\
-\
-[https://www.amazon.ca/gp/product/B08NVRV6G9](https://www.amazon.ca/gp/product/B08NVRV6G9)\
-[https://www.amazon.ca/Headphone-Splitter-KOOPAO-Compatible-Microphone/dp/B08RML676M](https://www.amazon.ca/Headphone-Splitter-KOOPAO-Compatible-Microphone/dp/B08RML676M)\
+USB-based audio devices have limited support with VDO.Ninja on Android. Some Android devices will support USB audio using Chrome, although many will not. Firefox mobile seems to support USB audio devices fairly often, so give Firefox a go if looking for support there.
 
+If nothing works, using a 3.5mm to USB adapter will sometimes work, if your audio device has 3.5mm mic out as an option. You may also need a TRRS/TRS adapter. Below are a couple that I use  successfully on my Google Pixel smartphone:\
+[https://www.amazon.ca/gp/product/B08NVRV6G9](https://www.amazon.ca/gp/product/B08NVRV6G9)\
+[https://www.amazon.ca/Headphone-Splitter-KOOPAO-Compatible-Microphone/dp/B08RML676M](https://www.amazon.ca/Headphone-Splitter-KOOPAO-Compatible-Microphone/dp/B08RML676M)
 
 ### Samsung phones
 
