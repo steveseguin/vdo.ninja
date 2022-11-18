@@ -1,10 +1,10 @@
 ---
-description: Recently added to VDO.Ninja in v22
+description: Recently added to VDO.Ninja
 ---
 
 # New Parameters in Version 22
 
-Recently added Parameters in Version 22 of VDO.Ninja
+## Recently added Parameters in Version 22
 
 | Parameter                                                                        | Explanation                                                                                                                                                  |
 | -------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------ |
@@ -13,7 +13,7 @@ Recently added Parameters in Version 22 of VDO.Ninja
 | ``[`&autorecord`](settings-parameters/and-autorecord.md)                         | Records the local video and the remote video(s) automatically on their initial load                                                                          |
 | ``[`&autorecordlocal`](settings-parameters/and-autorecordlocal.md)               | Records just the local video automatically on their initial load                                                                                             |
 | ``[`&autorecordremote`](settings-parameters/and-autorecordremote.md)             | Records just the remote video(s) automatically on their initial load                                                                                         |
-| ``[`&avatar`](upcoming-parameters/and-avatar.md)                                 | Adds the ability to select an image, instead of a video device                                                                                               |
+| ``[`&avatar`](video-parameters/and-avatar.md)                                    | Adds the ability to select an image, instead of a video device                                                                                               |
 | ``[`&prompt`](upcoming-parameters/and-prompt.md)                                 | Another security option, for those concerned about random spying of their streams                                                                            |
 | ``[`&totalbitrate`](upcoming-parameters/and-totalbitrate.md)                     | Sets both [`&totalscenebitrate`](../newly-added-parameters/and-maxtotalscenebitrate.md) and [`&totalroombitrate` ](view-parameters/totalroombitrate.md)flags |
 | ``[`&bgimage`](upcoming-parameters/and-bgimage.md)                               | Can be used to set the default image avatar, when using [`&style=0` ](design-parameters/style.md)or [`&style=6`](design-parameters/style.md)``               |

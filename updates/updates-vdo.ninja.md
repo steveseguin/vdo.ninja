@@ -424,7 +424,7 @@ _\*\*_ UPDATE: I hot-patched beta and alpha with a fix. This fix disables the op
 #### July 21
 
 * The [`&grid`](../advanced-settings/design-parameters/grid.md) overlay option now works in non-room mode
-* Added the toggles for `&grid` and [`&avatar`](../advanced-settings/upcoming-parameters/and-avatar.md) to the director's link customization section.
+* Added the toggles for `&grid` and [`&avatar`](../advanced-settings/video-parameters/and-avatar.md) to the director's link customization section.
 * Added [`&smallshare`](../advanced-settings/upcoming-parameters/and-smallshare.md) as a new option, which makes the screen share behave like a webcam share. ie: not larger in size vs other windows, for the publisher or the viewers. This is a push-side parameter. This is useful if a VR guests screen sharing an app of themselves, versus using a virtual camera. It can also be useful for gaming, where a larger screen share might bog down the system of the sender more than needed.\
   \*\*\* on alpha at vdo.ninja/alpha/
 
@@ -734,7 +734,7 @@ _\*\*_ UPDATE: I hot-patched beta and alpha with a fix. This fix disables the op
 #### April 19
 
 * Selected audio and video devices are remembered automatically on reload/refresh, without needing a URL parameter. On alpha for now. [https://vdo.ninja/alpha/](https://vdo.ninja/alpha/)
-* Added the ability to select an image, instead of a video device. The image will trigger when the video is muted or no video device is selected. A default avatar image is provided, but you can select your own from disk. [`&avatar`](../advanced-settings/upcoming-parameters/and-avatar.md) is the flag that enables this option. - `&avatar=default` will pre-select the default avatar, rather than leaving it un-selected [https://vdo.ninja/alpha/?avatar](https://vdo.ninja/alpha/?avatar) (on alpha for now)\
+* Added the ability to select an image, instead of a video device. The image will trigger when the video is muted or no video device is selected. A default avatar image is provided, but you can select your own from disk. [`&avatar`](../advanced-settings/video-parameters/and-avatar.md) is the flag that enables this option. - `&avatar=default` will pre-select the default avatar, rather than leaving it un-selected [https://vdo.ninja/alpha/?avatar](https://vdo.ninja/alpha/?avatar) (on alpha for now)\
   ![](<../.gitbook/assets/image (3) (3) (1).png>)
 * [`&js`](../advanced-settings/design-parameters/and-js.md) is a new parameter for VDO.Ninja that lets you pass a third party hosted Javascript file URL (URL-encoded), allowing for custom code injection without self-hosting, IFrames or chrome extensions. On VDO.Ninja, by user request.
 

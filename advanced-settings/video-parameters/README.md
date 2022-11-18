@@ -31,6 +31,7 @@ You have to add them to the source side ([`&push`](../../source-settings/push.md
 | ``[`&maxframerate`](../../source-settings/and-maxframerate.md)``                 | Like [`&fps`](and-fps.md), except it will allow for lower frame rates if the specific frame rate requested failed     |
 | ``[`&effects`](../../source-settings/effects.md)``                               | Applies effects to the video/audio feeds                                                                              |
 | ``[`&effectvalue`](../../newly-added-parameters/and-effectvalue.md)``            | Sets the amount of blur or effect applied                                                                             |
+| ``[`&avatar`](and-avatar.md)\*                                                   | Adds the ability to select an image, instead of a video device                                                        |
 | ``[`&outboundvideobitrate`](../../source-settings/and-outboundvideobitrate.md)`` | Target video bitrate and max bitrate for outgoing video streams                                                       |
 | ``[`&maxvideobitrate`](../../source-settings/maxbitrate.md)``                    | Limits the max video bitrate out for this publisher, per stream out                                                   |
 | ``[`&limittotalbitrate`](../../source-settings/limittotalbitrate.md)``           | Limits the total outbound bitrate                                                                                     |
@@ -45,6 +46,8 @@ You have to add them to the source side ([`&push`](../../source-settings/push.md
 | ``[`&ptz`](../../source-settings/ptz.md)``                                       | Enables pan/tilt control of the device, if compatible                                                                 |
 | ``[`&webp`](../view-parameters/webp.md)``                                        | Custom video codec for broadcasts                                                                                     |
 | ``[`&webpquality`](../view-parameters/webpquality.md)``                          | Quality setting for the [`&webp`](../view-parameters/webp.md) option                                                  |
+
+\*NEW IN VERSION 22
 
 ## **Viewer side options**
 

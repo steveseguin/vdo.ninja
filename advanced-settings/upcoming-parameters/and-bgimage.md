@@ -26,8 +26,8 @@ Viewer-Side Option! ([`&scene`](../view-parameters/scene.md), [`&room`](../../ge
 
 ## Related
 
-{% content-ref url="and-avatar.md" %}
-[and-avatar.md](and-avatar.md)
+{% content-ref url="../video-parameters/and-avatar.md" %}
+[and-avatar.md](../video-parameters/and-avatar.md)
 {% endcontent-ref %}
 
 {% content-ref url="../design-parameters/style.md" %}
