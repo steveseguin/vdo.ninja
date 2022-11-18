@@ -25,7 +25,7 @@ You have to add them to the source side ([`&push`](../../source-settings/push.md
 | Parameter                                                                        | Explanation                                                                              |
 | -------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------- |
 | ``[`&audiodevice`](../../source-settings/audiodevice.md)``                       | Pre-configures the selected audio device                                                 |
-| ``[`&aec`](../../source-settings/aec.md)``                                       | Automatic echo-cancellation is ON or OFF                                                 |
+| ``[`&echocancellation`](../../source-settings/aec.md)``                          | Automatic echo-cancellation is ON or OFF                                                 |
 | ``[`&audiogain`](and-audiogain.md)``                                             | Applies a gain multiplier (as a percentage) to the local microphone                      |
 | ``[`&autogain`](../../source-settings/autogain.md)``                             | Sets whether audio auto-normalization is ON or OFF                                       |
 | ``[`&compressor`](../../source-settings/and-compressor.md)``                     | Applies a generic audio compressor to the local microphone                               |

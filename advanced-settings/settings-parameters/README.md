@@ -14,7 +14,7 @@ You can use them for publisher, viewer and director URLs.
 
 | Parameter                                            | Explanation                                                                   |
 | ---------------------------------------------------- | ----------------------------------------------------------------------------- |
-| ``[`&ln`](../../general-settings/and-ln.md)``        | Sets the interface language                                                   |
+| ``[`&language`](and-language.md)``                   | Sets the interface language                                                   |
 | ``[`&remote`](../../general-settings/remote.md)``    | Allows remote operation of the zoom and focus, and access to statistics       |
 | ``[`&stats`](../../general-settings/and-stats.md)``  | Shows the connection/media stats window by default                            |
 | ``[`&sticky`](../../general-settings/sticky.md)``    | Allows a user to save and then later restore their streaming session settings |
@@ -32,7 +32,7 @@ You can use them for publisher, viewer and director URLs.
 | ``[`&nospeakerbutton`](../../source-settings/and-nospeakerbutton.md)`` | Hides the speaker button                                                                                            |
 | ``[`&novideobutton`](../../viewers-settings/and-novideobutton.md)``    | Disables the video button; guests can't mute video                                                                  |
 | ``[`&nofileshare`](../../source-settings/nofileshare.md)``             | Hides the ability for a guest to upload a file                                                                      |
-| ``[`&ssb`](../../source-settings/ssb.md)``                             | Forces the screen-share button to appear for guests                                                                 |
+| ``[`&screensharebutton`](and-screensharebutton.md)``                   | Forces the screen-share button to appear for guests                                                                 |
 | ``[`&nohangupbutton`](and-nohangupbutton.md)``                         | Hides the hang-up button                                                                                            |
 | ``[`&chatbutton`](../../general-settings/chatbutton.md)``              | Shows or hides the chat button                                                                                      |
 | ``[`&bigbutton`](../../newly-added-parameters/and-bigbutton.md)``      | Makes the microphone mute button a lot bigger                                                                       |

@@ -9,12 +9,12 @@ General Option! ([`&push`](../../source-settings/push.md), [`&room`](../../gener
 
 ## Details
 
-`&hidetranslate` hides the button at the bottom right of VDO.Ninja to select a different language. If you want to change the language via URL you can use [`&ln`](../../general-settings/and-ln.md).
+`&hidetranslate` hides the button at the bottom right of VDO.Ninja to select a different language. If you want to change the language via URL you can use [`&ln`](../settings-parameters/and-language.md).
 
 ![](<../../.gitbook/assets/image (6) (3).png>)
 
 ## Related
 
-{% content-ref url="../../general-settings/and-ln.md" %}
-[and-ln.md](../../general-settings/and-ln.md)
+{% content-ref url="../settings-parameters/and-language.md" %}
+[and-language.md](../settings-parameters/and-language.md)
 {% endcontent-ref %}

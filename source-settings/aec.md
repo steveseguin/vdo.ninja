@@ -2,14 +2,14 @@
 description: Automatic echo-cancellation is ON or OFF
 ---
 
-# \&aec
+# \&echocancellation
 
 Sender-Side Option! ([`&push`](push.md))
 
 ## Aliases
 
+* `&aec`
 * `&ec`
-* `&echocancellation` (only on [alpha](https://vdo.ninja/alpha/))
 
 ## Options
 

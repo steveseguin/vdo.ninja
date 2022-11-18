@@ -2,13 +2,13 @@
 description: Sets the interface language
 ---
 
-# \&ln
+# \&language
 
-General Option! ([`&push`](../source-settings/push.md), [`&room`](room.md), [`&view`](../advanced-settings/view-parameters/view.md), [`&scene`](../advanced-settings/view-parameters/scene.md))
+General Option! ([`&push`](../../source-settings/push.md), [`&room`](../../general-settings/room.md), [`&view`](../view-parameters/view.md), [`&scene`](../view-parameters/scene.md))
 
 ## Aliases
 
-* `&language` (on alpha)
+* `&ln` (on alpha)
 
 ## Options
 
@@ -36,10 +36,10 @@ General Option! ([`&push`](../source-settings/push.md), [`&room`](room.md), [`&v
 You can [contribute new or update existing translations](https://github.com/steveseguin/obsninja/tree/master/translations).
 
 You can also change the language of VDO.Ninja dynamically on the bottom right.\
-![](<../.gitbook/assets/image (115) (2).png>)
+![](<../../.gitbook/assets/image (115) (2).png>)
 
 ## Related
 
-{% content-ref url="../advanced-settings/upcoming-parameters/and-hidetranslate.md" %}
-[and-hidetranslate.md](../advanced-settings/upcoming-parameters/and-hidetranslate.md)
+{% content-ref url="../upcoming-parameters/and-hidetranslate.md" %}
+[and-hidetranslate.md](../upcoming-parameters/and-hidetranslate.md)
 {% endcontent-ref %}

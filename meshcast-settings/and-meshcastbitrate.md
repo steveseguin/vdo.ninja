@@ -35,6 +35,6 @@ Increased the default bitrate of [`&meshcast`](../newly-added-parameters/and-mes
 [and-meshcastcodec.md](and-meshcastcodec.md)
 {% endcontent-ref %}
 
-{% content-ref url="and-meshcastab.md" %}
-[and-meshcastab.md](and-meshcastab.md)
+{% content-ref url="../advanced-settings/meshcast-parameters/and-meshcastaudiobitrate.md" %}
+[and-meshcastaudiobitrate.md](../advanced-settings/meshcast-parameters/and-meshcastaudiobitrate.md)
 {% endcontent-ref %}
