@@ -877,15 +877,12 @@
 							<li>
 								Some devices that use hardware encoding can experience video issues; switching to VP8 or VP9 as a <a target='_blank' title='Jump to the documentation' href='https://docs.vdo.ninja/viewers-settings/codec'>codec</a> may help.
 							</li>
-							<li>
-								Audio may drop out in OBS Studio at random times, yet still appear active. Delete the browser source and re-create, or use the <a href="https://github.com/steveseguin/electroncapture">Electron Capture</a> app instead.
-							</li>
 							<br />
 							<h4>
 								<font style="color:#daad09;">Welcome to VDO Ninja! We've rebranded!  Nothing else is changing and we're staying 100% free.</font>
 							</h4>
 							<br />
-							Site updated October 2022. <a target="_blank" href="https://docs.vdo.ninja/releases/v21">v21 release notes</a>. If having new issues, the previous version <a href="https://vdo.ninja/v20/">is here</a>, and the <a href="https://vdo.ninja/beta/">upcoming next version is here</a>. Development <a target="_blank" href='https://updates.vdo.ninja/'>updates are here.</a>
+							🚀🚀 Site updated November 18th, 2022 to v22. If having new sudden issues, please try clearing your browser's cache, including refreshing the cache within any OBS browser source. You can also still access the previous version, which <a href="https://vdo.ninja/v21/">is hosted here</a>. Development <a target="_blank" href='https://updates.vdo.ninja/'>updates are here.</a>
 							<br />
 							<br />
 							<h3>
@@ -2223,7 +2220,7 @@
 
 		
 			var session = WebRTC.Media; // session is a required global variable if configuring manually. Run before loading main.js but after webrtc.js.
-			session.version = "22.6c";
+			session.version = "22.7"; // nov 18th
 			session.streamID = session.generateStreamID(); // randomly generates a streamID for this session. You can set your own programmatically if needed
 			
 			session.defaultPassword = "someEncryptionKey123"; // Change this password if self-deploying for added security/privacy

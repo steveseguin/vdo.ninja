@@ -3787,6 +3787,8 @@ function updateMixerRun(e=false){  // this is the main auto-mixing code.  It's a
 						}
 						if (sceneBitrate){
 							session.requestRateLimit(sceneBitrate, i);
+						} else if ((session.screenShareBitrate!==false) && session.rpcs[i].screenShareState){ // session.screenShareBitrate is non-room
+								session.requestRateLimit(session.screenShareBitrate, i); // well, screw that. Setting it to room quality.
 						} else {
 							session.requestRateLimit(-1, i);
 						}
@@ -7767,13 +7769,13 @@ function processStats(UUID){
 							session.rpcs[UUID].stats['Peer-to-Peer Connection'].remote_candidateType = stat.candidateType;
 							if (stat.candidateType === "relay"){
 								if ("relayProtocol" in stat){
-									session.rpcs[UUID].stats['Peer-to-Peer Connection'].remote_relayProtocol = stat.relayProtocol;
+									session.rpcs[UUID].stats['Peer-to-Peer Connection'].remote_relay_protocol = stat.relayProtocol;
 								}
 								if ("ip" in stat){session.rpcs[UUID].stats['Peer-to-Peer Connection'].remote_relay_IP = stat.ip;}
 							} else {
 								try {
-									delete session.rpcs[UUID].stats['Peer-to-Peer Connection'].local_relayIP;
-									delete session.rpcs[UUID].stats['Peer-to-Peer Connection'].local_relayProtocol;
+									delete session.rpcs[UUID].stats['Peer-to-Peer Connection'].local_relay_IP;
+									delete session.rpcs[UUID].stats['Peer-to-Peer Connection'].local_relay_protocol;
 								} catch(e){}
 							}
 							
@@ -7792,13 +7794,13 @@ function processStats(UUID){
 							session.rpcs[UUID].stats['Peer-to-Peer Connection'].local_candidateType = stat.candidateType;
 							if (stat.candidateType === "relay"){
 								if ("relayProtocol" in stat){
-									session.rpcs[UUID].stats['Peer-to-Peer Connection'].local_relayProtocol = stat.relayProtocol;
+									session.rpcs[UUID].stats['Peer-to-Peer Connection'].local_relay_protocol = stat.relayProtocol;
 								}
-								if ("ip" in stat){session.rpcs[UUID].stats['Peer-to-Peer Connection'].local_relayIP = stat.ip;}
+								if ("ip" in stat){session.rpcs[UUID].stats['Peer-to-Peer Connection'].local_relay_IP = stat.ip;}
 							} else {
 								try {
-									delete session.rpcs[UUID].stats['Peer-to-Peer Connection'].local_relayIP;
-									delete session.rpcs[UUID].stats['Peer-to-Peer Connection'].local_relayProtocol;
+									delete session.rpcs[UUID].stats['Peer-to-Peer Connection'].local_relay_IP;
+									delete session.rpcs[UUID].stats['Peer-to-Peer Connection'].local_relay_protocol;
 								} catch(e){}
 							}
 						}
@@ -8236,7 +8238,7 @@ function printValues(obj) { // see: printViewStats
 						stat = 'Packet Loss 📶';
 						value = parseInt(parseFloat(value) * 10000) / 10000.0;
 					}
-					else if (key == 'local_relayIP') {
+					else if (key == 'local_relay_IP') {
 						value = "<a href='https://whatismyipaddress.com/ip/" + value + "' target='_blank'>" + value + "</a>";
 					}
 					else if (key == 'remote_relay_IP') {
@@ -8385,13 +8387,13 @@ function processMeshcastStats(UUID){
 						session.rpcs[UUID].stats['Meshcast Connection'].remote_candidateType = stat.candidateType;
 						if (stat.candidateType === "relay"){
 							if ("relayProtocol" in stat){
-								session.rpcs[UUID].stats['Meshcast Connection'].remote_relayProtocol = stat.relayProtocol;
+								session.rpcs[UUID].stats['Meshcast Connection'].remote_relay_protocol = stat.relayProtocol;
 							}
 							if ("ip" in stat){session.rpcs[UUID].stats['Meshcast Connection'].remote_relay_IP = stat.ip;}
 						} else {
 							try {
-								delete session.rpcs[UUID].stats['Meshcast Connection'].local_relayIP;
-								delete session.rpcs[UUID].stats['Meshcast Connection'].local_relayProtocol;
+								delete session.rpcs[UUID].stats['Meshcast Connection'].local_relay_IP;
+								delete session.rpcs[UUID].stats['Meshcast Connection'].local_relay_protocol;
 							} catch(e){}
 						}
 						
@@ -8410,13 +8412,13 @@ function processMeshcastStats(UUID){
 						session.rpcs[UUID].stats['Meshcast Connection'].local_candidateType = stat.candidateType;
 						if (stat.candidateType === "relay"){
 							if ("relayProtocol" in stat){
-								session.rpcs[UUID].stats['Meshcast Connection'].local_relayProtocol = stat.relayProtocol;
+								session.rpcs[UUID].stats['Meshcast Connection'].local_relay_protocol = stat.relayProtocol;
 							}
-							if ("ip" in stat){session.rpcs[UUID].stats['Meshcast Connection'].local_relayIP = stat.ip;}
+							if ("ip" in stat){session.rpcs[UUID].stats['Meshcast Connection'].local_relay_IP = stat.ip;}
 						} else {
 							try {
-								delete session.rpcs[UUID].stats['Meshcast Connection'].local_relayIP;
-								delete session.rpcs[UUID].stats['Meshcast Connection'].local_relayProtocol;
+								delete session.rpcs[UUID].stats['Meshcast Connection'].local_relay_IP;
+								delete session.rpcs[UUID].stats['Meshcast Connection'].local_relay_protocol;
 							} catch(e){}
 						}
 					}
@@ -8648,7 +8650,6 @@ function printMyStats(menu) { // see: setupStatsMenu
 		if (document.querySelector("select#videoSource3")){
 			var videoSelect = document.querySelector("select#videoSource3").options;
 			if (videoSelect.length){
-				log(videoSelect[videoSelect.selectedIndex].text);
 				if (videoSelect[videoSelect.selectedIndex].text.startsWith("OBS-Camera")) { // OBS Virtualcam
 					obscam = true;
 				} else if (videoSelect[videoSelect.selectedIndex].text.startsWith("OBS Virtual Camera")) { // OBS Virtualcam
@@ -8681,18 +8682,25 @@ function printMyStats(menu) { // see: setupStatsMenu
 			return;
 		}
 		
-		for (var key in obj) {
+		var keys = Object.keys(obj);
+		
+		keys.forEach(key=>{
 			if (typeof obj[key] === "object") {
 				try{
 					var tmp = key;
 					tmp = sanitizeChat((tmp));
+					if (tmp === "info"){
+						tmp = "Remote Peer Info";
+					}
 					menu.innerHTML += "<li><h2 title='" + tmp + "'>" + tmp + "</h2></li>"
 				} catch(e){}
 				printViewValues(obj[key]);
 				menu.innerHTML += "<hr />";
-			} else {
-
-				if (key.startsWith("_")){continue;}
+			}
+		});
+		keys.forEach(key=>{
+			if (typeof obj[key] !== "object") {
+				if (key.startsWith("_")){return;}
 				
 				var stat = sanitizeChat(key);
 				var value = obj[key];
@@ -8700,13 +8708,13 @@ function printMyStats(menu) { // see: setupStatsMenu
 					value = sanitizeChat((value));
 				}
 				
-				if (value === false){continue;}
+				if (value === false){return;}
 				
 				if (key == 'useragent') {
 					value = "<span style='cursor: pointer;' onclick='copyFunction(this.innerText,event);' title='Copy this user-agent to the clipboard' style='cursor:pointer'>"+value+"</span>"
 				}
 
-				if (key == 'local_relayIP') {
+				if (key == 'local_relay_IP') {
 					value = "<a href='https://whatismyipaddress.com/ip/" + value + "' target='_blank'>" + value + "</a>";
 				}
 				if (key == 'remote_relay_IP') {
@@ -8725,7 +8733,7 @@ function printMyStats(menu) { // see: setupStatsMenu
 
 				menu.innerHTML += "<li><span>" + stat + "</span><span>" + value + "</span></li>";
 			}
-		}
+		});
 	}
 	printViewValues(session.stats);
 	menu.innerHTML += "<button onclick='session.forcePLI(null,event);' data-translate='send-keyframe-to-viewer'>Send Keyframe to Viewers</button>";
@@ -8964,12 +8972,12 @@ function updateLocalStats(){
 										session.mc.stats.remote_relay_IP = stat.ip;
 									}
 									if ("relayProtocol" in stat) {
-										session.mc.stats.remote_relayProtocol = stat.relayProtocol;	
+										session.mc.stats.remote_relay_protocol = stat.relayProtocol;	
 									}									
 								} else {
 									try {
 										delete session.mc.stats.remote_relay_IP;
-										delete session.mc.stats.remote_relayProtocol;
+										delete session.mc.stats.remote_relay_protocol;
 									} catch(e){}
 								}
 							}
@@ -8979,15 +8987,15 @@ function updateLocalStats(){
 								
 								if (stat.candidateType === "relay"){
 									if ("ip" in stat) {
-										session.mc.stats.local_relayIP = stat.ip;
+										session.mc.stats.local_relay_IP = stat.ip;
 									}
 									if ("relayProtocol" in stat) {
-										session.mc.stats.local_relayProtocol = stat.relayProtocol;								
+										session.mc.stats.local_relay_protocol = stat.relayProtocol;								
 									}
 								} else {
 									try {
-										delete session.mc.stats.local_relayIP;
-										delete session.mc.stats.local_relayProtocol;
+										delete session.mc.stats.local_relay_IP;
+										delete session.mc.stats.local_relay_protocol;
 									} catch(e){}
 								}
 								
@@ -9259,12 +9267,12 @@ function updateLocalStats(){
 									session.pcs[UUID].stats.remote_relay_IP = stat.ip;
 								}
 								if ("relayProtocol" in stat) {
-									session.pcs[UUID].stats.remote_relayProtocol = stat.relayProtocol;								
+									session.pcs[UUID].stats.remote_relay_protocol = stat.relayProtocol;								
 								}
 							} else {
 								try {
 									delete session.pcs[UUID].stats.remote_relay_IP;
-									delete session.pcs[UUID].stats.remote_relayProtocol;
+									delete session.pcs[UUID].stats.remote_relay_protocol;
 								} catch(e){}
 							}
 						}
@@ -9274,15 +9282,15 @@ function updateLocalStats(){
 							
 							if (stat.candidateType === "relay"){
 								if ("ip" in stat) {
-									session.pcs[UUID].stats.local_relayIP = stat.ip;
+									session.pcs[UUID].stats.local_relay_IP = stat.ip;
 								}
 								if ("relayProtocol" in stat) {
-									session.pcs[UUID].stats.local_relayProtocol = stat.relayProtocol;								
+									session.pcs[UUID].stats.local_relay_protocol = stat.relayProtocol;								
 								}
 							} else {
 								try {
-									delete session.pcs[UUID].stats.local_relayIP;
-									delete session.pcs[UUID].stats.local_relayProtocol;
+									delete session.pcs[UUID].stats.local_relay_IP;
+									delete session.pcs[UUID].stats.local_relay_protocol;
 								} catch(e){}
 							}
 							
