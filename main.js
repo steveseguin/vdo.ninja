@@ -110,6 +110,7 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 	
 	if (urlParams.has('director') || urlParams.has('dir')) {
 		session.director = urlParams.get('director') || urlParams.get('dir') || true;
+		session.effect = null; // so the director can see the effects after a page refresh
 	}
 	
 	if (urlParams.has('controls') || urlParams.has('videocontrols')) {
@@ -2264,8 +2265,16 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 		session.screensharecursor = true;
 	}
 
+	
+	if (urlParams.has('dtx') || urlParams.has('usedtx')) {
+		session.dtx = true;
+		session.cbr = 0; // no point dtx on if cbr is on, right?
+	}
+	
 	if (urlParams.has('vbr')) {
 		session.cbr = 0;
+	} else if (urlParams.has('cbr')) {
+		session.cbr = 1;
 	}
 
 	if (urlParams.has('order')) {
@@ -2372,6 +2381,14 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 		warnlog("Defaulting to VP8 manually, as H264 with remote iOS devices is not supported");
 	}
 	
+	if (urlParams.has('audiocodec')) {
+		log("CODEC CHANGED");
+		session.audioCodec = urlParams.get('audiocodec') || false;
+		if (session.audioCodec){
+			session.audioCodec = session.audioCodec.toLowerCase();
+		}
+	}
+	
 	if (urlParams.has('scenelinkcodec')){ // this is mainly for a niche iframe API use
 		log("codecGroupFlag CHANGED");
 		session.codecGroupFlag = urlParams.get('scenelinkcodec') || false;
@@ -2405,6 +2422,9 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 		}
 	}
 
+	if (urlParams.has('nofec')){ // disables error control / throttling -- currently on audio
+		session.noFEC = true;
+	}
 	if (urlParams.has('nonacks')){ // disables error control / throttling.
 		session.noNacks = true;
 	}

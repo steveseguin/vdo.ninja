@@ -3095,6 +3095,9 @@ function updateMixer(e=false){
 	}
 	updateMixerActive=true;
 	log("updating mixer");
+	
+	//console.log((new Error()).stack); // useful for breakpoints; finding what called updateMixer.
+	
 	try{
 		updateMixerRun(e);
 	//	clearInterval(cleanupTimeout);
@@ -7856,10 +7859,12 @@ function processStats(UUID){
 						session.rpcs[UUID].stats[trackID]._last_bytes = stat.bytesReceived || session.rpcs[UUID].stats[trackID]._last_bytes;
 						session.rpcs[UUID].stats[trackID]._last_time = stat.timestamp || session.rpcs[UUID].stats[trackID]._last_time;
 
-						session.rpcs[UUID].stats._codecId = stat.codecId;
-						session.rpcs[UUID].stats._codecIdTrackId = trackID;
 						
 						if (stat.mediaType=="video"){
+							
+							session.rpcs[UUID].stats._codecId = stat.codecId;
+							session.rpcs[UUID].stats._codecIdTrackId = trackID;
+							
 							session.rpcs[UUID].stats[trackID].type = "Video Stream"
 							session.rpcs[UUID].stats[trackID]._type = "video";
 							if ((session.obsfix) && ("codec" in session.rpcs[UUID].stats) && (session.rpcs[UUID].stats.codec=="video/VP8")){
@@ -7910,10 +7915,10 @@ function processStats(UUID){
 								session.rpcs[UUID].stats[trackID]._timestamp = stat.timestamp/1000;
 								
 							}
-						
-						
 						} else if (stat.mediaType=="audio"){
 							//log("AUDIO LEVEL: "+stat.audioLevel);
+							session.rpcs[UUID].stats._audioCodecId = stat.codecId;
+							session.rpcs[UUID].stats._audioCodecIdTrackId = trackID;
 							session.rpcs[UUID].stats[trackID].type = "Audio Stream";
 							session.rpcs[UUID].stats[trackID]._type = "audio";
 							if ("audioLevel" in stat){
@@ -7967,11 +7972,32 @@ function processStats(UUID){
 								session.rpcs[UUID].stats[session.rpcs[UUID].stats._codecIdTrackId] = {};
 								session.rpcs[UUID].stats[session.rpcs[UUID].stats._codecIdTrackId].codec = stat.mimeType;
 							}
+							
 						}
 						if ("frameHeight" in stat){
 							if ("frameWidth" in stat){
 								session.rpcs[UUID].stats.Resolution = parseInt(stat.frameWidth)+" x "+parseInt(stat.frameHeight);
 							}
+						}
+					} else if (("_audioCodecId" in session.rpcs[UUID].stats) && (stat.id == session.rpcs[UUID].stats._audioCodecId)){
+						
+						if ("mimeType" in stat){
+							var addOnDescription = stat.mimeType;
+							addOnDescription = addOnDescription.replace("audio/", "");
+							
+							if ("sdpFmtpLine" in stat){
+								if (stat.sdpFmtpLine.includes("useinbandfec=1")){
+									addOnDescription += ", /w fec";
+								}
+							}
+							
+							if (session.rpcs[UUID].stats[session.rpcs[UUID].stats._audioCodecIdTrackId]){
+							} else {
+								session.rpcs[UUID].stats[session.rpcs[UUID].stats._audioCodecIdTrackId] = {};
+							}
+							session.rpcs[UUID].stats[session.rpcs[UUID].stats._audioCodecIdTrackId].codec = addOnDescription;
+							session.rpcs[UUID].stats[session.rpcs[UUID].stats._audioCodecIdTrackId]
+							
 						}
 					} else if (Firefox){
 						if ("frameWidth" in stat){
@@ -8098,10 +8124,12 @@ function playoutdelay(UUID){  // applies a delay to all videos
 							if (session.rpcs[UUID].stats[tid]._type=="audio"){
 								if (sync_offset<0){sync_offset=0;}
 								session.rpcs[UUID].stats[tid]._sync_offset = sync_offset;
+								
 								receiver.playoutDelayHint = parseFloat(sync_offset/1000);
+								// receiver.jitterBufferDelayhint = parseFloat(sync_offset/1000); // This is deprecated I believe
 								
 								if (session.sync!==false){
-									var audio_delay = session.sync || 0; // video is typically showing greater delay than video
+									var audio_delay = session.sync || 0; // video is typically showing greater delay than audio.
 									audio_delay += target_buffer - session.rpcs[UUID].stats[tid].Buffer_Delay_in_ms
 									if (receiver.track.id in session.rpcs[UUID].inboundAudioPipeline){
 										if (session.rpcs[UUID].inboundAudioPipeline[receiver.track.id] && session.rpcs[UUID].inboundAudioPipeline[receiver.track.id].delayNode){
@@ -8118,7 +8146,8 @@ function playoutdelay(UUID){  // applies a delay to all videos
 							} else if (session.rpcs[UUID].stats[tid]._type=="video"){
 								if(sync_offset<0){sync_offset=0;}
 								session.rpcs[UUID].stats[tid]._sync_offset = sync_offset;
-								receiver.playoutDelayHint = parseFloat(sync_offset/1000);	  // only the video we are going to do the playout delay for; doesn't work well with audio.
+								receiver.playoutDelayHint = parseFloat(sync_offset/1000);	// Chrome seems to somewhat sync audio and video when using the delay
+								// receiver.jitterBufferDelayhint = parseFloat(sync_offset/1000); // This is deprecated I believe
 							}
 							
 						}
@@ -18768,7 +18797,10 @@ async function grabVideo(quality = 0, eleName = 'previewWebcam', selector = "sel
 					updateForceRotate();
 					
 					if (iOS || iPad){  
-						updateMixer(); // if we don't do this, portrait videos may be detected as horizontal
+						// if we don't do this, portrait videos may be detected as horizontal
+						if (!document.getElementById("previewWebcam")){
+							updateMixer(); // not with the preview, but after.
+						}
 					}
 					
 					 // this will reset scaling for all viewers of this stream. I also call it when aspect ratio, width, or height is changed via applyConstraints
