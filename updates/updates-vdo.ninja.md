@@ -864,7 +864,8 @@ February 23
 
 * Pushed v21.0 to GitHub: [https://github.com/steveseguin/vdo.ninja/tree/v21-dev](https://github.com/steveseguin/vdo.ninja/tree/v21-dev)
 * v21 pushed into production. Cached cleared. v20.4 is still available at [https://vdo.ninja/v20/](https://vdo.ninja/v20/) if you prefer that.
-* Added a 'clear' button to the download links in the chat.![Bild](https://media.discordapp.net/attachments/701232125831151697/942652225455534090/unknown.png?width=400\&height=205)
+* Added a 'clear' button to the download links in the chat.\
+  ![Bild](https://media.discordapp.net/attachments/701232125831151697/942652225455534090/unknown.png?width=400\&height=205)
 
 #### February 13
 
