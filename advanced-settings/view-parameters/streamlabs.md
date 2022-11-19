@@ -1,7 +1,7 @@
 ---
 description: >-
   Tells VDO.Ninja to not block VDO.Ninja from attempting to run when using
-  Streamlabs for macOS
+  Streamlabs for MacOS
 ---
 
 # \&streamlabs

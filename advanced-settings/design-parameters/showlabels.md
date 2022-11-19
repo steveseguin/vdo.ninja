@@ -107,6 +107,6 @@ Below is another example, this time we target the video tile class, creating a m
 [css.md](css.md)
 {% endcontent-ref %}
 
-{% content-ref url="../upcoming-parameters/and-labelsuggestion.md" %}
-[and-labelsuggestion.md](../upcoming-parameters/and-labelsuggestion.md)
+{% content-ref url="../setup-parameters/and-labelsuggestion.md" %}
+[and-labelsuggestion.md](../setup-parameters/and-labelsuggestion.md)
 {% endcontent-ref %}

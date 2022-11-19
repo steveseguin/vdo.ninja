@@ -40,6 +40,6 @@ You can also change the language of VDO.Ninja dynamically on the bottom right.\
 
 ## Related
 
-{% content-ref url="../upcoming-parameters/and-hidetranslate.md" %}
-[and-hidetranslate.md](../upcoming-parameters/and-hidetranslate.md)
+{% content-ref url="and-hidetranslate.md" %}
+[and-hidetranslate.md](and-hidetranslate.md)
 {% endcontent-ref %}

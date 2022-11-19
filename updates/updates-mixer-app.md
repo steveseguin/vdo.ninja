@@ -68,7 +68,7 @@
 #### May 15
 
 * The Mixer App ([https://vdo.ninja/beta/mixer](https://vdo.ninja/beta/mixer)) has been updated with changes. While the mixer is still under exploratory development, it uses a new UX/UI approach to assigning guests to slots. Much less drag/drop-based. These changes were based on user-feedback; lots more feedback to still dig thru.
-* Side note: It should be possible to assign slots to videos within the normal director mode. Adding [`&slotmode`](../advanced-settings/director-parameters/and-slotmode.md) enables it for the director. While the layout switching options of the mixer will be missing when doing this as a normal director, you can still specify [`&layout`](../advanced-settings/upcoming-parameters/and-layout.md) via he URL for multiple scenes that will obey the slot assignments. (might interest advanced users or inspire user suggestions).\
+* Side note: It should be possible to assign slots to videos within the normal director mode. Adding [`&slotmode`](../advanced-settings/director-parameters/and-slotmode.md) enables it for the director. While the layout switching options of the mixer will be missing when doing this as a normal director, you can still specify [`&layout`](../advanced-settings/mixer-scene-parameters/and-layout.md) via he URL for multiple scenes that will obey the slot assignments. (might interest advanced users or inspire user suggestions).\
   ![Bild](https://media.discordapp.net/attachments/701232125831151697/975293518572576828/unknown.png?width=400\&height=225)![Bild](https://media.discordapp.net/attachments/701232125831151697/975293518841016330/unknown.png?width=400\&height=279)
 
 #### April 27

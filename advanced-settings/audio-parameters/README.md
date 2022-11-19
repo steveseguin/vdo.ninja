@@ -54,6 +54,7 @@ You have to add them to the viewer side ([`&view`](../view-parameters/view.md) o
 | ``[`&audiooutput`](../setup-parameters/and-audiooutput.md)``    | Like [`&sink`](../view-parameters/and-sink.md), but selects the audio output device |
 | ``[`&sink`](../view-parameters/and-sink.md)``                   | Outputs the audio to the specified audio output device, rather than the default     |
 | ``[`&volume`](and-volume.md)\*                                  | Sets the 'default' playback volume for all video elements                           |
+| ``[`&volumecontrol`](and-volumecontrol.md)\*                    | Shows a dedicated local audio-volume control bar for canvas or image elements       |
 | ``[`&audiobitrate`](../view-parameters/audiobitrate.md)``       | Manually sets the audio bitrate in kbps                                             |
 | ``[`&vbr`](../view-parameters/vbr.md)``                         | Sets the audio bitrate to be variable, instead of constant                          |
 | ``[`&mono`](../view-parameters/mono.md)``                       | Has the inbound audio playback as mono audio                                        |

@@ -4,8 +4,7 @@ description: Added to the URL, when not assigned to a group, you don't hear or s
 
 # \&groupmode
 
-Sender-Side Option! ([`&push`](../../source-settings/push.md), [`&room`](../../general-settings/room.md))\
-\* on [https://vdo.ninja/beta/](https://vdo.ninja/beta/) and [https://vdo.ninja/alpha/](https://vdo.ninja/alpha/)
+Sender-Side Option! ([`&push`](../../source-settings/push.md), [`&room`](../../general-settings/room.md))
 
 ## Details
 

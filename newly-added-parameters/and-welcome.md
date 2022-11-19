@@ -31,6 +31,6 @@ You can also activate the welcome message as a director via a new toggle option.
 
 ## Related
 
-{% content-ref url="../advanced-settings/upcoming-parameters/and-welcomeimage.md" %}
-[and-welcomeimage.md](../advanced-settings/upcoming-parameters/and-welcomeimage.md)
+{% content-ref url="../advanced-settings/setup-parameters/and-welcomeimage.md" %}
+[and-welcomeimage.md](../advanced-settings/setup-parameters/and-welcomeimage.md)
 {% endcontent-ref %}

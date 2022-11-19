@@ -27,16 +27,16 @@ _\*\*_ UPDATE: I hot-patched beta and alpha with a fix. This fix disables the op
   ![](<../.gitbook/assets/image (4).png>)
 * I think I fixed an issue with Firefox where not all the audio-output devices were available to choose from, at least on desktop, and so I've added the custom logic Firefox requires to get it working. On Firefox, you'll now need to select "Show more options" in the audio drop down menu, where Firefox will prompt you to select the audio output device with its own prompt.\
   ![](<../.gitbook/assets/image (9).png>)
-* Added an option called [`&hidehome`](../advanced-settings/upcoming-parameters/and-hidehome.md), which hides the VDO.Ninja homepage and many links that lead to it. You can also enable at a code level with `session.hidehome=true;`, which is useful if doing a self-deployment, where you don't want anyone to stumble onto the site and start using it. You'll still be able to join push links and create rooms via URL parameters, but that's about it.\
+* Added an option called [`&hidehome`](../advanced-settings/settings-parameters/and-hidehome.md), which hides the VDO.Ninja homepage and many links that lead to it. You can also enable at a code level with `session.hidehome=true;`, which is useful if doing a self-deployment, where you don't want anyone to stumble onto the site and start using it. You'll still be able to join push links and create rooms via URL parameters, but that's about it.\
   \
   \*\* updated alpha (vdo.ninja/alpha) and GitHub with all changes.
 
 #### **November 15** <a href="#august-31" id="august-31"></a>
 
-* Added the [`&clock`](../advanced-settings/upcoming-parameters/and-clock.md) parameter, which shows the current time in the lower right; this can be applied to pretty much all link types.\
+* Added the [`&clock`](../advanced-settings/settings-parameters/and-clock.md) parameter, which shows the current time in the lower right; this can be applied to pretty much all link types.\
   ![](<../.gitbook/assets/image (1) (8).png>)\
   \-- The director has a button that lets them enable the clock for everyone in the room (via the director's room settings button).\
-  \-- [`&clock=false`](../advanced-settings/upcoming-parameters/and-clock.md) or [`&cleanoutput`](../advanced-settings/design-parameters/cleanoutput.md) will force-disable the clock from being remotely triggerable.\
+  \-- [`&clock=false`](../advanced-settings/settings-parameters/and-clock.md) or [`&cleanoutput`](../advanced-settings/design-parameters/cleanoutput.md) will force-disable the clock from being remotely triggerable.\
   \-- The director has a button that lets them also enable a global count-down timer. Holding CTRL + click will let the director pause the timer. If someone joins the room or reloads, the timer will also be reloaded, in sync. Button also in the room settings menu.\
   ![](<../.gitbook/assets/image (3) (3).png>)\
   \-- This count down timer is the same concept as the per-guest timer the director already has, and will actually conflict with it if both are used, since it uses the same state/variable to keep track of time remaining.\
@@ -53,13 +53,13 @@ _\*\*_ UPDATE: I hot-patched beta and alpha with a fix. This fix disables the op
 
 #### **November 11** <a href="#august-31" id="august-31"></a>
 
-*   Added a new URL parameter. [`&directoronly`](../advanced-settings/upcoming-parameters/and-directoronly.md) (`&do`). This is just the same as doing [`&view=DirectorStreamID`](../advanced-settings/view-parameters/view.md), but without having to know the stream ID for the director.
+*   Added a new URL parameter. [`&directoronly`](../advanced-settings/video-parameters/and-directoronly.md) (`&do`). This is just the same as doing [`&view=DirectorStreamID`](../advanced-settings/view-parameters/view.md), but without having to know the stream ID for the director.
 
     \-- It will actually connect to any director, including co-directors, not just the main one.
 
     \-- [`&view`](../advanced-settings/view-parameters/view.md), [`&include`](../advanced-settings/mixer-scene-parameters/and-include.md), [`&exclude`](../advanced-settings/view-parameters/and-exclude.md) have a lower priority to `&directoronly`. So if there are two directors, you can do `&directoronly&exclude=coDirector123`, so that the [codirector](../director-settings/codirector.md) doesn't connect.
 
-    \-- I changed the toggle in the director's room for "Guests hear others" from [`&view=`](../advanced-settings/view-parameters/view.md) to [`&directoronly`](../advanced-settings/upcoming-parameters/and-directoronly.md). The point of this change is that the director can now still talk to those in the room.
+    \-- I changed the toggle in the director's room for "Guests hear others" from [`&view=`](../advanced-settings/view-parameters/view.md) to [`&directoronly`](../advanced-settings/video-parameters/and-directoronly.md). The point of this change is that the director can now still talk to those in the room.
 
     \-- Purpose of change: I had a user who wanted [`&broadcast`](../advanced-settings/view-parameters/broadcast.md), but also not have the guests hear each other. It's a bit of a hassle to do [`&view=DirectorStreamID`](../advanced-settings/view-parameters/view.md), and the toggle is labelled to be misleading by saying "guests", not "everyone".
 
@@ -109,8 +109,8 @@ _\*\*_ UPDATE: I hot-patched beta and alpha with a fix. This fix disables the op
 
 #### **November 1** <a href="#august-31" id="august-31"></a>
 
-* ``[`&controlbarspace`](../advanced-settings/upcoming-parameters/and-controlbarspace.md) forces the bottom control bar to be in its own dedicated space, regardless of screen size.
-* ``[`&volumecontrol`](../advanced-settings/upcoming-parameters/and-volumecontrol.md) (alias, `&vc`) shows a dedicated local audio-volume control bar for canvas or image elements. Video elements already have a control-bar with volume, so I don't show it there currently. I'll likely tweak this more over time.\
+* ``[`&controlbarspace`](../advanced-settings/settings-parameters/and-controlbarspace.md) forces the bottom control bar to be in its own dedicated space, regardless of screen size.
+* ``[`&volumecontrol`](../advanced-settings/audio-parameters/and-volumecontrol.md) (alias, `&vc`) shows a dedicated local audio-volume control bar for canvas or image elements. Video elements already have a control-bar with volume, so I don't show it there currently. I'll likely tweak this more over time.\
   ![](<../.gitbook/assets/image (8) (2).png>)
 * Fixed an issue with [`&screensharetype=3`](../newly-added-parameters/and-screensharetype.md) crashing the browser when specifying an audio track to share.\
   \
@@ -128,7 +128,7 @@ _\*\*_ UPDATE: I hot-patched beta and alpha with a fix. This fix disables the op
 
 #### **October 26** <a href="#august-31" id="august-31"></a>
 
-* Added [`&labelsuggestion=defaultnamehere`](../advanced-settings/upcoming-parameters/and-labelsuggestion.md) (aka, `&ls`)\
+* Added [`&labelsuggestion=defaultnamehere`](../advanced-settings/setup-parameters/and-labelsuggestion.md) (aka, `&ls`)\
   \
   This is the same as [`&label`](../general-settings/label.md), except it asks the user still for a user name. If they leave it blank or cancel the prompt asking for a name, it will use the default label.\
   [https://vdo.ninja/alpha/?ls=guest\&webcam](https://vdo.ninja/alpha/?ls=guest\&webcam)\
@@ -141,7 +141,7 @@ _\*\*_ UPDATE: I hot-patched beta and alpha with a fix. This fix disables the op
 
 #### **October 24** <a href="#august-31" id="august-31"></a>
 
-* Added [`&groupmode`](../advanced-settings/upcoming-parameters/and-groupmode.md) to VDO.Ninja, which changes the way groups work when not in a group. \
+* Added [`&groupmode`](../advanced-settings/setup-parameters/and-groupmode.md) to VDO.Ninja, which changes the way groups work when not in a group. \
   \
   With `&groupmode` added to your URL, when not assigned to a group, you don't hear or see anything. This also goes for remote participants who are not in a group - you will not see or hear them if they are not in a group, even if you also are not in a group.\
   \
@@ -151,7 +151,7 @@ _\*\*_ UPDATE: I hot-patched beta and alpha with a fix. This fix disables the op
 
 #### **October 10** <a href="#august-31" id="august-31"></a>
 
-* Added [`&layouts=[[{xxxxxx}]]`](../advanced-settings/upcoming-parameters/and-layouts.md) as a URL parameter option, where you can pass a set of different layouts (as a URL-encoded ordered array) to VDO.Ninja. (\*\* on alpha)\
+* Added [`&layouts=[[{xxxxxx}]]`](../advanced-settings/director-parameters/and-layouts.md) as a URL parameter option, where you can pass a set of different layouts (as a URL-encoded ordered array) to VDO.Ninja. (\*\* on alpha)\
   \
   This is akin to using the [vdo.ninja/beta/mixer](https://vdo.ninja/beta/mixer), to visually set layouts, but instead you are just manually setting all the available layouts directly, bypassing the mixer app.\
   \
@@ -190,7 +190,7 @@ _\*\*_ UPDATE: I hot-patched beta and alpha with a fix. This fix disables the op
 
 * Updated the 'create reusable link' page a bit; added the option for "generate host link also", which sets things up for a simple two-way interview format.\
   ![](<../.gitbook/assets/image (1) (9).png>)
-* ``[`&welcomeimage`](../advanced-settings/upcoming-parameters/and-welcomeimage.md) added; this lets you specify a welcome image (URL) that appears for a few seconds before fading away once a guest joins.\
+* ``[`&welcomeimage`](../advanced-settings/setup-parameters/and-welcomeimage.md) added; this lets you specify a welcome image (URL) that appears for a few seconds before fading away once a guest joins.\
   ie: `https://vdo.ninja/alpha/?welcomeimage=https://vdo.ninja/alpha/media/old_logo.png&webcam`\
   ``\
   ``\*\* on alpha
@@ -254,7 +254,7 @@ _\*\*_ UPDATE: I hot-patched beta and alpha with a fix. This fix disables the op
 
 * Added [`&effects=7`](../source-settings/effects.md) (or `&effects=zoom`), which will provide a manual zoom option in the effects menu. (you can also select the zoom mode via the effects menu, if available)\
   ![](<../.gitbook/assets/image (2) (4).png>)
-* Added [`&getfaces`](../advanced-settings/upcoming-parameters/and-getfaces.md) on the viewer link (or `{getFaces:true}` via the IFrame API), which will request a continuous stream of face bounding boxes, for all inbound videos and all faces contained within. The data is transmitted to the parent IFRAME, and this data can be used for moving the IFrame window around, if you wish to make your own custom face-tracker or whatever else.\
+* Added [`&getfaces`](../advanced-settings/settings-parameters/and-getfaces.md) on the viewer link (or `{getFaces:true}` via the IFrame API), which will request a continuous stream of face bounding boxes, for all inbound videos and all faces contained within. The data is transmitted to the parent IFRAME, and this data can be used for moving the IFrame window around, if you wish to make your own custom face-tracker or whatever else.\
   ![](<../.gitbook/assets/image (11) (1) (2) (1).png>)
 * ``[`&effects=1`](../source-settings/effects.md) on the sender side (or `&effects=facetracking`) will auto-center the user's face in the center of their video, zooming in as needed. It takes a moment to initiate, but it offers a gentle PTZ-like effect.\
   \-- note: I previously had `&effects=1`, but it wasn't that good, so this is a more polished attempt. It's also available from the effects drop down menu now as a selectable option, as before I was hiding it.\
@@ -270,7 +270,7 @@ _\*\*_ UPDATE: I hot-patched beta and alpha with a fix. This fix disables the op
 * [`&autohide`](../parameters-only-on-beta/and-autohide.md) works better now; also on mobile, the `&autohide` makes the control bar transparent on timeout, to avoid conflicts with tap-to-zoom/focus logic.
 * It's easy to adjust video settings on mobile, as there is a large space to scroll without accidentally clicking a setting slider. Also more bottom padding, making it easier to click close in landscape mode.
 * Made the [`&sticky`](../general-settings/sticky.md) redirect confirmation prompt less ugly, and I now don't ask if the URL already matches the saved session's URL.
-* Made some changes/fixes to the recently new switchMode ([`&previewmode`](../advanced-settings/upcoming-parameters/and-previewmode.md)) function of the director room (hopefully no bugs?).\
+* Made some changes/fixes to the recently new switchMode ([`&previewmode`](../advanced-settings/director-parameters/and-previewmode.md)) function of the director room (hopefully no bugs?).\
   \*\* changes on alpha @ vdo.ninja/alpha/
 
 #### **September 7** <a href="#august-31" id="august-31"></a>
@@ -283,8 +283,8 @@ _\*\*_ UPDATE: I hot-patched beta and alpha with a fix. This fix disables the op
 
 #### **September 6** <a href="#august-31" id="august-31"></a>
 
-* ``[`&showconnections`](../advanced-settings/upcoming-parameters/and-showconnections.md) will display the total number of p2p connections of a remote stream. Works with the director's room and the automixer. Might help give comfort over privacy/security during a stream.
-* Total number of p2p remote connections (viewers) of a stream source will also appear in the stats menu, even without [`&showconnections`](../advanced-settings/upcoming-parameters/and-showconnections.md). Could be useful for debugging CPU/bandwidth issues.
+* ``[`&showconnections`](../advanced-settings/settings-parameters/and-showconnections.md) will display the total number of p2p connections of a remote stream. Works with the director's room and the automixer. Might help give comfort over privacy/security during a stream.
+* Total number of p2p remote connections (viewers) of a stream source will also appear in the stats menu, even without [`&showconnections`](../advanced-settings/settings-parameters/and-showconnections.md). Could be useful for debugging CPU/bandwidth issues.
 * Connections may represent video/audio streams, or just a data-connection. Meshcast-hosted streams might not be accounted for, depending on how the viewer is connecting.\
   ![](<../.gitbook/assets/image (10) (1).png>)
 * Added `showChat` and `showDirectorChat` as HTTP/WSS API options for sending messages to guest(s). Useful if you want to hotkey a streamdeck command with some welcome message for guests.
@@ -302,7 +302,7 @@ _\*\*_ UPDATE: I hot-patched beta and alpha with a fix. This fix disables the op
 
 #### **August 31** <a href="#august-31" id="august-31"></a>
 
-* Added a button in the director's room. It lets you toggle between a Preview layout and the normal Director layout; the Preview layout will mirror what a basic [`&scene=0`](../advanced-settings/view-parameters/scene.md) link would look like. Useful if you want to switch to a guest-like mode as a director, and then switch back as needed to the director's room to make adjustments. - to enter this mode by default, [`&previewmode`](../advanced-settings/upcoming-parameters/and-previewmode.md) can be used by the director \*\* on alpha at vdo.ninja/alpha/\
+* Added a button in the director's room. It lets you toggle between a Preview layout and the normal Director layout; the Preview layout will mirror what a basic [`&scene=0`](../advanced-settings/view-parameters/scene.md) link would look like. Useful if you want to switch to a guest-like mode as a director, and then switch back as needed to the director's room to make adjustments. - to enter this mode by default, [`&previewmode`](../advanced-settings/director-parameters/and-previewmode.md) can be used by the director \*\* on alpha at vdo.ninja/alpha/\
   ![](<../.gitbook/assets/image (1) (2) (4).png>)
 * ``[`&noisegatesettings`](../advanced-settings/audio-parameters/and-noisegatesettings.md) has been added to vdo.ninja/alpha/, which is used in conjunction with [`&noisegate`](../source-settings/noisegate.md). This feature lets you tweak the noise-gate's variables, making it more or less aggressive as needed. example:\
   `https://vdo.ninja/alpha/?noisegate&noisegatesettings=10,25,3000`\

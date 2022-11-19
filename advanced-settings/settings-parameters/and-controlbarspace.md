@@ -4,8 +4,7 @@ description: Forces the bottom control bar to be in its own dedicated space
 
 # \&controlbarspace
 
-Sender-Side Option! ([`&push`](../../source-settings/push.md), [`&room`](../../general-settings/room.md))\
-\* on [https://vdo.ninja/alpha/](https://vdo.ninja/alpha/)
+Sender-Side Option! ([`&push`](../../source-settings/push.md), [`&room`](../../general-settings/room.md))
 
 ## Details
 

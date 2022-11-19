@@ -19,11 +19,14 @@ You can add them to both, source ([`&push`](../../source-settings/push.md)) and 
 | ``[`&password`](../../general-settings/password.md)``           | Sets a password to view a stream or to join a room                                                            |
 | ``[`&hash`](../../newly-added-parameters/and-hash.md)``         | Checks the password                                                                                           |
 | ``[`&label`](../../general-settings/label.md)``                 | Sets a display name label                                                                                     |
+| ``[`&labelsuggestion`](and-labelsuggestion.md)\*                | The same as [`&label`](../../general-settings/label.md), except it asks the user still for a user name        |
 | ``[`&group`](../../general-settings/and-group.md)``             | Puts guests into sub-groups, so they only see others in the same group                                        |
 | ``[`&groupaudio`](../../general-settings/and-groupaudio.md)``   | Tells the system to not filter out audio streams when using [`&group`](../../general-settings/and-group.md)`` |
 | ``[`&datamode`](../../newly-added-parameters/and-datamode.md)`` | Combines a bunch of flags together; no video, no audio, GUI, etc.                                             |
 | ``[`&audiooutput`](and-audiooutput.md)``                        | Like [`&sink`](../view-parameters/and-sink.md), but selects the audio output device                           |
 | ``[`&sink`](../view-parameters/and-sink.md)``                   | Outputs the audio to the specified audio output device, rather than the default                               |
+
+\*NEW IN VERSION 22
 
 ## Source side options
 
@@ -49,3 +52,7 @@ You have to add them to the source side ([`&push`](../../source-settings/push.md
 | ``[`&host`](../../newly-added-parameters/and-host.md)``                 | Shows a pop up to invite more guests to the room                                                                                                                                                    |
 | ``[`&tips`](../../general-settings/tips.md)``                           | Shows a help-screen on the guest joining                                                                                                                                                            |
 | ``[`&welcome`](../../newly-added-parameters/and-welcome.md)``           | Adds a message the guest will see when joining the room                                                                                                                                             |
+| ``[`&welcomeimage`](and-welcomeimage.md)\*                              | Lets you specify an image that appears for a few seconds once a guest joins                                                                                                                         |
+| ``[`&groupmode`](and-groupmode.md)\*                                    | Added to the URL, when not assigned to a group, you don't hear or see anything                                                                                                                      |
+
+\*NEW IN VERSION 22

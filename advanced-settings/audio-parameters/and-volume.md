@@ -34,6 +34,6 @@ Viewer-Side Option! ([`&scene`](../view-parameters/scene.md), [`&room`](../../ge
 [autogain.md](../../source-settings/autogain.md)
 {% endcontent-ref %}
 
-{% content-ref url="../upcoming-parameters/and-volumecontrol.md" %}
-[and-volumecontrol.md](../upcoming-parameters/and-volumecontrol.md)
+{% content-ref url="and-volumecontrol.md" %}
+[and-volumecontrol.md](and-volumecontrol.md)
 {% endcontent-ref %}

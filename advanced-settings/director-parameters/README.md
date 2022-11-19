@@ -23,9 +23,9 @@ Parameters specified for the director's control panel; have to be used together 
 | ``[`&notify`](../../source-settings/and-notify.md)``                    | Audio alerts for raised hands, chat messages and if somebody joins the room                   |
 | ``[`&mutespeaker=0`](../../source-settings/and-mutespeaker.md)``        | Can be used to have the director join unmuted                                                 |
 | ``[`&slotmode`](and-slotmode.md)\*                                      | Gives you the possibility to assign slots to the connected guests                             |
-| ``[`&previewmode`](../upcoming-parameters/and-previewmode.md)\*         | Activates the Preview layout for the director's room by default                               |
-| ``[`&showconnections`](../upcoming-parameters/and-showconnections.md)\* | Displays the total number of p2p connections of a remote stream                               |
-| ``[`&novice`](../upcoming-parameters/and-novice.md)\*                   | Hides some advanced guest options in the director's control center                            |
-| ``[`&layouts`](../upcoming-parameters/and-layouts.md)\*                 | An ordered array of layouts, which can be used to switch between using the API layouts action |
+| ``[`&previewmode`](and-previewmode.md)\*                                | Activates the Preview layout for the director's room by default                               |
+| ``[`&showconnections`](../settings-parameters/and-showconnections.md)\* | Displays the total number of p2p connections of a remote stream                               |
+| ``[`&novice`](and-novice.md)\*                                          | Hides some advanced guest options in the director's control center                            |
+| ``[`&layouts`](and-layouts.md)\*                                        | An ordered array of layouts, which can be used to switch between using the API layouts action |
 
 \*NEW IN VERSION 22

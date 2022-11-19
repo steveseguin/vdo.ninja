@@ -4,8 +4,7 @@ description: The same as &label, except it asks the user still for a user name
 
 # \&labelsuggestion
 
-General Option! ([`&push`](../../source-settings/push.md), [`&room`](../../general-settings/room.md), [`&view`](../view-parameters/view.md), [`&scene`](../view-parameters/scene.md), [`&solo`](../mixer-scene-parameters/and-solo.md))\
-\* on [https://vdo.ninja/alpha/](https://vdo.ninja/alpha/)
+General Option! ([`&push`](../../source-settings/push.md), [`&room`](../../general-settings/room.md), [`&view`](../view-parameters/view.md), [`&scene`](../view-parameters/scene.md), [`&solo`](../mixer-scene-parameters/and-solo.md))
 
 ## Aliases
 
@@ -22,7 +21,7 @@ General Option! ([`&push`](../../source-settings/push.md), [`&room`](../../gener
 ## Details
 
 `&labelsuggestion` is the same as [`&label`](../../general-settings/label.md), except it asks the user still for a user name. If they leave it blank or cancel the prompt asking for a name, it will use the default label.\
-[https://vdo.ninja/alpha/?labelsuggestion=guest\&webcam](https://vdo.ninja/alpha/?labelsuggestion=guest\&webcam)
+[https://vdo.ninja/?labelsuggestion=guest\&webcam](https://vdo.ninja/?labelsuggestion=guest\&webcam)
 
 Once the user enters their label, `&label=username` is added to the URL, so if they reload, they won't be asked again for the label. `&label` takes priority over `&labelsuggestion`.
 

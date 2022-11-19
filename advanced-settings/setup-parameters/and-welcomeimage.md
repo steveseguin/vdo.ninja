@@ -4,8 +4,7 @@ description: Lets you specify an image that appears for a few seconds once a gue
 
 # \&welcomeimage
 
-Sender-Side Option! ([`&push`](../../source-settings/push.md))\
-\* on [https://vdo.ninja/alpha/](https://vdo.ninja/alpha/)
+Sender-Side Option! ([`&push`](../../source-settings/push.md))
 
 ## Aliases
 
@@ -22,7 +21,7 @@ Sender-Side Option! ([`&push`](../../source-settings/push.md))\
 `&welcomeimage` lets you specify a welcome image (URL) that appears for a few seconds before fading away once a guest joins.
 
 Example:\
-[`https://vdo.ninja/alpha/?welcomeimage=https://vdo.ninja/alpha/media/old_logo.png&webcam`](https://vdo.ninja/alpha/?welcomeimage=https://vdo.ninja/alpha/media/old\_logo.png\&webcam)``
+[`https://vdo.ninja/?welcomeimage=https://vdo.ninja/alpha/media/old_logo.png&webcam`](https://vdo.ninja/?welcomeimage=https://vdo.ninja/alpha/media/old\_logo.png\&webcam)``
 
 ## Related
 
