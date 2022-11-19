@@ -344,7 +344,7 @@
     * [\&mutespeaker=0](https://docs.vdo.ninja/advanced-settings/audio-parameters/and-mutespeaker)
     * [\&slotmode](advanced-settings/director-parameters/and-slotmode.md)
     * [\&previewmode](advanced-settings/director-parameters/and-previewmode.md)
-    * [\&showconnections](https://docs.vdo.ninja/advanced-settings/source-parameters/and-notify)
+    * [\&showconnections](https://docs.vdo.ninja/advanced-settings/settings-parameters/and-showconnections)
     * [\&novice](advanced-settings/director-parameters/and-novice.md)
     * [\&layouts](advanced-settings/director-parameters/and-layouts.md)
   * [Screen-share Parameters](advanced-settings/screen-share-parameters/README.md)
