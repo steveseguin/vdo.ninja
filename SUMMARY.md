@@ -427,6 +427,7 @@
   * [v12](releases/v12.md)
   * [v10](releases/v10.md)
   * [v8](releases/v8.md)
+  * [v22 👑](releases/v22.md)
 * [Updates](updates/README.md)
   * [Updates - VDO.Ninja](updates/updates-vdo.ninja.md)
   * [Updates - Social Stream & Chat Overlay](updates/updates-social-stream-and-chat-overlay.md)
