@@ -11,7 +11,7 @@ _\*\*_ UPDATE: I hot-patched beta and alpha with a fix. This fix disables the op
 #### **November 19** <a href="#august-31" id="august-31"></a>
 
 * Some advanced audio-related VDO.Ninja updates:\
-  \-**-** I show the audio codec now used in the stats, along with whether audio forward error correction (FEC) is on or not (on by default)\
+  \-- I show the audio codec now used in the stats, along with whether audio forward error correction (FEC) is on or not (on by default)\
   ![](../.gitbook/assets/image.png)\
   \-- `&nofec` on the viewer side can disable FEC.\
   \-- `&audiocodec` on the viewer side can let you specify the audio codec; `opus` (default), `pcmu`, `pcma`, `isac`, `g722` and `red`\
