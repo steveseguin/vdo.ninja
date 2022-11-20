@@ -11106,7 +11106,7 @@ function remoteSpeakerMute(ele,  event=false){
 	}
 
 	var msg = {};
-	if (ele.value == 1) {
+	if (ele.value == 0) {
 		msg.speakerMute = false
 	} else {
 		msg.speakerMute = true;
