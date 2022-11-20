@@ -903,12 +903,38 @@
 	<div id="container">
 		<div id="containermenu"></div>
 	</div>
+	<div id="chatModuleButton" class="hidden" onclick="toggleChat();" title="Show the chat window">💬</div>
+	<div id="chatModule" class="hidden">
+		<div class="xbutton" onclick="toggleChat();" title="Hide the chat window">x</div>
+		<div id="chatBody" class="message"> 
+			<div class="inMessage" data-translate='welcome-to-vdo-ninja-chat'>
+				Welcome to the Comms app! You can send text messages to everyone in the room from here.
+			</div>
+		</div>
+		<div id="chatSendBar">
+			<input id="chatInput" placeholder="Enter chat message to send here" onkeypress="EnterButtonChat(event)" />
+			<button onclick="sendChatMessage()" id='sendChat'>Send</button>
+		</div>
+	</div>
 	<div id="welcomeWindow">
 		<div class="center-content">
 			<div class="title"><h1 class="main-heading">Comms</h1><h2>multi-group audio chat<b></b></h2></div>
 			
-			The comms app has moved.  <a href='https://comms.cam' id='redirect'>Click here to go there now.</a>
-			
+			<label for="roomname"><input  autocapitalize="off" autocorrect="off"  name="roomname" id="roomname" type="text" placeholder="Room Name" /></label>
+			<font class="tooltip">
+				<button onclick="randomRoomName();" class="randomRoomName"></button><span class="tooltiptext">Generate a random room name</span>
+			</font>
+			<br />
+			<label for="roompassword"><input  autocapitalize="off" autocorrect="off"  name="roompassword" id="roompassword" type="text" placeholder="Room Password (optional)"/></label><br />
+			<button onclick="startRoom();">Get started!</button><br /><br />
+			<span id="lastSavedRoom" class="hidden">
+				<br /><br />
+				<label for="savedroomname">
+					<input name="savedroomname"  autocapitalize="off" autocorrect="off"  id="savedroomname" type="text" disabled placeholder="Room Name" /></label>
+				<label for="savedroompassword" id="savedpasswordlabel"><br />
+					<input name="savedroompassword"  autocapitalize="off" autocorrect="off"  id="savedroompassword" disabled type="password" placeholder="Room Password"/></label>
+				<button onclick="startLastRoom();">Restore last room</button>
+			</span>
 			<br /><br />
 			<div class="footer">
 				<div>
@@ -921,13 +947,1216 @@
 			</div>
 		</div>
 	</div>
+	<div id="iframeContainer" class="tFadeStart">
+	</div>
+	<div class="gone" >
+		<!-- This image is used when dragging elements -->
+		<img src="./media/favicon-32x32.png" style="pointer-events: none;" id="dragImage" loading="lazy" />
+	</div>
+	<div id="messagePopup" class="popup-message"></div>
 	<script>
 	
-	document.getElementById("redirect").href = 'https://comms.cam' + location.search;
-	try {
-		location.assign('https://comms.cam' + location.search)
-	} catch(e){
-		window.location.replace("https://comms.cam"+ location.search);
+	function allowDrop(ev) {
+		ev.preventDefault();
+	}
+	
+	(function(w) {
+		w.URLSearchParams = w.URLSearchParams || function(searchString) {
+			var self = this;
+			searchString = searchString.replace("??", "?");
+			self.searchString = searchString;
+			self.get = function(name) {
+				var results = new RegExp('[\?&]' + name + '=([^&#]*)').exec(self.searchString);
+				if (results == null) {
+					return null;
+				} else {
+					return decodeURI(results[1]) || 0;
+				}
+			};
+		};
+
+	})(window);
+	
+	function warnlog(msg){
+		console.warn(msg);
+	}
+	function errorlog(msg){
+		console.error(msg);
+	}
+	function log(msg){
+		console.log(msg);
+	}
+	
+	function getById(id){
+		var ele = document.getElementById(id);
+		if (!ele){
+			console.warn(id+" not found.");
+			return document.createElement("span");
+		} else {
+			return ele;
+		}
+	}
+	
+	function toggleChat(){
+		document.getElementById("chatModule").classList.toggle("hidden");
+		document.getElementById("chatModuleButton").classList.toggle("hidden");
+		
+		if (document.getElementById("chatModule").classList.contains("hidden")){
+			document.documentElement.style.setProperty('--chat-width', "0px");
+			document.documentElement.style.setProperty('--chat-filler', "33px");
+			
+		} else {
+			document.documentElement.style.setProperty('--chat-width', "400px");
+			document.documentElement.style.setProperty('--chat-filler', "0px");
+		}
+	}
+	
+	function sanitizeRoomName(roomid) {
+		if (!roomid){
+			return false;
+		}
+		roomid = roomid.trim();
+		if (roomid === "") {
+			return false;
+		} else if (!roomid) {
+			return false;
+		} else if (roomid=="test") {
+			return false;
+		}
+		var roomid = roomid.replace(/[\W]+/g, "_");
+		if (roomid.length > 50) {
+			roomid = roomid.substring(0, 50);
+		}
+		return roomid;
+	}
+	
+
+	var urlEdited = window.location.search.replace(/\?\?/g, "?");
+	urlEdited = urlEdited.replace(/\?/g, "&");
+	urlEdited = urlEdited.replace(/\&/, "?");
+
+	if (urlEdited !== window.location.search){
+		warnlog(window.location.search + " changed to " + urlEdited);
+		window.history.pushState({path: urlEdited.toString()}, '', urlEdited.toString());
+	}
+	var urlParams = new URLSearchParams(urlEdited);
+	
+	var api = false;
+	if (urlParams.has('osc') || urlParams.has('api')) {
+		if (urlParams.get('osc') || urlParams.get('api')) {
+			api = urlParams.get('osc') || urlParams.get('api');
+		}
+	}
+	
+	var streamIDs = [];
+	var slotsNeeded = 1;
+	
+	var updateOnSlotChange = true;
+	var assignSlotToGuest = true;
+	var toggleLabel = false;
+	var toggleBroadcast = true;
+	var messageList = [];
+	
+	
+	var iOS = !!navigator.platform && /iPad|iPhone|iPod/.test(navigator.platform);  // used by main.js also
+	var iPad = (navigator.maxTouchPoints && navigator.maxTouchPoints > 2 && /MacIntel/.test(navigator.platform));
+	var mobile = false;
+	if (/Android|Pixel|webOS|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)){
+		mobile = true;
+	} else if (iOS || iPad){
+		mobile = true;
+	} else if (urlParams.has('mobile')){
+		mobile = true;
+	}
+	
+	if (screen.height && screen.width && (screen.height*screen.width<400000)){
+		mobile = true;
+	}
+	
+	if (mobile){
+		//toggleChat();
+		document.body.classList.add("mobile");
+		//getById("chatModule").classList.add("hidden");
+	}
+	
+	
+	var password = false;
+	if (urlParams.has('password') || urlParams.has('pass') || urlParams.has('pw') || urlParams.has('p')) {
+		password = urlParams.get('password') || urlParams.get('pass') || urlParams.get('pw') || urlParams.get('p');
+	}
+	
+	var aspectRatio = 16/9.0;
+	document.documentElement.style.setProperty('--aspect-ratio', aspectRatio);
+	
+	var roomname = false;
+	if (urlParams.has("room") || urlParams.has("r") ||urlParams.has("dir") || urlParams.has("director")){
+		roomname = urlParams.get("room") || urlParams.get("r") ||urlParams.get("dir") || urlParams.get("director");
+		roomname = sanitizeRoomName(roomname);
+	}
+	var savedLastRoom = getStorage("savedRoom_comms");
+	
+	if (savedLastRoom){
+		if ("roomname" in savedLastRoom && savedLastRoom.roomname!==false){
+			document.getElementById("savedroomname").value = savedLastRoom.roomname;
+			document.getElementById("lastSavedRoom").classList.remove("hidden");
+			if ("password" in savedLastRoom && savedLastRoom.password!==false){
+				document.getElementById("savedpasswordlabel").classList.remove("hidden");
+				document.getElementById("savedroompassword").value = savedLastRoom.password;
+			} else {
+				document.getElementById("savedpasswordlabel").classList.add("hidden");
+			}
+		} 
+	}
+	function randomRoomName(){
+		document.getElementById("roomname").value = generateString(8);
+	}
+	function startLastRoom(){
+		document.getElementById("roomname").value = document.getElementById("savedroomname").value;
+		document.getElementById("roompassword").type = "password";
+		document.getElementById("roompassword").value = document.getElementById("savedroompassword").value;
+		startRoom();
+	}
+	function startRoom(){
+		var pid = document.getElementById("roompassword").value.trim();
+		if (pid){
+			password = pid;
+		}
+	
+		var rid = document.getElementById("roomname").value.trim();
+		if (rid == "test"){
+			alert("Please enter a unique room name");
+		}
+		rid = sanitizeRoomName(rid);
+		if (rid){
+			if (this){
+				this.disabled = true;
+				this.onclick = null;
+			}
+			roomname = rid;
+			loadIframe();
+			document.getElementById("welcomeWindow").classList.add("fadeout");
+			setTimeout(function(){
+				document.getElementById("welcomeWindow").classList.add("hidden");
+			},500);
+		} else {
+			document.getElementById("roomname").classList.remove("shake");
+			setTimeout(function(){document.getElementById("roomname").classList.add("shake");},10);
+		}
+	}
+	
+	function sanitize(string) {
+		var temp = document.createElement('div');
+		temp.textContent = string;
+		return temp.innerHTML;
+	}
+
+	function EnterButtonChat(event){
+		 // Number 13 is the "Enter" key on the keyboard
+		var key = event.which || event.keyCode;
+		if (key  === 13) {
+			// Cancel the default action, if needed
+			event.preventDefault();
+			// Trigger the button element with a click
+			sendChatMessage();
+		}
+	}
+
+	function sendChatMessage(){ // filtered + visual
+		var msg = document.getElementById('chatInput').value;
+		msg = sanitize(msg);
+		if (msg==""){return;}
+		iframe.contentWindow.postMessage({ sendChat: msg }, "*"); 
+		document.getElementById('chatInput').value = "";
+		
+		var message = {};
+		message.label = "You:";
+		message.type = "sent";
+		message.msg = msg;
+		
+		updateMessages(message);
+	}
+
+	function timeSince(date) {
+
+	  var seconds = Math.floor((new Date() - date) / 1000);
+
+	  var interval = seconds / 31536000;
+
+	  if (interval > 1) {
+		return Math.floor(interval) + " years";
+	  }
+	  interval = seconds / 2592000;
+	  if (interval > 1) {
+		return Math.floor(interval) + " months";
+	  }
+	  interval = seconds / 86400;
+	  if (interval > 1) {
+		return Math.floor(interval) + " days";
+	  }
+	  interval = seconds / 3600;
+	  if (interval > 1) {
+		return Math.floor(interval) + " hours";
+	  }
+	  interval = seconds / 60;
+	  if (interval > 1) {
+		return Math.floor(interval) + " minutes";
+	  }
+	  return "Seconds ago";
+	}
+
+	function updateMessages(message = false){
+		if (message){
+			var time = timeSince(message.time);
+			var msg = document.createElement("div");
+			////// KEEP THIS IN /////////
+			console.log(message.msg); // Display Recieved messages for View-Only clients.
+			/////////////////////////////
+			var label = "";
+			if (message.label){
+				label = message.label;
+			} 
+			
+			if (message.type == "sent"){
+				msg.innerHTML = "<span class='chat_message chat_sent'>"+message.msg + "  </span><i><small> <small>- "+time+"</small></small></i><span style='display:none'>"+label+"</span>";
+				msg.classList.add("outMessage");
+			} else if (message.type == "recv"){
+				msg.innerHTML = label+"<span class='chat_message chat_recv'>"+message.msg + " </span><i><small> <small>- "+time+"</small></small></i>";
+				msg.classList.add("inMessage");
+			} else if (message.type == "action"){
+				msg.innerHTML = label+"<span class='chat_message chat_action'>"+message.msg + " </span><i><small> <small>- "+time+"</small></small></i>";
+				msg.classList.add("actionMessage");
+			} else if (message.type == "alert"){
+				msg.innerHTML = "<span class='chat_message chat_alert'>"+message.msg + " </span><i><small> <small>- "+time+"</small></small></i>";
+				msg.classList.add("inMessage");
+			} else {
+				msg.innerHTML = "<span class='chat_message chat_other'>"+message.msg + "  </span><i><small> <small>- "+time+"</small></small></i>";
+				msg.classList.add("inMessage");
+			}
+			document.getElementById("chatBody").appendChild(msg);
+		} else {
+			document.getElementById("chatBody").innerHTML = "";
+			for (i in messageList){
+				var time = timeSince(messageList[i].time);
+				var msg = document.createElement("div");
+				////// KEEP THIS IN /////////
+				console.log(messageList[i].msg); // Display Recieved messages for View-Only clients.
+				/////////////////////////////
+				var label = "";
+				if (messageList[i].label){
+					label = messageList[i].label;
+				} 
+				
+				if (messageList[i].type == "sent"){
+					msg.innerHTML = "<span class='chat_message chat_sent'>"+messageList[i].msg + "  </span><i><small> <small>- "+time+"</small></small></i><span style='display:none'>"+label+"</span>";
+					msg.classList.add("outMessage");
+				} else if (messageList[i].type == "recv"){
+					msg.innerHTML = label+"<span class='chat_message chat_recv'>"+messageList[i].msg + " </span><i><small> <small>- "+time+"</small></small></i>";
+					msg.classList.add("inMessage");
+				} else if (messageList[i].type == "action"){
+					msg.innerHTML = label+"<span class='chat_message chat_action'>"+messageList[i].msg + " </span><i><small> <small>- "+time+"</small></small></i>";
+					msg.classList.add("actionMessage");
+				} else if (messageList[i].type == "alert"){
+					msg.innerHTML = "<span class='chat_message chat_alert'>"+messageList[i].msg + " </span><i><small> <small>- "+time+"</small></small></i>";
+					msg.classList.add("inMessage");
+				} else {
+					msg.innerHTML = "<span class='chat_message chat_other'>"+messageList[i].msg + "  </span><i><small> <small>- "+time+"</small></small></i>";
+					msg.classList.add("inMessage");
+				}
+				
+				document.getElementById("chatBody").appendChild(msg);
+			}
+		}
+		//if (chatUpdateTimeout){
+		//	clearInterval(chatUpdateTimeout);
+		//}
+		document.getElementById("chatBody").scrollTop = document.getElementById("chatBody").scrollHeight;
+		//chatUpdateTimeout = setTimeout(function(){updateMessages()},60000);
+	}
+	
+	function errorlog(e,a=null,b=null){
+		console.error(e);
+	}
+	
+	$(function(){
+		$( "#containermenu" ).sortable({
+			stop: function( event, ui ) {saveSession();},
+			distance: 20
+		});
+	});
+	
+	function swapNodes(n1, n2) {
+		var p1 = n1.parentNode;
+		var p2 = n2.parentNode;
+		var i1, i2;
+
+		if ( !p1 || !p2 || p1.isEqualNode(n2) || p2.isEqualNode(n1) ) return;
+
+		for (var i = 0; i < p1.children.length; i++) {
+			if (p1.children[i].isEqualNode(n1)) {
+				i1 = i;
+			}
+		}
+		for (var i = 0; i < p2.children.length; i++) {
+			if (p2.children[i].isEqualNode(n2)) {
+				i2 = i;
+			}
+		}
+
+		if ( p1.isEqualNode(p2) && i1 < i2 ) {
+			i2++;
+		}
+		p1.insertBefore(n2, p1.children[i1]);
+		p2.insertBefore(n1, p2.children[i2]);
+	}
+
+	function drag(ev) {
+		var data = ev.dataTransfer.getData("text");
+		var origThing = document.getElementById(data);
+	
+		ev.dataTransfer.setData("text", ev.target.id);
+		var eles = document.querySelectorAll(".thing");
+		for (var i=0;i<eles.length;i++){
+			if (eles[i].id == ev.target.id){continue;}
+			if (!ev.target.dataset.slot){
+				if (eles[i].id == "delete"){
+					if (!ev.target.classList.contains("disconnected")){
+						continue;
+					} else {
+						eles[i].style.boxShadow = "0px 0px 8px 2px #F00";
+						continue;
+					}
+				}
+			}
+			
+			eles[i].style.boxShadow = "0px 0px 8px 2px #Fff";
+		}
+		var eles = document.querySelectorAll(".empty");
+		for (var i=0;i<eles.length;i++){
+			eles[i].style.boxShadow = "0px 0px 8px 2px #Fff";
+		}
+	}
+
+	function drop(ev) {
+		ev.preventDefault();
+		var data = ev.dataTransfer.getData("text");
+		var origThing = document.getElementById(data);
+		ev.target.style.border = "";
+		origThing.style.border = "";
+		
+		if (ev.target.classList.contains("thing")){
+			
+			swapNodes( ev.target, origThing);
+			var slot = parseInt(origThing.dataset.slot);
+			origThing.dataset.slot = parseInt(ev.target.dataset.slot);
+			ev.target.dataset.slot = slot;
+			var oldColor = origThing.style.backgroundColor;
+			origThing.style.backgroundColor = ev.target.style.backgroundColor;
+			ev.target.style.backgroundColor = oldColor;
+			//ev.target.classList.add("empty");
+		} else if (ev.target.classList.contains("empty")){
+		
+			if (!ev.target.dataset.slot){return;}
+			if (ev.target.dataset.slot=="undefined"){return;}
+			if (ev.target.dataset.slot=="undefined"){return;}
+			
+			ev.target.parentNode.insertBefore(origThing, ev.target.nextSibling);
+			
+			console.warn(origThing);
+			
+			if (origThing.dataset.slot && (origThing.dataset.slot!=="undefined")){
+				document.querySelectorAll("[data-slot='"+origThing.dataset.slot+"']").forEach(ele=>{ele.style.display = "block";})
+				document.querySelectorAll("[data-slot='"+origThing.dataset.slot+"']").forEach(ele=>{ele.classList.remove("hidden");})
+			}
+			origThing.dataset.slot = ev.target.dataset.slot;
+			ev.target.style.display = "none";
+			ev.target.classList.add("hidden");
+			//ev.target.classList.remove("empty");
+			origThing.style.backgroundColor = ev.target.style.backgroundColor;
+		}
+		
+		var eles = document.querySelectorAll(".thing");
+		for (var i=0;i<eles.length;i++){
+			eles[i].style.boxShadow =  "unset";
+		}
+		var eles = document.querySelectorAll(".empty");
+		for (var i=0;i<eles.length;i++){
+			eles[i].style.boxShadow = "unset";
+		}
+	}
+	
+	function dragenter(event) {
+		event.preventDefault();
+		if ( event.target.classList.contains("thing") ) {
+			event.target.style.border = "3px dotted black";
+		} else if (event.target.classList.contains("empty")){
+			event.target.style.border =  "3px dotted black";
+		}
+	}
+
+	function dragleave(event) {
+		event.preventDefault();
+		if (event.target.classList.contains("thing")){
+			event.target.style.border = "";
+		} else if (event.target.classList.contains("empty")){
+			event.target.style.border = "";
+		}
+	}
+
+	
+	function dropRemove(ev) {
+		ev.preventDefault();
+		var data = ev.dataTransfer.getData("text");
+		var origThing = document.getElementById(data);
+		
+		ev.target.style.border = "";
+		origThing.style.border = "";
+		
+		if (origThing.dataset.slot){
+			document.querySelector("[data-slot='"+origThing.dataset.slot+"']").style.display = "block";
+			document.querySelector("[data-slot='"+origThing.dataset.slot+"']").classList.remove("hidden");
+			document.querySelector("[data-slot='"+origThing.dataset.slot+"']").classList.add("empty");
+			delete origThing.dataset.slot;
+		}
+		
+		origThing.style.backgroundColor = "#000"; 
+		if (ev.target.classList.contains("thing")){
+			ev.target.parentNode.insertBefore(origThing, ev.target.nextSibling);
+		} else {
+			ev.target.appendChild(origThing);
+		}
+		document.getElementById("col2").appendChild(document.getElementById("demoDrop"));
+		document.getElementById("col2").appendChild(document.getElementById("delete"));
+		
+		var eles = document.querySelectorAll(".thing");
+		for (var i=0;i<eles.length;i++){
+			eles[i].style.boxShadow =  "unset";
+		}
+		var eles = document.querySelectorAll(".empty");
+		for (var i=0;i<eles.length;i++){
+			eles[i].style.boxShadow = "unset";
+		}
+		
+		if (ev.target.id == "delete"){
+			if (origThing.classList.contains("disconnected")){
+				if (!origThing.dataset.slot){
+					origThing.remove();
+					return;
+				}
+			}
+		}
+	}
+	
+	var colors = [
+		"#00AAAA",
+		"#FF0000",
+		"#0000FF",
+		"#AA00AA",
+		"#00FF00",
+		"#AAAA00",
+		"#AACC44",
+		"#CCAA44",
+		"#CC44AA",
+		"#44AACC"
+	];
+	
+	var remoteGroups = {};
+	
+	var initialgroups = {};
+	
+	initialgroups.settings = {};
+	initialgroups.activeGroups = [];
+	initialgroups.groups = [];
+	
+	
+	var savedSession = getStorage("savedSession_comms");
+	
+	if (savedSession){
+		initialgroups = JSON.parse(savedSession);
+	} else {
+		var data = "1";	
+		initialgroups.groups.push(data);
+		
+		var data = "2";
+		initialgroups.groups.push(data);
+		
+		var data = "3";
+		initialgroups.groups.push(data);
+		
+		var data = "4";
+		initialgroups.groups.push(data);
+		
+		var data = "5";
+		initialgroups.groups.push(data);
+
+		var data = "6";
+		initialgroups.groups.push(data);
+	}
+	
+	
+	if (urlParams.has("group") || urlParams.has("groups")){
+		var groups = urlParams.get("group") || urlParams.get("groups");
+		if (groups){
+			groups.split(",").forEach(group=>{
+				if (!initialgroups.groups.includes(group)){
+					initialgroups.groups.push(group);
+					if (!initialgroups.activeGroups.includes(group)){
+						initialgroups.activeGroups.push(group);
+					};
+				}
+			});
+		}
+	}
+	var streamID = "";
+	if (urlParams.has("push") || urlParams.has("sid")){
+		streamID = urlParams.get("push") || urlParams.get("sid") || "";
+		streamID = "&push="+streamID;
+	}
+	
+	var label = "&label";
+	if (urlParams.has("label") || urlParams.has("l")){
+		label += "=" + (urlParams.get("label") || urlParams.get("l") || "");
+	}
+	
+	savedSession = initialgroups;
+	
+	if (iframe){
+		iframe.contentWindow.postMessage({ groups: savedSession.activeGroups }, "*"); 
+	}
+	
+	function exportSession() {
+		var content = JSON.stringify(savedSession);
+		var fileName = roomname + ".json";
+		var a = document.createElement("a");
+		var file = new Blob([content], {type: 'text/plain'});
+		a.href = URL.createObjectURL(file);
+		a.download = fileName;
+		a.click();
+	}
+	
+	
+	var injectCSS = `
+		.directorsgrid .vidcon {
+			display: inline-block !important;
+			width: 293.7px !important;
+			background: #3e3e3e00;
+			color: #FCFCFC;
+			vertical-align: top;
+			border: 1px solid #2e445c;
+			padding: 10px;
+			border-radius: 10px;
+			background: #2e445c;
+			box-shadow: 20px 20px 60px #182430, -20px -20px 60px #283c52;
+		}
+		.card{
+			background-color: #0000;
+		}
+		.container-inner {
+			background-color: #0000;
+		}
+		.column>h2{
+			color:#d5d5d5;
+		}
+		#dropButton{
+			display:none;
+		}
+	`;
+	
+	injectCSS = encodeURIComponent(btoa(injectCSS));
+	
+	function copyFunction(copyText, evt = false) {
+		if (evt){
+			if ("buttons" in evt) {
+				if (evt.buttons !== 0){return;}
+			} else if ("which" in evt){
+				if (evt.which !== 0){return;}
+			}
+			popupMessage(evt);
+			evt.preventDefault();
+			evt.stopPropagation();
+		}
+
+		try {
+			copyText.select();
+			copyText.setSelectionRange(0, 99999);
+			document.execCommand("copy");
+		} catch (e) {
+			var dummy = document.createElement('input');
+			document.body.appendChild(dummy);
+			dummy.value = copyText;
+			dummy.select();
+			document.execCommand('copy');
+			document.body.removeChild(dummy);
+		}
+		return false;
+	}
+	
+	
+	
+	function popupMessage(e, message = "Copied to Clipboard") { // right click menu
+
+		var posx = 0;
+		var posy = 0;
+
+		if (!e) var e = window.event;
+
+		if (e.pageX || e.pageY) {
+			posx = e.pageX;
+			posy = e.pageY;
+		} else if (e.clientX || e.clientY) {
+			posx = e.clientX + document.body.scrollLeft + document.documentElement.scrollLeft;
+			posy = e.clientY + document.body.scrollTop + document.documentElement.scrollTop;
+		}
+
+		posx += 10;
+
+
+		var menu = getById("messagePopup");
+		menu.innerHTML = "<center>" + message + "</center>";
+		var menuState = 0;
+		var menuWidth;
+		var menuHeight;
+		var menuPosition;
+		var menuPositionX;
+		var menuPositionY;
+
+		var windowWidth;
+		var windowHeight;
+
+		if (menuState !== 1) {
+			menuState = 1;
+			menu.classList.add("context-menu--active");
+		}
+
+		menuWidth = menu.offsetWidth + 4;
+		menuHeight = menu.offsetHeight + 4;
+
+		windowWidth = window.innerWidth;
+		windowHeight = window.innerHeight;
+
+		if ((windowWidth - posx) < menuWidth) {
+			menu.style.left = windowWidth - menuWidth + "px";
+		} else {
+			menu.style.left = posx + "px";
+		}
+
+		if ((windowHeight - posy) < menuHeight) {
+			menu.style.top = windowHeight - menuHeight + "px";
+		} else {
+			menu.style.top = posy + "px";
+		}
+
+		function toggleMenuOff() {
+			if (menuState !== 0) {
+				menuState = 0;
+				menu.classList.remove("context-menu--active");
+			}
+		}
+		menu.classList.remove("fadeout");
+		
+		setTimeout(function() {
+			menu.classList.add("fadeout");
+		}, 500);
+		
+		setTimeout(function() {
+			toggleMenuOff();
+		}, 1500);
+	}
+	
+	function generateString(LLL = 7){
+		var text = "";
+		var words = ["the","of","to","and","a","in","is","it","you","that","he","was","for","on","are","with","as","I","his","they","be","at","one","have","this","from","or","had","by","word","but","what","some","we","can","out","other","were","all","there","when","up","use","your","how","said","an","each","she","which","do","their","time","if","will","way","about","many","then","them","write","would","like","so","these","her","long","make","thing","see","him","two","has","look","more","day","could","go","come","did","number","sound","no","most","people","my","over","know","water","than","call","first","who","may","down","side","been","now","find","any","new","work","part","take","get","place","made","live","where","after","back","little","only","round","man","year","came","show","every","good","me","give","our","under","name","very","through","just","form","sentence","great","think","say","help","low","line","differ","turn","cause","much","mean","before","move","right","boy","old","too","same","tell","does","set","three","want","air","well","also","play","small","end","put","home","read","hand","port","large","spell","add","even","land","here","must","big","high","such","follow","act","why","ask","men","change","went","light","kind","off","need","house","picture","try","us","again","animal","point","mother","world","near","build","self","earth","father","head","stand","own","page","should","country","found","answer","school","grow","study","still","learn","plant","cover","food","sun","four","between","state","keep","eye","never","last","let","thought","city","tree","cross","farm","hard","start","might","story","saw","far","sea","draw","left","late","run","don't","while","press","close","night","real","life","few","north","open","seem","together","next","white","children","begin","got","walk","example","ease","paper","group","always","music","those","both","mark","often","letter","until","mile","river","car","feet","care","second","book","carry","took","science","eat","room","friend","began","idea","fish","mountain","stop","once","base","hear","horse","cut","sure","watch","color","face","wood","main","enough","plain","girl","usual","young","ready","above","ever","red","list","though","feel","talk","bird","soon","body","dog","family","direct","pose","leave","song","measure","door","product","black","short","numeral","class","wind","question","happen","complete","ship","area","half","rock","order","fire","south","problem","piece","told","knew","pass","since","top","whole","king","space","heard","best","hour","better","true .","during","hundred","five","remember","step","early","hold","west","ground","interest","reach","fast","verb","sing","listen","six","table","travel","less","morning","ten","simple","several","vowel","toward","war","lay","against","pattern","slow","center","love","person","money","serve","appear","road","map","rain","rule","govern","pull","cold","notice","voice","unit","power","town","fine","certain","fly","fall","lead","cry","dark","machine","note","wait","plan","figure","star","box","noun","field","rest","correct","able","pound","done","beauty","drive","stood","contain","front","teach","week","final","gave","green","oh","quick","develop","ocean","warm","free","minute","strong","special","mind","behind","clear","tail","produce","fact","street","inch","multiply","nothing","course","stay","wheel","full","force","blue","object","decide","surface","deep","moon","island","foot","system","busy","test","record","boat","common","gold","possible","plane","stead","dry","wonder","laugh","thousand","ago","ran","check","game","shape","equate","hot","miss","brought","heat","snow","tire","bring","yes","distant","fill","east","paint","language","among","grand","ball","yet","wave","drop","heart","am","present","heavy","dance","engine","position","arm","wide","sail","material","size","vary","settle","speak","weight","general","ice","matter","circle","pair","include","divide","syllable","felt","perhaps","pick","sudden","count","square","reason","length","represent","art","subject","region","energy","hunt","probable","bed","brother","egg","ride","cell","believe","fraction","forest","sit","race","window","store","summer","train","sleep","prove","lone","leg","exercise","wall","catch","mount","wish","sky","board","joy","winter","sat","written","wild","instrument","kept","glass","grass","cow","job","edge","sign","visit","past","soft","fun","bright","gas","weather","month","million","bear","finish","happy","hope","flower","clothe","strange","gone","jump","baby","eight","village","meet","root","buy","raise","solve","metal","whether","push","seven","paragraph","third","shall","held","hair","describe","cook","floor","either","result","burn","hill","safe","cat","century","consider","type","law","bit","coast","copy","phrase","silent","tall","sand","soil","roll","temperature","finger","industry","value","fight","lie","beat","excite","natural","view","sense","ear","else","quite","broke","case","middle","kill","son","lake","moment","scale","loud","spring","observe","child","straight","consonant","nation","dictionary","milk","speed","method","organ","pay","age","section","dress","cloud","surprise","quiet","stone","tiny","climb","cool","design","poor","lot","experiment","bottom","key","iron","single","stick","flat","twenty","skin","smile","crease","hole","trade","melody","trip","office","receive","row","mouth","exact","symbol","die","least","trouble","shout","except","wrote","seed","tone","join","suggest","clean","break","lady","yard","rise","bad","blow","oil","blood","touch","grew","cent","mix","team","wire","cost","lost","brown","wear","garden","equal","sent","choose","fell","fit","flow","fair","bank","collect","save","control","decimal","gentle","woman","captain","practice","separate","difficult","doctor","please","protect","noon","whose","locate","ring","character","insect","caught","period","indicate","radio","spoke","atom","human","history","effect","electric","expect","crop","modern","element","hit","student","corner","party","supply","bone","rail","imagine","provide","agree","thus","capital","won't","chair","danger","fruit","rich","thick","soldier","process","operate","guess","necessary","sharp","wing","create","neighbor","wash","bat","rather","crowd","corn","compare","poem","string","bell","depend","meat","rub","tube","famous","dollar","stream","fear","sight","thin","triangle","planet","hurry","chief","colony","clock","mine","tie","enter","major","fresh","search","send","yellow","gun","allow","print","dead","spot","desert","suit","current","lift","rose","continue","block","chart","hat","sell","success","company","subtract","event","particular","deal","swim","term","opposite","wife","shoe","shoulder","spread","arrange","camp","invent","cotton","born","determine","quart","nine","truck","noise","level","chance","gather","shop","stretch","throw","shine","property","column","molecule","select","wrong","gray","repeat","require","broad","prepare","salt","nose","plural","anger","claim","continent","oxygen","sugar","death","pretty","skill","women","season","solution","magnet","silver","thank","branch","match","suffix","especially","fig","afraid","huge","sister","steel","discuss","forward","similar","guide","experience","score","apple","bought","led","pitch","coat","mass","card","band","rope","slip","win","dream","evening","condition","feed","tool","total","basic","smell","valley","nor","double","seat","arrive","master","track","parent","shore","division","sheet","substance","favor","connect","post","spend","chord","fat","glad","original","share","station","dad","bread","charge","proper","bar","offer","segment","slave","duck","instant","market","degree","populate","chick","dear","enemy","reply","drink","occur","support","speech","nature","range","steam","motion","path","liquid","log","meant","quotient","teeth","shell","neck"];
+		
+		for (var i=0;i<2;i++){
+			try{
+				var rndint = parseInt(Math.random()*1000);
+				text += words[rndint];
+			} catch(e){}
+		}
+		var possible = "ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnpqrstuvwxyz23456789";
+		text += possible.charAt(Math.floor(Math.random() * possible.length));
+		while (text.length<LLL){
+			text += possible.charAt(Math.floor(Math.random() * possible.length));
+		}
+		try{
+			text = text.replaceAll('AD', 'vDAv'); // avoiding adblockers
+			text = text.replaceAll('Ad', 'vdAv');
+			text = text.replaceAll('ad', 'vdav');
+			text = text.replaceAll('aD', 'vDav');
+		} catch(e){errorlog(e);}
+		
+		return text;
+	};
+	
+	function hotkeyCheck(event){
+		if (event.target && (event.target.tagName == "INPUT")){warnlog("input in focus; return");return;}
+		var value = parseInt(event.key);
+		if (value == event.key){
+			try {
+				if (document.querySelector("#containermenu").children[value]){
+					document.querySelector("#containermenu").children[value].querySelector("group").click();
+					document.querySelector("#containermenu").children[value].classList.add("shake");
+					setTimeout(function(ele){ele.classList.remove("shake");},500,document.querySelector("#containermenu").children[value]);
+				}
+			} catch(e){}
+		}
+	}
+	
+	var iframe = null;
+	
+	function loadIframe(){
+		if (iframe){return;}
+		iframe = document.createElement("iframe");
+		
+		var additional = ""; // guest/scene links also
+		if (password){
+			additional = "&password="+password;
+		}
+		
+		var additional2 = ""; // this iframe only
+		if (api){
+			additional2 += "&api="+api;
+		}
+		
+		if (assignSlotToGuest){
+			additional2+="&slotmode";
+		} else {
+			additional2+="&slotmode=2";
+		}
+		roomname = sanitizeRoomName(roomname);
+	
+		
+		var iframeContainer = document.getElementById("iframeContainer");
+		iframe.allow = "autoplay;camera;microphone;fullscreen;picture-in-picture;display-capture;";
+		iframe.id = "vdoninja";
+		
+		if (!roomname){
+			roomname = generateString(10);
+		}
+		
+		if (mobile){
+			additional2 += "&ad=1&chatbutton=1";
+		} else {
+			additional2 += "&chatbutton=0";
+		}
+		
+		var chatmsg = "Welcome to the Comms app. Select a group to participate in.";
+		chatmsg = encodeURIComponent(chatmsg);
+		
+		if (window.location.hostname == "comms.cam"){
+			var iframesrc = "https://vdo.ninja/?controlbarspace&volumecontrol&sharperscreen&groupmode&novice&ltb=350&minipreview&transparent&hideheader&margin&rounded&hidetranslate&cleandirector&vd=0&webcam&nvb&sstype=3&ssb&showlabel=toprounded&labelsize=85&style=2&room="+roomname+additional+additional2+"&b64css="+injectCSS+streamID+label+"&chatmsg="+chatmsg;
+		} else {
+			var iframesrc = "./index.html?controlbarspace&volumecontrol&sharperscreen&groupmode&novice&ltb=350&minipreview&transparent&hideheader&margin&rounded&hidetranslate&cleandirector&vd=0&webcam&nvb&sstype=3&ssb&showlabel=toprounded&labelsize=85&style=2&room="+roomname+additional+additional2+"&b64css="+injectCSS+streamID+label+"&chatmsg="+chatmsg;
+		}
+		
+		
+		if (roomname!==false){
+			setStorage("savedRoom_comms", {roomname:roomname,password:password}, 9999);
+		}
+		
+		document.title = "Room: "+roomname;
+		
+		for (var i in savedSession.groups){
+			drawGroup(savedSession.groups[i]);
+		}
+		
+		if (!mobile){
+			document.getElementById("chatModule").classList.remove("hidden");
+		}
+		
+		iframe.onload = function(){
+			iframe.contentWindow.postMessage({ groups: savedSession.groups }, "*"); 
+		}
+		
+		iframe.src = iframesrc;
+		iframeContainer.appendChild(iframe);
+		document.getElementById("container").appendChild(iframeContainer);
+		document.getElementById("container").style.display = "block";
+		
+		iframe.contentWindow.addEventListener("keydown", hotkeyCheck);
+		document.addEventListener("keydown", hotkeyCheck);
+		
+		////////////  LISTEN FOR EVENTS
+
+		var eventMethod = window.addEventListener ? "addEventListener" : "attachEvent";
+		var eventer = window[eventMethod];
+		var messageEvent = eventMethod === "attachEvent" ? "onmessage" : "message";
+		var setupYet = false;
+		var showingVideoButton = false;
+		/// If you have a routing system setup, you could have just one global listener for all iframes instead.
+		
+		eventer(messageEvent, function (e) {
+			if (e.source != iframe.contentWindow){return} // reject messages send from other iframes
+			
+			
+			if ("gotChat" in e.data){
+				messageList.push(e.data.gotChat);
+				messageList = messageList.slice(-100);
+				updateMessages(e.data.gotChat);
+			} else if ("messageList" in e.data){
+				messageList = e.data.messageList;
+				updateMessages();
+			}
+			
+			if (e.data.action && "action" in e.data){
+			
+				if (e.data.action === "local-camera-event"){
+					if (!showingVideoButton){
+						showingVideoButton = true;
+						iframe.contentWindow.postMessage({"function":"eval", "value":'getById("mutevideobutton").style.setProperty("display", "block", "important");'}, '*');
+					}
+				} 
+				
+				var updateGroupSize = false;
+				if (e.data.action === "remote-group-change"){
+					if (e.data.value && (typeof e.data.value === "object")){
+						for (var group in remoteGroups){
+							var index = remoteGroups[group].indexOf(e.data.streamID);
+							if (index > -1) { // only splice array when item is found
+							  remoteGroups[group].splice(index, 1); // 2nd parameter means remove one item only
+							  updateGroupSize = true;
+							}
+						}
+						e.data.value.forEach(group =>{
+							group=group+"";
+							if (!(group in remoteGroups)){
+								remoteGroups[group] = [e.data.streamID];
+								updateGroupSize = true;
+							} else if (!remoteGroups[group].includes(e.data.streamID)){
+								remoteGroups[group].push(e.data.streamID);
+								updateGroupSize = true;
+							}
+						});
+					}
+				} else if (e.data.action === "view-connection-info"){
+					for (var group in remoteGroups){
+						var index = remoteGroups[group].indexOf(e.data.streamID);
+						if (index > -1) { // only splice array when item is found
+						  remoteGroups[group].splice(index, 1); // 2nd parameter means remove one item only
+						  updateGroupSize = true;
+						}
+					}
+					if (e.data.value && e.data.value.initial_group){
+						e.data.value.initial_group.split(",").forEach(group =>{
+							if (!(group in remoteGroups)){
+								remoteGroups[group] = [e.data.streamID]
+								updateGroupSize = true;
+							} else if (!remoteGroups[group].includes(e.data.streamID)){
+								remoteGroups[group].push(e.data.streamID);
+								updateGroupSize = true;
+							}
+						});
+					}
+				} else if (e.data.value && (e.data.action === "end-view-connection")){
+					for (var group in remoteGroups){
+						var index = remoteGroups[group].indexOf(e.data.value);
+						if (index > -1) { // only splice array when item is found
+						  remoteGroups[group].splice(index, 1); // 2nd parameter means remove one item only
+						  updateGroupSize = true;
+						}
+					}
+				} 
+				
+				if (updateGroupSize){
+					for (var group in remoteGroups){
+						var ele = document.getElementById("containermenu").querySelector(".group[data-group='"+group+"'] .groupsize");
+						ele.title = "totla guest:"+remoteGroups[group].length;
+						if (remoteGroups[group].length){
+							ele.innerText = "🗣 "+remoteGroups[group].length;
+						} else {
+							ele.innerText = "";
+						}
+					}
+				}
+				
+				if ("joining-room" == e.data.action){
+					if (!setupYet){
+						setupYet = true;
+						if (savedSession.activeGroups){
+							iframe.contentWindow.postMessage({"groups":savedSession.activeGroups}, '*');
+						}
+					}
+				}
+				if (("group-set-updated" == e.data.action) && e.data.value){
+					savedSession.activeGroups = [];
+					if (e.data.value && (typeof e.data.value == "object")){
+						savedSession.activeGroups = e.data.value;
+					} else if (e.data.value){
+						savedSession.activeGroups = e.data.value.split(",") 
+					} else if (e.data.value){
+						savedSession.activeGroups = [];
+					}
+					
+					
+					document.querySelectorAll(".pressed>[data-group]").forEach(ele=>{
+						if (ele){
+							if (!savedSession.activeGroups.includes(ele.dataset.group)){
+								ele.parentNode.classList.remove("pressed");
+							}
+						}
+					});
+					
+					savedSession.activeGroups.forEach(group=>{
+						if (!savedSession.groups.includes(group)){
+							savedSession.groups.push(group);
+						}
+						drawGroup(group);
+					});
+				}
+				
+			}
+		});
+	}
+	
+	function removeStorage(cname){
+		localStorage.removeItem(cname);
+	}
+
+	function setStorage(cname, cvalue, hours=9999){ // not actually a cookie
+		var now = new Date();
+		var item = {
+			value: cvalue,
+			expiry: now.getTime() + (hours * 60 * 60 * 1000),
+		};
+		try{
+			localStorage.setItem(cname, JSON.stringify(item));
+		}catch(e){errorlog(e);}
+	}
+
+	function getStorage(cname) {
+		try {
+			var itemStr = localStorage.getItem(cname);
+		} catch(e){
+			errorlog(e);
+			return;
+		}
+		if (!itemStr) {
+			return "";
+		}
+		var item = JSON.parse(itemStr);
+		var now = new Date();
+		if (now.getTime() > item.expiry) {
+			localStorage.removeItem(cname);
+			return "";
+		}
+		return item.value;
+	}
+	
+	
+	
+	var toggleBroadcast = false;
+	
+	
+	function addGroup(){
+		var group = prompt("Enter your new group name");
+		drawGroup(group);
+	}
+	
+	function closeScene(){
+		iframe.classList.remove("hidden");
+		document.getElementById("containermenu2").classList.remove("hFadeIn");
+		document.getElementById("containermenu2").classList.add("hFadeOut");
+		//document.getElementById("containermenu2").classList.add("hidden");
+		document.getElementById("group").classList.add("hidden");
+		
+		document.getElementById("iframeContainer").classList.remove("tFadeIn");
+		document.getElementById("iframeContainer").classList.add("tFadeout");
+		
+		document.querySelectorAll(".editButton").forEach(ele=>{
+			ele.dataset.state = "inactive";
+		});
+	}
+	
+	function compareZ( a, b ) { // sorts group based on z-index.
+		var aa = a.z || a.zIndex || 0;
+		var bb = b.z || b.zIndex || 0;
+		if ( aa > bb ){
+			return 1;
+		}
+		if ( aa < bb ){
+			return -1;
+		}
+		return 0;
+	}
+	
+	function drawGroup(groupID){
+	
+		var group = document.createElement('span');
+		group.dataset.group = groupID;
+		group.classList.add("group");
+		group.innerText = "group: "+groupID;
+		group.onclick = remoteActivate;
+		group.title = "Activate this group; the view scene link will be updated";
+		
+		
+		<!-- var editButton = document.createElement("button"); -->
+		<!-- editButton.innerHTML = "🔧"; -->
+		<!-- editButton.classList.add("editButton"); -->
+		<!-- editButton.title = "Edit this group"; -->
+		<!-- editButton.dataset.state = "inactive"; -->
+		<!-- editButton.onclick = function(){ -->
+			
+			<!-- getById("saveAndClose").classList.remove("shake"); -->
+			<!-- if (this.dataset.state == "active"){ -->
+				<!-- setTimeout(function(){getById("saveAndClose").classList.add("shake");},10); -->
+			<!-- } -->
+			<!-- document.querySelectorAll(".editButton").forEach(ele=>{ -->
+				<!-- ele.dataset.state = "inactive"; -->
+			<!-- }); -->
+			<!-- this.dataset.state = "active"; -->
+			<!-- addgroup2(this);  -->
+			<!-- addOldElement(JSON.parse(this.parentNode.querySelector("group").group)); -->
+		<!-- } -->
+		
+		var hotkey = document.createElement("div");
+		hotkey.title = "Keyboard hotkey value. Drag elements around to change order.";
+		hotkey.classList = "hotkey";
+		
+		var groupsize = document.createElement("div");
+		groupsize.classList = "groupsize";
+		
+		
+		var groupContainer = document.createElement("div");
+		//groupContainer.appendChild(editButton);
+		groupContainer.appendChild(group);
+		groupContainer.appendChild(hotkey);
+		group.appendChild(groupsize);
+		groupContainer.classList.add("groupContainer");
+		
+		if (savedSession.activeGroups.includes(groupID)){
+			groupContainer.classList.add("pressed");
+		}
+		
+		var eles = document.getElementById("containermenu").children;
+		for (var i =0;i<eles.length;i++){ // replace if existing
+			var t = eles[i].querySelector(".group");
+			if (t && t.dataset.group && (t.dataset.group == groupID)){
+				t.parentNode.parentNode.insertBefore(groupContainer, t.parentNode);
+				t.parentNode.remove();
+				return;
+			}
+		}
+		
+		//if (customgroup){
+		//	document.getElementById("addgroup").parentNode.insertBefore(groupContainer, document.getElementById("addgroup"));
+		//} else {
+		document.getElementById("containermenu").appendChild(groupContainer);
+		//}
+		return groupContainer;
+		
+	}
+	
+	
+	
+	function pullUp(event){
+		this.parentNode.zIndex = parseInt(this.parentNode.zIndex || 0) + 1;
+		this.parentNode.style.opacity = "0.9";
+		this.parentNode.style.zIndex=this.parentNode.zIndex;
+		this.parentNode.dimensions.innerHTML = parseInt(this.parentNode.style.width) +"x"+parseInt(this.parentNode.style.height);
+		this.parentNode.dimensions.innerHTML += " : " + parseInt(this.parentNode.style.left) +"x"+parseInt(this.parentNode.style.top);
+		this.parentNode.dimensions.innerHTML += " , layer: "+parseInt(this.parentNode.style.zIndex);
+		
+	} 
+	
+	function pushDown(event){
+		this.parentNode.zIndex = parseInt(this.parentNode.zIndex || 0) - 1;
+		if (this.parentNode.zIndex<0){
+			this.parentNode.zIndex=0;
+			this.parentNode.style.opacity = "1.0";
+		} else {
+			this.parentNode.style.opacity = "0.9";
+		}
+		this.parentNode.style.zIndex=this.parentNode.zIndex;
+		this.parentNode.dimensions.innerHTML = parseInt(this.parentNode.style.width) +"x"+parseInt(this.parentNode.style.height);
+		this.parentNode.dimensions.innerHTML += " : " + parseInt(this.parentNode.style.left) +"x"+parseInt(this.parentNode.style.top);
+		this.parentNode.dimensions.innerHTML += " , layer: "+parseInt(this.parentNode.style.zIndex);
+	}
+	
+	
+   
+   function remoteActivate(event=null, group=null){
+		if (event.target && group===null){
+			group = event.target.dataset.group;
+			event.target.parentNode.classList.toggle("pressed");
+		}
+		if (event.target.parentNode.classList.contains("pressed")){
+			var index = savedSession.activeGroups.indexOf(group);
+			if (index == -1){
+				savedSession.activeGroups.push(group);
+				
+			}
+		} else {
+			var index = savedSession.activeGroups.indexOf(group);
+			if (index > -1){
+				savedSession.activeGroups.splice(index, 1);
+			}
+		}
+		saveSession();
+		iframe.contentWindow.postMessage({"groups":savedSession.activeGroups}, '*');
+	}
+	
+	function deleteElement(event){
+		this.parentNode.remove();
+	}
+   
+	
+	function saveSession(){ 
+		var groups = document.querySelectorAll(".groupContainer>.group");
+		savedSession.groups = [];
+		savedSession.activeGroups = [];
+		savedSession.settings = {};
+		savedSession.version = 1;
+		
+		for (var i=0;i<groups.length;i++){
+			try {
+				savedSession.groups.push(groups[i].dataset.group);
+			} catch(e){
+				errorlog(e);
+			}
+			if (groups[i].parentNode.classList.contains("pressed")){
+				try {
+					savedSession.activeGroups.push(groups[i].dataset.group);
+				} catch(e){
+					errorlog(e);
+				}
+			}
+		}
+		setStorage("savedSession_comms", JSON.stringify(savedSession));
+		
+		if (iframe){
+			iframe.contentWindow.postMessage({ groups: savedSession.activeGroups }, "*"); 
+		}
+	}
+	
+	function changeAspectRatio(ar, button){
+		document.querySelectorAll(".aspectbutton").forEach(ele=>{
+			if (ele == button){return;}
+			ele.checked = false;
+			ele.value = false;
+		});
+		aspectRatio = ar;
+		document.documentElement.style.setProperty('--aspect-ratio', ar);
+	}
+	
+	//let modal = document.querySelector("#modal");
+	document.querySelectorAll(".close-btn").forEach(ele2=>{
+		ele2.onclick = function(){
+			document.querySelectorAll(".modal").forEach(ele=>{
+				ele.classList.add("hidden");
+			});
+		}
+	});
+	document.querySelectorAll(".modal").forEach(ele=>{
+		ele.onclick = function(e){
+			if (e.target.classList.contains("modal")){
+				e.target.classList.add("hidden");
+			}
+		}
+	});
+	
+	if (roomname){ 
+		loadIframe();
+	} else {
+		document.getElementById("welcomeWindow").style.display = "block";
 	}
 </script>
 </body>
