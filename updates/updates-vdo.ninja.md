@@ -19,7 +19,7 @@
 
 * ![](<../.gitbook/assets/image (3).png>)\
   For better or worse, I updated Production (VDO.Ninja) to version v22.6 ... up from v21.4.\
-  IF HAVING PROBLEMS suddenly, please do a hard-browser refresh. This includes in your browser and the OBS browser source, if using that. The previous v21 release can still be found at [https://vdo.ninja/v21/](https://vdo.ninja/v21/), if you want to go back. Release notes coming soon.
+  IF HAVING PROBLEMS suddenly, please do a hard-browser refresh. This includes in your browser and the OBS browser source, if using that. The previous [v21](../older-releases/v21.md) release can still be found at [https://vdo.ninja/v21/](https://vdo.ninja/v21/), if you want to go back. [Release notes](../releases/v22.md) coming soon.
 * I separated [`&sync`](../advanced-settings/view-parameters/sync.md) and [`&buffer`](../advanced-settings/view-parameters/buffer.md), so audio-sync isn't auto-enabled when `&buffer` is specified in the URL. I was finding `&sync` was causing some audio clicking issues, as adjusting audio playback speed isn't easy; you have a choice now. Use `&buffer` and `&sync` together or standalone items.
 * Fixed an issue with iPhones where changing the camera caused your own preview video to go small.
 * ``[`&screensharebitrate`](../newly-added-parameters/and-screensharebitrate.md) now works outside of group rooms, even with basic push/view links.
