@@ -67,5 +67,8 @@ You have to add them to the viewer side ([`&view`](../view-parameters/view.md) o
 | ``[`&ptime`](../view-parameters/and-ptime.md)``                 | Audio packet size                                                                   |
 | ``[`&maxptime`](../view-parameters/and-maxptime.md)``           | Maximum packet size of audio                                                        |
 | ``[`&minptime`](../view-parameters/minptime.md)``               | Minimum packet size of audio                                                        |
+| ``[`&audiocodec`](minptime-1.md) (alpha)                        | Lets you specify the audio codec                                                    |
+| ``[`&dtx`](minptime-2.md) (alpha)                               | Turns off the audio encoder automatically when no little to no sound is detected    |
+| ``[`&nofec`](minptime-3.md) (alpha)                             | Disables FEC (audio forward error correction)                                       |
 
 \*NEW IN VERSION 22

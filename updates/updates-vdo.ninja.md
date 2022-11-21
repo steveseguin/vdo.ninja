@@ -5,11 +5,11 @@
 * Some advanced audio-related VDO.Ninja updates:\
   \-- I show the audio codec now used in the stats, along with whether audio forward error correction (FEC) is on or not (on by default)\
   ![](<../.gitbook/assets/image (6).png>)\
-  \-- `&nofec` on the viewer side can disable FEC.\
-  \-- `&audiocodec` on the viewer side can let you specify the audio codec; `opus` (default), `pcmu`, `pcma`, `isac`, `g722` and `red`\
-  \-- `&audiocodec=red` is pretty much sending two opus streams, with one as a backup in case of packet loss; support in Chromium 97 and up, but the only way I can so far tell that it is working is to check if the audio bitrate has doubled\
-  \-- `&dtx` (aka, `&usedtx`), is also now functional (viewer side). Using this flag will turn off the audio encoder automatically when no little to no sound is detected. The VDO.Ninja default uses a dynamic audio bitrate mode ([`&vbr`](../advanced-settings/view-parameters/vbr.md)), but using `&dtx` takes things to the next level. It might be useful as a very mild noise-gate I suppose?\
-  \-- Also fixed a couple minor bugs, such as no play button appearing when using `&view=StreamID&novideo`\
+  \-- [`&nofec`](../advanced-settings/audio-parameters/minptime-3.md) on the viewer side can disable FEC.\
+  \-- [`&audiocodec`](../advanced-settings/audio-parameters/minptime-1.md) on the viewer side can let you specify the audio codec; `opus` (default), `pcmu`, `pcma`, `isac`, `g722` and `red`\
+  \-- [`&audiocodec`](../advanced-settings/audio-parameters/minptime-1.md)`=red` is pretty much sending two opus streams, with one as a backup in case of packet loss; support in Chromium 97 and up, but the only way I can so far tell that it is working is to check if the audio bitrate has doubled\
+  \-- [`&dtx`](../advanced-settings/audio-parameters/minptime-2.md) (aka, `&usedtx`), is also now functional (viewer side). Using this flag will turn off the audio encoder automatically when no little to no sound is detected. The VDO.Ninja default uses a dynamic audio bitrate mode ([`&vbr`](../advanced-settings/view-parameters/vbr.md)), but using [`&dtx`](../advanced-settings/audio-parameters/minptime-2.md) takes things to the next level. It might be useful as a very mild noise-gate I suppose?\
+  \-- Also fixed a couple minor bugs, such as no play button appearing when using [`&view=StreamID`](../advanced-settings/view-parameters/view.md)``[`&novideo`](../advanced-settings/video-parameters/novideo-1.md)\
   \
   \*\* changes on alpha at [https://vdo.ninja/alpha/](https://vdo.ninja/alpha/)
 
@@ -208,7 +208,7 @@
 *   Up to 20-videos on screen now are supported in the screen-share view; before after around 12-videos they started to be hidden
 
     ![](<../.gitbook/assets/image (3) (1) (3).png>)![](<../.gitbook/assets/image (5) (2).png>)\
-    ![](<../.gitbook/assets/image (2) (2).png>)![](<../.gitbook/assets/image (4) (1) (1).png>)\
+    ![](<../.gitbook/assets/image (2) (2) (3).png>)![](<../.gitbook/assets/image (4) (1) (1).png>)\
     \
     \*\*changes on alpha (vdo.ninja/alpha/) and github
 
