@@ -4,7 +4,7 @@ description: Record functionality for guests
 
 # \&record
 
-Sender-Side Option! ([`&push`](push.md))
+Sender-Side Option! ([`&push`](../../source-settings/push.md))
 
 ## Options
 
@@ -41,11 +41,11 @@ It will automatically capture with stereo audio and echo cancellation off, if av
 
 When recording as the director, the button and option to record each guest is available by default.  It's hidden behind Advanced controls. You have the option to record locally, to your own disk, or record remotely, directly to the remote guest's local storage.\
 \
-When recording to the guest's local storage, quality should be near pristine, given as its not being sent via the Internet first.  Recording locally, the video may have dynamic resolutions and varying quality, due to the low latency transmission. ([`&chunked`](../newly-added-parameters/and-chunked.md)-mode excepted)
+When recording to the guest's local storage, quality should be near pristine, given as its not being sent via the Internet first.  Recording locally, the video may have dynamic resolutions and varying quality, due to the low latency transmission. ([`&chunked`](../../newly-added-parameters/and-chunked.md)-mode excepted)
 
 Anyone can also access the recording options via right-clicking a video. This option is available as of VDO.Ninja v22.
 
-![](<../.gitbook/assets/image (102) (1) (1).png>)![](<../.gitbook/assets/image (101) (1).png>)
+![](<../../.gitbook/assets/image (102) (1) (1).png>)![](<../../.gitbook/assets/image (101) (1).png>)
 
 ### Bitrate Thresholds
 
@@ -55,7 +55,7 @@ Anyone can also access the recording options via right-clicking a video. This op
 | 2500           | 80 kbps       | 128 kpbs       |
 | Less than 2500 | 32 kbps       | 32 kbps        |
 
-### When using [`&chunked`](../newly-added-parameters/and-chunked.md) mode
+### When using [`&chunked`](../../newly-added-parameters/and-chunked.md) mode
 
 When the sender of a stream is using the `&chunked` mode, recording their video will save the inbound video directly to disk without transcoding. Not needing to transcode the saved video in the browser is only possible with the `&chunked` mode. Of course, you also don't have the option to increase the bitrate or change codecs when using this mode; at least not as the viewer.
 
@@ -75,12 +75,12 @@ When recording with PCM, ([`&pcm`](and-pcm.md)) the inbound audio bitrate will b
 
 ## Related
 
-{% content-ref url="../newly-added-parameters/and-recordcodec.md" %}
-[and-recordcodec.md](../newly-added-parameters/and-recordcodec.md)
+{% content-ref url="and-recordcodec.md" %}
+[and-recordcodec.md](and-recordcodec.md)
 {% endcontent-ref %}
 
-{% content-ref url="../advanced-settings/settings-parameters/and-autorecord.md" %}
-[and-autorecord.md](../advanced-settings/settings-parameters/and-autorecord.md)
+{% content-ref url="and-autorecord.md" %}
+[and-autorecord.md](and-autorecord.md)
 {% endcontent-ref %}
 
 {% content-ref url="and-pcm.md" %}

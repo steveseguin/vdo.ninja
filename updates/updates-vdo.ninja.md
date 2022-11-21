@@ -50,7 +50,7 @@
   \-- The director will see the global count down timer also; it will just be a bit smaller on screen.\
   ![](<../.gitbook/assets/image (1) (1).png>)
 * For VDO.Ninja, right-clicking a video and selecting "audio output destination" should work again. I had to disable that feature for a bit, as some users were reporting audio issues with it enabled. It might have some compatibilities issues, but it won't activate now unless used.
-* When using the special [`&screensharetype=3`](../newly-added-parameters/and-screensharetype.md) screen share mode (screen share with better echo cancellation), support for recording that local screen share, at the same time as as the main video, has been added. You'll need to use the [`&autorecord`](../advanced-settings/settings-parameters/and-autorecord.md) feature to trigger the recording, and when it does start recording, a button will appear specific to stopping that screen recording if needed.\
+* When using the special [`&screensharetype=3`](../newly-added-parameters/and-screensharetype.md) screen share mode (screen share with better echo cancellation), support for recording that local screen share, at the same time as as the main video, has been added. You'll need to use the [`&autorecord`](../advanced-settings/recording-parameters/and-autorecord.md) feature to trigger the recording, and when it does start recording, a button will appear specific to stopping that screen recording if needed.\
   ![](<../.gitbook/assets/image (14).png>)
 * I improve the [`&buffer`](../advanced-settings/view-parameters/buffer.md) and [`&sync`](../advanced-settings/view-parameters/sync.md) feature a bit -- it will activate and sync up faster now, which might be helpful on unstable connections.
 * I haven't been able to validate it works, but I think I added support for H265 (HEVC) to VDO.Ninja; the catch is it might only work between two iPhones running the experimental H265 WebRTC support currently; maybe [Raspberry Ninja](../steves-helper-apps/raspberry.ninja.md) in the future. I haven't managed to make it work yet though, so its just hypothetical support.\
@@ -672,7 +672,7 @@
     https://vdo.ninja/beta/?effects=-2 flips + mirrors
     https://vdo.ninja/beta/?effects=2 mirrors
     ```
-* I've added experimental support for local Media Recordings to iPhone/iPad devices. ([`&record`](../source-settings/and-record.md) may work now, etc)
+* I've added experimental support for local Media Recordings to iPhone/iPad devices. ([`&record`](../advanced-settings/recording-parameters/and-record.md) may work now, etc)
 * The iPad/IPhone needs to have "MediaRecorder" enabled in its "experimental webkit features" Safari settings section
 * The user will have to click "download" once the recording has finished to actual save the file -- The resulting file is still a webM file, which the iPhone itself won't be able to play, but will play fine elsewhere.\
   ![](<../.gitbook/assets/image (156).png>)
@@ -756,9 +756,9 @@
 #### April 12
 
 * [`&mcsscodec=h264`](../meshcast-settings/and-mcscreensharecodec.md) should now work correctly independently of [`&meshcastcodec`](../meshcast-settings/and-meshcastcodec.md). (These features let you select the codec / profile ID of the encoder that gets used when publishing video to Meshcast via VDO.Ninja.) \*\* code updated on beta (vdo.ninja/beta)
-* Added [`&autorecordlocal`](../advanced-settings/settings-parameters/and-autorecordlocal.md) and [`&autorecordremote`](../advanced-settings/settings-parameters/and-autorecordremote.md), which will record just the local video or the remote videos, respectively, automatically on their initial load. Using just [`&autorecord`](../advanced-settings/settings-parameters/and-autorecord.md) will do both. This all applies to the director, guest, scenes, and whatever really.\
+* Added [`&autorecordlocal`](../advanced-settings/recording-parameters/and-autorecordlocal.md) and [`&autorecordremote`](../advanced-settings/recording-parameters/and-autorecordremote.md), which will record just the local video or the remote videos, respectively, automatically on their initial load. Using just [`&autorecord`](../advanced-settings/recording-parameters/and-autorecord.md) will do both. This all applies to the director, guest, scenes, and whatever really.\
   \-- You can stop/restart recordings as needed via the right-click menu per each video for now, until I can design a nicer UI for managing multi-recording state at least.\
-  \-- You can pass the default recording bitrate as a value to the parameter, like you might if using [`&record`](../source-settings/and-record.md). (\*\*on beta)
+  \-- You can pass the default recording bitrate as a value to the parameter, like you might if using [`&record`](../advanced-settings/recording-parameters/and-record.md). (\*\*on beta)
 
 #### April 10
 
@@ -842,7 +842,7 @@ February 23
   I'm not calling this push-to-talk because if you just push for less than 300-ms or click the button, it will instead just toggle the mute state as it is now.\
   \
   This is on ALPHA, [https://vdo.ninja/alpha/](https://vdo.ninja/alpha/), since there are a few video styling issues with the current code I need to fix still.
-* Applied a hotfix to production to further improve the [`&record`](../source-settings/and-record.md) situation that a few users still were having.
+* Applied a hotfix to production to further improve the [`&record`](../advanced-settings/recording-parameters/and-record.md) situation that a few users still were having.
 
 #### February 20
 

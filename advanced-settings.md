@@ -55,7 +55,7 @@ All of the available parameters can be seperated in five categories. You find th
 
 ## Navigating the available setting options
 
-We've broken down the available URL parameters into 16 parts:
+We've broken down the available URL parameters into 17 parts:
 
 * [cheat-sheet-of-basic-parameters](advanced-settings/cheat-sheet-of-basic-parameters/ "mention") (the basic and most common parameters)
 * [setup-parameters](advanced-settings/setup-parameters/ "mention") (stream ID, create a room, password, labels, groups, devices, auto-start, welcoming guests, sharing a website/file)
@@ -66,12 +66,13 @@ We've broken down the available URL parameters into 16 parts:
 * [mixer-scene-parameters](advanced-settings/mixer-scene-parameters/ "mention") (layout and design for the video mixer in rooms/scenes, preload/hidden scene bitrate)
 * [director-parameters](advanced-settings/director-parameters/ "mention") (specific to the director's control room and director-specific features)
 * [screen-share-parameters](advanced-settings/screen-share-parameters/ "mention") (labels, audio filters, type, bitrate, quality, etc.)
+* [recording-parameters](advanced-settings/recording-parameters/ "mention") (options to specify recordings with VDO.Ninja)
 * [meshcast-parameters](advanced-settings/meshcast-parameters/ "mention") (options for the [`&meshcast`](newly-added-parameters/and-meshcast.md) parameter like audio filters, bitrate, screen-share, codecs, etc.)
 * [mobile-parameters](advanced-settings/mobile-parameters/ "mention") (options to specify push links and guest invite links for mobile phones)
 * [api-and-midi-parameters](advanced-settings/api-and-midi-parameters/ "mention") (hotkey features via API and MIDI)
 * [turn-and-stun-parameters](advanced-settings/turn-and-stun-parameters/ "mention") (options for setting up TURN and STUN servers)
 * [new-parameters-in-version-22.md](advanced-settings/new-parameters-in-version-22.md "mention") (recently added to VDO.Ninja)
-* [upcoming-parameters.md](advanced-settings/upcoming-parameters.md "mention") (only on [VDO.Ninja/beta](https://vdo.ninja/beta/) or [VDO.Ninja/alpha](https://vdo.ninja/alpha/) version at the moment)
+* [upcoming-parameters.md](advanced-settings/upcoming-parameters.md "mention") (only on [VDO.Ninja/beta](https://vdo.ninja/beta/) and/or [VDO.Ninja/alpha](https://vdo.ninja/alpha/) version at the moment)
 * [other-parameters.md](other-parameters.md "mention") (not ready for production, not intended to be used or not well-documented)
 
 You can search for specific commands using the search bar at the top-right as well.

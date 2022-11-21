@@ -12,22 +12,19 @@ They are separated in three groups: [general options](./#general-options) (push 
 
 You can use them for publisher, viewer and director URLs.
 
-| Parameter                                            | Explanation                                                                         |
-| ---------------------------------------------------- | ----------------------------------------------------------------------------------- |
-| ``[`&language`](and-language.md)``                   | Sets the interface language                                                         |
-| ``[`&remote`](../../general-settings/remote.md)``    | Allows remote operation of the zoom and focus, and access to statistics             |
-| ``[`&controlobs`](and-controlobs.md)\*               | The ability for VDO.Ninja to Remotely Control OBS Studio while streaming/directing  |
-| ``[`&stats`](../../general-settings/and-stats.md)``  | Shows the connection/media stats window by default                                  |
-| ``[`&sticky`](../../general-settings/sticky.md)``    | Allows a user to save and then later restore their streaming session settings       |
-| ``[`&disablehotkeys`](and-disablehotkeys.md)``       | Disables hotkeys (like `CRTL + M`)                                                  |
-| ``[`&showlist`](../../source-settings/showlist.md)`` | Shows list of hidden guests                                                         |
-| ``[`&autorecord`](and-autorecord.md)\*               | Records the local video and the remote video(s) automatically on their initial load |
-| ``[`&autorecordlocal`](and-autorecordlocal.md)\*     | Records just the local video automatically on their initial load                    |
-| ``[`&autorecordremote`](and-autorecordremote.md)\*   | Records just the remote video(s) automatically on their initial load                |
-| ``[`&nopush`](and-nopush.md)\*                       | Blocks outbound publishing connections                                              |
-| ``[`&hidehome`](and-hidehome.md)\*                   | Hides the VDO.Ninja homepage and many links that lead to it                         |
-| ``[`&hidetranslate`](and-hidetranslate.md)\*         | Hides the option to translate VDO.Ninja                                             |
-| ``[`&clock`](and-clock.md)\*                         | Shows the current time in the lower right                                           |
+| Parameter                                            | Explanation                                                                        |
+| ---------------------------------------------------- | ---------------------------------------------------------------------------------- |
+| ``[`&language`](and-language.md)``                   | Sets the interface language                                                        |
+| ``[`&remote`](../../general-settings/remote.md)``    | Allows remote operation of the zoom and focus, and access to statistics            |
+| ``[`&controlobs`](and-controlobs.md)\*               | The ability for VDO.Ninja to Remotely Control OBS Studio while streaming/directing |
+| ``[`&stats`](../../general-settings/and-stats.md)``  | Shows the connection/media stats window by default                                 |
+| ``[`&sticky`](../../general-settings/sticky.md)``    | Allows a user to save and then later restore their streaming session settings      |
+| ``[`&disablehotkeys`](and-disablehotkeys.md)``       | Disables hotkeys (like `CRTL + M`)                                                 |
+| ``[`&showlist`](../../source-settings/showlist.md)`` | Shows list of hidden guests                                                        |
+| ``[`&nopush`](and-nopush.md)\*                       | Blocks outbound publishing connections                                             |
+| ``[`&hidehome`](and-hidehome.md)\*                   | Hides the VDO.Ninja homepage and many links that lead to it                        |
+| ``[`&hidetranslate`](and-hidetranslate.md)\*         | Hides the option to translate VDO.Ninja                                            |
+| ``[`&clock`](and-clock.md)\*                         | Shows the current time in the lower right                                          |
 
 \*NEW IN VERSION 22
 
@@ -61,9 +58,6 @@ You can use them for publisher, viewer and director URLs.
 | ``[`&directorchat`](../../source-settings/directorchat.md)``           | Message ONLY the director                                                                                            |
 | ``[`&maxconnections`](../../source-settings/and-maxconnections.md)``   | Limits total of view and push connections                                                                            |
 | ``[`&maxviewers`](../../source-settings/and-maxviewers.md)``           | Limits the number of viewers allowed                                                                                 |
-| ``[`&record`](../../source-settings/and-record.md)``                   | Record functionality for guests                                                                                      |
-| ``[`&recordcodec`](../../newly-added-parameters/and-recordcodec.md)``  | Lets you set the video recording vodec                                                                               |
-| ``[`&pcm`](../../source-settings/and-pcm.md)``                         | PCM audio recordings                                                                                                 |
 | ``[`&chunked`](../../newly-added-parameters/and-chunked.md)``          | Does not use webRTC's video streaming protocols; rather it uses a custom-made protocol                               |
 | ``[`&rampuptime`](../../newly-added-parameters/and-rampuptime.md)``    | When a guest connects, this tries to load video from that guest for a few seconds, even if not yet added to a scene  |
 | ``[`&sensor`](../../source-settings/sensor.md)``                       | Access device sensor data at given rate                                                                              |

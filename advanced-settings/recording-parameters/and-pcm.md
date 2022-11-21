@@ -4,7 +4,7 @@ description: PCM audio recordings
 
 # \&pcm
 
-Sender-Side Option! ([`&push`](push.md))
+Sender-Side Option! ([`&push`](../../source-settings/push.md))
 
 ## Details
 

@@ -116,6 +116,6 @@ Experimental at this point in time and may not perform well, but if very bandwid
 [webp.md](webp.md)
 {% endcontent-ref %}
 
-{% content-ref url="../../newly-added-parameters/and-recordcodec.md" %}
-[and-recordcodec.md](../../newly-added-parameters/and-recordcodec.md)
+{% content-ref url="../recording-parameters/and-recordcodec.md" %}
+[and-recordcodec.md](../recording-parameters/and-recordcodec.md)
 {% endcontent-ref %}
