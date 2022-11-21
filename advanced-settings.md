@@ -61,7 +61,7 @@ We've broken down the available URL parameters into 17 parts:
 * [setup-parameters](advanced-settings/setup-parameters/ "mention") (stream ID, create a room, password, labels, groups, devices, auto-start, welcoming guests, sharing a website/file)
 * [video-parameters](advanced-settings/video-parameters/ "mention") (resolution, FPS, effects, bitrate, self preview, mute video, PTZ, codec, buffer, broadcasting, scale)
 * [audio-parameters](advanced-settings/audio-parameters/ "mention") (filters, adding delay, bitrate, channels, mono/stereo, muting guests, etc.)
-* [settings-parameters](advanced-settings/settings-parameters/ "mention") (language, save cookies, show/hide buttons, control bar, remote access, record, chunked mode, raise hands, notify, transcription, closed captions)
+* [settings-parameters](advanced-settings/settings-parameters/ "mention") (language, save cookies, show/hide buttons, control bar, remote access, chunked mode, raise hands, notify, transcription, closed captions)
 * [design-parameters](advanced-settings/design-parameters/ "mention") (labels, styles, clean output, CSS, mirroring, margin, darkmode, background color, disable tallies, etc.)
 * [mixer-scene-parameters](advanced-settings/mixer-scene-parameters/ "mention") (layout and design for the video mixer in rooms/scenes, preload/hidden scene bitrate)
 * [director-parameters](advanced-settings/director-parameters/ "mention") (specific to the director's control room and director-specific features)
