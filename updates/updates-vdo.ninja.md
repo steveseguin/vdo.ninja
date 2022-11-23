@@ -1,5 +1,21 @@
 # Updates - VDO.Ninja
 
+#### **November 23** <a href="#august-31" id="august-31"></a>
+
+* Added a couple exact presets for the [aspect ratio](../advanced-settings/video-parameters/and-aspectratio.md) setting; should make it easier to precisely crop an incoming guest who doesn't have their smartphone oriented right, or just in case you want to reset the aspect ratio to 16:9, etc.\
+  ![](<../.gitbook/assets/image (3).png>)\
+  \*\* on alpha at [https://vdo.ninja/alpha/](https://vdo.ninja/alpha/)
+
+#### **November 22** <a href="#august-31" id="august-31"></a>
+
+* Made the [`&clock`](../advanced-settings/settings-parameters/and-clock.md) and timer overlay be something you can 'pop out' and overlay as a native picture-in-picture element; just right-click it and select pop-out from the context menu.\
+  ![](<../.gitbook/assets/image (1).png>)![](<../.gitbook/assets/image (2).png>)
+* Fixed an issue where the right-click -> edit URL feature in [v22](../releases/v22.md) broke
+* Viewer-side [`&audiocodec=pcm`](../advanced-settings/audio-parameters/minptime-1.md) is now available as an audio codec option; this is 32khz, 16bit, mono, and uncompressed, so \~512-kbps bitrate. You'll need the sender to have `&insertablestreams` applied to their URL for this to work currently, as it requires the sender to enable a special mode that allows for custom codecs. This is very experimental at the moment, so its still a WIP.
+* `&micsamplerate` (`&msr`) added, which lets you specify the capture audio sample rate. Also added purely for experimental reasons; I don't recommend touching.\
+  \
+  \*\* All these changes are on alpha at [https://vdo.ninja/alpha/](https://vdo.ninja/alpha/), which I'll push into production pending user testing.
+
 #### **November 19** <a href="#august-31" id="august-31"></a>
 
 * Some advanced audio-related VDO.Ninja updates:\
@@ -17,7 +33,7 @@
 
 #### **November 18** <a href="#august-31" id="august-31"></a>
 
-* ![](<../.gitbook/assets/image (3).png>)\
+* ![](<../.gitbook/assets/image (3) (1).png>)\
   For better or worse, I updated Production (VDO.Ninja) to version v22.6 ... up from v21.4.\
   IF HAVING PROBLEMS suddenly, please do a hard-browser refresh. This includes in your browser and the OBS browser source, if using that. The previous [v21](../older-releases/v21.md) release can still be found at [https://vdo.ninja/v21/](https://vdo.ninja/v21/), if you want to go back. [Release notes](../releases/v22.md) coming soon.
 * I separated [`&sync`](../advanced-settings/view-parameters/sync.md) and [`&buffer`](../advanced-settings/view-parameters/buffer.md), so audio-sync isn't auto-enabled when `&buffer` is specified in the URL. I was finding `&sync` was causing some audio clicking issues, as adjusting audio playback speed isn't easy; you have a choice now. Use `&buffer` and `&sync` together or standalone items.
@@ -28,7 +44,7 @@
 
 * Added the "[mic delay](../source-settings/and-micdelay.md)" option as a slider to the director's control; it's available by default, with up to 500-ms of delay ready. If you make use of it, it will "enable" the [`&micdelay`](../source-settings/and-micdelay.md) web audio node remotely if not yet on, which might cause a clicking sound. Hoping that this though can help with problematic guests who might be out of sync. This is not the same as [`&buffer`](../advanced-settings/view-parameters/buffer.md) or [`&sync`](../advanced-settings/view-parameters/sync.md) delay, which are a view-side parameters.
 
-![](<../.gitbook/assets/image (3) (1).png>)
+![](<../.gitbook/assets/image (3) (1) (4).png>)
 
 * [`&micdelay`](../source-settings/and-micdelay.md), if used on a basic push link, will show the mic delay as a slider now also. So you can adjust it as needed. I don't show the slider by default unless using the URL parameter, as I don't think its a commonly used feature.\
   ![](<../.gitbook/assets/image (4).png>)
@@ -48,7 +64,7 @@
   ![](<../.gitbook/assets/image (3) (3).png>)\
   \-- This count down timer is the same concept as the per-guest timer the director already has, and will actually conflict with it if both are used, since it uses the same state/variable to keep track of time remaining.\
   \-- The director will see the global count down timer also; it will just be a bit smaller on screen.\
-  ![](<../.gitbook/assets/image (1) (1).png>)
+  ![](<../.gitbook/assets/image (1) (1) (1).png>)
 * For VDO.Ninja, right-clicking a video and selecting "audio output destination" should work again. I had to disable that feature for a bit, as some users were reporting audio issues with it enabled. It might have some compatibilities issues, but it won't activate now unless used.
 * When using the special [`&screensharetype=3`](../newly-added-parameters/and-screensharetype.md) screen share mode (screen share with better echo cancellation), support for recording that local screen share, at the same time as as the main video, has been added. You'll need to use the [`&autorecord`](../advanced-settings/recording-parameters/and-autorecord.md) feature to trigger the recording, and when it does start recording, a button will appear specific to stopping that screen recording if needed.\
   ![](<../.gitbook/assets/image (14).png>)
@@ -241,7 +257,7 @@
   \-- The guest can toggle it on and off in the settings, without needing to go into any advanced audio settings\
   \-- The remote director can still use the existing "channel count' in the advanced audio settings to override this button, unless the guest toggles it back on\
   \-- There's several other ways to set mono mode of course, including [`&monomic`](../advanced-settings/audio-parameters/and-monomic.md), [`&inputchannels=1`](../advanced-settings/audio-parameters/and-inputchannels.md), [`&stereo=3`](../general-settings/stereo.md), channelCount, [`&mono`](../advanced-settings/view-parameters/mono.md) (playback), [`&ec&dn&ag`](../guides/audio-filters.md), and within OBS/Windows itself.\
-  ![](<../.gitbook/assets/image (3) (1) (1).png>)![](<../.gitbook/assets/image (1) (1) (1).png>)\
+  ![](<../.gitbook/assets/image (3) (1) (1).png>)![](<../.gitbook/assets/image (1) (1) (1) (3).png>)\
   \
   \*\* updated on to alpha at vdo.ninja/alpha/
 
@@ -498,7 +514,7 @@
 
 * The WSS API (wss://api.vdo.ninja) has been expanded to include hang up events for publishers, along with viewer-side events for incoming connections/streams. These efforts will lead to a richer StreamDeck integration.
 * Add [`&background`](../advanced-settings/design-parameters/and-background.md), which accepts a URL-encoded image URL to make as the app's default background. For example, [`https://vdo.ninja/alpha/?appbg=./media/logo_cropped.png`](https://vdo.ninja/alpha/?appbg=./media/logo\_cropped.png) . The image will scale in size to cover the VDO.Ninja app's background. [`&chroma`](../advanced-settings/design-parameters/chroma.md) can still be used to set the background color, if using transparencies. There already exists [`&bgimage`](../advanced-settings/design-parameters/and-bgimage.md), which will set the default background image for videos; this however will set a background image for the entire page.\
-  ![](<../.gitbook/assets/image (2) (5) (1).png>)\
+  ![](<../.gitbook/assets/image (2) (5) (1) (1).png>)\
   \
   \*\* These changes are on alpha
 
@@ -601,7 +617,7 @@
 * Added a "channelCount" option to the audio controls, which will let the director/sender toggle between Stereo and Mono audio channels, _IF_ [`&stereo`](../general-settings/stereo.md)/[`&proaudio`](../advanced-settings/audio-parameters/and-proaudio.md) is added to the sender's URL and the sender supports +2-channels. So, if you're using `&stereo` on your guests, and you can only hear one of your guests on the left or right channel, you can use this to down-mix their microphone to a mono channel only.\
   \
   Due to some tricky technical challenges, this feature involves down mixing with web-audio nodes, and stereo can't be enabled if `&stereo` isn't in the URL. It might also make all audio from that guest mono at the moment. (adding [`&mono`](../advanced-settings/view-parameters/mono.md) to the view URL also works, but that will make all sources in the view link mono)\
-  ![](<../.gitbook/assets/image (2) (5).png>)\
+  ![](<../.gitbook/assets/image (2) (5) (1).png>)\
   \
   \*\* all updates on alpha at [`https://vdo.ninja/alpha`](https://vdo.ninja/alpha)``
 

@@ -2,6 +2,10 @@
 
 [comms.md](../steves-helper-apps/comms.md "mention")
 
+#### November 22
+
+* Fixed an issue with the group-button hiding the hot key numbers when selected
+
 #### November 18
 
 * The Comms App hosted on alpha `(https://vdo.ninja/alpha/comms)` now redirects to the official home for it. [https://comms.cam/](https://comms.cam/). URL parameters are passed as part of the redirect.

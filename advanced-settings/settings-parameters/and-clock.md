@@ -31,4 +31,4 @@ This count down timer is the same concept as the per-guest timer the director al
 
 The director will see the global count down timer also; it will just be a bit smaller on screen.
 
-![](<../../.gitbook/assets/image (1) (1).png>)
+![](<../../.gitbook/assets/image (1) (1) (1).png>)

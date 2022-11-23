@@ -10,7 +10,7 @@ Viewer-Side Option! ([`&view`](../view-parameters/view.md), [`&scene`](../view-p
 ## Details
 
 &#x20;`&nofec` on the viewer side can disable audio forward error correction (FEC). I show the audio codec now used in the stats, along with whether FEC is on or not (on by default).\
-![](<../../.gitbook/assets/image (2).png>)
+![](<../../.gitbook/assets/image (2) (5).png>)
 
 ## Related
 
