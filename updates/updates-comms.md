@@ -2,6 +2,11 @@
 
 [comms.md](../steves-helper-apps/comms.md "mention")
 
+#### November 24
+
+* Fixed a bug, where the hot key labels (0 to 9), cropped sometimes when the corresponding group button was pressed.\
+  ![](../.gitbook/assets/image.png)
+
 #### November 22
 
 * Fixed an issue with the group-button hiding the hot key numbers when selected

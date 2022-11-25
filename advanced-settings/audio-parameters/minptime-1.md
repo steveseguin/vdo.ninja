@@ -2,10 +2,9 @@
 description: Lets you specify the audio codec
 ---
 
-# \&audiocodec (alpha)
+# \&audiocodec
 
-Viewer-Side Option! ([`&view`](../view-parameters/view.md), [`&scene`](../view-parameters/scene.md), [`&room`](../../general-settings/room.md), [`&solo`](../mixer-scene-parameters/and-solo.md))\
-\*only available on [vdo.ninja/alpha/](https://vdo.ninja/alpha/)
+Viewer-Side Option! ([`&view`](../view-parameters/view.md), [`&scene`](../view-parameters/scene.md), [`&room`](../../general-settings/room.md), [`&solo`](../mixer-scene-parameters/and-solo.md))
 
 ## Options
 
@@ -29,7 +28,9 @@ Viewer-Side Option! ([`&view`](../view-parameters/view.md), [`&scene`](../view-p
 
 #### pcm
 
-This is 32khz, 16bit, mono, and uncompressed, so \~512-kbps bitrate. You'll need the sender to have `&insertablestreams` applied to their URL for this to work currently, as it requires the sender to enable a special mode that allows for custom codecs. This is very experimental at the moment, so its still a WIP.
+`&audiocodec=pcm` now will support 48khz and 44.1khz mono playback (48khz default), and if [`&stereo`](../../general-settings/stereo.md) is used, it changes to two-channel stereo 32khz.
+
+The existing [`&samplerate=44100`](../view-parameters/and-samplerate.md) option can lower the sample rate of this pcm mode (down to 8khz even), and hence the resulting audio bitrate. Since pcm is raw, [`&audiobitrate`](../view-parameters/audiobitrate.md) won't work, so expect 550 to 1200-kbps in just audio bitrates per viewer.
 
 ## Related
 

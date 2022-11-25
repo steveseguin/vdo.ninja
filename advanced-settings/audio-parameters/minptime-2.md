@@ -4,10 +4,9 @@ description: >-
   detected
 ---
 
-# \&dtx (alpha)
+# \&dtx
 
-Viewer-Side Option! ([`&view`](../view-parameters/view.md), [`&scene`](../view-parameters/scene.md), [`&room`](../../general-settings/room.md), [`&solo`](../mixer-scene-parameters/and-solo.md))\
-\*only available on [vdo.ninja/alpha/](https://vdo.ninja/alpha/)
+Viewer-Side Option! ([`&view`](../view-parameters/view.md), [`&scene`](../view-parameters/scene.md), [`&room`](../../general-settings/room.md), [`&solo`](../mixer-scene-parameters/and-solo.md))
 
 ## Aliases
 

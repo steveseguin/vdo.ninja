@@ -1,5 +1,18 @@
 # Updates - VDO.Ninja
 
+#### **November 24** <a href="#august-31" id="august-31"></a>
+
+* The recently added [`&audiocodec=pcm`](../advanced-settings/audio-parameters/minptime-1.md) option no longer needs `&insertablestreams` to be used on the sender's side; works with just a viewer-side flag now and works with video.
+* [`&audiocodec=pcm`](../advanced-settings/audio-parameters/minptime-1.md) now will support 48khz and 44.1khz mono playback (48khz default), and if [`&stereo`](../general-settings/stereo.md) is used, it changes to two-channel stereo 32khz.
+* The existing [`&samplerate=44100`](../advanced-settings/view-parameters/and-samplerate.md) option can lower the sample rate of this pcm mode (down to 8khz even), and hence the resulting audio bitrate. Since pcm is raw, [`&audiobitrate`](../advanced-settings/view-parameters/audiobitrate.md) won't work, so expect 550 to 1200-kbps in just audio bitrates per viewer.
+* Fixed a bug with the video-settings sliders in the director room, where changing a setting didn't visually always update the correct feedback input field - fixed a bug where using [`&view=xxx`](../advanced-settings/view-parameters/view.md)``[`&novideo`](../advanced-settings/video-parameters/novideo-1.md) didn't display a press-to-play button in the browser.
+* Fixed a bug where the self-preview video didn't have the right height when using [`&layouts`](../advanced-settings/director-parameters/and-layouts.md).
+* Fixed a bug where if a guest muted their video, and unmuted, it didn't always resize correctly afterwards.
+* Fixed a bug where if a guest muted their video, the audio-only spacer box that remained would resize smaller, rather than just staying the same size.\
+  \
+  \*\* changes have been pushed to production (and beta/alpha)\
+  Please report any other bugs.
+
 #### **November 23** <a href="#august-31" id="august-31"></a>
 
 * Added a couple exact presets for the [aspect ratio](../advanced-settings/video-parameters/and-aspectratio.md) setting; should make it easier to precisely crop an incoming guest who doesn't have their smartphone oriented right, or just in case you want to reset the aspect ratio to 16:9, etc.\
@@ -9,7 +22,7 @@
 #### **November 22** <a href="#august-31" id="august-31"></a>
 
 * Made the [`&clock`](../advanced-settings/settings-parameters/and-clock.md) and timer overlay be something you can 'pop out' and overlay as a native picture-in-picture element; just right-click it and select pop-out from the context menu.\
-  ![](<../.gitbook/assets/image (1).png>)![](<../.gitbook/assets/image (2).png>)
+  ![](<../.gitbook/assets/image (1).png>)![](<../.gitbook/assets/image (2) (8).png>)
 * Fixed an issue where the right-click -> edit URL feature in [v22](../releases/v22.md) broke
 * Viewer-side [`&audiocodec=pcm`](../advanced-settings/audio-parameters/minptime-1.md) is now available as an audio codec option; this is 32khz, 16bit, mono, and uncompressed, so \~512-kbps bitrate. You'll need the sender to have `&insertablestreams` applied to their URL for this to work currently, as it requires the sender to enable a special mode that allows for custom codecs. This is very experimental at the moment, so its still a WIP.
 * `&micsamplerate` (`&msr`) added, which lets you specify the capture audio sample rate. Also added purely for experimental reasons; I don't recommend touching.\
