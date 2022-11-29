@@ -3,6 +3,13 @@
 [social-stream.md](../steves-helper-apps/social-stream.md "mention")\
 [chat-overlay.md](../steves-helper-apps/chat-overlay.md "mention")
 
+#### **November 28**
+
+* Social Stream updated:\
+  \-- pushed a fix for MS teams\
+  \-- improved user avatar support for Amazon live\
+  \-- for Twitch and Amazon, added a hacky fix to keep a chat streaming even when the source tab is hidden
+
 #### **November 13**
 
 * Added the `&js` command to Socialstream by request, so you can inject custom javascript into the dock or overlay pages. Just make sure its URL encoded. Example use: [https://socialstream.ninja/index.html?session=test123\&js=https%3A%2F%2Fvdo.ninja%2Fexamples%2Ftestjs.js](https://socialstream.ninja/index.html?session=test123\&js=https%3A%2F%2Fvdo.ninja%2Fexamples%2Ftestjs.js)\
