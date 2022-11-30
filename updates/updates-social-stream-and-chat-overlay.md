@@ -3,6 +3,10 @@
 [social-stream.md](../steves-helper-apps/social-stream.md "mention")\
 [chat-overlay.md](../steves-helper-apps/chat-overlay.md "mention")
 
+#### **November 29**
+
+* Added host-avatar support to MS Teams for Socialstream
+
 #### **November 28**
 
 * Social Stream updated:\

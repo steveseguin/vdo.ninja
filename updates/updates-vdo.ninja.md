@@ -1,5 +1,9 @@
 # Updates - VDO.Ninja
 
+#### **November 29** <a href="#august-31" id="august-31"></a>
+
+* Patched an issue with VDO.Ninja where the 'page loaded' event didn't always trigger, causing the browser to display an incorrect 'waiting to load' state. This might cause odd behaviors' to the how the page loads now, but should fix issues where OBS custom CSS styles didn't always apply. Please let me know if there are problems, and remember, the previous version of VDO.Ninja at [vdo.ninja/v21/](https://vdo.ninja/v21/) is still available if so.
+
 #### **November 24** <a href="#august-31" id="august-31"></a>
 
 * The recently added [`&audiocodec=pcm`](../advanced-settings/audio-parameters/minptime-1.md) option no longer needs `&insertablestreams` to be used on the sender's side; works with just a viewer-side flag now and works with video.
