@@ -11,7 +11,9 @@
 * Fixed a bug where [`&language`](../advanced-settings/settings-parameters/and-language.md) didn't work in translating a couple elements, like "join with camera".
 * Re-enabled [`&limittotalbitrate`](../source-settings/limittotalbitrate.md) for non-guests, as it was causing me some problems before with versus.cam. It might still be causing issues, so more testing is needed.
 * Fixed an issue where changing a system-level audio device duplicated the audio output options during camera/mic setup.
-* Fixed an issue where screen sharing as a guest, while someone is sharing a website with you, causes the website to refresh. (In the case of [meshcast.io](https://meshcast.io/), this caused a reconnection loop)
+* Fixed an issue where screen sharing as a guest, while someone is sharing a website with you, causes the website to refresh. (In the case of [meshcast.io](https://meshcast.io/), this caused a reconnection loop)\
+  \
+  \*\* changes on alpha at the moment at, pending more testing.
 
 #### **November 29** <a href="#august-31" id="august-31"></a>
 
