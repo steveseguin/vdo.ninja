@@ -17,7 +17,7 @@ So for example:\
 | Pro Audio              | ``[`&proaudio`](../advanced-settings/audio-parameters/and-proaudio.md)``   | off        | `&proaudio`                |
 | Master Gain            | ``[`&audiogain`](../advanced-settings/audio-parameters/and-audiogain.md)`` | 100%       | `&audiogain=XX` (0-200 %)  |
 | Auto Gain Control      | ``[`&autogain`](../source-settings/autogain.md)``                          | on         | `&autogain=0`              |
-| Echo Cancellation      | ``[`&aec`](../source-settings/aec.md)``                                    | on         | `&aec=0`                   |
+| Echo Cancellation      | ``[`&echocancellation`](../source-settings/aec.md)``                       | on         | `&echocancellation=0`      |
 | Noise Suppression      | ``[`&denoise`](../source-settings/and-denoise.md)``                        | on         | `&denoise=0`               |
 | Noise Gating           | ``[`&noisegate`](../source-settings/noisegate.md)``                        | off        | `&noisegate`               |
 | Compressor             | ``[`&compressor`](../source-settings/and-compressor.md)``                  | off        | `&compressor`              |

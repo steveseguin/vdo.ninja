@@ -235,6 +235,7 @@
     * [\&nohangupbutton](advanced-settings/settings-parameters/and-nohangupbutton.md)
     * [\&chatbutton](general-settings/chatbutton.md)
     * [\&bigbutton](newly-added-parameters/and-bigbutton.md)
+    * [\&fullscreenbutton (alpha)](advanced-settings/settings-parameters/and-fullscreenbutton-alpha.md)
     * [\&autohide](parameters-only-on-beta/and-autohide.md)
     * [\&controlbarspace](advanced-settings/settings-parameters/and-controlbarspace.md)
     * [\&videocontrols](advanced-settings/newly-added-parameters/and-videocontrols.md)

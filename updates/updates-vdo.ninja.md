@@ -1,5 +1,18 @@
 # Updates - VDO.Ninja
 
+#### **December 1** <a href="#august-31" id="august-31"></a>
+
+* Added `&fullscreenbutton`, aka `&fsb`, adds a full-screen button to the control bar. It essentially just mimics F11, with added support for detecting the Escape button to exit full screen.\
+  \-- also while using `&fullscreenbutton`, the previous little 'full window' button in the top-right of videos (if in a group room) will also auto-F11 and isolate that video, rather than just isolate the video.\
+  \-- you can still right-click and select "full-window" on any video to isolate it without going full screen, if you need that. -- you can test by opening two such guest links: [https://vdo.ninja/alpha/?fsb\&room=test123123123\&webcam\&autostart](https://vdo.ninja/alpha/?fsb\&room=test123123123\&webcam\&autostart)\
+  \-- ultimately I'd like to override the native video full screen button with this behaviour, when `&fullscreenbutton` is used, but I'm still working on that aspect.\
+  ![](<../.gitbook/assets/image (7).png>)
+* Fixed a bug where the guest screen share, while in broadcast mode, was misplaced on the screen.
+* Fixed a bug where [`&language`](../advanced-settings/settings-parameters/and-language.md) didn't work in translating a couple elements, like "join with camera".
+* Re-enabled [`&limittotalbitrate`](../source-settings/limittotalbitrate.md) for non-guests, as it was causing me some problems before with versus.cam. It might still be causing issues, so more testing is needed.
+* Fixed an issue where changing a system-level audio device duplicated the audio output options during camera/mic setup.
+* Fixed an issue where screen sharing as a guest, while someone is sharing a website with you, causes the website to refresh. (In the case of [meshcast.io](https://meshcast.io/), this caused a reconnection loop)
+
 #### **November 29** <a href="#august-31" id="august-31"></a>
 
 * Patched an issue with VDO.Ninja where the 'page loaded' event didn't always trigger, causing the browser to display an incorrect 'waiting to load' state. This might cause odd behaviors' to the how the page loads now, but should fix issues where OBS custom CSS styles didn't always apply. Please let me know if there are problems, and remember, the previous version of VDO.Ninja at [vdo.ninja/v21/](https://vdo.ninja/v21/) is still available if so.
@@ -385,7 +398,7 @@
   \-- leave the passed value empty if you wish to have the white basic rule-of-thirds show as default.\
   example: `https://vdo.ninja/alpha/?thirds=./media/thirdshead.svg`\
   ``\*\* on alpha.\
-  ![](<../.gitbook/assets/image (7) (1) (1).png>)
+  ![](<../.gitbook/assets/image (7) (1) (1) (2).png>)
 * Added [`proxy.vdo.ninja/alpha/`](https://proxy.vdo.ninja/alpha/) as an alternative to `vdo.ninja/?proxy`. If's a more user-friendly version of [`&proxy`](../newly-added-parameters/and-proxy.md). \*\* Just on alpha for now
 
 #### August 16
@@ -474,7 +487,7 @@
   \-- This is a new noise gate, that lowers your mic volume to 10% of its current value based on volume-level activity. If you haven't made a significant sound in few seconds, the noise gate kicks in, and will re-enable when a significant noise is detected. It will take about 300-ms for the volume to recover once the noise triggers it back on, which can be a small bit harsh/distracting at times.\
   \-- [`&noisegate`](../source-settings/noisegate.md) or `&noisegate=1` (`&gating`/`&ng`) will enable it by default (if using it in a room, currently); and `&noisegate=0` will hide the option from the menu.\
   \-- The older existing `&noisegate=1` option I moved to `&noisegate=4`, as this new version is replacing it. I'm keeping the older version around as an option though.\
-  ![](<../.gitbook/assets/image (7) (1).png>)
+  ![](<../.gitbook/assets/image (7) (1) (1).png>)
 * Fixed some of the labels for the local audio labels; camel-case is replaced with words, and true/false replaced with on/off.
 *   Fixed an issue where iPhones's video output would freeze when the director would feature-highlight any other participant.
 
