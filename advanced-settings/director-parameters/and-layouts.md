@@ -32,7 +32,7 @@ fyi, the layout and the API in general work with the [vdo.ninja/beta/mixer](http
 
 You can assign guests to custom slots when using [`&slotmode`](and-slotmode.md) on the director's URL.
 
-<figure><img src="../../.gitbook/assets/image (5) (1).png" alt=""><figcaption></figcaption></figure>
+<figure><img src="../../.gitbook/assets/image (5) (1) (4).png" alt=""><figcaption></figcaption></figure>
 
 ### URL example
 

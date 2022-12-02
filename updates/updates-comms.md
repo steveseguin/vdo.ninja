@@ -5,7 +5,7 @@
 #### November 24
 
 * Fixed a bug, where the hot key labels (0 to 9), cropped sometimes when the corresponding group button was pressed.\
-  ![](../.gitbook/assets/image.png)
+  ![](<../.gitbook/assets/image (5).png>)
 
 #### November 22
 
