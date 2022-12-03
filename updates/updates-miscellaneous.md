@@ -1,5 +1,9 @@
 # Updates - Miscellaneous
 
+#### December 2
+
+* Updated the support for [vingester.app's](https://vingester.app/) audio destination selector to v22 of VDO.Ninja; it was no longer working with v22.
+
 #### November 12
 
 * Create a sample of how to apply a custom full-page overlay on top of VDO.Ninja: [https://vdo.ninja/alpha/examples/overlay](https://vdo.ninja/alpha/examples/overlay)\

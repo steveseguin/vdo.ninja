@@ -8,13 +8,14 @@ Viewer-Side Option! ([`&view`](view.md), [`&scene`](scene.md), [`&room`](../../g
 
 ## Options
 
-| Value                 | Description             |
-| --------------------- | ----------------------- |
-| `h264`                | request the h264 codec  |
-| `vp8`                 | request the VP8 codec   |
-| `vp9`                 | request the VP9 codec   |
-| `av1`                 | request the AV1 codec   |
-| ``[`webp`](webp.md)`` | request the webp codec  |
+| Value                 | Description                                                                                 |
+| --------------------- | ------------------------------------------------------------------------------------------- |
+| `h264`                | request the h264 codec                                                                      |
+| `vp8`                 | request the VP8 codec                                                                       |
+| `vp9`                 | request the VP9 codec                                                                       |
+| `av1`                 | request the AV1 codec                                                                       |
+| ``[`webp`](webp.md)`` | request the webp codec                                                                      |
+| `hardware` (on alpha) | request the h264 codec and[`&h264profile`](../../newly-added-parameters/and-h264profile.md) |
 
 ### Example usage
 
@@ -105,6 +106,10 @@ Experimental at this point in time and may not perform well, but if very bandwid
 {% content-ref url="webp.md" %}
 [webp.md](webp.md)
 {% endcontent-ref %}
+
+## HARDWARE (on alpha)
+
+The parameter `&codec=hardware` is Android-specific and is the same as doing `&codec=h264`[`&h264profile`](../../newly-added-parameters/and-h264profile.md), but perhaps easier to remember. Worth trying if your android phone is struggling to publish video at a high enough quality into OBS. I may expand on this feature to be smarter.
 
 ## Related
 

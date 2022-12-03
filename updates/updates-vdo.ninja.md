@@ -1,5 +1,12 @@
 # Updates - VDO.Ninja
 
+#### **December 2** <a href="#august-31" id="august-31"></a>
+
+* ``[`&noaudioprocessing`](../general-settings/noaudioprocessing.md) is even more aggressive in disabling audio processing effects now, useful for debugging, but breaks a lot of functionality.
+* The parameter [`&codec=hardware`](../advanced-settings/view-parameters/codec.md) is added; it's Android-specific and is the same as doing `&codec=h264`[`&h264profile`](../newly-added-parameters/and-h264profile.md), but perhaps easier to remember. Worth trying if your android phone is struggling to publish video at a high enough quality into OBS. I may expand on this feature to be smarter.\
+  \
+  \*\* changes pushed to alpha for user-testing and feedback. Thank you.
+
 #### **December 1** <a href="#august-31" id="august-31"></a>
 
 * Added `&fullscreenbutton`, aka `&fsb`, adds a full-screen button to the control bar. It essentially just mimics F11, with added support for detecting the Escape button to exit full screen.\
