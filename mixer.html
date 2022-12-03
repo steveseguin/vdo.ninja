@@ -507,8 +507,12 @@
 		user-select: none;
 	}
 	.pressed>canvas{
-		border: solid 2px black;
+		box-shadow: inset 2px 2px 10px #0007, inset -2px -2px 10px #0007;
 		background-color: #FFFA;
+	}
+	.pressed>.group{
+		box-shadow: inset 2px 2px 10px #0007, inset -2px -2px 10px #0007;
+		background-color: #276022aa;
 	}
 	button.pressed {
 		background-color: #CEF;
@@ -2450,7 +2454,7 @@
 			additional += "&broadcast";
 			toggleBroadcast = true;
 		} else {
-			additional += "&layout";
+			additional += "&layout"; // do not use &broadcast with &layout, else you will get broken results.
 			toggleBroadcast = false;
 		}
 		

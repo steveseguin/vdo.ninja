@@ -57,7 +57,7 @@
 		<meta property="twitter:image" content="./media/vdoNinja_logo_full.png" />
 		<meta name="msapplication-TileColor" content="#da532c" />
 		<meta name="theme-color" content="#ffffff" />
-		<link rel="stylesheet" href="./main.css?ver=229" />
+		<link rel="stylesheet" href="./main.css?ver=235" />
 		<script type="text/javascript" crossorigin="anonymous" src="./thirdparty/adapter.js"></script>
 		<style id="lightbox-animations" type="text/css"></style>
 		<!-- <link rel="manifest" href="manifest.json" /> -->
@@ -73,7 +73,7 @@
 			<meta name="apple-mobile-web-app-status-bar" content="#db4938" />
 		-->
 	</head>
-	<body id="main" class="hidden">
+	<body id="main" class="hidden" onload="main()">
 		<span itemprop="image" itemscope itemtype="image/png">
 			<link itemprop="url" href="./media/vdoNinja_logo_full.png" />
 		</span>
@@ -81,9 +81,9 @@
 		<span itemprop="thumbnail" itemscope itemtype="http://schema.org/ImageObject">
 			<link itemprop="url" href="./media/vdoNinja_logo_full.png" />
 		</span>
-		<script type="text/javascript" crossorigin="anonymous"  src="./thirdparty/CodecsHandler.js?ver=43"></script>
+		<script type="text/javascript" crossorigin="anonymous"  src="./thirdparty/CodecsHandler.js?ver=45"></script>
 		<script type="text/javascript" crossorigin="anonymous" src="./thirdparty/aes.js"></script>
-		<script type="text/javascript" crossorigin="anonymous" src="./webrtc.js?ver=544"></script>
+		<script type="text/javascript" crossorigin="anonymous" src="./webrtc.js?ver=549"></script>
 		<input id="zoomSlider" type="range" style="display: none;" />
 		<span id="electronDragZone" style="pointer-events: none; z-index:-10; position:absolute;top:0;left:0;width:100%;height:2%;-webkit-app-region: drag;min-height:20px;"></span>
 		<div id="header">
@@ -109,6 +109,7 @@
 					data-drag="1"
 					onclick="copyFunction(this, event)"
 					class="task grabLinks"
+					data-menu="context-menu"
 					style="font-weight: bold; color: #afa !important; cursor: grab; background-color: #0000;  font-size: 115%; min-width: 335px; max-width: 800px;"
 				></a>
 				<i class="las la-paperclip" style="color: #DDD;" onclick="copyFunction(document.getElementById('reshare'), event);" onmouseover="this.style.cursor='pointer'"></i>
@@ -179,7 +180,9 @@
 						Stop Sharing Website
 					</div>
 				</div>
-				
+				<div id="fullscreenPage" onmousedown="event.preventDefault(); event.stopPropagation();"  title="Full-screen the page" alt="Full-screen the page" aria-label="Full screen"  onclick="fullscreenPageToggle()" tabindex="21" role="button" aria-pressed="false" onkeyup="enterPressedClick(event,this);"  class="float hidden" style="cursor: pointer;">
+					<i id="fullscreenPageToggle" onmousedown="event.preventDefault(); event.stopPropagation();"  class="toggleSize las la-expand-arrows-alt my-float"></i>
+				</div>
 				<div id="flipcamerabutton" onmousedown="event.preventDefault(); event.stopPropagation();"  title="Cycle the Cameras"  onclick="cycleCameras()" class="hidden float"  tabindex="21" role="button" aria-pressed="false" onkeyup="enterPressedClick(event,this);" style="cursor: pointer;" aria-label="Cycle Cameras" alt="Cycle the Cameras">
 					<i id="settingstoggle" class="toggleSize las la-sync-alt my-float"></i> 
 				</div>
@@ -882,7 +885,7 @@
 								<font style="color:#daad09;">Welcome to VDO Ninja! We've rebranded!  Nothing else is changing and we're staying 100% free.</font>
 							</h4>
 							<br />
-							🚀🚀 Site updated November 18th, 2022 to v22. If having new sudden issues, please try clearing your browser's cache, including refreshing the cache within any OBS browser source. You can also still access the previous version, which <a href="https://vdo.ninja/v21/">is hosted here</a>. Development <a target="_blank" href='https://updates.vdo.ninja/'>updates are here.</a>
+							🚀🚀 Site last updated on Nov.18th (<a target='_blank' href='https://docs.vdo.ninja/releases/v22'>v22 release notes</a>). You can also still access the previous version, which <a href="https://vdo.ninja/v21/">is hosted here</a>. Development <a target="_blank" href='https://updates.vdo.ninja/'>updates are here.</a>
 							<br />
 							<br />
 							<h3>
@@ -943,7 +946,7 @@
 				<div class='directorBlock'>
 					<h2 title="Invite a guest or camera source to publish into the group room" style="margin-top: 5px;"><i class="las la-video director-link-icons" ></i><span data-translate="invite-a-guest">INVITE A GUEST</span></h2>
 					<span style="margin:5px; line-height: 1.6;" data-translate='invite-users-to-join'>Guests can use the link to join the group room</span>
-					<a onclick='copyFunction(this,event)' id="director_block_1" class='task grabLinks' style='cursor:copy;background-color: #0003;'></a>
+					<a onclick='copyFunction(this,event)' id="director_block_1" class='task grabLinks' data-menu="context-menu" style='cursor:copy;background-color: #0003;'></a>
 					<span style="display:block;">
 						<span style="bottom: 0; margin: 0 0 0 10px; top: 22px; position: relative; display:inline-block; max-width: 45%;">
 							<label class="switch" title="If disabled, the invited guest will not be able to see or hear anyone in the room.">
@@ -962,7 +965,7 @@
 				<div class='directorBlock' style="background-color: var(--green-accent);" >
 					<h2 title="Use this link in the OBS Browser Source to capture the video or audio" style="margin-left: 1px;margin-top: 5px;"><i class="las la-th-large director-link-icons" style="margin-right: 6px;" ></i> <span data-translate="capture-a-group-scene">CAPTURE A GROUP SCENE</span></h2>
 					<span style="margin:5px; line-height: 1.6;" data-translate='this-is-obs-browser-source-link'>Use in OBS or other studio software to capture the group video mix</span>
-					<a onclick='copyFunction(this,event)'  data-drag="1" draggable="true"  id="director_block_3" class='task grabLinks' style='cursor:grab;background-color: #0003;'></a>
+					<a onclick='copyFunction(this,event)'  data-drag="1" draggable="true"  id="director_block_3" data-menu="context-menu" class='task grabLinks' style='cursor:grab;background-color: #0003;'></a>
 					<span style="display:block;">
 						<span style="bottom: 0; margin: 0 0 0 10px; top: 22px; position: relative; display:inline-block; max-width: 45%;">
 							<label class="switch" title="If disabled, you must manually add a video to a scene for it to appear.">
@@ -1318,8 +1321,8 @@
 		</div>
 		
 		<div id="hiddenElements"></div>
-		<div id="overlayClockContainer" data-initial="600" class="hidden"><span id="overlayClock"></span></div>
-		<div id="overlayClockContainer2" data-initial="600" class="hidden"><span id="overlayClock2"></span></div>
+		<div id="overlayClockContainer" data-menu='context-menu-clock' data-initial="600" class="hidden"><span id="overlayClock"></span></div>
+		<div id="overlayClockContainer2" data-menu='context-menu-clock' data-initial="600" class="hidden"><span id="overlayClock2"></span></div>
 		<div id="overlayMsgs" onclick="this.innerHTML = '';" style="display:none"></div>
 		<div id="bigPlayButton" onclick="this.innerHTML = '';" style="display:none"></div>
 		<div id="controls_blank" style="display: none;">
@@ -1502,7 +1505,7 @@
 				</button>
 				
 				
-				<span class="hidden advanced" data-cluster="2">
+				<span class="hidden advanced audiocluster1" data-cluster="2">
 					
 					<button style="width:35.2px;" data-action-type="add-channel" title="Set to Audio Channel 1" onclick="changeChannelOffset(this.dataset.UUID, 0);">
 						<span >C1</span>
@@ -1515,7 +1518,7 @@
 					</button>
 				</span>
 				
-				<span class="hidden advanced" data-cluster="2">
+				<span class="hidden advanced audiocluster2" data-cluster="2">
 					
 					<button style="width:35.2px;" data-action-type="add-channel" title="Set to Audio Channel 4" onclick="changeChannelOffset(this.dataset.UUID,3);">
 						<span >C4</span>
@@ -1528,7 +1531,7 @@
 					</button>
 				</span>
 				
-				<span class="hidden advanced" data-cluster="2">
+				<span class="hidden advanced groupcluster1" data-cluster="2">
 					<button style="width:35.2px;" data-action-type="toggle-group" data-group="1" title="Add/remove from group 1" onclick="changeGroup(this);">
 						<span >G1</span>
 					</button>
@@ -1540,7 +1543,7 @@
 					</button>
 				</span>
 				
-				<span class="hidden advanced" data-cluster="2">
+				<span class="hidden advanced groupcluster2" data-cluster="2">
 					
 					<button style="width:35.2px;" data-action-type="toggle-group" data-group="4" title="Add/remove from group 4" onclick="changeGroup(this);">
 						<span >G4</span>
@@ -1765,7 +1768,7 @@
 				<button id="pIpStartButton" style="width: 135px; background-color:#EFEFEF;padding:20px;text-align:center;display:none;"><b>Preview PiP VIdeo</b><br /><i style="padding:5px; font-size:300%;color:black;" class="las la-compress-arrows-alt"></i></button>
 				
 				
-				<div class="hidden" id="grabDirectorSoloLinkParent" title="The solo view link of the Director's video."><i class="las la-user"></i> Director's solo link:<a onclick="copyFunction(this,event)" data-drag="1" draggable="true" id="grabDirectorSoloLink" class="task" ></a></div>
+				<div class="hidden" id="grabDirectorSoloLinkParent" title="The solo view link of the Director's video."><i class="las la-user"></i> Director's solo link:<a onclick="copyFunction(this,event)" data-drag="1" draggable="true" id="grabDirectorSoloLink" data-menu="context-menu" class="task" ></a></div>
 				<br />
 				<button onclick="toggleSettings()" class="toggleSettings"><i class="chevron right" style="font-size:150%;top:3px;position:relative;"></i> <b><span data-translate="close-settings">Close Settings</span></b></button>
 				
@@ -1861,6 +1864,16 @@
 					<a href="#" class="context-menu__link" data-action="ss3">
 						3📷
 						<span data-translate="ss-mode-3" >Screen Share Mode 3</span>
+					</a>
+				</li>
+			</ul>
+		</nav>
+		<nav id="context-menu-clock" class="context-menu">
+			<ul class="context-menu__items">
+				<li class="context-menu__item">
+					<a href="#" class="context-menu__link" data-action="pip-clock">
+						<i class="las la-external-link"></i>
+						<span data-translate="detach-clock2-pip">Pop-out clock toggle</span>
 					</a>
 				</li>
 			</ul>
@@ -2206,7 +2219,7 @@
 			</u>
 		</div>
 		<div id="meshcastMenu" class="hidden">
-			Publishing Region: <select name="edgelist" id="edgelist" onchange="selectMeshcast(this);" title="Select a location that is closest to both you and your audience."></select>
+			Meshcast publishing region: <select name="edgelist" id="edgelist" onchange="selectMeshcast(this);" title="Select a location that is closest to both you and your audience."></select>
 		</div>
 		<script>
 		
@@ -2220,7 +2233,7 @@
 
 		
 			var session = WebRTC.Media; // session is a required global variable if configuring manually. Run before loading main.js but after webrtc.js.
-			session.version = "22.7"; // nov 18th
+			session.version = "22.9"; // nov 18th
 			session.streamID = session.generateStreamID(); // randomly generates a streamID for this session. You can set your own programmatically if needed
 			
 			session.defaultPassword = "someEncryptionKey123"; // Change this password if self-deploying for added security/privacy
@@ -2292,11 +2305,11 @@
 			// session.defaultBackgroundImages = ["./media/bg_sample1.webp", "./media/bg_sample2.webp"]; // for &effects=5 (virtual backgrounds)
 			// session.hidehome = true; // If used, 'hide home' will make the landing page inaccessible, along with hiding a few go-home elements.
 		</script>
-		<script type="text/javascript" crossorigin="anonymous" id="lib-js" src="./lib.js?ver=554"></script>
+		<script type="text/javascript" crossorigin="anonymous" id="lib-js" src="./lib.js?ver=572"></script>
 		<!-- 
 		// If you wish to change branding, blank offers a good clean start.
 		<script type="text/javascript" id="main-js" src="./main.js" data-translation="blank"></script>
 		-->
-		<script type="text/javascript" crossorigin="anonymous" id="main-js" src="./main.js?ver=485"></script>
+		<script type="text/javascript" crossorigin="anonymous" id="main-js" src="./main.js?ver=497"></script>
 	</body>
 </html>
