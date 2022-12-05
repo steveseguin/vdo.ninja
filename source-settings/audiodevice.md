@@ -38,6 +38,12 @@ This web-based tool will also auto-create links for you, just by clicking on the
 
 There is a toggle in the director's room which adds `&ad` to the guest's invite link.![](<../.gitbook/assets/image (95) (2).png>)
 
+### Update (on beta)
+
+`&audiodevice` can accept multiple audio devices now. `&audiodevice=cam,cable` for example, will select the camlink and virtual audio cable devices as an audio source when joining.
+
+`&audiodevice={device name}` will now also now show the selected audio devices before joining, while `&audiodevice=1` or `&audiodevice=0` will still hide the option to change or see audio devices.
+
 ## Related
 
 {% content-ref url="and-nosettings.md" %}

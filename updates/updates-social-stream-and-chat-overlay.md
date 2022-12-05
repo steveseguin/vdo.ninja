@@ -3,9 +3,13 @@
 [social-stream.md](../steves-helper-apps/social-stream.md "mention")\
 [chat-overlay.md](../steves-helper-apps/chat-overlay.md "mention")
 
+#### **December 4**
+
+* A one [@ojacques](https://github.com/ojacques) on GitHub contributed Amazon Chime support to Social Stream; thank you.
+
 #### **November 29**
 
-* Added host-avatar support to MS Teams for Socialstream
+* Added host-avatar support to MS Teams for Social Stream
 
 #### **November 28**
 

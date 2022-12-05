@@ -39,6 +39,7 @@ You have to add them to the source side ([`&push`](../../source-settings/push.md
 | ``[`&audiolatency`](../../newly-added-parameters/and-audiolatency.md)``          | Adds an audio-latency to the published audio stream                                      |
 | ``[`&micdelay`](../../source-settings/and-micdelay.md)``                         | Delays the microphone by specified time in ms                                            |
 | ``[`&mute`](../../source-settings/and-mute.md)``                                 | Starts with the microphone muted by default                                              |
+| ``[`&automute`](and-automute-alpha.md) (alpha)                                   | Will mute the microphone of a guest when not loaded in an active OBS scene               |
 | ``[`&outboundaudiobitrate`](../../source-settings/and-outboundaudiobitrate.md)`` | Target audio bitrate and max bitrate for outgoing audio streams                          |
 | ``[`&inputchannels`](and-inputchannels.md)``                                     | Audio capture device to select N-number of audio channels                                |
 | ``[`&monomic`](and-monomic.md)\*                                                 | Sets a guest's audio input to mono (1-channel)                                           |

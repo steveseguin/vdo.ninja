@@ -1,5 +1,25 @@
 # Updates - VDO.Ninja
 
+#### **December 5** <a href="#august-31" id="august-31"></a>
+
+* Added [`&automute`](../advanced-settings/audio-parameters/and-automute-alpha.md), which will auto mute the microphone of a guest when not loaded in an active OBS scene.\
+  \-- Useful for perhaps limiting the discussion in a group chat to those on air.\
+  \-- `&automute=2` will mute it everywhere, while the default will still allow the director to speak to the guest, even if not in a scene.\
+  \-- This is a guest-side URL parameter; you may want to apply it to all guests.\
+  \-- Required quite a bit of code reworking; error reporting is on in the console, so please report issues. Feedback also welcomed.
+* Fixed the Tally light system. (broke in [v22](../releases/v22.md) I guess)
+* The group buttons for the director will appear under their control-box when using active and using [`&showdirector`](../viewers-settings/and-showdirector.md) now, rather than isolating them to the lower control bar.
+* Some minor CSS / code tweaks\
+  \
+  \*\* changes on alpha for testing at [https://vdo.ninja/alpha](https://vdo.ninja/alpha)
+
+#### **December 4** <a href="#august-31" id="august-31"></a>
+
+* Updated the [`&audiodevice`](../source-settings/audiodevice.md) (`&ad`) parameter so it can accept multiple audio devices. `&audiodevice=cam,cable` for example, will select the camlink and virtual audio cable devices as an audio source when joining.
+* [`&audiodevice={device name}`](../source-settings/audiodevice.md) will now also now show the selected audio devices before joining, while `&audiodevice=1` or `&audiodevice=0` will still hide the option to change or see audio devices.\
+  \
+  \*\* pushed to alpha and Beta
+
 #### **December 2** <a href="#august-31" id="august-31"></a>
 
 * ``[`&noaudioprocessing`](../general-settings/noaudioprocessing.md) is even more aggressive in disabling audio processing effects now, useful for debugging, but breaks a lot of functionality.
