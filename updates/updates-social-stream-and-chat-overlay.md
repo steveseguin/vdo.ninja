@@ -3,6 +3,10 @@
 [social-stream.md](../steves-helper-apps/social-stream.md "mention")\
 [chat-overlay.md](../steves-helper-apps/chat-overlay.md "mention")
 
+#### **December 5**
+
+* Social Stream has been updated so that clicking the currently active selected message in the dock will clear the message, rather than re-post it.
+
 #### **December 4**
 
 * A one [@ojacques](https://github.com/ojacques) on GitHub contributed Amazon Chime support to Social Stream; thank you.

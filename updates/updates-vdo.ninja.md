@@ -9,7 +9,9 @@
   \-- Required quite a bit of code reworking; error reporting is on in the console, so please report issues. Feedback also welcomed.
 * Fixed the Tally light system. (broke in [v22](../releases/v22.md) I guess)
 * The group buttons for the director will appear under their control-box when using active and using [`&showdirector`](../viewers-settings/and-showdirector.md) now, rather than isolating them to the lower control bar.
-* Some minor CSS / code tweaks\
+* Some minor CSS / code tweaks
+* Cleaned up some HTML code on director's page to make it a bit easier to modify with custom CSS, by a user's request.
+* Improved Firefox support for the director's solo talk and for the new [`&automute`](../advanced-settings/audio-parameters/and-automute-alpha.md) function; will need some further testing though.\
   \
   \*\* changes on alpha for testing at [https://vdo.ninja/alpha](https://vdo.ninja/alpha)
 
