@@ -30,7 +30,7 @@ var miscTranslations = {
 	"director-redirect-2": "\n\nPress OK to be redirected.",
 	"add-a-label": "Add a label",
 	"audio-processing-disabled": "Audio processing is disabled with this guest. Can't mute or change volume",
-	"not-the-director": "<font color='red'>You are not the director of this room. You will have limited to no control. See <a target='_blank' href='https://docs.vdo.ninja/director-settings/codirector'>&codirector</a> on how to become a co-director.</font>",
+	"not-the-director": "<span color='red'>You are not the director of this room. You will have limited to no control. See <a target='_blank' href='https://docs.vdo.ninja/director-settings/codirector'>&codirector</a> on how to become a co-director.</span>",
 	"room-is-claimed": "The room is already claimed by someone else.\n\nOnly the first person to join a room is the assigned director.\n\nRefresh after the first director leaves to claim.",
 	"room-is-claimed-codirector": "The room is already claimed by someone else.\n\nTrying to join as a co-director...",
 	"streamid-already-published": "The stream ID you are publishing to is already in use.\n\nPlease try with a different invite link or refresh to retry again.\n\nYou will now be disconnected.",
@@ -356,10 +356,20 @@ function detectGPUSupport() {
 		if (!gl) {
 			return false;
 		}
-		const debugInfo = gl.getExtension('WEBGL_debug_renderer_info');
-		if (debugInfo){
-			return gl.getParameter(debugInfo.UNMASKED_RENDERER_WEBGL);
+		
+		if (!Firefox){
+			try {
+				const debugInfo = gl.getExtension('WEBGL_debug_renderer_info'); // chrome
+				if (debugInfo){
+					return gl.getParameter(debugInfo.UNMASKED_RENDERER_WEBGL);
+				}
+			} catch(e){}
 		}
+		
+		try {
+			return gl.getParameter(gl.RENDERER) || false;  // firefox
+		} catch(e){}
+		
 	} catch(e){}
     return false;
 }
@@ -662,7 +672,7 @@ async function promptAlt(inputText, block=false, asterix=false, value=false){
 			var backdropClass = "modalBackdrop";
 		}
 	
-		inputText = "<font style='font-size:1.2em'>"+inputText.replace("\n","</font><br /><font>")+"</font>";
+		inputText = "<span style='font-size:1.2em'>"+inputText.replace("\n","</span><br /><span>")+"</span>";
 		inputText = inputText.replace(/\n/g,"<br />");
 		var type = "text";
 		if (asterix){
@@ -746,7 +756,7 @@ async function promptTransfer(value=null, bcmode = null, updateurl = null){
 		var zindex = 30 + document.querySelectorAll('.promptModal').length;
 		var backdropClass = "modalBackdrop";
 	
-		var inputText = "<font style='font-size:1.2em'>"+(miscTranslations["transfer-guest-to-room"].replace("\n","</font><br /><font>"))+"</font>";
+		var inputText = "<span style='font-size:1.2em'>"+(miscTranslations["transfer-guest-to-room"].replace("\n","</span><br /><span>"))+"</span>";
 		inputText = inputText.replace(/\n/g,"<br />");
 		
 		modalTemplate =
@@ -861,7 +871,7 @@ async function confirmAlt(inputText, block=false){
 			var backdropClass = "modalBackdrop";
 		}
 		
-		inputText = "<font style='font-size:1.2em'>"+inputText.replace("\n","</font><br /><font>")+"</font>";
+		inputText = "<span style='font-size:1.2em'>"+inputText.replace("\n","</span><br /><span>")+"</span>";
 		inputText = inputText.replace(/\n/g,"<br />");
 
 		modalTemplate =
@@ -1008,12 +1018,12 @@ var checkStrengthRoom = function() {
 	target.style.display = "block";
 	if (result1) {
 		if (result2) {
-			target.innerHTML = "<font style='color:green'>"+miscTranslations["share-with-trusted"]+"</font>";
+			target.innerHTML = "<span style='color:green'>"+miscTranslations["share-with-trusted"]+"</span>";
 		} else {
-			target.innerHTML = "<font style='color:#e67202;'>"+miscTranslations["pass-recommended"]+"</font>";
+			target.innerHTML = "<span style='color:#e67202;'>"+miscTranslations["pass-recommended"]+"</span>";
 		}
 	} else {
-		target.innerHTML = "<font style='color:red'>"+miscTranslations["insecure-room-name"]+"</font> "+miscTranslations["allowed-chars"]+": <i>A-Z, a-z, 0-9, _</i>";
+		target.innerHTML = "<span style='color:red'>"+miscTranslations["insecure-room-name"]+"</span> "+miscTranslations["allowed-chars"]+": <i>A-Z, a-z, 0-9, _</i>";
 	}
 };
 
@@ -1733,43 +1743,65 @@ function processOBSCommand(msg){
 
 function applySceneState(){ // guest side; tally light, etc.
 	if (session.disableOBS){return;} // the guest can decide to hide the tally light
-	if (session.cleanOutput===false){
-		if (document.getElementById("videosource")){
-			var visibility = false;
-			var ondeck = false;
-			var recording = false;
-			for (var uid in session.pcs){
-				
-				if (session.pcs[uid].obsState.sourceActive!==false && session.pcs[uid].obsState.visibility && (session.pcs[uid].sceneDisplay!==false)){
-					visibility=true;
-				} else if (session.pcs[uid].obsVisibility && (session.pcs[uid].sceneDisplay!==false)){
-					ondeck=true;
-				}
-				if ((session.pcs[uid].obsState.recording || session.pcs[uid].obsState.streaming) && (session.pcs[uid].obsState.sourceActive!==false && session.pcs[uid].obsState.visibility && (session.pcs[uid].sceneDisplay!==false))){ // the scene that is recording must be visible also.
-					recording=true;
-				}
-			}
+	
+	if (document.getElementById("videosource")){
+		var visibility = false;
+		var ondeck = false;
+		var recording = false;
+		for (var uid in session.pcs){
 			
-			if (recording){
-				getById("obsState").classList.remove("ondeck");
-				getById("obsState").classList.add("recording");  // TODO: this needs to check all peers to make sure it's valid
-				getById("obsState").innerHTML = "ON AIR";
-			} else if (ondeck && !visibility){
-				getById("obsState").classList.remove("recording");
-				getById("obsState").classList.add("ondeck");  // TODO: this needs to check all peers to make sure it's valid
-				getById("obsState").innerHTML = "STAND BY";
-			} else {
-				getById("obsState").classList.remove("recording");
-				getById("obsState").classList.remove("ondeck");
-				getById("obsState").innerHTML = "ACTIVE";
+			if (session.pcs[uid].obsState.sourceActive!==false && session.pcs[uid].obsState.visibility && (session.pcs[uid].sceneDisplay!==false)){
+				visibility=true;
+			} else if (session.pcs[uid].obsState.visibility && (session.pcs[uid].sceneDisplay!==false)){
+				ondeck=true;
 			}
+			if ((session.pcs[uid].obsState.recording || session.pcs[uid].obsState.streaming) && (session.pcs[uid].obsState.sourceActive!==false && session.pcs[uid].obsState.visibility && (session.pcs[uid].sceneDisplay!==false))){ // the scene that is recording must be visible also.
+				recording=true;
+			}
+		}
+		
+		if (!session.cleanOutput){
+			getById("obsState").classList.remove("hidden");
+		}
+		
+		if (recording){
+			getById("obsState").classList.remove("ondeck");
+			getById("obsState").classList.add("recording");  // TODO: this needs to check all peers to make sure it's valid
+			getById("obsState").innerHTML = "ON AIR";
+		} else if (ondeck && !visibility){
+			getById("obsState").classList.remove("recording");
+			getById("obsState").classList.add("ondeck");  // TODO: this needs to check all peers to make sure it's valid
+			getById("obsState").innerHTML = "STAND BY";
+		} else if (visibility){
+			getById("obsState").classList.remove("recording");
+			getById("obsState").classList.remove("ondeck");
+			getById("obsState").innerHTML = "ACTIVE";
+		} else {
+			getById("obsState").classList.remove("recording");
+			getById("obsState").classList.remove("ondeck");
+			getById("obsState").innerHTML = "INACTIVE";
+		}
 
-			if (visibility){ // BASIC TALLY LIGHT (on deck disabled)
-				getById("obsState").classList.add("onair"); // LIVE
+		if (visibility){ // BASIC TALLY LIGHT (on deck disabled)
+			getById("obsState").classList.add("onair"); // LIVE
+		} else {
+			getById("obsState").classList.remove("onair");
+		}
+		
+		if (session.automute){
+			if (!visibility){
+				session.micIsolatedAutoMute = [];
+				if (session.automute !== "2"){
+					for (var uid in session.pcs){
+						if (session.directorList.indexOf(uid)>=0){ // allow validated directors to hear the guest
+							session.micIsolatedAutoMute.push(uid);
+						}
+					}
+				}
 			} else {
-				getById("obsState").classList.remove("onair");
-				
+				session.micIsolatedAutoMute = false;
 			}
+			session.applyIsolatedChat();
 		}
 	}
 }
@@ -3443,6 +3475,7 @@ function updateMixerRun(e=false){  // this is the main auto-mixing code.  It's a
 			if (roomQuality === 0){roomQuality=1;}
 			
 			var totalRoomBitrate = session.totalRoomBitrate;
+			
 			if ((session.controlRoomBitrate!==false) && (session.controlRoomBitrate!==true)){
 				totalRoomBitrate = Math.min(session.controlRoomBitrate, totalRoomBitrate);
 			}
@@ -3451,7 +3484,9 @@ function updateMixerRun(e=false){  // this is the main auto-mixing code.  It's a
 			var sceneBitrate = false;
 			var screenShareBitrate = false;
 			
-			if (session.screenShareBitrate!==false){
+			if (session.bitrate && !roomBitrate && !session.totalSceneBitrate){
+				roomBitrate = session.bitrate;
+			} else if (session.screenShareBitrate!==false){
 				screenShareBitrate = session.screenShareBitrate;
 				if ((roomQuality-screenShareTotal)>0){
 					roomBitrate = parseInt(totalRoomBitrate/(roomQuality-screenShareTotal));
@@ -3514,9 +3549,10 @@ function updateMixerRun(e=false){  // this is the main auto-mixing code.  It's a
 						sceneBitrate = session.totalSceneBitrate;
 					}
 				}
-				
-				
 			}
+			
+			
+			
 			
 			var i = null;
 			var countOrder = 0;
@@ -3912,7 +3948,10 @@ function updateMixerRun(e=false){  // this is the main auto-mixing code.  It's a
 	
 	
 	var customLayout=false;
-	if (sssid && !session.layout){
+	
+	if (!session.notifyScreenShare && (session.scene!==false)){
+		// this is a scene, so lets assume &smallshare will disable larger screen shares since there is no one to screen share.
+	} else if (sssid && !session.layout){
 		customLayout = {};
 		
 		if (mediaPool.length>=12){
@@ -4248,7 +4287,12 @@ function updateMixerRun(e=false){  // this is the main auto-mixing code.  It's a
 	var layout = false;
 	if (customLayout || session.layout){
 		layout = session.layout || customLayout;
-		mediaPool = sortByZ(mediaPool, layout);
+		try {
+			mediaPool = sortByZ(mediaPool, layout);
+		} catch(e){
+			// layout = false;
+			errorlog(e);
+		}
 	}
 	
 	if (session.waitImage && !(mediaPool_invisible.length || mediaPool.length)){
@@ -7769,8 +7813,32 @@ function processStats(UUID){
 					
 					if ((stat.type == "candidate-pair") && (stat.nominated==true)){
 						
-						session.rpcs[UUID].stats['Peer-to-Peer Connection']._local_ice_id = stat.localCandidateId;
-						session.rpcs[UUID].stats['Peer-to-Peer Connection']._remote_ice_id = stat.remoteCandidateId;
+						
+						if (stat.localCandidateId && session.rpcs[UUID].stats['Peer-to-Peer Connection']._local_ice_id  && (session.rpcs[UUID].stats['Peer-to-Peer Connection']._local_ice_id !== stat.localCandidateId)){
+							if ("candidateType" in stat){
+								try {
+									session.rpcs[UUID].stats['Peer-to-Peer Connection'].local_candidateType = null;
+									session.rpcs[UUID].stats['Peer-to-Peer Connection'].local_relay_IP = null;
+									session.rpcs[UUID].stats['Peer-to-Peer Connection'].local_relay_protocol = null;
+								} catch(e){}
+							}
+						}
+						
+						if (stat.remoteCandidateId && session.rpcs[UUID].stats['Peer-to-Peer Connection']._remote_ice_id  && (session.rpcs[UUID].stats['Peer-to-Peer Connection']._remote_ice_id !== stat.remoteCandidateId)){
+							if ("candidateType" in stat){
+								try {
+									session.rpcs[UUID].stats['Peer-to-Peer Connection'].remote_candidateType = null;
+									session.rpcs[UUID].stats['Peer-to-Peer Connection'].remote_relay_IP = null;
+									session.rpcs[UUID].stats['Peer-to-Peer Connection'].remote_relay_protocol = null;
+								} catch(e){}
+							}
+						}
+						if (stat.localCandidateId){
+							session.rpcs[UUID].stats['Peer-to-Peer Connection']._local_ice_id = stat.localCandidateId;
+						}
+						if (stat.remoteCandidateId){
+							session.rpcs[UUID].stats['Peer-to-Peer Connection']._remote_ice_id = stat.remoteCandidateId;
+						}
 						if ("currentRoundTripTime" in stat){
 							session.rpcs[UUID].stats['Peer-to-Peer Connection'].Round_Trip_Time_ms = stat.currentRoundTripTime*1000;
 						}
@@ -7816,15 +7884,17 @@ function processStats(UUID){
 							if (stat.candidateType === "relay"){
 								if ("relayProtocol" in stat){
 									session.rpcs[UUID].stats['Peer-to-Peer Connection'].remote_relay_protocol = stat.relayProtocol;
+								} else {
+									session.rpcs[UUID].stats['Peer-to-Peer Connection'].remote_relay_protocol = null;
 								}
 								if ("ip" in stat){session.rpcs[UUID].stats['Peer-to-Peer Connection'].remote_relay_IP = stat.ip;}
+								else {session.rpcs[UUID].stats['Peer-to-Peer Connection'].remote_relay_IP = null;}
 							} else {
 								try {
-									delete session.rpcs[UUID].stats['Peer-to-Peer Connection'].local_relay_IP;
-									delete session.rpcs[UUID].stats['Peer-to-Peer Connection'].local_relay_protocol;
+									session.rpcs[UUID].stats['Peer-to-Peer Connection'].local_relay_IP = null;
+									session.rpcs[UUID].stats['Peer-to-Peer Connection'].local_relay_protocol = null;
 								} catch(e){}
 							}
-							
 						}
 						
 						if ("networkType" in stat){
@@ -7841,12 +7911,15 @@ function processStats(UUID){
 							if (stat.candidateType === "relay"){
 								if ("relayProtocol" in stat){
 									session.rpcs[UUID].stats['Peer-to-Peer Connection'].local_relay_protocol = stat.relayProtocol;
+								} else {
+									session.rpcs[UUID].stats['Peer-to-Peer Connection'].local_relay_protocol = null;
 								}
 								if ("ip" in stat){session.rpcs[UUID].stats['Peer-to-Peer Connection'].local_relay_IP = stat.ip;}
+								else {session.rpcs[UUID].stats['Peer-to-Peer Connection'].local_relay_IP = null;}
 							} else {
 								try {
-									delete session.rpcs[UUID].stats['Peer-to-Peer Connection'].local_relay_IP;
-									delete session.rpcs[UUID].stats['Peer-to-Peer Connection'].local_relay_protocol;
+									session.rpcs[UUID].stats['Peer-to-Peer Connection'].local_relay_IP = null;
+									session.rpcs[UUID].stats['Peer-to-Peer Connection'].local_relay_protocol = null;
 								} catch(e){}
 							}
 						}
@@ -9851,84 +9924,81 @@ function directorAdvanced(ele) {
 }
 
 function directorSendMessage(ele) {
-	var target = document.createElement("div");
-	target.style = "position:absolute;float:left;width:270px;height:222px;background-color:#7E7E7E;";
-	target.style.zIndex = "2";
-
-	var inputField = document.createElement("textarea");
-	inputField.placeholder = "Enter your message here";
-	inputField.style.width = "255px";
-	inputField.style.height = "170px";
-	inputField.style.margin = "5px 10px 5px 10px";
-	inputField.style.padding = "5px";
 	
-
-	var sendButton = document.createElement("button");
-	sendButton.innerHTML = "<i class='las la-reply'></i> <span data-translate='send-message'>send message<s/pan> ";
-	miniTranslate(sendButton);
-	sendButton.style.left = "5px";
-	sendButton.style.position = "relative";
-	sendButton.onclick = function() {
-		var chatMsg = {};
-		chatMsg.chat = inputField.value;
-		if (sendButton.parentNode.overlay) {
-			chatMsg.overlay = sendButton.parentNode.overlay;
-		}
-		session.sendRequest(chatMsg, ele.dataset.UUID);
-		inputField.value = "";
-		//target.parentNode.removeChild(target);
-	};
-
-
-	var closeButton = document.createElement("button");
-	closeButton.innerHTML = "<i class='las la-times'></i> <span data-translate='close'>close</span>";
-	miniTranslate(closeButton);
-	closeButton.style.left = "5px";
-	closeButton.style.position = "relative";
-	closeButton.onclick = function() {
-		inputField.value = "";
-		target.parentNode.removeChild(target);
-	};
-
-	var overlayMsg = document.createElement("span");
-
-	overlayMsg.style.left = "16px";
-	overlayMsg.style.top = "6px";
-	overlayMsg.style.position = "relative";
-	overlayMsg.innerHTML = "<i class='las la-bell' style='font-size:170%; color:#FFF; cursor:pointer;'></i>";
-	overlayMsg.title = "Toggle between the message appearing as a large overlay and as normal chat";
+	var UUID = ele.dataset.UUID;
+	var target = document.querySelector("[data--u-u-i-d='"+UUID+"'][data-action-type='messaging-box']");
+	if (!target){return;}
+	
+	if (target.classList.contains("hidden")){
+		target.classList.remove("hidden");
+		ele.classList.add("pressed");
+	} else {
+		target.classList.add("hidden");
+		ele.classList.remove("pressed");
+		return;
+	}
+	
+	
+	var inputField = target.querySelector("[data-action-type='messaging-box-text']");
+	if (inputField){
+		inputField.focus();
+		inputField.select();
+	}
+	if ("overlay" in target){
+		return;
+	}
+	
 	target.overlay = true;
-
-	overlayMsg.onclick = function(e) {
-		log(e.target.parentNode.parentNode);
-		if (e.target.parentNode.parentNode.overlay === true) {
-			e.target.parentNode.parentNode.overlay = false;
-			e.target.parentNode.innerHTML = "<i class='las la-bell-slash' style='font-size:170%; color:#DDD; cursor:pointer;'></i>";
-		} else {
-			e.target.parentNode.parentNode.overlay = true;
-			e.target.parentNode.innerHTML = "<i class='las la-bell' style='font-size:170%; color:#FFF; cursor:pointer;'></i>";
-		}
+	
+	if (inputField){
+		inputField.addEventListener("keydown", function(e) {
+			if (e.keyCode == 13) {
+				e.preventDefault();
+				sendButton.click();
+			} else if (e.keyCode == 27) {
+				e.preventDefault();
+				inputField.value = "";
+				target.parentNode.removeChild(target);
+			}
+		});
+	}
+	
+	var sendButton = target.querySelector("[data-action-type='messaging-box-send']");
+	if (sendButton){
+		sendButton.onclick = function() {
+			var chatMsg = {};
+			chatMsg.chat = inputField.value;
+			if (sendButton.parentNode.overlay) {
+				chatMsg.overlay = sendButton.parentNode.overlay;
+			}
+			session.sendRequest(chatMsg, ele.dataset.UUID);
+			inputField.value = "";
+			//target.parentNode.removeChild(target);
+		};
 	}
 
-
-	inputField.addEventListener("keydown", function(e) {
-		if (e.keyCode == 13) {
-			e.preventDefault();
-			sendButton.click();
-		} else if (e.keyCode == 27) {
-			e.preventDefault();
+	var closeButton = target.querySelector("[data-action-type='messaging-box-close']");
+	if (closeButton){
+		closeButton.onclick = function() {
 			inputField.value = "";
-			target.parentNode.removeChild(target);
+			target.classList.add("hidden");
+			ele.classList.remove("pressed");
+		};
+	}
+
+	var overlayMsg = target.querySelector("[data-action-type='messaging-box-toggle']");
+	if (overlayMsg){
+		overlayMsg.onclick = function(e) {
+			log(e.target.parentNode.parentNode);
+			if (e.target.parentNode.parentNode.overlay === true) {
+				e.target.parentNode.parentNode.overlay = false;
+				e.target.parentNode.innerHTML = "<i class='las la-bell-slash' style='font-size:170%; color:#DDD; cursor:pointer;'></i>";
+			} else {
+				e.target.parentNode.parentNode.overlay = true;
+				e.target.parentNode.innerHTML = "<i class='las la-bell' style='font-size:170%; color:#FFF; cursor:pointer;'></i>";
+			}
 		}
-	});
-	target.appendChild(closeButton);
-	target.appendChild(sendButton);
-	target.appendChild(overlayMsg);
-	target.appendChild(inputField);
-	ele.parentNode.appendChild(target);
-	inputField.focus();
-	inputField.select();
-	
+	}
 }
 
 function toggleAutoVideoMute(){ // for iOS devices, that tab out.
@@ -10091,14 +10161,14 @@ function hangup() { // TODO: I need to have this be MUTE, toggle, with volume no
 	if (session.hostedTransfers.length){
 		confirmAlt("There are still file transfer in progress\nAre you sure you wish to exit?").then(res=>{
 			if (res){
-				getById("main").innerHTML = "<font style='font-size:500%;text-align:center;margin:auto;'>👋</font>";
+				getById("main").innerHTML = "<span style='font-size:500%;text-align:center;margin:auto;'>👋</span>";
 				setTimeout(function() {
 					session.hangup();
 				}, 0);
 			}
 		});
 	} else {
-		getById("main").innerHTML = "<font style='font-size:500%;text-align:center;margin:auto;'>👋</font>";
+		getById("main").innerHTML = "<span style='font-size:500%;text-align:center;margin:auto;'>👋</span>";
 		setTimeout(function() {
 			session.hangup();
 		}, 0);
@@ -10132,7 +10202,7 @@ function hangup2() {
 }
 
 function hangupComplete() {
-	getById("main").innerHTML = "<font style='font-size:500%;text-align:center;margin:auto;'>👋</font>";
+	getById("main").innerHTML = "<span style='font-size:500%;text-align:center;margin:auto;'>👋</span>";
 	pokeIframeAPI("hungup",true); // don't use Hangup, as that's an action.  
 	pokeAPI("hangup",true);
 }
@@ -11196,9 +11266,12 @@ function remoteSpeakerMute(ele,  event=false){
 	} else {
 		msg.speakerMute = true;
 	}
-	msg.UUID = ele.UUID;
-	session.sendRequest(msg, ele.UUID);
+	msg.UUID = ele.dataset.UUID;
+	session.sendRequest(msg, ele.dataset.UUID);
 	syncDirectorState(ele);
+	
+	errorlog(msg);
+	
 	return msg.speakerMute;
 }
 
@@ -14387,12 +14460,19 @@ async function createDirectorOnlyBox() {
 	
 	container.innerHTML = buttons;
 	
+	var oldGroups = [];
+	document.querySelectorAll("#groups [data-action-type='toggle-group'][data-group]:not(.green)").forEach(ee=>{
+		oldGroups.push(ee.dataset.group);
+	});
+	getById("groups").remove();
+	
 	if (session.hidesololinks==false){ // won't be updating the solo link to a view-only one ever, since director is always expected to be in a room
 		controls.innerHTML += "<div style='padding:5px;word-wrap: break-word; overflow:hidden; white-space: nowrap; overflow: hidden; font-size:0.7em; text-overflow: ellipsis;' title='A direct solo view of the video/audio stream with nothing else'> \
 				<a class='soloLink advanced task' data-menu='context-menu' data-sololink='true' data-drag='1' draggable='true' onclick='copyFunction(this,event)' \
 				value='" + soloLink + "' href='" + soloLink + "'/>" + sanitizeChat(soloLink) + "</a>\
 				<button class='pull-right' style='width:100%;background-color:#ecfaff;' onclick='copyFunction(this.previousElementSibling,event)'><i class='las la-user'></i> copy solo view link</button>\
 			</div>\
+			<div id='groups'></div>\
 			<div style='text-align: center;margin:0px 10px 10px 10px;display:block;'><h3>This is you, the director.<br />You are also a performer.</h3></div>";
 	}
 	
@@ -14427,13 +14507,18 @@ async function createDirectorOnlyBox() {
 		}
 	});
 	
-	getById("groups").classList.add("hidden");
-	getById("groups").innerHTML = "";
+	getById("groups").showDirector = true;
 	
 	session.group.forEach(group=>{
 		// changeGroupDirectorAPI(group, state=null, update=true)
 		changeGroupDirectorAPI(group, true, false); // update the UI only /
 	});
+	
+	oldGroups.forEach(group=>{
+		// changeGroupDirectorAPI(group, state=null, update=true)
+		changeGroupDirectorAPI(group, false, false); // update the UI only /
+	});
+	
 	
 	
 	//if (session.group && session.group.length){
@@ -15450,7 +15535,8 @@ function gotDevices(deviceInfos) {
 			return 0;
 		}
 		//deviceInfos.sort(comp); // I like this idea, but it messes with the defaults.  I just don't know what it will do.
-
+		var deviceInfo;
+		
 		// This is to hide NDI from default device. NDI Tools fucks up.
 		var tmp = [];
 		for (let i = 0; i !== deviceInfos.length; ++i) {
@@ -15469,22 +15555,22 @@ function gotDevices(deviceInfos) {
 		}
 		deviceInfos = tmp;
 
-		if ((session.audioDevice) && (session.audioDevice !== 1)) { // this sorts according to users's manual selection
+		if (typeof session.audioDevice == "object") { // this sorts according to users's manual selection
 			var tmp = [];
 			for (let i = 0; i !== deviceInfos.length; ++i) {
 				deviceInfo = deviceInfos[i];
-				if ((deviceInfo.kind === 'audioinput') && (deviceInfo.label.replace(/[\W]+/g, "_").toLowerCase().includes(session.audioDevice))) {
+				if ((deviceInfo.kind === 'audioinput') && session.audioDevice.filter(ele => deviceInfo.label.replace(/[\W]+/g, "_").toLowerCase().includes(ele)).length) {
 					tmp.push(deviceInfo);
-					log("A DEVICE FOUND = " + deviceInfo.label.replace(/[\W]+/g, "_").toLowerCase());
-				} else if (deviceInfo.deviceId === session.audioDevice){
+					log("A DEVICE FOUND = " + deviceInfo.label);
+				} else if ((deviceInfo.kind === 'audioinput') && session.audioDevice.includes(deviceInfo.deviceId)) {
 					tmp.push(deviceInfo);
 					log("EXACT A DEVICE FOUND: "+session.audioDevice);
 				}
 			}
 			for (let i = 0; i !== deviceInfos.length; ++i) {
 				deviceInfo = deviceInfos[i];
-				if (!((deviceInfo.kind === 'audioinput') && (deviceInfo.label.replace(/[\W]+/g, "_").toLowerCase().includes(session.audioDevice)))) {
-					if (deviceInfo.deviceId !== session.audioDevice){
+				if (!((deviceInfo.kind === 'audioinput') && session.audioDevice.filter(ele => deviceInfo.label.replace(/[\W]+/g, "_").toLowerCase().includes(ele)).length)) { // opposite of previous loop
+					if (!(((deviceInfo.kind === 'audioinput') && session.audioDevice.includes(deviceInfo.deviceId)))){ // ditto
 						tmp.push(deviceInfo);
 					}
 				}
@@ -15605,7 +15691,7 @@ function gotDevices(deviceInfos) {
 			deviceInfos = matched.concat(notmatch);
 			delete session.store.SelectedVideoInputDevices;
 		}
-		
+		var adMatch = session.audioDevice;
 		var counter = 1;
 		for (let i = 0; i !== deviceInfos.length; ++i) {
 			const deviceInfo = deviceInfos[i];
@@ -15618,7 +15704,37 @@ function gotDevices(deviceInfos) {
 				option.type = "checkbox";
 				counter++;
 				listele = document.createElement('li');
-				if (counter == 2) {
+				listele.style.display = "none";
+				
+				if (typeof adMatch == "object"){
+					for (var j = 0;j<adMatch.length;j++){
+						if (!adMatch[j]){
+							// skip, already matched
+						} else if (adMatch[j] == deviceInfo.deviceId){
+							option.checked = true;
+							listele.style.display = "block";
+							option.style.display = "none"; 
+							getById("multiselect1").checked = false;
+							try{
+								getById("multiselect1").parentNode.style.display = "none";
+							} catch(e){}
+							adMatch[j] = null;
+							break;
+						} else if (deviceInfo.label.replace(/[\W]+/g, "_").toLowerCase().includes(adMatch[j])){
+							option.checked = true;
+							listele.style.display = "block";
+							option.style.display = "none"; 
+							getById("multiselect1").checked = false;
+							try{
+								getById("multiselect1").parentNode.style.display = "none";
+							} catch(e){}
+							adMatch[j] = null;
+							break;
+						}
+					}
+				}
+				
+				if ((typeof adMatch !== "object") && (counter == 2)){
 					option.checked = true;
 					listele.style.display = "block";
 					option.style.display = "none"; 
@@ -15626,10 +15742,7 @@ function gotDevices(deviceInfos) {
 					try{
 						getById("multiselect1").parentNode.style.display = "none";
 					} catch(e){}
-				} else {
-					listele.style.display = "none";
-				}
-
+				} 
 				
 				option.value = deviceInfo.deviceId || "default";
 				option.name = "multiselect" + counter;
@@ -16419,16 +16532,11 @@ function gotDevices2(deviceInfos) {
 			refreshVideoDevice();
 		};
 
-		audioOutputSelect.onchange = function() {
-			log("audioOutputSelect.onchange = function() {");
-
-			if ((iOS) || (iPad)) {
-				return;
-			}
-
-			if (Firefox && !session.mobile){
+		if (Firefox && !session.mobile){
+			audioOutputSelect.onclick = function() {
+				log("audioOutputSelect.onclick = function() {");
 				if (audioOutputSelect.options[audioOutputSelect.selectedIndex].value === "others"){
-				
+					log("Trying to increase the output device list");
 					navigator.mediaDevices.selectAudioOutput().then((device) => {
 						  
 						if (device.kind == "audiooutput"){
@@ -16459,13 +16567,24 @@ function gotDevices2(deviceInfos) {
 						}
 					  
 					});
-					
+				}
+			}
+		}
+
+		audioOutputSelect.onchange = function() {
+			log("audioOutputSelect.onchange = function() {");
+
+			if ((iOS) || (iPad)) {
+				return;
+			}
+			
+			if (Firefox && !session.mobile){
+				if (audioOutputSelect.options[audioOutputSelect.selectedIndex].value === "others"){  // we handle this elsewhere
 					return;
 				}
 			}
 
 			try {
-				
 				session.sink = audioOutputSelect.options[audioOutputSelect.selectedIndex].value;
 				saveSettings();
 			} catch (e) {
@@ -16531,8 +16650,10 @@ function gotDevicesRemote(deviceInfos, UUID) {
 				session.sendRequest(data, UUID); // Viewer is requesting the PUBLISHER
 			};
 			
-			getById("advanced_video_director_" + UUID).appendChild(videoSelect);
-			getById("advanced_video_director_" + UUID).appendChild(buttonGO);
+			var videoSelectDiv = document.createElement("div");
+			getById("advanced_video_director_" + UUID).appendChild(videoSelectDiv);
+			videoSelectDiv.appendChild(videoSelect);
+			videoSelectDiv.appendChild(buttonGO);
 		}
 		
 		if (document.getElementById("remoteAudioSelect_"+UUID)){
@@ -16610,9 +16731,11 @@ function gotDevicesRemote(deviceInfos, UUID) {
 				data.UUID = UUID;
 				session.sendRequest(data, UUID); // Viewer is requesting the PUBLISHER
 			}
-			getById("advanced_audio_director_" + UUID).appendChild(audioOutputSelect);
-			getById("advanced_audio_director_" + UUID).appendChild(buttonGO);
-			getById("advanced_audio_director_" + UUID).appendChild(buttonGO);
+			
+			var audioOutputSelectContainer = document.createElement("div");
+			getById("advanced_audio_director_" + UUID).appendChild(audioOutputSelectContainer);
+			audioOutputSelectContainer.appendChild(audioOutputSelect);
+			audioOutputSelectContainer.appendChild(buttonGO);
 		}
 		
 		var matched = false;
@@ -17233,19 +17356,21 @@ function resetupAudioOut(ele=false, forceReset=false) { // this re-sets ALL outp
 						ele.setSinkId(eleSink).then(() => {
 							log("New Output Device");
 						}).catch(error => {
-							errorlog(error);
+							if (!Firefox){
+								errorlog(error);
+							}
 							// TODO:  If error, then see if I need to add mic support, and grab it if needed.
 						});
 					}).catch(error => {
-						if (Firefox){
-							warnlog(error);
-						} else {
+						if (!Firefox){
 							errorlog(error);
 						}
 						ele.setSinkId(eleSink).then(() => {
 							log("New Output Device");
 						}).catch(error => {
-							errorlog(error);
+							if (!Firefox){
+								errorlog(error);
+							}
 							// TODO:  If error, then see if I need to add mic support, and grab it if needed.
 						});
 					});
@@ -17254,8 +17379,10 @@ function resetupAudioOut(ele=false, forceReset=false) { // this re-sets ALL outp
 				ele.setSinkId(eleSink).then(() => {
 					log("New Output Device for self-preview");
 				}).catch(error => {
-					warnlog("Need to add mic support, and grab it if needed.");
-					warnlog(error);
+					if (!Firefox){
+						warnlog("Need to add mic support, and grab it if needed.");
+						warnlog(error);
+					}
 					// TODO:  If error, then see if I need to add mic support, and grab it if needed.
 				});
 			}
@@ -17274,7 +17401,9 @@ function resetupAudioOut(ele=false, forceReset=false) { // this re-sets ALL outp
 				session.videoElement.setSinkId(eleSink).then(() => {
 					log("New Output Device for self-preview");
 				}).catch(error => {
-					errorlog(error);
+					if (!Firefox){
+						errorlog(error);
+					}
 					// TODO:  If error, then see if I need to add mic support, and grab it if needed.
 				});
 			}
@@ -17292,7 +17421,9 @@ function resetupAudioOut(ele=false, forceReset=false) { // this re-sets ALL outp
 					session.rpcs[UUID].videoElement.setSinkId(eleSink).then(() => {
 						log("New Output Device for: " + UUID);
 					}).catch(error => {
-						errorlog(error);
+						if (!Firefox){
+							errorlog(error);
+						}
 						// TODO:  If error, then see if I need to add mic support, and grab it if needed.
 					});
 				}
@@ -19219,7 +19350,9 @@ function pushOutVideoTrack(track){
 			}
 		}
 	}
-	
+	if (track.kind === "audio"){
+		session.applyIsolatedChat();
+	}
 	session.refreshScale(); 
 }
 
@@ -19318,16 +19451,17 @@ async function grabAudio(selector = "#audioSource", trackid = null, override = f
 }
 
 session.toggleSoloChat = function(UUID, event=false){ // ==> applyIsolatedChat -- this should be trigger by the director only I think
-	if (Firefox){
-		warnUser("Sorry, but Firefox does not support solo talk.",2000)
-		return false;
-	} else if (session.director){
+	
+	if (session.director){
 		if (!session.directorEnabledPPT){
 			warnUser("Enable the director's microphone first.",2000);
 			return false;
 		}
 	} 
 	
+	if (Firefox){
+		warnlog("Solo talk support for Firefox is currently experimental");
+	}
 	
 	var msg = {};
 	msg.micIsolate = false;
@@ -19340,7 +19474,6 @@ session.toggleSoloChat = function(UUID, event=false){ // ==> applyIsolatedChat -
 		msg.lowerVolume = true;
 	}
 	
-	
 	if (event){
 		if ( event.ctrlKey || event.metaKey){
 			if (session.soloChatUUID.includes(UUID)){
@@ -19348,18 +19481,20 @@ session.toggleSoloChat = function(UUID, event=false){ // ==> applyIsolatedChat -
 			}
 		}
 	}
+	
 	session.sendRequest(msg, UUID);
 	
-	var elements = document.querySelectorAll('[data-action-type="solo-chat"]'); // [data--u-u-i-d="'+UUID+'"]  // this all just updates the buttons
-	for (var i = 0; i< elements.length; i++){
-		if ((elements[i].dataset.UUID == UUID) && (session.soloChatUUID.includes(elements[i].dataset.UUID))){
-			if (msg.micIsolate){
-				elements[i].classList.add("altpress"); // we will do this later.
-			}
-		} else if (elements[i].dataset.UUID == UUID){
-			elements[i].classList.remove("pressed");
-			elements[i].classList.remove("altpress");
+	log(session.soloChatUUID);
+	var ele = document.querySelector('[data-action-type="solo-chat"][data--u-u-i-d="'+UUID+'"]'); // [data--u-u-i-d="'+UUID+'"]  // this all just updates the buttons
+	log(ele);
+	
+	if (session.soloChatUUID.includes(UUID)){
+		if (msg.micIsolate){
+			ele.classList.add("altpress"); // we will do this later.
 		}
+	} else {
+		ele.classList.remove("pressed");
+		ele.classList.remove("altpress");
 	}
 	
 	session.applySoloChat(false); 
@@ -19435,10 +19570,10 @@ session.applyIsolatedVolume = function(){ //  mutes outbound mic audio; for gues
 	}
 }
 
-session.applyIsolatedChat = function(){ //  mutes outbound mic audio; for guests, and not the director
-	
+session.applyIsolatedChat = function(UUID=false){ //  mutes outbound mic audio; for guests, and not the director
+	log("applyIsolatedChat"); 
 	session.applyIsolatedVolume(); // this toggle the speaker output
-	
+	 
 	var i = session.micIsolated.length;
 	while (i--){
 		if (!(session.micIsolated[i] in session.pcs) && !(session.micIsolated[i] in session.rpcs)){
@@ -19446,10 +19581,24 @@ session.applyIsolatedChat = function(){ //  mutes outbound mic audio; for guests
 		}
 	}
 	
+	var muteList =  [...session.micIsolated]; // one thing I hate about Javascript. Doesn't actually copy arrays.
 	var soloMode = false;
 	
+	if (session.micIsolatedAutoMute){ // session.micIsolatedAutoMute
+		soloMode = true;
+		session.micIsolatedAutoMute.forEach(uid =>{
+			if (!muteList.includes(uid) && (uid in session.rpcs || uid in session.pcs)){
+				muteList.push(uid);
+			}
+		});
+	}
+	
+	if (muteList.length){
+		soloMode = true;
+	}
+	
 	if (!(session.cleanOutput)){
-		if (session.micIsolated.length){
+		if (soloMode){
 			getById("header").classList.add('orange');
 			getById("head6").classList.remove('hidden');
 		} else if (session.audioGain === 0){
@@ -19458,10 +19607,6 @@ session.applyIsolatedChat = function(){ //  mutes outbound mic audio; for guests
 			getById("header").classList.remove('orange');
 			getById("head6").classList.add('hidden');
 		}
-	}
-	
-	if (session.micIsolated.length){
-		soloMode = true;
 	}
 	
 	/////
@@ -19474,7 +19619,9 @@ session.applyIsolatedChat = function(){ //  mutes outbound mic audio; for guests
 						receivers[i].track.enabled = !session.directorSpeakerMuted;
 					}
 				}
-			} catch(e){}
+			} catch(e){
+				errorlog(e);
+			}
 		}
 		if (session.directorSpeakerMuted){
 			getById("videosource").muted = true;
@@ -19482,31 +19629,161 @@ session.applyIsolatedChat = function(){ //  mutes outbound mic audio; for guests
 	}
 	//////////////
 	
-	for (var UUID in session.pcs){
+	if (UUID){
 		try {
 			var senders = getSenders2(UUID);
 			senders.forEach((sender) => {
 				if (!sender.track){return;}
 				if (sender.track.kind !== "audio"){return;}
 				
-				const params = sender.getParameters();
-				if (!params.encodings) {
-					params.encodings = [{ }];
-				} else if (!params.encodings.length){
-					return;
-				}
+				var settings = {};
 				if (!soloMode){
-					params.encodings[0].active = true;
-					sender.setParameters(params).then(() => {}).catch(warnlog);
-				} else if (session.micIsolated.indexOf(UUID)>=0){
-					params.encodings[0].active = true;
-					sender.setParameters(params).then(() => {}).catch(warnlog);
+					settings.active = true;
+					session.pcs[UUID].audioMutedOverride = false;
+				} else if (muteList.indexOf(UUID)>=0){
+					settings.active = true;
+					session.pcs[UUID].audioMutedOverride = false;
 				} else { 
-					params.encodings[0].active = false;
-					sender.setParameters(params).then(() => {}).catch(warnlog);
-				} 
+					log("MUTING via session.applyIsolatedChat");
+					settings.active = false;
+					session.pcs[UUID].audioMutedOverride = true
+				}
+				setEncodings(sender, settings);
 			});
 		} catch(e){errorlog(e);}
+	} else {
+		for (var UUID in session.pcs){
+			try {
+				var senders = getSenders2(UUID);
+				senders.forEach((sender) => {
+					if (!sender.track){return;}
+					if (sender.track.kind !== "audio"){return;}
+					
+					var settings = {};
+					if (!soloMode){
+						settings.active = true;
+						session.pcs[UUID].audioMutedOverride = false;
+					} else if (muteList.indexOf(UUID)>=0){
+						settings.active = true;
+						session.pcs[UUID].audioMutedOverride = false;
+					} else { 
+						log("MUTING via session.applyIsolatedChat");
+						settings.active = false;
+						session.pcs[UUID].audioMutedOverride = true;
+					}
+					setEncodings(sender, settings);
+				});
+			} catch(e){errorlog(e);}
+		}
+	}
+}
+
+var FirefoxSenders = {};
+
+function setEncodings(sender, settings=null, callback=null){
+	if (!settings){
+		if (!(sender.encodingsQueue)){ // not set
+			return;
+		} else if (!sender.encodingsQueue.length){ // none left
+			return;
+		}
+	} else if (!("encodingsQueue" in sender)){
+		sender.encodingsQueue = [[settings, callback]];
+	} else {
+		sender.encodingsQueue.push([settings, callback]);
+	}
+	
+	if (sender.encodingsQueueActive){return;}
+	
+	try {	
+		sender.encodingsQueueActive = true; // we're now busy.
+		
+		var options = sender.encodingsQueue.shift();
+		settings = options[0];
+		callback = options[1];
+		
+		const params = sender.getParameters();
+		if (!params.encodings || (params.encodings.length==0)){
+			params.encodings = [{}];
+		}
+		var changed = false;
+		for (var setting in settings){
+			if (settings[setting]===null){
+				if (setting in params.encodings[0]){
+					delete params.encodings[0][setting];
+					changed = true
+				}
+			} else {
+				if (setting in params.encodings[0]){
+					if (params.encodings[0][setting] !== settings[setting]){
+						changed = true
+					}
+				} else {
+					changed = true
+				}
+				params.encodings[0][setting] = settings[setting];
+			}
+		}
+		
+		log(settings);
+		
+		// if Firefox, see if I can do something other than Active?
+		
+		if (!changed){
+			log("SET ENCODINGS MATCH INPUT; skipping");
+			if (callback){
+				setTimeout(function(){callback();},0);
+			}
+			sender.encodingsQueueActive = false;
+			setEncodings(sender);
+			return;
+		}
+		
+		if (Firefox){
+			if ("active" in settings){
+				warnlog("Firefox does not support track active state. We will use enable/disable for that instead.");
+				if (FirefoxSenders.sender){
+					if (FirefoxSenders.sender.lastState === false){
+						FirefoxSenders.sender.activeState = settings.active;
+						// already set to false, so should stay disabled
+					} else {
+						FirefoxSenders.sender.activeState = settings.active;
+						sender.track.enabled = settings.active; // either true or false
+					}
+				} else {
+					FirefoxSenders.sender = {lastState: sender.track.enabled, activeState: settings.active};
+					sender.track.enabled = settings.active;
+				}
+				
+				delete settings.active;
+				if (!Object.keys(settings).length){
+					if (callback){
+						setTimeout(function(){callback();},0);
+					}
+					log("COMPELTED FIREFOX SET ENCODINGS");
+					sender.encodingsQueueActive = false;
+					setEncodings(sender);
+					return;
+				}
+			}
+		}
+	
+		sender.setParameters(params).then(() => {
+			if (callback){
+				log(callback);
+				setTimeout(function(){callback();},0);
+			}
+			log("COMPLETED SET ENCODINGS");
+			sender.encodingsQueueActive = false;
+			setEncodings(sender);
+		}).catch((e)=>{
+			errorlog(e);
+			sender.encodingsQueueActive = false;
+			setEncodings(sender);
+		});
+	} catch(e){
+		errorlog(e);
+		sender.encodingsQueueActive = false;
 	}
 }
 
@@ -19518,10 +19795,13 @@ session.applySoloChat = function(apply=true){ // mutes outbound mic audio; ;;  d
 		return;
 	}
 	
+	log("applySoloChat()");
+	
 	var i = session.soloChatUUID.length;
 	while (i--){
 		if (!(session.soloChatUUID[i] in session.pcs)){
 			session.soloChatUUID.splice(i, 1);
+			log("splicing out: "+i);
 		}
 	}
 	
@@ -19532,31 +19812,33 @@ session.applySoloChat = function(apply=true){ // mutes outbound mic audio; ;;  d
 				if (!sender.track){return;}
 				if (sender.track.kind !== "audio"){return;}
 				
-				const params = sender.getParameters();
-				if (!params.encodings) {
-					params.encodings = [{ }];
-				} else if (!params.encodings.length){
-					return;//params.encodings = [{ }];
-				}
-				if (session.soloChatUUID.length && (session.soloChatUUID.includes(uuid))){ 
-					//sender.track.enabled = true;
-					params.encodings[0].active = true;
-					setTimeout(function(uuid,params,sender){
-						sender.setParameters(params).then(() => {
-							document.querySelectorAll('[data-action-type="solo-chat"][data--u-u-i-d="'+uuid+'"]')[0].classList.add("pressed");
-						}).catch(warnlog);
-					},0,uuid,params,sender);
+				var settings = {};
+				
+				if (session.soloChatUUID.length && (session.soloChatUUID.includes(uuid))){
+					
+					settings.active = true;
+					setEncodings(sender, settings, (function(){
+						log(uuid);
+						document.querySelectorAll('[data-action-type="solo-chat"][data--u-u-i-d="'+uuid+'"]')[0].classList.add("pressed");
+						document.querySelectorAll('[data-action-type="solo-chat"][data--u-u-i-d="'+uuid+'"]')[0].classList.remove("hint");
+					}.bind(uuid))());
+					
+					
 				} else if (session.soloChatUUID.length==0){
-					params.encodings[0].active = true;
-					sender.setParameters(params).then(() => {}).catch(warnlog);
+					settings.active = true;
+					setEncodings(sender, settings, (function(){
+						log(uuid);
+						document.querySelectorAll('[data-action-type="solo-chat"][data--u-u-i-d="'+uuid+'"]')[0].classList.remove("pressed");
+						document.querySelectorAll('[data-action-type="solo-chat"][data--u-u-i-d="'+uuid+'"]')[0].classList.remove("hint");
+					}.bind(uuid))());
 				} else {
-					params.encodings[0].active = false;
-					setTimeout( function(uuid,params,sender){
-						sender.setParameters(params).then().catch((e) => {
-							warnlog(e);
-							document.querySelectorAll('[data-action-type="solo-chat"][data--u-u-i-d="'+uuid+'"]')[0].classList.add("pressed");
-						});
-					},0,uuid,params,sender);
+					settings.active = false;
+					setEncodings(sender, settings, (function(){
+						warnlog("mutied the output to:"+ uuid);
+						document.querySelectorAll('[data-action-type="solo-chat"][data--u-u-i-d="'+uuid+'"]')[0].classList.remove("pressed");
+						document.querySelectorAll('[data-action-type="solo-chat"][data--u-u-i-d="'+uuid+'"]')[0].classList.add("hint");
+					}.bind(uuid))());
+					
 				}
 			});
 			
@@ -19707,9 +19989,10 @@ function senderAudioUpdate(callback=false){
 				}
 			}
 		}
-		session.applySoloChat(); // mute streams that should be muted if a director
+		if (session.director!==false){ 
+			session.applySoloChat(); //  mute streams that should be muted if a director
+		}
 		session.applyIsolatedChat();
-	
 		
 		try {
 			if (toggleSettingsState){
@@ -25039,12 +25322,10 @@ function setupWebcamSelection() {
 					grabVideo(session.quality_wb);
 				}
 			};
-
-			outputSelect.onchange = function() {
-				if ((iOS) || (iPad)) {
-					return;
-				}
-				if (Firefox && !session.mobile){
+			
+			if (Firefox && !session.mobile){
+				outputSelect.onclick = function() {
+					log("on click");
 					if (outputSelect.options[outputSelect.selectedIndex].value === "others"){
 					
 						navigator.mediaDevices.selectAudioOutput().then((device) => {
@@ -25078,10 +25359,21 @@ function setupWebcamSelection() {
 							}
 						  
 						});
-						
+					}
+				}
+			}
+				
+
+			outputSelect.onchange = function() {
+				if ((iOS) || (iPad)) {
+					return;
+				}
+				if (Firefox && !session.mobile){
+					if (outputSelect.options[outputSelect.selectedIndex].value === "others"){
 						return;
 					}
 				}
+				
 				try{
 					session.sink = outputSelect.options[outputSelect.selectedIndex].value;
 					saveSettings(); // we're saving because there was an explicit action to change devices
@@ -25384,6 +25676,7 @@ function createScreenShareURL(transparent=true){ // iframe.src =
 	if (session.meshcast){
 		extras += "&meshcast"; 
 	}
+	
 	if (session.remote){
 		if (session.remote===true){
 			extras += "&remote";
@@ -28753,7 +29046,7 @@ function changeGroupDirector(ele, state=null){
 }
 
 function changeGroupDirectorAPI(group, state=null, update=true){
-	
+	log("changeGroupDirectorAPI()");
 	group = sanitizeLabel(group);
 	
 	if (document.getElementById("container_director")){
@@ -28776,10 +29069,25 @@ function changeGroupDirectorAPI(group, state=null, update=true){
 	
 	var eleGroup = getById("groups");
 	eleGroup.classList.remove("hidden");
-	
 	var ele = eleGroup.querySelector('[data-action-type="toggle-group"][data-group="'+group+'"');
 	
-	if (!ele){
+	if (eleGroup.showDirector){
+		if (!ele){
+			ele = htmlToElement('<button style="margin: 0 5px 10px 5px;" data-sid="'+session.streamID+'" data-action-type="toggle-group" data-group="'+group+'"   title="Add to Group: '+group+'" onclick="changeGroupDirector(this);"><span ><i class="las la-users" style="color:#060"></i>'+group+'</span></button>');
+
+			var added = false;
+			eleGroup.querySelectorAll('[data-group]').forEach(ele2=>{
+				log(ele2);
+				if (!added && ele2.dataset.group>group+""){
+					ele2.parentNode.insertBefore(ele, ele2);
+					added = true;
+				}
+			});
+			if (!added){
+				eleGroup.appendChild(ele);
+			}
+		}
+	} else if (!ele){
 		ele = document.createElement("div");
 		ele.dataset.actionType = "toggle-group";
 		ele.dataset.group = group;
@@ -28794,22 +29102,38 @@ function changeGroupDirectorAPI(group, state=null, update=true){
 	}
 	
 	if (state===true){
-		ele.classList.add("green");
+		if (eleGroup.showDirector){
+			ele.classList.add("pressed");
+		} else {
+			ele.classList.add("green");
+		}
 		if (index === -1){
 			session.group.push(group);
 		}
 	} else if (state === false){
-		ele.classList.remove("green");
+		if (eleGroup.showDirector){
+			ele.classList.remove("pressed");
+		} else {
+			ele.classList.remove("green");
+		}
 		if (index > -1){
 			session.group.splice(index, 1);
 		}
 	} else if (ele.classList.contains("green")){
-		ele.classList.remove("green");
+		if (eleGroup.showDirector){
+			ele.classList.remove("pressed");
+		} else {
+			ele.classList.remove("green");
+		}
 		if (index > -1){
 			session.group.splice(index, 1);
 		}
 	} else {
-		ele.classList.add("green");
+		if (eleGroup.showDirector){
+			ele.classList.add("pressed");
+		} else {
+			ele.classList.add("green");
+		}
 		if (index === -1){
 			session.group.push(group);
 		}
@@ -30964,6 +31288,7 @@ async function createSecondStream2(UUID){
 		session.pcs[UUID+"_screen"].setBitrate = false;
 		session.pcs[UUID+"_screen"].maxBandwidth = null; // based on max available bitrate
 		session.pcs[UUID+"_screen"].limitAudio = false;
+		session.pcs[UUID+"_screen"].audioMutedOverride = false;
 		session.pcs[UUID+"_screen"].enhanceAudio = false;
 		session.pcs[UUID+"_screen"].meshcast = null;
 		session.pcs[UUID+"_screen"].UUID = UUID+"_screen";
@@ -31041,11 +31366,11 @@ async function createSecondStream2(UUID){
 		if (!added){
 			session.pcs[UUID].addTrack(track, session.screenStream);
 		}
-		
 	}
+	session.applyIsolatedChat();
 }
-var screenshareTracks = {};
 
+var screenshareTracks = {};
 var firsttime = true;
 async function createSecondStream() { //////////////////////////// 
 	if (session.screenShareState == false) { // adding a screen

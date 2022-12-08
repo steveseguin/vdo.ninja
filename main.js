@@ -747,6 +747,14 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 			}
 		}
 	}
+	
+	/* if (session.layout && session.layouts && (typeof session.layout !== "object") && parseInt(session.layout) && (session.layout == parseInt(session.layout))){
+		try {
+			session.layout = session.layouts[session.layout-1];
+		} catch(e){
+			session.layout= false;
+		}
+	} */
 
 	if (urlParams.has('deaf') || urlParams.has('deafen')) {
 		session.directorSpeakerMuted=true; // false == true in this case.
@@ -1900,6 +1908,11 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 		log("Tally Light off");
 		getById("obsState").style.setProperty("display", "none", "important");
 	}
+	
+	if (urlParams.has('automute') || urlParams.has('am')){
+		session.automute = urlParams.get('automute') || true;
+		session.micIsolatedAutoMute = []; // default auto mutes
+	}
 
 	if (window.obsstudio) {
 		session.disableWebAudio = true; // default true; might be useful to disable on slow or old computers?
@@ -2119,9 +2132,9 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 
 		if (session.audioDevice === null) {
 			session.audioDevice = "1";
-		} else if (session.audioDevice) {
-			session.audioDevice = session.audioDevice.toLowerCase().replace(/[\W]+/g, "_");
-		}
+		} //else if (session.audioDevice) {
+		//	session.audioDevice = session.audioDevice.toLowerCase().replace(/[\W]+/g, "_");
+		//}
 
 		if (session.audioDevice == "false") {
 			session.audioDevice = 0;
@@ -2138,19 +2151,21 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 		} else if (session.audioDevice == "default") {
 			session.audioDevice = 1;
 		} else if (session.audioDevice == "ndi") {
-			session.audioDevice = "line_newtek_ndi_audio";
+			session.audioDevice = ["line_newtek_ndi_audio"];
 		} else {
 			// whatever the user entered I guess
-			session.audioDevice = session.audioDevice.replace(/[\W]+/g, "_").toLowerCase();
+			session.audioDevice = session.audioDevice.split(",");
+			for (var i =0;i<session.audioDevice.length;i++){
+				session.audioDevice[i] = session.audioDevice[i].replace(/[\W]+/g, "_").toLowerCase();
+				log("session.audioDevice:" + session.audioDevice[i]);
+			}
 		}
-
-		log("session.audioDevice:" + session.audioDevice);
-
-		getById("audioMenu").style.display = "none";
 		getById("headphonesDiv").style.display = "none";
 		getById("headphonesDiv2").style.display = "none";
-		getById("audioScreenShare1").style.display = "none";
-
+		if (typeof session.audioDevice !== "object"){
+			getById("audioMenu").style.display = "none";	
+			getById("audioScreenShare1").style.display = "none";
+		}
 	}
 	
 	if (session.videoDevice === 0) {
@@ -2579,14 +2594,14 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 		session.totalRoomBitrate = parseInt(session.totalRoomBitrate);
 
 		if (session.totalRoomBitrate < 1) {
-			session.totalRoomBitrate = false;
+			session.totalRoomBitrate = 0;
 		}
 		log("totalRoomBitrate ENABLED");
 		log(session.totalRoomBitrate);
 	}
 	
 	if (session.totalRoomBitrate===false){
-		session.totalRoomBitrate = session.totalRoomBitrate_default;
+		session.totalRoomBitrate = session.bitrate || session.totalRoomBitrate_default; // sneaky sneaky
 	} else {
 		session.totalRoomBitrate_default = session.totalRoomBitrate; // trb_default doesn't change dynamically, but trb can (per director I guess)
 	}
@@ -3465,9 +3480,9 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 			//}
 
 			if (session.webcamonly == true) { // mobile or manual flag 'webcam' pflag set
-				getById("head1").innerHTML = '<font style="color:#CCC;" data-translate="please-accept-permissions">- Please accept any camera permissions</font>';
+				getById("head1").innerHTML = '<span style="color:#CCC;" data-translate="please-accept-permissions">- Please accept any camera permissions</span>';
 			} else {
-				getById("head1").innerHTML = '<br /><font style="color:#CCC" data-translate="please-select-which-to-share">- Please select which you wish to share</font>';
+				getById("head1").innerHTML = '<br /><span style="color:#CCC" data-translate="please-select-which-to-share">- Please select which you wish to share</span>';
 			}
 		}
 	}
@@ -3705,7 +3720,7 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 		if (session.webcamonly == true) { // mobile or manual flag 'webcam' pflag set
 			getById("head1").innerHTML = '';
 		} else {
-			getById("head1").innerHTML = '<font style="color:#CCC" data-translate="please-select-option-to-join">Please select an option to join.</font>';
+			getById("head1").innerHTML = '<span style="color:#CCC" data-translate="please-select-option-to-join">Please select an option to join.</span>';
 		}
 
 		if (session.roomid.length > 0) {
@@ -4189,7 +4204,6 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 			
 			if (session.group){
 				session.group.forEach(group =>{
-					
 					var ele = eleGroup.querySelector('[data-action-type="toggle-group"][data-group="'+group+'"');
 					if (!ele){
 						ele = document.createElement("div");
@@ -5016,7 +5030,7 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 	var visAudioTimeout = null
 	document.addEventListener("visibilitychange", function() {
 		//log("hidden : " +document.hidden);
-		log("vis : "+document.visibilityState);
+		//log("vis : "+document.visibilityState);
 		if ((iOS) || (iPad)) { // fixes a bug on iOS devices.  Not need with other devices?
 			toggleAutoVideoMute();
 			clearTimeout(visAudioTimeout);
@@ -5056,7 +5070,6 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 		log("Back ONLINE");
 		closeModal();
 		session.ping();
-		
 	});
 
 	function updateConnectionStatus() {
@@ -5415,7 +5428,9 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 		window.addEventListener("beforeunload", confirmUnload); // This just keeps people from killing the live stream accidentally. Also give me a headsup that the stream is ending
 		window.addEventListener("unload", function(e) {
 			try {
-				session.ws.close();
+				if (session.ws){
+					session.ws.close();
+				}
 				if (session.videoElement.recording) {
 					session.videoElement.recorder.writer.close();
 					session.videoElement.recording = false;

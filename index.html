@@ -57,7 +57,7 @@
 		<meta property="twitter:image" content="./media/vdoNinja_logo_full.png" />
 		<meta name="msapplication-TileColor" content="#da532c" />
 		<meta name="theme-color" content="#ffffff" />
-		<link rel="stylesheet" href="./main.css?ver=235" />
+		<link rel="stylesheet" href="./main.css?ver=238" />
 		<script type="text/javascript" crossorigin="anonymous" src="./thirdparty/adapter.js"></script>
 		<style id="lightbox-animations" type="text/css"></style>
 		<!-- <link rel="manifest" href="manifest.json" /> -->
@@ -83,14 +83,14 @@
 		</span>
 		<script type="text/javascript" crossorigin="anonymous"  src="./thirdparty/CodecsHandler.js?ver=45"></script>
 		<script type="text/javascript" crossorigin="anonymous" src="./thirdparty/aes.js"></script>
-		<script type="text/javascript" crossorigin="anonymous" src="./webrtc.js?ver=549"></script>
+		<script type="text/javascript" crossorigin="anonymous" src="./webrtc.js?ver=552"></script>
 		<input id="zoomSlider" type="range" style="display: none;" />
 		<span id="electronDragZone" style="pointer-events: none; z-index:-10; position:absolute;top:0;left:0;width:100%;height:2%;-webkit-app-region: drag;min-height:20px;"></span>
 		<div id="header">
 			
 			<a id="logoname" href="./" style="text-decoration: none; color: white; margin: 0 2px 0px 8px;">
 				<span data-translate="logo-header">
-					<font id="qos">V</font>DO.Ninja 
+					<span id="qos">V</span>DO.Ninja 
 				</span>
 			</a>
 			<div id="head1">
@@ -99,9 +99,9 @@
 			</div>
 			<div id="head5" class="hidden"></div>
 			<div id="head3" style="display: inline-block;" class="hidden">
-				<font style="color: #888;" id="copythisurl"> &nbsp; 
+				<span style="color: #888;" id="copythisurl"> &nbsp; 
 					<span data-translate="copy-this-url">Copy this URL into an OBS "Browser Source"</span> <i style="color: #CCC;" class="las la-long-arrow-alt-right"></i> &nbsp; 
-				</font>
+				</span>
 			</div>
 			<div id="head3a" style="display: inline-block;" class="hidden">
 				<a
@@ -115,13 +115,13 @@
 				<i class="las la-paperclip" style="color: #DDD;" onclick="copyFunction(document.getElementById('reshare'), event);" onmouseover="this.style.cursor='pointer'"></i>
 			</div>
 			<div id="head4" style="display: inline-block;" class="hidden">
-				<font style="font-size: 68%; color: white;">
+				<span style="font-size: 68%; color: white;">
 					<span data-translate="you-are-in-the-control-center">Control center for room:</span>
 					
 					<div id="dirroomid" style="font-size: 140%; color: #99c; display: inline-block;"></div>
 					<span id="saveRoom" onclick="saveRoom(this)" style='cursor:pointer;margin-left:10px;' title="Will remember the room, prompting you the next time you visit if you wish to load this director's room again">💾</span>
 					<span id="togglePreviewMode" onclick="switchModes()" style='cursor:pointer;margin-left:2px;' title="Toggle between the director control-room view and a scene preview-mode.">🪟</span>
-				</font>
+				</span>
 			</div>
 			<div id="head2" class="hidden" style="display: inline-block; text-decoration: none; font-size: 60%; color: white;">
 				<span data-translate="joining-room">You are in room</span>:
@@ -453,7 +453,7 @@
 							<p><span id="audioTipContext1"></span></p>
 						</div>
 					</div>
-					<br />
+					<br style="line-height: 0;" />
 					<div id="headphonesDiv" class="audioMenu">
 						<div class="audioTitle2">
 						<i class="las la-headphones"></i><span data-translate="select-output-source"> Audio Output Destination
@@ -867,7 +867,7 @@
 							
 							<br />
 							<i>
-								<a href="https://docs.vdo.ninja/common-errors-and-known-issues/known-issues" title="For more known issues, click here" target="_blank"><font style="color: red;">Known issues:</font></a>
+								<a href="https://docs.vdo.ninja/common-errors-and-known-issues/known-issues" title="For more known issues, click here" target="_blank"><span style="color: red;">Known issues:</span></a>
 							</i>
 							<br />
 							<li>
@@ -882,7 +882,7 @@
 							</li>
 							<br />
 							<h4>
-								<font style="color:#daad09;">Welcome to VDO Ninja! We've rebranded!  Nothing else is changing and we're staying 100% free.</font>
+								<span style="color:#daad09;">Welcome to VDO Ninja! We've rebranded!  Nothing else is changing and we're staying 100% free.</span>
 							</h4>
 							<br />
 							🚀🚀 Site last updated on Nov.18th (<a target='_blank' href='https://docs.vdo.ninja/releases/v22'>v22 release notes</a>). You can also still access the previous version, which <a href="https://vdo.ninja/v21/">is hosted here</a>. Development <a target="_blank" href='https://updates.vdo.ninja/'>updates are here.</a>
@@ -909,16 +909,16 @@
 					<span style='color:white' id="directorLinksButton" onclick="hideDirectorinvites(this);">
 						<i class="las la-caret-down"></i><span data-translate="hide-the-links"> LINKS (GUEST INVITES & SCENES)</span>
 					</span>
-					<span id="help_directors_room" style='float: right;color:white;text-align: right;' data-translate="click-for-quick-room-overview" onclick="toggle(getById('roomnotes2'),this,false);">
+					<span id="help_directors_room" style='float: right;color:white;text-align: right;' onclick="toggle(getById('roomnotes2'),this,false);">
 						<i class="las la-question-circle"></i> <span data-translate="click-here-for-help">Click Here for a quick overview and help</span>
 					</span>
 				</div>
 				<div id='roomnotes2' style='max-width:1191px;display:none;padding:0 0 0 10px;' >
-					<font style='color:#CCC;' data-translate='welcome-to-control-room'>
+					<span style='color:#CCC;' data-translate='welcome-to-control-room'>
 						<b>Welcome. This is the director's control-room for the group-chat.</b><br /><br />
 						You can host a group chat with friends using a room. Share the blue link to invite guests who will join the chat automatically.
 						<br /><br />
-						<font style='color:red'>Known Limitations with Group Rooms:</font><br />
+						<span style='color:red'>Known Limitations with Group Rooms:</span><br />
 						<li>A group room can handle up to around 30 guests, depending on numerous factors, including CPU and available bandwidth of all guests in the room. To achieve more than around 7-guests though, you will likely want to <a href="https://www.youtube.com/watch?v=bpRa8-UYCGc" title="Youtube Video demoing how to do this">disable video sharing between guests</a>. Using &broadcast, &roombitrate=0 or &novideo are options there.</li>
 						
 						<li>Videos will appear of low quality on purpose for guests and director; this is to save bandwidth and CPU resources. It will be high-quality within OBS still though.</li>
@@ -938,7 +938,7 @@
 						<br />
 						
 						For advanced URL options and parameters, <a href="https://docs.vdo.ninja/advanced-settings">see the Wiki.</a>
-					</font>
+					</span>
 				</div>
 			</div>
 			
@@ -986,7 +986,7 @@
 						<label class="switch" title="Disables Echo Cancellation and improves audio quality">
 						<input type="checkbox" data-param="&s" onchange="updateLink(1,this);">
 						<span class="slider"></span>
-						</label><font class="tooltip" style='cursor: help;position:relative;bottom:2px;font-family:"Noto Color Emoji", "Apple Color Emoji", "Segoe UI Emoji", Times, Symbola, Aegyptus, Code2000, Code2001, Code2002, Musica, serif, LastResort;'>⚠<span class="tooltiptext" style="width: 16em;">This can cause guests to be too quiet or have feedback/echo issues</span></font> <span data-translate="pro-audio-mode">Pro-audio mode</span>
+						</label><span class="tooltip" style='cursor: help;position:relative;bottom:2px;font-family:"Noto Color Emoji", "Apple Color Emoji", "Segoe UI Emoji", Times, Symbola, Aegyptus, Code2000, Code2001, Code2002, Musica, serif, LastResort;'>⚠<span class="tooltiptext" style="width: 16em;">This can cause guests to be too quiet or have feedback/echo issues</span></span> <span data-translate="pro-audio-mode">Pro-audio mode</span>
 						<Br />
 						<label class="switch" title="Audio-only sources are visually hidden from scenes">
 						  <input type="checkbox" data-param="&st" onchange="updateLink(1,this);">
@@ -1039,7 +1039,7 @@
 						  <input type="checkbox" data-param="&q" onchange="updateLink(1,this);">
 						  <span class="slider"></span>
 						</label>
-						<font class="tooltip" style='cursor: help;position:relative;bottom:2px;font-family:"Noto Color Emoji", "Apple Color Emoji", "Segoe UI Emoji", Times, Symbola, Aegyptus, Code2000, Code2001, Code2002, Musica, serif, LastResort;'>⚠<span class="tooltiptext">This can cause video playback to lag</span></font><span data-translate="1080p60-if-available">1080p60 Video if Available</span>
+						<span class="tooltip" style='cursor: help;position:relative;bottom:2px;font-family:"Noto Color Emoji", "Apple Color Emoji", "Segoe UI Emoji", Times, Symbola, Aegyptus, Code2000, Code2001, Code2002, Musica, serif, LastResort;'>⚠<span class="tooltiptext">This can cause video playback to lag</span></span><span data-translate="1080p60-if-available">1080p60 Video if Available</span>
 						<Br />
 						<label class="switch" title="The default microphone will be pre-selected for the guest">
 						  <input type="checkbox" data-param="&ad" onchange="updateLink(1,this);">
@@ -1069,7 +1069,7 @@
 						  <input type="checkbox" data-param="&effects" onchange="updateLink(1,this);">
 						  <span class="slider"></span>
 						</label>
-						<font class="tooltip" style='cursor: help;position:relative;bottom:2px;font-family:"Noto Color Emoji", "Apple Color Emoji", "Segoe UI Emoji", Times, Symbola, Aegyptus, Code2000, Code2001, Code2002, Musica, serif, LastResort;'>⚠<span class="tooltiptext">Uses more CPU and freezes the video if the guest doesn't keep the tab visible.</span></font> <span data-translate="virtual-backgrounds">Virtual backgrounds</span>
+						<span class="tooltip" style='cursor: help;position:relative;bottom:2px;font-family:"Noto Color Emoji", "Apple Color Emoji", "Segoe UI Emoji", Times, Symbola, Aegyptus, Code2000, Code2001, Code2002, Musica, serif, LastResort;'>⚠<span class="tooltiptext">Uses more CPU and freezes the video if the guest doesn't keep the tab visible.</span></span> <span data-translate="virtual-backgrounds">Virtual backgrounds</span>
 						
 						<br />
 						<label class="switch" title="Disable animated transitions during video mixing">
@@ -1083,7 +1083,7 @@
 						  <input type="checkbox" data-param="&chunked=500" onchange="updateLink(1,this);">
 						  <span class="slider"></span>
 						</label>
-						<font class="tooltip" style='cursor: help;position:relative;bottom:2px;font-family:"Noto Color Emoji", "Apple Color Emoji", "Segoe UI Emoji", Times, Symbola, Aegyptus, Code2000, Code2001, Code2002, Musica, serif, LastResort;'>⚠<span class="tooltiptext">Pretty experimental and limited browser support, though relatively low CPU usage.</span></font>
+						<span class="tooltip" style='cursor: help;position:relative;bottom:2px;font-family:"Noto Color Emoji", "Apple Color Emoji", "Segoe UI Emoji", Times, Symbola, Aegyptus, Code2000, Code2001, Code2002, Musica, serif, LastResort;'>⚠<span class="tooltiptext">Pretty experimental and limited browser support, though relatively low CPU usage.</span></span>
 						<span data-translate="chunked-mode">P2P Chunked-mode</span>
 						
 						
@@ -1094,7 +1094,7 @@
 						  <input type="checkbox" data-param="&trb=2000" onchange="updateLink(1,this);">
 						  <span class="slider"></span>
 						</label>
-						<font class="tooltip" style='cursor: help;position:relative;bottom:2px;font-family:"Noto Color Emoji", "Apple Color Emoji", "Segoe UI Emoji", Times, Symbola, Aegyptus, Code2000, Code2001, Code2002, Musica, serif, LastResort;'>⚠<span class="tooltiptext"><span data-translate="powerful-computers-only">Only use with powerful computers and small groups!!</span></span></font> <span data-translate="guests-see-HD-video">Guests see HD video</span>
+						<span class="tooltip" style='cursor: help;position:relative;bottom:2px;font-family:"Noto Color Emoji", "Apple Color Emoji", "Segoe UI Emoji", Times, Symbola, Aegyptus, Code2000, Code2001, Code2002, Musica, serif, LastResort;'>⚠<span class="tooltiptext"><span data-translate="powerful-computers-only">Only use with powerful computers and small groups!!</span></span></span> <span data-translate="guests-see-HD-video">Guests see HD video</span>
 						<Br />
 						<label class="switch" title="The guest will not see their own self-preview after joining">
 						  <input type="checkbox" data-param="&np" onchange="updateLink(1,this);">
@@ -1144,7 +1144,7 @@
 						  <input type="checkbox" data-param="&meshcast" onchange="updateLink(1,this);">
 						  <span class="slider"></span>
 						</label>
-						<font class="tooltip" style='cursor: help;position:relative;bottom:2px;font-family:"Noto Color Emoji", "Apple Color Emoji", "Segoe UI Emoji", Times, Symbola, Aegyptus, Code2000, Code2001, Code2002, Musica, serif, LastResort;'>⚠<span class="tooltiptext">Uses a server to restream data, rather than p2p.</span></font>
+						<span class="tooltip" style='cursor: help;position:relative;bottom:2px;font-family:"Noto Color Emoji", "Apple Color Emoji", "Segoe UI Emoji", Times, Symbola, Aegyptus, Code2000, Code2001, Code2002, Musica, serif, LastResort;'>⚠<span class="tooltiptext">Uses a server to restream data, rather than p2p.</span></span>
 						<span data-translate="meshcast-mode">Stream via server</span>
 						
 						<Br />
@@ -1208,14 +1208,14 @@
 							<label class="switch">
 								<input type="checkbox" data-param="&s" onchange="updateLink(3,this, true);">
 								<span class="slider"></span>
-							</label><font class="tooltip" style='cursor: help;position:relative;bottom:2px;font-family:"Noto Color Emoji", "Apple Color Emoji", "Segoe UI Emoji", Times, Symbola, Aegyptus, Code2000, Code2001, Code2002, Musica, serif, LastResort;'>⚠<span class="tooltiptext" style="width: 10em;">This can cause audio clicking issues</span></font> 
+							</label><span class="tooltip" style='cursor: help;position:relative;bottom:2px;font-family:"Noto Color Emoji", "Apple Color Emoji", "Segoe UI Emoji", Times, Symbola, Aegyptus, Code2000, Code2001, Code2002, Musica, serif, LastResort;'>⚠<span class="tooltiptext" style="width: 10em;">This can cause audio clicking issues</span></span> 
 							<span data-translate="pro-audio-mode">Pro-audio mode</span>
 							<br />
 							
 							<label class="switch">
 								<input type="checkbox" id="codech264toggle" data-param="&codec=h264" onchange="updateLink(3,this, true);">
 								<span class="slider"></span>
-							</label><font class="tooltip" style='cursor: help;position:relative;bottom:2px;font-family:"Noto Color Emoji", "Apple Color Emoji", "Segoe UI Emoji", Times, Symbola, Aegyptus, Code2000, Code2001, Code2002, Musica, serif, LastResort;'>💉<span class="tooltiptext" style="width: 10em; background-color: #77C"><span data-translate="this-can-reduce-packet-loss">Can reduce packet loss video corruption in OBS on PC</span></span></font> 
+							</label><span class="tooltip" style='cursor: help;position:relative;bottom:2px;font-family:"Noto Color Emoji", "Apple Color Emoji", "Segoe UI Emoji", Times, Symbola, Aegyptus, Code2000, Code2001, Code2002, Musica, serif, LastResort;'>💉<span class="tooltiptext" style="width: 10em; background-color: #77C"><span data-translate="this-can-reduce-packet-loss">Can reduce packet loss video corruption in OBS on PC</span></span></span> 
 							<span data-translate="use-h264-codec">Use H264 codec</span>
 							
 						</div>
@@ -1269,7 +1269,7 @@
 							  <input type="checkbox" data-param="&vb=20000" onchange="updateLink(3,this, true);">
 							  <span class="slider"></span>
 							</label>
-							<font class="tooltip" style='cursor: help;position:relative;bottom:2px;font-family:"Noto Color Emoji", "Apple Color Emoji", "Segoe UI Emoji", Times, Symbola, Aegyptus, Code2000, Code2001, Code2002, Musica, serif, LastResort;'>⚠<span class="tooltiptext">This can cause video playback to lag</span></font>
+							<span class="tooltip" style='cursor: help;position:relative;bottom:2px;font-family:"Noto Color Emoji", "Apple Color Emoji", "Segoe UI Emoji", Times, Symbola, Aegyptus, Code2000, Code2001, Code2002, Musica, serif, LastResort;'>⚠<span class="tooltiptext">This can cause video playback to lag</span></span>
 							<span data-translate="unlock-video-bitrate">Unlock video bitrate</span>
 							<br />
 							
@@ -1277,7 +1277,7 @@
 							  <input type="checkbox" data-param="&scale=100" onchange="updateLink(3,this, true);">
 							  <span class="slider"></span>
 							</label>
-							<font class="tooltip" style='cursor: help;position:relative;bottom:2px;font-family:"Noto Color Emoji", "Apple Color Emoji", "Segoe UI Emoji", Times, Symbola, Aegyptus, Code2000, Code2001, Code2002, Musica, serif, LastResort;'>⚠<span class="tooltiptext">This can cause higher CPU load for everyone in the room</span></font>
+							<span class="tooltip" style='cursor: help;position:relative;bottom:2px;font-family:"Noto Color Emoji", "Apple Color Emoji", "Segoe UI Emoji", Times, Symbola, Aegyptus, Code2000, Code2001, Code2002, Musica, serif, LastResort;'>⚠<span class="tooltiptext">This can cause higher CPU load for everyone in the room</span></span>
 							<span data-translate="disable-downscaling">Increase sharpness</span>
 						</div>
 						
@@ -1305,7 +1305,7 @@
 					</div>
 				</div>
 				<a href="https://params.vdo.ninja" style="color:#888;" target="_blank" >
-					<div style="display: block;float:right;font-size:70%;z-index:30;bottom:6px;right:10px;position:relative;color:#888;" ><span data-translate="learn-more-about-params">Learn more about URL parameters at </span><font style="text-decoration: underline;">params.vdo.ninja</font>
+					<div style="display: block;float:right;font-size:70%;z-index:30;bottom:6px;right:10px;position:relative;color:#888;" ><span data-translate="learn-more-about-params">Learn more about URL parameters at </span><span style="text-decoration: underline;">params.vdo.ninja</span>
 					</div>
 				</a>
 			</div>
@@ -1334,16 +1334,37 @@
 				</button>
 				
 				<button data-action-type="direct-chat" class="mainonly" title="Send a Direct Message to this user." onclick="directorSendMessage(this);">
-					<span data-translate="send-direct-chat"><i class="las la-envelope"></i> Message</span>
+					<i class="las la-envelope"></i>
+					<span data-translate="send-direct-chat">Message</span>
 				</button>
-				
+			</div>
+			<div class="controlsGrid-1x1">	
+				<span class="director-message-box hidden" data-action-type="messaging-box">
+					
+					<textarea data-action-type="messaging-box-text" placeholder="Enter your message here"></textarea>
+					<button data-action-type="messaging-box-close" class="hidden">
+						<i class="las la-times"></i>
+						<span data-translate="close">close</span>
+					</button>
+					<span data-action-type="messaging-box-toggle" title="Toggle between the message appearing as a large overlay and as normal chat" >
+						<i class="las la-bell" style="font-size:170%; color:#FFF; cursor:pointer;"></i>
+					</span>
+					<button data-action-type="messaging-box-send">
+						<i class="las la-reply"></i>
+						<span data-translate="send-message">send message</span>
+					</button>
+					
+				</span>
+			</div>		
+			<div class="controlsGrid">		
 				<button data-action-type="hangup" class="mainonly"  title="Force the user to Disconnect. They can always reconnect." onclick="directHangup(this, event);">
 					<i class="las la-sign-out-alt"  style="color:#900"></i>
 					<span data-translate="disconnect-guest" >Hangup</span>
 				</button>
 				
 				<button data-action-type="solo-chat" class="mainonly advanced" title="Toggle solo voice chat or hold CTRL/CMD when selecting to make it two-way private." onclick="session.toggleSoloChat(this.dataset.UUID, event);">
-					<span data-translate="voice-chat"><i class="las la-microphone" style="color:#090"></i> Solo Talk</span>
+					<i class="las la-microphone" style="color:#090"></i>
+					<span data-translate="voice-chat">Solo Talk</span>
 				</button>
 				
 				<button data-action-type="addToScene" class="advanced" data-scene="1" title="Add this Video to any remote '&scene=1'" onclick="directEnable(this, event);">
@@ -1356,10 +1377,10 @@
 					<span data-translate="solo-video">Highlight guest</span>
 				</button>
 				
-				<font class="tooltip" style="height: 0; border: 0;">
+				<span class="tooltip" style="height: 0; border: 0;">
 					<input data-action-type="volume" type="range" min="0" max="200" value="100" title="Remotely change the volume of this guest; updates on release. Dbl-click to reset." oninput="remoteVolumeUI(this)" onchange="remoteVolume(this);" ondblclick="this.value=100;remoteVolume(this);remoteVolumeUI(this);"  style="grid-column: 2; margin:5px; width: 93%; position: relative;top: 0.6em; background-color:#fff0;"/>
 					<span class="tooltiptext" style='float: right; overflow: auto;  left: 40px;  width: 3em;  top: -13px; margin: 0; position:relative;font-family:"Noto Color Emoji", "Apple Color Emoji", "Segoe UI Emoji", Times, Symbola, Aegyptus,Code2000, Code2001, Code2002, Musica, serif, LastResort;' >100</span>
-				</font>
+				</span>
 				
 				<button data-action-type="mute-guest" value="0" title="Mute this guest everywhere" onclick="remoteMute(this, event);">
 					<i class="las la-microphone-slash" style="color:#900"></i>
@@ -1441,24 +1462,24 @@
 					<span data-translate="hide-guest" >hide guest</span>
 				</button>
 				
-				<button class="hidden mainonly" data-cluster="2" data-action-type="toggle-remote-speaker"title="Toggle the remote guest's speaker output" onclick="remoteSpeakerMute(this, event);">
+				<button class="hidden mainonly" data-cluster="2" data-action-type="toggle-remote-speaker" title="Toggle the remote guest's speaker output" onclick="remoteSpeakerMute(this, event);">
 					<i class="las la-volume-off"></i> <span data-translate="toggle-remote-speaker">Deafen Guest</span>
 				</button>
 				
-				<button class="hidden mainonly" data-cluster="2" data-action-type="toggle-remote-display"   title="Toggle the remote guest's display output" onclick="remoteDisplayMute(this, event);">
+				<button class="hidden mainonly" data-cluster="2" data-action-type="toggle-remote-display" title="Toggle the remote guest's display output" onclick="remoteDisplayMute(this, event);">
 					<i class="las la-eye-slash"></i> <span data-translate="toggle-remote-display">Blind Guest</span>
 				</button>
 				
 				
 				<span class="hidden" data-cluster="2" data-action-type="change-quality">
 					<button style="width: 35.2px" data-action-type="change-quality1" title="Disable Video Preview" onclick="toggleQualityDirector(0, this.dataset.UUID, this);">
-						<span data-translate="change-to-low-quality">&nbsp;&nbsp;<i class="las la-video-slash"></i></span>
+						<i class="las la-video-slash"></i>
 					</button>
 					<button class="pressed" style="width:35.2px;" data-action-type="change-quality2" title="Low-Quality Preview" onclick="toggleQualityDirector(50, this.dataset.UUID, this);">
-						<span data-translate="change-to-medium-quality">&nbsp;&nbsp;<i class="las la-video"></i></span>
+						<i class="las la-video"></i>
 					</button>
 					<button style="width: 35.2px" data-action-type="change-quality3" title="High-Quality Preview" onclick="toggleQualityDirector(1200, this.dataset.UUID, this);">
-						<span data-translate="change-to-high-quality">&nbsp;&nbsp;<i class="las la-binoculars"></i></span>
+						<i class="las la-binoculars"></i>
 					</button>
 				</span>
 				
@@ -1471,7 +1492,7 @@
 						Mix Order
 					</span>
 					<button style="width:34px;margin-left:0;height: 29px;" data-action-type="order-up" title="Shift this Video Up in Order"  onclick="changeOrder(1,this.dataset.UUID);">
-						<span data-translate="order-up"><i class="las la-plus"></i></span>
+						<i class="las la-plus"></i>
 					</button>
 				</span>
 				
@@ -1557,10 +1578,12 @@
 				</span>
 				
 				<button class="hidden" data-cluster="2" data-action-type="advanced-audio-settings"  data-active="false"  title="Remote Audio Settings" onclick="requestAudioSettings(this);">
-					<span data-translate="advanced-audio-settings"><i class="las la-sliders-h"></i> Audio Settings</span>
+					<i class="las la-sliders-h"></i>
+					<span data-translate="advanced-audio-settings">Audio Settings</span>
 				</button>
 				<button class="hidden mainonly" data-cluster="2" data-action-type="advanced-camera-settings"  data-active="false"  title="Advanced Video Settings" onclick="requestVideoSettings(this);">
-					<span data-translate="advanced-camera-settings"><i class="las la-sliders-h"></i> Video Settings</span>
+					<i class="las la-sliders-h"></i>
+					<span data-translate="advanced-camera-settings">Video Settings</span>
 				</button>
 				
 			</div>	
@@ -1644,7 +1667,7 @@
 				
 				<span>
 					<button style="width:34px;" data-action-type="order-down" title="Shift this Video Down in Order"  onclick="changeOrderDirector(-1);">
-						<span data-translate="order-down"><i class="las la-minus"></i></span>
+						<i class="las la-minus"></i>
 					</button>
 					<span class="orderspan">
 						<div style="text-align: center;font-size: 150%;" data-action-type="order-value-director" title="Current Index Order of this Video" >0</div>
@@ -2045,7 +2068,7 @@
 				<div id="obsSceneNames" style="margin: 10px 0;display:block" >
 				</div>
 				<div id="obsRemotePassword" class="hidden" style="margin: 10px 0;display:block;" >
-					<font style="font-size:117%"><i class="las la-key" style="margin: 10px;"></i>Remote OBS passcode:</font>
+					<span style="font-size:117%"><i class="las la-key" style="margin: 10px;"></i>Remote OBS passcode:</span>
 					<input style="margin:0 10px;display:inline-block;padding: 8px 10px 6px 10px;" placeholder="Enter the remote OBS password here" />
 				</div>
 				<small style="margin: 20px 0 0 0;display:block;" >
@@ -2305,11 +2328,11 @@
 			// session.defaultBackgroundImages = ["./media/bg_sample1.webp", "./media/bg_sample2.webp"]; // for &effects=5 (virtual backgrounds)
 			// session.hidehome = true; // If used, 'hide home' will make the landing page inaccessible, along with hiding a few go-home elements.
 		</script>
-		<script type="text/javascript" crossorigin="anonymous" id="lib-js" src="./lib.js?ver=572"></script>
+		<script type="text/javascript" crossorigin="anonymous" id="lib-js" src="./lib.js?ver=587"></script>
 		<!-- 
 		// If you wish to change branding, blank offers a good clean start.
 		<script type="text/javascript" id="main-js" src="./main.js" data-translation="blank"></script>
 		-->
-		<script type="text/javascript" crossorigin="anonymous" id="main-js" src="./main.js?ver=497"></script>
+		<script type="text/javascript" crossorigin="anonymous" id="main-js" src="./main.js?ver=504"></script>
 	</body>
 </html>

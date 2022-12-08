@@ -198,6 +198,13 @@ button.grey {
 	color: white;
 }
 
+button.hint {
+	-webkit-box-shadow: inset 0px 0px 25px #0004;
+	-moz-box-shadow: inset 0px 0px 25px #0004;
+	box-shadow: inset 0px 0px 25px #0004;
+}
+
+
 
 #miniPerformer>#videosource{
 	width: 80px;
@@ -1056,54 +1063,7 @@ button.glyphicon-button.active.focus {
 	100% { transform: translate(1px, -2px) rotate(-1deg); }
 }
 
-#obsState {
-	border:green solid 2px;
-	padding:2px 5px;
-	color: white;
-	z-index:2;
-	background-color: #222D;
-	display: block;
-	top: 0;
-	position: fixed;
-	opacity: 0.7;
-	transform: scale(0.7);
-}
-@media only screen and (max-width: 620px){
-	#obsState {
-		top:20px;
-		transform: scale(0.63);
-	}
-}
-@media only screen and (max-width: 400px){
-	#obsState {
-		top:30px;
-		transform: scale(0.56);
-		display:none!important;
-		opacity:0;
-	}
-}
-@media only screen and (max-width: 300px){
-	#obsState {
-		display:none!important;
-		opacity:0;
-	}
-}
 
-@media only screen and (max-height: 400px){
-	#obsState {
-		transform: scale(0.5);
-	}
-}
-@media only screen and (max-height: 300px){
-	#obsState {
-		transform: scale(0.4);
-	}
-}
-@media only screen and (max-height: 200px){
-	#obsState {
-		transform: scale(0.3);
-	}
-}
 
 button.btnArmTransferRoom{
 	width:auto;
@@ -2178,6 +2138,27 @@ iframe {
 	font-size: 32px;
 	color: white;
 }
+.controlsGrid-1x1 {
+	margin-left: auto;
+    margin-right: 0;
+    text-align: right;
+}
+.director-message-box{
+	margin-top: 5px;
+}
+.director-message-box textarea {
+	margin: 5px;
+	width: 260px;
+	padding: 5px;
+}
+.director-message-box > button {
+	margin: 5px;
+    text-align: right;
+}
+.director-message-box > span {
+	top: 5px;
+    position: relative;
+}
 
 img {
 	max-width: 100%;
@@ -2273,17 +2254,68 @@ img {
 	top:0.5;
 }
 
+#obsState {
+	border:#888 solid 2px;
+	padding:2px 5px;
+	color: white;
+	z-index:2;
+	background-color: #222D;
+	display: block;
+	top: 0;
+	position: fixed;
+	opacity: 0.7;
+	font-size: 11px;
+	border-radius: 4px;
+	text-align: center;
+}
+@media only screen and (max-width: 620px){
+	#obsState {
+		top:20px;
+		transform: scale(0.63);
+	}
+}
+@media only screen and (max-width: 400px){
+	#obsState {
+		top:30px;
+		transform: scale(0.56);
+		display:none!important;
+		opacity:0;
+	}
+}
+@media only screen and (max-width: 300px){
+	#obsState {
+		display:none!important;
+		opacity:0;
+	}
+}
+
+@media only screen and (max-height: 400px){
+	#obsState {
+		transform: scale(0.5);
+	}
+}
+@media only screen and (max-height: 300px){
+	#obsState {
+		transform: scale(0.4);
+	}
+}
+@media only screen and (max-height: 200px){
+	#obsState {
+		transform: scale(0.3);
+	}
+}
+
+.onair {
+	border:green solid 2px !important;
+}
+
 .ondeck {
-	border: grey solid 2px !important;
+	border: yellow solid 2px !important;
 	display: block !important;
 }
 
 .recording{
 	border: red solid 2px !important;
-}
-
-.onair {
-	display: block !important;
 }
 
 .raisedHand{
