@@ -43,7 +43,7 @@ You can use them for publisher, viewer and director URLs.
 | ``[`&nohangupbutton`](and-nohangupbutton.md)``                         | Hides the hang-up button                                                                                             |
 | ``[`&chatbutton`](../../general-settings/chatbutton.md)``              | Shows or hides the chat button                                                                                       |
 | ``[`&bigbutton`](../../newly-added-parameters/and-bigbutton.md)``      | Makes the microphone mute button a lot bigger                                                                        |
-| ``[`&fullscreenbutton`](and-fullscreenbutton-beta.md) (beta)           | Adds a full-screen button to the control bar                                                                         |
+| ``[`&fullscreenbutton`](and-fullscreenbutton.md)\*                     | Adds a full-screen button to the control bar                                                                         |
 | ``[`&autohide`](../../parameters-only-on-beta/and-autohide.md)``       | Auto-hides the control bar after a few moments of the mouse being idle                                               |
 | ``[`&controlbarspace`](and-controlbarspace.md)\*                       | Forces the bottom control bar to be in its own dedicated space                                                       |
 | ``[`&videocontrols`](../newly-added-parameters/and-videocontrols.md)`` | Shows the video control bar                                                                                          |

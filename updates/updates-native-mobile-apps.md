@@ -2,6 +2,10 @@
 
 [native-mobile-app-versions.md](../steves-helper-apps/native-mobile-app-versions.md "mention")
 
+#### December 8
+
+* Updated the android native app to have better re-connection smarts; if you lose the peer connection due to an IP address change or such, it should now reconnect. Can't promise it will handle more aggressive networking issues though.
+
 #### November 14
 
 * I updated the native Android app for VDO.Ninja to include support for publishing into a VDO.Ninja room, and fixed a couple UI bugs, along with improved 1080p toggle support.\

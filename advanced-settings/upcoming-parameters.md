@@ -8,10 +8,9 @@ description: >-
 
 You can use/test these parameters on [vdo.ninja/alpha](https://vdo.ninja/alpha/) and/or [vdo.ninja/beta](https://vdo.ninja/beta/)
 
-| Parameter                                                                     | Explanation                                                                |
-| ----------------------------------------------------------------------------- | -------------------------------------------------------------------------- |
-| ``[`&fullscreenbutton`](settings-parameters/and-fullscreenbutton-beta.md)\*\* | Adds a full-screen button to the control bar                               |
-| ``[`&automute`](audio-parameters/and-automute-alpha.md)\*                     | Will mute the microphone of a guest when not loaded in an active OBS scene |
+| Parameter                                                 | Explanation                                                                |
+| --------------------------------------------------------- | -------------------------------------------------------------------------- |
+| ``[`&automute`](audio-parameters/and-automute-alpha.md)\* | Will mute the microphone of a guest when not loaded in an active OBS scene |
 
 \*only on [vdo.ninja/alpha](https://vdo.ninja/alpha/)\
 \*\*on [vdo.ninja/beta](https://vdo.ninja/beta/) and [vdo.ninja/alpha](https://vdo.ninja/alpha/)

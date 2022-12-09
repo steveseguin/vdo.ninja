@@ -14,7 +14,7 @@ Total number of p2p remote connections (viewers) of a stream source will also ap
 
 Connections may represent video/audio streams, or just a data-connection. Meshcast-hosted streams might not be accounted for, depending on how the viewer is connecting.
 
-![](<../../.gitbook/assets/image (3) (4).png>)
+![](<../../.gitbook/assets/image (3) (4) (1).png>)
 
 ## Related
 

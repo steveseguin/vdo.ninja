@@ -2,10 +2,9 @@
 description: Adds a full-screen button to the control bar
 ---
 
-# \&fullscreenbutton (beta)
+# \&fullscreenbutton
 
-Sender-Side Option! ([`&push`](../../source-settings/push.md))\
-\*only available on [vdo.ninja/alpha](https://vdo.ninja/alpha/) and [vdo.ninja/beta](https://vdo.ninja/beta/)
+Sender-Side Option! ([`&push`](../../source-settings/push.md))
 
 ## Aliases
 
@@ -22,7 +21,7 @@ Also while using `&fullscreenbutton`, the previous little 'full window' button i
 You can still right-click and select "full-window" on any video to isolate it without going full screen, if you need that.
 
 You can test by opening two such guest links:\
-[https://vdo.ninja/alpha/?fsb\&room=test123123123\&webcam\&autostart](https://vdo.ninja/alpha/?fsb\&room=test123123123\&webcam\&autostart)
+[https://vdo.ninja/?fsb\&room=test123123123\&webcam\&autostart](https://vdo.ninja/?fsb\&room=test123123123\&webcam\&autostart)
 
 Ultimately I'd like to override the native video full screen button with this behaviour, when `&fullscreenbutton` is used, but I'm still working on that aspect.
 

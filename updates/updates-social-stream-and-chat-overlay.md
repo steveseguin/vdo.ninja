@@ -3,6 +3,19 @@
 [social-stream.md](../steves-helper-apps/social-stream.md "mention")\
 [chat-overlay.md](../steves-helper-apps/chat-overlay.md "mention")
 
+#### **December 8**
+
+* Added branded-channel icon support for rumble to Social Stream.
+
+#### **December 7**
+
+* Added support for NIMO.tv to Social Stream\
+  ![](<../.gitbook/assets/image (2).png>)
+* Fixed WhatsApp support for Social Stream
+* Added Instagram post (non-live) comments to Social Stream. You will need to enable this via the menu, since this is a pretty non-obvious integration for Social Stream.\
+  ![](<../.gitbook/assets/image (4).png>)![](<../.gitbook/assets/image (5).png>)
+* Support for locals.com added to Social Stream
+
 #### **December 5**
 
 * Social Stream has been updated so that clicking the currently active selected message in the dock will clear the message, rather than re-post it.

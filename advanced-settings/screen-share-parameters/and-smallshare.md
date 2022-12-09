@@ -4,7 +4,8 @@ description: Makes the screen share behave like a webcam share
 
 # \&smallshare
 
-Sender-Side Option! ([`&push`](../../source-settings/push.md))
+Sender-Side Option! ([`&push`](../../source-settings/push.md))\
+Viewer-Side Option! ([`&scene`](../view-parameters/scene.md), [`&room`](../../general-settings/room.md), [`&solo`](../mixer-scene-parameters/and-solo.md)) \*on alpha
 
 ## Details
 
@@ -15,6 +16,10 @@ Layout if using `&smallshare`:\
 
 Layout if NOT using `&smallshare`:\
 ![](<../../.gitbook/assets/image (121) (1).png>)
+
+### On alpha
+
+`&smallshare` will work on the scene-side now also, which disables the automixer's larger screen share layout, and instead just uses an equal-sized video layout for all videos.
 
 ## Related
 

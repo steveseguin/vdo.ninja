@@ -1,5 +1,29 @@
 # Updates - VDO.Ninja
 
+#### **December 9** <a href="#august-31" id="august-31"></a>
+
+* Add `&clearstorage` (aka, `&clear`). This will clear all the saved user preferences for all sessions, including [`&sticky`](../general-settings/sticky.md)'d data, director settings, any camera and microphone settings, and probably a couple other small things. This also includes the "default" saved stated of camera settings before adjusted.\
+  I also added a button to manually do this via the User menu settings.\
+  ![](<../.gitbook/assets/image (13).png>)\
+  \*\* on alpha
+
+#### **December 8** <a href="#august-31" id="august-31"></a>
+
+* Added "change URL" permissions to the [`&consent`](../source-settings/consent.md) flag. That is, when using `&consent` on the guest URL, the director can remotely change the guest's URL without additional permission -- it will just change. (`&consent` already gave the director controls to remotely change mic / camera) \* added to alpha
+* Added `&fakeguests=N` (or `&fakefeeds`) as a parameter. It creates simulated guest videos, based on the value passed to the parameter, using real-guests where possible. The default value is 4.\
+  \-- You can use this feature to help position and visualize what [`&cover`](../advanced-settings/view-parameters/cover.md), [`&portrait`](../advanced-settings/view-parameters/and-portrait.md), etc. looks like.\
+  \-- This doesn't yet support labels or layouts really, but I welcome feedback.\
+  \-- Currently I just threw up a video of me, 16:9, of 500-kbps.\
+  \-- You don't actually need to create a room / scene to play with it.\
+  ![](<../.gitbook/assets/image (3).png>)\
+  \
+  \*\* on alpha. try it at: [https://vdo.ninja/alpha/?room=xxxxtestxxxx\&scene\&cover\&square\&fakeguests=7](https://vdo.ninja/alpha/?room=xxxxtestxxxx\&scene\&cover\&square\&fakeguests=7)
+* Fixed an issue where the director's last-used saved audio output destination wasn't applying, even though the settings menu should it was selected.
+* Made it so the right-click pause video feature works with [`&meshcast`](../newly-added-parameters/and-meshcast.md) streams. Doesn't actually stop the incoming data stream, but it does pause its playback.
+* Just pushed beta into production (v22.9) after a week of testing; this had a fix for Meshcast screen sharing and some translation mistakes. Alpha currently is running v22.10.
+* [`&smallshare`](../advanced-settings/screen-share-parameters/and-smallshare.md) will work on the scene-side now also, which disables the automixer's larger screen share layout, and instead just uses an equal-sized video layout for all videos. \* on alpha
+* Fixed a bug with the 'deafen guest' function in the director's room. \* updated on prod, beta, alpha
+
 #### **December 5** <a href="#august-31" id="august-31"></a>
 
 * Added [`&automute`](../advanced-settings/audio-parameters/and-automute-alpha.md), which will auto mute the microphone of a guest when not loaded in an active OBS scene.\
@@ -64,7 +88,7 @@
 #### **November 23** <a href="#august-31" id="august-31"></a>
 
 * Added a couple exact presets for the [aspect ratio](../advanced-settings/video-parameters/and-aspectratio.md) setting; should make it easier to precisely crop an incoming guest who doesn't have their smartphone oriented right, or just in case you want to reset the aspect ratio to 16:9, etc.\
-  ![](<../.gitbook/assets/image (3).png>)\
+  ![](<../.gitbook/assets/image (3) (4).png>)\
   \*\* on alpha at [https://vdo.ninja/alpha/](https://vdo.ninja/alpha/)
 
 #### **November 22** <a href="#august-31" id="august-31"></a>
@@ -108,7 +132,7 @@
 ![](<../.gitbook/assets/image (3) (1) (4).png>)
 
 * [`&micdelay`](../source-settings/and-micdelay.md), if used on a basic push link, will show the mic delay as a slider now also. So you can adjust it as needed. I don't show the slider by default unless using the URL parameter, as I don't think its a commonly used feature.\
-  ![](<../.gitbook/assets/image (4).png>)
+  ![](<../.gitbook/assets/image (4) (2).png>)
 * I think I fixed an issue with Firefox where not all the audio-output devices were available to choose from, at least on desktop, and so I've added the custom logic Firefox requires to get it working. On Firefox, you'll now need to select "Show more options" in the audio drop down menu, where Firefox will prompt you to select the audio output device with its own prompt.\
   ![](<../.gitbook/assets/image (9).png>)
 * Added an option called [`&hidehome`](../advanced-settings/settings-parameters/and-hidehome.md), which hides the VDO.Ninja homepage and many links that lead to it. You can also enable at a code level with `session.hidehome=true;`, which is useful if doing a self-deployment, where you don't want anyone to stumble onto the site and start using it. You'll still be able to join push links and create rooms via URL parameters, but that's about it.\
