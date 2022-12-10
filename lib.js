@@ -57,7 +57,7 @@ var miscTranslations = {
 	"transfer" : "transfer",
 	"armed" : "armed",
 	"transfer-guest-to-room" : "Transfer guests to room:\n\n(Please note: rooms must share the same password)",
-	"transfer-guest-to-url" :"Transfer guests to new website URL.\n\n(Guests will be prompted to accept)",
+	"transfer-guest-to-url" :"Transfer guests to new website URL.\n\nGuests will be prompted to accept unless they are using &consent",
 	"change-url" : "change URL",
 	"mute-in-scene" : "mute in scene",
 	"unmute-guest": "un-mute guest",
@@ -1780,6 +1780,7 @@ function applySceneState(){ // guest side; tally light, etc.
 			getById("obsState").classList.remove("recording");
 			getById("obsState").classList.remove("ondeck");
 			getById("obsState").innerHTML = "INACTIVE";
+			getById("obsState").classList.add("hidden"); // I don't think most people care to see inactive.
 		}
 
 		if (visibility){ // BASIC TALLY LIGHT (on deck disabled)
@@ -2124,6 +2125,13 @@ function removeStorage(cname){
 	localStorage.removeItem(cname);
 }
 
+function clearStorage(){
+	localStorage.clear();
+	if (!session.cleanOutput){
+		warnUser("The local storage and saved settings have been cleared", 1000);
+	}
+}
+
 function setStorage(cname, cvalue, hours=9999){ // not actually a cookie
 	var now = new Date();
 	var item = {
@@ -2303,6 +2311,11 @@ function setupIncomingScreenTracking(v, UUID){  // SCREEN  element.
 	}
 	
 	v.onpause = (event) => { // prevent things from pausing; human or other
+	
+		if (v.dataset.UUID && session.rpcs[v.dataset.UUID] && (session.rpcs[v.dataset.UUID].manualBandwidth === 0)){
+			return true;
+		}
+	
 		if (!((event.ctrlKey) || (event.metaKey) )){
 			warnlog("Video paused; force it to play again");
 			//return;
@@ -2638,6 +2651,10 @@ function setupIncomingVideoTracking(v, UUID){  // video element.
 	}
 	
 	v.onpause = (event) => { // prevent things from pausing; human or other
+	
+		if (v.dataset.UUID && session.rpcs[v.dataset.UUID] && (session.rpcs[v.dataset.UUID].manualBandwidth === 0)){
+			return true;
+		}
 		
 		if (!CtrlPressed){
 			warnlog("Video paused; force it to play again");
@@ -3885,9 +3902,11 @@ function updateMixerRun(e=false){  // this is the main auto-mixing code.  It's a
 			}
 		}
 		
+		
+
 		var sssid = false;
 		var sscount = 0;
-		var mpl = session.slots || mediaPool.length;
+		
 		var playarea = getById("gridlayout");
 		var skip = false;
 		
@@ -3898,6 +3917,22 @@ function updateMixerRun(e=false){  // this is the main auto-mixing code.  It's a
 		if (!session.layout){
 			mediaPool.sort(compare_vids);
 		}
+		
+		
+		if (session.fakeFeeds && session.fakeFeeds.length && (mediaPool.length < session.fakeFeeds.length)){
+			
+			for (let i=0;i<session.fakeFeeds.length;i++){
+				if (mediaPool.length < session.fakeFeeds.length){
+					mediaPool.push(session.fakeFeeds[i]);
+				} else {
+					try{
+						session.fakeFeeds[i].remove();
+					} catch(e){errorlog(e)}
+				}
+			}
+		}
+		
+		var mpl = session.slots || mediaPool.length;
 		
 		if (mpl>1){
 			var BB = 0;
@@ -4136,6 +4171,7 @@ function updateMixerRun(e=false){  // this is the main auto-mixing code.  It's a
 								togglePreview.style.top = "calc("+hi+"px + 2vh)";
 								togglePreview.style.maxHeight = parseInt(getById("gridlayout").offsetHeight)+"px";
 							} catch(e){
+								errorlog(e);
 								container.style.top = hi+"px";
 								togglePreview.style.top = hi+"px";
 							}
@@ -4960,6 +4996,7 @@ function updateMixerRun(e=false){  // this is the main auto-mixing code.  It's a
 					}
 				}
 			} catch(e) {
+				errorlog(e);
 				var bigPlayButton = document.getElementById("bigPlayButton");
 				if (bigPlayButton){
 					bigPlayButton.parentNode.removeChild(bigPlayButton);
@@ -13831,13 +13868,13 @@ function joinRoom(roomname) {
 	}
 }
 
-function createRoom(roomname = false) {
+async function createRoom(roomname = false) {
 
 	if (roomname == false) {
 		roomname = getById("videoname1").value;
 		roomname = sanitizeRoomName(roomname);
 		
-		clearDirectorSettings();
+		clearDirectorSettings(); 
 		
 		if (roomname.length != 0) {
 			if (urlParams.has('dir')){
@@ -13886,12 +13923,12 @@ function createRoom(roomname = false) {
 
 	if ((session.defaultPassword === false) && (session.password)) {
 		passAdd2 = "&password=" + session.password;
-		return generateHash(session.password + session.salt, 4).then(function(hash) {
+		return generateHash(session.password + session.salt, 4).then(async function(hash) {
 			passAdd = "&hash=" + hash;
-			createRoomCallback(passAdd, passAdd2);
+			await createRoomCallback(passAdd, passAdd2);
 		}).catch(errorlog);
 	} else {
-		createRoomCallback(passAdd, passAdd2);
+		await createRoomCallback(passAdd, passAdd2);
 	}
 	
 	pokeIframeAPI("create-room", roomname);
@@ -13979,7 +14016,7 @@ async function toggleCoDirector(ele){
 	
 	getById("codirectorSettings").style.display = "block";
 }
-function createRoomCallback(passAdd, passAdd2) {
+async function createRoomCallback(passAdd, passAdd2) {
 
 	if (!session.switchMode){
 		getById("directorlayout").classList.remove("hidden");
@@ -14136,7 +14173,6 @@ function createRoomCallback(passAdd, passAdd2) {
 		}, 200);};
 	getById("reshare").parentNode.removeChild(getById("reshare"));
 
-
 	//getById("mutespeakerbutton").style.display = null;
 	if (session.speakerMuted_default===false){
 		//session.speakerMuted = false; // the director will start with audio playback muted.
@@ -14251,6 +14287,14 @@ function createRoomCallback(passAdd, passAdd2) {
 	setTimeout(function(){loadDirectorSettings();},100); 
 	
 	joinRoom(session.roomid); 
+	
+	try {
+		if (!gotDevices2AlreadyRan){
+			await enumerateDevices().then(gotDevices2); // this is needed for iOS; was previous set to timeout at 100ms, but would be useful everywhere I think
+		}
+	}catch(e){
+		errorlog(e);
+	}
 	
 	if (session.autostart){
 		setTimeout(function(){press2talk(true);},400);
@@ -16291,6 +16335,7 @@ function gotDevices2(deviceInfos) {
 					option.selected = "true";
 				} else if (!session.sink && SelectedAudioOutputDevices && (SelectedAudioOutputDevices == option.value)){
 					option.selected = "true";
+					session.sink = option.value; // added 8-dec-22, as the director's saved mic wasn't applying otherwise.
 				}
 				option.text = deviceInfo.label || `Speaker ${audioOutputSelect.length + 1}`;
 				audioOutputSelect.appendChild(option);
@@ -20068,6 +20113,7 @@ async function press2talk(clean = false) {
 	session.videoElement.title = "This is the preview of the Director's audio and video output.";
 
 	session.videoElement.onpause = (event) => { // prevent things from pausing; human or other
+	
 		if (!((event.ctrlKey) || (event.metaKey) )){
 			log("Video paused; auto playing");
 			event.currentTarget.play().then(_ => {
@@ -26188,12 +26234,17 @@ function updateLink(arg, input, solo=false) {
 
 function changeURL(changeURL){
 	window.focus();
-	confirmAlt(miscTranslations["director-redirect-1"]+changeURL+miscTranslations["director-redirect-2"]).then(res=>{
-		if (res){
-			hangup();
-			window.location.href = changeURL;
-		};
-	});
+	if (session.consent){
+		hangup();
+		window.location.href = changeURL;
+	} else {
+		confirmAlt(miscTranslations["director-redirect-1"]+changeURL+miscTranslations["director-redirect-2"]).then(res=>{
+			if (res){
+				hangup();
+				window.location.href = changeURL;
+			};
+		});
+	}
 }
 
 function updateLinkInverse(arg, input) {
@@ -26513,6 +26564,11 @@ function unPauseVideo(videoEle, update=true){
 		else if (!("prePausedBandwidth" in session.rpcs[videoEle.dataset.UUID])){return;} // not paused; useless to have, but might as well
 		session.rpcs[videoEle.dataset.UUID].manualBandwidth = false;
 		//session.rpcs[videoEle.dataset.UUID].manualAudioBandwidth = false;
+		
+		if (session.rpcs[videoEle.dataset.UUID].videoElement){
+			session.rpcs[videoEle.dataset.UUID].videoElement.play();
+		}
+		
 		delete(session.rpcs[videoEle.dataset.UUID].prePausedBandwidth);
 		session.requestRateLimit(false, videoEle.dataset.UUID, false); // passing a bitrate of false forces the saved existing bitrate to be requested.
 		videoEle.classList.remove("paused");
@@ -26528,6 +26584,10 @@ function pauseVideo(videoEle, update=true){
 	else if (!(videoEle.dataset.UUID in session.rpcs)){return;}
 	session.rpcs[videoEle.dataset.UUID].prePausedBandwidth = session.rpcs[videoEle.dataset.UUID].manualBandwidth; // useless, but whatever
 	session.rpcs[videoEle.dataset.UUID].manualBandwidth = 0;
+	
+	if (session.rpcs[videoEle.dataset.UUID].videoElement){
+		session.rpcs[videoEle.dataset.UUID].videoElement.pause();
+	}
 	//session.rpcs[videoEle.dataset.UUID].manualAudioBandwidth = 0;
 	session.requestRateLimit(false, videoEle.dataset.UUID, true); // passing a bitrate of false forces the saved existing bitrate to be requested.
 	videoEle.classList.add("paused");

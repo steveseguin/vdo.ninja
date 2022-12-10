@@ -1824,6 +1824,11 @@ h2 {
 label {
 	color: #000;
 }
+.generalButton{
+	border-radius: 3px;
+    padding: 5px;
+    margin: 0 0 10px 0;
+}
 
 .inner:before,
 .inner:after {

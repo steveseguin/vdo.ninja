@@ -1012,7 +1012,6 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 		session.autostart = true;
 	}
 	
-	
 	if (urlParams.has('datamode') || urlParams.has('dataonly')) { // this disables all media in/out.
 		session.dataMode = true;
 	}
@@ -1680,6 +1679,24 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 		} */
 		if ((session.scene !== false) && (session.style === false) && window.obsstudio){
 			session.style = 1;
+		}
+	}
+	
+	if (urlParams.has('fakeguests') || urlParams.has('fakefeeds')) {
+		var total =  parseInt(urlParams.get('fakeguests')) || parseInt(urlParams.get('fakefeeds')) || 4;
+		session.fakeFeeds = [];
+		log("Creating "+total+" fake feeds");
+		for (var i=0;i<total;i++){
+			let fakeElement = document.createElement("video");
+			fakeElement.autoplay = true;
+			fakeElement.loop = true;
+			fakeElement.muted = true;
+			fakeElement.src = "./media/fakesteve.webm";
+			fakeElement.id = parseInt(Math.random() * 10000000000);
+			session.fakeFeeds.push(fakeElement);
+		}
+		if (session.view!==false){
+			setTimeout(function(){updateMixer();},1000);
 		}
 	}
 	
@@ -2558,6 +2575,10 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 
 	if (urlParams.has('mixminus')){
 		session.mixMinus = true;
+	}
+	
+	if (urlParams.has('clearstorage') || urlParams.has('clear')){
+		clearStorage();
 	}
 
 	if (urlParams.has('videobitrate') || urlParams.has('bitrate') || urlParams.has('vb')) {
@@ -3809,7 +3830,7 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 				}
 			}
 			
-			createRoom(director_room_input);
+			setTimeout(function(director_room_input){createRoom(director_room_input);},20, director_room_input);
 		}
 		if (session.chatbutton === true) {
 			getById("chatbutton").classList.remove("hidden");
@@ -3919,39 +3940,41 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 		if (urlParams.has('waittimeout')){
 			session.waitImageTimeout = parseInt(urlParams.get('waittimeout')) || 0;
 		}
-		session.waitImageTimeoutObject = setTimeout(function() {
-			session.waitImageTimeoutObject = true;
-			try {
-				if ((session.view)) {
-					if (document.getElementById("mainmenu")) {
-						if (session.waitImage){
-							getById("mainmenu").innerHTML += '<img id="retryimage"/>';
-							getById("retryimage").src = decodeURIComponent(session.waitImage);
-							getById("retryimage").onerror = function(){this.style.display='none';};
-							
-							if (session.cover) {
-								getById("retryimage").style.objectFit = "cover";
-							} 
-							
-						} else if (!(session.cleanOutput)){
-							getById("mainmenu").innerHTML += '<div class="retry-spinner" id="retrySpinner"></div>';
-							getById("retrySpinner").onclick = function(){
-								updateURL("cleanoutput");
-								location.reload();
+		if (!session.fakeFeeds){
+			session.waitImageTimeoutObject = setTimeout(function() {
+				session.waitImageTimeoutObject = true;
+				try {
+					if ((session.view)) {
+						if (document.getElementById("mainmenu")) {
+							if (session.waitImage){
+								getById("mainmenu").innerHTML += '<img id="retryimage"/>';
+								getById("retryimage").src = decodeURIComponent(session.waitImage);
+								getById("retryimage").onerror = function(){this.style.display='none';};
+								
+								if (session.cover) {
+									getById("retryimage").style.objectFit = "cover";
+								} 
+								
+							} else if (!(session.cleanOutput)){
+								getById("mainmenu").innerHTML += '<div class="retry-spinner" id="retrySpinner"></div>';
+								getById("retrySpinner").onclick = function(){
+									updateURL("cleanoutput");
+									location.reload();
+								}
+								getById("retrySpinner").title = miscTranslations["waiting-for-the-stream"]
 							}
-							getById("retrySpinner").title = miscTranslations["waiting-for-the-stream"]
-						}
-						if (urlParams.has('waitmessage')){
-							getById("mainmenu").innerHTML += '<div id="retrymessage"></div>';
-							getById("retrymessage").innerText = urlParams.get('waitmessage');
-							getById("retrySpinner").title = urlParams.get('waitmessage');
+							if (urlParams.has('waitmessage')){
+								getById("mainmenu").innerHTML += '<div id="retrymessage"></div>';
+								getById("retrymessage").innerText = urlParams.get('waitmessage');
+								getById("retrySpinner").title = urlParams.get('waitmessage');
+							}
 						}
 					}
+				} catch (e) {
+					errorlog(e);
 				}
-			} catch (e) {
-				errorlog(e);
-			}
-		}, session.waitImageTimeout);
+			}, session.waitImageTimeout);
+		}
 
 		log("auto playing");
 		if ((iPad || iOS) && navigator.userAgent.indexOf('Safari') != -1 && navigator.userAgent.indexOf('Chrome') == -1 && SafariVersion > 13) { // Modern iOS doesn't need pop up
@@ -4072,9 +4095,9 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 	if (urlParams.has('flagship')) {
 		session.flagship = true;
 	}
-	if (!session.flagship && session.mobile && (session.limitTotalBitrate===false)){
-		session.limitTotalBitrate = session.totalRoomBitrate_default; // 500, with the max per guest stream out at maxMobileBitrate (350kbps) or 35-kbps if more than X in the room.
-	}
+	//if (!session.flagship && session.mobile && (session.limitTotalBitrate===false)){
+		// session.limitTotalBitrate = session.totalRoomBitrate_default; // 500, with the max per guest stream out at maxMobileBitrate (350kbps) or 35-kbps if more than X in the room.
+	//}
 	
 	if (urlParams.has('maxmobilebitrate')) {
 		session.maxMobileBitrate = parseInt(urlParams.has('maxmobilebitrate')) || 0;
