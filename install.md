@@ -119,7 +119,11 @@ As of this writing, VDO.Ninja uses Google's public STUN servers, but most TURN-s
 
 #### Dealing with no SSL scenarios
 
-Internet-free deployments will also need to deal with private SSL certificates and any DNS secure context issues that may arise. VDO.Ninja relies on SSL for security, but if you can't figure out how to do private SSL issuance, these SSL restrictions can be somewhat disabled at the browser's command-line or for localhost via the Chrome://flags settings. VDO.Ninja may complain about the lack of security if you take this approach though, but you can edit out those lines of code which trigger those warnings as needed. You may still need to issue an SSL certificate, self-signed or what not, but with these flags enabled it doesn't at least need to be valid.
+Internet-free deployments will also need to deal with private SSL certificates and any DNS secure context issues that may arise. VDO.Ninja relies on SSL for security, but without Internet, you'll need to create and use a private ceriticate that get added to your system's trusted certificate key chain.
+
+On Mac, you open the Keychain Access and add the cert to the Certificates section, allowing it always. It's a bit more work on PC, but Google is your friend there. There's also plenty of guides on using openssl to create a self-signed certiificates als.
+
+If you can't figure out how to do private SSL issuance, these SSL restrictions can be somewhat disabled at the browser's command-line or for localhost via the Chrome://flags settings. VDO.Ninja may complain about the lack of security if you take this approach though, but you can edit out those lines of code which trigger those warnings as needed. You may still need to issue an SSL certificate, self-signed or what not, but with these flags enabled it doesn't at least need to be valid.
 
 Setting it via command line on Windows,
 ```
@@ -133,6 +137,8 @@ and if you intend to only access it as a localhost,
 ```
 chrome://flags/#allow-insecure-localhost
 ```
+
+
 ### Hand-shake server deployment
 
 Finally, there is a handshake server hosting option available; advanced users can host their own personal handshake server, which is useful for air-gapped private deployments of the service. Some basic documentation with instructions on setting it up are included here: https://github.com/steveseguin/websocket_server.  Just be sure that your SSL-certifcates are valid or that you modify your browser to support invalid SSL certificates, else it will not work. From there, you just need to modify a couple ilnes in the index.html file of VDO.Ninja to configure things.
