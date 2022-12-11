@@ -113,9 +113,10 @@ My suggestion to extensive editing? Limit changes to images and perhaps the tran
 
 ### Internet-free deployments 
 
-For those looking to deploy a completely Internet-free or fully-isolated hosting option, you'll need to deploy your own handshake server, and you may also need to deploy your own STUN/TURN service. STUN/TURN might not be needed on a Local Area Network, and TURN might not be needed at all if you have control over each participant connecting, but adding one isn't too hard and can help with firewall and mobile network issues.
+For those looking to deploy a completely Internet-free or fully-isolated hosting option, you'll need to deploy your own handshake server. You may not need to deploy a TURN / STUN server if using things just on a LAN.
 
-As of this writing, VDO.Ninja uses Google's public STUN servers, but most TURN-servers also offer optional STUN server functionality as well. Details on deploying a TURN server are mentioned previously in this article, so following those instructions should suffice if you wish to have a combined STUN/TURN service.
+I've created an install script, and also am providing a Raspberry Pi image, for those looking for a simple working example of how to do it all.
+See it here: https://github.com/steveseguin/offline_deployment
 
 #### Dealing with no SSL scenarios
 
