@@ -14,7 +14,7 @@ Sender-Side Option! ([`&push`](../../source-settings/push.md))
 
 `&fullscreenbutton` adds a full-screen button to the control bar. It essentially just mimics F11, with added support for detecting the Escape button to exit full screen.
 
-![](../../.gitbook/assets/image.png)
+![](<../../.gitbook/assets/image (4).png>)
 
 Also while using `&fullscreenbutton`, the previous little 'full window' button in the top-right of videos (if in a group room) will also auto-F11 and isolate that video, rather than just isolate the video.
 

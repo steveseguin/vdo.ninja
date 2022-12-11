@@ -1,5 +1,15 @@
 # Updates - VDO.Ninja
 
+#### **December 10** <a href="#august-31" id="august-31"></a>
+
+*   Pushed a couple hot fixes for recently found bugs introduced in VDO.Ninja [v22](../releases/v22.md).
+
+    \-- One bug caused mobile phones to push lower than available bandwidth.\
+    \-- The second bug had [`&optimize=0`](../advanced-settings/view-parameters/optimize.md) sometimes causing video scenes to not correctly load all guests when toggling scenes in OBS.
+
+    \
+    These fixes have been pushed everywhere; production, beta, alpha, and github. Thank you for reporting the issues; please report any others you find.
+
 #### **December 9** <a href="#august-31" id="august-31"></a>
 
 * Add `&clearstorage` (aka, `&clear`). This will clear all the saved user preferences for all sessions, including [`&sticky`](../general-settings/sticky.md)'d data, director settings, any camera and microphone settings, and probably a couple other small things. This also includes the "default" saved stated of camera settings before adjusted.\
