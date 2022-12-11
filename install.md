@@ -118,6 +118,10 @@ For those looking to deploy a completely Internet-free or fully-isolated hosting
 I've created an install script, and also am providing a Raspberry Pi image, for those looking for a simple working example of how to do it all.
 See it here: https://github.com/steveseguin/offline_deployment
 
+Note, if doing things yourself, since you will be using a private handshake server, don't forget that you'll need to specify that in the VDO.Ninja index.html file.
+
+Lastly, SSL self-signed certificates will be a haunting issue for those not experienced. See below for a bit of direction on options there.
+
 #### Dealing with no SSL scenarios
 
 Internet-free deployments will also need to deal with private SSL certificates and any DNS secure context issues that may arise. VDO.Ninja relies on SSL for security, but without Internet, you'll need to create and use a private ceriticate that get added to your system's trusted certificate key chain.
