@@ -2597,7 +2597,7 @@ function setupIncomingScreenTracking(v, UUID){  // SCREEN  element.
 	
 	if (session.director){
 		var wss = "";
-		if (session.customWSS){
+		if (session.customWSS && session.wssSetViaUrl){
 			if (session.customWSS!==true){
 				wss = "&pie="+session.customWSS;
 			} else {
@@ -12381,7 +12381,7 @@ function soloLinkGenerator(streamID, scene=true){
 	}
 	
 	var wss = "";
-	if (session.customWSS){
+	if (session.customWSS && session.wssSetViaUrl){
 		if (session.customWSS!==true){
 			wss = "&pie="+session.customWSS;
 		} else {
@@ -14041,7 +14041,7 @@ async function createRoomCallback(passAdd, passAdd2) {
 	}
 	
 	var wss = "";
-	if (session.customWSS){
+	if (session.customWSS && session.wssSetViaUrl){
 		if (session.customWSS!==true){
 			wss = "&pie="+session.customWSS;
 		} else {
@@ -19815,7 +19815,6 @@ function setEncodings(sender, settings=null, callback=null){
 	
 		sender.setParameters(params).then(() => {
 			if (callback){
-				log(callback);
 				setTimeout(function(){callback();},0);
 			}
 			log("COMPLETED SET ENCODINGS");
@@ -19862,27 +19861,27 @@ session.applySoloChat = function(apply=true){ // mutes outbound mic audio; ;;  d
 				if (session.soloChatUUID.length && (session.soloChatUUID.includes(uuid))){
 					
 					settings.active = true;
-					setEncodings(sender, settings, (function(){
+					setEncodings(sender, settings, function(){
 						log(uuid);
 						document.querySelectorAll('[data-action-type="solo-chat"][data--u-u-i-d="'+uuid+'"]')[0].classList.add("pressed");
 						document.querySelectorAll('[data-action-type="solo-chat"][data--u-u-i-d="'+uuid+'"]')[0].classList.remove("hint");
-					}.bind(uuid))());
+					}.bind(uuid));
 					
 					
 				} else if (session.soloChatUUID.length==0){
 					settings.active = true;
-					setEncodings(sender, settings, (function(){
+					setEncodings(sender, settings, function(){
 						log(uuid);
 						document.querySelectorAll('[data-action-type="solo-chat"][data--u-u-i-d="'+uuid+'"]')[0].classList.remove("pressed");
 						document.querySelectorAll('[data-action-type="solo-chat"][data--u-u-i-d="'+uuid+'"]')[0].classList.remove("hint");
-					}.bind(uuid))());
+					}.bind(uuid));
 				} else {
 					settings.active = false;
-					setEncodings(sender, settings, (function(){
+					setEncodings(sender, settings, function(){
 						warnlog("mutied the output to:"+ uuid);
 						document.querySelectorAll('[data-action-type="solo-chat"][data--u-u-i-d="'+uuid+'"]')[0].classList.remove("pressed");
 						document.querySelectorAll('[data-action-type="solo-chat"][data--u-u-i-d="'+uuid+'"]')[0].classList.add("hint");
-					}.bind(uuid))());
+					}.bind(uuid));
 					
 				}
 			});
@@ -21313,7 +21312,7 @@ function updateReshareLink(){
 	}
 	
 	var wss = "";
-	if (session.customWSS){
+	if (session.customWSS && session.wssSetViaUrl){
 		if (session.customWSS!==true){
 			wss = "&pie="+session.customWSS;
 		} else {
@@ -26397,7 +26396,7 @@ function generateQRPageCallback(hash) {
 		
 		var wss = "";
 		
-		if (session.customWSS){
+		if (session.customWSS && session.wssSetViaUrl){
 			if (session.customWSS!==true){
 				wss = "&pie="+session.customWSS;
 			} else {

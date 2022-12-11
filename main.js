@@ -1448,6 +1448,7 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 	// Deploy your own handshake server for free; see: https://github.com/steveseguin/websocket_server
 	if (urlParams.has('pie')){ // piesocket.com support is to be deprecated after dec/19/21, since piesocket is no longer a free service.
 		session.customWSS = urlParams.get('pie') || true; // If session.customWSS == true, then there is no need to set parameters via URL
+		session.wssSetViaUrl = true;
 		if (session.customWSS && (session.customWSS!==true)){
 			session.wss = "wss://free3.piesocket.com/v3/1?api_key="+session.customWSS; // if URL param is set, it will use the API key.
 		}
@@ -1695,7 +1696,7 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 			fakeElement.id = parseInt(Math.random() * 10000000000);
 			session.fakeFeeds.push(fakeElement);
 		}
-		if (session.view!==false){
+		if (session.view!==false || session.scene!==false){
 			setTimeout(function(){updateMixer();},1000);
 		}
 	}
@@ -3422,6 +3423,7 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 
 	if (urlParams.has('wss')) {
 		session.customWSS = true;
+		session.wssSetViaUrl = true;
 		if (urlParams.get('wss')) {
 			session.wss = urlParams.get('wss');
 			if (!session.wss.startsWith("wss://")){
