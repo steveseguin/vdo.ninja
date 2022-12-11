@@ -19,6 +19,7 @@ You can use them for publisher, viewer and director URLs.
 | ``[`&controlobs`](and-controlobs.md)\*               | The ability for VDO.Ninja to Remotely Control OBS Studio while streaming/directing |
 | ``[`&stats`](../../general-settings/and-stats.md)``  | Shows the connection/media stats window by default                                 |
 | ``[`&sticky`](../../general-settings/sticky.md)``    | Allows a user to save and then later restore their streaming session settings      |
+| ``[`&clearstorage`](sticky-1.md) (alpha)             | Will clear all the saved user preferences for all sessions                         |
 | ``[`&disablehotkeys`](and-disablehotkeys.md)``       | Disables hotkeys (like `CRTL + M`)                                                 |
 | ``[`&showlist`](../../source-settings/showlist.md)`` | Shows list of hidden guests                                                        |
 | ``[`&nopush`](and-nopush.md)\*                       | Blocks outbound publishing connections                                             |

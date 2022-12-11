@@ -12,7 +12,7 @@
 
 #### **December 9** <a href="#august-31" id="august-31"></a>
 
-* Add `&clearstorage` (aka, `&clear`). This will clear all the saved user preferences for all sessions, including [`&sticky`](../general-settings/sticky.md)'d data, director settings, any camera and microphone settings, and probably a couple other small things. This also includes the "default" saved stated of camera settings before adjusted.\
+* Add [`&clearstorage`](../advanced-settings/settings-parameters/sticky-1.md) (aka, `&clear`). This will clear all the saved user preferences for all sessions, including [`&sticky`](../general-settings/sticky.md)'d data, director settings, any camera and microphone settings, and probably a couple other small things. This also includes the "default" saved stated of camera settings before adjusted.\
   I also added a button to manually do this via the User menu settings.\
   ![](<../.gitbook/assets/image (13).png>)\
   \*\* on alpha
@@ -20,7 +20,7 @@
 #### **December 8** <a href="#august-31" id="august-31"></a>
 
 * Added "change URL" permissions to the [`&consent`](../source-settings/consent.md) flag. That is, when using `&consent` on the guest URL, the director can remotely change the guest's URL without additional permission -- it will just change. (`&consent` already gave the director controls to remotely change mic / camera) \* added to alpha
-* Added `&fakeguests=N` (or `&fakefeeds`) as a parameter. It creates simulated guest videos, based on the value passed to the parameter, using real-guests where possible. The default value is 4.\
+* Added [`&fakeguests=N`](../advanced-settings/mixer-scene-parameters/scenetype.md) (or `&fakefeeds`) as a parameter. It creates simulated guest videos, based on the value passed to the parameter, using real-guests where possible. The default value is 4.\
   \-- You can use this feature to help position and visualize what [`&cover`](../advanced-settings/view-parameters/cover.md), [`&portrait`](../advanced-settings/view-parameters/and-portrait.md), etc. looks like.\
   \-- This doesn't yet support labels or layouts really, but I welcome feedback.\
   \-- Currently I just threw up a video of me, 16:9, of 500-kbps.\

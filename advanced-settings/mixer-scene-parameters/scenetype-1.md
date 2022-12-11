@@ -4,7 +4,7 @@ description: Shows only the last added video to a scene
 
 # \&scenetype
 
-Viewer-Side Option! ([`&scene`](scene.md))
+Viewer-Side Option! ([`&scene`](../view-parameters/scene.md))
 
 ## Aliases
 
@@ -34,8 +34,8 @@ This parameter is added to scene view links.
 
 ## Related
 
-{% content-ref url="scene.md" %}
-[scene.md](scene.md)
+{% content-ref url="../view-parameters/scene.md" %}
+[scene.md](../view-parameters/scene.md)
 {% endcontent-ref %}
 
 {% content-ref url="../../source-settings/order.md" %}

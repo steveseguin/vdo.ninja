@@ -6,7 +6,7 @@
 #### **December 9**
 
 * Export / import of settings added to Social Stream. Might need to testing to confirm working with all settings tho.\
-  ![](../.gitbook/assets/image.png)
+  ![](<../.gitbook/assets/image (2).png>)
 * chatroll.com added to Social Stream. I think it works on most websites given its an embedded IFrame, but let me know if there's a deployment its not working with.
 
 #### **December 8**
@@ -16,7 +16,7 @@
 #### **December 7**
 
 * Added support for NIMO.tv to Social Stream\
-  ![](<../.gitbook/assets/image (2).png>)
+  ![](<../.gitbook/assets/image (2) (3).png>)
 * Fixed WhatsApp support for Social Stream
 * Added Instagram post (non-live) comments to Social Stream. You will need to enable this via the menu, since this is a pretty non-obvious integration for Social Stream.\
   ![](<../.gitbook/assets/image (4) (5).png>)![](<../.gitbook/assets/image (5).png>)

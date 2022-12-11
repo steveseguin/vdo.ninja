@@ -7,6 +7,10 @@ description: Will mute the microphone of a guest when not loaded in an active OB
 Sender-Side Option! ([`&push`](../../source-settings/push.md))\
 \*only available on [vdo.ninja/alpha](https://vdo.ninja/alpha/)
 
+## Aliases
+
+* `&am`
+
 ## Options
 
 | Value            | Description                                                                                                            |
