@@ -2,6 +2,10 @@
 
 [meshcast.io.md](../steves-helper-apps/meshcast.io.md "mention")
 
+#### December 12
+
+* Added 3 new Meshcast servers: Toronto, Oregon, Virginia.
+
 #### September 6
 
 * Support for iPhone/iPads now

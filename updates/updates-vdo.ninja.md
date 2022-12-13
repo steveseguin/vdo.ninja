@@ -1,5 +1,13 @@
 # Updates - VDO.Ninja
 
+#### **December 11** <a href="#august-31" id="august-31"></a>
+
+* I created a guide + script for offline / local-only deployment of VDO.Ninja, so using it without Internet, connected to a router-only or something.\
+  \-- I've tested it on a raspberry pi, and have included the resulting RPI image as well, if you want to quick deploy it, but the guide is pretty simple as well.\
+  [https://github.com/steveseguin/offline\_deployment](https://github.com/steveseguin/offline\_deployment)\
+  \-- please note: there is already code / instructions for self-deploying VDO.Ninja; this new repo is specifically to help non-techies use VDO.Ninja offline.
+* Also fixed a minor issue where specifying a custom handshake server via index.html was adding a needless URL param to all links; pushed that fix to GitHub already.
+
 #### **December 10** <a href="#august-31" id="august-31"></a>
 
 *   Pushed a couple hot fixes for recently found bugs introduced in VDO.Ninja [v22](../releases/v22.md).
