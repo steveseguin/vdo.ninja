@@ -28,7 +28,9 @@ Not all 3.5mm to Lightning adapters will be compatible. One that I have tested f
 
 Audio quality from an iOS generally is pretty low quality. Disabling audio enhancements can sometimes help improve the clarity. It is recommended that the user be wearing headphones though to avoid any feedback issues.
 
-iOS does not work with the volume visualizer meter; it causes clicking noises when used, so it has been disabled.
+iOS does not work with the volume visualizer meter; it causes clicking noises when used, so it has been disabled.\
+\
+If willing to use Android, some users have noted that Firefox for Android often works with USB microphones.
 
 ### Random issues
 
