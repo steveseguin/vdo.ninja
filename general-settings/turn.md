@@ -17,20 +17,18 @@ General Option! ([`&push`](../source-settings/push.md), [`&room`](room.md), [`&v
 
 Several TURN servers are provided by Steve for free, for now, and these are automatically selected based on your geographic location. You may wish to use your own privately hosted TURN server instead though, and the `&turn` is one flexible way to select it.
 
-The default VDO.Ninja TURN server network address is `turn:turn.vdo.ninja:443`
-
 ### Locations
 
-* Montreal, Canada
+* Canada
 * Germany
-* Chicago
-* Los Angeles
+* USA
 * France/UK
-* [insecure.cam](http://insecure.cam/) is in Hong Kong
 
 ### **Example Usage**
 
-`https://vdo.ninja/?turn=steve;setupYourOwnPlease;turn.vdo.ninja:443&relay`
+`https://vdo.ninja/?turn=steve;setupYourOwnPlease;turn:turn.vdo.ninja:443&relay`\
+``\
+``Note the use of `turn:` , and in the case of TLS/SSL, `turns:`
 
 ### **More Info**
 
