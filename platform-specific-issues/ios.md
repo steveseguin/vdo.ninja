@@ -30,6 +30,8 @@ Audio quality from an iOS generally is pretty low quality. Disabling audio enhan
 
 iOS does not work with the volume visualizer meter; it causes clicking noises when used, so it has been disabled.
 
+If willing to use Android, some users have noted that Firefox for Android often works with USB microphones.
+
 ### Random issues
 
 * If full-screening a video on iOS devices, sometimes that can cause the outbound video to freeze.
