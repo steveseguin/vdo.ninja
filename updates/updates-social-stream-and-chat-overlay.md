@@ -3,6 +3,10 @@
 [social-stream.md](../steves-helper-apps/social-stream.md "mention")\
 [chat-overlay.md](../steves-helper-apps/chat-overlay.md "mention")
 
+#### **December 15**
+
+* kick.com added to Social Stream.
+
 #### **December 9**
 
 * Export / import of settings added to Social Stream. Might need to testing to confirm working with all settings tho.\

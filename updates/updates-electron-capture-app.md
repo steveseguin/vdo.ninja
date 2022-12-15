@@ -2,6 +2,16 @@
 
 [electron-capture.md](../steves-helper-apps/electron-capture.md "mention")
 
+#### December 14
+
+* Fixed a media recording error with electron capture in director-mode
+* Added a new mode to electron capture where you can pin the window, but then after "disable mouse clicks", so the window acts as if its not there. Might be useful with monitoring chat or watching videos while in compatible video games/apps. Selecting the app from the task bar (bringing it into focus) re-enables the click capture.
+* Fixed an issue with Social Stream where it wasn't always draggable with certain versions of electron capture (an electron.js bug)
+* Added the CLI option `--css test.css` to elecap where you can pass a local CSS file, example test.css, and it will auto-insert that CSS into every new window created.
+* Added a CLI option called `--minimized` to the Elecap that starts the app minimized. Pushed an updated release version of electron capture with above fixes here:\
+  [https://github.com/steveseguin/electroncapture/releases/tag/2.70.0](https://github.com/steveseguin/electroncapture/releases/tag/2.70.0)\
+  Windows and MacOS support added
+
 #### September 18
 
 * The Electron Capture app has had an issue fixed where on windows "keep on top" wasn't always working.\
