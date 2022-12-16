@@ -9,7 +9,7 @@
 * Fixed an issue with Social Stream where it wasn't always draggable with certain versions of electron capture (an electron.js bug)
 * Added the CLI option `--css test.css` to elecap where you can pass a local CSS file, example test.css, and it will auto-insert that CSS into every new window created.
 * Added a CLI option called `--minimized` to the Elecap that starts the app minimized. Pushed an updated release version of electron capture with above fixes here:\
-  [https://github.com/steveseguin/electroncapture/releases/tag/2.70.0](https://github.com/steveseguin/electroncapture/releases/tag/2.70.0)\
+  [https://github.com/steveseguin/electroncapture/releases/tag/2.17.0](https://github.com/steveseguin/electroncapture/releases/tag/2.17.0)\
   Windows and MacOS support added
 
 #### September 18
