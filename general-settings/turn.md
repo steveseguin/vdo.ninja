@@ -4,7 +4,7 @@ description: Lets you specify a custom TURN server or disable all TURN servers
 
 # \&turn
 
-General Option! ([`&push`](../source-settings/push.md), [`&room`](room.md), [`&view`](../advanced-settings/view-parameters/view.md), [`&scene`](../advanced-settings/view-parameters/scene.md))
+General Option! ([`&push`](../source-settings/push.md), [`&room`](room.md), [`&view`](../advanced-settings/view-parameters/view.md), [`&scene`](../advanced-settings/view-parameters/scene.md), [`&director`](../viewers-settings/director.md))
 
 ## Options
 
@@ -28,7 +28,7 @@ Several TURN servers are provided by Steve for free, for now, and these are auto
 
 `https://vdo.ninja/?turn=steve;setupYourOwnPlease;turn:turn.vdo.ninja:443&relay`\
 ``\
-``Note the use of `turn:` , and in the case of TLS/SSL, `turns:`
+``Note the use of `turn:`, and in the case of TLS/SSL, `turns:`
 
 ### **More Info**
 
