@@ -8,8 +8,8 @@
 */
 /*jshint esversion: 6 */
 async function main(){ // main asyncronous thread; mostly initializes the user settings.
+
 	var delayedStartupFuncs = [];
-	
 	// translation stuff start ////
 	
 	var ConfigSettings = getById("main-js");
@@ -97,6 +97,10 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 	
 	if (urlParams.has('cleanviewer') || urlParams.has('cv')) {
 		session.cleanViewer = true;
+	}
+	
+	if (session.cleanOutput || session.cleanViewer){
+		session.audioMeterGuest = false;
 	}
 	
 	if (urlParams.has('hidehome')){
@@ -2219,6 +2223,8 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 		session.AndroidFix = true;
 	}
 	
+	
+	
 	if (urlParams.has('consent')){
 		session.consent = true;
 		getById("consentWarning").classList.remove("hidden");
@@ -3049,7 +3055,7 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 		session.activeSpeaker = parseInt(session.activeSpeaker);
 		session.style=6;
 		session.audioEffects = true;
-		session.audioMeterGuest = true; 
+		//session.audioMeterGuest = true; 
 		session.minipreview = 2;
 		if ((session.activeSpeaker==1) || (session.activeSpeaker==3)){
 			session.animatedMoves = false;
@@ -3066,18 +3072,18 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 			session.quietOthers = false;
 			session.noisegate = true;
 			session.audioEffects = true;
-			session.audioMeterGuest = true;
+			//session.audioMeterGuest = true;
 		} else if (session.quietOthers == 4){
 			session.quietOthers = 1;
 			session.audioEffects = true;
-			session.audioMeterGuest = true;
+			//session.audioMeterGuest = true;
 			setInterval(function(){activeSpeaker(false);},100);
 		} else if (!session.quietOthers){
 			session.noisegate = false;
 			session.quietOthers = false;
 		} else {
 			session.audioEffects = true;
-			session.audioMeterGuest = true;
+			//session.audioMeterGuest = true;
 			setInterval(function(){activeSpeaker(false);},100);
 		}
 	}
@@ -3367,6 +3373,10 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 			}
 		}
 	}
+	
+	if (urlParams.has('apiserver') && urlParams.get('apiserver')){ // must set this after any custom TURN / STUN settings, else it might over-ride them.
+		session.apiserver = urlParams.get('apiserver');
+	}
 
 	if (urlParams.has('speedtest')){ // must set this after any custom TURN / STUN settings, else it might over-ride them.
 		session.speedtest = true;
@@ -3443,6 +3453,13 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 			if (session.api){
 				setTimeout(function(){oscClient();},1000);
 			}
+		}
+	}
+	
+	if (urlParams.has('whip')) {
+		session.whip = urlParams.get('whip') || false;
+		if (session.whip){
+			setTimeout(function(){whipClient();},1000); // OBS v29 required?
 		}
 	}
 
@@ -5497,7 +5514,3 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 		script.src = "./thirdparty/polyfill.min.js"; // dynamically load this only if its needed. Keeps loading time down.
 	},100);
 }
-
-
-
-// main(); //calling this now from body tag.

@@ -3137,12 +3137,14 @@ function switchModes(state=null){
 				var target = document.querySelector("#videoContainer_director");
 				if (target){
 					target.prepend(session.videoElement);
-				} else {
-					getById("miniPerformer").prepend(session.videoElement);
-				}
-			} else if (session.videoElement.srcObject && session.videoElement.srcObject.getTracks().length){
+				} 
+				//else {
+				//	getById("miniPerformer").prepend(session.videoElement);
+				//}
+			} else if ((session.videoElement.srcObject && session.videoElement.srcObject.getTracks().length) || (getById("press2talk").dataset.enabled == true)){
 				getById("miniPerformer").prepend(session.videoElement);
 			}
+			
 		}
 	}
 }
@@ -7841,6 +7843,9 @@ function processStats(UUID){
 			if (!session.rpcs[UUID].stats['Peer-to-Peer Connection']){
 				session.rpcs[UUID].stats['Peer-to-Peer Connection'] = {};
 			}
+			
+			var nominatedCandidate = false;
+			var candidates = {};
 				
 			stats.forEach(stat=>{
 				try {
@@ -7848,39 +7853,7 @@ function processStats(UUID){
 					 
 					var trackID = stat.trackIdentifier || stat.id || false;
 					
-					if ((stat.type == "candidate-pair") && (stat.nominated==true)){
-						
-						
-						if (stat.localCandidateId && session.rpcs[UUID].stats['Peer-to-Peer Connection']._local_ice_id  && (session.rpcs[UUID].stats['Peer-to-Peer Connection']._local_ice_id !== stat.localCandidateId)){
-							if ("candidateType" in stat){
-								try {
-									session.rpcs[UUID].stats['Peer-to-Peer Connection'].local_candidateType = null;
-									session.rpcs[UUID].stats['Peer-to-Peer Connection'].local_relay_IP = null;
-									session.rpcs[UUID].stats['Peer-to-Peer Connection'].local_relay_protocol = null;
-								} catch(e){}
-							}
-						}
-						
-						if (stat.remoteCandidateId && session.rpcs[UUID].stats['Peer-to-Peer Connection']._remote_ice_id  && (session.rpcs[UUID].stats['Peer-to-Peer Connection']._remote_ice_id !== stat.remoteCandidateId)){
-							if ("candidateType" in stat){
-								try {
-									session.rpcs[UUID].stats['Peer-to-Peer Connection'].remote_candidateType = null;
-									session.rpcs[UUID].stats['Peer-to-Peer Connection'].remote_relay_IP = null;
-									session.rpcs[UUID].stats['Peer-to-Peer Connection'].remote_relay_protocol = null;
-								} catch(e){}
-							}
-						}
-						if (stat.localCandidateId){
-							session.rpcs[UUID].stats['Peer-to-Peer Connection']._local_ice_id = stat.localCandidateId;
-						}
-						if (stat.remoteCandidateId){
-							session.rpcs[UUID].stats['Peer-to-Peer Connection']._remote_ice_id = stat.remoteCandidateId;
-						}
-						if ("currentRoundTripTime" in stat){
-							session.rpcs[UUID].stats['Peer-to-Peer Connection'].Round_Trip_Time_ms = stat.currentRoundTripTime*1000;
-						}
-						
-					} else if ((stat.type=="track") && stat.remoteSource){
+					if ((stat.type=="track") && stat.remoteSource){
 						
 						if (stat.id in session.rpcs[UUID].stats){
 							session.rpcs[UUID].stats[stat.id]._trackID = stat.trackIdentifier;
@@ -7911,61 +7884,16 @@ function processStats(UUID){
 								session.rpcs[UUID].stats[stat.id]._type = "video";
 							}
 						}
-						
-					} else if (stat.type=="remote-candidate"){
-						
-						if (("_remote_ice_id" in  session.rpcs[UUID].stats['Peer-to-Peer Connection']) && (session.rpcs[UUID].stats['Peer-to-Peer Connection']._remote_ice_id != stat.id )){return;} // not matched to nominated one
-						
-						if ("candidateType" in stat){
-							session.rpcs[UUID].stats['Peer-to-Peer Connection'].remote_candidateType = stat.candidateType;
-							if (stat.candidateType === "relay"){
-								if ("relayProtocol" in stat){
-									session.rpcs[UUID].stats['Peer-to-Peer Connection'].remote_relay_protocol = stat.relayProtocol;
-								} else {
-									session.rpcs[UUID].stats['Peer-to-Peer Connection'].remote_relay_protocol = null;
-								}
-								if ("ip" in stat){session.rpcs[UUID].stats['Peer-to-Peer Connection'].remote_relay_IP = stat.ip;}
-								else {session.rpcs[UUID].stats['Peer-to-Peer Connection'].remote_relay_IP = null;}
-							} else {
-								try {
-									session.rpcs[UUID].stats['Peer-to-Peer Connection'].local_relay_IP = null;
-									session.rpcs[UUID].stats['Peer-to-Peer Connection'].local_relay_protocol = null;
-								} catch(e){}
-							}
+					} else if (stat.type == "remote-candidate") {
+						candidates[stat.id] = stat;
+					} else if (stat.type == "local-candidate") {
+						candidates[stat.id] = stat;
+					} else if ((stat.type == "candidate-pair" ) && (stat.nominated)) {
+						if (!nominatedCandidate){
+							nominatedCandidate = stat;
+						} else if (nominatedCandidate.priority < stat.priority){
+							nominatedCandidate = stat;
 						}
-						
-						if ("networkType" in stat){
-							session.rpcs[UUID].stats['Peer-to-Peer Connection'].remote_networkType = stat.networkType;
-						}
-						
-						
-					} else if (stat.type=="local-candidate"){
-						
-						if (("_local_ice_id" in  session.rpcs[UUID].stats['Peer-to-Peer Connection']) && (session.rpcs[UUID].stats['Peer-to-Peer Connection']._local_ice_id != stat.id )){return;} // not matched to nominated one
-						
-						if ("candidateType" in stat){
-							session.rpcs[UUID].stats['Peer-to-Peer Connection'].local_candidateType = stat.candidateType;
-							if (stat.candidateType === "relay"){
-								if ("relayProtocol" in stat){
-									session.rpcs[UUID].stats['Peer-to-Peer Connection'].local_relay_protocol = stat.relayProtocol;
-								} else {
-									session.rpcs[UUID].stats['Peer-to-Peer Connection'].local_relay_protocol = null;
-								}
-								if ("ip" in stat){session.rpcs[UUID].stats['Peer-to-Peer Connection'].local_relay_IP = stat.ip;}
-								else {session.rpcs[UUID].stats['Peer-to-Peer Connection'].local_relay_IP = null;}
-							} else {
-								try {
-									session.rpcs[UUID].stats['Peer-to-Peer Connection'].local_relay_IP = null;
-									session.rpcs[UUID].stats['Peer-to-Peer Connection'].local_relay_protocol = null;
-								} catch(e){}
-							}
-						}
-						
-						if ("networkType" in stat){
-							session.rpcs[UUID].stats['Peer-to-Peer Connection'].remote_networkType = stat.networkType;
-						}
-						
-					
 					} else if (stat.type == "transport"){
 						if ("bytesReceived" in stat) {
 							if ("_bytesReceived" in session.rpcs[UUID].stats['Peer-to-Peer Connection']){
@@ -8191,6 +8119,143 @@ function processStats(UUID){
 					errorlog(e);
 				}
 			});
+			
+			//////////
+			
+			if (nominatedCandidate){
+				if (nominatedCandidate.localCandidateId && session.rpcs[UUID].stats['Peer-to-Peer Connection']._local_ice_id  && (session.rpcs[UUID].stats['Peer-to-Peer Connection']._local_ice_id !== nominatedCandidate.localCandidateId)){
+					if ("candidateType" in nominatedCandidate){
+						try {
+							session.rpcs[UUID].stats['Peer-to-Peer Connection'].local_candidateType = null;
+							session.rpcs[UUID].stats['Peer-to-Peer Connection'].local_relay_IP = null;
+							session.rpcs[UUID].stats['Peer-to-Peer Connection'].local_relay_protocol = null;
+						} catch(e){}
+					}
+				}
+				if (nominatedCandidate.remoteCandidateId && session.rpcs[UUID].stats['Peer-to-Peer Connection']._remote_ice_id  && (session.rpcs[UUID].stats['Peer-to-Peer Connection']._remote_ice_id !== nominatedCandidate.remoteCandidateId)){
+					if ("candidateType" in nominatedCandidate){
+						try {
+							session.rpcs[UUID].stats['Peer-to-Peer Connection'].remote_candidateType = null;
+							session.rpcs[UUID].stats['Peer-to-Peer Connection'].remote_relay_IP = null;
+							session.rpcs[UUID].stats['Peer-to-Peer Connection'].remote_relay_protocol = null;
+						} catch(e){}
+					}
+				}
+				if (nominatedCandidate.localCandidateId){
+					session.rpcs[UUID].stats['Peer-to-Peer Connection']._local_ice_id = nominatedCandidate.localCandidateId;
+				}
+				if (nominatedCandidate.remoteCandidateId){
+					session.rpcs[UUID].stats['Peer-to-Peer Connection']._remote_ice_id = nominatedCandidate.remoteCandidateId;
+				}
+				if ("currentRoundTripTime" in nominatedCandidate){
+					session.rpcs[UUID].stats['Peer-to-Peer Connection'].Round_Trip_Time_ms = nominatedCandidate.currentRoundTripTime*1000;
+				}
+			}
+			
+			if (nominatedCandidate && nominatedCandidate.remoteCandidateId){
+				if (candidates[nominatedCandidate.remoteCandidateId]){
+					var candidate = candidates[nominatedCandidate.remoteCandidateId];
+					if ("candidateType" in candidate) {
+						session.rpcs[UUID].stats.remote_candidateType = candidate.candidateType;
+						if (candidate.candidateType === "relay"){
+							if ("ip" in candidate) {
+								session.rpcs[UUID].stats.remote_relay_IP = candidate.ip;
+							}
+							if ("relayProtocol" in candidate) {
+								session.rpcs[UUID].stats.remote_relay_protocol = candidate.relayProtocol;								
+							}
+						} else {
+							try {
+								delete session.rpcs[UUID].stats.remote_relay_IP;
+								delete session.rpcs[UUID].stats.remote_relay_protocol;
+							} catch(e){}
+						}
+					}
+				}
+			}
+			if (nominatedCandidate && nominatedCandidate.localCandidateId){
+				if (candidates[nominatedCandidate.localCandidateId]){
+					var candidate = candidates[nominatedCandidate.localCandidateId];
+					if ("candidateType" in candidate) {
+						session.rpcs[UUID].stats.local_candidateType = candidate.candidateType;
+						
+						if (candidate.candidateType === "relay"){
+							if ("ip" in candidate) {
+								session.rpcs[UUID].stats.local_relay_IP = candidate.ip;
+							}
+							if ("relayProtocol" in candidate) {
+								session.rpcs[UUID].stats.local_relay_protocol = candidate.relayProtocol;								
+							}
+						} else {
+							try {
+								delete session.rpcs[UUID].stats.local_relay_IP;
+								delete session.rpcs[UUID].stats.local_relay_protocol;
+							} catch(e){}
+						}
+						
+					}
+				}
+			}
+			
+			///////////
+			if (nominatedCandidate && nominatedCandidate.remoteCandidateId){
+				if (candidates[nominatedCandidate.remoteCandidateId]){
+					var candidate = candidates[nominatedCandidate.remoteCandidateId];
+					if ("candidateType" in candidate){
+						session.rpcs[UUID].stats['Peer-to-Peer Connection'].remote_candidateType = candidate.candidateType;
+						if (candidate.candidateType === "relay"){
+							if ("relayProtocol" in candidate){
+								session.rpcs[UUID].stats['Peer-to-Peer Connection'].remote_relay_protocol = candidate.relayProtocol;
+							} else {
+								session.rpcs[UUID].stats['Peer-to-Peer Connection'].remote_relay_protocol = null;
+							}
+							if ("ip" in candidate){session.rpcs[UUID].stats['Peer-to-Peer Connection'].remote_relay_IP = candidate.ip;}
+							else {session.rpcs[UUID].stats['Peer-to-Peer Connection'].remote_relay_IP = null;}
+						} else {
+							try {
+								session.rpcs[UUID].stats['Peer-to-Peer Connection'].local_relay_IP = null;
+								session.rpcs[UUID].stats['Peer-to-Peer Connection'].local_relay_protocol = null;
+							} catch(e){}
+						}
+					}
+					
+					if ("networkType" in candidate){
+						session.rpcs[UUID].stats['Peer-to-Peer Connection'].remote_networkType = candidate.networkType;
+					}
+				}
+			}
+						
+						
+			if (nominatedCandidate && nominatedCandidate.localCandidateId){
+				if (candidates[nominatedCandidate.localCandidateId]){
+					var candidate = candidates[nominatedCandidate.localCandidateId];
+					
+					if ("candidateType" in candidate){
+						session.rpcs[UUID].stats['Peer-to-Peer Connection'].local_candidateType = candidate.candidateType;
+						if (candidate.candidateType === "relay"){
+							if ("relayProtocol" in candidate){
+								session.rpcs[UUID].stats['Peer-to-Peer Connection'].local_relay_protocol = candidate.relayProtocol;
+							} else {
+								session.rpcs[UUID].stats['Peer-to-Peer Connection'].local_relay_protocol = null;
+							}
+							if ("ip" in candidate){session.rpcs[UUID].stats['Peer-to-Peer Connection'].local_relay_IP = candidate.ip;}
+							else {session.rpcs[UUID].stats['Peer-to-Peer Connection'].local_relay_IP = null;}
+						} else {
+							try {
+								session.rpcs[UUID].stats['Peer-to-Peer Connection'].local_relay_IP = null;
+								session.rpcs[UUID].stats['Peer-to-Peer Connection'].local_relay_protocol = null;
+							} catch(e){}
+						}
+					}
+					
+					if ("networkType" in candidate){
+						session.rpcs[UUID].stats['Peer-to-Peer Connection'].local_networkType = candidate.networkType;
+					}
+				}
+			}
+						
+					
+					//////////////
 			
 			if (session.buffer!==false){
 				playoutdelay(UUID);
@@ -8426,15 +8491,23 @@ function printValues(obj) { // see: printViewStats
 					else if (key == 'remote_relay_IP') {
 						value = "<a href='https://whatismyipaddress.com/ip/" + value + "' target='_blank'>" + value + "</a>";
 					}
-					else if (key == 'local_candidateType') {
-						if (value == "relay") {
-							value = "💸 relay server";
-						}
+					else if ((key == 'local_candidateType') &&  (value == "relay")){
+						value = "💸 <p style='cursor:help;' title='no direct p2p connection made; using the TURN relay servers.'>relay server</p>";
 					}
-					else if (key == 'remote_candidateType') {
-						if (value == "relay") {
-							value = "💸 relay server";
-						}
+					else if ((key == 'remote_candidateType') && (value == "relay")) {
+						value = "💸 <p style='cursor:help;' title='no direct p2p connection made; using the TURN relay servers.'>relay server</p>";
+					}
+					else if ((key == 'local_candidateType') &&  (value == "host")){
+						value = "<p style='cursor:help;' title='No NAT firewall, typical of LAN to LAN'>host</p>";
+					}
+					else if ((key == 'remote_candidateType') && (value == "host")) {
+						value = "<p style='cursor:help;' title='No NAT firewall, typical of LAN to LAN'>host</p>";
+					}
+					else if ((key == 'local_candidateType') &&  (value == "srflx")){
+						value = "<p style='cursor:help;' title='direct p2p, but NAT firewall likely'>srflx</p>";
+					}
+					else if ((key == 'remote_candidateType') && (value == "srflx")) {
+						value = "<p style='cursor:help;' title='direct p2p, but NAT firewall likely'>srflx</p>";
 					}
 					else if (key == 'height_url') {
 						if (value == false) {
@@ -8516,21 +8589,29 @@ function processMeshcastStats(UUID){
 			if (!session.rpcs[UUID].stats['Meshcast Connection']){
 				session.rpcs[UUID].stats['Meshcast Connection'] = {};
 			}
-				
+			
+			// var qos = false;]
+			
+			var nominatedCandidate = false;
+			var candidates = {};
+			
 			stats.forEach(stat=>{
 				
 				if (stat.id && stat.id.startsWith("DEPRECATED_")){return;}
 				
 				var trackID = stat.trackIdentifier || stat.id || false;
 				
-				if ((stat.type == "candidate-pair") && (stat.nominated==true)){
-					
-					session.rpcs[UUID].stats['Meshcast Connection']._local_ice_id = stat.localCandidateId;
-					session.rpcs[UUID].stats['Meshcast Connection']._remote_ice_id = stat.remoteCandidateId;
-					if ("currentRoundTripTime" in stat){
-						session.rpcs[UUID].stats['Meshcast Connection'].Round_Trip_Time_ms = stat.currentRoundTripTime*1000;
+				
+				if (stat.type == "remote-candidate") {
+					candidates[stat.id] = stat;
+				} else if (stat.type == "local-candidate") {
+					candidates[stat.id] = stat;
+				} else if ((stat.type == "candidate-pair" ) && (stat.nominated)) {
+					if (!nominatedCandidate){
+						nominatedCandidate = stat;
+					} else if (nominatedCandidate.priority < stat.priority){
+						nominatedCandidate = stat;
 					}
-					
 				} else if ((stat.type=="track") && stat.remoteSource){
 					
 					if (stat.id in session.rpcs[UUID].stats){
@@ -8560,56 +8641,6 @@ function processMeshcastStats(UUID){
 							session.rpcs[UUID].stats[stat.id]._type = "video";
 						}
 					}
-					
-				} else if (stat.type=="remote-candidate"){
-					
-					if (("_remote_ice_id" in  session.rpcs[UUID].stats['Meshcast Connection']) && (session.rpcs[UUID].stats['Meshcast Connection']._remote_ice_id != stat.id )){return;} // not matched to nominated one
-					
-					if ("candidateType" in stat){
-						session.rpcs[UUID].stats['Meshcast Connection'].remote_candidateType = stat.candidateType;
-						if (stat.candidateType === "relay"){
-							if ("relayProtocol" in stat){
-								session.rpcs[UUID].stats['Meshcast Connection'].remote_relay_protocol = stat.relayProtocol;
-							}
-							if ("ip" in stat){session.rpcs[UUID].stats['Meshcast Connection'].remote_relay_IP = stat.ip;}
-						} else {
-							try {
-								delete session.rpcs[UUID].stats['Meshcast Connection'].local_relay_IP;
-								delete session.rpcs[UUID].stats['Meshcast Connection'].local_relay_protocol;
-							} catch(e){}
-						}
-						
-					}
-					
-					if ("networkType" in stat){
-						session.rpcs[UUID].stats['Meshcast Connection'].remote_networkType = stat.networkType;
-					}
-					
-					
-				} else if (stat.type=="local-candidate"){
-					
-					if (("_local_ice_id" in  session.rpcs[UUID].stats['Meshcast Connection']) && (session.rpcs[UUID].stats['Meshcast Connection']._local_ice_id != stat.id )){return;} // not matched to nominated one
-					
-					if ("candidateType" in stat){
-						session.rpcs[UUID].stats['Meshcast Connection'].local_candidateType = stat.candidateType;
-						if (stat.candidateType === "relay"){
-							if ("relayProtocol" in stat){
-								session.rpcs[UUID].stats['Meshcast Connection'].local_relay_protocol = stat.relayProtocol;
-							}
-							if ("ip" in stat){session.rpcs[UUID].stats['Meshcast Connection'].local_relay_IP = stat.ip;}
-						} else {
-							try {
-								delete session.rpcs[UUID].stats['Meshcast Connection'].local_relay_IP;
-								delete session.rpcs[UUID].stats['Meshcast Connection'].local_relay_protocol;
-							} catch(e){}
-						}
-					}
-					
-					if ("networkType" in stat){
-						session.rpcs[UUID].stats['Meshcast Connection'].remote_networkType = stat.networkType;
-					}
-					
-				
 				} else if (stat.type == "transport"){
 					if ("bytesReceived" in stat) {
 						if ("_bytesReceived" in session.rpcs[UUID].stats['Meshcast Connection']){
@@ -8735,6 +8766,10 @@ function processMeshcastStats(UUID){
 						
 						session.rpcs[UUID].stats[trackID].packetLoss_in_percentage = session.rpcs[UUID].stats[trackID].packetLoss_in_percentage*0.35 + 0.65*((stat.packetsLost-session.rpcs[UUID].stats[trackID]._packetsLost)*100.0)/((stat.packetsReceived-session.rpcs[UUID].stats[trackID]._packetsReceived)+(stat.packetsLost-session.rpcs[UUID].stats[trackID]._packetsLost)) || 0;
 						
+						if (session.rpcs[UUID].stats[trackID]._type==="video"){
+							qos = session.rpcs[UUID].stats[trackID].packetLoss_in_percentage; // packet loss of video track
+						}
+						
 						if (session.rpcs[UUID].signalMeter && (session.rpcs[UUID].stats[trackID]._type==="video")){
 							if (session.rpcs[UUID].stats[trackID].packetLoss_in_percentage<0.01){
 								if (session.rpcs[UUID].stats[trackID].Bitrate_in_kbps==0){
@@ -8805,6 +8840,73 @@ function processMeshcastStats(UUID){
 					}
 				}
 			});
+			
+			////////////
+			
+			if (nominatedCandidate){
+				if ("currentRoundTripTime" in nominatedCandidate){
+					session.rpcs[UUID].stats['Meshcast Connection'].Round_Trip_Time_ms = nominatedCandidate.currentRoundTripTime*1000;
+				}
+			}
+			
+			if (nominatedCandidate && nominatedCandidate.remoteCandidateId){
+				if (candidates[nominatedCandidate.remoteCandidateId]){
+					var candidate = candidates[nominatedCandidate.remoteCandidateId];
+					if ("candidateType" in candidate){
+						session.rpcs[UUID].stats['Meshcast Connection'].remote_candidateType = candidate.candidateType;
+						if (candidate.candidateType === "relay"){
+							if ("relayProtocol" in candidate){
+								session.rpcs[UUID].stats['Meshcast Connection'].remote_relay_protocol = candidate.relayProtocol;
+							}
+							if ("ip" in candidate){session.rpcs[UUID].stats['Meshcast Connection'].remote_relay_IP = candidate.ip;}
+						} else {
+							try {
+								delete session.rpcs[UUID].stats['Meshcast Connection'].local_relay_IP;
+								delete session.rpcs[UUID].stats['Meshcast Connection'].local_relay_protocol;
+							} catch(e){}
+						}
+						if ("networkType" in candidate){
+							session.rpcs[UUID].stats['Meshcast Connection'].remote_networkType = candidate.networkType;
+						}
+					}
+				}
+			} 
+			if (nominatedCandidate && nominatedCandidate.localCandidateId){
+				if (candidates[nominatedCandidate.localCandidateId]){
+					var candidate = candidates[nominatedCandidate.localCandidateId];
+					if ("candidateType" in candidate){
+						session.rpcs[UUID].stats['Meshcast Connection'].local_candidateType = candidate.candidateType;
+						if (candidate.candidateType === "relay"){
+							if ("relayProtocol" in candidate){
+								session.rpcs[UUID].stats['Meshcast Connection'].local_relay_protocol = candidate.relayProtocol;
+							}
+							if ("ip" in candidate){session.rpcs[UUID].stats['Meshcast Connection'].local_relay_IP = candidate.ip;}
+						} else {
+							try {
+								delete session.rpcs[UUID].stats['Meshcast Connection'].local_relay_IP;
+								delete session.rpcs[UUID].stats['Meshcast Connection'].local_relay_protocol;
+							} catch(e){}
+						}
+					}
+					
+					if ("networkType" in candidate){
+						session.rpcs[UUID].stats['Meshcast Connection'].local_networkType = candidate.networkType;
+					}
+				}
+			}
+			
+			/* try{ // we want to let meshcast know if our node is getting overloaded, to avoid making it worse
+				if ((qos!==false) &&  session.rpcs[UUID].settings && session.rpcs[UUID].settings.url){
+					var request = new XMLHttpRequest();
+					var node = session.rpcs[UUID].settings.url.split("https://")[1].split(".meshcast.io")[0];
+					if (node){
+						request.open('POST', " https://qos.meshcast.io/?name="+node);
+						request.send(qos);
+					}
+				}
+			} catch(e){
+				errorlog(e);
+			} */
 			
 			if (session.buffer!==false){
 				playoutdelay(UUID);
@@ -8902,21 +9004,29 @@ function printMyStats(menu) { // see: setupStatsMenu
 				if (key == 'remote_relay_IP') {
 					value = "<a href='https://whatismyipaddress.com/ip/" + value + "' target='_blank'>" + value + "</a>";
 				}
-				if (key == 'local_candidateType') {
-					if (value == "relay") {
-						value = "💸 relay server";
-					}
+				if ((key == 'local_candidateType') &&  (value == "relay")){
+					value = "💸 <p style='cursor:help;' title='no direct p2p connection made; using the TURN relay servers.'>relay server</p>";
 				}
-				if (key == 'remote_candidateType') {
-					if (value == "relay") {
-						value = "💸 relay server";
-					}
+				else if ((key == 'remote_candidateType') && (value == "relay")) {
+					value = "💸 <p style='cursor:help;' title='no direct p2p connection made; using the TURN relay servers.'>relay server</p>";
 				}
-
+				else if ((key == 'local_candidateType') &&  (value == "host")){
+					value = "<p style='cursor:help;' title='No NAT firewall, typical of LAN to LAN'>host</p>";
+				}
+				else if ((key == 'remote_candidateType') && (value == "host")) {
+					value = "<p style='cursor:help;' title='No NAT firewall, typical of LAN to LAN'>host</p>";
+				}
+				else if ((key == 'local_candidateType') &&  (value == "srflx")){
+					value = "<p style='cursor:help;' title='direct p2p, but NAT firewall likely'>srflx</p>";
+				}
+				else if ((key == 'remote_candidateType') && (value == "srflx")) {
+					value = "<p style='cursor:help;' title='direct p2p, but NAT firewall likely'>srflx</p>";
+				}
 				menu.innerHTML += "<li><span>" + stat + "</span><span>" + value + "</span></li>";
 			}
 		});
 	}
+	
 	printViewValues(session.stats);
 	menu.innerHTML += "<button onclick='session.forcePLI(null,event);' data-translate='send-keyframe-to-viewer'>Send Keyframe to Viewers</button>";
 	
@@ -9001,6 +9111,10 @@ function updateLocalStats(){
 					if ("audio_bitrate_kbps" in session.mc.stats){
 						session.mc.stats.audio_bitrate_kbps=0;
 					}
+					
+					var nominatedCandidate = false;
+					var candidates = {};
+					
 					stats.forEach(stat => {
 						
 						if (stat.id && stat.id.startsWith("DEPRECATED_")){return;}
@@ -9146,54 +9260,14 @@ function updateLocalStats(){
 								}
 							}
 						} else if (stat.type == "remote-candidate") {
-							
-							if ("candidateType" in stat) {
-								session.mc.stats.remote_candidateType = stat.candidateType;
-								if (stat.candidateType === "relay"){
-									if ("ip" in stat) {
-										session.mc.stats.remote_relay_IP = stat.ip;
-									}
-									if ("relayProtocol" in stat) {
-										session.mc.stats.remote_relay_protocol = stat.relayProtocol;	
-									}									
-								} else {
-									try {
-										delete session.mc.stats.remote_relay_IP;
-										delete session.mc.stats.remote_relay_protocol;
-									} catch(e){}
-								}
-							}
+							candidates[stat.id] = stat;
 						} else if (stat.type == "local-candidate") {
-							if ("candidateType" in stat) {
-								session.mc.stats.local_candidateType = stat.candidateType;
-								
-								if (stat.candidateType === "relay"){
-									if ("ip" in stat) {
-										session.mc.stats.local_relay_IP = stat.ip;
-									}
-									if ("relayProtocol" in stat) {
-										session.mc.stats.local_relay_protocol = stat.relayProtocol;								
-									}
-								} else {
-									try {
-										delete session.mc.stats.local_relay_IP;
-										delete session.mc.stats.local_relay_protocol;
-									} catch(e){}
-								}
-								
-							}
-						} else if ((stat.type == "candidate-pair" ) && (stat.nominated)) { 
-									
-							if ("availableOutgoingBitrate" in stat){
-								session.mc.stats.available_outgoing_bitrate_kbps = parseInt(stat.availableOutgoingBitrate/1024);
-								if (session.maxBandwidth!==false){
-									session.limitMaxBandwidth(session.mc.stats.available_outgoing_bitrate_kbps, session.mc, true);
-								}
-							}
-							if ("totalRoundTripTime" in stat){
-								if ("responsesReceived" in stat){
-									session.mc.stats.average_roundTripTime_ms = parseInt((stat.totalRoundTripTime/stat.responsesReceived)*1000);
-								}
+							candidates[stat.id] = stat;
+						} else if ((stat.type == "candidate-pair" ) && (stat.nominated)) {
+							if (!nominatedCandidate){
+								nominatedCandidate = stat;
+							} else if (nominatedCandidate.priority < stat.priority){
+								nominatedCandidate = stat;
 							}
 						} else if (Firefox && ("mimeType" in stat) && ("type" in stat) && (stat.type=="codec")) {
 							if (stat.mimeType.includes("video")){
@@ -9204,6 +9278,66 @@ function updateLocalStats(){
 						}
 						return;
 					});
+					
+					if (nominatedCandidate){
+						if ("availableOutgoingBitrate" in nominatedCandidate){
+							session.mc.stats.available_outgoing_bitrate_kbps = parseInt(nominatedCandidate.availableOutgoingBitrate/1024);
+							if (session.maxBandwidth!==false){
+								session.limitMaxBandwidth(session.mc.stats.available_outgoing_bitrate_kbps, session.pcs[UUID], false);
+							}
+						}
+						if ("totalRoundTripTime" in nominatedCandidate){
+							if ("responsesReceived" in nominatedCandidate){
+								session.mc.stats.average_roundTripTime_ms = parseInt((nominatedCandidate.totalRoundTripTime/nominatedCandidate.responsesReceived)*1000);
+							}
+						}
+					}
+					if (nominatedCandidate && nominatedCandidate.remoteCandidateId){
+						if (candidates[nominatedCandidate.remoteCandidateId]){
+							var candidate = candidates[nominatedCandidate.remoteCandidateId];
+							if ("candidateType" in candidate) {
+								session.mc.stats.remote_candidateType = candidate.candidateType;
+								if (candidate.candidateType === "relay"){
+									if ("ip" in candidate) {
+										session.mc.stats.remote_relay_IP = candidate.ip;
+									}
+									if ("relayProtocol" in candidate) {
+										session.mc.stats.remote_relay_protocol = candidate.relayProtocol;								
+									}
+								} else {
+									try {
+										delete session.mc.stats.remote_relay_IP;
+										delete session.mc.stats.remote_relay_protocol;
+									} catch(e){}
+								}
+							}
+						}
+					}
+					if (nominatedCandidate && nominatedCandidate.localCandidateId){
+						if (candidates[nominatedCandidate.localCandidateId]){
+							var candidate = candidates[nominatedCandidate.localCandidateId];
+							if ("candidateType" in candidate) {
+								session.mc.stats.local_candidateType = candidate.candidateType;
+								
+								if (candidate.candidateType === "relay"){
+									if ("ip" in candidate) {
+										session.mc.stats.local_relay_IP = candidate.ip;
+									}
+									if ("relayProtocol" in candidate) {
+										session.mc.stats.local_relay_protocol = candidate.relayProtocol;								
+									}
+								} else {
+									try {
+										delete session.mc.stats.local_relay_IP;
+										delete session.mc.stats.local_relay_protocol;
+									} catch(e){}
+								}
+								
+							}
+						}
+					}
+					
+					
 					return;
 				});
 			}, 0);
@@ -9277,6 +9411,10 @@ function updateLocalStats(){
 				if ("audio_bitrate_kbps" in session.pcs[UUID].stats){
 					session.pcs[UUID].stats.audio_bitrate_kbps=0;
 				}
+				
+				var nominatedCandidate = false;
+				var candidates = {};
+				
 				stats.forEach(stat => {
 					
 					if (stat.id && stat.id.startsWith("DEPRECATED_")){return;}
@@ -9439,56 +9577,14 @@ function updateLocalStats(){
 							}
 						}
 					} else if (stat.type == "remote-candidate") {
-						if ("relayProtocol" in stat) {
-							
-						}
-						if ("candidateType" in stat) {
-							session.pcs[UUID].stats.remote_candidateType = stat.candidateType;
-							if (stat.candidateType === "relay"){
-								if ("ip" in stat) {
-									session.pcs[UUID].stats.remote_relay_IP = stat.ip;
-								}
-								if ("relayProtocol" in stat) {
-									session.pcs[UUID].stats.remote_relay_protocol = stat.relayProtocol;								
-								}
-							} else {
-								try {
-									delete session.pcs[UUID].stats.remote_relay_IP;
-									delete session.pcs[UUID].stats.remote_relay_protocol;
-								} catch(e){}
-							}
-						}
+						candidates[stat.id] = stat;
 					} else if (stat.type == "local-candidate") {
-						if ("candidateType" in stat) {
-							session.pcs[UUID].stats.local_candidateType = stat.candidateType;
-							
-							if (stat.candidateType === "relay"){
-								if ("ip" in stat) {
-									session.pcs[UUID].stats.local_relay_IP = stat.ip;
-								}
-								if ("relayProtocol" in stat) {
-									session.pcs[UUID].stats.local_relay_protocol = stat.relayProtocol;								
-								}
-							} else {
-								try {
-									delete session.pcs[UUID].stats.local_relay_IP;
-									delete session.pcs[UUID].stats.local_relay_protocol;
-								} catch(e){}
-							}
-							
-						}
+						candidates[stat.id] = stat;
 					} else if ((stat.type == "candidate-pair" ) && (stat.nominated)) {
-								
-						if ("availableOutgoingBitrate" in stat){
-							session.pcs[UUID].stats.available_outgoing_bitrate_kbps = parseInt(stat.availableOutgoingBitrate/1024);
-							if (session.maxBandwidth!==false){
-								session.limitMaxBandwidth(session.pcs[UUID].stats.available_outgoing_bitrate_kbps, session.pcs[UUID], false);
-							}
-						}
-						if ("totalRoundTripTime" in stat){
-							if ("responsesReceived" in stat){
-								session.pcs[UUID].stats.average_roundTripTime_ms = parseInt((stat.totalRoundTripTime/stat.responsesReceived)*1000);
-							}
+						if (!nominatedCandidate){
+							nominatedCandidate = stat;
+						} else if (nominatedCandidate.priority < stat.priority){
+							nominatedCandidate = stat;
 						}
 					} else if (Firefox && ("mimeType" in stat) && ("type" in stat) && (stat.type=="codec")) {
 						if (stat.mimeType.includes("video")){
@@ -9499,6 +9595,65 @@ function updateLocalStats(){
 					}
 					return;
 				});
+				
+				if (nominatedCandidate){
+					if ("availableOutgoingBitrate" in nominatedCandidate){
+						session.pcs[UUID].stats.available_outgoing_bitrate_kbps = parseInt(nominatedCandidate.availableOutgoingBitrate/1024);
+						if (session.maxBandwidth!==false){
+							session.limitMaxBandwidth(session.pcs[UUID].stats.available_outgoing_bitrate_kbps, session.pcs[UUID], false);
+						}
+					}
+					if ("totalRoundTripTime" in nominatedCandidate){
+						if ("responsesReceived" in nominatedCandidate){
+							session.pcs[UUID].stats.average_roundTripTime_ms = parseInt((nominatedCandidate.totalRoundTripTime/nominatedCandidate.responsesReceived)*1000);
+						}
+					}
+				}
+				if (nominatedCandidate && nominatedCandidate.remoteCandidateId){
+					if (candidates[nominatedCandidate.remoteCandidateId]){
+						var candidate = candidates[nominatedCandidate.remoteCandidateId];
+						if ("candidateType" in candidate) {
+							session.pcs[UUID].stats.remote_candidateType = candidate.candidateType;
+							if (candidate.candidateType === "relay"){
+								if ("ip" in candidate) {
+									session.pcs[UUID].stats.remote_relay_IP = candidate.ip;
+								}
+								if ("relayProtocol" in candidate) {
+									session.pcs[UUID].stats.remote_relay_protocol = candidate.relayProtocol;								
+								}
+							} else {
+								try {
+									delete session.pcs[UUID].stats.remote_relay_IP;
+									delete session.pcs[UUID].stats.remote_relay_protocol;
+								} catch(e){}
+							}
+						}
+					}
+				}
+				if (nominatedCandidate && nominatedCandidate.localCandidateId){
+					if (candidates[nominatedCandidate.localCandidateId]){
+						var candidate = candidates[nominatedCandidate.localCandidateId];
+						if ("candidateType" in candidate) {
+							session.pcs[UUID].stats.local_candidateType = candidate.candidateType;
+							
+							if (candidate.candidateType === "relay"){
+								if ("ip" in candidate) {
+									session.pcs[UUID].stats.local_relay_IP = candidate.ip;
+								}
+								if ("relayProtocol" in candidate) {
+									session.pcs[UUID].stats.local_relay_protocol = candidate.relayProtocol;								
+								}
+							} else {
+								try {
+									delete session.pcs[UUID].stats.local_relay_IP;
+									delete session.pcs[UUID].stats.local_relay_protocol;
+								} catch(e){}
+							}
+							
+						}
+					}
+				}
+				
 				return;
 			});
 		}, 0, uuid);
@@ -12110,8 +12265,6 @@ function publishWebcam(btn = false) {
 	activatedStream = true;
 	log("PRESSED PUBLISH WEBCAM!!");
  
-	var ele = getById("previewWebcam");
-	
 	formSubmitting = false;
 	window.scrollTo(0, 0); // iOS has a nasty habit of overriding the CSS when changing camaera selections, so this addresses that.
 
@@ -12263,7 +12416,22 @@ function publishWebcam(btn = false) {
 	if (!session.streamSrc){
 		checkBasicStreamsExist(); // create srcObject + videoElement
 	}
-	session.publishStream(ele); // calls session.postPublish at the end.
+	
+	if (!session.avatar && session.mobile && session.streamSrc && !session.streamSrc.getVideoTracks().length){ // this just keeps the phone active.
+		let fakeElement = document.createElement("video");
+		fakeElement.autoplay = true;
+		fakeElement.loop = true;
+		fakeElement.muted = true;
+		fakeElement.src = "./media/micro.mp4";
+		fakeElement.style.width = "1px";
+		fakeElement.style.height ="1px";
+		fakeElement.controls = false;
+		fakeElement.id = "keepAlivePlayer";
+		getById("main").appendChild(fakeElement);
+	}
+	
+	
+	session.publishStream(getById("previewWebcam")); // calls session.postPublish at the end.
 }
 
 function createYoutubeLink(vidid){
@@ -14516,8 +14684,12 @@ async function createDirectorOnlyBox() {
 				value='" + soloLink + "' href='" + soloLink + "'/>" + sanitizeChat(soloLink) + "</a>\
 				<button class='pull-right' style='width:100%;background-color:#ecfaff;' onclick='copyFunction(this.previousElementSibling,event)'><i class='las la-user'></i> copy solo view link</button>\
 			</div>\
-			<div id='groups'></div>\
-			<div style='text-align: center;margin:0px 10px 10px 10px;display:block;'><h3>This is you, the director.<br />You are also a performer.</h3></div>";
+			<div id='groups'></div>";
+		if (session.directorUUID){
+			controls.innerHTML += "<div style='text-align: center;margin:0px 10px 10px 10px;display:block;'><h3 id='yourDirectorStatus'>This is you, a co-director.<br />You are also a performer.</h3></div>";
+		} else {
+			controls.innerHTML += "<div style='text-align: center;margin:0px 10px 10px 10px;display:block;'><h3 id='yourDirectorStatus'>This is you, the director.<br />You are also a performer.</h3></div>";
+		}
 	}
 	
 	controls.querySelectorAll('[data-action-type]').forEach((ele) => { // give action buttons some self-reference
@@ -18710,13 +18882,28 @@ async function grabVideo(quality = 0, eleName = 'previewWebcam', selector = "sel
 	getById("cameraTip1").classList.add("hidden");
 
 	if (!videoSelect || videoSelect.value == "ZZZ"){ // if there is no video, or if manually set to audio ready, then do this step.
+	
+		clearTimeout(grabVideoUserMediaTimeout);
+		getUserMediaRequestID += 1;
+	
 		warnlog("ZZZ SET - so no VIDEO");
 		SelectedVideoInputDevices = [];
 		saveSettings();
 		
 		if (session.avatar && session.avatar.ready){
 			updateRenderOutpipe();
-		}
+		} else if (session.mobile && !document.getElementById("keepAlivePlayer")){ // keep alive player doens't exist
+			let fakeElement = document.createElement("video");
+			fakeElement.autoplay = true;
+			fakeElement.loop = true;
+			fakeElement.muted = true;
+			fakeElement.src = "./media/micro.mp4";
+			fakeElement.style.width = "1px";
+			fakeElement.style.height ="1px";
+			fakeElement.controls = false;
+			fakeElement.id = "keepAlivePlayer";
+			getById("main").appendChild(fakeElement);
+		} 
 		
 		if ((eleName == "previewWebcam") && document.getElementById("previewWebcam")){
 			if (session.autostart) {
@@ -30262,6 +30449,97 @@ function targetGuest(target, action, value=null){
 	return false;
 }
 
+
+function whipClient(){ // api.vdo.ninja api OSC (websocket / https API hotkey support).  The iFrame API method provides greater customization.
+	if (!session.whip){return;}
+	warnlog("WHIP Client started");
+	
+	var socket = null;
+	var connecting = false;
+	var failedCount = 0;
+	
+	function connect(){
+		clearTimeout(connecting);
+		if (socket){
+			if (socket.readyState === socket.OPEN){return;}
+			try{
+				socket.close();
+			} catch(e){}
+		}
+		console.log("Trying to load websocket...");
+		
+		socket = new WebSocket("wss://whip.vdo.ninja");
+		
+		socket.onclose = function (){
+			failedCount+=1;
+			clearTimeout(connecting);
+			connecting = setTimeout(function(){connect();},100*(failedCount-1));
+			
+		};
+
+		socket.onerror = function (e){
+			console.error(e);
+			failedCount+=1;
+			clearTimeout(connecting);
+			connecting = setTimeout(function(){connect();},100*failedCount);
+		};
+
+		socket.onopen = function (){
+			failedCount = 0;
+			try{
+				var settings = {};
+				socket.send(JSON.stringify({"join":session.whip}));
+			} catch(e){
+				connecting = setTimeout(function(){connect();},1);
+			}
+		};
+		
+		socket.addEventListener('message', async function (event) {
+			if (event.data){
+				
+				var data = JSON.parse(event.data);
+				
+				if ("sdp" in data){
+					var resp = await processWHIP(data);
+					if (resp){
+						var ret = {};
+						data.result = resp;
+						ret.callback = data;
+						log(ret);
+						socket.send(JSON.stringify(ret));
+					}
+				}
+			}
+		});
+	}
+	connect();
+}
+
+async function processWHIP(data){
+	var msg = {};
+	msg.description = {};
+	msg.description.type = "offer";
+	msg.description.sdp = data.sdp;
+	// msg.session = session.generateRandomString(5);
+	msg.UUID = session.generateRandomString(25);  // fake
+	
+	if (data.streamID){
+		msg.streamID = data.streamID;
+	} else {
+		msg.streamID = session.generateRandomString(15);  // fake
+	}
+	await session.setupIncoming(msg); // could end up setting up the peer the wrong way.
+	
+	var callback = null;
+	var promise = new Promise((resolve, reject) => {
+		callback = resolve;
+	});
+	console.log(session.rpcs[msg.UUID]);
+	session.rpcs[msg.UUID].whipCallback = callback;
+	session.connectPeer(msg);
+	return await promise; // return SDP answer for the remote WHIP request
+}
+
 var queuedSendingAPIMsgs = [];
 function pokeAPI(action, data, streamID = null){
 	if (!session.api){return;}
@@ -30335,12 +30613,14 @@ function oscClient(){ // api.vdo.ninja api OSC (websocket / https API hotkey sup
 			
 		};
 		
-		socket.addEventListener('message', function (event) {
+		socket.addEventListener('message', async function (event) {
 			if (event.data){
+				
 				var data = JSON.parse(event.data);
+				
 				if ("msg" in data){
 					data = data.msg
-				}
+				} 
 				
 				if ("value" in data){
 					if (("action" in data) && (data.action == "layout")){

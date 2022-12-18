@@ -204,17 +204,7 @@ button.hint {
 	box-shadow: inset 0px 0px 25px #0004;
 }
 
-
-
-#miniPerformer>#videosource{
-	width: 80px;
-	height: 45px;
-	margin: 5px;
-	background-color: #464749 !important;
-	background-size: 50%;
-}
-
-#miniPerformer>#previewWebcam{
+#miniPerformer > video, #miniPerformer > canvas{
 	width: 80px;
 	height: 45px;
 	margin: 5px;
@@ -1319,6 +1309,7 @@ body {
 
 ::-webkit-scrollbar {
 	width: 15px;
+	height: 15px;
 }
 
 ::-webkit-scrollbar-track {
