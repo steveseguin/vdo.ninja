@@ -16,9 +16,9 @@ Director Option! ([`&director`](../../viewers-settings/director.md))
 
 ## Details
 
-`&layouts=[[{xxxxxx}]]` is a URL parameter option, where you can pass a set of different layouts (as a URL-encoded ordered array) to VDO.Ninja. (\*\* on alpha)
+`&layouts=[[{xxxxxx}]]` is a URL parameter option, where you can pass a set of different layouts (as a URL-encoded ordered array) to VDO.Ninja.
 
-This is akin to using the [vdo.ninja/beta/mixer](https://vdo.ninja/beta/mixer), to visually set layouts, but instead you are just manually setting all the available layouts directly, bypassing the mixer app.
+This is akin to using the [vdo.ninja/mixer](https://vdo.ninja/mixer), to visually set layouts, but instead you are just manually setting all the available layouts directly, bypassing the mixer app.
 
 Once you have set the layouts, the "layout" [API](../../general-settings/api.md) feature becomes a bit more useful, as you can remotely activate any of those layouts with a simple API command.
 
@@ -26,7 +26,7 @@ I documented the 'layout' API option a bit here, but the tl;dr; is that you can 
 
 ie: `{action:'layout',value':5}` or `{action:'layout',value':[{xxxx.layout-stuff-here.xxxx]]}`
 
-fyi, the layout and the API in general work with the [vdo.ninja/beta/mixer](https://vdo.ninja/beta/mixer) page, so you can use it to create the layouts, and then manually switch between them via the API. The API is streamdeck-friendly.
+fyi, the layout and the API in general work with the [vdo.ninja/mixer](https://vdo.ninja/mixer) page, so you can use it to create the layouts, and then manually switch between them via the API. The API is streamdeck-friendly.
 
 {% embed url="https://github.com/steveseguin/Companion-Ninja/blob/main/README.md#custom-layout-switching-" %}
 
