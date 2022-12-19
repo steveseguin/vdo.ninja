@@ -2,6 +2,10 @@
 
 [mixer-app.md](../steves-helper-apps/mixer-app.md "mention")
 
+#### December 18
+
+* Fixed a couple minor CSS issues, such as the hot keys being hidden at times, the control bar being partially offscreen, or the mini-preview breaking the control bar when toggling views. (**partially pushed to production; a full fix on alpha)**
+
 #### November 13
 
 *   Added the option to change OBS scenes whenever you change layouts in the Mixer App.\

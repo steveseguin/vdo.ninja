@@ -1,5 +1,13 @@
 # Updates - VDO.Ninja
 
+#### **December 18** <a href="#august-31" id="august-31"></a>
+
+* Fixed a stats (relay vs host vs srflx) issue, where sometimes the incorrect stat appeared.\
+  ****fix on alpha at [vdo.ninja/alpha/](https://vdo.ninja/alpha/)
+* Added a small mouse-over tooltip to the candidate type value in the stats menu, to hint at what it means again if needed.
+* GitHub updated with the newest code (currently in sync with alpha).
+* Made it so mobile won't go to sleep while streaming out audio-only content.
+
 #### **December 11** <a href="#august-31" id="august-31"></a>
 
 * I created a guide + script for offline / local-only deployment of VDO.Ninja, so using it without Internet, connected to a router-only or something.\

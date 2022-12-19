@@ -3,6 +3,12 @@
 [social-stream.md](../steves-helper-apps/social-stream.md "mention")\
 [chat-overlay.md](../steves-helper-apps/chat-overlay.md "mention")
 
+#### **December 18**
+
+* Details on how to publish messages from Social Stream to third-party overlay systems is up: [https://github.com/steveseguin/social\_stream/blob/main/README.md#remote-server-api-support-publish-messages-to-third-parties](https://github.com/steveseguin/social\_stream/blob/main/README.md#remote-server-api-support-publish-messages-to-third-parties)\
+  \
+  So far support for singular, h2r, and generic post requests is available.
+
 #### **December 15**
 
 * kick.com added to Social Stream.
