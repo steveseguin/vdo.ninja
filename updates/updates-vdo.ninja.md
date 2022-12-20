@@ -1,5 +1,13 @@
 # Updates - VDO.Ninja
 
+#### **December 19** <a href="#august-31" id="august-31"></a>
+
+* [`&fullscreenbutton`](../advanced-settings/settings-parameters/and-fullscreenbutton.md) is improved, so that even when there is a single video on the page, it will show. It also shows more reliably, without needing to move the mouse around a bit to re-show the button after going full screen. Lastly, when used, it now hides the native full-screen button, so users have to use it.\
+  \
+  Unlike the native full screen button, this full screen mode alternative keeps the chat and control bar overlays visible (like press F11). Since this is probably the preferred way most users will want to full screen to work, I may make it the default mode at some point, after some more testing/feedback. (not supported on iOS/iPhone tho)\
+  \
+  Changes on alpha for testing at [`https://vdo.ninja/alpha/?fsb`](https://vdo.ninja/alpha/?fsb) (join a room as a guest to trigger)
+
 #### **December 18** <a href="#august-31" id="august-31"></a>
 
 * Fixed a stats (relay vs host vs srflx) issue, where sometimes the incorrect stat appeared.\
