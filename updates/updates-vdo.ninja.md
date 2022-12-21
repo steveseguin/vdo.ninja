@@ -1,5 +1,11 @@
 # Updates - VDO.Ninja
 
+#### **December 21** <a href="#august-31" id="august-31"></a>
+
+* Added experimental "[WHIP](../advanced-settings/mixer-scene-parameters/view-1.md)" support to VDO.Ninja, which means in the near future you'll be able to publish directly from OBS to VDO.Ninja without a virtual camera. There's some big caveats to it all, so I don't recommend it over the normal method to most users, but we'll see how it evolves. ([https://vdo.ninja/alpha/?whip=xxx](https://vdo.ninja/alpha/?whip=xxx) + [https://whip.vdo.ninja/](https://whip.vdo.ninja/) + xxx)\
+  \
+  YouTube tutorial: [https://youtu.be/ynSOE2d4Z9Y](https://youtu.be/ynSOE2d4Z9Y)
+
 #### **December 19** <a href="#august-31" id="august-31"></a>
 
 * [`&fullscreenbutton`](../advanced-settings/settings-parameters/and-fullscreenbutton.md) is improved, so that even when there is a single video on the page, it will show. It also shows more reliably, without needing to move the mouse around a bit to re-show the button after going full screen. Lastly, when used, it now hides the native full-screen button, so users have to use it.\
@@ -395,7 +401,7 @@
 #### **September 12** <a href="#august-31" id="august-31"></a>
 
 * Added [`&effects=7`](../source-settings/effects.md) (or `&effects=zoom`), which will provide a manual zoom option in the effects menu. (you can also select the zoom mode via the effects menu, if available)\
-  ![](<../.gitbook/assets/image (2) (4).png>)
+  ![](<../.gitbook/assets/image (2) (4) (1).png>)
 * Added [`&getfaces`](../advanced-settings/settings-parameters/and-getfaces.md) on the viewer link (or `{getFaces:true}` via the IFrame API), which will request a continuous stream of face bounding boxes, for all inbound videos and all faces contained within. The data is transmitted to the parent IFRAME, and this data can be used for moving the IFrame window around, if you wish to make your own custom face-tracker or whatever else.\
   ![](<../.gitbook/assets/image (11) (1) (2) (1).png>)
 * ``[`&effects=1`](../source-settings/effects.md) on the sender side (or `&effects=facetracking`) will auto-center the user's face in the center of their video, zooming in as needed. It takes a moment to initiate, but it offers a gentle PTZ-like effect.\

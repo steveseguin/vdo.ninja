@@ -30,6 +30,10 @@ You can pass a stream ID as a value, which will specify the video source to be f
 
 You add `&broadcast` to the guest invite links. You do not add this to the director or scene links.
 
+{% embed url="https://youtu.be/QcFKI9q0yFs" %}
+Configuring VDO.Ninja in a broadcast group mode
+{% endembed %}
+
 #### Why might you want to use this option?
 
 In `&broadcast` mode, only the director is sharing video to the guests of the group room, so only the director has the burden of encoding multiple video streams and uploading them to guests. This is great if your guests are primarily on mobile-devices, have slow-Internet, or it is a larger room; otherwise each guest would be sharing video with each other guest as well.
@@ -37,10 +41,6 @@ In `&broadcast` mode, only the director is sharing video to the guests of the gr
 When used with Meshcast, the director can reduce their own system burden even further. You can achieve fairly large group rooms with modest system requirements this way.
 
 To ensure the guests see all that's needed, if the director selects their Virtual Camera output as their video source, then all the guests in the room will be able to see the live output of that virtual camera stream. The source of this virtual camera feed could be the main OBS output mix, or a specific [custom scene mix](https://github.com/exeldro/obs-virtual-cam-filter) that's design just for the guests.
-
-{% embed url="https://www.youtube.com/watch?v=YxduINMXw1M" %}
-See this video on Meshcast
-{% endembed %}
 
 #### Default settings and styles that are applied when \&broadcast is used
 
@@ -74,6 +74,10 @@ While the `&broadcast` flag is great for reducing the load on guests in a room, 
 ![The button used to share a website as the director](<../../.gitbook/assets/image (93) (1) (1).png>)
 
 * If using meshcast.io and the website share functionality, rather than `&meshcast`, you will want to mute the Meshcast source to avoid echo cancellation or audio-doubling. The meshcast.io source page has options to do so there, but you can also add [`&mute`](../../source-settings/and-mute.md) to the meshcast.io when sharing it, to have it auto-mute on playback for the guests.
+
+{% embed url="https://youtu.be/YxduINMXw1M" %}
+Understanding Meshcast as a tool for VDO.Ninja
+{% endembed %}
 
 {% embed url="https://www.youtube.com/watch?v=-7QsLChfdsE" %}
 An older video, but it gets some basics across still about \&broadcast mode

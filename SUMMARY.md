@@ -272,6 +272,7 @@
   * [Mixer/Scene Parameters](advanced-settings/mixer-scene-parameters/README.md)
     * [\&solo](advanced-settings/mixer-scene-parameters/and-solo.md)
     * [\&view](advanced-settings/view-parameters/view.md)
+    * [\&whip (alpha)](advanced-settings/mixer-scene-parameters/view-1.md)
     * [\&include](advanced-settings/mixer-scene-parameters/and-include.md)
     * [\&exclude](advanced-settings/view-parameters/and-exclude.md)
     * [\&layout](advanced-settings/mixer-scene-parameters/and-layout.md)

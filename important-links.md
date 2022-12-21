@@ -60,6 +60,7 @@ description: All useful links you might take a look at
 | Testing regions for vdo.ninja/alpha/check                                         | [https://vdo.ninja/alpha/regions](https://vdo.ninja/alpha/regions)                                                                                     |
 | VDO.Ninja + Chat Overlay Auto Mixer                                               | [https://chat.overlay.ninja/automix](https://chat.overlay.ninja/automix)                                                                               |
 | VDO.Ninja + Social Stream Auto Mixer                                              | [https://socialstream.ninja/automix](https://socialstream.ninja/automix)                                                                               |
+| [WHIP](advanced-settings/mixer-scene-parameters/view-1.md) support for VDO.Ninja  | [https://whip.vdo.ninja/](https://whip.vdo.ninja/)                                                                                                     |
 
 ### VDO.Ninja Tech Demonstrations
 

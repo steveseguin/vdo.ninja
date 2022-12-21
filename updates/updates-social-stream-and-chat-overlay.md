@@ -3,6 +3,11 @@
 [social-stream.md](../steves-helper-apps/social-stream.md "mention")\
 [chat-overlay.md](../steves-helper-apps/chat-overlay.md "mention")
 
+#### **December 21**
+
+* Social Stream's dock page now shows the Twitch avatars in the chat stream; it's not just limited to the featured-chat overlay.\
+  ![](<../.gitbook/assets/image (2).png>)
+
 #### **December 18**
 
 * Details on how to publish messages from Social Stream to third-party overlay systems is up: [https://github.com/steveseguin/social\_stream/blob/main/README.md#remote-server-api-support-publish-messages-to-third-parties](https://github.com/steveseguin/social\_stream/blob/main/README.md#remote-server-api-support-publish-messages-to-third-parties)\
@@ -16,7 +21,7 @@
 #### **December 9**
 
 * Export / import of settings added to Social Stream. Might need to testing to confirm working with all settings tho.\
-  ![](<../.gitbook/assets/image (2).png>)
+  ![](<../.gitbook/assets/image (2) (4).png>)
 * chatroll.com added to Social Stream. I think it works on most websites given its an embedded IFrame, but let me know if there's a deployment its not working with.
 
 #### **December 8**

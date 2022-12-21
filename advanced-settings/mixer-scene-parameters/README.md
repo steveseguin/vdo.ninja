@@ -14,6 +14,7 @@ You have to add them to [`&scene`](../view-parameters/scene.md) or [`&room`](../
 | ----------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------- |
 | ``[`&solo`](and-solo.md)\*                                  | Similar to [`&scene`](../view-parameters/scene.md), but tells the system to be a solo-link                                  |
 | ``[`&view`](../view-parameters/view.md)``                   | Defines the stream or streams you are receiving, by their stream IDs                                                        |
+| ``[`&whip`](view-1.md) (alpha)                              | Publish directly from OBS to VDO.Ninja without a virtual camera                                                             |
 | ``[`&include`](and-include.md)\*                            | Includes streams that do not exist in the room                                                                              |
 | ``[`&exclude`](../view-parameters/and-exclude.md)``         | Same concept as [`&view`](../view-parameters/view.md), except does the opposite                                             |
 | ``[`&layout`](and-layout.md)\*                              | Shows the guest a return feed of the current mixer layout when using the [Mixer App](../../steves-helper-apps/mixer-app.md) |

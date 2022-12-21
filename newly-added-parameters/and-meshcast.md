@@ -28,7 +28,7 @@ There is a toggle in the director's room which adds `&meshcast` to the guest's i
 Steve made a YouTube video explaining all the Meshcast stuff:
 
 {% embed url="https://youtu.be/YxduINMXw1M" %}
-[https://youtu.be/YxduINMXw1M](https://youtu.be/YxduINMXw1M)
+Understanding Meshcast as a tool for VDO.Ninja
 {% endembed %}
 
 ## Options
@@ -48,6 +48,10 @@ Full server list: [https://meshcast.io/servers.json](https://meshcast.io/servers
 
 As a director you can select the Meshcast server on the bottom left of the director's control center\
 ![](<../.gitbook/assets/image (2) (3) (1).png>)
+
+{% embed url="https://youtu.be/-7QsLChfdsE" %}
+Meshcast /w VDO.Ninja to host even Larger Rooms
+{% endembed %}
 
 ## Related
 
