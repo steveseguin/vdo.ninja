@@ -55,7 +55,7 @@
   \-- This doesn't yet support labels or layouts really, but I welcome feedback.\
   \-- Currently I just threw up a video of me, 16:9, of 500-kbps.\
   \-- You don't actually need to create a room / scene to play with it.\
-  ![](<../.gitbook/assets/image (3).png>)\
+  ![](<../.gitbook/assets/image (3) (5).png>)\
   \
   \*\* on alpha. try it at: [https://vdo.ninja/alpha/?room=xxxxtestxxxx\&scene\&cover\&square\&fakeguests=7](https://vdo.ninja/alpha/?room=xxxxtestxxxx\&scene\&cover\&square\&fakeguests=7)
 * Fixed an issue where the director's last-used saved audio output destination wasn't applying, even though the settings menu should it was selected.
@@ -395,7 +395,7 @@
 #### **September 16** <a href="#august-31" id="august-31"></a>
 
 * Simplified the connection type wording in the stat's menu , plus made the publisher's connection type available to the viewer's side so you can more clearly see now if a guest has ignored your request to use Ethernet.\
-  ![](<../.gitbook/assets/image (16).png>)\
+  ![](<../.gitbook/assets/image (16) (2).png>)\
   \*\*\* Changes on alpha at vdo.ninja/alpha/
 
 #### **September 12** <a href="#august-31" id="august-31"></a>
@@ -559,7 +559,7 @@
   \-- It supports multiple OBS instances and will label them according to the [`&label=xxx`](../general-settings/label.md) value set on the scene/view link, or whatever the unique connection ID is.\
   \
   All this is on alpha, at [https://vdo.ninja/alpha/](https://vdo.ninja/alpha/)\
-  ![](<../.gitbook/assets/image (2) (1) (4).png>)![](<../.gitbook/assets/image (3) (5).png>)
+  ![](<../.gitbook/assets/image (2) (1) (4).png>)![](<../.gitbook/assets/image (3) (5) (1).png>)
 
 #### July 23
 

@@ -3,6 +3,11 @@
 [social-stream.md](../steves-helper-apps/social-stream.md "mention")\
 [chat-overlay.md](../steves-helper-apps/chat-overlay.md "mention")
 
+#### **December 22**
+
+* Added an option to randomize the color of names in Social Stream if no name color is already provided.\
+  ![](<../.gitbook/assets/image (3).png>)![](../.gitbook/assets/image.png)
+
 #### **December 21**
 
 * Social Stream's dock page now shows the Twitch avatars in the chat stream; it's not just limited to the featured-chat overlay.\
