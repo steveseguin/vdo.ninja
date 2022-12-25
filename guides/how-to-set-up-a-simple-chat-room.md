@@ -3,12 +3,12 @@
 ### Link
 
 With this link you can set up a simple room to chat with friends:\
-[`https://vdo.ninja/?room=SOMEROOMNAME&audiodevice=0&videodevice=0&chatbutton&cleanoutput&label`](https://vdo.ninja/?room=SOMEROOMNAME\&audiodevice=0\&videodevice=0\&chatbutton\&cleanoutput\&label)``
+[https://vdo.ninja/?room=SOMEROOMNAME\&audiodevice=0\&videodevice=0\&chatbutton\&cleanoutput\&label](https://vdo.ninja/?room=SOMEROOMNAME\&audiodevice=0\&videodevice=0\&chatbutton\&cleanoutput\&label)
 
 Alias:\
-[`https://vdo.ninja/?r=SOMEROOMNAME&ad=0&vd=0&cb&clean&l`](https://vdo.ninja/?r=SOMEROOMNAME\&ad=0\&vd=0\&cb\&clean\&l)``\
-``\
-``Copy one of the two links above and change SOMEROOMNAME into a different name.
+[https://vdo.ninja/?r=SOMEROOMNAME\&ad=0\&vd=0\&cb\&clean\&l](https://vdo.ninja/?r=SOMEROOMNAME\&ad=0\&vd=0\&cb\&clean\&l)\
+\
+Copy one of the two links above and change SOMEROOMNAME into a different name.
 
 ### Explanation
 

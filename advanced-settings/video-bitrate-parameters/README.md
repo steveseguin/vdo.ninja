@@ -25,14 +25,15 @@ You have to add them to the source side ([`&push`](../../source-settings/push.md
 
 You have to add them to the viewer side ([`&room`](../../general-settings/room.md) or [`&view`](../view-parameters/view.md) or [`&scene`](../view-parameters/scene.md) or [`&solo`](../mixer-scene-parameters/and-solo.md)).
 
-| Parameter                                            | Explanation                                                                                                     |
-| ---------------------------------------------------- | --------------------------------------------------------------------------------------------------------------- |
-| ``[`&videobitrate`](bitrate.md)``                    | Sets the "desired target" bitrate in kbps                                                                       |
-| ``[`&totalscenebitrate`](and-totalscenebitrate.md)`` | Max. video bitrate a scene uses                                                                                 |
-| ``[`&totalroombitrate`](totalroombitrate.md)``       | The total bitrate a guest in a room can view video streams with                                                 |
-| ``[`&totalbitrate`](and-totalbitrate.md)\*           | Sets both [`&totalscenebitrate`](and-totalscenebitrate.md) and [`&totalroombitrate`](totalroombitrate.md) flags |
-| ``[`&zoomedbitrate`](and-zoomedbitrate.md)``         | Lets you set the target bitrate for a guest when they 'zoom in' (fullscreen) on a video                         |
-| ``[`&optimize`](optimize.md)``                       | Video bitrate reduced when the video is not visible in OBS (not active in a scene)                              |
+| Parameter                                                                           | Explanation                                                                                                     |
+| ----------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------- |
+| ``[`&videobitrate`](bitrate.md)``                                                   | Sets the "desired target" bitrate in kbps                                                                       |
+| ``[`&totalscenebitrate`](and-totalscenebitrate.md)``                                | Max. video bitrate a scene uses                                                                                 |
+| ``[`&totalroombitrate`](totalroombitrate.md)``                                      | The total bitrate a guest in a room can view video streams with                                                 |
+| ``[`&totalbitrate`](and-totalbitrate.md)\*                                          | Sets both [`&totalscenebitrate`](and-totalscenebitrate.md) and [`&totalroombitrate`](totalroombitrate.md) flags |
+| ``[`&zoomedbitrate`](and-zoomedbitrate.md)``                                        | Lets you set the target bitrate for a guest when they 'zoom in' (fullscreen) on a video                         |
+| ``[`&optimize`](optimize.md)``                                                      | Video bitrate reduced when the video is not visible in OBS (not active in a scene)                              |
+| ``[`&screensharebitrate`](../../newly-added-parameters/and-screensharebitrate.md)`` | Lets you manually set the video bitrate for screen-shares                                                       |
 
 \*NEW IN VERSION 22
 
