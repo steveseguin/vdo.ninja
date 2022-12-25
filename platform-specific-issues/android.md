@@ -61,7 +61,7 @@ For iPhone screen sharing, you can refer to [this guide](../guides/screen-share-
 
 ### Performance issues
 
-Android devices are not powerhouses; disabling video sharing for mobile users in group rooms if there are problems. More than around 7 guests in a room will probably require the Android users add [`&roombitrate=0`](../source-settings/roombitrate.md) to their URL invite links, to disable their video sharing to other group members.
+Android devices are not powerhouses; disabling video sharing for mobile users in group rooms if there are problems. More than around 7 guests in a room will probably require the Android users add [`&roombitrate=0`](../advanced-settings/video-bitrate-parameters/roombitrate.md) to their URL invite links, to disable their video sharing to other group members.
 
 ### Camera selection page freezes
 

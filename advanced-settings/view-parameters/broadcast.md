@@ -61,7 +61,7 @@ While the `&broadcast` flag is great for reducing the load on guests in a room, 
 * Consider using NVEnc or other hardware-encoders to encode any RTMP streams in your studio software to reduce CPU load there. This frees up more CPU for VDO.Ninja.
 * Make sure you have a capable computer; an AMD 5900x CPU is recommend for most users using this mode without Meshcast, allowing for medium-sized group rooms with some headroom to spare.
 * A quad-core computer might only be able to support 1 or 2 guests adequately in this mode, although using Meshcast can help overcome that limitation.
-* If you would like the guests to see even higher quality video, consider using [`&totalroombitrate=2500`](totalroombitrate.md) as an option to greatly improve the video quality. This also will greatly also increase the load on the director, so good internet and a powerful CPU will be needed.
+* If you would like the guests to see even higher quality video, consider using [`&totalroombitrate=2500`](../video-bitrate-parameters/totalroombitrate.md) as an option to greatly improve the video quality. This also will greatly also increase the load on the director, so good internet and a powerful CPU will be needed.
 
 #### Using `&broadcast` mode with Meshcast as a source
 

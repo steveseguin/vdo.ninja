@@ -66,6 +66,6 @@ The view link is normally found at the top of the VDO.Ninja page, but it can be 
 
 ![](<../.gitbook/assets/image (132) (1).png>)
 
-10\. If you want to increase the frame rate and quality of the VDO.Ninja stream, adding [`&videobitrate=6000`](../advanced-settings/view-parameters/bitrate.md) to the URL will increase the quality by more than double. If you're looking to stream a game, you may want to increase this value even higher, although the default bitrate is more than enough for text and basic screen sharing.
+10\. If you want to increase the frame rate and quality of the VDO.Ninja stream, adding [`&videobitrate=6000`](../advanced-settings/video-bitrate-parameters/bitrate.md) to the URL will increase the quality by more than double. If you're looking to stream a game, you may want to increase this value even higher, although the default bitrate is more than enough for text and basic screen sharing.
 
 Please see the rest of the documentation for me details on customizing VDO.Ninja.

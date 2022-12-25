@@ -25,8 +25,8 @@ The upcoming and standalone replacement vor vdo.ninja/monitor:\
 
 ## Related
 
-{% content-ref url="../../source-settings/and-outboundvideobitrate.md" %}
-[and-outboundvideobitrate.md](../../source-settings/and-outboundvideobitrate.md)
+{% content-ref url="and-outboundvideobitrate.md" %}
+[and-outboundvideobitrate.md](and-outboundvideobitrate.md)
 {% endcontent-ref %}
 
 {% content-ref url="../../source-settings/and-outboundaudiobitrate.md" %}

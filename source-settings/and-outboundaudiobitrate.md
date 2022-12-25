@@ -32,6 +32,6 @@ Allows the Director to set their outbound audio bitrate to be shared with guests
 [audiobitrate.md](../advanced-settings/view-parameters/audiobitrate.md)
 {% endcontent-ref %}
 
-{% content-ref url="and-outboundvideobitrate.md" %}
-[and-outboundvideobitrate.md](and-outboundvideobitrate.md)
+{% content-ref url="../advanced-settings/video-bitrate-parameters/and-outboundvideobitrate.md" %}
+[and-outboundvideobitrate.md](../advanced-settings/video-bitrate-parameters/and-outboundvideobitrate.md)
 {% endcontent-ref %}

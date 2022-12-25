@@ -1,6 +1,6 @@
 ---
 description: >-
-  Labels, styles, clean output, CSS, mirroring, margin, darkmode, background
+  Labels, styles, clean output, CSS, mirroring, margin, dark mode, background
   color, disable tallies etc.
 ---
 

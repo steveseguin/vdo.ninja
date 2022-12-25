@@ -15,17 +15,17 @@ There will be a outgoing video bitrate of 2500-kbps on the source side and 2500-
 
 There are five parameters we will take a look at:
 
-1. [\&outboundvideobitrate (\&ovb)](../source-settings/and-outboundvideobitrate.md) -> push side
-2. [\&maxvideobitrate (\&mvb)](../source-settings/maxbitrate.md) -> push side
-3. [\&limittotalbitrate (\&ltb)](../source-settings/limittotalbitrate.md) -> push side
-4. [\&videobitrate (\&vb)](../advanced-settings/view-parameters/bitrate.md) -> view side
-5. [\&totalscenebitrate (\&tsb)](../newly-added-parameters/and-maxtotalscenebitrate.md) -> view side
+1. [\&outboundvideobitrate (\&ovb)](../advanced-settings/video-bitrate-parameters/and-outboundvideobitrate.md) -> push side
+2. [\&maxvideobitrate (\&mvb)](../advanced-settings/video-bitrate-parameters/and-maxvideobitrate.md) -> push side
+3. [\&limittotalbitrate (\&ltb)](../advanced-settings/video-bitrate-parameters/limittotalbitrate.md) -> push side
+4. [\&videobitrate (\&vb)](../advanced-settings/video-bitrate-parameters/bitrate.md) -> view side
+5. [\&totalscenebitrate (\&tsb)](../advanced-settings/video-bitrate-parameters/and-totalscenebitrate.md) -> view side
 
 ## On the source side ([\&push](../source-settings/push.md))
 
 ### The push link sets the target and maximum outgoing video bitrate
 
-``[`&outboundvideobitrate (&ovb)`](../source-settings/and-outboundvideobitrate.md)\
+``[`&outboundvideobitrate (&ovb)`](../advanced-settings/video-bitrate-parameters/and-outboundvideobitrate.md)\
 Sets the target and maximum outgoing video bitrate on the source side.
 
 [https://vdo.ninja/?push=streamid\&ovb=4000](https://vdo.ninja/?push=streamid\&ovb=4000)\
@@ -35,7 +35,7 @@ The push link sets the outgoing video bitrate to 4000-kbps. The view link sees t
 
 ### The push link sets the video bitrate per stream out
 
-``[`&maxvideobitrate (&mvb)`](../source-settings/maxbitrate.md)``\
+``[`&maxvideobitrate (&mvb)`](../advanced-settings/video-bitrate-parameters/and-maxvideobitrate.md)``\
 `&mvb` is similar to `&ovb` but it sets the target and maximum bitrate per stream out.
 
 [https://vdo.ninja/?push=streamid\&mvb=1000](https://vdo.ninja/?push=streamid\&mvb=1000)\
@@ -45,7 +45,7 @@ Every view link has a video bitrate of 1000-kbps.
 
 ### The push link limits the video bitrate to a maximum defined value
 
-``[`&limittotalbitrate (&ltb)`](../source-settings/limittotalbitrate.md)\
+``[`&limittotalbitrate (&ltb)`](../advanced-settings/video-bitrate-parameters/limittotalbitrate.md)\
 Limits the total outbound video bitrate to a defined value.
 
 [https://vdo.ninja/?push=streamid\&ltb=5000](https://vdo.ninja/?push=streamid\&ltb=5000)\
@@ -57,7 +57,7 @@ The video bitrate will be around 2500-kbps (default value), because `&ltb` only 
 
 ### The view link sets the video bitrate per stream in
 
-``[`&videobitrate (&vb)`](../advanced-settings/view-parameters/bitrate.md)\
+``[`&videobitrate (&vb)`](../advanced-settings/video-bitrate-parameters/bitrate.md)\
 The view link is setting the target and maximum video bitrate per incoming stream.
 
 [https://vdo.ninja/?push=streamid](https://vdo.ninja/?push=streamid)\
@@ -67,7 +67,7 @@ The view link is setting the bitrate per incoming stream (in this case 2000-kbps
 
 ### The view link sets the total video bitrate for all incoming streams combined
 
-``[`&totalscenebitrate (&tsb)`](../newly-added-parameters/and-maxtotalscenebitrate.md)\
+``[`&totalscenebitrate (&tsb)`](../advanced-settings/video-bitrate-parameters/and-totalscenebitrate.md)\
 This is similar to [`&vb`](video-bitrates-for-push-view-links.md#the-view-link-sets-the-video-bitrate-per-stream-in) but it sets the target and maximum bitrate for all incoming streams combined.
 
 [https://vdo.ninja/?push=streamid](https://vdo.ninja/?push=streamid)\
@@ -86,3 +86,9 @@ All the three push parameters are always limiting the maximum. So if you set one
 * `&ovb` is overwriting `&vb`
 * `&mvb` is overwriting `&vb`
 * `&tsb` is stronger than `&ovb`
+
+## Related
+
+{% content-ref url="../advanced-settings/video-bitrate-parameters/" %}
+[video-bitrate-parameters](../advanced-settings/video-bitrate-parameters/)
+{% endcontent-ref %}

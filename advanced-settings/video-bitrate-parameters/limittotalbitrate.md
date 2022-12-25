@@ -4,7 +4,7 @@ description: Limits the total outbound bitrate
 
 # \&limittotalbitrate
 
-Sender-Side Option! ([`&push`](push.md))
+Sender-Side Option! ([`&push`](../../source-settings/push.md))
 
 ## Aliases
 
@@ -22,8 +22,8 @@ _Tries_ to limit the total outbound bitrate to some max total value, via the pub
 
 ## Related
 
-{% content-ref url="../advanced-settings/view-parameters/totalroombitrate.md" %}
-[totalroombitrate.md](../advanced-settings/view-parameters/totalroombitrate.md)
+{% content-ref url="totalroombitrate.md" %}
+[totalroombitrate.md](totalroombitrate.md)
 {% endcontent-ref %}
 
 {% content-ref url="roombitrate.md" %}

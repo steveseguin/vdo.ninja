@@ -16,13 +16,13 @@
 
 ### Explanation
 
-| Parameter                                                                    | Explanation                                                                 |
-| ---------------------------------------------------------------------------- | --------------------------------------------------------------------------- |
-| Push Link                                                                    |                                                                             |
-| ``[`&push=SOMESTREAMID`](../source-settings/push.md)``                       | sets a unique stream ID                                                     |
-| ``[`&screenshare`](../source-settings/screenshare.md)``                      | selects screen sharing instead of webcam                                    |
-| ``[`&quality=0`](../advanced-settings/video-parameters/and-quality.md)``     | sets the resolution to 1920x1080p                                           |
-| View Link                                                                    |                                                                             |
-| ``[`&view=SOMESTREAMID`](../advanced-settings/view-parameters/view.md)``     | selects the stream ID                                                       |
-| ``[`&videobitrate=10000`](../advanced-settings/view-parameters/bitrate.md)`` | sets the video bitrate to 10,000-kbps, you can change the value if you want |
-| ``[`&scale=100`](../advanced-settings/view-parameters/scale.md)``            | tells the system to not scale down the screen share                         |
+| Parameter                                                                             | Explanation                                                                 |
+| ------------------------------------------------------------------------------------- | --------------------------------------------------------------------------- |
+| Push Link                                                                             |                                                                             |
+| ``[`&push=SOMESTREAMID`](../source-settings/push.md)``                                | sets a unique stream ID                                                     |
+| ``[`&screenshare`](../source-settings/screenshare.md)``                               | selects screen sharing instead of webcam                                    |
+| ``[`&quality=0`](../advanced-settings/video-parameters/and-quality.md)``              | sets the resolution to 1920x1080p                                           |
+| View Link                                                                             |                                                                             |
+| ``[`&view=SOMESTREAMID`](../advanced-settings/view-parameters/view.md)``              | selects the stream ID                                                       |
+| ``[`&videobitrate=10000`](../advanced-settings/video-bitrate-parameters/bitrate.md)`` | sets the video bitrate to 10,000-kbps, you can change the value if you want |
+| ``[`&scale=100`](../advanced-settings/view-parameters/scale.md)``                     | tells the system to not scale down the screen share                         |

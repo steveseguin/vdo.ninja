@@ -38,7 +38,7 @@ VDO.Ninja is peer-to-peer-based, which works great for linking one camera to one
 
 ### Group rooms, multiple-scenes, or multiple viewers
 
-Every viewer of a stream adds to the heat and load experienced by the publisher of that stream. To reduce heat as much as possible, only allow one viewer of a stream to be active. Group-scenes, multiple-guests in a room, and multiple view-links each consistent as an active viewer. There are ways to optimize in these situations, but they may not be obvious. ([`&optimize=0`](../advanced-settings/view-parameters/optimize.md), for example).
+Every viewer of a stream adds to the heat and load experienced by the publisher of that stream. To reduce heat as much as possible, only allow one viewer of a stream to be active. Group-scenes, multiple-guests in a room, and multiple view-links each consistent as an active viewer. There are ways to optimize in these situations, but they may not be obvious. ([`&optimize=0`](../advanced-settings/video-bitrate-parameters/optimize.md), for example).
 
 In the case of an iOS device, since it only has 3 hardware encoders, the device will switch to VP8-software mode or just stop working all together if those get exhausted. iOS devices are rather poor at software-encoding video, especially at higher resolutions, so be careful.
 

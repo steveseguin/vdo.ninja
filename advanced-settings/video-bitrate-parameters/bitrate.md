@@ -4,7 +4,7 @@ description: Sets the "desired target" bitrate in kbps
 
 # \&videobitrate
 
-Viewer-Side Option! ([`&view`](view.md), [`&scene`](scene.md), [`&room`](../../general-settings/room.md))
+Viewer-Side Option! ([`&view`](../view-parameters/view.md), [`&scene`](../view-parameters/scene.md), [`&room`](../../general-settings/room.md))
 
 ## Aliases
 
@@ -43,6 +43,6 @@ Not compatible with **Firefox**.
 [video-bitrates-for-push-view-links.md](../../guides/video-bitrates-for-push-view-links.md)
 {% endcontent-ref %}
 
-{% content-ref url="audiobitrate.md" %}
-[audiobitrate.md](audiobitrate.md)
+{% content-ref url="../view-parameters/audiobitrate.md" %}
+[audiobitrate.md](../view-parameters/audiobitrate.md)
 {% endcontent-ref %}

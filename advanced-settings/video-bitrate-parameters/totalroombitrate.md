@@ -4,7 +4,7 @@ description: The total bitrate a guest in a room can view video streams with
 
 # \&totalroombitrate
 
-Viewer-Side Option! ([`&view`](view.md), [`&scene`](scene.md), [`&room`](../../general-settings/room.md))\
+Viewer-Side Option! ([`&view`](../view-parameters/view.md), [`&scene`](../view-parameters/scene.md), [`&room`](../../general-settings/room.md))\
 Director Option! ([`&director`](../../viewers-settings/director.md))
 
 ## Aliases
@@ -35,7 +35,7 @@ There is a toggle in the director's room which adds `&trb=2000` to the guest's i
 ![](<../../.gitbook/assets/image (94) (1).png>)
 
 {% hint style="info" %}
-Please note the difference between `&totalroombitrate` and [`&totalscenebitrate`](../../newly-added-parameters/and-maxtotalscenebitrate.md). `&totalroombitrate`controls what the total bitrate for guests in a room is limited to. [`&totalscenebitrate`](../../newly-added-parameters/and-maxtotalscenebitrate.md), on the other hand, is what you will want if you want to do the same for a view-link, added to OBS, for example.
+Please note the difference between `&totalroombitrate` and [`&totalscenebitrate`](and-totalscenebitrate.md). `&totalroombitrate`controls what the total bitrate for guests in a room is limited to. [`&totalscenebitrate`](and-totalscenebitrate.md), on the other hand, is what you will want if you want to do the same for a view-link, added to OBS, for example.
 {% endhint %}
 
 ### Limitations
@@ -46,7 +46,7 @@ Mobile devices are also coded to typically refuse requests of higher bitrates by
 
 In general, setting a high total room bitrate will increase the CPU and network requirements of the group room. Higher bitrates mean higher resolution, which means higher compute loads, so some computers may become overloaded. The default of 500-kbps seems low, but it was carefully selected to reduce such issues as much as reasonable.
 
-Consider using [`&broadcast`](broadcast.md), combined with either a powerful host computer or a service like [Meshcast.io](https://meshcast.io/) if you'd like to share high quality video to a larger room. A high total room bitrate value may cause severe problems in large rooms or on slower computers.
+Consider using [`&broadcast`](../view-parameters/broadcast.md), combined with either a powerful host computer or a service like [Meshcast.io](https://meshcast.io/) if you'd like to share high quality video to a larger room. A high total room bitrate value may cause severe problems in large rooms or on slower computers.
 
 ### Director's ability to control
 
@@ -58,12 +58,12 @@ The director can also dynamically change their total room bitrate value using a 
 
 ## Related
 
-{% content-ref url="../../source-settings/roombitrate.md" %}
-[roombitrate.md](../../source-settings/roombitrate.md)
+{% content-ref url="roombitrate.md" %}
+[roombitrate.md](roombitrate.md)
 {% endcontent-ref %}
 
-{% content-ref url="../video-parameters/and-totalbitrate.md" %}
-[and-totalbitrate.md](../video-parameters/and-totalbitrate.md)
+{% content-ref url="and-totalbitrate.md" %}
+[and-totalbitrate.md](and-totalbitrate.md)
 {% endcontent-ref %}
 
 {% content-ref url="and-controlroombitrate.md" %}

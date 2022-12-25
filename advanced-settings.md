@@ -42,11 +42,11 @@ A stream ID must also not already be in active use, else you will be provided wi
 
 All of the available parameters can be seperated in five categories. You find the category on the top of the page of a parameter.
 
-* **General Option** ([`&push`](source-settings/push.md), [`&room`](general-settings/room.md), [`&view`](advanced-settings/view-parameters/view.md), [`&scene`](advanced-settings/view-parameters/scene.md),[`&solo`](advanced-settings/mixer-scene-parameters/and-solo.md),[`&director`](viewers-settings/director.md))\
+* **General Option** ([`&push`](source-settings/push.md), [`&room`](general-settings/room.md), [`&view`](advanced-settings/view-parameters/view.md), [`&scene`](advanced-settings/view-parameters/scene.md), [`&solo`](advanced-settings/mixer-scene-parameters/and-solo.md), [`&director`](viewers-settings/director.md))\
   You can use these parameters as a sender or as a viewer as well as in scenes, solo-links and rooms or even as a director.
 * **Sender-Side Option** ([`&push`](source-settings/push.md))\
   You can use these parameters as a sender when you are publishing a video with `&push`. You can use these parameters in rooms ([`&room`](general-settings/room.md)) when publishing or as a basic push link outside a room. These parameters will affect the outgoing stream.
-* **Viewer-Side Option** ([`&view`](advanced-settings/view-parameters/view.md), [`&scene`](advanced-settings/view-parameters/scene.md), [`&room`](general-settings/room.md),[`&solo`](advanced-settings/mixer-scene-parameters/and-solo.md))\
+* **Viewer-Side Option** ([`&view`](advanced-settings/view-parameters/view.md), [`&scene`](advanced-settings/view-parameters/scene.md), [`&room`](general-settings/room.md), [`&solo`](advanced-settings/mixer-scene-parameters/and-solo.md))\
   You can use these parameters as a viewer of one or more video sources (scenes and solo-links in a room, as a guest in a room, or a basic `&view` stream). These parameters will affect the incoming stream(s).
 * **Director Option** ([`&director`](viewers-settings/director.md))\
   These parameters are specifically for the director of a room.
@@ -55,14 +55,15 @@ All of the available parameters can be seperated in five categories. You find th
 
 ## Navigating the available setting options
 
-We've broken down the available URL parameters into 17 parts:
+We've broken down the available URL parameters into 18 parts:
 
 * [cheat-sheet-of-basic-parameters](advanced-settings/cheat-sheet-of-basic-parameters/ "mention") (the basic and most common parameters)
 * [setup-parameters](advanced-settings/setup-parameters/ "mention") (stream ID, create a room, password, labels, groups, devices, auto-start, welcoming guests, sharing a website/file)
-* [video-parameters](advanced-settings/video-parameters/ "mention") (resolution, FPS, effects, bitrate, self preview, mute video, PTZ, codec, buffer, broadcasting, scale)
+* [video-parameters](advanced-settings/video-parameters/ "mention") (resolution, FPS, effects, self preview, mute video, PTZ, codec, buffer, broadcasting, scale)
+* [video-bitrate-parameters](advanced-settings/video-bitrate-parameters/ "mention") (changing the bitrate of the outgoing and incoming video and for rooms)
 * [audio-parameters](advanced-settings/audio-parameters/ "mention") (filters, adding delay, bitrate, channels, mono/stereo, muting guests, etc.)
 * [settings-parameters](advanced-settings/settings-parameters/ "mention") (language, save cookies, show/hide buttons, control bar, remote access, chunked mode, raise hands, notify, transcription, closed captions)
-* [design-parameters](advanced-settings/design-parameters/ "mention") (labels, styles, clean output, CSS, mirroring, margin, darkmode, background color, disable tallies, etc.)
+* [design-parameters](advanced-settings/design-parameters/ "mention") (labels, styles, clean output, CSS, mirroring, margin, dark mode, background color, disable tallies, etc.)
 * [mixer-scene-parameters](advanced-settings/mixer-scene-parameters/ "mention") (layout and design for the video mixer in rooms/scenes, preload/hidden scene bitrate)
 * [director-parameters](advanced-settings/director-parameters/ "mention") (specific to the director's control room and director-specific features)
 * [screen-share-parameters](advanced-settings/screen-share-parameters/ "mention") (labels, audio filters, type, bitrate, quality, etc.)

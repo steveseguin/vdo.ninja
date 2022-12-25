@@ -38,7 +38,7 @@ Samsung devices can sometimes use the built in Samsung Internet browser instead 
 
 Next, while you might have selected 4K, with the exception of static video screen shares, you cannot transfer 4K video with the default video bitrates set. For action, you will need closer to 40-mbps video bitrates set on the viewer’s end. For talking head videos, you will want over 10-mbps and possibly even more. Without a high enough bitrate set, the video will not stream at 4K and more than likely not maintain 60-fps.
 
-To set a target bitrate add [`&videobitrate=20000`](../advanced-settings/view-parameters/bitrate.md) for 20-mbps for example. This goes on the viewer link.
+To set a target bitrate add [`&videobitrate=20000`](../advanced-settings/video-bitrate-parameters/bitrate.md) for 20-mbps for example. This goes on the viewer link.
 
 ## Performance issues
 

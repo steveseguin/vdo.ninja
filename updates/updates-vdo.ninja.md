@@ -35,7 +35,7 @@
 *   Pushed a couple hot fixes for recently found bugs introduced in VDO.Ninja [v22](../releases/v22.md).
 
     \-- One bug caused mobile phones to push lower than available bandwidth.\
-    \-- The second bug had [`&optimize=0`](../advanced-settings/view-parameters/optimize.md) sometimes causing video scenes to not correctly load all guests when toggling scenes in OBS.
+    \-- The second bug had [`&optimize=0`](../advanced-settings/video-bitrate-parameters/optimize.md) sometimes causing video scenes to not correctly load all guests when toggling scenes in OBS.
 
     \
     These fixes have been pushed everywhere; production, beta, alpha, and github. Thank you for reporting the issues; please report any others you find.
@@ -102,7 +102,7 @@
   ![](<../.gitbook/assets/image (7).png>)
 * Fixed a bug where the guest screen share, while in broadcast mode, was misplaced on the screen.
 * Fixed a bug where [`&language`](../advanced-settings/settings-parameters/and-language.md) didn't work in translating a couple elements, like "join with camera".
-* Re-enabled [`&limittotalbitrate`](../source-settings/limittotalbitrate.md) for non-guests, as it was causing me some problems before with versus.cam. It might still be causing issues, so more testing is needed.
+* Re-enabled [`&limittotalbitrate`](../advanced-settings/video-bitrate-parameters/limittotalbitrate.md) for non-guests, as it was causing me some problems before with versus.cam. It might still be causing issues, so more testing is needed.
 * Fixed an issue where changing a system-level audio device duplicated the audio output options during camera/mic setup.
 * Fixed an issue where screen sharing as a guest, while someone is sharing a website with you, causes the website to refresh. (In the case of [meshcast.io](https://meshcast.io/), this caused a reconnection loop)\
   \
@@ -618,8 +618,8 @@
 
 * The [`&website`](../source-settings/and-website.md) function now lets you start/stop and change website sources; no longer is it just one site and that's it. (only the director previously could change websites constantly). I suppose you could use this to remotely change inputs in an OBS browser source via a remote website, as I think the YouTube implementation supports synced playback/scrubbing.
 * There's toggle in the director's room now to add [`&scale=100`](../advanced-settings/view-parameters/scale.md) to the scene links. Might improve sharpness a bit, at the cost of increased CPU/network load.
-* Fixed an issue where if a guest was viewing the director in full-window mode, and the director changed the total room bitrate value, the new [`&totalroombitrate`](../advanced-settings/view-parameters/totalroombitrate.md) value would be ignored by that guest until they exited the full-window mode.
-* Also fixed an issue where if setting a custom total room bitrate value higher than 4000 via the URL ([`&totalroombitrate`](../advanced-settings/view-parameters/totalroombitrate.md)), the slider to adjust the TRB value will be extended so the max range is that of the URL value if higher than 4000.\
+* Fixed an issue where if a guest was viewing the director in full-window mode, and the director changed the total room bitrate value, the new [`&totalroombitrate`](../advanced-settings/video-bitrate-parameters/totalroombitrate.md) value would be ignored by that guest until they exited the full-window mode.
+* Also fixed an issue where if setting a custom total room bitrate value higher than 4000 via the URL ([`&totalroombitrate`](../advanced-settings/video-bitrate-parameters/totalroombitrate.md)), the slider to adjust the TRB value will be extended so the max range is that of the URL value if higher than 4000.\
   \
   \*\* on vdo.ninja/alpha/ for testing.
 
@@ -631,7 +631,7 @@
 #### July 3
 
 * Unless manually specified ([`&screensharequality`](../source-settings/screensharequality.md) or [`&screenshare`](../source-settings/screenshare.md)), I have the screen share resolution matching the webcam resolution now. This avoids a sudden CPU spike when screen sharing; still room for improvement tho.
-* For the time being, I have [`&limittotalbitrate`](../source-settings/limittotalbitrate.md) only applying to guests, rather than all viewers. I need to revisit this at some point soon.\
+* For the time being, I have [`&limittotalbitrate`](../advanced-settings/video-bitrate-parameters/limittotalbitrate.md) only applying to guests, rather than all viewers. I need to revisit this at some point soon.\
   \
   \*\* changes on alpha
 
@@ -656,7 +656,7 @@
 * Added support for [`&buffer`](../advanced-settings/view-parameters/buffer.md) and [`&sync`](../advanced-settings/view-parameters/sync.md) to the viewer when using [`&chunked`](../newly-added-parameters/and-chunked.md) mode on the sender. If on an unstable connection, setting the buffer to a few seconds can help avoid pauses in the video playback, as there will be some buffer to use. (a bit experimental still -- so it might be more a WIP still ).
 * Added a new url param called [`&include`](../advanced-settings/mixer-scene-parameters/and-include.md), which is like [`&view`](../advanced-settings/view-parameters/view.md), except it's for including streams that do not exist in the room you are in, assuming those streams are not in another room and have matching passwords. So, useful for adding basic push-streams that you might want to be in multiple rooms at the same time, but not actually be locked to any room. (`&view`, conversely, is pretty exclusive; that or nothing.)
 * Been playing around a new flag called [`&flagship`](../advanced-settings/upcoming-parameters/and-flagship.md), which will optimize the mobile experience for more capable smartphones; essentially, streaming higher quality video to other guests versus the normal mobile-performance mode.
-* I've also modified the non-flagship mode, for low-end mobile devices, to use the [`&limittotalbitrate`](../source-settings/limittotalbitrate.md) flag by default (500-kbps). [`&limittotalbitrate`](../source-settings/limittotalbitrate.md) hasn't been that heavily tested yet, but it's part of v22 and might be better than [`&totalroombitrate`](../advanced-settings/view-parameters/totalroombitrate.md); currently I'll increasingly use them together I think though. They are both the same concept, except one is viewer-side controlled, and the other is sender-side controlled; both limit the bitrate that guests in the room see based on the number of guests in the room.\
+* I've also modified the non-flagship mode, for low-end mobile devices, to use the [`&limittotalbitrate`](../advanced-settings/video-bitrate-parameters/limittotalbitrate.md) flag by default (500-kbps). [`&limittotalbitrate`](../advanced-settings/video-bitrate-parameters/limittotalbitrate.md) hasn't been that heavily tested yet, but it's part of v22 and might be better than [`&totalroombitrate`](../advanced-settings/video-bitrate-parameters/totalroombitrate.md); currently I'll increasingly use them together I think though. They are both the same concept, except one is viewer-side controlled, and the other is sender-side controlled; both limit the bitrate that guests in the room see based on the number of guests in the room.\
   \
   \*\* changes to alpha, at [https://vdo.ninja/alpha/](https://vdo.ninja/alpha/)
 
@@ -775,7 +775,7 @@
 
 #### May 19
 
-* Made a new bitrate option called [`&maxbandwidth`](../advanced-settings/video-parameters/and-maxbandwidth.md), which differs from other commands as it leverages a chromium (chrome/edge/brave/electron) feature to judge the available bandwidth of a sender's connection. Passing a value to it as the sender (a percentage; 1 to 100 ideally), you can try to ensure the connection never uses more than that amount of the available reported bandwidth. (on alpha) So the notion is, if you want to set the invite link bitrate to 50-mbps, but one guest only has only a 20-mbps connection, `&maxbandwidth=80` will try to limit the bitrate to around 16-mbps. I sometimes will tell people to set the bit rate to about 80% of what their connection can allow, as higher than that can result in some frame stutter when there is packet loss, since the connection lacks headroom to recover. This command will try to do it automatically, for all the viewers of a stream. My goal here is to use it with the mixer or stats app, so eSports users can crank out high bitrates with less tinkering per guest. I have no idea how well it will work in practice so far.
+* Made a new bitrate option called [`&maxbandwidth`](../advanced-settings/video-bitrate-parameters/and-maxbandwidth.md), which differs from other commands as it leverages a chromium (chrome/edge/brave/electron) feature to judge the available bandwidth of a sender's connection. Passing a value to it as the sender (a percentage; 1 to 100 ideally), you can try to ensure the connection never uses more than that amount of the available reported bandwidth. (on alpha) So the notion is, if you want to set the invite link bitrate to 50-mbps, but one guest only has only a 20-mbps connection, `&maxbandwidth=80` will try to limit the bitrate to around 16-mbps. I sometimes will tell people to set the bit rate to about 80% of what their connection can allow, as higher than that can result in some frame stutter when there is packet loss, since the connection lacks headroom to recover. This command will try to do it automatically, for all the viewers of a stream. My goal here is to use it with the mixer or stats app, so eSports users can crank out high bitrates with less tinkering per guest. I have no idea how well it will work in practice so far.
 * Fixed an issue where the director's mic audio could cut out after stopping the screen share, depending on how the screen-share was cancelled. - added [`&showall`](../advanced-settings/design-parameters/and-showall.md) (or [`&style=7`](../advanced-settings/design-parameters/style.md)), which will include non-media-based push connections as video elements in a group room. This can include guests that joined without audio/video, directors, or a data-only connection, like maybe MIDI-output source. - to help avoid some types of connections showing up when using `&showall`, I've also added a [`&nopush`](../advanced-settings/settings-parameters/and-nopush.md) mode, which blocks outbound publishing connections. This acts a bit like a `&scene=1` link, so unless `&showall` is added, you'll need to use the IFRAME API to show/hide videos in it. (also just on alpha atm)
 
 #### May 16
@@ -838,7 +838,7 @@
 
 #### May 3
 
-* Made [`&totalbitrate`](../advanced-settings/video-parameters/and-totalbitrate.md) (`&tb`) set both [`&totalscenebitrate`](../newly-added-parameters/and-maxtotalscenebitrate.md) and [`&totalroombitrate`](../advanced-settings/view-parameters/totalroombitrate.md) flags. Not quite sure how well it will work, but since a scene and a guest are exclusive possibilities, it's a bit of a flexible way to just learn one flag to do it all, as I realize all the options can get confusing.\
+* Made [`&totalbitrate`](../advanced-settings/video-bitrate-parameters/and-totalbitrate.md) (`&tb`) set both [`&totalscenebitrate`](../advanced-settings/video-bitrate-parameters/and-totalscenebitrate.md) and [`&totalroombitrate`](../advanced-settings/video-bitrate-parameters/totalroombitrate.md) flags. Not quite sure how well it will work, but since a scene and a guest are exclusive possibilities, it's a bit of a flexible way to just learn one flag to do it all, as I realize all the options can get confusing.\
   \
   `&trb` and `&tsb` limit the total incoming bitrate, dividing up the bandwidth available to each video being played back. There are nuances in differences, with the main one being `&trb` is for a guest link and `&tsb` is for a scene/view link.\
   (on local dev for now, pending more testing)
@@ -960,7 +960,7 @@
 
 #### March 3
 
-* Fixed an issue where [`&maxvideobitrate`](../source-settings/maxbitrate.md) would sometimes increase the default bitrate as well. (was impacting the speedtest a bit. on local dev atm)
+* Fixed an issue where [`&maxvideobitrate`](../advanced-settings/video-bitrate-parameters/and-maxvideobitrate.md) would sometimes increase the default bitrate as well. (was impacting the speedtest a bit. on local dev atm)
 
 #### February 26
 

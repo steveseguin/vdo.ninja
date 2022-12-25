@@ -8,9 +8,9 @@ Something like [https://vdo.ninja/?view=yyyyy\&bitrate=10000 ](https://vdo.ninja
 
 The viewer sets the bitrate generally, although you can set maximum allowed bitrates as the publisher of a stream. See the advanced settings in the wiki for more help here; there are many options available.
 
-When in a group room, the guests will generally get a very low-quality preview of the stream. This can be changed with the [`&totalroombitrate`](../advanced-settings/view-parameters/totalroombitrate.md) parameter or via the room's director settings menu. The higher the room bitrate however, the more CPU and Network load will be placed on those in the room.
+When in a group room, the guests will generally get a very low-quality preview of the stream. This can be changed with the [`&totalroombitrate`](../advanced-settings/video-bitrate-parameters/totalroombitrate.md) parameter or via the room's director settings menu. The higher the room bitrate however, the more CPU and Network load will be placed on those in the room.
 
-When dealing with a group scene link, you can use [`&bitrate`](../advanced-settings/view-parameters/bitrate.md) as normal, or `&totalbitrate.`
+When dealing with a group scene link, you can use [`&bitrate`](../advanced-settings/video-bitrate-parameters/bitrate.md) as normal, or `&totalbitrate.`
 
 ## Resolution
 
