@@ -23,7 +23,7 @@ You have to add them to the source side ([`&push`](../../source-settings/push.md
 
 ## **Viewer side options**
 
-You have to add them to the viewer side ([`&room`](../../general-settings/room.md) or [`&view`](../view-parameters/view.md) or [`&scene`](../view-parameters/scene.md)).
+You have to add them to the viewer side ([`&room`](../../general-settings/room.md) or [`&view`](../view-parameters/view.md) or [`&scene`](../view-parameters/scene.md) or [`&solo`](../mixer-scene-parameters/and-solo.md)).
 
 | Parameter                                            | Explanation                                                                                                     |
 | ---------------------------------------------------- | --------------------------------------------------------------------------------------------------------------- |

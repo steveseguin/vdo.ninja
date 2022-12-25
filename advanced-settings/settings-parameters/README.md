@@ -71,7 +71,7 @@ You can use them for publisher, viewer and director URLs.
 
 ## Viewer Side Options
 
-**Viewer's Settings**, which are aspects that are controllable by the viewer's side. These parameters are mostly added to [`&room`](../../general-settings/room.md) or [`&view`](../view-parameters/view.md) and [`&scene`](../view-parameters/scene.md) links, but some of them can also be added to the director's URL.
+**Viewer's Settings**, which are aspects that are controllable by the viewer's side. These parameters are mostly added to [`&room`](../../general-settings/room.md) (viewing other guests), [`&view`](../view-parameters/view.md) and [`&scene`](../view-parameters/scene.md) or [`&solo`](../mixer-scene-parameters/and-solo.md) links, but some of them can also be added to the director's URL.
 
 | Parameter                                                               | Explanation                                                                                                           |
 | ----------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------- |

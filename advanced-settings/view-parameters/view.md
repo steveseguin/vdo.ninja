@@ -1,5 +1,5 @@
 ---
-description: Defines the stream or streams you are receiving, by their stream IDs
+description: Defines the stream(s) you are receiving, by their stream IDs
 ---
 
 # \&view

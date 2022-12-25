@@ -13,7 +13,7 @@ You have to add them to [`&scene`](../view-parameters/scene.md) or [`&room`](../
 | Parameter                                                   | Explanation                                                                                                                 |
 | ----------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------- |
 | ``[`&solo`](and-solo.md)\*                                  | Similar to [`&scene`](../view-parameters/scene.md), but tells the system to be a solo-link                                  |
-| ``[`&view`](../view-parameters/view.md)``                   | Defines the stream or streams you are receiving, by their stream IDs                                                        |
+| ``[`&view`](../view-parameters/view.md)``                   | Defines the stream(s) you are receiving, by their stream IDs                                                                |
 | ``[`&whip`](view-1.md) (alpha)                              | Publish directly from OBS to VDO.Ninja without a virtual camera                                                             |
 | ``[`&include`](and-include.md)\*                            | Includes streams that do not exist in the room                                                                              |
 | ``[`&exclude`](../view-parameters/and-exclude.md)``         | Same concept as [`&view`](../view-parameters/view.md), except does the opposite                                             |

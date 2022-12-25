@@ -10,7 +10,7 @@ They are separated in two groups: [general options](./#general-options) (push an
 
 ## General options
 
-You can add them to both, source ([`&push`](../../source-settings/push.md)) and viewer ([`&view`](../view-parameters/view.md) or [`&scene`](../view-parameters/scene.md)) sides.
+You can add them to both, source ([`&push`](../../source-settings/push.md)) and viewer ([`&view`](../view-parameters/view.md), [`&scene`](../view-parameters/scene.md) or [`&solo`](../mixer-scene-parameters/and-solo.md)) sides.
 
 | Parameter                                                       | Explanation                                                                                                   |
 | --------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------- |
