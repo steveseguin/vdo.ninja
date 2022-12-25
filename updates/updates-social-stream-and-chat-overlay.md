@@ -3,6 +3,10 @@
 [social-stream.md](../steves-helper-apps/social-stream.md "mention")\
 [chat-overlay.md](../steves-helper-apps/chat-overlay.md "mention")
 
+#### **December 24**
+
+* Right clicking a message in socialstream will show a menu now, where you can pin/queue or even now Delete a message. Delete will auto-delete from all docks, even if `&sync` isn't used, this way its more intuitive when trying to delete a message from an OBS dock overlay.
+
 #### **December 22**
 
 * Added an option to randomize the color of names in Social Stream if no name color is already provided.\
