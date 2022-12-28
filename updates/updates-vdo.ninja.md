@@ -1,5 +1,16 @@
 # Updates - VDO.Ninja
 
+#### **December 27** <a href="#august-31" id="august-31"></a>
+
+* Added [`&mididelay=1000`](../advanced-settings/api-and-midi-parameters/midiin-1.md), which lets you precisely delay the MIDI play-out from VDO.Ninja to your MIDI device when using [`&midiin`](../midi-settings/midiin.md), irrespective of network latency. Use case: If you have a remote drum machine, you can have it play out the beat exactly 4-bars ahead, allowing for music jamming types with even high ping delays between locations.
+* Added the option to right click a remote video and add/adjust the [`&buffer`](../advanced-settings/view-parameters/buffer.md) delay for that specific video dynamically.\
+  ![](<../.gitbook/assets/image (175).png>)
+* Added [`&buffer2=500`](../advanced-settings/video-parameters/buffer-1.md), which is the same as [`&buffer`](../advanced-settings/view-parameters/buffer.md), but instead also tells the system to include the round-trip-time in the buffer delay calculation. This way 500-ms of buffer on a connection that has a 200ms ping time will result in a smaller 300-ms buffer, leading to an end-to-end playout delay of \~500ms.\
+  \-- won't work that well with Meshcast.\
+  \-- not super precise, but on a stable connection maybe within 20-ms of flux?\
+  \
+  \*\* changes on alpha at vdo.ninja/alpha/
+
 #### **December 21** <a href="#august-31" id="august-31"></a>
 
 * Added experimental "[WHIP](../advanced-settings/mixer-scene-parameters/view-1.md)" support to VDO.Ninja, which means in the near future you'll be able to publish directly from OBS to VDO.Ninja without a virtual camera. There's some big caveats to it all, so I don't recommend it over the normal method to most users, but we'll see how it evolves. ([https://vdo.ninja/alpha/?whip=xxx](https://vdo.ninja/alpha/?whip=xxx) + [https://whip.vdo.ninja/](https://whip.vdo.ninja/) + xxx)\

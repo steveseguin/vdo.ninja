@@ -15,4 +15,5 @@ description: hotkey features via API and MIDI
 | ``[`&midichannel`](../../midi-settings/and-midichannel.md)``    | Allows for specifying which midi channel (1 to 16) to listen on                                 |
 | ``[`&mididevice`](../../midi-settings/and-mididevice.md)``      | Allows to specify which midi device (1 and up) selected                                         |
 | ``[`&midioffset`](../../midi-settings/and-midioffset.md)``      | Allows you to set a series of buttons on a MIDI controller to be mute controls for those guests |
+| ``[`&mididelay`](midiin-1.md) (alpha)                           | Lets you precisely delay the MIDI play-out                                                      |
 | ``[`&datamode`](../../newly-added-parameters/and-datamode.md)`` | Combines a bunch of flags together; no video, no audio, GUI, etc.                               |

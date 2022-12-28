@@ -33,3 +33,7 @@ Using may stop [Echo Cancellation](../../source-settings/aec.md) from working.
 {% content-ref url="buffer.md" %}
 [buffer.md](buffer.md)
 {% endcontent-ref %}
+
+{% content-ref url="../video-parameters/buffer-1.md" %}
+[buffer-1.md](../video-parameters/buffer-1.md)
+{% endcontent-ref %}

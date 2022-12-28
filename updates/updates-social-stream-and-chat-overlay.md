@@ -10,7 +10,7 @@
 #### **December 22**
 
 * Added an option to randomize the color of names in Social Stream if no name color is already provided.\
-  ![](<../.gitbook/assets/image (3).png>)![](../.gitbook/assets/image.png)
+  ![](<../.gitbook/assets/image (3).png>)![](<../.gitbook/assets/image (174).png>)
 
 #### **December 21**
 
