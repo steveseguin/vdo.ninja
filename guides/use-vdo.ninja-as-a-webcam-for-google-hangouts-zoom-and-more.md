@@ -78,13 +78,17 @@ To setup our OBS Studio, create a Scene and then add a Browser Source in OBS Stu
 
 In the properties for the Browser Source, we need to fill out a few fields and then hit OK.
 
-* The URL we add to OBS needs to be set to the VIEW address we created earlier,  ie: https://VDO.Ninja/?view=q3QCScW\
+* The URL we add to OBS needs to be set to the VIEW address we created earlier,  \
+  \
+  Just as example: `https://vdo.ninja/?view=q3QCScW`\
+  \
+  You will of course need to use your own link, with its own unique view ID, which was given to you at the end of Step #1.  The view ID should exactly make the push ID; case-sensitive.\
 
 * Width can be set to 1280\
 
 * The height be set to 720\
 
-* "<mark style="color:green;">**Control audio via OBS**</mark>" should be checked. This is quite important.
+* "<mark style="color:green;">**Control audio via OBS**</mark>" should be checked. This is quite important, else the audio will not work correctly or you will get a terrible echo / feedback.
 
 ![When you hit OK, you should see your remote camera source appear in OBS](<../.gitbook/assets/image (108) (1).png>)
 
