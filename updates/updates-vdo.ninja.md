@@ -1,5 +1,11 @@
 # Updates - VDO.Ninja
 
+#### **December 30** <a href="#august-31" id="august-31"></a>
+
+* Added [`&groupview`](../advanced-settings/setup-parameters/and-groupview-alpha.md), which is the same as [`&group`](../general-settings/and-group.md), except it lets you see those groups without actually needing to join them with your mic/camera. (There's no button in the directors/guest view for this, since there isn't a need yet for that.)
+* You can change the view-only groups via the API (HTTP / IFrame) or using the [Comms app](../steves-helper-apps/comms.md), which has been updated with buttons for this option. the HTTP documentation: [https://github.com/steveseguin/Companion-Ninja/blob/main/README.md#api-commands](https://github.com/steveseguin/Companion-Ninja/blob/main/README.md#api-commands)
+* You can now use the HTTP/WSS API to both join and leave a group; not just toggle said state. Both the view-group function and regular group function.
+
 #### **December 27** <a href="#august-31" id="august-31"></a>
 
 * Added [`&mididelay=1000`](../advanced-settings/api-and-midi-parameters/midiin-1.md), which lets you precisely delay the MIDI play-out from VDO.Ninja to your MIDI device when using [`&midiin`](../midi-settings/midiin.md), irrespective of network latency. Use case: If you have a remote drum machine, you can have it play out the beat exactly 4-bars ahead, allowing for music jamming types with even high ping delays between locations.

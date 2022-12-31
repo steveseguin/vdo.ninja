@@ -12,19 +12,20 @@ They are separated in two groups: [general options](./#general-options) (push an
 
 You can add them to both, source ([`&push`](../../source-settings/push.md)) and viewer ([`&view`](../view-parameters/view.md), [`&scene`](../view-parameters/scene.md) or [`&solo`](../mixer-scene-parameters/and-solo.md)) sides.
 
-| Parameter                                                       | Explanation                                                                                                   |
-| --------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------- |
-| ``[`&push`](../../source-settings/push.md)``                    | The stream ID that you are publishing with will be the defined value                                          |
-| ``[`&room`](../../general-settings/room.md)``                   | Sets a room ID for the session to join                                                                        |
-| ``[`&password`](../../general-settings/password.md)``           | Sets a password to view a stream or to join a room                                                            |
-| ``[`&hash`](../../newly-added-parameters/and-hash.md)``         | Checks the password                                                                                           |
-| ``[`&label`](../../general-settings/label.md)``                 | Sets a display name label                                                                                     |
-| ``[`&labelsuggestion`](and-labelsuggestion.md)\*                | The same as [`&label`](../../general-settings/label.md), except it asks the user still for a user name        |
-| ``[`&group`](../../general-settings/and-group.md)``             | Puts guests into sub-groups, so they only see others in the same group                                        |
-| ``[`&groupaudio`](../../general-settings/and-groupaudio.md)``   | Tells the system to not filter out audio streams when using [`&group`](../../general-settings/and-group.md)`` |
-| ``[`&datamode`](../../newly-added-parameters/and-datamode.md)`` | Combines a bunch of flags together; no video, no audio, GUI, etc.                                             |
-| ``[`&audiooutput`](and-audiooutput.md)``                        | Like [`&sink`](../view-parameters/and-sink.md), but selects the audio output device                           |
-| ``[`&sink`](../view-parameters/and-sink.md)``                   | Outputs the audio to the specified audio output device, rather than the default                               |
+| Parameter                                                       | Explanation                                                                                                                                                 |
+| --------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| ``[`&push`](../../source-settings/push.md)``                    | The stream ID that you are publishing with will be the defined value                                                                                        |
+| ``[`&room`](../../general-settings/room.md)``                   | Sets a room ID for the session to join                                                                                                                      |
+| ``[`&password`](../../general-settings/password.md)``           | Sets a password to view a stream or to join a room                                                                                                          |
+| ``[`&hash`](../../newly-added-parameters/and-hash.md)``         | Checks the password                                                                                                                                         |
+| ``[`&label`](../../general-settings/label.md)``                 | Sets a display name label                                                                                                                                   |
+| ``[`&labelsuggestion`](and-labelsuggestion.md)\*                | The same as [`&label`](../../general-settings/label.md), except it asks the user still for a user name                                                      |
+| ``[`&group`](../../general-settings/and-group.md)``             | Puts guests into sub-groups, so they only see others in the same group                                                                                      |
+| ``[`&groupaudio`](../../general-settings/and-groupaudio.md)``   | Tells the system to not filter out audio streams when using [`&group`](../../general-settings/and-group.md)``                                               |
+| ``[`&groupview`](and-groupview-alpha.md) (alpha)                | The same as [`&group`](../../general-settings/and-group.md), except it lets you see those groups without actually needing to join them with your mic/camera |
+| ``[`&datamode`](../../newly-added-parameters/and-datamode.md)`` | Combines a bunch of flags together; no video, no audio, GUI, etc.                                                                                           |
+| ``[`&audiooutput`](and-audiooutput.md)``                        | Like [`&sink`](../view-parameters/and-sink.md), but selects the audio output device                                                                         |
+| ``[`&sink`](../view-parameters/and-sink.md)``                   | Outputs the audio to the specified audio output device, rather than the default                                                                             |
 
 \*NEW IN VERSION 22
 

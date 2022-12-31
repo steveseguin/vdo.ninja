@@ -22,6 +22,10 @@ The [Comms app](../../steves-helper-apps/comms.md) uses `&groupmode` by default.
 [and-group.md](../../general-settings/and-group.md)
 {% endcontent-ref %}
 
+{% content-ref url="and-groupview-alpha.md" %}
+[and-groupview-alpha.md](and-groupview-alpha.md)
+{% endcontent-ref %}
+
 {% content-ref url="../../general-settings/and-groupaudio.md" %}
 [and-groupaudio.md](../../general-settings/and-groupaudio.md)
 {% endcontent-ref %}

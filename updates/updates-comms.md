@@ -2,6 +2,13 @@
 
 [comms.md](../steves-helper-apps/comms.md "mention")
 
+#### December 30
+
+* Applied some CSS tweaks, plus the view-group function was added to it as a small button option (the little eye ball you can toggle on).\
+  ![](../.gitbook/assets/image.png)\
+  \
+  \*\* changes on on alpha, ie: [https://vdo.ninja/alpha/comms?api=AAAAA\&room=RRRRRR](https://vdo.ninja/alpha/comms?api=AAAAA\&room=RRRRRR)
+
 #### November 24
 
 * Fixed a bug, where the hot key labels (0 to 9), cropped sometimes when the corresponding group button was pressed.\

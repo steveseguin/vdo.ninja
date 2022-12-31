@@ -3,6 +3,11 @@
 [social-stream.md](../steves-helper-apps/social-stream.md "mention")\
 [chat-overlay.md](../steves-helper-apps/chat-overlay.md "mention")
 
+#### **December 30**
+
+* You can choose to include or block non-chat events from the social stream feed now, like "John joined the stream". It only works on a few sites currently, but more can be added in time. (tiktok, for example, included)
+* When using `&autoshow`, there's a small queue now, so if there's a sudden spike of messages, up to around 30-seconds of messages will be queued before being skipped.
+
 #### **December 24**
 
 * Right clicking a message in socialstream will show a menu now, where you can pin/queue or even now Delete a message. Delete will auto-delete from all docks, even if `&sync` isn't used, this way its more intuitive when trying to delete a message from an OBS dock overlay.
