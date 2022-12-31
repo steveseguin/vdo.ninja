@@ -52,7 +52,7 @@ The <mark style="color:green;">OBS Browser Source link</mark> is what we will be
 
 
 
-<figure><img src="../.gitbook/assets/image.png" alt=""><figcaption></figcaption></figure>
+<figure><img src="../.gitbook/assets/image (25).png" alt=""><figcaption></figcaption></figure>
 
 ![A QR-code is provided to make connecting your phone as a camera source easy](<../.gitbook/assets/image (121) (1) (1).png>)
 
