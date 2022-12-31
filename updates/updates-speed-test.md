@@ -9,7 +9,7 @@
 #### September 16
 
 * Added more details to the tech-check test's result page (vdo.ninja/alpha/results?id=xxx), including system detail and the network type. WiFi is of course isn't advised, so if it detects that, it points it out as seen in the photo.\
-  ![](<../.gitbook/assets/image (15) (2) (1).png>)![](<../.gitbook/assets/image (17).png>)
+  ![](<../.gitbook/assets/image (15) (2) (1).png>)![](<../.gitbook/assets/image (17) (2).png>)
 
 #### September 14
 

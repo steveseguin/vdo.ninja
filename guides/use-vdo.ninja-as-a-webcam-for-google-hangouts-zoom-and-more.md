@@ -37,11 +37,9 @@ We also will assume you are using Windows. You will need to adapt accordingly fo
 On the computer that will be using Zoom or Google Hangouts to broadcast, please do the following:\
 
 
-1. Uninstall and remove all old versions of OBS, including StreamLabs OBS if that is installed.\
+1. Install OBS Studio  h[ttps://github.com/obsproject/obs-studio/releases/](https://www.google.com/url?q=https://github.com/obsproject/obs-studio/releases/\&sa=D\&source=editors\&ust=1651965669925129\&usg=AOvVaw2y3\_HZy3Sm\_0aAQ7QRRX8K)\
 
-2. Install OBS Studio  h[ttps://github.com/obsproject/obs-studio/releases/](https://www.google.com/url?q=https://github.com/obsproject/obs-studio/releases/\&sa=D\&source=editors\&ust=1651965669925129\&usg=AOvVaw2y3\_HZy3Sm\_0aAQ7QRRX8K)\
-
-3. Lastly, install the VB-Cable Virtual Audio device.\
+2. Install the VB-Cable Virtual Audio device.\
    [https://www.vb-audio.com/Cable/](https://www.google.com/url?q=https://www.vb-audio.com/Cable/\&sa=D\&source=editors\&ust=1651965669925809\&usg=AOvVaw3k4NHvzmWNnuxOnB2nnoYZ)
 
 ### **Step 1.** &#x20;
@@ -54,7 +52,7 @@ The <mark style="color:green;">OBS Browser Source link</mark> is what we will be
 
 
 
-![](https://lh6.googleusercontent.com/m\_qUTD6GQ0eJRv7-b0SfqbGQwGLkzKE4PsrDCYCc6qN2Q\_fDIoGQIiMzqVWQFX4udKAKLiKmDWGZZdRyWo9oe8Uc-9cuayr55Itn8ZxCdipFdz5n6RHWd\_FK9SC2k6Up3Ad-owd3ymJccbk\_Lw)
+<figure><img src="../.gitbook/assets/image.png" alt=""><figcaption></figcaption></figure>
 
 ![A QR-code is provided to make connecting your phone as a camera source easy](<../.gitbook/assets/image (121) (1) (1).png>)
 

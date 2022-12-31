@@ -5,7 +5,7 @@
 #### December 30
 
 * Applied some CSS tweaks, plus the view-group function was added to it as a small button option (the little eye ball you can toggle on).\
-  ![](../.gitbook/assets/image.png)\
+  ![](<../.gitbook/assets/image (17).png>)\
   \
   \*\* changes on on alpha, ie: [https://vdo.ninja/alpha/comms?api=AAAAA\&room=RRRRRR](https://vdo.ninja/alpha/comms?api=AAAAA\&room=RRRRRR)
 
