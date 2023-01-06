@@ -36,3 +36,4 @@
 * [transfer-rooms.md](../getting-started/rooms/transfer-rooms.md "mention")
 * [how-to-set-up-a-simple-chat-room.md](how-to-set-up-a-simple-chat-room.md "mention")
 * [how-to-screen-share-in-1080p.md](how-to-screen-share-in-1080p.md "mention")
+* [how-to-control-powerpoint-remotely-with-vdo.ninja.md](how-to-control-powerpoint-remotely-with-vdo.ninja.md "mention")
