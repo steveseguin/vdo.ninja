@@ -128,7 +128,7 @@ If we want to include our own microphone and video to the stream, we can also do
 
 If we do close the director's control center though, we can still add our audio and video to the stream by joining the room as a guest, using the guest invite link we looked at previously.
 
-<figure><img src="../.gitbook/assets/image.png" alt=""><figcaption></figcaption></figure>
+<figure><img src="../.gitbook/assets/image (18).png" alt=""><figcaption></figcaption></figure>
 
 ### Need help?
 

@@ -3,6 +3,13 @@
 [social-stream.md](../steves-helper-apps/social-stream.md "mention")\
 [chat-overlay.md](../steves-helper-apps/chat-overlay.md "mention")
 
+#### **January 6**
+
+* Google Meet support added to Social Stream. (you'll need to toggle it on explicitly to use, for privacy reasons)\
+  ![](../.gitbook/assets/image.png)
+
+## 2022
+
 #### **December 30**
 
 * You can choose to include or block non-chat events from the social stream feed now, like "John joined the stream". It only works on a few sites currently, but more can be added in time. (tiktok, for example, included)
