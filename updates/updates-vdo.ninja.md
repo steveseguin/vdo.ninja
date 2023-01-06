@@ -1,5 +1,22 @@
 # Updates - VDO.Ninja
 
+#### January 4 <a href="#august-31" id="august-31"></a>
+
+* Added support for remote PowerPoint slide control. (previous/next slide)\
+  \-- Documented things quite a bit here: [https://github.com/steveseguin/powerpoint\_remote](https://github.com/steveseguin/powerpoint\_remote)\
+  \-- I've only tested with Windows + PowerPoint so far, but it can be tweaked to work with more than PPT without much trouble.\
+  \-- Uses AutoHotKey + VDO.Ninja + MIDI to achieve the result; quite a few different ways implement it, with samples provided\
+  \-- built-in basic controller added, via `&powerpoint` (aliases: `&slides`, `&ppt`, `&pptcontrols`)\
+  \-- IFRAME sample app provided with larger buttons and sample code to add more custom buttons/actions if needed. (start/stop/etc)\
+  \-- HTTP / WSS remote control also added; `https://api.vdo.ninja/YOURAPIKEY/nextSlide` and `prevSlide`\
+  ``-- Local Streamdeck support also working, via MIDI.\
+  \-- YouTube Tutorial: [https://youtu.be/ORH8betTt8Y](https://youtu.be/ORH8betTt8Y)\
+  ![](<../.gitbook/assets/image (18).png>)![](../.gitbook/assets/image.png)\
+  \
+  \* on alpha at vdo.ninja/alpha/
+
+### 2022
+
 #### **December 30** <a href="#august-31" id="august-31"></a>
 
 * Added [`&groupview`](../advanced-settings/setup-parameters/and-groupview-alpha.md), which is the same as [`&group`](../general-settings/and-group.md), except it lets you see those groups without actually needing to join them with your mic/camera. (There's no button in the directors/guest view for this, since there isn't a need yet for that.)
@@ -1017,6 +1034,8 @@ February 23
 * Added a 'clear' button to the download links in the chat.\
   ![Bild](https://media.discordapp.net/attachments/701232125831151697/942652225455534090/unknown.png?width=400\&height=205)
 
+## [Version 21 Release](../older-releases/v21.md)
+
 #### February 13
 
 * I'm going to consider v20.8 as v21.0 going forward, which is currently on beta ([https://vdo.ninja/beta/](https://vdo.ninja/beta/))
@@ -1024,6 +1043,6 @@ February 23
 * Please note: I am intending to push v21 to production tonight, around midnight EST, which should not cause disruptions; it's small changes compared to what's on production now. The goal of pushing it is to allow for v20.4 to be archived, creating a clear division in versions to be made. v21 has been mainly bug fixes and tweaks, but i'll work on its release notes still.
 * Any testing of beta today though would be VERY welcomed. If you are able to demonstrate an issue that exists in beta (v21) that does not exist in v20.4, please provide me the details of how you are able to replicate it. Android/iOS has had their group-room performance/quality allowances tweaked, and Android has had its h264 encoder profile tweaked to avoid it failing on some devices. I've had a few users mention higher CPU loads and audio sync issues since v20.4, but I am unable to reproduce any higher CPU load myself.
 
-#### **Previous updates**
+## **Previous updates**
 
 {% embed url="https://docs.vdo.ninja/releases" %}
