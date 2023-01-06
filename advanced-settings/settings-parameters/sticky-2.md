@@ -21,12 +21,12 @@ Adds a built-in basic controller to control PowerPoint.
 
 Detailed information on how to control PowerPoint remotely:
 
-{% content-ref url="../../guides/how-to-control-powerpoint-remote-with-vdo.ninja.md" %}
-[how-to-control-powerpoint-remote-with-vdo.ninja.md](../../guides/how-to-control-powerpoint-remote-with-vdo.ninja.md)
+{% content-ref url="../../guides/how-to-control-powerpoint-remotely-with-vdo.ninja.md" %}
+[how-to-control-powerpoint-remotely-with-vdo.ninja.md](../../guides/how-to-control-powerpoint-remotely-with-vdo.ninja.md)
 {% endcontent-ref %}
 
 ## Related
 
-{% content-ref url="../../guides/how-to-control-powerpoint-remote-with-vdo.ninja.md" %}
-[how-to-control-powerpoint-remote-with-vdo.ninja.md](../../guides/how-to-control-powerpoint-remote-with-vdo.ninja.md)
+{% content-ref url="../../guides/how-to-control-powerpoint-remotely-with-vdo.ninja.md" %}
+[how-to-control-powerpoint-remotely-with-vdo.ninja.md](../../guides/how-to-control-powerpoint-remotely-with-vdo.ninja.md)
 {% endcontent-ref %}

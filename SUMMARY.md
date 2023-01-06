@@ -66,7 +66,7 @@
   * [How to transfer guests to other rooms](getting-started/rooms/transfer-rooms.md)
   * [How to set up a simple chat room](guides/how-to-set-up-a-simple-chat-room.md)
   * [How to screen share in 1080p](guides/how-to-screen-share-in-1080p.md)
-  * [How to control PowerPoint remote with VDO.Ninja](guides/how-to-control-powerpoint-remote-with-vdo.ninja.md)
+  * [How to control PowerPoint remotely with VDO.Ninja](guides/how-to-control-powerpoint-remotely-with-vdo.ninja.md)
 * [Advanced Options (URL Parameters)](advanced-settings.md)
   * [Most common Parameters](advanced-settings/cheat-sheet-of-basic-parameters/README.md)
     * [\&push](https://docs.vdo.ninja/advanced-settings/source-parameters/push)
