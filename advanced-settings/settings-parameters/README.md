@@ -26,6 +26,7 @@ You can use them for publisher, viewer and director URLs.
 | ``[`&hidehome`](and-hidehome.md)\*                   | Hides the VDO.Ninja homepage and many links that lead to it                        |
 | ``[`&hidetranslate`](and-hidetranslate.md)\*         | Hides the option to translate VDO.Ninja                                            |
 | ``[`&clock`](and-clock.md)\*                         | Shows the current time in the lower right                                          |
+| ``[`&powerpoint`](sticky-2.md) (alpha)               | Adds a built-in basic controller to control PowerPoint                             |
 
 \*NEW IN VERSION 22
 

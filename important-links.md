@@ -46,6 +46,7 @@ description: All useful links you might take a look at
 | Electron                                                                          | [https://vdo.ninja/electron](https://vdo.ninja/electron)                                                                                               |
 | Video streaming quality test                                                      | [https://vdo.ninja/speedtest](https://vdo.ninja/speedtest)                                                                                             |
 | Remote Monitor                                                                    | [https://vdo.ninja/monitor](https://vdo.ninja/monitor)                                                                                                 |
+| Tech Demonstrations                                                               | [https://vdo.ninja/examples/](https://vdo.ninja/examples/)                                                                                             |
 | Domain-isolated hosted version                                                    | [https://isolated.vdo.ninja](https://isolated.vdo.ninja/)                                                                                              |
 | Companion                                                                         | [https://companion.vdo.ninja/](https://companion.vdo.ninja/)                                                                                           |
 | MIDI Controller App                                                               | [https://vdo.ninja/alpha/remotemidi](https://vdo.ninja/alpha/remotemidi)                                                                               |
@@ -61,25 +62,6 @@ description: All useful links you might take a look at
 | VDO.Ninja + Chat Overlay Auto Mixer                                               | [https://chat.overlay.ninja/automix](https://chat.overlay.ninja/automix)                                                                               |
 | VDO.Ninja + Social Stream Auto Mixer                                              | [https://socialstream.ninja/automix](https://socialstream.ninja/automix)                                                                               |
 | [WHIP](advanced-settings/mixer-scene-parameters/view-1.md) support for VDO.Ninja  | [https://whip.vdo.ninja/](https://whip.vdo.ninja/)                                                                                                     |
-
-### VDO.Ninja Tech Demonstrations
-
-| Overview                                                                                                                            | [https://vdo.ninja/examples/](https://vdo.ninja/examples/)                                                     |
-| ----------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------- |
-| How to use VDO.Ninja as a data transport tunneling service                                                                          | [https://vdo.ninja/examples/p2p.html](https://vdo.ninja/examples/p2p.html)                                     |
-| How to have a twitch live chat side-by-side with VDO.Ninja on the same screen (viewing Twitch chat while using VDO.Ninja on mobile) | [https://vdo.ninja/twitch](https://vdo.ninja/twitch)                                                           |
-| How to have a youtube live chat side-by-side with VDO.Ninja on the same screen                                                      | [https://vdo.ninja/examples/youtube.html](https://vdo.ninja/examples/youtube.html)                             |
-| How to have two VDO.Ninja windows (or any windows really) open on the same page; Picture-in-Picture style                           | [https://vdo.ninja/examples/dual.html](https://vdo.ninja/examples/dual.html)                                   |
-| How to transmit sensor and video data from a phone to a computer, drawing it to canvas.                                             | [https://vdo.ninja/examples/sensors.html](https://vdo.ninja/examples/sensors.html)                             |
-| Demonstrates the MIDI API for VDO.Ninja                                                                                             | [https://vdo.ninja/midi](https://vdo.ninja/midi)                                                               |
-| Demonstrates how to drag multiple windows around, if you wanted to create a custom layout of elements. (experimental)               | [https://vdo.ninja/examples/draggable.html](https://vdo.ninja/examples/draggable.html)                         |
-| Example of a chat-only interface for VDO.Ninja; maybe dockable into OBS even.                                                       | [https://vdo.ninja/examples/chatoverlay.html](https://vdo.ninja/examples/chatoverlay.html)                     |
-| iframe.outbound-stats.html demostrates how to get stats from VDO.Ninja using the IFRAME API                                         | [https://vdo.ninja/examples/iframe.outbound-stats.html](https://vdo.ninja/examples/iframe.outbound-stats.html) |
-| Lets you create passwords and related HASH values for VDO.Ninja rooms                                                               | [https://vdo.ninja/examples/changepass.html](https://vdo.ninja/examples/changepass.html)                       |
-| Webhid demonstrates how to interface with a USB device, like a streamdeck (mouse/keyboard not supported)                            | [https://vdo.ninja/webhid](https://vdo.ninja/webhid)                                                           |
-| A tool for letting you publish into VDO.Ninja, but then full-screen the window once setup, allowing for window-capturing into zoom. | [https://vdo.ninja/examples/zoom.html](https://vdo.ninja/examples/zoom.html)                                   |
-| Also hosted on github elsewhere, but it's an example of how to remotely control OBS using VDO.Ninja's tunneling abilities           | [https://vdo.ninja/examples/obs\_remote/index](https://vdo.ninja/examples/obs\_remote/index)                   |
-| Create a sample of how to apply a custom full-page overlay on top of VDO.Ninja                                                      | [https://vdo.ninja/alpha/examples/overlay](https://vdo.ninja/alpha/examples/overlay)                           |
 
 ### [Sponsor ❤](getting-started/sponsor.md)
 

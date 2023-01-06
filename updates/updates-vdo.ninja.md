@@ -6,12 +6,12 @@
   \-- Documented things quite a bit here: [https://github.com/steveseguin/powerpoint\_remote](https://github.com/steveseguin/powerpoint\_remote)\
   \-- I've only tested with Windows + PowerPoint so far, but it can be tweaked to work with more than PPT without much trouble.\
   \-- Uses AutoHotKey + VDO.Ninja + MIDI to achieve the result; quite a few different ways implement it, with samples provided\
-  \-- built-in basic controller added, via `&powerpoint` (aliases: `&slides`, `&ppt`, `&pptcontrols`)\
-  \-- IFRAME sample app provided with larger buttons and sample code to add more custom buttons/actions if needed. (start/stop/etc)\
+  \-- built-in basic controller added, via [`&powerpoint`](../advanced-settings/settings-parameters/sticky-2.md) (aliases: `&slides`, `&ppt`, `&pptcontrols`)\
+  \-- IFRAME sample app provided with larger buttons and sample code to add more custom buttons/actions if needed. (start/stop/etc): [https://vdo.ninja/examples/powerpoint](https://vdo.ninja/examples/powerpoint)\
   \-- HTTP / WSS remote control also added; `https://api.vdo.ninja/YOURAPIKEY/nextSlide` and `prevSlide`\
   ``-- Local Streamdeck support also working, via MIDI.\
   \-- YouTube Tutorial: [https://youtu.be/ORH8betTt8Y](https://youtu.be/ORH8betTt8Y)\
-  ![](<../.gitbook/assets/image (18).png>)![](../.gitbook/assets/image.png)\
+  ![](../.gitbook/assets/image.png)![](<../.gitbook/assets/image (19).png>)\
   \
   \* on alpha at vdo.ninja/alpha/
 

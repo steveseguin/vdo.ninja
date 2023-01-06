@@ -32,7 +32,7 @@ Click the Add Group Chat to OBS button.
 
 If we were looking to just share our camera, and not a group scene, we could instead just use "Add your Camera to OBS". This guide will assume you are using a group scene though.
 
-<figure><img src="../.gitbook/assets/image (17) (3).png" alt=""><figcaption></figcaption></figure>
+<figure><img src="../.gitbook/assets/image (17) (4).png" alt=""><figcaption></figcaption></figure>
 
 ### Step 3.
 
