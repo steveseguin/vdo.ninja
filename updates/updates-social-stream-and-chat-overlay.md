@@ -8,7 +8,7 @@
 * Google Meet support added to Social Stream. (you'll need to toggle it on explicitly to use, for privacy reasons)\
   ![](../.gitbook/assets/image.png)
 
-## 2022
+### 2022
 
 #### **December 30**
 
