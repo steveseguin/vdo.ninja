@@ -3,6 +3,10 @@
 [social-stream.md](../steves-helper-apps/social-stream.md "mention")\
 [chat-overlay.md](../steves-helper-apps/chat-overlay.md "mention")
 
+#### **January 9**
+
+* Added a toggle to hide !commands from chat in Social Stream
+
 #### **January 6**
 
 * Google Meet support added to Social Stream. (you'll need to toggle it on explicitly to use, for privacy reasons)\
