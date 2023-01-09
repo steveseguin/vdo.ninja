@@ -1,4 +1,4 @@
-# How to control PowerPoint remote with VDO.Ninja
+# How to control PowerPoint remotely with VDO.Ninja
 
 ### Overview
 
@@ -20,6 +20,6 @@ Remote control PowerPoint with VDO.Ninja
 
 ### Images
 
-<figure><img src="../.gitbook/assets/image.png" alt=""><figcaption><p><code></code><a href="../advanced-settings/settings-parameters/sticky-2.md"><code>&#x26;powerpoint</code></a> as a URL parameter</p></figcaption></figure>
+<figure><img src="../.gitbook/assets/image (5).png" alt=""><figcaption><p><code></code><a href="../advanced-settings/settings-parameters/sticky-2.md"><code>&#x26;powerpoint</code></a> as a URL parameter</p></figcaption></figure>
 
 <figure><img src="../.gitbook/assets/image (19).png" alt=""><figcaption><p>Remote PowerPoint Web control via VDO.Ninja (IFrame API)</p></figcaption></figure>

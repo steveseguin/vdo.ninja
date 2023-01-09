@@ -26,12 +26,12 @@
 #### **December 22**
 
 * Added an option to randomize the color of names in Social Stream if no name color is already provided.\
-  ![](<../.gitbook/assets/image (3).png>)![](<../.gitbook/assets/image (174).png>)
+  ![](<../.gitbook/assets/image (3) (2).png>)![](<../.gitbook/assets/image (174).png>)
 
 #### **December 21**
 
 * Social Stream's dock page now shows the Twitch avatars in the chat stream; it's not just limited to the featured-chat overlay.\
-  ![](<../.gitbook/assets/image (2).png>)
+  ![](<../.gitbook/assets/image (2) (9).png>)
 
 #### **December 18**
 
@@ -59,7 +59,7 @@
   ![](<../.gitbook/assets/image (2) (3).png>)
 * Fixed WhatsApp support for Social Stream
 * Added Instagram post (non-live) comments to Social Stream. You will need to enable this via the menu, since this is a pretty non-obvious integration for Social Stream.\
-  ![](<../.gitbook/assets/image (4) (5).png>)![](<../.gitbook/assets/image (5).png>)
+  ![](<../.gitbook/assets/image (4) (5).png>)![](<../.gitbook/assets/image (5) (1).png>)
 * Support for locals.com added to Social Stream
 
 #### **December 5**

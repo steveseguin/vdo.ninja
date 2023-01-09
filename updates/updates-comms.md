@@ -12,7 +12,7 @@
 #### November 24
 
 * Fixed a bug, where the hot key labels (0 to 9), cropped sometimes when the corresponding group button was pressed.\
-  ![](<../.gitbook/assets/image (5) (1).png>)
+  ![](<../.gitbook/assets/image (5) (1) (3).png>)
 
 #### November 22
 
@@ -62,4 +62,4 @@
     or just go to [https://vdo.ninja/alpha/comms](https://vdo.ninja/alpha/comms) to quick start without presetting anything\
 
 
-    <figure><img src="../.gitbook/assets/image (4) (3).png" alt=""><figcaption></figcaption></figure>
+    <figure><img src="../.gitbook/assets/image (4) (3) (1).png" alt=""><figcaption></figcaption></figure>

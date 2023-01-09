@@ -1,5 +1,21 @@
 # Updates - VDO.Ninja
 
+#### January 9 <a href="#august-31" id="august-31"></a>
+
+* Re-worked the animation logic for VDO.Ninja; should be much smoother and accurate now.
+* When screen-sharing with [`&screensharetype=3`](../newly-added-parameters/and-screensharetype.md), you'll now see your screen share preview, in the same way the normal screen share mode works. This allows it to work with custom layouts, as before it was hidden there, too.
+* The UI for the director's guest control boxes have been reworked; hoping this makes it easier for external CSS customization.
+* Added some added connection stats; initial capture resolution/frame of the remote publisher, along with aspect ratio iframe api updates. This should make it easier for iframe wrappers of VDO.Ninja to have accurate placeholders for incoming video feeds during loading.
+* The remote http API sample page was updated to include some recent additional button options, specifically relating to joining/leaving groups.
+* Added an option called `&widget`, which lets you pass a URIComponent-encoded URL value. It will load a side-bar with that page as an IFRAME embed, with support for YouTube/Twitch specifically added.\
+  \-- The director of a room also has the option to enable/disable the widget function for everyone in the room via the room settings menu.\
+  ![](<../.gitbook/assets/image (2).png>)\
+  \-- This was designed for Twitch / YouTube / Social Stream chat, but could in theory work with any CORS-friendly site, such as a third-party web tool.\
+  \-- If the director uses `&widget`, it will auto sync that with all guests as they connect. I'll try to find ways to make it easier to resize/minimize in the future.\
+  ![](../.gitbook/assets/image.png)\
+  \
+  \*\*changes on alpha at vdo.ninja/alpha/
+
 #### January 4 <a href="#august-31" id="august-31"></a>
 
 * Added support for remote PowerPoint slide control. (previous/next slide)\
@@ -11,7 +27,7 @@
   \-- HTTP / WSS remote control also added; `https://api.vdo.ninja/YOURAPIKEY/nextSlide` and `prevSlide`\
   ``-- Local Streamdeck support also working, via MIDI.\
   \-- YouTube Tutorial: [https://youtu.be/ORH8betTt8Y](https://youtu.be/ORH8betTt8Y)\
-  ![](../.gitbook/assets/image.png)![](<../.gitbook/assets/image (19).png>)\
+  ![](<../.gitbook/assets/image (5).png>)![](<../.gitbook/assets/image (19).png>)\
   \
   \* on alpha at vdo.ninja/alpha/
 
@@ -168,7 +184,7 @@
 #### **November 22** <a href="#august-31" id="august-31"></a>
 
 * Made the [`&clock`](../advanced-settings/settings-parameters/and-clock.md) and timer overlay be something you can 'pop out' and overlay as a native picture-in-picture element; just right-click it and select pop-out from the context menu.\
-  ![](<../.gitbook/assets/image (1).png>)![](<../.gitbook/assets/image (2) (8).png>)
+  ![](<../.gitbook/assets/image (1) (1).png>)![](<../.gitbook/assets/image (2) (8).png>)
 * Fixed an issue where the right-click -> edit URL feature in [v22](../releases/v22.md) broke
 * Viewer-side [`&audiocodec=pcm`](../advanced-settings/audio-parameters/minptime-1.md) is now available as an audio codec option; this is 32khz, 16bit, mono, and uncompressed, so \~512-kbps bitrate. You'll need the sender to have `&insertablestreams` applied to their URL for this to work currently, as it requires the sender to enable a special mode that allows for custom codecs. This is very experimental at the moment, so its still a WIP.
 * `&micsamplerate` (`&msr`) added, which lets you specify the capture audio sample rate. Also added purely for experimental reasons; I don't recommend touching.\
@@ -391,7 +407,7 @@
 
 * Firefox won't playback stereo audio as stereo by default now; it will require the [`&stereo`](../general-settings/stereo.md)/[`&proaudio`](../advanced-settings/audio-parameters/and-proaudio.md) flag to enable stereo playback. [`&mono`](../advanced-settings/view-parameters/mono.md) also works with Firefox now, allowing you to use `&proaudio&mono` with Firefox. (this was just a quirk of Firefox's default settings vs Chrome that I long needed to address)
 *   **M**ade the little upload arrow in the top-right color coded in response to the detected 'average' upload connection quality; won't be supported by all browsers, but most.\
-    ![](<../.gitbook/assets/image (5) (1) (3).png>)
+    ![](<../.gitbook/assets/image (5) (1) (3) (1).png>)
 
     \
     \*\* updated both alpha and beta.
@@ -960,7 +976,7 @@
 * Added messaging for mac users who try to screen share and get denied; MacOS instructions are added on how to setup permissions.\
   ![](<../.gitbook/assets/image (10).png>)
 * Added messaging for those with surround gaming headsets or using VMs on how to handle no-audio-capture errors when screen sharing.\
-  ![](<../.gitbook/assets/image (3) (2).png>)
+  ![](<../.gitbook/assets/image (3) (2) (2).png>)
 * Tweaked [`&screensharetype=3`](../newly-added-parameters/and-screensharetype.md) a bit; [`&aec`](../source-settings/aec.md) and such will impact it now.
 *   Fixed an issue where the screen share's audio didn't get correctly stopped in cases where it should have been.
 

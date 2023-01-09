@@ -2,6 +2,12 @@
 
 [mixer-app.md](../steves-helper-apps/mixer-app.md "mention")
 
+#### January 9
+
+* The Mixer App now has the director defaulting to [`&screensharetype=3`](../newly-added-parameters/and-screensharetype.md), so they can screen share and host a camera at the same time.
+
+### 2022
+
 #### December 18
 
 * Fixed a couple minor CSS issues, such as the hot keys being hidden at times, the control bar being partially offscreen, or the mini-preview breaking the control bar when toggling views. (**partially pushed to production; a full fix on alpha)**
