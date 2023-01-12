@@ -12,7 +12,7 @@
   ![](<../.gitbook/assets/image (2).png>)\
   \-- This was designed for Twitch / YouTube / Social Stream chat, but could in theory work with any CORS-friendly site, such as a third-party web tool.\
   \-- If the director uses `&widget`, it will auto sync that with all guests as they connect. I'll try to find ways to make it easier to resize/minimize in the future.\
-  ![](../.gitbook/assets/image.png)\
+  ![](<../.gitbook/assets/image (6).png>)\
   \
   \*\*changes on alpha at vdo.ninja/alpha/
 
@@ -149,7 +149,7 @@
   \-- also while using `&fullscreenbutton`, the previous little 'full window' button in the top-right of videos (if in a group room) will also auto-F11 and isolate that video, rather than just isolate the video.\
   \-- you can still right-click and select "full-window" on any video to isolate it without going full screen, if you need that. -- you can test by opening two such guest links: [https://vdo.ninja/alpha/?fsb\&room=test123123123\&webcam\&autostart](https://vdo.ninja/alpha/?fsb\&room=test123123123\&webcam\&autostart)\
   \-- ultimately I'd like to override the native video full screen button with this behaviour, when `&fullscreenbutton` is used, but I'm still working on that aspect.\
-  ![](<../.gitbook/assets/image (7).png>)
+  ![](<../.gitbook/assets/image (7) (1).png>)
 * Fixed a bug where the guest screen share, while in broadcast mode, was misplaced on the screen.
 * Fixed a bug where [`&language`](../advanced-settings/settings-parameters/and-language.md) didn't work in translating a couple elements, like "join with camera".
 * Re-enabled [`&limittotalbitrate`](../advanced-settings/video-bitrate-parameters/limittotalbitrate.md) for non-guests, as it was causing me some problems before with versus.cam. It might still be causing issues, so more testing is needed.
@@ -195,7 +195,7 @@
 
 * Some advanced audio-related VDO.Ninja updates:\
   \-- I show the audio codec now used in the stats, along with whether audio forward error correction (FEC) is on or not (on by default)\
-  ![](<../.gitbook/assets/image (6).png>)\
+  ![](<../.gitbook/assets/image (6) (2).png>)\
   \-- [`&nofec`](../advanced-settings/audio-parameters/minptime-3.md) on the viewer side can disable FEC.\
   \-- [`&audiocodec`](../advanced-settings/audio-parameters/minptime-1.md) on the viewer side can let you specify the audio codec; `opus` (default), `pcmu`, `pcma`, `isac`, `g722` and `red`\
   \-- [`&audiocodec`](../advanced-settings/audio-parameters/minptime-1.md)`=red` is pretty much sending two opus streams, with one as a backup in case of packet loss; support in Chromium 97 and up, but the only way I can so far tell that it is working is to check if the audio bitrate has doubled\

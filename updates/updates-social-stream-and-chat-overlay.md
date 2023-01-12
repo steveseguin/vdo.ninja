@@ -110,7 +110,7 @@
 #### **October 2**
 
 * Updated Socialstream to support custom themes/templates. I've provided an example theme that you can use or base your own themes on. see: [https://github.com/steveseguin/social\_stream/tree/main/themes](https://github.com/steveseguin/social\_stream/tree/main/themes) for more.\
-  ![](<../.gitbook/assets/image (7) (1).png>)
+  ![](<../.gitbook/assets/image (7) (1) (2).png>)
 * Added more animated style options for how messages appear into the chat stream, such as slide in, fade in, and drop in.\
   ![](<../.gitbook/assets/image (8) (1).png>)
 
