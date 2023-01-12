@@ -2,6 +2,10 @@
 
 [mixer-app.md](../steves-helper-apps/mixer-app.md "mention")
 
+#### January 11
+
+* URL-param pass-thru added to the Mixer App. So [`&meshcast`](../newly-added-parameters/and-meshcast.md) now works with the Mixer App, etc.
+
 #### January 9
 
 * The Mixer App now has the director defaulting to [`&screensharetype=3`](../newly-added-parameters/and-screensharetype.md), so they can screen share and host a camera at the same time.

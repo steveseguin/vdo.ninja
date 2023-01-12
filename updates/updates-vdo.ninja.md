@@ -1,5 +1,9 @@
 # Updates - VDO.Ninja
 
+#### January 11 <a href="#august-31" id="august-31"></a>
+
+* More fixes on alpha; [`&screensharetype=3`](../newly-added-parameters/and-screensharetype.md) related fixes
+
 #### January 9 <a href="#august-31" id="august-31"></a>
 
 * Re-worked the animation logic for VDO.Ninja; should be much smoother and accurate now.

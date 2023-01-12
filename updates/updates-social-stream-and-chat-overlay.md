@@ -3,6 +3,10 @@
 [social-stream.md](../steves-helper-apps/social-stream.md "mention")\
 [chat-overlay.md](../steves-helper-apps/chat-overlay.md "mention")
 
+#### **January 11**
+
+* Social Stream has documentation, sample code, and better support for server-side message sourcing -- so if you want to issue messages from a server (instead of web scraping) to the service, that works now. ([https://socialstream.ninja/sampleapi.html](https://socialstream.ninja/sampleapi.html))
+
 #### **January 9**
 
 * Added a toggle to hide !commands from chat in Social Stream
