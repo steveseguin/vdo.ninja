@@ -22,7 +22,7 @@
   \-- Documented things quite a bit here: [https://github.com/steveseguin/powerpoint\_remote](https://github.com/steveseguin/powerpoint\_remote)\
   \-- I've only tested with Windows + PowerPoint so far, but it can be tweaked to work with more than PPT without much trouble.\
   \-- Uses AutoHotKey + VDO.Ninja + MIDI to achieve the result; quite a few different ways implement it, with samples provided\
-  \-- built-in basic controller added, via [`&powerpoint`](../advanced-settings/settings-parameters/sticky-2.md) (aliases: `&slides`, `&ppt`, `&pptcontrols`)\
+  \-- built-in basic controller added, via [`&powerpoint`](../advanced-settings/settings-parameters/and-powerpoint-alpha.md) (aliases: `&slides`, `&ppt`, `&pptcontrols`)\
   \-- IFRAME sample app provided with larger buttons and sample code to add more custom buttons/actions if needed. (start/stop/etc): [https://vdo.ninja/examples/powerpoint](https://vdo.ninja/examples/powerpoint)\
   \-- HTTP / WSS remote control also added; `https://api.vdo.ninja/YOURAPIKEY/nextSlide` and `prevSlide`\
   ``-- Local Streamdeck support also working, via MIDI.\
@@ -41,10 +41,10 @@
 
 #### **December 27** <a href="#august-31" id="august-31"></a>
 
-* Added [`&mididelay=1000`](../advanced-settings/api-and-midi-parameters/midiin-1.md), which lets you precisely delay the MIDI play-out from VDO.Ninja to your MIDI device when using [`&midiin`](../midi-settings/midiin.md), irrespective of network latency. Use case: If you have a remote drum machine, you can have it play out the beat exactly 4-bars ahead, allowing for music jamming types with even high ping delays between locations.
+* Added [`&mididelay=1000`](../advanced-settings/api-and-midi-parameters/and-mididelay-alpha.md), which lets you precisely delay the MIDI play-out from VDO.Ninja to your MIDI device when using [`&midiin`](../midi-settings/midiin.md), irrespective of network latency. Use case: If you have a remote drum machine, you can have it play out the beat exactly 4-bars ahead, allowing for music jamming types with even high ping delays between locations.
 * Added the option to right click a remote video and add/adjust the [`&buffer`](../advanced-settings/view-parameters/buffer.md) delay for that specific video dynamically.\
   ![](<../.gitbook/assets/image (175).png>)
-* Added [`&buffer2=500`](../advanced-settings/video-parameters/buffer-1.md), which is the same as [`&buffer`](../advanced-settings/view-parameters/buffer.md), but instead also tells the system to include the round-trip-time in the buffer delay calculation. This way 500-ms of buffer on a connection that has a 200ms ping time will result in a smaller 300-ms buffer, leading to an end-to-end playout delay of \~500ms.\
+* Added [`&buffer2=500`](../advanced-settings/video-parameters/and-buffer2-alpha.md), which is the same as [`&buffer`](../advanced-settings/view-parameters/buffer.md), but instead also tells the system to include the round-trip-time in the buffer delay calculation. This way 500-ms of buffer on a connection that has a 200ms ping time will result in a smaller 300-ms buffer, leading to an end-to-end playout delay of \~500ms.\
   \-- won't work that well with Meshcast.\
   \-- not super precise, but on a stable connection maybe within 20-ms of flux?\
   \
@@ -52,7 +52,7 @@
 
 #### **December 21** <a href="#august-31" id="august-31"></a>
 
-* Added experimental "[WHIP](../advanced-settings/mixer-scene-parameters/view-1.md)" support to VDO.Ninja, which means in the near future you'll be able to publish directly from OBS to VDO.Ninja without a virtual camera. There's some big caveats to it all, so I don't recommend it over the normal method to most users, but we'll see how it evolves. ([https://vdo.ninja/alpha/?whip=xxx](https://vdo.ninja/alpha/?whip=xxx) + [https://whip.vdo.ninja/](https://whip.vdo.ninja/) + xxx)\
+* Added experimental "[WHIP](../advanced-settings/mixer-scene-parameters/and-whip-alpha.md)" support to VDO.Ninja, which means in the near future you'll be able to publish directly from OBS to VDO.Ninja without a virtual camera. There's some big caveats to it all, so I don't recommend it over the normal method to most users, but we'll see how it evolves. ([https://vdo.ninja/alpha/?whip=xxx](https://vdo.ninja/alpha/?whip=xxx) + [https://whip.vdo.ninja/](https://whip.vdo.ninja/) + xxx)\
   \
   YouTube tutorial: [https://youtu.be/ynSOE2d4Z9Y](https://youtu.be/ynSOE2d4Z9Y)
 
@@ -92,7 +92,7 @@
 
 #### **December 9** <a href="#august-31" id="august-31"></a>
 
-* Add [`&clearstorage`](../advanced-settings/settings-parameters/sticky-1.md) (aka, `&clear`). This will clear all the saved user preferences for all sessions, including [`&sticky`](../general-settings/sticky.md)'d data, director settings, any camera and microphone settings, and probably a couple other small things. This also includes the "default" saved stated of camera settings before adjusted.\
+* Add [`&clearstorage`](../advanced-settings/settings-parameters/and-clearstorage-alpha.md) (aka, `&clear`). This will clear all the saved user preferences for all sessions, including [`&sticky`](../general-settings/sticky.md)'d data, director settings, any camera and microphone settings, and probably a couple other small things. This also includes the "default" saved stated of camera settings before adjusted.\
   I also added a button to manually do this via the User menu settings.\
   ![](<../.gitbook/assets/image (13).png>)\
   \*\* on alpha
@@ -100,7 +100,7 @@
 #### **December 8** <a href="#august-31" id="august-31"></a>
 
 * Added "change URL" permissions to the [`&consent`](../source-settings/consent.md) flag. That is, when using `&consent` on the guest URL, the director can remotely change the guest's URL without additional permission -- it will just change. (`&consent` already gave the director controls to remotely change mic / camera) \* added to alpha
-* Added [`&fakeguests=N`](../advanced-settings/mixer-scene-parameters/scenetype.md) (or `&fakefeeds`) as a parameter. It creates simulated guest videos, based on the value passed to the parameter, using real-guests where possible. The default value is 4.\
+* Added [`&fakeguests=N`](../advanced-settings/mixer-scene-parameters/and-fakeguests-alpha.md) (or `&fakefeeds`) as a parameter. It creates simulated guest videos, based on the value passed to the parameter, using real-guests where possible. The default value is 4.\
   \-- You can use this feature to help position and visualize what [`&cover`](../advanced-settings/view-parameters/cover.md), [`&portrait`](../advanced-settings/view-parameters/and-portrait.md), etc. looks like.\
   \-- This doesn't yet support labels or layouts really, but I welcome feedback.\
   \-- Currently I just threw up a video of me, 16:9, of 500-kbps.\

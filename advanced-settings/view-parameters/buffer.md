@@ -48,8 +48,8 @@ The option to right click a remote video and add/adjust the [`&buffer`](buffer.m
 
 ## Related
 
-{% content-ref url="../video-parameters/buffer-1.md" %}
-[buffer-1.md](../video-parameters/buffer-1.md)
+{% content-ref url="../video-parameters/and-buffer2-alpha.md" %}
+[and-buffer2-alpha.md](../video-parameters/and-buffer2-alpha.md)
 {% endcontent-ref %}
 
 {% content-ref url="sync.md" %}

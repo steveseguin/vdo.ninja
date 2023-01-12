@@ -27,6 +27,6 @@ Parameters specified for the director's control panel; have to be used together 
 | ``[`&showconnections`](../settings-parameters/and-showconnections.md)\*    | Displays the total number of p2p connections of a remote stream                               |
 | ``[`&novice`](and-novice.md)\*                                             | Hides some advanced guest options in the director's control center                            |
 | ``[`&layouts`](and-layouts.md)\*                                           | An ordered array of layouts, which can be used to switch between using the API layouts action |
-| ``[`&widget`](../settings-parameters/sticky-3.md) (alpha)                  | Will load a side-bar with an IFrame embed, with support for YouTube / Twitch / Social Stream  |
+| ``[`&widget`](../settings-parameters/and-widget-alpha.md) (alpha)          | Will load a side-bar with an IFrame embed, with support for YouTube / Twitch / Social Stream  |
 
 \*NEW IN VERSION 22

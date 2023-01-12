@@ -21,6 +21,6 @@ There is a toggle in the director's room which adds `&sticky` to the guest's inv
 
 ## Related
 
-{% content-ref url="../advanced-settings/settings-parameters/sticky-1.md" %}
-[sticky-1.md](../advanced-settings/settings-parameters/sticky-1.md)
+{% content-ref url="../advanced-settings/settings-parameters/and-clearstorage-alpha.md" %}
+[and-clearstorage-alpha.md](../advanced-settings/settings-parameters/and-clearstorage-alpha.md)
 {% endcontent-ref %}

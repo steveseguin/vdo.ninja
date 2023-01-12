@@ -1,43 +1,43 @@
 ---
-description: Creates simulated guest videos
+description: Shows only the last added video to a scene
 ---
 
-# \&fakeguests (alpha)
+# \&scenetype
 
-Viewer-Side Option! ([`&view`](../view-parameters/view.md), [`&scene`](../view-parameters/scene.md), [`&room`](../../general-settings/room.md))\
-\*only available on [vdo.ninja/alpha](https://vdo.ninja/alpha/)
+Viewer-Side Option! ([`&scene`](../view-parameters/scene.md))
 
 ## Aliases
 
-* `&fakefeeds`
+* `&type`
 
 ## Options
 
-| Value            | Description                                                                |
-| ---------------- | -------------------------------------------------------------------------- |
-| (integer number) | creates simulated guest videos, based on the value passed to the parameter |
-| (no value given) | 4 fakeguests added                                                         |
+| Value | Description                                                                                                                                               |
+| ----- | --------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `1`   | just shows the last guest that was added in the scene, but doesn't mute the previous guests                                                               |
+| `2`   | just shows the last guest that was added in the scene                                                                                                     |
+| `3`   | the general idea is it will only show the video that is in a particular ordered position (default, position = 1), rather than all the videos in the scene |
 
 ## Details
 
-`&fakeguests=N` creates simulated guest videos, based on the value passed to the parameter, using real-guests where possible. The default value is 4.&#x20;
+You can change the behaviour of scenes a bit with this parameter.
 
-You can use this feature to help position and visualize what [`&cover`](../view-parameters/cover.md), [`&portrait`](../view-parameters/and-portrait.md), etc. looks like.
+`&scenetype` can be set to `1` or `2`, which overrides the default scene state.
 
-This doesn't yet support labels or layouts really, but I welcome feedback. Currently I just threw up a video of me, 16:9, of 500-kbps.
+Scene state of 1 and 2 will only show the last video added to a group scene. `&scenetype=2` will mute the other videos, while `&scenetype=1` will not mute previously added videos.
 
-You don't actually need to create a room / scene to play with it.\
-\
-Try it at: [https://vdo.ninja/alpha/?room=xxxxtestxxxx\&scene\&cover\&square\&fakeguests=7](https://vdo.ninja/alpha/?room=xxxxtestxxxx\&scene\&cover\&square\&fakeguests=7)
+`&scenetype=3` - Usage is like this: `&scene&room=roomname&scenetype=3&order=1` , where [`&order=N`](../../source-settings/order.md) is optional. This feature isn't set in stone yet, but the general idea is it will only show the video that is in a particular ordered position (default, position = 1), rather than all the videos in the scene. When someone leaves, the spots are recalculated. The order that the positions are based on is calculated via alphanumeric sorting of connection IDs, though I wish to improve this to be probably sync with the director's order. Anyways, this feature was a result of a user request.
 
-<figure><img src="../../.gitbook/assets/image (16).png" alt=""><figcaption></figcaption></figure>
+This URL parameter option is a bit of a hack currently and may be replaced in the future.
+
+This parameter is added to scene view links.
 
 ## Related
 
-{% content-ref url="../view-parameters/cover.md" %}
-[cover.md](../view-parameters/cover.md)
-{% endcontent-ref %}
-
 {% content-ref url="../view-parameters/scene.md" %}
 [scene.md](../view-parameters/scene.md)
+{% endcontent-ref %}
+
+{% content-ref url="../../source-settings/order.md" %}
+[order.md](../../source-settings/order.md)
 {% endcontent-ref %}
