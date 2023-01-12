@@ -11,11 +11,11 @@
 * The UI for the director's guest control boxes have been reworked; hoping this makes it easier for external CSS customization.
 * Added some added connection stats; initial capture resolution/frame of the remote publisher, along with aspect ratio iframe api updates. This should make it easier for iframe wrappers of VDO.Ninja to have accurate placeholders for incoming video feeds during loading.
 * The remote http API sample page was updated to include some recent additional button options, specifically relating to joining/leaving groups.
-* Added an option called `&widget`, which lets you pass a URIComponent-encoded URL value. It will load a side-bar with that page as an IFRAME embed, with support for YouTube/Twitch specifically added.\
+* Added an option called [`&widget`](../advanced-settings/settings-parameters/and-widget-alpha.md), which lets you pass a URIComponent-encoded URL value. It will load a side-bar with that page as an IFRAME embed, with support for YouTube/Twitch specifically added.\
   \-- The director of a room also has the option to enable/disable the widget function for everyone in the room via the room settings menu.\
   ![](<../.gitbook/assets/image (2).png>)\
   \-- This was designed for Twitch / YouTube / Social Stream chat, but could in theory work with any CORS-friendly site, such as a third-party web tool.\
-  \-- If the director uses `&widget`, it will auto sync that with all guests as they connect. I'll try to find ways to make it easier to resize/minimize in the future.\
+  \-- If the director uses [`&widget`](../advanced-settings/settings-parameters/and-widget-alpha.md), it will auto sync that with all guests as they connect. I'll try to find ways to make it easier to resize/minimize in the future.\
   ![](<../.gitbook/assets/image (6).png>)\
   \
   \*\*changes on alpha at vdo.ninja/alpha/
