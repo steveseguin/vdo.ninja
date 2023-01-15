@@ -7,13 +7,24 @@
 * Updated Raspberry.Ninja with Error Correction + Dynamic Bitrate support. This essentially makes the video stability substantially better, and it's even a bit adaptive now to changes in available bandwidth.
 
 ```
---nored  => Disable error correction. If you don't disable it, the bandwidth may be up to 2x higher than the target video bitrate.  I do not recommend removing, unless you're on a pristine connection.
+--nored  => Disable error correction. If you don't disable it,
+the bandwidth may be up to 2x higher than the target video bitrate.
+I do not recommend removing, unless you're on a pristine connection.
 
---noqos => "qos" will lower the bitrate of the video encoder if packet loss is detected. It won't lower it more than 5x (20% of target), but I find this works well to combat times where the network bandwidth is insufficient.  Error correction just doesn't work if it can't actually send enough data. Using --noqos disables this feature
+--noqos => "qos" will lower the bitrate of the video encoder if packet loss
+is detected. It won't lower it more than 5x (20% of target),
+but I find this works well to combat times where the network bandwidth is
+insufficient.  Error correction just doesn't work if it can't actually send
+enough data. Using --noqos disables this feature
 
-I lowered the default bitrate to 2500, which will be 5000-kbps with error correction on.  On a typical spotty WIFI connection, it might drop to 2000-kbps (4-mbps total bandwidth). 
+I lowered the default bitrate to 2500, which will be 5000-kbps with error
+correction on. On a typical spotty WIFI connection, it might drop to 2000-kbps
+(4-mbps total bandwidth). 
 
-I do NOT dynamically change the resolution, and 1500-kbps is about as low as 1080p will allow.  So, if on weak cellular or wifi, you might want to use 720p as the resolution. This should allow for a lower bitrate floor, allowing for use in bad environments.
+I do NOT dynamically change the resolution, and 1500-kbps is about as low as
+1080p will allow.  So, if on weak cellular or wifi, you might want to use 720p
+as the resolution. This should allow for a lower bitrate floor, allowing for
+use in bad environments.
  main
 ```
 

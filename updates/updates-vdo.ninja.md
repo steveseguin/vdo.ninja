@@ -22,7 +22,7 @@
 * The remote http API sample page was updated to include some recent additional button options, specifically relating to joining/leaving groups.
 * Added an option called [`&widget`](../advanced-settings/settings-parameters/and-widget-alpha.md), which lets you pass a URIComponent-encoded URL value. It will load a side-bar with that page as an IFRAME embed, with support for YouTube/Twitch specifically added.\
   \-- The director of a room also has the option to enable/disable the widget function for everyone in the room via the room settings menu.\
-  ![](<../.gitbook/assets/image (2).png>)\
+  ![](<../.gitbook/assets/image (2) (1).png>)\
   \-- This was designed for Twitch / YouTube / Social Stream chat, but could in theory work with any CORS-friendly site, such as a third-party web tool.\
   \-- If the director uses [`&widget`](../advanced-settings/settings-parameters/and-widget-alpha.md), it will auto sync that with all guests as they connect. I'll try to find ways to make it easier to resize/minimize in the future.\
   ![](<../.gitbook/assets/image (6).png>)\
@@ -429,7 +429,7 @@
 
 * When using [`&waitimage`](../advanced-settings/newly-added-parameters/and-waitimage.md), the specified 'waiting to connect' image will appear after all connections end. This is a bit different than the default behaviour of the spinner, which doesn't re-appear, but I assume if you're advanced enough to use the `&waitimage` option, you're okay with this.
 *   Added the option to "draw on the screen", which might be a useful tool for niche use cases where you might need to take notes, etc. It doesn't affix to videos themselves, but rather it's just a full-window transparent canvas overlay, You can start/stop/clear and select a couple style-types with this feature, via the settings -> User menu. You can also do `CTRL + ALT + D` to toggle this as needed.\
-    ![](<../.gitbook/assets/image (2) (1).png>)\
+    ![](<../.gitbook/assets/image (2) (1) (1).png>)\
 
 
     \*\* on alpha at vdo.ninja/alpha
@@ -893,7 +893,7 @@
 #### May 5
 
 * When using the [`&remote`](../general-settings/remote.md) control option, the viewer can now remotely hang-up the sender via the right-click menu. The sender needs to remote control enabled for this to work of course. \*\* on local dev, coming to beta soon.\
-  ![](<../.gitbook/assets/image (2) (1) (1).png>)
+  ![](<../.gitbook/assets/image (2) (1) (1) (2).png>)
 
 #### May 4
 
