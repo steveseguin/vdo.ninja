@@ -1,5 +1,14 @@
 # Updates - VDO.Ninja
 
+#### January 12 <a href="#august-31" id="august-31"></a>
+
+* Improved publishing stats when using [`&meshcast`](../newly-added-parameters/and-meshcast.md); server region + external watchURL are available now there.\
+  ![](../.gitbook/assets/image.png)
+* [`&screensharevideoonly`](../newly-added-parameters/and-screensharevideoonly.md) will hide the audio selection menu when screen sharing; it will also hide that warning message about no audio selected when screen sharing.
+* Fixed some issues with [`&viewwidth`](../advanced-settings/video-parameters/and-viewwidth.md) and [`&viewheight`](../advanced-settings/video-parameters/and-viewheight.md) (works like [`&scale`](../advanced-settings/view-parameters/scale.md), but tries to target certain resolutions instead (also from the viewer's side tho).\
+  \
+  \*\* pushed to alpha
+
 #### January 11 <a href="#august-31" id="august-31"></a>
 
 * More fixes on alpha; [`&screensharetype=3`](../newly-added-parameters/and-screensharetype.md) related fixes
