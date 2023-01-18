@@ -1,5 +1,13 @@
 # Updates - VDO.Ninja
 
+#### January 16 <a href="#august-31" id="august-31"></a>
+
+* New [turn server](../general-settings/turn.md) added to Washington DC area.
+* [`&website`](../source-settings/and-website.md) as a director now works again (auto shares a website to all guests)
+* If multiple mic inputs are selected, they will be auto-selected on page load (rather than just one mic only).\
+  \
+  \*\* changes on alpha
+
 #### January 12 <a href="#august-31" id="august-31"></a>
 
 * Improved publishing stats when using [`&meshcast`](../newly-added-parameters/and-meshcast.md); server region + external watchURL are available now there.\

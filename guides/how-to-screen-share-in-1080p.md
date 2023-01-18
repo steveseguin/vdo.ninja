@@ -26,3 +26,15 @@
 | ``[`&view=SOMESTREAMID`](../advanced-settings/view-parameters/view.md)``              | selects the stream ID                                                       |
 | ``[`&videobitrate=10000`](../advanced-settings/video-bitrate-parameters/bitrate.md)`` | sets the video bitrate to 10,000-kbps, you can change the value if you want |
 | ``[`&scale=100`](../advanced-settings/view-parameters/scale.md)``                     | tells the system to not scale down the screen share                         |
+
+{% hint style="info" %}
+If you have problems, you could add [`&codec=av1`](../advanced-settings/view-parameters/codec.md) to the viewer's side and see if it makes the screen share any better.
+{% endhint %}
+
+### Framerate
+
+Screen share in 60 FPS is the default, you can force it by adding [`&fps=60`](../advanced-settings/video-parameters/and-fps.md) to the source. If you get an error you could add [\&maxframerate=60](../source-settings/and-maxframerate.md) instead.
+
+{% hint style="warning" %}
+You may not achieve 60 FPS depending on your hardware, the browser or the type of screen share you use or the viewer uses. If you want to share a chrome window, the best way is to share the tab.
+{% endhint %}

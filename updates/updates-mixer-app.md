@@ -2,6 +2,13 @@
 
 [mixer-app.md](../steves-helper-apps/mixer-app.md "mention")
 
+#### January 16
+
+* You can specify the animation speed now
+* Manually enter values for element size/position (rather than just by dragging)
+* IFrame source support added, so you can specify a website as a source
+* Background images now display, even if no video stream is active
+
 #### January 11
 
 * URL-param pass-thru added to the Mixer App. So [`&meshcast`](../newly-added-parameters/and-meshcast.md) now works with the Mixer App, etc.
