@@ -36,5 +36,5 @@ If you have problems you could add [`&codec=av1`](../advanced-settings/view-para
 Screen share in 60 FPS is the default. You can force it by adding [`&fps=60`](../advanced-settings/video-parameters/and-fps.md) to the source. If you get an error you could add [`&maxframerate=60`](../source-settings/and-maxframerate.md) instead.
 
 {% hint style="warning" %}
-You may not achieve 60 FPS depending on your hardware, the browser or the type of screen share you use or the viewer uses. If you want to share a chrome window, the best way is to share the tab.
+You may not achieve 60 FPS depending on your hardware, the browser or the type of screen share you use or the viewer uses. Sharing a window or a chrome tab might give a higher frame rate than sharing the screen.
 {% endhint %}
