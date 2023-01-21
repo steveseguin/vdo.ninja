@@ -1,5 +1,36 @@
 # Updates - VDO.Ninja
 
+#### January 21 <a href="#august-31" id="august-31"></a>
+
+* added a little "pin" icon to the end of the copy/view link when sharing your camera. Pressing it is the same as using [`&sticky`](../general-settings/sticky.md) on your URL, as next time you visit VDO.Ninja it will ask you if you wish to reload your \&push link. \*\* on alpha\
+  ![](../.gitbook/assets/image.png)
+
+#### January 20 <a href="#august-31" id="august-31"></a>
+
+* Streamlabs mobile support improved, but there are still some users who are not able to see video. I can confirm though, it's working with my Google Pixel 4a now at least.
+* If you adjust the resolution on mobile, the frame rate shouldn't change now. I also have the aspect ratio tweaked a bit on android, so if in portrait mode, the aspect ratio is correctly adapted. (I can't say the same for the resolution though, which has a mind of its own still)
+* You can change the Buffer of a video on alpha via right-clicking the menu; this has been further improved to its own window with a numerical-input option as well as a slider.
+*   I've added a new IRL-related command called `&cutscene` (aka, `&lowbitratescene`), which you can use to specify an OBS cut scene to switch to when the bitrate drops below a threshold. And return to the original scene when the bitrate recovers. (assuming the cut scene is active; it won't switch back from a scene that isn't the cut away scene)\
+    \
+    The default bitrate threshold is 300-kbps, but you can use the existing [`&bitratecutoff=N`](../advanced-settings/parameters-only-on-beta/and-bitratecutoff.md) option to specify a custom one. Using `&cutscene` with [`&bitratecutoff`](../advanced-settings/parameters-only-on-beta/and-bitratecutoff.md) will override the behaviour of `&bitratecutoff`'s other features. It won't start triggering until the bitrate has hit at least the threshold once. to use:
+
+    ```
+    https://vdo.ninja/alpha/?push=XXX
+    https://vdo.ninja/alpha/?view=XXX&controlobs&bitcut=300&cutscene=FML&remote
+    ```
+
+    You can of course use this with [`&controlobs`](../advanced-settings/settings-parameters/and-controlobs.md)``[`&remote`](../general-settings/remote.md), to have the publisher change the scenes dynamically, and see what the current OBS scene is (if still connected).\
+    \
+    \*\* Note that the OBS Browser source needs the permissions to be set to high, to give VDO.Ninja permissions to change scenes. (on alpha for testing)
+* Added a new experimental parameter called `&maindirectorpassword`, which lets you set a pseudo 'master room password' as a director. It helps avoid getting locked out as the director, if someone else tries to claim the director-role first. ie:\
+  `https://vdo.ninja/alpha/?director=ROOMNAME&maindirectorpassword=MASTERPASS` \
+  \
+  This will add a `&token` value to the invite/scene links. This token is used by the guests to check a remote database server to see who currently 'owns' the token; it persists though, even if the director is not connected. When using `&maindirectorpassword` as a director, it tells this database that you are the owner, and it will persist even if you aren't connected to vdo.ninja. The `&token` tells the guest to ignore other logic about who the director is, instead using the info provided by the token-lookup to determine whose the director.\
+  \
+  I may change or revoke this feature, depending on how testing goes this week, as it's rather experimental.\
+  \
+  \*\* on alpha for feedback
+
 #### January 19 <a href="#august-31" id="august-31"></a>
 
 * [`&autorecord`](../advanced-settings/recording-parameters/and-autorecord.md) can now accept a bitrate as a value, as it wasn't doing so before (on alpha)
@@ -15,7 +46,7 @@
 #### January 12 <a href="#august-31" id="august-31"></a>
 
 * Improved publishing stats when using [`&meshcast`](../newly-added-parameters/and-meshcast.md); server region + external watchURL are available now there.\
-  ![](../.gitbook/assets/image.png)
+  ![](<../.gitbook/assets/image (1).png>)
 * [`&screensharevideoonly`](../newly-added-parameters/and-screensharevideoonly.md) will hide the audio selection menu when screen sharing; it will also hide that warning message about no audio selected when screen sharing.
 * Fixed some issues with [`&viewwidth`](../advanced-settings/video-parameters/and-viewwidth.md) and [`&viewheight`](../advanced-settings/video-parameters/and-viewheight.md) (works like [`&scale`](../advanced-settings/view-parameters/scale.md), but tries to target certain resolutions instead (also from the viewer's side tho).\
   \
