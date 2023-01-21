@@ -1,5 +1,9 @@
 # Updates - VDO.Ninja
 
+#### January 19 <a href="#august-31" id="august-31"></a>
+
+* [`&autorecord`](../advanced-settings/recording-parameters/and-autorecord.md) can now accept a bitrate as a value, as it wasn't doing so before (on alpha)
+
 #### January 16 <a href="#august-31" id="august-31"></a>
 
 * New [turn server](../general-settings/turn.md) added to Washington DC area.

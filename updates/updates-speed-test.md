@@ -2,6 +2,12 @@
 
 [speed-test.md](../steves-helper-apps/speed-test.md "mention")
 
+#### January 19
+
+* Speed Test now includes a timestamp, so you can see when the test started.
+
+### 2022
+
 #### October 3
 
 * Fixed a couple issues with the speedtest and [vdo.ninja/alpha/check](https://vdo.ninja/alpha/check) pages -- a recent chrome update deprecated (broke) some stats APIs I was using, along with a new race condition issue caused results to not always save. (It's funny how working code starts to 'rust' over time)

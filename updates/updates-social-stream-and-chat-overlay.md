@@ -3,6 +3,12 @@
 [social-stream.md](../steves-helper-apps/social-stream.md "mention")\
 [chat-overlay.md](../steves-helper-apps/chat-overlay.md "mention")
 
+#### **January 19**
+
+* Higher resolution YouTube avatar images are used in Social Stream and its third party outputs now
+* Social Stream can now filter out messages starting with `!` ; it's a toggle option that's useful to filtering out bot commands on Twitch/FB chat,etc.
+* There's an HTTP API option to toggle the auto-show mode now
+
 #### **January 11**
 
 * Social Stream has documentation, sample code, and better support for server-side message sourcing -- so if you want to issue messages from a server (instead of web scraping) to the service, that works now. ([https://socialstream.ninja/sampleapi.html](https://socialstream.ninja/sampleapi.html))

@@ -2,6 +2,10 @@
 
 [mixer-app.md](../steves-helper-apps/mixer-app.md "mention")
 
+#### January 19
+
+* The Mixer App on alpha has had several bug fixes; thank you for reporting them ([vdo.ninja/alpha/mixer](https://vdo.ninja/alpha/mixer))
+
 #### January 16
 
 * You can specify the animation speed now
