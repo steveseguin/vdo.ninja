@@ -1,4 +1,4 @@
-// Copy and paste this code into OBS.Ninja's developer's console to generate new Translation files
+// Copy and paste this code into VDO.Ninja's developer's console to generate new Translation files
 
 function downloadTranslation(filename, trans = {}) { // downloads the current translation to a file
 
@@ -69,20 +69,22 @@ function updateTranslation(filename) { // updates the website with a specific tr
 }
 
 const updateList = [
+	"blank", // must be first
+	"en",
     "cs",
+	"cn",
     "de",
-    "en",
     "es",
     "fr",
     "it",
-    "uk",
     "ja",
+	"eu",
     "nl",
     "pig",
     "pt",
     "ru",
     "tr",
-    "blank"
+	"uk"
 ]; // list of languages to update. Update this if you add a new language.
 
 const allItems = document.querySelectorAll('[data-translate]');
@@ -108,10 +110,13 @@ allPlaceholders.forEach((ele) => {
     defaultTransPlaceholders[key] = ele.placeholder;
 });
 
-const combinedTrans = {};
-combinedTrans.titles = defaultTransTitles;
-combinedTrans.innerHTML = defaultTrans;
-combinedTrans.placeholders = defaultTransPlaceholders;
+//const combinedTrans = {};
+//combinedTrans.titles = defaultTransTitles;
+//combinedTrans.innerHTML = defaultTrans;
+//combinedTrans.placeholders = defaultTransPlaceholders;
+
+
+
 
 var counter = 0;
 for (const i in updateList) {
@@ -125,6 +130,20 @@ for (const i in updateList) {
                 const key = ele.dataset.translate;//.replace(/[\W]+/g, "-").toLowerCase();
                 newTrans[key] = ele.innerHTML;
             });
+			if (lang == "blank" || lang == "en"){
+				console.log(newTrans);
+				for (var key in newTrans) {
+					if (!(key in defaultTrans)){
+						defaultTrans[key] = newTrans[key];
+					}
+				}
+			}  else {
+				for (var key in defaultTrans){
+					if (!(key in newTrans)){
+						newTrans[key] = defaultTrans[key]
+					}
+				}
+			}
 
             const newTransTitles = suceess[1].titles;
             //const allTitles = document.querySelectorAll('[title]');
@@ -132,6 +151,19 @@ for (const i in updateList) {
                 const key = ele.dataset.key;
                 newTransTitles[key] = ele.title;
             });
+			if (lang == "blank" || lang == "en"){
+				for (var key in newTransTitles) {
+					if (!(key in defaultTransTitles)){
+						defaultTransTitles[key] = newTransTitles[key];
+					}
+				}
+			} else {
+				for (var key in defaultTransTitles){
+					if (!(key in newTransTitles)){
+						newTransTitles[key] = defaultTransTitles[key]
+					}
+				}
+			}
 
             const newPlaceholders = suceess[1].placeholders;
            // const allPlaceholders = document.querySelectorAll('[placeholder]');
@@ -139,12 +171,58 @@ for (const i in updateList) {
                 const key = ele.dataset.key;
                 newPlaceholders[key] = ele.placeholder;
             });
+			if (lang == "blank" || lang == "en"){
+				for (var key in newPlaceholders) {
+					if (!(key in defaultTransPlaceholders)){
+						defaultTransPlaceholders[key] = newPlaceholders[key];
+					}
+				}
+			} else {
+				for (var key in defaultTransPlaceholders){
+					if (!(key in newPlaceholders)){
+						newPlaceholders[key] = defaultTransPlaceholders[key]
+					}
+				}
+			}
+			
+			var miscellaneous = {};
+			if ("miscellaneous" in suceess[1]){
+				if (miscTranslations){
+					Object.keys(miscTranslations).forEach(key => {
+						if (key in suceess[1].miscellaneous) {
+							miscellaneous[key] = suceess[1].miscellaneous[key];
+						} else {
+							miscellaneous[key] = miscTranslations[key];
+						}
+					});
+				} else {
+					miscellaneous = suceess[1].miscellaneous;
+				}
+			} else if (miscTranslations){
+				miscellaneous = miscTranslations;
+			}
 
             // //// DOWNLOAD UPDATED TRANSLATION
             const outputTrans = {};
-            outputTrans.titles = newTransTitles;
+			outputTrans.titles = defaultTransTitles;
+			outputTrans.innerHTML = defaultTrans;
+			outputTrans.placeholders = defaultTransPlaceholders;
+			
+			
+			for (var key in newTrans) {
+				outputTrans.innerHTML[key] = newTrans[key];
+			}
+			for (var key in newTransTitles) {
+				outputTrans.titles[key] = newTransTitles[key];
+			}
+			for (var key in newPlaceholders) {
+				outputTrans.placeholders[key] = newPlaceholders[key];
+			}
+			
+			outputTrans.titles = newTransTitles;
             outputTrans.innerHTML = newTrans;
-            outputTrans.placeholders = newPlaceholders;
+			outputTrans.placeholders = newPlaceholders;
+			outputTrans.miscellaneous = miscellaneous;
             downloadTranslation(ln, outputTrans);
         }
         // //////// RESET THING BACK

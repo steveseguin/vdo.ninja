@@ -1,0 +1,185 @@
+<html>
+<head><title>SocialStream + Video</title>
+<meta name="viewport" content="width=device-width, initial-scale=0.7, maximum-scale=1.0, user-scalable=yes" />
+<meta content="text/html;charset=utf-8" http-equiv="Content-Type" />
+<style>
+body{
+	padding:0;
+	margin:0;
+	background-color:#003;
+	width:100%;
+	height:100%;
+}
+
+iframe {
+	width:100%;
+	height:100%;
+	border:0;
+	margin:0;
+	padding:0;
+	position:absolute;
+	display:block;
+}
+
+
+input{
+	padding:10px;
+	width:80%;
+	font-size:1.2em;
+	z-index: 1000;
+}
+
+h1{
+	color: white;
+    font-family: verdana;
+    margin: 10px;
+}
+
+#container2{
+	width:100vw;
+	height:100vh;
+	position: fixed; 
+	top: 0;
+	left:0;
+	display:none;
+	z-index:2;
+}
+#container1{
+	width:100vw;
+	height:100vh;
+	position: fixed; 
+	top: 0;
+	left:0;
+	display:none;
+}
+iframe{
+	width:100vw;
+	height:100vh;
+}
+	
+@media screen and (orientation:portrait) {
+	#container2{
+	}
+	#container1{
+	}
+	iframe{
+	}
+}
+
+@media screen and (orientation:landscape) {
+	#container2{
+	}
+	#container1{
+	}
+	iframe{
+	}
+}
+
+</style>
+</head>
+<body>
+<div id="container2"></div>
+<div id="container1" ></div>
+<div id="selectChatSource">
+	<h1>Which social integration are you adding?</h1>
+	
+	
+</div>
+<div id="clean">
+	<h1>Use VDO.Ninja and SocialStream chat at the same time</h1>
+	<input placeholder="Enter a VDON stream ID or VDON URL" id="viewlink" type="text" />
+	<input placeholder="Enter the SocialStream URL" id="social" type="text" />
+	<button onclick="loadIframes()" style="display:block;padding:10px;margin:10px;">START</button>
+</div>
+<script>
+
+window.addEventListener("orientationchange", function() {
+  // Announce the new orientation number
+ // alert(window.orientation);
+}, false);
+
+function removeStorage(cname){
+	localStorage.removeItem(cname);
+}
+
+function setStorage(cname, cvalue, hours=9999){ // not actually a cookie
+	var now = new Date();
+	var item = {
+		value: cvalue,
+		expiry: now.getTime() + (hours * 60 * 60 * 1000),
+	};
+	try{
+		localStorage.setItem(cname, JSON.stringify(item));
+	}catch(e){errorlog(e);}
+}
+
+function getStorage(cname) {
+	try {
+		var itemStr = localStorage.getItem(cname);
+	} catch(e){
+		errorlog(e);
+		return;
+	}
+	if (!itemStr) {
+		return "";
+	}
+	var item = JSON.parse(itemStr);
+	var now = new Date();
+	if (now.getTime() > item.expiry) {
+		localStorage.removeItem(cname);
+		return "";
+	}
+	return item.value;
+}
+if (getStorage("SocialStreamChatLink")){
+	document.getElementById("social").value = getStorage("SocialStreamChatLink");
+}
+if (getStorage("vdoNinjaSocialStreamURL")){
+	document.getElementById("viewlink").value = getStorage("vdoNinjaSocialStreamURL");
+}
+
+function loadIframes(url=false){ 
+
+	var roomname = document.getElementById("viewlink").value;
+	var room2 = document.getElementById("social").value;
+	
+	document.getElementById("clean").parentNode.removeChild(document.getElementById("clean"));
+	document.getElementById("container1").style.display="inline-block";
+	document.getElementById("container2").style.display="inline-block";
+	
+	var path = window.location.host+window.location.pathname.split("/").slice(0,-1).join("/");
+	path = path.replace("/examples","");
+	
+	if (roomname.startsWith("https://")){
+		var room1 = roomname;
+	} else {
+		var room1 = "https://"+path+"/?push="+roomname+"&webcam&autostart&vd=front&ad=1&transparent&noheader";
+	}
+	
+	var iframe = document.createElement("iframe");
+	iframe.allow = "autoplay;camera;microphone;fullscreen;picture-in-picture;";
+	iframe.src = room1;
+	var iframeContainer = document.createElement("div");
+	iframeContainer.appendChild(iframe);
+	document.getElementById("container1").appendChild(iframeContainer);
+	
+	
+	setStorage("SocialStreamChatLink", room2);
+
+	setStorage("vdoNinjaSocialStreamURL", room1);
+	
+	
+	setTimeout(function(){
+		var iframe = document.createElement("iframe");
+		iframe.allow = "autoplay;camera;microphone;fullscreen;picture-in-picture;";
+		iframe.src = room2;
+		var iframeContainer = document.createElement("div");
+		iframeContainer.appendChild(iframe);
+		document.getElementById("container2").appendChild(iframeContainer);
+	},3000);
+	
+}
+
+</script>
+</body>
+</html>

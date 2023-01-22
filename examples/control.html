@@ -1,0 +1,123 @@
+<html>
+<head>
+	<style>
+		body {
+			margin:0;
+			padding:0;
+			height:100%;
+			width:100%;
+			border:0;
+			overflow:hidden;
+		}
+		
+	
+	</style>
+</head>
+<body id="body">
+	<button onclick='send({"abc1231":[0,0,50,50],abc1232:[50,0,50,50],abc1233:[0,50,50,50],abc1234:[50,50,50,50]});'>2x2</button>
+	<button onclick='send({"abc1231":[0,0,100,100],abc1232:[0, 0, 0, 0  ],abc1233:[0,0,0,0],abc1234:[0,0,0,0]});'>1</button>
+	<button onclick='send({"abc1231":[0,0,50 ,100],abc1232:[50,0,100,100],abc1233:[0,0,0,0],abc1234:[0,0,0,0]});'>2x1</button>
+	<button onclick='send({"abc1231":[0,0,100,100],abc1232:[70,70,20,20],abc1233:[0,0,0,0],abc1234:[0,0,0,0]});'>Pip</button>
+	<script>
+
+	// this app is mainly for demo purposes at this time.  It has been depreciated.
+
+	function updateURL(param, force=false) {
+		var para = param.split('=')[0];
+		if (!(urlParams.has(para)) || (force)){
+			if (history.pushState){
+				
+				var arr = window.location.href.split('?');
+				var newurl;
+				if (arr.length > 1 && arr[1] !== '') {
+					newurl = window.location.href + '&' +param;
+				} else {
+					newurl = window.location.href + '?' +param;
+				}
+				
+				window.history.pushState({path:newurl},'',newurl);
+			}
+		}
+	}
+
+	
+	(function (w) {
+		w.URLSearchParams = w.URLSearchParams || function (searchString) {
+			var self = this;
+			self.searchString = searchString;
+			self.get = function (name) {
+				var results = new RegExp('[\?&]' + name + '=([^&#]*)').exec(self.searchString);
+				if (results == null) {
+					return null;
+				}
+				else {
+					return decodeURI(results[1]) || 0;
+				}
+			};
+		};
+
+	})(window);
+	var urlParams = new URLSearchParams(window.location.search);
+	
+	
+	function generateStreamID(){
+		var text = "";
+		var possible = "ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnpqrstuvwxyz23456789";
+		for (var i = 0; i < 7; i++){
+			text += possible.charAt(Math.floor(Math.random() * possible.length));
+		}
+		return text;
+	};
+	
+	var roomID = "undefined";
+	
+	if (urlParams.has("room")){
+		roomID = urlParams.get("room");
+	} else {
+		roomID = generateStreamID();
+		updateURL("room="+roomID);
+	}
+	
+	var url = document.URL.substr(0,document.URL.lastIndexOf('/'));
+	
+
+	navigator.clipboard.writeText(url+"/mixer?room="+roomID).then(() => {
+      /* clipboard successfully set */
+    }, () => {
+      /* clipboard write failed */
+    });
+	
+	document.getElementById("body").innerHTML+=url+"/mixer?room="+roomID;
+	
+
+	var socket = new WebSocket("wss://api.action.wtf:666"); // api.action.wtf has been deprecated. 
+		
+	socket.onclose = function (){
+		setTimeout(function(){window.location.reload(true);},100);
+	};
+	
+	socket.onopen = function (){
+		socket.send(JSON.stringify({"join":roomID}));
+	}
+	
+	
+	socket.addEventListener('message', function (event) {
+		if (event.data){
+			var data = JSON.parse(event.data);
+			log(data);
+		}
+	});
+	
+	socket.onclose = function (){
+		setTimeout(function(){window.location.reload(true);},100);
+	};
+	
+	var counter=0;
+	function send(scene){
+		counter+=1;
+		socket.send(JSON.stringify({"msg":true, "scene":scene, "id":counter}));
+	}
+
+	</script>
+	</body>
+</html>

@@ -1,0 +1,181 @@
+<head>
+	<link rel="stylesheet" href="../main.css?ver=40" />
+	<style>
+		.container {
+			max-width: 900px;
+			width: fit-content;
+			margin: 0 auto;
+		}
+
+		h1 {
+			margin-top: 3em;
+		}
+
+		h2 {
+			font-size: 1.2em;
+			padding: 10px;
+			background-color: #457b9d;
+			color: white;
+			border-bottom: 2px solid #3b6a87;
+			text-align: center;
+		}
+
+		h2 a {
+			color: white !important;
+		}
+
+		#examples {
+			margin-top: 3em;
+			display: grid;
+			grid-template-columns: 1fr 1fr 1fr;
+			grid-gap: 1em;
+		}
+
+
+		div#examples>div {
+			background: #dddddd;
+			color: black;
+		}
+
+		.description {
+			padding: 1em;
+			display: block;
+		}
+
+		.youtube {
+			display: block;
+			text-align: right;
+		}
+
+		.media {
+			background: hsl(203deg 26% 73%);
+			display: block;
+			width: 100%;
+			padding: 0.2em;
+		}
+	</style>
+</head>
+
+<body style='color:white'>
+	<div id="header">
+		<a id="logoname" href="./" style="text-decoration: none; color: white; margin: 2px">
+			<span data-translate="logo-header">
+				<font id="qos">V</font>DO.Ninja
+			</span>
+		</a>
+	</div>
+	<div class="container">
+		<div id="info">
+			<h1>VDO.Ninja tech demonstrations</h1>
+			<div id="examples">
+				<div>
+					<h2><a href='p2p.html'>p2p</a></h2>
+					<div class="description">How to use vdo.ninja as a data transport tunneling service</div>
+				</div>
+				<div>
+					<h2><a href='twitch.html'>twitch</a></h2>
+					<div class="description">How to have a twitch live chat side-by-side with VDO.NInja on the same
+						screen</div>
+				</div>
+				<div>
+					<h2><a href='youtube.html'>youtube</a></h2>
+					<div class="description">How to have a youtube live chat side-by-side with VDO.NInja on the same
+						screen</div>
+				</div>
+				<div>
+					<h2><a href='dual.html'>dual</a></h2>
+					<div class="description">how to have two VDO.Ninja windows (or any windows really) open on the same
+						page;
+						Picture-in-Picture style</div>
+				</div>
+				<div>
+					<h2><a href='multi.html?rooms=room1xx,room2xx,room3xx'>Multiple rooms</a></h2>
+					<div class="description">how to have multiple director rooms open in a single tab; note the URL's ?rooms=xx,yy command</div>
+				</div>
+				<div>
+					<h2><a href='https://versus.cam'>versus.cam</a></h2>
+					<div class="description">How to use the IFRAME API to transport audio and video to the parent frame in Chrome</div>
+				</div>
+				<div>
+					<h2><a href='addtoscene.html'>add to scene</a></h2>
+					<div class="description">How to use the IFRAME API to add/remove guests to a scene remotely</div>
+				</div>
+				<div>
+					<h2><a href='bigmutebutton.html'>big mute button</a></h2>
+					<div class="description">Mobile-friendly big-button for muting yourself easily</div>
+				</div>
+				<div>
+					<h2><a href='sensors.html'>sensors</a></h2>
+					<div class="media">
+						<a href='https://www.youtube.com/watch?v=SqbufszHKi4' class="youtube">
+							<img src="youtube.svg" />
+						</a>
+					</div>
+					<div class="description">how to transmit sensor and video data from a phone to a computer, drawing
+						it to canvas.
+					</div>
+				</div>
+				<div>
+					<h2><a href='sensoroverlay.html'>sensor overlay</a></h2>
+					
+					<div class="description">Overlay the incoming speed from remote mobile sensor data onto your video
+					</div>
+				</div>
+				<div>
+					<h2><a href='../midi.html'>midi</a></h2>
+					<div class="media">
+						<a href='https://www.youtube.com/watch?v=rnZ8HM9FL4I' class="youtube">
+							<img src="youtube.svg" />
+						</a>
+					</div>
+					<div class="description">Demonstrates the MIDI API for VDO.Ninja
+
+					</div>
+				</div>
+				<div>
+					<h2><a href='draggable.html'>draggable</a></h2>
+					<div class="description">demonstrates how to drag multiple
+						windows around, if you wanted to create a custom
+						layout of elements. (experimental)</div>
+				</div>
+				<div>
+					<h2><a href='chatoverlay.html'>chat</a></h2>
+					<div class="description">Example of a chat-only interface for VDO.Ninja; maybe
+						dockable into OBS even.</div>
+				</div>
+				<div>
+					<h2><a href='iframe.outbound-stats.html'>iframe.outbound-stats</a></h2>
+					<div class="description">iframe.outbound-stats.html demostrates how to get stats from VDO.Ninja
+						using the
+						IFRAME API</div>
+				</div>
+				<div>
+					<h2><a href='changepass.html'>changepass</a></h2>
+					<div class="description">lets you create passwords and related HASH values for VDO.NInja
+						rooms</div>
+				</div>
+				<div>
+					<h2><a href='webhid.html'>webhid</a></h2>
+					<div class="description">webhid demonstrates how to interface with a USB device, like a streamdeck
+						(mouse/keyboard not supported)</div>
+				</div>
+				<div>
+					<h2><a href='zoom.html'>zoom</a></h2>
+					<div class="description">A tool for letting you publish into VDO.Ninja, but then
+						full-screen the window once setup, allowing for
+						window-capturing into zoom.</div>
+				</div>
+				<div>
+					<h2><a href='obs_remote/index.html'>obs_remote</a></h2>
+					<div class="media">
+					<a href='https://github.com/steveseguin/remote_ninja' class="youtube">
+						<img src="github.svg" />
+					</a>
+					</div>
+
+					<div class="description">Also hosted on github elsewhere, but it's an example of how to remotely
+						control OBS using VDO.Ninja's tunneling abilities</div>
+				</div>
+			</div>
+		</div>
+</body>

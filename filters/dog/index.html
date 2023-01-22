@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <meta http-equiv="content-language" content="en-EN" />
+    
+    <title>JEELIZ FACEFILTER: DOG</title>
+    
+    <!-- INCLUDE JEELIZ FACEFILTER SCRIPT -->
+    <script src="../../../dist/jeelizFaceFilter.js"></script>
+
+    <!-- INCLUDE THREE.JS -->
+    <script src="../../../libs/three/v97/three.js"></script>
+
+    <!-- INCLUDE JEELIZRESIZER -->
+    <script src="../../../helpers/JeelizResizer.js"></script>
+
+    <!-- INCLUDE JEELIZTHREEJSHELPER -->
+    <script src="../../../helpers/JeelizThreeHelper.js"></script>
+
+    <!-- INCLUDE FLEXMATERIAL (CUSTOM DEV) -->
+    <script src="../../../libs/three/customMaterials/FlexMaterial/ThreeFlexMaterial.js"></script>
+
+    <!-- INCLUDE TWEEN.JS -->
+    <script src='../../../libs/tween/v16_3_5/Tween.min.js'></script>
+
+    <!-- INCLUDE JQUERY -->
+    <script src='../../../libs/jquery/jquery-3.3.1.min.js'></script>
+
+    <!-- INCLUDE GLFX -->
+    <script src='libs/glfx.js'></script>
+
+    <!-- INCLUDE DEMO SCRIPT -->
+    <script src="./main.js"></script>
+
+    <!-- INCLUDE ADDDRAGEVENTLISTENER.JS -->
+    <script src='../../../helpers/addDragEventListener.js'></script>
+
+    <!-- INCLUDE FORK ME ON GITHUB BANNER -->
+    <script src="../../appearance/widget.js"></script>
+
+    <link rel="stylesheet" href="../../appearance/style.css" type="text/css" />
+
+    <style>
+      .canvasContainer {
+        position: relative;
+        margin: 0 auto;
+        text-align: center;
+      }
+      #jeeFaceFilterCanvas {
+        z-index: 0;
+        max-height: 100%;
+        left: auto;
+        top: auto;
+        width: 100vmin;
+        transform: translate(0,0) rotateY(180deg);
+        position: static;
+      }
+      img {
+        max-width: 100%;
+      }
+      #filter {
+        position: absolute;
+        z-index: 0;
+        max-height: 100%;
+        width: 100vmin;
+        top: 0;
+        left: 50%;
+        transform: translate(-50%);
+        opacity: 0.15;
+      }
+      #filter canvas {
+        width: 100%;
+        height: 100%;
+      }
+    </style>
+  </head>
+  
+  <body onload="main()">
+    <div class="canvasContainer">
+      <canvas width="600" height="600" id='jeeFaceFilterCanvas'></canvas>
+      <div id='filter'></div>      
+    </div>
+  </body>
+</html>
+ 
+ 

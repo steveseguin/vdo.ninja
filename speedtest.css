@@ -1,3 +1,20 @@
+:root {
+	--background-color: #141926;
+	--container-color: #373737;
+	--button-color: #2A2A2A;
+	--blue-accent: #4a4c63;
+	--red-accent: #553737;
+	--green-accent: #3f4f50;
+	--olive-accent: #535D32;
+	--regular-margin: 10px;
+	--director-margin: 15px 20px 0 0;
+	--fit-style: contain;
+	--fadein-speed: 0;
+	--video-margin: 0px;
+	--video-rounded: 0px;
+	--button-radius: 2px;
+}
+
 body {
 	-webkit-font-smoothing: antialiased;
 	text-rendering: optimizeLegibility;
@@ -12,10 +29,27 @@ body {
 	transition: opacity .1s linear;
     background-color: #141926;
 }
+.container-inner{
+	background-color: #0000!important;
+}
+.card{
+	background-color: #0000!important;
+}
+#container-3{
+	background-image:unset;
+	overflow:hidden!important;
+}
+.column>h2{
+	color:white!important;
+}
+#add_screen{
+	display:none;
+}
 
 h1 {
     color: white;
-    margin: 20px 0px;
+    margin: 20px auto;
+	width: 80%;
 }
 
 h1 small {
@@ -24,6 +58,9 @@ h1 small {
     font-size: 0.5em;
 }
 
+video {
+	transform: translate(0px, 0%) !important;
+}
 #explanation {
     color: white;
     font-family: sans-serif;
@@ -72,6 +109,7 @@ iframe {
     height: 85%;
     width: 100%;
     flex: 1;
+    border: 0;
 }
 
 #controls {
@@ -80,6 +118,9 @@ iframe {
 
 #controls button {
     margin: 5px;
+	padding: 5px 10px;
+    border: 0;
+    border-radius: var(--button-radius);
 }
 
 #controls button.active {
@@ -135,6 +176,7 @@ canvas {
 .graph h2, #log h2 {
     margin: 0px 20px;
     font-size: 1em;
+    color: #cacaca;
 }
 
 .graph > span {
@@ -171,17 +213,20 @@ ol {
     }
 
     #feeds h3 {
-        font-size:50%;
+        font-size:100%;
     }
 	
 	h1{
 		color: white;
-		margin: 2px;
-		font-size:70%
+		font-size:1.4em;
+	}
+	h2{
+		color: white;
+		font-size:1.2em;
 	}
 	
 	#feeds span{
-		height: 50%;
+		height: :calc(100% - 100px);
 		width:100%;
 		display: inline-block;
 	}

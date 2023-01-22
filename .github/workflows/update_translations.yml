@@ -35,5 +35,5 @@ jobs:
           with:
             commit-message: Generated updated translations
             branch: generated_translations
-            title: "[OBSNinja Bot] Updated translations"
+            title: "[VDONinja Bot] Updated translations"
             labels: i18n

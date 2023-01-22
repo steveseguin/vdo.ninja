@@ -2,7 +2,7 @@
 	<head>
 		<meta charset="utf8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1" />
-		<title>OBSN Monitoring</title>
+		<title>VDO.Ninja Monitoring</title>
 		<style>
 		
 		body {
@@ -99,7 +99,9 @@
 
 		canvas {
 			background-color: black;
-			margin: 20px;
+			margin: 1vw;
+			width: 22vw;
+			height: 160px;
 		}
 
 		#log {
@@ -260,11 +262,10 @@
 				
 				var iframe = document.createElement("iframe");
 
-				if (urlParams.has('remote') || urlParams.has('rem')) {
-					var remote = urlParams.get('remote') || urlParams.get('rem') || "nosecurity";
-					remote = remote.trim();
+				if (urlParams.has("remote")) {
+					var remote = urlParams.get("remote");
 				} else {
-					var remote = "";
+					var remote="";
 				}
 
 				if (urlParams.has("sid")) {
@@ -355,17 +356,35 @@
 							}
 							
 							if (e.data.remoteStats[UUID].retransmitted_kbps){
-								var retransmitted_kbps = e.data.remoteStats[UUID].retransmitted_kbps;
+								var retransmitted_kbps = parseInt(10000*e.data.remoteStats[UUID].retransmitted_kbps/ (e.data.remoteStats[UUID].video_bitrate_kbps-e.data.remoteStats[UUID].retransmitted_kbps))/100;
 								updateData("retransmit", retransmitted_kbps, UUID);
 							} else if (document.getElementById(UUID)){
 								updateData("retransmit", 0, UUID);
 							}
 							
-							if (e.data.remoteStats[UUID].info.label){
-								if (!document.getElementById("label_"+UUID)){
-									document.getElementById(UUID).innerHTML = "<h1 class='small' id='label_"+UUID+"'></h1>" + document.getElementById(UUID).innerHTML;
+							var streamID = false;
+							if ("streamID" in e.data) {
+								streamID = e.data.streamID;
+							}
+							if (document.getElementById(UUID)){
+								if ("label" in e.data.remoteStats[UUID].info){
+									if (e.data.remoteStats[UUID].info.label){
+										if (!document.getElementById("label_"+UUID)){
+											document.getElementById(UUID).innerHTML = "<h1 class='small' id='label_"+UUID+"'></h1>" + document.getElementById(UUID).innerHTML;
+										}
+										document.getElementById("label_"+UUID).innerText = e.data.remoteStats[UUID].info.label + ", - a remote viewer of stream ID: "+streamID;
+									} else if (streamID){
+										if (!document.getElementById("label_"+UUID)){
+											document.getElementById(UUID).innerHTML = "<h1 class='small' id='label_"+UUID+"'></h1>" + document.getElementById(UUID).innerHTML;
+										}
+										document.getElementById("label_"+UUID).innerText = "Stats for a remote viewer of stream ID: "+streamID;
+									} else {
+										if (!document.getElementById("label_"+UUID)){
+											document.getElementById(UUID).innerHTML = "<h1 class='small' id='label_"+UUID+"'></h1>" + document.getElementById(UUID).innerHTML;
+										}
+										document.getElementById("label_"+UUID).innerText = "";
+									}
 								}
-								document.getElementById("label_"+UUID).innerText = e.data.remoteStats[UUID].info.label;
 							}
 							
 							
@@ -413,14 +432,12 @@
 	<body onload="loadIframe();">
 		<div id="container">
 			<h1 >
-				<span id="streamID_header">OBS.Ninja Remote Monitor</span>
+				<span id="streamID_header">VDO.Ninja Remote Monitor</span>
 			</h1>
 		</div>
 		
 		<div id="graphs" style="display:none">
-		
-			
-			
+
 			<div class="graph">
 				<h2>Bitrate (kbps)</h2>
 				<span>0</span>
@@ -430,11 +447,11 @@
 			<div class="graph">
 				<h2>Reported lost packets (per second)</h2>
 				<span>0</span>
-				<canvas  data-nackrate-graph="true"></canvas>
+				<canvas data-nackrate-graph="true"></canvas>
 			</div>
 
 			<div class="graph">
-				<h2>Retransmitted (kbps)</h2>
+				<h2>Retransmitted bytes (%)</h2>
 				<span>0</span>
 				<canvas data-retransmit-graph="true"></canvas>
 			</div>
@@ -464,8 +481,8 @@
 			var retransmit = {
 				element: "retransmit-graph",
 				data: 0,
-				max: 100,
-				target: 100,
+				max: 3,
+				target: 2,
 			};
 
 			function updateData(type, data, UUID) {
@@ -525,6 +542,11 @@
 					grd.addColorStop(0, "#33C433");
 					grd.addColorStop(0.7, "#F3F304");
 					grd.addColorStop(0.9, "#F30404");
+				} else if (type == "retransmit") {
+					// Higher values are red
+					grd.addColorStop(0, "#F30404");
+					grd.addColorStop(0.75, "#F3F304");
+					grd.addColorStop(1.0, "#33C433");
 				} else {
 					// Higher values are red
 					grd.addColorStop(0, "#F30404");
@@ -544,7 +566,7 @@
 				}
 
 				if (type == "retransmit" && stat.data == 0.0) {
-					stat.data = 0.5;
+					stat.data = 0.1;
 				}
 				if (type == "nackrate" && stat.data == 0.0) {
 					stat.data = 0.1;

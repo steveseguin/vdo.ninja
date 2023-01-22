@@ -1,0 +1,266 @@
+<html>
+<head><title>Video with sensor overlayed data</title>
+<style>
+body{
+	padding:0;
+	margin:0;
+	background-color: #0000;
+}
+iframe {
+	border:0;
+	margin:0;
+	padding:0;
+	display:block;
+	width:100%;
+	height:100%;
+}
+
+#container {
+	border:0;
+	margin:0;
+	padding:0;
+	display:block;
+	width:100%;
+	height:100%;
+	position:absolute;
+	top:0;
+	left:0;
+	
+}
+
+#overlay{
+	border:0;
+	margin:0;
+	padding:0;
+	display:block;
+	text-align:right;
+	position:absolute;
+	top:100px;
+	right:0;
+	z-index: 10;
+    color: white;
+	font-size:300%;
+}
+
+#canvas{
+	border:0;
+	margin:0;
+	padding:0;
+	display:block;
+	width:20%;
+	text-align:right;
+	height:100px;
+	position:absolute;
+	top:0;
+	right:0;
+	z-index: 5;
+}
+
+</style>
+</head>
+<body id="main">
+	<div id="overlay"></div>
+	<canvas id="canvas"></canvas>
+	<div id="container"></div>
+<script>
+function getColor(value) {
+  var hue = (Math.abs(value*100+50)).toString(10);
+  return ["hsl(", hue, ",100%,50%)"].join("");
+}
+var canvas = document.getElementById("canvas");
+var context = canvas.getContext("2d");
+var height = context.canvas.height;
+var width = context.canvas.width;
+canvas.history_accel = [];
+canvas.history_speed = [];
+var canvasNew = true
+
+function plotData(speed, accel) { 
+
+
+	if (isNaN(speed)) {
+		speed = 0;
+	}
+	if (isNaN(accel)) {
+		accel = 0;
+	}
+
+	canvas.history_accel.push(accel);
+	canvas.history_speed.push(speed);
+
+	canvas.history_accel = canvas.history_accel.slice(-1 * canvas.width);
+	canvas.history_speed = canvas.history_speed.slice(-1 * canvas.width);
+	
+	var maxSpeed = Math.max(...canvas.history_speed);
+	
+	var interval = 10;
+	var target = canvas.target || (interval*1.5);
+	if (target && (maxSpeed > target)){
+		
+		canvas.target = maxSpeed*1.5; // set it higher than it needs to be, so it doens't jump around a lot
+		var yScale = height / canvas.target;
+		context.clearRect(0, 0, width, height);
+		var w = 1;
+		var x = width - w;
+		
+		
+		for (var i = 0; i<canvas.history_speed.length;i++){
+			
+			var accel = canvas.history_accel[i];
+			var speed = canvas.history_speed[i];
+			
+			var val = (10-accel)/10;
+			if (val>1){val=1;}
+			else if (val<0){val=0;}
+			var color = getColor(val);
+			var y = height - speed * yScale;
+			context.fillStyle = color;
+			context.fillRect(x, y, w, height);
+			context.fillStyle = "#DDD5";
+			context.fillRect(x, y-2, w, 4);
+			
+			if (y-5>0){
+				context.fillStyle = "#FFF3";
+				context.fillRect(x, y+2, w, 1);
+			}
+
+			var imageData = context.getImageData(w, 0, x, height);
+			context.putImageData(imageData, 0, 0);
+			context.clearRect(x, 0, w, height);
+		}
+		
+		for (var tt = interval; tt<canvas.target;tt+=interval){
+			var y = parseInt(height - tt * yScale);
+			context.fillStyle = "#0555";
+			context.fillRect(0, y, width, 1);
+		}
+		return;
+	}
+	
+	var val = (10-accel)/10;
+	if (val>1){val=1;}
+	else if (val<0){val=0;}
+	var color = getColor(val);
+
+	var yScale = height / target;
+
+	var w = 1;
+	var x = width - w;
+	var y = height - speed * yScale;
+	
+	context.fillStyle = color;
+	context.fillRect(x, y, w, height);
+	context.fillStyle = "#DDD5";
+	context.fillRect(x, y-2, w, 4);
+	
+	if (y-5>0){
+		context.fillStyle = "#FFF3";
+		context.fillRect(x, y+2, w, 1);
+	}
+	
+	context.fillStyle = "#0555";
+	if (canvasNew){
+		canvasNew = false;
+		for (var tt = interval; tt<target;tt+=interval){
+			var y = parseInt(height - tt * yScale);
+			context.fillRect(0, y, width, 1);
+		}
+	} else {
+		for (var tt = interval; tt<target;tt+=interval){
+			var y = parseInt(height - tt * yScale);
+			context.fillRect(x, y, w, 1);
+		}
+	}
+	
+	var imageData = context.getImageData(w, 0, x, height);
+	context.putImageData(imageData, 0, 0);
+	context.clearRect(x, 0, w, height);
+	
+}
+
+function loadIframe(url=false){ 
+	var iframe = document.createElement("iframe");
+	
+	if (url){
+		var iframesrc = url;
+	} else {
+		var iframesrc = document.getElementById("viewlink").value;
+	}
+	
+	iframe.allow = "autoplay;camera;microphone;fullscreen;picture-in-picture;";
+
+	if (iframesrc==""){
+		iframesrc="./";
+	}
+	
+	iframe.src = iframesrc;
+	
+	document.getElementById("container").appendChild(iframe);
+	var outputWindow = document.getElementById("overlay");
+
+	var sensors = {};
+	
+	////////////  LISTEN FOR EVENTS
+
+	var eventMethod = window.addEventListener ? "addEventListener" : "attachEvent";
+	var eventer = window[eventMethod];
+	var messageEvent = eventMethod === "attachEvent" ? "onmessage" : "message";
+
+	eventer(messageEvent, function (e) {
+		if (e.source != iframe.contentWindow){return} // reject messages send from other iframes
+		
+		if ("sensors" in e.data){
+			//console.log(e.data.sensors);
+			
+			var speed = 0;
+			if (e.data.sensors.pos){
+				speed = e.data.sensors.pos.speed;
+				// e.data.sensors.pos.alt
+				// e.data.sensors.pos.t
+			}
+			
+			var accel = 0;
+			if (e.data.sensors.lin){
+				accel += Math.pow(e.data.sensors.lin.x, 2);
+				accel += Math.pow(e.data.sensors.lin.y, 2);
+				accel += Math.pow(e.data.sensors.lin.z, 2);
+			}
+			if (accel){
+				accel = Math.pow(accel,0.5);
+			}
+			
+			if (isNaN(accel)){
+				accel = 0;
+			}
+			
+			plotData(speed, accel);
+			
+			outputWindow.innerHTML = "";
+			
+			speed = parseInt(speed*100)/100;
+			outputWindow.innerHTML += "speed: "+speed+"m/s<br />";          
+		
+			accel = parseInt(accel*100)/100;
+			outputWindow.innerHTML += "acceleration: " + accel + "m/s^2<br />";         
+			
+			//for (var key in e.data.sensors.lin) {
+			//	outputWindow.innerHTML += key + " lin: " +  e.data.sensors.lin[key] + "<br />";           
+			//}
+			//for (var key in e.data.sensors.acc) {
+			//	outputWindow.innerHTML += key + " acc: " +  e.data.sensors.acc[key] + "<br />";           
+			//}
+			//for (var key in e.data.sensors.mag) {
+			//	outputWindow.innerHTML += key + " magnet: " +  e.data.sensors.mag[key] + "<br />";         
+			//}
+			//for (var key in e.data.sensors.ori) {
+			//	outputWindow.innerHTML += key + " orientation: " +  e.data.sensors.ori[key] + "<br />";         
+			//}
+		}
+	});
+}
+
+loadIframe("../"+window.location.search);
+
+</script>
+</body>
+</html>

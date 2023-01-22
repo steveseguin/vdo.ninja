@@ -1,0 +1,88 @@
+<html>
+<head><title>Dual Input</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+<meta content="text/html;charset=utf-8" http-equiv="Content-Type" />
+<style>
+body{
+	padding:0;
+	margin:0;
+	background-color:#003;
+	width:100%;
+	height:100%;
+}
+
+iframe {
+	width:100%;
+	height:470px;
+	border:0;
+	margin:0;
+	padding:0;
+	display:block;
+}
+
+
+
+</style>
+</head>
+<body>
+
+<script>
+
+
+
+(function(w) {
+	w.URLSearchParams = w.URLSearchParams || function(searchString) {
+		var self = this;
+		searchString = searchString.replace("??", "?");
+		self.searchString = searchString;
+		self.get = function(name) {
+			var results = new RegExp('[\?&]' + name + '=([^&#]*)').exec(self.searchString);
+			if (results == null) {
+				return null;
+			} else {
+				return decodeURI(results[1]) || 0;
+			}
+		};
+	};
+
+})(window);
+
+var urlEdited = window.location.search.replace(/\?\?/g, "?");
+urlEdited = urlEdited.replace(/\?/g, "&");
+urlEdited = urlEdited.replace(/\&/, "?");
+
+if (urlEdited !== window.location.search){
+	warnlog(window.location.search + " changed to " + urlEdited);
+	window.history.pushState({path: urlEdited.toString()}, '', urlEdited.toString());
+}
+var urlParams = new URLSearchParams(urlEdited);
+var path = window.location.host+window.location.pathname.split("/").slice(0,-1).join("/");
+var rooms = "";
+if (urlParams.has("rooms")){
+	rooms = urlParams.get("rooms");
+	rooms = rooms.split(",");
+	
+	var password = prompt("Enter the password for the rooms; leave blank for none");
+	if (password){
+		password = "&password="+password;
+	} else {
+		password = "";
+	}
+	rooms.forEach(room=>{
+		loadIframes("https://"+path+"/../?clean&hidecodirectors&director="+room+password);
+	});
+} else {
+	document.write("To use, comma separate the room names. ie: https://vdo.ninja/examples/multi?rooms=xxxx,yyy,ccc");
+}
+
+function loadIframes(url){ 
+	var iframe = document.createElement("iframe");
+	iframe.allow = "autoplay;camera;microphone;fullscreen;picture-in-picture;";
+	iframe.src = url;
+	document.body.appendChild(iframe);
+	
+}
+
+</script>
+</body>
+</html>
