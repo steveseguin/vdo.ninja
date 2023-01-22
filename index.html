@@ -2282,7 +2282,43 @@
 			// session.configuration.iceServers.push(turn);
 			/////////////// ------------ END OF TURN SETUP SECTION -------
 
-			// session.configuration.iceTransportPolicy = "relay";  // uncomment to enable "&privacy" and force the TURN server
+			// use this section if you plan to use the turn-credentials.php to provide usename and password of the turn-server, e.g., because you use a turn-server that uses use-auth-secret and static-auth-secret
+			// try {
+			// 	session.ws = false; // prevents connection
+			// 	var phpcredentialsRequest = new XMLHttpRequest();
+			// 	phpcredentialsRequest.onreadystatechange = function() {
+			// 		if (phpcredentialsRequest.status === 200) {
+			// 			try{
+			// 				var res = JSON.parse(phpcredentialsRequest.responseText);
+			// 			} catch(e){return;}
+			// 			session.configuration = {
+			// 				iceServers: [{
+			// 						"username": res["1"],
+			// 						"credential": res["2"],
+			// 						"urls": res["3"]
+			// 					},
+			// 					{
+			// 						"username": res["1"],
+			// 						"credential": res["2"],
+			// 						"urls": res["4"]
+			// 					}
+			// 				],
+			// 				sdpSemantics: 'unified-plan' // future-proofing
+			// 			};
+			// 			if (session.ws===false){
+			// 				session.ws=null; // allows connection (clears state)
+			// 				session.connect(); // connect if not already connected.
+			// 			}
+			// 		}
+			// 		// system does not connect if php script does not respond.
+			// 	};
+			// 	phpcredentialsRequest.open('GET', 'turn-credentials.php', true); // `false` makes the request synchronous
+			// 	phpcredentialsRequest.send();
+			// } catch (e) {
+			// 	errorlog("php-credentials script Failed");
+			// }
+
+      // session.configuration.iceTransportPolicy = "relay";  // uncomment to enable "&privacy" and force the TURN server
 
 			// session.wss = "wss://api.vdo.ninja:443"; // US-East (Default)
 
