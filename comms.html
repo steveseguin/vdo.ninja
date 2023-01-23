@@ -41,7 +41,7 @@
 		height: 100%;
 		width: 1280px;
 		
-		max-height: calc(100vh - 95px);
+		max-height: calc(100vh - 92px);
 	
 		background-color: #0002;
 		border-radius: 3px;
@@ -52,8 +52,8 @@
 	}
 	
 	iframe.aspectRatio{
-		max-height: min(calc(100vh - 80px), calc(100vw - var(--chat-width)) / var(--aspect-ratio))) !important;
-		max-width: min(calc((100vh - 80px) *  var(--aspect-ratio)), calc(100vw - var(--chat-width))) !important;
+		max-height: min(calc(100vh - 92px), calc(100vw - 160px - var(--chat-width)) / var(--aspect-ratio)) !important;
+		max-width: min(calc((100vh - 92px) *  var(--aspect-ratio)), calc(100vw - 160px - var(--chat-width))) !important;
 		height: 720px;
 		width: 1280px;
 	}
@@ -128,20 +128,20 @@
 		bottom: 0;
 		position: fixed;
 		margin: 10px;
-		margin-left:0;
+				
 		align-self: center;
-		width: var(--chat-width);
-		max-width: calc(100% - 40px);
+		width: 400px;
+		max-width: 100%;
 		z-index:3;
 		height: calc(100vh - 40px);
 		overflow: hidden;
 		right:0;
-		background:#0008;
+		background:#0001;
 		border: solid 2px #0005;
 		border-radius: 10px;
 		padding: 10px;
 		transition: all .05s ease-in-out; 
-		max-height: 95vh;
+				   
 	}
 	#chatInput {
 		display: inline-block;
@@ -149,8 +149,8 @@
 		background-color: #FFFE;
 		width: 324px;
 		font-size: 105%;
-		margin-left: 3px;
-		max-width: calc(100% - 76px);
+		margin-left: 7px;
+							   
 	}
 	#chatSendBar{
 		display: inline-block;
@@ -199,7 +199,7 @@
 	#containerMenu{
 		position: absolute;
 		left: 0px;
-		width: calc(100vw - var(--chat-width));
+		width: calc(100vw - var(--chat-width) - 40px  + var(--chat-filler));
 		display: flex;
 		top: 0;
 		height: 100px;
@@ -214,7 +214,7 @@
 	#vdoninja {
 		max-width: calc(100vw - 54px - var(--chat-width) + var(--chat-filler));
 		width: 100vw;
-		height: calc(100vh - 117px);
+		height: calc(100vh - 112px);
 	}
 	
 	#viewlink {
@@ -306,7 +306,7 @@
 		border-radius: 10px;
 		box-shadow: 2px 2px 6px #273a4e, -2px -2px 6px #354e6a;
 		width: 135px;
-		height: 60px;
+		height: 50px;
 		background-color: #0004;
 		display: inline-block;
 		margin: 5px 10px 0 10px;
@@ -328,7 +328,8 @@
 	}
 
 	::-webkit-scrollbar {
-		width: 15px;
+		width: 12px;
+		height: 12px;
 	}
 	 
 	::-webkit-scrollbar-track {
@@ -372,7 +373,7 @@
 		top: 92px;
 	}
 	.tFadeStart{
-		top: 107px;
+		top: 102px;
 	}
 	
 	@keyframes tFadeOut {
@@ -443,6 +444,9 @@
 		position: absolute;
 	}
 	
+	 h3 {
+	    margin-bottom: 6px;
+	}
 	.settings {
 		display: block;
 		background: #c0e3ff;
@@ -510,7 +514,7 @@
 		user-select: none;
 	}
 	.pressed>.group{
-		border: solid 2px black;
+		box-shadow: inset 2px 2px 10px #0007, inset -2px -2px 10px #0007;
 		background-color: #276022aa;
 	}
 	button.pressed {
@@ -731,45 +735,42 @@
 		background-color:#0000;
 	}
 	#containermenu>div:nth-child(1)>div::before {
-		content: "0";
-		color: #a4a4a4;
-	}
-	#containermenu>div:nth-child(2)>div::before {
 		content: "1";
 		color: #a4a4a4;
 	}
-	#containermenu>div:nth-child(3)>div::before {
+	#containermenu>div:nth-child(2)>div::before {
 		content: "2";
 		color: #a4a4a4;
 	}
-	#containermenu>div:nth-child(4)>div::before {
+	#containermenu>div:nth-child(3)>div::before {
 		content: "3";
 		color: #a4a4a4;
 	}
-	#containermenu>div:nth-child(5)>div::before {
+	#containermenu>div:nth-child(4)>div::before {
 		content: "4";
 		color: #a4a4a4;
 	}
-	#containermenu>div:nth-child(6)>div::before {
+	#containermenu>div:nth-child(5)>div::before {
 		content: "5";
 		color: #a4a4a4;
 	}
-	#containermenu>div:nth-child(7)>div::before {
+	#containermenu>div:nth-child(6)>div::before {
 		content: "6";
 		color: #a4a4a4;
 	}
-	#containermenu>div:nth-child(8)>div::before {
+	#containermenu>div:nth-child(7)>div::before {
 		content: "7";
 		color: #a4a4a4;
 	}
-	#containermenu>div:nth-child(9)>div::before {
+	#containermenu>div:nth-child(8)>div::before {
 		content: "8";
 		color: #a4a4a4;
 	}
-	#containermenu>div:nth-child(10)>div::before {
+	#containermenu>div:nth-child(9)>div::before {
 		content: "9";
 		color: #a4a4a4;
 	}
+	
 	#containermenu>div>div {
 		width: 15px;
 		height: 15px;
@@ -1003,7 +1004,7 @@
 		
 		if (document.getElementById("chatModule").classList.contains("hidden")){
 			document.documentElement.style.setProperty('--chat-width', "0px");
-			document.documentElement.style.setProperty('--chat-filler', "33px");
+			document.documentElement.style.setProperty('--chat-filler', "40px");
 			
 		} else {
 			document.documentElement.style.setProperty('--chat-width', "400px");
@@ -1689,11 +1690,11 @@
 	
 	function hotkeyCheck(event){
 		if (event.target && (event.target.tagName == "INPUT")){warnlog("input in focus; return");return;}
-		var value = parseInt(event.key);
-		if (value == event.key){
+		var value = parseInt(event.key)-1;
+		if (value+1 == event.key){
 			try {
 				if (document.querySelector("#containermenu").children[value]){
-					document.querySelector("#containermenu").children[value].querySelector("group").click();
+					document.querySelector("#containermenu").children[value].querySelector(".group").click();
 					document.querySelector("#containermenu").children[value].classList.add("shake");
 					setTimeout(function(ele){ele.classList.remove("shake");},500,document.querySelector("#containermenu").children[value]);
 				}
@@ -2004,7 +2005,7 @@
 			<!-- }); -->
 			<!-- this.dataset.state = "active"; -->
 			<!-- addgroup2(this);  -->
-			<!-- addOldElement(JSON.parse(this.parentNode.querySelector("group").group)); -->
+			<!-- addOldElement(JSON.parse(this.parentNode.querySelector(".group").group)); -->
 		<!-- } -->
 		
 		var hotkey = document.createElement("div");

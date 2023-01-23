@@ -42,7 +42,7 @@
 		height: 100%;
 		width: var(--iframe-width);
 		
-		max-height: calc(100vh - 80px);
+		max-height: calc(100vh - 92px);
 	
 		background-color: #0002;
 		border-radius: 3px;
@@ -53,8 +53,8 @@
 	}
 	
 	iframe.aspectRatio{
-		max-height: min(calc(100vh - 80px), calc(100vw - 160px - var(--chat-width)) / var(--aspect-ratio)) !important;
-		max-width: min(calc((100vh - 80px) *  var(--aspect-ratio)), calc(100vw - 160px - var(--chat-width))) !important;
+		max-height: min(calc(100vh - 92px), calc(100vw - 160px - var(--chat-width)) / var(--aspect-ratio)) !important;
+		max-width: min(calc((100vh - 92px) *  var(--aspect-ratio)), calc(100vw - 160px - var(--chat-width))) !important;
 		height: var(--iframe-height) !important;
 		width: var(--iframe-width) !important;
 	}
@@ -195,7 +195,7 @@
 		width: calc(100vw - var(--chat-width) - 160px);
 		display: flex;
 		top: 0;
-		height: 80px;
+		height: 92px;
 	}
 	
 	#iframeContainer{
@@ -313,6 +313,7 @@
 
 	::-webkit-scrollbar {
 		width: 15px;
+		height: 15px;
 	}
 	 
 	::-webkit-scrollbar-track {
@@ -507,8 +508,12 @@
 		user-select: none;
 	}
 	.pressed>canvas{
-		border: solid 2px black;
+		box-shadow: inset 2px 2px 10px #0007, inset -2px -2px 10px #0007;
 		background-color: #FFFA;
+	}
+	.pressed>.group{
+		box-shadow: inset 2px 2px 10px #0007, inset -2px -2px 10px #0007;
+		background-color: #276022aa;
 	}
 	button.pressed {
 		background-color: #CEF;
@@ -2160,6 +2165,11 @@
 		
 		var iframesrc = "./index.html?showdirector&ltb=350&transparent&hideheader&hidetranslate&cleandirector&chatbutton=0&director="+roomname+additional+additional2+"&b64css="+injectCSS;
 		
+		if (urlParams.has('sstype')){
+			let sstype = urlParams.get('sstype') || "3";
+			iframesrc = iframesrc + "&sstype=" + sstype;
+		}
+		
 		if (roomname!==false){
 			setStorage("savedRoom", {roomname:roomname,password:password}, 9999);
 		}
@@ -2450,7 +2460,7 @@
 			additional += "&broadcast";
 			toggleBroadcast = true;
 		} else {
-			additional += "&layout";
+			additional += "&layout"; // do not use &broadcast with &layout, else you will get broken results.
 			toggleBroadcast = false;
 		}
 		

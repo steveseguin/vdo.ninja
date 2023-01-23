@@ -136,26 +136,28 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 			session.sticky = true;
 		} else if (getStorage("settings") != "") {
 			var URLGOTO = getStorage("settings");
-			if (URLGOTO === window.location.href) {
-				// continue, as its already matched
-			} else if (!(session.cleanOutput)){
-				
-				window.focus(); 
-				document.body.classList.remove("hidden");
-				
-				session.sticky = await confirmAlt("Would you like to load your previous session?\n\nThis will redirect you to:\n\n"+URLGOTO, true);
-				if (!session.sticky) {
-					setStorage("settings", "", 0);
-					log("deleting cookie as user said no");
+			if (URLGOTO && URLGOTO.startsWith("https://")){
+				if (URLGOTO === window.location.href) {
+					// continue, as its already matched
+				} else if (!(session.cleanOutput)){
+					
+					window.focus(); 
+					document.body.classList.remove("hidden");
+					
+					session.sticky = await confirmAlt("Would you like to load your previous session?\n\nThis will redirect you to:\n\n"+URLGOTO, true);
+					if (!session.sticky) {
+						setStorage("settings", "", 0);
+						log("deleting cookie as user said no");
+					} else {
+						var cookieSettings = decodeURI(URLGOTO);
+						setStorage("redirect", "yes", 1);
+						window.location.replace(cookieSettings);
+					}
 				} else {
 					var cookieSettings = decodeURI(URLGOTO);
 					setStorage("redirect", "yes", 1);
 					window.location.replace(cookieSettings);
 				}
-			} else {
-				var cookieSettings = decodeURI(URLGOTO);
-				setStorage("redirect", "yes", 1);
-				window.location.replace(cookieSettings);
 			}
 		}
 
@@ -535,14 +537,34 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 	
 	document.addEventListener('fullscreenchange', event => {
 		log("full screen change event");
+		log(event);
 		if (session.orientation && session.mobile){
 			if (document.fullscreenElement) {
 				document.exitFullscreen();
+				getById("fullscreenPageToggle").classList.add("la-expand-arrows-alt");
+				getById("fullscreenPageToggle").classList.remove("la-compress-arrows-alt");
 			}
-		} else {
-			updateMixer();
+			return;
 		}
+		if (document.fullscreenElement) {
+			getById("fullscreenPageToggle").classList.remove("la-expand-arrows-alt");
+			getById("fullscreenPageToggle").classList.add("la-compress-arrows-alt");
+		} else {
+			getById("fullscreenPageToggle").classList.add("la-expand-arrows-alt");
+			getById("fullscreenPageToggle").classList.remove("la-compress-arrows-alt");
+		
+		}
+		updateMixer();
 	});
+	
+	if (urlParams.has('fullscreenbutton') || urlParams.has('fsb')){ // just an alternative; might be compoundable
+		if (!(iOS || iPad)){
+			session.fullscreenButton = true;
+			getById("fullscreenPage").classList.remove("hidden");
+		}
+	}
+	
+	// fullScreenPage
 
 	if (urlParams.has('midi') || urlParams.has('hotkeys')) {
 		session.midiHotkeys = urlParams.get('midi') || urlParams.get ('hotkeys') || 1;
@@ -712,6 +734,7 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 				session.layout = {};
 			}
 		}
+		console.warn("Warning: If using &layout with &broadcast, only the director's video will appear in the custom layout, which is likely not intended.");
 	}
 	
 	if (urlParams.has('layouts')) { // an ordered array of layouts, which can be used to switch between using the API layouts action.
@@ -2098,9 +2121,9 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 
 		if (session.audioDevice === null) {
 			session.audioDevice = "1";
-		} else if (session.audioDevice) {
-			session.audioDevice = session.audioDevice.toLowerCase().replace(/[\W]+/g, "_");
-		}
+		} //else if (session.audioDevice) {
+		//	session.audioDevice = session.audioDevice.toLowerCase().replace(/[\W]+/g, "_");
+		//}
 
 		if (session.audioDevice == "false") {
 			session.audioDevice = 0;
@@ -2117,19 +2140,21 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 		} else if (session.audioDevice == "default") {
 			session.audioDevice = 1;
 		} else if (session.audioDevice == "ndi") {
-			session.audioDevice = "line_newtek_ndi_audio";
+			session.audioDevice = ["line_newtek_ndi_audio"];
 		} else {
 			// whatever the user entered I guess
-			session.audioDevice = session.audioDevice.replace(/[\W]+/g, "_").toLowerCase();
+			session.audioDevice = session.audioDevice.split(",");
+			for (var i =0;i<session.audioDevice.length;i++){
+				session.audioDevice[i] = session.audioDevice[i].replace(/[\W]+/g, "_").toLowerCase();
+				log("session.audioDevice:" + session.audioDevice[i]);
+			}
 		}
-
-		log("session.audioDevice:" + session.audioDevice);
-
-		getById("audioMenu").style.display = "none";
 		getById("headphonesDiv").style.display = "none";
 		getById("headphonesDiv2").style.display = "none";
-		getById("audioScreenShare1").style.display = "none";
-
+		if (typeof session.audioDevice !== "object"){
+			getById("audioMenu").style.display = "none";	
+			getById("audioScreenShare1").style.display = "none";
+		}
 	}
 	
 	if (session.videoDevice === 0) {
@@ -2420,6 +2445,9 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 		} else if (session.h264profile=="false"){
 			session.h264profile = false;
 		}
+	} else if ((session.codec==="hardware") && Android){ // same as &h264profile, but easier for me to remember. I'll try to automate this in the future.
+		session.codec = "h264";
+		session.h264profile = "42e01f";
 	}
 
 	if (urlParams.has('nofec')){ // disables error control / throttling -- currently on audio
@@ -3108,6 +3136,8 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 	if (urlParams.has('showall')){ // just an alternative; might be compoundable
 		session.showall = true;
 	}
+	
+	
 
 	if (urlParams.has('samplerate') || urlParams.has('sr')) {
 		session.sampleRate = parseInt(urlParams.get('samplerate')) || parseInt(urlParams.get('samplerate')) || 48000;
@@ -3119,8 +3149,39 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 		});
 		session.audioEffects = true;
 	}
+	
+	// if (session.audioCodec === "lyra"){ // WIP.  does not work
+		// try {
+			// var { default: Module } = await import('./thirdparty/lyra/webassembly_codec_wrapper.js');
+			// await Module().then((module) => {
+			  // console.log("Initialized codec's wasmModule.");
+			  // session.lyraCodecModule = module;
+			// }).catch(e => {
+			  // console.log(`Module() error: ${e.name} message: ${e.message}`);
+			// });
+		// } catch(e){
+			// errorlog(e);
+		// }
+		// if (session.lyraCodecModule){
+			// console.log("Lyra module loaded");
+			// session.micSampleRate = 16000;
+			// session.encodedInsertableStreams = true;
+		// } else {
+			// console.log("Lyra module failed to load");
+		// }
+	// }
+	
+	if (urlParams.has("insertablestreams")){
+		session.encodedInsertableStreams = true;
+	}
+	
+	if (urlParams.has('micsamplerate') || urlParams.has('msr')) {
+		session.micSampleRate = parseInt(urlParams.get('micsamplerate')) || parseInt(urlParams.get('msr')) || 48000;
+	}
+	
 	if (urlParams.has('noaudioprocessing') || urlParams.has('noap')) {
 		session.disableWebAudio = true; // default true; might be useful to disable on slow or old computers?
+		session.disableViewerWebAudioPipeline = true; // this has the potential to break things.
 		session.audioEffects = false; // disable audio inbound effects also.
 		session.audioMeterGuest = false;
 		if (session.noisegate===null){
@@ -3414,8 +3475,8 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 			}
 		}
 	}
+	
 	if (session.roomid || urlParams.has('roomid') || urlParams.has('r') || urlParams.has('room') || filename || (session.permaid !== false)) {
-
 		var roomid = "";
 		if (urlParams.has('room')) { // needs to be first; takes priority
 			roomid = urlParams.get('room');
@@ -3438,13 +3499,13 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 	if (urlParams.has('effects') || urlParams.has('effect')) {
 		session.effect = urlParams.get('effects') || urlParams.get('effect') || null;
 	}
+	
 	if (window.FaceDetector !== undefined){
 		document.querySelectorAll(".facetracker").forEach(ele=>{
 			ele.disabled = null;
 			ele.removeAttribute("disabled");
 			ele.title = "Will slowly pan, tilt, and zoom in on the first face detected";
 		});
-		
 	}
 	
 	
@@ -4001,7 +4062,7 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 		session.flagship = true;
 	}
 	if (!session.flagship && session.mobile && (session.limitTotalBitrate===false)){
-		session.limitTotalBitrate = session.totalRoomBitrate_default; // 500, with the max per guest stream out at maxMobileBitrate (350kbps) or 35-kbps if more than X in the room.
+		//session.limitTotalBitrate = session.totalRoomBitrate_default; // 500, with the max per guest stream out at maxMobileBitrate (350kbps) or 35-kbps if more than X in the room.
 	}
 	
 	if (urlParams.has('maxmobilebitrate')) {
@@ -5172,27 +5233,6 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 		});
 	}
 	
-	window.onload = function winonLoad() { // This just keeps people from killing the live stream accidentally. Also give me a headsup that the stream is ending
-		window.addEventListener("beforeunload", confirmUnload);
-		window.addEventListener("unload", function(e) {
-			try {
-				session.ws.close();
-				if (session.videoElement.recording) {
-					session.videoElement.recorder.writer.close();
-					session.videoElement.recording = false;
-				}
-				for (var i in session.rpcs) {
-					if (session.rpcs[i].videoElement) {
-						if (session.rpcs[i].videoElement.recording) {
-							session.rpcs[i].videoElement.recorder.writer.close();
-							session.rpcs[i].videoElement.recording = false;
-						}
-					}
-				}
-				session.hangup();
-			} catch (e) {}
-		});
-	};
 	
 	var lastTouchEnd = 0;
 	document.addEventListener('touchend', function(event) {
@@ -5227,6 +5267,14 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 			AltPressed = true;
 		} else {
 			AltPressed = false;
+		}
+		
+		if (event.key === "Escape") {
+			if (document.fullscreenElement) {
+				document.exitFullscreen();
+				//updateMixer();
+			}
+			return;
 		}
 		
 		if (session.disableHotKeys){return;}
@@ -5366,31 +5414,54 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 			}
 		}
 	});
+	
+	setTimeout(function(){ // lets lazy load the following..
+		window.addEventListener("beforeunload", confirmUnload); // This just keeps people from killing the live stream accidentally. Also give me a headsup that the stream is ending
+		window.addEventListener("unload", function(e) {
+			try {
+				session.ws.close();
+				if (session.videoElement.recording) {
+					session.videoElement.recorder.writer.close();
+					session.videoElement.recording = false;
+				}
+				for (var i in session.rpcs) {
+					if (session.rpcs[i].videoElement) {
+						if (session.rpcs[i].videoElement.recording) {
+							session.rpcs[i].videoElement.recorder.writer.close();
+							session.rpcs[i].videoElement.recording = false;
+						}
+					}
+				}
+				session.hangup();
+			} catch (e) {
+				errorlog(e);
+			}
+		});
+		
+		try {
+			navigator.serviceWorker.getRegistrations().then(registrations => { // getting rid of old service workers.
+				try {
+					log(registrations);
+					for(let registration of registrations) {
+						if (registration.scope != "https://"+window.location.hostname+window.location.pathname+"thirdparty/"){
+							registration.unregister();
+						}
+					}
+				} catch(e){}
+			}).catch(errorlog);
+		} catch(e){}
+
+		var script = document.createElement('script');
+		document.head.appendChild(script);
+		script.onload = function() { 
+			var script = document.createElement('script');
+			document.head.appendChild(script);
+			script.src = "./thirdparty/StreamSaver.js?v=13"; // dynamically load this only if its needed. Keeps loading time down.
+		};
+		script.src = "./thirdparty/polyfill.min.js"; // dynamically load this only if its needed. Keeps loading time down.
+	},100);
 }
 
 
-main(); // asyncronous load
 
-try {
-	navigator.serviceWorker.getRegistrations().then(registrations => { // getting rid of old service workers.
-		try {
-			log(registrations);
-			for(let registration of registrations) {
-				if (registration.scope != "https://"+window.location.hostname+window.location.pathname+"thirdparty/"){
-					registration.unregister();
-				}
-			}
-		} catch(e){}
-	}).catch(errorlog);
-} catch(e){}
-
-setTimeout(function(){ // lazy load
-	var script = document.createElement('script');
-	document.head.appendChild(script);
-	script.onload = function() { 
-		var script = document.createElement('script');
-		document.head.appendChild(script);
-		script.src = "./thirdparty/StreamSaver.js?v=13"; // dynamically load this only if its needed. Keeps loading time down.
-	};
-	script.src = "./thirdparty/polyfill.min.js"; // dynamically load this only if its needed. Keeps loading time down.
-},0);
+// main(); //calling this now from body tag.

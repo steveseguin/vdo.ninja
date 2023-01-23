@@ -156,6 +156,25 @@
 				
 			}
 			
+			function timeConverter(UNIX_timestamp){
+			  var a = new Date(UNIX_timestamp);
+			  var months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+			  var year = a.getFullYear();
+			  var month = months[a.getMonth()];
+			  var date = a.getDate();
+			  
+			  var hours = a.getHours();
+			  var minutes = a.getMinutes();
+			  var ampm = hours >= 12 ? 'pm' : 'am';
+			  hours = hours % 12;
+			  hours = hours ? hours : 12; // the hour '0' should be '12'
+			  minutes = minutes < 10 ? '0'+minutes : minutes;
+			  var strTime = hours + ':' + minutes + ' ' + ampm;
+			  
+			  var time = date + ' ' + month + ' ' + year + ' ' + hours + ':' + minutes + ampm;
+			  return time;
+			}
+			
 			function printValues(obj) {
 				var out = "";
 				for (var key in obj) {
@@ -238,12 +257,16 @@
 						if (data.packetloss!==null){
 							PAK += parseFloat(data.packetloss) || 0;
 							PAKCCC += 1;
-							
 						}
 					}
+					if (data.timestart){
+						document.getElementById("details").innerHTML += "<br /><b>Test start time:</b> "+timeConverter(data.timestart)+"<br />";
+					}
+					
 					if ("resolution" in data){
 						updateData("resolution", data.resolution);
 					}
+					
 					if ("QLR" in data){
 						if (data.QLR == "none"){
 							QLR_1 +=1;
