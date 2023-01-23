@@ -2296,7 +2296,7 @@
 			
 			session.stunServers = [{ urls: ["stun:stun.l.google.com:19302", "stun:stun4.l.google.com:19302"]}]; // google stun servers. default
 			
-			///////////////  ------  Custom TURN SETUP SECTION STARTS Here --------
+			///////////////  ------  Custom basic TURN SETUP SECTION STARTS Here --------
 			// session.configuration = {         // uncomment to disable the default usage of the vdo.ninja turn servers.
 			//	iceServers: session.stunServers,
 			//	sdpSemantics: 'unified-plan'
@@ -2314,47 +2314,51 @@
 			// session.configuration.iceServers.push(turn);
 			/////////////// ------------ END OF TURN SETUP SECTION -------
 
-			// use this section if you plan to use the turn-credentials.php to provide usename and password of the turn-server, e.g., because you use a turn-server that uses use-auth-secret and static-auth-secret
+			/////////////// --------  Alternative custom TURN SETUP SECTION here ---------
+			// Use this section if you plan to use the turn-credentials.php sample and its use-auth-secret and static-auth-secret method, rather than a plain password
+			// 
 			// try {
-			// 	session.ws = false; // prevents connection
-			// 	var phpcredentialsRequest = new XMLHttpRequest();
-			// 	phpcredentialsRequest.onreadystatechange = function() {
-			// 		if (phpcredentialsRequest.status === 200) {
-			// 			try{
-			// 				var res = JSON.parse(phpcredentialsRequest.responseText);
-			// 			} catch(e){return;}
-			// 			session.configuration = {
-			// 				iceServers: [{
-			// 						"username": res["1"],
-			// 						"credential": res["2"],
-			// 						"urls": res["3"]
-			// 					},
-			// 					{
-			// 						"username": res["1"],
-			// 						"credential": res["2"],
-			// 						"urls": res["4"]
-			// 					}
-			// 				],
-			// 				sdpSemantics: 'unified-plan' // future-proofing
-			// 			};
-			// 			if (session.ws===false){
-			// 				session.ws=null; // allows connection (clears state)
-			// 				session.connect(); // connect if not already connected.
-			// 			}
-			// 		}
-			// 		// system does not connect if php script does not respond.
-			// 	};
-			// 	phpcredentialsRequest.open('GET', 'turn-credentials.php', true); // `false` makes the request synchronous
-			// 	phpcredentialsRequest.send();
-			// } catch (e) {
-			// 	errorlog("php-credentials script Failed");
-			// }
+				// session.ws = false; // prevents connection
+				// var phpcredentialsRequest = new XMLHttpRequest();
+				// phpcredentialsRequest.onload = function() {
+					// if (this.status === 200) {
+						// try {
+							// var res = JSON.parse(this.responseText);
+						// } catch(e){
+							// console.error(e); // not proper JSON
+							// return;
+						// }
+						// session.configuration = {};
+						// session.configuration.sdpSemantics = "unified-plan";
+						// session.configuration.iceServers = [];
+						//  // session.configuration.iceServers = session.stunServers; // Uncomment to use the hard-coded Google STUN servers, if we don't provide our own STUN
 
-      // session.configuration.iceTransportPolicy = "relay";  // uncomment to enable "&privacy" and force the TURN server
+						// let phpIceServers = {"username": res[0], "credential": res[1], urls:[]};
+						// for (let i = 2; i < res.length; i++){ // Supports one or multiple TURN/STUN servers, but assumes same credientials for each.
+							// phpIceServers['urls'].push(res[i]);
+						// };
+						// session.configuration.iceServers.push(phpIceServers);
+
+						// if (session.ws===false){
+							// session.ws=null; // allows connection (clears block state)
+							// session.connect(); // connect if not already connected.
+						// }
+					// }
+					//  // system does not connect if php script does not respond.
+				// };
+				// phpcredentialsRequest.open('GET', './turn-credentials.json', true); // `false` makes the request synchronous
+				// phpcredentialsRequest.send();
+			// } catch (e) {
+				// console.error(e);
+				// errorlog("php-credentials script Failed");
+			// }
+			//////////////////// -------------- END OF ALTERNATIVE TURN SETUP SECTION -------
+
+			// session.configuration.iceTransportPolicy = "relay";  // uncomment to enable "&privacy" and force the TURN server's use
 
 			// session.wss = "wss://backupapi.vdo.ninja:443"; // US-East (Default)
 
-			///  If wanting to fully-self-host, uncomment the following and deploy your own websocket server; good for air-gapped deployments
+			//  If wanting to fully-self-host, uncomment the following and deploy your own websocket server; good for air-gapped deployments
 			// session.wss = "wss://wss.yourdomainhere.com:443"; // https://github.com/steveseguin/websocket_server 
 			// session.customWSS = true;
 			//////
