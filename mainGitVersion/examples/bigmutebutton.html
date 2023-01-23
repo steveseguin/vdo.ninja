@@ -1,0 +1,121 @@
+<html>
+<head><title>Twitch + Video</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+<meta content="text/html;charset=utf-8" http-equiv="Content-Type" />
+<style>
+body{
+	padding:0;
+	margin:0;
+	background-color:#003;
+	width:100%;
+	height:100%;
+}
+
+iframe {
+	width:100%;
+	height:100%;
+	border:0;
+	margin:0;
+	padding:0;
+	position:absolute;
+	display:block;
+}
+
+
+input{
+	padding:10px;
+	width:80%;
+	font-size:1.2em;
+	z-index: 1000;
+	margin:10%;
+}
+
+#startButton{
+	margin: 10px;
+    padding: 20px
+	display: block;
+	border-radius: 50px;
+	font-size:1.5em;
+}
+
+#toggleMute{
+	margin: 10px;
+    padding: 30px 0;
+    border-radius: 50px;
+	font-size:1.5em;
+	display: block;
+    position: fixed;
+    bottom: 0;
+	width:200px;
+    left: calc(50% - 100px);
+}
+
+.pressed {
+	background-color: red;
+}
+
+</style>
+</head>
+<body>
+<div id="clean">
+	<center>
+	<input placeholder="Enter a VDON stream ID here" id="viewlink" type="text" />
+	<button id="startButton" onclick="loadIframes()" style="display:block;padding:10px;margin:10px;">START</button></center>
+</div>
+<script>
+
+window.addEventListener("orientationchange", function() {
+  // Announce the new orientation number
+ // alert(window.orientation);
+}, false);
+
+
+
+
+function loadIframes(url=false){ 
+
+	var streamID = document.getElementById("viewlink").value;
+	https://vdo.ninja/?label&webcam&cleanoutput&ad=1&vd=1
+	
+	var path = "vdo.ninja"; //window.location.host+window.location.pathname.split("/").slice(0,-1).join("/");
+	var streamSrc = "https://"+path+"/?push="+streamID+"&label&webcam&cleanoutput&ad=1&vd=1";
+	
+	document.getElementById("clean").parentNode.removeChild(document.getElementById("clean"));
+	
+	var iframe = document.createElement("iframe");
+	iframe.allow = "autoplay;camera;microphone;fullscreen;picture-in-picture;";
+	iframe.src = streamSrc;
+	document.body.appendChild(iframe);
+	
+	function sendSelfCommand(action, value=null){
+		iframe.contentWindow.postMessage({"target":null, "action":action, "value":value}, '*');
+	}
+	
+	
+	
+	var button = document.createElement("button");
+	button.id = "toggleMute";
+	button.innerHTML = "Mute";
+	button.dataset.value = "true";
+	document.body.appendChild(button);
+	
+	button.onclick = function(){
+		
+		if (this.dataset.value=="true"){
+			this.dataset.value = "false";
+			this.classList.add("pressed");
+			this.innerHTML = "Un-Mute";
+			sendSelfCommand("mic",false);
+		} else {
+			this.classList.remove("pressed");
+			this.innerHTML = "Mute";
+			this.dataset.value = "true";
+			sendSelfCommand("mic",true);
+		}
+	}
+	
+}
+
+</script>
+</body>
+</html>

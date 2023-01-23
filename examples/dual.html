@@ -54,7 +54,7 @@ function loadIframes(url=false){
 	var room2 = "https://"+path+"/../?room="+roomname+"&push="+roomname+"_rear&webcam&autostart&vd=back&ad=0&view&cleanoutput&nosettings&transparent";
 	
 	var iframe = document.createElement("iframe");
-	iframe.allow = "autoplay;camera;microphone;fullscreen;picture-in-picture;";
+	iframe.allow = "document-domain;encrypted-media;sync-xhr;usb;web-share;cross-origin-isolated;accelerometer;midi;geolocation;autoplay;camera;microphone;fullscreen;picture-in-picture;display-capture;";
 	iframe.src = room1;
 	var iframeContainer = document.createElement("div");
 	iframeContainer.appendChild(iframe);

@@ -25,6 +25,7 @@
 	--advanced-mode: inline-block;
 	--background-main-image: unset;
 	--show-codirectors: inline-block;
+	--full-screen-button: inherit;
 }
 
 * {
@@ -246,7 +247,7 @@ button.red {
 
 button {
 	-webkit-app-region: no-drag;
-	padding: 7px 10px 6px 10px;
+	padding: 7px 10px 6px 6px;
 	user-select: none;
 	margin: 10px 0px;
 	cursor: pointer;
@@ -947,7 +948,7 @@ button.glyphicon-button.active.focus {
 
 #controlButtons {
 	position: fixed;
-	z-index: 5;
+	z-index: 995;
 	bottom: 0px;
 	width: 100%;
 	display: none;
@@ -1410,9 +1411,6 @@ select{
 	background-color:#EFEFEF;
 	padding:10px 12px 12px 8px;
 	margin: 0px 0px 0px 10px;
-}
-.advanced {
-	display: var(--advanced-mode);
 }
 
 .highlight {
@@ -2450,6 +2448,10 @@ video::-webkit-media-controls-timeline {
 	display: none;
 }
 
+video::-webkit-media-controls-fullscreen-button {
+	display: var(--full-screen-button);
+}
+
 video::-webkit-media-controls-timeline-container {
 	display: none;
 }
@@ -2514,7 +2516,7 @@ audio.fileshare::-webkit-media-controls-play-button, video.fileshare::-webkit-me
 .context-menu {
 	display: none;
 	position: absolute;
-	z-index: 10 !important;
+	z-index: 996 !important;
 	padding: 12px 0 !important;
 	width: 240px !important;
 	background-color: #fff !important;
@@ -2565,7 +2567,12 @@ audio.fileshare::-webkit-media-controls-play-button, video.fileshare::-webkit-me
     position: relative;
     top: 7px;
 }
-
+#bufferSliderValue{
+	margin-left:10px;
+}
+.context-menu__link:hover > #bufferSliderValue {
+	color: #fff;
+}
 .selectedTFImage{
     box-shadow: 0 0 10px #2c3554;
     outline: 2px solid black;
@@ -3277,20 +3284,47 @@ div#roomnotes2 {
 	text-transform: lowercase;
 }
 .controlsGrid {
-	grid-template-columns: 1fr 1fr;
-	display: grid;
+	display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-content: stretch;
+    justify-content: flex-start;
+    align-items: stretch;
 }
 .controlsGrid button {
 	margin: 5px;
-	text-align: right;
+    text-align: right;
+    width: 46%;
+}
+.controlsGrid > span {
+	width: 50%;
+}
+.controlsGrid > div {
+	width: 100%;
+	display: flex;
 }
 .controlsGrid span button {
 	margin-right: 0;
 	padding-left: 3px;
 	text-align: right;
+	width: calc(33% - 10px);
 }
 .controlsGrid input {
 	margin: 5px var(--regular-margin);
+}
+
+.advanced {
+	display: var(--advanced-mode);
+}
+.controlCenterBox{
+	margin-top:2px;
+}
+#widget {
+	position: absolute;
+    width: 25%;
+    height: 100%;
+    right: 0;
+    top: 0;
 }
 
 .pull-right {
@@ -3333,6 +3367,24 @@ i.las.la-circle {
 .vidcon>h2 {
 	font-size: 1em;
 	margin-top: 20px;
+}
+#pptbackbutton {
+	margin-left: 20;
+}
+#pptnextbutton {
+	background-color: #007900;
+}
+#pptbackbutton:active {
+	-webkit-box-shadow: inset 0px 0px 17px #4b4b4b;
+	-moz-box-shadow: inset 0px 0px 17px #4b4b4b;
+	box-shadow: inset 0px 0px 17px #4b4b4b;
+	outline: none;
+}
+#pptnextbutton:active {
+	-webkit-box-shadow: inset 0px 0px 17px #4b4b4b;
+	-moz-box-shadow: inset 0px 0px 17px #4b4b4b;
+	box-shadow: inset 0px 0px 17px #4b4b4b;
+	outline: none;
 }
 div#guestFeeds {
 	background: var(--container-color);
@@ -3784,6 +3836,23 @@ input:checked + .slider:before {
 	overflow-wrap: break-word;
 }
 
+#bufferSettings{
+	position: absolute;
+	background-color: #ddddddee;
+	box-shadow: 0 0 30px 10px #0000005c;
+	color: black;
+	font-size: 1.0em;
+	bottom: 5%;
+	left: 50%;
+	transform: translate(-50%, 0%);
+	border-radius: 10px;
+	font-weight: bold;
+	z-index:31;
+	width:550px;
+	max-width:100%;
+	overflow: hidden;
+	overflow-wrap: break-word;
+}
 .largeTextEntry {
 	width: 90%;
 	margin: 10px 5%;
@@ -4221,6 +4290,10 @@ input:checked + .slider:before {
 	content: "\f021"; }
 .la-circle:before {
 	content: "\f111"; }
+.la-chevron-left:before {
+	content: "\f053"; }
+.la-chevron-right:before {
+	content: "\f054"; }
 .la-binoculars:before {
 	content: "\f1e5"; }
 .la-user-cog:before {
@@ -4263,6 +4336,8 @@ input:checked + .slider:before {
 	content: "\f078"; }
 .la-music:before {
 	content: "\f001"; }
+.la-thumbtack:before {
+	content: "\f08d"; }
 .la-hdd:before {
 	content: "\f0a0"; }
 .la-signal:before {

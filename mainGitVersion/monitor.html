@@ -1,0 +1,590 @@
+<html>
+	<head>
+		<meta charset="utf8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		<title>VDO.Ninja Monitoring</title>
+		<style>
+		
+		body {
+			-webkit-font-smoothing: antialiased;
+			text-rendering: optimizeLegibility;
+			font-family: "Lato", sans-serif;
+			padding: 0 0px;
+			height: 100%;
+			width: 100%;
+			font-family: Helvetica, Arial, sans-serif;
+			border: 0;
+			margin: 0;
+			opacity:  1;
+			transition: opacity .1s linear;
+			background-color: #141926;
+		}
+
+		h1 {
+			color: white;
+			margin: 5px 20px;
+		}
+
+		h1 small {
+			display: block;
+			margin-top: 0.5em;
+			font-size: 0.5em;
+		}
+		
+		h2 {
+			color: #CCC;
+			margin-top:10px;
+		}
+
+		#explanation {
+			color: white;
+			font-family: sans-serif;
+			width: 80%;
+			margin: 0 auto;
+			margin-top: 20px;
+		}
+
+		#container, #graphs, #log {
+			width: 80%;
+			margin: 0 auto;
+		}
+
+
+		#explanation h2 {
+			border-bottom: 1px solid #383838;
+			margin-bottom: 10px;
+			padding-bottom: 5px;
+		}
+
+		#feeds {
+			display: inline-block;
+			width:100%;
+			height:380px;
+			
+		}
+
+		#feeds span {
+			margin:auto;
+			height: 100%;
+			min-width:50%;
+			display: inline-block;
+			flex-direction: column;
+		}
+
+		#button_container{
+			margin:auto;
+		}
+		#feeds h3 {
+			color: whitesmoke;
+			margin: 10px;
+		}
+
+		iframe {
+			height: 85%;
+			width: 100%;
+			flex: 1;
+		}
+
+		#controls {
+			margin:auto;
+		}
+
+		#controls button {
+			margin: 5px;
+		}
+
+		#controls button.active {
+			background-color: #70ff70;
+		}
+
+		canvas {
+			background-color: black;
+			margin: 1vw;
+			width: 22vw;
+			height: 160px;
+		}
+
+		#log {
+			margin-top: 10px;
+			background: #313131;
+			padding: 20px 0px;
+			border: 1px solid #383838;
+			cursor: pointer;
+			max-height:300px;
+		}
+
+		#log ul {
+			margin: 20px;
+			list-style: none;
+			color: #cacaca;
+			max-height: 20vh;
+			overflow: auto;
+			overflow-x: hidden;
+		}
+
+		#graphs {
+			display: block;
+			margin-top: 20px;
+			background: #313131;
+			padding: 20px 0px;
+			border: 1px solid #383838;
+			text-align: center;
+		}
+
+		.graphContainer {
+			display: block;
+			margin-top: 20px;
+			background: #313131;
+			border: 1px solid #383838;
+		}
+
+		.graph {
+			display: inline-block;
+			position: relative;
+		}
+
+		.graph h2, #log h2 {
+			margin: 10px 20px 0 20px;
+			font-size: 1em;
+		}
+
+		.graph > span {
+			position: absolute;
+			bottom: 30px;
+			left: 30px;
+			color: #cacaca;
+			font-weight: bold;
+		}
+
+		ol {
+			margin-left: 20px;
+			margin-top: 30px;
+		}
+
+
+		@media only screen and (max-width: 800px) {
+			
+			#container, #graphs, #log {
+				width: 100%;
+				margin: 0 auto;
+			}
+
+			#graphs {
+				flex-direction: column;
+			}
+
+			iframe {
+				width: 100%;
+			}
+
+			#feeds {
+				flex-direction: column;
+			}
+
+			#feeds h3 {
+				font-size:50%;
+			}
+			
+			h1{
+				color: white;
+				margin: 2px;
+				font-size:70%
+			}
+			
+			#feeds span{
+				height: 50%;
+				width:100%;
+				display: inline-block;
+			}
+			canvas {
+				margin:auto;
+			}
+			
+		}
+
+		#statsdiv {display: none;}
+
+
+  
+	</style>
+	<script>
+		
+			function getChromeVersion() {
+				var raw = navigator.userAgent.match(/Chrom(e|ium)\/([0-9]+)\./);
+				return raw ? parseInt(raw[2], 10) : false;
+			}
+			if (!getChromeVersion()){
+				alert("This speedtest is optimized for Chromium-based browsers; graphs will not work for Firefox or Safari browsers.");
+			}
+		
+			(function (w) {
+				w.URLSearchParams =
+					w.URLSearchParams ||
+					function (searchString) {
+						var self = this;
+						self.searchString = searchString;
+						self.get = function (name) {
+							var results = new RegExp("[\?&]" + name + "=([^&#]*)").exec(
+								self.searchString
+							);
+							if (results == null) {
+								return null;
+							} else {
+								return decodeURI(results[1]) || 0;
+							}
+						};
+					};
+			})(window);
+			var urlParams = new URLSearchParams(window.location.search);
+			
+			var quality_reason = {};
+			var video_encoder={};
+			var resolution={};
+				
+			function copyFunction(copyText) {
+				try {
+					copyText.select();
+					copyText.setSelectionRange(0, 99999);
+					document.execCommand("copy");
+				} catch (e) {
+					var dummy = document.createElement("input");
+					document.body.appendChild(dummy);
+					dummy.value = copyText;
+					dummy.select();
+					document.execCommand("copy");
+					document.body.removeChild(dummy);
+					return false;
+				}
+				
+			}
+
+			function loadIframe() {
+				
+				var iframe = document.createElement("iframe");
+
+				if (urlParams.has("remote")) {
+					var remote = urlParams.get("remote");
+				} else {
+					var remote="";
+				}
+
+				if (urlParams.has("sid")) {
+					var streamID = urlParams.get("sid");
+				} else if (urlParams.has("view")) {
+					var streamID = urlParams.get("view");
+				} else {
+					return;
+				}
+				
+				if (document.getElementById("streamID_header")){
+					document.getElementById("streamID_header").innerText += ": "+streamID;
+				}
+				
+				var room="";
+				if (urlParams.has("room")) {
+					room = "&room="+urlParams.get("room");
+				}
+				
+				var password="";
+				if (urlParams.has("password")) {
+					password = "&password="+urlParams.get("password");
+				}
+				
+				iframe.allow = "autoplay";
+				var srcString = "./?view=" + streamID + room + password + "&vd=0&ad=0&autostart&novideo&noaudio&remote="+remote;
+				
+				
+				iframe.src = srcString;
+				iframe.style.width="0";
+				iframe.style.height="0";
+				iframe.style.border="0";
+				
+
+				document.body.appendChild(iframe);
+
+				setInterval(function () {
+					iframe.contentWindow.postMessage({ getRemoteStats: true }, "*");
+				}, 3000);
+
+				var eventMethod = window.addEventListener
+					? "addEventListener"
+					: "attachEvent";
+				var eventer = window[eventMethod];
+				var messageEvent = eventMethod === "attachEvent" ? "onmessage" : "message";
+				var previousResolution;
+
+				eventer(messageEvent, function (e) {
+					if ("remoteStats" in e.data) {
+						var out = "";
+						console.log(e.data);
+						
+						for (var UUID in e.data.remoteStats) {
+							
+							if (e.data.remoteStats[UUID].quality_limitation_reason){
+								if (quality_reason[UUID] != e.data.remoteStats[UUID].quality_limitation_reason) {
+									quality_reason[UUID] = e.data.remoteStats[UUID].quality_limitation_reason;
+									logData("Quality Limitation Reason:", quality_reason[UUID], UUID);
+								}
+							}
+							
+							if (e.data.remoteStats[UUID].video_encoder){
+								if (video_encoder[UUID] != e.data.remoteStats[UUID].video_encoder) {
+									video_encoder[UUID] = e.data.remoteStats[UUID].video_encoder;
+									logData("Video encoder used:", video_encoder[UUID], UUID);
+								}
+							}
+							
+							if (e.data.remoteStats[UUID].resolution){
+								if (resolution[UUID] != e.data.remoteStats[UUID].resolution) {
+									resolution[UUID] = e.data.remoteStats[UUID].resolution;
+									logData("Resolution:", resolution[UUID], UUID);
+								}
+							}
+							
+							if (e.data.remoteStats[UUID].video_bitrate_kbps){
+								var video_bitrate_kbps = e.data.remoteStats[UUID].video_bitrate_kbps;
+								updateData("bitrate", video_bitrate_kbps, UUID);
+							} else if (document.getElementById(UUID)){
+								updateData("bitrate", 0, UUID);
+							}
+							
+							if (e.data.remoteStats[UUID].nacks_per_second){
+								var nacks_per_second = e.data.remoteStats[UUID].nacks_per_second;
+								updateData("nackrate", nacks_per_second, UUID);
+							} else if (document.getElementById(UUID)){
+								updateData("nackrate", 0, UUID);
+							}
+							
+							if (e.data.remoteStats[UUID].retransmitted_kbps){
+								var retransmitted_kbps = parseInt(10000*e.data.remoteStats[UUID].retransmitted_kbps/ (e.data.remoteStats[UUID].video_bitrate_kbps-e.data.remoteStats[UUID].retransmitted_kbps))/100;
+								updateData("retransmit", retransmitted_kbps, UUID);
+							} else if (document.getElementById(UUID)){
+								updateData("retransmit", 0, UUID);
+							}
+							
+							var streamID = false;
+							if ("streamID" in e.data) {
+								streamID = e.data.streamID;
+							}
+							if (document.getElementById(UUID)){
+								if ("label" in e.data.remoteStats[UUID].info){
+									if (e.data.remoteStats[UUID].info.label){
+										if (!document.getElementById("label_"+UUID)){
+											document.getElementById(UUID).innerHTML = "<h1 class='small' id='label_"+UUID+"'></h1>" + document.getElementById(UUID).innerHTML;
+										}
+										document.getElementById("label_"+UUID).innerText = e.data.remoteStats[UUID].info.label + ", - a remote viewer of stream ID: "+streamID;
+									} else if (streamID){
+										if (!document.getElementById("label_"+UUID)){
+											document.getElementById(UUID).innerHTML = "<h1 class='small' id='label_"+UUID+"'></h1>" + document.getElementById(UUID).innerHTML;
+										}
+										document.getElementById("label_"+UUID).innerText = "Stats for a remote viewer of stream ID: "+streamID;
+									} else {
+										if (!document.getElementById("label_"+UUID)){
+											document.getElementById(UUID).innerHTML = "<h1 class='small' id='label_"+UUID+"'></h1>" + document.getElementById(UUID).innerHTML;
+										}
+										document.getElementById("label_"+UUID).innerText = "";
+									}
+								}
+							}
+							
+							
+							//updateData("buffer", buffer);
+							
+							//if (packetloss != undefined) {
+							//	packetloss = packetloss.toFixed(2);
+							//	updateData("packetloss", packetloss);
+							//}
+						}
+					}
+				});
+			}
+
+			function printValues(obj) {
+				var out = "";
+				for (var key in obj) {
+					if (typeof obj[key] === "object") {
+						out += "<br />";
+						out += printValues(obj[key]);
+					} else {
+						if (key.startsWith("_")) {
+						} else {
+							out += "<b>" + key + "</b>: " + obj[key] + "<br />";
+						}
+					}
+				}
+				return out;
+			}
+
+			function logData(type, data, UUID) {
+				try{
+					var log = document.getElementById(UUID).querySelectorAll('[data-log]')[0].getElementsByTagName("ul")[0];
+					var entry = document.createElement('li');
+					entry.style.color ="white";
+					entry.textContent =	"[" + new Date().toLocaleTimeString() + "] " + type + " : " + data;
+					if (log.childElementCount>10){
+						log.childNodes[0].parentNode.removeChild(log.childNodes[0]);
+					}
+					log.appendChild(entry);
+				} catch(e){}
+			}
+		</script>
+	</head>
+	<body onload="loadIframe();">
+		<div id="container">
+			<h1 >
+				<span id="streamID_header">VDO.Ninja Remote Monitor</span>
+			</h1>
+		</div>
+		
+		<div id="graphs" style="display:none">
+
+			<div class="graph">
+				<h2>Bitrate (kbps)</h2>
+				<span>0</span>
+				<canvas data-bitrate-graph="true"></canvas>
+			</div>
+
+			<div class="graph">
+				<h2>Reported lost packets (per second)</h2>
+				<span>0</span>
+				<canvas data-nackrate-graph="true"></canvas>
+			</div>
+
+			<div class="graph">
+				<h2>Retransmitted bytes (%)</h2>
+				<span>0</span>
+				<canvas data-retransmit-graph="true"></canvas>
+			</div>
+			
+			<div data-log="true" onclick="copyFunction(this.innerText)" style="max-height:400px;display:inline-block;">
+				<ul></ul>
+			</div>
+		</div>
+		
+		
+
+
+		<script>
+			var bitrate = {
+				element: "bitrate-graph",
+				data: 0,
+				max: 6000,
+				target: 3000,
+			};
+			var frames;
+			var nackrate = {
+				element: "nackrate-graph",
+				data: 0,
+				max: 15,
+				target: 15,
+			};
+			var retransmit = {
+				element: "retransmit-graph",
+				data: 0,
+				max: 3,
+				target: 2,
+			};
+
+			function updateData(type, data, UUID) {
+				if (type == "bitrate") {
+					bitrate.data = data;
+					plotData("bitrate", bitrate, UUID);
+				}
+
+				if (type == "nackrate") {
+					nackrate.data = data;
+					plotData("nackrate", nackrate, UUID);
+				}
+
+				if (type == "retransmit") {
+					retransmit.data = data;
+					plotData("retransmit", retransmit, UUID);
+				}
+			}
+
+			function plotData(type, stat, UUID) {
+				var canvas;
+				var context;
+				var yScale;
+
+				var container = document.getElementById(UUID);
+				if (container){
+					canvas = container.querySelectorAll('[data-'+stat.element+']')[0];
+			
+				} else {
+					container = document.getElementById("graphs").cloneNode(true);
+					container.id = UUID;
+					container.className = "graphContainer";
+					container.style.display = "block";
+					document.getElementById("graphs").parentNode.insertBefore(container, document.getElementById("graphs").nextSibling);
+					canvas = container.querySelectorAll('[data-'+stat.element+']')[0];
+				}
+				
+				context = canvas.getContext("2d");
+
+				if (isNaN(stat.data)) {
+					stat.data = 0;
+				}
+
+				var text = (canvas.previousElementSibling.innerHTML = stat.data);
+
+				var height = context.canvas.height;
+				var width = context.canvas.width;
+
+				var borderWidth = 5;
+				var offset = borderWidth * 2;
+
+				// Create gradient
+				var grd = context.createLinearGradient(0, 0, 0, height);
+
+				if (type == "bitrate") {
+					// Higher values are green
+					grd.addColorStop(0, "#33C433");
+					grd.addColorStop(0.7, "#F3F304");
+					grd.addColorStop(0.9, "#F30404");
+				} else if (type == "retransmit") {
+					// Higher values are red
+					grd.addColorStop(0, "#F30404");
+					grd.addColorStop(0.75, "#F3F304");
+					grd.addColorStop(1.0, "#33C433");
+				} else {
+					// Higher values are red
+					grd.addColorStop(0, "#F30404");
+					grd.addColorStop(0.85, "#F3F304");
+					grd.addColorStop(0.95, "#33C433");
+				}
+
+				context.strokeStyle = "white";
+				context.fillStyle = grd;
+				//context.fillStyle = "#009933";
+				//context.imageSmoothingEnabled = true;
+
+				yScale = height / stat.target;
+
+				if (stat.data > stat.target) {
+					stat.data = stat.target;
+				}
+
+				if (type == "retransmit" && stat.data == 0.0) {
+					stat.data = 0.1;
+				}
+				if (type == "nackrate" && stat.data == 0.0) {
+					stat.data = 0.1;
+				}
+
+				var x = width - 1;
+				var y = height - stat.data * yScale;
+				var w = 1;
+
+				context.fillStyle = grd;
+				context.fillRect(x, y, w, height);
+
+				// shift everything to the left:
+				var imageData = context.getImageData(1, 0, width - 1, height);
+				context.putImageData(imageData, 0, 0);
+				// now clear the right-most pixels:
+				context.clearRect(width - 1, 0, 1, height);
+			}
+		</script>
+	</body>
+</html>

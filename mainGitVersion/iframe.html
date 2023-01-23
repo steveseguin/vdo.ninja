@@ -1,0 +1,473 @@
+<html>
+<head>
+	<title>IFRAME Example</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+	<meta content="text/html;charset=utf-8" http-equiv="Content-Type" />
+	<link rel="stylesheet" href="./iframe.css" />
+	<script src="iframe-examples.js"></script>
+	<script>
+	const ExpandableCards = {};
+
+	function loadIframe(){  // this is pretty important if you want to avoid camera permission popup problems.  You can also call it automatically via: <body onload=>loadIframe();"> , but don't call it before the page loads.
+		var exampleId = generateId();
+
+		// Keep track of which API cards are opened vs closed
+		ExpandableCards[exampleId] = {
+			iframe: false,
+			companion: false,
+		}
+
+		var iframesrc = document.getElementById("viewlink").value;
+		var container = document.getElementById("container");
+		var iframe = newElement("iframe", {
+			allow: "document-domain;encrypted-media;sync-xhr;usb;web-share;cross-origin-isolated;accelerometer;midi;geolocation;autoplay;camera;microphone;fullscreen;picture-in-picture;display-capture;",
+			src: addUrlParams(iframesrc, ["cleanoutput", "transparent", "hidemenu"])
+		});
+		var iframeExample = newElement("div", { id: exampleId, classList: "iframe-example" });
+		var exampleHeader = newElement("div", { classList: "example-header", innerHTML: iframesrc });
+		var exampleBody = newElement("div", { classList: "example-body" });
+		var outputContainer = newElement("div", { classList: "output-container" });
+		var customPostContainer = newElement("div", { classList: "custom-post" });
+		var customPostInput = newElement("input", {
+			classList: "custom-post-input", type: "text", placeholder: "Post Message (format as a JSON object}"
+		});
+		var mainLog = newElement("div", { id: exampleId + "-logs", classList: "main-log" });
+		var streamDataLogs = newElement("div", { classList: "stream-data-logs" } );
+		var controlsContainer = getExampleControls();
+		var targetGuest = getGuestAPIGenerator();
+		var customPostSend = newElement("button", { 
+			innerText: "POST",
+			onclick: function() { 
+				try {
+					const message = JSON.parse(customPostInput.value);
+					postMessage(message, '*');
+				} catch (error) {
+					alert(error)
+				}
+			}
+		});
+
+		customPostContainer.append(customPostInput, customPostSend);
+		controlsContainer.appendChild(targetGuest);
+		outputContainer.append(iframe, mainLog, customPostContainer);
+		exampleBody.append(controlsContainer, outputContainer, streamDataLogs);
+		iframeExample.append(exampleHeader, exampleBody);
+		container.prepend(iframeExample);
+
+		
+
+		var media = {};
+		media.tracks = {};
+		media.streams = {};
+		
+		window.addEventListener('messageerror', e => {
+			console.error(e);
+		});
+		
+		////////////  LISTEN FOR EVENTS
+		var eventMethod = window.addEventListener ? "addEventListener" : "attachEvent";
+		var eventer = window[eventMethod];
+		var messageEvent = eventMethod === "attachEvent" ? "onmessage" : "message";
+		
+		eventer(messageEvent, function (e) {
+			if (e.source != iframe.contentWindow){return} // reject messages send from other iframes
+			
+			if (typeof e.data !== "object"){
+				console.log(e.data);
+				return;
+			}
+			
+			if (e.data.frame){  // add `&sendframes` to the view link to trigger this event; it lets you capture video/audio from the parent window
+				if (!media.tracks[e.data.trackID]){
+					media.tracks[e.data.trackID] = {};
+					media.tracks[e.data.trackID].generator = new MediaStreamTrackGenerator({kind:e.data.kind});
+					media.tracks[e.data.trackID].stream = new MediaStream([media.tracks[e.data.trackID].generator]);
+					media.tracks[e.data.trackID].frameWriter = media.tracks[e.data.trackID].generator.writable.getWriter();
+					
+					media.tracks[e.data.trackID].frameWriter.write(e.data.frame);
+					
+					if (!media.streams[e.data.streamID]){
+						media.streams[e.data.streamID] = document.createElement("video");
+						media.streams[e.data.streamID].id = "video_"+e.data.streamID;
+						media.streams[e.data.streamID].autoplay = true;
+						media.streams[e.data.streamID].muted = true;
+						setTimeout(function(ele){ele.controls=true;},3000, media.streams[e.data.streamID]);
+						media.streams[e.data.streamID].srcObject = media.tracks[e.data.trackID].stream;
+						mainLog.appendChild(media.streams[e.data.streamID]);
+					} else {
+						if (e.data.kind=="video"){
+							media.streams[e.data.streamID].srcObject.getVideoTracks().forEach(trk=>{
+								media.streams[e.data.streamID].srcObject.removeTrack(trk);
+							});
+						} else if (e.data.kind=="audio"){
+							media.streams[e.data.streamID].srcObject.getAudioTracks().forEach(trk=>{
+								media.streams[e.data.streamID].srcObject.removeTrack(trk);
+							});
+						} 
+						media.tracks[e.data.trackID].stream.getTracks().forEach(trk=>{
+							media.streams[e.data.streamID].srcObject.addTrack(trk);
+						});
+					}
+				} else {
+					media.tracks[e.data.trackID].frameWriter.write(e.data.frame);
+				}
+				return;
+			} // end of video/audio capture
+			
+			var consolelog = true;
+			if (e.data.stats){
+				console.log(e.data.stats);
+
+				var out = "<br />total_inbound_connections:"+e.data.stats.total_inbound_connections;
+				out += "<br />total_outbound_connections:"+e.data.stats.total_outbound_connections;
+				
+				for (var streamID in e.data.stats.inbound_stats){
+					out += "<br /><br /><b>streamID:</b> "+streamID+"<br />";
+					out += printValues(e.data.stats.inbound_stats[streamID]);
+				}
+				logOutput(out)
+				consolelog = false;
+			} 
+			
+			if (e.data.gotChat){
+				logOutput(e.data.gotChat)
+			}
+
+			if ("action" in e.data && e.data.action !== "loudness") {
+				logOutput("child-page-action: "+e.data.action+"<br />")
+			}
+
+			if ("streamIDs" in e.data){
+				var out = "child-page-action: streamIDs<br />"
+				for (var key in e.data.streamIDs) {
+					out += "streamID: " +  key + ", label:"+e.data.streamIDs[key] + "\n";          
+				}
+				logOutput(out)
+			}
+			
+			if ("deviceList" in e.data){
+				var out = "child-page-action: deviceList<br />";
+				for (var i = 0;i<e.data.deviceList.length;i++){
+					out += e.data.deviceList[i].label + "<br />";   
+				}
+				logOutput(out);
+			}
+			
+			if ("loudness" in e.data) {
+				var loudnessOutput;
+				var id = exampleId + "-loudness";
+				var out = "child-page-action: loudness<br />";
+
+				if (document.getElementById(id)){
+					loudnessOutput = document.getElementById(id);
+				} else {
+					loudnessOutput = newElement("div", { id, classList: "sensors-log" });
+					streamDataLogs.prepend(loudnessOutput);
+				}
+				for (var key in e.data.loudness) {
+					out += key + " Loudness: " + e.data.loudness[key] + "\n";          
+				}
+				logOutput(out, { window: loudnessOutput, replace: true, style: { paddingBottom: '20px', borderBottom: 'dotted 1px #4d66a8' } });
+				consolelog = false;
+			}
+			
+			if ("detailedState" in e.data){
+				logOutput("child-page-action: detailedState<br />"+JSON.stringify(e.data.detailedState)+"<br />")
+			}
+
+			if ("callback" in e.data) {
+				if (e.data.callback.action === 'getDetails') {
+					logOutput("child-page-action: getDetails<br />"+JSON.stringify(e.data.callback.result, null, 2))
+				}
+			}
+			
+			if ("sensors" in e.data){
+				var sensorsOutput;
+				var id = exampleId + "-sensors";
+				var out = "child-page-action: sensors<br /><br />";
+
+				if (document.getElementById(id)){
+					sensorsOutput = document.getElementById(id);
+				} else {
+					sensorsOutput = newElement("div", { id, classList: "sensors-log" });
+					streamDataLogs.appendChild(sensorsOutput);
+				}
+				for (var key in e.data.sensors.lin) {
+					out += key + " linear: " + roundSensorData(e.data.sensors.lin[key]) + "<br />";          
+				}
+				for (var key in e.data.sensors.acc) {
+					out += key + " acceleration: " + roundSensorData(e.data.sensors.acc[key]) + "<br />";         
+				}
+				for (var key in e.data.sensors.gyro) {
+					out += key + " gyro: " + roundSensorData(e.data.sensors.gyro[key]) + "<br />";           
+				}
+				for (var key in e.data.sensors.mag) {
+					out += key + " magnet: " + roundSensorData(e.data.sensors.mag[key]) + "<br />";         
+				}
+				logOutput(out, { window: sensorsOutput, replace: true })
+
+				function roundSensorData(data) {
+					return Math.round(data * 100000) / 100000
+				}
+				consolelog = false;
+			}
+			
+			if (("action" in e.data) && (e.data.action === "view-stats-updated")){
+				consolelog = false;
+			}
+			
+			if (consolelog){
+				console.log(e.data);
+			}
+		});
+
+		function getExampleControls() {
+			var controlsContainer = newElement("div", { classList: "controls" });
+
+			var iframeExamples = getExamplesSection(
+				IFRAME_API,
+				{ 
+					guestId: 'iframe',
+					headers: '<h3>IFRAME</h3><p><em>These commands are exclusive to the IFRAME API.</em></p>',
+				}
+			);
+			var companionExamples = getExamplesSection(
+				COMPANION_API,
+				{
+					guestId: 'companion',
+					headers: '<h3>HTTP/WSS</h3><p><em>These commands re-use the Companion.Ninja HTTP/WSS API, except you can send them via this Iframe interface.</em></p>',
+					info: '\
+					<p><a target="_blank" style="word-break: break-word" href="https://github.com/steveseguin/Companion-Ninja#api-commands">\
+						More details of the below IFRAME API details are here: https://github.com/steveseguin/Companion-Ninja#api-commands\
+					</a></p>'
+				}
+			)
+
+			var removeIframeButton = document.createElement("button");
+			removeIframeButton.innerHTML = "REMOVE IFRAME";
+			removeIframeButton.onclick = function(){iframeExample.parentNode.removeChild(iframeExample);};
+			exampleHeader.appendChild(removeIframeButton);
+
+			controlsContainer.append(
+				iframeExamples.header,
+				iframeExamples.examples,
+				companionExamples.header,
+				companionExamples.examples
+			);
+
+			return controlsContainer
+		}
+
+		function getGuestAPIGenerator() {
+			var targetGuest = newElement('div', { 
+				classList: 'target-guest',  
+				innerHTML: '<h3>HTTP/WSS Director</h3><p><em>Directors can target commands to individual guests</em></p><h4>Target guest by: </h4>'
+			});
+			var targetGuestBySlot = newElement("input", { 
+				type: "radio", 
+				checked: true,
+				id: exampleId+"-guest-slot-radio",
+				value: "slot", 
+				name: exampleId+"-guest-target",
+				onclick: function() {
+					document.getElementById(exampleId+"-guest-slot").classList.remove("hidden");
+					document.getElementById(exampleId+"-guest-id").classList="hidden";
+				}
+			});
+			var targetGuestBySlotLabel = newElement("label", { for: exampleId+"-guest-slot-radio", innerText: "Slot (number)" })
+			var targetGuestById = newElement("input", {
+				type: "radio", 
+				id: exampleId+"-guest-id-radio", 
+				value: "id", 
+				min: 0,
+				name: exampleId+"-guest-target",
+				onclick: function() {
+					document.getElementById(exampleId+"-guest-slot").classList="hidden";
+					document.getElementById(exampleId+"-guest-id").classList.remove("hidden")
+				}
+			});
+			var targetGuestByIdLabel = newElement("label", { for: exampleId+"-guest-id-radio", innerText: "streamID (string)" })
+			var targetGuestInputs = newElement("div", { classList: "target-guest-inputs"});
+			var guestIdInput = newElement("input", { id: exampleId+"-guest-id", type: "text", placeholder: "Guest ID", value: "abc123", classList: "hidden" });
+			var guestSlotInput = newElement("input", { value: 1, id: exampleId+"-guest-slot", type: "number", placeholder: "Guest Slot" });
+			var generateGuestAPI = newElement("button", { 
+				innerText: "Generate commands",
+				onclick: function() {
+					var targetType = (guestSlotInput.classList.value === "hidden") ? 'id' : 'slot';
+					var value = (targetType === 'id') ? guestIdInput.value : guestSlotInput.value;
+					var guestId = 'guest' + value;
+					var headers = '<h4>Target GUEST ' + value + '</h4><p><em>These commands target a guest';
+					headers += (targetType === 'id') ? ' with id ' : ' in slot ';
+					headers += value + '</em></p>'
+
+					if (!document.getElementById(exampleId + '-' + guestId)) {
+						var guestTargetedExamples = getExamplesSection(
+							guestTargetedAPI(value),
+							{ guestId: 'guest' + value, headers },
+						)
+						controlsContainer.appendChild(guestTargetedExamples.header);
+						controlsContainer.appendChild(guestTargetedExamples.examples);
+					}
+				}
+			})
+
+			targetGuestInputs.append(guestIdInput, guestSlotInput, generateGuestAPI);
+			targetGuest.append(targetGuestBySlot, targetGuestBySlotLabel, targetGuestById, targetGuestByIdLabel, targetGuestInputs);
+
+			return targetGuest;
+		}
+
+		function getExamplesSection(api, section) {
+			var sectionId = exampleId + "-" + section.guestId;
+			var header = document.createElement('div');
+			header.classList = "api-section-header";
+
+			var toggleBtn = document.createElement('button');
+			toggleBtn.innerText = "Show";
+			toggleBtn.onclick = function() { 
+				ExpandableCards[exampleId][section.guestId] = !ExpandableCards[exampleId][section.guestId];
+				if (ExpandableCards[exampleId][section.guestId] === true) {
+					document.getElementById(sectionId).classList = "api-section";
+					toggleBtn.innerText = "Hide"
+				} else {
+					document.getElementById(sectionId).classList = "hidden";
+					toggleBtn.innerText = "Show"
+				}
+			};
+
+			var headerText = document.createElement('div');
+			headerText.innerHTML = section.headers;
+
+			header.append(headerText, toggleBtn);
+
+			var examples = document.createElement('div');
+			examples.classList = "hidden";
+			examples.id = sectionId;
+
+			if (section.info) {
+				var info = document.createElement("div");
+				info.innerHTML = section?.info;
+				examples.appendChild(info);
+			}
+
+			Object.keys(api).sort().forEach((param) => {
+				var header = document.createElement('h4');
+				header.innerHTML = param;
+				examples.appendChild(header);
+				addExamples(examples, param, api[param]);
+			})
+
+			return { header, examples }
+		}
+
+		function newElement(type, attributes) {
+			var el = document.createElement(type);
+			for (var attr in attributes) { 
+				el[attr] = attributes[attr] 
+			}
+			return el;
+		}
+
+		function addExamples(parentContainer, name, data) {
+			if (data.options) {
+				for (var i = 0; i < data.options.length; i++) {
+					var button = document.createElement("button");
+
+					button.innerHTML = (data.labels !== undefined)
+						? data.labels[i]
+						: JSON.stringify(data.options[i]);
+
+					const result = data.result(data.options[i]); // result needs to be a const, not a var
+					button.onclick = function() { postMessage(result)};
+					parentContainer.appendChild(button)
+				}
+			}
+
+			if (data.input) {
+				var inputWrapper = document.createElement("div");
+				var input = document.createElement("input");
+
+				for (var attr in data.input) {
+					input[attr] = data.input[attr];
+				}
+				if (input.type === 'range') {
+					input.onchange = function() { postMessage(data.result(this.value)) };
+				} else {
+					var button = newElement("button", { innerText: "Send" });
+					button.onclick = function() { postMessage(data.result(input.value)) };
+					inputWrapper.appendChild(button);
+				}
+
+				inputWrapper.prepend(input);
+				parentContainer.appendChild(inputWrapper);
+			}
+		}
+
+		function logOutput(output, config) {
+			var log = document.createElement("div");
+			var outputWindow = config?.window ?? mainLog;
+
+			log.innerHTML = output;
+			if (config?.classList) {
+				log.classList = config?.classList;
+			}
+
+			// Clears the log when a new entry comes in
+			if (config?.replace === true) { 
+				outputWindow.innerHTML = ""
+			}
+
+			outputWindow.appendChild(log);
+			outputWindow.scrollTo(0, outputWindow.scrollHeight);
+		}
+
+		function postMessage(message) {
+			iframe.contentWindow.postMessage(message, '*');
+			var out = "Post: " + JSON.stringify(message);
+			logOutput(out, { classList: "post-log" });
+		}
+	}
+
+	function generateId() {
+		return Math.random().toString(36).replace(/[^a-z]+/g, '').substr(0, 10);
+	}
+
+	function printValues( obj) {
+		var out = "";
+
+		for (var key in obj) {
+			if (typeof obj[key] === "object") {
+				out +="<br />";
+				out += printValues(obj[key]);   
+			} else {
+				out +="<b>"+key+"</b>: "+obj[key]+"<br />";
+			}
+		}
+
+		return out;
+	}
+
+	function addUrlParams(_url, paramCheckboxes) {
+		var url = _url !== "" ? _url : "./";
+
+		for(var i = 0; i < paramCheckboxes.length; i++) {
+			var param = paramCheckboxes[i];
+			if (document.getElementById(param).checked){
+				url += url.includes("?") ? '&' : '?';
+				url += param;
+			}
+		}
+
+		return url;
+	}
+	</script>
+</head>
+<body>
+	<input placeholder="Enter an VDO.Ninja View URL here" id="viewlink" />
+	<button onclick="loadIframe();">ADD</button>
+	<input type="checkbox" id="cleanoutput" >Clean Output
+	<input type="checkbox" id="transparent">Transparent
+	<input type="checkbox" id="hidemenu">Hide Menu
+	<div id="container"></div>
+</body>
+</html>

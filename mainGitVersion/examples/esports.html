@@ -1,0 +1,131 @@
+<html>
+<head>
+	<title>IFRAME Example</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+	<meta content="text/html;charset=utf-8" http-equiv="Content-Type" />
+	<style>
+	body{
+		padding:0;
+		margin:0;
+		background-color: #0000;
+	}
+	iframe {
+		border:0;
+		margin:0;
+		padding:0;
+		display:block;
+		width:100%;
+		height:90%
+	}
+	#viewlink {
+		width:400px;
+	}
+	#container {
+		display:block;
+		padding:0px;
+	}
+	input{
+		padding:5px;
+		margin:5px;
+	}
+	button{
+		padding:5px;
+		margin:5px;
+	}
+	</style>
+	<script>
+
+	function loadIframe(){ 
+		
+		document.getElementById("container").innerHTML = "";
+		
+		var iframe = document.createElement("iframe");
+		var iframeContainer = document.createElement("div");
+		iframe.allow = "autoplay;camera;microphone;fullscreen;picture-in-picture;display-capture;";
+
+		
+		var iframesrc = "https://vdo.ninja/?transparent&cleanoutput&bitrate=200&manual&noaudio&view=";
+		
+		var listOfStreamIDs = [
+			"1234_pov",
+			"2345_pov",
+			"3456_pov",
+			"4567_pov",
+			"5678_pov"
+			];
+		
+		var button = document.createElement("button");
+		button.innerHTML = "List connected StreamIDs"; 
+		button.onclick = function(){iframe.contentWindow.postMessage({"getStreamIDs":true}, '*');};
+		iframeContainer.appendChild(button);
+		
+		var button = document.createElement("button");
+		button.innerHTML = "HIDE ALL";
+		button.dataset.sid = listOfStreamIDs[i];
+		button.onclick = function(){iframe.contentWindow.postMessage({"target":"*", "remove":true}, '*');};
+		iframeContainer.appendChild(button);
+		
+		for (var i=0;i<listOfStreamIDs.length;i++){
+			if (i!==0){
+				iframesrc+=",";
+			}
+			iframesrc+=listOfStreamIDs[i];
+			
+			var button = document.createElement("button");
+			button.innerHTML = "SHOW "+listOfStreamIDs[i];
+			button.dataset.sid = listOfStreamIDs[i];
+			button.title = "Publish using: https://vdo.ninja/?push="+listOfStreamIDs[i];
+			button.onclick = function(){
+				iframe.contentWindow.postMessage({"target":"*", "remove":true}, '*');
+				iframe.contentWindow.postMessage({"target":this.dataset.sid, "add":true, "settings":{"style":{"width":"100%", "height":"100%", "display":"block"}}}, '*');
+			}; // target can be a stream ID or * for all.
+			iframeContainer.appendChild(button);
+		}
+		
+		iframe.src = iframesrc;
+		iframeContainer.appendChild(iframe);
+		document.getElementById("container").appendChild(iframeContainer);
+		
+		////////////  LISTEN FOR EVENTS
+
+		var eventMethod = window.addEventListener ? "addEventListener" : "attachEvent";
+		var eventer = window[eventMethod];
+		var messageEvent = eventMethod === "attachEvent" ? "onmessage" : "message";
+
+
+		/// If you have a routing system setup, you could have just one global listener for all iframes instead.
+		
+		eventer(messageEvent, function (e) {
+			if (e.source != iframe.contentWindow){return} // reject messages send from other iframes
+			
+			
+			if ("action" in e.data){
+				var outputWindow = document.createElement("div");
+				outputWindow.innerHTML = "event: "+e.data.action+"<br />";
+				outputWindow.style.border="1px dotted black";
+				iframeContainer.appendChild(outputWindow);
+			}
+			
+			
+			if ("streamIDs" in e.data){
+				var outputWindow = document.createElement("div");
+				outputWindow.innerHTML = "streamID list:<br />";
+				for (var key in e.data.streamIDs) {
+					outputWindow.innerHTML += "streamID: " +  key + ", label:"+e.data.streamIDs[key] + "\n";          
+				}
+				outputWindow.style.border="1px dotted black";
+				iframeContainer.appendChild(outputWindow);
+			}
+			
+		});
+	}
+	</script>
+</head>
+<body>
+
+
+<div id="container">
+	<button onclick="loadIframe();">CONNECT</button>
+</div>
+</body>
+</html>

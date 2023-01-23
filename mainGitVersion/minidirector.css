@@ -1,0 +1,146 @@
+body{
+	zoom: 75%;
+	background-color: #1F1E1F;
+}
+button[data-action-type='solo-chat'] {
+	display:none! important;
+}
+
+button[data-action-type='recorder-local'] {
+	display:none! important;
+}
+span[data-action-type='ordering'] {
+	display:none! important;
+}
+button[data-action-type='open-file-share'] {
+	display:none! important;
+}
+
+button[data-action-type='add-channel']{
+	display:none! important;
+}
+button[data-action-type='toggle-remote-speaker']{
+	display:none! important;
+}
+button[data-action-type='toggle-remote-display']{
+	display:none! important;
+}
+button[data-action-type='hide-guest']{
+	display:none! important;
+}
+button[data-action-type='create-timer']{
+	display:none! important;
+}
+button[data-action-type='change-url']{
+	display:none! important;
+}
+button[data-action-type='change-params']{
+	display:none! important;
+}
+span[data-action-type='change-quality']{
+	display:none! important;
+}
+
+span[data-action-type='sceneCluster2']{
+	display:none! important;
+}
+span[data-action-type='sceneCluster1']{
+	display:none! important;
+}
+button[data-action-type='recorder-remote']{
+	display:none! important;
+}
+button[data-action-type='advanced-camera-settings']{
+	display:inline-block! important;
+}
+button[data-action-type='force-keyframe']{
+	display:none! important;
+}
+body {
+	font-size: 0.9em! important;
+}
+button[data-action-type='mute-scene']{
+	display:inline-block! important;
+	visibility: visible;
+    width: unset;
+    height: unset;
+    opacity: 1;
+}
+button[data-action-type='stats-remote']{
+	display:inline-block! important;
+	visibility: visible;
+    width: unset;
+    height: unset;
+    opacity: 1;
+}
+button[data-action-type='advanced-audio-settings']{
+	display:inline-block! important;
+	visibility: visible;
+    width: unset;
+    height: unset;
+    opacity: 1;
+}
+button[data-action-type='advanced-camera-settings']{
+	display:inline-block! important;
+	visibility: visible;
+    width: unset;
+    height: unset;
+    opacity: 1;
+}
+button[data-action-type='advanced-camera-settings']{
+	display:inline-block! important;
+	visibility: visible;
+    width: unset;
+    height: unset;
+    opacity: 1;
+}
+.groupcluster1 {
+	display:inline-block! important;
+	visibility: visible;
+    width: unset;
+    height: unset;
+    opacity: 1;
+}
+.hideDropMenu:empty{
+	display:none;
+}
+.hideDropMenu {
+	display:none;
+}
+.orderspan{
+	display:none! important;
+}
+#roomHeader{
+	display:none! important;
+}
+.directorContainer {
+	display:none!important;
+}
+:root {
+	--advanced-mode: inline;
+}
+
+#header{
+	display:none!important;
+}
+
+button[class="pull-right"]{
+	display:none! important;
+}
+
+div#guestFeeds {
+	padding: 1px!important;
+	margin: 1px!important;
+}
+div[class="vidcon directorMargins"] {
+	padding: 1px!important;
+	margin: 1px!important;
+	width: 260px;
+}
+button[data-action-type]{
+	margin: 1px!important;
+}
+
+
+
+

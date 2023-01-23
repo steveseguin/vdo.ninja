@@ -41,7 +41,7 @@
 		height: 100%;
 		width: 1280px;
 		
-		max-height: calc(100vh - 95px);
+		max-height: calc(100vh - 92px);
 	
 		background-color: #0002;
 		border-radius: 3px;
@@ -52,8 +52,8 @@
 	}
 	
 	iframe.aspectRatio{
-		max-height: min(calc(100vh - 80px), calc(100vw - var(--chat-width)) / var(--aspect-ratio))) !important;
-		max-width: min(calc((100vh - 80px) *  var(--aspect-ratio)), calc(100vw - var(--chat-width))) !important;
+		max-height: min(calc(100vh - 92px), calc(100vw - 160px - var(--chat-width)) / var(--aspect-ratio)) !important;
+		max-width: min(calc((100vh - 92px) *  var(--aspect-ratio)), calc(100vw - 160px - var(--chat-width))) !important;
 		height: 720px;
 		width: 1280px;
 	}
@@ -128,20 +128,20 @@
 		bottom: 0;
 		position: fixed;
 		margin: 10px;
-		margin-left:0;
+				
 		align-self: center;
-		width: var(--chat-width);
-		max-width: calc(100% - 40px);
+		width: 400px;
+		max-width: 100%;
 		z-index:3;
 		height: calc(100vh - 40px);
 		overflow: hidden;
 		right:0;
-		background:#0008;
+		background:#0001;
 		border: solid 2px #0005;
 		border-radius: 10px;
 		padding: 10px;
 		transition: all .05s ease-in-out; 
-		max-height: 95vh;
+				   
 	}
 	#chatInput {
 		display: inline-block;
@@ -149,8 +149,8 @@
 		background-color: #FFFE;
 		width: 324px;
 		font-size: 105%;
-		margin-left: 3px;
-		max-width: calc(100% - 76px);
+		margin-left: 7px;
+							   
 	}
 	#chatSendBar{
 		display: inline-block;
@@ -182,7 +182,30 @@
 	input[type="checkbox"]:checked { 
 		transform: scale(1.1);
 	}
+	.groupview{
+		position: absolute;
+		right: 0;
+		bottom: 0;
+		width: 24px;
+		height: 24px;
+		display: block;
+		background-color: #000;
+		opacity: 30%;
+		border: 2px solid #222;
+		z-index: 2;
+		border-radius: 50%;
+		padding:2px;
+	}
 	
+	.groupview::before{
+		content: '👁️';
+	}
+	
+	.view > .groupview {
+		opacity: 100%;
+		background-color: #FFF3;
+		border: 2px solid #DDD;
+	}
 	
 	label {
 		margin: 0 0px 6px 0;
@@ -199,7 +222,7 @@
 	#containerMenu{
 		position: absolute;
 		left: 0px;
-		width: calc(100vw - var(--chat-width));
+		width: calc(100vw - var(--chat-width) - 40px  + var(--chat-filler));
 		display: flex;
 		top: 0;
 		height: 100px;
@@ -214,7 +237,7 @@
 	#vdoninja {
 		max-width: calc(100vw - 54px - var(--chat-width) + var(--chat-filler));
 		width: 100vw;
-		height: calc(100vh - 117px);
+		height: calc(100vh - 112px);
 	}
 	
 	#viewlink {
@@ -306,7 +329,7 @@
 		border-radius: 10px;
 		box-shadow: 2px 2px 6px #273a4e, -2px -2px 6px #354e6a;
 		width: 135px;
-		height: 60px;
+		height: 50px;
 		background-color: #0004;
 		display: inline-block;
 		margin: 5px 10px 0 10px;
@@ -328,7 +351,8 @@
 	}
 
 	::-webkit-scrollbar {
-		width: 15px;
+		width: 12px;
+		height: 12px;
 	}
 	 
 	::-webkit-scrollbar-track {
@@ -372,7 +396,7 @@
 		top: 92px;
 	}
 	.tFadeStart{
-		top: 107px;
+		top: 102px;
 	}
 	
 	@keyframes tFadeOut {
@@ -443,6 +467,9 @@
 		position: absolute;
 	}
 	
+	 h3 {
+	    margin-bottom: 6px;
+	}
 	.settings {
 		display: block;
 		background: #c0e3ff;
@@ -731,45 +758,42 @@
 		background-color:#0000;
 	}
 	#containermenu>div:nth-child(1)>div::before {
-		content: "0";
-		color: #a4a4a4;
-	}
-	#containermenu>div:nth-child(2)>div::before {
 		content: "1";
 		color: #a4a4a4;
 	}
-	#containermenu>div:nth-child(3)>div::before {
+	#containermenu>div:nth-child(2)>div::before {
 		content: "2";
 		color: #a4a4a4;
 	}
-	#containermenu>div:nth-child(4)>div::before {
+	#containermenu>div:nth-child(3)>div::before {
 		content: "3";
 		color: #a4a4a4;
 	}
-	#containermenu>div:nth-child(5)>div::before {
+	#containermenu>div:nth-child(4)>div::before {
 		content: "4";
 		color: #a4a4a4;
 	}
-	#containermenu>div:nth-child(6)>div::before {
+	#containermenu>div:nth-child(5)>div::before {
 		content: "5";
 		color: #a4a4a4;
 	}
-	#containermenu>div:nth-child(7)>div::before {
+	#containermenu>div:nth-child(6)>div::before {
 		content: "6";
 		color: #a4a4a4;
 	}
-	#containermenu>div:nth-child(8)>div::before {
+	#containermenu>div:nth-child(7)>div::before {
 		content: "7";
 		color: #a4a4a4;
 	}
-	#containermenu>div:nth-child(9)>div::before {
+	#containermenu>div:nth-child(8)>div::before {
 		content: "8";
 		color: #a4a4a4;
 	}
-	#containermenu>div:nth-child(10)>div::before {
+	#containermenu>div:nth-child(9)>div::before {
 		content: "9";
 		color: #a4a4a4;
 	}
+	
 	#containermenu>div>div {
 		width: 15px;
 		height: 15px;
@@ -1003,7 +1027,7 @@
 		
 		if (document.getElementById("chatModule").classList.contains("hidden")){
 			document.documentElement.style.setProperty('--chat-width', "0px");
-			document.documentElement.style.setProperty('--chat-filler', "33px");
+			document.documentElement.style.setProperty('--chat-filler', "40px");
 			
 		} else {
 			document.documentElement.style.setProperty('--chat-width', "400px");
@@ -1465,6 +1489,7 @@
 	
 	initialgroups.settings = {};
 	initialgroups.activeGroups = [];
+	initialgroups.activeViewGroups = [];
 	initialgroups.groups = [];
 	
 	
@@ -1472,6 +1497,15 @@
 	
 	if (savedSession){
 		initialgroups = JSON.parse(savedSession);
+		if (!("activeViewGroups" in initialgroups)){
+			initialgroups.activeViewGroups = [];
+		} else {
+			initialgroups.activeViewGroups.forEach(group=>{
+				if (!initialgroups.groups.includes(group)){
+					initialgroups.groups.push(group);
+				}
+			});
+		}
 	} else {
 		var data = "1";	
 		initialgroups.groups.push(data);
@@ -1493,6 +1527,8 @@
 	}
 	
 	
+	
+	
 	if (urlParams.has("group") || urlParams.has("groups")){
 		var groups = urlParams.get("group") || urlParams.get("groups");
 		if (groups){
@@ -1503,6 +1539,19 @@
 						initialgroups.activeGroups.push(group);
 					};
 				}
+			});
+		}
+	}
+	
+	
+	if (urlParams.has("groupview") || urlParams.has("gv")){
+		var viewgroups = urlParams.get("groupview") || urlParams.get("gv");
+		if (viewgroups){
+			viewgroups.split(",").forEach(group=>{
+				if (!initialgroups.groups.includes(group)){
+					initialgroups.groups.push(group);
+				}
+				initialgroups.activeViewGroups.push(group);
 			});
 		}
 	}
@@ -1517,10 +1566,10 @@
 		label += "=" + (urlParams.get("label") || urlParams.get("l") || "");
 	}
 	
-	savedSession = initialgroups;
+	savedSession = initialgroups; 
 	
 	if (iframe){
-		iframe.contentWindow.postMessage({ groups: savedSession.activeGroups }, "*"); 
+		iframe.contentWindow.postMessage({ groups: savedSession.activeGroups ,  groupView: savedSession.activeViewGroups }, "*"); 
 	}
 	
 	function exportSession() {
@@ -1557,6 +1606,9 @@
 			color:#d5d5d5;
 		}
 		#dropButton{
+			display:none;
+		}
+		#groups{
 			display:none;
 		}
 	`;
@@ -1689,11 +1741,11 @@
 	
 	function hotkeyCheck(event){
 		if (event.target && (event.target.tagName == "INPUT")){warnlog("input in focus; return");return;}
-		var value = parseInt(event.key);
-		if (value == event.key){
+		var value = parseInt(event.key)-1;
+		if (value+1 == event.key){
 			try {
 				if (document.querySelector("#containermenu").children[value]){
-					document.querySelector("#containermenu").children[value].querySelector("group").click();
+					document.querySelector("#containermenu").children[value].querySelector(".group").click();
 					document.querySelector("#containermenu").children[value].classList.add("shake");
 					setTimeout(function(ele){ele.classList.remove("shake");},500,document.querySelector("#containermenu").children[value]);
 				}
@@ -1764,7 +1816,7 @@
 		}
 		
 		iframe.onload = function(){
-			iframe.contentWindow.postMessage({ groups: savedSession.groups }, "*"); 
+			iframe.contentWindow.postMessage({ groups: savedSession.activeGroups ,  groupView: savedSession.activeViewGroups }, "*"); 
 		}
 		
 		iframe.src = iframesrc;
@@ -1787,7 +1839,6 @@
 		eventer(messageEvent, function (e) {
 			if (e.source != iframe.contentWindow){return} // reject messages send from other iframes
 			
-			
 			if ("gotChat" in e.data){
 				messageList.push(e.data.gotChat);
 				messageList = messageList.slice(-100);
@@ -1796,6 +1847,8 @@
 				messageList = e.data.messageList;
 				updateMessages();
 			}
+			
+			console.log(e.data);
 			
 			if (e.data.action && "action" in e.data){
 			
@@ -1874,6 +1927,9 @@
 						if (savedSession.activeGroups){
 							iframe.contentWindow.postMessage({"groups":savedSession.activeGroups}, '*');
 						}
+						if (savedSession.activeViewGroups){
+							iframe.contentWindow.postMessage({"groupView":savedSession.activeViewGroups}, '*');
+						}
 					}
 				}
 				if (("group-set-updated" == e.data.action) && e.data.value){
@@ -1881,25 +1937,48 @@
 					if (e.data.value && (typeof e.data.value == "object")){
 						savedSession.activeGroups = e.data.value;
 					} else if (e.data.value){
-						savedSession.activeGroups = e.data.value.split(",") 
-					} else if (e.data.value){
-						savedSession.activeGroups = [];
+						savedSession.activeGroups = e.data.value.split(",") || [];
 					}
 					
-					
-					document.querySelectorAll(".pressed>[data-group]").forEach(ele=>{
-						if (ele){
-							if (!savedSession.activeGroups.includes(ele.dataset.group)){
-								ele.parentNode.classList.remove("pressed");
-							}
+					document.querySelectorAll("[data-group]").forEach(ele=>{
+						if (!savedSession.activeGroups.includes(ele.dataset.group)){
+							ele.parentNode.classList.remove("pressed");
+						} else {
+							ele.parentNode.classList.add("pressed");
 						}
 					});
 					
 					savedSession.activeGroups.forEach(group=>{
 						if (!savedSession.groups.includes(group)){
 							savedSession.groups.push(group);
+							drawGroup(group);
 						}
-						drawGroup(group);
+					});
+				}
+				
+				if (("group-view-set-updated" == e.data.action) && e.data.value){
+					savedSession.activeViewGroups = [];
+					if (e.data.value && (typeof e.data.value == "object")){
+						savedSession.activeViewGroups = e.data.value;
+					} else if (e.data.value){
+						savedSession.activeViewGroups = e.data.value.split(",") || [];
+					} 
+					
+					
+					document.querySelectorAll("[data-group]").forEach(ele=>{
+						if (!savedSession.activeViewGroups.includes(ele.dataset.group)){
+							ele.classList.remove("view");
+						} else {
+							ele.classList.add("view");
+						}
+					});
+					
+					savedSession.activeViewGroups.forEach(group=>{
+						if (!savedSession.groups.includes(group)){
+							savedSession.groups.push(group);
+							drawGroup(group);
+						}
+						
 					});
 				}
 				
@@ -2004,7 +2083,7 @@
 			<!-- }); -->
 			<!-- this.dataset.state = "active"; -->
 			<!-- addgroup2(this);  -->
-			<!-- addOldElement(JSON.parse(this.parentNode.querySelector("group").group)); -->
+			<!-- addOldElement(JSON.parse(this.parentNode.querySelector(".group").group)); -->
 		<!-- } -->
 		
 		var hotkey = document.createElement("div");
@@ -2015,15 +2094,43 @@
 		groupsize.classList = "groupsize";
 		
 		
+		var groupview = document.createElement("div");
+		groupview.classList = "groupview";
+		groupview.title = "View this group, without needing to publish to it";
+		groupview.onclick = function(e){
+			e.preventDefault();
+			e.stopPropagation();
+			
+			var index = savedSession.activeViewGroups.indexOf(this.parentNode.dataset.group);
+			console.log(index);
+			if (index > -1){
+				savedSession.activeViewGroups.splice(index, 1);
+				this.parentNode.classList.remove("view");
+			} else {
+				savedSession.activeViewGroups.push(this.parentNode.dataset.group);
+				this.parentNode.classList.add("view");
+			}
+			if (iframe){
+				iframe.contentWindow.postMessage({"groupView":savedSession.activeViewGroups}, '*');
+			}
+			saveSession();
+			return false;
+		}
+		
 		var groupContainer = document.createElement("div");
 		//groupContainer.appendChild(editButton);
 		groupContainer.appendChild(group);
 		groupContainer.appendChild(hotkey);
 		group.appendChild(groupsize);
+		group.appendChild(groupview);
 		groupContainer.classList.add("groupContainer");
 		
 		if (savedSession.activeGroups.includes(groupID)){
 			groupContainer.classList.add("pressed");
+		}
+		
+		if (savedSession.activeViewGroups.includes(groupID)){
+			group.classList.add("view");
 		}
 		
 		var eles = document.getElementById("containermenu").children;
@@ -2074,6 +2181,7 @@
 	
    
    function remoteActivate(event=null, group=null){
+		console.log("remoteActivate");
 		if (event.target && group===null){
 			group = event.target.dataset.group;
 			event.target.parentNode.classList.toggle("pressed");
@@ -2103,6 +2211,7 @@
 		var groups = document.querySelectorAll(".groupContainer>.group");
 		savedSession.groups = [];
 		savedSession.activeGroups = [];
+		savedSession.activeViewGroups = [];
 		savedSession.settings = {};
 		savedSession.version = 1;
 		
@@ -2119,11 +2228,18 @@
 					errorlog(e);
 				}
 			}
+			if (groups[i].classList.contains("view")){
+				try {
+					savedSession.activeViewGroups.push(groups[i].dataset.group);
+				} catch(e){
+					errorlog(e);
+				}
+			}
 		}
 		setStorage("savedSession_comms", JSON.stringify(savedSession));
 		
 		if (iframe){
-			iframe.contentWindow.postMessage({ groups: savedSession.activeGroups }, "*"); 
+			iframe.contentWindow.postMessage({ groups: savedSession.activeGroups , groupView: savedSession.activeViewGroups}, "*"); 
 		}
 	}
 	

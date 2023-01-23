@@ -1,0 +1,1976 @@
+<html>
+<head>
+	<title>Meet app</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+	<meta content="text/html;charset=utf-8" http-equiv="Content-Type" />
+	<script src="./thirdparty/jquery/jquery-3.6.0.js?asdf"></script>
+    <script src="./thirdparty/jquery/jquery-ui.js"></script>
+	<link rel="stylesheet" href="./thirdparty/jquery/jquery-ui.css">
+	<link rel="shortcut icon" href="data:image/x-icon;," type="image/x-icon" />
+	<link rel="icon" type="image/png" sizes="32x32" href="./media/favicon-32x32.png" />
+	<link rel="icon" type="image/png" sizes="16x16" href="./media/favicon-16x16.png" />
+	<link rel="icon" href="./media/favicon.ico" />
+	<link itemprop="thumbnailUrl" href="./media/vdoNinja_logo_full.png" />
+	<link rel="preconnect" href="https://fonts.googleapis.com">
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link href="https://fonts.googleapis.com/css2?family=Sora:wght@200;400;700&display=swap" rel="stylesheet">
+	<style>
+	:root{
+		--aspect-ratio: 1.7777777777;
+		--chat-width: 450px;
+	}
+	
+	body {
+		padding:0;
+		margin:0;
+		background-color: #c9c9c9;
+		font-family: 'Sora', sans-serif;
+		overflow: auto;
+		position: absolute;
+		border-radius: 50px;
+		background: #2e445c;
+		box-shadow:  20px 20px 60px #273a4e, -20px -20px 60px #354e6a;
+		scrollbar-color:#666 #201c29;
+	}
+	iframe {
+		border: 0;
+		padding: 0;
+		display: block;
+		
+		height: 100%;
+		width: 1280px;
+		
+		max-height: calc(100vh - 80px);
+	
+		background-color: #0002;
+		border-radius: 3px;
+		position: absolute;
+		left: 0;
+		top: 0;
+		transition: background-color 0.05s ease-out;
+	}
+	
+	iframe.aspectRatio{
+		max-height: min(calc(100vh - 80px), calc(100vw - var(--chat-width)) / var(--aspect-ratio))) !important;
+		max-width: min(calc((100vh - 80px) *  var(--aspect-ratio)), calc(100vw - var(--chat-width))) !important;
+		height: 720px;
+		width: 1280px;
+	}
+	.gone {
+		position:absolute;
+		top: -150px;
+	}
+	.modal{
+		overflow:auto;
+	}
+	.message{
+		background: #3e3e3e00;
+		color: #FCFCFC;
+		vertical-align: top;
+		border: 1px solid #2e445c;
+		border-radius: 10px;
+		background: #2e445c;
+		box-shadow: 5px 5px 10px #121620, -5px -5px 10px #162a36;
+	}
+	.inMessage {
+		color: #000;
+		margin: 3px;
+		border-radius: 5px;
+		background: #FFF;
+		padding: 5px;
+		text-align: left;
+	}
+	.actionMessage {
+		color: #000;
+		margin: 3px;
+		border-radius: 5px;
+		background: #FFF;
+		padding: 5px;
+		text-align: left;
+	}
+	.outMessage {
+		color: #000;
+		margin: 3px;
+		border-radius: 5px;
+		background: #BCF;
+		padding: 5px;
+		text-align: right;
+	}
+	#chatBody {
+		background-color: #0004;
+		margin: 0 10px 10px 0;
+		border-radius: 5px;
+		overflow-y:scroll;
+		overflow-wrap: anywhere;
+		bottom: 45px;
+		position: absolute;
+	}
+
+	#chatBody::-webkit-scrollbar {
+		width: 0px;
+		background: transparent; /* make scrollbar transparent */
+	}
+
+
+	.xbutton{
+		float: right;
+		cursor: pointer;
+		user-select: none;
+		color: white;
+		font-size: 250%;
+		font-family: Verdana;
+		line-height: 30px;
+		z-index:20;
+	}
+	#chatModule {
+		bottom: 0;
+		position: fixed;
+		margin: 10px;
+		align-self: center;
+		width: 400px;
+		max-width: calc(100% - 40px);
+		z-index:3;
+		height: calc(100vh - 40px);
+		overflow: hidden;
+		right:0;
+		background:#0008;
+		border: solid 2px #0005;
+		border-radius: 10px;
+		padding: 10px;
+		transition: all .05s ease-in-out; 
+		max-height: 95vh;
+	}
+	#chatInput {
+		display: inline-block;
+		color: #000;
+		background-color: #FFFE;
+		width: 324px;
+		font-size: 105%;
+		margin-left: 3px;
+		max-width: calc(100% - 76px);
+	}
+	#chatSendBar{
+		display: inline-block;
+		bottom: 0px;
+		position:absolute;
+	}
+	#savedroompassword{
+		width:50px;
+	}
+	button[data-state='true']{
+		background-color:#CEF !important;
+	}
+	
+	input[type="checkbox"] {
+		width: 20px;
+		height: 20px;
+		text-align: center;
+		vertical-align: middle;
+		transition: all .2s ease-in-out; 
+	}
+	input[type="checkbox"]:checked { 
+		transform: scale(1.1);
+	}
+	
+	
+	label {
+		margin: 0 0px 6px 0;
+		display: inline-block;
+		font-weight: 600;
+	}
+	.ui-widget-header{
+		background: rgb(225,225,225); /* Old browsers */
+		background: -moz-linear-gradient(-45deg, rgba(255,255,255,1) 0%, rgba(241,241,241,1) 50%, rgba(225,225,225,1) 51%, rgba(246,246,246,1) 100%); /* FF3.6-15 */
+		background: -webkit-linear-gradient(-45deg, rgba(255,255,255,1) 0%,rgba(241,241,241,1) 50%,rgba(225,225,225,1) 51%,rgba(246,246,246,1) 100%); /* Chrome10-25,Safari5.1-6 */
+		background: linear-gradient(135deg, rgba(255,255,255,1) 0%,rgba(241,241,241,1) 50%,rgba(225,225,225,1) 51%,rgba(246,246,246,1) 100%); 
+	}
+	
+	#containerMenu{
+		position: absolute;
+		left: 0px;
+		width: calc(100vw - var(--chat-width));
+		display: flex;
+		top: 0;
+		margin-left: 10px;
+		overflow: hidden;
+		font-size: 42px;
+	}
+	
+	#iframeContainer{
+		position: absolute;
+		left: 10px;
+		box-shadow: 1px 1px 3px #1b1b1b, -1px -1px 3px #1d1d1d;
+		height: calc(100vh - 67px);
+	}
+	#vdoninja {
+		max-width: calc(100vw - 4px - var(--chat-width));
+		width: 100vw;
+		height: 100%;
+		border-radius: 10px;
+		border: 1px solid black;
+	}
+	
+	#viewlink {
+		width:400px;
+	}
+	#container {
+		display:none;
+		padding:0px;
+	}
+	button[data-state='true']{
+		background-color:#CEF !important;
+	}
+	.disconnected{
+		border: 4px dotted red!important;
+		padding: 6px 0.25em 0.25em 0.25em!important;
+		outline: dashed 2px black!important;
+	}
+	.thing:hover{
+		animation: horizontalShake 2s;
+		animation-iteration-count: 1;
+	}
+	#col1>.thing:hover{
+		animation: enlargeAnimation 2s;
+		animation-iteration-count: 1;
+	}
+	#col1>.thing:active{
+		transform: scale(1.05);
+		animation:none;
+	}
+	.thing:active{
+		animation:none;
+		transform: translate(7px, 0px) rotate(0deg);
+	}
+	#delete:hover{
+		animation: none!important;
+	}
+	#delete:active{
+		transform: none!important;
+	}
+	@keyframes enlargeAnimation {
+	  0% { transform: scale(1.01); }
+	  20% { transform: scale(1.03); }
+	  80% { transform: scale(1.05); }
+	  100% { transform: scale(1.06); }
+	}
+	@keyframes horizontalShake {
+	  0% { transform: translate(3px, 0px) rotate(0deg); }
+	  20% { transform: translate(7px, 0px) rotate(0deg); }
+	  80% { transform: translate(8px, 0px) rotate(0deg); }
+	  100% { transform: translate(-1px, 0px) rotate(0deg); }
+	}
+	.shake {
+	  animation: shake 0.5s;
+	  animation-iteration-count: 1;
+	}
+	@keyframes shake {
+	  0% { transform: translate(1px, 1px) rotate(0deg); }
+	  10% { transform: translate(-1px, -2px) rotate(-1deg); }
+	  20% { transform: translate(-3px, 0px) rotate(1deg); }
+	  30% { transform: translate(3px, 2px) rotate(0deg); }
+	  40% { transform: translate(1px, -1px) rotate(1deg); }
+	  50% { transform: translate(-1px, 2px) rotate(-1deg); }
+	  60% { transform: translate(-3px, 1px) rotate(0deg); }
+	  70% { transform: translate(3px, 1px) rotate(-1deg); }
+	  80% { transform: translate(-1px, -1px) rotate(1deg); }
+	  90% { transform: translate(1px, 2px) rotate(0deg); }
+	  100% { transform: translate(1px, -2px) rotate(-1deg); }
+	}
+	input{
+		padding:5px;
+		margin:5px;
+		border-radius: 3px;
+	}
+	.menuButton{
+		 width: 92%;
+	}
+	button{
+		user-select: none;
+		padding:5px;
+		margin:5px;
+		border-radius: 3px;
+		cursor:pointer;
+		background: linear-gradient(135deg, rgba(238,238,238,1) 60%,rgb(225, 225, 225, 1) 80%,rgb(210, 209, 209, 1) 100%);
+	}
+	
+	.group{
+		padding: 10px;
+		cursor: pointer;
+		border-radius: 10px;
+		box-shadow: 2px 2px 6px #273a4e, -2px -2px 6px #354e6a;
+		width: 100px;
+		height: 45px;
+		background-color: #0004;
+		display: inline-block;
+		margin: 5px 10px 0 10px;
+		color:white;
+		text-align: center;
+		vertical-align: middle;
+		align-content: center;
+	}
+	h2 {
+		text-shadow: 0 0 2px #a7a7a7;
+		color: #000b3a;
+		user-select: none;
+	}
+	.inline{
+		display:inline-block;
+	}
+	table {
+		font-size: 1em;
+	}
+
+	::-webkit-scrollbar {
+		width: 15px;
+	}
+	 
+	::-webkit-scrollbar-track {
+		-webkit-box-shadow: inset 0 0 13px rgb(0 0 0 / 90%);
+		border-radius: 4px;
+	}
+	 
+	::-webkit-scrollbar-thumb {
+		border-radius: 4px;
+		-webkit-box-shadow: inset 0 0 16px rgb(150 150 150 / 100%);
+		border: solid 3px transparent;
+	}
+
+	.ui-draggable, .ui-droppable {
+		background-position: top;
+	}
+	#containerMenu2 {
+		width: calc(100vw - 300px);
+		position: absolute;
+		left: 155px;
+		margin: 20px 0;
+		top: 60px;
+	}
+	
+	.tFadeOut{
+		animation-duration: 1s;
+		animation-name: tFadeOut;
+		transition: top 1s;
+		top: 92px;
+	}
+	.tFadeIn{
+		animation-duration: 1s;
+		animation-name: tFadeIn;
+		transition: top 1s;
+		top: 122px;
+	}
+	.tFadeOut{
+		animation-duration: 1s;
+		animation-name: tFadeOut;
+		transition: top 1s;
+		top: 92px;
+	}
+	.tFadeStart{
+		top: 65px;
+	}
+	
+	@keyframes tFadeOut {
+	  from {
+		top: 122px;
+	  }
+	  to {
+		top: 92px; 
+	  }
+	}
+	@keyframes tFadeIn {
+	  from {
+		top: 92px; 
+	  }
+	  to {
+		top: 122px;
+	  }
+	}
+	
+	.hFadeOut{
+		overflow:hidden;
+		animation-duration: 1s;
+		animation-name: hFadeOut;
+		transition: height 1s;
+		height:0;
+	}
+	
+	@keyframes hFadeOut {
+	  from {
+		height: 43px;
+	  }
+	  to {
+		height: 0; 
+	  }
+	}
+	
+	.hFadeIn{
+		overflow:hidden;
+		animation-duration: 1s;
+		animation-name: hFadeIn;
+		transition: height 1s;
+		height:43px;
+	}
+	
+	@keyframes hFadeIn {
+	  from {
+		height: 0; 
+	  }
+	  to {
+		height: 43px;
+	  }
+	}
+  
+	.draggable { width: 150px; height: 150px; padding: 0; margin:0; border:0; }
+	.resizable { width: 150px; height: 150px; padding: 0; margin:0; border:0; }
+	.resizable h3 { text-align: center; margin: 0; cursor: grab; border: 1px solid black;}
+	.ui-menu { width: 150px; }
+
+	.ui-state-selected {
+		background-color: #64b1ff;
+	}
+	.ui-state-disabled {
+		background-color: grey;
+	}
+
+	.widget {
+		background-color: #DDD;
+		position: absolute;
+	}
+	
+	.settings {
+		display: block;
+		background: #c0e3ff;
+		position: absolute;
+		top: 100px;
+		left: 100px;
+		z-Index:20;
+	}
+
+	.hidden {
+		display:none!important;
+	}
+	.fadeout {
+		visibility: hidden;
+		opacity: 0;
+		transition: visibility 0s 0.5s, opacity 0.5s linear;
+	}
+	.fade2black{
+		background-color: 000F;
+		transition: background-color 0.5s linear;
+	}
+	.hidden2{
+		display:none!important;
+	}
+	.hidden3{
+		display:none!important;
+	}
+	
+	.thing {
+		width: 100px;
+		padding: 10px 0.5em 0.5em 0.5em;
+		margin: 6px;
+		border: #565656 solid 1px;
+		background: rgba(0,0,0,0.8);
+		color: white;
+		font-family: sans-serif;
+		cursor: grab;
+		text-align: center;
+	    border-radius: 6px;
+		word-wrap: break-word;
+		box-shadow: inset 6px 6px 6px #dadada1c, inset -6px -6px 6px #27272724;
+	}
+	.empty {
+		width: 100px;
+		padding: 10px 0.5em 0 0.5em;
+		margin: 0.5em 0.4em;
+		background: rgba(0,0,0,0.8);
+		color: white;
+		font-family: sans-serif;
+		user-select: none;
+		text-align: center;
+		border-radius: 6px;
+		height: 1.7em;
+		cursor: crosshair;
+		border: 1px solid black;
+	}
+	.col {
+		width: 130px;
+		height: calc(100vh - 20px);
+		padding: 5px;
+		border: 1px solid;
+		border-radius: 5px;
+		position: relative;
+		float: left;
+		user-select: none;
+	}
+	.pressed>.group{
+		border: solid 2px black;
+		background-color: #276022aa;
+	}
+	button.pressed {
+		background-color: #CEF;
+	}
+	.editButton{
+		display:none;
+		position: absolute;
+		z-index: 2;
+		padding: 6px 0;
+		width: 28px;
+		height: 28px;
+		line-height: 0px;
+		border-radius: 14px;
+	}
+	.editButton[data-state="active"]{
+		display:block!important;
+		background: #defffd;
+		border: #166b49 solid 2px;
+	}
+	.setButton{
+		display:none;
+		position:absolute;
+		margin: 20px 57px;
+		z-index:2;
+	}
+	.groupContainer{
+		display:inline-block;
+	}
+	.groupContainer>.group{
+		transform: scale(calc(  var(--aspect-ratio) / (16 / 9)), 1);
+	}
+	.groupContainer:hover>.group{
+		box-shadow: 0 0 6px #273a4e, 0 0px 6px #fffC;
+	}
+	
+	.groupContainer:hover>button{
+		display:inline-block;
+		padding: 3.2px;
+		opacity: 80%;
+	}
+	
+	.groupContainer>button:hover{
+		display:inline-block;
+		padding: 3.2px;
+		opacity: 100!important;
+		box-shadow:  2px 2px 2px #918c8c7c, -2px -2px 2px #27272774
+	}
+	
+	b {
+		text-shadow: 0 0 1px #f4f4f4;
+	}
+	a {
+		display: inline-block;
+		margin: 5px;
+		background-color: #c9c9c9;
+		border: 2px solid black;
+		padding: 4px;
+		border-radius: 6px;
+		cursor:pointer;
+	}
+	#delete {
+		background-color: rgb(191 191 191);
+		text-align: center;
+		border: 1px solid black;
+		color: black;
+		cursor: crosshair;
+		margin: 5.5px;
+		border-radius: 0px;
+		display:none;
+	}
+	
+	.modal {
+	  position: fixed; 
+	  padding-top: 50px;
+	  left: 0; 
+	  top: 0;
+	  width: 100%;
+	  height: 100%; 
+	  background-color: rgb(0, 0, 0);
+	  background-color: rgba(0, 0, 0, 0.5);
+	  z-Index: 20;
+	}
+	.modal-content {
+	  position: relative; 
+	  padding: 20px; 
+	  margin: auto;
+	  margin-bottom: 100px;
+	  width: 75%;  
+	  -webkit-animation-name: animatetop;
+	  -webkit-animation-duration: 0.4s;
+	  animation-name: animatetop;
+	  animation-duration: 0.4s;
+	  border-radius: 4px;
+	  background-color: #e2e2e2;
+	  background-image: url("data:image/svg+xml,%3Csvg width='6' height='6' viewBox='0 0 6 6' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%239C92AC' fill-opacity='0.1' fill-rule='evenodd'%3E%3Cpath d='M5 0h1L0 6V5zM6 5v1H5z'/%3E%3C/g%3E%3C/svg%3E");
+	}
+	.close-btn {
+	  color: #333;
+	  font-size: 24px;  
+	  font-weight: bold;
+	  user-select: none;
+	}
+	.close-btn:hover {
+	  color: black;
+	  cursor:pointer;
+	}
+	span.close-btn {
+	  float: right; 
+	}
+	@-webkit-keyframes animatetop {
+	  from {top:-300px; opacity:0} 
+	  to {top:0; opacity:1}
+	}
+	@keyframes animatetop {
+	  from {top:-300px; opacity:0}
+	  to {top:0; opacity:1}
+	}
+	
+	#welcomeWindow{
+	    display:none;
+		position:absolute;
+		top:0;
+		left:0;
+		width:100vw;
+		height:100vh;
+		z-index:5;
+		background: #2775dc;
+		box-shadow:  20px 20px 60px #51729d,
+					-20px -20px 60px #6d9ad5;
+		background: -moz-linear-gradient(-45deg, rgba(59,103,158,1) 2%, rgba(43,136,217,1) 50%, rgba(32,124,202,1) 79%, rgba(89, 165, 224,1) 100%); /* FF3.6-15 */
+		background: -webkit-linear-gradient(-45deg, rgba(59,103,158,1) 2%,rgba(56, 134, 202,1) 50%,rgba(32,124,202,1) 79%,rgba(89, 165, 224,1) 100%); /* Chrome10-25,Safari5.1-6 */
+		background: linear-gradient(135deg, rgba(59,103,158,1) 2%,rgba(56, 134, 202,1) 50%,rgba(32,124,202,1) 79%,rgba(89, 165, 224,1) 100%);
+		background: linear-gradient(135deg, rgba(59,103,158,1) 2%,rgba(56, 134, 202,1) 50%,rgba(32,124,202,0.8) 79%,rgba(89, 165, 224,1) 100%),  url("data:image/svg+xml,%0A%3Csvg xmlns='http://www.w3.org/2000/svg' width='500' height='500'%3E%3Cfilter id='noise' x='0' y='0'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3CfeBlend mode='screen'/%3E%3C/filter%3E%3Crect width='500' height='500' filter='url(%23noise)' opacity='0.5'/%3E%3C/svg%3E");
+	}
+	.center-content{
+		align-content: center;
+		margin: 20px auto;
+		display: block;
+		width: 500px;
+		max-width: 100%;
+	}
+	.footer {
+		bottom: 0;
+		display: inline-block;
+		vertical-align: middle;
+		margin: 5px 20px;
+		height: 28px;
+		display: flex;
+		align-items: center;
+		position: fixed;
+		right: 0;
+	}
+	.footer>div{
+		align-items: center;
+	}
+	
+	.popup-message {
+		display: none;
+		align-text: center;
+		position: absolute;
+		z-index: 35 !important;
+		padding: 5px !important;
+		border-radius: 3px;
+		min-width: 180px !important;
+		background-color: #fff !important;
+		border: solid 1px #dfdfdf !important;
+		box-shadow: 1px 1px 2px #cfcfcf !important;
+	}
+	.context-menu--active {
+		display: block !important;
+	}
+	.context-menu__items {
+		list-style: none !important;
+		margin: 0;
+		padding: 0;
+	}
+	.context-menu__item {
+		display: block;
+		margin-bottom: 4px !important;
+	}
+	.context-menu__item:last-child {
+		margin-bottom: 0 !important;
+	}
+	.context-menu__link {
+		display: block;
+		padding: 4px 12px;
+		color: #0066aa !important;
+		text-decoration: none;
+	}
+	button.menuButtons{
+		background-color: #b4c5ca !important;
+		background: linear-gradient(135deg, #c2d2d7 60%,#c7d3d7 80%, #a3b5ba 100%)
+	}
+	.context-menu__link:hover {
+		color: #fff !important;
+		background-color: #0066aa !important;
+	}
+		
+	.discord{
+		background-image: url("data:image/svg+xml,%3Csvg width='71' height='55' viewBox='0 0 71 55' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cg clip-path='url(%23clip0)'%3E%3Cpath d='M60.1045 4.8978C55.5792 2.8214 50.7265 1.2916 45.6527 0.41542C45.5603 0.39851 45.468 0.440769 45.4204 0.525289C44.7963 1.6353 44.105 3.0834 43.6209 4.2216C38.1637 3.4046 32.7345 3.4046 27.3892 4.2216C26.905 3.0581 26.1886 1.6353 25.5617 0.525289C25.5141 0.443589 25.4218 0.40133 25.3294 0.41542C20.2584 1.2888 15.4057 2.8186 10.8776 4.8978C10.8384 4.9147 10.8048 4.9429 10.7825 4.9795C1.57795 18.7309 -0.943561 32.1443 0.293408 45.3914C0.299005 45.4562 0.335386 45.5182 0.385761 45.5576C6.45866 50.0174 12.3413 52.7249 18.1147 54.5195C18.2071 54.5477 18.305 54.5139 18.3638 54.4378C19.7295 52.5728 20.9469 50.6063 21.9907 48.5383C22.0523 48.4172 21.9935 48.2735 21.8676 48.2256C19.9366 47.4931 18.0979 46.6 16.3292 45.5858C16.1893 45.5041 16.1781 45.304 16.3068 45.2082C16.679 44.9293 17.0513 44.6391 17.4067 44.3461C17.471 44.2926 17.5606 44.2813 17.6362 44.3151C29.2558 49.6202 41.8354 49.6202 53.3179 44.3151C53.3935 44.2785 53.4831 44.2898 53.5502 44.3433C53.9057 44.6363 54.2779 44.9293 54.6529 45.2082C54.7816 45.304 54.7732 45.5041 54.6333 45.5858C52.8646 46.6197 51.0259 47.4931 49.0921 48.2228C48.9662 48.2707 48.9102 48.4172 48.9718 48.5383C50.038 50.6034 51.2554 52.5699 52.5959 54.435C52.6519 54.5139 52.7526 54.5477 52.845 54.5195C58.6464 52.7249 64.529 50.0174 70.6019 45.5576C70.6551 45.5182 70.6887 45.459 70.6943 45.3942C72.1747 30.0791 68.2147 16.7757 60.1968 4.9823C60.1772 4.9429 60.1437 4.9147 60.1045 4.8978ZM23.7259 37.3253C20.2276 37.3253 17.3451 34.1136 17.3451 30.1693C17.3451 26.225 20.1717 23.0133 23.7259 23.0133C27.308 23.0133 30.1626 26.2532 30.1066 30.1693C30.1066 34.1136 27.28 37.3253 23.7259 37.3253ZM47.3178 37.3253C43.8196 37.3253 40.9371 34.1136 40.9371 30.1693C40.9371 26.225 43.7636 23.0133 47.3178 23.0133C50.9 23.0133 53.7545 26.2532 53.6986 30.1693C53.6986 34.1136 50.9 37.3253 47.3178 37.3253Z' fill='%23ffffff'/%3E%3C/g%3E%3Cdefs%3E%3CclipPath id='clip0'%3E%3Crect width='71' height='55' fill='white'/%3E%3C/clipPath%3E%3C/defs%3E%3C/svg%3E");
+		background-size: contain;
+		background-repeat: no-repeat;
+		width:14px;
+		height:10px;
+		border:0;
+		background-color:#0000;
+	}
+	
+	.github {
+		background-image: url("data:image/svg+xml,%0A%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24'%3E%3Cpath d='M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z'/%3E%3C/svg%3E");
+		background-size: contain;
+		width:10px;
+		height:10px;
+		border:0;
+		background-color:#0000;
+	}
+	#containermenu>div:nth-child(1)>div::before {
+		content: "0";
+		color: #a4a4a4;
+	}
+	#containermenu>div:nth-child(2)>div::before {
+		content: "1";
+		color: #a4a4a4;
+	}
+	#containermenu>div:nth-child(3)>div::before {
+		content: "2";
+		color: #a4a4a4;
+	}
+	#containermenu>div:nth-child(4)>div::before {
+		content: "3";
+		color: #a4a4a4;
+	}
+	#containermenu>div:nth-child(5)>div::before {
+		content: "4";
+		color: #a4a4a4;
+	}
+	#containermenu>div:nth-child(6)>div::before {
+		content: "5";
+		color: #a4a4a4;
+	}
+	#containermenu>div:nth-child(7)>div::before {
+		content: "6";
+		color: #a4a4a4;
+	}
+	#containermenu>div:nth-child(8)>div::before {
+		content: "7";
+		color: #a4a4a4;
+	}
+	#containermenu>div:nth-child(9)>div::before {
+		content: "8";
+		color: #a4a4a4;
+	}
+	#containermenu>div:nth-child(10)>div::before {
+		content: "9";
+		color: #a4a4a4;
+	}
+	#containermenu>div>div {
+		width: 15px;
+		height: 15px;
+		border-radius: 10px;
+		margin: 0 auto;
+		color: #a4a4a4;
+		position: relative;
+		left: 4px;
+		font-size: 70%;
+		cursor:help;
+	}
+	.tooltip {
+		z-index: 100;
+	}
+	.tooltip .tooltiptext {
+		user-select: none;
+		visibility: hidden;
+		background-color: #333;
+		color: #fff;
+		text-align: center;
+		border-radius: 3px;
+		padding: 3px;
+		display:none;
+		position:absolute;
+		overflow: auto; 
+		margin: 0; position:relative;
+		font-family: "Noto Color Emoji", "Apple Color Emoji", "Segoe UI Emoji", Times, Symbola, Aegyptus,Code2000, Code2001, Code2002, Musica, serif, LastResort;
+		
+	}
+	.tooltip:hover .tooltiptext {
+		visibility: visible;
+		display:inline-block;
+	}
+	
+	.randomRoomName{
+	
+		width: 24px;
+		height: 24px;
+		background-size: contain;
+		background-repeat: no-repeat;
+		border-radius: 5px;
+		background: rgb(238,238,238);
+		background-image: url("data:image/svg+xml,%0A%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 29 29'%3E%3Cpath d='M18 9v-3c-1 0-3.308-.188-4.506 2.216l-4.218 8.461c-1.015 2.036-3.094 3.323-5.37 3.323h-3.906v-2h3.906c1.517 0 2.903-.858 3.58-2.216l4.218-8.461c1.356-2.721 3.674-3.323 6.296-3.323v-3l6 4-6 4zm-9.463 1.324l1.117-2.242c-1.235-2.479-2.899-4.082-5.748-4.082h-3.906v2h3.906c2.872 0 3.644 2.343 4.631 4.324zm15.463 8.676l-6-4v3c-3.78 0-4.019-1.238-5.556-4.322l-1.118 2.241c1.021 2.049 2.1 4.081 6.674 4.081v3l6-4z'/%3E%3C/svg%3E"), linear-gradient(135deg, rgba(238,238,238,1) 0%,rgba(204,204,204,1) 100%);
+	}
+	#demoDrop{
+		background-color: #30892c;
+		cursor: help;
+		display:none;
+	}
+	.demoThing{
+		width: 100px;
+		padding: 10px 0.5em 0.5em 0.5em;
+		margin: 6px;
+		border: #565656 solid 1px;
+		background: rgba(0,0,0,0.8);
+		color: white;
+		font-family: sans-serif;
+		cursor: grab;
+		text-align: center;
+	    border-radius: 6px;
+		word-wrap: break-word;
+		box-shadow: inset 6px 6px 6px #dadada1c, inset -6px -6px 6px #27272724;
+		display:none;
+	}
+	
+	#sendChat{
+		bottom: 1px;
+		position: relative;
+	}
+	
+	
+	body.mobile #iframeContainer {
+		position: absolute;
+		max-width: calc(100vw - 40px);
+		bottom:0;
+	}
+	
+	body.mobile {
+		margin:0;
+		overflow: initial;
+		overflow-x: hidden;
+	}
+	
+	
+	body.mobile .tooltip:hover .tooltiptext {
+		display: none;
+	}
+	
+	body.mobile #welcomeWindow{
+		padding-bottom: 40px;
+	}
+	
+	#chatModuleButton {
+		user-select: none;
+		position: fixed;
+		top: 10px;
+		right: 10px;
+		cursor: pointer;
+	}
+	
+	body.mobile #chatModuleButton {
+		position: fixed;
+		bottom: 10px;
+		top: unset;
+		display:none;
+	}
+	
+	</style>
+</head>
+<body>
+	<div id="container">
+		<div id="containermenu"></div>
+	</div>
+	<div id="chatModuleButton" class="hidden" onclick="toggleChat();" title="Show the chat window">💬</div>
+	<div id="chatModule" class="hidden">
+		<div class="xbutton" onclick="toggleChat();" title="Hide the chat window">x</div>
+		<div id="chatBody" class="message"> 
+			<div class="inMessage" data-translate='welcome-to-vdo-ninja-chat'>
+				Welcome to the Meet app! You can send text messages directly to connected peers from here.
+			</div>
+		</div>
+		<div id="chatSendBar">
+			<input id="chatInput" placeholder="Enter chat message to send here" onkeypress="EnterButtonChat(event)" />
+			<button onclick="sendChatMessage()" id='sendChat'>Send</button>
+		</div>
+	</div>
+	<div id="welcomeWindow">
+		<div class="center-content">
+			<div class="title"><h1 class="main-heading">Meet</h1><h2>A simple free chat room<b></b></h2></div>
+			
+			<label for="roomname"><input name="roomname" id="roomname" type="text" placeholder="Room Name" /></label>
+			<font class="tooltip">
+				<button onclick="randomRoomName();" class="randomRoomName"></button><span class="tooltiptext">Generate a random room name</span>
+			</font>
+			<br />
+			<label for="roompassword"><input name="roompassword" id="roompassword" type="text" placeholder="Room Password (optional)"/></label><br />
+			<button onclick="startRoom();">Join Room!</button><br /><br />
+			<span id="lastSavedRoom" class="hidden">
+				<br /><br />
+				<label for="savedroomname">
+					<input name="savedroomname" id="savedroomname" type="text" disabled placeholder="Room Name" /></label>
+				<label for="savedroompassword" id="savedpasswordlabel"><br />
+					<input name="savedroompassword" id="savedroompassword" disabled type="password" placeholder="Room Password"/></label>
+				<button onclick="startLastRoom();">Restore last room</button>
+			</span>
+			<br /><br />
+			<div class="footer">
+				<div>
+					<a href="https://discord.vdo.ninja" class="discord" target="_blank"></a>
+				</div>
+				<div>
+					<a class="github" href="https://github.com/steveseguin/vdoninja" rel="noopener" target="_blank" title="Star steveseguin/vdoninja on GitHub"></a>
+				</div>
+				<div style="cursor:pointer;" onclick="window.open('https://vdo.ninja');">Powered by VDO.Ninja</div>
+			</div>
+		</div>
+	</div>
+	<div id="iframeContainer" class="tFadeStart">
+	</div>
+	<div class="gone" >
+		<!-- This image is used when dragging elements -->
+		<img src="./media/favicon-32x32.png" style="pointer-events: none;" id="dragImage" loading="lazy" />
+	</div>
+	<div id="messagePopup" class="popup-message"></div>
+	<script>
+	
+	function allowDrop(ev) {
+		ev.preventDefault();
+	}
+	
+	(function(w) {
+		w.URLSearchParams = w.URLSearchParams || function(searchString) {
+			var self = this;
+			searchString = searchString.replace("??", "?");
+			self.searchString = searchString;
+			self.get = function(name) {
+				var results = new RegExp('[\?&]' + name + '=([^&#]*)').exec(self.searchString);
+				if (results == null) {
+					return null;
+				} else {
+					return decodeURI(results[1]) || 0;
+				}
+			};
+		};
+
+	})(window);
+	
+	function warnlog(msg){
+		console.warn(msg);
+	}
+	function errorlog(msg){
+		console.error(msg);
+	}
+	function log(msg){
+		console.log(msg);
+	}
+	
+	function getById(id){
+		var ele = document.getElementById(id);
+		if (!ele){
+			console.warn(id+" not found.");
+			return document.createElement("span");
+		} else {
+			return ele;
+		}
+	}
+	
+	function toggleChat(){
+		document.getElementById("chatModule").classList.toggle("fadeout");
+		document.getElementById("chatModuleButton").classList.toggle("hidden");
+		if (document.getElementById("chatModule").classList.contains("fadeout")){
+			document.documentElement.style.setProperty('--chat-width', "16px");
+		} else {
+			document.documentElement.style.setProperty('--chat-width', "450px");
+		}
+	}
+	
+	function sanitizeRoomName(roomid) {
+		if (!roomid){
+			return false;
+		}
+		roomid = roomid.trim();
+		if (roomid === "") {
+			return false;
+		} else if (!roomid) {
+			return false;
+		} else if (roomid=="test") {
+			return false;
+		}
+		var roomid = roomid.replace(/[\W]+/g, "_");
+		if (roomid.length > 50) {
+			roomid = roomid.substring(0, 50);
+		}
+		return roomid;
+	}
+	
+
+	var urlEdited = window.location.search.replace(/\?\?/g, "?");
+	urlEdited = urlEdited.replace(/\?/g, "&");
+	urlEdited = urlEdited.replace(/\&/, "?");
+
+	if (urlEdited !== window.location.search){
+		warnlog(window.location.search + " changed to " + urlEdited);
+		window.history.pushState({path: urlEdited.toString()}, '', urlEdited.toString());
+	}
+	var urlParams = new URLSearchParams(urlEdited);
+	
+	var api = false;
+	if (urlParams.has('osc') || urlParams.has('api')) {
+		if (urlParams.get('osc') || urlParams.get('api')) {
+			api = urlParams.get('osc') || urlParams.get('api');
+		}
+	}
+	
+	var streamIDs = [];
+	var slotsNeeded = 1;
+	
+	var updateOnSlotChange = true;
+	var assignSlotToGuest = true;
+	var toggleLabel = false;
+	var toggleBroadcast = true;
+	var messageList = [];
+	
+	
+	var iOS = !!navigator.platform && /iPad|iPhone|iPod/.test(navigator.platform);  // used by main.js also
+	var iPad = (navigator.maxTouchPoints && navigator.maxTouchPoints > 2 && /MacIntel/.test(navigator.platform));
+	var mobile = false;
+	if (/Android|Pixel|webOS|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)){
+		mobile = true;
+	} else if (iOS || iPad){
+		mobile = true;
+	} else if (urlParams.has('mobile')){
+		mobile = true;
+	}
+	if (screen.height && screen.width && (screen.height*screen.width<400000)){
+		mobile = true;
+	}
+	
+	if (mobile){
+		toggleChat();
+		document.body.classList.add("mobile");
+	}	
+	
+	var password = false;
+	if (urlParams.has('password') || urlParams.has('pass') || urlParams.has('pw') || urlParams.has('p')) {
+		password = urlParams.get('password') || urlParams.get('pass') || urlParams.get('pw') || urlParams.get('p');
+	}
+	
+	var aspectRatio = 16/9.0;
+	document.documentElement.style.setProperty('--aspect-ratio', aspectRatio);
+	
+	var roomname = false;
+	if (urlParams.has("room") || urlParams.has("r") ||urlParams.has("dir") || urlParams.has("director")){
+		roomname = urlParams.get("room") || urlParams.get("r") ||urlParams.get("dir") || urlParams.get("director");
+		roomname = sanitizeRoomName(roomname);
+	}
+	var savedLastRoom = getStorage("savedRoom_comms");
+	
+	if (savedLastRoom){
+		if ("roomname" in savedLastRoom && savedLastRoom.roomname!==false){
+			document.getElementById("savedroomname").value = savedLastRoom.roomname;
+			document.getElementById("lastSavedRoom").classList.remove("hidden");
+			if ("password" in savedLastRoom && savedLastRoom.password!==false){
+				document.getElementById("savedpasswordlabel").classList.remove("hidden");
+				document.getElementById("savedroompassword").value = savedLastRoom.password;
+			} else {
+				document.getElementById("savedpasswordlabel").classList.add("hidden");
+			}
+		} 
+	}
+	function randomRoomName(){
+		document.getElementById("roomname").value = generateString(8);
+	}
+	function startLastRoom(){
+		document.getElementById("roomname").value = document.getElementById("savedroomname").value;
+		document.getElementById("roompassword").type = "password";
+		document.getElementById("roompassword").value = document.getElementById("savedroompassword").value;
+		startRoom();
+	}
+	function startRoom(){
+		var pid = document.getElementById("roompassword").value.trim();
+		if (pid){
+			password = pid;
+		}
+	
+		var rid = document.getElementById("roomname").value.trim();
+		if (rid == "test"){
+			alert("Please enter a unique room name");
+		}
+		rid = sanitizeRoomName(rid);
+		if (rid){
+			if (this){
+				this.disabled = true;
+				this.onclick = null;
+			}
+			roomname = rid;
+			loadIframe();
+			document.getElementById("welcomeWindow").classList.add("fadeout");
+			setTimeout(function(){
+				document.getElementById("welcomeWindow").classList.add("hidden");
+			},500);
+		} else {
+			document.getElementById("roomname").classList.remove("shake");
+			setTimeout(function(){document.getElementById("roomname").classList.add("shake");},10);
+		}
+		
+		document.getElementById("containermenu").innerHTML = "Room: "+rid;
+	}
+	
+	function sanitize(string) {
+		var temp = document.createElement('div');
+		temp.textContent = string;
+		return temp.innerHTML;
+	}
+
+	function EnterButtonChat(event){
+		 // Number 13 is the "Enter" key on the keyboard
+		var key = event.which || event.keyCode;
+		if (key  === 13) {
+			// Cancel the default action, if needed
+			event.preventDefault();
+			// Trigger the button element with a click
+			sendChatMessage();
+		}
+	}
+
+	function sendChatMessage(){ // filtered + visual
+		var msg = document.getElementById('chatInput').value;
+		msg = sanitize(msg);
+		if (msg==""){return;}
+		iframe.contentWindow.postMessage({ sendChat: msg }, "*"); 
+		document.getElementById('chatInput').value = "";
+		
+		var message = {};
+		message.label = "You:";
+		message.type = "sent";
+		message.msg = msg;
+		
+		updateMessages(message);
+	}
+
+	function timeSince(date) {
+
+	  var seconds = Math.floor((new Date() - date) / 1000);
+
+	  var interval = seconds / 31536000;
+
+	  if (interval > 1) {
+		return Math.floor(interval) + " years";
+	  }
+	  interval = seconds / 2592000;
+	  if (interval > 1) {
+		return Math.floor(interval) + " months";
+	  }
+	  interval = seconds / 86400;
+	  if (interval > 1) {
+		return Math.floor(interval) + " days";
+	  }
+	  interval = seconds / 3600;
+	  if (interval > 1) {
+		return Math.floor(interval) + " hours";
+	  }
+	  interval = seconds / 60;
+	  if (interval > 1) {
+		return Math.floor(interval) + " minutes";
+	  }
+	  return "Seconds ago";
+	}
+
+	function updateMessages(message = false){
+		if (message){
+			var time = timeSince(message.time);
+			var msg = document.createElement("div");
+			////// KEEP THIS IN /////////
+			console.log(message.msg); // Display Recieved messages for View-Only clients.
+			/////////////////////////////
+			var label = "";
+			if (message.label){
+				label = message.label;
+			} 
+			
+			if (message.type == "sent"){
+				msg.innerHTML = "<span class='chat_message chat_sent'>"+message.msg + "  </span><i><small> <small>- "+time+"</small></small></i><span style='display:none'>"+label+"</span>";
+				msg.classList.add("outMessage");
+			} else if (message.type == "recv"){
+				msg.innerHTML = label+"<span class='chat_message chat_recv'>"+message.msg + " </span><i><small> <small>- "+time+"</small></small></i>";
+				msg.classList.add("inMessage");
+			} else if (message.type == "action"){
+				msg.innerHTML = label+"<span class='chat_message chat_action'>"+message.msg + " </span><i><small> <small>- "+time+"</small></small></i>";
+				msg.classList.add("actionMessage");
+			} else if (message.type == "alert"){
+				msg.innerHTML = "<span class='chat_message chat_alert'>"+message.msg + " </span><i><small> <small>- "+time+"</small></small></i>";
+				msg.classList.add("inMessage");
+			} else {
+				msg.innerHTML = "<span class='chat_message chat_other'>"+message.msg + "  </span><i><small> <small>- "+time+"</small></small></i>";
+				msg.classList.add("inMessage");
+			}
+			document.getElementById("chatBody").appendChild(msg);
+		} else {
+			document.getElementById("chatBody").innerHTML = "";
+			for (i in messageList){
+				var time = timeSince(messageList[i].time);
+				var msg = document.createElement("div");
+				////// KEEP THIS IN /////////
+				console.log(messageList[i].msg); // Display Recieved messages for View-Only clients.
+				/////////////////////////////
+				var label = "";
+				if (messageList[i].label){
+					label = messageList[i].label;
+				} 
+				
+				if (messageList[i].type == "sent"){
+					msg.innerHTML = "<span class='chat_message chat_sent'>"+messageList[i].msg + "  </span><i><small> <small>- "+time+"</small></small></i><span style='display:none'>"+label+"</span>";
+					msg.classList.add("outMessage");
+				} else if (messageList[i].type == "recv"){
+					msg.innerHTML = label+"<span class='chat_message chat_recv'>"+messageList[i].msg + " </span><i><small> <small>- "+time+"</small></small></i>";
+					msg.classList.add("inMessage");
+				} else if (messageList[i].type == "action"){
+					msg.innerHTML = label+"<span class='chat_message chat_action'>"+messageList[i].msg + " </span><i><small> <small>- "+time+"</small></small></i>";
+					msg.classList.add("actionMessage");
+				} else if (messageList[i].type == "alert"){
+					msg.innerHTML = "<span class='chat_message chat_alert'>"+messageList[i].msg + " </span><i><small> <small>- "+time+"</small></small></i>";
+					msg.classList.add("inMessage");
+				} else {
+					msg.innerHTML = "<span class='chat_message chat_other'>"+messageList[i].msg + "  </span><i><small> <small>- "+time+"</small></small></i>";
+					msg.classList.add("inMessage");
+				}
+				
+				document.getElementById("chatBody").appendChild(msg);
+			}
+		}
+		//if (chatUpdateTimeout){
+		//	clearInterval(chatUpdateTimeout);
+		//}
+		document.getElementById("chatBody").scrollTop = document.getElementById("chatBody").scrollHeight;
+		//chatUpdateTimeout = setTimeout(function(){updateMessages()},60000);
+	}
+	
+	function errorlog(e,a=null,b=null){
+		console.error(e);
+	}
+	
+	var currentgroup = {};
+	
+	$(function(){
+		$( "#containermenu" ).sortable({
+			stop: function( event, ui ) {saveSession();},
+			distance: 20
+		});
+	});
+	
+	function swapNodes(n1, n2) {
+		var p1 = n1.parentNode;
+		var p2 = n2.parentNode;
+		var i1, i2;
+
+		if ( !p1 || !p2 || p1.isEqualNode(n2) || p2.isEqualNode(n1) ) return;
+
+		for (var i = 0; i < p1.children.length; i++) {
+			if (p1.children[i].isEqualNode(n1)) {
+				i1 = i;
+			}
+		}
+		for (var i = 0; i < p2.children.length; i++) {
+			if (p2.children[i].isEqualNode(n2)) {
+				i2 = i;
+			}
+		}
+
+		if ( p1.isEqualNode(p2) && i1 < i2 ) {
+			i2++;
+		}
+		p1.insertBefore(n2, p1.children[i1]);
+		p2.insertBefore(n1, p2.children[i2]);
+	}
+
+	function drag(ev) {
+		var data = ev.dataTransfer.getData("text");
+		var origThing = document.getElementById(data);
+	
+		ev.dataTransfer.setData("text", ev.target.id);
+		var eles = document.querySelectorAll(".thing");
+		for (var i=0;i<eles.length;i++){
+			if (eles[i].id == ev.target.id){continue;}
+			if (!ev.target.dataset.slot){
+				if (eles[i].id == "delete"){
+					if (!ev.target.classList.contains("disconnected")){
+						continue;
+					} else {
+						eles[i].style.boxShadow = "0px 0px 8px 2px #F00";
+						continue;
+					}
+				}
+			}
+			
+			eles[i].style.boxShadow = "0px 0px 8px 2px #Fff";
+		}
+		var eles = document.querySelectorAll(".empty");
+		for (var i=0;i<eles.length;i++){
+			eles[i].style.boxShadow = "0px 0px 8px 2px #Fff";
+		}
+	}
+
+	function drop(ev) {
+		ev.preventDefault();
+		var data = ev.dataTransfer.getData("text");
+		var origThing = document.getElementById(data);
+		ev.target.style.border = "";
+		origThing.style.border = "";
+		
+		if (ev.target.classList.contains("thing")){
+			
+			swapNodes( ev.target, origThing);
+			var slot = parseInt(origThing.dataset.slot);
+			origThing.dataset.slot = parseInt(ev.target.dataset.slot);
+			ev.target.dataset.slot = slot;
+			var oldColor = origThing.style.backgroundColor;
+			origThing.style.backgroundColor = ev.target.style.backgroundColor;
+			ev.target.style.backgroundColor = oldColor;
+			//ev.target.classList.add("empty");
+		} else if (ev.target.classList.contains("empty")){
+		
+			if (!ev.target.dataset.slot){return;}
+			if (ev.target.dataset.slot=="undefined"){return;}
+			if (ev.target.dataset.slot=="undefined"){return;}
+			
+			ev.target.parentNode.insertBefore(origThing, ev.target.nextSibling);
+			
+			console.warn(origThing);
+			
+			if (origThing.dataset.slot && (origThing.dataset.slot!=="undefined")){
+				document.querySelectorAll("[data-slot='"+origThing.dataset.slot+"']").forEach(ele=>{ele.style.display = "block";})
+				document.querySelectorAll("[data-slot='"+origThing.dataset.slot+"']").forEach(ele=>{ele.classList.remove("hidden");})
+			}
+			origThing.dataset.slot = ev.target.dataset.slot;
+			ev.target.style.display = "none";
+			ev.target.classList.add("hidden");
+			//ev.target.classList.remove("empty");
+			origThing.style.backgroundColor = ev.target.style.backgroundColor;
+		}
+		
+		var eles = document.querySelectorAll(".thing");
+		for (var i=0;i<eles.length;i++){
+			eles[i].style.boxShadow =  "unset";
+		}
+		var eles = document.querySelectorAll(".empty");
+		for (var i=0;i<eles.length;i++){
+			eles[i].style.boxShadow = "unset";
+		}
+	}
+	
+	function dragenter(event) {
+		event.preventDefault();
+		if ( event.target.classList.contains("thing") ) {
+			event.target.style.border = "3px dotted black";
+		} else if (event.target.classList.contains("empty")){
+			event.target.style.border =  "3px dotted black";
+		}
+	}
+
+	function dragleave(event) {
+		event.preventDefault();
+		if (event.target.classList.contains("thing")){
+			event.target.style.border = "";
+		} else if (event.target.classList.contains("empty")){
+			event.target.style.border = "";
+		}
+	}
+
+	
+	function dropRemove(ev) {
+		ev.preventDefault();
+		var data = ev.dataTransfer.getData("text");
+		var origThing = document.getElementById(data);
+		
+		ev.target.style.border = "";
+		origThing.style.border = "";
+		
+		if (origThing.dataset.slot){
+			document.querySelector("[data-slot='"+origThing.dataset.slot+"']").style.display = "block";
+			document.querySelector("[data-slot='"+origThing.dataset.slot+"']").classList.remove("hidden");
+			document.querySelector("[data-slot='"+origThing.dataset.slot+"']").classList.add("empty");
+			delete origThing.dataset.slot;
+		}
+		
+		origThing.style.backgroundColor = "#000"; 
+		if (ev.target.classList.contains("thing")){
+			ev.target.parentNode.insertBefore(origThing, ev.target.nextSibling);
+		} else {
+			ev.target.appendChild(origThing);
+		}
+		document.getElementById("col2").appendChild(document.getElementById("demoDrop"));
+		document.getElementById("col2").appendChild(document.getElementById("delete"));
+		
+		var eles = document.querySelectorAll(".thing");
+		for (var i=0;i<eles.length;i++){
+			eles[i].style.boxShadow =  "unset";
+		}
+		var eles = document.querySelectorAll(".empty");
+		for (var i=0;i<eles.length;i++){
+			eles[i].style.boxShadow = "unset";
+		}
+		
+		if (ev.target.id == "delete"){
+			if (origThing.classList.contains("disconnected")){
+				if (!origThing.dataset.slot){
+					origThing.remove();
+					return;
+				}
+			}
+		}
+	}
+	
+	var colors = [
+		"#00AAAA",
+		"#FF0000",
+		"#0000FF",
+		"#AA00AA",
+		"#00FF00",
+		"#AAAA00",
+		"#AACC44",
+		"#CCAA44",
+		"#CC44AA",
+		"#44AACC"
+	];
+	
+	
+	var initialgroups = {};
+	
+	initialgroups.settings = {};
+	initialgroups.activeGroups = [];
+	initialgroups.groups = [];
+	
+	
+	var savedSession = getStorage("savedSession_comms");
+	
+	if (savedSession){
+		initialgroups = JSON.parse(savedSession);
+	} else {
+		var data = "1";	
+		initialgroups.groups.push(data);
+		
+		var data = "2";
+		initialgroups.groups.push(data);
+		
+		var data = "3";
+		initialgroups.groups.push(data);
+		
+		var data = "4";
+		initialgroups.groups.push(data);
+		
+		var data = "5";
+		initialgroups.groups.push(data);
+
+		var data = "6";
+		initialgroups.groups.push(data);
+	}
+	
+	
+	if (urlParams.has("group") || urlParams.has("groups")){
+		var groups = urlParams.get("group") || urlParams.get("groups");
+		if (groups){
+			groups.split(",").forEach(group=>{
+				if (!initialgroups.groups.includes(group)){
+					initialgroups.groups.push(group);
+					if (!initialgroups.activeGroups.includes(group)){
+						initialgroups.activeGroups.push(group);
+					};
+				}
+			});
+		}
+	}
+	var streamID = "";
+	if (urlParams.has("push") || urlParams.has("sid")){
+		streamID = urlParams.get("push") || urlParams.get("sid") || "";
+		streamID = "&push="+streamID;
+	}
+	
+	var label = "&label";
+	if (urlParams.has("label") || urlParams.has("l")){
+		label += "=" + (urlParams.get("label") || urlParams.get("l") || "");
+	}
+	
+	savedSession = initialgroups;
+	
+	if (iframe){
+		iframe.contentWindow.postMessage({ groups: savedSession.activeGroups }, "*"); 
+	}
+	
+	function exportSession() {
+		var content = JSON.stringify(savedSession);
+		var fileName = roomname + ".json";
+		var a = document.createElement("a");
+		var file = new Blob([content], {type: 'text/plain'});
+		a.href = URL.createObjectURL(file);
+		a.download = fileName;
+		a.click();
+	}
+	
+	
+	var injectCSS = `
+		.directorsgrid .vidcon {
+			display: inline-block !important;
+			width: 293.7px !important;
+			background: #3e3e3e00;
+			color: #FCFCFC;
+			vertical-align: top;
+			border: 1px solid #2e445c;
+			padding: 10px;
+			border-radius: 10px;
+			background: #2e445c;
+			box-shadow: 20px 20px 60px #182430, -20px -20px 60px #283c52;
+		}
+		.card{
+			background-color: #0000;
+		}
+		.container-inner {
+			background-color: #0000;
+		}
+		.column>h2{
+			color:#d5d5d5;
+		}
+		#dropButton{
+			display:none;
+		}
+	`;
+	
+	injectCSS = encodeURIComponent(btoa(injectCSS));
+	
+	function copyFunction(copyText, evt = false) {
+		if (evt){
+			if ("buttons" in evt) {
+				if (evt.buttons !== 0){return;}
+			} else if ("which" in evt){
+				if (evt.which !== 0){return;}
+			}
+			popupMessage(evt);
+			evt.preventDefault();
+			evt.stopPropagation();
+		}
+
+		try {
+			copyText.select();
+			copyText.setSelectionRange(0, 99999);
+			document.execCommand("copy");
+		} catch (e) {
+			var dummy = document.createElement('input');
+			document.body.appendChild(dummy);
+			dummy.value = copyText;
+			dummy.select();
+			document.execCommand('copy');
+			document.body.removeChild(dummy);
+		}
+		return false;
+	}
+	
+	
+	
+	function popupMessage(e, message = "Copied to Clipboard") { // right click menu
+
+		var posx = 0;
+		var posy = 0;
+
+		if (!e) var e = window.event;
+
+		if (e.pageX || e.pageY) {
+			posx = e.pageX;
+			posy = e.pageY;
+		} else if (e.clientX || e.clientY) {
+			posx = e.clientX + document.body.scrollLeft + document.documentElement.scrollLeft;
+			posy = e.clientY + document.body.scrollTop + document.documentElement.scrollTop;
+		}
+
+		posx += 10;
+
+
+		var menu = getById("messagePopup");
+		menu.innerHTML = "<center>" + message + "</center>";
+		var menuState = 0;
+		var menuWidth;
+		var menuHeight;
+		var menuPosition;
+		var menuPositionX;
+		var menuPositionY;
+
+		var windowWidth;
+		var windowHeight;
+
+		if (menuState !== 1) {
+			menuState = 1;
+			menu.classList.add("context-menu--active");
+		}
+
+		menuWidth = menu.offsetWidth + 4;
+		menuHeight = menu.offsetHeight + 4;
+
+		windowWidth = window.innerWidth;
+		windowHeight = window.innerHeight;
+
+		if ((windowWidth - posx) < menuWidth) {
+			menu.style.left = windowWidth - menuWidth + "px";
+		} else {
+			menu.style.left = posx + "px";
+		}
+
+		if ((windowHeight - posy) < menuHeight) {
+			menu.style.top = windowHeight - menuHeight + "px";
+		} else {
+			menu.style.top = posy + "px";
+		}
+
+		function toggleMenuOff() {
+			if (menuState !== 0) {
+				menuState = 0;
+				menu.classList.remove("context-menu--active");
+			}
+		}
+		menu.classList.remove("fadeout");
+		
+		setTimeout(function() {
+			menu.classList.add("fadeout");
+		}, 500);
+		
+		setTimeout(function() {
+			toggleMenuOff();
+		}, 1500);
+	}
+	
+	function generateString(LLL = 7){
+		var text = "";
+		var words = ["the","of","to","and","a","in","is","it","you","that","he","was","for","on","are","with","as","I","his","they","be","at","one","have","this","from","or","had","by","word","but","what","some","we","can","out","other","were","all","there","when","up","use","your","how","said","an","each","she","which","do","their","time","if","will","way","about","many","then","them","write","would","like","so","these","her","long","make","thing","see","him","two","has","look","more","day","could","go","come","did","number","sound","no","most","people","my","over","know","water","than","call","first","who","may","down","side","been","now","find","any","new","work","part","take","get","place","made","live","where","after","back","little","only","round","man","year","came","show","every","good","me","give","our","under","name","very","through","just","form","sentence","great","think","say","help","low","line","differ","turn","cause","much","mean","before","move","right","boy","old","too","same","tell","does","set","three","want","air","well","also","play","small","end","put","home","read","hand","port","large","spell","add","even","land","here","must","big","high","such","follow","act","why","ask","men","change","went","light","kind","off","need","house","picture","try","us","again","animal","point","mother","world","near","build","self","earth","father","head","stand","own","page","should","country","found","answer","school","grow","study","still","learn","plant","cover","food","sun","four","between","state","keep","eye","never","last","let","thought","city","tree","cross","farm","hard","start","might","story","saw","far","sea","draw","left","late","run","don't","while","press","close","night","real","life","few","north","open","seem","together","next","white","children","begin","got","walk","example","ease","paper","group","always","music","those","both","mark","often","letter","until","mile","river","car","feet","care","second","book","carry","took","science","eat","room","friend","began","idea","fish","mountain","stop","once","base","hear","horse","cut","sure","watch","color","face","wood","main","enough","plain","girl","usual","young","ready","above","ever","red","list","though","feel","talk","bird","soon","body","dog","family","direct","pose","leave","song","measure","door","product","black","short","numeral","class","wind","question","happen","complete","ship","area","half","rock","order","fire","south","problem","piece","told","knew","pass","since","top","whole","king","space","heard","best","hour","better","true .","during","hundred","five","remember","step","early","hold","west","ground","interest","reach","fast","verb","sing","listen","six","table","travel","less","morning","ten","simple","several","vowel","toward","war","lay","against","pattern","slow","center","love","person","money","serve","appear","road","map","rain","rule","govern","pull","cold","notice","voice","unit","power","town","fine","certain","fly","fall","lead","cry","dark","machine","note","wait","plan","figure","star","box","noun","field","rest","correct","able","pound","done","beauty","drive","stood","contain","front","teach","week","final","gave","green","oh","quick","develop","ocean","warm","free","minute","strong","special","mind","behind","clear","tail","produce","fact","street","inch","multiply","nothing","course","stay","wheel","full","force","blue","object","decide","surface","deep","moon","island","foot","system","busy","test","record","boat","common","gold","possible","plane","stead","dry","wonder","laugh","thousand","ago","ran","check","game","shape","equate","hot","miss","brought","heat","snow","tire","bring","yes","distant","fill","east","paint","language","among","grand","ball","yet","wave","drop","heart","am","present","heavy","dance","engine","position","arm","wide","sail","material","size","vary","settle","speak","weight","general","ice","matter","circle","pair","include","divide","syllable","felt","perhaps","pick","sudden","count","square","reason","length","represent","art","subject","region","energy","hunt","probable","bed","brother","egg","ride","cell","believe","fraction","forest","sit","race","window","store","summer","train","sleep","prove","lone","leg","exercise","wall","catch","mount","wish","sky","board","joy","winter","sat","written","wild","instrument","kept","glass","grass","cow","job","edge","sign","visit","past","soft","fun","bright","gas","weather","month","million","bear","finish","happy","hope","flower","clothe","strange","gone","jump","baby","eight","village","meet","root","buy","raise","solve","metal","whether","push","seven","paragraph","third","shall","held","hair","describe","cook","floor","either","result","burn","hill","safe","cat","century","consider","type","law","bit","coast","copy","phrase","silent","tall","sand","soil","roll","temperature","finger","industry","value","fight","lie","beat","excite","natural","view","sense","ear","else","quite","broke","case","middle","kill","son","lake","moment","scale","loud","spring","observe","child","straight","consonant","nation","dictionary","milk","speed","method","organ","pay","age","section","dress","cloud","surprise","quiet","stone","tiny","climb","cool","design","poor","lot","experiment","bottom","key","iron","single","stick","flat","twenty","skin","smile","crease","hole","trade","melody","trip","office","receive","row","mouth","exact","symbol","die","least","trouble","shout","except","wrote","seed","tone","join","suggest","clean","break","lady","yard","rise","bad","blow","oil","blood","touch","grew","cent","mix","team","wire","cost","lost","brown","wear","garden","equal","sent","choose","fell","fit","flow","fair","bank","collect","save","control","decimal","gentle","woman","captain","practice","separate","difficult","doctor","please","protect","noon","whose","locate","ring","character","insect","caught","period","indicate","radio","spoke","atom","human","history","effect","electric","expect","crop","modern","element","hit","student","corner","party","supply","bone","rail","imagine","provide","agree","thus","capital","won't","chair","danger","fruit","rich","thick","soldier","process","operate","guess","necessary","sharp","wing","create","neighbor","wash","bat","rather","crowd","corn","compare","poem","string","bell","depend","meat","rub","tube","famous","dollar","stream","fear","sight","thin","triangle","planet","hurry","chief","colony","clock","mine","tie","enter","major","fresh","search","send","yellow","gun","allow","print","dead","spot","desert","suit","current","lift","rose","continue","block","chart","hat","sell","success","company","subtract","event","particular","deal","swim","term","opposite","wife","shoe","shoulder","spread","arrange","camp","invent","cotton","born","determine","quart","nine","truck","noise","level","chance","gather","shop","stretch","throw","shine","property","column","molecule","select","wrong","gray","repeat","require","broad","prepare","salt","nose","plural","anger","claim","continent","oxygen","sugar","death","pretty","skill","women","season","solution","magnet","silver","thank","branch","match","suffix","especially","fig","afraid","huge","sister","steel","discuss","forward","similar","guide","experience","score","apple","bought","led","pitch","coat","mass","card","band","rope","slip","win","dream","evening","condition","feed","tool","total","basic","smell","valley","nor","double","seat","arrive","master","track","parent","shore","division","sheet","substance","favor","connect","post","spend","chord","fat","glad","original","share","station","dad","bread","charge","proper","bar","offer","segment","slave","duck","instant","market","degree","populate","chick","dear","enemy","reply","drink","occur","support","speech","nature","range","steam","motion","path","liquid","log","meant","quotient","teeth","shell","neck"];
+		
+		for (var i=0;i<2;i++){
+			try{
+				var rndint = parseInt(Math.random()*1000);
+				text += words[rndint];
+			} catch(e){}
+		}
+		var possible = "ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnpqrstuvwxyz23456789";
+		text += possible.charAt(Math.floor(Math.random() * possible.length));
+		while (text.length<LLL){
+			text += possible.charAt(Math.floor(Math.random() * possible.length));
+		}
+		try{
+			text = text.replaceAll('AD', 'vDAv'); // avoiding adblockers
+			text = text.replaceAll('Ad', 'vdAv');
+			text = text.replaceAll('ad', 'vdav');
+			text = text.replaceAll('aD', 'vDav');
+		} catch(e){errorlog(e);}
+		
+		log(text);
+		return text;
+	};
+	
+	function hotkeyCheck(event){
+		if (event.target && (event.target.tagName == "INPUT")){warnlog("input in focus; return");return;}
+		var value = parseInt(event.key);
+		if (value == event.key){
+			try {
+				if (document.querySelector("#containermenu").children[value]){
+					document.querySelector("#containermenu").children[value].querySelector("group").click();
+					document.querySelector("#containermenu").children[value].classList.add("shake");
+					setTimeout(function(ele){ele.classList.remove("shake");},500,document.querySelector("#containermenu").children[value]);
+				}
+			} catch(e){}
+		}
+	}
+	
+	var iframe = null;
+	
+	function loadIframe(){
+		if (iframe){return;}
+		iframe = document.createElement("iframe");
+		
+		var additional = ""; // guest/scene links also
+		if (password){
+			additional = "&password="+password;
+		}
+		
+		var additional2 = ""; // this iframe only
+		if (api){
+			additional2 += "&api="+api;
+		}
+		
+		if (assignSlotToGuest){
+			additional2+="&slotmode";
+		} else {
+			additional2+="&slotmode=2";
+		}
+		roomname = sanitizeRoomName(roomname);
+	
+		
+		var iframeContainer = document.getElementById("iframeContainer");
+		iframe.allow = "autoplay;camera;microphone;fullscreen;picture-in-picture;display-capture;";
+		iframe.id = "vdoninja";
+		
+		if (!roomname){
+			roomname = generateString(10);
+		}
+		
+		if (mobile){
+			additional2 += "&ad=1";
+		}
+		if (mobile){
+			var iframesrc = "./index.html?novice&ltb=350&minipreview&transparent&hideheader&margin&rounded&hidetranslate&cleandirector&chatbutton&vd=0&webcam&nvb&sstype=3&ssb&showlabel=skype&style=2&room="+roomname+additional+additional2+"&b64css="+injectCSS+streamID+label;
+		} else {
+			var iframesrc = "./index.html?novice&ltb=350&minipreview&transparent&hideheader&margin&rounded&hidetranslate&cleandirector&chatbutton=0&vd=0&webcam&nvb&sstype=3&ssb&showlabel=skype&style=2&room="+roomname+additional+additional2+"&b64css="+injectCSS+streamID+label;
+		}
+		
+		if (roomname!==false){
+			setStorage("savedRoom_comms", {roomname:roomname,password:password}, 9999);
+		}
+		
+		document.title = "Room: "+roomname;
+		
+		//for (var i in savedSession.groups){
+		//	drawGroup(savedSession.groups[i]);
+		//}
+		
+		document.getElementById("chatModule").classList.remove("hidden");
+		
+		iframe.onload = function(){
+			iframe.contentWindow.postMessage({ groups: savedSession.groups }, "*"); 
+		}
+		
+		iframe.src = iframesrc;
+		iframeContainer.appendChild(iframe);
+		document.getElementById("container").appendChild(iframeContainer);
+		document.getElementById("container").style.display = "block";
+		
+		iframe.contentWindow.addEventListener("keydown", hotkeyCheck);
+		document.addEventListener("keydown", hotkeyCheck);
+		
+		////////////  LISTEN FOR EVENTS
+
+		var eventMethod = window.addEventListener ? "addEventListener" : "attachEvent";
+		var eventer = window[eventMethod];
+		var messageEvent = eventMethod === "attachEvent" ? "onmessage" : "message";
+		var setupYet = false;
+		var showingVideoButton = false;
+		
+		/// If you have a routing system setup		 
+		/// If you have a routing system setup, you could have just one global listener for all iframes instead.
+		
+		eventer(messageEvent, function (e) {
+			if (e.source != iframe.contentWindow){return} // reject messages send from other iframes
+			
+			if ("gotChat" in e.data){
+				messageList.push(e.data.gotChat);
+				messageList = messageList.slice(-100);
+				updateMessages(e.data.gotChat);
+			} else if ("messageList" in e.data){
+				messageList = e.data.messageList;
+				updateMessages();
+			}
+			
+			if (e.data.action && "action" in e.data){
+				if (e.data.action === "local-camera-event"){
+					if (!showingVideoButton){
+						showingVideoButton = true;
+						iframe.contentWindow.postMessage({"function":"eval", "value":'getById("mutevideobutton").style.setProperty("display", "block", "important");'}, '*');
+					}
+				} 									
+				
+				if ("joining-room" == e.data.action){
+					if (!setupYet){
+						setupYet = true;
+						if (savedSession.activeGroups){
+							iframe.contentWindow.postMessage({"groups":savedSession.activeGroups}, '*');
+						}
+					}
+				}
+				if (("group-set-updated" == e.data.action) && e.data.value){
+					savedSession.activeGroups = [];
+					if (e.data.value && (typeof e.data.value == "object")){
+						savedSession.activeGroups = e.data.value;
+					} else if (e.data.value){
+						savedSession.activeGroups = e.data.value.split(",") 
+					} else if (e.data.value){
+						savedSession.activeGroups = [];
+					}
+					
+					
+					document.querySelectorAll(".pressed>[data-group]").forEach(ele=>{
+						if (ele){
+							if (!savedSession.activeGroups.includes(ele.dataset.group)){
+								ele.parentNode.classList.remove("pressed");
+							}
+						}
+					});
+					
+					savedSession.activeGroups.forEach(group=>{
+						if (!savedSession.groups.includes(group)){
+							savedSession.groups.push(group);
+						}
+						drawGroup(group);
+					});
+				}
+				
+			}
+			
+		
+		
+		});
+	}
+	
+	function removeStorage(cname){
+		localStorage.removeItem(cname);
+	}
+
+	function setStorage(cname, cvalue, hours=9999){ // not actually a cookie
+		var now = new Date();
+		var item = {
+			value: cvalue,
+			expiry: now.getTime() + (hours * 60 * 60 * 1000),
+		};
+		try{
+			localStorage.setItem(cname, JSON.stringify(item));
+		}catch(e){errorlog(e);}
+	}
+
+	function getStorage(cname) {
+		try {
+			var itemStr = localStorage.getItem(cname);
+		} catch(e){
+			errorlog(e);
+			return;
+		}
+		if (!itemStr) {
+			return "";
+		}
+		var item = JSON.parse(itemStr);
+		var now = new Date();
+		if (now.getTime() > item.expiry) {
+			localStorage.removeItem(cname);
+			return "";
+		}
+		return item.value;
+	}
+	
+	
+	
+	var toggleBroadcast = false;
+	
+
+	function compareZ( a, b ) { // sorts group based on z-index.
+		var aa = a.z || a.zIndex || 0;
+		var bb = b.z || b.zIndex || 0;
+		if ( aa > bb ){
+			return 1;
+		}
+		if ( aa < bb ){
+			return -1;
+		}
+		return 0;
+	}
+	
+	
+	
+	
+	function pullUp(event){
+		this.parentNode.zIndex = parseInt(this.parentNode.zIndex || 0) + 1;
+		this.parentNode.style.opacity = "0.9";
+		this.parentNode.style.zIndex=this.parentNode.zIndex;
+		this.parentNode.dimensions.innerHTML = parseInt(this.parentNode.style.width) +"x"+parseInt(this.parentNode.style.height);
+		this.parentNode.dimensions.innerHTML += " : " + parseInt(this.parentNode.style.left) +"x"+parseInt(this.parentNode.style.top);
+		this.parentNode.dimensions.innerHTML += " , layer: "+parseInt(this.parentNode.style.zIndex);
+		
+	} 
+	
+	function pushDown(event){
+		this.parentNode.zIndex = parseInt(this.parentNode.zIndex || 0) - 1;
+		if (this.parentNode.zIndex<0){
+			this.parentNode.zIndex=0;
+			this.parentNode.style.opacity = "1.0";
+		} else {
+			this.parentNode.style.opacity = "0.9";
+		}
+		this.parentNode.style.zIndex=this.parentNode.zIndex;
+		this.parentNode.dimensions.innerHTML = parseInt(this.parentNode.style.width) +"x"+parseInt(this.parentNode.style.height);
+		this.parentNode.dimensions.innerHTML += " : " + parseInt(this.parentNode.style.left) +"x"+parseInt(this.parentNode.style.top);
+		this.parentNode.dimensions.innerHTML += " , layer: "+parseInt(this.parentNode.style.zIndex);
+	}
+	
+	
+   
+   function remoteActivate(event=null, group=null){
+		if (event.target && group===null){
+			group = event.target.dataset.group;
+			event.target.parentNode.classList.toggle("pressed");
+		}
+		if (event.target.parentNode.classList.contains("pressed")){
+			var index = savedSession.activeGroups.indexOf(group);
+			if (index == -1){
+				savedSession.activeGroups.push(group);
+				
+			}
+		} else {
+			var index = savedSession.activeGroups.indexOf(group);
+			if (index > -1){
+				savedSession.activeGroups.splice(index, 1);
+			}
+		}
+		saveSession();
+		iframe.contentWindow.postMessage({"groups":savedSession.activeGroups}, '*');
+	}
+	
+	function deleteElement(event){
+		this.parentNode.remove();
+	}
+   
+	
+	function saveSession(){ 
+		var groups = document.querySelectorAll(".groupContainer>.group");
+		savedSession.groups = [];
+		savedSession.activeGroups = [];
+		savedSession.settings = {};
+		savedSession.version = 1;
+		
+		for (var i=0;i<groups.length;i++){
+			try {
+				savedSession.groups.push(groups[i].dataset.group);
+			} catch(e){
+				errorlog(e);
+			}
+			if (groups[i].parentNode.classList.contains("pressed")){
+				try {
+					savedSession.activeGroups.push(groups[i].dataset.group);
+				} catch(e){
+					errorlog(e);
+				}
+			}
+		}
+		setStorage("savedSession_comms", JSON.stringify(savedSession));
+		
+		if (iframe){
+			iframe.contentWindow.postMessage({ groups: savedSession.activeGroups }, "*"); 
+		}
+	}
+	
+	function changeAspectRatio(ar, button){
+		document.querySelectorAll(".aspectbutton").forEach(ele=>{
+			if (ele == button){return;}
+			ele.checked = false;
+			ele.value = false;
+		});
+		aspectRatio = ar;
+		document.documentElement.style.setProperty('--aspect-ratio', ar);
+	}									
+	//let modal = document.querySelector("#modal");
+	document.querySelectorAll(".close-btn").forEach(ele2=>{
+		ele2.onclick = function(){
+			document.querySelectorAll(".modal").forEach(ele=>{
+				ele.classList.add("hidden");
+			});
+		}
+	});
+	document.querySelectorAll(".modal").forEach(ele=>{
+		ele.onclick = function(e){
+			if (e.target.classList.contains("modal")){
+				e.target.classList.add("hidden");
+			}
+		}
+	});
+	
+	if (roomname){ 
+		loadIframe();
+	} else {
+		document.getElementById("welcomeWindow").style.display = "block";
+	}
+</script>
+</body>
+</html>

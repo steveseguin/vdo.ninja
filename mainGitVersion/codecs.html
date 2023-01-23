@@ -1,0 +1,84 @@
+<html>
+<body>
+<div id="output"></div>
+<script>
+
+function getSupportedMimeTypes(media, types, codecs) {
+  const isSupported = MediaRecorder.isTypeSupported;
+  const supported = [];
+  types.forEach((type) => {
+    const mimeType = `${media}/${type}`;
+	acodecs.forEach((codec2) => {
+		codecs.forEach((codec) => [
+			mimeType+';codecs="'+codec+', '+codec2+'"',
+			mimeType+';codecs:"'+codec+', '+codec2+'"',
+			mimeType+';codecs="'+codec.toUpperCase()+', '+codec2.toUpperCase()+'"',
+			mimeType+';codecs:"'+codec.toUpperCase()+', '+codec2.toUpperCase()+'"'
+		  ].forEach(variation => {
+			if (isSupported(variation)){
+				try {
+					options.mimeType = variation;
+					new MediaRecorder(stream, options);
+					
+					mediaSource.addSourceBuffer(variation);
+					
+					supported.push(variation);
+				} catch(e){
+					console.error(e);
+				}
+			}
+		}));
+	});
+    if (isSupported(mimeType))
+      supported.push(mimeType);
+  });
+  return supported;
+};
+
+
+var options = {};
+options.videoBitsPerSecond = parseInt(2500 * 1024);
+
+const videoTypes = ["webm", "ogg", "mp4", "x-matroska"];
+const audioTypes = ["webm", "ogg", "mp3", "x-matroska"];
+const codecs = ["vp9", "vp9.0", "vp8", "vp8.0", "avc1", "av1", "h265", "h.265", "h264", "h.264"] 
+const acodecs = ["opus", "pcm", "aac", "mpeg", "mp4a", "mp3", "vorbis"];
+
+document.getElementById("output").innerHTML= "";
+var supportedVideos = null;
+var supportedAudios = null;
+// Usage ------------------
+var stream = null;
+var mediaSource = new MediaSource();
+
+var video = document.createElement("video");
+video.autoplay = true;
+video.muted = false;
+video.setAttribute("playsinline","");
+video.src = URL.createObjectURL(mediaSource);
+
+mediaSource.addEventListener('sourceopen', sourceOpen);
+console.log("1");
+function sourceOpen(e) {
+	console.log("2");
+	navigator.mediaDevices.getUserMedia({audio:true,video:true}).then(function(s) {
+		stream = s;
+		
+		supportedVideos = getSupportedMimeTypes("video", videoTypes, codecs);
+		supportedAudios = getSupportedMimeTypes("audio", audioTypes, codecs);
+		
+		for (var i=0;i<supportedVideos.length;i++){
+			document.getElementById("output").innerHTML += supportedVideos[i]+"<br/>";
+		}
+	}).catch(function(err) {
+	  /* handle the error */
+	});
+}
+
+//for (var i=0;i<supportedAudios.length;i++){
+	//document.getElementById("output").innerHTML += supportedAudios[i]+"<br/>";
+//}
+</script>
+
+</body>
+</html>

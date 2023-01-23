@@ -53,8 +53,8 @@
 	}
 	
 	iframe.aspectRatio{
-		max-height: min(calc(100vh - 92px), calc(100vw - 160px - var(--chat-width)) / var(--aspect-ratio)) !important;
-		max-width: min(calc((100vh - 92px) *  var(--aspect-ratio)), calc(100vw - 160px - var(--chat-width))) !important;
+		max-height: min(calc(100vh - 92px), calc(100vw - 160px - var(--chat-width)) / var(--aspect-ratio-widget)) !important;
+		max-width: min(calc((100vh - 92px) *  var(--aspect-ratio-widget)), calc(100vw - 160px - var(--chat-width))) !important;
 		height: var(--iframe-height) !important;
 		width: var(--iframe-width) !important;
 	}
@@ -107,7 +107,10 @@
 		bottom: 45px;
 		position: absolute;
 	}
-
+	.ui-widget-content {
+		border-left:0;
+		border-top:0;
+	}
 	#chatBody::-webkit-scrollbar {
 		width: 0px;
 		background: transparent; /* make scrollbar transparent */
@@ -150,6 +153,22 @@
 		width: 324px;
 		font-size: 105%;
 		margin-left: 7px;
+	}
+	.part0{
+		display:inline-block;
+		cursor:default;
+	}
+	.part{
+		display:inline-block;
+		cursor:pointer;
+	}
+	.part:hover{
+		text-shadow: 0 0 black;
+	}
+	.dimensions{
+		cursor:default;
+		background-color: #FFF9;
+		z-index:1;
 	}
 	#chatSendBar{
 		display: inline-block;
@@ -426,6 +445,8 @@
 	.widget {
 		background-color: #DDD;
 		position: absolute;
+		width:100%;
+		height:100%;
 	}
 	#canvas{
 		background-color: #000;
@@ -524,6 +545,7 @@
 		z-index: 2;
 		padding: 6px 0;
 		width: 28px;
+		margin: 2px;
 		height: 28px;
 		line-height: 0px;
 		border-radius: 14px;
@@ -574,6 +596,11 @@
 		border-radius: 6px;
 		cursor:pointer;
 	}
+	
+	[title]{
+		cursor: help;
+	}
+
 	#delete {
 		background-color: rgb(191 191 191);
 		text-align: center;
@@ -948,6 +975,8 @@
 			<input type="checkbox" title="A guest is assigned a slot when they join, automatically. If disabled, they must be assigned a slot manually." id="assignSlotToGuest" checked onchange="submitChange2(this)";>Assign a slot to new guests automatically
 			<h3>Show advanced controls</h3>
 			<input type="checkbox" title="Shows more director control options" id="advancedMode" onchange="toggleAdvanced(this)";>Show the advanced director control options
+			<h3>Show director</h3>
+			<input type="checkbox" checked title="If disabled, the director will not be visible or audible in scene links" id="showDirector" onchange="submitChange4(this)";>The director can be visable and audible in scenes
 			
 			<h3>🗑 Remove all Layouts</h3>
 			<button onclick="wipeLayouts();">This will remove all the scene layouts from the current session.</button><br />
@@ -1029,7 +1058,7 @@
 	function getById(id){
 		var ele = document.getElementById(id);
 		if (!ele){
-			console.warn(id+" not found.");
+			warnlog(id+" not found.");
 			return document.createElement("span");
 		} else {
 			return ele;
@@ -1129,6 +1158,8 @@
 	var messageList = [];
 	var password = false;
 	var syncOBS = false;
+	var showDirector = true;
+	
 	if (urlParams.has('password') || urlParams.has('pass') || urlParams.has('pw') || urlParams.has('p')) {
 		password = urlParams.get('password') || urlParams.get('pass') || urlParams.get('pw') || urlParams.get('p');
 	}
@@ -1136,6 +1167,8 @@
 	var aspectRatio = 16/9.0;
 	var pixelDensity = 720;
 	document.documentElement.style.setProperty('--aspect-ratio', aspectRatio);
+	document.documentElement.style.setProperty('--aspect-ratio-widget', aspectRatio);
+	
 	
 	var absolutePixel = false; 
 	var advancedMode = false;
@@ -1267,7 +1300,7 @@
 			var time = timeSince(message.time);
 			var msg = document.createElement("div");
 			////// KEEP THIS IN /////////
-			console.log(message.msg); // Display Recieved messages for View-Only clients.
+			log(message.msg); // Display Recieved messages for View-Only clients.
 			/////////////////////////////
 			var label = "";
 			if (message.label){
@@ -1297,7 +1330,7 @@
 				var time = timeSince(messageList[i].time);
 				var msg = document.createElement("div");
 				////// KEEP THIS IN /////////
-				console.log(messageList[i].msg); // Display Recieved messages for View-Only clients.
+				log(messageList[i].msg); // Display Recieved messages for View-Only clients.
 				/////////////////////////////
 				var label = "";
 				if (messageList[i].label){
@@ -1721,10 +1754,24 @@
 				getById("syncOBS").checked = true;
 			}
 		}
+		
+		if (savedSession.settings && ("showDirector" in savedSession.settings)){
+			showDirector = savedSession.settings.showDirector;
+			if (!showDirector){
+				getById("showDirector").value = "off";
+				getById("showDirector").checked = false;
+				getById("showDirector").removeAttribute('checked');
+			} else {
+				getById("showDirector").value = "on";
+				getById("showDirector").checked = true;
+			}
+		}
+		
+		
 		if (savedSession.settings && ("aspectRatio" in savedSession.settings)){
 			aspectRatio = savedSession.settings.aspectRatio;
-			document.documentElement.style.setProperty('--aspect-ratio', aspectRatio);
-			
+			changeAspectRatio(aspectRatio,false);
+	
 			document.querySelectorAll(".aspectbutton").forEach(ele=>{
 				if ((ele.dataset.value == "169") && (aspectRatio == 16/9.0)){
 					ele.checked = true;
@@ -1796,7 +1843,8 @@
 				var hh = pixelDensity;
 				var ww = parseInt((pixelDensity*16/9) * (aspectRatio/(16/9)));
 				
-				document.documentElement.style.setProperty('--aspect-ratio', aspectRatio);
+				changeAspectRatio(aspectRatio,false);
+				
 				document.documentElement.style.setProperty('--iframe-width', ww+"px");
 				document.documentElement.style.setProperty('--iframe-height', hh+"px");
 				
@@ -1816,6 +1864,13 @@
 		applySettings();
 	} else {
 		savedSession = initialLayouts;
+	}
+	
+	if (urlParams.has("hidedirector")){
+		showDirector = false;
+		if (savedSession.settings){
+			savedSession.settings.showDirector = false;
+		}
 	}
 	
 	if (iframe){
@@ -1854,6 +1909,20 @@
 			syncOBS=false
 		}
 		saveSession();
+	}
+	
+	function submitChange4(element){
+		if (element.checked){
+			showDirector=true;
+		} else { // do not assign guests to slots automatically
+			element.removeAttribute('checked');
+			showDirector=false
+		}
+		saveSession();
+		
+		if (document.getElementById("vdoninja")){
+			document.getElementById("vdoninja").src = createIframeURL();
+		}
 	}
 	
 	function toggleAdvanced(element){
@@ -2129,10 +2198,7 @@
 	
 	var iframe = null;
 	
-	function loadIframe(){
-		if (iframe){return;}
-		iframe = document.createElement("iframe");
-		
+	function createIframeURL(){
 		var additional = ""; // guest/scene links also
 		if (password){
 			additional = "&password="+password;
@@ -2148,25 +2214,49 @@
 		} else {
 			additional2+="&slotmode=2";
 		}
-		roomname = sanitizeRoomName(roomname);
+		
 	
 		if (!advancedMode){
 			additional2+="&novice";
 		}
 	
+		if (showDirector){
+			additional2+="&showdirector";
+		}
 		
-		var iframeContainer = document.getElementById("iframeContainer");
+		var iframesrc = "./index.html?ltb=350&sstype=3&transparent&hideheader&hidetranslate&cleandirector&chatbutton=0&director="+roomname+additional+additional2+"&b64css="+injectCSS;
+		
+		var params = window.location.search || "";
+		
+		if (params.startsWith("?")){
+			params = params.slice(1);
+			iframesrc = iframesrc + "&" + params
+		} else {
+			iframesrc = iframesrc + params
+		}
+		return iframesrc
+	}
+	
+	function loadIframe(){
+		if (iframe){return;}
+		iframe = document.createElement("iframe");
 		iframe.allow = "autoplay;camera;microphone;fullscreen;picture-in-picture;display-capture;";
 		iframe.id = "vdoninja";
 		
+		roomname = sanitizeRoomName(roomname);
 		if (!roomname){
 			roomname = generateString(10);
 		}
 		
-		var iframesrc = "./index.html?showdirector&ltb=350&transparent&hideheader&hidetranslate&cleandirector&chatbutton=0&director="+roomname+additional+additional2+"&b64css="+injectCSS;
-		
 		if (roomname!==false){
 			setStorage("savedRoom", {roomname:roomname,password:password}, 9999);
+		}
+		
+		var iframesrc = createIframeURL();
+		
+		var additional = ""; // guest/scene links also
+		if (password){
+			additional = "&password="+password;
 		}
 		
 		document.title = "Mixer: "+roomname;
@@ -2194,7 +2284,8 @@
 		button.onclick = function(){
 			this.state = !this.state; 
 			this.dataset.state = this.state;
-			iframe.contentWindow.postMessage({"previewMode":this.state, "layout":currentLayout.layouts, "bitrate":35, "target": "*"}, '*');
+			
+			iframe.contentWindow.postMessage({"previewMode":this.state, "layout":currentLayout, "bitrate":35, "target": "*"}, '*');
 			if (this.state){
 				this.innerHTML = "Director View &#x21bb;"; 
 				iframe.classList.add("aspectRatio");
@@ -2293,6 +2384,7 @@
 		}
 		
 		iframe.src = iframesrc;
+		var iframeContainer = document.getElementById("iframeContainer");
 		iframeContainer.appendChild(iframe);
 		document.getElementById("container").appendChild(iframeContainer);
 		
@@ -2320,6 +2412,15 @@
 			}
 			
 			if ("action" in e.data){
+				if (e.data.action === "widget-src"){
+					if (e.data.value){
+						widgetSrc = true;
+					} else {
+						widgetSrc = false;
+					}
+					changeAspectRatio(aspectRatio,false);
+				}
+				
 				///var outputWindow = document.createElement("div");
 				//outputWindow.innerHTML = "event: "+e.data.action+"<br />";
 				//outputWindow.style.border="1px dotted black";
@@ -2341,6 +2442,8 @@
 						<!-- updateList(e.data.streamID); -->
 					<!-- } -->
 				<!-- } -->
+				
+				// view-connection
 				
 				if (e.data.action === "slot-updated"){
 					for (var i in guestPositions){
@@ -2376,6 +2479,35 @@
 						layoutIssue.UUID = e.data.UUID;
 					}
 					iframe.contentWindow.postMessage(lastLayout, '*');
+				}
+			}
+			
+			if (e.data.action && (e.data.action == "view-connection")){
+				if (!e.data.value && e.data.streamID){
+					
+					for (var i in guestPositions){
+						if (guestPositions[i] === e.data.streamID){
+							delete guestPositions[i];
+						}
+					}
+					
+					if (updateOnSlotChange){
+						remoteActivate(false, lastLayoutRaw);
+					}
+					
+				}
+			}
+			
+			if (e.data.action && (e.data.action == "director-share")){
+				if (!e.data.value && e.data.streamID){
+					for (var i in guestPositions){
+						if (guestPositions[i] === e.data.streamID){
+							delete guestPositions[i];
+						}
+					}
+					if (updateOnSlotChange){
+						remoteActivate(false, lastLayoutRaw);
+					}
 				}
 			}
 			
@@ -2491,6 +2623,9 @@
 	}
 	
 	function addLayout2(item=false){
+	
+		closeScene();
+		
 		//document.getElementById("containermenu").classList.add("hidden");
 		iframe.classList.add("hidden");
 		document.getElementById("containermenu2").classList.add("hFadeIn");
@@ -2505,9 +2640,18 @@
 		
 		document.getElementById("canvas").classList.remove("hidden");
 		
+		//if (item.target){
+		//	item = item.target;
+		//}
+		
 		try {
-			var obsSceneName = item.parentNode.querySelector("canvas").obsSceneName;
-			document.getElementById("canvas").obsSceneName = obsSceneName;
+			if (!item.target){
+				var obsSceneName = item.parentNode.querySelector("canvas").obsSceneName;
+				document.getElementById("canvas").obsSceneName = obsSceneName;
+			} else {
+				document.getElementById("canvas").obsSceneName = parseInt(Math.random()*1000000000);
+				document.getElementById("canvas").sceneName = parseInt(Math.random()*1000000000);
+			}
 		} catch(e){
 			document.getElementById("canvas").obsSceneName = "";
 			errorlog(e);
@@ -2532,6 +2676,7 @@
 		document.getElementById("containermenu2").classList.add("hFadeOut");
 		//document.getElementById("containermenu2").classList.add("hidden");
 		document.getElementById("canvas").classList.add("hidden");
+		document.getElementById("canvas").innerHTML = "";
 		
 		document.getElementById("iframeContainer").classList.remove("tFadeIn");
 		document.getElementById("iframeContainer").classList.add("tFadeout");
@@ -2790,10 +2935,8 @@
 	function pullUp(event){
 		this.parentNode.zIndex = parseInt(this.parentNode.zIndex || 0) + 1;
 		this.parentNode.style.opacity = "0.9";
-		this.parentNode.style.zIndex=this.parentNode.zIndex;
-		this.parentNode.dimensions.innerHTML = parseInt(this.parentNode.style.width) +"x"+parseInt(this.parentNode.style.height);
-		this.parentNode.dimensions.innerHTML += " : " + parseInt(this.parentNode.style.left) +"x"+parseInt(this.parentNode.style.top);
-		this.parentNode.dimensions.innerHTML += " , layer: "+parseInt(this.parentNode.style.zIndex);
+		this.parentNode.parent.style.zIndex=this.parentNode.zIndex;
+		this.parentNode.dimensions = updateSize(this.parentNode);
 	} 
 	
 	function pushDown(event){
@@ -2804,10 +2947,110 @@
 		} else {
 			this.parentNode.style.opacity = "0.9";
 		}
-		this.parentNode.style.zIndex=this.parentNode.zIndex;
-		this.parentNode.dimensions.innerHTML = parseInt(this.parentNode.style.width) +"x"+parseInt(this.parentNode.style.height);
-		this.parentNode.dimensions.innerHTML += " : " + parseInt(this.parentNode.style.left) +"x"+parseInt(this.parentNode.style.top);
-		this.parentNode.dimensions.innerHTML += " , layer: "+parseInt(this.parentNode.style.zIndex);
+		this.parentNode.parent.style.zIndex=this.parentNode.zIndex;
+		this.parentNode.dimensions = updateSize(this.parentNode);
+	}
+	
+	function updateSize(supercontainer){
+	
+		var container = supercontainer.container || supercontainer;
+		supercontainer = container.parent;
+		
+		if (container.dimensions){
+			var dimensions = container.dimensions;
+		} else {
+			var dimensions = document.createElement("div");
+			dimensions.className = "dimensions";
+			container.dimensions = dimensions;
+		}
+		
+		dimensions.innerHTML = "";
+		
+		var part = document.createElement("div");
+		dimensions.appendChild(part);
+		part.className = "part";
+		part.innerHTML = parseInt(supercontainer.style.width);
+		part.onclick = function(){
+				var value = prompt("Change the width",this.innerHTML);
+				if (value!==null){
+					value=parseInt(value);
+				}
+				if (value>=0){
+					supercontainer.style.width = value+"px";
+					updateSize(supercontainer);
+				}
+			};
+		
+		var part = document.createElement("div");
+		dimensions.appendChild(part);
+		part.className = "part0";
+		part.innerHTML = "x";
+		
+		var part = document.createElement("div");
+		dimensions.appendChild(part);
+		part.className = "part";
+		part.innerHTML = parseInt(supercontainer.style.height);
+		part.onclick = function(){
+				var value = prompt("Change the height",this.innerHTML);
+				if (value!==null){
+					value=parseInt(value);
+				}
+				if (value>=0){
+					supercontainer.style.height = value+"px";
+					updateSize(supercontainer);
+				}
+			};
+			
+		var part = document.createElement("div");
+		dimensions.appendChild(part);
+		part.className = "part0";
+		part.innerText = ":";
+		part.style.margin = "0px 5px";
+		
+		var part = document.createElement("div");
+		dimensions.appendChild(part);
+		part.className = "part";
+		part.innerHTML += parseInt(supercontainer.style.left);
+		part.onclick = function(){
+				var value = prompt("Left offset",this.innerHTML);
+				if (value!==null){
+					value=parseInt(value);
+				}
+				if (value>=0){
+					supercontainer.style.left = value+"px";
+					updateSize(supercontainer);
+				}
+			};
+		
+		
+		var part = document.createElement("div");
+		dimensions.appendChild(part);
+		part.className = "part0";
+		part.innerHTML = "x";
+		
+		var part = document.createElement("div");
+		dimensions.appendChild(part);
+		part.className = "part";
+		part.innerHTML += parseInt(supercontainer.style.top);
+		part.onclick = function(){
+				var value = prompt("Top offset",this.innerHTML);
+				if (value!==null){
+					value=parseInt(value);
+				}
+				if (value>=0){
+					supercontainer.style.top = value+"px";
+					updateSize(supercontainer);
+				}
+			};
+		
+		
+		var part = document.createElement("div");
+		dimensions.appendChild(part);
+		part.className = "part0";
+		part.innerHTML += " , layer: "+parseInt(container.zIndex);
+		
+		dimensions.style = "position:absolute;left:10px;bottom:0;max-width:250px;height:20px;";
+		return dimensions;
 	}
 	
 	function addOldElement(object){
@@ -2825,9 +3068,19 @@
 			var slot = parseInt(object[i].slot) || 0;
 			
 			var color = colors[slot];
-			var container = document.createElement("div");
 			
-			container.className = "widget ui-widget-content draggable resizable";
+			var containerSuper = document.createElement("div");
+			document.getElementById("canvas").appendChild(containerSuper);
+			
+			
+			var container = document.createElement("div");
+			containerSuper.appendChild(container);
+			containerSuper.container = container;
+			
+			container.parent = containerSuper;
+			
+			container.className = "widget ui-widget-content";
+			containerSuper.className = "draggable resizable";
 			container.slot = slot;
 			
 			if ("cover" in object[i]){
@@ -2840,9 +3093,10 @@
 			container.zIndex = parseInt(object[i].zIndex) || parseInt(object[i].z) || 0;
 			//container.backgroundColor = object[i].backgroundColor || "#0000";
 			container.borderThickness = object[i].borderThickness || 0;
-			container.animated = object[i].animated || 0;
+			container.animated = parseInt(object[i].animated) || 0;
 			container.borderColor = object[i].borderColor || "#0000";
 			container.backgroundMedia = object[i].backgroundMedia || "";
+			container.iframeSrc = object[i].iframeSrc || "";
 			container.defaultStreamID = object[i].defaultStreamID || "";
 			container.margin = object[i].margin || 0;
 			container.muted = object[i].muted || false;
@@ -2856,7 +3110,9 @@
 			var w = object[i].w*ww/100 || object[i].wp || 0;
 			var h = object[i].h*hh/100 || object[i].hp || 0;
 			
-			container.style = "z-index:"+container.zIndex+";left:"+xoffset+"px;top:"+yoffset+"px;width:"+w+"px;height:"+h+"px;background-color:"+color+";";
+			containerSuper.style = "z-index:"+container.zIndex+";position: absolute;left:"+xoffset+"px;top:"+yoffset+"px;width:"+w+"px;height:"+h+"px;";
+			container.style = "background-color:"+color+";";
+			
 			
 			var h3 = document.createElement("h3");
 			h3.className = "ui-widget-header";
@@ -2887,27 +3143,22 @@
 			button.innerHTML = "Push Back";
 			button.onclick = pushDown;
 			container.appendChild(button);
-			container.dimensions = dimensions;
-			var dimensions = document.createElement("div");
-			container.dimensions = dimensions;
-			dimensions.innerHTML = parseInt(container.style.width) +"x"+parseInt(container.style.height);
-			dimensions.innerHTML += " : " + parseInt(container.style.left) +"x"+parseInt(container.style.top);
-			dimensions.innerHTML += " , layer: "+parseInt(container.style.zIndex);
-			dimensions.style = "position:absolute;left:10px;bottom:0;max-width:250px;height:20px;";
+			
+			
+			//part.onclick = function(){console.log(this.innerHTML);};
+			
+			var dimensions = updateSize(container);
 			
 			container.appendChild(dimensions);
-			container.ondrag = function(e){
-				this.dimensions.innerHTML = parseInt(this.style.width) +"x"+parseInt(this.style.height);
-				this.dimensions.innerHTML += " : " + parseInt(this.style.left) +"x"+parseInt(this.style.top);
-				this.dimensions.innerHTML += " , layer: "+parseInt(this.style.zIndex);
+			container.dimensions = dimensions;
+			
+			containerSuper.ondrag = function(e){
+				updateSize(this);
 			}
-			container.onresize = function(e){
-				this.dimensions.innerHTML = parseInt(this.style.width) +"x"+parseInt(this.style.height);
-				this.dimensions.innerHTML += " : " + parseInt(this.style.left) +"x"+parseInt(this.style.top);
-				this.dimensions.innerHTML += " , layer: "+parseInt(this.style.zIndex);
+			containerSuper.onresize = function(e){
+				updateSize(this);
 			}
 			
-			document.getElementById("canvas").appendChild(container);
 
 			$(function(){
 				$(".draggable").draggable({ snap: true  , grid: [ 10,10 ] });
@@ -2938,16 +3189,34 @@
 			}
 		}
 		
+		
 		var color = colors[slot];
-		var container = document.createElement("div"); // we use the long-form of meta attributes for container elements.
-		container.className = "widget ui-widget-content draggable resizable";
+		
+		var containerSuper = document.createElement("div");
+		document.getElementById("canvas").appendChild(containerSuper);
+		
+		
+		var container = document.createElement("div");
+		containerSuper.appendChild(container);
+		containerSuper.container = container;
+		
+		container.parent = containerSuper;
+		
+		container.className = "widget ui-widget-content";
+		containerSuper.className = "draggable resizable";
 		container.slot = slot;
+		
+		container.zIndex = 10;
 		
 		var yoffset = 20*(slot+1);
 		var xoffset =  20*(slot+1);
+		var w = 640;
+		var h = 360;
 		
-		container.style = "z-Index:10;left:"+xoffset+"px;top:"+yoffset+"px;width:640px;height:360px;background-color:"+color+";";
-		container.zIndex = 10;
+		containerSuper.style = "z-index:"+container.zIndex+";position: absolute;left:"+xoffset+"px;top:"+yoffset+"px;width:"+w+"px;height:"+h+"px;";
+		container.style = "background-color:"+color+";";
+		
+		
 		var h3 = document.createElement("h3");
 		h3.className = "ui-widget-header";
 		h3.innerHTML = "drag/resize me";
@@ -2978,32 +3247,18 @@
 		button.onclick = pushDown;
 		container.appendChild(button);
 		
-		var dimensions = document.createElement("div");
-		container.dimensions = dimensions;
-		dimensions.innerHTML = parseInt(container.style.width) +"x"+parseInt(container.style.height);
-		dimensions.innerHTML += " : " + parseInt(container.style.left) +"x"+parseInt(container.style.top);
-		dimensions.style = "position:absolute;left:10px;bottom:0;max-width:250px;height:20px;";
-		dimensions.innerHTML += " , layer: "+parseInt(container.style.zIndex);
-				
+		var dimensions = updateSize(container);
+			
 		container.appendChild(dimensions);
-		container.ondrag = function(e){
-			this.dimensions.innerHTML = parseInt(this.style.width) +"x"+parseInt(this.style.height);
-			this.dimensions.innerHTML += " : " + parseInt(this.style.left) +"x"+parseInt(this.style.top);
-			this.dimensions.innerHTML += " , layer: "+parseInt(this.style.zIndex);
-			
+		container.dimensions = dimensions;
+		
+		containerSuper.ondrag = function(e){
+			updateSize(this);
 		}
-		container.onresize = function(e){
-			this.dimensions.innerHTML = parseInt(this.style.width) +"x"+parseInt(this.style.height);
-			this.dimensions.innerHTML += " : " + parseInt(this.style.left) +"x"+parseInt(this.style.top);
-			this.dimensions.innerHTML += " , layer: "+parseInt(this.style.zIndex);
-			
+		containerSuper.onresize = function(e){
+			updateSize(this);
 		}
 		
-		document.getElementById("canvas").appendChild(container);
-		
-		container.style.zIndex = "10";
-		container.zIndex = 10;
-
 		$(function(){
 			$(".draggable").draggable({ snap: true  , grid: [ 10,10 ] });
 		});
@@ -3014,27 +3269,30 @@
    
     function combinedLayout(layout){
 		var combined = {};
-		
 		for (var i=0;i<layout.length;i++){
 			if (!layout[i]){continue;}
-			if (!("slot" in layout[i])){
-				continue;
-			}
-			try {
-				var stream = guestPositions[parseInt(layout[i].slot)+1]; // slot 1 is index of 0, but slot 0 is considered NULL; I need to stream line this a bit
-			} catch(e){
-				errorlog(e);
-				continue;
+			var stream = null;
+			if ("slot" in layout[i]){
+				try {
+					stream = guestPositions[parseInt(layout[i].slot)+1]; // slot 1 is index of 0, but slot 0 is considered NULL; I need to stream line this a bit
+				} catch(e){
+					errorlog(e);
+					stream = null;
+				}
 			}
 			if (!stream){
-				if (layout[i].defaultStreamID){
-					combined[layout[i].defaultStreamID] = layout[i];
+				//if (layout[i].defaultStreamID){
+				//	combined[layout[i].defaultStreamID] = layout[i];
+				//} else 
+				if (combined[""]){
+					combined[""].push(layout[i]);
+				} else {
+					combined[""] = [layout[i]];
 				}
-				continue;
+			} else {
+				combined[stream] = layout[i];
 			}
-			combined[stream] = layout[i];
 		}
-		log(combined);
 		return combined;
 	}
    
@@ -3084,8 +3342,12 @@
 		}
 		
 		var setEle = document.createElement("div");
-		parent.appendChild(setEle);
+		
+		setEle.parent = parent;
 		parent.setting = setEle;
+		
+		parent.parent.appendChild(setEle);
+		
 		setEle.className = "settings";
 		setEle.innerHTML = "";
 		
@@ -3097,7 +3359,22 @@
 		var br = document.createElement("br");
 		setEle.appendChild(br);
 		var label = document.createElement("label");
+		label.innerHTML = "IFrame (URL)";
+		label.title = "If no video stream is present, load the specified website here as an IFRAME instead";
+		setEle.appendChild(label);
+		var input = document.createElement("input");
+		input.style.width = "200px";
+		setEle.appendChild(input);
+		input.value = parent.iframeSrc || "";
+		input.onchange = function(){
+			parent.iframeSrc = this.value;
+		}
+		
+		var br = document.createElement("br");
+		setEle.appendChild(br);
+		var label = document.createElement("label");
 		label.innerHTML = "Background Image (URL)";
+		label.title = "Set a background image for this space";
 		setEle.appendChild(label);
 		var input = document.createElement("input");
 		input.style.width = "200px";
@@ -3111,7 +3388,7 @@
 		setEle.appendChild(br);
 		var label = document.createElement("label");
 		label.innerHTML = "Default Stream ID";
-		label.title = "If the slot is empty, this will be the default stream ID used.";
+		label.title = "If the specified stream is connected, and both it and this element are unassigned, load that stream here.";
 		setEle.appendChild(label);
 		var input = document.createElement("input");
 		input.style.width = "200px";
@@ -3196,6 +3473,7 @@
 		setEle.appendChild(br);
 		var label = document.createElement("label");
 		label.innerHTML = "Media fully cover area?" ;
+		label.title = "This applies to the background image and video element.";
 		setEle.appendChild(label);
 		var checkbox = document.createElement("input");
 		checkbox.type = "checkbox";
@@ -3213,17 +3491,49 @@
 		setEle.appendChild(br);
 		var br = document.createElement("br");
 		setEle.appendChild(br);
+		
 		var label = document.createElement("label");
 		label.innerHTML = "Animated transitions";
 		setEle.appendChild(label);
+		
+		var input = document.createElement("input");
 		var checkbox = document.createElement("input");
 		checkbox.type = "checkbox";
+		checkbox.linked = input;
+		input.linked = checkbox;
 		setEle.appendChild(checkbox);
+		
+		if (parent.animated===true){
+			parent.animated = 300;
+		}
+		
 		if (parent.animated){
 			checkbox.checked = true;
+		} else {
+			input.disabled = true;
 		}
 		checkbox.onchange = function(){
-			parent.animated = this.checked;
+			if (this.checked){
+				this.linked.disabled = null;
+				delete this.linked.disabled;
+				parent.animated = this.linked.value || 300;
+			} else {
+				this.linked.disabled = true;
+				parent.animated = 0;
+			}
+		}
+		
+		var label = document.createElement("label");
+		label.innerHTML = "Speed (ms)";
+		label.style.marginLeft = "10px";
+		setEle.appendChild(label);
+		
+		input.type = "number";
+		input.style.width = "70px";
+		setEle.appendChild(input);
+		input.value = parent.animated || 0;
+		input.onchange = function(){
+			parent.animated = this.value;
 		}
 		
 		
@@ -3242,15 +3552,16 @@
 	
 	function copyJSON(){
 		var layout = [];
-		var pos = document.getElementById("canvas").getBoundingClientRect();
-		var bodyRect = document.body.getBoundingClientRect();
 		
-		var hh = parseInt(document.getElementById("canvas").style.height);
-		var ww = parseInt(document.getElementById("canvas").style.width);
+		var compute = window.getComputedStyle(document.getElementById("canvas"));
+		
+		var hh = parseInt(compute.height);
+		var ww = parseInt(compute.width);
+		
 		
 		var eles = document.querySelectorAll(".widget");
 		for (var i=0;i<eles.length;i++){
-			var compute = window.getComputedStyle(eles[i]);
+			compute = window.getComputedStyle(eles[i].parent);
 			var ele = {};
 			
 			if (absolutePixel){
@@ -3282,6 +3593,7 @@
 				ele.animated = eles[i].animated || 0;
 				ele.borderColor = eles[i].borderColor || "#0000";
 				ele.backgroundMedia = eles[i].backgroundMedia || "";
+				ele.iframeSrc = eles[i].iframeSrc || "";
 				ele.defaultStreamID = eles[i].defaultStreamID || "";
 				ele.margin = parseInt(eles[i].margin) || 0;
 				ele.rounded = parseInt(eles[i].rounded) || 0;
@@ -3289,7 +3601,7 @@
 			} catch(e){errorlog(e);}
 			layout.push(ele);
 		}
-		
+		log(layout);
 		var combined = combinedLayout(layout);
 		
 		prompt("Layout as URL-encoded JSON. StreamIDs are based on current and default values.", encodeURIComponent(JSON.stringify(combined)));
@@ -3316,15 +3628,15 @@
 			var ele = {};
 			
 			if (absolutePixel){
-				ele.wp = parseFloat(eles[i].style.width) || 0;
-				ele.hp = parseFloat(eles[i].style.height) || 0;
-				ele.xp = parseFloat(eles[i].style.left) || 0;
-				ele.yp = parseFloat(eles[i].style.top) || 0;
+				ele.wp = parseFloat(eles[i].parent.style.width) || 0;
+				ele.hp = parseFloat(eles[i].parent.style.height) || 0;
+				ele.xp = parseFloat(eles[i].parent.style.left) || 0;
+				ele.yp = parseFloat(eles[i].parent.style.top) || 0;
 			} else {
-				ele.w = parseFloat(eles[i].style.width)/ww*100 || 0;
-				ele.h = parseFloat(eles[i].style.height)/hh*100 || 0;
-				ele.x = parseFloat(eles[i].style.left)/ww*100 || 0;
-				ele.y = parseFloat(eles[i].style.top)/hh*100 || 0;
+				ele.w = parseFloat(eles[i].parent.style.width)/ww*100 || 0;
+				ele.h = parseFloat(eles[i].parent.style.height)/hh*100 || 0;
+				ele.x = parseFloat(eles[i].parent.style.left)/ww*100 || 0;
+				ele.y = parseFloat(eles[i].parent.style.top)/hh*100 || 0;
 			}
 			
 			//ele.w = parseFloat(eles[i].style.width)/ww*100;
@@ -3348,6 +3660,7 @@
 				ele.animated = eles[i].animated || 0;
 				ele.borderColor = eles[i].borderColor || "#0000";
 				ele.backgroundMedia = eles[i].backgroundMedia || "";
+				ele.iframeSrc = eles[i].iframeSrc || "";
 				ele.defaultStreamID = eles[i].defaultStreamID || "";
 				ele.margin = parseInt(eles[i].margin) || 0;
 				ele.rounded = parseInt(eles[i].rounded) || 0;
@@ -3357,7 +3670,7 @@
 			scene.push(ele);
 			//scene[sid] = ele;
 		}
-		console.log(scene);
+		log(scene);
 		
 		if (makenew){
 			var canvasContainer = drawLayout(scene); 
@@ -3376,7 +3689,7 @@
 		} else {
 			var sceneName = document.getElementById("canvas").sceneName || parseInt(Math.random()*1000000000);
 			var obsSceneName = document.getElementById("canvas").obsSceneName || "";
-			console.log("'sceneName: "+sceneName);
+			log("'sceneName: "+sceneName);
 			drawLayout(scene, sceneName, obsSceneName);
 			popupMessage(event, "Scene saved");
 		}
@@ -3413,6 +3726,7 @@
 		savedSession.settings.aspectRatio = aspectRatio;
 		savedSession.settings.pixelDensity = pixelDensity;
 		savedSession.settings.absolutePixel = absolutePixel;
+		savedSession.settings.showDirector = showDirector;
 		
 		savedSession.settings.advancedMode = advancedMode;
 		
@@ -3436,16 +3750,27 @@
 		}
 		log(getStorage("savedSession"));
 	}
-	
-	function changeAspectRatio(ar, button){
-		document.querySelectorAll(".aspectbutton").forEach(ele=>{
-			if (ele == button){return;}
-			ele.checked = false;
-			ele.value = false;
-		});
-		aspectRatio = ar;
-		saveSession();
+	var widgetSrc = false;
+	function changeAspectRatio(ar, button=false){
+		if (button){
+			document.querySelectorAll(".aspectbutton").forEach(ele=>{
+				if (ele == button){return;}
+				ele.checked = false;
+				ele.value = false;
+			});
+		
+			aspectRatio = ar;
+			saveSession();
+		
+		}
+		
 		document.documentElement.style.setProperty('--aspect-ratio', ar);
+		
+		if (widgetSrc){
+			document.documentElement.style.setProperty('--aspect-ratio-widget', ar/0.75);
+		} else {
+			document.documentElement.style.setProperty('--aspect-ratio-widget', ar);
+		}
 	}
 	
 	function changeAbsolutePosition(value, button){
@@ -3471,7 +3796,8 @@
 		var hh = pixelDensity;
 		var ww = parseInt((pixelDensity*16/9) * (aspectRatio/(16/9)));
 		
-		document.documentElement.style.setProperty('--aspect-ratio', aspectRatio);
+		changeAspectRatio(aspectRatio,false);
+		
 		document.documentElement.style.setProperty('--iframe-width', ww+"px");
 		document.documentElement.style.setProperty('--iframe-height', hh+"px");
 		

@@ -1,0 +1,27 @@
+<html><body><script>
+var generateHash = function (str, length=false){
+	var buffer = new TextEncoder("utf-8").encode(str);
+	return crypto.subtle.digest("SHA-256", buffer).then(
+		function (hash) {
+			hash = new Uint8Array(hash);
+			if (length){
+				hash = hash.slice(0, parseInt(parseInt(length)/2));
+			}
+			hash = toHexString(hash);
+			return hash;
+		}
+	);
+};
+function toHexString(byteArray){
+		return Array.prototype.map.call(byteArray, function(byte){
+			return ('0' + (byte & 0xFF).toString(16)).slice(-2);
+		}).join('');
+	}
+var password = prompt("Please enter the password");
+password = password.trim();
+password = encodeURIComponent(password);
+	
+generateHash(password + location.hostname, 4).then(function(hash) { // million to one error. 
+	alert("hash value: "+hash)
+});
+</script></body></html>

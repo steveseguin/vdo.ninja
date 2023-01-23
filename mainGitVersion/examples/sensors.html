@@ -1,0 +1,280 @@
+<html>
+<head><title>Sensor and video stream access example</title>
+<style>
+body{
+	padding:0;
+	margin:0;
+	background-color: rgb(222,242,253);
+}
+iframe {
+	border:0;
+	margin:0;
+	padding:0;
+	display:block;
+	margin:10px;
+	width:640px;
+	height:320px;
+}
+#viewlink {
+	width:400px;
+}
+#container {
+	display:block;
+	padding:0px;
+}
+input{
+	padding:5px;
+	margin:5px;
+}
+button{
+	padding:5px;
+	margin:5px;
+}
+canvas{
+	width:100%;
+	display:block;
+	margin:0;
+	padding:0;
+}
+</style>
+</head>
+<body>
+
+
+<canvas id="canvas" style="display:none;max-height:70vh;max-width:calc(70vh*1.777);width:100%;height:100%;" width="1920" height="1080" ></canvas>
+<input placeholder="Enter a VDO.Ninja View URL here" id="viewlink" style="display:block;" onchange="loadIframe();"/>
+<label for="hori">FOA-Horizontal</label>
+<input type="range" id="hori" name="hori" value="63" title="63"  min="40" max="80" title="67" onchange="updateHor(this);">
+<label for="vert">FOA-Vertical</label>
+<input type="range" id="vert" name="vert" value="50" title="50"  min="30" max="70" onchange="updateVer(this);">
+<label for="draw">Draw Delay</label>
+<input type="range" id="draw" name="draw" value="110" title="110" min="0" max="500" style="width:500px" onchange="updateDelay(this);"><br /><br />
+Add &sensor to the push link to send data; see: <a target="_blank" href="https://docs.vdo.ninja/source-settings/sensor">https://docs.vdo.ninja/source-settings/sensor</a>
+<div id="container">
+
+</div>
+
+<script>
+// https://www.camerafv5.com/devices/manufacturers/google/pixel_4a_sunfish_1/ ; pixel 4a specs
+var horFOA = 49.6;
+var verFOA = 63.3;
+var drawDelay = 110;
+function updateHor(hor){
+	horFOA = parseInt(hor.value);
+	hor.title = horFOA;
+}
+function updateVer(ver){
+	verFOA = parseInt(ver.value);
+	ver.title = verFOA;
+}
+function updateDelay(time){
+	drawDelay = parseInt(time.value);
+	time.title = drawDelay;
+}
+function loadIframe(url=false){  // this is pretty important if you want to avoid camera permission popup problems.  You can also call it automatically via: <body onload=>loadIframe();"> , but don't call it before the page loads.
+
+	var canvas = document.getElementById("canvas");
+	var ctx = canvas.getContext('2d');
+	ctx.imageSmoothingEnabled= false;
+	var iframe = document.createElement("iframe");
+	var iframeContainer = document.createElement("div");
+	
+	if (url){
+		var iframesrc = url;
+	} else {
+		var iframesrc = document.getElementById("viewlink").value;
+	}
+	console.log(iframesrc);
+	document.getElementById("viewlink").parentNode.removeChild(document.getElementById("viewlink"));
+	document.getElementById("canvas").style.display="block";
+	iframe.allow = "autoplay;camera;microphone;fullscreen;picture-in-picture;";
+
+	if (iframesrc==""){
+		iframesrc="./";
+	}
+	
+	iframe.src = iframesrc;
+	
+	iframeContainer.appendChild(iframe);
+	
+	document.getElementById("container").appendChild(iframeContainer);
+
+	var videos = iframe.contentWindow.document.querySelectorAll("video");
+	var sensors = {};
+	
+	function drawFrame(vid){
+		try {
+			if (sensors.mag){ // androids may not support this.
+				var angle = 1.5 * Math.PI - Math.atan2(sensors.mag.y,sensors.mag.x);
+				var startPixel = (angle / ( 2 * Math.PI)) * 1920;
+				var endPixel = (verFOA/360) * 1920 + startPixel;
+			} else if (sensors.ori){ 
+				var angle = sensors.ori.a;
+				var frontToBack = sensors.ori.b;
+				var leftToRight = sensors.ori.g;
+				
+				var startPixel = Math.floor((angle / 360) * 1920);
+				var width = Math.floor((verFOA/360) * 1920);
+				var height = vid.videoHeight*(width/vid.videoWidth);
+				
+				var h_offset = Math.floor(((frontToBack+(verFOA/2))/180 * 1080)-540);
+				var w_offset = Math.floor((leftToRight+horFOA)/180 * 1920);
+			}
+			
+			setTimeout(function(a1,a2,a3,a4,a5){
+			
+				ctx.filter = 'blur(4px)';
+				ctx.drawImage(a1,a2,a3,a4,a5);
+				
+				ctx.filter = "none";
+				ctx.drawImage(a1,a2,a3,a4,a5);
+				
+			}, drawDelay, vid, startPixel-w_offset, h_offset, width, height);
+		} catch(e){console.error(e);}
+	};
+	
+	setInterval(function(){
+		if (videos.length){
+			if ("UUID" in sensors){
+				if (videos[0].id !== "videosource_"+sensors.UUID){
+					videos = iframe.contentWindow.document.querySelectorAll("video#videosource_"+sensors.UUID);
+				} 
+				if (videos.length){
+					drawFrame(videos[0]);
+				}
+			}
+		}
+	},100);
+	
+	
+	////////////  LISTEN FOR EVENTS
+
+	var eventMethod = window.addEventListener ? "addEventListener" : "attachEvent";
+	var eventer = window[eventMethod];
+	var messageEvent = eventMethod === "attachEvent" ? "onmessage" : "message";
+
+
+	/// If you have a routing system setup, you could have just one global listener for all iframes instead.
+	
+	eventer(messageEvent, function (e) {
+		if (e.source != iframe.contentWindow){return} // reject messages send from other iframes
+		
+		if ("stats" in e.data){
+			var outputWindow = document.createElement("div");
+			//console.log(e.data.stats);
+			
+			
+			var out = "<br />total_inbound_connections:"+e.data.stats.total_inbound_connections;
+			out += "<br />total_outbound_connections:"+e.data.stats.total_outbound_connections;
+			
+			for (var streamID in e.data.stats.inbound_stats){
+				out += "<br /><br /><b>streamID:</b> "+streamID+"<br />";
+				out += printValues(e.data.stats.inbound_stats[streamID]);
+			}
+			
+			outputWindow.innerHTML = out;
+			iframeContainer.appendChild(outputWindow);
+		}
+		
+		if ("gotChat" in e.data){
+			var outputWindow = document.createElement("div");
+			outputWindow.innerHTML = e.data.gotChat.msg;
+			outputWindow.style.border="1px dotted black";
+			iframeContainer.appendChild(outputWindow);
+		}
+		
+		if ("action" in e.data){
+			var outputWindow = document.createElement("div");
+			outputWindow.innerHTML = "child-page-action: "+e.data.action+"<br />";
+			outputWindow.style.border="1px dotted black";
+			iframeContainer.appendChild(outputWindow);
+			console.log(e.data.action);
+			
+			if (e.data.action == "new-view-connection"){
+				setTimeout(function(){
+					videos = iframe.contentWindow.document.querySelectorAll("video");
+					console.log(videos);
+				},500);
+			}
+		}
+		
+		
+		if ("streamIDs" in e.data){
+			var outputWindow = document.createElement("div");
+			outputWindow.innerHTML = "child-page-action: streamIDs<br />";
+			for (var key in e.data.streamIDs) {
+				outputWindow.innerHTML += "streamID: " +  key + ", label:"+e.data.streamIDs[key] + "\n";          
+			}
+			outputWindow.style.border="1px dotted black";
+			iframeContainer.appendChild(outputWindow);
+		}
+		
+		if ("loudness" in e.data){
+			//console.log(e.data);
+			if (document.getElementById("loudness")){
+				outputWindow = document.getElementById("loudness");
+			} else {
+				var outputWindow = document.createElement("div");
+				outputWindow.style.border="1px dotted black";
+				iframeContainer.appendChild(outputWindow);
+				outputWindow.id = "loudness";
+			}
+			outputWindow.innerHTML = "child-page-action: loudness<br />";
+			for (var key in e.data.loudness) {
+				outputWindow.innerHTML += key + " Loudness: " +  e.data.loudness[key] + "\n";          
+			}
+			outputWindow.style.border="1px black";
+			
+		}
+		
+		if ("sensors" in e.data){
+			sensors = e.data.sensors;
+			if (document.getElementById("sensors")){
+				outputWindow = document.getElementById("sensors");
+			} else {
+				var outputWindow = document.createElement("div");
+				outputWindow.style.border="1px dotted black";
+				iframeContainer.appendChild(outputWindow);
+				outputWindow.id = "sensors";
+				console.log(sensors);
+			}
+			outputWindow.innerHTML = "child-page-action: sensors<br /><br />";
+				
+			for (var key in e.data.sensors.lin) {
+				outputWindow.innerHTML += key + " linear: " +  e.data.sensors.lin[key] + "<br />";          
+			}
+			for (var key in e.data.sensors.acc) {
+				outputWindow.innerHTML += key + " acceleration: " +  e.data.sensors.acc[key] + "<br />";         
+			}
+			for (var key in e.data.sensors.gyro) {
+				outputWindow.innerHTML += key + " gyro: " +  e.data.sensors.gyro[key] + "<br />";           
+			}
+			for (var key in e.data.sensors.mag) {
+				outputWindow.innerHTML += key + " magnet: " +  e.data.sensors.mag[key] + "<br />";         
+			}
+			for (var key in e.data.sensors.ori) {
+				outputWindow.innerHTML += key + " orientation: " +  e.data.sensors.ori[key] + "<br />";         
+			}
+			outputWindow.style.border="1px black";
+		}
+	});
+}
+
+
+function printValues( obj) {
+	var out = "";
+	for (var key in obj) {
+		if (typeof obj[key] === "object") {
+			out +="<br />";
+			out += printValues(obj[key]);   
+		} else {
+			out +="<b>"+key+"</b>: "+obj[key]+"<br />";
+		}
+	}
+	return out;
+}
+		
+		
+</script>
+</body>
+</html>

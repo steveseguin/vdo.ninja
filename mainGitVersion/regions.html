@@ -1,0 +1,94 @@
+<html>
+<head>
+
+<style>
+div {
+	padding:10px;
+}
+body {
+	font-family: verdana, tahoma, arial;
+	margin:10px;
+	background: #0021;
+}
+
+#main>div div:nth-child(even) {
+	background: #0001;
+}
+
+.entry {
+	display:block;
+}
+.content {
+	display:block;
+}
+.avatar {
+	display:inline-block;
+	max-height:32px;
+	max-width:32px;
+	vertical-align: top;
+	border-radius: 32px;
+	margin: 3px;
+   	margin-right: 4px;
+}
+.name {
+	display:inline-block;
+	font-weight: bold;
+	vertical-align: top;
+}
+.time {
+	display: inline-block;
+	font-style: italic;
+	font-size: 11px;
+	position: relative;
+	top: 4px;
+	vertical-align: top;
+}
+div:empty {
+	display:none;
+}
+</style>
+<title>Regions for VDO.Ninja Tech Check</title>
+</head>
+<body>
+<div id="main">
+<h1>Testing Regions for <a href="https://vdo.ninja/alpha/check" target="_blank">VDO.Ninja Tech Check</a>
+</div>
+<script>
+
+
+var data = fetch("https://turnservers.vdo.ninja/regions?ts="+Date.now()).then((response) => response.json())
+	.then((data) => {
+		data = data.servers;
+		data.forEach(message => {
+			console.log(message);
+			var ele = document.createElement("div");
+			ele.className = "entry";
+			
+			var name = document.createElement("div");
+			name.innerText =  message.name;
+			name.className = "name";			
+			ele.appendChild(name);
+
+			var distance = document.createElement("div");
+			distance.className = "time";
+			distance.innerText = message.distance +  " km away";
+			ele.appendChild(distance);
+			
+			
+			var content = document.createElement("div");
+
+			// do some basic formatting replacements
+			var msgCnt = "<a href='https://vdo.ninja/alpha/check?region="+message.locale+"'>https://vdo.ninja/alpha/check?region="+message.locale+"</a>";
+			content.innerHTML =  msgCnt;
+			content.className = "content";
+			
+			
+			ele.appendChild(content);
+			document.getElementById("main").appendChild(ele);
+		
+			
+		});
+	});
+</script>
+</body>
+</html>

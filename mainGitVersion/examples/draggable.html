@@ -1,0 +1,331 @@
+<html>
+<head><title>Dual Input</title>
+<style>
+body{
+	padding:0;
+	margin:0;
+}
+iframe {
+	border:0;
+	margin:0;
+	padding:0;
+	display:block;
+	margin:0px;
+	min-height: 100px;
+    min-width: 100px;
+    max-height: 95%;
+    max-width: 99%%;
+    float: left;
+    position: fixed;
+}
+
+#viewlink {
+	width:400px;
+}
+
+
+input{
+	padding:5px;
+	margin:5px;
+}
+button{
+	padding:5px;
+	margin:5px;
+	position:relative;
+	
+}
+
+.menu {
+	z-index: 10;
+	float:right;
+	right: 20px;
+	color: #fff;
+}
+
+.close {
+	background-color: #d33;
+    color: #fff;
+}
+
+.reload {
+	background-color: #0a0;
+	color: #fff;
+}
+
+.popup {
+	z-index: 9;
+	background-color: #f1f1f1;
+	border: 1px solid #d3d3d3;
+	text-align: center;
+	min-height: 100px;
+	min-width: 100px;
+	max-height: 95%;
+    max-width: 99%;
+	scale: 0.5;
+}
+
+.popup {
+  position: absolute;
+  /*resize: both; !*enable this to css resize*! */
+  overflow: auto;
+}
+
+.popup-header {
+  cursor: move;
+  background-color: #2196f3;
+}
+
+
+
+.popup .resizer-right {
+  width: 5px;
+  height: 100%;
+  background: transparent;
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  cursor: e-resize;
+}
+
+.popup .resizer-bottom {
+  width: 100%;
+  height: 5px;
+  background: transparent;
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  cursor: n-resize;
+}
+
+.popup .resizer-both {
+  width: 5px;
+  height: 5px;
+  background: transparent;
+  z-index: 10;
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  cursor: nw-resize;
+}
+
+
+/*NOSELECT*/
+
+.popup * {
+  -webkit-touch-callout: none; /* iOS Safari */
+  -webkit-user-select: none; /* Safari */
+  -khtml-user-select: none; /* Konqueror HTML */
+  -moz-user-select: none; /* Firefox */
+  -ms-user-select: none; /* Internet Explorer/Edge */
+  user-select: none; /* Non-prefixed version, currently
+                                  supported by Chrome and Opera */
+}
+
+</style>
+</head>
+<body>
+
+<input placeholder="Enter an VDO.Ninja Room Link" id="viewlink" />
+
+<button onclick="loadIframe();">Load URL</button>You can drag and resize the generated windows; multiple can be created.
+
+<div id="container"></div>
+
+<script>
+var currentZIndex = 100;
+function initDragElement(popup){
+
+	var pos1 = 0,
+		pos2 = 0,
+		pos3 = 0,
+		pos4 = 0;
+
+	var elmnt = null;
+
+	var header = getHeader(popup);
+	var iframe = getIFrame(popup);
+
+	popup.onmousedown = function() {
+	  this.style.zIndex = "" + ++currentZIndex;
+	};
+
+	if (header) {
+	  header.parentPopup = popup;
+	  header.onmousedown = dragMouseDown;
+	}
+  
+
+  function dragMouseDown(e) {
+    elmnt = this.parentPopup;
+    elmnt.style.zIndex = "" + ++currentZIndex;
+
+    e = e || window.event;
+    // get the mouse cursor position at startup:
+    pos3 = e.clientX;
+    pos4 = e.clientY;
+    document.onmouseup = closeDragElement;
+    // call a function whenever the cursor moves:
+    document.onmousemove = elementDrag;
+  }
+
+  function elementDrag(e) {
+    if (!elmnt) {
+      return;
+    }
+
+    e = e || window.event;
+    // calculate the new cursor position:
+    pos1 = pos3 - e.clientX;
+    pos2 = pos4 - e.clientY;
+    pos3 = e.clientX;
+    pos4 = e.clientY;
+    // set the element's new position:
+    elmnt.style.top = elmnt.offsetTop - pos2 + "px";
+    elmnt.style.left = elmnt.offsetLeft - pos1 + "px";
+	
+	iframe.style.top = elmnt.offsetTop - pos2 + "px";
+	iframe.style.left = elmnt.offsetLeft - pos1 + "px";
+  }
+
+  function closeDragElement() {
+    /* stop moving when mouse button is released:*/
+    document.onmouseup = null;
+    document.onmousemove = null;
+  }
+
+  function getHeader(element) {
+    var headerItems = element.getElementsByClassName("popup-header");
+
+    if (headerItems.length === 1) {
+      return headerItems[0];
+    }
+
+    return null;
+  }
+  
+  function getIFrame(element) {
+    var headerItems = element.getElementsByTagName("iframe");
+
+    if (headerItems.length === 1) {
+      return headerItems[0];
+    }
+
+    return null;
+  }
+}
+
+function initResizeElement(p) {
+
+	var iframe = getIFrame(p);
+	var element = null;
+	var startX, startY, startWidth, startHeight;
+
+    var right = document.createElement("div");
+    right.className = "resizer-right";
+    p.appendChild(right);
+    right.addEventListener("mousedown", initDrag, false);
+    right.parentPopup = p;
+
+    var bottom = document.createElement("div");
+    bottom.className = "resizer-bottom";
+    p.appendChild(bottom);
+    bottom.addEventListener("mousedown", initDrag, false);
+    bottom.parentPopup = p;
+
+    var both = document.createElement("div");
+    both.className = "resizer-both";
+    p.appendChild(both);
+    both.addEventListener("mousedown", initDrag, false);
+    both.parentPopup = p;
+  
+
+  function initDrag(e) {
+    element = this.parentPopup;
+
+    startX = e.clientX;
+    startY = e.clientY;
+    startWidth = parseInt(
+      document.defaultView.getComputedStyle(element).width,
+      10
+    );
+    startHeight = parseInt(
+      document.defaultView.getComputedStyle(element).height,
+      10
+    );
+    document.documentElement.addEventListener("mousemove", doDrag, false);
+    document.documentElement.addEventListener("mouseup", stopDrag, false);
+	document.documentElement.addEventListener("click", stopDrag, false)
+  }
+
+  function doDrag(e) {
+	if (e.buttons==0){
+		stopDrag(e);
+		return false;
+	}
+  
+    element.style.width = startWidth + e.clientX - startX + "px";
+    element.style.height = startHeight + e.clientY - startY + "px";
+	
+	iframe.style.width = startWidth + e.clientX - startX + "px";
+	iframe.style.height = startHeight + e.clientY - startY + "px";
+  }
+
+  function stopDrag(e) {
+    document.documentElement.removeEventListener("mousemove", doDrag, false);
+    document.documentElement.removeEventListener("mouseup", stopDrag, false);
+  }
+
+  function getIFrame(element) {
+    var headerItems = element.getElementsByTagName("iframe");
+
+    if (headerItems.length === 1) {
+      return headerItems[0];
+    }
+
+    return null;
+  }
+}
+  
+function loadIframe(){
+
+	var iframeContainer = document.createElement("div");
+	iframeContainer.className="popup";
+	iframeContainer.style.zIndex = "" + ++currentZIndex;
+	iframeContainer.style.width="325px";
+	iframeContainer.style.height="420px";
+	
+	var button = document.createElement("button");
+	button.innerHTML = "Move";
+	button.className = "popup-header menu";
+	iframeContainer.appendChild(button);
+	
+	var button = document.createElement("button");
+	button.innerHTML = "Close";
+	button.className = "menu close";
+	button.onclick = function(){iframe.contentWindow.postMessage({"close":true}, '*');iframe.parentNode.parentNode.removeChild(iframeContainer);}
+	iframeContainer.appendChild(button);
+	
+	var button = document.createElement("button");
+	button.innerHTML = "Reload";
+	button.className = "menu reload";
+	button.onclick = function(){iframe.contentWindow.postMessage({"reload":true}, '*');}
+	iframeContainer.appendChild(button);
+
+	var iframe = document.createElement("iframe");
+	iframe.allow="autoplay";
+	iframe.src = document.getElementById("viewlink").value || "https://vdo.ninja";
+	iframe.style.width="325px";
+	iframe.style.height="420px";
+	
+	iframeContainer.appendChild(iframe);
+	
+	document.getElementById("container").appendChild(iframeContainer);
+
+	initDragElement(iframeContainer);
+	initResizeElement(iframeContainer);
+	
+}
+
+</script>
+</body>
+</html>

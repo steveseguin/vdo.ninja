@@ -1,0 +1,242 @@
+:root {
+	--background-color: #141926;
+	--container-color: #373737;
+	--button-color: #2A2A2A;
+	--blue-accent: #4a4c63;
+	--red-accent: #553737;
+	--green-accent: #3f4f50;
+	--olive-accent: #535D32;
+	--regular-margin: 10px;
+	--director-margin: 15px 20px 0 0;
+	--fit-style: contain;
+	--fadein-speed: 0;
+	--video-margin: 0px;
+	--video-rounded: 0px;
+	--button-radius: 2px;
+}
+
+body {
+	-webkit-font-smoothing: antialiased;
+	text-rendering: optimizeLegibility;
+	font-family: "Lato", sans-serif;
+	padding: 0 0px;
+	height: 100%;
+	width: 100%;
+	font-family: Helvetica, Arial, sans-serif;
+	border: 0;
+	margin: 0;
+	opacity:  1;
+	transition: opacity .1s linear;
+    background-color: #141926;
+}
+.container-inner{
+	background-color: #0000!important;
+}
+.card{
+	background-color: #0000!important;
+}
+#container-3{
+	background-image:unset;
+	overflow:hidden!important;
+}
+.column>h2{
+	color:white!important;
+}
+#add_screen{
+	display:none;
+}
+
+h1 {
+    color: white;
+    margin: 20px auto;
+	width: 80%;
+}
+
+h1 small {
+    display: block;
+    margin-top: 0.5em;
+    font-size: 0.5em;
+}
+
+video {
+	transform: translate(0px, 0%) !important;
+}
+#explanation {
+    color: white;
+    font-family: sans-serif;
+    width: 80%;
+    margin: 0 auto;
+    margin-top: 20px;
+}
+
+#container, #graphs, #log {
+    width: 80%;
+    margin: 0 auto;
+}
+
+
+#explanation h2 {
+    border-bottom: 1px solid #383838;
+    margin-bottom: 10px;
+    padding-bottom: 5px;
+}
+
+#feeds {
+    display: inline-block;
+	width:100%;
+	height:380px;
+	
+}
+
+#feeds span {
+    margin:auto;
+    height: 100%;
+	min-width:50%;
+    display: inline-block;
+    flex-direction: column;
+}
+
+#button_container{
+	margin:auto;
+}
+#feeds h3 {
+    color: whitesmoke;
+    margin: 10px;
+    text-align: center;
+}
+
+iframe {
+    height: 85%;
+    width: 100%;
+    flex: 1;
+    border: 0;
+}
+
+#controls {
+    margin:auto;
+}
+
+#controls button {
+    margin: 5px;
+	padding: 5px 10px;
+    border: 0;
+    border-radius: var(--button-radius);
+}
+
+#controls button.active {
+    background-color: #70ff70;
+}
+
+canvas {
+    background-color: black;
+    margin: 20px;
+}
+
+#log {
+    margin-top: 10px;
+    background: #313131;
+    padding: 20px 0px;
+    border: 1px solid #383838;
+    cursor: pointer;
+	max-height:300px;
+}
+
+#log ul {
+    margin: 20px;
+    list-style: none;
+    color: #cacaca;
+    max-height: 20vh;
+    overflow: auto;
+    overflow-x: hidden;
+}
+
+#graphs {
+    display: block;
+    margin-top: 20px;
+    background: #313131;
+    padding: 20px 0px;
+    border: 1px solid #383838;
+	text-align: center;
+}
+
+.graphContainer {
+	display: block;
+    margin-top: 20px;
+    background: #313131;
+    padding: 20px 0px;
+    border: 1px solid #383838;
+	text-align: center;
+}
+
+.graph {
+    display: inline-block;
+    position: relative;
+}
+
+.graph h2, #log h2 {
+    margin: 0px 20px;
+    font-size: 1em;
+    color: #cacaca;
+}
+
+.graph > span {
+    position: absolute;
+    bottom: 30px;
+    left: 30px;
+    color: #cacaca;
+    font-weight: bold;
+}
+
+ol {
+    margin-left: 20px;
+    margin-top: 30px;
+}
+
+
+@media only screen and (max-width: 800px) {
+	
+	#container, #graphs, #log {
+		width: 100%;
+		margin: 0 auto;
+	}
+
+    #graphs {
+        flex-direction: column;
+    }
+
+    iframe {
+        width: 100%;
+    }
+
+    #feeds {
+        flex-direction: column;
+    }
+
+    #feeds h3 {
+        font-size:100%;
+    }
+	
+	h1{
+		color: white;
+		font-size:1.4em;
+	}
+	h2{
+		color: white;
+		font-size:1.2em;
+	}
+	
+	#feeds span{
+		height: :calc(100% - 100px);
+		width:100%;
+		display: inline-block;
+	}
+	canvas {
+		margin:auto;
+	}
+	
+  }
+
+  #statsdiv {display: none;}
+
+
+  

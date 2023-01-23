@@ -1,0 +1,172 @@
+<html>
+	<head>
+		<meta charset="utf8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		<title>VDON Chat Overlay</title>
+		<style>
+		
+			@font-face {
+			  font-family: 'Cousine';
+			  src: url('fonts/Cousine-Bold.ttf') format('truetype');
+			}
+		
+			body {
+				margin:0;
+				padding:0 10px;
+				height:100%;
+				border: 0;
+				display: flex;
+				flex-direction: column-reverse;
+				position:absolute;
+				bottom:0;
+				overflow:hidden;
+				max-width:100%;
+			}
+
+			ul {
+				margin:0;
+				background-color: #0000;
+				color: white;
+				font-family: Cousine, monospace;
+				font-size: 3.2em;
+				line-height: 1.1em;
+				letter-spacing: 0.0em;
+				text-transform: uppercase;
+				padding: 0em;
+				text-shadow: 0.05em 0.05em 0px rgba(0,0,0,1);
+				max-width:100%;
+			}
+			
+			ul li { 
+				background-color: black; 
+				padding: 8px 8px 0px 8px;
+				margin:0;
+				word-wrap: break-word;
+				overflow-wrap: break-word;
+				word-wrap: break-word;
+				word-break: break-all;
+				hyphens: auto;
+				max-width:100%;
+			}
+			
+			a {
+				color:white;
+				font-size:1.2em;
+				text-transform: none;
+				word-wrap: break-word;
+				overflow-wrap: break-word;
+				word-wrap: break-word;
+				word-break: break-all;
+				hyphens: auto;
+			}
+			</style>
+		<script>
+		
+		
+			(function (w) {
+				w.URLSearchParams =
+					w.URLSearchParams ||
+					function (searchString) {
+						var self = this;
+						self.searchString = searchString;
+						self.get = function (name) {
+							var results = new RegExp("[\?&]" + name + "=([^&#]*)").exec(
+								self.searchString
+							);
+							if (results == null) {
+								return null;
+							} else {
+								return decodeURI(results[1]) || 0;
+							}
+						};
+					};
+			})(window);
+			var urlParams = new URLSearchParams(window.location.search);
+			
+
+			function loadIframe() {
+				
+				var iframe = document.createElement("iframe");
+
+				var view= "";
+				if (urlParams.has("view")) {
+					view = "&view="+(urlParams.get("view") || "");
+				} 
+				var room="";
+				if (urlParams.has("room")) {
+					room = "&room="+urlParams.get("room");
+				}
+				
+				var password="";
+				if (urlParams.has("password")) {
+					password = "&password="+urlParams.get("password");
+				}
+				
+				iframe.allow = "autoplay";
+				var srcString = "./?novideo&noaudio&label=chatOverlay&scene"+room+view+password;
+				
+				iframe.src = srcString;
+				iframe.style.width="0";
+				iframe.style.height="0";
+				iframe.style.border="0";
+				
+				document.body.appendChild(iframe);
+
+				////////////  LISTEN FOR EVENTS
+	
+				var eventMethod = window.addEventListener ? "addEventListener" : "attachEvent";
+				var eventer = window[eventMethod];
+				var messageEvent = eventMethod === "attachEvent" ? "onmessage" : "message";
+
+
+				/// If you have a routing system setup, you could have just one global listener for all iframes instead.
+				
+				eventer(messageEvent, function (e) {
+					if (e.source != iframe.contentWindow){return} // reject messages send from other iframes
+
+					console.log(e);
+					if ("gotChat" in e.data){
+						logData(e.data.gotChat.label,e.data.gotChat.msg);
+					}
+				});
+			}
+
+			function printValues(obj) {
+				var out = "";
+				for (var key in obj) {
+					if (typeof obj[key] === "object") {
+						out += "<br />";
+						out += printValues(obj[key]);
+					} else {
+						if (key.startsWith("_")) {
+						} else {
+							out += "<b>" + key + "</b>: " + obj[key] + "<br />";
+						}
+					}
+				}
+				return out;
+			}
+
+			function logData(type, data) {
+				var log = document.body.getElementsByTagName("ul")[0];
+				var entry = document.createElement('li');
+				if (type){
+					type = "<i>"+type+"</i>";
+				}
+				entry.innerHTML = type + data;
+				
+				//setTimeout(function(entry){ // hide message after 60 seconds
+			//		entry.innerHTML="";
+			//		entry.remove();
+			//	},60000,entry);
+				
+				log.appendChild(entry);
+			}
+		</script>
+	</head>
+	<body onload="loadIframe();">
+			<ul></ul>
+
+
+	</body>
+</html>
