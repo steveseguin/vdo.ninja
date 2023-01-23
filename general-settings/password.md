@@ -48,3 +48,7 @@ Use this link to get the hash for the password:\
 {% content-ref url="../advanced-settings/settings-parameters/and-prompt.md" %}
 [and-prompt.md](../advanced-settings/settings-parameters/and-prompt.md)
 {% endcontent-ref %}
+
+{% content-ref url="../advanced-settings/director-parameters/and-maindirectorpassword-alpha.md" %}
+[and-maindirectorpassword-alpha.md](../advanced-settings/director-parameters/and-maindirectorpassword-alpha.md)
+{% endcontent-ref %}

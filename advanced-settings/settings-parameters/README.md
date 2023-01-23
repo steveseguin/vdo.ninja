@@ -28,6 +28,7 @@ You can use them for publisher, viewer and director URLs.
 | ``[`&clock`](and-clock.md)\*                           | Shows the current time in the lower right                                                    |
 | ``[`&powerpoint`](and-powerpoint-alpha.md) (alpha)     | Adds a built-in basic controller to control PowerPoint                                       |
 | ``[`&widget`](and-widget-alpha.md) (alpha)             | Will load a side-bar with an IFrame embed, with support for YouTube / Twitch / Social Stream |
+| ``[`&token`](and-token-alpha.md) (alpha)               | A token for invite/scene links to determine whose the director of a room                     |
 
 \*NEW IN VERSION 22
 
@@ -80,6 +81,7 @@ You can use them for publisher, viewer and director URLs.
 | ``[`&closedcaptions`](and-closedcaptions.md)                            | Enables displaying of closed captioning text                                                                          |
 | ``[`&enhance`](../view-parameters/enhance.md)``                         | Tells the remote source that you would like them to prioritize the audio stream over other streams                    |
 | ``[`&bitratecutoff`](../parameters-only-on-beta/and-bitratecutoff.md)`` | If the total bitrate drops below the specified bitrate, the viewer will auto-hide the audio and video for that stream |
+| ``[`&cutscene`](and-cutscene-alpha.md) (alpha)                          | Specifies an OBS cut scene to switch to when the bitrate drops below a threshold                                      |
 | ``[`&statsinterval`](../parameters-only-on-beta/and-statsinterval.md)`` | Lets you change the default stats update interval from 3-seconds to something else                                    |
 | ``[`&keyframerate`](../view-parameters/keyframerate.md)``               | This tells the remote publishers to send keyframes at a specified rate                                                |
 | ``[`&maxpublishers`](../view-parameters/and-maxpublishers.md)``         | Limits the number of remote peer connections that are publishers                                                      |

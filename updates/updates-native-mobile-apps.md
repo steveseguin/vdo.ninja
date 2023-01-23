@@ -2,6 +2,13 @@
 
 [native-mobile-app-versions.md](../steves-helper-apps/native-mobile-app-versions.md "mention")
 
+#### January 21
+
+* I pushed an update for the iOS native app of VDO.Ninja earlier and it just got approved. Mainly added reconnection fixes, along with publish-to-room support.\
+  ![](<../.gitbook/assets/image (2).png>)
+
+### 2022
+
 #### December 8
 
 * Updated the android native app to have better re-connection smarts; if you lose the peer connection due to an IP address change or such, it should now reconnect. Can't promise it will handle more aggressive networking issues though.

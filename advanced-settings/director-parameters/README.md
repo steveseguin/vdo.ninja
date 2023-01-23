@@ -28,5 +28,6 @@ Parameters specified for the director's control panel; have to be used together 
 | ``[`&novice`](and-novice.md)\*                                             | Hides some advanced guest options in the director's control center                            |
 | ``[`&layouts`](and-layouts.md)\*                                           | An ordered array of layouts, which can be used to switch between using the API layouts action |
 | ``[`&widget`](../settings-parameters/and-widget-alpha.md) (alpha)          | Will load a side-bar with an IFrame embed, with support for YouTube / Twitch / Social Stream  |
+| ``[`&maindirectorpassword`](and-maindirectorpassword-alpha.md) (alpha)     | Lets you set a pseudo 'master room password' as a director                                    |
 
 \*NEW IN VERSION 22
