@@ -3387,6 +3387,7 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 		if (turnstring == "twilio") { // a sample function on loading remote credentials for TURN servers.
 			try {
 				session.ws = false; // prevents connection
+				var twillioRequest = new XMLHttpRequest();
 				twillioRequest.onload = function() {
 				if (this.status === 200) {
 						try{
