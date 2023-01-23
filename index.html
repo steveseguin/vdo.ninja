@@ -2346,7 +2346,7 @@
 					// }
 					//  // system does not connect if php script does not respond.
 				// };
-				// phpcredentialsRequest.open('GET', './turn-credentials.json', true); // `false` makes the request synchronous
+				// phpcredentialsRequest.open('GET', './turn-credentials.php', true); // `false` makes the request synchronous
 				// phpcredentialsRequest.send();
 			// } catch (e) {
 				// console.error(e);
@@ -2356,7 +2356,7 @@
 
 			// session.configuration.iceTransportPolicy = "relay";  // uncomment to enable "&privacy" and force the TURN server's use
 
-			// session.wss = "wss://backupapi.vdo.ninja:443"; // US-East (Default)
+			// session.wss = "wss://wss.vdo.ninja:443"; // US-East (Default)
 
 			//  If wanting to fully-self-host, uncomment the following and deploy your own websocket server; good for air-gapped deployments
 			// session.wss = "wss://wss.yourdomainhere.com:443"; // https://github.com/steveseguin/websocket_server 
