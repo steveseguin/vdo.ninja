@@ -3387,12 +3387,14 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 		if (turnstring == "twilio") { // a sample function on loading remote credentials for TURN servers.
 			try {
 				session.ws = false; // prevents connection
-				var twillioRequest = new XMLHttpRequest();
-				twillioRequest.onreadystatechange = function() {
-					if (twillioRequest.status === 200) {
+				twillioRequest.onload = function() {
+				if (this.status === 200) {
 						try{
-							var res = JSON.parse(twillioRequest.responseText);
-						} catch(e){return;}
+							var res = JSON.parse(this.responseText);
+						} catch(e){
+							console.error(e);
+							return;
+						}
 						session.configuration = {
 							iceServers: [{
 									"username": res["1"],
