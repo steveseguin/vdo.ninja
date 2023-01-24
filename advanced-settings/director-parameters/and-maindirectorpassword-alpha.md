@@ -7,6 +7,10 @@ description: Lets you set a pseudo 'master room password' as a director
 Director Option! ([`&director`](../../viewers-settings/director.md))\
 \*only available on [vdo.ninja/alpha](https://vdo.ninja/alpha/)
 
+## Aliases
+
+* `&maindirpass`
+
 ## Options
 
 | Value                          | Description                                        |

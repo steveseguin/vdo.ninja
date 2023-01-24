@@ -9,6 +9,11 @@ description: >-
 General Option! ([`&push`](../../source-settings/push.md), [`&room`](../../general-settings/room.md), [`&view`](../view-parameters/view.md), [`&scene`](../view-parameters/scene.md))\
 \*only available on [vdo.ninja/alpha](https://vdo.ninja/alpha/)
 
+## Aliases
+
+* `&viewgroup`
+* `&gv`
+
 ## Options
 
 | Value     | Description                                          |

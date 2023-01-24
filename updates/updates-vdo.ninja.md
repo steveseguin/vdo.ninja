@@ -1,5 +1,10 @@
 # Updates - VDO.Ninja
 
+#### January 23 <a href="#august-31" id="august-31"></a>
+
+* Updated GitHub with the current alpha-version of VDO.Ninja (v23-alpha I guess). Also updated GitHub with a formal 'stable' release of the existing v22.9, which is what's been running on production for the last couple months.
+* There's new logic added to support secret-auth-tokens for private turn server deployments; this was mainly a contribution by `Jumper` on GitHub.
+
 #### January 21 <a href="#august-31" id="august-31"></a>
 
 * Added a little "pin" icon to the end of the copy/view link when sharing your camera. Pressing it is the same as using [`&sticky`](../general-settings/sticky.md) on your URL, as next time you visit VDO.Ninja it will ask you if you wish to reload your [`&push`](../source-settings/push.md) link. \*\* on alpha\
