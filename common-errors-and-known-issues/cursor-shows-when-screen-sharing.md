@@ -2,7 +2,7 @@
 
 Most browsers do not allow the mouse cursor to be hidden when screen sharing.&#x20;
 
-For gaming, this can be am obvious problem.
+For gaming, this can be an obvious problem.
 
 Instead, you can use OBS to capture the game and use the OBS Virtual Camera to share the screen with VDO.Ninja that way.&#x20;
 
