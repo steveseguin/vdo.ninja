@@ -3,6 +3,10 @@
 [social-stream.md](../steves-helper-apps/social-stream.md "mention")\
 [chat-overlay.md](../steves-helper-apps/chat-overlay.md "mention")
 
+#### **January 25**
+
+* Fixed a few dock.html issues on Social Stream, such as queuing sync and message scaling not working as expected in edge cases
+
 #### **January 19**
 
 * Higher resolution YouTube avatar images are used in Social Stream and its third party outputs now
