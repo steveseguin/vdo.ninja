@@ -38,11 +38,15 @@ You can select the Meshcast server via URL Parameter. If you don't set it, the b
 | Value        | Description     |
 | ------------ | --------------- |
 | (servercode) | Meshcast server |
-| `cae1`       | Canada-East     |
-| `use1`       | USA-East        |
-| `usw1`       | USA-West        |
+| `cae1`       | Canada-East 1   |
+| `cae2`       | Canada-East 2   |
+| `use1`       | USA-East 1      |
+| `use2`       | USA-East 2      |
+| `usw1`       | USA-West 1      |
+| `usw2`       | USA-West 2      |
 | `fr1`        | France          |
 | `de1`        | Germany         |
+| `usc1`       | Dev-server      |
 
 Full server list: [https://meshcast.io/servers.json](https://meshcast.io/servers.json)
 
