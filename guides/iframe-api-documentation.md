@@ -2,7 +2,7 @@
 description: How to embed VDO.Ninja into your own website with the IFRAME API
 ---
 
-# Embed into a site with iFrames
+# How to embed VDO.Ninja into a site with iFrames
 
 [VDO.Ninja](https://vdo.ninja/) offers here a simple and free solution to quickly enable real-time video streaming in their websites. VDON wishes to make live video streaming development accessible to any developer, even novices, yet still remain flexible and powerful.
 
@@ -319,6 +319,46 @@ If you aren't self-hosting the code, you may run into cross origin permission is
 See the video below for an advanced demo of the IFRAME API and how videos hosted within VDO.Ninja can be accessed and manipulated by the parent window. Video works well in this fashion; pulling audio from the IFRAME is a bit trickier however.
 
 {% embed url="https://www.youtube.com/watch?v=SqbufszHKi4&feature=youtu.be" %}
+
+### Basic full window IFRAME control
+
+Below is a simple code example of a website that can use VDO.Ninja as normal, full-window, while having a wrapper around it that controls it using the IFRAME API.\
+\
+It also will query the IFRAME every second for detailed state of the current setup, such as who is connected and visible.
+
+This approach can allow you to do very advanced and dynamic configurations for VDO.Ninja, which might not be possible with the normal HTTPS/WSS API or URL parameters.  Code injection is also supported, so there's no limit really to what you can do. If you would like to use VDO.Ninja with a custom API or inside an application as a webview, this is also a simple example of the concept.
+
+```
+<style>body,iframe{width:100%;height:100%;margin:0;padding:0;border:0;background-color:#0000;}</style><body></body><script>
+
+var IFRAMEWINDOW = document.createElement("iframe"); // create VDO.Ninja in an IFRAME
+IFRAMEWINDOW.src = "https://vdo.ninja/alpha/?scene&transparent&room=sssss123";
+
+IFRAMEWINDOW.onload = function(){ // start polling shortly after we connect
+    setInterval(function(){
+            IFRAMEWINDOW.contentWindow.postMessage({"getDetailedState":true}, "*");  // get details every second
+        },1000);
+}
+document.body.appendChild(IFRAMEWINDOW); // add the vdo.ninja element to the page, so its active/visible
+
+window.addEventListener("message", (e) => {
+  if (e.source != IFRAMEWINDOW.contentWindow){return} // only listen for vdo.ninja events
+  console.log(e.data);// print the messages inbound to the console log
+});
+</script>
+```
+
+### Webviews
+
+The IFRAME API is is also a WebView API, using the same concept of listening for events and post-messaging into the VDO.Ninja window.\
+\
+Webviews are available within iOS and Android native apps, Electron.js apps, and other applications, like Unity or Unreal.&#x20;
+
+This is a great way to configure, edit, listen to, and control VDO.Ninja, without a web or midi api.
+
+### Raw video and audio transport
+
+It's possible to transmit uncompressed video frames and audio data from VDO.Ninja to the parent window using the post-mesasging API. This allows video playback to happen outside the IFRAME itself, using your own custom mixing logic. See[ https://versus.cam](https://versus.cam) for a code example; the website is on Steve's GitHub for reference.  Please note, this may require a custom deployment of VDO.Ninja's website code (SameOriginPolicy), and likely will also require a recent Chromium-based browser to use.
 
 ### All to happy to support the IFRAME API
 
