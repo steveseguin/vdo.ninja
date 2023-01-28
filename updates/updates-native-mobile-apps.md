@@ -5,7 +5,7 @@
 #### January 21
 
 * I pushed an update for the iOS native app of VDO.Ninja earlier and it just got approved. Mainly added reconnection fixes, along with publish-to-room support.\
-  ![](<../.gitbook/assets/image (2).png>)
+  ![](<../.gitbook/assets/image (2) (10).png>)
 
 ### 2022
 

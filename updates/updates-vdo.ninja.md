@@ -13,7 +13,7 @@
 #### January 21 <a href="#august-31" id="august-31"></a>
 
 * Added a little "pin" icon to the end of the copy/view link when sharing your camera. Pressing it is the same as using [`&sticky`](../general-settings/sticky.md) on your URL, as next time you visit VDO.Ninja it will ask you if you wish to reload your [`&push`](../source-settings/push.md) link. \*\* on alpha\
-  ![](<../.gitbook/assets/image (1).png>)
+  ![](<../.gitbook/assets/image (1) (1).png>)
 
 #### January 20 <a href="#august-31" id="august-31"></a>
 
@@ -56,7 +56,7 @@
 #### January 12 <a href="#august-31" id="august-31"></a>
 
 * Improved publishing stats when using [`&meshcast`](../newly-added-parameters/and-meshcast.md); server region + external watchURL are available now there.\
-  ![](<../.gitbook/assets/image (1) (1).png>)
+  ![](<../.gitbook/assets/image (1) (1) (8).png>)
 * [`&screensharevideoonly`](../newly-added-parameters/and-screensharevideoonly.md) will hide the audio selection menu when screen sharing; it will also hide that warning message about no audio selected when screen sharing.
 * Fixed some issues with [`&viewwidth`](../advanced-settings/video-parameters/and-viewwidth.md) and [`&viewheight`](../advanced-settings/video-parameters/and-viewheight.md) (works like [`&scale`](../advanced-settings/view-parameters/scale.md), but tries to target certain resolutions instead (also from the viewer's side tho).\
   \
