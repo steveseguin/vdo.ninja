@@ -348,11 +348,11 @@ window.addEventListener("message", (e) => {
 </script>
 ```
 
-### Webviews
+### WebViews
 
-The IFRAME API is is also a WebView API, using the same concept of listening for events and post-messaging into the VDO.Ninja window.\
-\
-Webviews are available within iOS and Android native apps, Electron.js apps, and other applications, like Unity or Unreal.&#x20;
+The IFRAME API is is also a WebView API, using the same concept of listening for events and post-messaging into the VDO.Ninja window.
+
+WebViews are available within iOS and Android native apps, Electron.js apps, and other applications, like Unity or Unreal.&#x20;
 
 This is a great way to configure, edit, listen to, and control VDO.Ninja, without a web or midi api.
 
@@ -362,8 +362,8 @@ It's possible to transmit uncompressed video frames and audio data from VDO.Ninj
 
 ### All to happy to support the IFRAME API
 
-Please feel free to follow me in the VDO.Ninja Discord channel ([discord.vdo.ninja](https://discord.com/invite/T4xpQVv)) where I post news about updates and listen to requests. The upcoming version of VDO.Ninja is also often hosted at [https://vdo.ninja/beta](https://vdo.ninja/beta), where you can explore new features and help crush any unexpected bugs.\
-\
+Please feel free to follow me in the VDO.Ninja Discord channel ([discord.vdo.ninja](https://discord.com/invite/T4xpQVv)) where I post news about updates and listen to requests. The upcoming version of VDO.Ninja is also often hosted at [https://vdo.ninja/beta](https://vdo.ninja/beta), where you can explore new features and help crush any unexpected bugs.
+
 I am keen to continue to support the IFRAME API, so please reach out if you have questions or requests.
 
 \-steve
