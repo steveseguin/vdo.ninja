@@ -33,10 +33,10 @@ Understanding Meshcast as a tool for VDO.Ninja
 
 ## Options
 
-You can select the Meshcast server via URL Parameter, if you want low-level control there.\
-\
-`&meshcast=usw2` for example.\
-\
+You can select the Meshcast server via URL Parameter, if you want low-level control there.
+
+`&meshcast=usw2` for example.
+
 &#x20;If you don't set it, the best one will be chosen automatically. If the specified one isn't found, the next best is used.
 
 | Value        | Description     |
@@ -54,16 +54,16 @@ You can select the Meshcast server via URL Parameter, if you want low-level cont
 
 Full server list: [https://meshcast.io/servers.json](https://meshcast.io/servers.json)
 
-As a director you can also select the Meshcast server on the bottom left of the director's control center. This method will show you the current load on a server, so you can avoid servers that are over-capacity. \
+As a director you can also select the Meshcast server on the bottom left of the director's control center. This method will show you the current load on a server, so you can avoid servers that are over-capacity.\
 \
 ![](<../.gitbook/assets/image (2) (3) (1).png>)\
 
 
-You can also specify the Meshcast server based on geographic timezone values using the `&tz=300` parameter, where the value passed is the UTC timezone value in negative minutes. Eastern Europe I suppose would be a negative value, while North America would be a positive value.  The `&tz` will also use the closest TURN server to that timezone, if needed; just keep in mind that timezones are east/west accurate; not north/south accurate.\
-\
-Normally during peak-hours, around 7pm, the Internet in general can get slow, and Meshcast servers can occasionally become slow also as a result.  Using a Meshcast server that's located in a different timezone, even if on the other side of the world, can sometimes avoid the bottlenecks in your local region, offering better results.\
-\
-Lastly, if a Meshcast server fails to respond, please contact steve@seguin.email or Steve on discord (discord.vdo.ninja) so it can be fixed.
+You can also specify the Meshcast server based on geographic timezone values using the [`&tz=300`](and-tz.md) parameter, where the value passed is the UTC timezone value in negative minutes. Eastern Europe I suppose would be a negative value, while North America would be a positive value. The [`&tz`](and-tz.md) will also use the closest TURN server to that timezone, if needed; just keep in mind that timezones are east/west accurate; not north/south accurate.
+
+Normally during peak-hours, around 7pm, the Internet in general can get slow, and Meshcast servers can occasionally become slow also as a result. Using a Meshcast server that's located in a different timezone, even if on the other side of the world, can sometimes avoid the bottlenecks in your local region, offering better results.
+
+Lastly, if a Meshcast server fails to respond, please contact steve@seguin.email or Steve on discord ([discord.vdo.ninja](https://discord.com/invite/cKkj5nN8pH)) so it can be fixed.
 
 {% embed url="https://youtu.be/-7QsLChfdsE" %}
 Meshcast /w VDO.Ninja to host even Larger Rooms
