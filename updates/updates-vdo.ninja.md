@@ -3,7 +3,7 @@
 #### January 25 <a href="#august-31" id="august-31"></a>
 
 * Updated the http [API](../general-settings/api.md) getDetails request to include info about video visibility; makes it a bit more usable if querying a scene link\
-  ![](<../.gitbook/assets/image (3) (7).png>)
+  ![](<../.gitbook/assets/image (3).png>)
 
 #### January 23 <a href="#august-31" id="august-31"></a>
 
