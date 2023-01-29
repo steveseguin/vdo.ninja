@@ -2,6 +2,18 @@
 
 [caption.ninja.md](../steves-helper-apps/caption.ninja.md "mention")
 
+#### January 26
+
+* Added a version of the Caption.Ninja transcription+translation tool that uses Google Cloud's premium translation API. (many many more languages)
+* You can use your own API KEY, available with a free tier of use from Google, or you can use my key (default) to try it out
+*   Use `&api=xxxxxxxx` to specify your own key in the URL (auto saves to local storage when set)\
+    Find it at: [https://caption.ninja/translate\_premium](https://caption.ninja/translate\_premium)\
+
+
+    <figure><img src="../.gitbook/assets/image (2).png" alt=""><figcaption></figcaption></figure>
+
+### 2022
+
 #### July 29
 
 * Added a "translation" component to Caption.Ninja, so you can convert speakers to a single language for overlay on stream. I tried this before, but only now do I think I have it working okay.

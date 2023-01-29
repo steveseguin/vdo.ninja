@@ -6,6 +6,11 @@
 #### **January 25**
 
 * Fixed a few dock.html issues on Social Stream, such as queuing sync and message scaling not working as expected in edge cases
+* Toggle added to Social Stream to disable the green name that YouTube-members get (Social Stream)
+* Fixed support for kick.com and nimo live
+* Added `&lang=xxxx` (`&language`/`&ln`), which you can use instead of `&speech=xxx`. When using `&lang`, it will not enable it by default. (Social Stream)
+* Option added to right-click and trigger text to speech on a message (Social Stream dock)\
+  ![](../.gitbook/assets/image.png)
 
 #### **January 19**
 
