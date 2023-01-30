@@ -12,6 +12,8 @@ General Option! ([`&push`](../source-settings/push.md), [`&room`](room.md), [`&v
 
 ## Options
 
+Example: `&label=Steve`
+
 | Value            | Description                                        |
 | ---------------- | -------------------------------------------------- |
 | (no value given) | It will prompt the user for a Display Name on load |

@@ -13,6 +13,8 @@ Sender-Side Option! ([`&room`](../general-settings/room.md))
 
 ## Options
 
+Example: `&push=StreamID`
+
 | Value            | Description                                                       |
 | ---------------- | ----------------------------------------------------------------- |
 | (no value given) | creates a randomly generated stream ID                            |

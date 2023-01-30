@@ -13,6 +13,8 @@ Sender-Side Option! ([`&push`](../../source-settings/push.md))
 
 ## Options
 
+Example: `&maxvideobitrate=8000`
+
 | Value                    | Description                              |
 | ------------------------ | ---------------------------------------- |
 | (positive integer value) | max allowed video bitrate per stream out |

@@ -12,6 +12,8 @@ Sender-Side Option! ([`&push`](../../source-settings/push.md))
 
 ## Options
 
+Example: `&quality=0`
+
 | Value                   | Description                                                       |
 | ----------------------- | ----------------------------------------------------------------- |
 | `0` \| (no value given) | about 1080p60, depending on hardware                              |

@@ -17,6 +17,8 @@ V22: Sender-Side Option! ([`&push`](../../source-settings/push.md))
 
 ## Options
 
+Example: `&webpquality=1`
+
 | Value | Description    |
 | ----- | -------------- |
 | `0`   | 1080p          |

@@ -16,12 +16,14 @@ General Option! ([`&push`](../../source-settings/push.md), [`&room`](../../gener
 
 ## Options
 
+Example: `&groupview=Groupname`
+
 | Value     | Description                                          |
 | --------- | ---------------------------------------------------- |
 | `1`       | adds the guest or director to group 1                |
 | `2`       | adds the guest or director to group 2                |
 | `3,4,5,6` | adds the guest or director to group 3, 4, 5 and 6    |
-| string    | creates/adds the guest or director to a custom group |
+| (string)  | creates/adds the guest or director to a custom group |
 
 ## Details
 

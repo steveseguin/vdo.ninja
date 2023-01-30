@@ -12,6 +12,8 @@ Viewer-Side Option! ([`&scene`](../view-parameters/scene.md), [`&room`](../../ge
 
 ## Options
 
+Example: `&viewwidth=1920`
+
 | Value           | Description           |
 | --------------- | --------------------- |
 | (value integer) | video width in pixels |

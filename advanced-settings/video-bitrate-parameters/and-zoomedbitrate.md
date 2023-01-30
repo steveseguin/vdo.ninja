@@ -14,6 +14,8 @@ Viewer-Side Option! ([`&view`](../view-parameters/view.md), [`&room`](../../gene
 
 ## Options
 
+Example: `&zoomedbitrate=2000`
+
 | Value            | Description                                    |
 | ---------------- | ---------------------------------------------- |
 | (no value given) | zoomed bitrate = 2500-kbps instead of 600-kbps |

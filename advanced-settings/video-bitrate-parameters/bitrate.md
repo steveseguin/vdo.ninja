@@ -13,6 +13,8 @@ Viewer-Side Option! ([`&view`](../view-parameters/view.md), [`&scene`](../view-p
 
 ## Options
 
+Example: `&videobitrate=6000`
+
 | Value           | Description     |
 | --------------- | --------------- |
 | (integer value) | bitrate in kbps |

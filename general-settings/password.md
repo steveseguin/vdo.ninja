@@ -4,13 +4,24 @@ description: Sets a password to view a stream or to join a room
 
 # \&password
 
-General Option! ([`&push`](../source-settings/push.md), [`&room`](room.md), [`&view`](../advanced-settings/view-parameters/view.md), [`&scene`](../advanced-settings/view-parameters/scene.md), [`&director`](../viewers-settings/director.md))
+General Option! ([`&push`](../source-settings/push.md), [`&room`](room.md), [`&view`](../advanced-settings/view-parameters/view.md), [`&director`](../viewers-settings/director.md))
 
 ## Aliases
 
 * `&pass`
 * `&pw`
 * `&p`
+
+## Options
+
+Example: `&password=PASSWORD123`
+
+| Value            | Description                                                       |
+| ---------------- | ----------------------------------------------------------------- |
+| (no value given) | prompts you to select a password                                  |
+| (string)         | 1 to 49-characters long: aLphaNumEric-characters; case sensitive. |
+
+## Details
 
 ## Details
 

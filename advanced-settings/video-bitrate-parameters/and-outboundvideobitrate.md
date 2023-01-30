@@ -12,6 +12,8 @@ Sender-Side Option! ([`&push`](../../source-settings/push.md))
 
 ## Options
 
+Example: `&outboundvideobitrate=4000`
+
 | Value           | Description        |
 | --------------- | ------------------ |
 | (integer value) | value will be kbps |
@@ -20,7 +22,7 @@ Sender-Side Option! ([`&push`](../../source-settings/push.md))
 
 Target video bitrate and max bitrate for outgoing video streams.
 
-Sets the viewer's bitrate and overrides the [`&videobitrate`](bitrate.md) parameter.  It won't override the room's total bitrate parameter, as that's a dynamically set bitrate, so **to get higher bitrate in group rooms you still need to use** [`&totalroombitrate`](totalroombitrate.md).
+Sets the viewer's bitrate and overrides the [`&videobitrate`](bitrate.md) parameter. It won't override the room's total bitrate parameter, as that's a dynamically set bitrate, so **to get higher bitrate in group rooms you still need to use** [`&totalroombitrate`](totalroombitrate.md).
 
 ## Related
 

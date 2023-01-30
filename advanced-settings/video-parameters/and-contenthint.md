@@ -14,6 +14,8 @@ Sender-Side Option! ([`&push`](../../source-settings/push.md))
 
 ## Options
 
+Example: `&contenthint=detail`
+
 | Value    | Description                                    |
 | -------- | ---------------------------------------------- |
 | `detail` | will prioritize **resolution** over frame rate |

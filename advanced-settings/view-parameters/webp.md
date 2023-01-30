@@ -16,6 +16,8 @@ V22: Sender-Side Option! ([`&push`](../../source-settings/push.md))
 
 ## Options
 
+Example: `&webp=jpeg`
+
 | Value            | Description       |
 | ---------------- | ----------------- |
 | (no value given) | webp image format |

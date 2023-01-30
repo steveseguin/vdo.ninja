@@ -8,6 +8,8 @@ Viewer-Side Option! ([`&view`](view.md), [`&scene`](scene.md), [`&room`](../../g
 
 ## Options
 
+Example: `&codec=h264`
+
 | Value                 | Description                                                                                 |
 | --------------------- | ------------------------------------------------------------------------------------------- |
 | `h264`                | request the h264 codec                                                                      |

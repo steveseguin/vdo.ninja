@@ -12,6 +12,8 @@ Sender-Side Option! ([`&push`](../../source-settings/push.md))
 
 ## Options
 
+Example: `&aspectratio=1.77777` or `&aspectratio=landscape`
+
 | Value            | Description                     |
 | ---------------- | ------------------------------- |
 | `landscape`      | aspect ratio of 16:9 (1.777777) |

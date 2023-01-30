@@ -12,6 +12,8 @@ Sender-Side Option! ([`&push`](../../source-settings/push.md))
 
 ## Options
 
+Example: `&limittotalbitrate=2000`
+
 | Value                    | Description                              |
 | ------------------------ | ---------------------------------------- |
 | (positive integer value) | max total outbound video bitrate in kbps |

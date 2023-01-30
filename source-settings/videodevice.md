@@ -13,6 +13,8 @@ Sender-Side Option! ([`&push`](push.md))
 
 ## Options
 
+Example: `&videodevice=BRIO_4K`
+
 | Value                   | Description                                                                                                                                |
 | ----------------------- | ------------------------------------------------------------------------------------------------------------------------------------------ |
 | `0`                     | disable the video camera automatically. No option to change it during setup is provided.                                                   |

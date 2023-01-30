@@ -15,6 +15,8 @@ Sender-Side Option! ([`&push`](../../source-settings/push.md))
 
 ## Options
 
+Example: `&roombitrate=200`
+
 | Value                         | Description                                                    |
 | ----------------------------- | -------------------------------------------------------------- |
 | `0`                           | disables access to your video for other guests in a group room |

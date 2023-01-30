@@ -8,6 +8,8 @@ Viewer-Side Option! ([`&view`](../advanced-settings/view-parameters/view.md), [`
 
 ## Options
 
+Example: `&h264profile=42e01f`
+
 | Value                                        | Description                                                                                                                                    |
 | -------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------- |
 | (no value given)                             | disables hardware h264 encoding -> OpenH264 software encoding will be used, if H264 is used. This is the same as setting the value to `42e01f` |

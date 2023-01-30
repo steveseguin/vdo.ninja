@@ -14,6 +14,8 @@ Director Option! ([`&director`](../../viewers-settings/director.md))
 
 ## Options
 
+Example: `&totalroombitrate=4000`
+
 | Value           | Description                                    |
 | --------------- | ---------------------------------------------- |
 | (integer value) | set this to be the total combined room bitrate |

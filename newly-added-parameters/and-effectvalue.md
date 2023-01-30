@@ -12,6 +12,8 @@ Sender-Side Option! ([`&push`](../source-settings/push.md))
 
 ## Options
 
+Example: `&effectvalue=8`
+
 | Value           | Description                               |
 | --------------- | ----------------------------------------- |
 | (integer value) | Sets the amount of blur or effect applied |

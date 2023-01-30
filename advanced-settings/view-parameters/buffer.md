@@ -8,6 +8,8 @@ Viewer-Side Option! ([`&view`](view.md), [`&scene`](scene.md), [`&room`](../../g
 
 ## Options
 
+Example: `&buffer=500`
+
 | Value           | Description |
 | --------------- | ----------- |
 | (numeric value) | delay in ms |

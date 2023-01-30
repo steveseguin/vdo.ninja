@@ -12,6 +12,8 @@ Sender-Side Option! ([`&push`](push.md))
 
 ## Options
 
+Example: `&height=1080`
+
 | Value                         | Description  |
 | ----------------------------- | ------------ |
 | (some positive integer value) | height in px |

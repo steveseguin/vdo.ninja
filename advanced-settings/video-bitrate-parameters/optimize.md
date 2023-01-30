@@ -10,6 +10,8 @@ Viewer-Side Option! ([`&view`](../view-parameters/view.md), [`&scene`](../view-p
 
 ## Options
 
+Example: `&optimize=1000`
+
 | Value            | Description                                                           |
 | ---------------- | --------------------------------------------------------------------- |
 | (integer value)  | value in kbps                                                         |

@@ -12,6 +12,8 @@ Sender-Side Option! ([`&push`](push.md))
 
 ## Options
 
+Example: `&effects=7` or `&effects=zoom`
+
 | Value                   | Description                                                   |
 | ----------------------- | ------------------------------------------------------------- |
 | (no value given)        | Shows a "Digital Video Effects" panel when setting up devices |

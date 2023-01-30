@@ -8,6 +8,8 @@ Viewer-Side Option! ([`&view`](view.md), [`&scene`](scene.md), [`&room`](../../g
 
 ## Options
 
+Example: `&scale=100`
+
 | Value                             | Description                                                        |
 | --------------------------------- | ------------------------------------------------------------------ |
 | (integer value between 0 and 100) | scale the incoming video feed by this percentage                   |

@@ -10,11 +10,13 @@ Sender-Side Option! ([`&push`](../source-settings/push.md))
 
 ## Options
 
-| Value          | Description                                                                                                                                |
-| -------------- | ------------------------------------------------------------------------------------------------------------------------------------------ |
-| `0`            | disable the video camera automatically                                                                                                     |
-| `1`            | auto-select the default video camera                                                                                                       |
-| (string value) | auto-select a video device that has a label containing that same string / deviceID. Whitespaces in names can be replaced with underscores. |
+Example: `&vdo=BRIO_4K`
+
+| Value          | Description                                                                                                                                 |
+| -------------- | ------------------------------------------------------------------------------------------------------------------------------------------- |
+| `0`            | disable the video camera automatically                                                                                                      |
+| `1`            | auto-select the default video camera                                                                                                        |
+| (string value) | auto-select a video device that has a label containing that same string / device ID. Whitespaces in names can be replaced with underscores. |
 
 ## Details
 

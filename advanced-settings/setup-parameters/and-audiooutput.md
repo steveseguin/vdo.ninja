@@ -13,6 +13,8 @@ General Option! ([`&push`](../../source-settings/push.md), [`&room`](../../gener
 
 ## Options
 
+Example: `&audiooutput=Cable_Input`
+
 | Value            | Description                                                                                                          |
 | ---------------- | -------------------------------------------------------------------------------------------------------------------- |
 | (string value)   | partial string that matches the device's label/name                                                                  |

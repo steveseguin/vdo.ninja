@@ -13,6 +13,8 @@ General Option! ([`&push`](../source-settings/push.md), [`&room`](../general-set
 
 ## Options
 
+Example: `&hash=99e5`
+
 | Value    | Description     |
 | -------- | --------------- |
 | (string) | Hashed password |
@@ -21,7 +23,7 @@ General Option! ([`&push`](../source-settings/push.md), [`&room`](../general-set
 
 You can add `&hash=STRING` this to a guest's URL instead of [`&password`](../general-settings/password.md) if you want to check the password. That means the password turns into another string.
 
-If you added a passwort to your room, the guests' invitations in the director room get 'hashed' automatically:\
+If you added a password to your room, the guests' invitations in the director room get 'hashed' automatically:\
 ![](<../.gitbook/assets/image (1) (4) (1).png>)
 
 If you want to hash your password manually, you can use this link:\

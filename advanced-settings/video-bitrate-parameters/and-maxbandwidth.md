@@ -8,6 +8,8 @@ Sender-Side Option! ([`&push`](../../source-settings/push.md))
 
 ## Options
 
+Example: `&maxbandwidth=80`
+
 | Value                 | Description                                                                         |
 | --------------------- | ----------------------------------------------------------------------------------- |
 | (percentage 1 to 100) | the connection never uses more than that amount of the available reported bandwidth |

@@ -10,9 +10,11 @@ General Option! ([`&push`](../../source-settings/push.md), [`&room`](../../gener
 
 ## Options
 
-| Value          | Description |
-| -------------- | ----------- |
-| (string value) | device id   |
+Example: `&sink=1dee4206f5deb75973e33f7078d4c1539782e29e255799d59b8b61a855d17bea`
+
+| Value          | Description                                                        |
+| -------------- | ------------------------------------------------------------------ |
+| (string value) | device ID ([https://vdo.ninja/devices](https://vdo.ninja/devices)) |
 
 ## Details
 

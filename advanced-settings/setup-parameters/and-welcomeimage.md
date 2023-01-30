@@ -12,6 +12,8 @@ Sender-Side Option! ([`&push`](../../source-settings/push.md))
 
 ## Options
 
+Example: `&welcomeimage=https://vdo.ninja/alpha/media/old_logo.png`
+
 | Value | Description      |
 | ----- | ---------------- |
 | (URL) | URL of the image |

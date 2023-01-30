@@ -10,7 +10,7 @@
     Find it at: [https://caption.ninja/translate\_premium](https://caption.ninja/translate\_premium)\
 
 
-    <figure><img src="../.gitbook/assets/image (2).png" alt=""><figcaption></figcaption></figure>
+    <figure><img src="../.gitbook/assets/image (2) (12).png" alt=""><figcaption></figcaption></figure>
 
 ### 2022
 

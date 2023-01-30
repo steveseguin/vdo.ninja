@@ -9,6 +9,8 @@ Viewer-Side Option! ([`&view`](../view-parameters/view.md), [`&scene`](../view-p
 
 ## Options
 
+Example: `&buffer2=500`
+
 | Value           | Description |
 | --------------- | ----------- |
 | (numeric value) | delay in ms |

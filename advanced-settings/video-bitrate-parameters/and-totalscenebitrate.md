@@ -14,6 +14,8 @@ Viewer-Side Option! ([`&view`](../view-parameters/view.md), [`&scene`](../view-p
 
 ## Options
 
+Example: `&totalscenebitrate=4000`
+
 | Value           | Description                             |
 | --------------- | --------------------------------------- |
 | (integer value) | max. video bitrate in kbps a scene uses |

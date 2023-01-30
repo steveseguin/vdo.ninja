@@ -12,6 +12,8 @@ Viewer-Side Option! ([`&scene`](../view-parameters/scene.md), [`&room`](../../ge
 
 ## Options
 
+Example: `&viewheight=1080`
+
 | Value           | Description            |
 | --------------- | ---------------------- |
 | (value integer) | video height in pixels |

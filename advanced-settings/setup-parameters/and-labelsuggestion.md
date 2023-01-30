@@ -13,6 +13,8 @@ General Option! ([`&push`](../../source-settings/push.md), [`&room`](../../gener
 
 ## Options
 
+Example: `&labelsuggestion=Steve`
+
 | Value            | Description                                        |
 | ---------------- | -------------------------------------------------- |
 | (string)         | Sets the label if the user leaves the prompt blank |

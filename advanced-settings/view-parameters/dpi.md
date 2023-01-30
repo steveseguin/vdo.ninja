@@ -12,6 +12,8 @@ Viewer-Side Option! ([`&view`](view.md), [`&scene`](scene.md), [`&room`](../../g
 
 ## Options
 
+Example: `&dpi=2`
+
 | Value             | Description                 |
 | ----------------- | --------------------------- |
 | `1`               | Set Device Pixel Ratio to 1 |

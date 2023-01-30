@@ -15,6 +15,8 @@ Sender-Side Option! ([`&push`](push.md))
 
 ## Options
 
+Example: `&maxframerate=60`
+
 | Value                    | Description                    |
 | ------------------------ | ------------------------------ |
 | (positive integer value) | Frame rate (frames per second) |

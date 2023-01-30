@@ -13,6 +13,8 @@ Sender-Side Option! ([`&push`](../../source-settings/push.md))
 
 ## Options
 
+Example: `&fps=60`
+
 | Value                         | Description                    |
 | ----------------------------- | ------------------------------ |
 | (some positive integer value) | Frame rate (frames per second) |

@@ -9,6 +9,8 @@ Sender-Side Option! ([`&push`](../../source-settings/push.md))\
 
 ## Options
 
+Example: `&avatar=default`
+
 | Value            | Description                                                            |
 | ---------------- | ---------------------------------------------------------------------- |
 | (no value given) | adds the ability to select an image, instead of a video device         |

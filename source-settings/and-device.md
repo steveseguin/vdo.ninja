@@ -12,6 +12,8 @@ Sender-Side Option! ([`&push`](push.md))
 
 ## Options
 
+Example: `&device=Brio_4K`
+
 | Value          | Description                                                                                                                               |
 | -------------- | ----------------------------------------------------------------------------------------------------------------------------------------- |
 | `0`            | disable the audio and video devices; no option to change it during setup is provided.                                                     |

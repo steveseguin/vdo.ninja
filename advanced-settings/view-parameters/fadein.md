@@ -8,6 +8,8 @@ Viewer-Side Option! ([`&view`](view.md), [`&scene`](scene.md), [`&room`](../../g
 
 ## Values
 
+Example: `&fadein=400`
+
 | Value            | Description                           |
 | ---------------- | ------------------------------------- |
 | (no value given) | fades in video in 500-ms              |

@@ -4,12 +4,20 @@ description: Sets a room ID for the session to join
 
 # \&room
 
-General Option! ([`&push`](../source-settings/push.md), [`&scene`](../advanced-settings/view-parameters/scene.md))
+General Option! ([`&push`](../source-settings/push.md), [`&scene`](../advanced-settings/view-parameters/scene.md), [`&solo`](../advanced-settings/mixer-scene-parameters/and-solo.md))
 
 ## Aliases
 
 * `&roomid`
 * `&r`
+
+## Options
+
+Example: `&room=RoomID`
+
+| Value    | Description                                                       |
+| -------- | ----------------------------------------------------------------- |
+| (string) | 1 to 49-characters long: aLphaNumEric-characters; case sensitive. |
 
 ## Details
 

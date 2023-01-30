@@ -14,6 +14,8 @@ Viewer-Side Option! ([`&view`](../view-parameters/view.md), [`&scene`](../view-p
 
 ## Options
 
+Example: `&showonly=streamID1,streamID2`
+
 | Value          | Description                                           |
 | -------------- | ----------------------------------------------------- |
 | (string value) | the stream IDs to view; can be a comma separated list |
