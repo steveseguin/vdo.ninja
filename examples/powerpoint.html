@@ -1,0 +1,136 @@
+<html>
+<head><title>PowerPoint Remote Controller</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+<meta content="text/html;charset=utf-8" http-equiv="Content-Type" />
+<style>
+body{
+	padding:0;
+	margin:0;
+	background-color:#003;
+	width:100%;
+	height:100%;
+	color:white;
+	font-family: tahoma, arial;
+}
+
+a {
+	color:white
+}
+
+iframe {
+	width:100%;
+	height:100%;
+	border:0;
+	margin:0;
+	padding:0;
+	display:block;
+}
+
+
+input{
+	padding:10px;
+	width:80%;
+	font-size:1.2em;
+	z-index: 1000;
+}
+
+div{
+	border:0;
+	margin:0;
+	padding:0;
+	text-align: center;
+}
+
+button{
+	border:0;
+	margin:0;
+	padding:0;
+	width:49%;
+	height:100%;
+}
+</style>
+</head>
+<body>
+
+
+
+<div id="container1" style="width:100%;height:89%;display:none;"></div>
+<div id="container2" style="width:100%;height:10%;display:none;">
+	<button onclick="prevSlide()" style='background-color:red'>Previous Slide</button>
+	<button onclick="nextSlide()" style='background-color:green'>Next Slide</button>
+</div>
+<div>
+	<h2>PowerPoint Remote Control interface</h2>
+	<input placeholder="Enter a Room name" id="viewlink" type="text" onchange="loadIframes()" /><br>
+	<br>
+	This app is a custom remote client for VDO.Ninja's PowerPoint remote control feature.
+	<br><br>
+	For this to work, the remote VDO.Ninja peer will need <b> &midiin </b> added to their URL, a virtual MIDI loopback device installed, PowerPoint running as an application, and the AutoHotKey script <a href='https://github.com/steveseguin/powerpoint_remote'>found here</a> running, with the MIDI loopback device selected as a MIDI Input device.
+</div>
+<script>
+var iframe;
+
+function nextSlide(){
+	if (iframe){
+		iframe.contentWindow.postMessage({"sendRawMIDI":{data:[176, 110, 11]}}, '*');
+		/// OR AS OF V22.12 YOU CAN DO:
+		//iframe.contentWindow.postMessage({"nextSlide":true}, '*');
+		
+	}
+}
+
+function prevSlide(){
+	if (iframe){
+		iframe.contentWindow.postMessage({"sendRawMIDI":{data:[176, 110, 10]}}, '*');
+		/// OR AS OF V22.12 YOU CAN DO:
+		//iframe.contentWindow.postMessage({"prevSlide":true}, '*');
+	}
+}
+
+function customCommand(){ // just an example of what you can do to make a custom action.
+	if (iframe){
+		iframe.contentWindow.postMessage({"sendRawMIDI":{data:[176, 110, 12]}}, '*'); // You'll need to have autohotkey be updated to respond to this though.
+	}
+}
+var urlEdited = window.location.search.replace(/\?\?/g, "?");
+urlEdited = urlEdited.replace(/\?/g, "&");
+urlEdited = urlEdited.replace(/\&/, "?");
+
+if (urlEdited !== window.location.search){
+	warnlog(window.location.search + " changed to " + urlEdited);
+	window.history.pushState({path: urlEdited.toString()}, '', urlEdited.toString());
+}
+var urlParams = new URLSearchParams(urlEdited);
+var room = false;
+
+if (urlParams.has("room") || urlParams.has("r")){
+	room = urlParams.get("room") || urlParams.get("r") || false;
+}
+
+if (room){
+	loadIframes(room);
+}
+
+function loadIframes(roomname=false){ 
+
+	if (!roomname){
+		roomname = document.getElementById("viewlink").value;
+	}
+	
+	document.getElementById("viewlink").parentNode.parentNode.removeChild(document.getElementById("viewlink").parentNode);
+	document.getElementById("container1").style.display="inline-block";
+	document.getElementById("container2").style.display="inline-block";
+	
+	var path = window.location.host+window.location.pathname.split("/").slice(0,-1).join("/");
+	
+	var room1 = "https://"+path+"/../?room="+roomname+"&push="+roomname+"_controller&webcam&autostart&minipreview";
+	
+	iframe = document.createElement("iframe");
+	iframe.allow = "document-domain;encrypted-media;sync-xhr;usb;web-share;cross-origin-isolated;accelerometer;midi;geolocation;autoplay;camera;microphone;fullscreen;picture-in-picture;display-capture;";
+	iframe.src = room1;
+	document.getElementById("container1").appendChild(iframe);
+}
+
+</script>
+</body>
+</html>

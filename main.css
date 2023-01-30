@@ -3330,6 +3330,20 @@ button[data-action-type="messaging-box-send"] {
     top: 0;
 }
 
+.advanced {
+	display: var(--advanced-mode);
+}
+.controlCenterBox{
+	margin-top:2px;
+}
+#widget {
+	position: absolute;
+    width: 25%;
+    height: 100%;
+    right: 0;
+    top: 0;
+}
+
 .pull-right {
 	float: right;
 	right: 0;

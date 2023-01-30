@@ -304,6 +304,8 @@
 						)[0].style.display = "inline";
 						
 						
+						logData({"timestart": Date.now()});
+						
 						var showdetails = document.createElement("button");
 						showdetails.onclick = function(){
 							document.getElementById("graphs").classList.toggle('hidden');
