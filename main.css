@@ -592,7 +592,9 @@ hr {
 	border: 0;
 	margin: 0;
 }
-
+#gridlayout{
+	z-index:-1;
+}
 .invite_setting_group {
 	margin: 20px 0px;
 	background-color: #d2d2d2;
@@ -943,6 +945,9 @@ button.glyphicon-button.active.focus {
 	background-attachment: fixed;
 	background-position: center;
 	overflow-x: hidden;
+	overflow: hidden;
+    position: absolute;
+    z-index: 0;
 }
 
 

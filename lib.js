@@ -10903,56 +10903,62 @@ function getDetailedState(sid=false){
 			item.streamID = session.rpcs[UUID].streamID;
 			item.label = session.rpcs[UUID].label;
 			item.group = session.rpcs[UUID].group;
-			item.videoMuted = session.rpcs[UUID].videoMuted;
-			item.muted = session.rpcs[UUID].remoteMuteState;
 			item.iframeSrc = session.rpcs[UUID].iframeSrc;
 			item.localStream = false;
+			item.muted = session.rpcs[UUID].remoteMuteState;
+			item.videoMuted = session.rpcs[UUID].videoMuted;
+			item.videoVisible = session.rpcs[UUID].videoElement && session.rpcs[UUID].videoElement.checkVisibility();
+			if (session.rpcs[UUID].videoElement){
+				item.videoVolume = session.rpcs[UUID].videoElement.volume;
+			}
+			item.iframeVisible = session.rpcs[UUID].iframeVisible && session.rpcs[UUID].iframeVisible.checkVisibility();
+					
 			if (session.directorList.indexOf(UUID)>=0){
 				item.director = true;
 			} else {
 				item.director = false;
 			}
 			try {
-				if (guestFeeds){
-					var lock = parseInt(document.getElementById("position_"+UUID).dataset.locked);
-					if (lock){
-						item.position = lock; // probably should make a universal function to do this, for all lock requesting
-					} else {
-						var child = document.getElementById('container_'+UUID);
-						if (child){
-							var parent = child.parentNode;
-							if (parent.id == "guestFeeds"){
-								item.position = Array.prototype.indexOf.call(parent.children, child) + 1;
+				if (session.director){
+					if (guestFeeds){
+						var lock = parseInt(document.getElementById("position_"+UUID).dataset.locked);
+						if (lock){
+							item.position = lock; // probably should make a universal function to do this, for all lock requesting
+						} else {
+							var child = document.getElementById('container_'+UUID);
+							if (child){
+								var parent = child.parentNode;
+								if (parent.id == "guestFeeds"){
+									item.position = Array.prototype.indexOf.call(parent.children, child) + 1;
+								}
 							}
 						}
 					}
-				}
-				
-				var scenes = getById("container_" + UUID).querySelectorAll('[data-action-type="addToScene"][data-scene][data--u-u-i-d="'+UUID+'"]');
-				var sceneState = {};
-				for (var i=0;i<scenes.length;i++){
-					if (scenes[i].value==1){
-						sceneState[scenes[i].dataset.scene] = true;
-					} else {
-						sceneState[scenes[i].dataset.scene] = false;
-					}
-				}
-				item.scenes = sceneState;
-				
-				var others = getById("container_" + UUID).querySelectorAll('[data-action-type][data--u-u-i-d="'+UUID+'"]');
-				var otherState = {};
-				for (var i=0;i<others.length;i++){
-					if ("scene" in others[i].dataset){continue;}
-					if ("toggle-group" == others[i].dataset.actionType){continue;}
-					if ("value" in others[i]){
-						if (others[i].value!==""){
-							otherState[others[i].dataset.actionType] = others[i].value;
+					var scenes = getById("container_" + UUID).querySelectorAll('[data-action-type="addToScene"][data-scene][data--u-u-i-d="'+UUID+'"]');
+					var sceneState = {};
+					for (var i=0;i<scenes.length;i++){
+						if (scenes[i].value==1){
+							sceneState[scenes[i].dataset.scene] = true;
+						} else {
+							sceneState[scenes[i].dataset.scene] = false;
 						}
 					}
+					item.scenes = sceneState;
+					var others = getById("container_" + UUID).querySelectorAll('[data-action-type][data--u-u-i-d="'+UUID+'"]');
+					var otherState = {};
+					for (var i=0;i<others.length;i++){
+						if ("scene" in others[i].dataset){continue;}
+						if ("toggle-group" == others[i].dataset.actionType){continue;}
+						if ("value" in others[i]){
+							if (others[i].value!==""){
+								otherState[others[i].dataset.actionType] = others[i].value;
+							}
+						}
+					}
+					item.others = otherState;
 				}
-				item.others = otherState;
-				
 			} catch(e){}
+			
 			streamList[session.rpcs[UUID].streamID] = item;
 		}
 	}
@@ -10960,22 +10966,26 @@ function getDetailedState(sid=false){
 	if (sid && (sid!==session.streamID)){return streamList;}
 	
 	streamList[session.streamID] = {}; 
-	var sceneState = {};
+	
 	
 	try {
-		var scenes = getById("container_director").querySelectorAll('[data-action-type="addToScene"][data-scene]');
-		for (var i=0;i<scenes.length;i++){
-			if (scenes[i].value==1){
-				sceneState[scenes[i].dataset.scene] = true;
-			} else {
-				sceneState[scenes[i].dataset.scene] = false;
+		if (session.director){
+			var sceneState = {};
+			var scenes = getById("container_director").querySelectorAll('[data-action-type="addToScene"][data-scene]');
+			for (var i=0;i<scenes.length;i++){
+				if (scenes[i].value==1){
+					sceneState[scenes[i].dataset.scene] = true;
+				} else {
+					sceneState[scenes[i].dataset.scene] = false;
+				}
 			}
+			streamList[session.streamID].scenes = sceneState;
 		}
 	} catch(e){}
 	streamList[session.streamID].label = session.label;
 	streamList[session.streamID].group = session.group;
 	streamList[session.streamID].groupView = session.groupView;
-	streamList[session.streamID].scenes = sceneState;
+	streamList[session.streamID].scene = session.scene;
 	streamList[session.streamID].streamID = session.streamID;
 	streamList[session.streamID].iframeSrc = session.iframeSrc;
 	streamList[session.streamID].director = session.directorState; //session.director is what you want to be; session.directorState is what you are
@@ -10984,10 +10994,11 @@ function getDetailedState(sid=false){
 	streamList[session.streamID].seeding = session.seeding;
 	streamList[session.streamID].muted = session.muted;
 	streamList[session.streamID].videoMuted = session.videoMuted;
+	streamList[session.streamID].videoVisible = session.videoElement && session.videoElement.checkVisibility();
 	streamList[session.streamID].speakerMuted = session.speakerMuted;
 	streamList[session.streamID].position = null;
 	
-	if (session.showDirector){
+	if (session.showDirector && session.director){
 		var child = document.getElementById('container_director');
 		if (child){
 			var parent = child.parentNode;
@@ -13419,6 +13430,68 @@ function outboundAudioPipeline(){ // this function isn't letting me change the a
 				webAudio.lowcut1.connect(webAudio.lowcut2);
 				webAudio.lowcut2.connect(webAudio.lowcut3);
 				anonNode = webAudio.lowcut3;
+			}
+			
+			
+			if (session.voicechanger) { 
+			
+				
+				function makeDistortionCurve(amount=10) {
+					var sampleRate = audioContext.sampleRate || 48000;
+					var curve = new Float32Array(sampleRate);
+					var x;
+					for (let i = 0; i < sampleRate; ++i ) {
+						x = i * 2 / sampleRate - 1;
+						curve[i] = ( 3 + amount ) * x * 20 *  (Math.PI / 180) / (Math.PI + amount * Math.abs(x));
+					}
+					return curve;
+				}
+				
+				let waveShaper = audioContext.createWaveShaper();
+				waveShaper.curve = makeDistortionCurve(5);
+				
+				var realCoeffs = new Float32Array([1,0]);
+				var imagCoeffs = new Float32Array([0,1]);
+
+				var numCoeffs = 20; // The more coefficients you use, the better the approximation
+				var realCoeffs = new Float32Array(numCoeffs);
+				var imagCoeffs = new Float32Array(numCoeffs);
+
+				realCoeffs[0] = 0.5;
+				for (var i = 1; i < numCoeffs; i++) { // note i starts at 1
+					imagCoeffs[i] = 1 / (i * Math.PI) * (1  - Math.random()/2);
+				}
+				
+				let oscillator = audioContext.createOscillator();
+				oscillator.frequency.value = 10;
+				const wave = audioContext.createPeriodicWave(realCoeffs, imagCoeffs);
+				oscillator.setPeriodicWave(wave);
+				
+				let oscillatorGain = audioContext.createGain();
+				oscillatorGain.gain.value = 0.005;
+				oscillator.connect(oscillatorGain);
+				oscillator.start(0);
+				
+				let delay = audioContext.createDelay();
+				delay.delayTime.value = 0.01;
+				oscillatorGain.connect(delay.delayTime);
+				
+				let lowEQ = audioContext.createBiquadFilter();
+				lowEQ.type = "peaking";
+				lowEQ.frequency.value = 200;
+				lowEQ.Q.value = 0.5;
+				lowEQ.gain.value = 6;
+				
+				let mid = audioContext.createBiquadFilter();
+				mid.type = "peaking";
+				mid.frequency.value = 500;
+				mid.Q.value = 0.5;
+				mid.gain.value = -10;
+				anonNode.connect(delay)
+				delay.connect(waveShaper)
+				waveShaper.connect(mid);
+				mid.connect(lowEQ);
+				anonNode = lowEQ;
 			}
 
 
@@ -15919,7 +15992,7 @@ function createControlBox(UUID, soloLink, streamID) {
 					if (value<100){
 						session.rpcs[UUID].batteryMeter.classList.remove("hidden");
 					}
-					session.rpcs[UUID].batteryMeter.title = value+"% battery remaining";
+					session.rpcs[UUID].batteryMeter.title = (Math.round(value*10)/10)+"% battery remaining";
 				}
 			}
 			if (session.rpcs[UUID].stats.info && ("plugged_in" in session.rpcs[UUID].stats.info) && (session.rpcs[UUID].stats.info.plugged_in===false)){
@@ -30807,6 +30880,8 @@ function audioMeterGuest(mediaStreamSource, UUID, trackid){
 				}
 			}
 			
+			
+			
 			try{
 				clearTimeout(session.rpcs[UUID].inboundAudioPipeline[trackid].analyser.interval);
 				session.rpcs[UUID].inboundAudioPipeline[trackid].analyser.interval = setTimeout(function(){updateLevels();},100);
@@ -30815,12 +30890,17 @@ function audioMeterGuest(mediaStreamSource, UUID, trackid){
 			}
 			
 			if (session.style==3 || session.meterStyle){ // overrides style
-				// continue
+				if (session.meterStyle==4){
+					if (session.rpcs[UUID].videoElement){
+						session.rpcs[UUID].videoElement.dataset.loudness = total;
+					}
+					return; // this is cause we are using the data-loudness
+				}
 			} else if (session.scene!==false){ // if a scene, cancel
 				return;
 			} else if (session.audioMeterGuest===false){  // don't show if we just want the volume levels
 				return;
-			}
+			} 
 			
 			if (session.rpcs[UUID].voiceMeter){
 				session.rpcs[UUID].voiceMeter.dataset.level = total;
@@ -31059,6 +31139,144 @@ async function loadScript(url, callback=false){
 		document.head.appendChild(script);
 	}
 	return await promise;
+}
+
+var tokenClient=false;
+function YoutubeChatInterface(){ // this lets us query Youtube for chat messages, but its quota limited :(
+	if (!tokenClient){
+		tokenClient=true;
+	} else {
+		return;
+	}
+	
+	var gisInited = false;
+	var gapiInited = false;
+	var busy = 0;
+
+	function handleAuthClick() {
+		tokenClient.callback = async (resp) => {
+			if (resp.error){
+				errorlog(resp.error);
+			}
+			closeModal();
+			var auths = gapi.client.getToken();
+			if (auths){
+				setStorage("YoutubeAuth", JSON.stringify(auths), auths.expires_in || 3600);
+			}
+			listBroadcasts();
+		};
+		var saved = getStorage("YoutubeAuth");
+		
+		if (saved){
+			gapi.client.setToken(JSON.parse(saved));
+			listBroadcasts();
+		} else if (gapi.client.getToken() === null) {
+			warnUser("<button onclick='(function(){tokenClient.requestAccessToken({prompt: \"consent\"});})()'>Grant Access to Youtube Chat</button>", false, false);
+		} else {
+			warnUser("<button onclick='(function(){this.remove();tokenClient.requestAccessToken({prompt: \"\"});})()'>Grant Access to Youtube Chat</button>", false, false);	
+		}
+	}
+	
+	function maybeEnableButtons() {
+		if (gapiInited && gisInited){
+			handleAuthClick();
+		}
+	}
+	
+	async function initializeGapiClient() {
+		await gapi.client.init({
+			apiKey: session.youtubeKey.split(",")[1],
+			discoveryDocs: ['https://www.googleapis.com/discovery/v1/apis/youtube/v3/rest'],
+		});
+		gapiInited = true;
+		maybeEnableButtons();
+	}
+
+	function handleSignoutClick() {
+		let token = gapi.client.getToken();
+		if (token !== null) {
+			google.accounts.oauth2.revoke(token.access_token);
+			gapi.client.setToken('');
+		}
+	}
+
+	async function listBroadcasts() {
+		try {
+			var response = await gapi.client.youtube.liveBroadcasts.list({
+				"broadcastStatus": "active"
+			});
+		} catch (err) {
+			errorlog(err);
+			return;
+		}
+		
+		let broadcasts = response.result.items;
+		if (!broadcasts || broadcasts.length == 0) {
+			return;
+		}
+		broadcasts.forEach(broadcast=>{
+			setTimeout(function(liveChatId){
+				listMessages(liveChatId);
+				busy+=1;
+			},1000, broadcast.snippet.liveChatId);
+		});
+	}
+	
+	async function listMessages(liveChatId, pageToken = false) {
+		try {
+			if (pageToken){
+				var response = await gapi.client.youtube.liveChatMessages.list({
+				  "liveChatId": liveChatId,
+				  "part": ["id", "snippet", "authorDetails"],
+				  "pageToken": pageToken
+				});
+			} else {
+				var response = await gapi.client.youtube.liveChatMessages.list({
+				  "liveChatId": liveChatId,
+				  "part": ["id", "snippet", "authorDetails"]
+				});
+			}
+			
+			var messages = response.result.items;
+			messages.forEach(msg =>{
+				pokeIframeAPI("YoutubeChat",msg);
+			});
+			
+			var polling = response.result.pollingIntervalMillis;
+			var pageToken = response.result.nextPageToken;
+			
+			if (busy>1){
+				// popular eh?  Lets quickly check for more.
+			} else if (busy>0){ // a message ! hurrah
+				if (polling<2000){polling=2000;} // Was it just luck?
+			} else if (polling<5000){
+				polling=5000; // let's not spam the api, cause we know there isn't anything waiting..
+			}
+			busy=0; // reset
+			setTimeout(function(liveChatId,pageToken){
+				listMessages(liveChatId, pageToken);
+			}, polling, liveChatId, pageToken)
+			
+		} catch (err) {
+			return;
+		}
+	}
+	
+	function gisLoaded() {
+		tokenClient = google.accounts.oauth2.initTokenClient({
+			client_id: session.youtubeKey.split(",")[0],
+			scope: 'https://www.googleapis.com/auth/youtube',
+			callback: '',
+		});
+		gisInited = true;
+		maybeEnableButtons();
+	}
+	function gapiLoaded() {
+		gapi.load('client', initializeGapiClient);
+	}
+	
+	loadScript("https://apis.google.com/js/api.js",gapiLoaded);
+	loadScript("https://accounts.google.com/gsi/client",gisLoaded);
 }
 
 function loadTensorflowJS(){
