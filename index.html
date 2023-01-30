@@ -56,7 +56,7 @@
 		<meta property="twitter:image" content="./media/vdoNinja_logo_full.png" />
 		<meta name="msapplication-TileColor" content="#da532c" />
 		<meta name="theme-color" content="#ffffff" />
-		<link rel="stylesheet" href="./main.css?ver=239" />
+		<link rel="stylesheet" href="./main.css?ver=251" />
 		<script type="text/javascript" crossorigin="anonymous" src="./thirdparty/adapter.js"></script>
 		<style id="lightbox-animations" type="text/css"></style>
 		<!-- <link rel="manifest" href="manifest.json" /> -->
@@ -80,9 +80,10 @@
 		<span itemprop="thumbnail" itemscope itemtype="http://schema.org/ImageObject">
 			<link itemprop="url" href="./media/vdoNinja_logo_full.png" />
 		</span>
+		
 		<script type="text/javascript" crossorigin="anonymous"  src="./thirdparty/CodecsHandler.js?ver=45"></script>
 		<script type="text/javascript" crossorigin="anonymous" src="./thirdparty/aes.js"></script>
-		<script type="text/javascript" crossorigin="anonymous" src="./webrtc.js?ver=557"></script>
+		<script type="text/javascript" crossorigin="anonymous" src="./webrtc.js?ver=572"></script>
 		<input id="zoomSlider" type="range" style="display: none;" />
 		<span id="electronDragZone" style="pointer-events: none; z-index:-10; position:absolute;top:0;left:0;width:100%;height:2%;-webkit-app-region: drag;min-height:20px;"></span>
 		<div id="header">
@@ -111,7 +112,8 @@
 					data-menu="context-menu"
 					style="font-weight: bold; color: #afa !important; cursor: grab; background-color: #0000;  font-size: 115%; min-width: 335px; max-width: 800px;"
 				></a>
-				<i class="las la-paperclip" style="color: #DDD;" onclick="copyFunction(document.getElementById('reshare'), event);" onmouseover="this.style.cursor='pointer'"></i>
+				<i class="las la-paperclip" style="color: #DDD;" title="Copy link to clipboard" onclick="copyFunction(document.getElementById('reshare'), event);" onmouseover="this.style.cursor='pointer'"></i>
+				<span title="Save and ask to reload the current page on next site visit" style='font-size:92%;' onclick="saveRoom(this);" onmouseover="this.style.cursor='pointer'">💾</span>
 			</div>
 			<div id="head4" style="display: inline-block;" class="hidden">
 				<span style="font-size: 68%; color: white;">
@@ -204,6 +206,14 @@
 				<div id="raisehandbutton" onmousedown="event.preventDefault(); event.stopPropagation();"  data-raised="0" title="Alert the host you want to speak"  aria-label="Raise hand" alt="Alert the host you want to speak" tabindex="24" role="button" aria-pressed="false" onkeyup="enterPressedClick(event,this);" onclick="raisehand()" class="hidden float" style="cursor: pointer;">
 					<i class="toggleSize my-float las la-hand-paper" style="position: relative; right: 1px;" aria-hidden="true"></i>
 				</div>
+				
+				<div id="pptbackbutton" onmousedown="event.preventDefault(); event.stopPropagation();" title="Go back a slide" aria-label="Back a slide" alt="Go back a slide" tabindex="25" role="button" aria-pressed="false" onkeyup="enterPressedClick(event,this);" onclick="gobackSlide()" class="hidden float red" style="cursor: pointer;">
+					<i class="toggleSize my-float las la-chevron-left" style="position: relative; right: 1px;" aria-hidden="true"></i>
+				</div>
+				<div id="pptnextbutton" onmousedown="event.preventDefault(); event.stopPropagation();" title="Next slide" aria-label="Next slide" alt="Next slide" tabindex="25" role="button" aria-pressed="false" onkeyup="enterPressedClick(event,this);" onclick="nextSlide()" class="hidden float" style="cursor: pointer;">
+					<i class="toggleSize my-float las la-chevron-right" style="position: relative; right: 1px;" aria-hidden="true"></i>
+				</div>
+				
 				<div id="recordLocalbutton" onmousedown="event.preventDefault(); event.stopPropagation();"  data-state="0" title="Record your stream to disk" aria-label="Record your stream to disk" alt="Record your stream to disk" tabindex="25" role="button" aria-pressed="false" onkeyup="enterPressedClick(event,this);" onclick="recordLocalVideoToggle();" class="hidden float" style="cursor: pointer;">
 					<i class="toggleSize my-float las la-dot-circle" style="position: relative;" aria-hidden="true"></i>
 				</div>
@@ -884,7 +894,7 @@
 								<span style="color:#daad09;">Welcome to VDO Ninja! We've rebranded!  Nothing else is changing and we're staying 100% free.</span>
 							</h4>
 							<br />
-							🚀🚀 Site last updated on Nov.18th (<a target='_blank' href='https://docs.vdo.ninja/releases/v22'>v22 release notes</a>). You can also still access the previous version, which <a href="https://vdo.ninja/v21/">is hosted here</a>. Development <a target="_blank" href='https://updates.vdo.ninja/'>updates are here.</a>
+							😁 This is Version 23; it's still in development. 🧪 Please report any issues you have with it. Development <a target="_blank" href='https://updates.vdo.ninja/'>updates are here.</a>
 							<br />
 							<br />
 							<h3>
@@ -1324,7 +1334,7 @@
 		<div id="overlayClockContainer2" data-menu='context-menu-clock' data-initial="600" class="hidden"><span id="overlayClock2"></span></div>
 		<div id="overlayMsgs" onclick="this.innerHTML = '';" style="display:none"></div>
 		<div id="bigPlayButton" onclick="this.innerHTML = '';" style="display:none"></div>
-		<div id="controls_blank" style="display: none;">
+		<div id="controls_blank" class="hidden controlCenterBox">
 			<div class="controlsGrid">
 			
 				<button data-action-type="forward" class="mainonly advanced" title="Move the user to another room, controlled by another director" onclick="directMigrate(this, event);">
@@ -1336,12 +1346,10 @@
 					<i class="las la-envelope"></i>
 					<span data-translate="send-direct-chat">Message</span>
 				</button>
-			</div>
-			<div class="controlsGrid-1x1">	
 				<span class="director-message-box hidden" data-action-type="messaging-box">
 					
 					<textarea data-action-type="messaging-box-text" placeholder="Enter your message here"></textarea>
-					<button data-action-type="messaging-box-close" class="hidden">
+					<button data-action-type="messaging-box-close" class="">
 						<i class="las la-times"></i>
 						<span data-translate="close">close</span>
 					</button>
@@ -1353,9 +1361,7 @@
 						<span data-translate="send-message">send message</span>
 					</button>
 					
-				</span>
-			</div>		
-			<div class="controlsGrid">		
+				</span>	
 				<button data-action-type="hangup" class="mainonly"  title="Force the user to Disconnect. They can always reconnect." onclick="directHangup(this, event);">
 					<i class="las la-sign-out-alt"  style="color:#900"></i>
 					<span data-translate="disconnect-guest" >Hangup</span>
@@ -1376,9 +1382,9 @@
 					<span data-translate="solo-video">Highlight guest</span>
 				</button>
 				
-				<span class="tooltip" style="height: 0; border: 0;">
-					<input data-action-type="volume" type="range" min="0" max="200" value="100" title="Remotely change the volume of this guest; updates on release. Dbl-click to reset." oninput="remoteVolumeUI(this)" onchange="remoteVolume(this);" ondblclick="this.value=100;remoteVolume(this);remoteVolumeUI(this);"  style="grid-column: 2; margin:5px; width: 93%; position: relative;top: 0.6em; background-color:#fff0;"/>
-					<span class="tooltiptext" style='float: right; overflow: auto;  left: 40px;  width: 3em;  top: -13px; margin: 0; position:relative;font-family:"Noto Color Emoji", "Apple Color Emoji", "Segoe UI Emoji", Times, Symbola, Aegyptus,Code2000, Code2001, Code2002, Musica, serif, LastResort;' >100</span>
+				<span class="tooltip" style="border: 0;">
+					<input data-action-type="volume" type="range" min="0" max="200" value="100" title="Remotely change the volume of this guest; updates on release. Dbl-click to reset." oninput="remoteVolumeUI(this)" onchange="remoteVolume(this);" ondblclick="this.value=100;remoteVolume(this);remoteVolumeUI(this);" />
+					<span class="tooltiptext" style='overflow: auto;left: 35%;width: 3em;top: -15px;margin: 0;position: absolute;font-family:"Noto Color Emoji", "Apple Color Emoji", "Segoe UI Emoji", Times, Symbola, Aegyptus,Code2000, Code2001, Code2002, Musica, serif, LastResort;' >100</span>
 				</span>
 				
 				<button data-action-type="mute-guest" value="0" title="Mute this guest everywhere" onclick="remoteMute(this, event);">
@@ -1404,25 +1410,25 @@
 				</button>
 				
 				<span class="hidden advanced" data-cluster="1" data-action-type="sceneCluster1">
-					<button style="width: 35.2px" data-action-type="addToScene" data-scene="3" title="Add to Scene 3" onclick="directEnable(this, event);">
+					<button data-action-type="addToScene" data-scene="3" title="Add to Scene 3" onclick="directEnable(this, event);">
 						<span >S3</span>
 					</button>
-					<button style="width:35.2px;" data-action-type="addToScene" data-scene="4" title="Add to Scene 4" onclick="directEnable(this, event);">
+					<button data-action-type="addToScene" data-scene="4" title="Add to Scene 4" onclick="directEnable(this, event);">
 						<span >S4</span>
 					</button>
-					<button style="width: 35.2px" data-action-type="addToScene" data-scene="5"  title="Add to Scene 5" onclick="directEnable(this, event);">
+					<button data-action-type="addToScene" data-scene="5"  title="Add to Scene 5" onclick="directEnable(this, event);">
 						<span >S5</span>
 					</button>
 				</span>
 				
 				<span class="hidden advanced" data-cluster="1" data-action-type="sceneCluster2">
-					<button style="width: 35.2px" data-action-type="addToScene" data-scene="6" title="Add to Scene 6" onclick="directEnable(this, event);">
+					<button data-action-type="addToScene" data-scene="6" title="Add to Scene 6" onclick="directEnable(this, event);">
 						<span >S6</span>
 					</button>
-					<button style="width: 35.2px" data-action-type="addToScene" data-scene="7" title="Add to Scene 7" onclick="directEnable(this, event);">
+					<button data-action-type="addToScene" data-scene="7" title="Add to Scene 7" onclick="directEnable(this, event);">
 						<span >S7</span>
 					</button>
-					<button style="width: 35.2px" data-action-type="addToScene" data-scene="8" title="Add to Scene 8" onclick="directEnable(this, event);">
+					<button data-action-type="addToScene" data-scene="8" title="Add to Scene 8" onclick="directEnable(this, event);">
 						<span >S8</span>
 					</button>
 				</span>
@@ -1471,13 +1477,13 @@
 				
 				
 				<span class="hidden" data-cluster="2" data-action-type="change-quality">
-					<button style="width: 35.2px" data-action-type="change-quality1" title="Disable Video Preview" onclick="toggleQualityDirector(0, this.dataset.UUID, this);">
+					<button data-action-type="change-quality1" title="Disable Video Preview" onclick="toggleQualityDirector(0, this.dataset.UUID, this);">
 						<i class="las la-video-slash"></i>
 					</button>
-					<button class="pressed" style="width:35.2px;" data-action-type="change-quality2" title="Low-Quality Preview" onclick="toggleQualityDirector(50, this.dataset.UUID, this);">
+					<button class="pressed" data-action-type="change-quality2" title="Low-Quality Preview" onclick="toggleQualityDirector(50, this.dataset.UUID, this);">
 						<i class="las la-video"></i>
 					</button>
-					<button style="width: 35.2px" data-action-type="change-quality3" title="High-Quality Preview" onclick="toggleQualityDirector(1200, this.dataset.UUID, this);">
+					<button data-action-type="change-quality3" title="High-Quality Preview" onclick="toggleQualityDirector(1200, this.dataset.UUID, this);">
 						<i class="las la-binoculars"></i>
 					</button>
 				</span>
@@ -1527,68 +1533,68 @@
 				
 				<span class="hidden advanced audiocluster1" data-cluster="2">
 					
-					<button style="width:35.2px;" data-action-type="add-channel" title="Set to Audio Channel 1" onclick="changeChannelOffset(this.dataset.UUID, 0);">
+					<button data-action-type="add-channel" title="Set to Audio Channel 1" onclick="changeChannelOffset(this.dataset.UUID, 0);">
 						<span >C1</span>
 					</button>
-					<button style="width: 35.2px" data-action-type="add-channel" title="Set to Audio Channel 2" onclick="changeChannelOffset(this.dataset.UUID, 1);">
+					<button data-action-type="add-channel" title="Set to Audio Channel 2" onclick="changeChannelOffset(this.dataset.UUID, 1);">
 						<span >C2</span>
 					</button>
-					<button style="width: 35.2px" data-action-type="add-channel" title="Set to Audio Channel 3" onclick="changeChannelOffset(this.dataset.UUID, 2);">
+					<button data-action-type="add-channel" title="Set to Audio Channel 3" onclick="changeChannelOffset(this.dataset.UUID, 2);">
 						<span >C3</span>
 					</button>
 				</span>
 				
 				<span class="hidden advanced audiocluster2" data-cluster="2">
 					
-					<button style="width:35.2px;" data-action-type="add-channel" title="Set to Audio Channel 4" onclick="changeChannelOffset(this.dataset.UUID,3);">
+					<button data-action-type="add-channel" title="Set to Audio Channel 4" onclick="changeChannelOffset(this.dataset.UUID,3);">
 						<span >C4</span>
 					</button>
-					<button style="width: 35.2px" data-action-type="add-channel" title="Set to Audio Channel 5" onclick="changeChannelOffset(this.dataset.UUID, 4);">
+					<button data-action-type="add-channel" title="Set to Audio Channel 5" onclick="changeChannelOffset(this.dataset.UUID, 4);">
 						<span >C5</span>
 					</button>
-					<button style="width: 35.2px" data-action-type="add-channel" title="Set to Audio Channel 6" onclick="changeChannelOffset(this.dataset.UUID, 5);">
+					<button data-action-type="add-channel" title="Set to Audio Channel 6" onclick="changeChannelOffset(this.dataset.UUID, 5);">
 						<span >C6</span>
 					</button>
 				</span>
 				
 				<span class="hidden advanced groupcluster1" data-cluster="2">
-					<button style="width:35.2px;" data-action-type="toggle-group" data-group="1" title="Add/remove from group 1" onclick="changeGroup(this);">
+					<button data-action-type="toggle-group" data-group="1" title="Add/remove from group 1" onclick="changeGroup(this);">
 						<span >G1</span>
 					</button>
-					<button style="width: 35.2px" data-action-type="toggle-group" data-group="2" title="Add/remove from group 2" onclick="changeGroup(this);">
+					<button data-action-type="toggle-group" data-group="2" title="Add/remove from group 2" onclick="changeGroup(this);">
 						<span >G2</span>
 					</button>
-					<button style="width: 35.2px" data-action-type="toggle-group" data-group="3" title="Add/remove from group 3" onclick="changeGroup(this);">
+					<button data-action-type="toggle-group" data-group="3" title="Add/remove from group 3" onclick="changeGroup(this);">
 						<span >G3</span>
 					</button>
 				</span>
 				
 				<span class="hidden advanced groupcluster2" data-cluster="2">
-					
-					<button style="width:35.2px;" data-action-type="toggle-group" data-group="4" title="Add/remove from group 4" onclick="changeGroup(this);">
+					<button data-action-type="toggle-group" data-group="4" title="Add/remove from group 4" onclick="changeGroup(this);">
 						<span >G4</span>
 					</button>
-					<button style="width: 35.2px" data-action-type="toggle-group" data-group="5" title="Add/remove from group 5" onclick="changeGroup(this);">
+					<button data-action-type="toggle-group" data-group="5" title="Add/remove from group 5" onclick="changeGroup(this);">
 						<span >G5</span>
 					</button>
-					<button style="width: 35.2px" data-action-type="toggle-group" data-group="6" title="Add/remove from group 6" onclick="changeGroup(this);">
+					<button data-action-type="toggle-group" data-group="6" title="Add/remove from group 6" onclick="changeGroup(this);">
 						<span >G6</span>
 					</button>
 				</span>
-				
-				<button class="hidden" data-cluster="2" data-action-type="advanced-audio-settings"  data-active="false"  title="Remote Audio Settings" onclick="requestAudioSettings(this);">
-					<i class="las la-sliders-h"></i>
-					<span data-translate="advanced-audio-settings">Audio Settings</span>
-				</button>
-				<button class="hidden mainonly" data-cluster="2" data-action-type="advanced-camera-settings"  data-active="false"  title="Advanced Video Settings" onclick="requestVideoSettings(this);">
-					<i class="las la-sliders-h"></i>
-					<span data-translate="advanced-camera-settings">Video Settings</span>
-				</button>
+				<div data-cluster="3">
+					<button class="hidden" data-cluster="2" data-action-type="advanced-audio-settings"  data-active="false"  title="Remote Audio Settings" onclick="requestAudioSettings(this);">
+						<i class="las la-sliders-h"></i>
+						<span data-translate="advanced-audio-settings">Audio Settings</span>
+					</button>
+					<button class="hidden mainonly" data-cluster="2" data-action-type="advanced-camera-settings"  data-active="false"  title="Advanced Video Settings" onclick="requestVideoSettings(this);">
+						<i class="las la-sliders-h"></i>
+						<span data-translate="advanced-camera-settings">Video Settings</span>
+					</button>
+				</div>
 				
 			</div>	
 		</div>
 		
-		<div id="controls_directors_blank" style="display: none;">
+		<div id="controls_directors_blank" class="hidden controlCenterBox">
 			<div class="controlsGrid">
 
 				<button data-action-type="addToScene" data-scene="1"  title="Add this Video to any remote '&scene=1'" onclick="directEnable(this, event, true);">
@@ -1600,63 +1606,63 @@
 					<span data-translate="mute-scene" >mute in scene</span>
 				</button>
 				
-				<span>
-					<button style="width: 35.2px" data-scene="2" data-action-type="addToScene" title="Add to Scene 2" onclick="directEnable(this, event, true);">
+				<span  class="advanced">
+					<button data-scene="2" data-action-type="addToScene" title="Add to Scene 2" onclick="directEnable(this, event, true);">
 						<span >S2</span>
 					</button>
-					<button style="width:35.2px;" data-scene="3" data-action-type="addToScene" title="Add to Scene 3" onclick="directEnable(this, event, true);">
+					<button data-scene="3" data-action-type="addToScene" title="Add to Scene 3" onclick="directEnable(this, event, true);">
 						<span >S3</span>
 					</button>
-					<button style="width: 35.2px" data-scene="4" data-action-type="addToScene" title="Add to Scene 4" onclick="directEnable(this, event, true);">
+					<button data-scene="4" data-action-type="addToScene" title="Add to Scene 4" onclick="directEnable(this, event, true);">
 						<span >S4</span>
 					</button>
 				</span>
 				
-				<span >
-					<button style="width: 35.2px" data-scene="5" data-action-type="addToScene" title="Add to Scene 5" onclick="directEnable(this, event, true);">
+				<span  class="advanced">
+					<button data-scene="5" data-action-type="addToScene" title="Add to Scene 5" onclick="directEnable(this, event, true);">
 						<span >S5</span>
 					</button>
-					<button style="width: 35.2px" data-scene="6" data-action-type="addToScene" title="Add to Scene 6" onclick="directEnable(this, event, true);">
+					<button data-scene="6" data-action-type="addToScene" title="Add to Scene 6" onclick="directEnable(this, event, true);">
 						<span >S6</span>
 					</button>
-					<button style="width: 35.2px" data-scene="7" data-action-type="addToScene" title="Add to Scene 7" onclick="directEnable(this, event, true);">
+					<button data-scene="7" data-action-type="addToScene" title="Add to Scene 7" onclick="directEnable(this, event, true);">
 						<span >S7</span>
 					</button>
 				</span>
 				
-				<span>
+				<span  class="advanced">
 					
-					<button style="width:35.2px;" data-action-type="toggle-group" data-group="1" title="Add/remove from group 1" onclick="changeGroupDirector(this);">
+					<button data-action-type="toggle-group" data-group="1" title="Add/remove from group 1" onclick="changeGroupDirector(this);">
 						<span >G1</span>
 					</button>
-					<button style="width: 35.2px" data-action-type="toggle-group" data-group="2" title="Add/remove from group 2" onclick="changeGroupDirector(this);">
+					<button data-action-type="toggle-group" data-group="2" title="Add/remove from group 2" onclick="changeGroupDirector(this);">
 						<span >G2</span>
 					</button>
-					<button style="width: 35.2px" data-action-type="toggle-group" data-group="3" title="Add/remove from group 3" onclick="changeGroupDirector(this);">
+					<button data-action-type="toggle-group" data-group="3" title="Add/remove from group 3" onclick="changeGroupDirector(this);">
 						<span >G3</span>
 					</button>
 				</span>
 				
-				<span>
+				<span  class="advanced">
 					
-					<button style="width:35.2px;" data-action-type="toggle-group" data-group="4" title="Add/remove from group 4" onclick="changeGroupDirector(this);">
+					<button data-action-type="toggle-group" data-group="4" title="Add/remove from group 4" onclick="changeGroupDirector(this);">
 						<span >G4</span>
 					</button>
-					<button style="width: 35.2px" data-action-type="toggle-group" data-group="5" title="Add/remove from group 5" onclick="changeGroupDirector(this);">
+					<button data-action-type="toggle-group" data-group="5" title="Add/remove from group 5" onclick="changeGroupDirector(this);">
 						<span >G5</span>
 					</button>
-					<button style="width: 35.2px" data-action-type="toggle-group" data-group="6" title="Add/remove from group 6" onclick="changeGroupDirector(this);">
+					<button data-action-type="toggle-group" data-group="6" title="Add/remove from group 6" onclick="changeGroupDirector(this);">
 						<span >G6</span>
 					</button>
 				</span>
 				
-				<button data-action-type="force-keyframe"   title="Force the remote sender to issue a keyframe to all scenes, fixing Pixel Smearing issues." onclick="session.sendKeyFrameScenes();">
+				<button data-action-type="force-keyframe" class="advanced" title="Force the remote sender to issue a keyframe to all scenes, fixing Pixel Smearing issues." onclick="session.sendKeyFrameScenes();">
 					<span data-translate="force-keyframe">Rainbow Puke Fix</span>
 				</button>
 				
 				<button data-action-type="solo-video"   title="Solo this video everywhere" onclick="requestInfocus(this);">
 					<i class="las la-user"></i>
-					<span data-translate="solo-video">Highlight</span>
+					<span data-translate="solo-video-director">Highlight</span>
 				</button>
 				
 				<button data-action-type="recorder-local" title="Start Recording this remote stream to this local drive. *experimental*'" onclick="recordLocalVideoToggle();">
@@ -1664,7 +1670,7 @@
 					<span data-translate="record-director-local"> Record</span>
 				</button> 
 				
-				<span>
+				<span  class="advanced">
 					<button style="width:34px;" data-action-type="order-down" title="Shift this Video Down in Order"  onclick="changeOrderDirector(-1);">
 						<i class="las la-minus"></i>
 					</button>
@@ -1987,6 +1993,12 @@
 						<span data-translate="remote-reload-connection">Remote Reload Page</span>
 					</a>
 				</li>
+				<li class="context-menu__item">
+					<a href="#" class="context-menu__link" data-action="ChangeBuffer">
+						<i class="las la-external-link"></i>
+						<span data-translate="change-playout-buffer">Change Buffer</span>
+					</a>
+				</li>
 				<li class="context-menu__item hidden">
 					<hr />
 					<span href="#" class="context-menu__tip" data-action="TipRightClick">
@@ -2052,6 +2064,26 @@
 						</div>
 					</span>
 				</span>
+				
+				
+				<span style="margin: 5px 0 0 0;display:block" >
+					<input id="widgetURCheck" style="width: 15px; height: 15px; margin:10px;" name="widgetURCheck"  data-action-type="widgetURCheck" type="checkbox" onchange="toggleWidgetURL(this);" />
+					<label for="widgetURCheck">Embed a sidebar widget for all</label> 
+					<input id="widgetURL" onmousedown="toggleWidgetURL(this);event.preventDefault" onclick="toggleWidgetURL(this);event.preventDefault" class="hidden" style="cursor:pointer; display:inline-block; margin: 3px 0; margin-left: 10px; min-width: 230px; padding: 4px 5px 3px 5px; border: 1px solid black;" name="widgetURL" placeholder="Enter a URL for the sidebar page" type="text"  />
+				</span>
+				
+			</div>
+		</div>
+		
+		<div id="bufferSettings" style="display:none; user-select: none;">
+			<div class="promptModalInner">
+				<span class='modalClose' onclick="toggleBufferSettings();">×</span>
+				<span></span>
+				<h3 data-translate="buffer-settings">Buffer Settings</h3><br />
+				<div>
+					<span data-translate="change-playout-buffer">Buffer (ms): </span><input style='margin-left: 3px;padding: 2px;width: 60px;' type='number' min='0' max='15000' /><br />
+					<input type='range' min='0' max='15000' /><br />
+				</div>
 			</div>
 		</div>
 		
@@ -2256,7 +2288,7 @@
 
 		
 			var session = WebRTC.Media; // session is a required global variable if configuring manually. Run before loading main.js but after webrtc.js.
-			session.version = "22.11"; // nov 18th
+			session.version = "23.0b";
 			session.streamID = session.generateStreamID(); // randomly generates a streamID for this session. You can set your own programmatically if needed
 			
 			session.defaultPassword = "someEncryptionKey123"; // Change this password if self-deploying for added security/privacy
@@ -2264,7 +2296,7 @@
 			
 			session.stunServers = [{ urls: ["stun:stun.l.google.com:19302", "stun:stun4.l.google.com:19302"]}]; // google stun servers. default
 			
-			///////////////  ------  Custom TURN SETUP SECTION STARTS Here --------
+			///////////////  ------  Custom basic TURN SETUP SECTION STARTS Here --------
 			// session.configuration = {         // uncomment to disable the default usage of the vdo.ninja turn servers.
 			//	iceServers: session.stunServers,
 			//	sdpSemantics: 'unified-plan'
@@ -2282,11 +2314,51 @@
 			// session.configuration.iceServers.push(turn);
 			/////////////// ------------ END OF TURN SETUP SECTION -------
 
-			// session.configuration.iceTransportPolicy = "relay";  // uncomment to enable "&privacy" and force the TURN server
+			/////////////// --------  Alternative custom TURN SETUP SECTION here ---------
+			// Use this section if you plan to use the turn-credentials.php sample and its use-auth-secret and static-auth-secret method, rather than a plain password
+			// 
+			// try {
+				// session.ws = false; // prevents connection
+				// var phpcredentialsRequest = new XMLHttpRequest();
+				// phpcredentialsRequest.onload = function() {
+					// if (this.status === 200) {
+						// try {
+							// var res = JSON.parse(this.responseText);
+						// } catch(e){
+							// console.error(e); // not proper JSON
+							// return;
+						// }
+						// session.configuration = {};
+						// session.configuration.sdpSemantics = "unified-plan";
+						// session.configuration.iceServers = [];
+						//  // session.configuration.iceServers = session.stunServers; // Uncomment to use the hard-coded Google STUN servers, if we don't provide our own STUN
 
-			// session.wss = "wss://api.vdo.ninja:443"; // US-East (Default)
+						// let phpIceServers = {"username": res[0], "credential": res[1], urls:[]};
+						// for (let i = 2; i < res.length; i++){ // Supports one or multiple TURN/STUN servers, but assumes same credientials for each.
+							// phpIceServers['urls'].push(res[i]);
+						// };
+						// session.configuration.iceServers.push(phpIceServers);
 
-			///  If wanting to fully-self-host, uncomment the following and deploy your own websocket server; good for air-gapped deployments
+						// if (session.ws===false){
+							// session.ws=null; // allows connection (clears block state)
+							// session.connect(); // connect if not already connected.
+						// }
+					// }
+					//  // system does not connect if php script does not respond.
+				// };
+				// phpcredentialsRequest.open('GET', './turn-credentials.php', true); // `false` makes the request synchronous
+				// phpcredentialsRequest.send();
+			// } catch (e) {
+				// console.error(e);
+				// errorlog("php-credentials script Failed");
+			// }
+			//////////////////// -------------- END OF ALTERNATIVE TURN SETUP SECTION -------
+
+			// session.configuration.iceTransportPolicy = "relay";  // uncomment to enable "&privacy" and force the TURN server's use
+
+			// session.wss = "wss://wss.vdo.ninja:443"; // US-East (Default)
+
+			//  If wanting to fully-self-host, uncomment the following and deploy your own websocket server; good for air-gapped deployments
 			// session.wss = "wss://wss.yourdomainhere.com:443"; // https://github.com/steveseguin/websocket_server 
 			// session.customWSS = true;
 			//////
@@ -2328,11 +2400,11 @@
 			// session.defaultBackgroundImages = ["./media/bg_sample1.webp", "./media/bg_sample2.webp"]; // for &effects=5 (virtual backgrounds)
 			// session.hidehome = true; // If used, 'hide home' will make the landing page inaccessible, along with hiding a few go-home elements.
 		</script>
-		<script type="text/javascript" crossorigin="anonymous" id="lib-js" src="./lib.js?ver=601"></script>
+		<script type="text/javascript" crossorigin="anonymous" id="lib-js" src="./lib.js?ver=639"></script>
 		<!-- 
 		// If you wish to change branding, blank offers a good clean start.
 		<script type="text/javascript" id="main-js" src="./main.js" data-translation="blank"></script>
 		-->
-		<script type="text/javascript" crossorigin="anonymous" id="main-js" src="./main.js?ver=516"></script>
+		<script type="text/javascript" crossorigin="anonymous" id="main-js" src="./main.js?ver=533"></script>
 	</body>
 </html>
