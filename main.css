@@ -2143,11 +2143,13 @@ iframe {
     text-align: right;
 }
 .director-message-box{
-	margin-top: 5px;
+    display: flex;
+    flex: 1 100%;
+    flex-wrap: wrap;
 }
 .director-message-box textarea {
 	margin: 5px;
-	width: 260px;
+	flex: 1 100%;
 	padding: 5px;
 }
 .director-message-box > button {
@@ -3289,33 +3291,48 @@ div#roomnotes2 {
 	text-transform: lowercase;
 }
 .controlsGrid {
-	display: flex;
-    flex-direction: row;
+    display: flex;
     flex-wrap: wrap;
-    align-content: stretch;
-    justify-content: flex-start;
-    align-items: stretch;
 }
 .controlsGrid button {
-	margin: 5px;
+    margin: 5px;
     text-align: right;
-    width: 46%;
-}
-.controlsGrid > span {
-	width: 50%;
+    flex: 0 1 calc(50% - 10px);
 }
 .controlsGrid > div {
 	width: 100%;
 	display: flex;
 }
-.controlsGrid span button {
-	margin-right: 0;
-	padding-left: 3px;
-	text-align: right;
-	width: calc(33% - 10px);
-}
+
 .controlsGrid input {
-	margin: 5px var(--regular-margin);
+	margin: 5px;
+}
+
+button[data-action-type="messaging-box-close"] {
+	flex: 0 1 25%;
+}
+button[data-action-type="messaging-box-send"] {
+	flex: 1 0 50%
+}
+
+.controlsGrid > span.tooltip {
+    display: flex;
+    flex: 1 calc(50% - 10px);
+    align-items: center;
+}
+
+.advanced {
+	display: var(--advanced-mode);
+}
+.controlCenterBox{
+	margin-top:2px;
+}
+#widget {
+	position: absolute;
+    width: 25%;
+    height: 100%;
+    right: 0;
+    top: 0;
 }
 
 .advanced {

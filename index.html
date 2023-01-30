@@ -1349,7 +1349,7 @@
 				<span class="director-message-box hidden" data-action-type="messaging-box">
 					
 					<textarea data-action-type="messaging-box-text" placeholder="Enter your message here"></textarea>
-					<button data-action-type="messaging-box-close" class="hidden">
+					<button data-action-type="messaging-box-close" class="">
 						<i class="las la-times"></i>
 						<span data-translate="close">close</span>
 					</button>
@@ -1382,9 +1382,9 @@
 					<span data-translate="solo-video">Highlight guest</span>
 				</button>
 				
-				<span class="tooltip" style="height: 0; border: 0;">
-					<input data-action-type="volume" type="range" min="0" max="200" value="100" title="Remotely change the volume of this guest; updates on release. Dbl-click to reset." oninput="remoteVolumeUI(this)" onchange="remoteVolume(this);" ondblclick="this.value=100;remoteVolume(this);remoteVolumeUI(this);"  style="grid-column: 2; margin:5px; width: 93%; position: relative;top: 0.6em; background-color:#fff0;"/>
-					<span class="tooltiptext" style='float: right; overflow: auto;  left: 40px;  width: 3em;  top: -13px; margin: 0; position:relative;font-family:"Noto Color Emoji", "Apple Color Emoji", "Segoe UI Emoji", Times, Symbola, Aegyptus,Code2000, Code2001, Code2002, Musica, serif, LastResort;' >100</span>
+				<span class="tooltip" style="border: 0;">
+					<input data-action-type="volume" type="range" min="0" max="200" value="100" title="Remotely change the volume of this guest; updates on release. Dbl-click to reset." oninput="remoteVolumeUI(this)" onchange="remoteVolume(this);" ondblclick="this.value=100;remoteVolume(this);remoteVolumeUI(this);" />
+					<span class="tooltiptext" style='overflow: auto;left: 35%;width: 3em;top: -15px;margin: 0;position: absolute;font-family:"Noto Color Emoji", "Apple Color Emoji", "Segoe UI Emoji", Times, Symbola, Aegyptus,Code2000, Code2001, Code2002, Musica, serif, LastResort;' >100</span>
 				</span>
 				
 				<button data-action-type="mute-guest" value="0" title="Mute this guest everywhere" onclick="remoteMute(this, event);">
