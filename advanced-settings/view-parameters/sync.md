@@ -8,6 +8,8 @@ Viewer-Side Option! ([`&view`](view.md), [`&scene`](scene.md), [`&room`](../../g
 
 ## Options
 
+Example: `&sync=50`
+
 | Value           | Description |
 | --------------- | ----------- |
 | (integer value) | value in ms |

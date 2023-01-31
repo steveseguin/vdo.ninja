@@ -17,7 +17,7 @@ Delivers video only streams; audio playback is disabled for all incoming streams
 
 If you want to be able to unmute the speaker button during production, use [`&mutespeaker`](../../source-settings/and-mutespeaker.md) instead of `&noaudio`.&#x20;
 
-``[`&deafen`](../../general-settings/deafen.md) also disables monitoring your own audio, then it's impossible to get any sound from VDO.Ninja.
+[`&deafen`](../../general-settings/deafen.md) also disables monitoring your own audio, then it's impossible to get any sound from VDO.Ninja.
 
 ## Related
 

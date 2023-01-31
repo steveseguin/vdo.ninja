@@ -8,6 +8,8 @@ Viewer-Side Option! ([`&view`](view.md), [`&scene`](scene.md), [`&room`](../../g
 
 ## Options
 
+Example: `&minptime=20`
+
 | Value           | Description               |
 | --------------- | ------------------------- |
 | (integer value) | minimum audio packet size |

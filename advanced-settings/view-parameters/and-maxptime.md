@@ -8,6 +8,8 @@ Viewer-Side Option! ([`&view`](view.md), [`&scene`](scene.md), [`&room`](../../g
 
 ## Options
 
+Example: `&maxptime=60`
+
 | Value           | Description           |
 | --------------- | --------------------- |
 | (integer value) | max packet size in ms |

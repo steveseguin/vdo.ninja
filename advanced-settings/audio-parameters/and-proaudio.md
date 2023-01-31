@@ -13,6 +13,20 @@ General Option! ([`&push`](../../source-settings/push.md), [`&room`](../../gener
 * [`&stereo`](../../general-settings/stereo.md)``
 * `&s`
 
+## Options
+
+Example: `&proaudio=1`
+
+| Value            | Description                                                                                           |
+| ---------------- | ----------------------------------------------------------------------------------------------------- |
+| (no value given) | It behaves like 3 or 1, depending on if you are a guest or not                                        |
+| `0`              | will try to down-mix your mic to mono. Does not enable any pro-audio settings                         |
+| `1`              | enables it for both push and view (if used on both links)                                             |
+| `2`              | enables it just for viewing requests and not publishing requests                                      |
+| `3`              | enables it for just publishing requests and not viewing requests                                      |
+| `4`              | enables 5.1-multichannel audio support (Experimental and may require a Chrome flag to be set)         |
+| `5`              | This is the default if nothing is set. It behaves like 3 or 1, depending on if you are a guest or not |
+
 ## Details
 
 Adding `&proaudio` to the URL will apply audio-specific setting presets. For inbound audio streams, it can be used to increase the audio bitrate from 32-kbps to 256-kbps. For outbound streams, it will disable echo-cancellation and noise-reduction. When applied to both the outbound and inbound sides of an audio stream, it will also enable stereo audio if available.
@@ -26,19 +40,7 @@ When using this option in a group room, you can't simply just apply this URL opt
 There is a director's room toggle for guest's invite link and for scene links:\
 ![](<../../.gitbook/assets/image (95) (1).png>)
 
-## Options
-
-| Value            | Description                                                                                           |
-| ---------------- | ----------------------------------------------------------------------------------------------------- |
-| (no value given) | It behaves like 3 or 1, depending on if you are a guest or not                                        |
-| `0`              | will try to down-mix your mic to mono. Does not enable any pro-audio settings                         |
-| `1`              | enables it for both push and view (if used on both links)                                             |
-| `2`              | enables it just for viewing requests and not publishing requests                                      |
-| `3`              | enables it for just publishing requests and not viewing requests                                      |
-| `4`              | enables 5.1-multichannel audio support (Experimental and may require a Chrome flag to be set)         |
-| `5`              | This is the default if nothing is set. It behaves like 3 or 1, depending on if you are a guest or not |
-
-## More Details
+### More Details
 
 `&stereo` and `&proaudio` currently do the same thing, so they are just aliases of each other. When used, they can be used to setup the audio transfer pipeline to allow for unprocessed, high-bitrate, stereo audio.
 
@@ -67,7 +69,7 @@ If the parameter is used, but left without a value, it is treated as a special c
 | `&proaudio=3` | out   | _off_ | _off_    | _off_   | _off_           | yes           | 32            | 510        | 510           | _no_ |
 | `&proaudio=4` | multi | _off_ | _off_    | _off_   | on (5.1)        | yes           | 256           | 510        | 510           | yes  |
 
-## Newbie mode
+### Newbie mode
 
 The default mode when `&proaudio` is used alone is `&proaudio=5`, which acts like either `&proaudio=3` or `&proaudio=1`, depending on whether the link its applied to is a room guest or not. This option will make the most sense for most users.
 
@@ -77,7 +79,7 @@ The default mode when `&proaudio` is used alone is `&proaudio=5`, which acts lik
 | `&proaudio=5` | Director    | 5     | _off_ | _off_    | _off_   | on              | yes           | 32            | 510        | 510           | _no_ |
 | `&proaudio=5` | Room Guest  | 5     | _off_ | _off_    | _off_   | _off_           | yes           | 32            | 510        | 510           | _no_ |
 
-## iOS Devices
+### iOS Devices
 
 | Option      | alias | aec | autogain | denoise | stereo playback | stereo output | default ab in | max ab out | limited ab in | cbr  |
 | ----------- | ----- | --- | -------- | ------- | --------------- | ------------- | ------------- | ---------- | ------------- | ---- |

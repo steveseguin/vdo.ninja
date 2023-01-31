@@ -12,6 +12,8 @@ Sender-Side Option! ([`&push`](push.md))
 
 ## Options
 
+Example: `&outboundaudiobitrate=128`
+
 | Value           | Description                    |
 | --------------- | ------------------------------ |
 | (integer value) | outbound audio bitrate in kbps |

@@ -13,6 +13,8 @@ Sender-Side Option! ([`&push`](push.md))
 
 ## Options
 
+Example: `&autogain=1`
+
 | Value | Description                  |
 | ----- | ---------------------------- |
 | `0`   | audio auto-normalization off |

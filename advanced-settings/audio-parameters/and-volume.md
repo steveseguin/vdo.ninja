@@ -12,6 +12,8 @@ Viewer-Side Option! ([`&scene`](../view-parameters/scene.md), [`&room`](../../ge
 
 ## Options
 
+Example: `&volume=50`
+
 | Value   | Description                      |
 | ------- | -------------------------------- |
 | (0-100) | audio playback volume in percent |

@@ -16,9 +16,7 @@ Sender-Side Option! ([`&push`](push.md))
 
 ## Options
 
-{% hint style="info" %}
-Updated on v22
-{% endhint %}
+Example: `&noisegate=1`
 
 | Value                   | Description                                                                |
 | ----------------------- | -------------------------------------------------------------------------- |
@@ -29,8 +27,6 @@ Updated on v22
 | `4`                     | will mute the microphone when someone else is speaking                     |
 
 ## Details
-
-### Update on v22
 
 The default setting is OFF. You can switch on the noise gate in the audio settings:\
 ![](<../.gitbook/assets/image (95).png>)

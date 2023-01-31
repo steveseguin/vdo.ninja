@@ -13,6 +13,8 @@ Sender-Side Option! ([`&push`](../../source-settings/push.md))
 
 ## Options
 
+Example: `&audiogain=80`
+
 | Value           | Description                                                                            |
 | --------------- | -------------------------------------------------------------------------------------- |
 | `0`             | mutes the microphone so that only the Director can unmute it; the guest cannot unmute. |

@@ -12,6 +12,8 @@ Sender-Side Option! ([`&push`](push.md))
 
 ## Options
 
+Example: `&compressor=1`
+
 | Value | Description |
 | ----- | ----------- |
 | `0`   | Filter Off  |

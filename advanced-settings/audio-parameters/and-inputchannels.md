@@ -15,6 +15,8 @@ Sender-Side Option! ([`&push`](../../source-settings/push.md))
 
 ## Options
 
+Example: `&inputchannels=6`
+
 | Value             | Description                                 |
 | ----------------- | ------------------------------------------- |
 | `1`               | Audio capture device set to mono; 1 channel |

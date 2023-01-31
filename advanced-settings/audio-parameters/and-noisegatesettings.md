@@ -10,6 +10,8 @@ Sender-Side Option! ([`&push`](../../source-settings/push.md))
 
 ## Options
 
+Example: `&noisegatesettings=10,25,3000`
+
 | Value                                   | Description                                                          |
 | --------------------------------------- | -------------------------------------------------------------------- |
 | (TargetGain,Threshold,GateOpenPosition) | see [Details](and-noisegatesettings.md#details) for more information |

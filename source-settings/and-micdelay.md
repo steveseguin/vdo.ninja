@@ -12,6 +12,8 @@ Sender-Side Option! ([`&push`](push.md))
 
 ## Options
 
+Example: `&micdelay=100`
+
 | Value                    | Description                         |
 | ------------------------ | ----------------------------------- |
 | (positive integer value) | Delay to add in milliseconds        |

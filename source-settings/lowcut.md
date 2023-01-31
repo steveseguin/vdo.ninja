@@ -13,6 +13,8 @@ Sender-Side Option! ([`&push`](push.md))
 
 ## Options
 
+Example: `&lowcut=150`
+
 | Value           | Description                                         |
 | --------------- | --------------------------------------------------- |
 | (integer value) | Sets the cut-off frequency in hz (default is 100hz) |

@@ -15,6 +15,8 @@ General Option! ([`&push`](push.md), [`&room`](../general-settings/room.md), [`&
 
 ## Options
 
+Example: `&mutespeaker=0` or `&mutespeaker=false`
+
 | Value            | Description                                                           |
 | ---------------- | --------------------------------------------------------------------- |
 | (no value given) | the default behavior of this option is to mute inbound audio playback |

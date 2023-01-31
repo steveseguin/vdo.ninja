@@ -13,6 +13,8 @@ Sender-Side Option! ([`&push`](../../source-settings/push.md))\
 
 ## Options
 
+Example: `&automute=2`
+
 | Value            | Description                                                                                                            |
 | ---------------- | ---------------------------------------------------------------------------------------------------------------------- |
 | (no value given) | will auto mute the microphone of a guest when not loaded in an active OBS scene                                        |

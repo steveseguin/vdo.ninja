@@ -8,6 +8,8 @@ Viewer-Side Option! ([`&view`](view.md), [`&scene`](scene.md), [`&room`](../../g
 
 ## Options
 
+Example: `&ptime=40`
+
 | Value           | Description             |
 | --------------- | ----------------------- |
 | (integer value) | audio packet size in ms |

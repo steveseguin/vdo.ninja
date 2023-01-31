@@ -8,6 +8,8 @@ Viewer-Side Option! ([`&view`](../view-parameters/view.md), [`&scene`](../view-p
 
 ## Options
 
+Example: `&audiocodec=opus`
+
 | Value  | Description                       |
 | ------ | --------------------------------- |
 | `opus` | default; selects audio codec opus |

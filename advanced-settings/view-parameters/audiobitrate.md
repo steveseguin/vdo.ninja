@@ -12,6 +12,8 @@ Viewer-Side Option! ([`&view`](view.md), [`&scene`](scene.md), [`&room`](../../g
 
 ## Options
 
+Example: `&audiobitrate=128`
+
 | Value           | Description     |
 | --------------- | --------------- |
 | (integer value) | bitrate in kbps |

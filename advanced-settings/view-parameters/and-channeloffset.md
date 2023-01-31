@@ -8,6 +8,8 @@ Viewer-Side Option! ([`&view`](view.md), [`&scene`](scene.md), [`&room`](../../g
 
 ## Options
 
+Example: `&channeloffset=1`
+
 | Value           | Description                                                  |
 | --------------- | ------------------------------------------------------------ |
 | (numeric value) | Number of channels to shift the audio, starting at channel 0 |

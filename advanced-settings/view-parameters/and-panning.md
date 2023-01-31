@@ -12,6 +12,8 @@ Viewer-Side Option! ([`&view`](view.md), [`&scene`](scene.md), [`&room`](../../g
 
 ## Options
 
+Example: `&panning=120`
+
 | Value                    | Description                                                   |
 | ------------------------ | ------------------------------------------------------------- |
 | (no value given) \| `90` | has the audio centered, but published as a mono-stereo stream |

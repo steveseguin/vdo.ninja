@@ -8,6 +8,8 @@ Viewer-Side Option! ([`&view`](view.md), [`&scene`](scene.md), [`&room`](../../g
 
 ## Options
 
+Example: `&channels=4`
+
 | Value           | Description                     |
 | --------------- | ------------------------------- |
 | (integer value) | number of audio output channels |

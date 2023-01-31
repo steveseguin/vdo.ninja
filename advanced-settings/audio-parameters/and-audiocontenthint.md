@@ -14,6 +14,8 @@ Sender-Side Option! ([`&push`](../../source-settings/push.md))
 
 ## Options
 
+Example: `&audiocontenthint=music`
+
 | Value    | Description                                                 |
 | -------- | ----------------------------------------------------------- |
 | `music`  | seems to be a fixed bitrate of 32-kbps sent out by default  |

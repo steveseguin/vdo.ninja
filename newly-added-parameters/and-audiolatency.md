@@ -13,6 +13,8 @@ Sender-Side Option! ([`&push`](../source-settings/push.md))
 
 ## Options
 
+Example: `&audiolatency=50`
+
 | Value            | Description   |
 | ---------------- | ------------- |
 | (no value given) | 10-ms latency |
