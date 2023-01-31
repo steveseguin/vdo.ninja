@@ -946,13 +946,28 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 			}
 		} 
 		session.recordLocal = urlParams.get('record');
-
-		if (session.recordLocal != parseInt(session.recordLocal)) {
+		
+		if ((session.recordLocal==="false") || (session.recordLocal==="off")){
+			session.record = false;
+			session.recordLocal = false;
+		} else if (session.recordLocal != parseInt(session.recordLocal)) {
 			session.recordLocal = 6000;
 		} else {
 			session.recordLocal = parseInt(session.recordLocal);
 		}
 	}
+	
+	if (session.record === false){
+		getById("recordLocalbutton").classList.add("hidden");
+		getById("recordLocalScreenbutton").classList.add("hidden");
+		try{
+			document.querySelectorAll('[data-action-type^="record"]').forEach(ele=>{ele.remove();delete ele;});
+			document.querySelectorAll('[data-action="Record"]').forEach(ele=>{ele.parentNode.remove();delete ele.parentNode;});
+		} catch(e){
+			errorlog(e);
+		}
+	}
+	
 	if (urlParams.has('autorecord')) {
 		session.autorecord=true;
 		if (session.recordLocal===false){

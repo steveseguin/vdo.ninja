@@ -29106,6 +29106,8 @@ var recordingBitratePromise = false;
 var defaultRecordingBitrate = false;
 async function recordVideo(target, event = null, videoKbps = false) { // event.currentTarget,this.parentNode.parentNode.dataset.UUID
 
+	if (session.record === false){warnlog("recordings are disabled by decree of thy host magistrate");}
+
 	var UUID = target.dataset.UUID;
 	
 	if (!UUID){return;}
@@ -29649,6 +29651,9 @@ function setupSensorData(pollrate = 30) {
 
 
 function recordLocalVideo(action = null, videoKbps = 6000, remote=false) { // event.currentTarget,this.parentNode.parentNode.dataset.UUID
+	
+	if (session.record === false){warnlog("recordings are disabled by decree of thy host magistrate");}
+	
 	var audioKbps = false;
 	if (remote){
 		var video = remote;
