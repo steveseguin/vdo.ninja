@@ -10,7 +10,7 @@
 * Fixed support for kick.com and nimo live
 * Added `&lang=xxxx` (`&language`/`&ln`), which you can use instead of `&speech=xxx`. When using `&lang`, it will not enable it by default. (Social Stream)
 * Option added to right-click and trigger text to speech on a message (Social Stream dock)\
-  ![](../.gitbook/assets/image.png)
+  ![](<../.gitbook/assets/image (1).png>)
 
 #### **January 19**
 
