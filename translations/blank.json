@@ -532,7 +532,7 @@
     "no-screen-share-supported": "Sorry, your browser does not support screen-sharing.\n\nPlease use the desktop versions of Firefox or Chrome instead.",
     "speech-not-suppoted": "⚠ Speech Recognition is not supported by this browser",
     "blue-yeti-tip": "<i>Tip:</i> Blue Yeti microphones may experience issues being overly loud. <a href='https://support.google.com/chrome/thread/7542181?hl=en&msgid=79691143'>Please see here</a> for a solution or disable auto-gain.",
-    "site-not-responsive": "<h3>Notice: The system cannot be accessed or is currently slow to respond.</h3>\n\nContact steve@seguin.email for added help.\n\nThis service requires the use of Websockets over port 443.",
+    "site-not-responsive": "<h3>Notice: The system cannot be accessed or is currently slow to respond.</h3>\n\nCheck your connection or contact support.\n\nThis service requires the use of Websockets over port 443.",
     "no-audio-source-detected": "Notice: No Audio Source was detected"
   }
 }
