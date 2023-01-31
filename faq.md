@@ -14,8 +14,8 @@
 
 ## Where can I get support?
 
-The preferred support mechanism is via [Reddit](https://www.reddit.com/r/VDONinja/) or [Discord](https://discord.gg/feenJm8HTa), which offer community-assisted support. Development issues, feature requests, and bugs are tracked on [Github](https://github.com/steveseguin/obsninja). For mission critical support issues, or business-related inquiries, you can contact Steve directly.
+The preferred support mechanism is via [Reddit](https://www.reddit.com/r/VDONinja/) or [Discord](https://discord.gg/feenJm8HTa), which offer community-assisted support. Development issues, feature requests, and bugs are tracked on [GitHub](https://github.com/steveseguin/obsninja). For mission critical support issues, or business-related inquiries, you can contact Steve directly.
 
 ## Where can I report a bug?
 
-It is most helpful to report bugs via the official [Github](https://github.com/steveseguin/obsninja). We also monitor the [Reddit](https://www.reddit.com/r/VDONinja/) and [Discord](https://discord.gg/qWDshMsTar) channels, though it is easier to miss reports that occur there.
+It is most helpful to report bugs via the official [GitHub](https://github.com/steveseguin/obsninja). We also monitor the [Reddit](https://www.reddit.com/r/VDONinja/) and [Discord](https://discord.gg/qWDshMsTar) channels, though it is easier to miss reports that occur there.
