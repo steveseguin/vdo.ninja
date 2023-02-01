@@ -3764,13 +3764,40 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 		}
 	}
 	if (urlParams.has('clock')){
+		session.showTime = true;
 		if (urlParams.get('clock') === "false"){
 			session.showTime = false;
 		} else if (urlParams.get('clock') === "0"){
 			session.showTime = false;
-		} else {
-			session.showTime = true;
+		} else if (urlParams.get('clock') === "1"){
+			getById("overlayClockContainer2").classList.add("top");
+			getById("overlayClockContainer2").classList.add("left");
+		} else if (urlParams.get('clock') === "7"){
+			getById("overlayClockContainer2").classList.add("bottom");
+			getById("overlayClockContainer2").classList.add("left");
+		} else if (urlParams.get('clock') === "4"){
+			getById("overlayClockContainer2").classList.add("vmiddle");
+			getById("overlayClockContainer2").classList.add("left");
+		} else if (urlParams.get('clock') === "2"){
+			getById("overlayClockContainer2").classList.add("top");
+			getById("overlayClockContainer2").classList.add("hmiddle");
+		} else if (urlParams.get('clock') === "8"){
+			getById("overlayClockContainer2").classList.add("bottom");
+			getById("overlayClockContainer2").classList.add("hmiddle");
+		} else if (urlParams.get('clock') === "5"){
+			getById("overlayClockContainer2").classList.add("vmiddle");
+			getById("overlayClockContainer2").classList.add("hmiddle");
+		} else if (urlParams.get('clock') === "3"){
+			getById("overlayClockContainer2").classList.add("top");
+			getById("overlayClockContainer2").classList.add("right");
+		} else if (urlParams.get('clock') === "9"){
+			getById("overlayClockContainer2").classList.add("bottom");
+			getById("overlayClockContainer2").classList.add("right");
+		} else if (urlParams.get('clock') === "6"){
+			getById("overlayClockContainer2").classList.add("vmiddle");
+			getById("overlayClockContainer2").classList.add("right");
 		}
+		
 	} else if (session.cleanOutput){
 		session.showTime = false;
 	}

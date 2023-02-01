@@ -11393,7 +11393,7 @@ function toggleClock(){
 	if (session.showTime){
 		clearInterval(session.showTime);
 		session.showTime = null;
-		var clock = document.getElementById("overlayClock2");
+		var clock = getById("overlayClock2");
 		clock.ctx = null;
 		clock.canvas = null;
 		
@@ -11410,7 +11410,7 @@ function toggleClock(){
 	} else {
 		var time = new Date();
 		
-		var clock = document.getElementById("overlayClock2");
+		var clock = getById("overlayClock2");
 		if (clock.ctx){
 			clock.ctx.beginPath();
 			clock.ctx.rect(0, 0, 230, 40);
@@ -11427,7 +11427,7 @@ function toggleClock(){
 		session.showTime = setInterval(function(){
 			var time = new Date();
 			
-			var clock = document.getElementById("overlayClock2");
+			var clock = getById("overlayClock2");
 			if (clock.ctx){
 				clock.ctx.beginPath();
 				clock.ctx.rect(0, 0, 230, 40);

@@ -390,6 +390,30 @@ button.white:active {
 	cursor: pointer;
 	user-select: none;
 }
+#overlayClockContainer2.top {
+	top:0%;
+	bottom:unset;
+}
+#overlayClockContainer2.vmiddle {
+	bottom:48%;
+	top:unset;
+}
+#overlayClockContainer2.bottom {
+	bottom:0%;
+	top:unset;
+}
+#overlayClockContainer2.left {
+	right:unset;
+	left:0;
+}
+#overlayClockContainer2.hmiddle {
+	right:45%;
+	left:unset;
+}
+#overlayClockContainer2.right {
+	right:0;
+	left:unset;
+}
 #overlayClock2{
 	padding:0 5px;
 	background-color: #0009;
