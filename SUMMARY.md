@@ -187,6 +187,7 @@
     * [\&autogain](source-settings/autogain.md)
     * [\&compressor](source-settings/and-compressor.md)
     * [\&denoise](source-settings/and-denoise.md)
+    * [\&distort (alpha)](advanced-settings/audio-parameters/and-distort-alpha.md)
     * [\&equalizer](source-settings/and-equalizer.md)
     * [\&limiter](source-settings/and-limiter.md)
     * [\&lowcut](source-settings/lowcut.md)

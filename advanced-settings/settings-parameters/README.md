@@ -25,7 +25,7 @@ You can use them for publisher, viewer and director URLs.
 | ``[`&nopush`](and-nopush.md)\*                         | Blocks outbound publishing connections                                                       |
 | ``[`&hidehome`](and-hidehome.md)\*                     | Hides the VDO.Ninja homepage and many links that lead to it                                  |
 | ``[`&hidetranslate`](and-hidetranslate.md)\*           | Hides the option to translate VDO.Ninja                                                      |
-| ``[`&clock`](and-clock.md)\*                           | Shows the current time in the lower right                                                    |
+| ``[`&clock`](and-clock.md)\*                           | Shows the current time                                                                       |
 | ``[`&powerpoint`](and-powerpoint-alpha.md) (alpha)     | Adds a built-in basic controller to control PowerPoint                                       |
 | ``[`&widget`](and-widget-alpha.md) (alpha)             | Will load a side-bar with an IFrame embed, with support for YouTube / Twitch / Social Stream |
 | ``[`&token`](and-token-alpha.md) (alpha)               | A token for invite/scene links to determine whose the director of a room                     |

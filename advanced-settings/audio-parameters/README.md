@@ -30,6 +30,7 @@ You have to add them to the source side ([`&push`](../../source-settings/push.md
 | ``[`&autogain`](../../source-settings/autogain.md)``                             | Sets whether audio auto-normalization is ON or OFF                                       |
 | ``[`&compressor`](../../source-settings/and-compressor.md)``                     | Applies a generic audio compressor to the local microphone                               |
 | ``[`&denoise`](../../source-settings/and-denoise.md)``                           | Turn audio noise reduction filter ON or OFF                                              |
+| ``[`&distort`](and-distort-alpha.md) (alpha)                                     | Will try to "distort" your microphone's output audio, making your voice a bit anonymous  |
 | ``[`&equalizer`](../../source-settings/and-equalizer.md)``                       | Provides access to a generic audio equalizer that can be applied to the local microphone |
 | ``[`&limiter`](../../source-settings/and-limiter.md)``                           | Applies a generic audio limiter to the local microphone                                  |
 | ``[`&lowcut`](../../source-settings/lowcut.md)``                                 | Adds a low-cut filter                                                                    |

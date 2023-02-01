@@ -23,7 +23,7 @@ This was designed for Twitch / YouTube / Social Stream chat, but could in theory
 
 The director of a room also has the option to enable/disable the widget function for everyone in the room via the room settings menu.
 
-<figure><img src="../../.gitbook/assets/image (7).png" alt=""><figcaption></figcaption></figure>
+<figure><img src="../../.gitbook/assets/image (7) (1).png" alt=""><figcaption></figcaption></figure>
 
 If the director uses `&widget`, it will auto sync that with all guests as they connect. I'll try to find ways to make it easier to resize/minimize in the future.
 

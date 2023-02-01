@@ -2,6 +2,10 @@
 
 [raspberry.ninja.md](../steves-helper-apps/raspberry.ninja.md "mention")
 
+#### January 31
+
+* Pushed a patch to Raspberry.Ninja; this patch offers a workaround for an issue on the pi/jetson disk images I'm hosting.. at least until I can get some new disk images made with a better fix. (there's a bug in the older libraries used, so I need to recompile it all to fix it properly)
+
 #### January 12
 
 * Updated Raspberry.Ninja with Error Correction + Dynamic Bitrate support. This essentially makes the video stability substantially better, and it's even a bit adaptive now to changes in available bandwidth.

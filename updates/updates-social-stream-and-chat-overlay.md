@@ -3,6 +3,16 @@
 [social-stream.md](../steves-helper-apps/social-stream.md "mention")\
 [chat-overlay.md](../steves-helper-apps/chat-overlay.md "mention")
 
+#### **January 31**
+
+* Social Stream has a new menu-bar design; our Discord member @💎╲⎝⧹River⧸⎠╱💎 helped with the new icons, updated much of the UI, compressed the images files down, and improved many aspects of the menu's UX. A fantastic job really; thank you. (I should also mention @Sunadmiral on Discord, as she contributed some menu bar / icon concepts and designs as well, which influenced the redesign).\
+  ![](../.gitbook/assets/image.png)
+* Some of the new tweaks made to the UX includes the option to immediately "stop" voice-to-speak, if you accidentally enable it. You can also right-click a message to enable TTS on it, and none others. If you need the old version of the dock.html page still, it's available at `socialstream.ninja/dock2.html`
+* Telegram.com/z/ for Social Stream also patched a bit; now if you specify a host-name in the menu, it will use that as your telegram name (rather than not know it)
+* Submitted an application to gain access to the YouTube chat API; wrote some code into VDO.Ninja / Social Stream to support it. I'm trying to see if I can offer a secondary way to access YouTube/Twitch chat data streams without an extra window open.
+* Added a parameter called `&twolines` to the dock.html page, which puts the name/avatar of the guest on its own line
+* Fixed Twitch support on chat.overlay.ninja (the older / alternative Social Stream extension)
+
 #### **January 25**
 
 * Fixed a few dock.html issues on Social Stream, such as queuing sync and message scaling not working as expected in edge cases
@@ -10,7 +20,7 @@
 * Fixed support for kick.com and nimo live
 * Added `&lang=xxxx` (`&language`/`&ln`), which you can use instead of `&speech=xxx`. When using `&lang`, it will not enable it by default. (Social Stream)
 * Option added to right-click and trigger text to speech on a message (Social Stream dock)\
-  ![](<../.gitbook/assets/image (1).png>)
+  ![](<../.gitbook/assets/image (1) (2).png>)
 
 #### **January 19**
 
@@ -45,7 +55,7 @@
 #### **December 22**
 
 * Added an option to randomize the color of names in Social Stream if no name color is already provided.\
-  ![](<../.gitbook/assets/image (3) (2).png>)![](<../.gitbook/assets/image (174).png>)
+  ![](<../.gitbook/assets/image (3) (2) (1).png>)![](<../.gitbook/assets/image (174).png>)
 
 #### **December 21**
 

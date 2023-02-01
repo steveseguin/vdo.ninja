@@ -1,9 +1,22 @@
 # Updates - VDO.Ninja
 
+#### February 1 <a href="#august-31" id="august-31"></a>
+
+* Added options for the [`&clock`](../advanced-settings/settings-parameters/and-clock.md) parameter. `&clock=N`, where `N` can be `1` to `9`; each option specifies where the clock will appear on the screen. \*\* on alpha at [`vdo.ninja/alpha/?webcam&autostart&clock=5`](https://vdo.ninja/alpha/?webcam\&autostart\&clock=5)``\
+  ``![](<../.gitbook/assets/image (3).png>)
+
+#### January 31 <a href="#august-31" id="august-31"></a>
+
+* Added [`&record=false`](../advanced-settings/recording-parameters/and-record.md) or `&record=off` (or `session.record=false;` in code) will disable the user from being able to record a video. Buttons for recording are hidden/deleted and the recording function is disabled when used; so the [director](../viewers-settings/director.md) won't even be able to trigger it remotely. (won't stop OBS from recording of course)
+* Added [`&distort`](../advanced-settings/audio-parameters/and-distort-alpha.md) as a URL parameter for the sender's side, which will try to "distort" your microphone's output audio, making your voice a bit anonymous.
+* Added [`&meterstyle=4`](../advanced-settings/design-parameters/meterstyle.md), which should work on any VDO.Ninja link, and it adds `data-loudness=N` as an attribute to the videos. You can use as a CSS target, to apply your own custom CSS on/off/effects for those speaking.
+* Our very own @Lindenkron on Discord made their first code contribution to the GitHub; they were able to fix a bug on alpha related to the director's control-box UI.\
+  \*\* on alpha/GitHub.
+
 #### January 25 <a href="#august-31" id="august-31"></a>
 
 * Updated the http [API](../general-settings/api.md) getDetails request to include info about video visibility; makes it a bit more usable if querying a scene link\
-  ![](<../.gitbook/assets/image (3).png>)
+  ![](<../.gitbook/assets/image (3) (2).png>)
 
 #### January 23 <a href="#august-31" id="august-31"></a>
 
@@ -75,7 +88,7 @@
 * The remote http API sample page was updated to include some recent additional button options, specifically relating to joining/leaving groups.
 * Added an option called [`&widget`](../advanced-settings/settings-parameters/and-widget-alpha.md), which lets you pass a URIComponent-encoded URL value. It will load a side-bar with that page as an IFRAME embed, with support for YouTube/Twitch specifically added.\
   \-- The director of a room also has the option to enable/disable the widget function for everyone in the room via the room settings menu.\
-  ![](<../.gitbook/assets/image (2) (1).png>)\
+  ![](<../.gitbook/assets/image (2) (1) (1).png>)\
   \-- This was designed for Twitch / YouTube / Social Stream chat, but could in theory work with any CORS-friendly site, such as a third-party web tool.\
   \-- If the director uses [`&widget`](../advanced-settings/settings-parameters/and-widget-alpha.md), it will auto sync that with all guests as they connect. I'll try to find ways to make it easier to resize/minimize in the future.\
   ![](<../.gitbook/assets/image (6).png>)\
@@ -215,7 +228,7 @@
   \-- also while using `&fullscreenbutton`, the previous little 'full window' button in the top-right of videos (if in a group room) will also auto-F11 and isolate that video, rather than just isolate the video.\
   \-- you can still right-click and select "full-window" on any video to isolate it without going full screen, if you need that. -- you can test by opening two such guest links: [https://vdo.ninja/alpha/?fsb\&room=test123123123\&webcam\&autostart](https://vdo.ninja/alpha/?fsb\&room=test123123123\&webcam\&autostart)\
   \-- ultimately I'd like to override the native video full screen button with this behaviour, when `&fullscreenbutton` is used, but I'm still working on that aspect.\
-  ![](<../.gitbook/assets/image (7) (1).png>)
+  ![](<../.gitbook/assets/image (7) (1) (1).png>)
 * Fixed a bug where the guest screen share, while in broadcast mode, was misplaced on the screen.
 * Fixed a bug where [`&language`](../advanced-settings/settings-parameters/and-language.md) didn't work in translating a couple elements, like "join with camera".
 * Re-enabled [`&limittotalbitrate`](../advanced-settings/video-bitrate-parameters/limittotalbitrate.md) for non-guests, as it was causing me some problems before with versus.cam. It might still be causing issues, so more testing is needed.
@@ -339,7 +352,7 @@
   This lets you toggle the [`&style=N`](../advanced-settings/design-parameters/style.md) options, between 1,2,4,5,6 I think?\
   \
   So if you find it distracting, the waveform in the [Comms app](../steves-helper-apps/comms.md) or such, you can toggle as a guest.\
-  ![](<../.gitbook/assets/image (1) (2).png>)\
+  ![](<../.gitbook/assets/image (1) (2) (1).png>)\
   \
   \*\* Change is on alpha at [vdo.ninja/alpha/](https://vdo.ninja/alpha/)
 
@@ -482,7 +495,7 @@
 
 * When using [`&waitimage`](../advanced-settings/newly-added-parameters/and-waitimage.md), the specified 'waiting to connect' image will appear after all connections end. This is a bit different than the default behaviour of the spinner, which doesn't re-appear, but I assume if you're advanced enough to use the `&waitimage` option, you're okay with this.
 *   Added the option to "draw on the screen", which might be a useful tool for niche use cases where you might need to take notes, etc. It doesn't affix to videos themselves, but rather it's just a full-window transparent canvas overlay, You can start/stop/clear and select a couple style-types with this feature, via the settings -> User menu. You can also do `CTRL + ALT + D` to toggle this as needed.\
-    ![](<../.gitbook/assets/image (2) (1) (1).png>)\
+    ![](<../.gitbook/assets/image (2) (1) (1) (1).png>)\
 
 
     \*\* on alpha at vdo.ninja/alpha
@@ -698,7 +711,7 @@
   \-- This is a new noise gate, that lowers your mic volume to 10% of its current value based on volume-level activity. If you haven't made a significant sound in few seconds, the noise gate kicks in, and will re-enable when a significant noise is detected. It will take about 300-ms for the volume to recover once the noise triggers it back on, which can be a small bit harsh/distracting at times.\
   \-- [`&noisegate`](../source-settings/noisegate.md) or `&noisegate=1` (`&gating`/`&ng`) will enable it by default (if using it in a room, currently); and `&noisegate=0` will hide the option from the menu.\
   \-- The older existing `&noisegate=1` option I moved to `&noisegate=4`, as this new version is replacing it. I'm keeping the older version around as an option though.\
-  ![](<../.gitbook/assets/image (7) (1) (1).png>)
+  ![](<../.gitbook/assets/image (7) (1) (1) (3).png>)
 * Fixed some of the labels for the local audio labels; camel-case is replaced with words, and true/false replaced with on/off.
 *   Fixed an issue where iPhones's video output would freeze when the director would feature-highlight any other participant.
 

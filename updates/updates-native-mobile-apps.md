@@ -2,11 +2,15 @@
 
 [native-mobile-app-versions.md](../steves-helper-apps/native-mobile-app-versions.md "mention")
 
+#### January 31
+
+* &#x20;The v3 update for the iOS native app has been approved and is now available.
+
 #### January 30
 
 * Updated the iOS/Android version with a newer version 2.0.9, which contains some improvements for manual disconnection/reconnection. (also disconnects faster now when using alpha)\
   The Android update is live now, while the Apple update is still pending store approval.\
-  ![](../.gitbook/assets/image.png)
+  ![](<../.gitbook/assets/image (7).png>)
 
 #### January 21
 
