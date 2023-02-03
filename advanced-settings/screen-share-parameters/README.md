@@ -50,3 +50,5 @@ You have to add them to the viewer side ([`&view`](../view-parameters/view.md) o
 | ``[`&screensharebitrate`](../../newly-added-parameters/and-screensharebitrate.md)`` | Lets you manually set the video bitrate for screen-shares                    |
 | ``[`&sharperscreen`](and-sharperscreen.md)\*                                        | Sets [`&scale=100`](../view-parameters/scale.md), but only for screen-shares |
 | ``[`&sspaused`](../../parameters-only-on-beta/and-sspaused.md)``                    | Starts any screen-share paused                                               |
+
+\*NEW IN VERSION 22

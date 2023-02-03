@@ -69,7 +69,7 @@ We've broken down the available URL parameters into 19 categories:
 * [director-parameters](advanced-settings/director-parameters/ "mention") (specific to the director's control room and director-specific features)
 * [screen-share-parameters](advanced-settings/screen-share-parameters/ "mention") (labels, audio filters, type, bitrate, quality, etc.)
 * [recording-parameters](advanced-settings/recording-parameters/ "mention") (options to specify recordings with VDO.Ninja)
-* [meshcast-parameters](advanced-settings/meshcast-parameters/ "mention") (options for the [`&meshcast`](newly-added-parameters/and-meshcast.md) parameter like audio filters, bitrate, screen-share, codecs, etc.)
+* [meshcast-parameters](advanced-settings/meshcast-parameters/ "mention") (options for the [`&meshcast`](newly-added-parameters/and-meshcast.md) parameter like audio filters, bitrate, screen share, codecs, etc.)
 * [mobile-parameters](advanced-settings/mobile-parameters/ "mention") (options to specify push links and guest invite links for mobile phones)
 * [api-and-midi-parameters](advanced-settings/api-and-midi-parameters/ "mention") (hotkey features via API and MIDI)
 * [turn-and-stun-parameters](advanced-settings/turn-and-stun-parameters/ "mention") (options for setting up TURN and STUN servers)
