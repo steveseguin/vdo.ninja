@@ -10,6 +10,8 @@ Viewer-Side Option! ([`&view`](../view-parameters/view.md), [`&scene`](../view-p
 
 ## Options
 
+Example: `&statsinterval=1500`
+
 | Value            | Description                     |
 | ---------------- | ------------------------------- |
 | (no value given) | stats update interval = 3000-ms |

@@ -8,6 +8,8 @@ Sender-Side Option! ([`&push`](../../source-settings/push.md))
 
 ## Options
 
+Example: `&postimage=https%3A%2F%2Ftemp.vdo.ninja%2F`
+
 | Value                             | Description     |
 | --------------------------------- | --------------- |
 | `https%3A%2F%2Ftemp.vdo.ninja%2F` | URL-encoded URL |

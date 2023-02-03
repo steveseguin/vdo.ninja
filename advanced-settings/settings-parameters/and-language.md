@@ -12,6 +12,8 @@ General Option! ([`&push`](../../source-settings/push.md), [`&room`](../../gener
 
 ## Options
 
+Example: `&language=fr`
+
 | Value            | Language                               |
 | ---------------- | -------------------------------------- |
 | `cn`             | Chinese                                |

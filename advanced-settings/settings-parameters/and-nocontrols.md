@@ -18,6 +18,11 @@ Sender-Side Option! ([`&push`](../../source-settings/push.md))
 This is not the same control bar as the user control bar. Also, be sure to not accidentally unmute yourself -- echo feedback galore.
 {% endhint %}
 
+This is the video control bar:\
+
+
+<figure><img src="../../.gitbook/assets/image (1).png" alt=""><figcaption></figcaption></figure>
+
 ## Related
 
 {% content-ref url="../newly-added-parameters/and-videocontrols.md" %}

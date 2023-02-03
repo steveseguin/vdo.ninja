@@ -10,6 +10,8 @@ Sender-Side Option! ([`&push`](../source-settings/push.md))
 
 ## Options
 
+Example: `&chunked=1000`
+
 | Value            | Description                                                          |
 | ---------------- | -------------------------------------------------------------------- |
 | (no value given) | will just enable viewing, and not saving, of the video               |

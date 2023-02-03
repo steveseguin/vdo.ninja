@@ -12,6 +12,8 @@ Sender-Side Option! ([`&push`](../../source-settings/push.md))
 
 ## Options
 
+Example: `&videocontrols=false`
+
 | Value                   | Description                 |
 | ----------------------- | --------------------------- |
 | (no value given)        | Shows the video control bar |

@@ -12,6 +12,8 @@ Sender-Side Option! ([`&push`](push.md))
 
 ## Options
 
+Example: `&maxviewers=8`
+
 | Value                    | Description         |
 | ------------------------ | ------------------- |
 | (positive integer value) | max allowed viewers |

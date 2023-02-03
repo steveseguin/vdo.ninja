@@ -14,6 +14,8 @@ Viewer-Side Option! ([`&view`](view.md), [`&scene`](scene.md), [`&room`](../../g
 
 ## Options
 
+Example: `&keyframerate=2000`
+
 | Value           | Description    |
 | --------------- | -------------- |
 | (integer value) | interval in ms |

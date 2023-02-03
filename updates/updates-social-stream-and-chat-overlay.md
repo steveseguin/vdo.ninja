@@ -6,7 +6,7 @@
 #### **January 31**
 
 * Social Stream has a new menu-bar design; our Discord member @💎╲⎝⧹River⧸⎠╱💎 helped with the new icons, updated much of the UI, compressed the images files down, and improved many aspects of the menu's UX. A fantastic job really; thank you. (I should also mention @Sunadmiral on Discord, as she contributed some menu bar / icon concepts and designs as well, which influenced the redesign).\
-  ![](../.gitbook/assets/image.png)
+  ![](<../.gitbook/assets/image (3).png>)
 * Some of the new tweaks made to the UX includes the option to immediately "stop" voice-to-speak, if you accidentally enable it. You can also right-click a message to enable TTS on it, and none others. If you need the old version of the dock.html page still, it's available at `socialstream.ninja/dock2.html`
 * Telegram.com/z/ for Social Stream also patched a bit; now if you specify a host-name in the menu, it will use that as your telegram name (rather than not know it)
 * Submitted an application to gain access to the YouTube chat API; wrote some code into VDO.Ninja / Social Stream to support it. I'm trying to see if I can offer a secondary way to access YouTube/Twitch chat data streams without an extra window open.

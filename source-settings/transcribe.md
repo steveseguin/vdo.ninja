@@ -13,12 +13,14 @@ Sender-Side Option! ([`&push`](push.md))
 
 ## Options
 
-| Value                   | Description                                                                                              |
-| ----------------------- | -------------------------------------------------------------------------------------------------------- |
-| `en-US`                 | American English                                                                                         |
-| `de-DE`                 | German                                                                                                   |
-| `pt-PT`                 | Portuguese                                                                                               |
-| any xx-XX language code | You can check for additional language codes [here](https://www.science.co.il/language/Locale-codes.php). |
+Example: `&transcribe=de-DE`
+
+| Value                     | Description                                                                                              |
+| ------------------------- | -------------------------------------------------------------------------------------------------------- |
+| `en-US`                   | American English                                                                                         |
+| `de-DE`                   | German                                                                                                   |
+| `pt-PT`                   | Portuguese                                                                                               |
+| (any xx-XX language code) | You can check for additional language codes [here](https://www.science.co.il/language/Locale-codes.php). |
 
 ## Details
 

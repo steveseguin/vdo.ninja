@@ -14,6 +14,8 @@ Viewer-Side Option! ([`&view`](../view-parameters/view.md), [`&scene`](../view-p
 
 ## Options
 
+Example: `&bitratecutoff=500`
+
 | Value            | Description                   |
 | ---------------- | ----------------------------- |
 | (no value given) | video cuts off under 300-kbps |

@@ -15,6 +15,8 @@ Sender-Side Option! ([`&push`](push.md))
 
 ## Options
 
+Example: `&sensor=50`
+
 | Value           | Description                                           |
 | --------------- | ----------------------------------------------------- |
 | (integer value) | Set polling rate to given value, in hz. Default 30hz. |

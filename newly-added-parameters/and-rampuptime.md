@@ -10,6 +10,8 @@ Sender-Side Option! ([`&push`](../source-settings/push.md))
 
 ## Options
 
+Example: `&rampuptime=4000`
+
 | Value           | Description        |
 | --------------- | ------------------ |
 | (integer value) | ramp up time in ms |

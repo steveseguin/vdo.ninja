@@ -9,6 +9,8 @@ General Option! ([`&push`](../../source-settings/push.md), [`&room`](../../gener
 
 ## Options
 
+Example: `&token=5eb5e63ee4d9ba06`
+
 | Value                          | Description                                                              |
 | ------------------------------ | ------------------------------------------------------------------------ |
 | (alphanumeric-characters only) | a token for invite/scene links to determine whose the director of a room |

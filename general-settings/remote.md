@@ -12,6 +12,8 @@ General Option! ([`&push`](../source-settings/push.md), [`&room`](room.md), [`&v
 
 ## Options
 
+Example: `&remote=somepasscode`
+
 | Value                 | Description                                                    |
 | --------------------- | -------------------------------------------------------------- |
 | (some passcode value) | this string will have to match on both sides of the connection |
@@ -62,7 +64,7 @@ The VDO.Ninja speed test ([https://vdo.ninja/speedtest](https://vdo.ninja/speedt
 
 In regards to `&sid`, you can pass multiple stream IDs, and so long as each remote sender of that stream ID has `&remote` added to their URL, the monitoring page will be able to monitor all those outbound streams.
 
-Nacks per second is similar to packet loss, and so a high nack loss rate implies a restriction on network quality.  "quality limitation reason" may also be stated, which can imply whether the CPU or Network is the bottleneck in achieving maximum quality.
+Nacks per second is similar to packet loss, and so a high nack loss rate implies a restriction on network quality. "quality limitation reason" may also be stated, which can imply whether the CPU or Network is the bottleneck in achieving maximum quality.
 
 If viewers of a stream ID being monitor have a label assigned ([`&label`](label.md)), then that will appear as a label on the monitor page besides the graph, identifying it.
 

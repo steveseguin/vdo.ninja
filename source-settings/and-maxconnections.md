@@ -12,6 +12,8 @@ Sender-Side Option! ([`&push`](push.md))
 
 ## Options
 
+Example: `&maxconnections=5`
+
 | Value               | Description                     |
 | ------------------- | ------------------------------- |
 | (any integer value) | Will set maximum to given value |

@@ -13,6 +13,8 @@ Sender-Side Option! ([`&push`](../source-settings/push.md))
 
 ## Options
 
+Example: `&chatbutton=0`
+
 | Value | Description           |
 | ----- | --------------------- |
 | `0`   | hides the chat button |

@@ -8,6 +8,8 @@ General Option! ([`&push`](push.md), [`&room`](../general-settings/room.md), [`&
 
 ## Options
 
+Example: `&showlist=1`
+
 | Value                   | Description                             |
 | ----------------------- | --------------------------------------- |
 | `0`                     | Force disable the list of hidden guests |

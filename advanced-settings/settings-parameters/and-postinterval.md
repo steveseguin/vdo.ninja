@@ -8,6 +8,8 @@ Sender-Side Option! ([`&push`](../../source-settings/push.md))
 
 ## Options
 
+Example: `&postinterval=20`
+
 | Value   | Description     |
 | ------- | --------------- |
 | (value) | time in seconds |

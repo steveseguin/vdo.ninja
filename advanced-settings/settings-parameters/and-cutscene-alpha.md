@@ -15,6 +15,8 @@ Viewer-Side Option! ([`&view`](../view-parameters/view.md), [`&scene`](../view-p
 
 ## Options
 
+Example: `&cutscene=ObsSceneName`
+
 | Value            | Description               |
 | ---------------- | ------------------------- |
 | (OBS scene name) | The name of the OBS scene |

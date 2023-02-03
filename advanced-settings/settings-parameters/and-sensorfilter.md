@@ -16,6 +16,8 @@ Sender-Side Option! ([`&push`](../../source-settings/push.md))
 
 ## Options
 
+Example: `&sensorfilter=gyro`
+
 | Value  | Description   |
 | ------ | ------------- |
 | `gyro` | gyroscopic    |

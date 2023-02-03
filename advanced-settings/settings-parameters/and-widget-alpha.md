@@ -11,6 +11,8 @@ General Option! / Director Option! ([`&director`](../../viewers-settings/directo
 
 ## Options
 
+Example: `&widget=https%3A%2F%2Fwww.youtube.com%2Flive_chat%3Fis_popout%3D1%26v%3DORBwkXsUNEs`
+
 | Value                            | Description                                       |
 | -------------------------------- | ------------------------------------------------- |
 | (URLComponent-encoded URL value) | load a side-bar with that page as an IFRAME embed |
@@ -22,6 +24,9 @@ General Option! / Director Option! ([`&director`](../../viewers-settings/directo
 This was designed for Twitch / YouTube / Social Stream chat, but could in theory work with any CORS-friendly site, such as a third-party web tool.
 
 The director of a room also has the option to enable/disable the widget function for everyone in the room via the room settings menu.
+
+You can encode the URL here:\
+[https://www.urlencoder.org/](https://www.urlencoder.org/)
 
 <figure><img src="../../.gitbook/assets/image (7) (1).png" alt=""><figcaption></figcaption></figure>
 

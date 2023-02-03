@@ -8,6 +8,8 @@ Sender-Side Option! ([`&push`](../source-settings/push.md))
 
 ## Options
 
+Example: `&signalmeter=false`
+
 | Value            | Description                                      |
 | ---------------- | ------------------------------------------------ |
 | (no value given) | Adds a signal-meter per guest                    |

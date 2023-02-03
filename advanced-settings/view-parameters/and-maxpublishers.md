@@ -12,6 +12,8 @@ Viewer-Side Option! ([`&view`](view.md), [`&scene`](scene.md), [`&room`](../../g
 
 ## Options
 
+Example: `&maxpublishers=7`
+
 | Value           | Description                             |
 | --------------- | --------------------------------------- |
 | (integer value) | limit number of remote peer connections |
