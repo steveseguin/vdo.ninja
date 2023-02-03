@@ -91,7 +91,7 @@
   ![](<../.gitbook/assets/image (2) (1) (1).png>)\
   \-- This was designed for Twitch / YouTube / Social Stream chat, but could in theory work with any CORS-friendly site, such as a third-party web tool.\
   \-- If the director uses [`&widget`](../advanced-settings/settings-parameters/and-widget-alpha.md), it will auto sync that with all guests as they connect. I'll try to find ways to make it easier to resize/minimize in the future.\
-  ![](<../.gitbook/assets/image (6).png>)\
+  ![](<../.gitbook/assets/image (6) (1).png>)\
   \
   \*\*changes on alpha at vdo.ninja/alpha/
 

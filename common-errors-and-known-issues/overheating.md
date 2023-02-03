@@ -90,7 +90,7 @@ Like with the native mobile app versions, the capabilities of this option is ver
 
 Using a Chromium browser with a Raspberry Pi, in software-encoded mode, will probably give more reliable results, but also generate a lot of heat and limit the maximum video resolution a lot.
 
-![](<../.gitbook/assets/image (6) (1) (1).png>)
+![](<../.gitbook/assets/image (6) (1) (1) (1).png>)
 
 Just as a consideration though, the Nvidia Jetson development boards support higher resolutions and seem to have better support for dynamic video and packet loss recovery. These products are a bit more expensive, but tend to work better than a Raspberry Pi when it comes to encoding HD video. I have a support for the Hardware-encoding capabilities of a Jetson here, buried away alongside the files for the Raspberry Pi: [https://github.com/steveseguin/raspberry\_ninja](https://github.com/steveseguin/raspberry\_ninja) It's pretty basic support also currently, but has a lot of potential.
 
