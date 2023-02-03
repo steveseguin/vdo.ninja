@@ -10,6 +10,14 @@ Viewer-Side Option! ([`&view`](view.md), [`&scene`](scene.md), [`&room`](../../g
 
 * `&ex`
 
+## Options
+
+Example: `&exclude=StreamID1,StreamID2`
+
+| Value          | Description                                             |
+| -------------- | ------------------------------------------------------- |
+| (string value) | stream ID to view; can be a comma-separated list of IDs |
+
 ## Details
 
 Any stream ID listed as a value will **NOT** be played or requested.

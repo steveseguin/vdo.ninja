@@ -12,13 +12,13 @@ Copy one of the two links above and change SOMEROOMNAME into a different name.
 
 ### Explanation
 
-| Parameter                                                                   | Explanation                                          |
-| --------------------------------------------------------------------------- | ---------------------------------------------------- |
-| ``[`&room=SOMEROOMNAME`](../general-settings/room.md)``                     | creates a room with a specified room name            |
-| ``[`&audiodevice=0`](../source-settings/audiodevice.md)``                   | join with no audio input                             |
-| ``[`&videodevice=0`](../source-settings/videodevice.md)``                   | join with no camera                                  |
-| ``[`&chatbutton`](../general-settings/chatbutton.md)``                      | shows the chat button                                |
-| ``[`&cleanoutput`](../advanced-settings/design-parameters/cleanoutput.md)`` | keeps the room as clean as possible from UI elements |
-| ``[`&label`](../general-settings/label.md)``                                | asks for a name when joining the room                |
+| Parameter                                                                                  | Explanation                                          |
+| ------------------------------------------------------------------------------------------ | ---------------------------------------------------- |
+| ``[`&room=SOMEROOMNAME`](../general-settings/room.md)``                                    | creates a room with a specified room name            |
+| ``[`&audiodevice=0`](../source-settings/audiodevice.md)``                                  | join with no audio input                             |
+| ``[`&videodevice=0`](../source-settings/videodevice.md)``                                  | join with no camera                                  |
+| ``[`&chatbutton`](../advanced-settings/buttons-and-control-bar-parameters/chatbutton.md)`` | shows the chat button                                |
+| ``[`&cleanoutput`](../advanced-settings/design-parameters/cleanoutput.md)``                | keeps the room as clean as possible from UI elements |
+| ``[`&label`](../general-settings/label.md)``                                               | asks for a name when joining the room                |
 
 ![](<../.gitbook/assets/image (109) (2).png>)

@@ -8,6 +8,8 @@ Viewer-Side Option! ([`&view`](../advanced-settings/view-parameters/view.md), [`
 
 ## Options
 
+Example: `&order=3`
+
 | Value                    | Description                         |
 | ------------------------ | ----------------------------------- |
 | (positive integer value) | Higher order, drawn first on screen |

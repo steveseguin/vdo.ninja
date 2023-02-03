@@ -13,6 +13,8 @@ Viewer-Side Option! ([`&view`](../view-parameters/view.md), [`&scene`](../view-p
 
 ## Options
 
+Example: `&fakeguests=7`
+
 | Value            | Description                                                                |
 | ---------------- | -------------------------------------------------------------------------- |
 | (integer number) | creates simulated guest videos, based on the value passed to the parameter |

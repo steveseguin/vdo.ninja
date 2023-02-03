@@ -8,6 +8,8 @@ Viewer-Side Option! ([`&scene`](../advanced-settings/view-parameters/scene.md))
 
 ## Options
 
+Example: `&preloadbitrate=500`
+
 | Value           | Description                                    |
 | --------------- | ---------------------------------------------- |
 | (integer value) | specified video bitrate in kbps                |

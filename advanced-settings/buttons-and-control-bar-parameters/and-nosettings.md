@@ -4,7 +4,7 @@ description: Disables the local settings button
 
 # \&nosettings
 
-Sender-Side Option! ([`&push`](push.md))
+Sender-Side Option! ([`&push`](../../source-settings/push.md))
 
 ## Aliases
 
@@ -18,4 +18,4 @@ You won't be able to change video or audio feeds after initially selecting them.
 
 Hides the screen-share button as well.
 
-![](<../.gitbook/assets/image (97).png>)
+![](<../../.gitbook/assets/image (97).png>)

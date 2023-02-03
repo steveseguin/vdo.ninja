@@ -14,9 +14,11 @@ Viewer-Side Option! ([`&scene`](scene.md), [`&room`](../../general-settings/room
 
 ## Options
 
+Example: `&view=StreamID1,StreamID2`
+
 | Value            | Description                                                      |
 | ---------------- | ---------------------------------------------------------------- |
-| (string value)   | streamid to view; can be a comma-separated list of ids           |
+| (string value)   | stream ID to view; can be a comma-separated list of IDs          |
 | (no value given) | in a room, you don't see any other guests including the director |
 
 ## Details

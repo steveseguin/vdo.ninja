@@ -1,7 +1,7 @@
 ---
 description: >-
-  Language, save cookies, show/hide buttons, control bar, remote access, chunked
-  mode, raise hands, notify, transcription, closed captions
+  Language, save cookies, remote access, chunked mode, raise hands, notify,
+  transcription, closed captions
 ---
 
 # Settings Parameters
@@ -36,39 +36,24 @@ You can use them for publisher, viewer and director URLs.
 
 **Source Settings**, which are settings specific to publishing. The parameters can be added to a publishing link, like for example a guest, a director or just a basic push link.
 
-| Parameter                                                              | Explanation                                                                                                          |
-| ---------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------- |
-| ``[`&nosettings`](../../source-settings/and-nosettings.md)``           | Disables the local settings button                                                                                   |
-| ``[`&nomicbutton`](../../viewers-settings/nomicbutton.md)``            | Disables the mic button; guests can't mute audio                                                                     |
-| ``[`&nospeakerbutton`](../../source-settings/and-nospeakerbutton.md)`` | Hides the speaker button                                                                                             |
-| ``[`&novideobutton`](../../viewers-settings/and-novideobutton.md)``    | Disables the video button; guests can't mute video                                                                   |
-| ``[`&nofileshare`](../../source-settings/nofileshare.md)``             | Hides the ability for a guest to upload a file                                                                       |
-| ``[`&screensharebutton`](and-screensharebutton.md)``                   | Forces the screen-share button to appear for guests                                                                  |
-| ``[`&nohangupbutton`](and-nohangupbutton.md)``                         | Hides the hang-up button                                                                                             |
-| ``[`&chatbutton`](../../general-settings/chatbutton.md)``              | Shows or hides the chat button                                                                                       |
-| ``[`&bigbutton`](../../newly-added-parameters/and-bigbutton.md)``      | Makes the microphone mute button a lot bigger                                                                        |
-| ``[`&fullscreenbutton`](and-fullscreenbutton.md)\*                     | Adds a full-screen button to the control bar                                                                         |
-| ``[`&autohide`](../../parameters-only-on-beta/and-autohide.md)``       | Auto-hides the control bar after a few moments of the mouse being idle                                               |
-| ``[`&controlbarspace`](and-controlbarspace.md)\*                       | Forces the bottom control bar to be in its own dedicated space                                                       |
-| ``[`&videocontrols`](../newly-added-parameters/and-videocontrols.md)`` | Shows the video control bar                                                                                          |
-| ``[`&nocontrols`](and-nocontrols.md)\*                                 | Will force hide the video control bar                                                                                |
-| ``[`&transcribe`](../../source-settings/transcribe.md)``               | Enables transcription and closed captioning                                                                          |
-| ``[`&nowebsite`](../../source-settings/nowebsite.md)``                 | Disables IFRAMEs from loading, such as remotely shared websites by another guest or director                         |
-| ``[`&signalmeter`](../../newly-added-parameters/and-signalmeter.md)``  | Visualizes the packet loss of a guest                                                                                |
-| ``[`&consent`](../../source-settings/consent.md)``                     | Will ask the user for content to remote change their camera or microphone                                            |
-| ``[`&prompt`](and-prompt.md)\*                                         | Another security option, for those concerned about random spying of their streams                                    |
-| ``[`&hands`](../../source-settings/and-hands.md)``                     | Enables a "Raise Hand" button for guests                                                                             |
-| ``[`&notify`](../../source-settings/and-notify.md)``                   | Audio alerts for raised hands, chat messages and if somebody joins the room                                          |
-| ``[`&r2d2`](../../source-settings/r2d2.md)``                           | Easter egg `&notify` sound                                                                                           |
-| ``[`&directorchat`](../../source-settings/directorchat.md)``           | Message ONLY the director                                                                                            |
-| ``[`&maxconnections`](../../source-settings/and-maxconnections.md)``   | Limits total of view and push connections                                                                            |
-| ``[`&maxviewers`](../../source-settings/and-maxviewers.md)``           | Limits the number of viewers allowed                                                                                 |
-| ``[`&chunked`](../../newly-added-parameters/and-chunked.md)``          | Does not use webRTC's video streaming protocols; rather it uses a custom-made protocol                               |
-| ``[`&rampuptime`](../../newly-added-parameters/and-rampuptime.md)``    | When a guest connects, this tries to load video from that guest for a few seconds, even if not yet added to a scene  |
-| ``[`&sensor`](../../source-settings/sensor.md)``                       | Access device sensor data at given rate                                                                              |
-| ``[`&sensorfilter`](and-sensorfilter.md)\*                             | An option to explicitly list what [`&sensor`](../../source-settings/sensor.md) data you want to capture and transmit |
-| ``[`&postimage`](and-postimage.md)\*                                   | Post a snapshot of your local camera to a HTTPS/POST URL                                                             |
-| ``[`&postinterval`](and-postinterval.md)\*                             | Time interval in seconds for [`&postimage`](and-postimage.md)``                                                      |
+| Parameter                                                             | Explanation                                                                                                          |
+| --------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------- |
+| ``[`&transcribe`](../../source-settings/transcribe.md)``              | Enables transcription and closed captioning                                                                          |
+| ``[`&signalmeter`](../../newly-added-parameters/and-signalmeter.md)`` | Visualizes the packet loss of a guest                                                                                |
+| ``[`&consent`](../../source-settings/consent.md)``                    | Will ask the user for content to remote change their camera or microphone                                            |
+| ``[`&prompt`](and-prompt.md)\*                                        | Another security option, for those concerned about random spying of their streams                                    |
+| ``[`&hands`](../buttons-and-control-bar-parameters/and-hands.md)``    | Enables a "Raise Hand" button for guests                                                                             |
+| ``[`&notify`](../../source-settings/and-notify.md)``                  | Audio alerts for raised hands, chat messages and if somebody joins the room                                          |
+| ``[`&r2d2`](../../source-settings/r2d2.md)``                          | Easter egg `&notify` sound                                                                                           |
+| ``[`&directorchat`](../../source-settings/directorchat.md)``          | Message ONLY the director                                                                                            |
+| ``[`&maxconnections`](../../source-settings/and-maxconnections.md)``  | Limits total of view and push connections                                                                            |
+| ``[`&maxviewers`](../../source-settings/and-maxviewers.md)``          | Limits the number of viewers allowed                                                                                 |
+| ``[`&chunked`](../../newly-added-parameters/and-chunked.md)``         | Does not use webRTC's video streaming protocols; rather it uses a custom-made protocol                               |
+| ``[`&rampuptime`](../../newly-added-parameters/and-rampuptime.md)``   | When a guest connects, this tries to load video from that guest for a few seconds, even if not yet added to a scene  |
+| ``[`&sensor`](../../source-settings/sensor.md)``                      | Access device sensor data at given rate                                                                              |
+| ``[`&sensorfilter`](and-sensorfilter.md)\*                            | An option to explicitly list what [`&sensor`](../../source-settings/sensor.md) data you want to capture and transmit |
+| ``[`&postimage`](and-postimage.md)\*                                  | Post a snapshot of your local camera to a HTTPS/POST URL                                                             |
+| ``[`&postinterval`](and-postinterval.md)\*                            | Time interval in seconds for [`&postimage`](and-postimage.md)``                                                      |
 
 \*NEW IN VERSION 22
 

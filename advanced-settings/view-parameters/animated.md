@@ -12,6 +12,8 @@ Viewer-Side Option! ([`&view`](view.md), [`&scene`](scene.md), [`&room`](../../g
 
 ## Options
 
+Example: `&animated=false`
+
 | Value                           | Description                                                      |
 | ------------------------------- | ---------------------------------------------------------------- |
 | (no value given)                | videos in a group scene will slide around when being re-arranged |

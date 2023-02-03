@@ -9,6 +9,8 @@ Viewer-Side Option! ([`&scene`](../view-parameters/scene.md), [`&room`](../../ge
 
 ## Options
 
+Example: `&whip=bearertoken`
+
 | Value          | Description           |
 | -------------- | --------------------- |
 | (string value) | bearer token from OBS |

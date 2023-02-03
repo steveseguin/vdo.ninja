@@ -8,6 +8,8 @@ Viewer-Side Option! ([`&scene`](../advanced-settings/view-parameters/scene.md))
 
 ## Options
 
+Example: `&autoadd=StreamID1,StreamID2`
+
 | Value                           | Description                                                     |
 | ------------------------------- | --------------------------------------------------------------- |
 | (streamid1,streamid2,streamid3) | the stream IDs which should be automatically added to the scene |

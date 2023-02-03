@@ -10,6 +10,8 @@ Viewer-Side Option! ([`&scene`](../view-parameters/scene.md), [`&view`](../view-
 
 ## Options
 
+Example: `&waittimeout=3000`
+
 | Value           | Description |
 | --------------- | ----------- |
 | (integer value) | Delay in ms |

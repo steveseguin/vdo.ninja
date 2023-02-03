@@ -4,7 +4,7 @@ description: Disables the video button; guests can't mute video
 
 # \&novideobutton
 
-Sender-Side Option! ([`&push`](../source-settings/push.md))
+Sender-Side Option! ([`&push`](../../source-settings/push.md))
 
 ## Aliases
 
@@ -14,7 +14,7 @@ Sender-Side Option! ([`&push`](../source-settings/push.md))
 
 Disables the video button. Guests can't mute their video input.
 
-![](<../.gitbook/assets/image (58) (1).png>)
+![](<../../.gitbook/assets/image (58) (1).png>)
 
 ## Related
 
@@ -22,6 +22,6 @@ Disables the video button. Guests can't mute their video input.
 [nomicbutton.md](nomicbutton.md)
 {% endcontent-ref %}
 
-{% content-ref url="../source-settings/and-nospeakerbutton.md" %}
-[and-nospeakerbutton.md](../source-settings/and-nospeakerbutton.md)
+{% content-ref url="and-nospeakerbutton.md" %}
+[and-nospeakerbutton.md](and-nospeakerbutton.md)
 {% endcontent-ref %}

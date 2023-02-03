@@ -10,6 +10,8 @@ Viewer-Side Option! ([`&view`](../advanced-settings/view-parameters/view.md), [`
 
 ## Options
 
+Example: `&slots=4`
+
 | Value              | Description                                                           |
 | ------------------ | --------------------------------------------------------------------- |
 | (positive integer) | the number of slots force the auto-mixer to have that number of slots |

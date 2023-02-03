@@ -48,8 +48,8 @@ There is a toggle in the director's room which adds `&ad` to the guest's invite 
 
 ## Related
 
-{% content-ref url="and-nosettings.md" %}
-[and-nosettings.md](and-nosettings.md)
+{% content-ref url="../advanced-settings/buttons-and-control-bar-parameters/and-nosettings.md" %}
+[and-nosettings.md](../advanced-settings/buttons-and-control-bar-parameters/and-nosettings.md)
 {% endcontent-ref %}
 
 {% content-ref url="videodevice.md" %}

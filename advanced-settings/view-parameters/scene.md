@@ -12,6 +12,8 @@ Viewer-Side Option! ([`&room`](../../general-settings/room.md))
 
 ## Options
 
+Example: `&scene=2` or `&scene=choosethename`
+
 | Value                   | Description                                             |
 | ----------------------- | ------------------------------------------------------- |
 | `0` \| (no value given) | auto-add all videos to the scene; they can't be removed |

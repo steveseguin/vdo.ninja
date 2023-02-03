@@ -58,8 +58,8 @@ Disables the guest's camera by adding `&vd=0` to the guest's invite link.\
 [audiodevice.md](audiodevice.md)
 {% endcontent-ref %}
 
-{% content-ref url="and-nosettings.md" %}
-[and-nosettings.md](and-nosettings.md)
+{% content-ref url="../advanced-settings/buttons-and-control-bar-parameters/and-nosettings.md" %}
+[and-nosettings.md](../advanced-settings/buttons-and-control-bar-parameters/and-nosettings.md)
 {% endcontent-ref %}
 
 {% content-ref url="and-webcam.md" %}

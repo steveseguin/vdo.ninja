@@ -8,6 +8,8 @@ Viewer-Side Option! ([`&scene`](../view-parameters/scene.md), [`&room`](../../ge
 
 ## Options
 
+Example: `&include=StreamID`
+
 | Value       | Description                                                         |
 | ----------- | ------------------------------------------------------------------- |
 | (stream ID) | stream ID of a publisher outside of a room with a matching password |

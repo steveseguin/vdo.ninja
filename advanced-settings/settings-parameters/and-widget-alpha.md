@@ -34,8 +34,8 @@ If the director uses `&widget`, it will auto sync that with all guests as they c
 
 ## Related
 
-{% content-ref url="../../general-settings/chatbutton.md" %}
-[chatbutton.md](../../general-settings/chatbutton.md)
+{% content-ref url="../buttons-and-control-bar-parameters/chatbutton.md" %}
+[chatbutton.md](../buttons-and-control-bar-parameters/chatbutton.md)
 {% endcontent-ref %}
 
 {% content-ref url="../../steves-helper-apps/social-stream.md" %}

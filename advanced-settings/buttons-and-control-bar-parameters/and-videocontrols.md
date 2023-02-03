@@ -4,7 +4,7 @@ description: Shows the video control bar
 
 # \&videocontrols
 
-Sender-Side Option! ([`&push`](../../source-settings/push.md))
+General Option! ([`&push`](../../source-settings/push.md), [`&room`](../../general-settings/room.md), [`&view`](../view-parameters/view.md), [`&scene`](../view-parameters/scene.md))
 
 ## Aliases
 
@@ -21,7 +21,7 @@ Example: `&videocontrols=false`
 
 ## Details
 
-`&videocontrols` is a publisher's side parameter. It shows the video control bar (provides access to full screen on mobile). You can also show the control bar with `Right-Click` -> `Show control bar`.
+`&videocontrols` will show the video control bar (provides access to full screen on mobile). You can also show the control bar with `Right-Click` -> `Show control bar`.
 
 {% hint style="warning" %}
 This is not the same control bar as the user control bar. Also, be sure to not accidentally unmute yourself -- echo feedback galore.
@@ -31,10 +31,10 @@ This is not the same control bar as the user control bar. Also, be sure to not a
 
 ## Related
 
-{% content-ref url="../settings-parameters/and-nocontrols.md" %}
-[and-nocontrols.md](../settings-parameters/and-nocontrols.md)
+{% content-ref url="and-nocontrols.md" %}
+[and-nocontrols.md](and-nocontrols.md)
 {% endcontent-ref %}
 
-{% content-ref url="../../parameters-only-on-beta/and-autohide.md" %}
-[and-autohide.md](../../parameters-only-on-beta/and-autohide.md)
+{% content-ref url="and-autohide.md" %}
+[and-autohide.md](and-autohide.md)
 {% endcontent-ref %}

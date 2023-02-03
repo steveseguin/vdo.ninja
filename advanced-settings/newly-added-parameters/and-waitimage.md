@@ -10,9 +10,11 @@ Viewer-Side Option! ([`&scene`](../view-parameters/scene.md), [`&view`](../view-
 
 ## Options
 
-| Value | Description              |
-| ----- | ------------------------ |
-| (URL) | Specifies a custom image |
+Example: `&waitimage=https%3A%2F%2Fvdo.ninja%2Fmedia%2Flogo_cropped.png`
+
+| Value         | Description              |
+| ------------- | ------------------------ |
+| (encoded URL) | Specifies a custom image |
 
 ## Details
 
@@ -26,6 +28,9 @@ It fits to the screen, and [`&cover`](../view-parameters/cover.md) will have it 
 When using `&waitimage`, the specified 'waiting to connect' image will appear after all connections end.
 
 It overrides [`&cleanoutput`](../design-parameters/cleanoutput.md).
+
+You can encode the URL here:\
+[https://www.urlencoder.org/](https://www.urlencoder.org/)
 
 ## Related
 

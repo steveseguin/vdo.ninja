@@ -10,6 +10,8 @@ Viewer-Side Option! ([`&scene`](../advanced-settings/view-parameters/scene.md))
 
 ## Options
 
+Example: `&hiddenscenebitrate=800`
+
 | Value           | Description                     |
 | --------------- | ------------------------------- |
 | (integer value) | specified video bitrate in kbps |

@@ -10,6 +10,8 @@ Viewer-Side Option! ([`&scene`](../view-parameters/scene.md), [`&view`](../view-
 
 ## Options
 
+Example: `&waitmessage=hello`
+
 | Value    | Description         |
 | -------- | ------------------- |
 | (string) | Specifies a message |

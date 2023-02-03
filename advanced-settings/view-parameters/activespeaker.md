@@ -15,6 +15,8 @@ Viewer-Side Option! ([`&view`](view.md), [`&scene`](scene.md), [`&room`](../../g
 
 ## Options
 
+Example: `&activespeaker=1`
+
 | Value                   | Description                                                                             |
 | ----------------------- | --------------------------------------------------------------------------------------- |
 | `1` \| (no value given) | will only show one speaker at a time; the loudest or last-loud speaker                  |

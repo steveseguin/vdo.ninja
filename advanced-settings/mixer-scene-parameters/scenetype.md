@@ -12,6 +12,8 @@ Viewer-Side Option! ([`&scene`](../view-parameters/scene.md))
 
 ## Options
 
+Example: `&scenetype=2`
+
 | Value | Description                                                                                                                                               |
 | ----- | --------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | `1`   | just shows the last guest that was added in the scene, but doesn't mute the previous guests                                                               |

@@ -1,5 +1,5 @@
 ---
-description: Forces the bottom control bar to be in its own dedicated space
+description: Forces the user control bar to be in its own dedicated space
 ---
 
 # \&controlbarspace
@@ -14,6 +14,6 @@ Sender-Side Option! ([`&push`](../../source-settings/push.md), [`&room`](../../g
 
 ## Related
 
-{% content-ref url="../../parameters-only-on-beta/and-autohide.md" %}
-[and-autohide.md](../../parameters-only-on-beta/and-autohide.md)
+{% content-ref url="and-autohide.md" %}
+[and-autohide.md](and-autohide.md)
 {% endcontent-ref %}
