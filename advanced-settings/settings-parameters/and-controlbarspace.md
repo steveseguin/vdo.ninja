@@ -14,6 +14,6 @@ Sender-Side Option! ([`&push`](../../source-settings/push.md), [`&room`](../../g
 
 ## Related
 
-{% content-ref url="and-autohide.md" %}
-[and-autohide.md](and-autohide.md)
+{% content-ref url="../../parameters-only-on-beta/and-autohide.md" %}
+[and-autohide.md](../../parameters-only-on-beta/and-autohide.md)
 {% endcontent-ref %}

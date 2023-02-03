@@ -6,7 +6,7 @@ description: >-
 
 # \&nowebsite
 
-Sender-Side Option! ([`&push`](../../source-settings/push.md))
+Sender-Side Option! ([`&push`](push.md))
 
 ## Aliases
 
@@ -20,6 +20,6 @@ Disables IFRAMEs from loading, such as remotely shared websites by another guest
 
 ## Related
 
-{% content-ref url="../../source-settings/and-website.md" %}
-[and-website.md](../../source-settings/and-website.md)
+{% content-ref url="and-website.md" %}
+[and-website.md](and-website.md)
 {% endcontent-ref %}

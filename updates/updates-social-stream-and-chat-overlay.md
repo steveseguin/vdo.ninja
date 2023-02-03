@@ -88,7 +88,7 @@
   ![](<../.gitbook/assets/image (2) (3).png>)
 * Fixed WhatsApp support for Social Stream
 * Added Instagram post (non-live) comments to Social Stream. You will need to enable this via the menu, since this is a pretty non-obvious integration for Social Stream.\
-  ![](<../.gitbook/assets/image (4) (5).png>)![](<../.gitbook/assets/image (5) (1) (1).png>)
+  ![](<../.gitbook/assets/image (4) (5).png>)![](<../.gitbook/assets/image (5) (1).png>)
 * Support for locals.com added to Social Stream
 
 #### **December 5**

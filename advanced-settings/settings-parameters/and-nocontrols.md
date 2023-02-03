@@ -21,10 +21,10 @@ This is not the same control bar as the user control bar. Also, be sure to not a
 This is the video control bar:\
 
 
-<figure><img src="../../.gitbook/assets/image (1) (1).png" alt=""><figcaption></figcaption></figure>
+<figure><img src="../../.gitbook/assets/image (1) (11).png" alt=""><figcaption></figcaption></figure>
 
 ## Related
 
-{% content-ref url="and-videocontrols.md" %}
-[and-videocontrols.md](and-videocontrols.md)
+{% content-ref url="../newly-added-parameters/and-videocontrols.md" %}
+[and-videocontrols.md](../newly-added-parameters/and-videocontrols.md)
 {% endcontent-ref %}

@@ -24,6 +24,6 @@ It is recommend to consider using the Electron Capture app as the window-capture
 [cleanoutput.md](../advanced-settings/design-parameters/cleanoutput.md)
 {% endcontent-ref %}
 
-{% content-ref url="../advanced-settings/buttons-and-control-bar-parameters/and-fullscreenbutton.md" %}
-[and-fullscreenbutton.md](../advanced-settings/buttons-and-control-bar-parameters/and-fullscreenbutton.md)
+{% content-ref url="../advanced-settings/settings-parameters/and-fullscreenbutton.md" %}
+[and-fullscreenbutton.md](../advanced-settings/settings-parameters/and-fullscreenbutton.md)
 {% endcontent-ref %}

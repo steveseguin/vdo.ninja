@@ -25,6 +25,6 @@ If you can't hear a sound, click any button in the room. Then the sounds will be
 [r2d2.md](r2d2.md)
 {% endcontent-ref %}
 
-{% content-ref url="../advanced-settings/buttons-and-control-bar-parameters/and-hands.md" %}
-[and-hands.md](../advanced-settings/buttons-and-control-bar-parameters/and-hands.md)
+{% content-ref url="and-hands.md" %}
+[and-hands.md](and-hands.md)
 {% endcontent-ref %}

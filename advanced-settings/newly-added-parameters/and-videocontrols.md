@@ -31,10 +31,10 @@ This is not the same control bar as the user control bar. Also, be sure to not a
 
 ## Related
 
-{% content-ref url="and-nocontrols.md" %}
-[and-nocontrols.md](and-nocontrols.md)
+{% content-ref url="../settings-parameters/and-nocontrols.md" %}
+[and-nocontrols.md](../settings-parameters/and-nocontrols.md)
 {% endcontent-ref %}
 
-{% content-ref url="and-autohide.md" %}
-[and-autohide.md](and-autohide.md)
+{% content-ref url="../../parameters-only-on-beta/and-autohide.md" %}
+[and-autohide.md](../../parameters-only-on-beta/and-autohide.md)
 {% endcontent-ref %}

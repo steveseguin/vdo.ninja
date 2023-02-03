@@ -16,7 +16,7 @@
 #### January 25 <a href="#august-31" id="august-31"></a>
 
 * Updated the http [API](../general-settings/api.md) getDetails request to include info about video visibility; makes it a bit more usable if querying a scene link\
-  ![](<../.gitbook/assets/image (3) (2).png>)
+  ![](<../.gitbook/assets/image (3) (2) (3).png>)
 
 #### January 23 <a href="#august-31" id="august-31"></a>
 
@@ -106,7 +106,7 @@
   \-- HTTP / WSS remote control also added; `https://api.vdo.ninja/YOURAPIKEY/nextSlide` and `prevSlide`\
   ``-- Local Streamdeck support also working, via MIDI.\
   \-- YouTube Tutorial: [https://youtu.be/ORH8betTt8Y](https://youtu.be/ORH8betTt8Y)\
-  ![](<../.gitbook/assets/image (5) (1).png>)![](<../.gitbook/assets/image (19).png>)\
+  ![](<../.gitbook/assets/image (5).png>)![](<../.gitbook/assets/image (19).png>)\
   \
   \* on alpha at vdo.ninja/alpha/
 
@@ -137,7 +137,7 @@
 
 #### **December 19** <a href="#august-31" id="august-31"></a>
 
-* [`&fullscreenbutton`](../advanced-settings/buttons-and-control-bar-parameters/and-fullscreenbutton.md) is improved, so that even when there is a single video on the page, it will show. It also shows more reliably, without needing to move the mouse around a bit to re-show the button after going full screen. Lastly, when used, it now hides the native full-screen button, so users have to use it.\
+* [`&fullscreenbutton`](../advanced-settings/settings-parameters/and-fullscreenbutton.md) is improved, so that even when there is a single video on the page, it will show. It also shows more reliably, without needing to move the mouse around a bit to re-show the button after going full screen. Lastly, when used, it now hides the native full-screen button, so users have to use it.\
   \
   Unlike the native full screen button, this full screen mode alternative keeps the chat and control bar overlays visible (like press F11). Since this is probably the preferred way most users will want to full screen to work, I may make it the default mode at some point, after some more testing/feedback. (not supported on iOS/iPhone tho)\
   \
@@ -263,7 +263,7 @@
 #### **November 22** <a href="#august-31" id="august-31"></a>
 
 * Made the [`&clock`](../advanced-settings/settings-parameters/and-clock.md) and timer overlay be something you can 'pop out' and overlay as a native picture-in-picture element; just right-click it and select pop-out from the context menu.\
-  ![](<../.gitbook/assets/image (1) (1) (1) (1).png>)![](<../.gitbook/assets/image (2) (8).png>)
+  ![](<../.gitbook/assets/image (1) (1) (1).png>)![](<../.gitbook/assets/image (2) (8).png>)
 * Fixed an issue where the right-click -> edit URL feature in [v22](../releases/v22.md) broke
 * Viewer-side [`&audiocodec=pcm`](../advanced-settings/audio-parameters/minptime-1.md) is now available as an audio codec option; this is 32khz, 16bit, mono, and uncompressed, so \~512-kbps bitrate. You'll need the sender to have `&insertablestreams` applied to their URL for this to work currently, as it requires the sender to enable a special mode that allows for custom codecs. This is very experimental at the moment, so its still a WIP.
 * `&micsamplerate` (`&msr`) added, which lets you specify the capture audio sample rate. Also added purely for experimental reasons; I don't recommend touching.\
@@ -386,7 +386,7 @@
 
 #### **November 1** <a href="#august-31" id="august-31"></a>
 
-* ``[`&controlbarspace`](../advanced-settings/buttons-and-control-bar-parameters/and-controlbarspace.md) forces the bottom control bar to be in its own dedicated space, regardless of screen size.
+* ``[`&controlbarspace`](../advanced-settings/settings-parameters/and-controlbarspace.md) forces the bottom control bar to be in its own dedicated space, regardless of screen size.
 * ``[`&volumecontrol`](../advanced-settings/audio-parameters/and-volumecontrol.md) (alias, `&vc`) shows a dedicated local audio-volume control bar for canvas or image elements. Video elements already have a control-bar with volume, so I don't show it there currently. I'll likely tweak this more over time.\
   ![](<../.gitbook/assets/image (8) (2).png>)
 * Fixed an issue with [`&screensharetype=3`](../newly-added-parameters/and-screensharetype.md) crashing the browser when specifying an audio track to share.\
@@ -544,7 +544,7 @@
 * Added mobile touch support to the tap-to-focus (only mouse support previously).
 * Minor issue with drag-to-zoom fixed.
 * Fixed issue with not being able to reset video settings to default after changing them.
-* [`&autohide`](../advanced-settings/buttons-and-control-bar-parameters/and-autohide.md) works better now; also on mobile, the `&autohide` makes the control bar transparent on timeout, to avoid conflicts with tap-to-zoom/focus logic.
+* [`&autohide`](../parameters-only-on-beta/and-autohide.md) works better now; also on mobile, the `&autohide` makes the control bar transparent on timeout, to avoid conflicts with tap-to-zoom/focus logic.
 * It's easy to adjust video settings on mobile, as there is a large space to scroll without accidentally clicking a setting slider. Also more bottom padding, making it easier to click close in landscape mode.
 * Made the [`&sticky`](../general-settings/sticky.md) redirect confirmation prompt less ugly, and I now don't ask if the URL already matches the saved session's URL.
 * Made some changes/fixes to the recently new switchMode ([`&previewmode`](../advanced-settings/director-parameters/and-previewmode.md)) function of the director room (hopefully no bugs?).\
@@ -952,7 +952,7 @@
     \*\* on vdo.ninja/beta/ (all current code is up to date on beta)
 * ``[`&bgimage=`](../advanced-settings/design-parameters/and-bgimage.md) can be used to set the default image avatar, when using [`&style=0`](../advanced-settings/design-parameters/style.md) or `&style=6`. This only impacts what the person with the parameter added sees and must be either a URL or a base64 data image/SVG. URL-encoded values. on alpha ie: [https://vdo.ninja/alpha/?view=aSmexM6\&style=0\&nocontrols\&bgimage=https%3A%2F%2Fvdo.ninja%2Fmedia%2Fold\_icon.png](https://vdo.ninja/alpha/?view=aSmexM6\&style=0\&nocontrols\&bgimage=https%3A%2F%2Fvdo.ninja%2Fmedia%2Fold\_icon.png)\
   ![](<../.gitbook/assets/image (157).png>)
-* ``[`&controls=0`](../advanced-settings/buttons-and-control-bar-parameters/and-videocontrols.md) \[`off`/`false`] or [`&nocontrols`](../advanced-settings/buttons-and-control-bar-parameters/and-nocontrols.md), will force hide the video control bar. (on local dev atm)
+* ``[`&controls=0`](../advanced-settings/newly-added-parameters/and-videocontrols.md) \[`off`/`false`] or [`&nocontrols`](../advanced-settings/settings-parameters/and-nocontrols.md), will force hide the video control bar. (on local dev atm)
 * Added the option to set a dedicated hold-to-talk key to VDO.Ninja; `CTRL+M` can work in place of this still by default, but this lets you set a custom combo/key that doesn't act as a mute toggle at all (if just tapped accidentally) \*\* This is on alpha\
   ![](<../.gitbook/assets/image (169).png>)
 
@@ -1006,7 +1006,7 @@
 
 * Added [`&disablehotkeys`](../advanced-settings/settings-parameters/and-disablehotkeys.md) to VDO.Ninja (hot patched), to allow for hotkeys (like `CTRL + M`) to be disabled.
 * [`&notify`](../source-settings/and-notify.md) works with basic view/push link combos; before it only beeped when a guest joined a room. (on alpha)
-* [`&nohangupbutton`](../advanced-settings/buttons-and-control-bar-parameters/and-nohangupbutton.md) (aka, `&nohub`), has been added to VDO.Ninja (hot patched). This option hides the hang-up button, so it can't be accidentally clicked.
+* [`&nohangupbutton`](../advanced-settings/settings-parameters/and-nohangupbutton.md) (aka, `&nohub`), has been added to VDO.Ninja (hot patched). This option hides the hang-up button, so it can't be accidentally clicked.
 
 #### April 19
 

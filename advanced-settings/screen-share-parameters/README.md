@@ -18,26 +18,26 @@ You can add them to both, source ([`&push`](../../source-settings/push.md)) and 
 
 You can add them to both, source ([`&push`](../../source-settings/push.md)) and viewer ([`&view`](../view-parameters/view.md) or [`&scene`](../view-parameters/scene.md)) sides.
 
-| Parameter                                                                                  | Explanation                                                                                                 |
-| ------------------------------------------------------------------------------------------ | ----------------------------------------------------------------------------------------------------------- |
-| ``[`&screenshare`](../../source-settings/screenshare.md)``                                 | Disables camera-sharing as an option                                                                        |
-| ``[`&screenshare2`](../../newly-added-parameters/and-screenshare2.md)``                    | Will show the "Share your Screen" button before asking the user to select screenshare options               |
-| ``[`&screenshareaec`](../../newly-added-parameters/and-screenshareaec.md)``                | Turns automatic echo-cancellation filter for screen-shares ON or OFF                                        |
-| ``[`&screenshareautogain`](../../newly-added-parameters/and-screenshareautogain.md)``      | Turns audio auto-normalization filter for screen-shares ON or OFF                                           |
-| ``[`&screensharecursor`](../../source-settings/cursor.md)``                                | Attempts to show the mouse cursor on screen shares                                                          |
-| ``[`&screensharedenoise`](../../newly-added-parameters/and-screensharedenoise.md)``        | Turns audio noise reduction filter for screen-shares ON or OFF                                              |
-| ``[`&screensharefps`](../../source-settings/screensharefps.md)``                           | Set a target FPS for your screenshare (secondary stream)                                                    |
-| ``[`&screensharehide`](../../newly-added-parameters/and-screensharehide.md)``              | Hides the local screen-share sub-window that appears when screen sharing in a room                          |
-| ``[`&screenshareid`](../../source-settings/screenshareid.md)``                             | Pre-sets the screenshare stream id for a screen share if its a secondary stream                             |
-| ``[`&screensharelabel`](../../newly-added-parameters/and-screensharelabel.md)``            | The screen-share of the guest will have the same label as the guest                                         |
-| ``[`&screensharequality`](../../source-settings/screensharequality.md)``                   | Set a custom screenshare quality                                                                            |
-| ``[`&screensharecontenthint`](and-screensharecontenthint.md)\*                             | `=motion` prioritizes screen-share resolution; `=detail` prioritizes screen-share frame rate                |
-| ``[`&screenshareaspectratio`](and-screenshareaspectratio.md)\*                             | Changes the screen-share aspect ratio on the publisher side                                                 |
-| ``[`&screensharestereo`](../../newly-added-parameters/and-screensharestereo.md)``          | Sets the audio mode for screen-shares to stereo and changes default audio settings to improve audio quality |
-| ``[`&screensharetype`](../../newly-added-parameters/and-screensharetype.md)``              | Defines how webcam and screenshare of a guest in a room interacts which each other                          |
-| ``[`&smallshare`](and-smallshare.md)\*                                                     | Makes the screen share behave like a webcam share                                                           |
-| ``[`&screensharevideoonly`](../../newly-added-parameters/and-screensharevideoonly.md)``    | Lets you disable the option to select audio when screen sharing                                             |
-| ``[`&screensharebutton`](../buttons-and-control-bar-parameters/and-screensharebutton.md)`` | Forces the screen-share button to appear for guests                                                         |
+| Parameter                                                                               | Explanation                                                                                                 |
+| --------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------- |
+| ``[`&screenshare`](../../source-settings/screenshare.md)``                              | Disables camera-sharing as an option                                                                        |
+| ``[`&screenshare2`](../../newly-added-parameters/and-screenshare2.md)``                 | Will show the "Share your Screen" button before asking the user to select screenshare options               |
+| ``[`&screenshareaec`](../../newly-added-parameters/and-screenshareaec.md)``             | Turns automatic echo-cancellation filter for screen-shares ON or OFF                                        |
+| ``[`&screenshareautogain`](../../newly-added-parameters/and-screenshareautogain.md)``   | Turns audio auto-normalization filter for screen-shares ON or OFF                                           |
+| ``[`&screensharecursor`](../../source-settings/cursor.md)``                             | Attempts to show the mouse cursor on screen shares                                                          |
+| ``[`&screensharedenoise`](../../newly-added-parameters/and-screensharedenoise.md)``     | Turns audio noise reduction filter for screen-shares ON or OFF                                              |
+| ``[`&screensharefps`](../../source-settings/screensharefps.md)``                        | Set a target FPS for your screenshare (secondary stream)                                                    |
+| ``[`&screensharehide`](../../newly-added-parameters/and-screensharehide.md)``           | Hides the local screen-share sub-window that appears when screen sharing in a room                          |
+| ``[`&screenshareid`](../../source-settings/screenshareid.md)``                          | Pre-sets the screenshare stream id for a screen share if its a secondary stream                             |
+| ``[`&screensharelabel`](../../newly-added-parameters/and-screensharelabel.md)``         | The screen-share of the guest will have the same label as the guest                                         |
+| ``[`&screensharequality`](../../source-settings/screensharequality.md)``                | Set a custom screenshare quality                                                                            |
+| ``[`&screensharecontenthint`](and-screensharecontenthint.md)\*                          | `=motion` prioritizes screen-share resolution; `=detail` prioritizes screen-share frame rate                |
+| ``[`&screenshareaspectratio`](and-screenshareaspectratio.md)\*                          | Changes the screen-share aspect ratio on the publisher side                                                 |
+| ``[`&screensharestereo`](../../newly-added-parameters/and-screensharestereo.md)``       | Sets the audio mode for screen-shares to stereo and changes default audio settings to improve audio quality |
+| ``[`&screensharetype`](../../newly-added-parameters/and-screensharetype.md)``           | Defines how webcam and screenshare of a guest in a room interacts which each other                          |
+| ``[`&smallshare`](and-smallshare.md)\*                                                  | Makes the screen share behave like a webcam share                                                           |
+| ``[`&screensharevideoonly`](../../newly-added-parameters/and-screensharevideoonly.md)`` | Lets you disable the option to select audio when screen sharing                                             |
+| ``[`&screensharebutton`](../settings-parameters/and-screensharebutton.md)``             | Forces the screen-share button to appear for guests                                                         |
 
 \*NEW IN VERSION 22
 

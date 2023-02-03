@@ -4,7 +4,7 @@ description: Enables a "Raise Hand" button for guests
 
 # \&hands
 
-Sender-Side Option! ([`&push`](../../source-settings/push.md))
+Sender-Side Option! ([`&push`](push.md))
 
 ## Aliases
 
@@ -14,19 +14,19 @@ Sender-Side Option! ([`&push`](../../source-settings/push.md))
 
 Adds a button for guests to raise their hands.
 
-![](<../../.gitbook/assets/image (60).png>)
+![](<../.gitbook/assets/image (60).png>)
 
 If pressed, and the user is in a room, the room's director will get a notification that the user pressed the button.\
-![](<../../.gitbook/assets/image (139).png>)
+![](<../.gitbook/assets/image (139).png>)
 
 It will do nothing if the room does not have a director in it.
 
 The director can dismiss the user's action.
 
-There is a toggle in the director's room which adds `&hand` to the guest's invite link.![](<../../.gitbook/assets/image (107).png>)
+There is a toggle in the director's room which adds `&hand` to the guest's invite link.![](<../.gitbook/assets/image (107).png>)
 
 ## Related
 
-{% content-ref url="../../source-settings/and-notify.md" %}
-[and-notify.md](../../source-settings/and-notify.md)
+{% content-ref url="and-notify.md" %}
+[and-notify.md](and-notify.md)
 {% endcontent-ref %}

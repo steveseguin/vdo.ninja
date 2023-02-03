@@ -1,7 +1,7 @@
 ---
 description: >-
-  Language, save cookies, remote access, chunked mode, raise hands, notify,
-  transcription, closed captions
+  Language, save cookies, remote access, chat widget, chunked mode, raise hands,
+  notify, transcription, closed captions
 ---
 
 # Settings Parameters
@@ -42,7 +42,7 @@ You can use them for publisher, viewer and director URLs.
 | ``[`&signalmeter`](../../newly-added-parameters/and-signalmeter.md)`` | Visualizes the packet loss of a guest                                                                                |
 | ``[`&consent`](../../source-settings/consent.md)``                    | Will ask the user for content to remote change their camera or microphone                                            |
 | ``[`&prompt`](and-prompt.md)\*                                        | Another security option, for those concerned about random spying of their streams                                    |
-| ``[`&hands`](../buttons-and-control-bar-parameters/and-hands.md)``    | Enables a "Raise Hand" button for guests                                                                             |
+| ``[`&hands`](../../source-settings/and-hands.md)``                    | Enables a "Raise Hand" button for guests                                                                             |
 | ``[`&notify`](../../source-settings/and-notify.md)``                  | Audio alerts for raised hands, chat messages and if somebody joins the room                                          |
 | ``[`&r2d2`](../../source-settings/r2d2.md)``                          | Easter egg `&notify` sound                                                                                           |
 | ``[`&directorchat`](../../source-settings/directorchat.md)``          | Message ONLY the director                                                                                            |
