@@ -16,7 +16,7 @@ Example: `&clock=5` or `&clock=false`
 | `9` \| (no value given) | Shows the current time in the lower right                                                                       |
 | `false`                 | Will force-disable the clock from being remotely triggerable                                                    |
 
-![](<../../.gitbook/assets/image (1) (3).png>)
+![](<../../.gitbook/assets/image (1) (10).png>)
 
 ## Details
 
@@ -30,7 +30,7 @@ The director has a button that lets them enable the clock for everyone in the ro
 
 The director has a button that lets them also enable a global count-down timer. Holding `CTRL + click` will let the director pause the timer. If someone joins the room or reloads, the timer will also be reloaded, in sync. Button also in the room settings menu.
 
-<figure><img src="../../.gitbook/assets/image (3) (3) (2).png" alt=""><figcaption></figcaption></figure>
+<figure><img src="../../.gitbook/assets/image (3) (3).png" alt=""><figcaption></figcaption></figure>
 
 This count down timer is the same concept as the per-guest timer the director already has, and will actually conflict with it if both are used, since it uses the same state/variable to keep track of time remaining.
 

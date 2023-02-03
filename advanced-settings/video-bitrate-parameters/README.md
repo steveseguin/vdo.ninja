@@ -43,6 +43,10 @@ You have to add them to the viewer side ([`&room`](../../general-settings/room.m
 [video-parameters](../video-parameters/)
 {% endcontent-ref %}
 
-{% content-ref url="../../guides/video-bitrates-for-push-view-links.md" %}
-[video-bitrates-for-push-view-links.md](../../guides/video-bitrates-for-push-view-links.md)
+{% content-ref url="../../guides/video-bitrate-in-rooms.md" %}
+[video-bitrate-in-rooms.md](../../guides/video-bitrate-in-rooms.md)
+{% endcontent-ref %}
+
+{% content-ref url="../../guides/video-bitrate-for-push-view-links.md" %}
+[video-bitrate-for-push-view-links.md](../../guides/video-bitrate-for-push-view-links.md)
 {% endcontent-ref %}

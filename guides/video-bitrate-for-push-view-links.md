@@ -2,7 +2,7 @@
 description: How to control video bitrates for basic push/view links
 ---
 
-# Video bitrates for push/view links
+# Video bitrate for push/view links
 
 ## The default settings
 
@@ -68,7 +68,7 @@ The view link is setting the bitrate per incoming stream (in this case 2000-kbps
 ### The view link sets the total video bitrate for all incoming streams combined
 
 ``[`&totalscenebitrate (&tsb)`](../advanced-settings/video-bitrate-parameters/and-totalscenebitrate.md)\
-This is similar to [`&vb`](video-bitrates-for-push-view-links.md#the-view-link-sets-the-video-bitrate-per-stream-in) but it sets the target and maximum bitrate for all incoming streams combined.
+This is similar to [`&vb`](video-bitrate-for-push-view-links.md#the-view-link-sets-the-video-bitrate-per-stream-in) but it sets the target and maximum bitrate for all incoming streams combined.
 
 [https://vdo.ninja/?push=streamid](https://vdo.ninja/?push=streamid)\
 [https://vdo.ninja/?view=streamid\&tsb=3000](https://vdo.ninja/?view=streamid\&tsb=3000)\
@@ -91,4 +91,8 @@ All the three push parameters are always limiting the maximum. So if you set one
 
 {% content-ref url="../advanced-settings/video-bitrate-parameters/" %}
 [video-bitrate-parameters](../advanced-settings/video-bitrate-parameters/)
+{% endcontent-ref %}
+
+{% content-ref url="video-bitrate-in-rooms.md" %}
+[video-bitrate-in-rooms.md](video-bitrate-in-rooms.md)
 {% endcontent-ref %}

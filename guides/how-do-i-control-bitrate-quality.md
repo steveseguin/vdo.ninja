@@ -36,8 +36,8 @@ You can improve audio quality in the same way, by increasing the [`&audiobitrate
 
 ## More Details
 
-{% content-ref url="video-bitrates-for-push-view-links.md" %}
-[video-bitrates-for-push-view-links.md](video-bitrates-for-push-view-links.md)
+{% content-ref url="video-bitrate-for-push-view-links.md" %}
+[video-bitrate-for-push-view-links.md](video-bitrate-for-push-view-links.md)
 {% endcontent-ref %}
 
 {% content-ref url="audio-filters.md" %}

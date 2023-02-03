@@ -19,7 +19,7 @@ General Option! ([`&push`](../../source-settings/push.md), [`&room`](../../gener
 | `3`                     | will show a little green dot in the top-right corner when the guest's talking; this is default for the guest's view already                                                                      |
 | `4` \*on alpha          | no meter is shown, but a data-attribute named `data-loudness` is applied to the video element. This can be targeted with CSS to do custom styles via OBS browser source or with [`&css`](css.md) |
 
-<figure><img src="../../.gitbook/assets/image (4).png" alt=""><figcaption></figcaption></figure>
+<figure><img src="../../.gitbook/assets/image (4) (8).png" alt=""><figcaption></figcaption></figure>
 
 ## Details
 

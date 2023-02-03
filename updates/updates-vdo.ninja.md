@@ -3,7 +3,7 @@
 #### February 1 <a href="#august-31" id="august-31"></a>
 
 * Added options for the [`&clock`](../advanced-settings/settings-parameters/and-clock.md) parameter. `&clock=N`, where `N` can be `1` to `9`; each option specifies where the clock will appear on the screen. \*\* on alpha at [`vdo.ninja/alpha/?webcam&autostart&clock=5`](https://vdo.ninja/alpha/?webcam\&autostart\&clock=5)``\
-  ``![](<../.gitbook/assets/image (3) (3).png>)
+  ``![](<../.gitbook/assets/image (3) (7).png>)
 
 #### January 31 <a href="#august-31" id="august-31"></a>
 
@@ -315,7 +315,7 @@
   \-- The director has a button that lets them enable the clock for everyone in the room (via the director's room settings button).\
   \-- [`&clock=false`](../advanced-settings/settings-parameters/and-clock.md) or [`&cleanoutput`](../advanced-settings/design-parameters/cleanoutput.md) will force-disable the clock from being remotely triggerable.\
   \-- The director has a button that lets them also enable a global count-down timer. Holding CTRL + click will let the director pause the timer. If someone joins the room or reloads, the timer will also be reloaded, in sync. Button also in the room settings menu.\
-  ![](<../.gitbook/assets/image (3) (3) (2).png>)\
+  ![](<../.gitbook/assets/image (3) (3).png>)\
   \-- This count down timer is the same concept as the per-guest timer the director already has, and will actually conflict with it if both are used, since it uses the same state/variable to keep track of time remaining.\
   \-- The director will see the global count down timer also; it will just be a bit smaller on screen.\
   ![](<../.gitbook/assets/image (1) (1) (1) (3).png>)

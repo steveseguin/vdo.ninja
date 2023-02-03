@@ -47,3 +47,7 @@ Set to 600-kbps, 200-kbps, or 80-kbps if the goal is to reduce CPU load. (2x, 3x
 {% content-ref url="and-maxvideobitrate.md" %}
 [and-maxvideobitrate.md](and-maxvideobitrate.md)
 {% endcontent-ref %}
+
+{% content-ref url="../../guides/video-bitrate-in-rooms.md" %}
+[video-bitrate-in-rooms.md](../../guides/video-bitrate-in-rooms.md)
+{% endcontent-ref %}

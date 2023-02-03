@@ -41,8 +41,8 @@ Not compatible with **Firefox**.
 
 ## Related
 
-{% content-ref url="../../guides/video-bitrates-for-push-view-links.md" %}
-[video-bitrates-for-push-view-links.md](../../guides/video-bitrates-for-push-view-links.md)
+{% content-ref url="../../guides/video-bitrate-for-push-view-links.md" %}
+[video-bitrate-for-push-view-links.md](../../guides/video-bitrate-for-push-view-links.md)
 {% endcontent-ref %}
 
 {% content-ref url="../view-parameters/audiobitrate.md" %}

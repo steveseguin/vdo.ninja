@@ -71,3 +71,7 @@ The director can also dynamically change their total room bitrate value using a 
 {% content-ref url="and-controlroombitrate.md" %}
 [and-controlroombitrate.md](and-controlroombitrate.md)
 {% endcontent-ref %}
+
+{% content-ref url="../../guides/video-bitrate-in-rooms.md" %}
+[video-bitrate-in-rooms.md](../../guides/video-bitrate-in-rooms.md)
+{% endcontent-ref %}

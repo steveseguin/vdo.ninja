@@ -17,7 +17,7 @@ General Option! ([`&push`](../../source-settings/push.md), [`&room`](../../gener
 
 Adds a built-in basic controller to control PowerPoint.
 
-<figure><img src="../../.gitbook/assets/image (18).png" alt=""><figcaption></figcaption></figure>
+<figure><img src="../../.gitbook/assets/image (18) (3).png" alt=""><figcaption></figcaption></figure>
 
 Detailed information on how to control PowerPoint remotely:
 
