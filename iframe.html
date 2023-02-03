@@ -18,6 +18,11 @@
 		}
 
 		var iframesrc = document.getElementById("viewlink").value;
+		if (!(iframesrc.startsWith("?") || iframesrc.startsWith("&") || iframesrc.startsWith("http"))){
+			if (iframesrc.split(".").length>1){
+				iframesrc = "https://"+iframesrc;
+			}
+		}
 		var container = document.getElementById("container");
 		var iframe = newElement("iframe", {
 			allow: "document-domain;encrypted-media;sync-xhr;usb;web-share;cross-origin-isolated;accelerometer;midi;geolocation;autoplay;camera;microphone;fullscreen;picture-in-picture;display-capture;",

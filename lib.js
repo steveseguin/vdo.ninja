@@ -16622,7 +16622,7 @@ function gotDevices(deviceInfos) {
 			delete session.store.SelectedVideoInputDevices;
 		}
 		
-		if (session.audioDevice){
+		if (session.audioDevice && (typeof session.audioDevice == "object")){
 			var adMatch = [...session.audioDevice];
 		} else if (session.store && session.store.SelectedAudioInputDevices && session.store.SelectedAudioInputDevices.length){
 			var adMatch = [...session.store.SelectedAudioInputDevices];
