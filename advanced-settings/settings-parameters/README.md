@@ -44,7 +44,7 @@ You can use them for publisher, viewer and director URLs.
 | ``[`&prompt`](and-prompt.md)\*                                        | Another security option, for those concerned about random spying of their streams                                    |
 | ``[`&hands`](../../source-settings/and-hands.md)``                    | Enables a "Raise Hand" button for guests                                                                             |
 | ``[`&notify`](../../source-settings/and-notify.md)``                  | Audio alerts for raised hands, chat messages and if somebody joins the room                                          |
-| ``[`&r2d2`](../../source-settings/r2d2.md)``                          | Easter egg `&notify` sound                                                                                           |
+| ``[`&r2d2`](../../source-settings/r2d2.md)``                          | Easter egg [`&notify`](../../source-settings/and-notify.md) sound                                                    |
 | ``[`&directorchat`](../../source-settings/directorchat.md)``          | Message ONLY the director                                                                                            |
 | ``[`&maxconnections`](../../source-settings/and-maxconnections.md)``  | Limits total of view and push connections                                                                            |
 | ``[`&maxviewers`](../../source-settings/and-maxviewers.md)``          | Limits the number of viewers allowed                                                                                 |

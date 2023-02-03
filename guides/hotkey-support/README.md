@@ -23,3 +23,9 @@ When using the above keyboard short-cuts, the tab/window must be actively in foc
 When using the [Electron Capture App](../../steves-helper-apps/electron-capture.md) in elevated privilege mode, the keyboard shortcuts are global.
 
 <figure><img src="../../.gitbook/assets/image (90) (2).png" alt=""><figcaption></figcaption></figure>
+
+## Related
+
+{% content-ref url="../../advanced-settings/settings-parameters/and-disablehotkeys.md" %}
+[and-disablehotkeys.md](../../advanced-settings/settings-parameters/and-disablehotkeys.md)
+{% endcontent-ref %}

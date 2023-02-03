@@ -16,7 +16,7 @@
 #### January 25 <a href="#august-31" id="august-31"></a>
 
 * Updated the http [API](../general-settings/api.md) getDetails request to include info about video visibility; makes it a bit more usable if querying a scene link\
-  ![](<../.gitbook/assets/image (3) (2) (3).png>)
+  ![](<../.gitbook/assets/image (3) (2).png>)
 
 #### January 23 <a href="#august-31" id="august-31"></a>
 
@@ -303,7 +303,7 @@
 * [`&micdelay`](../source-settings/and-micdelay.md), if used on a basic push link, will show the mic delay as a slider now also. So you can adjust it as needed. I don't show the slider by default unless using the URL parameter, as I don't think its a commonly used feature.\
   ![](<../.gitbook/assets/image (4) (2).png>)
 * I think I fixed an issue with Firefox where not all the audio-output devices were available to choose from, at least on desktop, and so I've added the custom logic Firefox requires to get it working. On Firefox, you'll now need to select "Show more options" in the audio drop down menu, where Firefox will prompt you to select the audio output device with its own prompt.\
-  ![](<../.gitbook/assets/image (9).png>)
+  ![](<../.gitbook/assets/image (9) (3).png>)
 * Added an option called [`&hidehome`](../advanced-settings/settings-parameters/and-hidehome.md), which hides the VDO.Ninja homepage and many links that lead to it. You can also enable at a code level with `session.hidehome=true;`, which is useful if doing a self-deployment, where you don't want anyone to stumble onto the site and start using it. You'll still be able to join push links and create rooms via URL parameters, but that's about it.\
   \
   \*\* updated alpha (vdo.ninja/alpha) and GitHub with all changes.
