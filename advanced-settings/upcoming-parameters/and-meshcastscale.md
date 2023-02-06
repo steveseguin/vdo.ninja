@@ -12,6 +12,8 @@ Meshcast Option! / Sender-Side Option! ([`&meshcast`](../../newly-added-paramete
 
 ## Options
 
+Example: `&meshcastscale=50`
+
 | Value                 | Description                                       |
 | --------------------- | ------------------------------------------------- |
 | (percentage 1 to 100) | will scale down the video to the percentage given |

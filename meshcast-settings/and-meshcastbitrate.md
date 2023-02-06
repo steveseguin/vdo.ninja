@@ -13,6 +13,8 @@ Meshcast Option / Sender-Side Option! ([`&meshcast`](../newly-added-parameters/a
 
 ## Options
 
+Example: `&meshcastbitrate=2500`
+
 | Value           | Description                               |
 | --------------- | ----------------------------------------- |
 | (integer value) | publishing meshcast video bitrate in kbps |

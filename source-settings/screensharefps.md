@@ -12,6 +12,8 @@ Sender-Side Option! ([`&push`](push.md))
 
 ## Options
 
+Example: `&screensharefps=60`
+
 | Value           | Description                        |
 | --------------- | ---------------------------------- |
 | (integer value) | will target this framerate. Eg: 60 |

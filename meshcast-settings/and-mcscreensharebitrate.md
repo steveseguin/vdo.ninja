@@ -14,6 +14,8 @@ Meshcast Option / Sender-Side Option! ([`&meshcast`](../newly-added-parameters/a
 
 ## Options
 
+Example: `&mcscreensharebitrate=2000`
+
 | Value           | Description                                            |
 | --------------- | ------------------------------------------------------ |
 | (integer value) | publishing screen share Meshcast video bitrate in kbps |

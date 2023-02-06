@@ -15,6 +15,8 @@ General Option! ([`&push`](../source-settings/push.md), [`&room`](../general-set
 
 ## Options
 
+Example: `&screensharestereo=1`
+
 | Value            | Description                                                                                           |
 | ---------------- | ----------------------------------------------------------------------------------------------------- |
 | (no value given) | It behaves like 3 or 1, depending on if you are a guest or not                                        |

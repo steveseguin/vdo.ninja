@@ -12,6 +12,8 @@ Sender-Side Option! ([`&push`](../../source-settings/push.md))
 
 ## Options
 
+Example: `&screenshareaspectratio=landscape`
+
 | Value            | Description                                                                                                              |
 | ---------------- | ------------------------------------------------------------------------------------------------------------------------ |
 | (no value given) | overrides [`&aspectratio`](../video-parameters/and-aspectratio.md) and sets the screen-share to the default aspect ratio |

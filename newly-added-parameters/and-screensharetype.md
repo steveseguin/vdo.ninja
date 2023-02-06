@@ -14,6 +14,8 @@ Sender-Side Option! ([`&push`](../source-settings/push.md))
 
 ## Options
 
+Example: `&screensharetype=3`
+
 | Value | Description                                                 |
 | ----- | ----------------------------------------------------------- |
 | `1`   | Replaces the webcam screen with the screen share            |

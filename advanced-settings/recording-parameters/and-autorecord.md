@@ -10,6 +10,8 @@ General Option! ([`&push`](../../source-settings/push.md), [`&room`](../../gener
 
 ## Options
 
+Example: `&autorecord=1500`
+
 | Value              | Description                                                                                       |
 | ------------------ | ------------------------------------------------------------------------------------------------- |
 | `0`                | No video recorded; audio tentatively recorded as 32bit PCM lossless.                              |

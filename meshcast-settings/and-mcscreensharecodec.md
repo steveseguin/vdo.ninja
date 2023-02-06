@@ -12,6 +12,8 @@ Meshcast Option / Sender-Side Option! ([`&meshcast`](../newly-added-parameters/a
 
 ## Options
 
+Example: `&mcscreensharecodec=h264`
+
 | Value      | Description      |
 | ---------- | ---------------- |
 | `h264`     | h264 codec       |

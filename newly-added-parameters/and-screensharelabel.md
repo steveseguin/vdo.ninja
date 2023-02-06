@@ -12,6 +12,8 @@ Sender-Side Option! ([`&push`](../source-settings/push.md))
 
 ## Options
 
+Example: `&screensharelabel=SomeLabel`
+
 | Value            | Description                                                      |
 | ---------------- | ---------------------------------------------------------------- |
 | (no value given) | Uses the existing [`&label`](../general-settings/label.md) value |

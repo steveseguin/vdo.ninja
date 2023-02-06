@@ -14,6 +14,8 @@ Sender-Side Option! ([`&push`](push.md))
 
 ## Options
 
+Example: `&screenshareid=SomeID`
+
 | Value            | Description                                                                                                                           |
 | ---------------- | ------------------------------------------------------------------------------------------------------------------------------------- |
 | (no value given) | If no value is passed, the system will automatically add the suffix of "\_ss" to the existing stream ID that the user might be using. |

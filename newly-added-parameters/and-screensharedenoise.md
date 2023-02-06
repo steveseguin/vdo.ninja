@@ -12,6 +12,8 @@ Sender-Side Option! ([`&push`](../source-settings/push.md))
 
 ## Options
 
+Example: `&screensharedenoise=1`
+
 | Value | Description                                       |
 | ----- | ------------------------------------------------- |
 | `0`   | Turns OFF audio noise reduction for screen-shares |

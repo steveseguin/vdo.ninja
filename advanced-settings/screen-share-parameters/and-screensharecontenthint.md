@@ -17,6 +17,8 @@ Sender-Side Option! ([`&push`](../../source-settings/push.md))
 
 ## Options
 
+Example: `&screensharecontenthint=detail`
+
 | Value    | Description                                                 |
 | -------- | ----------------------------------------------------------- |
 | `detail` | will prioritize **screen-share resolution** over frame rate |

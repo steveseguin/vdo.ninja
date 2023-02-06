@@ -8,6 +8,8 @@ Sender-Side Option! ([`&push`](../../source-settings/push.md))
 
 ## Options
 
+Example: `&record=1000`
+
 | Value                       | Description                                                                                                                                                                                                   |
 | --------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | `0`                         | No video recorded; audio tentatively recorded as 32bit PCM lossless                                                                                                                                           |
