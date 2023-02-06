@@ -15,6 +15,8 @@ General Option! ([`&push`](../source-settings/push.md), [`&room`](../general-set
 
 Device indices starts at 1, where an index of 0 implies "all". You can refer to [`https://vdo.ninja/midi`](https://vdo.ninja/midi) for a drop-down list of available MIDI devices; the first MIDI device in the list would have a device index ID of 1.
 
+Example: `&midiout=2`
+
 | Value                  | Description                                   |
 | ---------------------- | --------------------------------------------- |
 | `0`                    | using 0 will listen to all midi input devices |

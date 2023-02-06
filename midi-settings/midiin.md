@@ -13,6 +13,8 @@ General Option! ([`&push`](../source-settings/push.md), [`&room`](../general-set
 
 ## Options
 
+Example: `&midiin=2`
+
 | Value                  | Description                |
 | ---------------------- | -------------------------- |
 | `0`                    | all midi output devices    |

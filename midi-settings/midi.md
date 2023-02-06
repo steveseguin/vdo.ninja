@@ -28,14 +28,15 @@ Currently a Chromium-browser, like Google Chrome, is recommended when using the 
 **Notice:** The VDO.Ninja's MIDI API is still constantly evolving, so check back for updates if you face problems or to discover new available features and options.
 {% endhint %}
 
-## Options for \&midi={value}
+### Options for \&midi={value}
 
 {% hint style="warning" %}
 There are two MIDI standards; one where value 33 is note A0, and the more common standard where value 33 is note A1. VDO.Ninja uses the A1 standard. Decrease your octave by one if having problems, such as if using TouchOSC.
 {% endhint %}
 
-| \&midi=N | Description of MIDI                                                                                                                          |
+| Value    | Description                                                                                                                                  |
 | -------- | -------------------------------------------------------------------------------------------------------------------------------------------- |
+| \&midi=N | Description of MIDI                                                                                                                          |
 | `1`      | Hotkeys using A3 to G4 notes                                                                                                                 |
 | `2`      | Hotkeys using A1 to G2 notes                                                                                                                 |
 | `3`      | Hotkeys using Note C1 + velocities                                                                                                           |

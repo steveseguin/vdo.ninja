@@ -8,9 +8,11 @@ General Option! ([`&push`](../source-settings/push.md), [`&room`](../general-set
 
 ## Options
 
-| Value  | Description                               |
-| ------ | ----------------------------------------- |
-| (1-16) | specifies which midi channel to listen on |
+Example: `&midichannel=3`
+
+| Value         | Description                               |
+| ------------- | ----------------------------------------- |
+| (`1` to `16`) | specifies which midi channel to listen on |
 
 ## Details
 

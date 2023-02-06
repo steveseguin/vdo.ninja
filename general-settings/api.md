@@ -12,6 +12,8 @@ General Option! ([`&push`](../source-settings/push.md), [`&room`](room.md), [`&v
 
 ## Options
 
+Example: `&api=SomeAPIKey`
+
 | Value | Description                           |
 | ----- | ------------------------------------- |
 | (key) | API KEY to control VDO.Ninja remotely |

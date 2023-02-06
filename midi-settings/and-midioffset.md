@@ -10,6 +10,8 @@ General Option! ([`&push`](../source-settings/push.md), [`&room`](../general-set
 
 ## Options
 
+Example: `&midioffset=23`
+
 | Value                    | Description                                                                                                          |
 | ------------------------ | -------------------------------------------------------------------------------------------------------------------- |
 | (positive integer value) | (postitive integer value) is the control change command you want to use to mute guest 1. N+1 will mute guest 2, etc. |

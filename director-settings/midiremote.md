@@ -10,11 +10,15 @@ General Option! ([`&push`](../source-settings/push.md), [`&room`](../general-set
 
 * `&remotemidi`
 
-## Details
+## Options
 
-{% hint style="info" %}
-This is available for [version 19](../release-notes/v19.md) and higher.
-{% endhint %}
+Example: `&midiremote=4`
+
+| Value        | Description                                            |
+| ------------ | ------------------------------------------------------ |
+| (`1` to `4`) | reference [`&midi`](../midi-settings/midi.md)'s values |
+
+## Details
 
 This lets you route all MIDI messages from one computer to another computer, with the purpose of remote triggering the VDO.Ninja hotkeys.
 

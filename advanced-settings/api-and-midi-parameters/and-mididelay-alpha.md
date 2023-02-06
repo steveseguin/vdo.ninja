@@ -9,6 +9,8 @@ General Option! ([`&push`](../../source-settings/push.md), [`&room`](../../gener
 
 ## Options
 
+Example: `&mididelay=1000`
+
 | Value           | Description |
 | --------------- | ----------- |
 | (numeric value) | delay in ms |

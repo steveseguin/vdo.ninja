@@ -8,6 +8,8 @@ General Option! ([`&push`](../source-settings/push.md), [`&room`](room.md), [`&v
 
 ## Options
 
+Example: `&icefilter=tcp`
+
 | Value  | Description                 |
 | ------ | --------------------------- |
 | `tcp`  | Filters TCP ICE candidates  |

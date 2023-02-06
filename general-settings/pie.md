@@ -8,6 +8,8 @@ General Option! ([`&push`](../source-settings/push.md), [`&room`](room.md), [`&v
 
 ## Options
 
+Example: `&pie=YourPiesocketAPIKey`
+
 | Value      | Description                                          |
 | ---------- | ---------------------------------------------------- |
 | (API\_KEY) | the only parameter is your own piesocket.com API key |

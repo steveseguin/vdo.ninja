@@ -8,6 +8,8 @@ Sender-Side Option! ([`&push`](../../source-settings/push.md))
 
 ## Options
 
+Example: `&facing=rear`
+
 | Value                             | Description         |
 | --------------------------------- | ------------------- |
 | `rear` \| `environment` \| `back` | rear-facing camera  |

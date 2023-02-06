@@ -8,6 +8,8 @@ General Option! ([`&push`](../source-settings/push.md), [`&room`](room.md), [`&v
 
 ## Options
 
+Example: `&turn=steve;setupYourOwnPlease;turn:turn.vdo.ninja:443`
+
 | Value                        | Description                                                                   |
 | ---------------------------- | ----------------------------------------------------------------------------- |
 | (user;pwd;turnserveraddress) | Set this TURN server to turnserveraddress with username user and password pwd |

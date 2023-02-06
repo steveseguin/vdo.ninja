@@ -8,6 +8,8 @@ General Option! ([`&push`](../source-settings/push.md), [`&room`](../general-set
 
 ## Options
 
+Example: `&mididevice=5`
+
 | Value                    | Description               |
 | ------------------------ | ------------------------- |
 | (positive integer value) | Specifies the midi device |
