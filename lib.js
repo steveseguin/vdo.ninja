@@ -102,7 +102,22 @@ var miscTranslations = {
 	"no-audio-source-detected": "No Audio Source was detected.\n\nIf you were wanting to capture an Application's Audio, please see:\nhttps://docs.vdo.ninja/help/guides-and-how-tos#audio for some guides.",
 	"viewer-count": "Total outbound p2p connections of this remote stream",
 	"enter-url-for-widget": "Enter a URL for a page to embed as a sidebar",
-	"director-password" : "Enter the main director's password"
+	"director-password" : "Enter the main director's password",
+	"vision-disabled": "The Director has disabled your vision temporarily<br /><br ><center><i style='font-size:500%;' class='las la-eye-slash'></i></center>",
+	"invalid-remote-code": "Invalid remote control code.\n\nUse the field below to try again with a different passcode.",
+	"invalid-remote-code-obs": "Invalid remote control code.\n\nThe remote OBS system needs a matching passcode set using &remote.\n\nSee the documentation for help..",
+	"request-rejected-obs": "The request was rejected.\n\nThe remote OBS system needs a matching passcode set using &remote.\n\nSee the documentation for help.",
+	"remote-token-rejected": "The remote request failed; the &remote token did not match or the remote user does not allow remote control.",
+	"remote-control-failed": "The remote control request failed.",
+	"remote-peer-connected": "Remote peer connected to video stream.\n\nConnection to handshake server being killed on request. This increases security, but the peer will not be able to reconnect automatically on connection failure.\n\nPress OK to start the stream!",
+	"director-denied": "The main director denied you as a co-director",
+	"only-main-director": "Only the main director can transfer this guest",
+	"request-failed": "The request failed; you can't apply this action",
+	"tokens-did-not-match": "The remote request failed; the remote token did not match or the remote user does not allow remote control.",
+	"token-not-director": "The request failed; the remote user did not recognize you as the director",
+	"approved-as-director": "The director approved you as a co-director",
+	"you-are-a-codirector": "You are a co-director of this room; you have partial director control assigned to you.",
+	"this-is-you": "This is you, a co-director.<br />You are also a performer."
 };
 
 // function log(msg){ // uncomment to enable logging.
@@ -2988,7 +3003,7 @@ function setupIncomingVideoTracking(v, UUID){  // video element.
 	
 	
 	if (session.rpcs[UUID].stats.info && ("remote" in session.rpcs[UUID].stats.info) && session.rpcs[UUID].stats.info.remote){
-		v.addEventListener("wheel", session.remoteFocusZoomRequest);  //  just remote focus
+		v.addEventListener("wheel", remoteFocusZoomRequest);  //  just remote focus
 	}
 
 	if (v.controls == false){
@@ -3063,6 +3078,18 @@ function setupIncomingVideoTracking(v, UUID){  // video element.
 	
 	setTimeout(processStats, 100, UUID);
 }
+
+function remoteFocusZoomRequest(event){
+	event.preventDefault();
+	var scale = parseFloat(event.deltaY * -0.001);
+	log(event.currentTarget);
+	
+	if ((event.ctrlKey)||(event.metaKey)){  // focus
+		session.requestFocusChange(scale, event.currentTarget.dataset.UUID);
+	} else { // zoom
+		session.requestZoomChange(scale, event.currentTarget.dataset.UUID);
+	}
+};
 
 function mediaSourceUpdated(UUID, streamID){
 	pokeIframeAPI("new-track-added", true, UUID, streamID); //  videoTrack is whether video. audio will be false I guess.
@@ -5152,31 +5179,17 @@ function updateMixerRun(e=false){  // this is the main auto-mixing code.  It's a
 						button.id = "button_"+vid.id;
 						button.dataset.button = true;
 						if (soloVideo){
-							button.innerHTML = "<img src='./media/sd.svg' style='user-select: none;background-color:#0007;width:4vh' aria-hidden='true' />";
+							button.innerHTML = "<img src='./media/sd.svg'  class='fullwindowButtonimg' aria-hidden='true' />";
 							button.title = "Show all active videos togethers";
 							button.style.visibility = "visible";
 						} else if ((mpl>1) || session.fullscreenButton){ // with session.fullscreenButton we hide the actuall full screen button, so this replaces it
-							button.innerHTML = "<img src='./media/hd.svg' style='user-select: none;background-color:#0007;width:4vh' aria-hidden='true' />";
+							button.innerHTML = "<img src='./media/hd.svg' class='fullwindowButtonimg' aria-hidden='true' />";
 							button.title = "Enlarge video and increase its clarity";
 							button.style.visibility = "visible";
 						} else {
 							button.style.visibility = "hidden";
 						}
-						button.style.transition = "opacity 0.3s"
-						button.style.width ="4vh";
-						button.style.height = "4vh";
-						button.style.maxWidth ="30px";
-						button.style.maxHeight = "30px";
-						button.style.minWidth ="15px";
-						button.style.minHeight = "15px";
-						button.style.position = "absolute";
-						button.style.display="none";
-						//button.style.opacity="10%";
-						button.style.zIndex="6";
-						button.style.right = "4vh";//(Math.ceil(w/rw) -30 - 30 + offsetx+Math.floor(((i%rw)+0)*w/rw))+"px";
-						button.style.top  = "4vh";//(  offsety + 30 + Math.floor((Math.floor(i/rw)+0)*h/rh + hi))+"px";
-						button.style.color = "white";
-						button.style.cursor = "pointer";
+						button.classList.add("fullwindowButton");
 						
 						if (vid.id == "videosource"){
 							button.onclick = function(event){
@@ -5269,26 +5282,14 @@ function updateMixerRun(e=false){  // this is the main auto-mixing code.  It's a
 						button.id = "button_videosource";
 						button.dataset.button = true;
 						if (soloVideo){
-							button.innerHTML = "<img src='./media/sd.svg' style='background-color:#0007;width:4vh' aria-hidden='true' />";
+							button.innerHTML = "<img src='./media/sd.svg' class='fullwindowButtonimg' aria-hidden='true' />";
 							button.title = "Show all active videos togethers";
 							button.style.display="unset";
 						} else {
 							button.style.visibility = "hidden";
 							button.style.display="none";
 						}
-						button.style.transition = "opacity 0.3s"
-						button.style.width ="4vh";
-						button.style.height = "4vh";
-						button.style.maxWidth ="30px";
-						button.style.maxHeight = "30px";
-						button.style.minWidth ="15px";
-						button.style.minHeight = "15px";
-						button.style.position = "absolute";
-						button.style.zIndex="6";
-						button.style.right = "4vh";//(Math.ceil(w/rw) -30 - 30 + offsetx+Math.floor(((i%rw)+0)*w/rw))+"px";
-						button.style.top  = "4vh";//(  offsety + 30 + Math.floor((Math.floor(i/rw)+0)*h/rh + hi))+"px";
-						button.style.color = "white";
-						button.style.cursor = "pointer";
+						button.classList.add("fullwindowButton");
 						
 						button.onclick = function(event){
 							event.stopPropagation();

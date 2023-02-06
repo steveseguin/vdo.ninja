@@ -3348,9 +3348,7 @@ button[data-action-type="messaging-box-send"] {
 .advanced {
 	display: var(--advanced-mode);
 }
-.controlCenterBox{
-	margin-top:2px;
-}
+
 #widget {
 	position: absolute;
     width: 25%;
@@ -3358,12 +3356,50 @@ button[data-action-type="messaging-box-send"] {
     right: 0;
     top: 0;
 }
-
+#localMuteElement{
+	top: 1vh;
+	right: 1vh;
+}
+#localVoiceMeter{
+	width: 10px;
+	height: 10px;
+	top: 8px;
+	right: 10px;
+}
 .advanced {
 	display: var(--advanced-mode);
 }
 .controlCenterBox{
 	margin-top:2px;
+}
+
+.contolboxLabel {
+	float: left;
+	top: 2px;
+	margin-left: 5px;
+	position: relative;
+	cursor: pointer;
+}					
+.fullwindowButton {
+	transition: opacity 0.3s;
+	width: 4vh;
+	height: 4vh;
+	max-width: 30px;
+	max-height: 30px;
+	min-width: 15px;
+	min-height: 15px;
+	position: absolute;
+	display: none;
+	z-index: 6;
+	right: 4vh;
+	top : 4vh;
+	color: white;
+	cursor: pointer;
+}
+.fullwindowButtonimg {
+	user-select: none;
+	background-color:#0007;
+	width:4vh;
 }
 #widget {
 	position: absolute;
