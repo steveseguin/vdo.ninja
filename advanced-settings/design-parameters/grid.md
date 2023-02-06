@@ -13,10 +13,12 @@ Sender-Side Option! ([`&push`](../../source-settings/push.md))
 
 ## Options
 
-| Value            | Descritpion                             |
-| ---------------- | --------------------------------------- |
-| (no value given) | adds a white rule-of-thirs grid overlay |
-| (URL)            | adds an image as a overlay              |
+Example: `&grid=./media/thirdshead.svg`
+
+| Value            | Descritpion                              |
+| ---------------- | ---------------------------------------- |
+| (no value given) | adds a white rule-of-thirds grid overlay |
+| (encoded URL)    | adds an image as a overlay               |
 
 ## Details
 
@@ -50,3 +52,6 @@ Leave the passed value empty if you wish to have the white basic rule-of-thirds 
 * You can now also toggle it in the director's room to add it to the guest's link:\
   ![](<../../.gitbook/assets/image (103) (1).png>)
 {% endhint %}
+
+You can encode your URL here:\
+[https://www.urlencoder.org/](https://www.urlencoder.org/)

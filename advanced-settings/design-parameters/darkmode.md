@@ -12,10 +12,12 @@ General Option! ([`&push`](../../source-settings/push.md), [`&room`](../../gener
 
 ## Options
 
+Example: `&darkmode=0`
+
 | Value            | Description            |
 | ---------------- | ---------------------- |
-| `0` \| `false`   | disables the dark-mode |
 | (no value given) | enables the dark-mode  |
+| `0` \| `false`   | disables the dark-mode |
 
 ## Details
 

@@ -13,6 +13,8 @@ General Option! ([`&push`](../../source-settings/push.md), [`&room`](../../gener
 
 ## Options
 
+Example: `&fontsize=70`
+
 | Value           | Description                     |
 | --------------- | ------------------------------- |
 | (integer value) | font size value as a percentage |

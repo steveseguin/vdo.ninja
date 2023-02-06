@@ -16,6 +16,8 @@ General Option! ([`&push`](../../source-settings/push.md), [`&room`](../../gener
 
 ## Options
 
+Example: `&base64css=JTIzbWFpbm1lbnUlN0JiYWNrZ3JvdW5kLWNvbG9yJTNBJTIwcGluayUzQiUyMCVFMiU5RCVBNA`
+
 | Value    | Description          |
 | -------- | -------------------- |
 | (string) | Custom base64 string |
@@ -25,7 +27,7 @@ General Option! ([`&push`](../../source-settings/push.md), [`&room`](../../gener
 This command lets you add CSS to VDO.Ninja via the URL, but as a single string, so no external reference to a file is needed.
 
 Example usage:\
-[`https://vdo.ninja/beta/?base64css=JTIzbWFpbm1lbnUlN0JiYWNrZ3JvdW5kLWNvbG9yJTNBJTIwcGluayUzQiUyMCVFMiU5RCVBNA`](https://vdo.ninja/beta/?base64css=JTIzbWFpbm1lbnUlN0JiYWNrZ3JvdW5kLWNvbG9yJTNBJTIwcGluayUzQiUyMCVFMiU5RCVBNA)\
+[`https://vdo.ninja/?base64css=JTIzbWFpbm1lbnUlN0JiYWNrZ3JvdW5kLWNvbG9yJTNBJTIwcGluayUzQiUyMCVFMiU5RCVBNA`](https://vdo.ninja/?base64css=JTIzbWFpbm1lbnUlN0JiYWNrZ3JvdW5kLWNvbG9yJTNBJTIwcGluayUzQiUyMCVFMiU5RCVBNA)\
 \
 You can create the base64 encoding using `btoa(encodeURIComponent(csshere))`, for example `window.btoa(encodeURIComponent("#mainmenu{background-color: pink; ❤" ));`
 

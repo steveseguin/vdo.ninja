@@ -13,6 +13,8 @@ Director Option! ([`&director`](../../viewers-settings/director.md))\
 
 ## Options
 
+Example: `&maindirectorpassword=SomePassword123`
+
 | Value                          | Description                                        |
 | ------------------------------ | -------------------------------------------------- |
 | (alphanumeric-characters only) | the password you want to set for the main director |

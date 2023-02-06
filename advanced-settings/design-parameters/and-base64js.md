@@ -14,6 +14,8 @@ General Option! ([`&push`](../../source-settings/push.md), [`&room`](../../gener
 
 ## Options
 
+Example: `&base64js=YWxlcnQoJ2hpJyk=`
+
 | Value    | Description    |
 | -------- | -------------- |
 | (string) | Javascript URL |
@@ -23,7 +25,7 @@ General Option! ([`&push`](../../source-settings/push.md), [`&room`](../../gener
 `&base64js` lets a user add raw java script to the URL to run on page load.
 
 To test:\
-[`https://vdo.ninja/?b64js=YWxlcnQoJ2hpJyk=`](https://vdo.ninja/?b64js=YWxlcnQoJ2hpJyk=)``
+[`https://vdo.ninja/?base64js=YWxlcnQoJ2hpJyk=`](https://vdo.ninja/?base64js=YWxlcnQoJ2hpJyk=)``
 
 ## Related
 

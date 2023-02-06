@@ -8,10 +8,12 @@ Sender-Side Option! ([`&push`](../../source-settings/push.md))
 
 ## Options
 
+Example: `&rotate=180`
+
 | Value            | Description                                         |
 | ---------------- | --------------------------------------------------- |
-| (degree)         | Rotates the camera in the specified value in degree |
 | (no value given) | 90 degree                                           |
+| (degree)         | Rotates the camera in the specified value in degree |
 
 ## Details
 

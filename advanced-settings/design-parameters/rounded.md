@@ -12,6 +12,8 @@ General Option! ([`&push`](../../source-settings/push.md), [`&room`](../../gener
 
 ## Options
 
+Example: `&rounded=100`
+
 | Value                    | Description                                          |
 | ------------------------ | ---------------------------------------------------- |
 | (no value given)         | 50 px                                                |

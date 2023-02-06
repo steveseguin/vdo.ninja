@@ -8,7 +8,9 @@ Director Option! ([`&director`](../viewers-settings/director.md))
 
 ## Options
 
-<table><thead><tr><th>Value</th><th>Description</th><th data-hidden></th></tr></thead><tbody><tr><td>(string value)</td><td>adds the rooms to the guest transfer buttons to the director control bar</td><td></td></tr></tbody></table>
+Example: `&rooms=room1,room2,room3`
+
+<table><thead><tr><th>Value</th><th>Description</th><th data-hidden></th></tr></thead><tbody><tr><td>(string value)</td><td>adds the rooms to the guest transfer buttons to the director control bar (comma separated)</td><td></td></tr></tbody></table>
 
 ## Details
 

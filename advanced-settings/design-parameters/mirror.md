@@ -8,6 +8,8 @@ General Option! ([`&push`](../../source-settings/push.md), [`&room`](../../gener
 
 ## Options
 
+Example: `&mirror=2`
+
 | Value            | Description                                                                               |
 | ---------------- | ----------------------------------------------------------------------------------------- |
 | (no value given) | Mirroring is forced for all videos                                                        |

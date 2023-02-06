@@ -14,13 +14,22 @@ Director Option! ([`&director`](../viewers-settings/director.md))
 * `&dirpass`
 * `&dp`
 
+## Options
+
+Example: `&codirector=DirectorPassword`
+
+| Value                 | Description                                     |
+| --------------------- | ----------------------------------------------- |
+| (no value given)      | the site will prompt you for a password on load |
+| (alpha numeric value) | password for the directors                      |
+
 ## Details
 
 The basic idea is there is a URL parameter called `&codirector` that you need to add to all the director links used.
 
 For example, `https://vdo.ninja/?director=MYROOMNAME&codirector=DirectorPWD123`
 
-So long as all the directors have `&codirector=DirectoPWD123` added to their URLs, they all share a common director's password, and so they all treat each other as valid directors.
+So long as all the directors have `&codirector=DirectorPWD123` added to their URLs, they all share a common director's password, and so they all treat each other as valid directors.
 
 If the passwords don't match, the first director into the room will be the real director, and the others will be rejected.
 

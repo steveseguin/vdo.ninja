@@ -12,6 +12,8 @@ General Option! ([`&push`](../../source-settings/push.md), [`&room`](../../gener
 
 ## Options
 
+Example: `&meterstyle=3`
+
 | Value                   | Description                                                                                                                                                                                      |
 | ----------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
 | `1` \| (no value given) | will show the VU-style meter that the director has by default already                                                                                                                            |

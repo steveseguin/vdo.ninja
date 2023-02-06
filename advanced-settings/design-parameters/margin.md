@@ -8,10 +8,12 @@ General Option! ([`&push`](../../source-settings/push.md), [`&room`](../../gener
 
 ## Options
 
+Example: `&margin=100`
+
 | Value            | Description         |
 | ---------------- | ------------------- |
-| (integer value)  | margin value in px  |
 | (no value given) | margin value = 10px |
+| (integer value)  | margin value in px  |
 
 ## Details
 

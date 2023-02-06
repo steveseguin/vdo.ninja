@@ -11,6 +11,22 @@ General Option! ([`&push`](../../source-settings/push.md), [`&room`](../../gener
 * `&showlabel`
 * `&sl`
 
+## Options
+
+There are some preset style options, which can be passed to the parameter as a value. You can also choose to just edit the label's style with CSS, as discussed lower on this page.
+
+Example: `&showlabels=ninjablue`
+
+| Value            | Description                          |
+| ---------------- | ------------------------------------ |
+| (no value given) | Generic styled display names         |
+| `fire`           | Fire looking display names           |
+| `ninjablue`      | VDO.Ninja styled display names       |
+| `skype`          | Skype styled display names           |
+| `teams`          | Microsoft Teams styled display names |
+| `toprounded`     | Rounded display names                |
+| `zoom`           | Zoom styled display names            |
+
 ## Details
 
 This parameter will display the user's display name or label on screen, as a text overlay. The label can be set either via the URL using the [`&label`](../../general-settings/label.md) parameter, or the room's director can set it dynamically via the "Add a label" option.
@@ -20,19 +36,6 @@ This parameter can be used on guest links, view links, or scene links. It will b
 Underscores "\_" used in label values will be replaced by spaces, allowing for word separation.
 
 HTML5 Emojis 🎈 and some non-Latin characters are supported.
-
-## Preset styling options
-
-There are some preset style options, which can be passed to the parameter as a value. You can also choose to just edit the label's style with CSS, as discussed lower on this page.
-
-| Value        | Description                          |
-| ------------ | ------------------------------------ |
-| `fire`       | Fire looking display names           |
-| `ninjablue`  | VDO.Ninja styled display names       |
-| `skype`      | Skype styled display names           |
-| `teams`      | Microsoft Teams styled display names |
-| `toprounded` | Rounded display names                |
-| `zoom`       | Zoom styled display names            |
 
 For example: `https://vdo.ninja/?showlabels=fire`\
 ``![](<../../.gitbook/assets/image (54).png>)``
@@ -46,7 +49,7 @@ You can change the font-size without using CSS, using the [`&fontsize`](../view-
 
 Font-size of labels will adjust slightly based on the window size.
 
-## Advanced Customization
+### Advanced Customization
 
 CSS of the styles can be set via the OBS browser source stylesheet window.\
 The CSS class name you can customize is called `video-label`.

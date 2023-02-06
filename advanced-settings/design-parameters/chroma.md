@@ -8,6 +8,8 @@ General Option! ([`&push`](../../source-settings/push.md), [`&room`](../../gener
 
 ## Options
 
+Example: `&chroma=F0F`
+
 | Value            | Descritpion             |
 | ---------------- | ----------------------- |
 | (no value given) | green background        |

@@ -12,6 +12,8 @@ Director Option!
 
 ## Options
 
+Example: `&director=RoomName`
+
 | Value            | Description                        |
 | ---------------- | ---------------------------------- |
 | (no value given) | opens the director page            |

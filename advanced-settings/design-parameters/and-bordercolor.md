@@ -8,10 +8,17 @@ General Option! ([`&push`](../../source-settings/push.md), [`&room`](../../gener
 
 ## Options
 
-| Value               | Description                           |
-| ------------------- | ------------------------------------- |
-| (HEX \| color name) | FFFFFF \| white (color of the border) |
-| (no value given)    | black border                          |
+Example: `&bordercolor=ffffff` or `&bordercolor=white`
+
+| Value                 | Description                       |
+| --------------------- | --------------------------------- |
+| (no value given)      | black border                      |
+| (HEX) \| (color name) | specifies the color of the border |
+| `ffffff`              | white border                      |
+
+{% hint style="danger" %}
+Do not include the # character with the hex value.
+{% endhint %}
 
 ## Details
 

@@ -12,9 +12,11 @@ General Option! ([`&push`](../../source-settings/push.md), [`&room`](../../gener
 
 ## Options
 
-| Value                      | Description           |
-| -------------------------- | --------------------- |
-| `./media/logo_cropped.png` | URL-encoded image URL |
+Example: `&background=./media/logo_cropped.png`
+
+| Value         | Description                         |
+| ------------- | ----------------------------------- |
+| (encoded URL) | Changes the background of VDO.Ninja |
 
 ## Details
 
@@ -28,7 +30,7 @@ The image will scale in size to cover the VDO.Ninja app's background. [`&chroma`
 You can encode and decode a URL here:\
 [https://www.urlencoder.org/](https://www.urlencoder.org/)
 
-![](<../../.gitbook/assets/image (110) (1) (1) (1).png>)
+<figure><img src="../../.gitbook/assets/image (110) (1) (1) (1).png" alt=""><figcaption></figcaption></figure>
 
 ## Related
 

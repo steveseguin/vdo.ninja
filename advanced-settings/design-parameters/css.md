@@ -8,11 +8,16 @@ General Option! ([`&push`](../../source-settings/push.md), [`&room`](../../gener
 
 ## Options
 
-Any url-encoded url that links to a CSS file.
+Example: `&css=https%3A%2F%2Fbackup.vdo.ninja%2Fdev4321%2Fexamples%2Fmain.css`
 
-Example:
+| Value         | Description                                                           |
+| ------------- | --------------------------------------------------------------------- |
+| (encoded URL) | will show the VU-style meter that the director has by default already |
 
-<pre><code><strong>https://vdo.ninja/?css=https%3A%2F%2Fbackup.vdo.ninja%2Fdev4321%2Fexamples%2Fmain.css</strong></code></pre>
+Any URL-encoded URL that links to a CSS file.
+
+Example:\
+[https://vdo.ninja/?css=https%3A%2F%2Fbackup.vdo.ninja%2Fdev4321%2Fexamples%2Fmain.css](https://vdo.ninja/?css=https%3A%2F%2Fbackup.vdo.ninja%2Fdev4321%2Fexamples%2Fmain.css)
 
 You can use this tool to encode the URL you want to link to\
 [https://www.urlencoder.org/](https://www.urlencoder.org/)

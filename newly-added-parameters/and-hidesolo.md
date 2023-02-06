@@ -14,7 +14,7 @@ Director Option! ([`&director`](../viewers-settings/director.md))
 
 If you add this to the director's URL you hide the solo guest's links in the director's panel from showing.
 
-![](<../.gitbook/assets/image (150).png>)
+<figure><img src="../.gitbook/assets/image (150).png" alt=""><figcaption><p>You won't see this if you add &#x26;hidesolo to the director's URL</p></figcaption></figure>
 
 ## Related
 

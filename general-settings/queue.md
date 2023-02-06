@@ -26,7 +26,7 @@ This system can support hundreds of guests in queue, but it is not advisable to 
 Looking for feedback!
 {% endhint %}
 
-## Details of using
+### Details of using
 
 Add this to both the director URL and the guest URL.
 

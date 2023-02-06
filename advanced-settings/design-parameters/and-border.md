@@ -8,10 +8,12 @@ General Option! ([`&push`](../../source-settings/push.md), [`&room`](../../gener
 
 ## Options
 
+Example: `&border=20`
+
 | Value            | Description              |
 | ---------------- | ------------------------ |
-| (integer value)  | adds a border in px      |
 | (no value given) | adds a border with 10 px |
+| (integer value)  | adds a border in px      |
 
 ## Details
 

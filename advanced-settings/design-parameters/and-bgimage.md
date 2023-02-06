@@ -13,24 +13,33 @@ General Option! ([`&push`](../../source-settings/push.md), [`&room`](../../gener
 
 ## Options
 
-| Value                                            | Description                  |
-| ------------------------------------------------ | ---------------------------- |
-| `https%3A%2F%2Fvdo.ninja%2Fmedia%2Fold_icon.png` | URL or base64 data image/svg |
+Example: `&bgimage=https%3A%2F%2Fvdo.ninja%2Fmedia%2Fold_icon.png`
+
+| Value         | Description                  |
+| ------------- | ---------------------------- |
+| (Encoded URL) | URL or base64 data image/svg |
 
 ## Details
 
 `&bgimage` can be used to set the default image avatar, when using [`&style=0`](style.md) or [`&style=6`](style.md). This only impacts what the person with the parameter added sees and must be either a URL or a base64 data image/svg. URL-encoded values.
 
-> [`https://vdo.ninja/alpha/?view=aSmexM6&style=0&nocontrols&bgimage=https%3A%2F%2Fvdo.ninja%2Fmedia%2Fold_icon.png`](https://vdo.ninja/alpha/?view=aSmexM6\&style=0\&nocontrols\&bgimage=https%3A%2F%2Fvdo.ninja%2Fmedia%2Fold\_icon.png)
+[`https://vdo.ninja/?push=aSmexM6&style=0&vd=0&webcam&bgimage=https%3A%2F%2Fvdo.ninja%2Fmedia%2Fold_icon.png`](https://vdo.ninja/?push=aSmexM6\&style=0\&vd=0\&webcam\&bgimage=https%3A%2F%2Fvdo.ninja%2Fmedia%2Fold\_icon.png)``
+
+![](../../.gitbook/assets/image.png)
+
+You can encode your URL here:\
+[https://www.urlencoder.org/](https://www.urlencoder.org/)
+
+If you want to change the background image / avatar on the sender's side for all viewers, use [`&avatar`](../video-parameters/and-avatar.md).
 
 ## Related
 
-{% content-ref url="../video-parameters/and-avatar.md" %}
-[and-avatar.md](../video-parameters/and-avatar.md)
-{% endcontent-ref %}
-
 {% content-ref url="style.md" %}
 [style.md](style.md)
+{% endcontent-ref %}
+
+{% content-ref url="../video-parameters/and-avatar.md" %}
+[and-avatar.md](../video-parameters/and-avatar.md)
 {% endcontent-ref %}
 
 {% content-ref url="../newly-added-parameters/and-waitimage.md" %}
