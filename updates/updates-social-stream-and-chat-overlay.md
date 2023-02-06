@@ -3,6 +3,14 @@
 [social-stream.md](../steves-helper-apps/social-stream.md "mention")\
 [chat-overlay.md](../steves-helper-apps/chat-overlay.md "mention")
 
+#### **February 5**
+
+* Further tweaked the menu in Social Stream; thank you `River` for that.
+
+#### **February 4**
+
+* Added instafeed.me support to Social Stream
+
 #### **January 31**
 
 * Social Stream has a new menu-bar design; our Discord member @💎╲⎝⧹River⧸⎠╱💎 helped with the new icons, updated much of the UI, compressed the images files down, and improved many aspects of the menu's UX. A fantastic job really; thank you. (I should also mention @Sunadmiral on Discord, as she contributed some menu bar / icon concepts and designs as well, which influenced the redesign).\

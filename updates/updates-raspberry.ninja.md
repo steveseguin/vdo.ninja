@@ -2,6 +2,23 @@
 
 [raspberry.ninja.md](../steves-helper-apps/raspberry.ninja.md "mention")
 
+#### February 5
+
+* Added pipe-in media support to **Raspberry.Ninja**. This lets you publish from FFmpeg, OBS, applications, etc to VDO.Ninja, without needing a browser, and optionally without having to do further transcoding.\
+  \
+  You can either have Raspberry.Ninja do transcoding with `--pipein auto` (automatic decode detectio) or `--pipein raw` (just encode raw data), or you can do pass-thru without transcoding with `--pipein=h264`, `--pipein=vp9`, `--pipein=vp8` or `--pipein=mpegts` (mpegts is for YouTube-dl doing h264 /w audio)\
+  \
+  example usage: `ffmpeg -i xxxx -o - | python publish.py --pipein auto`\
+  \
+  I've been developing and testing this code on an Nvidia Jetson, and so I've updated to the `installer.sh` for that system as well, including adding SRT to it.\
+  \
+  Currently I just am support Linux with this code, but with some help I could have it working on Windows/Mac I bet -- _I've been struggling to get it working on Windows, but I see a lot of value for it there._
+
+#### February 4
+
+* Added the option to stream a video file to VDO.Ninja using Raspberry.Ninja. You can do it with or without transcoding the file; audio isn't supported yet, but its a start. vp8/vp9 formats work best, but compatible variations of h264 files will work also. Technically, if streaming from Raspberry.Ninja -> Raspberry.Ninja, transparency layers should be preservable I think.
+* Added support for the Theta Z1 360 4K camera to the Raspberry Ninja (jetson tested).
+
 #### January 31
 
 * Pushed a patch to Raspberry.Ninja; this patch offers a workaround for an issue on the pi/jetson disk images I'm hosting.. at least until I can get some new disk images made with a better fix. (there's a bug in the older libraries used, so I need to recompile it all to fix it properly)

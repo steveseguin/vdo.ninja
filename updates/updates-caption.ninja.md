@@ -2,6 +2,10 @@
 
 [caption.ninja.md](../steves-helper-apps/caption.ninja.md "mention")
 
+#### February 4
+
+* Caption.Ninja has `&showtime=5000` as an option, to control how long a message takes to timeout.
+
 #### January 26
 
 * Added a version of the Caption.Ninja transcription+translation tool that uses Google Cloud's premium translation API. (many many more languages)
