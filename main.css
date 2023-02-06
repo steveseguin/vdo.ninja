@@ -4436,7 +4436,7 @@ body.darktheme button {
 	filter: brightness(0.70);
 }
 body.darktheme .column .las {
-	color: black;
+	color: #f8f7f7;
 }
 body.darktheme label {
 	filter: brightness(0.85);
@@ -4452,6 +4452,18 @@ body.darktheme .videoMenu {
 }
 body.darktheme .audioMenu{
 	background-color: #414141;
+}
+body.darktheme #avatarDiv{
+	background-color: #414141;
+}
+body.darktheme .selected {
+	border: solid 3px #f8f7f7;
+}
+body.darktheme #selectAvatarImage label {
+	color: #f8f7f7;
+}
+body.darktheme .avatarLabel {
+	color: #f8f7f7;		  
 }
 body.darktheme #headphonesDiv{
 	background-color: #414141;
