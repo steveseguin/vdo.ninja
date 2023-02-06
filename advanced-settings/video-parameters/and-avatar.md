@@ -14,6 +14,7 @@ Example: `&avatar=default`
 | Value            | Description                                                            |
 | ---------------- | ---------------------------------------------------------------------- |
 | (no value given) | adds the ability to select an image, instead of a video device         |
+| (encoded URL)    | pre-selects the chosen image as an avatar                              |
 | `default`        | will pre-select the default avatar, rather than leaving it un-selected |
 
 ## Details
@@ -24,6 +25,9 @@ Example: `&avatar=default`
 
 You can toggle it for the guest's invite link in the director's room:\
 ![](<../../.gitbook/assets/image (118) (1).png>)
+
+You can encode your URL here:\
+[https://www.urlencoder.org/](https://www.urlencoder.org/)
 
 ## Related
 
