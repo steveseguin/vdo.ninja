@@ -106,7 +106,7 @@ We also want to disable Windows audio ducking.
 
 ![](https://lh6.googleusercontent.com/JVL8m6M4M3r3VUBKbas9-7plk2hiozPz9q4ZkooARU639q2j9JHZjzqJrFv8V9znfe9uybgDJCdcdJ1hN-N0HzDTZxS2bQH3K2hpIqq5DmmFRDpdW180ILVL2C11OFzbQX11xRWEH-U150YPuQ)
 
-### Step 8. (Optional)
+### Step 8. (optional)
 
 In our last configuration step, we want to go into the Advanced Audio Properties in OBS. When there, we want to set the audio sources we want to output have its Audio Monitoring setting be set to Monitor and Output.
 
