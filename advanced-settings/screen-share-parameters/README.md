@@ -31,7 +31,7 @@ You can add them to both, source ([`&push`](../../source-settings/push.md)) and 
 | ``[`&screenshareid`](../../source-settings/screenshareid.md)``                          | Pre-sets the screenshare stream id for a screen share if its a secondary stream                             |
 | ``[`&screensharelabel`](../../newly-added-parameters/and-screensharelabel.md)``         | The screen-share of the guest will have the same label as the guest                                         |
 | ``[`&screensharequality`](../../source-settings/screensharequality.md)``                | Set a custom screenshare quality                                                                            |
-| ``[`&screensharecontenthint`](and-screensharecontenthint.md)\*                          | `=motion` prioritizes screen-share resolution; `=detail` prioritizes screen-share frame rate                |
+| ``[`&screensharecontenthint`](and-screensharecontenthint.md)\*                          | `=motion` prioritizes screen-share frame rate; `=detail` prioritizes screen-share resolution                |
 | ``[`&screenshareaspectratio`](and-screenshareaspectratio.md)\*                          | Changes the screen-share aspect ratio on the publisher side                                                 |
 | ``[`&screensharestereo`](../../newly-added-parameters/and-screensharestereo.md)``       | Sets the audio mode for screen-shares to stereo and changes default audio settings to improve audio quality |
 | ``[`&screensharetype`](../../newly-added-parameters/and-screensharetype.md)``           | Defines how webcam and screenshare of a guest in a room interacts which each other                          |

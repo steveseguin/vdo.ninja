@@ -1,7 +1,7 @@
 ---
 description: >-
-  =motion prioritizes screen-share resolution; =detail prioritizes screen-share
-  frame rate
+  =motion prioritizes screen-share frame rate; =detail prioritizes screen-share
+  resolution
 ---
 
 # \&screensharecontenthint

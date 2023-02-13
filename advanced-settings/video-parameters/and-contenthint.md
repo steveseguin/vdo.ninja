@@ -1,5 +1,5 @@
 ---
-description: '=motion prioritizes resolution; =detail prioritizes frame rate'
+description: '=motion prioritizes frame rate; =detail prioritizes resolution'
 ---
 
 # \&contenthint
