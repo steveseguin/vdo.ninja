@@ -46,13 +46,14 @@ You can add them to both, source ([`&push`](../../source-settings/push.md)) and 
 
 You have to add them to the source side ([`&push`](../../source-settings/push.md)).
 
-| Parameter                              | Explanation                                                     |
-| -------------------------------------- | --------------------------------------------------------------- |
-| ``[`&rotate`](and-rotate.md)``         | Rotates the camera                                              |
-| ``[`&grid`](grid.md)``                 | Applies an rule-of-thirds grid overlay to the self-preview      |
-| ``[`&hideheader`](and-hideheader.md)`` | Hides just the top header-bar                                   |
-| ``[`&hidemenu`](and-hidemenu.md)``     | Hides the VDO.Ninja-branded menu and header bar                 |
-| ``[`&tallyoff`](tallyoff.md)``         | Disables the Tally Light's visibility for that particular guest |
+| Parameter                              | Explanation                                                             |
+| -------------------------------------- | ----------------------------------------------------------------------- |
+| ``[`&rotate`](and-rotate.md)``         | Rotates the camera                                                      |
+| ``[`&grid`](grid.md)``                 | Applies an rule-of-thirds grid overlay to the self-preview              |
+| ``[`&hideheader`](and-hideheader.md)`` | Hides just the top header-bar                                           |
+| ``[`&hidemenu`](and-hidemenu.md)``     | Hides the VDO.Ninja-branded menu and header bar                         |
+| ``[`&tally`](tallyoff.md) (alpha)      | Will make the tally sign larger and colorize the background of the page |
+| ``[`&tallyoff`](tallyoff-1.md)``       | Disables the Tally Light's visibility for that particular guest         |
 
 ## **Viewer side options**
 

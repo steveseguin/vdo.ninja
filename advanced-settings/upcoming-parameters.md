@@ -23,6 +23,7 @@ You can use/test these parameters on [vdo.ninja/alpha](https://vdo.ninja/alpha/)
 | ``[`&token`](settings-parameters/and-token-alpha.md)\*                               | A token for invite/scene links to determine whose the director of a room                                                                                 |
 | ``[`&cutscene`](settings-parameters/and-cutscene-alpha.md)\*                         | Specifies an OBS cut scene to switch to when the bitrate drops below a threshold                                                                         |
 | ``[`&distort`](audio-parameters/and-distort-alpha.md)\*                              | Will try to "distort" your microphone's output audio, making your voice a bit anonymous                                                                  |
+| ``[`&tally`](design-parameters/tallyoff.md)\*                                        | Will make the tally sign larger and colorize the background of the page                                                                                  |
 
 \*only on [vdo.ninja/alpha](https://vdo.ninja/alpha/)\
 \*\*on [vdo.ninja/beta](https://vdo.ninja/beta/) and [vdo.ninja/alpha](https://vdo.ninja/alpha/)

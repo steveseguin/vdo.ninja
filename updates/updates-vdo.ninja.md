@@ -1,5 +1,20 @@
 # Updates - VDO.Ninja
 
+#### February 10 <a href="#august-31" id="august-31"></a>
+
+* You can set the [totalroombitrate](../advanced-settings/video-bitrate-parameters/totalroombitrate.md) via manual value input now (rather than slider) in the room settings menu. (on vdo.ninja production)\
+  ![](<../.gitbook/assets/image (5).png>)
+
+#### February 9 <a href="#august-31" id="august-31"></a>
+
+* Welcome message in vdo.ninja will not auto-clear now, rather there is a close button to clear it
+* Fixed an issue with darkmode + [`&avatar`](../advanced-settings/video-parameters/and-avatar.md) (fix via Lindenkron)
+* Adding [`&tally`](../advanced-settings/design-parameters/tallyoff.md) will make the tally sign larger and colorize the background of the page, for added emphasis
+* The 'loudness' IFrame request will work with the local mic's audio as well; not just remote audio
+* [`&chunked`](../newly-added-parameters/and-chunked.md) mode on alpha will work now even if there's no audio included\
+  \
+  \*\* on vdo.ninja/alpha/
+
 #### February 1 <a href="#august-31" id="august-31"></a>
 
 * Added options for the [`&clock`](../advanced-settings/settings-parameters/and-clock.md) parameter. `&clock=N`, where `N` can be `1` to `9`; each option specifies where the clock will appear on the screen. \*\* on alpha at [`vdo.ninja/alpha/?webcam&autostart&clock=5`](https://vdo.ninja/alpha/?webcam\&autostart\&clock=5)``\
@@ -106,7 +121,7 @@
   \-- HTTP / WSS remote control also added; `https://api.vdo.ninja/YOURAPIKEY/nextSlide` and `prevSlide`\
   ``-- Local Streamdeck support also working, via MIDI.\
   \-- YouTube Tutorial: [https://youtu.be/ORH8betTt8Y](https://youtu.be/ORH8betTt8Y)\
-  ![](<../.gitbook/assets/image (5).png>)![](<../.gitbook/assets/image (19).png>)\
+  ![](<../.gitbook/assets/image (5) (1).png>)![](<../.gitbook/assets/image (19).png>)\
   \
   \* on alpha at vdo.ninja/alpha/
 
@@ -352,7 +367,7 @@
   This lets you toggle the [`&style=N`](../advanced-settings/design-parameters/style.md) options, between 1,2,4,5,6 I think?\
   \
   So if you find it distracting, the waveform in the [Comms app](../steves-helper-apps/comms.md) or such, you can toggle as a guest.\
-  ![](<../.gitbook/assets/image (1) (2) (1).png>)\
+  ![](<../.gitbook/assets/image (1) (2) (1) (2).png>)\
   \
   \*\* Change is on alpha at [vdo.ninja/alpha/](https://vdo.ninja/alpha/)
 
@@ -478,7 +493,7 @@
 *   Up to 20-videos on screen now are supported in the screen-share view; before after around 12-videos they started to be hidden
 
     ![](<../.gitbook/assets/image (3) (1) (3).png>)![](<../.gitbook/assets/image (5) (2).png>)\
-    ![](<../.gitbook/assets/image (2) (2) (3) (2).png>)![](<../.gitbook/assets/image (4) (1) (1).png>)\
+    ![](<../.gitbook/assets/image (2) (2) (3) (2).png>)![](<../.gitbook/assets/image (4) (1) (1) (2).png>)\
     \
     \*\*changes on alpha (vdo.ninja/alpha/) and github
 
@@ -1034,7 +1049,7 @@
 
 * Setting [`&h264profile=0`](../newly-added-parameters/and-h264profile.md) (or `false`/`off`/`default`), will now have the h264 profile be left as the default browser default when the sender is an android. (currently I rewrite the h264 profile for android devices when h264 is used, but advanced users might want the default)
 * I rewrote a large part of the auto-mixer to support borders around videos ([`&border=10`](../advanced-settings/design-parameters/and-border.md)), as well as fixed the [`&rounded=10`](../advanced-settings/design-parameters/rounded.md) parameter to crop videos better. Also, I added [`&bordercolor=FFFFFF`](../advanced-settings/design-parameters/and-bordercolor.md) (hex or color name), to allow for changing the color of the border.\
-  ![](<../.gitbook/assets/image (11) (1).png>)\
+  ![](<../.gitbook/assets/image (11) (1) (3).png>)\
   \
   \*changes on alpha, [https://vdo.ninja/alpha](https://vdo.ninja/alpha) (on alpha, since it was a large code rewrite and so needs a bit more testing, but it has been lightly tested)
 
@@ -1053,7 +1068,7 @@
 #### April 5
 
 * Added messaging for mac users who try to screen share and get denied; MacOS instructions are added on how to setup permissions.\
-  ![](<../.gitbook/assets/image (10).png>)
+  ![](<../.gitbook/assets/image (10) (5).png>)
 * Added messaging for those with surround gaming headsets or using VMs on how to handle no-audio-capture errors when screen sharing.\
   ![](<../.gitbook/assets/image (3) (2) (2).png>)
 * Tweaked [`&screensharetype=3`](../newly-added-parameters/and-screensharetype.md) a bit; [`&aec`](../source-settings/aec.md) and such will impact it now.

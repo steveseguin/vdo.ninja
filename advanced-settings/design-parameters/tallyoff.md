@@ -1,22 +1,23 @@
 ---
-description: Disables the Tally Light's visibility for that particular guest
+description: Will make the tally sign larger and colorize the background of the page
 ---
 
-# \&tallyoff
+# \&tally (alpha)
 
-Sender-Side Option! ([`&push`](../../source-settings/push.md))
-
-## Aliases
-
-* `&notally`
-* `&disabletally`
-* `&to`
+Sender-Side Option! ([`&push`](../../source-settings/push.md))\
+\*only available on [vdo.ninja/alpha](https://vdo.ninja/alpha/)
 
 ## Details
 
-Disables the Tally Light's visibility for that particular guest.
+`&tally` will make the tally sign larger and colorize the background of the page, for added emphasis when the feed is added to OBS.
+
+<figure><img src="../../.gitbook/assets/image (1).png" alt=""><figcaption></figcaption></figure>
 
 ## Related
+
+{% content-ref url="tallyoff-1.md" %}
+[tallyoff-1.md](tallyoff-1.md)
+{% endcontent-ref %}
 
 {% content-ref url="and-obsoff.md" %}
 [and-obsoff.md](and-obsoff.md)

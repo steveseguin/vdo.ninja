@@ -32,7 +32,7 @@ You can also use [`&totalroombitrate`](../advanced-settings/video-bitrate-parame
 
 If you use [`&controlroombitrate`](../advanced-settings/video-bitrate-parameters/and-controlroombitrate.md) on the guest's URL, the guest can change the total room bitrate dynamically via a slider. If you add `&controlroombitrate&totalroombitrate=4000` to the guest's URL the guest can change the bitrate between 0 and 4000-kbps. It doesn't affect what other guest's are viewing.
 
-![](<../.gitbook/assets/image (26).png>)![](<../.gitbook/assets/image (4).png>)
+![](<../.gitbook/assets/image (26).png>)![](<../.gitbook/assets/image (4) (1).png>)
 
 ## Examples
 

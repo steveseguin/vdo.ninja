@@ -25,7 +25,7 @@ Example: `&bgimage=https%3A%2F%2Fvdo.ninja%2Fmedia%2Fold_icon.png`
 
 [`https://vdo.ninja/?push=aSmexM6&style=0&vd=0&webcam&bgimage=https%3A%2F%2Fvdo.ninja%2Fmedia%2Fold_icon.png`](https://vdo.ninja/?push=aSmexM6\&style=0\&vd=0\&webcam\&bgimage=https%3A%2F%2Fvdo.ninja%2Fmedia%2Fold\_icon.png)``
 
-![](../../.gitbook/assets/image.png)
+![](<../../.gitbook/assets/image (11).png>)
 
 You can encode your URL here:\
 [https://www.urlencoder.org/](https://www.urlencoder.org/)

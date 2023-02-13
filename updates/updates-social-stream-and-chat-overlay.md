@@ -3,6 +3,20 @@
 [social-stream.md](../steves-helper-apps/social-stream.md "mention")\
 [chat-overlay.md](../steves-helper-apps/chat-overlay.md "mention")
 
+#### **February 10**
+
+* Added an **emotes-wall** function to Social Stream (emojis from chat will bounce around the window).\
+  ![](<../.gitbook/assets/image (4).png>)\
+  \-- This was added by a user's request; it works with all sites Social Stream supports; not just Twitch. BTTV and animated emojis are supported as well.\
+  \-- Please report any issues with freezing/CPU issues. I've designed it to be low on CPU, but who knows.\
+  \-- To use, `https://socialstream.ninja/emotes.html?session=XXXXXXXXXX&showtime=5000` or update the extension.\
+  ![](<../.gitbook/assets/image (10).png>)
+
+#### **February 9**
+
+* Added rokfin.com to Social Stream
+* Menu on Social Stream tweaked to be a bit easier to see, based on user feedback
+
 #### **February 5**
 
 * Further tweaked the menu in Social Stream; thank you `River` for that.
@@ -28,7 +42,7 @@
 * Fixed support for kick.com and nimo live
 * Added `&lang=xxxx` (`&language`/`&ln`), which you can use instead of `&speech=xxx`. When using `&lang`, it will not enable it by default. (Social Stream)
 * Option added to right-click and trigger text to speech on a message (Social Stream dock)\
-  ![](<../.gitbook/assets/image (1) (2).png>)
+  ![](<../.gitbook/assets/image (1) (2) (1).png>)
 
 #### **January 19**
 
@@ -96,7 +110,7 @@
   ![](<../.gitbook/assets/image (2) (3).png>)
 * Fixed WhatsApp support for Social Stream
 * Added Instagram post (non-live) comments to Social Stream. You will need to enable this via the menu, since this is a pretty non-obvious integration for Social Stream.\
-  ![](<../.gitbook/assets/image (4) (5).png>)![](<../.gitbook/assets/image (5) (1).png>)
+  ![](<../.gitbook/assets/image (4) (5).png>)![](<../.gitbook/assets/image (5) (1) (3).png>)
 * Support for locals.com added to Social Stream
 
 #### **December 5**

@@ -27,6 +27,6 @@ Videos on **first-load** in OBS, even if visible in OBS, **don't glow red**; it 
 [and-controlobs.md](../settings-parameters/and-controlobs.md)
 {% endcontent-ref %}
 
-{% content-ref url="tallyoff.md" %}
-[tallyoff.md](tallyoff.md)
+{% content-ref url="tallyoff-1.md" %}
+[tallyoff-1.md](tallyoff-1.md)
 {% endcontent-ref %}
