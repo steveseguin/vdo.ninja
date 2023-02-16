@@ -254,6 +254,7 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 			try {
 				avatarImg = 'url("'+avatarImg+'")';
 				document.documentElement.style.setProperty('--video-background-image', avatarImg);
+				document.documentElement.style.setProperty('--video-background-image-size', "contain");
 			} catch(e){}
 		}
 	} 
@@ -512,6 +513,7 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 	if (urlParams.has("statsinterval")){
 		session.statsInterval = parseInt(urlParams.get("statsinterval")) || 3000; // milliseconds.  interval of requesting stats of remote guests
 	}
+	
 	
 	if (urlParams.has('rotate') ) {
 		session.rotate = urlParams.get('rotate') || 90;
@@ -1167,7 +1169,7 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 		} else if (avatar){
 			avatar = decodeURIComponent(avatar);
 			
-			session.avatar = document.getElementById("defaultAvatar2");
+			session.avatar = getById("defaultAvatar2");
 			session.avatar.ready = false;
 			session.avatar.onload = () => {
 				session.avatar.ready = true;
@@ -1176,12 +1178,12 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 				getById("defaultAvatar1").classList.add("selected");
 				getById("defaultAvatar2").classList.add("selected");
 			};
-			document.getElementById("defaultAvatar1").src = avatar;
-			document.getElementById("defaultAvatar2").src = avatar;
+			getById("defaultAvatar1").src = avatar;
+			getById("defaultAvatar2").src = avatar;
 			
 		}
-		document.getElementById("avatarDiv3").classList.remove("hidden");
-		document.getElementById("avatarDiv").classList.remove("hidden");
+		getById("avatarDiv3").classList.remove("hidden");
+		getById("avatarDiv").classList.remove("hidden");
 	}
 	
 	if (urlParams.has('prompt') || urlParams.has('validate') || urlParams.has('approve')){
@@ -1972,11 +1974,15 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 	} 
 	if (session.obsControls){
 		getById("obscontrolbutton").classList.remove("hidden");
+		getById("controlButtons").style.display = "block";
 	}
 	
 	if (urlParams.has('tallyoff') || urlParams.has('notally') || urlParams.has('disabletally') || urlParams.has('to')) {
 		log("Tally Light off");
 		getById("obsState").style.setProperty("display", "none", "important");
+	} else if (urlParams.has('tally')) {
+		session.tallyStyle = 1;
+		getById("obsState").classList.add("larger");
 	}
 	
 	if (urlParams.has('automute') || urlParams.has('am')){
@@ -2145,7 +2151,7 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 		}
 		if (session.darkmode){
 			document.body.classList.add("darktheme");
-			document.querySelector(':root').style.setProperty('--background-color',"#02050c" );
+			//document.querySelector(':root').style.setProperty('--background-color',"#02050c" );
 		} else {
 			document.body.classList.remove("darktheme");
 			//document.querySelector(':root').style.setProperty('--background-color',"#141926" ); // already set as default. 
@@ -3662,6 +3668,8 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 	
 	if (urlParams.has('effects') || urlParams.has('effect')) {
 		session.effect = urlParams.get('effects') || urlParams.get('effect') || null;
+	} else if (urlParams.has('zoom')){
+		session.effect = "7";
 	}
 	
 	if (window.FaceDetector !== undefined){

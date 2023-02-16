@@ -56,7 +56,7 @@
 		<meta property="twitter:image" content="./media/vdoNinja_logo_full.png" />
 		<meta name="msapplication-TileColor" content="#da532c" />
 		<meta name="theme-color" content="#ffffff" />
-		<link rel="stylesheet" href="./main.css?ver=255" />
+		<link rel="stylesheet" href="./main.css?ver=260" />
 		<script type="text/javascript" crossorigin="anonymous" src="./thirdparty/adapter.js"></script>
 		<style id="lightbox-animations" type="text/css"></style>
 		<!-- <link rel="manifest" href="manifest.json" /> -->
@@ -83,7 +83,7 @@
 		
 		<script type="text/javascript" crossorigin="anonymous"  src="./thirdparty/CodecsHandler.js?ver=45"></script>
 		<script type="text/javascript" crossorigin="anonymous" src="./thirdparty/aes.js"></script>
-		<script type="text/javascript" crossorigin="anonymous" src="./webrtc.js?ver=573"></script>
+		<script type="text/javascript" crossorigin="anonymous" src="./webrtc.js?ver=577"></script>
 		<input id="zoomSlider" type="range" style="display: none;" />
 		<span id="electronDragZone" style="pointer-events: none; z-index:-10; position:absolute;top:0;left:0;width:100%;height:2%;-webkit-app-region: drag;min-height:20px;"></span>
 		<div id="header">
@@ -479,7 +479,7 @@
 							<i class="las la-robot"></i><span data-translate="select-avatar-image"> Default Avatar / Placeholder Image </span>
 						</div>
 						<div id="selectAvatarImage" style="margin-top:10px;">
-							<img src="./media/avatar.webp" loading="lazy" id="defaultAvatar1" style="max-width:130px;max-height:73.5px;display:inline-block;margin:10px;cursor:pointer;" onclick="changeAvatarImage(event, this);"/>
+							<img src="./media/avatar.webp" crossOrigin="Anonymous" loading="lazy" id="defaultAvatar1" style="max-width:130px;max-height:73.5px;display:inline-block;margin:10px;cursor:pointer;" onclick="changeAvatarImage(event, this);"/>
 							<label class="selected" id="noAvatarSelected" style="width:130px;display:inline-block;margin:0 1px; text-align: center; cursor:pointer;">
 							  <i class="las la-minus-circle" style="font-size: 3em;"></i><br />No Image Selected
 							  <button onclick="changeAvatarImage(event, this)" style="position: fixed; top: -100em; margin-left:10px; border:1px solid #555;"></button>
@@ -1333,6 +1333,7 @@
 		<div id="overlayClockContainer" data-menu='context-menu-clock' data-initial="600" class="hidden"><span id="overlayClock"></span></div>
 		<div id="overlayClockContainer2" data-menu='context-menu-clock' data-initial="600" class="hidden"><span id="overlayClock2"></span></div>
 		<div id="overlayMsgs" onclick="this.innerHTML = '';" style="display:none"></div>
+		<div id="stickyMsgs" class="hidden"></div>
 		<div id="bigPlayButton" onclick="this.innerHTML = '';" style="display:none"></div>
 		<div id="controls_blank" class="hidden controlCenterBox">
 			<div class="controlsGrid">
@@ -1751,12 +1752,12 @@
 							<i class="las la-robot"></i><span data-translate="select-avatar-image"> Default Avatar / Placeholder Image: </span>
 						</div>
 						<div id="selectAvatarImage3" style="margin-top:10px;">
-							<img src="./media/avatar.webp" loading="lazy" id="defaultAvatar2" style="max-width:130px;max-height:73.5px;display:inline-block;margin:10px;cursor:pointer;" onclick="changeAvatarImage(event, this);"/>
-							<label class="selected" id="noAvatarSelected3" style="width:130px;display:inline-block;margin:0 1px; text-align: center; cursor:pointer;">
+							<img src="./media/avatar.webp" crossOrigin="Anonymous"  loading="lazy" id="defaultAvatar2" style="max-width:130px;max-height:73.5px;display:inline-block;margin:10px;cursor:pointer;" onclick="changeAvatarImage(event, this);"/>
+							<label class="selected avatarSelection" id="noAvatarSelected3">
 							  <i class="las la-minus-circle" style="font-size: 3em;"></i><br />No Image Selected
 							  <button onclick="changeAvatarImage(event, this)" style="position: fixed; top: -100em; margin-left:10px; border:1px solid #555;"></button>
 							</label>
-							<label style="width:130px;display:inline-block;margin:0 1px; text-align: center;  vertical-align: top;cursor:pointer;">
+							<label class="avatarSelection">
 							  <i class="las la-hdd" style="font-size: 3em;"></i><br />Select Local Image
 							  <input type="file" onchange="changeAvatarImage(event, this)" accept="image/*" style="position: fixed; top: -100em; margin-left:10px; border:1px solid #555;"> 
 							</label>
@@ -2025,9 +2026,12 @@
 				<span class='modalClose' onclick="toggleRoomSettings();">×</span>
 				<span></span>
 				<h3 data-translate="change-room-settings">Change room settings</h3><br />
+				
 				<label title="Increase this at your peril. Changes the total inbound video bitrate per guest; mobile devices excluded." for="trbSettingInput" data-translate="change-room-video-quality">Change room video quality:</label>
 				<span style="margin-left: 6px;" id="trbSettingInputFeedback"></span>-kbps
-				<input id="trbSettingInput" type="range" min="0" max="4000" value="500" onchange="changeTRB(this);" oninput="getById('trbSettingInputFeedback').innerHTML = this.value;" style="width:100%;display:block;" />
+				<input id="trbSettingInput" type="range" min="0" max="4000" value="500" onchange="getById('trbSettingInputManual').value=this.value;changeTRB(this);" oninput="getById('trbSettingInputFeedback').innerHTML = this.value;" style="width:calc(100% - 60px);display:inline-block;" />
+				<input id="trbSettingInputManual" min="0" value="500" onchange="getById('trbSettingInput').value=this.value;changeTRB(this);" oninput="getById('trbSettingInputFeedback').innerHTML = this.value;" style="width:42px;display:inline-block;text-align: center;" />
+				
 				<span style="margin: 20px 0 0 0;display:block" id='highlightDirectorSpan' title="Only the director's video will be visible to guests and within group scenes">
 					<input id="highlightDirector" style="width: 15px; height: 15px; margin:10px;" name="highlightDirector"  data-action-type="solo-video" type="checkbox" onchange="requestInfocus(this);" />
 					<label for="highlightDirector" data-translate="highlight-director-only-video-guests-will-see">Highlight Director (only video guests will see)</label> 
@@ -2288,7 +2292,7 @@
 
 		
 			var session = WebRTC.Media; // session is a required global variable if configuring manually. Run before loading main.js but after webrtc.js.
-			session.version = "23.1b";
+			session.version = "23.2b";
 			session.streamID = session.generateStreamID(); // randomly generates a streamID for this session. You can set your own programmatically if needed
 			
 			session.defaultPassword = "someEncryptionKey123"; // Change this password if self-deploying for added security/privacy
@@ -2401,11 +2405,11 @@
 			// session.hidehome = true; // If used, 'hide home' will make the landing page inaccessible, along with hiding a few go-home elements.
 			// session.record = false; // uncomment to block users from being able to record via vdo.ninja's built in recording function
 		</script>
-		<script type="text/javascript" crossorigin="anonymous" id="lib-js" src="./lib.js?ver=648"></script>
+		<script type="text/javascript" crossorigin="anonymous" id="lib-js" src="./lib.js?ver=657"></script>
 		<!-- 
 		// If you wish to change branding, blank offers a good clean start.
 		<script type="text/javascript" id="main-js" src="./main.js" data-translation="blank"></script>
 		-->
-		<script type="text/javascript" crossorigin="anonymous" id="main-js" src="./main.js?ver=538"></script>
+		<script type="text/javascript" crossorigin="anonymous" id="main-js" src="./main.js?ver=542"></script>
 	</body>
 </html>

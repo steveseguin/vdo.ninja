@@ -618,6 +618,7 @@ function createVideoElement(){
 		v.volume = session.volume; // setting default volume
 		log("setting volume to manual");
 	}
+	
 	return v;
 }
 
@@ -1799,26 +1800,56 @@ function applySceneState(){ // guest side; tally light, etc.
 			getById("obsState").classList.remove("ondeck");
 			getById("obsState").classList.add("recording");  // TODO: this needs to check all peers to make sure it's valid
 			getById("obsState").innerHTML = "ON AIR";
+			
+			if (session.tallyStyle){
+				getById("main").classList.remove("ondeck");
+				getById("main").classList.add("recording");
+			}
+		
 		} else if (ondeck && !visibility){
 			getById("obsState").classList.remove("recording");
 			getById("obsState").classList.add("ondeck");  // TODO: this needs to check all peers to make sure it's valid
 			getById("obsState").innerHTML = "STAND BY";
+			
+			if (session.tallyStyle){
+				getById("main").classList.remove("recording");
+				getById("main").classList.add("ondeck");
+			}
+			
 		} else if (visibility){
 			getById("obsState").classList.remove("recording");
 			getById("obsState").classList.remove("ondeck");
 			getById("obsState").innerHTML = "ACTIVE";
+			
+			if (session.tallyStyle){
+				getById("main").classList.remove("recording");
+				getById("main").classList.remove("ondeck");
+			}
 		} else {
 			getById("obsState").classList.remove("recording");
 			getById("obsState").classList.remove("ondeck");
 			getById("obsState").innerHTML = "INACTIVE";
 			getById("obsState").classList.add("hidden"); // I don't think most people care to see inactive.
+			
+			if (session.tallyStyle){
+				getById("main").classList.remove("recording");
+				getById("main").classList.remove("ondeck");
+			}
 		}
 
 		if (visibility){ // BASIC TALLY LIGHT (on deck disabled)
 			getById("obsState").classList.add("onair"); // LIVE
+			if (session.tallyStyle){
+				getById("main").classList.add("onair");
+			}
 		} else {
 			getById("obsState").classList.remove("onair");
+			if (session.tallyStyle){
+				getById("main").classList.remove("onair");
+			}
 		}
+		
+		
 		
 		if (session.automute){
 			if (!visibility){
@@ -3136,6 +3167,7 @@ function createRichVideoElement(UUID){ // this function is used to check and gen
 			} catch(e){}
 			
 		}, { once: true });
+		
 		
 		setupIncomingVideoTracking(session.rpcs[UUID].videoElement, UUID);
 		pokeIframeAPI("video-element-created", "videosource_"+UUID, UUID);
@@ -5475,7 +5507,7 @@ function loadQR(callback=false, value=false){
 		}
 		script.src = "./thirdparty/qrcode.min.js"; // dynamically load this only if its needed. Keeps loading time down.
 		document.head.appendChild(script);
-	} else {
+	} else if (callback){
 		callback(value);
 	}
 }
@@ -6062,10 +6094,12 @@ function setAvatarImage(tracks){
 		session.canvas.height = 2 * parseInt(height / 2);
 		session.canvas.width = 2 * parseInt(width / 2);
 		
+		session.canvasCtx.drawImage(session.avatar, 0, 0, session.canvas.width, session.canvas.height);
+		
 		session.avatar.timer = setInterval(function(){
 			log("drawing");
 			session.canvasCtx.drawImage(session.avatar, 0, 0, session.canvas.width, session.canvas.height);
-		},500);
+		},2000);
 		
 		applyMirror(true);
 		
@@ -7534,10 +7568,10 @@ async function getFaces(){
 //////
 
 var digitalZoomMain=false;
-function digitalZoom() {
+function digitalZoom(reinit=false) {
 	if (session.effect !== "7"){return;}
 	if (digitalZoomMain){
-		digitalZoomMain();
+		digitalZoomMain(reinit); 
 		return;
 	} else if (digitalZoomMain===null){
 		return;
@@ -7626,7 +7660,14 @@ function digitalZoom() {
 			timers.activelyProcessingDraw = false;
 		}
 			
-		function fde2(){
+		function fde2(reinit=false){
+			if (reinit){
+				if (session.canvasSource && session.canvasSource.srcObject && session.canvasSource.srcObject.getVideoTracks().length){
+					session.canvasSource.width = session.canvasSource.srcObject.getVideoTracks()[0].getSettings().width || 1280;
+					session.canvasSource.height = session.canvasSource.srcObject.getVideoTracks()[0].getSettings().height || 720;
+				}
+				xa = null;
+			}
 			if (!timers.activelyProcessingDraw){
 				draw();
 			}
@@ -12497,12 +12538,9 @@ function publishWebcam(btn = false) {
 		window.onresize = updateMixer;
 		window.onorientationchange = function(){setTimeout(async function(){
 			if (session.forceAspectRatio){
-			//	if (window.matchMedia("(orientation: portrait)").matches){
-			//		await updateCameraConstraints("aspectRatio", 1.0/session.forceAspectRatio);
-			//	} else {
 					await updateCameraConstraints("aspectRatio", session.forceAspectRatio);
-			//	}
 			}
+			if (session.effect && (session.effect === "7")){digitalZoom(true);}
 			updateForceRotate();
 			updateMixer();
 		}, 200);};
@@ -13874,6 +13912,14 @@ function audioMeter(mediaStreamSource, audioContext) {
 				}
 			}
 			
+			if (session.pushLoudness==true){
+				var loudnessObj = {};
+				loudnessObj[session.streamID] = parseInt(total);
+				if (isIFrame){
+					parent.postMessage({"loudness": loudnessObj, "action":"loudness", "value":total}, session.iframetarget);
+				}
+			}
+			
 			if (session.noisegate){
 				if (total<=ng2){
 					if (currentlyActive==ng3){
@@ -14852,12 +14898,9 @@ async function createRoomCallback(passAdd, passAdd2) {
 	window.onresize = updateMixer;
 	window.onorientationchange = function(){setTimeout(async function(){
 			if (session.forceAspectRatio){
-			//	if (window.matchMedia("(orientation: portrait)").matches){
-			//		await updateCameraConstraints("aspectRatio", 1.0/session.forceAspectRatio);
-			//	} else {
-					await updateCameraConstraints("aspectRatio", session.forceAspectRatio);
-			//	}
+				await updateCameraConstraints("aspectRatio", session.forceAspectRatio);
 			}
+			if (session.effect && (session.effect === "7")){digitalZoom(true);}
 			updateForceRotate();
 			updateMixer();
 		}, 200);};
@@ -18745,7 +18788,7 @@ if (navigator.userAgent.toLowerCase().indexOf(' electron/') > -1) {  // this ena
 						///
 						const stream = await window.navigator.mediaDevices.getUserMedia(new_constraints);
 						resolve(stream);
-				    } else if (session.screenshare!==true){
+				    } else if (session.screenshare && (session.screenshare!==true)){
 						var sscid=null;
 						const sources = await ipcRenderer.sendSync('getSources',{types: ['window']});
 						for (var i=0; i<sources.length;i++){
@@ -19399,6 +19442,7 @@ function toggleRoomSettings(){
 		document.body.insertAdjacentHTML("beforeend", modalTemplate); // Insert modal at body end
 		document.getElementById("modalBackdrop").addEventListener("click", toggleRoomSettings);
 		document.getElementById('trbSettingInput').value = session.totalRoomBitrate;
+		document.getElementById('trbSettingInputManual').value = session.totalRoomBitrate;
 		document.getElementById('trbSettingInputFeedback').innerHTML = session.totalRoomBitrate;
 	}
 }
@@ -19610,7 +19654,7 @@ function checkBasicStreamsExist(){
 		} else if (document.getElementById("previewWebcam")) {
 			session.videoElement = document.getElementById("previewWebcam");
 		} else {
-			session.videoElement = createVideoElement();
+			session.videoElement = createVideoElement(); 
 		}
 		
 		session.videoElement.addEventListener("playing", (e)=>{
@@ -21586,10 +21630,26 @@ session.publishStream = function(v){ //  stream is used to generated an SDP
 	
 }; // publishStream
 
+function stickyMessage(message){
+	var textOverlay = getById("stickyMsgs");
+	if (textOverlay) {
+		var spanOverlay = document.createElement("span");
+		spanOverlay.innerHTML = message;
+		var closeBtn = document.createElement("button");
+		closeBtn.className = "overlayCloseBtn";
+		closeBtn.innerText = "X";
+		closeBtn.onclick = function(){this.parentNode.remove();};
+		textOverlay.appendChild(spanOverlay);
+		spanOverlay.appendChild(closeBtn);
+		textOverlay.classList.remove("hidden");
+	}
+}
+
 session.postPublish = async function(){
 	log("Post publish");
 	if (session.welcomeMessage){
-		getChatMessage(session.welcomeMessage, false, true, true);
+		stickyMessage(session.welcomeMessage);
+		// getChatMessage(session.welcomeMessage, false, true, true);
 	}
 	
 	if (session.welcomeImage){
@@ -21771,12 +21831,9 @@ async function publishScreen2(constraints, audioList=[], audio=true, overrideFra
 				window.onresize = updateMixer;
 				window.onorientationchange = function(){setTimeout(async function(){
 					if (session.forceAspectRatio){
-						//if (window.matchMedia("(orientation: portrait)").matches){
-						//	await updateCameraConstraints("aspectRatio", 1.0/session.forceAspectRatio);
-						//} else {
-							await updateCameraConstraints("aspectRatio", session.forceAspectRatio);
-						//}
+						await updateCameraConstraints("aspectRatio", session.forceAspectRatio);
 					}
+					if (session.effect && (session.effect === "7")){digitalZoom(true);}
 					updateForceRotate();
 					updateMixer();
 				}, 200);};
@@ -21955,12 +22012,9 @@ async function publishScreen2(constraints, audioList=[], audio=true, overrideFra
 			window.onresize = updateMixer;
 			window.onorientationchange = function(){setTimeout(async function(){
 				if (session.forceAspectRatio){
-					//if (window.matchMedia("(orientation: portrait)").matches){
-					//	await updateCameraConstraints("aspectRatio", 1.0/session.forceAspectRatio);
-					//} else {
-						await updateCameraConstraints("aspectRatio", session.forceAspectRatio);
-					//}
+					await updateCameraConstraints("aspectRatio", session.forceAspectRatio);
 				}
+				if (session.effect && (session.effect === "7")){digitalZoom(true);}
 				updateForceRotate();
 				updateMixer();
 			}, 200);};
@@ -27052,6 +27106,14 @@ function previewWebcam() {
 	} else {
 		constraint.video = true;
 	}
+	
+	window.onorientationchange = function(){setTimeout(async function(){
+		if (session.forceAspectRatio){
+			await updateCameraConstraints("aspectRatio", session.forceAspectRatio);
+		}
+		if (session.effect && (session.effect === "7")){digitalZoom(true);}
+		updateForceRotate(); 
+	}, 200);};
 
 	if ((constraint.video === false) && (constraint.audio === false)){
 		if (session.autostart) {
@@ -27590,6 +27652,7 @@ function generateQRPageCallback(hash) {
 			getById("qrcode").title = "";
 			if (getById("qrcode").getElementsByTagName('img').length) {
 				getById("qrcode").getElementsByTagName('img')[0].style.cursor = "none";
+				getById("qrcode").getElementsByTagName('img')[0].style.margin = "0 auto";
 			}
 		}, 100); // i really hate the title overlay that the qrcode function makes
 
@@ -30821,7 +30884,7 @@ function fftWaveform( source, UUID, trackid){  // append the delay Node to the t
 			loudness = Math.sqrt(Mean)*10;
 			session.rpcs[uuid].stats.Audio_Loudness = parseInt(loudness);
 			
-			if (session.pushLoudness==true){
+			if (session.pushLoudness==true){ 
 				var loudnessObj = {};
 				loudnessObj[session.rpcs[uuid].streamID] = session.rpcs[uuid].stats.Audio_Loudness;
 				
@@ -30973,9 +31036,9 @@ function effectsDynamicallyUpdate(event, ele){
 		return;
 	}
 	
-	if (session.effect === "7"){
+	if (session.effect === "7"){ // digitalZoom
 		getById("selectEffectAmount").style.display = "block";
-		getById("selectEffectAmount3").style.display = "block";
+		getById("selectEffectAmount3").style.display = "block"; 
 		session.effectValue = 1.0;
 		getById("selectEffectAmountInput").min = 1;
 		getById("selectEffectAmountInput").max = 1.99;
@@ -31728,17 +31791,26 @@ async function processWHIP(data){
 	if (data.streamID){
 		msg.streamID = data.streamID;
 	} else {
-		msg.streamID = session.generateRandomString(15);  // fake
+		msg.streamID = session.generateRandomString(15);  // fake 
 	}
+	log("setupIncoming");
 	await session.setupIncoming(msg); // could end up setting up the peer the wrong way.
-	 
+	
 	var callback = null;
 	var promise = new Promise((resolve, reject) => {
 		callback = resolve;
 	});
-	
 	session.rpcs[msg.UUID].whipCallback = callback;
+	
+	var callback2 = null;
+	var promise2 = new Promise((resolve, reject) => {
+		callback2 = resolve;
+	});
+	session.rpcs[msg.UUID].whipCallback2 = callback2;
+	
+	log("CONNECT PEEER");
 	session.connectPeer(msg);
+	log("CONNECT PEEER DONE");
 	
 	if (!session.manual || !session.director){
 		window.onresize = updateMixer;
@@ -31747,7 +31819,41 @@ async function processWHIP(data){
 		};
 	}
 	
-	return await promise; // return SDP answer for the remote WHIP request
+	log("ICE BUNDLE PROMISE");
+	setTimeout(function(UUID){
+		log("ICE BUNDLE PROMISE TIMEOUT");
+		if (session.rpcs[UUID].whipCallback2){
+			session.rpcs[UUID].whipCallback2([...session.rpcs[UUID].iceBundle]);
+			clearTimeout(session.rpcs[UUID].iceTimer);
+			session.rpcs[UUID].iceTimer = null;
+			session.rpcs[UUID].iceBundle = []
+			session.rpcs[UUID].whipCallback2 = null;
+			
+		}
+	},3000,msg.UUID);
+	var iceBundle = await promise2; // waiting for ICE GATHER COMPLETE
+	session.rpcs[msg.UUID].whipCallback2 = null;
+	
+	log("ICE BUNDLE");
+	log(iceBundle);
+	
+	var insertIce = "";
+	
+	iceBundle.forEach(ice=>{
+		if (ice.candidate){
+			insertIce += "a="+ice.candidate+"\r\n";
+		}
+	});
+	
+	var sdpAnswer = await promise;
+	session.rpcs[msg.UUID].whipCallback = null;
+	
+	sdpAnswer = sdpAnswer.replace("a=ice-ufrag", insertIce+"a=ice-ufrag");
+	
+	log("completed");
+	log(sdpAnswer);
+	
+	return sdpAnswer; // return SDP answer for the remote WHIP request
 }
 
 var queuedSendingAPIMsgs = [];
