@@ -19,7 +19,7 @@ Example: `&allowedscenes=Scene1,Scene2`
 
 ## Details
 
-Added `&allowedscenes` as an option to filter which OBS scenes a remote guest has access to controlling when using [`&controlobs`](and-controlobs.md). Uses CSV to split up the scenes (avoid special characters in your scene names if there are issues)
+`&allowedscenes` filters which OBS scenes a remote guest has access to controlling when using [`&controlobs`](and-controlobs.md). Uses CSV to split up the scenes (avoid special characters in your scene names if there are issues)
 
 Example: `vdo.ninja/alpha/?view=StreamID&remote&allowedscenes=Scene1,Scene2`
 
