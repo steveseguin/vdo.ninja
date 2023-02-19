@@ -3,6 +3,19 @@
 [social-stream.md](../steves-helper-apps/social-stream.md "mention")\
 [chat-overlay.md](../steves-helper-apps/chat-overlay.md "mention")
 
+#### **February 19**
+
+* With Social Stream, you can use `&fixed` on the dock page now, which places messages in the same place (overlapping the last one). When combined with `&limit=1`, you can get a neat one-message bar auto-featured chat effect.\
+  ie: `https://socialstream.ninja/dock.html?bubble&color&hidemenu&hideshadow&largeavatar&nobadges&nooutline&notime&limit=1&fadeout&fixed&alignbottom&session=XXXXXXXX`\
+  ``![](<../.gitbook/assets/image (1).png>)``
+* `&chartime=60` added as a dock option; this will specify the time per character that a message will show on screen when using the auto-show feature. 60ms is the default; longer messages will show for longer.
+
+#### **February 15**
+
+* `&largeavatar` and `&bubble` added to Social Stream styling options; when combined, you can see what they look like in the attached images.\
+  ![](../.gitbook/assets/image.png)![](<../.gitbook/assets/image (2).png>)
+* sli.do support added to Social Stream; works with the Q\&A section via the participant link
+
 #### **February 10**
 
 * Added an **emotes-wall** function to Social Stream (emojis from chat will bounce around the window).\
@@ -107,7 +120,7 @@
 #### **December 7**
 
 * Added support for NIMO.tv to Social Stream\
-  ![](<../.gitbook/assets/image (2) (3).png>)
+  ![](<../.gitbook/assets/image (2) (3) (1).png>)
 * Fixed WhatsApp support for Social Stream
 * Added Instagram post (non-live) comments to Social Stream. You will need to enable this via the menu, since this is a pretty non-obvious integration for Social Stream.\
   ![](<../.gitbook/assets/image (4) (5).png>)![](<../.gitbook/assets/image (5) (1) (3).png>)
@@ -163,7 +176,7 @@
 * Updated Socialstream to support custom themes/templates. I've provided an example theme that you can use or base your own themes on. see: [https://github.com/steveseguin/social\_stream/tree/main/themes](https://github.com/steveseguin/social\_stream/tree/main/themes) for more.\
   ![](<../.gitbook/assets/image (7) (1) (2).png>)
 * Added more animated style options for how messages appear into the chat stream, such as slide in, fade in, and drop in.\
-  ![](<../.gitbook/assets/image (8) (1).png>)
+  ![](<../.gitbook/assets/image (8) (1) (1).png>)
 
 #### **October 1**
 
@@ -198,7 +211,7 @@
 #### **September 10**
 
 * Using `&beep` or the bell icon will trigger audio 'beeps' when new messages appear in the Socialstream dock. Requires user-interaction with the page in chrome for the audio to work.\
-  ![](<../.gitbook/assets/image (8) (1) (1).png>)
+  ![](<../.gitbook/assets/image (8) (1) (1) (2).png>)
 * Support for @mention added to Mixcloud for Socialstream+touch, by means of providing the username that scripts can respond to (by user request).
 * `&alignbottom` added to the Socialstream dock; this aligns the message stream to the bottom by default, rather than top.
 * Added `&transparent` (versus the new `&hideshadow`), which can be useful for loading Socialstream into non-OBS studios.

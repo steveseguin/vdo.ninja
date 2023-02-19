@@ -2,6 +2,13 @@
 
 [comms.md](../steves-helper-apps/comms.md "mention")
 
+#### February 19
+
+* You can pass URL parameters for the default audio/video device to the app now (pretty much any VDO.Ninja parameter will work now actually with it).\
+  \*on production and alpha
+
+### 2022
+
 #### December 30
 
 * Applied some CSS tweaks, plus the view-group function was added to it as a small button option (the little eye ball you can toggle on).\
@@ -39,7 +46,7 @@
   It uses vdo.ninja/alpha via the IFrame API, so its cross compatible. I'm not entirely sure if I'll keep it spun off like this, rather than just hosted on the VDO.Ninja domain itself, but I'm open to feedback/ideas on which direction I should go. (better domain names also are welcomed, if I can afford them)
 * The Comms app has been updated to use [`&groupmode`](../advanced-settings/setup-parameters/and-groupmode.md) by default
 * Lets you share video now; you need to select it via the settings menu - when sharing video via the Comms app, the video-mute button and mini-preview appears\
-  ![](<../.gitbook/assets/image (9) (1).png>)
+  ![](<../.gitbook/assets/image (9) (1) (2).png>)
 
 #### October 15
 

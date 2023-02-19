@@ -30,6 +30,10 @@ See this video for details how to set it up:
 Publishing from OBS directly to VDO.Ninja
 {% endembed %}
 
+### Update in V23
+
+I've refined the WHIP service on `vdo.ninja/alpha/?whip=xxx`, making it as robust as I can I think, so if some third-party WHIP client/app doesn't work with it, it may not an issue with VDO.Ninja. In those cases it will be up to the client to ensure full support of the WHIP specification, else it may not work with VDO.Ninja.
+
 ## Related
 
 {% content-ref url="../../guides/publish-from-obs-into-vdo.ninja.md" %}

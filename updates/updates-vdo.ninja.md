@@ -1,5 +1,26 @@
 # Updates - VDO.Ninja
 
+#### February 19 <a href="#august-31" id="august-31"></a>
+
+* I've refined the [WHIP service](../advanced-settings/mixer-scene-parameters/and-whip-alpha.md) on `vdo.ninja/alpha/?whip=xxx`, making it as robust as I can I think, so if some third-party WHIP client/app doesn't work with it, it may not an issue with VDO.Ninja. In those cases it will be up to the client to ensure full support of the WHIP specification, else it may not work with VDO.Ninja.
+* Added [`&allowedscenes`](../advanced-settings/settings-parameters/and-allowedscenes-alpha.md) as an option to filter which OBS scenes a remote guest has access to controlling when using [`&controlobs`](../advanced-settings/settings-parameters/and-controlobs.md). Uses CSV to split up the scenes (avoid special characters in your scene names if there are issues)\
+  example: `vdo.ninja/alpha/?view=xxx&remote&allowedscenes=Scene1,Scene2`\
+  \
+  \*\* on alpha
+
+#### February 16 <a href="#august-31" id="august-31"></a>
+
+* [`&timer=N`](../advanced-settings/settings-parameters/and-timer-alpha.md) can be used to position where the countdown timer is positioned on a guest's window. Default is still center top, but a value of 1 to 9 can be be passed to change positions.
+* Setting the time as a director, for the timers, now can accept minute/seconds, rather than just seconds.\
+  ![](<../.gitbook/assets/image (9).png>)
+* The [`&datamode`](../newly-added-parameters/and-datamode.md) option was tweaked to work a bit better now when using it to both connect via push and view modes. Data-only mode is an advanced option; it's a bit like doing `&ad=0&vd=0&webcam&autostart&hidemenu`, but a bit cleaner and disables a few other common functions that might be considered bloat. Useful perhaps if you want to use only the data-channels of VDO.Ninja, for remote control only operations or sending files.\
+  \
+  \*\* changes on alpha at vdo.ninja/alpha/
+
+#### February 15 <a href="#august-31" id="august-31"></a>
+
+* Digital zoom fixed to support a change in orientation.
+
 #### February 10 <a href="#august-31" id="august-31"></a>
 
 * You can set the [totalroombitrate](../advanced-settings/video-bitrate-parameters/totalroombitrate.md) via manual value input now (rather than slider) in the room settings menu. (on vdo.ninja production)\
@@ -547,7 +568,7 @@
 * Added [`&effects=7`](../source-settings/effects.md) (or `&effects=zoom`), which will provide a manual zoom option in the effects menu. (you can also select the zoom mode via the effects menu, if available)\
   ![](<../.gitbook/assets/image (2) (4) (1).png>)
 * Added [`&getfaces`](../advanced-settings/settings-parameters/and-getfaces.md) on the viewer link (or `{getFaces:true}` via the IFrame API), which will request a continuous stream of face bounding boxes, for all inbound videos and all faces contained within. The data is transmitted to the parent IFRAME, and this data can be used for moving the IFrame window around, if you wish to make your own custom face-tracker or whatever else.\
-  ![](<../.gitbook/assets/image (11) (1) (2) (1).png>)
+  ![](<../.gitbook/assets/image (11) (1) (2) (1) (1).png>)
 * ``[`&effects=1`](../source-settings/effects.md) on the sender side (or `&effects=facetracking`) will auto-center the user's face in the center of their video, zooming in as needed. It takes a moment to initiate, but it offers a gentle PTZ-like effect.\
   \-- note: I previously had `&effects=1`, but it wasn't that good, so this is a more polished attempt. It's also available from the effects drop down menu now as a selectable option, as before I was hiding it.\
   ![](<../.gitbook/assets/image (3) (1) (1) (2).png>)\
