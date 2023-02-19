@@ -61,7 +61,3 @@ It supports multiple OBS instances and will label them according to the [`&label
 {% content-ref url="../design-parameters/and-obsoff.md" %}
 [and-obsoff.md](../design-parameters/and-obsoff.md)
 {% endcontent-ref %}
-
-{% content-ref url="and-allowedscenes-alpha.md" %}
-[and-allowedscenes-alpha.md](and-allowedscenes-alpha.md)
-{% endcontent-ref %}

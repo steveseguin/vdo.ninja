@@ -10,7 +10,7 @@ Director Option! ([`&director`](../../viewers-settings/director.md))
 
 `&novice` hides some advanced guest items in the director's control center.
 
-![](<../../.gitbook/assets/image (6) (2) (1).png>)
+![](<../../.gitbook/assets/image (6) (2) (1) (2).png>)
 
 ## Related
 

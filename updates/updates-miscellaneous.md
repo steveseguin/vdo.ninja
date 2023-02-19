@@ -9,7 +9,7 @@
 * Create a sample of how to apply a custom full-page overlay on top of VDO.Ninja: [https://vdo.ninja/alpha/examples/overlay](https://vdo.ninja/alpha/examples/overlay)\
   \
   For example, the default (leave field blank option) shows how to apply a logo on top of a guest invite. It isn't clickable, so it won't interfere with the app itself (other than make it harder to see things).\
-  ![](<../.gitbook/assets/image (12) (1).png>)
+  ![](<../.gitbook/assets/image (12).png>)
 
 #### October 1
 

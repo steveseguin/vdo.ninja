@@ -19,7 +19,7 @@ Example: `&token=5eb5e63ee4d9ba06`
 
 When using [`&maindirectorpassword`](../director-parameters/and-maindirectorpassword-alpha.md) as a director, it will add `&token=xxx` to the invite/scene links.
 
-![](<../../.gitbook/assets/image (1) (1).png>)
+![](<../../.gitbook/assets/image (1) (1) (1).png>)
 
 This token is used by the guests to check a remote database server to see who currently 'owns' the token; it persists though, even if the director is not connected.
 

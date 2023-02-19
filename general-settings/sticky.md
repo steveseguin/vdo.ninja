@@ -23,7 +23,7 @@ There is a toggle in the director's room which adds `&sticky` to the guest's inv
 
 Added a little "pin" icon to the end of the copy/view link when sharing your camera. Pressing it is the same as using `&sticky` on your URL, as next time you visit VDO.Ninja it will ask you if you wish to reload your [`&push`](../source-settings/push.md) link.
 
-<figure><img src="../.gitbook/assets/image (8) (1).png" alt=""><figcaption></figcaption></figure>
+<figure><img src="../.gitbook/assets/image (8).png" alt=""><figcaption></figcaption></figure>
 
 ## Related
 

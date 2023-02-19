@@ -26,7 +26,7 @@ Example: `&maindirectorpassword=SomePassword123`
 
 This will add a [`&token`](../settings-parameters/and-token-alpha.md) value to the invite/scene links.
 
-![](<../../.gitbook/assets/image (1) (1).png>)
+![](<../../.gitbook/assets/image (1) (1) (1).png>)
 
 This token is used by the guests to check a remote database server to see who currently 'owns' the token; it persists though, even if the director is not connected.
 

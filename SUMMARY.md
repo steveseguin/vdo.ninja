@@ -252,7 +252,6 @@
     * [\&language](advanced-settings/settings-parameters/and-language.md)
     * [\&remote](general-settings/remote.md)
     * [\&controlobs](advanced-settings/settings-parameters/and-controlobs.md)
-    * [\&allowedscenes (alpha)](advanced-settings/settings-parameters/and-allowedscenes-alpha.md)
     * [\&stats](general-settings/and-stats.md)
     * [\&sticky](general-settings/sticky.md)
     * [\&clearstorage (alpha)](advanced-settings/settings-parameters/and-clearstorage-alpha.md)

@@ -30,7 +30,7 @@ Added the "mic delay" option as a slider to the director's control; it's availab
 ![](<../.gitbook/assets/image (3) (1) (4).png>)
 
 `&micdelay`, if used on a basic push link, will show the mic delay as a slider now also. So you can adjust it as needed. I don't show the slider by default unless using the URL parameter, as I don't think its a commonly used feature.\
-![](<../.gitbook/assets/image (4) (2).png>)
+![](<../.gitbook/assets/image (4) (2) (2).png>)
 
 ## Related
 

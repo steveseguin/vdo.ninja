@@ -43,7 +43,7 @@
 * Updated a bit, including adding some new servers and replacing some others. Applies to the [`&meshcast`](../newly-added-parameters/and-meshcast.md) flag as well.
 * There's a drop down to select different regions; it automatically tries to select the closest though.
 *   Info on whether a region is overloaded or not is present; should always read "good", but who knows.\
-    ![](<../.gitbook/assets/image (12) (1) (3).png>)
+    ![](<../.gitbook/assets/image (12) (1).png>)
 
     Things are more responsive with the updated code, but its new code -- let me know if any bugs occur.
 
