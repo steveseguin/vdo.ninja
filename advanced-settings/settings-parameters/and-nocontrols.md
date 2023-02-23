@@ -21,7 +21,7 @@ This is not the same control bar as the user control bar. Also, be sure to not a
 This is the video control bar:\
 
 
-<figure><img src="../../.gitbook/assets/image (1) (3).png" alt=""><figcaption></figcaption></figure>
+<figure><img src="../../.gitbook/assets/image (1) (3) (3).png" alt=""><figcaption></figcaption></figure>
 
 ## Related
 

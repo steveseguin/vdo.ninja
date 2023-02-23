@@ -12,24 +12,25 @@ They are separated in three groups: [general options](./#general-options) (push 
 
 You can use them for publisher, viewer and director URLs.
 
-| Parameter                                              | Explanation                                                                                  |
-| ------------------------------------------------------ | -------------------------------------------------------------------------------------------- |
-| ``[`&language`](and-language.md)``                     | Sets the interface language                                                                  |
-| ``[`&remote`](../../general-settings/remote.md)``      | Allows remote operation of the zoom and focus, and access to statistics                      |
-| ``[`&controlobs`](and-controlobs.md)\*                 | The ability for VDO.Ninja to Remotely Control OBS Studio while streaming/directing           |
-| ``[`&stats`](../../general-settings/and-stats.md)``    | Shows the connection/media stats window by default                                           |
-| ``[`&sticky`](../../general-settings/sticky.md)``      | Allows a user to save and then later restore their streaming session settings                |
-| ``[`&clearstorage`](and-clearstorage-alpha.md) (alpha) | Will clear all the saved user preferences for all sessions                                   |
-| ``[`&disablehotkeys`](and-disablehotkeys.md)``         | Disables hotkeys (like `CRTL + M`)                                                           |
-| ``[`&showlist`](../../source-settings/showlist.md)``   | Shows list of hidden guests                                                                  |
-| ``[`&nopush`](and-nopush.md)\*                         | Blocks outbound publishing connections                                                       |
-| ``[`&hidehome`](and-hidehome.md)\*                     | Hides the VDO.Ninja homepage and many links that lead to it                                  |
-| ``[`&hidetranslate`](and-hidetranslate.md)\*           | Hides the option to translate VDO.Ninja                                                      |
-| ``[`&clock`](and-clock.md)\*                           | Shows the current time                                                                       |
-| ``[`&timer`](and-timer-alpha.md) (alpha)               | Positions the countdown timer                                                                |
-| ``[`&powerpoint`](and-powerpoint-alpha.md) (alpha)     | Adds a built-in basic controller to control PowerPoint                                       |
-| ``[`&widget`](and-widget-alpha.md) (alpha)             | Will load a side-bar with an IFrame embed, with support for YouTube / Twitch / Social Stream |
-| ``[`&token`](and-token-alpha.md) (alpha)               | A token for invite/scene links to determine whose the director of a room                     |
+| Parameter                                                | Explanation                                                                                                                |
+| -------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------- |
+| ``[`&language`](and-language.md)``                       | Sets the interface language                                                                                                |
+| ``[`&remote`](../../general-settings/remote.md)``        | Allows remote operation of the zoom and focus, and access to statistics                                                    |
+| ``[`&controlobs`](and-controlobs.md)\*                   | The ability for VDO.Ninja to Remotely Control OBS Studio while streaming/directing                                         |
+| ``[`&allowedscenes`](and-allowedscenes-alpha.md) (alpha) | Option to filter which OBS scenes a remote guest has access to controlling when using [`&controlobs`](and-controlobs.md)`` |
+| ``[`&stats`](../../general-settings/and-stats.md)``      | Shows the connection/media stats window by default                                                                         |
+| ``[`&sticky`](../../general-settings/sticky.md)``        | Allows a user to save and then later restore their streaming session settings                                              |
+| ``[`&clearstorage`](and-clearstorage-alpha.md) (alpha)   | Will clear all the saved user preferences for all sessions                                                                 |
+| ``[`&disablehotkeys`](and-disablehotkeys.md)``           | Disables hotkeys (like `CRTL + M`)                                                                                         |
+| ``[`&showlist`](../../source-settings/showlist.md)``     | Shows list of hidden guests                                                                                                |
+| ``[`&nopush`](and-nopush.md)\*                           | Blocks outbound publishing connections                                                                                     |
+| ``[`&hidehome`](and-hidehome.md)\*                       | Hides the VDO.Ninja homepage and many links that lead to it                                                                |
+| ``[`&hidetranslate`](and-hidetranslate.md)\*             | Hides the option to translate VDO.Ninja                                                                                    |
+| ``[`&clock`](and-clock.md)\*                             | Shows the current time                                                                                                     |
+| ``[`&timer`](and-timer-alpha.md) (alpha)                 | Positions the countdown timer                                                                                              |
+| ``[`&powerpoint`](and-powerpoint-alpha.md) (alpha)       | Adds a built-in basic controller to control PowerPoint                                                                     |
+| ``[`&widget`](and-widget-alpha.md) (alpha)               | Will load a side-bar with an IFrame embed, with support for YouTube / Twitch / Social Stream                               |
+| ``[`&token`](and-token-alpha.md) (alpha)                 | A token for invite/scene links to determine whose the director of a room                                                   |
 
 \*NEW IN VERSION 22
 

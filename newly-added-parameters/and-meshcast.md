@@ -44,7 +44,7 @@ Understanding Meshcast as a tool for VDO.Ninja
 
 As a director you can also select the Meshcast server on the bottom left of the director's control center. This method will show you the current load on a server, so you can avoid servers that are over-capacity.\
 \
-![](<../.gitbook/assets/image (2) (3) (1).png>)\
+![](<../.gitbook/assets/image (2) (3) (1) (1).png>)\
 
 
 You can also specify the Meshcast server based on geographic timezone values using the [`&tz=300`](and-tz.md) parameter, where the value passed is the UTC timezone value in negative minutes. Eastern Europe I suppose would be a negative value, while North America would be a positive value. The [`&tz`](and-tz.md) will also use the closest TURN server to that timezone, if needed; just keep in mind that timezones are east/west accurate; not north/south accurate.

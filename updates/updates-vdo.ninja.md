@@ -3,12 +3,16 @@
 #### February 19 <a href="#august-31" id="august-31"></a>
 
 * I've refined the [WHIP service](../advanced-settings/mixer-scene-parameters/and-whip-alpha.md) on `vdo.ninja/alpha/?whip=xxx`, making it as robust as I can I think, so if some third-party WHIP client/app doesn't work with it, it may not an issue with VDO.Ninja. In those cases it will be up to the client to ensure full support of the WHIP specification, else it may not work with VDO.Ninja.
+* Added [`&allowedscenes`](../advanced-settings/settings-parameters/and-allowedscenes-alpha.md) as an option to filter which OBS scenes a remote guest has access to controlling when using [`&controlobs`](../advanced-settings/settings-parameters/and-controlobs.md). Uses CSV to split up the scenes (avoid special characters in your scene names if there are issues)\
+  example: `vdo.ninja/alpha/?view=xxx&remote&allowedscenes=Scene1,Scene2`\
+  \
+  \*\* on alpha
 
 #### February 16 <a href="#august-31" id="august-31"></a>
 
 * [`&timer=N`](../advanced-settings/settings-parameters/and-timer-alpha.md) can be used to position where the countdown timer is positioned on a guest's window. Default is still center top, but a value of 1 to 9 can be be passed to change positions.
 * Setting the time as a director, for the timers, now can accept minute/seconds, rather than just seconds.\
-  ![](<../.gitbook/assets/image (4).png>)
+  ![](<../.gitbook/assets/image (9).png>)
 * The [`&datamode`](../newly-added-parameters/and-datamode.md) option was tweaked to work a bit better now when using it to both connect via push and view modes. Data-only mode is an advanced option; it's a bit like doing `&ad=0&vd=0&webcam&autostart&hidemenu`, but a bit cleaner and disables a few other common functions that might be considered bloat. Useful perhaps if you want to use only the data-channels of VDO.Ninja, for remote control only operations or sending files.\
   \
   \*\* changes on alpha at vdo.ninja/alpha/
@@ -20,7 +24,7 @@
 #### February 10 <a href="#august-31" id="august-31"></a>
 
 * You can set the [totalroombitrate](../advanced-settings/video-bitrate-parameters/totalroombitrate.md) via manual value input now (rather than slider) in the room settings menu. (on vdo.ninja production)\
-  ![](<../.gitbook/assets/image (5) (2).png>)
+  ![](<../.gitbook/assets/image (5).png>)
 
 #### February 9 <a href="#august-31" id="august-31"></a>
 
@@ -295,7 +299,7 @@
 #### **November 22** <a href="#august-31" id="august-31"></a>
 
 * Made the [`&clock`](../advanced-settings/settings-parameters/and-clock.md) and timer overlay be something you can 'pop out' and overlay as a native picture-in-picture element; just right-click it and select pop-out from the context menu.\
-  ![](<../.gitbook/assets/image (1) (1) (1) (4).png>)![](<../.gitbook/assets/image (2) (8).png>)
+  ![](<../.gitbook/assets/image (1) (1) (1).png>)![](<../.gitbook/assets/image (2) (8).png>)
 * Fixed an issue where the right-click -> edit URL feature in [v22](../releases/v22.md) broke
 * Viewer-side [`&audiocodec=pcm`](../advanced-settings/audio-parameters/minptime-1.md) is now available as an audio codec option; this is 32khz, 16bit, mono, and uncompressed, so \~512-kbps bitrate. You'll need the sender to have `&insertablestreams` applied to their URL for this to work currently, as it requires the sender to enable a special mode that allows for custom codecs. This is very experimental at the moment, so its still a WIP.
 * `&micsamplerate` (`&msr`) added, which lets you specify the capture audio sample rate. Also added purely for experimental reasons; I don't recommend touching.\
@@ -306,7 +310,7 @@
 
 * Some advanced audio-related VDO.Ninja updates:\
   \-- I show the audio codec now used in the stats, along with whether audio forward error correction (FEC) is on or not (on by default)\
-  ![](<../.gitbook/assets/image (6) (2) (1).png>)\
+  ![](<../.gitbook/assets/image (6) (2).png>)\
   \-- [`&nofec`](../advanced-settings/audio-parameters/minptime-3.md) on the viewer side can disable FEC.\
   \-- [`&audiocodec`](../advanced-settings/audio-parameters/minptime-1.md) on the viewer side can let you specify the audio codec; `opus` (default), `pcmu`, `pcma`, `isac`, `g722` and `red`\
   \-- [`&audiocodec`](../advanced-settings/audio-parameters/minptime-1.md)`=red` is pretty much sending two opus streams, with one as a backup in case of packet loss; support in Chromium 97 and up, but the only way I can so far tell that it is working is to check if the audio bitrate has doubled\
@@ -333,7 +337,7 @@
 ![](<../.gitbook/assets/image (3) (1) (4).png>)
 
 * [`&micdelay`](../source-settings/and-micdelay.md), if used on a basic push link, will show the mic delay as a slider now also. So you can adjust it as needed. I don't show the slider by default unless using the URL parameter, as I don't think its a commonly used feature.\
-  ![](<../.gitbook/assets/image (4) (2) (2).png>)
+  ![](<../.gitbook/assets/image (4) (2).png>)
 * I think I fixed an issue with Firefox where not all the audio-output devices were available to choose from, at least on desktop, and so I've added the custom logic Firefox requires to get it working. On Firefox, you'll now need to select "Show more options" in the audio drop down menu, where Firefox will prompt you to select the audio output device with its own prompt.\
   ![](<../.gitbook/assets/image (9) (3).png>)
 * Added an option called [`&hidehome`](../advanced-settings/settings-parameters/and-hidehome.md), which hides the VDO.Ninja homepage and many links that lead to it. You can also enable at a code level with `session.hidehome=true;`, which is useful if doing a self-deployment, where you don't want anyone to stumble onto the site and start using it. You'll still be able to join push links and create rooms via URL parameters, but that's about it.\
@@ -509,7 +513,7 @@
 * Updated the screen-share layouts to have a larger screen, relative to the other videos: It now targets an average of around 80% screen real-estate for the main screen share.
 *   Up to 20-videos on screen now are supported in the screen-share view; before after around 12-videos they started to be hidden
 
-    ![](<../.gitbook/assets/image (3) (1) (3).png>)![](<../.gitbook/assets/image (5) (2) (2).png>)\
+    ![](<../.gitbook/assets/image (3) (1) (3).png>)![](<../.gitbook/assets/image (5) (2).png>)\
     ![](<../.gitbook/assets/image (2) (2) (3) (2).png>)![](<../.gitbook/assets/image (4) (1) (1) (2).png>)\
     \
     \*\*changes on alpha (vdo.ninja/alpha/) and github
@@ -543,7 +547,7 @@
   \-- The guest can toggle it on and off in the settings, without needing to go into any advanced audio settings\
   \-- The remote director can still use the existing "channel count' in the advanced audio settings to override this button, unless the guest toggles it back on\
   \-- There's several other ways to set mono mode of course, including [`&monomic`](../advanced-settings/audio-parameters/and-monomic.md), [`&inputchannels=1`](../advanced-settings/audio-parameters/and-inputchannels.md), [`&stereo=3`](../general-settings/stereo.md), channelCount, [`&mono`](../advanced-settings/view-parameters/mono.md) (playback), [`&ec&dn&ag`](../guides/audio-filters.md), and within OBS/Windows itself.\
-  ![](<../.gitbook/assets/image (3) (1) (1) (3).png>)![](<../.gitbook/assets/image (1) (1) (1) (3) (1).png>)\
+  ![](<../.gitbook/assets/image (3) (1) (1).png>)![](<../.gitbook/assets/image (1) (1) (1) (3) (1).png>)\
   \
   \*\* updated on to alpha at vdo.ninja/alpha/
 
@@ -564,7 +568,7 @@
 * Added [`&effects=7`](../source-settings/effects.md) (or `&effects=zoom`), which will provide a manual zoom option in the effects menu. (you can also select the zoom mode via the effects menu, if available)\
   ![](<../.gitbook/assets/image (2) (4) (1).png>)
 * Added [`&getfaces`](../advanced-settings/settings-parameters/and-getfaces.md) on the viewer link (or `{getFaces:true}` via the IFrame API), which will request a continuous stream of face bounding boxes, for all inbound videos and all faces contained within. The data is transmitted to the parent IFRAME, and this data can be used for moving the IFrame window around, if you wish to make your own custom face-tracker or whatever else.\
-  ![](<../.gitbook/assets/image (11) (1) (2) (1).png>)
+  ![](<../.gitbook/assets/image (11) (1) (2) (1) (1).png>)
 * ``[`&effects=1`](../source-settings/effects.md) on the sender side (or `&effects=facetracking`) will auto-center the user's face in the center of their video, zooming in as needed. It takes a moment to initiate, but it offers a gentle PTZ-like effect.\
   \-- note: I previously had `&effects=1`, but it wasn't that good, so this is a more polished attempt. It's also available from the effects drop down menu now as a selectable option, as before I was hiding it.\
   ![](<../.gitbook/assets/image (3) (1) (1) (2).png>)\
