@@ -281,7 +281,7 @@
     "enter-the-website-URL-you-wish-to-share": "Sartu partekatzeko web orrialdearen helbidea.",
     "run-a-speed-test": "Neurtu konexio abiadura",
     "read-the-guides": "Irakurri gidak",
-    "info-blob": "",
+    "info-blob": "<h3>🛠 For support, see the <a href=\"https://www.reddit.com/r/VDONinja/\">sub-reddit <i class=\"lab la-reddit-alien\"></i></a> or join the <a href=\"https://discord.vdo.ninja/\">Discord <i class=\"lab la-discord\"></i></a>. The <a href=\"https://docs.vdo.ninja/\">documentation is here</a> and my personal email is <i>steve@seguin.email</i></h3>",
     "hide-the-links": " ESTEKA (GONBIDAPENAK &amp; ESZENAK)",
     "click-for-quick-room-overview": "\n<i class=\"las la-question-circle\"></i> <span data-translate=\"click-here-for-help\">Hemen klik egin laburpen azkarra ikusteko eta laguntza izateko</span>\n\t",
     "click-here-for-help": "Hemen klik egin laburpen azkarra ikusteko eta laguntza izateko",

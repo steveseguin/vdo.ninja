@@ -411,7 +411,7 @@
     "enter-the-website-URL-you-wish-to-share": "Поделиться ссылкой на сайт.",
     "run-a-speed-test": "Запустить тест скорости",
     "read-the-guides": "Ознакомиться с руководством",
-    "info-blob": "Пожалуйста, сделайте все возможное, чтобы немедленно остановить эту кровавую войну! Иначе завтра может не быть!",
+    "info-blob": "<li>Пожалуйста, сделайте все возможное, чтобы немедленно остановить эту кровавую войну! Иначе завтра может не быть!</li>\n<br><h3>🛠 For support, see the <a href=\"https://www.reddit.com/r/VDONinja/\">sub-reddit <i class=\"lab la-reddit-alien\"></i></a> or join the <a href=\"https://discord.vdo.ninja/\">Discord <i class=\"lab la-discord\"></i></a>. The <a href=\"https://docs.vdo.ninja/\">documentation is here</a> and my personal email is <i>steve@seguin.email</i></h3>",
     "animate-mixing": "Анимированный переход",
     "prefix-screenshare": "Prefix screenshare IDs",
     "more-than-four-can-join": "Этот шаблон на 4 гостей только для демонстрации. Гостей может быть больше.",

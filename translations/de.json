@@ -270,7 +270,7 @@
     "share-website-iframe": "Website teilen",
     "run-a-speed-test": "Speed-Test",
     "read-the-guides": "Guides",
-    "info-blob": "",
+    "info-blob": "\n<h2>Was ist VDO.Ninja</h2>\n<br>\n<li>100% <b>umsonst</b>; keine Downloads; keine persönliche Daten übertragen; keine Anmeldung</li>\n<li>Bring live-Videos von deinem Smartphone, remote Computer, oder Freunden direkt in OBS oder andere Studio Software.</li>\n<li>Wir verwenden die neuste Peer-to-Peer forwarding technology die Datenschutz und ultra-low latency bietet</li>\n<br>\n<li>Youtube video \n<i class=\"lab la-youtube\"></i>\n<a href=\"https://www.youtube.com/watch?v=QaA_6aOP9z8&amp;list=PLWodc2tCfAH1WHjl4WAOOoRSscJ8CHACe&amp;index=1\" alt=\"Youtube Video Demo VDO.Ninja\">Demo hier</a>\n</li>\n<br>\n<h3>\n🛠 Für Support, schau in den <a href=\"https://www.reddit.com/r/VDONinja/\">Sub-Reddit <i class=\"lab la-reddit-alien\"></i></a> oder tritt dem <a href=\"https://discord.vdo.ninja/\">Discord bei<i class=\"lab la-discord\"></i></a>. Die <a href=\"https://docs.vdo.ninja/\">Dokumentation ist hier</a> und meine private E-Mail ist <i>steve@seguin.email</i>\n</h3> \n\n",
     "add-to-scene": "Zur Szene hinzufügen",
     "forward-to-room": "Transferieren",
     "record": "Aufnehmen",
