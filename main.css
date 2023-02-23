@@ -1012,7 +1012,6 @@ button.glyphicon-button.active.focus {
 	background-attachment: fixed;
 	background-position: center;
 	overflow-x: hidden;
-	overflow: hidden;
     position: absolute;
     z-index: 0;
 }
