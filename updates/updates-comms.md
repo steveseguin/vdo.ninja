@@ -2,6 +2,12 @@
 
 [comms.md](../steves-helper-apps/comms.md "mention")
 
+#### February 21
+
+* In the Comms app, you can hold CTRL and click on the group name to give it a custom label (as alias).\
+  \*\* available at [https://comms.cam/alpha/](https://comms.cam/alpha/)\
+  ![](../.gitbook/assets/image.png)
+
 #### February 19
 
 * You can pass URL parameters for the default audio/video device to the app now (pretty much any VDO.Ninja parameter will work now actually with it).\

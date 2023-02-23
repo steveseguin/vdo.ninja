@@ -3,12 +3,18 @@
 [social-stream.md](../steves-helper-apps/social-stream.md "mention")\
 [chat-overlay.md](../steves-helper-apps/chat-overlay.md "mention")
 
+#### **February 22**
+
+* Fixed/improved the Slack integration; emojis, etc, should work now
+* Added some options to add custom URLs to the auto-open chat feature; doesn't need to be a chat window
+* Fixed an issue with the darkmode toggle state not saving/loading correctly
+
 #### **February 21**
 
 * Social Stream had some fixes: locals.com fix, hide-emoji/beep function fix
 * Added a section to specify and auto-open the chat-windows with a single click via the extension. This was developed in part with @River&#x20;
 * `&openchat` can be added to the dock to auto open all the saved chat locations on dock load/refresh\
-  ![](../.gitbook/assets/image.png)
+  ![](<../.gitbook/assets/image (10).png>)
 
 #### **February 19**
 
@@ -30,7 +36,7 @@
   \-- This was added by a user's request; it works with all sites Social Stream supports; not just Twitch. BTTV and animated emojis are supported as well.\
   \-- Please report any issues with freezing/CPU issues. I've designed it to be low on CPU, but who knows.\
   \-- To use, `https://socialstream.ninja/emotes.html?session=XXXXXXXXXX&showtime=5000` or update the extension.\
-  ![](<../.gitbook/assets/image (10).png>)
+  ![](<../.gitbook/assets/image (10) (1).png>)
 
 #### **February 9**
 
@@ -230,7 +236,7 @@
 #### **August 31**
 
 * New MIDI control feature for Social Stream: - the option to select a file containing text-strings for use with the MIDI-command option is available - sample file is included in the extension folder; edit it and select it from the extension menu (JSON format) - you shouldn't have to reload the file each time you open the browser; just when you reload the extension or when you want to update the commands with a newer file.\
-  ![](<../.gitbook/assets/image (10) (1) (2).png>)
+  ![](<../.gitbook/assets/image (10) (1) (2) (1).png>)
 * Social Stream has had it's pop-out menu UI updated, courtesy of the one and only [@jcalado](https://github.com/jcalado) (there's dark-mode support now, also) #pretty\
   ![](<../.gitbook/assets/image (1) (1) (1) (2).png>)
 * Added workplace.com support to Social Stream

@@ -1,5 +1,10 @@
 # Updates - VDO.Ninja
 
+#### February 22 <a href="#august-31" id="august-31"></a>
+
+* Fixed an issue with the audio-meters not always showing in the director's guest-control boxes (hot patched)
+* Added a small on-hover over buttons effect to buttons (nod to @Lindenkron)
+
 #### February 19 <a href="#august-31" id="august-31"></a>
 
 * I've refined the [WHIP service](../advanced-settings/mixer-scene-parameters/and-whip-alpha.md) on `vdo.ninja/alpha/?whip=xxx`, making it as robust as I can I think, so if some third-party WHIP client/app doesn't work with it, it may not an issue with VDO.Ninja. In those cases it will be up to the client to ensure full support of the WHIP specification, else it may not work with VDO.Ninja.
@@ -599,7 +604,7 @@
 * ``[`&showconnections`](../advanced-settings/settings-parameters/and-showconnections.md) will display the total number of p2p connections of a remote stream. Works with the director's room and the automixer. Might help give comfort over privacy/security during a stream.
 * Total number of p2p remote connections (viewers) of a stream source will also appear in the stats menu, even without [`&showconnections`](../advanced-settings/settings-parameters/and-showconnections.md). Could be useful for debugging CPU/bandwidth issues.
 * Connections may represent video/audio streams, or just a data-connection. Meshcast-hosted streams might not be accounted for, depending on how the viewer is connecting.\
-  ![](<../.gitbook/assets/image (10) (1).png>)
+  ![](<../.gitbook/assets/image (10) (1) (2).png>)
 * Added `showChat` and `showDirectorChat` as HTTP/WSS API options for sending messages to guest(s). Useful if you want to hotkey a streamdeck command with some welcome message for guests.
 * Added events notifications relating to the director's guest-mute, guest-video-mute, and guest-position-change actions, along with any remote-video-mute updates to the HTTP/WSS API (by request for the bitfocus companion app)
 
