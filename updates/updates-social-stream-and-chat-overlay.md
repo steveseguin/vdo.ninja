@@ -133,7 +133,7 @@
 #### **December 7**
 
 * Added support for NIMO.tv to Social Stream\
-  ![](<../.gitbook/assets/image (2) (3) (1) (2).png>)
+  ![](<../.gitbook/assets/image (2) (3) (1).png>)
 * Fixed WhatsApp support for Social Stream
 * Added Instagram post (non-live) comments to Social Stream. You will need to enable this via the menu, since this is a pretty non-obvious integration for Social Stream.\
   ![](<../.gitbook/assets/image (4) (5).png>)![](<../.gitbook/assets/image (5) (1) (3).png>)

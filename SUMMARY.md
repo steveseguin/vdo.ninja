@@ -481,6 +481,7 @@
   * [Logos and media assets](help/logos-and-media-assets.md)
   * [What does VDO stand for?](help/what-does-vdo-stand-for.md)
 * [Common errors and known issues](common-errors-and-known-issues/README.md)
+  * [Can't select a camera lens on mobile](common-errors-and-known-issues/cant-select-a-camera-lens-on-mobile.md)
   * [Known issues](common-errors-and-known-issues/known-issues.md)
   * [Echo or feedback issues](common-errors-and-known-issues/echo-or-feedback-issues.md)
   * [Works on WiFi but not on 4G](common-errors-and-known-issues/works-on-wifi-but-not-on-4g.md)

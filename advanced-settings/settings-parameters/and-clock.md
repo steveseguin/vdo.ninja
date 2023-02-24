@@ -26,7 +26,7 @@ Example: `&clock=5` or `&clock=false`
 
 The director has a button that lets them enable the clock for everyone in the room (via the director's room settings button).
 
-<figure><img src="../../.gitbook/assets/image (3) (3).png" alt=""><figcaption></figcaption></figure>
+<figure><img src="../../.gitbook/assets/image (3) (3) (1).png" alt=""><figcaption></figcaption></figure>
 
 `&clock=false` or [`&cleanoutput`](../design-parameters/cleanoutput.md) will force-disable the clock from being remotely triggerable.
 
