@@ -75,15 +75,29 @@ It's free and uses VDO.Ninja, while adding a nifty management dashboard for moni
 
 ## Still not getting 60-fps?
 
+Using _Entire Screen_ or _Chrome Tab_ capture, instead of _Window_ capture, can increase the frame rate when screen sharing via the Chrome browser;\
+\
+For some reason, when screen sharing a _Window_ with Chrome, the frame rate is limited to around 42-fps.
+
+If you're needing exactly 60-fps, or are still having issues, continue on for more options:
+
 ### Using OBS Studio to capture
 
 #### With the browser and a virtual camera
 
-For the best screen-share results, you can use OBS Studio to capture the gameplay, and bring that into VDO.Ninja via the OBS Virtual Camera.  This is an annoying added step, but OBS does a better job at capturing gameplay than the browser does.&#x20;
+For the best screen-share results, you can use OBS Studio to capture the gameplay, and bring that into VDO.Ninja via the OBS Virtual Camera.  This is an annoying added step, but OBS does a better job at capturing gameplay than the browser does. \
+\
+Frame rates should be close to 60-fps in this mode, but may vary still vary a bit.
 
 #### Using WHIP from within OBS
 
-An alternative to using the Virtual Camera and browser though is to use a feature in OBS to publish directly to VDO.Ninja. This is an experimental feature currently and may require a special version of OBS at the moment to work, but it might be included in OBS by default with the release of OBS v30 or v31.   Check out a demo Youtube video of how to accomplish this:  [Publishing from OBS directly to VDO.Ninja](https://www.youtube.com/watch?v=ynSOE2d4Z9Y)
+An alternative to using the Virtual Camera and browser though is to use a feature in OBS to publish directly to VDO.Ninja. \
+\
+This is an experimental feature currently and may require a special version of OBS at the moment to work, but it might be included in OBS by default with the release of OBS v30 or v31.   \
+\
+Check out a demo Youtube video of how to accomplish this:  [Publishing from OBS directly to VDO.Ninja](https://www.youtube.com/watch?v=ynSOE2d4Z9Y)\
+\
+This mode should give OBS Studio control over frame rate and bitrate, so with a good connection it should be possible to lock in a solid 60-fps.
 
 {% embed url="https://www.youtube.com/watch?v=ynSOE2d4Z9Y" %}
 Using WHIP to publish to VDO.Ninja directly from OBS
