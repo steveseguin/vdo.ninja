@@ -6,6 +6,8 @@ description: >-
 
 # How to capture an application's audio
 
+This page contains the standard guide for capturing application-specific audio in Windows. Less complex methods are being developed, with some current[ alternative options listed here](audio.md#other-options).
+
 #### Guide: Routing Windows application’s audio to [VDO.Ninja](https://vdo.ninja/)
 
 (For macOS users, you can use [Loopback by Roguemedia](https://www.google.com/url?q=https://rogueamoeba.com/loopback/\&sa=D\&source=editors\&ust=1622130763272000\&usg=AOvVaw09b4uk6dZqBTznSzHMJcul) instead, or check out this list of free options: [https://docs.vdo.ninja/platform-specific-issues/macos#capturing-audio](https://docs.vdo.ninja/platform-specific-issues/macos#capturing-audio))
@@ -41,3 +43,31 @@ Tip: If you want to configure the VB Audio driver with custom settings, the reco
 * 7\) Alternatively, you can also use the Sound properties for the VB cable to “listen to this device” in Windows, so you can hear the audio even if not in VDO.Ninja. This method might have lower latency than the method in step 6.\
   \
   ![](https://lh3.googleusercontent.com/AQwJuAdfBEGqhrSOyjqYmZyoNf8HrfrRRtNK3w2HhFMWiP87NZeoFQ6rh2pznr-InI8gg1OyI3CnPnyWUbtV1tnlTfXMswIchomWpbfwyJtlkFFOt-BnS5nO8ObxwBocmU8NuqlJ)
+
+##
+
+## Other options
+
+#### Using OBS to capture audio
+
+While this option still requires a virtual audio cable, as seen above, you can use OBS to capture the application's audio and output the audio from OBS to the virtual cable via the Monitor output in OBS.\
+
+
+<figure><img src="../.gitbook/assets/image.png" alt=""><figcaption><p>Another way of selecting application audio for the Virtual Audio Cable</p></figcaption></figure>
+
+#### Publishing directly from OBS to VDO.Ninja
+
+An alternative to using a virtual audio cable is to use OBS to capture the audio, and then publish the audio to VDO.Ninja directly using the WHIP-publishing mode.\
+\
+WHIP is an experimental feature currently in OBS and may require a special version of OBS at the moment to access, but it might be included in OBS by default with the release of OBS v30 or v31.   \
+\
+Check out a demo Youtube video of how to accomplish this:  [Publishing from OBS directly to VDO.Ninja](https://www.youtube.com/watch?v=ynSOE2d4Z9Y)\
+\
+More details will be provided as the feature develops.
+
+{% embed url="https://www.youtube.com/watch?v=ynSOE2d4Z9Y" %}
+Using WHIP to publish to VDO.Ninja directly from OBS
+{% endembed %}
+
+
+

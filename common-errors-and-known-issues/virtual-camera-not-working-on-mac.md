@@ -32,8 +32,6 @@ The Google Chrome usually works with most virtual cameras.  If you are having pr
 \
 Please also be sure to START the virtual camera before selecting or opening it in VDO.Ninja. If you open it in VDO.Ninja before starting it, the resolution and/or frame rate may be wrong.
 
-##
-
 ## Enabling permissions for Virtual Camera on macOS
 
 If the OBS Virtual Camera is not appearing in Chrome or your browser after installing OBS on macOS, you may need to enable screen recording permissions.
@@ -56,7 +54,7 @@ If the OBS Virtual Camera is not appearing in Chrome or your browser after insta
     \
 
 
-    <figure><img src="../.gitbook/assets/image (2).png" alt=""><figcaption><p>If OBS isn't listed, press the + button, navigate to it, and select it</p></figcaption></figure>
+    <figure><img src="../.gitbook/assets/image (2) (3).png" alt=""><figcaption><p>If OBS isn't listed, press the + button, navigate to it, and select it</p></figcaption></figure>
 
     \
 
