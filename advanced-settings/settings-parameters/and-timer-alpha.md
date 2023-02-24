@@ -16,7 +16,7 @@ Example: `&timer=5`
 | `1` - `9` \*on alpha    | Shows the current countdown timer as in the graphic below. Each option specifies where the countdown timer will appear on the screen |
 | `2` \| (no value given) | Shows the countdown timer in the top center                                                                                          |
 
-![](<../../.gitbook/assets/image (12).png>)
+![](<../../.gitbook/assets/image (12) (5).png>)
 
 ## Details
 

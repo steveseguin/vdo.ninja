@@ -24,6 +24,6 @@
 * [autoplay-doesnt-work-in-chrome-or-vmix-v77.md](autoplay-doesnt-work-in-chrome-or-vmix-v77.md "mention")
 * [low-frame-rates.md](low-frame-rates.md "mention")
 * [there-are-black-borders-around-the-video-in-obs..md](there-are-black-borders-around-the-video-in-obs..md "mention")
-* [virtual-cam-not-working-on-mac.md](virtual-cam-not-working-on-mac.md "mention")
+* [virtual-camera-not-working-on-mac.md](virtual-camera-not-working-on-mac.md "mention")
 * [mics-volume-keeps-changing.md](mics-volume-keeps-changing.md "mention")
 * [enable-camera-microphone-permissions.md](enable-camera-microphone-permissions.md "mention")

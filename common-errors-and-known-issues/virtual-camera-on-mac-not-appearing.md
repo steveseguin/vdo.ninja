@@ -15,10 +15,10 @@ The following guide may work with other applications as well, but if not, see: [
 
 2. Click Privacy & Security and then Screen Recording
 
-<figure><img src="../.gitbook/assets/image.png" alt=""><figcaption></figcaption></figure>
+<figure><img src="../.gitbook/assets/image (3).png" alt=""><figcaption></figcaption></figure>
 
 3. For OBS, enable the permission. If OBS isn't listed, click the + button, enter your system's password, and navigate to OBS in the Application settings. Select it and enable.
 4. Quit and relaunch OBS.
 
-<figure><img src="../.gitbook/assets/image (5).png" alt=""><figcaption></figcaption></figure>
+<figure><img src="../.gitbook/assets/image (5) (4).png" alt=""><figcaption></figcaption></figure>
 

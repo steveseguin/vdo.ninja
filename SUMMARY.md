@@ -507,7 +507,7 @@
   * [Autoplay doesn't work in Chrome or vMix v77](common-errors-and-known-issues/autoplay-doesnt-work-in-chrome-or-vmix-v77.md)
   * [Low frame rates](common-errors-and-known-issues/low-frame-rates.md)
   * [Black borders around the video in OBS](common-errors-and-known-issues/there-are-black-borders-around-the-video-in-obs..md)
-  * [Virtual cam not working on Mac](common-errors-and-known-issues/virtual-cam-not-working-on-mac.md)
+  * [Virtual camera not working on Mac](common-errors-and-known-issues/virtual-camera-not-working-on-mac.md)
   * [Mic's volume keeps changing](common-errors-and-known-issues/mics-volume-keeps-changing.md)
   * [Enable Camera / Microphone permissions](common-errors-and-known-issues/enable-camera-microphone-permissions.md)
 * [Platform specific issues](platform-specific-issues/README.md)
