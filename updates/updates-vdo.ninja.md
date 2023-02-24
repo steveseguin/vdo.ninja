@@ -29,7 +29,7 @@
 #### February 10 <a href="#august-31" id="august-31"></a>
 
 * You can set the [totalroombitrate](../advanced-settings/video-bitrate-parameters/totalroombitrate.md) via manual value input now (rather than slider) in the room settings menu. (on vdo.ninja production)\
-  ![](<../.gitbook/assets/image (5).png>)
+  ![](<../.gitbook/assets/image (5) (2).png>)
 
 #### February 9 <a href="#august-31" id="august-31"></a>
 
@@ -269,7 +269,7 @@
   \-- also while using `&fullscreenbutton`, the previous little 'full window' button in the top-right of videos (if in a group room) will also auto-F11 and isolate that video, rather than just isolate the video.\
   \-- you can still right-click and select "full-window" on any video to isolate it without going full screen, if you need that. -- you can test by opening two such guest links: [https://vdo.ninja/alpha/?fsb\&room=test123123123\&webcam\&autostart](https://vdo.ninja/alpha/?fsb\&room=test123123123\&webcam\&autostart)\
   \-- ultimately I'd like to override the native video full screen button with this behaviour, when `&fullscreenbutton` is used, but I'm still working on that aspect.\
-  ![](<../.gitbook/assets/image (7) (1) (1).png>)
+  ![](<../.gitbook/assets/image (7) (1) (1) (1).png>)
 * Fixed a bug where the guest screen share, while in broadcast mode, was misplaced on the screen.
 * Fixed a bug where [`&language`](../advanced-settings/settings-parameters/and-language.md) didn't work in translating a couple elements, like "join with camera".
 * Re-enabled [`&limittotalbitrate`](../advanced-settings/video-bitrate-parameters/limittotalbitrate.md) for non-guests, as it was causing me some problems before with versus.cam. It might still be causing issues, so more testing is needed.
@@ -518,7 +518,7 @@
 * Updated the screen-share layouts to have a larger screen, relative to the other videos: It now targets an average of around 80% screen real-estate for the main screen share.
 *   Up to 20-videos on screen now are supported in the screen-share view; before after around 12-videos they started to be hidden
 
-    ![](<../.gitbook/assets/image (3) (1) (3).png>)![](<../.gitbook/assets/image (5) (2).png>)\
+    ![](<../.gitbook/assets/image (3) (1) (3).png>)![](<../.gitbook/assets/image (5) (2) (2).png>)\
     ![](<../.gitbook/assets/image (2) (2) (3) (2).png>)![](<../.gitbook/assets/image (4) (1) (1) (2).png>)\
     \
     \*\*changes on alpha (vdo.ninja/alpha/) and github

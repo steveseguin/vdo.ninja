@@ -494,6 +494,7 @@
   * [Overheating](common-errors-and-known-issues/overheating.md)
   * [Audio is delayed in OBS](common-errors-and-known-issues/audio-is-delayed-in-obs.md)
   * [vMix High CPU](common-errors-and-known-issues/vmix-high-cpu.md)
+  * [Virtual camera on Mac not appearing](common-errors-and-known-issues/virtual-camera-on-mac-not-appearing.md)
   * [OBS Virtual Camera has low FPS](common-errors-and-known-issues/obs-virtual-camera-low-has-fps.md)
   * [Video is pixelated](common-errors-and-known-issues/video-is-pixelated.md)
   * [Video freezes mid-stream](common-errors-and-known-issues/video-freezes-mid-stream.md)

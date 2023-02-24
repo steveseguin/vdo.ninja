@@ -6,7 +6,7 @@
 
 * In the Comms app, you can hold CTRL and click on the group name to give it a custom label (as alias).\
   \*\* available at [https://comms.cam/alpha/](https://comms.cam/alpha/)\
-  ![](../.gitbook/assets/image.png)
+  ![](<../.gitbook/assets/image (1).png>)
 
 #### February 19
 

@@ -26,7 +26,7 @@
 #### **February 15**
 
 * `&largeavatar` and `&bubble` added to Social Stream styling options; when combined, you can see what they look like in the attached images.\
-  ![](<../.gitbook/assets/image (1).png>)![](<../.gitbook/assets/image (2).png>)
+  ![](<../.gitbook/assets/image (1) (2).png>)![](<../.gitbook/assets/image (2).png>)
 * sli.do support added to Social Stream; works with the Q\&A section via the participant link
 
 #### **February 10**

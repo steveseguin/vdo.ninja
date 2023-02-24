@@ -6,7 +6,7 @@ description: Show/hide buttons, adjust the user control bar and video control ba
 
 ## User Control Bar Options
 
-<figure><img src="../../.gitbook/assets/image (1) (2).png" alt=""><figcaption><p>The user control bar</p></figcaption></figure>
+<figure><img src="../../.gitbook/assets/image (1) (2) (6).png" alt=""><figcaption><p>The user control bar</p></figcaption></figure>
 
 | Parameter                                                                   | Explanation                                                                                  |
 | --------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------- |
