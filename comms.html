@@ -1109,6 +1109,8 @@
 		password = urlParams.get('password') || urlParams.get('pass') || urlParams.get('pw') || urlParams.get('p');
 	}
 	
+	
+	
 	var aspectRatio = 16/9.0;
 	document.documentElement.style.setProperty('--aspect-ratio', aspectRatio);
 	
@@ -1791,13 +1793,15 @@
 			additional2 += "&chatbutton=0";
 		}
 		
+		urlEdited = urlEdited.replace("?","");
+		
 		var chatmsg = "Welcome to the Comms app. Select a group to participate in.";
 		chatmsg = encodeURIComponent(chatmsg);
 		
 		if (window.location.hostname == "comms.cam"){
-			var iframesrc = "https://vdo.ninja/?controlbarspace&volumecontrol&sharperscreen&groupmode&novice&ltb=350&minipreview&transparent&hideheader&margin&rounded&hidetranslate&cleandirector&vd=0&webcam&nvb&sstype=3&ssb&showlabel=toprounded&labelsize=85&style=2&room="+roomname+additional+additional2+"&b64css="+injectCSS+streamID+label+"&chatmsg="+chatmsg;
+			var iframesrc = "https://vdo.ninja/?"+urlEdited+"&controlbarspace&volumecontrol&sharperscreen&groupmode&novice&ltb=350&minipreview&transparent&hideheader&margin&rounded&hidetranslate&cleandirector&vd=0&webcam&nvb&sstype=3&ssb&showlabel=toprounded&labelsize=85&style=2&room="+roomname+additional+additional2+"&b64css="+injectCSS+streamID+label+"&chatmsg="+chatmsg;
 		} else {
-			var iframesrc = "./index.html?controlbarspace&volumecontrol&sharperscreen&groupmode&novice&ltb=350&minipreview&transparent&hideheader&margin&rounded&hidetranslate&cleandirector&vd=0&webcam&nvb&sstype=3&ssb&showlabel=toprounded&labelsize=85&style=2&room="+roomname+additional+additional2+"&b64css="+injectCSS+streamID+label+"&chatmsg="+chatmsg;
+			var iframesrc = "./index.html?"+urlEdited+"&controlbarspace&volumecontrol&sharperscreen&groupmode&novice&ltb=350&minipreview&transparent&hideheader&margin&rounded&hidetranslate&cleandirector&vd=0&webcam&nvb&sstype=3&ssb&showlabel=toprounded&labelsize=85&style=2&room="+roomname+additional+additional2+"&b64css="+injectCSS+streamID+label+"&chatmsg="+chatmsg;
 		}
 		
 		
@@ -2062,7 +2066,37 @@
 		var group = document.createElement('span');
 		group.dataset.group = groupID;
 		group.classList.add("group");
-		group.innerText = "group: "+groupID;
+		//group.innerText = "group: "+groupID;
+		var name = document.createElement('span');
+		
+		
+		if (savedSession.aliases && savedSession.aliases[groupID]){
+			name.innerHTML = savedSession.aliases[groupID];
+			name.innerHTML += "<br /><small>group: "+groupID+"</small>";
+		} else {
+			name.innerHTML = "group: "+groupID;
+		}
+		name.title = "Hold CTRL and click to give this group a custom label";
+		group.appendChild(name);
+		name.groupID = groupID;
+		name.onclick = function(e){
+			if (e.ctrlKey){
+				var nn = prompt("Rename this group", this.groupID);
+				if (this.groupID == nn){
+					name.innerHTML = "group: "+nn;
+					delete group.dataset.alias;
+					//delete savedSession.aliases[this.groupID];
+				} else if (nn){
+					name.innerHTML = nn;
+					name.innerHTML += "<br /><small>group: "+groupID+"</small>";
+					group.dataset.alias = nn;
+					//savedSession.aliases[this.groupID] = nn;
+				}
+				saveSession();
+			} else {
+				this.parentNode.click();
+			}
+		}
 		group.onclick = remoteActivate;
 		group.title = "Activate this group; the view scene link will be updated";
 		
@@ -2184,9 +2218,11 @@
 		console.log("remoteActivate");
 		if (event.target && group===null){
 			group = event.target.dataset.group;
-			event.target.parentNode.classList.toggle("pressed");
+			if (event.target && event.target.parentNode){
+				event.target.parentNode.classList.toggle("pressed");
+			}
 		}
-		if (event.target.parentNode.classList.contains("pressed")){
+		if (event.target && event.target.parentNode && event.target.parentNode.classList.contains("pressed")){
 			var index = savedSession.activeGroups.indexOf(group);
 			if (index == -1){
 				savedSession.activeGroups.push(group);
@@ -2214,10 +2250,18 @@
 		savedSession.activeViewGroups = [];
 		savedSession.settings = {};
 		savedSession.version = 1;
+		savedSession.aliases = {};
 		
 		for (var i=0;i<groups.length;i++){
 			try {
 				savedSession.groups.push(groups[i].dataset.group);
+			} catch(e){
+				errorlog(e);
+			}
+			try {
+				if (groups[i].dataset.alias){
+					savedSession.aliases[groups[i].dataset.group] = groups[i].dataset.alias;
+				}
 			} catch(e){
 				errorlog(e);
 			}

@@ -500,6 +500,7 @@ function playAllVideos(){
 	}
 	
 	for (var i in session.rpcs){
+		if (session.rpcs[i].whip){continue;}
 		try{
 			if (session.rpcs[i].videoElement){
 				log("I: "+i);
@@ -684,7 +685,7 @@ async function delay(ms) {
 }
 
 var Prompts = {};
-async function promptAlt(inputText, block=false, asterix=false, value=false){
+async function promptAlt(inputText, block=false, asterix=false, value=false, time=false){
 	var result = null;
 	if (session.beepToNotify){
 		playtone();
@@ -710,41 +711,80 @@ async function promptAlt(inputText, block=false, asterix=false, value=false){
 			type = "password";
 		}
 		
-		
-		modalTemplate =
-			`<div id="modal_${promptID}" class="promptModal" style="z-index:${zindex + 2}">	
-				<div class="promptModalInner">
-					<span id="close_${promptID}" class='modalClose' data-pid="${promptID}">×</span>
-					<span class='promptModalMessage'>${inputText}</span>
-					<input id="input_${promptID}" autocorrect="off" autocapitalize="none" data-pid="${promptID}"  type="${type}" class="largeTextEntry" />
-					<button id="submit_${promptID}" data-pid="${promptID}" style="width:120px; background-color: #fff; position: relative;border: 1px solid #999; margin: 0 0 0 55px;" data-translate='ok'>✔ OK</button>
-					<button id="cancel_${promptID}" data-pid="${promptID}" style="width:120px; background-color: #fff; position: relative;border: 1px solid #999; margin: 0;" data-translate='cancel'>❌ Cancel</button>
+		if (time){
+			modalTemplate =
+				`<div id="modal_${promptID}" class="promptModal" style="z-index:${zindex + 2}">	
+					<div class="promptModalInner">
+						<span id="close_${promptID}" class='modalClose' data-pid="${promptID}">×</span>
+						<span class='promptModalMessage' style='margin:20px'>${inputText}</span>
+						<input id="input_${promptID}" title="minutes" autocorrect="off" autocapitalize="none" data-pid="${promptID}" value="0" style="width:50px;padding:4px;margin:4px;" min="0" type="number" /> minutes, 
+						<input id="input_${promptID}_sec"  title="seconds" autocorrect="off" autocapitalize="none" data-pid="${promptID}" value="0"  style="width:50px;padding:4px;margin:4px;" max="59" min="0" type="number" /> seconds 
+						<button id="submit_${promptID}" data-pid="${promptID}" style="width:120px; background-color: #fff; position: relative;border: 1px solid #999; margin: 0 0 0 10px" data-translate='ok'>✔ OK</button>
+						<button id="cancel_${promptID}" data-pid="${promptID}" style="width:120px; background-color: #fff; position: relative;border: 1px solid #999; margin: 0;" data-translate='cancel'>❌ Cancel</button>
+						<br /><br />
+					</div>
 				</div>
-			</div>
-			<div id="modalBackdrop_${promptID}" class="${backdropClass}" style="z-index:${zindex + 1}"></div>`;
-
+				<div id="modalBackdrop_${promptID}" class="${backdropClass}" style="z-index:${zindex + 1}"></div>`;
+		} else {
+			modalTemplate =
+				`<div id="modal_${promptID}" class="promptModal" style="z-index:${zindex + 2}">	
+					<div class="promptModalInner">
+						<span id="close_${promptID}" class='modalClose' data-pid="${promptID}">×</span>
+						<span class='promptModalMessage'>${inputText}</span>
+						<input id="input_${promptID}" autocorrect="off" autocapitalize="none" data-pid="${promptID}"  type="${type}" class="largeTextEntry" />
+						<button id="submit_${promptID}" data-pid="${promptID}" style="width:120px; background-color: #fff; position: relative;border: 1px solid #999; margin: 0 0 0 55px;" data-translate='ok'>✔ OK</button>
+						<button id="cancel_${promptID}" data-pid="${promptID}" style="width:120px; background-color: #fff; position: relative;border: 1px solid #999; margin: 0;" data-translate='cancel'>❌ Cancel</button>
+					</div>
+				</div>
+				<div id="modalBackdrop_${promptID}" class="${backdropClass}" style="z-index:${zindex + 1}"></div>`;
+		}
 
 		document.body.insertAdjacentHTML("beforeend", modalTemplate); // Insert modal at body end
 		
 		document.getElementById("input_"+promptID).focus();
 		
 		if (value!==false){
-			document.getElementById("input_"+promptID).value = value;
+			if (time){
+				document.getElementById("input_"+promptID).value = parseInt(value/60);
+				document.getElementById("input_"+promptID+"_sec").value = parseInt(value)%60;
+			} else {
+				document.getElementById("input_"+promptID).value = value;
+			}
 		}
 		
-		document.getElementById("input_"+promptID).addEventListener("keyup", function(event) {
-			if (event.key === "Enter") {
-				var pid = event.target.dataset.pid;
-				result = document.getElementById("input_"+pid).value;
-				document.getElementById("modal_"+pid).remove();
-				document.getElementById("modalBackdrop_"+pid).remove();
-				Prompts[pid].resolve();
-			}
-		});
+		
+		if (!time){
+			document.getElementById("input_"+promptID).addEventListener("keyup", function(event) {
+				if (event.key === "Enter") {
+					var pid = event.target.dataset.pid;
+					result = document.getElementById("input_"+pid).value;
+					document.getElementById("modal_"+pid).remove();
+					document.getElementById("modalBackdrop_"+pid).remove();
+					Prompts[pid].resolve();
+				}
+			});
+		} else {
+			document.getElementById("input_"+promptID).addEventListener("keyup", function(event) {
+				if (event.key === "Enter") {
+					document.getElementById("input_"+promptID+"_sec").focus();
+				}
+			});
+			document.getElementById("input_"+promptID+"_sec").addEventListener("keyup", function(event) {
+				if (event.key === "Enter") {
+					document.getElementById("submit_"+promptID).focus();
+				}
+			});
+		}
+		
 
 		document.getElementById("submit_"+promptID).addEventListener("click", function(event){
 			var pid = event.target.dataset.pid;
-			result = document.getElementById("input_"+pid).value;
+			if (time){
+				result = parseInt(document.getElementById("input_"+pid+"_sec").value) +  parseInt(document.getElementById("input_"+pid).value)*60;
+			} else {
+				result = document.getElementById("input_"+pid).value;
+			}
+			
 			document.getElementById("modal_"+pid).remove();
 			document.getElementById("modalBackdrop_"+pid).remove();
 			Prompts[pid].resolve();
@@ -1196,6 +1236,8 @@ session.obsStateSync = function(data2send=false, uid=false){
 		}
 	}
 	
+	
+	
 	for (var UUID in session.rpcs){
 		if (uid && (uid!==UUID)){continue;} // target just a single connection.
 		
@@ -1216,6 +1258,18 @@ session.obsStateSync = function(data2send=false, uid=false){
 				msg.obsState = {};
 				msg.obsState[data2send] = session.obsState[data2send];
 			}
+		}
+		
+		if (session.filterOBSscenes && msg.obsState && msg.obsState.details && msg.obsState.details.scenes && msg.obsState.details.scenes.length){
+			var scenes = [];
+			msg.obsState.details.scenes.forEach(scene=>{
+				if (session.filterOBSscenes && session.filterOBSscenes.length){
+					if (session.filterOBSscenes.includes(scene)){
+						scenes.push(scene);
+					}
+				}
+			});
+			msg.obsState.details.scenes = scenes;
 		}
 		
 		if (session.optimize!==false){
@@ -1496,7 +1550,7 @@ function manageSceneState(data, UUID){ // incoming obs details
 			control =  parseInt(session.pcs[UUID].obsState.details.controlLevel) || 0; //0 for NONE, 1 for READ_OBS (OBS data), 2 for READ_USER (User data), 3 for BASIC, 4 for ADVANCED and 5 for ALL
 		}
 		
-		if (control ===5){
+		if (control >= 4){
 			if (session.director || !session.roomid){
 				if (session.obsControls!==false){
 					getById("obscontrolbutton").classList.remove("hidden"); // so they get a tip.
@@ -1697,6 +1751,7 @@ function manageSceneState(data, UUID){ // incoming obs details
 		var details = session.pcs[UUID].obsState.details;
 		if (details.scenes){
 			details.scenes.forEach(scene=>{
+				
 				var sceneButton = document.createElement("button");
 				sceneButton.dataset.obsScene = scene;
 				sceneButton.dataset.UUID = UUID;
@@ -1705,7 +1760,7 @@ function manageSceneState(data, UUID){ // incoming obs details
 					sceneButton.classList.add("pressed");
 				}
 				obsSceneNamesBox.appendChild(sceneButton);
-				if (control<5){
+				if (control<4){
 					sceneButton.disabled = true;
 					sceneButton.style.cursor = "not-allowed";
 					sceneButton.title = "Source is lacking required permissions.";
@@ -1758,9 +1813,19 @@ function processOBSCommand(msg){
 		return false;
 	}
 	
+	
+	
+	
 	try { //  {changeScene: this.dataset.obsScene}
 		if (msg.obsCommand.action && (typeof msg.obsCommand.action=="string")){
 			if (msg.obsCommand.value && (typeof msg.obsCommand.value=="string")){
+				if ((msg.obsCommand.action == "setCurrentScene") && session.filterOBSscenes && session.filterOBSscenes.length){
+					try {
+						if (!session.filterOBSscenes.includes(msg.obsCommand.value)){
+							return false;
+						}
+					} catch(e){errorlog(e);return false;}
+				}
 				window.obsstudio[msg.obsCommand.action](msg.obsCommand.value);
 			} else {
 				window.obsstudio[msg.obsCommand.action]();
@@ -3232,6 +3297,7 @@ function hideHomeCheck(){
 		}
 		
 		getById("audioScreenCaptureDocs").classList.add("permahide");
+		getById("audioScreenCaptureDocs2").classList.add("permahide");
 		getById("translateButton").classList.add("permahide");
 		getById("calendarButton").classList.add("permahide");
 		getById("info").classList.add("permahide");
@@ -10025,17 +10091,14 @@ function updateStats(obsvc = false) {
 }
 
 function toggleControlBar() {
-	if (getById("controlButtons").style.display != 'none') {
-		// Dont hardcode style here. Copy it over to data-style before changing to none;
-		getById("controlButtons").dataset.style = getById("controlButtons").style.display;
-		getById("controlButtons").style.display = 'none';
-	} else {
-		// Copy the style over from the data-style attribute.
-		getById("controlButtons").style.display = getById("controlButtons").dataset.style;
-	};
+	if (!getById("controlButtons").classList.contains("hidden")) {
+		getById("controlButtons").dataset.enabled = true;
+		getById("controlButtons").classList.add("hidden");
+	} else if (getById("controlButtons").dataset.enabled){
+		getById("controlButtons").classList.remove("hidden");
+		delete getById("controlButtons").dataset.enabled;
+	}
 }
-
-
 
 
 function toggleMute(apply = false, event=false) { // TODO: I need to have this be MUTE, toggle, with volume not touched.
@@ -10599,7 +10662,7 @@ function hangup2() {
 	getById("mutebutton").classList.add("hidden");
 	getById("hangupbutton2").classList.add("hidden");
 	//getById("chatbutton").classList.remove("hidden");
-	getById("controlButtons").style.display = "inherit";
+	getById("controlButtons").classList.remove("hidden");
 	//getById("mutespeakerbutton").classList.add("hidden");
 	getById("mutevideobutton").classList.add("hidden");
 	getById("screenshare2button").classList.add("hidden");
@@ -11388,7 +11451,7 @@ async function directTimer(ele,  event=false) { // A directing room only is cont
 	ele.classList.remove("red2");
 	if (!event || (!((event.ctrlKey) || (event.metaKey)))) {
 		if (ele.value == 0 || ele.value == 2) {
-			var getTime = await promptAlt("Time in seconds to count down", false, false, parseInt(getById("overlayClockContainer").dataset.initial));
+			var getTime = await promptAlt("Time to set count down timer", false, false, parseInt(getById("overlayClockContainer").dataset.initial), true);
 			if (!getTime){return;}
 			getById("overlayClockContainer").dataset.initial = parseInt(getTime) || 600;
 			ele.value = 1;
@@ -11523,7 +11586,7 @@ async function directRoomTimer(ele,  event=false) { // A directing room only is 
 	
 	if (!event || (!((event.ctrlKey) || (event.metaKey)))) {
 		if (ele.value == 0 || ele.value == 2) {
-			var getTime = await promptAlt("Time in seconds to count down", false, false, parseInt(getById("overlayClockContainer").dataset.initial));
+			var getTime = await promptAlt("Time to set count down timer", false, false, parseInt(getById("overlayClockContainer").dataset.initial), true);
 			if (!getTime){return;}
 			getTime = parseInt(getTime);
 			getById("overlayClockContainer").dataset.initial = getTime || 600;
@@ -12327,7 +12390,7 @@ async function publishScreen() {
 			if (session.screensharebutton) {
 				getById("screensharebutton").className = "float2";
 			}
-			getById("controlButtons").style.display = "flex";
+			getById("controlButtons").classList.remove("hidden");
 			getById("helpbutton").style.display = "inherit";
 			getById("reportbutton").style.display = "";
 		} else if (session.cleanish && session.recordLocal!==false){
@@ -12338,29 +12401,29 @@ async function publishScreen() {
 			getById("mutevideobutton").classList.add("hidden");
 			getById("hangupbutton").classList.add("hidden");
 			getById("hangupbutton2").classList.add("hidden");
-			getById("controlButtons").style.display = "flex";
+			getById("controlButtons").classList.remove("hidden");
 			getById("settingsbutton").classList.add("hidden");
 			getById("screenshare2button").classList.add("hidden");
 			getById("screensharebutton").classList.add("hidden");
 			getById("queuebutton").classList.add("hidden");
 		} else {
-			getById("controlButtons").style.display = "none";
+			getById("controlButtons").classList.add("hidden");
 		}
 
 		if (session.chatbutton === true) {
 			getById("chatbutton").classList.remove("hidden");
-			getById("controlButtons").style.display = "flex";
+			getById("controlButtons").classList.remove("hidden");
 		} else if (session.chatbutton === false) {
 			getById("chatbutton").classList.add("hidden");
 		}
 		
 		if (session.screensharebutton === true) {
-			getById("controlButtons").style.display = "flex";
+			getById("controlButtons").classList.remove("hidden");
 			getById("screensharebutton").className = "float2";
 		}
 
 		if (session.hangupbutton === true){
-			getById("controlButtons").style.display = "flex";
+			getById("controlButtons").classList.remove("hidden");
 			getById("hangupbutton").className = "float";
 		}
 
@@ -12491,6 +12554,14 @@ async function joinDataMode(){ // join the room, but without publishing anything
 		getById("head3").classList.add('hidden');
 		getById("head3a").classList.add('hidden');
 		joinRoom(session.roomid);
+	} else if (session.view){
+		window.onresize = updateMixer;
+		play();
+		if (session.permaid!==false){
+			session.postPublish();
+		}
+	} else if (session.permaid!==false){
+		session.postPublish();
 	}
 }
 
@@ -12601,7 +12672,7 @@ function publishWebcam(btn = false) {
 	getById("head1").className = 'hidden';
 
 
-	if (!(session.cleanOutput)) {
+	if (!session.cleanOutput){
 		getById("mutebutton").classList.remove("hidden");
 		getById("mutespeakerbutton").classList.remove("hidden");
 		//getById("mutespeakerbutton").className="float";
@@ -12631,10 +12702,14 @@ function publishWebcam(btn = false) {
 					getById("screensharebutton").className = "float";
 					getById("screenshare3button").className = "float hidden";
 					getById("screenshare2button").className = "float hidden";
-				} else {
+				} else if (session.screenshareType===2){
 					getById("screenshare2button").className = "float";
 					getById("screensharebutton").className = "float hidden";
 					getById("screenshare3button").className = "float hidden";
+				} else {
+					getById("screenshare3button").className = "float";
+					getById("screensharebutton").className = "float hidden";
+					getById("screenshare2button").className = "float hidden";
 				}
 			} else {
 				getById("screensharebutton").className = "float";
@@ -12642,7 +12717,7 @@ function publishWebcam(btn = false) {
 				getById("screenshare3button").className = "float hidden";
 			}
 		}
-		getById("controlButtons").style.display = "flex";
+		getById("controlButtons").classList.remove("hidden");
 		getById("helpbutton").style.display = "inherit";
 		getById("reportbutton").style.display = "";
 	} else if (session.cleanish && session.recordLocal!==false){
@@ -12653,18 +12728,18 @@ function publishWebcam(btn = false) {
 		getById("mutevideobutton").classList.add("hidden");
 		getById("hangupbutton").classList.add("hidden");
 		getById("hangupbutton2").classList.add("hidden");
-		getById("controlButtons").style.display = "flex";
+		getById("controlButtons").classList.remove("hidden");
 		getById("settingsbutton").classList.add("hidden");
 		getById("screenshare2button").classList.add("hidden");
 		getById("screensharebutton").classList.add("hidden");
 		getById("queuebutton").classList.add("hidden");
 	} else {
-		getById("controlButtons").style.display = "none";
+		getById("controlButtons").classList.add("hidden");
 	}
 	
 	if (session.chatbutton === true) {
 		getById("chatbutton").classList.remove("hidden");
-		getById("controlButtons").style.display = "inherit";
+		getById("controlButtons").classList.remove("hidden");
 	} else if (session.chatbutton === false) {
 		getById("chatbutton").classList.add("hidden");
 	}
@@ -13223,11 +13298,11 @@ session.publishIFrame = function(iframeURL){
 	if (!(session.cleanOutput)){
 		getById("chatbutton").className="float";
 		getById("hangupbutton").className="float";
-		getById("controlButtons").style.display="flex";
+		getById("controlButtons").classList.remove("hidden");
 		getById("helpbutton").style.display = "inherit";
 		getById("reportbutton").style.display = "";
 	} else {
-		getById("controlButtons").style.display="none";
+		getById("controlButtons").classList.add("hidden");
 	}
 	
 	if (session.chatbutton === false) {
@@ -14949,7 +15024,7 @@ async function createRoomCallback(passAdd, passAdd2) {
 			getById("queuebutton").classList.remove("hidden");
 		}
 		getById("chatbutton").classList.remove("hidden");
-		getById("controlButtons").style.display = "inherit";
+		getById("controlButtons").classList.remove("hidden");
 		getById("mutespeakerbutton").classList.remove("hidden");
 		getById("websitesharebutton").classList.remove("hidden");
 		//getById("screensharebutton").classList.remove("hidden");
@@ -14983,12 +15058,12 @@ async function createRoomCallback(passAdd, passAdd2) {
 		
 	} else {
 		getById("miniPerformer").style.display = "none";
-		getById("controlButtons").style.display = "none";
+		getById("controlButtons").classList.add("hidden");
 	}
 
 	if (session.chatbutton === true) {
 		getById("chatbutton").classList.remove("hidden");
-		getById("controlButtons").style.display = "inherit";
+		getById("controlButtons").classList.remove("hidden");
 	} else if (session.chatbutton === false) {
 		getById("chatbutton").classList.add("hidden");
 	}
@@ -22364,11 +22439,11 @@ session.hostFile = function(ele, event){ // webcam stream is used to generated a
 	if (!(session.cleanOutput)){
 		getById("chatbutton").className="float";
 		getById("hangupbutton").className="float";
-		getById("controlButtons").style.display="flex";
+		getById("controlButtons").classList.remove("hidden");
 		getById("helpbutton").style.display = "inherit";
 		getById("reportbutton").style.display = "";
 	} else {
-		getById("controlButtons").style.display="none";
+		getById("controlButtons").classList.add("hidden");
 	}
 	
 	
@@ -22485,11 +22560,11 @@ session.publishFile = function(ele, event){ // webcam stream is used to generate
 	if (!(session.cleanOutput)){
 		getById("chatbutton").className="float";
 		getById("hangupbutton").className="float";
-		getById("controlButtons").style.display="flex";
+		getById("controlButtons").classList.remove("hidden");
 		getById("helpbutton").style.display = "inherit";
 		getById("reportbutton").style.display = "";
 	} else {
-		getById("controlButtons").style.display="none";
+		getById("controlButtons").classList.add("hidden");
 	}
 	
 	var bigPlayButton = document.getElementById("bigPlayButton");
@@ -30949,8 +31024,6 @@ function audioMeterGuest(mediaStreamSource, UUID, trackid){
 				}
 			}
 			
-			
-			
 			try{
 				clearTimeout(session.rpcs[UUID].inboundAudioPipeline[trackid].analyser.interval);
 				session.rpcs[UUID].inboundAudioPipeline[trackid].analyser.interval = setTimeout(function(){updateLevels();},100);
@@ -31211,7 +31284,7 @@ async function loadScript(url, callback=false){
 }
 
 var tokenClient=false;
-function YoutubeChatInterface(){ // this lets us query Youtube for chat messages, but its quota limited :(
+function YoutubeChatInterface(remote=false){ // this lets us query Youtube for chat messages, but its quota limited :(
 	if (!tokenClient){
 		tokenClient=true;
 	} else {
@@ -31240,9 +31313,17 @@ function YoutubeChatInterface(){ // this lets us query Youtube for chat messages
 			gapi.client.setToken(JSON.parse(saved));
 			listBroadcasts();
 		} else if (gapi.client.getToken() === null) {
-			warnUser("<button onclick='(function(){tokenClient.requestAccessToken({prompt: \"consent\"});})()'>Grant Access to Youtube Chat</button>", false, false);
+			if (remote){
+				tokenClient.requestAccessToken({prompt:"consent"});
+			} else {
+				warnUser("<button onclick='(function(){tokenClient.requestAccessToken({prompt: \"consent\"});})()'>Grant Access to Youtube Chat</button>", false, false);
+			}
 		} else {
-			warnUser("<button onclick='(function(){this.remove();tokenClient.requestAccessToken({prompt: \"\"});})()'>Grant Access to Youtube Chat</button>", false, false);	
+			if (remote){
+				tokenClient.requestAccessToken({prompt: ""});	
+			} else {
+				warnUser("<button onclick='(function(){this.remove();tokenClient.requestAccessToken({prompt: \"\"});})()'>Grant Access to Youtube Chat</button>", false, false);	
+			}
 		}
 	}
 	
@@ -31768,11 +31849,19 @@ function whipClient(){ // publish to whip.vdo.ninja with obs v29 I think, to use
 					var resp = await processWHIP(data);
 					if (resp){
 						var ret = {};
-						data.result = resp;
-						ret.callback = data;
-						log(ret);
-						socket.send(JSON.stringify(ret));
+						var get = data.get;
+						data = {};
+						if (get){
+							data.get = get;
+							data.result = resp;
+							ret.callback = data;
+							log(ret);
+							socket.send(JSON.stringify(ret));
+						}
 					}
+				} else if ("delete" in data){
+					warnlog("WHIP Client is actively disconnecting");
+					// session.closeRPC(i, true);
 				}
 			}
 		});
@@ -31795,7 +31884,7 @@ async function processWHIP(data){
 	}
 	log("setupIncoming");
 	await session.setupIncoming(msg); // could end up setting up the peer the wrong way.
-	
+	session.rpcs[msg.UUID].whip = true;
 	var callback = null;
 	var promise = new Promise((resolve, reject) => {
 		callback = resolve;
@@ -31834,24 +31923,27 @@ async function processWHIP(data){
 	var iceBundle = await promise2; // waiting for ICE GATHER COMPLETE
 	session.rpcs[msg.UUID].whipCallback2 = null;
 	
-	log("ICE BUNDLE");
-	log(iceBundle);
 	
-	var insertIce = "";
 	
-	iceBundle.forEach(ice=>{
-		if (ice.candidate){
-			insertIce += "a="+ice.candidate+"\r\n";
-		}
-	});
+	//log("ICE BUNDLE");
+	//log(iceBundle);
 	
-	var sdpAnswer = await promise;
+	//var insertIce = "";
+	
+	//iceBundle.forEach(ice=>{
+	//	if (ice.candidate){
+	//		insertIce += "a="+ice.candidate+"\r\n";
+	//	}
+	//});
+	
+	await promise;
 	session.rpcs[msg.UUID].whipCallback = null;
+	sdpAnswer = session.rpcs[msg.UUID].localDescription.sdp;
 	
-	sdpAnswer = sdpAnswer.replace("a=ice-ufrag", insertIce+"a=ice-ufrag");
+	//sdpAnswer = sdpAnswer.replace("a=ice-ufrag", insertIce+"a=ice-ufrag");
 	
 	log("completed");
-	log(sdpAnswer);
+	warnlog(sdpAnswer);
 	
 	return sdpAnswer; // return SDP answer for the remote WHIP request
 }

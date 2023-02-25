@@ -47,6 +47,10 @@
 	color: #FFF;
 }
 
+button:hover,[role="button"]:not(.column):hover{
+	filter: brightness(90%);
+}
+
 table {
 	display: inline-block;
 	padding:10px;
@@ -358,15 +362,41 @@ button.white:active {
 	font-size: calc(6vh + 6vw / 2);
 	letter-spacing: 0.0em;
 	text-shadow: 0.05em 0.05em 0px rgb(0 0 0);
-	width: 100%;
 	z-index: 6;
 	vertical-align: top;
-	text-align: center;
+	text-align: right;
+	right:0;
+	bottom:0;
 	position: fixed;
 	overflow-wrap: anywhere;
 	cursor: pointer;
 	user-select: none;
 }
+#overlayClockContainer.top {
+	top:0%;
+	bottom:unset;
+}
+#overlayClockContainer.vmiddle {
+	bottom:48%;
+	top:unset;
+}
+#overlayClockContainer.bottom {
+	bottom:0%;
+	top:unset;
+}
+#overlayClockContainer.left {
+	right:unset;
+	left:0;
+}
+#overlayClockContainer.hmiddle {
+	right:45%;
+	left:unset;
+}
+#overlayClockContainer.right {
+	right:0;
+	left:unset;
+}
+
 #overlayClock{
 	padding:2px 20px;
 	background-color: #0009;	
@@ -421,6 +451,7 @@ button.white:active {
 	right:0;
 	left:unset;
 }
+
 #overlayClock2{
 	padding:0 5px;
 	background-color: #0009;
@@ -444,7 +475,7 @@ button.white:active {
 	position: fixed;
 	overflow-wrap: anywhere;
 	padding:2% 3%;
-}
+}.
 .avatarSelection{
 	vertical-align: top;
     margin: 10px 0;
@@ -1023,12 +1054,15 @@ button.glyphicon-button.active.focus {
 	z-index: 995;
 	bottom: 0px;
 	width: 100%;
-	display: none;
 	justify-content: center;
 	align-items: center;
 	height: 60px;
 	border: 0;
 	pointer-events: none;
+	display: flex;
+}
+#controlButtons:empty {
+	display: none;
 }
 
 #subControlButtons {
@@ -1039,6 +1073,10 @@ button.glyphicon-button.active.focus {
 	position: absolute;
 	pointer-events: auto;
 }
+#subControlButtons:empty{
+	display:none;
+}
+
 #container.vidcon {
 	height:100%;
 }
@@ -4527,7 +4565,7 @@ body.darktheme button {
 	filter: brightness(0.70);
 }
 body.darktheme .column .las {
-	color: #f8f7f7;
+	color: black;
 }
 body.darktheme label {
 	filter: brightness(0.85);

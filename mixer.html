@@ -3609,7 +3609,7 @@
 	
 	function setobsSceneName(){
 		var obsSceneName = document.getElementById("canvas").obsSceneName || "";
-		var input = prompt("Enter the OBS scene you want to trigger", obsSceneName);
+		var input = prompt("Enter the OBS scene you want to trigger\n\n(To use, also be sure to enable this feature in the mixer settings and enable permissions in the OBS browser source)", obsSceneName);
 		if (input !==null){
 			document.getElementById("canvas").obsSceneName = input;
 		}

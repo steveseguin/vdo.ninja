@@ -56,7 +56,7 @@
 		<meta property="twitter:image" content="./media/vdoNinja_logo_full.png" />
 		<meta name="msapplication-TileColor" content="#da532c" />
 		<meta name="theme-color" content="#ffffff" />
-		<link rel="stylesheet" href="./main.css?ver=260" />
+		<link rel="stylesheet" href="./main.css?ver=265" />
 		<script type="text/javascript" crossorigin="anonymous" src="./thirdparty/adapter.js"></script>
 		<style id="lightbox-animations" type="text/css"></style>
 		<!-- <link rel="manifest" href="manifest.json" /> -->
@@ -83,7 +83,7 @@
 		
 		<script type="text/javascript" crossorigin="anonymous"  src="./thirdparty/CodecsHandler.js?ver=45"></script>
 		<script type="text/javascript" crossorigin="anonymous" src="./thirdparty/aes.js"></script>
-		<script type="text/javascript" crossorigin="anonymous" src="./webrtc.js?ver=577"></script>
+		<script type="text/javascript" crossorigin="anonymous" src="./webrtc.js?ver=579"></script>
 		<input id="zoomSlider" type="range" style="display: none;" />
 		<span id="electronDragZone" style="pointer-events: none; z-index:-10; position:absolute;top:0;left:0;width:100%;height:2%;-webkit-app-region: drag;min-height:20px;"></span>
 		<div id="header">
@@ -132,7 +132,7 @@
 			<div id="head7" class="hidden" data-translate="director-muted-you">The director has muted you.</div>
 			
 		</div>
-		<div id="controlButtons" >
+		<div id="controlButtons" class="hidden">
 			<div id="obsState" class="hidden" >ACTIVE</div>
 			<div id="subControlButtons">
 			
@@ -609,7 +609,9 @@
 						</select>
 					</div>
 					<br />
-					<div id="audioScreenCaptureDocs" data-translate="application-audio-capture">For application-specific audio capture, <a href='https://docs.vdo.ninja/audio' style='color: #007AC8;'>see here</a></div>
+					<div id="audioScreenCaptureDocs" data-translate="application-audio-capture">For application-specific audio capture, <a href='https://docs.vdo.ninja/audio' style='color: #007AC8;' target="_blank">see here</a></div>
+					<div id="audioScreenCaptureDocs2" data-translate="1080p-screen-capture-guide">For achieving 1080p60 game-capture, <a href='https://docs.vdo.ninja/guides/how-to-screen-share-in-1080p' style='color: #007AC8;'  target="_blank">see here</a></div>
+					
 				</div>
 				<div class="outer close">
 					<div class="inner">
@@ -898,7 +900,7 @@
 							<br />
 							<br />
 							<h3>
-							   🛠 For support, join the <a href="https://discord.vdo.ninja/">Discord <i class="lab la-discord"></i></a> or see the <a href="https://www.reddit.com/r/VDONinja/">sub-reddit <i class="lab la-reddit-alien"></i></a>. The <a href="https://docs.vdo.ninja/">documentation is here</a> and my personal email is <i>steve@seguin.email</i>
+							   🛠 For support, join the <a href="https://discord.gg/T4xpQVv">Discord <i class="lab la-discord"></i></a> or see the <a href="https://www.reddit.com/r/VDONinja/">sub-reddit <i class="lab la-reddit-alien"></i></a>. The <a href="https://docs.vdo.ninja/">documentation is here</a> and my personal email is <i>steve@seguin.email</i>
 							</h3> 
 								
 						</span>
@@ -2405,11 +2407,11 @@
 			// session.hidehome = true; // If used, 'hide home' will make the landing page inaccessible, along with hiding a few go-home elements.
 			// session.record = false; // uncomment to block users from being able to record via vdo.ninja's built in recording function
 		</script>
-		<script type="text/javascript" crossorigin="anonymous" id="lib-js" src="./lib.js?ver=657"></script>
+		<script type="text/javascript" crossorigin="anonymous" id="lib-js" src="./lib.js?ver=666"></script>
 		<!-- 
 		// If you wish to change branding, blank offers a good clean start.
 		<script type="text/javascript" id="main-js" src="./main.js" data-translation="blank"></script>
 		-->
-		<script type="text/javascript" crossorigin="anonymous" id="main-js" src="./main.js?ver=542"></script>
+		<script type="text/javascript" crossorigin="anonymous" id="main-js" src="./main.js?ver=549"></script>
 	</body>
 </html>

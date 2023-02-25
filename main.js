@@ -1059,6 +1059,10 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 		session.fakeUser = true;
 		session.dataMode = true;
 		session.autostart = true;
+		session.novideo = [];
+		session.noaudio = [];
+		session.noiframe = [];
+		session.cleanOutput=true;
 	}
 	
 	if (urlParams.has('datamode') || urlParams.has('dataonly')) { // this disables all media in/out.
@@ -1066,13 +1070,14 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 	}
 	
 	if (session.dataMode){
-		session.cleanOutput=true;
 		session.videoDevice = 0;
-		session.audioDevice = 0;
+		session.audioDevice = 0; 
+		getById("mainmenu").classList.add("hidden");
+		//session.autohide = true;
 		//session.autostart = true;
-		session.novideo = [];
-		session.noaudio = [];
-		session.noiframe = [];
+		//session.novideo = [];
+		//session.noaudio = [];
+		//session.noiframe = [];
 		//session.webcamonly = true;
 	} 
 	
@@ -1972,10 +1977,16 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 			session.obsControls = true;
 		}
 	} 
-	if (session.obsControls){
-		getById("obscontrolbutton").classList.remove("hidden");
-		getById("controlButtons").style.display = "block";
+	
+	if (urlParams.has('allowedscenes')){
+		session.filterOBSscenes = urlParams.get('allowedscenes');
+		if (session.filterOBSscenes){
+			session.filterOBSscenes = session.filterOBSscenes.split(",");
+		} else {
+			session.filterOBSscenes = true;
+		}
 	}
+	
 	
 	if (urlParams.has('tallyoff') || urlParams.has('notally') || urlParams.has('disabletally') || urlParams.has('to')) {
 		log("Tally Light off");
@@ -2879,7 +2890,7 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 		getById("translateButton").style.display = "none";
 		getById("credits").style.display = "none";
 		getById("header").style.display = "none";
-		getById("controlButtons").style.display = "none";
+		getById("controlButtons").classList.add("hidden");
 		getById("helpbutton").style.display = "none";
 		getById("helpbutton").style.opacity = 0;
 		getById("reportbutton").style.display = "none";
@@ -2941,6 +2952,13 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 	
 	if (urlParams.has('cleanish')) {
 		session.cleanish = true;
+	}
+	
+	if (session.cleanish || !session.cleanOutput){
+		if (session.obsControls){
+			getById("obscontrolbutton").classList.remove("hidden");
+			getById("controlButtons").classList.remove("hidden");
+		}
 	}
 
 	if (urlParams.has('channels')) { // must be loaded before channelOffset
@@ -3810,6 +3828,41 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 		session.showTime = false;
 	}
 	
+	if (urlParams.has('timer')){
+		if (urlParams.get('timer') === "1"){
+			getById("overlayClockContainer").classList.add("top");
+			getById("overlayClockContainer").classList.add("left");
+		} else if (urlParams.get('timer') === "7"){
+			getById("overlayClockContainer").classList.add("bottom");
+			getById("overlayClockContainer").classList.add("left");
+		} else if (urlParams.get('timer') === "4"){
+			getById("overlayClockContainer").classList.add("vmiddle");
+			getById("overlayClockContainer").classList.add("left");
+		} else if (urlParams.get('timer') === "2"){
+			getById("overlayClockContainer").classList.add("top");
+			getById("overlayClockContainer").classList.add("hmiddle");
+		} else if (urlParams.get('timer') === "8"){
+			getById("overlayClockContainer").classList.add("bottom");
+			getById("overlayClockContainer").classList.add("hmiddle");
+		} else if (urlParams.get('timer') === "5"){
+			getById("overlayClockContainer").classList.add("vmiddle");
+			getById("overlayClockContainer").classList.add("hmiddle");
+		} else if (urlParams.get('timer') === "3"){
+			getById("overlayClockContainer").classList.add("top");
+			getById("overlayClockContainer").classList.add("right");
+		} else if (urlParams.get('timer') === "9"){
+			getById("overlayClockContainer").classList.add("bottom");
+			getById("overlayClockContainer").classList.add("right");
+		} else if (urlParams.get('timer') === "6"){
+			getById("overlayClockContainer").classList.add("vmiddle");
+			getById("overlayClockContainer").classList.add("right");
+		} else {
+			getById("overlayClockContainer").classList.add("top");
+			getById("overlayClockContainer").classList.add("hmiddle");
+		}
+	}
+	
+	
 	if (urlParams.has('hidescreenshare') || urlParams.has('hidess') || urlParams.has('sshide') || urlParams.has('screensharehide')) { // this way I don't need to remember what it's called. I can just guess. :D
 		session.screenShareElementHidden = true;
 	}
@@ -3958,7 +4011,7 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 
 			if (session.chatbutton === true) {
 				getById("chatbutton").classList.remove("hidden");
-				getById("controlButtons").style.display = "inherit";
+				getById("controlButtons").classList.remove("hidden");
 			} else if (session.chatbutton === false) {
 				getById("chatbutton").classList.add("hidden");
 			}
@@ -4002,11 +4055,11 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 		}
 		if (session.chatbutton === true) {
 			getById("chatbutton").classList.remove("hidden");
-			getById("controlButtons").style.display = "inherit";
+			getById("controlButtons").classList.remove("hidden");
 		} else if (session.chatbutton === false) {
 			getById("chatbutton").classList.add("hidden");
 		}
-	} else if ((session.view) && (session.permaid === false)) {
+	} else if (session.view && (session.permaid === false)) {
 		//if (!session.activeSpeaker){
 		session.audioMeterGuest = false;
 		//}
@@ -4026,7 +4079,7 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 
 		if (session.chatbutton === true) {
 			getById("chatbutton").classList.remove("hidden");
-			getById("controlButtons").style.display = "inherit";
+			getById("controlButtons").classList.remove("hidden");
 		} else if (session.chatbutton === false) {
 			getById("chatbutton").classList.add("hidden");
 		}
@@ -4250,7 +4303,7 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 		errorlog(e);
 	}
 
-	if  (urlParams.has('autohide')) {
+	if (urlParams.has('autohide')) {
 		session.autohide=true;
 	}
 	if (session.autohide && (session.scene===false)){// && (session.roomid!==false)){
@@ -4521,7 +4574,8 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 			} else if (!session.youtubeKey){
 				errorlog("No Youtube Key provided");
 			}
-			YoutubeChatInterface();
+			console.log(session.youtubeKey);
+			YoutubeChatInterface(true);
 		}
 		
 		if ("nextSlide" in e.data){ // panning adjusts the stereo pan , although current its UUID based. can add stream ID based if requested.
@@ -5483,6 +5537,13 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 		if (session.firstPlayTriggered == false) {
 			playAllVideos();
 			session.firstPlayTriggered = true;
+			
+			try {
+				if (session.audioCtx && session.audioCtx.state == "suspended"){
+					session.audioCtx.resume();
+				} 
+			} catch(e){warnlog("session.audioCtx.resume(); failed 4");}
+			
 			history.pushState({}, '');
 		}
 	});
