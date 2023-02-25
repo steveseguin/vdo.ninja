@@ -4,6 +4,7 @@
 * [echo-or-feedback-issues.md](echo-or-feedback-issues.md "mention")
 * [works-on-wifi-but-not-on-4g.md](works-on-wifi-but-not-on-4g.md "mention")
 * [cant-capture-an-applications-audio-when-screen-sharing.md](cant-capture-an-applications-audio-when-screen-sharing.md "mention")
+* [cant-select-a-camera-lens-on-mobile.md](cant-select-a-camera-lens-on-mobile.md "mention")
 * [appearing-then-disappearing-guest.md](appearing-then-disappearing-guest.md "mention")
 * [cant-share-my-screen.md](cant-share-my-screen.md "mention")
 * [nothing-shows-up-in-obs-or-it-is-choppy.md](nothing-shows-up-in-obs-or-it-is-choppy.md "mention")
