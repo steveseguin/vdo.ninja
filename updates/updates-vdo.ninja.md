@@ -2,7 +2,10 @@
 
 #### February 24 <a href="#august-31" id="august-31"></a>
 
-* Improved the guide on 1080p60 streaming via VDO.Ninja, along with some other sections in the documentation. [https://docs.vdo.ninja/guides/how-to-screen-share-in-1080p](https://docs.vdo.ninja/guides/how-to-screen-share-in-1080p)\
+* Improved the guide on 1080p60 streaming via VDO.Ninja, along with some other sections in the documentation:\
+  [how-to-screen-share-in-1080p.md](../guides/how-to-screen-share-in-1080p.md "mention")\
+  [cant-select-a-camera-lens-on-mobile.md](../common-errors-and-known-issues/cant-select-a-camera-lens-on-mobile.md "mention")\
+  [virtual-camera-not-working-on-mac.md](../common-errors-and-known-issues/virtual-camera-not-working-on-mac.md "mention")\
   Added a link to it to the screen-sharing setup page as well in VDO.Ninja, so its easier to find.
 * I've set the default \&sstype for screen sharing to 3 when in a room now, versus 2. This change is on alpha and beta. If using `xxxxx_s` with \&ssid before, you'll need to switch to `xxxxx:s` instead I think, but otherwise it should be all the same? (feedback welcomed)
 * Updated vdo.ninja/beta/ with the current vdo.ninja/alpha/ version. A bit overdue, but I am looking to have the current v23 released tested some more.
