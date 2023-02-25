@@ -1,5 +1,12 @@
 # Updates - VDO.Ninja
 
+#### February 24 <a href="#august-31" id="august-31"></a>
+
+* Improved the guide on 1080p60 streaming via VDO.Ninja, along with some other sections in the documentation. [https://docs.vdo.ninja/guides/how-to-screen-share-in-1080p](https://docs.vdo.ninja/guides/how-to-screen-share-in-1080p)\
+  Added a link to it to the screen-sharing setup page as well in VDO.Ninja, so its easier to find.
+* I've set the default \&sstype for screen sharing to 3 when in a room now, versus 2. This change is on alpha and beta. If using `xxxxx_s` with \&ssid before, you'll need to switch to `xxxxx:s` instead I think, but otherwise it should be all the same? (feedback welcomed)
+* Updated vdo.ninja/beta/ with the current vdo.ninja/alpha/ version. A bit overdue, but I am looking to have the current v23 released tested some more.
+
 #### February 22 <a href="#august-31" id="august-31"></a>
 
 * Fixed an issue with the audio-meters not always showing in the director's guest-control boxes (hot patched)

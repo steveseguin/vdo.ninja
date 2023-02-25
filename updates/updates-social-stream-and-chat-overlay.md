@@ -3,6 +3,12 @@
 [social-stream.md](../steves-helper-apps/social-stream.md "mention")\
 [chat-overlay.md](../steves-helper-apps/chat-overlay.md "mention")
 
+#### **February 24**
+
+* Social Stream has had the "open chat automatically" functionality improved a lot the last couple days. @River played a large part in that.
+* Added to Social Stream the option to map a chat command to some webhook API. Just an easy way to get started with making bot-actions, such as turning on a light. Happy to evolve this based on feedback.\
+  ![](<../.gitbook/assets/image (1).png>)
+
 #### **February 22**
 
 * Fixed/improved the Slack integration; emojis, etc, should work now
