@@ -99,7 +99,7 @@
 			<div class="card">
 				<h2>WebM (or MKV/FLV) to MP4 (fixed 1280x720 resolution) <span class='warning'>(very slow!)</span></h2>
 				<div>
-					<small>The same as: <i>fmpeg -i input.webm -vf scale="1280:720" output.mp4</i></small>
+					<small>The same as: <i>ffmpeg -i input.webm -vf scale="1280:720" output.mp4</i></small>
 					<input type="file" accept=".mkv, .flv, .webm" id="uploader" title="Convert WebM to MP4">
 				</div>
 			</div>
@@ -113,14 +113,14 @@
 			<div class="card">
 				<h2>WebM to Audio-only files (opus or wav)</h2>
 				<div>
-					<small>The same as:  <i>fmpeg -i input.webm -vn -acodec copy output.wav</i></small>
+					<small>The same as:  <i>ffmpeg -i input.webm -vn -acodec copy output.wav</i></small>
 					<input type="file" id="uploader4" accept=".webm" title="Convert WebM to OPUS (or WAV)">
 				</div>
 			</div>
 			<div class="card">
 				<h2>MKV (or FLV/WebM) to MP4 (no transcoding)</h2>
 				<div>
-					<small>The same as:  <i>fmpeg -i INPUTFILE -vcodec copy -acodec copy output.mp4</i></small>
+					<small>The same as:  <i>ffmpeg -i INPUTFILE -vcodec copy -acodec copy output.mp4</i></small>
 					<input type="file" id="uploader2" accept=".mkv, .flv, .webm" title="Convert MKV (or FLV) to MP4">
 				</div>
 			</div>
