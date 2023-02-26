@@ -11903,11 +11903,11 @@ function remoteMute(ele, event=false, skipSend=false) {
 		if (val == 1){
 			ele.value = 0;
 			ele.classList.remove("pressed");
-			ele.innerHTML = '<i class="las la-microphone-slash" style="color:#900"></i>	<span data-translate="mute-guest" >mute guest</span>';
+			ele.innerHTML = '<i class="las la-microphone-slash" style="color:#900"></i>';
 		} else {
 			ele.value = 1;
 			ele.classList.add("pressed");
-			ele.innerHTML = '<i class="las la-microphone-slash" style="color:#900"></i>	<span data-translate="unmute-guest" >un-mute guest</span>';
+			ele.innerHTML = '<i class="las la-microphone-slash" style="color:#900"></i>';
 		}
 		miniTranslate(ele);
 	}

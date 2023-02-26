@@ -598,15 +598,6 @@ body.darktheme .credits>a:visited {
 	color: #FFF;
 }
 
-.pressed {
-	background: #1e0000;
-	-webkit-box-shadow: inset 0px 0px 1px #b90000;
-	-moz-box-shadow: inset 0px 0px 1px #b90000;
-	box-shadow: inset 0px 0px 1px #b90000;
-	outline: none;
-	color: white;
-}
-
 .altpress {
 	background: #673100 !important;
 	-webkit-box-shadow: inset 0px 0px 1px #b90000;
@@ -3367,7 +3358,10 @@ div#roomnotes2 {
 
 
 
-/* DIRECTORS PAGE - User Controls Box */
+
+
+
+/* ---- DIRECTORS PAGE - User Controls Box ---- */
 .controlsGrid {
     display: flex;
     flex-wrap: wrap;
@@ -3380,60 +3374,37 @@ div#roomnotes2 {
 
 .controlsGrid .row {
 	width: 100%;
-	display: grid;
-	grid-gap: 10px;
+	display: flex;
+	flex-wrap: wrap;
+	gap: 10px;
 	margin-top: 5px;
 	margin-bottom: 5px;
 }
 .controlsGrid .row > .row {
 	margin: 0;
 }
-.controlsGrid .row.two {
-	grid-template-columns: [left] 1fr 1fr [right];
+.controlsGrid .row.two > * {
+	flex: 1 33%;
 }
-.controlsGrid .row.three {
-	grid-template-columns: 1fr 1fr 1fr;
+.controlsGrid .row.three > * {
+	flex: 1 25%;
 }
-.controlsGrid .row.fourth {
-	grid-template-columns: 3fr 1fr;
+.controlsGrid .row.four > * {
+	flex: 1 20%;
 }
-.controlsGrid .row.four {
-	grid-template-columns: 1fr 1fr 1fr 1fr;
-}
-.controlsGrid .row.six {
-	grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr;
-}
-
-.controlsGrid .director-message-box {
-	grid-column-start: left;
-  	grid-column-end: right;
-	padding: 0 10px;
-	padding-top: 10px;
-
-	background: rgba(0, 0, 0, .15);
-}
-.controlsGrid .director-message-box textarea {
-	width: 100%;
-	min-width: 100%;
-	max-width: 100%;
-	padding: 5px;
-}
-.controlsGrid .director-message-box .controls {
-	margin: 5px 0;
-	grid-template-columns: max-content min-content auto;
+.controlsGrid .row.six > * {
+	flex: 1 13%;
 }
 
 .controlsGrid button {
     margin: 0;
     text-align: right;
-    flex: 0 1 calc(50% - 10px);
-	width: 100%;
 }
 .controlsGrid button.center {
 	display: flex;
 	align-self: center;
 	justify-content: center;
-	padding: 0;
+	padding: 0 5px;
 	padding-top: 7px;
 	padding-bottom: 6px;
 }
@@ -3446,11 +3417,26 @@ div#roomnotes2 {
 	height: 15px;
 }
 
-button[data-action-type="messaging-box-close"] {
-	flex: 0 1 25%;
+/* Specitic CSS for different elements inside the guest control-buttons */
+.controlsGrid .director-message-box {
+	flex: 1 100% !important;
+	padding: 10px;
+
+	background: rgba(0, 0, 0, .15);
+
+	display: flex;
+	flex-wrap: wrap;
+	gap: 5px;
 }
-button[data-action-type="messaging-box-send"] {
-	flex: 1 0 50%
+.controlsGrid .director-message-box textarea {
+	flex: 1 100%;
+	padding: 5px;
+}
+.controlsGrid .director-message-box .message-close {
+	flex: 1;
+}
+.controlsGrid .director-message-box .message-send {
+	flex: 1 33%;
 }
 
 .controlsGrid .tooltip {
@@ -3474,7 +3460,6 @@ button[data-action-type="messaging-box-send"] {
 	font-size: 80%;
 	cursor: pointer;
 }
-
 .controlsGrid .orderspan {
 	font-size: 50%;
 	display: flex;
@@ -3483,9 +3468,6 @@ button[data-action-type="messaging-box-send"] {
 	justify-content: center;
 
 	text-align: center;
-	/* width: 49px;
-	height: 22px; */
-	/* top: 5px; */
 	position: relative;
 	user-select: none; 
 }
@@ -3506,6 +3488,7 @@ button[data-action-type="messaging-box-send"] {
 .controlsGrid .btn-HL-blue {
 	background: rgb(170, 204, 248);
 }
+
 
 
 
@@ -4799,4 +4782,17 @@ body.darktheme .startupWarning>.las  {
 }
 body.darktheme .invite_setting_group_links a {
 	color:#d2e5ff!important;
+}
+
+
+
+
+/* ---- BASIC CSS CLASSES ---- */
+.pressed {
+	background: #1e0000 !important;
+	-webkit-box-shadow: inset 0px 0px 1px #b90000;
+	-moz-box-shadow: inset 0px 0px 1px #b90000;
+	box-shadow: inset 0px 0px 1px #b90000;
+	outline: none;
+	color: white;
 }
