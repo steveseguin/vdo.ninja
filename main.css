@@ -57,15 +57,6 @@ table {
 	margin:10px;
 }
 
-.hideDropMenu{
-	user-select: none;
-	grid-column: 1;
-	width:100%;
-	margin:5px 0;
-	font-size:80%;
-	cursor: pointer;
-}
-
 #audioSource3{
 	background-color: #FFF;
 }
@@ -625,10 +616,15 @@ body.darktheme .credits>a:visited {
 	color: white;
 }
 
-.row {
+#mainmenu .row {
 	align-content: center;
 	text-align: center;
 	margin-top: 10px;
+}
+#mainmenu .row:after {
+	content: "";
+	display: table;
+	clear: both;
 }
 
 hr {
@@ -638,23 +634,6 @@ hr {
 	background-color: gray;
 }
 
-.orderspan{
-	font-size: 50%;
-	display: inline-block;
-	margin: auto;
-	text-align: center;
-	width: 49px;
-	height: 22px;
-	top: 5px;
-	position: relative;
-	user-select: none; 
-}
-
-.row:after {
-	content: "";
-	display: table;
-	clear: both;
-}
 
 .vidcon {
 	max-width: 100%;
@@ -2250,24 +2229,6 @@ iframe {
     margin-right: 0;
     text-align: right;
 }
-.director-message-box{
-    display: flex;
-    flex: 1 100%;
-    flex-wrap: wrap;
-}
-.director-message-box textarea {
-	margin: 5px;
-	flex: 1 100%;
-	padding: 5px;
-}
-.director-message-box > button {
-	margin: 5px;
-    text-align: right;
-}
-.director-message-box > span {
-	top: 5px;
-    position: relative;
-}
 
 img {
 	max-width: 100%;
@@ -2870,10 +2831,10 @@ button.toggleSettings{
 }
 
 .hidden {
-	display:none!important;
+	display: none !important;
 	visibility: hidden;
-	width:0px;
-	height:0px;
+	width: 0px;
+	height: 0px;
 	opacity: 0;
 }
 .grabLinks a:visited {
@@ -3403,22 +3364,86 @@ div#roomnotes2 {
 .directorsgrid button {
 	text-transform: lowercase;
 }
+
+
+
+/* DIRECTORS PAGE - User Controls Box */
 .controlsGrid {
     display: flex;
     flex-wrap: wrap;
 }
-.controlsGrid button {
-    margin: 5px;
-    text-align: right;
-    flex: 0 1 calc(50% - 10px);
-}
-.controlsGrid > div {
+.controlsGrid .group {
 	width: 100%;
 	display: flex;
+	flex-direction: column;
 }
 
-.controlsGrid input {
-	margin: 5px;
+.controlsGrid .row {
+	width: 100%;
+	display: grid;
+	grid-gap: 10px;
+	margin-top: 5px;
+	margin-bottom: 5px;
+}
+.controlsGrid .row > .row {
+	margin: 0;
+}
+.controlsGrid .row.two {
+	grid-template-columns: [left] 1fr 1fr [right];
+}
+.controlsGrid .row.three {
+	grid-template-columns: 1fr 1fr 1fr;
+}
+.controlsGrid .row.fourth {
+	grid-template-columns: 3fr 1fr;
+}
+.controlsGrid .row.four {
+	grid-template-columns: 1fr 1fr 1fr 1fr;
+}
+.controlsGrid .row.six {
+	grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr;
+}
+
+.controlsGrid .director-message-box {
+	grid-column-start: left;
+  	grid-column-end: right;
+	padding: 0 10px;
+	padding-top: 10px;
+
+	background: rgba(0, 0, 0, .15);
+}
+.controlsGrid .director-message-box textarea {
+	width: 100%;
+	min-width: 100%;
+	max-width: 100%;
+	padding: 5px;
+}
+.controlsGrid .director-message-box .controls {
+	margin: 5px 0;
+	grid-template-columns: max-content min-content auto;
+}
+
+.controlsGrid button {
+    margin: 0;
+    text-align: right;
+    flex: 0 1 calc(50% - 10px);
+	width: 100%;
+}
+.controlsGrid button.center {
+	display: flex;
+	align-self: center;
+	justify-content: center;
+	padding: 0;
+	padding-top: 7px;
+	padding-bottom: 6px;
+}
+
+.controlsGrid .spacer {
+	width: 100%;
+	height: 5px;
+}
+.controlsGrid .spacer.big {
+	height: 15px;
 }
 
 button[data-action-type="messaging-box-close"] {
@@ -3428,15 +3453,63 @@ button[data-action-type="messaging-box-send"] {
 	flex: 1 0 50%
 }
 
-.controlsGrid > span.tooltip {
+.controlsGrid .tooltip {
+	flex: 1 calc(50% - 10px);
     display: flex;
-    flex: 1 calc(50% - 10px);
     align-items: center;
 }
-
-.advanced {
-	display: var(--advanced-mode);
+.controlsGrid .tooltip input[type=range] {
+	margin: 0;
 }
+.controlsGrid .tooltip .tooltiptext {
+	top: -25px;
+}
+
+.controlsGrid .hideDropMenu{
+	user-select: none;
+	grid-column: 1;
+	width: 100%;
+	margin-top: 10px;
+	margin-bottom: 5px;
+	font-size: 80%;
+	cursor: pointer;
+}
+
+.controlsGrid .orderspan {
+	font-size: 50%;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+
+	text-align: center;
+	/* width: 49px;
+	height: 22px; */
+	/* top: 5px; */
+	position: relative;
+	user-select: none; 
+}
+.controlsGrid .orderspan .order-label {
+	width: max-content;
+}
+
+/* Hightlights for buttons in the guest control-buttons */
+.controlsGrid .btn-HL-yellow {
+	background: rgb(255, 235, 154);
+}
+.controlsGrid .btn-HL-peach {
+	background: rgb(243, 197, 242);
+}
+.controlsGrid .btn-HL-green {
+	background: rgb(130, 223, 128);
+}
+.controlsGrid .btn-HL-blue {
+	background: rgb(170, 204, 248);
+}
+
+
+
+
 
 #widget {
 	position: absolute;
@@ -3455,11 +3528,9 @@ button[data-action-type="messaging-box-send"] {
 	top: 8px;
 	right: 10px;
 }
-.advanced {
-	display: var(--advanced-mode);
-}
 .controlCenterBox{
 	margin-top:2px;
+	padding: 0 5px;
 }
 
 .contolboxLabel {
