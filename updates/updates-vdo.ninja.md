@@ -348,7 +348,7 @@
 
 * Some advanced audio-related VDO.Ninja updates:\
   \-- I show the audio codec now used in the stats, along with whether audio forward error correction (FEC) is on or not (on by default)\
-  ![](<../.gitbook/assets/image (6) (2).png>)\
+  ![](<../.gitbook/assets/image (6) (2) (2).png>)\
   \-- [`&nofec`](../advanced-settings/audio-parameters/minptime-3.md) on the viewer side can disable FEC.\
   \-- [`&audiocodec`](../advanced-settings/audio-parameters/minptime-1.md) on the viewer side can let you specify the audio codec; `opus` (default), `pcmu`, `pcma`, `isac`, `g722` and `red`\
   \-- [`&audiocodec`](../advanced-settings/audio-parameters/minptime-1.md)`=red` is pretty much sending two opus streams, with one as a backup in case of packet loss; support in Chromium 97 and up, but the only way I can so far tell that it is working is to check if the audio bitrate has doubled\

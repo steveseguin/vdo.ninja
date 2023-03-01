@@ -24,6 +24,12 @@ You can stop/restart recordings as needed via the right-click menu per each vide
 
 You can pass the default recording bitrate as a value to the parameter, like you might if using [`&record`](and-record.md).
 
+### Update in V23 (currently on alpha)
+
+There are buttons in the room settings of the director to start/stop _all_ recordings; both remote/local.
+
+<figure><img src="../../.gitbook/assets/image (6).png" alt=""><figcaption></figcaption></figure>
+
 ## Related
 
 {% content-ref url="and-record.md" %}
