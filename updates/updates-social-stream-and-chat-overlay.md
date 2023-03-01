@@ -3,11 +3,24 @@
 [social-stream.md](../steves-helper-apps/social-stream.md "mention")\
 [chat-overlay.md](../steves-helper-apps/chat-overlay.md "mention")
 
+#### **February 28**
+
+* Twitter post support added to Social Stream; you will need to manually select the tweet you want to push to the dock though. (I'll play with this a bit more based on feedback.)\
+  ![](<../.gitbook/assets/image (2).png>):
+
+#### **February 25**
+
+Social Stream updates for today:
+
+* When turning off autoshow, the auto-show queue will stop and clear.
+* You can control whether to show firstname / names in the featured chat page now; not just the dock. The dock's settings will take priority over the overlay's page if enabled though.
+* The open-chat functionality opens a window or tab based on the destination, to offer best performance. (added by River)
+
 #### **February 24**
 
 * Social Stream has had the "open chat automatically" functionality improved a lot the last couple days. @River played a large part in that.
 * Added to Social Stream the option to map a chat command to some webhook API. Just an easy way to get started with making bot-actions, such as turning on a light. Happy to evolve this based on feedback.\
-  ![](<../.gitbook/assets/image (1).png>)
+  ![](<../.gitbook/assets/image (1) (1).png>)
 
 #### **February 22**
 

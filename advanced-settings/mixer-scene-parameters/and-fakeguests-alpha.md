@@ -5,7 +5,7 @@ description: Creates simulated guest videos
 # \&fakeguests (alpha)
 
 Viewer-Side Option! ([`&view`](../view-parameters/view.md), [`&scene`](../view-parameters/scene.md), [`&room`](../../general-settings/room.md))\
-\*only available on [vdo.ninja/alpha](https://vdo.ninja/alpha/)
+\*only available on [vdo.ninja/alpha](https://vdo.ninja/alpha/) and [vdo.ninja/beta](https://vdo.ninja/beta/)
 
 ## Aliases
 

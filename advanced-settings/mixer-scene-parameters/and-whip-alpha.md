@@ -5,7 +5,7 @@ description: Publish directly from OBS to VDO.Ninja without a virtual camera
 # \&whip (alpha)
 
 Viewer-Side Option! ([`&scene`](../view-parameters/scene.md), [`&room`](../../general-settings/room.md), [`&director`](../../viewers-settings/director.md))\
-\*only available on [vdo.ninja/alpha](https://vdo.ninja/alpha/)
+\*only available on [vdo.ninja/alpha](https://vdo.ninja/alpha/) and [vdo.ninja/beta](https://vdo.ninja/beta/)
 
 ## Options
 

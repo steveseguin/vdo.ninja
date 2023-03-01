@@ -5,7 +5,7 @@ description: A token for invite/scene links to determine whose the director of a
 # \&token (alpha)
 
 General Option! ([`&push`](../../source-settings/push.md), [`&room`](../../general-settings/room.md), [`&view`](../view-parameters/view.md), [`&scene`](../view-parameters/scene.md), [`&solo`](../mixer-scene-parameters/and-solo.md))\
-\*only available on [vdo.ninja/alpha](https://vdo.ninja/alpha/)
+\*only available on [vdo.ninja/alpha](https://vdo.ninja/alpha/) and [vdo.ninja/beta](https://vdo.ninja/beta/)
 
 ## Options
 
@@ -19,7 +19,7 @@ Example: `&token=5eb5e63ee4d9ba06`
 
 When using [`&maindirectorpassword`](../director-parameters/and-maindirectorpassword-alpha.md) as a director, it will add `&token=xxx` to the invite/scene links.
 
-![](<../../.gitbook/assets/image (1) (1).png>)
+![](<../../.gitbook/assets/image (1) (1) (9).png>)
 
 This token is used by the guests to check a remote database server to see who currently 'owns' the token; it persists though, even if the director is not connected.
 

@@ -5,7 +5,7 @@ description: Will mute the microphone of a guest when not loaded in an active OB
 # \&automute (alpha)
 
 Sender-Side Option! ([`&push`](../../source-settings/push.md))\
-\*only available on [vdo.ninja/alpha](https://vdo.ninja/alpha/)
+\*only available on [vdo.ninja/alpha](https://vdo.ninja/alpha/) and [vdo.ninja/beta](https://vdo.ninja/beta/)
 
 ## Aliases
 

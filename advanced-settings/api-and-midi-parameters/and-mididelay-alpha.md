@@ -5,7 +5,7 @@ description: Lets you precisely delay the MIDI play-out
 # \&mididelay (alpha)
 
 General Option! ([`&push`](../../source-settings/push.md), [`&room`](../../general-settings/room.md), [`&view`](../view-parameters/view.md), [`&scene`](../view-parameters/scene.md))\
-\*only available on [vdo.ninja/alpha](https://vdo.ninja/alpha/)
+\*only available on [vdo.ninja/alpha](https://vdo.ninja/alpha/) and [vdo.ninja/beta](https://vdo.ninja/beta/)
 
 ## Options
 

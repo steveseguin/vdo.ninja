@@ -5,7 +5,7 @@ description: Lets you set a pseudo 'master room password' as a director
 # \&maindirectorpassword (alpha)
 
 Director Option! ([`&director`](../../viewers-settings/director.md))\
-\*only available on [vdo.ninja/alpha](https://vdo.ninja/alpha/)
+\*only available on [vdo.ninja/alpha](https://vdo.ninja/alpha/) and [vdo.ninja/beta](https://vdo.ninja/beta/)
 
 ## Aliases
 
@@ -26,7 +26,7 @@ Example: `&maindirectorpassword=SomePassword123`
 
 This will add a [`&token`](../settings-parameters/and-token-alpha.md) value to the invite/scene links.
 
-![](<../../.gitbook/assets/image (1) (1).png>)
+![](<../../.gitbook/assets/image (1) (1) (9).png>)
 
 This token is used by the guests to check a remote database server to see who currently 'owns' the token; it persists though, even if the director is not connected.
 

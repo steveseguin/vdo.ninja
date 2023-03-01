@@ -5,7 +5,7 @@ description: Will make the tally sign larger and colorize the background of the 
 # \&tally (alpha)
 
 Sender-Side Option! ([`&push`](../../source-settings/push.md))\
-\*only available on [vdo.ninja/alpha](https://vdo.ninja/alpha/)
+\*only available on [vdo.ninja/alpha](https://vdo.ninja/alpha/) and [vdo.ninja/beta](https://vdo.ninja/beta/)
 
 ## Details
 

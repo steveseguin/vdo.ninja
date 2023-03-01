@@ -1,5 +1,28 @@
 # Updates - VDO.Ninja
 
+#### February 27 <a href="#august-31" id="august-31"></a>
+
+* Added the option to "pin" the room-settings to the side of the director's room. This way you'll have access to certain global/room settings quickly, if needed. (expect some tinkering over the following weeks though)
+* Added buttons to the room settings to start/stop _all_ recordings; both remote/local.\
+  ![](<../.gitbook/assets/image (1).png>)\
+  \
+  \*\* these updates are available on alpha at [https://vdo.ninja/alpha/](https://vdo.ninja/alpha/) for testing/feedback\
+
+
+#### February 26 <a href="#august-31" id="august-31"></a>
+
+* If you hold CTRL when clicking highlight, the target guest becomes 75% of the screen (not 100% as normal), leaving room for other guests along the side.\
+  ![](<../.gitbook/assets/image (21).png>)
+* Fixed an issue where when using [`&screensharetype=3`](../newly-added-parameters/and-screensharetype.md), stopping the screen share as a guest didn't clear it from the screen (a frozen image remained). That should be fixed now.
+*   That "are you sure you want to quit" pop up now appears when joining VDO.Ninja by either of these links; before it only appeared in the later
+
+    ```
+    https://vdo.ninja/alpha/?room=roomID
+    https://vdo.ninja/alpha/?room=roomID&push=XdTX2qX
+    ```
+
+\*\* on vdo.ninja/alpha/
+
 #### February 24 <a href="#august-31" id="august-31"></a>
 
 * Improved the guide on 1080p60 streaming via VDO.Ninja, along with some other sections in the documentation:\

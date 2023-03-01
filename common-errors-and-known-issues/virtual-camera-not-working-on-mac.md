@@ -51,4 +51,4 @@ If the OBS Virtual Camera is not appearing in Chrome or your browser after insta
 4.  Quit and relaunch OBS.\
 
 
-    <figure><img src="../.gitbook/assets/image (2).png" alt=""><figcaption><p>If OBS isn't listed, press the + button, navigate to it, and select it</p></figcaption></figure>
+    <figure><img src="../.gitbook/assets/image (2) (14).png" alt=""><figcaption><p>If OBS isn't listed, press the + button, navigate to it, and select it</p></figcaption></figure>

@@ -43,6 +43,10 @@ The type-3 screen share is still not fully cooked for use in scenes, etc, and it
 work with [`&meshcast`](and-meshcast.md), [`&novideo`](../advanced-settings/video-parameters/novideo-1.md) or [`&noaudio`](../advanced-settings/view-parameters/noaudio.md).
 {% endhint %}
 
+### Update in V23 (currently on alpha and beta)
+
+The default `&screensharetype` for screen sharing is now 3 when in a room, versus 2. This change is on alpha and beta. If using `xxxxx_s` with [`&screenshareid`](../source-settings/screenshareid.md) before, you'll need to switch to `xxxxx:s` instead I think, but otherwise it should be all the same. (feedback welcomed)
+
 ## Related
 
 {% content-ref url="../source-settings/screenshareid.md" %}
