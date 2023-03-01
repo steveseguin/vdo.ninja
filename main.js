@@ -242,7 +242,10 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 	}
 	
 	if (urlParams.has('novice') ) {
-		document.documentElement.style.setProperty('--advanced-mode', "none"); // hide advanced items
+		// Hiding advanced items
+		document.querySelectorAll(".advanced").forEach(element => {
+			element.classList.add("hide");
+		})
 	}
 	
 	if (urlParams.has('avatarimg') || urlParams.has('bgimage') || urlParams.has('bgimg')) { // URL or data:base64 image. Becomes local to this viewer only.  This is like &avatar, but slightly different. Just CSS in this case
@@ -5032,9 +5035,15 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 		
 		if ("advancedMode" in e.data){
 			if (e.data.advancedMode){
-				document.documentElement.style.setProperty('--advanced-mode', "inline-block"); // show advanced items
+				// Un-hiding advanced items
+				document.querySelectorAll(".advanced").forEach(element => {
+					element.classList.remove("hide");
+				})
 			} else {
-				document.documentElement.style.setProperty('--advanced-mode', "none"); // hide advanced items
+				// Hiding advanced items
+				document.querySelectorAll(".advanced").forEach(element => {
+					element.classList.add("hide");
+				})
 			}
 		} 
 		
