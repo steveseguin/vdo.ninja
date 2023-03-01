@@ -3487,11 +3487,12 @@ function updateMixerRun(e=false){  // this is the main auto-mixing code.  It's a
 		if (session.groupView.length){
 			groups.push(...session.groupView)
 		}
-		
+		var sssid = false;
 		var soloVideo = false;
+		
 		if (session.infocus===true){
 			soloVideo = true;
-		} else if (session.infocus && (session.infocus!==true) && (session.infocus in session.rpcs)){ // if the infocus stream is connected
+		} else if (session.infocus && (session.infocus in session.rpcs)){ // if the infocus stream is connected
 			if (groups.length || session.allowNoGroup){
 				try {
 					if (groups.some(item => session.rpcs[session.infocus].group.includes(item))){
@@ -3500,6 +3501,19 @@ function updateMixerRun(e=false){  // this is the main auto-mixing code.  It's a
 				} catch(e){errorlog(e);}
 			} else {
 				soloVideo = session.infocus;
+			}
+		} else if (session.infocus2===true){
+			sssid = session.streamID;
+			console.log("2.");
+		} else if (session.infocus2 && (session.infocus2 in session.rpcs)){ // if the infocus2 stream is connected
+			if (groups.length || session.allowNoGroup){
+				try {
+					if (groups.some(item => session.rpcs[session.infocus2].group.includes(item))){
+						sssid = session.rpcs[session.infocus2].streamID;
+					}
+				} catch(e){errorlog(e);}
+			} else {
+				sssid = session.rpcs[session.infocus2].streamID;
 			}
 		}
 		
@@ -3571,7 +3585,7 @@ function updateMixerRun(e=false){  // this is the main auto-mixing code.  It's a
 			}
 		}
 		
-		if (session.screenShareElement){ // I, myself, exist
+		if (session.screenShareState && session.screenShareElement){ // I, myself, exist
 			if (!session.screenShareElementHidden){ 
 				if (session.order!==false){
 					session.screenShareElement.order=session.order;
@@ -4165,8 +4179,6 @@ function updateMixerRun(e=false){  // this is the main auto-mixing code.  It's a
 		}
 		
 		
-
-		var sssid = false;
 		var sscount = 0;
 		
 		var skip = false;
@@ -4193,57 +4205,65 @@ function updateMixerRun(e=false){  // this is the main auto-mixing code.  It's a
 			}
 		}
 		
+		
 		var mpl = session.slots || mediaPool.length;
 		
-		if (mpl>1){
-			var BB = 0;
-			var rw = 1;
-			var rh = 1;
-			var NW;
-			var NH;
-			var current;
-			for (NW=1; NW <= mpl; NW++){
-				NH = Math.ceil(mpl/NW);
-				var www = ww/NW;
-				var hhh = hh/NH;
-				if (www>hhh){
-					current = hhh * hhh * (mpl/(NW*NH));
-				} else {
-					current = www * www * (mpl/(NW*NH));
-				}
-				
-				if (current>=BB){
-					BB = current;
-					rw = NW;
-					rh = NH;
-				}
-				
-				if (mediaPool[NW-1]){
-					//if (mediaPool[NW-1].tagName == "VIDEO"){
-					if (mediaPool[NW-1].dataset.UUID){
-						if (mediaPool[NW-1].dataset.UUID in session.rpcs){
-							if (session.rpcs[mediaPool[NW-1].dataset.UUID].screenShareState){
-								sscount+=1;
-								sssid = mediaPool[NW-1].dataset.sid;
+		if (!sssid){
+			if (mpl>1){
+				var BB = 0;
+				var rw = 1;
+				var rh = 1;
+				var NW;
+				var NH;
+				var current;
+				for (NW=1; NW <= mpl; NW++){
+					NH = Math.ceil(mpl/NW);
+					var www = ww/NW;
+					var hhh = hh/NH;
+					if (www>hhh){
+						current = hhh * hhh * (mpl/(NW*NH));
+					} else {
+						current = www * www * (mpl/(NW*NH));
+					}
+					
+					if (current>=BB){
+						BB = current;
+						rw = NW;
+						rh = NH;
+					}
+					
+					if (mediaPool[NW-1]){
+						//if (mediaPool[NW-1].tagName == "VIDEO"){
+						if (mediaPool[NW-1].dataset.UUID){
+							if (mediaPool[NW-1].dataset.UUID in session.rpcs){
+								if (session.rpcs[mediaPool[NW-1].dataset.UUID].screenShareState){
+									sscount+=1;
+									sssid = mediaPool[NW-1].dataset.sid;
+								}
 							}
+						} else if (("id" in mediaPool[NW-1]) && (mediaPool[NW-1].id == "screensharesource") && session.notifyScreenShare){
+							sscount+=1;
+							sssid = mediaPool[NW-1].dataset.sid;
 						}
-					} else if (("id" in mediaPool[NW-1]) && (mediaPool[NW-1].id == "screensharesource") && session.notifyScreenShare){
-						sscount+=1;
-						sssid = mediaPool[NW-1].dataset.sid;
 					}
 				}
+			} else { var rw=1; var rh=1;}
+			
+			if (sscount>1){
+				sssid = false; // lets not maximize if more than one screen share.
 			}
-		} else { var rw=1; var rh=1;}
-		if (sscount>1){
-			sssid = false; // lets not maximize if more than one screen share.
 		}
+		
 	} catch(e){
 		errorlog(e);
 		sssid = false
 	}
 	
+	console.log(soloVideo);
+	console.log(sssid);
+	console.log(mediaPool);
 	
-	var customLayout=false;
+	var customLayout=false; 
 	
 	if (!session.notifyScreenShare && (session.scene!==false)){
 		// this is a scene, so lets assume &smallshare will disable larger screen shares since there is no one to screen share.
@@ -10691,7 +10711,7 @@ function reloadRequested() {
 	location.reload(); // the main reload function call
 }
 function confirmUnload(event){
-	if (!session.noExitPrompt && !session.cleanOutput && (session.permaid!==false || session.director)){
+	if (!session.noExitPrompt && !session.cleanOutput && (session.scene === false) && (session.seeding || (session.roomid!==false) || (session.permaid!==false) || session.director)){
 		(event || window.event).returnValue = "Are you sure you want to exit?"; //Gecko + IE
 		return "Are you sure you want to exit?";   
 	} else {
@@ -15190,7 +15210,7 @@ function getDirectorSettings(scene=false){
 	return settings;
 }
 
-function requestInfocus(ele) {
+function requestInfocus(ele, evt=null, value=null) {
 	try{
 		var sid = ele.dataset.sid;
 	} catch(e){
@@ -15203,6 +15223,22 @@ function requestInfocus(ele) {
 		}
 	}
 
+	if (value!==null){
+		if (value){
+			ele.value == 0; // we will toggle it in a second anyways.
+		} else {
+			ele.value == 1;
+		}
+	}
+	
+	var special = false;
+	if (evt){
+		special = evt.ctrlKey || evt.metaKey || false;
+		if (special){
+			special = true;
+		}
+	}
+
 	if (ele.value == 1) {
 		ele.value = 0;
 		ele.classList.remove("pressed");
@@ -15211,7 +15247,11 @@ function requestInfocus(ele) {
 		session.sendMessage(actionMsg);
 	} else {
 		var actionMsg = {};
-		actionMsg.infocus = sid;
+		if (special){
+			actionMsg.infocus2 = sid;
+		} else {
+			actionMsg.infocus = sid;
+		}
 		session.sendMessage(actionMsg);
 		
 		var eles = document.querySelectorAll('[data-action-type="solo-video"]');
@@ -15328,6 +15368,7 @@ async function createDirectorOnlyBox() {
 	buttons += "<div title='Does not impact scene order.' class='shift'><i class='las la-angle-left' onclick='shiftPC(this,-1, true);'></i><i class='las la-angle-right' onclick='shiftPC(this,1, true)';></i></div>\
 		<div class='streamID' style='user-select: none;'>ID: <span style='user-select: text;'>" + session.streamID + "</span>\
 			<i class='las la-copy' data-sid='" + session.streamID + "'  onclick='copyFunction(this.dataset.sid,event)' title='Copy this Stream ID to the clipboard' style='cursor:pointer'></i>\
+			<i class='las la-window-minimize' onclick='minimizeMe(this, \'container_director\')' title='Minimize this control box' style='cursor:pointer'></i>\
 			<span id='label_director' class='addALabel' title='Click here to edit the label for this stream. Changes will propagate to all viewers of this stream' data-translate='add-a-label'>"+miscTranslations["add-a-label"]+"</span>\
 		</div>\
 		<div id='videoContainer_director'></div>";
@@ -15490,6 +15531,7 @@ async function createDirectorScreenshareOnlyBox() { // sstype=3
 	buttons += "<div title='Does not impact scene order.' class='shift'><i class='las la-angle-left' onclick='shiftPC(this,-1, true);'></i><i class='las la-angle-right' onclick='shiftPC(this,1, true)';></i></div>\
 		<div class='streamID' style='user-select: none;'>ID: <span style='user-select: text;'>" + session.streamID+":s</span>\
 			<i class='las la-copy' data-sid='" + session.streamID+":s'  onclick='copyFunction(this.dataset.sid,event)' title='Copy this Stream ID to the clipboard' style='cursor:pointer'></i>\
+			<i class='las la-window-minimize' onclick='minimizeMe(this, \'container_screen_director\')' title='Minimize this control box'></i>\
 			<span id='label_director' class='addALabel' title='Click here to edit the label for this stream. Changes will propagate to all viewers of this stream' data-translate='add-a-label'>"+miscTranslations["add-a-label"]+"</span>\
 		</div>\
 		<div id='videoScreenContainer_director'></div>";
@@ -15999,7 +16041,7 @@ function createControlBox(UUID, soloLink, streamID) {
 			</div>";
 	}
 	
-	controls.innerHTML += "<button data-action-type=\"hand-raised\" id='" + handsID + "' class='lowerRaisedHand' title=\"This guest raised their hand. Click this to clear notification.\" onclick=\"remoteLowerhands('" + UUID + "');\">\
+	controls.innerHTML += "<button data-action-type=\"hand-raised\" id='" + handsID + "' class='hidden lowerRaisedHand' title=\"This guest raised their hand. Click this to clear notification.\" onclick=\"remoteLowerhands('" + UUID + "');\">\
 			<i class=\"las la-hand-paper\"></i>\
 			<span data-translate=\"user-raised-hand\">Lower Raised Hand</span>\
 		</button>\
@@ -16045,6 +16087,7 @@ function createControlBox(UUID, soloLink, streamID) {
 	}
 	buttons += "<div title='Does not impact scene order.' class='shift'><i class='las la-angle-left' data--u-u-i-d='"+UUID+"' onclick='shiftPC(this,-1);'></i><span onclick='lockPosition(this);' style='cursor:pointer;' data-locked='0' data--u-u-i-d='"+UUID+"' id='position_"+UUID+"'><i class='las la-lock-open'></i></span><i class='las la-angle-right' data--u-u-i-d='"+UUID+"' onclick='shiftPC(this,1);'></i></div><div class='streamID' style='user-select: none;'>ID: <span style='user-select: text;'>" + streamID + "</span>\
 	<i class='las la-copy' data-sid='" + streamID + "' onclick='copyFunction(this.dataset.sid,event)' title='Copy this Stream ID to the clipboard' style='cursor:pointer'></i>\
+	<i class='las la-window-minimize' data--u-u-i-d='"+UUID+"' onclick='minimizeMe(this)' title='Minimize this control box' style='cursor:pointer'></i>\
 	<span id='label_" + UUID + "' class='addALabel' title='Click here to edit the label for this stream. Changes will propagate to all viewers of this stream'></span>\
 	</div>";
 
@@ -16174,6 +16217,14 @@ function createControlBox(UUID, soloLink, streamID) {
 	}
 }
 
+
+function minimizeMe(button, director=false){
+	if (!director){
+		getById("container_"+button.dataset.UUID).classList.toggle("minimized");
+	} else {
+		getById(director).classList.toggle("minimized");
+	}
+}
 function cycleCameras(){
 	if (session.screenShareState) {
 		warnUser("Stop the screen-share first.");
@@ -19506,16 +19557,16 @@ function toggleBufferSettings(UUID){
 function toggleRoomSettings(){
 	toggle(getById('roomSettings'));
 	if (getById('roomSettings').style.display=="none"){
-		getById("modalBackdrop").innerHTML = ''; // Delete modal
-		getById("modalBackdrop").remove();
+		//getById("modalBackdrop").innerHTML = ''; // Delete modal
+		//getById("modalBackdrop").remove();
 	} else {
-		getById("modalBackdrop").innerHTML = ''; // Delete modal
-		getById("modalBackdrop").remove();
+	//getById("modalBackdrop").innerHTML = ''; // Delete modal
+		//getById("modalBackdrop").remove();
 		zindex = 25;
 		getById('roomSettings').style.zIndex = 25;
 		var modalTemplate = `<div id="modalBackdrop" style="z-index:24"></div>`;
-		document.body.insertAdjacentHTML("beforeend", modalTemplate); // Insert modal at body end
-		document.getElementById("modalBackdrop").addEventListener("click", toggleRoomSettings);
+	//	document.body.insertAdjacentHTML("beforeend", modalTemplate); // Insert modal at body end
+	//	document.getElementById("modalBackdrop").addEventListener("click", toggleRoomSettings);
 		document.getElementById('trbSettingInput').value = session.totalRoomBitrate;
 		document.getElementById('trbSettingInputManual').value = session.totalRoomBitrate;
 		document.getElementById('trbSettingInputFeedback').innerHTML = session.totalRoomBitrate;
@@ -23492,20 +23543,22 @@ function setupClosedCaptions() {
 }
 
 
-async function requestVideoRecord(ele) {
-	var UUID = ele.dataset.UUID
-	if (ele.classList.contains("pressed")) {
+async function requestVideoRecord(ele, state=null, bitrate=null) {
+	var UUID = ele.dataset.UUID;
+	if (!state && ele.classList.contains("pressed")) {
 		var msg = {};
 		msg.requestVideoRecord = false;
 		msg.UUID = UUID;
 		session.sendRequest(msg, msg.UUID);
 		ele.classList.remove("pressed");
-	} else {
+	} else if (state==null || state){
 		var msg = {};
 		msg.requestVideoRecord = true;
 		msg.UUID = UUID;
-		window.focus();
-		var bitrate = await promptAlt(miscTranslations["what-bitrate"], false, false, 6000);
+		if (bitrate===null){
+			window.focus();
+			bitrate = await promptAlt(miscTranslations["what-bitrate"], false, false, 6000);
+		}
 		if (bitrate) {
 			msg.value = bitrate;
 			session.sendRequest(msg, msg.UUID);
@@ -32269,6 +32322,22 @@ function setupCommands(){
 		return true;
 	};
 	
+	commands.soloVideo = function(value=null,value2=null){
+		var element = getById("highlightDirector");
+		if (value && (value == "toggle")){
+			return requestInfocus(element);
+		} else if (value && (value !== "null")){
+			return requestInfocus(element, null, true);
+		} else if (value && (value === "null")){
+			return requestInfocus(element);
+		} else {
+			return requestInfocus(element, null, false);
+		}
+		return false;
+	}; 
+	commands.highlight = function(value=null,value2=null){
+		return commands.soloVideo(value, value2);
+	}; 
 	
 	commands.layout = function(value=null,value2=null){
 		try {
@@ -33721,7 +33790,7 @@ function createControlBoxScreenshare(UUID, soloLink, streamID) {
 			</div>";
 	}
 	
-	controls.innerHTML += "<button data-action-type=\"hand-raised\" id='" + handsID + "' class='lowerRaisedHand' title=\"This guest raised their hand. Click this to clear notification.\" onclick=\"remoteLowerhands('" + UUID + "');\">\
+	controls.innerHTML += "<button data-action-type=\"hand-raised\" id='" + handsID + "' class='hidden lowerRaisedHand' title=\"This guest raised their hand. Click this to clear notification.\" onclick=\"remoteLowerhands('" + UUID + "');\">\
 			<i class=\"las la-hand-paper\"></i>\
 			<span data-translate=\"user-raised-hand\">Lower Raised Hand</span>\
 		</button>\
@@ -33768,6 +33837,7 @@ function createControlBoxScreenshare(UUID, soloLink, streamID) {
 	
 	buttons += "<div title='Does not impact scene order.' class='shift'><i class='las la-angle-left' data--u-u-i-d='"+UUID+"' onclick='shiftPC(this,-1);'></i><span onclick='lockPosition(this);' style='cursor:pointer;' data-locked='0' data--u-u-i-d='"+UUID+"' id='position_"+UUID+"'><i class='las la-lock-open'></i></span><i class='las la-angle-right' data--u-u-i-d='"+UUID+"' onclick='shiftPC(this,1);'></i></div><div class='streamID' style='user-select: none;'>ID: <span style='user-select: text;'>" + streamID + "</span>\
 	<i class='las la-copy' data-sid='" + streamID + "' onclick='copyFunction(this.dataset.sid,event)' title='Copy this Stream ID to the clipboard' style='cursor:pointer'></i>\
+	<i class='las la-window-minimize' data--u-u-i-d='"+UUID+"' onclick='minimizeMe(this)' title='Minimize this control box' style='cursor:pointer'></i>\
 	<span id='label_" + UUID + "' class='addALabel' title='Click here to edit the label for this stream. Changes will propagate to all viewers of this stream'></span>\
 	</div>";
 	

@@ -762,8 +762,59 @@ hr {
 	animation: pulse 2s infinite;
 }
 
+.minimized {
+	float: left;
+    position: absolute;
+    bottom: 0;
+    height: 24px;
+	overflow:hidden;
+	box-shadow: inset -1px 1px white
+}
 
-
+.minimized:nth-child(1) {
+	left:0px;
+	z-index:10;
+}
+.minimized:nth-child(2) {
+	left:max(100px, calc(10% - 260px));
+	z-index:9;
+}
+.minimized:nth-child(3) {
+	left:max(200px, calc(20% - 260px));
+	z-index:8;
+}
+.minimized:nth-child(4) {
+	left:max(250px, calc(30% - 260px));
+	z-index:7;
+}
+.minimized:nth-child(5) {
+	left:max(300px, calc(40% - 260px));
+	z-index:6;
+}
+.minimized:nth-child(6) {
+	left:max(450px, calc(50% - 260px));
+	z-index:5;
+}
+.minimized:nth-child(7) {
+	left:max(500px, calc(60% - 260px));
+	z-index:4;
+}
+.minimized:nth-child(8) {
+	left:max(650px, calc(70% - 260px));
+	z-index:3;
+}
+.minimized:nth-child(9) {
+	left:max(700px, calc(80% - 260px));
+	z-index:2;
+}
+.minimized:nth-child(10) {
+	left:max(850px, calc(90% - 260px));
+	z-index:1;
+}
+.minimized:nth-child(11) {
+	left:max(900px, calc(100% - 260px));
+	z-index:0;
+}
 .battery {
 	border: 3px solid #4192c5;
 	width: 11px;
@@ -2149,10 +2200,19 @@ span[data-action-type="stats-graphs-details-container"]>span{
 	padding-bottom: 20px;
 }
 .soloButton{
-	padding:5px;word-wrap: break-word; overflow:hidden; white-space: nowrap; overflow: hidden; font-size:0.7em; text-overflow: ellipsis;
+	padding:5px;
+	word-wrap: break-word;
+	overflow:hidden;
+	white-space: nowrap;
+	overflow: hidden;
+	font-size:0.7em;
+	text-overflow: ellipsis;
 }
+
 .lowerRaisedHand{
-	margin: auto;margin-bottom:10px;display:none;background-color:yellow;
+	margin: auto;
+	margin-bottom:10px;
+	background-color:yellow;
 }
 .float {
 	opacity: 0.8;
@@ -3302,6 +3362,7 @@ div#chatBody a {
 	width:1191px;
 	padding: 10px;
 	margin: 5px 10px 10px 10px;
+	max-width:100%;
 }
 .directorContainer {
 	background-color: var(--container-color);
@@ -3309,7 +3370,8 @@ div#chatBody a {
 	grid-template-columns: 1fr ;
 	margin: 10px 0px 10px 10px;
 	padding: 10px;
-	max-width: 1191px
+	max-width: min(100%, 1191px);
+	
 }
 
 #directorLinksButton{
@@ -3320,7 +3382,7 @@ div#chatBody a {
 	display: grid;
 	grid-template-columns: 1fr 1fr;
 	padding: 10px 10px;
-	width: 591px;
+	width: min(100%, 591px);
 }
 .directorBlock {
 	padding: 10px 10px 5px 10px;
@@ -3519,7 +3581,7 @@ i.las.la-circle {
 	display: inline-block;
 }
 .streamID i {
-	margin-left: 5px;
+	margin-left: 1px;
 	font-size: 1.3em;
 	position: relative;
 	top: 1px;
@@ -4300,8 +4362,26 @@ input:checked + .slider:before {
 	text-overflow: ellipsis;
 	overflow: hidden;
 }
-
-
+.makeSmallerDirectorRoom{
+	max-width: calc(100% - 415px);
+    min-width: min(calc(100% - 395px), 75%);
+}
+.pinToSide{
+	top: unset;
+    left: unset;
+    right: 0;
+    transform: unset;
+    border-radius: unset;
+    height: 100%;
+	max-width: min(25%, 415px);
+	min-width: 395px;
+	overflow-y: auto;
+	position: fixed;
+}
+#roomSettings{
+	max-height: 100%;
+    overflow: auto;
+}
 @font-face {
 	font-family: 'Line Awesome Free';
 	font-style: normal;
@@ -4462,6 +4542,8 @@ input:checked + .slider:before {
 	content: "\f068"; }
 .la-minus-circle:before {
 	content: "\f056"; }
+.la-window-minimize:before {
+	content: "\f2d1"; }
 .la-hat-wizard:before {
 	content: "\f6e8"; }
 .la-plus:before {
