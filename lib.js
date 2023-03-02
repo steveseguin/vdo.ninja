@@ -11909,8 +11909,8 @@ function remoteLowerhands(UUID) {
 	session.sendRequest(msg, UUID);
 
 	try{
-		getById("hands_"+UUID).style.display="none";
-		session.rpcs[UUID].remoteRaisedHandElement.style.display = "none";
+		getById("hands_"+UUID).classList.add("hidden");
+		session.rpcs[UUID].remoteRaisedHandElement.classList.add("hidden");
 	} catch(e){}
 	return true;
 }
