@@ -606,12 +606,12 @@ body.darktheme .credits>a:visited {
 	color: white;
 }
 
-#mainmenu .row {
+#mainmenu.row {
 	align-content: center;
 	text-align: center;
 	margin-top: 10px;
 }
-#mainmenu .row:after {
+#mainmenu.row:after {
 	content: "";
 	display: table;
 	clear: both;
@@ -1065,12 +1065,6 @@ button.glyphicon-button.active.focus {
 	overflow-x: hidden;
     position: absolute;
     z-index: 0;
-}
-
-.row {
-    align-content: center;
-    text-align: center;
-    margin-top: 10px;
 }
 
 #controlButtons {
@@ -2164,7 +2158,7 @@ span[data-action-type="stats-graphs-details-container"]>span{
 }
 .canvasStats{
 	background-color: black;
-	width: calc(100%);
+	width: 100%;
 	height: 50px;
 	margin: 0 5px 5px 0;
 }
