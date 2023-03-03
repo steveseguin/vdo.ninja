@@ -13,7 +13,7 @@ General Option! ([`&push`](../source-settings/push.md), [`&room`](room.md), [`&v
 
 ## Details
 
-Forcing relay mode is provided for testing and emergency purposes. It will increase latency; sometimes by a lot.
+Forcing relay mode is provided for testing and emergency purposes. It will typically increase latency; sometimes by a lot.
 
 Alternatives to relay mode include:
 
@@ -23,13 +23,16 @@ Alternatives to relay mode include:
 Uses of relay mode include:
 
 * Can potentially reduce packet loss with some guests on bad connections.
+* Some peer to peer connections over residential networks struggle, and introducing a relay server can help avoid those issues
 * Has the advantage of hiding your IP address from peers.
 
-You can [deploy your own TURN server](https://github.com/steveseguin/obsninja/blob/master/turnserver.md) if intending to use this feature a lot.
+You can [deploy your own TURN server](https://github.com/steveseguin/obsninja/blob/master/turnserver.md) if intending to use this feature a lot or needing more bandwidth
 
-Please feel free to donate to OBS.Ninja to help support the provided TURN servers.\
-Current TURN servers are deployed in North America and Germany.\
-TCP/UDP on port 443.
+Please feel free to donate to VDO.Ninja to help support the provided TURN servers.\
+\
+Currently TURN servers are deployed numerous countries around the world.\
+\
+Ports that a TURN server may use include 443, 3478, and potentially others.
 
 {% hint style="info" %}
 More information on what TURN is [here](https://en.wikipedia.org/wiki/Traversal\_Using\_Relays\_around\_NAT)
