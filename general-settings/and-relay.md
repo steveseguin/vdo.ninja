@@ -28,10 +28,10 @@ Uses of relay mode include:
 
 You can [deploy your own TURN server](https://github.com/steveseguin/obsninja/blob/master/turnserver.md) if intending to use this feature a lot or needing more bandwidth
 
-Please feel free to donate to VDO.Ninja to help support the provided TURN servers.\
-\
-Currently TURN servers are deployed numerous countries around the world.\
-\
+Please feel free to donate to VDO.Ninja to help support the provided TURN servers.
+
+Currently TURN servers are deployed numerous countries around the world.
+
 Ports that a TURN server may use include 443, 3478, and potentially others.
 
 {% hint style="info" %}
