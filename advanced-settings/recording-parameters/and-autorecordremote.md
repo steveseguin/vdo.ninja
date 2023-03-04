@@ -28,7 +28,7 @@ You can pass the default recording bitrate as a value to the parameter, like you
 
 There are buttons in the room settings of the director to start/stop _all_ recordings; both remote/local.
 
-<figure><img src="../../.gitbook/assets/image (6).png" alt=""><figcaption></figcaption></figure>
+<figure><img src="../../.gitbook/assets/image (6) (1).png" alt=""><figcaption></figcaption></figure>
 
 ## Related
 

@@ -14,7 +14,7 @@ Every guests is viewing video streams in a room with a combined bitrate of 500-k
 
 As a director of a room you can control the total room bitrate dynamically.
 
-<figure><img src="../.gitbook/assets/image (2) (3).png" alt=""><figcaption><p>Open the room settings via this button as a director</p></figcaption></figure>
+<figure><img src="../.gitbook/assets/image (2) (3) (1).png" alt=""><figcaption><p>Open the room settings via this button as a director</p></figcaption></figure>
 
 <figure><img src="../.gitbook/assets/image (3) (8).png" alt=""><figcaption><p>The default is (as explained before) 500-kbps. You can increase it op to 4000-kbps.</p></figcaption></figure>
 
@@ -32,7 +32,7 @@ You can also use [`&totalroombitrate`](../advanced-settings/video-bitrate-parame
 
 If you use [`&controlroombitrate`](../advanced-settings/video-bitrate-parameters/and-controlroombitrate.md) on the guest's URL, the guest can change the total room bitrate dynamically via a slider. If you add `&controlroombitrate&totalroombitrate=4000` to the guest's URL the guest can change the bitrate between 0 and 4000-kbps. It doesn't affect what other guest's are viewing.
 
-![](<../.gitbook/assets/image (26).png>)![](<../.gitbook/assets/image (4) (1).png>)
+![](<../.gitbook/assets/image (26).png>)![](<../.gitbook/assets/image (4) (1) (1).png>)
 
 ## Examples
 

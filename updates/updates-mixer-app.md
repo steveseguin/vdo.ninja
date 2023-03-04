@@ -42,7 +42,7 @@
 
     The idea here is that you can have OBS overlays/mixer apply in sync to your VDO.Ninja custom mix layouts, and even control your show remotely without OBS even on the same computer.
 * If you hold CTRL down while dragging/resizing elements in the Mixer App, grid-snapping mode is disabled, allowing for fine-grain pixel-level accuracy.\
-  ![](<../.gitbook/assets/image (6) (1) (1).png>)\
+  ![](<../.gitbook/assets/image (6) (1) (1) (1).png>)\
   \
   \*\* on alpha at [https://vdo.ninja/alpha/mixer](https://vdo.ninja/alpha/mixer) (could be some bugs here or there, so please report issues as you find them).
 

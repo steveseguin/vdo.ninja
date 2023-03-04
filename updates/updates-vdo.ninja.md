@@ -1,10 +1,30 @@
 # Updates - VDO.Ninja
 
+#### March 4 <a href="#august-31" id="august-31"></a>
+
+* Added a volume control to the list of hidden users. As well, when you close the hidden user list, you can open it again via a little icon that appears in the lower-right corner (an icon with two masks).\
+  ![](<../.gitbook/assets/image (6).png>)\
+  \
+  \*\* on vdo.ninja/alpha/ for testing
+
+#### March 2 <a href="#august-31" id="august-31"></a>
+
+* Some translations updated (via Lindenkron)
+* Tycho and Lindenkron fixed a few random typos/errors in the code base
+* The UI/CSS for the director's room control-boxes has been updated/improved. The majority of this effort was done by Andrewww, which is also his first repo commit.\
+  \-- you can see we adopted some color coding (actual colors might get changed over time), which was inspired by Lindenkron.\
+  \-- the CSS / HTML is slightly less rigid, so should be easier to customize with custom css by users.\
+  \-- rainbow puke button removed, (but is still available as the sender if you `CTRL + click` on the video preview)
+* I added in a little "minimize" button to the control box, which lets you minimize it. It's not all that robust, but it might come in handy for hiding a couple annoying windows (like a co-director) that is taking up space.\
+  ![](../.gitbook/assets/image.png)![](<../.gitbook/assets/image (7).png>)\
+  \
+  \*\* changes on alpha at vdo.ninja/alpha/
+
 #### February 27 <a href="#august-31" id="august-31"></a>
 
 * Added the option to "pin" the room-settings to the side of the director's room. This way you'll have access to certain global/room settings quickly, if needed. (expect some tinkering over the following weeks though)
 * Added buttons to the room settings to start/stop _all_ recordings; both remote/local.\
-  ![](<../.gitbook/assets/image (1).png>)\
+  ![](<../.gitbook/assets/image (1) (1).png>)\
   \
   \*\* these updates are available on alpha at [https://vdo.ninja/alpha/](https://vdo.ninja/alpha/) for testing/feedback\
 
@@ -165,7 +185,7 @@
   ![](<../.gitbook/assets/image (2) (1) (1).png>)\
   \-- This was designed for Twitch / YouTube / Social Stream chat, but could in theory work with any CORS-friendly site, such as a third-party web tool.\
   \-- If the director uses [`&widget`](../advanced-settings/settings-parameters/and-widget-alpha.md), it will auto sync that with all guests as they connect. I'll try to find ways to make it easier to resize/minimize in the future.\
-  ![](<../.gitbook/assets/image (6) (1).png>)\
+  ![](<../.gitbook/assets/image (6) (1) (1).png>)\
   \
   \*\*changes on alpha at vdo.ninja/alpha/
 
@@ -337,7 +357,7 @@
 #### **November 22** <a href="#august-31" id="august-31"></a>
 
 * Made the [`&clock`](../advanced-settings/settings-parameters/and-clock.md) and timer overlay be something you can 'pop out' and overlay as a native picture-in-picture element; just right-click it and select pop-out from the context menu.\
-  ![](<../.gitbook/assets/image (1) (1) (1).png>)![](<../.gitbook/assets/image (2) (8).png>)
+  ![](<../.gitbook/assets/image (1) (1) (1) (1).png>)![](<../.gitbook/assets/image (2) (8).png>)
 * Fixed an issue where the right-click -> edit URL feature in [v22](../releases/v22.md) broke
 * Viewer-side [`&audiocodec=pcm`](../advanced-settings/audio-parameters/minptime-1.md) is now available as an audio codec option; this is 32khz, 16bit, mono, and uncompressed, so \~512-kbps bitrate. You'll need the sender to have `&insertablestreams` applied to their URL for this to work currently, as it requires the sender to enable a special mode that allows for custom codecs. This is very experimental at the moment, so its still a WIP.
 * `&micsamplerate` (`&msr`) added, which lets you specify the capture audio sample rate. Also added purely for experimental reasons; I don't recommend touching.\
@@ -552,7 +572,7 @@
 *   Up to 20-videos on screen now are supported in the screen-share view; before after around 12-videos they started to be hidden
 
     ![](<../.gitbook/assets/image (3) (1) (3).png>)![](<../.gitbook/assets/image (5) (2) (2).png>)\
-    ![](<../.gitbook/assets/image (2) (2) (3) (2).png>)![](<../.gitbook/assets/image (4) (1) (1) (2).png>)\
+    ![](<../.gitbook/assets/image (2) (2) (3) (2).png>)![](<../.gitbook/assets/image (4) (1) (1) (2) (1).png>)\
     \
     \*\*changes on alpha (vdo.ninja/alpha/) and github
 

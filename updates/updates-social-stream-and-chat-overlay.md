@@ -3,10 +3,22 @@
 [social-stream.md](../steves-helper-apps/social-stream.md "mention")\
 [chat-overlay.md](../steves-helper-apps/chat-overlay.md "mention")
 
+#### **March 4**
+
+* Fixed a bugs with the remote http API feature in the extension now always turning on/off as expected
+* Added the option to send messages to a specific social site via the API. ie: `https://api.vdo.ninja/XXXXXX/sendEncodedChat/twitch/!socials`. (note that the target is not null in this case, but 'Twitch') You can use this to perhaps trigger a command that's Twitch specific or send custom messages based on the site.
+* I updated the sample API page `https://socialstream.ninja/sampleapi.html` with the option to customize the input values of faked messages.\
+  ![](<../.gitbook/assets/image (4).png>)
+
+#### **March 3**
+
+* Zoom's Q\&A should now work with Social Stream. Questions from the Q\&A will be pushed to the dock automatically, and colored blue.\
+  ![](<../.gitbook/assets/image (2).png>)
+
 #### **February 28**
 
 * Twitter post support added to Social Stream; you will need to manually select the tweet you want to push to the dock though. (I'll play with this a bit more based on feedback.)\
-  ![](<../.gitbook/assets/image (2).png>):
+  ![](<../.gitbook/assets/image (2) (3).png>):
 
 #### **February 25**
 
@@ -20,7 +32,7 @@ Social Stream updates for today:
 
 * Social Stream has had the "open chat automatically" functionality improved a lot the last couple days. @River played a large part in that.
 * Added to Social Stream the option to map a chat command to some webhook API. Just an easy way to get started with making bot-actions, such as turning on a light. Happy to evolve this based on feedback.\
-  ![](<../.gitbook/assets/image (1) (1).png>)
+  ![](<../.gitbook/assets/image (1) (1) (1).png>)
 
 #### **February 22**
 
@@ -51,7 +63,7 @@ Social Stream updates for today:
 #### **February 10**
 
 * Added an **emotes-wall** function to Social Stream (emojis from chat will bounce around the window).\
-  ![](<../.gitbook/assets/image (4).png>)\
+  ![](<../.gitbook/assets/image (4) (1).png>)\
   \-- This was added by a user's request; it works with all sites Social Stream supports; not just Twitch. BTTV and animated emojis are supported as well.\
   \-- Please report any issues with freezing/CPU issues. I've designed it to be low on CPU, but who knows.\
   \-- To use, `https://socialstream.ninja/emotes.html?session=XXXXXXXXXX&showtime=5000` or update the extension.\
@@ -152,7 +164,7 @@ Social Stream updates for today:
 #### **December 7**
 
 * Added support for NIMO.tv to Social Stream\
-  ![](<../.gitbook/assets/image (2) (3) (1).png>)
+  ![](<../.gitbook/assets/image (2) (3) (1) (2).png>)
 * Fixed WhatsApp support for Social Stream
 * Added Instagram post (non-live) comments to Social Stream. You will need to enable this via the menu, since this is a pretty non-obvious integration for Social Stream.\
   ![](<../.gitbook/assets/image (4) (5).png>)![](<../.gitbook/assets/image (5) (1) (3).png>)
