@@ -3,9 +3,10 @@
 #### March 4 <a href="#august-31" id="august-31"></a>
 
 * Added a volume control to the list of hidden users. As well, when you close the hidden user list, you can open it again via a little icon that appears in the lower-right corner (an icon with two masks).\
-  ![](<../.gitbook/assets/image (6).png>)\
+  ![](<../.gitbook/assets/image (6).png>)
+* Pushed some audio-related fixes for iPhones onto alpha. The audio-meter was active even when muted, and I think I fixed that now.\
   \
-  \*\* on vdo.ninja/alpha/ for testing
+  \*\* on alpha at vdo.ninja/alpha/
 
 #### March 2 <a href="#august-31" id="august-31"></a>
 
