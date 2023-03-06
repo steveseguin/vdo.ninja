@@ -28,4 +28,4 @@ _`https://vdo.ninja/alpha/?whip=STREAMIDHERE`_
 
 There are camera lens adapters available for smartphones for fairly cheap; anywhere from $3 on aliexpress to $20 on Amazon. While not the best solution, it may be a solution available in a pinch that works across all mobile applications and services.
 
-<figure><img src="../.gitbook/assets/image (3).png" alt=""><figcaption></figcaption></figure>
+<figure><img src="../.gitbook/assets/image (3) (2).png" alt=""><figcaption></figcaption></figure>

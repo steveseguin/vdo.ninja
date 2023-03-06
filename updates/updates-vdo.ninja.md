@@ -2,9 +2,9 @@
 
 #### March 4 <a href="#august-31" id="august-31"></a>
 
+* Pushed some audio-related fixes for iPhones onto alpha. The audio-meter was active even when muted, and I think I fixed that now.
 * Added a volume control to the list of hidden users. As well, when you close the hidden user list, you can open it again via a little icon that appears in the lower-right corner (an icon with two masks).\
-  ![](<../.gitbook/assets/image (6).png>)
-* Pushed some audio-related fixes for iPhones onto alpha. The audio-meter was active even when muted, and I think I fixed that now.\
+  ![](<../.gitbook/assets/image (6).png>)\
   \
   \*\* on alpha at vdo.ninja/alpha/
 
@@ -17,7 +17,7 @@
   \-- the CSS / HTML is slightly less rigid, so should be easier to customize with custom css by users.\
   \-- rainbow puke button removed, (but is still available as the sender if you `CTRL + click` on the video preview)
 * I added in a little "minimize" button to the control box, which lets you minimize it. It's not all that robust, but it might come in handy for hiding a couple annoying windows (like a co-director) that is taking up space.\
-  ![](../.gitbook/assets/image.png)![](<../.gitbook/assets/image (7).png>)\
+  ![](<../.gitbook/assets/image (3).png>)![](<../.gitbook/assets/image (7).png>)\
   \
   \*\* changes on alpha at vdo.ninja/alpha/
 
@@ -111,7 +111,7 @@
 #### January 25 <a href="#august-31" id="august-31"></a>
 
 * Updated the http [API](../general-settings/api.md) getDetails request to include info about video visibility; makes it a bit more usable if querying a scene link\
-  ![](<../.gitbook/assets/image (3) (2).png>)
+  ![](<../.gitbook/assets/image (3) (2) (3).png>)
 
 #### January 23 <a href="#august-31" id="august-31"></a>
 

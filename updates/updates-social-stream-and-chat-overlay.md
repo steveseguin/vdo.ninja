@@ -13,7 +13,7 @@
 #### **March 3**
 
 * Zoom's Q\&A should now work with Social Stream. Questions from the Q\&A will be pushed to the dock automatically, and colored blue.\
-  ![](<../.gitbook/assets/image (2).png>)
+  ![](<../.gitbook/assets/image (2) (15).png>)
 
 #### **February 28**
 
