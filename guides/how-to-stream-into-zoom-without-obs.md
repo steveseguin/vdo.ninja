@@ -52,7 +52,7 @@ We want to send this link to our guests. The can use this link to **JOIN** the r
 
 If we want to join the room ourselves, we can also join as a guest, or we can do so as the director. Since our camera might be in use by Zoom currently, we can add ourselves a bit later on instead
 
-<figure><img src="../.gitbook/assets/image (22).png" alt=""><figcaption></figcaption></figure>
+<figure><img src="../.gitbook/assets/image (22) (1).png" alt=""><figcaption></figcaption></figure>
 
 ### Step 5.
 

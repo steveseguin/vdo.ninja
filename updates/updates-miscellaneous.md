@@ -1,5 +1,18 @@
 # Updates - Miscellaneous
 
+#### March 7
+
+* I updated Vingester to support VDO.Ninja v22 (production and newer)\
+  \-- It doesn't seem like Vingester is being actively updated anymore, and there were some breaking changes in [v22](../releases/v22.md) that prevented audio from being captured. I tried, but couldn't reasonably fix the issue from VDO.Ninja's side, so I've forked the Vingester repo and will maintain it as best I can in the meanwhile.\
+  \-- You can get the windows-build, with security patches applied and the audio-bug fixed, from here: [https://github.com/steveseguin/vingester/releases/tag/2.8.1](https://github.com/steveseguin/vingester/releases/tag/2.8.1)
+
+#### March 6
+
+* I still have [rtc.ninja](https://rtc.ninja/) up, which is a brand-free version of VDO.Ninja. Based on a user request, I additional just hid some additional buttons on the landing page, such as the "show more" and "create reusable" links, leaving just the basics now.\
+  ![](<../.gitbook/assets/image (22).png>)
+
+### 2022
+
 #### December 2
 
 * Updated the support for [vingester.app's](https://vingester.app/) audio destination selector to v22 of VDO.Ninja; it was no longer working with v22.

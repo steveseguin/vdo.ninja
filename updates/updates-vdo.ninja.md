@@ -1,10 +1,17 @@
 # Updates - VDO.Ninja
 
+#### March 6 <a href="#august-31" id="august-31"></a>
+
+* The default for iOS 16-devices and newer will now have 720p60 selected by default, rather than 720p30. 60-fps still isn't working at 1080p on iOS, but baby steps I guess.\
+  ![](../.gitbook/assets/image.png)\
+  \
+  \*\* on alpha at vdo.ninja/alpha/
+
 #### March 4 <a href="#august-31" id="august-31"></a>
 
 * Pushed some audio-related fixes for iPhones onto alpha. The audio-meter was active even when muted, and I think I fixed that now.
 * Added a volume control to the list of hidden users. As well, when you close the hidden user list, you can open it again via a little icon that appears in the lower-right corner (an icon with two masks).\
-  ![](<../.gitbook/assets/image (6).png>)\
+  ![](<../.gitbook/assets/image (6) (3).png>)\
   \
   \*\* on alpha at vdo.ninja/alpha/
 
