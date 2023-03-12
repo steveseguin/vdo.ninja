@@ -3,7 +3,7 @@
 #### March 6 <a href="#august-31" id="august-31"></a>
 
 * The default for iOS 16-devices and newer will now have 720p60 selected by default, rather than 720p30. 60-fps still isn't working at 1080p on iOS, but baby steps I guess.\
-  ![](../.gitbook/assets/image.png)\
+  ![](<../.gitbook/assets/image (13).png>)\
   \
   \*\* on alpha at vdo.ninja/alpha/
 
@@ -275,7 +275,7 @@
 
 * Add [`&clearstorage`](../advanced-settings/settings-parameters/and-clearstorage-alpha.md) (aka, `&clear`). This will clear all the saved user preferences for all sessions, including [`&sticky`](../general-settings/sticky.md)'d data, director settings, any camera and microphone settings, and probably a couple other small things. This also includes the "default" saved stated of camera settings before adjusted.\
   I also added a button to manually do this via the User menu settings.\
-  ![](<../.gitbook/assets/image (13).png>)\
+  ![](<../.gitbook/assets/image (13) (1).png>)\
   \*\* on alpha
 
 #### **December 8** <a href="#august-31" id="august-31"></a>

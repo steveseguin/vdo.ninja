@@ -3,6 +3,19 @@
 [social-stream.md](../steves-helper-apps/social-stream.md "mention")\
 [chat-overlay.md](../steves-helper-apps/chat-overlay.md "mention")
 
+#### **March 9**
+
+Social Stream update:
+
+* Opt out of YouTube / Twitch capture added, along with the ability to specify a single Twitch channel to only capture from.\
+  ![](../.gitbook/assets/image.png)
+
+#### **March 8**
+
+* `&viewonly` is an added parameter to Social Stream; if added to the dock.html page, it will disable any sort of message selection / message sending actions. Useful if you want to share a link with someone, but whom you don't want to actually interfere with the overlay/broadcast/chat. (limited security of course, since they can remove the parameter if they wanted to)
+* Also added `&questionsonly`, `&hidequestions`, `&stripemoji`
+* Support for castr.io overlay and wix.com chat added to Social Stream
+
 #### **March 4**
 
 * Fixed a bugs with the remote http API feature in the extension now always turning on/off as expected
