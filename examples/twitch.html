@@ -137,7 +137,11 @@ function loadIframes(url=false){
 	} else {
 		var room1 = "https://"+path+"/?push="+roomname+"&webcam&autostart&vd=front&ad=1&transparent&noheader";
 	}
-	var room2 = "https://www.twitch.tv/embed/"+twitch+"/chat?parent="+location.hostname;
+	
+	var room2 = twitch.startsWith("https://")
+		? twitch
+		: `https://www.twitch.tv/embed/${twitch}/chat?parent=${location.hostname}`;
+
 	var iframe = document.createElement("iframe");
 	iframe.allow = "autoplay;camera;microphone;fullscreen;picture-in-picture;";
 	iframe.src = room1;
