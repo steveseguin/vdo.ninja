@@ -63,7 +63,15 @@ Sharing a chrome window or tab is the best way to get 60 FPS consistently. If yo
 Screen sharing a "Window" with Chrome (chromium) tends max out at \~42 FPS, while screen sharing via "Entire Screen" tends to make out close to 59 FPS.
 {% endhint %}
 
-### &#x20;Versus.cam&#x20;
+### Frame rate or resolution
+
+You can use the Content Hint parameter in some browsers to suggestion whether to prioritize frame rate or resolution.  Sometimes getting both high isn't possible.\
+\
+[\&contenthint](../advanced-settings/video-parameters/and-contenthint.md) ([\&screensharecontenthint](../advanced-settings/screen-share-parameters/and-screensharecontenthint.md))
+
+This parameter takes detail or motion as a value, based on whether you value resolution or frame rate.&#x20;
+
+### Versus.cam&#x20;
 
 For an e-sports optimized version of VDO.Ninja, with many of the settings pre-configured for 1080p60 streaming, check out [Versus.cam](../steves-helper-apps/versus.cam.md).
 
