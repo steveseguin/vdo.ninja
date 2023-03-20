@@ -2458,6 +2458,28 @@
 				}
 			}
 			
+			if (e.data.action === "layout-index"){
+				if ("value" in e.data){
+					var idx = parseInt(e.data.value) || 0;
+					if (!idx){
+						var ele = document.getElementById("automix");
+					} else {
+						var ele = document.querySelectorAll("#containermenu .canvasContainer")[idx-1];
+					}
+					
+					var layoutButtons = document.querySelectorAll(".pressed");
+					for (var i = 0;i<layoutButtons.length;i++){
+						layoutButtons[i].classList.remove("pressed");
+					}
+					if (ele){
+						ele.classList.add("pressed");
+						ele.classList.add("shake");
+						setTimeout(function(ele){ele.classList.remove("shake");},500,ele);
+					}
+					
+				}
+			}
+			
 			
 			if (e.data.action && (e.data.action == "scene-connected")){
 				if (lastLayout && lastLayout.scene == e.data.value){
@@ -2913,6 +2935,7 @@
 		container.classList.add("inline");
 		//container.classList.add("canvasContainer");
 		container.appendChild(canvas);
+		container.id = "automix"
 		document.getElementById("containermenu").appendChild(container);
 		ctx.beginPath();
 		ctx.rect(0, 0, 80, 45);

@@ -56,7 +56,7 @@
 		<meta property="twitter:image" content="./media/vdoNinja_logo_full.png" />
 		<meta name="msapplication-TileColor" content="#da532c" />
 		<meta name="theme-color" content="#ffffff" />
-		<link rel="stylesheet" href="./main.css?ver=271" />
+		<link rel="stylesheet" href="./main.css?ver=272" />
 		<script type="text/javascript" crossorigin="anonymous" src="./thirdparty/adapter.js"></script>
 		<style id="lightbox-animations" type="text/css"></style>
 		<!-- <link rel="manifest" href="manifest.json" /> -->
@@ -83,7 +83,7 @@
 		
 		<script type="text/javascript" crossorigin="anonymous"  src="./thirdparty/CodecsHandler.js?ver=45"></script>
 		<script type="text/javascript" crossorigin="anonymous" src="./thirdparty/aes.js"></script>
-		<script type="text/javascript" crossorigin="anonymous" src="./webrtc.js?ver=581"></script>
+		<script type="text/javascript" crossorigin="anonymous" src="./webrtc.js?ver=587"></script>
 		<input id="zoomSlider" type="range" style="display: none;" />
 		<span id="electronDragZone" style="pointer-events: none; z-index:-10; position:absolute;top:0;left:0;width:100%;height:2%;-webkit-app-region: drag;min-height:20px;"></span>
 		<div id="header">
@@ -228,28 +228,34 @@
 				</div>
 			</div>
 		</div>
-		<span
-				id="reportbutton"
-				title="Submit any error logs" 
-				onclick="submitDebugLog();"
-				style="cursor: pointer; visibility: hidden; display:none;z-index:3;"
-			>
-			<i style="float: right; bottom: 0px; cursor: pointer; position: fixed; right: 55px; color: #d9e4eb; padding: 2px; margin: 2px 2px 0 0; font-size: 140%;" class="las la-bug" aria-hidden="true"></i>
-		</span>
-		<span
-				id="helpbutton"
-				title="Show Help Info" 
-				onclick="warnUser('For support, please browse https://reddit.com/r/vdoninja or join the live chat on Discord at https://discord.vdo.ninja.\n\nThe Docs also contains many help guides and advanced settings, located at https://docs.vdo.ninja.\n\nTo access the video stats menu, hold CTRL (command) and Left-Click on a video. Most video issues can be fixed by using Wired Internet instead of Wi-Fi.')"
-				style="cursor: pointer; display:none;"
-				alt="How to Use This with OBS"
-			>
-			<i style="float: right; bottom: 0px; cursor: pointer; position: fixed; right: 33px; color: #d9e4eb; padding: 2px; margin: 2px 2px 0 0; font-size: 140%;" class="las la-question-circle" aria-hidden="true"></i>
-		</span>
-		<span title="Language Options" onclick="toggle(document.getElementById('languages'));" aria-label="language options" aria-pressed="false" id="translateButton">
-			<i style="float: right; bottom: 0px; cursor: pointer; position: fixed; right:  10px; color: #d9e4eb; padding: 2px; margin: 2px 2px 0 0; font-size: 140%;" class="las la-language" aria-hidden="true"></i>
-		</span>
-		<span title="Add to Calendar" onclick="toggle(document.getElementById('calendar'));" id="calendarButton">
-			<i style="float: right; bottom: 0px; cursor: pointer; position: fixed; right:  33px; color: #d9e4eb; padding: 2px; margin: 2px 2px 0 0; font-size: 140%;" class="las la-calendar" aria-hidden="true"></i>
+		<span id="miniTaskBar" style="float: right; bottom: 0px;right:0; position:fixed; display:flex;">
+			<div id="closedList_connectUsers" class="hidden"  onclick="getById('connectUsers').classList.remove('hidden');getById('closedList_connectUsers').classList.add('hidden');">
+				<i class="las la-theater-masks"></i>
+			</div>
+			<span
+					id="reportbutton"
+					title="Submit any error logs" 
+					onclick="submitDebugLog();"
+					style="cursor: pointer; display:none;z-index:3;"
+					class="hidden"
+				>
+				<i style="cursor: pointer; color: #d9e4eb; padding: 2px; margin: 2px 2px 0 0; font-size: 140%;" class="las la-bug" aria-hidden="true"></i>
+			</span>
+			<span
+					id="helpbutton"
+					title="Show Help Info" 
+					onclick="warnUser('For support, please browse https://reddit.com/r/vdoninja or join the live chat on Discord at https://discord.vdo.ninja.\n\nThe Docs also contains many help guides and advanced settings, located at https://docs.vdo.ninja.\n\nTo access the video stats menu, hold CTRL (command) and Left-Click on a video. Most video issues can be fixed by using Wired Internet instead of Wi-Fi.')"
+					style="cursor: pointer; display:none;"
+					alt="How to Use This with OBS"
+				>
+				<i style="cursor: pointer;  color: #d9e4eb; padding: 2px; margin: 2px 2px 0 0; font-size: 140%;" class="las la-question-circle" aria-hidden="true"></i>
+			</span>
+			<span title="Language Options" onclick="toggle(document.getElementById('languages'));" aria-label="language options" aria-pressed="false" id="translateButton">
+				<i style="cursor: pointer;color: #d9e4eb; padding: 2px; margin: 2px 2px 0 0; font-size: 140%;" class="las la-language" aria-hidden="true"></i>
+			</span>
+			<span title="Add to Calendar" onclick="toggle(document.getElementById('calendar'));" id="calendarButton">
+				<i style="cursor: pointer;  color: #d9e4eb; padding: 2px; margin: 2px 2px 0 0; font-size: 140%;" class="las la-calendar" aria-hidden="true"></i>
+			</span>
 		</span>
 		<div id="mainmenu" class="row" style="opacity: 0;">
 			
@@ -327,14 +333,15 @@
 								<b>
 									<span data-translate="default-codec-select" title="Which video codec would you want used by default?" >Preferred Video Codec:  </span> 
 									<select style="font-size:1.1em" id="codecGroupFlag" type="checkbox" title="For large group rooms, this option can reduce the load on remote guests substantially" >
-									<option value="default" selected>Default</option>
-									<option value="vp9">VP9</option>
-									<option value="h264">H264</option>
-									<option value="vp8">VP8</option>
-									<option value="av1">AV1</option>
-								</select >
+										<option value="default" selected>Default</option>
+										<option value="vp9">VP9</option>
+										<option value="h264">H264</option>
+										<option value="vp8">VP8</option>
+										<option value="av1">AV1</option>
+									</select >
 								</b>
-							</th>	
+							</th>
+							
 						</tr>
 						</table>
 						
@@ -2233,11 +2240,12 @@
 
 		<div id="connectUsers">
 			<div style="margin-bottom:5px"><u ><span data-translate="invisible-guests">Not Visible</span></u> 
-			<span title="Hide this window" id='hideusers' style="cursor:pointer;font-size:1.2em; float: right;" onclick="session.showList=false;getById('connectUsers').style.display = 'none';"><i class="las la-times"></i></span></div>
+			<span title="Hide this window" id='hideusers' style="cursor:pointer;font-size:1.2em; float: right;" onclick="getById('connectUsers').classList.add('hidden');getById('closedList_connectUsers').classList.remove('hidden');"><i class="las la-times"></i></span></div>
 			<span style="height:5px;display:block;"></span>
 			<div id="userList">
 			</div>
 		</div>
+		
 		<div id="signalMeterTemplate" class="signal-meter hidden" data-cpu="0" data-level="0">
 			<i class="las la-signal"></i>
 			<i class="las la-fire-alt"></i>
@@ -2338,7 +2346,11 @@
 			</u>
 		</div>
 		<span class="hidden" id="hangupTemplate">
-			<span style='font-size:500%;text-align:center;margin:auto;'><a href="." title="Go to the homepage">👋</a></span>
+			<span style='font-size:500%;text-align:center;margin:auto;'>👋</span>
+		</span>
+		<span class="hidden" id="hangupTemplateMobileFullscreen">
+			<span style='font-size:500%;text-align:center;margin:auto;'>👋<br ><a onclick="history.go(0);" title="Reload the page" data-translate="reload-page">Reload Page</a>
+			</span>
 		</span>
 		<div id="meshcastMenu" class="hidden">
 			Meshcast publishing region: <select name="edgelist" id="edgelist" onchange="selectMeshcast(this);" title="Select a location that is closest to both you and your audience."></select>
@@ -2468,11 +2480,11 @@
 			// session.hidehome = true; // If used, 'hide home' will make the landing page inaccessible, along with hiding a few go-home elements.
 			// session.record = false; // uncomment to block users from being able to record via vdo.ninja's built in recording function
 		</script>
-		<script type="text/javascript" crossorigin="anonymous" id="lib-js" src="./lib.js?ver=673"></script>
+		<script type="text/javascript" crossorigin="anonymous" id="lib-js" src="./lib.js?ver=696"></script>
 		<!-- 
 		// If you wish to change branding, blank offers a good clean start.
 		<script type="text/javascript" id="main-js" src="./main.js" data-translation="blank"></script>
 		-->
-		<script type="text/javascript" crossorigin="anonymous" id="main-js" src="./main.js?ver=552"></script>
+		<script type="text/javascript" crossorigin="anonymous" id="main-js" src="./main.js?ver=569"></script>
 	</body>
 </html>

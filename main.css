@@ -3934,8 +3934,40 @@ a#reshare {
 	padding: 2.2px 1.5px 2px 2px;
 	margin: 0 0 0 5px;
 }
+.volume-control-userlist {
+	display:inline-block;
+	color:white;
+	border-radius: 2vh;
+	background-color:#262c3e;
+	padding: 2.2px 1.5px 2px 2px;
+	margin: 0 0 0 5px;
+	cursor: pointer;
+	border: 1px solid #9a9393;
+}
 
+.volume-control-userlist input[type=range][orient=vertical] {
+    display: block;
+    color: white;
+    border-radius: 2vh;
+    -webkit-appearance: slider-vertical;
+    background-color: #262c3e;
+    cursor: pointer;
+    width: 13px;
+	margin: 3px 0;
+}
+#closedList_connectUsers{
+	
+	cursor: pointer; 
+	color: #d9e4eb; 
+	padding: 2px; 
+	margin: 2px 2px 0 0; 
+	font-size: 140%;
+}
 
+.screenshareNotActive{
+	opacity: 0.5;
+    box-shadow: inset 0 0 50px #290f07;
+}
 #help_directors_room{
 	cursor:pointer;
 }
@@ -4675,6 +4707,8 @@ input:checked + .slider:before {
 	content: "\f023"; }
 .la-lock-open:before {
 	content: "\f3c1"; }
+.la-theater-masks:before {
+	content: "\f630"; }
 
 body.darktheme {
 	color: white;
