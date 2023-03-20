@@ -3,6 +3,13 @@
 [social-stream.md](../steves-helper-apps/social-stream.md "mention")\
 [chat-overlay.md](../steves-helper-apps/chat-overlay.md "mention")
 
+#### **March 13**
+
+Social Stream update:
+
+* Expanded the number of Social Stream !commands to 20.
+* Now removing text-based alt names for emojis when filtering images/emojis.
+
 #### **March 9**
 
 Social Stream update:

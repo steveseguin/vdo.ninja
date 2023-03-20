@@ -1,5 +1,13 @@
 # Updates - VDO.Ninja
 
+#### March 13 <a href="#august-31" id="august-31"></a>
+
+* If you hover over a name in the Not Visible user list, it will show the stream ID as a tool tip. (useful if it says "unknown user").
+* If you `CTRL + Click` on the user name in the list, it will open that user stats menu, showing all details: system deets, stream ID, settings, etc.
+* Applied a fix for recording iPhone video that's portrait mode; might be properly oriented now when saved?\
+  \
+  \*\* on alpha
+
 #### March 6 <a href="#august-31" id="august-31"></a>
 
 * The default for iOS 16-devices and newer will now have 720p60 selected by default, rather than 720p30. 60-fps still isn't working at 1080p on iOS, but baby steps I guess.\
