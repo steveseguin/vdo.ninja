@@ -17,3 +17,4 @@ description: hotkey features via API and MIDI
 | ``[`&midioffset`](../../midi-settings/and-midioffset.md)``      | Allows you to set a series of buttons on a MIDI controller to be mute controls for those guests |
 | ``[`&mididelay`](and-mididelay-alpha.md) (alpha)                | Lets you precisely delay the MIDI play-out                                                      |
 | ``[`&datamode`](../../newly-added-parameters/and-datamode.md)`` | Combines a bunch of flags together; no video, no audio, GUI, etc.                               |
+| ``[`&postapi`](and-postapi-alpha.md) (alpha)                    | Lets you specify a custom POST URL to send events within VDO.Ninja to                           |

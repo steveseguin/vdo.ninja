@@ -1,5 +1,43 @@
 # Updates - VDO.Ninja
 
+#### March 20 <a href="#august-31" id="august-31"></a>
+
+* Pushed a fix for [`&screensharetype=3`](../newly-added-parameters/and-screensharetype.md) not always updating the layout; specifically when **VDO.Ninja** is used in an IFrame. Update on alpha and also all code has been pushed to github.
+
+#### March 18 <a href="#august-31" id="august-31"></a>
+
+* [`&codecs`](../advanced-settings/view-parameters/codec.md) and [`&videocodec`](../advanced-settings/view-parameters/codec.md) were added; these are an alias of [`&codec`](../advanced-settings/view-parameters/codec.md). Additionally, [`&codec`](../advanced-settings/view-parameters/codec.md) (and these new aliases) can now accept comma separated values that define the order of preferred video codecs if the primary one fails. You might want this it you want AV1 to be the main codec, falling back to H264 rather than VP8 if not supported. ie: `&codecs=av1,h264`
+* Added an option to count-up from 0, rather than count down. You can set the time to 0 to count up, or use the checkbox to enable it.\
+  ![](<../.gitbook/assets/image (14).png>)\
+  \
+  \*\* changes on vdo.ninja/alpha/
+
+#### March 17 <a href="#august-31" id="august-31"></a>
+
+* Fixed an issue with [`&screensharetype=3`](../newly-added-parameters/and-screensharetype.md) where a screen share when stopped would continue to be listed as an "unknown user" in the hidden user list.
+* When a guest is using [`&screensharetype=3`](../newly-added-parameters/and-screensharetype.md), the screen share holder control box that the director sees dims when that screen share stops. It does not disappear though.
+* When recording iPhone/iPad videos in portrait mode with Chrome as a remote VDO.Ninja viewer, the videos should be saved correctly (both via p2p and with Meshcast), rather than in a chopped-in-half corrupted version.
+* Added [`&postapi`](../advanced-settings/api-and-midi-parameters/and-postapi-alpha.md) (aka `&posturl`), which lets you specify a custom POST URL to send events within VDO.Ninja to.\
+  \-- data JSON encoded, post URL requires HTTPS+CORS, and the passed URL parameter value needs to be encodedURLComponent. ie: `&postapi=https%3A%2F%2Fwebhook.site%2Fb190f5bf-e4f8-454a-bd51-78b5807df9c1` -- If you don't want to listen for events with the websocket server API I host, you can use this with your own API https server instead and get key events pushed to you that way\
+  ![](../.gitbook/assets/image.png)![](<../.gitbook/assets/image (28).png>)
+* The hidden user-list can be closed when using [`&broadcast`](../advanced-settings/view-parameters/broadcast.md) mode now
+* Bug fixed with the [vdo.ninja/twitch](https://vdo.ninja/twitch) page, via a community code contribution
+* _Development Progress update: WHIP and VDO.Ninja_\
+  __\
+  __I've been slowly improving the WHIP/WHEP interface for VDO.Ninja. It's a bit mentally exhausting, but there is some progress up on alpha:\
+  \- WHEP in now added (test with cloudflare whep out),\
+  \- WHIP out now added (tested with cloudflare whip in),\
+  \- WHIP in improved a bit (tested with a private build of OBS and Larix, but isn't 100% stable yet) \
+  \
+  Still working on WHEP out and all the polish/integration that goes with this all. Hacking support in is one thing, but having it all work well with the rest of VDO.Ninja is tricky.\
+  \
+  One challenge is the interface and configuration for these WebRTC options. To help make it easier to play with things, I've created a little config page to test the very basics with.\
+  \
+  Many WHIP/WHEP apps are just as buggy/limited with their support as VDO.Ninja is, so incompatibilities and unstable behavior is unavoidable in the near term. Happy to work with others in the community to improve cross-app support.\
+  ![](<../.gitbook/assets/image (1).png>)\
+  \
+  \*\* changes available for testing at vdo.ninja/alpha/
+
 #### March 13 <a href="#august-31" id="august-31"></a>
 
 * If you hover over a name in the Not Visible user list, it will show the stream ID as a tool tip. (useful if it says "unknown user").
@@ -32,7 +70,7 @@
   \-- the CSS / HTML is slightly less rigid, so should be easier to customize with custom css by users.\
   \-- rainbow puke button removed, (but is still available as the sender if you `CTRL + click` on the video preview)
 * I added in a little "minimize" button to the control box, which lets you minimize it. It's not all that robust, but it might come in handy for hiding a couple annoying windows (like a co-director) that is taking up space.\
-  ![](<../.gitbook/assets/image (3).png>)![](<../.gitbook/assets/image (7).png>)\
+  ![](<../.gitbook/assets/image (3) (4).png>)![](<../.gitbook/assets/image (7) (2).png>)\
   \
   \*\* changes on alpha at vdo.ninja/alpha/
 
@@ -367,7 +405,7 @@
 #### **November 23** <a href="#august-31" id="august-31"></a>
 
 * Added a couple exact presets for the [aspect ratio](../advanced-settings/video-parameters/and-aspectratio.md) setting; should make it easier to precisely crop an incoming guest who doesn't have their smartphone oriented right, or just in case you want to reset the aspect ratio to 16:9, etc.\
-  ![](<../.gitbook/assets/image (3) (4).png>)\
+  ![](<../.gitbook/assets/image (3) (4) (2).png>)\
   \*\* on alpha at [https://vdo.ninja/alpha/](https://vdo.ninja/alpha/)
 
 #### **November 22** <a href="#august-31" id="august-31"></a>
@@ -431,7 +469,7 @@
   ![](<../.gitbook/assets/image (1) (1) (1) (3).png>)
 * For VDO.Ninja, right-clicking a video and selecting "audio output destination" should work again. I had to disable that feature for a bit, as some users were reporting audio issues with it enabled. It might have some compatibilities issues, but it won't activate now unless used.
 * When using the special [`&screensharetype=3`](../newly-added-parameters/and-screensharetype.md) screen share mode (screen share with better echo cancellation), support for recording that local screen share, at the same time as as the main video, has been added. You'll need to use the [`&autorecord`](../advanced-settings/recording-parameters/and-autorecord.md) feature to trigger the recording, and when it does start recording, a button will appear specific to stopping that screen recording if needed.\
-  ![](<../.gitbook/assets/image (14).png>)
+  ![](<../.gitbook/assets/image (14) (2).png>)
 * I improve the [`&buffer`](../advanced-settings/view-parameters/buffer.md) and [`&sync`](../advanced-settings/view-parameters/sync.md) feature a bit -- it will activate and sync up faster now, which might be helpful on unstable connections.
 * I haven't been able to validate it works, but I think I added support for H265 (HEVC) to VDO.Ninja; the catch is it might only work between two iPhones running the experimental H265 WebRTC support currently; maybe [Raspberry Ninja](../steves-helper-apps/raspberry.ninja.md) in the future. I haven't managed to make it work yet though, so its just hypothetical support.\
   \

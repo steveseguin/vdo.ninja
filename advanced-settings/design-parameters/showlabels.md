@@ -54,7 +54,7 @@ Font-size of labels will adjust slightly based on the window size.
 CSS of the styles can be set via the OBS browser source stylesheet window.\
 The CSS class name you can customize is called `video-label`.
 
-![An example of how to set a custom CSS style for labels](<../../.gitbook/assets/image (16) (1).png>)
+![An example of how to set a custom CSS style for labels](<../../.gitbook/assets/image (16) (1) (1).png>)
 
 You can copy the below code, modifying it as you desire, as a starting point. You'll still need to use `&showlabels` to trigger the labels to display though.
 

@@ -65,11 +65,12 @@ Screen sharing a "Window" with Chrome (chromium) tends max out at \~42 FPS, whil
 
 ### Frame rate or resolution
 
-You can use the Content Hint parameter in some browsers to suggestion whether to prioritize frame rate or resolution.  Sometimes getting both high isn't possible.\
-\
-[\&contenthint](../advanced-settings/video-parameters/and-contenthint.md) ([\&screensharecontenthint](../advanced-settings/screen-share-parameters/and-screensharecontenthint.md))
+You can use the [`&contenthint`](../advanced-settings/video-parameters/and-contenthint.md) parameter in some browsers to suggestion whether to prioritize frame rate or resolution. Sometimes getting both high isn't possible.
 
-This parameter takes detail or motion as a value, based on whether you value resolution or frame rate.&#x20;
+[and-contenthint.md](../advanced-settings/video-parameters/and-contenthint.md "mention")\
+[and-screensharecontenthint.md](../advanced-settings/screen-share-parameters/and-screensharecontenthint.md "mention")
+
+These parameters take detail or motion as a value, based on whether you value resolution or frame rate.
 
 ### Versus.cam&#x20;
 

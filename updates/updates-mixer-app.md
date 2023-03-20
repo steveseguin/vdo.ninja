@@ -65,7 +65,7 @@
 * Added support to VDO.Ninja so that layouts can be expressed as a relative percentile or pixel specific (for advanced users). VDO.Ninja will assume wp,hp,xp, and yp are "pixel" based units for x,y,h,w. If you canvas/browser is too big or small, things may overflow or not fit correctly.\
   \-- please note: w,h,x,y take priority over wp,hp,xp,yp, if both are present in a layout file.
 *   JSON export is "prettified" so its easier to edit with notepad (rather than being a single long line).\
-    ![](<../.gitbook/assets/image (15).png>)
+    ![](<../.gitbook/assets/image (15) (1).png>)
 
     \
     \*\*\* Changes on alpha at [vdo.ninja/alpha/mixer](https://vdo.ninja/alpha/mixer) for testing and feedback.

@@ -26,6 +26,7 @@ You can use/test these parameters on [vdo.ninja/alpha](https://vdo.ninja/alpha/)
 | ``[`&tally`](design-parameters/tallyoff.md)\*\*                                        | Will make the tally sign larger and colorize the background of the page                                                                                  |
 | ``[`&timer`](settings-parameters/and-timer-alpha.md)\*\*                               | Positions the countdown timer                                                                                                                            |
 | ``[`&allowedscenes`](settings-parameters/and-allowedscenes-alpha.md)\*\*               | Option to filter which OBS scenes a remote guest has access to controlling when using [`&controlobs`](settings-parameters/and-controlobs.md)``           |
+| ``[`&postapi`](api-and-midi-parameters/and-postapi-alpha.md)\*                         | Lets you specify a custom POST URL to send events within VDO.Ninja to                                                                                    |
 
 \*only on [vdo.ninja/alpha](https://vdo.ninja/alpha/)\
 \*\*on [vdo.ninja/beta](https://vdo.ninja/beta/) and [vdo.ninja/alpha](https://vdo.ninja/alpha/)

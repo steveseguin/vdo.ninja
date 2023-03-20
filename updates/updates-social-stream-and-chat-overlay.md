@@ -3,6 +3,23 @@
 [social-stream.md](../steves-helper-apps/social-stream.md "mention")\
 [chat-overlay.md](../steves-helper-apps/chat-overlay.md "mention")
 
+#### **March 19**
+
+* `&reload` added to Social Stream; this will try to reload the last 40 to 50 messages in the dock after a page refresh, so you don't lose all your messages if something needs a refresh or things crash.
+* IRC support added to Social Stream via [https://webchat.quakenet.org/](https://webchat.quakenet.org/).
+* tellonym.me support added to Social Stream.
+* Initial guest avatar image support added to kick.com on Social Stream.\
+  ![](<../.gitbook/assets/image (16).png>)
+
+#### **March 17**
+
+Social Stream update:
+
+* `&helpermode` added to Social Stream, which lets a synced dock user set pins/queues, but not control the featured chat requests. Helpful if you need someone to manage your messages for you while live.
+* Twitter "start overlay" button when using Social Stream won't show if the extension is disabled
+* Added the option to send messages from extension -> dock via the websocket server, rather than p2p\
+  ![](<../.gitbook/assets/image (7).png>)
+
 #### **March 13**
 
 Social Stream update:
@@ -15,7 +32,7 @@ Social Stream update:
 Social Stream update:
 
 * Opt out of YouTube / Twitch capture added, along with the ability to specify a single Twitch channel to only capture from.\
-  ![](../.gitbook/assets/image.png)
+  ![](<../.gitbook/assets/image (3).png>)
 
 #### **March 8**
 
@@ -71,7 +88,7 @@ Social Stream updates for today:
 
 * With Social Stream, you can use `&fixed` on the dock page now, which places messages in the same place (overlapping the last one). When combined with `&limit=1`, you can get a neat one-message bar auto-featured chat effect.\
   ie: `https://socialstream.ninja/dock.html?bubble&color&hidemenu&hideshadow&largeavatar&nobadges&nooutline&notime&limit=1&fadeout&fixed&alignbottom&session=XXXXXXXX`\
-  ``![](<../.gitbook/assets/image (1) (3).png>)``
+  ``![](<../.gitbook/assets/image (1) (3) (1).png>)``
 * `&chartime=60` added as a dock option; this will specify the time per character that a message will show on screen when using the auto-show feature. 60ms is the default; longer messages will show for longer.
 
 #### **February 15**
