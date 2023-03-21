@@ -56,7 +56,7 @@ If the director joins the room, they automatically set the default total room bi
 
 The director can also dynamically change their total room bitrate value using a slider that appears when pressing the room-settings button in the lower control bar. This will instantly change the total room bitrate value for all guests.
 
-![The director can change the room's default TRB value dynamically](<../../.gitbook/assets/image (28) (1).png>)
+![The director can change the room's default TRB value dynamically](<../../.gitbook/assets/image (28).png>)
 
 ## Related
 

@@ -2,6 +2,15 @@
 
 [native-mobile-app-versions.md](../steves-helper-apps/native-mobile-app-versions.md "mention")
 
+#### March 21
+
+* Updated the Android app to support offline/fully-self-hosted deployments of VDO.Ninja, by request.\
+  \-- just click the "Advanced" toggle on it setup page, then enter your custom WSS address in the field.\
+  \
+  Until I push this into the Google Play / App store, you can grab the sideloadable APK here: [https://drive.google.com/file/d/1M0kv5nWLtcfl2JOnsAGiG1zUmkeIVLyZ/view?usp=share\_link](https://drive.google.com/file/d/1M0kv5nWLtcfl2JOnsAGiG1zUmkeIVLyZ/view?usp=share\_link) \
+  \
+  (btw, I am very much welcoming any experienced help in adding USB/HDMI support to the native app)
+
 #### January 31
 
 * &#x20;The v3 update for the iOS native app has been approved and is now available.

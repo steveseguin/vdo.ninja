@@ -17,7 +17,7 @@ This parameter behaves just as [`&scene`](../view-parameters/scene.md). The only
 
 Links updates in the director's room from Version 22 onwards.
 
-![](<../../.gitbook/assets/image (1) (3) (1) (1) (1).png>)
+![](<../../.gitbook/assets/image (1) (3) (1) (1).png>)
 
 ## Related
 

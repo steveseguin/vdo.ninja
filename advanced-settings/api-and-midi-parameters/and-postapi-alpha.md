@@ -4,7 +4,8 @@ description: Lets you specify a custom POST URL to send events within VDO.Ninja 
 
 # \&postapi (alpha)
 
-General Option! ([`&push`](../../source-settings/push.md), [`&room`](../../general-settings/room.md), [`&view`](../view-parameters/view.md), [`&scene`](../view-parameters/scene.md))
+General Option! ([`&push`](../../source-settings/push.md), [`&room`](../../general-settings/room.md), [`&view`](../view-parameters/view.md), [`&scene`](../view-parameters/scene.md))\
+\*only available on [vdo.ninja/alpha](https://vdo.ninja/alpha/)
 
 ## Aliases
 
@@ -27,4 +28,4 @@ ie: `&postapi=https%3A%2F%2Fwebhook.site%2Fb190f5bf-e4f8-454a-bd51-78b5807df9c1`
 
 If you don't want to listen for events with the websocket server API I host, you can use this with your own API https server instead and get key events pushed to you that way.
 
-<figure><img src="../../.gitbook/assets/image (15).png" alt=""><figcaption></figcaption></figure>
+<figure><img src="../../.gitbook/assets/image.png" alt=""><figcaption></figcaption></figure>

@@ -6,7 +6,7 @@
 
 *   You can use the API to control the mixer layout now, via the Mixer App. `https://api.vdo.ninja/APIKEY/layout/2`\
     ``-- there were some bugs with this when using it via the Mixer App before, and there wasn't much documentation on the [companion.vdo.ninja](https://companion.vdo.ninja/) site. All fixed.\
-    ![](<../.gitbook/assets/image (6).png>)![](<../.gitbook/assets/image (2).png>)\
+    ![](<../.gitbook/assets/image (6).png>)![](<../.gitbook/assets/image (2) (1).png>)\
 
 
     Note: The benefit of being able to switch just the layout, rather than scene, is that you only need one browser source in OBS (not even needing OBS really either). Having one browser source means fewer resources used for both the director and guests. All controllable via hotkeys or API.\
@@ -65,7 +65,7 @@
 * Added support to VDO.Ninja so that layouts can be expressed as a relative percentile or pixel specific (for advanced users). VDO.Ninja will assume wp,hp,xp, and yp are "pixel" based units for x,y,h,w. If you canvas/browser is too big or small, things may overflow or not fit correctly.\
   \-- please note: w,h,x,y take priority over wp,hp,xp,yp, if both are present in a layout file.
 *   JSON export is "prettified" so its easier to edit with notepad (rather than being a single long line).\
-    ![](<../.gitbook/assets/image (15) (1).png>)
+    ![](<../.gitbook/assets/image (15).png>)
 
     \
     \*\*\* Changes on alpha at [vdo.ninja/alpha/mixer](https://vdo.ninja/alpha/mixer) for testing and feedback.
