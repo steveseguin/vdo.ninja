@@ -2,7 +2,7 @@
 description: If your microphone drops out after a few seconds
 ---
 
-# Audio dropping out
+# Mic audio dropping out
 
 ### One possible solution:
 
@@ -17,6 +17,10 @@ From `chrome://flags` we disable:\
 &#x20; `#enable-webrtc-allow-input-volume-adjustment`
 
 &#x20; `#chrome-wide-echo-cancellation`\
+
+
+_ℹ️ This also might be a useful option if using a USB mic that has the audio volume controls changing against your will, such as with a Blue Yeti._
+
 \
 In Firefox, we disable:
 

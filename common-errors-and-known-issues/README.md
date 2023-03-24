@@ -3,7 +3,7 @@
 * [known-issues.md](known-issues.md "mention")
 * [echo-or-feedback-issues.md](echo-or-feedback-issues.md "mention")
 * [works-on-wifi-but-not-on-4g.md](works-on-wifi-but-not-on-4g.md "mention")
-* #### &#x20;[Audio dropping out](audio-dropping-out.md)&#x20;
+* #### &#x20;[Audio dropping out](mic-audio-dropping-out.md)&#x20;
 * [cant-capture-an-applications-audio-when-screen-sharing.md](cant-capture-an-applications-audio-when-screen-sharing.md "mention")
 * [cant-select-a-camera-lens-on-mobile.md](cant-select-a-camera-lens-on-mobile.md "mention")
 * [appearing-then-disappearing-guest.md](appearing-then-disappearing-guest.md "mention")
