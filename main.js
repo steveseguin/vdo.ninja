@@ -2237,6 +2237,7 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 		} else if (session.videoDevice) {
 			session.videoDevice = session.videoDevice.toLowerCase().replace(/[\W]+/g, "_");
 		}
+		
 		if (session.videoDevice == "false") {
 			session.videoDevice = 0;
 		} else if (session.videoDevice == "0") {
@@ -2259,10 +2260,7 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 			session.videoDevice = 1;
 		} else if (session.videoDevice == "default") {
 			session.videoDevice = 1;
-		} else {
-			// whatever the user entered I guess, santitized.
-			session.videoDevice = session.videoDevice.replace(/[\W]+/g, "_").toLowerCase();
-		}
+		} 
 		
 		if (!urlParams.has('vdo')){
 			getById("videoMenu").style.display = "none";
@@ -2278,9 +2276,9 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 
 		if (session.audioDevice === null) {
 			session.audioDevice = "1";
-		} //else if (session.audioDevice) {
-		//	session.audioDevice = session.audioDevice.toLowerCase().replace(/[\W]+/g, "_");
-		//}
+		} else if (session.audioDevice) {
+			session.audioDevice = session.audioDevice.toLowerCase().replace(/[^-,'A-Za-z0-9]+/g,"_");
+		}
  
 		if (session.audioDevice == "false") {
 			session.audioDevice = 0;
@@ -2299,15 +2297,11 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 		} else if (session.audioDevice == "ndi") {
 			session.audioDevice = ["line_newtek_ndi_audio"];
 		} else {
-			// whatever the user entered I guess
 			session.audioDevice = session.audioDevice.split(",");
-			for (var i =0;i<session.audioDevice.length;i++){
-				session.audioDevice[i] = session.audioDevice[i].replace(/[\W]+/g, "_").toLowerCase();
-				log("session.audioDevice:" + session.audioDevice[i]);
-			}
 		}
 		getById("headphonesDiv").style.display = "none";
 		getById("headphonesDiv2").style.display = "none";
+		
 		if (typeof session.audioDevice !== "object"){
 			getById("audioMenu").style.display = "none";	
 			getById("audioScreenShare1").style.display = "none";
@@ -3676,19 +3670,28 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 			}
 		}
 	}
-	
 
 	if (urlParams.has('queue')) {
 		session.queue = true;
 	}
+	
+	
 
 	if (urlParams.has('push') || urlParams.has('id') || urlParams.has('permaid') ) {
 		session.permaid = urlParams.get('push')  || urlParams.get('id') || urlParams.get('permaid');
-
+		
 		if (session.permaid) {
-			session.streamID = sanitizeStreamID(session.permaid);
+			session.permaid = sanitizeStreamID(session.permaid) || null;
+			session.streamID = session.permaid || session.streamID;
+		} else if (urlParams.has('permaid') && getStorage("permaid")){
+			session.streamID = sanitizeStreamID(getStorage("permaid")) || session.streamID;
+			session.permaid = null;
 		} else {
 			session.permaid = null;
+		}
+		
+		if (urlParams.has('permaid')){
+			setStorage("permaid", session.streamID, 99999)
 		}
 		
 		if (urlParams.has('push')){

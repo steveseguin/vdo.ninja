@@ -4258,6 +4258,8 @@ input:checked + .slider:before {
 	box-shadow: 0px 5px 10px -5px #a9a9a9;
 	text-align: left;
 	font-size: 97%;
+	white-space:normal;
+	min-height: 44px;
 }
 .cameraTip > p {
 	text-align: left;

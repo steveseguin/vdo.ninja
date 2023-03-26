@@ -83,7 +83,7 @@
 		
 		<script type="text/javascript" crossorigin="anonymous"  src="./thirdparty/CodecsHandler.js?ver=45"></script>
 		<script type="text/javascript" crossorigin="anonymous" src="./thirdparty/aes.js"></script>
-		<script type="text/javascript" crossorigin="anonymous" src="./webrtc.js?ver=587"></script>
+		<script type="text/javascript" crossorigin="anonymous" src="./webrtc.js?ver=589"></script>
 		<input id="zoomSlider" type="range" style="display: none;" />
 		<span id="electronDragZone" style="pointer-events: none; z-index:-10; position:absolute;top:0;left:0;width:100%;height:2%;-webkit-app-region: drag;min-height:20px;"></span>
 		<div id="header">
@@ -1993,6 +1993,19 @@
 						<span data-translate="stop-record-to-disk">Stop Recording</span>
 					</a>
 				</li>
+				<li class="context-menu__item hidden">
+					<a href="#" class="context-menu__link" data-action="CopyFrameAsImage">
+						<i class="las la-external-link"></i>
+						<span data-translate="copy-to-clipboard-frame">Snapshot to clipboard</span>
+					</a>
+				</li>
+				<li class="context-menu__item hidden">
+					<a href="#" class="context-menu__link" data-action="SaveFrameToDisk">
+						<i class="las la-external-link"></i>
+						<span data-translate="save-current-frame">Save frame to disk</span>
+					</a>
+				</li>
+				
 				<li class="context-menu__item">
 					<a href="#" class="context-menu__link" data-action="ShowStats">
 						<i class="las la-external-link"></i>
@@ -2480,11 +2493,11 @@
 			// session.hidehome = true; // If used, 'hide home' will make the landing page inaccessible, along with hiding a few go-home elements.
 			// session.record = false; // uncomment to block users from being able to record via vdo.ninja's built in recording function
 		</script>
-		<script type="text/javascript" crossorigin="anonymous" id="lib-js" src="./lib.js?ver=696"></script>
+		<script type="text/javascript" crossorigin="anonymous" id="lib-js" src="./lib.js?ver=701"></script>
 		<!-- 
 		// If you wish to change branding, blank offers a good clean start.
 		<script type="text/javascript" id="main-js" src="./main.js" data-translation="blank"></script>
 		-->
-		<script type="text/javascript" crossorigin="anonymous" id="main-js" src="./main.js?ver=569"></script>
+		<script type="text/javascript" crossorigin="anonymous" id="main-js" src="./main.js?ver=571"></script>
 	</body>
 </html>

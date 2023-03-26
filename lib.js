@@ -13025,7 +13025,7 @@ function soloLinkGenerator(streamID, scene=true){
 	}
 	
 	var wss = "";
-	if (session.customWSS || session.wssSetViaUrl){
+	if (session.wssSetViaUrl){
 		if (session.customWSS && (session.customWSS!==true)){
 			wss = "&pie="+session.customWSS;
 		} else {
@@ -13384,7 +13384,7 @@ function updatePushId(){
 		updateURL("push="+session.streamID);
 	} else if (urlParams.has('id')){
 		updateURL("id="+session.streamID);
-	} else if (urlParams.has('permaid')){
+	} else if (urlParams.has('permaid')){ 
 		updateURL("permaid="+session.streamID);
 	} else {
 		updateURL("push="+session.streamID);
@@ -14703,6 +14703,57 @@ async function createRoom(roomname = false) {
 	pokeIframeAPI("create-room", roomname);
 }
 
+function copyVideoFrameToClipboard(videoElement, e=false) {
+	try{
+	  var canvas = document.createElement("canvas");
+
+	  canvas.width = videoElement.videoWidth;
+	  canvas.height = videoElement.videoHeight;
+
+	  var ctx = canvas.getContext("2d");
+	  ctx.drawImage(videoElement, 0, 0);
+
+	  var img = new Image();
+	  img.src = canvas.toDataURL();
+
+	  canvas.toBlob(function(blob) {
+		navigator.clipboard.write([new ClipboardItem({'image/png': blob})]);
+	  }, 'image/png');
+	  
+	  popupMessage(e, "Frame copied to clipboard as as PNG Image");
+	} catch(e){
+		errorlog(e);
+	}
+}
+
+function saveVideoFrameToClipboard(videoElement, e=false) {
+	try{
+	  var canvas = document.createElement("canvas");
+
+	  canvas.width = videoElement.videoWidth;
+	  canvas.height = videoElement.videoHeight;
+
+	  var ctx = canvas.getContext("2d");
+	  ctx.drawImage(videoElement, 0, 0);
+
+	  var img = new Image();
+	  img.src = canvas.toDataURL();
+
+	  canvas.toBlob(function(blob) {
+		var link = document.createElement("a");
+		link.download = (videoElement.id||"video")+"_"+parseInt(performance.now())+".png";
+		link.href = URL.createObjectURL(blob);
+		link.click();
+		URL.revokeObjectURL(link.href);
+	  }, 'image/png');
+	  
+	  popupMessage(e, "Saving current frame to disk");
+	} catch(e){
+		errorlog(e);
+	}
+}
+
+
 async function checkDirectorStreamID(){
 	if (session.directorStreamID){
 		for (var UUID in session.rpcs){
@@ -15026,7 +15077,7 @@ async function createRoomCallback(passAdd, passAdd2) {
 	}
 	
 	var wss = "";
-	if (session.customWSS || session.wssSetViaUrl){
+	if (session.wssSetViaUrl){
 		if (session.customWSS && (session.customWSS!==true)){
 			wss = "&pie="+session.customWSS;
 		} else {
@@ -16822,23 +16873,26 @@ function gotDevices(deviceInfos) {
 		deviceInfos = tmp;
 
 		if (typeof session.audioDevice == "object") { // this sorts according to users's manual selection
-			var tmp = [];
+			var matched = [];
+			var notmatched = [];
 			for (let i = 0; i !== deviceInfos.length; ++i) {
 				if (deviceInfos[i].kind === 'audioinput'){
 					if (session.audioDevice.includes(deviceInfos[i].deviceId)) {
-						tmp.push(deviceInfos[i]);
+						matched.push(deviceInfos[i]);
 					} else {
 						for (var j=0;j<session.audioDevice.length;j++){
 							if (deviceInfos[i].label.replace(/[\W]+/g, "_").toLowerCase().includes(session.audioDevice[j])) {
-								tmp.push(deviceInfos[i]);
+								matched.push(deviceInfos[i]);
 								log("A DEVICE FOUND = " + deviceInfos[i].label);
 								break;
 							}
 						}
 					}
+				} else {
+					notmatched.push(deviceInfos[i]);
 				}
 			}
-			deviceInfos = tmp;
+			deviceInfos = matched.concat(notmatched);
 		} else if (session.store && session.store.SelectedAudioInputDevices){
 			var matched = [];
 			var notmatch = [];
@@ -16871,10 +16925,11 @@ function gotDevices(deviceInfos) {
 			deviceInfos = matched.concat(notmatch);
 		}
 		
-		if ((session.videoDevice) && (session.videoDevice !== 1)){ // this sorts according to users's manual selection
+		if (session.videoDevice && (session.videoDevice !== 1)){ // this sorts according to users's manual selection
 			var tmp = [];
 			var tmp2 = [];
 			var tmp3 = [];
+			
 			
 			for (let i = 0; i !== deviceInfos.length; ++i) {
 				deviceInfo = deviceInfos[i];
@@ -16935,7 +16990,7 @@ function gotDevices(deviceInfos) {
 			deviceInfos = tmp;
 			log("VDECICE:" + session.videoDevice);
 			log(deviceInfos);
-		} else if (session.store && session.store.SelectedVideoInputDevices){
+		} else if (session.store && session.store.SelectedVideoInputDevices && (session.videoDevice===false)){
 			var matched = [];
 			var notmatch = [];
 			for (let i = 0; i !== deviceInfos.length; ++i) {
@@ -18885,9 +18940,6 @@ function obfuscateURL(input) {
 
 	input = input.replace('&fps=', '&fr=');
 	input = input.replace('?fps=', '?fr=');
-
-	input = input.replace('&permaid=', '&push=');
-	input = input.replace('?permaid=', '?push=');
 
 	input = input.replace('&roomid=', '&r=');
 	input = input.replace('?roomid=', '?r=');
@@ -22785,7 +22837,7 @@ function updateReshareLink(){
 	}
 	
 	var wss = "";
-	if (session.customWSS || session.wssSetViaUrl){
+	if (session.wssSetViaUrl){
 		if (session.customWSS && (session.customWSS!==true)){
 			wss = "&pie="+session.customWSS;
 		} else {
@@ -27979,7 +28031,7 @@ function generateQRPageCallback(hash) {
 		
 		var wss = "";
 		
-		if (session.customWSS || session.wssSetViaUrl){
+		if (session.wssSetViaUrl){
 			if (session.customWSS && (session.customWSS!==true)){
 				wss = "&pie="+session.customWSS;
 			} else {
@@ -28259,7 +28311,7 @@ function pauseVideo(videoEle, update=true){
 		if (clickeElIsLink) {
 			e.preventDefault();
 			e.stopPropagation();
-			menuItemListener(clickeElIsLink);
+			menuItemListener(clickeElIsLink, false, e);
 			return false;
 		} else {
 			var button = e.which || e.button;
@@ -28274,7 +28326,7 @@ function pauseVideo(videoEle, update=true){
 		if (clickeElIsLink) {
 			e.preventDefault();
 			e.stopPropagation();
-			menuItemListener(clickeElIsLink, e.srcElement);
+			menuItemListener(clickeElIsLink, e.srcElement, e);
 			return false;
 		} else {
 			var button = e.which || e.button;
@@ -28351,7 +28403,7 @@ function pauseVideo(videoEle, update=true){
 		}
 	}
 
-	async function menuItemListener(link, inputElement=false) {
+	async function menuItemListener(link, inputElement=false, e=false) {
 		if (link.getAttribute("data-action") === "Open") {
 			window.open(taskItemInContext.href);
 		} else if (link.getAttribute("data-action") === "Copy") {
@@ -28400,6 +28452,10 @@ function pauseVideo(videoEle, update=true){
 			} else if (taskItemInContext.recording){
 				recordLocalVideo("stop", null, taskItemInContext); 
 			}
+		} else if (link.getAttribute("data-action") === "CopyFrameAsImage") {
+			copyVideoFrameToClipboard(taskItemInContext, e);
+		} else if (link.getAttribute("data-action") === "SaveFrameToDisk") {
+			saveVideoFrameToClipboard(taskItemInContext, e);
 		} else if (link.getAttribute("data-action") === "ChangeBuffer") { 
 			toggleBufferSettings(taskItemInContext.dataset.UUID);
 		} else if (link.getAttribute("data-action") === "Cast") {
@@ -28558,6 +28614,18 @@ function pauseVideo(videoEle, update=true){
 				} else {
 					items[i].parentNode.classList.add("hidden");
 				}
+			} else if (items[i].getAttribute("data-action") === "CopyFrameAsImage") {
+				if (taskItemInContext.srcObject && taskItemInContext.srcObject.getVideoTracks().length){
+					items[i].parentNode.classList.remove("hidden");
+				} else {
+					items[i].parentNode.classList.add("hidden");
+				}	
+			} else if (items[i].getAttribute("data-action") === "SaveFrameToDisk") {
+				if (taskItemInContext.srcObject && taskItemInContext.srcObject.getVideoTracks().length){
+					items[i].parentNode.classList.remove("hidden");
+				} else {
+					items[i].parentNode.classList.add("hidden");
+				}	
 			} else if (items[i].getAttribute("data-action") === "Controls") {
 				if (taskItemInContext.controls){
 					items[i].parentNode.classList.add("hidden");
@@ -28709,13 +28777,15 @@ function popupMessage(e, message = "Copied to Clipboard") { // right click menu
 	}
 	menu.classList.remove("fadeout");
 	
+	var showlength = message.length*50 || 500;
+	
 	setTimeout(function() {
 		menu.classList.add("fadeout");
-	}, 500);
+	}, showlength);
 	
 	setTimeout(function() {
 		toggleMenuOff();
-	}, 1500);
+	}, showlength+1000);
 }
 
 function timeSince(date) {
