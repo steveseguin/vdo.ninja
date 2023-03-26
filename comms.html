@@ -2080,7 +2080,7 @@
 		group.appendChild(name);
 		name.groupID = groupID;
 		name.onclick = function(e){
-			if (e.ctrlKey){
+			if (e.ctrlKey || e.metaKey){
 				var nn = prompt("Rename this group", this.groupID);
 				if (this.groupID == nn){
 					name.innerHTML = "group: "+nn;
