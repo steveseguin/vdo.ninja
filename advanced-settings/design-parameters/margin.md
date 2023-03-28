@@ -19,7 +19,7 @@ Example: `&margin=100`
 
 Adds 10px around the videos for some spacing, by default. It can be customized.\
 `https://vdo.ninja/?scene&room=roomname&margin=100`\
-![](<../../.gitbook/assets/image (6) (1) (2).png>)
+![](<../../.gitbook/assets/image (6) (1) (2) (1).png>)
 
 It's also available as a toggle to the director's room.\
 ![](<../../.gitbook/assets/image (125).png>)

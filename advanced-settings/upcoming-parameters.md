@@ -27,6 +27,7 @@ You can use/test these parameters on [vdo.ninja/alpha](https://vdo.ninja/alpha/)
 | ``[`&timer`](settings-parameters/and-timer-alpha.md)\*\*                               | Positions the countdown timer                                                                                                                            |
 | ``[`&allowedscenes`](settings-parameters/and-allowedscenes-alpha.md)\*\*               | Option to filter which OBS scenes a remote guest has access to controlling when using [`&controlobs`](settings-parameters/and-controlobs.md)``           |
 | ``[`&postapi`](api-and-midi-parameters/and-postapi-alpha.md)\*                         | Lets you specify a custom POST URL to send events within VDO.Ninja to                                                                                    |
+| ``[`&permaid`](setup-parameters/and-permaid-alpha.md)\*                                | Will save that stream ID to local storage and reuse it every time \&permaid is used without a stream ID                                                  |
 
 \*only on [vdo.ninja/alpha](https://vdo.ninja/alpha/)\
 \*\*on [vdo.ninja/beta](https://vdo.ninja/beta/) and [vdo.ninja/alpha](https://vdo.ninja/alpha/)

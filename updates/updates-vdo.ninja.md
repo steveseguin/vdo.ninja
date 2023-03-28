@@ -1,5 +1,22 @@
 # Updates - VDO.Ninja
 
+#### March 24 <a href="#august-31" id="august-31"></a>
+
+* Right click a video and click `Snapshot to Clipboard` to save the current video frame to the clipboard as a PNG image. This can be pasted into most applications, such as Photoshop, for quick use in a production\
+  ![](<../.gitbook/assets/image (6).png>)\
+  \
+  \-- Also the option to save to disk\
+  ![](<../.gitbook/assets/image (4).png>)\
+  \
+  \*\* on alpha @ vdo.ninja/alpha/
+
+#### March 23 <a href="#august-31" id="august-31"></a>
+
+* If using [`&permaid=streamidhere`](../advanced-settings/setup-parameters/and-permaid-alpha.md) to specify the stream ID, rather than just [`&push`](../source-settings/push.md), will save that stream ID to local storage and reuse it every time [`&permaid`](../advanced-settings/setup-parameters/and-permaid-alpha.md) is used without a stream ID\
+  \-- You could also just use [`&permaid`](../advanced-settings/setup-parameters/and-permaid-alpha.md) on its own initially, which will auto assign a unique stream ID and save that generated one to local storage, which makes it easier to use one invite for many users, but have VDO.Ninja manage the stream ID assignments.\
+  \-- If not using [`&permaid`](../advanced-settings/setup-parameters/and-permaid-alpha.md), it will just default to using `&push` with a random ID. (this avoids 'stream already in use' mishaps)\
+  \* on alpha
+
 #### March 20 <a href="#august-31" id="august-31"></a>
 
 * Pushed a fix for [`&screensharetype=3`](../newly-added-parameters/and-screensharetype.md) not always updating the layout; specifically when **VDO.Ninja** is used in an IFrame. Update on alpha and also all code has been pushed to github.
@@ -8,7 +25,7 @@
 
 * [`&codecs`](../advanced-settings/view-parameters/codec.md) and [`&videocodec`](../advanced-settings/view-parameters/codec.md) were added; these are an alias of [`&codec`](../advanced-settings/view-parameters/codec.md). Additionally, [`&codec`](../advanced-settings/view-parameters/codec.md) (and these new aliases) can now accept comma separated values that define the order of preferred video codecs if the primary one fails. You might want this it you want AV1 to be the main codec, falling back to H264 rather than VP8 if not supported. ie: `&codecs=av1,h264`
 * Added an option to count-up from 0, rather than count down. You can set the time to 0 to count up, or use the checkbox to enable it.\
-  ![](<../.gitbook/assets/image (1).png>)\
+  ![](<../.gitbook/assets/image (1) (1).png>)\
   \
   \*\* changes on vdo.ninja/alpha/
 
@@ -19,7 +36,7 @@
 * When recording iPhone/iPad videos in portrait mode with Chrome as a remote VDO.Ninja viewer, the videos should be saved correctly (both via p2p and with Meshcast), rather than in a chopped-in-half corrupted version.
 * Added [`&postapi`](../advanced-settings/api-and-midi-parameters/and-postapi-alpha.md) (aka `&posturl`), which lets you specify a custom POST URL to send events within VDO.Ninja to.\
   \-- data JSON encoded, post URL requires HTTPS+CORS, and the passed URL parameter value needs to be encodedURLComponent. ie: `&postapi=https%3A%2F%2Fwebhook.site%2Fb190f5bf-e4f8-454a-bd51-78b5807df9c1` -- If you don't want to listen for events with the websocket server API I host, you can use this with your own API https server instead and get key events pushed to you that way\
-  ![](<../.gitbook/assets/image (21).png>)![](<../.gitbook/assets/image (3).png>)
+  ![](<../.gitbook/assets/image (21).png>)![](<../.gitbook/assets/image (3) (1).png>)
 * The hidden user-list can be closed when using [`&broadcast`](../advanced-settings/view-parameters/broadcast.md) mode now
 * Bug fixed with the [vdo.ninja/twitch](https://vdo.ninja/twitch) page, via a community code contribution
 * _Development Progress update: WHIP and VDO.Ninja_\
@@ -34,7 +51,7 @@
   One challenge is the interface and configuration for these WebRTC options. To help make it easier to play with things, I've created a little config page to test the very basics with.\
   \
   Many WHIP/WHEP apps are just as buggy/limited with their support as VDO.Ninja is, so incompatibilities and unstable behavior is unavoidable in the near term. Happy to work with others in the community to improve cross-app support.\
-  ![](<../.gitbook/assets/image (4).png>)\
+  ![](<../.gitbook/assets/image (4) (2).png>)\
   \
   \*\* changes available for testing at vdo.ninja/alpha/
 
@@ -411,7 +428,7 @@
 #### **November 22** <a href="#august-31" id="august-31"></a>
 
 * Made the [`&clock`](../advanced-settings/settings-parameters/and-clock.md) and timer overlay be something you can 'pop out' and overlay as a native picture-in-picture element; just right-click it and select pop-out from the context menu.\
-  ![](<../.gitbook/assets/image (1) (1) (1) (1).png>)![](<../.gitbook/assets/image (2) (8).png>)
+  ![](<../.gitbook/assets/image (1) (1) (1) (1) (2).png>)![](<../.gitbook/assets/image (2) (8).png>)
 * Fixed an issue where the right-click -> edit URL feature in [v22](../releases/v22.md) broke
 * Viewer-side [`&audiocodec=pcm`](../advanced-settings/audio-parameters/minptime-1.md) is now available as an audio codec option; this is 32khz, 16bit, mono, and uncompressed, so \~512-kbps bitrate. You'll need the sender to have `&insertablestreams` applied to their URL for this to work currently, as it requires the sender to enable a special mode that allows for custom codecs. This is very experimental at the moment, so its still a WIP.
 * `&micsamplerate` (`&msr`) added, which lets you specify the capture audio sample rate. Also added purely for experimental reasons; I don't recommend touching.\
@@ -449,7 +466,7 @@
 ![](<../.gitbook/assets/image (3) (1) (4).png>)
 
 * [`&micdelay`](../source-settings/and-micdelay.md), if used on a basic push link, will show the mic delay as a slider now also. So you can adjust it as needed. I don't show the slider by default unless using the URL parameter, as I don't think its a commonly used feature.\
-  ![](<../.gitbook/assets/image (4) (2).png>)
+  ![](<../.gitbook/assets/image (4) (2) (1).png>)
 * I think I fixed an issue with Firefox where not all the audio-output devices were available to choose from, at least on desktop, and so I've added the custom logic Firefox requires to get it working. On Firefox, you'll now need to select "Show more options" in the audio drop down menu, where Firefox will prompt you to select the audio output device with its own prompt.\
   ![](<../.gitbook/assets/image (9) (3).png>)
 * Added an option called [`&hidehome`](../advanced-settings/settings-parameters/and-hidehome.md), which hides the VDO.Ninja homepage and many links that lead to it. You can also enable at a code level with `session.hidehome=true;`, which is useful if doing a self-deployment, where you don't want anyone to stumble onto the site and start using it. You'll still be able to join push links and create rooms via URL parameters, but that's about it.\
@@ -659,7 +676,7 @@
   \-- The guest can toggle it on and off in the settings, without needing to go into any advanced audio settings\
   \-- The remote director can still use the existing "channel count' in the advanced audio settings to override this button, unless the guest toggles it back on\
   \-- There's several other ways to set mono mode of course, including [`&monomic`](../advanced-settings/audio-parameters/and-monomic.md), [`&inputchannels=1`](../advanced-settings/audio-parameters/and-inputchannels.md), [`&stereo=3`](../general-settings/stereo.md), channelCount, [`&mono`](../advanced-settings/view-parameters/mono.md) (playback), [`&ec&dn&ag`](../guides/audio-filters.md), and within OBS/Windows itself.\
-  ![](<../.gitbook/assets/image (3) (1) (1).png>)![](<../.gitbook/assets/image (1) (1) (1) (3) (1).png>)\
+  ![](<../.gitbook/assets/image (3) (1) (1) (2).png>)![](<../.gitbook/assets/image (1) (1) (1) (3) (1).png>)\
   \
   \*\* updated on to alpha at vdo.ninja/alpha/
 
@@ -683,7 +700,7 @@
   ![](<../.gitbook/assets/image (11) (1) (2) (1) (1).png>)
 * ``[`&effects=1`](../source-settings/effects.md) on the sender side (or `&effects=facetracking`) will auto-center the user's face in the center of their video, zooming in as needed. It takes a moment to initiate, but it offers a gentle PTZ-like effect.\
   \-- note: I previously had `&effects=1`, but it wasn't that good, so this is a more polished attempt. It's also available from the effects drop down menu now as a selectable option, as before I was hiding it.\
-  ![](<../.gitbook/assets/image (3) (1) (1) (2).png>)\
+  ![](<../.gitbook/assets/image (3) (1) (1) (2) (3).png>)\
   \-- important note: Both `&getfaces` and `&effects=1` requires the use of the Chromium experimental face detection API, as I'm using the built-in browser face-tracking model for this. You can enable the API flag here: `chrome://flags/#enable-experimental-web-platform-features` My hope is that this feature will eventually be enabled by default within Chromium, as loading a large ML model to do face detection otherwise is a bit heavy; you may need to enable this within the OBS CLI if wishing to use it there?\
   \*\*\* Changes on alpha at vdo.ninja/alpha/
 

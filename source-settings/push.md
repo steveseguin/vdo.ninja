@@ -8,7 +8,6 @@ Sender-Side Option! ([`&room`](../general-settings/room.md))
 
 ## Aliases
 
-* `&permaid`
 * `&id`
 
 ## Options
@@ -41,6 +40,10 @@ If the stream ID is already in active use, an error will be shown and the stream
 If using a [`&room`](../general-settings/room.md) URL and not using [`&scene`](../advanced-settings/view-parameters/scene.md) or [`&solo`](../advanced-settings/mixer-scene-parameters/and-solo.md), VDO.Ninja will automatically generate a `&push` ID.
 
 ## Related
+
+{% content-ref url="../advanced-settings/setup-parameters/and-permaid-alpha.md" %}
+[and-permaid-alpha.md](../advanced-settings/setup-parameters/and-permaid-alpha.md)
+{% endcontent-ref %}
 
 {% content-ref url="../advanced-settings/view-parameters/view.md" %}
 [view.md](../advanced-settings/view-parameters/view.md)

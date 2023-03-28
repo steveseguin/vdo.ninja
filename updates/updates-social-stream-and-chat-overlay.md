@@ -3,6 +3,30 @@
 [social-stream.md](../steves-helper-apps/social-stream.md "mention")\
 [chat-overlay.md](../steves-helper-apps/chat-overlay.md "mention")
 
+#### **March 23**
+
+Social stream updates:
+
+* Fixed an issue with 7TV v3 and usernames not being coloured
+* Fixed an issue where Pinned messages in YouTube chat would be duplicated in the dock; attempted to fix some other duplication issues.
+*   Updated [**Electron Capture**](../steves-helper-apps/electron-capture.md) so that you can toggle the "click thru and pin on top" with a global keyboard shortcut. (`CTRL + SHIFT + X`)\
+    \-- This Electron Capture update relates to Social Stream because you can use it to overlay the dock chat on your display (such as while gaming?) without it getting in the way of what you're doing. (see photo for example)\
+
+
+    ```
+    https://socialstream.ninja/dock.html?session=XXXXXXX&transparent  <= example of what you can use in the EC app; &transparent is recommended.
+    ```
+
+    \
+    [https://github.com/steveseguin/electroncapture/releases/tag/2.17.1.1](https://github.com/steveseguin/electroncapture/releases/tag/2.17.1.1) <= Test version of Electron Capture with this new feature; windows build\
+    ![](<../.gitbook/assets/image (3).png>)
+
+#### **March 22**
+
+* Updated Social Stream to support the recently pushed 7TV v3.0 extension (which broke the old version of Social Stream).
+* Also improved the scrolling function; should be less jerky now (rewrote the logic; I hope its bug free. please let me know if not).
+* Added some TTS options, such as only read out every 3rd message, and optionally tell the TTS to not say "xxxx says yyyy"; just the name + message.
+
 #### **March 19**
 
 * `&reload` added to Social Stream; this will try to reload the last 40 to 50 messages in the dock after a page refresh, so you don't lose all your messages if something needs a refresh or things crash.
@@ -69,7 +93,7 @@ Social Stream updates for today:
 
 * Social Stream has had the "open chat automatically" functionality improved a lot the last couple days. @River played a large part in that.
 * Added to Social Stream the option to map a chat command to some webhook API. Just an easy way to get started with making bot-actions, such as turning on a light. Happy to evolve this based on feedback.\
-  ![](<../.gitbook/assets/image (1) (1) (1).png>)
+  ![](<../.gitbook/assets/image (1) (1) (1) (1).png>)
 
 #### **February 22**
 

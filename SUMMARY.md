@@ -98,6 +98,7 @@
     * [\&hash](newly-added-parameters/and-hash.md)
     * [\&label](general-settings/label.md)
     * [\&labelsuggestion](advanced-settings/setup-parameters/and-labelsuggestion.md)
+    * [\&permaid (alpha)](advanced-settings/setup-parameters/and-permaid-alpha.md)
     * [\&group](general-settings/and-group.md)
     * [\&groupview (alpha)](advanced-settings/setup-parameters/and-groupview-alpha.md)
     * [\&groupaudio](general-settings/and-groupaudio.md)

@@ -2,6 +2,23 @@
 
 [electron-capture.md](../steves-helper-apps/electron-capture.md "mention")
 
+#### March 23
+
+*   Updated **Electron Capture** so that you can toggle the "click thru and pin on top" with a global keyboard shortcut. (`CTRL + SHIFT + X`)\
+    \-- This Electron Capture update relates to [Social Stream](../steves-helper-apps/social-stream.md) because you can use it to overlay the dock chat on your display (such as while gaming?) without it getting in the way of what you're doing. (see photo for example)\
+
+
+    ```
+    https://socialstream.ninja/dock.html?session=XXXXXXX&transparent  <= example of what you can use in the EC app; &transparent is recommended.
+    ```
+
+    \
+    [https://github.com/steveseguin/electroncapture/releases/tag/2.17.1.1](https://github.com/steveseguin/electroncapture/releases/tag/2.17.1.1) <= Test version of Electron Capture with this new feature; windows build\
+    ![](<../.gitbook/assets/image (1).png>)\
+
+
+### 2022
+
 #### December 14
 
 * Fixed a media recording error with electron capture in director-mode
