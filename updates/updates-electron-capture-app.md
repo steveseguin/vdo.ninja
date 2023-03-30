@@ -2,6 +2,10 @@
 
 [electron-capture.md](../steves-helper-apps/electron-capture.md "mention")
 
+#### March 30
+
+* **Electron capture** will save the Edit CSS custom user entry to local storage, so on next visit to a site, your last CSS entry will be remembered for easy reuse (source code updated; new builds will come later)
+
 #### March 23
 
 *   Updated **Electron Capture** so that you can toggle the "click thru and pin on top" with a global keyboard shortcut. (`CTRL + SHIFT + X`)\
@@ -14,7 +18,7 @@
 
     \
     [https://github.com/steveseguin/electroncapture/releases/tag/2.17.1.1](https://github.com/steveseguin/electroncapture/releases/tag/2.17.1.1) <= Test version of Electron Capture with this new feature; windows build\
-    ![](<../.gitbook/assets/image (1).png>)\
+    ![](<../.gitbook/assets/image (1) (12).png>)\
 
 
 ### 2022

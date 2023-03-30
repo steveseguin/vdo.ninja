@@ -2,6 +2,12 @@
 
 [meshcast.io.md](../steves-helper-apps/meshcast.io.md "mention")
 
+#### March 30
+
+* Pushed a needed update to the **Meshcast** servers; should help solve the "Meshcast not available" problem that was happening every couple months.
+
+### 2022
+
 #### December 12
 
 * Added 3 new Meshcast servers: Toronto, Oregon, Virginia.

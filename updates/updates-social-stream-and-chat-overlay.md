@@ -3,6 +3,10 @@
 [social-stream.md](../steves-helper-apps/social-stream.md "mention")\
 [chat-overlay.md](../steves-helper-apps/chat-overlay.md "mention")
 
+#### **March 30**
+
+* Added `&opacity=0.3` to **Social Stream**; lets you make the text/dock partially transparent.
+
 #### **March 23**
 
 Social stream updates:
@@ -33,7 +37,7 @@ Social stream updates:
 * IRC support added to Social Stream via [https://webchat.quakenet.org/](https://webchat.quakenet.org/).
 * tellonym.me support added to Social Stream.
 * Initial guest avatar image support added to kick.com on Social Stream.\
-  ![](<../.gitbook/assets/image (2).png>)
+  ![](<../.gitbook/assets/image (2) (16).png>)
 
 #### **March 17**
 

@@ -36,7 +36,7 @@ This chat overlay extension will forward the selected chat message over a web-so
 
 Get support on the Discord if you have any problems: [💬│chat․overlay-support](https://discord.gg/6Wbu848w94)
 
-![](<../.gitbook/assets/image (35).png>)
+![](<../.gitbook/assets/image (35) (1).png>)
 
 ## Updates
 
