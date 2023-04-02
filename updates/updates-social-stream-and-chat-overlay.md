@@ -3,6 +3,10 @@
 [social-stream.md](../steves-helper-apps/social-stream.md "mention")\
 [chat-overlay.md](../steves-helper-apps/chat-overlay.md "mention")
 
+#### **April 2**
+
+* tradingview.com support added to Social Stream
+
 #### **March 30**
 
 * Added `&opacity=0.3` to **Social Stream**; lets you make the text/dock partially transparent.
@@ -23,7 +27,7 @@ Social stream updates:
 
     \
     [https://github.com/steveseguin/electroncapture/releases/tag/2.17.1.1](https://github.com/steveseguin/electroncapture/releases/tag/2.17.1.1) <= Test version of Electron Capture with this new feature; windows build\
-    ![](<../.gitbook/assets/image (3).png>)
+    ![](<../.gitbook/assets/image (3) (2).png>)
 
 #### **March 22**
 
@@ -199,7 +203,7 @@ Social Stream updates for today:
 #### **December 22**
 
 * Added an option to randomize the color of names in Social Stream if no name color is already provided.\
-  ![](<../.gitbook/assets/image (3) (2) (1).png>)![](<../.gitbook/assets/image (174).png>)
+  ![](<../.gitbook/assets/image (3) (2) (1) (1).png>)![](<../.gitbook/assets/image (174).png>)
 
 #### **December 21**
 

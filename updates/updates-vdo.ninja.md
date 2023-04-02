@@ -1,5 +1,16 @@
 # Updates - VDO.Ninja
 
+#### March 31 <a href="#august-31" id="august-31"></a>
+
+* Added a `disable video` button as a new director's remote control option. This will remotely disable the guest's video in the same way that the guest themselves can disable it.\
+  \-- The guest can't override it (unless they reload the page I guess).\
+  \-- This disables the video preview for even the director, as its disabled as the source, so there isn't for even a solo "view" link to override it. This then is a bit more of a sure-fire way to disable a video from a guest.\
+  \-- The previous "hide guest" button still works, but has a new icon. This differs from the new "disable video" in that the director can still see a preview of the guests video and it also hides any avatar/style-place-holder. When "disabling video", audio-only styles and avatar placeholders may still work.\
+  \-- The guest gets a little note in their header bar that the director muted them when enabled. Also, the guest is unable to see their own video preview when enabled, hence the need for a message.\
+  ![](../.gitbook/assets/image.png)![](<../.gitbook/assets/image (3).png>)\
+  \
+  \*\* on alpha [https://vdo.ninja/alpha/](https://vdo.ninja/alpha/), by user request. Please report any issues/feedback regarding it.
+
 #### March 24 <a href="#august-31" id="august-31"></a>
 
 * Right click a video and click `Snapshot to Clipboard` to save the current video frame to the clipboard as a PNG image. This can be pasted into most applications, such as Photoshop, for quick use in a production\
