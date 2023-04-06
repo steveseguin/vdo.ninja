@@ -3515,10 +3515,10 @@ div#roomnotes2 {
 
 .controlsGrid button {
 	display: flex;
-	justify-content: center;
+    align-items: center;
+    justify-content: center;
     margin: 0;
-    text-align: right;
-	padding: 5px;
+    padding: 5px;
     border-radius: 4px;
 }
 .controlsGrid button.center {
