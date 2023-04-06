@@ -4545,6 +4545,8 @@ input:checked + .slider:before {
 	content: "\f095"; } 
 .la-gamepad:before {
 	content: "\f11b"; }
+.la-user-slash:before {
+	content: "\f506"; }	
 .la-skull-crossbones:before {
 	content: "\f714"; }
 .la-hand-paper:before {

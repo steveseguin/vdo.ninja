@@ -373,9 +373,12 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 		session.audioEffects = false; // disable audio inbound effects also.
 		session.audioMeterGuest = false;
 		window.addEventListener('resize', function() {  // Safari is the new IE.
-			var msg = {};
-			msg.requestSceneUpdate = true;
-			session.sendMessage(msg);
+		
+			if (session.ws){
+				var msg = {};
+				msg.requestSceneUpdate = true;
+				session.sendMessage(msg);
+			}
 			
 			if ( window.matchMedia("(orientation: portrait)").matches ) {
 				document.getElementsByTagName("html")[0].style.height = "100vh";
@@ -1456,6 +1459,7 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 			}
 		}
 	}
+	
 
 	if (urlParams.has('transparent') || urlParams.has('transparency')) { // sets the window to be transparent - useful for IFRAMES?
 		session.transparent=true;
@@ -2487,9 +2491,15 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 	}
 	
 	if (urlParams.has('chunked')) {
-		session.chunked = parseInt(urlParams.get('chunked')) || 2500;
-		session.alpha = true;
+		session.chunked = parseInt(urlParams.get('chunked')) || 2500; // sender side; enables to allows.
+		// session.alpha = true;
 	}
+	if (urlParams.has('nochunk') || urlParams.has('nochunked')) { // viewer side
+		session.nochunk = true;
+	}
+	//if (urlParams.has('viewchunked') || urlParams.has('viewchunk') || urlParams.has('allowchunked') || urlParams.has('allowchunk')) { // viewer side
+	//	session.forceChunked = true;
+	//}
 	
 	if (urlParams.has('token')) {
 		session.token = urlParams.get('token') || false;
