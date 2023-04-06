@@ -24813,7 +24813,7 @@ var remoteSliderTimeout = 0;
 function updateDirectorsVideo(data, UUID) {
 	var videoEle = document.createElement("div");
 	if (data.trackLabel) { 
-		var label = document.createElement("span");
+		var label = document.createElement("label");
 		label.innerText = data.trackLabel;
 		label.style.marginBottom = "10px";
 		label.style.display = "block";
