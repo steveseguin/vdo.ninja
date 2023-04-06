@@ -587,15 +587,60 @@ body.darktheme .credits>a:visited {
 	background-color: black;
 }
 
-.advDirectGuestSettings {
-    padding: 10px 5px;
+.advancedAudioSettings, .advancedVideoSettings {
+    display: flex;
+    flex-direction: column;
+    padding: 5px;
     max-height: 400px;
     overflow-y: auto;
     border-radius: 0px 0px 4px 4px;
     background-color: #222;
+    width: 100%;
+}
+.advancedAudioSettings div {
+    display: flex;
+    overflow: hidden;
+    align-items: center;
+    gap: 4px;
+    padding: 4px;
+}
+.advancedAudioSettings div button {
+    padding: 4px;
+    height: 24px;
+    margin: unset;
+    flex: 1;
 }
 
-.darktheme .advDirectGuestSettings label {
+.advancedAudioSettings div select {
+    width: 100%;
+    border-radius: 4px;
+    flex: 2;
+    height: 24px;
+
+}
+.advancedVideoSettings div:nth-child(2) {
+    display: flex;
+    width: 100%;
+    padding: 4px;
+    align-items: center;
+    gap: 4px;
+}
+
+.advancedVideoSettings div:nth-child(2) select {
+    width: 100%;
+    flex: 2;
+    height: 24px;
+    border-radius: 4px;
+}
+
+.advancedVideoSettings div:nth-child(2) button { 
+    width: 100%;
+    flex: 1;
+    height: 24px;
+    margin: unset;
+}
+
+.darktheme .advancedAudioSettings label, .darktheme .advancedVideoSettings label {
 	color: #FFF;
 }
 
