@@ -15603,7 +15603,10 @@ function requestAudioSettings(ele) {
 	} else {
 		ele.value = 1;
 		ele.classList.add("pressed");
+        const videoSettingsButton = document.querySelector('[data-cluster="3"] button[data-action-type="advanced-camera-settings"][data--u-u-i-d="' + UUID + '"]');
+        videoSettingsButton.classList.remove("pressed");
 		getById("advanced_audio_director_" + UUID).innerHTML = "";
+		getById("advanced_video_director_" + UUID).classList.add("hidden");
 		var actionMsg = {};
 		actionMsg.getAudioSettings = true;
 		session.sendRequest(actionMsg, UUID);
@@ -15622,7 +15625,10 @@ function requestVideoSettings(ele) {
 	} else {
 		ele.value = 1;
 		ele.classList.add("pressed");
+        const audioSettingsButton = document.querySelector('[data-cluster="3"] button[data-action-type="advanced-audio-settings"][data--u-u-i-d="' + UUID + '"]');
+        audioSettingsButton.classList.remove("pressed");
 		getById("advanced_video_director_" + UUID).innerHTML = "";
+		getById("advanced_audio_director_" + UUID).classList.add("hidden");
 		var actionMsg = {};
 		actionMsg.getVideoSettings = true;
 		session.sendRequest(actionMsg, UUID);
