@@ -587,6 +587,10 @@ body.darktheme .credits>a:visited {
 	background-color: black;
 }
 
+.darktheme .advancedAudioSettings, .darktheme .advancedVideoSettings {
+    background-color: #222;
+}
+
 .advancedAudioSettings, .advancedVideoSettings {
     display: flex;
     flex-direction: column;
@@ -594,7 +598,7 @@ body.darktheme .credits>a:visited {
     max-height: 400px;
     overflow-y: auto;
     border-radius: 0px 0px 4px 4px;
-    background-color: #222;
+    background-color: #ccc;
     width: 100%;
 }
 .advancedAudioSettings div {
@@ -2218,9 +2222,8 @@ span[data-action-type="stats-graphs-details-container"]>span{
 	width: 55px;
 	display: inline-block;
 	overflow: scroll;
-	padding: 1px 0 0 5px;
-	margin-top: 14px;
-	margin-left: 5px;
+    margin: 4px 0 4px 4px;
+    padding: 1px 4px;
 }
 #add_screen {
 	padding-bottom: 20px;
