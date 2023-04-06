@@ -3524,9 +3524,6 @@ div#roomnotes2 {
     padding: 5px;
     border-radius: 4px;
 }
-.controlsGrid button.center {
-	align-self: center;
-}
 
 /* Specitic CSS for different elements inside the guest control-buttons */
 .controlsGrid .director-message-box {
