@@ -122,7 +122,7 @@ th {
 	padding:4px;
 }
 .preSelectButton {
-	margin: 4px 0 4px 8px;
+    margin: 4px 0 4px 4px;
     padding: 1px 4px;
 }
 .meter {
@@ -252,7 +252,7 @@ button {
 	user-select: none;
 	margin: 10px 0px;
 	cursor: pointer;
-	border-radius: 2px;
+    border-radius: 4px;
 }
 
 
@@ -588,9 +588,11 @@ body.darktheme .credits>a:visited {
 }
 
 .advDirectGuestSettings {
-	padding: 10px 5px;
+    padding: 10px 5px;
     max-height: 400px;
     overflow-y: auto;
+    border-radius: 0px 0px 4px 4px;
+    background-color: #222;
 }
 
 .darktheme .advDirectGuestSettings label {
@@ -694,6 +696,7 @@ hr {
 	width: 100%;
 	height: 148px;
 	max-width: 260px;
+    border-radius: 4px;
 }
 
 .directorsgrid .vidcon {
@@ -702,6 +705,7 @@ hr {
 	background: #7E7E7E;
 	color: #FCFCFC;
 	vertical-align: top;
+    border-radius: 4px;
 }
 
 .directorBox {
@@ -1584,23 +1588,23 @@ input[type=range]::-webkit-slider-runnable-track {
 	height: 8.4px;
 	cursor: pointer;
 	box-shadow: 1px 1px 1px #000000, 0px 0px 1px #0d0d0d;
-	background: #3071a9;
+	background: #5ca930;
 	border-radius: 1.3px;
 	border: 0.2px solid #010101;
 }
 input[type=range]::-webkit-slider-thumb {
 	box-shadow: 1px 1px 1px #000000, 0px 0px 1px #0d0d0d;
 	border: 1px solid #000000;
-	height: 30px;
-	width: 16px;
-	border-radius: 3px;
+	height: 24px;
+	width: 8px;
+	border-radius: 2px;
 	background: #ffffff;
 	cursor: pointer;
 	-webkit-appearance: none;
-	margin-top: -11px;
+	margin-top: -8px;
 }
 input[type=range]:focus::-webkit-slider-runnable-track {
-	background: #367ebd;
+	background: #57a32a;
 }
 input[type=range]::-moz-range-track {
 	width: 100%;
@@ -2177,13 +2181,16 @@ span[data-action-type="stats-graphs-details-container"]>span{
 	padding-bottom: 20px;
 }
 .soloButton{
-	padding:5px;
 	word-wrap: break-word;
 	overflow:hidden;
 	white-space: nowrap;
 	overflow: hidden;
 	font-size:0.7em;
 	text-overflow: ellipsis;
+    margin-top: 5px;
+}
+.soloButton button {
+    margin: 5px 0px 0px 0px;
 }
 
 .lowerRaisedHand{
@@ -3423,32 +3430,27 @@ div#roomnotes2 {
 	grid-column: 1;
 }
 .directorsgrid button {
-	text-transform: lowercase;
+	text-transform: capitalize;
 }
-
-
-
-
-
 
 /* ---- DIRECTORS PAGE - Guest Controls Box ---- */
 .controlsGrid {
     display: flex;
     flex-wrap: wrap;
+    gap: 4px;
 }
 .controlsGrid .group {
 	width: 100%;
 	display: flex;
 	flex-direction: column;
+    gap: 4px;
 }
 
 .controlsGrid .row {
 	width: 100%;
 	display: flex;
 	flex-wrap: wrap;
-	gap: 10px;
-	margin-top: 5px;
-	margin-bottom: 5px;
+	gap: 4px;
 }
 .controlsGrid .row > .row {
 	margin: 0;
@@ -3467,40 +3469,31 @@ div#roomnotes2 {
 }
 
 .controlsGrid button {
+	display: flex;
+	justify-content: center;
     margin: 0;
     text-align: right;
+	padding: 5px;
+    border-radius: 4px;
 }
 .controlsGrid button.center {
-	display: flex;
 	align-self: center;
-	justify-content: center;
-	padding: 0 5px;
-	padding-top: 7px;
-	padding-bottom: 6px;
-}
-
-.controlsGrid .spacer {
-	width: 100%;
-	height: 5px;
-}
-.controlsGrid .spacer.big {
-	height: 15px;
 }
 
 /* Specitic CSS for different elements inside the guest control-buttons */
 .controlsGrid .director-message-box {
-	flex: 1 100% !important;
-	padding: 10px;
-
-	background: rgba(0, 0, 0, .15);
-
 	display: flex;
 	flex-wrap: wrap;
 	gap: 5px;
+	flex: 1 100% !important;
+    padding: 5px;
+	background: rgba(0, 0, 0, .15);
+    border-radius: 4px;
 }
 .controlsGrid .director-message-box textarea {
 	flex: 1 100%;
 	padding: 5px;
+    border-radius: 4px;
 }
 .controlsGrid .director-message-box .message-close {
 	flex: 1;
@@ -3518,15 +3511,20 @@ div#roomnotes2 {
 	margin: 0;
 }
 .controlsGrid .tooltip .tooltiptext {
-	top: -25px;
+    height: 18px;
+    line-height: 1.2;
+    top: 3px !important;
+    left: 100% !important;
+    background-color: #7a9d50;
+    border: 1px solid rgba(0,0,0,1);
+    border-radius: 4px;
+    font-size: 12px;
 }
 
 .controlsGrid .hideDropMenu{
 	user-select: none;
 	grid-column: 1;
 	width: 100%;
-	margin-top: 10px;
-	margin-bottom: 5px;
 	font-size: 80%;
 	cursor: pointer;
 }
@@ -3547,26 +3545,22 @@ div#roomnotes2 {
 
 /* Hightlights for buttons in the guest control-buttons */
 .controlsGrid .btn-HL-yellow {
-	background: rgb(255, 235, 154);
+	background: rgb(255, 229, 127);
 }
 .controlsGrid .btn-HL-peach {
-	background: rgb(243, 197, 242);
+	background: rgb(228, 203, 189);
 }
 .controlsGrid .btn-HL-green {
-	background: rgb(130, 223, 128);
+	background: rgb(189, 228, 199);
 }
 .controlsGrid .btn-HL-blue {
-	background: rgb(170, 204, 248);
+	background: rgb(170, 204, 248)
 }
 
 /* Hides buttons that are supposed to be hidden when &novice is added to URL */
 .controlsGrid .advanced.hide {
     display: none;
 }
-
-
-
-
 
 #widget {
 	position: absolute;
@@ -3586,8 +3580,7 @@ div#roomnotes2 {
 	right: 10px;
 }
 .controlCenterBox{
-	margin-top:2px;
-	padding: 0 5px;
+    padding: 5px;
 }
 
 .contolboxLabel {
@@ -3873,7 +3866,7 @@ a#reshare {
 	height:0%;
 	min-width:2px;
 	bottom: 1px;
-	right: 5px;
+    right: 7px;
 	background-color:#0000;
 	position:absolute;
 	border-radius: 2vh;
