@@ -28,13 +28,13 @@
 		<meta name="license" content="https://github.com/steveseguin/vdo.ninja/LICENSE.md" />
 		<meta name="sourcecode" content="https://github.com/steveseguin/vdo.ninja" />
 		<link rel="shortcut icon" href="data:image/x-icon;," type="image/x-icon" />
-		<link rel="icon" type="image/png" sizes="32x32" href="./media/favicon-32x32.png" />
-		<link rel="icon" type="image/png" sizes="16x16" href="./media/favicon-16x16.png" />
-		<link rel="icon" href="./media/favicon.ico" />
-		<link itemprop="thumbnailUrl" href="./media/vdoNinja_logo_full.png" />
+		<link id="favicon1" rel="icon" type="image/png" sizes="32x32" href="./media/favicon-32x32.png" />
+		<link id="favicon2" rel="icon" type="image/png" sizes="16x16" href="./media/favicon-16x16.png" />
+		<link id="favicon3" rel="icon" href="./media/favicon.ico" />
+		<link id="thumbnailUrl" itemprop="thumbnailUrl" href="./media/vdoNinja_logo_full.png" />
 		<!-- Primary Meta Tags -->
 		<title>VDO.Ninja</title>
-		<meta name="title" content="VDO.Ninja" />
+		<meta id="metaTitle" name="title" content="VDO.Ninja" />
 		<meta name="description" content="Bring live video from your smartphone, computer, or friends directly into your Studio. 100% free." />
 		<meta name="author" content="Steve Seguin" />
 		<!-- Open Graph / Facebook -->
@@ -56,7 +56,7 @@
 		<meta property="twitter:image" content="./media/vdoNinja_logo_full.png" />
 		<meta name="msapplication-TileColor" content="#da532c" />
 		<meta name="theme-color" content="#ffffff" />
-		<link rel="stylesheet" href="./main.css?ver=272" />
+		<link rel="stylesheet" href="./main.css?ver=274" />
 		<script type="text/javascript" crossorigin="anonymous" src="./thirdparty/adapter.js"></script>
 		<style id="lightbox-animations" type="text/css"></style>
 		<!-- <link rel="manifest" href="manifest.json" /> -->
@@ -81,9 +81,9 @@
 			<link itemprop="url" href="./media/vdoNinja_logo_full.png" />
 		</span>
 		
-		<script type="text/javascript" crossorigin="anonymous"  src="./thirdparty/CodecsHandler.js?ver=45"></script>
+		<script type="text/javascript" crossorigin="anonymous"  src="./thirdparty/CodecsHandler.js?ver=47"></script>
 		<script type="text/javascript" crossorigin="anonymous" src="./thirdparty/aes.js"></script>
-		<script type="text/javascript" crossorigin="anonymous" src="./webrtc.js?ver=589"></script>
+		<script type="text/javascript" crossorigin="anonymous" src="./webrtc.js?ver=606"></script>
 		<input id="zoomSlider" type="range" style="display: none;" />
 		<span id="electronDragZone" style="pointer-events: none; z-index:-10; position:absolute;top:0;left:0;width:100%;height:2%;-webkit-app-region: drag;min-height:20px;"></span>
 		<div id="header">
@@ -130,7 +130,7 @@
 			</div>
 			<div id="head6" class="hidden" data-translate="only-director-can-hear-you">Only the director can hear you currently.</div>
 			<div id="head7" class="hidden" data-translate="director-muted-you">The director has muted you.</div>
-			
+			<div id="head8" class="hidden" data-translate="director-video-muted-you">The director has disabled your camera temporarily.</div>
 		</div>
 		<div id="controlButtons" class="hidden">
 			<div id="obsState" class="hidden" >ACTIVE</div>
@@ -1386,7 +1386,7 @@
 						<span data-translate="voice-chat">Solo Talk</span>
 					</button>
 
-					<button data-action-type="solo-video" class="btn-HL-yellow advanced" title="Solo this video everywhere" onclick="requestInfocus(this);">
+					<button data-action-type="solo-video" class="btn-HL-yellow advanced" title="Solo this video everywhere. (Hold CTRL/CMD to just make video larger)" onclick="requestInfocus(this, event);">
 						<i class="las la-user"></i>
 						<span data-translate="solo-video">Highlight guest</span>
 					</button>
@@ -1454,9 +1454,6 @@
 							<span>S9</span>
 						</button>
 					</div>
-					
-					<span class="spacer"></span>
-
 				</div>
 				
 
@@ -1483,9 +1480,13 @@
 				<div class="group hidden" data-cluster="2">
 					<!-- General Controls -->
 					<div class="row two">
-						<button data-action-type="hide-guest" title="Hide this guest everywhere" onclick="remoteMuteVideo(this, event);">
-							<i class="las la-video-slash"></i>
+						<button data-action-type="hide-guest" title="Hide this guest everywhere" onclick="remoteHideVideo(this, event);">
+							<i class="las la-user-slash"></i>
 							<span data-translate="hide-guest">hide guest</span>
+						</button>
+						<button data-action-type="mute-video-guest" title="Disable this guest's video track" onclick="remoteMuteVideo(this, event);">
+							<i class="las la-video-slash"></i>
+							<span data-translate="mute-video-guest">disable video</span>
 						</button>
 						<button class="mainonly" data-action-type="toggle-remote-speaker" title="Toggle the remote guest's speaker output" onclick="remoteSpeakerMute(this, event);">
 							<i class="las la-volume-off"></i> <span data-translate="toggle-remote-speaker">Deafen Guest</span>
@@ -1568,8 +1569,6 @@
 						</button>
 					</div>
 
-					<span class="spacer"></span>
-
 					<!-- General Controls -->
 					<div class="row two">
 						<!-- Mix Order Control -->
@@ -1599,8 +1598,6 @@
 							</button>
 						</div>
 					</div>
-
-					<span class="spacer big"></span>
 					 
 					<!-- Further Audio/Video Settings -->
 					<div class="row two" data-cluster="3">
@@ -1615,8 +1612,6 @@
 					</div>
 
 				</div>
-				
-				<span class="spacer"></span>
 			</div>
 		</div>
 		
@@ -1633,7 +1628,7 @@
 						<i class="las la-microphone-slash"></i>
 						<span data-translate="mute-scene">mute in scene</span>
 					</button>
-					<button data-action-type="solo-video" class="btn-HL-yellow" title="Solo this video everywhere" onclick="requestInfocus(this);">
+					<button data-action-type="solo-video" class="btn-HL-yellow" title="Solo this video everywhere. (Hold CTRL/CMD to just make video larger)" onclick="requestInfocus(this, event);">
 						<i class="las la-user"></i>
 						<span data-translate="solo-video-director">Highlight</span>
 					</button>
@@ -1688,8 +1683,6 @@
 						<span>G6</span>
 					</button>
 				</div>
-
-				<span class="spacer"></span>
 				
 				<!-- Mix Order Control -->
 				<span class="row three advanced" data-action-type="ordering">
@@ -1704,9 +1697,6 @@
 						<i class="las la-plus"></i>
 					</button>
 				</span>
-
-				<span class="spacer"></span>
-
 			</div>	
 		</div>
 		
@@ -2069,7 +2059,7 @@
 				<input id="trbSettingInput" type="range" min="0" max="4000" value="500" onchange="getById('trbSettingInputManual').value=this.value;changeTRB(this);" oninput="getById('trbSettingInputFeedback').innerHTML = this.value;" style="width:calc(100% - 60px);display:inline-block;" />
 				<input id="trbSettingInputManual" min="0" value="500" onchange="getById('trbSettingInput').value=this.value;changeTRB(this);" oninput="getById('trbSettingInputFeedback').innerHTML = this.value;" style="width:42px;display:inline-block;text-align: center;" />
 				
-				<span style="margin: 20px 0 0 0;display:block" id='highlightDirectorSpan' title="Only the director's video will be visible to guests and within group scenes">
+				<span style="margin: 20px 0 0 0;display:block" id='highlightDirectorSpan' title="Only the director's video will be visible to guests and within group scenes. (Hold CTRL/CMD to just make video larger)">
 					<input id="highlightDirector" style="width: 15px; height: 15px; margin:10px;" name="highlightDirector"  data-action-type="solo-video" type="checkbox" onchange="requestInfocus(this, event);" />
 					<label for="highlightDirector" data-translate="highlight-director-only-video-guests-will-see">Highlight Director (only video guests will see)</label> 
 				</span>
@@ -2493,11 +2483,11 @@
 			// session.hidehome = true; // If used, 'hide home' will make the landing page inaccessible, along with hiding a few go-home elements.
 			// session.record = false; // uncomment to block users from being able to record via vdo.ninja's built in recording function
 		</script>
-		<script type="text/javascript" crossorigin="anonymous" id="lib-js" src="./lib.js?ver=701"></script>
+		<script type="text/javascript" crossorigin="anonymous" id="lib-js" src="./lib.js?ver=711"></script>
 		<!-- 
 		// If you wish to change branding, blank offers a good clean start.
 		<script type="text/javascript" id="main-js" src="./main.js" data-translation="blank"></script>
 		-->
-		<script type="text/javascript" crossorigin="anonymous" id="main-js" src="./main.js?ver=571"></script>
+		<script type="text/javascript" crossorigin="anonymous" id="main-js" src="./main.js?ver=578"></script>
 	</body>
 </html>

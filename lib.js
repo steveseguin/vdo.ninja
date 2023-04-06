@@ -945,6 +945,8 @@ function youveBeenTransferred(){
 	} else {
 		document.title = miscTranslations["transferred"];
 	}
+	
+	hideHomeCheck();
 }
 
 async function confirmAlt(inputText, block=false){
@@ -1251,6 +1253,7 @@ session.sceneSync = function(UUID){
 
 session.obsStateSync = function(data2send=false, uid=false){
 	if (session.disableOBS){return;}
+	if (!window.obsstudio){return;} // this isn't OBS
 	// they can disable remote control via OBS brower source drop-down itself.
 	
 	var needOptimize = false;
@@ -1259,8 +1262,6 @@ session.obsStateSync = function(data2send=false, uid=false){
 			needOptimize=true;
 		}
 	}
-	
-	
 	
 	for (var UUID in session.rpcs){
 		if (uid && (uid!==UUID)){continue;} // target just a single connection.
@@ -1362,6 +1363,7 @@ session.getOBSOptimization = function(msg, UUID){
 
 function getOBSDetails(){
 	if (session.disableOBS){return false;}
+	if (!window.obsstudio){return;}
 	
 	if (!("details" in session.obsState)){
 		session.obsState.details = {};
@@ -3326,6 +3328,24 @@ function hideHomeCheck(){
 		getById("calendarButton").classList.add("permahide");
 		getById("info").classList.add("permahide");
 		getById("helpbutton").classList.add("permahide");
+	}
+	
+	if (urlParams.has('headertitle')){
+		let pageTitle = urlParams.get('headertitle') || "";
+		pageTitle = decodeURIComponent(pageTitle) || "";
+		document.title = pageTitle
+		getById("metaTitle").content = pageTitle;
+	}
+	
+	if (urlParams.has('favicon')){
+		let favicon = "";
+		if (urlParams.get('favicon')){
+			favicon = decodeURIComponent(urlParams.get('favicon')) || "";
+		}
+		getById("favicon1").href = favicon;
+		getById("favicon2").href = favicon;
+		getById("favicon3").href = favicon;
+		
 	}
 }
 
@@ -5773,6 +5793,7 @@ async function changeAvatarImage(ev, ele, set=false){
 	
 	if (session.avatar && session.avatar.timer){
 		clearInterval(session.avatar.timer);
+		session.avatar.timer=null;
 	}
 	
 	if (!session.streamSrc){
@@ -6155,6 +6176,7 @@ function setAvatarImage(tracks){
 	if (session.avatar && session.avatar.ready){
 		if (session.avatar && session.avatar.timer){
 			clearInterval(session.avatar.timer);
+			session.avatar.timer=null;
 		}
 		setupCanvas();
 		
@@ -6179,11 +6201,17 @@ function setAvatarImage(tracks){
 		}
 		
 		if (session.avatar.naturalHeight && session.avatar.naturalHeight>maxH){
-			height = parseInt(session.avatar.naturalHeight/session.avatar.naturalWidth*maxW);
+			width = parseInt(maxH/session.avatar.naturalHeight * session.avatar.naturalWidth);
 			height = maxH;
+			
+			if (width>maxW){
+				width = maxW;
+				height = parseInt(maxW/width * height);
+			}
+			
 		} else if (session.avatar.naturalWidth && session.avatar.naturalWidth>maxW){
 			width = maxW;
-			height = parseInt(session.avatar.naturalWidth/session.avatar.naturalHeight*maxH);
+			height = parseInt(maxW/session.avatar.naturalWidth*session.avatar.naturalHeight);
 		} else {
 			width = session.avatar.naturalWidth;
 			height = session.avatar.naturalHeight;
@@ -6200,7 +6228,7 @@ function setAvatarImage(tracks){
 		session.avatar.timer = setInterval(function(){
 			log("drawing");
 			session.canvasCtx.drawImage(session.avatar, 0, 0, session.canvas.width, session.canvas.height);
-		},2000);
+		},200); // too slow and it takes way too long for the video to udpate when a new guest joins
 		
 		applyMirror(true);
 		
@@ -9462,6 +9490,8 @@ function printMyStats(menu) { // see: setupStatsMenu
 
 function updateLocalStats(){
 	
+	if (!session){return;}
+	
 	var totalBitrate = 0;
 	var totalBitrate2 = 0;
 	var cpuLimited = false;
@@ -10145,7 +10175,7 @@ function updateLocalStats(){
 	}
 	
 	
-	if  (session.director || !session.roomid){ // show stats if the director or if not in a group room
+	if (session.director || !session.roomid){ // show stats if the director or if not in a group room
 		if (cpuLimited){
 			headerStats += ", <span style='color: #e69a0f;' title='Your CPU is maxed out; this can cause audio, sync, and quality issues.'>🔥 CPU Overloaded</span>";
 		}
@@ -10624,19 +10654,40 @@ function toggleVideoMute(apply = false) { // TODO: I need to have this be MUTE, 
 	if (apply) {
 		session.videoMuted = !session.videoMuted;
 	}
+	
+	if (!session.remoteVideoMuted){
+		getById("head8").classList.add("hidden");
+	}
+	
 	if (session.videoMuted == false) {
 		session.videoMuted = true;
 		getById("mutevideotoggle").className = "las la-video-slash my-float toggleSize";
 		if (!(session.cleanOutput)){
 			getById("mutevideobutton").className = "float2 red";
 			getById("header").classList.add("red2");
+			if (session.remoteVideoMuted){
+				getById("head8").classList.remove("hidden");
+			}
 		}
 		if (session.streamSrc) {
 			session.streamSrc.getVideoTracks().forEach((track) => {
 				track.enabled = false;
 			});
 		}
-
+	} else if (session.remoteVideoMuted){  // the director has muted this guest's video feed
+		session.videoMuted = false; // just setting it back to the pre-toggled state
+		getById("mutevideotoggle").className = "las la-video my-float toggleSize";
+		if (!(session.cleanOutput)){
+			getById("head8").classList.remove("hidden");
+			getById("header").classList.add("red2");
+			getById("mutevideobutton").className = "float";
+		}
+		if (session.streamSrc) {
+			session.streamSrc.getVideoTracks().forEach((track) => {
+				track.enabled = false;
+			});
+		}
+	
 	} else {
 		session.videoMuted = false;
 
@@ -10665,10 +10716,10 @@ function toggleVideoMute(apply = false) { // TODO: I need to have this be MUTE, 
 		session.sendMessage(msg);
 	}
 	 
-	pokeIframeAPI("video-mute-state",session.videoMuted);
+	pokeIframeAPI("video-mute-state", (session.videoMuted || session.remoteVideoMuted));
 	
 	if (!apply){
-		pokeAPI("videoMuted", session.videoMuted);
+		pokeAPI("videoMuted", (session.videoMuted || session.remoteVideoMuted));
 	}
 	
 }
@@ -11317,6 +11368,10 @@ function syncOtherState(sid){
 						remoteMute(ele, false, true);
 					}
 				} else if (other == "hide-guest"){ 
+					if (changed){
+						remoteHideVideo(ele, true, true);
+					}
+				} else if (other == "mute-video-guest"){ 
 					if (changed){
 						remoteMuteVideo(ele, true, true);
 					}
@@ -12116,24 +12171,24 @@ function toggleQualityGear3(){
 	}
 }
 
-function remoteMuteVideo(ele,  event=false, skipSend=false) {
-	log("video mute");
+function remoteHideVideo(ele,  event=false, skipSend=false) {
+	log("video hide");
 	
 	if (!event ||  ((event.ctrlKey) || (event.metaKey))) {
 		ele.children[1].innerHTML = miscTranslations["armed"]
 		ele.style.backgroundColor = "#BF3F3F";
-		Callbacks.push([remoteMuteVideo, ele, false]);
+		Callbacks.push([remoteHideVideo, ele, false]);
 		log("video queued");
 		return;
 	} else {
 		if (ele.value == 1) {
 			ele.value = 0;
 			ele.classList.remove("pressed");
-			ele.innerHTML = '<i class="las la-video-slash"></i> <span data-translate="hide-guest" >hide guest</span>';
+			ele.innerHTML = '<i class="las la-user-slash"></i> <span data-translate="hide-guest" >hide guest</span>';
 		} else {
 			ele.value = 1;
 			ele.classList.add("pressed");
-			ele.innerHTML = '<i class="las la-video-slash"></i> <span data-translate="unhide-guest" >un-hide</span>';
+			ele.innerHTML = '<i class="las la-user-slash"></i> <span data-translate="unhide-guest" >un-hide</span>';
 		}
 		miniTranslate(ele);
 		ele.style.backgroundColor = null;
@@ -12162,18 +12217,68 @@ function remoteMuteVideo(ele,  event=false, skipSend=false) {
 		syncDirectorState(ele);
 	}
 	
-	pokeIframeAPI("director-video-mute-state", msg.directVideoMuted, ele.dataset.UUID);
-	pokeAPI("directorVideoMuted", msg.directVideoMuted, session.rpcs[ele.dataset.UUID].streamID);
+	pokeIframeAPI("director-video-hide-state", msg.directVideoMuted, ele.dataset.UUID);
+	pokeAPI("directorVideoHide", msg.directVideoMuted, session.rpcs[ele.dataset.UUID].streamID);
 	
 	return msg.directVideoMuted;
 }
 
-function updateDirectorVideoMute(UUID) {
+function remoteMuteVideo(ele,  event=false, skipSend=false) {
+	log("video mute");
+	
+	if (!event ||  ((event.ctrlKey) || (event.metaKey))) {
+		ele.children[1].innerHTML = miscTranslations["armed"]
+		ele.style.backgroundColor = "#BF3F3F";
+		Callbacks.push([remoteMuteVideo, ele, false]);
+		log("video queued");
+		return;
+	} else {
+		if (ele.value == 1) {
+			ele.value = 0;
+			ele.classList.remove("pressed");
+			ele.innerHTML = '<i class="las la-video-slash"></i> <span data-translate="mute-video-guest" >disable video</span>';
+		} else {
+			ele.value = 1;
+			ele.classList.add("pressed");
+			ele.innerHTML = '<i class="las la-video-slash"></i> <span data-translate="unmute-video-guest" >allow video</span>';
+		}
+		miniTranslate(ele);
+		ele.style.backgroundColor = null;
+	}
+
+	var msg = {};
+	if (ele.value == 0) {
+		msg.remoteVideoMuted = false;
+	} else {
+		msg.remoteVideoMuted = true;
+	}
+		
+	if (!skipSend){
+		session.sendRequest(msg, ele.dataset.UUID)
+		syncDirectorState(ele);
+	}
+	
+	pokeIframeAPI("remote-video-mute-state", msg.remoteVideoMuted, ele.dataset.UUID);
+	pokeAPI("remoteVideoMuted", msg.remoteVideoMuted, session.rpcs[ele.dataset.UUID].streamID);
+	
+	return msg.remoteVideoMuted;
+}
+function updateDirectorVideoHide(UUID) {
 	var ele = document.querySelectorAll('[data-action-type="hide-guest"][data--u-u-i-d="' + UUID + '"]');
 	if (ele[0]) {
 		ele[0].value = 1;
 		ele[0].classList.add("pressed");
-		ele[0].innerHTML = '<i class="las la-video-slash"></i> <span data-translate="unhide-guest" >un-hide</span>';
+		ele[0].innerHTML = '<i class="las la-user-slash"></i> <span data-translate="unhide-guest" >un-hide</span>';
+		miniTranslate(ele[0]);
+	}
+	return true;
+}
+function updateDirectorVideoMute(UUID) {
+	var ele = document.querySelectorAll('[data-action-type="mute-video-guest"][data--u-u-i-d="' + UUID + '"]');
+	if (ele[0]) {
+		ele[0].value = 1;
+		ele[0].classList.add("pressed");
+		ele[0].innerHTML = '<i class="las la-video-slash"></i> <span data-translate="unmute-video-guest" >allow video</span>';
 		miniTranslate(ele[0]);
 	}
 	return true;
@@ -16236,8 +16341,8 @@ function createControlBox(UUID, soloLink, streamID) {
 	iframeDetails.id = "iframeDetails_" + UUID; // needed to delete on user disconnect
 	iframeDetails.className = "iframeDetails hidden";
 
-	controls.innerHTML += "<div id='advanced_audio_director_" + UUID + "' class='hidden advDirectGuestSettings'></div>";
-	controls.innerHTML += "<div id='advanced_video_director_" + UUID + "' class='hidden advDirectGuestSettings'></div>";
+	controls.innerHTML += "<div id='advanced_audio_director_" + UUID + "' class='hidden advancedAudioSettings'></div>";
+	controls.innerHTML += "<div id='advanced_video_director_" + UUID + "' class='hidden advancedVideoSettings'></div>";
 
 	var handsID = "hands_" + UUID;
 
@@ -17971,7 +18076,7 @@ function gotDevicesRemote(deviceInfos, UUID) {
 		} else {
 			var videoSelect = document.createElement("select");
 			videoSelect.id = "remoteVideoSelect_"+UUID;
-			videoSelect.style = "max-width:170px;font-size: 70% !important; margin: 5px 5px 5px 0; padding:2px;";
+			videoSelect.style = "font-size: 70% !important;";
 			
 			
 			
@@ -18013,7 +18118,7 @@ function gotDevicesRemote(deviceInfos, UUID) {
 		} else {
 			var audioSelect = document.createElement("select");
 			audioSelect.id = "remoteAudioSelect_"+UUID;
-			audioSelect.style = "max-width:170px;font-size: 70% !important; margin: 5px 5px 5px 0; padding:2px;";
+			audioSelect.style = "font-size: 70% !important;";
 			
 			
 			audioSelect.onchange = function(){
@@ -18029,7 +18134,7 @@ function gotDevicesRemote(deviceInfos, UUID) {
 			
 			var buttonGO = document.createElement("button");
 			buttonGO.innerHTML = '<i class="las la-microphone-alt"></i> refresh';
-			buttonGO.style = "padding: 5px;";
+			// buttonGO.style = "padding: 5px;";
 			buttonGO.title = "This will refresh the current device";
 			buttonGO.id = "requestAudioDevice_"+UUID;
 			
@@ -18055,7 +18160,7 @@ function gotDevicesRemote(deviceInfos, UUID) {
 		} else {
 			var audioOutputSelect = document.createElement("select");
 			audioOutputSelect.id = "remoteAudioOutputSelect_"+UUID;
-			audioOutputSelect.style = "max-width:170px;font-size: 70% !important; margin: 5px 5px 5px 0; padding:2px;";
+			audioOutputSelect.style = "font-size: 70% !important;";
 			
 			audioOutputSelect.onchange = function(){
 				if (session.rpcs[UUID].stats.info && session.rpcs[UUID].stats.info.consent){
@@ -18069,7 +18174,6 @@ function gotDevicesRemote(deviceInfos, UUID) {
 			
 			var buttonGO = document.createElement("button");
 			buttonGO.innerHTML = '<i class="las la-headphones"></i> refresh';
-			buttonGO.style = "padding: 5px;";
 			buttonGO.title = "This will refresh the current device";
 			buttonGO.id =  "requestAudioOutputDevice_"+UUID;
 			buttonGO.onclick = function(){
@@ -20219,7 +20323,7 @@ async function grabVideo(quality = 0, eleName = 'previewWebcam', selector = "sel
 				var senders = getSenders2(UUID);
 				senders.forEach((sender) => { // I suppose there could be a race condition between negotiating and updating this. if joining at the same time as changnig streams?
 					if (sender.track && sender.track.kind == "video") {
-						sender.track.enabled = false;
+						sender.track.enabled = false; // I'm not entirely sure if I shoudl be doing this to a video stream... but I suppose new connections won't get a stream, and old connections will just replace it?
 						getById("mutevideobutton").classList.add("hidden"); // hide the mute button, so they can't unmute while no video.
 						//session.pcs[UUID].removeTrack(sender);  // replace may not be supported by all browsers.  eek.
 						//errorlog("DELETED SENDER");
@@ -20241,6 +20345,7 @@ async function grabVideo(quality = 0, eleName = 'previewWebcam', selector = "sel
 		
 		if (session.avatar && session.avatar.timer){
 			clearInterval(session.avatar.timer);
+			session.avatar.timer=null;
 		}
 		
 		var sq = 0;
@@ -20859,7 +20964,7 @@ function pushOutVideoTrack(track){
 	if (track.kind === "audio"){
 		session.applyIsolatedChat();
 	}
-	session.refreshScale(); 
+	session.refreshScale();
 }
 
 
@@ -33839,25 +33944,25 @@ function sendRawMIDI(input, UUID=false, streamID=false){
 	} else if (UUID && session.rpcs[UUID] && session.rpcs[UUID].allowMIDI){
 		session.sendRequest(msg, UUID);
 	} else if (streamID){
-		for (var UUID in session.rpcs){
-			if (session.rpcs[UUID].allowMIDI && (session.rpcs[UUID].streamID === streamID)){  // specific to gstreamer code aplication
-				session.sendRequest(msg, UUID)
+		for (var UID in session.rpcs){
+			if (session.rpcs[UID].allowMIDI && (session.rpcs[UID].streamID === streamID)){  // specific to gstreamer code aplication
+				session.sendRequest(msg, UID)
 				return; // only one stream ID should match
 			}
 		}
 	} else {
 		var list = [];
-		for (var UUID in session.pcs){
-			if (session.pcs[UUID].allowMIDI){
-				if (session.sendMessage(msg, UUID)){
-					list.push(UUID);
+		for (var UID in session.pcs){
+			if (session.pcs[UID].allowMIDI){
+				if (session.sendMessage(msg, UID)){
+					list.push(UID);
 				}
 			}
 		}
-		for (var UUID in session.rpcs){
-			if (session.rpcs[UUID].allowMIDI){  // specific to gstreamer code aplication
-				if (!list.includes(UUID)){
-					session.sendRequest(msg, UUID)
+		for (var UID in session.rpcs){
+			if (session.rpcs[UID].allowMIDI){  // specific to gstreamer code aplication
+				if (!list.includes(UID)){
+					session.sendRequest(msg, UID)
 				}
 			}
 		}
@@ -34930,8 +35035,8 @@ function createControlBoxScreenshare(UUID, soloLink, streamID) {
 	iframeDetails.id = "iframeDetails_" + UUID; // needed to delete on user disconnect
 	iframeDetails.className = "iframeDetails hidden";
 
-	controls.innerHTML += "<div id='advanced_audio_director_" + UUID + "' class='hidden advDirectGuestSettings'></div>";
-	controls.innerHTML += "<div id='advanced_video_director_" + UUID + "' class='hidden advDirectGuestSettings'></div>";
+	controls.innerHTML += "<div id='advanced_audio_director_" + UUID + "' class='hidden advancedAudioSettings'></div>";
+	controls.innerHTML += "<div id='advanced_video_director_" + UUID + "' class='hidden advancedVideoSettings'></div>";
 
 	var handsID = "hands_" + UUID;
 
