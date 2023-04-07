@@ -24147,6 +24147,7 @@ function updateDirectorsAudio(dataN, UUID) {
 		if (("micDelay" in data) && n==0) {
 			var label = document.createElement("label");
 			var i = "micDelay";
+			var div = document.createElement("div");
 			label.id = "label_" + i + "_"+UUID;
 			label.htmlFor = "constraints_" + i + "_"+UUID;
 			
@@ -24198,8 +24199,9 @@ function updateDirectorsAudio(dataN, UUID) {
 				}
 			};
 
-			audioEle.appendChild(label);
-			audioEle.appendChild(manualInput);
+			audioEle.appendChild(div)
+			div.appendChild(label);
+			div.appendChild(manualInput);
 			audioEle.appendChild(input);
 		}
 

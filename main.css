@@ -625,13 +625,14 @@ body.darktheme .credits>a:visited {
     border-radius: 0px 0px 4px 4px;
     background-color: #ccc;
     width: 100%;
+    gap: 4px;
 }
 .advancedAudioSettings div {
     display: flex;
+    width: 100%;
     overflow: hidden;
     align-items: center;
     gap: 4px;
-    padding: 4px;
 }
 .advancedAudioSettings div button {
     padding: 4px;
@@ -648,7 +649,8 @@ body.darktheme .credits>a:visited {
 
 }
 .advancedAudioSettings div:nth-child(1) {
-    display: unset;
+    flex-direction: column;
+    align-items: flex-start;
     width: 100%;
     padding: unset;
 }
