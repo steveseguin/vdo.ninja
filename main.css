@@ -3548,6 +3548,14 @@ div#roomnotes2 {
 }
 
 /* Specitic CSS for different elements inside the guest control-buttons */
+.darktheme .controlsGrid .director-message-box {
+    background-color: var(--discord-grey-1);
+}
+
+.darktheme .controlsGrid .director-message-box button {
+    background-color: var(--discord-grey-3);
+}
+
 .controlsGrid .director-message-box {
 	display: flex;
 	flex-wrap: wrap;
@@ -3556,12 +3564,23 @@ div#roomnotes2 {
     padding: 5px;
 	background: rgba(0, 0, 0, .15);
     border-radius: 4px;
+    max-width: 100%;
 }
+
+
+.darktheme .controlsGrid .director-message-box textarea {
+    background-color: var(--discord-grey-4);
+    color: var(--discord-text);
+}
+
+
 .controlsGrid .director-message-box textarea {
 	flex: 1 100%;
 	padding: 5px;
     border-radius: 4px;
+    outline: none;
 }
+
 .controlsGrid .director-message-box .message-close {
 	flex: 1;
 }
