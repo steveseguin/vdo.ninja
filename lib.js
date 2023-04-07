@@ -15697,16 +15697,16 @@ async function createDirectorOnlyBox() {
 	getById("groups").remove();
 	
 	if (session.hidesololinks==false){ // won't be updating the solo link to a view-only one ever, since director is always expected to be in a room
-		controls.innerHTML += "<div style='padding:5px;word-wrap: break-word; overflow:hidden; white-space: nowrap; overflow: hidden; font-size:0.7em; text-overflow: ellipsis;' title='A direct solo view of the video/audio stream with nothing else'> \
+		controls.innerHTML += "<div class='soloButton' title='A direct solo view of the video/audio stream with nothing else'> \
 				<a class='soloLink advanced task' data-menu='context-menu' data-sololink='true' data-drag='1' draggable='true' onclick='copyFunction(this,event)' \
 				value='" + soloLink + "' href='" + soloLink + "'/>" + sanitizeChat(soloLink) + "</a>\
 				<button class='pull-right' style='width:100%;' onclick='copyFunction(this.previousElementSibling,event)'><i class='las la-user'></i> copy solo view link</button>\
 			</div>\
 			<div id='groups'></div>";
 		if (session.directorUUID){
-			controls.innerHTML += "<div style='text-align: center;margin:0px 10px 10px 10px;display:block;'><h3 id='yourDirectorStatus'>This is you, a co-director.<br />You are also a performer.</h3></div>";
+			controls.innerHTML += "<div style='text-align: center;margin:10px 5px 5px 5px;display:block;'><h3 id='yourDirectorStatus'>This is you, a co-director.<br />You are also a performer.</h3></div>";
 		} else {
-			controls.innerHTML += "<div style='text-align: center;margin:0px 10px 10px 10px;display:block;'><h3 id='yourDirectorStatus'>This is you, the director.<br />You are also a performer.</h3></div>";
+			controls.innerHTML += "<div style='text-align: center;margin:10px 5px 5px 5px;display:block;'><h3 id='yourDirectorStatus'>This is you, the director.<br />You are also a performer.</h3></div>";
 		}
 	}
 	
@@ -15867,9 +15867,9 @@ async function createDirectorScreenshareOnlyBox() { // sstype=3
 			</div>\
 			<div id='groups'></div>";
 		if (session.directorUUID){
-			controls.innerHTML += "<div style='text-align: center;margin:0px 10px 10px 10px;display:block;'><h3 id='yourDirectorStatus'>This is you, a co-director.<br />You are also a performer.</h3></div>";
+			controls.innerHTML += "<div style='text-align: center;margin:10px 5px 5px 5px;display:block;'><h3 id='yourDirectorStatus'>This is you, a co-director.<br />You are also a performer.</h3></div>";
 		} else {
-			controls.innerHTML += "<div style='text-align: center;margin:0px 10px 10px 10px;display:block;'><h3 id='yourDirectorStatus'>This is you, the director.<br />You are also a performer.</h3></div>";
+			controls.innerHTML += "<div style='text-align: center;margin:10px 5px 5px 5px;display:block;'><h3 id='yourDirectorStatus'>This is you, the director.<br />You are also a performer.</h3></div>";
 		}
 	}
 	
