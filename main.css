@@ -1,4 +1,20 @@
 :root {
+    /* Discord Greys - Dark to Lighter */
+    --discord-grey-1: #1e1f22;
+    --discord-grey-2: #232428;
+    --discord-grey-3: #2b2d31;
+    --discord-grey-4: #2e3035;
+    --discord-grey-5: #313338;
+    --discord-grey-6: #383a40;
+    --discord-grey-7: #404249; 
+    --discord-text: hsl( 210 calc(1 * 9.1%) 87.1% /1);
+
+    --darktheme-blue: rgb(33 69 114);
+    --darktheme-green: rgb(36 88 49);
+    --darktheme-brown: rgb(72 47 33);
+    --darktheme-yellow: rgb(84 70 9);
+
+    /* Discord Greys */
 	--background-color: #141926;
 	--dark-background-color: #02050c;
 	--container-color: #373737;
@@ -168,20 +184,29 @@ th {
 a {
 	-webkit-app-region: no-drag;
 }
-a:link {
-	text-decoration: none;
+.darktheme a:link {
 	color: #B9DFF9;
 }
-a:visited {
+.darktheme a:visited {
 	text-decoration: none;
 	color: #99BFD9;
 }
-a:hover {
+.darktheme a:active {
+	color: #B9DFF9;
+}
+a:link {
+	text-decoration: none;
+    color: #508fbb;
+}
+a:visited {
+	text-decoration: none;
+	color: #508fbb;
+}
+.darktheme a:hover, a:hover {
 	color: #048AE8;
 }
-
 a:active {
-	color: #D9E4EB;
+	color: #508fbb;
 }
 
 input {
@@ -465,7 +490,7 @@ button.white:active {
 	position: fixed;
 	overflow-wrap: anywhere;
 	padding:2% 3%;
-}.
+}
 .avatarSelection{
 	vertical-align: top;
     margin: 10px 0;
@@ -622,14 +647,6 @@ body.darktheme .credits>a:visited {
     height: 24px;
 
 }
-.advancedAudioSettings div:nth-child(1) {
-    display: unset;
-    width: 100%;
-    padding: unset;
-    align-items: center;
-    gap: 4px;
-}
-
 .advancedVideoSettings div:nth-child(2) {
     display: flex;
     width: 100%;
@@ -2237,13 +2254,10 @@ span[data-action-type="stats-graphs-details-container"]>span{
 	padding-bottom: 20px;
 }
 .soloButton{
-	word-wrap: break-word;
-	overflow:hidden;
-	white-space: nowrap;
-	overflow: hidden;
-	font-size:0.7em;
-	text-overflow: ellipsis;
-    margin-top: 5px;
+    display: flex;
+    flex-wrap: wrap;
+    font-size: 0.7em;
+    overflow: hidden;
 }
 .soloButton button {
     margin: 5px 0px 0px 0px;
@@ -2702,7 +2716,7 @@ audio.fileshare::-webkit-media-controls-play-button, video.fileshare::-webkit-me
 	-webkit-transform: scaleX(-1);
 }
 .popup-screen {
-	align-text: center;
+	text-align: center;
 	position: absolute;
 	display:none;
 	top:0;
@@ -2728,7 +2742,7 @@ audio.fileshare::-webkit-media-controls-play-button, video.fileshare::-webkit-me
 }
 .popup-message {
 	display: none;
-	align-text: center;
+	text-align: center;
 	position: absolute;
 	z-index: 35 !important;
 	padding: 3px !important;
@@ -2858,7 +2872,6 @@ button.toggleSettings{
 	display: block;
 	padding: 10px 10px;
 	border: 1px solid #ccc;
-	vertical-align: middle;
 }
 #effectsDiv {
 	user-select: none;
@@ -3597,18 +3610,37 @@ div#roomnotes2 {
 	width: max-content;
 }
 
+/* Hightlight */
+[data-action-type="solo-video"] {
+    box-shadow: 0 0 3px rgb(175 165 122), inset 0 0 2px yellow;
+}
+
 /* Hightlights for buttons in the guest control-buttons */
+/* Dark theme */
+.darktheme .controlsGrid .btn-HL-yellow {
+	background-color: var(--darktheme-yellow);
+}
+.darktheme .controlsGrid .btn-HL-peach {
+	background-color: var(--darktheme-brown);
+}
+.darktheme .controlsGrid .btn-HL-green {
+	background-color: var(--darktheme-green);
+}
+.darktheme .controlsGrid .btn-HL-blue {
+	background-color: var(--darktheme-blue);
+}
+/* Light theme */
 .controlsGrid .btn-HL-yellow {
-	background: rgb(255, 229, 127);
+	background-color: rgb(255, 229, 127);
 }
 .controlsGrid .btn-HL-peach {
-	background: rgb(228, 203, 189);
+	background-color: rgb(228, 203, 189);
 }
 .controlsGrid .btn-HL-green {
-	background: rgb(189, 228, 199);
+	background-color: rgb(189, 228, 199);
 }
 .controlsGrid .btn-HL-blue {
-	background: rgb(170, 204, 248)
+	background-color: rgb(170, 204, 248)
 }
 
 /* Hides buttons that are supposed to be hidden when &novice is added to URL */
@@ -3700,15 +3732,19 @@ i.las.la-circle {
 	position: relative;
 	top: 1px;
 }
+.darktheme .soloLink {
+    background-color: var(--discord-grey-6);
+}
 .soloLink {
-	background: none;
-	border-radius: 0;
-	width: 100%;
-	cursor: grab;
-	white-space: nowrap;
-	text-overflow: ellipsis;
-	font-size: 1.2em;
-	font-weight: 700;
+    background-color: #CCC;
+    cursor: grab;
+    font-size: 1.2em;
+    font-weight: 700;
+    padding: 5px;
+    border-radius: 5px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 .vidcon>h2 {
 	font-size: 1em;
@@ -3732,8 +3768,13 @@ i.las.la-circle {
 	box-shadow: inset 0px 0px 17px #4b4b4b;
 	outline: none;
 }
+
+.darktheme div#guestFeeds {
+    background-color: var(--discord-grey-1)
+}
+
 div#guestFeeds {
-	background: var(--container-color);
+	background-color: var(--container-color);
 	padding: 5px 0 15px 20px;
 	display: inline-block;
 	margin: 0px var(--regular-margin) 80px var(--regular-margin);
@@ -4795,7 +4836,8 @@ body.darktheme h2 {
 	color: #DDD;
 }
 body.darktheme button {
-	filter: brightness(0.70);
+    background-color: var(--discord-grey-7);
+    color: var(--discord-text);
 }
 body.darktheme .column .las {
 	color: black;
@@ -4840,8 +4882,8 @@ body.darktheme .white {
 	filter: brightness(0.85);
 }
 body.darktheme .directorsgrid .vidcon {
-	background-color: #2b2b2bdd;
-	color: #978c8c;
+    background-color: var(--discord-grey-3);
+	color: var(--discord-text);
 }
 body.darktheme .promptModalInner{
 	filter: brightness(0.65);
