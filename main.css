@@ -3509,11 +3509,20 @@ div#roomnotes2 {
 }
 
 /* ---- DIRECTORS PAGE - Guest Controls Box ---- */
+.darktheme .controlCenterBox button {
+    background-color: var(--discord-grey-7);
+    color: var(--discord-text);
+    filter: brightness(1);
+}
+.darktheme .controlCenterBox button:hover {
+    filter: brightness(1.2);
+}
 .controlsGrid {
     display: flex;
     flex-wrap: wrap;
     gap: 4px;
 }
+
 .controlsGrid .group {
 	width: 100%;
 	display: flex;
@@ -4262,6 +4271,7 @@ input:checked + .slider:before {
 	margin:5px;
 	padding:10px;
 }
+
 #promptModal, .customModelPopup, .promptModal {
 	position: absolute;
 	background-color: rgb(221 221 221);
@@ -4861,8 +4871,7 @@ body.darktheme h2 {
 	color: #DDD;
 }
 body.darktheme button {
-    background-color: var(--discord-grey-7);
-    color: var(--discord-text);
+    filter: brightness(0.70);
 }
 body.darktheme .column .las {
 	color: black;
@@ -4910,8 +4919,9 @@ body.darktheme .directorsgrid .vidcon {
     background-color: var(--discord-grey-3);
 	color: var(--discord-text);
 }
-body.darktheme .promptModalInner{
-	filter: brightness(0.65);
+body.darktheme .promptModal {
+    background-color: var(--discord-grey-5);
+    color: var(--discord-text);
 }
 body.darktheme .infoblob{
 	color: #CCC;
@@ -4987,9 +4997,6 @@ body.darktheme #outputSource3{
 }
 body.darktheme #videoSettings3{
 	background-color: #414141;
-}
-body.darktheme .promptModalInner{
-	background-color: #ccc;
 }
 body.darktheme .alertModal{
 	background-color: #ccc;
