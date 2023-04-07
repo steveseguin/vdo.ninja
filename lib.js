@@ -24128,7 +24128,7 @@ function updateDirectorsAudio(dataN, UUID) {
 
 		if (dataN.length==1) {
 			if (data.trackLabel) {
-				var label = document.createElement("span");
+				var label = document.createElement("label");
 				label.innerText = data.trackLabel;
 				label.style.marginBottom = "10px";
 				label.style.display = "block";
@@ -24440,7 +24440,7 @@ function updateDirectorsAudio(dataN, UUID) {
 			label.id = "label_" + i + "_"+n + "_"+UUID;
 			label.htmlFor = "constraints_" + i + "_"+n + "_"+UUID;
 			label.innerText = capitalizeFirstLetter(i).replace(/([a-z])([A-Z])/g, '$1 $2') + ":";
-			label.style = "display:inline-block; padding:0;margin: 5px 0px 9px;";
+			label.style = "display:inline-block; padding:0;;";
 			label.dataset.keyname = i;
 			label.dataset.track = n;
 			var input = document.createElement("select");
@@ -24459,7 +24459,7 @@ function updateDirectorsAudio(dataN, UUID) {
 			input.id = "constraints_" + i + "_"+n + "_"+UUID;
 			input.className = "constraintCameraInput";
 			input.name = "constraints_" + i + "_"+n;
-			input.style = "display:inline; padding:2px; margin:0 10px;";
+			input.style = "display:inline; padding:2px;";
 			input.dataset.keyname = i;
 			input.dataset.track = n;
 			input.dataset.UUID = UUID;
@@ -24482,7 +24482,7 @@ function updateDirectorsAudio(dataN, UUID) {
 			label.id = "label_" + i + "_"+n+ "_"+UUID;
 			label.htmlFor = "constraints_" + i + "_"+n+ "_"+UUID;
 			label.innerText = capitalizeFirstLetter(i).replace(/([a-z])([A-Z])/g, '$1 $2') + ":";
-			label.style = "display:inline-block; padding:0;margin: 5px 0px 9px;";
+			label.style = "display:inline-block; padding:0;";
 			label.dataset.keyname = i;
 			label.dataset.track = n;
 			
@@ -24508,7 +24508,7 @@ function updateDirectorsAudio(dataN, UUID) {
 			input.id = "constraints_" + i + "_"+n+ "_"+UUID;
 			input.className = "constraintCameraInput";
 			input.name = "constraints_" + i + "_"+n;
-			input.style = "display:inline; padding:2px; margin:0 10px;";
+			input.style = "display:inline; padding:2px;";
 			input.dataset.keyname = i;
 			input.dataset.track = n;
 			input.dataset.UUID = UUID;
@@ -24525,7 +24525,7 @@ function updateDirectorsAudio(dataN, UUID) {
 		
 		if (dataN.length>1){ 
 			if (data.trackLabel) {
-				var label = document.createElement("span");
+				var label = document.createElement("label");
 				label.innerText = data.trackLabel;
 				label.style.margin = "20px 0 10px 0";
 				label.style.display = "block";
@@ -24650,7 +24650,7 @@ function updateDirectorsAudio(dataN, UUID) {
 					label.id = "label_" + i + "_"+n+ "_"+UUID;
 					label.htmlFor = "constraints_" + i + "_"+n+ "_"+UUID;
 					label.innerText = capitalizeFirstLetter(i).replace(/([a-z])([A-Z])/g, '$1 $2') + ":";
-					label.style = "display:inline-block; padding:0;margin: 5px 0px 9px;";
+					label.style = "display:inline-block; padding:0;";
 					var input = document.createElement("select");
 					var c = document.createElement("option");
 					
@@ -24685,7 +24685,7 @@ function updateDirectorsAudio(dataN, UUID) {
 					input.id = "constraints_" + i + "_"+n+ "_"+UUID;
 					input.className = "constraintCameraInput";
 					input.name = input.id;
-					input.style = "display:inline; padding:2px; margin:0 10px;";
+					input.style = "display:inline; padding:2px;";
 					input.dataset.keyname = i;
 					input.dataset.track = n;
 					input.dataset.deviceId = data.deviceId;
@@ -24706,7 +24706,7 @@ function updateDirectorsAudio(dataN, UUID) {
 					label.id = "label_" + i + "_"+n+ "_"+UUID;
 					label.htmlFor = "constraints_" + i + "_"+n+ "_"+UUID;
 					label.innerText = capitalizeFirstLetter(i).replace(/([a-z])([A-Z])/g, '$1 $2') + ":";
-					label.style = "display:inline-block; padding:0;margin: 5px 0px 9px;";
+					label.style = "display:inline-block; padding:0;";
 					label.dataset.keyname = i ;
 					label.dataset.track = n;
 					var input = document.createElement("select");
@@ -24727,7 +24727,7 @@ function updateDirectorsAudio(dataN, UUID) {
 					input.id = "constraints_" + i + "_"+n+ "_"+UUID;
 					input.className = "constraintCameraInput";
 					input.name = input.id;
-					input.style = "display:inline; padding:2px; margin:0 10px;";
+					input.style = "display:inline; padding:2px;";
 					input.dataset.keyname = i;
 					input.dataset.track = n;
 					input.dataset.UUID = UUID;
@@ -25079,7 +25079,7 @@ function updateDirectorsVideo(data, UUID) {
 				label.name = label.id;
 				label.htmlFor = "constraints_" + i + "_"+UUID;
 				label.innerText = capitalizeFirstLetter(i).replace(/([a-z])([A-Z])/g, '$1 $2') + ":";
-				label.style = "display:inline-block; padding:0;margin: 5px 0px 9px;";
+				label.style = "display:inline-block; padding:0;";
 				label.dataset.keyname = i;
 				label.dataset.UUID = UUID;
 				var input = document.createElement("select");
@@ -25116,7 +25116,7 @@ function updateDirectorsVideo(data, UUID) {
 				input.className = "constraintCameraInput";
 				input.name = input.id;
 				input.dataset.UUID = UUID;
-				input.style = "display:inline; padding:2px; margin:0 10px;";
+				input.style = "display:inline; padding:2px;";
 				input.dataset.keyname = i;
 				input.onchange = function(e) {
 					//getById("label_"+e.target.dataset.keyname+ "_" + e.target.dataset.UUID).innerText =e.target.dataset.keyname+": "+e.target.value;
@@ -25139,7 +25139,7 @@ function updateDirectorsVideo(data, UUID) {
 				label.name = label.id;
 				label.htmlFor = "constraints_" + + i + "_"+UUID;
 				label.innerText = capitalizeFirstLetter(i).replace(/([a-z])([A-Z])/g, '$1 $2') + ":";
-				label.style = "display:inline-block; padding:0;margin: 5px 0px 9px;";
+				label.style = "display:inline-block; padding:0;";
 				label.dataset.keyname = i;
 				label.dataset.UUID = UUID;
 				var input = document.createElement("select");
@@ -25159,7 +25159,7 @@ function updateDirectorsVideo(data, UUID) {
 				input.id = "constraints_" + + i + "_"+UUID;
 				input.className = "constraintCameraInput";
 				input.name = input.id;
-				input.style = "display:inline; padding:2px; margin:0 10px;";
+				input.style = "display:inline; padding:2px;";
 				input.dataset.UUID = UUID;
 				input.dataset.keyname = i;
 				input.onchange = function(e) {
@@ -25639,7 +25639,7 @@ function listAudioSettings() {
 					input.id = "constraints_" + i + "_"+ii;
 					input.className = "constraintCameraInput";
 					input.name = "constraints_" + i + "_"+ii;
-					input.style = "display:inline; padding:2px; margin:0 10px;";
+					input.style = "display:inline; padding:2px;";
 					input.dataset.keyname = i;
 					
 					input.onchange = function(e) {
@@ -25852,7 +25852,7 @@ function listAudioSettings() {
 					input.className = "constraintCameraInput";
 					input.name = "constraints_" + i + "_"+ii;
 					input.dataset.deviceid = track0.id;
-					input.style = "display:inline; padding:2px; margin:0 10px;";
+					input.style = "display:inline; padding:2px;";
 					input.dataset.keyname = i;
 					input.onchange = function(e) {
 						applyAudioHack(e.target.dataset.keyname, e.target.value, e.target.dataset.deviceid);
@@ -25890,7 +25890,7 @@ function listAudioSettings() {
 					input.id = "constraints_" + i + "_"+ii;
 					input.className = "constraintCameraInput";
 					input.name = "constraints_" + i + "_"+ii;
-					input.style = "display:inline; padding:2px; margin:0 10px;";
+					input.style = "display:inline; padding:2px;";
 					input.dataset.keyname = i;
 					input.onchange = function(e) {
 						//getById("label_"+e.target.dataset.keyname).innerHTML =e.target.dataset.keyname+": "+e.target.value;
@@ -26539,7 +26539,7 @@ function listCameraSettings() {
 				input.id = "constraints_" + i;
 				input.className = "constraintCameraInput";
 				input.name = "constraints_" + i;
-				input.style = "display:inline; padding:2px; margin:0 10px;";
+				input.style = "display:inline; padding:2px;";
 				input.dataset.keyname = i;
 				input.onchange = function(e) {
 					//getById("label_"+e.target.dataset.keyname).innerHTML =e.target.dataset.keyname+": "+e.target.value;
@@ -26580,7 +26580,7 @@ function listCameraSettings() {
 				input.id = "constraints_" + i;
 				input.className = "constraintCameraInput";
 				input.name = "constraints_" + i;
-				input.style = "display:inline; padding:2px; margin:0 10px;";
+				input.style = "display:inline; padding:2px;";
 				input.dataset.keyname = i;
 				input.onchange = function(e) {
 					//getById("label_"+e.target.dataset.keyname).innerHTML =e.target.dataset.keyname+": "+e.target.value;
