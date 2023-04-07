@@ -1377,21 +1377,21 @@
 					</span>	
 
 					<button data-action-type="hangup" class="mainonly"  title="Force the user to Disconnect. They can always reconnect." onclick="directHangup(this, event);">
-						<i class="las la-sign-out-alt" style="color:#900"></i>
+						<i class="las la-sign-out-alt"></i>
 						<span data-translate="disconnect-guest">Hangup</span>
 
 					</button>
 					<button data-action-type="solo-chat" class="mainonly advanced" title="Toggle solo voice chat or hold CTRL/CMD when selecting to make it two-way private." onclick="session.toggleSoloChat(this.dataset.UUID, event);">
-						<i class="las la-microphone" style="color:#090"></i>
+						<i class="las la-microphone"></i>
 						<span data-translate="voice-chat">Solo Talk</span>
 					</button>
 
-					<button data-action-type="solo-video" class="btn-HL-yellow advanced" title="Solo this video everywhere. (Hold CTRL/CMD to just make video larger)" onclick="requestInfocus(this, event);">
+					<button data-action-type="solo-video" class="advanced" title="Solo this video everywhere. (Hold CTRL/CMD to just make video larger)" onclick="requestInfocus(this, event);">
 						<i class="las la-user"></i>
 						<span data-translate="solo-video">Highlight guest</span>
 					</button>
 					<button data-action-type="addToScene" class="btn-HL-peach advanced" title="Add this Video to any remote '&scene=1'" data-scene="1" onclick="directEnable(this, event);">
-						<i class="las la-plus-square" style="color:#090"></i>
+						<i class="las la-plus-square"></i>
 						<span data-translate="add-to-scene">add to scene 1</span>
 					</button>
 				</div>
@@ -1403,7 +1403,7 @@
 						<span class="tooltiptext" style='overflow: auto;left: 35%;width: 3em;top: -15px;margin: 0;position: absolute;font-family:"Noto Color Emoji", "Apple Color Emoji", "Segoe UI Emoji", Times, Symbola, Aegyptus,Code2000, Code2001, Code2002, Musica, serif, LastResort;' >100</span>
 					</span>
 					<button data-action-type="mute-guest" class="center" value="0" title="Mute this guest everywhere" onclick="remoteMute(this, event);">
-						<i class="las la-microphone-slash" style="color:#900"></i>
+						<i class="las la-microphone-slash"></i>
 					</button>
 				</div>
 				
@@ -1421,7 +1421,7 @@
 							<span data-translate="stats-remote">Scene Stats</span>
 						</button>
 						<button data-action-type="mute-scene" title="Remotely Mute this Audio in all remote '&scene' views" onclick="directMute(this, event);">
-							<i class="las la-microphone-slash" style="color:#900"></i>
+							<i class="las la-microphone-slash"></i>
 							<span data-translate="mute-scene">mute in scenes</span>
 						</button>
 					</div>
@@ -1501,11 +1501,11 @@
 						</button>
 
 						<button data-action-type="recorder-local" title="Start Recording this remote stream to this local drive. *experimental*'" onclick="recordVideo(this, event)">
-							<i class="las la-circle"></i>
+							<i class="las la-compact-disc"></i>
 							<span data-translate="record-local"> Record Local</span>
 						</button>
 						<button data-action-type="recorder-remote" title="The Remote Guest will record their local stream to their local drive. *experimental*" onclick="requestVideoRecord(this)">
-							<i class="las la-circle"></i>
+							<i class="las la-compact-disc"></i>
 							<span data-translate="record-remote"> Record Remote</span>
 						</button>
 						
