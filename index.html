@@ -2349,11 +2349,10 @@
 			</u>
 		</div>
 		<span class="hidden" id="hangupTemplate">
-			<span style='font-size:500%;text-align:center;margin:auto;'>👋</span>
+			<span style='font-size:500%;text-align:center;margin:auto;'>👋<br><button onClick='parent.location.reload();' title="Reload the page" data-translate="reload-page">Refresh</button></span>
 		</span>
 		<span class="hidden" id="hangupTemplateMobileFullscreen">
-			<span style='font-size:500%;text-align:center;margin:auto;'>👋<br ><a onclick="history.go(0);" title="Reload the page" data-translate="reload-page">Reload Page</a>
-			</span>
+			<span style='font-size:500%;text-align:center;margin:auto;'>👋<br><button onClick='parent.location.reload();' title="Reload the page" data-translate="reload-page">Refresh</button></span>
 		</span>
 		<div id="meshcastMenu" class="hidden">
 			Meshcast publishing region: <select name="edgelist" id="edgelist" onchange="selectMeshcast(this);" title="Select a location that is closest to both you and your audience."></select>
