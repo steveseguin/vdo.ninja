@@ -12821,7 +12821,7 @@ async function joinDataMode(){ // join the room, but without publishing anything
 	}
 }
 
-function publishWebcam(btn = false) {
+function publishWebcam(btn = false, miconly=false) {
 	
 	if (btn) {
 		if (btn.dataset.ready == "false") {
@@ -16878,7 +16878,7 @@ function loadSettings(){
 	}
 }
 
-function gotDevices(deviceInfos) {
+function gotDevices(deviceInfos, miconly=false) {
 
 	log("got devices!1");
 	log(deviceInfos);
@@ -17271,6 +17271,10 @@ function gotDevices(deviceInfos) {
 		option.text = "Disable Video";
 		option.value = "ZZZ";
 		videoSelect.appendChild(option); // NO AUDIO OPTION
+		
+		if (miconly){
+			option.selected = "true";
+		}
 
 		selectors.forEach((select, selectorIndex) => {
 			if (Array.prototype.slice.call(select.childNodes).some(n => n.value === values[selectorIndex])) {
@@ -27038,13 +27042,13 @@ async function updateCameraConstraints(constraint, value = null, ctrl=false, UUI
 	return;
 }
 
-function setupWebcamSelection() {
+function setupWebcamSelection(miconly=false) {
 	log("setupWebcamSelection();");
 	
 	checkBasicStreamsExist();
 
 	try {
-		return enumerateDevices().then(gotDevices).then(function() {
+		return enumerateDevices().then(function(dInfo){return gotDevices(dInfo, miconly)}).then(function() {
 			
 			if (getById("webcamquality").elements && parseInt(getById("webcamquality").elements.namedItem("resolution").value) == 3) {
 				if (session.maxframeRate===false){
@@ -27059,7 +27063,7 @@ function setupWebcamSelection() {
 			var audioSelect =  getById('audioSource');
 			var videoSelect =  getById('videoSourceSelect');
 			var outputSelect = getById('outputSource'); 
-
+			
 			audioSelect.onchange = function() {
 
 				if (document.getElementById("gowebcam")) {
@@ -27204,7 +27208,7 @@ function setupWebcamSelection() {
 				document.getElementById("gowebcam").dataset.audioready = "true";
 			}
 
-			if (session.videoDevice === 0) {
+			if ((session.videoDevice === 0) || miconly) {
 				if (session.autostart) {
 					publishWebcam(); // no need to mirror as there is no video...
 					return;
@@ -27592,13 +27596,13 @@ function createIframePopup() {
 	return; // ignore the rest.
 }
 
-function previewWebcam() {
+function previewWebcam(miconly=false) {
 
 	if (session.taintedSession === null) {
 		log("STILL WAITING ON HASH TO VALIDATE");
-		setTimeout(function() {
-			previewWebcam();
-		}, 1000);
+		setTimeout(function(miconly) {
+			previewWebcam(miconly);
+		}, 1000, miconly);
 		return;
 	} else if (session.taintedSession === true) {
 		warnlog("HASH FAILED; PASSWORD NOT VALID");
@@ -27612,6 +27616,20 @@ function previewWebcam() {
 		return;
 	}
 	activatedPreview = true;
+	
+	
+	if (miconly){  // this just shares the preview section with the mic-only and video+mic modes
+		if (!getById("add_camera_inner").cloned){
+			getById("add_camera_inner").cloned = true;
+			insertAfter(getById("add_camera_inner"),getById("add_microphone"));
+			document.getElementById('videoSourceSelect').innerHTML = "";
+		}
+	} else if (getById("add_camera_inner").cloned){
+		getById("add_camera_inner").cloned = false;
+		insertAfter(getById("add_camera_inner"),getById("add_camera"));
+		document.getElementById('videoSourceSelect').innerHTML = "";
+	}
+	
 
 	if (session.audioDevice === 0) { // OFF
 		var constraint = {
@@ -27646,7 +27664,7 @@ function previewWebcam() {
 		}
 	}
 
-	if (session.videoDevice === 0) {
+	if ((session.videoDevice === 0) || miconly) {
 		constraint.video = false;
 	} else {
 		constraint.video = true;
@@ -27662,7 +27680,7 @@ function previewWebcam() {
 
 	if ((constraint.video === false) && (constraint.audio === false)){
 		if (session.autostart) {
-			publishWebcam(); // no need to mirror as there is no video...
+			publishWebcam(false, miconly); // no need to mirror as there is no video...
 			return;
 		} else {
 			getById("getPermissions").style.display = "none";
@@ -27694,23 +27712,23 @@ function previewWebcam() {
 		if (vtrue === false) {
 			constraint.video = false;
 		}
-		setTimeout(function(constraint) {
-			requestBasicPermissions(constraint);
-		}, 0, constraint);
+		setTimeout(function(constraint, miconly) {
+			requestBasicPermissions(constraint, setupWebcamSelection, miconly);
+		}, 0, constraint, miconly);
 	}).catch((error) => {
 		log("enumeratated failed. Seeking permissions.");
-		setTimeout(function(constraint) {
-			requestBasicPermissions(constraint);
-		}, 0, constraint);
+		setTimeout(function(constraint, miconly) {
+			requestBasicPermissions(constraint, setupWebcamSelection, miconly);
+		}, 0, constraint, miconly);
 	});
 	
 }
 
-async function requestBasicPermissions(constraint = {video: true, audio: true}, callback=setupWebcamSelection) {
+async function requestBasicPermissions(constraint = {video: true, audio: true}, callback=setupWebcamSelection, miconly=false) {
 	if (session.taintedSession === null) {
 		log("STILL WAITING ON HASH TO VALIDATE");
 		setTimeout(function(constraint) {
-			requestBasicPermissions(constraint, callback);
+			requestBasicPermissions(constraint, callback, miconly);
 		}, 1000, constraint);
 		return null;
 	} else if (session.taintedSession === true) {
@@ -27793,7 +27811,7 @@ async function requestBasicPermissions(constraint = {video: true, audio: true}, 
 			updateRenderOutpipe();
 
 			if (callback){
-				callback();
+				callback(miconly);
 			}
 		}).catch(function(err) {
 			clearTimeout(timerBasicCheck);
@@ -27832,7 +27850,7 @@ async function requestBasicPermissions(constraint = {video: true, audio: true}, 
 			errorlog("trying to list webcam again");
 
 			if (callback){
-				callback();
+				callback(miconly);
 			}
 			
 		});
@@ -34078,10 +34096,15 @@ function addEventToAll(targets, trigger, callback) { // js helper
 		}
 	}
 }
+
+function insertAfter(newNode, existingNode) {
+    existingNode.parentNode.insertBefore(newNode, existingNode.nextSibling);
+}
 addEventToAll(".column", 'click', function(e, ele) {
 	if (ele.classList.contains("skip-animation")) {
 		return;
 	}
+	
 	var bounding_box = ele.getBoundingClientRect();
 	ele.style.top = bounding_box.top + "px";
 	ele.style.left = (bounding_box.left - 20) + "px";

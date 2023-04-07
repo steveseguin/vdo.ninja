@@ -208,8 +208,10 @@
   },
   "innerHTML": {
     "join-room": "Join room",
-    "join-room-with-mic": "Join room with Microphone",
+    "join-room-with-mic": "Join Room with Microphone",
+	"join-room-with-mic-only": "Join with just Microphone",
     "join-room-with-camera": "Join Room with Camera",
+	"join-room-with-video": "Join Room with Video",
     "copy-this-url": "Copy this URL into your \"browser source\"",
     "share-screen-with-room": "Screenshare with Room",
     "share-your-mic": "Share your Microphone",
