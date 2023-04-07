@@ -3523,9 +3523,7 @@ div#roomnotes2 {
     margin: 0;
     padding: 5px;
     border-radius: 4px;
-}
-.controlsGrid button.center {
-	align-self: center;
+    gap: 2px;
 }
 
 /* Specitic CSS for different elements inside the guest control-buttons */
