@@ -1,5 +1,6 @@
 :root {
     /* Discord Greys - Dark to Lighter */
+    --discord-grey-0: #121212;
     --discord-grey-1: #1e1f22;
     --discord-grey-2: #232428;
     --discord-grey-3: #2b2d31;
@@ -62,8 +63,12 @@
 	color: #FFF;
 }
 
-button:hover,[role="button"]:not(.column):hover{
-	filter: brightness(90%);
+button:hover,[role="button"]
+:not(.column)
+:not(.controlsGrid)
+:not(#controlButtons)
+:hover{
+	filter: brightness(120%);
 }
 
 table {
@@ -245,6 +250,9 @@ button.hint {
 
 .red {
 	background-color: #840000 !important;
+}
+.red:hover {
+	background-color: #b30c0c !important;
 }
 
 .red2 {
@@ -1154,32 +1162,53 @@ button.glyphicon-button.active.focus {
 }
 
 #controlButtons {
-	position: fixed;
-	z-index: 995;
-	bottom: 0px;
-	width: 100%;
-	justify-content: center;
-	align-items: center;
-	height: 60px;
-	border: 0;
-	pointer-events: none;
-	display: flex;
+    display: flex;
+    position: fixed;
+    z-index: 995;
+    bottom: 0px;
+    width: 100%;
+    justify-content: center;
+    align-items: center;
+    height: 60px;
+    border: 0;
+    pointer-events: none;
 }
 #controlButtons:empty {
 	display: none;
 }
 
 #subControlButtons {
-	display: flex;
-	border-radius: 38px;
-	background-color: #030303dd;
-	padding: 5px 7px;
-	position: absolute;
-	pointer-events: auto;
+    display: flex;
+    border-radius: 38px;
+    background-color: var(--discord-grey-0);
+    box-shadow: 0px 0px 10px rgba(0,0,0,1);
+    top: -10px;
+    position: absolute;
+    pointer-events: auto;
+    border: #cccccc22 1px solid;
+    border-radius: 10px;
 }
+
 #subControlButtons:empty{
 	display:none;
 }
+
+#subControlButtons div {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: var(--discord-grey-1);
+    opacity: unset;
+    border-radius: 8px;
+    transition: border-radius 200ms ease-in-out;
+    box-shadow: 1px 1px 3px rgba(0,0,0,0.75);
+}
+
+#subControlButtons div:hover {
+    background-color: var(--discord-grey-3);
+    border-radius: 4px;
+}
+
 
 #container.vidcon {
 	height:100%;
@@ -2289,9 +2318,10 @@ span[data-action-type="stats-graphs-details-container"]>span{
 	opacity: 0.8;
 	min-width: 45px;
 	height: 45px;
-	background-color: #6666;
+	background-color: #66b16a66;
+    box-shadow: 1px 1px 3px rgba(0,0,0,0.75);
 	color: #FFF;
-	border-radius: 38px;
+	border-radius: 8px;
 	text-align: center;
 	margin: 5px;
 	pointer-events: auto;
@@ -2302,6 +2332,7 @@ span[data-action-type="stats-graphs-details-container"]>span{
 	min-width: 45px;
 	height: 45px;
 	background-color: #8888;
+    box-shadow: 1px 1px 3px rgba(0,0,0,0.75);
 	color: #FFF;
 	border-radius: 38px;
 	text-align: center;
@@ -2367,18 +2398,9 @@ iframe {
 
 .popup .menu { margin: 2px; }
 
-.my-float {
-	margin-top: 7px;
-	opacity: 0.9;
-}
 .toggleSize {
 	font-size: 32px;
 	color: white;
-}
-.controlsGrid-1x1 {
-	margin-left: auto;
-    margin-right: 0;
-    text-align: right;
 }
 
 img {
@@ -3571,6 +3593,8 @@ div#roomnotes2 {
     gap: 2px;
 }
 
+.controlsGrid
+
 .controlsGrid button i {
     font-size: 15px;
 }
@@ -3615,7 +3639,6 @@ div#roomnotes2 {
     border-radius: 4px;
     max-width: 100%;
 }
-
 
 .darktheme .controlsGrid .director-message-box textarea {
     background-color: var(--discord-grey-4);

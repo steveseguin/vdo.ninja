@@ -10305,7 +10305,7 @@ function toggleMute(apply = false, event=false) { // TODO: I need to have this b
 	
 	if (session.muted == false) {
 		session.muted = true;
-		getById("mutetoggle").className = "las la-microphone-slash my-float toggleSize";
+		getById("mutetoggle").className = "las la-microphone-slash toggleSize";
 		if (!(session.cleanOutput)){
 			getById("mutebutton").classList.remove("float"); 
 			getById("mutebutton").classList.add("float2"); 
@@ -10331,7 +10331,7 @@ function toggleMute(apply = false, event=false) { // TODO: I need to have this b
 
 	} else {
 		session.muted = false;
-		getById("mutetoggle").className = "las la-microphone my-float toggleSize";
+		getById("mutetoggle").className = "las la-microphone toggleSize";
 		if (!(session.cleanOutput)){
 			
 			getById("mutebutton").classList.add("float"); 
@@ -10396,7 +10396,7 @@ function toggleSpeakerMute(apply = false) { // TODO: I need to have this be MUTE
 	}
 	if (session.speakerMuted == false) { // mute output
 		session.speakerMuted = true;
-		getById("mutespeakertoggle").className = "las la-volume-mute my-float toggleSize";
+		getById("mutespeakertoggle").className = "las la-volume-mute toggleSize";
 		if (!(session.cleanOutput)){
 			getById("mutespeakerbutton").className = "float2 red";
 		}
@@ -10416,7 +10416,7 @@ function toggleSpeakerMute(apply = false) { // TODO: I need to have this be MUTE
 	} else {
 		session.speakerMuted = false;  // unmute output
 
-		getById("mutespeakertoggle").className = "las la-volume-up my-float toggleSize";
+		getById("mutespeakertoggle").className = "las la-volume-up toggleSize";
 		if (!(session.cleanOutput)){
 			getById("mutespeakerbutton").className = "float";
 		}
@@ -10512,13 +10512,13 @@ function toggleChat(event = null) { // TODO: I need to have this be MUTE, toggle
 			return false;
 		});
 		session.chat = true;
-		getById("chattoggle").className = "las la-comment-dots my-float toggleSize";
+		getById("chattoggle").className = "las la-comment-dots toggleSize";
 		getById("chatbutton").className = "float2";
 		getById("chatModule").style.display = "block";
 		getById("chatInput").focus(); // give it keyboard focus
 	} else {
 		session.chat = false;
-		getById("chattoggle").className = "las la-comment-alt my-float toggleSize";
+		getById("chattoggle").className = "las la-comment-alt toggleSize";
 		getById("chatbutton").className = "float";
 		getById("chatModule").style.display = "none";
 
@@ -10661,7 +10661,7 @@ function toggleVideoMute(apply = false) { // TODO: I need to have this be MUTE, 
 	
 	if (session.videoMuted == false) {
 		session.videoMuted = true;
-		getById("mutevideotoggle").className = "las la-video-slash my-float toggleSize";
+		getById("mutevideotoggle").className = "las la-video-slash toggleSize";
 		if (!(session.cleanOutput)){
 			getById("mutevideobutton").className = "float2 red";
 			getById("header").classList.add("red2");
@@ -10676,7 +10676,7 @@ function toggleVideoMute(apply = false) { // TODO: I need to have this be MUTE, 
 		}
 	} else if (session.remoteVideoMuted){  // the director has muted this guest's video feed
 		session.videoMuted = false; // just setting it back to the pre-toggled state
-		getById("mutevideotoggle").className = "las la-video my-float toggleSize";
+		getById("mutevideotoggle").className = "las la-video toggleSize";
 		if (!(session.cleanOutput)){
 			getById("head8").classList.remove("hidden");
 			getById("header").classList.add("red2");
@@ -10691,7 +10691,7 @@ function toggleVideoMute(apply = false) { // TODO: I need to have this be MUTE, 
 	} else {
 		session.videoMuted = false;
 
-		getById("mutevideotoggle").className = "las la-video my-float toggleSize";
+		getById("mutevideotoggle").className = "las la-video toggleSize";
 		if (!(session.cleanOutput)){
 			getById("mutevideobutton").className = "float";
 			getById("header").classList.remove("red2");
@@ -10866,10 +10866,10 @@ function hangup2() {
 	getById("screensharebutton").classList.remove("float2");
 	
 	if (session.showDirector == false) {
-		getById("miniPerformer").innerHTML = '<button id="press2talk" onmousedown="event.preventDefault(); event.stopPropagation();" style="width:auto;margin-left:5px;height:45px;border-radius: 38px;" class="float" onclick="press2talk(true);" title="You can also enable the director`s Video Output afterwards by clicking the Setting`s button"><i class="las la-headset"></i><span data-translate="push-to-talk-enable"> enable director`s microphone or video<br />(only guests can see this feed)</span></button>';
+		getById("miniPerformer").innerHTML = '<button id="press2talk" onmousedown="event.preventDefault(); event.stopPropagation();" class="float" onclick="press2talk(true);" title="You can also enable the director`s Video Output afterwards by clicking the Setting`s button"><i class="las la-headset"></i><span data-translate="push-to-talk-enable"> enable director`s microphone or video<br />(only guests can see this feed)</span></button>';
 		miniTranslate(getById("miniPerformer"));
 	} else {
-		getById("miniPerformer").innerHTML = '<button id="press2talk" onmousedown="event.preventDefault(); event.stopPropagation();" style="width:auto;margin-left:5px;height:45px;border-radius: 38px;" class="float" onclick="press2talk(true);" title="You can also enable the director`s Video Output afterwards by clicking the Setting`s button"><i class="las la-headset"></i><span data-translate="push-to-talk-enable-2"> enable director`s microphone or video</span></button>';
+		getById("miniPerformer").innerHTML = '<button id="press2talk" onmousedown="event.preventDefault(); event.stopPropagation();" class="float" onclick="press2talk(true);" title="You can also enable the director`s Video Output afterwards by clicking the Setting`s button"><i class="las la-headset"></i><span data-translate="push-to-talk-enable-2"> enable director`s microphone or video</span></button>';
 	}
 	getById("miniPerformer").className = "";
 }
@@ -12033,12 +12033,12 @@ function blindAllGuests(ele, event=false){
 			ele.value = 0;
 			ele.classList.remove("pressed");
 			ele.classList.remove("red");
-			ele.innerHTML = '<i class="toggleSize las la-eye my-float"></i>';
+			ele.innerHTML = '<i class="toggleSize las la-eye"></i>';
 		} else {
 			ele.value = 1;
 			ele.classList.add("pressed");
 			ele.classList.add("red");
-			ele.innerHTML = '<i class="toggleSize las la-eye-slash my-float"></i>';
+			ele.innerHTML = '<i class="toggleSize las la-eye-slash"></i>';
 		}
 	}
 
@@ -15369,14 +15369,14 @@ async function createRoomCallback(passAdd, passAdd2) {
 		}
 		
 		if (session.showDirector == false) {
-			getById("miniPerformer").innerHTML = '<button id="press2talk" onmousedown="event.preventDefault(); event.stopPropagation();" style="width:auto;margin-left:5px;height:45px;border-radius: 38px;" class="float" onclick="press2talk(true);" title="You can also enable the director`s Video Output afterwards by clicking the Setting`s button"><i class="las la-headset"></i><span data-translate="push-to-talk-enable"> enable director`s microphone or video<br />(only guests can see this feed)</span></button>';
+			getById("miniPerformer").innerHTML = '<button id="press2talk" onmousedown="event.preventDefault(); event.stopPropagation();" class="float" onclick="press2talk(true);" title="You can also enable the director`s Video Output afterwards by clicking the Setting`s button"><i class="las la-headset"></i><span data-translate="push-to-talk-enable"> enable director`s microphone or video<br />(only guests can see this feed)</span></button>';
 			miniTranslate(getById("miniPerformer"));
 			getById("grabDirectorSoloLink").dataset.raw = "https://" + location.host + location.pathname + "?solo&sd&r=" + session.roomid + "&v="+session.streamID + passAdd2 + wss + token;
 			getById("grabDirectorSoloLink").href = "https://" + location.host + location.pathname + "?solo&sd&r=" + session.roomid + "&v="+session.streamID  + passAdd2 + wss + token;
 			getById("grabDirectorSoloLink").innerText = "https://" + location.host + location.pathname + "?solo&sd&r=" + session.roomid + "&v="+session.streamID  + passAdd2 + wss + token;
 			getById("grabDirectorSoloLinkParent").classList.remove("hidden");
 		} else {
-			getById("miniPerformer").innerHTML = '<button id="press2talk" onmousedown="event.preventDefault(); event.stopPropagation();" style="width:auto;margin-left:5px;height:45px;border-radius: 38px;" class="float" onclick="press2talk(true);" title="You can also enable the director`s Video Output afterwards by clicking the Setting`s button"><i class="las la-headset"></i><span data-translate="push-to-talk-enable-2"> enable director`s microphone or video</span></button>';
+			getById("miniPerformer").innerHTML = '<button id="press2talk" onmousedown="event.preventDefault(); event.stopPropagation();" class="float" onclick="press2talk(true);" title="You can also enable the director`s Video Output afterwards by clicking the Setting`s button"><i class="las la-headset"></i><span data-translate="push-to-talk-enable-2"> enable director`s microphone or video</span></button>';
 		}
 		getById("miniPerformer").className = "";
 		
@@ -22732,7 +22732,7 @@ function addDownloadLink(fileList, UUID, pc){
 	}
 
 	if (session.chat == false) {
-		getById("chattoggle").className = "las la-comments my-float toggleSize puslate";
+		getById("chattoggle").className = "las la-comments toggleSize puslate";
 		getById("chatbutton").className = "float";
 
 		if (getById("chatNotification").value) {
@@ -29433,7 +29433,7 @@ function getChatMessage(msg, label = false, director = false, overlay = false) {
 	updateMessages();
 
 	if (session.chat == false) {
-		getById("chattoggle").className = "las la-comments my-float toggleSize puslate";
+		getById("chattoggle").className = "las la-comments toggleSize puslate";
 		getById("chatbutton").className = "float";
 
 		if (getById("chatNotification").value) {
@@ -30173,7 +30173,7 @@ function recordLocalVideoToggle() {
 	if (ele.dataset.state == "0") {
 		ele.dataset.state = "1";
 		ele.style.backgroundColor = "red";
-		ele.innerHTML = '<i class="toggleSize my-float las la-square" ></i>';
+		ele.innerHTML = '<i class="toggleSize las la-square" ></i>';
 		if ("recording" in session.videoElement) {
 
 		} else {
@@ -30194,7 +30194,7 @@ function recordLocalVideoToggle() {
 		}
 		ele.dataset.state = "0";
 		ele.style.backgroundColor = "";
-		ele.innerHTML = '<i class="toggleSize my-float las la-dot-circle" ></i>';
+		ele.innerHTML = '<i class="toggleSize las la-dot-circle" ></i>';
 		
 		if (session.director){
 			var elements = document.querySelectorAll('[data-action-type="recorder-local"][data-sid="' + session.streamID + '"]');
@@ -30339,7 +30339,7 @@ function recordLocalVideo(action = null, videoKbps = 6000, remote=false) { // ev
 			if (remote){
 				getById("recordLocalbutton").dataset.state = "1";
 				getById("recordLocalbutton").style.backgroundColor = "red";
-				getById("recordLocalbutton").innerHTML = '<i class="toggleSize my-float las la-square" ></i>';
+				getById("recordLocalbutton").innerHTML = '<i class="toggleSize las la-square" ></i>';
 			}
 			return;
 		} else {
@@ -30369,7 +30369,7 @@ function recordLocalVideo(action = null, videoKbps = 6000, remote=false) { // ev
 		if (remote){
 			getById("recordLocalbutton").dataset.state = "1";
 			getById("recordLocalbutton").style.backgroundColor = "red";
-			getById("recordLocalbutton").innerHTML = '<i class="toggleSize my-float las la-square" ></i>';
+			getById("recordLocalbutton").innerHTML = '<i class="toggleSize las la-square" ></i>';
 		}
 	} else if (action == "stop") {
 		return;
@@ -30377,7 +30377,7 @@ function recordLocalVideo(action = null, videoKbps = 6000, remote=false) { // ev
 		if (!remote){
 			getById("recordLocalbutton").dataset.state = "1";
 			getById("recordLocalbutton").style.backgroundColor = "red";
-			getById("recordLocalbutton").innerHTML = '<i class="toggleSize my-float las la-square" ></i>';
+			getById("recordLocalbutton").innerHTML = '<i class="toggleSize las la-square" ></i>';
 		}
 		video.recording = true;
 	}
@@ -30419,17 +30419,17 @@ function recordLocalVideo(action = null, videoKbps = 6000, remote=false) { // ev
 				if (getById("recordLocalbutton").dataset.state == 2) {
 					getById("recordLocalbutton").dataset.state = "0";
 					getById("recordLocalbutton").style.backgroundColor = "";
-					getById("recordLocalbutton").innerHTML = '<i class="toggleSize my-float las la-exclamation" ></i>';
+					getById("recordLocalbutton").innerHTML = '<i class="toggleSize las la-exclamation" ></i>';
 					restart = false;
 					warnUser("Media Recording Stopped due to an error.");
 				} else {
-					getById("recordLocalbutton").innerHTML = '<i class="toggleSize my-float las la-spinner" ></i>';
+					getById("recordLocalbutton").innerHTML = '<i class="toggleSize las la-spinner" ></i>';
 					getById("recordLocalbutton").dataset.state = "2";
 				}
 			} else {
 				getById("recordLocalbutton").dataset.state = "0";
 				getById("recordLocalbutton").style.backgroundColor = "";
-				getById("recordLocalbutton").innerHTML = '<i class="toggleSize my-float las la-dot-circle" ></i>';
+				getById("recordLocalbutton").innerHTML = '<i class="toggleSize las la-dot-circle" ></i>';
 				if (notify){
 					if (!session.cleanOutput){
 						warnUser("A recording has stopped unexpectedly.");
@@ -30996,7 +30996,7 @@ function changeGroupDirectorAPI(group, state=null, update=true){
 		ele.classList.add('float');
 		ele.style.display = "inline-block";
 		ele.role = "button";
-		ele.innerHTML = '<i class="my-float las la-users" aria-hidden="true"></i><br />'+group;
+		ele.innerHTML = '<i class="las la-users" aria-hidden="true"></i><br />'+group;
 		eleGroup.appendChild(ele);
 		ele.onclick = function(){
 			changeGroupDirectorAPI(this.dataset.group);
