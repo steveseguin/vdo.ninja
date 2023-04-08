@@ -1166,12 +1166,12 @@ button.glyphicon-button.active.focus {
     position: fixed;
     z-index: 995;
     bottom: 0px;
+    border: 0;
+    pointer-events: none;
     width: 100%;
     justify-content: center;
     align-items: center;
-    height: 60px;
-    border: 0;
-    pointer-events: none;
+    transform-origin: bottom; /* Keeps it at bottom even if scaled */
 }
 #controlButtons:empty {
 	display: none;
@@ -1179,14 +1179,16 @@ button.glyphicon-button.active.focus {
 
 #subControlButtons {
     display: flex;
-    border-radius: 38px;
     background-color: var(--discord-grey-0);
     box-shadow: 0px 0px 10px rgba(0,0,0,1);
-    top: -10px;
-    position: absolute;
+    margin: 5px;
     pointer-events: auto;
     border: #cccccc22 1px solid;
     border-radius: 10px;
+    align-items: center;
+    justify-content: center;
+    flex-wrap: wrap;
+    min-width: 0%;
 }
 
 #subControlButtons:empty{
@@ -1234,8 +1236,8 @@ button.glyphicon-button.active.focus {
 }
 
 @media only screen and (max-width: 640px){
-	#subControlButtons {
-		transform: scale(0.9) translateY(10%);
+	#controlButtons {
+		transform: scale(0.9);
 	}
 	
 	.labelSmall {
@@ -1263,15 +1265,15 @@ button.glyphicon-button.active.focus {
 	}
 }
 @media only screen and (max-width: 400px){
-	#subControlButtons {
-		transform: scale(0.8) translateY(20%);
-	}
-}
-@media only screen and (max-width: 300px){
-	#subControlButtons {
-		padding: 0px;
+	#controlButtons {
+		transform: scale(0.8);
 	}
 	
+}
+@media only screen and (max-width: 300px){
+	#controlButtons {
+		transform: scale(0.7);
+	}	
 }
 
 .orange{
@@ -1317,34 +1319,19 @@ button.btnArmTransferRoom.selected{
 }
 
 @media only screen and (max-height: 540px){
-	#subControlButtons {
-		transform: scale(0.88);
-	}
 	#gridlayout>#container.vidcon {
 		height:88%
-	}
-	#controlButtons {
-		height:54px;
 	}
 	#copythisurl {
 		font-size:80%;
 	}
 }
 @media only screen and (max-height: 500px){
-	#subControlButtons {
-		transform: scale(0.87);
-	}
 	#gridlayout>#container.vidcon {
 		height:87%
 	}
-	#controlButtons {
-		height:54px;
-	}
 }
 @media only screen and (max-height: 400px){
-	#subControlButtons {
-		transform: scale(0.85);
-	}
 	#logoname{
 		display:none;
 	}
@@ -1358,7 +1345,7 @@ button.btnArmTransferRoom.selected{
 		height:85%
 	}
 	#controlButtons {
-		height:50px;
+        transform: scale(0.9);
 	}
 	#header{
 		min-height:0px;
@@ -1367,12 +1354,6 @@ button.btnArmTransferRoom.selected{
 @media only screen and (max-height: 300px){
 	#gridlayout>#container.vidcon {
 		height:81%
-	}
-	#subControlButtons {
-		transform: scale(0.81);
-	}
-	#controlButtons {
-		height:46.2px;
 	}
 	#head2 {
 		display:none !important;
@@ -1383,44 +1364,26 @@ button.btnArmTransferRoom.selected{
 	#gridlayout>#container.vidcon {
 		height:78%
 	}
-	#subControlButtons {
-		transform: scale(0.77);
-	}
 	#controlButtons {
-		height:46.2px;
+        transform: scale(0.8);
 	}
 }
 @media only screen and (max-height: 190px){
 	#gridlayout>#container.vidcon {
 		height:75%
 	}
-	#subControlButtons {
-		transform: scale(0.73);
-	}
-	#controlButtons {
-		height:42px
-	}
 }
 @media only screen and (max-height: 160px){
 	#gridlayout>#container.vidcon {
 		height:70%
 	}
-	#subControlButtons {
-		transform: scale(0.65);
-	}
 	#controlButtons {
-		height:38px
+        transform: scale(0.7);
 	}
 }
 @media only screen and (max-height: 120px){
 	#gridlayout>#container.vidcon {
 		height:70%
-	}
-	#subControlButtons {
-		transform: scale(0.52);
-	}
-	#controlButtons {
-		height:30px
 	}
 }
 
@@ -2317,7 +2280,8 @@ span[data-action-type="stats-graphs-details-container"]>span{
 .float {
 	opacity: 0.8;
 	min-width: 45px;
-	height: 45px;
+    min-height: 45px;
+    height: 100%;
 	background-color: #66b16a66;
     box-shadow: 1px 1px 3px rgba(0,0,0,0.75);
 	color: #FFF;
@@ -2326,11 +2290,13 @@ span[data-action-type="stats-graphs-details-container"]>span{
 	margin: 5px;
 	pointer-events: auto;
 	outline:none;
+    padding: 5px 5px;
 }
 .float2 {
 	opacity: 0.8;
 	min-width: 45px;
-	height: 45px;
+    min-height: 45px;
+    height: 100%;
 	background-color: #8888;
     box-shadow: 1px 1px 3px rgba(0,0,0,0.75);
 	color: #FFF;
@@ -2340,6 +2306,7 @@ span[data-action-type="stats-graphs-details-container"]>span{
 	margin: 5px;
 	pointer-events: auto;
 	outline:none;
+    padding: 5px 5px;
 }
 
 .rotate225 {
