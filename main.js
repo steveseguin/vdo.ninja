@@ -3952,6 +3952,9 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 		}
 	}
 	
+	if (urlParams.has('miconlyoption') || urlParams.has('moo')){
+		session.optionalMicOnly = true;
+	}
 	
 	if (urlParams.has('hidescreenshare') || urlParams.has('hidess') || urlParams.has('sshide') || urlParams.has('screensharehide')) { // this way I don't need to remember what it's called. I can just guess. :D
 		session.screenShareElementHidden = true;
@@ -4064,13 +4067,13 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 				}
 			} else if (session.audioDevice === 0) {
 				miniTranslate(getById("add_camera"), "join-room-with-camera", "Join Room with Camera");
-			} else {
+			} else if (session.optionalMicOnly){
 				miniTranslate(getById("add_camera"), "join-room-with-video", "Join Room with Video");
-				
 				miniTranslate(getById("add_microphone"), "join-room-with-mic-only", "Join Room with just Microphone");
-				
 				getById("container-3a").classList.remove("hidden");
 
+			} else{
+				miniTranslate(getById("add_camera"), "join-room-with-camera", "Join Room with Camera");
 			}
 			miniTranslate(getById("add_screen"), "share-screen-with-room", "Screenshare with Room");
 		} else {
