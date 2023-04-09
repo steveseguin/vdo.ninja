@@ -5687,8 +5687,6 @@ eventer(messageEvent, function(e) { // this listens for child IFRAMES.
 						session.screenShareElement = false;
 					
 						updateMixer();
-						// getById("screenshare2button").classList.add("float");
-						// getById("screenshare2button").classList.remove("float2");
 					}
 				}
 			} else if (e.data.action == "video-loaded") {
@@ -10343,11 +10341,8 @@ function toggleMute(apply = false, event=false) { // TODO: I need to have this b
 	if (session.muted == false) {
 		session.muted = true;
 		getById("mutetoggle").className = "las la-microphone-slash toggleSize";
-		if (!(session.cleanOutput)){
-			// getById("mutebutton").classList.remove("float"); 
-			// getById("mutebutton").classList.add("float2"); 
-			getById("mutebutton").classList.add("red"); 
-			getById("mutebutton").classList.add("pulsate"); 
+		if (!(session.cleanOutput)){ 
+			getById("mutebutton").classList.add("red", "pulsate"); 
 			getById("header").classList.add('red');
 			
 			if (session.localMuteElement){
@@ -10373,9 +10368,7 @@ function toggleMute(apply = false, event=false) { // TODO: I need to have this b
 			
 			// getById("mutebutton").classList.add("float"); 
 			// getById("mutebutton").classList.remove("float2"); 
-			getById("mutebutton").classList.remove("red"); 
-			getById("mutebutton").classList.remove("pulsate"); 
-			
+			getById("mutebutton").classList.remove("red", "pulsate"); 
 			getById("header").classList.remove('red');
 			
 			if (session.localMuteElement){
@@ -10902,8 +10895,7 @@ function hangup2() {
 	getById("mutevideobutton").classList.add("hidden");
 	getById("screenshare2button").classList.add("hidden");
 	
-	// getById("screensharebutton").classList.add("float");
-	// getById("screensharebutton").classList.remove("float2");
+	getById("screensharebutton").classList.remove("green");
 	
 	if (session.showDirector == false) {
 		getById("miniPerformer").innerHTML = '<button id="press2talk" onmousedown="event.preventDefault(); event.stopPropagation();" class="float green" onclick="press2talk(true);" title="You can also enable the director`s Video Output afterwards by clicking the Setting`s button"><i class="las la-headset"></i><span data-translate="push-to-talk-enable"> enable director`s microphone or video<br />(only guests can see this feed)</span></button>';
@@ -17930,8 +17922,7 @@ function gotDevices2(deviceInfos) {
 					notifyOfScreenShare();
 					//session.refreshScale();
 				}
-				// getById("screensharebutton").classList.add("float");
-				// getById("screensharebutton").classList.remove("float2");
+				getById("screensharebutton").classList.remove("green");
 			}
 			
 		};
@@ -19133,9 +19124,8 @@ async function toggleScreenShare(reload = false) { ////////////////////////////
 				session.screenShareState = true;
 				
 				notifyOfScreenShare();
-				
-				// getById("screensharebutton").classList.add("float2");
-				// getById("screensharebutton").classList.remove("float");
+                
+				getById("screensharebutton").classList.add("green");
 				enumerateDevices().then(gotDevices2).then(function() {});
 				
 				pokeIframeAPI("screen-share-state", true);
@@ -19153,10 +19143,7 @@ async function toggleScreenShare(reload = false) { ////////////////////////////
 					
 				//session.refreshScale();
 				
-				getById("screensharebutton").classList.add("green");
-				getById("screensharebutton").classList.add("pulsate");
-				// getById("screensharebutton").classList.add("float2");
-				// getById("screensharebutton").classList.remove("float");
+			    getById("screensharebutton").classList.add("green");
 				enumerateDevices().then(gotDevices2).then(function() {});
 				
 				//if (session.videoElement.readyState!==4){
@@ -19245,9 +19232,6 @@ async function toggleScreenShare(reload = false) { ////////////////////////////
 		}
 
 		getById("screensharebutton").classList.remove("green");
-		getById("screensharebutton").classList.remove("pulsate");
-		// getById("screensharebutton").classList.add("float"); // disable the button after we know the tracks are disabled
-		// getById("screensharebutton").classList.remove("float2");
 		
 		if (beforeScreenShare){
 			if (addedAlready==false){
@@ -19843,8 +19827,8 @@ async function grabScreen(quality = 0, audio = true, videoOnEnd = false) {
 				
 				notifyOfScreenShare();
 
-				// getById("screensharebutton").classList.add("float");
-				// getById("screensharebutton").classList.remove("float2");
+
+			    getById("screensharebutton").classList.remove("green");
  
 				if (videoOnEnd == true) {
 					if (beforeScreenShare) {
@@ -34892,17 +34876,13 @@ async function createSecondStream() { ////////////////////////////
 			
 			session.screenShareElement.srcObject = session.screenStream;
 			
-			// getById("screensharebutton").classList.remove("float");
 			getById("screensharebutton").classList.add("green");
 			getById("screensharebutton").title = miscTranslations["stop-screen-sharing"];
 			
-			// getById("screenshare2button").classList.remove("float");
 			getById("screenshare2button").classList.add("green");
 			getById("screenshare2button").title = miscTranslations["stop-screen-sharing"];
 			
-			// getById("screenshare3button").classList.remove("float");
 			getById("screenshare3button").classList.add("green");
-			getById("screenshare3button").classList.add("pulsate");
 			getById("screenshare3button").title = miscTranslations["stop-screen-sharing"];
 			
 			
@@ -35002,15 +34982,12 @@ function stopSecondScreenshare(){
 	session.screenStream = false;
 	session.screenShareState = false;
 	
-	// getById("screensharebutton").classList.remove("float2");
 	getById("screensharebutton").classList.remove("green");
 	getById("screensharebutton").title = miscTranslations["share-a-screen"];
 
-	// getById("screenshare2button").classList.remove("float2");
 	getById("screenshare2button").classList.remove("green");
 	getById("screenshare2button").title = miscTranslations["share-a-screen"];
 	
-	// getById("screenshare3button").classList.remove("float2");
 	getById("screenshare3button").classList.remove("green");
 	getById("screenshare3button").title = miscTranslations["share-a-screen"];
 	pokeIframeAPI("screen-share-state", false);
