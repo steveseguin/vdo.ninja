@@ -35000,15 +35000,15 @@ function stopSecondScreenshare(){
 	session.screenShareState = false;
 	
 	// getById("screenshare2button").classList.remove("float2");
-	getById("screenshare2button").classList.add("green");
+	getById("screenshare2button").classList.remove("green");
 	getById("screenshare2button").title = miscTranslations["share-a-screen"];
 	
 	// getById("screensharebutton").classList.remove("float2");
-	getById("screensharebutton").classList.add("green");
+	getById("screensharebutton").classList.remove("green");
 	getById("screensharebutton").title = miscTranslations["share-a-screen"];
 	
 	// getById("screenshare3button").classList.remove("float2");
-	getById("screenshare3button").classList.add("green");
+	getById("screenshare3button").classList.remove("green");
 	getById("screenshare3button").title = miscTranslations["share-a-screen"];
 	pokeIframeAPI("screen-share-state", false);
 	
