@@ -10374,7 +10374,7 @@ function toggleMute(apply = false, event=false) { // TODO: I need to have this b
 }
 
 function postMessageIframe(iFrameEle, message){ // iframes seem to only have the contentWindow work on the last placed iframe object, so this checks the dom first. 
-	if (iFrameEle){
+	if (iFrameEle && (iFrameEle.nodeName == "IFRAME")){
 		try{
 			if (iFrameEle.id && document.getElementById(iFrameEle.id)){
 				document.getElementById(iFrameEle.id).contentWindow.postMessage(message, '*');
