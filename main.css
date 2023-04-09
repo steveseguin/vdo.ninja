@@ -626,11 +626,11 @@ body.darktheme .credits>a:visited {
     background-color: #ccc;
     width: 100%;
     gap: 4px;
+    font-size: 14px;
 }
 .advancedAudioSettings div {
     display: flex;
     width: 100%;
-    overflow: hidden;
     align-items: center;
     gap: 4px;
 }
@@ -648,11 +648,27 @@ body.darktheme .credits>a:visited {
     height: 24px;
 
 }
-.advancedAudioSettings div:nth-child(1) {
+.advancedAudioSettings > div:nth-child(1) {
     flex-direction: column;
     align-items: flex-start;
     width: 100%;
     padding: unset;
+}
+
+.darktheme .advancedAudioSettings .settingsLabel {
+    background-color: var(--discord-grey-7);
+    border: 1px solid var(--discord-grey-1);
+    box-shadow: 1px 1px 3px var(--discord-grey-1);
+}
+
+.advancedAudioSettings .settingsLabel {
+    background-color: #bbb;
+    padding: 5px;
+    border-radius: 4px;
+    display: block;
+    border: 1px solid #999;
+    box-shadow: 1px 1px 3px #999;
+    margin: 5px -2px 0px;
 }
 
 .advancedVideoSettings div:nth-child(2) {

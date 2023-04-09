@@ -18080,7 +18080,6 @@ function gotDevicesRemote(deviceInfos, UUID) {
 		} else {
 			var videoSelect = document.createElement("select");
 			videoSelect.id = "remoteVideoSelect_"+UUID;
-			videoSelect.style = "font-size: 70% !important;";
 			
 			
 			
@@ -18122,7 +18121,6 @@ function gotDevicesRemote(deviceInfos, UUID) {
 		} else {
 			var audioSelect = document.createElement("select");
 			audioSelect.id = "remoteAudioSelect_"+UUID;
-			audioSelect.style = "font-size: 70% !important;";
 			
 			
 			audioSelect.onchange = function(){
@@ -18164,7 +18162,6 @@ function gotDevicesRemote(deviceInfos, UUID) {
 		} else {
 			var audioOutputSelect = document.createElement("select");
 			audioOutputSelect.id = "remoteAudioOutputSelect_"+UUID;
-			audioOutputSelect.style = "font-size: 70% !important;";
 			
 			audioOutputSelect.onchange = function(){
 				if (session.rpcs[UUID].stats.info && session.rpcs[UUID].stats.info.consent){
@@ -24417,7 +24414,7 @@ function updateDirectorsAudio(dataN, UUID) {
 			input.dataset.track = n;
 			input.dataset.UUID = UUID;
 			input.id = "constraints_" + i + "_"+UUID;
-			input.style = "display:block; width:100%;margin:10px 0;";
+			input.style = "display:block; width:100%; margin: 2px 0px 5px;";
 			input.name = "constraints_" + i;
 			
 			manualInput.onchange = function(e) {
@@ -24538,9 +24535,9 @@ function updateDirectorsAudio(dataN, UUID) {
 			if (data.trackLabel) {
 				var label = document.createElement("label");
 				label.innerText = data.trackLabel;
-				label.style.margin = "20px 0 10px 0";
 				label.style.display = "block";
 				label.id = "remoteAudioLabel_"+UUID+"_"+n+ "_"+UUID;
+                label.classList.add("settingsLabel");
 				audioEle.appendChild(label);
 			}
 		}
@@ -24761,6 +24758,7 @@ function updateDirectorsAudio(dataN, UUID) {
 		if (data.subGain!==false) {
 			var label = document.createElement("label");
 			var i = "Gain";
+			var div = document.createElement("div");
 			label.id = "label_" + i + "_"+n+ "_"+UUID;
 			label.htmlFor = "constraints_" + i + "_" + n+ "_"+UUID;
 
@@ -24790,7 +24788,7 @@ function updateDirectorsAudio(dataN, UUID) {
 			input.id = "constraints_" + i + "_" + n+ "_"+UUID;
 			input.style = "display:block; width:100%;";
 			input.name = input.id;
-			input.style.margin = "10px 0";
+			input.style.margin = "2px 0px 5px";
 			
 			manualInput.onchange = function(e) {
 				getById("constraints_" + e.target.dataset.keyname + "_"+e.target.dataset.track + "_"+ e.target.dataset.UUID).value = parseFloat(e.target.value);
@@ -24810,8 +24808,9 @@ function updateDirectorsAudio(dataN, UUID) {
 				}
 			};
 
-			audioEle.appendChild(label);
-			audioEle.appendChild(manualInput);
+            audioEle.appendChild(div)
+			div.appendChild(label);
+			div.appendChild(manualInput);
 			audioEle.appendChild(input);
 		}
 		
@@ -24985,7 +24984,7 @@ function updateDirectorsVideo(data, UUID) {
 				input.dataset.UUID = UUID;
 				input.id = "constraints_" + i + "_" + UUID;
 				input.name = input.id;
-				input.style = "display:block; width:100%;margin: 10px 0;";
+                input.style = "display:block; width:100%; margin: 2px 0px 5px;";
 				input.manualMode = manualMode;
 				
 
