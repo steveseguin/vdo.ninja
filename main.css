@@ -1,5 +1,6 @@
 :root {
     /* Discord Greys - Dark to Lighter */
+    --discord-grey-0: #121212;
     --discord-grey-1: #1e1f22;
     --discord-grey-2: #232428;
     --discord-grey-3: #2b2d31;
@@ -62,8 +63,12 @@
 	color: #FFF;
 }
 
-button:hover,[role="button"]:not(.column):hover{
-	filter: brightness(90%);
+button:hover,[role="button"]
+:not(.column)
+:not(.controlsGrid)
+:not(#controlButtons)
+:hover{
+	filter: brightness(120%);
 }
 
 table {
@@ -243,16 +248,44 @@ button.hint {
 	visibility: hidden;
 }
 
+
+/* #screenshare3button.green{
+	animation: pulse 5s infinite;
+} */
+
+/* Clicked buttons overwrite */
 .red {
 	background-color: #840000 !important;
 }
+.red:hover {
+	background-color: #b30c0c !important;
+}
 
-.red2 {
-	background-color: #840000 !important;
+.green {
+    background-color: #64c04d !important;
 }
+
+.green:hover {
+    background-color: #76c762 !important;
+}
+
 .blue {
-	background-color: #000084 !important;
+	background-color: #161699 !important;
 }
+
+.blue:hover {
+    background-color: #2727bb !important;
+}
+
+.brown {
+	background-color: #8d6418 !important;
+}
+
+.brown:hover {
+	background-color: #a06d10 !important;
+}
+
+/* ///////////////////// */
 
 .orange {
 	background-color: #673100 !important;
@@ -262,14 +295,14 @@ button.hint {
 	background-color: #5c7785 !important;
 }
 
-button.red {
+/* button.red {
 	-webkit-app-region: no-drag;
 	padding: 10px;
 	margin: 10px 0px;
 	cursor: pointer;
 	border-radius: 2px;
 	color: white;
-}
+} */
 
 button {
 	-webkit-app-region: no-drag;
@@ -810,7 +843,7 @@ hr {
 	font-size: 12px;
 	margin: 10px 0 0 0;
 }
-.puslate {
+.pulsate {
 	border-radius: 50%;
 	box-shadow: 0 0 0 0 rgba(14, 19, 26, 1);
 	transform: scale(1);
@@ -1154,32 +1187,55 @@ button.glyphicon-button.active.focus {
 }
 
 #controlButtons {
-	position: fixed;
-	z-index: 995;
-	bottom: 0px;
-	width: 100%;
-	justify-content: center;
-	align-items: center;
-	height: 60px;
-	border: 0;
-	pointer-events: none;
-	display: flex;
+    display: flex;
+    position: fixed;
+    z-index: 995;
+    bottom: 0px;
+    border: 0;
+    pointer-events: none;
+    width: 100%;
+    justify-content: center;
+    align-items: center;
+    transform-origin: bottom; /* Keeps it at bottom even if scaled */
 }
 #controlButtons:empty {
 	display: none;
 }
 
 #subControlButtons {
-	display: flex;
-	border-radius: 38px;
-	background-color: #030303dd;
-	padding: 5px 7px;
-	position: absolute;
-	pointer-events: auto;
+    display: flex;
+    background-color: var(--discord-grey-0);
+    box-shadow: 0px 0px 10px rgba(0,0,0,1);
+    margin: 5px;
+    pointer-events: auto;
+    border: #cccccc22 1px solid;
+    border-radius: 10px;
+    align-items: center;
+    justify-content: center;
+    flex-wrap: wrap;
+    min-width: 0%;
 }
+
 #subControlButtons:empty{
 	display:none;
 }
+
+#subControlButtons div {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: var(--discord-grey-1);
+    opacity: unset;
+    border-radius: 8px;
+    transition: border-radius 200ms ease-in-out;
+    box-shadow: 1px 1px 3px rgba(0,0,0,0.75);
+}
+
+#subControlButtons div:hover {
+    background-color: var(--discord-grey-3);
+    border-radius: 4px;
+}
+
 
 #container.vidcon {
 	height:100%;
@@ -1205,8 +1261,8 @@ button.glyphicon-button.active.focus {
 }
 
 @media only screen and (max-width: 640px){
-	#subControlButtons {
-		transform: scale(0.9) translateY(10%);
+	#controlButtons {
+		transform: scale(0.9);
 	}
 	
 	.labelSmall {
@@ -1234,15 +1290,15 @@ button.glyphicon-button.active.focus {
 	}
 }
 @media only screen and (max-width: 400px){
-	#subControlButtons {
-		transform: scale(0.8) translateY(20%);
-	}
-}
-@media only screen and (max-width: 300px){
-	#subControlButtons {
-		padding: 0px;
+	#controlButtons {
+		transform: scale(0.8);
 	}
 	
+}
+@media only screen and (max-width: 300px){
+	#controlButtons {
+		transform: scale(0.7);
+	}	
 }
 
 .orange{
@@ -1288,34 +1344,19 @@ button.btnArmTransferRoom.selected{
 }
 
 @media only screen and (max-height: 540px){
-	#subControlButtons {
-		transform: scale(0.88);
-	}
 	#gridlayout>#container.vidcon {
 		height:88%
-	}
-	#controlButtons {
-		height:54px;
 	}
 	#copythisurl {
 		font-size:80%;
 	}
 }
 @media only screen and (max-height: 500px){
-	#subControlButtons {
-		transform: scale(0.87);
-	}
 	#gridlayout>#container.vidcon {
 		height:87%
 	}
-	#controlButtons {
-		height:54px;
-	}
 }
 @media only screen and (max-height: 400px){
-	#subControlButtons {
-		transform: scale(0.85);
-	}
 	#logoname{
 		display:none;
 	}
@@ -1329,7 +1370,7 @@ button.btnArmTransferRoom.selected{
 		height:85%
 	}
 	#controlButtons {
-		height:50px;
+        transform: scale(0.9);
 	}
 	#header{
 		min-height:0px;
@@ -1338,12 +1379,6 @@ button.btnArmTransferRoom.selected{
 @media only screen and (max-height: 300px){
 	#gridlayout>#container.vidcon {
 		height:81%
-	}
-	#subControlButtons {
-		transform: scale(0.81);
-	}
-	#controlButtons {
-		height:46.2px;
 	}
 	#head2 {
 		display:none !important;
@@ -1354,44 +1389,26 @@ button.btnArmTransferRoom.selected{
 	#gridlayout>#container.vidcon {
 		height:78%
 	}
-	#subControlButtons {
-		transform: scale(0.77);
-	}
 	#controlButtons {
-		height:46.2px;
+        transform: scale(0.8);
 	}
 }
 @media only screen and (max-height: 190px){
 	#gridlayout>#container.vidcon {
 		height:75%
 	}
-	#subControlButtons {
-		transform: scale(0.73);
-	}
-	#controlButtons {
-		height:42px
-	}
 }
 @media only screen and (max-height: 160px){
 	#gridlayout>#container.vidcon {
 		height:70%
 	}
-	#subControlButtons {
-		transform: scale(0.65);
-	}
 	#controlButtons {
-		height:38px
+        transform: scale(0.7);
 	}
 }
 @media only screen and (max-height: 120px){
 	#gridlayout>#container.vidcon {
 		height:70%
-	}
-	#subControlButtons {
-		transform: scale(0.52);
-	}
-	#controlButtons {
-		height:30px
 	}
 }
 
@@ -1633,12 +1650,6 @@ select{
 .highlight {
 	background-color:#ddeeff;
 }
-
-.green {
-	background-color:#474!important;
-}
-
-
 
 #effectSelector{
 	display: inline-block;
@@ -1931,16 +1942,7 @@ input[type=range]:focus::-ms-fill-upper {
 .tooltip:hover .tooltiptext {
 	visibility: visible;
 }
-#screensharebutton.float2{
-	background-color: #335c3a;
-}
-#screenshare2button.float2{
-	background-color: #335c3a;
-}
-#screenshare3button.float2{
-	background-color: #2bf96e88;
-	animation: pulse 5s infinite;
-}
+
 #previewWebcam.miconly {
 	display:none;
 }
@@ -2288,20 +2290,24 @@ span[data-action-type="stats-graphs-details-container"]>span{
 .float {
 	opacity: 0.8;
 	min-width: 45px;
-	height: 45px;
-	background-color: #6666;
+    min-height: 45px;
+    height: 100%;
+    box-shadow: 1px 1px 3px rgba(0,0,0,0.75);
 	color: #FFF;
-	border-radius: 38px;
+	border-radius: 8px;
 	text-align: center;
 	margin: 5px;
 	pointer-events: auto;
 	outline:none;
+    padding: 5px 5px;
 }
 .float2 {
 	opacity: 0.8;
 	min-width: 45px;
-	height: 45px;
+    min-height: 45px;
+    height: 100%;
 	background-color: #8888;
+    box-shadow: 1px 1px 3px rgba(0,0,0,0.75);
 	color: #FFF;
 	border-radius: 38px;
 	text-align: center;
@@ -2309,6 +2315,7 @@ span[data-action-type="stats-graphs-details-container"]>span{
 	margin: 5px;
 	pointer-events: auto;
 	outline:none;
+    padding: 5px 5px;
 }
 
 .rotate225 {
@@ -2367,18 +2374,9 @@ iframe {
 
 .popup .menu { margin: 2px; }
 
-.my-float {
-	margin-top: 7px;
-	opacity: 0.9;
-}
 .toggleSize {
 	font-size: 32px;
 	color: white;
-}
-.controlsGrid-1x1 {
-	margin-left: auto;
-    margin-right: 0;
-    text-align: right;
 }
 
 img {
@@ -3571,6 +3569,8 @@ div#roomnotes2 {
     gap: 2px;
 }
 
+.controlsGrid
+
 .controlsGrid button i {
     font-size: 15px;
 }
@@ -3615,7 +3615,6 @@ div#roomnotes2 {
     border-radius: 4px;
     max-width: 100%;
 }
-
 
 .darktheme .controlsGrid .director-message-box textarea {
     background-color: var(--discord-grey-4);
