@@ -2426,12 +2426,12 @@ function nextQueue(){
 	if (!session.queue){return;}
 	if (!session.director){return;}
 	if (session.queueList.length==0){
-		getById("queuebutton").classList.add("float2");
+		// getById("queuebutton").classList.add("float2");
 		getById("queuebutton").classList.add("red");
-		getById("queuebutton").classList.remove("float");
+		// getById("queuebutton").classList.remove("float");
 		setTimeout(function(){
-			getById("queuebutton").classList.add("float");
-			getById("queuebutton").classList.remove("float2");
+			// getById("queuebutton").classList.add("float");
+			// getById("queuebutton").classList.remove("float2");
 			getById("queuebutton").classList.remove("red");
 		},50);
 		return;
@@ -2439,11 +2439,11 @@ function nextQueue(){
 	var nextStream = session.queueList.shift();
 	
 	
-	getById("queuebutton").classList.add("float2");
-	getById("queuebutton").classList.remove("float");
+	// getById("queuebutton").classList.add("float2");
+	// getById("queuebutton").classList.remove("float");
 	setTimeout(function(){
-		getById("queuebutton").classList.add("float");
-		getById("queuebutton").classList.remove("float2");
+		// getById("queuebutton").classList.add("float");
+		// getById("queuebutton").classList.remove("float2");
 	},200);
 
 	updateQueue();
@@ -5687,8 +5687,8 @@ eventer(messageEvent, function(e) { // this listens for child IFRAMES.
 						session.screenShareElement = false;
 					
 						updateMixer();
-						getById("screenshare2button").classList.add("float");
-						getById("screenshare2button").classList.remove("float2");
+						// getById("screenshare2button").classList.add("float");
+						// getById("screenshare2button").classList.remove("float2");
 					}
 				}
 			} else if (e.data.action == "video-loaded") {
@@ -10344,10 +10344,10 @@ function toggleMute(apply = false, event=false) { // TODO: I need to have this b
 		session.muted = true;
 		getById("mutetoggle").className = "las la-microphone-slash toggleSize";
 		if (!(session.cleanOutput)){
-			getById("mutebutton").classList.remove("float"); 
-			getById("mutebutton").classList.add("float2"); 
+			// getById("mutebutton").classList.remove("float"); 
+			// getById("mutebutton").classList.add("float2"); 
 			getById("mutebutton").classList.add("red"); 
-			getById("mutebutton").classList.add("puslate"); 
+			getById("mutebutton").classList.add("pulsate"); 
 			getById("header").classList.add('red');
 			
 			if (session.localMuteElement){
@@ -10371,10 +10371,10 @@ function toggleMute(apply = false, event=false) { // TODO: I need to have this b
 		getById("mutetoggle").className = "las la-microphone toggleSize";
 		if (!(session.cleanOutput)){
 			
-			getById("mutebutton").classList.add("float"); 
-			getById("mutebutton").classList.remove("float2"); 
+			// getById("mutebutton").classList.add("float"); 
+			// getById("mutebutton").classList.remove("float2"); 
 			getById("mutebutton").classList.remove("red"); 
-			getById("mutebutton").classList.remove("puslate"); 
+			getById("mutebutton").classList.remove("pulsate"); 
 			
 			getById("header").classList.remove('red');
 			
@@ -10435,7 +10435,7 @@ function toggleSpeakerMute(apply = false) { // TODO: I need to have this be MUTE
 		session.speakerMuted = true;
 		getById("mutespeakertoggle").className = "las la-volume-mute toggleSize";
 		if (!(session.cleanOutput)){
-			getById("mutespeakerbutton").className = "float2 red";
+			getById("mutespeakerbutton").className = "float red";
 		}
 		var sounds = document.getElementsByTagName("video");
 		
@@ -10550,7 +10550,7 @@ function toggleChat(event = null) { // TODO: I need to have this be MUTE, toggle
 		});
 		session.chat = true;
 		getById("chattoggle").className = "las la-comment-dots toggleSize";
-		getById("chatbutton").className = "float2";
+		getById("chatbutton").className = "float";
 		getById("chatModule").style.display = "block";
 		getById("chatInput").focus(); // give it keyboard focus
 	} else {
@@ -10700,8 +10700,8 @@ function toggleVideoMute(apply = false) { // TODO: I need to have this be MUTE, 
 		session.videoMuted = true;
 		getById("mutevideotoggle").className = "las la-video-slash toggleSize";
 		if (!(session.cleanOutput)){
-			getById("mutevideobutton").className = "float2 red";
-			getById("header").classList.add("red2");
+			getById("mutevideobutton").className = "float red";
+			getById("header").classList.add("red");
 			if (session.remoteVideoMuted){
 				getById("head8").classList.remove("hidden");
 			}
@@ -10716,7 +10716,7 @@ function toggleVideoMute(apply = false) { // TODO: I need to have this be MUTE, 
 		getById("mutevideotoggle").className = "las la-video toggleSize";
 		if (!(session.cleanOutput)){
 			getById("head8").classList.remove("hidden");
-			getById("header").classList.add("red2");
+			getById("header").classList.add("red");
 			getById("mutevideobutton").className = "float";
 		}
 		if (session.streamSrc) {
@@ -10731,7 +10731,7 @@ function toggleVideoMute(apply = false) { // TODO: I need to have this be MUTE, 
 		getById("mutevideotoggle").className = "las la-video toggleSize";
 		if (!(session.cleanOutput)){
 			getById("mutevideobutton").className = "float";
-			getById("header").classList.remove("red2");
+			getById("header").classList.remove("red");
 		}
 		if (session.streamSrc) {
 			session.streamSrc.getVideoTracks().forEach((track) => {
@@ -10824,8 +10824,9 @@ async function toggleSettings(forceShow = false) { // TODO: I need to have this 
 		}
 
 		getById("popupSelector").style.display = "inline-block"
-		getById("settingsbutton").classList.add("float2");
-		getById("settingsbutton").classList.remove("float");
+		getById("settingsbutton").classList.add("brown");
+		// getById("settingsbutton").classList.add("float2");
+		// getById("settingsbutton").classList.remove("float");
 		
 		loadTFLITEImages() // only triggers if effects==5 is true
 		
@@ -10842,8 +10843,10 @@ async function toggleSettings(forceShow = false) { // TODO: I need to have this 
 
 		getById("popupSelector").style.right = "-400px";
 
-		getById("settingsbutton").classList.add("float");
-		getById("settingsbutton").classList.remove("float2");
+        
+		getById("settingsbutton").classList.remove("brown");
+		// getById("settingsbutton").classList.add("float");
+		// getById("settingsbutton").classList.remove("float2");
 		setTimeout(function() {
 			getById("popupSelector").style.display = "none";
 		}, 200);
@@ -10899,14 +10902,14 @@ function hangup2() {
 	getById("mutevideobutton").classList.add("hidden");
 	getById("screenshare2button").classList.add("hidden");
 	
-	getById("screensharebutton").classList.add("float");
-	getById("screensharebutton").classList.remove("float2");
+	// getById("screensharebutton").classList.add("float");
+	// getById("screensharebutton").classList.remove("float2");
 	
 	if (session.showDirector == false) {
-		getById("miniPerformer").innerHTML = '<button id="press2talk" onmousedown="event.preventDefault(); event.stopPropagation();" class="float" onclick="press2talk(true);" title="You can also enable the director`s Video Output afterwards by clicking the Setting`s button"><i class="las la-headset"></i><span data-translate="push-to-talk-enable"> enable director`s microphone or video<br />(only guests can see this feed)</span></button>';
+		getById("miniPerformer").innerHTML = '<button id="press2talk" onmousedown="event.preventDefault(); event.stopPropagation();" class="float green" onclick="press2talk(true);" title="You can also enable the director`s Video Output afterwards by clicking the Setting`s button"><i class="las la-headset"></i><span data-translate="push-to-talk-enable"> enable director`s microphone or video<br />(only guests can see this feed)</span></button>';
 		miniTranslate(getById("miniPerformer"));
 	} else {
-		getById("miniPerformer").innerHTML = '<button id="press2talk" onmousedown="event.preventDefault(); event.stopPropagation();" class="float" onclick="press2talk(true);" title="You can also enable the director`s Video Output afterwards by clicking the Setting`s button"><i class="las la-headset"></i><span data-translate="push-to-talk-enable-2"> enable director`s microphone or video</span></button>';
+		getById("miniPerformer").innerHTML = '<button id="press2talk" onmousedown="event.preventDefault(); event.stopPropagation();" class="float green" onclick="press2talk(true);" title="You can also enable the director`s Video Output afterwards by clicking the Setting`s button"><i class="las la-headset"></i><span data-translate="push-to-talk-enable-2"> enable director`s microphone or video</span></button>';
 	}
 	getById("miniPerformer").className = "";
 }
@@ -11691,7 +11694,7 @@ async function directTimer(ele,  event=false) { // A directing room only is cont
 	log("directTimer");
 	var msg = {};
 	ele.classList.remove("blue");
-	ele.classList.remove("red2");
+	ele.classList.remove("red");
 	if (!event || (!((event.ctrlKey) || (event.metaKey)))) {
 		if (ele.value == 0 || ele.value == 2) {
 			var getTime = await promptAlt("Time to set count down timer", false, false, parseInt(getById("overlayClockContainer").dataset.initial), true);
@@ -11699,7 +11702,7 @@ async function directTimer(ele,  event=false) { // A directing room only is cont
 			getById("overlayClockContainer").dataset.initial = parseInt(getTime);
 			ele.value = 1;
 			ele.classList.add("pressed");
-			ele.classList.remove("red2");
+			ele.classList.remove("red");
 			msg.setClock = getTime;
 			msg.showClock = true;
 			msg.startClock = true;
@@ -11708,7 +11711,7 @@ async function directTimer(ele,  event=false) { // A directing room only is cont
 		} else if (ele.value == 3) {
 			ele.value = 1;
 			msg.resumeClock = true;
-			ele.classList.add("red2");
+			ele.classList.add("red");
 		} else {
 			ele.value = 2;
 			ele.classList.remove("pressed");
@@ -11725,7 +11728,7 @@ async function directTimer(ele,  event=false) { // A directing room only is cont
 		} else if (ele.value == 3) {
 			ele.value = 1;
 			msg.resumeClock = true;
-			ele.classList.add("red2");
+			ele.classList.add("red");
 		}
 	}
 	
@@ -11823,7 +11826,7 @@ async function directRoomTimer(ele,  event=false) { // A directing room only is 
 	log("directGlobalRoomTimer");
 	var msg = {};
 	ele.classList.remove("blue");
-	ele.classList.remove("red2");
+	ele.classList.remove("red");
 	
 	getById("overlayClockContainer").style.fontSize = "50px";
 	
@@ -11835,7 +11838,7 @@ async function directRoomTimer(ele,  event=false) { // A directing room only is 
 			getById("overlayClockContainer").dataset.initial = getTime;
 			ele.value = 1;
 			ele.classList.add("pressed");
-			ele.classList.remove("red2");
+			ele.classList.remove("red");
 			
 			session.roomTimer = Date.now()/1000 + getTime;
 			
@@ -11857,7 +11860,7 @@ async function directRoomTimer(ele,  event=false) { // A directing room only is 
 			} else {
 				session.roomTimer = Date.now()/1000 - session.roomTimer;
 			}
-			ele.classList.add("red2");
+			ele.classList.add("red");
 		} else {
 			ele.value = 2;
 			ele.classList.remove("pressed");
@@ -11895,7 +11898,7 @@ async function directRoomTimer(ele,  event=false) { // A directing room only is 
 				session.roomTimer = Date.now()/1000 - session.roomTimer;
 			}
 			
-			ele.classList.add("red2");
+			ele.classList.add("red");
 		}
 	}
 	if (ele.dataset.UUID){
@@ -11916,17 +11919,17 @@ function updateRemoteTimerButton(UUID, currentTime) {
 				time = time * -1;
 				var minutes = Math.floor(time / 60);
 				var seconds = time - minutes * 60;
-				elements[0].classList.add("red2");
+				elements[0].classList.add("red");
 				elements[0].innerHTML = '<i class="las la-clock"></i> -' + (minutes) + "m : " + zpadTime(seconds) + "s";
 			} else {
 				var minutes = Math.floor(time / 60);
 				var seconds = time - minutes * 60;
-				elements[0].classList.remove("red2");
+				elements[0].classList.remove("red");
 				elements[0].innerHTML = '<i class="las la-clock"></i> ' + (minutes) + "m : " + zpadTime(seconds) + "s";
 			}
 		} else {
 			elements[0].classList.remove("pressed");
-			elements[0].classList.remove("red2");
+			elements[0].classList.remove("red");
 			elements[0].innerHTML = '<i class="las la-clock"></i><span data-translate="create-timer"> Create Timer</span>';
 		}
 	}
@@ -12681,7 +12684,7 @@ async function publishScreen() {
 				getById("recordLocalbutton").className = "float";
 			}
 			if (session.screensharebutton) {
-				getById("screensharebutton").className = "float2";
+				getById("screensharebutton").className = "float";
 			}
 			getById("controlButtons").classList.remove("hidden");
 			getById("helpbutton").style.display = "inherit";
@@ -12712,7 +12715,7 @@ async function publishScreen() {
 		
 		if (session.screensharebutton === true) {
 			getById("controlButtons").classList.remove("hidden");
-			getById("screensharebutton").className = "float2";
+			getById("screensharebutton").className = "float";
 		}
 
 		if (session.hangupbutton === true){
@@ -15406,14 +15409,14 @@ async function createRoomCallback(passAdd, passAdd2) {
 		}
 		
 		if (session.showDirector == false) {
-			getById("miniPerformer").innerHTML = '<button id="press2talk" onmousedown="event.preventDefault(); event.stopPropagation();" class="float" onclick="press2talk(true);" title="You can also enable the director`s Video Output afterwards by clicking the Setting`s button"><i class="las la-headset"></i><span data-translate="push-to-talk-enable"> enable director`s microphone or video<br />(only guests can see this feed)</span></button>';
+			getById("miniPerformer").innerHTML = '<button id="press2talk" onmousedown="event.preventDefault(); event.stopPropagation();" class="float green" onclick="press2talk(true);" title="You can also enable the director`s Video Output afterwards by clicking the Setting`s button"><i class="las la-headset"></i><span data-translate="push-to-talk-enable"> enable director`s microphone or video<br />(only guests can see this feed)</span></button>';
 			miniTranslate(getById("miniPerformer"));
 			getById("grabDirectorSoloLink").dataset.raw = "https://" + location.host + location.pathname + "?solo&sd&r=" + session.roomid + "&v="+session.streamID + passAdd2 + wss + token;
 			getById("grabDirectorSoloLink").href = "https://" + location.host + location.pathname + "?solo&sd&r=" + session.roomid + "&v="+session.streamID  + passAdd2 + wss + token;
 			getById("grabDirectorSoloLink").innerText = "https://" + location.host + location.pathname + "?solo&sd&r=" + session.roomid + "&v="+session.streamID  + passAdd2 + wss + token;
 			getById("grabDirectorSoloLinkParent").classList.remove("hidden");
 		} else {
-			getById("miniPerformer").innerHTML = '<button id="press2talk" onmousedown="event.preventDefault(); event.stopPropagation();" class="float" onclick="press2talk(true);" title="You can also enable the director`s Video Output afterwards by clicking the Setting`s button"><i class="las la-headset"></i><span data-translate="push-to-talk-enable-2"> enable director`s microphone or video</span></button>';
+			getById("miniPerformer").innerHTML = '<button id="press2talk" onmousedown="event.preventDefault(); event.stopPropagation();" class="float green" onclick="press2talk(true);" title="You can also enable the director`s Video Output afterwards by clicking the Setting`s button"><i class="las la-headset"></i><span data-translate="push-to-talk-enable-2"> enable director`s microphone or video</span></button>';
 		}
 		getById("miniPerformer").className = "";
 		
@@ -17927,8 +17930,8 @@ function gotDevices2(deviceInfos) {
 					notifyOfScreenShare();
 					//session.refreshScale();
 				}
-				getById("screensharebutton").classList.add("float");
-				getById("screensharebutton").classList.remove("float2");
+				// getById("screensharebutton").classList.add("float");
+				// getById("screensharebutton").classList.remove("float2");
 			}
 			
 		};
@@ -19132,8 +19135,8 @@ async function toggleScreenShare(reload = false) { ////////////////////////////
 				notifyOfScreenShare();
 				
 				
-				getById("screensharebutton").classList.add("float2");
-				getById("screensharebutton").classList.remove("float");
+				// getById("screensharebutton").classList.add("float2");
+				// getById("screensharebutton").classList.remove("float");
 				enumerateDevices().then(gotDevices2).then(function() {});
 				
 				pokeIframeAPI("screen-share-state", true);
@@ -19151,8 +19154,8 @@ async function toggleScreenShare(reload = false) { ////////////////////////////
 					
 				//session.refreshScale();
 				
-				getById("screensharebutton").classList.add("float2");
-				getById("screensharebutton").classList.remove("float");
+				// getById("screensharebutton").classList.add("float2");
+				// getById("screensharebutton").classList.remove("float");
 				enumerateDevices().then(gotDevices2).then(function() {});
 				
 				//if (session.videoElement.readyState!==4){
@@ -19240,8 +19243,8 @@ async function toggleScreenShare(reload = false) { ////////////////////////////
 			});
 		}
 		
-		getById("screensharebutton").classList.add("float"); // disable the button after we know the tracks are disabled
-		getById("screensharebutton").classList.remove("float2");
+		// getById("screensharebutton").classList.add("float"); // disable the button after we know the tracks are disabled
+		// getById("screensharebutton").classList.remove("float2");
 		
 		if (beforeScreenShare){
 			if (addedAlready==false){
@@ -19837,8 +19840,8 @@ async function grabScreen(quality = 0, audio = true, videoOnEnd = false) {
 				
 				notifyOfScreenShare();
 
-				getById("screensharebutton").classList.add("float");
-				getById("screensharebutton").classList.remove("float2");
+				// getById("screensharebutton").classList.add("float");
+				// getById("screensharebutton").classList.remove("float2");
  
 				if (videoOnEnd == true) {
 					if (beforeScreenShare) {
@@ -22773,7 +22776,7 @@ function addDownloadLink(fileList, UUID, pc){
 	}
 
 	if (session.chat == false) {
-		getById("chattoggle").className = "las la-comments toggleSize puslate";
+		getById("chattoggle").className = "las la-comments toggleSize pulsate";
 		getById("chatbutton").className = "float";
 
 		if (getById("chatNotification").value) {
@@ -27596,8 +27599,8 @@ function createIframePopup() {
 		session.screenShareElement.parentNode.removeChild(session.screenShareElement);
 		session.screenShareElement = false;
 		updateMixer();
-		getById("screenshare2button").classList.add("float");
-		getById("screenshare2button").classList.remove("float2");
+		// getById("screenshare2button").classList.add("float");
+		// getById("screenshare2button").classList.remove("float2");
 		return;
 	}
 	
@@ -27631,8 +27634,8 @@ function createIframePopup() {
 
 	updateMixer();
 	
-	getById("screenshare2button").classList.add("float2");
-	getById("screenshare2button").classList.remove("float");
+	// getById("screenshare2button").classList.add("float2");
+	// getById("screenshare2button").classList.remove("float");
 
 	return; // ignore the rest.
 }
@@ -29474,7 +29477,7 @@ function getChatMessage(msg, label = false, director = false, overlay = false) {
 	updateMessages();
 
 	if (session.chat == false) {
-		getById("chattoggle").className = "las la-comments toggleSize puslate";
+		getById("chattoggle").className = "las la-comments toggleSize pulsate";
 		getById("chatbutton").className = "float";
 
 		if (getById("chatNotification").value) {
@@ -34886,16 +34889,17 @@ async function createSecondStream() { ////////////////////////////
 			
 			session.screenShareElement.srcObject = session.screenStream;
 			
-			getById("screensharebutton").classList.remove("float");
-			getById("screensharebutton").classList.add("float2");
+			// getById("screensharebutton").classList.remove("float");
+			getById("screensharebutton").classList.add("green");
 			getById("screensharebutton").title = miscTranslations["stop-screen-sharing"];
 			
-			getById("screenshare2button").classList.remove("float");
-			getById("screenshare2button").classList.add("float2");
+			// getById("screenshare2button").classList.remove("float");
+			getById("screenshare2button").classList.add("green");
 			getById("screenshare2button").title = miscTranslations["stop-screen-sharing"];
 			
-			getById("screenshare3button").classList.remove("float");
-			getById("screenshare3button").classList.add("float2");
+			// getById("screenshare3button").classList.remove("float");
+			getById("screenshare3button").classList.add("green");
+			getById("screenshare3button").classList.add("pulsate");
 			getById("screenshare3button").title = miscTranslations["stop-screen-sharing"];
 			
 			
@@ -34995,16 +34999,16 @@ function stopSecondScreenshare(){
 	session.screenStream = false;
 	session.screenShareState = false;
 	
-	getById("screenshare2button").classList.remove("float2");
-	getById("screenshare2button").classList.add("float");
+	// getById("screenshare2button").classList.remove("float2");
+	getById("screenshare2button").classList.add("green");
 	getById("screenshare2button").title = miscTranslations["share-a-screen"];
 	
-	getById("screensharebutton").classList.remove("float2");
-	getById("screensharebutton").classList.add("float");
+	// getById("screensharebutton").classList.remove("float2");
+	getById("screensharebutton").classList.add("green");
 	getById("screensharebutton").title = miscTranslations["share-a-screen"];
 	
-	getById("screenshare3button").classList.remove("float2");
-	getById("screenshare3button").classList.add("float");
+	// getById("screenshare3button").classList.remove("float2");
+	getById("screenshare3button").classList.add("green");
 	getById("screenshare3button").title = miscTranslations["share-a-screen"];
 	pokeIframeAPI("screen-share-state", false);
 	
