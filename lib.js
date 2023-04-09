@@ -19140,13 +19140,14 @@ async function toggleScreenShare(reload = false) { ////////////////////////////
 		}
 		
 		if (screenShareAudioTrack){
-			
-			session.videoElement.srcObject.getAudioTracks().forEach(function(track) { // previous video track; saving it. Must remove the track at some point.
-				if (screenShareAudioTrack.id == track.id) { // since there are more than one audio track, lets see if we can remove JUST the audio track for the screen share.
-					session.videoElement.srcObject.removeTrack(track);
-					track.stop();
-				}
-			});
+			if (session.videoElement && session.videoElement.srcObject){
+				session.videoElement.srcObject.getAudioTracks().forEach(function(track) { // previous video track; saving it. Must remove the track at some point.
+					if (screenShareAudioTrack.id == track.id) { // since there are more than one audio track, lets see if we can remove JUST the audio track for the screen share.
+						session.videoElement.srcObject.removeTrack(track);
+						track.stop();
+					}
+				});
+			}
 			
 			if (session.streamSrcClone){ // 
 				session.streamSrcClone.getAudioTracks().forEach(function(track) {
@@ -19156,13 +19157,14 @@ async function toggleScreenShare(reload = false) { ////////////////////////////
 					}
 				});
 			}
-			
-			session.streamSrc.getAudioTracks().forEach(function(track) { // previous video track; saving it. Must remove the track at some point.
-				if (screenShareAudioTrack.id == track.id) { // since there are more than one audio track, lets see if we can remove JUST the audio track for the screen share.
-					session.streamSrc.removeTrack(track);
-					track.stop();
-				}
-			});
+			if (session.streamSrc){
+				session.streamSrc.getAudioTracks().forEach(function(track) { // previous video track; saving it. Must remove the track at some point.
+					if (screenShareAudioTrack.id == track.id) { // since there are more than one audio track, lets see if we can remove JUST the audio track for the screen share.
+						session.streamSrc.removeTrack(track);
+						track.stop();
+					}
+				});
+			}
 			
 			session.videoElement.srcObject = outboundAudioPipeline(); // updateREnderOoutput is just for video if videoElement is already activated.
 			screenShareAudioTrack=null;
@@ -19170,23 +19172,26 @@ async function toggleScreenShare(reload = false) { ////////////////////////////
 		}
 		
 		var addedAlready = false;
-		session.streamSrc.getVideoTracks().forEach(function(track) {
-			if (beforeScreenShare && (track.id == beforeScreenShare.id)){
-				addedAlready=true;
-			} else {
-				session.streamSrc.removeTrack(track);
-				track.stop();
-			}
-		});
-		
-		session.streamSrcClone.getVideoTracks().forEach(function(track) {
-			if (beforeScreenShare && (track.id == beforeScreenShare.id)){
-				// 
-			} else {
-				session.streamSrcClone.removeTrack(track);
-				track.stop();
-			}
-		});
+		if (session.streamSrc){
+			session.streamSrc.getVideoTracks().forEach(function(track) {
+				if (beforeScreenShare && (track.id == beforeScreenShare.id)){
+					addedAlready=true;
+				} else {
+					session.streamSrc.removeTrack(track);
+					track.stop();
+				}
+			});
+		}
+		if (session.streamSrcClone){
+			session.streamSrcClone.getVideoTracks().forEach(function(track) {
+				if (beforeScreenShare && (track.id == beforeScreenShare.id)){
+					// 
+				} else {
+					session.streamSrcClone.removeTrack(track);
+					track.stop();
+				}
+			});
+		}
 		
 		if (session.videoElement && session.videoElement.srcObject){
 			session.videoElement.srcObject.getVideoTracks().forEach(function(track) {
