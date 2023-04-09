@@ -19134,7 +19134,6 @@ async function toggleScreenShare(reload = false) { ////////////////////////////
 				
 				notifyOfScreenShare();
 				
-				
 				// getById("screensharebutton").classList.add("float2");
 				// getById("screensharebutton").classList.remove("float");
 				enumerateDevices().then(gotDevices2).then(function() {});
@@ -19154,6 +19153,8 @@ async function toggleScreenShare(reload = false) { ////////////////////////////
 					
 				//session.refreshScale();
 				
+				getById("screensharebutton").classList.add("green");
+				getById("screensharebutton").classList.add("pulsate");
 				// getById("screensharebutton").classList.add("float2");
 				// getById("screensharebutton").classList.remove("float");
 				enumerateDevices().then(gotDevices2).then(function() {});
@@ -19242,7 +19243,9 @@ async function toggleScreenShare(reload = false) { ////////////////////////////
 				}
 			});
 		}
-		
+
+		getById("screensharebutton").classList.remove("green");
+		getById("screensharebutton").classList.remove("pulsate");
 		// getById("screensharebutton").classList.add("float"); // disable the button after we know the tracks are disabled
 		// getById("screensharebutton").classList.remove("float2");
 		
@@ -24490,7 +24493,7 @@ function updateDirectorsAudio(dataN, UUID) {
 			label.id = "label_" + i + "_"+n + "_"+UUID;
 			label.htmlFor = "constraints_" + i + "_"+n + "_"+UUID;
 			label.innerText = capitalizeFirstLetter(i).replace(/([a-z])([A-Z])/g, '$1 $2') + ":";
-			label.style = "display:inline-block; padding:0;;";
+			label.style = "display:inline-block; padding:0;";
 			label.dataset.keyname = i;
 			label.dataset.track = n;
 			var input = document.createElement("select");
@@ -34999,13 +35002,13 @@ function stopSecondScreenshare(){
 	session.screenStream = false;
 	session.screenShareState = false;
 	
-	// getById("screenshare2button").classList.remove("float2");
-	getById("screenshare2button").classList.remove("green");
-	getById("screenshare2button").title = miscTranslations["share-a-screen"];
-	
 	// getById("screensharebutton").classList.remove("float2");
 	getById("screensharebutton").classList.remove("green");
 	getById("screensharebutton").title = miscTranslations["share-a-screen"];
+
+	// getById("screenshare2button").classList.remove("float2");
+	getById("screenshare2button").classList.remove("green");
+	getById("screenshare2button").title = miscTranslations["share-a-screen"];
 	
 	// getById("screenshare3button").classList.remove("float2");
 	getById("screenshare3button").classList.remove("green");
