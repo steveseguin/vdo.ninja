@@ -19207,23 +19207,27 @@ async function toggleScreenShare(reload = false) { ////////////////////////////
 		}
 		
 		var addedAlready = false;
-		session.streamSrc.getVideoTracks().forEach(function(track) {
-			if (beforeScreenShare && (track.id == beforeScreenShare.id)){
-				addedAlready=true;
-			} else {
-				session.streamSrc.removeTrack(track);
-				track.stop();
-			}
-		});
+		if (session.streamSrc){
+			session.streamSrc.getVideoTracks().forEach(function(track) {
+				if (beforeScreenShare && (track.id == beforeScreenShare.id)){
+					addedAlready=true;
+				} else {
+					session.streamSrc.removeTrack(track);
+					track.stop();
+				}
+			});
+		}
 		
-		session.streamSrcClone.getVideoTracks().forEach(function(track) {
-			if (beforeScreenShare && (track.id == beforeScreenShare.id)){
-				// 
-			} else {
-				session.streamSrcClone.removeTrack(track);
-				track.stop();
-			}
-		});
+		if (session.streamSrcClone){
+			session.streamSrcClone.getVideoTracks().forEach(function(track) {
+				if (beforeScreenShare && (track.id == beforeScreenShare.id)){
+					// 
+				} else {
+					session.streamSrcClone.removeTrack(track);
+					track.stop();
+				}
+			});
+		}
 		
 		if (session.videoElement && session.videoElement.srcObject){
 			session.videoElement.srcObject.getVideoTracks().forEach(function(track) {
