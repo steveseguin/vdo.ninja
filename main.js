@@ -888,7 +888,7 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 		session.speakerMuted_default = session.speakerMuted;
 		
 		if (session.speakerMuted){
-			getById("mutespeakertoggle").className = "las la-volume-mute my-float toggleSize";
+			getById("mutespeakertoggle").className = "las la-volume-mute toggleSize";
 			//getById("mutespeakerbutton").className="hidden float2 red";
 			getById("mutespeakerbutton").classList.add("red");
 			getById("mutespeakerbutton").classList.add("float2");
@@ -4560,7 +4560,7 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 						ele.classList.add('float');
 						ele.style.display = "inline-block";
 						ele.role = "button";
-						ele.innerHTML = '<i class="my-float las la-users" aria-hidden="true"></i><br />'+group;
+						ele.innerHTML = '<i class="las la-users" aria-hidden="true"></i><br />'+group;
 						eleGroup.appendChild(ele);
 						ele.onclick = function(){
 							changeGroupDirectorAPI(this.dataset.group);
