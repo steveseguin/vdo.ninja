@@ -8806,6 +8806,7 @@ function playoutdelay(UUID){  // applies a delay to all videos
 	}
 };
 
+
 function printViewStats(menu, UUID) { // Stats for viewing a remote video
 	if (!session.rpcs[UUID]){
 		menu.innerHTML = "<br /><br /><br />Remote Publisher Disconnected";
@@ -8817,6 +8818,12 @@ function printViewStats(menu, UUID) { // Stats for viewing a remote video
 	var scrollLeft = menu.scrollLeft;
 	var scrollTop = menu.scrollTop;
 	menu.innerHTML = "StreamID: <b>" + streamID + "</b><br />";
+	
+	//// doesn't work on viewer side.
+	//if (session.rpcs && session.rpcs[UUID] && session.rpcs[UUID] && session.rpcs[UUID].restartIce){ // only show if available
+	//	menu.innerHTML += "<button onclick='session.rpcs[\""+UUID+"\"].restartIce();'>Restart connection</button>";
+	//}
+	
 	menu.innerHTML += printValues(statsObj);
 	menu.scrollTop = scrollTop;
 	menu.scrollLeft = scrollLeft;
@@ -9394,7 +9401,7 @@ function printMyStats(menu) { // see: setupStatsMenu
 		}
 	} catch(e){errorlog(e);}
 
-	function printViewValues(obj) { 
+	function printViewValues(obj, UUID=false) { 
 		
 		if (!(document.getElementById("menuStatsBox"))){
 			return;
@@ -9416,6 +9423,11 @@ function printMyStats(menu) { // see: setupStatsMenu
 				menu.innerHTML += "<hr />";
 			}
 		});
+		
+		if (session.pcs[UUID] && session.pcs[UUID].restartIce){ // only show if available
+			menu.innerHTML += "<button onclick='session.pcs[\""+UUID+"\"].restartIce();'>Restart connection</button>";
+		}
+		
 		keys.forEach(key=>{
 			if (typeof obj[key] !== "object") {
 				if (key.startsWith("_")){return;}
@@ -9476,7 +9488,7 @@ function printMyStats(menu) { // see: setupStatsMenu
 		menu.innerHTML += "<hr>";
 	}
 	for (var uuid in session.pcs) {
-		printViewValues(session.pcs[uuid].stats);
+		printViewValues(session.pcs[uuid].stats, uuid);
 		menu.innerHTML += "<hr>";
 	}
 	if ((iOS) || (iPad)){
@@ -10361,7 +10373,9 @@ function toggleMute(apply = false, event=false) { // TODO: I need to have this b
 		//}
 	}
 	
-	postMessageIframe(document.getElementById("screensharesource"), {"mic":!session.muted});
+	try {
+		postMessageIframe(document.getElementById("screensharesource"), {"mic":!session.muted});
+	} catch(e){}
 
 	if (!apply) { // only if they are changing states do we bother to spam.
 		data = {};
