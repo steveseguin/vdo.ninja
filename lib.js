@@ -2168,111 +2168,148 @@ function makeMiniDraggableElement(elmnt) {
 	elmnt.ontouchstart = dragMouseDown;
 }
 				
-function makeDraggableElement(elmnt, absolute=false) {
+// function makeDraggableElement(elmnt, absolute=false) {
 	
-	if (session.disableMouseEvents){return;}
+// 	if (session.disableMouseEvents){return;}
 	
-	try {
-		elmnt.dragElement = false;
-		elmnt.style.bottom = "auto";
-		elmnt.style.cursor = "grab";
-		elmnt.stashonmouseup = null;
-		elmnt.stashonmousemove = null;
-	} catch (e) {
-		errorlog(e);
-		return;
-	}
-	var pos1 = 0;
-	var pos2 = 0;
-	var pos3 = 0;
-	var pos4 = 0;
-	var timestamp = false;
+// 	try {
+// 		elmnt.dragElement = false;
+// 		elmnt.style.bottom = "auto";
+// 		elmnt.style.cursor = "grab";
+// 		elmnt.stashonmouseup = null;
+// 		elmnt.stashonmousemove = null;
+// 	} catch (e) {
+// 		errorlog(e);
+// 		return;
+// 	}
+// 	var pos1 = 0;
+// 	var pos2 = 0;
+// 	var pos3 = 0;
+// 	var pos4 = 0;
+// 	var timestamp = false;
 	
 	
-	var enterEventCount = 0;
-	var leaveEventCount = 0;
+// 	var enterEventCount = 0;
+// 	var leaveEventCount = 0;
 
 
-	function dragMouseDown(e) {
-		timestamp = Date.now();
+// 	function dragMouseDown(e) {
+// 		timestamp = Date.now();
 		
-		e = e || window.event;
-		e.preventDefault();
+// 		e = e || window.event;
+// 		e.preventDefault();
 		
-		pos3 = e.clientX;
-		pos4 = e.clientY;
-		//elmnt.stashonmouseup = document.onmouseup; // I don't want to interfere with other drag events.
-		//elmnt.stashonmousemove = document.onmousemove;
-		//elmnt.stashonclick = document.onclick;
+// 		pos3 = e.clientX;
+// 		pos4 = e.clientY;
+// 		//elmnt.stashonmouseup = document.onmouseup; // I don't want to interfere with other drag events.
+// 		//elmnt.stashonmousemove = document.onmousemove;
+// 		//elmnt.stashonclick = document.onclick;
 
-		document.onmouseup = function(event){closeDragElement(event, elmnt);};
+// 		document.onmouseup = function(event){closeDragElement(event, elmnt);};
 		
-		document.onmousemove = function(event){elementDrag(elmnt,event);};
+// 		document.onmousemove = function(event){elementDrag(elmnt,event);};
 		
-		if ("stopDragTimeout" in elmnt){clearTimeout(elmnt.stopDragTimeout);}
+// 		if ("stopDragTimeout" in elmnt){clearTimeout(elmnt.stopDragTimeout);}
 		
-		elmnt.onmouseleave = function(event){
-			leaveEventCount+=1;
-			elmnt.stopDragTimeout = setTimeout(function(ele,evt1){
-					closeDragElement(evt1, ele);}
-				,100, elmnt, event);
-		};
-		elmnt.onmouseenter = function(event){
-			enterEventCount+=1;
-			if (enterEventCount>=leaveEventCount){
-				if ("stopDragTimeout" in elmnt){clearTimeout(elmnt.stopDragTimeout);}
-			} else {
-				if (("stopDragTimeout" in elmnt) && (elmnt.stopDragTimeout)){
-					clearTimeout(elmnt.stopDragTimeout);
-					elmnt.stopDragTimeout = setTimeout(function(ele,evt1){
+// 		elmnt.onmouseleave = function(event){
+// 			leaveEventCount+=1;
+// 			elmnt.stopDragTimeout = setTimeout(function(ele,evt1){
+// 					closeDragElement(evt1, ele);}
+// 				,100, elmnt, event);
+// 		};
+// 		elmnt.onmouseenter = function(event){
+// 			enterEventCount+=1;
+// 			if (enterEventCount>=leaveEventCount){
+// 				if ("stopDragTimeout" in elmnt){clearTimeout(elmnt.stopDragTimeout);}
+// 			} else {
+// 				if (("stopDragTimeout" in elmnt) && (elmnt.stopDragTimeout)){
+// 					clearTimeout(elmnt.stopDragTimeout);
+// 					elmnt.stopDragTimeout = setTimeout(function(ele,evt1){
 						
-						closeDragElement(evt1, ele);}
-					,100, elmnt, event);
-				}
-			}
-		};
+// 						closeDragElement(evt1, ele);}
+// 					,100, elmnt, event);
+// 				}
+// 			}
+// 		};
 		
-	}
-	function elementDrag(ele,e) {
+// 	}
+// 	function elementDrag(ele,e) {
 		
-		e = e || window.event;
-		if (("buttons" in e) && (e.buttons!==1)){return;}
+// 		e = e || window.event;
+// 		if (("buttons" in e) && (e.buttons!==1)){return;}
 		
-		e.preventDefault();
+// 		e.preventDefault();
 		
-		ele.dragElement = true;
-		pos1 = pos3 - e.clientX;
-		pos2 = pos4 - e.clientY;
-		pos3 = e.clientX;
-		pos4 = e.clientY;
+// 		ele.dragElement = true;
+// 		pos1 = pos3 - e.clientX;
+// 		pos2 = pos4 - e.clientY;
+// 		pos3 = e.clientX;
+// 		pos4 = e.clientY;
 
-		var topDrag = (ele.offsetTop - pos2 );
-		if (absolute){
-			if (topDrag > (-3 + (window.innerHeight - ele.clientHeight))){
-				topDrag = (-3 + (window.innerHeight - ele.clientHeight));
-			}
-		} else {
-			if (topDrag > -3){
-				topDrag = -3;
-			}
-		}
-		ele.style.top = topDrag + "px";
-		ele.style.left = (ele.offsetLeft - pos1) + "px";
+// 		var topDrag = (ele.offsetTop - pos2 );
+// 		if (absolute){
+// 			if (topDrag > (-3 + (window.innerHeight - ele.clientHeight))){
+// 				topDrag = (-3 + (window.innerHeight - ele.clientHeight));
+// 			}
+// 		} else {
+// 			if (topDrag > -3){
+// 				topDrag = -3;
+// 			}
+// 		}
+// 		ele.style.top = topDrag + "px";
+// 		ele.style.left = (ele.offsetLeft - pos1) + "px";
 		
-	}
-	function closeDragElement(event=false, ele=false) {
-		document.onmouseup = null;
-		document.onmousemove = null
-		ele.onmouseleave = null;
-		ele.onmouseenter = null;
-		enterEventCount = 0;
-		leaveEventCount = 0;
-		updateMixer();
-		//document.onclick = elmnt.stashonclick;
-	}
+// 	}
+// 	function closeDragElement(event=false, ele=false) {
+// 		document.onmouseup = null;
+// 		document.onmousemove = null
+// 		ele.onmouseleave = null;
+// 		ele.onmouseenter = null;
+// 		enterEventCount = 0;
+// 		leaveEventCount = 0;
+// 		updateMixer();
+// 		//document.onclick = elmnt.stashonclick;
+// 	}
 	
-	elmnt.onmousedown = dragMouseDown;
+// 	elmnt.onmousedown = dragMouseDown;
+// }
+
+let isDragging = false;
+let draggable = document.querySelector('#subControlButtons');
+let initialX;
+let currentX;
+let xOffset = 0;
+let initialY;
+let currentY;
+let yOffset = 0;
+
+draggable.addEventListener('mousedown', dragStart);
+draggable.addEventListener('mouseup', dragEnd);
+
+function dragStart(e) {
+    initialX = e.clientX - xOffset;
+    initialY = e.clientY - yOffset;
+    isDragging = true;
 }
+
+function dragEnd(e) {
+    initialX = currentX;
+    initialY = currentY;
+    isDragging = false;
+}
+
+document.addEventListener('mousemove', drag);
+
+function drag(e) {
+    if (isDragging) {
+        currentX = e.clientX - initialX;
+        currentY = e.clientY - initialY;
+        xOffset = currentX;
+        yOffset = currentY;
+        draggable.style.transform = `translate(${currentX}px, ${currentY}px)`;
+    }
+}
+
 
 function removeStorage(cname){
 	localStorage.removeItem(cname);

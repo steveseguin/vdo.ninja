@@ -408,7 +408,7 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 		session.audioMeterGuest = false;
 	} else {
 		log("MAKE DRAGGABLE");
-		delayedStartupFuncs.push([makeDraggableElement, document.getElementById("subControlButtons")]);
+		// delayedStartupFuncs.push([makeDraggableElement, document.getElementById("subControlButtons")]);
 		if (SafariVersion && !ChromeVersion){ // if desktop Safari, so macOS, give a note saying it sucks
 			getById("SafariWarning").classList.remove("hidden");
 		}
