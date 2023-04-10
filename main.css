@@ -1206,7 +1206,7 @@ button.glyphicon-button.active.focus {
     display: flex;
     position: fixed;
     z-index: 995;
-    bottom: 0px;
+    bottom: 10px;
     border: 0;
     min-height: 52px;
     pointer-events: none;
@@ -4902,7 +4902,8 @@ body.darktheme .card{
 	background-color: #40444E
 }
 body.darktheme input{
-	background-color: #ccc;
+    background-color: var(--discord-grey-7);
+    color: var(--discord-text);
 }
 body.darktheme .column>h2{
 	color: #b6b6b6;
@@ -4960,7 +4961,8 @@ body.darktheme #headphonesDiv3{
 	background-color: #414141;
 }
 body.darktheme select{
-	background-color: #b2b2b2;
+    background-color: var(--discord-grey-7);
+    color: var(--discord-text);
 }
 body.darktheme .white {
 	filter: brightness(0.85);
