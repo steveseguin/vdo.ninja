@@ -24464,7 +24464,9 @@ function updateDirectorsAudio(dataN, UUID) {
 			input.dataset.keyname = i;
 			input.dataset.track = n;
 			input.dataset.UUID = UUID;
+			input.dataset.chosen = input.value;
 			input.onchange = function(e) {
+				this.dataset.chosen = this.value;
 				//getById("label_"+e.target.dataset.keyname).innerText =e.target.dataset.keyname+": "+e.target.value;
 				//updateAudioConstraints(e.target.dataset.keyname, e.target.value);
 				requestChangeGating("gating", e.target.value, e.target.dataset.UUID, parseInt(e.target.dataset.track));
@@ -24513,7 +24515,9 @@ function updateDirectorsAudio(dataN, UUID) {
 			input.dataset.keyname = i;
 			input.dataset.track = n;
 			input.dataset.UUID = UUID;
+			input.dataset.chosen = input.value;
 			input.onchange = function(e) {
+				this.dataset.chosen = this.value;
 				//getById("label_"+e.target.dataset.keyname).innerText =e.target.dataset.keyname+": "+e.target.value;
 				//updateAudioConstraints(e.target.dataset.keyname, e.target.value);
 				requestChangeCompressor("compressor", e.target.value, e.target.dataset.UUID, parseInt(e.target.dataset.track));
@@ -24659,7 +24663,13 @@ function updateDirectorsAudio(dataN, UUID) {
 					if (data.audioConstraints[i].length > 1) {
 						for (var opts in data.audioConstraints[i]) {
 							log(opts);
-							var opt = new Option(data.audioConstraints[i][opts], data.audioConstraints[i][opts]);
+							if (data.audioConstraints[i][opts] === false){
+								var opt = new Option("Off", data.audioConstraints[i][opts]);
+							} else if (data.audioConstraints[i][opts] === true){
+								var opt = new Option("On", data.audioConstraints[i][opts]);
+							} else {
+								var opt = new Option(data.audioConstraints[i][opts], data.audioConstraints[i][opts]);
+							}
 							input.options.add(opt);
 							if (i in data.currentAudioConstraints) {
 								if (data.audioConstraints[i][opts] == data.currentAudioConstraints[i]) {
@@ -24691,7 +24701,9 @@ function updateDirectorsAudio(dataN, UUID) {
 					input.dataset.track = n;
 					input.dataset.deviceId = data.deviceId;
 					input.dataset.UUID = UUID;
+					input.dataset.chosen = input.value;
 					input.onchange = function(e) {
+						this.dataset.chosen = this.value;
 						//getById("label_"+e.target.dataset.keyname).innerText =e.target.dataset.keyname+": "+e.target.value;
 						//updateAudioConstraints(e.target.dataset.keyname, e.target.value);
 						requestAudioHack(e.target.dataset.keyname, e.target.value, e.target.dataset.UUID, e.target.dataset.deviceId);
@@ -24732,7 +24744,9 @@ function updateDirectorsAudio(dataN, UUID) {
 					input.dataset.keyname = i;
 					input.dataset.track = n;
 					input.dataset.UUID = UUID;
+					input.dataset.chosen = input.value;
 					input.onchange = function(e) {
+						this.dataset.chosen = this.value;
 						//getById("label_"+e.target.dataset.keyname).innerText =e.target.dataset.keyname+": "+e.target.value;
 						//updateAudioConstraints(e.target.dataset.keyname, e.target.value);
 						requestAudioHack(e.target.dataset.keyname, e.target.value, e.target.dataset.UUID, e.target.dataset.deviceId);
@@ -25091,7 +25105,15 @@ function updateDirectorsVideo(data, UUID) {
 				if (data.cameraConstraints[i].length > 1) {
 					for (var opts in data.cameraConstraints[i]) {
 						log(opts);
-						var opt = new Option(data.cameraConstraints[i][opts], data.cameraConstraints[i][opts]);
+						
+						if (data.cameraConstraints[i][opts] === false){
+							var opt = new Option("Off", data.cameraConstraints[i][opts]);
+						} else if (data.cameraConstraints[i][opts] === true){
+							var opt = new Option("On", data.cameraConstraints[i][opts]);
+						} else {
+							var opt = new Option(data.cameraConstraints[i][opts], data.cameraConstraints[i][opts]);
+						}
+						
 						input.options.add(opt);
 						if (i in data.currentCameraConstraints) {
 							if (data.cameraConstraints[i][opts] == data.currentCameraConstraints[i]) {
@@ -25121,7 +25143,9 @@ function updateDirectorsVideo(data, UUID) {
 				input.dataset.UUID = UUID;
 				input.style = "display:inline; padding:2px;";
 				input.dataset.keyname = i;
+				input.dataset.chosen = input.value;
 				input.onchange = function(e) {
+					this.dataset.chosen = this.value;
 					//getById("label_"+e.target.dataset.keyname+ "_" + e.target.dataset.UUID).innerText =e.target.dataset.keyname+": "+e.target.value;
 					//updateVideoConstraints(e.target.dataset.keyname, e.target.value);
 					if (CtrlPressed){
@@ -25165,7 +25189,9 @@ function updateDirectorsVideo(data, UUID) {
 				input.style = "display:inline; padding:2px;";
 				input.dataset.UUID = UUID;
 				input.dataset.keyname = i;
+				input.dataset.chosen = input.value;
 				input.onchange = function(e) {
+					this.dataset.chosen = this.value;
 					//getById("label_"+e.target.dataset.keyname+ "_" + e.target.dataset.UUID).innerText =e.target.dataset.keyname+": "+e.target.value;
 					//updateVideoConstraints(e.target.dataset.keyname, e.target.value);
 					if (CtrlPressed){
@@ -25644,8 +25670,9 @@ function listAudioSettings() {
 					input.name = "constraints_" + i + "_"+ii;
 					input.style = "display:inline; padding:2px;";
 					input.dataset.keyname = i;
-					
+					input.dataset.chosen = input.value;
 					input.onchange = function(e) {
+						this.dataset.chosen = this.value;
 						if (e.target.value == "false"){
 							session.noisegate = null;
 						} else if (e.target.value == "true"){
@@ -25857,7 +25884,9 @@ function listAudioSettings() {
 					input.dataset.deviceid = track0.id;
 					input.style = "display:inline; padding:2px;";
 					input.dataset.keyname = i;
+					input.dataset.chosen = input.value;
 					input.onchange = function(e) {
+						this.dataset.chosen = this.value;
 						applyAudioHack(e.target.dataset.keyname, e.target.value, e.target.dataset.deviceid);
 						log(e.target.dataset.keyname, e.target.value);
 					};
@@ -25895,7 +25924,9 @@ function listAudioSettings() {
 					input.name = "constraints_" + i + "_"+ii;
 					input.style = "display:inline; padding:2px;";
 					input.dataset.keyname = i;
+					input.dataset.chosen = input.value;
 					input.onchange = function(e) {
+						this.dataset.chosen = this.value;
 						//getById("label_"+e.target.dataset.keyname).innerHTML =e.target.dataset.keyname+": "+e.target.value;
 						//updateAudioConstraints(e.target.dataset.keyname, e.target.value);
 						applyAudioHack(e.target.dataset.keyname, e.target.value, e.target.dataset.deviceid);
@@ -26544,7 +26575,9 @@ function listCameraSettings() {
 				input.name = "constraints_" + i;
 				input.style = "display:inline; padding:2px;";
 				input.dataset.keyname = i;
+				input.dataset.chosen = input.value;
 				input.onchange = function(e) {
+					this.dataset.chosen = this.value;
 					//getById("label_"+e.target.dataset.keyname).innerHTML =e.target.dataset.keyname+": "+e.target.value;
 					if (CtrlPressed){
 						updateCameraConstraints(e.target.dataset.keyname, e.target.value, true, false, false);
@@ -26585,7 +26618,9 @@ function listCameraSettings() {
 				input.name = "constraints_" + i;
 				input.style = "display:inline; padding:2px;";
 				input.dataset.keyname = i;
+				input.dataset.chosen = input.value;
 				input.onchange = function(e) {
+					this.dataset.chosen = this.value;
 					//getById("label_"+e.target.dataset.keyname).innerHTML =e.target.dataset.keyname+": "+e.target.value;
 					if (CtrlPressed){
 						updateCameraConstraints(e.target.dataset.keyname, e.target.value, true, false, false);
