@@ -1238,7 +1238,7 @@ button.glyphicon-button.active.focus {
 	display:none;
 }
 
-#subControlButtons div {
+#subControlButtons div, #subControlButtons span button {
     display: flex;
     align-items: center;
     justify-content: center;
@@ -4922,7 +4922,7 @@ body.darktheme h2 {
 	color: #DDD;
 }
 body.darktheme button {
-    filter: brightness(0.70);
+    /* filter: brightness(0.70); */
 }
 body.darktheme .column .las {
 	color: black;
