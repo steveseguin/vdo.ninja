@@ -646,7 +646,7 @@ body.darktheme .credits>a:visited {
 }
 
 .darktheme .advancedAudioSettings, .darktheme .advancedVideoSettings {
-    background-color: #222;
+    background-color: var(--discord-grey-2);
 }
 
 .advancedAudioSettings, .advancedVideoSettings {
