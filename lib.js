@@ -24129,7 +24129,6 @@ function updateDirectorsAudio(dataN, UUID) {
 			if (data.trackLabel) {
 				var label = document.createElement("label");
 				label.innerText = data.trackLabel;
-				label.style.marginBottom = "10px";
 				label.style.display = "block";
 				label.id = "remoteAudioLabel_"+UUID;
 				label.classList.add("settingsLabel");
@@ -24178,7 +24177,7 @@ function updateDirectorsAudio(dataN, UUID) {
 			input.id = "constraints_" + i + "_"+UUID;
 			input.style = "display:block; width:100%;";
 			input.name = "constraints_" + i;
-			input.style.margin = "10px 0";
+			input.style.margin = "2px 0px 5px";
 			
 			manualInput.onchange = function(e) {
 				getById("constraints_" + e.target.dataset.keyname+"_"+e.target.dataset.UUID).value = parseFloat(e.target.value);
@@ -24239,7 +24238,7 @@ function updateDirectorsAudio(dataN, UUID) {
 			input.id = "constraints_" + i + "_"+UUID;
 			input.style = "display:block; width:100%;";
 			input.name = "constraints_" + i;
-			input.style.margin = "10px 0";
+			input.style.margin = "2px 0px 5px";
 			
 			manualInput.onchange = function(e) {
 				getById("constraints_" + e.target.dataset.keyname+"_"+e.target.dataset.UUID).value = parseFloat(e.target.value);
@@ -24297,7 +24296,7 @@ function updateDirectorsAudio(dataN, UUID) {
 			input.id = "constraints_" + i + "_"+UUID;
 			input.style = "display:block; width:100%;";
 			input.name = "constraints_" + i;
-			input.style.margin = "10px 0";
+			input.style.margin = "2px 0px 5px";
 			
 			manualInput.onchange = function(e) {
 				getById("constraints_" + e.target.dataset.keyname+"_"+e.target.dataset.UUID).value = parseFloat(e.target.value);
@@ -24353,7 +24352,7 @@ function updateDirectorsAudio(dataN, UUID) {
 			input.id = "constraints_" + i + "_"+UUID;
 			input.style = "display:block; width:100%;";
 			input.name = "constraints_" + i;
-			input.style.margin = "10px 0";
+			input.style.margin = "2px 0px 5px";
 
 			manualInput.onchange = function(e) {
 				getById("constraints_" + e.target.dataset.keyname+"_"+e.target.dataset.UUID).value = parseFloat(e.target.value);
@@ -24819,10 +24818,10 @@ function updateDirectorsVideo(data, UUID) {
 	if (data.trackLabel) { 
 		var label = document.createElement("label");
 		label.innerText = data.trackLabel;
-		label.style.marginBottom = "10px";
 		label.style.display = "block";
 		label.id = "remoteVideoLabel_"+UUID;
 		label.dataset.UUID = UUID;
+        label.classList.add("settingsLabel")
 		videoEle.appendChild(label);
 	}
 	
