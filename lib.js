@@ -2168,148 +2168,111 @@ function makeMiniDraggableElement(elmnt) {
 	elmnt.ontouchstart = dragMouseDown;
 }
 				
-// function makeDraggableElement(elmnt, absolute=false) {
+function makeDraggableElement(elmnt, absolute=false) {
 	
-// 	if (session.disableMouseEvents){return;}
+	if (session.disableMouseEvents){return;}
 	
-// 	try {
-// 		elmnt.dragElement = false;
-// 		elmnt.style.bottom = "auto";
-// 		elmnt.style.cursor = "grab";
-// 		elmnt.stashonmouseup = null;
-// 		elmnt.stashonmousemove = null;
-// 	} catch (e) {
-// 		errorlog(e);
-// 		return;
-// 	}
-// 	var pos1 = 0;
-// 	var pos2 = 0;
-// 	var pos3 = 0;
-// 	var pos4 = 0;
-// 	var timestamp = false;
+	try {
+		elmnt.dragElement = false;
+		elmnt.style.bottom = "auto";
+		elmnt.style.cursor = "grab";
+		elmnt.stashonmouseup = null;
+		elmnt.stashonmousemove = null;
+	} catch (e) {
+		errorlog(e);
+		return;
+	}
+	var pos1 = 0;
+	var pos2 = 0;
+	var pos3 = 0;
+	var pos4 = 0;
+	var timestamp = false;
 	
 	
-// 	var enterEventCount = 0;
-// 	var leaveEventCount = 0;
+	var enterEventCount = 0;
+	var leaveEventCount = 0;
 
 
-// 	function dragMouseDown(e) {
-// 		timestamp = Date.now();
+	function dragMouseDown(e) {
+		timestamp = Date.now();
 		
-// 		e = e || window.event;
-// 		e.preventDefault();
+		e = e || window.event;
+		e.preventDefault();
 		
-// 		pos3 = e.clientX;
-// 		pos4 = e.clientY;
-// 		//elmnt.stashonmouseup = document.onmouseup; // I don't want to interfere with other drag events.
-// 		//elmnt.stashonmousemove = document.onmousemove;
-// 		//elmnt.stashonclick = document.onclick;
+		pos3 = e.clientX;
+		pos4 = e.clientY;
+		//elmnt.stashonmouseup = document.onmouseup; // I don't want to interfere with other drag events.
+		//elmnt.stashonmousemove = document.onmousemove;
+		//elmnt.stashonclick = document.onclick;
 
-// 		document.onmouseup = function(event){closeDragElement(event, elmnt);};
+		document.onmouseup = function(event){closeDragElement(event, elmnt);};
 		
-// 		document.onmousemove = function(event){elementDrag(elmnt,event);};
+		document.onmousemove = function(event){elementDrag(elmnt,event);};
 		
-// 		if ("stopDragTimeout" in elmnt){clearTimeout(elmnt.stopDragTimeout);}
+		if ("stopDragTimeout" in elmnt){clearTimeout(elmnt.stopDragTimeout);}
 		
-// 		elmnt.onmouseleave = function(event){
-// 			leaveEventCount+=1;
-// 			elmnt.stopDragTimeout = setTimeout(function(ele,evt1){
-// 					closeDragElement(evt1, ele);}
-// 				,100, elmnt, event);
-// 		};
-// 		elmnt.onmouseenter = function(event){
-// 			enterEventCount+=1;
-// 			if (enterEventCount>=leaveEventCount){
-// 				if ("stopDragTimeout" in elmnt){clearTimeout(elmnt.stopDragTimeout);}
-// 			} else {
-// 				if (("stopDragTimeout" in elmnt) && (elmnt.stopDragTimeout)){
-// 					clearTimeout(elmnt.stopDragTimeout);
-// 					elmnt.stopDragTimeout = setTimeout(function(ele,evt1){
+		elmnt.onmouseleave = function(event){
+			leaveEventCount+=1;
+			elmnt.stopDragTimeout = setTimeout(function(ele,evt1){
+					closeDragElement(evt1, ele);}
+				,100, elmnt, event);
+		};
+		elmnt.onmouseenter = function(event){
+			enterEventCount+=1;
+			if (enterEventCount>=leaveEventCount){
+				if ("stopDragTimeout" in elmnt){clearTimeout(elmnt.stopDragTimeout);}
+			} else {
+				if (("stopDragTimeout" in elmnt) && (elmnt.stopDragTimeout)){
+					clearTimeout(elmnt.stopDragTimeout);
+					elmnt.stopDragTimeout = setTimeout(function(ele,evt1){
 						
-// 						closeDragElement(evt1, ele);}
-// 					,100, elmnt, event);
-// 				}
-// 			}
-// 		};
+						closeDragElement(evt1, ele);}
+					,100, elmnt, event);
+				}
+			}
+		};
 		
-// 	}
-// 	function elementDrag(ele,e) {
+	}
+	function elementDrag(ele,e) {
 		
-// 		e = e || window.event;
-// 		if (("buttons" in e) && (e.buttons!==1)){return;}
+		e = e || window.event;
+		if (("buttons" in e) && (e.buttons!==1)){return;}
 		
-// 		e.preventDefault();
+		e.preventDefault();
 		
-// 		ele.dragElement = true;
-// 		pos1 = pos3 - e.clientX;
-// 		pos2 = pos4 - e.clientY;
-// 		pos3 = e.clientX;
-// 		pos4 = e.clientY;
+		ele.dragElement = true;
+		pos1 = pos3 - e.clientX;
+		pos2 = pos4 - e.clientY;
+		pos3 = e.clientX;
+		pos4 = e.clientY;
 
-// 		var topDrag = (ele.offsetTop - pos2 );
-// 		if (absolute){
-// 			if (topDrag > (-3 + (window.innerHeight - ele.clientHeight))){
-// 				topDrag = (-3 + (window.innerHeight - ele.clientHeight));
-// 			}
-// 		} else {
-// 			if (topDrag > -3){
-// 				topDrag = -3;
-// 			}
-// 		}
-// 		ele.style.top = topDrag + "px";
-// 		ele.style.left = (ele.offsetLeft - pos1) + "px";
+		var topDrag = (ele.offsetTop - pos2 );
+		if (absolute){
+			if (topDrag > (-3 + (window.innerHeight - ele.clientHeight))){
+				topDrag = (-3 + (window.innerHeight - ele.clientHeight));
+			}
+		} else {
+			if (topDrag > -3){
+				topDrag = -3;
+			}
+		}
+		ele.style.top = topDrag + "px";
+		ele.style.left = (ele.offsetLeft - pos1) + "px";
 		
-// 	}
-// 	function closeDragElement(event=false, ele=false) {
-// 		document.onmouseup = null;
-// 		document.onmousemove = null
-// 		ele.onmouseleave = null;
-// 		ele.onmouseenter = null;
-// 		enterEventCount = 0;
-// 		leaveEventCount = 0;
-// 		updateMixer();
-// 		//document.onclick = elmnt.stashonclick;
-// 	}
+	}
+	function closeDragElement(event=false, ele=false) {
+		document.onmouseup = null;
+		document.onmousemove = null
+		ele.onmouseleave = null;
+		ele.onmouseenter = null;
+		enterEventCount = 0;
+		leaveEventCount = 0;
+		updateMixer();
+		//document.onclick = elmnt.stashonclick;
+	}
 	
-// 	elmnt.onmousedown = dragMouseDown;
-// }
-
-let isDragging = false;
-let draggable = document.querySelector('#subControlButtons');
-let initialX;
-let currentX;
-let xOffset = 0;
-let initialY;
-let currentY;
-let yOffset = 0;
-
-draggable.addEventListener('mousedown', dragStart);
-draggable.addEventListener('mouseup', dragEnd);
-
-function dragStart(e) {
-    initialX = e.clientX - xOffset;
-    initialY = e.clientY - yOffset;
-    isDragging = true;
+	elmnt.onmousedown = dragMouseDown;
 }
-
-function dragEnd(e) {
-    initialX = currentX;
-    initialY = currentY;
-    isDragging = false;
-}
-
-document.addEventListener('mousemove', drag);
-
-function drag(e) {
-    if (isDragging) {
-        currentX = e.clientX - initialX;
-        currentY = e.clientY - initialY;
-        xOffset = currentX;
-        yOffset = currentY;
-        draggable.style.transform = `translate(${currentX}px, ${currentY}px)`;
-    }
-}
-
 
 function removeStorage(cname){
 	localStorage.removeItem(cname);
@@ -2426,24 +2389,17 @@ function nextQueue(){
 	if (!session.queue){return;}
 	if (!session.director){return;}
 	if (session.queueList.length==0){
-		// getById("queuebutton").classList.add("float2");
 		getById("queuebutton").classList.add("red");
-		// getById("queuebutton").classList.remove("float");
 		setTimeout(function(){
-			// getById("queuebutton").classList.add("float");
-			// getById("queuebutton").classList.remove("float2");
 			getById("queuebutton").classList.remove("red");
 		},50);
 		return;
 	}
 	var nextStream = session.queueList.shift();
 	
-	
-	// getById("queuebutton").classList.add("float2");
-	// getById("queuebutton").classList.remove("float");
+	getById("queuebutton").classList.add("red");
 	setTimeout(function(){
-		// getById("queuebutton").classList.add("float");
-		// getById("queuebutton").classList.remove("float2");
+		getById("queuebutton").classList.remove("red");
 	},200);
 
 	updateQueue();
@@ -3494,16 +3450,17 @@ function updateMixer(e=false){
 
 function updateMixerRun(e=false){  // this is the main auto-mixing code.  It's a giant function that runs when there are changes to screensize, video track statuses, etc.
 	try { 
-		if (getById("subControlButtons").dragElement){
-			if (parseInt(getById("subControlButtons").style.top) > 0){
-				getById("subControlButtons").style.top = "0px";
-			} else if (parseInt(getById("subControlButtons").style.top) < parseInt(50 - window.innerHeight) ){
-				getById("subControlButtons").style.top =  parseInt( 50 - window.innerHeight)+"px";
-			}
-			if (parseInt(getById("subControlButtons").style.left) < 0){
-				getById("subControlButtons").style.left = "0px";
-			} else if (parseInt(getById("subControlButtons").style.left) > parseInt( window.innerWidth - getById("subControlButtons").offsetWidth) ){
-				getById("subControlButtons").style.left =  parseInt( window.innerWidth -getById("subControlButtons").offsetWidth )+"px";
+		let controlButtons = getById("subControlButtons");
+		if (controlButtons.dragElement){
+			if (parseInt(controlButtons.style.top) > 53-parseInt(controlButtons.clientHeight)){
+				controlButtons.style.top = parseInt(53 - controlButtons.clientHeight)+"px";
+			} else if (parseInt(controlButtons.style.top) < parseInt(53 - window.innerHeight) ){
+				controlButtons.style.top =  parseInt( 53 - window.innerHeight)+"px";
+			} 
+			if (parseInt(controlButtons.style.left) < 0){
+				controlButtons.style.left = "0px";
+			} else if (parseInt(controlButtons.style.left) > parseInt( window.innerWidth - controlButtons.offsetWidth) ){
+				controlButtons.style.left =  parseInt( window.innerWidth - controlButtons.offsetWidth )+"px";
 			}
 		}
 		
@@ -10378,8 +10335,6 @@ function toggleMute(apply = false, event=false) { // TODO: I need to have this b
 		getById("mutetoggle").className = "las la-microphone toggleSize";
 		if (!(session.cleanOutput)){
 			
-			// getById("mutebutton").classList.add("float"); 
-			// getById("mutebutton").classList.remove("float2"); 
 			getById("mutebutton").classList.remove("red", "pulsate"); 
 			getById("header").classList.remove('red');
 			
@@ -10832,8 +10787,6 @@ async function toggleSettings(forceShow = false) { // TODO: I need to have this 
 
 		getById("popupSelector").style.display = "inline-block"
 		getById("settingsbutton").classList.add("brown");
-		// getById("settingsbutton").classList.add("float2");
-		// getById("settingsbutton").classList.remove("float");
 		
 		loadTFLITEImages() // only triggers if effects==5 is true
 		
@@ -10852,8 +10805,6 @@ async function toggleSettings(forceShow = false) { // TODO: I need to have this 
 
         
 		getById("settingsbutton").classList.remove("brown");
-		// getById("settingsbutton").classList.add("float");
-		// getById("settingsbutton").classList.remove("float2");
 		setTimeout(function() {
 			getById("popupSelector").style.display = "none";
 		}, 200);
@@ -27602,8 +27553,7 @@ function createIframePopup() {
 		session.screenShareElement.parentNode.removeChild(session.screenShareElement);
 		session.screenShareElement = false;
 		updateMixer();
-		// getById("screenshare2button").classList.add("float");
-		// getById("screenshare2button").classList.remove("float2");
+		getById("screenshare2button").classList.remove("green");
 		return;
 	}
 	
@@ -27637,8 +27587,7 @@ function createIframePopup() {
 
 	updateMixer();
 	
-	// getById("screenshare2button").classList.add("float2");
-	// getById("screenshare2button").classList.remove("float");
+	getById("screenshare2button").classList.add("green");
 
 	return; // ignore the rest.
 }

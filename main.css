@@ -1192,6 +1192,7 @@ button.glyphicon-button.active.focus {
     z-index: 995;
     bottom: 0px;
     border: 0;
+    min-height: 52px;
     pointer-events: none;
     width: 100%;
     justify-content: center;
@@ -1204,16 +1205,17 @@ button.glyphicon-button.active.focus {
 
 #subControlButtons {
     display: flex;
+    position: absolute;
     background-color: var(--discord-grey-0);
     box-shadow: 0px 0px 10px rgba(0,0,0,1);
-    margin: 5px;
     pointer-events: auto;
     border: #cccccc22 1px solid;
     border-radius: 10px;
     align-items: center;
     justify-content: center;
     flex-wrap: wrap;
-    min-width: 0%;
+    bottom: 3px;
+	min-width: 230px;
 }
 
 #subControlButtons:empty{
