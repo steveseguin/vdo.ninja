@@ -24132,6 +24132,7 @@ function updateDirectorsAudio(dataN, UUID) {
 				label.style.marginBottom = "10px";
 				label.style.display = "block";
 				label.id = "remoteAudioLabel_"+UUID;
+				label.classList.add("settingsLabel");
 				label.dataset.UUID = UUID;
 				audioEle.appendChild(label);
 			}
