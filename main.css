@@ -1222,6 +1222,7 @@ button.glyphicon-button.active.focus {
     z-index: 995;
     padding: 0px 10px;
     bottom: 10px;
+    padding: 0 10px;
     border: 0;
     min-height: 52px;
     pointer-events: none;
@@ -1232,6 +1233,16 @@ button.glyphicon-button.active.focus {
 }
 #controlButtons:empty {
 	display: none;
+}
+
+.controlPositioning {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    position: relative;
+    width: 100%;
+    height: 100%;
+    align-items: center;
 }
 
 #subControlButtons {
@@ -1850,6 +1861,9 @@ input[type=range]:focus::-ms-fill-upper {
     #subControlButtons {
         position: unset;
         min-width: unset;
+    }
+    #chatModule {
+        margin-bottom: 5px !important;
     }
 }
 @media only screen and (max-width: 292px) {
@@ -3289,23 +3303,20 @@ input[type=checkbox] {
 }
 .outMessage {
 	color: #000;
-	margin: 3px;
 	border-radius: 5px;
 	background: #BCF;
 	padding: 5px;
 	text-align: right;
-	margin: 10px 3px;
+    margin-bottom: 5px;
 }
 #chatBody {
-	z-index: 12;
-	background-color: #0004;
-	width: 100%;
-	border-radius: 5px;
-	padding: 1px 7px;
-	overflow-y:scroll;
-	overflow-wrap: anywhere;
-	max-height: 800px;
-    line-height: 22px;
+    z-index: 12;
+    background-color: #0004;
+    width: 100%;
+    border-radius: 5px;
+    overflow-y: scroll;
+    overflow-wrap: anywhere;
+    max-height: 500px;
 }
 
 #chatBody::-webkit-scrollbar {
@@ -3324,31 +3335,24 @@ div#chatBody a {
 }
 
 #chatModule {
-	bottom: 50px;
-	position: fixed;
-	margin: 10px;
-	align-self: center;
-	width: 574px;
-	min-width: 300px;
-	max-width: 100%;
-	z-index:3;
+    display: flex;
+    flex-wrap: wrap;
+    z-index: 3;
+    width: 100%;
+    max-width: 500px;
+    z-index: 3;
+    margin-bottom: 70px;
+    gap: 0px 5px;
 }
 #chatInput {
 	color: #000;
 	background-color: #FFFE;
-	max-width: 700px;
-	min-width: 320px;
-	width: calc(100% - 89px);
-	font-size: 105%;
+	width: 70%;
 	padding: 3px;
-	border: 3px solid black;
 }
 .chatBarInputButton {
-	width:60px;
-	background-color:#EEE;
-	top: -1px;
-	position: relative;
-	margin-right: 10px;
+	width: calc(30% - 5px);
+    margin: unset;
 }
     
 .debugStats {
@@ -3447,30 +3451,30 @@ div#chatBody a {
 	border-bottom: 2px solid #364c84;
 }
 @media only screen and (max-width: 390px) {
-	#chatBody {
+	/* #chatBody {
 		z-index: 12;
 		background-color: #FFF1;
 		width: 100%;
 		border-radius: 5px;
 		padding: 1px 7px;
 		margin: 0px;
-	}
+	} */
 	
-	#chatModule {
+	/* #chatModule {
 		bottom: 50px;
 		position: fixed;
 		margin: 0px;
 		align-self: center;
 		width: 400px;
 		max-width: 100%;
-	}
+	} */
 	
-	#chatInput {
+	/* #chatInput {
 		max-width: 99%;
 		min-width: 240px;
 		margin-left: 11px;
 		font-size: 100%;
-	}
+	} */
 }
 .directorMargins {
 	margin: var(--director-margin);
@@ -5055,7 +5059,8 @@ body.darktheme .actionMessage {
 	background-color: #b1b1b1;
 }
 body.darktheme #chatInput{
-	background-color:#ccc;
+    background-color: var(--discord-grey-7);
+    color: var(--discord-text)
 }
 body.darktheme .popup-message{
 	background-color: #9b9b9b !important;
