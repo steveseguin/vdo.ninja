@@ -1674,6 +1674,8 @@ select{
 	vertical-align: middle;
 	font-size: 100%;
 	max-width: 260px;
+    border: solid 1px #AAA;
+    border-radius: 4px;
 }
 #effectSelector3{
 	background-color: #FFF;
@@ -1683,6 +1685,8 @@ select{
 	font-size: 93%;
 	max-width: 100%;
 	width: 90%;
+    border: solid 1px #AAA;
+    border-radius: 4px;
 }
 
 /*https://css-tricks.com/styling-cross-browser-compatible-range-inputs-css/*/
@@ -1990,6 +1994,8 @@ input[type=range]:focus::-ms-fill-upper {
 	overflow: auto;
 	padding: 5px;
 	resize: both;
+    border: solid 1px #AAA;
+    border-radius: 4px;
 }
 
 
@@ -2967,6 +2973,8 @@ button.toggleSettings{
 	vertical-align: middle;
 	font-size: 100%;
 	max-width: 260px;
+    border: solid 1px #AAA;
+    border-radius: 4px;
 }
 #gear_webcam{
     cursor: pointer;
@@ -3061,6 +3069,8 @@ button.toggleSettings{
 	padding: 4px;
 	font-size: 93%;
 	max-width: 100%;
+    border: solid 1px #AAA;
+    border-radius: 4px;
 }
 #outputSource3 {
 	display: inline-block;
@@ -3083,6 +3093,16 @@ button.toggleSettings{
 	padding: 10px 10px;
 	border: 1px solid #ccc;
 	vertical-align: middle;
+}
+
+#outputSourceScreenshare {
+    margin-top: 5px;
+    padding: 10px 5px;
+    width: 100%;
+    display: inline-block;
+    vertical-align: middle;
+    border-radius: 4px;
+    border: solid 1px #AAA;
 }
 
 .videoMenu {
@@ -3137,11 +3157,10 @@ div.multiselect {
 	margin: 0;
 	font-size: 80%;
 	padding: 3px 5px 1px;
-	border-top: 0;
-	border-bottom-left-radius: 4px;
-	border-bottom-right-radius: 4px;
 	text-align: left;
 	background-color: white;
+    border: solid 1px #AAA;
+    border-radius: 4px;
 }
 .multiselect .multiselect-contents li {
 	list-style: none;
@@ -4182,7 +4201,7 @@ div.message-card a {
 	background: #e6e8f0;
 }
 .darktheme #guestTips {
-	background-color: #414141;
+    background-color: var(--discord-grey-7);
 }
 .darktheme #guestTips .las {
 	color: #FFF;
@@ -4896,14 +4915,17 @@ body.darktheme form>label{
 }
 	
 body.darktheme .container-inner{
-	background-color: #40444E
+	background-color: var(--discord-grey-3);
 }
 body.darktheme .card{
-	background-color: #40444E
+    background-color: var(--discord-grey-3);
 }
 body.darktheme input{
     background-color: var(--discord-grey-7);
     color: var(--discord-text);
+}
+body.darktheme input::placeholder {
+    color: var(--discord-) !important;
 }
 body.darktheme .column>h2{
 	color: #b6b6b6;
@@ -4915,8 +4937,8 @@ body.darktheme .directorsgrid .vidcon > .las {
 	background-color: #424242;
 }
 body.darktheme .form-group .multiselect {
-	background-color: #414141;
-	padding: 10px; background-color:#f3f3f3;
+    background-color: var(--discord-grey-7);
+	padding: 10px; 
 }
 body.darktheme h2 {
 	color: #DDD;
@@ -4925,25 +4947,25 @@ body.darktheme button {
     /* filter: brightness(0.70); */
 }
 body.darktheme .column .las {
-	color: black;
+	color: var(--discord-text);
 }
 body.darktheme label {
-	filter: brightness(0.85);
+	color: var(--discord-text);
 }
 body.darktheme #roomHeader{
-	filter: brightness(0.85);
+	color: var(--discord-text);
 }
 body.darktheme div.multiselect {
-	background-color: #414141;
+    background-color: var(--discord-grey-7);
 }
 body.darktheme .videoMenu {
-	background-color: #414141;
+    background-color: var(--discord-grey-7);
 }
 body.darktheme .audioMenu{
-	background-color: #414141;
+    background-color: var(--discord-grey-7);
 }
 body.darktheme #avatarDiv{
-	background-color: #414141;
+    background-color: var(--discord-grey-7);
 }
 body.darktheme .selected {
 	border: solid 3px #f8f7f7;
@@ -4955,17 +4977,17 @@ body.darktheme .avatarLabel {
 	color: #f8f7f7;		  
 }
 body.darktheme #headphonesDiv{
-	background-color: #414141;
+    background-color: var(--discord-grey-7);
 }
 body.darktheme #headphonesDiv3{
-	background-color: #414141;
+    background-color: var(--discord-grey-7);
 }
 body.darktheme select{
     background-color: var(--discord-grey-7);
     color: var(--discord-text);
 }
 body.darktheme .white {
-	filter: brightness(0.85);
+	color: var(--discord-text);
 }
 body.darktheme .directorsgrid .vidcon {
     background-color: var(--discord-grey-3);
@@ -4979,13 +5001,13 @@ body.darktheme .infoblob{
 	color: #CCC;
 }
 body.darktheme #addPasswordBasic{
-	background-color: #414141;
+    background-color: var(--discord-grey-7);
 }
 body.darktheme #effectsDiv{
-	background-color: #414141;
+    background-color: var(--discord-grey-7);
 }
 body.darktheme #effectsDiv3{
-	background-color: #414141;
+    background-color: var(--discord-grey-7);
 }
 body.darktheme .outMessage{
 	background-color: #7f89a7;
@@ -5003,52 +5025,52 @@ body.darktheme .popup-message{
 	background-color: #9b9b9b !important;
 }
 body.darktheme #audioScreenShare1{
-	background-color: #414141;
+    background-color: var(--discord-grey-3);
 }
 body.darktheme #webcamstats2{
-	background-color: #414141;
+    background-color: var(--discord-grey-3);
 }
 body.darktheme #audioSourceScreenshare{
-	background-color: #e4e4e4;
+    background-color: var(--discord-grey-7);
 }
 body.darktheme #headphonesDiv2{
-	background-color: #414141;
+    background-color: var(--discord-grey-3);
 }
 body.darktheme #outputSourceScreenshare{
-	background-color: #e4e4e4;
+    background-color: var(--discord-grey-7);
 }
 body.darktheme #audioSource{
-	background-color: #e4e4e4;
+    background-color: var(--discord-grey-3);
 }
 body.darktheme #outputSource{
-	background-color: #e4e4e4;
+    background-color: var(--discord-grey-3);
 }
 body.darktheme #videoSourceSelect{
-	background-color: #e4e4e4;
+    background-color: var(--discord-grey-3);
 }
 body.darktheme #videoSettings{
-	background-color: #414141;
+    background-color: var(--discord-grey-7);
 }
 body.darktheme #effectSelector{
-	background-color: #e4e4e4;
+    background-color: var(--discord-grey-3);
 }
 body.darktheme #effectSelector3{
-	background-color: #e4e4e4;
+    background-color: var(--discord-grey-3);
 }
 body.darktheme #audioSource3{
-	background-color: #e4e4e4;
+    background-color: var(--discord-grey-3);
 }
 body.darktheme #videoSource3{
-	background-color: #e4e4e4;
+    background-color: var(--discord-grey-3);
 }
 body.darktheme #videoMenu3{
-	background-color: #414141;
+    background-color: var(--discord-grey-7);
 }
 body.darktheme #outputSource3{
-	background-color: #e4e4e4;
+    background-color: var(--discord-grey-3);
 }
 body.darktheme #videoSettings3{
-	background-color: #414141;
+    background-color: var(--discord-grey-7);
 }
 body.darktheme .alertModal{
 	background-color: #ccc;
@@ -5058,10 +5080,10 @@ body.darktheme .directorContainer{
 	filter: brightness(0.85);
 }
 body.darktheme #grabDirectorSoloLinkParent{
-	background-color: #414141;
+    background-color: var(--discord-grey-7);
 }
 body.darktheme #grabDirectorSoloLink{
-	background-color: #e4e4e4;
+    background-color: var(--discord-grey-3);
 }
 body.darktheme .cameraTip{
 	background-color: #27354b;
