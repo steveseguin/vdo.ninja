@@ -1906,9 +1906,13 @@ input[type=range]:focus::-ms-fill-upper {
 	}
 	#outputSource {
 		width: 100% !important;
+        border: solid 1px #AAA;
+        border-radius: 4px;
 	}
 	#outputSource3 {
 		width: 100% !important;
+        border: solid 1px #AAA;
+        border-radius: 4px;
 	}
 	#audioSourceScreenshare, #videoSettings2 {
 		max-width: 90% !important;
@@ -3059,7 +3063,6 @@ button.toggleSettings{
 	padding:4px 5px 2px 7px;
 	cursor:grab;
 	background-color: #FFF;
-	color:darkblue;
 }
 
 #videoSettings3 {
@@ -3076,6 +3079,8 @@ button.toggleSettings{
 	padding: 3px;
 	font-size: 93%;
 	max-width: 235px;
+    border: solid 1px #AAA;
+    border-radius: 4px;
 }
 #outputSource {
 	display: inline-block;
@@ -3092,6 +3097,8 @@ button.toggleSettings{
 	padding: 3px;
 	font-size: 93%;
 	max-width: 100%;
+    border: solid 1px #AAA;
+    border-radius: 4px;
 }
 #addPasswordBasic {
 	width: 450px;
@@ -4351,6 +4358,11 @@ input:checked + .slider:before {
 #remoteOBSControl  button {
 	margin:5px;
 	padding:10px;
+}
+
+.darktheme #promptModal, .darktheme .customModelPopup, .darktheme .promptModal {
+    background-color: var(--discord-grey-5);
+    color: var(--discord-text);
 }
 
 #promptModal, .customModelPopup, .promptModal {
