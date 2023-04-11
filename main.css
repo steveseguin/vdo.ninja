@@ -3083,6 +3083,8 @@ button.toggleSettings{
 	padding: 3px;
 	font-size: 93%;
 	max-width: 100%;
+    border: solid 1px #AAA;
+    border-radius: 4px;
 }
 #addPasswordBasic {
 	width: 450px;
