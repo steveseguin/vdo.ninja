@@ -34134,8 +34134,11 @@ addEventToAll(".column", 'click', function(e, ele) {
 	if (ele.classList.contains("skip-animation")) {
 		return;
 	}
-	
-	var bounding_box = ele.getBoundingClientRect();
+	try {
+		var bounding_box = ele.getBoundingClientRect();
+	} catch(e){
+		return;
+	}
 	ele.style.top = bounding_box.top + "px";
 	ele.style.left = (bounding_box.left - 20) + "px";
 	ele.classList.add('in-animation');
