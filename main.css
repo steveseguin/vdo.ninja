@@ -1246,7 +1246,7 @@ button.glyphicon-button.active.focus {
     justify-content: center;
     flex-wrap: wrap;
     bottom: 3px;
-    min-width: 385px;
+    min-width: 230px;
 }
 
 #subControlButtons:empty{
