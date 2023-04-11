@@ -1220,6 +1220,7 @@ button.glyphicon-button.active.focus {
     display: flex;
     position: fixed;
     z-index: 995;
+    padding: 0px 10px;
     bottom: 10px;
     border: 0;
     min-height: 52px;
@@ -1245,7 +1246,7 @@ button.glyphicon-button.active.focus {
     justify-content: center;
     flex-wrap: wrap;
     bottom: 3px;
-    margin: 0 10px;
+    min-width: 385px;
 }
 
 #subControlButtons:empty{
@@ -1294,7 +1295,7 @@ button.glyphicon-button.active.focus {
 
 @media only screen and (max-width: 640px){
 	#controlButtons {
-		transform: scale(0.9);
+		/* transform: scale(0.9); */
 	}
 	
 	.labelSmall {
@@ -1323,13 +1324,13 @@ button.glyphicon-button.active.focus {
 }
 @media only screen and (max-width: 400px){
 	#controlButtons {
-		transform: scale(0.8);
+		/* transform: scale(0.8); */
 	}
 	
 }
 @media only screen and (max-width: 300px){
 	#controlButtons {
-		transform: scale(0.7);
+		/* transform: scale(0.7); */
 	}	
 }
 
@@ -1402,7 +1403,7 @@ button.btnArmTransferRoom.selected{
 		height:85%
 	}
 	#controlButtons {
-        transform: scale(0.9);
+        /* transform: scale(0.9); */
 	}
 	#header{
 		min-height:0px;
@@ -1422,7 +1423,7 @@ button.btnArmTransferRoom.selected{
 		height:78%
 	}
 	#controlButtons {
-        transform: scale(0.8);
+        /* transform: scale(0.8); */
 	}
 }
 @media only screen and (max-height: 190px){
@@ -1435,7 +1436,7 @@ button.btnArmTransferRoom.selected{
 		height:70%
 	}
 	#controlButtons {
-        transform: scale(0.7);
+        /* transform: scale(0.7); */
 	}
 }
 @media only screen and (max-height: 120px){
@@ -1842,12 +1843,13 @@ input[type=range]:focus::-ms-fill-upper {
 		display: none!important;
 	}
 }
-@media only screen and (max-width: 641px) {
+@media only screen and (max-width: 700px) {
 	#fakeguest2{
 		display: none!important;
 	}
     #subControlButtons {
         position: unset;
+        min-width: unset;
     }
 }
 @media only screen and (max-width: 292px) {
