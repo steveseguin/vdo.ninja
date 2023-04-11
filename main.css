@@ -1256,7 +1256,7 @@ button.glyphicon-button.active.focus {
     align-items: center;
     justify-content: center;
     flex-wrap: wrap;
-    bottom: 3px;
+    bottom: 0px;
     min-width: 230px;
 }
 
@@ -3341,7 +3341,7 @@ div#chatBody a {
     width: 100%;
     max-width: 500px;
     z-index: 3;
-    margin-bottom: 70px;
+    margin-bottom: 65px;
     gap: 0px 5px;
 }
 #chatInput {
