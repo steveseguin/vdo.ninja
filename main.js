@@ -1471,6 +1471,7 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 		document.documentElement.style.setProperty('--background-color', '#0000');
 		document.documentElement.style.setProperty('--regular-margin', '0');
 		document.documentElement.style.setProperty('--director-margin', '0 25px 0 0');
+		document.documentElement.style.setProperty('--discord-grey-1a', '#0000');
 		getById("directorLinksButton").style.color = "black";
 		getById("main").style.overflow = "hidden";
 	}
