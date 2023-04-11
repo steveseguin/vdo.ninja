@@ -1245,7 +1245,7 @@ button.glyphicon-button.active.focus {
     justify-content: center;
     flex-wrap: wrap;
     bottom: 3px;
-	min-width: 230px;
+    margin: 0 10px;
 }
 
 #subControlButtons:empty{
@@ -1846,6 +1846,9 @@ input[type=range]:focus::-ms-fill-upper {
 	#fakeguest2{
 		display: none!important;
 	}
+    #subControlButtons {
+        position: unset;
+    }
 }
 @media only screen and (max-width: 292px) {
 	#fakeguest1{
@@ -1919,11 +1922,11 @@ input[type=range]:focus::-ms-fill-upper {
 		min-width: 90% !important;
 		overflow: hidden !important;
 	}
-	#popupSelector {
+	/* #popupSelector {
 		padding: 20px 5px 0px 15px !important;
 		font-size: 92%;
 		width: 385px !important
-	}
+	} */
 	.popupSelector_constraints{
 		margin:25px 15% 0 1%;
 	}
@@ -1944,16 +1947,16 @@ input[type=range]:focus::-ms-fill-upper {
 		margin:20px 12% 0 2%;
 	}
 
-	#popupSelector {
+	/* #popupSelector {
 		padding: 0 0 20px 0 !important;
-	}
+	} */
 }
 
-@media only screen and (max-height: 330px) {
+/* @media only screen and (max-height: 330px) {
 	#popupSelector {
 		font-size: 92%;
 	}
-}
+} */
 
 
 #popupSelector_user_settings label{
@@ -1998,11 +2001,16 @@ input[type=range]:focus::-ms-fill-upper {
 	position: fixed;
 	top: 0px;
 	height: 90%;
-	width: 505px;
+	max-width: 505px;
+    max-width: 100%;
 	right: -400px;
 	overflow: auto;
 	z-index: 4;
 	-webkit-app-region: no-drag;
+}
+
+#popupSelector div {
+    max-width: 100%;
 }
 
 #audioSourceScreenshare {
