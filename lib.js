@@ -2168,110 +2168,192 @@ function makeMiniDraggableElement(elmnt) {
 	elmnt.ontouchstart = dragMouseDown;
 }
 				
-function makeDraggableElement(elmnt, absolute=false) {
+function makeDraggableElement(element) {
+
+        let isDragging = false;
+        let initialX;
+        let currentX;
+        let xOffset = 0;
+        let initialY;
+        let currentY;
+        let yOffset = 0;
+    
+        element.addEventListener('mousedown', dragStart);
+        document.addEventListener('mouseup', dragEnd);
+    
+        function dragStart(e) {
+            initialX = e.clientX - xOffset;
+            initialY = e.clientY - yOffset;
+    
+            document.addEventListener('mousemove', drag);
+            isDragging = true;
+        }
+    
+        function dragEnd(e) {
+            initialX = currentX;
+            initialY = currentY;
+    
+            document.removeEventListener('mousemove', drag);
+            isDragging = false;
+            updateMixer();
+        }
+    
+        function drag(e) {
+            if (isDragging) {
+                currentX = (e.clientX - initialX);
+                currentY = (e.clientY - initialY);
+    
+                // Get the dimensions of the viewport
+                let vw = Math.max(document.documentElement.clientWidth || 0, window.innerWidth || 0);
+                let vh = Math.max(document.documentElement.clientHeight || 0, window.innerHeight || 0);
+
+                // Get the dimensions of the object
+                let elementWidth = element.offsetWidth;
+                let elementHeight = element.offsetHeight;
+                // console.log('elementWidth:\n',elementWidth)
+                // console.log('elementHeight:\n',elementHeight)
+    
+                // Calculate the boundaries
+                let maxX = vw - elementWidth;
+                let maxY = vh - elementHeight;
+                let minX = 0;
+                let minY = 0;
+    
+                // Calculate real boundaries (parent position: fixed issues) 
+                let topOffset = 0;
+                let leftOffset = 0;
+                let elementOffset = element;
+                while (elementOffset) {
+                    topOffset += elementOffset.offsetTop;
+                    leftOffset += elementOffset.offsetLeft;
+                    elementOffset = elementOffset.offsetParent;
+                }
+    
+                // Adjust the position if it's going beyond the boundaries   
+                let realX = currentX + leftOffset; 
+                let realY = currentY + topOffset;
+
+                if (realX > maxX) {
+                    currentX = maxX - leftOffset;
+                } else if (realX < minX) {
+                    currentX = minX - leftOffset;
+                }
+    
+                if (realY > maxY) {
+                    currentY = maxY - topOffset;
+                } else if (realY < minY) {
+                    currentY = minY - topOffset;
+                }
+                // Update the position and offset
+                xOffset = currentX;
+                yOffset = currentY;
+    
+                element.style.transform = `translate(${currentX}px, ${currentY}px)`;
+            }
+        }
 	
-	if (session.disableMouseEvents){return;}
+	// if (session.disableMouseEvents){return;}
 	
-	try {
-		elmnt.dragElement = false;
-		elmnt.style.bottom = "auto";
-		elmnt.style.cursor = "grab";
-		elmnt.stashonmouseup = null;
-		elmnt.stashonmousemove = null;
-	} catch (e) {
-		errorlog(e);
-		return;
-	}
-	var pos1 = 0;
-	var pos2 = 0;
-	var pos3 = 0;
-	var pos4 = 0;
-	var timestamp = false;
+	// try {
+	// 	elmnt.dragElement = false;
+	// 	elmnt.style.bottom = "auto";
+	// 	elmnt.style.cursor = "grab";
+	// 	elmnt.stashonmouseup = null;
+	// 	elmnt.stashonmousemove = null;
+	// } catch (e) {
+	// 	errorlog(e);
+	// 	return;
+	// }
+	// var pos1 = 0;
+	// var pos2 = 0;
+	// var pos3 = 0;
+	// var pos4 = 0;
+	// var timestamp = false;
 	
 	
-	var enterEventCount = 0;
-	var leaveEventCount = 0;
+	// var enterEventCount = 0;
+	// var leaveEventCount = 0;
 
 
-	function dragMouseDown(e) {
-		timestamp = Date.now();
+	// function dragMouseDown(e) {
+	// 	timestamp = Date.now();
 		
-		e = e || window.event;
-		e.preventDefault();
+	// 	e = e || window.event;
+	// 	e.preventDefault();
 		
-		pos3 = e.clientX;
-		pos4 = e.clientY;
-		//elmnt.stashonmouseup = document.onmouseup; // I don't want to interfere with other drag events.
-		//elmnt.stashonmousemove = document.onmousemove;
-		//elmnt.stashonclick = document.onclick;
+	// 	pos3 = e.clientX;
+	// 	pos4 = e.clientY;
+	// 	//elmnt.stashonmouseup = document.onmouseup; // I don't want to interfere with other drag events.
+	// 	//elmnt.stashonmousemove = document.onmousemove;
+	// 	//elmnt.stashonclick = document.onclick;
 
-		document.onmouseup = function(event){closeDragElement(event, elmnt);};
+	// 	document.onmouseup = function(event){closeDragElement(event, elmnt);};
 		
-		document.onmousemove = function(event){elementDrag(elmnt,event);};
+	// 	document.onmousemove = function(event){elementDrag(elmnt,event);};
 		
-		if ("stopDragTimeout" in elmnt){clearTimeout(elmnt.stopDragTimeout);}
+	// 	if ("stopDragTimeout" in elmnt){clearTimeout(elmnt.stopDragTimeout);}
 		
-		elmnt.onmouseleave = function(event){
-			leaveEventCount+=1;
-			elmnt.stopDragTimeout = setTimeout(function(ele,evt1){
-					closeDragElement(evt1, ele);}
-				,100, elmnt, event);
-		};
-		elmnt.onmouseenter = function(event){
-			enterEventCount+=1;
-			if (enterEventCount>=leaveEventCount){
-				if ("stopDragTimeout" in elmnt){clearTimeout(elmnt.stopDragTimeout);}
-			} else {
-				if (("stopDragTimeout" in elmnt) && (elmnt.stopDragTimeout)){
-					clearTimeout(elmnt.stopDragTimeout);
-					elmnt.stopDragTimeout = setTimeout(function(ele,evt1){
+	// 	elmnt.onmouseleave = function(event){
+	// 		leaveEventCount+=1;
+	// 		elmnt.stopDragTimeout = setTimeout(function(ele,evt1){
+	// 				closeDragElement(evt1, ele);}
+	// 			,100, elmnt, event);
+	// 	};
+	// 	elmnt.onmouseenter = function(event){
+	// 		enterEventCount+=1;
+	// 		if (enterEventCount>=leaveEventCount){
+	// 			if ("stopDragTimeout" in elmnt){clearTimeout(elmnt.stopDragTimeout);}
+	// 		} else {
+	// 			if (("stopDragTimeout" in elmnt) && (elmnt.stopDragTimeout)){
+	// 				clearTimeout(elmnt.stopDragTimeout);
+	// 				elmnt.stopDragTimeout = setTimeout(function(ele,evt1){
 						
-						closeDragElement(evt1, ele);}
-					,100, elmnt, event);
-				}
-			}
-		};
+	// 					closeDragElement(evt1, ele);}
+	// 				,100, elmnt, event);
+	// 			}
+	// 		}
+	// 	};
 		
-	}
-	function elementDrag(ele,e) {
+	// }
+	// function elementDrag(ele,e) {
 		
-		e = e || window.event;
-		if (("buttons" in e) && (e.buttons!==1)){return;}
+	// 	e = e || window.event;
+	// 	if (("buttons" in e) && (e.buttons!==1)){return;}
 		
-		e.preventDefault();
+	// 	e.preventDefault();
 		
-		ele.dragElement = true;
-		pos1 = pos3 - e.clientX;
-		pos2 = pos4 - e.clientY;
-		pos3 = e.clientX;
-		pos4 = e.clientY;
+	// 	ele.dragElement = true;
+	// 	pos1 = pos3 - e.clientX;
+	// 	pos2 = pos4 - e.clientY;
+	// 	pos3 = e.clientX;
+	// 	pos4 = e.clientY;
 
-		var topDrag = (ele.offsetTop - pos2 );
-		if (absolute){
-			if (topDrag > (-3 + (window.innerHeight - ele.clientHeight))){
-				topDrag = (-3 + (window.innerHeight - ele.clientHeight));
-			}
-		} else {
-			if (topDrag > -3){
-				topDrag = -3;
-			}
-		}
-		ele.style.top = topDrag + "px";
-		ele.style.left = (ele.offsetLeft - pos1) + "px";
+	// 	var topDrag = (ele.offsetTop - pos2 );
+	// 	if (absolute){
+	// 		if (topDrag > (-3 + (window.innerHeight - ele.clientHeight))){
+	// 			topDrag = (-3 + (window.innerHeight - ele.clientHeight));
+	// 		}
+	// 	} else {
+	// 		if (topDrag > -3){
+	// 			topDrag = -3;
+	// 		}
+	// 	}
+	// 	ele.style.top = topDrag + "px";
+	// 	ele.style.left = (ele.offsetLeft - pos1) + "px";
 		
-	}
-	function closeDragElement(event=false, ele=false) {
-		document.onmouseup = null;
-		document.onmousemove = null
-		ele.onmouseleave = null;
-		ele.onmouseenter = null;
-		enterEventCount = 0;
-		leaveEventCount = 0;
-		updateMixer();
-		//document.onclick = elmnt.stashonclick;
-	}
+	// }
+	// function closeDragElement(event=false, ele=false) {
+	// 	document.onmouseup = null;
+	// 	document.onmousemove = null
+	// 	ele.onmouseleave = null;
+	// 	ele.onmouseenter = null;
+	// 	enterEventCount = 0;
+	// 	leaveEventCount = 0;
+	// 	updateMixer();
+	// 	//document.onclick = elmnt.stashonclick;
+	// }
 	
-	elmnt.onmousedown = dragMouseDown;
+	// elmnt.onmousedown = dragMouseDown;
 }
 
 function removeStorage(cname){
