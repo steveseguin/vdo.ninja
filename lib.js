@@ -3310,6 +3310,10 @@ function createRichVideoElement(UUID){ // this function is used to check and gen
 			session.rpcs[UUID].videoElement.dataset.sid = session.rpcs[UUID].streamID;
 		}
 		
+		if (session.rpcs[UUID].rotate !== false){
+			session.rpcs[UUID].videoElement.rotated = session.rpcs[UUID].rotate;
+		}
+		
 		session.rpcs[UUID].videoElement.addEventListener("playing", (e)=>{
 			
 			try {
@@ -5134,8 +5138,8 @@ function updateMixerRun(e=false){  // this is the main auto-mixing code.  It's a
 					
 					vid.style.objectFit = "cover"; //contain;
 					vid.style.overflow = "unset"; //contain;
-					vid.style.maxWidth = "unset";
-					vid.style.maxHeight = "unset";
+					//vid.style.maxWidth = "unset";
+					//vid.style.maxHeight = "unset";
 				} else {
 					if (vw && vh){
 						var vvw = parseInt(vw);
@@ -5175,6 +5179,9 @@ function updateMixerRun(e=false){  // this is the main auto-mixing code.  It's a
 					vid.style.width = Math.ceil(wrw - borderOffset*2) + "px";
 					vid.style.height = Math.ceil(hsw - borderOffset*2) + "px";
 					vid.style.left =  0;
+					
+					vid.style.maxWidth = "100vh";
+					vid.style.maxHeight = "100vw";
 					
 					if (ChromeVersion && ChromeVersion<77){
 						if (!animated && (parseInt(container.style.width)>parseInt(holder.style.height))){
@@ -12867,17 +12874,9 @@ function updateForceRotate(){
 
 function updateForceRotatedCSS(){
 	if (session.forceRotate==270){
-		document.body.setAttribute( "style", "transform: rotate(270deg);position: absolute;top: "+(getWidth()/4)+"px;left: -"+ (getHeight()/4) + "px;height: 95vw;width: 95vh;");
+		document.body.setAttribute( "style", "transform: rotate(270deg);position: absolute;top: 100vh;left: 0;height: 100vw;width: 100vh;transform-origin: 0 0;");
 	} else if (session.forceRotate==90){
-		document.body.setAttribute( "style", "transform: rotate(90deg);position: absolute;top: "+(getWidth()/4)+"px;left: -"+ (getHeight()/4) + "px;height: 95vw;width: 95vh;");
-	} else {
-		document.body.setAttribute( "style", "");
-	}
-	
-	if (session.forceRotate==270){
-		document.body.setAttribute( "style", "transform: rotate(270deg);position: absolute;top: "+(getWidth()/4)+"px;left: -"+ (getHeight()/4) + "px;height: 95vw;width: 95vh;");
-	} else if (session.forceRotate==90){
-		document.body.setAttribute( "style", "transform: rotate(90deg);position: absolute;top: "+(getWidth()/4)+"px;left: -"+ (getHeight()/4) + "px;height: 95vw;width: 95vh;");
+		document.body.setAttribute( "style", "transform: rotate(90deg);position: absolute;top: 0;left: 100vw;height: 100vw;width: 100vh;transform-origin: 0 0;");
 	} else {
 		document.body.setAttribute( "style", "");
 	}

@@ -2,6 +2,7 @@
     /* Discord Greys - Dark to Lighter */
     --discord-grey-0: #121212;
     --discord-grey-1: #1e1f22;
+	--discord-grey-1a: #1e1f22;
     --discord-grey-2: #232428;
     --discord-grey-3: #2b2d31;
     --discord-grey-4: #2e3035;
@@ -1296,7 +1297,6 @@ button.glyphicon-button.active.focus {
 }
 
 @media only screen and (max-width: 640px){
-
 	.labelSmall {
 		display:inherit;
 		padding:5px;
@@ -1989,8 +1989,6 @@ input[type=range]:focus::-ms-fill-upper {
 		margin:20px 12% 0 2%;
 	}
 }
-
-
 
 #popupSelector_user_settings label{
 	color:white;
@@ -3898,7 +3896,7 @@ div#roomnotes2 {
 }
 
 .darktheme div#guestFeeds {
-    background-color: var(--discord-grey-1)
+    background-color: var(--discord-grey-1a)
 }
 
 div#guestFeeds {
