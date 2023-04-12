@@ -248,11 +248,6 @@ button.hint {
 	visibility: hidden;
 }
 
-
-/* #screenshare3button.green{
-	animation: pulse 5s infinite;
-} */
-
 /* Clicked buttons overwrite */
 .red {
 	background-color: #840000 !important;
@@ -294,15 +289,6 @@ button.hint {
 .directorBlue {
 	background-color: #5c7785 !important;
 }
-
-/* button.red {
-	-webkit-app-region: no-drag;
-	padding: 10px;
-	margin: 10px 0px;
-	cursor: pointer;
-	border-radius: 2px;
-	color: white;
-} */
 
 button {
 	-webkit-app-region: no-drag;
@@ -1305,10 +1291,7 @@ button.glyphicon-button.active.focus {
 }
 
 @media only screen and (max-width: 640px){
-	#controlButtons {
-		/* transform: scale(0.9); */
-	}
-	
+
 	.labelSmall {
 		display:inherit;
 		padding:5px;
@@ -1332,17 +1315,6 @@ button.glyphicon-button.active.focus {
 	#head5 {
 		margin-right: 1px;
 	}
-}
-@media only screen and (max-width: 400px){
-	#controlButtons {
-		/* transform: scale(0.8); */
-	}
-	
-}
-@media only screen and (max-width: 300px){
-	#controlButtons {
-		/* transform: scale(0.7); */
-	}	
 }
 
 .orange{
@@ -1413,9 +1385,6 @@ button.btnArmTransferRoom.selected{
 	#gridlayout>#container.vidcon {
 		height:85%
 	}
-	#controlButtons {
-        /* transform: scale(0.9); */
-	}
 	#header{
 		min-height:0px;
 	}
@@ -1433,9 +1402,6 @@ button.btnArmTransferRoom.selected{
 	#gridlayout>#container.vidcon {
 		height:78%
 	}
-	#controlButtons {
-        /* transform: scale(0.8); */
-	}
 }
 @media only screen and (max-height: 190px){
 	#gridlayout>#container.vidcon {
@@ -1445,9 +1411,6 @@ button.btnArmTransferRoom.selected{
 @media only screen and (max-height: 160px){
 	#gridlayout>#container.vidcon {
 		height:70%
-	}
-	#controlButtons {
-        /* transform: scale(0.7); */
 	}
 }
 @media only screen and (max-height: 120px){
@@ -1813,7 +1776,6 @@ input[type=range]:focus::-ms-fill-upper {
 	
 }
 
-
 @media only screen and (max-height: 650px) {
 	body {
 		font-size: 0.9em;
@@ -1938,11 +1900,6 @@ input[type=range]:focus::-ms-fill-upper {
 		min-width: 90% !important;
 		overflow: hidden !important;
 	}
-	/* #popupSelector {
-		padding: 20px 5px 0px 15px !important;
-		font-size: 92%;
-		width: 385px !important
-	} */
 	.popupSelector_constraints{
 		margin:25px 15% 0 1%;
 	}
@@ -1962,17 +1919,8 @@ input[type=range]:focus::-ms-fill-upper {
 	.popupSelector_constraints{
 		margin:20px 12% 0 2%;
 	}
-
-	/* #popupSelector {
-		padding: 0 0 20px 0 !important;
-	} */
 }
 
-/* @media only screen and (max-height: 330px) {
-	#popupSelector {
-		font-size: 92%;
-	}
-} */
 
 
 #popupSelector_user_settings label{
@@ -3450,32 +3398,7 @@ div#chatBody a {
 	font-weight: bold;
 	border-bottom: 2px solid #364c84;
 }
-@media only screen and (max-width: 390px) {
-	/* #chatBody {
-		z-index: 12;
-		background-color: #FFF1;
-		width: 100%;
-		border-radius: 5px;
-		padding: 1px 7px;
-		margin: 0px;
-	} */
-	
-	/* #chatModule {
-		bottom: 50px;
-		position: fixed;
-		margin: 0px;
-		align-self: center;
-		width: 400px;
-		max-width: 100%;
-	} */
-	
-	/* #chatInput {
-		max-width: 99%;
-		min-width: 240px;
-		margin-left: 11px;
-		font-size: 100%;
-	} */
-}
+
 .directorMargins {
 	margin: var(--director-margin);
 }
@@ -4983,9 +4906,6 @@ body.darktheme .form-group .multiselect {
 body.darktheme h2 {
 	color: #DDD;
 }
-body.darktheme button {
-    /* filter: brightness(0.70); */
-}
 body.darktheme .column .las {
 	color: var(--discord-text);
 }
@@ -5151,9 +5071,6 @@ body.darktheme .startupWarning>.las  {
 body.darktheme .invite_setting_group_links a {
 	color:#d2e5ff!important;
 }
-
-
-
 
 /* ---- BASIC CSS CLASSES ---- */
 .pressed {
