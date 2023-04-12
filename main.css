@@ -3002,10 +3002,9 @@ button.toggleSettings{
 }
 
 #videoSourceSelect {
-	display: inline-block;
+    flex: 1;
 	vertical-align: middle;
 	font-size: 100%;
-	max-width: 260px;
     border: solid 1px #AAA;
     border-radius: 4px;
 }
@@ -3150,6 +3149,7 @@ button.toggleSettings{
 	vertical-align: middle;
 	text-align: left;
 }
+
 #videoMenu3{
 	background-color: #f3f3f3;
 	width: 450px;
@@ -4989,9 +4989,9 @@ body.darktheme select{
     background-color: var(--discord-grey-7);
     color: var(--discord-text);
 }
-body.darktheme .white {
+/* body.darktheme .white {
 	color: var(--discord-text);
-}
+} */
 body.darktheme .directorsgrid .vidcon {
     background-color: var(--discord-grey-3);
 	color: var(--discord-text);
