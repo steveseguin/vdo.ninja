@@ -1798,7 +1798,7 @@ input[type=range]:focus::-ms-fill-upper {
     }
 }
 
-@media only screen and (max-width: 400px) {
+@media only screen and (max-width: 410px) {
     #subControlButtons > div {
         min-width: 35px;
         min-height: 35px;
@@ -1810,7 +1810,7 @@ input[type=range]:focus::-ms-fill-upper {
     }
 }
 
-@media only screen and (max-width: 320px) {
+@media only screen and (max-width: 360px) {
     #subControlButtons > div {
         min-width: 30px;
         min-height: 30px;
@@ -1819,6 +1819,18 @@ input[type=range]:focus::-ms-fill-upper {
     }
     #SubControlButtons > div i {
         font-size: 20px;
+    }
+}
+
+@media only screen and (max-width: 320px) {
+    #subControlButtons > div {
+        min-width: 28px;
+        min-height: 28px;
+        border-radius: 4px;
+        margin: 3px;
+    }
+    #SubControlButtons > div i {
+        font-size: 18px;
     }
 }
 
