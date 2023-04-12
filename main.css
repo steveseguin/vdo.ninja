@@ -1209,7 +1209,7 @@ button.glyphicon-button.active.focus {
     bottom: 10px;
     padding: 0 10px;
     border: 0;
-    min-height: 52px;
+    min-height: 0; /* Must have a min-height or drag-drop doesn't work */
     pointer-events: none;
     width: 100%;
     justify-content: center;
@@ -1780,6 +1780,49 @@ input[type=range]:focus::-ms-fill-upper {
 	
 }
 
+/* ////// Icon resizing for mobile subControl bar ////// */
+
+@media only screen and (max-width: 500px) {
+    #subControlButtons {
+        position: unset;
+        min-width: unset;
+    }
+    #subControlButtons > div {
+        min-width: 40px;
+        min-height: 40px;
+        margin: 4px;
+    }
+    #SubControlButtons > div i {
+        font-size: 28px;
+    }
+}
+
+@media only screen and (max-width: 400px) {
+    #subControlButtons > div {
+        min-width: 35px;
+        min-height: 35px;
+        border-radius: 6px;
+        margin: 3px;
+    }
+    #SubControlButtons > div i {
+        font-size: 24px;
+    }
+}
+
+@media only screen and (max-width: 300px) {
+    #subControlButtons > div {
+        min-width: 30px;
+        min-height: 30px;
+        border-radius: 4px;
+        margin: 3px;
+    }
+    #SubControlButtons > div i {
+        font-size: 20px;
+    }
+}
+
+/* //////////////////////////////////// */
+
 @media only screen and (max-height: 650px) {
 	body {
 		font-size: 0.9em;
@@ -1824,10 +1867,6 @@ input[type=range]:focus::-ms-fill-upper {
 	#fakeguest2{
 		display: none!important;
 	}
-    #subControlButtons {
-        position: unset;
-        min-width: unset;
-    }
     #chatModule {
         margin-bottom: 5px !important;
     }
