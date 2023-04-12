@@ -1152,16 +1152,15 @@ hr {
 }
 
 .notification {
-	position: relative;
-	top: -40px;
-	right: -33px;
-	padding: 2px 0;
-	border-radius: 50%;
-	background: red;
-	color: white;
-	width: 11px;
-	height: 11px;
-	margin: 0;
+    position: absolute;
+    top: -4px;
+    right: -4px;
+    padding: 2px 0;
+    border-radius: 50%;
+    color: white;
+    width: 11px;
+    height: 11px;
+    margin: 0;
 }
 .queueNotification {
 	position: relative;
@@ -1264,6 +1263,11 @@ button.glyphicon-button.active.focus {
 #subControlButtons div:hover {
     background-color: var(--discord-grey-3);
     border-radius: 4px;
+}
+
+/* Set for the notification button to use as offset */
+#chatbutton {
+    position: relative;
 }
 
 

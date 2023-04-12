@@ -10612,7 +10612,7 @@ function toggleChat(event = null) { // TODO: I need to have this be MUTE, toggle
 	if (getById("chatNotification").value) {
 		getById("chatNotification").value = 0;
 	}
-	getById("chatNotification").classList.remove("notification");
+	getById("chatNotification").classList.remove("notification", "red");
 }
 
 function directorAdvanced(ele) {
@@ -22817,7 +22817,7 @@ function addDownloadLink(fileList, UUID, pc){
 		} else {
 			getById("chatNotification").value = 1;
 		}
-		getById("chatNotification").classList.add("notification");
+		getById("chatNotification").classList.add("notification", "red");
 	}
 	
 	//if (session.broadcastChannel !== false) {
@@ -29553,7 +29553,7 @@ function getChatMessage(msg, label = false, director = false, overlay = false) {
 		} else {
 			getById("chatNotification").value = 1;
 		}
-		getById("chatNotification").classList.add("notification");
+		getById("chatNotification").classList.add("notification", "red");
 	}
 
 	
