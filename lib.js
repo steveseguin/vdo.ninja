@@ -2010,7 +2010,7 @@ function makeMiniDraggableElement(elmnt) {
 	
 	try {
 		elmnt.dragElement = false;
-		// elmnt.style.bottom = "auto";
+		elmnt.style.bottom = "auto";
 		elmnt.style.cursor = "grab";
 		
 		elmnt.stashonmouseup = null;
@@ -2174,7 +2174,7 @@ function makeDraggableElement(elmnt, absolute=false) {
 	
 	try {
 		elmnt.dragElement = false;
-		// elmnt.style.bottom = "auto";
+		elmnt.style.bottom = "auto";
 		elmnt.style.cursor = "grab";
 		elmnt.stashonmouseup = null;
 		elmnt.stashonmousemove = null;
