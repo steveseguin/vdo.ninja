@@ -379,6 +379,14 @@ function URLFromFiles(files) {
   });
 }
 
+function detectCPUSupport(){
+	let cpuThreads = navigator.hardwareConcurrency;
+	if (cpuThreads){
+		return cpuThreads+" threads";
+	}
+	return false;
+}
+
 function detectGPUSupport() {
 	try {
 		const gl = document.createElement('canvas').getContext('webgl');
@@ -450,10 +458,14 @@ try{
 	var SafariVersion = safariVersion();
 	var SamsungASeries = isSamsungASeries();
 	var isVingester = navigator.userAgent.indexOf("Vingester")>=0;
-} catch(e){errorlog(e);}
 
-var gpgpuSupport = detectGPUSupport();
-log(gpgpuSupport);
+	var gpgpuSupport = detectGPUSupport();
+	log(gpgpuSupport);
+
+	var cpuSupport = detectCPUSupport();
+	log(cpuSupport);
+	
+} catch(e){errorlog(e);}
 
 if (isVingester){
 	console.warn("If Vingester isn't able to capture audio, get a fixed version of Vingester from here: https://github.com/steveseguin/vingester/releases/");

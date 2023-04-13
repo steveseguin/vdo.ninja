@@ -2329,7 +2329,7 @@ span[data-action-type="stats-graphs-details-container"]>span{
 	display: none;
 	background-color: rgb(221, 221, 221);
 	max-height: 100%;
-	min-height: 90%;
+	min-height: calc(100% - 75px);
 	margin-bottom:30px;
 }
 .canvasStats{

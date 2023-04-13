@@ -294,6 +294,9 @@
 						if (data.info.gpGPU){
 							document.getElementById("details").innerHTML += "<br /><b>GPU:</b> "+data.info.gpGPU+"<br />";
 						}
+						if (data.info.CPU){
+							document.getElementById("details").innerHTML += "<br /><b>CPU:</b> "+data.info.CPU+"<br />";
+						}
 						if (data.info.conn_type){
 							document.getElementById("details").innerHTML += "<br /><b>Connection type:</b> "+data.info.conn_type+"<br />";
 							if (data.info.conn_type == "wifi"){
