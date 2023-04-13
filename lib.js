@@ -2183,92 +2183,93 @@ function makeMiniDraggableElement(elmnt) {
 function makeDraggableElement(element) {
 
 		if (session.disableMouseEvents){return;} // this is here for a reason. :P
-		
-        element.initialX;
+
+		element.initialX;
 		element.initialY;
-        element.currentX;
-        element.xOffset = 0;
-        element.currentY;
-        element.yOffset = 0;
+		element.currentX;
+		element.xOffset = 0;
+		element.currentY;
+		element.yOffset = 0;
 		element.isDragging = false;
 		element.dragElement = true;
-        element.addEventListener('mousedown', dragStart);
+		
+		element.addEventListener('mousedown', dragStart);
         
         function dragStart(e) {
-            element.initialX = e.clientX - element.xOffset;
-            element.initialY = e.clientY - element.yOffset;
-    
-            document.addEventListener('mousemove', drag);
+			element.initialX = e.clientX - element.xOffset;
+			element.initialY = e.clientY - element.yOffset;
+
+			document.addEventListener('mousemove', drag);
 			document.addEventListener('mouseup', dragEnd);
 			document.addEventListener('onmouseleave', dragEnd);
 			document.addEventListener('onmouseenter', dragEnd);
-            element.isDragging = true;
+			
+			element.isDragging = true;
         }
     
         function dragEnd(e) {
-            element.initialX = element.currentX;
-            element.initialY = element.currentY;
-    
-            document.removeEventListener('mousemove', drag);
+			element.initialX = element.currentX;
+			element.initialY = element.currentY;
+
+			document.removeEventListener('mousemove', drag);
 			document.removeEventListener('mouseup', dragEnd);
 			document.removeEventListener('onmouseleave', dragEnd);
 			document.removeEventListener('onmouseenter', dragEnd);
-			
-            element.isDragging = false;
-            
+
+			element.isDragging = false;
         }
     
         function drag(e) {
             if (element.isDragging) {
-                element.currentX = (e.clientX - element.initialX);
-                element.currentY = (e.clientY - element.initialY);
-    
-                // Get the dimensions of the viewport
-                let vw = Math.max(document.documentElement.clientWidth || 0, window.innerWidth || 0);
-                let vh = Math.max(document.documentElement.clientHeight || 0, window.innerHeight || 0);
+				element.currentX = (e.clientX - element.initialX);
+				element.currentY = (e.clientY - element.initialY);
 
-                // Get the dimensions of the object
-                let elementWidth = element.offsetWidth;
-                let elementHeight = element.offsetHeight;
-                // console.log('elementWidth:\n',elementWidth)
-                // console.log('elementHeight:\n',elementHeight)
-    
-                // Calculate the boundaries
-                let maxX = vw - elementWidth;
-                let maxY = vh - elementHeight;
-                let minX = 0;
-                let minY = 0;
-    
-                // Calculate real boundaries (parent position: fixed issues) 
-                let topOffset = 0;
-                let leftOffset = 0;
-                let elementOffset = element;
-                while (elementOffset) {
-                    topOffset += elementOffset.offsetTop;
-                    leftOffset += elementOffset.offsetLeft;
-                    elementOffset = elementOffset.offsetParent;
-                }
-    
-                // Adjust the position if it's going beyond the boundaries   
-                let realX = element.currentX + leftOffset; 
-                let realY = element.currentY + topOffset;
+				// Get the dimensions of the viewport
+				let vw = Math.max(document.documentElement.clientWidth || 0, window.innerWidth || 0);
+				let vh = Math.max(document.documentElement.clientHeight || 0, window.innerHeight || 0);
 
-                if (realX > maxX) {
-                    element.currentX = maxX - leftOffset;
-                } else if (realX < minX) {
-                    element.currentX = minX - leftOffset;
-                }
-    
-                if (realY > maxY) {
-                    element.currentY = maxY - topOffset;
-                } else if (realY < minY) {
-                    element.currentY = minY - topOffset;
-                }
-                // Update the position and offset
-                element.xOffset = element.currentX;
-                element.yOffset = element.currentY;
-    
-                element.style.transform = `translate(${element.currentX}px, ${element.currentY}px)`;
+				// Get the dimensions of the object
+				let elementWidth = element.offsetWidth;
+				let elementHeight = element.offsetHeight;
+				// console.log('elementWidth:\n',elementWidth)
+				// console.log('elementHeight:\n',elementHeight)
+
+				// Calculate the boundaries
+				let maxX = vw - elementWidth;
+				let maxY = vh - elementHeight;
+				let minX = 0;
+				let minY = 0;
+
+				// Calculate real boundaries (parent position: fixed issues) 
+				let topOffset = 0;
+				let leftOffset = 0;
+				let elementOffset = element;
+				while (elementOffset) {
+					topOffset += elementOffset.offsetTop;
+					leftOffset += elementOffset.offsetLeft;
+					elementOffset = elementOffset.offsetParent;
+				}
+
+				// Adjust the position if it's going beyond the boundaries   
+				let realX = element.currentX + leftOffset; 
+				let realY = element.currentY + topOffset;
+
+				if (realX > maxX) {
+					element.currentX = maxX - leftOffset;
+				} else if (realX < minX) {
+					element.currentX = minX - leftOffset;
+				}
+
+				if (realY > maxY) {
+					element.currentY = maxY - topOffset;
+				} else if (realY < minY) {
+					element.currentY = minY - topOffset;
+				}
+				// Update the position and offset
+				element.xOffset = element.currentX;
+				element.yOffset = element.currentY;
+
+				element.style.transform = `translate(${element.currentX}px, ${element.currentY}px)`;
             }
         }
 	
@@ -3537,12 +3538,12 @@ function updateMixer(e=false){
 			leftOffset += elementOffset.offsetLeft;
 			elementOffset = elementOffset.offsetParent;
 		}
-		
+
 		let realX = controlBar.xOffset + leftOffset; 
 		let realY = controlBar.yOffset + topOffset;
 		let maxX = vw - controlBar.offsetWidth;
 		let maxY = vh - controlBar.offsetHeight;
-		
+
 		if (realX > maxX) {
 			controlBar.xOffset = maxX - leftOffset;
 		} else if (realX < 0) {
@@ -3554,7 +3555,7 @@ function updateMixer(e=false){
 		} else if (realY < 0) {
 			controlBar.yOffset = 0 - topOffset;
 		}
-		
+
 		controlBar.style.transform = `translate(${controlBar.xOffset}px, ${controlBar.yOffset}px)`;
 	}
 	
