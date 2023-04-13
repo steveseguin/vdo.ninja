@@ -3574,7 +3574,7 @@ function updateMixer(e=false){
 		return;
 	}
 	updateMixerActive=true;
-	errorlog("updating mixer");
+	log("updating mixer");
 	
 	//console.log((new Error()).stack); // useful for breakpoints; finding what called updateMixer.
 	
