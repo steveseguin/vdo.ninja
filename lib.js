@@ -2182,38 +2182,46 @@ function makeMiniDraggableElement(elmnt) {
 				
 function makeDraggableElement(element) {
 
-        let isDragging = false;
-        let initialX;
-        let currentX;
-        let xOffset = 0;
-        let initialY;
-        let currentY;
-        let yOffset = 0;
-    
+		if (session.disableMouseEvents){return;} // this is here for a reason. :P
+		
+        element.initialX;
+		element.initialY;
+        element.currentX;
+        element.xOffset = 0;
+        element.currentY;
+        element.yOffset = 0;
+		element.isDragging = false;
+		element.dragElement = true;
         element.addEventListener('mousedown', dragStart);
-        document.addEventListener('mouseup', dragEnd);
-    
+        
         function dragStart(e) {
-            initialX = e.clientX - xOffset;
-            initialY = e.clientY - yOffset;
+            element.initialX = e.clientX - element.xOffset;
+            element.initialY = e.clientY - element.yOffset;
     
             document.addEventListener('mousemove', drag);
-            isDragging = true;
+			document.addEventListener('mouseup', dragEnd);
+			document.addEventListener('onmouseleave', dragEnd);
+			document.addEventListener('onmouseenter', dragEnd);
+            element.isDragging = true;
         }
     
         function dragEnd(e) {
-            initialX = currentX;
-            initialY = currentY;
+            element.initialX = element.currentX;
+            element.initialY = element.currentY;
     
             document.removeEventListener('mousemove', drag);
-            isDragging = false;
-            updateMixer();
+			document.removeEventListener('mouseup', dragEnd);
+			document.removeEventListener('onmouseleave', dragEnd);
+			document.removeEventListener('onmouseenter', dragEnd);
+			
+            element.isDragging = false;
+            
         }
     
         function drag(e) {
-            if (isDragging) {
-                currentX = (e.clientX - initialX);
-                currentY = (e.clientY - initialY);
+            if (element.isDragging) {
+                element.currentX = (e.clientX - element.initialX);
+                element.currentY = (e.clientY - element.initialY);
     
                 // Get the dimensions of the viewport
                 let vw = Math.max(document.documentElement.clientWidth || 0, window.innerWidth || 0);
@@ -2242,25 +2250,25 @@ function makeDraggableElement(element) {
                 }
     
                 // Adjust the position if it's going beyond the boundaries   
-                let realX = currentX + leftOffset; 
-                let realY = currentY + topOffset;
+                let realX = element.currentX + leftOffset; 
+                let realY = element.currentY + topOffset;
 
                 if (realX > maxX) {
-                    currentX = maxX - leftOffset;
+                    element.currentX = maxX - leftOffset;
                 } else if (realX < minX) {
-                    currentX = minX - leftOffset;
+                    element.currentX = minX - leftOffset;
                 }
     
                 if (realY > maxY) {
-                    currentY = maxY - topOffset;
+                    element.currentY = maxY - topOffset;
                 } else if (realY < minY) {
-                    currentY = minY - topOffset;
+                    element.currentY = minY - topOffset;
                 }
                 // Update the position and offset
-                xOffset = currentX;
-                yOffset = currentY;
+                element.xOffset = element.currentX;
+                element.yOffset = element.currentY;
     
-                element.style.transform = `translate(${currentX}px, ${currentY}px)`;
+                element.style.transform = `translate(${element.currentX}px, ${element.currentY}px)`;
             }
         }
 	
@@ -3514,6 +3522,43 @@ var updateMixerTimer = null;
 var updateMixerActive = false;
 //var cleanupTimeout = null;
 function updateMixer(e=false){
+	
+	var controlBar = document.getElementById("subControlButtons");
+	if (controlBar && controlBar.dragElement && !controlBar.isDragging){
+		let vw = Math.max(document.documentElement.clientWidth || 0, window.innerWidth || 0);
+		let vh = Math.max(document.documentElement.clientHeight || 0, window.innerHeight || 0);
+
+		// Calculate real boundaries (parent position: fixed issues) 
+		let topOffset = 0;
+		let leftOffset = 0;
+		let elementOffset = controlBar;
+		while (elementOffset) {
+			topOffset += elementOffset.offsetTop;
+			leftOffset += elementOffset.offsetLeft;
+			elementOffset = elementOffset.offsetParent;
+		}
+		
+		let realX = controlBar.xOffset + leftOffset; 
+		let realY = controlBar.yOffset + topOffset;
+		let maxX = vw - controlBar.offsetWidth;
+		let maxY = vh - controlBar.offsetHeight;
+		
+		if (realX > maxX) {
+			controlBar.xOffset = maxX - leftOffset;
+		} else if (realX < 0) {
+			controlBar.xOffset = 0 - leftOffset;
+		}
+
+		if (realY > maxY) {
+			controlBar.yOffset = maxY - topOffset;
+		} else if (realY < 0) {
+			controlBar.yOffset = 0 - topOffset;
+		}
+		
+		controlBar.style.transform = `translate(${controlBar.xOffset}px, ${controlBar.yOffset}px)`;
+	}
+	
+	
 	if (session.manual === true){return;}
 	else if (!session.switchMode && session.director){return;}
 	else if (session.windowed){return;}
@@ -3528,7 +3573,7 @@ function updateMixer(e=false){
 		return;
 	}
 	updateMixerActive=true;
-	log("updating mixer");
+	errorlog("updating mixer");
 	
 	//console.log((new Error()).stack); // useful for breakpoints; finding what called updateMixer.
 	
@@ -3548,19 +3593,6 @@ function updateMixer(e=false){
 
 function updateMixerRun(e=false){  // this is the main auto-mixing code.  It's a giant function that runs when there are changes to screensize, video track statuses, etc.
 	try { 
-		let controlButtons = getById("subControlButtons");
-		if (controlButtons.dragElement){
-			if (parseInt(controlButtons.style.top) > 53-parseInt(controlButtons.clientHeight)){
-				controlButtons.style.top = parseInt(53 - controlButtons.clientHeight)+"px";
-			} else if (parseInt(controlButtons.style.top) < parseInt(53 - window.innerHeight) ){
-				controlButtons.style.top =  parseInt( 53 - window.innerHeight)+"px";
-			} 
-			if (parseInt(controlButtons.style.left) < 0){
-				controlButtons.style.left = "0px";
-			} else if (parseInt(controlButtons.style.left) > parseInt( window.innerWidth - controlButtons.offsetWidth) ){
-				controlButtons.style.left =  parseInt( window.innerWidth - controlButtons.offsetWidth )+"px";
-			}
-		}
 		
 		if (session.switchMode){}
 		else if (session.director){return;}
@@ -3594,7 +3626,7 @@ function updateMixerRun(e=false){  // this is the main auto-mixing code.  It's a
 		
 		var h = window.innerHeight - hi;
 		
-		if (session.dedicatedControlBarSpace || window.innerHeight<=700 ){
+		if (session.dedicatedControlBarSpace || window.innerHeight<=700 ){ // # This needs to be reviewed.
 			if (document.getElementById("controlButtons") && !session.overlayControls){
 				var h = window.innerHeight - hi - document.getElementById("controlButtons").offsetHeight;
 			} else {
