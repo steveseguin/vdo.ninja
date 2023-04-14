@@ -2238,15 +2238,15 @@ label {
 	animation: greyout 3s;
 	opacity: 0.3!important;
 }
-.graphSection{
-	max-width:50%;
+.graphSection {
+    display: flex;
+    flex-direction: column;
+    max-width: 50%;
+    gap: 5px;
 }
 .graphSection>span {
 	font-size: 10px;
     display: block;
-    margin: 5px;
-    margin-top: 0px;
-	margin-right: 0px;
     height: 50px;
 }
 .graphSection>span:last-child{
@@ -2339,10 +2339,7 @@ span[data-action-type="stats-graphs-details-container"]>span{
 	background-color: black;
 	width: 100%;
 	height: 50px;
-	margin: 0 5px 5px 0;
-}
-.canvasStats:last-child{
-	margin: 0 5px 0 0;
+    border-radius: 4px;
 }
 .manualInput{
 	width: 55px;
