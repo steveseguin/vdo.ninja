@@ -249,6 +249,14 @@ button.hint {
 	visibility: hidden;
 }
 
+#popOutChat{
+	cursor:pointer;
+	text-align:right;
+	color:#B3C7F9;
+	margin:5px;
+	cursor: pointer;
+}
+
 /* Clicked buttons overwrite */
 .red {
 	background-color: #840000 !important;
@@ -3353,6 +3361,7 @@ div#chatBody a {
     z-index: 3;
     margin-bottom: 65px;
     gap: 0px 5px;
+	pointer-events: auto;
 }
 #chatInput {
 	color: #000;

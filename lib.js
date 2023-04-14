@@ -10748,6 +10748,7 @@ function toggleChat(event = null) { // TODO: I need to have this be MUTE, toggle
 		getById("chatModule").style.display = "flex";
 		getById("chatInput").focus(); // give it keyboard focus
 	} else {
+		
 		session.chat = false;
 		getById("chattoggle").className = "las la-comment-alt toggleSize";
 		getById("chatbutton").className = "float";
