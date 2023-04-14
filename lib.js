@@ -3672,7 +3672,6 @@ function updateMixerRun(e=false){  // this is the main auto-mixing code.  It's a
 			}
 		} else if (session.infocus2===true){
 			sssid = session.streamID;
-			console.log("2.");
 		} else if (session.infocus2 && (session.infocus2 in session.rpcs)){ // if the infocus2 stream is connected
 			if (groups.length || session.allowNoGroup){
 				try {
@@ -6627,7 +6626,17 @@ function applyEffects(track) { // video only please. do not touch audio.  Run up
 		session.canvas.height = 2 * parseInt(session.canvasSource.height / 2);
 		session.canvas.width = 2 * parseInt(session.canvasSource.width / 2);
 		
-		digitalZoom();	
+		digitalZoom();
+	} else if (session.effect == "8") { // manual zoom
+		setupCanvas();
+		session.canvasSource.srcObject.addTrack(track);
+		
+		session.canvasSource.width = track.getSettings().width || 1280;
+		session.canvasSource.height = track.getSettings().height || 720;
+		session.canvas.height = 2 * parseInt(session.canvasSource.height / 2);
+		session.canvas.width = 2 * parseInt(session.canvasSource.width / 2);
+		
+		simpleDraw();	
 	} else if (session.effect == "2") {  // mirror video at a canvas level
 		setupCanvas();
 		session.canvasSource.srcObject.addTrack(track);
@@ -7908,6 +7917,95 @@ async function getFaces(){
 	
 	getFacesActive=false;
 }
+
+//////
+
+var simpleDrawMain=false;
+function simpleDraw(reinit=false) {
+	if (session.effect !== "8"){return;}
+	if (simpleDrawMain){
+		simpleDrawMain(reinit); 
+		return;
+	} else if (simpleDrawMain===null){
+		return;
+	}
+	simpleDrawMain = null;
+	
+	var timers = {};
+	timers.activelyProcessing=false;
+	timers.activelyProcessingDraw = false;
+
+	var ctx = session.canvasCtx;
+	
+	function fde1(){
+		try{
+			warnlog("LOADED simpleDraw()");
+			
+			session.canvas.height = 2 * parseInt(session.canvasSource.height / 2);
+			session.canvas.width = 2 * parseInt(session.canvasSource.width / 2);
+			
+			function draw() {
+				if (timers.activelyProcessingDraw){return;}
+				timers.activelyProcessingDraw = true;
+				clearTimeout(timers.timeoutDraw);
+				if (session.effect !== "8"){
+					timers.activelyProcessingDraw = false;
+					return;
+				}
+				try {
+					if (!session.canvasSource.width){
+						timers.timeoutDraw = setTimeout(function(){draw();},1000);
+						timers.activelyProcessingDraw = false;
+						return
+					}
+					
+					session.canvas.height = 2 * parseInt(session.canvasSource.height / 2);
+					session.canvas.width = 2 * parseInt(session.canvasSource.width / 2);
+					
+					ctx.drawImage(session.canvasSource, 0, 0, session.canvasSource.width, session.canvasSource.height, 0,0,session.canvasSource.width, session.canvasSource.height);
+					
+				} catch(e){errorlog(e);}
+
+				if (document.hidden){
+					timers.lastTimeDraw = timers.nowTimeDraw || new Date().getTime();
+					timers.nowTimeDraw = new Date().getTime();
+					var time  = 33 - (timers.nowTimeDraw - timers.lastTimeDraw);
+					if (time <= 0 ){
+						timers.timeoutDraw = setTimeout(function(){draw();},0);
+					} else {
+						timers.timeoutDraw = setTimeout(function(){draw();},time);
+					}
+					timers.activelyProcessingDraw = false;
+				} else {
+					timers.timeoutDraw = setTimeout(function(){draw();},33);
+					timers.activelyProcessingDraw = false;
+					window.requestAnimationFrame(draw);
+				}
+			
+			}
+		} catch(e){
+			errorlog(e);
+			timers.activelyProcessingDraw = false;
+		}
+			
+		function fde2(reinit=false){
+			if (reinit){
+				if (session.canvasSource && session.canvasSource.srcObject && session.canvasSource.srcObject.getVideoTracks().length){
+					session.canvasSource.width = session.canvasSource.srcObject.getVideoTracks()[0].getSettings().width || 1280;
+					session.canvasSource.height = session.canvasSource.srcObject.getVideoTracks()[0].getSettings().height || 720;
+				}
+			}
+			if (!timers.activelyProcessingDraw){
+				draw();
+			}
+		};
+		fde2();
+
+		return fde2;
+	};
+	simpleDrawMain = fde1();
+}
+////////  END CANVAS EFFECTS  ///////////////////
 //////
 
 var digitalZoomMain=false;
@@ -8872,7 +8970,7 @@ function playoutdelay(UUID){  // applies a delay to all videos
 				try {
 					for (var tid in session.rpcs[UUID].stats){
 						
-						if ((typeof( session.rpcs[UUID].stats[tid])=="object") && ("_trackID" in session.rpcs[UUID].stats[tid]) && (session.rpcs[UUID].stats[tid]._trackID===receiver.track.id) && ("Buffer_Delay_in_ms" in session.rpcs[UUID].stats[tid])){
+						if ((typeof( session.rpcs[UUID].stats[tid])=="object") && ("_trackID" in session.rpcs[UUID].stats[tid]) && (session.rpcs[UUID].stats[tid]._trackID===receiver.track.id) && (session.rpcs[UUID].stats[tid]._type == receiver.track.kind) && ("Buffer_Delay_in_ms" in session.rpcs[UUID].stats[tid])){
 							
 							var sync_offset = 0.0;
 							
@@ -8903,7 +9001,7 @@ function playoutdelay(UUID){  // applies a delay to all videos
 								if (session.sync!==false){
 									var audio_delay = session.sync || 0; // video is typically showing greater delay than audio.
 									audio_delay += target_buffer - session.rpcs[UUID].stats[tid].Buffer_Delay_in_ms
-									if (receiver.track.id in session.rpcs[UUID].inboundAudioPipeline){
+									if ((receiver.track.kind=="audio") && (receiver.track.id in session.rpcs[UUID].inboundAudioPipeline)){
 										if (session.rpcs[UUID].inboundAudioPipeline[receiver.track.id] && session.rpcs[UUID].inboundAudioPipeline[receiver.track.id].delayNode){
 											if (audio_delay<0){audio_delay=0;}
 											try {
@@ -14115,15 +14213,15 @@ function outboundAudioPipeline(){ // this function isn't letting me change the a
 			session.webAudios[webAudio.id] = webAudio;
 			if (session.videoElement && session.videoElement.srcObject){
 				session.videoElement.srcObject.getVideoTracks().forEach(function(track) {
-					if (webAudio.id != track.id) {
+					//if (webAudio.id != track.id) { // presumed to be video, but OBS screws this up with its matching track ids for audio/video. doesn't matter tho
 						webAudio.destination.stream.addTrack(track, session.videoElement.srcObject);
-					}
+					//}
 				});
 			} else if (streamSrc){
 				streamSrc.getVideoTracks().forEach(function(track) {
-					if (webAudio.id != track.id) {
+					//if (webAudio.id != track.id) {
 						webAudio.destination.stream.addTrack(track, streamSrc);
-					}
+					//}
 				});
 			}
 			
@@ -21695,7 +21793,7 @@ function senderAudioUpdate(callback=false){
 				senders.forEach((sender) => {
 					var good = false;
 					if (sender.track && sender.track.id && (sender.track.kind == "audio")) {
-						tracks.forEach(function(track) {
+						tracks.forEach(function(track) { // audio also
 							if (track.id == sender.track.id) {
 								good = true;
 							}
@@ -30784,11 +30882,251 @@ function recordLocalVideo(action = null, videoKbps = 6000, remote=false) { // ev
 	return;
 }
 
+session.onTrack = function(event, UUID){
+		
+	if (session.badStreamList.includes(session.rpcs[UUID].streamID)){
+		errorlog("new connection is contained in badStreamList 2! This shouldn't happen");
+		// we will have none of this.
+		return;
+	}
+	
+	var newTracks = [];
+	var newStream = false;
+	if (event.streams && event.streams[0]){
+		newStream = event.streams[0];
+		newTracks = newStream.getTracks();
+	} else if (event.track){
+		newTracks.push(event.track);
+	} else {
+		errorlog("Something went wrong with incoming track..");
+		return;
+	}
+	
+	if (session.rpcs[UUID].streamSrc){
+		var tracks = session.rpcs[UUID].streamSrc.getTracks();
+		newTracks.forEach(function(trk){
+			tracks.forEach(function(trk2){
+				if ((trk.id == trk2.id) && (trk.kind == trk2.kind)){
+					var index = newTracks.indexOf(trk);
+					if (index > -1) {
+						newTracks.splice(index, 1);
+					}
+				}
+			});
+		});
+	}
+	
+	var screenshare = false;
+	if (session.rpcs[UUID].screenIndexes && session.rpcs[UUID].screenIndexes.length){
+		log("session.rpcs[UUID].screenIndexes: " + session.rpcs[UUID].screenIndexes);
+		var receievers = session.rpcs[UUID].getReceivers(); // excluded
+		for (var i=0;i<receievers.length;i++){
+			for (var j=0;j<newTracks.length;j++){
+				if (receievers[i].track && (receievers[i].track.id == newTracks[j].id) && (receievers[i].track.kind == newTracks[j].kind)){
+					for (var k=0;k<session.rpcs[UUID].screenIndexes.length;k++){
+						if (session.rpcs[UUID].screenIndexes[k]==i){
+							screenshare = true;
+							break;
+						}
+					}
+				}
+				if (screenshare){break;}
+			}
+			if (screenshare){break;}
+		}
+	} 
+	
+	log("screenshare: "+screenshare);
+	
+	try {
+		var index = newTracks.length;
+		while (index--){
+			if (newTracks[index].kind == "video"){
+				if ((session.novideo !== false) && (!session.novideo.includes(session.rpcs[UUID].streamID))){
+					newTracks.splice(index,1);
+					continue;
+				} else if (session.rpcs[UUID].settings && session.rpcs[UUID].settings.allowscreen && screenshare){
+					//newTracks.splice(index,1);
+					continue;
+				} else if (session.rpcs[UUID].settings && !session.rpcs[UUID].settings.video){
+					newTracks.splice(index,1);
+					continue;
+				}
+			} else if (newTracks[index].kind == "audio"){
+				if ((session.noaudio !== false) && (!session.noaudio.includes(session.rpcs[UUID].streamID))){
+					newTracks.splice(index,1);
+					continue;
+				} else if (session.rpcs[UUID].settings && session.rpcs[UUID].settings.allowscreen && screenshare){
+					//newTracks.splice(index,1);
+					continue;
+				} else if (session.rpcs[UUID].settings && !session.rpcs[UUID].settings.audio){
+					newTracks.splice(index,1);
+					continue;
+				}
+			}
+		}
+	} catch(e){errorlog(e);}
+	
+	if (!newTracks.length){
+		warnlog("NO NEW TRACKS?");
+		return;
+	}
+	
+	
+	if (screenshare){
+		session.setupScreenShareAddon(newTracks, UUID); 
+		return;
+	}
+	
+	//if (session.buffer!==false){
+	playoutdelay(UUID);
+	//}
+	
+	session.directorSpeakerMute(); // apply any mute states to new tracks.
+	session.directorDisplayMute();
+	
+	if (newStream){
+		newStream.onremovetrack = function(e1){
+			try{
+				warnlog("Track was removed");
+				session.rpcs[UUID].streamSrc.getTracks().forEach((trk)=>{
+					if ((trk.id == e1.track.id) && (trk.kind == e1.track.kind)){
+						session.rpcs[UUID].streamSrc.removeTrack(trk);
+					}
+				});
+				if ( e1.track.kind=="video"){
+					updateIncomingVideoElement(UUID, true, false); 
+				} else {
+					updateIncomingVideoElement(UUID, false, true);
+				}
+				updateIncomingVideoElement(UUID); // session.rpcs[UUID].videoElement.srcObject = session.rpcs[UUID].streamSrc;
+				setTimeout(function(){updateMixer();},1);
+			}  catch(e){}
+		};
+		
+		newStream.onerror = function(e1){
+			errorlog(e1);
+			try{
+				warnlog("Track threw an error; going to reconnect it");
+				session.rpcs[UUID].streamSrc.getTracks().forEach((trk)=>{
+					try{
+						if ((trk.id == e1.track.id) && (trk.kind == e1.track.kind)){
+							session.rpcs[UUID].streamSrc.removeTrack(trk);
+						}
+					} catch(e){}
+				});
+				if ( e1.track.kind=="video"){
+					updateIncomingVideoElement(UUID, true, false);
+				} else {
+					updateIncomingVideoElement(UUID, false, true);
+				}
+				setTimeout(function(){updateMixer();},1);
+			}  catch(e){errorlog(e);}
+		};
+	}
+	
+	createRichVideoElement(UUID);
+	
+	if (!session.rpcs[UUID].streamSrc) {
+		session.rpcs[UUID].streamSrc = createMediaStream();
+		mediaSourceUpdated(UUID, session.rpcs[UUID].streamID);
+	}
+	
+	
+	var videoAdded=false;
+	var audioAdded=false;
+	
+	newTracks.forEach((trk)=>{
+		if (trk.kind=="video"){
+			videoAdded=true;
+		} else if (trk.kind=="audio"){
+			audioAdded=true;
+		}
+		log("adding track");
+		session.rpcs[UUID].streamSrc.addTrack(trk);
+	});
+	
+	if (newTracks.length > session.rpcs[UUID].streamSrc.getTracks().length){
+		errorlog("Not all the tracks were added to the local stream; are the tracks' IDs not unique?");
+	}
+	
+	if (isIFrame && session.sendframes){
+		newTracks.forEach((trk)=>{
+			if (trk.kind==="video"){
+				log("STARTING NEW VIDEO TRACK");
+				
+				trk.frameReader = new MediaStreamTrackProcessor(trk).readable.getReader();
+				trk.frameReader.read().then(function processFrame2({done, value}) {
+					if (done) {
+						if (value){
+							value.close();
+						}
+						return;
+					}
+					try {
+						parent.postMessage({"frame":value, UUID:UUID, streamID:session.rpcs[UUID].streamID, trackID: trk.id, kind: "video"}, session.sendframes, [value]);
+					} catch(e){
+						value.close();
+						return;
+					}
+					value.close();
+					trk.frameReader.read().then(processFrame2);
+					
+				});
+			} else if (trk.kind==="audio"){
+				log("STARTING NEW AUDIO TRACK");
+				
+				trk.frameReader = new MediaStreamTrackProcessor(trk).readable.getReader();
+				trk.frameReader.read().then(function processFrameAudio2({done, value}) {
+					if (done) {
+						if (value){
+							value.close();
+						}
+						return;
+					}
+					try {
+						parent.postMessage({"frame":value, UUID:UUID, streamID:session.rpcs[UUID].streamID, trackID: trk.id, kind: "audio"}, session.sendframes, [new ArrayBuffer(value)]);
+					} catch(e){
+						value.close();
+						return;
+					}
+					value.close();
+					trk.frameReader.read().then(processFrameAudio2);
+					
+				});
+			}
+		});
+	}
+	
+	
+	
+	if (audioAdded && videoAdded){
+		updateIncomingVideoElement(UUID);
+	} else if (videoAdded){
+		updateIncomingVideoElement(UUID, true, false);
+	} else if (audioAdded){
+		try {
+			if (session.audioCodec == "lyra"){ // not supported currently
+				lyraDecode(event.receiver);
+			} 
+		} catch(e){errorlog(e);}
+		updateIncomingVideoElement(UUID, false, true);
+		if (!session.roomid && session.view && !session.permaid){
+			setTimeout(function(){updateMixer();},10); // video already has an auto-start, with aspect ratio size change. audio doesn't.
+		}
+	}
+	
+	return session;
+	
+};
+
 
 function updateIncomingVideoElement(UUID, video=true, audio=true){
 	
-	if (!session.rpcs[UUID].videoElement){return;}
-	if (!session.rpcs[UUID].streamSrc){return;}
+	if (!session.rpcs[UUID].videoElement){
+		return;}
+	if (!session.rpcs[UUID].streamSrc){
+		return;}
 	
 	if (!session.rpcs[UUID].videoElement.srcObject) {
 		session.rpcs[UUID].videoElement.srcObject = createMediaStream();
@@ -30796,10 +31134,11 @@ function updateIncomingVideoElement(UUID, video=true, audio=true){
 	
 	if (video){
 		var tracks = session.rpcs[UUID].videoElement.srcObject.getVideoTracks(); // add video track
+		
 		session.rpcs[UUID].streamSrc.getVideoTracks().forEach((trk)=>{
 			var added = false;
 			tracks.forEach(trk2 =>{
-				if (trk2.id == trk.id){
+				if ((trk.id == trk2.id) && (trk.kind == trk2.kind)){
 					added=true;
 				}
 			});
@@ -30856,9 +31195,9 @@ function updateIncomingAudioElement(UUID){ // this can be called when turning on
 			tracks2.forEach(trk2 =>{
 				if (trk2.label && (trk2.label == "MediaStreamAudioDestinationNode")){ // an old morphed node; delete it.
 					session.rpcs[UUID].videoElement.srcObject.removeTrack(trk2);
-				} else if (track.id == trk2.id){ // maybe it didn't morph; already added either way
+				} else if ((track.id == trk2.id) && (track.kind == trk2.kind)){ // maybe it didn't morph; already added either way
 					added = true;
-				} else if ((trk2.id == tracks[0].id) && (track.id != tracks[0].id)){ // remove original audio track that is now morphed
+				} else if ((tracks[0].id == trk2.id) && (tracks[0].kind == trk2.kind) && (track.id != tracks[0].id)){ // remove original audio track that is now morphed
 					session.rpcs[UUID].videoElement.srcObject.removeTrack(trk2);
 				}
 			});
@@ -30877,7 +31216,7 @@ function updateIncomingAudioElement(UUID){ // this can be called when turning on
 		session.rpcs[UUID].streamSrc.getAudioTracks().forEach((trk)=>{
 			var added = false;
 			tracks.forEach(trk2 =>{
-				if (trk2.id == trk.id){
+				if ((trk.id == trk2.id) && (trk.kind == trk2.kind)){
 					added=true;
 					expected.push(trk2); // 
 				}
@@ -30889,7 +31228,7 @@ function updateIncomingAudioElement(UUID){ // this can be called when turning on
 		tracks.forEach((trk)=>{
 			var added = false;
 			expected.forEach((trk2)=>{
-				if (trk2.id == trk.id){
+				if ((trk.id == trk2.id) && (trk.kind == trk2.kind)){
 					added=true;
 				}
 			});
@@ -31792,6 +32131,11 @@ function effectsDynamicallyUpdate(event, ele){
 		
 		getById("selectEffectAmountInput").value = session.effectValue;
 		getById("selectEffectAmountInput3").value = session.effectValue;
+		updateRenderOutpipe();
+		return;
+	}
+	
+	if (session.effect === "8"){ // like zoom but none
 		updateRenderOutpipe();
 		return;
 	}
@@ -32797,7 +33141,7 @@ function whipClient(){ // publish to whip.vdo.ninja with obs, to use.  experimen
 				socket.close();
 			} catch(e){}
 		}
-		console.log("Trying to load websocket...");
+		log("Trying to load whip websocket...");
 		
 		socket = new WebSocket("wss://whip.vdo.ninja");
 		
@@ -32871,8 +33215,8 @@ async function processWHIP(data){ // LISTEN FOR REMOTE WHIP
 	await session.setupIncoming(msg); // could end up setting up the peer the wrong way.
 	
 	try {
-		session.rpcs[msg.UUID].addTransceiver('video', {direction: 'recvonly'});
-		session.rpcs[msg.UUID].addTransceiver('audio', {direction: 'recvonly'});
+	//	session.rpcs[msg.UUID].addTransceiver('video', {direction: 'recvonly'});
+	//	session.rpcs[msg.UUID].addTransceiver('audio', {direction: 'recvonly'});
 	} catch(e){errorlog(e);}
 	
 	session.rpcs[msg.UUID].whip = true;
@@ -33154,7 +33498,7 @@ function whepOut(){ // publish to whip.vdo.ninja with obs, to use.  experimental
 				socket.close();
 			} catch(e){}
 		}
-		console.log("Trying to load websocket...");
+		log("Trying to load whep websocket...");
 		
 		socket = new WebSocket("wss://whep.vdo.ninja:81");
 		
@@ -34470,7 +34814,7 @@ function getSenders2(UUID){
 	if (isAlt){
 		senders.forEach((sender)=>{
 			if (sender.track && sender.track.id){
-				if (sender.track.id in screenshareTracks) {
+				if (sender.track.id in screenshareTracks) { // I'm not going to change track.kind, since OBS isn't part of this list
 					fixedSenders.push(sender);
 				}
 			}
@@ -34886,7 +35230,7 @@ async function createSecondStream() { ////////////////////////////
 			} catch(e){log("No Video selected; screensharing?");}
 			
 			session.screenStream.getTracks().forEach(function(track){
-				screenshareTracks[track.id] = true;
+				screenshareTracks[track.id] = true; // obs isn't included, so no point to check track.kind
 			});
 			for (UUID in session.pcs){
 				createSecondStream2(UUID);
@@ -35101,7 +35445,7 @@ function stopSecondScreenshare(){
 				}
 			});
 		}
-		if (track.id in screenshareTracks) {
+		if (track.id in screenshareTracks) { // obs isn't included, so no point to check track.kind
 			session.screenStream.removeTrack(track);
 			track.stop();
 			screenshareTracks[track.id] = false;
