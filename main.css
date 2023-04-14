@@ -3912,6 +3912,9 @@ div#guestFeeds:empty {
 	width:0px;
 	height:0px;
 }
+#press2talk:hover {
+    border-radius: 4px;
+}
 #press2talk[data-enabled="true"] {
 	background: #1e0000;
 	-webkit-box-shadow: inset 0px 0px 1px #b90000;
