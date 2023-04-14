@@ -202,17 +202,17 @@ a {
 }
 a:link {
 	text-decoration: none;
-    color: #508fbb;
+    color: #2ca8ff;
 }
 a:visited {
 	text-decoration: none;
-	color: #508fbb;
+	color: #2ca8ff;
 }
 .darktheme a:hover, a:hover {
-	color: #048AE8;
+	color: #82cbff;
 }
 a:active {
-	color: #508fbb;
+	color: #2ca8ff;
 }
 
 input {
@@ -843,7 +843,7 @@ hr {
 	display: inline-block;
 	width: 269.7px !important;
 	background: #7E7E7E;
-	color: #FCFCFC;
+	color: #000;
 	vertical-align: top;
     border-radius: 4px;
 }
@@ -2355,10 +2355,10 @@ span[data-action-type="stats-graphs-details-container"]>span{
     display: flex;
     flex-wrap: wrap;
     font-size: 0.7em;
-    overflow: hidden;
 }
 .soloButton button {
     margin: 5px 0px 0px 0px;
+    box-shadow: 1px 1px 3px rgba(0,0,0,0.75);
 }
 
 .lowerRaisedHand{
@@ -3542,6 +3542,7 @@ a.task {
 	min-width: 25px;
 	font-size: 0.8em;
 	top: -4.9px;
+    color: white;
 }
 .shift>i {
 	cursor:pointer;
@@ -3593,11 +3594,24 @@ div#roomnotes2 {
     gap: 4px;
 }
 
+.darktheme .controlsGrid .group {
+    background-color: var(--discord-grey-2);
+    border: 1px solid var(--discord-grey-6);
+    border-top: 1px solid var(--discord-grey-0);
+}
+
 .controlsGrid .group {
-	width: 100%;
-	display: flex;
-	flex-direction: column;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
     gap: 4px;
+    padding: 4px 4px 4px 4px;
+    background-color: #bbb;
+    border-radius: 0px 0px 4px 4px;
+    margin-top: -6px;
+    border: 1px solid #ccc;
+    border-top: 1px solid #666;
+    box-shadow: inset 0 10px 5px -10px rgba(0, 0, 0, 1);
 }
 
 .controlsGrid .row {
@@ -3630,6 +3644,8 @@ div#roomnotes2 {
     padding: 5px;
     border-radius: 4px;
     gap: 2px;
+    /* background-color: white; */
+    box-shadow: 1px 1px 3px rgba(0,0,0,0.75);
 }
 
 .controlsGrid
@@ -3718,12 +3734,31 @@ div#roomnotes2 {
     font-size: 12px;
 }
 
+.darktheme .controlsGrid .hideDropMenu:hover {
+    filter: brightness(1.2);
+    background-color: var(--discord-grey-2);
+}
+
+.darktheme .controlsGrid .hideDropMenu {
+    background-color: var(--discord-grey-2);
+    border: 1px solid var(--discord-grey-6);
+}
+
+.controlsGrid .hideDropMenu:hover {
+    background-color: white;
+}
+
 .controlsGrid .hideDropMenu{
-	user-select: none;
-	grid-column: 1;
-	width: 100%;
-	font-size: 80%;
-	cursor: pointer;
+    user-select: none;
+    width: 100%;
+    font-size: 80%;
+    cursor: pointer;
+    background-color: #bbb;
+    border-radius: 4px;
+    padding: 4px 4px 5px 4px;
+    margin-bottom: 0px;
+    border: 1px solid #ddd;
+    box-shadow: 1px 1px 3px rgba(0,0,0,0.75);
 }
 .controlsGrid .orderspan {
 	font-size: 50%;
@@ -3852,6 +3887,7 @@ div#roomnotes2 {
 	position: relative;
 	width: 227px;
 	display: inline-block;
+    color: white;
 }
 .streamID i {
 	margin-left: 1px;
@@ -3859,11 +3895,19 @@ div#roomnotes2 {
 	position: relative;
 	top: 1px;
 }
+.darktheme .soloLink:hover {
+    filter: brightness(1.2);
+    background-color: var(--discord-grey-6);
+}
 .darktheme .soloLink {
     background-color: var(--discord-grey-6);
 }
+
+.soloLink:hover {
+    background-color: white;
+}
 .soloLink {
-    background-color: #CCC;
+    background-color: #f0f0f0;
     cursor: grab;
     font-size: 1.2em;
     font-weight: 700;
@@ -3872,6 +3916,7 @@ div#roomnotes2 {
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
+    box-shadow: 1px 1px 3px rgba(0,0,0,0.75);
 }
 .vidcon>h2 {
 	font-size: 1em;
