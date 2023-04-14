@@ -33244,6 +33244,10 @@ async function processWHIP(data){ // LISTEN FOR REMOTE WHIP
 		};
 	}
 	
+	if ((session.roomid === false) && !session.permaid){
+		getById("header").classList.add("hidden");
+	}
+	
 	log("ICE BUNDLE PROMISE");
 	setTimeout(function(UUID){
 		log("ICE BUNDLE PROMISE TIMEOUT");
