@@ -4410,7 +4410,6 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 	if (session.autohide && (session.scene===false)){// && (session.roomid!==false)){
 		getById("main").onmouseover = showControl; // this is correct. (it's not session.showControls)
 		document.ontouchstart = showControl; // this is correct. (it's not session.showControls)
-		getById("controlButtons").classList.add("zeroHeight");
 		getById("gridlayout").classList.add("nocontrolbar");
 	}
 	
