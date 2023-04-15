@@ -1426,7 +1426,7 @@
 						<span data-translate="disconnect-guest">Hangup</span>
 					</button>
                 </div>
-                <div class="flexBreak"><span>Guest Toggle</span></div>
+                <div class="flexBreak"><span data-translate="guest-toggle">Guest Toggle</span></div>
 				<div class="row two"> 
 					<button data-action-type="solo-chat" class="mainonly advanced" title="Toggle solo voice chat or hold CTRL/CMD when selecting to make it two-way private." onclick="session.toggleSoloChat(this.dataset.UUID, event);">
 						<i class="las la-microphone"></i>
@@ -1451,7 +1451,7 @@
                         <i class="las la-eye-slash"></i> <span data-translate="toggle-remote-display">Blind Guest</span>
                     </button>
                 </div>
-                <div class="flexBreak"><span>Settings</span></div>
+                <div class="flexBreak"><span data-translate="settings">Settings</span></div>
 				<div class="row two"> 
                     <!-- Further Audio/Video Settings -->
                     <div class="row two settingsWrapper" data-cluster="3">
@@ -1465,10 +1465,10 @@
                         </button>
                     </div>
 				</div>				
-                <div class="flexBreak"><span>More</span></div>
+                <div class="flexBreak"><span data-translate="more">More</span></div>
 				<button class="hideDropMenu" onclick="toggleByDataset('1');getById('chevarrow3').classList.toggle('bottom');getById('chevarrow3').classList.toggle('right');">
 					<i id="chevarrow3" style="padding:0px 7px 0 3px;" class="chevron right" aria-hidden="true"></i>
-					<span data-translate="More-scene-options">Scene options</span>
+					<span data-translate="scene-options">Scene options</span>
 				</button>
 				<div class="group hidden" data-cluster="1">
 					<!-- Scene Controls -->

@@ -68,7 +68,7 @@ var miscTranslations = {
 	"unmute" : "un-mute",
 	"mute-guest" : "mute guest",
 	"unhide" : "unhide guest",
-	"hide-guest": "hide guest",
+	"hide-guest": "Hide",
 	"confirm-disconnect-users": "Are you sure you wish to disconnect these users?",
 	"confirm-disconnect-user": "Are you sure you wish to disconnect this user?",
 	"enter-new-codirector-password": "Enter a co-director password to use",
@@ -16568,7 +16568,7 @@ function createControlBox(UUID, soloLink, streamID) {
 
 	var handsID = "hands_" + UUID;
 
-	controls.innerHTML += "<div class='flexBreak'><span>Links</span></div>"; //Seems to create an empty div.
+	controls.innerHTML += "<div class='flexBreak'><span data-translate='links'>Links</span></div>"; //Seems to create an empty div.
 	
 	if (session.hidesololinks==false){
 		controls.innerHTML += "<div class='soloButton' title='A direct solo view of the video/audio stream with nothing else. Its audio can be remotely controlled from here'> \
