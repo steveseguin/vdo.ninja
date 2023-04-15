@@ -1427,28 +1427,28 @@
 					</button>
                 </div>
                 <div class="flexBreak"><span data-translate="guest-toggle">Guest Toggle</span></div>
-				<div class="row two"> 
+				<div class="row three"> 
 					<button data-action-type="solo-chat" class="mainonly advanced" title="Toggle solo voice chat or hold CTRL/CMD when selecting to make it two-way private." onclick="session.toggleSoloChat(this.dataset.UUID, event);">
 						<i class="las la-microphone"></i>
 						<span data-translate="voice-chat">Solo Talk</span>
 					</button>
 					<button data-action-type="solo-video" class="advanced" title="Solo this video everywhere. (Hold CTRL/CMD to just make video larger)" onclick="requestInfocus(this, event);">
 						<i class="las la-user"></i>
-						<span data-translate="solo-video">Highlight guest</span>
+						<span data-translate="solo-video">Highlight</span>
 					</button>
                     <button data-action-type="mute-video-guest" title="Disable this guest's video track" onclick="remoteMuteVideo(this, event);">
                         <i class="las la-video-slash"></i>
-                        <span data-translate="mute-video-guest">disable video</span>
+                        <span data-translate="mute-video-guest">Video on</span>
+                    </button>
+                    <button class="mainonly" data-action-type="toggle-remote-speaker" title="Toggle the remote guest's speaker output" onclick="remoteSpeakerMute(this, event);">
+                        <i class="las la-volume-off"></i> <span data-translate="toggle-remote-speaker">Deafen</span>
                     </button>
                     <button data-action-type="hide-guest" title="Hide this guest everywhere" onclick="remoteHideVideo(this, event);">
                         <i class="las la-user-slash"></i>
-                        <span data-translate="hide-guest">hide guest</span>
-                    </button>
-                    <button class="mainonly" data-action-type="toggle-remote-speaker" title="Toggle the remote guest's speaker output" onclick="remoteSpeakerMute(this, event);">
-                        <i class="las la-volume-off"></i> <span data-translate="toggle-remote-speaker">Deafen Guest</span>
+                        <span data-translate="hide-guest">Hide</span>
                     </button>
                     <button class="mainonly" data-action-type="toggle-remote-display" title="Toggle the remote guest's display output" onclick="remoteDisplayMute(this, event);">
-                        <i class="las la-eye-slash"></i> <span data-translate="toggle-remote-display">Blind Guest</span>
+                        <i class="las la-eye-slash"></i> <span data-translate="toggle-remote-display">Blind</span>
                     </button>
                 </div>
                 <div class="flexBreak"><span data-translate="settings">Settings</span></div>
