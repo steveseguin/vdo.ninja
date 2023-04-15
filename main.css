@@ -3890,6 +3890,9 @@ div#roomnotes2 {
 	color: var(--discord-text);
     background-color: #7E7E7E;
     padding: 0px 4px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
 }
 
 .contolboxLabel {
