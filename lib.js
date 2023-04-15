@@ -60,14 +60,14 @@ var miscTranslations = {
 	"transfer-guest-to-url" :"Transfer guests to new website URL.\n\nGuests will be prompted to accept unless they are using &consent",
 	"change-url" : "change URL",
 	"mute-in-scene" : "mute in scene",
-	"unmute-guest": "unmute guest",
+	"unmute-guest": "unmute",
 	"undeafen" : "undeafen",
-	"deafen" : "deafen guest",
+	"deafen" : "deafen",
 	"unblind" : "unblind",
-	"blind" : "blind guest",
+	"blind" : "blind",
 	"unmute" : "unmute",
-	"mute-guest" : "mute guest",
-	"unhide" : "unhide guest",
+	"mute-guest" : "mute",
+	"unhide" : "Unhide",
 	"hide-guest": "Hide",
 	"confirm-disconnect-users": "Are you sure you wish to disconnect these users?",
 	"confirm-disconnect-user": "Are you sure you wish to disconnect this user?",
@@ -12196,11 +12196,11 @@ function remoteSpeakerMute(ele,  event=false){
 		if (ele.value == 1) {
 			ele.value = 0;
 			ele.classList.remove("pressed");
-			ele.innerHTML = '<i class="las la-volume-off"></i> <span data-translate="toggle-remote-speaker">deafen guest</span>';
+			ele.innerHTML = '<i class="las la-volume-off"></i> <span data-translate="toggle-remote-speaker">Deafen</span>';
 		} else {
 			ele.value = 1;
 			ele.classList.add("pressed");
-			ele.innerHTML = '<i class="las la-volume-off"></i> <span data-translate="undeafen">undeafen</span>';
+			ele.innerHTML = '<i class="las la-volume-off"></i> <span data-translate="undeafen">Undeafen</span>';
 		}
 		miniTranslate(ele);
 	}
@@ -12297,11 +12297,11 @@ function remoteDisplayMute(ele, event=false) {
 		if (ele.value == 1) {
 			ele.value = 0;
 			ele.classList.remove("pressed");
-			ele.innerHTML = '<i class="las la-eye-slash"></i> <span data-translate="toggle-remote-display">blind guest</span>';
+			ele.innerHTML = '<i class="las la-eye-slash"></i> <span data-translate="toggle-remote-display">Blind</span>';
 		} else {
 			ele.value = 1;
 			ele.classList.add("pressed");
-			ele.innerHTML = '<i class="las la-eye-slash"></i> <span data-translate="unblind">unblind</span>';
+			ele.innerHTML = '<i class="las la-eye-slash"></i> <span data-translate="unblind">Unblind</span>';
 		}
 		miniTranslate(ele);
 	}
@@ -12414,11 +12414,11 @@ function remoteHideVideo(ele,  event=false, skipSend=false) {
 		if (ele.value == 1) {
 			ele.value = 0;
 			ele.classList.remove("pressed");
-			ele.innerHTML = '<i class="las la-user-slash"></i> <span data-translate="hide-guest" >hide</span>';
+			ele.innerHTML = '<i class="las la-user-slash"></i> <span data-translate="hide-guest" >Hide</span>';
 		} else {
 			ele.value = 1;
 			ele.classList.add("pressed");
-			ele.innerHTML = '<i class="las la-user-slash"></i> <span data-translate="unhide-guest" >unhide</span>';
+			ele.innerHTML = '<i class="las la-user-slash"></i> <span data-translate="unhide-guest" >Unhide</span>';
 		}
 		miniTranslate(ele);
 		ele.style.backgroundColor = null;
@@ -12498,7 +12498,7 @@ function updateDirectorVideoHide(UUID) {
 	if (ele[0]) {
 		ele[0].value = 1;
 		ele[0].classList.add("pressed");
-		ele[0].innerHTML = '<i class="las la-user-slash"></i> <span data-translate="unhide-guest" >unhide</span>';
+		ele[0].innerHTML = '<i class="las la-user-slash"></i> <span data-translate="unhide-guest" >Unhide</span>';
 		miniTranslate(ele[0]);
 	}
 	return true;
