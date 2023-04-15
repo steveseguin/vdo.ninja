@@ -60,15 +60,15 @@ var miscTranslations = {
 	"transfer-guest-to-url" :"Transfer guests to new website URL.\n\nGuests will be prompted to accept unless they are using &consent",
 	"change-url" : "change URL",
 	"mute-in-scene" : "mute in scene",
-	"unmute-guest": "un-mute guest",
-	"undeafen" : "un-deafen",
+	"unmute-guest": "unmute guest",
+	"undeafen" : "undeafen",
 	"deafen" : "deafen guest",
-	"unblind" : "un-blind",
+	"unblind" : "unblind",
 	"blind" : "blind guest",
-	"unmute" : "un-mute",
+	"unmute" : "unmute",
 	"mute-guest" : "mute guest",
 	"unhide" : "unhide guest",
-	"hide-guest": "hide guest",
+	"hide-guest": "Hide",
 	"confirm-disconnect-users": "Are you sure you wish to disconnect these users?",
 	"confirm-disconnect-user": "Are you sure you wish to disconnect this user?",
 	"enter-new-codirector-password": "Enter a co-director password to use",
@@ -12137,7 +12137,7 @@ function directMute(ele,  event=false) { // A directing room only is controlled 
 		} else {
 			ele.value = 1;
 			ele.classList.add("pressed");
-			ele.innerHTML = '<i class="las la-microphone-slash"></i> <span data-translate="unmute" >un-mute</span>';
+			ele.innerHTML = '<i class="las la-microphone-slash"></i> <span data-translate="unmute" >unmute</span>';
 		}
 		miniTranslate(ele);
 	}
@@ -12200,7 +12200,7 @@ function remoteSpeakerMute(ele,  event=false){
 		} else {
 			ele.value = 1;
 			ele.classList.add("pressed");
-			ele.innerHTML = '<i class="las la-volume-off"></i> <span data-translate="undeafen">un-deafen</span>';
+			ele.innerHTML = '<i class="las la-volume-off"></i> <span data-translate="undeafen">undeafen</span>';
 		}
 		miniTranslate(ele);
 	}
@@ -12225,7 +12225,7 @@ function updateRemoteSpeakerMute(UUID) {
 	if (ele[0]) {
 		ele[0].classList.add("pressed");
 		ele[0].value = 1;
-		ele[0].innerHTML = '<i class="las la-volume-off"></i> <span data-translate="undeafen">un-deafen</span>';
+		ele[0].innerHTML = '<i class="las la-volume-off"></i> <span data-translate="undeafen">undeafen</span>';
 		miniTranslate(ele[0]);
 	}
 	return true;
@@ -12237,7 +12237,7 @@ function updateRemoteDisplayMute(UUID, blind=true) {
 		if (blind){
 			ele[0].classList.add("pressed");
 			ele[0].value = 1;
-			ele[0].innerHTML = '<i class="las la-eye-slash"></i> <span data-translate="unblind">un-blind</span>';
+			ele[0].innerHTML = '<i class="las la-eye-slash"></i> <span data-translate="unblind">unblind</span>';
 			miniTranslate(ele[0]);
 			return true;
 		} else {
@@ -12301,7 +12301,7 @@ function remoteDisplayMute(ele, event=false) {
 		} else {
 			ele.value = 1;
 			ele.classList.add("pressed");
-			ele.innerHTML = '<i class="las la-eye-slash"></i> <span data-translate="unblind">un-blind</span>';
+			ele.innerHTML = '<i class="las la-eye-slash"></i> <span data-translate="unblind">unblind</span>';
 		}
 		miniTranslate(ele);
 	}
@@ -12414,11 +12414,11 @@ function remoteHideVideo(ele,  event=false, skipSend=false) {
 		if (ele.value == 1) {
 			ele.value = 0;
 			ele.classList.remove("pressed");
-			ele.innerHTML = '<i class="las la-user-slash"></i> <span data-translate="hide-guest" >hide guest</span>';
+			ele.innerHTML = '<i class="las la-user-slash"></i> <span data-translate="hide-guest" >hide</span>';
 		} else {
 			ele.value = 1;
 			ele.classList.add("pressed");
-			ele.innerHTML = '<i class="las la-user-slash"></i> <span data-translate="unhide-guest" >un-hide</span>';
+			ele.innerHTML = '<i class="las la-user-slash"></i> <span data-translate="unhide-guest" >unhide</span>';
 		}
 		miniTranslate(ele);
 		ele.style.backgroundColor = null;
@@ -12466,11 +12466,11 @@ function remoteMuteVideo(ele,  event=false, skipSend=false) {
 		if (ele.value == 1) {
 			ele.value = 0;
 			ele.classList.remove("pressed");
-			ele.innerHTML = '<i class="las la-video-slash"></i> <span data-translate="mute-video-guest" >disable video</span>';
+			ele.innerHTML = '<i class="las la-video-slash"></i> <span data-translate="mute-video-guest" >Video on</span>';
 		} else {
 			ele.value = 1;
 			ele.classList.add("pressed");
-			ele.innerHTML = '<i class="las la-video-slash"></i> <span data-translate="unmute-video-guest" >allow video</span>';
+			ele.innerHTML = '<i class="las la-video-slash"></i> <span data-translate="unmute-video-guest" >Video off</span>';
 		}
 		miniTranslate(ele);
 		ele.style.backgroundColor = null;
@@ -12498,7 +12498,7 @@ function updateDirectorVideoHide(UUID) {
 	if (ele[0]) {
 		ele[0].value = 1;
 		ele[0].classList.add("pressed");
-		ele[0].innerHTML = '<i class="las la-user-slash"></i> <span data-translate="unhide-guest" >un-hide</span>';
+		ele[0].innerHTML = '<i class="las la-user-slash"></i> <span data-translate="unhide-guest" >unhide</span>';
 		miniTranslate(ele[0]);
 	}
 	return true;
@@ -12508,7 +12508,7 @@ function updateDirectorVideoMute(UUID) {
 	if (ele[0]) {
 		ele[0].value = 1;
 		ele[0].classList.add("pressed");
-		ele[0].innerHTML = '<i class="las la-video-slash"></i> <span data-translate="unmute-video-guest" >allow video</span>';
+		ele[0].innerHTML = '<i class="las la-video-slash"></i> <span data-translate="unmute-video-guest" >Video off</span>';
 		miniTranslate(ele[0]);
 	}
 	return true;
@@ -16568,7 +16568,7 @@ function createControlBox(UUID, soloLink, streamID) {
 
 	var handsID = "hands_" + UUID;
 
-	controls.innerHTML += "<div class='flexBreak'><span>Links</span></div>"; //Seems to create an empty div.
+	controls.innerHTML += "<div class='flexBreak'><span data-translate='links'>Links</span></div>"; //Seems to create an empty div.
 	
 	if (session.hidesololinks==false){
 		controls.innerHTML += "<div class='soloButton' title='A direct solo view of the video/audio stream with nothing else. Its audio can be remotely controlled from here'> \
@@ -17490,7 +17490,7 @@ function gotDevices(deviceInfos, miconly=false) {
 		}
 
 		option = document.createElement('option');
-		option.text = "Disable Video";
+		option.text = "Video on";
 		option.value = "ZZZ";
 		videoSelect.appendChild(option); // NO AUDIO OPTION
 		
@@ -18069,7 +18069,7 @@ function gotDevices2(deviceInfos) {
 		}
 
 		var option = document.createElement('option'); // no video
-		option.text = "Disable Video";
+		option.text = "Video on";
 		option.value = "ZZZ";
 		videoSelect.appendChild(option);
 		
