@@ -1595,9 +1595,10 @@ body.darktheme{
 
 .gowebcam {
 	font-size: 110%;
-	border: 3px solid #DDDDDD;
+	border: 1px solid #ccc;
+	background-color: #f0f0f0;
+    color: black;
 	cursor: pointer;
-	background-color: #DDDDDD;
 	margin: 20px;
 	padding: 10px 50px;
 }
@@ -2241,9 +2242,12 @@ label {
     max-width: 50%;
     gap: 5px;
 }
-.graphSection>span {
-	font-size: 10px;
+.darktheme .graphSection > span {
+    color: var(--discord-text)
+}
+.graphSection > span {
     display: block;
+	font-size: 10px;
     height: 50px;
 }
 .graphSection>span:last-child{
@@ -2832,17 +2836,47 @@ audio.fileshare::-webkit-media-controls-play-button, video.fileshare::-webkit-me
 	border: solid 1px #dfdfdf !important;
 	box-shadow: 1px 1px 2px #cfcfcf !important;
 }
+
+.darktheme .popup-message {
+    background-color: var(--discord-grey-1);
+    border-color: var(--discord-grey-3);
+    color: var(--discord-text);
+    box-shadow: 1px 1px 3px black;
+}
+
 .popup-message {
 	display: none;
 	text-align: center;
 	position: absolute;
-	z-index: 35 !important;
-	padding: 3px !important;
-	min-width: 180px !important;
-	background-color: #fff !important;
-	border: solid 1px #dfdfdf !important;
-	box-shadow: 1px 1px 2px #cfcfcf !important;
+	z-index: 35;
+	padding: 5px;
+    border-radius: 4px;
+	min-width: 180px;
+	background-color: #fff;
+	border: solid 1px #dfdfdf;
+	box-shadow: 1px 1px 2px #cfcfcf;
 }
+
+.darktheme .popup-message ul {
+    list-style: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAkAAAALCAYAAACtWacbAAAAr0lEQVQYlY3QMUoDUBAE0KciNtpI+hQ5gdhZ5QIewwN4EisJpM0RhJRiZSt4A8EynWlCig0j+wttdODzYXZndhj/QlX9frOqeq6q96paZ3aMNW7b8AorTPCBRcijKJrI4gsuscXNSBKnDaZ4xQX2OGtBnL+X7lp5jhNc9x/HR8xybmR5aKeBXQs3cQreMO/BKb46U7JOxlJCP7Uyp++bX+JzdJQ+0kv6SU8/uvsbOACH0VkbmsdQwQAAAABJRU5ErkJggg==);
+}
+
+.popup-message ul {
+    list-style: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAkAAAAJCAYAAADgkQYQAAAA/ElEQVQYlTWPwUrEMBCGJ2mUNKZxIbRQ2oPeRT34OH2HPfQ5eugzeRG8rOLdvRVagm5Jm+DSILO0c5kZZub/vyF1XcMWTdNgda2UeqSUSmvt736/P7C2bZ9DCN8hhBMAxEqpJ601H4bhJ4RwxCsqpdwJIe6wieP4Icsy3nWdt9Z+rIdAlFIvWmuJAynlVRRFsCwLTNPknXNfAODoOI6fxhhfliUnhNCqql4xF0Vxg9bISFbmGK2EEJwxdlGy1p7zPOfGGEvX75xz7n2apnOSJBFaee/fEB6/ZBd6Sm8RPk1T3vf9xgLzPB8ppWRbumeM7VAaGQHgb3U4AcDhH7U6eiFtegoRAAAAAElFTkSuQmCC');
+    margin-left: 14px;
+}
+
+.popup-message li {
+    text-align: left;
+    padding-left: unset;
+    line-height: unset;
+    margin: 0 0 0 18px;
+}
+
+.popup-message a {
+
+}
+
 .context-menu--active {
 	display: block !important;
 }
@@ -5120,9 +5154,6 @@ body.darktheme .actionMessage {
 body.darktheme #chatInput{
     background-color: var(--discord-grey-7);
     color: var(--discord-text)
-}
-body.darktheme .popup-message{
-	background-color: #9b9b9b !important;
 }
 body.darktheme #audioScreenShare1{
     background-color: var(--discord-grey-3);
