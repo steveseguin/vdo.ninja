@@ -144,9 +144,10 @@ tr {
 th {
 	padding:4px;
 }
-.preSelectButton {
+.advancedVideoSettings .preSelectButton {
+    display: inline-block;
     margin: 4px 0 4px 4px;
-    padding: 1px 4px;
+    padding: 2px 8px 1px 8px;
 }
 .meter {
 	display: inline-block;
@@ -674,7 +675,7 @@ body.darktheme .credits>a:visited {
     border-radius: 4px;
     flex: 2;
     height: 24px;
-
+    box-shadow: 1px 1px 3px rgba(0,0,0,0.75);
 }
 
 .advancedAudioSettings div select[data-chosen='false'] { 
@@ -719,6 +720,7 @@ body.darktheme .credits>a:visited {
     padding: 4px;
     align-items: center;
     gap: 4px;
+    box-shadow: 1px 1px 3px rgba(0,0,0,0.75);
 }
 
 .advancedVideoSettings div:nth-child(2) select {
@@ -726,6 +728,7 @@ body.darktheme .credits>a:visited {
     flex: 2;
     height: 24px;
     border-radius: 4px;
+    box-shadow: 1px 1px 3px rgba(0,0,0,0.75);
 }
 
 .advancedVideoSettings div:nth-child(2) button { 
@@ -2347,6 +2350,7 @@ span[data-action-type="stats-graphs-details-container"]>span{
 	overflow: scroll;
     margin: 4px 0 4px 4px;
     padding: 1px 4px;
+    box-shadow: 1px 1px 3px rgba(0,0,0,0.75);
 }
 #add_screen {
 	padding-bottom: 20px;
