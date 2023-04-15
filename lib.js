@@ -15819,13 +15819,13 @@ function requestAudioSettings(ele) {
 	if (ele.value == 1) {
 		ele.value = 0;
 		ele.classList.remove("pressed");
-		getById("advanced_audio_director_" + UUID).innerHTML = "";
-		getById("advanced_audio_director_" + UUID).classList.add("hidden");
+		query("#container_"+UUID+" .advancedAudioSettings").innerHTML = "";
+		query("#container_"+UUID+" .advancedAudioSettings").classList.add("hidden");
 		return false;
 	} else {
 		ele.value = 1;
 		ele.classList.add("pressed");
-		getById("advanced_audio_director_" + UUID).innerHTML = "";
+		query("#container_"+UUID+" .advancedAudioSettings").innerHTML = "";
 		var actionMsg = {};
 		actionMsg.getAudioSettings = true;
 		session.sendRequest(actionMsg, UUID);
@@ -15838,13 +15838,14 @@ function requestVideoSettings(ele) {
 	if (ele.value == 1) {
 		ele.value = 0;
 		ele.classList.remove("pressed");
-		getById("advanced_video_director_" + UUID).innerHTML = "";
-		getById("advanced_video_director_" + UUID).classList.add("hidden");
+		
+		query("#container_"+UUID+" .advancedVideoSettings").innerHTML = "";
+		query("#container_"+UUID+" .advancedVideoSettings").classList.add("hidden");
 		return false;
 	} else {
 		ele.value = 1;
 		ele.classList.add("pressed");
-		getById("advanced_video_director_" + UUID).innerHTML = "";
+		query("#container_"+UUID+" .advancedVideoSettings").innerHTML = "";
 		var actionMsg = {};
 		actionMsg.getVideoSettings = true;
 		session.sendRequest(actionMsg, UUID);
@@ -18327,7 +18328,7 @@ function gotDevicesRemote(deviceInfos, UUID) {
 			};
 			
 			var videoSelectDiv = document.createElement("div");
-			getById("advanced_video_director_" + UUID).appendChild(videoSelectDiv);
+			query("#container_"+UUID+" .advancedVideoSettings").appendChild(videoSelectDiv);
 			videoSelectDiv.appendChild(videoSelect);
 			videoSelectDiv.appendChild(buttonGO);
 		}
@@ -18368,7 +18369,7 @@ function gotDevicesRemote(deviceInfos, UUID) {
 				session.sendRequest(data, UUID); // Viewer is requesting the PUBLISHER
 			}
 			var audioSelectDiv = document.createElement("div");
-			getById("advanced_audio_director_" + UUID).appendChild(audioSelectDiv);
+			query("#container_"+UUID+" .advancedAudioSettings").appendChild(audioSelectDiv);
 			audioSelectDiv.appendChild(audioSelect);
 			audioSelectDiv.appendChild(buttonGO);
 			
@@ -18406,7 +18407,7 @@ function gotDevicesRemote(deviceInfos, UUID) {
 			}
 			
 			var audioOutputSelectContainer = document.createElement("div");
-			getById("advanced_audio_director_" + UUID).appendChild(audioOutputSelectContainer);
+			query("#container_"+UUID+" .advancedAudioSettings").appendChild(audioOutputSelectContainer);
 			audioOutputSelectContainer.appendChild(audioOutputSelect);
 			audioOutputSelectContainer.appendChild(buttonGO);
 		}
@@ -24339,8 +24340,8 @@ function toggleSystemPip(vid) {
 
 function updateDirectorsAudio(dataN, UUID) {
 	var audioEle = document.createElement("div");
-	getById("advanced_audio_director_" + UUID).innerHTML = "";
-	getById("advanced_audio_director_" + UUID).classList.remove("hidden");
+	query("#container_"+UUID+" .advancedAudioSettings").innerHTML = "";
+	query("#container_"+UUID+" .advancedAudioSettings").classList.remove("hidden");
 
 	//log(dataN);
 	if (!dataN.length) {
@@ -25046,7 +25047,7 @@ function updateDirectorsAudio(dataN, UUID) {
 			audioEle.appendChild(input);
 		}
 		
-		getById("advanced_audio_director_" + UUID).appendChild(audioEle);
+		query("#container_"+UUID+" .advancedAudioSettings").appendChild(audioEle);
 	}
 }
 
@@ -25435,9 +25436,9 @@ function updateDirectorsVideo(data, UUID) {
 		}
 	}
 
-	getById("advanced_video_director_" + UUID).innerHTML = "";
-	getById("advanced_video_director_" + UUID).appendChild(videoEle);
-	getById("advanced_video_director_" + UUID).classList.remove("hidden");
+	query("#container_"+UUID+" .advancedVideoSettings").innerHTML = "";
+	query("#container_"+UUID+" .advancedVideoSettings").appendChild(videoEle);
+	query("#container_"+UUID+" .advancedVideoSettings").classList.remove("hidden");
 }
 
 ///////
@@ -35562,8 +35563,8 @@ function createControlBoxScreenshare(UUID, soloLink, streamID) {
 	iframeDetails.id = "iframeDetails_" + UUID; // needed to delete on user disconnect
 	iframeDetails.className = "iframeDetails hidden";
 
-	controls.innerHTML += "<div id='advanced_audio_director_" + UUID + "' class='hidden advancedAudioSettings'></div>";
-	controls.innerHTML += "<div id='advanced_video_director_" + UUID + "' class='hidden advancedVideoSettings'></div>";
+	//controls.innerHTML += "<div id='advanced_audio_director_" + UUID + "' class='hidden advancedAudioSettings'></div>";
+	//controls.innerHTML += "<div id='advanced_video_director_" + UUID + "' class='hidden advancedVideoSettings'></div>";
 
 	var handsID = "hands_" + UUID;
 
