@@ -24387,8 +24387,8 @@ function updateDirectorsAudio(dataN, UUID) {
 			//input.dataset.labelname =  "mic delay (ms):";
 			label.innerText = capitalizeFirstLetter(i).replace(/([a-z])([A-Z])/g, '$1 $2') + " (ms):";
 			
-			
 			var manualInput = document.createElement("input");
+			
 			manualInput.type = "number";
 			manualInput.dataset.keyname = i;
 			manualInput.value = parseFloat(input.value);
