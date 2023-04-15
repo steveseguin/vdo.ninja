@@ -647,7 +647,6 @@ body.darktheme .credits>a:visited {
 
 .advancedAudioSettings, .advancedVideoSettings {
     display: flex;
-    flex-direction: column;
     padding: 5px;
     max-height: 220px;
     overflow-y: auto;
