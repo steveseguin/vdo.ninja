@@ -1351,7 +1351,6 @@
 					</div>
 				</a>
 			</div>
-			<div></div>
 			<div id='guestFeeds' style="display:none">
 				<div id='deleteme'>
 					<div class='vidcon directorMargins' id='fakeguest1' style='min-height: 300px;text-align: center;'><h2><span data-translate="guest-1">Guest 1</span></h2><i class='las la-user-circle' style='font-size:8em; margin: 20px 0px;' aria-hidden='true'></i></div>
@@ -1372,12 +1371,30 @@
 		<!-- Guest & Director Control-Buttons Box -->
 		<div id="controls_blank" class="hidden controlCenterBox">
 			<div class="controlsGrid">
+				<!-- Volume & Mute Controls -->
+				<div class="row fourth">
+					<span class="tooltip" style="border: 0;">
+						<input data-action-type="volume" type="range" min="0" max="200" value="100" title="Remotely change the volume of this guest; updates on release. Dbl-click to reset." oninput="remoteVolumeUI(this)" onchange="remoteVolume(this);" ondblclick="this.value=100;remoteVolume(this);remoteVolumeUI(this);" />
+						<span class="tooltiptext" style='overflow: auto;left: 35%;width: 3em;top: -15px;margin: 0;position: absolute;font-family:"Noto Color Emoji", "Apple Color Emoji", "Segoe UI Emoji", Times, Symbola, Aegyptus,Code2000, Code2001, Code2002, Musica, serif, LastResort;' >100</span>
+					</span>
+					<button data-action-type="mute-guest" class="center" value="0" title="Mute this guest everywhere" onclick="remoteMute(this, event);">
+						<i class="las la-microphone-slash"></i>
+					</button>
+				</div>
 				<!-- General Controls -->
 				<div class="row two"> 
-					<button data-action-type="forward" class="mainonly advanced" title="Move the user to another room, controlled by another director" onclick="directMigrate(this, event);">
-						<i class="las la-paper-plane"></i>
-						<span data-translate="forward-to-room">Transfer</span>
-					</button>
+                    <!-- Video Feed Quality -->
+                    <div class="row three">
+                        <button class="" data-action-type="change-quality1" title="Disable Video Preview" onclick="toggleQualityDirector(0, this.dataset.UUID, this);">
+                            <i class="las la-video-slash"></i>
+                        </button>
+                        <button class="pressed" data-action-type="change-quality2" title="Low-Quality Preview" onclick="toggleQualityDirector(50, this.dataset.UUID, this);">
+                            <i class="las la-video"></i>
+                        </button>
+                        <button class="" data-action-type="change-quality3" title="High-Quality Preview" onclick="toggleQualityDirector(1200, this.dataset.UUID, this);">
+                            <i class="las la-binoculars"></i>
+                        </button>
+                    </div>
 					<button data-action-type="direct-chat" class="mainonly" title="Send a Direct Message to this user." onclick="directorSendMessage(this);">
 						<i class="las la-envelope"></i>
 						<span data-translate="send-direct-chat">Message</span>
@@ -1400,50 +1417,66 @@
 						</button>
 					</span>	
 
+					<button data-action-type="forward" class="mainonly advanced" title="Move the user to another room, controlled by another director" onclick="directMigrate(this, event);">
+						<i class="las la-paper-plane"></i>
+						<span data-translate="forward-to-room">Transfer</span>
+					</button>
 					<button data-action-type="hangup" class="mainonly"  title="Force the user to Disconnect. They can always reconnect." onclick="directHangup(this, event);">
 						<i class="las la-sign-out-alt"></i>
 						<span data-translate="disconnect-guest">Hangup</span>
-
 					</button>
+                </div>
+                <div class="flexBreak"><span>Guest Toggle</span></div>
+				<div class="row two"> 
 					<button data-action-type="solo-chat" class="mainonly advanced" title="Toggle solo voice chat or hold CTRL/CMD when selecting to make it two-way private." onclick="session.toggleSoloChat(this.dataset.UUID, event);">
 						<i class="las la-microphone"></i>
 						<span data-translate="voice-chat">Solo Talk</span>
 					</button>
-
 					<button data-action-type="solo-video" class="advanced" title="Solo this video everywhere. (Hold CTRL/CMD to just make video larger)" onclick="requestInfocus(this, event);">
 						<i class="las la-user"></i>
 						<span data-translate="solo-video">Highlight guest</span>
 					</button>
-					<button data-action-type="addToScene" class="btn-HL-peach advanced" title="Add this Video to any remote '&scene=1'" data-scene="1" onclick="directEnable(this, event);">
-						<i class="las la-plus-square"></i>
-						<span data-translate="add-to-scene">add to scene 1</span>
-					</button>
-				</div>
-				
-				<!-- Volume & Mute Controls -->
-				<div class="row fourth">
-					<span class="tooltip" style="border: 0;">
-						<input data-action-type="volume" type="range" min="0" max="200" value="100" title="Remotely change the volume of this guest; updates on release. Dbl-click to reset." oninput="remoteVolumeUI(this)" onchange="remoteVolume(this);" ondblclick="this.value=100;remoteVolume(this);remoteVolumeUI(this);" />
-						<span class="tooltiptext" style='overflow: auto;left: 35%;width: 3em;top: -15px;margin: 0;position: absolute;font-family:"Noto Color Emoji", "Apple Color Emoji", "Segoe UI Emoji", Times, Symbola, Aegyptus,Code2000, Code2001, Code2002, Musica, serif, LastResort;' >100</span>
-					</span>
-					<button data-action-type="mute-guest" class="center" value="0" title="Mute this guest everywhere" onclick="remoteMute(this, event);">
-						<i class="las la-microphone-slash"></i>
-					</button>
-				</div>
-				
-
-				<!----	  /////// DROPDOWN BREAK ////////			-->
-				<span class="hideDropMenu" onclick="toggleByDataset('1');getById('chevarrow3').classList.toggle('bottom');getById('chevarrow3').classList.toggle('right');">
+                    <button data-action-type="mute-video-guest" title="Disable this guest's video track" onclick="remoteMuteVideo(this, event);">
+                        <i class="las la-video-slash"></i>
+                        <span data-translate="mute-video-guest">disable video</span>
+                    </button>
+                    <button data-action-type="hide-guest" title="Hide this guest everywhere" onclick="remoteHideVideo(this, event);">
+                        <i class="las la-user-slash"></i>
+                        <span data-translate="hide-guest">hide guest</span>
+                    </button>
+                    <button class="mainonly" data-action-type="toggle-remote-speaker" title="Toggle the remote guest's speaker output" onclick="remoteSpeakerMute(this, event);">
+                        <i class="las la-volume-off"></i> <span data-translate="toggle-remote-speaker">Deafen Guest</span>
+                    </button>
+                    <button class="mainonly" data-action-type="toggle-remote-display" title="Toggle the remote guest's display output" onclick="remoteDisplayMute(this, event);">
+                        <i class="las la-eye-slash"></i> <span data-translate="toggle-remote-display">Blind Guest</span>
+                    </button>
+                </div>
+                <div class="flexBreak"><span>Settings</span></div>
+				<div class="row two"> 
+                    <!-- Further Audio/Video Settings -->
+                    <div class="row two settingsWrapper" data-cluster="3">
+                        <button data-action-type="advanced-audio-settings" data-active="false" title="Remote Audio Settings" onclick="requestAudioSettings(this);">
+                            <i class="las la-sliders-h"></i>
+                            <span data-translate="advanced-audio-settings">Audio</span>
+                        </button>
+                        <button class="mainonly" data-action-type="advanced-camera-settings" data-active="false" title="Advanced Video Settings" onclick="requestVideoSettings(this);">
+                            <i class="las la-sliders-h"></i>
+                            <span data-translate="advanced-camera-settings">Video</span>
+                        </button>
+                    </div>
+				</div>				
+                <div class="flexBreak"><span>More</span></div>
+				<button class="hideDropMenu" onclick="toggleByDataset('1');getById('chevarrow3').classList.toggle('bottom');getById('chevarrow3').classList.toggle('right');">
 					<i id="chevarrow3" style="padding:0px 7px 0 3px;" class="chevron right" aria-hidden="true"></i>
-					<span data-translate="More-scene-options">More scene options</span>
-				</span>
+					<span data-translate="More-scene-options">Scene options</span>
+				</button>
 				<div class="group hidden" data-cluster="1">
-					<!-- General Controls -->
+					<!-- Scene Controls -->
 					<div class="row two">
-						<button data-action-type="stats-remote" title="Request the statistics of this video in any active scene" onclick="toggleSceneStats(this);">
-							<i class="las la-info-circle"></i>
-							<span data-translate="stats-remote">Scene Stats</span>
-						</button>
+                        <button data-action-type="addToScene" class="advanced" title="Add this Video to any remote '&scene=1'" data-scene="1" onclick="directEnable(this, event);">
+                            <i class="las la-plus-square"></i>
+                            <span data-translate="add-to-scene">add to scene 1</span>
+                        </button>
 						<button data-action-type="mute-scene" title="Remotely Mute this Audio in all remote '&scene' views" onclick="directMute(this, event);">
 							<i class="las la-microphone-slash"></i>
 							<span data-translate="mute-scene">mute in scenes</span>
@@ -1451,7 +1484,7 @@
 					</div>
 
 					<!-- Row of Scenes -->
-					<div class="row four advanced">
+					<div class="row six advanced">
 						<button class="btn-HL-peach" data-action-type="addToScene" data-scene="2" title="Add to Scene 2" onclick="directEnable(this, event);">
 							<span>S2</span>
 						</button>
@@ -1464,22 +1497,19 @@
 						<button class="btn-HL-peach" data-action-type="addToScene" data-scene="5" title="Add to Scene 5" onclick="directEnable(this, event);">
 							<span>S5</span>
 						</button>
-
 						<button class="btn-HL-peach" data-action-type="addToScene" data-scene="6" title="Add to Scene 6" onclick="directEnable(this, event);">
 							<span>S6</span>
 						</button>
 						<button class="btn-HL-peach" data-action-type="addToScene" data-scene="7" title="Add to Scene 7" onclick="directEnable(this, event);">
 							<span>S7</span>
 						</button>
-						<button class="btn-HL-peach" data-action-type="addToScene" data-scene="8" title="Add to Scene 8" onclick="directEnable(this, event);">
-							<span>S8</span>
-						</button>
-						<button class="btn-HL-peach" data-action-type="addToScene" data-scene="9" title="Add to Scene 9" onclick="directEnable(this, event);">
-							<span>S9</span>
-						</button>
 					</div>
+
+                    <button data-action-type="stats-remote" title="Request the statistics of this video in any active scene" onclick="toggleSceneStats(this);">
+                        <i class="las la-info-circle"></i>
+                        <span data-translate="stats-remote">Scene Stats</span>
+                    </button>
                     <!-- Graph Section for Scenes -->
-                    
 					<div class="row two advanced">
                         <span class="graphSection hidden" data-action-type="stats-graphs-bitrate" >
                             <span class="hidden" data-message="true" data-no-scenes="true">No scenes active</span>
@@ -1496,35 +1526,30 @@
                     </div>
                 </div>
 				
-
-				<!----	  /////// DROPDOWN BREAK ////////			-->
-				<span class="hideDropMenu" onclick="toggleByDataset('2');getById('chevarrow4').classList.toggle('bottom');getById('chevarrow4').classList.toggle('right');">
+				<button class="hideDropMenu" onclick="toggleByDataset('2');getById('chevarrow4').classList.toggle('bottom');getById('chevarrow4').classList.toggle('right');">
 					<i id="chevarrow4" class="chevron right" aria-hidden="true" style="padding:0px 7px 0 3px;" ></i>
-					<span data-translate="additional-controls">Additional controls</span>
-				</span>
+					<span data-translate="additional-controls">Controls</span>
+				</button>
 				<div class="group hidden" data-cluster="2">
 					<!-- General Controls -->
 					<div class="row two">
-						<button data-action-type="hide-guest" title="Hide this guest everywhere" onclick="remoteHideVideo(this, event);">
-							<i class="las la-user-slash"></i>
-							<span data-translate="hide-guest">hide guest</span>
+						<!-- Mix Order Control -->
+						<span class="row three advanced" data-action-type="ordering">
+							<button class="center" data-action-type="order-down" title="Shift this Video Down in Order" onclick="changeOrder(-1,this.dataset.UUID);">
+								<span data-translate="order-down"><i class="las la-minus"></i></span>
+							</button>
+							<span class="orderspan">
+								<p style="text-align: center;font-size: 150%;" data-action-type="order-value" title="Current Index Order of this Video">0</p>
+								<p class="order-label">Mix Order</p>
+							</span>
+							<button class="center" data-action-type="order-up" title="Shift this Video Up in Order" onclick="changeOrder(1,this.dataset.UUID);">
+								<i class="las la-plus"></i>
+							</button>
+						</span>
+						<button class="mainonly" data-action-type="create-timer"  title="Set a countdown timer that this guest sees. CTRL (cmd) + click to pause." onclick="directTimer(this, event);">
+							<i class="las la-clock"></i>
+							<span data-translate="create-timer">Create Timer</span>
 						</button>
-						<button data-action-type="mute-video-guest" title="Disable this guest's video track" onclick="remoteMuteVideo(this, event);">
-							<i class="las la-video-slash"></i>
-							<span data-translate="mute-video-guest">disable video</span>
-						</button>
-						<button class="mainonly" data-action-type="toggle-remote-speaker" title="Toggle the remote guest's speaker output" onclick="remoteSpeakerMute(this, event);">
-							<i class="las la-volume-off"></i> <span data-translate="toggle-remote-speaker">Deafen Guest</span>
-						</button>
-						
-						<button class="mainonly" data-action-type="toggle-remote-display" title="Toggle the remote guest's display output" onclick="remoteDisplayMute(this, event);">
-							<i class="las la-eye-slash"></i> <span data-translate="toggle-remote-display">Blind Guest</span>
-						</button>
-						<button class="mainonly" data-action-type="change-url" title="Remotely reload the guest's page with a new URL" onclick="directPageReload(this, event);">
-							<i class="las la-sync"></i>
-							<span data-translate="change-url">Change URL</span>
-						</button>
-
 						<button data-action-type="recorder-local" title="Start Recording this remote stream to this local drive. *experimental*'" onclick="recordVideo(this, event)">
 							<i class="las la-compact-disc"></i>
 							<span data-translate="record-local"> Record Local</span>
@@ -1533,20 +1558,17 @@
 							<i class="las la-compact-disc"></i>
 							<span data-translate="record-remote"> Record Remote</span>
 						</button>
-						
 						<button  class="mainonly" data-action-type="change-params" style="display:none" title="Change user parameters" onclick="promptUser('transferSettingsTemplate', this.dataset.UUID);">
 							<i class="las la-cog"></i>
 							<span data-translate="change-params">URL Params</span>
 						</button>
-						
+						<button class="mainonly" data-action-type="change-url" title="Remotely reload the guest's page with a new URL" onclick="directPageReload(this, event);">
+							<i class="las la-sync"></i>
+							<span data-translate="change-url">Change URL</span>
+						</button>
 						<button  class="mainonly" data-action-type="open-file-share"  title="Allow the guest to select a file to upload to the director. Once shared, it will show in the chat as a download link." onclick="requestFileUpload(this)">
 							<i class="las la-file-upload"></i>
 							<span data-translate="request-upload"> Request File</span>
-						</button>
-						
-						<button class="mainonly" data-action-type="create-timer"  title="Set a countdown timer that this guest sees. CTRL (cmd) + click to pause." onclick="directTimer(this, event);">
-							<i class="las la-clock"></i>
-							<span data-translate="create-timer">Create Timer</span>
 						</button>
 					</div>
 					
@@ -1593,49 +1615,6 @@
 							<span>G6</span>
 						</button>
 					</div>
-
-					<!-- General Controls -->
-					<div class="row two">
-						<!-- Mix Order Control -->
-						<span class="row three advanced" data-action-type="ordering">
-							<button class="center" data-action-type="order-down" title="Shift this Video Down in Order" onclick="changeOrder(-1,this.dataset.UUID);">
-								<span data-translate="order-down"><i class="las la-minus"></i></span>
-							</button>
-							<span class="orderspan">
-								<p style="text-align: center;font-size: 150%;" data-action-type="order-value" title="Current Index Order of this Video">0</p>
-								<p class="order-label">Mix Order</p>
-							</span>
-							<button class="center" data-action-type="order-up" title="Shift this Video Up in Order" onclick="changeOrder(1,this.dataset.UUID);">
-								<i class="las la-plus"></i>
-							</button>
-						</span>
-
-						<!-- Video Feed Quality -->
-						<div class="row three">
-							<button class="center" data-action-type="change-quality1" title="Disable Video Preview" onclick="toggleQualityDirector(0, this.dataset.UUID, this);">
-								<i class="las la-video-slash"></i>
-							</button>
-							<button class="pressed" data-action-type="change-quality2" title="Low-Quality Preview" onclick="toggleQualityDirector(50, this.dataset.UUID, this);">
-								<i class="las la-video"></i>
-							</button>
-							<button class="center" data-action-type="change-quality3" title="High-Quality Preview" onclick="toggleQualityDirector(1200, this.dataset.UUID, this);">
-								<i class="las la-binoculars"></i>
-							</button>
-						</div>
-					</div>
-					 
-					<!-- Further Audio/Video Settings -->
-					<div class="row two" data-cluster="3">
-						<button data-action-type="advanced-audio-settings" data-active="false" title="Remote Audio Settings" onclick="requestAudioSettings(this);">
-							<i class="las la-sliders-h"></i>
-							<span data-translate="advanced-audio-settings">Audio Settings</span>
-						</button>
-						<button class="mainonly" data-action-type="advanced-camera-settings" data-active="false" title="Advanced Video Settings" onclick="requestVideoSettings(this);">
-							<i class="las la-sliders-h"></i>
-							<span data-translate="advanced-camera-settings">Video Settings</span>
-						</button>
-					</div>
-
 				</div>
 			</div>
 		</div>
@@ -1653,11 +1632,11 @@
 						<i class="las la-microphone-slash"></i>
 						<span data-translate="mute-scene">mute in scene</span>
 					</button>
-					<button data-action-type="solo-video" class="btn-HL-yellow" title="Solo this video everywhere. (Hold CTRL/CMD to just make video larger)" onclick="requestInfocus(this, event);">
+					<button data-action-type="solo-video" class="" title="Solo this video everywhere. (Hold CTRL/CMD to just make video larger)" onclick="requestInfocus(this, event);">
 						<i class="las la-user"></i>
 						<span data-translate="solo-video-director">Highlight</span>
 					</button>
-					<button data-action-type="addToScene" data-scene="1" class="btn-HL-peach" title="Add this Video to any remote '&scene=1'" onclick="directEnable(this, event, true);">
+					<button data-action-type="addToScene" data-scene="1" class="" title="Add this Video to any remote '&scene=1'" onclick="directEnable(this, event, true);">
 						<i class="las la-plus-square"></i>
 						<span data-translate="add-to-scene">add to scene 1</span>
 					</button>

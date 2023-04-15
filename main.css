@@ -9,6 +9,7 @@
     --discord-grey-5: #313338;
     --discord-grey-6: #383a40;
     --discord-grey-7: #404249; 
+    --discord-grey-8: #5e6064; 
     --discord-text: hsl( 210 calc(1 * 9.1%) 87.1% /1);
 
     --darktheme-blue: rgb(33 69 114);
@@ -610,19 +611,19 @@ body.darktheme .credits>a:visited {
 	height: 0.32em;
 	left: 0.15em;
 	position: relative;
-	top: .43em;
+	/* top: .43em; */
 	transform: rotate(-45deg);
 	vertical-align: top;
 	width: 0.32em;
 }
 
 .chevron.bottom::before {
-	top: .28em;
+	/* top: .28em; */
 	transform: rotate(135deg);
 }
 
 .chevron.right::before {
-	top: .28em;
+	/* top: .28em; */
 	transform: rotate(45deg);
 }
 
@@ -648,9 +649,9 @@ body.darktheme .credits>a:visited {
     display: flex;
     flex-direction: column;
     padding: 5px;
-    max-height: 400px;
+    max-height: 220px;
     overflow-y: auto;
-    border-radius: 0px 0px 4px 4px;
+    border-radius: 4px;
     background-color: #ccc;
     width: 100%;
     gap: 4px;
@@ -3526,7 +3527,6 @@ div#chatBody a {
 }
 a.task {
 	width: 100%;
-	margin-top: 10px;
 }
 .directorBlock h2 {
 	text-transform: uppercase;
@@ -3579,6 +3579,10 @@ div#roomnotes2 {
 	text-transform: capitalize;
 }
 
+#yourDirectorStatus {
+    color: var(--discord-text);
+}
+
 /* ---- DIRECTORS PAGE - Guest Controls Box ---- */
 .darktheme .controlCenterBox button {
     background-color: var(--discord-grey-7);
@@ -3595,9 +3599,9 @@ div#roomnotes2 {
 }
 
 .darktheme .controlsGrid .group {
-    background-color: var(--discord-grey-2);
-    border: 1px solid var(--discord-grey-6);
-    border-top: 1px solid var(--discord-grey-0);
+    background-color: var(--discord-grey-3);
+    border: 1px solid var(--discord-grey-8);
+    border-top: 1px solid var(--discord-grey-2);
 }
 
 .controlsGrid .group {
@@ -3644,7 +3648,6 @@ div#roomnotes2 {
     padding: 5px;
     border-radius: 4px;
     gap: 2px;
-    /* background-color: white; */
     box-shadow: 1px 1px 3px rgba(0,0,0,0.75);
 }
 
@@ -3677,11 +3680,12 @@ div#roomnotes2 {
 
 /* Specitic CSS for different elements inside the guest control-buttons */
 .darktheme .controlsGrid .director-message-box {
-    background-color: var(--discord-grey-1);
+    background-color: var(--discord-grey-3);
+    border: 1px solid var(--discord-grey-8);
 }
 
 .darktheme .controlsGrid .director-message-box button {
-    background-color: var(--discord-grey-3);
+    background-color: var(--discord-grey-6);
 }
 
 .controlsGrid .director-message-box {
@@ -3696,7 +3700,8 @@ div#roomnotes2 {
 }
 
 .darktheme .controlsGrid .director-message-box textarea {
-    background-color: var(--discord-grey-4);
+    background-color: var(--discord-grey-6);
+    border: 1px solid var(--discord-grey-7);
     color: var(--discord-text);
 }
 
@@ -3734,32 +3739,20 @@ div#roomnotes2 {
     font-size: 12px;
 }
 
-.darktheme .controlsGrid .hideDropMenu:hover {
-    filter: brightness(1.2);
-    background-color: var(--discord-grey-2);
-}
 
 .darktheme .controlsGrid .hideDropMenu {
-    background-color: var(--discord-grey-2);
-    border: 1px solid var(--discord-grey-6);
-}
-
-.controlsGrid .hideDropMenu:hover {
-    background-color: white;
+    border: 1px solid var(--discord-grey-8);
+    background-color: var(--discord-grey-5);
 }
 
 .controlsGrid .hideDropMenu{
-    user-select: none;
     width: 100%;
-    font-size: 80%;
-    cursor: pointer;
-    background-color: #bbb;
-    border-radius: 4px;
-    padding: 4px 4px 5px 4px;
-    margin-bottom: 0px;
-    border: 1px solid #ddd;
-    box-shadow: 1px 1px 3px rgba(0,0,0,0.75);
 }
+
+.darktheme .controlsGrid .orderspan {
+    color: var(--discord-text);
+}
+
 .controlsGrid .orderspan {
 	font-size: 50%;
 	display: flex;
@@ -3776,8 +3769,8 @@ div#roomnotes2 {
 }
 
 /* Hightlight */
-[data-action-type="solo-video"] {
-    box-shadow: 0 0 3px rgb(175 165 122), inset 0 0 2px yellow;
+.controlsGrid button[data-action-type="solo-video"] {
+    box-shadow: 1px 1px 3px rgba(0,0,0,0.75), inset 0px 0px 3px rgb(255,255,0,0.5);
 }
 
 /* Hightlights for buttons in the guest control-buttons */
@@ -3831,7 +3824,41 @@ div#roomnotes2 {
 	right: 10px;
 }
 .controlCenterBox{
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
     padding: 5px;
+}
+
+.darktheme .controlCenterBox .flexBreak {
+    border-bottom: 1px double var(--discord-grey-7);
+}
+
+.controlCenterBox .flexBreak {
+    width: 100%;
+    border-bottom: 1px #ccc double;
+    margin: 4px 0px;
+    position: relative;
+    user-select: none;
+}
+
+.darktheme .controlCenterBox .flexBreak span {
+    text-shadow: 0px 0px 1px var(--discord-text);
+    background-color: var(--discord-grey-3);
+	color: var(--discord-text);
+}
+
+.controlCenterBox .flexBreak span {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    text-transform: uppercase;
+    font-size: 10px;
+    text-shadow: 0px 0px 1px var(--discord-text);
+	color: var(--discord-text);
+    background-color: #7E7E7E;
+    padding: 0px 4px;
 }
 
 .contolboxLabel {
@@ -5067,7 +5094,6 @@ body.darktheme select{
 } */
 body.darktheme .directorsgrid .vidcon {
     background-color: var(--discord-grey-3);
-	color: var(--discord-text);
 }
 body.darktheme .promptModal {
     background-color: var(--discord-grey-5);
