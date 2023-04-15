@@ -3629,6 +3629,18 @@ div#roomnotes2 {
     gap: 4px;
 }
 
+.controlsGrid button {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.controlsGrid button span {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
 .darktheme .controlsGrid .group {
     background-color: var(--discord-grey-3);
     border: 1px solid var(--discord-grey-8);
