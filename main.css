@@ -3579,6 +3579,10 @@ div#roomnotes2 {
 	text-transform: capitalize;
 }
 
+#yourDirectorStatus {
+    color: var(--discord-text);
+}
+
 /* ---- DIRECTORS PAGE - Guest Controls Box ---- */
 .darktheme .controlCenterBox button {
     background-color: var(--discord-grey-7);
@@ -3644,7 +3648,6 @@ div#roomnotes2 {
     padding: 5px;
     border-radius: 4px;
     gap: 2px;
-    /* background-color: white; */
     box-shadow: 1px 1px 3px rgba(0,0,0,0.75);
 }
 
@@ -3745,6 +3748,11 @@ div#roomnotes2 {
 .controlsGrid .hideDropMenu{
     width: 100%;
 }
+
+.darktheme .controlsGrid .orderspan {
+    color: var(--discord-text);
+}
+
 .controlsGrid .orderspan {
 	font-size: 50%;
 	display: flex;
