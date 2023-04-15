@@ -17490,7 +17490,7 @@ function gotDevices(deviceInfos, miconly=false) {
 		}
 
 		option = document.createElement('option');
-		option.text = "Video on";
+		option.text = "Disable Video";
 		option.value = "ZZZ";
 		videoSelect.appendChild(option); // NO AUDIO OPTION
 		
@@ -18069,7 +18069,7 @@ function gotDevices2(deviceInfos) {
 		}
 
 		var option = document.createElement('option'); // no video
-		option.text = "Video on";
+		option.text = "Disable Video";
 		option.value = "ZZZ";
 		videoSelect.appendChild(option);
 		
@@ -24387,8 +24387,8 @@ function updateDirectorsAudio(dataN, UUID) {
 			//input.dataset.labelname =  "mic delay (ms):";
 			label.innerText = capitalizeFirstLetter(i).replace(/([a-z])([A-Z])/g, '$1 $2') + " (ms):";
 			
-			var manualInput = document.createElement("input");
 			
+			var manualInput = document.createElement("input");
 			manualInput.type = "number";
 			manualInput.dataset.keyname = i;
 			manualInput.value = parseFloat(input.value);
