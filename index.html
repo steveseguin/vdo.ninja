@@ -56,7 +56,7 @@
 		<meta property="twitter:image" content="./media/vdoNinja_logo_full.png" />
 		<meta name="msapplication-TileColor" content="#da532c" />
 		<meta name="theme-color" content="#ffffff" />
-		<link rel="stylesheet" href="./main.css?ver=298" />
+		<link rel="stylesheet" href="./main.css?ver=299" />
 		<script type="text/javascript" crossorigin="anonymous" src="./thirdparty/adapter.js"></script>
 		<style id="lightbox-animations" type="text/css"></style>
 		<!-- <link rel="manifest" href="manifest.json" /> -->
@@ -83,7 +83,7 @@
 		
 		<script type="text/javascript" crossorigin="anonymous"  src="./thirdparty/CodecsHandler.js?ver=47"></script>
 		<script type="text/javascript" crossorigin="anonymous" src="./thirdparty/aes.js"></script>
-		<script type="text/javascript" crossorigin="anonymous" src="./webrtc.js?ver=614"></script>
+		<script type="text/javascript" crossorigin="anonymous" src="./webrtc.js?ver=615"></script>
 		<input id="zoomSlider" type="range" style="display: none;" />
 		<span id="electronDragZone" style="pointer-events: none; z-index:-10; position:absolute;top:0;left:0;width:100%;height:2%;-webkit-app-region: drag;min-height:20px;"></span>
 		<div id="header">
@@ -1029,46 +1029,46 @@
 						<input type="checkbox" data-param="&s" onchange="updateLink(1,this);">
 						<span class="slider"></span>
 						</label><span class="tooltip" style='cursor: help;position:relative;bottom:2px;font-family:"Noto Color Emoji", "Apple Color Emoji", "Segoe UI Emoji", Times, Symbola, Aegyptus, Code2000, Code2001, Code2002, Musica, serif, LastResort;'>⚠<span class="tooltiptext" style="width: 16em;">This can cause guests to be too quiet or have feedback/echo issues</span></span> <span data-translate="pro-audio-mode">Pro-audio mode</span>
-						<Br />
+						<br />
 						<label class="switch" title="Audio-only sources are visually hidden from scenes">
 						  <input type="checkbox" data-param="&st" onchange="updateLink(1,this);">
 						  <span class="slider"></span>
 						</label>
 						<span data-translate="hide-audio-only-sources">Hide audio-only sources</span>
-						<Br />
+						<br />
 						
 						<label class="switch" title="Allow for remote stat monitoring via the monitoring tool">
 						  <input type="checkbox" data-param="&remote" onchange="updateLink(1,this);">
 						  <span class="slider"></span>
 						</label>
 						<span data-translate="remote-monitoring">Remote Monitoring</span>
-						<Br />
+						<br />
 						
 						<label class="switch" title="The guest will be asked if they want to reload the previous link when revisiting">
 						  <input type="checkbox" data-param="&sticky" onchange="updateLink(1,this);">
 						  <span class="slider"></span>
 						</label>
 						<span data-translate="invite-saved-to-cookie">Invite saved to cookie</span>
-						<Br />
+						<br />
 						
 						<label class="switch" title="Guest will be prompted to enter a Display Name">
 						  <input type="checkbox" data-param="&l" onchange="updateLink(1,this);">
 						  <span class="slider"></span>
 						</label>
 						<span data-translate="ask-for-display-name">Ask for display name</span>
-						<Br />
+						<br />
 						<label class="switch" title="Display Names will be shown in the bottom-left corner of videos">
 						  <input type="checkbox" data-param="&sl" onchange="updateLink(1,this);">
 						  <span class="slider"></span>
 						</label>
 						<span data-translate="show-display-names">Show display names</span>
-						<Br />
+						<br />
 						<label class="switch" title="Guests not actively speaking will be hidden">
 						  <input type="checkbox" data-param="&sas" onchange="updateLink(1,this);">
 						  <span class="slider"></span>
 						</label>
 						<span data-translate="show-active-speaker">Show active speakers</span>
-						<Br />
+						<br />
 						<label class="switch" title="Show a custom welcome message to the joining guest of this invite link">
 						  <input type="checkbox" data-param="&welcome" onchange="updateLinkWelcome(1,this);">
 						  <span class="slider"></span>
@@ -1082,31 +1082,31 @@
 						  <span class="slider"></span>
 						</label>
 						<span class="tooltip" style='cursor: help;position:relative;bottom:2px;font-family:"Noto Color Emoji", "Apple Color Emoji", "Segoe UI Emoji", Times, Symbola, Aegyptus, Code2000, Code2001, Code2002, Musica, serif, LastResort;'>⚠<span class="tooltiptext">This can cause video playback to lag</span></span><span data-translate="1080p60-if-available">1080p60 Video if Available</span>
-						<Br />
+						<br />
 						<label class="switch" title="The default microphone will be pre-selected for the guest">
 						  <input type="checkbox" data-param="&ad" onchange="updateLink(1,this);">
 						  <span class="slider"></span>
 						</label>
 						<span data-translate="auto-select-microphone">Auto-select default microphone</span>
-						<Br />
+						<br />
 						<label class="switch" title="The default camera device will selected automatically">
 						  <input type="checkbox" id="vd1toggle" data-param="&vd" onchange="if(getById('vd0toggle').checked){getById('vd0toggle').checked=false;updateLink(1,getById('vd0toggle'));} updateLink(1,this);">
 						  <span class="slider"></span>
 						</label>
 						<span data-translate="auto-select-camera">Auto-select default camera</span>
-						<Br />
+						<br />
 						<label class="switch" title="The camera will load in a default safe-mode that may work if other modes fail.">
 						  <input type="checkbox" data-param="&safemode" onchange="updateLink(1,this);">
 						  <span class="slider"></span>
 						</label>
 						<span data-translate="compatibility-mode">Compatibility mode</span>
-						<Br />
+						<br />
 						<label class="switch" title="The guest won't have access to changing camera settings or screenshare">
 						  <input type="checkbox" data-param="&ns" onchange="updateLink(1,this);">
 						  <span class="slider"></span>
 						</label>
 						<span data-translate="hide-setting-buttons">Hide settings button</span>
-						<Br />
+						<br />
 						<label class="switch" title="Allow the guests to pick a virtual backscreen effect">
 						  <input type="checkbox" data-param="&effects" onchange="updateLink(1,this);">
 						  <span class="slider"></span>
@@ -1120,15 +1120,13 @@
 						</label>
 						<span data-translate="disable-animated-mixing">Disable animations</span>
 						
-						<Br />
+						<br />
 						<label class="switch" title="This mode encodes the video and audio into chunks, which are shared with multiple viewers. Limited browser support. Can potentially reduce CPU and improve video quality, but will rely on a buffer.">
 						  <input type="checkbox" data-param="&chunked=500" onchange="updateLink(1,this);">
 						  <span class="slider"></span>
 						</label>
 						<span class="tooltip" style='cursor: help;position:relative;bottom:2px;font-family:"Noto Color Emoji", "Apple Color Emoji", "Segoe UI Emoji", Times, Symbola, Aegyptus, Code2000, Code2001, Code2002, Musica, serif, LastResort;'>⚠<span class="tooltiptext">Pretty experimental and limited browser support, though relatively low CPU usage.</span></span>
 						<span data-translate="chunked-mode">P2P Chunked-mode</span>
-						
-						
 						
 					</div>
 					<div  style="display:inline-block;margin-top: 12px; position: relative; margin-right:10px;">
@@ -1137,25 +1135,25 @@
 						  <span class="slider"></span>
 						</label>
 						<span class="tooltip" style='cursor: help;position:relative;bottom:2px;font-family:"Noto Color Emoji", "Apple Color Emoji", "Segoe UI Emoji", Times, Symbola, Aegyptus, Code2000, Code2001, Code2002, Musica, serif, LastResort;'>⚠<span class="tooltiptext"><span data-translate="powerful-computers-only">Only use with powerful computers and small groups!!</span></span></span> <span data-translate="guests-see-HD-video">Guests see HD video</span>
-						<Br />
+						<br />
 						<label class="switch" title="The guest will not see their own self-preview after joining">
 						  <input type="checkbox" data-param="&np" onchange="updateLink(1,this);">
 						  <span class="slider"></span>
 						</label>
 						<span data-translate="no-self-preview">Disable self-preview</span>
-						<Br />
+						<br />
 						<label class="switch" title="Guests will have an option to poke the Director by pressing a button">
 						  <input type="checkbox" data-param="&hand" onchange="updateLink(1,this);">
 						  <span class="slider"></span>
 						</label>
 						<span data-translate="raise-hand-button">Display 'raise-hand' button</span>
-						<Br />
+						<br />
 						<label class="switch" title="Add an audio compressor to the guest's microphone">
 						  <input type="checkbox" data-param="&comp" onchange="updateLink(1,this);">
 						  <span class="slider"></span>
 						</label>
 						<span data-translate="enable-compressor">Enable audio compressor</span>
-						<Br />
+						<br />
 						<label class="switch" title="Add an Equalizer to the guest's microphone that the director can control">
 						  <input type="checkbox" data-param="&eq" onchange="updateLink(1,this);">
 						  <span class="slider"></span>
@@ -1173,7 +1171,7 @@
 						  <span class="slider"></span>
 						</label>
 						<span data-translate="prefix-screenshare">Prefix screenshare IDs</span>	
-						<Br />
+						<br />
 						<label class="switch" title="Allow the guest to select an avatar image for when they hide their camera">
 						  <input type="checkbox" data-param="&avatar" onchange="updateLink(1,this);">
 						  <span class="slider"></span>
@@ -1189,21 +1187,21 @@
 						<span class="tooltip" style='cursor: help;position:relative;bottom:2px;font-family:"Noto Color Emoji", "Apple Color Emoji", "Segoe UI Emoji", Times, Symbola, Aegyptus, Code2000, Code2001, Code2002, Musica, serif, LastResort;'>⚠<span class="tooltiptext">Uses a server to restream data, rather than p2p.</span></span>
 						<span data-translate="meshcast-mode">Stream via server</span>
 						
-						<Br />
+						<br />
 						<label class="switch" title="The guest's self-video preview will appear tiny in the top right">
 						  <input type="checkbox" data-param="&mini" onchange="updateLink(1,this);">
 						  <span class="slider"></span>
 						</label>
 						<span data-translate="mini-self-preview">Mini self-preview</span>
 						
-						<Br />
+						<br />
 						<label class="switch" title="Show an ovelaid grid on the guest's preview video to help with self-centering of the guest.">
 						  <input type="checkbox" data-param="&grid" onchange="updateLink(1,this);">
 						  <span class="slider"></span>
 						</label>
 						<span data-translate="rule-of-thirds">Show rule-of-thirds grid</span>
 						
-						<Br />
+						<br />
 						<label class="switch" title="The guest can only see the Director's video, if provided">
 						  <input type="checkbox" data-param="&broadcast" id="broadcastSlider" onchange="updateLink(1,this);">
 						  <span class="slider"></span>
@@ -1215,19 +1213,19 @@
 						  <span class="slider"></span>
 						</label>
 						<span data-translate="mute-microphone-by-default">Muted; guest can unmute</span>
-						<Br />
+						<br />
 						<label class="switch" title="Have the guest join muted, so only the director can Unmute the guest.">
 						  <input type="checkbox" data-param="&g=0" onchange="updateLink(1,this);">
 						  <span class="slider"></span>
 						</label>
 						<span data-translate="unmute-by-director-only">Muted; director can unmute</span>
-						<Br />
+						<br />
 						<label class="switch" title="The guest will not be asked for a video device on connection">
 						  <input type="checkbox" id="vd0toggle" data-param="&vd=0" onchange="if(getById('vd1toggle').checked){getById('vd1toggle').checked=false;updateLink(1,getById('vd1toggle'));} updateLink(1,this);">
 						  <span class="slider"></span>
 						</label>
 						<span data-translate="guest-joins-with-no-camera">Guest joins with no camera</span>
-						<Br />
+						<br />
 						<label class="switch" title="Make the invite URL encoded, so parameters are harder to tinker with by guests. This also debrands the interface and gives it a new domain name.">
 						  <input type="checkbox" data-param="" id="obfuscate_director_1" onchange="updateLink(1,this);">
 						  <span class="slider"></span>
@@ -1351,6 +1349,7 @@
 					</div>
 				</a>
 			</div>
+			<br />
 			<div id='guestFeeds' style="display:none">
 				<div id='deleteme'>
 					<div class='vidcon directorMargins' id='fakeguest1' style='min-height: 300px;text-align: center;'><h2><span data-translate="guest-1">Guest 1</span></h2><i class='las la-user-circle' style='font-size:8em; margin: 20px 0px;' aria-hidden='true'></i></div>
@@ -2474,11 +2473,11 @@
 			// session.hidehome = true; // If used, 'hide home' will make the landing page inaccessible, along with hiding a few go-home elements.
 			// session.record = false; // uncomment to block users from being able to record via vdo.ninja's built in recording function
 		</script>
-		<script type="text/javascript" crossorigin="anonymous" id="lib-js" src="./lib.js?ver=739"></script>
+		<script type="text/javascript" crossorigin="anonymous" id="lib-js" src="./lib.js?ver=740"></script>
 		<!-- 
 		// If you wish to change branding, blank offers a good clean start.
 		<script type="text/javascript" id="main-js" src="./main.js" data-translation="blank"></script>
 		-->
-		<script type="text/javascript" crossorigin="anonymous" id="main-js" src="./main.js?ver=596"></script>
+		<script type="text/javascript" crossorigin="anonymous" id="main-js" src="./main.js?ver=597"></script>
 	</body>
 </html>
