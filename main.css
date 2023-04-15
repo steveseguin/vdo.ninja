@@ -678,16 +678,10 @@ body.darktheme .credits>a:visited {
     box-shadow: 1px 1px 3px rgba(0,0,0,0.75);
 }
 
-.advancedAudioSettings div select[data-chosen='false'] { 
+.advancedAudioSettings div select[data-chosen='false'], .advancedVideoSettings div select[data-chosen='false'] { 
     border: 2px solid red;
 }
-.advancedAudioSettings div select[data-chosen='true'] { 
-    border: 2px solid green;
-}
-.advancedVideoSettings div select[data-chosen='false'] { 
-    border: 2px solid red;
-}
-.advancedVideoSettings div select[data-chosen='true'] { 
+.advancedAudioSettings div select[data-chosen='true'], .advancedVideoSettings div select[data-chosen='true'] { 
     border: 2px solid green;
 }
 
