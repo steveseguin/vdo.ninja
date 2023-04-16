@@ -5704,9 +5704,16 @@ async function changeLg(lang) {
 				trans = data.titles;
 				var allTitles = document.querySelectorAll('[title]');
 				allTitles.forEach(function(ele) {
-					var key = ele.title.replace(/[\W]+/g, "-").toLowerCase();
-					if (key in trans) {
-						ele.title = trans[key];
+					if (title.dataset.key){
+						if (title.dataset.key in trans) {
+							ele.title = trans[title.dataset.key];
+						}
+					} else {
+						var key = ele.title.replace(/[\W]+/g, "-").toLowerCase();
+						title.dataset.key = key;
+						if (key in trans) {
+							ele.title = trans[key];
+						}
 					}
 				});
 				trans = data.placeholders;

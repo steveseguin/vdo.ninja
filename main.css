@@ -4901,7 +4901,7 @@ input:checked + .slider:before {
 	content: "\f059"; }
 .la-language:before {
 	content: "\f1ab"; }
-.la.la-calendar:before {
+.la-calendar:before {
 	content: "\f073"; }
 .la-exclamation-circle:before {
 	content: "\f06a"; }
