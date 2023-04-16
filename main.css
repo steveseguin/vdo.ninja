@@ -3384,7 +3384,6 @@ div#chatBody a {
 #chatModule {
     display: flex;
     flex-wrap: wrap;
-    z-index: 3;
     width: 100%;
     max-width: 500px;
     z-index: 3;
