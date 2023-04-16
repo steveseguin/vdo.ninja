@@ -31057,6 +31057,7 @@ session.onTrack = function(event, UUID){
 	
 	if (newTracks.length > session.rpcs[UUID].streamSrc.getTracks().length){
 		errorlog("Not all the tracks were added to the local stream; are the tracks' IDs not unique?");
+		console.log("streamSrc total tracks: "+session.rpcs[UUID].streamSrc.getTracks().length);
 	}
 	
 	if (isIFrame && session.sendframes){
