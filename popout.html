@@ -1,84 +1,121 @@
 <html>
 <head>
 <meta name="theme-color" content="#ffffff" />
-<link rel="stylesheet" href="./main.css?ver=22" />
+<!-- <link rel="stylesheet" href="./main.css?ver=22" /> -->
 <style>
+
+:root {
+    --discord-grey-0: #121212;
+    --discord-grey-1: #1e1f22;
+	--discord-grey-1a: #1e1f22;
+    --discord-grey-2: #232428;
+    --discord-grey-3: #2b2d31;
+    --discord-grey-4: #2e3035;
+    --discord-grey-5: #313338;
+    --discord-grey-6: #383a40;
+    --discord-grey-7: #404249; 
+    --discord-grey-8: #5e6064; 
+    --discord-text: hsl( 210 calc(1 * 9.1%) 87.1% /1);
+
+    --baby-blue: #BCF;
+}
+
+* {
+    padding: 0;
+    margin: 0;
+    border: 0;
+    box-sizing: border-box;
+}
+
+body{
+    background-color: var(--discord-grey-0);
+    height: 100%;
+    width: 100%;
+}
+
 #chatModule{
     display: flex;
-    flex-wrap: wrap;
-    align-self: center;
-    z-index: 3;
-    margin-bottom: unset;
-    width: 100%;
-    max-width: unset !important;
-    gap: 0px 5px;
-	pointer-events: auto;
+    flex-direction: column;
+    padding: 5px;
+    height: 100%;
     gap: 5px;
-    height: calc(100% - 25px);
+    justify-content: flex-end;
 }
-#chatModule {
-    display: flex;
-    flex-wrap: wrap;
-    z-index: 3;
-    width: 100%;
-    max-width: 500px;
-    z-index: 3;
-    margin-bottom: 65px;
-    gap: 0px 5px;
-	pointer-events: auto;
-    margin-bottom: unset !important;
-    margin: 5px;
-}
+
 #chatBody {
     display: flex;
     flex-direction: column;
-    justify-content: flex-end;
-    z-index: 12;
-    background-color: #0000;
-    border-bottom: 5px #121212 solid;
-    width: 100%;
-    height: 100%;
-    border-radius: 5px;
     gap: 5px;
-    overflow-y: scroll;
-    overflow-wrap: anywhere;
-    height: calc(100% - 25px);
-    max-height: unset;
+    overflow-y: auto;
 }
-#chatInput{
-    color: #ccc;
-    background-color: #404249;
-    padding: 7px 10px 6px 6px;
-    flex: 3;
-    max-height: 25px;
-    z-index: 100;
 
-}
 .outMessage {
-    margin-bottom: unset;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 5px;
+
+    font-family: 'Roboto';
+    font-size: 14px;
+    text-align: right;
+    background-color: var(--baby-blue);
+    border-radius: 4px;
+    padding: 2px 5px;
 }
+
+.outMessage .chat_message {
+    font-weight: bold;
+}
+
 ::-webkit-input-placeholder {
 	color: #ccc !important;
 }
-body{
-    background-color: #121212;
-    justify-content: center;
-    flex-flow: unset;
+
+.controls {
+    display: flex;
+    flex-direction: row;
+    gap: 5px;
+    height: 25px;
+    flex-shrink: 0;
 }
 
-button {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    -webkit-app-region: no-drag;
-    user-select: none;
-    cursor: pointer;
+.controls input {
+    border-radius: 4px;
+    flex: 3;
+    color: var(--discord-text);
+    background-color: var(--discord-grey-5);
+    border: 1px solid var(--discord-grey-8);
+    padding: 0px 5px;
+}
+
+.controls button {
     border-radius: 4px;
     flex: 1;
-    margin: unset;
-    padding: 7px 10px 6px 6px;
-    max-height: 25px;
+    color: var(--discord-text);
+    background-color: var(--discord-grey-2);
+    border: 1px solid var(--discord-grey-8);
 }
+
+/* SCROLL BAR STYLING  */
+
+::-webkit-scrollbar {
+  width: 12px; /* Set the width of the scrollbar for WebKit browsers */
+}
+
+::-webkit-scrollbar-track {
+  background-color: var(--discord-grey-1); /* Set the background color of the scrollbar track */
+  border-radius: 4px; /* Set the border radius of the scrollbar track */
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: var(--discord-grey-7); /* Set the background color of the scrollbar thumb */
+  border-radius: 4px; /* Set the border radius of the scrollbar thumb */
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background-color: var(--discord-grey-8); /* Set the background color of the scrollbar thumb on hover */
+}
+
 </style>
 </head>
 <body>
@@ -88,8 +125,10 @@ button {
 			Welcome to VDO.Ninja! You can send text messages directly to connected peers from here.
 		</div>
 	</div>
-	<input id="chatInput" placeholder="Enter chat message to send here" onkeypress="EnterButtonChat(event)" />
-	<button style="background-color:#fff;" onclick="sendChatMessage()" data-translate='send-chat'>Send</button>
+    <div class="controls">
+        <input id="chatInput" placeholder="Enter chat message to send here" onkeypress="EnterButtonChat(event)" />
+        <button onclick="sendChatMessage()" data-translate='send-chat'>Send</button>
+    </div>
 </div>
 <script>
 
