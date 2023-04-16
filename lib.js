@@ -32997,7 +32997,7 @@ function whipOut(){
 					
 					var contentType = this.getResponseHeader('content-type');
 					
-					if (contentType == "application/sdp"){
+					if (contentType.startsWith("application/sdp")){
 						var jsep = {};
 						jsep.sdp = this.responseText;
 						jsep.type = "answer";
@@ -33052,7 +33052,7 @@ function whipOut(){
 						} */
 						
 						warnlog("Processing answer:");
-						//warnlog(jsep);
+						warnlog(jsep);
 						
 						session.whipOut.setRemoteDescription(jsep).then(function(){
 							warnlog("SHOULD BE CONNECTED?");
@@ -33081,6 +33081,9 @@ function whipOut(){
 					} else if (callback){
 						callback();
 					}
+				} else{
+					console.warn(this.responseText);
+					console.error(this);
 				}
 			};
 			if (type==="trickle-ice-sdpfrag"){
@@ -33450,7 +33453,7 @@ async function whepIn(){ // PLAY WHEP
 					responseLocation = this.getResponseHeader('location');
 					
 					
-					if (contentType == "application/sdp"){
+					if (contentType.startsWith("application/sdp")){
 						var jsep = {};
 						jsep.sdp = this.responseText;
 						jsep.type = "answer";

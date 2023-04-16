@@ -304,12 +304,25 @@
 						<label for="changeText">
 							<i class="las la-upload"></i>
 						</label>
-						<input type="text" id="changeText1" class="inputfield changeText" placeholder="WHIP Publishing URL" " />
+						<input type="text" id="changeText1" class="inputfield changeText" placeholder="WHIP Publishing URL" />
 						<button  onclick="gohere1();" class="gobutton" id="gobutton1">GO</button>
 					</div>
 					<div class="inputCombo" style="width:350px;margin:10 0 10 auto;">
 						<input type="text" id="changeText1a" class="inputfield changeText" placeholder="Authentication Bearer Token (optional)" />
 						<div class="details">⚙️</div>
+					</div>
+				</div>
+				
+				<div id="urlInput1" class="urlInput" title="Put the link you want to load here">
+					
+					<h3>Publish a video from VDO.Ninja to your Twitch channel</h3>
+					
+					<div  class="inputCombo" id="inputCombo1t">
+						<label for="changeText">
+							<i class="las la-upload"></i>
+						</label>
+						<input type="text" id="changeText1t" class="inputfield changeText" placeholder="Enter your Twitch stream token here" />
+						<button  onclick="gohere1t();" class="gobutton" id="gobutton1t">GO</button>
 					</div>
 				</div>
 				
@@ -361,6 +374,7 @@
 var domain = "./";
 
 document.querySelector("#changeText1").value = localStorage.getItem('changeText1') || "";
+document.querySelector("#changeText1t").value = localStorage.getItem('changeText1t') || "";
 document.querySelector("#changeText1a").value = localStorage.getItem('changeText1a') || "";
 document.querySelector("#changeText2").value = localStorage.getItem('changeText2') || "";
 document.querySelector("#changeText3").value = localStorage.getItem('changeText3') || "";
@@ -369,14 +383,22 @@ function gohere1(){
 	if (document.getElementById('changeText1').value && document.getElementById('changeText1a').value){
 		localStorage.setItem('changeText1', document.getElementById('changeText1').value);
 		localStorage.setItem('changeText1a', document.getElementById('changeText1a').value);
-		window.location = domain + "?whippush=" + encodeURIComponent(document.getElementById('changeText1').value) + "&whippushtoken=" + document.getElementById('changeText1a').value;
+		window.location = domain + "?push&whippush=" + encodeURIComponent(document.getElementById('changeText1').value) + "&whippushtoken=" + document.getElementById('changeText1a').value;
 	} else if (document.getElementById('changeText1').value){
 		localStorage.setItem('changeText1', document.getElementById('changeText1').value);
 		localStorage.setItem('changeText1a', "");
-		window.location = domain + "?wc&whippush=" + encodeURIComponent(document.getElementById('changeText1').value);
+		window.location = domain + "?push&whippush=" + encodeURIComponent(document.getElementById('changeText1').value);
 	}
 	
 }
+
+function gohere1t(){
+	if (document.getElementById('changeText1t').value){
+		localStorage.setItem('changeText1t', document.getElementById('changeText1t').value);
+		window.location = domain + "?push&whippush=https%3A%2F%2Ftwitch.vdo.ninja%2F"+ document.getElementById('changeText1t').value;
+	}
+}
+
 function gohere2(){
 	if (document.getElementById('changeText2').value){
 		localStorage.setItem('changeText2', document.getElementById('changeText1').value);
@@ -401,6 +423,7 @@ function resetHistory(){
 	document.querySelector("#changeText1a").value = "";
 	document.querySelector("#changeText2").value = "";
 	document.querySelector("#changeText3").value = "";
+	document.querySelector("#changeText1t").value = "";
 }
 
 (function (w) {

@@ -288,24 +288,20 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 		}
 	}
 	
-	if (urlParams.has('whippush')) { // URL or data:base64 image. Becomes local to this viewer only.  This is like &avatar, but slightly different. Just CSS in this case
-		if (urlParams.get('whippush')){
+	if (urlParams.has('whippush') || urlParams.has('whipout') || urlParams.has('pushwhip')) { // URL or data:base64 image. Becomes local to this viewer only.  This is like &avatar, but slightly different. Just CSS in this case
+		let whippush = urlParams.get('whippush') || urlParams.get('whipout') || urlParams.get('pushwhip');
+		if (whippush){
 			try {
-				session.whipOutput = decodeURIComponent(urlParams.get('whippush'));
+				session.whipOutput = decodeURIComponent(whippush);
 			} catch(e){
 				errorlog(e);
 			}
 		}
 	}
-	if (urlParams.has('whippushtoken')) { // URL or data:base64 image. Becomes local to this viewer only.  This is like &avatar, but slightly different. Just CSS in this case
-		if (urlParams.get('whippushtoken')){
-			try {
-				session.whipOutputToken = urlParams.get('whippushtoken');
-			} catch(e){
-				errorlog(e);
-			}
-		}
+	if (urlParams.has('whippushtoken') || urlParams.has('whipouttoken') || urlParams.has('pushwhiptoken')) {// URL or data:base64 image. Becomes local to this viewer only.  This is like &avatar, but slightly different. Just CSS in this case
+		session.whipOutputToken = urlParams.get('whippushtoken') || urlParams.get('whipouttoken') || urlParams.get('pushwhiptoken') || false;
 	}
+	
 	if (urlParams.has('whepplay')) { // URL or data:base64 image. Becomes local to this viewer only.  This is like &avatar, but slightly different. Just CSS in this case
 		if (urlParams.get('whepplay')){
 			try {
