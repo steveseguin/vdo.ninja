@@ -49,7 +49,7 @@ body{
     overflow-y: auto;
 }
 
-.outMessage {
+.outMessage, .inMessage {
     display: flex;
     align-items: center;
     justify-content: flex-end;
@@ -61,6 +61,11 @@ body{
     background-color: var(--baby-blue);
     border-radius: 4px;
     padding: 2px 5px;
+}
+
+.inMessage {
+    color: var(--discord-text);
+    background-color: var(--discord-grey-7);
 }
 
 .outMessage .chat_message {
