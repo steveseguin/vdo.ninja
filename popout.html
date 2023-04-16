@@ -4,32 +4,80 @@
 <link rel="stylesheet" href="./main.css?ver=22" />
 <style>
 #chatModule{
-    bottom: 0px;
-    position: fixed;
+    display: flex;
+    flex-wrap: wrap;
     align-self: center;
+    z-index: 3;
+    margin-bottom: unset;
     width: 100%;
+    max-width: unset !important;
+    gap: 0px 5px;
+	pointer-events: auto;
+    gap: 5px;
+    height: calc(100% - 25px);
 }
-#chatInput{
-    color: #000;
-    background-color: #FFFE;
-    max-width: 700px;
-    min-width: 390px;
-    font-size: 105%;
-    margin-left: 10px;
-    padding: 3px;
+#chatModule {
+    display: flex;
+    flex-wrap: wrap;
+    z-index: 3;
+    width: 100%;
+    max-width: 500px;
+    z-index: 3;
+    margin-bottom: 65px;
+    gap: 0px 5px;
+	pointer-events: auto;
+    margin-bottom: unset !important;
+    margin: 5px;
 }
 #chatBody {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
     z-index: 12;
     background-color: #0000;
+    border-bottom: 5px #121212 solid;
     width: 100%;
+    height: 100%;
     border-radius: 5px;
-    padding: 1px 7px;
+    gap: 5px;
     overflow-y: scroll;
     overflow-wrap: anywhere;
-    max-height: 800px;
+    height: calc(100% - 25px);
+    max-height: unset;
+}
+#chatInput{
+    color: #ccc;
+    background-color: #404249;
+    padding: 7px 10px 6px 6px;
+    flex: 3;
+    max-height: 25px;
+    z-index: 100;
+
+}
+.outMessage {
+    margin-bottom: unset;
+}
+::-webkit-input-placeholder {
+	color: #ccc !important;
 }
 body{
-	background-color:#EEE;
+    background-color: #121212;
+    justify-content: center;
+    flex-flow: unset;
+}
+
+button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    -webkit-app-region: no-drag;
+    user-select: none;
+    cursor: pointer;
+    border-radius: 4px;
+    flex: 1;
+    margin: unset;
+    padding: 7px 10px 6px 6px;
+    max-height: 25px;
 }
 </style>
 </head>
@@ -41,7 +89,7 @@ body{
 		</div>
 	</div>
 	<input id="chatInput" placeholder="Enter chat message to send here" onkeypress="EnterButtonChat(event)" />
-	<button style="width:60px;background-color:#ACA;" onclick="sendChatMessage()" data-translate='send-chat'>Send</button>
+	<button style="background-color:#fff;" onclick="sendChatMessage()" data-translate='send-chat'>Send</button>
 </div>
 <script>
 
