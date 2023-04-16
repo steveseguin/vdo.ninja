@@ -3309,9 +3309,15 @@ function remoteFocusZoomRequest(event){
 	}
 };
 
+function mediaAudioTrackUpdated(UUID, streamID){
+	pokeIframeAPI("new-audio-track-added", true, UUID, streamID); //  videoTrack is whether video. audio will be false I guess.
+}
+function mediaVideoTrackUpdated(UUID, streamID){
+	pokeIframeAPI("new-video-track-added", true, UUID, streamID); //  videoTrack is whether video. audio will be false I guess.
+}
 function mediaSourceUpdated(UUID, streamID){
-	pokeIframeAPI("new-track-added", true, UUID, streamID); //  videoTrack is whether video. audio will be false I guess.
-	pokeAPI("tracksAdded", streamID);
+	pokeIframeAPI("new-stream-added", true, UUID, streamID); //  videoTrack is whether video. audio will be false I guess.
+	pokeAPI("streamAdded", streamID);
 }
 
 function showControlBar(vel){
@@ -13233,7 +13239,7 @@ function publishWebcam(btn = false, miconly=false) {
 	
 	if (session.dataMode){ // skip the media stuff.
 		errorlog("this shoulnd't happen..");
-		session.postPublish();
+		session.postPublish(); 
 		return;
 	}
 	
@@ -22439,6 +22445,8 @@ session.postPublish = async function(){
 	clearInterval(session.updateLocalStatsInterval);
 	session.updateLocalStatsInterval = setInterval(function(){updateLocalStats();},session.statsInterval);	
 	
+	pokeIframeAPI("screen-share-state", false);
+	
 	session.seeding=true;			
 	session.seedStream();
 	
@@ -31176,6 +31184,7 @@ function updateIncomingVideoElement(UUID, video=true, audio=true){
 						}
 					}
 					session.rpcs[UUID].videoElement.srcObject.addTrack(trk); 
+					mediaVideoTrackUpdated(UUID, session.rpcs[UUID].streamID);
 				}
 			}
 		});
@@ -31213,6 +31222,7 @@ function updateIncomingAudioElement(UUID){ // this can be called when turning on
 			});
 			if (!added){
 				session.rpcs[UUID].videoElement.srcObject.addTrack(track);
+				mediaAudioTrackUpdated(UUID, session.rpcs[UUID].streamID);
 			}
 			
 		} else {
@@ -31233,6 +31243,7 @@ function updateIncomingAudioElement(UUID){ // this can be called when turning on
 			});
 			if (!added){
 				session.rpcs[UUID].videoElement.srcObject.addTrack(trk);
+				mediaAudioTrackUpdated(UUID, session.rpcs[UUID].streamID);
 			}
 		});
 		tracks.forEach((trk)=>{
