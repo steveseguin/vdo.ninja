@@ -2224,7 +2224,7 @@
 			additional2+="&showdirector";
 		}
 		
-		var iframesrc = "./index.html?ltb=350&sstype=3&transparent&hideheader&hidetranslate&cleandirector&chatbutton=0&director="+roomname+additional+additional2+"&b64css="+injectCSS;
+		var iframesrc = "./index.html?ltb=350&transparent&hideheader&hidetranslate&cleandirector&chatbutton=0&director="+roomname+additional+additional2+"&b64css="+injectCSS;
 		
 		var params = window.location.search || "";
 		
@@ -2285,7 +2285,7 @@
 			this.state = !this.state; 
 			this.dataset.state = this.state;
 			
-			iframe.contentWindow.postMessage({"previewMode":this.state, "layout":currentLayout, "bitrate":35, "target": "*"}, '*');
+			iframe.contentWindow.postMessage({"previewMode":this.state, "layout":currentLayout, "target": "*"}, '*');
 			if (this.state){
 				this.innerHTML = "Director View &#x21bb;"; 
 				iframe.classList.add("aspectRatio");
@@ -2346,7 +2346,7 @@
 		
 		var a = document.createElement("a");
 		a.innerHTML = "Invite Guest Link 📎"; 
-		a.href = "./?room="+roomname+"&sstype=3&broadcast"+additional;
+		a.href = "./?room="+roomname+"&broadcast"+additional;
 		a.target = "_blank";
 		a.onclick = function(evt){copyFunction(this, evt);};
 		document.getElementById("sources").appendChild(a);

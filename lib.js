@@ -15846,12 +15846,21 @@ function requestInfocus(ele, evt=null, value=null) {
 
 
 function requestAudioSettings(ele) {
+	
 	var UUID = ele.dataset.UUID;
+	
+	try {
+		query("#container_"+UUID+" [data-action-type='advanced-camera-settings']").value = 0;
+		query("#container_"+UUID+" [data-action-type='advanced-camera-settings']").classList.remove("pressed");
+		query("#container_"+UUID+" .advancedVideoSettings").classList.add("hidden");
+		query("#container_"+UUID+" .advancedVideoSettings").innerHTML = "";
+	} catch(e){}
+	
 	if (ele.value == 1) {
 		ele.value = 0;
 		ele.classList.remove("pressed");
-		query("#container_"+UUID+" .advancedAudioSettings").innerHTML = "";
 		query("#container_"+UUID+" .advancedAudioSettings").classList.add("hidden");
+		query("#container_"+UUID+" .advancedAudioSettings").innerHTML = "";
 		return false;
 	} else {
 		ele.value = 1;
@@ -15866,12 +15875,19 @@ function requestAudioSettings(ele) {
 
 function requestVideoSettings(ele) {
 	var UUID = ele.dataset.UUID;
+	
+	try {
+		query("#container_"+UUID+" [data-action-type='advanced-audio-settings']").value = 0;
+		query("#container_"+UUID+" [data-action-type='advanced-audio-settings']").classList.remove("pressed");
+		query("#container_"+UUID+" .advancedAudioSettings").classList.add("hidden");
+		query("#container_"+UUID+" .advancedAudioSettings").innerHTML = "";
+	} catch(e){}
+	
 	if (ele.value == 1) {
 		ele.value = 0;
 		ele.classList.remove("pressed");
-		
-		query("#container_"+UUID+" .advancedVideoSettings").innerHTML = "";
 		query("#container_"+UUID+" .advancedVideoSettings").classList.add("hidden");
+		query("#container_"+UUID+" .advancedVideoSettings").innerHTML = "";
 		return false;
 	} else {
 		ele.value = 1;
