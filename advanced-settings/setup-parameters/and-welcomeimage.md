@@ -23,7 +23,7 @@ Example: `&welcomeimage=https://vdo.ninja/alpha/media/old_logo.png`
 `&welcomeimage` lets you specify a welcome image (URL) that appears for a few seconds before fading away once a guest joins.
 
 Example:\
-[`https://vdo.ninja/?welcomeimage=https://vdo.ninja/alpha/media/old_logo.png&webcam`](https://vdo.ninja/?welcomeimage=https://vdo.ninja/alpha/media/old\_logo.png\&webcam)``
+[`https://vdo.ninja/?welcomeimage=https://vdo.ninja/alpha/media/old_logo.png&webcam`](https://vdo.ninja/?welcomeimage=https://vdo.ninja/alpha/media/old\_logo.png\&webcam)
 
 ## Related
 

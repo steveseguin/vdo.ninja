@@ -47,3 +47,9 @@ Transparent and chunked video transfer over VDO.Ninja
 * Note: When doing live playback of chunked-transferred video, there is currently a clicking sound that needs to be resolved still. This clicking does not appear when recording the stream to disk though, so it is still suitable for remote recordings.
 * You can enable it by adding `&chunked` on the publisher side of things. It does not yet work in group rooms, just basic push/view links. It also does not work with Meshcast.
 * Chunked transfer is supported in recent Chromium-based browsers, including OBS v27.2 and newer.
+
+## Related
+
+{% content-ref url="../advanced-settings/settings-parameters/and-nochunked-alpha.md" %}
+[and-nochunked-alpha.md](../advanced-settings/settings-parameters/and-nochunked-alpha.md)
+{% endcontent-ref %}

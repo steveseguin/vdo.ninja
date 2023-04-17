@@ -25,7 +25,7 @@ There are five parameters we will take a look at:
 
 ### The push link sets the target and maximum outgoing video bitrate
 
-``[`&outboundvideobitrate (&ovb)`](../advanced-settings/video-bitrate-parameters/and-outboundvideobitrate.md)\
+[`&outboundvideobitrate (&ovb)`](../advanced-settings/video-bitrate-parameters/and-outboundvideobitrate.md)\
 Sets the target and maximum outgoing video bitrate on the source side.
 
 [https://vdo.ninja/?push=streamid\&ovb=4000](https://vdo.ninja/?push=streamid\&ovb=4000)\
@@ -35,7 +35,7 @@ The push link sets the outgoing video bitrate to 4000-kbps. The view link sees t
 
 ### The push link sets the video bitrate per stream out
 
-``[`&maxvideobitrate (&mvb)`](../advanced-settings/video-bitrate-parameters/and-maxvideobitrate.md)``\
+[`&maxvideobitrate (&mvb)`](../advanced-settings/video-bitrate-parameters/and-maxvideobitrate.md)\
 `&mvb` is similar to `&ovb` but it sets the target and maximum bitrate per stream out.
 
 [https://vdo.ninja/?push=streamid\&mvb=1000](https://vdo.ninja/?push=streamid\&mvb=1000)\
@@ -45,7 +45,7 @@ Every view link has a video bitrate of 1000-kbps.
 
 ### The push link limits the video bitrate to a maximum defined value
 
-``[`&limittotalbitrate (&ltb)`](../advanced-settings/video-bitrate-parameters/limittotalbitrate.md)\
+[`&limittotalbitrate (&ltb)`](../advanced-settings/video-bitrate-parameters/limittotalbitrate.md)\
 Limits the total outbound video bitrate to a defined value.
 
 [https://vdo.ninja/?push=streamid\&ltb=5000](https://vdo.ninja/?push=streamid\&ltb=5000)\
@@ -57,7 +57,7 @@ The video bitrate will be around 2500-kbps (default value), because `&ltb` only 
 
 ### The view link sets the video bitrate per stream in
 
-``[`&videobitrate (&vb)`](../advanced-settings/video-bitrate-parameters/bitrate.md)\
+[`&videobitrate (&vb)`](../advanced-settings/video-bitrate-parameters/bitrate.md)\
 The view link is setting the target and maximum video bitrate per incoming stream.
 
 [https://vdo.ninja/?push=streamid](https://vdo.ninja/?push=streamid)\
@@ -67,7 +67,7 @@ The view link is setting the bitrate per incoming stream (in this case 2000-kbps
 
 ### The view link sets the total video bitrate for all incoming streams combined
 
-``[`&totalscenebitrate (&tsb)`](../advanced-settings/video-bitrate-parameters/and-totalscenebitrate.md)\
+[`&totalscenebitrate (&tsb)`](../advanced-settings/video-bitrate-parameters/and-totalscenebitrate.md)\
 This is similar to [`&vb`](video-bitrate-for-push-view-links.md#the-view-link-sets-the-video-bitrate-per-stream-in) but it sets the target and maximum bitrate for all incoming streams combined.
 
 [https://vdo.ninja/?push=streamid](https://vdo.ninja/?push=streamid)\

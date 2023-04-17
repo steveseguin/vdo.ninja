@@ -18,7 +18,7 @@ As a director of a room you can control the total room bitrate dynamically.
 
 <figure><img src="../.gitbook/assets/image (3) (8).png" alt=""><figcaption><p>The default is (as explained before) 500-kbps. You can increase it op to 4000-kbps.</p></figcaption></figure>
 
-You can control the total room bitrate also with a URL parameter: [`&totalroombitrate=6000`](../advanced-settings/video-bitrate-parameters/totalroombitrate.md)``
+You can control the total room bitrate also with a URL parameter: [`&totalroombitrate=6000`](../advanced-settings/video-bitrate-parameters/totalroombitrate.md)
 
 <figure><img src="../.gitbook/assets/image (176).png" alt=""><figcaption><p>Default is 6000-kbps now with <code>&#x26;totalroombitrate=6000</code></p></figcaption></figure>
 

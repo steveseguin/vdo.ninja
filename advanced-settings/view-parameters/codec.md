@@ -15,25 +15,25 @@ Viewer-Side Option! ([`&view`](view.md), [`&scene`](scene.md), [`&room`](../../g
 
 Example: `&codec=h264`
 
-| Value                                                             | Description                                                                                     |
-| ----------------------------------------------------------------- | ----------------------------------------------------------------------------------------------- |
-| ``[`h264`](codec.md#h264)``                                       | request the h264 codec                                                                          |
-| ``[`vp8`](codec.md#vp8)``                                         | request the VP8 codec                                                                           |
-| ``[`vp9`](codec.md#vp9)``                                         | request the VP9 codec                                                                           |
-| ``[`av1`](codec.md#av1)``                                         | request the AV1 codec                                                                           |
-| ``[`webp`](codec.md#webp)``                                       | request the webp codec                                                                          |
-| ``[`hardware`](codec.md#hardware)``                               | request the h264 codec and[`&h264profile`](../../newly-added-parameters/and-h264profile.md)     |
-| ``[`av1,h264`](codec.md#comma-seperated-update-in-v23-on-alpha)\* | Comma separated values that define the order of preferred video codecs if the primary one fails |
+| Value                                                           | Description                                                                                     |
+| --------------------------------------------------------------- | ----------------------------------------------------------------------------------------------- |
+| [`h264`](codec.md#h264)                                         | request the h264 codec                                                                          |
+| [`vp8`](codec.md#vp8)                                           | request the VP8 codec                                                                           |
+| [`vp9`](codec.md#vp9)                                           | request the VP9 codec                                                                           |
+| [`av1`](codec.md#av1)                                           | request the AV1 codec                                                                           |
+| [`webp`](codec.md#webp)                                         | request the webp codec                                                                          |
+| [`hardware`](codec.md#hardware)                                 | request the h264 codec and[`&h264profile`](../../newly-added-parameters/and-h264profile.md)     |
+| [`av1,h264`](codec.md#comma-seperated-update-in-v23-on-alpha)\* | Comma separated values that define the order of preferred video codecs if the primary one fails |
 
 \*on alpha&#x20;
 
 ### Example usage
 
 `https://vdo.ninja/?view=abc123`**`&codec=h264`**\
-****\
-****`https://vdo.ninja/?room=xxx7654&scene&bitrate=2000`**`&codec=vp9`**\
-****\
-****The `&codec` parameter is added to the viewer-side; so the [`&view`](view.md) or [`&scene`](scene.md) link.
+\
+`https://vdo.ninja/?room=xxx7654&scene&bitrate=2000`**`&codec=vp9`**\
+\
+The `&codec` parameter is added to the viewer-side; so the [`&view`](view.md) or [`&scene`](scene.md) link.
 
 ### **Description**
 

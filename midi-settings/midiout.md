@@ -28,7 +28,7 @@ Allows for sending of MIDI signals to a remote computer. Mirrors even the channe
 
 The remote device must use [`&midiin`](midiin.md) to accept the signal and a peer connection is needed for the signal to take place.
 
-You can disable the video and audio of VDO.Ninja, but still have a basic data-only peer-connection, but using `&videodevice=0&audiodevice=0` or [`&novideo`](../advanced-settings/video-parameters/novideo-1.md)``[`&noaudio`](../advanced-settings/view-parameters/noaudio.md).
+You can disable the video and audio of VDO.Ninja, but still have a basic data-only peer-connection, but using `&videodevice=0&audiodevice=0` or [`&novideo`](../advanced-settings/video-parameters/novideo-1.md)[`&noaudio`](../advanced-settings/view-parameters/noaudio.md).
 
 {% hint style="danger" %}
 If testing locally, beware of feedback loops, where the MIDI output is fed back into the MIDI input, causing high CPU usage and a lot of MIDI messages. If testing locally, use two MIDI devices and explicitly select the input and output MIDI devices to avoid these feedback loops.

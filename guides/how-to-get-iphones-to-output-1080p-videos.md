@@ -4,11 +4,11 @@ You can force 1080p on an iPhone, but you then need to use [`&codec=vp8`](../adv
 
 for example:
 
-``[`https://vdo.ninja/?push=streamid&width=1920&height=1080`](https://vdo.ninja/?push=streamid\&width=1920\&height=1080)``
+[`https://vdo.ninja/?push=streamid&width=1920&height=1080`](https://vdo.ninja/?push=streamid\&width=1920\&height=1080)
 
 and:
 
-``[`https://vdo.ninja/?view=streamid&codec=vp8&videobitrate=6000`](https://vdo.ninja/?view=streamid\&codec=vp8\&videobitrate=6000)``
+[`https://vdo.ninja/?view=streamid&codec=vp8&videobitrate=6000`](https://vdo.ninja/?view=streamid\&codec=vp8\&videobitrate=6000)
 
 iPhones do not support h264 at resolutions higher than 720p30.
 

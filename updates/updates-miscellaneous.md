@@ -5,7 +5,7 @@
 * created the example page: [https://vdo.ninja/examples/rotated.html](https://vdo.ninja/examples/rotated.html), which lets you rotate a specific website 90, 270, or 180 degrees. `&rotate` and URL encoded `&link` parameters accepted. Works with any website that supports IFrame embedding I think; **VDO.Ninja** or other. \
   ie:\
   [https://vdo.ninja/examples/rotated.html?rotate=270\&link=https%3A%2F%2Fvdo.ninja%2Falpha%2Fmixer](https://vdo.ninja/examples/rotated.html?rotate=270\&link=https%3A%2F%2Fvdo.ninja%2Falpha%2Fmixer)\
-  ![](<../.gitbook/assets/image (1).png>)
+  ![](<../.gitbook/assets/image (1) (13).png>)
 
 #### March 7
 

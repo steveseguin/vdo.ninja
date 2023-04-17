@@ -5,7 +5,7 @@
 #### March 6
 
 *   You can use the API to control the mixer layout now, via the Mixer App. `https://api.vdo.ninja/APIKEY/layout/2`\
-    ``-- there were some bugs with this when using it via the Mixer App before, and there wasn't much documentation on the [companion.vdo.ninja](https://companion.vdo.ninja/) site. All fixed.\
+    \-- there were some bugs with this when using it via the Mixer App before, and there wasn't much documentation on the [companion.vdo.ninja](https://companion.vdo.ninja/) site. All fixed.\
     ![](<../.gitbook/assets/image (6) (1).png>)![](<../.gitbook/assets/image (2) (1) (2).png>)\
 
 
@@ -43,7 +43,7 @@
 *   Added the option to change OBS scenes whenever you change layouts in the Mixer App.\
     For this to work:
 
-    1. ``[`&remote`](../general-settings/remote.md) needs to be on the scene link (should be there if using the provided scene link)
+    1. [`&remote`](../general-settings/remote.md) needs to be on the scene link (should be there if using the provided scene link)
     2. Needs to be enabled in the Mixer's settings\
        ![](<../.gitbook/assets/image (2) (2) (2).png>)
     3. An OBS scene name needs to be specified for a layout in the mixer app (And make sure you click "save scene" after)\

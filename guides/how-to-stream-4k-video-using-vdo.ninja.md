@@ -22,7 +22,7 @@ While I could make a selectable option for 4K in the user interface, another pro
 
 ![4k comparison chart with lesser resolutions](../.gitbook/assets/4KComparison)
 
-That all said, you can give “4K” a go by adding [`&width=3840`](../source-settings/and-width.md)``[`&height=2160`](../source-settings/and-height.md) to the invite link.
+That all said, you can give “4K” a go by adding [`&width=3840`](../source-settings/and-width.md)[`&height=2160`](../source-settings/and-height.md) to the invite link.
 
 For example then, [https://vdo.ninja/?push=inviteGuest123\&width=3840\&height=2160](https://obs.ninja/?push=inviteGuest123\&width=3840\&height=2160)
 

@@ -10,7 +10,7 @@ General Option! ([`&push`](../../source-settings/push.md), [`&room`](../../gener
 
 Example: `&chroma=F0F`
 
-| Value            | Descritpion             |
+| Value            | Description             |
 | ---------------- | ----------------------- |
 | (no value given) | green background        |
 | `F0F`            | any RGB format color    |

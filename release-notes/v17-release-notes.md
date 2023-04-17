@@ -57,7 +57,7 @@ YouTube video talking about the new release a bit:\
 
 * Attempting to solve the CPU issue when broadcasting to many guests in a room, I created a bit of a custom video codec that bypasses the issues I've been having with WebRTC. This codec uses under 1mbps upload per connection, strives to be as low latency as possible, and uses very little CPU even with many viewers connected. It's quite experimental, not the greatest quality, and still needs the publisher to be 'visible' on the desktop (else it freezes), but it can be enabled while in a group room by adding `&broadcast&webp` URL parameter to the guest links.\
   ie:) `https://vdo.ninja/?room=xxx123&broadcast&webp`\
-  ``(The director just needs to go live with their camera after that.)
+  (The director just needs to go live with their camera after that.)
 * It must be used in conjunction with broadcast mode, but the director doesn't need to be the designated broadcaster.
 * The Electron Capture app should work to allow for webp-based broadcasting even if the tab is not visible, as tab throttling is disabled with that application.
 * This usese a custom video codec, which is essentially a stream of webp-based images sent over the webRTC data-channels.
@@ -83,7 +83,7 @@ ie: `/list`
 * Should list user's labels in a list, along with whether they are video-muted or not, etc.&#x20;
 * Includes mic mute states and voice activity meters in the list.
 * Isn't visible by default in scenes, faux rooms, or when using `&broadcast` mode.
-* ``[`&showlist=1`](../source-settings/showlist.md) will force show it and [`&showlist=0`](../source-settings/showlist.md) will force hide it.
+* [`&showlist=1`](../source-settings/showlist.md) will force show it and [`&showlist=0`](../source-settings/showlist.md) will force hide it.
 * Feedback welcomed.
 
 ![](https://user-images.githubusercontent.com/2575698/115191919-19ab1080-a0b8-11eb-882e-86b5d22f3914.png)
@@ -228,8 +228,8 @@ This pretty much lets you remotely monitor a publisher's outbound video stats.
 * If using this with a room, you'll need to still include `&room=ROOMNAME`; same with the password.\
   `https://vdo.ninja/speedtest?sid=xxxxxxx`\
   `https://vdo.ninja/monitor?sid=xxxxxxx`\
-  ``\
-  ``or for a direct link:\
+  \
+  or for a direct link:\
   `https://vdo.ninja/?push=xxxxxxx&remote=privateKey` `https://vdo.ninja/monitor?sid=xxxxxxx&remote=privateKey`
 
 ### Community highlights

@@ -81,7 +81,7 @@ In the properties for the Browser Source, we need to fill out a few fields and t
 ![When you hit OK, you should see your remote camera source appear in OBS](<../.gitbook/assets/image (108) (1).png>)
 
 {% hint style="info" %}
-_SECRET TIP_: __ Some links in VDO.Ninja can be dragged and dropped directly into OBS from the Chrome browser, avoiding the tedious parts of step 2 and 3. You will still need to select “Control audio via OBS” however, if you wish audio to function.
+_SECRET TIP_: Some links in VDO.Ninja can be dragged and dropped directly into OBS from the Chrome browser, avoiding the tedious parts of step 2 and 3. You will still need to select “Control audio via OBS” however, if you wish audio to function.
 {% endhint %}
 
 ### Step 5.

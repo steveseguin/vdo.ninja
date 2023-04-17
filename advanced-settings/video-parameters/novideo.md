@@ -8,7 +8,7 @@ Viewer-Side Option! ([`&view`](../view-parameters/view.md), [`&scene`](../view-p
 
 ## Aliases
 
-* ``[`&novideo`](novideo-1.md)``
+* [`&novideo`](novideo-1.md)
 * `&nv`
 * `&hidevideo`
 

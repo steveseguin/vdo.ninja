@@ -1,5 +1,38 @@
 # Updates - VDO.Ninja
 
+#### April 7 <a href="#august-31" id="august-31"></a>
+
+* Based on user feedback, I'm testing the concept of a "join with mic-only" button.\
+  \-- You can enable it with [`&miconlyoption`](../advanced-settings/setup-parameters/and-miconlyoption-alpha.md) (or `&moo`).\
+  \-- It's exactly the same as join with video, except the video device is not selected by default.\
+  \-- When used, a mic only button shows if a guest joining a room, and if [`&audiodevice=0`](../source-settings/audiodevice.md) is not present.\
+  \-- Hoping this will give more users courage to click the join button, but if it causes issues, I may revert.\
+  ![](<../.gitbook/assets/image (1).png>)\
+  \
+  \*\* on alpha for testing at [https://vdo.ninja/alpha/?room=someetestroomhere\&moo](https://vdo.ninja/alpha/?room=someetestroomhere\&moo)
+
+#### April 6 <a href="#august-31" id="august-31"></a>
+
+* Our very own @Lindenkron on Discord further improved the styling of the director's control boxes on alpha.\
+  ![](<../.gitbook/assets/image (178).png>)
+* VDO.Ninja updated on GitHub and alpha with all recent changes.
+
+#### April 5 <a href="#august-31" id="august-31"></a>
+
+* If a VDO.Ninja guest has [`&chunked`](../newly-added-parameters/and-chunked.md) added, the viewer or another guest can now use [`&nochunked`](../advanced-settings/settings-parameters/and-nochunked-alpha.md) to ignore the chunked version, and use the low-latency version. In this way, guests in a room can still use the low latency streams to chat, but publish chunked video to OBS for (delayed) high quality video.
+* [`&noaudio`](../advanced-settings/view-parameters/noaudio.md) and [`&novideo`](../advanced-settings/video-parameters/novideo-1.md) works with [`&chunked`](../newly-added-parameters/and-chunked.md) mode sources now also, so you can have audio or video only chunked mode if needed.\
+  \*\* on alpha
+* [invite.cam](https://invite.cam/) updated to support the recent [`&headertitle`](../advanced-settings/design-parameters/and-headertitle-alpha.md) and [`&favicon`](../advanced-settings/design-parameters/and-favicon-alpha.md) feature. (use via the encoded input URL, such as VDO.Ninja; not the invite.cam URL)
+
+#### April 3 <a href="#august-31" id="august-31"></a>
+
+* Adding [`&headertitle`](../advanced-settings/design-parameters/and-headertitle-alpha.md) and [`&favicon`](../advanced-settings/design-parameters/and-favicon-alpha.md) as options. These will change the browser's page title and favicon image, respectively.\
+  \-- Passed values should be URL encoded (Google URL encoding if needed).\
+  \-- Since this is Javascript based, the values only update once the page loads. Meta-page-previews will likely not reflect the values.\
+  \
+  \*\* on alpha Sample link: [`https://vdo.ninja/alpha/?headertitle=LINDENKRON4TW&favicon=https%3A%2F%2Fmeshcast.io%2Ffavicon.ico`](https://vdo.ninja/alpha/?headertitle=LINDENKRON4TW\&favicon=https%3A%2F%2Fmeshcast.io%2Ffavicon.ico)\
+  ![](<../.gitbook/assets/image (181).png>)
+
 #### March 31 <a href="#august-31" id="august-31"></a>
 
 * Added a `disable video` button as a new director's remote control option. This will remotely disable the guest's video in the same way that the guest themselves can disable it.\
@@ -7,7 +40,7 @@
   \-- This disables the video preview for even the director, as its disabled as the source, so there isn't for even a solo "view" link to override it. This then is a bit more of a sure-fire way to disable a video from a guest.\
   \-- The previous "hide guest" button still works, but has a new icon. This differs from the new "disable video" in that the director can still see a preview of the guests video and it also hides any avatar/style-place-holder. When "disabling video", audio-only styles and avatar placeholders may still work.\
   \-- The guest gets a little note in their header bar that the director muted them when enabled. Also, the guest is unable to see their own video preview when enabled, hence the need for a message.\
-  ![](../.gitbook/assets/image.png)![](<../.gitbook/assets/image (3).png>)\
+  ![](<../.gitbook/assets/image (179).png>)![](<../.gitbook/assets/image (3).png>)\
   \
   \*\* on alpha [https://vdo.ninja/alpha/](https://vdo.ninja/alpha/), by user request. Please report any issues/feedback regarding it.
 
@@ -51,8 +84,8 @@
 * The hidden user-list can be closed when using [`&broadcast`](../advanced-settings/view-parameters/broadcast.md) mode now
 * Bug fixed with the [vdo.ninja/twitch](https://vdo.ninja/twitch) page, via a community code contribution
 * _Development Progress update: WHIP and VDO.Ninja_\
-  __\
-  __I've been slowly improving the WHIP/WHEP interface for VDO.Ninja. It's a bit mentally exhausting, but there is some progress up on alpha:\
+  \
+  I've been slowly improving the WHIP/WHEP interface for VDO.Ninja. It's a bit mentally exhausting, but there is some progress up on alpha:\
   \- WHEP in now added (test with cloudflare whep out),\
   \- WHIP out now added (tested with cloudflare whip in),\
   \- WHIP in improved a bit (tested with a private build of OBS and Larix, but isn't 100% stable yet) \
@@ -178,8 +211,8 @@
 
 #### February 1 <a href="#august-31" id="august-31"></a>
 
-* Added options for the [`&clock`](../advanced-settings/settings-parameters/and-clock.md) parameter. `&clock=N`, where `N` can be `1` to `9`; each option specifies where the clock will appear on the screen. \*\* on alpha at [`vdo.ninja/alpha/?webcam&autostart&clock=5`](https://vdo.ninja/alpha/?webcam\&autostart\&clock=5)``\
-  ``![](<../.gitbook/assets/image (3) (7) (1).png>)
+* Added options for the [`&clock`](../advanced-settings/settings-parameters/and-clock.md) parameter. `&clock=N`, where `N` can be `1` to `9`; each option specifies where the clock will appear on the screen. \*\* on alpha at [`vdo.ninja/alpha/?webcam&autostart&clock=5`](https://vdo.ninja/alpha/?webcam\&autostart\&clock=5)\
+  ![](<../.gitbook/assets/image (3) (7) (1).png>)
 
 #### January 31 <a href="#august-31" id="august-31"></a>
 
@@ -218,7 +251,7 @@
     https://vdo.ninja/alpha/?view=XXX&controlobs&bitcut=300&cutscene=FML&remote
     ```
 
-    You can of course use this with [`&controlobs`](../advanced-settings/settings-parameters/and-controlobs.md)``[`&remote`](../general-settings/remote.md), to have the publisher change the scenes dynamically, and see what the current OBS scene is (if still connected).\
+    You can of course use this with [`&controlobs`](../advanced-settings/settings-parameters/and-controlobs.md)[`&remote`](../general-settings/remote.md), to have the publisher change the scenes dynamically, and see what the current OBS scene is (if still connected).\
     \
     \*\* Note that the OBS Browser source needs the permissions to be set to high, to give VDO.Ninja permissions to change scenes. (on alpha for testing)
 * Added a new experimental parameter called [`&maindirectorpassword`](../advanced-settings/director-parameters/and-maindirectorpassword-alpha.md), which lets you set a pseudo 'master room password' as a director. It helps avoid getting locked out as the director, if someone else tries to claim the director-role first. ie:\
@@ -280,7 +313,7 @@
   \-- built-in basic controller added, via [`&powerpoint`](../advanced-settings/settings-parameters/and-powerpoint-alpha.md) (aliases: `&slides`, `&ppt`, `&pptcontrols`)\
   \-- IFRAME sample app provided with larger buttons and sample code to add more custom buttons/actions if needed. (start/stop/etc): [https://vdo.ninja/examples/powerpoint](https://vdo.ninja/examples/powerpoint)\
   \-- HTTP / WSS remote control also added; `https://api.vdo.ninja/YOURAPIKEY/nextSlide` and `prevSlide`\
-  ``-- Local Streamdeck support also working, via MIDI.\
+  \-- Local Streamdeck support also working, via MIDI.\
   \-- YouTube Tutorial: [https://youtu.be/ORH8betTt8Y](https://youtu.be/ORH8betTt8Y)\
   ![](<../.gitbook/assets/image (5) (1).png>)![](<../.gitbook/assets/image (19).png>)\
   \
@@ -322,7 +355,7 @@
 #### **December 18** <a href="#august-31" id="august-31"></a>
 
 * Fixed a stats (relay vs host vs srflx) issue, where sometimes the incorrect stat appeared.\
-  ****fix on alpha at [vdo.ninja/alpha/](https://vdo.ninja/alpha/)
+  fix on alpha at [vdo.ninja/alpha/](https://vdo.ninja/alpha/)
 * Added a small mouse-over tooltip to the candidate type value in the stats menu, to hint at what it means again if needed.
 * GitHub updated with the newest code (currently in sync with alpha).
 * Made it so mobile won't go to sleep while streaming out audio-only content.
@@ -393,7 +426,7 @@
 
 #### **December 2** <a href="#august-31" id="august-31"></a>
 
-* ``[`&noaudioprocessing`](../general-settings/noaudioprocessing.md) is even more aggressive in disabling audio processing effects now, useful for debugging, but breaks a lot of functionality.
+* [`&noaudioprocessing`](../general-settings/noaudioprocessing.md) is even more aggressive in disabling audio processing effects now, useful for debugging, but breaks a lot of functionality.
 * The parameter [`&codec=hardware`](../advanced-settings/view-parameters/codec.md) is added; it's Android-specific and is the same as doing `&codec=h264`[`&h264profile`](../newly-added-parameters/and-h264profile.md), but perhaps easier to remember. Worth trying if your android phone is struggling to publish video at a high enough quality into OBS. I may expand on this feature to be smarter.\
   \
   \*\* changes pushed to alpha for user-testing and feedback. Thank you.
@@ -422,7 +455,7 @@
 * The recently added [`&audiocodec=pcm`](../advanced-settings/audio-parameters/minptime-1.md) option no longer needs `&insertablestreams` to be used on the sender's side; works with just a viewer-side flag now and works with video.
 * [`&audiocodec=pcm`](../advanced-settings/audio-parameters/minptime-1.md) now will support 48khz and 44.1khz mono playback (48khz default), and if [`&stereo`](../general-settings/stereo.md) is used, it changes to two-channel stereo 32khz.
 * The existing [`&samplerate=44100`](../advanced-settings/view-parameters/and-samplerate.md) option can lower the sample rate of this pcm mode (down to 8khz even), and hence the resulting audio bitrate. Since pcm is raw, [`&audiobitrate`](../advanced-settings/view-parameters/audiobitrate.md) won't work, so expect 550 to 1200-kbps in just audio bitrates per viewer.
-* Fixed a bug with the video-settings sliders in the director room, where changing a setting didn't visually always update the correct feedback input field - fixed a bug where using [`&view=xxx`](../advanced-settings/view-parameters/view.md)``[`&novideo`](../advanced-settings/video-parameters/novideo-1.md) didn't display a press-to-play button in the browser.
+* Fixed a bug with the video-settings sliders in the director room, where changing a setting didn't visually always update the correct feedback input field - fixed a bug where using [`&view=xxx`](../advanced-settings/view-parameters/view.md)[`&novideo`](../advanced-settings/video-parameters/novideo-1.md) didn't display a press-to-play button in the browser.
 * Fixed a bug where the self-preview video didn't have the right height when using [`&layouts`](../advanced-settings/director-parameters/and-layouts.md).
 * Fixed a bug where if a guest muted their video, and unmuted, it didn't always resize correctly afterwards.
 * Fixed a bug where if a guest muted their video, the audio-only spacer box that remained would resize smaller, rather than just staying the same size.\
@@ -455,7 +488,7 @@
   \-- [`&audiocodec`](../advanced-settings/audio-parameters/minptime-1.md) on the viewer side can let you specify the audio codec; `opus` (default), `pcmu`, `pcma`, `isac`, `g722` and `red`\
   \-- [`&audiocodec`](../advanced-settings/audio-parameters/minptime-1.md)`=red` is pretty much sending two opus streams, with one as a backup in case of packet loss; support in Chromium 97 and up, but the only way I can so far tell that it is working is to check if the audio bitrate has doubled\
   \-- [`&dtx`](../advanced-settings/audio-parameters/minptime-2.md) (aka, `&usedtx`), is also now functional (viewer side). Using this flag will turn off the audio encoder automatically when no little to no sound is detected. The VDO.Ninja default uses a dynamic audio bitrate mode ([`&vbr`](../advanced-settings/view-parameters/vbr.md)), but using [`&dtx`](../advanced-settings/audio-parameters/minptime-2.md) takes things to the next level. It might be useful as a very mild noise-gate I suppose?\
-  \-- Also fixed a couple minor bugs, such as no play button appearing when using [`&view=StreamID`](../advanced-settings/view-parameters/view.md)``[`&novideo`](../advanced-settings/video-parameters/novideo-1.md)\
+  \-- Also fixed a couple minor bugs, such as no play button appearing when using [`&view=StreamID`](../advanced-settings/view-parameters/view.md)[`&novideo`](../advanced-settings/video-parameters/novideo-1.md)\
   \
   \*\* changes on alpha at [https://vdo.ninja/alpha/](https://vdo.ninja/alpha/)
 
@@ -468,7 +501,7 @@
   IF HAVING PROBLEMS suddenly, please do a hard-browser refresh. This includes in your browser and the OBS browser source, if using that. The previous [v21](../older-releases/v21.md) release can still be found at [https://vdo.ninja/v21/](https://vdo.ninja/v21/), if you want to go back. [Release notes](../releases/v22.md) coming soon.
 * I separated [`&sync`](../advanced-settings/view-parameters/sync.md) and [`&buffer`](../advanced-settings/view-parameters/buffer.md), so audio-sync isn't auto-enabled when `&buffer` is specified in the URL. I was finding `&sync` was causing some audio clicking issues, as adjusting audio playback speed isn't easy; you have a choice now. Use `&buffer` and `&sync` together or standalone items.
 * Fixed an issue with iPhones where changing the camera caused your own preview video to go small.
-* ``[`&screensharebitrate`](../newly-added-parameters/and-screensharebitrate.md) now works outside of group rooms, even with basic push/view links.
+* [`&screensharebitrate`](../newly-added-parameters/and-screensharebitrate.md) now works outside of group rooms, even with basic push/view links.
 
 #### **November 16** <a href="#august-31" id="august-31"></a>
 
@@ -562,8 +595,8 @@
 
 #### **November 1** <a href="#august-31" id="august-31"></a>
 
-* ``[`&controlbarspace`](../advanced-settings/settings-parameters/and-controlbarspace.md) forces the bottom control bar to be in its own dedicated space, regardless of screen size.
-* ``[`&volumecontrol`](../advanced-settings/audio-parameters/and-volumecontrol.md) (alias, `&vc`) shows a dedicated local audio-volume control bar for canvas or image elements. Video elements already have a control-bar with volume, so I don't show it there currently. I'll likely tweak this more over time.\
+* [`&controlbarspace`](../advanced-settings/settings-parameters/and-controlbarspace.md) forces the bottom control bar to be in its own dedicated space, regardless of screen size.
+* [`&volumecontrol`](../advanced-settings/audio-parameters/and-volumecontrol.md) (alias, `&vc`) shows a dedicated local audio-volume control bar for canvas or image elements. Video elements already have a control-bar with volume, so I don't show it there currently. I'll likely tweak this more over time.\
   ![](<../.gitbook/assets/image (8) (2).png>)
 * Fixed an issue with [`&screensharetype=3`](../newly-added-parameters/and-screensharetype.md) crashing the browser when specifying an audio track to share.\
   \
@@ -643,10 +676,10 @@
 
 * Updated the 'create reusable link' page a bit; added the option for "generate host link also", which sets things up for a simple two-way interview format.\
   ![](<../.gitbook/assets/image (1) (9).png>)
-* ``[`&welcomeimage`](../advanced-settings/setup-parameters/and-welcomeimage.md) added; this lets you specify a welcome image (URL) that appears for a few seconds before fading away once a guest joins.\
+* [`&welcomeimage`](../advanced-settings/setup-parameters/and-welcomeimage.md) added; this lets you specify a welcome image (URL) that appears for a few seconds before fading away once a guest joins.\
   ie: `https://vdo.ninja/alpha/?welcomeimage=https://vdo.ninja/alpha/media/old_logo.png&webcam`\
-  ``\
-  ``\*\* on alpha
+  \
+  \*\* on alpha
 
 #### **September 26** <a href="#august-31" id="august-31"></a>
 
@@ -709,7 +742,7 @@
   ![](<../.gitbook/assets/image (2) (4) (1).png>)
 * Added [`&getfaces`](../advanced-settings/settings-parameters/and-getfaces.md) on the viewer link (or `{getFaces:true}` via the IFrame API), which will request a continuous stream of face bounding boxes, for all inbound videos and all faces contained within. The data is transmitted to the parent IFRAME, and this data can be used for moving the IFrame window around, if you wish to make your own custom face-tracker or whatever else.\
   ![](<../.gitbook/assets/image (11) (1) (2) (1) (1).png>)
-* ``[`&effects=1`](../source-settings/effects.md) on the sender side (or `&effects=facetracking`) will auto-center the user's face in the center of their video, zooming in as needed. It takes a moment to initiate, but it offers a gentle PTZ-like effect.\
+* [`&effects=1`](../source-settings/effects.md) on the sender side (or `&effects=facetracking`) will auto-center the user's face in the center of their video, zooming in as needed. It takes a moment to initiate, but it offers a gentle PTZ-like effect.\
   \-- note: I previously had `&effects=1`, but it wasn't that good, so this is a more polished attempt. It's also available from the effects drop down menu now as a selectable option, as before I was hiding it.\
   ![](<../.gitbook/assets/image (3) (1) (1) (2) (3).png>)\
   \-- important note: Both `&getfaces` and `&effects=1` requires the use of the Chromium experimental face detection API, as I'm using the built-in browser face-tracking model for this. You can enable the API flag here: `chrome://flags/#enable-experimental-web-platform-features` My hope is that this feature will eventually be enabled by default within Chromium, as loading a large ML model to do face detection otherwise is a bit heavy; you may need to enable this within the OBS CLI if wishing to use it there?\
@@ -736,7 +769,7 @@
 
 #### **September 6** <a href="#august-31" id="august-31"></a>
 
-* ``[`&showconnections`](../advanced-settings/settings-parameters/and-showconnections.md) will display the total number of p2p connections of a remote stream. Works with the director's room and the automixer. Might help give comfort over privacy/security during a stream.
+* [`&showconnections`](../advanced-settings/settings-parameters/and-showconnections.md) will display the total number of p2p connections of a remote stream. Works with the director's room and the automixer. Might help give comfort over privacy/security during a stream.
 * Total number of p2p remote connections (viewers) of a stream source will also appear in the stats menu, even without [`&showconnections`](../advanced-settings/settings-parameters/and-showconnections.md). Could be useful for debugging CPU/bandwidth issues.
 * Connections may represent video/audio streams, or just a data-connection. Meshcast-hosted streams might not be accounted for, depending on how the viewer is connecting.\
   ![](<../.gitbook/assets/image (10) (1) (2).png>)
@@ -757,9 +790,9 @@
 
 * Added a button in the director's room. It lets you toggle between a Preview layout and the normal Director layout; the Preview layout will mirror what a basic [`&scene=0`](../advanced-settings/view-parameters/scene.md) link would look like. Useful if you want to switch to a guest-like mode as a director, and then switch back as needed to the director's room to make adjustments. - to enter this mode by default, [`&previewmode`](../advanced-settings/director-parameters/and-previewmode.md) can be used by the director \*\* on alpha at vdo.ninja/alpha/\
   ![](<../.gitbook/assets/image (1) (2) (4).png>)
-* ``[`&noisegatesettings`](../advanced-settings/audio-parameters/and-noisegatesettings.md) has been added to vdo.ninja/alpha/, which is used in conjunction with [`&noisegate`](../source-settings/noisegate.md). This feature lets you tweak the noise-gate's variables, making it more or less aggressive as needed. example:\
+* [`&noisegatesettings`](../advanced-settings/audio-parameters/and-noisegatesettings.md) has been added to vdo.ninja/alpha/, which is used in conjunction with [`&noisegate`](../source-settings/noisegate.md). This feature lets you tweak the noise-gate's variables, making it more or less aggressive as needed. example:\
   `https://vdo.ninja/alpha/?noisegate&noisegatesettings=10,25,3000`\
-  ``It takes a comma separated list:\
+  It takes a comma separated list:\
   \-- First value is target gain (0 to 100), although 0 to 40 is probably the recommended range here\
   \-- second value is the threshold value where the gate is triggered if below it. \~ 100 is loudly speaking, \~ 20 is light background noise levels, and under 5 is quiet background levels.\
   \-- third value is how 'sticky' the gate-open position is, in milliseconds. Having this set to a few seconds should prevent someone from being cut off while speaking or if taking a short pause.
@@ -767,8 +800,8 @@
 #### August 25
 
 * Added new sender-side parameters that can customize how you want VDO.Ninja to balance resolution vs frame rate, specifically when bitrate or CPU is insufficient to offer both at the same time.\
-  \-- for video, [`&contenthint=detail`](../advanced-settings/video-parameters/and-contenthint.md)``\
-  ``-- for screen-shares, [`&screensharecontenthint=motion`](../advanced-settings/screen-share-parameters/and-screensharecontenthint.md), which will override [`&contenthint`](../advanced-settings/video-parameters/and-contenthint.md) for just screen-shares if set also.\
+  \-- for video, [`&contenthint=detail`](../advanced-settings/video-parameters/and-contenthint.md)\
+  \-- for screen-shares, [`&screensharecontenthint=motion`](../advanced-settings/screen-share-parameters/and-screensharecontenthint.md), which will override [`&contenthint`](../advanced-settings/video-parameters/and-contenthint.md) for just screen-shares if set also.\
   The two options for video are `detail` or `motion`. Screen shares generally tends towards `detail` by default, and camera sources are tend towards `motion` by default. `detail` will try to prioritize resolution over frame rate, so the frame rate may drop a lot used. `motion` will try to maximize frame rate, but may drop the resolution a lot. There's no way to force both on as there's no magic bullet if your CPU or network cannot keep up. note: If using [`&codec=vp9`](../advanced-settings/view-parameters/codec.md) on the viewer side, the frame rate may drop as low as even 5-fps.\
   \-- Also for audio, I've added [`&audiocontenthint=music`](../advanced-settings/audio-parameters/and-audiocontenthint.md) The two options are `speech` and `music`. No idea what it does exactly, but when using `music` there seems to be a fixed bitrate of 32-kbps sent out by default, where as with `speech` it is variable, using less bandwidth when not speaking.\
   These parameters have been tested on Chrome, but other browsers may vary in behavior. Safari seems to just ignore things, for example. \*\* changes on alpha
@@ -797,13 +830,13 @@
   \-- technically this can be used as an overlay for other things, but it only works with the self-preview.\
   \-- leave the passed value empty if you wish to have the white basic rule-of-thirds show as default.\
   example: `https://vdo.ninja/alpha/?thirds=./media/thirdshead.svg`\
-  ``\*\* on alpha.\
+  \*\* on alpha.\
   ![](<../.gitbook/assets/image (7) (1) (1) (2).png>)
 * Added [`proxy.vdo.ninja/alpha/`](https://proxy.vdo.ninja/alpha/) as an alternative to `vdo.ninja/?proxy`. If's a more user-friendly version of [`&proxy`](../newly-added-parameters/and-proxy.md). \*\* Just on alpha for now
 
 #### August 16
 
-* ``[`&activespeaker=3`](../advanced-settings/view-parameters/activespeaker.md) and `4` added; which are the same as `1` and `2`, except it will not switch to show audio-only sources (just video only). As a recap, active speaker mode shows the person(s) who are actively speaking, and hides those who aren't.
+* [`&activespeaker=3`](../advanced-settings/view-parameters/activespeaker.md) and `4` added; which are the same as `1` and `2`, except it will not switch to show audio-only sources (just video only). As a recap, active speaker mode shows the person(s) who are actively speaking, and hides those who aren't.
 * Fixed a bug/race condition in Chrome where the web-audio audio effects pipeline and having to 'click-to-play' didn't always unmute all the audio. (`&activespeaker` mode when viewed as a scene, in chrome, for example. Wasn't an issue in OBS)
 * Changed chunked mode a small bit, so the video stream uses the same frame rate and resolution of the original video source, rather than a fixed resolution/frame rate.
 * Chunked mode should work with audio-only or video-only tracks now
@@ -820,7 +853,7 @@
 
 #### August 9
 
-* ``[`&aspectratio`](../advanced-settings/video-parameters/and-aspectratio.md) now works with screen shares, so you can force crop an incoming screen share to be a certain aspect ratio. If [`&screenshareaspectratio`](../advanced-settings/screen-share-parameters/and-screenshareaspectratio.md) is used, (`&ssar`), it will apply to just screen shares. If `&ssar` does not have a value passed, it's assumed to be set as "default", which overrides `&aspectratio` option, if used also. \*\* on alpha, ie: vdo.ninja/alpha/?ar=2.0
+* [`&aspectratio`](../advanced-settings/video-parameters/and-aspectratio.md) now works with screen shares, so you can force crop an incoming screen share to be a certain aspect ratio. If [`&screenshareaspectratio`](../advanced-settings/screen-share-parameters/and-screenshareaspectratio.md) is used, (`&ssar`), it will apply to just screen shares. If `&ssar` does not have a value passed, it's assumed to be set as "default", which overrides `&aspectratio` option, if used also. \*\* on alpha, ie: vdo.ninja/alpha/?ar=2.0
 
 #### August 6
 
@@ -834,7 +867,7 @@
 
 #### August 3
 
-* ``[`&hidecodirectors`](../advanced-settings/director-parameters/and-hidecodirectors.md) will hide the co-directors from appearing in the director's room. You might have a few co-directors join you, but they might be taking up space, so this is a way to prevent that. It simply hides the boxes; they are still there at a code level.
+* [`&hidecodirectors`](../advanced-settings/director-parameters/and-hidecodirectors.md) will hide the co-directors from appearing in the director's room. You might have a few co-directors join you, but they might be taking up space, so this is a way to prevent that. It simply hides the boxes; they are still there at a code level.
 * Added [https://updates.vdo.ninja/](https://updates.vdo.ninja/), which will mirror the updates from this discord 📑│updates channel, which should be helpful for those not using Discord to see development progress. (basic, but will undergo more updates). The Discord in general has been undergoing improvements; the mods here have been working hard to keep the discord and documentation functional, so thank you to them.
 * Added [`&mobile`](../advanced-settings/upcoming-parameters/and-mobile.md) and [`&notmobile`](../advanced-settings/upcoming-parameters/and-notmobile.md) as a couple options to vdo.ninja/alpha/ I already have [`&flagship`](../advanced-settings/upcoming-parameters/and-flagship.md), [`&noscale`](../newly-added-parameters/and-noscale.md), and [`&forceios`](../advanced-settings/mobile-parameters/and-forceios.md) as a few options to configure mobile devices, but mobile/notmobile are more generic options that will optimize a guest/push link based on whether VDO.Ninja thinks they are a smartphone or not. `&mobile` might help reduce CPU issues, and `&notmobile` might be able to improve video quality (in case you want to override the automatic defaults, which already detects if a device is mobile or not).
 
@@ -857,8 +890,8 @@
 * Added two-way solo talk as an option to the http/wss VDO.Ninja API.
 * Also, - added the ability for VDO.Ninja to _**Remotely Control OBS Studio**_ while streaming/directing; useful for IRL maybe?\
   \-- The menu button to control OBS auto-shows in the director's view or push-mode, if OBS Studio is set to give VDO.Ninja "full" permissions.\
-  \-- The menu button can also be added manually, for even guests, using [`&controlobs`](../advanced-settings/settings-parameters/and-controlobs.md)``\
-  ``-- [`&obsoff`](../advanced-settings/design-parameters/and-obsoff.md) can be used to set permissions to fully off (also disables tally light and scene optimizations tho) when added to the OBS browser source link.\
+  \-- The menu button can also be added manually, for even guests, using [`&controlobs`](../advanced-settings/settings-parameters/and-controlobs.md)\
+  \-- [`&obsoff`](../advanced-settings/design-parameters/and-obsoff.md) can be used to set permissions to fully off (also disables tally light and scene optimizations tho) when added to the OBS browser source link.\
   \-- The OBS instance still needs [`&remote={optional-passcode-here}`](../general-settings/remote.md) added to the URL for remote commands to work. If \&remote is left blank, it gives anyone permissions to control it. If a value is passed to `&remote`, the sender needs to have a matching \&remote value or manually enter they need to manually enter passcode in the pop up control menu.\
   \-- If the OBS browser source has its permissions set to something other than full (lower than level 5), the control menu will still show what info it has -- current scene, recording/streaming state, etc; depending on level. The lower the level, the less info is available to show; can't remotely change anything though.\
   \-- It supports multiple OBS instances and will label them according to the [`&label=xxx`](../general-settings/label.md) value set on the scene/view link, or whatever the unique connection ID is.\
@@ -917,7 +950,7 @@
     \
     This feature could be useful to checking out a stream before actually connecting to it, as that's my intent with it, but it is also something you can use with Octoprint, where you need an IP camera jpeg source as input.\
     \
-    \*\* on alpha, at [`https://vdo.ninja/alpha/`](https://vdo.ninja/alpha/)``
+    \*\* on alpha, at [`https://vdo.ninja/alpha/`](https://vdo.ninja/alpha/)
 
 #### July 14
 
@@ -1049,7 +1082,7 @@
   Due to some tricky technical challenges, this feature involves down mixing with web-audio nodes, and stereo can't be enabled if `&stereo` isn't in the URL. It might also make all audio from that guest mono at the moment. (adding [`&mono`](../advanced-settings/view-parameters/mono.md) to the view URL also works, but that will make all sources in the view link mono)\
   ![](<../.gitbook/assets/image (2) (5) (1).png>)\
   \
-  \*\* all updates on alpha at [`https://vdo.ninja/alpha`](https://vdo.ninja/alpha)``
+  \*\* all updates on alpha at [`https://vdo.ninja/alpha`](https://vdo.ninja/alpha)
 
 #### May 27
 
@@ -1058,7 +1091,7 @@
 #### May 23
 
 * Deployed a new turn server in Poland; it's only yet available on alpha. `https://vdo.ninja/alpha/speedtest`\
-  ``![](<../.gitbook/assets/image (159).png>)``
+  ![](<../.gitbook/assets/image (159).png>)
 * Two large broadcast servers enabled on production, in France and Canada.\
   ![](<../.gitbook/assets/image (163) (1).png>)
 
@@ -1103,11 +1136,11 @@
 
 #### May 11
 
-* ``[`&remote`](../general-settings/remote.md), if used on a push link without a password added, it will now allow the remote viewer limited control (hangup, focus, zoom, detailed stats), even if they don't have `&remote` added to their URL also.
-* When using [`&remote`](../general-settings/remote.md), the option to "reload" the remote browser is now available, so you can potentially reload a remote unattended session that contains [`&autostart`](../source-settings/and-autostart.md)``[`&webcam`](../source-settings/and-webcam.md)``\
-  ``![](<../.gitbook/assets/image (2) (7).png>)``\
-  ``\
-  ``\*\* all changes on alpha @ vdo.ninja/alpha/
+* [`&remote`](../general-settings/remote.md), if used on a push link without a password added, it will now allow the remote viewer limited control (hangup, focus, zoom, detailed stats), even if they don't have `&remote` added to their URL also.
+* When using [`&remote`](../general-settings/remote.md), the option to "reload" the remote browser is now available, so you can potentially reload a remote unattended session that contains [`&autostart`](../source-settings/and-autostart.md)[`&webcam`](../source-settings/and-webcam.md)\
+  ![](<../.gitbook/assets/image (2) (7).png>)\
+  \
+  \*\* all changes on alpha @ vdo.ninja/alpha/
 
 #### May 8
 
@@ -1126,9 +1159,9 @@
 
 
     \*\* on vdo.ninja/beta/ (all current code is up to date on beta)
-* ``[`&bgimage=`](../advanced-settings/design-parameters/and-bgimage.md) can be used to set the default image avatar, when using [`&style=0`](../advanced-settings/design-parameters/style.md) or `&style=6`. This only impacts what the person with the parameter added sees and must be either a URL or a base64 data image/SVG. URL-encoded values. on alpha ie: [https://vdo.ninja/alpha/?view=aSmexM6\&style=0\&nocontrols\&bgimage=https%3A%2F%2Fvdo.ninja%2Fmedia%2Fold\_icon.png](https://vdo.ninja/alpha/?view=aSmexM6\&style=0\&nocontrols\&bgimage=https%3A%2F%2Fvdo.ninja%2Fmedia%2Fold\_icon.png)\
+* [`&bgimage=`](../advanced-settings/design-parameters/and-bgimage.md) can be used to set the default image avatar, when using [`&style=0`](../advanced-settings/design-parameters/style.md) or `&style=6`. This only impacts what the person with the parameter added sees and must be either a URL or a base64 data image/SVG. URL-encoded values. on alpha ie: [https://vdo.ninja/alpha/?view=aSmexM6\&style=0\&nocontrols\&bgimage=https%3A%2F%2Fvdo.ninja%2Fmedia%2Fold\_icon.png](https://vdo.ninja/alpha/?view=aSmexM6\&style=0\&nocontrols\&bgimage=https%3A%2F%2Fvdo.ninja%2Fmedia%2Fold\_icon.png)\
   ![](<../.gitbook/assets/image (157).png>)
-* ``[`&controls=0`](../advanced-settings/newly-added-parameters/and-videocontrols.md) \[`off`/`false`] or [`&nocontrols`](../advanced-settings/settings-parameters/and-nocontrols.md), will force hide the video control bar. (on local dev atm)
+* [`&controls=0`](../advanced-settings/newly-added-parameters/and-videocontrols.md) \[`off`/`false`] or [`&nocontrols`](../advanced-settings/settings-parameters/and-nocontrols.md), will force hide the video control bar. (on local dev atm)
 * Added the option to set a dedicated hold-to-talk key to VDO.Ninja; `CTRL+M` can work in place of this still by default, but this lets you set a custom combo/key that doesn't act as a mute toggle at all (if just tapped accidentally) \*\* This is on alpha\
   ![](<../.gitbook/assets/image (169).png>)
 
@@ -1253,7 +1286,7 @@
 
 #### March 15
 
-* Fixed an issue with [`&showlabels=STYLENAME`](../advanced-settings/design-parameters/showlabels.md)``
+* Fixed an issue with [`&showlabels=STYLENAME`](../advanced-settings/design-parameters/showlabels.md)
 
 #### March 9
 

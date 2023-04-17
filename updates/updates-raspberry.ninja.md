@@ -69,7 +69,7 @@ I've yet to do full testing on a PI with it, but it's been working great on a Je
 
 #### August 9
 
-* You can wire up an LED to the Raspberry\_Ninja project now, on a RPI, to use as a connection-status indicator. see [`https://raspberry.ninja/raspberry_pi/`](https://raspberry.ninja/raspberry\_pi/)``![Bild](https://media.discordapp.net/attachments/701232125831151697/1006385249577598976/unknown.png?width=385\&height=300)
+* You can wire up an LED to the Raspberry\_Ninja project now, on a RPI, to use as a connection-status indicator. see [`https://raspberry.ninja/raspberry_pi/`](https://raspberry.ninja/raspberry\_pi/)![Bild](https://media.discordapp.net/attachments/701232125831151697/1006385249577598976/unknown.png?width=385\&height=300)
 
 #### August 6
 

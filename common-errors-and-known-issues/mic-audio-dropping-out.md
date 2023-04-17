@@ -13,7 +13,7 @@ They resolved the issue by **disabling** certain WebRTC audio processing options
 **In Chrome**,
 
 From `chrome://flags` we disable:\
-``\
+\
 `#enable-webrtc-allow-input-volume-adjustment`
 
 `#chrome-wide-echo-cancellation`

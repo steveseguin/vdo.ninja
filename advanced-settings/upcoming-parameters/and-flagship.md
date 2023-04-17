@@ -8,7 +8,7 @@ Sender-Side Option! ([`&push`](../../source-settings/push.md))
 
 ## Details
 
-``[`https://vdo.ninja/alpha/?flagship`](https://vdo.ninja/alpha/?flagship)
+[`https://vdo.ninja/alpha/?flagship`](https://vdo.ninja/alpha/?flagship)
 
 Been playing around a new flag called `&flagship`, which will optimize the mobile experience for more capable smartphones; essentially, streaming higher quality video to other guests versus the normal mobile-performance mode.
 

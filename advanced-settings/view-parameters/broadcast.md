@@ -48,7 +48,7 @@ To ensure the guests see all that's needed, if the director selects their Virtua
 
 * The guest's self-preview becomes a mini-preview, rather than the normal large self-preview. You can disable the preview all together by using [`&nopreview`.](../../source-settings/and-nopreview.md)
 * While `&broadcast` disables the video from other guests, it does not disable or impact their audio, so guests should still be able to hear each other.
-* ``[`&showlist`](../../source-settings/showlist.md) is enabled by default for the guests, which provides a list of those in the room to the guests. `&showlist=0` can hide this, when added to the guest link; useful if you want a cleaner output for the guests.
+* [`&showlist`](../../source-settings/showlist.md) is enabled by default for the guests, which provides a list of those in the room to the guests. `&showlist=0` can hide this, when added to the guest link; useful if you want a cleaner output for the guests.
 * The header bar, with basic stats, is shown by default. [`&noheader`](../design-parameters/and-hideheader.md) can be added to the guest links, which will hide this top bar, room name and the stats.
 * It hides the audio-only playback elements of other guests in the room, so it's not possible to mute or control the volume, as a guest, or other guests, when `&broadcast` is set. This is akin to having [`&style=1`](../../advanced-settings.md#style)set.
 

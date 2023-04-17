@@ -22,7 +22,7 @@ Example: `&welcome=Hello`
 
 You can set a message on the guest-invite link that appears as an overlay, appearing to be from the director, once the guest joins the stream.
 
-example: [`https://vdo.ninja/?room=roomname&welcome=hello`](https://vdo.ninja/?room=roomname\&welcome=hello)``
+example: [`https://vdo.ninja/?room=roomname&welcome=hello`](https://vdo.ninja/?room=roomname\&welcome=hello)
 
 ![](<../.gitbook/assets/image (26) (2).png>)
 

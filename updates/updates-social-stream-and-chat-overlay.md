@@ -3,6 +3,18 @@
 [social-stream.md](../steves-helper-apps/social-stream.md "mention")\
 [chat-overlay.md](../steves-helper-apps/chat-overlay.md "mention")
 
+#### **April 8**
+
+* When using Social Stream, and it's remote API interface, you can now target specific docks with your API requests by assigning a target name to each dock.html page using `&label` For example:\
+  Dock with the name "NAMEHERE": `https://socialstream.ninja/dock.html?session=XXXXXXXXXXXXX&server&sync&label=NAMEHERE` Can be targeted with the API format like this: `https://api.vdo.ninja/XXXXXXXXXXXXX/nextInQueue/NAMEHERE/null` \
+  \
+  This was needed because if you had multiple docks connected to the API interface, you'd trigger multiple messages to be featured at a time (one per dock), when you'd want only one.
+
+#### **April 5**
+
+* Fixed an issue with pinning + sync logic with Social Stream
+* Fixed an issue where badges on Twitch didn't show when using 7TV
+
 #### **April 2**
 
 * tradingview.com support added to Social Stream
@@ -120,7 +132,7 @@ Social Stream updates for today:
 
 * With Social Stream, you can use `&fixed` on the dock page now, which places messages in the same place (overlapping the last one). When combined with `&limit=1`, you can get a neat one-message bar auto-featured chat effect.\
   ie: `https://socialstream.ninja/dock.html?bubble&color&hidemenu&hideshadow&largeavatar&nobadges&nooutline&notime&limit=1&fadeout&fixed&alignbottom&session=XXXXXXXX`\
-  ``![](<../.gitbook/assets/image (1) (3).png>)``
+  ![](<../.gitbook/assets/image (1) (3).png>)
 * `&chartime=60` added as a dock option; this will specify the time per character that a message will show on screen when using the auto-show feature. 60ms is the default; longer messages will show for longer.
 
 #### **February 15**
@@ -319,7 +331,7 @@ Social Stream updates for today:
 #### **September 15**
 
 * `&random` added to SocialStream; it can be used with the dock to randomize where messages appear on screen.\
-  ****![](<../.gitbook/assets/image (13) (2).png>)****
+  ![](<../.gitbook/assets/image (13) (2).png>)
 
 #### **September 10**
 
@@ -425,7 +437,7 @@ Social Stream updates for today:
 #### May 9
 
 * Added the option to show only first-names with social stream's dock; creates more room for messages. Use via menu toggle or use `&firstnames`\
-  ``![Bild](https://media.discordapp.net/attachments/701232125831151697/973329479801921576/unknown.png?width=400\&height=195)
+  ![Bild](https://media.discordapp.net/attachments/701232125831151697/973329479801921576/unknown.png?width=400\&height=195)
 
 #### May 5
 

@@ -2,6 +2,14 @@
 
 [native-mobile-app-versions.md](../steves-helper-apps/native-mobile-app-versions.md "mention")
 
+#### April 3
+
+* Added an audio-only option to the VDO.Ninja native app. For now, it's available for Android via sideloading, with the app store versions being updated later on.\
+  [https://drive.google.com/file/d/1M0kv5nWLtcfl2JOnsAGiG1zUmkeIVLyZ/view?usp=share\_link](https://drive.google.com/file/d/1M0kv5nWLtcfl2JOnsAGiG1zUmkeIVLyZ/view?usp=share\_link)\
+  \
+  ![](<../.gitbook/assets/image (180).png>)\
+
+
 #### March 21
 
 * Updated the Android app to support offline/fully-self-hosted deployments of VDO.Ninja, by request.\

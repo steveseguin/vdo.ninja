@@ -43,13 +43,13 @@ Something else to note about this iframe API is that it can not only be controll
 
 Some of the more interesting ones primarily for iframe users might include:
 
-* ``[`&webcam`](../source-settings/and-webcam.md)``
-* ``[`&screenshare`](../source-settings/screenshare.md)``
-* ``[`&videodevice`](../source-settings/videodevice.md)`=`1 or 0
-* ``[`&audiodevice`](../source-settings/audiodevice.md)`=`1 or 0
-* ``[`&autostart`](../source-settings/and-autostart.md)``
-* ``[`&chroma`](../advanced-settings/design-parameters/chroma.md)``
-* ``[`&transparent`](../advanced-settings/design-parameters/and-transparent.md)``
+* [`&webcam`](../source-settings/and-webcam.md)
+* [`&screenshare`](../source-settings/screenshare.md)
+* [`&videodevice`](../source-settings/videodevice.md)`=`1 or 0
+* [`&audiodevice`](../source-settings/audiodevice.md)`=`1 or 0
+* [`&autostart`](../source-settings/and-autostart.md)
+* [`&chroma`](../advanced-settings/design-parameters/chroma.md)
+* [`&transparent`](../advanced-settings/design-parameters/and-transparent.md)
 * As for API, allow for dynamic messaging, below are examples of the options available:
 * Mute Speaker
 * Mute Mic

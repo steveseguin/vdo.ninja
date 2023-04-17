@@ -22,8 +22,8 @@ Added an option to post a snapshot of your local camera to a HTTPS/POST URL (blo
 
 So, for example:
 
-``[`https://vdo.ninja/?postimage=https%3A%2F%2Ftemp.vdo.ninja%2F&postinterval=30&push&wc`](https://vdo.ninja/?postimage=https%3A%2F%2Ftemp.vdo.ninja%2F\&postinterval=30\&push\&wc)``\
-``posts to a sample test server I have up. The URL is URL encoded, but not always necessary. If posting to my test server, the image can be accessed at `https://temp.vdo.ninja/images/STREAMID.jpg`.\
+[`https://vdo.ninja/?postimage=https%3A%2F%2Ftemp.vdo.ninja%2F&postinterval=30&push&wc`](https://vdo.ninja/?postimage=https%3A%2F%2Ftemp.vdo.ninja%2F\&postinterval=30\&push\&wc)\
+posts to a sample test server I have up. The URL is URL encoded, but not always necessary. If posting to my test server, the image can be accessed at `https://temp.vdo.ninja/images/STREAMID.jpg`.\
 There's caching enabled mind you, so you'll want to post-fix the current timestamp to the URL to disable that per request.
 
 For example: [`https://temp.vdo.ninja/images/yiMkpMg.jpg?t=3412341234`](https://temp.vdo.ninja/images/yiMkpMg.jpg?t=3412341234)&#x20;

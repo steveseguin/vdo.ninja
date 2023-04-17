@@ -23,7 +23,7 @@ Example: `&bgimage=https%3A%2F%2Fvdo.ninja%2Fmedia%2Fold_icon.png`
 
 `&bgimage` can be used to set the default image avatar, when using [`&style=0`](style.md) or [`&style=6`](style.md). This only impacts what the person with the parameter added sees and must be either a URL or a base64 data image/svg. URL-encoded values.
 
-[`https://vdo.ninja/?push=aSmexM6&style=0&vd=0&webcam&bgimage=https%3A%2F%2Fvdo.ninja%2Fmedia%2Fold_icon.png`](https://vdo.ninja/?push=aSmexM6\&style=0\&vd=0\&webcam\&bgimage=https%3A%2F%2Fvdo.ninja%2Fmedia%2Fold\_icon.png)``
+[`https://vdo.ninja/?push=aSmexM6&style=0&vd=0&webcam&bgimage=https%3A%2F%2Fvdo.ninja%2Fmedia%2Fold_icon.png`](https://vdo.ninja/?push=aSmexM6\&style=0\&vd=0\&webcam\&bgimage=https%3A%2F%2Fvdo.ninja%2Fmedia%2Fold\_icon.png)
 
 ![](<../../.gitbook/assets/image (11) (1).png>)
 

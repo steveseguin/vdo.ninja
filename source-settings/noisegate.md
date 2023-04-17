@@ -41,7 +41,7 @@ User feedback on this feature welcomed.
 
 ### Noise Gate Settings
 
-``[`&noisegatesettings`](../advanced-settings/audio-parameters/and-noisegatesettings.md) is used in conjunction with `&noisegate`. This feature lets you tweak the noise-gate's variables, making it more or less aggressive as needed.
+[`&noisegatesettings`](../advanced-settings/audio-parameters/and-noisegatesettings.md) is used in conjunction with `&noisegate`. This feature lets you tweak the noise-gate's variables, making it more or less aggressive as needed.
 
 It takes a comma separated list:
 

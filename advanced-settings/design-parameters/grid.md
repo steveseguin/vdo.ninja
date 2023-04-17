@@ -15,7 +15,7 @@ Sender-Side Option! ([`&push`](../../source-settings/push.md))
 
 Example: `&grid=./media/thirdshead.svg`
 
-| Value            | Descritpion                              |
+| Value            | Description                              |
 | ---------------- | ---------------------------------------- |
 | (no value given) | adds a white rule-of-thirds grid overlay |
 | (encoded URL)    | adds an image as a overlay               |
@@ -42,7 +42,7 @@ URL can be URL-encoded, for more complex URLs. Simple URLs might work without.
 
 Technically this can be used as an overlay for other things, but it only works with the self-preview.
 
-Example: [`https://vdo.ninja/?push&grid=./media/thirdshead.svg`](https://vdo.ninja/?push\&grid=./media/thirdshead.svg)``
+Example: [`https://vdo.ninja/?push&grid=./media/thirdshead.svg`](https://vdo.ninja/?push\&grid=./media/thirdshead.svg)
 
 Leave the passed value empty if you wish to have the white basic rule-of-thirds show as default.
 

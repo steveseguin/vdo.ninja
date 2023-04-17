@@ -29,8 +29,8 @@ Several TURN servers are provided by Steve for free, for now, and these are auto
 ### **Example Usage**
 
 `https://vdo.ninja/?turn=steve;setupYourOwnPlease;turn:turn.vdo.ninja:443&relay`\
-``\
-``Note the use of `turn:`, and in the case of TLS/SSL, `turns:`
+\
+Note the use of `turn:`, and in the case of TLS/SSL, `turns:`
 
 ### **More Info**
 

@@ -10,7 +10,7 @@ Viewer-Side Option! ([`&view`](../view-parameters/view.md), [`&scene`](../view-p
 
 * `&nv`
 * `&hidevideo`
-* ``[`&showonly`](novideo.md)``
+* [`&showonly`](novideo.md)
 
 ## Details
 

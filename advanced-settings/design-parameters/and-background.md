@@ -23,7 +23,7 @@ Example: `&background=./media/logo_cropped.png`
 Accepts a URL-encoded image URL to make as the app's default background.
 
 To test:\
-[`https://vdo.ninja/?background=./media/logo_cropped.png`](https://vdo.ninja/?background=./media/logo\_cropped.png)``
+[`https://vdo.ninja/?background=./media/logo_cropped.png`](https://vdo.ninja/?background=./media/logo\_cropped.png)
 
 The image will scale in size to cover the VDO.Ninja app's background. [`&chroma`](chroma.md) can still be used to set the background color, if using transparencies. There already exists [`&bgimage`](and-bgimage.md), which will set the default background image for videos; this however will set a background image for the entire page.
 

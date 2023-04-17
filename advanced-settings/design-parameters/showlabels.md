@@ -38,7 +38,7 @@ Underscores "\_" used in label values will be replaced by spaces, allowing for w
 HTML5 Emojis 🎈 and some non-Latin characters are supported.
 
 For example: `https://vdo.ninja/?showlabels=fire`\
-``![](<../../.gitbook/assets/image (54).png>)``
+![](<../../.gitbook/assets/image (54).png>)
 
 If no preset option is passed, a default generic style is used:\
 ![](<../../.gitbook/assets/image (119).png>)

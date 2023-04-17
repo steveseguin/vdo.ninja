@@ -9,7 +9,7 @@ Viewer-Side Option! ([`&scene`](../view-parameters/scene.md), [`&room`](../../ge
 ## Aliases
 
 * `&sharpen`
-* ``[`&dpi=2`](../view-parameters/dpi.md)``
+* [`&dpi=2`](../view-parameters/dpi.md)
 
 ## Details
 

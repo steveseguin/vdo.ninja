@@ -22,7 +22,7 @@ Example: `&maindirectorpassword=SomePassword123`
 ## Details
 
 `&maindirectorpassword` lets you set a pseudo 'master room password' as a director. It helps avoid getting locked out as the director, if someone else tries to claim the director-role first. ie:\
-[`https://vdo.ninja/alpha/?director=ROOMNAME&maindirectorpassword=MASTERPASS`](https://vdo.ninja/alpha/?director=ROOMNAME\&maindirectorpassword=MASTERPASS)``
+[`https://vdo.ninja/alpha/?director=ROOMNAME&maindirectorpassword=MASTERPASS`](https://vdo.ninja/alpha/?director=ROOMNAME\&maindirectorpassword=MASTERPASS)
 
 This will add a [`&token`](../settings-parameters/and-token-alpha.md) value to the invite/scene links.
 

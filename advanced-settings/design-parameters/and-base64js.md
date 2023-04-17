@@ -25,7 +25,7 @@ Example: `&base64js=YWxlcnQoJ2hpJyk=`
 `&base64js` lets a user add raw java script to the URL to run on page load.
 
 To test:\
-[`https://vdo.ninja/?base64js=YWxlcnQoJ2hpJyk=`](https://vdo.ninja/?base64js=YWxlcnQoJ2hpJyk=)``
+[`https://vdo.ninja/?base64js=YWxlcnQoJ2hpJyk=`](https://vdo.ninja/?base64js=YWxlcnQoJ2hpJyk=)
 
 ## Related
 

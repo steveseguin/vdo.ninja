@@ -21,7 +21,7 @@ See video for a walk-thru:
 
 Overlay text data is pulled from the source with [`&transcribe`](../../source-settings/transcribe.md) added.
 
-``[`&fontsize={percent}`](../view-parameters/fontsize.md) can be used to adjust the overlay font-size. 100% is default;
+[`&fontsize={percent}`](../view-parameters/fontsize.md) can be used to adjust the overlay font-size. 100% is default;
 
 Use can use [`&css=somecssfile.css`](../design-parameters/css.md) to further customize the CSS style, or do so in the OBS Browser source style sheet area. You can also set the CSS via a base64 encoded string in the URL, via the [`&base64css`](../design-parameters/css.md) parameter.\
 \

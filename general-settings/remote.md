@@ -51,8 +51,8 @@ A bit less accessible, but using `&remote` also gives the viewer permission to r
 [https://vdo.ninja/monitor](https://vdo.ninja/monitor)
 
 Example usage:\
-``\
-``Monitoring Link: `https://vdo.ninja/monitor?sid=BaGpHmu,stevetest123`
+\
+Monitoring Link: `https://vdo.ninja/monitor?sid=BaGpHmu,stevetest123`
 
 ![](<../.gitbook/assets/image (39).png>)
 
@@ -72,4 +72,4 @@ If viewers of a stream ID being monitor have a label assigned ([`&label`](label.
 
 When using the `&remote` control option, the viewer can now remotely hang-up the sender via the right-click menu. The sender needs to remote control enabled for this to work of course.
 
-`&remote`, if used on a push link without a password added, it will now allow the remote viewer limited control (hangup, focus, zoom, detailed stats), even if they don't have `&remote` added to their URL also. When using `&remote`, the option to "reload" the remote browser is now available, so you can potentially reload a remote unattended session that contains`&autostart&webcam`.![](<../.gitbook/assets/image (115).png>)``
+`&remote`, if used on a push link without a password added, it will now allow the remote viewer limited control (hangup, focus, zoom, detailed stats), even if they don't have `&remote` added to their URL also. When using `&remote`, the option to "reload" the remote browser is now available, so you can potentially reload a remote unattended session that contains`&autostart&webcam`.![](<../.gitbook/assets/image (115).png>)
