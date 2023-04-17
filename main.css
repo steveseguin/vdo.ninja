@@ -5351,3 +5351,9 @@ body.darktheme .invite_setting_group_links a {
     box-shadow: 0px 0px 15px var(--codirector-box);
     display: var(--show-codirectors) !important;
 }
+
+.disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    pointer-events: none;
+}
