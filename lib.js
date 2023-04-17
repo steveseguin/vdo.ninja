@@ -3632,13 +3632,12 @@ function updateMixerRun(e=false){  // this is the main auto-mixing code.  It's a
 		}
 		
 		var h = window.innerHeight - hi;
-		
 		if (session.dedicatedControlBarSpace || window.innerHeight<=700 ){ // # This needs to be reviewed.
-			if (document.getElementById("controlButtons") && !session.overlayControls){
-				var h = window.innerHeight - hi - document.getElementById("controlButtons").offsetHeight;
-			} else {
-				var h = window.innerHeight - hi;
-			}
+			if (document.getElementById("subControlButtons") && !session.overlayControls){
+				if (!document.getElementById("subControlButtons").yOffset || (document.getElementById("subControlButtons").yOffset>-10)){
+					h = window.innerHeight - hi - document.getElementById("subControlButtons").offsetHeight;
+				}
+			} 
 		}
 		
 		var arW = 16.0;

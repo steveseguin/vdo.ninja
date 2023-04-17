@@ -132,19 +132,19 @@
 			<div id="head7" class="hidden" data-translate="director-muted-you">The director has muted you.</div>
 			<div id="head8" class="hidden" data-translate="director-video-muted-you">The director has disabled your camera temporarily.</div>
 		</div>
-		<div id="chatModule" class="hidden">
-			<a target="popup" id="popOutChat" onclick="createPopoutChat();"><i class="las la-external-link-alt"></i></a>
-			<div id="chatBody"> 
-				<div class="inMessage" id="welcomeMsg" data-translate='welcome-to-vdo-ninja-chat'>
-					Welcome to the chat! You can send text messages directly to connected peers from here.
-				</div>
-			</div>
-			<input type="text" id="chatInput" placeholder="Enter chat message to send here" onkeypress="EnterButtonChat(event)" />
-			<button class="chatBarInputButton" onclick="sendChatMessage()" data-translate='send-chat'>Send</button>
-		</div>
 		<div id="controlButtons" class="hidden">
             <div class="controlPositioning">
                 <div id="obsState" class="hidden" >ACTIVE</div>
+                <div id="chatModule" class="hidden">
+                    <a target="popup" id="popOutChat" onclick="createPopoutChat();"><i class="las la-external-link-alt"></i></a>
+                    <div id="chatBody"> 
+                        <div class="inMessage" id="welcomeMsg" data-translate='welcome-to-vdo-ninja-chat'>
+                            Welcome to the chat! You can send text messages directly to connected peers from here.
+                        </div>
+                    </div>
+                    <input type="text" id="chatInput" placeholder="Enter chat message to send here" onkeypress="EnterButtonChat(event)" />
+                    <button class="chatBarInputButton" onclick="sendChatMessage()" data-translate='send-chat'>Send</button>
+                </div>
                 <div id="subControlButtons">
                 
                     <div id="blindAllGuests" title="Blind all guests in room (toggle)" alt="Blind all guests in room (toggle)" aria-label="Blind all guests in room" onmousedown="event.preventDefault(); event.stopPropagation();"  onclick="blindAllGuests(this, event)"  tabindex="16" role="button" aria-pressed="false" onkeyup="enterPressedClick(event,this);"  class="hidden float" style="cursor: pointer;" >
@@ -2480,6 +2480,6 @@
 		// If you wish to change branding, blank offers a good clean start.
 		<script type="text/javascript" id="main-js" src="./main.js" data-translation="blank"></script>
 		-->
-		<script type="text/javascript" crossorigin="anonymous" id="main-js" src="./main.js?ver=602"></script>
+		<script type="text/javascript" crossorigin="anonymous" id="main-js" src="./main.js?ver=603"></script>
 	</body>
 </html>
