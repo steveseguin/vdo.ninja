@@ -56,7 +56,7 @@
 		<meta property="twitter:image" content="./media/vdoNinja_logo_full.png" />
 		<meta name="msapplication-TileColor" content="#da532c" />
 		<meta name="theme-color" content="#ffffff" />
-		<link rel="stylesheet" href="./main.css?ver=303" />
+		<link rel="stylesheet" href="./main.css?ver=304" />
 		<script type="text/javascript" crossorigin="anonymous" src="./thirdparty/adapter.js"></script>
 		<style id="lightbox-animations" type="text/css"></style>
 		<!-- <link rel="manifest" href="manifest.json" /> -->
@@ -132,19 +132,19 @@
 			<div id="head7" class="hidden" data-translate="director-muted-you">The director has muted you.</div>
 			<div id="head8" class="hidden" data-translate="director-video-muted-you">The director has disabled your camera temporarily.</div>
 		</div>
+		<div id="chatModule" class="hidden">
+			<a target="popup" id="popOutChat" onclick="createPopoutChat();"><i class="las la-external-link-alt"></i></a>
+			<div id="chatBody"> 
+				<div class="inMessage" id="welcomeMsg" data-translate='welcome-to-vdo-ninja-chat'>
+					Welcome to the chat! You can send text messages directly to connected peers from here.
+				</div>
+			</div>
+			<input type="text" id="chatInput" placeholder="Enter chat message to send here" onkeypress="EnterButtonChat(event)" />
+			<button class="chatBarInputButton" onclick="sendChatMessage()" data-translate='send-chat'>Send</button>
+		</div>
 		<div id="controlButtons" class="hidden">
             <div class="controlPositioning">
                 <div id="obsState" class="hidden" >ACTIVE</div>
-                <div id="chatModule" style="display:none;">
-                    <a target="popup" id="popOutChat" onclick="createPopoutChat();"><i class="las la-external-link-alt"></i></a>
-                    <div id="chatBody"> 
-                        <div class="inMessage" id="welcomeMsg" data-translate='welcome-to-vdo-ninja-chat'>
-                            Welcome to the chat! You can send text messages directly to connected peers from here.
-                        </div>
-                    </div>
-                    <input type="text" id="chatInput" placeholder="Enter chat message to send here" onkeypress="EnterButtonChat(event)" />
-                    <button class="chatBarInputButton" onclick="sendChatMessage()" data-translate='send-chat'>Send</button>
-                </div>
                 <div id="subControlButtons">
                 
                     <div id="blindAllGuests" title="Blind all guests in room (toggle)" alt="Blind all guests in room (toggle)" aria-label="Blind all guests in room" onmousedown="event.preventDefault(); event.stopPropagation();"  onclick="blindAllGuests(this, event)"  tabindex="16" role="button" aria-pressed="false" onkeyup="enterPressedClick(event,this);"  class="hidden float" style="cursor: pointer;" >
@@ -1817,7 +1817,7 @@
 				
 				<div class="hidden" id="grabDirectorSoloLinkParent" title="The solo view link of the Director's video."><i class="las la-user"></i> Director's solo link:<a onclick="copyFunction(this,event)" data-drag="1" draggable="true" id="grabDirectorSoloLink" data-menu="context-menu" class="task" ></a></div>
 				<br />
-				<button onclick="toggleSettings()" class="toggleSettings"><i class="chevron right" style="font-size:150%;top:3px;position:relative;"></i> <b><span data-translate="close-settings">Close Settings</span></b></button>
+				<button onclick="toggleSettings()" class="toggleSettings"><i class="chevron right" style="font-size:150%;top:9px;position:relative;"></i> <b><span data-translate="close-settings">Close Settings</span></b></button>
 				
 				<button id='advancedOptionsAudio' onclick="this.classList.toggle('highlight');toggle(getById('popupSelector_constraints_audio'),false,false); getById('popupSelector_constraints_loading').style.visibility='visible';" class="advancedToggle">
 				<i class="las la-sliders-h" style="font-size:150%;top:3px;position:relative;"></i> <b>Audio</b></button>
@@ -2475,7 +2475,7 @@
 			// session.hidehome = true; // If used, 'hide home' will make the landing page inaccessible, along with hiding a few go-home elements.
 			// session.record = false; // uncomment to block users from being able to record via vdo.ninja's built in recording function
 		</script>
-		<script type="text/javascript" crossorigin="anonymous" id="lib-js" src="./lib.js?ver=748"></script>
+		<script type="text/javascript" crossorigin="anonymous" id="lib-js" src="./lib.js?ver=749"></script>
 		<!-- 
 		// If you wish to change branding, blank offers a good clean start.
 		<script type="text/javascript" id="main-js" src="./main.js" data-translation="blank"></script>

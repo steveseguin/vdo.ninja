@@ -1791,6 +1791,21 @@ input[type=range]:focus::-ms-fill-upper {
 
 /* ////// Icon resizing for mobile subControl bar ////// */
 
+@media only screen and (max-height: 500px) {
+    #subControlButtons {
+        position: unset;
+        min-width: unset;
+    }
+    #subControlButtons > div {
+        min-width: 40px;
+        min-height: 40px;
+        margin: 4px;
+    }
+    #SubControlButtons > div i {
+        font-size: 28px;
+    }
+}
+
 @media only screen and (max-width: 500px) {
     #subControlButtons {
         position: unset;
@@ -1803,6 +1818,18 @@ input[type=range]:focus::-ms-fill-upper {
     }
     #SubControlButtons > div i {
         font-size: 28px;
+    }
+}
+
+@media only screen and (max-height: 410px) {
+    #subControlButtons > div {
+        min-width: 35px;
+        min-height: 35px;
+        border-radius: 6px;
+        margin: 3px;
+    }
+    #SubControlButtons > div i {
+        font-size: 24px;
     }
 }
 
@@ -1819,6 +1846,18 @@ input[type=range]:focus::-ms-fill-upper {
 }
 
 @media only screen and (max-width: 360px) {
+    #subControlButtons > div {
+        min-width: 30px;
+        min-height: 30px;
+        border-radius: 4px;
+        margin: 3px;
+    }
+    #SubControlButtons > div i {
+        font-size: 20px;
+    }
+}
+
+@media only screen and (max-height: 360px) {
     #subControlButtons > div {
         min-width: 30px;
         min-height: 30px;
@@ -2983,7 +3022,7 @@ button.toggleSettings{
 	width: 135px;
 	background-color:#EFEFEF;
 	padding:9px 12px 10px 2px;
-	margin: 0px 0px 20px 0
+	margin: 0;
 }
 .selected {
 	border: solid 3px black;
@@ -3365,7 +3404,7 @@ input[type=checkbox] {
     border-radius: 5px;
     overflow-y: scroll;
     overflow-wrap: anywhere;
-    max-height: 500px;
+    max-height: min(500px, 70vh);
 }
 
 #chatBody::-webkit-scrollbar {
@@ -3384,24 +3423,31 @@ div#chatBody a {
 }
 
 #chatModule {
-    display: flex;
-    flex-wrap: wrap;
-    width: 100%;
-    max-width: 500px;
+    bottom: 50px;
+    position: fixed;
+    margin: 10px;
+    align-self: center;
+    width: 574px;
+    min-width: 300px;
+    max-width: 100%;
     z-index: 3;
-    margin-bottom: 65px;
-    gap: 0px 5px;
-	pointer-events: auto;
 }
 #chatInput {
 	color: #000;
-	background-color: #FFFE;
-	width: 70%;
-	padding: 3px;
+    background-color: #FFFE;
+    max-width: 700px;
+    min-width: 320px;
+    width: calc(100% - 89px);
+    font-size: 105%;
+    padding: 3px;
+    border: 3px solid black;
 }
 .chatBarInputButton {
-	width: calc(30% - 5px);
-    margin: unset;
+	width: 60px;
+    background-color: #EEE;
+    top: -1px;
+    position: relative;
+    margin-right: 10px;
 }
     
 .debugStats {

@@ -10757,15 +10757,13 @@ function toggleChat(event = null) { // TODO: I need to have this be MUTE, toggle
 		});
 		session.chat = true;
 		getById("chattoggle").className = "las la-comment-dots toggleSize";
-		getById("chatbutton").className = "float";
-		getById("chatModule").style.display = "flex";
+		getById("chatModule").classList.remove("hidden");
 		getById("chatInput").focus(); // give it keyboard focus
 	} else {
 		
 		session.chat = false;
 		getById("chattoggle").className = "las la-comment-alt toggleSize";
-		getById("chatbutton").className = "float";
-		getById("chatModule").style.display = "none";
+		getById("chatModule").classList.add("hidden");
 
 		document.removeEventListener("click", toggleChat);
 		getById("chatModule").removeEventListener("click", function(e) {
