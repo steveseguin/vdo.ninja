@@ -328,7 +328,7 @@
 				
 				<div id="urlInput2"  class="urlInput"title="Put the WHIP token you want to listen for">
 					
-					<h3>Setup VDO.Ninja to be a WHIP-ingestion end-point</h3>
+					<h3>Setup VDO.Ninja to be a WHIP-ingestion end-point (ie: OBS -> VDO)</h3>
 					
 					<div class="inputCombo" id="inputCombo2">
 						<label for="changeText">
@@ -337,6 +337,7 @@
 						<input type="text" id="changeText2" class="inputfield changeText" placeholder="Ingest WHIP token" />
 						<button  onclick="gohere2();"  class="gobutton" id="gobutton2">GO</button>
 					</div>
+					<h3 style="text-align: center;color:#ccc;"><i>The WHIP endpoint for VDO.Ninja is <b>https://whip.vdo.ninja</b></i></h3>
 				</div>
 				
 				<div id="urlInput3"  class="urlInput"title="Put the link you want to play here">
@@ -401,8 +402,8 @@ function gohere1t(){
 
 function gohere2(){
 	if (document.getElementById('changeText2').value){
-		localStorage.setItem('changeText2', document.getElementById('changeText1').value);
-		window.location = domain + "?hidemenu&whip=" + document.getElementById('changeText1').value;
+		localStorage.setItem('changeText2', document.getElementById('changeText2').value);
+		window.location = domain + "?hidemenu&whip=" + document.getElementById('changeText2').value;
 	}
 }
 

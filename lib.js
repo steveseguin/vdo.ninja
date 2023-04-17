@@ -4157,7 +4157,7 @@ function updateMixerRun(e=false){  // this is the main auto-mixing code.  It's a
 						session.rpcs[i].videoElement.style.visibility = "visible";
 					} catch(e){errorlog(e);}
 					
-					if (session.rpcs[i].virtualHangup || session.rpcs[i].bandwidthMuted){
+					if (session.rpcs[i].virtualHangup || session.rpcs[i].bandwidthMuted || session.rpcs[i].directorVideoMuted){
 						continue;
 					}
 					
@@ -11222,20 +11222,23 @@ async function directMigrate(ele, event, room=false) { // everyone in the room w
 		if (previousRoom === null) { // user cancelled in previous callback
 			ele.innerHTML = '<i class="las la-paper-plane"></i> <span data-translate="forward-to-room">transfer</span>';
 			miniTranslate(ele);
-			ele.style.backgroundColor = null;
+			//ele.style.backgroundColor = null;
+			ele.classList.remove("armed");
 			return;
 		}
 		if (transferCancelled === true) {
 			ele.innerHTML = '<i class="las la-paper-plane"></i> <span data-translate="forward-to-room">transfer</span>';
 			miniTranslate(ele);
-			ele.style.backgroundColor = null;
+			//ele.style.backgroundColor = null;
+			ele.classList.remove("armed");
 			return;
 		}
 		var migrateRoom = previousRoom
 	} else if ((event.ctrlKey) || (event.metaKey)) {
 		ele.innerHTML = '<i class="las la-check"></i> <span data-translate="forward-to-room">armed</span>';
 		miniTranslate(ele);
-		ele.style.backgroundColor = "#BF3F3F";
+		ele.classList.add("armed");
+		//ele.style.backgroundColor = "#BF3F3F";
 		transferCancelled = false;
 		//armedTransfer=true;
 		Callbacks.push([directMigrate, ele, stillNeedRoom]);
@@ -11272,7 +11275,8 @@ async function directMigrate(ele, event, room=false) { // everyone in the room w
 		if (migrateRoom === null) { // user cancelled
 			ele.innerHTML = '<i class="las la-paper-plane"></i> <span data-translate="forward-to-room">transfer</span>';
 			miniTranslate(ele);
-			ele.style.backgroundColor = null;
+			//ele.style.backgroundColor = null;
+			ele.classList.remove("armed");
 			transferCancelled = true;
 			return;
 		}
@@ -11284,7 +11288,8 @@ async function directMigrate(ele, event, room=false) { // everyone in the room w
 	}
 	ele.innerHTML = '<i class="las la-paper-plane"></i> <span data-translate="forward-to-room">transfer</span>';
 	miniTranslate(ele);
-	ele.style.backgroundColor = null;
+	//ele.style.backgroundColor = null;
+	ele.classList.remove("armed");
 
 	if (migrateRoom) {
 		previousRoom = migrateRoom;
@@ -11306,9 +11311,10 @@ function directHangup(ele, event) { // everyone in the room will hangup this gue
 	} else if (event===true) {
 		var confirmHangup = true;
 	} else if ((event.ctrlKey) || (event.metaKey)) {
-		ele.innerHTML = '<i class="las la-skull-crossbones"></i> <span data-translate="disconnect-guest" >ARMED</span>';
+		ele.innerHTML = '<i class="las la-skull-crossbones"></i> <span data-translate="disconnect-guest" >ARMED</span>'; 
 		miniTranslate(ele);
-		ele.style.backgroundColor = "#BF3F3F";
+		ele.classList.add("armed");
+		//ele.style.backgroundColor = "#BF3F3F";
 		stillNeedHangupTarget = 1;
 		Callbacks.push([directHangup, ele, false]);
 		log("Hangup queued");
@@ -11330,7 +11336,8 @@ function directHangup(ele, event) { // everyone in the room will hangup this gue
 	} else {
 		ele.innerHTML = '<i class="las la-sign-out-alt"></i><span data-translate="disconnect-guest"> Hangup</span>';
 		miniTranslate(ele);
-		ele.style.backgroundColor = null;
+		//ele.style.backgroundColor = null;
+		ele.classList.remove("armed");
 		return false;
 	}
 }
@@ -11839,20 +11846,22 @@ async function directPageReload(ele, event) {
 		if (previousURL === null) { // user cancelled in previous callback
 			ele.innerHTML = '<i class="las la-sync"></i> <span data-translate="change-url">change URL</span>';
 			miniTranslate(ele)
-			ele.style.backgroundColor = null;
+			ele.classList.remove("armed");// ele.style.backgroundColor = null;
 			return;
 		}
 		if (reloadCancelled === true) {
 			ele.innerHTML = '<i class="las la-sync"></i> <span data-translate="change-url">change URL</span>';
 			miniTranslate(ele)
-			ele.style.backgroundColor = null;
+			ele.classList.remove("armed");
+			//ele.style.backgroundColor = null;
 			return;
 		}
 		reloadURL = previousURL
 	} else if ((event.ctrlKey) || (event.metaKey)) {
 		ele.innerHTML = '<i class="las la-check"></i> <span data-translate="button-armed">armed</span>';
 		miniTranslate(ele)
-		ele.style.backgroundColor = "#BF3F3F";
+		ele.classList.add("armed");
+		//ele.style.backgroundColor = "#BF3F3F";
 		reloadCancelled = false;
 		armedReload=true;
 		Callbacks.push([directPageReload, ele, stillNeedURL]);
@@ -11867,8 +11876,9 @@ async function directPageReload(ele, event) {
 		stillNeedURL = true;
 		if (reloadURL === null) { // user cancelled
 			ele.innerHTML = '<i class="las la-sync"></i> <span data-translate="change-url">change URL</span>';
-			miniTranslate(ele)
-			ele.style.backgroundColor = null;
+			miniTranslate(ele);
+			ele.classList.remove("armed");
+			//ele.style.backgroundColor = null;
 			reloadCancelled = true;
 			return;
 		}
@@ -11879,7 +11889,7 @@ async function directPageReload(ele, event) {
 	}
 	ele.innerHTML = '<i class="las la-sync"></i> <span data-translate="change-url">change URL</span>';
 	miniTranslate(ele)
-	ele.style.backgroundColor = null;
+	ele.classList.remove("armed");//ele.style.backgroundColor = null;
 
 	if (reloadURL) {
 		previousURL = reloadURL;
@@ -12419,7 +12429,8 @@ function remoteHideVideo(ele,  event=false, skipSend=false) {
 	
 	if (!event ||  ((event.ctrlKey) || (event.metaKey))) {
 		ele.children[1].innerHTML = miscTranslations["armed"]
-		ele.style.backgroundColor = "#BF3F3F";
+		//ele.style.backgroundColor = "#BF3F3F";
+		ele.classList.add("armed");
 		Callbacks.push([remoteHideVideo, ele, false]);
 		log("video queued");
 		return;
@@ -12434,7 +12445,7 @@ function remoteHideVideo(ele,  event=false, skipSend=false) {
 			ele.innerHTML = '<i class="las la-user-slash"></i> <span data-translate="unhide-guest" >Unhide</span>';
 		}
 		miniTranslate(ele);
-		ele.style.backgroundColor = null;
+		ele.classList.remove("armed");//ele.style.backgroundColor = null;
 	}
 
 	var msg = {};
@@ -12471,7 +12482,7 @@ function remoteMuteVideo(ele,  event=false, skipSend=false) {
 	
 	if (!event ||  ((event.ctrlKey) || (event.metaKey))) {
 		ele.children[1].innerHTML = miscTranslations["armed"]
-		ele.style.backgroundColor = "#BF3F3F";
+		ele.classList.add("armed");//ele.style.backgroundColor = "#BF3F3F";
 		Callbacks.push([remoteMuteVideo, ele, false]);
 		log("video queued");
 		return;
@@ -12479,14 +12490,14 @@ function remoteMuteVideo(ele,  event=false, skipSend=false) {
 		if (ele.value == 1) {
 			ele.value = 0;
 			ele.classList.remove("pressed");
-			ele.innerHTML = '<i class="las la-video-slash"></i> <span data-translate="mute-video-guest" >Video on</span>';
+			ele.innerHTML = '<i class="las la-video-slash"></i> <span data-translate="mute-video-guest" >Video off</span>';
 		} else {
 			ele.value = 1;
 			ele.classList.add("pressed");
-			ele.innerHTML = '<i class="las la-video-slash"></i> <span data-translate="unmute-video-guest" >Video off</span>';
+			ele.innerHTML = '<i class="las la-video-slash"></i> <span data-translate="unmute-video-guest" >Video on</span>';
 		}
 		miniTranslate(ele);
-		ele.style.backgroundColor = null;
+		ele.classList.remove("armed");
 	}
 
 	var msg = {};
@@ -12521,7 +12532,7 @@ function updateDirectorVideoMute(UUID) {
 	if (ele[0]) {
 		ele[0].value = 1;
 		ele[0].classList.add("pressed");
-		ele[0].innerHTML = '<i class="las la-video-slash"></i> <span data-translate="unmute-video-guest" >Video off</span>';
+		ele[0].innerHTML = '<i class="las la-video-slash"></i> <span data-translate="unmute-video-guest" >Video on</span>';
 		miniTranslate(ele[0]);
 	}
 	return true;
@@ -15792,6 +15803,7 @@ function requestInfocus(ele, evt=null, value=null) {
 	if (ele.value == 1) {
 		ele.value = 0;
 		ele.classList.remove("pressed");
+		ele.classList.remove("altpress");
 		var actionMsg = {};
 		actionMsg.infocus = false;
 		session.sendMessage(actionMsg);
@@ -15808,10 +15820,16 @@ function requestInfocus(ele, evt=null, value=null) {
 		for (var i=0;i<eles.length;i++) {
 			log(eles);
 			eles[i].classList.remove("pressed");
+			eles[i].classList.remove("altpress");
 			eles[i].value = 0;
 		}
 		ele.value = 1;
-		ele.classList.add("pressed");
+		
+		if(special){
+			ele.classList.add("altpress");
+		} else {
+			ele.classList.add("pressed");
+		}
 		if (ele.id!=="highlightDirector"){
 			getById("highlightDirector").checked=false;
 		}
@@ -21354,6 +21372,7 @@ session.toggleSoloChat = function(UUID, event=false){ // ==> applyIsolatedChat -
 	session.sendRequest(msg, UUID);
 	
 	log(session.soloChatUUID);
+	
 	var ele = document.querySelector('[data-action-type="solo-chat"][data--u-u-i-d="'+UUID+'"]'); // [data--u-u-i-d="'+UUID+'"]  // this all just updates the buttons
 	log(ele);
 	
@@ -21549,7 +21568,7 @@ session.applyIsolatedChat = function(UUID=false){ //  mutes outbound mic audio; 
 
 var FirefoxSenders = {};
 
-function setEncodings(sender, settings=null, callback=null){
+function setEncodings(sender, settings=null, callback=null, cbarg=null){
 	if (!settings){
 		if (!(sender.encodingsQueue)){ // not set
 			return;
@@ -21557,9 +21576,9 @@ function setEncodings(sender, settings=null, callback=null){
 			return;
 		}
 	} else if (!("encodingsQueue" in sender)){
-		sender.encodingsQueue = [[settings, callback]];
+		sender.encodingsQueue = [[settings, callback, cbarg]];
 	} else {
-		sender.encodingsQueue.push([settings, callback]);
+		sender.encodingsQueue.push([settings, callback, cbarg]);
 	}
 	
 	if (sender.encodingsQueueActive){return;}
@@ -21570,6 +21589,7 @@ function setEncodings(sender, settings=null, callback=null){
 		var options = sender.encodingsQueue.shift();
 		settings = options[0];
 		callback = options[1];
+		cbarg = options[2];
 		
 		const params = sender.getParameters();
 		if (!params.encodings || (params.encodings.length==0)){
@@ -21601,7 +21621,11 @@ function setEncodings(sender, settings=null, callback=null){
 		if (!changed){
 			log("SET ENCODINGS MATCH INPUT; skipping");
 			if (callback){
-				setTimeout(function(){callback();},0);
+				if (cbarg){
+					setTimeout(function(){callback(cbarg);},0);
+				} else {
+					setTimeout(function(){callback();},0);
+				}
 			}
 			sender.encodingsQueueActive = false;
 			setEncodings(sender);
@@ -21627,7 +21651,11 @@ function setEncodings(sender, settings=null, callback=null){
 				delete settings.active;
 				if (!Object.keys(settings).length){
 					if (callback){
-						setTimeout(function(){callback();},0);
+						if (cbarg){
+							setTimeout(function(){callback(cbarg);},0);
+						} else {
+							setTimeout(function(){callback();},0);
+						}
 					}
 					log("COMPELTED FIREFOX SET ENCODINGS");
 					sender.encodingsQueueActive = false;
@@ -21639,7 +21667,11 @@ function setEncodings(sender, settings=null, callback=null){
 	
 		sender.setParameters(params).then(() => {
 			if (callback){
-				setTimeout(function(){callback();},0);
+				if (cbarg){
+					setTimeout(function(){callback(cbarg);},0);
+				} else {
+					setTimeout(function(){callback();},0);
+				}
 			}
 			sender.encodingsQueueActive = false;
 			setEncodings(sender);
@@ -21682,41 +21714,42 @@ session.applySoloChat = function(apply=true){ // mutes outbound mic audio; ;;  d
 				var settings = {};
 				
 				if (session.soloChatUUID.length && (session.soloChatUUID.includes(uuid))){
-					
+					console.log("1: "+uuid);
 					settings.active = true;
-					setEncodings(sender, settings, function(){
-						log(uuid);
+					setEncodings(sender, settings, function(uid){
+						log("2: "+uid);
 						try {
-							document.querySelectorAll('[data-action-type="solo-chat"][data--u-u-i-d="'+uuid+'"]')[0].classList.add("pressed");
-							document.querySelectorAll('[data-action-type="solo-chat"][data--u-u-i-d="'+uuid+'"]')[0].classList.remove("hint");
+							console.log(document.querySelectorAll('[data-action-type="solo-chat"][data--u-u-i-d="'+uid+'"]'));
+							document.querySelectorAll('[data-action-type="solo-chat"][data--u-u-i-d="'+uid+'"]')[0].classList.add("pressed");
+							document.querySelectorAll('[data-action-type="solo-chat"][data--u-u-i-d="'+uid+'"]')[0].classList.remove("hint");
 						} catch(e){
 							warnlog(e);
 						}
-					}.bind(uuid));
+					}, uuid);
 					
 					
 				} else if (session.soloChatUUID.length==0){
 					settings.active = true;
-					setEncodings(sender, settings, function(){
-						log(uuid);
+					setEncodings(sender, settings, function(uid){
+						log(uid);
 						try {
-							document.querySelectorAll('[data-action-type="solo-chat"][data--u-u-i-d="'+uuid+'"]')[0].classList.remove("pressed");
-							document.querySelectorAll('[data-action-type="solo-chat"][data--u-u-i-d="'+uuid+'"]')[0].classList.remove("hint");
+							document.querySelectorAll('[data-action-type="solo-chat"][data--u-u-i-d="'+uid+'"]')[0].classList.remove("pressed");
+							document.querySelectorAll('[data-action-type="solo-chat"][data--u-u-i-d="'+uid+'"]')[0].classList.remove("hint");
 						} catch(e){
 							warnlog(e);
 						}
-					}.bind(uuid));
+					}, uuid);
 				} else {
 					settings.active = false;
-					setEncodings(sender, settings, function(){
-						warnlog("mutied the output to:"+ uuid);
+					setEncodings(sender, settings, function(uid){
+						warnlog("muted the output to:"+ uid);
 						try {
-							document.querySelectorAll('[data-action-type="solo-chat"][data--u-u-i-d="'+uuid+'"]')[0].classList.remove("pressed");
-							document.querySelectorAll('[data-action-type="solo-chat"][data--u-u-i-d="'+uuid+'"]')[0].classList.add("hint");
+							document.querySelectorAll('[data-action-type="solo-chat"][data--u-u-i-d="'+uid+'"]')[0].classList.remove("pressed");
+							document.querySelectorAll('[data-action-type="solo-chat"][data--u-u-i-d="'+uid+'"]')[0].classList.add("hint");
 						} catch(e){
 							warnlog(e);
 						}
-					}.bind(uuid));
+					}, uuid);
 					
 				}
 			});
@@ -22023,7 +22056,10 @@ async function press2talk(clean = false) {
 				log("SETTING AUDIO DEVICE!!");
 				activatedPreview = false; 
 				await grabAudio("#audioSource3");
+				
 			} 
+			
+			
 
 			if (session.videoDevice !== 0) { 
 				activatedPreview = false;
@@ -22041,6 +22077,8 @@ async function press2talk(clean = false) {
 			}
 			
 			session.directorEnabledPPT = true;
+			toggleMute(true);
+			
 			//await toggleSettings();
 			
 			log("session.seeding: " +session.seeding);
@@ -32869,8 +32907,9 @@ function whipOut(){
 				var streamsource = false;
 				if (!tracks || !tracks.length){
 					var audioCtx = new AudioContext();
-					streamsource = destination.stream;
+					
 					var destination = audioCtx.createMediaStreamDestination();
+					streamsource = destination.stream;
 					destination.stream.getAudioTracks().forEach(trk=>{
 						tracks = trk;
 					});
@@ -32889,7 +32928,7 @@ function whipOut(){
 				
 				if (tracks){
 					try {
-					session.whipOut.addTransceiver(tracks, {
+					  session.whipOut.addTransceiver(tracks, {
 						streams: [ streamsource ],
 						direction: 'sendonly'
 					  });
@@ -32930,7 +32969,7 @@ function whipOut(){
 				}
 				if (tracks){
 					try {
-					session.whipOut.addTransceiver(tracks, {
+					   session.whipOut.addTransceiver(tracks, {
 						streams: [ session.videoElement.srcObject ],
 						direction: 'sendonly'
 					  });
@@ -33081,9 +33120,6 @@ function whipOut(){
 					} else if (callback){
 						callback();
 					}
-				} else{
-					console.warn(this.responseText);
-					console.error(this);
 				}
 			};
 			if (type==="trickle-ice-sdpfrag"){
@@ -33109,6 +33145,8 @@ function whipOut(){
 	function GOP(){
 		log("Sending keyframe");
 		try {
+			if (!session.whipOut){return;}
+			
 			var senders = session.whipOut.getSenders();
 			var sender = false;
 			senders.forEach((senderVideo)=>{
@@ -33116,7 +33154,6 @@ function whipOut(){
 					sender = senderVideo;
 				}
 			});
-				
 			
 			if (!sender){
 				warnlog("can't change bitrate; no video sender found");
@@ -33126,7 +33163,8 @@ function whipOut(){
 			var settings = {};
 			settings.scaleResolutionDownBy = 10; // 50% of default max
 
-			setEncodings(sender, settings, function(){
+			
+			setEncodings(sender, settings, function(sendr){
 				var settings = {};
 				
 				var chromeVersion = getChromeVersion();
@@ -33136,10 +33174,10 @@ function whipOut(){
 					settings.scaleResolutionDownBy = 1.0;
 				}
 				
-				setEncodings(sender, settings, function(){
+				setEncodings(sendr, settings, function(){
 					//log("scaleResolutionDownBy set 3b!");
 				});
-			}.bind(sender));
+			}, sender);
 			
 			return true;
 		} catch(e){

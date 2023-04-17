@@ -493,7 +493,7 @@
     "remote-control-obs-menu": "Remote Controller for OBS Studio",
     "director-video-muted-you": "The director has disabled your camera temporarily.",
     "guest-toggle": "Guest Toggle",
-    "mute-video-guest": "Video on",
+    "mute-video-guest": "Video off",
     "settings": "Settings",
     "more": "More",
     "scene-options": "Scene options",

@@ -736,7 +736,7 @@ body.darktheme .credits>a:visited {
 	color: #FFF;
 }
 
-.altpress {
+.pressed.altpress, .altpress {
 	background: #673100 !important;
 	-webkit-box-shadow: inset 0px 0px 1px #b90000;
 	-moz-box-shadow: inset 0px 0px 1px #b90000;
@@ -744,7 +744,9 @@ body.darktheme .credits>a:visited {
 	outline: none;
 	color: white;
 }
-
+.pressed.armed, .armed {
+	background: #BF3F3F !important;
+}
 #mainmenu.row {
 	align-content: center;
 	text-align: center;
