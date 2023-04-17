@@ -238,7 +238,7 @@ a:link {
 	color: var(--a-link);
 }
 a:visited {
-	color: var(--a-e);
+	color: var(--a-visited);
 }
 a:hover {
 	color: var(--a-hover);
@@ -5351,9 +5351,20 @@ body.darktheme .invite_setting_group_links a {
     box-shadow: 0px 0px 15px var(--codirector-box);
     display: var(--show-codirectors) !important;
 }
-
-.disabled {
+/* Buttons to disable due to them being a director */
+.directorBoxColor button[data-action-type="hangup"],
+.directorBoxColor button[data-action-type="toggle-remote-speaker"],
+.directorBoxColor button[data-action-type="toggle-remote-display"],
+.directorBoxColor button[data-action-type="mute-video-guest"],
+.directorBoxColor button[data-action-type="advanced-camera-settings"],
+.directorBoxColor button[data-action-type="advanced-audio-settings"],
+.directorBoxColor button[data-action-type="order-down"],
+.directorBoxColor button[data-action-type="order-up"],
+.directorBoxColor button[data-action-type="toggle-group"],
+.directorBoxColor button[data-action-type="mute-guest"],
+.directorBoxColor .tooltip {
     opacity: 0.5;
     cursor: not-allowed;
     pointer-events: none;
 }
+    
