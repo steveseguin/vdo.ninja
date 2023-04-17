@@ -679,10 +679,10 @@ body.darktheme .credits>a:visited {
 }
 
 .advancedAudioSettings div select[data-chosen='false'], .advancedVideoSettings div select[data-chosen='false'] { 
-    border: 2px solid red;
+    border: 1px solid red;
 }
 .advancedAudioSettings div select[data-chosen='true'], .advancedVideoSettings div select[data-chosen='true'] { 
-    border: 2px solid green;
+    border: 1px solid green;
 }
 
 .advancedAudioSettings > div:nth-child(1) {
