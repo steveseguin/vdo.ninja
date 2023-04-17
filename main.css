@@ -711,10 +711,8 @@ body.darktheme .credits>a:visited {
 .advancedVideoSettings div:nth-child(2) {
     display: flex;
     width: 100%;
-    padding: 4px;
     align-items: center;
     gap: 4px;
-    box-shadow: 1px 1px 3px rgba(0,0,0,0.75);
 }
 
 .advancedVideoSettings div:nth-child(2) select {
