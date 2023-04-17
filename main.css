@@ -238,7 +238,7 @@ a:link {
 	color: var(--a-link);
 }
 a:visited {
-	color: var(--a-e);
+	color: var(--a-visited);
 }
 a:hover {
 	color: var(--a-hover);
