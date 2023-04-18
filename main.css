@@ -5143,6 +5143,10 @@ input[type='range'] {
     width: 100%;
 }
 
+#videoname1, #passwordRoom {
+    height:unset;
+}
+
 #audioMenu ul {
     list-style:none;
 }
