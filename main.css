@@ -5108,7 +5108,7 @@ input[type='range'] {
 }
 
 .darktheme #grabDirectorSoloLink {
-    background-color: var(--discord-grey-5);
+    background-color: var(--discord-grey-3);
     border: 1px solid var(--discord-grey-8);
 }
 
