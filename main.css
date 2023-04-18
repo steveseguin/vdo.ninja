@@ -2096,6 +2096,10 @@ label {
 	color: #000;
 }
 
+.darktheme .inner:before,
+.darktheme .inner:after {
+	background: var(--discord-text);
+}
 
 .inner:before,
 .inner:after {
@@ -4894,6 +4898,7 @@ input[type='text'], input[type='password']  {
     border: 1px solid var(--lighttheme-6);
     color: var(--lighttheme-text);
     border-radius: 4px;
+    padding: 4px;
     height: 25px;
 }
 input::placeholder {
