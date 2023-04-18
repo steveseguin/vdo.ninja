@@ -1821,7 +1821,12 @@
 				<button id="pIpStartButton" style="width: 135px; background-color:#EFEFEF;padding:20px;text-align:center;display:none;"><b>Preview PiP VIdeo</b><br /><i style="padding:5px; font-size:300%;color:black;" class="las la-compress-arrows-alt"></i></button>
 				
 				
-				<div class="hidden" id="grabDirectorSoloLinkParent" title="The solo view link of the Director's video."><i class="las la-user"></i> Director's solo link:<a onclick="copyFunction(this,event)" data-drag="1" draggable="true" id="grabDirectorSoloLink" data-menu="context-menu" class="task" ></a></div>
+				<div class="hidden" id="grabDirectorSoloLinkParent" title="The solo view link of the Director's video.">
+                    <div class="title">
+                        <i class="las la-user"></i> Director's solo link:
+                    </div>
+                    <a onclick="copyFunction(this,event)" data-drag="1" draggable="true" id="grabDirectorSoloLink" data-menu="context-menu" class="task" ></a>
+                </div>
 				<br />
 				<button onclick="toggleSettings()" class="toggleSettings"><i class="las la-chevron-right"></i><b><span data-translate="close-settings">Close Settings</span></b></button>
 				
