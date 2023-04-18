@@ -15962,6 +15962,7 @@ async function createDirectorOnlyBox() {
 		oldGroups.push(ee.dataset.group);
 	});
 	getById("groups").remove();
+    
 	
 	if (session.hidesololinks==false){ // won't be updating the solo link to a view-only one ever, since director is always expected to be in a room
 		controls.innerHTML += "<div class='soloButton' title='A direct solo view of the video/audio stream with nothing else'> \
@@ -35638,7 +35639,7 @@ function createControlBoxScreenshare(UUID, soloLink, streamID) {
 
 	var handsID = "hands_" + UUID;
 
-	controls.innerHTML += "<div>";
+    controls.innerHTML += "<div class='flexBreak'><span data-translate='links'>Links</span></div>"; //Seems to create an empty div.
 	
 	if (session.hidesololinks==false){
 		controls.innerHTML += "<div class='soloButton' title='A direct solo view of the video/audio stream with nothing else.'> \
