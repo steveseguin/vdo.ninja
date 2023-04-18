@@ -3455,6 +3455,8 @@ function hideHomeCheck(){
 	}
 }
 
+// toggleQualityDirector(1200, this.dataset.UUID, this)
+
 function switchModes(state=null){
 	if (state===null){
 		session.switchMode = !session.switchMode;
@@ -3522,6 +3524,8 @@ function switchModes(state=null){
 			}
 			
 		}
+		
+		applyQualityDirector();
 	}
 }
 
@@ -29445,7 +29449,15 @@ function sendChatMessage(chatMsg = false, bc = false) { // filtered + visual
 	return true;
 }
 
-function toggleQualityDirector(bitrate, UUID, ele = null) { // ele is specific to the button in the director's room
+
+function applyQualityDirector() { // lets revert back to the director's quality settings after viewing the scene
+	var eles = document.querySelectorAll('#guestFeeds button.pressed[data-action-type="change-quality1"],#guestFeeds button.pressed[data-action-type="change-quality2"],#guestFeeds button.pressed[data-action-type="change-quality3"]');
+	eles.forEach(ele =>{
+		ele.click();
+	});
+}
+
+function toggleQualityDirector(bitrate, UUID, ele) { // ele is specific to the button in the director's room
 	var eles = ele.parentNode.childNodes;
 	for (var i=0;i<eles.length;i++) {
 		eles[i].className = "";
