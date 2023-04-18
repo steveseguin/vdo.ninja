@@ -1534,8 +1534,8 @@ body.darktheme{
 	box-shadow: 0 0 31px 0px #244e1c44;
     animation: pulsate 2s ease-out infinite;
 }
-#mainmenu {
-	height:100vh;
+#mainmenu { 
+	height:0; /* This fixes my background issue - but I'm unsure what it breaks. */
 }
 .mainmenuclass {
 	display: inherit;
