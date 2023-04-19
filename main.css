@@ -27,11 +27,11 @@
     --a-dark-focus: rgb(142 219 98);
     --a-dark-active: rgb(145 197 115);
 
-    --a-link: rgb(88 171 41);
-    --a-visited: rgb(88 171 41);
-    --a-hover: rgb(142 219 98);
-    --a-focus: rgb(142 219 98);
-    --a-active: rgb(88 171 41);
+    --a-link: #70ade6;
+    --a-visited: #70ade6;
+    --a-hover: #49A7FF;
+    --a-focus: #49A7FF;
+    --a-active: #3D9DF7;
 
     /* Box colors */
     --director-box: rgb(165 119 18);
@@ -2836,7 +2836,6 @@ img {
 	border-radius: var(--video-rounded);
 	border-width: var(--video-border);
 	border-color: var(--video-border-color);
-	background-color: var(--video-border-color);
 	border-style: solid;
 }
 
@@ -2888,6 +2887,7 @@ video {
 	-ms-user-select: none; /* IE10+ */
 	-webkit-tap-highlight-color:transparent;
 	outline-style:none;
+	border-style:solid;
 	background-size: var(--video-background-image-size);
 	background-repeat: no-repeat;
 	background-position: center;
