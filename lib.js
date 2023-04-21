@@ -5191,6 +5191,8 @@ function updateMixerRun(e=false){  // this is the main auto-mixing code.  It's a
 					vid.style.left =  0;
 					vid.style.top =   0;
 				}
+				
+				
 			} else if ((vw && vh) || (vid.width && vid.height) || vid.dataset.aspectRatio){
 				if (("rotated" in vid) && ((vid.rotated==90) || (vid.rotated==270))){
 					if (vw && vh){
@@ -5264,19 +5266,8 @@ function updateMixerRun(e=false){  // this is the main auto-mixing code.  It's a
 				holder.style.height = Math.ceil(hsh) + 'px';
 				//holder.style.padding = videoMargin + "px";
 				
-				vid.style.borderRadius = borderRadius+"px";
-				vid.style.borderColor = borderColor;
-				vid.style.borderWidth = borderOffset+"px"; 
-				//vid.style.backgroundColor = borderColor;
 				
 				
-				if (session.colorVideosBackground){
-					vid.style.backgroundColor = session.colorVideosBackground;
-				//} else if (borderOffset){
-				//	vid.style.backgroundColor = borderColor;
-				} else {
-					vid.style.backgroundColor = "unset";
-				}
 				
 				if (("rotated" in vid) && ((vid.rotated==90) || (vid.rotated==270))){
 					vid.style.width = Math.ceil(wrw - borderOffset*2) + "px";
@@ -5297,7 +5288,6 @@ function updateMixerRun(e=false){  // this is the main auto-mixing code.  It's a
 					} else {
 						vid.style.position = "relative";
 					}
-					
 					
 				} else if ((session.blurBackground!==false) && (vid.nodeName == "VIDEO") && !container.blurred && vid.srcObject && (( asw>1  && ash>1) ||  asw>=1 || ash>=1)){
 					
@@ -5334,6 +5324,15 @@ function updateMixerRun(e=false){  // this is the main auto-mixing code.  It's a
 				holder.style.top = (borderOffset +  videoMargin) + "px";
 				holder.style.height = "calc(100% - "+((borderOffset + videoMargin*2))+"px)";
 				holder.style.width = "calc(100% - "+((borderOffset + videoMargin*2))+"px)";
+			}
+			
+			vid.style.borderRadius = borderRadius+"px";
+			vid.style.borderColor = borderColor;
+			vid.style.borderWidth = borderOffset+"px";
+			if (session.colorVideosBackground){
+				vid.style.backgroundColor = session.colorVideosBackground;
+			} else {
+				vid.style.backgroundColor = "unset";
 			}
 			
 			
