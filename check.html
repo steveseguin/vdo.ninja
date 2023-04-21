@@ -66,36 +66,60 @@
 			<h1>
 				Welcome
 			</h1>
+			<br />
 			<h2>
 				This application will access your camera and complete a video test stream.
 				<br />
 				
 				<br />
-				The test will take a few minutes to complete.<br />
-				<button onclick="next1();">Continue</button>⭐⭐⭐
+				The full test will take a few minutes to complete.<br />
+				<button onclick="next1();">Continue</button>⭐⭐⭐⭐
 				
 			</h2>
 		</div>
 		<div class="fullscreen hidden" id="page2">
-			
+			<h1>
+				Please note, for best results:<br />
+			</h1>
+			<br />
 			<h2>
-				Please note, for best results:<br /><br />
+				
 				<li>Connect your computer to a wired connection, instead of Wi-Fi</li><br />
 				<li>Have no other applications open while running this test</li><br />
 				<li>If using a laptop, connect your laptop to a power outlet</li><br />
-				🌠<button onclick="next2();">Continue</button>⭐⭐
+				🌠<button onclick="next2();">Continue</button>⭐⭐⭐
 				
 			</h2>
 		</div>
+		
+		<div class="fullscreen hidden" id="page2a">
+			
+			<h1>
+				This first step will measure your network bandwidth<br />
+			</h1>
+			<br />
+			<h2>
+				We will test against Cloudflare's speed test servers.<br /><br />
+				It will take a minute to complete once started.<br />
+				
+				<br />
+				<div id="cloudflareresults">
+					🌠🌠<button id="cloudflare" disabled>Loading Files</button>⭐⭐
+				</div>
+				
+			</h2>
+		</div>
+		
 		<div class="fullscreen hidden" id="page3">
 			
 			<h2>
 				The next step will access your camera and microphone.<br /><br />
 				<br />
-				Accept the camera and microphone permissions if prompted.
+				Accept the camera and microphone permissions if prompted.<br />
+				<small>No one will be able to see your video or audio, other than you.</small>
 				<br /><br />
 				<img src='./media/accept.png'/><br />
-				🌠🌠<button onclick="next3();">Continue</button>⭐
+				🌠🌠🌠<button onclick="next3();">Continue</button>⭐
 				
 			</h2>
 		</div>
@@ -164,8 +188,17 @@
 			
 			function next2(){
 				document.getElementById("page2").classList.add("hidden");
+				document.getElementById("page2a").classList.remove("hidden");
+				setTimeout(function(){
+					if (document.getElementById("playButton") && !document.getElementById("playButton").skip){
+						next2a();
+					}
+				},10000);
+			}
+			
+			function next2a(){
+				document.getElementById("page2a").classList.add("hidden");
 				document.getElementById("page3").classList.remove("hidden");
-				loadIframe(region);
 			}
 			
 			function next3(){
@@ -749,6 +782,46 @@
 				// now clear the right-most pixels:
 				context.clearRect(width - 1, 0, 1, height);
 			}
+			
+			
+			
+		</script>
+	
+		<script type="module">
+			import SpeedTest from 'https://cdn.skypack.dev/@cloudflare/speedtest';
+
+			const controlEl = document.getElementById('controls');
+			const playButton = document.getElementById("cloudflare");
+			
+			const resultsCl = document.getElementById("cloudflareresults");
+			
+			var Runstate = false;
+			const engine = new SpeedTest({
+			  autoStart: false
+			});
+			engine.onRunningChange = (running) => {playButton.textContent = running ? 'Running...' : 'Finished!';Runstate=running;}
+			engine.onResultsChange = ({ type }) => {
+			   console.log(type);
+			   if (Runstate){
+				console.log(engine.results.raw);
+			   }
+			   resultsCl.style.color = "green";
+			   resultsCl.innerHTML = Runstate ? '<b>Please wait</b><br .><br .>Testing in progress: '+type : 'Finished!';
+			};
+			
+			engine.onFinish = results => {
+			  console.log(results.getSummary());
+			  console.log(results.getScores());
+			  logData({['summary']: results.getSummary()});
+			  logData({['scores']: results.getScores()});
+			  next2a();
+			};
+			playButton.skip=true;
+			playButton.textContent = "Start test";
+			playButton.disabled = null;
+	
+			playButton.onclick = function(){playButton.disabled=true;playButton.onclick=null;engine.play();}
+
 		</script>
 	</body>
 </html>
