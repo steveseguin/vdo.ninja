@@ -20,9 +20,16 @@ Example: `&whip=bearertoken`
 Added experimental "WHIP" support to VDO.Ninja, which means in the near future you'll be able to publish directly from OBS to VDO.Ninja without a virtual camera. There's some big caveats to it all, so I don't recommend it over the normal method to most users, but we'll see how it evolves.
 
 To publish use: [https://whip.vdo.ninja/bearertoken](https://whip.vdo.ninja/bearertoken)\
-To view use: [https://vdo.ninja/alpha/?whip=bearertoken](https://vdo.ninja/alpha/?whip=bearertoken)
+To view use: [https://vdo.ninja/alpha/?whip=bearertoken](https://vdo.ninja/alpha/?whip=bearertoken)\
 
-You have to use [OBS v29](https://github.com/obsproject/obs-studio/releases/tag/29.0.0-beta2) to get this working.
+
+You have to use a version of OBS that contains WHIP support to get this working.   As of April 2023, these are some builds of OBS that support WHIP:\
+[https://github.com/obsproject/obs-studio/suites/12263428876/artifacts/649328007](https://github.com/obsproject/obs-studio/suites/12263428876/artifacts/649328007) win (x64)\
+[https://github.com/obsproject/obs-studio/suites/12263428876/artifacts/649328001](https://github.com/obsproject/obs-studio/suites/12263428876/artifacts/649328001) mac (arm)\
+[https://github.com/obsproject/obs-studio/actions/runs/4711358202?pr=7926](https://github.com/obsproject/obs-studio/actions/runs/4711358202?pr=7926) (others here)\
+\
+Hopefully WHIP support will be in OBS officially sometime soon.\
+
 
 See this video for details how to set it up:
 
