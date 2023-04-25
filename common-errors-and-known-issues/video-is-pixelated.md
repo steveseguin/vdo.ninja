@@ -4,12 +4,12 @@ description: When the video turns into a rainbow puke with distorted colors
 
 # Video stream looks corrupted
 
-Update: This issue of rainbow puke impacted OBS v25 and older, but is no longer an issue for most users.\
-\
-If having issues with the video being very low quality, this is often due to high packet loss caused by weak WiFi or other network issue.  More info: [https://www.youtube.com/watch?v=je2ljlvLzlY](https://www.youtube.com/watch?v=je2ljlvLzlY)
+{% hint style="info" %}
+Update: This issue of rainbow puke impacted OBS v25 and older, but is no longer an issue for most users.
 
-\--------------------- end of update\
+If having issues with the video being very low quality, this is often due to high packet loss caused by weak WiFi or other network issue. More info: [https://www.youtube.com/watch?v=je2ljlvLzlY](https://www.youtube.com/watch?v=je2ljlvLzlY)\
 
+{% endhint %}
 
 {% hint style="warning" %}
 **DO NOT USE WIFI**. Have everyone connect to stable wired Internet whenever possible.

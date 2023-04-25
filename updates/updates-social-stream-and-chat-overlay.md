@@ -105,7 +105,7 @@ Social Stream update:
 Social Stream update:
 
 * Opt out of YouTube / Twitch capture added, along with the ability to specify a single Twitch channel to only capture from.\
-  ![](<../.gitbook/assets/image (18).png>)
+  ![](<../.gitbook/assets/image (18) (1).png>)
 
 #### **March 8**
 

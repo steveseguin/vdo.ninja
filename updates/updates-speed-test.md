@@ -7,7 +7,7 @@
 * Added a max bandwidth (upload / download) test\
   \-- unlike the video test, this just is a classic test looking at network bandwidth\
   \-- it does add another step to the test, so it's overall about 30-seconds longer to complete now (\~4 minutes long)\
-  ![](<../.gitbook/assets/image (16).png>)
+  ![](<../.gitbook/assets/image (20).png>)
 
 #### April 13
 
