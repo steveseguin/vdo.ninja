@@ -2,6 +2,18 @@
 
 [speed-test.md](../steves-helper-apps/speed-test.md "mention")
 
+#### April 21
+
+* Added a max bandwidth (upload / download) test\
+  \-- unlike the video test, this just is a classic test looking at network bandwidth\
+  \-- it does add another step to the test, so it's overall about 30-seconds longer to complete now (\~4 minutes long)\
+  ![](<../.gitbook/assets/image (17).png>)
+
+#### April 13
+
+* Added the number of CPU threads (logical cores) to the stats in VDO.Ninja, as well as the check/results testing page.. (update on alpha & GitHub)\
+  ![](../.gitbook/assets/image.png)
+
 #### January 19
 
 * Speed Test now includes a timestamp, so you can see when the test started.

@@ -1,5 +1,80 @@
 # Updates - VDO.Ninja
 
+#### April 19 <a href="#august-31" id="august-31"></a>
+
+* Added `&structure` as an option, which will have the video holding div element be structured to 16:9 (or whatever [`&aspectratio`](../advanced-settings/video-parameters/and-aspectratio.md) is set to), making it easier to apply custom CSS backgrounds to videos\
+  \-- It will have the label/border/margins align relative to the 16:9 holder element, rather than video itself.\
+  \-- Also related, you can also specify the background color independent of the border color with `&color` (new). If using [`&border`](../advanced-settings/design-parameters/and-border.md), it will not set the background color, so you may need to use both `&border` and `&color`.\
+  \-- May not yet work with [`&forcedlandscape`](../advanced-settings/mobile-parameters/and-forcelandscape.md) or [`&rotate`](../advanced-settings/design-parameters/and-rotate.md).\
+  ![](<../.gitbook/assets/image (14).png>)
+* Added `&blur`, which will try to add a blurred background to the video so it fits the structured video container\
+  \-- Using `&blur` auto enables `&structure`.\
+  \-- Code in the auto mixer, so you won't see the effect in a simple preview or some self-preview types.\
+  \-- `&blur` doesn't work with `&color`, etc.\
+  \-- You can change the blurring intensity with `&blur=25` or whatever; `10` is default\
+  \-- `&blur=0` works as well\
+  \-- may be buggy if using it with [`&forcedlandscape`](../advanced-settings/mobile-parameters/and-forcelandscape.md) or [`&rotate`](../advanced-settings/design-parameters/and-rotate.md)\
+  ![](<../.gitbook/assets/image (8).png>)
+* Added new accessibility options, include button states using the `aria-pressed` attribute.\
+  \
+  \*\* changes on alpha. ie:\
+  [`https://vdo.ninja/alpha/?scene&room=ROOMNAME&blur&margin&border&structure`](https://vdo.ninja/alpha/?scene\&room=ROOMNAME\&blur\&margin\&border\&structure)
+
+#### April 18 <a href="#august-31" id="august-31"></a>
+
+* In VDO.Ninja, when switching between the scene-preview and the director view modes (used in the [Mixer App](../steves-helper-apps/mixer-app.md)), the app will ramp up the bitrate in the scene mode to 500-kbps now (instead of staying at 35-kbps), and then switch back to the preview-targets when switching back in the director mode. This makes things work a bit closer to what is expected by the user, while also increasing the scene-preview's quality significantly (without still being a huge stress on the guests).\
+  \*\* change on alpha at [https://vdo.ninja/alpha/](https://vdo.ninja/alpha/)
+
+#### April 17 <a href="#august-31" id="august-31"></a>
+
+* [`&mute`](../source-settings/and-mute.md) works with the director now, so the mic starts muted when you enable your microphone or when using [`&autostart`](../source-settings/and-autostart.md)
+* Fixed an issue where if you used [`&style=N`](../advanced-settings/design-parameters/style.md) on a guest, the director isn't able to "hide" them from the auto mix.
+
+#### April 16 <a href="#august-31" id="august-31"></a>
+
+* You can now publish from VDO.Ninja directly to Twitch.\
+  \-- Go here, [https://vdo.ninja/alpha/whip](https://vdo.ninja/alpha/whip), enter your Twitch stream token in the correct field, GO, and then select your camera in VDO.Ninja as normal.\
+  \-- There's also a new development version of OBS Studio that has improved support for direct publishing of OBS -> VDO.Ninja (via whip) here:\
+  [https://github.com/obsproject/obs-studio/actions/runs/4711358202?pr=7926](https://github.com/obsproject/obs-studio/actions/runs/4711358202?pr=7926)\
+  ![](<../.gitbook/assets/image (9).png>)![](<../.gitbook/assets/image (16).png>)
+
+#### April 14 <a href="#august-31" id="august-31"></a>
+
+* Added [`&effects=8`](../source-settings/effects.md), which might be useful if using a Camlink or simple HDMI capture device and [`&record`](../advanced-settings/recording-parameters/and-record.md) mode. The current `&record` mode doesn't seem to always scale down the video before recording (browser issue it seems), so local file recordings might be 4K in size, despite the target resolution being set much lower. `&effects=8` will use a canvas to first resize the video though, and then recordings will be based on that, making smaller recording sizes possible. (You could also use `&effects=7`, which then provides digital zooming controls and is otherwise the same thing).\
+  \
+  This `&effects=8` mode might also be helpful in solving issues with cameras disconnecting or having their frame rate change while recording, causing issues with the recording. The canvas acts as a reliable middle man between the camera and output video stream, so if the camera's input stream fails, the recording stream will not be impacted, other than perhaps skipping some frames. The canvas is sensitive to CPU load or browser throttling though, so frame rates may fluctuate more often when using it, so I can't suggest using it unless the guest/user is known to have a problematic camera.\
+  \*\* on alpha
+* Added a new IFRAME code example that prompts a guest who is joining a room with a message if the director is not there yet. The message clears when the director joins the room. This sample can be used like a normal vdo.ninja/?room=xxx link (as seen below). The code is extremely easy to customize or embedded into your own websites. The code is just provided as an example. [https://vdo.ninja/examples/waitingroom?room=TESTROOM123](https://vdo.ninja/examples/waitingroom?room=TESTROOM123)\
+  ![](<../.gitbook/assets/image (15).png>)
+
+#### April 13 <a href="#august-31" id="august-31"></a>
+
+* Control bar styling for VDO.Ninja has been overhauled to look a lot nicer, curtesy of @Lindenkron. This style update is available on vdo.ninja/alpha/ and on GitHub.\
+  ![](<../.gitbook/assets/image (13).png>)
+* Added the number of CPU threads (logical cores) to the stats in VDO.Ninja, as well as the check/results testing page.. (update on alpha & GitHub)\
+  ![](../.gitbook/assets/image.png)
+
+#### April 12 <a href="#august-31" id="august-31"></a>
+
+* Fixed an issue with [`&forcelandscape`](../advanced-settings/mobile-parameters/and-forcelandscape.md), with the patch on [https://vdo.ninja/alpha/](https://vdo.ninja/alpha/); the viewer side should have the video rotate now also; not just on the guest side. This is still a bit iffy, but feedback welcomed.
+
+#### April 11 <a href="#august-31" id="august-31"></a>
+
+* The VDO.Ninja's director's interface and control bar UI style has been further updated on alpha. (design improvements by Lindenkron)\
+  ![](<../.gitbook/assets/image (10).png>)
+* The Social Stream and VDO.Ninja HTTP/WSS remote API server went thru some changes; let me know if you have any sudden new issues
+* If having issues with [Meshcast](../steves-helper-apps/meshcast.io.md) and iPhone/iPad users (video being black), I pushed a patch to vdo.ninja/alpha/ and meshcast.io (either will work). I've partially updated [`&meshcast`](../newly-added-parameters/and-meshcast.md) on production with a fix also, but I won't be able to fully fix it on production probably until late tonight.
+
+#### April 9 <a href="#august-31" id="august-31"></a>
+
+* Added a "restart connection" button to the sender's side stats menu. I'll tinker with this a bit more, but the notion is if you are having problems with perhaps audio or video quality gets "stuck" low, you can try to restart the connection without refreshing the page.\
+  \-- if this works well for users, I'll see about adding something into the code to automate pressing it when problems are detected (if possible).\
+  \-- button only shows on compatible devices/ browsers\
+  \-- not all devices support reconnection in this way.\
+  ![](<../.gitbook/assets/image (12).png>)\
+  \
+  \*\* on alpha at vdo.ninja/alpha/ and on GitHub.
+
 #### April 7 <a href="#august-31" id="august-31"></a>
 
 * Based on user feedback, I'm testing the concept of a "join with mic-only" button.\
@@ -7,7 +82,7 @@
   \-- It's exactly the same as join with video, except the video device is not selected by default.\
   \-- When used, a mic only button shows if a guest joining a room, and if [`&audiodevice=0`](../source-settings/audiodevice.md) is not present.\
   \-- Hoping this will give more users courage to click the join button, but if it causes issues, I may revert.\
-  ![](<../.gitbook/assets/image (1).png>)\
+  ![](<../.gitbook/assets/image (1) (2).png>)\
   \
   \*\* on alpha for testing at [https://vdo.ninja/alpha/?room=someetestroomhere\&moo](https://vdo.ninja/alpha/?room=someetestroomhere\&moo)
 
@@ -40,7 +115,7 @@
   \-- This disables the video preview for even the director, as its disabled as the source, so there isn't for even a solo "view" link to override it. This then is a bit more of a sure-fire way to disable a video from a guest.\
   \-- The previous "hide guest" button still works, but has a new icon. This differs from the new "disable video" in that the director can still see a preview of the guests video and it also hides any avatar/style-place-holder. When "disabling video", audio-only styles and avatar placeholders may still work.\
   \-- The guest gets a little note in their header bar that the director muted them when enabled. Also, the guest is unable to see their own video preview when enabled, hence the need for a message.\
-  ![](<../.gitbook/assets/image (179).png>)![](<../.gitbook/assets/image (3).png>)\
+  ![](<../.gitbook/assets/image (179).png>)![](<../.gitbook/assets/image (3) (1).png>)\
   \
   \*\* on alpha [https://vdo.ninja/alpha/](https://vdo.ninja/alpha/), by user request. Please report any issues/feedback regarding it.
 
@@ -50,7 +125,7 @@
   ![](<../.gitbook/assets/image (6).png>)\
   \
   \-- Also the option to save to disk\
-  ![](<../.gitbook/assets/image (4).png>)\
+  ![](<../.gitbook/assets/image (4) (1).png>)\
   \
   \*\* on alpha @ vdo.ninja/alpha/
 
@@ -80,7 +155,7 @@
 * When recording iPhone/iPad videos in portrait mode with Chrome as a remote VDO.Ninja viewer, the videos should be saved correctly (both via p2p and with Meshcast), rather than in a chopped-in-half corrupted version.
 * Added [`&postapi`](../advanced-settings/api-and-midi-parameters/and-postapi-alpha.md) (aka `&posturl`), which lets you specify a custom POST URL to send events within VDO.Ninja to.\
   \-- data JSON encoded, post URL requires HTTPS+CORS, and the passed URL parameter value needs to be encodedURLComponent. ie: `&postapi=https%3A%2F%2Fwebhook.site%2Fb190f5bf-e4f8-454a-bd51-78b5807df9c1` -- If you don't want to listen for events with the websocket server API I host, you can use this with your own API https server instead and get key events pushed to you that way\
-  ![](<../.gitbook/assets/image (21).png>)![](<../.gitbook/assets/image (3) (1).png>)
+  ![](<../.gitbook/assets/image (21).png>)![](<../.gitbook/assets/image (3) (1) (1).png>)
 * The hidden user-list can be closed when using [`&broadcast`](../advanced-settings/view-parameters/broadcast.md) mode now
 * Bug fixed with the [vdo.ninja/twitch](https://vdo.ninja/twitch) page, via a community code contribution
 * _Development Progress update: WHIP and VDO.Ninja_\
@@ -110,7 +185,7 @@
 #### March 6 <a href="#august-31" id="august-31"></a>
 
 * The default for iOS 16-devices and newer will now have 720p60 selected by default, rather than 720p30. 60-fps still isn't working at 1080p on iOS, but baby steps I guess.\
-  ![](<../.gitbook/assets/image (13).png>)\
+  ![](<../.gitbook/assets/image (13) (2).png>)\
   \
   \*\* on alpha at vdo.ninja/alpha/
 
@@ -131,7 +206,7 @@
   \-- the CSS / HTML is slightly less rigid, so should be easier to customize with custom css by users.\
   \-- rainbow puke button removed, (but is still available as the sender if you `CTRL + click` on the video preview)
 * I added in a little "minimize" button to the control box, which lets you minimize it. It's not all that robust, but it might come in handy for hiding a couple annoying windows (like a co-director) that is taking up space.\
-  ![](<../.gitbook/assets/image (3) (7).png>)![](<../.gitbook/assets/image (7).png>)\
+  ![](<../.gitbook/assets/image (3) (7).png>)![](<../.gitbook/assets/image (7) (3).png>)\
   \
   \*\* changes on alpha at vdo.ninja/alpha/
 
@@ -185,7 +260,7 @@
 
 * [`&timer=N`](../advanced-settings/settings-parameters/and-timer-alpha.md) can be used to position where the countdown timer is positioned on a guest's window. Default is still center top, but a value of 1 to 9 can be be passed to change positions.
 * Setting the time as a director, for the timers, now can accept minute/seconds, rather than just seconds.\
-  ![](<../.gitbook/assets/image (9).png>)
+  ![](<../.gitbook/assets/image (9) (4).png>)
 * The [`&datamode`](../newly-added-parameters/and-datamode.md) option was tweaked to work a bit better now when using it to both connect via push and view modes. Data-only mode is an advanced option; it's a bit like doing `&ad=0&vd=0&webcam&autostart&hidemenu`, but a bit cleaner and disables a few other common functions that might be considered bloat. Useful perhaps if you want to use only the data-channels of VDO.Ninja, for remote control only operations or sending files.\
   \
   \*\* changes on alpha at vdo.ninja/alpha/
@@ -530,7 +605,7 @@
   ![](<../.gitbook/assets/image (1) (1) (1) (3).png>)
 * For VDO.Ninja, right-clicking a video and selecting "audio output destination" should work again. I had to disable that feature for a bit, as some users were reporting audio issues with it enabled. It might have some compatibilities issues, but it won't activate now unless used.
 * When using the special [`&screensharetype=3`](../newly-added-parameters/and-screensharetype.md) screen share mode (screen share with better echo cancellation), support for recording that local screen share, at the same time as as the main video, has been added. You'll need to use the [`&autorecord`](../advanced-settings/recording-parameters/and-autorecord.md) feature to trigger the recording, and when it does start recording, a button will appear specific to stopping that screen recording if needed.\
-  ![](<../.gitbook/assets/image (14).png>)
+  ![](<../.gitbook/assets/image (14) (1).png>)
 * I improve the [`&buffer`](../advanced-settings/view-parameters/buffer.md) and [`&sync`](../advanced-settings/view-parameters/sync.md) feature a bit -- it will activate and sync up faster now, which might be helpful on unstable connections.
 * I haven't been able to validate it works, but I think I added support for H265 (HEVC) to VDO.Ninja; the catch is it might only work between two iPhones running the experimental H265 WebRTC support currently; maybe [Raspberry Ninja](../steves-helper-apps/raspberry.ninja.md) in the future. I haven't managed to make it work yet though, so its just hypothetical support.\
   \
@@ -772,7 +847,7 @@
 * [`&showconnections`](../advanced-settings/settings-parameters/and-showconnections.md) will display the total number of p2p connections of a remote stream. Works with the director's room and the automixer. Might help give comfort over privacy/security during a stream.
 * Total number of p2p remote connections (viewers) of a stream source will also appear in the stats menu, even without [`&showconnections`](../advanced-settings/settings-parameters/and-showconnections.md). Could be useful for debugging CPU/bandwidth issues.
 * Connections may represent video/audio streams, or just a data-connection. Meshcast-hosted streams might not be accounted for, depending on how the viewer is connecting.\
-  ![](<../.gitbook/assets/image (10) (1) (2).png>)
+  ![](<../.gitbook/assets/image (10) (1) (2) (1).png>)
 * Added `showChat` and `showDirectorChat` as HTTP/WSS API options for sending messages to guest(s). Useful if you want to hotkey a streamdeck command with some welcome message for guests.
 * Added events notifications relating to the director's guest-mute, guest-video-mute, and guest-position-change actions, along with any remote-video-mute updates to the HTTP/WSS API (by request for the bitfocus companion app)
 

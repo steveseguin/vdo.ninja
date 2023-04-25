@@ -2,6 +2,11 @@
 
 [electron-capture.md](../steves-helper-apps/electron-capture.md "mention")
 
+#### April 8
+
+* Electron Capture has been updated for both Windows and Mac. [https://github.com/steveseguin/electroncapture/releases/tag/2.17.2](https://github.com/steveseguin/electroncapture/releases/tag/2.17.2)\
+  \-- This update includes general updates/patches, but also a new command line parameter called `--color` (or `--chroma`), which lets you pass a HEX value (000, 0F0, FFFF, etc) to set the background color. Useful if you want to make a background transparent or opaque without needing to use CSS.
+
 #### March 30
 
 * **Electron capture** will save the Edit CSS custom user entry to local storage, so on next visit to a site, your last CSS entry will be remembered for easy reuse (source code updated; new builds will come later)

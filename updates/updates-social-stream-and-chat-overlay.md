@@ -3,8 +3,37 @@
 [social-stream.md](../steves-helper-apps/social-stream.md "mention")\
 [chat-overlay.md](../steves-helper-apps/chat-overlay.md "mention")
 
+#### **April 18**
+
+* Added the option to filter Social Stream messages by the source destination. You'll need to enable the alt filter mode in the filter search bar, and then use `source:SOURCENAME`, so ie: `source:twitch` or `source:youtube`.\
+  ![](<../.gitbook/assets/image (4).png>)
+
+#### **April 17**
+
+* [https://kiwiirc.com/](https://kiwiirc.com/) support added to Social Stream + fix for quakenet irc.
+
+#### **April 12**
+
+* Added a bad word black list option to Social Stream. This option replaces matched words with \*\*\*. Currently the bad word list is hard-coded in, but it can be changed/expanded based on feedback.\
+  ![](<../.gitbook/assets/image (11).png>)
+* Added a URL option called `&passttl` to the dock page of Social Stream. When enabled, when someone types in `!pass` into chat, it cancels the current text to speech queue.\
+
+* Added an option to save a list of all unique names seen in chat to disk, as a simple text list. (Social Stream)\
+  \-- You will need to select a file location before it starts saving.\
+  \-- It only saves each name once, without timestamp or additional meta data.\
+  \-- You can open the file while its still recording, to see the current sate of number of unique chatters, etc.\
+  \-- Start/stop support works, which will also start a new list once started again.\
+  ![](<../.gitbook/assets/image (1).png>)
+
+#### **April 11**
+
+* The Social Stream and VDO.Ninja HTTP/WSS remote API server went thru some changes; let me know if you have any sudden new issues
+* Numerous small fixes applied to Social Stream. bttv, kick, etc.
+
 #### **April 8**
 
+* loco.gg, rooter.gg, and joystick.tv support added to Social Stream. (donations/badges not supported yet tho)
+* Support for international "display names" on Twitch added to Social Stream (via **ZiLin** on GitHub, thank you)
 * When using Social Stream, and it's remote API interface, you can now target specific docks with your API requests by assigning a target name to each dock.html page using `&label` For example:\
   Dock with the name "NAMEHERE": `https://socialstream.ninja/dock.html?session=XXXXXXXXXXXXX&server&sync&label=NAMEHERE` Can be targeted with the API format like this: `https://api.vdo.ninja/XXXXXXXXXXXXX/nextInQueue/NAMEHERE/null` \
   \
@@ -126,7 +155,7 @@ Social Stream updates for today:
 * Social Stream had some fixes: locals.com fix, hide-emoji/beep function fix
 * Added a section to specify and auto-open the chat-windows with a single click via the extension. This was developed in part with @River&#x20;
 * `&openchat` can be added to the dock to auto open all the saved chat locations on dock load/refresh\
-  ![](<../.gitbook/assets/image (10).png>)
+  ![](<../.gitbook/assets/image (10) (1).png>)
 
 #### **February 19**
 
@@ -138,17 +167,17 @@ Social Stream updates for today:
 #### **February 15**
 
 * `&largeavatar` and `&bubble` added to Social Stream styling options; when combined, you can see what they look like in the attached images.\
-  ![](<../.gitbook/assets/image (1) (2).png>)![](<../.gitbook/assets/image (2) (13).png>)
+  ![](<../.gitbook/assets/image (1) (2) (1).png>)![](<../.gitbook/assets/image (2) (13).png>)
 * sli.do support added to Social Stream; works with the Q\&A section via the participant link
 
 #### **February 10**
 
 * Added an **emotes-wall** function to Social Stream (emojis from chat will bounce around the window).\
-  ![](<../.gitbook/assets/image (4) (1).png>)\
+  ![](<../.gitbook/assets/image (4) (1) (2).png>)\
   \-- This was added by a user's request; it works with all sites Social Stream supports; not just Twitch. BTTV and animated emojis are supported as well.\
   \-- Please report any issues with freezing/CPU issues. I've designed it to be low on CPU, but who knows.\
   \-- To use, `https://socialstream.ninja/emotes.html?session=XXXXXXXXXX&showtime=5000` or update the extension.\
-  ![](<../.gitbook/assets/image (10) (1).png>)
+  ![](<../.gitbook/assets/image (10) (1) (2).png>)
 
 #### **February 9**
 
@@ -180,7 +209,7 @@ Social Stream updates for today:
 * Fixed support for kick.com and nimo live
 * Added `&lang=xxxx` (`&language`/`&ln`), which you can use instead of `&speech=xxx`. When using `&lang`, it will not enable it by default. (Social Stream)
 * Option added to right-click and trigger text to speech on a message (Social Stream dock)\
-  ![](<../.gitbook/assets/image (1) (2) (1).png>)
+  ![](<../.gitbook/assets/image (1) (2) (1) (1).png>)
 
 #### **January 19**
 
@@ -199,7 +228,7 @@ Social Stream updates for today:
 #### **January 6**
 
 * Google Meet support added to Social Stream. (you'll need to toggle it on explicitly to use, for privacy reasons)\
-  ![](<../.gitbook/assets/image (17).png>)
+  ![](<../.gitbook/assets/image (17) (1).png>)
 
 ### 2022
 
@@ -331,7 +360,7 @@ Social Stream updates for today:
 #### **September 15**
 
 * `&random` added to SocialStream; it can be used with the dock to randomize where messages appear on screen.\
-  ![](<../.gitbook/assets/image (13) (2).png>)
+  ![](<../.gitbook/assets/image (13) (2) (1).png>)
 
 #### **September 10**
 
@@ -348,7 +377,7 @@ Social Stream updates for today:
 #### **August 31**
 
 * New MIDI control feature for Social Stream: - the option to select a file containing text-strings for use with the MIDI-command option is available - sample file is included in the extension folder; edit it and select it from the extension menu (JSON format) - you shouldn't have to reload the file each time you open the browser; just when you reload the extension or when you want to update the commands with a newer file.\
-  ![](<../.gitbook/assets/image (10) (1) (2) (1).png>)
+  ![](<../.gitbook/assets/image (10) (1) (2) (1) (1).png>)
 * Social Stream has had it's pop-out menu UI updated, courtesy of the one and only [@jcalado](https://github.com/jcalado) (there's dark-mode support now, also) #pretty\
   ![](<../.gitbook/assets/image (1) (1) (1) (2).png>)
 * Added workplace.com support to Social Stream
@@ -414,7 +443,7 @@ Social Stream updates for today:
 #### July 3
 
 * socialstream.ninja was updated to support horizontal scrolling for the dock page (`&horizontal`) and extra-large emojis (`&emoji`)\
-  ![](<../.gitbook/assets/image (9) (4).png>)
+  ![](<../.gitbook/assets/image (9) (4) (1).png>)
 
 #### June 28
 

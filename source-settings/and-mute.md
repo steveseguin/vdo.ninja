@@ -4,7 +4,7 @@ description: Starts with the microphone muted by default
 
 # \&mute
 
-Sender-Side Option! ([`&push`](push.md))
+Sender-Side Option! ([`&push`](push.md), [`&director`](../viewers-settings/director.md))
 
 ## Aliases
 
@@ -15,7 +15,11 @@ Sender-Side Option! ([`&push`](push.md))
 
 Starts with the microphone muted by default. The guest can switch on the microphone.
 
-![](<../.gitbook/assets/image (1) (2) (1) (1).png>)
+![](<../.gitbook/assets/image (1) (2) (1) (1) (1).png>)
+
+### Update in Version 23 (currently alpha)
+
+`&mute` works with the director now, so the mic starts muted when you enable your microphone or when using [`&autostart`](and-autostart.md).
 
 ## Related
 

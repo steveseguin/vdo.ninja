@@ -28,3 +28,4 @@ description: Useful tools that could help you make your stream better
 | [Overlay](https://vdo.ninja/alpha/examples/overlay)                                   | Create a sample of how to apply a custom full-page overlay on top of VDO.Ninja                                                      |
 | [PowerPoint Remote Control](https://vdo.ninja/examples/powerpoint)                    | Remote PowerPoint Web control via VDO.Ninja (IFrame API)                                                                            |
 | [Rotate website](https://vdo.ninja/examples/rotated.html)                             | Lets you rotate a specific website 90, 270, or 180 degrees                                                                          |
+| [Waiting room](https://vdo.ninja/examples/waitingroom?room=TESTROOM123)               | Prompts a guest who is joining a room with a message if the director is not there yet                                               |

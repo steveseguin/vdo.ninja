@@ -1,5 +1,17 @@
 # Updates - Miscellaneous
 
+#### April 10
+
+* Managed to get Vingester built for MacOS; [https://github.com/steveseguin/vingester/releases/tag/2.8.1](https://github.com/steveseguin/vingester/releases/tag/2.8.1) (I already had PC support added)\
+  \-- this is compiled for x64 Macs; it's not optimized for ARM-based macs (but should still work with them)\
+  \-- this version should be compatible with VDO.Ninja v22 and newer (audio is captured)\
+  \-- the official Vingester repo is out of date and doesn't seem to be supported anymore, so just keeping it alive for now
+
+#### April 8
+
+* The [https://updates.vdo.ninja/](https://updates.vdo.ninja/) page has been updated to show image attachments now. The updates page just mirrors this Discord #updates channel; accessible for non-Discord users. This update was brought to you by @leb, who is also responsible for building out our hardworking Discord bot.\
+  ![](<../.gitbook/assets/image (7).png>)
+
 #### March 30
 
 * created the example page: [https://vdo.ninja/examples/rotated.html](https://vdo.ninja/examples/rotated.html), which lets you rotate a specific website 90, 270, or 180 degrees. `&rotate` and URL encoded `&link` parameters accepted. Works with any website that supports IFrame embedding I think; **VDO.Ninja** or other. \

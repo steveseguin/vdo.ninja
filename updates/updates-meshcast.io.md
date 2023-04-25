@@ -2,6 +2,10 @@
 
 [meshcast.io.md](../steves-helper-apps/meshcast.io.md "mention")
 
+#### April 11
+
+* If having issues with [Meshcast](../steves-helper-apps/meshcast.io.md) and iPhone/iPad users (video being black), I pushed a patch to vdo.ninja/alpha/ and meshcast.io (either will work). I've partially updated [`&meshcast`](../newly-added-parameters/and-meshcast.md) on production with a fix also, but I won't be able to fully fix it on production probably until late tonight.
+
 #### March 30
 
 * Pushed a needed update to the **Meshcast** servers; should help solve the "Meshcast not available" problem that was happening every couple months.

@@ -23,7 +23,7 @@ Example: `&timer=5`
 `&timer=N` can be used to position where the countdown timer is positioned on a guest's window. Default is still center top but a value of 1 to 9 can be be passed to change positions.
 
 You can enable the countdown as a director via the room settings.\
-![](<../../.gitbook/assets/image (11).png>)
+![](<../../.gitbook/assets/image (11) (4).png>)
 
 The director has a button that lets them also enable a global count-down timer. Holding `CTRL + click` will let the director pause the timer. If someone joins the room or reloads, the timer will also be reloaded, in sync. Button also in the room settings menu.
 

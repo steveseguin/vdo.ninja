@@ -2,6 +2,10 @@
 
 [native-mobile-app-versions.md](../steves-helper-apps/native-mobile-app-versions.md "mention")
 
+#### April 9
+
+* Updated builds of the VDO.Ninja native app for Android and iOS are now LIVE on both Google Play and iOS App stores. These new versions allow for use with fully self-hosted deployments, a mic-only mode, and general WebRTC lib updates.
+
 #### April 3
 
 * Added an audio-only option to the VDO.Ninja native app. For now, it's available for Android via sideloading, with the app store versions being updated later on.\

@@ -2,6 +2,27 @@
 
 [raspberry.ninja.md](../steves-helper-apps/raspberry.ninja.md "mention")
 
+#### April 22
+
+* Following up on the updated Raspberry.Ninja I did for the RPi the other day, I now finished building an updated version for the Nvidia Jetson Nano also.\
+  \
+  Download: [https://drive.google.com/file/d/1B\_ywphXQ49F9we3ytcM-Zn1h7dCYOLBh/view?usp=share\_link](https://drive.google.com/file/d/1B\_ywphXQ49F9we3ytcM-Zn1h7dCYOLBh/view?usp=share\_link)\
+  \
+  \-- It comes with GStreamer 1.23.0 installed, with libcamera, SRT, RTMP, ffmpeg, hardware-encode, and av1 support ready to go.\
+  \-- Should fit on most 16-GB or larger uSD cards - username is `vdo` and the password is `ninja`\
+  \
+  The installer file is also updated, if you want to diy: [https://github.com/steveseguin/raspberry\_ninja/tree/main/nvidia\_jetson](https://github.com/steveseguin/raspberry\_ninja/tree/main/nvidia\_jetson)
+
+#### April 21
+
+* Raspberry.Ninja was updated for Pi devices (1080p30 video from a Raspberry Pi device, straight to VDO.Ninja)\
+  \-- created a new image for Raspberry Pi devices. It uses the newest Bullseye OS and has built-in support for many new advanced Sony cameras (the low light IMX462 was tested)\
+  \-- libcamera support added (`python3 publish.py --libcamera` to use)\
+  \-- av1, srt, and other codecs added to the image as well; should future-proof the image a bit, so I can add support for those down the road with updates.\
+  \-- Newest version of gstreamer/WebRTC lib is installed now, so the **video is more stable than ever**; less frame loss than previous versions.\
+  \-- install script also updated for the pi devices , so if you want to build the image yourself, now's your chance to do it hassle free. [https://github.com/steveseguin/raspberry\_ninja/blob/main/raspberry\_pi/README.md](https://github.com/steveseguin/raspberry\_ninja/blob/main/raspberry\_pi/README.md)\
+  (image + install for Raspberry Pi)
+
 #### February 5
 
 * Added pipe-in media support to **Raspberry.Ninja**. This lets you publish from FFmpeg, OBS, applications, etc to VDO.Ninja, without needing a browser, and optionally without having to do further transcoding.\
