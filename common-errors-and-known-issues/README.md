@@ -1,5 +1,6 @@
 # Common errors and known issues
 
+* [screen-share-is-just-a-black-video.md](screen-share-is-just-a-black-video.md "mention")
 * [mic-audio-dropping-out.md](mic-audio-dropping-out.md "mention")
 * [known-issues.md](known-issues.md "mention")
 * [echo-or-feedback-issues.md](echo-or-feedback-issues.md "mention")

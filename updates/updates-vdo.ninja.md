@@ -14,7 +14,7 @@
   \-- You can change the blurring intensity with `&blur=25` or whatever; `10` is default\
   \-- `&blur=0` works as well\
   \-- may be buggy if using it with [`&forcedlandscape`](../advanced-settings/mobile-parameters/and-forcelandscape.md) or [`&rotate`](../advanced-settings/design-parameters/and-rotate.md)\
-  ![](<../.gitbook/assets/image (8).png>)
+  ![](<../.gitbook/assets/image (7).png>)
 * Added new accessibility options, include button states using the `aria-pressed` attribute.\
   \
   \*\* changes on alpha. ie:\

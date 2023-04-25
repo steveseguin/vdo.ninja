@@ -10,7 +10,7 @@
 #### April 8
 
 * The [https://updates.vdo.ninja/](https://updates.vdo.ninja/) page has been updated to show image attachments now. The updates page just mirrors this Discord #updates channel; accessible for non-Discord users. This update was brought to you by @leb, who is also responsible for building out our hardworking Discord bot.\
-  ![](<../.gitbook/assets/image (7).png>)
+  ![](<../.gitbook/assets/image (8).png>)
 
 #### March 30
 
