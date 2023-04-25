@@ -15,7 +15,7 @@ Sender-Side Option! ([`&push`](push.md), [`&director`](../viewers-settings/direc
 
 Starts with the microphone muted by default. The guest can switch on the microphone.
 
-![](<../.gitbook/assets/image (1) (2) (1) (1) (1).png>)
+![](<../.gitbook/assets/image (1) (2) (1) (1) (3).png>)
 
 ### Update in Version 23 (currently alpha)
 

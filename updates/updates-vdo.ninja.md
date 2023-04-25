@@ -6,7 +6,7 @@
   \-- It will have the label/border/margins align relative to the 16:9 holder element, rather than video itself.\
   \-- Also related, you can also specify the background color independent of the border color with `&color` (new). If using [`&border`](../advanced-settings/design-parameters/and-border.md), it will not set the background color, so you may need to use both `&border` and `&color`.\
   \-- May not yet work with [`&forcedlandscape`](../advanced-settings/mobile-parameters/and-forcelandscape.md) or [`&rotate`](../advanced-settings/design-parameters/and-rotate.md).\
-  ![](<../.gitbook/assets/image (17).png>)
+  ![](<../.gitbook/assets/image (14).png>)
 * Added `&blur`, which will try to add a blurred background to the video so it fits the structured video container\
   \-- Using `&blur` auto enables `&structure`.\
   \-- Code in the auto mixer, so you won't see the effect in a simple preview or some self-preview types.\
@@ -36,7 +36,7 @@
   \-- Go here, [https://vdo.ninja/alpha/whip](https://vdo.ninja/alpha/whip), enter your Twitch stream token in the correct field, GO, and then select your camera in VDO.Ninja as normal.\
   \-- There's also a new development version of OBS Studio that has improved support for direct publishing of OBS -> VDO.Ninja (via whip) here:\
   [https://github.com/obsproject/obs-studio/actions/runs/4711358202?pr=7926](https://github.com/obsproject/obs-studio/actions/runs/4711358202?pr=7926)\
-  ![](<../.gitbook/assets/image (9).png>)![](<../.gitbook/assets/image (19).png>)
+  ![](<../.gitbook/assets/image (9).png>)![](<../.gitbook/assets/image (16).png>)
 
 #### April 14 <a href="#august-31" id="august-31"></a>
 
@@ -45,7 +45,7 @@
   This `&effects=8` mode might also be helpful in solving issues with cameras disconnecting or having their frame rate change while recording, causing issues with the recording. The canvas acts as a reliable middle man between the camera and output video stream, so if the camera's input stream fails, the recording stream will not be impacted, other than perhaps skipping some frames. The canvas is sensitive to CPU load or browser throttling though, so frame rates may fluctuate more often when using it, so I can't suggest using it unless the guest/user is known to have a problematic camera.\
   \*\* on alpha
 * Added a new IFRAME code example that prompts a guest who is joining a room with a message if the director is not there yet. The message clears when the director joins the room. This sample can be used like a normal vdo.ninja/?room=xxx link (as seen below). The code is extremely easy to customize or embedded into your own websites. The code is just provided as an example. [https://vdo.ninja/examples/waitingroom?room=TESTROOM123](https://vdo.ninja/examples/waitingroom?room=TESTROOM123)\
-  ![](<../.gitbook/assets/image (18).png>)
+  ![](<../.gitbook/assets/image (15).png>)
 
 #### April 13 <a href="#august-31" id="august-31"></a>
 
@@ -390,7 +390,7 @@
   \-- HTTP / WSS remote control also added; `https://api.vdo.ninja/YOURAPIKEY/nextSlide` and `prevSlide`\
   \-- Local Streamdeck support also working, via MIDI.\
   \-- YouTube Tutorial: [https://youtu.be/ORH8betTt8Y](https://youtu.be/ORH8betTt8Y)\
-  ![](<../.gitbook/assets/image (5) (1).png>)![](<../.gitbook/assets/image (19) (3).png>)\
+  ![](<../.gitbook/assets/image (5) (1).png>)![](<../.gitbook/assets/image (19).png>)\
   \
   \* on alpha at vdo.ninja/alpha/
 
@@ -605,7 +605,7 @@
   ![](<../.gitbook/assets/image (1) (1) (1) (3).png>)
 * For VDO.Ninja, right-clicking a video and selecting "audio output destination" should work again. I had to disable that feature for a bit, as some users were reporting audio issues with it enabled. It might have some compatibilities issues, but it won't activate now unless used.
 * When using the special [`&screensharetype=3`](../newly-added-parameters/and-screensharetype.md) screen share mode (screen share with better echo cancellation), support for recording that local screen share, at the same time as as the main video, has been added. You'll need to use the [`&autorecord`](../advanced-settings/recording-parameters/and-autorecord.md) feature to trigger the recording, and when it does start recording, a button will appear specific to stopping that screen recording if needed.\
-  ![](<../.gitbook/assets/image (14).png>)
+  ![](<../.gitbook/assets/image (14) (1).png>)
 * I improve the [`&buffer`](../advanced-settings/view-parameters/buffer.md) and [`&sync`](../advanced-settings/view-parameters/sync.md) feature a bit -- it will activate and sync up faster now, which might be helpful on unstable connections.
 * I haven't been able to validate it works, but I think I added support for H265 (HEVC) to VDO.Ninja; the catch is it might only work between two iPhones running the experimental H265 WebRTC support currently; maybe [Raspberry Ninja](../steves-helper-apps/raspberry.ninja.md) in the future. I haven't managed to make it work yet though, so its just hypothetical support.\
   \
