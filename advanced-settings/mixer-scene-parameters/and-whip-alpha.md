@@ -20,21 +20,18 @@ Example: `&whip=bearertoken`
 Added experimental "WHIP" support to VDO.Ninja, which means in the near future you'll be able to publish directly from OBS to VDO.Ninja without a virtual camera. There's some big caveats to it all, so I don't recommend it over the normal method to most users, but we'll see how it evolves.
 
 To publish use: [https://whip.vdo.ninja/bearertoken](https://whip.vdo.ninja/bearertoken)\
-To view use: [https://vdo.ninja/alpha/?whip=bearertoken](https://vdo.ninja/alpha/?whip=bearertoken)\
-\
-\
-You can also go to [https://vdo.ninja/alpha/whip](https://vdo.ninja/alpha/whip) for a page to help auto-generate basic VDO.Ninja WHIP links for you.\
+To view use: [https://vdo.ninja/alpha/?whip=bearertoken](https://vdo.ninja/alpha/?whip=bearertoken)
 
+You can also go to [https://vdo.ninja/alpha/whip](https://vdo.ninja/alpha/whip) for a page to help auto-generate basic VDO.Ninja WHIP links for you.
 
-You have to use a version of OBS that contains WHIP support to get OBS to WHIP working.   As of April 2023, these are some builds of OBS that support WHIP:\
+You have to use a version of OBS that contains WHIP support to get OBS to WHIP working. As of April 2023, these are some builds of OBS that support WHIP:\
 [https://github.com/obsproject/obs-studio/suites/12263428876/artifacts/649328007](https://github.com/obsproject/obs-studio/suites/12263428876/artifacts/649328007) win (x64)\
 [https://github.com/obsproject/obs-studio/suites/12263428876/artifacts/649328001](https://github.com/obsproject/obs-studio/suites/12263428876/artifacts/649328001) mac (arm)\
-[https://github.com/obsproject/obs-studio/actions/runs/4711358202?pr=7926](https://github.com/obsproject/obs-studio/actions/runs/4711358202?pr=7926) (others here)\
-\
-Hopefully WHIP support will be in OBS officially sometime soon. WHIP support is already added to many other applications and services, and VDO.Ninja will do its best to ensure compatibility as the situation evolves.\
+[https://github.com/obsproject/obs-studio/actions/runs/4711358202?pr=7926](https://github.com/obsproject/obs-studio/actions/runs/4711358202?pr=7926) (others here)
 
+Hopefully WHIP support will be in OBS officially sometime soon. WHIP support is already added to many other applications and services, and VDO.Ninja will do its best to ensure compatibility as the situation evolves.
 
-See this video for details how to set up OBS WHIP to VDO.NInja:
+See this video for details how to set up OBS WHIP to VDO.Ninja:
 
 {% embed url="https://youtu.be/ynSOE2d4Z9Y" %}
 Publishing from OBS directly to VDO.Ninja

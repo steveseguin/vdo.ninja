@@ -14,7 +14,7 @@
   \-- You can change the blurring intensity with `&blur=25` or whatever; `10` is default\
   \-- `&blur=0` works as well\
   \-- may be buggy if using it with [`&forcedlandscape`](../advanced-settings/mobile-parameters/and-forcelandscape.md) or [`&rotate`](../advanced-settings/design-parameters/and-rotate.md)\
-  ![](<../.gitbook/assets/image (7).png>)
+  ![](<../.gitbook/assets/image (8).png>)
 * Added new accessibility options, include button states using the `aria-pressed` attribute.\
   \
   \*\* changes on alpha. ie:\
@@ -36,7 +36,7 @@
   \-- Go here, [https://vdo.ninja/alpha/whip](https://vdo.ninja/alpha/whip), enter your Twitch stream token in the correct field, GO, and then select your camera in VDO.Ninja as normal.\
   \-- There's also a new development version of OBS Studio that has improved support for direct publishing of OBS -> VDO.Ninja (via whip) here:\
   [https://github.com/obsproject/obs-studio/actions/runs/4711358202?pr=7926](https://github.com/obsproject/obs-studio/actions/runs/4711358202?pr=7926)\
-  ![](<../.gitbook/assets/image (9).png>)![](<../.gitbook/assets/image (16).png>)
+  ![](<../.gitbook/assets/image (9).png>)![](<../.gitbook/assets/image (17).png>)
 
 #### April 14 <a href="#august-31" id="august-31"></a>
 
