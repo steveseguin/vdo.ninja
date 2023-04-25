@@ -37,6 +37,7 @@
   * [How Group Chat works](help/how-does-group-chat-work.md)
   * [Video bitrate for push/view links](guides/video-bitrate-for-push-view-links.md)
   * [Video bitrate in rooms](guides/video-bitrate-in-rooms.md)
+  * [How do I lock the resolution?](guides/how-do-i-lock-the-resolution.md)
   * [Basic hotkeys](guides/hotkey-support/README.md)
   * [MIDI, API and WebHID support](guides/midi-api-and-webhid-support.md)
   * [Hardware-accelerated video encoding](guides/hardware-accelerated-video-encoding.md)

@@ -10,7 +10,7 @@ That said, there are things to try still if WiFi is needed or packet loss persis
 
 * Make sure the guest is plugged in and powered; battery mode can cause issues.
 * try to sit closer to the WiFi router and try to limit the traffic on the network; the more that's going through the air, the more packet loss.
-* If the guest can use the 4G LTE instead of WiFi (tethered via USB) , that will often be much better than WiFi.
+* If the guest can use the 4G LTE instead of WiFi (tethered via USB), that will often be much better than WiFi.
 * The guest can also Tether their 4G LTE /w their WiFi using bonding apps like Speedify or with hardware from Peplink; these services can give you more control over network settings.
 * Try to have the guest use Chrome, Edge, or Electron Capture rather than Safari -- preferably in Incognito mode.
 * Disable any Anti-virus software.
