@@ -1535,7 +1535,7 @@ body {
     animation: pulsate 2s ease-out infinite;
 }
 #mainmenu { 
-	height:100vh; 
+	height:0; /* This fixes my background issue - but I'm unsure what it breaks. */
 }
 .mainmenuclass {
 	display: inherit;
