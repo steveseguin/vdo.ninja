@@ -791,6 +791,8 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 	}
 	if (urlParams.has('controlbarspace')){
 		session.dedicatedControlBarSpace = true;
+	} else if (urlParams.has('nocontrolbarspace')){
+		session.dedicatedControlBarSpace = false;
 	}
 	
 	if (urlParams.has('hidesolo') || urlParams.has('hs')){
@@ -939,7 +941,12 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 	} else if (urlParams.has('43')) {
 		session.aspectRatio = 3; //1:1 ?
 	}
-
+	
+	if (urlParams.has('structure')) {
+		session.structure = true;
+	}
+	
+	
 	
 	if (urlParams.has('aspectratio') || urlParams.has('ar')) {  // capture aspect ratio
 		session.forceAspectRatio = urlParams.get('aspectratio') || urlParams.get('ar') || false;
@@ -2185,7 +2192,9 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 		} catch(e){errorlog("variable css failed");}
 	}
 	
-	
+	if (urlParams.has('color')) {
+		session.colorVideosBackground = urlParams.get('color') || session.borderColor || "#000";
+	}
 	
 	if (urlParams.has('retry')) {
 		session.forceRetry = parseInt(urlParams.get('retry')) || 30;
@@ -2828,6 +2837,12 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 		}
 	}
 
+	if (urlParams.has('blur')){
+		session.blurBackground = urlParams.get('blur') || 10;
+		session.blurBackground = parseInt(session.blurBackground) || 10;
+		if (session.blurBackground<0){session.blurBackground=false;}
+		session.structure=true;
+	}
 
 	if (urlParams.has('limittotalbitrate') || urlParams.has('ltb')){
 		session.limitTotalBitrate = urlParams.get('limittotalbitrate') || urlParams.get('ltb') || 2500;

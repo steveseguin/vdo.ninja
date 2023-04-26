@@ -2649,7 +2649,6 @@ img {
 	border-radius: var(--video-rounded);
 	border-width: var(--video-border);
 	border-color: var(--video-border-color);
-	background-color: var(--video-border-color);
 	border-style: solid;
 }
 
@@ -2701,6 +2700,7 @@ video {
 	-ms-user-select: none; /* IE10+ */
 	-webkit-tap-highlight-color:transparent;
 	outline-style:none;
+	border-style:solid;
 	background-size: var(--video-background-image-size);
 	background-repeat: no-repeat;
 	background-position: center;

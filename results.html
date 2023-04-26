@@ -263,6 +263,16 @@
 						document.getElementById("details").innerHTML += "<br /><b>Test start time:</b> "+timeConverter(data.timestart)+"<br />";
 					}
 					
+					if (data.summary){
+						if (data.summary.download && data.summary.upload){
+							document.getElementById("details").innerHTML += "<br /><b>Max download bandwidth:</b> "+parseInt(data.summary.download/(1024*1024))+"-mbps<br />";
+							document.getElementById("details").innerHTML += "<br /><b>Max Upload bandwidth:</b> "+parseInt(data.summary.upload/(1024*1024))+"-mbps<br />";
+						}
+					}
+					if (data.scores && data.scores.gaming && data.scores.gaming.classificationName && data.scores.rtc && data.scores.rtc.classificationName && data.scores.streaming && data.scores.streaming.classificationName){
+						document.getElementById("details").innerHTML += "<br /><b>Gaming:</b> "+data.scores.gaming.classificationName+", <b>RTC:</b> "+data.scores.rtc.classificationName+", <b>Streaming:</b> "+data.scores.streaming.classificationName+"<br />";
+					}
+					
 					if ("resolution" in data){
 						updateData("resolution", data.resolution);
 					}
@@ -320,10 +330,10 @@
 					document.getElementById("container").innerHTML += "The network quality or bandwidth may have limited the performance.<br />";
 				}
 				
-				document.getElementById("container").innerHTML += "The average bitrate was: "+parseInt(BBB/counter)+"-kbps<br />";
+				document.getElementById("container").innerHTML += "The average video bitrate was: "+parseInt(BBB/counter)+"-kbps<br />";
 		
 				if (BBB/counter<500){
-					document.getElementById("container").innerHTML += "<h3>Bitrate is really bad</h3>";
+					document.getElementById("container").innerHTML += "<small><i>Did they select an active camera?</i></small><h3>Bitrate is really bad</h3>";
 				}
 				else if (BBB/counter<1000){
 					document.getElementById("container").innerHTML += "<h3>Bitrate is poor</h3>";
@@ -335,7 +345,7 @@
 					document.getElementById("container").innerHTML += "<h3>Bitrate is good</h3>";
 				}
 				
-				document.getElementById("container").innerHTML += "<br />The average buffer length was: "+parseInt(BUFF/BUFFCCC)+"-ms<br />";
+				document.getElementById("container").innerHTML += "<br />The average video buffer length was: "+parseInt(BUFF/BUFFCCC)+"-ms<br />";
 				
 				if (BUFF/BUFFCCC>500){
 					document.getElementById("container").innerHTML += "<h3>Video delay is really bad</h3><br />";
@@ -350,7 +360,7 @@
 					document.getElementById("container").innerHTML += "<h3>Video delay is good</h3><br />";
 				}
 				
-				document.getElementById("container").innerHTML += "The average packet loss was: "+(parseInt(PAK*1000/PAKCCC)/1000.0)+"%<br />";
+				document.getElementById("container").innerHTML += "The average video packet loss was: "+(parseInt(PAK*1000/PAKCCC)/1000.0)+"%<br />";
 				
 				if (PAK/PAKCCC>3){
 					document.getElementById("container").innerHTML += "<h3>Packet loss is extremely bad; Must Fix This</h3>";
