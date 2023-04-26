@@ -271,12 +271,11 @@
 		</span>
 		<div id="mainmenu" class="row" style="opacity: 0;">
 			
-			<div id="container-1" title="Add Group Chat to OBS"  alt="Add Group Chat to OBS" tabindex="2" role="button" aria-pressed="false" onkeyup="enterPressedClick(event,this);" class="column columnfade pointer rounded card">
+			<div id="container-1" title="Add Group Chat to OBS"  alt="Add Group Chat to OBS" tabindex="2" role="button" aria-pressed="false" onkeyup="enterPressedClick(event,this);" class="column columnfade pointer rounded card" style=" overflow-y: auto;">
 				
 					<h2>
 						<span data-translate="add-group-chat">Create a Room</span>
 					</h2>
-                    <i class="las la-th-large"></i>
 					<div class="container-inner">
 						<br />
 						<br />
@@ -394,11 +393,10 @@
 						</div>
 					</div>
 			</div>
-			<div id="container-3"  title="Add your Camera to OBS" onkeyup="enterPressedClick(event,this);"  alt="Add your Camera to OBS" tabindex="3" role="button" aria-pressed="false" class="column columnfade pointer rounded card" onclick="previewWebcam()">
+			<div id="container-3"  title="Add your Camera to OBS" onkeyup="enterPressedClick(event,this);"  alt="Add your Camera to OBS" tabindex="3" role="button" aria-pressed="false" class="column columnfade pointer rounded card" onclick="previewWebcam()" style=" overflow-y: auto;">
 				<h2 id="add_camera">
 					<span data-translate="add-your-camera">Add your Camera to OBS</span>
 				</h2>
-                <i class="las la-video"></i>
 				<div class="container-inner" id="add_camera_inner">
 					<br />
 					<p>
@@ -567,11 +565,10 @@
 					</div>
 				</div>
 			</div>
-			<div id="container-3a"  title="Add your Microphone to OBS" onkeyup="enterPressedClick(event,this);"  alt="Add your Microphone to OBS" tabindex="3" role="button" aria-pressed="false" class="microphoneBackground column columnfade pointer rounded card hidden" onclick="previewWebcam(true)">
+			<div id="container-3a"  title="Add your Microphone to OBS" onkeyup="enterPressedClick(event,this);"  alt="Add your Microphone to OBS" tabindex="3" role="button" aria-pressed="false" class="microphoneBackground column columnfade pointer rounded card hidden" onclick="previewWebcam(true)" style=" overflow-y: auto;">
 				<h2 id="add_microphone">
 					<span data-translate="add-your-microphone">Add your Microphone to OBS</span>
 				</h2>
-                <i class="las la-microphone"></i>
 				<div class="outer close">
 					<div class="inner">
 						<label class="labelclass">
@@ -580,11 +577,10 @@
 					</div>
 				</div>
 			</div>
-			<div id="container-2" title="Remote Screenshare into OBS" onkeyup="enterPressedClick(event,this);"  alt="Remote Screenshare into OBS"  tabindex="4" role="button" aria-pressed="false" class="column columnfade pointer rounded card">
+			<div id="container-2" title="Remote Screenshare into OBS" onkeyup="enterPressedClick(event,this);"  alt="Remote Screenshare into OBS"  tabindex="4" role="button" aria-pressed="false" class="column columnfade pointer rounded card" style=" overflow-y: auto;">
 				<h2 id="add_screen">
 					<span data-translate="remote-screenshare-obs">Remote Screenshare into OBS</span>
 				</h2>
-                <i class="las la-desktop"></i>
 				<div class="container-inner">
 					<span>
 						<video id="screenshare" autoplay="true" muted="true" loop src="./media/screenshare.webm" class="lazy" style='background-image: unset;'></video>
@@ -660,11 +656,10 @@
 					</div>
 				</div>
 			</div>
-			<div id="container-4" tabindex="5" alt="Create Reusable Invite" onkeyup="enterPressedClick(event,this);" onclick="loadQR();" title="Create Reusable Invite" role="button" aria-pressed="false" class="column columnfade pointer rounded card">
+			<div id="container-4" tabindex="5" alt="Create Reusable Invite" onkeyup="enterPressedClick(event,this);" onclick="loadQR();" title="Create Reusable Invite" role="button" aria-pressed="false" class="column columnfade pointer rounded card" style=" overflow-y: auto;">
 				<h2>
 					<span data-translate="create-reusable-invite">Create Reusable Invite</span>
 				</h2>
-                <i class="las la-paper-plane"></i>
 				<div id="gencontent2" style="display:none; max-height: 100%;min-height: 90%;"></div>
 				<div id="gencontent" class="container-inner">
 					
@@ -790,10 +785,10 @@
 			
 			<div id="dropButton" onclick="dropDownButtonAction()" title="More Options"><i class="las la-chevron-down" ></i></div>
 			
-			<div id="container-5" class="column columnfade pointer rounded card hidden">
+			<div id="container-5" class="column columnfade pointer rounded card hidden" style=" overflow-y: auto;">
 				<h2><span data-translate="share-local-video-file">Stream Media File</span></h2>
-				<i class="las la-file-video"></i>
 				<div class="container-inner">
+					
 					<br /><br />
 					<span data-translate="select-the-video-files-to-share">SELECT THE VIDEO FILES TO SHARE</span><br /><br />
 					<input id="fileselector" onchange="session.publishFile(this,event);" type="file" accept="video/*,audio/*" alt="Hold CTRL (or CMD) to select multiple files" title="Hold CTRL (or CMD) to select multiple files" multiple/>
@@ -824,9 +819,9 @@
 				</div>
 			</div>
 			
-			<div id="container-6" class="column columnfade pointer rounded card hidden">
+			<div id="container-6" class="column columnfade pointer rounded card hidden" style=" overflow-y: auto;">
 				<h2><span data-translate="share-website-iframe">Share Website</span></h2>
-				<i class="las la-broadcast-tower"></i>
+				<i style="margin-top:30px;font-size:560%;overflow:hidden;" class="las la-broadcast-tower"></i>
 				<div class="container-inner">
 					<br />
 					<div id="previewIframe"></div>
@@ -855,49 +850,49 @@
 
 			</div>
 			
-			<div id="container-7" class="column columnfade pointer rounded card hidden" onclick="window.location = './speedtest.html';">
+			<div id="container-7" class="column columnfade pointer rounded card hidden" style="overflow: hidden;" onclick="window.location = './speedtest.html';">
 				<h2><span data-translate="run-a-speed-test">Run a Speed Test</span></h2>
-				<i class="las la-tachometer-alt"></i>
+				<i style="margin-top:30px;font-size:600%;overflow:hidden;" class="las la-tachometer-alt"></i>
 			</div>
 			
-			<div id="container-8" class="column columnfade pointer rounded card hidden" onclick="window.location = './mixer.html';">
+			<div id="container-8" class="column columnfade pointer rounded card hidden" style="overflow: hidden;" onclick="window.location = './mixer.html';">
 				<h2><span data-translate="try-the-mixer-out">Custom Mixed Layouts</span></h2>
-				<i class="las la-blender"></i>
+				<i style="margin-top:30px;font-size:600%;overflow:hidden;" class="las la-blender"></i>
 			</div>
 			
-			<div id="container-14" class="column columnfade pointer rounded card hidden" onclick="window.location = 'https://versus.cam';">
+			<div id="container-14" class="column columnfade pointer rounded card hidden" style="overflow: hidden;" onclick="window.location = 'https://versus.cam';">
 				<h2><span data-translate="try-out-versus-cam">Multi-Stream Monitor</span></h2>
-				<i class="las la-gamepad"></i>
+				<i style="margin-top:30px;font-size:600%;overflow:hidden;" class="las la-gamepad"></i>
 			</div>
 			
-			<div id="container-15" class="column columnfade pointer rounded card hidden" onclick="window.location = './comms.html';">
+			<div id="container-15" class="column columnfade pointer rounded card hidden" style="overflow: hidden;" onclick="window.location = './comms.html';">
 				<h2><span data-translate="voice-comms-app">Group Voice Comms</span></h2>
-				<i class="las la-comments"></i>
+				<i style="margin-top:30px;font-size:600%;overflow:hidden;" class="las la-comments"></i>
 			</div>
 			
-			<div id="container-9" class="column columnfade pointer rounded card hidden" onclick="window.location = 'https://guides.vdo.ninja';">
+			<div id="container-9" class="column columnfade pointer rounded card hidden" style="overflow: hidden;" onclick="window.location = 'https://guides.vdo.ninja';">
 				<h2><span data-translate="read-the-guides">Basic Usage Guides</span></h2>
-				<i class="las la-book-open"></i>
+				<i style="margin-top:30px;font-size:600%;overflow:hidden;" class="las la-book-open"></i>
 			</div>
 			
-			<div id="container-13" class="column columnfade pointer rounded card hidden" onclick="window.location = 'https://linkgen.vdo.ninja';">
+			<div id="container-13" class="column columnfade pointer rounded card hidden" style="overflow: hidden;" onclick="window.location = 'https://linkgen.vdo.ninja';">
 				<h2><span data-translate="wizard-link-generator">Wizard Link Generator</span></h2>
-				<i class="las la-hat-wizard"></i>
+				<i style="margin-top:30px;font-size:600%;overflow:hidden;" class="las la-hat-wizard"></i>
 			</div>
 			
-			<div id="container-10" class="column columnfade pointer rounded card hidden" onclick="window.location = 'https://docs.vdo.ninja';">
+			<div id="container-10" class="column columnfade pointer rounded card hidden" style="overflow: hidden;" onclick="window.location = 'https://docs.vdo.ninja';">
 				<h2><span data-translate="get-full-documentation">Full Documentation</span></h2>
-				<i class="las la-info"></i>
+				<i style="margin-top:30px;font-size:600%;overflow:hidden;" class="las la-info"></i>
 			</div>
 			
-			<div id="container-11" class="column columnfade pointer rounded card hidden" onclick="window.location = 'https://github.vdo.ninja';">
+			<div id="container-11" class="column columnfade pointer rounded card hidden" style="overflow: hidden;" onclick="window.location = 'https://github.vdo.ninja';">
 				<h2><span data-translate="get-the-source-code">Source Code</span></h2>
-				<i class="las la-code-branch"></i>
+				<i style="margin-top:30px;font-size:600%;overflow:hidden;" class="las la-code-branch"></i>
 			</div>
 			
-			<div id="container-12" class="column columnfade pointer rounded card hidden" onclick="window.location = 'https://docs.vdo.ninja/getting-started/sponsor';">
+			<div id="container-12" class="column columnfade pointer rounded card hidden" style="overflow: hidden;" onclick="window.location = 'https://docs.vdo.ninja/getting-started/sponsor';">
 				<h2><span data-translate="show-your-support">Show Your Support</span></h2>
-				<i class="las la-heartbeat"></i>
+				<i style="margin-top:30px;font-size:600%;overflow:hidden;" class="las la-heartbeat"></i>
 			</div>
 			
 			<p></p>
