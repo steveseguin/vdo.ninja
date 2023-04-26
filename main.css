@@ -2,20 +2,19 @@
     /* Discord Greys - Dark to Lighter */
     --discord-grey-0: #121212;
     --discord-grey-1: #1e1f22;
-	--discord-grey-1a: #1e1f22; /* Added to modify a specific color without affecting everything */
     --discord-grey-2: #232428;
-    --discord-grey-3: #2b2d31;
+    --discord-grey-3: #2c2c2d;
     --discord-grey-4: #2e3035;
     --discord-grey-5: #313338;
     --discord-grey-6: #383a40;
-    --discord-grey-7: #404249; 
+    --discord-grey-7: #404249; /* primary */
     --discord-grey-8: #5e6064; 
-    --discord-text: hsl( 210 calc(1 * 9.1%) 87.1% /1);
+    --discord-text: hsl( 210 calc(1 * 9.1%) 92% /1);
 
     --darktheme-red: rgb(161, 45, 45);
     --darktheme-blue: rgb(33, 69, 114);
     --darktheme-green: rgb(36, 88, 49);
-    --darktheme-lightgreen: rgb(92, 169, 48);
+    --darktheme-lightgreen: #008770;
     --darktheme-brown: rgb(96, 58, 25);
     --darktheme-yellow: rgb(84, 70, 9);
 
@@ -23,7 +22,7 @@
     --lighttheme-1: #fff;
     --lighttheme-2: #f0f0f0;
     --lighttheme-3: #ddd;
-    --lighttheme-4: #ccc;
+    --lighttheme-4: #ccc; /* primary */
     --lighttheme-5: #bbb;
     --lighttheme-6: #aaa;
     --lighttheme-7: #7e7e7e;
@@ -32,17 +31,23 @@
 
     /* Director v2 - General colors */
     /* -- Links */
-    --a-dark-link: rgb(145 197 115);
-    --a-dark-visited: rgb(145 197 115);
-    --a-dark-hover: rgb(142 219 98);
-    --a-dark-focus: rgb(142 219 98);
-    --a-dark-active: rgb(145 197 115);
+    --a-dark-link: #8fcdcd;
+    --a-dark-visited: #8fcdcd;
+    --a-dark-hover: #6ddddd;
+    --a-dark-focus: #6ddddd;
+    --a-dark-active: #58c0c0;
+	
+	--a-darker-link: #43ab99;
+    --a-darker-visited: #43ab99;
+    --a-darker-hover: #55cdb8;
+    --a-darker-focus: #55cdb8;
+    --a-darker-active: #42a896;
 
-    --a-link: #70ade6;
-    --a-visited: #70ade6;
-    --a-hover: #49A7FF;
-    --a-focus: #49A7FF;
-    --a-active: #3D9DF7;
+    --a-link: #6eb4a8;
+    --a-visited: #6eb4a8;
+    --a-hover: #67c0b1;
+    --a-focus: #67c0b1;
+    --a-active: #61ada0;
 
     /* -- Box colors */
     --director-box: rgb(165 119 18);
@@ -247,6 +252,24 @@ a {
 .darktheme a:active {
 	color: var(--a-dark-active);
 }
+
+.darktheme .infoblob a:link {
+	color: var(--a-darker-link);
+}
+.darktheme .infoblob a:visited {
+	color: var(--a-darker-visited);
+}
+.darktheme .infoblob a:hover {
+	color: var(--a-darker-hover);
+}
+.darktheme .infoblob a:focus {
+	color: var(--a-darker-focus);
+}
+.darktheme .infoblob a:active {
+	color: var(--a-darker-active);
+}
+
+
 a:link {
 	color: var(--a-link);
 }
@@ -3636,7 +3659,7 @@ div#roomnotes2 {
 }
 
 .darktheme div#guestFeeds {
-    background-color: var(--discord-grey-1a)
+    background-color: var(--container-color)
 }
 
 div#guestFeeds {
@@ -4833,7 +4856,7 @@ button .chevron.right::before {
 /* ********************* */
 
 .darktheme select {
-    background-color: var(--discord-grey-3);
+    background-color: var(--discord-grey-2);
     border: 1px solid var(--discord-grey-8);
     color: var(--discord-text);
     border-radius: 4px;
@@ -4921,7 +4944,7 @@ input[type='range'] {
 }
 
 .darktheme .container-inner {
-    background-color: var(--discord-grey-1);
+    background-color: var(--discord-grey-7);
 }
 
 .container-inner {
@@ -5048,7 +5071,7 @@ input[type='range'] {
 }
 
 .invite_setting_item {
-	margin: 10px 0px;
+	margin: 10px 0px 0px 0;
 } 
 
 .invite_setting_group_links {
