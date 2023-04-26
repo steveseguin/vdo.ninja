@@ -4,10 +4,10 @@ In some cases, the functionality of [VDO.Ninja](https://vdo.ninja) may overlap w
 
 * **100% free.** There's **no downloads** required, **no personal data collected**, and **no sign-in** needed.
 * Compatible with most modern browsers and mobile devices.
-* **Free support** offered via email, Discord, Reddit, and numerous written guides.
-* **Video data is peer-to-peer**, so unlike Skype, your video data does not go thru the NSA's spying servers
-* **Video can be transferred over a LAN directly**, so if using your phone as a webcam, you can crank the bitrates up to 40mbps if you want, and your bandwidth won't be affected.
-* **Low latency**. I'm talking as low as 30ms, and normally it never goes higher than 200ms.
+* **Free support** offered via email, Discord, Reddit and numerous written guides.
+* **Video data is peer-to-peer**, so unlike Skype, your video data does not go thru the NSA's spying servers.
+* **Video can be transferred over a LAN directly**, so if using your phone as a webcam, you can crank the bitrates up to 40-mbps if you want, and your bandwidth won't be affected.
+* **Low latency**. I'm talking as low as 30-ms, and normally it never goes higher than 200-ms.
 * **Adjustable resolutions and video bitrates** (1920x1080p60 @ 30-mbps -- or even custom resolutions). 4K @ 30fps is possible, but CPU intensive.
 * **Control over audio denoise**, **echo-cancellation**, and **auto-gain** is available, along with custom audio bitrates, and **stereo-sound**. It is an exceptional tool for podcasters and live streaming DJs.
 * You can **parameterize many aspects of VDO.Ninja** such as total bitrate usage, bitrate per viewer usage, auto-select a device, autostart a session, removing the preview window.
