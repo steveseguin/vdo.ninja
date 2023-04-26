@@ -752,6 +752,10 @@ hr {
 	border-radius: var(--video-rounded);
 }
 
+.darktheme #gridlayout, .darktheme #directorlayout {
+    background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAkAAAAJCAYAAADgkQYQAAAA/ElEQVQYlTWPwUrEMBCGJ2mUNKZxIbRQ2oPeRT34OH2HPfQ5eugzeRG8rOLdvRVagm5Jm+DSILO0c5kZZub/vyF1XcMWTdNgda2UeqSUSmvt736/P7C2bZ9DCN8hhBMAxEqpJ601H4bhJ4RwxCsqpdwJIe6wieP4Icsy3nWdt9Z+rIdAlFIvWmuJAynlVRRFsCwLTNPknXNfAODoOI6fxhhfliUnhNCqql4xF0Vxg9bISFbmGK2EEJwxdlGy1p7zPOfGGEvX75xz7n2apnOSJBFaee/fEB6/ZBd6Sm8RPk1T3vf9xgLzPB8ppWRbumeM7VAaGQHgb3U4AcDhH7U6eiFtegoRAAAAAElFTkSuQmCC')
+}
+
 #gridlayout, #directorlayout {
 	padding: 0;
 	width: 100%;
@@ -760,6 +764,7 @@ hr {
 	justify-items: stretch;
 	border: 0;
 	margin: 0;
+    background-image:  url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAkAAAALCAYAAACtWacbAAAAXklEQVQYlY2QQQrAIBADR9v/v7jVEiEQF1qaiyw7jFH+pM05K9aAI+arAyfQX4BBLH1uhgopMmY0y7yguyxlcGRuLl67bPF1ItOwGbN4dnKFVdyLfIAAf56gBX4HeACpTBUQDGw6iAAAAABJRU5ErkJggg==');
 }
 #gridlayout{
 	z-index:-1;
@@ -1131,6 +1136,10 @@ button.glyphicon-button.active.focus {
 	outline: 0px !important;
 	height:100%;
 	animation: fadeIn 0.2s;
+	background-size: cover;
+	background-image: var(--background-main-image);
+	background-repeat: no-repeat;
+	background-attachment: fixed;
 	background-position: center;
 	overflow-x: hidden;
     position: absolute;
@@ -1448,12 +1457,6 @@ html {
 	outline: 0;
 }
 
-body.darktheme{
-	background-color: var(--dark-background-color);
-    background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAkAAAAJCAYAAADgkQYQAAAA/ElEQVQYlTWPwUrEMBCGJ2mUNKZxIbRQ2oPeRT34OH2HPfQ5eugzeRG8rOLdvRVagm5Jm+DSILO0c5kZZub/vyF1XcMWTdNgda2UeqSUSmvt736/P7C2bZ9DCN8hhBMAxEqpJ601H4bhJ4RwxCsqpdwJIe6wieP4Icsy3nWdt9Z+rIdAlFIvWmuJAynlVRRFsCwLTNPknXNfAODoOI6fxhhfliUnhNCqql4xF0Vxg9bISFbmGK2EEJwxdlGy1p7zPOfGGEvX75xz7n2apnOSJBFaee/fEB6/ZBd6Sm8RPk1T3vf9xgLzPB8ppWRbumeM7VAaGQHgb3U4AcDhH7U6eiFtegoRAAAAAElFTkSuQmCC')
-
-}
-
 body {
 	-webkit-font-smoothing: antialiased;
 	text-rendering: optimizeLegibility;
@@ -1461,6 +1464,7 @@ body {
 	padding: 0 0px;
 	height: 100%;
 	width: 100%;
+	background-color: var(--background-color);
 	font-family: Helvetica, Arial, sans-serif;
 	display: flex;
 	flex-flow: column;
@@ -1469,14 +1473,10 @@ body {
 	opacity: 1;
 	transition: opacity .1s linear;
 	scrollbar-color:#666 #201c29;
-	background-color: var(--background-color);
-    background-image:  url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAkAAAALCAYAAACtWacbAAAAXklEQVQYlY2QQQrAIBADR9v/v7jVEiEQF1qaiyw7jFH+pM05K9aAI+arAyfQX4BBLH1uhgopMmY0y7yguyxlcGRuLl67bPF1ItOwGbN4dnKFVdyLfIAAf56gBX4HeACpTBUQDGw6iAAAAABJRU5ErkJggg==');
 }
-
-
-
-body {
-    }
+body.darktheme{
+	background-color: var(--dark-background-color);
+}
 
 ::-webkit-scrollbar {
 	width: 15px;
