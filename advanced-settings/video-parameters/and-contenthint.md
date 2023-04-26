@@ -37,8 +37,8 @@ The two options for video are `detail` or `motion`. Screen-shares generally tend
 
 For more information on how to lock or maximize the resolution of a video feed, please see the following guide:
 
-{% content-ref url="../../guides/how-do-i-lock-the-resolution.md" %}
-[how-do-i-lock-the-resolution.md](../../guides/how-do-i-lock-the-resolution.md)
+{% content-ref url="../../guides/how-to-lock-the-resolution.md" %}
+[how-to-lock-the-resolution.md](../../guides/how-to-lock-the-resolution.md)
 {% endcontent-ref %}
 
 There is [`&screensharecontenthint`](../screen-share-parameters/and-screensharecontenthint.md) if you want the parameter to only affect screen-shares.
