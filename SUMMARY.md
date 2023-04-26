@@ -4,7 +4,6 @@
   * [How does it work](how-does-it-work.md)
   * [Use cases](use-cases.md)
   * [Why use VDO.Ninja over other solutions?](why-use-obs.ninja-over-other-solutions.md)
-  * [I'm not using OBS; is VDO.Ninja for me?](im-not-using-obs-is-obs.ninja-for-me.md)
   * [Sponsor ❤](https://docs.vdo.ninja/getting-started/sponsor)
 * [Getting started](getting-started/README.md)
   * [VDO.Ninja basics](getting-started/vdo.ninja-basics.md)
