@@ -12,7 +12,7 @@
 
 ## How-to's
 
-* [how-to-lock-the-resolution.md](how-to-lock-the-resolution.md "mention")
+* [how-do-i-lock-the-resolution.md](how-do-i-lock-the-resolution.md "mention")
 * [use-vdo.ninja-as-a-webcam-for-google-hangouts-zoom-and-more.md](use-vdo.ninja-as-a-webcam-for-google-hangouts-zoom-and-more.md "mention")
 * [how-do-i-control-bitrate-quality.md](how-do-i-control-bitrate-quality.md "mention")
 * [how-to-send-the-audio-video-output-of-one-obs-to-another-obs-using-vdo.ninja.md](how-to-send-the-audio-video-output-of-one-obs-to-another-obs-using-vdo.ninja.md "mention")

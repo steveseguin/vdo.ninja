@@ -2,7 +2,7 @@
 description: If you don't want the resolution to vary
 ---
 
-# How do I lock the resolution?
+# How to lock the resolution
 
 The browser doesn't allow much control over the resolution, which is unfortunate. The published resolution will often change based on network conditions or CPU performance, but also if the bitrate for a video stream is too low.
 
