@@ -57,7 +57,7 @@
 		<meta name="msapplication-TileColor" content="#da532c" />
 		<meta name="theme-color" content="#ffffff" />
 		<link rel="stylesheet" href="./main.css?ver=310" />
-		<script type="text/javascript" crossorigin="anonymous" src="./thirdparty/adapter.js?v=7"></script>
+		<script type="text/javascript" crossorigin="anonymous" src="./thirdparty/adapter.js"></script>
 		<style id="lightbox-animations" type="text/css"></style>
 		<!-- <link rel="manifest" href="manifest.json" /> -->
 			<!-- ios support 
@@ -298,7 +298,7 @@
 									</b>
 								</div>
 								<input type="text" autocorrect="off" autocapitalize="none"  id="videoname1" placeholder="Enter a room name here" onkeydown="checkStrengthRoom(event, 'securityLevelRoom');" onchange="checkStrengthRoom(event, 'securityLevelRoom');" onkeyup="enterPressed(event, createRoom);" maxlength="30" style="max-width: 431px;width: 100%;font-size: 110%; padding: 5px;" />
-								<button onclick="getById('videoname1').value = session.generateRandomString();getById('securityLevelRoom').style.display='none';" title="Generate a random room name" class="randomRoomName"></button>
+								<button onclick="getById('videoname1').value = session.generateRandomString();getById('securityLevelRoom').style.display='none';" title="Generate a random room name" class="randomRoomName"><i class="las la-random"></i></button>
 								<div id="securityLevelRoom" style="display:none;margin-top:3px;position:relative;top:3px;font-size:0.8em;"></div>
 							</th>
 							
@@ -366,22 +366,21 @@
 								<span data-translate="show-tips">Show me some tips..</span>
 							</button>
 							
-							<ul style=" margin: auto auto; max-width: 500px; display: none; text-align: left;" class="roomnotes" id="roomnotes">
+							<ul style="max-width: 500px; display: none; text-align: left;" class="roomnotes" id="roomnotes">
 								<span data-translate="added-notes" >
-									<u>
-										<i>Important Tips:</i><br /><br />
-									</u>
+									<i>Important Tips:</i>
 									<li>Disabling video sharing between guests will improve performance</li>
 									<li>Invite only guests to the room that you trust.</li>
 									<li>The "Recording" option is considered experimental.</li>
 									<li><a href="https://params.vdo.ninja" style="color:black;"><u>Advanced URL parameters</u></a> are available to customize rooms.</li>
 								</span>
-								<br />
-								<br />
 							</ul>
-							<br /><br />
+							<br />
+							<br />
 							<i data-translate="looking-to-just-chat-and-not-direct">Looking to just chat and not direct?</i>
-							<button onclick="jumptoroom2()" class="gobutton" style="width:100%;" alt="Enter the room as the group's director" title="You'll enter as the room's director">
+							<br />
+							<br />
+                            <button onclick="jumptoroom2()" class="gobutton" style="width:100%;" alt="Enter the room as the group's director" title="You'll enter as the room's director">
 								<span data-translate="join-the-room-basic">Join the room as a Participant, rather than a director</span>
 							</button>
 						</span>
@@ -423,7 +422,9 @@
 						<span><i class="las la-headphones"></i><span data-translate="you-are-using-headphones-earphones">You are using headphones / earphones</span></span>
 					</div>
 					<div id="videoMenu" class="videoMenu">
-						<span style="display:inline-block;position:relative;padding: 7px 0px;"><i class="las la-video"></i><span data-translate="video-source"> Video Source </span></span>
+						<div class="title">
+                            <i class="las la-video"></i><span data-translate="video-source"> Video Source </span>
+                        </div>
 						<span style="display:flex;align-items: center;">
 							<select id="videoSourceSelect" alt="Video source list"></select>
 							<span id="gear_webcam" onclick="toggle(document.getElementById('videoSettings'));">
@@ -462,7 +463,7 @@
 							<input type="checkbox" id='micStereoMonoInput' alt="Mono microphone audio"  onchange="toggleMonoStereoMic(this);">Mono
 						</span>
 						<a id="multiselect-trigger" class="form-control multiselect-trigger" >
-							<div  class="audioTitle">
+							<div  class="title">
 								<i class="las la-microphone-alt"></i><span data-translate="select-audio-source"> Audio Source(s) </span>
 								<i id='chevarrow1' class="chevron bottom" aria-hidden="true"></i>
 								<div class="meter" id="meter1"></div><div class="meter2" id="meter2"></div>
@@ -483,35 +484,35 @@
 					</div>
 					<br style="line-height: 0;" />
 					<div id="headphonesDiv" class="audioMenu">
-						<div class="audioTitle2">
+						<div class="title">
 						<i class="las la-headphones"></i><span data-translate="select-output-source"> Audio Output Destination
-						</span><button onclick="playtone()" class="white" style="margin:0 0 0 15px;padding: 2px 10px 0px 10px;" type="button">Test</button></div>
+						</span><button onclick="playtone()" class="white" style="padding: 2px 10px;" type="button">Test</button></div>
 						<select id="outputSource" alt="Audio output device" ></select>
 						<div id="headphoneTip1" class="cameraTip hidden">
 							<i class="las la-info-circle"></i>
 							<p><span id="headphoneTipContext1"></span></p>
 						</div>
 					</div>
-					
+					<br style="line-height: 0;" />
 					<div id="avatarDiv" class="hidden">
-						<div style="text-align: left;display: inline-block;">
+						<div class="title">
 							<i class="las la-robot"></i><span data-translate="select-avatar-image"> Default Avatar / Placeholder Image </span>
 						</div>
 						<div id="selectAvatarImage" style="margin-top:10px;">
 							<img src="./media/avatar.webp" crossOrigin="Anonymous" loading="lazy" id="defaultAvatar1" style="max-width:130px;max-height:73.5px;display:inline-block;margin:10px;cursor:pointer;" onclick="changeAvatarImage(event, this);"/>
-							<label class="selected" id="noAvatarSelected" style="width:130px;display:inline-block;margin:0 1px; text-align: center; cursor:pointer;">
+							<label class="selected" id="noAvatarSelected" style="width:130px;display:inline-block;text-align: center; cursor:pointer;">
 							  <i class="las la-minus-circle" style="font-size: 3em;"></i><br />No Image Selected
 							  <button onclick="changeAvatarImage(event, this)" style="position: fixed; top: -100em; margin-left:10px; border:1px solid #555;"></button>
 							</label>
-							<label style="width:130px;display:inline-block;margin:10px 1px; text-align: center; cursor:pointer;">
+							<label style="width:130px;display:inline-block; text-align: center; cursor:pointer;">
 							  <i class="las la-hdd" style="font-size: 3em;"></i><br />Select Local Image
 							  <input type="file" onchange="changeAvatarImage(event, this)" accept="image/*" style="position: fixed; top: -100em; margin-left:10px; border:1px solid #555;"> 
 							</label>
 						</div>
 					</div>
-					
+					<br style="line-height: 0;" />
 					<div id="effectsDiv">
-						<div style="text-align: left;display: inline-block;">
+						<div class="title">
 							<i class="las la-robot"></i><span data-translate="select-digital-effect"> Digital Video Effects </span>
 						</div>
 						<select id="effectSelector" alt="Digital video effect options"  onchange="effectsDynamicallyUpdate(event, this);">
@@ -541,13 +542,13 @@
 						</div>
 						
 					</div>
-					<div id="addPasswordBasic" >
-						<i class="las la-key"></i><span data-translate="add-a-password"> Add a Password</span>
-						<input type="text" id="passwordBasicInput" placeholder="optional" style="border: solid 1px #AAA;
-							padding: 4px 6px;
-							width: 200px;
-							margin: 0 6px;"/>
-					</div>
+					<br style="line-height: 0;" />
+					<div id="addPasswordBasic">
+                        <div class="title">
+                            <i class="las la-key"></i><span data-translate="add-a-password"> Add a Password</span>
+                        </div>
+                        <input type="text" id="passwordBasicInput" placeholder="optional"/>
+                    </div>
 					
 					<div id="SafariWarning" class="startupWarning hidden">
 						<i class="las la-exclamation-circle"></i>
@@ -589,11 +590,10 @@
 						<span data-translate="select-screen-to-share">SELECT SCREEN TO SHARE</span>
 					</button>
 					<span id="gear_screen" style="display: inline-block; cursor: pointer;" onclick="toggle(document.getElementById('videoSettings2'));">
-						&nbsp;&nbsp;
 						<i class="las la-cog" style="font-size: 170%; vertical-align: middle;" aria-hidden="true"></i>
 					</span>
 					<center>
-						<span id="videoSettings2" style="margin: auto auto; display: none; border: 3px solid #ccc; max-width: 500px; padding: 10px 10px 5px 10px; margin: 0px 0px 10px;">
+						<span id="videoSettings2" style="display: none;">
 							<form id="webcamquality2">
 								<input type="radio" id="fullhd2" name="resolution2" value="0" />
 								<label for="fullhd">
@@ -609,7 +609,7 @@
 								<label for="nothd">
 									<span data-translate="smooth-cool">360p (smooth)</span>
 								</label>
-								<div id="webcamstats2" style="padding: 5px 0 0 0;"></div>
+								<div id="webcamstats2"></div>
 							</form>
 						</span>
 					</center>
@@ -618,8 +618,10 @@
 						<p><span data-translate="privacy-disabled">Privacy warning: The director will be able to remotely change your camera, microphone, and URL while this page is open, if you continue.</span></p>
 					</div>
 					<div id="audioScreenShare1">
-						<i class="las la-microphone-alt"></i>
-						<span data-translate="audio-sources">Audio Sources</span>
+                        <div class="title">
+                            <i class="las la-microphone-alt"></i>
+                            <span data-translate="audio-sources">Audio Sources</span>
+                        </div>
 						<select id="audioSourceScreenshare" multiple  alt="tip: Hold CTRL (command) to select Multiple" title="tip: Hold CTRL (command) to select Multiple" onchange="requestAudioStream();">
 							<option value="screenshare" selected>
 								Screen Share Audio (default)
@@ -631,17 +633,19 @@
 					</div>
 					<br />
 					<div id="headphonesDiv2">
-						<i class="las la-headphones"></i>
-						<span data-translate="select-output-source"> Audio Output Destination: <button onclick="playtone(true)" class="white" style="padding:3px 5px 2px 5px; margin:0; margin-left:15px; position: relative; " type="button">Test</button></span>
-						<select id="outputSourceScreenshare" onclick="requestOutputAudioStream();">
+                        <div class="title">
+                            <i class="las la-headphones"></i>
+                            <span data-translate="select-output-source"> Audio Output Destination: <button onclick="playtone(true)" class="white" style="padding:3px 5px 2px 5px; margin:0; margin-left:15px; position: relative; " type="button">Test</button></span>
+						</div>
+                        <select id="outputSourceScreenshare" onclick="requestOutputAudioStream();">
 							<option value="default">
 								Default Device
 							</option>
 						</select>
 					</div>
 					<br />
-					<div id="audioScreenCaptureDocs" data-translate="application-audio-capture">For application-specific audio capture, <a href='https://docs.vdo.ninja/audio' style='color: #007AC8;' target="_blank">see here</a></div>
-					<div id="audioScreenCaptureDocs2" data-translate="1080p-screen-capture-guide">For achieving 1080p60 game-capture, <a href='https://docs.vdo.ninja/guides/how-to-screen-share-in-1080p' style='color: #007AC8;'  target="_blank">see here</a></div>
+					<div id="audioScreenCaptureDocs" data-translate="application-audio-capture">For application-specific audio capture, <a href='https://docs.vdo.ninja/audio' target="_blank">see here</a></div>
+					<div id="audioScreenCaptureDocs2" data-translate="1080p-screen-capture-guide">For achieving 1080p60 game-capture, <a href='https://docs.vdo.ninja/guides/how-to-screen-share-in-1080p' target="_blank">see here</a></div>
 					
 				</div>
 				<div class="outer close">
@@ -656,7 +660,7 @@
 				<h2>
 					<span data-translate="create-reusable-invite">Create Reusable Invite</span>
 				</h2>
-				<div id="gencontent2" style="display:none;background-color: rgb(221, 221, 221); max-height: 100%;min-height: 90%;"></div>
+				<div id="gencontent2" style="display:none; max-height: 100%;min-height: 90%;"></div>
 				<div id="gencontent" class="container-inner">
 					
 					<br />
@@ -765,8 +769,8 @@
 							</div>
 						</div>
 						<div class="invite_setting_group_links">See the 
-							<a style="text-decoration: none; color: blue;" target="_blank" href="https://docs.vdo.ninja/advanced-settings">documentation</a> for a list of all options and details.<br /><br />
-							Try out the advanced <a style="text-decoration: none; color: blue;" target="_blank" href="https://invite.vdo.ninja/">invite generator</a> here as well.
+							<a target="_blank" href="https://docs.vdo.ninja/advanced-settings">documentation</a> for a list of all options and details.<br /><br />
+							Try out the advanced <a target="_blank" href="https://invite.vdo.ninja/">invite generator</a> here as well.
 						</div>
 					</span>
 				</div>
@@ -997,8 +1001,8 @@
 						</label>
 							<span data-translate="guests-hear-others" style="line-height:0;position:relative;top:-3px;">Guests hear others</span>
 						</span>
-						<button class='pull-right grey' style='font-size:1.15em' onclick='copyFunction(getById("director_block_1"),event)'><i class='las la-copy'></i><span data-translate="copy-link">Copy link</span></button>
-						<button class='pull-right grey' style='font-size:1.15em' id="showCustomizerButton1"  onclick='showCustomizer(1,this)'><i class='las la-tools'></i><span data-translate="customize">Customize</span></button>
+						<button class='pull-right' style='font-size:1.15em' onclick='copyFunction(getById("director_block_1"),event)'><i class='las la-copy'></i><span data-translate="copy-link">Copy link</span></button>
+						<button class='pull-right' style='font-size:1.15em' id="showCustomizerButton1"  onclick='showCustomizer(1,this)'><i class='las la-tools'></i><span data-translate="customize">Customize</span></button>
 					<span>
 				</div>
 			</div>
@@ -1016,8 +1020,8 @@
 						</label>
 							<span data-translate="auto-add-guests" style="line-height:0;position:relative;top:-3px;">Auto-add guests</span>
 						</span>
-						<button class='pull-right grey' style='font-size:1.15em' onclick='copyFunction(getById("director_block_3"),event)'><i class='las la-copy'></i><span data-translate="copy-link">Copy link</span></button>
-						<button class='pull-right grey' style='font-size:1.15em' id="showCustomizerButton3"  onclick='showCustomizer(3,this)'><i class='las la-tools'></i><span data-translate="customize">Customize</span></button>
+						<button class='pull-right' style='font-size:1.15em' onclick='copyFunction(getById("director_block_3"),event)'><i class='las la-copy'></i><span data-translate="copy-link">Copy link</span></button>
+						<button class='pull-right' style='font-size:1.15em' id="showCustomizerButton3"  onclick='showCustomizer(3,this)'><i class='las la-tools'></i><span data-translate="customize">Customize</span></button>
 					<span>
 				</div>
 			</div>
@@ -1377,7 +1381,7 @@
 						<span class="tooltiptext" style='overflow: auto;left: 35%;width: 3em;top: -15px;margin: 0;position: absolute;font-family:"Noto Color Emoji", "Apple Color Emoji", "Segoe UI Emoji", Times, Symbola, Aegyptus,Code2000, Code2001, Code2002, Musica, serif, LastResort;' >100</span>
 					</span>
 					<button data-action-type="mute-guest" class="center" value="0" title="Mute this guest everywhere" onclick="remoteMute(this, event);">
-						<i class="las la-microphone-slash"></i>
+						<i class="las la-microphone-slash"></i><span data-translate="mute">Mute</span>
 					</button>
 				</div>
 				<!-- General Controls -->
@@ -1706,14 +1710,16 @@
 		</div>
 		
 		<div id="popupSelector" style="display:none;">
+
 				<span id="videoMenu3">
-					<i class="las la-video"></i><span data-translate="video-source"> Video Source: </span>
+                    <div class="title">
+                        <i class="las la-video"></i><span data-translate="video-source"> Video Source: </span>
+                    </div>
 					<select id="videoSource3" ></select>			
 					<span id="refreshVideoButton" title="Activate or Reload this video device.">
-						<i style="top: 3px; cursor: pointer; font-size: 120%;  position: relative; left: 10px;" class="las la-sync-alt"></i>
+						<i style="cursor: pointer; font-size: 120%;" class="las la-sync-alt"></i>
 					</span>
 					<span id="gear_webcam3" style="display: none; cursor:pointer;" onclick="toggleQualityGear3();">
-						&nbsp;&nbsp;
 						<i class="las la-cog" style="font-size: 135%; top:1px; vertical-align: middle;" aria-hidden="true"></i>
 					</span>
 					<span id="videoSettings3" style="display: none;">
@@ -1739,12 +1745,12 @@
 					</span>
 				</span>
 				
-				<div class="form-group multiselect" alt="tip: Hold CTRL (command) to select Multiple" title="tip: Hold CTRL (command) to select Multiple" >
+				<div id="audioMenu2" class="form-group multiselect" alt="tip: Hold CTRL (command) to select Multiple" title="tip: Hold CTRL (command) to select Multiple" >
 					<span class='gear_microphone gearflat hidden'>
 						<input type="checkbox" id='micStereoMonoInput3' onchange="toggleMonoStereoMic(this);">Mono
 					</span>
 					<a id="multiselect-trigger3" class="form-control multiselect-trigger" >
-						<div id="audioTitle2" class="title">
+						<div id="title" class="title">
 							<i class="las la-microphone-alt"></i><span data-translate="select-audio-source"> Audio Source(s) </span>
 							<i id="chevarrow2" class="chevron bottom" aria-hidden="true"></i>
 							<div class="meter" id="meter3"></div><div class="meter2" id="meter4"></div>
@@ -1815,19 +1821,24 @@
 				<button id="pIpStartButton" style="width: 135px; background-color:#EFEFEF;padding:20px;text-align:center;display:none;"><b>Preview PiP VIdeo</b><br /><i style="padding:5px; font-size:300%;color:black;" class="las la-compress-arrows-alt"></i></button>
 				
 				
-				<div class="hidden" id="grabDirectorSoloLinkParent" title="The solo view link of the Director's video."><i class="las la-user"></i> Director's solo link:<a onclick="copyFunction(this,event)" data-drag="1" draggable="true" id="grabDirectorSoloLink" data-menu="context-menu" class="task" ></a></div>
+				<div class="hidden" id="grabDirectorSoloLinkParent" title="The solo view link of the Director's video.">
+                    <div class="title">
+                        <i class="las la-user"></i> Director's solo link:
+                    </div>
+                    <a onclick="copyFunction(this,event)" data-drag="1" draggable="true" id="grabDirectorSoloLink" data-menu="context-menu" class="task" ></a>
+                </div>
 				<br />
-				<button onclick="toggleSettings()" class="toggleSettings"><i class="chevron right" style="font-size:150%;top:9px;position:relative;"></i> <b><span data-translate="close-settings">Close Settings</span></b></button>
+				<button onclick="toggleSettings()" class="toggleSettings"><i class="las la-chevron-right"></i><b><span data-translate="close-settings">Close Settings</span></b></button>
 				
 				<button id='advancedOptionsAudio' onclick="this.classList.toggle('highlight');toggle(getById('popupSelector_constraints_audio'),false,false); getById('popupSelector_constraints_loading').style.visibility='visible';" class="advancedToggle">
-				<i class="las la-sliders-h" style="font-size:150%;top:3px;position:relative;"></i> <b>Audio</b></button>
+				<i class="las la-sliders-h" style="position:relative;"></i> <b>Audio</b></button>
 				
 				<button id='advancedOptionsCamera' onclick="this.classList.toggle('highlight');toggle(getById('popupSelector_constraints_video'),false,false);  getById('popupSelector_constraints_loading').style.visibility='visible';" class="advancedToggle">
-				<i class="las la-sliders-h" style="font-size:150%;top:3px;position:relative;"></i> <b>Video</b></button>
+				<i class="las la-sliders-h" style="position:relative;"></i> <b>Video</b></button>
 				
 				<span class="mobileHide">
-					<button id='advancedOptionsGeneral' onclick="this.classList.toggle('highlight');toggle(getById('popupSelector_user_settings'),false,false);  getById('popupSelector_user_settings').style.visibility='visible';" style='padding: 10px 12px 12px 8px;margin: 0px 0px 0px 10px;'>
-					<i class="las la-user-cog" style="font-size:150%;top:1.5px;position:relative;"></i> <b><span data-translate="user">User</span></b></button>
+					<button id='advancedOptionsGeneral' onclick="this.classList.toggle('highlight');toggle(getById('popupSelector_user_settings'),false,false);  getById('popupSelector_user_settings').style.visibility='visible';" >
+					<i class="las la-user-cog" style="position:relative;"></i> <b><span data-translate="user">User</span></b></button>
 				</span>
 				
 				<span id="popupSelector_constraints_audio" class="popupSelector_constraints" style="display: none;">
@@ -2324,7 +2335,7 @@
 				<li><a onclick="changeLg('eu');toggle(document.getElementById('languages'));" style="cursor: pointer;" data-tz="Europe/Euskara">Basque</a></li>
 				<li><a onclick="changeLg('pig');toggle(document.getElementById('languages'));" style="cursor: pointer;">Pig Latin</a></li>
 			</ul>
-			<br />
+			<br style="line-height: 0.3;" />
 			<i class="las la-exclamation-circle"></i><a href="https://github.com/steveseguin/vdoninja/tree/master/translations" target="_blank" rel="noopener noreferrer" data-translate='add-more-here'>Add More Here!</a>
 			<br />
 		</div>

@@ -3819,7 +3819,7 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 	
 	if (session.effect!==false){
 		if (session.effect === null){
-			getById("effectsDiv").style.display = "block";
+			getById("effectsDiv").style.display = "inline-block";
 			session.effect = "0";
 		} else if (session.effect === "0" || session.effect === "false" || session.effect === "off" || session.effect === 0){
 			session.effect = false;
@@ -3834,7 +3834,7 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 			loadTFLITEImages();
 			
 			getById("effectSelector").style.display = "none";
-			getById("effectsDiv").style.display = "block";
+			getById("effectsDiv").style.display = "inline-block";
 			
 		}
 		if (session.effect === "3a"){ // heavier blur

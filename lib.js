@@ -11264,7 +11264,7 @@ async function toggleSettings(forceShow = false) { // TODO: I need to have this 
 			return false;
 		});
 
-		getById("popupSelector").style.right = "-400px";
+		getById("popupSelector").style.right = "-500px";
 
         
 		getById("settingsbutton").classList.remove("brown");
@@ -12588,12 +12588,13 @@ function remoteMute(ele, event=false, skipSend=false) {
 			ele.value = 0;
 			ele.classList.remove("pressed"); ele.ariaPressed = "false";
 			ele.innerHTML = '<i class="las la-microphone-slash" style="color:#900"></i>';
+			ele.innerHTML += miscTranslations["mute"] || "Mute";
 		} else {
 			ele.value = 1;
-			ele.classList.add("pressed"); ele.ariaPressed = "true";
+			ele.classList.add("pressed"); ele.ariaPressed = "true"; 
 			ele.innerHTML = '<i class="las la-microphone-slash" style="color:#900"></i>';
+			ele.innerHTML += miscTranslations["unmute"] || "Unmute";
 		}
-		miniTranslate(ele);
 	}
 
 	try {
@@ -25844,7 +25845,7 @@ function listAudioSettings() {
 				if (session.webAudios[webAudio].gainNode ) {
 			
 					if (getById("popupSelector_constraints_audio").style.display == "none") {
-						getById("advancedOptionsAudio").style.display = "inline-block";
+						getById("advancedOptionsAudio").style.display = "inline-flex";
 					}
 					var div = document.createElement("div");
 					var label = document.createElement("label");
@@ -25852,7 +25853,7 @@ function listAudioSettings() {
 					//label.id = "label_" + i;
 					label.htmlFor = "constraints_" + i;
 					label.innerText = capitalizeFirstLetter(i).replace(/([a-z])([A-Z])/g, '$1 $2') + ":";
-					label.style = "display:inline-block; padding:0;margin-top: 15px";
+					label.style = "display:inline-block;";
 
 					var input = document.createElement("input");
 					input.min = 0;
@@ -25903,7 +25904,7 @@ function listAudioSettings() {
 		
 		if (session.micDelay!==false && ii==0) {  // ii==0 implies only track0 is supported by the web audio pipeline currently (or everything after the mixer node)
 			if (getById("popupSelector_constraints_audio").style.display == "none") {
-				getById("advancedOptionsAudio").style.display = "inline-block";
+				getById("advancedOptionsAudio").style.display = "inline-flex";
 			}
 
 			var label = document.createElement("label");
@@ -25961,7 +25962,7 @@ function listAudioSettings() {
 		
 		if (session.lowcut && ii==0) {  // ii==0 implies only track0 is supported by the web audio pipeline currently (or everything after the mixer node)
 			if (getById("popupSelector_constraints_audio").style.display == "none") {
-				getById("advancedOptionsAudio").style.display = "inline-block";
+				getById("advancedOptionsAudio").style.display = "inline-flex";
 			}
 
 			var label = document.createElement("label");
@@ -26018,7 +26019,7 @@ function listAudioSettings() {
 
 		if (session.equalizer && ii==0) { // ii==0 implies only track0 is supported by the web audio pipeline currently (or everything after the mixer node)
 			if (getById("popupSelector_constraints_audio").style.display == "none") {
-				getById("advancedOptionsAudio").style.display = "inline-block";
+				getById("advancedOptionsAudio").style.display = "inline-flex";
 			}
 
 			var label = document.createElement("label");
@@ -26073,7 +26074,7 @@ function listAudioSettings() {
 			getById("popupSelector_constraints_audio").appendChild(input);
 			//
 			if (getById("popupSelector_constraints_audio").style.display == "none") {
-				getById("advancedOptionsAudio").style.display = "inline-block";
+				getById("advancedOptionsAudio").style.display = "inline-flex";
 			}
 
 			var label = document.createElement("label");
@@ -26129,7 +26130,7 @@ function listAudioSettings() {
 			getById("popupSelector_constraints_audio").appendChild(input);
 			//
 			if (getById("popupSelector_constraints_audio").style.display == "none") {
-				getById("advancedOptionsAudio").style.display = "inline-block";
+				getById("advancedOptionsAudio").style.display = "inline-flex";
 			}
 
 			var label = document.createElement("label");
@@ -26196,7 +26197,7 @@ function listAudioSettings() {
 					label.id = "label_" + i + "_"+ii;
 					label.htmlFor = "constraints_" + i + "_"+ii;
 					label.innerText = capitalizeFirstLetter(i).replace(/([a-z])([A-Z])/g, '$1 $2') + ":";
-					label.style = "display:inline-block; padding:0;margin: 15px 0px 29px;";
+					label.style = "display:inline-block;";
 					label.dataset.keyname = i;
 					label.title = "This will reduce the gain ~80% when there is no one talking loudly";
 					var input = document.createElement("select");
@@ -26214,7 +26215,7 @@ function listAudioSettings() {
 					input.options.add(opt);
 
 					if (getById("popupSelector_constraints_audio").style.display == "none") {
-						getById("advancedOptionsAudio").style.display = "inline-block";
+						getById("advancedOptionsAudio").style.display = "inline-flex";
 					}
 
 					input.id = "constraints_" + i + "_"+ii;
@@ -26301,7 +26302,7 @@ function listAudioSettings() {
 					}
 					
 					if (getById("popupSelector_constraints_audio").style.display == "none") {
-						getById("advancedOptionsAudio").style.display = "inline-block";
+						getById("advancedOptionsAudio").style.display = "inline-flex";
 					}
 					
 					var manualInput = document.createElement("input");
@@ -26348,7 +26349,6 @@ function listAudioSettings() {
 					
 					if (i=="channelCount"){
 						input.style.display = "none";
-						manualInput.style.margin = "15px 0px 29px 10px";
 					}
 					
 					manualInput.onchange = function(e) {
@@ -26380,7 +26380,7 @@ function listAudioSettings() {
 					label.id = "label_" + i + "_"+ii;
 					label.htmlFor = "constraints_" + i + "_"+ii;
 					label.innerText = capitalizeFirstLetter(i).replace(/([a-z])([A-Z])/g, '$1 $2') + ":";
-					label.style = "display:inline-block; padding:0;margin: 15px 0px 29px;";
+					label.style = "display:inline-block;";
 					label.dataset.keyname = i;
 					
 					var input = document.createElement("select");
@@ -26427,7 +26427,7 @@ function listAudioSettings() {
 					}
 
 					if (getById("popupSelector_constraints_audio").style.display == "none") {
-						getById("advancedOptionsAudio").style.display = "inline-block";
+						getById("advancedOptionsAudio").style.display = "inline-flex";
 					}
 
 					input.id = "constraints_" + i + "_"+ii;
@@ -26452,7 +26452,7 @@ function listAudioSettings() {
 					label.id = "label_" + i + "_"+ii;
 					label.htmlFor = "constraints_" + i + "_"+ii;
 					label.innerText = capitalizeFirstLetter(i).replace(/([a-z])([A-Z])/g, '$1 $2') + ":";
-					label.style = "display:inline-block; padding:0;margin: 15px 0px 29px;";
+					label.style = "display:inline-block;";
 					label.dataset.keyname = i;
 					var input = document.createElement("select");
 					var c = document.createElement("option");
@@ -26468,7 +26468,7 @@ function listAudioSettings() {
 					
 
 					if (getById("popupSelector_constraints_audio").style.display == "none") {
-						getById("advancedOptionsAudio").style.display = "inline-block";
+						getById("advancedOptionsAudio").style.display = "inline-flex";
 					}
 
 					input.id = "constraints_" + i + "_"+ii;
@@ -26498,7 +26498,7 @@ function listAudioSettings() {
 				if (session.webAudios[webAudio].subGainNodes && (track0.id in session.webAudios[webAudio].subGainNodes)) {
 			
 					if (getById("popupSelector_constraints_audio").style.display == "none") {
-						getById("advancedOptionsAudio").style.display = "inline-block";
+						getById("advancedOptionsAudio").style.display = "inline-flex";
 					}
 					var div = document.createElement("div");
 					var label = document.createElement("label");
@@ -26724,7 +26724,7 @@ function listCameraSettings() {
 		input.max = parseInt(session.totalRoomBitrate);
 
 		if (getById("popupSelector_constraints_video").style.display == "none") {
-			getById("advancedOptionsCamera").style.display = "inline-block";
+			getById("advancedOptionsCamera").style.display = "inline-flex";
 		}
 
 		input.value = session.controlRoomBitrate;
@@ -26915,7 +26915,7 @@ function listCameraSettings() {
 				}
 
 				if (getById("popupSelector_constraints_video").style.display == "none") {
-					getById("advancedOptionsCamera").style.display = "inline-block";
+					getById("advancedOptionsCamera").style.display = "inline-flex";
 				} 
 				
 				var manualInput = document.createElement("input");
@@ -27022,7 +27022,7 @@ function listCameraSettings() {
 				label.id = "label_" + i;
 				label.htmlFor = "constraints_" + i;
 				label.innerText = capitalizeFirstLetter(i).replace(/([a-z])([A-Z])/g, '$1 $2') + ":";
-				label.style = "display:inline-block; padding:0;margin: 15px 0px 29px;";
+				label.style = "display:inline-block;";
 				label.dataset.keyname = i;
 				var input = document.createElement("select");
 
@@ -27120,7 +27120,7 @@ function listCameraSettings() {
 				}
 
 				if (getById("popupSelector_constraints_video").style.display == "none") {
-					getById("advancedOptionsCamera").style.display = "inline-block";
+					getById("advancedOptionsCamera").style.display = "inline-flex";
 				}
 
 				input.id = "constraints_" + i;
@@ -27149,7 +27149,7 @@ function listCameraSettings() {
 				label.id = "label_" + i;
 				label.htmlFor = "constraints_" + i;
 				label.innerText = capitalizeFirstLetter(i).replace(/([a-z])([A-Z])/g, '$1 $2') + ":";
-				label.style = "display:inline-block; padding:0;margin: 15px 0px 29px;";
+				label.style = "display:inline-block;";
 				label.dataset.keyname = i;
 				var input = document.createElement("select");
 
@@ -27163,7 +27163,7 @@ function listCameraSettings() {
 				}
 				
 				if (getById("popupSelector_constraints_video").style.display == "none") {
-					getById("advancedOptionsCamera").style.display = "inline-block";
+					getById("advancedOptionsCamera").style.display = "inline-flex";
 				}
 
 				input.id = "constraints_" + i;
@@ -27196,8 +27196,7 @@ function listCameraSettings() {
 			var button = document.createElement("button");
 			button.innerHTML = "Reset video settings to default";
 			button.style.display = "block";
-			button.style.padding = "20px";
-			button.style.margin = "32px 20px 20px 20px";
+			button.style.padding = "10px 5px";
 			button.dataset.deviceId = session.currentCameraConstraints.deviceId;
 			button.onclick = function(){
 				var deviceId = this.dataset.deviceId;
@@ -31847,6 +31846,7 @@ function initAudioButtons(audioGain, UUID){
 		if (ele){
 			ele.value = 1;
 			ele.classList.add("pressed"); ele.ariaPressed = "true";
+			ele.children[1].innerHTML = miscTranslations["unmute"] || "Unmute";
 			//ele.title = miscTranslations["unmute-guest"];
 			session.rpcs[UUID].directorMutedState = 1;
 		}
