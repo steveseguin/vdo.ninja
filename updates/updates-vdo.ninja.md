@@ -10,15 +10,15 @@
 
 #### April 19 <a href="#august-31" id="august-31"></a>
 
-* Added `&structure` as an option, which will have the video holding div element be structured to 16:9 (or whatever [`&aspectratio`](../advanced-settings/video-parameters/and-aspectratio.md) is set to), making it easier to apply custom CSS backgrounds to videos\
+* Added [`&structure`](../advanced-settings/design-parameters/and-structure-alpha.md) as an option, which will have the video holding div element be structured to 16:9 (or whatever [`&aspectratio`](../advanced-settings/video-parameters/and-aspectratio.md) is set to), making it easier to apply custom CSS backgrounds to videos.\
   \-- It will have the label/border/margins align relative to the 16:9 holder element, rather than video itself.\
-  \-- Also related, you can also specify the background color independent of the border color with `&color` (new). If using [`&border`](../advanced-settings/design-parameters/and-border.md), it will not set the background color, so you may need to use both `&border` and `&color`.\
+  \-- Also related, you can also specify the background color independent of the border color with [`&color`](../advanced-settings/design-parameters/and-color-alpha.md) (new). If using [`&border`](../advanced-settings/design-parameters/and-border.md), it will not set the background color, so you may need to use both `&border` and `&color`.\
   \-- May not yet work with [`&forcedlandscape`](../advanced-settings/mobile-parameters/and-forcelandscape.md) or [`&rotate`](../advanced-settings/design-parameters/and-rotate.md).\
   ![](<../.gitbook/assets/image (14).png>)
-* Added `&blur`, which will try to add a blurred background to the video so it fits the structured video container\
-  \-- Using `&blur` auto enables `&structure`.\
+* Added [`&blur`](../advanced-settings/design-parameters/and-blur-alpha.md), which will try to add a blurred background to the video so it fits the structured video container\
+  \-- Using `&blur` auto enables [`&structure`](../advanced-settings/design-parameters/and-structure-alpha.md).\
   \-- Code in the auto mixer, so you won't see the effect in a simple preview or some self-preview types.\
-  \-- `&blur` doesn't work with `&color`, etc.\
+  \-- `&blur` doesn't work with [`&color`](../advanced-settings/design-parameters/and-color-alpha.md), etc.\
   \-- You can change the blurring intensity with `&blur=25` or whatever; `10` is default\
   \-- `&blur=0` works as well\
   \-- may be buggy if using it with [`&forcedlandscape`](../advanced-settings/mobile-parameters/and-forcelandscape.md) or [`&rotate`](../advanced-settings/design-parameters/and-rotate.md)\

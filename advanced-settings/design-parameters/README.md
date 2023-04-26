@@ -29,6 +29,9 @@ You can add them to both, source ([`&push`](../../source-settings/push.md)) and 
 | [`&base64js`](and-base64js.md)\*                      | Lets a user add raw javascript to the URL to run on page load                                            |
 | [`&mirror`](mirror.md)                                | Inverts the video so it is the mirror reflection                                                         |
 | [`&flip`](and-flip.md)                                | Inverts the video so it is upside down                                                                   |
+| [`&structure`](and-structure-alpha.md) (alpha)        | Will have the video holding div element be structured to the aspect ratio                                |
+| [`&color`](and-color-alpha.md) (alpha)                | You can specify the background color independent of the border color                                     |
+| [`&blur`](and-blur-alpha.md) (alpha)                  | Will try to add a blurred background to the video so it fits the structured video container              |
 | [`&border`](and-border.md)\*                          | Adds a border around the videos                                                                          |
 | [`&bordercolor`](and-bordercolor.md)\*                | Defines the color of [`&border`](and-border.md)                                                          |
 | [`&rounded`](rounded.md)                              | Rounds the edges of videos                                                                               |
