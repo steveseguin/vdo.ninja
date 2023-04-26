@@ -5,9 +5,9 @@ VDO.Ninja needs two things to work:
 * Someone pushing a video feed out from their device
 * Someone viewing that video feed
 
-1. Visit [https://vdo.ninja/](https://vdo.ninja/) with your web browser (Chrome, Edge, Safari)
-2. Select `Add your camera to OBS`
-3. Select your camera and audio device from the list of devices![](<../.gitbook/assets/camera picker>)\
+1. Visit [https://vdo.ninja/](https://vdo.ninja/) with your web browser (Chrome, Edge, Safari).
+2. Select `Add your camera to OBS`.
+3. Select your camera and audio device from the list of devices.![](<../.gitbook/assets/camera picker>)\
    You will see the video feed of the device on screen.
 4. Select `Start` and at the top of the screen a ‘view’ link will appear.
 5. Copy this view link and send it to someone you want to have access to this feed, or place it inside an OBS browser source.
