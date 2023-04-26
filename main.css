@@ -38,17 +38,11 @@
     --a-dark-focus: rgb(142 219 98);
     --a-dark-active: rgb(145 197 115);
 
-    /* --a-link: rgb(88 171 41);
-    --a-visited: rgb(88 171 41);
-    --a-hover: rgb(142 219 98);
-    --a-focus: rgb(142 219 98);
-    --a-active: rgb(88 171 41); */
-
-    --a-link: rgb(74, 123, 207);
-    --a-visited: rgb(74, 123, 207);
-    --a-hover: rgb(41, 88, 171);
-    --a-focus: rgb(41, 88, 171);
-    --a-active: rgb(74, 123, 207);
+    --a-link: #70ade6;
+    --a-visited: #70ade6;
+    --a-hover: #49A7FF;
+    --a-focus: #49A7FF;
+    --a-active: #3D9DF7;
 
     /* -- Box colors */
     --director-box: rgb(165 119 18);
