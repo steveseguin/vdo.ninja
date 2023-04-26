@@ -2426,7 +2426,7 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 
 		session.noaudio = urlParams.get('noaudio') || urlParams.get('na') || urlParams.get('hideaudio');
 
-		if (!(session.noaudio)) {
+		if (!session.noaudio) {
 			session.noaudio = [];
 		} else {
 			session.noaudio = session.noaudio.split(",");
@@ -4309,7 +4309,7 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 			}, session.waitImageTimeout);
 		}
 
-		log("auto playing");
+		log("auto request videos");
 		if ((iPad || iOS) && navigator.userAgent.indexOf('Safari') != -1 && navigator.userAgent.indexOf('Chrome') == -1 && SafariVersion > 13) { // Modern iOS doesn't need pop up
 			play();
 		} else if (navigator.userAgent.indexOf('Safari') != -1 && navigator.userAgent.indexOf('Chrome') == -1) { // Safari on Desktop does require pop up
@@ -4339,7 +4339,6 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 		} catch (e) {
 			errorlog(e);
 		};
-
 	}
 	
 	hideHomeCheck();

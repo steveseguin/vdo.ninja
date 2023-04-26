@@ -1160,6 +1160,8 @@
 	var syncOBS = false;
 	var showDirector = true;
 	
+	var currentOBSState = false;
+	
 	if (urlParams.has('password') || urlParams.has('pass') || urlParams.has('pw') || urlParams.has('p')) {
 		password = urlParams.get('password') || urlParams.get('pass') || urlParams.get('pw') || urlParams.get('p');
 	}
@@ -2421,29 +2423,6 @@
 					changeAspectRatio(aspectRatio,false);
 				}
 				
-				///var outputWindow = document.createElement("div");
-				//outputWindow.innerHTML = "event: "+e.data.action+"<br />";
-				//outputWindow.style.border="1px dotted black";
-				//iframeContainer.appendChild(outputWindow);
-				//console.log(e.data.action);
-				<!-- if (e.data.action === "view-connection"){ -->
-					<!-- if (e.data.value){ -->
-						<!-- iframe.contentWindow.postMessage({"getStreamIDs":true}, '*'); -->
-					<!-- } else if (e.data.streamID){ -->
-						<!-- for (var i = 0; i < streamIDs.length; i++){  -->
-							<!-- if (e.data.streamID == streamIDs[i]){ -->
-								<!-- streamIDs.splice(i,1); -->
-								<!-- if (document.getElementById("sid_"+e.data.streamID)){ -->
-									<!-- document.getElementById("sid_"+e.data.streamID).classList.add("disconnected"); -->
-									<!-- document.getElementById("sid_"+e.data.streamID).title = "Not currently connected, but can still be placed"; -->
-								<!-- } -->
-							<!-- } -->
-						<!-- } -->
-						<!-- updateList(e.data.streamID); -->
-					<!-- } -->
-				<!-- } -->
-				
-				// view-connection
 				
 				if (e.data.action === "slot-updated"){
 					for (var i in guestPositions){
@@ -2456,83 +2435,112 @@
 						remoteActivate(false, lastLayoutRaw);
 					}
 				}
-			}
 			
-			if (e.data.action === "layout-index"){
-				if ("value" in e.data){
-					var idx = parseInt(e.data.value) || 0;
-					if (!idx){
-						var ele = document.getElementById("automix");
-					} else {
-						var ele = document.querySelectorAll("#containermenu .canvasContainer")[idx-1];
+			
+				if (e.data.action === "layout-index"){
+					if ("value" in e.data){
+						var idx = parseInt(e.data.value) || 0;
+						if (!idx){
+							var ele = document.getElementById("automix");
+						} else {
+							var ele = document.querySelectorAll("#containermenu .canvasContainer")[idx-1];
+						}
+						
+						var layoutButtons = document.querySelectorAll(".pressed");
+						for (var i = 0;i<layoutButtons.length;i++){
+							layoutButtons[i].classList.remove("pressed");
+						}
+						if (ele){
+							ele.classList.add("pressed");
+							ele.classList.add("shake");
+							setTimeout(function(ele){ele.classList.remove("shake");},500,ele);
+						}
+						
 					}
-					
-					var layoutButtons = document.querySelectorAll(".pressed");
-					for (var i = 0;i<layoutButtons.length;i++){
-						layoutButtons[i].classList.remove("pressed");
-					}
-					if (ele){
-						ele.classList.add("pressed");
-						ele.classList.add("shake");
-						setTimeout(function(ele){ele.classList.remove("shake");},500,ele);
-					}
-					
 				}
-			}
-			
-			
-			if (e.data.action && (e.data.action == "scene-connected")){
-				if (lastLayout && lastLayout.scene == e.data.value){
-					var layoutIssue = {};
-					layoutIssue.layout = lastLayout.layout;
-					if (e.data.UUID){
-						layoutIssue.UUID = e.data.UUID;
+				
+				if (e.data.action && (e.data.action == "scene-connected")){
+					if (lastLayout && lastLayout.scene == e.data.value){
+						var layoutIssue = {};
+						layoutIssue.layout = lastLayout.layout;
+						if (e.data.UUID){
+							layoutIssue.UUID = e.data.UUID;
+						}
+						layoutIssue.scene = lastLayout.scene
+						iframe.contentWindow.postMessage(lastLayout, '*');
 					}
-					layoutIssue.scene = lastLayout.scene
-					iframe.contentWindow.postMessage(lastLayout, '*');
 				}
-			}
-			
-			if (e.data.action && (e.data.action == "guest-connected")){
-				if (lastLayout){
-					var layoutIssue = {};
-					layoutIssue.layout = lastLayout.layout;
-					if (e.data.UUID){
-						layoutIssue.UUID = e.data.UUID;
+				
+				if (e.data.action && (e.data.action == "guest-connected")){
+					if (lastLayout){
+						var layoutIssue = {};
+						layoutIssue.layout = lastLayout.layout;
+						if (e.data.UUID){
+							layoutIssue.UUID = e.data.UUID;
+						}
+						iframe.contentWindow.postMessage(lastLayout, '*');
 					}
-					iframe.contentWindow.postMessage(lastLayout, '*');
 				}
-			}
-			
-			if (e.data.action && (e.data.action == "view-connection")){
-				if (!e.data.value && e.data.streamID){
-					
-					for (var i in guestPositions){
-						if (guestPositions[i] === e.data.streamID){
-							delete guestPositions[i];
+				
+				if (e.data.action && (e.data.action == "view-connection")){
+					if (!e.data.value && e.data.streamID){
+						
+						for (var i in guestPositions){
+							if (guestPositions[i] === e.data.streamID){
+								delete guestPositions[i];
+							}
+						}
+						
+						if (updateOnSlotChange){
+							remoteActivate(false, lastLayoutRaw);
+						}
+						
+					}
+				}
+				
+				if (e.data.action && (e.data.action == "director-share")){
+					if (!e.data.value && e.data.streamID){
+						for (var i in guestPositions){
+							if (guestPositions[i] === e.data.streamID){
+								delete guestPositions[i];
+							}
+						}
+						if (updateOnSlotChange){
+							remoteActivate(false, lastLayoutRaw);
 						}
 					}
-					
-					if (updateOnSlotChange){
-						remoteActivate(false, lastLayoutRaw);
-					}
-					
 				}
-			}
-			
-			if (e.data.action && (e.data.action == "director-share")){
-				if (!e.data.value && e.data.streamID){
-					for (var i in guestPositions){
-						if (guestPositions[i] === e.data.streamID){
-							delete guestPositions[i];
+				
+				if (e.data.action == "obs-state"){
+					if (e.data.value && e.data.value.details){
+						currentOBSState = e.data.value.details;
+						
+						if (currentOBSState.currentScene && currentOBSState.currentScene.name){
+							console.log("Current OBS scene: " + currentOBSState.currentScene.name);
+							
+							if (syncOBS){
+							
+								var layouts = document.querySelectorAll(".canvasContainer>canvas");
+								
+								for (var i=0;i<layouts.length;i++){
+									if (!layouts[i].layout){continue;}
+									try {
+										var obs = layouts[i].obsSceneName || false;
+										if (obs && obs == currentOBSState.currentScene.name){
+											console.log("Syncing with OBS");
+											layouts[i].click();
+											break;
+										}
+									} catch(e){
+										errorlog(e);
+									}
+								}
+							}
 						}
 					}
-					if (updateOnSlotChange){
-						remoteActivate(false, lastLayoutRaw);
-					}
 				}
-			}
 			
+			}
 			<!-- if ("streamIDs" in e.data){ -->
 				<!-- streamIDs = []; -->
 				<!-- for (var key in e.data.streamIDs){ -->
@@ -3632,7 +3640,7 @@
 	
 	function setobsSceneName(){
 		var obsSceneName = document.getElementById("canvas").obsSceneName || "";
-		var input = prompt("Enter the OBS scene you want to trigger\n\n(To use, also be sure to enable this feature in the mixer settings and enable permissions in the OBS browser source)", obsSceneName);
+		var input = prompt("Enter the OBS scene you want to link this scene to.\n\nWhen changing layouts it will auto-select the linked OBS scene, and vice versas.\n\nTo activate the syncing you also need to enable this feature in the mixer settings and enable permissions in the OBS browser source.", obsSceneName);
 		if (input !==null){
 			document.getElementById("canvas").obsSceneName = input;
 		}

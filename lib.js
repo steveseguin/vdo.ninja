@@ -12,6 +12,7 @@
 var formSubmitting = true;
 var activatedPreview = false;
 var screensharesupport = true;
+var FirefoxEnumerated = false;
 
 var Callbacks = [];
 var CtrlPressed = false; // global
@@ -1579,6 +1580,10 @@ function manageSceneState(data, UUID){ // incoming obs details
 		return;
 	}
 	
+	if (isIFrame){
+		pokeIframeAPI("obs-state", data.obsState, UUID);
+	}
+	
 	if (session.obsControls===false){
 		return;
 	}
@@ -1810,7 +1815,7 @@ function manageSceneState(data, UUID){ // incoming obs details
 				} else {
 					sceneButton.onclick = async function(){
 						var msg = {};
-						msg.obsCommand = {action: "setCurrentScene", value: this.dataset.obsScene}
+						msg.obsCommand = {action: "setCurrentScene", value: this.dataset.obsScene};
 						msg.UUID = this.dataset.UUID;
 						if (document.querySelector("#obsRemotePassword>input").value){
 							msg.remote = document.querySelector("#obsRemotePassword>input").value;
@@ -1855,9 +1860,6 @@ function processOBSCommand(msg){
 		}
 		return false;
 	}
-	
-	
-	
 	
 	try { //  {changeScene: this.dataset.obsScene}
 		if (msg.obsCommand.action && (typeof msg.obsCommand.action=="string")){
@@ -5115,21 +5117,7 @@ function updateMixerRun(e=false){  // this is the main auto-mixing code.  It's a
 				container.style.backgroundImage = "unset";
 			}
 			
-			if (session.sharperScreen && sssid && vid.dataset.sid && (vid.dataset.sid === sssid) ){
-				// do not dynamically scale the screen share feed.
-			} else if (session.dynamicScale){
-				if (vid.dataset.UUID){
-					if (wrw && hrh){
-						if (session.devicePixelRatio){
-							session.requestResolution(vid.dataset.UUID, wrw * session.devicePixelRatio, hrh * session.devicePixelRatio, true); // snap=true; if resolution close to 100%, send 100%. screenshare only
-						} else if (window.devicePixelRatio && parseInt(window.devicePixelRatio) > 1 ){
-							session.requestResolution(vid.dataset.UUID, wrw*window.devicePixelRatio, hrh*window.devicePixelRatio, true);
-						} else {
-							session.requestResolution(vid.dataset.UUID, wrw, hrh, true);
-						}
-					}
-				}
-			}
+			
 			if (("rotated" in vid) && (vid.rotated!==false)){
 				if (vid.rotated==90){
 					vid.style.transform = "rotate(90deg)";
@@ -5192,6 +5180,41 @@ function updateMixerRun(e=false){  // this is the main auto-mixing code.  It's a
 					vid.style.top =   0;
 				}
 				
+				
+				////////// COVER VERSION
+				if (session.sharperScreen && sssid && vid.dataset.sid && (vid.dataset.sid === sssid) ){
+					// do not dynamically scale the screen share feed.
+				} else if (session.dynamicScale){
+					if (vid.dataset.UUID){
+						if (wrw && hrh){
+							
+							let targetWidth = wrw;
+							let targetHeight = hrh;
+							
+							if (maxWidth>targetWidth){
+								targetWidth = maxWidth;
+							}
+							if (maxHeight>targetHeight){
+								targetHeight = maxHeight;
+							}
+							
+							targetWidth -= (borderOffset + videoMargin)*2;
+							targetHeight -= (borderOffset + videoMargin)*2
+							
+							if (targetWidth<0){targetWidth=0;}
+							if (targetHeight<0){targetHeight=0;}
+							
+							if (session.devicePixelRatio){
+								session.requestResolution(vid.dataset.UUID, targetWidth * session.devicePixelRatio, targetHeight * session.devicePixelRatio, true); // snap=true; if resolution close to 100%, send 100%. screenshare only
+							} else if (window.devicePixelRatio && parseInt(window.devicePixelRatio) > 1 ){
+								session.requestResolution(vid.dataset.UUID, targetWidth*window.devicePixelRatio, targetHeight*window.devicePixelRatio, true);
+							} else {
+								session.requestResolution(vid.dataset.UUID, targetWidth, targetHeight, true);
+							}
+						}
+					}
+				}
+			
 				
 			} else if ((vw && vh) || (vid.width && vid.height) || vid.dataset.aspectRatio){
 				if (("rotated" in vid) && ((vid.rotated==90) || (vid.rotated==270))){
@@ -5319,11 +5342,77 @@ function updateMixerRun(e=false){  // this is the main auto-mixing code.  It's a
 						delete container.blurred;
 					} catch(e){}
 				}
+				
+				////////// NON-COVER VERSION (based on holder)
+				if (session.sharperScreen && sssid && vid.dataset.sid && (vid.dataset.sid === sssid) ){
+					// do not dynamically scale the screen share feed.
+				} else if (session.dynamicScale){
+					if (vid.dataset.UUID){
+						
+						let targetWidth = Math.ceil(hsw);
+						let targetHeight = Math.ceil(hsh);
+						
+						targetWidth -= (borderOffset + videoMargin)*2;
+						targetHeight -= (borderOffset + videoMargin)*2
+						
+						if (targetWidth<0){targetWidth=0;}
+						if (targetHeight<0){targetHeight=0;}
+						
+						if (session.devicePixelRatio){
+							session.requestResolution(vid.dataset.UUID, targetWidth * session.devicePixelRatio, targetHeight * session.devicePixelRatio, true); // snap=true; if resolution close to 100%, send 100%. screenshare only
+						} else if (window.devicePixelRatio && parseInt(window.devicePixelRatio) > 1 ){
+							session.requestResolution(vid.dataset.UUID, targetWidth*window.devicePixelRatio, targetHeight*window.devicePixelRatio, true);
+						} else {
+							session.requestResolution(vid.dataset.UUID, targetWidth, targetHeight, true);
+						}
+						
+					}
+				}
+				///////////////
+				
 			} else {
 				holder.style.left = (borderOffset + videoMargin) + "px";
 				holder.style.top = (borderOffset +  videoMargin) + "px";
 				holder.style.height = "calc(100% - "+((borderOffset + videoMargin*2))+"px)";
 				holder.style.width = "calc(100% - "+((borderOffset + videoMargin*2))+"px)";
+				
+				//////////  UNKNOWN VERSION
+				if (session.sharperScreen && sssid && vid.dataset.sid && (vid.dataset.sid === sssid) ){
+					// do not dynamically scale the screen share feed.
+				} else if (session.dynamicScale){
+					if (vid.dataset.UUID){
+						if (wrw && hrh){
+							
+							let targetWidth = wrw;
+							let targetHeight = hrh;
+							
+							if (cover){
+								if (maxWidth>targetWidth){
+									targetWidth = maxWidth;
+								}
+								if (maxHeight>targetHeight){
+									targetHeight = maxHeight;
+								}
+							}
+							
+							targetWidth -= (borderOffset + videoMargin)*2;
+							targetHeight -= (borderOffset + videoMargin)*2
+							
+							if (targetWidth<0){targetWidth=0;}
+							if (targetHeight<0){targetHeight=0;}
+							
+							if (session.devicePixelRatio){
+								session.requestResolution(vid.dataset.UUID, targetWidth * session.devicePixelRatio, targetHeight * session.devicePixelRatio, true); // snap=true; if resolution close to 100%, send 100%. screenshare only
+							} else if (window.devicePixelRatio && parseInt(window.devicePixelRatio) > 1 ){
+								session.requestResolution(vid.dataset.UUID, targetWidth*window.devicePixelRatio, targetHeight*window.devicePixelRatio, true);
+							} else {
+								session.requestResolution(vid.dataset.UUID, targetWidth, targetHeight, true);
+							}
+						}
+					}
+				}
+				///////////////
+			
 			}
 			
 			vid.style.borderRadius = borderRadius+"px";
@@ -5334,6 +5423,7 @@ function updateMixerRun(e=false){  // this is the main auto-mixing code.  It's a
 			} else {
 				vid.style.backgroundColor = "unset";
 			}
+			
 			
 			
 			if (vid.dataset.UUID && session.rpcs[vid.dataset.UUID] && ("label" in session.rpcs[vid.dataset.UUID]) && (session.rpcs[vid.dataset.UUID].label !== false) && (session.showlabels===true)){  // remote source
@@ -5500,7 +5590,7 @@ function updateMixerRun(e=false){  // this is the main auto-mixing code.  It's a
 						if (vid.tagName.toLowerCase()=="video"){ // we don't want to try playing an Iframe or Canvas.
 							if (vid.paused){
 								warnlog("VIDEO IS NOT PLAYING");
-								var playPromise = vid.play(); 
+								var playPromise = vid.play();
 								if (playPromise !== undefined){
 									playPromise.then(_ => {
 										// playing
@@ -8577,13 +8667,14 @@ function processStats(UUID){
 						 
 						var trackID = stat.trackIdentifier || stat.id || false;
 						
-						if ((stat.type=="track") && stat.remoteSource){
+						if ((stat.type=="track") && stat.remoteSource){ 
 							
 							if (stat.id in session.rpcs[UUID].stats){
 								session.rpcs[UUID].stats[stat.id]._trackID = stat.trackIdentifier;
-								session.rpcs[UUID].stats[stat.id].Buffer_Delay_in_ms = parseInt(1000*(parseFloat(stat.jitterBufferDelay) - session.rpcs[UUID].stats[stat.id]._jitter_delay)/(parseInt(stat.jitterBufferEmittedCount) - session.rpcs[UUID].stats[stat.id]._jitter_count)) || 0;
+								session.rpcs[UUID].stats[stat.id].Jitter_Buffer_ms = parseInt(1000*(parseFloat(stat.jitterBufferDelay) - session.rpcs[UUID].stats[stat.id]._jitter_delay)/(parseInt(stat.jitterBufferEmittedCount) - session.rpcs[UUID].stats[stat.id]._jitter_count)) || 0;
 								session.rpcs[UUID].stats[stat.id]._jitter_delay = parseFloat(stat.jitterBufferDelay) || 0;
 								session.rpcs[UUID].stats[stat.id]._jitter_count = parseInt(stat.jitterBufferEmittedCount) || 0;
+								
 								if ("frameWidth" in stat){
 									if ("frameHeight" in stat){
 										session.rpcs[UUID].stats[stat.id].Resolution = stat.frameWidth+" x "+stat.frameHeight;
@@ -8595,7 +8686,7 @@ function processStats(UUID){
 								var media = {};
 								media._jitter_delay = parseFloat(stat.jitterBufferDelay) || 0;
 								media._jitter_count = parseInt(stat.jitterBufferEmittedCount) || 0;
-								media.Buffer_Delay_in_ms = 0;
+								media.Jitter_Buffer_ms = 0;
 								media._trackID = stat.trackIdentifier;
 								
 								session.rpcs[UUID].stats[stat.id] = media;
@@ -8648,10 +8739,11 @@ function processStats(UUID){
 								session.rpcs[UUID].stats[trackID]._trackID = stat.trackIdentifier;
 							}
 							if ("jitterBufferDelay" in stat){
-								session.rpcs[UUID].stats[trackID].Buffer_Delay_in_ms = parseInt(1000*(parseFloat(stat.jitterBufferDelay) - session.rpcs[UUID].stats[trackID]._jitter_delay_2)/(parseInt(stat.jitterBufferEmittedCount) - session.rpcs[UUID].stats[trackID]._jitter_count_2)) || 0;
+								session.rpcs[UUID].stats[trackID].Jitter_Buffer_ms = parseInt(1000*(parseFloat(stat.jitterBufferDelay) - session.rpcs[UUID].stats[trackID]._jitter_delay_2)/(parseInt(stat.jitterBufferEmittedCount) - session.rpcs[UUID].stats[trackID]._jitter_count_2)) || 0;
 								session.rpcs[UUID].stats[trackID]._jitter_delay_2 = parseFloat(stat.jitterBufferDelay) || 0;
 								session.rpcs[UUID].stats[trackID]._jitter_count_2 = parseInt(stat.jitterBufferEmittedCount) || 0;
 							}
+							
 							if ("frameWidth" in stat){
 								if ("frameHeight" in stat){
 									session.rpcs[UUID].stats[trackID].Resolution = stat.frameWidth+" x "+stat.frameHeight;
@@ -9069,7 +9161,7 @@ function playoutdelay(UUID){  // applies a delay to all videos
 				try {
 					for (var tid in session.rpcs[UUID].stats){
 						
-						if ((typeof( session.rpcs[UUID].stats[tid])=="object") && ("_trackID" in session.rpcs[UUID].stats[tid]) && (session.rpcs[UUID].stats[tid]._trackID===receiver.track.id) && (session.rpcs[UUID].stats[tid]._type == receiver.track.kind) && ("Buffer_Delay_in_ms" in session.rpcs[UUID].stats[tid])){
+						if ((typeof( session.rpcs[UUID].stats[tid])=="object") && ("_trackID" in session.rpcs[UUID].stats[tid]) && (session.rpcs[UUID].stats[tid]._trackID===receiver.track.id) && (session.rpcs[UUID].stats[tid]._type == receiver.track.kind) && ("Jitter_Buffer_ms" in session.rpcs[UUID].stats[tid])){
 							
 							var sync_offset = 0.0;
 							
@@ -9080,7 +9172,7 @@ function playoutdelay(UUID){  // applies a delay to all videos
 							}
 
 							sync_offset += target_buffer;
-							sync_offset -= session.rpcs[UUID].stats[tid].Buffer_Delay_in_ms;
+							sync_offset -= session.rpcs[UUID].stats[tid].Jitter_Buffer_ms;
 							
 							if (session.includeRTT){
 								sync_offset -= parseInt(session.rpcs[UUID].stats['Peer-to-Peer_Connection'].Round_Trip_Time_ms/2); // I can't be sure what the actual one-way delay is
@@ -9090,16 +9182,22 @@ function playoutdelay(UUID){  // applies a delay to all videos
 								sync_offset=target_buffer;
 							}
 							
+							if (sync_offset<0){sync_offset=0;}
+							
+							session.rpcs[UUID].stats[tid].Added_Buffer_Delay_ms = sync_offset;
+							
+							session.rpcs[UUID].stats[tid].Total_Playout_Delay_ms = sync_offset + parseInt(session.rpcs[UUID].stats['Peer-to-Peer_Connection'].Round_Trip_Time_ms/2) + session.rpcs[UUID].stats[tid].Jitter_Buffer_ms;
+							
 							if (session.rpcs[UUID].stats[tid]._type=="audio"){
-								if (sync_offset<0){sync_offset=0;}
+								
 								session.rpcs[UUID].stats[tid]._sync_offset = sync_offset;
 								
 								receiver.playoutDelayHint = parseFloat(sync_offset/1000);
 								// receiver.jitterBufferDelayhint = parseFloat(sync_offset/1000); // This is deprecated I believe
-								
+								 
 								if (session.sync!==false){
 									var audio_delay = session.sync || 0; // video is typically showing greater delay than audio.
-									audio_delay += target_buffer - session.rpcs[UUID].stats[tid].Buffer_Delay_in_ms
+									audio_delay += target_buffer - session.rpcs[UUID].stats[tid].Jitter_Buffer_ms
 									if ((receiver.track.kind=="audio") && (receiver.track.id in session.rpcs[UUID].inboundAudioPipeline)){
 										if (session.rpcs[UUID].inboundAudioPipeline[receiver.track.id] && session.rpcs[UUID].inboundAudioPipeline[receiver.track.id].delayNode){
 											if (audio_delay<0){audio_delay=0;}
@@ -9113,7 +9211,6 @@ function playoutdelay(UUID){  // applies a delay to all videos
 									}
 								}
 							} else if (session.rpcs[UUID].stats[tid]._type=="video"){
-								if(sync_offset<0){sync_offset=0;}
 								session.rpcs[UUID].stats[tid]._sync_offset = sync_offset;
 								receiver.playoutDelayHint = parseFloat(sync_offset/1000);	// Chrome seems to somewhat sync audio and video when using the delay
 								// receiver.jitterBufferDelayhint = parseFloat(sync_offset/1000); // This is deprecated I believe
@@ -9210,6 +9307,8 @@ function printValues(obj) { // see: printViewStats
 					var value = obj[key];
 
 					var stat = sanitizeChat(key);
+					
+					var hint = "";
 
 					if (typeof obj[key] == "string") {
 						value = sanitizeChat((value));
@@ -9223,6 +9322,7 @@ function printValues(obj) { // see: printViewStats
 					if (key == 'Bitrate_in_kbps') {
 						var unit = " kbps";
 						stat = "Bitrate";
+						hint = "You can refer to the documentation for ways to increase the target bitrate";
 					}
 					else if (key == 'type') {
 						var unit = "";
@@ -9242,6 +9342,8 @@ function printValues(obj) { // see: printViewStats
 						var unit = " %";
 						stat = 'Packet Loss 📶';
 						value = parseInt(parseFloat(value) * 10000) / 10000.0;
+						hint = "A high packet loss will lower quality of the media";
+			
 					}
 					else if (key == 'local_relay_IP') {
 						value = "<a href='https://whatismyipaddress.com/ip/" + value + "' target='_blank'>" + value + "</a>";
@@ -9250,22 +9352,24 @@ function printValues(obj) { // see: printViewStats
 						value = "<a href='https://whatismyipaddress.com/ip/" + value + "' target='_blank'>" + value + "</a>";
 					}
 					else if ((key == 'local_candidateType') &&  (value == "relay")){
-						value = "💸 <p style='cursor:help;' title='no direct p2p connection made; using the TURN relay servers.'>relay server</p>";
+						value = "💸 relay server";
+						hint = 'no direct p2p connection made; using the TURN relay servers.';
 					}
 					else if ((key == 'remote_candidateType') && (value == "relay")) {
-						value = "💸 <p style='cursor:help;' title='no direct p2p connection made; using the TURN relay servers.'>relay server</p>";
+						value = "💸 relay server"
+						hint = 'no direct p2p connection made; using the TURN relay servers.';
 					}
 					else if ((key == 'local_candidateType') &&  (value == "host")){
-						value = "<p style='cursor:help;' title='No NAT firewall, typical of LAN to LAN'>host</p>";
+						hint = 'No NAT firewall, typical of LAN to LAN';
 					}
 					else if ((key == 'remote_candidateType') && (value == "host")) {
-						value = "<p style='cursor:help;' title='No NAT firewall, typical of LAN to LAN'>host</p>";
+						hint = 'No NAT firewall, typical of LAN to LAN';
 					}
 					else if ((key == 'local_candidateType') &&  (value == "srflx")){
-						value = "<p style='cursor:help;' title='direct p2p, but NAT firewall likely'>srflx</p>";
+						hint = 'direct p2p, but NAT firewall likely';
 					}
 					else if ((key == 'remote_candidateType') && (value == "srflx")) {
-						value = "<p style='cursor:help;' title='direct p2p, but NAT firewall likely'>srflx</p>";
+						hint = 'direct p2p, but NAT firewall likely';
 					}
 					else if (key == 'height_url') {
 						if (value == false) {
@@ -9299,9 +9403,19 @@ function printValues(obj) { // see: printViewStats
 					else if (key == 'audio_level') {
 						stat = "Audio Level";
 					}
-					else if (key == 'Buffer_Delay_in_ms') {
+					else if (key == 'Jitter_Buffer_ms') {
 						var unit = " ms";
-						stat = 'Buffer Delay';
+						stat = 'Jitter Buffer Delay';
+					}
+					else if (key == 'Added_Buffer_Delay_ms') {
+						var unit = " ms";
+						stat = 'Added Buffer Delay';
+						hint = "Value of playout buffer delay added if using &buffer";
+					}
+					else if (key == 'Total_Playout_Delay_ms') { // doesn't include bluetooth / monitor / capture delay, etc.
+						var unit = " ms";
+						stat = 'Total Playout Delay';
+						hint = "Network latency + Jitter buffer + any manually added playout delay"
 					}
 					else if (value === null) {
 						value = "null";
@@ -9326,10 +9440,15 @@ function printValues(obj) { // see: printViewStats
 					else if (value === "false") {
 						continue
 					}
-					else {
-						stat = stat.replaceAll("_", " ");
+					
+					stat = stat.replaceAll("_", " ");
+					stat = stat.trim();
+					
+					if (hint){
+						out += "<li style='cursor:help;' title='"+hint+"'><span>" + stat + "</span><span>" + value + unit + "</span></li>";
+					} else {
+						out += "<li><span>" + stat + "</span><span>" + value + unit + "</span></li>";
 					}
-					out += "<li><span>" + stat + "</span><span>" + value + unit + "</span></li>";
 				} catch (e) {
 					warnlog(e);
 				}
@@ -9374,9 +9493,10 @@ function processMeshcastStats(UUID){
 					
 					if (stat.id in session.rpcs[UUID].stats){
 						session.rpcs[UUID].stats[stat.id]._trackID = stat.trackIdentifier;
-						session.rpcs[UUID].stats[stat.id].Buffer_Delay_in_ms = parseInt(1000*(parseFloat(stat.jitterBufferDelay) - session.rpcs[UUID].stats[stat.id]._jitter_delay)/(parseInt(stat.jitterBufferEmittedCount) - session.rpcs[UUID].stats[stat.id]._jitter_count)) || 0;
+						session.rpcs[UUID].stats[stat.id].Jitter_Buffer_ms = parseInt(1000*(parseFloat(stat.jitterBufferDelay) - session.rpcs[UUID].stats[stat.id]._jitter_delay)/(parseInt(stat.jitterBufferEmittedCount) - session.rpcs[UUID].stats[stat.id]._jitter_count)) || 0;
 						session.rpcs[UUID].stats[stat.id]._jitter_delay = parseFloat(stat.jitterBufferDelay) || 0;
 						session.rpcs[UUID].stats[stat.id]._jitter_count = parseInt(stat.jitterBufferEmittedCount) || 0;
+						
 						if ("frameWidth" in stat){
 							if ("frameHeight" in stat){
 								session.rpcs[UUID].stats[stat.id].Resolution = stat.frameWidth+" x "+stat.frameHeight;
@@ -9388,7 +9508,7 @@ function processMeshcastStats(UUID){
 						session.rpcs[UUID].stats[stat.id] = {};
 						session.rpcs[UUID].stats[stat.id]._jitter_delay = parseFloat(stat.jitterBufferDelay) || 0;
 						session.rpcs[UUID].stats[stat.id]._jitter_count = parseInt(stat.jitterBufferEmittedCount) || 0;
-						session.rpcs[UUID].stats[stat.id].Buffer_Delay_in_ms = 0;
+						session.rpcs[UUID].stats[stat.id].Jitter_Buffer_ms = 0;
 						session.rpcs[UUID].stats[stat.id]._trackID = stat.trackIdentifier;
 						
 						if (stat.kind && stat.kind=="audio"){
@@ -9427,10 +9547,11 @@ function processMeshcastStats(UUID){
 							session.rpcs[UUID].stats[trackID]._trackID = stat.trackIdentifier;
 						}
 						if ("jitterBufferDelay" in stat){
-							session.rpcs[UUID].stats[trackID].Buffer_Delay_in_ms = parseInt(1000*(parseFloat(stat.jitterBufferDelay) - session.rpcs[UUID].stats[trackID]._jitter_delay_2)/(parseInt(stat.jitterBufferEmittedCount) - session.rpcs[UUID].stats[trackID]._jitter_count_2)) || 0;
+							session.rpcs[UUID].stats[trackID].Jitter_Buffer_ms = parseInt(1000*(parseFloat(stat.jitterBufferDelay) - session.rpcs[UUID].stats[trackID]._jitter_delay_2)/(parseInt(stat.jitterBufferEmittedCount) - session.rpcs[UUID].stats[trackID]._jitter_count_2)) || 0;
 							session.rpcs[UUID].stats[trackID]._jitter_delay_2 = parseFloat(stat.jitterBufferDelay) || 0;
 							session.rpcs[UUID].stats[trackID]._jitter_count_2 = parseInt(stat.jitterBufferEmittedCount) || 0;
 						}
+				
 						if ("frameWidth" in stat){
 							if ("frameHeight" in stat){
 								session.rpcs[UUID].stats[trackID].Resolution = stat.frameWidth+" x "+stat.frameHeight;
@@ -10438,7 +10559,6 @@ function updateLocalStats(){
 	}
 	
 	
-	
 	try{
 		var totalCon = Object.keys(session.pcs).length || 0;
 		var headerStats = "<span title='Number of outbound connections'>🔗 ";
@@ -10465,6 +10585,7 @@ function updateLocalStats(){
 			session.info.out.v = totalVideo;
 			session.info.out.a = totalAudio;
 			session.info.out.c = totalCon;
+			session.info.out.s = totalScenes;
 			changed = true;
 		} else {
 			if (session.info.out.a !== totalAudio){
@@ -10480,6 +10601,12 @@ function updateLocalStats(){
 					changed = true; // update if I'm not the first one
 				}
 				session.info.out.c = totalCon;
+			}
+			if (session.info.out.s !== totalScenes){
+				if (session.info.out.s){
+					changed = true; // update if I'm not the first one
+				}
+				session.info.out.s = totalScenes;
 			}
 		}
 	} catch(e){}
@@ -10789,7 +10916,6 @@ function toggleSpeakerMute(apply = false) { // TODO: I need to have this be MUTE
 				}
 			}
 		}
-		
 	}
 
 	for (var UUID in session.rpcs) {
@@ -11648,6 +11774,11 @@ function getDetailedState(sid=false){
 	streamList[session.streamID].videoVisible = session.videoElement && session.videoElement.checkVisibility();
 	streamList[session.streamID].speakerMuted = session.speakerMuted;
 	streamList[session.streamID].position = null;
+	streamList[session.streamID].meshcast = session.meshcast;
+	if (session.info && session.info.out){
+		streamList[session.streamID].outbound = session.info.out;
+	}
+	
 	
 	if (session.showDirector && session.director){
 		var child = document.getElementById('container_director');
@@ -12662,10 +12793,24 @@ function directVolume(ele) { // NOT USED ANYMORE
 function applyMuteState(UUID){ // this is the mute state of PLAYBACK audio; not the microphone or outbound.
 	if (!(UUID in session.rpcs)){return "UUID not found";}
 	var muteOutcome = session.rpcs[UUID].mutedState || session.rpcs[UUID].mutedStateMixer || session.rpcs[UUID].mutedStateScene || session.speakerMuted || session.rpcs[UUID].bandwidthMuted;
+	
+	if (!muteOutcome && (session.noaudio !== false)){
+		if (session.noaudio===true){
+			muteOutcome = true;
+		} else if (session.noaudio.length){
+			if (("streamID" in session.rpcs[UUID].streamID) && session.rpcs[UUID].streamID && !session.noaudio.includes(session.rpcs[UUID].streamID)){
+				muteOutcome = true;
+			}
+		} else {
+			muteOutcome = true;
+		}
+	} 
+	
 	if (session.rpcs[UUID].videoElement){
 		if (session.rpcs[UUID].videoElement && session.rpcs[UUID].videoElement.usermuted===true){return "usermuted true";}
 		session.rpcs[UUID].videoElement.muted = muteOutcome;
 	}
+	
 	// session.scene
 	return muteOutcome;
 }
@@ -12971,7 +13116,7 @@ async function publishScreen() {
 				setupClosedCaptions();
 			}, 1000);
 		}
-		//session.screenShareState=true;
+		
 		if (!session.cleanOutput){		
 			getById("mutebutton").classList.remove("hidden");
 			getById("mutespeakerbutton").classList.remove("hidden");
@@ -17251,6 +17396,11 @@ function gotDevices(deviceInfos, miconly=false) {
 	log(deviceInfos);
 	try {
 		
+		if (Firefox && !FirefoxEnumerated){
+			if (session.streamSrc && session.streamSrc.getTracks().length){
+				FirefoxEnumerated=true;
+			}
+		}
 
 		var option = document.createElement('input');
 		option.type = "checkbox";
@@ -18252,8 +18402,7 @@ function gotDevices2(deviceInfos) {
 			if (!(getById('audioSource3').querySelectorAll("input[data-type='screen']").length)){
 				if (session.screenShareState){
 					session.screenShareState = false;
-					pokeIframeAPI("screen-share-state", false);
-					
+					pokeIframeAPI('screen-share-state', session.screenShareState, null, session.streamID);
 					notifyOfScreenShare();
 					//session.refreshScale();
 				}
@@ -19434,8 +19583,8 @@ function notifyOfScreenShare(){
 }
 
 var beforeScreenShare = null; // video
-var screenShareAudioTrack = null;
-async function toggleScreenShare(reload = false) { ////////////////////////////
+var screenShareAudioTrack = null; 
+async function toggleScreenShare(reload = false) { /// &sstype=1
 
 	var quality = session.quality_ss;
 
@@ -19454,14 +19603,12 @@ async function toggleScreenShare(reload = false) { ////////////////////////////
 		await grabScreen(quality, true, true).then(res => {  
 			if (res != false) {
 				session.screenShareState = true;
-				
+				pokeIframeAPI('screen-share-state', session.screenShareState, null, session.streamID);
 				notifyOfScreenShare();
                 
 				getById("screensharebutton").classList.add("green");
 				getById("screensharebutton").ariaPressed = "true";
 				enumerateDevices().then(gotDevices2).then(function() {});
-				
-				pokeIframeAPI("screen-share-state", true);
 			}
 
 		});
@@ -19471,7 +19618,7 @@ async function toggleScreenShare(reload = false) { ////////////////////////////
 		await grabScreen(quality, true, true).then(res => {
 			if (res != false) {
 				session.screenShareState = true;
-				
+				pokeIframeAPI('screen-share-state', session.screenShareState, null, session.streamID);
 				notifyOfScreenShare();
 					
 				//session.refreshScale();
@@ -19493,8 +19640,7 @@ async function toggleScreenShare(reload = false) { ////////////////////////////
 	} else { // removing a screen  . session.screenShareState already true true  /////////////////////////////////
 
 		session.screenShareState = false;
-		pokeIframeAPI("screen-share-state", false);
-		
+		pokeIframeAPI('screen-share-state', session.screenShareState, null, session.streamID);
 		notifyOfScreenShare();
 		
 		if (!session.streamSrc){
@@ -20160,8 +20306,7 @@ async function grabScreen(quality = 0, audio = true, videoOnEnd = false) {
 				}
 			
 				session.screenShareState = false;
-				pokeIframeAPI("screen-share-state", false);
-				
+				pokeIframeAPI('screen-share-state', session.screenShareState, null, session.streamID);
 				notifyOfScreenShare();
 
 
@@ -20205,8 +20350,7 @@ async function grabScreen(quality = 0, audio = true, videoOnEnd = false) {
 		session.applyIsolatedChat();
 		
 		applyMirror(true);
-		
-		pokeIframeAPI('local-screen-capture-event'); 
+
 		
 		return true;
 	}).catch(function(err) {
@@ -20907,6 +21051,7 @@ async function grabVideo(quality = 0, eleName = 'previewWebcam', selector = "sel
 		grabVideoUserMediaTimeout = setTimeout(function(gumID, callback2) {
 			if (getUserMediaRequestID !== gumID) {return;} // cancel
 			navigator.mediaDevices.getUserMedia(constraints).then(function(stream) {
+				
 				if (getUserMediaRequestID !== gumID) {
 					warnlog("GET USER MEDIA CALL HAS EXPIRED");
 					stream.getTracks().forEach(function(track) {
@@ -20917,8 +21062,6 @@ async function grabVideo(quality = 0, eleName = 'previewWebcam', selector = "sel
 					return;
 				}
 				log("adding video tracks 2412");
-				
-				//checkBasicStreamsExist();
 				
 				stream.getVideoTracks().forEach(function(track) {
 					
@@ -20950,6 +21093,13 @@ async function grabVideo(quality = 0, eleName = 'previewWebcam', selector = "sel
 						}
 					}
 				});
+				
+				if (Firefox && !FirefoxEnumerated){
+					if (session.streamSrc && session.streamSrc.getTracks().length){
+						FirefoxEnumerated=true;
+						enumerateDevices().then(gotDevices);
+					}
+				}
 				
 				
 				updateRenderOutpipe();  
@@ -21221,7 +21371,7 @@ function updateRenderOutpipe(){ // video only.
 					} else {
 						toggleVideoMute(true);
 					}
-					pushOutVideoTrack(track)
+					pushOutVideoTrack(track); // video only
 				});
 			} else {
 				var msg = {};
@@ -21235,7 +21385,7 @@ function updateRenderOutpipe(){ // video only.
 				track = applyEffects(track); // updates with the correct track session.streamSrc
 				session.videoElement.srcObject.addTrack(track);
 				toggleVideoMute(true);
-				pushOutVideoTrack(track)
+				pushOutVideoTrack(track); // video only
 			});
 		}
 	}
@@ -21243,21 +21393,25 @@ function updateRenderOutpipe(){ // video only.
 
 function pushOutVideoTrack(track){
 	log("pushOutVideoTrack");
+	
+	pokeIframeAPI('push-video-track', track.id, false, session.streamID);  // (action, value = null, UUID = null, SID=null) 
+	
 	if (session.chunked){
 		for (UUID in session.pcs) {
-			session.chunkedStream(UUID); // make sure we check that this connection allows video / audio
+			session.chunkedStream(UUID); // I need to update chunkedStream with the current track? If sstype=3, then skip this 
 		}
 		return;
 	}
 	
-	if (session.audioContentHint && (track.kind === "audio")){
+	if (session.audioContentHint && (track.kind === "audio")){  // why am I pushing an audio track?
+		errorlog("this shouldn't occur, since only video tracks are expected");
 		try {
 			track.contentHint = session.audioContentHint;
 		} catch(e){
 			errorlog(e);
 		}
 	}
-	if (session.screenShareState && session.screenshareContentHint && (track.kind === "video")){
+	if (session.screenShareState && session.screenshareContentHint && (track.kind === "video")){ // I need to check if this is actually a screenshare before setting the hint (sstype=3)
 		try {
 			track.contentHint = session.screenshareContentHint;
 		} catch(e){
@@ -21447,6 +21601,13 @@ async function grabAudio(selector = "#audioSource", trackid = null, override = f
 			});
 		}
 	} catch(e){errorlog(e);}
+	
+	if (Firefox && !FirefoxEnumerated){
+		if (session.streamSrc && session.streamSrc.getTracks().length){
+			FirefoxEnumerated=true;
+			enumerateDevices().then(gotDevices);
+		}
+	}
 	
 	if (callback){
 		callback();
@@ -22157,7 +22318,7 @@ async function press2talk(clean = false) {
 	if (session.audioDevice===0){
 		constraint.audio = false;
 	}
-	requestBasicPermissions(constraint, function(){
+	requestBasicPermissions(constraint, function(){ 
 		log("requestBasicPermissions done"); 
 		enumerateDevices().then(gotDevices).then(async function() {
 			log("enumerateDevices+gotDevices complete");
@@ -22741,18 +22902,12 @@ async function publishScreen2(constraints, audioList=[], audio=true, overrideFra
 		
 		 /// RETURN stream for preview? rather than jumping right in.
 		session.screenShareState=true;
-		
-		notifyOfScreenShare();
+		pokeIframeAPI('screen-share-state', session.screenShareState, null, session.streamID);
+		notifyOfScreenShare(); 
 		
 		try {
 			stream.getVideoTracks()[0].onended = function () {
-				toggleScreenShare();
-				/* session.screenShareState=false;
-				pokeIframeAPI("screen-share-state", false);
-				var data = {};
-				data.screenShareState = session.screenShareState;
-				session.sendMessage(data);*/
-				
+				toggleScreenShare();				
 			};
 		} catch(e){log("No Video selected; screensharing?");}
 		
@@ -23012,8 +23167,8 @@ async function publishScreen2(constraints, audioList=[], audio=true, overrideFra
 		session.seeding=true;
 		session.seedStream();
 		
-		pokeIframeAPI('started-screenshare'); // depreciated
-		pokeIframeAPI('screen-share', true); 
+		//pokeIframeAPI('started-screenshare'); // depreciated
+		pokeIframeAPI('screen-share-state', true, null, session.streamID);     // (action, value = null, UUID = null, SID=null) 
 		
 		if (session.autorecord || session.autorecordlocal){
 			log("AUTO RECORD START");
@@ -23037,8 +23192,7 @@ async function publishScreen2(constraints, audioList=[], audio=true, overrideFra
 		if ((err.name == "NotAllowedError") || (err.name == "PermissionDeniedError")){
 			// User Stopped it.  (is this next part needed??)
 			session.screenShareState=false;
-			pokeIframeAPI("screen-share-state", false);
-			
+			pokeIframeAPI('screen-share-state', session.screenShareState, null, session.streamID);
 			notifyOfScreenShare();
 			
 			if (macOS){
@@ -23486,7 +23640,7 @@ session.publishFile = function(ele, event){ // webcam stream is used to generate
 			
 			var tracks = session.streamSrc.getVideoTracks();
 			if (tracks.length){
-				pushOutVideoTrack(tracks[0]);
+				pushOutVideoTrack(tracks[0]); // video only
 			}
 			var tracks = session.streamSrc.getAudioTracks();
 			senderAudioUpdate();
@@ -31673,35 +31827,36 @@ function soloLinkGeneratorInit(UUID){
 }
 
 function initRecordingImpossible(UUID){
-	var elements = document.querySelectorAll('[data-action-type="mute-guest"][data--u-u-i-d="'+UUID+'"]');
-	if (elements[0]){
-		elements[0].disabled = true;
-		elements[0].title = miscTranslations["Audio processing is disabled with this guest. Can't mute or change volume"];
+	var ele = document.querySelectorAll('[data-action-type="mute-guest"][data--u-u-i-d="'+UUID+'"]');
+	if (ele){
+		ele.disabled = true;
+		ele.title = miscTranslations["Audio processing is disabled with this guest. Can't mute or change volume"];
 	}
-	var elements = document.querySelectorAll('[data-action-type="volume"][data--u-u-i-d="'+UUID+'"]');
-	if (elements[0]){
-		elements[0].disabled = true;
-		elements[0].title = title = miscTranslations["Audio processing is disabled with this guest. Can't mute or change volume"];
-		elements[0].style.opacity = 0.2;
+	var ele = document.querySelectorAll('[data-action-type="volume"][data--u-u-i-d="'+UUID+'"]');
+	if (ele){
+		ele.disabled = true;
+		ele.title = title = miscTranslations["Audio processing is disabled with this guest. Can't mute or change volume"];
+		ele.style.opacity = 0.2;
 	}
 }
 
 function initAudioButtons(audioGain, UUID){
 	if (audioGain===0){
-		var elements = document.querySelectorAll('[data-action-type="mute-guest"][data--u-u-i-d="'+UUID+'"]');
-		if (elements[0]){
-			elements[0].value = 1;
-			elements[0].classList.add("pressed"); elements[0].ariaPressed = "true";
-			elements[0].children[1].innerHTML = miscTranslations["unmute"];
+		var ele = document.querySelector('[data-action-type="mute-guest"][data--u-u-i-d="'+UUID+'"]');
+		if (ele){
+			ele.value = 1;
+			ele.classList.add("pressed"); ele.ariaPressed = "true";
+			ele.children[1].innerHTML = miscTranslations["unmute"] || "Unmute";
+			//ele.title = miscTranslations["unmute-guest"];
 			session.rpcs[UUID].directorMutedState = 1;
 		}
 		pokeIframeAPI("director-mute-state", true, UUID);
 	} else {
-		var elements = document.querySelectorAll('[data-action-type="volume"][data--u-u-i-d="'+UUID+'"]');
-		if (elements[0]){
-			elements[0].value = audioGain;
+		var ele = document.querySelector('[data-action-type="volume"][data--u-u-i-d="'+UUID+'"]');
+		if (ele){
+			ele.value = audioGain;
 			session.rpcs[UUID].directorVolumeState = audioGain;
-			remoteVolumeUI(elements[0]);
+			remoteVolumeUI(ele);
 		}
 	}
 }
@@ -35374,7 +35529,7 @@ async function createSecondStream2(UUID){
 
 var screenshareTracks = {};
 var firsttime = true;
-async function createSecondStream() { //////////////////////////// 
+async function createSecondStream() { ////////////////////////////  &sstype=3 ?
 	if (session.screenShareState == false) { // adding a screen
 	
 		var video = {}
@@ -35554,7 +35709,9 @@ async function createSecondStream() { ////////////////////////////
 
 			
 			session.screenShareState = true;
-			session.screenStream = stream; 
+			session.screenStream = stream;
+			pokeIframeAPI('screen-share-state', session.screenShareState, null, session.streamID);
+			
 			//if (!session.screenVideoElement){
 			//	session.screenVideoElement = createVideoElement()
 			//}
@@ -35791,6 +35948,7 @@ function stopSecondScreenshare(){
 	});
 	session.screenStream = false;
 	session.screenShareState = false;
+	pokeIframeAPI('screen-share-state', session.screenShareState, null, session.streamID);
 	
 	getById("screensharebutton").classList.remove("green");
 	getById("screensharebutton").ariaPressed = "false";
@@ -35803,7 +35961,6 @@ function stopSecondScreenshare(){
 	getById("screenshare3button").classList.remove("green");
 	getById("screenshare3button").ariaPressed = "false";
 	getById("screenshare3button").title = miscTranslations["share-a-screen"];
-	pokeIframeAPI("screen-share-state", false);
 	
 	setTimeout(function(){
 		updateMixer();

@@ -2056,6 +2056,9 @@ div#chatBody a {
 		margin:20px 12% 0 2%;
 	}
 }
+#popupSelector_user_settings{
+	margin-top: 10px;
+}
 
 
 .tooltip {
