@@ -12457,12 +12457,13 @@ function remoteMute(ele, event=false, skipSend=false) {
 			ele.value = 0;
 			ele.classList.remove("pressed"); ele.ariaPressed = "false";
 			ele.innerHTML = '<i class="las la-microphone-slash" style="color:#900"></i>';
+			ele.innerHTML += miscTranslations["mute"] || "Mute";
 		} else {
 			ele.value = 1;
-			ele.classList.add("pressed"); ele.ariaPressed = "true";
+			ele.classList.add("pressed"); ele.ariaPressed = "true"; 
 			ele.innerHTML = '<i class="las la-microphone-slash" style="color:#900"></i>';
+			ele.innerHTML += miscTranslations["unmute"] || "Unmute";
 		}
-		miniTranslate(ele);
 	}
 
 	try {
@@ -31691,7 +31692,7 @@ function initAudioButtons(audioGain, UUID){
 		if (elements[0]){
 			elements[0].value = 1;
 			elements[0].classList.add("pressed"); elements[0].ariaPressed = "true";
-			elements[0].children[1].innerHTML = miscTranslations["unmute-guest"];
+			elements[0].children[1].innerHTML = miscTranslations["unmute"];
 			session.rpcs[UUID].directorMutedState = 1;
 		}
 		pokeIframeAPI("director-mute-state", true, UUID);

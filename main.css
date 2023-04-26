@@ -259,6 +259,22 @@ a {
 	color: var(--a-dark-active);
 }
 
+.directorContainer a:link {
+	color: var(--a-lighter-link);
+}
+.directorContainer a:visited {
+	color: var(--a-lighter-visited);
+}
+.directorContainer a:hover {
+	color: var(--a-lighter-hover);
+}
+.directorContainer a:focus {
+	color: var(--a-lighter-focus);
+}
+.directorContainer a:active {
+	color: var(--a-lighter-active);
+}
+
 .infoblob a:link {
 	color: var(--a-lighter-link);
 }
@@ -3362,6 +3378,10 @@ div#roomnotes2 {
 
 .controlsGrid button i {
     font-size: 15px;
+}
+
+.controlsGrid button[data-action-type="mute-guest"] {
+	min-width: 31%;
 }
 
 /* Button icons: Red  */
