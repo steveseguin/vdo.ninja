@@ -1,5 +1,13 @@
 # Updates - VDO.Ninja
 
+#### April 25 <a href="#august-31" id="august-31"></a>
+
+* Videos should auto-play within VDO.Ninja if using [`&noaudio`](../advanced-settings/view-parameters/noaudio.md). This was already the case if using [`&mutespeaker`](../source-settings/and-mutespeaker.md).
+* I changed the logic for dynamic resolutions (optimizing to fit window). If the requested resolution is 1920x100 now, instead of requesting \~170x100, the auto mixer will now request 1920x1080. This should account for cases such as using [`&cover`](../advanced-settings/view-parameters/cover.md), improving video quality, despite not being super efficient.
+* Added more IFrame API events and deprecated some older events (for those using the IFrame API).\
+  \
+  \* changes on alpha at vdo.ninja/alpha/
+
 #### April 19 <a href="#august-31" id="august-31"></a>
 
 * Added `&structure` as an option, which will have the video holding div element be structured to 16:9 (or whatever [`&aspectratio`](../advanced-settings/video-parameters/and-aspectratio.md) is set to), making it easier to apply custom CSS backgrounds to videos\
