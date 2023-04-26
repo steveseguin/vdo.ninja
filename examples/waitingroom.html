@@ -1,0 +1,121 @@
+<html>
+<head><title>Video with sensor overlayed data</title>
+<style>
+body{
+	padding:0;
+	margin:0;
+	background-color: #0000;
+}
+iframe {
+	border:0;
+	margin:0;
+	padding:0;
+	display:block;
+	width:100%;
+	height:100%;
+}
+
+#container {
+	border:0;
+	margin:0;
+	padding:0;
+	display:block;
+	width:100%;
+	height:100%;
+	position:absolute;
+	top:0;
+	left:0;
+	
+}
+
+#overlay{
+    top: 0;
+    border: 0;
+    margin: auto;
+    padding: 5% 0;
+    text-align: center;
+    vertical-align: middle;
+    z-index: 10;
+    color: white;
+    font-size: 10vh;
+    width: 100%;
+    background-color: #000000a3;
+    height: 100%;
+    overflow: hidden;
+    position: absolute;
+    font-family: monospace;
+    text-shadow: 2px 2px black;
+}
+
+.hidden {
+	display:none;
+}
+
+</style>
+</head>
+<body id="main">
+	<div id="overlay" class="hidden"></div>
+	<div id="container"></div>
+<script>
+
+function loadIframe(url=false){ 
+	
+	if (url){
+		var iframesrc = url;
+	} else {
+		var iframesrc = document.getElementById("viewlink").value;
+	}
+	
+	if (iframesrc==""){
+		iframesrc="../";
+	}
+	
+	var params = window.location.search || "";
+		
+	if (params.startsWith("?")){
+		params = params.slice(1);
+		iframesrc = iframesrc + "&" + params
+	} else {
+		iframesrc = iframesrc + params
+	}
+	
+	var iframe = document.createElement("iframe");
+	iframe.allow = "document-domain;encrypted-media;sync-xhr;usb;web-share;cross-origin-isolated;accelerometer;midi;geolocation;autoplay;camera;microphone;fullscreen;picture-in-picture;display-capture;";
+	iframe.src = iframesrc;
+	
+	document.getElementById("container").appendChild(iframe);
+	var outputWindow = document.getElementById("overlay");
+
+	////////////  LISTEN FOR EVENTS
+
+	var eventMethod = window.addEventListener ? "addEventListener" : "attachEvent";
+	var eventer = window[eventMethod];
+	var messageEvent = eventMethod === "attachEvent" ? "onmessage" : "message";
+	var waiting = null;
+	
+	eventer(messageEvent, function (e) {
+		if (e.source != iframe.contentWindow){return} // reject messages send from other iframes
+		console.warn(e.data);
+		if ("action" in e.data){
+		
+			if (e.data.action == "joining-room"){
+				outputWindow.innerHTML = "JOINING ROOM";   
+				waiting = setTimeout(function(){
+					outputWindow.innerHTML = "Waiting for the director to join";   
+					outputWindow.classList.remove("hidden");
+				},1000);
+			} else if (e.data.action == "director-connected"){
+				clearTimeout(waiting);
+				outputWindow.innerHTML = "";   
+				outputWindow.classList.add("hidden");
+			}
+			
+		}
+	});
+}
+
+loadIframe("../"+window.location.search);
+
+</script>
+</body>
+</html>
