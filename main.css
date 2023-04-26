@@ -4727,7 +4727,7 @@ body.darktheme h2 {
 	color: #DDD;
 }
 body.darktheme .column .las {
-	color: var(--discord-text);
+	color: var(--dark-background-color); 
 }
 body.darktheme label {
 	color: var(--discord-text);
