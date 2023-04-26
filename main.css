@@ -43,11 +43,17 @@
     --a-darker-focus: #55cdb8;
     --a-darker-active: #42a896;
 
-    --a-link: #6eb4a8;
-    --a-visited: #6eb4a8;
-    --a-hover: #67c0b1;
-    --a-focus: #67c0b1;
-    --a-active: #61ada0;
+    --a-lighter-link: #9ed0e1;
+    --a-lighter-visited: #9ed0e1;
+    --a-lighter-hover: #8acee4;
+    --a-lighter-focus: #8acee4;
+    --a-lighter-active: #89d5ee;
+	
+	--a-link:  #144267;
+    --a-visited: #144267;
+    --a-hover: #38668c;
+    --a-focus: #38668c;
+    --a-active: #0165b5;
 
     /* -- Box colors */
     --director-box: rgb(165 119 18);
@@ -251,6 +257,22 @@ a {
 }
 .darktheme a:active {
 	color: var(--a-dark-active);
+}
+
+.infoblob a:link {
+	color: var(--a-lighter-link);
+}
+.infoblob a:visited {
+	color: var(--a-lighter-visited);
+}
+.infoblob a:hover {
+	color: var(--a-lighter-hover);
+}
+.infoblob a:focus {
+	color: var(--a-lighter-focus);
+}
+.infoblob a:active {
+	color: var(--a-lighter-active);
 }
 
 .darktheme .infoblob a:link {
@@ -5088,7 +5110,7 @@ input[type='range'] {
 	cursor: pointer;
 	font-weight: bold;
     margin: 10px 0px 0px 0px;
-    background-color: rgb(127 154 189);
+    background-color: #92bbde;
 }
 
 .darktheme #popupSelector {
