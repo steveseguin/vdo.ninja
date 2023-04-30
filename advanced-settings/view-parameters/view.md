@@ -42,8 +42,8 @@ You can use `&view` in a room combined with [`&scene`](scene.md) or [`&solo`](..
 
 ## Related
 
-{% content-ref url="../../getting-started/two-person-chat.md" %}
-[two-person-chat.md](../../getting-started/two-person-chat.md)
+{% content-ref url="../../getting-started/multi-person-chat.md" %}
+[multi-person-chat.md](../../getting-started/multi-person-chat.md)
 {% endcontent-ref %}
 
 {% content-ref url="../../source-settings/push.md" %}

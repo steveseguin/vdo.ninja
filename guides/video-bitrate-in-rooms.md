@@ -8,7 +8,7 @@ This guide will show you how to control and set up the bitrate in rooms as a dir
 
 ## Default settings
 
-Every guests is viewing video streams in a room with a combined bitrate of 500-kbps. If there is only one video stream, the guest will view the video on 500-kbps. Two video streams: 250-kbps per video.
+Every guest is viewing video streams in a room with a combined bitrate of 500-kbps. If there is only one video stream, the guest will view the video on 500-kbps. Two video streams: 250-kbps per video.
 
 ## Director
 

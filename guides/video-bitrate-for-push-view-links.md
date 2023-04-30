@@ -11,7 +11,7 @@ The default video bitrate for simple push/view links is 2500-kbps.
 [https://vdo.ninja/?push=streamid](https://vdo.ninja/?push=streamid)\
 [https://vdo.ninja/?view=streamid](https://vdo.ninja/?view=streamid)\
 \
-There will be a outgoing video bitrate of 2500-kbps on the source side and 2500-kbps incoming video bitrate on the viewer side.
+By default, both outgoing and incoming video bitrates are set at 2500-kbps.  This default setting and parameters are different if using [Rooms ](../getting-started/rooms/)and explained in detail [here](video-bitrate-in-rooms.md).
 
 There are five parameters we will take a look at:
 
@@ -31,7 +31,7 @@ Sets the target and maximum outgoing video bitrate on the source side.
 [https://vdo.ninja/?push=streamid\&ovb=4000](https://vdo.ninja/?push=streamid\&ovb=4000)\
 [https://vdo.ninja/?view=streamid](https://vdo.ninja/?view=streamid)\
 \
-The push link sets the outgoing video bitrate to 4000-kbps. The view link sees the video with a video bitrate of 4000-kbps.
+The push link sets the outgoing and incoming video bitrate to 4000-kbps. The view link doesn't need an additional parameter as its bitrate is set at 4000-kbps because the push link is using `&ovb.`
 
 ### The push link sets the video bitrate per stream out
 
@@ -51,7 +51,7 @@ Limits the total outbound video bitrate to a defined value.
 [https://vdo.ninja/?push=streamid\&ltb=5000](https://vdo.ninja/?push=streamid\&ltb=5000)\
 [https://vdo.ninja/?view=streamid](https://vdo.ninja/?view=streamid)\
 \
-The video bitrate will be around 2500-kbps (default value), because `&ltb` only tells the push link to not get higher than 5000-kbps.
+The incoming video bitrate will still default to around 2500-kbps but permits the viewer to increase it on their end with `&ltb` telling the push link to not get higher than 5000-kbps total outgoing bitrate.
 
 ## On the viewer side ([\&view](../advanced-settings/view-parameters/view.md))
 

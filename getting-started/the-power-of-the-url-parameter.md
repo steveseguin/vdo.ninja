@@ -26,7 +26,7 @@ For example, to view the video stream published at stream ID `streamid` at a vid
 http://vdo.ninja/?view=streamid&videobitrate=500&proaudio=1
 ```
 
-Some parameters, like [`&view`](../advanced-settings/view-parameters/view.md) will accept a comma-separated list of valid values, so you can do some rather powerful combos, such as publish a video (using [`&push`](../source-settings/push.md)) while also viewing multiple others videos. VDO.Ninja will auto-mix the videos together into a single layout for you:
+Some parameters, like [`&view`](../advanced-settings/view-parameters/view.md) will accept a comma-separated list of valid values, so you can do some rather powerful combos, such as publishing your own video (using [`&push`](../source-settings/push.md)) while also viewing multiple others videos. VDO.Ninja will auto-mix the videos together into a single layout for you:
 
 ```
 http://vdo.ninja/?push=aaa&view=bbb,ccc,ddd

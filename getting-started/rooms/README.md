@@ -18,11 +18,11 @@ The rooms feature creates a virtual room where multiple devices can connect to s
 ### How many people can a room support? 📈
 
 * There is Chrome-imposed limit of about 128 peers while using video and chat connections.
-* You will probably bump into limits sooner, as a function of video decoding processor power on the host computer and (to a lesser degree) network bandwidth.&#x20;
+* You will probably bump into video decoding limits before reaching a 128 peers limit, due to limits on the host's processor power and to a lesser degree their bandwidth.&#x20;
 
-If you want a room that can handle, (lets say 30 people even), it can be done, but everyone in the group needs good internet, a fast computer, or the room needs video previews disabled for guests. The [`&broadcast`](../../advanced-settings/view-parameters/broadcast.md) feature can help accomplish this, for example.
+If you want a room that can handle 30 people, it can be done.  However, everyone in the group needs good internet, a fast computer, or the room needs video previews disabled for guests. The [`&broadcast`](../../advanced-settings/view-parameters/broadcast.md) feature can help accomplish this, for example.
 
-For very large groups, >40, it is generally advised that you use regular server-based chatting service, like Google Meets, and send an VDO.Ninja invite links to each person individually. This way, you can record the individual streams of those in the Google Meet at a high resolution, but still have all the guests be able to see and hear each other.
+For very large groups (i.e. larger than 40), it's generally advised that you use regular server-based chatting service, like Google Meets, and send a VDO.Ninja invite link to each person individually. This way, you can record the individual streams of those in the Google Meet at a high resolution but still have all the guests see and hear each other.
 
 If you use OBS VirtualCam, now included with OBS v26, you can broadcast from OBS directly into the Google Hangouts or other conferencing software. To avoid audio feedback/echo issues, having the guests wear headphones is suggested.
 
