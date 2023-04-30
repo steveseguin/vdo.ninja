@@ -1,5 +1,9 @@
 # Updates - VDO.Ninja
 
+#### April 27 <a href="#august-31" id="august-31"></a>
+
+* Continuing to tweak and improving the styling of VDO.Ninja.
+
 #### April 25 <a href="#august-31" id="august-31"></a>
 
 * Videos should auto-play within VDO.Ninja if using [`&noaudio`](../advanced-settings/view-parameters/noaudio.md). This was already the case if using [`&mutespeaker`](../source-settings/and-mutespeaker.md).
@@ -53,7 +57,7 @@
   This `&effects=8` mode might also be helpful in solving issues with cameras disconnecting or having their frame rate change while recording, causing issues with the recording. The canvas acts as a reliable middle man between the camera and output video stream, so if the camera's input stream fails, the recording stream will not be impacted, other than perhaps skipping some frames. The canvas is sensitive to CPU load or browser throttling though, so frame rates may fluctuate more often when using it, so I can't suggest using it unless the guest/user is known to have a problematic camera.\
   \*\* on alpha
 * Added a new IFRAME code example that prompts a guest who is joining a room with a message if the director is not there yet. The message clears when the director joins the room. This sample can be used like a normal vdo.ninja/?room=xxx link (as seen below). The code is extremely easy to customize or embedded into your own websites. The code is just provided as an example. [https://vdo.ninja/examples/waitingroom?room=TESTROOM123](https://vdo.ninja/examples/waitingroom?room=TESTROOM123)\
-  ![](<../.gitbook/assets/image (15).png>)
+  ![](<../.gitbook/assets/image (15) (1).png>)
 
 #### April 13 <a href="#august-31" id="august-31"></a>
 
