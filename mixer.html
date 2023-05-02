@@ -952,7 +952,7 @@
 	<div id='sceneSettings' class="hidden modal">
 		<div class="modal-content">
 			<span class="close-btn">&times;</span>
-			<h2>General Settings</h2>
+			<h2>General Mixer Settings</h2>
 			<h3>Aspect Ratio</h3>
 			<input type="checkbox" checked class="aspectbutton" data-value="169"  onchange="changeAspectRatio(16/9.0, this);">16:9
 			<input type="checkbox" class="aspectbutton" data-value="0.5625" onchange="changeAspectRatio(9.0/16, this);">9:16
@@ -969,8 +969,12 @@
 			
 			<h3>Layout switching</h3>
 			<input type="checkbox" title="When a user is assigned a slot or switches slots, the last active layout is re-applied automatically" id="updateOnSlotChange" checked onchange="submitChange(this)";>Update layout on a slot change
-			<h3>Linked OBS scenes</h3>
-			<input type="checkbox" title="When a user is assigned a slot or switches slots, the last active layout is re-applied automatically" id="syncOBS" onchange="submitChange3(this)";>Activate linked OBS scene on layout change
+			
+			<h3>Trigger OBS scenes change on layout change</h3>
+			<input type="checkbox" title="" id="syncOBS" onchange="submitChange3(this)";>Activate linked OBS scene on layout change
+			<h3>Switch layouts to match selected OBS scene</h3>
+			<input type="checkbox" title="" id="remoteSyncOBS" onchange="submitChange5(this)";>Activate the linked layout on remote OBS scene change
+			
 			<h3>Slot assignment</h3>
 			<input type="checkbox" title="A guest is assigned a slot when they join, automatically. If disabled, they must be assigned a slot manually." id="assignSlotToGuest" checked onchange="submitChange2(this)";>Assign a slot to new guests automatically
 			<h3>Show advanced controls</h3>
@@ -1158,6 +1162,7 @@
 	var messageList = [];
 	var password = false;
 	var syncOBS = false;
+	var remoteSyncOBS = false;
 	var showDirector = true;
 	
 	var currentOBSState = false;
@@ -1757,6 +1762,18 @@
 			}
 		}
 		
+		if (savedSession.settings && ("remoteSyncOBS" in savedSession.settings)){
+			remoteSyncOBS = savedSession.settings.remoteSyncOBS;
+			if (!remoteSyncOBS){
+				getById("remoteSyncOBS").value = "off";
+				getById("remoteSyncOBS").checked = false;
+				getById("remoteSyncOBS").removeAttribute('checked');
+			} else {
+				getById("remoteSyncOBS").value = "on";
+				getById("remoteSyncOBS").checked = true;
+			}
+		}
+		
 		if (savedSession.settings && ("showDirector" in savedSession.settings)){
 			showDirector = savedSession.settings.showDirector;
 			if (!showDirector){
@@ -1876,7 +1893,11 @@
 	}
 	
 	if (iframe){
-		iframe.contentWindow.postMessage({ layouts: savedSession.layouts }, "*"); 
+		if (remoteSyncOBS){
+			iframe.contentWindow.postMessage({ layouts: savedSession.layouts , obsSceneTriggers: savedSession.obsScenes}, "*"); 
+		} else {
+			iframe.contentWindow.postMessage({ layouts: savedSession.layouts }, "*"); 
+		}
 	}
 	
 	var guestPositions = {};
@@ -1909,6 +1930,22 @@
 		} else { // do not assign guests to slots automatically
 			element.removeAttribute('checked');
 			syncOBS=false
+		}
+		saveSession();
+	}
+	
+	function submitChange5(element){
+		if (element.checked){
+			remoteSyncOBS=true;
+			if (iframe){
+				iframe.contentWindow.postMessage({ layouts: savedSession.layouts , obsSceneTriggers: savedSession.obsScenes}, "*"); 
+			}
+		} else { // do not assign guests to slots automatically
+			if (iframe){
+				iframe.contentWindow.postMessage({ layouts: savedSession.layouts , obsSceneTriggers: false}, "*"); 
+			}
+			element.removeAttribute('checked');
+			remoteSyncOBS=false
 		}
 		saveSession();
 	}
@@ -2270,12 +2307,7 @@
 		<!-- button.classList.add("menuButton"); -->
 		<!-- document.getElementById("sources").appendChild(button); -->
 		
-		var button = document.createElement("button");
-		button.innerHTML = "Settings ⚙︎"; 
-		button.onclick = showSettings;
-		button.id = "showSettings";
-		button.classList.add("menuButton");  
-		document.getElementById("sources").appendChild(button);
+		
 		
 		var button = document.createElement("button");
 		button.innerHTML = "Switch Modes &#x21bb;"; 
@@ -2303,6 +2335,12 @@
 		};
 		document.getElementById("sources").appendChild(button);
 		
+		var button = document.createElement("button");
+		button.innerHTML = "Mixer Settings ⚙︎"; 
+		button.onclick = showSettings;
+		button.id = "showSettings";
+		button.classList.add("menuButton");  
+		document.getElementById("sources").appendChild(button);
 		
 		var button = document.createElement("button");
 		button.innerHTML = "Add Stream ID"; 
@@ -2382,7 +2420,11 @@
 		document.getElementById("chatModule").classList.remove("hidden");
 		
 		iframe.onload = function(){
-			iframe.contentWindow.postMessage({ layouts: savedSession.layouts }, "*"); 
+			if (remoteSyncOBS){
+				iframe.contentWindow.postMessage({ layouts: savedSession.layouts , obsSceneTriggers: savedSession.obsScenes}, "*"); 
+			} else {
+				iframe.contentWindow.postMessage({ layouts: savedSession.layouts }, "*"); 
+			}
 		}
 		
 		iframe.src = iframesrc;
@@ -2494,7 +2536,6 @@
 						if (updateOnSlotChange){
 							remoteActivate(false, lastLayoutRaw);
 						}
-						
 					}
 				}
 				
@@ -2518,17 +2559,23 @@
 						if (currentOBSState.currentScene && currentOBSState.currentScene.name){
 							console.log("Current OBS scene: " + currentOBSState.currentScene.name);
 							
-							if (syncOBS){
-							
+							if (remoteSyncOBS){
 								var layouts = document.querySelectorAll(".canvasContainer>canvas");
-								
 								for (var i=0;i<layouts.length;i++){
-									if (!layouts[i].layout){continue;}
+									if (!layouts[i].layout){
+										console.log("no layout");
+										continue;
+									}
 									try {
 										var obs = layouts[i].obsSceneName || false;
-										if (obs && obs == currentOBSState.currentScene.name){
-											console.log("Syncing with OBS");
-											layouts[i].click();
+										console.log("obs scene names:"+obs+ " vs "+currentOBSState.currentScene.name);
+										if (obs && obs.toLowerCase().trim() == currentOBSState.currentScene.name.toLowerCase().trim()){
+											if (layouts[i].parentNode && layouts[i].parentNode.classList.contains("pressed")){
+												console.log("Matched scene already active");
+											} else {
+												console.log("Syncing with OBS; matched");
+												layouts[i].click(); // triggers for everyone else.
+											}
 											break;
 										}
 									} catch(e){
@@ -2536,6 +2583,8 @@
 									}
 								}
 							}
+						} else {
+							console.log("No current scene in OBS's output");
 						}
 					}
 				}
@@ -3754,6 +3803,7 @@
 		savedSession.settings.toggleLabel = toggleLabel;
 		savedSession.settings.toggleBroadcast = toggleBroadcast;
 		savedSession.settings.syncOBS = syncOBS;
+		savedSession.settings.remoteSyncOBS = remoteSyncOBS;
 		savedSession.settings.aspectRatio = aspectRatio;
 		savedSession.settings.pixelDensity = pixelDensity;
 		savedSession.settings.absolutePixel = absolutePixel;
@@ -3777,7 +3827,11 @@
 		setStorage("savedSession", JSON.stringify(savedSession));
 		
 		if (iframe){
-			iframe.contentWindow.postMessage({ layouts: savedSession.layouts }, "*"); 
+			if (remoteSyncOBS){
+				iframe.contentWindow.postMessage({ layouts: savedSession.layouts , obsSceneTriggers: savedSession.obsScenes}, "*"); 
+			} else {
+				iframe.contentWindow.postMessage({ layouts: savedSession.layouts }, "*"); 
+			}
 		}
 		log(getStorage("savedSession"));
 	}

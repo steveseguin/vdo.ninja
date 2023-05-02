@@ -56,7 +56,7 @@
 		<meta property="twitter:image" content="./media/vdoNinja_logo_full.png" />
 		<meta name="msapplication-TileColor" content="#da532c" />
 		<meta name="theme-color" content="#ffffff" />
-		<link rel="stylesheet" href="./main.css?ver=314" />
+		<link rel="stylesheet" href="./main.css?ver=324" />
 		<script type="text/javascript" crossorigin="anonymous" src="./thirdparty/adapter.js"></script>
 		<style id="lightbox-animations" type="text/css"></style>
 		<!-- <link rel="manifest" href="manifest.json" /> -->
@@ -83,7 +83,7 @@
 		
 		<script type="text/javascript" crossorigin="anonymous"  src="./thirdparty/CodecsHandler.js?ver=47"></script>
 		<script type="text/javascript" crossorigin="anonymous" src="./thirdparty/aes.js"></script>
-		<script type="text/javascript" crossorigin="anonymous" src="./webrtc.js?ver=625"></script>
+		<script type="text/javascript" crossorigin="anonymous" src="./webrtc.js?ver=631"></script>
 		<input id="zoomSlider" type="range" style="display: none;" />
 		<span id="electronDragZone" style="pointer-events: none; z-index:-10; position:absolute;top:0;left:0;width:100%;height:2%;-webkit-app-region: drag;min-height:20px;"></span>
 		<div id="header">
@@ -248,7 +248,7 @@
 					id="reportbutton"
 					title="Submit any error logs" 
 					onclick="submitDebugLog();"
-					style="cursor: pointer; display:none;z-index:3;"
+					style="cursor: pointer;z-index:3;display:none;"
 					class="hidden"
 				>
 				<i style="cursor: pointer; color: #d9e4eb; padding: 2px; margin: 2px 2px 0 0; font-size: 140%;" class="las la-bug" aria-hidden="true"></i>
@@ -369,6 +369,7 @@
 							<ul style="max-width: 500px; display: none; text-align: left;" class="roomnotes" id="roomnotes">
 								<span data-translate="added-notes" >
 									<i>Important Tips:</i>
+									<br><br>
 									<li>Disabling video sharing between guests will improve performance</li>
 									<li>Invite only guests to the room that you trust.</li>
 									<li>The "Recording" option is considered experimental.</li>
@@ -425,7 +426,7 @@
 						<div class="title">
                             <i class="las la-video"></i><span data-translate="video-source"> Video Source </span>
                         </div>
-						<span style="display:flex;align-items: center;">
+						<span style="display:inline-block;padding-top: 5px;">
 							<select id="videoSourceSelect" alt="Video source list"></select>
 							<span id="gear_webcam" onclick="toggle(document.getElementById('videoSettings'));">
 								<i class="las la-cog" style="font-size: 140%; vertical-align: middle;" aria-hidden="true"></i>
@@ -486,7 +487,7 @@
 					<div id="headphonesDiv" class="audioMenu">
 						<div class="title">
 						<i class="las la-headphones"></i><span data-translate="select-output-source"> Audio Output Destination
-						</span><button onclick="playtone()" class="white" style="padding: 2px 10px;" type="button">Test</button></div>
+						</span><button id="testtonebutton" onclick="playtone()" class="white" type="button">Test</button></div>
 						<select id="outputSource" alt="Audio output device" ></select>
 						<div id="headphoneTip1" class="cameraTip hidden">
 							<i class="las la-info-circle"></i>
@@ -586,7 +587,7 @@
 						<video id="screenshare" autoplay="true" muted="true" loop src="./media/screenshare.webm" class="lazy" style='background-image: unset;'></video>
 					</span>
 					<br />
-					<button class='gobutton' style="padding: 10px; font-size: 120%;" alt="clilck to select you screen to share" onclick="publishScreen()">
+					<button class='gobutton' style="padding: 10px; font-size: 120%;animation: pulsate 2s ease-out infinite;" alt="clilck to select you screen to share" onclick="publishScreen()">
 						<span data-translate="select-screen-to-share">SELECT SCREEN TO SHARE</span>
 					</button>
 					<span id="gear_screen" style="display: inline-block; cursor: pointer;" onclick="toggle(document.getElementById('videoSettings2'));">
@@ -821,7 +822,7 @@
 			
 			<div id="container-6" class="column columnfade pointer rounded card hidden" style=" overflow-y: auto;">
 				<h2><span data-translate="share-website-iframe">Share Website</span></h2>
-				<i style="margin-top:30px;font-size:560%;overflow:hidden;" class="las la-broadcast-tower"></i>
+				<i style="margin-top:30px;font-size:560%;overflow:hidden;" class="largeDarkIcon las la-broadcast-tower"></i>
 				<div class="container-inner">
 					<br />
 					<div id="previewIframe"></div>
@@ -852,47 +853,47 @@
 			
 			<div id="container-7" class="column columnfade pointer rounded card hidden" style="overflow: hidden;" onclick="window.location = './speedtest.html';">
 				<h2><span data-translate="run-a-speed-test">Run a Speed Test</span></h2>
-				<i style="margin-top:30px;font-size:600%;overflow:hidden;" class="las la-tachometer-alt"></i>
+				<i style="margin-top:30px;font-size:600%;overflow:hidden;" class="largeDarkIcon las la-tachometer-alt"></i>
 			</div>
 			
 			<div id="container-8" class="column columnfade pointer rounded card hidden" style="overflow: hidden;" onclick="window.location = './mixer.html';">
 				<h2><span data-translate="try-the-mixer-out">Custom Mixed Layouts</span></h2>
-				<i style="margin-top:30px;font-size:600%;overflow:hidden;" class="las la-blender"></i>
+				<i style="margin-top:30px;font-size:600%;overflow:hidden;" class="largeDarkIcon las la-blender"></i>
 			</div>
 			
 			<div id="container-14" class="column columnfade pointer rounded card hidden" style="overflow: hidden;" onclick="window.location = 'https://versus.cam';">
 				<h2><span data-translate="try-out-versus-cam">Multi-Stream Monitor</span></h2>
-				<i style="margin-top:30px;font-size:600%;overflow:hidden;" class="las la-gamepad"></i>
+				<i style="margin-top:30px;font-size:600%;overflow:hidden;" class="largeDarkIcon las la-gamepad"></i>
 			</div>
 			
 			<div id="container-15" class="column columnfade pointer rounded card hidden" style="overflow: hidden;" onclick="window.location = './comms.html';">
 				<h2><span data-translate="voice-comms-app">Group Voice Comms</span></h2>
-				<i style="margin-top:30px;font-size:600%;overflow:hidden;" class="las la-comments"></i>
+				<i style="margin-top:30px;font-size:600%;overflow:hidden;" class="largeDarkIcon las la-comments"></i>
 			</div>
 			
 			<div id="container-9" class="column columnfade pointer rounded card hidden" style="overflow: hidden;" onclick="window.location = 'https://guides.vdo.ninja';">
 				<h2><span data-translate="read-the-guides">Basic Usage Guides</span></h2>
-				<i style="margin-top:30px;font-size:600%;overflow:hidden;" class="las la-book-open"></i>
+				<i style="margin-top:30px;font-size:600%;overflow:hidden;" class="largeDarkIcon las la-book-open"></i>
 			</div>
 			
 			<div id="container-13" class="column columnfade pointer rounded card hidden" style="overflow: hidden;" onclick="window.location = 'https://linkgen.vdo.ninja';">
 				<h2><span data-translate="wizard-link-generator">Wizard Link Generator</span></h2>
-				<i style="margin-top:30px;font-size:600%;overflow:hidden;" class="las la-hat-wizard"></i>
+				<i style="margin-top:30px;font-size:600%;overflow:hidden;" class="largeDarkIcon las la-hat-wizard"></i>
 			</div>
 			
 			<div id="container-10" class="column columnfade pointer rounded card hidden" style="overflow: hidden;" onclick="window.location = 'https://docs.vdo.ninja';">
 				<h2><span data-translate="get-full-documentation">Full Documentation</span></h2>
-				<i style="margin-top:30px;font-size:600%;overflow:hidden;" class="las la-info"></i>
+				<i style="margin-top:30px;font-size:600%;overflow:hidden;" class="largeDarkIcon las la-info"></i>
 			</div>
 			
 			<div id="container-11" class="column columnfade pointer rounded card hidden" style="overflow: hidden;" onclick="window.location = 'https://github.vdo.ninja';">
 				<h2><span data-translate="get-the-source-code">Source Code</span></h2>
-				<i style="margin-top:30px;font-size:600%;overflow:hidden;" class="las la-code-branch"></i>
+				<i style="margin-top:30px;font-size:600%;overflow:hidden;" class="largeDarkIcon las la-code-branch"></i>
 			</div>
 			
 			<div id="container-12" class="column columnfade pointer rounded card hidden" style="overflow: hidden;" onclick="window.location = 'https://docs.vdo.ninja/getting-started/sponsor';">
 				<h2><span data-translate="show-your-support">Show Your Support</span></h2>
-				<i style="margin-top:30px;font-size:600%;overflow:hidden;" class="las la-heartbeat"></i>
+				<i style="margin-top:30px;font-size:600%;overflow:hidden;" class="largeDarkIcon las la-heartbeat"></i>
 			</div>
 			
 			<p></p>
@@ -1001,8 +1002,8 @@
 						</label>
 							<span data-translate="guests-hear-others" style="line-height:0;position:relative;top:-3px;">Guests hear others</span>
 						</span>
-						<button class='pull-right' style='font-size:1.15em' onclick='copyFunction(getById("director_block_1"),event)'><i class='las la-copy'></i><span data-translate="copy-link">Copy link</span></button>
-						<button class='pull-right' style='font-size:1.15em' id="showCustomizerButton1"  onclick='showCustomizer(1,this)'><i class='las la-tools'></i><span data-translate="customize">Customize</span></button>
+						<button class='pull-right' onclick='copyFunction(getById("director_block_1"),event)'><i class='las la-copy'></i><span data-translate="copy-link">Copy link</span></button>
+						<button class='pull-right' id="showCustomizerButton1"  onclick='showCustomizer(1,this)'><i class='las la-tools'></i><span data-translate="customize">Customize</span></button>
 					<span>
 				</div>
 			</div>
@@ -1353,7 +1354,7 @@
 					</div>
 				</a>
 			</div>
-			<br />
+			<div id="hiddenElements"></div>
 			<div id='guestFeeds' style="display:none">
 				<div id='deleteme'>
 					<div class='vidcon directorMargins' id='fakeguest1' style='min-height: 300px;text-align: center;'><h2><span data-translate="guest-1">Guest 1</span></h2><i class='las la-user-circle' style='font-size:8em; margin: 20px 0px;' aria-hidden='true'></i></div>
@@ -1429,7 +1430,7 @@
 						<span data-translate="disconnect-guest">Hangup</span>
 					</button>
                 </div>
-                <div class="flexBreak"><span data-translate="guest-toggle">Guest Toggle</span></div>
+                <div class="flexBreak"></div>
 				<div class="row three"> 
 					<button data-action-type="solo-chat" class="mainonly advanced" title="Toggle solo voice chat or hold CTRL/CMD when selecting to make it two-way private." onclick="session.toggleSoloChat(this.dataset.UUID, event);">
 						<i class="las la-microphone"></i>
@@ -1439,7 +1440,7 @@
 						<i class="las la-user"></i>
 						<span data-translate="solo-video">Highlight</span>
 					</button>
-                    <button data-action-type="mute-video-guest" title="Disable this guest's video track" onclick="remoteMuteVideo(this, event);">
+                    <button data-action-type="mute-video-guest" class="advanced" title="Disable this guest's video track" onclick="remoteMuteVideo(this, event);">
                         <i class="las la-video-slash"></i>
                         <span data-translate="mute-video-guest">Video off</span>
                     </button>
@@ -1450,38 +1451,25 @@
                         <i class="las la-user-slash"></i>
                         <span data-translate="hide-guest">Hide</span>
                     </button>
-                    <button class="mainonly" data-action-type="toggle-remote-display" title="Toggle the remote guest's display output" onclick="remoteDisplayMute(this, event);">
+                    <button class="mainonly advanced" data-action-type="toggle-remote-display" title="Toggle the remote guest's display output" onclick="remoteDisplayMute(this, event);">
                         <i class="las la-eye-slash"></i> <span data-translate="toggle-remote-display">Blind</span>
                     </button>
+					<button data-action-type="addToScene" class="advanced" title="Add this Video to any remote '&scene=1'" data-scene="1" onclick="directEnable(this, event);">
+						<i class="las la-plus-square"></i>
+						<span data-translate="add-to-scene">add to scene 1</span>
+					</button>
                 </div>
-                <div class="flexBreak"><span data-translate="settings">Settings</span></div>
-				<div class="row two"> 
-                    <!-- Further Audio/Video Settings -->
-                    <div class="row two settingsWrapper" data-cluster="3">
-                        <button data-action-type="advanced-audio-settings" data-active="false" title="Remote Audio Settings" onclick="requestAudioSettings(this);">
-                            <i class="las la-sliders-h"></i>
-                            <span data-translate="advanced-audio-settings">Audio</span>
-                        </button>
-                        <button class="mainonly" data-action-type="advanced-camera-settings" data-active="false" title="Advanced Video Settings" onclick="requestVideoSettings(this);">
-                            <i class="las la-sliders-h"></i>
-                            <span data-translate="advanced-camera-settings">Video</span>
-                        </button>
-                    </div>
-				</div>
-				<div class='row one hidden advancedAudioSettings'></div>
-				<div class='row one hidden advancedVideoSettings'></div>
-                <div class="flexBreak"><span data-translate="more">More</span></div>
 				<button class="hideDropMenu" onclick="toggleByDataset('1');getById('chevarrow3').classList.toggle('bottom');getById('chevarrow3').classList.toggle('right');">
-					<i id="chevarrow3" style="padding:0px 7px 0 3px;" class="chevron right" aria-hidden="true"></i>
+					<i id="chevarrow3" class="chevron right" aria-hidden="true"></i>
 					<span data-translate="scene-options">Scene options</span>
 				</button>
 				<div class="group hidden" data-cluster="1">
 					<!-- Scene Controls -->
 					<div class="row two">
-                        <button data-action-type="addToScene" class="advanced" title="Add this Video to any remote '&scene=1'" data-scene="1" onclick="directEnable(this, event);">
-                            <i class="las la-plus-square"></i>
-                            <span data-translate="add-to-scene">add to scene 1</span>
-                        </button>
+                       <button data-action-type="addToScene" class="advanced" title="Add this Video to any remote '&scene=2'" data-scene="2" onclick="directEnable(this, event);">
+							<i class="las la-plus-square"></i>
+							<span data-translate="add-to-scene2">add to scene 2</span>
+						</button>
 						<button data-action-type="mute-scene" title="Remotely Mute this Audio in all remote '&scene' views" onclick="directMute(this, event);">
 							<i class="las la-microphone-slash"></i>
 							<span data-translate="mute-scene">mute in scenes</span>
@@ -1490,23 +1478,23 @@
 
 					<!-- Row of Scenes -->
 					<div class="row six advanced">
-						<button class="btn-HL-peach" data-action-type="addToScene" data-scene="2" title="Add to Scene 2" onclick="directEnable(this, event);">
-							<span>S2</span>
-						</button>
-						<button class="btn-HL-peach" data-action-type="addToScene" data-scene="3" title="Add to Scene 3" onclick="directEnable(this, event);">
+						<button data-action-type="addToScene" data-scene="3" title="Add to Scene 3" onclick="directEnable(this, event);">
 							<span>S3</span>
 						</button>
-						<button class="btn-HL-peach" data-action-type="addToScene" data-scene="4" title="Add to Scene 4" onclick="directEnable(this, event);">
+						<button data-action-type="addToScene" data-scene="4" title="Add to Scene 4" onclick="directEnable(this, event);">
 							<span>S4</span>
 						</button>
-						<button class="btn-HL-peach" data-action-type="addToScene" data-scene="5" title="Add to Scene 5" onclick="directEnable(this, event);">
+						<button data-action-type="addToScene" data-scene="5" title="Add to Scene 5" onclick="directEnable(this, event);">
 							<span>S5</span>
 						</button>
-						<button class="btn-HL-peach" data-action-type="addToScene" data-scene="6" title="Add to Scene 6" onclick="directEnable(this, event);">
+						<button data-action-type="addToScene" data-scene="6" title="Add to Scene 6" onclick="directEnable(this, event);">
 							<span>S6</span>
 						</button>
-						<button class="btn-HL-peach" data-action-type="addToScene" data-scene="7" title="Add to Scene 7" onclick="directEnable(this, event);">
+						<button data-action-type="addToScene" data-scene="7" title="Add to Scene 7" onclick="directEnable(this, event);">
 							<span>S7</span>
+						</button>
+						<button data-action-type="addToScene" data-scene="8" title="Add to Scene 8" onclick="directEnable(this, event);">
+							<span>S8</span>
 						</button>
 					</div>
 
@@ -1532,8 +1520,8 @@
                 </div>
 				
 				<button class="hideDropMenu" onclick="toggleByDataset('2');getById('chevarrow4').classList.toggle('bottom');getById('chevarrow4').classList.toggle('right');">
-					<i id="chevarrow4" class="chevron right" aria-hidden="true" style="padding:0px 7px 0 3px;" ></i>
-					<span data-translate="additional-controls">Controls</span>
+					<i id="chevarrow4" class="chevron right" aria-hidden="true"  ></i>
+					<span data-translate="additional-controls">Additional Controls</span>
 				</button>
 				<div class="group hidden" data-cluster="2">
 					<!-- General Controls -->
@@ -1621,6 +1609,21 @@
 						</button>
 					</div>
 				</div>
+				<div class="row two"> 
+                    <!-- Further Audio/Video Settings -->
+                    <div class="row two settingsWrapper" data-cluster="3">
+                        <button data-action-type="advanced-audio-settings" data-active="false" title="Remote Audio Settings" onclick="requestAudioSettings(this);">
+                            <i class="las la-sliders-h"></i>
+                            <span data-translate="advanced-audio-settings">Audio settings</span>
+                        </button>
+                        <button class="mainonly" data-action-type="advanced-camera-settings" data-active="false" title="Advanced Video Settings" onclick="requestVideoSettings(this);">
+                            <i class="las la-sliders-h"></i>
+                            <span data-translate="advanced-camera-settings">Video settings</span>
+                        </button>
+                    </div>
+				</div>
+				<div class='row one hidden advancedAudioSettings'></div>
+				<div class='row one hidden advancedVideoSettings'></div>
 			</div>
 		</div>
 		
@@ -1715,12 +1718,14 @@
                     <div class="title">
                         <i class="las la-video"></i><span data-translate="video-source"> Video Source: </span>
                     </div>
-					<select id="videoSource3" ></select>			
-					<span id="refreshVideoButton" title="Activate or Reload this video device.">
-						<i style="cursor: pointer; font-size: 120%;" class="las la-sync-alt"></i>
-					</span>
-					<span id="gear_webcam3" style="display: none; cursor:pointer;" onclick="toggleQualityGear3();">
-						<i class="las la-cog" style="font-size: 135%; top:1px; vertical-align: middle;" aria-hidden="true"></i>
+					<span style="display:inline-block;">
+						<select id="videoSource3" ></select>			
+						<span id="refreshVideoButton" title="Activate or Reload this video device.">
+							<i class="las la-sync-alt"></i>
+						</span>
+						<span id="gear_webcam3" style="display: none; cursor:pointer;" onclick="toggleQualityGear3();">
+							<i class="las la-cog" style="font-size: 135%; top:1px; vertical-align: middle;" aria-hidden="true"></i>
+						</span>
 					</span>
 					<span id="videoSettings3" style="display: none;">
 						<center>
@@ -2345,11 +2350,8 @@
 			<u>
 				<br />
 				<a onclick="addToGoogleCalendar();" style="cursor: pointer;" data-translate='add-to-google-calendar'>Add to Google Calendar</a>
-				<br />
 				<a onclick="addToOutlookCalendar();" style="cursor: pointer;" data-translate='add-to-outlook-calendar'>Add to Outlook Calendar</a>
-				<br />
 				<a onclick="addToYahooCalendar();" style="cursor: pointer;" data-translate='add-to-yahoo-calendar'>Add to Yahoo Calendar</a>
-				<br />
 				<br />
 			</u>
 		</div>
@@ -2374,7 +2376,7 @@
 
 		
 			var session = WebRTC.Media; // session is a required global variable if configuring manually. Run before loading main.js but after webrtc.js.
-			session.version = "23.2b";
+			session.version = "23.3b";
 			session.streamID = session.generateStreamID(); // randomly generates a streamID for this session. You can set your own programmatically if needed
 			
 			session.defaultPassword = "someEncryptionKey123"; // Change this password if self-deploying for added security/privacy
@@ -2487,11 +2489,11 @@
 			// session.hidehome = true; // If used, 'hide home' will make the landing page inaccessible, along with hiding a few go-home elements.
 			// session.record = false; // uncomment to block users from being able to record via vdo.ninja's built in recording function
 		</script>
-		<script type="text/javascript" crossorigin="anonymous" id="lib-js" src="./lib.js?ver=773"></script>
+		<script type="text/javascript" crossorigin="anonymous" id="lib-js" src="./lib.js?ver=788"></script>
 		<!-- 
 		// If you wish to change branding, blank offers a good clean start.
 		<script type="text/javascript" id="main-js" src="./main.js" data-translation="blank"></script>
 		-->
-		<script type="text/javascript" crossorigin="anonymous" id="main-js" src="./main.js?ver=609"></script>
+		<script type="text/javascript" crossorigin="anonymous" id="main-js" src="./main.js?ver=617"></script>
 	</body>
 </html>

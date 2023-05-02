@@ -44,6 +44,9 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 		}
 	}
 	if (location.hostname !== "vdo.ninja" && location.hostname !== "backup.vdo.ninja" && location.hostname !== "proxy.vdo.ninja" && location.hostname !== "obs.ninja") {
+		
+		errorReport = false;
+		
 		if (location.hostname === "rtc.ninja"){
 			try {
 				if (session.label === false) {
@@ -778,6 +781,25 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 	if (urlParams.has('sstype') || urlParams.has('screensharetype')) { // wha type of screen sharing is used; track replace, iframe, or secondary try
 		session.screenshareType = urlParams.get('sstype') || urlParams.get('screensharetype');
 		session.screenshareType = parseInt(session.screenshareType) || false;
+	}
+	
+	if (urlParams.has('suppresslocalaudio')){
+		session.suppressLocalAudioPlayback = true;
+	}
+	if (urlParams.has('prefercurrenttab')){
+		session.preferCurrentTab = true;
+	}
+	if (urlParams.has('selfbrowsersurface')){ // exclude
+		session.selfBrowserSurface =  urlParams.get('selfbrowsersurface') || "exclude";
+	}
+	if (urlParams.has('surfaceswitching')){
+		session.surfaceSwitching = urlParams.get('surfaceswitching') || "exclude";
+	}
+	if (urlParams.has('systemaudio')){ // exclude or exclude
+		session.systemAudio = urlParams.get('systemaudio') || "exclude";
+	}
+	if (urlParams.has('displaysurface')){ // browser, window, or monitor (which is default selected)
+		session.displaySurface = urlParams.get('displaysurface') || "monitor";
 	}
 	
 	if (urlParams.has('intro') || urlParams.has('ib')) {
@@ -3640,13 +3662,13 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 				}
 			}
 		} else {
-			warnlog("Bitrate being throttled to max of 3000 kbps");
+			warnlog("Bitrate being throttled to max of 4000 kbps"); 
 			if (session.maxvideobitrate !== false) {
 				if (session.maxvideobitrate > 4000) {
 					session.maxvideobitrate = 4000; // Please feel free to get rid of this if using your own TURN servers...
 				}
 			} else {
-				session.maxvideobitrate = 4000; // don't let people pull more than 3000 from you
+				session.maxvideobitrate = 4000; // don't let people pull more than 4000 from you
 			}
 			if (session.bitrate !== false) {
 				if (session.bitrate > 4000) {
@@ -4870,6 +4892,18 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 		
 		if ("layouts" in e.data) {
 			session.layouts = e.data.layouts;
+			if ("obsSceneTriggers" in e.data) {
+				session.obsSceneTriggers = e.data.obsSceneTriggers;
+			} else {
+				session.obsSceneTriggers = false;
+			}
+			for (var uid in session.pcs){
+				if (session.pcs[uid].layout){
+					session.sendMessage(e.data, uid);
+				}
+			}
+			// session.obsSceneSync(); // not sure I need to trigger this?
+			log(e.data);
 		}
 		
 		if ("sendMessage" in e.data) { // webrtc send to viewers

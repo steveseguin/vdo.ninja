@@ -8,7 +8,8 @@
     --discord-grey-5: #313338;
     --discord-grey-6: #383a40;
     --discord-grey-7: #404249; /* primary */
-    --discord-grey-8: #5e6064; 
+    --discord-grey-8: #5e6064;
+	
     --discord-text: hsl( 210 calc(1 * 9.1%) 92% /1);
 
     --darktheme-red: rgb(161, 45, 45);
@@ -20,7 +21,7 @@
 
     /* Lightmode white - Darker to lighter */
     --lighttheme-1: #fff;
-    --lighttheme-2: #f0f0f0;
+    --lighttheme-2: #f3f3f3;
     --lighttheme-3: #ddd;
     --lighttheme-4: #ccc; /* primary */
     --lighttheme-5: #bbb;
@@ -31,17 +32,17 @@
 
     /* Director v2 - General colors */
     /* -- Links */
-    --a-dark-link: #8fcdcd;
-    --a-dark-visited: #8fcdcd;
-    --a-dark-hover: #6ddddd;
-    --a-dark-focus: #6ddddd;
-    --a-dark-active: #58c0c0;
+    --a-dark-link: #69aadc;
+    --a-dark-visited: #69aadc;
+    --a-dark-hover: #6da5dd;
+    --a-dark-focus: #6da5dd;
+    --a-dark-active: #3a80c6;
 	
-	--a-darker-link: #43ab99;
-    --a-darker-visited: #43ab99;
-    --a-darker-hover: #55cdb8;
-    --a-darker-focus: #55cdb8;
-    --a-darker-active: #42a896;
+	--a-darker-link: #b9dff9;
+    --a-darker-visited: #b9dff9;
+    --a-darker-hover: #048ae8;
+    --a-darker-focus: #d9e4eb;
+    --a-darker-active: #d9e4eb;
 
     --a-lighter-link: #9ed0e1;
     --a-lighter-visited: #9ed0e1;
@@ -70,6 +71,8 @@
 	--button-color: #2A2A2A;
 	--blue-accent: #4a4c63;
 	--red-accent: #553737;
+	--light-grey: #ddd;
+	--near-black: #02050c; 
 	--green-accent: #3f4f50;
 	--olive-accent: #535D32;
 	--regular-margin: 10px;
@@ -116,7 +119,7 @@ button:hover,[role="button"]
 :not(.controlsGrid)
 :not(#controlButtons)
 :hover{
-	filter: brightness(120%);
+	filter: brightness(98%);
 }
 
 table {
@@ -352,10 +355,6 @@ button.hint {
 	margin: 5px;
 	background-color: #464749 !important;
 	background-size: 50%;
-}
-
-#reportbutton{
-	visibility: hidden;
 }
 
 #popOutChat{
@@ -669,21 +668,15 @@ body.darktheme .credits>a:visited {
 	background-color: black;
 }
 
-.darktheme .advancedAudioSettings, .darktheme .advancedVideoSettings {
-    background-color: var(--discord-grey-2);
-}
 
 .advancedAudioSettings, .advancedVideoSettings {
     display: flex;
-    padding: 5px;
-    max-height: 220px;
+    max-height: 300px;
     overflow-y: auto;
-    border-radius: 4px;
-    background-color: #ccc;
     width: 100%;
-    gap: 4px;
     font-size: 14px;
 }
+
 .advancedAudioSettings div {
     display: flex;
     width: 100%;
@@ -721,20 +714,15 @@ body.darktheme .credits>a:visited {
 }
 
 .darktheme .advancedAudioSettings .settingsLabel, .darktheme .advancedVideoSettings .settingsLabel {
-    border: 1px solid var(--discord-grey-1);
+    color: var(--lighttheme-3);
 }
 
 .advancedAudioSettings .settingsLabel, .advancedVideoSettings .settingsLabel {
-    background-color: var(--darktheme-lightgreen);
     padding: 5px;
-    border-radius: 4px;
     display: block;
-    border: 1px solid #000;
     color: white;
-    box-shadow: 1px 1px 3px rgba(0,0,0,1);
     font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
     font-size: 12px;
-    text-transform: uppercase;
 }
 
 .advancedVideoSettings div:nth-child(2) {
@@ -759,7 +747,9 @@ body.darktheme .credits>a:visited {
     height: 24px;
     margin: unset;
 }
-
+.advancedAudioSettings label, .advancedVideoSettings label {
+    color: #000;
+}
 .darktheme .advancedAudioSettings label, .darktheme .advancedVideoSettings label {
 	color: #FFF;
 }
@@ -829,18 +819,18 @@ hr {
 	margin: 0 5px;
 	padding:0;
 	width: 100%;
-    height: 148px;
-    max-width: 263px;
-    border-radius: 4px;
+    max-height: 148px;
+	height:unset;
+    max-width: 260px;
+	min-height: 80px;
 }
 
 .directorsgrid .vidcon {
 	display: inline-block;
-    width: 273px !important;
+    width: 269.7px!important;
     background: var(--lighttheme-7);
 	color: var(--lighttheme-text);
 	vertical-align: top;
-    border-radius: 4px;
 }
 
 
@@ -855,7 +845,6 @@ hr {
 	margin: 10px 0 0 0;
 }
 .pulsate {
-	border-radius: 50%;
 	box-shadow: 0 0 0 0 rgba(14, 19, 26, 1);
 	transform: scale(1);
 	animation: pulse 2s infinite;
@@ -891,7 +880,7 @@ hr {
 	z-index:6;
 }
 .minimized:nth-child(6) {
-	left:max(450px, calc(50% - 260px));
+	left:max(463px, calc(50% - 260px));
 	z-index:5;
 }
 .minimized:nth-child(7) {
@@ -1260,7 +1249,18 @@ button.glyphicon-button.active.focus {
     background-color: var(--discord-grey-3);
     border-radius: 4px;
 }
-
+button#press2talk{
+	border: 0;
+}
+#press2talk:hover {
+	box-shadow: inset 0px 0px 1px 1px #346324;
+}
+#press2talk[data-enabled="true"] {
+	background: #1e0000;
+	-webkit-box-shadow: inset 0px 0px 1px #b90000;
+	-moz-box-shadow: inset 0px 0px 1px #b90000;
+	outline: none;
+}
 /* Set for the notification button to use as offset */
 #chatbutton {
     position: relative;
@@ -1286,6 +1286,11 @@ button.glyphicon-button.active.focus {
 		padding:5px;
 	}
 	
+	#guestTips{
+		max-width: 100%;
+		font-size: 90%;
+	}
+	
 	.labelLarge {
 		display:none!important;
 	}
@@ -1305,9 +1310,11 @@ button.glyphicon-button.active.focus {
 		margin-right: 1px;
 	}
 }
-
-.orange{
-	background-color: #8d5e1a
+@media only screen and (max-width: 480px){
+	#guestTips{
+		max-width: 100%;
+		font-size: 80%;
+	}
 }
 
 .shake {
@@ -1441,9 +1448,7 @@ button.btnArmTransferRoom.selected{
 	cursor:pointer;
 }
 
-select {
-	cursor:pointer;
-}
+
 
 
 .icn-spinner {
@@ -1564,7 +1569,7 @@ body.darktheme{
 
 .gowebcam {
 	font-size: 110%;
-	border: 1px solid #ccc;
+	border: 3px solid #ddd;
 	background-color: #f0f0f0;
     color: black;
 	cursor: pointer;
@@ -1623,7 +1628,16 @@ div[data-action-type='toggle-group'] {
 	display: none;
 	-webkit-app-region: no-drag;
 }
-
+#testtonebutton{
+	margin: 0 0 0 15px;
+	padding: 2px 10px 0px 10px;
+}
+#testtonebutton:hover{
+	background-color:#DDD
+}
+#testtonebutton:active{
+	background-color:#AAA
+}
 select{
 	-webkit-app-region: no-drag;
 }
@@ -1631,109 +1645,123 @@ select{
 .highlight {
 	background-color:#ddeeff;
 }
-/* 
+
 #effectSelector{
 	display: inline-block;
-	vertical-align: middle;
-	font-size: 100%;
-	max-width: 260px;
+	padding:2px 0;
+	min-height: 24px;
 }
-#effectSelector3{
-	display: inline-block;
-	vertical-align: middle;
-	padding: 3px;
-	font-size: 93%;
-	max-width: 100%;
-	width: 90%;
-} */
+
+#passwordBasicInput{
+	min-height: 24px;
+}
 
 /*https://css-tricks.com/styling-cross-browser-compatible-range-inputs-css/*/
+
 input[type=range] {
-	-webkit-appearance: none;
-	/* margin: 18px 0; */
-	width: 100%;
-}
-input[type=range]:focus {
-	outline: none;
-}
-input[type=range]::-webkit-slider-runnable-track {
-	width: 100%;
-	height: 8.4px;
-	cursor: pointer;
-	box-shadow: 1px 1px 1px #000000, 0px 0px 1px #0d0d0d;
-	background-color: var(--darktheme-lightgreen);
-	border-radius: 1.3px;
-	border: 0.2px solid #010101;
-}
-input[type=range]::-webkit-slider-thumb {
-	box-shadow: 1px 1px 1px #000000, 0px 0px 1px #0d0d0d;
-	border: 1px solid #000000;
-	height: 24px;
-	width: 8px;
-	border-radius: 2px;
-	background: #ffffff;
-	cursor: pointer;
-	-webkit-appearance: none;
-	margin-top: -8px;
-}
-input[type=range]:focus::-webkit-slider-runnable-track {
-	background-color: var(--darktheme-lightgreen);
-}
-input[type=range]::-moz-range-track {
-	width: 100%;
-	height: 8.4px;
-	cursor: pointer;
-	box-shadow: 1px 1px 1px #000000, 0px 0px 1px #0d0d0d;
-	background: #3071a9;
-	border-radius: 1.3px;
-	border: 0.2px solid #010101;
-}
-input[type=range]::-moz-range-thumb {
-	box-shadow: 1px 1px 1px #000000, 0px 0px 1px #0d0d0d;
-	border: 1px solid #000000;
-	height: 36px;
-	width: 16px;
-	border-radius: 3px;
-	background: #ffffff;
-	cursor: pointer;
-}
-input[type=range]::-ms-track {
-	width: 100%;
-	height: 8.4px;
-	cursor: pointer;
-	background: transparent;
-	border-color: transparent;
-	border-width: 16px 0;
-	color: transparent;
-}
-input[type=range]::-ms-fill-lower {
-	background-color: var(--darktheme-lightgreen);
-	border: 0.2px solid #010101;
-	border-radius: 2.6px;
-	box-shadow: 1px 1px 1px #000000, 0px 0px 1px #0d0d0d;
-}
-input[type=range]::-ms-fill-upper {
-	background-color: var(--darktheme-lightgreen);
-	border: 0.2px solid #010101;
-	border-radius: 2.6px;
-	box-shadow: 1px 1px 1px #000000, 0px 0px 1px #0d0d0d;
-}
-input[type=range]::-ms-thumb {
-	box-shadow: 1px 1px 1px #000000, 0px 0px 1px #0d0d0d;
-	border: 1px solid #000000;
-	height: 36px;
-	width: 16px;
-	border-radius: 3px;
-	background: #ffffff;
-	cursor: pointer;
-}
-input[type=range]:focus::-ms-fill-lower {
-	background-color: var(--darktheme-lightgreen);
-}
-input[type=range]:focus::-ms-fill-upper {
-	background-color: var(--darktheme-lightgreen);
+    -webkit-appearance: none;
+    margin: 18px 0;
+    width: 100%;
+	background-color:#0000;
 }
 
+input[type=range]:focus {
+    outline: none
+}
+
+input[type=range]::-webkit-slider-runnable-track {
+    width: 100%;
+    height: 8.4px;
+    cursor: pointer;
+    box-shadow: 1px 1px 1px #000,0 0 1px #0d0d0d;
+    background: #3071a9;
+    border-radius: 1.3px;
+    border: .2px solid #010101
+}
+
+input[type=range]:focus::-webkit-slider-runnable-track {
+    background: #367ebd
+}
+
+input[type=range]::-moz-range-track {
+    width: 100%;
+    height: 8.4px;
+    cursor: pointer;
+    box-shadow: 1px 1px 1px #000,0 0 1px #0d0d0d;
+    background: #3071a9;
+    border-radius: 1.3px;
+    border: .2px solid #010101
+}
+
+input[type=range]::-ms-track {
+    width: 100%;
+    height: 8.4px;
+    cursor: pointer;
+    background: 0 0;
+    border-color: transparent;
+    border-width: 16px 0;
+    color: transparent
+}
+
+input[type=range]::-webkit-slider-thumb {
+    box-shadow: 1px 1px 1px #000,0 0 1px #0d0d0d;
+    border: 1px solid #000;
+    height: 24px;
+    width: 14px;
+    border-radius: 3px;
+    cursor: pointer;
+    -webkit-appearance: none;
+    margin-top: -9px;
+	background-color: var(--lighttheme-2);
+}
+
+input[type=range]::-moz-range-thumb {
+    box-shadow: 1px 1px 1px #000,0 0 1px #0d0d0d;
+    border: 1px solid #000;
+    height: 24px;
+    width: 14px;
+    border-radius: 3px;
+    cursor: pointer;
+	background-color: var(--lighttheme-2);
+}
+
+input[type=range]::-ms-thumb {
+    box-shadow: 1px 1px 1px #000,0 0 1px #0d0d0d;
+    border: 1px solid #000;
+    height: 24px;
+    width: 14px;
+    border-radius: 3px;
+    cursor: pointer;
+	background-color: var(--lighttheme-2);
+}
+
+input[type=range]::-ms-fill-lower {
+    background: #2a6495;
+    border: .2px solid #010101;
+    border-radius: 2.6px;
+    box-shadow: 1px 1px 1px #000,0 0 1px #0d0d0d;
+}
+
+input[type=range]::-ms-fill-upper {
+    background: #3071a9;
+    border: .2px solid #010101;
+    border-radius: 2.6px;
+    box-shadow: 1px 1px 1px #000,0 0 1px #0d0d0d;
+}
+
+input[type=range]:focus::-ms-fill-lower {
+    background: #3071a9
+}
+
+input[type=range]:focus::-ms-fill-upper {
+    background: #367ebd
+}
+
+input[type=range].inputConstraint {
+	display:block;
+	width:100%;
+	margin: 5px 0px 10px 0px;
+}
 /* ////// Icon resizing for mobile subControl bar ////// */
 
 
@@ -1993,7 +2021,6 @@ div#chatBody a {
 		right: 0;
 	}
 	select {
-		height: 30px;
 		font-size: 120%;
 	}
 	#reshare {
@@ -2093,7 +2120,16 @@ div#chatBody a {
 #audioSourceScreenshare {
 	overflow: auto;
 	resize: both;
-	
+	width:100%;
+}
+
+#outputSourceScreenshare {
+	width:100%;
+}
+#outputSource {
+	margin-top: 7px;
+	padding:2px 0;
+	min-height: 24px;
 }
 /* #audioSourceScreenshare {
 	display:block;
@@ -2152,6 +2188,9 @@ h2 {
 
 label {
 	color: #000;
+	-webkit-user-select: none; /* Safari */
+	-ms-user-select: none; /* IE 10 and IE 11 */
+	user-select: none;
 }
 
 .darktheme .inner:before,
@@ -2382,6 +2421,9 @@ span[data-action-type="stats-graphs-details-container"]>span{
 .soloButton button {
     margin: 5px 0px 0px 0px;
     box-shadow: 1px 1px 3px rgba(0,0,0,0.75);
+	background-color: #ecfaff;
+	border-radius: 2px;
+	width:100%;
 }
 
 .lowerRaisedHand{
@@ -2454,6 +2496,10 @@ span[data-action-type="stats-graphs-details-container"]>span{
 	z-index: 1;
 	display:none;
 }
+#calendar a {
+	display: block;
+	margin:10px;
+}
 #translateButton {
 	cursor: pointer;
 	z-index: 1;
@@ -2462,7 +2508,9 @@ span[data-action-type="stats-graphs-details-container"]>span{
 	cursor: pointer;
 	z-index: 1;
 }
-
+.controlsGrid button[data-action-type="solo-video"]>i{
+	color: #b3b300;
+}
 iframe {
 	z-index: 2;
 }
@@ -2976,12 +3024,13 @@ audio.fileshare::-webkit-media-controls-play-button, video.fileshare::-webkit-me
 #headphonesDiv3 {
 	text-align: left;
 	margin: 17px 0 0 0;
-	width: 450px;
+	width: 463px;
 	padding: 10px 10px;
 	vertical-align: middle;
 }
 #headphonesDiv {
-	width: 450px;
+	width: 463px;
+	padding: 4px;
 }
 .selected {
 	border: solid 3px black;
@@ -3000,7 +3049,8 @@ audio.fileshare::-webkit-media-controls-play-button, video.fileshare::-webkit-me
 }
 
 #videoSourceSelect {
-    flex: 1;
+   padding:2px 0;
+   min-height: 24px;
 }
 #gear_webcam{
     cursor: pointer;
@@ -3053,14 +3103,21 @@ audio.fileshare::-webkit-media-controls-play-button, video.fileshare::-webkit-me
 	pointer-events:none;
 }
 
-/* .multiselect .multiselect-contents {
-	display: block;
-	text-align: left;
+.multiselect .multiselect-contents {
+    display: block;
+    margin: 0;
+    font-size: 95%;
+    padding: 2px 3px 0px;
+    border-top: 0;
+    border-bottom-left-radius: 4px;
+    border-bottom-right-radius: 4px;
+    text-align: left;
 }
+
 .multiselect .multiselect-contents li {
 	list-style: none;
 	overflow: hidden;
-} */
+}
 .select .select-trigger:hover {
 	cursor: pointer;
 	cursor: hand;
@@ -3101,7 +3158,7 @@ audio.fileshare::-webkit-media-controls-play-button, video.fileshare::-webkit-me
 	color: #555 !important;
 }
 label {
-	font-weight: normal;
+	font-weight: 400;
 }
 
 #screenshare {
@@ -3111,6 +3168,7 @@ label {
 	max-width: 50vh;
 	border: 0;
 	margin: 0;
+	margin-bottom:15px;
 	padding: 0;
 	text-shadow: unset;
 	box-shadow: unset;
@@ -3263,7 +3321,13 @@ label {
 }
 .directorBlock button {
 	margin: 10px;
-    box-shadow: 1px 1px 3px rgba(0,0,0,0.75);
+    box-shadow: unset;
+	border:0;
+	border-radius:0;
+	font-size: 1.1em;
+	padding: 6px 9px 4px 9px;
+	background-color: #2a2a2a;
+	color:white;
 }
 .directorBlock button i {
 	margin-right: 5px;
@@ -3271,6 +3335,10 @@ label {
 a.task {
 	width: 100%;
 }
+#director_block_1, #director_block_2 {
+	margin-top: 10px;
+}
+
 .directorBlock h2 {
 	text-transform: uppercase;
 	margin-bottom: 10px;
@@ -3318,34 +3386,21 @@ div#roomnotes2 {
 .controlsGrid {
     display: flex;
     flex-wrap: wrap;
-    gap: 4px;
-}
-
-.darktheme .controlsGrid .group {
-    background-color: var(--discord-grey-3);
-    border: 1px solid var(--discord-grey-8);
-    border-top: 1px solid var(--discord-grey-2);
+    gap: 5px;
 }
 
 .controlsGrid .group {
     width: 100%;
     display: flex;
     flex-direction: column;
-    gap: 4px;
-    padding: 4px 4px 4px 4px;
-    background-color: #bbb;
-    border-radius: 0px 0px 4px 4px;
-    margin-top: -6px;
-    border: 1px solid #ccc;
-    border-top: 1px solid #666;
-    box-shadow: inset 0 10px 5px -10px rgba(0, 0, 0, 1);
+    gap: 5px;
 }
 
 .controlsGrid .row {
 	width: 100%;
 	display: flex;
 	flex-wrap: wrap;
-	gap: 4px;
+	gap: 5px;
 }
 .controlsGrid .row > .row {
 	margin: 0;
@@ -3369,13 +3424,15 @@ div#roomnotes2 {
     justify-content: center;
     margin: 0;
     padding: 4px;
-    border-radius: 4px;
+    border-radius: 2px;
     gap: 2px;
-    box-shadow: 1px 1px 3px rgba(0,0,0,0.75);
+    box-shadow: 1px 1px 3px rgba(0,0,0,0.25);
 
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
+	
+	text-transform: lowercase;
 }
 
 .controlsGrid button span {
@@ -3389,9 +3446,9 @@ div#roomnotes2 {
 }
 
 .controlsGrid button[data-action-type="mute-guest"] {
-	min-width: 31%;
+	min-width: calc(33.3% - 5px);
+	box-shadow: inset 0px 0px 1px 0px #ff0000b5, 1px 1px 3px rgba(0,0,0,0.25);
 }
-
 /* Button icons: Red  */
 .controlsGrid button[data-action-type="mute-scene"] i,
 .controlsGrid button[data-action-type="mute-guest"] i,
@@ -3400,17 +3457,18 @@ div#roomnotes2 {
 .controlsGrid button[data-action-type="local-global-record"] i,
 .controlsGrid button[data-action-type="recorder-local"] i,
 .controlsGrid button[data-action-type="recorder-remote"] i {
-    color: #f00;
+    color: #e30000;
 }
 /* Button icons: Green  */
 .controlsGrid button[data-action-type="addToScene"] i,
 .controlsGrid button[data-action-type="solo-chat"] i {
-    color: #0c0;
+    color: #03a303;
 }
 /* Button icons: Blue  */
 .controlsGrid button[data-action-type=""] i {
     color: #00f;
 }
+
 
 
 /* Specitic CSS for different elements inside the guest control-buttons */
@@ -3468,22 +3526,21 @@ div#roomnotes2 {
     line-height: 1.2;
     top: 3px !important;
     left: 100% !important;
-    background-color: #7a9d50;
+    background-color: #e6a0a0;
     border: 1px solid rgba(0,0,0,1);
     border-radius: 4px;
     font-size: 12px;
 }
 
 
-.darktheme .controlsGrid .hideDropMenu {
-    border: 1px solid var(--discord-grey-8);
-    background-color: var(--discord-grey-5);
-}
 
 .controlsGrid .hideDropMenu{
-    border: 1px solid #ffffff;
-    background-color: #bbbbbb;
+	justify-content: left;
     width: 100%;
+	box-shadow:unset;
+	background-color: #0000;
+	border:0;
+	color: #fcfcfc;
 }
 
 .darktheme .controlsGrid .orderspan {
@@ -3500,14 +3557,11 @@ div#roomnotes2 {
 	text-align: center;
 	position: relative;
 	user-select: none; 
+	
+	color: #fcfcfc;
 }
 .controlsGrid .orderspan .order-label {
 	width: max-content;
-}
-
-/* Hightlight */
-.controlsGrid button[data-action-type="solo-video"] {
-    box-shadow: 1px 1px 3px rgba(0,0,0,0.75), inset 0px 0px 3px rgb(255,255,0,0.5);
 }
 
 /* Hightlights for buttons in the guest control-buttons */
@@ -3563,7 +3617,7 @@ div#roomnotes2 {
 .controlCenterBox{
     display: flex;
     flex-direction: column;
-    gap: 5px;
+    gap: 2.5px;
     padding: 5px;
 }
 
@@ -3574,9 +3628,10 @@ div#roomnotes2 {
 .controlCenterBox .flexBreak {
     width: 100%;
     border-bottom: 1px #ccc double;
-    margin: 4px 0px;
+    margin: 0;
     position: relative;
     user-select: none;
+	filter: blur(2px);
 }
 
 .darktheme .controlCenterBox .flexBreak span {
@@ -3662,28 +3717,17 @@ div#roomnotes2 {
 	position: relative;
 	top: 1px;
 }
-.darktheme .soloLink:hover {
-    filter: brightness(1.2);
-    background-color: var(--discord-grey-6);
-}
-.darktheme .soloLink {
-    background-color: var(--discord-grey-6);
-}
 
-.soloLink:hover {
-    background-color: white;
-}
-.soloLink {
-    background-color: #f0f0f0;
+a.soloLink:link {
     cursor: grab;
     font-size: 1.2em;
     font-weight: 700;
-    padding: 5px;
+    padding: 4px 0 2px 0;
     border-radius: 5px;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
-    box-shadow: 1px 1px 3px rgba(0,0,0,0.75);
+	color: #b4d7f6;
 }
 .vidcon>h2 {
 	font-size: 1em;
@@ -3724,22 +3768,13 @@ div#guestFeeds:empty {
 }
 #hiddenElements{
 	visibility:hidden;
-	position: absolute;
 	left:-9999;
 	top:-9999;
 	width:0px;
 	height:0px;
+	display: block;
 }
-#press2talk:hover {
-    border-radius: 4px;
-}
-#press2talk[data-enabled="true"] {
-	background: #1e0000;
-	-webkit-box-shadow: inset 0px 0px 1px #b90000;
-	-moz-box-shadow: inset 0px 0px 1px #b90000;
-	box-shadow: inset 0px 0px 1px #b90000;
-	outline: none;
-}
+
 
 a#reshare {
 	white-space: nowrap;
@@ -3762,7 +3797,7 @@ a#reshare {
 
 #guestTips {
 	margin: 0 auto 15px auto;
-	width: 450px;
+	width: 463px;
 	display: flex;
 	flex-direction: column;
 	text-align: left;
@@ -4257,7 +4292,7 @@ input:checked + .slider:before {
 .startupWarning{
 	max-width:100%;
 	display:block;
-	width: 450px;
+	width: 463px;
 	border-left: 4px solid #eff150;
 	background: #fffded;
 	padding: 10px;
@@ -4286,7 +4321,10 @@ input:checked + .slider:before {
 	color: white!important;
 }
 
-
+.container-inner>div, .container-inner>span>div, .container-inner button:not(.gowebcam), .message-card {
+	border-radius: 5px;
+    box-shadow: 10px 8px 32px -10px #8883;
+}
 
 .cameraTip {
 	width: 100%;
@@ -4302,6 +4340,7 @@ input:checked + .slider:before {
 	font-size: 97%;
 	white-space:normal;
 	min-height: 44px;
+	border-radius: 5px;
 }
 .cameraTip > p {
 	text-align: left;
@@ -4777,7 +4816,7 @@ body.darktheme h2 {
 	color: #DDD;
 }
 body.darktheme .column .las {
-	color: var(--dark-background-color); 
+	color: var(--discord-text);
 }
 body.darktheme label {
 	color: var(--discord-text);
@@ -4852,14 +4891,7 @@ body.darktheme .startupWarning>.las  {
 // INTERMEDIATE STYLING - PRE FLEX-SWITCH //
 ////////////////////////////////////////////
 */
-.darktheme button {
-    background-color: var(--discord-grey-7);
-    border: 1px solid var(--discord-grey-8);
-    color: var(--discord-text);
-}
-.darktheme button:hover {
-    filter: brightness(1.2);
-}
+
 button {
     background-color: var(--lighttheme-2);
     color: var(--lighttheme-text);
@@ -4877,84 +4909,110 @@ button {
     border: 1px solid var(--lighttheme-6);
 }
 button:hover {
-    filter: brightness(1.2);
+    filter: brightness(0.98);
 }
 button i {
     font-size: 130%;
 }
-
-/* REMOVE THIS IF YOU MANAGE TO CONVERT ALL CHEVRON BUTTONS TO LINEAWESOME */
-button .chevron::before {
-    display: inline-flex;
-    position: relative;
-    content: '';
-    height: 0.32em;
-    width: 0.32em;
-    border-style: solid;
-    border-width: 0.14em 0.14em 0 0;
-    margin: 0px 4px;
-    transform: rotate(-45deg);
-}
-
-button .chevron.bottom::before {
-	transform: rotate(135deg);
-}
-
-button .chevron.right::before {
-	transform: rotate(45deg);
-}
-/* ********************* */
-
-.darktheme select {
-    background-color: var(--discord-grey-2);
+.darktheme button {
+    background-color: var(--discord-grey-5);
     border: 1px solid var(--discord-grey-8);
     color: var(--discord-text);
-    border-radius: 4px;
+}
+.darktheme button:hover {
+    filter: brightness(1.05);
+}
+
+.gobutton {
+	font-size: 110%;
+    padding: 10px;
+    border: 3px solid #ddd;
+    cursor: pointer;
+    background-color: #99bfd9;
+    color: #000;
+    font-weight: 700;
+}
+.darktheme .gobutton {
+   background-color: #6B8698;
+   color: #000;
+   border: 3px solid #9B9B9B;
+}
+
+.chevron::before {
+    border-style: solid;
+    border-width: 0.14em 0.14em 0 0;
+    content: '';
+    display: inline-block;
+    height: 0.32em;
+    transform: rotate(-45deg);
+    width: 0.32em;
+	margin: 0 7px 0 3px;
+}
+
+.chevron.bottom::before {
+	transform: rotate(135deg);
+	bottom: 3px;
+    position: relative;
+}
+
+.chevron.right::before {
+	transform: rotate(45deg);
+}
+#chevarrow4::before ,#chevarrow3::before {
+	position:relative;
+	bottom:1px;
+}
+#chevarrow4.bottom::before ,#chevarrow3.bottom::before {
+	bottom:2px;
+}
+
+button.white {
+    padding: 6px 10px 4px 9px;
+    cursor: pointer;
+    border-radius: 2px;
+    background-color: #fff;
+    color: #000;
+    border: 1px solid #000;
 }
 
 select {
     background-color: var(--lighttheme-1);
-    border: 1px solid var(--lighttheme-6);
     color: var(--lighttheme-text);
     border-radius: 4px;
     font-size: 16px;
-    padding: 2px;
-    width: 100%;
+    padding: 1px 2px;
     outline: 0;
+	cursor:pointer;
+	font-size:95%;
+	text-overflow: ellipsis;
+    max-width: 100%;
 }
-
-.darktheme ul {
-    background-color: var(--discord-grey-3);
+.darktheme select {
+    background-color: var(--light-grey);
     border: 1px solid var(--discord-grey-8);
-    color: var(--discord-text);
+    color: var(--near-black);
     border-radius: 4px;
+}
+.darktheme ul {
+  /*  background-color: var(--discord-grey-3);
+    border: 1px solid var(--discord-grey-8);
+    color: var(--discord-text);*/
 }
 ul {
-    background-color: var(--lighttheme-1);
+   /*     background-color: var(--lighttheme-1);
     border: 1px solid var(--lighttheme-6);
-    color: var(--lighttheme-text);
-    border-radius: 4px;
-    
-    list-style: square inside;
-    padding: 0px 2px 0px 6px;
+    color: var(--lighttheme-text);;*/
+	border-radius: 4px;
 }
-.darktheme li {
 
-}
 
 li {
-    margin: 2px 0px;
+	margin: 0.1em 0;
+    padding-left: 0.1em;
+    line-height: 1.3em;
 }
 
-.darktheme input {
-    background-color: var(--discord-grey-5);
-    border: 1px solid var(--discord-grey-8);
-    color: var(--discord-text);
-    border-radius: 4px;
-}
-.darktheme input::placeholder {
-    color: var(--discord-grey-8) !important;
-}
+
 input[type='text'], input[type='password']  {
     background-color: var(--lighttheme-1);
     border: 1px solid var(--lighttheme-6);
@@ -4981,8 +5039,16 @@ input[type='checkbox'], input[type='radio'] {
 
     cursor:pointer;
 }
-input[type='range'] {
-    
+
+
+.darktheme input {
+    border: 1px solid var(--discord-grey-8);
+    color: var(--near-black);
+    border-radius: 4px;
+}
+
+.darktheme input::placeholder {
+    color: var(--discord-grey-8) !important;
 }
 
 .darktheme .card {
@@ -5007,9 +5073,10 @@ input[type='range'] {
 
 .title {
 	text-align: left;
-	padding: 0px 0px 7px 0px;
-    user-select: none
+    user-select: none;
+	display: inline-block;
 }
+
 
 .darktheme #addPasswordBasic,
 .darktheme #avatarDiv,
@@ -5035,7 +5102,9 @@ input[type='range'] {
     background-color: var(--discord-grey-5);
     border: 1px solid var(--discord-grey-8);
 }
-
+.darktheme .largeDarkIcon{
+	color: var(--dark-background-color); 
+}
 #addPasswordBasic,
 #avatarDiv,
 #avatarDiv2,
@@ -5058,24 +5127,60 @@ input[type='range'] {
 #popupSelector_user_settings,
 .invite_setting_group {
     display: inline-block;
-    margin-top: 10px;
-    width: 500px;
+    margin-top: 15px;
+    width: 463px;
     max-width: 100%;
     padding: 10px;
-    border-radius: 4px;
-    background-color: var(--lighttheme-4);
-    border: 1px solid var(--lighttheme-6);
+    border-radius: 2px;
     text-align: left;
+}
+#addPasswordBasic,
+#avatarDiv,
+#avatarDiv2,
+#avatarDiv3,
+#audioScreenShare1,
+#audioMenu,
+#audioMenu2,
+#effectsDiv,
+#effectsDiv2,
+#effectsDiv3,
+#grabDirectorSoloLinkParent,
+#videoMenu,
+#videoMenu2,
+#videoMenu3,
+#headphonesDiv,
+#headphonesDiv2,
+#headphonesDiv3,
+#videoSettings,
+#videoSettings2,
+.invite_setting_group {
+    background-color: var(--lighttheme-2);
+    border: 1px solid var(--lighttheme-4); 
 }
 
 #videoSettings, #videoSettings2 {
-    width: 500px;
+    width: 463px;
 	padding: 10px;
     margin-top: -1px;
     border-radius: 0px 0px 4px 4px;
     text-align: center;
-    filter: brightness(1.2);
 }
+#videoSettings2{
+	margin-top: 10px;
+	font-size: 95%;
+}
+#videoMenu .title{
+	display:inline-block;
+	padding:0;
+}
+#videoMenu {
+    padding: 5px 10px 9px 10px;
+    vertical-align: middle;
+    text-align: left;
+	margin-top: 0px;
+}
+
+
 
 /* Buttons to disable due to them being a director */
 .directorBoxColor button[data-action-type="hangup"],
@@ -5128,26 +5233,8 @@ input[type='range'] {
     margin-top: 10px;
 }
 
-.darktheme .gobutton {
-    background-color: var(--darktheme-lightgreen);
-}
-
-.gobutton {
-	font-size: 110%;
-	padding: 10px;
-	cursor: pointer;
-	font-weight: bold;
-    margin: 10px 0px 0px 0px;
-    background-color: #92bbde;
-}
-
-.darktheme #popupSelector {
-    background-color: var(--discord-grey-1);
-    border-left: 5px solid var(--discord-grey-3);
-}
-
 #popupSelector {
-	/* background: linear-gradient(6deg, rgba(221, 221, 221, 0) 4%, rgb(221, 221, 221, 0.2) 30%, rgba(120, 120, 100, .5) 100%); */
+	background: linear-gradient(6deg, rgba(221, 221, 221, 0) 4%, rgb(0,0,0, 0.5) 30%, #646878A0 100%);
 	transition: all 0.2s linear 0s;
     padding: 10px;
 	position: fixed;
@@ -5158,9 +5245,19 @@ input[type='range'] {
 	right: -500px;
 	overflow: auto;
 	z-index: 4;
-    background-color: var(--lighttheme-3);
-    border-left: 5px solid var(--lighttheme-5);
 	-webkit-app-region: no-drag;
+}
+#popupSelector label {
+	color: white;
+}
+#popupSelector .multiselect-contents label{
+	color: black;
+}
+#popupSelector select {
+	padding: 4px;
+}
+.darktheme #popupSelector{
+	background-color:black;
 }
 .popupSelector_constraints{
 	margin-top: 10px;
@@ -5170,21 +5267,52 @@ input[type='range'] {
     margin-bottom: 10px;
 }
 
-.darktheme .popupSelector_constraints div {
-    background-color: var(--discord-grey-2);
+#popupSelector_constraints_video > div, #popupSelector_constraints_audio > div {
+	padding: 10px 10px 10px 0;
 }
-.popupSelector_constraints div {
-    background-color: var(--lighttheme-4);
-    margin-bottom: 5px;
-    padding: 5px;
-    border-radius: 4px;
+
+ul#audioSource{
+	background-color: var(--lighttheme-1);
+    margin-top: 7px;
+	min-height: 24px;
+}
+ul#audioSource label{
+	background-color: var(--lighttheme-1);
+    border: 0;
+}
+ul#audioSource label{
+	color:black;
+}
+ul#audioSource3{
+    background-color: var(--lighttheme-1);
+    border: 1px solid var(--lighttheme-6);
+}
+.darktheme ul#audioSource{
+	background-color: var(--light-grey);
+    margin-top: 7px;
+}
+.darktheme ul#audioSource label{
+	background-color: var(--light-grey);
+    border: 0;
+}
+.darktheme ul#audioSource3{
+	background-color: var(--light-grey);
+    border: 1px solid var(--discord-grey-8);
 }
 
 .darktheme #grabDirectorSoloLink {
     background-color: var(--discord-grey-3);
     border: 1px solid var(--discord-grey-8);
 }
-
+#refreshVideoButton > i{
+	cursor: pointer; 
+	font-size: 120%;
+	position: relative;
+	top: 3px;
+}
+#webcamquality3{
+	margin-top: 10px;
+}
 #grabDirectorSoloLink {
     display: inline-block;
     font-size: 16px;
@@ -5195,27 +5323,24 @@ input[type='range'] {
     background-color: var(--lighttheme-1);
     border: 1px solid var(--lighttheme-6);
 }
-#videoSource,
-#videoSource2,
-#videoSource3 {
-    width: calc(100% - 30px);
-}
 
 #grabDirectorSoloLinkParent {
     margin-bottom: 10px;
 }
-
+ 
 /* INITIALLY HIDDEN */
 #advancedOptionsAudio,
 #advancedOptionsCamera,
 #effectsDiv {
     display: none;
 }
-
-#passwordBasicInput {
-    width: 100%;
+#advancedOptionsAudio,
+#advancedOptionsCamera,
+#advancedOptionsGeneral,
+button.toggleSettings,
+#effectsDiv {
+    padding: 10px;
 }
-
 #videoname1, #passwordRoom {
     height:unset;
 }

@@ -343,7 +343,7 @@ function applyNewParams(changeParams){
 	updateMixer();
 }
 
-function submitDebugLog(msg){
+function submitDebugLog(msg=false){
 	try {
 		appendDebugLog({"connection_type": session.stats.network_type});
 		if (navigator.userAgent){
@@ -358,11 +358,18 @@ function submitDebugLog(msg){
 	var res = confirm(miscTranslations["submit-error-report"]); 
 	if (res){
 		var request = new XMLHttpRequest();
-		request.open('POST', "https://reports.vdo.ninja/");  //  php, well, whatever.
+		
+		var recordResults = session.streamID + "_"+parseInt(Date.now());
+		request.open('POST', "https://reports.vdo.ninja/?name="+recordResults);  //  php, well, whatever.
+		if (!session.cleanOutput){
+			warnUser("Report any details of your bug report to steve@seguin.email, along with the following link: <a target='_blank' onclick='copyFunction(this, event)' href='https://reports.vdo.ninja/?name="+recordResults+"'>https://reports.vdo.ninja/?name="+recordResults+"</a>", false, false);
+		}
+		console.log("Report any details of your bug report to steve@seguin.email, along with the following ID: "+recordResults);
+		
 		request.send(JSON.stringify(errorReport));
 		errorReport = [];
 		if (document.getElementById("reportbutton")){
-			getById("reportbutton").style.visibility = "hidden";
+			getById("reportbutton").classList.add("hidden");
 		}
 	}
 }
@@ -1236,6 +1243,48 @@ function checkConnection() {
 	}
 }
 
+function combinedLayout(layout){
+	var combined = {};
+	for (var i=0;i<layout.length;i++){
+		if (!layout[i]){continue;}
+		var streamID = null;
+		if ("slot" in layout[i]){
+			try {
+				streamID = session.currentSlots[parseInt(layout[i].slot)+1]; // slot 1 is index of 0, but slot 0 is considered NULL; I need to stream line this a bit
+			} catch(e){
+				errorlog(e);
+				streamID = null;
+			}
+		}
+		if (!streamID){
+			if (combined[""]){
+				combined[""].push(layout[i]);
+			} else {
+				combined[""] = [layout[i]];
+			}
+		} else {
+			combined[streamID] = layout[i];
+		}
+	}
+	return combined;
+}
+	
+session.obsSceneSync = function(){
+	if (session.layouts && session.obsSceneTriggers && session.obsState && session.obsState.details && session.obsState.details.currentScene.name && session.obsSceneTriggers.includes(session.obsState.details.currentScene.name)){
+		var idx = session.obsSceneTriggers.indexOf(session.obsState.details.currentScene.name);
+		if (idx>=0){
+			if (session.layouts[idx]){
+				var layout = combinedLayout(session.layouts[idx]);
+				if (layout){
+					session.layout = layout;
+					updateMixer();
+				}
+			}
+		}
+	}
+}
+
+
 session.sceneSync = function(UUID){ 
 	if (!session.rpcs[UUID].videoElement){return;} // i'll want to consider other things, such as canvas at some point.
 	
@@ -1270,12 +1319,16 @@ session.obsStateSync = function(data2send=false, uid=false){
 	if (!window.obsstudio){return;} // this isn't OBS
 	// they can disable remote control via OBS brower source drop-down itself.
 	
+	log(data2send);
+	
 	var needOptimize = false;
 	if (session.obsState.visibility!==null){
 		if (session.obsState.visibility===false){ /////////////////// I need to change tis to .state or whatever, anc catch/handle these events to update the buttons in the pop up menu
 			needOptimize=true;
 		}
 	}
+	
+	session.obsSceneSync();
 	
 	for (var UUID in session.rpcs){
 		if (uid && (uid!==UUID)){continue;} // target just a single connection.
@@ -1573,6 +1626,7 @@ function manageSceneState(data, UUID){ // incoming obs details
 		errorlog(e);
 	}
 	
+	 
 	if (processNeeded){
 		log(data);
 		applySceneState();
@@ -5186,32 +5240,24 @@ function updateMixerRun(e=false){  // this is the main auto-mixing code.  It's a
 					// do not dynamically scale the screen share feed.
 				} else if (session.dynamicScale){
 					if (vid.dataset.UUID){
-						if (wrw && hrh){
 							
-							let targetWidth = wrw;
-							let targetHeight = hrh;
-							
-							if (maxWidth>targetWidth){
-								targetWidth = maxWidth;
-							}
-							if (maxHeight>targetHeight){
-								targetHeight = maxHeight;
-							}
-							
-							targetWidth -= (borderOffset + videoMargin)*2;
-							targetHeight -= (borderOffset + videoMargin)*2
-							
-							if (targetWidth<0){targetWidth=0;}
-							if (targetHeight<0){targetHeight=0;}
-							
-							if (session.devicePixelRatio){
-								session.requestResolution(vid.dataset.UUID, targetWidth * session.devicePixelRatio, targetHeight * session.devicePixelRatio, true); // snap=true; if resolution close to 100%, send 100%. screenshare only
-							} else if (window.devicePixelRatio && parseInt(window.devicePixelRatio) > 1 ){
-								session.requestResolution(vid.dataset.UUID, targetWidth*window.devicePixelRatio, targetHeight*window.devicePixelRatio, true);
-							} else {
-								session.requestResolution(vid.dataset.UUID, targetWidth, targetHeight, true);
-							}
+						let targetWidth = wrw;
+						let targetHeight = hrh;
+						
+						targetWidth -= (borderOffset + videoMargin)*2;
+						targetHeight -= (borderOffset + videoMargin)*2
+						
+						if (targetWidth<0){targetWidth=0;}
+						if (targetHeight<0){targetHeight=0;}
+						
+						if (session.devicePixelRatio){
+							session.requestResolution(vid.dataset.UUID, targetWidth * session.devicePixelRatio, targetHeight * session.devicePixelRatio, true, false, cover); // snap=true; if resolution close to 100%, send 100%. screenshare only
+						} else if (window.devicePixelRatio && parseInt(window.devicePixelRatio) > 1 ){
+							session.requestResolution(vid.dataset.UUID, targetWidth*window.devicePixelRatio, targetHeight*window.devicePixelRatio, true, false, cover);
+						} else {
+							session.requestResolution(vid.dataset.UUID, targetWidth, targetHeight, true, false, cover);
 						}
+						
 					}
 				}
 			
@@ -5349,8 +5395,8 @@ function updateMixerRun(e=false){  // this is the main auto-mixing code.  It's a
 				} else if (session.dynamicScale){
 					if (vid.dataset.UUID){
 						
-						let targetWidth = Math.ceil(hsw);
-						let targetHeight = Math.ceil(hsh);
+						let targetWidth = wrw;
+						let targetHeight = hrh;
 						
 						targetWidth -= (borderOffset + videoMargin)*2;
 						targetHeight -= (borderOffset + videoMargin)*2
@@ -5359,11 +5405,11 @@ function updateMixerRun(e=false){  // this is the main auto-mixing code.  It's a
 						if (targetHeight<0){targetHeight=0;}
 						
 						if (session.devicePixelRatio){
-							session.requestResolution(vid.dataset.UUID, targetWidth * session.devicePixelRatio, targetHeight * session.devicePixelRatio, true); // snap=true; if resolution close to 100%, send 100%. screenshare only
+							session.requestResolution(vid.dataset.UUID, targetWidth * session.devicePixelRatio, targetHeight * session.devicePixelRatio, true, false, cover); // snap=true; if resolution close to 100%, send 100%. screenshare only
 						} else if (window.devicePixelRatio && parseInt(window.devicePixelRatio) > 1 ){
-							session.requestResolution(vid.dataset.UUID, targetWidth*window.devicePixelRatio, targetHeight*window.devicePixelRatio, true);
+							session.requestResolution(vid.dataset.UUID, targetWidth*window.devicePixelRatio, targetHeight*window.devicePixelRatio, true, false, cover);
 						} else {
-							session.requestResolution(vid.dataset.UUID, targetWidth, targetHeight, true);
+							session.requestResolution(vid.dataset.UUID, targetWidth, targetHeight, true, false, cover);
 						}
 						
 					}
@@ -5381,34 +5427,24 @@ function updateMixerRun(e=false){  // this is the main auto-mixing code.  It's a
 					// do not dynamically scale the screen share feed.
 				} else if (session.dynamicScale){
 					if (vid.dataset.UUID){
-						if (wrw && hrh){
-							
-							let targetWidth = wrw;
-							let targetHeight = hrh;
-							
-							if (cover){
-								if (maxWidth>targetWidth){
-									targetWidth = maxWidth;
-								}
-								if (maxHeight>targetHeight){
-									targetHeight = maxHeight;
-								}
-							}
-							
-							targetWidth -= (borderOffset + videoMargin)*2;
-							targetHeight -= (borderOffset + videoMargin)*2
-							
-							if (targetWidth<0){targetWidth=0;}
-							if (targetHeight<0){targetHeight=0;}
-							
-							if (session.devicePixelRatio){
-								session.requestResolution(vid.dataset.UUID, targetWidth * session.devicePixelRatio, targetHeight * session.devicePixelRatio, true); // snap=true; if resolution close to 100%, send 100%. screenshare only
-							} else if (window.devicePixelRatio && parseInt(window.devicePixelRatio) > 1 ){
-								session.requestResolution(vid.dataset.UUID, targetWidth*window.devicePixelRatio, targetHeight*window.devicePixelRatio, true);
-							} else {
-								session.requestResolution(vid.dataset.UUID, targetWidth, targetHeight, true);
-							}
+						
+						let targetWidth = wrw;
+						let targetHeight = hrh;
+						
+						targetWidth -= (borderOffset + videoMargin)*2;
+						targetHeight -= (borderOffset + videoMargin)*2
+						
+						if (targetWidth<0){targetWidth=0;}
+						if (targetHeight<0){targetHeight=0;}
+						
+						if (session.devicePixelRatio){
+							session.requestResolution(vid.dataset.UUID, targetWidth * session.devicePixelRatio, targetHeight * session.devicePixelRatio, true, false, cover); // snap=true; if resolution close to 100%, send 100%. screenshare only
+						} else if (window.devicePixelRatio && parseInt(window.devicePixelRatio) > 1 ){
+							session.requestResolution(vid.dataset.UUID, targetWidth*window.devicePixelRatio, targetHeight*window.devicePixelRatio, true, false, cover);
+						} else {
+							session.requestResolution(vid.dataset.UUID, targetWidth, targetHeight, true, false, cover);
 						}
+						
 					}
 				}
 				///////////////
@@ -12587,12 +12623,12 @@ function remoteMute(ele, event=false, skipSend=false) {
 		if (val == 1){
 			ele.value = 0;
 			ele.classList.remove("pressed"); ele.ariaPressed = "false";
-			ele.innerHTML = '<i class="las la-microphone-slash" style="color:#900"></i>';
+			ele.innerHTML = '<i class="las la-microphone-slash"></i>';
 			ele.innerHTML += miscTranslations["mute"] || "Mute";
 		} else {
 			ele.value = 1;
 			ele.classList.add("pressed"); ele.ariaPressed = "true"; 
-			ele.innerHTML = '<i class="las la-microphone-slash" style="color:#900"></i>';
+			ele.innerHTML = '<i class="las la-microphone-slash"></i>';
 			ele.innerHTML += miscTranslations["unmute"] || "Unmute";
 		}
 	}
@@ -12827,9 +12863,15 @@ function remoteVolumeUI(ele){
 		remoteSliderTimeout = Date.now();
 		remoteVolume(ele);
 	}
+	//setVolumeColor(ele);
 	return ele.value;
 }
 
+/* function setVolumeColor(ele){
+	var vol1 = 200-parseInt(ele.value);
+	if (vol1<0){vol1=0};
+	ele.style.backgroundColor = "hsl("+vol1+", 100%, 50%)";
+} */
 
 function remoteVolume(ele) { // A directing room only is controlled by the Director, with the exception of MUTE.
 	log("volume: "+session.rpcs[ele.dataset.UUID].directorMutedState);
@@ -13063,19 +13105,36 @@ async function publishScreen() {
 	}
 
 	try {
-		let supportedConstraints = navigator.mediaDevices.getSupportedConstraints(); // cursor hidding isn't supported by most browsers anyways.
+		let supportedConstraints = navigator.mediaDevices.getSupportedConstraints();
 		if (supportedConstraints.cursor) {
-			constraints.video.cursor = "never";
+			if (session.screensharecursor){
+				constraints.video.cursor = ["always", "motion"];
+			} else {
+				constraints.video.cursor = "never";
+			}
+		}
+		if (session.suppressLocalAudioPlayback && supportedConstraints.suppressLocalAudioPlayback){
+			constraints.audio.suppressLocalAudioPlayback = true;
+		}
+		//
+		if (session.preferCurrentTab){
+			constraints.preferCurrentTab = true;
+		}
+		if (session.selfBrowserSurface){
+			constraints.selfBrowserSurface = session.selfBrowserSurface; // exclude or include
+		}
+		if (session.surfaceSwitching){
+			constraints.surfaceSwitching = session.surfaceSwitching; // exclude or include
+		}
+		if (session.systemAudio){
+			constraints.systemAudio = session.systemAudio;  // exclude or include
+		}
+		if (session.displaySurface && supportedConstraints.displaySurface){
+			constraints.video.displaySurface = session.displaySurface; // monitor, window, or browser
 		}
 	} catch(e){
 		warnlog("navigator.mediaDevices.getSupportedConstraints() not supported");
 	}
-
-	//if (session.nocursor) { // we assume no cursor on screen share anyways. maybe make a different flag for screenshare cursor
-	//	constraints.video.cursor = {
-	//		exact: "none"
-	//	}; // Not sure this does anything, but whatever.
-	//}
 
 	var overrideFramerate = false;
 	if ((session.frameRate !== false) && (session.maxframeRate != false)){
@@ -14042,7 +14101,7 @@ session.publishIFrame = function(iframeURL){
 		getById("hangupbutton").className="float";
 		getById("controlButtons").classList.remove("hidden");
 		getById("helpbutton").style.display = "inherit";
-		//getById("reportbutton").style.display = "";
+		getById("reportbutton").style.display = "";
 	} else {
 		getById("controlButtons").classList.add("hidden");
 	}
@@ -14861,11 +14920,11 @@ function audioMeter(mediaStreamSource, audioContext) {
 
 function audioCompressor(mediaStreamSource, audioContext) {
 	var compressor = audioContext.createDynamicsCompressor();
-	compressor.threshold.value = -50;
-	compressor.knee.value = 40;
-	compressor.ratio.value = 12;
-	compressor.attack.value = 0;
-	compressor.release.value = 0.25;
+	compressor.threshold.value = -40;
+	compressor.knee.value = 10;
+	compressor.ratio.value = 4; // 3
+	compressor.attack.value = 0.002;  // 0.001
+	compressor.release.value = 0.1; // 0.06
 	mediaStreamSource.connect(compressor);
 	return compressor;
 }
@@ -16083,13 +16142,21 @@ function requestInfocus(ele, evt=null, value=null) {
 	}
 }
 
-
+var fixScrollReset = null;
+var fixScrollResetValue = null;
 
 function requestAudioSettings(ele) {
 	
 	var UUID = ele.dataset.UUID;
 	
 	try {
+		clearTimeout(fixScrollReset);
+		fixScrollResetValue = getById("directorlayout").scrollTop;
+		fixScrollReset = setTimeout(function(scrollpos){
+			fixScrollReset = null;
+			getById("directorlayout").scrollTop = scrollpos;
+		}, 1000, fixScrollResetValue);
+		
 		query("#container_"+UUID+" [data-action-type='advanced-camera-settings']").value = 0;
 		query("#container_"+UUID+" [data-action-type='advanced-camera-settings']").classList.remove("pressed");
 		query("#container_"+UUID+" [data-action-type='advanced-camera-settings']").ariaPressed = "false";
@@ -16118,6 +16185,13 @@ function requestVideoSettings(ele) {
 	var UUID = ele.dataset.UUID;
 	
 	try {
+		clearTimeout(fixScrollReset);
+		fixScrollResetValue = getById("directorlayout").scrollTop;
+		fixScrollReset = setTimeout(function(scrollpos){
+			fixScrollReset = null;
+			getById("directorlayout").scrollTop = scrollpos;
+		}, 1000, fixScrollResetValue);
+		
 		query("#container_"+UUID+" [data-action-type='advanced-audio-settings']").value = 0;
 		query("#container_"+UUID+" [data-action-type='advanced-audio-settings']").classList.remove("pressed");
 		query("#container_"+UUID+" [data-action-type='advanced-audio-settings']").ariaPressed = "false";
@@ -16212,7 +16286,7 @@ async function createDirectorOnlyBox() {
 		controls.innerHTML += "<div class='soloButton' title='A direct solo view of the video/audio stream with nothing else'> \
 				<a class='soloLink advanced task' data-menu='context-menu' data-sololink='true' data-drag='1' draggable='true' onclick='copyFunction(this,event)' \
 				value='" + soloLink + "' href='" + soloLink + "'/>" + sanitizeChat(soloLink) + "</a>\
-				<button class='pull-right' style='width:100%;' onclick='copyFunction(this.previousElementSibling,event)'><i class='las la-user'></i><span translate='copy-solo-view-link'>copy solo view link</span></button>\
+				<button class='pull-right controlsGrid' onclick='copyFunction(this.previousElementSibling,event)'><i class='las la-user'></i><span translate='copy-solo-view-link'>copy solo view link</span></button>\
 			</div>\
 			<div id='groups'></div>";
 		if (session.directorUUID){
@@ -16303,6 +16377,28 @@ async function createDirectorOnlyBox() {
 	if (session.slotmode){
 		pokeIframeAPI("slot-updated", biggestSlot, null, session.streamID); // need to support self-director
 		session.pastSlots[session.streamID] = biggestSlot;
+		
+		createSlotUpdate();
+	}
+}
+
+function createSlotUpdate(UUID=false){
+	try {
+		var newSlots = {};
+		document.querySelectorAll("[data--u-u-i-d][data-slot]").forEach(ele=>{
+			newSlots[ele.dataset.slot] = ele.dataset.sid;
+		});
+		if (!UUID){
+			for (var uid in session.pcs){
+				if (session.pcs[uid].layout){
+					session.sendMessage({slotsUpdate:newSlots}, uid);
+				}
+			}
+		} else {
+			session.sendMessage({slotsUpdate:newSlots}, UUID);
+		}
+	} catch(e){
+		errorlog(e);
 	}
 }
 
@@ -16375,7 +16471,7 @@ async function createDirectorScreenshareOnlyBox() { // sstype=3
 		controls.innerHTML += "<div style='padding:5px;word-wrap: break-word; overflow:hidden; white-space: nowrap; overflow: hidden; font-size:0.7em; text-overflow: ellipsis;' title='A direct solo view of the video/audio stream with nothing else'> \
 				<a class='soloLink advanced task' data-menu='context-menu' data-sololink='true' data-drag='1' draggable='true' onclick='copyFunction(this,event)' \
 				value='" + soloLink + "' href='" + soloLink + "'/>" + sanitizeChat(soloLink) + "</a>\
-				<button class='pull-right' style='width:100%;' onclick='copyFunction(this.previousElementSibling,event)'><i class='las la-user'></i><span translate='copy-solo-view-link'>copy solo view link</span></button>\
+				<button class='pull-right controlsGrid' onclick='copyFunction(this.previousElementSibling,event)'><i class='las la-user'></i><span translate='copy-solo-view-link'>copy solo view link</span></button>\
 			</div>\
 			<div id='groups'></div>";
 		if (session.directorUUID){
@@ -16466,6 +16562,8 @@ async function createDirectorScreenshareOnlyBox() { // sstype=3
 	if (session.slotmode){
 		pokeIframeAPI("slot-updated", biggestSlot, null, session.streamID+":s"); // need to support self-director
 		session.pastSlots[session.streamID+":s"] = biggestSlot;
+		
+		createSlotUpdate();
 	}
 }
 
@@ -16633,6 +16731,7 @@ function dropSlot(event) {
 		pokeIframeAPI("slot-updated", parseInt(event.target.dataset.slot), null, event.target.dataset.sid ); // need to support self-director
 		pokeIframeAPI("slot-updated", parseInt(origThing.dataset.slot), null, origThing.dataset.sid); // need to support self-director
 		
+		
 		session.pastSlots[event.target.dataset.sid] = parseInt(event.target.dataset.slot);
 		session.pastSlots[origThing.dataset.sid] = parseInt(origThing.dataset.slot);
 	} else if (origThing && ("slot" in event.target.parentNode.dataset)){
@@ -16651,7 +16750,7 @@ function dropSlot(event) {
 		session.pastSlots[origThing.dataset.sid] = parseInt(origThing.dataset.slot);
 	}
 	
-	
+	createSlotUpdate();
 	
 	return false;
 }
@@ -16743,6 +16842,8 @@ function setSlot(ele,slot){
 		}
 		pokeIframeAPI("slot-updated", slot, null, ele.parentNode.dataset.sid);
 		session.pastSlots[ele.parentNode.dataset.sid] = slot;
+		
+		createSlotUpdate();
 	}
 }
 
@@ -16858,13 +16959,13 @@ function createControlBox(UUID, soloLink, streamID) {
 
 	var handsID = "hands_" + UUID;
 
-	controls.innerHTML += "<div class='flexBreak'><span data-translate='links'>Links</span></div>"; //Seems to create an empty div.
+	// controls.innerHTML += "<div class='flexBreak'><span data-translate='links'>Links</span></div>"; //Seems to create an empty div.
 	
 	if (session.hidesololinks==false){
 		controls.innerHTML += "<div class='soloButton' title='A direct solo view of the video/audio stream with nothing else. Its audio can be remotely controlled from here'> \
 				<a class='soloLink advanced task'  data-menu='context-menu' data-sololink='true' data-drag='1' draggable='true' onclick='copyFunction(this,event)' \
 				value='" + soloLink + "' href='" + soloLink + "'/>" + sanitizeChat(soloLink) + "</a>\
-				<button class='pull-right' style='width:100%;' onclick='copyFunction(this.previousElementSibling,event)'><i class='las la-user'></i><span translate='copy-solo-view-link'>copy solo view link</span></button>\
+				<button class='pull-right controlsGrid' onclick='copyFunction(this.previousElementSibling,event)'><i class='las la-user'></i><span translate='copy-solo-view-link'>copy solo view link</span></button>\
 			</div>";
 	}
 	
@@ -17041,6 +17142,8 @@ function createControlBox(UUID, soloLink, streamID) {
 	if (session.slotmode){
 		pokeIframeAPI("slot-updated", biggestSlot, UUID); // need to support self-director
 		session.pastSlots[streamID] = biggestSlot;
+		
+		createSlotUpdate();
 	}
 }
 
@@ -20122,19 +20225,39 @@ async function grabScreen(quality = 0, audio = true, videoOnEnd = false) {
 		//,cursor: {exact: "none"}
 	};
 	
-	if (session.screensharecursor){
-		constraints.video.cursor = ["always", "motion"];
-	} else {
-		try {
-			let supportedConstraints = navigator.mediaDevices.getSupportedConstraints();
-			if (supportedConstraints.cursor) {
+	
+	try {
+		let supportedConstraints = navigator.mediaDevices.getSupportedConstraints();
+		if (supportedConstraints.cursor) {
+			if (session.screensharecursor){
+				constraints.video.cursor = ["always", "motion"];
+			} else {
 				constraints.video.cursor = "never";
 			}
-		} catch(e){
-			warnlog("navigator.mediaDevices.getSupportedConstraints() not supported");
 		}
+		if (session.suppressLocalAudioPlayback && supportedConstraints.suppressLocalAudioPlayback){
+			constraints.audio.suppressLocalAudioPlayback = true;
+		}
+		if (session.preferCurrentTab){
+			constraints.preferCurrentTab = true;
+		}
+		if (session.selfBrowserSurface){
+			constraints.selfBrowserSurface = session.selfBrowserSurface; // exclude or include
+		}
+		if (session.surfaceSwitching){
+			constraints.surfaceSwitching = session.surfaceSwitching; // exclude or include
+		}
+		if (session.systemAudio){
+			constraints.systemAudio = session.systemAudio;  // exclude or include
+		}
+		if (session.displaySurface && supportedConstraints.displaySurface){
+			constraints.video.displaySurface = session.displaySurface; // monitor, window, or browser
+		}
+	} catch(e){
+		warnlog("navigator.mediaDevices.getSupportedConstraints() not supported");
 	}
-
+	
+	
 	if (session.echoCancellation === true) {
 		constraints.audio.echoCancellation = true;
 	}
@@ -23457,7 +23580,7 @@ session.hostFile = function(ele, event){ // webcam stream is used to generated a
 		getById("hangupbutton").className="float";
 		getById("controlButtons").classList.remove("hidden");
 		getById("helpbutton").style.display = "inherit";
-		//getById("reportbutton").style.display = "";
+		getById("reportbutton").style.display = "";
 	} else {
 		getById("controlButtons").classList.add("hidden");
 	}
@@ -24958,7 +25081,7 @@ function updateDirectorsAudio(dataN, UUID) {
 			input.dataset.track = n;
 			input.dataset.UUID = UUID;
 			input.id = "constraints_" + i + "_"+UUID;
-			input.style = "display:block; width:100%; margin: 2px 0px 5px;";
+			input.classList.add("inputConstraint");
 			input.name = "constraints_" + i;
 			
 			manualInput.onchange = function(e) {
@@ -25374,6 +25497,12 @@ function updateDirectorsAudio(dataN, UUID) {
 		
 		query("#container_"+UUID+" .advancedAudioSettings").appendChild(audioEle);
 	}
+	
+	if (fixScrollReset){
+		clearTimeout(fixScrollReset);
+		fixScrollReset = null;
+		getById("directorlayout").scrollTop = fixScrollResetValue;
+	}
 }
 
 var remoteSliderTimeout = 0;
@@ -25543,7 +25672,7 @@ function updateDirectorsVideo(data, UUID) {
 				input.dataset.UUID = UUID;
 				input.id = "constraints_" + i + "_" + UUID;
 				input.name = input.id;
-                input.style = "display:block; width:100%; margin: 2px 0px 5px;";
+                input.classList.add("inputConstraint");
 				input.manualMode = manualMode;
 				
 
@@ -25766,6 +25895,12 @@ function updateDirectorsVideo(data, UUID) {
 	query("#container_"+UUID+" .advancedVideoSettings").innerHTML = "";
 	query("#container_"+UUID+" .advancedVideoSettings").appendChild(videoEle);
 	query("#container_"+UUID+" .advancedVideoSettings").classList.remove("hidden");
+	
+	if (fixScrollReset){
+		clearTimeout(fixScrollReset);
+		fixScrollReset = null;
+		getById("directorlayout").scrollTop = fixScrollResetValue;
+	}
 }
 
 ///////
@@ -28404,7 +28539,7 @@ async function requestBasicPermissions(constraint = {video: true, audio: true}, 
 		}).catch(function(err) {
 			clearTimeout(timerBasicCheck);
 			warnlog("some error with GetUSERMEDIA");
-			errorlog(err); /* handle the error */
+			console.warn(err); /* handle the error */
 			if (err.name == "NotFoundError" || err.name == "DevicesNotFoundError") {
 				//required track is missing 
 			} else if (err.name == "NotReadableError" || err.name == "TrackStartError") {
@@ -28435,7 +28570,7 @@ async function requestBasicPermissions(constraint = {video: true, audio: true}, 
 					}, 1);
 				}
 			}
-			errorlog("trying to list webcam again");
+			warnlog("trying to list webcam again");
 
 			if (callback){
 				callback(miconly);
@@ -28443,7 +28578,7 @@ async function requestBasicPermissions(constraint = {video: true, audio: true}, 
 			
 		});
 	} catch (e) {
-		errorlog(e);
+		console.warn(e);
 		if (!(session.cleanOutput)) {
 			if (window.isSecureContext) {
 				warnUser("An error has occured when trying to access the webcam or microphone. The reason is not known.");
@@ -31509,7 +31644,7 @@ function updateIncomingVideoElement(UUID, video=true, audio=true){
 						}
 					}
 					session.rpcs[UUID].videoElement.srcObject.addTrack(trk); 
-					mediaVideoTrackUpdated(UUID, session.rpcs[UUID].streamID);
+					mediaVideoTrackUpdated(UUID, session.rpcs[UUID].streamID); 
 				}
 			}
 		});
@@ -35600,17 +35735,36 @@ async function createSecondStream() { ////////////////////////////  &sstype=3 ?
 			//,cursor: {exact: "none"}
 		};
 		
-		if (session.screensharecursor){
-			constraints.video.cursor = ["always", "motion"];
-		} else {
-			try {
-				let supportedConstraints = navigator.mediaDevices.getSupportedConstraints();
-				if (supportedConstraints.cursor) {
+		try {
+			let supportedConstraints = navigator.mediaDevices.getSupportedConstraints();
+			if (supportedConstraints.cursor) {
+				if (session.screensharecursor){
+					constraints.video.cursor = ["always", "motion"];
+				} else {
 					constraints.video.cursor = "never";
 				}
-			} catch(e){
-				warnlog("navigator.mediaDevices.getSupportedConstraints() not supported");
 			}
+			if (session.suppressLocalAudioPlayback && supportedConstraints.suppressLocalAudioPlayback){
+				constraints.audio.suppressLocalAudioPlayback = true;
+			}
+			//
+			if (session.preferCurrentTab){
+				constraints.preferCurrentTab = true;
+			}
+			if (session.selfBrowserSurface){
+				constraints.selfBrowserSurface = session.selfBrowserSurface; // exclude or include
+			}
+			if (session.surfaceSwitching){
+				constraints.surfaceSwitching = session.surfaceSwitching; // exclude or include
+			}
+			if (session.systemAudio){
+				constraints.systemAudio = session.systemAudio;  // exclude or include
+			}
+			if (session.displaySurface && supportedConstraints.displaySurface){
+				constraints.video.displaySurface = session.displaySurface; // monitor, window, or browser
+			}
+		} catch(e){
+			warnlog("navigator.mediaDevices.getSupportedConstraints() not supported");
 		}
 
 		if (session.echoCancellation === false) {
