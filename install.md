@@ -31,7 +31,7 @@ For a very simple method on how to deploy VDO.Ninja, there's a detailed video gu
 
 Most users might find the Github Pages deployment option easiest and quickest. 
 
-### Deplying to a NGINX web server
+### Deploying to a NGINX web server
 
 For advanced users, NGINX might be more appropriate than using Github Pages, so find written directions below. There's also a community-created video tutorial on setting up on AWS + Nginx here; https://youtu.be/8sDMwBIlgwE, but it's not an official install guide.
 
