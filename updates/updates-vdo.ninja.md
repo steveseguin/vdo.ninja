@@ -1,5 +1,74 @@
 # Updates - VDO.Ninja
 
+#### May 8 <a href="#august-31" id="august-31"></a>
+
+* _New version of VDO.Ninja released_ into Production at [https://vdo.ninja/](https://vdo.ninja/). v23 now live.\
+  \
+  If having problems,\
+  \- Please do a hard browser cache clear and refresh, especially in your OBS browser sources and if on mobile.\
+  \- If still having problems, the previous version of VDO.Ninja can be found here: [https://vdo.ninja/v22/](https://vdo.ninja/v22/)\
+  \- Report any issues you have with the new version in the ⁠[🐞│bug-report discord channel](https://discord.gg/qWDshMsTar) \
+  \
+  [Release notes](../releases/v23.md) will be coming over the next few days probably, but some quick highlights are:\
+  \- the [Mixer App](../steves-helper-apps/mixer-app.md) has been improved, including with the option to sync OBS scenes to Mixer layouts\
+  \- connection stats has new features and important fixes to the candidate type stat\
+  \- a refresh to the UI, with a large contribution from Lindenkron there\
+  \- chunked mode improvements and options to dynamically change the buffer have been added - Initial [WHIP/WHEP](../advanced-settings/mixer-scene-parameters/and-whip-alpha.md) support added, including a test page at [https://vdo.ninja/whip](https://vdo.ninja/whip)
+
+#### May 5 <a href="#august-31" id="august-31"></a>
+
+* Fixed an issue with mobile publishers, where if you rotated the phone from initially portrait mode, switching to landscape mode, the resolution after might have been still limited to the portrait resolution (but with just a rotated orientation). I'm now double checking that the outbound encoded video resolution per stream is maximized every time the sending device's orientation changes.
+* Added some more debugging stats into the VDO.Ninja sender's side stats menu.\
+  \-- three new video bitrate stats, useful for debugging. You can see what the initial bitrate was set to, the current bitrate target, and any max-bitrate target.\
+  \-- these stats won't appear if they aren't set.
+* Also added a bitrate slider for the sender-side to the stats menu, so you can adjust the video bitrate that you are sending for that particular viewer.\
+  \-- you can't set it higher than the initial connection bitrate, if it was set, or the max defined bitrate.\
+  \-- the default max of the slider will be either the initial/max bitrate of the connection; or otherwise 6-mbps.\
+  \-- it updates on release of the slider and will take upwards of 3 seconds to take effect, if it can.\
+  \-- also, importantly, this is not available to any user within a group-room. This is purely available for simple push/view setups.\
+  \
+  If you find this new data / tool useful, particularly if it helped fix quality issues, please let me know how it helped so I can invest more time into it.\
+  ![](<../.gitbook/assets/image (5).png>)
+* If an `iPhone 12 (and up)` user is detected, who is using `iOS +16`, with the `REAR camera selected`, and who has [`&quality=0`](../advanced-settings/video-parameters/and-quality.md) (high performance) mode active, then `1080p at 60-fps` will be enabled. So yes, iPhones actually work at 1080p60 now..\
+  \
+  related to this update, the stats menu has more data:\
+  \-- The viewer stats menu show the iOS version now by the browser stats: ie: Safari 16. (I'd recommend updating to iOS 16.2 if you do have an iPhone.)\
+  \-- The stats menu now shows whether it _thinks_ the remote iPhone is an iPhone 12 and up (SE versions excluded)\
+  \-- "iPhone 12 and up" will be true or false.\
+  ![](<../.gitbook/assets/image (2).png>)![](<../.gitbook/assets/image (1).png>)\
+  \
+  \*\* on alpha at vdo.ninja/alpha/
+
+#### May 4 <a href="#august-31" id="august-31"></a>
+
+* Added `&minipreviewoffset` (`&mpo`), to alpha. This accepts an interger value, `-20` to `120`, which is used to position where the [mini preview](../source-settings/and-minipreview.md) is located by default on screen. `&mpo=40` would imply center of screen, as the minipreview is about 20% of the screen size. `&mpo=0` (or just `&mpo`) is the left-most side of the screen.
+
+#### May 3 <a href="#august-31" id="august-31"></a>
+
+* Fixed an issue where if the main director reloads their page, they will have the current director state updated on load, provided by any existing co-directors in the room. Before, only director -> codirector and codirector -> codirector state syncing worked, resulting in the room's state being cleared whenever the main director reloaded.
+* Made the option to select an [avatar](../advanced-settings/video-parameters/and-avatar.md) / effect default-on when joining as a director.\
+  ![](<../.gitbook/assets/image (7).png>)
+*   Fixed an issue where the mute-video track button didn't always appear when a director with an active video track.
+
+    \
+    changes to VDO.Ninja on alpha at [https://vdo.ninja/alpha/](https://vdo.ninja/alpha/)
+
+#### May 1 <a href="#august-31" id="august-31"></a>
+
+* Added a report bug feature back into VDO.Ninja; it might show up in some cases in the lower-right hand of screen, where clicking on the bug icon will let you submit the app logs to me for analysis. It will appear more often on alpha than on production, to avoid being a nuisance. \
+  \* on alpha\
+  ![](<../.gitbook/assets/image (8).png>)
+* Added `&suppresslocalaudio` as a new URL option. This will disable local audio playback of a Chrome tab while screen-sharing it. This can be used with the new WHIP output of VDO.Ninja to publish a VDO.Ninja scene directly to Twitch, without having to deal with any audio feedback issues while having that scene tab open.
+* `&prefercurrenttab` (have the current tab as the default screen-share source)
+* `&selfbrowsersurface` , which excludes the current tab as an screen share source option. (you can pass "include" or "exclude" as a value to control this though)
+* `&systemaudio`, which excludes the system-audio as an audio source when display sharing. Tab audio is still available though. (can help prevent accidental audio feedback loops)
+* `&displaysurface` will pre-select "display share", rather than tab-share, when screen sharing. You can pass "monitor", "browser", or "window" as options to customize this though.\
+  ![](../.gitbook/assets/image.png)\
+  \
+  For more details on these new features see here: [https://developer.chrome.com/docs/web-platform/screen-sharing-controls/](https://developer.chrome.com/docs/web-platform/screen-sharing-controls/) (Chrome/chromium-browsers only)\
+  \
+  \* on alpha
+
 #### April 27 <a href="#august-31" id="august-31"></a>
 
 * Continuing to tweak and improving the styling of VDO.Ninja.
@@ -26,7 +95,7 @@
   \-- You can change the blurring intensity with `&blur=25` or whatever; `10` is default\
   \-- `&blur=0` works as well\
   \-- may be buggy if using it with [`&forcedlandscape`](../advanced-settings/mobile-parameters/and-forcelandscape.md) or [`&rotate`](../advanced-settings/design-parameters/and-rotate.md)\
-  ![](<../.gitbook/assets/image (8).png>)
+  ![](<../.gitbook/assets/image (8) (1).png>)
 * Added new accessibility options, include button states using the `aria-pressed` attribute.\
   \
   \*\* changes on alpha. ie:\
@@ -62,9 +131,9 @@
 #### April 13 <a href="#august-31" id="august-31"></a>
 
 * Control bar styling for VDO.Ninja has been overhauled to look a lot nicer, curtesy of @Lindenkron. This style update is available on vdo.ninja/alpha/ and on GitHub.\
-  ![](<../.gitbook/assets/image (13).png>)
+  ![](<../.gitbook/assets/image (13) (4).png>)
 * Added the number of CPU threads (logical cores) to the stats in VDO.Ninja, as well as the check/results testing page.. (update on alpha & GitHub)\
-  ![](../.gitbook/assets/image.png)
+  ![](<../.gitbook/assets/image (13).png>)
 
 #### April 12 <a href="#august-31" id="august-31"></a>
 
@@ -94,7 +163,7 @@
   \-- It's exactly the same as join with video, except the video device is not selected by default.\
   \-- When used, a mic only button shows if a guest joining a room, and if [`&audiodevice=0`](../source-settings/audiodevice.md) is not present.\
   \-- Hoping this will give more users courage to click the join button, but if it causes issues, I may revert.\
-  ![](<../.gitbook/assets/image (1) (2).png>)\
+  ![](<../.gitbook/assets/image (1) (2) (7).png>)\
   \
   \*\* on alpha for testing at [https://vdo.ninja/alpha/?room=someetestroomhere\&moo](https://vdo.ninja/alpha/?room=someetestroomhere\&moo)
 
@@ -134,10 +203,10 @@
 #### March 24 <a href="#august-31" id="august-31"></a>
 
 * Right click a video and click `Snapshot to Clipboard` to save the current video frame to the clipboard as a PNG image. This can be pasted into most applications, such as Photoshop, for quick use in a production\
-  ![](<../.gitbook/assets/image (6).png>)\
+  ![](<../.gitbook/assets/image (6) (1).png>)\
   \
   \-- Also the option to save to disk\
-  ![](<../.gitbook/assets/image (4) (1).png>)\
+  ![](<../.gitbook/assets/image (4) (1) (4).png>)\
   \
   \*\* on alpha @ vdo.ninja/alpha/
 
@@ -402,7 +471,7 @@
   \-- HTTP / WSS remote control also added; `https://api.vdo.ninja/YOURAPIKEY/nextSlide` and `prevSlide`\
   \-- Local Streamdeck support also working, via MIDI.\
   \-- YouTube Tutorial: [https://youtu.be/ORH8betTt8Y](https://youtu.be/ORH8betTt8Y)\
-  ![](<../.gitbook/assets/image (5) (1).png>)![](<../.gitbook/assets/image (19).png>)\
+  ![](<../.gitbook/assets/image (5) (1) (1).png>)![](<../.gitbook/assets/image (19).png>)\
   \
   \* on alpha at vdo.ninja/alpha/
 
@@ -553,7 +622,7 @@
 #### **November 23** <a href="#august-31" id="august-31"></a>
 
 * Added a couple exact presets for the [aspect ratio](../advanced-settings/video-parameters/and-aspectratio.md) setting; should make it easier to precisely crop an incoming guest who doesn't have their smartphone oriented right, or just in case you want to reset the aspect ratio to 16:9, etc.\
-  ![](<../.gitbook/assets/image (3) (4).png>)\
+  ![](<../.gitbook/assets/image (3) (4) (2).png>)\
   \*\* on alpha at [https://vdo.ninja/alpha/](https://vdo.ninja/alpha/)
 
 #### **November 22** <a href="#august-31" id="august-31"></a>

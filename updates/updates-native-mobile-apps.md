@@ -2,6 +2,18 @@
 
 [native-mobile-app-versions.md](../steves-helper-apps/native-mobile-app-versions.md "mention")
 
+#### May 7
+
+* I have updated the **iOS** native app to have **system-wide screen sharing support**, rather than just in-app screen sharing. (Android already had it).\
+  \
+  The iOS beta here: [https://testflight.apple.com/join/KnzvY7JO](https://testflight.apple.com/join/KnzvY7JO) (version 2.0.13)\
+  \
+  Audio for both android and iOS is still from the microphone, and not the internal system audio. I'll try to fix that, but it's quite the challenge for me. It probably wouldn't be too challenging for a more experienced mobile developer to get working though, along with perhaps HDMI support.\
+  \
+  The app code's repo is here, [https://github.com/steveseguin/vdon\_flutter](https://github.com/steveseguin/vdon\_flutter), if you wanted to pull and build it yourself. Ill continue to work on it this weekend, improving the UI/UX, and maybe have whatever progress I make then be pushed to the public live app store during the work week. There's some additional features and polish I want to get in before doing the final app submission.\
+  \
+  \[update; the beta link should be live now]
+
 #### April 9
 
 * Updated builds of the VDO.Ninja native app for Android and iOS are now LIVE on both Google Play and iOS App stores. These new versions allow for use with fully self-hosted deployments, a mic-only mode, and general WebRTC lib updates.

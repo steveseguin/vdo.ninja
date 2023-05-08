@@ -29,6 +29,12 @@ You can toggle it for the guest's invite link in the director's room:\
 You can encode your URL here:\
 [https://www.urlencoder.org/](https://www.urlencoder.org/)
 
+### Director
+
+Choosing the default avatar / placeholder image is activated for the director on default
+
+<figure><img src="../../.gitbook/assets/image (6).png" alt=""><figcaption></figcaption></figure>
+
 ## Related
 
 {% content-ref url="../newly-added-parameters/and-waitimage.md" %}

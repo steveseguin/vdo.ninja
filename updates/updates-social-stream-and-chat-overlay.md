@@ -3,10 +3,22 @@
 [social-stream.md](../steves-helper-apps/social-stream.md "mention")\
 [chat-overlay.md](../steves-helper-apps/chat-overlay.md "mention")
 
+#### **May 6**
+
+* buzzit.ca chat support added to **Social Stream** (added via community member: _Skintillion_)
+
+#### **May 3**
+
+* **Added more options on how to colorize names in** Social Stream\*\*\
+  \-- This was added to allow a host to put people into their own team by setting the name to a limited set of colors.\
+  \-- You can have color options (teams) ranging from 1 to several thousand.\
+  \-- You can also change the randomization seed so you can put people into different teams on the fly.\
+  ![](<../.gitbook/assets/image (4).png>)
+
 #### **April 18**
 
 * Added the option to filter Social Stream messages by the source destination. You'll need to enable the alt filter mode in the filter search bar, and then use `source:SOURCENAME`, so ie: `source:twitch` or `source:youtube`.\
-  ![](<../.gitbook/assets/image (4).png>)
+  ![](<../.gitbook/assets/image (4) (1).png>)
 
 #### **April 17**
 
@@ -23,7 +35,7 @@
   \-- It only saves each name once, without timestamp or additional meta data.\
   \-- You can open the file while its still recording, to see the current sate of number of unique chatters, etc.\
   \-- Start/stop support works, which will also start a new list once started again.\
-  ![](<../.gitbook/assets/image (1).png>)
+  ![](<../.gitbook/assets/image (1) (2).png>)
 
 #### **April 11**
 
@@ -330,7 +342,7 @@ Social Stream updates for today:
 * Updated Socialstream to support custom themes/templates. I've provided an example theme that you can use or base your own themes on. see: [https://github.com/steveseguin/social\_stream/tree/main/themes](https://github.com/steveseguin/social\_stream/tree/main/themes) for more.\
   ![](<../.gitbook/assets/image (7) (1) (2).png>)
 * Added more animated style options for how messages appear into the chat stream, such as slide in, fade in, and drop in.\
-  ![](<../.gitbook/assets/image (8) (1) (1).png>)
+  ![](<../.gitbook/assets/image (8) (1) (1) (3).png>)
 
 #### **October 1**
 

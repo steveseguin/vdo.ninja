@@ -446,6 +446,7 @@
   * [Upcoming Parameters](advanced-settings/upcoming-parameters.md)
   * [Other Parameters](other-parameters.md)
 * [Releases](release-notes/older-releases.md)
+  * [v23 🌱](releases/v23.md)
   * [v22 👑](releases/v22.md)
   * [v21 ❤️](older-releases/v21.md)
   * [v20 🎁](release-notes/v20.md)

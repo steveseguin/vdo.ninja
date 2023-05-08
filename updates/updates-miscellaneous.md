@@ -1,5 +1,22 @@
 # Updates - Miscellaneous
 
+#### May 6
+
+* Fixed the [**vdo.ninja/speedtest**](https://vdo.ninja/speedtest) site when loading it on mobile; the CSS was messed up.
+
+#### May 4
+
+* I updated the Twitch chat + VDO.Ninja web app @ [https://vdo.ninja/alpha/twitch](https://vdo.ninja/alpha/twitch)\
+  \-- you can hide the video preview now, which frees up some more space on screen\
+  \-- tried to make the page harder to accidentally refresh\
+  \-- made more things black, to help conserve battery power with OLED displays; this includes making the Twitch chat itself darker\
+  \-- control bar moved to the top of the page, disconnected from the video, so buttons are larger and less in the way\
+  \-- added a way to clear the saved URL options (recommended you use it to clear any old settings from the older version)
+
+#### May 3
+
+* Our Discord Bot has been further improved to better filter out spam and not legit messages. (via leb)
+
 #### April 10
 
 * Managed to get Vingester built for MacOS; [https://github.com/steveseguin/vingester/releases/tag/2.8.1](https://github.com/steveseguin/vingester/releases/tag/2.8.1) (I already had PC support added)\
@@ -10,7 +27,7 @@
 #### April 8
 
 * The [https://updates.vdo.ninja/](https://updates.vdo.ninja/) page has been updated to show image attachments now. The updates page just mirrors this Discord #updates channel; accessible for non-Discord users. This update was brought to you by @leb, who is also responsible for building out our hardworking Discord bot.\
-  ![](<../.gitbook/assets/image (7).png>)
+  ![](<../.gitbook/assets/image (7) (4).png>)
 
 #### March 30
 

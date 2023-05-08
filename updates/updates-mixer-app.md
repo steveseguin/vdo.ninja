@@ -2,6 +2,10 @@
 
 [mixer-app.md](../steves-helper-apps/mixer-app.md "mention")
 
+#### May 3
+
+* Further improved the new Mixer's feature where you can have OBS and the Mixer synced, so you can have OBS and the Mixer change scenes/layout automatically when either changes. (ie: change your OBS scene will auto activate the linked VDO.Ninja mixer layout.) The improvement is more customization over whether you want the sync to work both ways or not, and I've improved the speed of syncing to be instant.
+
 #### April 27
 
 * OBS scene syncing in the Mixer App works both ways now - changing the OBS scene will activate the corresponding layout in the Mixer App if the layout is linked to a scene. As already is the case, selecting a layout will activate the OBS scene it is linked to as well.\
@@ -11,7 +15,7 @@
 
 *   You can use the API to control the mixer layout now, via the Mixer App. `https://api.vdo.ninja/APIKEY/layout/2`\
     \-- there were some bugs with this when using it via the Mixer App before, and there wasn't much documentation on the [companion.vdo.ninja](https://companion.vdo.ninja/) site. All fixed.\
-    ![](<../.gitbook/assets/image (6) (1).png>)![](<../.gitbook/assets/image (2) (1) (2).png>)\
+    ![](<../.gitbook/assets/image (6) (1) (3).png>)![](<../.gitbook/assets/image (2) (1) (2).png>)\
 
 
     Note: The benefit of being able to switch just the layout, rather than scene, is that you only need one browser source in OBS (not even needing OBS really either). Having one browser source means fewer resources used for both the director and guests. All controllable via hotkeys or API.\
@@ -54,7 +58,7 @@
     3. An OBS scene name needs to be specified for a layout in the mixer app (And make sure you click "save scene" after)\
        ![](<../.gitbook/assets/image (11) (3).png>)
     4. OBS's browser source needs level 4 or 5 enabled for at least one of the VDO.Ninja scenes that you added to OBS (or set to all scenes, if you disable sources when inactive)\
-       ![](<../.gitbook/assets/image (5) (1) (1).png>)
+       ![](<../.gitbook/assets/image (5) (1) (1) (3).png>)
 
     The idea here is that you can have OBS overlays/mixer apply in sync to your VDO.Ninja custom mix layouts, and even control your show remotely without OBS even on the same computer.
 * If you hold CTRL down while dragging/resizing elements in the Mixer App, grid-snapping mode is disabled, allowing for fine-grain pixel-level accuracy.\
