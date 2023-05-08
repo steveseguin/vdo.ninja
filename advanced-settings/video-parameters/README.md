@@ -41,6 +41,7 @@ You have to add them to the source side ([`&push`](../../source-settings/push.md
 | [`&fullscreen`](../../source-settings/fullscreen.md)                  | The preview video will be fullscreen                                                                              |
 | [`&showpreview`](../../source-settings/and-preview.md)                | Forces the guest to have a self-preview                                                                           |
 | [`&minipreview`](../../source-settings/and-minipreview.md)            | Mini self-preview at the top right corner                                                                         |
+| [`&minipreviewoffset`](and-minipreview-1.md) (alpha)                  | Used to position where the mini preview is located by default on screen                                           |
 | [`&nopreview`](../../source-settings/and-nopreview.md)                | Disables the local self-preview                                                                                   |
 | [`&hideguest`](../../newly-added-parameters/and-hideguest.md)         | Has a guest join a room not visible to others                                                                     |
 | [`&videomute`](../../source-settings/and-videomute.md)                | Auto mutes guest's video                                                                                          |

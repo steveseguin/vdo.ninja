@@ -41,7 +41,7 @@
 
 #### May 4 <a href="#august-31" id="august-31"></a>
 
-* Added `&minipreviewoffset` (`&mpo`), to alpha. This accepts an interger value, `-20` to `120`, which is used to position where the [mini preview](../source-settings/and-minipreview.md) is located by default on screen. `&mpo=40` would imply center of screen, as the minipreview is about 20% of the screen size. `&mpo=0` (or just `&mpo`) is the left-most side of the screen.
+* Added [`&minipreviewoffset`](../advanced-settings/video-parameters/and-minipreview-1.md) (`&mpo`), to alpha. This accepts an interer value, `-20` to `120`, which is used to position where the [mini preview](../source-settings/and-minipreview.md) is located by default on screen. `&mpo=40` would imply center of screen, as the mini preview is about 20% of the screen size. `&mpo=0` (or just `&mpo`) is the left-most side of the screen.
 
 #### May 3 <a href="#august-31" id="august-31"></a>
 
@@ -195,7 +195,7 @@
   \-- This disables the video preview for even the director, as its disabled as the source, so there isn't for even a solo "view" link to override it. This then is a bit more of a sure-fire way to disable a video from a guest.\
   \-- The previous "hide guest" button still works, but has a new icon. This differs from the new "disable video" in that the director can still see a preview of the guests video and it also hides any avatar/style-place-holder. When "disabling video", audio-only styles and avatar placeholders may still work.\
   \-- The guest gets a little note in their header bar that the director muted them when enabled. Also, the guest is unable to see their own video preview when enabled, hence the need for a message.\
-  ![](<../.gitbook/assets/image (179).png>)![](<../.gitbook/assets/image (3) (1).png>)\
+  ![](<../.gitbook/assets/image (179).png>)![](<../.gitbook/assets/image (3) (1) (1).png>)\
   \
   \*\* on alpha [https://vdo.ninja/alpha/](https://vdo.ninja/alpha/), by user request. Please report any issues/feedback regarding it.
 
@@ -235,7 +235,7 @@
 * When recording iPhone/iPad videos in portrait mode with Chrome as a remote VDO.Ninja viewer, the videos should be saved correctly (both via p2p and with Meshcast), rather than in a chopped-in-half corrupted version.
 * Added [`&postapi`](../advanced-settings/api-and-midi-parameters/and-postapi-alpha.md) (aka `&posturl`), which lets you specify a custom POST URL to send events within VDO.Ninja to.\
   \-- data JSON encoded, post URL requires HTTPS+CORS, and the passed URL parameter value needs to be encodedURLComponent. ie: `&postapi=https%3A%2F%2Fwebhook.site%2Fb190f5bf-e4f8-454a-bd51-78b5807df9c1` -- If you don't want to listen for events with the websocket server API I host, you can use this with your own API https server instead and get key events pushed to you that way\
-  ![](<../.gitbook/assets/image (21).png>)![](<../.gitbook/assets/image (3) (1) (1).png>)
+  ![](<../.gitbook/assets/image (21).png>)![](<../.gitbook/assets/image (3) (1) (1) (3).png>)
 * The hidden user-list can be closed when using [`&broadcast`](../advanced-settings/view-parameters/broadcast.md) mode now
 * Bug fixed with the [vdo.ninja/twitch](https://vdo.ninja/twitch) page, via a community code contribution
 * _Development Progress update: WHIP and VDO.Ninja_\

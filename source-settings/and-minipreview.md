@@ -16,7 +16,13 @@ Shows the mini self-preview at the top right corner. This is the default behavio
 
 ![](<../.gitbook/assets/image (12) (1) (2).png>)
 
+You can change the default position of the mini preview with [`&minipreviewoffset`](../advanced-settings/video-parameters/and-minipreview-1.md).
+
 ## Related
+
+{% content-ref url="../advanced-settings/video-parameters/and-minipreview-1.md" %}
+[and-minipreview-1.md](../advanced-settings/video-parameters/and-minipreview-1.md)
+{% endcontent-ref %}
 
 {% content-ref url="and-preview.md" %}
 [and-preview.md](and-preview.md)

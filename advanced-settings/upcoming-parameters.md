@@ -40,6 +40,7 @@ You can use/test these parameters on [vdo.ninja/alpha](https://vdo.ninja/alpha/)
 | [`&selfbrowsersurface`](screen-share-parameters/and-selfbrowsersurface.md)\*         | Excludes the current tab as a screen-share source option                                                                                                 |
 | [`&systemaudio`](screen-share-parameters/and-systemaudio.md)\*                       | Excludes the system-audio as an audio source when display sharing                                                                                        |
 | [`&displaysurface`](screen-share-parameters/and-displaysurface.md)\*                 | Will pre-select display-share, rather than tab-share, when screen-sharing                                                                                |
+| [`&minipreviewoffset`](video-parameters/and-minipreview-1.md)\*                      | Used to position where the mini preview is located by default on screen                                                                                  |
 
 \*only on [vdo.ninja/alpha](https://vdo.ninja/alpha/)\
 \*\*on [vdo.ninja/beta](https://vdo.ninja/beta/) and [vdo.ninja/alpha](https://vdo.ninja/alpha/)
