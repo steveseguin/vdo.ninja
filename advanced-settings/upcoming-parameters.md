@@ -7,9 +7,9 @@ description: >-
 # Upcoming Parameters
 
 {% hint style="info" %}
-currently alpha, beta and production are on sync
+Currently alpha, beta and production are on sync
 
-[Version 23](../releases/v23.md) was released on May 8th. All the new parameters are [here](new-parameters.md).
+[Version 23](../releases/v23.md) was released on May 8th. All new parameters are [here](new-parameters.md).
 {% endhint %}
 
 You can use/test these parameters on [vdo.ninja/alpha](https://vdo.ninja/alpha/) and/or [vdo.ninja/beta](https://vdo.ninja/beta/)
