@@ -1,5 +1,7 @@
 # Updates - VDO.Ninja
 
+## [Version 23 Release](../releases/v23.md) <a href="#august-31" id="august-31"></a>
+
 #### May 8 <a href="#august-31" id="august-31"></a>
 
 * _New version of VDO.Ninja released_ into Production at [https://vdo.ninja/](https://vdo.ninja/). v23 now live.\
