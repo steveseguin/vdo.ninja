@@ -13218,6 +13218,7 @@ async function publishScreen() {
 			getById("mutespeakerbutton").classList.remove("hidden");
 			//getById("mutespeakerbutton").className="float";
 			getById("chatbutton").className = "float";
+			getById('sharefilebutton').classList.remove("hidden"); // we won't override "display:none", if set, though.
 			getById("mutevideobutton").className = "float";
 			getById("hangupbutton").className = "float";
 			if (session.showSettings) {
@@ -13518,6 +13519,7 @@ function publishWebcam(btn = false, miconly=false) {
 		getById("mutespeakerbutton").classList.remove("hidden");
 		//getById("mutespeakerbutton").className="float";
 		getById("chatbutton").className = "float";
+		getById('sharefilebutton').classList.remove("hidden"); // we won't override "display:none", if set, though.
 		getById("mutevideobutton").className = "float";
 		getById("hangupbutton").className = "float";
 		if (session.showSettings) {
@@ -14140,6 +14142,7 @@ session.publishIFrame = function(iframeURL){
 		getById("chatbutton").className="float";
 		getById("hangupbutton").className="float";
 		getById("controlButtons").classList.remove("hidden");
+		getById('sharefilebutton').classList.remove("hidden"); // we won't override "display:none", if set, though.
 		getById("helpbutton").style.display = "inherit";
 		getById("reportbutton").style.display = "";
 	} else {
@@ -15944,6 +15947,7 @@ async function createRoomCallback(passAdd, passAdd2) {
 			getById("queuebutton").classList.remove("hidden");
 		}
 		getById("chatbutton").classList.remove("hidden");
+		getById('sharefilebutton').classList.remove("hidden"); // we won't override "display:none", if set, though.
 		getById("controlButtons").classList.remove("hidden");
 		getById("mutespeakerbutton").classList.remove("hidden");
 		getById("websitesharebutton").classList.remove("hidden");
@@ -23653,6 +23657,7 @@ session.hostFile = function(ele, event){ // webcam stream is used to generated a
 
 	if (!(session.cleanOutput)){
 		getById("chatbutton").className="float";
+		getById('sharefilebutton').classList.remove("hidden"); // we won't override "display:none", if set, though.
 		getById("hangupbutton").className="float";
 		getById("controlButtons").classList.remove("hidden");
 		getById("helpbutton").style.display = "inherit";
@@ -23774,6 +23779,7 @@ session.publishFile = function(ele, event){ // webcam stream is used to generate
 
 	if (!(session.cleanOutput)){
 		getById("chatbutton").className="float";
+		getById('sharefilebutton').classList.remove("hidden"); // we won't override "display:none", if set, though.
 		getById("hangupbutton").className="float";
 		getById("controlButtons").classList.remove("hidden");
 		getById("helpbutton").style.display = "inherit";
@@ -36299,7 +36305,6 @@ function createControlBoxScreenshare(UUID, soloLink, streamID) {
 	session.rpcs[UUID].remoteRaisedHandElement.id = "";
 	session.rpcs[UUID].remoteRaisedHandElement.style.top = "5px";
 	session.rpcs[UUID].remoteRaisedHandElement.style.right = "49px";
-
 
 	var videoContainer = document.createElement("div");
 	videoContainer.id = "videoContainer_" + UUID; // needed to delete on user disconnect

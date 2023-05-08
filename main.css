@@ -5413,3 +5413,6 @@ button.toggleSettings,
 	outline: none;
 	color: white;
 }
+#sharefilebutton{
+	display:none!important;
+}

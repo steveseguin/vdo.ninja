@@ -4242,6 +4242,12 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 	} else if (session.roomid==false){
 		getById('sharefilebutton').style.display = "none";
 		getById('sharefilebutton').classList.add("hidden");
+	} else if (session.scene!==false){
+		getById('sharefilebutton').style.display = "none";
+		getById('sharefilebutton').classList.add("hidden");
+	} else if (session.cleanOutput){
+		getById('sharefilebutton').style.display = "none";
+		getById('sharefilebutton').classList.add("hidden");
 	}
 
 	if (session.audioEffects === null) {

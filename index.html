@@ -56,7 +56,7 @@
 		<meta property="twitter:image" content="./media/vdoNinja_logo_full.png" />
 		<meta name="msapplication-TileColor" content="#da532c" />
 		<meta name="theme-color" content="#ffffff" />
-		<link rel="stylesheet" href="./main.css?ver=330" />
+		<link rel="stylesheet" href="./main.css?ver=332" />
 		<script type="text/javascript" crossorigin="anonymous" src="./thirdparty/adapter.js"></script>
 		<style id="lightbox-animations" type="text/css"></style>
 		<!-- <link rel="manifest" href="manifest.json" /> -->
@@ -83,7 +83,7 @@
 		
 		<script type="text/javascript" crossorigin="anonymous"  src="./thirdparty/CodecsHandler.js?ver=47"></script>
 		<script type="text/javascript" crossorigin="anonymous" src="./thirdparty/aes.js"></script>
-		<script type="text/javascript" crossorigin="anonymous" src="./webrtc.js?ver=639"></script>
+		<script type="text/javascript" crossorigin="anonymous" src="./webrtc.js?ver=640"></script>
 		<input id="zoomSlider" type="range" style="display: none;" />
 		<span id="electronDragZone" style="pointer-events: none; z-index:-10; position:absolute;top:0;left:0;width:100%;height:2%;-webkit-app-region: drag;min-height:20px;"></span>
 		<div id="header">
@@ -155,12 +155,10 @@
                         <i id="queuetoggle" class="toggleSize las la-stream"></i>
                         <div id="queueNotification"></div>
                     </div>
-                    
-                    <div id="sharefilebutton" title="Transfer any file to the group" alt="Transfer any file to the group" aria-label="Select file to transfer" onmousedown="event.preventDefault(); event.stopPropagation();"  onclick="toggleFileshare()"  tabindex="16" role="button" aria-pressed="false" onkeyup="enterPressedClick(event,this);"  class="float hidden" style="cursor: pointer;" >
+                    <div id="sharefilebutton" title="Transfer any file to the group" alt="Transfer any file to the group" aria-label="Select file to transfer" onmousedown="event.preventDefault(); event.stopPropagation();"  onclick="toggleFileshare()"  tabindex="16" role="button" aria-pressed="false" onkeyup="enterPressedClick(event,this);"  class="float hidden" style="cursor: pointer;display:none!important;" >
                         <i id="filesharetoggle" class="toggleSize las la-file-upload"></i> 
                         <div id="transferNotification"></div>
                     </div>
-                    
                     <div id="chatbutton" title="Toggle the Chat" alt="Toggle the Chat" aria-label="Text chat" onmousedown="event.preventDefault(); event.stopPropagation();"  onclick="toggleChat()"  tabindex="16" role="button" aria-pressed="false" onkeyup="enterPressedClick(event,this);"  class="hidden float" style="cursor: pointer;" >
                         <i id="chattoggle" class="toggleSize las la-comment-alt"></i>
                         <div id="chatNotification"></div>
@@ -2283,13 +2281,13 @@
 		</div>
 		<div id="voiceMeterTemplate2" class="video-meter2 hidden">
 		</div>
-		<div id="muteStateTemplate" style="display:none;" class="video-mute-state">
+		<div id="muteStateTemplate" class="hidden video-mute-state">
 			<i class="las la-microphone-slash"></i>
 		</div>
-		<div id="videoMuteStateTemplate" style="display:none;" class="video-mute-state">
+		<div id="videoMuteStateTemplate" class="hidden video-mute-state">
 			<i class="las la-video-slash"></i>
 		</div>
-		<div id="raisedHandTemplate" style="display:none;" class="video-mute-state raisedHand">
+		<div id="raisedHandTemplate" class="hidden video-mute-state raisedHand">
 			<i class="las la-hand-paper"></i>
 		</div>
 		<div id="selectImageTFLITE_contents" style="display:flex;overflow-x:auto;" class="hidden">
@@ -2486,11 +2484,11 @@
 			// session.hidehome = true; // If used, 'hide home' will make the landing page inaccessible, along with hiding a few go-home elements.
 			// session.record = false; // uncomment to block users from being able to record via vdo.ninja's built in recording function
 		</script>
-		<script type="text/javascript" crossorigin="anonymous" id="lib-js" src="./lib.js?ver=804"></script>
+		<script type="text/javascript" crossorigin="anonymous" id="lib-js" src="./lib.js?ver=807"></script>
 		<!-- 
 		// If you wish to change branding, blank offers a good clean start.
 		<script type="text/javascript" id="main-js" src="./main.js" data-translation="blank"></script>
 		-->
-		<script type="text/javascript" crossorigin="anonymous" id="main-js" src="./main.js?ver=630"></script>
+		<script type="text/javascript" crossorigin="anonymous" id="main-js" src="./main.js?ver=633"></script>
 	</body>
 </html>
