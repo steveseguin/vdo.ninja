@@ -25,13 +25,13 @@ You can test by opening two such guest links:\
 
 Ultimately I'd like to override the native video full screen button with this behaviour, when `&fullscreenbutton` is used, but I'm still working on that aspect.
 
-### Update in v23 (currently alpha)
+### Update in [v23](../../releases/v23.md)
 
 `&fullscreenbutton` is improved, so that even when there is a single video on the page, it will show. It also shows more reliably, without needing to move the mouse around a bit to re-show the button after going full screen. Lastly, when used, it now hides the native full-screen button, so users have to use it.
 
 Unlike the native full screen button, this full screen mode alternative keeps the chat and control bar overlays visible (like press F11). Since this is probably the preferred way most users will want to full screen to work, I may make it the default mode at some point, after some more testing/feedback. (not supported on iOS/iPhone tho)
 
-Testing at [https://vdo.ninja/alpha/?fsb](https://vdo.ninja/alpha/?fsb) (join a room as a guest to trigger)
+Testing at [https://vdo.ninja/?fullscreenbutton](https://vdo.ninja/?fullscreenbutton) (join a room as a guest to trigger)
 
 ## Related
 

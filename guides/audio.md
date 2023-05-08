@@ -56,7 +56,7 @@ While this option still requires a virtual audio cable, as seen above, you can u
 
 An alternative to using a virtual audio cable is to use OBS to capture the audio, and then publish the audio to VDO.Ninja directly using the WHIP-publishing mode.
 
-[WHIP](../advanced-settings/mixer-scene-parameters/and-whip-alpha.md) is an experimental feature currently in OBS and may require a special version of OBS at the moment to access, but it might be included in OBS by default with the release of OBS v30 or v31.
+[WHIP](../advanced-settings/mixer-scene-parameters/and-whip.md) is an experimental feature currently in OBS and may require a special version of OBS at the moment to access, but it might be included in OBS by default with the release of OBS v30 or v31.
 
 Check out a demo YouTube video of how to accomplish this:\
 [Publishing from OBS directly to VDO.Ninja](https://www.youtube.com/watch?v=ynSOE2d4Z9Y)\

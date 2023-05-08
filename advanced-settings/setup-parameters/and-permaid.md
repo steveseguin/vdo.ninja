@@ -4,10 +4,9 @@ description: >-
   used without a stream ID
 ---
 
-# \&permaid (alpha)
+# \&permaid
 
-Sender-Side Option! ([`&room`](../../general-settings/room.md))\
-\*only available on [vdo.ninja/alpha](https://vdo.ninja/alpha/)
+Sender-Side Option! ([`&room`](../../general-settings/room.md))
 
 ## Options
 

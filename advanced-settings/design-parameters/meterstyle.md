@@ -19,7 +19,7 @@ Example: `&meterstyle=3`
 | `1` \| (no value given) | will show the VU-style meter that the director has by default already                                                                                                                            |
 | `2`                     | will show a green-border around the guest's video when they are talking                                                                                                                          |
 | `3`                     | will show a little green dot in the top-right corner when the guest's talking; this is default for the guest's view already                                                                      |
-| `4` \*on alpha          | no meter is shown, but a data-attribute named `data-loudness` is applied to the video element. This can be targeted with CSS to do custom styles via OBS browser source or with [`&css`](css.md) |
+| `4`                     | no meter is shown, but a data-attribute named `data-loudness` is applied to the video element. This can be targeted with CSS to do custom styles via OBS browser source or with [`&css`](css.md) |
 
 <figure><img src="../../.gitbook/assets/image (4) (8) (1).png" alt=""><figcaption></figcaption></figure>
 

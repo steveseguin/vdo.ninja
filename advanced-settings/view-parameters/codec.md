@@ -8,24 +8,22 @@ Viewer-Side Option! ([`&view`](view.md), [`&scene`](scene.md), [`&room`](../../g
 
 ## Aliases
 
-* `&videocodec` (on alpha)
-* `&codecs` (on alpha)
+* `&videocodec`
+* `&codecs`
 
 ## Options
 
 Example: `&codec=h264`
 
-| Value                                                           | Description                                                                                     |
-| --------------------------------------------------------------- | ----------------------------------------------------------------------------------------------- |
-| [`h264`](codec.md#h264)                                         | request the h264 codec                                                                          |
-| [`vp8`](codec.md#vp8)                                           | request the VP8 codec                                                                           |
-| [`vp9`](codec.md#vp9)                                           | request the VP9 codec                                                                           |
-| [`av1`](codec.md#av1)                                           | request the AV1 codec                                                                           |
-| [`webp`](codec.md#webp)                                         | request the webp codec                                                                          |
-| [`hardware`](codec.md#hardware)                                 | request the h264 codec and[`&h264profile`](../../newly-added-parameters/and-h264profile.md)     |
-| [`av1,h264`](codec.md#comma-seperated-update-in-v23-on-alpha)\* | Comma separated values that define the order of preferred video codecs if the primary one fails |
-
-\*on alpha&#x20;
+| Value                                                         | Description                                                                                     |
+| ------------------------------------------------------------- | ----------------------------------------------------------------------------------------------- |
+| [`h264`](codec.md#h264)                                       | request the h264 codec                                                                          |
+| [`vp8`](codec.md#vp8)                                         | request the VP8 codec                                                                           |
+| [`vp9`](codec.md#vp9)                                         | request the VP9 codec                                                                           |
+| [`av1`](codec.md#av1)                                         | request the AV1 codec                                                                           |
+| [`webp`](codec.md#webp)                                       | request the webp codec                                                                          |
+| [`hardware`](codec.md#hardware)                               | request the h264 codec and[`&h264profile`](../../newly-added-parameters/and-h264profile.md)     |
+| [`av1,h264`](codec.md#comma-seperated-update-in-v23-on-alpha) | Comma separated values that define the order of preferred video codecs if the primary one fails |
 
 ### Example usage
 
@@ -121,9 +119,9 @@ Experimental at this point in time and may not perform well, but if very bandwid
 
 The parameter `&codec=hardware` is Android-specific and is the same as doing `&codec=h264`[`&h264profile`](../../newly-added-parameters/and-h264profile.md), but perhaps easier to remember. Worth trying if your android phone is struggling to publish video at a high enough quality into OBS. I may expand on this feature to be smarter.
 
-### Comma seperated - update in V23 (on alpha)
+### Comma seperated - update in [v23](../../releases/v23.md)
 
-`&codecs` and `&videocodec` were added; these are an alias of `&codec`. Additionally, `&codec` (and these new aliases) can now accept comma separated values that define the order of preferred video codecs if the primary one fails. You might want this it you want AV1 to be the main codec, falling back to H264 rather than VP8 if not supported. ie: `&codecs=av1,h264`
+`&codec` can now accept comma separated values that define the order of preferred video codecs if the primary one fails. You might want this it you want AV1 to be the main codec, falling back to H264 rather than VP8 if not supported. ie: `&codec=av1,h264`
 
 ## Related
 

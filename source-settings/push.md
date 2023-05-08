@@ -41,8 +41,8 @@ If using a [`&room`](../general-settings/room.md) URL and not using [`&scene`](.
 
 ## Related
 
-{% content-ref url="../advanced-settings/setup-parameters/and-permaid-alpha.md" %}
-[and-permaid-alpha.md](../advanced-settings/setup-parameters/and-permaid-alpha.md)
+{% content-ref url="../advanced-settings/setup-parameters/and-permaid.md" %}
+[and-permaid.md](../advanced-settings/setup-parameters/and-permaid.md)
 {% endcontent-ref %}
 
 {% content-ref url="../advanced-settings/view-parameters/view.md" %}

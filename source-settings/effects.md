@@ -14,23 +14,23 @@ Sender-Side Option! ([`&push`](push.md))
 
 Example: `&effects=7` or `&effects=zoom`
 
-| Value                   | Description                                                            |
-| ----------------------- | ---------------------------------------------------------------------- |
-| (no value given)        | Shows a "Digital Video Effects" panel when setting up devices          |
-| `0` \| `false` \| `off` | Disables effects                                                       |
-| `1` \| `facetracking`   | Face tracker                                                           |
-| `-1`                    | Flip image                                                             |
-| `2`                     | Mirror image                                                           |
-| `-2`                    | Flip + mirror image                                                    |
-| `3`                     | Background blur                                                        |
-| `4`                     | Virtual Greenscreen                                                    |
-| `5`                     | Background replacement                                                 |
-| `6`                     | Avatar                                                                 |
-| `7` \| `zoom`           | Zoom                                                                   |
-| `8` (on alpha)          | [#and-effects-8-on-alpha](effects.md#and-effects-8-on-alpha "mention") |
-| `9`                     | Face tracking                                                          |
-| `10`                    | Face tracking                                                          |
-| `11` \| `anon`          | Anonymous face mask                                                    |
+| Value                   | Description                                                   |
+| ----------------------- | ------------------------------------------------------------- |
+| (no value given)        | Shows a "Digital Video Effects" panel when setting up devices |
+| `0` \| `false` \| `off` | Disables effects                                              |
+| `1` \| `facetracking`   | Face tracker                                                  |
+| `-1`                    | Flip image                                                    |
+| `2`                     | Mirror image                                                  |
+| `-2`                    | Flip + mirror image                                           |
+| `3`                     | Background blur                                               |
+| `4`                     | Virtual Greenscreen                                           |
+| `5`                     | Background replacement                                        |
+| `6`                     | Avatar                                                        |
+| `7` \| `zoom`           | Zoom                                                          |
+| `8`                     | [#and-effects-8](effects.md#and-effects-8 "mention")          |
+| `9`                     | Face tracking                                                 |
+| `10`                    | Face tracking                                                 |
+| `11` \| `anon`          | Anonymous face mask                                           |
 
 ## Details
 
@@ -60,7 +60,7 @@ Please do enable Webassembly-SIMD support under `chrome://flags/` if you'd like 
 My hope is that this feature will eventually be enabled by default within Chromium, as loading a large ML model to do face detection otherwise is a bit heavy; you may need to enable this within the OBS CLI if wishing to use it there?
 {% endhint %}
 
-## \&effects=8 (on alpha)
+## `&effects=8`
 
 Added `&effects=8`, which might be useful if using a Camlink or simple HDMI capture device and [`&record`](../advanced-settings/recording-parameters/and-record.md) mode. The current `&record` mode doesn't seem to always scale down the video before recording (browser issue it seems), so local file recordings might be 4K in size, despite the target resolution being set much lower. `&effects=8` will use a canvas to first resize the video though, and then recordings will be based on that, making smaller recording sizes possible. (You could also use `&effects=7`, which then provides digital zooming controls and is otherwise the same thing).
 

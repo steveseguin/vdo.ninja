@@ -29,12 +29,12 @@ Can be 3 or 6 characters in length, 0 to F, in RGB or RRGGBB format.
 [https://vdo.ninja/?scene\&room=roomname\&chroma](https://vdo.ninja/?scene\&room=roomname\&chroma)\
 ![](<../../.gitbook/assets/image (3) (1) (1) (2) (2).png>)
 
-See [`&color`](and-color-alpha.md) if you want to set the background color of one single video feed.
+See [`&color`](and-color.md) if you want to set the background color of one single video feed.
 
 ## Related
 
-{% content-ref url="and-color-alpha.md" %}
-[and-color-alpha.md](and-color-alpha.md)
+{% content-ref url="and-color.md" %}
+[and-color.md](and-color.md)
 {% endcontent-ref %}
 
 {% content-ref url="and-transparent.md" %}

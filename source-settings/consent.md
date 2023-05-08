@@ -14,7 +14,7 @@ For privacy reasons, without this flag a director of a room will need to have th
 
 ![](<../.gitbook/assets/image (102) (1) (1) (1).png>)
 
-### On alpha
+### Update on [v23](../releases/v23.md)
 
 Added "change URL" permissions to the `&consent` flag. That is, when using `&consent` on the guest URL, the director can remotely change the guest's URL without additional permission -- it will just change.
 

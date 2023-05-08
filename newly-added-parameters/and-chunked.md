@@ -50,6 +50,6 @@ Transparent and chunked video transfer over VDO.Ninja
 
 ## Related
 
-{% content-ref url="../advanced-settings/settings-parameters/and-nochunked-alpha.md" %}
-[and-nochunked-alpha.md](../advanced-settings/settings-parameters/and-nochunked-alpha.md)
+{% content-ref url="../advanced-settings/settings-parameters/and-nochunked.md" %}
+[and-nochunked.md](../advanced-settings/settings-parameters/and-nochunked.md)
 {% endcontent-ref %}

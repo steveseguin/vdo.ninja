@@ -2,10 +2,9 @@
 description: Lets you specify a custom POST URL to send events within VDO.Ninja to
 ---
 
-# \&postapi (alpha)
+# \&postapi
 
-General Option! ([`&push`](../../source-settings/push.md), [`&room`](../../general-settings/room.md), [`&view`](../view-parameters/view.md), [`&scene`](../view-parameters/scene.md))\
-\*only available on [vdo.ninja/alpha](https://vdo.ninja/alpha/)
+General Option! ([`&push`](../../source-settings/push.md), [`&room`](../../general-settings/room.md), [`&view`](../view-parameters/view.md), [`&scene`](../view-parameters/scene.md))
 
 ## Aliases
 

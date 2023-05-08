@@ -2,10 +2,9 @@
 description: Will ignore the chunked version and use the low-latency version
 ---
 
-# \&nochunked (alpha)
+# \&nochunked
 
-Viewer-Side Option! ([`&view`](../view-parameters/view.md), [`&scene`](../view-parameters/scene.md), [`&solo`](../mixer-scene-parameters/and-solo.md))\
-\*only available on [vdo.ninja/alpha](https://vdo.ninja/alpha/)
+Viewer-Side Option! ([`&view`](../view-parameters/view.md), [`&scene`](../view-parameters/scene.md), [`&solo`](../mixer-scene-parameters/and-solo.md))
 
 ## Aliases
 

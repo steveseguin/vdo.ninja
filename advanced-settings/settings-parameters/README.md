@@ -12,27 +12,27 @@ They are separated in three groups: [general options](./#general-options) (push 
 
 You can use them for publisher, viewer and director URLs.
 
-| Parameter                                              | Explanation                                                                                                              |
-| ------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------ |
-| [`&language`](and-language.md)                         | Sets the interface language                                                                                              |
-| [`&remote`](../../general-settings/remote.md)          | Allows remote operation of the zoom and focus, and access to statistics                                                  |
-| [`&controlobs`](and-controlobs.md)\*                   | The ability for VDO.Ninja to Remotely Control OBS Studio while streaming/directing                                       |
-| [`&allowedscenes`](and-allowedscenes-alpha.md) (alpha) | Option to filter which OBS scenes a remote guest has access to controlling when using [`&controlobs`](and-controlobs.md) |
-| [`&stats`](../../general-settings/and-stats.md)        | Shows the connection/media stats window by default                                                                       |
-| [`&sticky`](../../general-settings/sticky.md)          | Allows a user to save and then later restore their streaming session settings                                            |
-| [`&clearstorage`](and-clearstorage-alpha.md) (alpha)   | Will clear all the saved user preferences for all sessions                                                               |
-| [`&disablehotkeys`](and-disablehotkeys.md)             | Disables hotkeys (like `CRTL + M`)                                                                                       |
-| [`&showlist`](../../source-settings/showlist.md)       | Shows list of hidden guests                                                                                              |
-| [`&nopush`](and-nopush.md)\*                           | Blocks outbound publishing connections                                                                                   |
-| [`&hidehome`](and-hidehome.md)\*                       | Hides the VDO.Ninja homepage and many links that lead to it                                                              |
-| [`&hidetranslate`](and-hidetranslate.md)\*             | Hides the option to translate VDO.Ninja                                                                                  |
-| [`&clock`](and-clock.md)\*                             | Shows the current time                                                                                                   |
-| [`&timer`](and-timer-alpha.md) (alpha)                 | Positions the countdown timer                                                                                            |
-| [`&powerpoint`](and-powerpoint-alpha.md) (alpha)       | Adds a built-in basic controller to control PowerPoint                                                                   |
-| [`&widget`](and-widget-alpha.md) (alpha)               | Will load a side-bar with an IFrame embed, with support for YouTube / Twitch / Social Stream                             |
-| [`&token`](and-token-alpha.md) (alpha)                 | A token for invite/scene links to determine whose the director of a room                                                 |
+| Parameter                                        | Explanation                                                                                                              |
+| ------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------ |
+| [`&language`](and-language.md)                   | Sets the interface language                                                                                              |
+| [`&remote`](../../general-settings/remote.md)    | Allows remote operation of the zoom and focus, and access to statistics                                                  |
+| [`&controlobs`](and-controlobs.md)               | The ability for VDO.Ninja to Remotely Control OBS Studio while streaming/directing                                       |
+| [`&allowedscenes`](and-allowedscenes.md)\*       | Option to filter which OBS scenes a remote guest has access to controlling when using [`&controlobs`](and-controlobs.md) |
+| [`&stats`](../../general-settings/and-stats.md)  | Shows the connection/media stats window by default                                                                       |
+| [`&sticky`](../../general-settings/sticky.md)    | Allows a user to save and then later restore their streaming session settings                                            |
+| [`&clearstorage`](and-clearstorage.md)\*         | Will clear all the saved user preferences for all sessions                                                               |
+| [`&disablehotkeys`](and-disablehotkeys.md)       | Disables hotkeys (like `CRTL + M`)                                                                                       |
+| [`&showlist`](../../source-settings/showlist.md) | Shows list of hidden guests                                                                                              |
+| [`&nopush`](and-nopush.md)                       | Blocks outbound publishing connections                                                                                   |
+| [`&hidehome`](and-hidehome.md)                   | Hides the VDO.Ninja homepage and many links that lead to it                                                              |
+| [`&hidetranslate`](and-hidetranslate.md)         | Hides the option to translate VDO.Ninja                                                                                  |
+| [`&clock`](and-clock.md)                         | Shows the current time                                                                                                   |
+| [`&timer`](and-timer.md)\*                       | Positions the countdown timer                                                                                            |
+| [`&powerpoint`](and-powerpoint.md)\*             | Adds a built-in basic controller to control PowerPoint                                                                   |
+| [`&widget`](and-widget.md)\*                     | Will load a side-bar with an IFrame embed, with support for YouTube / Twitch / Social Stream                             |
+| [`&token`](and-token.md)\*                       | A token for invite/scene links to determine whose the director of a room                                                 |
 
-\*NEW IN VERSION 22
+\*NEW IN [VERSION 23](../../releases/v23.md)
 
 ## Source Side Options
 
@@ -43,7 +43,7 @@ You can use them for publisher, viewer and director URLs.
 | [`&transcribe`](../../source-settings/transcribe.md)              | Enables transcription and closed captioning                                                                          |
 | [`&signalmeter`](../../newly-added-parameters/and-signalmeter.md) | Visualizes the packet loss of a guest                                                                                |
 | [`&consent`](../../source-settings/consent.md)                    | Will ask the user for content to remote change their camera or microphone                                            |
-| [`&prompt`](and-prompt.md)\*                                      | Another security option, for those concerned about random spying of their streams                                    |
+| [`&prompt`](and-prompt.md)                                        | Another security option, for those concerned about random spying of their streams                                    |
 | [`&hands`](../../source-settings/and-hands.md)                    | Enables a "Raise Hand" button for guests                                                                             |
 | [`&notify`](../../source-settings/and-notify.md)                  | Audio alerts for raised hands, chat messages and if somebody joins the room                                          |
 | [`&r2d2`](../../source-settings/r2d2.md)                          | Easter egg [`&notify`](../../source-settings/and-notify.md) sound                                                    |
@@ -53,11 +53,9 @@ You can use them for publisher, viewer and director URLs.
 | [`&chunked`](../../newly-added-parameters/and-chunked.md)         | Does not use webRTC's video streaming protocols; rather it uses a custom-made protocol                               |
 | [`&rampuptime`](../../newly-added-parameters/and-rampuptime.md)   | When a guest connects, this tries to load video from that guest for a few seconds, even if not yet added to a scene  |
 | [`&sensor`](../../source-settings/sensor.md)                      | Access device sensor data at given rate                                                                              |
-| [`&sensorfilter`](and-sensorfilter.md)\*                          | An option to explicitly list what [`&sensor`](../../source-settings/sensor.md) data you want to capture and transmit |
-| [`&postimage`](and-postimage.md)\*                                | Post a snapshot of your local camera to a HTTPS/POST URL                                                             |
-| [`&postinterval`](and-postinterval.md)\*                          | Time interval in seconds for [`&postimage`](and-postimage.md)                                                        |
-
-\*NEW IN VERSION 22
+| [`&sensorfilter`](and-sensorfilter.md)                            | An option to explicitly list what [`&sensor`](../../source-settings/sensor.md) data you want to capture and transmit |
+| [`&postimage`](and-postimage.md)                                  | Post a snapshot of your local camera to a HTTPS/POST URL                                                             |
+| [`&postinterval`](and-postinterval.md)                            | Time interval in seconds for [`&postimage`](and-postimage.md)                                                        |
 
 ## Viewer Side Options
 
@@ -68,14 +66,14 @@ You can use them for publisher, viewer and director URLs.
 | [`&closedcaptions`](and-closedcaptions.md)                          | Enables displaying of closed captioning text                                                                          |
 | [`&enhance`](../view-parameters/enhance.md)                         | Tells the remote source that you would like them to prioritize the audio stream over other streams                    |
 | [`&bitratecutoff`](../parameters-only-on-beta/and-bitratecutoff.md) | If the total bitrate drops below the specified bitrate, the viewer will auto-hide the audio and video for that stream |
-| [`&cutscene`](and-cutscene-alpha.md) (alpha)                        | Specifies an OBS cut scene to switch to when the bitrate drops below a threshold                                      |
+| [`&cutscene`](and-cutscene.md)\*                                    | Specifies an OBS cut scene to switch to when the bitrate drops below a threshold                                      |
 | [`&statsinterval`](../parameters-only-on-beta/and-statsinterval.md) | Lets you change the default stats update interval from 3-seconds to something else                                    |
 | [`&keyframerate`](../view-parameters/keyframerate.md)               | This tells the remote publishers to send keyframes at a specified rate                                                |
 | [`&maxpublishers`](../view-parameters/and-maxpublishers.md)         | Limits the number of remote peer connections that are publishers                                                      |
-| [`&showconnections`](and-showconnections.md)\*                      | Displays the total number of p2p connections of a remote stream                                                       |
+| [`&showconnections`](and-showconnections.md)                        | Displays the total number of p2p connections of a remote stream                                                       |
 | [`&obsfix`](../view-parameters/and-obsfix.md)                       | Disables or adjusts the sensitivity of the VP8/VP9 Codec packet loss 'fix' for OBS                                    |
 | [`&streamlabs`](../view-parameters/streamlabs.md)                   | Tells VDO.Ninja to not block VDO.Ninja from attempting to run when using Streamlabs for MacOS                         |
-| [`&getfaces`](and-getfaces.md)\*                                    | Will request a continuous stream of face bounding boxes                                                               |
-| [`&nochunked`](and-nochunked-alpha.md) (alpha)                      | Will ignore the chunked version and use the low-latency version                                                       |
+| [`&getfaces`](and-getfaces.md)                                      | Will request a continuous stream of face bounding boxes                                                               |
+| [`&nochunked`](and-nochunked.md)\*                                  | Will ignore the chunked version and use the low-latency version                                                       |
 
-\*NEW IN VERSION 22
+\*NEW IN [VERSION 23](../../releases/v23.md)

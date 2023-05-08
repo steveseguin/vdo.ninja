@@ -54,14 +54,14 @@ It supports multiple OBS instances and will label them according to the [`&label
 [remote.md](../../general-settings/remote.md)
 {% endcontent-ref %}
 
-{% content-ref url="and-cutscene-alpha.md" %}
-[and-cutscene-alpha.md](and-cutscene-alpha.md)
+{% content-ref url="and-cutscene.md" %}
+[and-cutscene.md](and-cutscene.md)
 {% endcontent-ref %}
 
 {% content-ref url="../design-parameters/and-obsoff.md" %}
 [and-obsoff.md](../design-parameters/and-obsoff.md)
 {% endcontent-ref %}
 
-{% content-ref url="and-allowedscenes-alpha.md" %}
-[and-allowedscenes-alpha.md](and-allowedscenes-alpha.md)
+{% content-ref url="and-allowedscenes.md" %}
+[and-allowedscenes.md](and-allowedscenes.md)
 {% endcontent-ref %}

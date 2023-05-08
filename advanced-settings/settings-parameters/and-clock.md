@@ -12,7 +12,7 @@ Example: `&clock=5` or `&clock=false`
 
 | Value                   | Description                                                                                                     |
 | ----------------------- | --------------------------------------------------------------------------------------------------------------- |
-| `1` - `9` \*on alpha    | Shows the current time as in the graphic below. Each option specifies where the clock will appear on the screen |
+| `1` - `9`               | Shows the current time as in the graphic below. Each option specifies where the clock will appear on the screen |
 | `9` \| (no value given) | Shows the current time in the lower right                                                                       |
 | `false`                 | Will force-disable the clock from being remotely triggerable                                                    |
 
@@ -36,6 +36,6 @@ The director will see the clock also; it will just be a bit smaller on screen.
 
 ## Related
 
-{% content-ref url="and-timer-alpha.md" %}
-[and-timer-alpha.md](and-timer-alpha.md)
+{% content-ref url="and-timer.md" %}
+[and-timer.md](and-timer.md)
 {% endcontent-ref %}

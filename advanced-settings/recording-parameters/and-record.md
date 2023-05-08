@@ -10,12 +10,12 @@ Sender-Side Option! ([`&push`](../../source-settings/push.md))
 
 Example: `&record=1000`
 
-| Value                       | Description                                                                                                                                                                                                   |
-| --------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `0`                         | No video recorded; audio tentatively recorded as 32bit PCM lossless                                                                                                                                           |
-| (negative integer)          | No video recorded; audio recorded as {integer} kbps OPUS file. Eg: -120 - Audio only at 120 kbps                                                                                                              |
-| (positive integer)          | Recorded video bitrate in kbps                                                                                                                                                                                |
-| `false` \| `off` \*on alpha | Will disable the user from being able to record a video. Buttons for recording are hidden/deleted and the recording function is disabled when used; so the director won't even be able to trigger it remotely |
+| Value              | Description                                                                                                                                                                                                   |
+| ------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `0`                | No video recorded; audio tentatively recorded as 32bit PCM lossless                                                                                                                                           |
+| (negative integer) | No video recorded; audio recorded as {integer} kbps OPUS file. Eg: -120 - Audio only at 120 kbps                                                                                                              |
+| (positive integer) | Recorded video bitrate in kbps                                                                                                                                                                                |
+| `false` \| `off`   | Will disable the user from being able to record a video. Buttons for recording are hidden/deleted and the recording function is disabled when used; so the director won't even be able to trigger it remotely |
 
 ## Details
 
@@ -46,7 +46,7 @@ When recording as the director, the button and option to record each guest is av
 \
 When recording to the guest's local storage, quality should be near pristine, given as its not being sent via the Internet first.  Recording locally, the video may have dynamic resolutions and varying quality, due to the low latency transmission. ([`&chunked`](../../newly-added-parameters/and-chunked.md)-mode excepted)
 
-Anyone can also access the recording options via right-clicking a video. This option is available as of VDO.Ninja v22.
+Anyone can also access the recording options via right-clicking a video. This option is available as of VDO.Ninja [v22](../../releases/v22.md).
 
 ![](<../../.gitbook/assets/image (102) (1) (1).png>)![](<../../.gitbook/assets/image (101) (1).png>)
 

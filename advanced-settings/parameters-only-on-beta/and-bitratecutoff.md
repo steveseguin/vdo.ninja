@@ -31,8 +31,8 @@ There is a 3-second delay in calculating the average bitrate. Won't work with vi
 
 ## Related
 
-{% content-ref url="../settings-parameters/and-cutscene-alpha.md" %}
-[and-cutscene-alpha.md](../settings-parameters/and-cutscene-alpha.md)
+{% content-ref url="../settings-parameters/and-cutscene.md" %}
+[and-cutscene.md](../settings-parameters/and-cutscene.md)
 {% endcontent-ref %}
 
 {% content-ref url="and-statsinterval.md" %}

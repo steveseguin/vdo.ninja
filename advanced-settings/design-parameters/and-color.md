@@ -2,10 +2,9 @@
 description: You can specify the background color independent of the border color
 ---
 
-# \&color (alpha)
+# \&color
 
-General Option! ([`&push`](../../source-settings/push.md), [`&room`](../../general-settings/room.md), [`&view`](../view-parameters/view.md), [`&scene`](../view-parameters/scene.md))\
-\*only available on [vdo.ninja/alpha](https://vdo.ninja/alpha/)
+General Option! ([`&push`](../../source-settings/push.md), [`&room`](../../general-settings/room.md), [`&view`](../view-parameters/view.md), [`&scene`](../view-parameters/scene.md))
 
 ## Options
 
@@ -32,16 +31,16 @@ May not yet work with [`&forcedlandscape`](../mobile-parameters/and-forcelandsca
 
 ## Related
 
-{% content-ref url="and-structure-alpha.md" %}
-[and-structure-alpha.md](and-structure-alpha.md)
+{% content-ref url="and-structure.md" %}
+[and-structure.md](and-structure.md)
 {% endcontent-ref %}
 
 {% content-ref url="and-border.md" %}
 [and-border.md](and-border.md)
 {% endcontent-ref %}
 
-{% content-ref url="and-blur-alpha.md" %}
-[and-blur-alpha.md](and-blur-alpha.md)
+{% content-ref url="and-blur.md" %}
+[and-blur.md](and-blur.md)
 {% endcontent-ref %}
 
 {% content-ref url="and-bordercolor.md" %}

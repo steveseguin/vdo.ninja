@@ -16,11 +16,11 @@ Sender-Side Option! ([`&push`](../source-settings/push.md))
 
 Example: `&screensharetype=3`
 
-| Value | Description                                                 |
-| ----- | ----------------------------------------------------------- |
-| `1`   | Replaces the webcam screen with the screen share            |
-| `2`   | Creates a totally new connection for the screen share       |
-| `3`   | Reuses the existing connection, adding a second video track |
+| Value         | Description                                                 |
+| ------------- | ----------------------------------------------------------- |
+| `1`           | Replaces the webcam screen with the screen share            |
+| `2`           | Creates a totally new connection for the screen share       |
+| `3` (default) | Reuses the existing connection, adding a second video track |
 
 ## Details
 
@@ -30,7 +30,7 @@ This parameter can be used to specify which type of screen sharing logic is used
 * `screensharetype=2` creates a totally new connection for the screen share
 * `screensharetype=3` reuses the existing connection, adding a second video track; also doesn't show the local screen share window
 
-I hope to have `screensharetype=3` become the standard for sharing screens eventually, but for now it will remain optional, until the issues are all worked out.
+The default `&screensharetype` for screen-sharing is `3` when in a room.
 
 As a viewer or scene link, to specify only loading the `&screensharetype=3` screen share, you can now use `&view=xxxx:s`, where `:s` is appended to the end of the stream ID. This tells the system to ignore the webcam/mic feed, and just send over the screen share. You can do `&view=xxxx,xxxx:s` to target both webcam and screen share though. I may change this syntax over time, but for now it works. The solo-links in the director's room has this `:s` applied already where needed.
 
@@ -42,10 +42,6 @@ If using `&screensharetype=3` the parameter [`&screenshareid`](../source-setting
 The type-3 screen share is still not fully cooked for use in scenes, etc, and it won't yet \
 work with [`&meshcast`](and-meshcast.md), [`&novideo`](../advanced-settings/video-parameters/novideo-1.md) or [`&noaudio`](../advanced-settings/view-parameters/noaudio.md).
 {% endhint %}
-
-### Update in V23 (currently on alpha and beta)
-
-The default `&screensharetype` for screen sharing is now 3 when in a room, versus 2. This change is on alpha and beta. If using `xxxxx_s` with [`&screenshareid`](../source-settings/screenshareid.md) before, you'll need to switch to `xxxxx:s` instead I think, but otherwise it should be all the same. (feedback welcomed)
 
 ## Related
 

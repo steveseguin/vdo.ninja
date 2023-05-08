@@ -50,8 +50,8 @@ With [`&groupmode`](../advanced-settings/setup-parameters/and-groupmode.md) adde
 [and-groupaudio.md](and-groupaudio.md)
 {% endcontent-ref %}
 
-{% content-ref url="../advanced-settings/setup-parameters/and-groupview-alpha.md" %}
-[and-groupview-alpha.md](../advanced-settings/setup-parameters/and-groupview-alpha.md)
+{% content-ref url="../advanced-settings/setup-parameters/and-groupview.md" %}
+[and-groupview.md](../advanced-settings/setup-parameters/and-groupview.md)
 {% endcontent-ref %}
 
 {% content-ref url="../advanced-settings/setup-parameters/and-groupmode.md" %}

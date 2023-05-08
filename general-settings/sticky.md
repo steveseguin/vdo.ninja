@@ -19,7 +19,7 @@ The user will be prompted with a pop-up when they return to the site, after usin
 There is a toggle in the director's room which adds `&sticky` to the guest's invite link.\
 ![](<../.gitbook/assets/image (94) (2).png>)
 
-### New in Version 23 (on alpha)
+### New in [v23](../releases/v23.md)
 
 Added a little "pin" icon to the end of the copy/view link when sharing your camera. Pressing it is the same as using `&sticky` on your URL, as next time you visit VDO.Ninja it will ask you if you wish to reload your [`&push`](../source-settings/push.md) link.
 
@@ -27,6 +27,6 @@ Added a little "pin" icon to the end of the copy/view link when sharing your cam
 
 ## Related
 
-{% content-ref url="../advanced-settings/settings-parameters/and-clearstorage-alpha.md" %}
-[and-clearstorage-alpha.md](../advanced-settings/settings-parameters/and-clearstorage-alpha.md)
+{% content-ref url="../advanced-settings/settings-parameters/and-clearstorage.md" %}
+[and-clearstorage.md](../advanced-settings/settings-parameters/and-clearstorage.md)
 {% endcontent-ref %}

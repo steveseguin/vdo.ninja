@@ -12,16 +12,16 @@ You have to add them to [`&scene`](../view-parameters/scene.md) or [`&room`](../
 
 | Parameter                                               | Explanation                                                                                                                 |
 | ------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------- |
-| [`&solo`](and-solo.md)\*                                | Similar to [`&scene`](../view-parameters/scene.md), but tells the system to be a solo-link                                  |
+| [`&solo`](and-solo.md)                                  | Similar to [`&scene`](../view-parameters/scene.md), but tells the system to be a solo-link                                  |
 | [`&view`](../view-parameters/view.md)                   | Defines the stream(s) you are receiving, by their stream IDs                                                                |
-| [`&whip`](and-whip-alpha.md) (alpha)                    | Publish directly from OBS to VDO.Ninja without a virtual camera                                                             |
-| [`&include`](and-include.md)\*                          | Includes streams that do not exist in the room                                                                              |
+| [`&whip`](and-whip.md)\*                                | Publish directly from OBS to VDO.Ninja without a virtual camera                                                             |
+| [`&include`](and-include.md)                            | Includes streams that do not exist in the room                                                                              |
 | [`&exclude`](../view-parameters/and-exclude.md)         | Same concept as [`&view`](../view-parameters/view.md), except does the opposite                                             |
-| [`&layout`](and-layout.md)\*                            | Shows the guest a return feed of the current mixer layout when using the [Mixer App](../../steves-helper-apps/mixer-app.md) |
+| [`&layout`](and-layout.md)                              | Shows the guest a return feed of the current mixer layout when using the [Mixer App](../../steves-helper-apps/mixer-app.md) |
 | [`&activespeaker`](../view-parameters/activespeaker.md) | Auto-hides remote guests videos when added, if those guests are not speaking actively                                       |
 | [`&order`](../../source-settings/order.md)              | The order priority of a source video when added to the video mixer                                                          |
 | [`&slots`](../../newly-added-parameters/and-slots.md)   | Will force the auto-mixer to have that number of slots, even if there are more or less videos available to fill them        |
-| [`&fakeguests`](and-fakeguests-alpha.md) (alpha)        | Creates simulated guest videos                                                                                              |
+| [`&fakeguests`](and-fakeguests.md)\*                    | Creates simulated guest videos                                                                                              |
 | [`&randomize`](../view-parameters/randomize.md)         | Random video loading order                                                                                                  |
 | [`&cover`](../view-parameters/cover.md)                 | Has the videos fully "cover" their assigned areas, even if it means cropping the video                                      |
 | [`&43`](../../newly-added-parameters/and-43.md)         | Optimizes the video mixer for 4:3 videos                                                                                    |
@@ -30,7 +30,7 @@ You have to add them to [`&scene`](../view-parameters/scene.md) or [`&room`](../
 | [`&animated`](../view-parameters/animated.md)           | Videos in a group scene will slide around the screen when being re-arranged                                                 |
 | [`&manual`](../view-parameters/manual.md)               | Disables the auto-mixer, allowing for a custom mixer to be used                                                             |
 
-\*NEW IN VERSION 22
+\*NEW IN [VERSION 23](../../releases/v23.md)
 
 ## **Only Scene options**
 

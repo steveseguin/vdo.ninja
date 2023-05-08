@@ -2,10 +2,9 @@
 description: Will make the tally sign larger and colorize the background of the page
 ---
 
-# \&tally (alpha)
+# \&tally
 
-Sender-Side Option! ([`&push`](../../source-settings/push.md))\
-\*only available on [vdo.ninja/alpha](https://vdo.ninja/alpha/) and [vdo.ninja/beta](https://vdo.ninja/beta/)
+Sender-Side Option! ([`&push`](../../source-settings/push.md))
 
 ## Details
 

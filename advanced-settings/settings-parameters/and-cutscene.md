@@ -4,10 +4,9 @@ description: >-
   threshold
 ---
 
-# \&cutscene (alpha)
+# \&cutscene
 
-Viewer-Side Option! ([`&view`](../view-parameters/view.md), [`&scene`](../view-parameters/scene.md), [`&room`](../../general-settings/room.md))\
-\*only available on [vdo.ninja/alpha](https://vdo.ninja/alpha/) and [vdo.ninja/beta](https://vdo.ninja/beta/)
+Viewer-Side Option! ([`&view`](../view-parameters/view.md), [`&scene`](../view-parameters/scene.md), [`&room`](../../general-settings/room.md))
 
 ## Aliases
 
@@ -28,8 +27,8 @@ You can use the IRL-related command called `&cutscene` to specify an OBS cut sce
 The default bitrate threshold is 300-kbps, but you can use the existing [`&bitratecutoff=N`](../parameters-only-on-beta/and-bitratecutoff.md) option to specify a custom one. Using `&cutscene` with [`&bitratecutoff`](../parameters-only-on-beta/and-bitratecutoff.md) will override the behaviour of `&bitratecutoff`'s other features. It won't start triggering until the bitrate has hit at least the threshold once. to use:
 
 ```
-https://vdo.ninja/alpha/?push=XXX
-https://vdo.ninja/alpha/?view=XXX&controlobs&bitratecutoff=300&cutscene=FML&remote
+https://vdo.ninja/?push=XXX
+https://vdo.ninja/?view=XXX&controlobs&bitratecutoff=300&cutscene=FML&remote
 ```
 
 You can of course use this with [`&controlobs`](and-controlobs.md)[`&remote`](../../general-settings/remote.md), to have the publisher change the scenes dynamically, and see what the current OBS scene is (if still connected).

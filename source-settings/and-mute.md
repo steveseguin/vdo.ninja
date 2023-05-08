@@ -17,7 +17,7 @@ Starts with the microphone muted by default. The guest can switch on the microph
 
 ![](<../.gitbook/assets/image (1) (2) (1) (1) (3).png>)
 
-### Update in Version 23 (currently alpha)
+### Update in [v23](../releases/v23.md)
 
 `&mute` works with the director now, so the mic starts muted when you enable your microphone or when using [`&autostart`](and-autostart.md).
 

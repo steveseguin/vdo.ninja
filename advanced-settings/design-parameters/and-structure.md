@@ -2,10 +2,9 @@
 description: Will have the video holding div element be structured to the aspect ratio
 ---
 
-# \&structure (alpha)
+# \&structure
 
-General Option! ([`&push`](../../source-settings/push.md), [`&room`](../../general-settings/room.md), [`&view`](../view-parameters/view.md), [`&scene`](../view-parameters/scene.md))\
-\*only available on [vdo.ninja/alpha](https://vdo.ninja/alpha/)
+General Option! ([`&push`](../../source-settings/push.md), [`&room`](../../general-settings/room.md), [`&view`](../view-parameters/view.md), [`&scene`](../view-parameters/scene.md))
 
 ## Details
 
@@ -21,12 +20,12 @@ May not yet work with [`&forcedlandscape`](../mobile-parameters/and-forcelandsca
 
 ## Related
 
-{% content-ref url="and-color-alpha.md" %}
-[and-color-alpha.md](and-color-alpha.md)
+{% content-ref url="and-color.md" %}
+[and-color.md](and-color.md)
 {% endcontent-ref %}
 
-{% content-ref url="and-blur-alpha.md" %}
-[and-blur-alpha.md](and-blur-alpha.md)
+{% content-ref url="and-blur.md" %}
+[and-blur.md](and-blur.md)
 {% endcontent-ref %}
 
 {% content-ref url="and-border.md" %}

@@ -2,10 +2,9 @@
 description: Positions the countdown timer
 ---
 
-# \&timer (alpha)
+# \&timer
 
-General Option! ([`&push`](../../source-settings/push.md), [`&room`](../../general-settings/room.md), [`&view`](../view-parameters/view.md), [`&scene`](../view-parameters/scene.md), [`&solo`](../mixer-scene-parameters/and-solo.md), [`&director`](../../viewers-settings/director.md))\
-\*only available on [vdo.ninja/alpha](https://vdo.ninja/alpha/) and [vdo.ninja/beta](https://vdo.ninja/beta/)
+General Option! ([`&push`](../../source-settings/push.md), [`&room`](../../general-settings/room.md), [`&view`](../view-parameters/view.md), [`&scene`](../view-parameters/scene.md), [`&solo`](../mixer-scene-parameters/and-solo.md), [`&director`](../../viewers-settings/director.md))
 
 ## Options
 
@@ -13,7 +12,7 @@ Example: `&timer=5`
 
 | Value                   | Description                                                                                                                          |
 | ----------------------- | ------------------------------------------------------------------------------------------------------------------------------------ |
-| `1` - `9` \*on alpha    | Shows the current countdown timer as in the graphic below. Each option specifies where the countdown timer will appear on the screen |
+| `1` - `9`               | Shows the current countdown timer as in the graphic below. Each option specifies where the countdown timer will appear on the screen |
 | `2` \| (no value given) | Shows the countdown timer in the top center                                                                                          |
 
 ![](<../../.gitbook/assets/image (12) (5).png>)

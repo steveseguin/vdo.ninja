@@ -85,6 +85,6 @@ If using the [`&queue`](../general-settings/queue.md) parameter with co-director
 [and-hidecodirectors.md](../advanced-settings/director-parameters/and-hidecodirectors.md)
 {% endcontent-ref %}
 
-{% content-ref url="../advanced-settings/director-parameters/and-maindirectorpassword-alpha.md" %}
-[and-maindirectorpassword-alpha.md](../advanced-settings/director-parameters/and-maindirectorpassword-alpha.md)
+{% content-ref url="../advanced-settings/director-parameters/and-maindirectorpassword.md" %}
+[and-maindirectorpassword.md](../advanced-settings/director-parameters/and-maindirectorpassword.md)
 {% endcontent-ref %}

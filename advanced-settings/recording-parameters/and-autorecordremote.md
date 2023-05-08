@@ -10,11 +10,11 @@ General Option! ([`&push`](../../source-settings/push.md), [`&room`](../../gener
 
 Example: `&autorecordremote=1500`
 
-| Value              | Description                                                                                       |
-| ------------------ | ------------------------------------------------------------------------------------------------- |
-| `0`                | No video recorded; audio tentatively recorded as 32bit PCM lossless.                              |
-| (negative integer) | No video recorded; audio recorded as {integer} kbps OPUS file. Eg: -120 - Audio only at 120 kbps. |
-| (positive integer) | Recorded video bitrate in kbps.                                                                   |
+| Value              | Description                                                                                         |
+| ------------------ | --------------------------------------------------------------------------------------------------- |
+| `0`                | No video recorded; audio tentatively recorded as 32bit PCM lossless.                                |
+| (negative integer) | No video recorded; audio recorded as {integer} kbps OPUS file. Eg: `-120` - Audio only at 120 kbps. |
+| (positive integer) | Recorded video bitrate in kbps.                                                                     |
 
 ## Details
 
@@ -24,7 +24,7 @@ You can stop/restart recordings as needed via the right-click menu per each vide
 
 You can pass the default recording bitrate as a value to the parameter, like you might if using [`&record`](and-record.md).
 
-### Update in V23 (currently on alpha)
+### Update in [v23](../../releases/v23.md)
 
 There are buttons in the room settings of the director to start/stop _all_ recordings; both remote/local.
 

@@ -36,6 +36,6 @@ Using may stop [Echo Cancellation](../../source-settings/aec.md) from working.
 [buffer.md](buffer.md)
 {% endcontent-ref %}
 
-{% content-ref url="../video-parameters/and-buffer2-alpha.md" %}
-[and-buffer2-alpha.md](../video-parameters/and-buffer2-alpha.md)
+{% content-ref url="../video-parameters/and-buffer2.md" %}
+[and-buffer2.md](../video-parameters/and-buffer2.md)
 {% endcontent-ref %}

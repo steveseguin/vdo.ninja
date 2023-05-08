@@ -43,15 +43,15 @@ While one might think adding 10-seconds of buffer would then only improve the co
 You can refer to the [`&sync`](sync.md) command if you wish to delay the audio, relative to the video. `&buffer` will try to keep the audio and video in sync, which might always be desired.
 {% endhint %}
 
-## Update in Version 23 (on alpha)
+## Update in [v23](../../releases/v23.md)
 
 The option to right click a remote video and add/adjust the [`&buffer`](buffer.md) delay for that specific video dynamically.\
 ![](<../../.gitbook/assets/image (173).png>)
 
 ## Related
 
-{% content-ref url="../video-parameters/and-buffer2-alpha.md" %}
-[and-buffer2-alpha.md](../video-parameters/and-buffer2-alpha.md)
+{% content-ref url="../video-parameters/and-buffer2.md" %}
+[and-buffer2.md](../video-parameters/and-buffer2.md)
 {% endcontent-ref %}
 
 {% content-ref url="sync.md" %}

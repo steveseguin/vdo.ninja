@@ -2,10 +2,9 @@
 description: Will mute the microphone of a guest when not loaded in an active OBS scene
 ---
 
-# \&automute (alpha)
+# \&automute
 
-Sender-Side Option! ([`&push`](../../source-settings/push.md))\
-\*only available on [vdo.ninja/alpha](https://vdo.ninja/alpha/) and [vdo.ninja/beta](https://vdo.ninja/beta/)
+Sender-Side Option! ([`&push`](../../source-settings/push.md))
 
 ## Aliases
 
@@ -22,7 +21,7 @@ Example: `&automute=2`
 
 ## Details
 
-[`&automute`](and-automute-alpha.md) will auto mute the microphone of a guest when not loaded in an active OBS scene. Useful for perhaps limiting the discussion in a group chat to those on air.
+[`&automute`](and-automute.md) will auto mute the microphone of a guest when not loaded in an active OBS scene. Useful for perhaps limiting the discussion in a group chat to those on air.
 
 `&automute=2` will mute it everywhere, while the default will still allow the director to speak to the guest, even if not in a scene.
 

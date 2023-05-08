@@ -17,9 +17,9 @@ Layout if using `&smallshare`:\
 Layout if NOT using `&smallshare`:\
 ![](<../../.gitbook/assets/image (121) (1).png>)
 
-### On alpha
+### Update on [v23](../../releases/v23.md)
 
-`&smallshare` will work on the scene-side now also, which disables the automixer's larger screen share layout, and instead just uses an equal-sized video layout for all videos.
+`&smallshare` will work on the scene-side now also, which disables the automixer's larger screen-share layout, and instead just uses an equal-sized video layout for all videos.
 
 ## Related
 
