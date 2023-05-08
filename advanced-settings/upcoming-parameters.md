@@ -35,6 +35,11 @@ You can use/test these parameters on [vdo.ninja/alpha](https://vdo.ninja/alpha/)
 | [`&structure`](design-parameters/and-structure-alpha.md)\*                           | Will have the video holding div element be structured to the aspect ratio                                                                                |
 | [`&color`](design-parameters/and-color-alpha.md)\*                                   | You can specify the background color independent of the border color                                                                                     |
 | [`&blur`](design-parameters/and-blur-alpha.md)\*                                     | Will try to add a blurred background to the video so it fits the structured video container                                                              |
+|                                                                                      |                                                                                                                                                          |
+|                                                                                      |                                                                                                                                                          |
+|                                                                                      |                                                                                                                                                          |
+|                                                                                      |                                                                                                                                                          |
+|                                                                                      | Will pre-select display-share, rather than tab-share, when screen-sharing                                                                                |
 
 \*only on [vdo.ninja/alpha](https://vdo.ninja/alpha/)\
 \*\*on [vdo.ninja/beta](https://vdo.ninja/beta/) and [vdo.ninja/alpha](https://vdo.ninja/alpha/)

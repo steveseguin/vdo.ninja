@@ -38,6 +38,11 @@ You can add them to both, source ([`&push`](../../source-settings/push.md)) and 
 | [`&smallshare`](and-smallshare.md)\*                                                | Makes the screen share behave like a webcam share                                                           |
 | [`&screensharevideoonly`](../../newly-added-parameters/and-screensharevideoonly.md) | Lets you disable the option to select audio when screen sharing                                             |
 | [`&screensharebutton`](../settings-parameters/and-screensharebutton.md)             | Forces the screen-share button to appear for guests                                                         |
+| [`&suppresslocalaudio`](and-suppresslocalaudio.md) (alpha)                          | Will disable local audio playback of a Chrome tab while screen-sharing it                                   |
+| [`&prefercurrenttab`](and-prefercurrenttab.md) (alpha)                              | Will have the current tab as the default screen-share source                                                |
+| [`&selfbrowsersurface`](and-selfbrowsersurface.md) (alpha)                          | Excludes the current tab as a screen-share source option                                                    |
+| [`&systemaudio`](and-systemaudio.md) (alpha)                                        | Excludes the system-audio as an audio source when display sharing                                           |
+| [`&displaysurface`](and-displaysurface.md) (alpha)                                  | Will pre-select display-share, rather than tab-share, when screen-sharing                                   |
 
 \*NEW IN VERSION 22
 
