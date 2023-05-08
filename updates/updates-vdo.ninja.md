@@ -35,7 +35,7 @@
   \-- The viewer stats menu show the iOS version now by the browser stats: ie: Safari 16. (I'd recommend updating to iOS 16.2 if you do have an iPhone.)\
   \-- The stats menu now shows whether it _thinks_ the remote iPhone is an iPhone 12 and up (SE versions excluded)\
   \-- "iPhone 12 and up" will be true or false.\
-  ![](<../.gitbook/assets/image (2).png>)![](<../.gitbook/assets/image (1) (1).png>)\
+  ![](<../.gitbook/assets/image (2).png>)![](<../.gitbook/assets/image (1) (14).png>)\
   \
   \*\* on alpha at vdo.ninja/alpha/
 
@@ -225,7 +225,7 @@
 
 * [`&codecs`](../advanced-settings/view-parameters/codec.md) and [`&videocodec`](../advanced-settings/view-parameters/codec.md) were added; these are an alias of [`&codec`](../advanced-settings/view-parameters/codec.md). Additionally, [`&codec`](../advanced-settings/view-parameters/codec.md) (and these new aliases) can now accept comma separated values that define the order of preferred video codecs if the primary one fails. You might want this it you want AV1 to be the main codec, falling back to H264 rather than VP8 if not supported. ie: `&codecs=av1,h264`
 * Added an option to count-up from 0, rather than count down. You can set the time to 0 to count up, or use the checkbox to enable it.\
-  ![](<../.gitbook/assets/image (1) (1) (6).png>)\
+  ![](<../.gitbook/assets/image (1) (1).png>)\
   \
   \*\* changes on vdo.ninja/alpha/
 
@@ -1352,7 +1352,7 @@
 * Added graphs to the director room; one graph for each scene a guest is connected to. If video isn't active/visible, the bitrate should be zero, implying VDO.Ninja has it paused/disabled, but on standby. You can see the graphs via the "scene stats" button. Toggling the button will enable and disable the stats.\
   ![](<../.gitbook/assets/image (165).png>)
 * The graph is color coded; red/yellow implies packet loss, but otherwise green. Currently the graph is capped to like 4-mbps; higher than that isn't display atm.\
-  ![](<../.gitbook/assets/image (1) (1) (6) (1).png>)\
+  ![](<../.gitbook/assets/image (1) (1) (6).png>)\
   \
   \*\* alpha updated. Test it out at [https://vdo.ninja/alpha](https://vdo.ninja/alpha)
 * Fixed a more recent bug in VDO.Ninja where the special [`&sstype=3`](../newly-added-parameters/and-screensharetype.md) screen share mode did not work as solo links; stats for it were not always cleaned up either, so that's fixed too. (on dev)
