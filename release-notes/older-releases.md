@@ -2,7 +2,8 @@
 
 ## Release Notes
 
-* [V22 ](../releases/v22.md)(updated November 18th 2022) [https://vdo.ninja/](https://vdo.ninja/)
+* [V23](../releases/v23.md) (updated May 8th 2023) [https://vdo.ninja/](https://vdo.ninja/)
+* [V22 ](../releases/v22.md)(updated November 18th 2022) [https://vdo.ninja/v22/](https://vdo.ninja/v22/)
 * [V21](../older-releases/v21.md) (updated February 14th 2022) [https://vdo.ninja/v21/](https://vdo.ninja/v21/)
 * [V20](v20.md) (updated December 24th 2021) [https://vdo.ninja/v20/](https://vdo.ninja/v20/)
 * [V19](v19.md) (updated September 1st 2021) [https://vdo.ninja/v19/](https://vdo.ninja/v19/)
