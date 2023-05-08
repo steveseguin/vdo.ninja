@@ -56,7 +56,7 @@
 		<meta property="twitter:image" content="./media/vdoNinja_logo_full.png" />
 		<meta name="msapplication-TileColor" content="#da532c" />
 		<meta name="theme-color" content="#ffffff" />
-		<link rel="stylesheet" href="./main.css?ver=324" />
+		<link rel="stylesheet" href="./main.css?ver=329" />
 		<script type="text/javascript" crossorigin="anonymous" src="./thirdparty/adapter.js"></script>
 		<style id="lightbox-animations" type="text/css"></style>
 		<!-- <link rel="manifest" href="manifest.json" /> -->
@@ -83,7 +83,7 @@
 		
 		<script type="text/javascript" crossorigin="anonymous"  src="./thirdparty/CodecsHandler.js?ver=47"></script>
 		<script type="text/javascript" crossorigin="anonymous" src="./thirdparty/aes.js"></script>
-		<script type="text/javascript" crossorigin="anonymous" src="./webrtc.js?ver=631"></script>
+		<script type="text/javascript" crossorigin="anonymous" src="./webrtc.js?ver=638"></script>
 		<input id="zoomSlider" type="range" style="display: none;" />
 		<span id="electronDragZone" style="pointer-events: none; z-index:-10; position:absolute;top:0;left:0;width:100%;height:2%;-webkit-app-region: drag;min-height:20px;"></span>
 		<div id="header">
@@ -924,15 +924,12 @@
 							<li>
 								Samsung smartphones (A-series) may fail to publish video with some mobile browsers; try using Firefox Mobile or the native <a href='https://docs.vdo.ninja/getting-started/native-mobile-app-versions#android-download-link'>Android app</a> in these cases.
 							</li>
-							<li>
-								Some devices that use hardware encoding can experience video issues; switching to VP8 or VP9 as a <a target='_blank' title='Jump to the documentation' href='https://docs.vdo.ninja/viewers-settings/codec'>codec</a> may help.
-							</li>
 							<br />
 							<h4>
 								<span style="color:#daad09;">Welcome to VDO Ninja! We've rebranded!  Nothing else is changing and we're staying 100% free.</span>
 							</h4>
 							<br />
-							😁 This is Version 23; it's still in development. 🧪 Please report any issues you have with it. Development <a target="_blank" href='https://updates.vdo.ninja/'>updates are here.</a>
+							😁🌱 Site last updated on May 8th. If facing new problems, the previous version can still be <a href="https://vdo.ninja/v22/">accessed here</a>. Development <a target="_blank" href='https://updates.vdo.ninja/'>updates are here.</a>
 							<br />
 							<br />
 							<h3>
@@ -1388,7 +1385,7 @@
 				<!-- General Controls -->
 				<div class="row two"> 
                     <!-- Video Feed Quality -->
-                    <div class="row three">
+                    <div class="row three advanced">
                         <button class="" data-action-type="change-quality1" title="Disable Video Preview" onclick="toggleQualityDirector(0, this.dataset.UUID, this);">
                             <i class="las la-video-slash"></i>
                         </button>
@@ -1444,10 +1441,10 @@
                         <i class="las la-video-slash"></i>
                         <span data-translate="mute-video-guest">Video off</span>
                     </button>
-                    <button class="mainonly" data-action-type="toggle-remote-speaker" title="Toggle the remote guest's speaker output" onclick="remoteSpeakerMute(this, event);">
+                    <button class="mainonly advanced" data-action-type="toggle-remote-speaker" title="Toggle the remote guest's speaker output" onclick="remoteSpeakerMute(this, event);">
                         <i class="las la-volume-off"></i> <span data-translate="toggle-remote-speaker">Deafen</span>
                     </button>
-                    <button data-action-type="hide-guest" title="Hide this guest everywhere" onclick="remoteHideVideo(this, event);">
+                    <button class="advanced" data-action-type="hide-guest" title="Hide this guest everywhere" onclick="remoteHideVideo(this, event);">
                         <i class="las la-user-slash"></i>
                         <span data-translate="hide-guest">Hide</span>
                     </button>
@@ -1459,7 +1456,7 @@
 						<span data-translate="add-to-scene">add to scene 1</span>
 					</button>
                 </div>
-				<button class="hideDropMenu" onclick="toggleByDataset('1');getById('chevarrow3').classList.toggle('bottom');getById('chevarrow3').classList.toggle('right');">
+				<button class="hideDropMenu advanced" onclick="toggleByDataset('1');getById('chevarrow3').classList.toggle('bottom');getById('chevarrow3').classList.toggle('right');">
 					<i id="chevarrow3" class="chevron right" aria-hidden="true"></i>
 					<span data-translate="scene-options">Scene options</span>
 				</button>
@@ -1519,7 +1516,7 @@
                     </div>
                 </div>
 				
-				<button class="hideDropMenu" onclick="toggleByDataset('2');getById('chevarrow4').classList.toggle('bottom');getById('chevarrow4').classList.toggle('right');">
+				<button class="hideDropMenu advanced" onclick="toggleByDataset('2');getById('chevarrow4').classList.toggle('bottom');getById('chevarrow4').classList.toggle('right');">
 					<i id="chevarrow4" class="chevron right" aria-hidden="true"  ></i>
 					<span data-translate="additional-controls">Additional Controls</span>
 				</button>
@@ -1539,7 +1536,7 @@
 								<i class="las la-plus"></i>
 							</button>
 						</span>
-						<button class="mainonly" data-action-type="create-timer"  title="Set a countdown timer that this guest sees. CTRL (cmd) + click to pause." onclick="directTimer(this, event);">
+						<button class="mainonly advanced" data-action-type="create-timer"  title="Set a countdown timer that this guest sees. CTRL (cmd) + click to pause." onclick="directTimer(this, event);">
 							<i class="las la-clock"></i>
 							<span data-translate="create-timer">Create Timer</span>
 						</button>
@@ -1555,11 +1552,11 @@
 							<i class="las la-cog"></i>
 							<span data-translate="change-params">URL Params</span>
 						</button>
-						<button class="mainonly" data-action-type="change-url" title="Remotely reload the guest's page with a new URL" onclick="directPageReload(this, event);">
+						<button class="mainonly advanced" data-action-type="change-url" title="Remotely reload the guest's page with a new URL" onclick="directPageReload(this, event);">
 							<i class="las la-sync"></i>
 							<span data-translate="change-url">Change URL</span>
 						</button>
-						<button  class="mainonly" data-action-type="open-file-share"  title="Allow the guest to select a file to upload to the director. Once shared, it will show in the chat as a download link." onclick="requestFileUpload(this)">
+						<button  class="mainonly advanced" data-action-type="open-file-share"  title="Allow the guest to select a file to upload to the director. Once shared, it will show in the chat as a download link." onclick="requestFileUpload(this)">
 							<i class="las la-file-upload"></i>
 							<span data-translate="request-upload"> Request File</span>
 						</button>
@@ -2376,7 +2373,7 @@
 
 		
 			var session = WebRTC.Media; // session is a required global variable if configuring manually. Run before loading main.js but after webrtc.js.
-			session.version = "23.3b";
+			session.version = "23.4";
 			session.streamID = session.generateStreamID(); // randomly generates a streamID for this session. You can set your own programmatically if needed
 			
 			session.defaultPassword = "someEncryptionKey123"; // Change this password if self-deploying for added security/privacy
@@ -2489,11 +2486,11 @@
 			// session.hidehome = true; // If used, 'hide home' will make the landing page inaccessible, along with hiding a few go-home elements.
 			// session.record = false; // uncomment to block users from being able to record via vdo.ninja's built in recording function
 		</script>
-		<script type="text/javascript" crossorigin="anonymous" id="lib-js" src="./lib.js?ver=788"></script>
+		<script type="text/javascript" crossorigin="anonymous" id="lib-js" src="./lib.js?ver=803"></script>
 		<!-- 
 		// If you wish to change branding, blank offers a good clean start.
 		<script type="text/javascript" id="main-js" src="./main.js" data-translation="blank"></script>
 		-->
-		<script type="text/javascript" crossorigin="anonymous" id="main-js" src="./main.js?ver=617"></script>
+		<script type="text/javascript" crossorigin="anonymous" id="main-js" src="./main.js?ver=629"></script>
 	</body>
 </html>

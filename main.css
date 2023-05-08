@@ -1765,6 +1765,16 @@ input[type=range].inputConstraint {
 /* ////// Icon resizing for mobile subControl bar ////// */
 
 
+input[type=range].thinSlider {
+	margin: 0;
+    padding: 0;
+    height: 10px;
+    top: 5px;
+    overflow: hidden;
+    position: relative;
+    display: flex;
+}
+
 .inMessage {
 	color: #000;
 	margin: 3px;
@@ -2874,6 +2884,10 @@ audio.fileshare::-webkit-media-controls-play-button, video.fileshare::-webkit-me
 	 display: inherit;
 }
 
+video::-webkit-media-controls-panel {
+  background-color: #0000;
+}
+
 .mirrorControl::-webkit-media-controls-enclosure {
 	padding: 0px;
 	height: 30px;
@@ -3277,6 +3291,7 @@ label {
 .directorMargins {
 	margin: var(--director-margin);
 }
+
 .hideLinksClass {
 	background-color: var(--container-color);
 	width:1191px;
@@ -3381,7 +3396,13 @@ div#roomnotes2 {
 #yourDirectorStatus {
     color: var(--discord-text);
 }
-
+.directorBlue{
+	background-color: #5c7785 !important;
+	
+}
+.directorBox{
+	background-color: #606383 !important;
+}
 /* ---- DIRECTORS PAGE - Guest Controls Box ---- */
 .controlsGrid {
     display: flex;
@@ -5180,7 +5201,10 @@ input[type='checkbox'], input[type='radio'] {
 	margin-top: 0px;
 }
 
-
+.disable {
+	opacity: 0.5;
+    cursor: not-allowed;
+}
 
 /* Buttons to disable due to them being a director */
 .directorBoxColor button[data-action-type="hangup"],
@@ -5248,6 +5272,9 @@ input[type='checkbox'], input[type='radio'] {
 	-webkit-app-region: no-drag;
 }
 #popupSelector label {
+	color: black;
+}
+.darktheme #popupSelector label {
 	color: white;
 }
 #popupSelector .multiselect-contents label{
@@ -5270,7 +5297,15 @@ input[type='checkbox'], input[type='radio'] {
 #popupSelector_constraints_video > div, #popupSelector_constraints_audio > div {
 	padding: 10px 10px 10px 0;
 }
-
+#popupSelector_constraints_audio label {
+	color:white;
+}
+#popupSelector_constraints_video label {
+	color:white;
+}
+#popupSelector_user_settings label {
+	color:white;
+}
 ul#audioSource{
 	background-color: var(--lighttheme-1);
     margin-top: 7px;

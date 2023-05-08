@@ -123,6 +123,7 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 	if (urlParams.has('director') || urlParams.has('dir')) {
 		session.director = urlParams.get('director') || urlParams.get('dir') || true;
 		session.effect = null; // so the director can see the effects after a page refresh
+		getById("avatarDiv3").classList.remove("hidden"); // lets the director see the avatar option
 	}
 	
 	if (urlParams.has('controls') || urlParams.has('videocontrols')) {
@@ -1926,6 +1927,17 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 		session.nopreview = false;
 		session.minipreview = mini;
 	}
+	
+	if (urlParams.has('minipreviewoffset') || urlParams.has('mpo')){ // 40 would be centered
+		session.leftMiniPreview = urlParams.get('minipreviewoffset') || urlParams.get('mpo') || 0;
+		session.leftMiniPreview = parseInt(session.leftMiniPreview) || 0;
+		if (session.leftMiniPreview<-20){
+			session.leftMiniPreview = -20;
+		} else if (session.leftMiniPreview>120){
+			session.leftMiniPreview = 120;
+		}
+	}	
+	
 
 	if (urlParams.has('obsfix')) {
 		session.obsfix = urlParams.get('obsfix');
@@ -4547,6 +4559,18 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 				toggleMute();
 			}
 		}
+		
+		if ("toggleSettings" in e.data) { // this should work for the director's mic mute button as well. Needs to be manually enabled the first time still tho.
+
+			if (e.data.toggleSettings && !toggleSettingsState){
+				toggleSettings();
+			} else if (e.data.toggleSettings=="toggle"){
+				toggleSettings();
+			} else if (toggleSettingsState){
+				toggleSettings();
+			}
+		}
+		
 
 		if ("camera" in e.data) { // this should work for the director's mic mute button as well. Needs to be manually enabled the first time still tho.
 			if (e.data.camera === true) { // unmute
