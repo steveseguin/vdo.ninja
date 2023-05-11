@@ -54,7 +54,7 @@
 
 #### May 4 <a href="#august-31" id="august-31"></a>
 
-* Added [`&minipreviewoffset`](../advanced-settings/video-parameters/and-minipreviewoffset.md) (`&mpo`), to alpha. This accepts an interer value, `-20` to `120`, which is used to position where the [mini preview](../source-settings/and-minipreview.md) is located by default on screen. `&mpo=40` would imply center of screen, as the mini preview is about 20% of the screen size. `&mpo=0` (or just `&mpo`) is the left-most side of the screen.
+* Added [`&minipreviewoffset`](../advanced-settings/video-parameters/and-minipreview-1.md) (`&mpo`), to alpha. This accepts an interer value, `-20` to `120`, which is used to position where the [mini preview](../source-settings/and-minipreview.md) is located by default on screen. `&mpo=40` would imply center of screen, as the mini preview is about 20% of the screen size. `&mpo=0` (or just `&mpo`) is the left-most side of the screen.
 
 #### May 3 <a href="#august-31" id="august-31"></a>
 
