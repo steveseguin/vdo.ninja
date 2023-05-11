@@ -464,6 +464,10 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 		meshcast(true);
 	}
 	
+	if (urlParams.has('nomeshcast')) {
+		session.noMeshcast = urlParams.get('nomeshcast') || true;
+	}
+	
 	
 	var filename = false;
 	try {
@@ -2351,7 +2355,7 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 			getById("audioScreenShare1").style.display = "none";
 		}
 		
-		if (session.audioDevice!==false){
+		if (session.audioDevice){ // 0 or false, do not triger
 			log("requestAudioStream..()");
 			try {
 				await requestAudioStream();

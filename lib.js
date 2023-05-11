@@ -4272,7 +4272,7 @@ function updateMixerRun(e=false){  // this is the main auto-mixing code.  It's a
 						}
 					} else if (session.rpcs[i].videoElement.srcObject && ((session.rpcs[i].videoElement.srcObject.getVideoTracks().length==0) || session.rpcs[i].videoMuted)){
 						if (session.rpcs[i].screenShareState){
-							doNotPush = true;;
+							doNotPush = true;
 						}
 					}
 					//} else if (!session.directorList.indexOf(i)>=0){  // director is never audio-only.  Video if need, yes, but not visualized-audio.
@@ -5158,21 +5158,6 @@ function updateMixerRun(e=false){  // this is the main auto-mixing code.  It's a
 				var hrh = (h/rh);
 			}
 			
-			
-			/* } else {
-				holder.style.borderRadius = borderRadius+"px";
-				holder.style.borderColor = borderColor;
-				
-				holder.style.backgroundColor = borderColor;
-				holder.style.borderWidth = borderOffset+"px"; 
-				
-				if (session.colorVideosBackground){
-					holder.style.backgroundColor = session.colorVideosBackground;
-				} else if (borderOffset){
-					holder.style.backgroundColor = borderColor;
-				}
-			} */
-			
 			if (backgroundMedia){
 				container.style.backgroundImage = "url("+backgroundMedia+")";
 				if (cover){
@@ -5227,22 +5212,21 @@ function updateMixerRun(e=false){  // this is the main auto-mixing code.  It's a
 			
 			if (cover){
 				if ((("rotated" in vid) && ((vid.rotated==90) || (vid.rotated==270)))){
-					
 					holder.style.left = borderOffset + "px";
 					holder.style.top = borderOffset + "px";
-					
-					holder.style.height = "calc(100% - "+(videoMargin+borderOffset)+"px)";
-					holder.style.width = "calc(100% - "+(videoMargin+borderOffset)+"px)";
+					holder.style.height = "calc(100% - "+(videoMargin*2)+"px)";
+					holder.style.width = "calc(100% - "+(videoMargin*2)+"px)";
 					
 					vid.style.width = (height - (borderOffset + videoMargin)*2) + "px";
 					vid.style.height = (width - (borderOffset + videoMargin)*2) + "px";
 					vid.style.left =  0;
 					vid.style.top =   0;
 				} else {
-					holder.style.left = borderOffset + videoMargin + "px";
-					holder.style.top = borderOffset + videoMargin +"px";
-					holder.style.height = "calc(100% - "+(videoMargin*2+borderOffset)+"px)";
-					holder.style.width = "calc(100% - "+(videoMargin*2+borderOffset)+"px)";
+					holder.style.left =  videoMargin + "px";
+					holder.style.top =  videoMargin +"px";
+					holder.style.height = "calc(100% - "+(videoMargin*2)+"px)";
+					holder.style.width = "calc(100% - "+(videoMargin*2)+"px)";
+					
 					vid.style.width = "100%";
 					vid.style.height = "100%";
 					vid.style.left =  0;
@@ -5276,6 +5260,12 @@ function updateMixerRun(e=false){  // this is the main auto-mixing code.  It's a
 					}
 				}
 			
+				vid.style.borderColor = borderColor;
+				vid.style.borderWidth = borderOffset+"px";
+				vid.style.borderRadius = borderRadius+"px";
+				holder.style.borderColor = borderColor;
+				holder.style.borderWidth = "0px";
+				holder.style.borderRadius = borderRadius+"px";
 				
 			} else if ((vw && vh) || (vid.width && vid.height) || vid.dataset.aspectRatio){
 				if (("rotated" in vid) && ((vid.rotated==90) || (vid.rotated==270))){
@@ -5307,8 +5297,8 @@ function updateMixerRun(e=false){  // this is the main auto-mixing code.  It's a
 					}
 				}
 				
-				var asw = wrw/vvw;  // (window.innerWidth/ N)  /  vid.videoHeight;
-				var ash = hrh/vvh;
+				var asw = (wrw - videoMargin*2 - borderOffset*2)/vvw;  // (window.innerWidth/ N)  /  vid.videoHeight;
+				var ash = (hrh - videoMargin*2 - borderOffset*2)/vvh;
 				
 				if (session.structure){
 					// wrw x hrh
@@ -5318,29 +5308,25 @@ function updateMixerRun(e=false){  // this is the main auto-mixing code.  It's a
 					//var arH = 9.0;
 					if (arx>tarx){ // width is too long
 						var hsw = hrh*tarx - videoMargin*2*tarx - borderOffset*2;
-						
 						var hsl = (wrw - hsw) / 2;
 						var hst = videoMargin;
 						var hsh = (hrh - videoMargin*2 );
 					} else {
 						var hsh = (wrw - videoMargin*2 + borderOffset*2)/tarx;
-						
 						var hst = (hrh - hsh) / 2;
 						var hsl = videoMargin;
 						var hsw = (wrw - videoMargin*2);
 					}
+				} else if (asw > ash){
+					var hsh = hrh - videoMargin*2;
+					var hst = videoMargin;
+					var hsw = (hsh - borderOffset)*(vvw/vvh);
+					var hsl = (wrw - hsw)/2;
 				} else {
-					if (asw < ash){
-						var hsw = wrw - videoMargin*2;
-						var hsl = videoMargin;
-						var hsh = hsw/(vvw/vvh) + borderOffset*2 - borderOffset*2/(vvw/vvh);
-						var hst = (hrh - hsh - videoMargin - borderOffset)/2 + videoMargin;
-					} else { 
-						var hsh = hrh - videoMargin*2;
-						var hst = videoMargin;
-						var hsw = hsh*vvw/vvh + borderOffset*2 - borderOffset*2*(vvw/vvh);
-						var hsl = (wrw - hsw - videoMargin - borderOffset)/2;
-					}
+					var hsw = wrw - videoMargin*2;
+					var hsl = videoMargin;
+					var hsh = hsw/(vvw/vvh) + borderOffset;
+					var hst = (hrh - hsh)/2;
 				}
 				
 				
@@ -5350,7 +5336,10 @@ function updateMixerRun(e=false){  // this is the main auto-mixing code.  It's a
 				holder.style.height = Math.ceil(hsh) + 'px';
 				//holder.style.padding = videoMargin + "px";
 				
-				
+				holder.style.borderColor = borderColor;
+				holder.style.borderWidth = borderOffset+"px";
+				holder.style.borderRadius = borderRadius+"px";
+				vid.style.borderWidth = "0px";
 				
 				
 				if (("rotated" in vid) && ((vid.rotated==90) || (vid.rotated==270))){
@@ -5429,7 +5418,7 @@ function updateMixerRun(e=false){  // this is the main auto-mixing code.  It's a
 						
 					}
 				}
-				///////////////
+				
 				
 			} else {
 				holder.style.left = (borderOffset + videoMargin) + "px";
@@ -5463,12 +5452,15 @@ function updateMixerRun(e=false){  // this is the main auto-mixing code.  It's a
 					}
 				}
 				///////////////
+				holder.style.borderColor = borderColor;
+				holder.style.borderWidth = borderOffset+"px";
+				holder.style.borderRadius = borderRadius+"px";
+				vid.style.borderWidth = "0px";
 			
 			}
 			
-			vid.style.borderRadius = borderRadius+"px";
-			vid.style.borderColor = borderColor;
-			vid.style.borderWidth = borderOffset+"px";
+			
+			
 			if (session.colorVideosBackground){
 				vid.style.backgroundColor = session.colorVideosBackground;
 			} else {
@@ -12056,22 +12048,19 @@ function issueLayout(layout=false, scene=false, UUID=false) { // A directing roo
 			c:true
 		}
 	}; */
+	
 	if (UUID){
-		if (session.pcs[UUID] && (scene!==false) && (session.pcs[UUID].scene===(scene+""))){
-			if (!session.pcs[UUID].solo){
-				session.sendMessage(msg, UUID);
-			}
-		} else if (session.pcs[UUID] && session.pcs[UUID].layout){
+		if (session.pcs[UUID] && (scene!==false) && (session.pcs[UUID].scene===(scene+"")) && !session.pcs[UUID].solo && session.pcs[UUID].layout){ // scene specified
+			session.sendMessage(msg, UUID);
+		} else if (session.pcs[UUID] && session.pcs[UUID].layout && !session.pcs[UUID].solo){ // no scene targetted
 			session.sendMessage(msg, UUID);
 			log("broadcast");
 		}
 	} else {
 		for (var uuid in session.pcs){
-			if ((scene!==false) && (session.pcs[uuid].scene===(scene+""))){
-				if (!session.pcs[uuid].solo){
-					session.sendMessage(msg, uuid);
-				}
-			} else if (session.pcs[uuid].layout){
+			if ((scene!==false) && (session.pcs[uuid].scene===(scene+"")) && !session.pcs[uuid].solo && session.pcs[uuid].layout){
+				session.sendMessage(msg, uuid);
+			} else if (session.pcs[uuid].layout && !session.pcs[uuid].solo){
 				session.sendMessage(msg, uuid);
 				log("broadcast");
 			}
@@ -12871,7 +12860,7 @@ function applyMuteState(UUID){ // this is the mute state of PLAYBACK audio; not 
 		if (session.noaudio===true){
 			muteOutcome = true;
 		} else if (session.noaudio.length){
-			if (("streamID" in session.rpcs[UUID].streamID) && session.rpcs[UUID].streamID && !session.noaudio.includes(session.rpcs[UUID].streamID)){
+			if (("streamID" in session.rpcs[UUID]) && session.rpcs[UUID].streamID && !session.noaudio.includes(session.rpcs[UUID].streamID)){
 				muteOutcome = true;
 			}
 		} else {
@@ -16155,7 +16144,7 @@ function requestInfocus(ele, evt=null, value=null) {
 		ele.classList.remove("altpress");
 		var actionMsg = {};
 		actionMsg.infocus = false;
-		session.sendMessage(actionMsg);
+		//session.sendMessage(actionMsg);
 	} else {
 		var actionMsg = {};
 		if (special){
@@ -16163,7 +16152,7 @@ function requestInfocus(ele, evt=null, value=null) {
 		} else {
 			actionMsg.infocus = sid;
 		}
-		session.sendMessage(actionMsg);
+		//session.sendMessage(actionMsg);
 		
 		var eles = document.querySelectorAll('[data-action-type="solo-video"]');
 		for (var i=0;i<eles.length;i++) {
@@ -16183,6 +16172,13 @@ function requestInfocus(ele, evt=null, value=null) {
 			getById("highlightDirector").checked=false;
 		}
 	}
+	
+	for (var uuid in session.pcs){
+		if (!session.pcs[uuid].solo && !session.pcs[uuid].layout){ // only issue highlight commands to non-solo and non-layout links
+			session.sendMessage(actionMsg, uuid);
+		}
+	}
+	
 	syncDirectorState(ele);
 	
 	if (ele.value==1){
@@ -31529,7 +31525,7 @@ session.onTrack = function(event, UUID){
 				if ((session.novideo !== false) && (!session.novideo.includes(session.rpcs[UUID].streamID))){
 					newTracks.splice(index,1);
 					continue;
-				} else if (session.rpcs[UUID].settings && session.rpcs[UUID].settings.allowscreen && screenshare){
+				} else if (session.rpcs[UUID].settings && session.rpcs[UUID].settings.allowscreenvideo && screenshare){
 					//newTracks.splice(index,1);
 					continue;
 				} else if (session.rpcs[UUID].settings && !session.rpcs[UUID].settings.video){
@@ -31540,7 +31536,7 @@ session.onTrack = function(event, UUID){
 				if ((session.noaudio !== false) && (!session.noaudio.includes(session.rpcs[UUID].streamID))){
 					newTracks.splice(index,1);
 					continue;
-				} else if (session.rpcs[UUID].settings && session.rpcs[UUID].settings.allowscreen && screenshare){
+				} else if (session.rpcs[UUID].settings && session.rpcs[UUID].settings.allowscreenaudio && screenshare){
 					//newTracks.splice(index,1);
 					continue;
 				} else if (session.rpcs[UUID].settings && !session.rpcs[UUID].settings.audio){
@@ -35656,8 +35652,7 @@ function getReceiversMC(UUID){
 }
 
 async function createSecondStream2(UUID){
-	if (!("allowScreen" in session.pcs[UUID])){return false;}
-	if (session.pcs[UUID].allowScreen===false){return false;}
+	if (session.pcs[UUID].allowScreenVideo===false && session.pcs[UUID].allowScreenAudio===false){return false;}
 	if ("realUUID" in session.pcs[UUID]){return false;} // we don't want to attach to an existing screen share obviously
 	if (!session.screenStream){return false;}
 	
@@ -35669,6 +35664,8 @@ async function createSecondStream2(UUID){
 		session.pcs[UUID+"_screen"].sceneDisplay = null;
 		session.pcs[UUID+"_screen"].sceneMute = null;
 		session.pcs[UUID+"_screen"].solo = null;
+		session.pcs[UUID+"_screen"].allowVideo = session.pcs[UUID].allowScreenVideo;
+		session.pcs[UUID+"_screen"].allowAudio = session.pcs[UUID].allowScreenAudio;
 		session.pcs[UUID+"_screen"].layout = null;
 		session.pcs[UUID+"_screen"].obsState = {};
 		session.pcs[UUID+"_screen"].obsState.visibility = null;
@@ -35702,6 +35699,8 @@ async function createSecondStream2(UUID){
 		session.pcs[UUID+"_screen"].preferVideoCodec = false;
 		session.pcs[UUID+"_screen"].startTime = Date.now();
 		
+		// we will use allowVideo/allowAudio from the main UUID parent
+		
 		session.pcs[UUID+"_screen"].getStats = function(){
 			return new Promise((resolve, reject) => {
 				resolve([]);
@@ -35726,10 +35725,18 @@ async function createSecondStream2(UUID){
 	for (var i=0;i<tracks.length;i++){
 		var track = tracks[i];
 		
+		try {
+			if (track.kind === "audio" && (session.pcs[UUID+"_screen"].allowAudio===false)){
+				continue;
+			} else if (track.kind === "video" && (session.pcs[UUID+"_screen"].allowVideo===false)){
+				continue;
+			}
+		} catch(e){errorlog(e);}
+		
+		
 		if (session.audioContentHint && (track.kind === "audio")){
-			
 			try {
-				track.contentHint = session.audioContentHint;
+				track.contentHint = session.audioContentHint; // this gets triggered too often I think
 			} catch(e){
 				errorlog(e);
 			}
@@ -35737,13 +35744,13 @@ async function createSecondStream2(UUID){
 		
 		if (session.screenshareContentHint && (track.kind === "video")){
 			try {
-				track.contentHint = session.screenshareContentHint;
+				track.contentHint = session.screenshareContentHint; // this gets triggered too often I think
 			} catch(e){
 				errorlog(e);
 			}
 		} else if (session.contentHint && (track.kind === "video")){
 			try {
-				track.contentHint = session.contentHint;
+				track.contentHint = session.contentHint; // this gets triggered too often I think
 			} catch(e){
 				errorlog(e);
 			} 

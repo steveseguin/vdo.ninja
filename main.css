@@ -241,6 +241,39 @@ th {
 	user-select: none;
 }
 
+
+a:link {
+	color: var(--a-link);
+}
+a:visited {
+	color: var(--a-visited);
+}
+a:hover {
+	color: var(--a-hover);
+}
+a:focus {
+	color: var(--a-focus);
+}
+a:active {
+	color: var(--a-active);
+}
+
+
+a.soloLink:link {
+    cursor: grab;
+    font-size: 1.2em;
+    font-weight: 700;
+    padding: 4px 0 2px 0;
+    border-radius: 5px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+	color: #b4d7f6;
+}
+a.soloLink:visited{
+	color: #b4d7f6;
+}
+
 /* Links */
 a {
 	-webkit-app-region: no-drag;
@@ -311,21 +344,6 @@ a {
 }
 
 
-a:link {
-	color: var(--a-link);
-}
-a:visited {
-	color: var(--a-visited);
-}
-a:hover {
-	color: var(--a-hover);
-}
-a:focus {
-	color: var(--a-focus);
-}
-a:active {
-	color: var(--a-active);
-}
 
 input {
 	border-radius: 4px;
@@ -3739,17 +3757,7 @@ div#roomnotes2 {
 	top: 1px;
 }
 
-a.soloLink:link {
-    cursor: grab;
-    font-size: 1.2em;
-    font-weight: 700;
-    padding: 4px 0 2px 0;
-    border-radius: 5px;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-	color: #b4d7f6;
-}
+
 .vidcon>h2 {
 	font-size: 1em;
 	margin-top: 20px;
