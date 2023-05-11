@@ -20,7 +20,7 @@ Example: `&displaysurface=monitor`
 
 `&displaysurface` will pre-select "display-share", rather than tab-share, when screen-sharing. You can pass `monitor`, `browser`, or `window` as options to customize this though.
 
-![](<../../.gitbook/assets/image (1).png>)
+![](<../../.gitbook/assets/image (1) (1).png>)
 
 For more details on these new features see here:\
 [https://developer.chrome.com/docs/web-platform/screen-sharing-controls/](https://developer.chrome.com/docs/web-platform/screen-sharing-controls/)\

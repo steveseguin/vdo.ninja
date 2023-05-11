@@ -3,6 +3,17 @@
 [social-stream.md](../steves-helper-apps/social-stream.md "mention")\
 [chat-overlay.md](../steves-helper-apps/chat-overlay.md "mention")
 
+#### **May 10**
+
+* afreecatv.com support added to Social Stream. Update the extension and pop out chat to use.\
+  ![](<../.gitbook/assets/image (1).png>)![](<../.gitbook/assets/image (5).png>)
+
+#### **May 9**
+
+* Social Stream's filter mode can be customized via the menu to name only on name, rather than name and message.
+* The text-to-speech option will not trigger on messages that are filtered.
+* Fixed an issue where large avatars + branding icons weren't working well together.
+
 #### **May 6**
 
 * buzzit.ca chat support added to **Social Stream** (added via community member: _Skintillion_)
@@ -154,7 +165,7 @@ Social Stream updates for today:
 
 * Social Stream has had the "open chat automatically" functionality improved a lot the last couple days. @River played a large part in that.
 * Added to Social Stream the option to map a chat command to some webhook API. Just an easy way to get started with making bot-actions, such as turning on a light. Happy to evolve this based on feedback.\
-  ![](<../.gitbook/assets/image (1) (1) (1) (1).png>)
+  ![](<../.gitbook/assets/image (1) (1) (1) (1) (1).png>)
 
 #### **February 22**
 
