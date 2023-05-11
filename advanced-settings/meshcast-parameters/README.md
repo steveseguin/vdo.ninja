@@ -8,6 +8,8 @@ description: >-
 
 **Meshcast Parameters** are specific to the [`&meshcast`](../../newly-added-parameters/and-meshcast.md) parameter. They are all parameters for the publisher's side ([`&push`](../../source-settings/push.md)) and have to be used together with [`&meshcast`](../../newly-added-parameters/and-meshcast.md).
 
+## Source side options
+
 | Parameter                                                                      | Explanation                                                                                        |
 | ------------------------------------------------------------------------------ | -------------------------------------------------------------------------------------------------- |
 | [`&meshcast`](../../newly-added-parameters/and-meshcast.md)                    | Triggers the service, causing the outbound audio/video stream to be transferred to a hosted server |
@@ -17,3 +19,9 @@ description: >-
 | [`&mcscreensharebitrate`](../../meshcast-settings/and-mcscreensharebitrate.md) | Option to change outbound screen-share video bitrate of the `&meshcast` parameter                  |
 | [`&mcscreensharecodec`](../../meshcast-settings/and-mcscreensharecodec.md)     | Option to change codec of the `&meshcast` parameter while screen-sharing                           |
 | [`&meshcastscale`](../upcoming-parameters/and-meshcastscale.md)                | Scales down the Meshcast video output via the URL                                                  |
+
+## **Viewer side options**
+
+| Parameter                                  | Explanation                                                           |
+| ------------------------------------------ | --------------------------------------------------------------------- |
+| [`&nomeshcast`](and-nomeshcast.md) (alpha) | Tells a sender to provide a p2p stream, rather than a Meshcast stream |

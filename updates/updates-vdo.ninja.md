@@ -7,7 +7,7 @@
 
 #### May 9 <a href="#august-31" id="august-31"></a>
 
-* Added `&nomeshcast` as an option in VDO.Ninja. This is a viewer-side option that tells a sender to provide a p2p stream, rather than a Meshcast stream, if they have [`&meshcast`](../newly-added-parameters/and-meshcast.md) active. A bit of a niche option, but might be useful if bandwidth or latency is a consideration for a specific viewer, like the [director](../viewers-settings/director.md).\
+* Added [`&nomeshcast`](../advanced-settings/meshcast-parameters/and-nomeshcast.md) as an option in VDO.Ninja. This is a viewer-side option that tells a sender to provide a p2p stream, rather than a Meshcast stream, if they have [`&meshcast`](../newly-added-parameters/and-meshcast.md) active. A bit of a niche option, but might be useful if bandwidth or latency is a consideration for a specific viewer, like the [director](../viewers-settings/director.md).\
   \
   \*\* this change is on alpha, [https://vdo.ninja/alpha/](https://vdo.ninja/alpha/)
 
@@ -41,20 +41,20 @@
   \-- also, importantly, this is not available to any user within a group-room. This is purely available for simple push/view setups.\
   \
   If you find this new data / tool useful, particularly if it helped fix quality issues, please let me know how it helped so I can invest more time into it.\
-  ![](<../.gitbook/assets/image (5) (2).png>)
+  ![](<../.gitbook/assets/image (5) (6).png>)
 * If an `iPhone 12 (and up)` user is detected, who is using `iOS +16`, with the `REAR camera selected`, and who has [`&quality=0`](../advanced-settings/video-parameters/and-quality.md) (high performance) mode active, then `1080p at 60-fps` will be enabled. So yes, iPhones actually work at 1080p60 now..\
   \
   related to this update, the stats menu has more data:\
   \-- The viewer stats menu show the iOS version now by the browser stats: ie: Safari 16. (I'd recommend updating to iOS 16.2 if you do have an iPhone.)\
   \-- The stats menu now shows whether it _thinks_ the remote iPhone is an iPhone 12 and up (SE versions excluded)\
   \-- "iPhone 12 and up" will be true or false.\
-  ![](<../.gitbook/assets/image (2).png>)![](<../.gitbook/assets/image (1) (1) (1).png>)\
+  ![](<../.gitbook/assets/image (2).png>)![](<../.gitbook/assets/image (1) (1) (2).png>)\
   \
   \*\* on alpha at vdo.ninja/alpha/
 
 #### May 4 <a href="#august-31" id="august-31"></a>
 
-* Added [`&minipreviewoffset`](../advanced-settings/video-parameters/and-minipreview-1.md) (`&mpo`), to alpha. This accepts an interer value, `-20` to `120`, which is used to position where the [mini preview](../source-settings/and-minipreview.md) is located by default on screen. `&mpo=40` would imply center of screen, as the mini preview is about 20% of the screen size. `&mpo=0` (or just `&mpo`) is the left-most side of the screen.
+* Added [`&minipreviewoffset`](../advanced-settings/video-parameters/and-minipreviewoffset.md) (`&mpo`), to alpha. This accepts an interer value, `-20` to `120`, which is used to position where the [mini preview](../source-settings/and-minipreview.md) is located by default on screen. `&mpo=40` would imply center of screen, as the mini preview is about 20% of the screen size. `&mpo=0` (or just `&mpo`) is the left-most side of the screen.
 
 #### May 3 <a href="#august-31" id="august-31"></a>
 
@@ -365,7 +365,7 @@
 #### February 10 <a href="#august-31" id="august-31"></a>
 
 * You can set the [totalroombitrate](../advanced-settings/video-bitrate-parameters/totalroombitrate.md) via manual value input now (rather than slider) in the room settings menu. (on vdo.ninja production)\
-  ![](<../.gitbook/assets/image (5) (2) (3).png>)
+  ![](<../.gitbook/assets/image (5) (2).png>)
 
 #### February 9 <a href="#august-31" id="august-31"></a>
 
