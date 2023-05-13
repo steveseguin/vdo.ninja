@@ -2259,6 +2259,8 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 			}
 		} else if (urlParams.has("lightmode") || urlParams.has("lightmode")){
 			session.darkmode = false;
+		} else if (window.obsstudio){
+			session.darkmode = false; // prevent OBS from defaulting to dark mode, avoiding possible overlooked bugs.
 		} else {
 			session.darkmode = getComputedStyle(document.querySelector(':root')).getPropertyValue('--color-mode').trim();
 			if (session.darkmode == "dark"){
@@ -2267,6 +2269,7 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 				session.darkmode = false;
 			}
 		}
+		
 		if (session.darkmode){
 			document.body.classList.add("darktheme");
 			//document.querySelector(':root').style.setProperty('--background-color',"#02050c" );

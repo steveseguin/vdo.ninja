@@ -1298,7 +1298,8 @@ session.obsSceneSync = function(){
 
 
 session.sceneSync = function(UUID){ 
-	if (!session.rpcs[UUID].videoElement){return;} // i'll want to consider other things, such as canvas at some point.
+	if (!session.rpcs[UUID]){return;}
+	else if (!session.rpcs[UUID].videoElement){return;} // i'll want to consider other things, such as canvas at some point.
 	
 	var msg = {};
 	msg.sceneDisplay = (session.rpcs[UUID].videoElement.style.display!="none"); 
@@ -29047,14 +29048,16 @@ function initSceneList(UUID){
 	});
 }
 
-function updateSceneList(scene){
+function updateSceneList(scene){ // custom scenes only.
 	if (!session.director){return;}
 	if (scene in session.sceneList){return;}
+	
 	if ((parseInt(scene)+"")===scene){
 		if ((parseInt(scene)>=0) && (parseInt(scene)<=8)){
 			return;
 		}
 	}
+	
 	session.sceneList[scene] = true;
 	for (var UUID in session.rpcs){
 		var newScene = document.createElement("div");
