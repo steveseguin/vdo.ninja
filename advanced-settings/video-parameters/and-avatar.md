@@ -33,7 +33,7 @@ You can encode your URL here:\
 
 Choosing the default avatar / placeholder image is activated for the director on default
 
-<figure><img src="../../.gitbook/assets/image (6) (3).png" alt=""><figcaption></figcaption></figure>
+<figure><img src="../../.gitbook/assets/image (6) (6).png" alt=""><figcaption></figcaption></figure>
 
 ## Related
 

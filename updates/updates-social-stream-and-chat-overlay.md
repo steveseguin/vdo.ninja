@@ -24,7 +24,7 @@
   \-- This was added to allow a host to put people into their own team by setting the name to a limited set of colors.\
   \-- You can have color options (teams) ranging from 1 to several thousand.\
   \-- You can also change the randomization seed so you can put people into different teams on the fly.\
-  ![](<../.gitbook/assets/image (4) (2).png>)
+  ![](<../.gitbook/assets/image (4) (9).png>)
 
 #### **April 18**
 
@@ -91,7 +91,7 @@ Social stream updates:
 
     \
     [https://github.com/steveseguin/electroncapture/releases/tag/2.17.1.1](https://github.com/steveseguin/electroncapture/releases/tag/2.17.1.1) <= Test version of Electron Capture with this new feature; windows build\
-    ![](<../.gitbook/assets/image (3) (2) (4).png>)
+    ![](<../.gitbook/assets/image (3) (2).png>)
 
 #### **March 22**
 
@@ -165,7 +165,7 @@ Social Stream updates for today:
 
 * Social Stream has had the "open chat automatically" functionality improved a lot the last couple days. @River played a large part in that.
 * Added to Social Stream the option to map a chat command to some webhook API. Just an easy way to get started with making bot-actions, such as turning on a light. Happy to evolve this based on feedback.\
-  ![](<../.gitbook/assets/image (1) (1) (1) (1) (1).png>)
+  ![](<../.gitbook/assets/image (1) (1) (1) (1).png>)
 
 #### **February 22**
 
