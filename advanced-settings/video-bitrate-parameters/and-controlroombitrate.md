@@ -28,7 +28,11 @@ You need to be a publisher to access this value (as the settings button is neede
 
 Consider using [`&totalroombitrate`](totalroombitrate.md) if you wish to increase the bitrate higher than the default max of \~ 500-kbps.
 
-![](<../../.gitbook/assets/image (131).png>)
+<div align="left">
+
+<img src="../../.gitbook/assets/image (131).png" alt="">
+
+</div>
 
 ## Related
 

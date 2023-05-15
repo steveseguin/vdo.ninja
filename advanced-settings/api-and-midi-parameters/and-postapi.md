@@ -27,4 +27,8 @@ ie: `&postapi=https%3A%2F%2Fwebhook.site%2Fb190f5bf-e4f8-454a-bd51-78b5807df9c1`
 
 If you don't want to listen for events with the websocket server API I host, you can use this with your own API https server instead and get key events pushed to you that way.
 
-<figure><img src="../../.gitbook/assets/image (2) (1).png" alt=""><figcaption></figcaption></figure>
+<div align="left">
+
+<figure><img src="../../.gitbook/assets/image (2) (1) (6).png" alt=""><figcaption></figcaption></figure>
+
+</div>

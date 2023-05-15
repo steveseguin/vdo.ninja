@@ -6,6 +6,9 @@ description: Not ready for production, not intended to be used or not well-docum
 
 There are some more parameters on [VDO.Ninja](https://vdo.ninja/) which are currently not ready for production, not intended to be used, or not well-documented.
 
+You could find out more about these parameters when searching for them on this link:\
+[https://github.com/steveseguin/vdo.ninja/blob/develop/main.js](https://github.com/steveseguin/vdo.ninja/blob/develop/main.js)
+
 | Parameter            | Explanation                                                                                                                                                                                                                                                                                                   |
 | -------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | `&crop`              | <p>Changes the aspect ratio on the publisher side, but lets you pass an integer value to represent a percentile cropping value.<br><br>So, <code>&#x26;crop=10</code> will reduce the width by 90% and <code>&#x26;crop=-10</code> will increase the aspect ratio. The assumed base aspect ratio is 16:9.</p> |

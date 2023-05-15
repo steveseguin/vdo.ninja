@@ -12,7 +12,11 @@ VDO.Ninja needs two things to work:
 4. Select `Start` and at the top of the screen a ‘view’ link will appear.
 5. Copy this view link and send it to someone you want to have access to this feed, or place it inside an OBS browser source.
 
-![](<../.gitbook/assets/image (1) (2) (1) (1) (1).png>)
+<div align="left">
+
+<img src="../.gitbook/assets/image (1) (2) (1) (1) (1).png" alt="">
+
+</div>
 
 ![](../.gitbook/assets/obs)
 

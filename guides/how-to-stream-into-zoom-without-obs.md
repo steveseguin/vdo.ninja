@@ -66,7 +66,11 @@ The director of the room will also see each guest in the control center as they 
 
 If we copy the **CAPTURE A SCENE LINK** in the director's room, and we open it in a new Chrome tab, we should be able to see all the guests in the room on that page.
 
+<div align="left">
+
 <figure><img src="../.gitbook/assets/image (31).png" alt=""><figcaption></figcaption></figure>
+
+</div>
 
 We can technically screen share this browser tab into Zoom, especially if we joined Zoom via Chrome also. We will continue this guide assuming you want to share into Zoom via the Electron Capture app however, which offers some performance advantages.
 

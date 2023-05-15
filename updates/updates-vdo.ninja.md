@@ -41,14 +41,14 @@
   \-- also, importantly, this is not available to any user within a group-room. This is purely available for simple push/view setups.\
   \
   If you find this new data / tool useful, particularly if it helped fix quality issues, please let me know how it helped so I can invest more time into it.\
-  ![](<../.gitbook/assets/image (5) (6).png>)
+  ![](<../.gitbook/assets/image (5) (2).png>)
 * If an `iPhone 12 (and up)` user is detected, who is using `iOS +16`, with the `REAR camera selected`, and who has [`&quality=0`](../advanced-settings/video-parameters/and-quality.md) (high performance) mode active, then `1080p at 60-fps` will be enabled. So yes, iPhones actually work at 1080p60 now..\
   \
   related to this update, the stats menu has more data:\
   \-- The viewer stats menu show the iOS version now by the browser stats: ie: Safari 16. (I'd recommend updating to iOS 16.2 if you do have an iPhone.)\
   \-- The stats menu now shows whether it _thinks_ the remote iPhone is an iPhone 12 and up (SE versions excluded)\
   \-- "iPhone 12 and up" will be true or false.\
-  ![](<../.gitbook/assets/image (2).png>)![](<../.gitbook/assets/image (1) (1) (2).png>)\
+  ![](<../.gitbook/assets/image (2) (1).png>)![](<../.gitbook/assets/image (1) (1) (1).png>)\
   \
   \*\* on alpha at vdo.ninja/alpha/
 
@@ -263,7 +263,7 @@
   One challenge is the interface and configuration for these WebRTC options. To help make it easier to play with things, I've created a little config page to test the very basics with.\
   \
   Many WHIP/WHEP apps are just as buggy/limited with their support as VDO.Ninja is, so incompatibilities and unstable behavior is unavoidable in the near term. Happy to work with others in the community to improve cross-app support.\
-  ![](<../.gitbook/assets/image (4) (2).png>)\
+  ![](<../.gitbook/assets/image (4) (2) (2).png>)\
   \
   \*\* changes available for testing at vdo.ninja/alpha/
 
@@ -286,7 +286,7 @@
 
 * Pushed some audio-related fixes for iPhones onto alpha. The audio-meter was active even when muted, and I think I fixed that now.
 * Added a volume control to the list of hidden users. As well, when you close the hidden user list, you can open it again via a little icon that appears in the lower-right corner (an icon with two masks).\
-  ![](<../.gitbook/assets/image (6) (3).png>)\
+  ![](<../.gitbook/assets/image (6) (3) (2).png>)\
   \
   \*\* on alpha at vdo.ninja/alpha/
 
@@ -365,7 +365,7 @@
 #### February 10 <a href="#august-31" id="august-31"></a>
 
 * You can set the [totalroombitrate](../advanced-settings/video-bitrate-parameters/totalroombitrate.md) via manual value input now (rather than slider) in the room settings menu. (on vdo.ninja production)\
-  ![](<../.gitbook/assets/image (5) (2).png>)
+  ![](<../.gitbook/assets/image (5) (2) (3).png>)
 
 #### February 9 <a href="#august-31" id="august-31"></a>
 

@@ -86,7 +86,11 @@ ie: `/list`
 * [`&showlist=1`](../source-settings/showlist.md) will force show it and [`&showlist=0`](../source-settings/showlist.md) will force hide it.
 * Feedback welcomed.
 
-![](https://user-images.githubusercontent.com/2575698/115191919-19ab1080-a0b8-11eb-882e-86b5d22f3914.png)
+<div align="left">
+
+<img src="https://user-images.githubusercontent.com/2575698/115191919-19ab1080-a0b8-11eb-882e-86b5d22f3914.png" alt="">
+
+</div>
 
 ### New Stats added
 

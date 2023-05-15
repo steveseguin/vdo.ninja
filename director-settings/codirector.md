@@ -53,7 +53,11 @@ The co-director mode is still evolving, and certain things like shared-state bet
 Starting with [v20](../release-notes/v20.md) of VDO.Ninja, a co-director invite link will be available via the room settings button, along with the option to customize permissions.
 {% endhint %}
 
-![The co-directors have a special color assigned to them](<../.gitbook/assets/image (31) (1).png>)
+<div align="left">
+
+<img src="../.gitbook/assets/image (31) (1).png" alt="The co-directors have a special color assigned to them">
+
+</div>
 
 ### Optional - Enable via Room Settings
 

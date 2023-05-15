@@ -14,13 +14,25 @@ Every guest is viewing video streams in a room with a combined bitrate of 500-kb
 
 As a director of a room you can control the total room bitrate dynamically.
 
+<div align="left">
+
 <figure><img src="../.gitbook/assets/image (2) (3) (1).png" alt=""><figcaption><p>Open the room settings via this button as a director</p></figcaption></figure>
+
+</div>
+
+<div align="left">
 
 <figure><img src="../.gitbook/assets/image (3) (8).png" alt=""><figcaption><p>The default is (as explained before) 500-kbps. You can increase it op to 4000-kbps.</p></figcaption></figure>
 
+</div>
+
 You can control the total room bitrate also with a URL parameter: [`&totalroombitrate=6000`](../advanced-settings/video-bitrate-parameters/totalroombitrate.md)
 
+<div align="left">
+
 <figure><img src="../.gitbook/assets/image (176).png" alt=""><figcaption><p>Default is 6000-kbps now with <code>&#x26;totalroombitrate=6000</code></p></figcaption></figure>
+
+</div>
 
 The default setting for the room is now 6000-kbps. You can decrease it dynamically though if the guests have any problems.
 

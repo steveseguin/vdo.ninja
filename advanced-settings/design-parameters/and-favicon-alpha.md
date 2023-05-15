@@ -22,7 +22,11 @@ Example: `&favicon=https%3A%2F%2Fmeshcast.io%2Ffavicon.ico`
 \
 Sample link: [`https://vdo.ninja/?headertitle=LINDENKRON4TW&favicon=https%3A%2F%2Fmeshcast.io%2Ffavicon.ico`](https://vdo.ninja/?headertitle=LINDENKRON4TW\&favicon=https%3A%2F%2Fmeshcast.io%2Ffavicon.ico)
 
+<div align="left">
+
 <figure><img src="../../.gitbook/assets/image (181).png" alt=""><figcaption></figcaption></figure>
+
+</div>
 
 ## Related
 

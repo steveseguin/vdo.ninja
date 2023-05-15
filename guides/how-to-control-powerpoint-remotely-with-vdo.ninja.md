@@ -20,6 +20,14 @@ Remote control PowerPoint with VDO.Ninja
 
 ### Images
 
+<div align="left">
+
 <figure><img src="../.gitbook/assets/image (5) (1) (1).png" alt=""><figcaption><p><a href="../advanced-settings/settings-parameters/and-powerpoint.md"><code>&#x26;powerpoint</code></a> as a URL parameter</p></figcaption></figure>
 
+</div>
+
+<div align="left">
+
 <figure><img src="../.gitbook/assets/image (19).png" alt=""><figcaption><p>Remote PowerPoint Web control via VDO.Ninja (IFrame API)</p></figcaption></figure>
+
+</div>

@@ -12,7 +12,11 @@ Replacing the APIKEY with a string of your choosing.&#x20;
 2\. Then, in Touch Portal, add a new button with the `HTTP GET` action. In the `HTTP GET` Action `GET URL` field, input your desired action. This particular GET action will send Guest 1 to Scene 1 with a push of the button:\
 `https://api.vdo.ninja/APIKEY/addScene/1/1`
 
-![](<../../.gitbook/assets/image (109) (1) (1).png>)
+<div align="left">
+
+<img src="../../.gitbook/assets/image (109) (1) (1).png" alt="">
+
+</div>
 
 Thanks to <mark style="color:red;">djlefave</mark> on [Discord](https://discord.vdo.ninja/) for this guide.
 

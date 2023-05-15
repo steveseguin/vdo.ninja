@@ -31,7 +31,11 @@ Advanced users can also pass a 6-character h264 profile ID to the parameter to g
 
 Example: `https://vdo.ninja/?view=xxx&h264profile=42e01f&codec=h264&stats`
 
-![](https://lh5.googleusercontent.com/sITY54EgMFJiM2nX7QXOjd645PKQv\_xktwsSUg1QVyvdpxJ9hLRuv0iyOQiL4nHw0dDYklKKp8bqh5F3jFh8prq9foPjaEZmv\_se\_bEwzhECGUDjTYHCJvbaw\_eve8Xs3T5\_7fxf)
+<div align="left">
+
+<img src="https://lh5.googleusercontent.com/sITY54EgMFJiM2nX7QXOjd645PKQv_xktwsSUg1QVyvdpxJ9hLRuv0iyOQiL4nHw0dDYklKKp8bqh5F3jFh8prq9foPjaEZmv_se_bEwzhECGUDjTYHCJvbaw_eve8Xs3T5_7fxf" alt="">
+
+</div>
 
 ## Related
 

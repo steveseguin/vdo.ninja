@@ -24,7 +24,7 @@ Example: `&minipreviewoffset=60`
 
 Added `&minipreviewoffset` accepts an integer value, `-20` to `120`, which is used to position where the [mini preview](../../source-settings/and-minipreview.md) is located by default on screen. `40` would imply center of the screen, as the mini preview is about 20% of the screen size. `0` (or just `&minipreviewoffset`) is the left-most side of the screen.
 
-<figure><img src="../../.gitbook/assets/image (3).png" alt=""><figcaption><p><code>&#x26;minipreviewoffset=40</code></p></figcaption></figure>
+<figure><img src="../../.gitbook/assets/image (3) (2).png" alt=""><figcaption><p><code>&#x26;minipreviewoffset=40</code></p></figcaption></figure>
 
 ## Related
 

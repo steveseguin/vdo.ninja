@@ -10,7 +10,11 @@ Sender-Side Option! ([`&push`](../source-settings/push.md))
 
 The microphone mute button will be above the control bar and much bigger. You could use this for guests so they can find the button easier.
 
-![](../.gitbook/assets/bigbutton.png)
+<div align="left">
+
+<img src="../.gitbook/assets/bigbutton.png" alt="">
+
+</div>
 
 ## Related
 
