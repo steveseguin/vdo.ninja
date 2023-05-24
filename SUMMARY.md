@@ -31,6 +31,7 @@
   * [Invite Link Generators](steves-helper-apps/invite-link-generators.md)
   * [Community contributed tools](steves-helper-apps/community-contributed-tools.md)
 * [Guides](guides/README.md)
+  * [How to selectively allow access](guides/how-to-selectively-allow-access.md)
   * [Cheat Sheets](guides/cheat-sheets.md)
   * [How Group Chat works](help/how-does-group-chat-work.md)
   * [Video bitrate for push/view links](guides/video-bitrate-for-push-view-links.md)
