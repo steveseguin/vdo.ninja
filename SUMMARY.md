@@ -514,6 +514,7 @@
   * [vMix High CPU](common-errors-and-known-issues/vmix-high-cpu.md)
   * [OBS Virtual Camera has low FPS](common-errors-and-known-issues/obs-virtual-camera-low-has-fps.md)
   * [Virtual camera not working on Mac](common-errors-and-known-issues/virtual-camera-not-working-on-mac.md)
+  * [Mic stops on macOS when OBS opens](common-errors-and-known-issues/mic-stops-on-macos-when-obs-opens.md)
   * [Video stream looks corrupted](common-errors-and-known-issues/video-is-pixelated.md)
   * [Video freezes mid-stream](common-errors-and-known-issues/video-freezes-mid-stream.md)
   * [Webcam freezes after a time](common-errors-and-known-issues/webcam-freezes-after-a-time.md)
