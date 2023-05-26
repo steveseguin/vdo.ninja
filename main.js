@@ -463,6 +463,11 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 		session.meshcast = urlParams.get('meshcast') || "any";
 		meshcast(true);
 	}
+	if (urlParams.has('meshcastcode') || urlParams.has('mccode')) {
+		session.meshcastCode = urlParams.get('meshcastcode') ||  urlParams.get('mccode')  || false
+	}
+	
+	
 	
 	if (urlParams.has('nomeshcast')) {
 		session.noMeshcast = urlParams.get('nomeshcast') || true;
@@ -2239,14 +2244,15 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 	}
 	
 	if (session.forceRetry){
-		setTimeout(function(){
+		clearInterval(session.forceRetryTimeout);
+		session.forceRetryTimeout = setTimeout(function(){
 			try {
 				session.retryWatchInterval();
 			} catch(e){
 				warnlog(e);
 				clearTimeout(this);
 			}
-		},30000);
+		}, session.forceRetry*1000);
 	}
 	
 	try {
@@ -5536,10 +5542,14 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 	window.addEventListener("online", function (e) {
 		log("Back ONLINE");
 		closeModal();
-		session.ping();
+		
+		if (!session.retryWatchInterval()){ // ask for the streams again to watch
+			session.ping(); // if no streams requested, let's ping instead.
+		}
 	});
 
 	function updateConnectionStatus() {
+		
 		try{
 			if (!session.stats){
 				return;
@@ -5551,12 +5561,19 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 				var miniInfo = {};
 				miniInfo.con = Connection.type;
 				session.sendMessage({"miniInfo":miniInfo});
+				
+				if (!session.retryWatchInterval()){ // ask for the streams again to watch
+					session.ping(); // if no streams requested, let's ping instead.
+				}
+				
+			} else { // connection state changed, but doesn't seem like it actually changed...
+				session.ping(); // if no streams requested, let's ping instead.
 			}
 			
 			session.stats.network_type = Connection.type;
-			session.ping();
 			
-		} catch(e){warnlog(e);};
+		} catch(e){warnlog(e);}
+		
 	}
 	
 	try {

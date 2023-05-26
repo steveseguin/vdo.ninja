@@ -462,6 +462,10 @@ try{
 	var macOS = navigator.userAgent.indexOf('Mac OS X') != -1;
 	macOS = macOS && !(iOS || iPad);
 	var Firefox = navigator.userAgent.indexOf("Firefox")>=0;
+	if (Firefox){
+		Firefox = parseInt(navigator.userAgent.split("irefox/").pop()) || true;
+		
+	}
 	var Android = navigator.userAgent.toLowerCase().indexOf("android") > -1; //&& ua.indexOf("mobile");
 	var ChromeVersion = getChromeVersion();
 	var OperaGx = isOperaGX();
@@ -3439,6 +3443,11 @@ function createRichVideoElement(UUID){ // this function is used to check and gen
 			
 		}, { once: true });
 		
+		if (session.rpcs[UUID].mirrorState){
+			applyMirrorGuest(session.rpcs[UUID].mirrorState, session.rpcs[UUID].videoElement);
+		} else if (session.rpcs[UUID].mirrorState===false){
+			applyMirrorGuest(session.rpcs[UUID].mirrorState, session.rpcs[UUID].videoElement);
+		}
 		
 		setupIncomingVideoTracking(session.rpcs[UUID].videoElement, UUID);
 		pokeIframeAPI("video-element-created", "videosource_"+UUID, UUID);
@@ -6019,6 +6028,32 @@ eventer(messageEvent, function(e) { // this listens for child IFRAMES.
 	} catch(e){errorlog(e);}
 });
 
+
+function requestMirrorGuest(ele){
+	var UUID = ele.dataset.UUID;
+	if (ele.value == 1) {
+		ele.value = 0;
+		ele.classList.remove("pressed"); ele.ariaPressed = "false";
+		applyMirrorGuest(false, session.rpcs[UUID].videoElement);
+		var data = {};
+		data.mirrorGuestTarget = UUID;
+		data.mirrorGuestState = false;
+		session.sendPeers(data, false, UUID);
+		data.mirrorGuestTarget = true;
+		session.sendPeers(data, UUID);
+		
+	} else {
+		ele.value = 1;
+		ele.classList.add("pressed"); ele.ariaPressed = "true";
+		applyMirrorGuest(true, session.rpcs[UUID].videoElement);
+		var data = {};
+		data.mirrorGuestTarget = UUID;
+		data.mirrorGuestState = true;
+		session.sendPeers(data, false, UUID);
+		data.mirrorGuestTarget = true;
+		session.sendPeers(data, UUID);
+	}
+}
 
 function requestKeyframeScene(ele) {
 	var UUID = ele.dataset.UUID;
@@ -11380,6 +11415,8 @@ function hangup2() {
 	getById("miniPerformer").innerHTML = "";
 	getById("press2talk").dataset.enabled = false;
 	getById("screensharebutton").classList.add("hidden");
+	getById("screenshare2button").classList.add("hidden");
+	getById("screenshare3button").classList.add("hidden");
 	getById("settingsbutton").classList.add("hidden");
 	getById("mutebutton").classList.add("hidden");
 	getById("hangupbutton2").classList.add("hidden");
@@ -11387,7 +11424,6 @@ function hangup2() {
 	getById("controlButtons").classList.remove("hidden");
 	//getById("mutespeakerbutton").classList.add("hidden");
 	getById("mutevideobutton").classList.add("hidden");
-	getById("screenshare2button").classList.add("hidden");
 	
 	getById("screensharebutton").classList.remove("green");
 	getById("screensharebutton").ariaPressed = "false";
@@ -13242,6 +13278,7 @@ async function publishScreen() {
 			getById("settingsbutton").classList.add("hidden");
 			getById("screenshare2button").classList.add("hidden");
 			getById("screensharebutton").classList.add("hidden");
+			getById("screenshare3button").classList.add("hidden");
 			getById("queuebutton").classList.add("hidden");
 		} else {
 			getById("controlButtons").classList.add("hidden");
@@ -15299,8 +15336,7 @@ function joinRoom(roomname) {
 			updateQueue();
 			pokeIframeAPI("joined-room-complete");
 			
-			if (session.include.length){
-				var keys = Object.keys(session.waitingWatchList);
+			if (session.include.length){ // we want to request what hasn't been requested already, since we are joining a room.
 				session.include.forEach(sid =>{
 					if (sid in session.waitingWatchList){
 						return;
@@ -15309,6 +15345,7 @@ function joinRoom(roomname) {
 					}
 				});
 			}
+			
 			
 		}, function(error) {
 			return {};
@@ -16517,10 +16554,10 @@ async function createDirectorScreenshareOnlyBox() { // sstype=3
 	getById("groups").remove();
 	
 	if (session.hidesololinks==false){ // won't be updating the solo link to a view-only one ever, since director is always expected to be in a room
-		controls.innerHTML += "<div style='padding:5px;word-wrap: break-word; overflow:hidden; white-space: nowrap; overflow: hidden; font-size:0.7em; text-overflow: ellipsis;' title='A direct solo view of the video/audio stream with nothing else'> \
+		controls.innerHTML += "<div class='soloButton' title='A direct solo view of the video/audio stream with nothing else'> \
 				<a class='soloLink advanced task' data-menu='context-menu' data-sololink='true' data-drag='1' draggable='true' onclick='copyFunction(this,event)' \
 				value='" + soloLink + "' href='" + soloLink + "'/>" + sanitizeChat(soloLink) + "</a>\
-				<button class='pull-right controlsGrid' onclick='copyFunction(this.previousElementSibling,event)'><i class='las la-user'></i><span translate='copy-solo-view-link'>copy solo view link</span></button>\
+				<button class='pull-right controlsGrid' style='width:100%' onclick='copyFunction(this.previousElementSibling,event)'><i class='las la-user'></i><span translate='copy-solo-view-link'>copy solo view link</span></button>\
 			</div>\
 			<div id='groups'></div>";
 		if (session.directorUUID){
@@ -19115,6 +19152,10 @@ function applyMirror(mirror) { // true unmirrors as its already mirrored
 		
 		if (!session.videoElement.style){
 			session.videoElement.style = "";
+		}
+		
+		if (session.permaMirrored){
+			mirror = !mirror;
 		}
 		
 		if (mirror) {
@@ -22094,7 +22135,7 @@ function setEncodings(sender, settings=null, callback=null, cbarg=null){
 		
 		log(settings);
 		
-		// if Firefox, see if I can do something other than Active?
+		// if old Firefox, see if I can do something other than Active?
 		
 		if (!changed){
 			log("SET ENCODINGS MATCH INPUT; skipping");
@@ -22109,8 +22150,8 @@ function setEncodings(sender, settings=null, callback=null, cbarg=null){
 			setEncodings(sender);
 			return;
 		}
-		
-		if (Firefox){
+		 
+		if (Firefox && !(Firefox >=110)){ // https://developer.mozilla.org/en-US/docs/Web/API/RTCRtpEncodingParameters now supported in v110, but old versions will need this function still
 			if ("active" in settings){
 				warnlog("Firefox does not support track active state. We will use enable/disable for that instead.");
 				if (FirefoxSenders.sender){
@@ -22434,8 +22475,31 @@ async function press2talk(clean = false) {
 	getById("press2talk").dataset.enabled = true;
 	getById("press2talk").outerHTML = "";
 	getById("mutebutton").classList.remove("hidden");
-	getById("screensharebutton").classList.remove("hidden");
 	getById("hangupbutton2").classList.remove("hidden");
+	
+	if (session.screenshareType===3){
+		getById("screenshare3button").className = "float";
+		getById("screensharebutton").className = "float hidden";
+		getById("screenshare2button").className = "float hidden";
+	} else if (session.screenshareType===1){
+		getById("screensharebutton").className = "float";
+		getById("screenshare3button").className = "float hidden";
+		getById("screenshare2button").className = "float hidden";
+	} else if (session.screenshareType===2){
+		getById("screenshare2button").className = "float";
+		getById("screensharebutton").className = "float hidden";
+		getById("screenshare3button").className = "float hidden";
+	} else if (session.broadcast===null){
+		// sstype=1, since in self-broadcast mode
+		getById("screensharebutton").className = "float";
+		getById("screenshare2button").className = "float hidden";
+		getById("screenshare3button").className = "float hidden";
+	} else {
+		// sstype=3, since not in broadcast mode
+		getById("screensharebutton").className = "float hidden";
+		getById("screenshare2button").className = "float hidden";
+		getById("screenshare3button").className = "float";
+	}
 
 
 	checkBasicStreamsExist();
@@ -27591,6 +27655,8 @@ var updateCameraConstraintsNext = false;
 
 async function updateCameraConstraints(constraint, value = null, ctrl=false, UUID=false, save=true) {
 	
+	log("updateCameraConstraintsBusy..?");
+	
 	if (updateCameraConstraintsBusy){
 		updateCameraConstraintsNext = [constraint, value, ctrl, UUID, save];
 		return;
@@ -27631,6 +27697,9 @@ async function updateCameraConstraints(constraint, value = null, ctrl=false, UUI
 		updateCameraConstraintsNext = false;
 		return e;
 	}
+	
+	log("updateCameraConstraintsNext:");
+	log(updateCameraConstraintsNext);
 	try {
 		if (track0.getSettings){
 			var cameraSettings = {};
@@ -27763,9 +27832,17 @@ async function updateCameraConstraints(constraint, value = null, ctrl=false, UUI
 				constraits.colorTemperature = session.cameraConstraints.colorTemperature.max;
 			}
 		}
+	} else if ((constraint=="whiteBalanceMode") && (value=="continuous")){
+		var constraits = {[constraint]: value};
+		
+		if (session.mobile && ChromeVersion){ // trying to fix the issue that chrome mobile has.
+			constraits.colorTemperature = 5000;
+		}
+		
 	} else if (constraint=="colorTemperature"){
 		var constraits = {[constraint]: value};
 		constraits.whiteBalanceMode = "manual";
+		
 	} else if (constraint=="aspectRatio"){
 		var constraits = {[constraint]: value};
 		if (session.currentCameraConstraints && session.currentCameraConstraints.frameRate){
@@ -27787,6 +27864,7 @@ async function updateCameraConstraints(constraint, value = null, ctrl=false, UUI
 	await track0.applyConstraints({ 
 		advanced: [constraits]
 	}).then(() => {
+		log("applied constraint");
 		if (save){
 			if (track0.getSettings){ // -- updateCameraConstraints
 				if (session.currentCameraConstraints.deviceId){
@@ -27838,6 +27916,28 @@ async function updateCameraConstraints(constraint, value = null, ctrl=false, UUI
 		return;
 	});
 	return;
+}
+
+function toggleAudioUser(ele){
+	ele.classList.toggle('highlight');
+	toggle(getById('popupSelector_constraints_audio'),false,false); 
+	getById('popupSelector_constraints_loading').style.visibility='visible';
+	getById('popupSelector_constraints_video').style.display = "none";
+	getById('popupSelector_user_settings').style.display = "none";
+}
+function toggleVideoUser(ele){
+	ele.classList.toggle('highlight');
+	toggle(getById('popupSelector_constraints_video'),false,false); 
+	getById('popupSelector_constraints_loading').style.visibility='visible';
+	getById('popupSelector_user_settings').style.display = "none";
+	getById('popupSelector_constraints_audio').style.display = "none";
+}
+function toggleUserUser(ele){
+	ele.classList.toggle('highlight');
+	toggle(getById('popupSelector_user_settings'),false,false); 
+	getById('popupSelector_user_settings').style.visibility='visible';
+	getById('popupSelector_constraints_video').style.display = "none";
+	getById('popupSelector_constraints_audio').style.display = "none";
 }
 
 function setupWebcamSelection(miconly=false) {
@@ -29340,7 +29440,7 @@ function pauseVideo(videoEle, update=true){
 		} else if (link.getAttribute("data-action") === "Mirror") {
 			if ((taskItemInContext.id == "videosource") || (taskItemInContext.id == "previewWebcam")){
 				session.mirrored = !session.mirrored;
-				applyMirror(false, taskItemInContext); 
+				applyMirror(false);
 				log("session.mirrored");
 			} else {
 				if ("mirror" in taskItemInContext){

@@ -1878,6 +1878,9 @@ div#chatBody a {
     #SubControlButtons > div i {
         font-size: 28px;
     }
+	#hangupbutton {
+		margin-left: 15px;
+	}
 }
 
 @media only screen and (max-height: 500px) {
@@ -1903,8 +1906,11 @@ div#chatBody a {
         margin: 3px;
     }
     #SubControlButtons > div i {
-        font-size: 24px;
+        font-size: 26px;
     }
+	#hangupbutton {
+		margin-left: 15px!important;
+	}
 }
 
 @media only screen and (max-height: 410px) {
@@ -1915,11 +1921,12 @@ div#chatBody a {
         margin: 3px;
     }
     #SubControlButtons > div i {
-        font-size: 24px;
+        font-size: 26px;
     }
 	#chatModule{
 		margin-bottom: 40px;
 	}
+	
 }
 
 @media only screen and (max-width: 360px) {
@@ -1932,6 +1939,9 @@ div#chatBody a {
     #SubControlButtons > div i {
         font-size: 20px;
     }
+	#hangupbutton {
+		margin-left: unset;
+	}
 }
 
 @media only screen and (max-height: 360px) {
@@ -5278,6 +5288,7 @@ input[type='checkbox'], input[type='radio'] {
 	overflow: auto;
 	z-index: 4;
 	-webkit-app-region: no-drag;
+	padding-bottom: 80px;
 }
 #popupSelector label {
 	color: black;
@@ -5292,7 +5303,7 @@ input[type='checkbox'], input[type='radio'] {
 	padding: 4px;
 }
 .darktheme #popupSelector{
-	background-color:black;
+	background-color: #0004;
 }
 .popupSelector_constraints{
 	margin-top: 10px;
