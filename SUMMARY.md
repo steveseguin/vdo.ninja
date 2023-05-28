@@ -498,6 +498,7 @@
   * [Logos and media assets](help/logos-and-media-assets.md)
   * [What does VDO stand for?](help/what-does-vdo-stand-for.md)
 * [Common errors and known issues](common-errors-and-known-issues/README.md)
+  * [Audio over VDO.Ninja isn't working](common-errors-and-known-issues/audio-over-vdo.ninja-isnt-working.md)
   * [Screen-share is just a black video](common-errors-and-known-issues/screen-share-is-just-a-black-video.md)
   * [Mic audio dropping out](common-errors-and-known-issues/mic-audio-dropping-out.md)
   * [Known issues](common-errors-and-known-issues/known-issues.md)
