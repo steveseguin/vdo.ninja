@@ -14,14 +14,7 @@ Sender-Side Option! ([`&push`](../../source-settings/push.md))
 
 Example: `&screenshareaspectratio=landscape`
 
-| Value            | Description                                                                                                              |
-| ---------------- | ------------------------------------------------------------------------------------------------------------------------ |
-| (no value given) | overrides [`&aspectratio`](../video-parameters/and-aspectratio.md) and sets the screen-share to the default aspect ratio |
-| (decimal number) | sets the screen-share aspect ratio                                                                                       |
-| `landscape`      | screen-share aspect ratio of 16:9 (1.777777)                                                                             |
-| `portrait`       | screen-share aspect ratio of 9:16 (0.5625)                                                                               |
-| `square`         | screen-share aspect ratio of 1:1 (1)                                                                                     |
-| `1.33333`        | screen-share aspect ratio of 4:3                                                                                         |
+<table><thead><tr><th width="192">Value</th><th>Description</th></tr></thead><tbody><tr><td>(no value given)</td><td>overrides <a href="../video-parameters/and-aspectratio.md"><code>&#x26;aspectratio</code></a> and sets the screen-share to the default aspect ratio</td></tr><tr><td>(decimal number)</td><td>sets the screen-share aspect ratio</td></tr><tr><td><code>landscape</code></td><td>screen-share aspect ratio of 16:9 (1.777777)</td></tr><tr><td><code>portrait</code></td><td>screen-share aspect ratio of 9:16 (0.5625)</td></tr><tr><td><code>square</code></td><td>screen-share aspect ratio of 1:1 (1)</td></tr><tr><td><code>1.33333</code></td><td>screen-share aspect ratio of 4:3</td></tr></tbody></table>
 
 ## Details
 

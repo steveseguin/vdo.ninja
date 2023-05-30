@@ -14,9 +14,7 @@ Viewer-Side Option! ([`&view`](../advanced-settings/view-parameters/view.md), [`
 
 Example: `&screensharebitrate=2500`
 
-| Value           | Description                             |
-| --------------- | --------------------------------------- |
-| (integer value) | video bitrate for screen-shares in kbps |
+<table><thead><tr><th width="216">Value</th><th>Description</th></tr></thead><tbody><tr><td>(integer value)</td><td>video bitrate for screen-shares in kbps</td></tr></tbody></table>
 
 ## Details
 

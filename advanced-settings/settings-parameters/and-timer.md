@@ -10,10 +10,7 @@ General Option! ([`&push`](../../source-settings/push.md), [`&room`](../../gener
 
 Example: `&timer=5`
 
-| Value                   | Description                                                                                                                          |
-| ----------------------- | ------------------------------------------------------------------------------------------------------------------------------------ |
-| `1` - `9`               | Shows the current countdown timer as in the graphic below. Each option specifies where the countdown timer will appear on the screen |
-| `2` \| (no value given) | Shows the countdown timer in the top center                                                                                          |
+<table><thead><tr><th width="232">Value</th><th>Description</th></tr></thead><tbody><tr><td><code>1</code> - <code>9</code></td><td>Shows the current countdown timer as in the graphic below. Each option specifies where the countdown timer will appear on the screen</td></tr><tr><td><code>2</code> | (no value given)</td><td>Shows the countdown timer in the top center</td></tr></tbody></table>
 
 ![](<../../.gitbook/assets/image (12) (5).png>)
 

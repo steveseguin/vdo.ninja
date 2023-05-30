@@ -16,10 +16,7 @@ General Option! ([`&push`](../source-settings/push.md), [`&room`](room.md), [`&v
 
 Example: `&password=PASSWORD123`
 
-| Value            | Description                                                       |
-| ---------------- | ----------------------------------------------------------------- |
-| (no value given) | prompts you to select a password                                  |
-| (string)         | 1 to 49-characters long: aLphaNumEric-characters; case sensitive. |
+<table><thead><tr><th width="335">Value</th><th>Description</th></tr></thead><tbody><tr><td>(no value given)</td><td>prompts you to select a password</td></tr><tr><td>(string)</td><td>1 to 49-characters long: aLphaNumEric-characters; case sensitive.</td></tr></tbody></table>
 
 ## Details
 

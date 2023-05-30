@@ -14,10 +14,7 @@ Sender-Side Option! ([`&push`](../source-settings/push.md))
 
 Example: `&screensharedenoise=1`
 
-| Value | Description                                       |
-| ----- | ------------------------------------------------- |
-| `0`   | Turns OFF audio noise reduction for screen-shares |
-| `1`   | Turns ON audio noise reduction for screen-shares  |
+<table><thead><tr><th width="195">Value</th><th>Description</th></tr></thead><tbody><tr><td><code>0</code></td><td>Turns OFF audio noise reduction for screen-shares</td></tr><tr><td><code>1</code></td><td>Turns ON audio noise reduction for screen-shares</td></tr></tbody></table>
 
 ## Details
 

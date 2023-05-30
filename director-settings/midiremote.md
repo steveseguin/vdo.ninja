@@ -14,9 +14,7 @@ General Option! ([`&push`](../source-settings/push.md), [`&room`](../general-set
 
 Example: `&midiremote=4`
 
-| Value        | Description                                            |
-| ------------ | ------------------------------------------------------ |
-| (`1` to `4`) | reference [`&midi`](../midi-settings/midi.md)'s values |
+<table><thead><tr><th width="275">Value</th><th>Description</th></tr></thead><tbody><tr><td>(<code>1</code> to <code>4</code>)</td><td>reference <a href="../midi-settings/midi.md"><code>&#x26;midi</code></a>'s values</td></tr></tbody></table>
 
 ## Details
 

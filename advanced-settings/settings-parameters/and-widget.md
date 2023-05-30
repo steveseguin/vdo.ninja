@@ -12,9 +12,7 @@ General Option! / Director Option! ([`&director`](../../viewers-settings/directo
 
 Example: `&widget=https%3A%2F%2Fwww.youtube.com%2Flive_chat%3Fis_popout%3D1%26v%3DORBwkXsUNEs`
 
-| Value                            | Description                                       |
-| -------------------------------- | ------------------------------------------------- |
-| (URLComponent-encoded URL value) | load a side-bar with that page as an IFRAME embed |
+<table><thead><tr><th width="208">Value</th><th>Description</th></tr></thead><tbody><tr><td>(URLComponent-encoded URL value)</td><td>load a side-bar with that page as an IFRAME embed</td></tr></tbody></table>
 
 ## Details
 

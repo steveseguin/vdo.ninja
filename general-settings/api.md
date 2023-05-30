@@ -14,9 +14,7 @@ General Option! ([`&push`](../source-settings/push.md), [`&room`](room.md), [`&v
 
 Example: `&api=SomeAPIKey`
 
-| Value | Description                           |
-| ----- | ------------------------------------- |
-| (key) | API KEY to control VDO.Ninja remotely |
+<table><thead><tr><th width="180">Value</th><th>Description</th></tr></thead><tbody><tr><td>(key)</td><td>API KEY to control VDO.Ninja remotely</td></tr></tbody></table>
 
 ## Details
 

@@ -15,11 +15,7 @@ General Option! ([`&push`](../../source-settings/push.md), [`&room`](../../gener
 
 Example: `&audiooutput=Cable_Input`
 
-| Value            | Description                                                                                                          |
-| ---------------- | -------------------------------------------------------------------------------------------------------------------- |
-| (string value)   | partial string that matches the device's label/name                                                                  |
-| `Cable_Input`    | will match against "CABLE Input" (VB-Audio Virtual Cable). Use any other string to match against other device names. |
-| (no value given) | hides the option to change the output device, including under the settings cog                                       |
+<table><thead><tr><th width="186">Value</th><th>Description</th></tr></thead><tbody><tr><td>(string value)</td><td>partial string that matches the device's label/name</td></tr><tr><td><code>Cable_Input</code></td><td>will match against "CABLE Input" (VB-Audio Virtual Cable). Use any other string to match against other device names.</td></tr><tr><td>(no value given)</td><td>hides the option to change the output device, including under the settings cog</td></tr></tbody></table>
 
 ## Details
 

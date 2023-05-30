@@ -14,9 +14,7 @@ Viewer-Side Option! ([`&view`](view.md), [`&scene`](scene.md), [`&room`](../../g
 
 Example: `&exclude=StreamID1,StreamID2`
 
-| Value          | Description                                             |
-| -------------- | ------------------------------------------------------- |
-| (string value) | stream ID to view; can be a comma-separated list of IDs |
+<table><thead><tr><th width="200">Value</th><th>Description</th></tr></thead><tbody><tr><td>(string value)</td><td>stream ID to view; can be a comma-separated list of IDs</td></tr></tbody></table>
 
 ## Details
 

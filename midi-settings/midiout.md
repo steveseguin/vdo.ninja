@@ -17,10 +17,7 @@ Device indices starts at 1, where an index of 0 implies "all". You can refer to 
 
 Example: `&midiout=2`
 
-| Value                  | Description                                   |
-| ---------------------- | --------------------------------------------- |
-| `0`                    | using 0 will listen to all midi input devices |
-| (integer value. eg: 1) | midi input device list index ID; 1 and up.    |
+<table><thead><tr><th width="275">Value</th><th>Description</th></tr></thead><tbody><tr><td><code>0</code></td><td>using 0 will listen to all midi input devices</td></tr><tr><td>(integer value. eg: 1)</td><td>midi input device list index ID; 1 and up.</td></tr></tbody></table>
 
 ## Details
 

@@ -14,10 +14,7 @@ Director Option!
 
 Example: `&director=RoomName`
 
-| Value            | Description                        |
-| ---------------- | ---------------------------------- |
-| (no value given) | opens the director page            |
-| (room name)      | room name to enter as the director |
+<table><thead><tr><th width="211">Value</th><th>Description</th></tr></thead><tbody><tr><td>(no value given)</td><td>opens the director page</td></tr><tr><td>(room name)</td><td>room name to enter as the director</td></tr></tbody></table>
 
 ## Details
 

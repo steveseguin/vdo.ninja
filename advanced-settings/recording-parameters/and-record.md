@@ -10,12 +10,7 @@ Sender-Side Option! ([`&push`](../../source-settings/push.md))
 
 Example: `&record=1000`
 
-| Value              | Description                                                                                                                                                                                                   |
-| ------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `0`                | No video recorded; audio tentatively recorded as 32bit PCM lossless                                                                                                                                           |
-| (negative integer) | No video recorded; audio recorded as {integer} kbps OPUS file. Eg: -120 - Audio only at 120 kbps                                                                                                              |
-| (positive integer) | Recorded video bitrate in kbps                                                                                                                                                                                |
-| `false` \| `off`   | Will disable the user from being able to record a video. Buttons for recording are hidden/deleted and the recording function is disabled when used; so the director won't even be able to trigger it remotely |
+<table><thead><tr><th width="195">Value</th><th>Description</th></tr></thead><tbody><tr><td><code>0</code></td><td>No video recorded; audio tentatively recorded as 32bit PCM lossless</td></tr><tr><td>(negative integer)</td><td>No video recorded; audio recorded as {integer} kbps OPUS file. Eg: -120 - Audio only at 120 kbps</td></tr><tr><td>(positive integer)</td><td>Recorded video bitrate in kbps</td></tr><tr><td><code>false</code> | <code>off</code></td><td>Will disable the user from being able to record a video. Buttons for recording are hidden/deleted and the recording function is disabled when used; so the director won't even be able to trigger it remotely</td></tr></tbody></table>
 
 ## Details
 

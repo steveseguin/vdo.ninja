@@ -10,10 +10,7 @@ General Option! ([`&push`](../../source-settings/push.md), [`&room`](../../gener
 
 Example: `&border=20`
 
-| Value            | Description              |
-| ---------------- | ------------------------ |
-| (no value given) | adds a border with 10 px |
-| (integer value)  | adds a border in px      |
+<table><thead><tr><th width="238">Value</th><th>Description</th></tr></thead><tbody><tr><td>(no value given)</td><td>adds a border with 10 px</td></tr><tr><td>(integer value)</td><td>adds a border in px</td></tr></tbody></table>
 
 ## Details
 

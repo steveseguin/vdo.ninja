@@ -18,14 +18,7 @@ Sender-Side Option! ([`&push`](../../source-settings/push.md))
 
 Example: `&sensorfilter=gyro`
 
-| Value  | Description   |
-| ------ | ------------- |
-| `gyro` | gyroscopic    |
-| `lin`  | -             |
-| `acc`  | accelerometer |
-| `mag`  | magnetometer  |
-| `pos`  | -             |
-| `ori`  | -             |
+<table><thead><tr><th width="232">Value</th><th>Description</th></tr></thead><tbody><tr><td><code>gyro</code></td><td>gyroscopic</td></tr><tr><td><code>lin</code></td><td>-</td></tr><tr><td><code>acc</code></td><td>accelerometer</td></tr><tr><td><code>mag</code></td><td>magnetometer</td></tr><tr><td><code>pos</code></td><td>-</td></tr><tr><td><code>ori</code></td><td>-</td></tr></tbody></table>
 
 ## Details
 

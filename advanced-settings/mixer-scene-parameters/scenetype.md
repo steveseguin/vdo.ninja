@@ -14,11 +14,7 @@ Viewer-Side Option! ([`&scene`](../view-parameters/scene.md))
 
 Example: `&scenetype=2`
 
-| Value | Description                                                                                                                                               |
-| ----- | --------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `1`   | just shows the last guest that was added in the scene, but doesn't mute the previous guests                                                               |
-| `2`   | just shows the last guest that was added in the scene                                                                                                     |
-| `3`   | the general idea is it will only show the video that is in a particular ordered position (default, position = 1), rather than all the videos in the scene |
+<table><thead><tr><th width="200">Value</th><th>Description</th></tr></thead><tbody><tr><td><code>1</code></td><td>just shows the last guest that was added in the scene, but doesn't mute the previous guests</td></tr><tr><td><code>2</code></td><td>just shows the last guest that was added in the scene</td></tr><tr><td><code>3</code></td><td>the general idea is it will only show the video that is in a particular ordered position (default, position = 1), rather than all the videos in the scene</td></tr></tbody></table>
 
 ## Details
 

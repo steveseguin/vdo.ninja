@@ -14,10 +14,7 @@ Sender-Side Option! ([`&push`](../source-settings/push.md))
 
 Example: `&screensharelabel=SomeLabel`
 
-| Value            | Description                                                      |
-| ---------------- | ---------------------------------------------------------------- |
-| (no value given) | Uses the existing [`&label`](../general-settings/label.md) value |
-| (string)         | Sets the label for the screen share                              |
+<table><thead><tr><th width="245">Value</th><th>Description</th></tr></thead><tbody><tr><td>(no value given)</td><td>Uses the existing <a href="../general-settings/label.md"><code>&#x26;label</code></a> value</td></tr><tr><td>(string)</td><td>Sets the label for the screen share</td></tr></tbody></table>
 
 ## Details
 

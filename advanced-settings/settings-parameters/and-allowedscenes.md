@@ -12,9 +12,7 @@ General Option! ([`&push`](../../source-settings/push.md), [`&room`](../../gener
 
 Example: `&allowedscenes=Scene1,Scene2`
 
-| Value                             | Description                                                                                                    |
-| --------------------------------- | -------------------------------------------------------------------------------------------------------------- |
-| (comma separated OBS scene names) | filter which OBS scenes a remote guest has access to controlling when using [`&controlobs`](and-controlobs.md) |
+<table><thead><tr><th width="345">Value</th><th>Description</th></tr></thead><tbody><tr><td>(comma separated OBS scene names)</td><td>filter which OBS scenes a remote guest has access to controlling when using <a href="and-controlobs.md"><code>&#x26;controlobs</code></a></td></tr></tbody></table>
 
 ## Details
 

@@ -14,12 +14,7 @@ General Option! ([`&push`](../source-settings/push.md), [`&room`](room.md), [`&v
 
 Example: `&group=Groupname`
 
-| Value     | Description                                          |
-| --------- | ---------------------------------------------------- |
-| `1`       | adds the guest or director to group 1                |
-| `2`       | adds the guest or director to group 2                |
-| `3,4,5,6` | adds the guest or director to group 3, 4, 5 and 6    |
-| (string)  | creates/adds the guest or director to a custom group |
+<table><thead><tr><th width="222.57142857142856">Value</th><th>Description</th></tr></thead><tbody><tr><td><code>1</code></td><td>adds the guest or director to group 1</td></tr><tr><td><code>2</code></td><td>adds the guest or director to group 2</td></tr><tr><td><code>3,4,5,6</code></td><td>adds the guest or director to group 3, 4, 5 and 6</td></tr><tr><td>(string)</td><td>creates/adds the guest or director to a custom group</td></tr></tbody></table>
 
 ## Details
 

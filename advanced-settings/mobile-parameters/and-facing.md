@@ -10,10 +10,7 @@ Sender-Side Option! ([`&push`](../../source-settings/push.md))
 
 Example: `&facing=rear`
 
-| Value                             | Description         |
-| --------------------------------- | ------------------- |
-| `rear` \| `environment` \| `back` | rear-facing camera  |
-| `front` \| `user`                 | front-facing camera |
+<table><thead><tr><th width="305">Value</th><th>Description</th></tr></thead><tbody><tr><td><code>rear</code> | <code>environment</code> | <code>back</code></td><td>rear-facing camera</td></tr><tr><td><code>front</code> | <code>user</code></td><td>front-facing camera</td></tr></tbody></table>
 
 ## Details
 

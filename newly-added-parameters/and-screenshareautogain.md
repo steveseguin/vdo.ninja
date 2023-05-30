@@ -15,10 +15,7 @@ Sender-Side Option! ([`&push`](../source-settings/push.md))
 
 Example: `&screenshareautogain=1`
 
-| Value | Description                                          |
-| ----- | ---------------------------------------------------- |
-| `0`   | Turns OFF audio auto-normalization for screen-shares |
-| `1`   | Turns ON audio auto-normalization for screen-shares  |
+<table><thead><tr><th width="209">Value</th><th>Description</th></tr></thead><tbody><tr><td><code>0</code></td><td>Turns OFF audio auto-normalization for screen-shares</td></tr><tr><td><code>1</code></td><td>Turns ON audio auto-normalization for screen-shares</td></tr></tbody></table>
 
 ## Details
 

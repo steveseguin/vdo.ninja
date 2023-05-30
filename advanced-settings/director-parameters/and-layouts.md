@@ -12,9 +12,7 @@ Director Option! ([`&director`](../../viewers-settings/director.md))
 
 Example: `&layouts=[[{"x":0,"y":0,"w":100,"h":100,"slot":0}],[{"x":0,"y":0,"w":100,"h":100,"slot":1}],[{"x":0,"y":0,"w":100,"h":100,"slot":2}],[{"x":0,"y":0,"w":100,"h":100,"slot":3}],[{"x":0,"y":0,"w":50,"h":100,"c":false,"slot":0},{"x":50,"y":0,"w":50,"h":100,"c":false,"slot":1}],[{"x":0,"y":0,"w":100,"h":100,"z":0,"c":false,"slot":1},{"x":70,"y":70,"w":30,"h":30,"z":1,"c":true,"slot":0}],[{"x":0,"y":0,"w":50,"h":50,"c":true,"slot":0},{"x":50,"y":0,"w":50,"h":50,"c":true,"slot":1},{"x":0,"y":50,"w":50,"h":50,"c":true,"slot":2},{"x":50,"y":50,"w":50,"h":50,"c":true,"slot":3}],[{"x":0,"y":16.667,"w":66.667,"h":66.667,"c":true,"slot":0},{"x":66.667,"y":0,"w":33.333,"h":33.333,"c":true,"slot":1},{"x":66.667,"y":33.333,"w":33.333,"h":33.333,"c":true,"slot":2},{"x":66.667,"y":66.667,"w":33.333,"h":33.333,"c":true,"slot":3}]]`
 
-| Value                  | Description                 |
-| ---------------------- | --------------------------- |
-| \[layout1,layout2,...] | (URL-encoded ordered array) |
+<table><thead><tr><th width="241">Value</th><th>Description</th></tr></thead><tbody><tr><td>[layout1,layout2,...]</td><td>(URL-encoded ordered array)</td></tr></tbody></table>
 
 ## Details
 
@@ -65,12 +63,7 @@ Layout8:\
 
 You need to add [`&api=xxx`](../../general-settings/api.md) to the director's URL to control the layouts via Streamdeck.
 
-| HTTP Get                                                                                                                                | Description                         |
-| --------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------- |
-| `https://api.vdo.ninja/xxx/layout/0`                                                                                                    | Disables the layouts -> Auto-mixing |
-| `https://api.vdo.ninja/xxx/layout/1`                                                                                                    | Select Layout 1                     |
-| `https://api.vdo.ninja/xxx/layout/2`                                                                                                    | Select Layout 2                     |
-| `https://api.vdo.ninja/xxx/layout/[{"x":0,"y":0,"w":50,"h":100,"c":true,"slot":0},{"x":50,"y":0,"w":50,"h":100,"c":false,"slot":1}]` \* | Select specified layout             |
+<table><thead><tr><th width="398">HTTP Get</th><th>Description</th></tr></thead><tbody><tr><td><code>https://api.vdo.ninja/xxx/layout/0</code></td><td>Disables the layouts -> Auto-mixing</td></tr><tr><td><code>https://api.vdo.ninja/xxx/layout/1</code></td><td>Select Layout 1</td></tr><tr><td><code>https://api.vdo.ninja/xxx/layout/2</code></td><td>Select Layout 2</td></tr><tr><td><code>https://api.vdo.ninja/xxx/layout/[{"x":0,"y":0,"w":50,"h":100,"c":true,"slot":0},{"x":50,"y":0,"w":50,"h":100,"c":false,"slot":1}]</code> *</td><td>Select specified layout</td></tr></tbody></table>
 
 \*If you use the HTTP Get like this, you don't need to add `&layouts` to the director's URL.
 

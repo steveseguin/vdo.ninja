@@ -14,11 +14,7 @@ Sender-Side Option! ([`&push`](push.md))
 
 Example: `&device=Brio_4K`
 
-| Value          | Description                                                                                                                               |
-| -------------- | ----------------------------------------------------------------------------------------------------------------------------------------- |
-| `0`            | disable the audio and video devices; no option to change it during setup is provided.                                                     |
-| `1`            | auto-select the default video and audio devices; no option to change it will be allowed.                                                  |
-| (string value) | auto-select a video and audio device that has a label containing that same string; whitespaces in names can be replaced with underscores. |
+<table><thead><tr><th width="187">Value</th><th>Description</th></tr></thead><tbody><tr><td><code>0</code></td><td>disable the audio and video devices; no option to change it during setup is provided.</td></tr><tr><td><code>1</code></td><td>auto-select the default video and audio devices; no option to change it will be allowed.</td></tr><tr><td>(string value)</td><td>auto-select a video and audio device that has a label containing that same string; whitespaces in names can be replaced with underscores.</td></tr></tbody></table>
 
 ## Details
 

@@ -10,9 +10,7 @@ Sender-Side Option! ([`&push`](../../source-settings/push.md))
 
 Example: `&imagelist=%5B%22https%3A%2F%2Fvdo.ninja%2Fmedia%2Fold_logo.png%22%2C%22https%3A%2F%2Fvdo.ninja%2Fmedia%2Fbg_sample.webp%22%2C%22https%3A%2F%2Fvdo.ninja%2Fmedia%2Fbg_sample2.webp%22%5D`
 
-| Value | Description                         |
-| ----- | ----------------------------------- |
-| (URL) | Passes a list of images via the URL |
+<table><thead><tr><th width="208">Value</th><th>Description</th></tr></thead><tbody><tr><td>(URL)</td><td>Passes a list of images via the URL</td></tr></tbody></table>
 
 ## Details
 

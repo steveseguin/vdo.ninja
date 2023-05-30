@@ -10,13 +10,7 @@ General Option! ([`&push`](../../source-settings/push.md), [`&room`](../../gener
 
 Example: `&mirror=2`
 
-| Value            | Description                                                                               |
-| ---------------- | ----------------------------------------------------------------------------------------- |
-| (no value given) | Mirroring is forced for all videos                                                        |
-| `0`              | Preview video is mirrored only (excluding rear cameras and OBS Virtualcam/NDI)            |
-| `1`              | Mirroring is forced for all videos                                                        |
-| `2`              | Inverts the default; local previews are not mirrored, but guests are mirrored             |
-| `3`              | Same as default, except everything is mirrored, including text - useful for teleprompters |
+<table><thead><tr><th width="217">Value</th><th>Description</th></tr></thead><tbody><tr><td>(no value given)</td><td>Mirroring is forced for all videos</td></tr><tr><td><code>0</code></td><td>Preview video is mirrored only (excluding rear cameras and OBS Virtualcam/NDI)</td></tr><tr><td><code>1</code></td><td>Mirroring is forced for all videos</td></tr><tr><td><code>2</code></td><td>Inverts the default; local previews are not mirrored, but guests are mirrored</td></tr><tr><td><code>3</code></td><td>Same as default, except everything is mirrored, including text - useful for teleprompters</td></tr></tbody></table>
 
 ## Details
 

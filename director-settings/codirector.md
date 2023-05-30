@@ -18,10 +18,7 @@ Director Option! ([`&director`](../viewers-settings/director.md))
 
 Example: `&codirector=DirectorPassword`
 
-| Value                 | Description                                     |
-| --------------------- | ----------------------------------------------- |
-| (no value given)      | the site will prompt you for a password on load |
-| (alpha numeric value) | password for the directors                      |
+<table><thead><tr><th width="211">Value</th><th>Description</th></tr></thead><tbody><tr><td>(no value given)</td><td>the site will prompt you for a password on load</td></tr><tr><td>(alpha numeric value)</td><td>password for the directors</td></tr></tbody></table>
 
 ## Details
 

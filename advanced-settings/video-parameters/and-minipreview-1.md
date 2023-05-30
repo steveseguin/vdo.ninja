@@ -14,11 +14,7 @@ Sender-Side Option! ([`&push`](../../source-settings/push.md))
 
 Example: `&minipreviewoffset=60`
 
-| Value                          | Description                              |
-| ------------------------------ | ---------------------------------------- |
-| (no value given) \| `0`        | left-most side of the screen             |
-| `40`                           | center of the screen                     |
-| (integer value) `-20` to `120` | defines the position of the mini preview |
+<table><thead><tr><th width="295">Value</th><th>Description</th></tr></thead><tbody><tr><td>(no value given) | <code>0</code></td><td>left-most side of the screen</td></tr><tr><td><code>40</code></td><td>center of the screen</td></tr><tr><td>(integer value) <code>-20</code> to <code>120</code></td><td>defines the position of the mini preview</td></tr></tbody></table>
 
 ## Details
 

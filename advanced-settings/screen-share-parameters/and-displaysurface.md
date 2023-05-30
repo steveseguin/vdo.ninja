@@ -10,11 +10,7 @@ Sender-Side Option! ([`&push`](../../source-settings/push.md))
 
 Example: `&displaysurface=monitor`
 
-| Value     | Description                     |
-| --------- | ------------------------------- |
-| `monitor` | Will pre-select "display-share" |
-| `browser` | Will pre-select "tab-share"     |
-| `window`  | Will pre-select "window-share"  |
+<table><thead><tr><th width="280">Value</th><th>Description</th></tr></thead><tbody><tr><td><code>monitor</code></td><td>Will pre-select "display-share"</td></tr><tr><td><code>browser</code></td><td>Will pre-select "tab-share"</td></tr><tr><td><code>window</code></td><td>Will pre-select "window-share"</td></tr></tbody></table>
 
 ## Details
 

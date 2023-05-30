@@ -15,9 +15,7 @@ General Option! ([`&push`](../../source-settings/push.md), [`&room`](../../gener
 
 Example: `&bgimage=https%3A%2F%2Fvdo.ninja%2Fmedia%2Fold_icon.png`
 
-| Value         | Description                  |
-| ------------- | ---------------------------- |
-| (Encoded URL) | URL or base64 data image/svg |
+<table><thead><tr><th width="371">Value</th><th>Description</th></tr></thead><tbody><tr><td>(Encoded URL)</td><td>URL or base64 data image/svg</td></tr></tbody></table>
 
 ## Details
 

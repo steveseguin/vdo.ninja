@@ -17,10 +17,7 @@ Viewer-Side Option! ([`&view`](view.md), [`&scene`](scene.md), [`&room`](../../g
 
 Example: `&broadcast=StreamID`
 
-| Value            | Description                                                                                                                                                         |
-| ---------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| (no value given) | Only play-back the director's stream                                                                                                                                |
-| (stream ID)      | <p>You can pass an optional stream-ID to specify the stream's source manually.<br>If no value is passed, the source will be the room's director video out feed.</p> |
+<table><thead><tr><th width="195">Value</th><th>Description</th></tr></thead><tbody><tr><td>(no value given)</td><td>Only play-back the director's stream</td></tr><tr><td>(stream ID)</td><td>You can pass an optional stream-ID to specify the stream's source manually.<br>If no value is passed, the source will be the room's director video out feed.</td></tr></tbody></table>
 
 ## Details
 

@@ -10,11 +10,7 @@ General Option! ([`&push`](../source-settings/push.md), [`&room`](room.md), [`&v
 
 Example: `&icefilter=tcp`
 
-| Value  | Description                 |
-| ------ | --------------------------- |
-| `tcp`  | Filters TCP ICE candidates  |
-| `udp`  | Filters UDP ICE candidates  |
-| `host` | Filters HOST ICE candidates |
+<table><thead><tr><th width="222">Value</th><th>Description</th></tr></thead><tbody><tr><td><code>tcp</code></td><td>Filters TCP ICE candidates</td></tr><tr><td><code>udp</code></td><td>Filters UDP ICE candidates</td></tr><tr><td><code>host</code></td><td>Filters HOST ICE candidates</td></tr></tbody></table>
 
 ## Details
 

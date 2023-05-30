@@ -10,11 +10,7 @@ Sender-Side Option! ([`&push`](../../source-settings/push.md))
 
 Example: `&selfbrowsersurface=include` or `&selfbrowsersurface=exclude`
 
-| Value            | Description                                                  |
-| ---------------- | ------------------------------------------------------------ |
-| (no value given) | **Excludes** the current tab as a screen-share source option |
-| `include`        | In**cludes** the current tab as a screen-share source option |
-| `exclude`        | **Excludes** the current tab as a screen-share source option |
+<table><thead><tr><th width="196">Value</th><th>Description</th></tr></thead><tbody><tr><td>(no value given)</td><td><strong>Excludes</strong> the current tab as a screen-share source option</td></tr><tr><td><code>include</code></td><td>In<strong>cludes</strong> the current tab as a screen-share source option</td></tr><tr><td><code>exclude</code></td><td><strong>Excludes</strong> the current tab as a screen-share source option</td></tr></tbody></table>
 
 ## Details
 

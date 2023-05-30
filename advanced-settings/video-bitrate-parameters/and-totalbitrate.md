@@ -14,9 +14,7 @@ Viewer-Side Option! ([`&scene`](../view-parameters/scene.md), [`&room`](../../ge
 
 Example: `&totalbitrate=3000`
 
-| Value           | Description                                  |
-| --------------- | -------------------------------------------- |
-| (integer value) | max. video bitrate in kbps a scene/room uses |
+<table><thead><tr><th width="245">Value</th><th>Description</th></tr></thead><tbody><tr><td>(integer value)</td><td>max. video bitrate in kbps a scene/room uses</td></tr></tbody></table>
 
 ## Details
 

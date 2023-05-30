@@ -14,10 +14,7 @@ Sender-Side Option! ([`&push`](../../source-settings/push.md))
 
 Example: `&automute=2`
 
-| Value            | Description                                                                                                            |
-| ---------------- | ---------------------------------------------------------------------------------------------------------------------- |
-| (no value given) | will auto mute the microphone of a guest when not loaded in an active OBS scene                                        |
-| `2`              | will mute it everywhere, while the default will still allow the director to speak to the guest, even if not in a scene |
+<table><thead><tr><th width="171">Value</th><th>Description</th></tr></thead><tbody><tr><td>(no value given)</td><td>will auto mute the microphone of a guest when not loaded in an active OBS scene</td></tr><tr><td><code>2</code></td><td>will mute it everywhere, while the default will still allow the director to speak to the guest, even if not in a scene</td></tr></tbody></table>
 
 ## Details
 

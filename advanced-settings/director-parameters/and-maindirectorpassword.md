@@ -14,9 +14,7 @@ Director Option! ([`&director`](../../viewers-settings/director.md))
 
 Example: `&maindirectorpassword=SomePassword123`
 
-| Value                          | Description                                        |
-| ------------------------------ | -------------------------------------------------- |
-| (alphanumeric-characters only) | the password you want to set for the main director |
+<table><thead><tr><th width="309">Value</th><th>Description</th></tr></thead><tbody><tr><td>(alphanumeric-characters only)</td><td>the password you want to set for the main director</td></tr></tbody></table>
 
 ## Details
 

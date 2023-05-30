@@ -42,7 +42,7 @@
   * [External guides and how-tos](guides/guides-and-how-tos.md)
   * [How to lock the resolution](guides/how-do-i-lock-the-resolution.md)
   * [How to use VDO.Ninja as a webcam for Google Hangouts, Zoom, and more](guides/use-vdo.ninja-as-a-webcam-for-google-hangouts-zoom-and-more.md)
-  * [Capturing without browser sources](guides/capturing-without-browser-sources.md)
+  * [How to capture without browser sources](guides/how-to-capture-without-browser-sources.md)
   * [How to control bitrate/quality](guides/how-do-i-control-bitrate-quality.md)
   * [How to selectively allow access](guides/how-to-selectively-allow-access.md)
   * [How to send the audio/video output of one OBS to another OBS using VDO.Ninja](guides/how-to-send-the-audio-video-output-of-one-obs-to-another-obs-using-vdo.ninja.md)

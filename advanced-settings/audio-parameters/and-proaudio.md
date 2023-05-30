@@ -17,15 +17,7 @@ General Option! ([`&push`](../../source-settings/push.md), [`&room`](../../gener
 
 Example: `&proaudio=1`
 
-| Value            | Description                                                                                           |
-| ---------------- | ----------------------------------------------------------------------------------------------------- |
-| (no value given) | It behaves like 3 or 1, depending on if you are a guest or not                                        |
-| `0`              | will try to down-mix your mic to mono. Does not enable any pro-audio settings                         |
-| `1`              | enables it for both push and view (if used on both links)                                             |
-| `2`              | enables it just for viewing requests and not publishing requests                                      |
-| `3`              | enables it for just publishing requests and not viewing requests                                      |
-| `4`              | enables 5.1-multichannel audio support (Experimental and may require a Chrome flag to be set)         |
-| `5`              | This is the default if nothing is set. It behaves like 3 or 1, depending on if you are a guest or not |
+<table><thead><tr><th width="235">Value</th><th>Description</th></tr></thead><tbody><tr><td>(no value given)</td><td>It behaves like 3 or 1, depending on if you are a guest or not</td></tr><tr><td><code>0</code></td><td>will try to down-mix your mic to mono. Does not enable any pro-audio settings</td></tr><tr><td><code>1</code></td><td>enables it for both push and view (if used on both links)</td></tr><tr><td><code>2</code></td><td>enables it just for viewing requests and not publishing requests</td></tr><tr><td><code>3</code></td><td>enables it for just publishing requests and not viewing requests</td></tr><tr><td><code>4</code></td><td>enables 5.1-multichannel audio support (Experimental and may require a Chrome flag to be set)</td></tr><tr><td><code>5</code></td><td>This is the default if nothing is set. It behaves like 3 or 1, depending on if you are a guest or not</td></tr></tbody></table>
 
 ## Details
 
@@ -61,13 +53,7 @@ If the parameter is used, but left without a value, it is treated as a special c
 
 [https://docs.google.com/spreadsheets/d/e/2PACX-1vS7Up5jgXPcmg\_tN52JLgXBZG3wfHB3pZDQWimzxixiuRIDbeMdmU11fgrMpdYFT6yy4Igrkc9hnReY/pubhtml](https://docs.google.com/spreadsheets/d/e/2PACX-1vS7Up5jgXPcmg\_tN52JLgXBZG3wfHB3pZDQWimzxixiuRIDbeMdmU11fgrMpdYFT6yy4Igrkc9hnReY/pubhtml)
 
-|     Option    | alias | aec   | autogain | denoise | stereo playback | stereo output | default ab in | max ab out | limited ab in | cbr  |
-| :-----------: | ----- | ----- | -------- | ------- | --------------- | ------------- | ------------- | ---------- | ------------- | ---- |
-| `&proaudio=0` | off   | on    | on       | on      | _off_           | _no_          | 32            | 510        | 510           | _no_ |
-| `&proaudio=1` | both  | _off_ | _off_    | _off_   | on              | yes           | 256           | 510        | 510           | yes  |
-| `&proaudio=2` | in    | on    | on       | on      | on              | _no_          | 256           | 510        | 510           | yes  |
-| `&proaudio=3` | out   | _off_ | _off_    | _off_   | _off_           | yes           | 32            | 510        | 510           | _no_ |
-| `&proaudio=4` | multi | _off_ | _off_    | _off_   | on (5.1)        | yes           | 256           | 510        | 510           | yes  |
+<table><thead><tr><th align="center">Option</th><th>alias</th><th>aec</th><th>autogain</th><th>denoise</th><th>stereo playback</th><th width="40">stereo output</th><th>default ab in</th><th>max ab out</th><th>limited ab in</th><th>cbr</th></tr></thead><tbody><tr><td align="center"><code>&#x26;proaudio=0</code></td><td>off</td><td>on</td><td>on</td><td>on</td><td><em>off</em></td><td><em>no</em></td><td>32</td><td>510</td><td>510</td><td><em>no</em></td></tr><tr><td align="center"><code>&#x26;proaudio=1</code></td><td>both</td><td><em>off</em></td><td><em>off</em></td><td><em>off</em></td><td>on</td><td>yes</td><td>256</td><td>510</td><td>510</td><td>yes</td></tr><tr><td align="center"><code>&#x26;proaudio=2</code></td><td>in</td><td>on</td><td>on</td><td>on</td><td>on</td><td><em>no</em></td><td>256</td><td>510</td><td>510</td><td>yes</td></tr><tr><td align="center"><code>&#x26;proaudio=3</code></td><td>out</td><td><em>off</em></td><td><em>off</em></td><td><em>off</em></td><td><em>off</em></td><td>yes</td><td>32</td><td>510</td><td>510</td><td><em>no</em></td></tr><tr><td align="center"><code>&#x26;proaudio=4</code></td><td>multi</td><td><em>off</em></td><td><em>off</em></td><td><em>off</em></td><td>on (5.1)</td><td>yes</td><td>256</td><td>510</td><td>510</td><td>yes</td></tr></tbody></table>
 
 ### Newbie mode
 

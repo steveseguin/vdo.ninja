@@ -14,10 +14,7 @@ Sender-Side Option! ([`&room`](../general-settings/room.md))
 
 Example: `&push=StreamID`
 
-| Value            | Description                                                       |
-| ---------------- | ----------------------------------------------------------------- |
-| (no value given) | creates a randomly generated stream ID                            |
-| (string)         | 1 to 49-characters long: aLphaNumEric-characters; case sensitive. |
+<table><thead><tr><th width="186">Value</th><th>Description</th></tr></thead><tbody><tr><td>(no value given)</td><td>creates a randomly generated stream ID</td></tr><tr><td>(string)</td><td>1 to 49-characters long: aLphaNumEric-characters; case sensitive.</td></tr></tbody></table>
 
 ## Details
 

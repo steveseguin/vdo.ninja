@@ -11,11 +11,7 @@ Sender-Side Option! ([`&push`](../../source-settings/push.md))\
 
 Example: `&avatar=default`
 
-| Value            | Description                                                            |
-| ---------------- | ---------------------------------------------------------------------- |
-| (no value given) | adds the ability to select an image, instead of a video device         |
-| (encoded URL)    | pre-selects the chosen image as an avatar                              |
-| `default`        | will pre-select the default avatar, rather than leaving it un-selected |
+<table><thead><tr><th width="190">Value</th><th>Description</th></tr></thead><tbody><tr><td>(no value given)</td><td>adds the ability to select an image, instead of a video device</td></tr><tr><td>(encoded URL)</td><td>pre-selects the chosen image as an avatar</td></tr><tr><td><code>default</code></td><td>will pre-select the default avatar, rather than leaving it un-selected</td></tr></tbody></table>
 
 ## Details
 

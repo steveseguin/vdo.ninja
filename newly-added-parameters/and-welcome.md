@@ -14,9 +14,7 @@ Sender-Side Option! ([`&push`](../source-settings/push.md))
 
 Example: `&welcome=Hello`
 
-|          |                                                      |
-| -------- | ---------------------------------------------------- |
-| (string) | the message the guest will see when joining the room |
+<table><thead><tr><th width="192"></th><th></th></tr></thead><tbody><tr><td>(string)</td><td>the message the guest will see when joining the room</td></tr></tbody></table>
 
 ## Details
 

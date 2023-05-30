@@ -15,11 +15,7 @@ Sender-Side Option! ([`&push`](../../source-settings/push.md))
 
 Example: `&audiogain=80`
 
-| Value           | Description                                                                            |
-| --------------- | -------------------------------------------------------------------------------------- |
-| `0`             | mutes the microphone so that only the Director can unmute it; the guest cannot unmute. |
-| `100`           | full volume - default                                                                  |
-| (integer value) | value will be applied as a percentage.                                                 |
+<table><thead><tr><th width="196">Value</th><th>Description</th></tr></thead><tbody><tr><td><code>0</code></td><td>mutes the microphone so that only the Director can unmute it; the guest cannot unmute.</td></tr><tr><td><code>100</code></td><td>full volume - default</td></tr><tr><td>(integer value)</td><td>value will be applied as a percentage.</td></tr></tbody></table>
 
 ## Details
 

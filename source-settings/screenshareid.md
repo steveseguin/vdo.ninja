@@ -16,10 +16,7 @@ Sender-Side Option! ([`&push`](push.md))
 
 Example: `&screenshareid=SomeID`
 
-| Value            | Description                                                                                                                           |
-| ---------------- | ------------------------------------------------------------------------------------------------------------------------------------- |
-| (no value given) | If no value is passed, the system will automatically add the suffix of "\_ss" to the existing stream ID that the user might be using. |
-| (string)         | Pre-sets the screenshare ID. Useful to automate or prepare stuff in advance.                                                          |
+<table><thead><tr><th width="180">Value</th><th>Description</th></tr></thead><tbody><tr><td>(no value given)</td><td>If no value is passed, the system will automatically add the suffix of "_ss" to the existing stream ID that the user might be using.</td></tr><tr><td>(string)</td><td>Pre-sets the screenshare ID. Useful to automate or prepare stuff in advance.</td></tr></tbody></table>
 
 ## Details
 

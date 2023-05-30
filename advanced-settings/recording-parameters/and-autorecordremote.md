@@ -10,11 +10,7 @@ General Option! ([`&push`](../../source-settings/push.md), [`&room`](../../gener
 
 Example: `&autorecordremote=1500`
 
-| Value              | Description                                                                                         |
-| ------------------ | --------------------------------------------------------------------------------------------------- |
-| `0`                | No video recorded; audio tentatively recorded as 32bit PCM lossless.                                |
-| (negative integer) | No video recorded; audio recorded as {integer} kbps OPUS file. Eg: `-120` - Audio only at 120 kbps. |
-| (positive integer) | Recorded video bitrate in kbps.                                                                     |
+<table><thead><tr><th width="190">Value</th><th>Description</th></tr></thead><tbody><tr><td><code>0</code></td><td>No video recorded; audio tentatively recorded as 32bit PCM lossless.</td></tr><tr><td>(negative integer)</td><td>No video recorded; audio recorded as {integer} kbps OPUS file. Eg: <code>-120</code> - Audio only at 120 kbps.</td></tr><tr><td>(positive integer)</td><td>Recorded video bitrate in kbps.</td></tr></tbody></table>
 
 ## Details
 

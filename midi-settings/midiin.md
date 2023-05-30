@@ -15,10 +15,7 @@ General Option! ([`&push`](../source-settings/push.md), [`&room`](../general-set
 
 Example: `&midiin=2`
 
-| Value                  | Description                |
-| ---------------------- | -------------------------- |
-| `0`                    | all midi output devices    |
-| (integer value. eg: 1) | midi output device index 1 |
+<table><thead><tr><th width="225">Value</th><th>Description</th></tr></thead><tbody><tr><td><code>0</code></td><td>all midi output devices</td></tr><tr><td>(integer value. eg: 1)</td><td>midi output device index 1</td></tr></tbody></table>
 
 ## Details
 

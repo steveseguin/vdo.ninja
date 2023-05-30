@@ -10,10 +10,7 @@ Sender-Side Option! ([`&push`](../../source-settings/push.md))
 
 Example: `&rotate=180`
 
-| Value            | Description                                         |
-| ---------------- | --------------------------------------------------- |
-| (no value given) | 90 degree                                           |
-| (degree)         | Rotates the camera in the specified value in degree |
+<table><thead><tr><th width="212">Value</th><th>Description</th></tr></thead><tbody><tr><td>(no value given)</td><td>90 degree</td></tr><tr><td>(degree)</td><td>Rotates the camera in the specified value in degree</td></tr></tbody></table>
 
 ## Details
 

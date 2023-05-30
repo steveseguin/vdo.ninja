@@ -10,9 +10,7 @@ General Option! ([`&push`](../../source-settings/push.md), [`&room`](../../gener
 
 Example: `&headertitle=LINDENKRON4TW`
 
-| Value    | Description                      |
-| -------- | -------------------------------- |
-| (string) | Changes the browser's page title |
+<table><thead><tr><th width="339">Value</th><th>Description</th></tr></thead><tbody><tr><td>(string)</td><td>Changes the browser's page title</td></tr></tbody></table>
 
 ## Details
 

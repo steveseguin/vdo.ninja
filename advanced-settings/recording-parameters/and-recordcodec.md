@@ -14,12 +14,7 @@ Sender-Side Option / Director Option! ([`&push`](../../source-settings/push.md),
 
 Example: `&recordcodec=h264`
 
-| Value  | Description             |
-| ------ | ----------------------- |
-| `h264` | request the h264 codec  |
-| `vp8`  | request the VP8 codec   |
-| `vp9`  | request the VP9 codec   |
-| `av1`  | request the AV1 codec   |
+<table><thead><tr><th width="139">Value</th><th>Description</th></tr></thead><tbody><tr><td><code>h264</code></td><td>request the h264 codec </td></tr><tr><td><code>vp8</code></td><td>request the VP8 codec </td></tr><tr><td><code>vp9</code></td><td>request the VP9 codec</td></tr><tr><td><code>av1</code></td><td>request the AV1 codec</td></tr></tbody></table>
 
 ## Details
 

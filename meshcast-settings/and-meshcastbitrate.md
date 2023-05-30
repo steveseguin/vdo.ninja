@@ -15,9 +15,7 @@ Meshcast Option / Sender-Side Option! ([`&meshcast`](../newly-added-parameters/a
 
 Example: `&meshcastbitrate=2500`
 
-| Value           | Description                               |
-| --------------- | ----------------------------------------- |
-| (integer value) | publishing meshcast video bitrate in kbps |
+<table><thead><tr><th width="249">Value</th><th>Description</th></tr></thead><tbody><tr><td>(integer value)</td><td>publishing meshcast video bitrate in kbps</td></tr></tbody></table>
 
 ## Details
 

@@ -14,10 +14,7 @@ General Option! ([`&push`](../../source-settings/push.md), [`&room`](../../gener
 
 Example: `&rounded=100`
 
-| Value                    | Description                                          |
-| ------------------------ | ---------------------------------------------------- |
-| (no value given)         | 50 px                                                |
-| (positive integer value) | the higher the number, the more aggressive the curve |
+<table><thead><tr><th width="246">Value</th><th>Description</th></tr></thead><tbody><tr><td>(no value given)</td><td>50 px</td></tr><tr><td>(positive integer value)</td><td>the higher the number, the more aggressive the curve</td></tr></tbody></table>
 
 ## Details
 

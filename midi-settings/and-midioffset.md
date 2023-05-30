@@ -12,9 +12,7 @@ General Option! ([`&push`](../source-settings/push.md), [`&room`](../general-set
 
 Example: `&midioffset=23`
 
-| Value                    | Description                                                                                                          |
-| ------------------------ | -------------------------------------------------------------------------------------------------------------------- |
-| (positive integer value) | (postitive integer value) is the control change command you want to use to mute guest 1. N+1 will mute guest 2, etc. |
+<table><thead><tr><th width="233">Value</th><th>Description</th></tr></thead><tbody><tr><td>(positive integer value)</td><td>(postitive integer value) is the control change command you want to use to mute guest 1. N+1 will mute guest 2, etc.</td></tr></tbody></table>
 
 ## Details
 

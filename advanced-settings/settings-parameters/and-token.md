@@ -10,9 +10,7 @@ General Option! ([`&push`](../../source-settings/push.md), [`&room`](../../gener
 
 Example: `&token=5eb5e63ee4d9ba06`
 
-| Value                          | Description                                                              |
-| ------------------------------ | ------------------------------------------------------------------------ |
-| (alphanumeric-characters only) | a token for invite/scene links to determine whose the director of a room |
+<table><thead><tr><th width="306">Value</th><th>Description</th></tr></thead><tbody><tr><td>(alphanumeric-characters only)</td><td>a token for invite/scene links to determine whose the director of a room</td></tr></tbody></table>
 
 ## Details
 

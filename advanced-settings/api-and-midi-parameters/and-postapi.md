@@ -14,9 +14,7 @@ General Option! ([`&push`](../../source-settings/push.md), [`&room`](../../gener
 
 Example: `&postapi=https%3A%2F%2Fwebhook.site%2Fb190f5bf-e4f8-454a-bd51-78b5807df9c1`
 
-| Value             | Description                                                                                                         |
-| ----------------- | ------------------------------------------------------------------------------------------------------------------- |
-| (custom POST URL) | Data JSON encoded, post URL requires HTTPS+CORS, and the passed URL parameter value needs to be encodedURLComponent |
+<table><thead><tr><th width="203">Value</th><th>Description</th></tr></thead><tbody><tr><td>(custom POST URL)</td><td>Data JSON encoded, post URL requires HTTPS+CORS, and the passed URL parameter value needs to be encodedURLComponent</td></tr></tbody></table>
 
 ## Details
 

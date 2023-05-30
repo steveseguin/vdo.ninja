@@ -15,15 +15,7 @@ Viewer-Side Option! ([`&view`](view.md), [`&scene`](scene.md), [`&room`](../../g
 
 Example: `&codec=h264`
 
-| Value                                                         | Description                                                                                     |
-| ------------------------------------------------------------- | ----------------------------------------------------------------------------------------------- |
-| [`h264`](codec.md#h264)                                       | request the h264 codec                                                                          |
-| [`vp8`](codec.md#vp8)                                         | request the VP8 codec                                                                           |
-| [`vp9`](codec.md#vp9)                                         | request the VP9 codec                                                                           |
-| [`av1`](codec.md#av1)                                         | request the AV1 codec                                                                           |
-| [`webp`](codec.md#webp)                                       | request the webp codec                                                                          |
-| [`hardware`](codec.md#hardware)                               | request the h264 codec and[`&h264profile`](../../newly-added-parameters/and-h264profile.md)     |
-| [`av1,h264`](codec.md#comma-seperated-update-in-v23-on-alpha) | Comma separated values that define the order of preferred video codecs if the primary one fails |
+<table><thead><tr><th width="176">Value</th><th>Description</th></tr></thead><tbody><tr><td><a href="codec.md#h264"><code>h264</code></a></td><td>request the h264 codec </td></tr><tr><td><a href="codec.md#vp8"><code>vp8</code></a></td><td>request the VP8 codec </td></tr><tr><td><a href="codec.md#vp9"><code>vp9</code></a></td><td>request the VP9 codec</td></tr><tr><td><a href="codec.md#av1"><code>av1</code></a></td><td>request the AV1 codec</td></tr><tr><td><a href="codec.md#webp"><code>webp</code></a></td><td>request the webp codec</td></tr><tr><td><a href="codec.md#hardware"><code>hardware</code></a></td><td>request the h264 codec and<a href="../../newly-added-parameters/and-h264profile.md"><code>&#x26;h264profile</code></a></td></tr><tr><td><a href="codec.md#comma-seperated-update-in-v23-on-alpha"><code>av1,h264</code></a></td><td>Comma separated values that define the order of preferred video codecs if the primary one fails</td></tr></tbody></table>
 
 ### Example usage
 

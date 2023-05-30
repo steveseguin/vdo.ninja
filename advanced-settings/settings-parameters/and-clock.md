@@ -10,11 +10,7 @@ General Option! ([`&push`](../../source-settings/push.md), [`&room`](../../gener
 
 Example: `&clock=5` or `&clock=false`
 
-| Value                   | Description                                                                                                     |
-| ----------------------- | --------------------------------------------------------------------------------------------------------------- |
-| `1` - `9`               | Shows the current time as in the graphic below. Each option specifies where the clock will appear on the screen |
-| `9` \| (no value given) | Shows the current time in the lower right                                                                       |
-| `false`                 | Will force-disable the clock from being remotely triggerable                                                    |
+<table><thead><tr><th width="232">Value</th><th>Description</th></tr></thead><tbody><tr><td><code>1</code> - <code>9</code></td><td>Shows the current time as in the graphic below. Each option specifies where the clock will appear on the screen</td></tr><tr><td><code>9</code> | (no value given)</td><td>Shows the current time in the lower right</td></tr><tr><td><code>false</code></td><td>Will force-disable the clock from being remotely triggerable</td></tr></tbody></table>
 
 ![](<../../.gitbook/assets/image (1) (10).png>)
 

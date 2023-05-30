@@ -10,7 +10,7 @@ Director Option! ([`&director`](../viewers-settings/director.md))
 
 Example: `&rooms=room1,room2,room3`
 
-<table><thead><tr><th>Value</th><th>Description</th><th data-hidden></th></tr></thead><tbody><tr><td>(string value)</td><td>adds the rooms to the guest transfer buttons to the director control bar (comma separated)</td><td></td></tr></tbody></table>
+<table><thead><tr><th width="161">Value</th><th>Description</th><th data-hidden></th></tr></thead><tbody><tr><td>(string value)</td><td>adds the rooms to the guest transfer buttons to the director control bar (comma separated)</td><td></td></tr></tbody></table>
 
 ## Details
 

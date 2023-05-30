@@ -10,9 +10,7 @@ General Option! ([`&push`](../../source-settings/push.md), [`&room`](../../gener
 
 Example: `&favicon=https%3A%2F%2Fmeshcast.io%2Ffavicon.ico`
 
-| Value             | Description         |
-| ----------------- | ------------------- |
-| (URL encoded URL) | Changes the favicon |
+<table><thead><tr><th width="339">Value</th><th>Description</th></tr></thead><tbody><tr><td>(URL encoded URL)</td><td>Changes the favicon</td></tr></tbody></table>
 
 [https://www.urlencoder.org/](https://www.urlencoder.org/)
 

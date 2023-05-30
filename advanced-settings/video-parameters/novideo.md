@@ -16,9 +16,7 @@ Viewer-Side Option! ([`&view`](../view-parameters/view.md), [`&scene`](../view-p
 
 Example: `&showonly=streamID1,streamID2`
 
-| Value          | Description                                           |
-| -------------- | ----------------------------------------------------- |
-| (string value) | the stream IDs to view; can be a comma separated list |
+<table><thead><tr><th width="174">Value</th><th>Description</th></tr></thead><tbody><tr><td>(string value)</td><td>the stream IDs to view; can be a comma separated list</td></tr></tbody></table>
 
 ## Details
 

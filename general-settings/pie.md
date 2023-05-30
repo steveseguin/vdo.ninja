@@ -10,9 +10,7 @@ General Option! ([`&push`](../source-settings/push.md), [`&room`](room.md), [`&v
 
 Example: `&pie=YourPiesocketAPIKey`
 
-| Value      | Description                                          |
-| ---------- | ---------------------------------------------------- |
-| (API\_KEY) | the only parameter is your own piesocket.com API key |
+<table><thead><tr><th width="187">Value</th><th>Description</th></tr></thead><tbody><tr><td>(API_KEY)</td><td>the only parameter is your own piesocket.com API key</td></tr></tbody></table>
 
 ## Details
 

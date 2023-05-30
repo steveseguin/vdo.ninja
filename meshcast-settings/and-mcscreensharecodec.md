@@ -14,13 +14,7 @@ Meshcast Option / Sender-Side Option! ([`&meshcast`](../newly-added-parameters/a
 
 Example: `&mcscreensharecodec=h264`
 
-| Value      | Description      |
-| ---------- | ---------------- |
-| `h264`     | h264 codec       |
-| `vp8`      | vp8 codec        |
-| `vp9`      | vp9 codec        |
-| `42e01f`\* | open h264 codec  |
-| (xxxxxx)\* | h264 profile IDs |
+<table><thead><tr><th width="234">Value</th><th>Description</th></tr></thead><tbody><tr><td><code>h264</code></td><td>h264 codec</td></tr><tr><td><code>vp8</code></td><td>vp8 codec</td></tr><tr><td><code>vp9</code></td><td>vp9 codec</td></tr><tr><td><code>42e01f</code>*</td><td>open h264 codec</td></tr><tr><td>(xxxxxx)*</td><td>h264 profile IDs</td></tr></tbody></table>
 
 \*on beta and alpha
 

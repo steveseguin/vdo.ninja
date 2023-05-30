@@ -14,10 +14,7 @@ Viewer-Side Option! ([`&view`](../view-parameters/view.md), [`&scene`](../view-p
 
 Example: `&fakeguests=7`
 
-| Value            | Description                                                                |
-| ---------------- | -------------------------------------------------------------------------- |
-| (integer number) | creates simulated guest videos, based on the value passed to the parameter |
-| (no value given) | 4 fake guests added                                                        |
+<table><thead><tr><th width="200">Value</th><th>Description</th></tr></thead><tbody><tr><td>(integer number)</td><td>creates simulated guest videos, based on the value passed to the parameter</td></tr><tr><td>(no value given)</td><td>4 fake guests added</td></tr></tbody></table>
 
 ## Details
 

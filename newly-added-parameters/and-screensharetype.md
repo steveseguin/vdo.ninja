@@ -16,11 +16,7 @@ Sender-Side Option! ([`&push`](../source-settings/push.md))
 
 Example: `&screensharetype=3`
 
-| Value         | Description                                                 |
-| ------------- | ----------------------------------------------------------- |
-| `1`           | Replaces the webcam screen with the screen share            |
-| `2`           | Creates a totally new connection for the screen share       |
-| `3` (default) | Reuses the existing connection, adding a second video track |
+<table><thead><tr><th width="196">Value</th><th>Description</th></tr></thead><tbody><tr><td><code>1</code></td><td>Replaces the webcam screen with the screen share</td></tr><tr><td><code>2</code></td><td>Creates a totally new connection for the screen share</td></tr><tr><td><code>3</code> (default)</td><td>Reuses the existing connection, adding a second video track</td></tr></tbody></table>
 
 ## Details
 

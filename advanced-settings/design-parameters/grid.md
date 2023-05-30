@@ -15,10 +15,7 @@ Sender-Side Option! ([`&push`](../../source-settings/push.md))
 
 Example: `&grid=./media/thirdshead.svg`
 
-| Value            | Description                              |
-| ---------------- | ---------------------------------------- |
-| (no value given) | adds a white rule-of-thirds grid overlay |
-| (encoded URL)    | adds an image as a overlay               |
+<table><thead><tr><th width="215">Value</th><th>Description</th></tr></thead><tbody><tr><td>(no value given)</td><td>adds a white rule-of-thirds grid overlay</td></tr><tr><td>(encoded URL)</td><td>adds an image as a overlay</td></tr></tbody></table>
 
 ## Details
 

@@ -10,9 +10,7 @@ General Option! ([`&push`](../source-settings/push.md), [`&room`](../general-set
 
 Example: `&tz=-480`
 
-| Value              | Description                                    |
-| ------------------ | ---------------------------------------------- |
-| (value in minutes) | specifies a negative timezone value in minutes |
+<table><thead><tr><th width="283">Value</th><th>Description</th></tr></thead><tbody><tr><td>(value in minutes)</td><td>specifies a negative timezone value in minutes</td></tr></tbody></table>
 
 ## Details
 

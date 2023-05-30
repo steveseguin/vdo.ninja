@@ -6,30 +6,15 @@ description: All useful links you might take a look at
 
 ### VDO.Ninja Versions
 
-| Official Version              | [https://vdo.ninja/](https://vdo.ninja/)                                                             |
-| ----------------------------- | ---------------------------------------------------------------------------------------------------- |
-| Beta Version                  | [https://vdo.ninja/beta/](https://vdo.ninja/beta/)                                                   |
-| Alpha Version                 | [https://vdo.ninja/alpha/](https://vdo.ninja/alpha/)                                                 |
-| BackUp Version                | [https://backup.vdo.ninja/](https://backup.vdo.ninja/)                                               |
-| Previous Versions             | [https://docs.vdo.ninja/releases](https://docs.vdo.ninja/releases)                                   |
-| Project Development on GitHub | [https://github.com/steveseguin/vdo.ninja](https://github.com/steveseguin/vdo.ninja)                 |
-| Development Progress          | [https://docs.vdo.ninja/updates/updates-vdo.ninja](https://docs.vdo.ninja/updates/updates-vdo.ninja) |
+<table data-header-hidden><thead><tr><th width="323">Description</th><th>URL</th></tr></thead><tbody><tr><td>Official Version</td><td><a href="https://vdo.ninja/">https://vdo.ninja/</a></td></tr><tr><td>Beta Version</td><td><a href="https://vdo.ninja/beta/">https://vdo.ninja/beta/</a></td></tr><tr><td>Alpha Version</td><td><a href="https://vdo.ninja/alpha/">https://vdo.ninja/alpha/</a></td></tr><tr><td>BackUp Version</td><td><a href="https://backup.vdo.ninja/">https://backup.vdo.ninja/</a></td></tr><tr><td>Previous Versions</td><td><a href="https://docs.vdo.ninja/releases">https://docs.vdo.ninja/releases</a></td></tr><tr><td>Project Development on GitHub</td><td><a href="https://github.com/steveseguin/vdo.ninja">https://github.com/steveseguin/vdo.ninja</a></td></tr><tr><td>Development Progress</td><td><a href="https://docs.vdo.ninja/updates/updates-vdo.ninja">https://docs.vdo.ninja/updates/updates-vdo.ninja</a></td></tr></tbody></table>
 
 ### VDO.Ninja Link Generators
 
-| Wizard-style                 | [https://linkgen.vdo.ninja/](https://linkgen.vdo.ninja/)                                                              |
-| ---------------------------- | --------------------------------------------------------------------------------------------------------------------- |
-| Toggle-style                 | [https://invite.vdo.ninja/](https://invite.vdo.ninja/)                                                                |
-| Excel-based                  | [https://drive.google.com/file/d/1A7qiFAC](https://drive.google.com/file/d/1A7qiFACoCxk9J-uTv9yyZa5yQWzFol8l/view)... |
-| Trampoline                   | [https://rse.github.io/vdo-ninja-trampoline/](https://rse.github.io/vdo-ninja-trampoline/)                            |
-| URL Obfuscator for VDO.Ninja | [https://invite.cam/](https://invite.cam/)                                                                            |
-| Invite Dock for OBS          | [https://vdo.ninja/dock](https://vdo.ninja/dock)                                                                      |
+<table data-header-hidden><thead><tr><th width="291">Description</th><th>URL</th></tr></thead><tbody><tr><td>Wizard-style</td><td><a href="https://linkgen.vdo.ninja/">https://linkgen.vdo.ninja/</a></td></tr><tr><td>Toggle-style</td><td><a href="https://invite.vdo.ninja/">https://invite.vdo.ninja/</a></td></tr><tr><td>Excel-based</td><td><a href="https://drive.google.com/file/d/1A7qiFACoCxk9J-uTv9yyZa5yQWzFol8l/view">https://drive.google.com/file/d/1A7qiFAC</a>...</td></tr><tr><td>Trampoline</td><td><a href="https://rse.github.io/vdo-ninja-trampoline/">https://rse.github.io/vdo-ninja-trampoline/</a></td></tr><tr><td>URL Obfuscator for VDO.Ninja</td><td><a href="https://invite.cam/">https://invite.cam/</a></td></tr><tr><td>Invite Dock for OBS</td><td><a href="https://vdo.ninja/dock">https://vdo.ninja/dock</a></td></tr></tbody></table>
 
 ### [Mobile Apps](steves-helper-apps/native-mobile-app-versions.md)
 
-| iOS     | [https://apps.apple.com/us/app/vdo-ninja/id1607609685](https://apps.apple.com/us/app/vdo-ninja/id1607609685)                       |
-| ------- | ---------------------------------------------------------------------------------------------------------------------------------- |
-| Android | [https://play.google.com/store/apps/details?id=flutter.vdo.ninja](https://play.google.com/store/apps/details?id=flutter.vdo.ninja) |
+<table data-header-hidden><thead><tr><th width="191">Description</th><th>URL</th></tr></thead><tbody><tr><td>iOS</td><td><a href="https://apps.apple.com/us/app/vdo-ninja/id1607609685">https://apps.apple.com/us/app/vdo-ninja/id1607609685</a></td></tr><tr><td>Android</td><td><a href="https://play.google.com/store/apps/details?id=flutter.vdo.ninja">https://play.google.com/store/apps/details?id=flutter.vdo.ninja</a></td></tr></tbody></table>
 
 ### VDO.Ninja Related
 
@@ -65,10 +50,7 @@ description: All useful links you might take a look at
 
 ### [Sponsor ❤](getting-started/sponsor.md)
 
-| GitHub Sponsors    | [https://github.com/sponsors/steveseguin](https://github.com/sponsors/steveseguin)         |
-| ------------------ | ------------------------------------------------------------------------------------------ |
-| Buy Steve a coffee | [https://www.buymeacoffee.com/steveseguin](https://www.buymeacoffee.com/steveseguin)       |
-| PayPal             | [https://www.paypal.com/paypalme/steveseguin](https://www.paypal.com/paypalme/steveseguin) |
+<table data-header-hidden><thead><tr><th width="262">Description</th><th>URL</th></tr></thead><tbody><tr><td>GitHub Sponsors</td><td><a href="https://github.com/sponsors/steveseguin">https://github.com/sponsors/steveseguin</a></td></tr><tr><td>Buy Steve a coffee</td><td><a href="https://www.buymeacoffee.com/steveseguin">https://www.buymeacoffee.com/steveseguin</a></td></tr><tr><td>PayPal</td><td><a href="https://www.paypal.com/paypalme/steveseguin">https://www.paypal.com/paypalme/steveseguin</a></td></tr></tbody></table>
 
 ### Discord/Reddit/YouTube
 
@@ -79,19 +61,8 @@ description: All useful links you might take a look at
 
 ### [Steve's Other Projects](steves-helper-apps/)
 
-| Overview                                                | [https://docs.vdo.ninja/steves-helper-apps](https://docs.vdo.ninja/steves-helper-apps)           |
-| ------------------------------------------------------- | ------------------------------------------------------------------------------------------------ |
-| Live stream to multiple people                          | [https://meshcast.io/](https://meshcast.io/)                                                     |
-| Electron Capture App                                    | [https://github.com/steveseguin/electroncapture](https://github.com/steveseguin/electroncapture) |
-| Steve's App                                             | [https://steves.app/](https://steves.app/)                                                       |
-| Social Stream                                           | [https://socialstream.ninja/](https://socialstream.ninja/)                                       |
-| Captioning Tool                                         | [https://caption.ninja/](https://caption.ninja/)                                                 |
-| Translation Tool                                        | [https://caption.ninja/translate](https://caption.ninja/translate)                               |
-| Raspberry Ninja                                         | [https://raspberry.ninja/](https://raspberry.ninja/)                                             |
-| YouTube, Twitch chat and social comment Overlays plugin | [https://chat.overlay.ninja/](https://chat.overlay.ninja)                                        |
+<table data-header-hidden><thead><tr><th width="150">Description</th><th>URL</th></tr></thead><tbody><tr><td>Overview</td><td><a href="https://docs.vdo.ninja/steves-helper-apps">https://docs.vdo.ninja/steves-helper-apps</a></td></tr><tr><td>Live stream to multiple people</td><td><a href="https://meshcast.io/">https://meshcast.io/</a></td></tr><tr><td>Electron Capture App</td><td><a href="https://github.com/steveseguin/electroncapture">https://github.com/steveseguin/electroncapture</a></td></tr><tr><td>Steve's App</td><td><a href="https://steves.app/">https://steves.app/</a></td></tr><tr><td>Social Stream</td><td><a href="https://socialstream.ninja/">https://socialstream.ninja/</a></td></tr><tr><td>Captioning Tool</td><td><a href="https://caption.ninja/">https://caption.ninja/</a></td></tr><tr><td>Translation Tool</td><td><a href="https://caption.ninja/translate">https://caption.ninja/translate</a></td></tr><tr><td>Raspberry Ninja</td><td><a href="https://raspberry.ninja/">https://raspberry.ninja/</a></td></tr><tr><td>YouTube, Twitch chat and social comment Overlays plugin</td><td><a href="https://chat.overlay.ninja">https://chat.overlay.ninja/</a></td></tr></tbody></table>
 
 ### [Community contributed tools](steves-helper-apps/community-contributed-tools.md)
 
-| Vingester (ingest web pages as NDI-multicasted streams)              | [https://vingester.app/](https://vingester.app/)                                                                 |
-| -------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------- |
-| Companion Module (remote control VDON via this plugin for Companion) | [https://github.com/bitfocus/companion-module-vdo-ninja](https://github.com/bitfocus/companion-module-vdo-ninja) |
+<table data-header-hidden><thead><tr><th width="329">Description</th><th>URL</th></tr></thead><tbody><tr><td>Vingester (ingest web pages as NDI-multicasted streams)</td><td><a href="https://vingester.app/">https://vingester.app/</a></td></tr><tr><td>Companion Module (remote control VDON via this plugin for Companion)</td><td><a href="https://github.com/bitfocus/companion-module-vdo-ninja">https://github.com/bitfocus/companion-module-vdo-ninja</a></td></tr></tbody></table>

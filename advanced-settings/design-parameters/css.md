@@ -10,9 +10,7 @@ General Option! ([`&push`](../../source-settings/push.md), [`&room`](../../gener
 
 Example: `&css=https%3A%2F%2Fbackup.vdo.ninja%2Fdev4321%2Fexamples%2Fmain.css`
 
-| Value         | Description                                                           |
-| ------------- | --------------------------------------------------------------------- |
-| (encoded URL) | will show the VU-style meter that the director has by default already |
+<table><thead><tr><th width="188.55474452554745">Value</th><th>Description</th></tr></thead><tbody><tr><td>(encoded URL)</td><td>will show the VU-style meter that the director has by default already</td></tr></tbody></table>
 
 Any URL-encoded URL that links to a CSS file.
 

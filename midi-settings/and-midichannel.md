@@ -10,9 +10,7 @@ General Option! ([`&push`](../source-settings/push.md), [`&room`](../general-set
 
 Example: `&midichannel=3`
 
-| Value         | Description                               |
-| ------------- | ----------------------------------------- |
-| (`1` to `16`) | specifies which midi channel to listen on |
+<table><thead><tr><th width="183">Value</th><th>Description</th></tr></thead><tbody><tr><td>(<code>1</code> to <code>16</code>)</td><td>specifies which midi channel to listen on</td></tr></tbody></table>
 
 ## Details
 

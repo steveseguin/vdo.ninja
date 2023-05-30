@@ -14,24 +14,7 @@ General Option! ([`&push`](../../source-settings/push.md), [`&room`](../../gener
 
 Example: `&language=fr`
 
-| Value            | Language                               |
-| ---------------- | -------------------------------------- |
-| `cn`             | Chinese                                |
-| `cs`             | Czech                                  |
-| `de`             | German                                 |
-| `en`             | English (default if `&ln` not present) |
-| `es`             | Spanish                                |
-| `eu`             | Basque                                 |
-| `fr`             | French                                 |
-| `it`             | Italian                                |
-| `ja`             | Japanese                               |
-| `nl`             | Dutch                                  |
-| `pig`            | Pig Latin                              |
-| `pt`             | Portuguese                             |
-| `ru`             | Russian                                |
-| `tr`             | Turkish                                |
-| `uk`             | Ukrainian                              |
-| (no value given) | Less verbose interface                 |
+<table><thead><tr><th width="241">Value</th><th>Language</th></tr></thead><tbody><tr><td><code>cn</code></td><td>Chinese</td></tr><tr><td><code>cs</code></td><td>Czech</td></tr><tr><td><code>de</code></td><td>German</td></tr><tr><td><code>en</code></td><td>English (default if <code>&#x26;ln</code> not present)</td></tr><tr><td><code>es</code></td><td>Spanish</td></tr><tr><td><code>eu</code></td><td>Basque</td></tr><tr><td><code>fr</code></td><td>French</td></tr><tr><td><code>it</code></td><td>Italian</td></tr><tr><td><code>ja</code></td><td>Japanese</td></tr><tr><td><code>nl</code></td><td>Dutch</td></tr><tr><td><code>pig</code></td><td>Pig Latin</td></tr><tr><td><code>pt</code></td><td>Portuguese</td></tr><tr><td><code>ru</code></td><td>Russian</td></tr><tr><td><code>tr</code></td><td>Turkish</td></tr><tr><td><code>uk</code></td><td>Ukrainian</td></tr><tr><td>(no value given)</td><td>Less verbose interface</td></tr></tbody></table>
 
 ## Details
 

@@ -12,10 +12,7 @@ Sender-Side Option! ([`&push`](../source-settings/push.md))
 
 Example: `&meshcast=usw2`
 
-| Value            | Description                           |
-| ---------------- | ------------------------------------- |
-| (no value given) | Chooses the best server automatically |
-| (servercode)     | Chooses the selected Meshcast server  |
+<table><thead><tr><th width="200">Value</th><th>Description</th></tr></thead><tbody><tr><td>(no value given)</td><td>Chooses the best server automatically</td></tr><tr><td>(servercode)</td><td>Chooses the selected Meshcast server</td></tr></tbody></table>
 
 Full server list: [https://meshcast.io/servers.json](https://meshcast.io/servers.json)
 
@@ -65,18 +62,7 @@ If you don't set it, the best one will be chosen automatically. If the specified
 
 Example: `&meshcast=usw2`
 
-| Value        | Description     |
-| ------------ | --------------- |
-| (servercode) | Meshcast server |
-| `cae1`       | Canada-East 1   |
-| `cae2`       | Canada-East 2   |
-| `use1`       | USA-East 1      |
-| `use2`       | USA-East 2      |
-| `usw1`       | USA-West 1      |
-| `usw2`       | USA-West 2      |
-| `fr1`        | France          |
-| `de1`        | Germany         |
-| `usc1`       | Dev-server      |
+<table><thead><tr><th width="200">Value</th><th>Description</th></tr></thead><tbody><tr><td>(servercode)</td><td>Meshcast server</td></tr><tr><td><code>cae1</code></td><td>Canada-East 1</td></tr><tr><td><code>cae2</code></td><td>Canada-East 2</td></tr><tr><td><code>use1</code></td><td>USA-East 1</td></tr><tr><td><code>use2</code></td><td>USA-East 2</td></tr><tr><td><code>usw1</code></td><td>USA-West 1</td></tr><tr><td><code>usw2</code></td><td>USA-West 2</td></tr><tr><td><code>fr1</code></td><td>France</td></tr><tr><td><code>de1</code></td><td>Germany</td></tr><tr><td><code>usc1</code></td><td>Dev-server</td></tr></tbody></table>
 
 Full server list: [https://meshcast.io/servers.json](https://meshcast.io/servers.json)
 

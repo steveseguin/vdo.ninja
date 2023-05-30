@@ -19,10 +19,7 @@ Sender-Side Option! ([`&push`](../../source-settings/push.md))
 
 Example: `&screensharecontenthint=detail`
 
-| Value    | Description                                                 |
-| -------- | ----------------------------------------------------------- |
-| `detail` | will prioritize **screen-share resolution** over frame rate |
-| `motion` | will prioritize **screen-share frame rate** over resolution |
+<table><thead><tr><th width="177">Value</th><th>Description</th></tr></thead><tbody><tr><td><code>detail</code></td><td>will prioritize <strong>screen-share resolution</strong> over frame rate</td></tr><tr><td><code>motion</code></td><td>will prioritize <strong>screen-share frame rate</strong> over resolution</td></tr></tbody></table>
 
 #### Additional value options
 
@@ -30,15 +27,11 @@ Depending on browser and version, there may be additional values you can pass, s
 
 [https://developer.mozilla.org/en-US/docs/Web/API/MediaStreamTrack/contentHint](https://developer.mozilla.org/en-US/docs/Web/API/MediaStreamTrack/contentHint)
 
-
-
 ## Details
 
 `&screensharecontenthint` can customize how you want VDO.Ninja to balance screen-share resolution vs screen-share frame rate, specifically when bitrate or CPU is insufficient to offer both at the same time.
 
 The two options are `detail` or `motion`. Screen-shares generally tend towards `detail` by default, and camera sources are tend towards `motion` by default. `detail` will try to prioritize resolution over frame rate, so the frame rate may drop a lot used. `motion` will try to maximize frame rate, but may drop the resolution a lot. There's no way to force both on as there's no magic bullet if your CPU or network cannot keep up.
-
-
 
 For more information on how to lock or maximize the resolution of a video feed, please see the following guide:
 

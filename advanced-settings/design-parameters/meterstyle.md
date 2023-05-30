@@ -14,12 +14,7 @@ General Option! ([`&push`](../../source-settings/push.md), [`&room`](../../gener
 
 Example: `&meterstyle=3`
 
-| Value                   | Description                                                                                                                                                                                      |
-| ----------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| `1` \| (no value given) | will show the VU-style meter that the director has by default already                                                                                                                            |
-| `2`                     | will show a green-border around the guest's video when they are talking                                                                                                                          |
-| `3`                     | will show a little green dot in the top-right corner when the guest's talking; this is default for the guest's view already                                                                      |
-| `4`                     | no meter is shown, but a data-attribute named `data-loudness` is applied to the video element. This can be targeted with CSS to do custom styles via OBS browser source or with [`&css`](css.md) |
+<table><thead><tr><th width="218.55474452554745">Value</th><th>Description</th></tr></thead><tbody><tr><td><code>1</code> | (no value given)</td><td>will show the VU-style meter that the director has by default already</td></tr><tr><td><code>2</code></td><td>will show a green-border around the guest's video when they are talking</td></tr><tr><td><code>3</code></td><td>will show a little green dot in the top-right corner when the guest's talking; this is default for the guest's view already</td></tr><tr><td><code>4</code></td><td>no meter is shown, but a data-attribute named <code>data-loudness</code> is applied to the video element. This can be targeted with CSS to do custom styles via OBS browser source or with <a href="css.md"><code>&#x26;css</code></a></td></tr></tbody></table>
 
 <figure><img src="../../.gitbook/assets/image (4) (8) (1).png" alt=""><figcaption></figcaption></figure>
 

@@ -12,9 +12,7 @@ Viewer-Side Option! ([`&view`](../advanced-settings/view-parameters/view.md), [`
 
 Example: `&slots=4`
 
-| Value              | Description                                                           |
-| ------------------ | --------------------------------------------------------------------- |
-| (positive integer) | the number of slots force the auto-mixer to have that number of slots |
+<table><thead><tr><th width="194">Value</th><th>Description</th></tr></thead><tbody><tr><td>(positive integer)</td><td>the number of slots force the auto-mixer to have that number of slots</td></tr></tbody></table>
 
 ## Details
 

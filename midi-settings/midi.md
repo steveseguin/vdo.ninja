@@ -34,28 +34,11 @@ Currently a Chromium-browser, like Google Chrome, is recommended when using the 
 There are two MIDI standards; one where value 33 is note A0, and the more common standard where value 33 is note A1. VDO.Ninja uses the A1 standard. Decrease your octave by one if having problems, such as if using TouchOSC.
 {% endhint %}
 
-| Value    | Description                                                                                                                                  |
-| -------- | -------------------------------------------------------------------------------------------------------------------------------------------- |
-| \&midi=N | Description of MIDI                                                                                                                          |
-| `1`      | Hotkeys using A3 to G4 notes                                                                                                                 |
-| `2`      | Hotkeys using A1 to G2 notes                                                                                                                 |
-| `3`      | Hotkeys using Note C1 + velocities                                                                                                           |
-| `4`      | <p>Hotkeys using control-change inputs.</p><p></p><p>Designed mainly for the director to control multiple guests, as well as themselves.</p> |
+<table><thead><tr><th width="160">Value</th><th>Description</th></tr></thead><tbody><tr><td>&#x26;midi=N</td><td>Description of MIDI </td></tr><tr><td><code>1</code></td><td>Hotkeys using A3 to G4 notes </td></tr><tr><td><code>2</code></td><td>Hotkeys using A1 to G2 notes</td></tr><tr><td><code>3</code></td><td>Hotkeys using Note C1 + velocities</td></tr><tr><td><code>4</code></td><td><p>Hotkeys using control-change inputs.</p><p></p><p>Designed mainly for the director to control multiple guests, as well as themselves.</p></td></tr></tbody></table>
 
 ### **\&midi=1**
 
-| MIDI message | Function                                     |
-| ------------ | -------------------------------------------- |
-| Note G3      | Toggle Chat                                  |
-| Note A3      | Toggle Mute                                  |
-| Note B3      | Toggle Video Output                          |
-| Note C4      | Toggle Screen Share                          |
-| Note D4      | Hang up                                      |
-| Note E4      | Raise Hand Toggle                            |
-| Note F4      | Record Local Video Toggle                    |
-| Note G4      | Enable the Director’s audio \[director only] |
-| Note A4      | Stop the Director’s Audio \[director only]   |
-| Note B4      | Toggle the Local Speaker Output              |
+<table><thead><tr><th width="209">MIDI message</th><th>Function</th></tr></thead><tbody><tr><td>Note G3</td><td>Toggle Chat</td></tr><tr><td>Note A3</td><td>Toggle Mute</td></tr><tr><td>Note B3</td><td>Toggle Video Output</td></tr><tr><td>Note C4</td><td>Toggle Screen Share</td></tr><tr><td>Note D4</td><td>Hang up</td></tr><tr><td>Note E4</td><td>Raise Hand Toggle</td></tr><tr><td>Note F4</td><td>Record Local Video Toggle</td></tr><tr><td>Note G4</td><td>Enable the Director’s audio [director only]</td></tr><tr><td>Note A4</td><td>Stop the Director’s Audio [director only]</td></tr><tr><td>Note B4</td><td>Toggle the Local Speaker Output</td></tr></tbody></table>
 
 ### **\&midi=2**
 
@@ -74,40 +57,15 @@ There are two MIDI standards; one where value 33 is note A0, and the more common
 
 ### **\&midi=3**
 
-| MIDI message         | Function                                     |
-| -------------------- | -------------------------------------------- |
-| Note C1 + Velocity 0 | Toggle Chat                                  |
-| Note C1 + Velocity 1 | Toggle Mute                                  |
-| Note C1 + Velocity 2 | Toggle Video Output                          |
-| Note C1 + Velocity 3 | Toggle Screen Share                          |
-| Note C1 + Velocity 4 | Hang up                                      |
-| Note C1 + Velocity 5 | Raise Hand Toggle                            |
-| Note C1 + Velocity 6 | Record Local Video Toggle                    |
-| Note C1 + Velocity 7 | Enable the Director’s audio \[director only] |
-| Note C1 + Velocity 8 | Stop the Director’s Audio \[director only]   |
-| Note C1 + Velocity 9 | Toggle the Local Speaker Output              |
+<table><thead><tr><th width="232">MIDI message</th><th>Function</th></tr></thead><tbody><tr><td>Note C1 + Velocity 0</td><td>Toggle Chat</td></tr><tr><td>Note C1 + Velocity 1</td><td>Toggle Mute</td></tr><tr><td>Note C1 + Velocity 2</td><td>Toggle Video Output</td></tr><tr><td>Note C1 + Velocity 3</td><td>Toggle Screen Share</td></tr><tr><td>Note C1 + Velocity 4</td><td>Hang up</td></tr><tr><td>Note C1 + Velocity 5</td><td>Raise Hand Toggle</td></tr><tr><td>Note C1 + Velocity 6</td><td>Record Local Video Toggle</td></tr><tr><td>Note C1 + Velocity 7</td><td>Enable the Director’s audio [director only]</td></tr><tr><td>Note C1 + Velocity 8</td><td>Stop the Director’s Audio [director only]</td></tr><tr><td>Note C1 + Velocity 9</td><td>Toggle the Local Speaker Output</td></tr></tbody></table>
 
 ### **\&midi=4**
 
-| MIDI message    | Function                                                   |
-| --------------- | ---------------------------------------------------------- |
-| Command = 110   | with values accepted from 0 to 8 for local toggle options. |
-| Command = 110+N | where N is the guest’s order in the control room.          |
+<table><thead><tr><th width="209">MIDI message</th><th>Function</th></tr></thead><tbody><tr><td>Command = 110</td><td>with values accepted from 0 to 8 for local toggle options.</td></tr><tr><td>Command = 110+N</td><td>where N is the guest’s order in the control room.</td></tr></tbody></table>
 
 In this case, for hotkeying remote guests as a director:
 
-| MIDI message   | Function                                   |
-| -------------- | ------------------------------------------ |
-| Value 0        | Opens the Transfer Popup                   |
-| Value 1        | Add/remove from scene 1                    |
-| Value 2        | Mute guest in scene                        |
-| Value 3        | Mute guest everywhere                      |
-| Value 4        | Hang-up the guest                          |
-| Value 5        | Toggle Solo Chat with this guest           |
-| Value 6        | Toggle the remote speaker                  |
-| Value 7        | Toggle the remote display                  |
-| Value 8        | Fixes Rainbow Puke of this guest in scenes |
-| Value 12 to 18 | Add/remove from scene 2 to 8               |
+<table><thead><tr><th width="209">MIDI message</th><th>Function</th></tr></thead><tbody><tr><td>Value 0</td><td>Opens the Transfer Popup</td></tr><tr><td>Value 1</td><td>Add/remove from scene 1</td></tr><tr><td>Value 2</td><td>Mute guest in scene</td></tr><tr><td>Value 3</td><td>Mute guest everywhere</td></tr><tr><td>Value 4</td><td>Hang-up the guest</td></tr><tr><td>Value 5</td><td>Toggle Solo Chat with this guest</td></tr><tr><td>Value 6</td><td>Toggle the remote speaker</td></tr><tr><td>Value 7</td><td>Toggle the remote display</td></tr><tr><td>Value 8</td><td>Fixes Rainbow Puke of this guest in scenes</td></tr><tr><td>Value 12 to 18</td><td>Add/remove from scene 2 to 8</td></tr></tbody></table>
 
 All the above hotkey mappings are purely experimental at this time and will change based on user feedback. These mappings should allow a user to use a StreamDeck with VDO.Ninja.
 

@@ -15,9 +15,7 @@ General Option! ([`&push`](../source-settings/push.md), [`&scene`](../advanced-s
 
 Example: `&room=RoomID`
 
-| Value    | Description                                                       |
-| -------- | ----------------------------------------------------------------- |
-| (string) | 1 to 49-characters long: aLphaNumEric-characters; case sensitive. |
+<table><thead><tr><th width="335">Value</th><th>Description</th></tr></thead><tbody><tr><td>(string)</td><td>1 to 49-characters long: aLphaNumEric-characters; case sensitive.</td></tr></tbody></table>
 
 ## Details
 

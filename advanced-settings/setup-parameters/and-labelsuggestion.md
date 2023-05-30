@@ -15,10 +15,7 @@ General Option! ([`&push`](../../source-settings/push.md), [`&room`](../../gener
 
 Example: `&labelsuggestion=Steve`
 
-| Value            | Description                                        |
-| ---------------- | -------------------------------------------------- |
-| (string)         | Sets the label if the user leaves the prompt blank |
-| (no value given) | Asks the guest for a label                         |
+<table><thead><tr><th width="232">Value</th><th>Description</th></tr></thead><tbody><tr><td>(string)</td><td>Sets the label if the user leaves the prompt blank</td></tr><tr><td>(no value given)</td><td>Asks the guest for a label</td></tr></tbody></table>
 
 ## Details
 
