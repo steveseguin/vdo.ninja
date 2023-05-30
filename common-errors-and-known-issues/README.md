@@ -17,6 +17,7 @@
 * [vmix-high-cpu.md](vmix-high-cpu.md "mention")
 * [obs-virtual-camera-low-has-fps.md](obs-virtual-camera-low-has-fps.md "mention")
 * [virtual-camera-not-working-on-mac.md](virtual-camera-not-working-on-mac.md "mention")
+* [mic-stops-on-macos-when-obs-opens.md](mic-stops-on-macos-when-obs-opens.md "mention")
 * [video-is-pixelated.md](video-is-pixelated.md "mention")
 * [video-freezes-mid-stream.md](video-freezes-mid-stream.md "mention")
 * [webcam-freezes-after-a-time.md](webcam-freezes-after-a-time.md "mention")
