@@ -15,6 +15,7 @@
 * [how-do-i-lock-the-resolution.md](how-do-i-lock-the-resolution.md "mention")
 * [use-vdo.ninja-as-a-webcam-for-google-hangouts-zoom-and-more.md](use-vdo.ninja-as-a-webcam-for-google-hangouts-zoom-and-more.md "mention")
 * [how-do-i-control-bitrate-quality.md](how-do-i-control-bitrate-quality.md "mention")
+* [how-to-selectively-allow-access.md](how-to-selectively-allow-access.md "mention")
 * [how-to-send-the-audio-video-output-of-one-obs-to-another-obs-using-vdo.ninja.md](how-to-send-the-audio-video-output-of-one-obs-to-another-obs-using-vdo.ninja.md "mention")
 * [how-to-mirror-a-video-while-full-screen-for-ipads-and-teleprompters.md](how-to-mirror-a-video-while-full-screen-for-ipads-and-teleprompters.md "mention")
 * [how-to-get-permanent-links.md](how-to-get-permanent-links.md "mention")
