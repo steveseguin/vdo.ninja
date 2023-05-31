@@ -4,7 +4,7 @@ To ensure the long-term viability of this project, and for the protection of its
 
 # Contribution Policy
 
-You are invited to digitally sign the CLA with the provided CLA Assissant service. You may also print, sign, scan, and then email the CLA to steve@seguin.email.
+You are invited to digitally sign the CLA with the provided CLA Assissant service, with a link to sign it provided automatically after contributing to this Github project. You may also print, sign, scan, and then email the CLA to steve@seguin.email.  
 
 It is not required that you sign the CLA for every contribution. Once you execute a CLA, it is valid until the CLA agreement is meaningfully changed and requires updating.
 
