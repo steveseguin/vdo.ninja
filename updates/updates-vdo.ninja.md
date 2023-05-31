@@ -1,9 +1,76 @@
 # Updates - VDO.Ninja
 
+#### May 30 <a href="#august-31" id="august-31"></a>
+
+* The VDO.Ninja getDetails API request returns some added details for slots-position & active-speaker.
+* When using the JSON Layout blob ([`&layout=jsonblobhere`](../advanced-settings/mixer-scene-parameters/and-layout.md)) obtained from the [Mixer App](../steves-helper-apps/mixer-app.md), the director in [`&slotsmode`](../advanced-settings/director-parameters/and-slotmode.md) will now be able to change who is in which slot without the Mixer App open.
+* The Twitch WHIP ingest endpoint now works directly via VDO.Ninja (rather than via a proxy server I had hosted).
+* Played a bit with the audio loudness metering styling. More feedback welcomed.
+
+\*\* changes on alpha
+
+* New larger web server for VDO.Ninja going to go live tonight - same website, but different server. Should be a smooth transition, but fyi.
+
+#### May 28 <a href="#august-31" id="august-31"></a>
+
+* Added `&playchannel` as an option to VDO.Ninja, which will play either the left or right audio stream-only for an incoming stereo stream.\
+  \
+  \-- It will play back the selected channel as mono audio, dropping other channels from the playback.\
+  \-- `&playchannel=1` is left channel; `2` is right; and if multi channel works for you, then you can target 6 different channels.\
+  \-- This is useful if you wanted to capture the left and right audio channels of a remote guest in OBS in different browser sources, without having to do any fancy audio routing on the studio side.\
+  \-- Both left and right audio channels are still sent; it's just during local playback that the non-selected channels are dropped, so it's not as efficient as local routing, nor will both channel be in exact sync anymore either.\
+  \-- This will not currently work in conjunction with [`&panning`](../advanced-settings/view-parameters/and-panning.md) of [`&channeloffset`](../advanced-settings/view-parameters/and-channeloffset.md); and will override those options.\
+  \
+  Example usage: [https://vdo.ninja/alpha/?view=XXXXXXXX\&stereo\&playchannel=1](https://vdo.ninja/alpha/?view=XXXXXXXX\&stereo\&playchannel=1)
+
+\*\* on alpha for testing
+
+#### May 26 <a href="#august-31" id="august-31"></a>
+
+* Pushed a bug fix to VDO.Ninja production and GitHub, where a temporary loss of Internet could cause a waiting viewer to not notice a publisher has started streaming. This only happened in a niche situation of settings, and would self-fix itself after a while already, but this fix should have it resolve instantly now. The backup check option, in case everything fails still, also now checks 4x more often, just for added assurance.
+* Fixed some minor CSS font/coloring issues in VDO.Ninja, specific to [darkmode](../advanced-settings/design-parameters/darkmode.md). Also some changes to the VU meters, but more changes to come there.
+
+#### May 24 <a href="#august-31" id="august-31"></a>
+
+* When the director share screens now, their screen share will count as a second-video stream, so they can share both camera and screen share with guests by default. No need for [`&screensharetype=3`](../newly-added-parameters/and-screensharetype.md). The exception to this rule is if using [`&broadcast`](../advanced-settings/view-parameters/broadcast.md) as the director, which will have the screen share mode be [`screensharetype=1`](../newly-added-parameters/and-screensharetype.md) (one shared stream for webcam+screen sharing). This is just due to the nature of broadcast mode.
+
+\*\* on production
+
+#### May 23 <a href="#august-31" id="august-31"></a>
+
+*   Firefox now supports the option to fully-pause the encoding of a video stream to a guest. As a result, I've now updated the code to distinguish between new and old Firefox versions that support this ability.
+
+    \-- The director can now "fully stop' the preview for an incoming Firefox-based v110+ guest stream, rather than just limit it to \~ 30-kbps @ 1-fps or so.\
+    \-- When a Firefox v110+ guest full-windows their own preview, it won't pause the video stream for other guests like it did with older versions.
+
+\*\* updated on production and alpha
+
+#### May 17 <a href="#august-31" id="august-31"></a>
+
+*   Added `&meshcastcode` (`&mccode`) as an option, which lets you specify the Meshcast server to use. This was already possible with just [`&meshcast`](../newly-added-parameters/and-meshcast.md), but if you wanted to specify audio/video-only modes as well as the server, this new option will let you specify the server another way, allowing both options to work.
+
+    ie: `https://vdo.ninja/?meshcastcode=cae1&meshcast=video`
+* Couple minor bugs fixed; one related to [`&cover`](../advanced-settings/view-parameters/cover.md) and dynamic resolutions
+* The mobile settings slide in menu in darkmode is now made transparent
+* Added a spacing between the hang-up button and the other buttons on mobile; avoids misclicking
+* Few other CSS changes to the settings menu
+
+\*\* all recent changes now available on production, beta, and alpha.
+
+#### May 14 <a href="#august-31" id="august-31"></a>
+
+* Added an option for the director to mirror a guest's video\
+  \-- This applies globally, so within scenes, other guests, and for the actual guest\
+  \-- If a guest's video preview is mirrored already, such as if using [`&mirror`](../advanced-settings/design-parameters/mirror.md), this function will mirror their local mirror effect; so it doesn't override it, but applies on top of it for them.\
+  \-- If a guest mirrors someone else's video via the right-click context menu manually, if the director changes the mirror for that video, it will override what the guest has set. They can always re-mirror it manually, but the director in this case takes precedent.\
+  ![](<../.gitbook/assets/image (6).png>)
+
+\*\* this new mirror feature is on alpha for now at [https://vdo.ninja/alpha/](https://vdo.ninja/alpha/). Feel free to test and let me know how you fair.
+
 #### May 10 <a href="#august-31" id="august-31"></a>
 
 * Highlighting a guest as a director won't apply the solo highlighting to viewers/scenes who have [`&layout`](../advanced-settings/mixer-scene-parameters/and-layout.md) applied to their own links. The layout is assumed to take priority. (let me know if you have feedback though)
-* Fixed a couple reported bugs in the [new release](updates-vdo.ninja.md#august-31-2). Please keep any bug / issue reports coming  ⁠⁠[🐞│bug-report discord channel](https://discord.gg/qWDshMsTar)&#x20;
+* Fixed a couple reported bugs in the [new release](updates-vdo.ninja.md#august-31-2). Please keep any bug / issue reports coming ⁠⁠[🐞│bug-report discord channel](https://discord.gg/qWDshMsTar)&#x20;
 
 #### May 9 <a href="#august-31" id="august-31"></a>
 

@@ -3,10 +3,18 @@
 [social-stream.md](../steves-helper-apps/social-stream.md "mention")\
 [chat-overlay.md](../steves-helper-apps/chat-overlay.md "mention")
 
+#### **May 30**
+
+* TikTok stream events fixed for Socialstream, along with some odysee and a few other fixes pushed.
+
+#### **May 26**
+
+* Fixed an issue in Socialstream's random name color option, which now works with the background name color config option.
+
 #### **May 10**
 
 * afreecatv.com support added to Social Stream. Update the extension and pop out chat to use.\
-  ![](<../.gitbook/assets/image (6).png>)![](<../.gitbook/assets/image (5).png>)
+  ![](<../.gitbook/assets/image (6) (6).png>)![](<../.gitbook/assets/image (5).png>)
 
 #### **May 9**
 

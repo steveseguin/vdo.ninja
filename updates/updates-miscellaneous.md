@@ -1,5 +1,12 @@
 # Updates - Miscellaneous
 
+#### May 30
+
+*   Our Discord NinjaBot has had the AI-smarts improved further, including with the addition of Helpful or Not buttons. @leb can be thanked for this awesomeness.
+
+    \-- The Discord bot's source code is on github, if you want to use it within your own Discord server.\
+    \-- I've been added numerous guides and issue descriptions to the Docs to make our bot, as it is the source of its knowledge. Community contributions welcomed.
+
 #### May 6
 
 * Fixed the [**vdo.ninja/speedtest**](https://vdo.ninja/speedtest) site when loading it on mobile; the CSS was messed up.
