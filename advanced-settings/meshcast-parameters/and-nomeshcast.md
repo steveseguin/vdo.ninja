@@ -2,10 +2,9 @@
 description: Tells a sender to provide a p2p stream, rather than a Meshcast stream
 ---
 
-# \&nomeshcast (alpha)
+# \&nomeshcast
 
-Viewer-Side Option! ([`&view`](../view-parameters/view.md), [`&scene`](../view-parameters/scene.md), [`&room`](../../general-settings/room.md), [`&solo`](../mixer-scene-parameters/and-solo.md))\
-**ALPHA-ONLY** - Only available at [https://vdo.ninja/alpha/](https://vdo.ninja/alpha/)
+Viewer-Side Option! ([`&view`](../view-parameters/view.md), [`&scene`](../view-parameters/scene.md), [`&room`](../../general-settings/room.md), [`&solo`](../mixer-scene-parameters/and-solo.md))
 
 ## Details
 

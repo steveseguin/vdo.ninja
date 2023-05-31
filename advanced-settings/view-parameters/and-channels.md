@@ -39,3 +39,7 @@ If looking to set the number of input channels, rather than output, please see [
 {% content-ref url="../audio-parameters/and-inputchannels.md" %}
 [and-inputchannels.md](../audio-parameters/and-inputchannels.md)
 {% endcontent-ref %}
+
+{% content-ref url="../audio-parameters/and-channeloffset-1.md" %}
+[and-channeloffset-1.md](../audio-parameters/and-channeloffset-1.md)
+{% endcontent-ref %}

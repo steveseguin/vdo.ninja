@@ -35,3 +35,7 @@ Please see here for detailed testing results with different audio devices: [http
 {% content-ref url="and-channels.md" %}
 [and-channels.md](and-channels.md)
 {% endcontent-ref %}
+
+{% content-ref url="../audio-parameters/and-channeloffset-1.md" %}
+[and-channeloffset-1.md](../audio-parameters/and-channeloffset-1.md)
+{% endcontent-ref %}

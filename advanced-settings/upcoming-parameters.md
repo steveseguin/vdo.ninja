@@ -12,7 +12,7 @@ description: >-
 
 You can use/test these new parameters for Version 24 on [vdo.ninja/alpha](https://vdo.ninja/alpha/) and/or [vdo.ninja/beta](https://vdo.ninja/beta/):
 
-<table><thead><tr><th width="321">Parameter</th><th>Explanation</th></tr></thead><tbody><tr><td><a href="meshcast-parameters/and-nomeshcast.md"><code>&#x26;nomeshcast</code></a>*</td><td>Tells a sender to provide a p2p stream, rather than a Meshcast stream</td></tr></tbody></table>
+<table><thead><tr><th width="201">Parameter</th><th>Explanation</th></tr></thead><tbody><tr><td><a href="audio-parameters/and-channeloffset-1.md"><code>&#x26;playchannel</code></a>*</td><td>Will play either the left or right audio stream-only for an incoming stereo stream</td></tr></tbody></table>
 
 \***ALPHA-ONLY** - Only available at [https://vdo.ninja/alpha/](https://vdo.ninja/alpha/)\
 \*\*on [vdo.ninja/beta](https://vdo.ninja/beta/) and [vdo.ninja/alpha](https://vdo.ninja/alpha/)
