@@ -1,5 +1,10 @@
 # Updates - Miscellaneous
 
+#### May 31
+
+* Made a little auto-hotkey v2 script that lets you toggle your mouse cursor's visibility on and off. Might be useful if a gamer and struggling to hide the mouse cursor when screen sharing with VDO.Ninja.\
+  [https://github.com/steveseguin/hide-cursor](https://github.com/steveseguin/hide-cursor)
+
 #### May 30
 
 *   Our Discord NinjaBot has had the AI-smarts improved further, including with the addition of Helpful or Not buttons. @leb can be thanked for this awesomeness.
