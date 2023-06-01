@@ -32,7 +32,7 @@
   \-- This was added to allow a host to put people into their own team by setting the name to a limited set of colors.\
   \-- You can have color options (teams) ranging from 1 to several thousand.\
   \-- You can also change the randomization seed so you can put people into different teams on the fly.\
-  ![](<../.gitbook/assets/image (4) (9).png>)
+  ![](<../.gitbook/assets/image (4) (9) (1).png>)
 
 #### **April 18**
 
