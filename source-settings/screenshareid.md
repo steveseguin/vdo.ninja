@@ -20,20 +20,22 @@ Example: `&screenshareid=SomeID`
 
 ## Details
 
-When screen sharing as a guest in a group room, the screen share will now create a second stream for the screen share, keeping your webcam also.
+When screen sharing as a guest in a group room, in `&sstype=2` screen sharing mode, the screen share will now create a second stream for the screen share, keeping your webcam also.
 
-`&screenshareid` will preset the ID the screen share will have, making things easier to predict and prep for.
+`&screenshareid` will preset the ID the screen share will have, making the stream ID for the screen share easier to predict and prep for.
 
-Example (`&room=roomname&push=streamid&screenshareid`)\
+Example (`&room=roomname&sstype=2&push=streamid&screenshareid`)\
 ![](<../.gitbook/assets/image (110) (1) (1).png>)
 
-Without this, the screen share ID is random, which is a decision made to increase security. This complication will be addressed in the future.
+Without this, the screen share ID in `&sstype=2` mode is random, which is a decision made to increase security. This complication will be addressed in the future.
 
 There is a toggle in the director's room which adds `&ssid` to the guest's invite link.\
 ![](<../.gitbook/assets/image (117) (2).png>)
 
 {% hint style="info" %}
-`&screenshareid` doesn't work with [`&screensharetype=3`](../newly-added-parameters/and-screensharetype.md). When using `&screensharetype=3` the screen share gets the appendix `:s` added to the stream ID of the guest.
+`&screenshareid` doesn't work with [`&screensharetype=3`](../newly-added-parameters/and-screensharetype.md). When using `&screensharetype=3` the screen share gets the appendix `:s` added to the stream ID of the guest. \
+\
+As of VDO.Ninja v23, \&sstype=3 is default, but you can revert back to \&sstype=2 or use the new \&sstype=3 method post-fix `:s` method of identify screen shares.
 {% endhint %}
 
 ## Related
