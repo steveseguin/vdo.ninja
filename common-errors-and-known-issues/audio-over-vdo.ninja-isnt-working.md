@@ -8,7 +8,7 @@ If using OBS for audio playback, be sure that you select "Control Audio via OBS"
 
 If however you are testing VDO.Ninja and audio isn't working at all, from browser to browser, yet you see your mic-level loudness green indicator moving in VDO.Ninja as you speak, double check your Windows audio settings. In particular, high sample rates, like 384-khz sample rates, 32-bit depth audio playback, or other professional audio device settings in Windows may cause problems with audio playback.
 
-<figure><img src="../.gitbook/assets/image (4).png" alt=""><figcaption></figcaption></figure>
+<figure><img src="../.gitbook/assets/image (4) (9).png" alt=""><figcaption></figcaption></figure>
 
 To avoid issues, set your audio playback devices (specifically to the audio playback device) to 24-bit or 16-bit audio, with an audio sample rate of 48,000-hz, or as close to it as possible. If you mic-source isn't working, also check to make sure your microphone is 16 or 24-bit capture mode, and isn't in ASIO mode.
 

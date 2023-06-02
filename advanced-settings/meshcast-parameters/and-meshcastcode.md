@@ -6,6 +6,10 @@ description: Lets you specify the Meshcast server to use
 
 Sender-Side Option! ([`&push`](../../source-settings/push.md))
 
+## Aliases
+
+* `&mccode`
+
 ## Options
 
 Example: `&meshcastcode=usw2`

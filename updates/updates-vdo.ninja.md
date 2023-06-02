@@ -1,5 +1,15 @@
 # Updates - VDO.Ninja
 
+#### June 2 <a href="#august-31" id="august-31"></a>
+
+*   Fixed a recent issue where the director's screen share would appear in the OBS scene (not their webcam though), without having [`&showdirector`](../viewers-settings/and-showdirector.md) added.
+
+    \-- If the director wants their screen share to show in the scene, but not their webcam, they can use [`&showdirector=3`](../viewers-settings/and-showdirector.md) now instead.\
+    \-- The screen share still shows for the director, in its own control box, but add-to-scene options are hidden and some text clarifying the performer state of the screen share is provided.\
+    ![](<../.gitbook/assets/image (4).png>)
+
+\*\* update is currently on alpha, just pending a bit more testing. [https://vdo.ninja/alpha/](https://vdo.ninja/alpha/)
+
 #### May 30 <a href="#august-31" id="august-31"></a>
 
 * The VDO.Ninja getDetails API request returns some added details for slots-position & active-speaker.

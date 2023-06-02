@@ -10,6 +10,14 @@ Director Option / Viewer-Side Option! ([`&director`](director.md), [`&scene`](..
 
 * `&sd`
 
+## Options
+
+Example: `&showdirector=3`
+
+<table><thead><tr><th width="177">Value</th><th>Description</th></tr></thead><tbody><tr><td><code>1</code></td><td></td></tr><tr><td><code>2</code></td><td></td></tr><tr><td><code>3</code>*</td><td>Shows the screen share of the director in the scene, but not their webcam</td></tr><tr><td>(no value given)</td><td></td></tr></tbody></table>
+
+\*on alpha
+
 ## Details
 
 This URL value can be added to the director's URL (`&director=roomname&showdirector`) or to the scene link (`&scene&showdirector`) when you wish the director to appear in those links. You can also enable this flag a couple other ways.
