@@ -12,6 +12,7 @@
 * [cant-share-my-screen.md](cant-share-my-screen.md "mention")
 * [nothing-shows-up-in-obs-or-it-is-choppy.md](nothing-shows-up-in-obs-or-it-is-choppy.md "mention")
 * [blue-spinning-window.md](blue-spinning-window.md "mention")
+* [cursor-shows-trailing-or-artifacting.md](cursor-shows-trailing-or-artifacting.md "mention")
 * [packet-loss.md](packet-loss.md "mention")
 * [overheating.md](overheating.md "mention")
 * [audio-is-delayed-in-obs.md](audio-is-delayed-in-obs.md "mention")
