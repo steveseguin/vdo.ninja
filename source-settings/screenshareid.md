@@ -35,7 +35,7 @@ There is a toggle in the director's room which adds `&ssid` to the guest's invit
 {% hint style="info" %}
 `&screenshareid` doesn't work with [`&screensharetype=3`](../newly-added-parameters/and-screensharetype.md). When using `&screensharetype=3` the screen share gets the appendix `:s` added to the stream ID of the guest. \
 \
-As of VDO.Ninja v23, \&sstype=3 is default, but you can revert back to \&sstype=2 or use the new \&sstype=3 method post-fix `:s` method of identify screen shares.
+As of VDO.Ninja [v23](../releases/v23.md),`&screensharetype=3` is default, but you can revert back to `&screensharetype=2` or use the new `&screensharetype=3` method post-fix `:s` method of identify screen shares.
 {% endhint %}
 
 ## Related
