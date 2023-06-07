@@ -85,7 +85,7 @@ To keep things easy, Steve generally recommends using Cloudflare to provide cach
 
 `sudo systemctl reload nginx` will reload the settings after making changes.
 
-At this point, if you've managed to make it this far, you should have VDO.Ninja's web code hosted and accessible via yuor domain name.
+At this point, if you've managed to make it this far, you should have VDO.Ninja's web code hosted and accessible via your domain name.
 
 You can find many settings for VDO.Ninja at the bottom of the `index.html` file, including settings for specifiying TURN servers and default values.
 
