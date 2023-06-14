@@ -293,17 +293,28 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 	}
 	
 	if (urlParams.has('whippush') || urlParams.has('whipout') || urlParams.has('pushwhip')) { // URL or data:base64 image. Becomes local to this viewer only.  This is like &avatar, but slightly different. Just CSS in this case
-		let whippush = urlParams.get('whippush') || urlParams.get('whipout') || urlParams.get('pushwhip');
-		if (whippush){
+		session.whipOutput = urlParams.get('whippush') || urlParams.get('whipout') || urlParams.get('pushwhip') || null;
+		if (session.whipOutput){
 			try {
-				session.whipOutput = decodeURIComponent(whippush);
+				if (session.whipOutput == 'twitch'){
+					session.whipOutput = "https://g.webrtc.live-video.net:4443/v2/offer";
+					query("#publishOutToken input[type='password']").placeholder = "Twitch stream token here";
+				} else {
+					session.whipOutput = decodeURIComponent(session.whipOutput);
+				}
 			} catch(e){
 				errorlog(e);
 			}
+		} else {
+			getById("publishOutURL").classList.remove("hidden");
 		}
+		
 	}
 	if (urlParams.has('whippushtoken') || urlParams.has('whipouttoken') || urlParams.has('pushwhiptoken')) {// URL or data:base64 image. Becomes local to this viewer only.  This is like &avatar, but slightly different. Just CSS in this case
 		session.whipOutputToken = urlParams.get('whippushtoken') || urlParams.get('whipouttoken') || urlParams.get('pushwhiptoken') || false;
+		if (!session.whipOutputToken){
+			getById("publishOutToken").classList.remove("hidden");
+		}
 	}
 	
 	if (urlParams.has('whepplay')) { // URL or data:base64 image. Becomes local to this viewer only.  This is like &avatar, but slightly different. Just CSS in this case
@@ -318,6 +329,17 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 			}
 		}
 	}
+	if (urlParams.has('whepplaytoken')) { // URL or data:base64 image. Becomes local to this viewer only.  This is like &avatar, but slightly different. Just CSS in this case
+		if (urlParams.get('whepplaytoken')){
+			try {
+				session.whepInputToken = urlParams.get('whepplaytoken')
+			} catch(e){
+				errorlog(e);
+			}
+		}
+	}
+	
+	
 	if (urlParams.has('whepplaytoken')) { // URL or data:base64 image. Becomes local to this viewer only.  This is like &avatar, but slightly different. Just CSS in this case
 		if (urlParams.get('whepplaytoken')){
 			try {
@@ -414,6 +436,25 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 		}
 	}
 	
+	
+	if (urlParams.has('broadcasttransfer') || urlParams.has('bct')) {
+		log("Broadcast transfer flag set");
+		session.broadcastTransfer = urlParams.get('broadcasttransfer') || urlParams.get('bct') || null;
+		if (session.broadcastTransfer === "false") {
+			session.broadcastTransfer = false;
+		} else if (session.broadcastTransfer=== "0") {
+			session.broadcastTransfer = false;
+		} else if (session.broadcastTransfer === "no") {
+			session.broadcastTransfer = false;
+		} else if (session.broadcastTransfer === "off") {
+			session.broadcastTransfer = false;
+		} else {
+			session.broadcastTransfer = true;
+		}
+		if (transferSettings){
+			transferSettings.broadcast = session.broadcastTransfer;
+		}
+	}
 	
 	if (urlParams.has('broadcast') || urlParams.has('bc')) {
 		log("Broadcast flag set");
@@ -567,6 +608,7 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 
 	if (urlParams.has('showdirector') || urlParams.has('sd')) {
 		session.showDirector = parseInt(urlParams.get('showdirector')) || parseInt(urlParams.get('sd')) || true; // if 2, video only allowed.  True or 1 will be video + audio allowed.
+		// fyi,  true is the same as 1 when == is used, so assert(1==true) is true.
 	}
 	
 	if (urlParams.has('bitratecutoff') || urlParams.has('bitcut')) {
@@ -623,6 +665,11 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 	document.addEventListener('fullscreenchange', event => {
 		log("full screen change event");
 		log(event);
+		
+		if (document.getElementById("previewWebcam")){
+			return;	
+		}
+		
 		if (session.orientation && session.mobile){
 			if (document.fullscreenElement) {
 				document.exitFullscreen();
@@ -751,6 +798,8 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 		getById("container-5").classList.add("skip-animation");
 		getById("container-5").classList.remove('pointer');
 		
+		getById("sharefilebutton").style.display = "flex";
+		
 		if (SafariVersion){
 			getById("safari_warning_fileshare").classList.remove('hidden');
 		} else if (!Firefox){
@@ -810,6 +859,10 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 	}
 	if (urlParams.has('displaysurface')){ // browser, window, or monitor (which is default selected)
 		session.displaySurface = urlParams.get('displaysurface') || "monitor";
+	}
+	
+	if (urlParams.has('locksize')){ // browser, window, or monitor (which is default selected)
+		session.lockWindowSize = urlParams.get('locksize') || true;
 	}
 	
 	if (urlParams.has('intro') || urlParams.has('ib')) {
@@ -1118,12 +1171,24 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 		getById("mutetoggle").style.top = "unset";
 
 	}
+	
+	if (urlParams.has('nosettings')){
+		session.nosettings = true;
+		getById("settingsbutton").classList.add("hidden");
+	}
+	
+	if (urlParams.has('publish')){
+		session.publish = true;
+		getById("publishSettings").style.display = "block";
+	}
 
 	if (urlParams.has('nopush') || urlParams.has('noseed') || urlParams.has('viewonly') || urlParams.has('viewmode')) { // this is like a scene; Seeding is disabled. Can be used with &showall to show all videos on load 
 		session.doNotSeed=true;
-		session.scene = null; // not a scene, but sorta. false vs null makes a difference here. 
-		session.videoDevice = 0;
-		session.audioDevice = 0;
+		
+		if (session.scene===false){
+			session.scene = null; // not a scene, but sorta. false vs null makes a difference here. 
+		}
+		
 		session.dataMode = true; // thios will let us connect
 		// session.showall = true; // this can be used to SHOW the videos. (&showall)
 	}
@@ -1167,8 +1232,12 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 	}
 	
 	if (session.dataMode){
-		session.videoDevice = 0;
-		session.audioDevice = 0; 
+		
+		if (!(session.meshcast || (session.whipOutput!==false) || session.screenshare)){
+			session.videoDevice = 0;
+			session.audioDevice = 0;
+		}
+		
 		getById("mainmenu").classList.add("hidden");
 		//session.autohide = true;
 		//session.autostart = true;
@@ -2255,6 +2324,15 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 		}, session.forceRetry*1000);
 	}
 	
+	session.dbx = false;
+	if (urlParams.get('dropbox')){
+		loadScript("https://cdnjs.cloudflare.com/ajax/libs/dropbox.js/10.34.0/Dropbox-sdk.min.js", ()=>{
+			log("Loaded dropbox SDK");
+			var accessToken = urlParams.get('dropbox');
+			session.dbx = new Dropbox.Dropbox({ accessToken: accessToken });
+		});
+	}
+	
 	try {
 		if (urlParams.has("darkmode") || urlParams.has("nightmode")){
 			session.darkmode = urlParams.get("darkmode") || urlParams.get("nightmode") || null;
@@ -2540,6 +2618,10 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 	
 	if (urlParams.has('slots')) {
 		session.slots = parseInt(urlParams.get('slots')) || 4;
+	}
+	
+	if (urlParams.has('alpha')) {
+		session.alpha = true;
 	}
 	
 	if (urlParams.has('chunked')) {
@@ -3107,7 +3189,10 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 		log("max channels is 32; channels offset");
 		session.audioEffects = true;
 	}
-
+	if (urlParams.get('playchannel')) { // must be loaded before channelOffset
+		session.playChannel = parseInt(urlParams.get('playchannel')); // for audio output ; not input. see: &channelcount instead.
+		session.audioEffects = true;
+	}
 	if (urlParams.has('enhance')) {
 		//if (parseInt(urlParams.get('enhance')>0){
 		session.enhance = true; //parseInt(urlParams.get('enhance'));
@@ -4070,6 +4155,28 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 		session.screenShareLabel = session.screenShareLabel.replace(/_/g, " ")
 	}
 	
+	if (urlParams.has('whepshare') || urlParams.has('whepsrc')) { // URL or data:base64 image. Becomes local to this viewer only.  This is like &avatar, but slightly different. Just CSS in this case
+		try {
+			
+			session.whepSrc = urlParams.get('whepshare') || urlParams.get('whepsrc') || false;
+			console.log(session.whepSrc);
+			if (!session.whepSrc){
+				session.whepSrc = await promptAlt("Enter the WHEP source as a URL");
+			} else {
+				session.whepSrc = decodeURIComponent(session.whepSrc, true);
+			}
+			getById("container-6").classList.remove('hidden');
+			getById("container-6").classList.add("skip-animation");
+			getById("container-6").classList.remove('pointer');
+			
+			if (session.whepSrc){
+				delayedStartupFuncs.push([shareWebsite, session.whepSrc]);
+			}
+		} catch(e){
+			errorlog(e);
+		}
+	}
+	
 	if (session.roomid!==false){
 		if (!(session.cleanOutput)) {
 			if (session.roomid === "test") {
@@ -4474,6 +4581,10 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 		getById("main").onmouseover = showControl; // this is correct. (it's not session.showControls)
 		document.ontouchstart = showControl; // this is correct. (it's not session.showControls)
 		getById("gridlayout").classList.add("nocontrolbar");
+	}
+	
+	if (urlParams.has('experimental')) {
+		session.experimental = true;
 	}
 	
 	if (urlParams.has('flagship')) {
@@ -5540,37 +5651,44 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 	});
 
 	window.addEventListener("online", function (e) {
+		
 		log("Back ONLINE");
 		closeModal();
+		
+		if (!session.onceConnected){ // never connected to websockets before. Let's not trigger retryWatchInterval if we don't have to.
+			return;	
+		}
 		
 		if (!session.retryWatchInterval()){ // ask for the streams again to watch
 			session.ping(); // if no streams requested, let's ping instead.
 		}
 	});
 
-	function updateConnectionStatus() {
+	/* function updateConnectionStatus() { // no longer works in chrome.
 		
 		try{
 			if (!session.stats){
 				return;
 			}
-				
-			log("Connection type changed from " + session.stats.network_type + " to " + Connection.type);
 			
-			if (session.stats.network_type && (session.stats.network_type !== Connection.type)){
-				var miniInfo = {};
-				miniInfo.con = Connection.type;
-				session.sendMessage({"miniInfo":miniInfo});
+			if (Connection.type){
+				log("Connection type changed from " + session.stats.network_type + " to " + Connection.type);
 				
-				if (!session.retryWatchInterval()){ // ask for the streams again to watch
+				if (session.stats.network_type && (session.stats.network_type !== Connection.type)){
+					var miniInfo = {};
+					miniInfo.con = Connection.type;
+					session.sendMessage({"miniInfo":miniInfo});
+					
+					if (!session.retryWatchInterval()){ // ask for the streams again to watch
+						session.ping(); // if no streams requested, let's ping instead.
+					}
+					
+				} else { // connection state changed, but doesn't seem like it actually changed...
 					session.ping(); // if no streams requested, let's ping instead.
 				}
 				
-			} else { // connection state changed, but doesn't seem like it actually changed...
-				session.ping(); // if no streams requested, let's ping instead.
+				session.stats.network_type = Connection.type;
 			}
-			
-			session.stats.network_type = Connection.type;
 			
 		} catch(e){warnlog(e);}
 		
@@ -5579,10 +5697,12 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 	try {
 		var Connection = navigator.connection || navigator.mozConnection || navigator.webkitConnection;
 		if (Connection){
-			session.stats.network_type = Connection.type
+			if (Connection.type){
+				session.stats.network_type = Connection.type
+			}
 			Connection.addEventListener('change', updateConnectionStatus);
 		}
-	} catch (e) {log(e);} // effectiveType is not yet supported by Firefox or Safari; 2021
+	} catch (e) {log(e);} // effectiveType is not yet supported by Firefox or Safari; 2021 */
 
 	
 	setInterval(function() {

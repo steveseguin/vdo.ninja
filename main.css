@@ -1165,9 +1165,7 @@ hr {
     margin: 0;
 }
 .queueNotification {
-	position: relative;
-	top: -40px;
-	right: -33px;
+	
 	padding: 2px 0;
 	border-radius: 50%;
 	background: #335c3a;
@@ -1284,6 +1282,22 @@ button#press2talk{
     position: relative;
 }
 
+button.btnArmTransferRoom{
+	width:auto;
+	margin-left: 2px;
+	height:38px;
+	border-radius: 15px;
+}
+button.btnArmTransferRoom i{
+	margin-right:3px;
+}
+button.btnArmTransferRoom:hover{
+	background-color: var(--green-accent)!important;
+}
+
+button.btnArmTransferRoom.selected{
+	background-color: #840000!important;
+}
 
 #container.vidcon {
 	height:100%;
@@ -1354,22 +1368,6 @@ button#press2talk{
 	100% { transform: translate(1px, -2px) rotate(-1deg); }
 }
 
-button.btnArmTransferRoom{
-	width:auto;
-	margin-left: 2px;
-	height:38px;
-	border-radius: 15px;
-}
-button.btnArmTransferRoom i{
-	margin-right:3px;
-}
-button.btnArmTransferRoom:hover{
-	background-color: var(--green-accent);
-}
-
-button.btnArmTransferRoom.selected{
-	background-color: #840000;
-}
 
 @media only screen and (max-height: 540px){
 	#gridlayout>#container.vidcon {
@@ -1602,7 +1600,7 @@ body.darktheme{
 .gowebcam:enabled {
 	background-color: #26e726 !important;
 	background: radial-gradient(#26e726, #2EeF2E);
-	color: black;
+	color: black!important;
 	font-weight: bold !important;
 	box-shadow: 0 0 31px 0px #244e1c44;
     animation: pulsate 2s ease-out infinite;
@@ -1725,7 +1723,7 @@ input[type=range]::-webkit-slider-thumb {
     box-shadow: 1px 1px 1px #000,0 0 1px #0d0d0d;
     border: 1px solid #000;
     height: 24px;
-    width: 14px;
+    width: 24px;
     border-radius: 3px;
     cursor: pointer;
     -webkit-appearance: none;
@@ -1737,7 +1735,7 @@ input[type=range]::-moz-range-thumb {
     box-shadow: 1px 1px 1px #000,0 0 1px #0d0d0d;
     border: 1px solid #000;
     height: 24px;
-    width: 14px;
+    width: 24px;
     border-radius: 3px;
     cursor: pointer;
 	background-color: var(--lighttheme-2);
@@ -1747,7 +1745,7 @@ input[type=range]::-ms-thumb {
     box-shadow: 1px 1px 1px #000,0 0 1px #0d0d0d;
     border: 1px solid #000;
     height: 24px;
-    width: 14px;
+    width: 24px;
     border-radius: 3px;
     cursor: pointer;
 	background-color: var(--lighttheme-2);
@@ -1848,7 +1846,7 @@ div#chatBody a {
     display: flex;
     flex-wrap: wrap;
     width: 100%;
-    max-width: min(500px, 100vh);
+    max-width: min(500px, 100vw);
     z-index: 3;
     margin-bottom: 65px;
     gap: 0px 5px;
@@ -1857,11 +1855,11 @@ div#chatBody a {
 #chatInput {
 	color: #000;
 	background-color: #FFFE;
-	width: 70%;
+	width: calc(100% - 160px);
 	padding: 3px;
 }
 .chatBarInputButton {
-	width: calc(30% - 5px);
+	width: 50px;
     margin: unset;
 }
 
@@ -3426,10 +3424,12 @@ div#roomnotes2 {
 }
 .directorBlue{
 	background-color: #5c7785 !important;
+	display: var(--show-codirectors) !important;
 	
 }
 .directorBox{
 	background-color: #606383 !important;
+	display: var(--show-codirectors) !important;
 }
 /* ---- DIRECTORS PAGE - Guest Controls Box ---- */
 .controlsGrid {
@@ -3946,6 +3946,7 @@ a#reshare {
 	border-radius: 2vh;
 	pointer-events:none;
 	border: 1px black solid;
+	z-Index: 2;
 }
 
 .video-meter-2 {
@@ -3962,6 +3963,7 @@ a#reshare {
 	border-radius: 5px;
 	pointer-events:none;
 	border: 5px green solid;
+	z-Index: 2;
 }
 
 .video-meter-director {
@@ -3984,6 +3986,7 @@ a#reshare {
 	pointer-events:none;
 	border: 1px black solid;
 	transition: height 0.1s ease, background-color 0.1s ease;
+	z-Index: 2;
 }
 
 
@@ -4028,6 +4031,7 @@ a#reshare {
 	border-radius: 2vh;
 	background-color:#b11313;
 	padding: 2px 2px 2px 1px;
+	z-index: 2;
 }
 
 .video-mute-state-userlist {
@@ -4290,6 +4294,23 @@ input:checked + .slider:before {
 	color: black;
 	font-size: 1.0em;
 	bottom: 5%;
+	left: 50%;
+	transform: translate(-50%, 0%);
+	border-radius: 10px;
+	font-weight: bold;
+	z-index:31;
+	width:550px;
+	max-width:100%;
+	overflow: hidden;
+	overflow-wrap: break-word;
+}
+#publishSettings{
+	position: absolute;
+	background-color: #ddddddee;
+	box-shadow: 0 0 30px 10px #0000005c;
+	color: black;
+	font-size: 1.0em;
+	bottom: calc(50% - 130px);
 	left: 50%;
 	transform: translate(-50%, 0%);
 	border-radius: 10px;
@@ -4953,12 +4974,12 @@ button:hover {
 button i {
     font-size: 130%;
 }
-.darktheme button {
+.darktheme :not(.promptModalInner) > button {
     background-color: var(--discord-grey-5);
     border: 1px solid var(--discord-grey-8);
     color: var(--discord-text);
 }
-.darktheme button:hover {
+.darktheme :not(.promptModalInner) > button:hover {
     filter: brightness(1.05);
 }
 
@@ -5080,13 +5101,13 @@ input[type='checkbox'], input[type='radio'] {
 }
 
 
-.darktheme input {
+.darktheme :not(.promptModalInner) > input {
     border: 1px solid var(--discord-grey-8);
     color: var(--near-black);
     border-radius: 4px;
 }
 
-.darktheme input::placeholder {
+.darktheme :not(.promptModalInner) > input::placeholder {
     color: var(--discord-grey-8) !important;
 }
 
@@ -5105,7 +5126,6 @@ input[type='checkbox'], input[type='radio'] {
 .container-inner {
 	display: none;
     background-color: var(--lighttheme-3);
-	max-height: 100%;
 	min-height: calc(100% - 100px);
 	margin-bottom:30px;
 }
@@ -5222,41 +5242,6 @@ input[type='checkbox'], input[type='radio'] {
 .disable {
 	opacity: 0.5;
     cursor: not-allowed;
-}
-
-/* Buttons to disable due to them being a director */
-.directorBoxColor button[data-action-type="hangup"],
-.directorBoxColor button[data-action-type="toggle-remote-speaker"],
-.directorBoxColor button[data-action-type="toggle-remote-display"],
-.directorBoxColor button[data-action-type="mute-video-guest"],
-.directorBoxColor button[data-action-type="advanced-camera-settings"],
-.directorBoxColor button[data-action-type="advanced-audio-settings"],
-.directorBoxColor button[data-action-type="order-down"],
-.directorBoxColor button[data-action-type="order-up"],
-.directorBoxColor button[data-action-type="toggle-group"],
-.directorBoxColor button[data-action-type="mute-guest"],
-.directorBoxColor .tooltip {
-    opacity: 0.5;
-    cursor: not-allowed;
-    pointer-events: none;
-}
-
-.directorBoxColor {
-    border: 2px solid var(--director-box);
-    box-shadow: 0px 0px 15px var(--director-box);
-    display: var(--show-codirectors) !important;
-}
-
-.darktheme .codirectorBoxColor {
-    border: 2px solid var(--codirector-dark-box);
-    box-shadow: 0px 0px 15px var(--codirector-dark-box);
-    display: var(--show-codirectors) !important;
-}
-
-.codirectorBoxColor {
-    border: 2px solid var(--codirector-box);
-    box-shadow: 0px 0px 15px var(--codirector-box);
-    display: var(--show-codirectors) !important;
 }
 
 .darktheme .invite_setting_group {

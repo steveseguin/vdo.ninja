@@ -293,18 +293,18 @@
 	</style>
 </head>
 <body>
-	<div id="header" style="-webkit-app-region: drag; color:#6f6f6f;font-size:20px; line-height: 20px; padding: 5px 10px; letter-spacing: 3; font-weight: bold;">WHIP / WHEP simple sample setup</div>
+	<div id="header" style="-webkit-app-region: drag; color:#6f6f6f;font-size:20px; line-height: 20px; padding: 5px 10px; letter-spacing: 3; font-weight: bold;">Publish VDO.Ninja video mix to Twitch</div>
 	
 		<div class="container">
 				<div id="urlInput1" class="urlInput" title="Put the link you want to load here">
 					
-					<h3>Publish a video from VDO.Ninja to a WHIP ingestion end-point</h3>
+					<h3>Publish a video from VDO.Ninja Scene or View link to Twitch directly</h3>
 					
 					<div  class="inputCombo" id="inputCombo1">
 						<label for="changeText">
 							<i class="las la-upload"></i>
 						</label>
-						<input type="text" id="changeText1" class="inputfield changeText" placeholder="WHIP Publishing URL" />
+						<input type="text" id="changeText1" class="inputfield changeText" placeholder="VDO.Ninja scene link to publish" />
 						<button  onclick="gohere1();" class="gobutton" id="gobutton1">GO</button>
 					</div>
 					<div class="inputCombo" style="width:350px;margin:10 0 10 auto;">
@@ -312,119 +312,30 @@
 						<div class="details">⚙️</div>
 					</div>
 				</div>
-				
-				<div id="urlInput1" class="urlInput" title="Put the link you want to load here">
-					
-					<h3>Publish a video from VDO.Ninja to your Twitch channel</h3>
-					
-					<div  class="inputCombo" id="inputCombo1t">
-						<label for="changeText">
-							<i class="las la-upload"></i>
-						</label>
-						<input type="password" id="changeText1t" class="inputfield changeText" placeholder="Enter your Twitch stream token here" />
-						<button  onclick="gohere1t();" class="gobutton" id="gobutton1t">GO</button>
-					</div>
-				</div>
-				
-				<div id="urlInput2"  class="urlInput"title="Put the WHIP token you want to listen for">
-					
-					<h3>Setup VDO.Ninja to be a WHIP-ingestion end-point (ie: OBS -> VDO)</h3>
-					
-					<div class="inputCombo" id="inputCombo2">
-						<label for="changeText">
-						<i class="las la-play"></i>
-					</label>
-						<input type="text" id="changeText2" class="inputfield changeText" placeholder="Ingest WHIP token" />
-						<button  onclick="gohere2();"  class="gobutton" id="gobutton2">GO</button>
-					</div>
-					<h3 style="text-align: center;color:#ccc;"><i>The WHIP endpoint for VDO.Ninja is <b>https://whip.vdo.ninja</b></i></h3>
-				</div>
-				
-				<div id="urlInput3"  class="urlInput"title="Put the link you want to play here">
-					
-					<h3>Play a remote video stream available via WHEP</h3>
-					
-					<div  class="inputCombo" id="inputCombo3">
-						<label for="changeText">
-						<i class="las la-play"></i>
-					</label>
-						<input type="text" id="changeText3" class="inputfield changeText"  placeholder="WHEP Play URL" />
-						<button  onclick="gohere3();"  class="gobutton" id="gobutton3">GO</button>
-					</div>
-				</div>
-				
-				<div id="urlInput4" style="display:none;"  class="urlInput" title="Put the link you want to load here">
-					
-					<div  class="inputCombo" id="inputCombo4">
-					<label for="changeText">
-						<i class="las la-broadcast-tower"></i>
-					</label>
-						<input type="text" id="changeText4" class="inputfield changeText"  placeholder="WHEP Enabled Publishing Link" />
-						<button  onclick="gohere4();"  class="gobutton" id="gobutton4">GO</button>
-					</div>
-				</div>
-				
-				<div id="history" title="History of past links used. You can clear this history using the button to the left">
-					<label for="lastUrls" onclick="resetHistory()">
-						<i class="las la-history"></i>
-					</label>
-				</div>
 		</div>
 <script>
 
 var domain = "./";
 
 document.querySelector("#changeText1").value = localStorage.getItem('changeText1') || "";
-document.querySelector("#changeText1t").value = localStorage.getItem('changeText1t') || "";
 document.querySelector("#changeText1a").value = localStorage.getItem('changeText1a') || "";
-document.querySelector("#changeText2").value = localStorage.getItem('changeText2') || "";
-document.querySelector("#changeText3").value = localStorage.getItem('changeText3') || "";
-
 function gohere1(){
-	if (document.getElementById('changeText1').value && document.getElementById('changeText1a').value){
-		localStorage.setItem('changeText1', document.getElementById('changeText1').value);
-		localStorage.setItem('changeText1a', document.getElementById('changeText1a').value);
-		window.location = domain + "?push&whippush=" + encodeURIComponent(document.getElementById('changeText1').value) + "&whippushtoken=" + document.getElementById('changeText1a').value;
-	} else if (document.getElementById('changeText1').value){
-		localStorage.setItem('changeText1', document.getElementById('changeText1').value);
-		localStorage.setItem('changeText1a', "");
-		window.location = domain + "?push&whippush=" + encodeURIComponent(document.getElementById('changeText1').value);
-	}
+	localStorage.setItem('changeText1', document.getElementById('changeText1').value);
+	localStorage.setItem('changeText1a', document.getElementById('changeText1a').value);
+	
+	var URL = document.getElementById('changeText1').value;
+	URL+="&clean&chroma=000&ssar=landscape&nosettings&prefercurrenttab&selfbrowsersurface=include&displaysurface=browser&np&nopush&publish&whippush=https%3A%2F%2Fg.webrtc.live-video.net%3A4443%2Fv2%2Foffer&whippushtoken="+document.querySelector("#changeText1a").value;
+	var win = window.open( URL ,'targetWindow', 'toolbar=no,location=no,status=no,scaling=no,menubar=no,scrollbars=no,resizable=no,width=1280,height=720');
+	win.focus();
+	win.resizeTo(1280,720);
 	
 }
 
-function gohere1t(){
-	if (document.getElementById('changeText1t').value){
-		localStorage.setItem('changeText1t', document.getElementById('changeText1t').value);
-		window.location = domain + "?push&whippush=https%3A%2F%2Fg.webrtc.live-video.net%3A4443%2Fv2%2Foffer&whippushtoken="+ document.getElementById('changeText1t').value;
-	}
-}
-
-function gohere2(){
-	if (document.getElementById('changeText2').value){
-		localStorage.setItem('changeText2', document.getElementById('changeText2').value);
-		window.location = domain + "?hidemenu&whip=" + document.getElementById('changeText2').value;
-	}
-}
-
-function gohere3(){
-	if (document.getElementById('changeText3').value){
-		localStorage.setItem('changeText3', document.getElementById('changeText3').value);
-		window.location = domain + "?&hidemenu&whepplay=" + encodeURIComponent(document.getElementById('changeText3').value);
-	}
-}
-
-function gohere4(){
-	// nothing yet
-}
 
 function resetHistory(){
 	localStorage.clear();
 	document.querySelector("#changeText1").value = "";
 	document.querySelector("#changeText1a").value = "";
-	document.querySelector("#changeText2").value = "";
-	document.querySelector("#changeText3").value = "";
-	document.querySelector("#changeText1t").value = "";
 }
 
 (function (w) {

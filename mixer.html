@@ -2399,6 +2399,19 @@
 		document.getElementById("sources").appendChild(a);
 		
 		
+		var button = document.createElement("button");
+		button.innerHTML = "Publish to Twitch";
+		button.id = "publishTwitch";
+		button.onclick = function(){
+			var URL = window.location.href.replace("/mixer","");
+			URL+="/?scene=0&layout&remote&room="+roomname+additional;
+			URL+="&clean&chroma=000&ssar=landscape&nosettings&prefercurrenttab&selfbrowsersurface=include&displaysurface=browser&np&nopush&publish&whippush=twitch&whippushtoken";
+			var win = window.open( URL ,'targetWindow', 'toolbar=no,location=no,status=no,scaling=no,menubar=no,scrollbars=no,resizable=no,width=1280,height=720');
+			win.focus();
+			win.resizeTo(1280,720);
+		};
+		document.getElementById("sources").appendChild(button);
+	
 		var slots = document.getElementById("col1").children;
 		for (var i=0;i<slots.length;i++){
 			slots[i].style.backgroundColor = colors[i];
