@@ -2,6 +2,13 @@
 
 [electron-capture.md](../steves-helper-apps/electron-capture.md "mention")
 
+#### June 2
+
+*   Electron Capture updated to the newest version, along with some global hot key changes that some users reported were having issues.
+
+    [https://github.com/steveseguin/electroncapture/releases/tag/2.17.3](https://github.com/steveseguin/electroncapture/releases/tag/2.17.3)\
+    (Mac and Windows added)
+
 #### April 8
 
 * Electron Capture has been updated for both Windows and Mac. [https://github.com/steveseguin/electroncapture/releases/tag/2.17.2](https://github.com/steveseguin/electroncapture/releases/tag/2.17.2)\

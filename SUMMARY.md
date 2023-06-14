@@ -366,6 +366,7 @@
     * [\&orderby](newly-added-parameters/and-orderby.md)
     * [\&queue](general-settings/queue.md)
     * [\&rooms](director-settings/rooms.md)
+    * [\&broadcasttransfer (alpha)](advanced-settings/director-parameters/and-broadcasttransfer-alpha.md)
     * [\&showdirector](viewers-settings/and-showdirector.md)
     * [\&slotmode](advanced-settings/director-parameters/and-slotmode.md)
     * [\&previewmode](advanced-settings/director-parameters/and-previewmode.md)

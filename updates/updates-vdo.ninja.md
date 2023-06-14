@@ -1,5 +1,42 @@
 # Updates - VDO.Ninja
 
+#### June 14 <a href="#august-31" id="august-31"></a>
+
+* I've added [`&broadcasttransfer`](../advanced-settings/director-parameters/and-broadcasttransfer-alpha.md) (aka `&bct`) as a URL option, which will let you specify the default for whether to transfer a guest from room to room in broadcast mode or not. Mainly useful for when using [`&rooms`](../director-settings/rooms.md), since there isn't a transfer menu option when using it, since its more of a hotkey option.
+* I made some fixes to the UI as well, related to [`&queue`](../general-settings/queue.md) and [`&rooms`](../director-settings/rooms.md) and the upload button (which is now part of the chat pop up).
+* When a guest has a network disconnection with the handshake server while in a transfer room, I do a better job properly closing all existing peer to peer connections, and putting the guest back into the main lobby room. The improved logic also works with [`&include`](../advanced-settings/mixer-scene-parameters/and-include.md), so if you specify a stream via [`&include`](../advanced-settings/mixer-scene-parameters/and-include.md) that isn't in a room, it won't be disconnected like other non-excepted stream IDs.
+
+\*\* changes on alpha
+
+#### June 8 <a href="#august-31" id="august-31"></a>
+
+* Updated production with some fixes, such as director's view has the guest mute state working again, stats work with screen sharing in [`screensharetype=3`](../newly-added-parameters/and-screensharetype.md) mode, green screen updates, and a few UI glitches.
+
+#### June 7 <a href="#august-31" id="august-31"></a>
+
+* A recent change in Chrome I think broke the digital green screen effect in VDO.Ninja. I pushed a fix to alpha for testing:\
+  [https://vdo.ninja/alpha/?effects=4\&webcam](https://vdo.ninja/alpha/?effects=4\&webcam)
+* Updated the background removal effect logic; trying out a few methods of trying to clean up the edges\
+  \*\* on alpha for testing: [https://vdo.ninja/alpha/?effects=4\&webcam](https://vdo.ninja/alpha/?effects=4\&webcam)\
+  ![](<../.gitbook/assets/image (28).png>)
+
+#### June 6 <a href="#august-31" id="august-31"></a>
+
+*   Bug fix: Firefox forgot to make this [new 'active' feature](updates-vdo.ninja.md#august-31-7) of theirs work with audio tracks, which caused a recent issue here with solo-talk + Firefox users.
+
+    \
+    I think I've fixed the issue for now though, by having audio-tracks still use the old method of muting Firefox streams, while allowing video tracks to still use the new method.\
+    \
+    I've pushed this fix to alpha for the time being; testing welcomed. I've also submitted a bug report to the Firefox devs.
+
+#### June 4 <a href="#august-31" id="august-31"></a>
+
+* Fixed a recent Meshcast issue where the director wasn't able to select the Meshcast server manually before going live.
+* Fixed an issue where if you joined as a guest via iOS, if you didn't select video when joining, you couldn't enable your camera later via settings.
+* Fixed an issue (i hope) where joining as a guest via iOS without selecting your camera caused a black video to play full screen until closed. (seems like it was caused by a recent UX/security decision on apple's part? so this may end up being just a temporary hack if apple keeps poking at this new concept).
+
+\*on alpha
+
 #### June 2 <a href="#august-31" id="august-31"></a>
 
 *   Fixed a recent issue where the director's screen share would appear in the OBS scene (not their webcam though), without having [`&showdirector`](../viewers-settings/and-showdirector.md) added.

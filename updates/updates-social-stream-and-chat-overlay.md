@@ -3,6 +3,10 @@
 [social-stream.md](../steves-helper-apps/social-stream.md "mention")\
 [chat-overlay.md](../steves-helper-apps/chat-overlay.md "mention")
 
+#### **June 4**
+
+* Fixed some Social Stream issues where `&random` caused messages to appear off screen at times in OBS.
+
 #### **May 30**
 
 * TikTok stream events fixed for Socialstream, along with some odysee and a few other fixes pushed.
