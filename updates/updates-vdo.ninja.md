@@ -268,7 +268,7 @@
 #### April 11 <a href="#august-31" id="august-31"></a>
 
 * The VDO.Ninja's director's interface and control bar UI style has been further updated on alpha. (design improvements by Lindenkron)\
-  ![](<../.gitbook/assets/image (10) (2).png>)
+  ![](<../.gitbook/assets/image (10) (3).png>)
 * The Social Stream and VDO.Ninja HTTP/WSS remote API server went thru some changes; let me know if you have any sudden new issues
 * If having issues with [Meshcast](../steves-helper-apps/meshcast.io.md) and iPhone/iPad users (video being black), I pushed a patch to vdo.ninja/alpha/ and meshcast.io (either will work). I've partially updated [`&meshcast`](../newly-added-parameters/and-meshcast.md) on production with a fix also, but I won't be able to fully fix it on production probably until late tonight.
 

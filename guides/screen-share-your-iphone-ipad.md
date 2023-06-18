@@ -4,9 +4,17 @@ description: How to screen-share your iPhone or iPad to VDO.Ninja
 
 # How to screen share your iPhone/iPad
 
-If on iOS, there isn't an option available to screen share from within the browser or native iOS app, but you can wirelessly airplay your screen to a computer, and then window capture that output.
+If on iOS, there isn't an option available to screen share from within the browser (Safari), but there are some alternatives.
 
-Better than Airplay though, if you can connect your iPhone to a mac via USB, QuickTime supports USB-connected access to an iPhone's camera. This does not require any downloads and offers a high-quality stream. Using a virtual audio device, you can even capture IOS audio with this method.
+One recently added way to screen share is with the VDO.Ninja native mobile app. It now supports screen sharing, however system audio capture may be missing.
+
+{% content-ref url="../steves-helper-apps/native-mobile-app-versions.md" %}
+[native-mobile-app-versions.md](../steves-helper-apps/native-mobile-app-versions.md)
+{% endcontent-ref %}
+
+Another option to screen share is to use Apple Airplay to wirelessly cast your screen to a computer, and then window capture that output.
+
+Better than Airplay though, if you can connect your iPhone to a mac via USB, as QuickTime supports USB-connected access to an iPhone's camera. This does not require any downloads and offers a high-quality stream. Using a virtual audio device, you can even capture IOS audio with this method.
 
 In this guide we will show you how to screen-share to VDO.Ninja using QuickTime over USB with a Macbook and an iPhone. On Windows, you may wish to use Airplay instead, leveraging one of the free Airplay clients designed for PC.
 
