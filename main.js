@@ -2359,6 +2359,7 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 			//document.querySelector(':root').style.setProperty('--background-color',"#02050c" );
 		} else {
 			document.body.classList.remove("darktheme");
+			//document.querySelector(':root').style.setProperty('--background-color',"#141926" ); // already set as default. 
 		}
 	} catch(e){errorlog(e);}
 	
