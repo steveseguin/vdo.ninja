@@ -5284,13 +5284,13 @@ input[type='checkbox'], input[type='radio'] {
 	text-align: right;
 }
 #popupSelector label {
-	color: black;
+	color: #fff;
 }
 .darktheme #popupSelector label {
 	color: white;
 }
 #popupSelector .multiselect-contents label{
-	color: black;
+	color: #fff;
 }
 #popupSelector select {
 	padding: 4px;
