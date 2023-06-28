@@ -5162,8 +5162,8 @@ input[type='checkbox'], input[type='radio'] {
 .darktheme #videoSettings2,
 .darktheme #popupSelector_user_settings,
 .darktheme .invite_setting_group {
-    background-color: var(--discord-grey-5);
-    border: 1px solid var(--discord-grey-8);
+    background-color: transparent;
+    border: 0px solid var(--discord-grey-8);
 }
 .darktheme .largeDarkIcon{
 	color: var(--dark-background-color); 
@@ -5319,7 +5319,7 @@ input[type='checkbox'], input[type='radio'] {
 	color:white;
 }
 ul#audioSource{
-	background-color: var(--lighttheme-1);
+	background-color: transparent;
     margin-top: 7px;
 	min-height: 24px;
 }
@@ -5328,7 +5328,7 @@ ul#audioSource label{
     border: 0;
 }
 ul#audioSource label{
-	color:black;
+	color: #fff;
 }
 ul#audioSource3{
     background-color: var(--lighttheme-1);
