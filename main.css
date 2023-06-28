@@ -5268,7 +5268,7 @@ input[type='checkbox'], input[type='radio'] {
 }
 
 #popupSelector {
-	background: linear-gradient(6deg, rgba(221, 221, 221, 0) 4%, rgb(0,0,0, 0.5) 30%, #646878A0 100%);
+	background: transparent;
 	transition: all 0.2s linear 0s;
     padding: 10px;
 	position: fixed;
