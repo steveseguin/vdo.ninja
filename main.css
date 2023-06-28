@@ -222,6 +222,7 @@ th {
 	height: 10px;
 	background: red;
 	transition: all 25ms linear;
+	float: left;
 }
 .meter4 {
 	display: inline-block;
