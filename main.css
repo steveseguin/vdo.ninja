@@ -5267,13 +5267,14 @@ input[type='checkbox'], input[type='radio'] {
 	position: fixed;
 	top: 0px;
 	height: 100%;
-    width: 505px;
-    max-width: 100%;
+    width: 25vw;
+    max-width: 350px;
 	right: -500px;
 	overflow: auto;
 	z-index: 4;
 	-webkit-app-region: no-drag;
 	padding-bottom: 80px;
+	text-align: right;
 }
 #popupSelector label {
 	color: black;
