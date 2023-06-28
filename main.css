@@ -5217,9 +5217,11 @@ input[type='checkbox'], input[type='radio'] {
 #videoSettings,
 #videoSettings2,
 .invite_setting_group {
-    background-color: var(--lighttheme-2);
-    border: 1px solid var(--lighttheme-4); 
+    background-color: transparent;
+    border: 0px solid var(--lighttheme-4); 
     text-align: right;
+    color: #fff;
+    text-shadow: 0 0 1px #fff;
 }
 
 #videoSettings, #videoSettings2 {
