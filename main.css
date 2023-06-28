@@ -206,6 +206,8 @@ th {
 	height: 10px;
 	background: green;
 	transition: all 100ms linear;
+	float: left;
+	margin: 0 3px;
 }
 .meter2 {
 	display: inline-block;
