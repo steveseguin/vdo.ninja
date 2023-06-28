@@ -5100,8 +5100,8 @@ input[type='checkbox'], input[type='radio'] {
 	transform: scale(1.4);
 	padding: 5px;
     margin: 3px;
-
-    cursor:pointer;
+    cursor: pointer;
+    float: right;
 }
 
 
@@ -5333,6 +5333,7 @@ ul#audioSource label{
 ul#audioSource3{
     background-color: transparent;
     border: 0px solid var(--lighttheme-6);
+    text-align: right;
 }
 .darktheme ul#audioSource{
 	background-color: transparent;
