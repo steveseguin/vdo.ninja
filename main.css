@@ -5331,11 +5331,11 @@ ul#audioSource label{
 	color: #fff;
 }
 ul#audioSource3{
-    background-color: var(--lighttheme-1);
-    border: 1px solid var(--lighttheme-6);
+    background-color: transparent;
+    border: 0px solid var(--lighttheme-6);
 }
 .darktheme ul#audioSource{
-	background-color: var(--light-grey);
+	background-color: transparent;
     margin-top: 7px;
 }
 .darktheme ul#audioSource label{
