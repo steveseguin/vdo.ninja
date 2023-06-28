@@ -5344,8 +5344,8 @@ ul#audioSource3{
     border: 0;
 }
 .darktheme ul#audioSource3{
-	background-color: var(--light-grey);
-    border: 1px solid var(--discord-grey-8);
+	background-color: transparent;
+    border: 0px solid var(--discord-grey-8);
 }
 
 .darktheme #grabDirectorSoloLink {
