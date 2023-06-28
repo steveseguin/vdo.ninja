@@ -5039,8 +5039,9 @@ button.white {
 }
 
 select {
-    background-color: var(--lighttheme-1);
-    color: var(--lighttheme-text);
+    background-color: transparent;
+    color: #fff;
+    text-shadow:0 0 1px #fff;
     border-radius: 4px;
     font-size: 16px;
     padding: 1px 2px;
