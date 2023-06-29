@@ -5297,7 +5297,7 @@ input[type='checkbox'], input[type='radio'] {
 	padding: 4px;
 }
 .darktheme #popupSelector{
-	background-color: #0004;
+	background-color: transparent;
 }
 .popupSelector_constraints{
 	margin-top: 10px;
