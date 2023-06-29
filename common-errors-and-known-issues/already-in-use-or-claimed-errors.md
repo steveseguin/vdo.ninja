@@ -24,7 +24,7 @@ Manually creating a stream ID for each guest is recommended if you want each gue
 \
 If manually creating stream IDs, please just note that they need to be alphanumeric, with no special characters, are should be ideally less than roughly 30-characters long. If using a password, the uniqueness of the stream ID doesn't matter so much, but if not using a password, please ensure you create unique values that can't be easily guessed or accidentally duplicated by someone else.
 
-Additional tools and options are available to create and assign stream IDs, and methods to store stream IDs via local user storage, but that those options are out of the scope of this article.
+Additional tools and options are available to create and assign stream IDs, such as [\&permaid](../advanced-settings/setup-parameters/and-permaid.md),  and other methods to store stream IDs via local user storage, but those options are out of the scope of this article.
 
 ### "The room is already claimed by someone"
 
