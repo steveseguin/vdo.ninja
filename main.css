@@ -5289,6 +5289,7 @@ input[type='checkbox'], input[type='radio'] {
 }
 .darktheme #popupSelector label {
 	color: white;
+	text-shadow: 0 0 1px #fff;
 }
 #popupSelector .multiselect-contents label{
 	color: #fff;
