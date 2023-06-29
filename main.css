@@ -5286,6 +5286,7 @@ input[type='checkbox'], input[type='radio'] {
 }
 #popupSelector label {
 	color: #fff;
+	text-shadow: 0 0 1px #fff;
 }
 .darktheme #popupSelector label {
 	color: white;
