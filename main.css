@@ -5276,6 +5276,7 @@ input[type='checkbox'], input[type='radio'] {
 	height: 100%;
     width: 25vw;
     max-width: 50%;
+    min-width: 250px;
 	right: -500px;
 	overflow: auto;
 	z-index: 4;
