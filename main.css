@@ -2467,11 +2467,23 @@ span[data-action-type="stats-graphs-details-container"]>span{
 
 .lowerRaisedHand{
 	margin: auto;
+	margin-top: 5px;
     margin-left: 5px;
-	margin-bottom: 10px;
-    background-color: yellow;
-    width: calc(100% - 10px);
+	margin-bottom: 5px;
+    background-color: yellow!important;
+    width: 100%;
+	color:black!important;
 }
+
+.removeFromQueue{
+	margin: auto;
+	margin-top: 5px;
+    margin-left: 5px;
+	margin-bottom: 5px;
+    background-color: #ff00b8!important;
+    width: 100%
+}
+
 .float {
 	opacity: 0.8;
 	min-width: 45px;
@@ -3418,9 +3430,7 @@ div#roomnotes2 {
 	margin: 0 var(--regular-margin) 10px var(--regular-margin);
 	width: 100%;
 }
-.directorsgrid button {
-	text-transform: capitalize;
-}
+
 
 #yourDirectorStatus {
     color: var(--discord-text);
@@ -3434,6 +3444,7 @@ div#roomnotes2 {
 	background-color: #606383 !important;
 	display: var(--show-codirectors) !important;
 }
+
 /* ---- DIRECTORS PAGE - Guest Controls Box ---- */
 .controlsGrid {
     display: flex;

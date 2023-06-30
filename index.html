@@ -56,7 +56,7 @@
 		<meta property="twitter:image" content="./media/vdoNinja_logo_full.png" />
 		<meta name="msapplication-TileColor" content="#da532c" />
 		<meta name="theme-color" content="#ffffff" />
-		<link rel="stylesheet" href="./main.css?ver=335" />
+		<link rel="stylesheet" href="./main.css?ver=342" />
 		<script type="text/javascript" crossorigin="anonymous" src="./thirdparty/adapter.js"></script>
 		<style id="lightbox-animations" type="text/css"></style>
 		<!-- <link rel="manifest" href="manifest.json" /> -->
@@ -83,7 +83,7 @@
 		
 		<script type="text/javascript" crossorigin="anonymous"  src="./thirdparty/CodecsHandler.js?ver=47"></script>
 		<script type="text/javascript" crossorigin="anonymous" src="./thirdparty/aes.js"></script>
-		<script type="text/javascript" crossorigin="anonymous" src="./webrtc.js?ver=645"></script>
+		<script type="text/javascript" crossorigin="anonymous" src="./webrtc.js?ver=662"></script>
 		<input id="zoomSlider" type="range" style="display: none;" />
 		<span id="electronDragZone" style="pointer-events: none; z-index:-10; position:absolute;top:0;left:0;width:100%;height:2%;-webkit-app-region: drag;min-height:20px;"></span>
 		<div id="header">
@@ -144,6 +144,7 @@
                     </div>
                     <input type="text" id="chatInput" placeholder="Enter chat message to send here" onkeypress="EnterButtonChat(event)" />
                     <button class="chatBarInputButton" onclick="sendChatMessage()" data-translate='send-chat'>Send</button>
+					 <button onclick="toggleFileshare()" data-translate='upload-chat'><i class="las la-file-upload"></i> Upload File</button>
                 </div>
                 <div id="subControlButtons">
                 
@@ -186,7 +187,7 @@
                     </div>
                     <div id="websitesharebutton2" onmousedown="event.preventDefault(); event.stopPropagation();" title="Hold CTRL (or CMD) and click to spotlight this video" alt="Share a website as an embedded iFRAME" aria-label="Share a website" onclick="shareWebsite(false, event)" tabindex="21" role="button" aria-pressed="false" onkeyup="enterPressedClick(event,this);" class="float2 orange shake hidden" style="cursor: pointer;max-width: 200px;margin: auto;padding: 0 10px;">
                         <i onmousedown="event.preventDefault(); event.stopPropagation();" class="toggleSize las la-window-close" style="display: inline-block;"></i>
-                        <div style="display: inline-block;width: 85px;line-height: 1; font-size: 0.9em;">
+                        <div style="display: inline-block;width: 85px;line-height: 1; font-size: 0.9em; background-color: unset;box-shadow: unset;">
                             Stop Sharing Website
                         </div>
                     </div>
@@ -356,7 +357,7 @@
 						</table>
 						
 						<span style="margin: 0 auto; width: 470px; max-width:100%;display: block;">
-							<button onclick="createRoom()" class="gobutton" style="width:100%;" alt="Enter the room as the group's director" title="You'll enter as the room's director">
+							<button onclick="createRoom()"  class="gobutton gowebcam" style="width:100%;" alt="Enter the room as the group's director" title="You'll enter as the room's director">
 								<span data-translate="enter-the-rooms-control">Enter the room's Control Center in the director's role</span>
 							</button>
 							<br />
@@ -379,7 +380,7 @@
 							<i data-translate="looking-to-just-chat-and-not-direct">Looking to just chat and not direct?</i>
 							<br />
 							<br />
-                            <button onclick="jumptoroom2()" class="gobutton" style="width:100%;" alt="Enter the room as the group's director" title="You'll enter as the room's director">
+                            <button onclick="jumptoroom2()" class="gobutton gowebcam" style="width:100%;" alt="Enter the room as the group's director" title="You'll enter as the room's director">
 								<span data-translate="join-the-room-basic">Join the room as a Participant, rather than a director</span>
 							</button>
 						</span>
@@ -553,6 +554,11 @@
 						<i class="las la-exclamation-circle"></i>
 						<p><span data-translate="use-chrome-instead">Consider using a Chromium-based browser instead.<br />
  						Safari is more prone to having audio issues</span></p>
+					</div>
+					
+					<div id="oldiOSWarning" class="startupWarning hidden">
+						<i class="las la-exclamation-circle"></i>
+						<p><span data-translate="update-your-device">We've detected that you are using an old version of Apple iOS, which is known to have many issues.<br /><br />Please consider updating.</span></p>
 					</div>
 					
 				</div>
@@ -894,6 +900,36 @@
 				<i style="margin-top:30px;font-size:600%;overflow:hidden;" class="largeDarkIcon las la-heartbeat"></i>
 			</div>
 			
+			<div id="container-16" class="column columnfade pointer rounded card hidden" style=" overflow-y: auto;">
+				<h2><span data-translate="share-whepsrc">Share WHEP Media Source</span></h2>
+				<i style="margin-top:30px;font-size:560%;overflow:hidden;" class="largeDarkIcon las la-broadcast-tower"></i>
+				<div class="container-inner">
+					<br />
+					<div id="previewWhepSource"></div>
+					<br />
+					<span data-translate="enter-the-whep-URL-you-wish-to-share">Enter the WHEP URL you wish to share.</span><br /><br />
+					<input type="text" autocorrect="off" id="whepURL" autocapitalize="none" style="margin:10px; border:2px solid; padding:10px; width:400px;" title="Enter an HTTPS URL" multiple/><br />
+					<button onclick="previewIframe(getById('whepURL').value);" >Preview WHEP Stream</button> 
+					<button onclick="this.innerHTML = 'Update'; session.publishIFrame(getById('iframeURL').value);" >Start Sharing</button><br />
+					<div class="message-card info">
+						<h1>Usage information</h1>
+						<p></p>
+						<ul style="text-align: left;">
+						<li>WHEP sources are expected to support multiple viewers; simulcasting will be used if possible.</li>
+						<li>Remote URLs must allows cross-origin requests (CORS), along with having SSL (https).</li>
+					</ul>
+					</div>
+				</div>
+				<div class="outer close">
+					<div class="inner">
+						<label class="labelclass">
+							<span data-translate="back">Back</span>
+						</label>
+					</div>
+				</div>
+
+			</div>
+			
 			<p></p>
 			<div id="info" class="fullcolumn columnfade">
 				<center>
@@ -1007,7 +1043,7 @@
 				<div class='directorBlock' style="background-color: var(--green-accent);" >
 					<h2 title="Use this link in the OBS Browser Source to capture the video or audio" style="margin-left: 1px;margin-top: 5px;"><i class="las la-th-large director-link-icons" style="margin-right: 6px;" ></i> <span data-translate="capture-a-group-scene">CAPTURE A GROUP SCENE</span></h2>
 					<span style="margin:5px; line-height: 1.6;" data-translate='this-is-obs-browser-source-link'>Use in OBS or other studio software to capture the group video mix</span>
-					<a onclick='copyFunction(this,event)'  data-drag="1" draggable="true"  id="director_block_3" data-menu="context-menu" class='task grabLinks' style='cursor:grab;background-color: #0003;'></a>
+					<a onclick='copyFunction(this,event)'  data-drag="1" draggable="true"  id="director_block_3" data-menu="context-menu" class='task grabLinks publish' style='cursor:grab;background-color: #0003;'></a>
 					<span style="display:block;">
 						<span style="bottom: 0; margin: 0 0 0 10px; top: 22px; position: relative; display:inline-block; max-width: 45%;">
 							<label class="switch" title="If disabled, you must manually add a video to a scene for it to appear.">
@@ -1562,6 +1598,11 @@
 							<i class="las la-file-upload"></i>
 							<span data-translate="mirror-guest"> Mirror Video</span>
 						</button>
+						
+						<button class="mainonly advanced" data-action-type="force-keyframe" style=" background-image: linear-gradient(90deg, #C9F0FF 0%, #FFDFB9 39%, #FFDFDF 70%, #D9FFEC 100%);"  title="Force the remote sender to issue a keyframe to all scenes, fixing Pixel Smearing issues." onclick="requestKeyframeScene(this);">
+							<span data-translate="force-keyframe"> Rainbow Puke Fix</span>
+						</button>
+						
 					</div>
 					
 					<!-- Row of Channels -->
@@ -1815,7 +1856,7 @@
 						
 					</div>
 					<div id="selectEffectAmount3" style="display:none;margin-top:10px;">
-						<label for="selectEffectAmountInput" style="width: 113px;display: inline-block;">Effect amount:</label>
+						<label for="selectEffectAmountInput3" style="width: 113px;display: inline-block;">Effect amount:</label>
 						<input id="selectEffectAmountInput3" style="display: inline-block;width: 350px; max-width: 60%;margin:6px 0;" name="selectEffectAmountInput3" title="Adjust the amount of effect applied" type="range" oninput="changeEffectAmount(event, this)" onchange="changeEffectAmount(event, this)" min="0" step="1" max="20">
 					</div>
 					
@@ -1895,6 +1936,12 @@
 					<a href="#" class="context-menu__link" data-action="Edit">
 						<i class="las la-pen"></i>
 						<span data-translate="edit-url" >Edit URL manually</span>
+					</a>
+				</li>
+				<li class="context-menu__item hidden">
+					<a href="#" class="context-menu__link" data-action="Publish">
+						<i class="las la-tv"></i>
+						<span data-translate="publish-url" >Publish via WHIP</span>
 					</a>
 				</li>
 				<li class="context-menu__item">
@@ -2017,7 +2064,6 @@
 						<span data-translate="save-current-frame">Save frame to disk</span>
 					</a>
 				</li>
-				
 				<li class="context-menu__item">
 					<a href="#" class="context-menu__link" data-action="ShowStats">
 						<i class="las la-external-link"></i>
@@ -2168,6 +2214,32 @@
 					<span data-translate="change-playout-buffer">Buffer (ms): </span><input style='margin-left: 3px;padding: 2px;width: 60px;' type='number' min='0' max='15000' /><br />
 					<input type='range' min='0' max='15000' /><br />
 				</div>
+			</div>
+		</div>
+		
+		<div id="publishSettings" style="display:none; user-select: none;">
+			<div class="promptModalInner">
+				<h3 data-translate="publish-settings">Publish setup</h3>
+				<br />
+				<small>To publish this browser window, click the start publishing button below and then select the current browser window, with audio-selected if desired.  The stream will go live afterwards, automatically.</small>
+				
+				<div id="publishOutURL" class="hidden">
+					<br />
+					I'm publishing to Twitch: <input type="checkbox" onchange="twitchSelect(this)"; />
+					<br/> or 
+					<br />
+					Custom WHIP URL: <input type="text" size="30" placeholder="WHIP URL to publish to goes here">
+				</div>
+				<div id="publishOutToken" class="hidden">
+					<br />
+					Stream token: <input  type="password"  placeholder="Stream or auth token here">
+				</div>
+				<br />
+				<br />
+				<button onclick='startPublishing();'>🎦 Select window and start publishing</button>
+				<br /><br />
+				
+				<i>note: To stop the stream, simply close this browser window.</i>
 			</div>
 		</div>
 		
@@ -2376,7 +2448,7 @@
 
 		
 			var session = WebRTC.Media; // session is a required global variable if configuring manually. Run before loading main.js but after webrtc.js.
-			session.version = "23.4";
+			session.version = "23.7";
 			session.streamID = session.generateStreamID(); // randomly generates a streamID for this session. You can set your own programmatically if needed
 			
 			session.defaultPassword = "someEncryptionKey123"; // Change this password if self-deploying for added security/privacy
@@ -2491,11 +2563,11 @@
 			// session.hidehome = true; // If used, 'hide home' will make the landing page inaccessible, along with hiding a few go-home elements.
 			// session.record = false; // uncomment to block users from being able to record via vdo.ninja's built in recording function
 		</script>
-		<script type="text/javascript" crossorigin="anonymous" id="lib-js" src="./lib.js?ver=821"></script>
+		<script type="text/javascript" crossorigin="anonymous" id="lib-js" src="./lib.js?ver=833"></script>
 		<!-- 
 		// If you wish to change branding, blank offers a good clean start.
 		<script type="text/javascript" id="main-js" src="./main.js" data-translation="blank"></script>
 		-->
-		<script type="text/javascript" crossorigin="anonymous" id="main-js" src="./main.js?ver=639"></script>
+		<script type="text/javascript" crossorigin="anonymous" id="main-js" src="./main.js?ver=650"></script>
 	</body>
 </html>

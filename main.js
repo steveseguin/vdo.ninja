@@ -141,7 +141,7 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 		session.showControls = false; // show the video control bar
 	}
 
-	if (!isIFrame){
+	if (!isIFrame && !window.obsstudio){
 		if (ChromeVersion===65){
 			 // pass, since probably manycam and that's bugged
 		} else if (getStorage("redirect") == "yes") {
@@ -285,6 +285,24 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 		}
 	}
 	
+	if (urlParams.has('poster')) { // URL or data:base64 image. Becomes local to this viewer only.  This is like &avatar, but slightly different. Just CSS in this case
+		var posterImage = urlParams.get('poster') || "./media/avatar.webp"; 
+		if (posterImage){
+			try {
+				posterImage = decodeURIComponent(posterImage);
+				session.posterImage = posterImage;
+			} catch(e){}
+		}
+	}
+	
+	if (urlParams.has('hideplaybutton') || urlParams.has('hpb')) { // URL or data:base64 image. Becomes local to this viewer only.  This is like &avatar, but slightly different. Just CSS in this case
+		try {
+			document.getElementById("bigPlayButton").classList.add("hidden");
+		} catch(e){
+			
+		}
+	} 
+	
 	if (urlParams.has('whip') || urlParams.has('whipview')) {
 		session.whipView = urlParams.get('whip') || urlParams.get('whipview') || false;
 		if (session.whipView){
@@ -339,15 +357,8 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 		}
 	}
 	
-	
-	if (urlParams.has('whepplaytoken')) { // URL or data:base64 image. Becomes local to this viewer only.  This is like &avatar, but slightly different. Just CSS in this case
-		if (urlParams.get('whepplaytoken')){
-			try {
-				session.whepInputToken = urlParams.get('whepplaytoken')
-			} catch(e){
-				errorlog(e);
-			}
-		}
+	if (urlParams.has("hostwhep")){
+		session.whepHost = urlParams.get("hostwhep") || session.streamID || false;
 	}
 	
 	if (urlParams.has('nomouseevents') || urlParams.has('nme')) {
@@ -391,6 +402,9 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 		session.audioEffects = false; // disable audio inbound effects also.
 		session.audioMeterGuest = false;
 	} else if (iOS || iPad) {
+		if (SafariVersion<16){
+			getById("oldiOSWarning").classList.remove('hidden');
+		}
 		session.mobile = true;
 		session.audioEffects = false; // disable audio inbound effects also.
 		session.audioMeterGuest = false;
@@ -453,6 +467,25 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 		}
 		if (transferSettings){
 			transferSettings.broadcast = session.broadcastTransfer;
+		}
+	}
+	
+	if (urlParams.has('queuetransfer') || urlParams.has('qt')) {
+		log("Broadcast transfer flag set");
+		session.queueTransfer = urlParams.get('queuetransfer') || urlParams.get('qt') || null;
+		if (session.queueTransfer === "false") {
+			session.queueTransfer = false;
+		} else if (session.queueTransfer=== "0") {
+			session.queueTransfer = false;
+		} else if (session.queueTransfer === "no") {
+			session.queueTransfer = false;
+		} else if (session.queueTransfer === "off") {
+			session.queueTransfer = false;
+		} else {
+			session.queueTransfer = true;
+		}
+		if (transferSettings){
+			transferSettings.queue = session.queueTransfer;
 		}
 	}
 	
@@ -2129,8 +2162,9 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 		getById("obsState").style.setProperty("display", "none", "important");
 	} 
 	
-	if (urlParams.has('hidecodirectors')){
+	if (urlParams.has('hidecodirectors') || urlParams.has('hidecodirector') || urlParams.has('hidedirector') || urlParams.has('hidedirectors') || urlParams.has('hd')){
 		document.querySelector(':root').style.setProperty("--show-codirectors", "none", "important");
+		session.hideDirector = true;
 	}
 	
 	if (urlParams.has('pptcontrols') || urlParams.has('slides') || urlParams.has('ppt') || urlParams.has('powerpoint')){
@@ -2345,7 +2379,7 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 			session.darkmode = false;
 		} else if (window.obsstudio){
 			session.darkmode = false; // prevent OBS from defaulting to dark mode, avoiding possible overlooked bugs.
-		} else {
+		} else if (session.darkmode===null){
 			session.darkmode = getComputedStyle(document.querySelector(':root')).getPropertyValue('--color-mode').trim();
 			if (session.darkmode == "dark"){
 				session.darkmode = true;
@@ -2609,7 +2643,7 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 	}
 	
 	if (urlParams.has('orderby')) {
-		session.orderby = urlParams.get('orderby') || "id";
+		session.orderby = urlParams.get('orderby') || "id"; // "label" also an option; the default is stream ID tho.
 	}
 	
 	if (urlParams.has('slot')) {
@@ -3171,6 +3205,7 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 		session.cleanish = true;
 	}
 	
+	
 	if (session.cleanish || !session.cleanOutput){
 		if (session.obsControls){
 			getById("obscontrolbutton").classList.remove("hidden");
@@ -3266,8 +3301,8 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 		}
 	}
 
-	if (urlParams.has('maxframeRate') || urlParams.has('mfr') || urlParams.has('mfps')) {
-		session.maxframeRate = urlParams.get('maxframeRate') || urlParams.get('mfr') || urlParams.get('mfps');
+	if (urlParams.has('maxframerate') || urlParams.has('mfr') || urlParams.has('mfps')) {
+		session.maxframeRate = urlParams.get('maxframerate') || urlParams.get('mfr') || urlParams.get('mfps');
 		session.maxframeRate = parseInt(session.maxframeRate);
 		log("max frameRate assigned");
 		log(session.maxframeRate);
@@ -3826,6 +3861,13 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 
 	if (urlParams.has('queue')) {
 		session.queue = true;
+		if (urlParams.get('queue') === "false"){
+			session.queue = false;
+		} else if (urlParams.get('queue') === "0"){
+			session.queue = false;
+		} else if (urlParams.get('queue') === "off"){
+			session.queue = false;
+		}
 	}
 	
 	
@@ -4017,6 +4059,7 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 	//	session.studioSoftware = true; // vmix
 	if (window.obsstudio){
 		session.studioSoftware = true;
+		getById("saveRoom").style.display = "none"; // don't let the user save the room if in OBS
 	}
 	if (session.cleanViewer){
 		if (session.view && !session.director && session.permaid===false){
@@ -4155,22 +4198,30 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 		session.screenShareLabel = session.screenShareLabel.replace(/_/g, " ")
 	}
 	
+	// this is not the same as creating a whep source
 	if (urlParams.has('whepshare') || urlParams.has('whepsrc')) { // URL or data:base64 image. Becomes local to this viewer only.  This is like &avatar, but slightly different. Just CSS in this case
 		try {
-			
-			session.whepSrc = urlParams.get('whepshare') || urlParams.get('whepsrc') || false;
-			console.log(session.whepSrc);
-			if (!session.whepSrc){
-				session.whepSrc = await promptAlt("Enter the WHEP source as a URL");
-			} else {
-				session.whepSrc = decodeURIComponent(session.whepSrc, true);
-			}
-			getById("container-6").classList.remove('hidden');
-			getById("container-6").classList.add("skip-animation");
-			getById("container-6").classList.remove('pointer');
-			
+			session.whepSrc = urlParams.get('whepshare') || urlParams.get('whepsrc') || null;
+			log("WHEP SRC: "+session.whepSrc);
 			if (session.whepSrc){
-				delayedStartupFuncs.push([shareWebsite, session.whepSrc]);
+				try {
+					session.whepSrc = decodeURIComponent(session.whepSrc);
+				} catch(e){
+					session.whepSrc=null;
+				}
+			}
+			if (!session.whepSrc && session.autostart){
+				session.whepSrc = await promptAlt("Enter the WHEP source as a URL");
+			}
+			if (session.whepSrc){
+				getById("whepURL").value = session.whepSrc;
+			}
+			getById("container-16").classList.remove('hidden');
+			getById("container-16").classList.add("skip-animation");
+			getById("container-16").classList.remove('pointer');
+			
+			if (session.autostart && session.whepSrc){
+				delayedStartupFuncs.push([session.publishWhepSrc, session.whepSrc]);
 			}
 		} catch(e){
 			errorlog(e);

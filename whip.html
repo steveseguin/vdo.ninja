@@ -185,6 +185,17 @@
 	div.urlInput {
 		padding: 0 0 4vh 0;
 	}
+	
+	
+	@media only screen and (max-height: 839px) {
+		body{
+			zoom: 0.74; 
+			-moz-transform: scale(0.74); 
+			-moz-transform-origin: 0 0;
+			
+		}
+	}
+	
 	@media only screen and (max-width: 940px) {
 		body{
 			zoom: 0.74; 
@@ -353,7 +364,9 @@
 					</div>
 				</div>
 				
-				<div id="urlInput4" style="display:none;"  class="urlInput" title="Put the link you want to load here">
+				<div id="urlInput4" class="urlInput" title="Put the link you want to load here">
+					
+					<h3>Host a stream as a WHEP sourceP</h3>
 					
 					<div  class="inputCombo" id="inputCombo4">
 					<label for="changeText">
@@ -365,6 +378,7 @@
 				</div>
 				
 				<div id="history" title="History of past links used. You can clear this history using the button to the left">
+					<h3 style='cursor:pointer;' onclick="resetHistory()">Clear History</h3>
 					<label for="lastUrls" onclick="resetHistory()">
 						<i class="las la-history"></i>
 					</label>
