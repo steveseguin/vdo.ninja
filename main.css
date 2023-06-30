@@ -206,6 +206,8 @@ th {
 	height: 10px;
 	background: green;
 	transition: all 100ms linear;
+	float: left;
+	
 }
 .meter2 {
 	display: inline-block;
@@ -220,6 +222,7 @@ th {
 	height: 10px;
 	background: red;
 	transition: all 25ms linear;
+	float: left;
 }
 .meter4 {
 	display: inline-block;
@@ -5047,8 +5050,9 @@ button.white {
 }
 
 select {
-    background-color: var(--lighttheme-1);
-    color: var(--lighttheme-text);
+    background-color: transparent;
+    color: #fff;
+    text-shadow:0 0 1px #fff;
     border-radius: 4px;
     font-size: 16px;
     padding: 1px 2px;
@@ -5107,8 +5111,8 @@ input[type='checkbox'], input[type='radio'] {
 	transform: scale(1.4);
 	padding: 5px;
     margin: 3px;
-
-    cursor:pointer;
+    cursor: pointer;
+    float: right;
 }
 
 
@@ -5169,8 +5173,8 @@ input[type='checkbox'], input[type='radio'] {
 .darktheme #videoSettings2,
 .darktheme #popupSelector_user_settings,
 .darktheme .invite_setting_group {
-    background-color: var(--discord-grey-5);
-    border: 1px solid var(--discord-grey-8);
+    background-color: transparent;
+    border: 0px solid var(--discord-grey-8);
 }
 .darktheme .largeDarkIcon{
 	color: var(--dark-background-color); 
@@ -5224,8 +5228,11 @@ input[type='checkbox'], input[type='radio'] {
 #videoSettings,
 #videoSettings2,
 .invite_setting_group {
-    background-color: var(--lighttheme-2);
-    border: 1px solid var(--lighttheme-4); 
+    background-color: transparent;
+    border: 0px solid var(--lighttheme-4); 
+    text-align: right;
+    color: #fff;
+    text-shadow: 0 0 1px #fff;
 }
 
 #videoSettings, #videoSettings2 {
@@ -5272,34 +5279,38 @@ input[type='checkbox'], input[type='radio'] {
 }
 
 #popupSelector {
-	background: linear-gradient(6deg, rgba(221, 221, 221, 0) 4%, rgb(0,0,0, 0.5) 30%, #646878A0 100%);
+	background: transparent;
 	transition: all 0.2s linear 0s;
     padding: 10px;
 	position: fixed;
 	top: 0px;
 	height: 100%;
-    width: 505px;
-    max-width: 100%;
+    width: 25vw;
+    max-width: 50%;
+    min-width: 250px;
 	right: -500px;
 	overflow: auto;
 	z-index: 4;
 	-webkit-app-region: no-drag;
 	padding-bottom: 80px;
+	text-align: right;
 }
 #popupSelector label {
-	color: black;
+	color: #fff;
+	text-shadow: 0 0 1px #fff;
 }
 .darktheme #popupSelector label {
 	color: white;
+	text-shadow: 0 0 1px #fff;
 }
 #popupSelector .multiselect-contents label{
-	color: black;
+	color: #fff;
 }
 #popupSelector select {
 	padding: 4px;
 }
 .darktheme #popupSelector{
-	background-color: #0004;
+	background-color: transparent;
 }
 .popupSelector_constraints{
 	margin-top: 10px;
@@ -5322,7 +5333,7 @@ input[type='checkbox'], input[type='radio'] {
 	color:white;
 }
 ul#audioSource{
-	background-color: var(--lighttheme-1);
+	background-color: transparent;
     margin-top: 7px;
 	min-height: 24px;
 }
@@ -5331,14 +5342,15 @@ ul#audioSource label{
     border: 0;
 }
 ul#audioSource label{
-	color:black;
+	color: #fff;
 }
 ul#audioSource3{
-    background-color: var(--lighttheme-1);
-    border: 1px solid var(--lighttheme-6);
+    background-color: transparent;
+    border: 0px solid var(--lighttheme-6);
+    text-align: right;
 }
 .darktheme ul#audioSource{
-	background-color: var(--light-grey);
+	background-color: transparent;
     margin-top: 7px;
 }
 .darktheme ul#audioSource label{
@@ -5346,8 +5358,8 @@ ul#audioSource3{
     border: 0;
 }
 .darktheme ul#audioSource3{
-	background-color: var(--light-grey);
-    border: 1px solid var(--discord-grey-8);
+	background-color: transparent;
+    border: 0px solid var(--discord-grey-8);
 }
 
 .darktheme #grabDirectorSoloLink {
