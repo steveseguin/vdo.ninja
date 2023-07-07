@@ -1609,7 +1609,8 @@ body.darktheme{
 	height:100vh;
 }
 .mainmenuclass {
-	display: inherit;
+	display: inline-block;
+	width:100%;
 }
 #welcomeImage{
 	object-fit:cover;
@@ -2870,6 +2871,20 @@ video {
 	background-repeat: no-repeat;
 	background-position: center;
 	background-image: var(--video-background-image);
+	
+}
+video[data-speaking="0"] {
+	transition: opacity .25s ease-in-out, background-size 0.5s ease;
+}
+video[data-speaking="1"] {
+	background-image: var(--video-background-image-talking, var(--video-background-image));
+	background-size: var(--video-background-image-size-talking, var(--video-background-image-size));
+	transition: background-size 0.5s ease;
+}
+video[data-speaking="2"] {
+	background-image: var(--video-background-image-screaming, var(--video-background-image));
+	background-size: var(--video-background-image-size-screaming, var(--video-background-image-size));
+	transition: background-size 0.5s ease;
 }
 
 .nogb { background-image: unset !important }

@@ -3,6 +3,7 @@
 	<title>Mixer app</title>
 	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
 	<meta content="text/html;charset=utf-8" http-equiv="Content-Type" />
+	<script src="./thirdparty/aes.js"></script>
 	<script src="./thirdparty/jquery/jquery-3.6.0.js?asdf"></script>
     <script src="./thirdparty/jquery/jquery-ui.js"></script>
 	<link rel="stylesheet" href="./thirdparty/jquery/jquery-ui.css">
@@ -14,6 +15,7 @@
 	<link rel="preconnect" href="https://fonts.googleapis.com">
 	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 	<link href="https://fonts.googleapis.com/css2?family=Sora:wght@200;400;700&display=swap" rel="stylesheet">
+	
 	<style>
 	:root{
 		--aspect-ratio: 1.7777777777;
@@ -1015,7 +1017,10 @@
 			<span >
 				<input type="checkbox" id="toggleLabel" onclick="updateInviteLinks(event)" /><label>Prompt user for a display name</label><br />
 				<input type="checkbox" id="toggleBroadcast" onclick="updateInviteLinks(event)"/><label>Guest can see other guests and the active layout <small>(higher CPU for guest)</small></label><br />
+				<input type="checkbox" id="obfuscateInvites" onclick="updateInviteLinks(event)"/><label>Obfuscate the invite links so they cannot be easily modified by guests</label><br />
+				
 			</span>
+			<label>Append additional URL params: </label><input size='50' oninput="updateInviteLinks(event)"  style='max-width:50%' type="text" id="additionalParams" placeholder='optional URL params here. eg: &showlabels&ruler' /><br />
 			<i>You can manually customize the invite link further; see the documentation at <a href="https://docs.vdo.ninja" target="_blank">docs.vdo.ninja</a></i>
 			<br /><br />
 			<button class='close-btn'>Close</button>
@@ -1068,6 +1073,7 @@
 			return ele;
 		}
 	}
+	
 	
 	function toggleChat(){
 		document.getElementById("chatModule").classList.toggle("fadeout");
@@ -1158,7 +1164,9 @@
 	var updateOnSlotChange = true;
 	var assignSlotToGuest = true;
 	var toggleLabel = false;
-	var toggleBroadcast = true;
+	var toggleBroadcast = false;
+	var obfuscateInvites = false;
+	var additionalParams = "";
 	var messageList = [];
 	var password = false;
 	var syncOBS = false;
@@ -1167,9 +1175,6 @@
 	
 	var currentOBSState = false;
 	
-	if (urlParams.has('password') || urlParams.has('pass') || urlParams.has('pw') || urlParams.has('p')) {
-		password = urlParams.get('password') || urlParams.get('pass') || urlParams.get('pw') || urlParams.get('p');
-	}
 	
 	var aspectRatio = 16/9.0;
 	var pixelDensity = 720;
@@ -1205,6 +1210,14 @@
 			}
 		} 
 	}
+	
+	if (urlParams.has('password') || urlParams.has('pass') || urlParams.has('pw') || urlParams.has('p')) {
+		password = urlParams.get('password') || urlParams.get('pass') || urlParams.get('pw') || urlParams.get('p') || "";
+		password = password.trim();
+		document.getElementById("savedroompassword").classList.add("hidden");
+		document.getElementById("roompassword").classList.add("hidden");
+	}
+	
 	function randomRoomName(){
 		document.getElementById("roomname").value = generateString(8);
 	}
@@ -1215,9 +1228,12 @@
 		startRoom();
 	}
 	function startRoom(){
-		var pid = document.getElementById("roompassword").value.trim();
-		if (pid){
-			password = pid;
+	
+		if (password===false){
+			var pid = document.getElementById("roompassword").value.trim();
+			if (pid){
+				password = pid;
+			}
 		}
 	
 		var rid = document.getElementById("roomname").value.trim();
@@ -1258,6 +1274,27 @@
 			sendChatMessage();
 		}
 	}
+	
+	
+	function generateHash(str, length=false){
+		var buffer = new TextEncoder("utf-8").encode(str);
+		return crypto.subtle.digest("SHA-256", buffer).then(
+			function (hash) {
+				hash = new Uint8Array(hash);
+				if (length){
+					hash = hash.slice(0, parseInt(parseInt(length)/2));
+				}
+				hash = toHexString(hash);
+				return hash;
+			}
+		);
+	};
+	function toHexString(byteArray){
+		return Array.prototype.map.call(byteArray, function(byte){
+			return ('0' + (byte & 0xFF).toString(16)).slice(-2);
+		}).join('');
+	}
+	
 
 	function sendChatMessage(){ // filtered + visual
 		var msg = document.getElementById('chatInput').value;
@@ -1750,6 +1787,29 @@
 				getById("toggleBroadcast").checked = true;
 			}
 		}
+		
+		if (savedSession.settings && ("obfuscateInvites" in savedSession.settings)){
+			obfuscateInvites = savedSession.settings.obfuscateInvites;
+			if (!obfuscateInvites){
+				getById("obfuscateInvites").value = "off";
+				getById("obfuscateInvites").checked = false;
+				getById("obfuscateInvites").removeAttribute('checked');
+			} else {
+				getById("obfuscateInvites").value = "on";
+				getById("obfuscateInvites").checked = true;
+			}
+		}
+		
+		//
+		if (savedSession.settings && ("additionalParams" in savedSession.settings)){
+			additionalParams = savedSession.settings.additionalParams;
+			if (!additionalParams){
+				getById("additionalParams").value = "";
+			} else {
+				getById("additionalParams").value = additionalParams;
+			}
+		}
+		
 		if (savedSession.settings && ("syncOBS" in savedSession.settings)){
 			syncOBS = savedSession.settings.syncOBS;
 			if (!syncOBS){
@@ -2386,10 +2446,12 @@
 		
 		var a = document.createElement("a");
 		a.innerHTML = "Invite Guest Link 📎"; 
-		a.href = "./?room="+roomname+"&broadcast"+additional;
+		//a.href = "./?room="+roomname+"&broadcast"+additional;
 		a.target = "_blank";
+		a.id = "mainInviteLink";
 		a.onclick = function(evt){copyFunction(this, evt);};
 		document.getElementById("sources").appendChild(a);
+		updateInviteLinks();
 		
 		var a = document.createElement("a");
 		a.innerHTML = "Scene View Link 📎";
@@ -2659,13 +2721,15 @@
 		document.getElementById("inviteOptions").classList.remove("hidden");
 		updateInviteLinks();
 	}
-	var toggleBroadcast = false;
 	
-	function updateInviteLinks(event=false){	
+	async function updateInviteLinks(event=false){	
 		var additional = "";
 		
 		if (password){
-			additional += "&password="+password;
+			var hash = password.trim();
+			hash = encodeURIComponent(hash);
+			hash = await generateHash(hash + location.hostname, 4);
+			additional += "&hash="+hash;
 		}
 		
 		if (document.getElementById("toggleLabel").checked){
@@ -2675,23 +2739,50 @@
 			toggleLabel= false;
 		}
 		
-		if (!document.getElementById("toggleBroadcast").checked){
-			additional += "&broadcast";
+		if (document.getElementById("toggleBroadcast").checked){
+			additional += "&layout"; // do not use &broadcast with &layout, else you will get broken results.
 			toggleBroadcast = true;
 		} else {
-			additional += "&layout"; // do not use &broadcast with &layout, else you will get broken results.
+			additional += "&broadcast";
 			toggleBroadcast = false;
 		}
+		
+		
 		
 		document.querySelectorAll(".roomname").forEach(ele=>{
 			ele.innerText = roomname;
 		});
 		
+		var inviteURL = "https://"+location.hostname+"/?room="+roomname+additional;
+		
+		if (document.getElementById("additionalParams").value.trim().length){
+			additionalParams = document.getElementById("additionalParams").value.trim();
+			if (!additionalParams.startsWith("&")){
+				additionalParams = "&"+additionalParams;
+			}
+			inviteURL += additionalParams;
+		} else {
+			additionalParams = "";
+		}
+		
+		
+		if (document.getElementById("obfuscateInvites").checked){
+			obfuscateInvites = true;
+			inviteURL = processInvite(inviteURL);
+		} else {
+			obfuscateInvites = false;
+		}
+		
+		
+		document.getElementById("mainInviteLink").href = inviteURL
+		
 		document.querySelectorAll(".inviteLink").forEach(ele=>{
 			if (ele.tagName == "A"){
-				ele.href = "./?room="+roomname+additional;
+				ele.href = inviteURL
+			} else if (document.getElementById("obfuscateInvites").checked){
+				ele.innerHTML = inviteURL;
 			} else if (ele.tagName == "I"){
-				ele.innerHTML = "URL + ?room="+roomname+additional;
+				ele.innerHTML = "URL + ?room="+roomname+additional+additionalParams;
 			}
 			ele.onclick = function(evt){copyFunction(this, evt);};
 		});
@@ -2788,6 +2879,89 @@
 			return -1;
 		}
 		return 0;
+	}
+
+	function processInvite(input){
+	
+		if (input.startsWith("https://obs.ninja/")){
+			input = input.replace('https://vdo.ninja/', '');
+		} else if (input.startsWith("http://obs.ninja/")){
+			input = input.replace('http://vdo.ninja/', '');
+		} else if (input.startsWith("obs.ninja/")){
+			input = input.replace('vdo.ninja/', '');
+		} else if (input.startsWith("https://vdo.ninja/")){
+			input = input.replace('https://vdo.ninja/', 'vdo.ninja/');
+		} else if (input.startsWith("http://vdo.ninja/")){
+			input = input.replace('http://vdo.ninja/', 'vdo.ninja/');
+		} 
+		
+		input = input.replace('&view=', '&v=');
+		input = input.replace('&view&', '&v&');
+		input = input.replace('?view&', '?v&');
+		input = input.replace('?view=', '?v=');
+		
+		input = input.replace('&videobitrate=', '&vb=');
+		input = input.replace('?videobitrate=', '?vb=');
+		input = input.replace('&bitrate=', '&vb=');
+		input = input.replace('?bitrate=', '?vb=');
+		
+		input = input.replace('?audiodevice=', '?ad=');
+		input = input.replace('&audiodevice=', '&ad=');
+		
+		input = input.replace('?label=', '?l=');
+		input = input.replace('&label=', '&l=');
+		
+		input = input.replace('?stereo=', '?s=');
+		input = input.replace('&stereo=', '&s=');
+		input = input.replace('&stereo&', '&s&');
+		input = input.replace('?stereo&', '?s&');
+		
+		input = input.replace('?webcam&', '?wc&');
+		input = input.replace('&webcam&', '&wc&');
+		
+		input = input.replace('?remote=', '?rm=');
+		input = input.replace('&remote=', '&rm=');
+		
+		input = input.replace('?password=', '?p=');
+		input = input.replace('&password=', '&p=');
+		
+		input = input.replace('&maxvideobitrate=', '&mvb=');
+		input = input.replace('?maxvideobitrate=', '?mvb=');
+		
+		input = input.replace('&maxbitrate=', '&mvb=');
+		input = input.replace('?maxbitrate=', '?mvb=');
+		
+		input = input.replace('&height=', '&h=');
+		input = input.replace('?height=', '?h=');
+		
+		input = input.replace('&width=', '&w=');
+		input = input.replace('?width=', '?w=');
+		
+		input = input.replace('&quality=', '&q=');
+		input = input.replace('?quality=', '?q=');
+		
+		input = input.replace('&cleanoutput=', '&clean=');
+		input = input.replace('?cleanoutput=', '?clean=');
+		
+		input = input.replace('&maxviewers=', '&clean=');
+		input = input.replace('?maxviewers=', '?clean=');
+		
+		input = input.replace('&framerate=', '&fr=');
+		input = input.replace('?framerate=', '?fr=');
+		
+		input = input.replace('&fps=', '&fr=');
+		input = input.replace('?fps=', '?fr=');
+		
+		input = input.replace('&permaid=', '&push=');
+		input = input.replace('?permaid=', '?push=');
+		
+		input = input.replace('&roomid=', '&r=');
+		input = input.replace('?roomid=', '?r=');
+		
+		input = input.replace('&room=', '&r=');
+		input = input.replace('?room=', '?r=');
+		
+		return "https://invite.cam/"+CryptoJS.AES.encrypt(input, atob('T0JTTklOSkFGT1JMSUZF')).toString();
 	}
 	
 	function drawLayout(layoutOriginal, sceneName=false, obsSceneName = ""){
@@ -3815,6 +3989,8 @@
 		savedSession.settings.assignSlotToGuest = assignSlotToGuest;
 		savedSession.settings.toggleLabel = toggleLabel;
 		savedSession.settings.toggleBroadcast = toggleBroadcast;
+		savedSession.settings.obfuscateInvites = obfuscateInvites;
+		savedSession.settings.additionalParams = additionalParams;
 		savedSession.settings.syncOBS = syncOBS;
 		savedSession.settings.remoteSyncOBS = remoteSyncOBS;
 		savedSession.settings.aspectRatio = aspectRatio;

@@ -79,7 +79,7 @@
 		width:100%;
 		background-color: #101520;
 	}
-	input.changeText {
+	.changeText {
 		font-size: 1em;
 		align-self: center;
 		width: 100%;
@@ -96,8 +96,11 @@
 		border-top-right-radius: 0;
 	}
 
-	input.changeText:focus {
+	.changeText:focus {
 		outline: none;
+	}
+	select.changetext{
+		padding: .1em;
 	}
 
 	.container{
@@ -300,6 +303,14 @@
 	h3 {
 		color: #b0e3ff;
 	}
+	.hidden{
+		display:none;
+		opacity:0;
+		visibility:none;
+		width:0;
+		height:0
+	}
+	
 
 	</style>
 </head>
@@ -318,10 +329,57 @@
 						<input type="text" id="changeText1" class="inputfield changeText" placeholder="WHIP Publishing URL" />
 						<button  onclick="gohere1();" class="gobutton" id="gobutton1">GO</button>
 					</div>
-					<div class="inputCombo" style="width:350px;margin:10 0 10 auto;">
-						<input type="password" id="changeText1a" class="inputfield changeText" placeholder="Authentication Bearer Token (optional)" />
-						<div class="details">⚙️</div>
-					</div>
+					<div >
+						<div class="inputCombo" style="margin: 10px 0px 10px 10px;">
+							<input type="password" id="changeText1a" class="inputfield changeText" placeholder="🗝️ Authentication Bearer Token (optional)" />
+							<div class="details">⚙️</div>
+						</div>
+						
+						<div class="inputCombo" id="advanced" style="margin: 10px 0px 10px 10px;">
+							<select style="border-radius:10px;margin-right:5px;width:unset!important;" class="changeText" id="audioBitrateGroupFlag"  title="Which audio bitrate target would you prefer?" >
+								<option value="0" selected>🎙️Default Audio Bitrate</option>
+								<option value="500">🎙️32-kbps</option>
+								<option value="2500">🎙️64-kbps</option>
+								<option value="6000">🎙️128-kbps</option>
+								<option value="20000">🎙️256-kbps</option>
+							</select >
+							<select style="border-radius:10px;margin-right:5px;width:unset!important;" class="changeText" id="audioBitrateGroupFlag"  title="Which audio bitrate target would you prefer?" >
+								<option value="cbr" selected>🎙️CBR</option>
+								<option value="vbr">🎙️VBR</option>
+							</select >
+							<select style="border-radius:10px;margin-right:5px;width:unset!important;" class="changeText" id="audioBitrateGroupFlag"  title="Which audio bitrate target would you prefer?" >
+								<option value="0" selected>🎙️Denoise</option>
+								<option value="500">🎙️No Denoise</option>
+							</select >
+							<select style="border-radius:10px;margin-right:5px;width:unset!important;" class="changeText" id="audioBitrateGroupFlag"  title="Which audio bitrate target would you prefer?" >
+								<option value="0" selected>🎙️Auto Gain</option>
+								<option value="500">🎙️No Auto Gain</option>
+							</select >
+							<select style="border-radius:10px;margin-right:5px;width:unset!important;" class="changeText" id="audioBitrateGroupFlag"  title="Which audio bitrate target would you prefer?" >
+								<option value="0" selected>🎙️Stereo</option>
+								<option value="500">🎙️Mono</option>
+							</select >
+						</div>
+						<div class="inputCombo" id="advanced2" style="margin: 10px 0px 10px 10px;">
+							<select style="border-radius:10px;margin-right:5px;width:unset!important;" class="changeText" id="bitrateGroupFlag" title="Which video bitrate target would you prefer?" >
+								<option value="0" selected>🎦Default Video Bitrate</option>
+								<option value="500">🎦500-kbps</option>
+								<option value="2500">🎦2500-kbps</option>
+								<option value="6000">🎦6000-kbps</option>
+								<option value="20000">🎦20000-kbps</option>
+							</select >
+							<select style="border-radius:10px;margin-right:5px;width:unset!important;" class="changeText"  id="codecGroupFlag"  title="Which video codec would you prefer to be used if available?" >
+								<option value="default" selected>🎦OpenH264</option>
+								<option value="vp9">🎦VP9</option>
+								<option value="h264">🎦H264</option>
+								<option value="vp8">🎦VP8</option>
+								<option value="av1">🎦AV1</option>
+							</select >
+							
+						</div>
+						
+						
+					</div>	
 				</div>
 				
 				<div id="urlInput1" class="urlInput" title="Put the link you want to load here">
@@ -395,22 +453,35 @@ document.querySelector("#changeText2").value = localStorage.getItem('changeText2
 document.querySelector("#changeText3").value = localStorage.getItem('changeText3') || "";
 
 function gohere1(){
-	if (document.getElementById('changeText1').value && document.getElementById('changeText1a').value){
+	if (document.getElementById('changeText1').value){
 		localStorage.setItem('changeText1', document.getElementById('changeText1').value);
-		localStorage.setItem('changeText1a', document.getElementById('changeText1a').value);
-		window.location = domain + "?push&whippush=" + encodeURIComponent(document.getElementById('changeText1').value) + "&whippushtoken=" + document.getElementById('changeText1a').value;
-	} else if (document.getElementById('changeText1').value){
-		localStorage.setItem('changeText1', document.getElementById('changeText1').value);
-		localStorage.setItem('changeText1a', "");
-		window.location = domain + "?push&whippush=" + encodeURIComponent(document.getElementById('changeText1').value);
+		localStorage.setItem('changeText1a', document.getElementById('changeText1a').value || "");
+		
+		
+		localStorage.setItem('bitrateGroupFlag', document.getElementById('bitrateGroupFlag').value);
+		localStorage.setItem('codecGroupFlag', document.getElementById('codecGroupFlag').value);
+		
+		var bitrate = "";
+		if (parseInt(document.getElementById('bitrateGroupFlag').value)){
+			bitrate = "&whipoutvideobitrate="+document.getElementById('bitrateGroupFlag').value;
+		}
+		var codec = "";
+		if (document.getElementById('codecGroupFlag').value!=="default"){
+			codec = "&whipoutcodec="+document.getElementById('codecGroupFlag').value;
+		}
+		
+		if (document.getElementById('changeText1a').value){
+			window.location = domain + "?push&whippush=" + encodeURIComponent(document.getElementById('changeText1').value) + "&whippushtoken=" + document.getElementById('changeText1a').value + codec + bitrate;
+		} else {
+			window.location = domain + "?push&whippush=" + encodeURIComponent(document.getElementById('changeText1').value) + codec + bitrate;
+		}
 	}
-	
 }
 
 function gohere1t(){
 	if (document.getElementById('changeText1t').value){
 		localStorage.setItem('changeText1t', document.getElementById('changeText1t').value);
-		window.location = domain + "?push&whippush=https%3A%2F%2Fg.webrtc.live-video.net%3A4443%2Fv2%2Foffer&whippushtoken="+ document.getElementById('changeText1t').value;
+		window.location = domain + "?whipoutvideobitrate=5800&stereo&push&whippush=https%3A%2F%2Fg.webrtc.live-video.net%3A4443%2Fv2%2Foffer&whippushtoken="+ document.getElementById('changeText1t').value;
 	}
 }
 

@@ -56,7 +56,7 @@
 		<meta property="twitter:image" content="./media/vdoNinja_logo_full.png" />
 		<meta name="msapplication-TileColor" content="#da532c" />
 		<meta name="theme-color" content="#ffffff" />
-		<link rel="stylesheet" href="./main.css?ver=342" />
+		<link rel="stylesheet" href="./main.css?ver=344" />
 		<script type="text/javascript" crossorigin="anonymous" src="./thirdparty/adapter.js"></script>
 		<style id="lightbox-animations" type="text/css"></style>
 		<!-- <link rel="manifest" href="manifest.json" /> -->
@@ -83,7 +83,7 @@
 		
 		<script type="text/javascript" crossorigin="anonymous"  src="./thirdparty/CodecsHandler.js?ver=47"></script>
 		<script type="text/javascript" crossorigin="anonymous" src="./thirdparty/aes.js"></script>
-		<script type="text/javascript" crossorigin="anonymous" src="./webrtc.js?ver=662"></script>
+		<script type="text/javascript" crossorigin="anonymous" src="./webrtc.js?ver=665"></script>
 		<input id="zoomSlider" type="range" style="display: none;" />
 		<span id="electronDragZone" style="pointer-events: none; z-index:-10; position:absolute;top:0;left:0;width:100%;height:2%;-webkit-app-region: drag;min-height:20px;"></span>
 		<div id="header">
@@ -269,7 +269,6 @@
 			</span>
 		</span>
 		<div id="mainmenu" class="row" style="opacity: 0;">
-			
 			<div id="container-1" title="Add Group Chat to OBS"  alt="Add Group Chat to OBS" tabindex="2" role="button" aria-pressed="false" onkeyup="enterPressedClick(event,this);" class="column columnfade pointer rounded card" style=" overflow-y: auto;">
 				
 					<h2>
@@ -900,8 +899,13 @@
 				<i style="margin-top:30px;font-size:600%;overflow:hidden;" class="largeDarkIcon las la-heartbeat"></i>
 			</div>
 			
+			<div id="container-17" class="column columnfade pointer rounded card hidden" style="overflow: hidden;" onclick="window.location = './whip';">
+				<h2><span data-translate="publish-via-whip">Publish via WHIP</span></h2>
+				<i style="margin-top:30px;font-size:600%;overflow:hidden;" class="largeDarkIcon las la-broadcast-tower"></i>
+			</div>
+			
 			<div id="container-16" class="column columnfade pointer rounded card hidden" style=" overflow-y: auto;">
-				<h2><span data-translate="share-whepsrc">Share WHEP Media Source</span></h2>
+				<h2><span data-translate="share-whepsrc">Share via WHEP</span></h2>
 				<i style="margin-top:30px;font-size:560%;overflow:hidden;" class="largeDarkIcon las la-broadcast-tower"></i>
 				<div class="container-inner">
 					<br />
@@ -927,10 +931,15 @@
 						</label>
 					</div>
 				</div>
-
 			</div>
 			
 			<p></p>
+			
+			<div id="unexpectedPushLink" class='hidden' style="width:100%;color: white;display:block;font-size:130%;">
+				<h2>If this page is unexpected, double check your links.</h2>
+				<b>?push=xxx</b> links are for sending video, while <b>?view=xxx</b> links are for viewing.
+			</div>
+			
 			<div id="info" class="fullcolumn columnfade">
 				<center>
 					<div class="infoblob" align="left">
@@ -2561,11 +2570,11 @@
 			// session.hidehome = true; // If used, 'hide home' will make the landing page inaccessible, along with hiding a few go-home elements.
 			// session.record = false; // uncomment to block users from being able to record via vdo.ninja's built in recording function
 		</script>
-		<script type="text/javascript" crossorigin="anonymous" id="lib-js" src="./lib.js?ver=833"></script>
+		<script type="text/javascript" crossorigin="anonymous" id="lib-js" src="./lib.js?ver=838"></script>
 		<!-- 
 		// If you wish to change branding, blank offers a good clean start.
 		<script type="text/javascript" id="main-js" src="./main.js" data-translation="blank"></script>
 		-->
-		<script type="text/javascript" crossorigin="anonymous" id="main-js" src="./main.js?ver=650"></script>
+		<script type="text/javascript" crossorigin="anonymous" id="main-js" src="./main.js?ver=655"></script>
 	</body>
 </html>

@@ -258,15 +258,72 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 	}
 	
 	if (urlParams.has('avatarimg') || urlParams.has('bgimage') || urlParams.has('bgimg')) { // URL or data:base64 image. Becomes local to this viewer only.  This is like &avatar, but slightly different. Just CSS in this case
-		var avatarImg = urlParams.get('avatarimg') || urlParams.get('bgimage') || urlParams.get('bgimg') || "./media/avatar.webp"; 
+		var avatarImg = urlParams.get('avatarimg') || urlParams.get('bgimage') || urlParams.get('bgimg') || "./media/avatar1.png"; 
 		if (avatarImg){
 			try {
 				avatarImg = decodeURIComponent(avatarImg);
 			} catch(e){}
 			try {
-				avatarImg = 'url("'+avatarImg+'")';
-				document.documentElement.style.setProperty('--video-background-image', avatarImg);
-				document.documentElement.style.setProperty('--video-background-image-size', "contain");
+				let fallbackImage = new Image();
+				fallbackImage.src = avatarImg;
+				session.style = -1;
+				fallbackImage.onload = function(){
+					document.documentElement.style.setProperty('--video-background-image', 'url("'+avatarImg+'")');
+					if (session.meterStyle!==5){
+						document.documentElement.style.setProperty('--video-background-image-size', "contain"); 
+					}
+				}
+			} catch(e){}
+		}
+	} 
+	if (urlParams.has('avatarimg2') || urlParams.has('bgimage2') || urlParams.has('bgimg2')) { // URL or data:base64 image. Becomes local to this viewer only.  This is like &avatar, but slightly different. Just CSS in this case
+		var avatarImg2 = urlParams.get('avatarimg2') || urlParams.get('bgimage2') || urlParams.get('bgimg2') || "./media/avatar2.png"; 
+		if (avatarImg2){
+			try {
+				avatarImg2 = decodeURIComponent(avatarImg2);
+			} catch(e){}
+			try {
+				let fallbackImage2 = new Image();
+				fallbackImage2.src = avatarImg2;
+				fallbackImage2.onload = function(){
+					document.documentElement.style.setProperty('--video-background-image-talking', 'url("'+avatarImg2+'")');
+					if (session.meterStyle!==5){
+						document.documentElement.style.setProperty('--video-background-image-size', "contain"); 
+					}
+				}
+				session.audioEffects = true;
+				session.meterStyle = 4;
+				session.style = -1;
+				if (session.showControls===null){
+					session.showControls = false;
+				}
+				
+			} catch(e){}
+		}
+	}
+	
+	if (urlParams.has('avatarimg3') || urlParams.has('bgimage3') || urlParams.has('bgimg3')) { // URL or data:base64 image. Becomes local to this viewer only.  This is like &avatar, but slightly different. Just CSS in this case
+		var avatarImg3 = urlParams.get('avatarimg3') || urlParams.get('bgimage3') || urlParams.get('bgimg3') || "./media/avatar3.png"; 
+		if (avatarImg3){
+			try {
+				avatarImg3 = decodeURIComponent(avatarImg3);
+			} catch(e){}
+			try {
+				
+				let fallbackImage3 = new Image();
+				fallbackImage3.src = avatarImg3;
+				fallbackImage3.onload = function(){
+					document.documentElement.style.setProperty('--video-background-image-screaming', 'url("'+avatarImg3+'")');
+					if (session.meterStyle!==5){
+						document.documentElement.style.setProperty('--video-background-image-size', "contain"); 
+					}
+				}
+				session.audioEffects = true;
+				session.meterStyle = 4;
+				session.style = -1;
+				if (session.showControls===null){
+					session.showControls = false;
+				}
 			} catch(e){}
 		}
 	} 
@@ -1244,7 +1301,9 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 	
 	if (session.scene!==false){
 		session.disableWebAudio = true;
-		session.audioEffects = false;
+		if (session.audioEffects===null){
+			session.audioEffects = false;
+		}
 		session.audioMeterGuest = false; 
 	}
 	
@@ -1653,6 +1712,8 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 			session.stereo = 4;
 		} else if (session.stereo === "2") {
 			session.stereo = 2;
+		} else if (session.stereo === "6") {
+			session.stereo = 6;
 		} else if (session.stereo === "in") {
 			session.stereo = 2;
 		} else {
@@ -2217,7 +2278,9 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 	if (window.obsstudio) {
 		session.disableWebAudio = true; // default true; might be useful to disable on slow or old computers?
 		session.audioMeterGuest = false;
-		session.audioEffects = false;
+		if (session.audioEffects===null){
+			session.audioEffects = false;
+		}
 		if (window.obsstudio.pluginVersion){
 			if (macOS){ // if mac, no fix
 				//session.obsfix = false;
@@ -3046,6 +3109,29 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 			}
 		}
 	}
+	
+	if (urlParams.has('whipoutcodec') || urlParams.has('woc')){
+		session.whipOutCodec = urlParams.get('whipoutcodec') || urlParams.get('woc') || false;
+	}
+	if (session.whipOutCodec){
+		session.whipOutCodec = session.whipOutCodec.toLowerCase();
+		if (session.whipOutCodec){
+			session.whipOutCodec = session.whipOutCodec.split(',');
+		}
+	}
+	
+	if (urlParams.has('whipoutaudiobitrate') || urlParams.has('woab')){
+		session.whipOutAudioBitrate = urlParams.get('whipoutaudiobitrate') || urlParams.get('woab') || false;
+		if (session.whipOutAudioBitrate ){
+			session.whipOutAudioBitrate  = parseInt(session.whipOutAudioBitrate );
+		}
+	}
+	if (urlParams.has('whipoutvideobitrate') || urlParams.has('wovb')){
+		session.whipOutVideoBitrate = urlParams.get('whipoutvideobitrate') || urlParams.get('wovb') || false;
+		if (session.whipOutVideoBitrate){
+			session.whipOutVideoBitrate = parseInt(session.whipOutVideoBitrate);
+		}
+	}
 
 	if (urlParams.has('height') || urlParams.has('h')) {
 		session.height = urlParams.get('height') || urlParams.get('h');
@@ -3519,14 +3605,22 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 	if (urlParams.has('meter') || urlParams.has('meterstyle')){ // same as also adding &style=3
 		session.meterStyle = urlParams.get('meter') || urlParams.get('meterstyle') || 1;
 		session.meterStyle = parseInt(session.meterStyle);
-		session.style=3;
+		if (session.meterStyle<4){
+			session.style=3; // black canvas
+		} else {
+			session.style = -1; // no canvas
+		}
 		session.audioEffects = true;
+	}
+	
+	if (session.meterStyle==5){
+		document.documentElement.style.setProperty('--video-background-image-size-talking', 'auto 35%');
+		document.documentElement.style.setProperty('--video-background-image-size-screaming', 'auto 45%');
 	}
 
 	if (urlParams.has('directorchat') || urlParams.has('dc')){
 		session.directorChat = true;
 	}
-	
 	
 
 	if (urlParams.has('style') || urlParams.has('st')) {
@@ -3937,6 +4031,15 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 			} else {
 				getById("head1").innerHTML = '<br /><span style="color:#CCC" data-translate="please-select-which-to-share">- Please select which you wish to share</span>';
 			}
+			
+			if (!session.cleanOutput){
+				try {
+					if (window.obsstudio){
+						getById("unexpectedPushLink").classList.remove("hidden");
+					}
+				} catch(e){}
+			}
+			
 		}
 	}
 	

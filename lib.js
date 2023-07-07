@@ -4239,8 +4239,8 @@ function updateMixerRun(e=false){  // this is the main auto-mixing code.  It's a
 									session.rpcs[i].mutedStateMixer = true;
 								}
 								if (!session.hiddenSceneViewBitrate){ 
-									session.rpcs[i].videoElement.classList.add("nogb");
-								}
+									session.rpcs[i].videoElement.nogb = 2;
+								} 
 							} else {
 								if (session.groupAudio){
 									session.requestRateLimit(0, i, false);
@@ -4445,7 +4445,7 @@ function updateMixerRun(e=false){  // this is the main auto-mixing code.  It's a
 						if (session.scene!==false){
 							session.requestRateLimit(session.hiddenSceneViewBitrate, i, true);  // hidden. I dont want it to be super low, for video quality reasons.
 							if (!session.hiddenSceneViewBitrate){ 
-								session.rpcs[i].videoElement.classList.add("nogb");
+								session.rpcs[i].videoElement.nogb = 2;
 							}
 						} else {
 							session.requestRateLimit(0, i, true); // w/e   This is not in OBS, so we just set it as low as possible.  Shoudln't exist really unless loading?
@@ -4522,6 +4522,13 @@ function updateMixerRun(e=false){  // this is the main auto-mixing code.  It's a
 						} else {
 							session.requestRateLimit(-1, i);
 						}
+					}
+					if (session.rpcs[i].videoElement.nogb==2){
+						session.rpcs[i].videoElement.nogb = 1;
+						session.rpcs[i].videoElement.classList.add("nogb");
+					} else if (session.rpcs[i].videoElement.nogb==1){
+						session.rpcs[i].videoElement.nogb = 0;
+						session.rpcs[i].videoElement.classList.remove("nogb");
 					}
 				}
 			}
@@ -32538,7 +32545,7 @@ function updateIncomingVideoElement(UUID, video=true, audio=true){
 						if (session.showControls===null){
 							setTimeout(function(ele){
 								if (ele){
-									ele.controls=true;
+									ele.controls = true;
 								}
 							},500, session.rpcs[UUID].videoElement);
 						}
@@ -32775,6 +32782,54 @@ function addAudioPipeline(UUID, track){  // INBOUND AUDIO EFFECTS ; audio tracks
 		return track;
 	} catch(e) {errorlog(e);}
 	return track;
+}
+
+function processMiniInfoUpdate(miniInfo, UUID){
+	if ("qlr" in miniInfo){
+		session.rpcs[UUID].stats.info.quality_limitation_reason = miniInfo.qlr;
+	}
+	
+	if ("con" in miniInfo){
+		session.rpcs[UUID].stats.info.conn_type = miniInfo.con;
+	}
+	
+	if ("cpu" in miniInfo){
+		session.rpcs[UUID].stats.info.cpuLimited = miniInfo.cpu;
+		if (session.rpcs[UUID].signalMeter){
+			if (miniInfo.cpu){
+				session.rpcs[UUID].signalMeter.dataset.cpu = "1";
+			} else if ("cpu" in miniInfo){
+				session.rpcs[UUID].signalMeter.dataset.cpu = "0";
+			}
+		}
+	}
+	
+	if ("hw_enc" in miniInfo){
+		session.rpcs[UUID].stats.info.hardware_video_encoder = miniInfo.hw_enc;
+	}
+	
+	if ("bat" in miniInfo){
+		if (typeof miniInfo.bat == "number"){
+			session.rpcs[UUID].stats.info.power_level = miniInfo.bat*100;
+		} else {
+			session.rpcs[UUID].stats.info.power_level = null; 
+		}
+	}
+	if ("chrg" in miniInfo){
+		session.rpcs[UUID].stats.info.plugged_in = miniInfo.chrg;
+	}
+	
+	if (("out" in miniInfo) && ("c" in miniInfo.out)){
+		session.rpcs[UUID].stats.info.total_outbound_p2p_connections = miniInfo.out.c;
+		if (session.showConnections && session.rpcs[UUID].connectionDetails){
+			session.rpcs[UUID].connectionDetails.innerText = "🔗"+session.rpcs[UUID].stats.info.total_outbound_p2p_connections;
+			session.rpcs[UUID].connectionDetails.dataset.value = session.rpcs[UUID].stats.info.total_outbound_p2p_connections;
+		}
+	}
+	
+	if (session.rpcs[UUID].batteryMeter){
+		batteryMeterInfoUpdate(UUID);
+	}
 }
 
 
@@ -33583,11 +33638,21 @@ function audioMeterGuest(mediaStreamSource, UUID, trackid){
 			}
 			
 			if (session.style==3 || session.meterStyle){ // overrides style
-				if (session.meterStyle==4){
-					if (session.rpcs[UUID].videoElement){
-						session.rpcs[UUID].videoElement.dataset.loudness = total;
+				if (session.rpcs[UUID].videoElement){
+					if (total>40){
+						session.rpcs[UUID].videoElement.dataset.speaking = "2";
+					} else if (total>10){
+						session.rpcs[UUID].videoElement.dataset.speaking = "1";
+					} else {
+						session.rpcs[UUID].videoElement.dataset.speaking = "0";
 					}
-					return; // this is cause we are using the data-loudness
+				
+					if (session.meterStyle==4){
+						session.rpcs[UUID].videoElement.dataset.loudness = total;
+						return; // this is cause we are using the data-loudness
+					}
+				} else if (session.meterStyle==4){
+					return;
 				}
 			} else if (session.scene!==false){ // if a scene, cancel
 				return;
@@ -34435,6 +34500,108 @@ function resizeWindow(width, height){
 	},5000);
 }
 
+function configureWhipOutSDP(description){ // THIS IS FOR WHIP-OUTPUT; it has 
+
+	var configs = false;
+	
+	if (SafariVersion && (SafariVersion<=13) && (iOS || iPad)){
+		// skip.  Not going to try to tinker with older iOS SDPs
+	} else if ((session.stereo==3) || (session.stereo==5) || (session.stereo==6) || (session.stereo==1)){ // stereo out
+		configs = {
+			'stereo': 1,
+			'useinbandfec': session.noFEC ? 0 : 1,
+			'maxptime': session.maxptime,
+			'minptime': session.minptime,
+			'ptime': session.ptime,
+			'dtx': session.dtx  // "usedtx", if no loud audio, stops sending audio for 400ms. default.
+		};
+		log("stereo enabled");
+	} else if (iOS || iPad){ // iOS doesn't have multichannel, so why even bother
+		configs = {
+			'useinbandfec': session.noFEC ? 0 : 1,
+			'maxptime': session.maxptime,
+			'minptime': session.minptime,
+			'ptime': session.ptime,
+			'dtx': session.dtx  // "usedtx", if no loud audio, stops sending audio for 400ms. default.
+		};
+		
+	} else if (session.stereo==4){
+		configs = {
+			'stereo': 2,
+			'useinbandfec': session.noFEC ? 0 : 1,
+			'maxptime': session.maxptime,
+			'minptime': session.minptime,
+			'ptime': session.ptime,
+			'dtx': session.dtx  // "usedtx", if no loud audio, stops sending audio for 400ms. default.
+		};
+		log("stereo enabled");
+	} else {
+		configs = {
+			'stereo': 0,
+			'useinbandfec': session.noFEC ? 0 : 1,
+			'maxptime': session.maxptime,
+			'minptime': session.minptime,
+			'ptime': session.ptime,
+			'dtx': session.dtx  // "usedtx", if no loud audio, stops sending audio for 400ms. default.
+		};
+	}
+	
+	if (session.whipOutAudioBitrate){
+		if (!configs){
+			configs = {
+				'maxaveragebitrate': session.whipOutAudioBitrate  * 1024, 
+				'cbr': session.cbr
+			};
+		} else{
+			configs.maxaveragebitrate = session.whipOutAudioBitrate  * 1024;
+			configs.cbr = session.cbr;
+		}
+	}
+	
+	if (configs){
+		description.sdp = CodecsHandler.setOpusAttributes(description.sdp, configs);
+	}
+	
+	if (iOS || iPad){ //  solves issues with iOS rotation not being correct
+		if (session.removeOrientationFlag && description.sdp.includes("a=extmap:3 urn:3gpp:video-orientation\r\n")){
+			description.sdp = description.sdp.replace('a=extmap:3 urn:3gpp:video-orientation\r\n', '');
+		}
+	}
+	
+	if (typeof session.whipOutCodec === "object"){
+		session.whipOutCodec.reverse().forEach(codec=>{
+			description.sdp = CodecsHandler.preferCodec(description.sdp, codec);
+			if (session.whipOutVideoBitrate){
+				description.sdp = CodecsHandler.setVideoBitrates(description.sdp , {
+					min: parseInt(session.whipOutVideoBitrate/10) || 1,
+					max: session.whipOutVideoBitrate || 1
+				}, codec);
+			}
+		});
+	} else if (session.whipOutCodec){
+		description.sdp = CodecsHandler.preferCodec(description.sdp, session.whipOutCodec);
+		if (session.whipOutVideoBitrate){
+			description.sdp  = CodecsHandler.setVideoBitrates(description.sdp , {
+				min: parseInt(session.whipOutVideoBitrate/10) || 1,
+				max: session.whipOutVideoBitrate || 1
+			}, session.whipOutCodec);
+		}
+	} else {
+		description.sdp = CodecsHandler.preferCodec(description.sdp,"h264"); // default
+		description.sdp = description.sdp.replace(/42001f/gi,"42e01f"); // openh264 set as default.
+		description.sdp = description.sdp.replace(/420029/gi,"42e01f"); 
+		
+		if (session.whipOutVideoBitrate){
+			description.sdp  = CodecsHandler.setVideoBitrates(description.sdp , {
+				min: parseInt(session.whipOutVideoBitrate/10) || 1,
+				max: session.whipOutVideoBitrate || 1
+			}, "h264");
+		}
+	}
+	return description;
+}
+
+
 function whipOut(){
 	log("whipOut");
 	var candidates = [];
@@ -34570,15 +34737,16 @@ function whipOut(){
 		warnlog("ON NEGO NEEDED");
 		warnlog(event);
 		try {
-			session.whipOut.createOffer().then(function(offer){
-				//offer.sdp = CodecsHandler.setOpusAttributes(offer.sdp, {'stereo': 1});
-				offer.sdp = CodecsHandler.preferCodec(offer.sdp,"h264");
-				if (!codec){
-					offer.sdp = offer.sdp.replace(/42001f/gi,"42e01f");
-					offer.sdp = offer.sdp.replace(/420029/gi,"42e01f"); 
+			session.whipOut.createOffer().then(function(description){
+				
+				try {
+					description = configureWhipOutSDP(description)
+				} catch(e){
+					errorlog(e);
 				}
-				warnlog(offer);
-				return session.whipOut.setLocalDescription(offer);
+				
+				warnlog(description);
+				return session.whipOut.setLocalDescription(description);
 			}).then(function() {
 				//log(session.whipOut.localDescription);
 				var sdp = session.whipOut.localDescription.sdp;
@@ -34611,6 +34779,11 @@ function whipOut(){
 						jsep.sdp = this.responseText;
 						jsep.type = "answer";
 						
+						try {
+							jsep = configureWhipOutSDP(jsep)
+						} catch(e){
+							errorlog(e);
+						}
 						
 						warnlog("Processing answer:");
 						warnlog(jsep);

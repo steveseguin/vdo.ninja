@@ -273,7 +273,8 @@
 				var iframeContainer = document.createElement("span");
 
 				iframe.allow = "autoplay";
-				var srcString = "./?view=" + streamID + "&cleanoutput&privacy&noaudio&scale=0&speedtest="+zone; // No TURN servers set on the reciever. Don't want to query for TURN servers needlessly.
+				// I've removed &privacy from the view link, and left it just on the push link. This hopefully solves compatibility issues
+				var srcString = "./?view=" + streamID + "&cleanoutput&noaudio&scale=0&speedtest="+zone; // No TURN servers set on the reciever. Don't want to query for TURN servers needlessly.
 
 				if (urlParams.has("turn")) {
 					srcString = srcString + "&turn=" + urlParams.get("turn");
