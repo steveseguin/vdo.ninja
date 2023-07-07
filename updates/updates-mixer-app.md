@@ -2,6 +2,17 @@
 
 [mixer-app.md](../steves-helper-apps/mixer-app.md "mention")
 
+#### June 30
+
+* Mixer App has been updated to use [`&hash`](../newly-added-parameters/and-hash.md) instead of [`&password`](../general-settings/password.md) for guest invites.
+* Mixer also now has built-in support for the option to obfuscate links with invite.cam.
+* The option to add custom URL parameters to the invite link also added to the Mixer App.
+* An issue with how the [`&broadcast`](../advanced-settings/view-parameters/broadcast.md) toggle was being saved to local storage was fixed in the Mixer App.
+
+![](../.gitbook/assets/image.png)
+
+on production at [https://vdo.ninja/mixer](https://vdo.ninja/mixer)
+
 #### May 3
 
 * Further improved the new Mixer's feature where you can have OBS and the Mixer synced, so you can have OBS and the Mixer change scenes/layout automatically when either changes. (ie: change your OBS scene will auto activate the linked VDO.Ninja mixer layout.) The improvement is more customization over whether you want the sync to work both ways or not, and I've improved the speed of syncing to be instant.

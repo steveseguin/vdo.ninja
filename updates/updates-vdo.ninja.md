@@ -1,7 +1,65 @@
 # Updates - VDO.Ninja
 
+#### June 28 <a href="#august-31" id="august-31"></a>
+
+* Added `&slot=N`, which is a guest side property (sender side). It just tells the director ([Mixer App](../steves-helper-apps/mixer-app.md) / [`&slotsmode`](../advanced-settings/director-parameters/and-slotmode.md)) which slot the guest should prefer to be in, if slots are being auto-assigned. If the desired slot is already taken, then that guest will then not be assign a slot. If the guest was assigned a slot by the director, refreshing will keep the assign slot, and the URL-specified slot preference will be ignored.
+* Fixed an issue where custom scene names in the director's room were incorrectly being capitalized.
+* Users with old iOS (iOS 15 and older) versions will be greeted with a message, recommending they update their system's OS. iOS 16 and newer has many important bug fixes, so its strongly recommended. It should trigger when using Safari; not sure about all other browsers on iOS yet though.\
+  ![](<../.gitbook/assets/image (5).png>)
+*   I updated [`&orderby`](../newly-added-parameters/and-orderby.md) to work with non-director view links, such as with scenes or guests.
+
+    \-- Previously `&orderby` only worked with the director's view to sort the positioning of control boxes, based on the _stream ID_, but now it can apply to the auto-mixer.\
+    \-- The _mix order_, or [`&order=N`](../source-settings/order.md), of each guest takes priority over the name when sorting. By default all guests have a mix order of 0, mind you. You can change it dynamically as a guest, via the mix-order option in each guest's control box, or pre-assign it via URL with `&order=N` on the guest invite.
+*   I also added `&orderby=label` as an option, which will sort based on the display name (`&label`) of each video, if the label is set, instead of by stream ID.
+
+    \-- This option doesn't apply to the director's view at the moment, but it does work when used with respect to the auto-mixer (guests/scenes).\
+    \-- The label sort ignores letter casing, while the default stream ID includes letter casing in the sorting logic.
+
+\*\*\* on alpha for now
+
+#### June 27 <a href="#august-31" id="august-31"></a>
+
+* [`&sticky`](../general-settings/sticky.md) and the "save room" button won't work for links loaded in OBS Studio anymore - there isn't a usecase for this really, and using `&sticky` there just complicates things for some users.
+* Modified the initial p2p connection logic in VDO.Ninja to be a bit more aggressively in dealing with signaling distruptions caused by extreme packet loss and lag. So if a browser can't finalize the connection after X seconds, I just force restart it now, without waiting for it to error. I think this will reduce how often two guests in a large room can't see/hear each other. Let me know if you experience new issues tho as a result.
+* Improved some communication logic related to transfer rooms, where a director transferring a guest into another room with broadcast mode or queue mode being enabled didn't always work as intended if the guest had a high ping (>500ms). Transfers will take a bit longer to kick in now, upwards of a few seconds in some cases, but that transfer issue should be fixed.
+*   Updated the [`&hidecodirectors`](../advanced-settings/director-parameters/and-hidecodirectors.md) viewer-option with the aliases `&hidedirector` and `&hd`, but also changed the logic so it stops the video/audio/IFrame/widget data from any director loading.
+
+    \--- This is a bit like the opposite of [`&showdirector`](../viewers-settings/and-showdirector.md), but only viewer side.\
+    \--- Another change is that it works with more than just one codirector hiding another codirector, but can be used with scenes, view links, or guests.\
+    \--- Lastly, this is not like [`&exclude`](../advanced-settings/view-parameters/and-exclude.md), as it still allows the data-connection to happen between the two peers, allowing chat and two codirectors to sync their dashboards/commands. Keeping data connections active is important for directors, who rely on them to issue commands, so exclude is a bit to harsh in some cases.
+
+\*\* all changes pushed to production
+
+#### June 26 <a href="#august-31" id="august-31"></a>
+
+**VDO.Ninja flags added**
+
+* Added `&poster` as a URL option; lets you specify a poster image for videos that have not yet started playing. (using the built-in HTML poster attribute) - This flag takes an encoded URL, pointing to a CORS-accessible image file.
+* Added `&hideplaybutton`, (`&hpb`), which will hide the default big play button that overlays a video when auto play is not allowed. This option is useful when you want to perhaps include your own playbutton as part of the poster image.
+
+Example of the commands:
+
+```
+https://vdo.ninja/alpha/?view=YbFmisR&poster=./media/bg_sample.webp&hideplaybutton
+```
+
+\*\* on alpha for testing
+
+#### June 19 <a href="#august-31" id="august-31"></a>
+
+* Created `&queuetransfer` (`&qt`), which will transfer a guest from one room into another, but one transferred, the guest will be in Queue mode. So they won't share their video with anyone by the director.
+*   Added an 'activate guest' button to the director's controls, so that when a guest connects in queue mode, (yet the director isn't also in queue mode, as is typical for a queue mode setup), the director can take any select user out of queue mode.
+
+    \--- This has the result of guests joining a room in queue mode, and only being able to see the main director by default.\
+    \--- In this mode, the director can at any point allow the guest to see and talk to everyone in the room by taking them out of queue mode by activating them with the button.\
+    \--- You could of achieved a similar function to this 'activate button' as just transferring the guest back to the same room, but this has some polish and is less confusing.
+* Some more CSS fixes when in dark-mode, plus the create room buttons are now green.
+
+\*\* on alpha and now also on production (edited)
+
 #### June 14 <a href="#august-31" id="august-31"></a>
 
+* Few CSS fixes, including a larger thumb-button for the input value sliders, making it easier to use on mobile devices, and the START button on darkmode had a text-color fix.
 * I've added [`&broadcasttransfer`](../advanced-settings/director-parameters/and-broadcasttransfer-alpha.md) (aka `&bct`) as a URL option, which will let you specify the default for whether to transfer a guest from room to room in broadcast mode or not. Mainly useful for when using [`&rooms`](../director-settings/rooms.md), since there isn't a transfer menu option when using it, since its more of a hotkey option.
 * I made some fixes to the UI as well, related to [`&queue`](../general-settings/queue.md) and [`&rooms`](../director-settings/rooms.md) and the upload button (which is now part of the chat pop up).
 * When a guest has a network disconnection with the handshake server while in a transfer room, I do a better job properly closing all existing peer to peer connections, and putting the guest back into the main lobby room. The improved logic also works with [`&include`](../advanced-settings/mixer-scene-parameters/and-include.md), so if you specify a stream via [`&include`](../advanced-settings/mixer-scene-parameters/and-include.md) that isn't in a room, it won't be disconnected like other non-excepted stream IDs.
@@ -43,7 +101,7 @@
 
     \-- If the director wants their screen share to show in the scene, but not their webcam, they can use [`&showdirector=3`](../viewers-settings/and-showdirector.md) now instead.\
     \-- The screen share still shows for the director, in its own control box, but add-to-scene options are hidden and some text clarifying the performer state of the screen share is provided.\
-    ![](<../.gitbook/assets/image (4).png>)
+    ![](<../.gitbook/assets/image (4) (4).png>)
 
 \*\* update is currently on alpha, just pending a bit more testing. [https://vdo.ninja/alpha/](https://vdo.ninja/alpha/)
 
@@ -174,7 +232,7 @@
 
 * Fixed an issue where if the main director reloads their page, they will have the current director state updated on load, provided by any existing co-directors in the room. Before, only director -> codirector and codirector -> codirector state syncing worked, resulting in the room's state being cleared whenever the main director reloaded.
 * Made the option to select an [avatar](../advanced-settings/video-parameters/and-avatar.md) / effect default-on when joining as a director.\
-  ![](<../.gitbook/assets/image (7).png>)
+  ![](<../.gitbook/assets/image (7) (1).png>)
 *   Fixed an issue where the mute-video track button didn't always appear when a director with an active video track.
 
     \
@@ -189,7 +247,7 @@
 * [`&selfbrowsersurface`](../advanced-settings/screen-share-parameters/and-selfbrowsersurface.md), which excludes the current tab as an screen share source option. (you can pass `include` or `exclude` as a value to control this though)
 * [`&systemaudio`](../advanced-settings/screen-share-parameters/and-systemaudio.md), which excludes the system-audio as an audio source when display sharing. Tab audio is still available though. (can help prevent accidental audio feedback loops)
 * [`&displaysurface`](../advanced-settings/screen-share-parameters/and-displaysurface.md) will pre-select "display-share", rather than tab-share, when screen sharing. You can pass `monitor`, `browser`, or `window` as options to customize this though.\
-  ![](../.gitbook/assets/image.png)\
+  ![](<../.gitbook/assets/image (7).png>)\
   \
   For more details on these new features see here: [https://developer.chrome.com/docs/web-platform/screen-sharing-controls/](https://developer.chrome.com/docs/web-platform/screen-sharing-controls/) (Chrome/chromium-browsers only)\
   \
@@ -479,7 +537,7 @@
 #### February 10 <a href="#august-31" id="august-31"></a>
 
 * You can set the [totalroombitrate](../advanced-settings/video-bitrate-parameters/totalroombitrate.md) via manual value input now (rather than slider) in the room settings menu. (on vdo.ninja production)\
-  ![](<../.gitbook/assets/image (5) (2).png>)
+  ![](<../.gitbook/assets/image (5) (2) (2).png>)
 
 #### February 9 <a href="#august-31" id="august-31"></a>
 
@@ -968,7 +1026,7 @@
 * Updated the screen-share layouts to have a larger screen, relative to the other videos: It now targets an average of around 80% screen real-estate for the main screen share.
 *   Up to 20-videos on screen now are supported in the screen-share view; before after around 12-videos they started to be hidden
 
-    ![](<../.gitbook/assets/image (3) (1) (3).png>)![](<../.gitbook/assets/image (5) (2) (2).png>)\
+    ![](<../.gitbook/assets/image (3) (1) (3).png>)![](<../.gitbook/assets/image (5) (2) (2) (1).png>)\
     ![](<../.gitbook/assets/image (2) (2) (3) (2).png>)![](<../.gitbook/assets/image (4) (1) (1) (2) (1).png>)\
     \
     \*\*changes on alpha (vdo.ninja/alpha/) and github
@@ -1202,7 +1260,7 @@
   \-- This is a new noise gate, that lowers your mic volume to 10% of its current value based on volume-level activity. If you haven't made a significant sound in few seconds, the noise gate kicks in, and will re-enable when a significant noise is detected. It will take about 300-ms for the volume to recover once the noise triggers it back on, which can be a small bit harsh/distracting at times.\
   \-- [`&noisegate`](../source-settings/noisegate.md) or `&noisegate=1` (`&gating`/`&ng`) will enable it by default (if using it in a room, currently); and `&noisegate=0` will hide the option from the menu.\
   \-- The older existing `&noisegate=1` option I moved to `&noisegate=4`, as this new version is replacing it. I'm keeping the older version around as an option though.\
-  ![](<../.gitbook/assets/image (7) (1) (1) (3).png>)
+  ![](<../.gitbook/assets/image (7) (1) (1) (3) (1).png>)
 * Fixed some of the labels for the local audio labels; camel-case is replaced with words, and true/false replaced with on/off.
 *   Fixed an issue where iPhones's video output would freeze when the director would feature-highlight any other participant.
 

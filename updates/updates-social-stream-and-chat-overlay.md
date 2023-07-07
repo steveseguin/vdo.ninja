@@ -3,6 +3,33 @@
 [social-stream.md](../steves-helper-apps/social-stream.md "mention")\
 [chat-overlay.md](../steves-helper-apps/chat-overlay.md "mention")
 
+#### **June 29**
+
+* vkplay.live support added to Social Stream
+
+#### **June 23**
+
+* Added stream events (non chat messages, like subs) to Twitch via Social Stream
+* Added support for "Hype Chat" (aka, super chat but on Twitch) to Social Stream
+
+#### **June 21**
+
+*   Added YouTube static comment support to Social Stream.
+
+    \
+    You need to activate it in the top-right corner of YouTube to have the buttons appear next to each comment you wish to push to Social Stream. To activate, press the small SS button when SocialStream is enabled to have the "Send to Social Stream" buttons appear.\
+    ![](<../.gitbook/assets/image (4).png>)
+*   You can now make a file called `badwords.txt` in Social Stream, with a line by line list of bad words to filter out from chat.
+
+    \-- There's already a default blacklist of common bad words to filter out, but making your own badwords.txt will override that default list.\
+    \-- You still need to enable the badwords toggle in the menu for this to use your list.\
+    \-- The extension or browser needs to be reloaded if you change the badwords.txt file for it to update.
+
+#### **June 20**
+
+* 7tv support with kick.com added to Social Stream
+* Xeenon.xyz support added to Social Stream also
+
 #### **June 4**
 
 * Fixed some Social Stream issues where `&random` caused messages to appear off screen at times in OBS.
@@ -18,7 +45,7 @@
 #### **May 10**
 
 * afreecatv.com support added to Social Stream. Update the extension and pop out chat to use.\
-  ![](<../.gitbook/assets/image (6) (6).png>)![](<../.gitbook/assets/image (5).png>)
+  ![](<../.gitbook/assets/image (6) (6).png>)![](<../.gitbook/assets/image (5) (2).png>)
 
 #### **May 9**
 

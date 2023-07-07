@@ -25,7 +25,7 @@ The director of a room also has the option to enable/disable the widget function
 You can encode the URL here:\
 [https://www.urlencoder.org/](https://www.urlencoder.org/)
 
-<figure><img src="../../.gitbook/assets/image (7) (1) (1).png" alt=""><figcaption></figcaption></figure>
+<figure><img src="../../.gitbook/assets/image (7) (1) (1) (3).png" alt=""><figcaption></figcaption></figure>
 
 If the director uses `&widget`, it will auto sync that with all guests as they connect. I'll try to find ways to make it easier to resize/minimize in the future.
 
