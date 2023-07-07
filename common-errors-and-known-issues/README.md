@@ -1,5 +1,6 @@
 # Common errors and known issues
 
+* [very-old-iphone-support.md](very-old-iphone-support.md "mention")
 * [screen-share-is-just-a-black-video.md](screen-share-is-just-a-black-video.md "mention")
 * [mic-audio-dropping-out.md](mic-audio-dropping-out.md "mention")
 * [known-issues.md](known-issues.md "mention")
@@ -7,8 +8,11 @@
 * [works-on-wifi-but-not-on-4g.md](works-on-wifi-but-not-on-4g.md "mention")
 * [cant-capture-an-applications-audio-when-screen-sharing.md](cant-capture-an-applications-audio-when-screen-sharing.md "mention")
 * [cant-select-a-camera-lens-on-mobile.md](cant-select-a-camera-lens-on-mobile.md "mention")
+* [no-video-in-obs-just-an-add-camera-button.md](no-video-in-obs-just-an-add-camera-button.md "mention")
 * [audio-over-vdo.ninja-isnt-working.md](audio-over-vdo.ninja-isnt-working.md "mention")
 * [appearing-then-disappearing-guest.md](appearing-then-disappearing-guest.md "mention")
+* [cant-auto-start-screen-sharing.md](cant-auto-start-screen-sharing.md "mention")
+* [audio-clicking-popping.md](audio-clicking-popping.md "mention")
 * [cant-share-my-screen.md](cant-share-my-screen.md "mention")
 * [nothing-shows-up-in-obs-or-it-is-choppy.md](nothing-shows-up-in-obs-or-it-is-choppy.md "mention")
 * [already-in-use-or-claimed-errors.md](already-in-use-or-claimed-errors.md "mention")
