@@ -509,6 +509,7 @@
   * [Works on WiFi but not on 4G](common-errors-and-known-issues/works-on-wifi-but-not-on-4g.md)
   * [Can't capture an application's audio when screen-sharing](common-errors-and-known-issues/cant-capture-an-applications-audio-when-screen-sharing.md)
   * [Can't select a camera lens on mobile](common-errors-and-known-issues/cant-select-a-camera-lens-on-mobile.md)
+  * [No video in OBS, just an "Add camera" button](common-errors-and-known-issues/no-video-in-obs-just-an-add-camera-button.md)
   * [Audio over VDO.Ninja isn't working](common-errors-and-known-issues/audio-over-vdo.ninja-isnt-working.md)
   * [Appearing then disappearing guest](common-errors-and-known-issues/appearing-then-disappearing-guest.md)
   * [Can't auto-start screen sharing](common-errors-and-known-issues/cant-auto-start-screen-sharing.md)
