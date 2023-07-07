@@ -11,6 +11,7 @@
 * [appearing-then-disappearing-guest.md](appearing-then-disappearing-guest.md "mention")
 * [cant-share-my-screen.md](cant-share-my-screen.md "mention")
 * [nothing-shows-up-in-obs-or-it-is-choppy.md](nothing-shows-up-in-obs-or-it-is-choppy.md "mention")
+* [already-in-use-or-claimed-errors.md](already-in-use-or-claimed-errors.md "mention")
 * [blue-spinning-window.md](blue-spinning-window.md "mention")
 * [cursor-shows-trailing-or-artifacting.md](cursor-shows-trailing-or-artifacting.md "mention")
 * [packet-loss.md](packet-loss.md "mention")
