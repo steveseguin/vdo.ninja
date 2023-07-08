@@ -2,6 +2,16 @@
 
 [native-mobile-app-versions.md](../steves-helper-apps/native-mobile-app-versions.md "mention")
 
+#### July 1
+
+*   I pushed an update to the Google Play store with a BETA (open test) release of the android native app (for VDO.Ninja).
+
+    \--- It fixes an issue where if more than 5 cameras listed, additional cameras are blanked out and not available. This also often blocks the mic-only option, as its typically listed last.\
+    \--- Some additional library and null-safety updates applied to this beta build also, so it might be buggy -- hence why its going to beta testing first.\
+    \--- I'm not sure when the beta will be "approved" for download, but it should be available soon if you've signed up for the beta in the App Store. Please report issues and I'll try to have it available for mass production download shortly after.
+
+\*\*\* seems to be live now
+
 #### May 7
 
 * I have updated the **iOS** native app to have **system-wide screen sharing support**, rather than just in-app screen sharing. (Android already had it).\

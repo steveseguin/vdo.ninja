@@ -1,5 +1,53 @@
 # Updates - VDO.Ninja
 
+#### July 7 <a href="#august-31" id="august-31"></a>
+
+* Fixed an issue with some private turn servers hosted by others and niche compatibility issues when used with the speedtest.
+* Fixed an issue where the control bar would appear for guests that have joined without video and were added to a manual group scene.
+* Fixed an issue where the avatar image didn't appear always (was triggered I think with scene=1 or using group I think).
+* [`&stereo=6`](../general-settings/stereo.md) is added. Unlike `&stereo=1`, it doesn't change the default [bitrate](../advanced-settings/view-parameters/audiobitrate.md)/[aec](../source-settings/aec.md)/[denoise](../source-settings/and-denoise.md)/[autogain](../source-settings/autogain.md) settings; solely just enables stereo for both in/out.
+* If you put a PUSH link into OBS, you'll get a little notice asking if you made a mistake, with a solution on how to fix it.\
+  ![](<../.gitbook/assets/image (1).png>)
+
+\*\* changes on GitHub and on alpha
+
+#### July 4 <a href="#august-31" id="august-31"></a>
+
+*   Added [`&meterstyle=5`](../advanced-settings/design-parameters/meterstyle.md), which has the audio-only background image pulse larger in size when that specific guest is speaking. This is just another new way to tell when someone is speaking; there's several ways now.
+
+    \--- It can be used in conjunction with [`&bgimage`](../advanced-settings/design-parameters/and-bgimage.md) to specific a custom background image for the video, which will pulse in size. ie: `&meterstyle=5&bgimage=./media/avatar1.png`
+* When using [`&meterstyle=4`](../advanced-settings/design-parameters/meterstyle.md), or greater, the background of an audio-only element is transparent now; not black. I also specifically hide the video-control bar when using `&meterstyle=4`, but you can use [`&videocontrols`](../advanced-settings/newly-added-parameters/and-videocontrols.md) to add them back in if needed.
+*   When using any [`&meterstyle`](../advanced-settings/design-parameters/meterstyle.md) effect, I now I include a data attribute called `data-speaking` to the video element. It will be either 0, 1, or 2. 0 is quiet, 1 is whispering, and 2 is loud. `&meterstyle=4` includes a fine-grain option already for loudness as an attribute, but for basic CSS needs, this option might be more approachable.
+
+    \-- You can use this attribute to use CSS to customize your own effects when someone speaks. You can further target what is CSS used based on a specific guest by using each video's stream ID data attribute as well.
+*   `&avatarimg2` and `&avatarimg3` were added, and work in conjunction with the existing [`&bgimage`](../advanced-settings/design-parameters/and-bgimage.md) parameter. You pass an URL-encoded image URL to each, and when a guest speaks, it will switch their background image between the 3 possible images, based on their loudness.
+
+    \-- eg:
+
+    ```
+    vdo.ninja/alpha/?view=stream2,stream2&avatarimg=./media/avatar1.png&avatarimg2=./media/avatar2.png&avatarimg3=./media/avatar3.png
+    ```
+
+    \-- I've included some hand-drawn avatar sample images to test with; they are the default values for `&bgimage`, `&avatarimg2`, and `&avatarimg3`. (ugly, but mean to be just placeholders)\
+    \-- The images will only show when there is no active video and is essentially the same as using `&meterstyle=4` with some custom CSS to specify the behaviour, but it is not stream ID specific however.
+
+![](<../.gitbook/assets/image (24).png>)
+
+\*\* on vdo.ninja/alpha/
+
+#### July 1 <a href="#august-31" id="august-31"></a>
+
+* Added `&whipoutcodec=av1,h264,vp8` (`&woc`), which lets you specify the WHIP video output codec. It can take multiple values; if not used, the default at the moment is open264
+* Added `&whipoutaudiobitrate` (`&woab`) and `&whipoutvideobitrate` (`&wovb`), which lets you specified the WHIP audio and video bitrate (kbps).
+* [`&stereo`](../general-settings/stereo.md) now works with the WHIP output, so if enabled, you'll publish stereo 2.0 with a default audio bitrate of around 80 to 100-kbps; otherwise the default is mono at around 60kbps. These defaults bitrates might be changed own the road.
+* The WHIP sandbox test page is now configured with two drop down menus to let you select bitrate and codec for when publishing to a WHIP output.
+* The Twitch WHIP output example now has a default bitrate of 6000-kbps if used. The video codec for whip out by default is openh264, and the twitch output option uses that by default. (The Twitch defaults need to be changed via URL manually.)
+* Just a reminder you can test the WHIP out by publishing to the VDO.Ninja whip-in URL (`https://whip.vdo.ninja/STREAMID` and for playback, `https://vdo.ninja/?whip=STREAMID`).
+
+![](<../.gitbook/assets/image (9).png>)
+
+\*\* all changes are on alpha, with the updated whip sandbox here: [https://vdo.ninja/alpha/whip](https://vdo.ninja/alpha/whip) (edited)
+
 #### June 28 <a href="#august-31" id="august-31"></a>
 
 * Added `&slot=N`, which is a guest side property (sender side). It just tells the director ([Mixer App](../steves-helper-apps/mixer-app.md) / [`&slotsmode`](../advanced-settings/director-parameters/and-slotmode.md)) which slot the guest should prefer to be in, if slots are being auto-assigned. If the desired slot is already taken, then that guest will then not be assign a slot. If the guest was assigned a slot by the director, refreshing will keep the assign slot, and the URL-specified slot preference will be ignored.
@@ -301,7 +349,7 @@ https://vdo.ninja/alpha/?view=YbFmisR&poster=./media/bg_sample.webp&hideplaybutt
   \-- Go here, [https://vdo.ninja/alpha/whip](https://vdo.ninja/alpha/whip), enter your Twitch stream token in the correct field, GO, and then select your camera in VDO.Ninja as normal.\
   \-- There's also a new development version of OBS Studio that has improved support for direct publishing of OBS -> VDO.Ninja (via whip) here:\
   [https://github.com/obsproject/obs-studio/actions/runs/4711358202?pr=7926](https://github.com/obsproject/obs-studio/actions/runs/4711358202?pr=7926)\
-  ![](<../.gitbook/assets/image (9).png>)![](<../.gitbook/assets/image (16).png>)
+  ![](<../.gitbook/assets/image (9) (1).png>)![](<../.gitbook/assets/image (16).png>)
 
 #### April 14 <a href="#august-31" id="august-31"></a>
 
@@ -310,7 +358,7 @@ https://vdo.ninja/alpha/?view=YbFmisR&poster=./media/bg_sample.webp&hideplaybutt
   This `&effects=8` mode might also be helpful in solving issues with cameras disconnecting or having their frame rate change while recording, causing issues with the recording. The canvas acts as a reliable middle man between the camera and output video stream, so if the camera's input stream fails, the recording stream will not be impacted, other than perhaps skipping some frames. The canvas is sensitive to CPU load or browser throttling though, so frame rates may fluctuate more often when using it, so I can't suggest using it unless the guest/user is known to have a problematic camera.\
   \*\* on alpha
 * Added a new IFRAME code example that prompts a guest who is joining a room with a message if the director is not there yet. The message clears when the director joins the room. This sample can be used like a normal vdo.ninja/?room=xxx link (as seen below). The code is extremely easy to customize or embedded into your own websites. The code is just provided as an example. [https://vdo.ninja/examples/waitingroom?room=TESTROOM123](https://vdo.ninja/examples/waitingroom?room=TESTROOM123)\
-  ![](<../.gitbook/assets/image (15).png>)
+  ![](<../.gitbook/assets/image (15) (3).png>)
 
 #### April 13 <a href="#august-31" id="august-31"></a>
 

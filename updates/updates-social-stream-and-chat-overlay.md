@@ -3,6 +3,23 @@
 [social-stream.md](../steves-helper-apps/social-stream.md "mention")\
 [chat-overlay.md](../steves-helper-apps/chat-overlay.md "mention")
 
+#### **July 6**
+
+**Social Stream updates**
+
+* roll20.net had some updates
+* Owncast support fixed
+* General other patches/fixes
+
+#### **July 4**
+
+*   Added a `!giphy` chat command to Social Stream. You'll need to add you own Giphy API key in the extension settings to use this feature, but once enabled, chat messages containing `!giphy` will have an animated GIF get included with the message.
+
+    \-- The GIF image selected will be based on the words in the chat message; top closest match.\
+    \-- I'll probably change this feature as time goes on, to improve it, but let me know what you think.\
+    \-- How can it be better?\
+    ![](<../.gitbook/assets/image (25).png>)![](<../.gitbook/assets/image (15).png>)
+
 #### **June 29**
 
 * vkplay.live support added to Social Stream

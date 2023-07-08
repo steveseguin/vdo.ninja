@@ -47,7 +47,7 @@ The <mark style="color:red;">Guest Invite Link</mark> is what you send to a pers
 
 The <mark style="color:green;">OBS Browser Source link</mark> is what we will be putting into OBS to capture our guest’s video stream with.  We will also be calling this a VIEW link, as it contains \&view in the URL.
 
-<figure><img src="../.gitbook/assets/image (25).png" alt=""><figcaption></figcaption></figure>
+<figure><img src="../.gitbook/assets/image (25) (2).png" alt=""><figcaption></figcaption></figure>
 
 ![A QR-code is provided to make connecting your phone as a camera source easy](<../.gitbook/assets/image (121) (1) (1).png>)
 
