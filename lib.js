@@ -3677,6 +3677,11 @@ function switchModes(state=null){
 							target.appendChild(session.rpcs[UUID].signalMeter);
 						}
 					}
+					if (session.batteryMeter){
+						if (session.rpcs[UUID].batteryMeter){
+							target.appendChild(session.rpcs[UUID].batteryMeter);
+						}
+					}
 					if (session.rpcs[UUID].voiceMeter){
 						target.appendChild(session.rpcs[UUID].voiceMeter);
 					}
