@@ -5725,6 +5725,23 @@ function updateMixerRun(e=false){  // this is the main auto-mixing code.  It's a
 					}
 				}
 				
+				if (session.batteryMeter){
+					if (vid.dataset.UUID && !session.rpcs[vid.dataset.UUID].batteryMeter){
+						session.rpcs[vid.dataset.UUID].batteryMeter = getById("batteryMeterTemplate").cloneNode(true);
+						session.rpcs[vid.dataset.UUID].batteryMeter.classList.remove("hidden");
+						session.rpcs[vid.dataset.UUID].batteryMeter.id = "batteryMeter_" + vid.dataset.UUID;
+						session.rpcs[vid.dataset.UUID].batteryMeter.dataset.level = 0;
+						session.rpcs[vid.dataset.UUID].batteryMeter.title = miscTranslations["battery-meter"];
+						holder.appendChild(session.rpcs[vid.dataset.UUID].batteryMeter);
+						holder.batteryMeter = session.rpcs[vid.dataset.UUID].batteryMeter;
+					} else if (vid.dataset.UUID && session.rpcs[vid.dataset.UUID].batteryMeter){
+						if (!holder.batteryMeter){
+							holder.appendChild(session.rpcs[vid.dataset.UUID].batteryMeter);
+							holder.batteryMeter = session.rpcs[vid.dataset.UUID].batteryMeter;
+						}
+					}
+				}
+				
 				if (session.volumeControl && session.rpcs[vid.dataset.UUID].videoElement && (vid.tagName != "VIDEO")){
 					if (vid.dataset.UUID && !session.rpcs[vid.dataset.UUID].volumeControl){
 						session.rpcs[vid.dataset.UUID].volumeControl = getById("volumeControlTemplate").cloneNode(true);
