@@ -933,7 +933,7 @@ hr {
 	font-size: 1.5em;
 	z-index: 2;
 	cursor: help;
-	display:none;
+	display:block;
 }
 
 .battery-charging{
