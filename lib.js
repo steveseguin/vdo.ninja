@@ -16403,6 +16403,10 @@ async function createRoomCallback(passAdd, passAdd2) {
 	if (session.signalMeter===null){
 		session.signalMeter = true;
 	}
+
+	if (session.batteryMeter===null){
+		session.batteryMeter = true;
+	}
 	
 	if (session.directorPassword){
 		getById("coDirectorEnable").checked = true;
