@@ -17700,11 +17700,14 @@ function createControlBox(UUID, soloLink, streamID, slot_init=false) {
 			});
 		}
 		videoContainer.appendChild(session.rpcs[UUID].signalMeter);
-		
+	}
+	
+	if (session.batteryMeter){
 		////////
 		if (!session.rpcs[UUID].batteryMeter){
 			session.rpcs[UUID].batteryMeter = getById("batteryMeterTemplate").cloneNode(true);
 			session.rpcs[UUID].batteryMeter.id = "batteryMeter_" + UUID;
+			/*
 			if (session.rpcs[UUID].stats.info && (session.rpcs[UUID].stats.info.power_level!==null)){
 				var level = session.rpcs[UUID].batteryMeter.querySelector(".battery-level");
 				if (level){
@@ -17729,6 +17732,8 @@ function createControlBox(UUID, soloLink, streamID, slot_init=false) {
 			} else {
 				session.rpcs[UUID].batteryMeter.dataset.plugged = "1";
 			}
+   			*/
+			batteryMeterInfoUpdate(UUID);
 		}
 		videoContainer.appendChild(session.rpcs[UUID].batteryMeter);
 	}
