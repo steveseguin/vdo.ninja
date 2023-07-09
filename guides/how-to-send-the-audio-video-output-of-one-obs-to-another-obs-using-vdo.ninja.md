@@ -2,13 +2,13 @@
 
 In this walk-through we demonstrate how to use VDO.Ninja to stream a low-latency video/audio stream from one OBS Studio to another remote OBS Studio.
 
-Update: I also have created a video guide on how to output from OBS to VDO.Ninja here also:
+
 
 {% embed url="https://youtu.be/Ze1q6Qof2r0" %}
 
 #### Requirements
 
-* OBS Studio (goes for both local and remote systems)
+* OBS Studio
   * For some Linux or older systems, you may need a virtual camera plugin as well
 * A virtual audio cable&#x20;
   * For Windows, use VB-CABLE Virtual Audio
@@ -28,17 +28,12 @@ Please find below a diagram explaining the basic premise of what we are intendin
 
 This guide assumes you have OBS installed, along with the other required software, though we shall briefly cover these initial installation steps now.
 
-We also will assume you are using Windows. You will need to adapt accordingly for MacOS, which likely is going to be more complicated.
-
-On the computer that will be using Zoom or Google Hangouts to broadcast, please do the following:
-
-1. Uninstall and remove all old versions of OBS, including Streamlabs OBS if that is installed.
-2. Install OBS Studio.\
+1. Install OBS Studio (or StreamLabs, etc)\
    [https://github.com/obsproject/obs-studio/releases/](https://github.com/obsproject/obs-studio/releases/)
-3.  Lastly, install the VB-Cable Virtual Audio device.\
-    [https://www.vb-audio.com/cable/](https://www.google.com/url?q=https://www.vb-audio.com/Cable/\&sa=D\&source=editors\&ust=1658835550129391\&usg=AOvVaw3ine45P-vnxWJ7kpgt6fhV)
+2. Install the VB-Cable Virtual Audio device.\
+   [https://vb-audio.com/Cable/](https://vb-audio.com/Cable/)
 
-    (#3 is optional, depending on if you wish to send the audio from OBS or not)
+If you are on Mac, you can consider Loopback as a premium alternative option, if having problems.
 
 #### Step 1
 
@@ -121,3 +116,9 @@ Now we just need to stretch the video to fill the full scene. It should snap int
 All done! And that should be it! Problems?
 
 You can also ask for help on [Discord](https://discord.vdo.ninja/); usually help can be provided within minutes, if not usually within half a day.
+
+
+
+### WHIP Output
+
+Newer versions of OBS may also support WHIP output, which VDO.Ninja also supports. While the virtual camera might be the better option for many, details on[ WHIP are here](how-to-send-the-audio-video-output-of-one-obs-to-another-obs-using-vdo.ninja.md#whip-output)
