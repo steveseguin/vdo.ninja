@@ -16403,7 +16403,6 @@ async function createRoomCallback(passAdd, passAdd2) {
 	if (session.signalMeter===null){
 		session.signalMeter = true;
 	}
-
 	if (session.batteryMeter===null){
 		session.batteryMeter = true;
 	}
@@ -32872,7 +32871,7 @@ function batteryMeterInfoUpdate(UUID){
 			if (value > 100){value = 100;}
 			if (value < 0){ value = 0;}
 			level.style.height = parseInt(value)+"%";
-			if (value<10){
+			if (value<15){
 				session.rpcs[UUID].batteryMeter.classList.remove("warn");
 				session.rpcs[UUID].batteryMeter.classList.add("alert");
 			} else if (value<25){
@@ -32885,7 +32884,8 @@ function batteryMeterInfoUpdate(UUID){
 			if (value<100){
 				session.rpcs[UUID].batteryMeter.classList.remove("hidden");
 			}
-			session.rpcs[UUID].batteryMeter.title = value+"% battery remaining";
+			//session.rpcs[UUID].batteryMeter.title = value+"% battery remaining";
+			session.rpcs[UUID].batteryMeter.title = parseInt(value)+"% battery remaining";
 		}
 	}
 		
@@ -32894,6 +32894,9 @@ function batteryMeterInfoUpdate(UUID){
 		session.rpcs[UUID].batteryMeter.classList.remove("hidden");
 	} else {
 		session.rpcs[UUID].batteryMeter.dataset.plugged = "1";
+		// add on
+		session.rpcs[UUID].batteryMeter.title = parseInt(value)+"% charging";
+		session.rpcs[UUID].batteryMeter.classList.add("hidden");
 	}
 }
 
