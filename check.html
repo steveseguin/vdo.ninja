@@ -411,10 +411,22 @@
 								var bitrate = e.data.stats.inbound_stats[streamID][key]["Bitrate_in_kbps"];
 								updateData("bitrate", bitrate);
 							}
-							if ("Buffer_Delay_in_ms" in e.data.stats.inbound_stats[streamID][key]){
+							
+							
+							
+							
+							if ("Jitter_Buffer_ms" in e.data.stats.inbound_stats[streamID][key]){
+								var buffer = e.data.stats.inbound_stats[streamID][key]["Jitter_Buffer_ms"];
+								updateData("buffer", buffer);
+							} else if ("Buffer_Delay_in_ms" in e.data.stats.inbound_stats[streamID][key]){
 								var buffer = e.data.stats.inbound_stats[streamID][key]["Buffer_Delay_in_ms"];
 								updateData("buffer", buffer);
+							} else if ("Added_Buffer_Delay_ms" in e.data.stats.inbound_stats[streamID][key]){
+								console.log("Added_Buffer_Delay_ms");
+								var buffer = e.data.stats.inbound_stats[streamID][key]["Added_Buffer_Delay_ms"];
+								updateData("buffer", buffer);
 							}
+							
 							if ("packetLoss_in_percentage" in e.data.stats.inbound_stats[streamID][key]){
 								var packetloss = e.data.stats.inbound_stats[streamID][key]["packetLoss_in_percentage"];
 								if (packetloss != undefined) {

@@ -547,7 +547,7 @@ var CodecsHandler = (function() {
         return sdp;
     }
 
-    function setOpusAttributes(sdp, params) { 
+    function setOpusAttributes(sdp, params, debug=false) { 
         params = params || {};
 
         var sdpLines = sdp.split('\r\n');
@@ -635,7 +635,16 @@ var CodecsHandler = (function() {
 			}
         }
 
+		if (debug){
+			console.log();
+		}
+		
         sdpLines[opusFmtpLineIndex] = sdpLines[opusFmtpLineIndex].concat(appendOpusNext);
+		
+		if (debug){
+			console.log("Adding to SDP (audio): "+appendOpusNext+" --> Result: "+sdpLines[opusFmtpLineIndex]);
+		}
+		
         sdp = sdpLines.join('\r\n');
         return sdp;
     }
@@ -759,8 +768,8 @@ var CodecsHandler = (function() {
         setVideoBitrates: function(sdp, params, codec) {
             return setVideoBitrates(sdp, params, codec);
         },
-        setOpusAttributes: function(sdp, params) {
-            return setOpusAttributes(sdp, params);
+        setOpusAttributes: function(sdp, params, debug=false) {
+            return setOpusAttributes(sdp, params, debug);
         },
 		
 		getOpusBitrate: function(sdp){

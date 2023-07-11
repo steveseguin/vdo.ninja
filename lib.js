@@ -10272,7 +10272,11 @@ function printMyStats(menu, screenshare=false) { // see: setupStatsMenu
 		menu.innerHTML += "<hr>";
 	}
 	if (!screenshare && session.whepIn && session.whepIn.stats){
-		printViewValues({"Whip_Out_connection":session.whepIn.stats});
+		printViewValues({"Whep_In_connection":session.whepIn.stats});
+		menu.innerHTML += "<hr>";
+	}
+	if (!screenshare && session.whipOut && session.whipOut.stats){
+		printViewValues({"Whip_Out_connection":session.whipOut.stats});
 		menu.innerHTML += "<hr>";
 	}
 	for (var uuid in session.pcs) {
@@ -10311,10 +10315,20 @@ function updateLocalStats(){
 	var nackRate = 0;
 	var totalStreams = 0;
 	
+	var miscSenders = [];
+	
 	if (session.mc && session.mc.getSenders && session.mc.stats){
+		miscSenders.push(session.mc);
+	}
+	
+	if (session.whipOut && session.whipOut.getSenders && session.whipOut.stats){
+		miscSenders.push(session.whipOut);
+	}
+	
+	miscSenders.forEach(data=>{
 		try {
 			var atot = 0;
-			var senders = session.mc.getSenders(); // for any connected peer, update the video they have if connected with a video already.
+			var senders = data.getSenders(); // for any connected peer, update the video they have if connected with a video already.
 			senders.forEach((sender) => { // I suppose there could be a race condition between negotiating and updating this. if joining at the same time as changnig streams?
 				if (sender.track && sender.track.kind == "video" && sender.track.enabled) {
 					meshcastActive = true;
@@ -10324,25 +10338,25 @@ function updateLocalStats(){
 			});
 			//totalAudio += atot;
 			
-			if ("video_bitrate_kbps" in session.mc.stats){
-				totalBitrate+=session.mc.stats.video_bitrate_kbps || 0;
+			if ("video_bitrate_kbps" in data.stats){
+				totalBitrate+=data.stats.video_bitrate_kbps || 0;
 			}
-			if ("audio_bitrate_kbps" in session.mc.stats){
-				totalBitrate+=session.mc.stats.audio_bitrate_kbps || 0;
+			if ("audio_bitrate_kbps" in data.stats){
+				totalBitrate+=data.stats.audio_bitrate_kbps || 0;
 			}
-			if ("total_sending_bitrate_kbps" in session.mc.stats){
-				totalBitrate2+=session.mc.stats.total_sending_bitrate_kbps || 0;
+			if ("total_sending_bitrate_kbps" in data.stats){
+				totalBitrate2+=data.stats.total_sending_bitrate_kbps || 0;
 			}
 			
-			if ("quality_limitation_reason" in session.mc.stats){
-				if (session.mc.stats.quality_limitation_reason == "cpu"){
+			if ("quality_limitation_reason" in data.stats){
+				if (data.stats.quality_limitation_reason == "cpu"){
 					cpuLimited=true;
 				}
 			}
 			
 			
-			if ("nacks_per_second" in session.mc.stats){
-				nackRate += session.mc.stats.nacks_per_second;
+			if ("nacks_per_second" in data.stats){
+				nackRate += data.stats.nacks_per_second;
 				totalStreams += 1;
 			}
 			
@@ -10355,12 +10369,12 @@ function updateLocalStats(){
 			//} 
 		
 			
-			setTimeout(function(){
+			setTimeout(function(data){
 
-				if (!session.mc){return;}
-				session.mc.getStats().then(function(stats) {
-					if ("audio_bitrate_kbps" in session.mc.stats){
-						session.mc.stats.audio_bitrate_kbps=0;
+				if (!data){return;}
+				data.getStats().then(function(stats) {
+					if ("audio_bitrate_kbps" in data.stats){
+						data.stats.audio_bitrate_kbps=0;
 					}
 					
 					var nominatedCandidate = false;
@@ -10372,59 +10386,59 @@ function updateLocalStats(){
 						
 						if (stat.type == "transport"){
 							if ("bytesSent" in stat) {
-								if ("_bytesSent" in session.mc.stats){
-									if (session.mc.stats._timestamp){
+								if ("_bytesSent" in data.stats){
+									if (data.stats._timestamp){
 										if (stat.timestamp){
-											session.mc.stats.total_sending_bitrate_kbps = parseInt(8*(stat.bytesSent - session.mc.stats._bytesSent)/(stat.timestamp - session.mc.stats._timestamp));
+											data.stats.total_sending_bitrate_kbps = parseInt(8*(stat.bytesSent - data.stats._bytesSent)/(stat.timestamp - data.stats._timestamp));
 										}
 									}
 								}
-								session.mc.stats._bytesSent = stat.bytesSent;
+								data.stats._bytesSent = stat.bytesSent;
 							}
 							if ("timestamp" in stat) {
-								session.mc.stats._timestamp = stat.timestamp;
+								data.stats._timestamp = stat.timestamp;
 							}
 						} else if (stat.type == "outbound-rtp") {
 							if (stat.kind == "video") {
 								if ("framesPerSecond" in stat) {
-									session.mc.stats.resolution = stat.frameWidth + " x " + stat.frameHeight + " @ " + stat.framesPerSecond;
+									data.stats.resolution = stat.frameWidth + " x " + stat.frameHeight + " @ " + stat.framesPerSecond;
 								} else if ("frameHeight" in stat){
 									
 									if (("framesEncoded" in stat) && stat.timestamp){
 										var lastFramesEncoded = 0;
 										var lastTimestamp = 0;
 										try{
-											lastFramesEncoded = session.mc.stats._framesEncoded;
-											lastTimestamp = session.mc.stats._timestamp;
+											lastFramesEncoded = data.stats._framesEncoded;
+											lastTimestamp = data.stats._timestamp;
 										} catch(e){}
-										session.mc.stats._FPS = parseInt(10*(stat.framesEncoded - lastFramesEncoded)/(stat.timestamp/1000 - lastTimestamp))/10 || "?";
-										session.mc.stats._framesEncoded = stat.framesEncoded;
-										session.mc.stats._timestamp = stat.timestamp/1000;
-										session.mc.stats.resolution = stat.frameWidth + " x " + stat.frameHeight + " @ " + session.mc.stats._FPS;
+										data.stats._FPS = parseInt(10*(stat.framesEncoded - lastFramesEncoded)/(stat.timestamp/1000 - lastTimestamp))/10 || "?";
+										data.stats._framesEncoded = stat.framesEncoded;
+										data.stats._timestamp = stat.timestamp/1000;
+										data.stats.resolution = stat.frameWidth + " x " + stat.frameHeight + " @ " + data.stats._FPS;
 									} else {
-										session.mc.stats.resolution = stat.frameWidth + " x " + stat.frameHeight;
+										data.stats.resolution = stat.frameWidth + " x " + stat.frameHeight;
 									}
 								}
 								if ("encoderImplementation" in stat) {
-									session.mc.stats.video_encoder = stat.encoderImplementation;
+									data.stats.video_encoder = stat.encoderImplementation;
 									if (stat.encoderImplementation=="ExternalEncoder"){
-										session.mc.stats._hardwareEncoder = true; // I won't set this to false again, just because once I know it has one, I just need to assume it could always be used unexpectednly
-										session.mc.encoder = true;
+										data.stats._hardwareEncoder = true; // I won't set this to false again, just because once I know it has one, I just need to assume it could always be used unexpectednly
+										data.encoder = true;
 									} else if (stat.encoderImplementation=="MediaFoundationVideoEncodeAccelerator"){
-										session.mc.stats._hardwareEncoder = true; // I won't set this to false again, just because once I know it has one, I just need to assume it could always be used unexpectednly
-										session.mc.encoder = true;	
+										data.stats._hardwareEncoder = true; // I won't set this to false again, just because once I know it has one, I just need to assume it could always be used unexpectednly
+										data.encoder = true;	
 									} else {
-										session.mc.encoder = false; // this may not be actually accurate, but lets assume so.
+										data.encoder = false; // this may not be actually accurate, but lets assume so.
 									}
 								}
 								if ("qualityLimitationReason" in stat) {
-									if (session.mc.stats.quality_limitation_reason){
-										if (session.mc.stats.quality_limitation_reason !== stat.qualityLimitationReason){
+									if (data.stats.quality_limitation_reason){
+										if (data.stats.quality_limitation_reason !== stat.qualityLimitationReason){
 											try{
 												var miniInfo = {};
 												miniInfo.qlr = stat.qualityLimitationReason;
-												if ("_hardwareEncoder" in session.mc.stats){
-													miniInfo.hw_enc = session.mc.stats._hardwareEncoder;
+												if ("_hardwareEncoder" in data.stats){
+													miniInfo.hw_enc = data.stats._hardwareEncoder;
 												} else {
 													miniInfo.hw_enc = null;
 												}
@@ -10432,81 +10446,81 @@ function updateLocalStats(){
 											} catch(e){warnlog(e);}
 										}
 									}
-									session.mc.stats.quality_limitation_reason = stat.qualityLimitationReason;
+									data.stats.quality_limitation_reason = stat.qualityLimitationReason;
 								}
 								
 								if ("bytesSent" in stat) {
-									if ("_bytesSentVideo" in session.mc.stats){
-										if (session.mc.stats._timestamp1){
-												session.mc.stats.video_bitrate_kbps = parseInt(8*(stat.bytesSent - session.mc.stats._bytesSentVideo)/(stat.timestamp - session.mc.stats._timestamp1));
+									if ("_bytesSentVideo" in data.stats){
+										if (data.stats._timestamp1){
+												data.stats.video_bitrate_kbps = parseInt(8*(stat.bytesSent - data.stats._bytesSentVideo)/(stat.timestamp - data.stats._timestamp1));
 											if (stat.timestamp){
 											}
 										}
 									}
-									session.mc.stats._bytesSentVideo = stat.bytesSent;
+									data.stats._bytesSentVideo = stat.bytesSent;
 								}
 								
 								if ("nackCount" in stat) {
-									if ("_nackCount" in session.mc.stats){
-										if (session.mc.stats._timestamp1){
+									if ("_nackCount" in data.stats){
+										if (data.stats._timestamp1){
 											if (stat.timestamp){
-												session.mc.stats.nacks_per_second = parseInt(10000*(stat.nackCount - session.mc.stats._nackCount)/(stat.timestamp - session.mc.stats._timestamp1))/10;
+												data.stats.nacks_per_second = parseInt(10000*(stat.nackCount - data.stats._nackCount)/(stat.timestamp - data.stats._timestamp1))/10;
 												
 											}
 										}
 									}
 								}
 								if ("retransmittedBytesSent" in stat) {
-									if ("_retransmittedBytesSent" in session.mc.stats){
-										if (session.mc.stats._timestamp1){
+									if ("_retransmittedBytesSent" in data.stats){
+										if (data.stats._timestamp1){
 											if (stat.timestamp){
-												session.mc.stats.retransmitted_kbps = parseInt(8*(stat.retransmittedBytesSent - session.mc.stats._retransmittedBytesSent)/(stat.timestamp - session.mc.stats._timestamp1));
+												data.stats.retransmitted_kbps = parseInt(8*(stat.retransmittedBytesSent - data.stats._retransmittedBytesSent)/(stat.timestamp - data.stats._timestamp1));
 											}
 										}
 									}
 								}
 								
 								if ("nackCount" in stat) {
-									session.mc.stats._nackCount = stat.nackCount;
+									data.stats._nackCount = stat.nackCount;
 								}
 								
 								if ("retransmittedBytesSent" in stat) {
-									session.mc.stats._retransmittedBytesSent = stat.retransmittedBytesSent;
+									data.stats._retransmittedBytesSent = stat.retransmittedBytesSent;
 									
 								}
 								
 								if ("timestamp" in stat) {
-									session.mc.stats._timestamp1 = stat.timestamp;
+									data.stats._timestamp1 = stat.timestamp;
 								}
 								
 								if ("pliCount" in stat) {
-									session.mc.stats.total_pli_count = stat.pliCount;
+									data.stats.total_pli_count = stat.pliCount;
 								}
 								if ("keyFramesEncoded" in stat) {
-									session.mc.stats.total_key_frames_encoded = stat.keyFramesEncoded;
+									data.stats.total_key_frames_encoded = stat.keyFramesEncoded;
 								}
 								
 								
 							} else if (stat.kind == "audio") {
 								if ("bytesSent" in stat) {
-									if (session.mc.stats._bytesSentAudio){
-										if (session.mc.stats._timestamp2){
+									if (data.stats._bytesSentAudio){
+										if (data.stats._timestamp2){
 											if (stat.timestamp){
-												if ("audio_bitrate_kbps" in session.mc.stats){
-													session.mc.stats.audio_bitrate_kbps += parseInt(8*(stat.bytesSent - session.mc.stats._bytesSentAudio)/(stat.timestamp - session.mc.stats._timestamp2));
+												if ("audio_bitrate_kbps" in data.stats){
+													data.stats.audio_bitrate_kbps += parseInt(8*(stat.bytesSent - data.stats._bytesSentAudio)/(stat.timestamp - data.stats._timestamp2));
 												} else {
-													session.mc.stats.audio_bitrate_kbps=0;
+													data.stats.audio_bitrate_kbps=0;
 												}
 											}
 										}
 									}
 								}
 								if ("timestamp" in stat) {
-									session.mc.stats._timestamp2 = stat.timestamp;
+									data.stats._timestamp2 = stat.timestamp;
 								}
 								
 								if ("bytesSent" in stat) {
-									session.mc.stats._bytesSentAudio = stat.bytesSent;
+									data.stats._bytesSentAudio = stat.bytesSent;
 									
 								}
 							}
@@ -10522,9 +10536,9 @@ function updateLocalStats(){
 							}
 						} else if (Firefox && ("mimeType" in stat) && ("type" in stat) && (stat.type=="codec")) {
 							if (stat.mimeType.includes("video")){
-								session.mc.stats.video_codec = stat.mimeType.split("video/")[1];
+								data.stats.video_codec = stat.mimeType.split("video/")[1];
 							} else if (stat.mimeType.includes("audio")){
-								session.mc.stats.audio_codec = stat.mimeType.split("audio/")[1];
+								data.stats.audio_codec = stat.mimeType.split("audio/")[1];
 							}
 						}
 						return;
@@ -10532,14 +10546,14 @@ function updateLocalStats(){
 					
 					if (nominatedCandidate){
 						if ("availableOutgoingBitrate" in nominatedCandidate){
-							session.mc.stats.available_outgoing_bitrate_kbps = parseInt(nominatedCandidate.availableOutgoingBitrate/1024);
+							data.stats.available_outgoing_bitrate_kbps = parseInt(nominatedCandidate.availableOutgoingBitrate/1024);
 							if (session.maxBandwidth!==false){
-								session.limitMaxBandwidth(session.mc.stats.available_outgoing_bitrate_kbps, session.pcs[UUID], false);
+								session.limitMaxBandwidth(data.stats.available_outgoing_bitrate_kbps, session.pcs[UUID], false);
 							}
 						}
 						if ("totalRoundTripTime" in nominatedCandidate){
 							if ("responsesReceived" in nominatedCandidate){
-								session.mc.stats.average_roundTripTime_ms = parseInt((nominatedCandidate.totalRoundTripTime/nominatedCandidate.responsesReceived)*1000);
+								data.stats.average_roundTripTime_ms = parseInt((nominatedCandidate.totalRoundTripTime/nominatedCandidate.responsesReceived)*1000);
 							}
 						}
 					}
@@ -10547,18 +10561,18 @@ function updateLocalStats(){
 						if (candidates[nominatedCandidate.remoteCandidateId]){
 							var candidate = candidates[nominatedCandidate.remoteCandidateId];
 							if ("candidateType" in candidate) {
-								session.mc.stats.remote_candidateType = candidate.candidateType;
+								data.stats.remote_candidateType = candidate.candidateType;
 								if (candidate.candidateType === "relay"){
 									if ("ip" in candidate) {
-										session.mc.stats.remote_relay_IP = candidate.ip;
+										data.stats.remote_relay_IP = candidate.ip;
 									}
 									if ("relayProtocol" in candidate) {
-										session.mc.stats.remote_relay_protocol = candidate.relayProtocol;								
+										data.stats.remote_relay_protocol = candidate.relayProtocol;								
 									}
 								} else {
 									try {
-										delete session.mc.stats.remote_relay_IP;
-										delete session.mc.stats.remote_relay_protocol;
+										delete data.stats.remote_relay_IP;
+										delete data.stats.remote_relay_protocol;
 									} catch(e){}
 								}
 							}
@@ -10568,19 +10582,19 @@ function updateLocalStats(){
 						if (candidates[nominatedCandidate.localCandidateId]){
 							var candidate = candidates[nominatedCandidate.localCandidateId];
 							if ("candidateType" in candidate) {
-								session.mc.stats.local_candidateType = candidate.candidateType;
+								data.stats.local_candidateType = candidate.candidateType;
 								
 								if (candidate.candidateType === "relay"){
 									if ("ip" in candidate) {
-										session.mc.stats.local_relay_IP = candidate.ip;
+										data.stats.local_relay_IP = candidate.ip;
 									}
 									if ("relayProtocol" in candidate) {
-										session.mc.stats.local_relay_protocol = candidate.relayProtocol;								
+										data.stats.local_relay_protocol = candidate.relayProtocol;								
 									}
 								} else {
 									try {
-										delete session.mc.stats.local_relay_IP;
-										delete session.mc.stats.local_relay_protocol;
+										delete data.stats.local_relay_IP;
+										delete data.stats.local_relay_protocol;
 									} catch(e){}
 								}
 								
@@ -10591,9 +10605,9 @@ function updateLocalStats(){
 					
 					return;
 				});
-			}, 0);
+			}, 0, data);
 		} catch(e){errorlog(e);}
-	}
+	});
 	
 	for (var uuid in session.pcs) {
 		if (!session.pcs[uuid].stats){continue;}
@@ -21559,27 +21573,38 @@ async function grabVideo(quality = 0, eleName = 'previewWebcam', selector = "sel
 				return;
 			}
 			
+			
 			if (session.mc && session.mc.getSenders){
-				session.mc.getSenders().forEach((sender) => { // I suppose there could be a race condition between negotiating and updating this. if joining at the same time as changnig streams?
-					if (sender.track && sender.track.kind == "video") {
-						var trk = getMeshcastCanvasTrack();
-						if (session.screenShareState && session.screenshareContentHint && (trk.kind === "video")){
-							try {
-								trk.contentHint = session.screenshareContentHint;
-							} catch(e){
-								errorlog(e);
-							}
-						} else if (session.contentHint && (trk.kind === "video")){
-							try {
-								trk.contentHint = session.contentHint;
-							} catch(e){
-								errorlog(e);
-							}
-						}
-						sender.replaceTrack(trk); // replace may not be supported by all browsers.  eek.
-					}
-				});
+				miscSenders.push(session.mc);
 			}
+			if (session.whipOut && session.whipOut.getSenders){
+				miscSenders.push(session.whipOut);
+			}
+			
+			miscSenders.forEach(dataRTC=>{
+				if (dataRTC && dataRTC.getSenders){
+					dataRTC.getSenders().forEach((sender) => { // I suppose there could be a race condition between negotiating and updating this. if joining at the same time as changnig streams?
+						if (sender.track && sender.track.kind == "video") {
+							var trk = getMeshcastCanvasTrack(dataRTC);
+							if (session.screenShareState && session.screenshareContentHint && (trk.kind === "video")){
+								try {
+									trk.contentHint = session.screenshareContentHint;
+								} catch(e){
+									errorlog(e);
+								}
+							} else if (session.contentHint && (trk.kind === "video")){
+								try {
+									trk.contentHint = session.contentHint;
+								} catch(e){
+									errorlog(e);
+								}
+							}
+							sender.replaceTrack(trk); // replace may not be supported by all browsers.  eek.
+						}
+					});
+				}
+			});
+			
 			
 			for (UUID in session.pcs) {
 				if ("realUUID" in session.pcs[UUID]){continue;} // do not apply to screen shares.
@@ -22123,8 +22148,6 @@ function updateRenderOutpipe(){ // video only.
 	if (session.streamSrc){
 		var tracks = session.streamSrc.getVideoTracks();
 		
-		
-		
 		if (!tracks.length || session.videoMuted){
 			tracks = setAvatarImage(tracks); 
 			if (tracks.length){
@@ -22211,7 +22234,19 @@ function pushOutVideoTrack(track){
 				//added = true;
 			}
 		});
-	}
+	} 
+	
+	if (session.whipOut && session.whipOut.getSenders){ // should only be 0 or 1 video sender, ever.
+		//var added = false;
+		session.whipOut.getSenders().forEach((sender) => { // I suppose there could be a race condition between negotiating and updating this. if joining at the same time as changnig streams?
+			if (sender.track && sender.track.kind == "video") {
+				errorlog("Replacing track");
+				sender.replaceTrack(track); // replace may not be supported by all browsers.  eek.
+				//sender.track.enabled = true;
+				//added = true;
+			}
+		});
+	} 
 	
 	for (UUID in session.pcs){
 		var videoAdded = false;
@@ -22883,6 +22918,16 @@ function senderAudioUpdate(callback=false){
 		
 		if (session.mc && session.mc.getSenders && tracks.length){ // mixMinus won't work with meshcast, so don't bother.
 			session.mc.getSenders().forEach((sender) => { // I suppose there could be a race condition between negotiating and updating this. if joining at the same time as changnig streams?
+				if (sender.track && sender.track.kind == "audio") {
+					tracks.forEach(trk=>{
+						sender.replaceTrack(trk);
+					})
+				}
+			});
+		}
+		
+		if (session.whipOut && session.whipOut.getSenders && tracks.length){ // mixMinus won't work with meshcast, so don't bother.
+			session.whipOut.getSenders().forEach((sender) => { // I suppose there could be a race condition between negotiating and updating this. if joining at the same time as changnig streams?
 				if (sender.track && sender.track.kind == "audio") {
 					tracks.forEach(trk=>{
 						sender.replaceTrack(trk);
@@ -34559,7 +34604,8 @@ function configureWhipOutSDP(description){ // THIS IS FOR WHIP-OUTPUT; it has
 	}
 	
 	if (configs){
-		description.sdp = CodecsHandler.setOpusAttributes(description.sdp, configs);
+		console.log("Processing sdp of type: "+description.type+ " ...");
+		description.sdp = CodecsHandler.setOpusAttributes(description.sdp, configs, true);
 	}
 	
 	if (iOS || iPad){ //  solves issues with iOS rotation not being correct
@@ -34598,6 +34644,8 @@ function configureWhipOutSDP(description){ // THIS IS FOR WHIP-OUTPUT; it has
 			}, "h264");
 		}
 	}
+	
+	
 	return description;
 }
 
@@ -34636,11 +34684,11 @@ function whipOut(){
 				var tracks = false;
 				if (session.videoElement && session.videoElement.srcObject){
 					tracks = session.videoElement.srcObject.getAudioTracks();
-				} 
+				}
 				var streamsource = false;
 				if (!tracks || !tracks.length){
 					var audioCtx = new AudioContext();
-					
+					warnlog("No audio track; using a webaudio node instead");
 					var destination = audioCtx.createMediaStreamDestination();
 					streamsource = destination.stream;
 					destination.stream.getAudioTracks().forEach(trk=>{
@@ -34739,17 +34787,18 @@ function whipOut(){
 		try {
 			session.whipOut.createOffer().then(function(description){
 				
+				
 				try {
 					description = configureWhipOutSDP(description)
 				} catch(e){
 					errorlog(e);
 				}
 				
-				warnlog(description);
 				return session.whipOut.setLocalDescription(description);
 			}).then(function() {
-				//log(session.whipOut.localDescription);
+				warnlog(session.whipOut.localDescription.sdp);
 				var sdp = session.whipOut.localDescription.sdp;
+				
 				if (sdp.includes("sendrecv")){
 					errorlog("Should not include sendrecv");
 					sdp = sdp.replace("a=sendrecv","a=sendonly");
@@ -34780,7 +34829,7 @@ function whipOut(){
 						jsep.type = "answer";
 						
 						try {
-							jsep = configureWhipOutSDP(jsep)
+							jsep = configureWhipOutSDP(jsep);
 						} catch(e){
 							errorlog(e);
 						}
@@ -35033,6 +35082,10 @@ async function processWHIP(data){ // LISTEN FOR REMOTE WHIP
 		}
 	});
 	sdpAnswer = sdpAnswer.replace("a=ice-ufrag", insertIce+"a=ice-ufrag");
+	
+	//if (session.stereo){
+	//	sdpAnswer = CodecsHandler.setOpusAttributes(sdpAnswer, {stereo:1}, true);
+	//}
 	
 	if (sdpAnswer.includes("sendrecv")){
 		errorlog("Should not include sendrecv");

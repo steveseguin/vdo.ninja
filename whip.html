@@ -336,28 +336,28 @@
 						</div>
 						
 						<div class="inputCombo" id="advanced" style="margin: 10px 0px 10px 10px;">
-							<select style="border-radius:10px;margin-right:5px;width:unset!important;" class="changeText" id="audioBitrateGroupFlag"  title="Which audio bitrate target would you prefer?" >
+							<select style="border-radius:10px;margin-right:5px;width:unset!important;" class="changeText" id="whipoutaudiobitrate"  title="Which audio bitrate target would you prefer?" >
 								<option value="0" selected>🎙️Default Audio Bitrate</option>
-								<option value="500">🎙️32-kbps</option>
-								<option value="2500">🎙️64-kbps</option>
-								<option value="6000">🎙️128-kbps</option>
-								<option value="20000">🎙️256-kbps</option>
+								<option value="32">🎙️32-kbps</option>
+								<option value="64">🎙️64-kbps</option>
+								<option value="128">🎙️128-kbps</option>
+								<option value="256">🎙️256-kbps</option>
 							</select >
-							<select style="border-radius:10px;margin-right:5px;width:unset!important;" class="changeText" id="audioBitrateGroupFlag"  title="Which audio bitrate target would you prefer?" >
+							<select style="border-radius:10px;margin-right:5px;width:unset!important;" class="changeText" id="vbrcbr"  title="Which audio bitrate target would you prefer?" >
 								<option value="cbr" selected>🎙️CBR</option>
 								<option value="vbr">🎙️VBR</option>
 							</select >
-							<select style="border-radius:10px;margin-right:5px;width:unset!important;" class="changeText" id="audioBitrateGroupFlag"  title="Which audio bitrate target would you prefer?" >
-								<option value="0" selected>🎙️Denoise</option>
-								<option value="500">🎙️No Denoise</option>
+							<select style="border-radius:10px;margin-right:5px;width:unset!important;" class="changeText" id="denoise"  title="Which audio bitrate target would you prefer?" >
+								<option value="1" selected>🎙️Denoise On</option>
+								<option value="0">🎙️Denoise Off</option>
 							</select >
-							<select style="border-radius:10px;margin-right:5px;width:unset!important;" class="changeText" id="audioBitrateGroupFlag"  title="Which audio bitrate target would you prefer?" >
-								<option value="0" selected>🎙️Auto Gain</option>
-								<option value="500">🎙️No Auto Gain</option>
+							<select style="border-radius:10px;margin-right:5px;width:unset!important;" class="changeText" id="autogain"  title="Which audio bitrate target would you prefer?" >
+								<option value="1" selected>🎙️Auto Gain On</option>
+								<option value="0">🎙️Auto Gain Off</option>
 							</select >
-							<select style="border-radius:10px;margin-right:5px;width:unset!important;" class="changeText" id="audioBitrateGroupFlag"  title="Which audio bitrate target would you prefer?" >
-								<option value="0" selected>🎙️Stereo</option>
-								<option value="500">🎙️Mono</option>
+							<select style="border-radius:10px;margin-right:5px;width:unset!important;" class="changeText" id="stereo"  title="Which audio bitrate target would you prefer?" >
+								<option value="1" selected>🎙️Stereo</option>
+								<option value="0">🎙️Mono</option>
 							</select >
 						</div>
 						<div class="inputCombo" id="advanced2" style="margin: 10px 0px 10px 10px;">
@@ -424,7 +424,7 @@
 				
 				<div id="urlInput4" class="urlInput" title="Put the link you want to load here">
 					
-					<h3>Host a stream as a WHEP sourceP</h3>
+					<h3>Host a stream as a WHEP source  🚧</h3>
 					
 					<div  class="inputCombo" id="inputCombo4">
 					<label for="changeText">
@@ -457,9 +457,26 @@ function gohere1(){
 		localStorage.setItem('changeText1', document.getElementById('changeText1').value);
 		localStorage.setItem('changeText1a', document.getElementById('changeText1a').value || "");
 		
-		
 		localStorage.setItem('bitrateGroupFlag', document.getElementById('bitrateGroupFlag').value);
 		localStorage.setItem('codecGroupFlag', document.getElementById('codecGroupFlag').value);
+		
+		localStorage.setItem('whipoutaudiobitrate', document.getElementById('whipoutaudiobitrate').value);
+		localStorage.setItem('vbrcbr', document.getElementById('vbrcbr').value);
+		localStorage.setItem('autogain', document.getElementById('autogain').value);
+		localStorage.setItem('stereo', document.getElementById('stereo').value);
+		localStorage.setItem('denoise', document.getElementById('denoise').value);
+		
+		
+		var whipoutaudiobitrate = "";
+		if (parseInt(document.getElementById('whipoutaudiobitrate').value)){
+			whipoutaudiobitrate = "&whipoutaudiobitrate="+document.getElementById('whipoutaudiobitrate').value;
+		}
+		
+		var vbrcbr = "&"+document.getElementById('vbrcbr').value;
+		var autogain = "&autogain="+document.getElementById('autogain').value;
+		var stereo = "&stereo="+document.getElementById('stereo').value;
+		var denoise = "&denoise="+document.getElementById('denoise').value;
+		
 		
 		var bitrate = "";
 		if (parseInt(document.getElementById('bitrateGroupFlag').value)){
@@ -471,9 +488,9 @@ function gohere1(){
 		}
 		
 		if (document.getElementById('changeText1a').value){
-			window.location = domain + "?push&whippush=" + encodeURIComponent(document.getElementById('changeText1').value) + "&whippushtoken=" + document.getElementById('changeText1a').value + codec + bitrate;
+			window.location = domain + "?push&whippush=" + encodeURIComponent(document.getElementById('changeText1').value) + "&whippushtoken=" + document.getElementById('changeText1a').value + codec + bitrate+whipoutaudiobitrate+vbrcbr+autogain+stereo+denoise;
 		} else {
-			window.location = domain + "?push&whippush=" + encodeURIComponent(document.getElementById('changeText1').value) + codec + bitrate;
+			window.location = domain + "?push&whippush=" + encodeURIComponent(document.getElementById('changeText1').value) + codec + bitrate+whipoutaudiobitrate+vbrcbr+autogain+stereo+denoise;
 		}
 	}
 }
