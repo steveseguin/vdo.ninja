@@ -657,11 +657,13 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 		}
 		session.meterStyle = 1;
 		session.signalMeter = true;
+		session.batteryMeter = true;
 	} else if (filename === "director") {
 		directorLanding = true;
 		filename = false;
 		session.meterStyle = 1;
 		session.signalMeter = true;
+		session.batteryMeter = true;
 	}
 	
 	session.slotmode = false; // temporary; remove in the future TODO: ## -----------------------
@@ -685,6 +687,21 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 		}
 	}
 
+	if (urlParams.has('batterymeter')) {
+		session.batteryMeter = urlParams.get('batterymeter');
+		if (session.batteryMeter === "false") {
+			session.batteryMeter = false;
+		} else if (session.batteryMeter=== "0") {
+			session.batteryMeter = false;
+		} else if (session.batteryMeter === "no") {
+			session.batteryMeter = false;
+		} else if (session.batteryMeter === "off") {
+			session.batteryMeter = false;
+		} else {
+			session.batteryMeter = true;
+		}
+	}
+	
 	if (urlParams.has('rooms')) {
 		session.rooms = urlParams.get('rooms').split(",").map(function(e) { 
 			return sanitizeRoomName(e);

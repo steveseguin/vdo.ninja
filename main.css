@@ -933,7 +933,7 @@ hr {
 	font-size: 1.5em;
 	z-index: 2;
 	cursor: help;
-	display:none;
+	display:block;
 }
 
 .battery-charging{
@@ -945,14 +945,27 @@ hr {
 	display: none;
 }
 
-.battery[data-plugged="1"] > .battery-charging {
-	display:block;
+.battery[data-plugged="1"] {
+	display:none;
+}
+
+@keyframes blink-warn {
+  0% { opacity: 0; }
+  50% { opacity: 1; }
+  100% { opacity: 0; }
+}
+@keyframes blink-alert {
+  0% { opacity: 0; }
+  50% { opacity: 1; }
+  100% { opacity: 0; }
 }
 .battery.warn {
 	border: 3px solid #EFAF13;
+	animation: blink-warn 2s infinite;
 }
 .battery.alert {
 	border: 3px solid #e81309;
+	animation: blink-alert 1s infinite;
 }
 .battery-level {
 	background: #30b455; 

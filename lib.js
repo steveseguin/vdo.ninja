@@ -3677,6 +3677,11 @@ function switchModes(state=null){
 							target.appendChild(session.rpcs[UUID].signalMeter);
 						}
 					}
+					if (session.batteryMeter){
+						if (session.rpcs[UUID].batteryMeter){
+							target.appendChild(session.rpcs[UUID].batteryMeter);
+						}
+					}
 					if (session.rpcs[UUID].voiceMeter){
 						target.appendChild(session.rpcs[UUID].voiceMeter);
 					}
@@ -5716,6 +5721,23 @@ function updateMixerRun(e=false){  // this is the main auto-mixing code.  It's a
 						if (!holder.signalMeter){
 							holder.appendChild(session.rpcs[vid.dataset.UUID].signalMeter);
 							holder.signalMeter = session.rpcs[vid.dataset.UUID].signalMeter;
+						}
+					}
+				}
+				
+				if (session.batteryMeter){
+					if (vid.dataset.UUID && !session.rpcs[vid.dataset.UUID].batteryMeter){
+						session.rpcs[vid.dataset.UUID].batteryMeter = getById("batteryMeterTemplate").cloneNode(true);
+						session.rpcs[vid.dataset.UUID].batteryMeter.classList.remove("hidden");
+						session.rpcs[vid.dataset.UUID].batteryMeter.id = "batteryMeter_" + vid.dataset.UUID;
+						session.rpcs[vid.dataset.UUID].batteryMeter.dataset.level = 0;
+						session.rpcs[vid.dataset.UUID].batteryMeter.title = miscTranslations["battery-meter"];
+						holder.appendChild(session.rpcs[vid.dataset.UUID].batteryMeter);
+						holder.batteryMeter = session.rpcs[vid.dataset.UUID].batteryMeter;
+					} else if (vid.dataset.UUID && session.rpcs[vid.dataset.UUID].batteryMeter){
+						if (!holder.batteryMeter){
+							holder.appendChild(session.rpcs[vid.dataset.UUID].batteryMeter);
+							holder.batteryMeter = session.rpcs[vid.dataset.UUID].batteryMeter;
 						}
 					}
 				}
@@ -16395,6 +16417,9 @@ async function createRoomCallback(passAdd, passAdd2) {
 	if (session.signalMeter===null){
 		session.signalMeter = true;
 	}
+	if (session.batteryMeter===null){
+		session.batteryMeter = true;
+	}
 	
 	if (session.directorPassword){
 		getById("coDirectorEnable").checked = true;
@@ -17688,11 +17713,14 @@ function createControlBox(UUID, soloLink, streamID, slot_init=false) {
 			});
 		}
 		videoContainer.appendChild(session.rpcs[UUID].signalMeter);
-		
+	}
+	
+	if (session.batteryMeter){
 		////////
 		if (!session.rpcs[UUID].batteryMeter){
 			session.rpcs[UUID].batteryMeter = getById("batteryMeterTemplate").cloneNode(true);
 			session.rpcs[UUID].batteryMeter.id = "batteryMeter_" + UUID;
+			/*
 			if (session.rpcs[UUID].stats.info && (session.rpcs[UUID].stats.info.power_level!==null)){
 				var level = session.rpcs[UUID].batteryMeter.querySelector(".battery-level");
 				if (level){
@@ -17717,6 +17745,8 @@ function createControlBox(UUID, soloLink, streamID, slot_init=false) {
 			} else {
 				session.rpcs[UUID].batteryMeter.dataset.plugged = "1";
 			}
+   			*/
+			batteryMeterInfoUpdate(UUID);
 		}
 		videoContainer.appendChild(session.rpcs[UUID].batteryMeter);
 	}
@@ -32886,7 +32916,7 @@ function batteryMeterInfoUpdate(UUID){
 			if (value > 100){value = 100;}
 			if (value < 0){ value = 0;}
 			level.style.height = parseInt(value)+"%";
-			if (value<10){
+			if (value<15){
 				session.rpcs[UUID].batteryMeter.classList.remove("warn");
 				session.rpcs[UUID].batteryMeter.classList.add("alert");
 			} else if (value<25){
@@ -32899,7 +32929,8 @@ function batteryMeterInfoUpdate(UUID){
 			if (value<100){
 				session.rpcs[UUID].batteryMeter.classList.remove("hidden");
 			}
-			session.rpcs[UUID].batteryMeter.title = value+"% battery remaining";
+			//session.rpcs[UUID].batteryMeter.title = value+"% battery remaining";
+			session.rpcs[UUID].batteryMeter.title = parseInt(value)+"% battery remaining";
 		}
 	}
 		
@@ -32908,6 +32939,9 @@ function batteryMeterInfoUpdate(UUID){
 		session.rpcs[UUID].batteryMeter.classList.remove("hidden");
 	} else {
 		session.rpcs[UUID].batteryMeter.dataset.plugged = "1";
+		// add on
+		session.rpcs[UUID].batteryMeter.title = parseInt(value)+"% charging";
+		session.rpcs[UUID].batteryMeter.classList.add("hidden");
 	}
 }
 
@@ -37519,7 +37553,44 @@ function createControlBoxScreenshare(UUID, soloLink, streamID) {
 		}
 		videoContainer.appendChild(session.rpcs[UUID].signalMeter);
 	}
-	
+
+	if (session.batteryMeter){
+		////////
+		if (!session.rpcs[UUID].batteryMeter){
+			session.rpcs[UUID].batteryMeter = getById("batteryMeterTemplate").cloneNode(true);
+			session.rpcs[UUID].batteryMeter.id = "batteryMeter_" + UUID;
+			/*
+			if (session.rpcs[UUID].stats.info && (session.rpcs[UUID].stats.info.power_level!==null)){
+				var level = session.rpcs[UUID].batteryMeter.querySelector(".battery-level");
+				if (level){
+					var value = session.rpcs[UUID].stats.info.power_level;
+					if (value > 100){value = 100;}
+					else if (value < 0){ value = 0;}
+					level.style.height = parseInt(value)+"%";
+					if (value<10){
+						session.rpcs[UUID].batteryMeter.classList.add("alert");
+					} else if (value<25){
+						session.rpcs[UUID].batteryMeter.classList.add("warn");
+					}
+					if (value<100){
+						session.rpcs[UUID].batteryMeter.classList.remove("hidden");
+					}
+					session.rpcs[UUID].batteryMeter.title = (Math.round(value*10)/10)+"% battery remaining";
+				}
+			}
+			if (session.rpcs[UUID].stats.info && ("plugged_in" in session.rpcs[UUID].stats.info) && (session.rpcs[UUID].stats.info.plugged_in===false)){
+				session.rpcs[UUID].batteryMeter.dataset.plugged = "0";
+				session.rpcs[UUID].batteryMeter.classList.remove("hidden");
+			} else {
+				session.rpcs[UUID].batteryMeter.dataset.plugged = "1";
+			}
+			*/
+			batteryMeterInfoUpdate(UUID);
+			
+		}
+		videoContainer.appendChild(session.rpcs[UUID].batteryMeter);
+	}
+
 	if (session.showConnections){
 		if (!session.rpcs[UUID].connectionDetails){
 			createConnectionDetailsEle(UUID);
