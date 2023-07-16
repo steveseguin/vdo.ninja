@@ -17716,36 +17716,9 @@ function createControlBox(UUID, soloLink, streamID, slot_init=false) {
 	}
 	
 	if (session.batteryMeter){
-		////////
 		if (!session.rpcs[UUID].batteryMeter){
 			session.rpcs[UUID].batteryMeter = getById("batteryMeterTemplate").cloneNode(true);
 			session.rpcs[UUID].batteryMeter.id = "batteryMeter_" + UUID;
-			/*
-			if (session.rpcs[UUID].stats.info && (session.rpcs[UUID].stats.info.power_level!==null)){
-				var level = session.rpcs[UUID].batteryMeter.querySelector(".battery-level");
-				if (level){
-					var value = session.rpcs[UUID].stats.info.power_level;
-					if (value > 100){value = 100;}
-					else if (value < 0){ value = 0;}
-					level.style.height = parseInt(value)+"%";
-					if (value<10){
-						session.rpcs[UUID].batteryMeter.classList.add("alert");
-					} else if (value<25){
-						session.rpcs[UUID].batteryMeter.classList.add("warn");
-					}
-					if (value<100){
-						session.rpcs[UUID].batteryMeter.classList.remove("hidden");
-					}
-					session.rpcs[UUID].batteryMeter.title = (Math.round(value*10)/10)+"% battery remaining";
-				}
-			}
-			if (session.rpcs[UUID].stats.info && ("plugged_in" in session.rpcs[UUID].stats.info) && (session.rpcs[UUID].stats.info.plugged_in===false)){
-				session.rpcs[UUID].batteryMeter.dataset.plugged = "0";
-				session.rpcs[UUID].batteryMeter.classList.remove("hidden");
-			} else {
-				session.rpcs[UUID].batteryMeter.dataset.plugged = "1";
-			}
-   			*/
 			batteryMeterInfoUpdate(UUID);
 		}
 		videoContainer.appendChild(session.rpcs[UUID].batteryMeter);
@@ -37555,36 +37528,9 @@ function createControlBoxScreenshare(UUID, soloLink, streamID) {
 	}
 
 	if (session.batteryMeter){
-		////////
 		if (!session.rpcs[UUID].batteryMeter){
 			session.rpcs[UUID].batteryMeter = getById("batteryMeterTemplate").cloneNode(true);
 			session.rpcs[UUID].batteryMeter.id = "batteryMeter_" + UUID;
-			/*
-			if (session.rpcs[UUID].stats.info && (session.rpcs[UUID].stats.info.power_level!==null)){
-				var level = session.rpcs[UUID].batteryMeter.querySelector(".battery-level");
-				if (level){
-					var value = session.rpcs[UUID].stats.info.power_level;
-					if (value > 100){value = 100;}
-					else if (value < 0){ value = 0;}
-					level.style.height = parseInt(value)+"%";
-					if (value<10){
-						session.rpcs[UUID].batteryMeter.classList.add("alert");
-					} else if (value<25){
-						session.rpcs[UUID].batteryMeter.classList.add("warn");
-					}
-					if (value<100){
-						session.rpcs[UUID].batteryMeter.classList.remove("hidden");
-					}
-					session.rpcs[UUID].batteryMeter.title = (Math.round(value*10)/10)+"% battery remaining";
-				}
-			}
-			if (session.rpcs[UUID].stats.info && ("plugged_in" in session.rpcs[UUID].stats.info) && (session.rpcs[UUID].stats.info.plugged_in===false)){
-				session.rpcs[UUID].batteryMeter.dataset.plugged = "0";
-				session.rpcs[UUID].batteryMeter.classList.remove("hidden");
-			} else {
-				session.rpcs[UUID].batteryMeter.dataset.plugged = "1";
-			}
-			*/
 			batteryMeterInfoUpdate(UUID);
 			
 		}
