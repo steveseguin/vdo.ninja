@@ -29,7 +29,7 @@ Effects however may increase CPU/GPU usage, and could cause frame rate instabili
 
 
 
-#### Dedicated teleprompter tool that works for most sites
+### Dedicated teleprompter tool that works for most sites
 
 There's a dedicated tool for mirror, flipping, and rotating websites as part of VDO.Ninja as well:
 

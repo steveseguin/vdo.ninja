@@ -19,7 +19,7 @@ description: List of apps and helper tools Steve has created to be used with VDO
 * [tech-demonstrations.md](tech-demonstrations.md "mention")
 * [invite-link-generators.md](invite-link-generators.md "mention")
 * [community-contributed-tools.md](community-contributed-tools.md "mention")
-* 📃[Teleprompter Tool](#user-content-fn-1)[^1][ ](#user-content-fn-2)[^2] ([https://vdo.nina/teleprompter](https://vdo.nina/teleprompter))
+* 📃[Teleprompter Tool](#user-content-fn-1)[^1][ ](#user-content-fn-2)[^2] ([https://vdo.ninja/teleprompter](https://vdo.ninja/teleprompter))
 
 [^1]: 
 

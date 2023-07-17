@@ -33,6 +33,16 @@ Effects however may increase CPU/GPU usage, and could cause frame rate instabili
 
 There's also the [`&flip`](and-flip.md) and [`&mirror`](mirror.md) options, which use CSS, but are generally viewer-side only.
 
+
+
+### Dedicated teleprompter tool that works for most sites
+
+There's a dedicated tool for mirror, flipping, and rotating websites as part of VDO.Ninja as well:
+
+[https://vdo.ninja/teleprompter](https://vdo.ninja/teleprompter)
+
+In case the built-in options to mirror or flip don't work, the teleprompter app might be a good alternative.
+
 ## Related
 
 {% content-ref url="../../source-settings/effects.md" %}
