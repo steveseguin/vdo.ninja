@@ -28,6 +28,6 @@ Remote control PowerPoint with VDO.Ninja
 
 <div align="left">
 
-<figure><img src="../.gitbook/assets/image (19).png" alt=""><figcaption><p>Remote PowerPoint Web control via VDO.Ninja (IFrame API)</p></figcaption></figure>
+<figure><img src="../.gitbook/assets/image (19) (3).png" alt=""><figcaption><p>Remote PowerPoint Web control via VDO.Ninja (IFrame API)</p></figcaption></figure>
 
 </div>

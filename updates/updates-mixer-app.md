@@ -9,7 +9,7 @@
 * The option to add custom URL parameters to the invite link also added to the Mixer App.
 * An issue with how the [`&broadcast`](../advanced-settings/view-parameters/broadcast.md) toggle was being saved to local storage was fixed in the Mixer App.
 
-![](../.gitbook/assets/image.png)
+![](<../.gitbook/assets/image (19).png>)
 
 on production at [https://vdo.ninja/mixer](https://vdo.ninja/mixer)
 

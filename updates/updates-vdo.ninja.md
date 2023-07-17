@@ -703,7 +703,7 @@ https://vdo.ninja/alpha/?view=YbFmisR&poster=./media/bg_sample.webp&hideplaybutt
   \-- HTTP / WSS remote control also added; `https://api.vdo.ninja/YOURAPIKEY/nextSlide` and `prevSlide`\
   \-- Local Streamdeck support also working, via MIDI.\
   \-- YouTube Tutorial: [https://youtu.be/ORH8betTt8Y](https://youtu.be/ORH8betTt8Y)\
-  ![](<../.gitbook/assets/image (5) (1) (1).png>)![](<../.gitbook/assets/image (19).png>)\
+  ![](<../.gitbook/assets/image (5) (1) (1).png>)![](<../.gitbook/assets/image (19) (3).png>)\
   \
   \* on alpha at vdo.ninja/alpha/
 
