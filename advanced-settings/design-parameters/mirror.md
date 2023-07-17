@@ -27,7 +27,21 @@ If you are looking for a form of rotation and flipping that rotates the actual v
 \
 Effects however may increase CPU/GPU usage, and could cause frame rate instability, especially if the browser tab is not in active focus.
 
+
+
+#### Dedicated teleprompter tool that works for most sites
+
+There's a dedicated tool for mirror, flipping, and rotating websites as part of VDO.Ninja as well:
+
+[https://vdo.ninja/teleprompter](https://vdo.ninja/teleprompter)
+
+In case the built-in options to mirror or flip don't work, the teleprompter app might be a good alternative.
+
 ## Related
+
+{% embed url="https://vdo.ninja/teleprompter" %}
+Dedicated app for teleprompting; works with VDO.Ninja, Socialstream.Ninja, Youtube chat, and Twitch chat
+{% endembed %}
 
 {% content-ref url="../../source-settings/effects.md" %}
 [effects.md](../../source-settings/effects.md)
