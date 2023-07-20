@@ -6,9 +6,11 @@ description: >-
 
 # How to connect a smartphone to computer via USB
 
-Connecting your smartphone to your laptop via USB seems quite appealing, but it's not always the easiest option. Below I provided three options for tethering your phone to better Internet, some of which might be easier and still just as functional.&#x20;
+{% embed url="https://www.youtube.com/watch?v=abCuANblE5w" %}
+Demoing an Ethernet adapter for an iPhone and VDO.Ninja
+{% endembed %}
 
-\[If you would like to contribute a better option to this list of add more details or helpful hints, let me know!]
+Connecting your smartphone to your laptop via USB seems quite appealing, but it's not always the easiest option. Below I provided three options for tethering your phone to better Internet, with the recommended option first.
 
 ### Connecting smartphone via Ethernet
 
@@ -18,7 +20,9 @@ One easy option is to buy a smartphone to Ethernet adapter; this can be either U
 
 You can find details on how to buy and connect such an adapter here: [https://www.pcmag.com/how-to/connect-phone-tablet-to-internet-ethernet-cable](https://www.pcmag.com/how-to/connect-phone-tablet-to-internet-ethernet-cable)
 
-If you'd need to be able to charge while connected, there are adapters that offer charging and Ethernet at the same time. I would recommend buying a 100-mbps adapter over a gigabit adapter, as compatibility will probably be better with the 100-mbps adapter and it is still more than sufficient. There's plenty of options on Amazon for under $20.
+If you'd need to be able to charge while connected, there are adapters that offer charging and Ethernet at the same time. I would recommend buying a 100-mbps adapter over a gigabit adapter, as compatibility will probably be better with the 100-mbps adapter and it is still more than sufficient. There's plenty of options on Amazon for under $20.\
+\
+
 
 ### Reverse tethering over USB
 
@@ -26,7 +30,7 @@ If you're trying to get away on a budget or don't have access to Ethernet at all
 
 There are many approaches to setting this up, such as this one: [https://liliputing.com/2020/03/gnirehtet-reverse-tethering-app-lets-your-android-phone-use-your-pcs-internet-connection.html](https://liliputing.com/2020/03/gnirehtet-reverse-tethering-app-lets-your-android-phone-use-your-pcs-internet-connection.html)
 
-Many of these approaches require root-access to your Android phone and need a lot of low-level networking setup. As a result, unless your phone already has the feature supported in its settings somewhere, it may be too tricky for most users to setup. A functional paid-option may exist for this, though I'm not sure what it is.
+Many of these approaches require root-access to your Android / iPhone device and need a lot of low-level networking setup. As a result, unless your phone already has the feature supported in its settings somewhere, it may be too tricky for most users to setup. A functional paid-option may exist for this, though I'm not sure what it is.
 
 ### Reverse tethering over Wi-Fi
 
