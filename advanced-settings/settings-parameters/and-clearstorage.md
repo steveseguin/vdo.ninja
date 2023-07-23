@@ -17,7 +17,7 @@ General Option! ([`&push`](../../source-settings/push.md), [`&room`](../../gener
 I also added a button to manually do this via the User menu settings.\
 
 
-<figure><img src="../../.gitbook/assets/image (4) (3).png" alt=""><figcaption></figcaption></figure>
+<figure><img src="../../.gitbook/assets/image (4) (3) (2).png" alt=""><figcaption></figcaption></figure>
 
 ## Related
 

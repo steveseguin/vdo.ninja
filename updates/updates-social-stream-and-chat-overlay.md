@@ -35,7 +35,7 @@
 
     \
     You need to activate it in the top-right corner of YouTube to have the buttons appear next to each comment you wish to push to Social Stream. To activate, press the small SS button when SocialStream is enabled to have the "Send to Social Stream" buttons appear.\
-    ![](<../.gitbook/assets/image (4).png>)
+    ![](<../.gitbook/assets/image (4) (3).png>)
 *   You can now make a file called `badwords.txt` in Social Stream, with a line by line list of bad words to filter out from chat.
 
     \-- There's already a default blacklist of common bad words to filter out, but making your own badwords.txt will override that default list.\
@@ -62,7 +62,7 @@
 #### **May 10**
 
 * afreecatv.com support added to Social Stream. Update the extension and pop out chat to use.\
-  ![](<../.gitbook/assets/image (6) (6).png>)![](<../.gitbook/assets/image (5) (2).png>)
+  ![](<../.gitbook/assets/image (6) (6).png>)![](<../.gitbook/assets/image (5) (2) (2).png>)
 
 #### **May 9**
 
@@ -147,7 +147,7 @@ Social stream updates:
 
     \
     [https://github.com/steveseguin/electroncapture/releases/tag/2.17.1.1](https://github.com/steveseguin/electroncapture/releases/tag/2.17.1.1) <= Test version of Electron Capture with this new feature; windows build\
-    ![](<../.gitbook/assets/image (3) (2).png>)
+    ![](<../.gitbook/assets/image (3) (2) (4).png>)
 
 #### **March 22**
 

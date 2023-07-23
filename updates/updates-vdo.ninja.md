@@ -53,7 +53,7 @@
 * Added `&slot=N`, which is a guest side property (sender side). It just tells the director ([Mixer App](../steves-helper-apps/mixer-app.md) / [`&slotsmode`](../advanced-settings/director-parameters/and-slotmode.md)) which slot the guest should prefer to be in, if slots are being auto-assigned. If the desired slot is already taken, then that guest will then not be assign a slot. If the guest was assigned a slot by the director, refreshing will keep the assign slot, and the URL-specified slot preference will be ignored.
 * Fixed an issue where custom scene names in the director's room were incorrectly being capitalized.
 * Users with old iOS (iOS 15 and older) versions will be greeted with a message, recommending they update their system's OS. iOS 16 and newer has many important bug fixes, so its strongly recommended. It should trigger when using Safari; not sure about all other browsers on iOS yet though.\
-  ![](<../.gitbook/assets/image (5).png>)
+  ![](<../.gitbook/assets/image (5) (2).png>)
 *   I updated [`&orderby`](../newly-added-parameters/and-orderby.md) to work with non-director view links, such as with scenes or guests.
 
     \-- Previously `&orderby` only worked with the director's view to sort the positioning of control boxes, based on the _stream ID_, but now it can apply to the auto-mixer.\
@@ -124,7 +124,7 @@ https://vdo.ninja/alpha/?view=YbFmisR&poster=./media/bg_sample.webp&hideplaybutt
   [https://vdo.ninja/alpha/?effects=4\&webcam](https://vdo.ninja/alpha/?effects=4\&webcam)
 * Updated the background removal effect logic; trying out a few methods of trying to clean up the edges\
   \*\* on alpha for testing: [https://vdo.ninja/alpha/?effects=4\&webcam](https://vdo.ninja/alpha/?effects=4\&webcam)\
-  ![](<../.gitbook/assets/image (10).png>)
+  ![](<../.gitbook/assets/image (10) (6).png>)
 
 #### June 6 <a href="#august-31" id="august-31"></a>
 
@@ -585,7 +585,7 @@ https://vdo.ninja/alpha/?view=YbFmisR&poster=./media/bg_sample.webp&hideplaybutt
 #### February 10 <a href="#august-31" id="august-31"></a>
 
 * You can set the [totalroombitrate](../advanced-settings/video-bitrate-parameters/totalroombitrate.md) via manual value input now (rather than slider) in the room settings menu. (on vdo.ninja production)\
-  ![](<../.gitbook/assets/image (5) (2) (2).png>)
+  ![](<../.gitbook/assets/image (5) (2) (2) (2).png>)
 
 #### February 9 <a href="#august-31" id="august-31"></a>
 

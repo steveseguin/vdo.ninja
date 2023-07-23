@@ -42,7 +42,7 @@ Also, check "The director will be performing as well..", so that we can add our 
 
 Then click the Enter the Room’s control Center.  We should then enter the “director’s control center”.
 
-<figure><img src="../.gitbook/assets/image (23).png" alt=""><figcaption></figcaption></figure>
+<figure><img src="../.gitbook/assets/image (23) (1).png" alt=""><figcaption></figcaption></figure>
 
 ### Step 4.
 
