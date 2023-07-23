@@ -14,15 +14,18 @@ The highest quality possible is a bit tricky, as that will depend on certain fac
 
 **OBS link\*:** `https://vdo.ninja/?view=GUEST_ID&vb=12000&ab=128&scale=100` \
 \
-_\* Note the OBS Browser source should be set to a width of 1920 and a height of 1080._
-
+_\* Note the OBS Browser source should be set to a width of 1920 and a height of 1080._\
 
 
 The idea here is both you and the guest can talk to each other in the browser, at relatively very low quality, while in OBS you are capturing a very high quality version of just the guest. I'd imagine you can record the host locally in OBS, without needing Ninja in most cases.
 
 I am also assuming the guest is wearing headphones; if not, you may need to remove [`&stereo`](../general-settings/stereo.md) from their invite link. Removing it will lower the audio quality, but with it added you will not have echo cancellation enabled.
 
-You can improve the quality a small bit further with some added complexity, by having the host use OBS as the video/audio monitor when speaking to the guest, rather than pulling any audio/video in via a browser window. If you use the Electron Capture app instead of OBS browser source plugin, you'll get further improved video quality and audio sync, (since it's more advanced at handling packet loss).
+You can improve the quality a small bit further with some added complexity, by having the host use OBS as the video/audio monitor when speaking to the guest, rather than pulling any audio/video in via a browser window. If you use the Electron Capture app instead of OBS browser source plugin, you'll get further improved video quality and audio sync, (since it's more advanced at handling packet loss).\
+\
+If doing screen shares, or overlays, adding a bit of sharpening as an OBS video effects filter can also help the recording look better. Sharpening will make lines and fine details, like hair, pop out a bit more.  This is especially helpful for text, which is usually a bit soft in video otherwise.
+
+### Packet loss and connection quality
 
 The biggest impact and limitation is normally the connection itself; please sure that both sides have excellent high-quality connections. Bad connections will ruin a stream.\
 \
