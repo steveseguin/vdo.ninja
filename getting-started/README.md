@@ -7,6 +7,6 @@ Bring remote video and audio streams into your video production software for fre
 * [the-power-of-the-url-parameter.md](the-power-of-the-url-parameter.md "mention")
 * [multi-person-chat.md](multi-person-chat.md "mention")
 * [rooms](rooms/ "mention")
-* [high-quality-camera.md](high-quality-camera.md "mention")
+* [even-higher-quality-video.md](even-higher-quality-video.md "mention")
 * [mobile-phone-camera-into-webcam.md](mobile-phone-camera-into-webcam.md "mention")
 * [cheat-sheet-of-basic-parameters](../advanced-settings/cheat-sheet-of-basic-parameters/ "mention")

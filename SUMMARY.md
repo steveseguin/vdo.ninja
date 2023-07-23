@@ -11,7 +11,7 @@
   * [The power of the URL parameter](getting-started/the-power-of-the-url-parameter.md)
   * [Multi-Person Chat](getting-started/multi-person-chat.md)
   * [Rooms](getting-started/rooms/README.md)
-  * [High quality camera](getting-started/high-quality-camera.md)
+  * [Even higher quality video](getting-started/even-higher-quality-video.md)
   * [Mobile phone camera into webcam](getting-started/mobile-phone-camera-into-webcam.md)
   * [Cheat sheet of basic parameters](https://docs.vdo.ninja/getting-started/cheat-sheet-of-basic-parameters)
 * [Steve's helper apps & tools](steves-helper-apps/README.md)
