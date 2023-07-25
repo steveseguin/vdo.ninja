@@ -40,12 +40,9 @@
 		border: 0;
 		padding: 0;
 		display: block;
-		
 		height: 100%;
 		width: var(--iframe-width);
-		
 		max-height: calc(100vh - 92px);
-	
 		background-color: #0002;
 		border-radius: 3px;
 		position: absolute;
@@ -1015,10 +1012,13 @@
 			<br /><br />
 			<h3>Customize invite link</h3>
 			<span >
-				<input type="checkbox" id="toggleLabel" onclick="updateInviteLinks(event)" /><label>Prompt user for a display name</label><br />
-				<input type="checkbox" id="toggleBroadcast" onclick="updateInviteLinks(event)"/><label>Guest can see other guests and the active layout <small>(higher CPU for guest)</small></label><br />
-				<input type="checkbox" id="obfuscateInvites" onclick="updateInviteLinks(event)"/><label>Obfuscate the invite links so they cannot be easily modified by guests</label><br />
-				
+				<input type="checkbox" id="toggleLabel" onclick="updateInviteLinks(event)" /><label>💬Prompt user for a display name</label><br />
+				<input type="checkbox" id="toggleBroadcast" onclick="updateInviteLinks(event)"/><label>🪟Guest can see other guests and the active layout <small>(higher CPU for guest)</small></label><br />
+				<input type="checkbox" id="obfuscateInvites" onclick="updateInviteLinks(event)"/><label>*️⃣Obfuscate the invite links so they cannot be easily modified by guests</label><br />
+				<br />
+				<input type="checkbox" id="echoInvite" onclick="updateInviteLinks(event)"/><label>🎙️Guest's echo cancellation will be turned off (may improve audio quality)</label><br />
+				<input type="checkbox" id="denoiseInvite" onclick="updateInviteLinks(event)"/><label>🎙️Guest's noise reduction featured will be turned off</label><br />
+				<input type="checkbox" id="autogainInvite" onclick="updateInviteLinks(event)"/><label>🎙️Guest's automatic mic-gain control will be turned off</label><br />
 			</span>
 			<label>Append additional URL params: </label><input size='50' oninput="updateInviteLinks(event)"  style='max-width:50%' type="text" id="additionalParams" placeholder='optional URL params here. eg: &showlabels&ruler' /><br />
 			<i>You can manually customize the invite link further; see the documentation at <a href="https://docs.vdo.ninja" target="_blank">docs.vdo.ninja</a></i>
@@ -1165,6 +1165,10 @@
 	var assignSlotToGuest = true;
 	var toggleLabel = false;
 	var toggleBroadcast = false;
+	var toggleEchoInvite = false;
+	var toggleDenoiseInvite = false;
+	var toggleAutogainInvite = false;
+	
 	var obfuscateInvites = false;
 	var additionalParams = "";
 	var messageList = [];
@@ -1787,6 +1791,41 @@
 				getById("toggleBroadcast").checked = true;
 			}
 		}
+		
+		if (savedSession.settings && ("toggleEchoInvite" in savedSession.settings)){
+			toggleEchoInvite = savedSession.settings.toggleEchoInvite;
+			if (!toggleEchoInvite){
+				getById("echoInvite").value = "off";
+				getById("echoInvite").checked = false;
+				getById("echoInvite").removeAttribute('checked');
+			} else {
+				getById("echoInvite").value = "on";
+				getById("echoInvite").checked = true;
+			}
+		}
+		if (savedSession.settings && ("toggleDenoiseInvite" in savedSession.settings)){
+			toggleDenoiseInvite = savedSession.settings.toggleDenoiseInvite;
+			if (!toggleDenoiseInvite){
+				getById("denoiseInvite").value = "off";
+				getById("denoiseInvite").checked = false;
+				getById("denoiseInvite").removeAttribute('checked');
+			} else {
+				getById("denoiseInvite").value = "on";
+				getById("denoiseInvite").checked = true;
+			}
+		}
+		if (savedSession.settings && ("toggleAutogainInvite" in savedSession.settings)){
+			toggleAutogainInvite = savedSession.settings.toggleAutogainInvite;
+			if (!toggleAutogainInvite){
+				getById("autogainInvite").value = "off";
+				getById("autogainInvite").checked = false;
+				getById("autogainInvite").removeAttribute('checked');
+			} else {
+				getById("autogainInvite").value = "on";
+				getById("autogainInvite").checked = true;
+			}
+		}
+		
 		
 		if (savedSession.settings && ("obfuscateInvites" in savedSession.settings)){
 			obfuscateInvites = savedSession.settings.obfuscateInvites;
@@ -2465,9 +2504,27 @@
 		button.innerHTML = "Publish to Twitch";
 		button.id = "publishTwitch";
 		button.onclick = function(){
-			var URL = window.location.href.replace("/mixer","");
+			
+			var URL = window.location.href.split("/");
+			URL.pop();
+			URL = URL.join("/");
 			URL+="/?scene=0&layout&remote&room="+roomname+additional;
-			URL+="&clean&chroma=000&ssar=landscape&nosettings&prefercurrenttab&selfbrowsersurface=include&displaysurface=browser&np&nopush&publish&whippush=twitch&whippushtoken";
+			URL+="&clean&chroma=000&ssar=landscape&nosettings&prefercurrenttab&selfbrowsersurface=include&displaysurface=browser&np&nopush&publish&whippush=twitch&whippushtoken&screenshareaspectratio="+aspectRatio+"&locked="+aspectRatio;
+			var win = window.open( URL ,'targetWindow', 'toolbar=no,location=no,status=no,scaling=no,menubar=no,scrollbars=no,resizable=no,width=1280,height=720');
+			win.focus();
+			win.resizeTo(1280,720);
+		};
+		document.getElementById("sources").appendChild(button);
+		
+		var button = document.createElement("button");
+		button.innerHTML = "Publish via WHIP";
+		button.id = "publishOther";
+		button.onclick = function(){
+			var URL = window.location.href.split("/");
+			URL.pop();
+			URL = URL.join("/");
+			URL+="/?scene=0&layout&remote&room="+roomname+additional;
+			URL+="&clean&chroma=000&ssar=landscape&nosettings&prefercurrenttab&selfbrowsersurface=include&displaysurface=browser&np&nopush&publish&whippush&screenshareaspectratio="+aspectRatio+"&locked="+aspectRatio;
 			var win = window.open( URL ,'targetWindow', 'toolbar=no,location=no,status=no,scaling=no,menubar=no,scrollbars=no,resizable=no,width=1280,height=720');
 			win.focus();
 			win.resizeTo(1280,720);
@@ -2748,12 +2805,30 @@
 		}
 		
 		
+		if (document.getElementById("echoInvite").checked){
+			additional += "&ec=0"; // do not use &broadcast with &layout, else you will get broken results.
+			toggleEchoInvite = true;
+		}
+		
+		if (document.getElementById("denoiseInvite").checked){
+			additional += "&dn=0"; // do not use &broadcast with &layout, else you will get broken results.
+			toggleDenoiseInvite = true;
+		}
+		
+		if (document.getElementById("autogainInvite").checked){
+			additional += "&ag=0"; // do not use &broadcast with &layout, else you will get broken results.
+			toggleAutogainInvite = true;
+		}
 		
 		document.querySelectorAll(".roomname").forEach(ele=>{
 			ele.innerText = roomname;
 		});
+
+		var URL = window.location.href.split("/");
+		URL.pop();
+		URL = URL.join("/");
+		var inviteURL = URL+"/?room="+roomname+additional;
 		
-		var inviteURL = "https://"+location.hostname+"/?room="+roomname+additional;
 		
 		if (document.getElementById("additionalParams").value.trim().length){
 			additionalParams = document.getElementById("additionalParams").value.trim();
@@ -3997,6 +4072,12 @@
 		savedSession.settings.pixelDensity = pixelDensity;
 		savedSession.settings.absolutePixel = absolutePixel;
 		savedSession.settings.showDirector = showDirector;
+		
+		
+		savedSession.settings.toggleEchoInvite = toggleEchoInvite;
+		savedSession.settings.toggleDenoiseInvite = toggleDenoiseInvite;
+		savedSession.settings.toggleAutogainInvite = toggleAutogainInvite;
+		
 		
 		savedSession.settings.advancedMode = advancedMode;
 		

@@ -22,106 +22,119 @@ var PPTKeyPressed = false;
 
 var translation = false;
 
-var miscTranslations = {
-	"start" : "START",
-	"new-display-name":"Enter a new Display Name for this stream",
-	"submit-error-report": "Press OK to submit any error logs to VDO.Ninja. Error logs may contain private information.",
-	"director-redirect-1": "The director wishes to redirect you to the URL: ",
-	"director-redirect-2": "\n\nPress OK to be redirected.",
-	"add-a-label": "Add a label",
-	"audio-processing-disabled": "Audio processing is disabled with this guest. Can't mute or change volume",
-	"not-the-director": "<span color='red'>You are not the director of this room. You will have limited to no control. See <a target='_blank' href='https://docs.vdo.ninja/director-settings/codirector'>&codirector</a> on how to become a co-director.</span>",
-	"room-is-claimed": "The room is already claimed by someone else.\n\nOnly the first person to join a room is the assigned director.\n\nRefresh after the first director leaves to claim.",
-	"token-room-is-claimed": "The room is claimed by someone else.\n\nJoin as a guest or co-director instead.",
-	"room-is-claimed-codirector": "The room is already claimed by someone else.\n\nTrying to join as a co-director...",
-	"streamid-already-published": "The stream ID you are publishing to is already in use.\n\nPlease try with a different invite link or refresh to retry again.\n\nYou will now be disconnected.",
-	"director": "Director",
-	"unknown-user": "Unknown User",
-	"room-test-not-good": "The room name 'test' is very commonly used and may not be secure.\n\nAre you sure you wish to proceed?",
-	"load-previous-session":"Would you like to load your previous session's settings?",
-	"enter-password" : "Please enter the password below: \n\n(Note: Passwords are case-sensitive and you will not be alerted if it is incorrect.)",
-	"enter-password-2" : "Please enter the password below: \n\n(Note: Passwords are case-sensitive.)",
-	"enter-director-password": "Please enter the director's password:\n\n(Note: Passwords are case-sensitive and you will not be alerted if it is incorrect.)",
-	"password-incorrect" : "The password was incorrect.\n\nRefresh and try again.",
-	"enter-display-name" : "Please enter your display name:",
-	"enter-new-display-name" :"Enter a new Display Name for this stream",
-	"what-bitrate":"What bitrate would you like to record at? (kbps)\n(note: This feature is experimental, so have backup recordings going)",
-	"enter-website": "Enter a website URL to share",
-	"press-ok-to-record": "Press OK to start recording. Press again to stop and download.\n\nWarning: Keep this browser tab active to continue recording.\n\nYou can change the default video bitrate if desired below (kbps)",
-	"no-streamID-provided": "No streamID was provided; one will be generated randomily.\n\nStream ID: ",
-	"alphanumeric-only": "Info: Only AlphaNumeric characters should be used for the stream ID.\n\nThe offending characters have been replaced by an underscore",
-	"stream-id-too-long": "The Stream ID should be less than 45 alPhaNuMeric characters long.\n\nWe will trim it to length.",
-	"share-with-trusted":"Share only with those you trust",
-	"pass-recommended" : "A password is recommended",
-	"insecure-room-name" : "Insecure room name.",
-	"allowed-chars" : "Allowed chars",
-	"transfer" : "transfer",
-	"armed" : "armed",
-	"transfer-guest-to-room" : "Transfer guests to room:\n\n(Please note: rooms must share the same password)",
-	"transfer-guest-to-url" :"Transfer guests to new website URL.\n\nGuests will be prompted to accept unless they are using &consent",
-	"change-url" : "change URL",
-	"mute-in-scene" : "mute in scene",
-	"unmute-guest": "unmute",
-	"undeafen" : "undeafen",
-	"deafen" : "deafen",
-	"unblind" : "unblind",
-	"blind" : "blind",
-	"unmute" : "unmute",
-	"mute-guest" : "mute",
-	"unhide" : "Unhide",
-	"hide-guest": "Hide",
-	"confirm-disconnect-users": "Are you sure you wish to disconnect these users?",
-	"confirm-disconnect-user": "Are you sure you wish to disconnect this user?",
-	"enter-new-codirector-password": "Enter a co-director password to use",
-	"control-room-co-director": "Control Room: Co-Director",
-	"volume-control": "Volume control for local playback only",
-	"signal-meter": "Video packet loss indicator of video preview; green is good, red is bad. Flame implies CPU is overloaded. May not reflect the packet loss seen by scenes or other guests.",
-	"waiting-for-the-stream": "Waiting for the stream. Tip: Adding &cleanoutput to the URL will hide this spinner, or click to retry, which will also hide it.",
-	"main-director": "Main Director",
-	"share-a-screen": "Share a screen",
-	"stop-screen-sharing": "Stop screen sharing",
-	"you-have-been-transferred": "You've been transferred to a different room",
-	"you-have-been-activated": "The director has allowed you to see others in the room now",
-	"you-are-no-longer-a-co-director": "You are no longer a co-director as you were transferred.",
-	"transferred": "Transferred",
-	"room-changed": "Your room has changed",
-	"headphones-tip": "<i>Tip:</i> Use headphones to avoid audio echo issues.",
-	"camera-tip-c922": "<i>Tip:</i> To achieve 60-fps with a C922 webcam, low-light compensation needs to be turned off, exposure set to auto, and 720p used.",
-	"camera-tip-camlink": "<i>Tip:</i> A Cam Link may glitch green/purple if accessed elsewhere while already in use.",
-	"samsung-a-series": "Samsung A-series phones may have issues with Chrome; if so, try Firefox Mobile instead or switch video codecs.",
-	"screen-permissions-denied": "Permission to capture denied. Ensure your browser has screen record system permissions\n\n1.On your Mac, choose Apple menu  > System Preferences, click Security & Privacy , then click Privacy.\n2.Select Screen Recording.\n3.Select the checkbox next to your browser to allow it to record your screen.",
-	"change-audio-output-device": "Audio could not be captured. Please make sure you have an audio output device available.\n\nSome gaming headsets (ie: Corsair) may need to be set to 2-channel output to work, as surround sound drivers may cause problems.",
-	"prompt-access-request": " is trying to view your stream. Allow them?",
-	"confirm-reload-user": "Are you sure you wish to reload this user's browser?",
-	"webrtc-is-blocked": "⚠ This browser has either blocked WebRTC or does not support it.\n\nThis site will not work without it.\n\nDisable any browser extensions or privacy settings that may be blocking WebRTC, or try a different browser.",
-	"not-clean-session": "Video effects or canvas rendering failed.\n\nCheck to ensure any remotely hosted images are cross-origin allowed.",
-	"ios-no-screen-share": "Sorry, but your iOS browser does not support screen-sharing.\n\nPlease see <a href='https://docs.vdo.ninja/guides/screen-share-your-iphone-ipad' target='_blank'>this guide</a> for an alternative method to do so.",
-	"android-no-screen-share": "Sorry, your mobile browser does not support screen-sharing.\n\nThe <a href='https://docs.vdo.ninja/getting-started/native-mobile-app-versions' target='_blank'>Android native app</a> does offer basic support for it though.",
-	"no-screen-share-supported": "Sorry, your browser does not support screen-sharing.\n\nPlease use the desktop versions of Firefox or Chrome instead.",
-	"speech-not-suppoted": "⚠ Speech Recognition is not supported by this browser",
-	"blue-yeti-tip": "<i>Tip:</i> Blue Yeti microphones may experience issues being overly loud. <a href='https://support.google.com/chrome/thread/7542181?hl=en&msgid=79691143'>Please see here</a> for a solution or disable auto-gain in VDO.Ninja.",
-	"site-not-responsive": "<h3>Notice: The system cannot be accessed or is currently slow to respond.</h3>\nIf a routing issue, try adding <i title='or try visiting https://proxy.vdo.ninja/'>&proxy</i> to the URL; you can also try <i>https://proxy.vdo.ninja</i> or a VPN if the service is blocked in your country.\n\nIf the main service is down, a backup version is also available here: <i>https://backup.vdo.ninja</i>\n\nContact steve@seguin.email for added help.\n\nThis service requires the use of Websockets over port 443.",
-	"no-audio-source-detected": "No Audio Source was detected.\n\nIf you were wanting to capture an Application's Audio, please see:\nhttps://docs.vdo.ninja/help/guides-and-how-tos#audio for some guides.",
-	"viewer-count": "Total outbound p2p connections of this remote stream",
-	"enter-url-for-widget": "Enter a URL for a page to embed as a sidebar",
-	"director-password" : "Enter the main director's password",
-	"vision-disabled": "The Director has disabled your vision temporarily<br /><br ><center><i style='font-size:500%;' class='las la-eye-slash'></i></center>",
-	"invalid-remote-code": "Invalid remote control code.\n\nUse the field below to try again with a different passcode.",
-	"invalid-remote-code-obs": "Invalid remote control code.\n\nThe remote OBS system needs a matching passcode set using &remote.\n\nSee the documentation for help..",
-	"request-rejected-obs": "The request was rejected.\n\nThe remote OBS system needs a matching passcode set using &remote.\n\nSee the documentation for help.",
-	"remote-token-rejected": "The remote request failed; the &remote token did not match or the remote user does not allow remote control.",
-	"remote-control-failed": "The remote control request failed.",
-	"remote-peer-connected": "Remote peer connected to video stream.\n\nConnection to handshake server being killed on request. This increases security, but the peer will not be able to reconnect automatically on connection failure.\n\nPress OK to start the stream!",
-	"director-denied": "The main director denied you as a co-director",
-	"only-main-director": "Only the main director can transfer this guest",
-	"request-failed": "The request failed; you can't apply this action",
-	"tokens-did-not-match": "The remote request failed; the remote token did not match or the remote user does not allow remote control.",
-	"token-not-director": "The request failed; the remote user did not recognize you as the director",
-	"approved-as-director": "The director approved you as a co-director",
-	"you-are-a-codirector": "You are a co-director of this room; you have partial director control assigned to you.",
-	"this-is-you": "This is you, a co-director.<br />You are also a performer.",
-	"preview-meshcast-disabled": "You can't adjust the preview bitrate for Meshcast-based streams"
-};
+var miscTranslations = { // i can replace this list from time to time from the generated one in blank.json using translate.js
+	"start": "START",
+    "new-display-name": "Enter a new Display Name for this stream",
+    "submit-error-report": "Press OK to submit any error logs to VDO.Ninja. Error logs may contain private information.",
+    "director-redirect-1": "The director wishes to redirect you to the URL: ",
+    "director-redirect-2": "\n\nPress OK to be redirected.",
+    "add-a-label": "Add a label",
+    "audio-processing-disabled": "Audio processing is disabled with this guest. Can't mute or change volume",
+    "not-the-director": "<span color='red'>You are not the director of this room. You will have limited to no control. See <a target='_blank' href='https://docs.vdo.ninja/director-settings/codirector'>&codirector</a> on how to become a co-director.</span>",
+    "room-is-claimed": "The room is already claimed by someone else.\n\nOnly the first person to join a room is the assigned director.\n\nRefresh after the first director leaves to claim.",
+    "token-room-is-claimed": "The room is claimed by someone else.\n\nJoin as a guest or co-director instead.",
+    "room-is-claimed-codirector": "The room is already claimed by someone else.\n\nTrying to join as a co-director...",
+    "streamid-already-published": "The stream ID you are publishing to is already in use.\n\nPlease try with a different invite link or refresh to retry again.\n\nYou will now be disconnected.",
+    "director": "Director",
+    "unknown-user": "Unknown User",
+    "room-test-not-good": "The room name 'test' is very commonly used and may not be secure.\n\nAre you sure you wish to proceed?",
+    "load-previous-session": "Would you like to load your previous session's settings?",
+    "enter-password": "Please enter the password below: \n\n(Note: Passwords are case-sensitive and you will not be alerted if it is incorrect.)",
+    "enter-password-2": "Please enter the password below: \n\n(Note: Passwords are case-sensitive.)",
+    "enter-director-password": "Please enter the director's password:\n\n(Note: Passwords are case-sensitive and you will not be alerted if it is incorrect.)",
+    "password-incorrect": "The password was incorrect.\n\nRefresh and try again.",
+    "enter-display-name": "Please enter your display name:",
+    "enter-new-display-name": "Enter a new Display Name for this stream",
+    "what-bitrate": "What bitrate would you like to record at? (kbps)\n(note: This feature is experimental, so have backup recordings going)",
+    "enter-website": "Enter a website URL to share",
+    "press-ok-to-record": "Press OK to start recording. Press again to stop and download.\n\nWarning: Keep this browser tab active to continue recording.\n\nYou can change the default video bitrate if desired below (kbps)",
+    "no-streamID-provided": "No streamID was provided; one will be generated randomily.\n\nStream ID: ",
+    "alphanumeric-only": "Info: Only AlphaNumeric characters should be used for the stream ID.\n\nThe offending characters have been replaced by an underscore",
+    "stream-id-too-long": "The Stream ID should be less than 45 alPhaNuMeric characters long.\n\nWe will trim it to length.",
+    "share-with-trusted": "Share only with those you trust",
+    "pass-recommended": "A password is recommended",
+    "insecure-room-name": "Insecure room name.",
+    "allowed-chars": "Allowed chars",
+    "transfer": "transfer",
+    "armed": "armed",
+    "transfer-guest-to-room": "Transfer guests to room:\n\n(Please note: rooms must share the same password)",
+    "transfer-guest-to-url": "Transfer guests to new website URL.\n\nGuests will be prompted to accept unless they are using &consent",
+    "change-url": "change URL",
+    "mute-in-scene": "mute in scene",
+    "unmute-guest": "unmute guest",
+    "unmute": "unmute",
+    "undeafen": "undeafen",
+    "deafen": "deafen guest",
+    "unblind": "unblind",
+    "blind": "blind guest",
+    "mute-guest": "mute guest",
+    "mute": "mute",
+    "unhide": "unhide guest",
+    "hide-guest": "Hide",
+    "confirm-disconnect-users": "Are you sure you wish to disconnect these users?",
+    "confirm-disconnect-user": "Are you sure you wish to disconnect this user?",
+    "enter-new-codirector-password": "Enter a co-director password to use",
+    "control-room-co-director": "Control Room: Co-Director",
+    "volume-control": "Volume control for local playback only",
+    "signal-meter": "Video packet loss indicator of video preview; green is good, red is bad. Flame implies CPU is overloaded. May not reflect the packet loss seen by scenes or other guests.",
+    "waiting-for-the-stream": "Waiting for the stream. Tip: Adding &cleanoutput to the URL will hide this spinner, or click to retry, which will also hide it.",
+    "main-director": "Main Director",
+    "share-a-screen": "Share a screen",
+    "stop-screen-sharing": "Stop screen sharing",
+    "you-have-been-transferred": "You've been transferred to a different room",
+    "you-have-been-activated": "The director has allowed you to see others in the room now",
+    "you-are-no-longer-a-co-director": "You are no longer a co-director as you were transferred.",
+    "transferred": "Transferred",
+    "room-changed": "Your room has changed",
+    "headphones-tip": "<i>Tip:</i> Use headphones to avoid audio echo issues.",
+    "camera-tip-c922": "<i>Tip:</i> To achieve 60-fps with a C922 webcam, low-light compensation needs to be turned off, exposure set to auto, and 720p used.",
+    "camera-tip-camlink": "<i>Tip:</i> A Cam Link may glitch green/purple if accessed elsewhere while already in use.",
+    "samsung-a-series": "Samsung A-series phones may have issues with Chrome; if so, try Firefox Mobile instead or switch video codecs.",
+    "screen-permissions-denied": "Permission to capture denied. Ensure your browser has screen record system permissions\n\n1.On your Mac, choose Apple menu  > System Preferences, click Security & Privacy , then click Privacy.\n2.Select Screen Recording.\n3.Select the checkbox next to your browser to allow it to record your screen.",
+    "change-audio-output-device": "Audio could not be captured. Please make sure you have an audio output device available.\n\nSome gaming headsets (ie: Corsair) may need to be set to 2-channel output to work, as surround sound drivers may cause problems.",
+    "prompt-access-request": " is trying to view your stream. Allow them?",
+    "confirm-reload-user": "Are you sure you wish to reload this user's browser?",
+    "webrtc-is-blocked": "⚠ This browser has either blocked WebRTC or does not support it.\n\nThis site will not work without it.\n\nDisable any browser extensions or privacy settings that may be blocking WebRTC, or try a different browser.",
+    "not-clean-session": "Video effects or canvas rendering failed.\n\nCheck to ensure any remotely hosted images are cross-origin allowed.",
+    "ios-no-screen-share": "Sorry, but your iOS browser does not support screen-sharing.\n\nPlease see <a href='https://docs.vdo.ninja/guides/screen-share-your-iphone-ipad' target='_blank'>this guide</a> for an alternative method to do so.",
+    "android-no-screen-share": "Sorry, your mobile browser does not support screen-sharing.\n\nThe <a href='https://docs.vdo.ninja/getting-started/native-mobile-app-versions' target='_blank'>Android native app</a> does offer basic support for it though.",
+    "no-screen-share-supported": "Sorry, your browser does not support screen-sharing.\n\nPlease use the desktop versions of Firefox or Chrome instead.",
+    "speech-not-suppoted": "⚠ Speech Recognition is not supported by this browser",
+    "blue-yeti-tip": "<i>Tip:</i> Blue Yeti microphones may experience issues being overly loud. <a href='https://support.google.com/chrome/thread/7542181?hl=en&msgid=79691143'>Please see here</a> for a solution or disable auto-gain in VDO.Ninja.",
+    "site-not-responsive": "<h3>Notice: The system cannot be accessed or is currently slow to respond.</h3>\nIf a routing issue, try adding <i title='or try visiting https://proxy.vdo.ninja/'>&proxy</i> to the URL; you can also try <i>https://proxy.vdo.ninja</i> or a VPN if the service is blocked in your country.\n\nIf the main service is down, a backup version is also available here: <i>https://backup.vdo.ninja</i>\n\nContact steve@seguin.email for added help.\n\nThis service requires the use of Websockets over port 443.",
+    "no-audio-source-detected": "No Audio Source was detected.\n\nIf you were wanting to capture an Application's Audio, please see:\nhttps://docs.vdo.ninja/help/guides-and-how-tos#audio for some guides.",
+    "viewer-count": "Total outbound p2p connections of this remote stream",
+    "enter-url-for-widget": "Enter a URL for a page to embed as a sidebar",
+    "director-password": "Enter the main director's password",
+    "vision-disabled": "The Director has disabled your vision temporarily<br /><br ><center><i style='font-size:500%;' class='las la-eye-slash'></i></center>",
+    "invalid-remote-code": "Invalid remote control code.\n\nUse the field below to try again with a different passcode.",
+    "invalid-remote-code-obs": "Invalid remote control code.\n\nThe remote OBS system needs a matching passcode set using &remote.\n\nSee the documentation for help..",
+    "request-rejected-obs": "The request was rejected.\n\nThe remote OBS system needs a matching passcode set using &remote.\n\nSee the documentation for help.",
+    "remote-token-rejected": "The remote request failed; the &remote token did not match or the remote user does not allow remote control.",
+    "remote-control-failed": "The remote control request failed.",
+    "remote-peer-connected": "Remote peer connected to video stream.\n\nConnection to handshake server being killed on request. This increases security, but the peer will not be able to reconnect automatically on connection failure.\n\nPress OK to start the stream!",
+    "director-denied": "The main director denied you as a co-director",
+    "only-main-director": "Only the main director can transfer this guest",
+    "request-failed": "The request failed; you can't apply this action",
+    "tokens-did-not-match": "The remote request failed; the remote token did not match or the remote user does not allow remote control.",
+    "token-not-director": "The request failed; the remote user did not recognize you as the director",
+    "approved-as-director": "The director approved you as a co-director",
+    "you-are-a-codirector": "You are a co-director of this room; you have partial director control assigned to you.",
+    "this-is-you": "This is you, a co-director.<br />You are also a performer.",
+    "preview-meshcast-disabled": "You can't adjust the preview bitrate for Meshcast-based streams"
+}
+
+function getTranslation(key){ // when using this, instead of miniTranslate, if the user changes the language, it might not update. Used mainly when you don't want any HTML (<span data-translate>) being including in the translation
+	if (translation.innerHTML && (key in translation.innerHTML)){ // these are the proper translations
+		return translation.innerHTML[key];
+	} else if (key in miscTranslations){  // i guess these can be transitioned to innerHTML 
+		return miscTranslations[key];
+	} else {
+		warnlog("misc translation not found");
+		return key.replaceAll("-", " "); //
+	}
+}
+
 
 // function log(msg){ // uncomment to enable logging.
 	// console.log(msg);
@@ -356,7 +369,7 @@ function submitDebugLog(msg=false){
 		}
 	} catch(e){}
 	window.focus();
-	var res = confirm(miscTranslations["submit-error-report"]); 
+	var res = confirm(getTranslation("submit-error-report")); 
 	if (res){
 		var request = new XMLHttpRequest();
 		
@@ -735,7 +748,7 @@ async function promptAlt(inputText, block=false, asterix=false, value=false, tim
 		Prompts[promptID].resolve = resolve;
 		Prompts[promptID].reject = reject;
 		
-		var zindex = 30 + document.querySelectorAll('.promptModal').length;
+		var zindex = 1030 + document.querySelectorAll('.promptModal').length;
 		
 		if (block){
 			var backdropClass = "opaqueBackdrop";
@@ -888,7 +901,7 @@ async function promptTransfer(value=null, bcmode = null, updateurl = null, queue
 		var zindex = 30 + document.querySelectorAll('.promptModal').length;
 		var backdropClass = "modalBackdrop";
 	
-		var inputText = "<span style='font-size:1.2em'>"+(miscTranslations["transfer-guest-to-room"].replace("\n","</span><br /><span>"))+"</span>";
+		var inputText = "<span style='font-size:1.2em'>"+(getTranslation("transfer-guest-to-room").replace("\n","</span><br /><span>"))+"</span>";
 		inputText = inputText.replace(/\n/g,"<br />");
 		
 		modalTemplate =
@@ -976,23 +989,26 @@ async function promptTransfer(value=null, bcmode = null, updateurl = null, queue
 }
 
 function youveBeenTransferred(){
-	getChatMessage( miscTranslations["you-have-been-transferred"], label = false, director = false, overlay = true); // "you-have-been-transferred"
-	getById("head2").innerHTML =  '<span data-translate="transferred-to-room">'+miscTranslations["room-changed"]+'</span>'; // 
+	getChatMessage( getTranslation("you-have-been-transferred"), label = false, director = false, overlay = true); // "you-have-been-transferred"
+	getById("head2").innerHTML = getTranslation("room-changed"); // not sure this is right??
+	
+	miniTranslate(getById("head2"), "room-changed");
+	
 	if (session.director){
-		getById("head4").innerHTML = miscTranslations["you-are-no-longer-a-co-director"]; //"You are no longer a co-director as you were transferred."; //
+		getById("head4").innerHTML = getTranslation("you-are-no-longer-a-co-director"); //"You are no longer a co-director as you were transferred."; //
 	} 
 	
 	if (session.label){
-		document.title = session.label + " - " + miscTranslations["transferred"];
+		document.title = session.label + " - " + getTranslation("transferred");
 	} else {
-		document.title = miscTranslations["transferred"];
+		document.title = getTranslation("transferred");
 	}
 	
 	hideHomeCheck();
 }
 
 function youveBeenActivated(){
-	getChatMessage( miscTranslations["you-have-been-activated"], label = false, director = false, overlay = true); // "you-have-been-transferred"
+	getChatMessage( getTranslation("you-have-been-activated"), label = false, director = false, overlay = true); // "you-have-been-transferred"
 	hideHomeCheck();
 }
 
@@ -1126,19 +1142,19 @@ var sanitizeStreamID = function(streamID) {
 	if (streamID.length < 1) {
 		streamID = session.generateStreamID(8);
 		if (!(session.cleanOutput)) {
-			warnUser(miscTranslations["no-streamID-provided"] + streamID, false, false);
+			warnUser(getTranslation("no-streamID-provided") + streamID, false, false);
 		}
 	}
 	var streamID_sanitized = streamID.replace(/[\W]+/g, "_");
 	if (streamID !== streamID_sanitized) {
 		if (!(session.cleanOutput)) {
-			warnUser(miscTranslations["alphanumeric-only"], false, false);
+			warnUser(getTranslation("alphanumeric-only"), false, false);
 		}
 	}
 	if (streamID_sanitized.length > 44) {
 		streamID_sanitized = streamID_sanitized.substring(0, 50);
 		if (!(session.cleanOutput)) {
-			warnUser(miscTranslations["stream-id-too-long"], false, false);
+			warnUser(getTranslation("stream-id-too-long"), false, false);
 		}
 	}
 	return streamID_sanitized;
@@ -1162,12 +1178,12 @@ var checkStrengthRoom = function() {
 	target.style.display = "block";
 	if (result1) {
 		if (result2) {
-			target.innerHTML = "<span style='color:green'>"+miscTranslations["share-with-trusted"]+"</span>";
+			target.innerHTML = "<span style='color:green'>"+getTranslation("share-with-trusted")+"</span>";
 		} else {
-			target.innerHTML = "<span style='color:#e67202;'>"+miscTranslations["pass-recommended"]+"</span>";
+			target.innerHTML = "<span style='color:#e67202;'>"+getTranslation("pass-recommended")+"</span>";
 		}
 	} else {
-		target.innerHTML = "<span style='color:red'>"+miscTranslations["insecure-room-name"]+"</span> "+miscTranslations["allowed-chars"]+": <i>A-Z, a-z, 0-9, _</i>";
+		target.innerHTML = "<span style='color:red'>"+getTranslation("insecure-room-name")+"</span> "+getTranslation("allowed-chars")+": <i>A-Z, a-z, 0-9, _</i>";
 	}
 };
 
@@ -3843,6 +3859,25 @@ function updateMixerRun(e=false){  // this is the main auto-mixing code.  It's a
 				}
 			}
 		}
+
+	
+		if (session.locked){
+			var w123 = w;
+			var h123 = h;
+
+			if (w>h*session.locked){
+				w = h*session.locked;
+			} else if (h>w/session.locked){
+				h = w/session.locked;
+			}
+			
+			playarea.style.left = ((w123-w)/2)+"px";
+			playarea.style.top = ((h123-h)/2)+"px"
+			playarea.style.width = w+"px";
+			playarea.style.height = h+"px";
+			playarea.style.position = "absolute";
+			playarea.style.display = "block";
+		}
 		
 		var arW = 16.0;
 		var arH = 9.0;
@@ -3990,7 +4025,6 @@ function updateMixerRun(e=false){  // this is the main auto-mixing code.  It's a
 			}
 			
 			for (var j in session.rpcs){
-				
 				if (groups.length || session.allowNoGroup){
 					try {
 						if (!(groups.some(item => session.rpcs[j].group.includes(item)))){
@@ -4613,9 +4647,9 @@ function updateMixerRun(e=false){  // this is the main auto-mixing code.  It's a
 					var www = ww/NW;
 					var hhh = hh/NH;
 					if (www>hhh){
-						current = hhh * hhh * (mpl/(NW*NH));
+						current = Math.round(hhh * hhh * (mpl/(NW*NH)));
 					} else {
-						current = www * www * (mpl/(NW*NH));
+						current = Math.round(www * www * (mpl/(NW*NH)));
 					}
 					
 					if (current>=BB){
@@ -4650,7 +4684,7 @@ function updateMixerRun(e=false){  // this is the main auto-mixing code.  It's a
 		errorlog(e);
 		sssid = false
 	}
-	
+
 	var customLayout=false; 
 	
 	if (!session.notifyScreenShare && (session.scene!==false)){
@@ -5714,7 +5748,7 @@ function updateMixerRun(e=false){  // this is the main auto-mixing code.  It's a
 						session.rpcs[vid.dataset.UUID].signalMeter.classList.remove("hidden");
 						session.rpcs[vid.dataset.UUID].signalMeter.id = "signalMeter_" + vid.dataset.UUID;
 						session.rpcs[vid.dataset.UUID].signalMeter.dataset.level = 0;
-						session.rpcs[vid.dataset.UUID].signalMeter.title = miscTranslations["signal-meter"];
+						session.rpcs[vid.dataset.UUID].signalMeter.title = getTranslation("signal-meter");
 						holder.appendChild(session.rpcs[vid.dataset.UUID].signalMeter);
 						holder.signalMeter = session.rpcs[vid.dataset.UUID].signalMeter;
 					} else if (vid.dataset.UUID && session.rpcs[vid.dataset.UUID].signalMeter){
@@ -5731,7 +5765,7 @@ function updateMixerRun(e=false){  // this is the main auto-mixing code.  It's a
 						session.rpcs[vid.dataset.UUID].batteryMeter.classList.remove("hidden");
 						session.rpcs[vid.dataset.UUID].batteryMeter.id = "batteryMeter_" + vid.dataset.UUID;
 						session.rpcs[vid.dataset.UUID].batteryMeter.dataset.level = 0;
-						session.rpcs[vid.dataset.UUID].batteryMeter.title = miscTranslations["battery-meter"];
+						session.rpcs[vid.dataset.UUID].batteryMeter.title = getTranslation("battery-meter");
 						holder.appendChild(session.rpcs[vid.dataset.UUID].batteryMeter);
 						holder.batteryMeter = session.rpcs[vid.dataset.UUID].batteryMeter;
 					} else if (vid.dataset.UUID && session.rpcs[vid.dataset.UUID].batteryMeter){
@@ -5749,7 +5783,7 @@ function updateMixerRun(e=false){  // this is the main auto-mixing code.  It's a
 						session.rpcs[vid.dataset.UUID].volumeControl.id = "volumeControl_" + vid.dataset.UUID;
 						session.rpcs[vid.dataset.UUID].volumeControl.value = parseInt(session.rpcs[vid.dataset.UUID].videoElement.volume*100);
 						session.rpcs[vid.dataset.UUID].volumeControl.dataset.UUID = vid.dataset.UUID;
-						session.rpcs[vid.dataset.UUID].volumeControl.title = miscTranslations["volume-control"];
+						session.rpcs[vid.dataset.UUID].volumeControl.title = getTranslation("volume-control");
 						session.rpcs[vid.dataset.UUID].volumeControl.oninput = function(){
 							if (this.dataset.UUID && session.rpcs[this.dataset.UUID] && session.rpcs[this.dataset.UUID].videoElement){
 								session.rpcs[this.dataset.UUID].videoElement.volume = parseFloat(this.value/100);
@@ -5998,11 +6032,7 @@ var translationBacklog = [];
 function miniTranslate(ele, ident = false, direct=false) {
 	
 	if (!translation){
-		translationBacklog.push([ele,ident]);
-		log('Translation backlogged');
-		if (!direct || !ident){
-			return;
-		}
+		translation = {};
 	}
 	
 	if (ident){
@@ -6012,6 +6042,7 @@ function miniTranslate(ele, ident = false, direct=false) {
 				ele.querySelector('[data-translate]').dataset.translate = ident;
 			} else {
 				ele.innerHTML = translation.innerHTML[ident];
+				ele.dataset.translate = ident;
 			}
 			return;
 		} else if (direct){
@@ -6019,43 +6050,76 @@ function miniTranslate(ele, ident = false, direct=false) {
 				ele.querySelector('[data-translate]').innerHTML = direct;
 				ele.querySelector('[data-translate]').dataset.translate = ident;
 			} else {
+				ele.dataset.translate = ident;
 				ele.innerHTML = direct;
 			}
 			return;
 		} else {
 			warnlog(ident + ": not found in translation file");
+			
+			if (!(ident in miscTranslations)){ 
+				var value = ident.replaceAll("-", " "); // lets use the key as the translation
+			} else {
+				var value = miscTranslations[ident]; // lets use a miscellaneous translation as backup?
+			}
+			
+			if (ele.querySelector('[data-translate]')){
+				ele.querySelector('[data-translate]').innerHTML = value;
+				ele.querySelector('[data-translate]').dataset.translate = ident;
+			} else {
+				ele.innerHTML = value;
+				ele.dataset.translate = ident;
+			}
+			return;
 		}
 	}
 	
 	var allItems = ele.querySelectorAll('[data-translate]');
-	allItems.forEach(function(ele) {
-		if (ele.dataset.translate in translation.innerHTML) {
+	allItems.forEach(function(ele2) {
+		if (translation.innerHTML  && (ele2.dataset.translate in translation.innerHTML)){
+			ele2.innerHTML = translation.innerHTML[ele2.dataset.translate];
+		} else if (translation.miscellaneous && (ele2.dataset.translate in translation.miscellaneous)){
+			ele2.innerHTML = translation.miscellaneous[ele2.dataset.translate];
+		}
+	});
+	if (ele.dataset){
+		if (translation.innerHTML && (ele.dataset.translate in translation.innerHTML)){
 			ele.innerHTML = translation.innerHTML[ele.dataset.translate];
-		} else if (ele.dataset.translate in translation.miscellaneous) {
+		} else if (translation.miscellaneous && (ele.dataset.translate in translation.miscellaneous)){
 			ele.innerHTML = translation.miscellaneous[ele.dataset.translate];
 		}
-	});
-	var allTitles = ele.querySelectorAll('[title]');
-	allTitles.forEach(function(ele) {
-		var key = ele.title.replace(/[\W]+/g, "-").toLowerCase();
-		if (key in translation.titles) {
-			ele.title = translation.titles[key];
+	}
+	if (translation.titles){
+		var allTitles = ele.querySelectorAll('[title]');
+		allTitles.forEach(function(ele2) {
+			var key = ele2.title.replace(/[\W]+/g, "-").toLowerCase();
+			if (key in translation.titles) {
+				ele2.title = translation.titles[key];
+			}
+		});
+		if (ele.title){
+			var key = ele.title.replace(/[\W]+/g, "-").toLowerCase();
+			if (key in translation.titles) {
+				ele.title = translation.titles[key];
+			}
 		}
-	});
-	var allPlaceholders = ele.querySelectorAll('[placeholder]');
-	allPlaceholders.forEach(function(ele) {
-		var key = ele.placeholder.replace(/[\W]+/g, "-").toLowerCase();
-		if (key in translation.placeholders) {
-			ele.placeholder = translation.placeholders[key];
+	}
+	if (translation.placeholders){
+		var allPlaceholders = ele.querySelectorAll('[placeholder]');
+		allPlaceholders.forEach(function(ele2) {
+			var key = ele2.placeholder.replace(/[\W]+/g, "-").toLowerCase();
+			if (key in translation.placeholders) {
+				ele2.placeholder = translation.placeholders[key];
+			}
+		});
+		
+		if (ele.placeholder){
+			var key = ele.placeholder.replace(/[\W]+/g, "-").toLowerCase();
+			if (key in translation.placeholders) {
+				ele.placeholder = translation.placeholders[key];
+			}
 		}
-	});
-	
-	//Object.keys(miscTranslations).forEach(key => {
-	//	if (key in translation.miscellaneous) {
-	//		miscTranslations[key] = translation.miscellaneous[key];
-	//	}
-	//});
-	///
+	}
 }
 
 var controlBarTimeout = false;
@@ -6088,13 +6152,23 @@ async function changeLg(lang) {
 			}
 			await response.json().then(async function(data) {
 				translation = data; // translation.innerHTML[ele.dataset.translate]
-				var trans = data.innerHTML;
+				
+				if (data.miscellaneous){
+					Object.keys(data.miscellaneous).forEach(key => {
+						miscTranslations[key] = data.miscellaneous[key];
+					});
+				}
+				
+				var trans = data.innerHTML; 
 				var allItems = document.querySelectorAll('[data-translate]');
 				allItems.forEach(function(ele) {
 					if (ele.dataset.translate in trans) {
 						ele.innerHTML = trans[ele.dataset.translate];
+					} else if (data.miscellaneous && (ele.dataset.translate in data.miscellaneous)){
+						ele.innerHTML = data.miscellaneous[ele.dataset.translate]; // use the misc translation if no main one is found
 					}
 				});
+				
 				trans = data.titles;
 				var allTitles = document.querySelectorAll('[title]');
 				allTitles.forEach(function(ele) {
@@ -6110,6 +6184,7 @@ async function changeLg(lang) {
 						}
 					}
 				});
+				
 				trans = data.placeholders;
 				var allPlaceholders = document.querySelectorAll('[placeholder]');
 				allPlaceholders.forEach(function(ele) {
@@ -6118,14 +6193,8 @@ async function changeLg(lang) {
 						ele.placeholder = trans[key];
 					}
 				});
-				if ("miscellaneous" in data){
-					trans = data.miscellaneous;
-					Object.keys(miscTranslations).forEach(key => {
-						if (key in trans) {
-							miscTranslations[key] = trans[key];
-						}
-					});
-				}
+				
+				
 				if (translationBacklog.length){
 					for (var i=0;i<translationBacklog.length;i++){
 						try{
@@ -6336,6 +6405,28 @@ async function jumptoroom(event = null) {
 	}
 }
 
+
+async function jumptoURL(event = null) {
+
+	var url = getById('joinbyURL').value;
+	
+	if (url.length) {
+
+		if (url.startsWith('?')){url='./'+url};
+	
+		if (url.startsWith('&')){url='./?app'+url};
+		
+		if (!url.startsWith('http') && !url.startsWith('.')){url='./?app'+url};
+
+		window.location = url;
+		
+	} else {
+		getById("joinbyURL").focus();
+		getById("joinbyURL").classList.remove("shake");
+		setTimeout(function(){getById("joinbyURL").classList.add("shake");},10);
+	}
+}
+
 function sleep(ms = 0) {
 	return new Promise(r => setTimeout(r, ms)); // LOLz!
 }
@@ -6517,7 +6608,7 @@ async function tapToFocus(x,y, force=false){
 	}
 	track0 = track0[0];
 	if (!track0.getCapabilities){
-		log("Track lacks advanced features. Safari?");
+		log("Track lacks advanced features. Firefox?");
 		return;
 	}
 	
@@ -6603,6 +6694,8 @@ session.remoteZoom = function(zoom){
 			}
 			//updateCameraConstraints("zoom", session.zoom); // TODO: I should align the remote zoom and focus with the local one.
 			track0.applyConstraints({advanced: [ {zoom: session.zoom} ]});
+		} else if (Firefox){
+			warnlog("firefox sucks. that's why");
 		}
 	} catch(e){
 		errorlog(e);
@@ -7196,7 +7289,7 @@ function applyEffects(track) { // video only please. do not touch audio.  Run up
 		return session.canvas.captureStream().getVideoTracks()[0];
 	} catch(e){
 		if (!session.cleanOutput){
-			warnUser(miscTranslations["not-clean-session"], false, false);
+			warnUser(getTranslation("not-clean-session"), false, false);
 		}
 		return track;
 	}
@@ -7503,9 +7596,11 @@ function updateUserList(){
 					if (session.rpcs[UUID].label){
 						insert.innerText = session.rpcs[UUID].label + "";
 					} else if (session.directorList.indexOf(UUID)>=0){
-						insert.innerText = miscTranslations["director"];
+						miniTranslate(insert,"director");
+						//insert.innerHTML = getTranslation("director");
 					} else {
-						insert.innerText = miscTranslations["unknown-user"];
+						miniTranslate(insert,"unknown-user");
+						//insert.innerHTML = getTranslation("unknown-user");
 					}
 					try {
 						insert.dataset.UUID = UUID;
@@ -9458,7 +9553,7 @@ function createConnectionDetailsEle(UUID){
 		session.rpcs[UUID].connectionDetails.dataset.value = session.rpcs[UUID].stats.info.total_outbound_p2p_connections;
 	}
 	session.rpcs[UUID].connectionDetails.dataset.UUID = UUID;
-	session.rpcs[UUID].connectionDetails.title = miscTranslations["viewer-count"];
+	session.rpcs[UUID].connectionDetails.title = getTranslation("viewer-count");
 	session.rpcs[UUID].connectionDetails.className = "rem-con-count";
 	
 	session.rpcs[UUID].connectionDetails.addEventListener('click', function(e) { // show stats of video if double clicked
@@ -11958,7 +12053,7 @@ function directHangup(ele, event) { // everyone in the room will hangup this gue
 	if (event == false) {
 		if (stillNeedHangupTarget === 1) {
 			window.focus();
-			var confirmHangup = confirm(miscTranslations["confirm-disconnect-users"]);
+			var confirmHangup = confirm(getTranslation("confirm-disconnect-users"));
 			stillNeedHangupTarget = confirmHangup;
 		} else {
 			confirmHangup = stillNeedHangupTarget;
@@ -11976,7 +12071,7 @@ function directHangup(ele, event) { // everyone in the room will hangup this gue
 		return;
 	} else {
 		window.focus();
-		var confirmHangup = confirm(miscTranslations["confirm-disconnect-user"]);
+		var confirmHangup = confirm(getTranslation("confirm-disconnect-user"));
 	}
 
 	if (confirmHangup) {
@@ -12193,14 +12288,28 @@ function getDetailedState(sid=false){
 					var otherState = {};
 					for (var i=0;i<others.length;i++){
 						if ("scene" in others[i].dataset){continue;}
-						if ("toggle-group" == others[i].dataset.actionType){continue;}
-						if ("value" in others[i]){
+						else if ("toggle-group" == others[i].dataset.actionType){continue;}
+						else if ("value" in others[i]){
 							if (others[i].value!==""){
 								otherState[others[i].dataset.actionType] = others[i].value;
 							}
+						} else {
+							try {
+								if (others[i].querySelector('.altpress')){
+									otherState[others[i].dataset.actionType] = "alt";
+								} else if (others[i].querySelector('.pressed')){
+									otherState[others[i].dataset.actionType] = true;
+								} else if (others[i].dataset.actionType=="soloChat"){
+									otherState[others[i].dataset.actionType] = false;
+								}
+							} catch(e){
+								errorlog(e);
+							}
 						}
+						
 					}
 					item.others = otherState;
+					
 				}
 			} catch(e){}
 			
@@ -12591,7 +12700,7 @@ async function directPageReload(ele, event) {
 		reloadURL = previousURL;
 	} else {
 		window.focus();
-		var reloadURL = await promptAlt(miscTranslations["transfer-guest-to-url"], false, false, previousURL);
+		var reloadURL = await promptAlt(getTranslation("transfer-guest-to-url"), false, false, previousURL);
 		stillNeedURL = true;
 		if (reloadURL === null) { // user cancelled
 			ele.innerHTML = '<i class="las la-sync"></i> <span data-translate="change-url">change URL</span>';
@@ -12753,8 +12862,8 @@ async function directRoomClock(ele,  event=false) {
 	var msg = {};
 	msg.showTime = session.showRoomTime;
 	session.sendRequest(msg);
-}
-async function directRoomTimer(ele,  event=false) { // A directing room only is controlled by the Director, with the exception of MUTE.
+} 
+async function directRoomTimer(ele,  event=false, preSetTime=false) { // A directing room only is controlled by the Director, with the exception of MUTE.
 	log("directGlobalRoomTimer");
 	var msg = {};
 	ele.classList.remove("blue");
@@ -12762,9 +12871,13 @@ async function directRoomTimer(ele,  event=false) { // A directing room only is 
 	
 	getById("overlayClockContainer").style.fontSize = "50px";
 	
-	if (!event || (!((event.ctrlKey) || (event.metaKey)))) {
+	if (!event || (!(event.ctrlKey || event.metaKey))) {
 		if (ele.value == 0 || ele.value == 2) {
-			var getTime = await promptAlt("Time to set count down timer", false, false, parseInt(getById("overlayClockContainer").dataset.initial), true);
+			if (preSetTime!==false){
+				var getTime = preSetTime;
+			} else {
+				var getTime = await promptAlt("Time to set count down timer", false, false, parseInt(getById("overlayClockContainer").dataset.initial), true);
+			}
 			if (getTime===null){return;}
 			getTime = parseInt(getTime);
 			getById("overlayClockContainer").dataset.initial = getTime;
@@ -12780,11 +12893,11 @@ async function directRoomTimer(ele,  event=false) { // A directing room only is 
 			showClock();
 			msg.startClock = true;
 			startClock();
-			ele.innerHTML = '<i class="las la-clock"></i><span data-translate="create-timer"> Remove Timer</span>';
+			ele.innerHTML = '<i class="las la-clock"></i><span data-translate="remove-timer"> Remove Timer</span>'; 
 		} else if (ele.value == 3) {
 			ele.value = 1;
 			msg.resumeClock = true;
-			
+			resumeClock(); // this needed to be removed, right?
 			if (!session.roomTimer){
 				session.roomTimer = false;
 			} else if (session.roomTimer>0){
@@ -12792,6 +12905,7 @@ async function directRoomTimer(ele,  event=false) { // A directing room only is 
 			} else {
 				session.roomTimer = Date.now()/1000 - session.roomTimer;
 			}
+			ele.innerHTML = '<i class="las la-clock"></i><span data-translate="remove-timer"> Remove Timer</span>'; 
 			ele.classList.add("red");
 		} else {
 			ele.value = 2;
@@ -12804,7 +12918,7 @@ async function directRoomTimer(ele,  event=false) { // A directing room only is 
 			ele.innerHTML = '<i class="las la-clock"></i><span data-translate="create-timer"> Create Timer</span>';
 		}
 		//miniTranslate(ele);
-	} else if (event.ctrlKey || event.metaKey){
+	} else if (event.ctrlKey || event.metaKey){ 
 		if (ele.value == 1) {
 			ele.value = 3;
 			msg.pauseClock = true;
@@ -12816,7 +12930,7 @@ async function directRoomTimer(ele,  event=false) { // A directing room only is 
 			} else {
 				session.roomTimer =  Date.now()/1000 - session.roomTimer;
 			}
-			
+			ele.innerHTML = '<i class="las la-clock"></i><span data-translate="resume-timer"> Resume Timer</span>'; 
 			ele.classList.add("blue");
 		} else if (ele.value == 3) {
 			ele.value = 1;
@@ -12829,7 +12943,7 @@ async function directRoomTimer(ele,  event=false) { // A directing room only is 
 			} else {
 				session.roomTimer = Date.now()/1000 - session.roomTimer;
 			}
-			
+			ele.innerHTML = '<i class="las la-clock"></i><span data-translate="remove-timer"> Remove Timer</span>'; 
 			ele.classList.add("red");
 		}
 	}
@@ -12875,13 +12989,12 @@ function directMute(ele,  event=false) { // A directing room only is controlled 
 		if (ele.value == 1) {
 			ele.value = 0;
 			ele.classList.remove("pressed"); ele.ariaPressed = "false";
-			ele.innerHTML = '<i class="las la-microphone-slash"></i> <span data-translate="mute-scene" >mute in scene</span>';
+			miniTranslate(ele,"mute-scene");
 		} else {
 			ele.value = 1;
 			ele.classList.add("pressed"); ele.ariaPressed = "true";
-			ele.innerHTML = '<i class="las la-microphone-slash"></i> <span data-translate="unmute" >unmute</span>';
+			miniTranslate(ele,"unmute");
 		}
-		miniTranslate(ele);
 	}
 	var msg = {};
 	msg.scene = true; 
@@ -13081,13 +13194,14 @@ function remoteMute(ele, event=false, skipSend=false) {
 		if (val == 1){
 			ele.value = 0;
 			ele.classList.remove("pressed"); ele.ariaPressed = "false";
-			ele.innerHTML = '<i class="las la-microphone-slash"></i>';
-			ele.innerHTML += miscTranslations["mute"] || "Mute";
+			//ele.innerHTML = '<i class="las la-microphone-slash"></i> <span data-translate="mute" >mute</span>';
+			miniTranslate(ele,"mute");
+			//ele.innerHTML += getTranslation("mute");
 		} else {
 			ele.value = 1;
 			ele.classList.add("pressed"); ele.ariaPressed = "true"; 
-			ele.innerHTML = '<i class="las la-microphone-slash"></i>';
-			ele.innerHTML += miscTranslations["unmute"] || "Unmute";
+			//ele.innerHTML = '<i class="las la-microphone-slash"></i> <span data-translate="unmute" >unmute</span>';
+			miniTranslate(ele,"unmute");
 		}
 	}
 
@@ -13148,7 +13262,8 @@ function remoteHideVideo(ele,  event=false, skipSend=false) {
 	log("video hide");
 	
 	if (!event ||  ((event.ctrlKey) || (event.metaKey))) {
-		ele.children[1].innerHTML = miscTranslations["armed"]
+		//ele.children[1].innerHTML = getTranslation("armed");
+		miniTranslate(ele.children[1],"armed");
 		//ele.style.backgroundColor = "#BF3F3F";
 		ele.classList.add("armed");
 		Callbacks.push([remoteHideVideo, ele, false]);
@@ -13201,7 +13316,8 @@ function remoteMuteVideo(ele,  event=false, skipSend=false) {
 	log("video mute");
 	
 	if (!event ||  ((event.ctrlKey) || (event.metaKey))) {
-		ele.children[1].innerHTML = miscTranslations["armed"]
+		//ele.children[1].innerHTML = getTranslation("armed");
+		miniTranslate(ele.children[1],"armed");
 		ele.classList.add("armed");//ele.style.backgroundColor = "#BF3F3F";
 		Callbacks.push([remoteMuteVideo, ele, false]);
 		log("video queued");
@@ -13725,6 +13841,8 @@ function getHeight() {
 }
 
 function updateForceRotate(){
+	var capabilities = {facingMode:"unknown"};
+	var FirefoxSucks = false;
 	
 	if (session.orientation){
 		try {
@@ -13739,7 +13857,7 @@ function updateForceRotate(){
 				return;
 			}
 			
-			const capabilities = track.getCapabilities();
+			
 			const settings = track.getSettings();
 			session.currentCameraConstraints = settings;
 			if (!window.matchMedia("(orientation: portrait)").matches){
@@ -13748,37 +13866,71 @@ function updateForceRotate(){
 				}
 			}
 			
-			if ("width" in settings){
-				if ("height" in settings){
-					if (settings.width < settings.height){
-						if (session.orientation=="landscape"){
-							if (capabilities.facingMode == "environment"){
-								session.forceRotate=270;
+			session.forceRotate = 0;
+			
+			if (track.getCapabilities){
+				capabilities = track.getCapabilities(); // firefox sucks?
+				
+				if ("width" in settings){
+					if ("height" in settings){
+						if (settings.width < settings.height){
+							if (session.orientation=="landscape"){
+								if (capabilities){
+									if (capabilities.facingMode == "environment"){
+										session.forceRotate=270;
+									} else {
+										session.forceRotate=90;
+									}
+								} 
 							} else {
-								session.forceRotate=90;
+								session.forceRotate = 0;
+							}
+						} else if (settings.width > settings.height){
+							if (session.orientation=="portrait"){
+								if (capabilities){
+									if (capabilities.facingMode == "environment"){
+										session.forceRotate=90;
+									} else {
+										session.forceRotate=270;
+									}
+								} 
+							} else {
+								session.forceRotate = 0;
 							}
 						} else {
-							//if (!session.forceRotate){return;}
-							session.forceRotate = 0;
-						}
-					} else if (settings.width > settings.height){
-						if (session.orientation=="portrait"){
-							if (capabilities.facingMode == "environment"){
-								session.forceRotate=90;
-							} else {
-								session.forceRotate=270;
-							}
-						} else {
-							//if (!session.forceRotate){return;}
 							session.forceRotate = 0;
 						}
 					} else {
-					//	if (!session.forceRotate){return;}
-						session.forceRotate = 0;
+						return;
 					}
-				} else {
-					return;
 				}
+				
+			} else if (Firefox && session.mobile){ // firefox sucks...
+				try {
+					var vs1 = document.getElementById('videoSourceSelect') || document.getElementById('videoSource3');
+					if (vs1){
+						vs1 = vs1.options[vs1.selectedIndex].textContent;
+						if (vs1.includes(" back")){
+							capabilities = {facingMode:"environment"};
+							FirefoxSucks = 2;
+						} else if (vs1.includes(" front")){
+							capabilities = {facingMode:"user"};
+							FirefoxSucks = 1;
+						}
+					}
+					getById("videosource").style.transform = "";
+					if (session.orientation=="landscape"){
+						if (FirefoxSucks === 1){
+							session.forceRotate = 90;;
+							// video needs to be flipped
+							getById("videosource").style.transform = "rotate(90deg)";
+						} else if (FirefoxSucks === 2){
+							getById("videosource").style.transform = "rotate(270deg)";
+							session.forceRotate = 270;;
+						}
+					}
+					
+				} catch(e){}
 			} else {
 				return;
 			}
@@ -13800,8 +13952,49 @@ function updateForceRotate(){
 			session.sendMessage(msg);
 			
 		} catch(e){errorlog(e);}
-		updateForceRotatedCSS()
-		applyMirror(session.mirrorExclude);
+		
+		if (!(Firefox && session.mobile)){
+			updateForceRotatedCSS()
+			applyMirror(session.mirrorExclude);
+		}
+	} else if (Firefox && session.mobile){
+		try {
+			var vs1 = document.getElementById('videoSourceSelect') || document.getElementById('videoSource3');
+			if (vs1){
+				vs1 = vs1.options[vs1.selectedIndex].textContent;
+				if (vs1.includes(" back")){
+					FirefoxSucks = 2;
+				} else if (vs1.includes(" front")){
+					FirefoxSucks = 1;
+				}
+			}
+			
+			if (window.matchMedia("(orientation: portrait)").matches){ // as expected, screen.orientation.angle?
+				session.forceRotate = 0;
+			} else if (window.matchMedia("(orientation: landscape)").matches){ // as expected, screen.orientation.angle?
+				if (FirefoxSucks === 1){
+					session.forceRotate = 90;;
+				} else if (FirefoxSucks === 2){
+					session.forceRotate = 270;;
+				}
+			}
+			
+			var msg = {};
+			if (session.forceRotate!==false){
+				if (session.rotate){
+					msg.rotate_video = session.forceRotate + parseInt(session.rotate); 
+				} else {
+					msg.rotate_video = session.forceRotate;
+				}
+				if (msg.rotate_video && (msg.rotate_video>=360)){
+					msg.rotate_video-=360;
+				}
+				warnlog("SENDING FIREFOX MOBILE ONLY ROTATE");
+				session.sendMessage(msg);
+				
+				//rotateJustCamera();
+			}
+		} catch(e){}
 	}
 	
 	session.setResolution(); // probably only triggers with mobile devices?
@@ -13809,10 +14002,13 @@ function updateForceRotate(){
 }
 
 function updateForceRotatedCSS(){
-	if (session.forceRotate==270){
+	var rotateThis = session.forceRotate;
+	if (rotateThis==270){
 		document.body.setAttribute( "style", "transform: rotate(270deg);position: absolute;top: 100vh;left: 0;height: 100vw;width: 100vh;transform-origin: 0 0;");
-	} else if (session.forceRotate==90){
+	} else if (rotateThis==90){
 		document.body.setAttribute( "style", "transform: rotate(90deg);position: absolute;top: 0;left: 100vw;height: 100vw;width: 100vh;transform-origin: 0 0;");
+	} else if (rotateThis==180){
+		document.body.setAttribute( "style", "transform: rotate(180deg);position: absolute;top: 100vh;left: 100vw;height: 100vh;width: 100vw;transform-origin: 0 0;"); 
 	} else {
 		document.body.setAttribute( "style", "");
 	}
@@ -13882,7 +14078,7 @@ function publishWebcam(btn = false, miconly=false) {
 					await updateCameraConstraints("aspectRatio", session.forceAspectRatio);
 			}
 			if (session.effect && (session.effect === "7")){digitalZoom(true);}
-			updateForceRotate();
+			updateForceRotate(); 
 			updateMixer();
 		}, 200);};
 	
@@ -14708,7 +14904,7 @@ session.publishWhepSrc = function(){
 		updateMixer();
 	} else if (session.roomid!==false){
 		if (session.roomid===""){
-			if (!(session.view) || (session.view==="")){
+			if (!session.fullscreen && (!(session.view) || (session.view===""))){
 				session.windowed = true;
 				container.classList.add("vidcon");
 				
@@ -15913,25 +16109,52 @@ async function createRoom(roomname = false) {
 
 	var passwordRoom = getById("passwordRoom").value;
 	passwordRoom = sanitizePassword(passwordRoom);
-	if (passwordRoom.length) {
-		session.password = passwordRoom;
-		session.defaultPassword = false;
-
-		if (urlParams.has('pass')) {
-			updateURL("pass=" + session.password);
-		} else if (urlParams.has('pw')) {
-			updateURL("pw=" + session.password);
-		} else if (urlParams.has('p')) {
-			updateURL("p=" + session.password);
-		} else {
-			updateURL("password=" + session.password);
-		}
-	}
 	
-	await registerToken();
-
 	var passAdd = "";
 	var passAdd2 = "";
+	
+	if (passwordRoom.length) {
+		
+		session.password = passwordRoom;
+		session.defaultPassword = false;
+		
+		if ((session.password === "false") || (session.password === "0") || (session.password === "off")){
+			session.password = false;
+			if (urlParams.has('pass')) {
+				updateURL("pass=0");
+				passAdd = "&pass=0";
+				passAdd2 = "&pass=0";
+			} else if (urlParams.has('pw')) {
+				updateURL("pw=0");
+				passAdd = "&pw=0";
+				passAdd2 = "&pw=0";
+			} else if (urlParams.has('p')) {
+				updateURL("p=0");
+				passAdd = "&p=0";
+				passAdd2 = "&p=0";
+			} else if (urlParams.has('password')) {
+				updateURL("password=false");
+				passAdd = "&password=false";
+				passAdd2 = "&password=false";
+			} else {
+				updateURL("p=0");
+				passAdd = "&p=0";
+				passAdd2 = "&p=0";
+			}
+		} else {
+			if (urlParams.has('pass')) {
+				updateURL("pass=" + session.password);
+			} else if (urlParams.has('pw')) {
+				updateURL("pw=" + session.password);
+			} else if (urlParams.has('p')) {
+				updateURL("p=" + session.password);
+			} else {
+				updateURL("password=" + session.password);
+			}
+		}
+	} 
+	
+	await registerToken();
 
 	if ((session.defaultPassword === false) && (session.password)) {
 		passAdd2 = "&password=" + session.password;
@@ -15939,6 +16162,10 @@ async function createRoom(roomname = false) {
 			passAdd = "&hash=" + hash;
 			await createRoomCallback(passAdd, passAdd2);
 		}).catch(errorlog);
+	} else if ((session.defaultPassword === false) && (session.password===false)){
+		passAdd = "&p=0";
+		passAdd2 = "&p=0";
+		await createRoomCallback(passAdd, passAdd2);
 	} else {
 		await createRoomCallback(passAdd, passAdd2);
 	}
@@ -16184,7 +16411,7 @@ async function toggleCoDirector(ele){
 		return;
 	}
 	if (!session.directorPassword){
-		session.directorPassword = await promptAlt(miscTranslations["enter-new-codirector-password"], false);
+		session.directorPassword = await promptAlt(getTranslation("enter-new-codirector-password"), false);
 		if (!session.directorPassword){
 			session.directorPassword=false;
 			ele.checked=false;
@@ -16255,7 +16482,7 @@ async function toggleWidgetURL(ele){
 		pokeIframeAPI("widget-src", session.widget);
 		return;
 	}
-	var widget = await promptAlt(miscTranslations["enter-url-for-widget"], false, false, session.widget);
+	var widget = await promptAlt(getTranslation("enter-url-for-widget"), false, false, session.widget);
 	if (widget!==null){
 		session.widget = widget;
 	}
@@ -16888,7 +17115,7 @@ async function createDirectorOnlyBox() {
 		<div class='streamID' style='user-select: none;'>ID: <span style='user-select: text;'>" + session.streamID + "</span>\
 			<i class='las la-copy' data-sid='" + session.streamID + "'  onclick='copyFunction(this.dataset.sid,event)' title='Copy this Stream ID to the clipboard' style='cursor:pointer'></i>\
 			<i class='las la-window-minimize' onclick='minimizeMe(this, \'container_director\')' title='Minimize this control box' style='cursor:pointer'></i>\
-			<span id='label_director' class='addALabel' title='Click here to edit the label for this stream. Changes will propagate to all viewers of this stream' data-translate='add-a-label'>"+miscTranslations["add-a-label"]+"</span>\
+			<span id='label_director' class='addALabel' title='Click here to edit the label for this stream. Changes will propagate to all viewers of this stream' data-translate='add-a-label'>"+getTranslation("add-a-label")+"</span>\
 		</div>\
 		<div id='videoContainer_director'></div>";
 	
@@ -16966,11 +17193,12 @@ async function createDirectorOnlyBox() {
 			oldlabel = "";
 		}
 		window.focus();
-		var newlabel = await promptAlt(miscTranslations["enter-new-display-name"], false, false, oldlabel); 
+		var newlabel = await promptAlt(getTranslation("enter-new-display-name"), false, false, oldlabel); 
 		if (newlabel!==null){
 			if (newlabel == ""){
 				newlabel = false;
-				ee.target.innerText = miscTranslations["add-a-label"];
+				//ee.target.innerHTML = getTranslation("add-a-label");
+				miniTranslate(ee.target,"add-a-label");
 				ee.target.classList.add("addALabel");
 			} else {
 				ee.target.innerText = newlabel;
@@ -17074,7 +17302,7 @@ async function createDirectorScreenshareOnlyBox() { // sstype=3
 		<div class='streamID' style='user-select: none;'>ID: <span style='user-select: text;'>" + session.streamID+":s</span>\
 			<i class='las la-copy' data-sid='" + session.streamID+":s'  onclick='copyFunction(this.dataset.sid,event)' title='Copy this Stream ID to the clipboard' style='cursor:pointer'></i>\
 			<i class='las la-window-minimize' onclick='minimizeMe(this, \'container_screen_director\')' title='Minimize this control box'></i>\
-			<span id='label_director' class='addALabel' title='Click here to edit the label for this stream. Changes will propagate to all viewers of this stream' data-translate='add-a-label'>"+miscTranslations["add-a-label"]+"</span>\
+			<span id='label_director' class='addALabel' title='Click here to edit the label for this stream. Changes will propagate to all viewers of this stream' data-translate='add-a-label'>"+getTranslation("add-a-label")+"</span>\
 		</div>\
 		<div id='videoScreenContainer_director'></div>";
 	
@@ -17159,11 +17387,12 @@ async function createDirectorScreenshareOnlyBox() { // sstype=3
 			oldlabel = "";
 		}
 		window.focus();
-		var newlabel = await promptAlt(miscTranslations["enter-new-display-name"], false, false, oldlabel); 
+		var newlabel = await promptAlt(getTranslation("enter-new-display-name"), false, false, oldlabel); 
 		if (newlabel!==null){
 			if (newlabel == ""){
 				newlabel = false;
-				ee.target.innerText = miscTranslations["add-a-label"];
+				//ee.target.innerHTML = getTranslation("add-a-label");
+				miniTranslate(ee.target,"add-a-label");
 				ee.target.classList.add("addALabel");
 			} else {
 				ee.target.innerText = newlabel;
@@ -17687,7 +17916,7 @@ function createControlBox(UUID, soloLink, streamID, slot_init=false) {
 			session.rpcs[UUID].signalMeter.dataset.level = 0;
 			session.rpcs[UUID].signalMeter.classList.remove("hidden");
 			session.rpcs[UUID].signalMeter.dataset.UUID = UUID;
-			session.rpcs[UUID].signalMeter.title = miscTranslations["signal-meter"];
+			session.rpcs[UUID].signalMeter.title = getTranslation("signal-meter");
 			
 			if (session.rpcs[UUID].stats.info && session.rpcs[UUID].stats.info.cpuLimited){ // was quality_limitation_reason
 				session.rpcs[UUID].signalMeter.dataset.cpu = "1";
@@ -18472,7 +18701,8 @@ function gotDevices(deviceInfos, miconly=false) {
 				
 				if (deviceInfo.label.includes("Yeti ")) {
 					if (!session.cleanOutput){
-						getById("audioTipContext1").innerHTML = miscTranslations["blue-yeti-tip"];
+						//getById("audioTipContext1").innerHTML = getTranslation("blue-yeti-tip");
+						miniTranslate(getById("audioTipContext1"),"blue-yeti-tip");
 						getById("audioTip1").classList.remove("hidden");
 					}
 				}
@@ -20783,11 +21013,11 @@ async function grabScreen(quality = 0, audio = true, videoOnEnd = false) {
 		if (!(session.cleanOutput)) {
 			setTimeout(function() {
 				if (iOS || iPad){
-					warnUser(miscTranslations["ios-no-screen-share"], false, false);
+					warnUser(getTranslation("ios-no-screen-share"), false, false);
 				} else if (session.mobile){
-					warnUser(miscTranslations["android-no-screen-share"], false, false);
+					warnUser(getTranslation("android-no-screen-share"), false, false);
 				} else {
-					warnUser(miscTranslations["no-screen-share-supported"], false, false);
+					warnUser(getTranslation("no-screen-share-supported"), false, false);
 				}
 			}, 1);
 		}
@@ -21115,13 +21345,13 @@ async function grabScreen(quality = 0, audio = true, videoOnEnd = false) {
 		if ((err.name == "NotAllowedError") || (err.name == "PermissionDeniedError")) {
 			// User Stopped it.
 			if (macOS){
-				warnUser(miscTranslations["screen-permissions-denied"], false, false);
+				warnUser(getTranslation("screen-permissions-denied"), false, false);
 			}
 		} else {
 			if (audio == true) {
 				if (err.name == "NotReadableError"){
 					if (!(session.cleanOutput)){
-						warnUser(miscTranslations["change-audio-output-device"], false, false);
+						warnUser(getTranslation("change-audio-output-device"), false, false);
 					}
 					return false;
 				} else {
@@ -21556,7 +21786,8 @@ async function grabVideo(quality = 0, eleName = 'previewWebcam', selector = "sel
 					document.getElementById("gowebcam").dataset.ready = "true";
 					if (document.getElementById("gowebcam").dataset.audioready == "true"){
 						document.getElementById("gowebcam").disabled = false;
-						document.getElementById("gowebcam").innerHTML = miscTranslations["start"];
+						//document.getElementById("gowebcam").innerHTML = getTranslation("start");
+						miniTranslate(document.getElementById("gowebcam"),"start");
 					}
 				}
 			}
@@ -21804,12 +22035,14 @@ async function grabVideo(quality = 0, eleName = 'previewWebcam', selector = "sel
 			mirror = true;
 		} else if (videoSelect.options[videoSelect.selectedIndex].text.toLowerCase().includes("c922")) {
 			if ((session.quality!==2) && !session.cleanOutput){
-				getById("cameraTipContext1").innerHTML = miscTranslations["camera-tip-c922"];
+				//getById("cameraTipContext1").innerHTML = getTranslation("camera-tip-c922");
+				miniTranslate(getById("cameraTipContext1"),"camera-tip-c922");
 				getById("cameraTip1").classList.remove("hidden");
 			}
 		} else if (videoSelect.options[videoSelect.selectedIndex].text.toLowerCase().includes("cam link")) {
 			if (!session.cleanOutput){
-				getById("cameraTipContext1").innerHTML = miscTranslations["camera-tip-camlink"];
+				//getById("cameraTipContext1").innerHTML = getTranslation("camera-tip-camlink");
+				miniTranslate(getById("cameraTipContext1"),"camera-tip-camlink");
 				getById("cameraTip1").classList.remove("hidden");
 			}
 			 
@@ -21822,7 +22055,8 @@ async function grabVideo(quality = 0, eleName = 'previewWebcam', selector = "sel
 		
 		if (SamsungASeries && ChromeVersion){
 			if (!session.cleanOutput){
-				getById("cameraTipContext1").innerHTML = miscTranslations["samsung-a-series"];
+				//getById("cameraTipContext1").innerHTML = getTranslation("samsung-a-series");
+				miniTranslate(getById("cameraTipContext1"),"samsung-a-series");
 				getById("cameraTip1").classList.remove("hidden");
 			}
 		}
@@ -21839,6 +22073,12 @@ async function grabVideo(quality = 0, eleName = 'previewWebcam', selector = "sel
 		clearTimeout(grabVideoUserMediaTimeout);
 		getUserMediaRequestID += 1;
 		var gumMediaID = getUserMediaRequestID;
+		var delayStart = 100;
+		if (ChromeVersion>110){ // aded july 16th; speed up camera switching.
+			delayStart = 20;
+		} else if (Firefox){
+			delayStart = 500; // cause firefox is buggy as crap
+		}
 		grabVideoUserMediaTimeout = setTimeout(function(gumID, callback2) {
 			if (getUserMediaRequestID !== gumID) {return;} // cancel
 			navigator.mediaDevices.getUserMedia(constraints).then(function(stream) {
@@ -21858,7 +22098,11 @@ async function grabVideo(quality = 0, eleName = 'previewWebcam', selector = "sel
 					
 					try{
 						if (mirrorcheck){
-							const capabilities = track.getCapabilities();
+							try {
+								var capabilities = track.getCapabilities();
+							} catch(e){
+								var capabilities = {};
+							}
 							if ("facingMode" in capabilities){
 								if (capabilities.facingMode == "environment"){
 									session.mirrorExclude = true;
@@ -21920,7 +22164,8 @@ async function grabVideo(quality = 0, eleName = 'previewWebcam', selector = "sel
 							document.getElementById("gowebcam").dataset.ready = "true";
 							if (document.getElementById("gowebcam").dataset.audioready == "true"){
 								document.getElementById("gowebcam").disabled = false;
-								document.getElementById("gowebcam").innerHTML = miscTranslations["start"];
+								//document.getElementById("gowebcam").innerHTML = getTranslation("start");
+								miniTranslate(document.getElementById("gowebcam"),"start");
 							}
 						}
 					}
@@ -21956,6 +22201,12 @@ async function grabVideo(quality = 0, eleName = 'previewWebcam', selector = "sel
 				}
 				
 				pokeIframeAPI('local-camera-event'); 
+				
+				let grabVideoPostTimeoutValue = 1000;
+				
+				if (Firefox || session.mobile){ // wait longer for these; they are more likely to crash if too quick.
+					grabVideoPostTimeoutValue = 2000;
+				}
 
 				grabVideoTimer = setTimeout(async function(callback3, gumid) {
 					
@@ -22033,12 +22284,12 @@ async function grabVideo(quality = 0, eleName = 'previewWebcam', selector = "sel
 						if (!document.getElementById("previewWebcam")){
 							updateMixer(); // not with the preview, but after.
 						}
-					}
+					} 
 					
 					 // this will reset scaling for all viewers of this stream. I also call it when aspect ratio, width, or height is changed via applyConstraints
 					
 					dragElement(session.videoElement);
-				}, 1000, callback2, gumID); // focus
+				}, grabVideoPostTimeoutValue, callback2, gumID); // focus
 				
 				log("DONE - found stream");
 			}).catch(function(e) {
@@ -22119,7 +22370,7 @@ async function grabVideo(quality = 0, eleName = 'previewWebcam', selector = "sel
 					}
 				}
 			});
-		}, 100, gumMediaID, callback);
+		}, delayStart, gumMediaID, callback);
 	}
 }
 
@@ -22468,17 +22719,26 @@ session.toggleSoloChat = function(UUID, event=false){ // ==> applyIsolatedChat -
 	var ele = document.querySelector('[data-action-type="solo-chat"][data--u-u-i-d="'+UUID+'"]'); // [data--u-u-i-d="'+UUID+'"]  // this all just updates the buttons
 	log(ele);
 	
+	var ret = 0;
+	
 	if (session.soloChatUUID.includes(UUID)){
 		if (msg.micIsolate){
+			ret = 2;
 			ele.classList.add("altpress"); // we will do this later.
+			ele.value = 2;
+		} else {
+			ret = 1;
+			ele.value = 1;
 		}
 	} else {
 		ele.classList.remove("pressed"); ele.ariaPressed = "false";
 		ele.classList.remove("altpress");
+		ele.value = 0;
 	}
 	
 	session.applySoloChat(false); 
-	return msg.micIsolate;
+	return ret
+	
 };
 ///////////////////////
 
@@ -22900,14 +23160,13 @@ session.applySoloChat = function(apply=true){ // mutes outbound mic audio; ;;  d
 };
 
 
-function senderAudioUpdate(callback=false){
+function senderAudioUpdate(callback=false, tracks=false){
 	try {
 		
-		checkBasicStreamsExist();
-		
-		// toggleMute(true); // checkBasicStreamsExist contains toggle
-	
-		var tracks = session.videoElement.srcObject.getAudioTracks();
+		if (!tracks){
+			checkBasicStreamsExist();
+			tracks = session.videoElement.srcObject.getAudioTracks();
+		}
 		
 		if (session.audioContentHint && tracks.length){
 			tracks.forEach(trk=>{
@@ -23065,7 +23324,7 @@ function senderAudioUpdate(callback=false){
 		document.getElementById("gowebcam").dataset.audioready = true;
 		if (document.getElementById("gowebcam").dataset.ready && (document.getElementById("gowebcam").dataset.ready=="true")){
 			document.getElementById("gowebcam").disabled = false;
-			document.getElementById("gowebcam").innerHTML = miscTranslations["start"];
+			miniTranslate(document.getElementById("gowebcam"),"start");
 		}
 	}
 }
@@ -23841,7 +24100,7 @@ async function publishScreen2(constraints, audioList=[], audio=true, overrideFra
 					if (navigator.userAgent.toLowerCase().indexOf(' electron/') > -1){
 						// Electron has no audio.
 					} else {
-						setTimeout(function(){warnUser(miscTranslations["no-audio-source-detected"]);},300);
+						setTimeout(function(){warnUser(getTranslation("no-audio-source-detected"));},300);
 					}
 				}
 			}
@@ -24081,14 +24340,14 @@ async function publishScreen2(constraints, audioList=[], audio=true, overrideFra
 			notifyOfScreenShare();
 			
 			if (macOS){
-				warnUser(miscTranslations["screen-permissions-denied"], false, false);
+				warnUser(getTranslation("screen-permissions-denied"), false, false);
 			}
 			return false;
 		} else {
 			if (audio==true){
 				if (err.name == "NotReadableError"){
 					if (!(session.cleanOutput)){
-						warnUser(miscTranslations["change-audio-output-device"], false, false);
+						warnUser(getTranslation("change-audio-output-device"), false, false);
 					}
 					return false;
 				} else {
@@ -24398,6 +24657,52 @@ function updateReshareLink(){
 	pokeIframeAPI('share-link', shareLink); 
 }
 
+
+
+session.changePublishFile = function(ele, event){ // webcam stream is used to generated an SDP
+	log("FILE VIDEO STREAM CHANGE");
+	var files = [];
+	for (var i = 0; i < ele.files.length; i++){ // changing from a FileList to an Array. Arrays are easier to modify later on
+		files.push(ele.files[i]);
+	}
+	var vid = getById("videosource");
+	vid.playlist = files;
+	nextFilePlaylist(vid);
+}
+
+function nextFilePlaylist(vid) {
+	log("nextFilePlaylistD");
+	var filenext = vid.playlist.shift();
+	vid.pause();
+	vid.removeAttribute('src'); // empty source
+	vid.src = URL.createObjectURL(filenext);
+
+	vid.onloadeddata = function(){
+		
+		if (Firefox){
+			session.streamSrc = vid.mozCaptureStream();
+		} else {
+			session.streamSrc = vid.captureStream(); // gaaaaaaaaaaaahhhhhhhh!
+		}
+		
+		var tracks = session.streamSrc.getVideoTracks();
+		if (tracks.length){
+			pushOutVideoTrack(tracks[0]); // video only
+		}
+		
+		var tracks = session.streamSrc.getAudioTracks();
+		senderAudioUpdate(false, tracks); // don't apply audio effects
+	}
+	
+	session.applySoloChat(); // mute streams that should be muted if a director
+	session.applyIsolatedChat();
+		
+	vid.load();
+	vid.play().then(_ => {
+		log("playing 2");
+	}).catch(warnlog);
+}
+
 session.publishFile = function(ele, event){ // webcam stream is used to generated an SDP
 	log("FILE STREAM SETUP");
 
@@ -24517,32 +24822,7 @@ session.publishFile = function(ele, event){ // webcam stream is used to generate
 	function myHandler(e) {
 		log("MY HANDLER TRIGGERED");
 		var vid = getById("videosource");
-		log(vid.playlist);
-		vid.playlist.unshift(vid.playlist.pop());
-		vid.src = URL.createObjectURL(vid.playlist[0]);
-		vid.onloadeddata = function(){
-			
-			if (Firefox){
-				session.streamSrc = vid.mozCaptureStream();
-			} else {
-				session.streamSrc = vid.captureStream(); // gaaaaaaaaaaaahhhhhhhh!
-			}
-			
-			var tracks = session.streamSrc.getVideoTracks();
-			if (tracks.length){
-				pushOutVideoTrack(tracks[0]); // video only
-			}
-			var tracks = session.streamSrc.getAudioTracks();
-			senderAudioUpdate();
-		}
-		
-		session.applySoloChat(); // mute streams that should be muted if a director
-		session.applyIsolatedChat();
-			
-		vid.load();
-		vid.play().then(_ => {
-			log("playing 2");
-		}).catch(warnlog);
+		nextFilePlaylist(vid);
 	}
 	
 	// no preview doesn't work, so just stop it from doing its thing.
@@ -25393,7 +25673,7 @@ function setupClosedCaptions() {
 
 		Recognition.start();
 	} else if (!session.cleanOutput){
-		warnUser(miscTranslations["speech-not-suppoted"], false, false);
+		warnUser(getTranslation("speech-not-suppoted"), false, false);
 	}
 }
 
@@ -25412,7 +25692,7 @@ async function requestVideoRecord(ele, state=null, bitrate=null) {
 		msg.UUID = UUID;
 		if (bitrate===null){
 			window.focus();
-			bitrate = await promptAlt(miscTranslations["what-bitrate"], false, false, 6000);
+			bitrate = await promptAlt(getTranslation("what-bitrate"), false, false, 6000);
 		}
 		if (bitrate) {
 			msg.value = bitrate;
@@ -27675,7 +27955,7 @@ function listCameraSettings() {
 			if (track0.getCapabilities) {
 				session.cameraConstraints = track0.getCapabilities();
 			} else {
-				session.cameraConstraints = {};
+				session.cameraConstraints = {}; // probably firefox...
 			}
 			log(session.cameraConstraints);
 		}
@@ -28710,7 +28990,8 @@ function setupWebcamSelection(miconly=false) {
 			if (session.safemode){
 				if (document.getElementById("gowebcam")){
 					document.getElementById("gowebcam").disabled = false;
-					document.getElementById("gowebcam").innerHTML = miscTranslations["start"];
+					//document.getElementById("gowebcam").innerHTML = getTranslation("start");
+					miniTranslate(document.getElementById("gowebcam"),"start");
 					document.getElementById("gowebcam").dataset.audioready = "true";
 					document.getElementById("gowebcam").dataset.ready = "true";
 					setTimeout(function(){updateForceRotate();},1000);
@@ -28739,7 +29020,8 @@ function setupWebcamSelection(miconly=false) {
 						document.getElementById("gowebcam").dataset.ready = "true";
 						if (document.getElementById("gowebcam").dataset.audioready == "true"){
 							document.getElementById("gowebcam").disabled = false;
-							document.getElementById("gowebcam").innerHTML = miscTranslations["start"];
+							miniTranslate(document.getElementById("gowebcam"),"start");
+							//document.getElementById("gowebcam").innerHTML = getTranslation("start");
 						}
 					}
 				}
@@ -28883,7 +29165,7 @@ async function shareWebsite(autostart=false, evt=false){
 	
 	if (autostart===false){
 		window.focus();
-		var iframeURL = await promptAlt(miscTranslations["enter-website"], false, false, session.defaultIframeSrc);
+		var iframeURL = await promptAlt(getTranslation("enter-website"), false, false, session.defaultIframeSrc);
 	} else {
 		var iframeURL = autostart;
 	}
@@ -29176,7 +29458,8 @@ function previewWebcam(miconly=false) {
 			constraint.audio.echoCancellation = false;
 			if (!session.cleanoutput){
 				getById("headphoneTip1").classList.remove("hidden");
-				getById("headphoneTipContext1").innerHTML = miscTranslations["headphones-tip"];
+				miniTranslate(getById("headphoneTipContext1"),"headphones-tip");
+				//getById("headphoneTipContext1").innerHTML = getTranslation("headphones-tip");
 			}
 		}
 		if (session.autoGainControl !== false) {
@@ -29215,7 +29498,8 @@ function previewWebcam(miconly=false) {
 				document.getElementById("gowebcam").dataset.ready = "true";
 				document.getElementById("gowebcam").dataset.audioready = "true";
 				document.getElementById("gowebcam").disabled = false;
-				document.getElementById("gowebcam").innerHTML = miscTranslations["start"];
+				//document.getElementById("gowebcam").innerHTML = getTranslation("start");
+				miniTranslate(document.getElementById("gowebcam"),"start");
 			}
 		}
 		return;
@@ -29254,9 +29538,9 @@ function previewWebcam(miconly=false) {
 async function requestBasicPermissions(constraint = {video: true, audio: true}, callback=setupWebcamSelection, miconly=false) {
 	if (session.taintedSession === null) {
 		log("STILL WAITING ON HASH TO VALIDATE");
-		setTimeout(function(constraint) {
+		setTimeout(function(constraint, callback, miconly) {
 			requestBasicPermissions(constraint, callback, miconly);
-		}, 1000, constraint);
+		}, 1000, constraint, callback, miconly);
 		return null;
 	} else if (session.taintedSession === true) {
 		warnlog("HASH FAILED; PASSWORD NOT VALID");
@@ -29316,71 +29600,78 @@ async function requestBasicPermissions(constraint = {video: true, audio: true}, 
 		var gumID = getUserMediaRequestID;
 		log("CONSTRAINT");
 		log(constraint);
-		navigator.mediaDevices.getUserMedia(constraint).then(function(stream) { // Apple needs thi to happen before I can access EnumerateDevices. 
-			
-			log("got first stream");
-			clearTimeout(timerBasicCheck);
-			if (getUserMediaRequestID !== gumID) {
-				warnlog("GET USER MEDIA CALL HAS EXPIRED 3");
-				stream.getTracks().forEach(function(track) {
-					stream.removeTrack(track);
-					track.stop();
-					log("stopping old track");
-				});
-				return;
-			}
-			closeModal();
-			
-			log(stream.getTracks());
-
-			session.streamSrc=stream;
-			checkBasicStreamsExist();
-			updateRenderOutpipe();
-
-			if (callback){
-				callback(miconly);
-			}
-		}).catch(function(err) {
-			clearTimeout(timerBasicCheck);
-			warnlog("some error with GetUSERMEDIA");
-			console.warn(err); /* handle the error */
-			if (err.name == "NotFoundError" || err.name == "DevicesNotFoundError") {
-				//required track is missing 
-			} else if (err.name == "NotReadableError" || err.name == "TrackStartError") {
-				//webcam or mic are already in use 
-			} else if (err.name == "OverconstrainedError" || err.name == "ConstraintNotSatisfiedError") {
-				//constraints can not be satisfied by avb. devices 
-			} else if (err.name == "NotAllowedError" || err.name == "PermissionDeniedError") {
-				//permission denied in browser 
-				if (!(session.cleanOutput)) {
-					setTimeout(function() {
-						if (window.obsstudio){
-							warnUser("Permissions denied.\n\nTo access the camera or microphone from within OBS, please refer to:\n<a href='https://docs.vdo.ninja/guides/share-webcam-from-inside-obs'>docs.vdo.ninja/guides/share-webcam-from-inside-obs</a>.", false, false);
-						} else if (ChromeVersion && !session.mobile){
-							warnUser("<h1>Camera/mic permissions denied</h1>\nPlease ensure you have allowed the mic/camera permissions in your browser, such as like:\n\n<img src='./media/permissions_chrome.jpg' />\n\nFor further help on how to resolve this issue, please refer to:\n\n<a target='_blank' href='https://docs.vdo.ninja/common-errors-and-known-issues/enable-camera-microphone-permissions'>https://docs.vdo.ninja/common-errors-and-known-issues/enable-camera-microphone-permissions</a>.", false, false);
-						} else {
-							warnUser("Permission access to the camera or microphone was denied.\n\nPlease ensure you have allowed the mic/camera permissions in your browser.\n\nFor guides on how to resolve this issue, please refer to:\n\n<a target='_blank' href='https://docs.vdo.ninja/common-errors-and-known-issues/enable-camera-microphone-permissions'>https://docs.vdo.ninja/common-errors-and-known-issues/enable-camera-microphone-permissions</a>.", false, false);
-						}
-					}, 1);
+		var timeoutStart = 0;
+		if (Firefox){
+			timeoutStart = 500;
+		}
+		setTimeout(function(gumID,constraint, timerBasicCheck, callback, miconly){
+			log(gumID);
+			navigator.mediaDevices.getUserMedia(constraint).then(function(stream) { // Apple needs thi to happen before I can access EnumerateDevices. 
+				
+				log("got first stream");
+				clearTimeout(timerBasicCheck);
+				if (getUserMediaRequestID !== gumID) {
+					warnlog("GET USER MEDIA CALL HAS EXPIRED 3");
+					stream.getTracks().forEach(function(track) {
+						stream.removeTrack(track);
+						track.stop();
+						log("stopping old track");
+					});
+					return;
 				}
-				return;
-			} else if (err.name == "TypeError" || err.name == "TypeError") {
-				//empty constraints object 
-			} else {
-				//permission denied in browser 
-				if (!(session.cleanOutput)) {
-					setTimeout(function() {
-						warnUser(err);
-					}, 1);
-				}
-			}
-			warnlog("trying to list webcam again");
+				closeModal();
+				
+				log(stream.getTracks());
 
-			if (callback){
-				callback(miconly);
-			}
-			
-		});
+				session.streamSrc=stream;
+				checkBasicStreamsExist();
+				updateRenderOutpipe();
+
+				if (callback){
+					callback(miconly);
+				}
+			}).catch(function(err) {
+				clearTimeout(timerBasicCheck);
+				warnlog("some error with GetUSERMEDIA");
+				console.warn(err); /* handle the error */
+				if (err.name == "NotFoundError" || err.name == "DevicesNotFoundError") {
+					//required track is missing 
+				} else if (err.name == "NotReadableError" || err.name == "TrackStartError") {
+					//webcam or mic are already in use 
+				} else if (err.name == "OverconstrainedError" || err.name == "ConstraintNotSatisfiedError") {
+					//constraints can not be satisfied by avb. devices 
+				} else if (err.name == "NotAllowedError" || err.name == "PermissionDeniedError") {
+					//permission denied in browser 
+					if (!(session.cleanOutput)) {
+						setTimeout(function() {
+							if (window.obsstudio){
+								warnUser("Permissions denied.\n\nTo access the camera or microphone from within OBS, please refer to:\n<a href='https://docs.vdo.ninja/guides/share-webcam-from-inside-obs'>docs.vdo.ninja/guides/share-webcam-from-inside-obs</a>.", false, false);
+							} else if (ChromeVersion && !session.mobile){
+								warnUser("<h1>Camera/mic permissions denied</h1>\nPlease ensure you have allowed the mic/camera permissions in your browser, such as like:\n\n<img src='./media/permissions_chrome.jpg' />\n\nFor further help on how to resolve this issue, please refer to:\n\n<a target='_blank' href='https://docs.vdo.ninja/common-errors-and-known-issues/enable-camera-microphone-permissions'>https://docs.vdo.ninja/common-errors-and-known-issues/enable-camera-microphone-permissions</a>.", false, false);
+							} else {
+								warnUser("Permission access to the camera or microphone was denied.\n\nPlease ensure you have allowed the mic/camera permissions in your browser.\n\nFor guides on how to resolve this issue, please refer to:\n\n<a target='_blank' href='https://docs.vdo.ninja/common-errors-and-known-issues/enable-camera-microphone-permissions'>https://docs.vdo.ninja/common-errors-and-known-issues/enable-camera-microphone-permissions</a>.", false, false);
+							}
+						}, 1);
+					}
+					return;
+				} else if (err.name == "TypeError" || err.name == "TypeError") {
+					//empty constraints object 
+				} else {
+					//permission denied in browser 
+					if (!(session.cleanOutput)) {
+						setTimeout(function() {
+							warnUser(err);
+						}, 1);
+					}
+				}
+				warnlog("trying to list webcam again");
+
+				if (callback){
+					callback(miconly);
+				}
+				
+			});
+		}, timeoutStart, gumID, constraint, timerBasicCheck, callback, miconly);
 	} catch (e) {
 		console.warn(e);
 		if (!(session.cleanOutput)) {
@@ -29519,7 +29810,7 @@ function changeURL(changeURL){
 		hangup();
 		window.location.href = changeURL;
 	} else {
-		confirmAlt(miscTranslations["director-redirect-1"]+changeURL+miscTranslations["director-redirect-2"]).then(res=>{
+		confirmAlt(getTranslation("director-redirect-1")+changeURL+getTranslation("director-redirect-2")).then(res=>{
 			if (res){
 				hangup();
 				window.location.href = changeURL;
@@ -30173,7 +30464,7 @@ function pauseVideo(videoEle, update=true){
 			//
 		} else if (link.getAttribute("data-action") === "RemoteHangup") {
 			if (session.rpcs[taskItemInContext.dataset.UUID] && session.rpcs[taskItemInContext.dataset.UUID].stats.info && ("remote" in session.rpcs[taskItemInContext.dataset.UUID].stats.info) && session.rpcs[taskItemInContext.dataset.UUID].stats.info.remote){
-				var confirmHangup = confirm(miscTranslations["confirm-disconnect-user"]);
+				var confirmHangup = confirm(getTranslation("confirm-disconnect-user"));
 				if (confirmHangup) {
 					var msg = {};
 					msg.hangup = true;
@@ -30185,7 +30476,7 @@ function pauseVideo(videoEle, update=true){
 			}
 		} else if (link.getAttribute("data-action") === "RemoteReload") {
 			if (session.rpcs[taskItemInContext.dataset.UUID] && session.rpcs[taskItemInContext.dataset.UUID].stats.info && ("remote" in session.rpcs[taskItemInContext.dataset.UUID].stats.info) && session.rpcs[taskItemInContext.dataset.UUID].stats.info.remote){
-				var confirmReload = confirm(miscTranslations["confirm-reload-user"]);
+				var confirmReload = confirm(getTranslation("confirm-reload-user"));
 				if (confirmReload) {
 					var msg = {};
 					msg.reload = true;
@@ -30673,21 +30964,21 @@ function disableQualityDirector(UUID){ // lets revert back to the director's qua
 			elements[0].classList.add("disable"); elements[0].ariaPressed = "false";
 			elements[0].classList.remove("pressed"); 
 			elements[0].disabled = "true";
-			elements[0].title = miscTranslations["preview-meshcast-disabled"];
+			elements[0].title = getTranslation("preview-meshcast-disabled");
 		}
 		var elements = document.querySelectorAll('[data-action-type="change-quality1"][data--u-u-i-d="' + UUID + '"]');
 		if (elements[0]) {
 			elements[0].classList.add("disable"); elements[0].ariaPressed = "false";
 			elements[0].classList.remove("pressed"); 
 			elements[0].disabled = "true";
-			elements[0].title = miscTranslations["preview-meshcast-disabled"];
+			elements[0].title = getTranslation("preview-meshcast-disabled");
 		}
 		var elements = document.querySelectorAll('[data-action-type="change-quality3"][data--u-u-i-d="' + UUID + '"]');
 		if (elements[0]) {
 			elements[0].classList.add("disable"); elements[0].ariaPressed = "false";
 			elements[0].classList.remove("pressed"); 
 			elements[0].disabled = "true";
-			elements[0].title = miscTranslations["preview-meshcast-disabled"];
+			elements[0].title = getTranslation("preview-meshcast-disabled");
 		}
 	} catch(e){errorlog(e);}
 }
@@ -30764,15 +31055,25 @@ function pauseClock(){
 		current = parseInt(getById("overlayClockContainer").dataset.initial) - parseInt(Math.round(current/1000));
 	}
 	
-	var clock = document.getElementById("overlayClock");
-	setClock(false, "#00F");
+	getById("overlayClockContainer").dataset.current = current;
+
+	updateClock(current, "#00F");
 }
 function resumeClock(){
-	startClock();
+
+	if ("current" in getById("overlayClockContainer").dataset){
+		startClock(parseInt(getById("overlayClockContainer").dataset.current));
+	}
 }
-function startClock(){
+function startClock(restart=true){
 	clearInterval(clockOverlayTimer);
-	getById("overlayClockContainer").dataset.timestamp = Date.now();
+	if (restart===true){
+		getById("overlayClockContainer").dataset.timestamp = Date.now();
+	} else if (parseInt(getById("overlayClockContainer").dataset.initial) == 0){
+		getById("overlayClockContainer").dataset.timestamp =  Date.now() - parseInt(getById("overlayClockContainer").dataset.current*1000);
+	} else {
+		getById("overlayClockContainer").dataset.timestamp =  Date.now() - (parseInt(getById("overlayClockContainer").dataset.initial)*1000 - parseInt(getById("overlayClockContainer").dataset.current*1000));
+	}
 	stepClock();
 	var clock = document.getElementById("overlayClock");
 	if (clock && clock.video){
@@ -31481,7 +31782,7 @@ async function recordVideo(target, event = null, videoKbps = false) { // event.c
 			
 			if (!recordingBitratePromise){
 				window.focus();
-				recordingBitratePromise = promptAlt(miscTranslations["press-ok-to-record"], false, false, videoKbps);
+				recordingBitratePromise = promptAlt(getTranslation("press-ok-to-record"), false, false, videoKbps);
 			}
 			videoKbps = await recordingBitratePromise;
 			log("videoKbps: "+videoKbps+", UUID:"+UUID);
@@ -32924,20 +33225,24 @@ function updateLabelDirectors(UUID){
 		elements.innerText = session.rpcs[UUID].label;
 		elements.classList.remove("addALabel");
 	} else if (session.directorUUID === UUID){
-		elements.innerText = miscTranslations["main-director"];
+		//elements.innerHTML = getTranslation("main-director");
+		miniTranslate(elements,"main-director");
 		elements.classList.remove("addALabel");
 	} else {
-		elements.innerText = miscTranslations["add-a-label"];
+		//elements.innerHTML = getTranslation("add-a-label");
+		miniTranslate(elements,"add-a-label");
 		elements.classList.add("addALabel");
 	}
 }
 function updateLabelDirectors2(UUID){
 	var elements = getById("label_"+UUID);
 	if (session.directorUUID === UUID){
-		elements.innerText = miscTranslations["main-director"];
+		//elements.innerHTML = getTranslation("main-director");
+		miniTranslate(elements,"main-director");
 		elements.classList.remove("addALabel");
 	} else {
-		elements.innerText = miscTranslations["add-a-label"];
+		//elements.innerHTML = getTranslation("add-a-label");
+		miniTranslate(elements,"add-a-label");
 		elements.classList.add("addALabel");
 	}
 }
@@ -32976,12 +33281,12 @@ function initRecordingImpossible(UUID){
 	var ele = document.querySelectorAll('[data-action-type="mute-guest"][data--u-u-i-d="'+UUID+'"]');
 	if (ele){
 		ele.disabled = true;
-		ele.title = miscTranslations["Audio processing is disabled with this guest. Can't mute or change volume"];
+		ele.title = getTranslation("Audio processing is disabled with this guest. Can't mute or change volume");
 	}
 	var ele = document.querySelectorAll('[data-action-type="volume"][data--u-u-i-d="'+UUID+'"]');
 	if (ele){
 		ele.disabled = true;
-		ele.title = title = miscTranslations["Audio processing is disabled with this guest. Can't mute or change volume"];
+		ele.title = title = getTranslation("Audio processing is disabled with this guest. Can't mute or change volume");
 		ele.style.opacity = 0.2;
 	}
 }
@@ -32992,8 +33297,7 @@ function initAudioButtons(audioGain, UUID){
 		if (ele){
 			ele.value = 1;
 			ele.classList.add("pressed"); ele.ariaPressed = "true";
-			ele.children[1].innerHTML = miscTranslations["unmute"] || "Unmute";
-			//ele.title = miscTranslations["unmute-guest"];
+			miniTranslate(ele.children[1],"unmute");
 			session.rpcs[UUID].directorMutedState = 1;
 		}
 		pokeIframeAPI("director-mute-state", true, UUID);
@@ -34334,6 +34638,7 @@ function targetGuest(target, action, value=null){
 				element.value = 0;
 			}
 			return remoteSpeakerMute(element); 
+			
 		}
 	} else if ((action == 7) || (action == "display")) {
 		var element = getGuestTarget("toggle-remote-display", target);
@@ -34364,6 +34669,7 @@ function targetGuest(target, action, value=null){
 				element.value = 0;
 			}
 			return session.toggleSoloChat(element.dataset.UUID, ctrl);
+			
 		}
 	} else if ((action == 12) || (action == "addScene2")) { 
 		var element = getGuestTargetScene(2, target);
@@ -34463,7 +34769,7 @@ function targetGuest(target, action, value=null){
 	} else if ((action == 27) || (action == "volume")){
 		var element = getGuestTarget("volume", target);
 		if (element) {
-			element.value = parseInt(value) || 100;
+			element.value = parseInt(value) || 0;
 			return remoteVolume(element);
 		}
 	}
@@ -34492,6 +34798,43 @@ async function startPublishing(){
 		return;
 	}
 	getById("publishSettings").classList.add("hidden");
+	
+	
+	if (!getById("whipoutvbrcbr").classList.contains("hidden")){
+		if (getById("whipoutvbrcbr").value ==="cbr"){
+			session.cbr = 1;
+		} else {
+			session.cbr = 0;
+		}
+	}
+	if (!getById("whipoutdenoise").classList.contains("hidden")){
+		if (getById("whipoutdenoise").value ==="1"){
+			session.noiseSuppression = true;
+		} else {
+			session.noiseSuppression = false;
+		}
+	}
+	if (!getById("whipoutautogain").classList.contains("hidden")){
+		if (getById("whipoutautogain").value ==="1"){
+			session.autoGainControl = true;
+		} else {
+			session.autoGainControl = false;
+		}
+	}
+	if (!getById("whipoutstereo").classList.contains("hidden")){
+		if (getById("whipoutstereo").value ==="1"){
+			session.stereo = 1;
+		} else {
+			session.stereo = 0;
+		}
+	}
+	if (!getById("whipoutbitrateGroupFlag").classList.contains("hidden")){
+		session.whipOutVideoBitrate = parseInt(getById("whipoutbitrateGroupFlag").value);
+	}
+	if (!getById("whipoutaudiobitrate").classList.contains("hidden")){
+		session.whipOutAudioBitrate = parseInt(getById("whipoutaudiobitrate").value);
+	}
+	
 	var ret = await publishScreen();
 	if (ret){
 		getById("publishSettings").classList.add("hidden");
@@ -35853,8 +36196,6 @@ function setupCommands(){
 		return false;
 	}; 
 	
-	//
-	
 	commands.viewGroup = function(value=null,value2=null){ 
 		if (value && (value !== "null")){ 
 			return changeGroupViewDirectorAPI(value);
@@ -35879,6 +36220,27 @@ function setupCommands(){
 	commands.sendChat = function(value=null,value2=null){
 		sendChat(value);
 		// sendChatMessage // this would add it to the chat message
+		return true;
+	};
+
+	commands.startRoomTimer = function(value=null,value2=null){
+		getById("globalTimerDirectorToggle").value = 0; // reset
+		directRoomTimer(getById("globalTimerDirectorToggle"), false, value);
+		return true;
+	};
+
+	commands.pauseRoomTimer = function(value=null,value2=null){
+		if (getById("globalTimerDirectorToggle").value == 3){
+			directRoomTimer(getById("globalTimerDirectorToggle"), {ctrlKey:true}, value);
+		} else {
+			directRoomTimer(getById("globalTimerDirectorToggle"), {ctrlKey:true}, value);
+		}
+		return true;
+	};
+
+	commands.stopRoomTimer = function(value=null,value2=null){
+		getById("globalTimerDirectorToggle").value = 1; // pause
+		directRoomTimer(getById("globalTimerDirectorToggle"), false, value);
 		return true;
 	};
 	
@@ -37201,15 +37563,15 @@ async function createSecondStream() { ////////////////////////////  &sstype=3 ?
 			
 			getById("screensharebutton").classList.add("green");
 			getById("screensharebutton").ariaPressed = "true";
-			getById("screensharebutton").title = miscTranslations["stop-screen-sharing"];
+			getById("screensharebutton").title = getTranslation("stop-screen-sharing");
 			
 			getById("screenshare2button").classList.add("green");
 			getById("screenshare2button").ariaPressed = "true";
-			getById("screenshare2button").title = miscTranslations["stop-screen-sharing"];
+			getById("screenshare2button").title = getTranslation("stop-screen-sharing");
 			
 			getById("screenshare3button").classList.add("green");
 			getById("screenshare3button").ariaPressed = "true";
-			getById("screenshare3button").title = miscTranslations["stop-screen-sharing"];
+			getById("screenshare3button").title = getTranslation("stop-screen-sharing");
 			
 			
 			if (session.autorecord || session.autorecordlocal){
@@ -37311,15 +37673,15 @@ function stopSecondScreenshare(){
 	
 	getById("screensharebutton").classList.remove("green");
 	getById("screensharebutton").ariaPressed = "false";
-	getById("screensharebutton").title = miscTranslations["share-a-screen"];
+	getById("screensharebutton").title = getTranslation("share-a-screen");
 
 	getById("screenshare2button").classList.remove("green");
 	getById("screenshare2button").ariaPressed = "false";
-	getById("screenshare2button").title = miscTranslations["share-a-screen"];
+	getById("screenshare2button").title = getTranslation("share-a-screen");
 	
 	getById("screenshare3button").classList.remove("green");
 	getById("screenshare3button").ariaPressed = "false";
-	getById("screenshare3button").title = miscTranslations["share-a-screen"];
+	getById("screenshare3button").title = getTranslation("share-a-screen");
 	
 	setTimeout(function(){
 		updateMixer();
@@ -37498,7 +37860,7 @@ function createControlBoxScreenshare(UUID, soloLink, streamID) {
 			session.rpcs[UUID].signalMeter.dataset.level = 0;
 			session.rpcs[UUID].signalMeter.classList.remove("hidden");
 			session.rpcs[UUID].signalMeter.dataset.UUID = UUID;
-			session.rpcs[UUID].signalMeter.title = miscTranslations["signal-meter"];
+			session.rpcs[UUID].signalMeter.title = getTranslation("signal-meter");
 			
 			//if (session.rpcs[UUID].stats.info && session.rpcs[UUID].stats.info.cpu_maxed){
 			//	session.rpcs[UUID].signalMeter.dataset.cpu = "1";

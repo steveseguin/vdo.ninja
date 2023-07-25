@@ -56,7 +56,7 @@
 		<meta property="twitter:image" content="./media/vdoNinja_logo_full.png" />
 		<meta name="msapplication-TileColor" content="#da532c" />
 		<meta name="theme-color" content="#ffffff" />
-		<link rel="stylesheet" href="./main.css?ver=344" />
+		<link rel="stylesheet" href="./main.css?ver=350" />
 		<script type="text/javascript" crossorigin="anonymous" src="./thirdparty/adapter.js"></script>
 		<style id="lightbox-animations" type="text/css"></style>
 		<!-- <link rel="manifest" href="manifest.json" /> -->
@@ -83,7 +83,7 @@
 		
 		<script type="text/javascript" crossorigin="anonymous"  src="./thirdparty/CodecsHandler.js?ver=47"></script>
 		<script type="text/javascript" crossorigin="anonymous" src="./thirdparty/aes.js"></script>
-		<script type="text/javascript" crossorigin="anonymous" src="./webrtc.js?ver=667"></script>
+		<script type="text/javascript" crossorigin="anonymous" src="./webrtc.js?ver=675"></script>
 		<input id="zoomSlider" type="range" style="display: none;" />
 		<span id="electronDragZone" style="pointer-events: none; z-index:-10; position:absolute;top:0;left:0;width:100%;height:2%;-webkit-app-region: drag;min-height:20px;"></span>
 		<div id="header">
@@ -95,7 +95,11 @@
 			</a>
 			<div id="head1">
 				<input type="text" autocorrect="off" autocapitalize="none" id="joinroomID" name="joinroomID" size="22" placeholder="Join by Room Name here" alt="Enter a room name to join" title="Enter a room name to quick join" onkeyup="jumptoroom(event)"/>
-				<button onclick="jumptoroom();"  role="button" aria-pressed="false" alt="Join room" title="Join room" >GO</button>
+				<button onclick="jumptoroom();" id='jumptoroomButton' role="button" aria-pressed="false" alt="Join room" title="Join room" >GO</button>
+			</div>
+			<div id="head1a" class="hidden">
+				<input type="text" autocorrect="off" autocapitalize="none" id="joinbyURL" name="joinbyURL" size="22" placeholder="Load a website URL" alt="Enter the URL to load" title="Enter the URL to load"/>
+				<button onclick="jumptoURL(event)"  role="button" aria-pressed="false" alt="Load URL" title="Load URL" >Load URL</button>
 			</div>
 			<div id="head5" class="hidden"></div>
 			<div id="head3" style="display: inline-block;" class="hidden">
@@ -148,6 +152,11 @@
                 </div>
                 <div id="subControlButtons">
                 
+					<div id="mediafileshare" onmousedown="event.preventDefault(); event.stopPropagation();"  title="Stream a media file" aria-label="Stream a media file" alt="Stream a media file to others" onclick="getById('fileselector2').click();" tabindex="21" role="button" aria-pressed="false" onkeyup="enterPressedClick(event,this);"  class="float hidden" style="cursor: pointer;">
+                        <i id="mediafilesharetoggle" onmousedown="event.preventDefault(); event.stopPropagation();"  class="toggleSize las la-file-video"></i>
+						<input id="fileselector2" class="hidden" onchange="session.changePublishFile(this,event);" type="file" accept="video/*,audio/*" alt="Hold CTRL (or CMD) to select multiple files" title="Hold CTRL (or CMD) to select multiple files" multiple/>
+                    </div>
+				
                     <div id="blindAllGuests" title="Blind all guests in room (toggle)" alt="Blind all guests in room (toggle)" aria-label="Blind all guests in room" onmousedown="event.preventDefault(); event.stopPropagation();"  onclick="blindAllGuests(this, event)"  tabindex="16" role="button" aria-pressed="false" onkeyup="enterPressedClick(event,this);"  class="hidden float" style="cursor: pointer;" >
                         <i class="toggleSize las la-eye"></i>
                     </div>
@@ -972,7 +981,7 @@
 								<span style="color:#daad09;">Welcome to VDO Ninja! We've rebranded!  Nothing else is changing and we're staying 100% free.</span>
 							</h4>
 							<br />
-							😁🌱 Site last updated on May 8th. If facing new problems, the previous version can still be <a href="https://vdo.ninja/v22/">accessed here</a>. Development <a target="_blank" href='https://updates.vdo.ninja/'>updates are here.</a>
+							🌻 Site last updated on July 25th.  Development <a target="_blank" href='https://updates.vdo.ninja/'>updates are here.</a>
 							<br />
 							<br />
 							<h3>
@@ -1035,7 +1044,7 @@
 					<span style="margin:5px; line-height: 1.6;" data-translate='invite-users-to-join'>Guests can use the link to join the group room</span>
 					<a onclick='copyFunction(this,event)' id="director_block_1" class='task grabLinks' data-menu="context-menu" style='cursor:copy;background-color: #0003;'></a>
 					<span style="display:block;">
-						<span style="bottom: 0; margin: 0 0 0 10px; top: 22px; position: relative; display:inline-block; max-width: 45%;">
+						<span style="bottom: 0; margin: 22px 0 0 10px;  position: relative; display:inline-block; max-width:40%;">
 							<label class="switch" title="If disabled, the invited guest will not be able to see or hear anyone in the room.">
 							<input type="checkbox" checked data-param="&do" onchange="updateLinkInverse(1,this);saveDirectorSettings();">
 							<span class="slider"></span>
@@ -1048,13 +1057,13 @@
 				</div>
 			</div>
 			
-			<div class='directorContainer half' id='directorLinks2' style='margin-left: 5px;display:none;margin-top:0;'>
+			<div class='directorContainer half' id='directorLinks2' style='display:none;margin-top:0;'>
 				<div class='directorBlock' style="background-color: var(--green-accent);" >
 					<h2 title="Use this link in the OBS Browser Source to capture the video or audio" style="margin-left: 1px;margin-top: 5px;"><i class="las la-th-large director-link-icons" style="margin-right: 6px;" ></i> <span data-translate="capture-a-group-scene">CAPTURE A GROUP SCENE</span></h2>
 					<span style="margin:5px; line-height: 1.6;" data-translate='this-is-obs-browser-source-link'>Use in OBS or other studio software to capture the group video mix</span>
 					<a onclick='copyFunction(this,event)'  data-drag="1" draggable="true"  id="director_block_3" data-menu="context-menu" class='task grabLinks publish' style='cursor:grab;background-color: #0003;'></a>
 					<span style="display:block;">
-						<span style="bottom: 0; margin: 0 0 0 10px; top: 22px; position: relative; display:inline-block; max-width: 45%;">
+						<span style="bottom: 0; margin: 22px 0 0 10px;  position: relative; display:inline-block; max-width:40%;">
 							<label class="switch" title="If disabled, you must manually add a video to a scene for it to appear.">
 							<input type="checkbox" checked data-param="&scene" onchange="updateLinkScene(3,this);saveDirectorSettings();">
 							<span class="slider"></span>
@@ -2130,7 +2139,7 @@
 				</span>
 				
 				<span style="margin: 20px 0 0 0;display:block" id='globalTimerDirectorSpan'>
-					<button data-action-type="create-timer-global" title="Set a countdown timer that this guest sees. CTRL (cmd) + click to pause." onclick="directRoomTimer(this, event);">
+					<button data-action-type="create-timer-global" id="globalTimerDirectorToggle" title="Set a countdown timer that this guest sees. CTRL (cmd) + click to pause." onclick="directRoomTimer(this, event);">
 						<i class="las la-clock"></i>
 						<span data-translate="create-global-timer">Create Global Count-down Timer</span>
 					</button>
@@ -2228,24 +2237,73 @@
 		
 		<div id="publishSettings" style="display:none; user-select: none;">
 			<div class="promptModalInner">
-				<h3 data-translate="publish-settings">Publish setup</h3>
+				<h3 data-translate="publish-settings">Publishing setup</h3>
 				<br />
 				<small>To publish this browser window, click the start publishing button below and then select the current browser window, with audio-selected if desired.  The stream will go live afterwards, automatically.</small>
 				
 				<div id="publishOutURL" class="hidden">
 					<br />
-					I'm publishing to Twitch: <input type="checkbox" onchange="twitchSelect(this)"; />
-					<br/> or 
-					<br />
-					Custom WHIP URL: <input type="text" size="30" placeholder="WHIP URL to publish to goes here">
+					<span style="min-width: 85px; display: inline-block;">
+					WHIP URL
+					</span>
+					<input type="text" size="40"  placeholder="➡️ WHIP URL to publish to goes here">
+					<br /><br />
 				</div>
+				
 				<div id="publishOutToken" class="hidden">
-					<br />
-					Stream token: <input  type="password"  placeholder="Stream or auth token here">
+					<span style="min-width: 85px; display: inline-block;">
+					Auth Token
+					</span>
+					<input type="password" id="changeText1a"  size="40"  placeholder="🗝️ Authentication Bearer Token (optional)" />
+					<br /><br />
+				</div>
+				
+				<div id="advanced" style="margin: 10px 0;">
+					<select id="whipoutaudiobitrate"  title="Which audio bitrate target would you prefer?" >
+						<option value="0" selected>🎙️Default Audio Bitrate</option>
+						<option value="32">🎙️32-kbps</option>
+						<option value="64">🎙️64-kbps</option>
+						<option value="128">🎙️128-kbps</option>
+						<option value="256">🎙️256-kbps</option>
+					</select >
+					<select id="whipoutvbrcbr" title="Which audio bitrate target would you prefer?" >
+						<option value="cbr" selected>🎙️CBR</option>
+						<option value="vbr">🎙️VBR</option>
+					</select >
+					<select id="whipoutdenoise" title="Which audio bitrate target would you prefer?" >
+						<option value="1" selected>🎙️Denoise On</option>
+						<option value="0">🎙️Denoise Off</option>
+					</select >
+					<select id="whipoutautogain" title="Which audio bitrate target would you prefer?" >
+						<option value="1" selected>🎙️Auto Gain On</option>
+						<option value="0">🎙️Auto Gain Off</option>
+					</select >
+					<select id="whipoutstereo" title="Which audio bitrate target would you prefer?" >
+						<option value="1" selected>🎙️Stereo</option>
+						<option value="0">🎙️Mono</option>
+					</select >
+				</div>
+				<div style="margin: 10px 0px;">
+					<select  id="whipoutbitrateGroupFlag" title="Which video bitrate target would you prefer?" >
+						<option value="0" selected>🎦Default Video Bitrate</option>
+						<option value="500">🎦500-kbps</option>
+						<option value="2500">🎦2500-kbps</option>
+						<option value="6000">🎦6000-kbps</option>
+						<option value="20000">🎦20000-kbps</option>
+					</select >
+					<select id="whipoutcodecGroupFlag"  title="Which video codec would you prefer to be used if available?" >
+						<option value="default" selected>🎦OpenH264</option>
+						<option value="vp9">🎦VP9</option>
+						<option value="h264">🎦H264</option>
+						<option value="vp8">🎦VP8</option>
+						<option value="av1">🎦AV1</option>
+					</select >
+					
 				</div>
 				<br />
+				<button class="gobutton green" onclick='startPublishing();'>⬆️ Select window and start publishing</button>
+				
 				<br />
-				<button onclick='startPublishing();'>🎦 Select window and start publishing</button>
 				<br /><br />
 				
 				<i>note: To stop the stream, simply close this browser window.</i>
@@ -2457,7 +2515,7 @@
 
 		
 			var session = WebRTC.Media; // session is a required global variable if configuring manually. Run before loading main.js but after webrtc.js.
-			session.version = "23.7";
+			session.version = "23.8";
 			session.streamID = session.generateStreamID(); // randomly generates a streamID for this session. You can set your own programmatically if needed
 			
 			session.defaultPassword = "someEncryptionKey123"; // Change this password if self-deploying for added security/privacy
@@ -2570,11 +2628,11 @@
 			// session.hidehome = true; // If used, 'hide home' will make the landing page inaccessible, along with hiding a few go-home elements.
 			// session.record = false; // uncomment to block users from being able to record via vdo.ninja's built in recording function
 		</script>
-		<script type="text/javascript" crossorigin="anonymous" id="lib-js" src="./lib.js?ver=840"></script>
+		<script type="text/javascript" crossorigin="anonymous" id="lib-js" src="./lib.js?ver=870"></script>
 		<!-- 
 		// If you wish to change branding, blank offers a good clean start.
 		<script type="text/javascript" id="main-js" src="./main.js" data-translation="blank"></script>
 		-->
-		<script type="text/javascript" crossorigin="anonymous" id="main-js" src="./main.js?ver=657"></script>
+		<script type="text/javascript" crossorigin="anonymous" id="main-js" src="./main.js?ver=686"></script>
 	</body>
 </html>

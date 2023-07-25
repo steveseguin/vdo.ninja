@@ -3387,6 +3387,8 @@ label {
 	position:relative;
 	max-width: 100%;
 	overflow: hidden;
+	display:block;
+	min-height: 174px;
 }
 .directorBlock:nth-child(1) {
 	background-color: var(--blue-accent);
@@ -3409,15 +3411,13 @@ label {
 	padding: 6px 9px 4px 9px;
 	background-color: #2a2a2a;
 	color:white;
+	max-width:25%;
 }
 .directorBlock button i {
 	margin-right: 5px;
 }
 a.task {
 	width: 100%;
-}
-#director_block_1, #director_block_2 {
-	margin-top: 10px;
 }
 
 .directorBlock h2 {
@@ -3685,6 +3685,18 @@ div#roomnotes2 {
     display: none;
 }
 
+
+.appmode #head1 , .appmode #head1a {
+	display:flex;
+}
+
+.appmode #head1 input, .appmode #head1a input{
+	width:100%;
+	padding: 10px;
+    margin: 5px;
+    font-size: 125%;
+}
+
 #widget {
 	position: absolute;
     width: 25%;
@@ -3871,6 +3883,22 @@ a#reshare {
 }
 #joinroomID+button {
 	margin: 0px var(--regular-margin);
+}
+
+#joinbyURL {
+	border-radius: 0;
+	padding: 5px;
+}
+#joinbyURL+button {
+	margin: 0px var(--regular-margin);
+}
+
+.appmode #joinroomID+button {
+	width: 110px;
+}
+
+.appmode #joinbyURL+button {
+	width: 110px;
 }
 
 #guestTips {
@@ -4355,7 +4383,7 @@ input:checked + .slider:before {
 	border-radius: 10px;
 	font-weight: bold;
 	z-index:31;
-	width:550px;
+	width:680px;
 	max-width:100%;
 	overflow: hidden;
 	overflow-wrap: break-word;
@@ -4475,6 +4503,7 @@ input:checked + .slider:before {
 	font-weight: bold;
 	z-index:32;
 	overflow-wrap: break-word;
+	min-width: min(90vw, 320px);
 }
 
 #connectUsers{
@@ -4757,6 +4786,8 @@ input:checked + .slider:before {
 	content: "\f04b"; }
 .la-gamepad:before {
 	content: "\f11b"; }
+.la-file-video:before {
+	content: "\f1c8"; }
 .la-blender:before {
 	content: "\f517"; }
 .la-heartbeat:before {

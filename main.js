@@ -121,7 +121,7 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 	}
 	
 	if (urlParams.has('director') || urlParams.has('dir')) {
-		session.director = urlParams.get('director') || urlParams.get('dir') || true;
+		session.director = urlParams.get('director') || urlParams.get('dir') || session.roomid || urlParams.get('roomid') || urlParams.get('r') || urlParams.get('room') || filename || true;
 		session.effect = null; // so the director can see the effects after a page refresh
 		getById("avatarDiv3").classList.remove("hidden"); // lets the director see the avatar option
 	}
@@ -390,6 +390,10 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 		if (!session.whipOutputToken){
 			getById("publishOutToken").classList.remove("hidden");
 		}
+	} else if (session.whipOutput!==false){
+		if (!session.whipOutputToken){
+			getById("publishOutToken").classList.remove("hidden");
+		}
 	}
 	
 	if (urlParams.has('whepplay')) { // URL or data:base64 image. Becomes local to this viewer only.  This is like &avatar, but slightly different. Just CSS in this case
@@ -646,14 +650,9 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 
 
 	var directorLanding = false;
-	if (urlParams.has('director') || urlParams.has('dir')) {
-		directorLanding = urlParams.get('director') || urlParams.get('dir') || null;
-		if (directorLanding === null) {
+	if (session.director) {
+		if (session.director===true){ // room not specified.
 			directorLanding = true;
-		} else if (directorLanding.length === 0) {
-			directorLanding = true;
-		} else {
-			directorLanding = false;
 		}
 		session.meterStyle = 1;
 		session.signalMeter = true;
@@ -721,6 +720,21 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 	if (urlParams.has('bitratecutoff') || urlParams.has('bitcut')) {
 		session.lowBitrateCutoff = parseInt(urlParams.get('bitratecutoff')) || parseInt(urlParams.get('bitcut')) || 300; // low bitrate cut off.
 	}
+
+	if (urlParams.has('locked')) {
+		session.locked = urlParams.get('locked');
+
+		if ((session.locked == 'portrait') || (session.locked == 'vertical')){
+			session.locked = 9.0/16.0;
+		} else if (session.locked == 'landscape'){
+			session.locked = 16.0/9.0;
+		}  else if (session.locked == 'square'){
+			session.locked = 1.0;
+		} else {
+			session.locked = parseFloat(session.locked) || 16/9.0;
+		}
+	}
+		
 	
 	if (urlParams.has('lowbitratescene') || urlParams.has('cutscene')) {
 		session.lowBitrateSceneChange = urlParams.get('lowbitratescene') || urlParams.get('cutscene') || "cutscene"; // low bitrate cut off.
@@ -764,8 +778,14 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 	
 	if (urlParams.has('forcelandscape') || urlParams.has('forcedlandscape') || urlParams.has('fl')){
 		session.orientation = "landscape";
+		if (Firefox){
+			session.fullscreen = true;  // windowed mode complicates things in this mode
+		}
 	} else if (urlParams.has('forceportrait') || urlParams.has('forcedportrait')|| urlParams.has('fp')){
 		session.orientation = "portrait";
+		if (Firefox){
+			session.fullscreen = true;  // windowed mode complicates things in this mode
+		}
 	}
 	
 	
@@ -905,13 +925,16 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 		getById("container-5").classList.add("skip-animation");
 		getById("container-5").classList.remove('pointer');
 		
-		getById("sharefilebutton").style.display = "flex";
+		getById("sharefilebutton").style.display = "flex"; // this might be obsolete?
+		getById("mediafileshare").classList.remove("hidden");
+		
 		
 		if (SafariVersion){
 			getById("safari_warning_fileshare").classList.remove('hidden');
 		} else if (!Firefox){
 			getById("chrome_warning_fileshare").classList.remove('hidden');
 		}
+		
 	} else if (!session.director && (urlParams.has('website') || urlParams.has('iframe'))){
 		getById("container-6").classList.remove('hidden');
 		getById("container-6").classList.add("skip-animation");
@@ -1106,6 +1129,15 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 			getById("chatbutton").classList.remove("hidden");
 		}
 	}
+	
+	if (urlParams.has('app')){ // midi-in delay
+		session.screenshare = false;
+		getById("container-2").classList.add('hidden');
+		getById("logoname").classList.add('hidden');
+		getById("head1a").classList.remove('hidden');
+		getById("main").classList.add('appmode');
+		getById("jumptoroomButton").innerText = "Join Room";
+	}
 
 	if (session.screenshare !== false) {
 		if (session.introButton){
@@ -1155,7 +1187,7 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 		}
 	}
 	if (urlParams.has('screenshareaspectratio') || urlParams.has('ssar')) {  // capture aspect ratio
-		session.forceScreenShareAspectRatio = urlParams.get('screenshareaspectratio') || urlParams.get('ssar') || false;
+		session.forceScreenShareAspectRatio = urlParams.get('screenshareaspectratio') || urlParams.get('ssar') || 16.0/9.0;
 		if (session.forceScreenShareAspectRatio){
 			if ((session.forceScreenShareAspectRatio == 'portrait') || (session.forceScreenShareAspectRatio == 'vertical')){
 				session.forceScreenShareAspectRatio = 9.0/16.0;
@@ -1523,7 +1555,7 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 		 
 		if (!session.password) {
 			window.focus();
-			session.password = await promptAlt(miscTranslations["enter-password"], true, true);
+			session.password = await promptAlt(getTranslation("enter-password"), true, true);
 			if (session.password){
 				session.password = session.password.trim();
 			}
@@ -1564,7 +1596,7 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 		var hash_input = urlParams.get('hash') || urlParams.get('crc') || urlParams.get('check');
 		if (session.password === false) {
 			window.focus();
-			session.password = await promptAlt(miscTranslations["enter-password-2"], true, true);
+			session.password = await promptAlt(getTranslation("enter-password-2"), true, true);
 			session.password = sanitizePassword(session.password);
 			getById("passwordRoom").value = session.password;
 			session.defaultPassword = false;
@@ -1578,7 +1610,8 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 					if (hash2.substring(0, 4) !== hash_input) { // hash crc checks are just first 4 characters.
 						session.taintedSession = true;
 						if (!(session.cleanOutput)) {
-							getById("request_info_prompt").innerHTML = miscTranslations["password-incorrect"];
+							miniTranslate(getById("request_info_prompt"),"password-incorrect");
+							//getById("request_info_prompt").innerHTML = getTranslation("password-incorrect");
 							getById("request_info_prompt").style.display = "block";
 							getById("mainmenu").style.display = "none";
 							getById("head1").style.display = "none";
@@ -1630,7 +1663,7 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 		var updateURLAsNeed = true;
 		if (session.label == null || session.label.length == 0) {
 			window.focus();
-			session.label = await promptAlt(miscTranslations["enter-display-name"], true);
+			session.label = await promptAlt(getTranslation("enter-display-name"), true);
 		} else {
 			var updateURLAsNeed = false;
 			session.label = decodeURIComponent(session.label);
@@ -1653,7 +1686,7 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 		session.label = urlParams.get('defaultlabel') || urlParams.get('labelsuggestion') || urlParams.get('ls') || null;
 		var updateURLAsNeed = true;
 		window.focus();
-		var label = await promptAlt(miscTranslations["enter-display-name"], true);
+		var label = await promptAlt(getTranslation("enter-display-name"), true);
 		if (label) {
 			session.label = sanitizeLabel(label); // alphanumeric was too strict. 
 		} else {
@@ -1736,6 +1769,8 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 		} else {
 			session.stereo = 5; // guests; no stereo in, no high bitrate in, but otherwise like stereo=1
 		}
+		
+		getById("whipoutstereo").classList.add("hidden");
 	}
 
 	if (urlParams.has('screensharestereo') || urlParams.has('sss') || urlParams.has('ssproaudio')) { // both peers need this enabled for HD stereo to be on. If just pub, you get no echo/noise cancellation. if just viewer, you get high bitrate mono 
@@ -1787,11 +1822,7 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 		}
 	}
 
-	if ((session.stereo == 1) || (session.stereo == 3) || (session.stereo == 4) || (session.stereo == 5)) {
-		session.echoCancellation = false;
-		session.autoGainControl = false;
-		session.noiseSuppression = false;
-	}
+	
 	
 	if (Firefox && !session.stereo || (session.stereo === 3)){
 		session.mono = true; // this will set the SDP to mono if firefox
@@ -1809,6 +1840,12 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 			session.stereo = 0;
 			session.audiobitrate = 128;
 		}
+	}
+	
+	if ((session.stereo == 1) || (session.stereo == 3) || (session.stereo == 4) || (session.stereo == 5)) {
+		session.echoCancellation = false;
+		session.autoGainControl = false;
+		session.noiseSuppression = false;
 	}
 
 	if (urlParams.has("channelcount") || urlParams.has("ac") || urlParams.has("inputchannels")) { // if updates to this, see also function toggleMonoStereoMic()
@@ -1886,6 +1923,13 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 		} else {
 			session.noiseSuppression = true;
 		}
+	}
+	
+	if (session.noiseSuppression!==null){
+		getById("whipoutdenoise").classList.add("hidden");
+	}
+	if (session.autoGainControl!==null){ // should be the last
+		getById("whipoutautogain").classList.add("hidden");
 	}
 	
 	if (urlParams.has("screenshareaec") || urlParams.has("ssec")  || urlParams.has("ssaec")) {
@@ -2714,8 +2758,10 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 	
 	if (urlParams.has('vbr')) {
 		session.cbr = 0;
+		getById("whipoutvbrcbr").classList.add("hidden");
 	} else if (urlParams.has('cbr')) {
 		session.cbr = 1;
+		getById("whipoutvbrcbr").classList.add("hidden");
 	}
 
 	if (urlParams.has('order')) {
@@ -2758,7 +2804,7 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 		session.mainDirectorPassword = urlParams.get('maindirectorpassword') || urlParams.get('maindirpass') || false;
 		if (!session.mainDirectorPassword) {
 			window.focus();
-			session.mainDirectorPassword = await promptAlt(miscTranslations["director-password"], true, true);
+			session.mainDirectorPassword = await promptAlt(getTranslation("director-password"), true, true);
 			if (session.mainDirectorPassword){
 				session.mainDirectorPassword = session.mainDirectorPassword.trim();
 				session.mainDirectorPassword = decodeURIComponent(session.mainDirectorPassword);
@@ -3129,12 +3175,14 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 	
 	if (urlParams.has('whipoutcodec') || urlParams.has('woc')){
 		session.whipOutCodec = urlParams.get('whipoutcodec') || urlParams.get('woc') || false;
+		getById("whipoutcodecGroupFlag").classList.add("hidden");
 	}
 	if (session.whipOutCodec){
 		session.whipOutCodec = session.whipOutCodec.toLowerCase();
 		if (session.whipOutCodec){
 			session.whipOutCodec = session.whipOutCodec.split(',');
 		}
+		getById("whipoutcodecGroupFlag").classList.add("hidden");
 	}
 	
 	if (urlParams.has('whipoutaudiobitrate') || urlParams.has('woab')){
@@ -3142,12 +3190,15 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 		if (session.whipOutAudioBitrate ){
 			session.whipOutAudioBitrate  = parseInt(session.whipOutAudioBitrate );
 		}
+		getById("whipoutaudiobitrate").classList.add("hidden");
 	}
 	if (urlParams.has('whipoutvideobitrate') || urlParams.has('wovb')){
 		session.whipOutVideoBitrate = urlParams.get('whipoutvideobitrate') || urlParams.get('wovb') || false;
 		if (session.whipOutVideoBitrate){
 			session.whipOutVideoBitrate = parseInt(session.whipOutVideoBitrate);
 		}
+		getById("whipoutbitrateGroupFlag").classList.add("hidden");
+		getById("whipoutvbrcbr").classList.add("hidden");
 	}
 
 	if (urlParams.has('height') || urlParams.has('h')) {
@@ -4059,7 +4110,6 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 			
 		}
 	}
-	
 	if (session.roomid || urlParams.has('roomid') || urlParams.has('r') || urlParams.has('room') || filename || (session.permaid !== false)) {
 		var roomid = "";
 		if (urlParams.has('room')) { // needs to be first; takes priority
@@ -4074,6 +4124,14 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 			roomid = filename;
 		} 
 		session.roomid = sanitizeRoomName(roomid);
+		if (session.director){
+			if (session.director !== session.roomid){
+				if (!session.cleanOutput){
+					warnUser("Conflicting director and room values were provided.\n\n Check your URL parameters; there should be only &director OR &room",5000);
+				}
+			}
+			session.roomid = false;
+		}
 	}
 	
 	if ((session.permaid===false) && (session.roomid===false) && (session.view===false) && (session.effect===false) && (session.director===false)){
@@ -4353,7 +4411,7 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 			if (session.roomid === "test") {
 				if (session.password === session.defaultPassword) {
 					window.focus();
-					var testRoomResponse = confirm(miscTranslations["room-test-not-good"]);
+					var testRoomResponse = confirm(getTranslation("room-test-not-good"));
 					if (testRoomResponse == false) {
 						hangup();
 						throw new Error("User requested to not enter room 'room'.");
@@ -4462,33 +4520,37 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 		}
 		
 
-	} else if (urlParams.has('director') || urlParams.has('dir')) { // if I do a short form of this, it will cause duplications in the code elsewhere.
-		if (directorLanding == false) {
-			var director_room_input = urlParams.get('director') || urlParams.get('dir');
-			director_room_input = sanitizeRoomName(director_room_input);
-			log("director_room_input:" + director_room_input);
-			
-			if (urlParams.has('codirector') || urlParams.has('directorpassword') || urlParams.has('dirpass') || urlParams.has('dp')) {
-				session.directorPassword = urlParams.get('codirector') || urlParams.get('directorpassword') || urlParams.get('dirpass') || urlParams.get('dp');
-				if (!session.directorPassword) {
-					window.focus();
-					session.directorPassword = await promptAlt(miscTranslations["enter-director-password"], true);
-				} else {
-					session.directorPassword = decodeURIComponent(session.directorPassword);
+	} else if (session.director) { // if I do a short form of this, it will cause duplications in the code elsewhere.
+		if (directorLanding == false){ // implies director is not true or false, but a string
+			try{
+				var director_room_input = sanitizeRoomName(session.director);
+				log("director_room_input:" + director_room_input);
+				
+				if (urlParams.has('codirector') || urlParams.has('directorpassword') || urlParams.has('dirpass') || urlParams.has('dp')) {
+					session.directorPassword = urlParams.get('codirector') || urlParams.get('directorpassword') || urlParams.get('dirpass') || urlParams.get('dp');
+					if (!session.directorPassword) {
+						window.focus();
+						session.directorPassword = await promptAlt(getTranslation("enter-director-password"), true);
+					} else {
+						session.directorPassword = decodeURIComponent(session.directorPassword);
+					}
+					if (session.directorPassword){
+						session.directorPassword = sanitizePassword(session.directorPassword)
+						await generateHash(session.directorPassword + session.salt + "abc123", 12).then(function(hash) { // million to one error. 
+							log("dir room hash is " + hash);
+							session.directorHash = hash;
+							return;
+						}).catch(errorlog);
+					} else {
+						session.directorPassword = false;
+					}
 				}
-				if (session.directorPassword){
-					session.directorPassword = sanitizePassword(session.directorPassword)
-					await generateHash(session.directorPassword + session.salt + "abc123", 12).then(function(hash) { // million to one error. 
-						log("dir room hash is " + hash);
-						session.directorHash = hash;
-						return;
-					}).catch(errorlog);
-				} else {
-					session.directorPassword = false;
-				}
+				
+				setTimeout(function(director_room_input){createRoom(director_room_input);},20, director_room_input);
+			} catch(e){
+				directorLanding = true;
+				session.director = true;
 			}
-			
-			setTimeout(function(director_room_input){createRoom(director_room_input);},20, director_room_input);
 		}
 		if (session.chatbutton === true) {
 			getById("chatbutton").classList.remove("hidden");
@@ -4625,7 +4687,7 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 									updateURL("cleanoutput");
 									location.reload();
 								}
-								getById("retrySpinner").title = miscTranslations["waiting-for-the-stream"]
+								getById("retrySpinner").title = getTranslation("waiting-for-the-stream");
 							}
 							if (urlParams.has('waitmessage')){
 								getById("mainmenu").innerHTML += '<div id="retrymessage"></div>';
