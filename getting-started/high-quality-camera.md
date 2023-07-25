@@ -19,7 +19,7 @@ You can also play with different video codecs; `&codec=av1` is a viewer side opt
 Another viewer side option is `&scale=100`, which will disable dynamic fit-to-window scaling optimizations.  This is especially valuable if wanting to downlscale 4K to 1080p video, as otherwise VDO.Ninja would limit the resolution to the size of the OBS Browser source window. It can also help when there is more than one video on screen, but do note that disabling the auto-scale optimizations to achieve better quality will increase the CPU and network load for all parties.\
 \
 Sometimes adding some sharpness to the video as a digital video effect in OBS can help improve video quality, especially for video containing fine-text, like a screen share or video overlay. By default text might look a bit soft with VDO.Ninja, and sharpening can resolve it.\
-<img src="../.gitbook/assets/image (10) (7).png" alt="" data-size="original">![](<../.gitbook/assets/image (4) (1).png>)\
+<img src="../.gitbook/assets/image (10) (7).png" alt="" data-size="original">![](<../.gitbook/assets/image (4) (1) (1).png>)\
 
 
 ### Sender side options

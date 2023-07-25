@@ -98,7 +98,7 @@ I'll keep improving the support for WHIP/WHEP. Lots to do. Suggestions welcomed 
 #### July 9 <a href="#august-31" id="august-31"></a>
 
 * Added some audio options to the WHIP-publishing sandbox page at [https://vdo.ninja/alpha/whip](https://vdo.ninja/alpha/whip)\
-  ![](<../.gitbook/assets/image (1).png>)
+  ![](<../.gitbook/assets/image (1) (2).png>)
 
 #### July 7 <a href="#august-31" id="august-31"></a>
 
@@ -495,7 +495,7 @@ https://vdo.ninja/alpha/?view=YbFmisR&poster=./media/bg_sample.webp&hideplaybutt
   \-- It's exactly the same as join with video, except the video device is not selected by default.\
   \-- When used, a mic only button shows if a guest joining a room, and if [`&audiodevice=0`](../source-settings/audiodevice.md) is not present.\
   \-- Hoping this will give more users courage to click the join button, but if it causes issues, I may revert.\
-  ![](<../.gitbook/assets/image (1) (2) (7).png>)\
+  ![](<../.gitbook/assets/image (1) (2) (7) (1).png>)\
   \
   \*\* on alpha for testing at [https://vdo.ninja/alpha/?room=someetestroomhere\&moo](https://vdo.ninja/alpha/?room=someetestroomhere\&moo)
 
@@ -1656,7 +1656,7 @@ https://vdo.ninja/alpha/?view=YbFmisR&poster=./media/bg_sample.webp&hideplaybutt
 #### May 5
 
 * When using the [`&remote`](../general-settings/remote.md) control option, the viewer can now remotely hang-up the sender via the right-click menu. The sender needs to remote control enabled for this to work of course. \*\* on local dev, coming to beta soon.\
-  ![](<../.gitbook/assets/image (2) (1) (1) (2).png>)
+  ![](<../.gitbook/assets/image (2) (1) (1) (2) (2).png>)
 
 #### May 4
 

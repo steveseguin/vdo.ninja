@@ -52,7 +52,7 @@ Charging a mobile phone creates heat. If you start charging your device after yo
 
 Professional cameras do often include a small fan inside them to reduce heat. Consider buying a heatsink that can be mounted onto the back of your smartphone, with an optional fan to turn on if it starts getting hot. These are not super common, probably not super effective, but they can be had for not much money.
 
-![](<../.gitbook/assets/image (4) (1) (1) (1).png>)
+![](<../.gitbook/assets/image (4) (1) (1) (1) (1).png>)
 
 Sometimes a thick protective case can insulate a smartphone, making it hotter than needed, too.
 

@@ -10,6 +10,14 @@
   ![](<../.gitbook/assets/image (14).png>)
 * Added 6 more custom chat auto-start options to Social Stream; up from 3. This was by request. Hopefully that's enough?\
   ![](<../.gitbook/assets/image (15).png>)
+* Updated Social Stream with new relay options:
+  * Added the option to **relay all incoming messages** from one chat site to all other active chats on other sites\
+    \-- I try to ignore duplicates, and I've added a 1 second timeout, to avoid too much spamming.\
+    \-- image-based emojis and images won't be relayed; just text and maybe some normal text-emojis supported.\
+    ![](../.gitbook/assets/image.png)
+  * Added the option to relay just donations from sites to all other sites; stated as a thank you.
+  * Fixed an issue where the auto-hi option was saying hit to all sites, not just the site that the hi came from.\
+    ![](<../.gitbook/assets/image (1).png>)![](<../.gitbook/assets/image (2).png>)
 
 #### **July 19**
 
@@ -22,7 +30,7 @@
 
 * floatplane.com added to Social Stream
 * Few minor fixes to Social Stream, mainly to TikTok\
-  ![](<../.gitbook/assets/image (4).png>)
+  ![](<../.gitbook/assets/image (4) (1).png>)
 
 #### **July 10**
 
@@ -30,7 +38,7 @@
   this service seems to allow you to train your own custom high quality speech models? anyways, it's available now.
 * Google premium TTS and elevenlabs TTS added have support now in the dock.html page (not just in the index.html). TTS messages will queue automatically and will be cleared with the TTS is stopped/paused.
 * Added Threads.net support to Social Stream (little button appears under each post to let you select).\
-  ![](<../.gitbook/assets/image (2).png>)
+  ![](<../.gitbook/assets/image (2) (1).png>)
 
 #### **July 9**
 
@@ -38,7 +46,7 @@
 * bandlab.com added to Social Stream
 * `&largecontent` added as a toggle to Social Stream; this will make the content-images (like giphy images, twitter/IG posts, larger in the dock)
 * The giphy support has an option for #somekeyword now. related images from giphy will be used. You can concat hashtags for mulitword search. eg:`#Hello#kitty`\
-  ![](../.gitbook/assets/image.png)
+  ![](<../.gitbook/assets/image (4).png>)
 
 #### **July 6**
 
@@ -139,7 +147,7 @@
   \-- It only saves each name once, without timestamp or additional meta data.\
   \-- You can open the file while its still recording, to see the current sate of number of unique chatters, etc.\
   \-- Start/stop support works, which will also start a new list once started again.\
-  ![](<../.gitbook/assets/image (1) (2).png>)
+  ![](<../.gitbook/assets/image (1) (2) (7).png>)
 
 #### **April 11**
 
