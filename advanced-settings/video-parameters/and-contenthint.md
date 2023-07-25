@@ -39,7 +39,11 @@ For more information on how to lock or maximize the resolution of a video feed, 
 [how-do-i-lock-the-resolution.md](../../guides/how-do-i-lock-the-resolution.md)
 {% endcontent-ref %}
 
-There is [`&screensharecontenthint`](../screen-share-parameters/and-screensharecontenthint.md) if you want the parameter to only affect screen-shares.
+There is [`&screensharecontenthint`](../screen-share-parameters/and-screensharecontenthint.md) if you want the parameter to only affect screen-shares.\
+\
+If facing issues poor quality, try increasing your bitrate or improving your network connection, such as moving off of WiFi and onto Ethernet. Sometimes changing codecs, such as to h264 or av1, can help improve quality depending on the cause.\
+\
+If your CPU is overloaded, h264 might use less CPU than other codecs. You can also consider using \&meshcast to reduce CPU usage if sharing to multiple viewers at a time.
 
 {% hint style="info" %}
 If using [`&codec=vp9`](../view-parameters/codec.md) on the viewer side, the frame rate may drop as low as even 5-fps.
