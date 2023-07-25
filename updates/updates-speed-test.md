@@ -12,7 +12,7 @@
 #### April 13
 
 * Added the number of CPU threads (logical cores) to the stats in VDO.Ninja, as well as the check/results testing page.. (update on alpha & GitHub)\
-  ![](<../.gitbook/assets/image (13).png>)
+  ![](<../.gitbook/assets/image (13) (5).png>)
 
 #### January 19
 

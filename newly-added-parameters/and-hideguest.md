@@ -16,6 +16,6 @@ Adding `&hideguest` to a guest's URL has the guest join a room not visible to ot
 
 <div align="left">
 
-<img src="../.gitbook/assets/image (8) (3).png" alt="">
+<img src="../.gitbook/assets/image (8) (3) (1).png" alt="">
 
 </div>

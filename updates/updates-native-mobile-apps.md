@@ -2,6 +2,26 @@
 
 [native-mobile-app-versions.md](../steves-helper-apps/native-mobile-app-versions.md "mention")
 
+#### July 23
+
+* I pushed out v19 of the Android native app version of VDO.Ninja (its live now).\
+  \-- Fixed some menu bugs related to scrolling\
+  \-- Stream ID and room ID will now replace spaces and special characters with underscores\
+  \-- Added a button that will show users a "Help Guide" page, with basic instructions\
+  \-- The "stream ID" field now says "stream ID (optional)", to help with avoiding some user confusion about how to get a stream ID\
+  \-- And as previously mentioned with the Android version, other features now include an optional web-view version of VDO.Ninja, fixed Discord support link, fixed scrolling support, and the stream/room IDs are parsed now to correct reject special characters.
+
+#### July 17
+
+* Updated the Android native app client. It should be live on google play?\
+  \-- Added an option to load the VDO.Ninja web client from within the native app; no tabs or URL bar. (it stops working tho if you background the app.)\
+  \-- Made the Discord Support link open Discord directly, if installed, to make it easier to use.\
+  ![](<../.gitbook/assets/image (5).png>)![](<../.gitbook/assets/image (6).png>)
+
+#### July 13
+
+* This week the Android and iOS apps were updated; mainly fixing errors, including the screen sharing on iOS not working correctly. iOS update specifically just went live.
+
 #### July 1
 
 *   I pushed an update to the Google Play store with a BETA (open test) release of the android native app (for VDO.Ninja).
@@ -53,7 +73,7 @@
 
 * Updated the iOS/Android version with a newer version 2.0.9, which contains some improvements for manual disconnection/reconnection. (also disconnects faster now when using alpha)\
   The Android update is live now, while the Apple update is still pending store approval.\
-  ![](<../.gitbook/assets/image (7) (1) (1).png>)
+  ![](<../.gitbook/assets/image (7) (1) (1) (3).png>)
 
 #### January 21
 

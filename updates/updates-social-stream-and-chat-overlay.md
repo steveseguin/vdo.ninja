@@ -3,6 +3,43 @@
 [social-stream.md](../steves-helper-apps/social-stream.md "mention")\
 [chat-overlay.md](../steves-helper-apps/chat-overlay.md "mention")
 
+#### **July 25**
+
+* OpenAI's chat page added as a supported site to Social Stream, which opens up some interesting bot actions I guess.\
+  [`https://chat.openai.com/chat`](https://chat.openai.com/chat)\
+  ![](<../.gitbook/assets/image (14).png>)
+* Added 6 more custom chat auto-start options to Social Stream; up from 3. This was by request. Hopefully that's enough?\
+  ![](<../.gitbook/assets/image (15).png>)
+
+#### **July 19**
+
+* The emotes-wall with Social Stream has two new adjustable options\
+  \-- `&limit=10`, so you can limit the max emotes allowed at a time\
+  \-- `&speed=2`, this will double the speed of the emotes; can take decimal values as well\
+  Use now manually, or update and enable via new toggle switches in the emotes section.
+
+#### **July 15**
+
+* floatplane.com added to Social Stream
+* Few minor fixes to Social Stream, mainly to TikTok\
+  ![](<../.gitbook/assets/image (4).png>)
+
+#### **July 10**
+
+* Added ElevenLabs.io Text to Speech support to Social Stream ; [https://github.com/steveseguin/social\_stream/blob/main/README.md#eleven-labs-tts](https://github.com/steveseguin/social\_stream/blob/main/README.md#eleven-labs-tts)\
+  this service seems to allow you to train your own custom high quality speech models? anyways, it's available now.
+* Google premium TTS and elevenlabs TTS added have support now in the dock.html page (not just in the index.html). TTS messages will queue automatically and will be cleared with the TTS is stopped/paused.
+* Added Threads.net support to Social Stream (little button appears under each post to let you select).\
+  ![](<../.gitbook/assets/image (2).png>)
+
+#### **July 9**
+
+* arena.tv added to Social Stream
+* bandlab.com added to Social Stream
+* `&largecontent` added as a toggle to Social Stream; this will make the content-images (like giphy images, twitter/IG posts, larger in the dock)
+* The giphy support has an option for #somekeyword now. related images from giphy will be used. You can concat hashtags for mulitword search. eg:`#Hello#kitty`\
+  ![](../.gitbook/assets/image.png)
+
 #### **July 6**
 
 **Social Stream updates**
@@ -18,7 +55,7 @@
     \-- The GIF image selected will be based on the words in the chat message; top closest match.\
     \-- I'll probably change this feature as time goes on, to improve it, but let me know what you think.\
     \-- How can it be better?\
-    ![](<../.gitbook/assets/image (25).png>)![](<../.gitbook/assets/image (15).png>)
+    ![](<../.gitbook/assets/image (25).png>)![](<../.gitbook/assets/image (15) (3).png>)
 
 #### **June 29**
 
@@ -85,7 +122,7 @@
 #### **April 18**
 
 * Added the option to filter Social Stream messages by the source destination. You'll need to enable the alt filter mode in the filter search bar, and then use `source:SOURCENAME`, so ie: `source:twitch` or `source:youtube`.\
-  ![](<../.gitbook/assets/image (4) (1).png>)
+  ![](<../.gitbook/assets/image (4) (1) (5).png>)
 
 #### **April 17**
 
@@ -94,7 +131,7 @@
 #### **April 12**
 
 * Added a bad word black list option to Social Stream. This option replaces matched words with \*\*\*. Currently the bad word list is hard-coded in, but it can be changed/expanded based on feedback.\
-  ![](<../.gitbook/assets/image (11).png>)
+  ![](<../.gitbook/assets/image (11) (3).png>)
 * Added a URL option called `&passttl` to the dock page of Social Stream. When enabled, when someone types in `!pass` into chat, it cancels the current text to speech queue.\
 
 * Added an option to save a list of all unique names seen in chat to disk, as a simple text list. (Social Stream)\

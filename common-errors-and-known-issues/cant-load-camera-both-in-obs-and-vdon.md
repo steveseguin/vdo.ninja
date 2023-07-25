@@ -21,7 +21,7 @@ Your camera \*may\* now be working in both apps; this has been tested with OBS a
 
 _Example:_&#x20;
 
-<figure><img src="../.gitbook/assets/image.png" alt=""><figcaption><p>Demo of it working</p></figcaption></figure>
+<figure><img src="../.gitbook/assets/image (24).png" alt=""><figcaption><p>Demo of it working</p></figcaption></figure>
 
 #### If that doesn't work, another option that works well:
 

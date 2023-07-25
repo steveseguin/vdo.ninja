@@ -1,5 +1,105 @@
 # Updates - VDO.Ninja
 
+#### July 25 <a href="#august-31" id="august-31"></a>
+
+* Released VDO.Ninja v23.8 into production, so GitHub, alpha, beta, and production are all now in sync with all current features/fixes.\
+  \-- Production was last updated a few weeks ago (v23.7), so the main reason for this minor update has been to activate the native app's new web-view mode custom UI.
+
+#### July 24 <a href="#august-31" id="august-31"></a>
+
+* Created a new parameter called `&locked` for **VDO.Ninja**, which will force a the VDO.Ninja's mixer output keep the mixed render contained to a specific aspect-ratio, regardless of the browser's window size. (as seen in photo)\
+  \-- You'll get black bars (or whatever the background color is) as padding on the sides to force the inner video elements into the desired aspect ratio\
+  \-- When using `&locked`, the default aspect ratio is 16:9, but you can pass a floating point value for different aspect ratios, or use landscape (instead of 1.77777) / portrait / square as presets if needed.\
+  \-- Padding is centered, so the rendered video will be in the center of the screen. (tho using [`&widget`](../advanced-settings/settings-parameters/and-widget.md) mode might break things though).\
+  \-- This `&locked` option is added to the Mixer App's WHIP/T**witch publishing output option**, so regardless of window size, you'll get a 16:9 video render
+
+#### July 23 <a href="#august-31" id="august-31"></a>
+
+* Added options to start/stop/pause the group room timer as a director to the remote http/wss API.
+
+```
+https://api.vdo.ninja/test123456/startRoomTimer/null/600 - start 10min countdown timer
+https://api.vdo.ninja/steve123456/pauseRoomTimer - pause timer
+https://api.vdo.ninja/steve123456/stopRoomTimer - stop timer
+https://api.vdo.ninja/steve123456/startRoomTimer/null/600 - start timer that counts up from 0
+```
+
+for eg: `https://vdo.ninja/alpha/?director=countrytownc&api=test123456` test director \*\* on alpha for testing
+
+* Also added the room timer options to the companion.vdo.ninja sandbox page for testing\
+  ![](<../.gitbook/assets/image (11).png>)
+
+#### July 20 <a href="#august-31" id="august-31"></a>
+
+* fixed an issue where adding a screen share to a group didn't work, along with some other director-related commands targetting a screen share.
+
+\*on [https://vdo.ninja/alpha/](https://vdo.ninja/alpha/)
+
+#### July 19 <a href="#august-31" id="august-31"></a>
+
+* `&app` added as an option to VDO.Ninja; this loads the site into an "**app mode**" and allows you to load a new URL via the website itself.\
+  \-- This parameter is enabled in the mobile native app's new website-mode option by default (the screen share option is also hidden).\
+  \* it will go live inside the native Android app whenever I push VDO.Ninja's alpha version into production\
+  ![](<../.gitbook/assets/image (10).png>)
+* Updated the translation files with site/text changes from past few months; should help improve some of the breaking button translations, etc.
+* Updated the translation logic quite a bit; it should further help with some translation issues.
+* Tweaked the director's room CSS a small bit; mainly to help fit languages with long words that don't fit in some buttons.
+* Made some major changes to the way Firefox Mobile handles device rotation. Before, it didn't. Like, the camera didn't rotate when you rotated your device, nor did [`&forcelandscape`](../advanced-settings/mobile-parameters/and-forcelandscape.md) mode work. Well, that should should work now (to the extent possible with Firefox).
+* Made the code more patient for both Firefox and Mobile device, particularly when it comes to changing cameras, loading the camera, or applying settings to a camera. Mobile devices, especially Firefox Mobile, seem to like being given a few seconds to process camera changes before accepting new changes. (else crashes or cameras freezes, etc).
+* When switching cameras on Chrome desktop tho, I've made the switches a bit faster; nearly as fast as it will let me. Seems stable enough to let me.
+
+\*\* on alpha
+
+#### July 18 <a href="#august-31" id="august-31"></a>
+
+* Improved the media file sharing option so that you can now change to a new media file while streaming, without having to reload the page to select a new file
+* New button in the control to let you select a new media file to switch to sharing\
+  ![](<../.gitbook/assets/image (8).png>)
+* Fixed an issue where going to the next video in a playlist of videos caused the stream to get stuck
+* This media file option has long existed, but it's not really used as I suppose you can just screen-share a video instead. Access it by adding [`&fileshare`](../source-settings/and-fileshare.md) to the URL: ie `https://vdo.ninja/alpha/?fileshare`
+
+\*\* on alpha
+
+#### July 17 <a href="#august-31" id="august-31"></a>
+
+* If the director uses [`&password=false`](../general-settings/password.md) in the URL or creates a room with password set to `false` or `0`, that will be reflected now on the invite/scene links.
+* Fixed an issue where Firefox Mobile on Android would sometimes have the camera crash if changing changes.
+
+\*changes on alpha at vdo.ninja/alpha/
+
+#### July 15 <a href="#august-31" id="august-31"></a>
+
+* Using `&room&director` together now gets handled better
+* Minor fix to solo talk with the remote API
+* Alt solo talk support added to the remote API
+
+#### July 13 <a href="#august-31" id="august-31"></a>
+
+* `&batterymeter` added, curtesy of @Yong.\
+  \-- you can read their notes here: [https://github.com/steveseguin/vdo.ninja/pull/1078#issuecomment-1627799535](https://github.com/steveseguin/vdo.ninja/pull/1078#issuecomment-1627799535)\
+  \-- It's the same concept of [`&signalmeter`](../newly-added-parameters/and-signalmeter.md), except shows the battery meter for guests that are on devices with a battery that's draining/charging.\
+  \-- Shows blinking warning if under 25% battery life\
+  \-- The battery meter was already available by default as the director, but now it can be enabled as a guest, etc.\
+  \-- Also supports disabling the meter with `&batterymeter=0`.\
+  \
+  \*\* on alpha and GitHub
+
+#### July 10 <a href="#august-31" id="august-31"></a>
+
+* Added connection stats to the WHIP out functionality\
+  ![](<../.gitbook/assets/image (3).png>)
+* Fixed an issue where changing video/audio sources/settings broke the WHIP out stream.
+* [`&stereo`](../general-settings/stereo.md) should work now with the WHIP-Input mode (`?whip=xx&stereo`), assuming the source supports it (VDO.Ninja whip-out does)
+
+I'll keep improving the support for WHIP/WHEP. Lots to do. Suggestions welcomed also.\
+\
+\*\* on alpha pending a bit more testing
+
+#### July 9 <a href="#august-31" id="august-31"></a>
+
+* Added some audio options to the WHIP-publishing sandbox page at [https://vdo.ninja/alpha/whip](https://vdo.ninja/alpha/whip)\
+  ![](<../.gitbook/assets/image (1).png>)
+
 #### July 7 <a href="#august-31" id="august-31"></a>
 
 * Fixed an issue with some private turn servers hosted by others and niche compatibility issues when used with the speedtest.
@@ -7,7 +107,7 @@
 * Fixed an issue where the avatar image didn't appear always (was triggered I think with scene=1 or using group I think).
 * [`&stereo=6`](../general-settings/stereo.md) is added. Unlike `&stereo=1`, it doesn't change the default [bitrate](../advanced-settings/view-parameters/audiobitrate.md)/[aec](../source-settings/aec.md)/[denoise](../source-settings/and-denoise.md)/[autogain](../source-settings/autogain.md) settings; solely just enables stereo for both in/out.
 * If you put a PUSH link into OBS, you'll get a little notice asking if you made a mistake, with a solution on how to fix it.\
-  ![](<../.gitbook/assets/image (1).png>)
+  ![](<../.gitbook/assets/image (1) (4).png>)
 
 \*\* changes on GitHub and on alpha
 
@@ -31,7 +131,7 @@
     \-- I've included some hand-drawn avatar sample images to test with; they are the default values for `&bgimage`, `&avatarimg2`, and `&avatarimg3`. (ugly, but mean to be just placeholders)\
     \-- The images will only show when there is no active video and is essentially the same as using `&meterstyle=4` with some custom CSS to specify the behaviour, but it is not stream ID specific however.
 
-![](<../.gitbook/assets/image (24).png>)
+![](<../.gitbook/assets/image (24) (3).png>)
 
 \*\* on vdo.ninja/alpha/
 
@@ -44,7 +144,7 @@
 * The Twitch WHIP output example now has a default bitrate of 6000-kbps if used. The video codec for whip out by default is openh264, and the twitch output option uses that by default. (The Twitch defaults need to be changed via URL manually.)
 * Just a reminder you can test the WHIP out by publishing to the VDO.Ninja whip-in URL (`https://whip.vdo.ninja/STREAMID` and for playback, `https://vdo.ninja/?whip=STREAMID`).
 
-![](<../.gitbook/assets/image (9).png>)
+![](<../.gitbook/assets/image (9) (6).png>)
 
 \*\* all changes are on alpha, with the updated whip sandbox here: [https://vdo.ninja/alpha/whip](https://vdo.ninja/alpha/whip) (edited)
 
@@ -53,7 +153,7 @@
 * Added `&slot=N`, which is a guest side property (sender side). It just tells the director ([Mixer App](../steves-helper-apps/mixer-app.md) / [`&slotsmode`](../advanced-settings/director-parameters/and-slotmode.md)) which slot the guest should prefer to be in, if slots are being auto-assigned. If the desired slot is already taken, then that guest will then not be assign a slot. If the guest was assigned a slot by the director, refreshing will keep the assign slot, and the URL-specified slot preference will be ignored.
 * Fixed an issue where custom scene names in the director's room were incorrectly being capitalized.
 * Users with old iOS (iOS 15 and older) versions will be greeted with a message, recommending they update their system's OS. iOS 16 and newer has many important bug fixes, so its strongly recommended. It should trigger when using Safari; not sure about all other browsers on iOS yet though.\
-  ![](<../.gitbook/assets/image (5) (2).png>)
+  ![](<../.gitbook/assets/image (5) (2) (1).png>)
 *   I updated [`&orderby`](../newly-added-parameters/and-orderby.md) to work with non-director view links, such as with scenes or guests.
 
     \-- Previously `&orderby` only worked with the director's view to sort the positioning of control boxes, based on the _stream ID_, but now it can apply to the auto-mixer.\
@@ -216,7 +316,7 @@ https://vdo.ninja/alpha/?view=YbFmisR&poster=./media/bg_sample.webp&hideplaybutt
   \-- This applies globally, so within scenes, other guests, and for the actual guest\
   \-- If a guest's video preview is mirrored already, such as if using [`&mirror`](../advanced-settings/design-parameters/mirror.md), this function will mirror their local mirror effect; so it doesn't override it, but applies on top of it for them.\
   \-- If a guest mirrors someone else's video via the right-click context menu manually, if the director changes the mirror for that video, it will override what the guest has set. They can always re-mirror it manually, but the director in this case takes precedent.\
-  ![](<../.gitbook/assets/image (6).png>)
+  ![](<../.gitbook/assets/image (6) (1).png>)
 
 \*\* this new mirror feature is on alpha for now at [https://vdo.ninja/alpha/](https://vdo.ninja/alpha/). Feel free to test and let me know how you fair.
 
@@ -280,7 +380,7 @@ https://vdo.ninja/alpha/?view=YbFmisR&poster=./media/bg_sample.webp&hideplaybutt
 
 * Fixed an issue where if the main director reloads their page, they will have the current director state updated on load, provided by any existing co-directors in the room. Before, only director -> codirector and codirector -> codirector state syncing worked, resulting in the room's state being cleared whenever the main director reloaded.
 * Made the option to select an [avatar](../advanced-settings/video-parameters/and-avatar.md) / effect default-on when joining as a director.\
-  ![](<../.gitbook/assets/image (7) (1).png>)
+  ![](<../.gitbook/assets/image (7) (1) (1).png>)
 *   Fixed an issue where the mute-video track button didn't always appear when a director with an active video track.
 
     \
@@ -289,13 +389,13 @@ https://vdo.ninja/alpha/?view=YbFmisR&poster=./media/bg_sample.webp&hideplaybutt
 #### May 1 <a href="#august-31" id="august-31"></a>
 
 * Added a report bug feature back into VDO.Ninja; it might show up in some cases in the lower-right hand of screen, where clicking on the bug icon will let you submit the app logs to me for analysis. It will appear more often on alpha than on production, to avoid being a nuisance.\
-  ![](<../.gitbook/assets/image (8).png>)
+  ![](<../.gitbook/assets/image (8) (3).png>)
 * Added [`&suppresslocalaudio`](../advanced-settings/screen-share-parameters/and-suppresslocalaudio.md) as a new URL option. This will disable local audio playback of a Chrome tab while screen-sharing it. This can be used with the new WHIP output of VDO.Ninja to publish a VDO.Ninja scene directly to Twitch, without having to deal with any audio feedback issues while having that scene tab open.
 * [`&prefercurrenttab`](../advanced-settings/screen-share-parameters/and-prefercurrenttab.md) (have the current tab as the default screen-share source)
 * [`&selfbrowsersurface`](../advanced-settings/screen-share-parameters/and-selfbrowsersurface.md), which excludes the current tab as an screen share source option. (you can pass `include` or `exclude` as a value to control this though)
 * [`&systemaudio`](../advanced-settings/screen-share-parameters/and-systemaudio.md), which excludes the system-audio as an audio source when display sharing. Tab audio is still available though. (can help prevent accidental audio feedback loops)
 * [`&displaysurface`](../advanced-settings/screen-share-parameters/and-displaysurface.md) will pre-select "display-share", rather than tab-share, when screen sharing. You can pass `monitor`, `browser`, or `window` as options to customize this though.\
-  ![](<../.gitbook/assets/image (7).png>)\
+  ![](<../.gitbook/assets/image (7) (1).png>)\
   \
   For more details on these new features see here: [https://developer.chrome.com/docs/web-platform/screen-sharing-controls/](https://developer.chrome.com/docs/web-platform/screen-sharing-controls/) (Chrome/chromium-browsers only)\
   \
@@ -319,7 +419,7 @@ https://vdo.ninja/alpha/?view=YbFmisR&poster=./media/bg_sample.webp&hideplaybutt
   \-- It will have the label/border/margins align relative to the 16:9 holder element, rather than video itself.\
   \-- Also related, you can also specify the background color independent of the border color with [`&color`](../advanced-settings/design-parameters/and-color.md) (new). If using [`&border`](../advanced-settings/design-parameters/and-border.md), it will not set the background color, so you may need to use both `&border` and `&color`.\
   \-- May not yet work with [`&forcedlandscape`](../advanced-settings/mobile-parameters/and-forcelandscape.md) or [`&rotate`](../advanced-settings/design-parameters/and-rotate.md).\
-  ![](<../.gitbook/assets/image (14).png>)
+  ![](<../.gitbook/assets/image (14) (2).png>)
 * Added [`&blur`](../advanced-settings/design-parameters/and-blur.md), which will try to add a blurred background to the video so it fits the structured video container\
   \-- Using `&blur` auto enables [`&structure`](../advanced-settings/design-parameters/and-structure.md).\
   \-- Code in the auto mixer, so you won't see the effect in a simple preview or some self-preview types.\
@@ -358,14 +458,14 @@ https://vdo.ninja/alpha/?view=YbFmisR&poster=./media/bg_sample.webp&hideplaybutt
   This `&effects=8` mode might also be helpful in solving issues with cameras disconnecting or having their frame rate change while recording, causing issues with the recording. The canvas acts as a reliable middle man between the camera and output video stream, so if the camera's input stream fails, the recording stream will not be impacted, other than perhaps skipping some frames. The canvas is sensitive to CPU load or browser throttling though, so frame rates may fluctuate more often when using it, so I can't suggest using it unless the guest/user is known to have a problematic camera.\
   \*\* on alpha
 * Added a new IFRAME code example that prompts a guest who is joining a room with a message if the director is not there yet. The message clears when the director joins the room. This sample can be used like a normal vdo.ninja/?room=xxx link (as seen below). The code is extremely easy to customize or embedded into your own websites. The code is just provided as an example. [https://vdo.ninja/examples/waitingroom?room=TESTROOM123](https://vdo.ninja/examples/waitingroom?room=TESTROOM123)\
-  ![](<../.gitbook/assets/image (15) (3).png>)
+  ![](<../.gitbook/assets/image (15) (3) (1).png>)
 
 #### April 13 <a href="#august-31" id="august-31"></a>
 
 * Control bar styling for VDO.Ninja has been overhauled to look a lot nicer, curtesy of @Lindenkron. This style update is available on vdo.ninja/alpha/ and on GitHub.\
   ![](<../.gitbook/assets/image (13) (4).png>)
 * Added the number of CPU threads (logical cores) to the stats in VDO.Ninja, as well as the check/results testing page.. (update on alpha & GitHub)\
-  ![](<../.gitbook/assets/image (13).png>)
+  ![](<../.gitbook/assets/image (13) (5).png>)
 
 #### April 12 <a href="#august-31" id="august-31"></a>
 
@@ -384,7 +484,7 @@ https://vdo.ninja/alpha/?view=YbFmisR&poster=./media/bg_sample.webp&hideplaybutt
   \-- if this works well for users, I'll see about adding something into the code to automate pressing it when problems are detected (if possible).\
   \-- button only shows on compatible devices/ browsers\
   \-- not all devices support reconnection in this way.\
-  ![](<../.gitbook/assets/image (12).png>)\
+  ![](<../.gitbook/assets/image (12) (6).png>)\
   \
   \*\* on alpha at vdo.ninja/alpha/ and on GitHub.
 
@@ -435,7 +535,7 @@ https://vdo.ninja/alpha/?view=YbFmisR&poster=./media/bg_sample.webp&hideplaybutt
 #### March 24 <a href="#august-31" id="august-31"></a>
 
 * Right click a video and click `Snapshot to Clipboard` to save the current video frame to the clipboard as a PNG image. This can be pasted into most applications, such as Photoshop, for quick use in a production\
-  ![](<../.gitbook/assets/image (6) (1).png>)\
+  ![](<../.gitbook/assets/image (6) (1) (1).png>)\
   \
   \-- Also the option to save to disk\
   ![](<../.gitbook/assets/image (4) (1) (4).png>)\
@@ -688,7 +788,7 @@ https://vdo.ninja/alpha/?view=YbFmisR&poster=./media/bg_sample.webp&hideplaybutt
   ![](<../.gitbook/assets/image (2) (1) (1) (3).png>)\
   \-- This was designed for Twitch / YouTube / Social Stream chat, but could in theory work with any CORS-friendly site, such as a third-party web tool.\
   \-- If the director uses [`&widget`](../advanced-settings/settings-parameters/and-widget.md), it will auto sync that with all guests as they connect. I'll try to find ways to make it easier to resize/minimize in the future.\
-  ![](<../.gitbook/assets/image (6) (1) (1).png>)\
+  ![](<../.gitbook/assets/image (6) (1) (1) (1).png>)\
   \
   \*\*changes on alpha at vdo.ninja/alpha/
 
@@ -781,7 +881,7 @@ https://vdo.ninja/alpha/?view=YbFmisR&poster=./media/bg_sample.webp&hideplaybutt
   \-- This doesn't yet support labels or layouts really, but I welcome feedback.\
   \-- Currently I just threw up a video of me, 16:9, of 500-kbps.\
   \-- You don't actually need to create a room / scene to play with it.\
-  ![](<../.gitbook/assets/image (3) (5).png>)\
+  ![](<../.gitbook/assets/image (3) (5) (2).png>)\
   \
   \*\* on alpha. try it at: [https://vdo.ninja/alpha/?room=xxxxtestxxxx\&scene\&cover\&square\&fakeguests=7](https://vdo.ninja/alpha/?room=xxxxtestxxxx\&scene\&cover\&square\&fakeguests=7)
 * Fixed an issue where the director's last-used saved audio output destination wasn't applying, even though the settings menu should it was selected.
@@ -1285,7 +1385,7 @@ https://vdo.ninja/alpha/?view=YbFmisR&poster=./media/bg_sample.webp&hideplaybutt
   \-- It supports multiple OBS instances and will label them according to the [`&label=xxx`](../general-settings/label.md) value set on the scene/view link, or whatever the unique connection ID is.\
   \
   All this is on alpha, at [https://vdo.ninja/alpha/](https://vdo.ninja/alpha/)\
-  ![](<../.gitbook/assets/image (2) (1) (4).png>)![](<../.gitbook/assets/image (3) (5) (1).png>)
+  ![](<../.gitbook/assets/image (2) (1) (4) (1).png>)![](<../.gitbook/assets/image (3) (5) (1).png>)
 
 #### July 23
 
@@ -1308,7 +1408,7 @@ https://vdo.ninja/alpha/?view=YbFmisR&poster=./media/bg_sample.webp&hideplaybutt
   \-- This is a new noise gate, that lowers your mic volume to 10% of its current value based on volume-level activity. If you haven't made a significant sound in few seconds, the noise gate kicks in, and will re-enable when a significant noise is detected. It will take about 300-ms for the volume to recover once the noise triggers it back on, which can be a small bit harsh/distracting at times.\
   \-- [`&noisegate`](../source-settings/noisegate.md) or `&noisegate=1` (`&gating`/`&ng`) will enable it by default (if using it in a room, currently); and `&noisegate=0` will hide the option from the menu.\
   \-- The older existing `&noisegate=1` option I moved to `&noisegate=4`, as this new version is replacing it. I'm keeping the older version around as an option though.\
-  ![](<../.gitbook/assets/image (7) (1) (1) (3) (1).png>)
+  ![](<../.gitbook/assets/image (7) (1) (1) (3) (1) (1).png>)
 * Fixed some of the labels for the local audio labels; camel-case is replaced with words, and true/false replaced with on/off.
 *   Fixed an issue where iPhones's video output would freeze when the director would feature-highlight any other participant.
 

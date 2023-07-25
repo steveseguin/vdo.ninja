@@ -27,6 +27,6 @@ If you don't want to listen for events with the websocket server API I host, you
 
 <div align="left">
 
-<figure><img src="../../.gitbook/assets/image (2) (1).png" alt=""><figcaption></figcaption></figure>
+<figure><img src="../../.gitbook/assets/image (2) (1) (4).png" alt=""><figcaption></figcaption></figure>
 
 </div>

@@ -2,6 +2,24 @@
 
 [mixer-app.md](../steves-helper-apps/mixer-app.md "mention")
 
+#### July 24
+
+* [`&screenshareaspectratio`](../advanced-settings/screen-share-parameters/and-screenshareaspectratio.md) (already existed) is now used within the Mixer App's WHIP/Twitch output scene. This will force the screen share capture that is used to publish to the CDN to stay at a 16:9 aspect ratio, regardless of the window's actual aspect ratio.\
+  \-- The combined result of these two flags on the Mixer's publishing output is a 16:9 output to Twitch / etc. without black bars, regardless of window size. Resolution might not be exactly 720p still, but that's something I can work on.
+* Fixed a minor issue with invite links on the Mixer App
+* Fixed a minor issue (I hope), where the videos might vertically stack when it should preferably horizontally stack (1-pixel difference).
+
+![](<../.gitbook/assets/image (12).png>)![](<../.gitbook/assets/image (13).png>)
+
+\*\* on alpha, with the Mixer updated at [https://vdo.ninja/alpha/](https://vdo.ninja/alpha/)
+
+#### July 19
+
+* Mixer App has a few new toggle options to help configure the guest-invite options. AEC, auto gain, and denosing - toggling off can give better audio quality in some cases.\
+  ![](<../.gitbook/assets/image (9).png>)
+
+\* available at vdo.ninja/alpha/mixer
+
 #### June 30
 
 * Mixer App has been updated to use [`&hash`](../newly-added-parameters/and-hash.md) instead of [`&password`](../general-settings/password.md) for guest invites.
@@ -67,13 +85,13 @@ on production at [https://vdo.ninja/mixer](https://vdo.ninja/mixer)
     2. Needs to be enabled in the Mixer's settings\
        ![](<../.gitbook/assets/image (2) (2) (2).png>)
     3. An OBS scene name needs to be specified for a layout in the mixer app (And make sure you click "save scene" after)\
-       ![](<../.gitbook/assets/image (11) (3).png>)
+       ![](<../.gitbook/assets/image (11) (3) (1).png>)
     4. OBS's browser source needs level 4 or 5 enabled for at least one of the VDO.Ninja scenes that you added to OBS (or set to all scenes, if you disable sources when inactive)\
        ![](<../.gitbook/assets/image (5) (1) (1) (3).png>)
 
     The idea here is that you can have OBS overlays/mixer apply in sync to your VDO.Ninja custom mix layouts, and even control your show remotely without OBS even on the same computer.
 * If you hold CTRL down while dragging/resizing elements in the Mixer App, grid-snapping mode is disabled, allowing for fine-grain pixel-level accuracy.\
-  ![](<../.gitbook/assets/image (6) (1) (1) (1).png>)\
+  ![](<../.gitbook/assets/image (6) (1) (1) (1) (2).png>)\
   \
   \*\* on alpha at [https://vdo.ninja/alpha/mixer](https://vdo.ninja/alpha/mixer) (could be some bugs here or there, so please report issues as you find them).
 
