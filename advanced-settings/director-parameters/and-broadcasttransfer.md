@@ -4,10 +4,9 @@ description: >-
   room in broadcast mode or not
 ---
 
-# \&broadcasttransfer (alpha)
+# \&broadcasttransfer
 
-Director Option! ([`&director`](../../viewers-settings/director.md))\
-**ALPHA-ONLY** - Only available at [https://vdo.ninja/alpha/](https://vdo.ninja/alpha/)
+Director Option! ([`&director`](../../viewers-settings/director.md))
 
 ## Aliases
 

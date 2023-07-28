@@ -15,12 +15,8 @@ description: List of apps and helper tools Steve has created to be used with VDO
 * [speed-test.md](speed-test.md "mention") ([https://vdo.ninja/check](https://vdo.ninja/alpha/check))
 * [comms.md](comms.md "mention") ([https://comms.cam/](https://comms.cam/))
 * [native-mobile-app-versions.md](native-mobile-app-versions.md "mention") ([Android](https://play.google.com/store/apps/details?id=flutter.vdo.ninja) | [iOS](https://apps.apple.com/us/app/vdo-ninja/id1607609685))
+* [teleprompter-tool.md](teleprompter-tool.md "mention") ([https://vdo.ninja/teleprompter](https://vdo.ninja/teleprompter))
 * [vdo-applications.md](vdo-applications.md "mention")
 * [tech-demonstrations.md](tech-demonstrations.md "mention")
 * [invite-link-generators.md](invite-link-generators.md "mention")
 * [community-contributed-tools.md](community-contributed-tools.md "mention")
-* 📃[Teleprompter Tool](#user-content-fn-1)[^1][ ](#user-content-fn-2)[^2] ([https://vdo.ninja/teleprompter](https://vdo.ninja/teleprompter))
-
-[^1]: 
-
-[^2]: Teleprompting tool; mirror and whatever

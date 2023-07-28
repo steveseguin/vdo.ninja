@@ -4,10 +4,9 @@ description: >-
   stream
 ---
 
-# \&playchannel (alpha)
+# \&playchannel
 
-Viewer-Side Option! ([`&view`](../view-parameters/view.md), [`&scene`](../view-parameters/scene.md), [`&room`](../../general-settings/room.md))\
-**ALPHA-ONLY** - Only available at [https://vdo.ninja/alpha/](https://vdo.ninja/alpha/)
+Viewer-Side Option! ([`&view`](../view-parameters/view.md), [`&scene`](../view-parameters/scene.md), [`&room`](../../general-settings/room.md))
 
 ## Options
 
@@ -25,9 +24,9 @@ This is useful if you wanted to capture the left and right audio channels of a r
 
 Both left and right audio channels are still sent; it's just during local playback that the non-selected channels are dropped, so it's not as efficient as local routing, nor will both channel be in exact sync anymore either.
 
-This will not currently work in conjunction with [`&panning`](../view-parameters/and-panning.md) of [`&channeloffset`](../view-parameters/and-channeloffset.md); and will override those options.\
-\
-Example usage: [https://vdo.ninja/alpha/?view=XXXXXXXX\&stereo\&playchannel=1](https://vdo.ninja/alpha/?view=XXXXXXXX\&stereo\&playchannel=1)
+This will not currently work in conjunction with [`&panning`](../view-parameters/and-panning.md) of [`&channeloffset`](../view-parameters/and-channeloffset.md); and will override those options.
+
+Example usage: [https://vdo.ninja/?view=XXXXXXXX\&stereo\&playchannel=1](https://vdo.ninja/?view=XXXXXXXX\&stereo\&playchannel=1)
 
 ## Related
 

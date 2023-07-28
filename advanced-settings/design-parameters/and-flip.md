@@ -14,9 +14,9 @@ Inverts the video so it is upside down. That's it. It doesn't change the viewer'
 
 If you are looking for a form of rotation and flipping that rotates the actual video, rather than relying on CSS to achieve it, you can check out the sender-side [`&effects`](../../source-settings/effects.md) options.\
 \
-`https://vdo.ninja/?effects=-1`,  which will flip the video \
-`https://vdo.ninja/?effects=-2`,  which will flip and mirror the video\
-`https://vdo.ninja/?effects=2`,  which will mirror the video\
+`https://vdo.ninja/?effects=-1`, which will flip the video \
+`https://vdo.ninja/?effects=-2`, which will flip and mirror the video\
+`https://vdo.ninja/?effects=2`, which will mirror the video\
 \
 Effects however may increase CPU/GPU usage, and could cause frame rate instability, especially if the browser tab is not in active focus.
 
@@ -24,11 +24,15 @@ Effects however may increase CPU/GPU usage, and could cause frame rate instabili
 
 There's a dedicated tool for mirror, flipping, and rotating websites as part of VDO.Ninja as well:
 
-[https://vdo.ninja/teleprompter](https://vdo.ninja/teleprompter)
+[teleprompter-tool.md](../../steves-helper-apps/teleprompter-tool.md "mention")
 
 In case the built-in options to mirror or flip don't work, the teleprompter app might be a good alternative.
 
 ## Related
+
+{% content-ref url="../../steves-helper-apps/teleprompter-tool.md" %}
+[teleprompter-tool.md](../../steves-helper-apps/teleprompter-tool.md)
+{% endcontent-ref %}
 
 {% content-ref url="mirror.md" %}
 [mirror.md](mirror.md)

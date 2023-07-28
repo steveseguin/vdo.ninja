@@ -14,9 +14,7 @@ Director Option / Viewer-Side Option! ([`&director`](director.md), [`&scene`](..
 
 Example: `&showdirector=3`
 
-<table><thead><tr><th width="228">Value</th><th>Description</th></tr></thead><tbody><tr><td><code>1</code> | (no value given)</td><td>should allow everything from the director into the scene, except webpage shares and widget shares</td></tr><tr><td><code>2</code></td><td>allows the director's video from the director in scenes, but not audio</td></tr><tr><td><code>3</code>*</td><td>should allow the director's screen share to appear scene links, but not their main camera stream</td></tr><tr><td><code>4</code></td><td>allows everything, including iframe/webpage shares</td></tr></tbody></table>
-
-\*on alpha
+<table><thead><tr><th width="211">Value</th><th>Description</th></tr></thead><tbody><tr><td><code>1</code> | (no value given)</td><td>should allow everything from the director into the scene, except webpage shares and widget shares</td></tr><tr><td><code>2</code></td><td>allows the director's video from the director in scenes, but not audio</td></tr><tr><td><code>3</code></td><td>should allow the director's screen share to appear scene links, but not their main camera stream</td></tr><tr><td><code>4</code></td><td>allows everything, including iframe/webpage shares</td></tr></tbody></table>
 
 ## Details
 

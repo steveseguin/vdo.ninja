@@ -2,21 +2,19 @@
 
 In this walk-through we demonstrate how to use VDO.Ninja to stream a low-latency video/audio stream from one OBS Studio to another remote OBS Studio.
 
-
-
 {% embed url="https://youtu.be/Ze1q6Qof2r0" %}
 
 #### Requirements
 
 * OBS Studio
   * For some Linux or older systems, you may need a virtual camera plugin as well
-* A virtual audio cable&#x20;
+* A virtual audio cable
   * For Windows, use VB-CABLE Virtual Audio
     * This is recommended software as it enables proper audio support
     * The software is Donationware
     * [https://www.vb-audio.com/Cable/](https://www.google.com/url?q=https://www.vb-audio.com/Cable/\&sa=D\&source=editors\&ust=1658835550127888\&usg=AOvVaw1mgCACykvK7pkvmteZz-Mj)
   * For MacOS, you have a few choices:
-    * &#x20;[https://github.com/steveseguin/obsninja/wiki/FAQ#how-to-capture-audio-on-mac](https://www.google.com/url?q=https://github.com/steveseguin/obsninja/wiki/FAQ%23how-to-capture-audio-on-mac\&sa=D\&source=editors\&ust=1658835550128112\&usg=AOvVaw07GMfUuAZJy6FI8EYhOdd1)
+    * [https://github.com/steveseguin/obsninja/wiki/FAQ#how-to-capture-audio-on-mac](https://www.google.com/url?q=https://github.com/steveseguin/obsninja/wiki/FAQ%23how-to-capture-audio-on-mac\&sa=D\&source=editors\&ust=1658835550128112\&usg=AOvVaw07GMfUuAZJy6FI8EYhOdd1)
 
 #### Basic Workflow Diagram
 
@@ -77,7 +75,7 @@ VDO.Ninja will auto-mix if more than one option is selected. Hold `CTRL` (or `co
 
 Press the green button when ready.
 
-You’ll see a preview of your video stream and a link. This link is what we want to send to our remote OBS studio as an input source.&#x20;
+You’ll see a preview of your video stream and a link. This link is what we want to send to our remote OBS studio as an input source.
 
 We can modify this link if we wish to have higher bitrates, for example, [https://vdo.ninja/?view=streamID\&videobitrate=20000](https://vdo.ninja/?view=streamID\&videobitrate=20000) to set a target video bitrate of 20-mbps.
 
@@ -99,7 +97,7 @@ In the properties for the Browser Source, we need to fill out a few fields and t
 * The URL needs to be set to the address we created earlier, ie: [https://vdo.ninja/?view=q3QCScW](https://vdo.ninja/?view=q3QCScW)
 * Width needs to match the input video resolution, so likely 1280
 * The height also needs to match, so likely 720
-* _**Control audio via OBS**_ should be checked, for audio capture to function&#x20;
+* _**Control audio via OBS**_ should be checked, for audio capture to function
 
 ![](https://lh6.googleusercontent.com/72c\_PKWSl2peJ3L8cGnBqZcl9YAv9xvFfgzp3PXjsSpRPq0k1Ahbka3XKO27LK3DMglV0WP8APNYPdjCumRTUiJw\_V19CvWFcIKRH-Hi218IwWLGsssFSxHmRiOXBfTU44HSHf2P1hyKe3s)
 
@@ -117,8 +115,6 @@ All done! And that should be it! Problems?
 
 You can also ask for help on [Discord](https://discord.vdo.ninja/); usually help can be provided within minutes, if not usually within half a day.
 
-
-
 ### WHIP Output
 
-Newer versions of OBS may also support WHIP output, which VDO.Ninja also supports. While the virtual camera might be the better option for many, details on[ WHIP are here](how-to-send-the-audio-video-output-of-one-obs-to-another-obs-using-vdo.ninja.md#whip-output)
+Newer versions of OBS may also support WHIP output, which VDO.Ninja also supports. While the Virtual Camera might be the better option for many, details on [WHIP are here](../advanced-settings/mixer-scene-parameters/and-whip.md).

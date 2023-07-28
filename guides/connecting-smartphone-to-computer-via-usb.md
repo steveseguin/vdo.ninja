@@ -20,9 +20,7 @@ One easy option is to buy a smartphone to Ethernet adapter; this can be either U
 
 You can find details on how to buy and connect such an adapter here: [https://www.pcmag.com/how-to/connect-phone-tablet-to-internet-ethernet-cable](https://www.pcmag.com/how-to/connect-phone-tablet-to-internet-ethernet-cable)
 
-If you'd need to be able to charge while connected, there are adapters that offer charging and Ethernet at the same time. I would recommend buying a 100-mbps adapter over a gigabit adapter, as compatibility will probably be better with the 100-mbps adapter and it is still more than sufficient. There's plenty of options on Amazon for under $20.\
-\
-
+If you'd need to be able to charge while connected, there are adapters that offer charging and Ethernet at the same time. I would recommend buying a 100-mbps adapter over a gigabit adapter, as compatibility will probably be better with the 100-mbps adapter and it is still more than sufficient. There's plenty of options on Amazon for under $20.
 
 ### Reverse tethering over USB
 
