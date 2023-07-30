@@ -12,6 +12,6 @@ There is no guarentee this will work, and maybe it will be enabled by default in
 
 <figure><img src="../.gitbook/assets/image (2).png" alt="" width="297"><figcaption></figcaption></figure>
 
-There are some other experimental options as well that you can enable, such as AV1 and H265 codec support, and perhaps in the future Screen Capture will work, too.  iPadOS tends to have more functionality available, such as external USB video device support (as of iPadOS 17), as least compared to the iOS 16 at time of writing.
+There are some other experimental options as well that you can enable on iOS, such as AV1 and H265 codec support, and perhaps in the future Screen Capture will work, too.  iPadOS tends to have more functionality available, such as external USB video device support (as of iPadOS 17), as least compared to the iOS 16 at time of writing.
 
 ![](<../.gitbook/assets/image (3).png>)![](<../.gitbook/assets/image (4).png>)
