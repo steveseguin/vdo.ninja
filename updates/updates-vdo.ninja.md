@@ -87,7 +87,7 @@ for eg: `https://vdo.ninja/alpha/?director=countrytownc&api=test123456` test dir
 #### July 10 <a href="#august-31" id="august-31"></a>
 
 * Added connection stats to the WHIP out functionality\
-  ![](<../.gitbook/assets/image (3).png>)
+  ![](<../.gitbook/assets/image (3) (6).png>)
 * Fixed an issue where changing video/audio sources/settings broke the WHIP out stream.
 * [`&stereo`](../general-settings/stereo.md) should work now with the WHIP-Input mode (`?whip=xx&stereo`), assuming the source supports it (VDO.Ninja whip-out does)
 
@@ -98,7 +98,7 @@ I'll keep improving the support for WHIP/WHEP. Lots to do. Suggestions welcomed 
 #### July 9 <a href="#august-31" id="august-31"></a>
 
 * Added some audio options to the WHIP-publishing sandbox page at [https://vdo.ninja/alpha/whip](https://vdo.ninja/alpha/whip)\
-  ![](<../.gitbook/assets/image (1) (2).png>)
+  ![](<../.gitbook/assets/image (1) (2) (8).png>)
 
 #### July 7 <a href="#august-31" id="august-31"></a>
 
