@@ -1198,7 +1198,7 @@ button.glyphicon-button.active.focus {
 	outline: none !important;
 }
 
-#main {
+.main {
 	-webkit-tap-highlight-color: rgba(255, 255, 255, 0) !important;
 	-webkit-tap-highlight-color: transparent !important;
 	outline: 0px !important;
@@ -1658,14 +1658,17 @@ div[data-action-type='toggle-group'] {
 	display: none;
 	-webkit-app-region: no-drag;
 }
-#testtonebutton{
+.testtonebutton{
 	margin: 0 0 0 15px;
-	padding: 2px 10px 0px 10px;
+	padding: 0px 10px 0px 10px !important;
+	font-size: 84%;
+	border-radius: 5px!important;
+    box-shadow: 10px 8px 32px -10px #8883;
 }
-#testtonebutton:hover{
+.testtonebutton:hover{
 	background-color:#DDD
 }
-#testtonebutton:active{
+.testtonebutton:active{
 	background-color:#AAA
 }
 select{
@@ -4838,6 +4841,8 @@ input:checked + .slider:before {
 	content: "\f105"; }
 .la-angle-left:before {
 	content: "\f104"; }
+.la-external-link-square-alt:before  {
+	content: "\f360"; }
 .la-plus-square:before {
 	content: "\f0fe"; }
 .la-microphone-slash:before {
@@ -5462,6 +5467,7 @@ button.toggleSettings,
     border-radius: 3px;
     padding: 5px;
     max-width: 216px;
+	margin: 5px;
 }
 
 .roomnotes {

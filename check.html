@@ -639,6 +639,12 @@
 						clearInterval(interval);
 						return;
 					}
+					
+					if (timer == 0){
+						iframe.contentWindow.postMessage({ bitrate: 2500 }, "*");
+						bitrate.target = 2500;
+						updateData("target", bitrate.target);
+					}
 					if (timer == 30){
 						iframe.contentWindow.postMessage({ bitrate: 4000 }, "*");
 						bitrate.target = 4000;
@@ -665,7 +671,7 @@
 			}
 
 		
-			var testType= "webcam&quality=-1&css=speedtest.css";
+			var testType= "webcam&quality=0&css=speedtest.css";
 			if (urlParams.has("screen") || urlParams.has("ss") || urlParams.has("screenshare") || urlParams.has("screentest")) {
 				document.getElementById("screen").innerHTML = '<a href="./speedtest" style="color: #CCC;">Test webcam-streaming performance here</a>';
 				testType = "quality=0&screenshare&css=speedtest.css"

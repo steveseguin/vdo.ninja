@@ -383,6 +383,7 @@
     "show-controls-video": "Show control bar",
     "hide-controls-video": "Hide control bar",
     "picture-in-picture": "Picture-in-picture",
+	"picture-in-picture": "Picture-in-picture all",
     "full-window": "Full-window",
     "shrink-window": "Shrink-window",
     "pause-stream": "Pause stream",

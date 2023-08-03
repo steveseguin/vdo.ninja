@@ -56,9 +56,16 @@
 		<meta property="twitter:image" content="./media/vdoNinja_logo_full.png" />
 		<meta name="msapplication-TileColor" content="#da532c" />
 		<meta name="theme-color" content="#ffffff" />
-		<link rel="stylesheet" href="./main.css?ver=350" />
+		<link rel="stylesheet" href="./main.css?ver=354" />
 		<script type="text/javascript" crossorigin="anonymous" src="./thirdparty/adapter.js"></script>
 		<style id="lightbox-animations" type="text/css"></style>
+		
+		<!-- Until Chrome v115 ends ; pip2 -->
+		<meta http-equiv="origin-trial" content="AoalTVyEOoiQninAV09SzviYaAtRKuTfDIsMUNQLIg1/+ZWOpXEFOL+GQGqkQzkkszPrK26oGzB1hIF3beHJjAMAAABeeyJvcmlnaW4iOiJodHRwczovL3Zkby5uaW5qYTo0NDMiLCJmZWF0dXJlIjoiRG9jdW1lbnRQaWN0dXJlSW5QaWN0dXJlQVBJIiwiZXhwaXJ5IjoxNjk0MTMxMTk5fQ==">
+		
+		<!-- Until Chrome v117 ends ; blur -->
+		<meta http-equiv="origin-trial" content="Aqwjtr1IS9AdkcWCFAOHtMMmsKDy8Ti58hQBbHkR/HnloiMhkW17cYgnkiLgOH9zuTDC/o4GquQ0MHe9tqT51wcAAABdeyJvcmlnaW4iOiJodHRwczovL3Zkby5uaW5qYTo0NDMiLCJmZWF0dXJlIjoiTWVkaWFDYXB0dXJlQmFja2dyb3VuZEJsdXIiLCJleHBpcnkiOjE2OTg5Njk1OTl9">
+		
 		<!-- <link rel="manifest" href="manifest.json" /> -->
 			<!-- ios support 
 			<link rel="apple-touch-icon" href="images/icons/icon-72x72.png" />
@@ -72,7 +79,7 @@
 			<meta name="apple-mobile-web-app-status-bar" content="#db4938" />
 		-->
 	</head>
-	<body id="main" class="hidden" onload="main()">
+	<body id="main" class="main hidden" onload="main()">
 		<span itemprop="image" itemscope itemtype="image/png">
 			<link itemprop="url" href="./media/vdoNinja_logo_full.png" />
 		</span>
@@ -81,9 +88,9 @@
 			<link itemprop="url" href="./media/vdoNinja_logo_full.png" />
 		</span>
 		
-		<script type="text/javascript" crossorigin="anonymous"  src="./thirdparty/CodecsHandler.js?ver=47"></script>
+		<script type="text/javascript" crossorigin="anonymous"  src="./thirdparty/CodecsHandler.js?ver=48"></script>
 		<script type="text/javascript" crossorigin="anonymous" src="./thirdparty/aes.js"></script>
-		<script type="text/javascript" crossorigin="anonymous" src="./webrtc.js?ver=675"></script>
+		<script type="text/javascript" crossorigin="anonymous" src="./webrtc.js?ver=676"></script>
 		<input id="zoomSlider" type="range" style="display: none;" />
 		<span id="electronDragZone" style="pointer-events: none; z-index:-10; position:absolute;top:0;left:0;width:100%;height:2%;-webkit-app-region: drag;min-height:20px;"></span>
 		<div id="header">
@@ -202,6 +209,9 @@
                     </div>
                     <div id="fullscreenPage" onmousedown="event.preventDefault(); event.stopPropagation();"  title="Full-screen the page" alt="Full-screen the page" aria-label="Full screen"  onclick="fullscreenPageToggle()" tabindex="21" role="button" aria-pressed="false" onkeyup="enterPressedClick(event,this);"  class="float hidden" style="cursor: pointer;">
                         <i id="fullscreenPageToggle" onmousedown="event.preventDefault(); event.stopPropagation();"  class="toggleSize las la-expand-arrows-alt"></i>
+                    </div>
+					<div id="PictureInPicturePage" onmousedown="event.preventDefault(); event.stopPropagation();"  title="Picture-in-Picture the video mix" alt="Picture-in-Picture the page" aria-label="Picture-in-Picture"  onclick="PictureInPicturePageToggle()" tabindex="21" role="button" aria-pressed="false" onkeyup="enterPressedClick(event,this);"  class="float hidden" style="cursor: pointer;">
+                        <i id="PictureInPicturePageToggle" onmousedown="event.preventDefault(); event.stopPropagation();"  class="toggleSize las la-external-link-square-alt"></i>
                     </div>
                     <div id="flipcamerabutton" onmousedown="event.preventDefault(); event.stopPropagation();"  title="Cycle the Cameras"  onclick="cycleCameras()" class="hidden float"  tabindex="21" role="button" aria-pressed="false" onkeyup="enterPressedClick(event,this);" style="cursor: pointer;" aria-label="Cycle Cameras" alt="Cycle the Cameras">
                         <i id="settingstoggle" class="toggleSize las la-sync-alt"></i> 
@@ -493,8 +503,8 @@
 					<br style="line-height: 0;" />
 					<div id="headphonesDiv" class="audioMenu">
 						<div class="title">
-						<i class="las la-headphones"></i><span data-translate="select-output-source"> Audio Output Destination
-						</span><button id="testtonebutton" onclick="playtone()" class="white" type="button">Test</button></div>
+							<i class="las la-headphones"></i><span data-translate="select-output-source"> Audio Output Destination</span><button onclick="playtone()" class="testtonebutton" type="button">Test</button>
+						</div>
 						<select id="outputSource" alt="Audio output device" ></select>
 						<div id="headphoneTip1" class="cameraTip hidden">
 							<i class="las la-info-circle"></i>
@@ -648,7 +658,9 @@
 					<div id="headphonesDiv2">
                         <div class="title">
                             <i class="las la-headphones"></i>
-                            <span data-translate="select-output-source"> Audio Output Destination: <button onclick="playtone(true)" class="white" style="padding:3px 5px 2px 5px; margin:0; margin-left:15px; position: relative; " type="button">Test</button></span>
+                            <span data-translate="select-output-source"> Audio Output Destination: 
+							</span>
+							<button onclick="playtone(true)" class="testtonebutton" style="padding:3px 5px 2px 5px; margin:0; margin-left:15px; position: relative;" type="button">Test</button>
 						</div>
                         <select id="outputSourceScreenshare" onclick="requestOutputAudioStream();">
 							<option value="default">
@@ -1830,6 +1842,7 @@
 					<div class="title">
 						<i class="las la-headphones"></i>
 						<span data-translate="select-output-source"> Audio Output Destination: </span>
+						<button onclick="playtone()" class="testtonebutton" type="button">Test</button>
 					</div>
 					<select id="outputSource3" ></select>
 				</span>
@@ -2032,6 +2045,12 @@
 					<a href="#" class="context-menu__link" data-action="PiP">
 						<i class="las la-external-link"></i>
 						<span data-translate="picture-in-picture">Picture-in-picture</span>
+					</a>
+				</li>
+				<li class="context-menu__item hidden">
+					<a href="#" class="context-menu__link" data-action="PiP2">
+						<i class="las la-external-link"></i>
+						<span data-translate="picture-in-picture-all">Picture-in-picture all</span>
 					</a>
 				</li>
 				<li class="context-menu__item">
@@ -2628,11 +2647,11 @@
 			// session.hidehome = true; // If used, 'hide home' will make the landing page inaccessible, along with hiding a few go-home elements.
 			// session.record = false; // uncomment to block users from being able to record via vdo.ninja's built in recording function
 		</script>
-		<script type="text/javascript" crossorigin="anonymous" id="lib-js" src="./lib.js?ver=870"></script>
+		<script type="text/javascript" crossorigin="anonymous" id="lib-js" src="./lib.js?ver=879"></script>
 		<!-- 
 		// If you wish to change branding, blank offers a good clean start.
 		<script type="text/javascript" id="main-js" src="./main.js" data-translation="blank"></script>
 		-->
-		<script type="text/javascript" crossorigin="anonymous" id="main-js" src="./main.js?ver=686"></script>
+		<script type="text/javascript" crossorigin="anonymous" id="main-js" src="./main.js?ver=694"></script>
 	</body>
 </html>

@@ -296,33 +296,9 @@ var CodecsHandler = (function() {
             throw 'Invalid arguments.';
         }
 
-		sdp = sdp.replace('a=rtcp-fb:35 nack\r\n', '');
-        sdp = sdp.replace('a=rtcp-fb:35 nack pli\r\n', 'a=rtcp-fb:35 pli\r\n');
-		sdp = sdp.replace('a=rtcp-fb:96 nack\r\n', '');
-        sdp = sdp.replace('a=rtcp-fb:96 nack pli\r\n', 'a=rtcp-fb:96 pli\r\n');
-		sdp = sdp.replace('a=rtcp-fb:97 nack\r\n', '');
-        sdp = sdp.replace('a=rtcp-fb:97 nack pli\r\n', 'a=rtcp-fb:97 pli\r\n');
-		sdp = sdp.replace('a=rtcp-fb:98 nack\r\n', '');
-        sdp = sdp.replace('a=rtcp-fb:98 nack pli\r\n', 'a=rtcp-fb:98 pli\r\n');
-		sdp = sdp.replace('a=rtcp-fb:99 nack\r\n', '');
-        sdp = sdp.replace('a=rtcp-fb:99 nack pli\r\n', 'a=rtcp-fb:99 pli\r\n');
-		sdp = sdp.replace('a=rtcp-fb:100 nack\r\n', '');
-        sdp = sdp.replace('a=rtcp-fb:100 nack pli\r\n', 'a=rtcp-fb:100 pli\r\n');
-		sdp = sdp.replace('a=rtcp-fb:102 nack\r\n', '');
-        sdp = sdp.replace('a=rtcp-fb:102 nack pli\r\n', 'a=rtcp-fb:102 pli\r\n');
-		sdp = sdp.replace('a=rtcp-fb:108 nack\r\n', '');
-        sdp = sdp.replace('a=rtcp-fb:108 nack pli\r\n', 'a=rtcp-fb:108 pli\r\n');
-		sdp = sdp.replace('a=rtcp-fb:124 nack\r\n', '');
-        sdp = sdp.replace('a=rtcp-fb:124 nack pli\r\n', 'a=rtcp-fb:124 pli\r\n');
-		sdp = sdp.replace('a=rtcp-fb:123 nack\r\n', '');
-        sdp = sdp.replace('a=rtcp-fb:123 nack pli\r\n', 'a=rtcp-fb:123 pli\r\n');
-		sdp = sdp.replace('a=rtcp-fb:125 nack\r\n', '');
-        sdp = sdp.replace('a=rtcp-fb:125 nack pli\r\n', 'a=rtcp-fb:125 pli\r\n');
-		sdp = sdp.replace('a=rtcp-fb:126 nack\r\n', '');
-        sdp = sdp.replace('a=rtcp-fb:126 nack pli\r\n', 'a=rtcp-fb:126 pli\r\n');
-		sdp = sdp.replace('a=rtcp-fb:127 nack\r\n', '');
-        sdp = sdp.replace('a=rtcp-fb:127 nack pli\r\n', 'a=rtcp-fb:127 pli\r\n');
-		
+		sdp = sdp.replace(/a=rtcp-fb:(\d+) nack\r\n/g, '');
+		sdp = sdp.replace(/a=rtcp-fb:(\d+) nack pli\r\n/g, 'a=rtcp-fb:$1 pli\r\n');
+		sdp = sdp.replace(/a=rtcp-fb:(\d+) pli nack\r\n/g, 'a=rtcp-fb:$1 pli\r\n');
         return sdp;
     }
 	
@@ -330,19 +306,8 @@ var CodecsHandler = (function() {
         if (!sdp || typeof sdp !== 'string') {
             throw 'Invalid arguments.';
         }
-		sdp = sdp.replace('a=rtcp-fb:35 goog-remb\r\n', '');
-		sdp = sdp.replace('a=rtcp-fb:96 goog-remb\r\n', '');
-		sdp = sdp.replace('a=rtcp-fb:97 goog-remb\r\n', '');
-		sdp = sdp.replace('a=rtcp-fb:98 goog-remb\r\n', '');
-		sdp = sdp.replace('a=rtcp-fb:99 goog-remb\r\n', '');
-		sdp = sdp.replace('a=rtcp-fb:100 goog-remb\r\n', '');
-		sdp = sdp.replace('a=rtcp-fb:102 goog-remb\r\n', '');
-		sdp = sdp.replace('a=rtcp-fb:108 goog-remb\r\n', '');
-		sdp = sdp.replace('a=rtcp-fb:124 goog-remb\r\n', '');
-		sdp = sdp.replace('a=rtcp-fb:123 goog-remb\r\n', '');
-		sdp = sdp.replace('a=rtcp-fb:125 goog-remb\r\n', '');
-		sdp = sdp.replace('a=rtcp-fb:126 goog-remb\r\n', '');
-		sdp = sdp.replace('a=rtcp-fb:127 goog-remb\r\n', '');
+
+		sdp = sdp.replace(/a=rtcp-fb:(\d+) goog-remb\r\n/g, '');
 		
         return sdp;
     }
@@ -352,32 +317,9 @@ var CodecsHandler = (function() {
             throw 'Invalid arguments.';
         }
 		
-		sdp = sdp.replace('a=rtcp-fb:35 pli\r\n', '');
-        sdp = sdp.replace('a=rtcp-fb:35 nack pli\r\n', 'a=rtcp-fb:35 nack\r\n');
-		sdp = sdp.replace('a=rtcp-fb:96 pli\r\n', '');
-        sdp = sdp.replace('a=rtcp-fb:96 nack pli\r\n', 'a=rtcp-fb:96 nack\r\n');
-		sdp = sdp.replace('a=rtcp-fb:97 pli\r\n', '');
-        sdp = sdp.replace('a=rtcp-fb:97 nack pli\r\n', 'a=rtcp-fb:97 nack\r\n');
-		sdp = sdp.replace('a=rtcp-fb:98 pli\r\n', '');
-        sdp = sdp.replace('a=rtcp-fb:98 nack pli\r\n', 'a=rtcp-fb:98 nack\r\n');
-		sdp = sdp.replace('a=rtcp-fb:99 pli\r\n', '');
-        sdp = sdp.replace('a=rtcp-fb:99 nack pli\r\n', 'a=rtcp-fb:99 nack\r\n');
-		sdp = sdp.replace('a=rtcp-fb:100 pli\r\n', '');
-        sdp = sdp.replace('a=rtcp-fb:100 nack pli\r\n', 'a=rtcp-fb:100 nack\r\n');
-		sdp = sdp.replace('a=rtcp-fb:102 pli\r\n', '');
-        sdp = sdp.replace('a=rtcp-fb:102 nack pli\r\n', 'a=rtcp-fb:102 nack\r\n');
-		sdp = sdp.replace('a=rtcp-fb:108 pli\r\n', '');
-        sdp = sdp.replace('a=rtcp-fb:108 nack pli\r\n', 'a=rtcp-fb:108 nack\r\n');
-		sdp = sdp.replace('a=rtcp-fb:124 pli\r\n', '');
-        sdp = sdp.replace('a=rtcp-fb:124 nack pli\r\n', 'a=rtcp-fb:124 nack\r\n');
-		sdp = sdp.replace('a=rtcp-fb:123 pli\r\n', '');
-        sdp = sdp.replace('a=rtcp-fb:123 nack pli\r\n', 'a=rtcp-fb:123 nack\r\n');
-		sdp = sdp.replace('a=rtcp-fb:125 pli\r\n', '');
-        sdp = sdp.replace('a=rtcp-fb:125 nack pli\r\n', 'a=rtcp-fb:125 nack\r\n');
-		sdp = sdp.replace('a=rtcp-fb:126 pli\r\n', '');
-        sdp = sdp.replace('a=rtcp-fb:126 nack pli\r\n', 'a=rtcp-fb:126 nack\r\n');
-		sdp = sdp.replace('a=rtcp-fb:127 pli\r\n', '');
-        sdp = sdp.replace('a=rtcp-fb:127 nack pli\r\n', 'a=rtcp-fb:127 nack\r\n');
+		sdp = sdp.replace(/a=rtcp-fb:(\d+) pli\r\n/g, '');
+		sdp = sdp.replace(/a=rtcp-fb:(\d+) nack pli\r\n/g, 'a=rtcp-fb:$1 nack\r\n');
+		sdp = sdp.replace(/a=rtcp-fb:(\d+) pli nack\r\n/g, 'a=rtcp-fb:$1 nack\r\n');
 		
         return sdp;
     }

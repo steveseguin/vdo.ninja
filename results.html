@@ -300,6 +300,9 @@
 						}
 						if (data.info.platform){
 							document.getElementById("details").innerHTML += "<br /><b>Platform (os):</b> "+data.info.platform+"<br />";
+							if (data.info.platform.toLowerCase() == "macintel"){
+								document.getElementById("details").innerHTML += "<i>(Intel or Apple Silicon)</i><br />";
+							}
 						}
 						if (data.info.gpGPU){
 							document.getElementById("details").innerHTML += "<br /><b>GPU:</b> "+data.info.gpGPU+"<br />";

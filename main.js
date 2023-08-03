@@ -236,6 +236,11 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 	if (urlParams.has('ptz')){
 		session.ptz=true;
 	}
+	
+	if (urlParams.has('notios')){
+		iOS=false;
+		iPad=false;
+	}
 
 	if (urlParams.has('optimize')) {
 		session.optimize = parseInt(urlParams.get('optimize')) || 0;
@@ -476,8 +481,19 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 				msg.requestSceneUpdate = true;
 				session.sendMessage(msg);
 			}
-			
-			if ( window.matchMedia("(orientation: portrait)").matches ) {
+			if (screen && screen.orientation && screen.orientation.type){
+				if (screen.orientation.type.includes("portrait")){
+					document.getElementsByTagName("html")[0].style.height = "100vh";
+					setTimeout(function(){
+						document.getElementsByTagName("html")[0].style.height = "100%";
+					}, 1000);
+				} else if (screen.orientation.type.includes("landscape")){
+					document.getElementsByTagName("html")[0].style.height = "100vh";
+					setTimeout(function(){
+						document.getElementsByTagName("html")[0].style.height = "100%";
+					}, 1000);
+				} 
+			} else if ( window.matchMedia("(orientation: portrait)").matches ) {
 				document.getElementsByTagName("html")[0].style.height = "100vh";
 				setTimeout(function(){
 					document.getElementsByTagName("html")[0].style.height = "100%";
@@ -824,7 +840,11 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 		}
 	}
 	
-	// fullScreenPage
+	if (urlParams.has('pip2') || urlParams.has('pipall')){ // just an alternative; might be compoundable
+		if (documentPictureInPicture){
+			getById("PictureInPicturePage").classList.remove("hidden");
+		}
+	}
 
 	if (urlParams.has('midi') || urlParams.has('hotkeys')) {
 		session.midiHotkeys = urlParams.get('midi') || urlParams.get ('hotkeys') || 1;
@@ -1137,6 +1157,10 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 		getById("head1a").classList.remove('hidden');
 		getById("main").classList.add('appmode');
 		getById("jumptoroomButton").innerText = "Join Room";
+
+		if (getStorage("jumptoURL")){
+			 getById('joinbyURL').value = getStorage("jumptoURL");
+		}
 	}
 
 	if (session.screenshare !== false) {
@@ -2963,13 +2987,13 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 	if (urlParams.has('nofec')){ // disables error control / throttling -- currently on audio
 		session.noFEC = true;
 	}
-	if (urlParams.has('nonacks')){ // disables error control / throttling.
+	if (urlParams.has('nonacks') || urlParams.has('nonack')){ // disables error control / throttling.
 		session.noNacks = true;
 	}
 	if (urlParams.has('nopli')){ // disables error control / throttling.
 		session.noPLIs = true;
 	}
-	if (urlParams.has('noremb')){ // disables error control / throttling.
+	if (urlParams.has('noremb')){ // disables Receiver Estimated Maximum Bitrate (throttling)
 		session.noREMB = true;
 	}
 
@@ -5877,7 +5901,12 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 					applySceneState();
 				}
 			}
-			warnUser("Network connection lost.");
+			if (location.hostname === "vdo.ninja"){
+				warnUser(getTranslation("no-network-details"));
+			} else {
+				warnUser(getTranslation("no-network"));
+			}
+			
 		} else {
 			log("VDO.Ninja has no network connectivity and can't work properly.");
 		}
@@ -5947,7 +5976,7 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 		if (!session.cleanOutput) {
 			// Remove last inserted modal; Could be improved by tagging the
 			// modal elements and only removing modals tagged 'offline'
-			userWarnings = document.querySelectorAll('.alertModal');
+			let userWarnings = document.querySelectorAll('.alertModal');
 			closeModal(userWarnings[userWarnings.length- 1]);
 		} else {
 		  log(
@@ -6123,9 +6152,16 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 		}
 		
 		if (event.key === "Escape") {
+			log("escape pressed; checking to see if modal box opened and will close");
 			if (document.fullscreenElement) {
 				document.exitFullscreen();
 				//updateMixer();
+			}  else {
+				
+				let userWarnings = document.querySelectorAll('.alertModal, .promptModal');
+				if (userWarnings.length){
+					closeModal(userWarnings[userWarnings.length- 1]);
+				}
 			}
 			return;
 		}
