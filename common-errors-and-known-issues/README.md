@@ -2,6 +2,7 @@
 
 * [atem-not-working-with-firestick.md](atem-not-working-with-firestick.md "mention")
 * [very-old-iphone-support.md](very-old-iphone-support.md "mention")
+* [cant-select-audio-output-on-ios.md](cant-select-audio-output-on-ios.md "mention")
 * [screen-share-is-just-a-black-video.md](screen-share-is-just-a-black-video.md "mention")
 * [mic-audio-dropping-out.md](mic-audio-dropping-out.md "mention")
 * [loss-of-audio-when-obs-minimized.md](loss-of-audio-when-obs-minimized.md "mention")
