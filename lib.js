@@ -7266,6 +7266,16 @@ function applyEffects(track) { // video only please. do not touch audio.  Run up
 		} else {
 			session.canvasSource.onloadeddata = mainMeshMask;
 		}
+	} else if (session.effect == "13"){ // ha, no way to turn it off once it's started, except to change cameras? not sure.
+		try {
+			track.applyConstraints({backgroundBlur: true}).then(() => {
+				const settings = track.getSettings();
+				log(`Background blur is ${settings.backgroundBlur ? "ON" : "OFF"}`);
+			}).catch(errorlog);
+		} catch(e){
+			errorlog(e);
+		}
+		return track;
 	} else {
 		if (session.canvasource){
 			session.canvasSource.srcObject.getVideoTracks().forEach(function(trk) {
@@ -22299,6 +22309,15 @@ async function grabVideo(quality = 0, eleName = 'previewWebcam', selector = "sel
 									session.mirrorExclude = true;
 								}
 							}
+							if ("backgroundBlur" in capabilities){ // Chrome original trial, until v117, and then???
+								query('#effectSelector option[value="13"]').classList.remove("hidden");
+								query('#effectSelector option[value="13"]').disabled = null;
+								query('#effectSelector3 option[value="13"]').classList.remove("hidden");
+								query('#effectSelector3 option[value="13"]').disabled = null;
+							} else {
+								query('#effectSelector option[value="13"]').disabled = true;
+								query('#effectSelector3 option[value="13"]').disabled = true;
+							}
 						}
 					} catch(e){}
 						
@@ -30197,7 +30216,7 @@ function fullscreenPageToggle(state=null){
 session.pipWindow = false;
 async function PictureInPicturePageToggle(state=null){
 	try {
-		if (!documentPictureInPicture){return;}
+		if (typeof documentPictureInPicture === "undefined"){return;}
 		if (session.pipWindow){
 			getById("testtone").parentNode.insertBefore(session.pipWindow.document.getElementById("gridlayout"), getById("testtone"));
 			session.pipWindow.close();

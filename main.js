@@ -841,7 +841,7 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 	}
 	
 	if (urlParams.has('pip2') || urlParams.has('pipall')){ // just an alternative; might be compoundable
-		if (documentPictureInPicture){
+		if (typeof documentPictureInPicture !== "undefined"){
 			getById("PictureInPicturePage").classList.remove("hidden");
 		}
 	}
