@@ -16,7 +16,7 @@
 * Updated the Android native app client. It should be live on google play?\
   \-- Added an option to load the VDO.Ninja web client from within the native app; no tabs or URL bar. (it stops working tho if you background the app.)\
   \-- Made the Discord Support link open Discord directly, if installed, to make it easier to use.\
-  ![](<../.gitbook/assets/image (5) (4).png>)![](<../.gitbook/assets/image (6).png>)
+  ![](<../.gitbook/assets/image (5) (4).png>)![](<../.gitbook/assets/image (6) (7).png>)
 
 #### July 13
 

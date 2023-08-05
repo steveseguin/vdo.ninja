@@ -1,5 +1,46 @@
 # Updates - VDO.Ninja
 
+#### August 5 <a href="#august-31" id="august-31"></a>
+
+* A few minor fixes:\
+  \-- Rainbow puke button in [darkmode](../advanced-settings/design-parameters/darkmode.md) is correct now\
+  \-- New `&pipall` feature doesn't break the site if browser does not supported\
+  \-- Added a new experimental background blur effect; [`&effects=13`](../source-settings/effects.md) I think, but it's not supported by most browsers/systems and its in origin trial, but it it works for you, let me know\
+  \-- The startRoomTimer remote API command now works with specific guests (as well as for everyone still)\
+  \*\* changes on alpha
+
+#### August 3 <a href="#august-31" id="august-31"></a>
+
+* Added a new floating picture in picture mode, so you can pop out the entire video mix as a pinned window overlay\
+  \-- `&pipall` (aka `&pip2`) will add a dedicated button for this mode\
+  ![](<../.gitbook/assets/image (7).png>)\
+  \-- Or just right-click any video and select "Picture in picture all" from the context menu. This is available without any URL option\
+  \-- This requires Chrome v115 right now; it might vanish in v116 due to it being in a `chrome field trial`, and so you might need to enable it via `chrome:flags` if it stops working.\
+  \
+  \*\* on alpha
+
+#### July 31 <a href="#august-31" id="august-31"></a>
+
+* Added a flag called `&notios`, as in "not iOS". It just tells the system that its not an iOS device, or iPad, even if it is. This might change the behavior of the phone in certain ways, mainly for the purposes of debugging.
+* Updated the rotation logic so it supports legacy and now also future-API standards.
+* Rotating on Firefox should trigger the rotation event about 200ms faster now (found a faster event API).
+
+\*\* everything is updated on production and alpha
+
+#### July 28 <a href="#august-31" id="august-31"></a>
+
+* Updated the logic for [`&noremb`](../other-parameters.md), [`&nopli`](../other-parameters.md), and [`&nonack`](../other-parameters.md) advanced viewer-side flags; there were some scenarios where they didn't kick in if used. I tried to fix that a bit.\
+  \
+  These flags in theory I think should help try to force a bitrate or resolution, regardless of network conditions, but in practice they still seem to just smash your frame rate. I haven't really been able to find a good use for them yet, but let me know.\
+
+* Fixed an issue where when you hung up on an iPhone, it would still stay the camera/mic was in use at the goodbye/reload page.
+* Added the "test" audio output button to the in-call settings menu (as seen in image).\
+  ![](../.gitbook/assets/image.png)
+* Fixed an issue with Firefox mobile's camera rotation being wrong in the local preview. (let me know tho if the issues continues tho)
+* Firefox mobile should not go to sleep any more when idle.
+
+\*\* all above changes pushed to alpha for testing at vdo.ninja/alpha/
+
 #### July 25 <a href="#august-31" id="august-31"></a>
 
 * Released VDO.Ninja v23.8 into production, so GitHub, alpha, beta, and production are all now in sync with all current features/fixes.\
@@ -54,7 +95,7 @@ for eg: `https://vdo.ninja/alpha/?director=countrytownc&api=test123456` test dir
 
 * Improved the media file sharing option so that you can now change to a new media file while streaming, without having to reload the page to select a new file
 * New button in the control to let you select a new media file to switch to sharing\
-  ![](<../.gitbook/assets/image (8).png>)
+  ![](<../.gitbook/assets/image (8) (7).png>)
 * Fixed an issue where going to the next video in a playlist of videos caused the stream to get stuck
 * This media file option has long existed, but it's not really used as I suppose you can just screen-share a video instead. Access it by adding [`&fileshare`](../source-settings/and-fileshare.md) to the URL: ie `https://vdo.ninja/alpha/?fileshare`
 
@@ -528,7 +569,7 @@ https://vdo.ninja/alpha/?view=YbFmisR&poster=./media/bg_sample.webp&hideplaybutt
   \-- This disables the video preview for even the director, as its disabled as the source, so there isn't for even a solo "view" link to override it. This then is a bit more of a sure-fire way to disable a video from a guest.\
   \-- The previous "hide guest" button still works, but has a new icon. This differs from the new "disable video" in that the director can still see a preview of the guests video and it also hides any avatar/style-place-holder. When "disabling video", audio-only styles and avatar placeholders may still work.\
   \-- The guest gets a little note in their header bar that the director muted them when enabled. Also, the guest is unable to see their own video preview when enabled, hence the need for a message.\
-  ![](<../.gitbook/assets/image (179).png>)![](<../.gitbook/assets/image (3) (1) (1).png>)\
+  ![](<../.gitbook/assets/image (179).png>)![](<../.gitbook/assets/image (3) (1) (1) (4).png>)\
   \
   \*\* on alpha [https://vdo.ninja/alpha/](https://vdo.ninja/alpha/), by user request. Please report any issues/feedback regarding it.
 
@@ -538,7 +579,7 @@ https://vdo.ninja/alpha/?view=YbFmisR&poster=./media/bg_sample.webp&hideplaybutt
   ![](<../.gitbook/assets/image (6) (1) (1).png>)\
   \
   \-- Also the option to save to disk\
-  ![](<../.gitbook/assets/image (4) (1) (4).png>)\
+  ![](<../.gitbook/assets/image (4) (1) (4) (1).png>)\
   \
   \*\* on alpha @ vdo.ninja/alpha/
 

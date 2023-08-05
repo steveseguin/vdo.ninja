@@ -44,7 +44,7 @@ on production at [https://vdo.ninja/mixer](https://vdo.ninja/mixer)
 
 *   You can use the API to control the mixer layout now, via the Mixer App. `https://api.vdo.ninja/APIKEY/layout/2`\
     \-- there were some bugs with this when using it via the Mixer App before, and there wasn't much documentation on the [companion.vdo.ninja](https://companion.vdo.ninja/) site. All fixed.\
-    ![](<../.gitbook/assets/image (6) (1) (3).png>)![](<../.gitbook/assets/image (2) (1) (2).png>)\
+    ![](<../.gitbook/assets/image (6) (1) (3).png>)![](<../.gitbook/assets/image (2) (1) (2) (2).png>)\
 
 
     Note: The benefit of being able to switch just the layout, rather than scene, is that you only need one browser source in OBS (not even needing OBS really either). Having one browser source means fewer resources used for both the director and guests. All controllable via hotkeys or API.\

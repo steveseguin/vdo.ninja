@@ -2,6 +2,10 @@
 
 [raspberry.ninja.md](../steves-helper-apps/raspberry.ninja.md "mention")
 
+#### August 5
+
+* Added a new simplerinstall.md installation instructions to the Raspberry.Ninja project, inside the raspberry\_pi folder. It looks like you can now get Raspberry.Ninja working on the new Raspberry Image image builds (or most other systems) without having to use a custom image or building source from scratch, so setup and use is now pretty easy. I'll be pushing more changes on this front over the coming days.
+
 #### April 22
 
 * Following up on the updated Raspberry.Ninja I did for the RPi the other day, I now finished building an updated version for the Nvidia Jetson Nano also.\

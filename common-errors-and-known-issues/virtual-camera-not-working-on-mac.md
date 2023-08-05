@@ -37,7 +37,7 @@ If the OBS Virtual Camera is not appearing in Chrome or your browser after insta
 1.  Open your System Preferences; you can find this via the Apple logo in the top left corner of your desktop.\
 
 
-    <figure><img src="../.gitbook/assets/image (5) (3).png" alt=""><figcaption></figcaption></figure>
+    <figure><img src="../.gitbook/assets/image (5) (3) (1).png" alt=""><figcaption></figcaption></figure>
 
 
 2.  Click Privacy & Security and then Screen Recording.\

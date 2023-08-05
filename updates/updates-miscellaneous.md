@@ -21,7 +21,7 @@
     This works great for reading chat out from a teleprompter or even just for VDO.Ninja feeds. VDO.Ninja works great for sending remote teleprompter feeds to something like a Firestick 4K Max, and this teleprompting website should make it easy to flip/invert/mirror the video as needed.\
 
 
-    <figure><img src="../.gitbook/assets/image (7).png" alt=""><figcaption></figcaption></figure>
+    <figure><img src="../.gitbook/assets/image (7) (5).png" alt=""><figcaption></figcaption></figure>
 
 #### May 31
 

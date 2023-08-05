@@ -14,23 +14,7 @@ Sender-Side Option! ([`&push`](push.md))
 
 Example: `&effects=7` or `&effects=zoom`
 
-| Value                   | Description                                                   |
-| ----------------------- | ------------------------------------------------------------- |
-| (no value given)        | Shows a "Digital Video Effects" panel when setting up devices |
-| `0` \| `false` \| `off` | Disables effects                                              |
-| `1` \| `facetracking`   | Face tracker                                                  |
-| `-1`                    | Flip image                                                    |
-| `2`                     | Mirror image                                                  |
-| `-2`                    | Flip + mirror image                                           |
-| `3`                     | Background blur                                               |
-| `4`                     | Virtual Greenscreen                                           |
-| `5`                     | Background replacement                                        |
-| `6`                     | Avatar                                                        |
-| `7` \| `zoom`           | Zoom                                                          |
-| `8`                     | [#and-effects-8](effects.md#and-effects-8 "mention")          |
-| `9`                     | Face tracking                                                 |
-| `10`                    | Face tracking                                                 |
-| `11` \| `anon`          | Anonymous face mask                                           |
+<table><thead><tr><th width="227">Value</th><th>Description</th></tr></thead><tbody><tr><td>(no value given)</td><td>Shows a "Digital Video Effects" panel when setting up devices</td></tr><tr><td><code>0</code> | <code>false</code> | <code>off</code></td><td>Disables effects</td></tr><tr><td><code>1</code> | <code>facetracking</code></td><td>Face tracker</td></tr><tr><td><code>-1</code></td><td>Flip image</td></tr><tr><td><code>2</code></td><td>Mirror image</td></tr><tr><td><code>-2</code></td><td>Flip + mirror image</td></tr><tr><td><code>3</code></td><td>Background blur</td></tr><tr><td><code>4</code></td><td>Virtual Greenscreen</td></tr><tr><td><code>5</code></td><td>Background replacement</td></tr><tr><td><code>6</code></td><td>Avatar</td></tr><tr><td><code>7</code> | <code>zoom</code></td><td>Zoom</td></tr><tr><td><code>8</code></td><td><a data-mention href="effects.md#and-effects-8">#and-effects-8</a></td></tr><tr><td><code>9</code></td><td>Face tracking</td></tr><tr><td><code>10</code></td><td>Face tracking</td></tr><tr><td><code>11</code> | <code>anon</code></td><td>Anonymous face mask</td></tr><tr><td><code>13</code> *on alpha</td><td>New experimental background blur effect; it's not supported by most browsers/systems and its in origin trial</td></tr></tbody></table>
 
 ## Details
 

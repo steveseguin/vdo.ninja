@@ -3,6 +3,31 @@
 [social-stream.md](../steves-helper-apps/social-stream.md "mention")\
 [chat-overlay.md](../steves-helper-apps/chat-overlay.md "mention")
 
+#### **August 2**
+
+* The dock in Social Stream can now be configured to send its commands (fake chat or open chat pop out windows) via server instead of p2p.\
+  \-- The dock could be configured already to accept messages via WebSockets, but now you can have it also reply to messages.\
+  \-- This is mainly in the case you can't get WebRTC working\
+  ![](<../.gitbook/assets/image (3).png>)
+*   Added support for Stripe payments to Social Stream, so you can have successful payments made using Stripe show up as messages in Social Stream.
+
+    \-- Name, Message, and donation amount are support currently\
+    \-- Use a Stripe payment link (as a donation page if needed), point it to the SocialStream webhook API , and make a few setting changes\
+    \-- And you're good to go\
+    \-- Details/Guide: [https://github.com/steveseguin/social\_stream/blob/main/README.md#stripe-webhook-donation-support](https://github.com/steveseguin/social\_stream/blob/main/README.md#stripe-webhook-donation-support)\
+    ![](<../.gitbook/assets/image (4).png>)
+
+#### **July 31**
+
+* Option to hide specific events in socialstream added. Takes comma,separated,values, and if any of those match a word in the event message, it will be blocked.
+* `&filterevents` can be used on the dock page, or there is a toggle and text-input in the extension that will apply globally.\
+  ![](<../.gitbook/assets/image (2).png>)
+
+#### **July 30**
+
+* Support for `vstream.com` and `live.space` added to Social Stream\
+  ![](<../.gitbook/assets/image (1).png>)
+
 #### **July 25**
 
 * OpenAI's chat page added as a supported site to Social Stream, which opens up some interesting bot actions I guess.\
@@ -14,10 +39,10 @@
   * Added the option to **relay all incoming messages** from one chat site to all other active chats on other sites\
     \-- I try to ignore duplicates, and I've added a 1 second timeout, to avoid too much spamming.\
     \-- image-based emojis and images won't be relayed; just text and maybe some normal text-emojis supported.\
-    ![](<../.gitbook/assets/image (5).png>)
+    ![](<../.gitbook/assets/image (5) (3).png>)
   * Added the option to relay just donations from sites to all other sites; stated as a thank you.
   * Fixed an issue where the auto-hi option was saying hit to all sites, not just the site that the hi came from.\
-    ![](<../.gitbook/assets/image (1) (2).png>)![](<../.gitbook/assets/image (2) (1).png>)
+    ![](<../.gitbook/assets/image (1) (2).png>)![](<../.gitbook/assets/image (2) (1) (2).png>)
 
 #### **July 19**
 
@@ -30,7 +55,7 @@
 
 * floatplane.com added to Social Stream
 * Few minor fixes to Social Stream, mainly to TikTok\
-  ![](<../.gitbook/assets/image (4) (1).png>)
+  ![](<../.gitbook/assets/image (4) (1) (4).png>)
 
 #### **July 10**
 
