@@ -4636,19 +4636,20 @@ function updateMixerRun(e=false){  // this is the main auto-mixing code.  It's a
 			}
 		}
 			
-		if (document.fullscreenElement) { 
-			log("FULL SCREEN: "+document.fullscreenElement.id);
-			for (var i=0;i<mediaPool.length;i++){ // if its your local camera, it shouldn't be a problem.
-				if (mediaPool[i].id == document.fullscreenElement.id){ // make sure the element is suppose to be seen.
-					//return; // This is FULL SCREEN, (we will keep it if it is full screen
-				} else if (session.fullscreenButton && document.fullscreenElement.querySelector("[id='"+mediaPool[i].id+"']")){ // make sure the element is suppose to be seen.
-					//return; // This is FULL SCREEN, (we will keep it if it is full screen
-				} else if (mediaPool[i].dataset && mediaPool[i].dataset.UUID && mediaPool[i].tagName && mediaPool[i].tagName == "VIDEO"){
-					session.requestRateLimit(session.hiddenSceneViewBitrate, mediaPool[i].dataset.UUID, null); // null implies don't change the current audio setting
-					mediaPool_invisible.push(mediaPool[i]); // move visible elements to the invisible list, since something is full screen
-					mediaPool.splice(i,1);
+		if (document.fullscreenElement) {
+			 try {
+				if (document.fullscreenElement.tagName === "VIDEO"){ // if its HTML, than we assume its the full canvas
+					for (var i=0;i<mediaPool.length;i++){ // if its your local camera, it shouldn't be a problem, so we can focus on remote cameras only
+						if (mediaPool[i].id !== document.fullscreenElement.id){ // if its selected camera, we want to exclude it
+							if (mediaPool[i].dataset && mediaPool[i].dataset.UUID && mediaPool[i].tagName && mediaPool[i].tagName == "VIDEO"){
+								session.requestRateLimit(session.hiddenSceneViewBitrate, mediaPool[i].dataset.UUID, null); // null implies don't change the current audio setting
+								mediaPool_invisible.push(mediaPool[i]); // move visible elements to the invisible list, since something is full screen
+								mediaPool.splice(i,1);
+							}
+						}
+					}
 				}
-			}
+			 } catch(e){errorlog(e);}
 		}
 		
 		
