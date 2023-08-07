@@ -13,6 +13,7 @@ description: Some keyboard hotkeys
 | `CTRL + ALT + C`  | Cycle the camera to the next camera available                      |
 | `CTRL + ALT + S`  | Open the screen-sharing window                                     |
 | `CTRL + ALT + D`  | Enable Draw-on-Screen                                              |
+| `CTRL + ALT + P`  | Will toggle the picture in picture                                 |
 
 {% hint style="info" %}
 On MacOS use `CMD` instead of `CTRL`

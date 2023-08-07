@@ -1,5 +1,15 @@
 # Updates - VDO.Ninja
 
+#### August 6 <a href="#august-31" id="august-31"></a>
+
+* `&pipme` (aka `&mypip` or `&pip3`) will cause your self-video preview window to pop out into its own picture in picture (floating/draggable) on load.\
+  \-- this is not compatible with [`&autostart`](../source-settings/and-autostart.md)\
+  \-- works with director or guest; not tested on mobile.
+* `CTRL + ALT + P` will also toggle the picture in picture, without needing any URL parameters. (`cmd + ALT + P` on Mac)
+* Added experimental support for a built-in browser background blur effect; uses 4x less CPU in theory I guess, but it only works with Chrome on Windows and only with some systems/cameras. I don't actually know if it works or not, as its not compatible with my system, but \*if & you see it in the effects list as a second blur option, let me know how it goes.
+
+\*\* on alpha at vdo.ninja/alpha/
+
 #### August 5 <a href="#august-31" id="august-31"></a>
 
 * A few minor fixes:\
@@ -35,7 +45,7 @@
 
 * Fixed an issue where when you hung up on an iPhone, it would still stay the camera/mic was in use at the goodbye/reload page.
 * Added the "test" audio output button to the in-call settings menu (as seen in image).\
-  ![](../.gitbook/assets/image.png)
+  ![](<../.gitbook/assets/image (1).png>)
 * Fixed an issue with Firefox mobile's camera rotation being wrong in the local preview. (let me know tho if the issues continues tho)
 * Firefox mobile should not go to sleep any more when idle.
 

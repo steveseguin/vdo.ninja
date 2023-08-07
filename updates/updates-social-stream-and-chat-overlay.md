@@ -3,6 +3,15 @@
 [social-stream.md](../steves-helper-apps/social-stream.md "mention")\
 [chat-overlay.md](../steves-helper-apps/chat-overlay.md "mention")
 
+#### **August 7**
+
+* Added an option to change the font-family type in social stream via a drop down setting, and also via `&font=xxxx`\
+  ![](../.gitbook/assets/image.png)
+* made the "test message" button more accessible in the extension (pinned at the top now)\
+  ![](<../.gitbook/assets/image (28).png>)
+* `&compact` mode as a toggle is more accessible and clearly defined as to what it does in the menu list
+* Updated the HTML/XSS input sanitizing logic for all the social chat integrations
+
 #### **August 2**
 
 * The dock in Social Stream can now be configured to send its commands (fake chat or open chat pop out windows) via server instead of p2p.\
@@ -26,7 +35,7 @@
 #### **July 30**
 
 * Support for `vstream.com` and `live.space` added to Social Stream\
-  ![](<../.gitbook/assets/image (1).png>)
+  ![](<../.gitbook/assets/image (1) (1).png>)
 
 #### **July 25**
 
@@ -291,7 +300,7 @@ Social Stream updates for today:
 
 * Social Stream has had the "open chat automatically" functionality improved a lot the last couple days. @River played a large part in that.
 * Added to Social Stream the option to map a chat command to some webhook API. Just an easy way to get started with making bot-actions, such as turning on a light. Happy to evolve this based on feedback.\
-  ![](<../.gitbook/assets/image (1) (1) (1) (1).png>)
+  ![](<../.gitbook/assets/image (1) (1) (1) (1) (1).png>)
 
 #### **February 22**
 
