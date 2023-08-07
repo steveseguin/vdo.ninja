@@ -142,7 +142,7 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 	}
 
 	if (!isIFrame && !window.obsstudio){
-		if (ChromeVersion===65){
+		if (ChromiumVersion===65){
 			 // pass, since probably manycam and that's bugged
 		} else if (getStorage("redirect") == "yes") {
 			setStorage("redirect", "", 0);
@@ -468,7 +468,7 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 		session.audioEffects = false; // disable audio inbound effects also.
 		session.audioMeterGuest = false;
 	} else if (iOS || iPad) {
-		if (SafariVersion<16){
+		if (SafariVersion && SafariVersion<16){
 			getById("oldiOSWarning").classList.remove('hidden');
 		}
 		session.mobile = true;
@@ -522,7 +522,7 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 	} else {
 		log("MAKE DRAGGABLE");
 		delayedStartupFuncs.push([makeDraggableElement, document.getElementById("subControlButtons")]);
-		if (SafariVersion && !ChromeVersion){ // if desktop Safari, so macOS, give a note saying it sucks
+		if (SafariVersion && !ChromiumVersion){ // if desktop Safari, so macOS, give a note saying it sucks
 			getById("SafariWarning").classList.remove("hidden");
 		}
 	}
@@ -2296,6 +2296,9 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 		//session.manual=true;
 		//innerHTML = 
 	}
+	if (urlParams.has('pip3') || urlParams.has('mypip') || urlParams.has('pipme')){
+		session.pip3 = true;
+	}
 	
 	if (urlParams.has('keyframeinterval') || urlParams.has('keyframerate') || urlParams.has('keyframe') || urlParams.has('fki')) {
 		log("keyframeRate ENABLED");
@@ -2396,7 +2399,7 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 				var ver1 = window.obsstudio.pluginVersion.split(".");
 
 				if (ver1.length == 3) { // Should be 3, but disabled3
-					if ((ver1.length == 3) && (parseInt(ver1[0]) == 2) && (ChromeVersion < 76) && (macOS)) {
+					if ((ver1.length == 3) && (parseInt(ver1[0]) == 2) && (ChromiumVersion < 76) && (macOS)) {
 						updateURL("streamlabs");
 						getById("main").innerHTML = "<div style='background-color:black;color:white;' data-translate='obs-macos-not-supported'><h1>Update OBS Studio to v26.1.2 or newer; older versions and StreamLabs OBS are not supported on macOS.\
 						<br /><i><small><small>download here: <a href='https://github.com/obsproject/obs-studio/releases'>https://github.com/obsproject/obs-studio/releases</a></small></small></i>\
@@ -3487,7 +3490,7 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 	}
 
 	if (urlParams.has('buffer') || urlParams.has('buffer2')) { // needs to be before sync
-		if ((ChromeVersion > 50) && (ChromeVersion< 78)){
+		if ((ChromiumVersion > 50) && (ChromiumVersion< 78)){
 		} else {
 			session.buffer = parseFloat(urlParams.get('buffer')) || parseFloat(urlParams.get('buffer2')) || 0;
 			log("buffer Changed: " + session.buffer);
@@ -3507,7 +3510,7 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 	}
 
 	if (urlParams.has('sync')) {
-		if ((ChromeVersion > 50) && (ChromeVersion< 78)){
+		if ((ChromiumVersion > 50) && (ChromiumVersion< 78)){
 			
 		} else {
 			session.sync = parseFloat(urlParams.get('sync'));
@@ -3585,7 +3588,7 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 	
 	
 	
-	//if (!(ChromeVersion>=57)){
+	//if (!(ChromiumVersion>=57)){
 	//	getById("effectSelector").disabled=true;
 	//	getById("effectSelector3").disabled=true;
 	//	getById("effectSelector").title = "Effects are only support on Chromium-based browsers";
@@ -4257,7 +4260,7 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 		delayedStartupFuncs.push([previewWebcam]); 
 	}
 	
-	//if (!session.director && ((ChromeVersion == 86) || (ChromeVersion == 77) || (ChromeVersion == 62) || (ChromeVersion == 51)) && (((session.permaid===false) && session.view) || (session.scene!==false))){
+	//if (!session.director && ((ChromiumVersion == 86) || (ChromiumVersion == 77) || (ChromiumVersion == 62) || (ChromiumVersion == 51)) && (((session.permaid===false) && session.view) || (session.scene!==false))){
 	//	session.studioSoftware = true; // vmix
 	if (window.obsstudio){
 		session.studioSoftware = true;
@@ -6244,12 +6247,12 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 					event.preventDefault(); 
 					event.stopPropagation();
 					return;
-				} else if (event.keyCode == 83) { // S
+				} else if (event.keyCode == 83) { 
 					toggleScreenShare()();
 					event.preventDefault(); 
 					event.stopPropagation();
 					return;
-				} else if (event.keyCode == 68) { // S
+				} else if (event.keyCode == 68) { 
 					if (!drawOnScreenObject){
 						drawOnScreen();
 					} else {
@@ -6258,6 +6261,13 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 					event.preventDefault(); 
 					event.stopPropagation();
 					return;
+				} else if (event.keyCode == 80) { // S
+					if (session.videoElement){
+						togglePictureInPicture(session.videoElement);
+						event.preventDefault(); 
+						event.stopPropagation();
+						return;
+					}
 				}
 			}
 		}

@@ -455,9 +455,23 @@ function isSamsungASeries(){
 	return navigator.userAgent.includes("; SM-A") || false;
 }
 
-function getChromeVersion() {
+function getChromiumVersion() {
 	var raw = navigator.userAgent.match(/Chrom(e|ium)\/([0-9]+)\./);
 	return raw ? parseInt(raw[2], 10) : false;
+}
+
+function getiOSVersion(){
+	try {
+		var agent = navigator.userAgent;
+		var start = agent.indexOf("OS ");
+		if( ( agent.indexOf("iPhone") > -1 || agent.indexOf("iPad") > -1 ) && start > -1 ){
+			return window.Number( agent.substr( start + 3, 3 ).replace("_","." ) );
+		}
+		return 0;
+	} catch (e) {
+		return 0;
+	}
+	return 0;
 }
 
 function safariVersion() {
@@ -490,12 +504,22 @@ try{
 	var Firefox = navigator.userAgent.indexOf("Firefox")>=0;
 	if (Firefox){
 		Firefox = parseInt(navigator.userAgent.split("irefox/").pop()) || true;
-		
-	}
+	} 
 	var Android = navigator.userAgent.toLowerCase().indexOf("android") > -1; //&& ua.indexOf("mobile");
-	var ChromeVersion = getChromeVersion();
+	var ChromiumVersion = getChromiumVersion();
 	var OperaGx = isOperaGX();
-	var SafariVersion = safariVersion();
+	var SafariVersion = safariVersion() || getiOSVersion();  // I should rename this to webkit
+
+	if (iOS || iPad){ // iOS doesn't yet allow actual browsers, cause it's abusing its duopoly.
+		if (SafariVersion){
+			if (Firefox){
+				Firefox = false; //  I should rename this to gecko
+			}
+			if (ChromiumVersion){
+				ChromiumVersion = false; // I should rename this to chromium
+			}
+		}
+	}
 	var SamsungASeries = isSamsungASeries();
 	var isVingester = navigator.userAgent.indexOf("Vingester")>=0;
 
@@ -2841,6 +2865,7 @@ function setupIncomingScreenTracking(v, UUID){  // SCREEN  element.
 	}, { once: true });
 	
 	v.onpause = (event) => { // prevent things from pausing; human or other
+
 		if (v.dataset.UUID && session.rpcs[v.dataset.UUID] && (session.rpcs[v.dataset.UUID].manualBandwidth === 0)){
 			return true;
 		}
@@ -5564,7 +5589,7 @@ function updateMixerRun(e=false){  // this is the main auto-mixing code.  It's a
 					vid.style.maxWidth = "100vh";
 					vid.style.maxHeight = "100vw";
 					
-					if (ChromeVersion && ChromeVersion<77){
+					if (ChromiumVersion && ChromiumVersion<77){
 						if (!animated && (parseInt(container.style.width)>parseInt(holder.style.height))){
 							vid.style.position = "relative";
 							vid.style.objectFit = "contain"; //contain;
@@ -9645,7 +9670,7 @@ function playoutdelay(UUID){  // applies a delay to all videos
 						if ((typeof( session.rpcs[UUID].stats[tid])=="object") && ("_trackID" in session.rpcs[UUID].stats[tid]) && (session.rpcs[UUID].stats[tid]._trackID===receiver.track.id) && (session.rpcs[UUID].stats[tid]._type == receiver.track.kind) && ("Jitter_Buffer_ms" in session.rpcs[UUID].stats[tid])){
 							
 
-							if (ChromeVersion<=103){ // I don't know the exact version, except I know OBS Studio is 103 and it uses the old way still.netwqor
+							if (ChromiumVersion<=103){ // I don't know the exact version, except I know OBS Studio is 103 and it uses the old way still.netwqor
 								var sync_offset = 0.0;
 								
 								if (session.rpcs[UUID].stats[tid]._sync_offset){
@@ -12834,14 +12859,18 @@ async function directPageReload(ele, event) {
 }
 
 
-async function directTimer(ele,  event=false) { // A directing room only is controlled by the Director, with the exception of MUTE.
+async function directTimer(ele,  event=false, manualSetTime=false) { // A directing room only is controlled by the Director, with the exception of MUTE.
 	log("directTimer");
 	var msg = {};
 	ele.classList.remove("blue");
 	ele.classList.remove("red");
 	if (!event || (!((event.ctrlKey) || (event.metaKey)))) {
 		if (ele.value == 0 || ele.value == 2) {
-			var getTime = await promptAlt("Time to set count down timer", false, false, parseInt(getById("overlayClockContainer").dataset.initial), true);
+			if (manualSetTime!==false){
+				var getTime = parseFloat(manualSetTime) || 0;
+			} else {
+				var getTime = await promptAlt("Time to set count down timer", false, false, parseInt(getById("overlayClockContainer").dataset.initial), true);
+			}
 			if (getTime===null){return;}
 			getById("overlayClockContainer").dataset.initial = parseInt(getTime);
 			ele.value = 1;
@@ -12877,10 +12906,15 @@ async function directTimer(ele,  event=false) { // A directing room only is cont
 	}
 	
 	if (ele.dataset.UUID){
-		session.sendRequest(msg, ele.dataset.UUID);
+		if (session.sendRequest(msg, ele.dataset.UUID)){
+			return true;
+		}
 	} else {
-		session.sendRequest(msg);
+		if (session.sendRequest(msg)){
+			return true;
+		}
 	}
+	return false;
 }
 
 function toggleClock(){
@@ -20450,7 +20484,7 @@ function reconnectDevices(event) { ///  TODO: Perhaps change this to only if the
 var vingesterFixed = false;
 function resetupAudioOut(ele=false, forceReset=false) { // this re-sets ALL output devices / sources 
 	log("resetupAudioOut");
-	if (iOS || iPad || SafariVersion || (ChromeVersion && session.mobile)) { // TODO : TEST TO SEE IF THIS WORKS WITH SAFARI? it might.
+	if (iOS || iPad || SafariVersion || (ChromiumVersion && session.mobile)) { // TODO : TEST TO SEE IF THIS WORKS WITH SAFARI? it might.
 		if (ele){return;}
 		for (var UUID in session.rpcs) {
 			if (session.rpcs[UUID].videoElement){
@@ -22176,7 +22210,7 @@ async function grabVideo(quality = 0, eleName = 'previewWebcam', selector = "sel
 		
 		if (session.ptz){
 			if (constraints.video && constraints.video!==true){
-				if (ChromeVersion && ChromeVersion>80){
+				if (ChromiumVersion && ChromiumVersion>80){
 					constraints.video.pan=true;
 					constraints.video.tilt=true;
 					constraints.video.zoom=true;
@@ -22254,7 +22288,7 @@ async function grabVideo(quality = 0, eleName = 'previewWebcam', selector = "sel
 			mirror = false;
 		}
 		
-		if (SamsungASeries && ChromeVersion){
+		if (SamsungASeries && ChromiumVersion){
 			if (!session.cleanOutput){
 				//getById("cameraTipContext1").innerHTML = getTranslation("samsung-a-series");
 				miniTranslate(getById("cameraTipContext1"),"samsung-a-series");
@@ -22275,7 +22309,7 @@ async function grabVideo(quality = 0, eleName = 'previewWebcam', selector = "sel
 		getUserMediaRequestID += 1;
 		var gumMediaID = getUserMediaRequestID;
 		var delayStart = 100;
-		if (ChromeVersion>110){ // aded july 16th; speed up camera switching.
+		if (ChromiumVersion>110){ // aded july 16th; speed up camera switching.
 			delayStart = 20;
 		} else if (Firefox){
 			delayStart = 500; // cause firefox is buggy as crap
@@ -22492,7 +22526,16 @@ async function grabVideo(quality = 0, eleName = 'previewWebcam', selector = "sel
 						if (!document.getElementById("previewWebcam")){
 							updateMixer(); // not with the preview, but after.
 						}
-					} 
+					}
+					
+					try {
+						if (session.pip3){
+							if (!eleName.pip){
+								eleName.pip=true;
+								toggleSystemPip(session.videoElement, true);
+							}
+						}
+					} catch(e){}
 					
 					 // this will reset scaling for all viewers of this stream. I also call it when aspect ratio, width, or height is changed via applyConstraints
 					
@@ -22510,7 +22553,7 @@ async function grabVideo(quality = 0, eleName = 'previewWebcam', selector = "sel
 					
 				warnlog(e);
 				if (e.name === "OverconstrainedError") {
-					warnlog(e.message);
+					warnlog(e.message || e);
 					log("Resolution or frameRate didn't work");
 				} else if (e.name === "NotReadableError"){
 					if (quality <= 10) {
@@ -23612,6 +23655,7 @@ async function press2talk(clean = false) {
 	if (session.streamID){
 		session.videoElement.dataset.sid = session.streamID;
 	}
+	
 
 	// videosource
 	session.videoElement.muted = true;
@@ -23663,7 +23707,7 @@ async function press2talk(clean = false) {
 			}
 		} catch(e){errorlog(e);}
 	});
-
+			
 	updatePushId();
 	
 	
@@ -23716,6 +23760,7 @@ async function press2talk(clean = false) {
 					await grabVideo(session.quality_wb || 0, 'videosource',  "#videoSource3");
 				}
 			}
+			
 			
 			if (session.videoMutedFlag){
 				session.videoMuted = true;
@@ -26061,20 +26106,24 @@ function requestChangeLowcut(value, UUID, track = 0) { // updateAudioConstraints
 }
 
 function toggleSystemPip(vid) {
-  if (vid.webkitSupportsPresentationMode && (typeof vid.webkitSetPresentationMode === "function")) {
-	vid.webkitSetPresentationMode(
-		vid.webkitPresentationMode === "picture-in-picture"
-			? "inline"
-			: "picture-in-picture"
-	);
-  } else {
-		if (document.pictureInPictureElemen) {
-			document.exitPictureInPicture();
-			vid.requestPictureInPicture();
-		} else {
-			vid.requestPictureInPicture();
-		}
-  }
+	try{
+	  if (vid.webkitSupportsPresentationMode && (typeof vid.webkitSetPresentationMode === "function")) {
+		vid.webkitSetPresentationMode(
+			vid.webkitPresentationMode === "picture-in-picture"
+				? "inline"
+				: "picture-in-picture"
+		);
+	  } else {
+			if (document.pictureInPictureElemen) {
+				document.exitPictureInPicture();
+				vid.requestPictureInPicture();
+			} else {
+				vid.requestPictureInPicture();
+			}
+	  }
+	} catch(e){
+		errorlog(e);
+	}
 }
 
 function updateDirectorsAudio(dataN, UUID) {
@@ -29043,7 +29092,7 @@ async function updateCameraConstraints(constraint, value = null, ctrl=false, UUI
 	} else if ((constraint=="whiteBalanceMode") && (value=="continuous")){
 		var constraits = {[constraint]: value};
 		
-		if (session.mobile && ChromeVersion){ // trying to fix the issue that chrome mobile has.
+		if (session.mobile && ChromiumVersion){ // trying to fix the issue that chrome mobile has.
 			constraits.colorTemperature = 5000;
 		}
 		
@@ -29967,7 +30016,7 @@ async function requestBasicPermissions(constraint = {video: true, audio: true}, 
 						setTimeout(function() {
 							if (window.obsstudio){
 								warnUser("Permissions denied.\n\nTo access the camera or microphone from within OBS, please refer to:\n<a href='https://docs.vdo.ninja/guides/share-webcam-from-inside-obs'>docs.vdo.ninja/guides/share-webcam-from-inside-obs</a>.", false, false);
-							} else if (ChromeVersion && !session.mobile){
+							} else if (ChromiumVersion && !session.mobile){
 								warnUser("<h1>Camera/mic permissions denied</h1>\nPlease ensure you have allowed the mic/camera permissions in your browser, such as like:\n\n<img src='./media/permissions_chrome.jpg' />\n\nFor further help on how to resolve this issue, please refer to:\n\n<a target='_blank' href='https://docs.vdo.ninja/common-errors-and-known-issues/enable-camera-microphone-permissions'>https://docs.vdo.ninja/common-errors-and-known-issues/enable-camera-microphone-permissions</a>.", false, false);
 							} else {
 								warnUser("Permission access to the camera or microphone was denied.\n\nPlease ensure you have allowed the mic/camera permissions in your browser.\n\nFor guides on how to resolve this issue, please refer to:\n\n<a target='_blank' href='https://docs.vdo.ninja/common-errors-and-known-issues/enable-camera-microphone-permissions'>https://docs.vdo.ninja/common-errors-and-known-issues/enable-camera-microphone-permissions</a>.", false, false);
@@ -29980,9 +30029,9 @@ async function requestBasicPermissions(constraint = {video: true, audio: true}, 
 				} else {
 					//permission denied in browser 
 					if (!(session.cleanOutput)) {
-						setTimeout(function() {
+						setTimeout(function(err) {
 							warnUser(err);
-						}, 1);
+						}, 1,err);
 					}
 				}
 				warnlog("trying to list webcam again");
@@ -33390,7 +33439,7 @@ function addAudioPipeline(UUID, track){  // INBOUND AUDIO EFFECTS ; audio tracks
 		session.rpcs[UUID].inboundAudioPipeline[trackid].mediaStream = createMediaStream();
 		session.rpcs[UUID].inboundAudioPipeline[trackid].mediaStream.addTrack(track);
 		
-		if (ChromeVersion && session.audioEffects){ // I'm going to deprecate this.
+		if (ChromiumVersion && session.audioEffects){ // I'm going to deprecate this.
 			session.rpcs[UUID].inboundAudioPipeline[trackid].mutedAudio = createAudioElement(); // TODO: I don't know if this mutedAudio thing matters any more, in recent versions of Chrome, since it won't play even if muted.
 			session.rpcs[UUID].inboundAudioPipeline[trackid].mutedAudio.muted = true;
 			session.rpcs[UUID].inboundAudioPipeline[trackid].mutedAudio.playsinline = true; // ## Added Oct 9th 2022. Not sure it's does anything, but might help with iPhones?
@@ -35136,8 +35185,28 @@ function targetGuest(target, action, value=null){
 			element.value = parseInt(value) || 0;
 			return remoteVolume(element);
 		}
+	} else if (action == "startRoomTimer"){
+		var element = getGuestTarget("create-timer", target);
+		if (element) {
+			element.value = 0;
+			return directTimer(element, false, value);
+		}
+	} else if (action == "pauseRoomTimer"){
+		var element = getGuestTarget("create-timer", target);
+		if (element) {
+			if (element.value == 3){
+				return directTimer(element, {ctrlKey:true});
+			} else {
+				return directTimer(element, {ctrlKey:true});
+			}
+		}
+	} else if (action == "stopRoomTimer"){
+		var element = getGuestTarget("create-timer", target);
+		if (element) {
+			element.value = 1;
+			return directTimer(element);
+		}
 	}
-
 	return false;
 }
 async function startPublishing(){
@@ -35625,7 +35694,7 @@ function whipOut(){
 			setEncodings(sender, settings, function(sendr){
 				var settings = {};
 				
-				var chromeVersion = getChromeVersion();
+				var chromeVersion = getChromiumVersion();
 				if (chromeVersion>80){ // just because
 					settings.scaleResolutionDownBy = null;
 				} else {
@@ -37807,7 +37876,7 @@ async function createSecondStream() { ////////////////////////////  &sstype=3 ?
 			
 			session.screenStream.getTracks().forEach(function(track){
 				screenshareTracks[track.id] = true; // obs isn't included, so no point to check track.kind
-			});
+			}); 
 			for (UUID in session.pcs){
 				createSecondStream2(UUID);
 			}
