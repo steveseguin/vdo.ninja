@@ -95,9 +95,11 @@
 					<span id="qos">V</span>DO.Ninja 
 				</span>
 			</a>
+
 			<div id="head1">
-				<input type="text" autocorrect="off" autocapitalize="none" id="joinroomID" name="joinroomID" size="22" placeholder="Join by Room Name here" alt="Enter a room name to join" title="Enter a room name to quick join" onkeyup="jumptoroom(event)"/>
-				<button onclick="jumptoroom();" id='jumptoroomButton' role="button" aria-pressed="false" alt="Join room" title="Join room" >GO</button>
+				<input type="text" autocorrect="off" autocapitalize="none" id="joinroomID" name="joinroomID" size="22" placeholder="Enter by room name" alt="Enter a room name to join" title="Enter a room name to quick join" onkeyup="jumptoroom(event)"/>
+
+				<button onclick="jumptoroom();" id='jumptoroomButton' role="button" aria-pressed="false" alt="Join room" title="Join room" >Join</button>
 			</div>
 			<div id="head1a" class="hidden">
 				<input type="text" autocorrect="off" autocapitalize="none" id="joinbyURL" name="joinbyURL" size="22" placeholder="Load a website URL" alt="Enter the URL to load" title="Enter the URL to load"/>
@@ -2454,7 +2456,7 @@
 				<input type="file"  accept="image/*" onchange="changeTFLiteImage(event, this)" style="position: fixed; top: -100em; margin-left:10px; border:1px solid #555;"> 
 			</label>
 		</div>
-		<div id="gridlayout"></div>
+		<!-- <div id="gridlayout"></div> -->
 		<audio id="testtone" style="display:none;" preload="none">
 			<source src="./media/tone.mp3" type="audio/mpeg"> 
 			<source src="./media/tone.ogg" type="audio/ogg"> 
