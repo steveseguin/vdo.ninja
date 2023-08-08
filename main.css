@@ -469,11 +469,6 @@ button.hint {
   font-weight: 700;
 }
 
-#logo {
-  margin-right: auto;
-  margin-left: 4%;
-}
-
 #overlayClockContainer {
   margin: 0 auto;
   background-color: #0000;
@@ -1437,7 +1432,7 @@ button.btnArmTransferRoom.selected {
 }
 @media only screen and (max-height: 400px) {
   #logoname {
-    display: inline-block;
+    display: none;
   }
   #head4 {
     display: none;
@@ -2129,6 +2124,8 @@ div#chatBody a {
     font-size: 75% !important;
   }
   #logoname {
+    margin-right: auto;
+    margin-left: 4%;
     font-size: 100%;
   }
   .column {
