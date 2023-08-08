@@ -1581,8 +1581,6 @@ body {
   width: 100%;
   background-color: var(--background-color);
   font-family: Helvetica, Arial, sans-serif;
-  display: flex;
-  flex-flow: column;
   border: 0;
   margin: 0;
   opacity: 1;
