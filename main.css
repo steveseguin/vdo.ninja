@@ -9,7 +9,7 @@
 	--discord-grey-6: #383a40;
 	--discord-grey-7: #404249; /* primary */
 	--discord-grey-8: #5e6064;
-	
+
 	--discord-text: hsl( 210 calc(1 * 9.1%) 92% /1);
 
 	--darktheme-red: rgb(161, 45, 45);
@@ -37,7 +37,7 @@
 	--a-dark-hover: #6da5dd;
 	--a-dark-focus: #6da5dd;
 	--a-dark-active: #3a80c6;
-	
+
 	--a-darker-link: #b9dff9;
 	--a-darker-visited: #b9dff9;
 	--a-darker-hover: #048ae8;
@@ -49,7 +49,7 @@
 	--a-lighter-hover: #8acee4;
 	--a-lighter-focus: #8acee4;
 	--a-lighter-active: #89d5ee;
-	
+
 	--a-link:  #144267;
 	--a-visited: #144267;
 	--a-hover: #38668c;
@@ -71,7 +71,7 @@
 	--blue-accent: #4a4c63;
 	--red-accent: #553737;
 	--light-grey: #ddd;
-	--near-black: #02050c; 
+	--near-black: #02050c;
 	--green-accent: #3f4f50;
 	--olive-accent: #535D32;
 	--regular-margin: 10px;
@@ -428,9 +428,9 @@ button.hint {
 	-webkit-app-region: drag;
 }
 #head1{
-	display: inline-block; 
-	padding:1px; 
-	position: relative; 
+	display: inline-block;
+	padding:1px;
+	position: relative;
 	-webkit-app-region: no-drag;
 }
 #head5 {
@@ -510,7 +510,7 @@ button.hint {
 
 #overlayClock{
 	padding:2px 20px;
-	background-color: #0009;	
+	background-color: #0009;
 }
 #overlayClock video {
 	width: calc(22vh + 22vw / 2);
@@ -592,7 +592,7 @@ button.hint {
 	margin: 10px 0;
 	width:130px;
 	display:inline-block;
-	margin:0 1px; 
+	margin:0 1px;
 	text-align: center;
 	cursor:pointer;
 }
@@ -708,10 +708,10 @@ body.darktheme .credits>a:visited {
 	font-size: 14px;
 }
 
-.advancedAudioSettings div select[data-chosen='false'], .advancedVideoSettings div select[data-chosen='false'] { 
+.advancedAudioSettings div select[data-chosen='false'], .advancedVideoSettings div select[data-chosen='false'] {
 	border: 1px solid red;
 }
-.advancedAudioSettings div select[data-chosen='true'], .advancedVideoSettings div select[data-chosen='true'] { 
+.advancedAudioSettings div select[data-chosen='true'], .advancedVideoSettings div select[data-chosen='true'] {
 	border: 1px solid green;
 }
 
@@ -750,7 +750,7 @@ body.darktheme .credits>a:visited {
 	font-size: 14px;
 }
 
-.advancedVideoSettings div:nth-child(2) button { 
+.advancedVideoSettings div:nth-child(2) button {
 	width: 100%;
 	flex: 1;
 	height: 24px;
@@ -939,14 +939,14 @@ hr {
 }
 
 @keyframes blink-warn {
-  0% { opacity: 0; }
-  50% { opacity: 1; }
-  100% { opacity: 0; }
+	0% { opacity: 0; }
+	50% { opacity: 1; }
+	100% { opacity: 0; }
 }
 @keyframes blink-alert {
-  0% { opacity: 0; }
-  50% { opacity: 1; }
-  100% { opacity: 0; }
+	0% { opacity: 0; }
+	50% { opacity: 1; }
+	100% { opacity: 0; }
 }
 .battery.warn {
 	border: 3px solid #EFAF13;
@@ -957,7 +957,7 @@ hr {
 	animation: blink-alert 1s infinite;
 }
 .battery-level {
-	background: #30b455; 
+	background: #30b455;
 	position: absolute;
 	bottom: 0px;
 	right: 0;
@@ -1167,7 +1167,7 @@ hr {
 	margin: 0;
 }
 .queueNotification {
-	
+
 	padding: 2px 0;
 	border-radius: 50%;
 	background: #335c3a;
@@ -1317,27 +1317,27 @@ button.btnArmTransferRoom.selected{
 		display:inherit;
 		padding:5px;
 	}
-	
+
 	#guestTips{
 		max-width: 100%;
 		font-size: 90%;
 	}
-	
+
 	.labelLarge {
 		display:none!important;
 	}
-	
+
 	.gobutton{
 		width: 100vh;
 		margin-left: 10px;
 		margin-right: 10px;
 		max-width: 87%;
 	}
-	
+
 	.roomnotes{
 		display:none!important;
 	}
-	
+
 	#head5 {
 		margin-right: 1px;
 	}
@@ -1405,7 +1405,7 @@ button.btnArmTransferRoom.selected{
 	#head2 {
 		display:none !important;
 	}
-	
+
 }
 @media only screen and (max-height: 240px){
 	#gridlayout>#container.vidcon {
@@ -1587,7 +1587,7 @@ body.darktheme{
 	padding: 10px 50px;
 }
 @-webkit-keyframes pulsate {
-	0%   { box-shadow: 0 0 31px #244e1c44; transform: scale(1.0);}
+	0%	{ box-shadow: 0 0 31px #244e1c44; transform: scale(1.0);}
 	50%  { box-shadow: 0 0 17px #0004; transform: scale(0.99);}
 	100% { box-shadow: 0 0 31px #244e1c44; transform: scale(1.0);}
 }
@@ -1879,7 +1879,7 @@ div#chatBody a {
 }
 
 @media only screen and (max-height: 500px) {
-   
+
 	#subControlButtons > div {
 		min-width: 40px;
 		min-height: 40px;
@@ -1921,7 +1921,7 @@ div#chatBody a {
 	#chatModule{
 		margin-bottom: 40px;
 	}
-	
+
 }
 
 @media only screen and (max-width: 360px) {
@@ -2040,7 +2040,7 @@ div#chatBody a {
 }
 
 @media only screen and (max-width: 650px) {
-	
+
 	.mainmenuclass {
 		display: inline-block;
 	}
@@ -2108,7 +2108,7 @@ div#chatBody a {
 }
 
 @media only screen and (max-height: 355px) {
-	
+
 	.popupSelector_constraints{
 		margin:20px 12% 0 2%;
 	}
@@ -2605,7 +2605,7 @@ img {
 		left: 0;
 		height: 200px;
 	}
-	
+
 	100% {
 		height: 100%;
 		width: 100%;
@@ -2622,7 +2622,7 @@ img {
 	100% {
 		box-shadow: 0 0 5px rgba(255, 255, 255, .8), 0 0 10px rgba(255, 255, 255, .8), 0 0 20px rgba(66, 220, 219, .5), 0 0 22px rgba(66, 220, 219, .5)
 	}
-	
+
 	0% {
 		box-shadow: 0 0 2px rgba(255, 255, 255, .8), 0 0 3px rgba(255, 255, 255, .8), 0 0 4px rgba(66, 220, 219, .5)
 	}
@@ -2761,7 +2761,7 @@ img {
 		top: -300px;
 		opacity: 0
 	}
-	
+
 	to {
 		top: 0;
 		opacity: 1
@@ -2772,7 +2772,7 @@ img {
 		top: -300px;
 		opacity: 0
 	}
-	
+
 	to {
 		top: 0;
 		opacity: 1
@@ -2850,7 +2850,7 @@ video {
 	border: 0;
 	margin: 0;
 	user-select:none;
-	-webkit-user-select: none; /* Chrome/Safari */		
+	-webkit-user-select: none; /* Chrome/Safari */
 	-moz-user-select: none; /* Firefox */
 	-ms-user-select: none; /* IE10+ */
 	-webkit-tap-highlight-color:transparent;
@@ -2860,7 +2860,7 @@ video {
 	background-repeat: no-repeat;
 	background-position: center;
 	background-image: var(--video-background-image);
-	
+
 }
 video[data-speaking="0"] {
 	transition: opacity .25s ease-in-out, background-size 0.5s ease;
@@ -2895,7 +2895,7 @@ audio::-webkit-media-controls-overlay-play-button, video::-webkit-media-controls
 }
 
 audio::-webkit-media-controls-play-button, video::-webkit-media-controls-play-button {
-	 display: none;
+	display: none;
 }
 
 video::-webkit-media-controls-toggle-closed-captions-button {
@@ -2923,11 +2923,11 @@ audio.fileshare::-webkit-media-controls-overlay-play-button, video.fileshare::-w
 }
 
 audio.fileshare::-webkit-media-controls-play-button, video.fileshare::-webkit-media-controls-play-button {
-	 display: inherit;
+	display: inherit;
 }
 
 video::-webkit-media-controls-panel {
-  background-color: #0000;
+	background-color: #0000;
 }
 
 .mirrorControl::-webkit-media-controls-enclosure {
@@ -3105,8 +3105,8 @@ video::-webkit-media-controls-panel {
 }
 
 #videoSourceSelect {
-   padding:2px 0;
-   min-height: 24px;
+	padding:2px 0;
+	min-height: 24px;
 }
 #gear_webcam{
 	cursor: pointer;
@@ -3152,7 +3152,7 @@ video::-webkit-media-controls-panel {
 	visibility: hidden;
 	width:0px;
 	height:0px;
-	opacity: 0; 
+	opacity: 0;
 	background: #0000;
 	color: #0000;
 	font-size: 0em;
@@ -3233,7 +3233,7 @@ label {
 	background-size: contain;
 	background-color: rgba(0, 0, 0, 0);
 }
-	
+
 .debugStats {
 	font-size: 0.8rem;
 	list-style-type: none;
@@ -3438,7 +3438,7 @@ div#roomnotes2 {
 .directorBlue{
 	background-color: #5c7785 !important;
 	display: var(--show-codirectors) !important;
-	
+
 }
 .directorBox{
 	background-color: #606383 !important;
@@ -3494,7 +3494,7 @@ div#roomnotes2 {
 	overflow: hidden;
 	text-overflow: ellipsis;
 	white-space: nowrap;
-	
+
 	text-transform: lowercase;
 }
 
@@ -3614,8 +3614,8 @@ div#roomnotes2 {
 
 	text-align: center;
 	position: relative;
-	user-select: none; 
-	
+	user-select: none;
+
 	color: #fcfcfc;
 }
 .controlsGrid .orderspan .order-label {
@@ -3731,7 +3731,7 @@ div#roomnotes2 {
 	margin-left: 5px;
 	position: relative;
 	cursor: pointer;
-}					
+}
 .fullwindowButton {
 	transition: opacity 0.3s;
 	width: 4vh;
@@ -4095,11 +4095,11 @@ a#reshare {
 	margin: 3px 0;
 }
 #closedList_connectUsers{
-	
-	cursor: pointer; 
-	color: #d9e4eb; 
-	padding: 2px; 
-	margin: 2px 2px 0 0; 
+
+	cursor: pointer;
+	color: #d9e4eb;
+	padding: 2px;
+	margin: 2px 2px 0 0;
 	font-size: 140%;
 }
 
@@ -4165,7 +4165,7 @@ div.message-card a {
 .darktheme .message-card {
 	background-color: #000;
 }
-.darktheme input[type='file'] {  
+.darktheme input[type='file'] {
 	background-color: #000;
 }
 .message-card h1 {
@@ -4201,7 +4201,7 @@ div.message-card.info:before {
 @keyframes floating {
 	0% { transform: translate(0, 0px); }
 	50% { transform: translate(0, 15%); }
-	100% { transform: translate(0, -0px); }	
+	100% { transform: translate(0, -0px); }
 }
 
 .video-label.floating3d {
@@ -4358,7 +4358,7 @@ input:checked + .slider:before {
 	font-size: .8em;
 	padding: 0.4em;
 	display: block;
-	
+
 }
 .promptModalInner {
 	position: relative;
@@ -4397,7 +4397,7 @@ input:checked + .slider:before {
 	text-align: left;
 	display:inline-block;
 	padding-left: 38px;
-	
+
 }
 .startupWarning > i {
 	position: absolute;
@@ -4437,7 +4437,7 @@ input:checked + .slider:before {
 	display:inline-block;
 	padding-left: 32px;
 	vertical-align: middle;
-	
+
 }
 .cameraTip > i {
 	position: absolute;
@@ -4713,11 +4713,11 @@ input:checked + .slider:before {
 .la-cog:before {
 	content: "\f013"; }
 .la-phone:before {
-	content: "\f095"; } 
+	content: "\f095"; }
 .la-gamepad:before {
 	content: "\f11b"; }
 .la-user-slash:before {
-	content: "\f506"; }	
+	content: "\f506"; }
 .la-skull-crossbones:before {
 	content: "\f714"; }
 .la-hand-paper:before {
@@ -4934,7 +4934,7 @@ body.darktheme #selectAvatarImage label {
 	color: #f8f7f7;
 }
 body.darktheme .avatarLabel {
-	color: #f8f7f7;		  
+	color: #f8f7f7;
 }
 body.darktheme .directorsgrid .vidcon {
 	background-color: var(--discord-grey-3);
@@ -4990,7 +4990,7 @@ button {
 	background-color: var(--lighttheme-2);
 	color: var(--lighttheme-text);
 	filter: brightness(1);
-	
+
 	display: inline-flex;
 	align-items: center;
 	justify-content: center;
@@ -5027,9 +5027,9 @@ button i {
 	font-weight: 700;
 }
 .darktheme .gobutton {
-   background-color: #6B8698;
-   color: #000;
-   border: 3px solid #9B9B9B;
+	background-color: #6B8698;
+	color: #000;
+	border: 3px solid #9B9B9B;
 }
 
 .chevron::before {
@@ -5088,12 +5088,12 @@ select {
 	border-radius: 4px;
 }
 .darktheme ul {
-  /*  background-color: var(--discord-grey-3);
+	/*  background-color: var(--discord-grey-3);
 	border: 1px solid var(--discord-grey-8);
 	color: var(--discord-text);*/
 }
 ul {
-   /*	 background-color: var(--lighttheme-1);
+	/*	 background-color: var(--lighttheme-1);
 	border: 1px solid var(--lighttheme-6);
 	color: var(--lighttheme-text);;*/
 	border-radius: 4px;
@@ -5192,7 +5192,7 @@ input[type='checkbox'], input[type='radio'] {
 	border: 1px solid var(--discord-grey-8);
 }
 .darktheme .largeDarkIcon{
-	color: var(--dark-background-color); 
+	color: var(--dark-background-color);
 }
 #addPasswordBasic,
 #avatarDiv,
@@ -5244,7 +5244,7 @@ input[type='checkbox'], input[type='radio'] {
 #videoSettings2,
 .invite_setting_group {
 	background-color: var(--lighttheme-2);
-	border: 1px solid var(--lighttheme-4); 
+	border: 1px solid var(--lighttheme-4);
 }
 
 #videoSettings, #videoSettings2 {
@@ -5284,7 +5284,7 @@ input[type='checkbox'], input[type='radio'] {
 
 .invite_setting_item {
 	margin: 10px 0px 0px 0;
-} 
+}
 
 .invite_setting_group_links {
 	margin-top: 10px;
@@ -5374,7 +5374,7 @@ ul#audioSource3{
 	border: 1px solid var(--discord-grey-8);
 }
 #refreshVideoButton > i{
-	cursor: pointer; 
+	cursor: pointer;
 	font-size: 120%;
 	position: relative;
 	top: 3px;
@@ -5388,7 +5388,7 @@ ul#audioSource3{
 	padding: 2px 6px;
 	width: 100%;
 	outline: 0;
-	border-radius: 4px; 
+	border-radius: 4px;
 	background-color: var(--lighttheme-1);
 	border: 1px solid var(--lighttheme-6);
 }
@@ -5396,7 +5396,7 @@ ul#audioSource3{
 #grabDirectorSoloLinkParent {
 	margin-bottom: 10px;
 }
- 
+
 /* INITIALLY HIDDEN */
 #advancedOptionsAudio,
 #advancedOptionsCamera,
