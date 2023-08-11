@@ -34,8 +34,14 @@ https://vdo.ninja/?view=XXX&controlobs&bitratecutoff=300&cutscene=FML&remote
 You can of course use this with [`&controlobs`](and-controlobs.md)[`&remote`](../../general-settings/remote.md), to have the publisher change the scenes dynamically, and see what the current OBS scene is (if still connected).
 
 {% hint style="warning" %}
-Note that the OBS Browser source needs the permissions to be set to high, to give VDO.Ninja permissions to change scenes.
+Note that the OBS browser source needs the permissions to be set to high, to give VDO.Ninja permissions to change scenes.
 {% endhint %}
+
+{% hint style="warning" %}
+Do not set the OBS browser source to "Shutdown" when not visible, as this will prevent things from being able to switch back.
+{% endhint %}
+
+
 
 ## Related
 
