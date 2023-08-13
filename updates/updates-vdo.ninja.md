@@ -1,5 +1,38 @@
 # Updates - VDO.Ninja
 
+#### August 13 <a href="#august-31" id="august-31"></a>
+
+* `&humb64` and `&welcomeb64` added. These are the same as `&hangupmessage` and [`&welcome`](../newly-added-parameters/and-welcome.md), which already exist, except these new options take an input as a base64 encoded string. VDO.Ninja will decode the base64 on load.\
+  \-- Base64 values are less likely to get parsed by apps like Slack incorrectly, so safter to share. If feeling lazy, you can also just use [invite.cam](https://invite.cam/), and encode the entire link itself; has a similar effect.
+* When using [`&cutscene`](../advanced-settings/settings-parameters/and-cutscene.md) or [`&bitratecutoff`](../advanced-settings/parameters-only-on-beta/and-bitratecutoff.md) on a room scene, it won't trigger due to a director being in the room with no video, unless they are using [`&showdirector`](../viewers-settings/and-showdirector.md).\
+  \-- [`&cutscene`](../advanced-settings/settings-parameters/and-cutscene.md) wasn't intended really for a group scene; just a solo link or view link, but this fix makes it at more usable with a group scene.
+
+\*\* on alpha
+
+#### August 11 <a href="#august-31" id="august-31"></a>
+
+Option for a custom hang-up message added to VDO.Ninja.\
+\-- `&hangupmessage` (or `&hum`) , which take a URL encoded string. So it can be just "bye", or it can be some HTML, as shown in the link\
+\-- eg: [https://vdo.ninja/alpha/?hum=bye%3Cimg%20src%3D%22.%2Fmedia%2Flogo\_cropped.png%22%3E\&push=ZimFGxM](https://vdo.ninja/alpha/?hum=bye%3Cimg%20src%3D%22.%2Fmedia%2Flogo\_cropped.png%22%3E\&push=ZimFGxM)\
+![](<../.gitbook/assets/image (1).png>)\
+\
+\* on alpha
+
+#### August 10 <a href="#august-31" id="august-31"></a>
+
+* Fixed an issue where using [`&cover`](../advanced-settings/view-parameters/cover.md) and [`&showlabels`](../advanced-settings/design-parameters/showlabels.md), a newly added video to a scene might have had a larger label size than the other labels.
+* Fixed an issue where deleting a label for a guest as a director didn't remove the label from guests/scene.
+* I think I improved the local recording option, specifically for directors, where record-all didn't always work correctly.
+* If a local recording fails, due to no media tracks being present, it will not turn the record button red now.
+* Some minor text and labels fixed here and there, mainly impacting self-hosting.
+
+\*\* on alpha at vdo.ninja/alpha/
+
+#### August 9 <a href="#august-31" id="august-31"></a>
+
+* Added `&nomirror` to VDO.Ninja, which unlike [`&mirror=0`](../advanced-settings/design-parameters/mirror.md), disables the default mirror state of the video preview for a guest. Previews are often mirrored by default... [`&mirror`](../advanced-settings/design-parameters/mirror.md) can be applied on top of that state, to mirror things back for everyone if needed.\
+  On alpha at [`https://vdo.ninja/alpha/?nomirror`](https://vdo.ninja/alpha/?nomirror)
+
 #### August 6 <a href="#august-31" id="august-31"></a>
 
 * `&pipme` (aka `&mypip` or `&pip3`) will cause your self-video preview window to pop out into its own picture in picture (floating/draggable) on load.\
@@ -45,7 +78,7 @@
 
 * Fixed an issue where when you hung up on an iPhone, it would still stay the camera/mic was in use at the goodbye/reload page.
 * Added the "test" audio output button to the in-call settings menu (as seen in image).\
-  ![](<../.gitbook/assets/image (1).png>)
+  ![](<../.gitbook/assets/image (1) (1).png>)
 * Fixed an issue with Firefox mobile's camera rotation being wrong in the local preview. (let me know tho if the issues continues tho)
 * Firefox mobile should not go to sleep any more when idle.
 
@@ -1243,7 +1276,7 @@ https://vdo.ninja/alpha/?view=YbFmisR&poster=./media/bg_sample.webp&hideplaybutt
 
 * When using [`&waitimage`](../advanced-settings/newly-added-parameters/and-waitimage.md), the specified 'waiting to connect' image will appear after all connections end. This is a bit different than the default behaviour of the spinner, which doesn't re-appear, but I assume if you're advanced enough to use the `&waitimage` option, you're okay with this.
 *   Added the option to "draw on the screen", which might be a useful tool for niche use cases where you might need to take notes, etc. It doesn't affix to videos themselves, but rather it's just a full-window transparent canvas overlay, You can start/stop/clear and select a couple style-types with this feature, via the settings -> User menu. You can also do `CTRL + ALT + D` to toggle this as needed.\
-    ![](<../.gitbook/assets/image (2) (1) (1) (1).png>)\
+    ![](<../.gitbook/assets/image (2) (1) (1) (1) (1).png>)\
 
 
     \*\* on alpha at vdo.ninja/alpha
