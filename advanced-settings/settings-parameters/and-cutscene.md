@@ -24,7 +24,7 @@ Example: `&cutscene=ObsSceneName`
 
 You can use the IRL-related command called `&cutscene` to specify an OBS cut scene to switch to when the bitrate drops below a threshold and return to the original scene when the bitrate recovers. (assuming the cut scene is active; it won't switch back from a scene that isn't the cut away scene)
 
-The default bitrate threshold is 300-kbps, but you can use the existing [`&bitratecutoff=N`](../parameters-only-on-beta/and-bitratecutoff.md) option to specify a custom one. Using `&cutscene` with [`&bitratecutoff`](../parameters-only-on-beta/and-bitratecutoff.md) will override the behaviour of `&bitratecutoff`'s other features. It won't start triggering until the bitrate has hit at least the threshold once. to use:
+The default bitrate threshold is 300-kbps, but you can use the existing [`&bitratecutoff=N`](../parameters-only-on-beta/and-bitratecutoff.md) option to specify a custom one. Using `&cutscene` with [`&bitratecutoff`](../parameters-only-on-beta/and-bitratecutoff.md) will override the behaviour of [`&bitratecutoff`](../parameters-only-on-beta/and-bitratecutoff.md)'s other features. It won't start triggering until the bitrate has hit at least the threshold once. to use:
 
 ```
 https://vdo.ninja/?push=XXX
@@ -40,8 +40,6 @@ Note that the OBS browser source needs the permissions to be set to high, to giv
 {% hint style="warning" %}
 Do not set the OBS browser source to "Shutdown" when not visible, as this will prevent things from being able to switch back.
 {% endhint %}
-
-
 
 ## Related
 
