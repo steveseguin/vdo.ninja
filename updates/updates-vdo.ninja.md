@@ -796,7 +796,7 @@ https://vdo.ninja/alpha/?view=YbFmisR&poster=./media/bg_sample.webp&hideplaybutt
 
 #### January 25 <a href="#august-31" id="august-31"></a>
 
-* Updated the http [API](../general-settings/api.md) getDetails request to include info about video visibility; makes it a bit more usable if querying a scene link\
+* Updated the http [API](../advanced-settings/api-and-midi-parameters/api/) getDetails request to include info about video visibility; makes it a bit more usable if querying a scene link\
   ![](<../.gitbook/assets/image (3) (2) (3).png>)
 
 #### January 23 <a href="#august-31" id="august-31"></a>
@@ -1603,7 +1603,7 @@ https://vdo.ninja/alpha/?view=YbFmisR&poster=./media/bg_sample.webp&hideplaybutt
   \--- If [`&showdirector`](../viewers-settings/and-showdirector.md) is used, it will not use the control-bar for group buttons 1 to 8\
   \--- It technically is possible to use groups via the API or URL other than 1 to 8, but I only offer buttons to add guests to groups 1 to 8.\
   ![](<../.gitbook/assets/image (84).png>)
-* Using the [`&api`](../general-settings/api.md) remote API option, you now can get STATE values as the reply to a GET/POST/WSS request.\
+* Using the [`&api`](../advanced-settings/api-and-midi-parameters/api/) remote API option, you now can get STATE values as the reply to a GET/POST/WSS request.\
   So if you do `https://api.vdo.ninja/c6sWHN9zzX/group/null/1`, with `&api=c6sWHN9zzX` added to the director's URL, you will toggle the director in and out of GROUP 1.\
   The response of the HTTP GET request though will be `true` or `false` or `timeout`, based on whether the director was added to the group, removed from the group, or whether it failed. This new feature can be used with a Streamdeck (or other controller) to have the button's color of the Streamdeck match the state of the action.\
   [https://github.com/steveseguin/Companion-Ninja/blob/main/README.md#callbacks--state-responses](https://github.com/steveseguin/Companion-Ninja/blob/main/README.md#callbacks--state-responses)\
