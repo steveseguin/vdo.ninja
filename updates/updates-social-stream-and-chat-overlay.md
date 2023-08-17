@@ -1,6 +1,6 @@
 # Updates - Social Stream & Chat Overlay
 
-[social-stream](../steves-helper-apps/social-stream/ "mention")\
+[social-stream.md](../steves-helper-apps/social-stream.md "mention")\
 [chat-overlay.md](../steves-helper-apps/chat-overlay.md "mention")
 
 #### **August 12**

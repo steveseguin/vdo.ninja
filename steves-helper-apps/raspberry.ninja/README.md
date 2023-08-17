@@ -13,7 +13,7 @@ Turn your Raspberry Pi or Nvidia Jetson into a Ninja-cam with hardware-accelerat
 Get support on the Discord if you have any problems: [🏮│raspberry․ninja](https://discord.gg/BVvGwGaD9F)\
 
 
-![An Nvidia Jetson NX pushing 1080p video to VDO.Ninja, captured with a $10 HDMI to USB adapter](<../.gitbook/assets/image (38) (1).png>)
+![An Nvidia Jetson NX pushing 1080p video to VDO.Ninja, captured with a $10 HDMI to USB adapter](<../../.gitbook/assets/image (38) (1).png>)
 
 ## Raspberry Pi system images (and code)
 
@@ -27,6 +27,6 @@ Stream live video from your embedded SBC or Linux system!
 
 ## Updates
 
-{% content-ref url="../updates/updates-raspberry.ninja.md" %}
-[updates-raspberry.ninja.md](../updates/updates-raspberry.ninja.md)
+{% content-ref url="../../updates/updates-raspberry.ninja.md" %}
+[updates-raspberry.ninja.md](../../updates/updates-raspberry.ninja.md)
 {% endcontent-ref %}

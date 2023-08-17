@@ -22,7 +22,7 @@ Given the price of a Firestick versus something like an SBC (ie: Orange Pi 5), i
 
 Needing to disable HDCP may also apply to other HDMI input devices when paired with a Firestick, Chromecast, or other media dongle.&#x20;
 
-If using this setup with an overlay, like [Social Stream](../steves-helper-apps/social-stream/), you may want to use `&chroma` on the featured chat overlays to enable the green background. From there, you should be able to chroma-filter out the green in the ATEM device, providing transparency.
+If using this setup with an overlay, like [Social Stream](../steves-helper-apps/social-stream.md), you may want to use `&chroma` on the featured chat overlays to enable the green background. From there, you should be able to chroma-filter out the green in the ATEM device, providing transparency.
 
 It's also possible to use OBS to output a source to an ATEM device, via HDMI output on your computer. You'll still need to use a green screen if wanting transparencies of course.
 

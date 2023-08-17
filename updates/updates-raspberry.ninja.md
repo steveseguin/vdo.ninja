@@ -1,6 +1,6 @@
 # Updates - Raspberry.Ninja
 
-[raspberry.ninja.md](../steves-helper-apps/raspberry.ninja.md "mention")
+[raspberry.ninja](../steves-helper-apps/raspberry.ninja/ "mention")
 
 #### August 5
 
