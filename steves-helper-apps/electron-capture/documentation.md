@@ -8,7 +8,7 @@ description: This Electron Capture documentation was last updated Aug 16, 2023
 
 For the most recent version of Electron Capture documentation, please visit: [https://github.com/steveseguin/electroncapture](https://github.com/steveseguin/electroncapture).&#x20;
 
-This copy of the documenation is provided here simply as a consolidated resource for our LMM AI support bot to learn from. It will be updated only occassionally, as needed.
+This copy of the documentation is provided here simply as a consolidated resource for our LMM AI support bot to learn from. It will be updated only occasionally, as needed.
 
 
 
