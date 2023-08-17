@@ -1,6 +1,6 @@
 # Updates - Electron Capture App
 
-[electron-capture](../steves-helper-apps/electron-capture/ "mention")
+[electron-capture.md](../steves-helper-apps/electron-capture.md "mention")
 
 #### June 2
 

@@ -225,7 +225,7 @@ Social stream updates:
 
 * Fixed an issue with 7TV v3 and usernames not being coloured
 * Fixed an issue where Pinned messages in YouTube chat would be duplicated in the dock; attempted to fix some other duplication issues.
-*   Updated [**Electron Capture**](../steves-helper-apps/electron-capture/) so that you can toggle the "click thru and pin on top" with a global keyboard shortcut. (`CTRL + SHIFT + X`)\
+*   Updated [**Electron Capture**](../steves-helper-apps/electron-capture.md) so that you can toggle the "click thru and pin on top" with a global keyboard shortcut. (`CTRL + SHIFT + X`)\
     \-- This Electron Capture update relates to Social Stream because you can use it to overlay the dock chat on your display (such as while gaming?) without it getting in the way of what you're doing. (see photo for example)\
 
 

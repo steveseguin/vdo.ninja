@@ -10,7 +10,7 @@ description: Provides users a clean way of window capturing websites
 
 Created for [VDO.Ninja](https://vdo.ninja) users, it can provide users a clean way of window capturing websites. In the case of [VDO.Ninja](https://vdo.ninja), it may offer a more flexible and reliable method of capturing live video than the browser source plugin built into OBS.
 
-![](<../../.gitbook/assets/image (36) (1).png>)
+![](<../.gitbook/assets/image (36) (1).png>)
 
 ## Why ?
 
@@ -26,6 +26,6 @@ Lastly, since playback is agnostic, you can window-capture the same video multip
 
 ## Updates
 
-{% content-ref url="../../updates/updates-electron-capture-app.md" %}
-[updates-electron-capture-app.md](../../updates/updates-electron-capture-app.md)
+{% content-ref url="../updates/updates-electron-capture-app.md" %}
+[updates-electron-capture-app.md](../updates/updates-electron-capture-app.md)
 {% endcontent-ref %}

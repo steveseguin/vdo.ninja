@@ -1,8 +1,14 @@
+---
+description: This Electron Capture documentation was last updated Aug 16, 2023
+---
+
 # Documentation
 
-### PLEASE NOTE:  This copy of documentation for the Electron Capture app is not kept up to date.
+**PLEASE NOTE:** This copy of documentation for the Electron Capture app is not kept up to date.
 
-For the most recent version of Electron Capture documentation, please visit: [https://github.com/steveseguin/electroncapture](https://github.com/steveseguin/electroncapture). This copy of the documenation is provided here simply as a consolidated resource for our LMM AI support bot to learn from. It will be updated only occassionally, as needed.
+For the most recent version of Electron Capture documentation, please visit: [https://github.com/steveseguin/electroncapture](https://github.com/steveseguin/electroncapture).&#x20;
+
+This copy of the documenation is provided here simply as a consolidated resource for our LMM AI support bot to learn from. It will be updated only occassionally, as needed.
 
 
 

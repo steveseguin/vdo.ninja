@@ -15,7 +15,7 @@
   * [Mobile phone camera into webcam](getting-started/mobile-phone-camera-into-webcam.md)
   * [Cheat sheet of basic parameters](https://docs.vdo.ninja/getting-started/cheat-sheet-of-basic-parameters)
 * [Steve's helper apps & tools](steves-helper-apps/README.md)
-  * [Electron Capture](steves-helper-apps/electron-capture/README.md)
+  * [Electron Capture](steves-helper-apps/electron-capture.md)
     * [Documentation](steves-helper-apps/electron-capture/documentation.md)
   * [Chat Overlay](steves-helper-apps/chat-overlay.md)
   * [Social Stream](steves-helper-apps/social-stream.md)

@@ -14,4 +14,4 @@ Tells VDO.Ninja to not block VDO.Ninja from attempting to run when using Streaml
 
 For normal OBS users, update to OBS 26.1.2 on MacOS to obtain native support for VDO.Ninja in OBS.
 
-Streamlabs doesn't yet have full support for VDO.Ninja; consider the [Electron Capture](../../steves-helper-apps/electron-capture/) app if it fails to work well.
+Streamlabs doesn't yet have full support for VDO.Ninja; consider the [Electron Capture](../../steves-helper-apps/electron-capture.md) app if it fails to work well.
