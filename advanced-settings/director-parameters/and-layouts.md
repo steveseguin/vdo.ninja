@@ -20,7 +20,7 @@ Example: `&layouts=[[{"x":0,"y":0,"w":100,"h":100,"slot":0}],[{"x":0,"y":0,"w":1
 
 This is akin to using the [vdo.ninja/mixer](https://vdo.ninja/mixer), to visually set layouts, but instead you are just manually setting all the available layouts directly, bypassing the mixer app.
 
-Once you have set the layouts, the "layout" [API](../api-and-midi-parameters/api/) feature becomes a bit more useful, as you can remotely activate any of those layouts with a simple API command.
+Once you have set the layouts, the "layout" [API](../../general-settings/api.md) feature becomes a bit more useful, as you can remotely activate any of those layouts with a simple API command.
 
 I documented the 'layout' API option a bit here, but the tl;dr; is that you can either use this API call to set a layout from within the array of layouts that are set, or you can pass a full-fledge layout-object, for on-the-fly custom layouts.
 
@@ -61,7 +61,7 @@ Layout8:\
 
 ### Streamdeck usage
 
-You need to add [`&api=xxx`](../api-and-midi-parameters/api/) to the director's URL to control the layouts via Streamdeck.
+You need to add [`&api=xxx`](../../general-settings/api.md) to the director's URL to control the layouts via Streamdeck.
 
 <table><thead><tr><th width="398">HTTP Get</th><th>Description</th></tr></thead><tbody><tr><td><code>https://api.vdo.ninja/xxx/layout/0</code></td><td>Disables the layouts -> Auto-mixing</td></tr><tr><td><code>https://api.vdo.ninja/xxx/layout/1</code></td><td>Select Layout 1</td></tr><tr><td><code>https://api.vdo.ninja/xxx/layout/2</code></td><td>Select Layout 2</td></tr><tr><td><code>https://api.vdo.ninja/xxx/layout/[{"x":0,"y":0,"w":50,"h":100,"c":true,"slot":0},{"x":50,"y":0,"w":50,"h":100,"c":false,"slot":1}]</code> *</td><td>Select specified layout</td></tr></tbody></table>
 
@@ -83,8 +83,8 @@ Download it and save it as .xlsx - then you can edit it and create custom layout
 [and-slotmode.md](and-slotmode.md)
 {% endcontent-ref %}
 
-{% content-ref url="../api-and-midi-parameters/api/" %}
-[api](../api-and-midi-parameters/api/)
+{% content-ref url="../../general-settings/api.md" %}
+[api.md](../../general-settings/api.md)
 {% endcontent-ref %}
 
 {% content-ref url="../mixer-scene-parameters/and-layout.md" %}

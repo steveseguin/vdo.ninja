@@ -21,7 +21,7 @@
 #### March 23
 
 *   Updated **Electron Capture** so that you can toggle the "click thru and pin on top" with a global keyboard shortcut. (`CTRL + SHIFT + X`)\
-    \-- This Electron Capture update relates to [Social Stream](../steves-helper-apps/social-stream.md) because you can use it to overlay the dock chat on your display (such as while gaming?) without it getting in the way of what you're doing. (see photo for example)\
+    \-- This Electron Capture update relates to [Social Stream](../steves-helper-apps/social-stream/) because you can use it to overlay the dock chat on your display (such as while gaming?) without it getting in the way of what you're doing. (see photo for example)\
 
 
     ```

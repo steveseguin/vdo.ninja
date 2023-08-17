@@ -38,7 +38,7 @@ While nearly all data transfer is peer to peer based, the initial handshake betw
 
 Once a user disconnects from the handshake-server, any cached information about their connection is promptly cleared from memory. Such cached information is a technical requirement to offer public service at scale.
 
-Future and auxiliary services that use VDO.Ninja as a component, such as [SocialStream](../steves-helper-apps/social-stream.md), Invite.cam, or [Versus.cam](../steves-helper-apps/versus.cam.md), may have their own data-privacy or user-storage policies.
+Future and auxiliary services that use VDO.Ninja as a component, such as [SocialStream](../steves-helper-apps/social-stream/), Invite.cam, or [Versus.cam](../steves-helper-apps/versus.cam.md), may have their own data-privacy or user-storage policies.
 
 Backup handshake servers are hosted to ensure reliability, such as with [https://backup.vdo.ninja](https://backup.vdo.ninja), and managed third-party handshake servers are supported, such as piesocket.com.
 

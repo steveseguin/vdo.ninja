@@ -6,7 +6,7 @@ description: List of apps and helper tools Steve has created to be used with VDO
 
 * [electron-capture.md](electron-capture.md "mention") ([https://github.com/steveseguin/electroncapture](https://github.com/steveseguin/electroncapture))
 * [chat-overlay.md](chat-overlay.md "mention") ([https://chat.overlay.ninja](https://chat.overlay.ninja))
-* [social-stream.md](social-stream.md "mention") ([https://socialstream.ninja](https://socialstream.ninja))
+* [social-stream](social-stream/ "mention") ([https://socialstream.ninja](https://socialstream.ninja))
 * [meshcast.io.md](meshcast.io.md "mention") ([https://meshcast.io](https://meshcast.io))
 * [caption.ninja.md](caption.ninja.md "mention") ([https://caption.ninja/](https://caption.ninja/))
 * [raspberry.ninja.md](raspberry.ninja.md "mention") ([https://raspberry.ninja](https://raspberry.ninja))

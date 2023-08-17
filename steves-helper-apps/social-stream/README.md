@@ -16,10 +16,10 @@ Very much like Chat Overlay Ninja, except is purely for live chat and has a focu
 
 Get support on the Discord if you have any problems: [💬│chat․overlay-support](https://discord.gg/6Wbu848w94)
 
-![](<../.gitbook/assets/image (98) (1) (1) (1).png>)
+![](<../../.gitbook/assets/image (98) (1) (1) (1).png>)
 
 ## Updates
 
-{% content-ref url="../updates/updates-social-stream-and-chat-overlay.md" %}
-[updates-social-stream-and-chat-overlay.md](../updates/updates-social-stream-and-chat-overlay.md)
+{% content-ref url="../../updates/updates-social-stream-and-chat-overlay.md" %}
+[updates-social-stream-and-chat-overlay.md](../../updates/updates-social-stream-and-chat-overlay.md)
 {% endcontent-ref %}

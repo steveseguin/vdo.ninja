@@ -4,7 +4,7 @@ description: Remote control API (HTTP-GET / WSS-based)
 
 # \&api
 
-General Option! ([`&push`](../../../source-settings/push.md), [`&room`](../../../general-settings/room.md), [`&view`](../../view-parameters/view.md), [`&scene`](../../view-parameters/scene.md))
+General Option! ([`&push`](../source-settings/push.md), [`&room`](room.md), [`&view`](../advanced-settings/view-parameters/view.md), [`&scene`](../advanced-settings/view-parameters/scene.md))
 
 ## Aliases
 
@@ -28,10 +28,10 @@ Please see [https://companion.vdo.ninja](https://companion.vdo.ninja) for a samp
 
 ## Related
 
-{% content-ref url="../../../guides/hotkey-support/" %}
-[hotkey-support](../../../guides/hotkey-support/)
+{% content-ref url="../guides/hotkey-support/" %}
+[hotkey-support](../guides/hotkey-support/)
 {% endcontent-ref %}
 
-{% content-ref url="../../../guides/hotkey-support/how-to-control-vdo.ninja-with-touch-portal.md" %}
-[how-to-control-vdo.ninja-with-touch-portal.md](../../../guides/hotkey-support/how-to-control-vdo.ninja-with-touch-portal.md)
+{% content-ref url="../guides/hotkey-support/how-to-control-vdo.ninja-with-touch-portal.md" %}
+[how-to-control-vdo.ninja-with-touch-portal.md](../guides/hotkey-support/how-to-control-vdo.ninja-with-touch-portal.md)
 {% endcontent-ref %}
