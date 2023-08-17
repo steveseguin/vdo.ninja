@@ -10,7 +10,7 @@ Sometimes other guests in the room will see the problematic guest, and in this c
 
 Things that often work:
 
-* Switch browsers, with Firefox being a common winner when Chrome fails. Perhaps also try Edge or even the [Electron Capture app](../steves-helper-apps/electron-capture.md).
+* Switch browsers, with Firefox being a common winner when Chrome fails. Perhaps also try Edge or even the [Electron Capture app](../steves-helper-apps/electron-capture/).
 * Use a VPN designed for streaming, such as [speedify.com](https://speedify.com/). Free VPNs exist as Chrome extensions, if you need something quick.
 * Switch networks; if using WiFi, switch to Cellular, and vice-versa.
 * If behind a corporate firewall, have the IT administrators allow WebRTC traffic, or use a different.

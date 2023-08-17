@@ -78,7 +78,7 @@ Since we will be using the Electron Capture app instead, we can close the scene 
 
 ### Step 7.
 
-Next, we **download the** [**Electron Capture app**](../steves-helper-apps/electron-capture.md) – [https://github.com/steveseguin/electroncapture/releases](https://github.com/steveseguin/electroncapture/releases) (free)
+Next, we **download the** [**Electron Capture app**](../steves-helper-apps/electron-capture/) – [https://github.com/steveseguin/electroncapture/releases](https://github.com/steveseguin/electroncapture/releases) (free)
 
 The Electron Capture will let us share our video into Zoom without any borders and allow us to capture the audio. It also is optimized in resolution for maximum quality transfer from VDO.Ninja to Zoom.
 

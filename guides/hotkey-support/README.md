@@ -21,7 +21,7 @@ On MacOS use `CMD` instead of `CTRL`
 
 When using the above keyboard short-cuts, the tab/window must be actively in focus.
 
-When using the [Electron Capture App](../../steves-helper-apps/electron-capture.md) in elevated privilege mode, the keyboard shortcuts are global.
+When using the [Electron Capture App](../../steves-helper-apps/electron-capture/) in elevated privilege mode, the keyboard shortcuts are global.
 
 <figure><img src="../../.gitbook/assets/image (90) (2).png" alt=""><figcaption></figcaption></figure>
 

@@ -17,11 +17,11 @@ Sender-Side Option! ([`&push`](push.md))
 
 Starting with [v19](../release-notes/v19.md) of VDO.Ninja, there is also the [`&screenshare2`](../newly-added-parameters/and-screenshare2.md) option; a minor UI variant that requires an additional button press, but more clearly preps the guest to the fact they will be sharing their screen.
 
-#### Using `&screenshare` with the [Electron Capture App](../steves-helper-apps/electron-capture.md)
+#### Using `&screenshare` with the [Electron Capture App](../steves-helper-apps/electron-capture/)
 
 When using the Electron Capture App you have to "Elevate Privileges" to be able to share a window or screen. You can enable Elevated Privileges for the Electron App via the command line with `--node true` or in the app by right-clicking and selecting "Elevate Privileges" from the context-menu.
 
-One unique feature about the [Electron Capture App](../steves-helper-apps/electron-capture.md) is that it can auto-select a screen or window when screen-sharing with VDO.Ninja, without user-input.\
+One unique feature about the [Electron Capture App](../steves-helper-apps/electron-capture/) is that it can auto-select a screen or window when screen-sharing with VDO.Ninja, without user-input.\
 For example:\
 `&screenshare=1` for the main display\
 `&screenshare=2` for the second display\
