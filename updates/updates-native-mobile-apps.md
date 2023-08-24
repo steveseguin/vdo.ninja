@@ -2,6 +2,13 @@
 
 [native-mobile-app-versions.md](../steves-helper-apps/native-mobile-app-versions.md "mention")
 
+#### August 23
+
+* The Android native app has been updated to allow a custom turn server to be specified. It's live on the play store now.\
+  \-- Also added geo-routing for the official turn servers to the native app, so the closest turn server to you will be used if possible now (if needed).\
+  \-- General framework updates applied as well, including a higher minimum android target that was required.\
+  \-- An update to the iOS version will take longer to get out; the code's updated, but I can't publish to the store just yet.
+
 #### July 23
 
 * I pushed out v19 of the Android native app version of VDO.Ninja (its live now).\

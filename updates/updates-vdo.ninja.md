@@ -1,5 +1,20 @@
 # Updates - VDO.Ninja
 
+#### August 23 <a href="#august-31" id="august-31"></a>
+
+* I've open-sourced the VDO.Ninja whip API server code and put it on GitHub:\
+  [https://github.com/steveseguin/whip](https://github.com/steveseguin/whip)\
+  It's kinda basic right now, but it will probably grow over time into something more broadly useful.
+
+#### August 17 <a href="#august-31" id="august-31"></a>
+
+* Add a new remote API query option to VDO.Ninja; called getGuestList. eg: `https://api.vdo.ninja/APIKEYHERE123/getGuestList`\
+  \-- It returns an object with guest slot values as its keys, along with the associated stream ID and label for each of those guests.\
+  ![](<../.gitbook/assets/image (5).png>)
+* I've been trying to fix a recent [`&buffer`](../advanced-settings/view-parameters/buffer.md) issue where audio/video fell out of sync with a buffer greater than 3-seconds. The new code isn't yet perfected, but the sync is closer -- I'll continue to work on it. Might be best to keep the buffer under 3 seconds though in the interm.
+
+\*\* on alpha
+
 #### August 13 <a href="#august-31" id="august-31"></a>
 
 * `&humb64` and `&welcomeb64` added. These are the same as `&hangupmessage` and [`&welcome`](../newly-added-parameters/and-welcome.md), which already exist, except these new options take an input as a base64 encoded string. VDO.Ninja will decode the base64 on load.\
@@ -14,7 +29,7 @@
 Option for a custom hang-up message added to VDO.Ninja.\
 \-- `&hangupmessage` (or `&hum`) , which take a URL encoded string. So it can be just "bye", or it can be some HTML, as shown in the link\
 \-- eg: [https://vdo.ninja/alpha/?hum=bye%3Cimg%20src%3D%22.%2Fmedia%2Flogo\_cropped.png%22%3E\&push=ZimFGxM](https://vdo.ninja/alpha/?hum=bye%3Cimg%20src%3D%22.%2Fmedia%2Flogo\_cropped.png%22%3E\&push=ZimFGxM)\
-![](<../.gitbook/assets/image (1).png>)\
+![](<../.gitbook/assets/image (1) (1).png>)\
 \
 \* on alpha
 
@@ -56,7 +71,7 @@ Option for a custom hang-up message added to VDO.Ninja.\
 
 * Added a new floating picture in picture mode, so you can pop out the entire video mix as a pinned window overlay\
   \-- `&pipall` (aka `&pip2`) will add a dedicated button for this mode\
-  ![](<../.gitbook/assets/image (7).png>)\
+  ![](<../.gitbook/assets/image (7) (1).png>)\
   \-- Or just right-click any video and select "Picture in picture all" from the context menu. This is available without any URL option\
   \-- This requires Chrome v115 right now; it might vanish in v116 due to it being in a `chrome field trial`, and so you might need to enable it via `chrome:flags` if it stops working.\
   \
@@ -78,7 +93,7 @@ Option for a custom hang-up message added to VDO.Ninja.\
 
 * Fixed an issue where when you hung up on an iPhone, it would still stay the camera/mic was in use at the goodbye/reload page.
 * Added the "test" audio output button to the in-call settings menu (as seen in image).\
-  ![](<../.gitbook/assets/image (1) (1).png>)
+  ![](<../.gitbook/assets/image (1) (1) (1).png>)
 * Fixed an issue with Firefox mobile's camera rotation being wrong in the local preview. (let me know tho if the issues continues tho)
 * Firefox mobile should not go to sleep any more when idle.
 
@@ -124,7 +139,7 @@ for eg: `https://vdo.ninja/alpha/?director=countrytownc&api=test123456` test dir
 * `&app` added as an option to VDO.Ninja; this loads the site into an "**app mode**" and allows you to load a new URL via the website itself.\
   \-- This parameter is enabled in the mobile native app's new website-mode option by default (the screen share option is also hidden).\
   \* it will go live inside the native Android app whenever I push VDO.Ninja's alpha version into production\
-  ![](<../.gitbook/assets/image (10).png>)
+  ![](<../.gitbook/assets/image (10) (8).png>)
 * Updated the translation files with site/text changes from past few months; should help improve some of the breaking button translations, etc.
 * Updated the translation logic quite a bit; it should further help with some translation issues.
 * Tweaked the director's room CSS a small bit; mainly to help fit languages with long words that don't fit in some buttons.
@@ -400,7 +415,7 @@ https://vdo.ninja/alpha/?view=YbFmisR&poster=./media/bg_sample.webp&hideplaybutt
   \-- This applies globally, so within scenes, other guests, and for the actual guest\
   \-- If a guest's video preview is mirrored already, such as if using [`&mirror`](../advanced-settings/design-parameters/mirror.md), this function will mirror their local mirror effect; so it doesn't override it, but applies on top of it for them.\
   \-- If a guest mirrors someone else's video via the right-click context menu manually, if the director changes the mirror for that video, it will override what the guest has set. They can always re-mirror it manually, but the director in this case takes precedent.\
-  ![](<../.gitbook/assets/image (6) (1).png>)
+  ![](<../.gitbook/assets/image (6) (1) (1).png>)
 
 \*\* this new mirror feature is on alpha for now at [https://vdo.ninja/alpha/](https://vdo.ninja/alpha/). Feel free to test and let me know how you fair.
 
@@ -464,7 +479,7 @@ https://vdo.ninja/alpha/?view=YbFmisR&poster=./media/bg_sample.webp&hideplaybutt
 
 * Fixed an issue where if the main director reloads their page, they will have the current director state updated on load, provided by any existing co-directors in the room. Before, only director -> codirector and codirector -> codirector state syncing worked, resulting in the room's state being cleared whenever the main director reloaded.
 * Made the option to select an [avatar](../advanced-settings/video-parameters/and-avatar.md) / effect default-on when joining as a director.\
-  ![](<../.gitbook/assets/image (7) (1) (1).png>)
+  ![](<../.gitbook/assets/image (7) (1) (1) (2).png>)
 *   Fixed an issue where the mute-video track button didn't always appear when a director with an active video track.
 
     \
@@ -479,7 +494,7 @@ https://vdo.ninja/alpha/?view=YbFmisR&poster=./media/bg_sample.webp&hideplaybutt
 * [`&selfbrowsersurface`](../advanced-settings/screen-share-parameters/and-selfbrowsersurface.md), which excludes the current tab as an screen share source option. (you can pass `include` or `exclude` as a value to control this though)
 * [`&systemaudio`](../advanced-settings/screen-share-parameters/and-systemaudio.md), which excludes the system-audio as an audio source when display sharing. Tab audio is still available though. (can help prevent accidental audio feedback loops)
 * [`&displaysurface`](../advanced-settings/screen-share-parameters/and-displaysurface.md) will pre-select "display-share", rather than tab-share, when screen sharing. You can pass `monitor`, `browser`, or `window` as options to customize this though.\
-  ![](<../.gitbook/assets/image (7) (1).png>)\
+  ![](<../.gitbook/assets/image (7) (1) (1).png>)\
   \
   For more details on these new features see here: [https://developer.chrome.com/docs/web-platform/screen-sharing-controls/](https://developer.chrome.com/docs/web-platform/screen-sharing-controls/) (Chrome/chromium-browsers only)\
   \
@@ -511,7 +526,7 @@ https://vdo.ninja/alpha/?view=YbFmisR&poster=./media/bg_sample.webp&hideplaybutt
   \-- You can change the blurring intensity with `&blur=25` or whatever; `10` is default\
   \-- `&blur=0` works as well\
   \-- may be buggy if using it with [`&forcedlandscape`](../advanced-settings/mobile-parameters/and-forcelandscape.md) or [`&rotate`](../advanced-settings/design-parameters/and-rotate.md)\
-  ![](<../.gitbook/assets/image (8) (1).png>)
+  ![](<../.gitbook/assets/image (8) (1) (3).png>)
 * Added new accessibility options, include button states using the `aria-pressed` attribute.\
   \
   \*\* changes on alpha. ie:\
@@ -619,7 +634,7 @@ https://vdo.ninja/alpha/?view=YbFmisR&poster=./media/bg_sample.webp&hideplaybutt
 #### March 24 <a href="#august-31" id="august-31"></a>
 
 * Right click a video and click `Snapshot to Clipboard` to save the current video frame to the clipboard as a PNG image. This can be pasted into most applications, such as Photoshop, for quick use in a production\
-  ![](<../.gitbook/assets/image (6) (1) (1).png>)\
+  ![](<../.gitbook/assets/image (6) (1) (1) (2).png>)\
   \
   \-- Also the option to save to disk\
   ![](<../.gitbook/assets/image (4) (1) (4) (1).png>)\
@@ -887,7 +902,7 @@ https://vdo.ninja/alpha/?view=YbFmisR&poster=./media/bg_sample.webp&hideplaybutt
   \-- HTTP / WSS remote control also added; `https://api.vdo.ninja/YOURAPIKEY/nextSlide` and `prevSlide`\
   \-- Local Streamdeck support also working, via MIDI.\
   \-- YouTube Tutorial: [https://youtu.be/ORH8betTt8Y](https://youtu.be/ORH8betTt8Y)\
-  ![](<../.gitbook/assets/image (5) (1) (1).png>)![](<../.gitbook/assets/image (19) (3).png>)\
+  ![](<../.gitbook/assets/image (5) (1) (1) (4).png>)![](<../.gitbook/assets/image (19) (3).png>)\
   \
   \* on alpha at vdo.ninja/alpha/
 
@@ -1276,7 +1291,7 @@ https://vdo.ninja/alpha/?view=YbFmisR&poster=./media/bg_sample.webp&hideplaybutt
 
 * When using [`&waitimage`](../advanced-settings/newly-added-parameters/and-waitimage.md), the specified 'waiting to connect' image will appear after all connections end. This is a bit different than the default behaviour of the spinner, which doesn't re-appear, but I assume if you're advanced enough to use the `&waitimage` option, you're okay with this.
 *   Added the option to "draw on the screen", which might be a useful tool for niche use cases where you might need to take notes, etc. It doesn't affix to videos themselves, but rather it's just a full-window transparent canvas overlay, You can start/stop/clear and select a couple style-types with this feature, via the settings -> User menu. You can also do `CTRL + ALT + D` to toggle this as needed.\
-    ![](<../.gitbook/assets/image (2) (1) (1) (1) (1).png>)\
+    ![](<../.gitbook/assets/image (2) (1) (1) (1) (1) (1).png>)\
 
 
     \*\* on alpha at vdo.ninja/alpha
@@ -1292,7 +1307,7 @@ https://vdo.ninja/alpha/?view=YbFmisR&poster=./media/bg_sample.webp&hideplaybutt
   \-- The guest can toggle it on and off in the settings, without needing to go into any advanced audio settings\
   \-- The remote director can still use the existing "channel count' in the advanced audio settings to override this button, unless the guest toggles it back on\
   \-- There's several other ways to set mono mode of course, including [`&monomic`](../advanced-settings/audio-parameters/and-monomic.md), [`&inputchannels=1`](../advanced-settings/audio-parameters/and-inputchannels.md), [`&stereo=3`](../general-settings/stereo.md), channelCount, [`&mono`](../advanced-settings/view-parameters/mono.md) (playback), [`&ec&dn&ag`](../guides/audio-filters.md), and within OBS/Windows itself.\
-  ![](<../.gitbook/assets/image (3) (1) (1) (2).png>)![](<../.gitbook/assets/image (1) (1) (1) (3) (1).png>)\
+  ![](<../.gitbook/assets/image (3) (1) (1) (2) (1).png>)![](<../.gitbook/assets/image (1) (1) (1) (3) (1).png>)\
   \
   \*\* updated on to alpha at vdo.ninja/alpha/
 
@@ -1403,7 +1418,7 @@ https://vdo.ninja/alpha/?view=YbFmisR&poster=./media/bg_sample.webp&hideplaybutt
   \-- leave the passed value empty if you wish to have the white basic rule-of-thirds show as default.\
   example: `https://vdo.ninja/alpha/?thirds=./media/thirdshead.svg`\
   \*\* on alpha.\
-  ![](<../.gitbook/assets/image (7) (1) (1) (2).png>)
+  ![](<../.gitbook/assets/image (7) (1) (1) (2) (1).png>)
 * Added [`proxy.vdo.ninja/alpha/`](https://proxy.vdo.ninja/alpha/) as an alternative to `vdo.ninja/?proxy`. If's a more user-friendly version of [`&proxy`](../newly-added-parameters/and-proxy.md). \*\* Just on alpha for now
 
 #### August 16

@@ -32,7 +32,7 @@ You can change the blurring intensity with `&blur=25` or whatever; `10` is defau
 
 May be buggy if using it with [`&forcedlandscape`](../mobile-parameters/and-forcelandscape.md) or [`&rotate`](and-rotate.md)
 
-<figure><img src="../../.gitbook/assets/image (8) (1).png" alt=""><figcaption></figcaption></figure>
+<figure><img src="../../.gitbook/assets/image (8) (1) (3).png" alt=""><figcaption></figcaption></figure>
 
 ## Related
 

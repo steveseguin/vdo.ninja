@@ -22,7 +22,7 @@ Remote control PowerPoint with VDO.Ninja
 
 <div align="left">
 
-<figure><img src="../.gitbook/assets/image (5) (1) (1).png" alt=""><figcaption><p><a href="../advanced-settings/settings-parameters/and-powerpoint.md"><code>&#x26;powerpoint</code></a> as a URL parameter</p></figcaption></figure>
+<figure><img src="../.gitbook/assets/image (5) (1) (1) (4).png" alt=""><figcaption><p><a href="../advanced-settings/settings-parameters/and-powerpoint.md"><code>&#x26;powerpoint</code></a> as a URL parameter</p></figcaption></figure>
 
 </div>
 

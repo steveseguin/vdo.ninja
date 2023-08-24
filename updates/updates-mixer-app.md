@@ -16,7 +16,7 @@
 #### July 19
 
 * Mixer App has a few new toggle options to help configure the guest-invite options. AEC, auto gain, and denosing - toggling off can give better audio quality in some cases.\
-  ![](<../.gitbook/assets/image (9).png>)
+  ![](<../.gitbook/assets/image (9) (7).png>)
 
 \* available at vdo.ninja/alpha/mixer
 

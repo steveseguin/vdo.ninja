@@ -2,6 +2,13 @@
 
 [raspberry.ninja](../steves-helper-apps/raspberry.ninja/ "mention")
 
+#### August 23
+
+* Raspberry.Ninja updated with new feature and code example that allows developers to access VDO.Ninja video within OpenCV, Tensorflow, and other cv/ml python apps.\
+  \-- The ability to convert VDO.Ninja video into an motion-jpeg stream is one of the examples, which also includes a YouTube video guide:\
+  [https://youtu.be/LGaruUjb8dg](https://youtu.be/LGaruUjb8dg?si=-F2\_rn9t6P6FCn87)\
+  \-- Some install instructions for using raspberry ninja on windows also added in the wsl folder.
+
 #### August 5
 
 * Added a new simplerinstall.md installation instructions to the Raspberry.Ninja project, inside the raspberry\_pi folder. It looks like you can now get Raspberry.Ninja working on the new Raspberry Image image builds (or most other systems) without having to use a custom image or building source from scratch, so setup and use is now pretty easy. I'll be pushing more changes on this front over the coming days.
