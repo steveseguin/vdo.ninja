@@ -10,7 +10,11 @@ For the most recent version of Electron Capture documentation, please visit: [ht
 
 This copy of the documentation is provided here simply as a consolidated resource for our LMM AI support bot to learn from. It will be updated only occasionally, as needed.
 
+Chronologically updates are here:
 
+{% content-ref url="../../updates/updates-electron-capture-app.md" %}
+[updates-electron-capture-app.md](../../updates/updates-electron-capture-app.md)
+{% endcontent-ref %}
 
 ### This is the **Electron Capture app**,
 
@@ -38,7 +42,7 @@ Lastly, since playback is agnostic, you can window-capture the same video multip
 
 ### Video guide on how to use Electron Capture
 
-[![Video Guide for Electron](https://user-images.githubusercontent.com/2575698/129784248-3270a876-6831-4595-9eb5-63665843e631.png)](https://youtu.be/mZ7X7WvRcRA)
+{% embed url="https://youtu.be/mZ7X7WvRcRA?si=oNTT0e3POOHAE_kj" %}
 
 ### Settings and Parameters
 
@@ -115,13 +119,13 @@ If you right-click the application, you'll get a context menu with additional op
 
 #### Screen-share, global hotkeys, and user-prompts
 
-**screen sharing**
+**Screen-sharing**
 
 Starting with version 1.6.0, to enable screen-share support and some other features, the app needs Node Integration enabled; aka, Elevated Privileges. This will allow remote websites to run node-based code, which is a security concern if visiting untrusted websites.
 
 You can enable Elevated Privileges for the app via the command line with `--node 1` or in the app by right-clicking and selecting "Elevate Privileges" from the context-menu. If right-clicking to enable this mode, the app may reload the page afterwards.
 
-A unique feature about the Electron Capture app is that it can auto-select a screen or window when screen-sharing with VDO.Ninja, without user-input. Adding to the VDO.Ninja URL, \&ss=1 will select display 1, \&ss=2 for the second display, etc. Or specify a window with \&ss=window\_name\_here.
+A unique feature about the Electron Capture app is that it can auto-select a screen or window when screen-sharing with VDO.Ninja, without user-input. Adding to the VDO.Ninja URL, [`&ss=1`](../../source-settings/screenshare.md) will select display 1, `&ss=2` for the second display, etc. Or specify a window with `&ss=window_name_here`.
 
 To select Screen 1 automatically on load, for example you can do:
 
@@ -135,7 +139,7 @@ elecap.exe --node 1 --url "https://vdo.ninja/beta/?ss=Discord&autostart"
 
 It's also possible to select audio-only when screen sharing via Electron Capture with VDO.Ninja; you do not need to select a video if you wish to share audio-only.
 
-**global hotkeys**
+**Global hotkeys**
 
 Global Hotkeys, such as CTRL+M, are supported. CTRL+M will mute the mic, in the most recently opened window. You can assign a custom global hot-key in VDO.Ninja, and it will be respected by Electron Capture. (VDO.Ninja Settings -> User -> Global Hotkey)
 
@@ -147,21 +151,21 @@ Youtube has a built-in automatic ad-skipper added, and for both Youtube, Twitch,
 
 A popular way of outputting audio from the Electron Capture app into OBS is done using a virtual audio cable. Some such cables include:
 
-Mac Audio Options: https://rogueamoeba.com/loopback/ (macOS & non-free, but excellent), and https://existential.audio/blackhole/ (macOS & free) (and more here https://github.com/steveseguin/vdoninja/wiki/FAQ#macaudio)
+Mac Audio Options: https://rogueamoeba.com/loopback/ (MacOS & non-free, but excellent), and [https://existential.audio/blackhole/](https://existential.audio/blackhole/) (MacOS & free) (and more here [https://github.com/steveseguin/vdoninja/wiki/FAQ#macaudio](https://github.com/steveseguin/vdoninja/wiki/FAQ#macaudio))
 
-Windows Audio Option: https://www.vb-audio.com/Cable/ (donationware)
+Windows Audio Option: [https://www.vb-audio.com/Cable/](https://www.vb-audio.com/Cable/) (donation ware)
 
 If you intend to have more than a 6 virtual audio cables, you can try VAC instead of VB Cables, as VAC seems to support dozens of virtual audio cables, while VB Cable supports just a few: https://vac.muzychenko.net/
 
-You can also use some advanced URL parameters to output the audio to specific channels. The following link links the parameters and the outcome, based on device/software used: https://docs.google.com/spreadsheets/d/1R-y7xZ2BCn-GzTlwqq63H8lorXecO02DU9Hu4twuhuA/edit?usp=sharing
+You can also use some advanced URL parameters to output the audio to specific channels. The following link links the parameters and the outcome, based on device/software used: [https://docs.google.com/spreadsheets/d/1R-y7xZ2BCn-GzTlwqq63H8lorXecO02DU9Hu4twuhuA/edit?usp=sharing](https://docs.google.com/spreadsheets/d/1R-y7xZ2BCn-GzTlwqq63H8lorXecO02DU9Hu4twuhuA/edit?usp=sharing)
 
-You can still capture audio via OBS Browser source, appending \&novideo to the URL to disable video. Appending \&noaudio to the Electron Capture URL would conversely disable audio there, allowing you to capture audio with OBS browser source and video with Electron Capture. The audio/video sync might be slightly off in this setup, but not noticible in most cases.
+You can still capture audio via OBS Browser source, appending [`&novideo`](../../advanced-settings/video-parameters/novideo-1.md) to the URL to disable video. Appending [`&noaudio`](../../advanced-settings/view-parameters/noaudio.md) to the Electron Capture URL would conversely disable audio there, allowing you to capture audio with OBS browser source and video with Electron Capture. The audio/video sync might be slightly off in this setup, but not noticible in most cases.
 
 **Changing the audio output device**
 
-If you right click the app when on a site, you can change the audio output device for that site. This is useful for setting a Youtube or VDO.Ninja video to output to a virtual audio cable or headphones, rather than playout via the default audio device.
+If you right click the app when on a site, you can change the audio output device for that site. This is useful for setting a YouTube or VDO.Ninja video to output to a virtual audio cable or headphones, rather than playout via the default audio device.
 
-On macOS, this is especially helpful since there is a lack of audio routing controls.
+On MacOS, this is especially helpful since there is a lack of audio routing controls.
 
 Please note: To use this feature, you will need to elevate the app's privilleges, which can expose the user to security issues on untrusted websites.
 
@@ -169,17 +173,17 @@ Please note: To use this feature, you will need to elevate the app's privilleges
 
 You can pin the app on top of other apps via the right-click menu, and when enabled, you can then also enable "click thru" mode also via the context-menu, so no mouse input is captured. The app acts a bit like it is invisible, turning it into a bit of HUD for other applications and games.
 
-If using socialstream or vdo.ninja, you can append \&transparent to those URLs to make the background transparent. You can also use custom CSS to make web pages shown semi-transparent, so you can still see underneath.
+If using Social Stream or vdo.ninja, you can append \&transparent to those URLs to make the background transparent. You can also use custom CSS to make web pages shown semi-transparent, so you can still see underneath.
 
 Once "click thru" mode is enabled, you can re-enable click-capture by just selecting the app via the task bar, as bringing the app into focus will disable the click-thru mode.
 
 #### Syphon Output
 
-While there is no native Syphon or NDI output option yet available, one user has mentioned a solution for some users: http://www.sigmasix.ch/syphoner/
+While there is no native Syphon or NDI output option yet available, one user has mentioned a solution for some users: [http://www.sigmasix.ch/syphoner/](http://www.sigmasix.ch/syphoner/)
 
 #### Automation Workflows with VDO.Ninja
 
-You can see a quick start / cheat sheet guide for example uses of the app with VDO.Ninja here: https://github.com/steveseguin/vdo.ninja/blob/quickstart/automation/cheatsheet\_obsn\_automation.md
+You can see a quick start / cheat sheet guide for example uses of the app with VDO.Ninja here: [https://github.com/steveseguin/vdo.ninja/blob/quickstart/automation/cheatsheet\_obsn\_automation.md](https://github.com/steveseguin/vdo.ninja/blob/quickstart/automation/cheatsheet\_obsn\_automation.md)
 
 ### Notes on Using and Closing the App
 
@@ -204,7 +208,7 @@ You can see a quick start / cheat sheet guide for example uses of the app with V
 
 ## Links to downloads below.
 
-You can find the newest release builds of the app here: https://github.com/steveseguin/electroncapture/releases or see below.
+You can find the newest release builds of the app here: [https://github.com/steveseguin/electroncapture/releases](https://github.com/steveseguin/electroncapture/releases) or see below.
 
 Please note that the Electron Capture app does not auto-update to newer versions of Chromium. This can become a security issue if it is left to become out of date. It's also recommended to not use the Electron Capture app with websites and remote VDO.Ninja peers that you do not trust.
 
@@ -212,16 +216,16 @@ Please note that the Electron Capture app does not auto-update to newer versions
 
 There are two versions for Windows. An installer for x64 systems. There's also a portable version, which is larger in size, but supports x64 and x86 (32-bit) systems. The portable version requires no install and is easier to use from the command-line or from a batch file.
 
-New release here: https://github.com/steveseguin/electroncapture/releases/
+New release here: [https://github.com/steveseguin/electroncapture/releases/](https://github.com/steveseguin/electroncapture/releases/)
 
 If you have problems, try a different version or contact me on Discord.
 
 #### Mac Version
 
-* Newest version can be found here: https://github.com/steveseguin/electroncapture/releases/
-* If having problems, there's an older version here (v1.1.3) https://github.com/steveseguin/electroncapture/releases/download/1.1.3/obsn-1.1.3.dmg
+* Newest version can be found here: [https://github.com/steveseguin/electroncapture/releases/](https://github.com/steveseguin/electroncapture/releases/)
+* If having problems, there's an older version here (v1.1.3) [https://github.com/steveseguin/electroncapture/releases/download/1.1.3/obsn-1.1.3.dmg](https://github.com/steveseguin/electroncapture/releases/download/1.1.3/obsn-1.1.3.dmg)
 
-If on version of Electron doesn't work for you all that well, try a different version. There may be some issues with rounded edges depending on you macOS version and the Electron version used.
+If on version of Electron doesn't work for you all that well, try a different version. There may be some issues with rounded edges depending on you MacOS version and the Electron version used.
 
 #### Linux Version
 
@@ -285,7 +289,7 @@ This will probably file if you do not disable the GPU / hardware-acceration with
 
 You'll also need nodejs and npm installed.
 
-If on Windows, you can find the NPM/Nodejs install files here: https://nodejs.org/en/download/current/
+If on Windows, you can find the NPM/Nodejs install files here: [https://nodejs.org/en/download/current/](https://nodejs.org/en/download/current/)
 
 and then to get the source code for Electron Capture,
 
@@ -340,9 +344,9 @@ Change the capture method in OBS to "BitBlt"and uncheck the Capture Cursor. Also
 
 ![image](https://user-images.githubusercontent.com/2575698/126881462-b6916972-aa46-41bd-be01-54e3c2a58906.png)
 
-Adding \&nocursor to VDO.Ninja will hide the cursor in that browser window, but that often isn't enough. If the above fails, make sure you are window capturing with OBS using the same display adapter for both OBS and the Electron window.
+Adding [`&nocursor`](../../general-settings/and-nocursor.md) to VDO.Ninja will hide the cursor in that browser window, but that often isn't enough. If the above fails, make sure you are window capturing with OBS using the same display adapter for both OBS and the Electron window.
 
-Lastly, if that still doesn't help, you can try Windows + Tab (on windows), and host the Electron Capture app on the secondary windows desktop. Window+Tab back to the main one and select the window then. You may need to toggle between the two desktops after selecting the window to capture, to get it to show in OBS, but it is one way of hiding the mouse.
+Lastly, if that still doesn't help, you can try Windows + Tab (on windows), and host the Electron Capture app on the secondary windows desktop. Windows + Tab back to the main one and select the window then. You may need to toggle between the two desktops after selecting the window to capture, to get it to show in OBS, but it is one way of hiding the mouse.
 
 You can also drag the Electron Capture far off screen, so the cursor can't approach it really.
 
@@ -361,4 +365,4 @@ Seems to work with newer npm versions
 
 #### Thank you
 
-"Electron capture is one process that unstable atoms can use to become more stable. " - https://education.jlab.org/glossary/electroncapture.html
+"Electron capture is one process that unstable atoms can use to become more stable. " - [https://education.jlab.org/glossary/electroncapture.html](https://education.jlab.org/glossary/electroncapture.html)

@@ -6,9 +6,13 @@ description: This is an archived snapshot of the documentation as of Aug. 16, 20
 
 ## Please note that this documentation is not kept up to date.
 
-Please visit [https://raspberry.ninja](../../updates/updates-raspberry.ninja.md) for the most up-to-date documentation for Raspberry.Ninja. This documentation is included here as a conslidate resource for our LMM AI support bot to learn from. It will be updated only occassional, as needed.
+Please visit [https://raspberry.ninja](../../updates/updates-raspberry.ninja.md) for the most up-to-date documentation for Raspberry.Ninja. This documentation is included here as a consolidate resource for our LMM AI support bot to learn from. It will be updated only occasional, as needed.
 
+Chronologically updates are here:
 
+{% content-ref url="../../updates/updates-raspberry.ninja.md" %}
+[updates-raspberry.ninja.md](../../updates/updates-raspberry.ninja.md)
+{% endcontent-ref %}
 
 ## ![](https://user-images.githubusercontent.com/2575698/107161314-f6523f80-6969-11eb-9e9b-9135554b87b5.png) Raspberry Ninja
 
@@ -20,13 +24,15 @@ It also has the ability to record remote VDO.Ninja streams to disk, without need
 
 The core concepts and code used in this project can be reused for other projects; most Linux systems, and a large variety of embedded systems; potentially even smartphones. There's a focus of supporting Raspberry Pis and Nvidia Jetson systems, which includes offering pre-built images and install scripts. Other Linux system users should still be able to use the code, but setup support will be limited.
 
-Youtube video demoing: [https://youtu.be/J0qqXxHNU\_c](https://youtu.be/J0qqXxHNU\_c)
+YouTube video demoing:
+
+{% embed url="https://youtu.be/J0qqXxHNU_c" %}
 
 I also have another longer [YouTube video here](https://youtu.be/eqC2SRXoPK4), which focuses on setting up the Raspberry\_ninja for IRL-streaming.\*\*\*\*
 
 [![image](https://user-images.githubusercontent.com/2575698/127951812-b799a6e6-f77e-4749-8ef1-15221b842805.png)](https://youtu.be/J0qqXxHNU\_c)
 
-Recent updates to Raspberry Ninja have added improved error correction and video redundency, along with automated dynamic bitrate controls for congestion management. This has greatly improved stream reliabilty, reducing frame loss, and limiting buffer sizes. That said, having more than 5-megabites of upload bandwidth and having a solid connection is recommend if intending to use the default settings.
+Recent updates to Raspberry Ninja have added improved error correction and video redundancy, along with automated dynamic bitrate controls for congestion management. This has greatly improved stream reliability, reducing frame loss, and limiting buffer sizes. That said, having more than 5-megabites of upload bandwidth and having a solid connection is recommend if intending to use the default settings.
 
 ### Install options
 
@@ -68,8 +74,7 @@ Still, it might be useful if you want to pull a stream from a remote Raspberry.N
 
 See the WSL install script here: Jump there now
 
-It is possible to install Gstreamer for Windows natively, but due to the difficulty in that all, I'm not supporting it officially at present. The main challenge is `cairo` fails to compile, so that needs to be fixed first.\
-
+It is possible to install Gstreamer for Windows natively, but due to the difficulty in that all, I'm not supporting it officially at present. The main challenge is `cairo` fails to compile, so that needs to be fixed first.
 
 ### Generic quick-install method
 
@@ -273,19 +278,19 @@ I have gotten the low-light Arducam IMX462 to work with the newest image for RPI
 
 Links for such low-light cameras:
 
-https://www.uctronics.com/arducam-for-raspberry-pi-ultra-low-light-camera-1080p-hd-wide-angle-pivariety-camera-module-based-on-1-2-7inch-2mp-starvis-sensor-imx462-compatible-with-raspberry-pi-isp-and-gstreamer-plugin.html (I own this camera and it works on a Raspberry Pi 4 with my newest created RPi image. It works if you do not use the pivariety daughterboard and just connecting directly; you'll need to change the config.txt file a bit and use --libcamera to use though)
+[https://www.uctronics.com/arducam-for-raspberry-pi-ultra-low-light-camera-1080p-hd-wide-angle-pivariety-camera-module-based-on-1-2-7inch-2mp-starvis-sensor-imx462-compatible-with-raspberry-pi-isp-and-gstreamer-plugin.html](https://www.uctronics.com/arducam-for-raspberry-pi-ultra-low-light-camera-1080p-hd-wide-angle-pivariety-camera-module-based-on-1-2-7inch-2mp-starvis-sensor-imx462-compatible-with-raspberry-pi-isp-and-gstreamer-plugin.html) (I own this camera and it works on a Raspberry Pi 4 with my newest created RPi image. It works if you do not use the pivariety daughterboard and just connecting directly; you'll need to change the config.txt file a bit and use --libcamera to use though)
 
-https://www.amazon.ca/VEYE-MIPI-327E-forRaspberry-Jetson-XavierNX-YT0-95-4I/dp/B08QJ1BBM1
+[https://www.amazon.ca/VEYE-MIPI-327E-forRaspberry-Jetson-XavierNX-YT0-95-4I/dp/B08QJ1BBM1](https://www.amazon.ca/VEYE-MIPI-327E-forRaspberry-Jetson-XavierNX-YT0-95-4I/dp/B08QJ1BBM1)
 
-https://www.e-consystems.com/usb-cameras/sony-starvis-imx462-ultra-low-light-camera.asp (USB-based; more compatible with other devices)
+[https://www.e-consystems.com/usb-cameras/sony-starvis-imx462-ultra-low-light-camera.asp ](https://www.e-consystems.com/usb-cameras/sony-starvis-imx462-ultra-low-light-camera.asp)(USB-based; more compatible with other devices)
 
-You can buy IR Filters, or you can buy lenses that come with IR filters, if needed, for pretty cheap. Many are designed for security applications, so be aware. https://fulekan.aliexpress.com/store/1862644
+You can buy IR Filters, or you can buy lenses that come with IR filters, if needed, for pretty cheap. Many are designed for security applications, so be aware. [https://fulekan.aliexpress.com/store/1862644](https://fulekan.aliexpress.com/store/1862644)
 
 #### 360-degree cameras
 
 Support for the Theta 4k 360 USB camera has been added. Has been tested with the Jetson. It is likely too slow to use with a Raspberry Pi though.
 
-Install script and brief usage example found here: https://github.com/steveseguin/raspberry\_ninja/blob/main/nvidia\_jetson/theta\_z1\_install.sh
+Install script and brief usage example found here: [https://github.com/steveseguin/raspberry\_ninja/blob/main/nvidia\_jetson/theta\_z1\_install.sh](https://github.com/steveseguin/raspberry\_ninja/blob/main/nvidia\_jetson/theta\_z1\_install.sh)
 
 #### HDMI Input options
 
@@ -319,23 +324,25 @@ If using a virtual MIDI device on the remote viewer's computer, such as `loopMID
 
 Please note, the raspberry\_ninja publish.py script can both send and recieve MIDI commands over a single peer connection, which is a bit different than how video/audio work currently. It's also different than how browser to browser currently is setup, where a sender won't ever request MIDI data, yet the raspberry\_ninja code does allow the sender to both send and receive MIDI data.
 
-midi demo video: https://youtu.be/Gry9UFtOTmQ
+midi demo video:
+
+{% embed url="https://youtu.be/Gry9UFtOTmQ?si=SpIBdDBPu9J1MN2M" %}
 
 #### Note:
 
-* Installation from source is pretty slow and problematic on a rpi; using system images makes using this so much easier.
+* Installation from source is pretty slow and problematic on a RPI; using system images makes using this so much easier.
 * Please use the provided backup server for development purposes; that wss server is `wss://apibackup.vdo.ninja:443` and for viewing: `https://backup.vdo.ninja`
 * Passwords must be DISABLED explicitly as this code does not yet have the required crypto logic added yet. Things will not playback if you leave off `&password=false`
 * The current code does not dynamically adjust resolution to combat frame loss; rather it will just drop frames. As a result, having a high quality connection between sender and viewer is required. Consider lowering the bitrate or resolution if problems persist.
 * Speedify.com works on Linux and embedded devices, providing network bonding and fail-over connections. The install instructions are pretty easy and can be found here: https://support.speedify.com/article/562-install-speedify-linux (not sponsored)
 * If you want to do computer-vision / machine-learning with cv2 or tensorflow on the resulting webRTC video stream, I have an open-source project here that you can take snippets from that you can add to raspberry\_ninja to do what you want: [github.com/ooblex](https://github.com/ooblex/ooblex/blob/master/code/decoder.py#L84)
 * If you wish to play a video back, using a Raspberry Pi, try this "kiosk" mode image that can be found here: https://awesomeopensource.com/project/futurice/chilipie-kiosk. Raspberry Pis seem to handle video playback in Chromium-based browsers OK. I'l try to have browser-free playback at some point in the future.
-* If needing to make a backup of your microSD, see: http://sigkillit.com/2022/10/13/shrink-a-raspberry-pi-or-retropie-img-on-windows-with-pishrink/
+* If needing to make a backup of your microSD, see: [http://sigkillit.com/2022/10/13/shrink-a-raspberry-pi-or-retropie-img-on-windows-with-pishrink/](http://sigkillit.com/2022/10/13/shrink-a-raspberry-pi-or-retropie-img-on-windows-with-pishrink/)
 
 #### TODO:
 
 * Fix VP8/VP9 recordings and add muxing to the H264 recordings (moderate)
-* Have an option to "playback" an incoming stream full-screened on a pi or jetson, to use as an input to an ATEM mixer.
+* Have an option to "playback" an incoming stream full-screened on a pi or Jetson, to use as an input to an ATEM mixer.
 * Add a jitter buffer to the recording mode (moderate)
 * Add support for passwords and group rooms (steve)
 * Make easier to use for novice users; perhaps adding a local web-interface or config file accessible via an SD card reader via Windows. These options could then allow for setting of wifi passwords, device, settings, stream IDs, etc, without needing to SSH in or using nano/vim. (moderate)

@@ -8,10 +8,9 @@ For the most up to date copy of this API endpoint documentation, please go to [h
 
 For a test sandbox, to easily try out a few of the basic API options via a web dashboard, please go to: [https://companion.vdo.ninja/](https://companion.vdo.ninja/)
 
-You can use this API on its own directly, or can use it indirectly via the Bitfocus Companion app /w the VDO.Ninja module.  The Companion app can be found here: [https://bitfocus.io/companion](https://bitfocus.io/companion)\
-\
-While not maintained or controlled by VDO.NInja, you can find the third-party Bitfocus Companion module for VDO.NInja here: [https://github.com/bitfocus/companion-module-vdo-ninja](https://github.com/bitfocus/companion-module-vdo-ninja)\
+You can use this API on its own directly, or can use it indirectly via the Bitfocus Companion app /w the VDO.Ninja module.  The Companion app can be found here: [https://bitfocus.io/companion](https://bitfocus.io/companion)
 
+While not maintained or controlled by VDO.Ninja, you can find the third-party Bitfocus Companion module for VDO.Ninja here: [https://github.com/bitfocus/companion-module-vdo-ninja](https://github.com/bitfocus/companion-module-vdo-ninja)
 
 ## Companion Ninja _(aka, the VDO.Ninja remote HTTP/WSS API)_
 
@@ -29,7 +28,7 @@ Note: This API should also work with the vdo.ninja/beta/mixer?api=XXXXX page.
 
 A fantastic user in the community also has made a BitFocus-Companion module for this VDO.Ninja API. If you wish to avoid doing custom API calls, definitely give the module a go.
 
-https://github.com/bitfocus/companion-module-vdo-ninja
+[https://github.com/bitfocus/companion-module-vdo-ninja](https://github.com/bitfocus/companion-module-vdo-ninja)
 
 #### Customized IFRAME API Integration
 
@@ -37,9 +36,9 @@ You can also use the Companion Ninja service with your own custom set of command
 
 An example of this approach can be found here:
 
-https://github.com/steveseguin/Companion-Ninja/blob/main/iframe\_api\_customizable\_example.html
+[https://github.com/steveseguin/Companion-Ninja/blob/main/iframe\_api\_customizable\_example.html](https://github.com/steveseguin/Companion-Ninja/blob/main/iframe\_api\_customizable\_example.html)
 
-Also note, the IFRAME API used by VDO.Ninja (v19.1) is also largely backwards compatible with the Companion Ninja API. You can find the IFRAME developer sandbox here: https://vdo.ninja/beta/iframe to get a sense of what is available.
+Also note, the IFRAME API used by VDO.Ninja (v19.1) is also largely backwards compatible with the Companion Ninja API. You can find the IFRAME developer sandbox here: [https://vdo.ninja/beta/iframe](https://vdo.ninja/beta/iframe) to get a sense of what is available.
 
 #### Technical Details of the API
 
@@ -149,15 +148,17 @@ layout 2 is the second custom layout
 etc
 ```
 
-If using the mixer app, the layout objects are controlled via the mixer app itself, so you don't need to pass an object in that case to the URL.
+If using the [Mixer App](../../../steves-helper-apps/mixer-app.md), the layout objects are controlled via the mixer app itself, so you don't need to pass an object in that case to the URL.
 
 `?layouts=[[{"x":0,"y":0,"w":100,"h":100,"slot":0}],[{"x":0,"y":0,"w":100,"h":100,"slot":1}],[{"x":0,"y":0,"w":100,"h":100,"slot":2}],[{"x":0,"y":0,"w":100,"h":100,"slot":3}],[{"x":0,"y":0,"w":50,"h":100,"c":false,"slot":0},{"x":50,"y":0,"w":50,"h":100,"c":false,"slot":1}],[{"x":0,"y":0,"w":100,"h":100,"z":0,"c":false,"slot":1},{"x":70,"y":70,"w":30,"h":30,"z":1,"c":true,"slot":0}],[{"x":0,"y":0,"w":50,"h":50,"c":true,"slot":0},{"x":50,"y":0,"w":50,"h":50,"c":true,"slot":1},{"x":0,"y":50,"w":50,"h":50,"c":true,"slot":2},{"x":50,"y":50,"w":50,"h":50,"c":true,"slot":3}],[{"x":0,"y":16.667,"w":66.667,"h":66.667,"c":true,"slot":0},{"x":66.667,"y":0,"w":33.333,"h":33.333,"c":true,"slot":1},{"x":66.667,"y":33.333,"w":33.333,"h":33.333,"c":true,"slot":2},{"x":66.667,"y":66.667,"w":33.333,"h":33.333,"c":true,"slot":3}]]`
 
-Some of these layout features are only available with Version 22 of VDO.Ninja; specifically the \&layouts= parameter is available on v22.5 or newer only.
+Some of these layout features are only available with [Version 22](../../../releases/v22.md) of VDO.Ninja; specifically the [`&layouts=`](../../director-parameters/and-layouts.md) parameter is available on v22.5 or newer only.
 
-See https://docs.vdo.ninja/advanced-settings/director-parameters/and-layouts for details and better documentation on this layout function.
+See for details and better documentation on this layout function:
 
-**Commands that target remote guests as a director (available on vdo.ninja v19)**
+[and-layouts.md](../../director-parameters/and-layouts.md "mention")
+
+**Commands that target remote guests as a director (available on VDO.Ninja v19)**
 
 The guest slot (1 to 99) or the guests's stream ID can be used as a target.
 
@@ -185,7 +186,7 @@ Currently toggling is primarily available for options; on/off absolute value opt
 
 #### Callbacks / State Responses
 
-Start with Version 22 of VDO.Ninja, the API requestes will have a response reflecting the state of the request.
+Start with Version 22 of VDO.Ninja, the API requests will have a response reflecting the state of the request.
 
 For example, if toggling a mic of a guest, the response of the HTTP API request will be `true` or `false`, based on whether the mic is now muted or not. If the request is an object, such as when using `getDetails`, you'll get a JSON response instead of basic text. There's also `getGuestList`, which can be useful for getting a set of possible guest slot positional values, along with its corresponding stream ID and label.
 
@@ -195,8 +196,8 @@ Basic text/word responses are such things as `true`, `false`, `null`, `fail`, {`
 
 ![image](https://user-images.githubusercontent.com/2575698/172721854-0a8fe712-aaf9-4128-bbb7-0f3de7ca0d3e.png)
 
-If the request was made via Websockets, instead of the HTTP request, you'll get a JSON object back that contains the same data, along with the original request, including custom data fields. These custom data fields, such as `data.cid = 3124`, can be used to link requests with the callback, if precision with the requests is needed.
+If the request was made via WebSockets, instead of the HTTP request, you'll get a JSON object back that contains the same data, along with the original request, including custom data fields. These custom data fields, such as `data.cid = 3124`, can be used to link requests with the callback, if precision with the requests is needed.
 
-There is no time-out when using Websockets; the callback can happen seconds or minutes later even, although normally a response should be expected in under a second as well.
+There is no time-out when using WebSockets; the callback can happen seconds or minutes later even, although normally a response should be expected in under a second as well.
 
 ![image](https://user-images.githubusercontent.com/2575698/172722028-860dd0b9-b73c-4ef9-8d22-b909bd79c88b.png)

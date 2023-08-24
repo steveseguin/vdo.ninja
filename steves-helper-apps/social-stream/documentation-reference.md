@@ -4,7 +4,13 @@ description: This is a snapshot of the Social Stream documentation, taken Aug. 1
 
 # Documentation reference
 
-For the newest and most up-to-date copy of the Social Stream documentation, please visit: [https://github.com/steveseguin/social\_stream](https://github.com/steveseguin/social\_stream)  This article won't be kept as up-to-date, but should cover the basics; it is provided here as a consolidated resource for our LMM AI support bot to learn from.
+For the newest and most up-to-date copy of the Social Stream documentation, please visit: [https://github.com/steveseguin/social\_stream](https://github.com/steveseguin/social\_stream). This article won't be kept as up-to-date, but should cover the basics; it is provided here as a consolidated resource for our LMM AI support bot to learn from.
+
+Chronologically Updates are here:
+
+{% content-ref url="../../updates/updates-social-stream-and-chat-overlay.md" %}
+[updates-social-stream-and-chat-overlay.md](../../updates/updates-social-stream-and-chat-overlay.md)
+{% endcontent-ref %}
 
 ## Social Stream
 
@@ -19,7 +25,7 @@ Consolidate your live social messaging streams
 * Multi-channel source-icon support, so you can differentiate between different streams and creators
 * No user login, API key, or permission needed to capture the chat messages from most sites and services.
 * Queuing of messages for later highlighting
-* Free community support at https://discord.socialstream.ninja
+* Free community support at [https://discord.socialstream.ninja](https://discord.socialstream.ninja)
 
 Social Stream makes use of VDO.Ninja's data-transport API to stream data securely between browser windows with extremely low latency and all for free!
 
@@ -100,7 +106,7 @@ Social Stream makes use of VDO.Ninja's data-transport API to stream data securel
 * estrim - live video chat supported
 * livestorm.io (open the 'external sidebar', which might be a plugin, and it should capture that)\
   \
-  ... and likely many many more.  Even more on request
+  ... and likely many many more. Even more on request
 
 **Chat graveyard 🪦🪦🪦**
 
@@ -115,9 +121,9 @@ Past supported sites that have ceased to exist.
 
 An older guide covering the basics of setting up Social Stream:
 
-https://www.youtube.com/watch?v=X\_11Np2JHNU
+{% embed url="https://youtu.be/X_11Np2JHNU?si=DeWtc36ZAvD4PK67" %}
 
-For a more recent guide focusing on setup for discord, slack, whatsapp, and telegram, see:
+For a more recent guide focusing on setup for Discord, slack, Whatsapp, and Telegram, see:
 
 {% embed url="https://www.youtube.com/watch?v=L3l0_8V1t0Q" %}
 
@@ -127,7 +133,7 @@ This extension should work with Chromium-based browser on systems that support w
 
 Currently you must download, extract, and load the browser extension manually. It is not available yet in the browser's web store.
 
-The link to download newest version is here: https://github.com/steveseguin/social\_stream/archive/refs/heads/main.zip
+The link to download newest version is here: [https://github.com/steveseguin/social\_stream/archive/refs/heads/main.zip](https://github.com/steveseguin/social\_stream/archive/refs/heads/main.zip)
 
 Once extracted into a folder, you can go here to load it: chrome://extensions/
 
@@ -211,11 +217,11 @@ Next, using the provided two links, you can manage the social stream of chat mes
 
 You can hold ALT on the keyboard to resize elements in OBS, allowing you to crop the chat stream if you want to hide aspects like the time or source icon.
 
-Clicking on a message will have it appear in the overlay link. You can press the clear button to hide it or use the \&showtime=20000 URL option added to the overlay page to auto-hide it after 20-seconds (20,000 ms).
+Clicking on a message will have it appear in the overlay link. You can press the clear button to hide it or use the `&showtime=20000` URL option added to the overlay page to auto-hide it after 20-seconds (20,000 ms).
 
 ![image](https://user-images.githubusercontent.com/2575698/142854951-fe1f34c9-0e24-495f-8bfe-a33ab69fa7cb.png)
 
-There is a \&darkmode option, but the default is white, for the dock.
+There is a `&darkmode` option, but the default is white, for the dock.
 
 ![image](https://user-images.githubusercontent.com/2575698/142855585-45c11625-c01c-4cc0-bfe0-cde4aed5fc44.png)
 
@@ -223,7 +229,7 @@ A good resolution for the overlay is either 1280x600 or 1920x600; you can specif
 
 ![image](https://user-images.githubusercontent.com/2575698/142855680-74f6055d-7b79-4e9a-ae7d-909c7f677a24.png)
 
-If using the automated chat response options, like auto-hi, you must ensure the Youtube/Twitch/Facebook chat input options are enabled and that you are able to send a chat message. Manually entering a chat message into the pop-out window or into the Facebook live chat area first can help ensure things are working are intended, else automated message may not be sent.
+If using the automated chat response options, like auto-hi, you must ensure the YouTube/Twitch/Facebook chat input options are enabled and that you are able to send a chat message. Manually entering a chat message into the pop-out window or into the Facebook live chat area first can help ensure things are working are intended, else automated message may not be sent.
 
 **Note: If things do not work,**
 
@@ -240,21 +246,21 @@ There are quite a few toggles available to customize functions and styles, but t
 
 To customize the dock, you can use the following options:
 
-* \&lightmode (Enables the dark-mode for the chat stream)
-* \&scale=2 (doubles size/resolution of all elements)
-* \&notime (hides the date in the chat stream)
-* \&hidesource (hides the youtube/twitch/fb icons from the stream)
-* \&compact (Removes the spacing between name and message)
-* \&autoshow (will auto-feature chat messages as they come into the dock at a rate of about 2 per 3 seconds)
-* \&attachmentsonly (will only show image attachments in the dock; the messages will be wiped)
+* `&lightmode` (Enables the dark-mode for the chat stream)
+* `&scale=2` (doubles size/resolution of all elements)
+* `&notime` (hides the date in the chat stream)
+* `&hidesource` (hides the youtube/twitch/fb icons from the stream)
+* `&compact` (Removes the spacing between name and message)
+* `&autoshow` (will auto-feature chat messages as they come into the dock at a rate of about 2 per 3 seconds)
+* `&attachmentsonly` (will only show image attachments in the dock; the messages will be wiped)
 
 To customize the featured chat overlay, the following URL parameters are available
 
-* \&showtime=20000 (auto-hides selected messages after 20s)
-* \&showsource (shows the youtube/twitch/fb icons next to the name)
-* \&fade (will have featured messages fade in, rather than pop up)
-* \&swipe (will have featured messages swipe in from the left side)
-* \&center (center featured messages)
+* `&showtime=20000` (auto-hides selected messages after 20s)
+* `&showsource` (shows the youtube/twitch/fb icons next to the name)
+* `&fade` (will have featured messages fade in, rather than pop up)
+* `&swipe` (will have featured messages swipe in from the left side)
+* `&center` (center featured messages)
 
 To customize the color, font-size and styling, you can edit the CSS, in either the OBS browser source style-sheet section, or by editing the and using the index.html file. See below:
 
@@ -308,7 +314,7 @@ body {
 
 #### Changing CSS without OBS
 
-You can also pass custom CSS to the dock and index page via URL parameters using either \&css or \&b64css.
+You can also pass custom CSS to the dock and index page via URL parameters using either `&css` or `&b64css`.
 
 `&css=https://youdomain.com/style.css` or `&b64css=YOUR_CSS_CODE_HERE`
 
@@ -320,13 +326,13 @@ For the base64 css option, you can create the base64 encoding using `btoa(encode
 
 The above will return the base64 encoded string required. Special non-latin characters are supported with this approach; not just latin characters.
 
-Example of what it might look like: https://socialstream.ninja/?64css=JTIzbWFpbm1lbnUlN0JiYWNrZ3JvdW5kLWNvbG9yJTNBJTIwcGluayUzQiUyMCVFMiU5RCVBNA
+Example of what it might look like: [https://socialstream.ninja/?64css=JTIzbWFpbm1lbnUlN0JiYWNrZ3JvdW5kLWNvbG9yJTNBJTIwcGluayUzQiUyMCVFMiU5RCVBNA](https://socialstream.ninja/?64css=JTIzbWFpbm1lbnUlN0JiYWNrZ3JvdW5kLWNvbG9yJTNBJTIwcGluayUzQiUyMCVFMiU5RCVBNA)
 
 #### Pre-styled templates / themes
 
 You can try out some stylized chat overlays in the themes folder:
 
-An example of one is available here: https://socialstream.ninja/themes/pretty.html?session=SESSIONIDHERE
+An example of one is available here: [https://socialstream.ninja/themes/pretty.html?session=SESSIONIDHERE](https://socialstream.ninja/themes/pretty.html?session=SESSIONIDHERE)
 
 ![image](https://user-images.githubusercontent.com/2575698/193437450-545f7f4c-d5fc-465b-9cfe-d42f82671c51.png)
 
@@ -414,7 +420,7 @@ For example, to set a dock with the target name of "NAMEHERE", we'd do: `https:/
 
 For details of the commands, see the following link for sample functionality and refer to its source code for examples.
 
-https://socialstream.ninja/sampleapi.html?session=xxxxxxxxxx (replacing xxxxxxxx with your Social Stream session ID to have it work)
+`https://socialstream.ninja/sampleapi.html?session=xxxxxxxxxx` (replacing xxxxxxxx with your Social Stream session ID to have it work)
 
 More functionality can be added on request.
 
@@ -422,7 +428,7 @@ More functionality can be added on request.
 
 **Remote server API support (publish messages to third parties)**
 
-Remote API support is available via dock page, configured by URL parameters. In the future, some support can be added to the extension itself directly, so no dock page needs to be open. You can currently auto-publish messages via the dock with the \&autoshow parameter, but otherwise messages will be issues to the remote API only when a message is selected manually.
+Remote API support is available via dock page, configured by URL parameters. In the future, some support can be added to the extension itself directly, so no dock page needs to be open. You can currently auto-publish messages via the dock with the `&autoshow` parameter, but otherwise messages will be issues to the remote API only when a message is selected manually.
 
 For some images provided in the outgoing data-structure, the assumed host location for certain files/images, if none provided, should be `https://socialstream.ninja/`.
 
@@ -527,10 +533,10 @@ To use this with Social Stream, you'll need to be using the featured-chat index.
 
 Example URL with options `https://socialstream.ninja/index.html?session=SESSIONIDHERE&tts&elevenlabskey=YOURELEVENLABSAPIKEYHERE&latency=4&voice=VR6AewLTigWG4xSOukaG`
 
-* \&tts is also required to enable TTS in general
-* \&voice={VOICEIDHERE} , is the voice ID you want to use.
-* \&latency={N}, where N can be 0,1,2,3, or 4. 0 is high latency, but better quality. Default is 4 (fastest)
-* \&elevenlabskey={APIKEYHERE} , don't share this API key, but this is needed to use the service and to specify that you want to use elevenlabs for TTS
+* `&tts` is also required to enable TTS in general
+* `&voice={VOICEIDHERE}`, is the voice ID you want to use.
+* `&latency={N}`, where N can be 0,1,2,3, or 4. 0 is high latency, but better quality. Default is 4 (fastest)
+* `&elevenlabskey={APIKEYHERE}`, don't share this API key, but this is needed to use the service and to specify that you want to use elevenlabs for TTS
 
 If you stop the TTS with the button in the dock's menu, it will stop playback immediately in the dock. It will also delete any queued messages to be spoken.
 
@@ -540,22 +546,21 @@ Please NOTE: Make sure to CLICK on the browser page after it loads, else audio m
 
 There is a toggle that lets you show the source of the chat messages.
 
-* \&branded will show the channel-icon; Youtube and Twitch channels supported. Use with the dock or index file.
-* \&showsource can be added to the index.file, to show the main site the source is from; ie: Youtube, Facebook.
+* `&branded` will show the channel-icon; YouTube and Twitch channels supported. Use with the dock or index file.
+* `&showsource` can be added to the index.file, to show the main site the source is from; ie: YouTube, Facebook.
 
 ![image](https://user-images.githubusercontent.com/2575698/166864138-00cd1e1c-2149-473f-be8d-d07a8d400c07.png)
 
 #### Known issues or solutions
 
-* Browsers will sometimes stop browser tabs after an hour of inactivity. Disable this option in your browser under `chrome://settings/performance` or whereever this setting is found.
+* Browsers will sometimes stop browser tabs after an hour of inactivity. Disable this option in your browser under `chrome://settings/performance` or where ever this setting is found.
 * Other options that may be active in your browser can be disabled also, to avoid tabs being throttled or paused, such as `chrome://flags/#calculate-native-win-occlusion`
 * Another option, if using Windows, is to do Windows + Tab, and have two virtual Desktops on your PC. Put the chat windows into one virtual desktop, and use OBS in the other. Win+Tab can let you switch between windows.
-*
 
 If the auto responder doesn't work -- you see a blue bar, but nothing happens, there's a couple things to do.
 
-* make sure if using Youtube/Twitch that the pop out window is open
-* go to `chrome://apps` and remove the Youtube(s) apps that might appear. You can remove them all really if none are required.
+* make sure if using YouTube/Twitch that the pop out window is open
+* go to `chrome://apps` and remove the YouTube(s) apps that might appear. You can remove them all really if none are required.
 * Make sure you have permission to post into the chat first -- sometimes you need to be a subscriber for example to send chat messages.
 
 ![image](https://user-images.githubusercontent.com/2575698/146602513-e3b7e69c-19fa-4e58-b907-6f08b3f873e0.png)
@@ -596,7 +601,9 @@ There is no guarentee that a site that gets added will continue to be supported 
 
 #### Adding sites yourself
 
-I have a video walk-thru on how I added a simple social site to Social Stream: [https://www.youtube.com/watch?v=5LquQ1xhmms](https://www.youtube.com/watch?v=5LquQ1xhmms)
+I have a video walk-thru on how I added a simple social site to Social Stream:
+
+{% embed url="https://youtu.be/5LquQ1xhmms?si=zzMKO2ewoqYOhdCx" %}
 
 You can also refer to some of my code commits, where you can see which changes I made to add support for any specific site.
 
