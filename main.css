@@ -421,18 +421,24 @@ button.hint {
 	color: #e0dfdf;
 }
 #header {
+	display: flex;
+	align-items: center;
+	justify-content: right;
 	width: 100%;
 	padding: 1px;
-	background-color: #0F131D;
-	color: #FFF;
+	background-color: #0f131d;
+	color: #fff;
 	-webkit-app-region: drag;
 }
-#head1{
+
+#head1 {
 	display: inline-block;
-	padding:1px;
+	text-align: right;
+	padding: 20px;
+	padding-right: 4%;
 	position: relative;
 	-webkit-app-region: no-drag;
-}
+  }
 #head5 {
 	-webkit-app-region: no-drag;
 	display: inline-block;
@@ -3866,8 +3872,8 @@ a#reshare {
 }
 
 #joinroomID {
-	border-radius: 0;
-	padding: 5px;
+	border-radius: 2px;
+	padding: 15px;
 }
 #joinroomID+button {
 	margin: 0px var(--regular-margin);
@@ -3880,6 +3886,10 @@ a#reshare {
 #joinbyURL+button {
 	margin: 0px var(--regular-margin);
 }
+
+#jumptoroomButton {
+	padding: 8px;
+  }
 
 .appmode #joinroomID+button {
 	width: 110px;

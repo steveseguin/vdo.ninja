@@ -88,7 +88,7 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 			getById("qos").style.color = "#FFF0";
 			getById("qos").style.fontSize = "70%";
 			getById("logoname").style.display = "none";
-			getById("logoname").style.margin = "0 0 0 5px";
+			getById("logoname").style.margin = "0 auto 0 4%";
 		} catch (error) {
 			getById("mainmenu").style.opacity = 1;
 			errorlog(error);
