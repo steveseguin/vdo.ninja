@@ -176,7 +176,7 @@
 
 		<script>
 		
-			function getChromeVersion() {
+			function getChromiumVersion() {
 				var raw = navigator.userAgent.match(/Chrom(e|ium)\/([0-9]+)\./);
 				return raw ? parseInt(raw[2], 10) : false;
 			}
@@ -339,6 +339,10 @@
 						
 						logData({"timestart": Date.now()});
 						
+						try {
+							logData({"peakhour": new Date(Date.now()).getHours()>7 && new Date(Date.now()).getHours()<11});
+						} catch(e){}
+						
 						var showdetails = document.createElement("button");
 						showdetails.onclick = function(){
 							document.getElementById("graphs").classList.toggle('hidden');
@@ -377,7 +381,7 @@
 					
 					for (var someValue in e.data.stats.inbound_stats) {
 						out += printValues(e.data.stats.inbound_stats[someValue]);
-						if (e.data.stats.inbound_stats[someValue]){
+						if (e.data.stats.inbound_stats[someValue] && e.data.stats.inbound_stats[someValue].info){
 							if (!statsSent){
 								statsSent = e.data.stats.inbound_stats[someValue];
 							}
@@ -502,7 +506,7 @@
 				iframe1.allowfullscreen ="true";
 
 				//iframe.allow = "autoplay";
-				var srcString =	"./?push=" + streamID + "&cleanoutput&privacy&"+testType+"&audiodevice=1&fullscreen&transparent&remote&maxbandwidth&speedtest="+zone;
+				var srcString =	"./index.html?push=" + streamID + "&cleanoutput&privacy&"+testType+"&audiodevice=1&fullscreen&transparent&remote&maxbandwidth&speedtest="+zone;
 				
 				if (urlParams.has("turn")) {
 					srcString = srcString + "&turn=" + urlParams.get("turn");
@@ -555,7 +559,7 @@
 				var iframeContainer = document.createElement("span");
 
 				iframe.allow = "autoplay";
-				var srcString = "./?view=" + streamID + "&cleanoutput&privacy&noaudio&transparent&bitrate=6000&scale=100&speedtest="+zone; // No TURN servers set on the reciever. Don't want to query for TURN servers needlessly.
+				var srcString = "./index.html?view=" + streamID + "&cleanoutput&privacy&noaudio&transparent&bitrate=6000&scale=100&speedtest="+zone; // No TURN servers set on the reciever. Don't want to query for TURN servers needlessly.
 
 				if (urlParams.has("turn")) {
 					srcString = srcString + "&turn=" + urlParams.get("turn");
@@ -673,7 +677,7 @@
 		
 			var testType= "webcam&quality=0&css=speedtest.css";
 			if (urlParams.has("screen") || urlParams.has("ss") || urlParams.has("screenshare") || urlParams.has("screentest")) {
-				document.getElementById("screen").innerHTML = '<a href="./speedtest" style="color: #CCC;">Test webcam-streaming performance here</a>';
+				document.getElementById("screen").innerHTML = '<a href="./speedtest.html" style="color: #CCC;">Test webcam-streaming performance here</a>';
 				testType = "quality=0&screenshare&css=speedtest.css"
 			}
 			

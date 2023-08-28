@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Generate Cloudflare Auth</title>
+	<style>
+		body {
+			font-family: Arial, sans-serif;
+			font-family: Arial, sans-serif;
+			background-color: #f5f5f5;
+			margin: 0;
+			padding: 0;
+			
+			background-color: #f0f0f0;
+			  background-image: 
+				linear-gradient(to right, #e0e0e0 1px, transparent 1px),
+				linear-gradient(to bottom, #e0e0e0 1px, transparent 1px);
+			  background-size: 10px 10px;
+			  backdrop-filter: blur(3px);
+			}
+
+		h1 {
+			color: #333;
+			margin-bottom: 20px;
+		}
+
+		form {
+			background-color: #fff;
+			border-radius: 8px;
+			padding: 20px;
+			box-shadow: 0px 2px 6px rgba(0, 0, 0, 0.1);
+			width: 300px;
+		}
+
+		label {
+			display: block;
+			margin-bottom: 5px;
+			color: #555;
+		}
+
+		input[type="text"],
+		input[type="password"],
+		input[type="number"] {
+			width: 93%;
+			padding: 8px;
+			margin-bottom: 15px;
+			border: 1px solid #ccc;
+			border-radius: 4px;
+		}
+		input[type="number"] {
+			max-width:80px;
+		}
+
+		button {
+			background-color: #007bff;
+			color: #fff;
+			padding: 10px 20px;
+			border: none;
+			border-radius: 4px;
+			cursor: pointer;
+		}
+
+		button:hover {
+			background-color: #0056b3;
+		}
+
+		textarea {
+			width: 100%;
+			padding: 8px;
+			border: 1px solid #ccc;
+			border-radius: 4px;
+			resize: vertical;
+			max-width: 500px;
+			min-height: 100px;
+		}
+		
+		.section{
+			max-width:700px;
+			padding: 20px;
+			overflow: auto;
+			
+		}
+		.main {
+			height: 100vh;
+			display: flex;
+			flex-direction: column;
+			align-items: center;
+			flex-wrap: wrap;
+			align-content: space-around;
+			justify-content: center;
+		}
+		.secondary {
+			padding: 50px;
+			display: flex;
+			flex-direction: column;
+			align-items: center;
+			flex-wrap: wrap;
+			align-content: space-around;
+			justify-content: center;
+			max-width:1200px;
+			margin:auto;
+		}
+	</style>
+</head>
+<body>
+	<div class='main'>
+		<h1>Generate Cloudflare Auth for VDO.Ninja</h1>
+		<form id="postForm">
+			<label for="userId">Cloudflare Account ID:</label>
+			<input type="text" id="userId" name="userId" required>
+			<br><br>
+			<label for="accessToken">Cloudflare Stream Access Token:</label>
+			<input type="password" id="accessToken" name="accessToken" required>
+			<br><br>
+			<label for="expiration">Hours until expiration</label>
+			<input min="0" type="number" id="expiration" name="expiration" placeholder="optional">
+			<br><br>
+			<button type="button" id="submitButton">Generate</button>
+		</form>
+		<br><br>
+		<label for="response">Generated URL parameter to add to VDO.Ninja:</label>
+		<textarea id="response" rows="5" cols="50" readonly placeholder="Use this parameter with your VDO.Ninja links in place of &meshcast"></textarea>
+		
+		<div class="section">
+			<h2>
+				What you can do with Cloudflare + VDO.Ninja?
+			</h2>
+			<h3>Restream VDO.Ninja as an RTMP Output</h3>
+			<p>Live Video Inputs (Cloudflare feature) can be set up to forward any input to another input. This can be a RTMP(S) service such as YouTube, Twitch or Facebook Live.</p>
+			<p>In theory you could publish from VDO.Ninja WHIP output to Cloudstream, and then to your RTMP destinations, like Youtube.</p>
+			<p></p>
+			<h3>Meshcast-alternative</h3>
+			<p>Instead of using Meshcast to broadcast video from director to guest, or guest to scene, you can use Cloudflare instead.</p>
+			<p>Meshcast, or any compatible WHIP/WHEP service, can help reduce CPU and network load of guests by offloading distribution to a server, compared to using the peer-to-peer default of VDO.Ninja
+			<h3>Automatic isolated guest recording</h3>
+			<p>Cloudflare will automatically record incoming videos, allowing you (in theory) to have a backup of each guest in a room.</p>
+			<p>This offers a redundant backup for your recordings, but also makes it easier to do higher quality VODs edits after the live ends.</p>
+			<h3>SRT, HLS, DASH, MP4, WHIP/WHEP options</h3>
+			<p>Lots input and output options, although if you're here, you're probably interested in the WHIP/WHEP mainly.</p>
+			<p>VDO.Ninja is compatible with WHEP and WHIP!</p>
+			<h3>Very competitive pricing</h3>
+			<p>There's a free tier, which is more than enough for testing.</p>
+			<p>Or pay $1 per $1000 minutes of streaming.</p>
+		</div>
+	</div>
+	<div class='secondary'>
+		<h2>
+			How it works?
+		</h2>
+		<p>When used with VDO.Ninja, video is published to Cloudflare via WHIP, and the WHEP playback URL is distributed to viewers. Unless otherwise specified, viewers will use the WHEP URL as the source of media from the publisher, instead of using the normal peer-to-peer mode. This has the effect of reducing the CPU and network load when sharing media with multiple videos, as instead of distributing media via peer-to-peer, the media is distributed via a server. This approach does have some downsides also, so its not normally advisable unless desired or needed.</p>
+		<h2>
+			Why do I need a special URL parameter?
+		</h2>
+		<p>The reason we need a special generated URL parameter is because Cloudflare requires user accounts, unlike Meshcast. While you can generate WHIP URLs within your Cloudflare dashboard, and use them on VDO.Ninja links using &whipout, you'd need to create one per guest. Instead here, we're using our Cloudflare credentials to automatically create unique WHIP ingest URLs on demand for each guest, so you can get away with one-invite link for all your guests.</p>
+		<p>Since it's not advisable to share your Cloudflare credentials, particularly with random guests, this page will encrypt your credentials into URL-friendly parameter.  Only the VDO.Ninja servers knows the decryption key, which limits what guest can do with the encrypted key. You can delete or restrict the credentials provided to VDO.Ninja from your Cloudflare dashboard, allowing you to limit or revoke any trust provided to VDO.Ninja.</p>
+		<h2>
+			Where to get my Cloudflare account ID and token?
+		</h2>
+		
+		<p>The Cloudflare account ID can be found on the right-hand side of the Workers & Pages (Overview) page, or it can be found on the right-lower side of any of your Website (domain) overview pages.</p>
+		<p>
+			As for the API token, you'll need to create it, with limited permissions.
+			<ul>
+				<li>Go to <a href='https://dash.cloudflare.com/profile/api-tokens' target="_blank">https://dash.cloudflare.com/profile/api-tokens</a></li>
+				<li>Click to Create Token (API Tokens)</li>
+				<li>Click Get started with the Create Custom Token option</li>
+				<li>Provide a token name, and for the permissions select Account -> Stream -> Edit</li>
+				<li>You can define a time-to-live (TTL), if you wish for the token to auto-expire.</li>
+			</ul>
+			You should now have access to both access token and account ID.
+		</p>
+		<h2>
+			Can I self-host or hard-code my Cloudflare credentials?
+		</h2>
+		<p>Yes, the code is open-sourced and it can be self-hosted, however please be aware there is limited support for those self-hosting.</p>
+		<h2>
+			Does VDO.Ninja track me or store my private information?
+		</h2>
+		<p>Please refer to the <a href='https://docs.vdo.ninja/help/privacy-and-security-details'>privacy policy</a>, although the short answer is no. I can't say the same for Cloudflare, so please refer to their terms of service.
+	</div>
+    <script>
+		function removeStorage(cname){
+			localStorage.removeItem(cname);
+		}
+
+		function clearStorage(){
+			localStorage.clear();
+			if (!session.cleanOutput){
+				warnUser("The local storage and saved settings have been cleared", 1000);
+			}
+		}
+
+		function setStorage(cname, cvalue, hours=9999){ // not actually a cookie
+			var now = new Date();
+			var item = {
+				value: cvalue,
+				expiry: now.getTime() + (hours * 60 * 60 * 1000),
+			};
+			try{
+				localStorage.setItem(cname, JSON.stringify(item));
+			}catch(e){errorlog(e);}
+		}
+
+		function getStorage(cname) {
+			try {
+				var itemStr = localStorage.getItem(cname);
+			} catch(e){
+				errorlog(e);
+				return;
+			}
+			if (!itemStr) {
+				return "";
+			}
+			var item = JSON.parse(itemStr);
+			var now = new Date();
+			if (now.getTime() > item.expiry) {
+				localStorage.removeItem(cname);
+				return "";
+			}
+			return item.value;
+		}
+		
+		document.getElementById("accessToken").value = getStorage("accessToken") || "";
+		document.getElementById("userId").value = getStorage("userId") || "";
+		document.getElementById("expiration").value = getStorage("expiration") || "";
+
+        document.getElementById("submitButton").addEventListener("click", async function () {
+		
+            const accessToken = document.getElementById("accessToken").value;
+            const userId = document.getElementById("userId").value;
+			const expiration = document.getElementById("expiration").value;
+
+            if (!accessToken || !userId) {
+                alert("Access Token and User ID are required.");
+                return;
+            }
+			
+            const data = {
+                accessToken: accessToken,
+                userId: userId,
+				expiration: Math.round(expiration*60)
+            };
+
+            try {
+                const response = await fetch("https://cloudflare.vdo.ninja/encode/", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify(data)
+                });
+
+                const responseData = await response.text();
+				console.log(responseData);
+				
+				setStorage("accessToken",accessToken);
+				setStorage("userId", userId);
+				setStorage("expiration", expiration);
+
+				document.getElementById("response").value = "&cftoken="+responseData;
+            } catch (error) {
+                console.error("Error:", error);
+                document.getElementById("response").value = "An error occurred.";
+            }
+        });
+    </script>
+</body>
+</html>

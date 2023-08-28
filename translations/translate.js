@@ -1,3 +1,25 @@
+/* function getAllContentNodes(element) { // takes an element.
+	
+	element.childNodes.forEach(node=>{
+		if (node.childNodes.length){
+			if (node.dataset.translate){return;}
+			getAllContentNodes(node)
+		} else if ((node.nodeType === 3) && node.textContent && (node.textContent.trim().length > 0)){
+			var datatag = node.textContent.toLowerCase().replace(/[^a-zA-Z0-9\s\-]/g, '').trim().replaceAll(" ","-");
+			if (datatag){
+				var newNode = document.createElement("span");
+				newNode.dataset.translate = datatag;
+				newNode.innerHTML = node.textContent;
+				node.parentNode.replaceChild(newNode, node);
+				
+			}
+			
+		} 
+	});
+}
+getAllContentNodes(document.body)
+
+ */
 // Copy and paste this code into VDO.Ninja's developer's console to generate new Translation files
 
 function downloadTranslation(filename, trans = {}) { // downloads the current translation to a file

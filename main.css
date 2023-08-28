@@ -805,10 +805,9 @@ hr {
 	border-radius: var(--video-rounded);
 }
 
-#gridlayout,#directorlayout {
+#gridlayout, #directorlayout {
 	padding: 0;
 	width: 100%;
-	height: 100%;
 	overflow: hidden;
 	justify-items: stretch;
 	border: 0;
@@ -1606,12 +1605,21 @@ body.darktheme{
 	display: inline-block;
 	width:100%;
 }
-#welcomeImage{
-	object-fit:cover;
-	width:100%;
-	height:100%;
-	display:block;
-	z-index:10;
+.welcomeOverlay{
+	object-fit: cover;
+    width: 100%;
+    height: 100%;
+    display: block;
+    position: absolute;
+    left: 0;
+    z-index: 500;
+    top: 0;
+	animation: fadeIn 0.1s;
+	-webkit-animation: fadeIn  0.3s;
+	-moz-animation: fadeIn  0.3s;
+	-o-animation: fadeIn  0.3s;
+	-ms-animation: fadeIn  0.3s;
+	animation-iteration-count: 1;
 }
 div[data-action-type='toggle-group'] {
 	padding: 0 10px;
@@ -3708,7 +3716,20 @@ div#roomnotes2 {
 	background-color: var(--discord-grey-3);
 	color: var(--discord-text);
 }
-
+#hangupContainer {
+	font-size: 500%;
+    text-align: center;
+    margin: auto auto;
+    display: flex;
+    height: 100%;
+    width: 100%;
+    vertical-align: middle;
+    flex-wrap: wrap;
+    align-content: center;
+    flex-direction: column;
+    justify-content: center;
+    align-items: stretch;
+}
 .controlCenterBox .flexBreak span {
 	position: absolute;
 	top: 50%;

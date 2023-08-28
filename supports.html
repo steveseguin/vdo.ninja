@@ -38,7 +38,7 @@
 
 		<script>
 		
-			function getChromeVersion() {
+			function getChromiumVersion() {
 				var raw = navigator.userAgent.match(/Chrom(e|ium)\/([0-9]+)\./);
 				return raw ? parseInt(raw[2], 10) : false;
 			}
@@ -64,7 +64,7 @@
 			}
 
 			
-			if (!((safariVersion() && safariVersion()>=15) || (getChromeVersion() || getChromeVersion >=60))){
+			if (!((safariVersion() && safariVersion()>=15) || (getChromiumVersion() || getChromiumVersion >=60))){
 				alert("This tool really only works with recent Chromium based browsers; Firefox is not supported: "+ safariVersion());
 			}
 		
