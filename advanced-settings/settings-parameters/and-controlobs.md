@@ -48,6 +48,16 @@ It supports multiple OBS instances and will label them according to the [`&label
 
 5\. Control OBS Studio remotely via VDO.Ninja
 
+
+
+### Disabling or hiding the controls
+
+Setting `&obscontrols=0` or to false/off, will hide the control option on the sender side, regardless of the OBS browser source page permissions.\
+\
+As well, setting the OBS browser source to low or no page permissions will also not show the controls, which is how it is by default.  You can force show the controls of course, but they won't work if the browser source doesn't have the right permissions.
+
+
+
 ## Related
 
 {% content-ref url="../../general-settings/remote.md" %}
