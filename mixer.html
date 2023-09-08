@@ -2610,9 +2610,13 @@
 					}
 				}
 			
+				if (e.data.action === "layout-updated"){
+					console.log(e.data);
+				}
 			
 				if (e.data.action === "layout-index"){
 					if ("value" in e.data){
+						console.log(e.data);
 						var idx = parseInt(e.data.value) || 0;
 						if (!idx){
 							var ele = document.getElementById("automix");

@@ -1461,12 +1461,22 @@ session.sceneSync = function(UUID){
 	}
 }
 
+var TriggerOnNewDetails = false;
 session.obsStateSync = function(data2send=false, uid=false){
 	if (session.disableOBS){return;}
 	if (!window.obsstudio){return;} // this isn't OBS
 	// they can disable remote control via OBS brower source drop-down itself.
 	
 	log(data2send);
+	
+	 if (data2send && (data2send == "sourceActive") && session.obsState.sourceActive){
+		TriggerOnNewDetails = true;
+	} else if (data2send && (data2send == "details") && session.obsState.sourceActive && TriggerOnNewDetails){
+		if (session.obsState.details && session.obsState.details.currentScene && session.obsState.details.currentScene.name){
+			session.obsState.details.thisScene = session.obsState.details.currentScene.name;
+			TriggerOnNewDetails = false;
+		}
+	} 
 	
 	var needOptimize = false;
 	if (session.obsState.visibility!==null){
@@ -1575,7 +1585,7 @@ session.getOBSOptimization = function(msg, UUID){
 	return msg;
 }
 
-function getOBSDetails(){
+function getOBSDetails(callbackname = "details"){
 	if (session.disableOBS){return false;}
 	if (!window.obsstudio){return;}
 	
@@ -1609,7 +1619,7 @@ function getOBSDetails(){
 							session.obsState.details[shortkey] = out;
 							delete promises[key]
 							if (!Object.keys(promises).length){
-								session.obsStateSync("details");
+								session.obsStateSync(callbackname);
 							}
 						});
 					} catch(e){
@@ -1631,7 +1641,7 @@ function getOBSDetails(){
 	});
 	delete promises.main;
 	if (!Object.keys(promises).length){
-		session.obsStateSync("details");
+		session.obsStateSync(callbackname);
 	}
 }
 
@@ -1797,8 +1807,10 @@ function manageSceneState(data, UUID){ // incoming obs details
 		
 		if (control >= 4){
 			if (session.director || !session.roomid){
-				if (session.obsControls!==false){
-					getById("obscontrolbutton").classList.remove("hidden"); // so they get a tip.
+				if (session.pcs[UUID].remote){
+					if (session.obsControls!==false){
+						getById("obscontrolbutton").classList.remove("hidden"); // so they get a tip.
+					}
 				}
 			}
 		}
@@ -2819,9 +2831,9 @@ function changeSceneLowBandwidth(state){
 	if (!session.lowBitrateSceneChange){return;}
 	if (!session.obsState){return;}
 	try {
-		if (session.obsState.visibility && session.obsState.details && session.obsState.details.currentScene){
+		if (session.obsState.sourceActive && session.obsState.details && session.obsState.details.currentScene){
 			changeSceneLowBandwidthRevert = session.obsState.details.currentScene.name || false;
-		} else if (("visibility" in session.obsState) && !session.obsState.visibilit && session.obsState.details && session.obsState.details.currentScene){
+		} else if (("sourceActive" in session.obsState) && !session.obsState.sourceActive && session.obsState.details && session.obsState.details.currentScene){
 			if (session.obsState.details.currentScene.name !== session.lowBitrateSceneChange){
 				return; // not the FML scene, nor are we visible, so we're not going to switch back.  Assume the user has overtaken the setup.
 			}
@@ -2955,6 +2967,9 @@ function setupIncomingScreenTracking(v, UUID){  // SCREEN  element.
 	if (document.getElementById("mainmenu")){
 		var m = getById("mainmenu");
 		m.remove();
+		document.querySelectorAll(".hidden2").forEach(ele2=>{
+			ele2.classList.remove("hidden2");
+		});
 	}
 	
 	if (session.director){
@@ -3334,6 +3349,9 @@ function setupIncomingVideoTracking(v, UUID){  // video element.
 	if (document.getElementById("mainmenu")){
 		var m = getById("mainmenu");
 		m.remove();
+		document.querySelectorAll(".hidden2").forEach(ele2=>{
+			ele2.classList.remove("hidden2");
+		});
 	}
 	
 	if (session.director){
@@ -4325,7 +4343,6 @@ function updateMixerRun(e=false){  // this is the main auto-mixing code.  It's a
 				}
 			}
 			
-			
 			var i = null;
 			var countOrder = 0;
 			try{
@@ -4361,7 +4378,7 @@ function updateMixerRun(e=false){  // this is the main auto-mixing code.  It's a
 							continue;
 						}
 					} catch(e){} 
-				}
+				} 
 				applyMuteState(i);
 				var doNotPush = false;
 				
@@ -4521,7 +4538,7 @@ function updateMixerRun(e=false){  // this is the main auto-mixing code.  It's a
 							continue; // easiest is to just not show anything if no video and no audio track.
 						}
 						if (session.rpcs[i].videoElement.srcObject){
-							session.rpcs[i].videoElement.srcObject.getVideoTracks().forEach(track=>{
+							session.rpcs[i].videoElement.srcObject.getVideoTracks().forEach(track=>{ 
 								session.rpcs[i].videoElement.srcObject.removeTrack(track);
 								session.rpcs[i].videoElement.load();
 							});
@@ -7164,6 +7181,64 @@ function drawFrameMirrored(mirror=true, flip=false) {
 		session.canvasCtx.drawImage(session.canvasSource, 0, 0, session.canvas.width, session.canvas.height);
 	}
 	session.canvasCtx.restore();
+}
+
+function motionDetection(video, threshold = 15, sensitivity=75){ 
+	var targetSize = 16;
+	
+	if (!video.motionDetector){
+		video.motionDetector = {};
+		video.motionDetector.canvas = document.createElement("canvas");
+		video.motionDetector.canvas.width = targetSize;
+		video.motionDetector.canvas.height = targetSize;
+		try {
+			video.motionDetector.ctx = video.motionDetector.canvas.getContext("2d", { willReadFrequently: true });
+		} catch(e){
+			video.motionDetector.ctx = video.motionDetector.canvas.getContext("2d");
+		}
+		video.motionDetector.previous = [];
+		for (var y = 0; y < targetSize; y++) {
+			for (var x = 0; x < targetSize; x++) {
+				video.motionDetector.previous.push(0);
+			}
+		}
+	}
+	var motionDetector = video.motionDetector;
+
+	motionDetector.ctx.drawImage(video, 0, 0, video.videoWidth, video.videoHeight, 0, 0, targetSize, targetSize);
+	var data = motionDetector.ctx.getImageData(0, 0, targetSize, targetSize).data;
+	var matches = 0;
+	for (var y = 0; y < targetSize; y++) {
+		for (var x = 0; x < targetSize; x++) {
+			var pos = y*targetSize+x;
+			var pos2 = pos*3;
+			var value = data[pos2] + data[pos2+1] + data[pos2+2]; // convert to to greyscale
+			if (motionDetector.previous[pos] && Math.abs(motionDetector.previous[pos] - value) > sensitivity) {
+			   matches+=1;
+			}
+			motionDetector.previous[pos] = value;
+		}
+	}
+	if (matches >= threshold){
+		log("MOTION DETECTED: "+matches);
+		if (window.obsstudio && window.obsstudio["setCurrentScene"]){
+			if (!changeSceneEnabled){ // the bit cut scene change is already active.
+				if (session.obsState && session.obsState.details && session.obsState.details.thisScene && session.obsState.details.currentScene){
+					if (session.obsState.details.thisScene !== session.obsState.details.currentScene.name){ // don't trigger it multiple times; makes it hard to prep next scene
+						window.obsstudio["setCurrentScene"](session.obsState.details.thisScene);
+					}
+				}
+			}
+		}
+		pokeIframeAPI('motion-detected', true, video.dataset.UUID || true);
+		
+		if (session.infocus!==(video.dataset.UUID || true)){
+			if (!session.layout){
+				session.infocus = video.dataset.UUID || true;
+				updateMixer();
+			}
+		}
+	}
 }
 
 function setupCanvas() {
@@ -11955,7 +12030,7 @@ function hangup2() {
 	getById("screensharebutton").ariaPressed = "false";
 	
 	
-	if (session.showDirector == false) {
+	if (!session.showDirector) {
 		getById("miniPerformer").innerHTML = '<button id="press2talk" onmousedown="event.preventDefault(); event.stopPropagation();" class="float" onclick="press2talk(true);" title="You can also enable the director`s Video Output afterwards by clicking the Setting`s button"><i class="las la-headset"></i><span data-translate="push-to-talk-enable"> enable director`s microphone or video<br />(only guests can see this feed)</span></button>';
 		miniTranslate(getById("miniPerformer"));
 	} else {
@@ -12336,7 +12411,7 @@ function getDetailedState(sid=false){
 					} else {
 						item.featured = false;
 					}
-				} else if (session.infocus && session.infocus===session.rpcs[UUID].streamID){
+				} else if (session.infocus && session.infocus===UUID){
 					item.featured = true;
 				} else {
 					item.featured = false;
@@ -12447,13 +12522,13 @@ function getDetailedState(sid=false){
 	
 	
 	if (session.director){
-		let featured = query("#highlightDirector[data-action-type='solo-video'], #container_director [data-action-type='solo-video']");
+		let featured = document.querySelector("#highlightDirector[data-action-type='solo-video'], #container_director [data-action-type='solo-video']");
 		if (featured && parseInt(featured.value)){
 			streamList[session.streamID].featured = true;
 		} else {
 			streamList[session.streamID].featured = false;
 		}
-	} else if (session.infocus && session.infocus===session.streamID){
+	} else if (session.infocus && session.infocus===true){
 		streamList[session.streamID].featured = true;
 	} else {
 		streamList[session.streamID].featured = false;
@@ -16656,7 +16731,7 @@ async function toggleCoDirector(ele){
 		if (session.password===false){
 			getById("codirectorSettings_invite").value += "&password=false";
 		} else{
-			getById("codirectorSettings_invite").value += "&password";
+			getById("codirectorSettings_invite").value += "&password="+session.password;
 		}
 	}
 	
@@ -16826,9 +16901,13 @@ async function createRoomCallback(passAdd, passAdd2) {
 	
 	
 	formSubmitting = false;
-
-	var m = getById("mainmenu");
-	m.remove();
+	try {
+		var m = getById("mainmenu");
+		m.remove();
+		document.querySelectorAll(".hidden2").forEach(ele2=>{
+			ele2.classList.remove("hidden2");
+		});
+	} catch(e){}
 
 	getById("head1").className = 'hidden';
 	getById("head2").className = 'hidden';
@@ -16869,7 +16948,7 @@ async function createRoomCallback(passAdd, passAdd2) {
 			if (session.password==false){
 				getById("codirectorSettings_invite").value += "&password=false";
 			} else{
-				getById("codirectorSettings_invite").value += "&password";
+				getById("codirectorSettings_invite").value += "&password="+session.password;
 			}
 		} 
 	
@@ -16956,12 +17035,12 @@ async function createRoomCallback(passAdd, passAdd2) {
 			getById("roomsettingsbutton").classList.remove("hidden");
 		}
 		
-		if (session.showDirector == false) {
+		if (!session.showDirector) { // if null or false, we want to show the solo link, since the director won't have their control box. The director will be visible in their solo link
 			getById("miniPerformer").innerHTML = '<button id="press2talk" onmousedown="event.preventDefault(); event.stopPropagation();" class="float" onclick="press2talk(true);" title="You can also enable the director`s Video Output afterwards by clicking the Setting`s button"><i class="las la-headset"></i><span data-translate="push-to-talk-enable"> enable director`s microphone or video<br />(only guests can see this feed)</span></button>';
 			miniTranslate(getById("miniPerformer"));
-			getById("grabDirectorSoloLink").dataset.raw = "https://" + location.host + location.pathname + "?solo&sd&r=" + session.roomid + "&v="+session.streamID + passAdd2 + wss + token;
-			getById("grabDirectorSoloLink").href = "https://" + location.host + location.pathname + "?solo&sd&r=" + session.roomid + "&v="+session.streamID  + passAdd2 + wss + token;
-			getById("grabDirectorSoloLink").innerText = "https://" + location.host + location.pathname + "?solo&sd&r=" + session.roomid + "&v="+session.streamID  + passAdd2 + wss + token;
+			getById("grabDirectorSoloLink").dataset.raw = "https://" + location.host + location.pathname + "?solo&r=" + session.roomid + "&v="+session.streamID + passAdd2 + wss + token;
+			getById("grabDirectorSoloLink").href = "https://" + location.host + location.pathname + "?solo&r=" + session.roomid + "&v="+session.streamID  + passAdd2 + wss + token;
+			getById("grabDirectorSoloLink").innerText = "https://" + location.host + location.pathname + "?solo&r=" + session.roomid + "&v="+session.streamID  + passAdd2 + wss + token;
 			getById("grabDirectorSoloLinkParent").classList.remove("hidden");
 		} else {
 			getById("miniPerformer").innerHTML = '<button id="press2talk" onmousedown="event.preventDefault(); event.stopPropagation();" class="float" onclick="press2talk(true);" title="You can also enable the director`s Video Output afterwards by clicking the Setting`s button"><i class="las la-headset"></i><span data-translate="push-to-talk-enable-2"> enable director`s microphone or video</span></button>';
@@ -22078,6 +22157,7 @@ async function grabVideo(quality = 0, eleName = 'previewWebcam', selector = "sel
 						document.getElementById("gowebcam").disabled = false;
 						//document.getElementById("gowebcam").innerHTML = getTranslation("start");
 						miniTranslate(document.getElementById("gowebcam"),"start");
+						document.getElementById("gowebcam").focus();
 					}
 				}
 			}
@@ -22461,6 +22541,7 @@ async function grabVideo(quality = 0, eleName = 'previewWebcam', selector = "sel
 								document.getElementById("gowebcam").disabled = false;
 								//document.getElementById("gowebcam").innerHTML = getTranslation("start");
 								miniTranslate(document.getElementById("gowebcam"),"start");
+								document.getElementById("gowebcam").focus();
 							}
 						}
 					}
@@ -23625,6 +23706,7 @@ function senderAudioUpdate(callback=false, tracks=false){
 		if (document.getElementById("gowebcam").dataset.ready && (document.getElementById("gowebcam").dataset.ready=="true")){
 			document.getElementById("gowebcam").disabled = false;
 			miniTranslate(document.getElementById("gowebcam"),"start");
+			document.getElementById("gowebcam").focus();
 		}
 	}
 }
@@ -24980,6 +25062,9 @@ function updateReshareLink(){
 	try{
 		var m = getById("mainmenu");
 		m.remove();
+		document.querySelectorAll(".hidden2").forEach(ele2=>{
+			ele2.classList.remove("hidden2");
+		});
 	} catch (e){}
 	
 	var added = "";
@@ -29508,6 +29593,7 @@ function setupWebcamSelection(miconly=false) {
 					miniTranslate(document.getElementById("gowebcam"),"start");
 					document.getElementById("gowebcam").dataset.audioready = "true";
 					document.getElementById("gowebcam").dataset.ready = "true";
+					document.getElementById("gowebcam").focus();
 					setTimeout(function(){updateForceRotate();},1000);
 					
 					if (session.autostart) {
@@ -29535,6 +29621,7 @@ function setupWebcamSelection(miconly=false) {
 						if (document.getElementById("gowebcam").dataset.audioready == "true"){
 							document.getElementById("gowebcam").disabled = false;
 							miniTranslate(document.getElementById("gowebcam"),"start");
+							document.getElementById("gowebcam").focus();
 							//document.getElementById("gowebcam").innerHTML = getTranslation("start");
 						}
 					}
@@ -30019,6 +30106,7 @@ function previewWebcam(miconly=false) {
 				document.getElementById("gowebcam").disabled = false;
 				//document.getElementById("gowebcam").innerHTML = getTranslation("start");
 				miniTranslate(document.getElementById("gowebcam"),"start");
+				document.getElementById("gowebcam").focus();
 			}
 		}
 		return;
@@ -33347,7 +33435,7 @@ session.onTrack = function(event, UUID){
 						}
 					}
 				}
-				if (screenshare){break;}
+				if (screenshare){break;} 
 			}
 			if (screenshare){break;}
 		}
@@ -33414,9 +33502,9 @@ session.onTrack = function(event, UUID){
 				if ( e1.track.kind=="video"){
 					updateIncomingVideoElement(UUID, true, false); 
 				} else {
-					updateIncomingVideoElement(UUID, false, true);
+					updateIncomingVideoElement(UUID, false, true); 
 				}
-				updateIncomingVideoElement(UUID); // session.rpcs[UUID].videoElement.srcObject = session.rpcs[UUID].streamSrc;
+				// updateIncomingVideoElement(UUID); // session.rpcs[UUID].videoElement.srcObject = session.rpcs[UUID].streamSrc;
 				setTimeout(function(){updateMixer();},1);
 			}  catch(e){}
 		};
@@ -33588,6 +33676,15 @@ function updateIncomingVideoElement(UUID, video=true, audio=true){
 				}
 			}
 		});
+		
+		if (session.motionSwitch && !session.rpcs[UUID].motionDetectionInterval){
+			session.rpcs[UUID].motionDetectionInterval = setTimeout(function(){
+				 setInterval(function(){
+					motionDetection(session.rpcs[UUID].videoElement, session.motionSwitch);
+				},400);
+			},2000);
+		}
+		
 	}
 	if (audio){
 		updateIncomingAudioElement(UUID) // do the same for audio now.
@@ -36319,6 +36416,7 @@ async function whepIn(whepInput=false,whepInputToken=false, UUID=false){ // PLAY
 				session.rpcs[UUID].lockedVideoBitrate = false; // doesn't do anything
 				session.rpcs[UUID].lockedAudioBitrate = false;
 				session.rpcs[UUID].manualBandwidth = false; // doesn't do anything, except maybe help keep track of pause/play states
+				session.rpcs[UUID].motionDetectionInterval = false;
 			}
 			var config = {...session.configuration};
 			
@@ -37181,28 +37279,40 @@ function setupCommands(){
 				updateMixer();
 				return true;
 			} else if (session.layouts && session.layouts[value]){
-				session.layout = session.layouts[value];
-				pokeIframeAPI("layout-updated", session.layout);
-				pokeIframeAPI("layout-index", value+1);
-				if (session.director){
-					var combined = {};
-					for (var i=0;i<session.layout.length;i++){
-						if (!session.layout[i]){continue;}
-						if (!("slot" in session.layout[i])){
-							continue;
+				try {
+					console.log(session.layouts);
+					session.layout = session.layouts[value];
+					pokeIframeAPI("layout-updated", session.layout);
+					pokeIframeAPI("layout-index", value+1);
+					if (session.director){
+						var combined = {};
+						for (var i=0;i<session.layout.length;i++){
+							if (!session.layout[i]){continue;}
+							if (!("slot" in session.layout[i])){
+								continue;
+							}
+							var slot = document.querySelector("div.slotsbar[data-slot='"+(parseInt(session.layout[i].slot)+1)+"']") || false
+							if (!slot){
+								console.error("Slot target not found?");
+								continue;
+							} 
+							var streamID = slot.dataset.sid;
+							combined[streamID] = session.layout[i];
+							
 						}
-						var slot = document.querySelector("div.slotsbar[data-slot='"+(parseInt(session.layout[i].slot)+1)+"']") || false
-						if (!slot){continue;}
-						var streamID = slot.dataset.sid;
-						combined[streamID] = session.layout[i];
-						
+						session.layout = combined;
+						console.log("issuing layout:");
+						console.log(session.layout);
+						issueLayout(session.layout, "0"); 
 					}
-					session.layout = combined;
-					issueLayout(combined, "0");
+				} catch(e){
+					console.error(e);
 				}
 				updateMixer();
 				return true;
 			} else {
+				console.error("no layout found");
+				console.log(session.layouts);
 				return false;
 			}
 		
@@ -37680,6 +37790,11 @@ addEventToAll(".column", 'click', function(e, ele) {
 });
 addEventToAll(".close", 'click', function(e, ele) {
 	cleanupMediaTracks();
+	
+	document.querySelectorAll(".hidden2").forEach(ele2=>{
+		ele2.classList.remove("hidden2");
+	});
+	
 	ele.style.display = "none";
 	mapToAll(".container-inner", function(target) {
 		target.style.display = "none";
@@ -37699,8 +37814,13 @@ addEventToAll(".column", 'animationend', function(e, ele) {
 		mapToAll(".close", function(target) {
 			target.style.display = "block";
 		}, ele);
+		document.querySelectorAll("#header, #miniTaskBarm, #credits, .columnfade").forEach(ele2=>{
+			if (ele2!==ele){
+				ele2.classList.add("hidden2");
+			}
+		});
 		mapToAll(".container-inner", function(target) {
-			target.style.display = "block";
+			target.style.display = "block"; 
 		}, ele);
 	} else if (e.animationName == 'outlightbox') {
 		ele.classList.remove('in-animation');

@@ -743,6 +743,11 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 	if (urlParams.has('bitratecutoff') || urlParams.has('bitcut')) {
 		session.lowBitrateCutoff = parseInt(urlParams.get('bitratecutoff')) || parseInt(urlParams.get('bitcut')) || 300; // low bitrate cut off.
 	}
+	
+	if (urlParams.has('motionswitch') || urlParams.has('motiondetection')) { // switch OBS to this scene when there is motion, and "solo view" this video in the VDO.Ninja auto-mixer, if used
+		session.motionSwitch = parseInt(urlParams.get('motionswitch')) ||  parseInt(urlParams.get('motiondetection')) || 15; // threshold of motion needed to trigger
+	}
+	
 
 	if (urlParams.has('locked')) {
 		session.locked = urlParams.get('locked');
@@ -769,6 +774,19 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 	if (urlParams.has('rotate') ) {
 		session.rotate = urlParams.get('rotate') || 90;
 		session.rotate = parseInt(session.rotate);
+	}
+	
+	if (urlParams.has("rotatewindow") || urlParams.has("rotatepage")){
+		let rotateThis = parseInt(urlParams.get("rotatewindow")) || parseInt(urlParams.get("rotatepage")) || 90;
+		if (rotateThis==270){
+			document.body.setAttribute( "style", "transform: rotate(270deg);position: absolute;top: 100vh;left: 0;height: 100vw;width: 100vh;transform-origin: 0 0;");
+		} else if (rotateThis==90){
+			document.body.setAttribute( "style", "transform: rotate(90deg);position: absolute;top: 0;left: 100vw;height: 100vw;width: 100vh;transform-origin: 0 0;");
+		} else if (rotateThis==180){
+			document.body.setAttribute( "style", "transform: rotate(180deg);position: absolute;top: 100vh;left: 100vw;height: 100vh;width: 100vw;transform-origin: 0 0;"); 
+		} else {
+			document.body.setAttribute( "style", "");
+		}
 	}
 	
 	if (urlParams.has('facing') ) {
@@ -1065,6 +1083,7 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 	}
 	
 	if (urlParams.has('layout')) {
+		session.accept_layouts = true;
 		try {
 			session.layout = JSON.parse(decodeURIComponent(urlParams.get('layout'))) || JSON.parse(urlParams.get('layout')) || {};
 		} catch(e){
@@ -2467,6 +2486,10 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 	if (urlParams.has('chroma')) {
 		log("Chroma ENABLED");
 		getById("main").style.backgroundColor = "#" + (urlParams.get('chroma') || "0F0");
+		//try {
+		//	document.querySelector('meta[name="theme-color"]')?.setAttribute('content',  "#" + (urlParams.get('chroma') || "0F0")); .. meh
+		//} catch(e){}
+		//const ogColor = document.querySelector('meta[name="theme-color"]')?.getAttribute('content');
 	} // else if (window.obsstudio || (navigator.userAgent.toLowerCase().indexOf(' electron/') > -1)){
 	//	getById("main").style.backgroundColor = "rgba(0,0,0,0)";
 	//}
@@ -4086,6 +4109,14 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 				session.wss = "wss://" + session.wss;
 			}
 		}
+	} else if (urlParams.has('wss2')) {
+		session.wssSetViaUrl = true;
+		if (urlParams.get('wss2')) {
+			session.wss = urlParams.get('wss2');
+			if (!session.wss.startsWith("wss://")){
+				session.wss = "wss://" + session.wss;
+			}
+		}
 	}
 	
 	if (urlParams.has("bypass")){
@@ -4733,6 +4764,11 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 		} catch (e) {
 			errorlog(e);
 		};
+	}
+	
+	
+	if (urlParams.get('auth')) {
+		session.auth = urlParams.get('auth');
 	}
 
 	if (urlParams.has('waitimage')){

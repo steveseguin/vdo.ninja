@@ -808,6 +808,7 @@ hr {
 #gridlayout, #directorlayout {
 	padding: 0;
 	width: 100%;
+	height: 100%;
 	overflow: hidden;
 	justify-items: stretch;
 	border: 0;
@@ -1537,6 +1538,9 @@ body {
 	opacity: 1;
 	transition: opacity .1s linear;
 	scrollbar-color:#666 #201c29;
+	display:flex;
+	flex-direction: column;
+	position: fixed;
 }
 body.darktheme{
 	background-color: var(--dark-background-color);
@@ -3145,6 +3149,13 @@ video::-webkit-media-controls-panel {
 }
 
 .hidden {
+	display: none !important;
+	visibility: hidden;
+	width: 0px;
+	height: 0px;
+	opacity: 0;
+}
+.hidden2 {
 	display: none !important;
 	visibility: hidden;
 	width: 0px;

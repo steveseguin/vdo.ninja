@@ -317,9 +317,87 @@
 		</div>
 <script>
 
+
 var domain = "./";
 var urlParams = new URLSearchParams(window.location.search);
 var iframe = document.createElement("iframe");
+
+
+function changeParam(url, paramName, paramValue) {
+	paramName = paramName.replace("?", "");
+	var qind = url.indexOf('?');
+	url = url.replace("?", "&");
+	var params = url.substring(qind + 1).split('&');
+	var query = '';
+	var match = false;
+	for (var i = 0; i < params.length; i++) {
+		var tokens = params[i].split('=');
+		var name = tokens[0];
+		var value = "";
+		if (tokens.length > 1 && tokens[1] !== '') {
+			value = tokens[1];
+		}
+
+		if (name == paramName) {
+			if (match) {
+				continue;
+			} // already matched the first time.
+			match = true;
+			value = paramValue;
+		}
+		if (value !== "") {
+			value = '=' + value;
+		}
+
+		if (query == '') {
+			query = "?" + name + value;
+		} else {
+			query = query + '&' + name + value;
+		}
+	}
+	return url.substring(0, qind) + query;
+}
+function updateURL(param, force = false, cleanUrl = false) {
+	
+	param = param.replace("?", "");
+	var para = param.split('=');
+	if (cleanUrl) {
+		if (history.pushState) {
+			var href = new URL(cleanUrl);
+			if (para.length == 1) {
+				href = changeParam(cleanUrl, para[0], "");
+			} else {
+				href = changeParam(cleanUrl, para[0], para[1]);
+			}
+			window.history.pushState({path: href.toString()}, '', href.toString());
+		}
+	} else if (!(urlParams.has(para[0]))) { // don't need to replace as it doesn't exist.
+		if (history.pushState) {
+			var href = window.location.href;
+			href = href.replace("??", "?");
+			var arr = href.split('?');
+			var newurl;
+			if (arr.length > 1 && arr[1] !== '') {
+				newurl = href + '&' + param;
+			} else {
+				newurl = href + '?' + param;
+			}
+
+			window.history.pushState({path: newurl.toString()}, '', newurl.toString());
+		}
+	} else if (force) {
+		if (history.pushState) {
+			var href = new URL(window.location.href);
+			if (para.length == 1) {
+				href = changeParam(window.location.href, para[0], "");
+			} else {
+				href = changeParam(window.location.href, para[0], para[1]);
+			}
+			window.history.pushState({path: href.toString()}, '', href.toString());
+		}
+	}
+	urlParams = new URLSearchParams(window.location.search);
+}
 
 if (urlParams.has("rotate")){
 	document.querySelector("#rotation").value = urlParams.get("rotate") || 0;
@@ -342,18 +420,41 @@ if (localStorage.getItem('sourceType')){
 }
 
 if (localStorage.getItem('iframeURL') || urlParams.has("link")){
-	document.querySelector("#iframeURL").value = decodeURIComponent(urlParams.get("link") || "") || localStorage.getItem('iframeURL') || "";
+	try {
+		document.querySelector("#iframeURL").value = decodeURIComponent(urlParams.get("link") || "") || localStorage.getItem('iframeURL') || "";
+	} catch(e){
+		document.querySelector("#iframeURL").value = urlParams.get("link") || localStorage.getItem('iframeURL') || "";
+	}
 }
 if (localStorage.getItem('iframeURL_twitch') || urlParams.has("twitch")){
-	document.querySelector("#iframeURL_twitch").value = decodeURIComponent(urlParams.get("twitch") || "") || localStorage.getItem('iframeURL_twitch') || "";
+	try {
+		document.querySelector("#iframeURL_twitch").value = decodeURIComponent(urlParams.get("twitch") || "") || localStorage.getItem('iframeURL_twitch') || "";
+	}  catch(e){
+		document.querySelector("#iframeURL_twitch").value = urlParams.get("twitch") || localStorage.getItem('iframeURL_twitch') || "";
+	}
 }
 if (localStorage.getItem('iframeURL_youtube') || urlParams.has("youtube")){
-	document.querySelector("#iframeURL").value = decodeURIComponent(urlParams.get("youtube") || "") || localStorage.getItem('iframeURL_youtube') || "";
+	try {
+		document.querySelector("#iframeURL").value = decodeURIComponent(urlParams.get("youtube") || "") || localStorage.getItem('iframeURL_youtube') || "";
+	} catch(e){
+		document.querySelector("#iframeURL").value = urlParams.get("youtube") || localStorage.getItem('iframeURL_youtube') || "";
+	}
 }
+
 var menuOffset = "70px";
+
+if ( urlParams.has("hidemenu") || urlParams.has("hide") ||  urlParams.has("hidebar")){
+	container.classList.add("hidden");
+	menuOffset = "0px";
+}
+
+
 loadPage();
 
+
+
 function hidebar(){
+	// updateURL("hidemenu");
 	container.classList.add("hidden");
 	menuOffset = "0px";
 	loadPage();
@@ -561,15 +662,8 @@ async function loadPage(){
 	var urlEdited = window.location.search.replace(/\?\?/g, "?");
 	urlEdited = urlEdited.replace(/\?/g, "&");
 	urlEdited = urlEdited.replace(/\&/, "?");
-
-	if (urlEdited !== window.location.search){
-		if (!urlParams.has("link")){
-			urlEdited += "&link="+ encodeURIComponent(iframeURL);
-		}
-		urlEdited = urlEdited.replace(/\?/g, "&");
-		urlEdited = urlEdited.replace(/\&/, "?");
-		window.history.pushState({path: urlEdited.toString()}, '', urlEdited.toString());
-	}
+	
+	updateURL("link="+ encodeURIComponent(iframeURL), true);
 	
 	iframe.allow = "encrypted-media;sync-xhr;usb;web-share;cross-origin-isolated;accelerometer;midi;geolocation;autoplay;camera;microphone;fullscreen;picture-in-picture;display-capture;";
 	iframe.src = iframeURL;
@@ -585,6 +679,9 @@ function rotatePage(){
 
 	var rotate = document.querySelector("#rotation").value || 0;
 	var flip = document.querySelector("#transform").value;
+	
+	updateURL("rotate="+rotate, true);
+	updateURL("flip="+flip, true);
 	
 	localStorage.setItem('iframeURL', document.getElementById('iframeURL').value);
 	localStorage.setItem('rotation', document.getElementById('rotation').value);
