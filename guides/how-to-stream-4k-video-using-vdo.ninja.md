@@ -11,6 +11,7 @@ VDO.Ninja has 3 predefined [`&quality`](../advanced-settings/video-parameters/an
 * `&quality=0` tries to do 1080p (1920x1080 @ 60fps)
 * `&quality=1` is the default. It tries to select 720p (1280x720 @ 30fps ) for both screen capture and webcam.
 * `&quality=2` tries to do 360p (640x360 @ 30 fps).
+* also there's `&quality=-1` , which will use the device's default resolution, but this could be anything, low or high, so it's a niche option.
 
 By “trying”, I mean that if the resolution is not available, VDO.Ninja defaults to another resolution that the camera supports instead. This way, no errors are thrown and a compatible stream is sent, even if it’s not exactly what you might have desired.
 
