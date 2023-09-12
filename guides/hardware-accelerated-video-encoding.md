@@ -62,3 +62,16 @@ Code and quick start deployment images are available for the Raspberry Pi and Nv
 Other Linux systems are support with the provided code, but it is up to you to ensure the hardware driver and configuration is setup correctly in those cases.
 
 The project will hopefully keep expanding, to include more devices and operating systems.
+
+
+
+### WHIP and WHEP
+
+With OBS v30 supporting WHIP output, it's now possible to stream video directly from OBS to VDO.Ninja via webRTC with hardware accelerated encoding.
+
+There are limitations with OBS's WHIP implementation in version 30 however, which may get addressed in the future, but without a server supporting OBS's WHIP output currently, this option is primarily limited for single point to point video distribution on controlled networks.
+
+You can however use OBS's WHIP output with an SFU server however, such as Cloudflare's WHIP/WHEP server, and VDO.Ninja can ingest the WHEP output from that. This setup would work a bit like how Meshcast works with VDO.Ninja currently, except with the source being specified as WHEP-based, rather than from Meshcast.\
+\
+
+
