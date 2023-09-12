@@ -15,11 +15,13 @@ If it works, in the video stats window (`CTRL + Click`), you'll see the video co
 
 ![Sample of the H264 Hardware Encoder working with VDO.Ninja](<../.gitbook/assets/image (17) (1) (1).png>)
 
-Despite software using a lot of CPU, it offers better compatibility, fewer glitches, and technically can still handle dozens of video streams at a time if you CPU is fast enough. Hardware however can be finicky, where glitching is common and a hardware encoder typically can only support three video encoding sessions at a time.
+Despite software using a lot of CPU, it offers better compatibility, fewer glitches, and technically can still handle dozens of video streams at a time if your CPU is fast enough. Hardware however can be finicky, where glitching is common and a hardware encoder typically can only support three video encoding sessions at a time.
 
 What's really strange about hardware encoding on a PC is that it may actually use MORE CPU than the software-based openH264 alternative. If your goal is to save CPU power, a hardware encoder may just introduce more problems and offer no benefit at all; at least if encoding with a PC.&#x20;
 
 You can specify whether to use software or hardware H264 by changing the H264 profile ID; this can be specified, for example, using `&h264profile=42e01f`. `42e01f` should trigger the OpenH264 software encoder, if available.&#x20;
+
+
 
 AMD systems, and some Intel systems, the default H264 hardware encoder will limit bitrates. Using VP8 or a software-based H264 encoder could allow for higher bitrates. The software VP8 encoder does seem to use more CPU than the H264 encoders, but it often is more stable, especially for screen shares.
 
@@ -29,7 +31,10 @@ On iOS, the H264 encoders can only support 720p30, while the VP8 software encode
 
 On the Google Pixel the H264/VP8 encoder will glitch like crazy when used in Portrait mode, however it's glitch free when using the VP9 codec via software encoding.
 
-Many Android phones may not support H264 encoding in Chrome; this seems to vary based on the browser version, device chipset, and other factors. Trying to force H264 with such incompatible devices might result in no video, as the browser isn't always smart enough to know it isn't working. Chrome on Android doesn't seem to have a software-based H264 encoder.
+Many Android phones may not support H264 encoding in Chrome; this seems to vary based on the browser version, device chipset, and other factors. Trying to force H264 with such incompatible devices might result in no video, as the browser isn't always smart enough to know it isn't working. Chrome on Android doesn't seem to have a software-based H264 encoder.\
+\
+With entry-level and mid-range smartphones, the hardware H264 encoder will probably give the best results, as other software based encoders may trigger overheating or CPU throttling.\
+
 
 If a director, choosing to publish video to your group with H264 might reduce some CPU load, but if using an Nvidia graphics card, you may end up forfeiting your ability to use NVenc encoding for RTMP or MKV file recording, since Nvidia only offers typically three encoders. You can unlock this limit, but the benefits of using NVenc with VDO.Ninja often provides no benefits it seems over a software H264 option.
 
@@ -37,7 +42,14 @@ If using a CDN-service like meshcast.io, where a server redistributes the video 
 
 OperaGX tends to have issues with H264 encoding.
 
-On the bright side, H264 is supported well on macOS, and it seems to use less CPU to decode than VP8. H264 on OBS 27.1 and older (for PC) offers lower packet-loss-induced "rainbow puke" than the VP8 codec, but this isn't a factor anymore with OBS 27.2 and newer. On PC, VP8 and H264 seem to use about the same CPU to decode in OBS. I'd advise you to do your own testing though.
+On the bright side, H264 is supported well on macOS, and it seems to use less CPU to decode than VP8. H264 on OBS 27.1 and older (for PC) offers lower packet-loss-induced "rainbow puke" than the VP8 codec, but this isn't a factor anymore with OBS 27.2 and newer. On PC, VP8 and H264 seem to use about the same CPU to decode in OBS. I'd advise you to do your own testing though.\
+
+
+### Minimum resolutions
+
+For many devices that are offering hardware accelerated encoding, a minimum or specific resolution is needed, else the device may switch back to software based encoding.\
+\
+Sometimes this minimum resolution is 640x360, but other times it might be 1920x1080.
 
 ### Embedded and Linux hardware-encoding support
 
