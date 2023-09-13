@@ -1,5 +1,76 @@
 # Updates - VDO.Ninja
 
+#### September 5 <a href="#august-31" id="august-31"></a>
+
+Fixed a few bugs and pushed to alpha (vdo.ninja/alpha). Thank you for reporting the issues.
+
+* The [Mixer App](../steves-helper-apps/mixer-app.md) wouldn't respond to the change-layout API after a director reloaded.
+* When the director was in 'scene preview mode', sometimes a muted camera or screen share would not show video.
+* the [vdo.ninja/twitch](https://vdo.ninja/twitch) app failed to show the 'add camera' menu if using a custom VDO.Ninja link.
+
+#### September 2 <a href="#august-31" id="august-31"></a>
+
+* The director / co-director will be visible in their own solo-link, even if [`&showdirector`](../viewers-settings/and-showdirector.md) isn't added. They still won't appear in normal [`&scene`](../advanced-settings/view-parameters/scene.md) links, but rather just [`&solo`](../advanced-settings/mixer-scene-parameters/and-solo.md) scene links. This is being done to just simplify the experience.
+* Unless using [`&remote`](../general-settings/remote.md) on the OBS browser source link now (with the right browser source permissions), the remote guest/director won't see the "remote control OBS" menu option appear. Before it would appear, but it would fail if you tried to actually do anything beyond just observe the current state, and that's probably not worth confusing users.\
+  \-- I should note, OBS Studio v30 beta seems is a bit buggy with the remote control options, but the current OBS v29 works fine.
+* If you create a co-director link, via the room settings menu, I'm including the room password in the URL now, along with the co-director password. This just avoids the confusion between what password the co-director needs to enter, which was turning out to be a common point of confusion. Hopefully this avoids that confusion. If you wish to remove the passwords from the URL for a boost to security, you can still do that of course; users will then be prompted to enter the corresponding required password on joining.
+
+\*\* changes on alpha
+
+#### September 1 <a href="#august-31" id="august-31"></a>
+
+* I've tried to make the accessibility (for the vision impaired) a bit easier on the main landing and menu pages, as it was a bit too verbose.\
+  \-- Essentially, I disabled a lot of the non-important stuff, including non-visible elements, as seen by accessibility readers. Also added more titles, and improved the ordering of some buttons.
+* Played around with some CSS elements here and there; if you get a chance to test alpha, let me know if there are any rendering issues.
+
+\*\* changes on alpha
+
+#### August 28 <a href="#august-31" id="august-31"></a>
+
+* When a user changes an advanced audio or video option (white balance, frame rate, main gain, etc), it will now announce that over the IFrame API.\
+  ![](<../.gitbook/assets/image (5).png>)![](<../.gitbook/assets/image (6).png>)
+* [vdo.ninja/alpha/](https://vdo.ninja/alpha/) updated with this change, and _**Github**_ has also had all recent changes pushed to it.
+
+#### August 27 <a href="#august-31" id="august-31"></a>
+
+* `&clock24` added to VDO.Ninja; this is the same as the existing [`&clock`](../advanced-settings/settings-parameters/and-clock.md) option, (which shows a clock) except it uses 24-hour time for the display (vs am/pm)\
+  \-- if the director uses `&clock24` on their URL, and then enables the room clock, it will be 24-hour time for all guests, matching the director's settings.\
+  ![](<../.gitbook/assets/image (3).png>)
+
+\*\* at [vdo.ninja/alpha/?clock24](https://vdo.ninja/alpha/?clock24)
+
+#### August 26 <a href="#august-31" id="august-31"></a>
+
+* I've updated [vdo.ninja/alpha/](https://vdo.ninja/alpha/) to version "24.0b", to signify a large change to the code base.
+* I've merged the Meshcast and WHIP/WHEP features in VDO.Ninja to share about 95% of the same logic, including the URL options. If you want to use Meshcast, you still need to use [`&meshcast`](../newly-added-parameters/and-meshcast.md) instead of `&whipout`, but since Meshcast is essentially a WHIP/WHEP server, I just have Meshcast using the generic WHIP logic now.\
+  \-- Below shows what whip-output options now are fully interchangeable with Meshcast options, since they share the same code. (alias of each other)
+
+```
+mcscale == woscale, whipoutscale
+meshcastbitrate == whipoutvideobitrate, wovb
+mcscreensharebitrate == whipoutscreensharebitrate, wossbitrate
+mcscreensharecodec == whipoutscreensharecodec, wosscodec
+mcaudiobitrate == whipoutaudiobitrate, woab
+meshcastcodec == whipoutcodec, woc
+```
+
+* A goal for a while has been to allow anyone to drop-in their own Meshcast replacement, using a third-party WHIP/WHEP server/service. That is, publish to a whip-service, and have viewers of the stream get the whep-view link, so they can view via whep instead of p2p. I've achieved this finally; close enough at least.
+* There's a few requirements to make it work though, so either an API wrapper is needed or a set of rules needs to be followed:\
+  \-- If your WHIP server returns an exposed "WHEP" field in the POST response header, with the URL to the WHEP view link, it will use that WHEP link. You just need to then specify the `&whipout` URL on the sender side then.\
+  \-- This should let you make your own Meshcast service with minimal work; the open-source WHIP API code I released the other day further makes it pretty easy.
+* If using a cloudflare.com WHIP URL on the sender side, I'll guess at the WHEP link - seems to be working so far. (built this logic into VDO.Ninja directly and works automatically). This of course still implies a unique whip URL per guest.
+
+![](<../.gitbook/assets/image (2).png>)
+
+* To make using Cloudflare easier though, I've also created the WHIP end point `cloudflare.vdo.ninja`, which takes a Cloudflare API token, instead of a stream token.\
+  \-- This special end point will auto-create a unique WHEP URL. The official cloudflare.com whip endpoint can only be used by one sender at a time, but this API special endpoint and token approach can be used by many senders at a time. It automatically generates unique WHIP/WHEP when used, in the same way Meshcast does, so no need for unique invite urls per guest.\
+  \-- I've created a page to generate the required special api token; the page also provides further information on this all: [https://vdo.ninja/alpha/cloudflare](https://vdo.ninja/alpha/cloudflare)\
+  \-- `&cftoken` (`&cft`) is also now added to vdo.ninja/alpha/; this parameter accepts the special token without needing to specify the cloudflare.vdo.ninja part if using `&whipout` instead.
+
+\*\* on vdo.ninja/alpha/
+
+* I focused mainly on adding Cloudflare support first, as it has good pricing for its WHIP/WHEP service, it doesn't require deploying anything, and it has a lot of features (RTMP, SRT, recording, API). It's not 100% cooked yet though, so it's just on alpha currently for testing.
+
 #### August 23 <a href="#august-31" id="august-31"></a>
 
 * I've open-sourced the VDO.Ninja whip API server code and put it on GitHub:\
@@ -10,7 +81,7 @@
 
 * Add a new remote API query option to VDO.Ninja; called getGuestList. eg: `https://api.vdo.ninja/APIKEYHERE123/getGuestList`\
   \-- It returns an object with guest slot values as its keys, along with the associated stream ID and label for each of those guests.\
-  ![](<../.gitbook/assets/image (5).png>)
+  ![](<../.gitbook/assets/image (5) (1).png>)
 * I've been trying to fix a recent [`&buffer`](../advanced-settings/view-parameters/buffer.md) issue where audio/video fell out of sync with a buffer greater than 3-seconds. The new code isn't yet perfected, but the sync is closer -- I'll continue to work on it. Might be best to keep the buffer under 3 seconds though in the interm.
 
 \*\* on alpha
@@ -29,7 +100,7 @@
 Option for a custom hang-up message added to VDO.Ninja.\
 \-- `&hangupmessage` (or `&hum`) , which take a URL encoded string. So it can be just "bye", or it can be some HTML, as shown in the link\
 \-- eg: [https://vdo.ninja/alpha/?hum=bye%3Cimg%20src%3D%22.%2Fmedia%2Flogo\_cropped.png%22%3E\&push=ZimFGxM](https://vdo.ninja/alpha/?hum=bye%3Cimg%20src%3D%22.%2Fmedia%2Flogo\_cropped.png%22%3E\&push=ZimFGxM)\
-![](<../.gitbook/assets/image (1) (1).png>)\
+![](<../.gitbook/assets/image (1) (1) (1).png>)\
 \
 \* on alpha
 
@@ -71,7 +142,7 @@ Option for a custom hang-up message added to VDO.Ninja.\
 
 * Added a new floating picture in picture mode, so you can pop out the entire video mix as a pinned window overlay\
   \-- `&pipall` (aka `&pip2`) will add a dedicated button for this mode\
-  ![](<../.gitbook/assets/image (7) (1).png>)\
+  ![](<../.gitbook/assets/image (7) (1) (1).png>)\
   \-- Or just right-click any video and select "Picture in picture all" from the context menu. This is available without any URL option\
   \-- This requires Chrome v115 right now; it might vanish in v116 due to it being in a `chrome field trial`, and so you might need to enable it via `chrome:flags` if it stops working.\
   \
@@ -93,7 +164,7 @@ Option for a custom hang-up message added to VDO.Ninja.\
 
 * Fixed an issue where when you hung up on an iPhone, it would still stay the camera/mic was in use at the goodbye/reload page.
 * Added the "test" audio output button to the in-call settings menu (as seen in image).\
-  ![](<../.gitbook/assets/image (1) (1) (1).png>)
+  ![](<../.gitbook/assets/image (1) (1) (1) (1).png>)
 * Fixed an issue with Firefox mobile's camera rotation being wrong in the local preview. (let me know tho if the issues continues tho)
 * Firefox mobile should not go to sleep any more when idle.
 
@@ -126,7 +197,7 @@ https://api.vdo.ninja/steve123456/startRoomTimer/null/600 - start timer that cou
 for eg: `https://vdo.ninja/alpha/?director=countrytownc&api=test123456` test director \*\* on alpha for testing
 
 * Also added the room timer options to the companion.vdo.ninja sandbox page for testing\
-  ![](<../.gitbook/assets/image (11).png>)
+  ![](<../.gitbook/assets/image (11) (4).png>)
 
 #### July 20 <a href="#august-31" id="august-31"></a>
 
@@ -415,7 +486,7 @@ https://vdo.ninja/alpha/?view=YbFmisR&poster=./media/bg_sample.webp&hideplaybutt
   \-- This applies globally, so within scenes, other guests, and for the actual guest\
   \-- If a guest's video preview is mirrored already, such as if using [`&mirror`](../advanced-settings/design-parameters/mirror.md), this function will mirror their local mirror effect; so it doesn't override it, but applies on top of it for them.\
   \-- If a guest mirrors someone else's video via the right-click context menu manually, if the director changes the mirror for that video, it will override what the guest has set. They can always re-mirror it manually, but the director in this case takes precedent.\
-  ![](<../.gitbook/assets/image (6) (1) (1).png>)
+  ![](<../.gitbook/assets/image (6) (1) (1) (2).png>)
 
 \*\* this new mirror feature is on alpha for now at [https://vdo.ninja/alpha/](https://vdo.ninja/alpha/). Feel free to test and let me know how you fair.
 
@@ -494,7 +565,7 @@ https://vdo.ninja/alpha/?view=YbFmisR&poster=./media/bg_sample.webp&hideplaybutt
 * [`&selfbrowsersurface`](../advanced-settings/screen-share-parameters/and-selfbrowsersurface.md), which excludes the current tab as an screen share source option. (you can pass `include` or `exclude` as a value to control this though)
 * [`&systemaudio`](../advanced-settings/screen-share-parameters/and-systemaudio.md), which excludes the system-audio as an audio source when display sharing. Tab audio is still available though. (can help prevent accidental audio feedback loops)
 * [`&displaysurface`](../advanced-settings/screen-share-parameters/and-displaysurface.md) will pre-select "display-share", rather than tab-share, when screen sharing. You can pass `monitor`, `browser`, or `window` as options to customize this though.\
-  ![](<../.gitbook/assets/image (7) (1) (1).png>)\
+  ![](<../.gitbook/assets/image (7) (1) (1) (1).png>)\
   \
   For more details on these new features see here: [https://developer.chrome.com/docs/web-platform/screen-sharing-controls/](https://developer.chrome.com/docs/web-platform/screen-sharing-controls/) (Chrome/chromium-browsers only)\
   \
@@ -548,7 +619,7 @@ https://vdo.ninja/alpha/?view=YbFmisR&poster=./media/bg_sample.webp&hideplaybutt
   \-- Go here, [https://vdo.ninja/alpha/whip](https://vdo.ninja/alpha/whip), enter your Twitch stream token in the correct field, GO, and then select your camera in VDO.Ninja as normal.\
   \-- There's also a new development version of OBS Studio that has improved support for direct publishing of OBS -> VDO.Ninja (via whip) here:\
   [https://github.com/obsproject/obs-studio/actions/runs/4711358202?pr=7926](https://github.com/obsproject/obs-studio/actions/runs/4711358202?pr=7926)\
-  ![](<../.gitbook/assets/image (9) (1).png>)![](<../.gitbook/assets/image (16).png>)
+  ![](<../.gitbook/assets/image (9) (1) (3).png>)![](<../.gitbook/assets/image (16).png>)
 
 #### April 14 <a href="#august-31" id="august-31"></a>
 
@@ -634,7 +705,7 @@ https://vdo.ninja/alpha/?view=YbFmisR&poster=./media/bg_sample.webp&hideplaybutt
 #### March 24 <a href="#august-31" id="august-31"></a>
 
 * Right click a video and click `Snapshot to Clipboard` to save the current video frame to the clipboard as a PNG image. This can be pasted into most applications, such as Photoshop, for quick use in a production\
-  ![](<../.gitbook/assets/image (6) (1) (1) (2).png>)\
+  ![](<../.gitbook/assets/image (6) (1) (1) (2) (1).png>)\
   \
   \-- Also the option to save to disk\
   ![](<../.gitbook/assets/image (4) (1) (4) (1).png>)\
@@ -1024,7 +1095,7 @@ https://vdo.ninja/alpha/?view=YbFmisR&poster=./media/bg_sample.webp&hideplaybutt
   \-- also while using `&fullscreenbutton`, the previous little 'full window' button in the top-right of videos (if in a group room) will also auto-F11 and isolate that video, rather than just isolate the video.\
   \-- you can still right-click and select "full-window" on any video to isolate it without going full screen, if you need that. -- you can test by opening two such guest links: [https://vdo.ninja/alpha/?fsb\&room=test123123123\&webcam\&autostart](https://vdo.ninja/alpha/?fsb\&room=test123123123\&webcam\&autostart)\
   \-- ultimately I'd like to override the native video full screen button with this behaviour, when `&fullscreenbutton` is used, but I'm still working on that aspect.\
-  ![](<../.gitbook/assets/image (7) (1) (1) (1).png>)
+  ![](<../.gitbook/assets/image (7) (1) (1) (1) (1).png>)
 * Fixed a bug where the guest screen share, while in broadcast mode, was misplaced on the screen.
 * Fixed a bug where [`&language`](../advanced-settings/settings-parameters/and-language.md) didn't work in translating a couple elements, like "join with camera".
 * Re-enabled [`&limittotalbitrate`](../advanced-settings/video-bitrate-parameters/limittotalbitrate.md) for non-guests, as it was causing me some problems before with versus.cam. It might still be causing issues, so more testing is needed.
@@ -1291,7 +1362,7 @@ https://vdo.ninja/alpha/?view=YbFmisR&poster=./media/bg_sample.webp&hideplaybutt
 
 * When using [`&waitimage`](../advanced-settings/newly-added-parameters/and-waitimage.md), the specified 'waiting to connect' image will appear after all connections end. This is a bit different than the default behaviour of the spinner, which doesn't re-appear, but I assume if you're advanced enough to use the `&waitimage` option, you're okay with this.
 *   Added the option to "draw on the screen", which might be a useful tool for niche use cases where you might need to take notes, etc. It doesn't affix to videos themselves, but rather it's just a full-window transparent canvas overlay, You can start/stop/clear and select a couple style-types with this feature, via the settings -> User menu. You can also do `CTRL + ALT + D` to toggle this as needed.\
-    ![](<../.gitbook/assets/image (2) (1) (1) (1) (1) (1).png>)\
+    ![](<../.gitbook/assets/image (2) (1) (1) (1) (1) (1) (1).png>)\
 
 
     \*\* on alpha at vdo.ninja/alpha

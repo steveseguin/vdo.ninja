@@ -18,7 +18,7 @@ description: Show/hide buttons, adjust the user control bar and video control ba
 
 <div align="left">
 
-<figure><img src="../../.gitbook/assets/image (9) (1) (3).png" alt=""><figcaption><p>The video control bar</p></figcaption></figure>
+<figure><img src="../../.gitbook/assets/image (9) (1) (3) (1).png" alt=""><figcaption><p>The video control bar</p></figcaption></figure>
 
 </div>
 

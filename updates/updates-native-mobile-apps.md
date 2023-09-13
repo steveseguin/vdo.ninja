@@ -2,6 +2,13 @@
 
 [native-mobile-app-versions.md](../steves-helper-apps/native-mobile-app-versions.md "mention")
 
+#### August 30
+
+* Updated the Android app with a "[force landscape](../advanced-settings/mobile-parameters/and-forcelandscape.md)" option\
+  ![](<../.gitbook/assets/image (10).png>)\
+  [https://drive.google.com/file/d/1M0kv5nWLtcfl2JOnsAGiG1zUmkeIVLyZ/view](https://drive.google.com/file/d/1M0kv5nWLtcfl2JOnsAGiG1zUmkeIVLyZ/view)\
+  \-- I'll submit it to the Google play store in a little bit. The iOS version might be a while tho.
+
 #### August 23
 
 * The Android native app has been updated to allow a custom turn server to be specified. It's live on the play store now.\
