@@ -8,7 +8,7 @@ Sending a 4K video feed with VDO.Ninja is very CPU intensive. Be prepared to use
 
 VDO.Ninja has 3 predefined [`&quality`](../advanced-settings/video-parameters/and-quality.md) levels:
 
-* `&quality=0` tries to do 1080p (1920x1080 @ 60fps)
+* `&quality=0` tries to do 1080p (1920x1080 @ 60fps).
 * `&quality=1` is the default. It tries to select 720p (1280x720 @ 30fps ) for both screen capture and webcam.
 * `&quality=2` tries to do 360p (640x360 @ 30 fps).
 * also there's `&quality=-1` , which will use the device's default resolution, but this could be anything, low or high, so it's a niche option.
