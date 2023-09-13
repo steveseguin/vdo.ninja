@@ -15,6 +15,12 @@ General Option! ([`&push`](../../source-settings/push.md), [`&room`](../../gener
 * `&obsremote`
 * `&obs`
 
+## Options
+
+Example: `&controlobs=0`
+
+<table><thead><tr><th width="227">Value</th><th>Description</th></tr></thead><tbody><tr><td>(no value given)</td><td><a data-mention href="and-controlobs.md#remotely-control-obs-studio">#remotely-control-obs-studio</a></td></tr><tr><td><code>0</code> | <code>false</code> | <code>off</code></td><td><a href="and-controlobs.md#disabling-or-hiding-the-controls">will hide the control option on the sender side, regardless of the OBS browser source page permissions</a></td></tr></tbody></table>
+
 ## Remotely Control OBS Studio
 
 Added the ability for VDO.Ninja to **Remotely Control OBS Studio** while streaming/directing. It may be useful for [IRL streaming](https://restream.io/blog/irl-streaming-ultimate-guide/)?
@@ -48,15 +54,11 @@ It supports multiple OBS instances and will label them according to the [`&label
 
 5\. Control OBS Studio remotely via VDO.Ninja
 
-
-
 ### Disabling or hiding the controls
 
-Setting `&obscontrols=0` or to false/off, will hide the control option on the sender side, regardless of the OBS browser source page permissions.\
-\
+Setting `&controlobs=0` or to `false`/`off`, will hide the control option on the sender side, regardless of the OBS browser source page permissions.
+
 As well, setting the OBS browser source to low or no page permissions will also not show the controls, which is how it is by default.  You can force show the controls of course, but they won't work if the browser source doesn't have the right permissions.
-
-
 
 ## Related
 
