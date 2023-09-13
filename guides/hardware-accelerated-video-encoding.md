@@ -21,20 +21,17 @@ What's really strange about hardware encoding on a PC is that it may actually us
 
 You can specify whether to use software or hardware H264 by changing the H264 profile ID; this can be specified, for example, using `&h264profile=42e01f`. `42e01f` should trigger the OpenH264 software encoder, if available.&#x20;
 
-
-
 AMD systems, and some Intel systems, the default H264 hardware encoder will limit bitrates. Using VP8 or a software-based H264 encoder could allow for higher bitrates. The software VP8 encoder does seem to use more CPU than the H264 encoders, but it often is more stable, especially for screen shares.
 
-On a macOS system, Chrome may drop frame rates suddenly when using the H264 encoder.&#x20;
+On a MacOS system, Chrome may drop frame rates suddenly when using the H264 encoder.&#x20;
 
 On iOS, the H264 encoders can only support 720p30, while the VP8 software encoder on iOS can support 1080p. (This recently changed with the iOS \~15; it can now support 1080p30 with H264, but your phone may get very hot, so I am unsure if its actually hardware-accelerated).
 
 On the Google Pixel the H264/VP8 encoder will glitch like crazy when used in Portrait mode, however it's glitch free when using the VP9 codec via software encoding.
 
-Many Android phones may not support H264 encoding in Chrome; this seems to vary based on the browser version, device chipset, and other factors. Trying to force H264 with such incompatible devices might result in no video, as the browser isn't always smart enough to know it isn't working. Chrome on Android doesn't seem to have a software-based H264 encoder.\
-\
-With entry-level and mid-range smartphones, the hardware H264 encoder will probably give the best results, as other software based encoders may trigger overheating or CPU throttling.\
+Many Android phones may not support H264 encoding in Chrome; this seems to vary based on the browser version, device chipset, and other factors. Trying to force H264 with such incompatible devices might result in no video, as the browser isn't always smart enough to know it isn't working. Chrome on Android doesn't seem to have a software-based H264 encoder.
 
+With entry-level and mid-range smartphones, the hardware H264 encoder will probably give the best results, as other software based encoders may trigger overheating or CPU throttling.
 
 If a director, choosing to publish video to your group with H264 might reduce some CPU load, but if using an Nvidia graphics card, you may end up forfeiting your ability to use NVenc encoding for RTMP or MKV file recording, since Nvidia only offers typically three encoders. You can unlock this limit, but the benefits of using NVenc with VDO.Ninja often provides no benefits it seems over a software H264 option.
 
@@ -42,13 +39,12 @@ If using a CDN-service like meshcast.io, where a server redistributes the video 
 
 OperaGX tends to have issues with H264 encoding.
 
-On the bright side, H264 is supported well on macOS, and it seems to use less CPU to decode than VP8. H264 on OBS 27.1 and older (for PC) offers lower packet-loss-induced "rainbow puke" than the VP8 codec, but this isn't a factor anymore with OBS 27.2 and newer. On PC, VP8 and H264 seem to use about the same CPU to decode in OBS. I'd advise you to do your own testing though.\
-
+On the bright side, H264 is supported well on macOS, and it seems to use less CPU to decode than VP8. H264 on OBS 27.1 and older (for PC) offers lower packet-loss-induced "rainbow puke" than the VP8 codec, but this isn't a factor anymore with OBS 27.2 and newer. On PC, VP8 and H264 seem to use about the same CPU to decode in OBS. I'd advise you to do your own testing though.
 
 ### Minimum resolutions
 
-For many devices that are offering hardware accelerated encoding, a minimum or specific resolution is needed, else the device may switch back to software based encoding.\
-\
+For many devices that are offering hardware accelerated encoding, a minimum or specific resolution is needed, else the device may switch back to software based encoding.
+
 Sometimes this minimum resolution is 640x360, but other times it might be 1920x1080.
 
 ### Embedded and Linux hardware-encoding support
@@ -63,15 +59,10 @@ Other Linux systems are support with the provided code, but it is up to you to e
 
 The project will hopefully keep expanding, to include more devices and operating systems.
 
-
-
 ### WHIP and WHEP
 
-With OBS v30 supporting WHIP output, it's now possible to stream video directly from OBS to VDO.Ninja via webRTC with hardware accelerated encoding.
+With OBS v30 supporting WHIP output, it's now possible to stream video directly from OBS to VDO.Ninja via WebRTC with hardware accelerated encoding.
 
 There are limitations with OBS's WHIP implementation in version 30 however, which may get addressed in the future, but without a server supporting OBS's WHIP output currently, this option is primarily limited for single point to point video distribution on controlled networks.
 
-You can however use OBS's WHIP output with an SFU server however, such as Cloudflare's WHIP/WHEP server, and VDO.Ninja can ingest the WHEP output from that. This setup would work a bit like how Meshcast works with VDO.Ninja currently, except with the source being specified as WHEP-based, rather than from Meshcast.\
-\
-
-
+You can however use OBS's WHIP output with an SFU server however, such as Cloudflare's WHIP/WHEP server, and VDO.Ninja can ingest the WHEP output from that. This setup would work a bit like how Meshcast works with VDO.Ninja currently, except with the source being specified as WHEP-based, rather than from Meshcast.
