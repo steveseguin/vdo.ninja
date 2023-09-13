@@ -14,12 +14,12 @@ Sender-Side Option! ([`&push`](../../source-settings/push.md))
 
 Example: `&quality=0`
 
-| Value                   | Description                                                                |
-| ----------------------- | -------------------------------------------------------------------------- |
-| `0` \| (no value given) | about 1080p60, depending on hardware                                       |
-| `1`                     | about 720p60, depending on hardware                                        |
-| `2`                     | about 360p30, depending on hardware                                        |
-| `-1` (device's default) | useful in allowing the screen share at the same resolution as the display. |
+| Value                   | Description                                                               |
+| ----------------------- | ------------------------------------------------------------------------- |
+| `0` \| (no value given) | about 1080p60, depending on hardware                                      |
+| `1`                     | about 720p60, depending on hardware                                       |
+| `2`                     | about 360p30, depending on hardware                                       |
+| `-1` (device's default) | useful in allowing the screen share at the same resolution as the display |
 
 ## Details
 
