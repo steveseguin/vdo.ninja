@@ -20,7 +20,7 @@ Example: `&chunked=2000`
 
 ### Chunked video transfer mode
 
-[Version 20](../release-notes/v20.md) introduces the option to enable a chunked-video transfer mode, which is similar to how Twitch or YouTube Live broadcasts videos. This still uses VDO.Ninja's peer to peer connections to distribute video to viewers, except it does not use webRTC's video streaming protocols; rather it uses a custom-made protocol.
+[Version 20](../release-notes/v20.md) introduces the option to enable a chunked-video transfer mode, which is similar to how Twitch or YouTube Live broadcasts videos. This still uses VDO.Ninja's peer to peer connections to distribute video to viewers, except it does not use WebRTC's video streaming protocols; rather it uses a custom-made protocol.
 
 The upsides of this mode is that packet loss on a network connection impacts the video stream less, so the quality can be higher. It also makes it easier to record the stream to disk on the viewer's end with no added quality loss and with lower CPU usage.
 
@@ -34,13 +34,13 @@ Future versions of this feature will include the option to record to a cloud ser
 
 * The option to save the chunked stream as a viewer is to use `&chunked=2` on the sender side. Using just `&chunked` will just enable viewing, and not saving, of the video.
 * `&chunked=2` and [`&maxvideobitrate`](../advanced-settings/video-bitrate-parameters/and-maxvideobitrate.md) will likely get changed up and moved to the viewer side eventually; currently doing this just for convenience of development/testing. Multiple viewers is not recommended. There seems to be an issue with audio clicking that I'm trying to solve currently.
-* Using \&buffer on the viewer side can vary the buffering amount, however setting it too low may cause the stream to fail if it faces a buffer underrun event.
+* Using [`&buffer`](../advanced-settings/view-parameters/buffer.md) on the viewer side can vary the buffering amount, however setting it too low may cause the stream to fail if it faces a buffer underrun event.
 
 #### Info and issues about using the chunked transfer mode
 
 * It does not work with Meshcast.
 * Chunked transfer is supported in recent Chromium-based browsers, including OBS v27.2 and newer.
-* Audio and video sync isn't always guarenteed
+* Audio and video sync isn't always guarenteed.
 
 ## Related
 
