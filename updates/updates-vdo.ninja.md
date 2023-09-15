@@ -1,5 +1,24 @@
 # Updates - VDO.Ninja
 
+#### September 8 <a href="#august-31" id="august-31"></a>
+
+* `&rotatewindow=90` (`&rotatepage`) will rotate the contents of the VDO.Ninja window. It doesn't target any specific video, and can be used on the viewer-side, not just the sender.\
+  \-- This will be overridden by [`&forcelandscape`](../advanced-settings/mobile-parameters/and-forcelandscape.md) mode, if that is used also.\
+  \-- You can pass `90`, `180`, or `270` as a value to the parameter, to rotate accordingly. The default is 90 though, if used without any value.\
+  \-- You might still want to use OBS to rotate instead, but if not using OBS and find the teleprompter app too cumbersome, this is a good option.
+
+\*\* this specific change is on production and alpha.\
+![](<../.gitbook/assets/image (182).png>)
+
+* Added `&motiondetection=15`, which does a few things when it detects motion in a video (viewer-side).\
+  \-- It will feature highlight the specific video where movement is detected, if more than one video is included in the mix. Using a custom [`&layout`](../advanced-settings/mixer-scene-parameters/and-layout.md) will disable this feature though, and use the layout instead.\
+  \-- It will also trigger an IFrame API event, which might be useful if you want to use VDO.Ninja as a security camera; you could script things to auto-record the video or log data events.\
+  \-- It will also switch to itself in OBS as a scene, which might be how this will be mainly used. (you need to have the OBS browser source's page permission set to high to allow this to actually work)\
+  \-- You can adjust the sensitivity of the motion detection trigger as a value; the default I think is 15, but it can be between 1 and 64 I think.
+
+\*\* on alpha at vdo.ninja/alpha/\
+\*\* GitHub also updated with the newest code
+
 #### September 5 <a href="#august-31" id="august-31"></a>
 
 Fixed a few bugs and pushed to alpha (vdo.ninja/alpha). Thank you for reporting the issues.
