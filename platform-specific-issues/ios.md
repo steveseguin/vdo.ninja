@@ -6,17 +6,19 @@ description: >-
 
 # iOS (iPhone/iPad)
 
-[VDO.Ninja](https://vdo.ninja/) has been tested with iOS v12 thru v15, but iOS v10 and under is strictly not supported. Older iPad and iPhone devices as a result are not compatible and likely never will be; an iPhone 5 for example will never be supported.
+[VDO.Ninja](https://vdo.ninja/) has been tested with iOS v12 thru v17, but iOS v10 and under is strictly not supported. Older iPad and iPhone devices as a result are not compatible and likely never will be; an iPhone 5 for example will never be supported.
 
-Please upgrade your iOS to at least v13.4 to avoid some critical bugs, although even newer is generally better.&#x20;
+Please upgrade your iOS to at least v16 to avoid some critical bugs, although even newer is generally better.&#x20;
 
 ### 1080p mode
 
-H264 is the default video encoder on iOS, yet H264 only supports up to 720p30 on iOS 14 or older. On iOS 15 devices, H264 (the default codec used), supports 1080p30. A frame rate of 60-fps is still not supported though.
+H264 is the default video encoder on iOS, yet H264 only supports up to 720p30 on iOS 14 or older. On iOS 15 devices, H264 (the default codec used), supports 1080p30. A frame rate of 60-fps is still not supported though. Newer iOS devices may even support 1080p60 with certain cameras.
 
 Both new and old iOS devices support 1080p30 when using the VP8 codec, which uses software-encoding rather than hardware. You may need to manually specific [`&width`](../source-settings/and-width.md) and [`&height`](../source-settings/and-height.md) to access 1080p mode on iOS 14 and older, but you can use also [`&quality=0`](../advanced-settings/video-parameters/and-quality.md) on iOS 15 and newer.
 
-VP9 is supported on iOS 14, but you have to enable it as an experimental flag in the iOS Safari advanced settings. It supports 1080p, software-based encoding, and acts a lot like VP8. It generally is finicky, with low-frame rates being common, so use at your own risk.
+VP9 is supported on iOS 14, but you have to enable it as an experimental flag in the iOS Safari advanced settings. It supports 1080p, software-based encoding, and acts a lot like VP8. It generally is finicky, with low-frame rates being common, so use at your own risk.\
+\
+The AV1 video codec is now also supported with modern iOS versions and works quite well with newer iOS devices. You may need to enable this however in the experimental advanced settings though in your Safari settings.
 
 ### Microphones and Audio
 
@@ -27,6 +29,8 @@ While there may be a drop down option for "external microphone", often iOS devic
 One TRRS adapter that I have tested for myself that does seem to work is this one: [https://www.amazon.ca/gp/product/B07Q49SVYR](https://www.amazon.ca/gp/product/B07Q49SVYR)
 
 Airpods seem to work also, and some users report that USB devices on iPadOS 17 work, but this is not yet confirmed by me. It is hoped that this issue will be resolved in future versions of IOS, or perhaps one day I'll have support added to the native iOS app.
+
+Firefox mobile on Android supports USB microphones reliably, if that is a potential solution.
 
 
 
