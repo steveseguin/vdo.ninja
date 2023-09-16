@@ -57,6 +57,6 @@ iOS does not yet support for many features that VDO.Ninja would like to make use
 
 {% embed url="https://apps.apple.com/us/app/vdo-ninja/id1607609685" %}
 
-There is a basic native iOS app provided by VDO.Ninja at this time, but it is extremely basic. It lacks useful screen-capture support, group-room support, and password support. It does work with the Torch light function though, and it's useful to have when Safari refuses to work.
+There is a basic native iOS app provided by VDO.Ninja at this time, but it is extremely basic. It lacks useful screen-capture support, group-room support, and password support. It does work with the Torch light function though, you can zoom with it also, and it's useful to have when Safari refuses to work.
 
 Supporting a native app for iOS takes a lot of resources and time, so it's being developed in tandem with the Android native app using a mobile development framework.
