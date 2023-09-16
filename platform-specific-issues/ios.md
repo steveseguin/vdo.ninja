@@ -20,9 +20,15 @@ VP9 is supported on iOS 14, but you have to enable it as an experimental flag in
 
 ### Microphones and Audio
 
-External microphones are supported on iOS, however iOS devices can be very finicky as to whether they work or not. A strong signal from your microphone and a proper connector (3.5mm TRRS and/or a legitimate Lightning adapter with microphone support). It should automatically work if it works. There is no drop down option for "external microphone" that you need to select in VDO.Ninja; the iOS device manages it automatically.
+Some external microphones are supported by Safari on iOS, however iOS devices are very finicky as to which microphones are supported. Just because your device is listed, doesn't mean it will work or stay selected.\
+\
+While there may be a drop down option for "external microphone", often iOS devices will auto-select and manage the microphone on its own once connected  Typically microphones that register as headsets, or some certified TRRS adapters, seem to work, but not all will still.
 
-Not all 3.5mm to Lightning adapters will be compatible. One that I have tested for myself that does seem to work is this one: [https://www.amazon.ca/gp/product/B07Q49SVYR](https://www.amazon.ca/gp/product/B07Q49SVYR)
+One TRRS adapter that I have tested for myself that does seem to work is this one: [https://www.amazon.ca/gp/product/B07Q49SVYR](https://www.amazon.ca/gp/product/B07Q49SVYR)
+
+Airpods seem to work also, and some users report that USB devices on iPadOS 17 work, but this is not yet confirmed by me. It is hoped that this issue will be resolved in future versions of IOS, or perhaps one day I'll have support added to the native iOS app.
+
+
 
 **AirPods** can create clicking or distortion if used as a microphone; please ensure they are fully-charged if you intend to use them in a live production. If they are on low-power, they will create audible problems.
 
