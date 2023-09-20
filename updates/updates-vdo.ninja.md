@@ -54,7 +54,7 @@ Fixed a few bugs and pushed to alpha (vdo.ninja/alpha). Thank you for reporting 
 
 * `&clock24` added to VDO.Ninja; this is the same as the existing [`&clock`](../advanced-settings/settings-parameters/and-clock.md) option, (which shows a clock) except it uses 24-hour time for the display (vs am/pm)\
   \-- if the director uses `&clock24` on their URL, and then enables the room clock, it will be 24-hour time for all guests, matching the director's settings.\
-  ![](<../.gitbook/assets/image (3).png>)
+  ![](<../.gitbook/assets/image (3) (1).png>)
 
 \*\* at [vdo.ninja/alpha/?clock24](https://vdo.ninja/alpha/?clock24)
 
@@ -79,7 +79,7 @@ meshcastcodec == whipoutcodec, woc
   \-- This should let you make your own Meshcast service with minimal work; the open-source WHIP API code I released the other day further makes it pretty easy.
 * If using a cloudflare.com WHIP URL on the sender side, I'll guess at the WHEP link - seems to be working so far. (built this logic into VDO.Ninja directly and works automatically). This of course still implies a unique whip URL per guest.
 
-![](<../.gitbook/assets/image (2).png>)
+![](<../.gitbook/assets/image (2) (1).png>)
 
 * To make using Cloudflare easier though, I've also created the WHIP end point `cloudflare.vdo.ninja`, which takes a Cloudflare API token, instead of a stream token.\
   \-- This special end point will auto-create a unique WHEP URL. The official cloudflare.com whip endpoint can only be used by one sender at a time, but this API special endpoint and token approach can be used by many senders at a time. It automatically generates unique WHIP/WHEP when used, in the same way Meshcast does, so no need for unique invite urls per guest.\
@@ -119,7 +119,7 @@ meshcastcodec == whipoutcodec, woc
 Option for a custom hang-up message added to VDO.Ninja.\
 \-- `&hangupmessage` (or `&hum`) , which take a URL encoded string. So it can be just "bye", or it can be some HTML, as shown in the link\
 \-- eg: [https://vdo.ninja/alpha/?hum=bye%3Cimg%20src%3D%22.%2Fmedia%2Flogo\_cropped.png%22%3E\&push=ZimFGxM](https://vdo.ninja/alpha/?hum=bye%3Cimg%20src%3D%22.%2Fmedia%2Flogo\_cropped.png%22%3E\&push=ZimFGxM)\
-![](<../.gitbook/assets/image (1) (1) (1).png>)\
+![](<../.gitbook/assets/image (1) (1) (1) (1).png>)\
 \
 \* on alpha
 
@@ -183,7 +183,7 @@ Option for a custom hang-up message added to VDO.Ninja.\
 
 * Fixed an issue where when you hung up on an iPhone, it would still stay the camera/mic was in use at the goodbye/reload page.
 * Added the "test" audio output button to the in-call settings menu (as seen in image).\
-  ![](<../.gitbook/assets/image (1) (1) (1) (1).png>)
+  ![](<../.gitbook/assets/image (1) (1) (1) (1) (1).png>)
 * Fixed an issue with Firefox mobile's camera rotation being wrong in the local preview. (let me know tho if the issues continues tho)
 * Firefox mobile should not go to sleep any more when idle.
 
@@ -1381,7 +1381,7 @@ https://vdo.ninja/alpha/?view=YbFmisR&poster=./media/bg_sample.webp&hideplaybutt
 
 * When using [`&waitimage`](../advanced-settings/newly-added-parameters/and-waitimage.md), the specified 'waiting to connect' image will appear after all connections end. This is a bit different than the default behaviour of the spinner, which doesn't re-appear, but I assume if you're advanced enough to use the `&waitimage` option, you're okay with this.
 *   Added the option to "draw on the screen", which might be a useful tool for niche use cases where you might need to take notes, etc. It doesn't affix to videos themselves, but rather it's just a full-window transparent canvas overlay, You can start/stop/clear and select a couple style-types with this feature, via the settings -> User menu. You can also do `CTRL + ALT + D` to toggle this as needed.\
-    ![](<../.gitbook/assets/image (2) (1) (1) (1) (1) (1) (1).png>)\
+    ![](<../.gitbook/assets/image (2) (1) (1) (1) (1) (1) (1) (1).png>)\
 
 
     \*\* on alpha at vdo.ninja/alpha
