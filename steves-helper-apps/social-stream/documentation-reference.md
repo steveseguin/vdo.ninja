@@ -117,6 +117,16 @@ Past supported sites that have ceased to exist.
 
     (it's the effort that counts, guys; may your code live on in our ai llm bots forever)
 
+#### Adding sites yourself
+
+I have a video walk-thru on how I added a simple social site to Social Stream: [https://www.youtube.com/watch?v=5LquQ1xhmms](https://www.youtube.com/watch?v=5LquQ1xhmms)
+
+You can also refer to some of my code commits, where you can see which changes I made to add support for any specific site.
+
+ie: `https://github.com/steveseguin/social_stream/commit/942fce2697d5f9d51af6da61fc878824dee514b4`
+
+For a simple site, a developer should need just 30 minutes to an hour to get a site supported. A more complicated and tricky site may take a few hours or longer, depending on the developer's skill.
+
 #### Video walk-thru
 
 An older guide covering the basics of setting up Social Stream:
