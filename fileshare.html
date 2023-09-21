@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>WebRTC File Sharing</title>
+	<style>
+		body {
+		  font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+		  background-color: #f7f7f7;
+		}
+
+		/* Container Styles */
+		.container {
+		  margin: 0 auto;
+		  max-width: 600px;
+		  padding: 20px;
+		  background-color: #ffffff;
+		  border-radius: 5px;
+		  box-shadow: 0px 0px 5px rgba(0,0,0,0.1);
+		}
+
+		/* Header Styles */
+		h1 {
+		  margin: 0;
+		  text-align: center;
+		  font-weight: normal;
+		  font-size: 36px;
+		  color: #333333;
+		  margin-bottom: 20px;
+		}
+
+		/* File Selector Styles */
+		#file-selector {
+		  display: flex;
+		  flex-direction: column;
+		  align-items: center;
+		  margin: 20px;
+		}
+
+		#file-selector label {
+		  font-size: 20px;
+		  margin-bottom: 10px;
+		}
+
+		#file-selector input[type="file"] {
+		  display: none;
+		}
+
+		#file-selector button {
+		  font-size: 16px;
+		  padding: 10px 20px;
+		  background-color: #4CAF50;
+		  color: white;
+		  border: none;
+		  border-radius: 4px;
+		  cursor: pointer;
+		  transition: background-color 0.3s ease;
+		}
+
+		#file-selector button:hover {
+		  background-color: #3e8e41;
+		}
+
+		/* Progress Container Styles */
+		#progress-container {
+		  display: none;
+		  flex-direction: column;
+		  align-items: center;
+		  margin: 20px;
+		}
+
+		#progress-bar {
+		  width: 100%;
+		  height: 30px;
+		  background-color: #f1f1f1;
+		  border-radius: 5px;
+		  overflow: hidden;
+		  margin-bottom: 10px;
+		}
+
+		#progress-bar-inner {
+		  height: 100%;
+		  background-color: #4CAF50;
+		  text-align: center;
+		  line-height: 30px;
+		  color: white;
+		  transition: width 0.3s ease;
+		}
+
+		#status {
+		  font-size: 16px;
+		  margin-bottom: 10px;
+		}
+
+		#connections {
+		  font-size: 14px;
+		  color: #999999;
+		}
+
+		/* Input Styles */
+		input[type="file"] {
+		  padding: 10px;
+		  border-radius: 5px;
+		  border: 1px solid #dddddd;
+		  margin-bottom: 10px;
+		}
+
+		/* Button Styles */
+		button {
+		  font-size: 16px;
+		  padding: 10px 20px;
+		  background-color: #4CAF50;
+		  color: white;
+		  border: none;
+		  border-radius: 4px;
+		  cursor: pointer;
+		  transition: background-color 0.3s ease;
+		}
+
+		button:hover {
+		  background-color: #3e8e41;
+		}
+	</style>
+</head>
+<body>
+	<h1>WebRTC File Sharing</h1>
+
+	<div id="file-selector">
+		<label for="file-input">Select a file:</label>
+		<input type="file" id="file-input" />
+		<button id="share-button">Share</button>
+	</div>
+
+	<div id="progress-container" style="display:none">
+		<div id="progress-bar">
+			<div id="progress-bar-inner"></div>
+		</div>
+		<div id="status">Connecting...</div>
+		<div id="connections">0 connections</div>
+	</div>
+
+	<script>
+		var fileInput = document.getElementById("file-input");
+		var shareButton = document.getElementById("share-button");
+		var progressContainer = document.getElementById("progress-container");
+		var progressBarInner = document.getElementById("progress-bar-inner");
+		var status = document.getElementById("status");
+		var connections = document.getElementById("connections");
+		var connectionCount = 0;
+
+		shareButton.addEventListener("click", function() {
+			if (fileInput.files.length > 0) {
+				// Display progress bar and status message
+				progressContainer.style.display = "block";
+				status.innerText = "Connecting...";
+
+				// TODO: Use WebRTC to share the file with other users
+
+				// Update progress bar and status messages
+				progressBarInner.style.width = "100%";
+				status.innerText = "File shared successfully.";
+			}
+		});
+
+		// TODO: Use WebRTC to display the number of connections, progress, and speed
+	</script>
+</body>
+</html>

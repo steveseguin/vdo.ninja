@@ -3,6 +3,7 @@
 	<title>Mixer app</title>
 	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
 	<meta content="text/html;charset=utf-8" http-equiv="Content-Type" />
+	<script src="./thirdparty/aes.js"></script>
 	<script src="./thirdparty/jquery/jquery-3.6.0.js?asdf"></script>
     <script src="./thirdparty/jquery/jquery-ui.js"></script>
 	<link rel="stylesheet" href="./thirdparty/jquery/jquery-ui.css">
@@ -14,10 +15,13 @@
 	<link rel="preconnect" href="https://fonts.googleapis.com">
 	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 	<link href="https://fonts.googleapis.com/css2?family=Sora:wght@200;400;700&display=swap" rel="stylesheet">
+	
 	<style>
 	:root{
 		--aspect-ratio: 1.7777777777;
 		--chat-width: 450px;
+		--iframe-width: 1280px;
+		--iframe-height: 720px;
 	}
 	
 	body {
@@ -36,12 +40,9 @@
 		border: 0;
 		padding: 0;
 		display: block;
-		
 		height: 100%;
-		width: 1280px;
-		
-		max-height: calc(100vh - 80px);
-	
+		width: var(--iframe-width);
+		max-height: calc(100vh - 92px);
 		background-color: #0002;
 		border-radius: 3px;
 		position: absolute;
@@ -51,10 +52,10 @@
 	}
 	
 	iframe.aspectRatio{
-		max-height: min(calc(100vh - 80px), calc(100vw - 160px - var(--chat-width)) / var(--aspect-ratio))) !important;
-		max-width: min(calc((100vh - 80px) *  var(--aspect-ratio)), calc(100vw - 160px - var(--chat-width))) !important;
-		height: 720px;
-		width: 1280px;
+		max-height: min(calc(100vh - 92px), calc(100vw - 160px - var(--chat-width)) / var(--aspect-ratio-widget)) !important;
+		max-width: min(calc((100vh - 92px) *  var(--aspect-ratio-widget)), calc(100vw - 160px - var(--chat-width))) !important;
+		height: var(--iframe-height) !important;
+		width: var(--iframe-width) !important;
 	}
 	.gone {
 		position:absolute;
@@ -105,7 +106,10 @@
 		bottom: 45px;
 		position: absolute;
 	}
-
+	.ui-widget-content {
+		border-left:0;
+		border-top:0;
+	}
 	#chatBody::-webkit-scrollbar {
 		width: 0px;
 		background: transparent; /* make scrollbar transparent */
@@ -120,6 +124,9 @@
 		font-size: 150%;
 		font-family: Verdana;
 		line-height: 14px;
+	}
+	#sceneSettings{
+		font-size: 80%;
 	}
 	#chatModule {
 		bottom: 0;
@@ -145,6 +152,22 @@
 		width: 324px;
 		font-size: 105%;
 		margin-left: 7px;
+	}
+	.part0{
+		display:inline-block;
+		cursor:default;
+	}
+	.part{
+		display:inline-block;
+		cursor:pointer;
+	}
+	.part:hover{
+		text-shadow: 0 0 black;
+	}
+	.dimensions{
+		cursor:default;
+		background-color: #FFF9;
+		z-index:1;
 	}
 	#chatSendBar{
 		display: inline-block;
@@ -190,7 +213,7 @@
 		width: calc(100vw - var(--chat-width) - 160px);
 		display: flex;
 		top: 0;
-		height: 80px;
+		height: 92px;
 	}
 	
 	#iframeContainer{
@@ -308,6 +331,7 @@
 
 	::-webkit-scrollbar {
 		width: 15px;
+		height: 15px;
 	}
 	 
 	::-webkit-scrollbar-track {
@@ -420,18 +444,22 @@
 	.widget {
 		background-color: #DDD;
 		position: absolute;
+		width:100%;
+		height:100%;
 	}
 	#canvas{
 		background-color: #000;
-		width: 1280px;
-		height: 720px;
+		width: var(--iframe-width);
+		height: var(--iframe-height);
 		margin:0;
 		padding:0;
 		border:0; 
 		display: inline-block;
 	}
 	
-	
+	h3 {
+	    margin-bottom: 6px;
+	}
 	
 	.settings {
 		display: block;
@@ -500,8 +528,12 @@
 		user-select: none;
 	}
 	.pressed>canvas{
-		border: solid 2px black;
+		box-shadow: inset 2px 2px 10px #0007, inset -2px -2px 10px #0007;
 		background-color: #FFFA;
+	}
+	.pressed>.group{
+		box-shadow: inset 2px 2px 10px #0007, inset -2px -2px 10px #0007;
+		background-color: #276022aa;
 	}
 	button.pressed {
 		background-color: #CEF;
@@ -512,6 +544,7 @@
 		z-index: 2;
 		padding: 6px 0;
 		width: 28px;
+		margin: 2px;
 		height: 28px;
 		line-height: 0px;
 		border-radius: 14px;
@@ -562,6 +595,11 @@
 		border-radius: 6px;
 		cursor:pointer;
 	}
+	
+	[title]{
+		cursor: help;
+	}
+
 	#delete {
 		background-color: rgb(191 191 191);
 		text-align: center;
@@ -600,7 +638,7 @@
 	}
 	.close-btn {
 	  color: #333;
-	  font-size: 24px;  
+	  font-size: 42px;  
 	  font-weight: bold;
 	  user-select: none;
 	}
@@ -844,7 +882,8 @@
 			<button onclick="addElement();">➕ Add Element to Scene</button>
 			<button onclick="saveScene(false, event);">💾 Save Scene</button>
 			<button onclick="saveScene(true, event);">💾<span style="position:relative;right:12px;top:2px;width:12px;display: inline-block;">💾</span>Duplicate Scene</button>
-			<button onclick="copyJSON();" title="This can be used with &format directly in VDO.Ninja without the mixer app.">Show as JSON</button>
+			<button onclick="setobsSceneName();" title="When this layout is triggered, OBS will change to the specified scene as well">Link OBS Scene</button>
+			<button onclick="copyJSON();" title="This can be used with &format directly in VDO.Ninja without the mixer app. Requires a guest being active.">Show as JSON</button>
 			<button onclick="removeScene();">🗑️ Remove Scene</button>
 			<button id="saveAndClose" onclick="saveScene(false, event);closeScene();">💾❌ Save and Close</button>
 			<button onclick="closeScene();">❌ Close Scene Maker</button>
@@ -867,19 +906,19 @@
 		<div class="center-content">
 			<div class="title"><h1 class="main-heading">Mixer App</h1><h2>Video chat with custom <b>layouts</b></h2></div>
 			
-			<label for="roomname"><input name="roomname" id="roomname" type="text" placeholder="Room Name" /></label>
+			<label for="roomname"><input name="roomname"  autocorrect="off"  autocapitalize="off" id="roomname" type="text" placeholder="Room Name" /></label>
 			<font class="tooltip">
 				<button onclick="randomRoomName();" class="randomRoomName"></button><span class="tooltiptext">Generate a random room name</span>
 			</font>
 			<br />
-			<label for="roompassword"><input name="roompassword" id="roompassword" type="text" placeholder="Room Password (optional)"/></label><br />
+			<label for="roompassword"><input name="roompassword" autocorrect="off"  autocapitalize="off" id="roompassword" type="text" placeholder="Room Password (optional)"/></label><br />
 			<button onclick="startRoom();">Get started!</button><br /><br />
 			<span id="lastSavedRoom" class="hidden">
 				<br /><br />
 				<label for="savedroomname">
-					<input name="savedroomname" id="savedroomname" type="text" disabled placeholder="Room Name" /></label>
+					<input name="savedroomname" autocorrect="off"   autocapitalize="off" id="savedroomname" type="text" disabled placeholder="Room Name" /></label>
 				<label for="savedroompassword" id="savedpasswordlabel"><br />
-					<input name="savedroompassword" id="savedroompassword" disabled type="password" placeholder="Room Password"/></label>
+					<input name="savedroompassword" autocorrect="off"  autocapitalize="off" id="savedroompassword" disabled type="password" placeholder="Room Password"/></label>
 				<button onclick="startLastRoom();">Restore last room</button>
 			</span>
 			<br /><br />
@@ -890,7 +929,7 @@
 				<div>
 					<a class="github" href="https://github.com/steveseguin/vdoninja" rel="noopener" target="_blank" title="Star steveseguin/vdoninja on GitHub"></a>
 				</div>
-				<div style="cursor:pointer;" onclick="window.open('https://vdo.ninja');">Powered by VDO.Ninja</div>
+				<div style="cursor:pointer;" onclick="window.open('https://vdo.ninja');">Powered by VDO.Ninja (v23)</div>
 			</div>
 		</div>
 	</div>
@@ -912,28 +951,44 @@
 	<div id='sceneSettings' class="hidden modal">
 		<div class="modal-content">
 			<span class="close-btn">&times;</span>
-			<h2>General Settings</h2>
-			<h4>Aspect Ratio</h4>
-			<input type="checkbox" checked class="aspectbutton" onchange="changeAspectRatio(16/9.0, this);">16:9
-			<input type="checkbox" class="aspectbutton" onchange="changeAspectRatio(9.0/16, this);">9:16
-			<input type="checkbox" class="aspectbutton" onchange="changeAspectRatio(1.0, this);">1:1
+			<h2>General Mixer Settings</h2>
+			<h3>Aspect Ratio</h3>
+			<input type="checkbox" checked class="aspectbutton" data-value="169"  onchange="changeAspectRatio(16/9.0, this);">16:9
+			<input type="checkbox" class="aspectbutton" data-value="0.5625" onchange="changeAspectRatio(9.0/16, this);">9:16
+			<input type="checkbox" class="aspectbutton" data-value="1" onchange="changeAspectRatio(1.0, this);">1:1
 			<br /><small><i>This just impacts the aspect ratio of the local preview.</i></small><br />
 			
-			<h4>Layout switching</h4>
-			<input type="checkbox" title="When a user is assigned a slot or switches slots, the last active layout is re-applied automatically" id="updateOnSlotChange" checked onchange="submitChange(this)";>Update layout on a slot change
-			<h4>Slot assignment</h4>
-			<input type="checkbox" title="A guest is assigned a slot when they join, automatically. If disabled, they must be assigned a slot manually." id="assignSlotToGuest" checked onchange="submitChange2(this)";>Assign a slot to new guests automatically
-			<h4>Show advanced controls</h4>
-			<input type="checkbox" title="Shows more director control options" onchange="toggleAdvanced(this)";>Show the advanced director control options
+			<h3 title="Does not impact the output; just increases pixel accuracy">Canvas Size</h3>
+			<input type="checkbox" checked class="pixeldensity" data-value="720" onchange="changePixelDensity(720, this);">720p
+			<input type="checkbox" class="pixeldensity" data-value="1080" onchange="changePixelDensity(1080, this);">1080p
 			
-			<h4>🗑 Remove all Layouts </h4>
+			<h3>Unit type for saved scene edits 📏</h3>
+			<input type="checkbox" checked class="absolutePosition" data-value="false" onchange="changeAbsolutePosition(false, this);">Relative (Percentage)
+			<input type="checkbox" class="absolutePosition" data-value="true" onchange="changeAbsolutePosition(true, this);">Absolute (Pixels)
+			
+			<h3>Layout switching</h3>
+			<input type="checkbox" title="When a user is assigned a slot or switches slots, the last active layout is re-applied automatically" id="updateOnSlotChange" checked onchange="submitChange(this)";>Update layout on a slot change
+			
+			<h3>Trigger OBS scenes change on layout change</h3>
+			<input type="checkbox" title="" id="syncOBS" onchange="submitChange3(this)";>Activate linked OBS scene on layout change
+			<h3>Switch layouts to match selected OBS scene</h3>
+			<input type="checkbox" title="" id="remoteSyncOBS" onchange="submitChange5(this)";>Activate the linked layout on remote OBS scene change
+			
+			<h3>Slot assignment</h3>
+			<input type="checkbox" title="A guest is assigned a slot when they join, automatically. If disabled, they must be assigned a slot manually." id="assignSlotToGuest" checked onchange="submitChange2(this)";>Assign a slot to new guests automatically
+			<h3>Show advanced controls</h3>
+			<input type="checkbox" title="Shows more director control options" id="advancedMode" onchange="toggleAdvanced(this)";>Show the advanced director control options
+			<h3>Show director</h3>
+			<input type="checkbox" checked title="If disabled, the director will not be visible or audible in scene links" id="showDirector" onchange="submitChange4(this)";>The director can be visable and audible in scenes
+			
+			<h3>🗑 Remove all Layouts</h3>
 			<button onclick="wipeLayouts();">This will remove all the scene layouts from the current session.</button><br />
-			<h4>🚿 Load Default Layouts </h4>
+			<h3>🚿 Load Default Layouts</h3>
 			<button onclick="resetLayouts();">This will replace all current scene layouts with the initial defaults.</button><br />
 			
-			<h4>📤 Export settings </h4>
+			<h3>📤 Export settings </h3>
 			<button onclick="exportSession();">Export all scenes and settings to disk</button><br />
-			<h4>📥 Import settings </h4>
+			<h3>📥 Import settings </h3>
 			Import scenes and settings from local file:<br /><input type="file" accept=".json" onchange="importSession(event);"/><br /><br />
 			<button class='close-btn'>Close Settings</button>
 		</div>
@@ -957,9 +1012,15 @@
 			<br /><br />
 			<h3>Customize invite link</h3>
 			<span >
-				<input type="checkbox" id="toggleLabel" onclick="updateInviteLinks(event)" /><label>Prompt user for a display name</label><br />
-				<input type="checkbox" id="toggleBroadcast" onclick="updateInviteLinks(event)"/><label>Guest can see other guests and the active layout <small>(higher CPU for guest)</small></label><br />
+				<input type="checkbox" id="toggleLabel" onclick="updateInviteLinks(event)" /><label>💬Prompt user for a display name</label><br />
+				<input type="checkbox" id="toggleBroadcast" onclick="updateInviteLinks(event)"/><label>🪟Guest can see other guests and the active layout <small>(higher CPU for guest)</small></label><br />
+				<input type="checkbox" id="obfuscateInvites" onclick="updateInviteLinks(event)"/><label>*️⃣Obfuscate the invite links so they cannot be easily modified by guests</label><br />
+				<br />
+				<input type="checkbox" id="echoInvite" onclick="updateInviteLinks(event)"/><label>🎙️Guest's echo cancellation will be turned off (may improve audio quality)</label><br />
+				<input type="checkbox" id="denoiseInvite" onclick="updateInviteLinks(event)"/><label>🎙️Guest's noise reduction featured will be turned off</label><br />
+				<input type="checkbox" id="autogainInvite" onclick="updateInviteLinks(event)"/><label>🎙️Guest's automatic mic-gain control will be turned off</label><br />
 			</span>
+			<label>Append additional URL params: </label><input size='50' oninput="updateInviteLinks(event)"  style='max-width:50%' type="text" id="additionalParams" placeholder='optional URL params here. eg: &showlabels&ruler' /><br />
 			<i>You can manually customize the invite link further; see the documentation at <a href="https://docs.vdo.ninja" target="_blank">docs.vdo.ninja</a></i>
 			<br /><br />
 			<button class='close-btn'>Close</button>
@@ -993,11 +1054,11 @@
 
 	})(window);
 	
+	function errorlog(e,a=null,b=null){
+		console.error(e);
+	}
 	function warnlog(msg){
 		console.warn(msg);
-	}
-	function errorlog(msg){
-		console.error(msg);
 	}
 	function log(msg){
 		console.log(msg);
@@ -1006,12 +1067,13 @@
 	function getById(id){
 		var ele = document.getElementById(id);
 		if (!ele){
-			console.warn(id+" not found.");
+			warnlog(id+" not found.");
 			return document.createElement("span");
 		} else {
 			return ele;
 		}
 	}
+	
 	
 	function toggleChat(){
 		document.getElementById("chatModule").classList.toggle("fadeout");
@@ -1042,7 +1104,42 @@
 		return roomid;
 	}
 	
-
+	var CtrlPressed = false;
+	document.addEventListener("keydown", event => {
+		if ((event.ctrlKey) || (event.metaKey)) { // detect if CTRL is pressed
+			if (!CtrlPressed){
+				CtrlPressed = true;
+				$(function(){
+				//	$(".draggable").unbind();
+					$(".draggable").draggable({ snap: false , grid: [ 1,1 ] });
+				});
+				$(function(){
+					//$(".resizable").unbind();
+					$(".resizable").resizable({ snap: false , grid: [ 1,1 ] });
+				});
+				//errorlog("CtrlPressed :"+CtrlPressed);
+			}
+		}
+	});
+	
+	document.addEventListener("keyup", event => {
+		if ((event.ctrlKey) || (event.metaKey)) { // detect if CTRL is pressed
+		//
+		} else if (CtrlPressed){
+			CtrlPressed = false;
+			$(function(){
+			//	$(".draggable").unbind();
+				$(".draggable").draggable({ snap: true  , grid: [ 10,10 ] });
+			});
+			$(function(){
+				//$(".resizable").unbind();
+				$(".resizable").resizable({ snap: true , grid: [ 10, 10] });
+			});
+			//errorlog("CtrlPressed :"+CtrlPressed);
+		}
+	});
+	
+	
 	var urlEdited = window.location.search.replace(/\?\?/g, "?");
 	urlEdited = urlEdited.replace(/\?/g, "&");
 	urlEdited = urlEdited.replace(/\&/, "?");
@@ -1067,15 +1164,36 @@
 	var updateOnSlotChange = true;
 	var assignSlotToGuest = true;
 	var toggleLabel = false;
-	var toggleBroadcast = true;
+	var toggleBroadcast = false;
+	var toggleEchoInvite = false;
+	var toggleDenoiseInvite = false;
+	var toggleAutogainInvite = false;
 	
+	var obfuscateInvites = false;
+	var additionalParams = "";
+	var messageList = [];
 	var password = false;
-	if (urlParams.has('password') || urlParams.has('pass') || urlParams.has('pw') || urlParams.has('p')) {
-		password = urlParams.get('password') || urlParams.get('pass') || urlParams.get('pw') || urlParams.get('p');
-	}
+	var syncOBS = false;
+	var remoteSyncOBS = false;
+	var showDirector = true;
+	
+	var currentOBSState = false;
+	
 	
 	var aspectRatio = 16/9.0;
+	var pixelDensity = 720;
 	document.documentElement.style.setProperty('--aspect-ratio', aspectRatio);
+	document.documentElement.style.setProperty('--aspect-ratio-widget', aspectRatio);
+	
+	
+	var absolutePixel = false; 
+	var advancedMode = false;
+	var hh = pixelDensity;
+	var ww = parseInt((pixelDensity*16/9) * (aspectRatio/(16/9)));
+	
+	document.documentElement.style.setProperty('--iframe-width', ww);
+	document.documentElement.style.setProperty('--iframe-height',hh);
+		
 	
 	var roomname = false;
 	if (urlParams.has("room") || urlParams.has("r") ||urlParams.has("dir") || urlParams.has("director")){
@@ -1096,6 +1214,14 @@
 			}
 		} 
 	}
+	
+	if (urlParams.has('password') || urlParams.has('pass') || urlParams.has('pw') || urlParams.has('p')) {
+		password = urlParams.get('password') || urlParams.get('pass') || urlParams.get('pw') || urlParams.get('p') || "";
+		password = password.trim();
+		document.getElementById("savedroompassword").classList.add("hidden");
+		document.getElementById("roompassword").classList.add("hidden");
+	}
+	
 	function randomRoomName(){
 		document.getElementById("roomname").value = generateString(8);
 	}
@@ -1106,9 +1232,12 @@
 		startRoom();
 	}
 	function startRoom(){
-		var pid = document.getElementById("roompassword").value.trim();
-		if (pid){
-			password = pid;
+	
+		if (password===false){
+			var pid = document.getElementById("roompassword").value.trim();
+			if (pid){
+				password = pid;
+			}
 		}
 	
 		var rid = document.getElementById("roomname").value.trim();
@@ -1149,12 +1278,32 @@
 			sendChatMessage();
 		}
 	}
+	
+	
+	function generateHash(str, length=false){
+		var buffer = new TextEncoder("utf-8").encode(str);
+		return crypto.subtle.digest("SHA-256", buffer).then(
+			function (hash) {
+				hash = new Uint8Array(hash);
+				if (length){
+					hash = hash.slice(0, parseInt(parseInt(length)/2));
+				}
+				hash = toHexString(hash);
+				return hash;
+			}
+		);
+	};
+	function toHexString(byteArray){
+		return Array.prototype.map.call(byteArray, function(byte){
+			return ('0' + (byte & 0xFF).toString(16)).slice(-2);
+		}).join('');
+	}
+	
 
 	function sendChatMessage(){ // filtered + visual
 		var msg = document.getElementById('chatInput').value;
 		msg = sanitize(msg);
 		if (msg==""){return;}
-		console.log(msg);
 		iframe.contentWindow.postMessage({ sendChat: msg }, "*"); 
 		document.getElementById('chatInput').value = "";
 		
@@ -1199,7 +1348,7 @@
 			var time = timeSince(message.time);
 			var msg = document.createElement("div");
 			////// KEEP THIS IN /////////
-			console.log(message.msg); // Display Recieved messages for View-Only clients.
+			log(message.msg); // Display Recieved messages for View-Only clients.
 			/////////////////////////////
 			var label = "";
 			if (message.label){
@@ -1229,7 +1378,7 @@
 				var time = timeSince(messageList[i].time);
 				var msg = document.createElement("div");
 				////// KEEP THIS IN /////////
-				console.log(messageList[i].msg); // Display Recieved messages for View-Only clients.
+				log(messageList[i].msg); // Display Recieved messages for View-Only clients.
 				/////////////////////////////
 				var label = "";
 				if (messageList[i].label){
@@ -1263,9 +1412,7 @@
 		//chatUpdateTimeout = setTimeout(function(){updateMessages()},60000);
 	}
 	
-	function errorlog(e,a=null,b=null){
-		console.error(e);
-	}
+	
 	
 	var currentLayout = {};
 	
@@ -1332,9 +1479,6 @@
 		ev.preventDefault();
 		var data = ev.dataTransfer.getData("text");
 		var origThing = document.getElementById(data);
-		console.log(origThing);
-		console.log(data);
-		console.log(ev);
 		ev.target.style.border = "";
 		origThing.style.border = "";
 		
@@ -1355,8 +1499,6 @@
 			if (ev.target.dataset.slot=="undefined"){return;}
 			
 			ev.target.parentNode.insertBefore(origThing, ev.target.nextSibling);
-			
-			console.warn(origThing);
 			
 			if (origThing.dataset.slot && (origThing.dataset.slot!=="undefined")){
 				document.querySelectorAll("[data-slot='"+origThing.dataset.slot+"']").forEach(ele=>{ele.style.display = "block";})
@@ -1455,12 +1597,9 @@
 				thing.classList.add("thing");
 				thing.ondblclick = function(ev){
 					var origThing = ev.target;
-					console.log(ev);
 					if (origThing.parentNode.id == "col1"){return;}
 					ev.preventDefault();
 					var target = document.querySelector("[data-slot][class='empty']:not([class='hidden'])");
-					console.log(origThing);
-					console.log(target);
 					origThing.style.border = "";
 					  
 					var eles = document.querySelectorAll(".thing");
@@ -1488,8 +1627,6 @@
 						if (target.dataset.slot=="undefined"){return;}
 						if (target.dataset.slot=="undefined"){return;}
 						target.parentNode.insertBefore(origThing, target.nextSibling);
-						
-						console.warn(origThing);
 						
 						if (origThing.dataset.slot && (origThing.dataset.slot!=="undefined")){
 							document.querySelector("[data-slot='"+origThing.dataset.slot+"']").style.display = "block";
@@ -1654,6 +1791,188 @@
 				getById("toggleBroadcast").checked = true;
 			}
 		}
+		
+		if (savedSession.settings && ("toggleEchoInvite" in savedSession.settings)){
+			toggleEchoInvite = savedSession.settings.toggleEchoInvite;
+			if (!toggleEchoInvite){
+				getById("echoInvite").value = "off";
+				getById("echoInvite").checked = false;
+				getById("echoInvite").removeAttribute('checked');
+			} else {
+				getById("echoInvite").value = "on";
+				getById("echoInvite").checked = true;
+			}
+		}
+		if (savedSession.settings && ("toggleDenoiseInvite" in savedSession.settings)){
+			toggleDenoiseInvite = savedSession.settings.toggleDenoiseInvite;
+			if (!toggleDenoiseInvite){
+				getById("denoiseInvite").value = "off";
+				getById("denoiseInvite").checked = false;
+				getById("denoiseInvite").removeAttribute('checked');
+			} else {
+				getById("denoiseInvite").value = "on";
+				getById("denoiseInvite").checked = true;
+			}
+		}
+		if (savedSession.settings && ("toggleAutogainInvite" in savedSession.settings)){
+			toggleAutogainInvite = savedSession.settings.toggleAutogainInvite;
+			if (!toggleAutogainInvite){
+				getById("autogainInvite").value = "off";
+				getById("autogainInvite").checked = false;
+				getById("autogainInvite").removeAttribute('checked');
+			} else {
+				getById("autogainInvite").value = "on";
+				getById("autogainInvite").checked = true;
+			}
+		}
+		
+		
+		if (savedSession.settings && ("obfuscateInvites" in savedSession.settings)){
+			obfuscateInvites = savedSession.settings.obfuscateInvites;
+			if (!obfuscateInvites){
+				getById("obfuscateInvites").value = "off";
+				getById("obfuscateInvites").checked = false;
+				getById("obfuscateInvites").removeAttribute('checked');
+			} else {
+				getById("obfuscateInvites").value = "on";
+				getById("obfuscateInvites").checked = true;
+			}
+		}
+		
+		//
+		if (savedSession.settings && ("additionalParams" in savedSession.settings)){
+			additionalParams = savedSession.settings.additionalParams;
+			if (!additionalParams){
+				getById("additionalParams").value = "";
+			} else {
+				getById("additionalParams").value = additionalParams;
+			}
+		}
+		
+		if (savedSession.settings && ("syncOBS" in savedSession.settings)){
+			syncOBS = savedSession.settings.syncOBS;
+			if (!syncOBS){
+				getById("syncOBS").value = "off";
+				getById("syncOBS").checked = false;
+				getById("syncOBS").removeAttribute('checked');
+			} else {
+				getById("syncOBS").value = "on";
+				getById("syncOBS").checked = true;
+			}
+		}
+		
+		if (savedSession.settings && ("remoteSyncOBS" in savedSession.settings)){
+			remoteSyncOBS = savedSession.settings.remoteSyncOBS;
+			if (!remoteSyncOBS){
+				getById("remoteSyncOBS").value = "off";
+				getById("remoteSyncOBS").checked = false;
+				getById("remoteSyncOBS").removeAttribute('checked');
+			} else {
+				getById("remoteSyncOBS").value = "on";
+				getById("remoteSyncOBS").checked = true;
+			}
+		}
+		
+		if (savedSession.settings && ("showDirector" in savedSession.settings)){
+			showDirector = savedSession.settings.showDirector;
+			if (!showDirector){
+				getById("showDirector").value = "off";
+				getById("showDirector").checked = false;
+				getById("showDirector").removeAttribute('checked');
+			} else {
+				getById("showDirector").value = "on";
+				getById("showDirector").checked = true;
+			}
+		}
+		
+		
+		if (savedSession.settings && ("aspectRatio" in savedSession.settings)){
+			aspectRatio = savedSession.settings.aspectRatio;
+			changeAspectRatio(aspectRatio,false);
+	
+			document.querySelectorAll(".aspectbutton").forEach(ele=>{
+				if ((ele.dataset.value == "169") && (aspectRatio == 16/9.0)){
+					ele.checked = true;
+					ele.value = true;
+				} else if (ele.dataset.value == aspectRatio){
+					ele.checked = true;
+					ele.value = true;
+				} else {
+					ele.checked = false;
+					ele.value = false;
+				}
+			});
+		}
+		if (savedSession.settings && ("advancedMode" in savedSession.settings)){
+			advancedMode = savedSession.settings.advancedMode;
+			if (!advancedMode){
+				getById("advancedMode").value = "off";
+				getById("advancedMode").checked = false;
+				getById("advancedMode").removeAttribute('checked');
+			} else {
+				getById("advancedMode").value = "on";
+				getById("advancedMode").checked = true;
+			}
+			if (iframe && iframe.contentWindow){
+				iframe.contentWindow.postMessage({"advancedMode":advancedMode}, '*');
+			}
+		}
+		if (savedSession.settings && ("absolutePixel" in savedSession.settings)){
+			absolutePixel = savedSession.settings.absolutePixel;
+			
+			document.querySelectorAll(".absolutePosition").forEach(ele=>{
+			
+				if (ele.dataset.value == "true"){
+					if (true == absolutePixel){
+						ele.checked = true;
+						ele.value = true;
+					} else {
+						ele.checked = false;
+						ele.value = false;
+					}
+				} else {
+					if (false == absolutePixel){
+						ele.checked = true;
+						ele.value = true;
+					} else {
+						ele.checked = false;
+						ele.value = false;
+					}
+				}
+			
+			});
+		}
+		
+		
+		if (savedSession.settings && ("pixelDensity" in savedSession.settings)){
+			pixelDensity = savedSession.settings.pixelDensity;
+			if (pixelDensity==1080){
+			
+				document.querySelectorAll(".pixeldensity").forEach(ele=>{
+					if (ele.dataset.value == pixelDensity){
+						ele.checked = true;
+						ele.value = true;
+					} else {
+						ele.checked = false;
+						ele.value = false;
+					}
+				});
+		
+				var hh = pixelDensity;
+				var ww = parseInt((pixelDensity*16/9) * (aspectRatio/(16/9)));
+				
+				changeAspectRatio(aspectRatio,false);
+				
+				document.documentElement.style.setProperty('--iframe-width', ww+"px");
+				document.documentElement.style.setProperty('--iframe-height', hh+"px");
+				
+				
+			
+			//	getById("syncOBS").value = "off";
+			//	getById("syncOBS").checked = false;
+			//	getById("syncOBS").removeAttribute('checked');
+			}
+		}
 	}
 	
 	var savedSession = getStorage("savedSession");
@@ -1665,8 +1984,19 @@
 		savedSession = initialLayouts;
 	}
 	
+	if (urlParams.has("hidedirector")){
+		showDirector = false;
+		if (savedSession.settings){
+			savedSession.settings.showDirector = false;
+		}
+	}
+	
 	if (iframe){
-		iframe.contentWindow.postMessage({ layouts: savedSession.layouts }, "*"); 
+		if (remoteSyncOBS){
+			iframe.contentWindow.postMessage({ layouts: savedSession.layouts , obsSceneTriggers: savedSession.obsScenes}, "*"); 
+		} else {
+			iframe.contentWindow.postMessage({ layouts: savedSession.layouts }, "*"); 
+		}
 	}
 	
 	var guestPositions = {};
@@ -1690,21 +2020,63 @@
 			assignSlotToGuest=false
 			iframe.contentWindow.postMessage({"slotmode":2}, '*');;
 		}
-		
 		saveSession();
+	}
+	
+	function submitChange3(element){
+		if (element.checked){
+			syncOBS=true;
+		} else { // do not assign guests to slots automatically
+			element.removeAttribute('checked');
+			syncOBS=false
+		}
+		saveSession();
+	}
+	
+	function submitChange5(element){
+		if (element.checked){
+			remoteSyncOBS=true;
+			if (iframe){
+				iframe.contentWindow.postMessage({ layouts: savedSession.layouts , obsSceneTriggers: savedSession.obsScenes}, "*"); 
+			}
+		} else { // do not assign guests to slots automatically
+			if (iframe){
+				iframe.contentWindow.postMessage({ layouts: savedSession.layouts , obsSceneTriggers: false}, "*"); 
+			}
+			element.removeAttribute('checked');
+			remoteSyncOBS=false
+		}
+		saveSession();
+	}
+	
+	function submitChange4(element){
+		if (element.checked){
+			showDirector=true;
+		} else { // do not assign guests to slots automatically
+			element.removeAttribute('checked');
+			showDirector=false
+		}
+		saveSession();
+		
+		if (document.getElementById("vdoninja")){
+			document.getElementById("vdoninja").src = createIframeURL();
+		}
 	}
 	
 	function toggleAdvanced(element){
 		if (element.checked){
 			iframe.contentWindow.postMessage({"advancedMode":true}, '*');
+			advancedMode = true;
 		} else {
 			element.removeAttribute('checked');
 			iframe.contentWindow.postMessage({"advancedMode":false}, '*');
+			advancedMode = false;
 		}
+		saveSession();
 	}
 	
 	function exportSession() {
-		var content = JSON.stringify(savedSession);
+		var content = JSON.stringify(savedSession,null,2);
 		var fileName = roomname + ".json";
 		var a = document.createElement("a");
 		var file = new Blob([content], {type: 'text/plain'});
@@ -1714,10 +2086,9 @@
 	}
 	
 	function importSession(event){
-		
 		var reader = new FileReader();
 		reader.onload = function(event){
-			console.log(event.target.result);
+			log(event.target.result);
 			try {
 				var obj = JSON.parse(event.target.result);
 			} catch(e){
@@ -1731,8 +2102,13 @@
 				document.getElementById("containermenu").innerHTML = "";
 				drawAddNewLayout2();
 				drawAddNewLayout3();
+				
 				for (var i in savedSession.layouts){
-					drawLayout(savedSession.layouts[i]);
+					if (savedSession.obsScenes && savedSession.obsScenes[i]){
+						drawLayout(savedSession.layouts[i], false, savedSession.obsScenes[i]);
+					} else {
+						drawLayout(savedSession.layouts[i]);
+					}
 				}
 				alert("The saved session has been imported and loaded.");
 			} else {
@@ -1752,6 +2128,7 @@
 		drawAddNewLayout2();
 		drawAddNewLayout3();
 		
+		savedSession.obsScenes = []; 
 		savedSession.layouts = initialLayouts.layouts;
 		
 		for (var i in savedSession.layouts){
@@ -1759,6 +2136,29 @@
 		}
 		saveSession();
 	}
+	
+	function updateLayouts(){
+		document.getElementById("containermenu").innerHTML = "";
+		
+		var slots = document.getElementById("col1").children;
+		for (var i=0;i<slots.length;i++){
+			slots[i].style.backgroundColor = colors[i];
+			slots[i].style.opacity = "0.9";
+		}
+		
+		drawAddNewLayout2();
+		drawAddNewLayout3();
+		
+		for (var i in savedSession.layouts){
+			if (savedSession.obsScenes && savedSession.obsScenes[i]){
+				drawLayout(savedSession.layouts[i], false, savedSession.obsScenes[i]);
+			} else {
+				drawLayout(savedSession.layouts[i]);
+			}
+		}
+	}
+	
+	
 	
 	function wipeLayouts(){
 	
@@ -1769,7 +2169,7 @@
 	
 		drawAddNewLayout2();
 		drawAddNewLayout3();
-		
+		savedSession.obsScenes = [];
 		savedSession.layouts = [];
 		for (var i in savedSession.layouts){
 			drawLayout(savedSession.layouts[i]);
@@ -1923,7 +2323,7 @@
 		if (event.target && (event.target.tagName == "INPUT")){warnlog("input in focus; return");return;}
 		var value = parseInt(event.key);
 		if (value == event.key){
-			console.log(value);
+			log(value);
 			try {
 				if (document.querySelector("#containermenu").children[value]){
 					document.querySelector("#containermenu").children[value].querySelector("canvas").click();
@@ -1936,10 +2336,7 @@
 	
 	var iframe = null;
 	
-	function loadIframe(){
-		if (iframe){return;}
-		iframe = document.createElement("iframe");
-		
+	function createIframeURL(){
 		var additional = ""; // guest/scene links also
 		if (password){
 			additional = "&password="+password;
@@ -1955,21 +2352,49 @@
 		} else {
 			additional2+="&slotmode=2";
 		}
-		roomname = sanitizeRoomName(roomname);
-	
 		
-		var iframeContainer = document.getElementById("iframeContainer");
+	
+		if (!advancedMode){
+			additional2+="&novice";
+		}
+	
+		if (showDirector){
+			additional2+="&showdirector";
+		}
+		
+		var iframesrc = "./index.html?ltb=350&transparent&hideheader&hidetranslate&cleandirector&chatbutton=0&director="+roomname+additional+additional2+"&b64css="+injectCSS;
+		
+		var params = window.location.search || "";
+		
+		if (params.startsWith("?")){
+			params = params.slice(1);
+			iframesrc = iframesrc + "&" + params
+		} else {
+			iframesrc = iframesrc + params
+		}
+		return iframesrc
+	}
+	
+	function loadIframe(){
+		if (iframe){return;}
+		iframe = document.createElement("iframe");
 		iframe.allow = "autoplay;camera;microphone;fullscreen;picture-in-picture;display-capture;";
 		iframe.id = "vdoninja";
 		
+		roomname = sanitizeRoomName(roomname);
 		if (!roomname){
 			roomname = generateString(10);
 		}
 		
-		var iframesrc = "./index.html?novice&ltb=350&transparent&hideheader&hidetranslate&cleandirector&chatbutton=0&director="+roomname+additional+additional2+"&b64css="+injectCSS;
-		
 		if (roomname!==false){
 			setStorage("savedRoom", {roomname:roomname,password:password}, 9999);
+		}
+		
+		var iframesrc = createIframeURL();
+		
+		var additional = ""; // guest/scene links also
+		if (password){
+			additional = "&password="+password;
 		}
 		
 		document.title = "Mixer: "+roomname;
@@ -1981,12 +2406,7 @@
 		<!-- button.classList.add("menuButton"); -->
 		<!-- document.getElementById("sources").appendChild(button); -->
 		
-		var button = document.createElement("button");
-		button.innerHTML = "Settings ⚙︎"; 
-		button.onclick = showSettings;
-		button.id = "showSettings";
-		button.classList.add("menuButton");  
-		document.getElementById("sources").appendChild(button);
+		
 		
 		var button = document.createElement("button");
 		button.innerHTML = "Switch Modes &#x21bb;"; 
@@ -1997,7 +2417,8 @@
 		button.onclick = function(){
 			this.state = !this.state; 
 			this.dataset.state = this.state;
-			iframe.contentWindow.postMessage({"previewMode":this.state, "layout":currentLayout.layouts, "bitrate":35, "target": "*"}, '*');
+			
+			iframe.contentWindow.postMessage({"previewMode":this.state, "layout":currentLayout, "target": "*"}, '*');
 			if (this.state){
 				this.innerHTML = "Director View &#x21bb;"; 
 				iframe.classList.add("aspectRatio");
@@ -2013,6 +2434,12 @@
 		};
 		document.getElementById("sources").appendChild(button);
 		
+		var button = document.createElement("button");
+		button.innerHTML = "Mixer Settings ⚙︎"; 
+		button.onclick = showSettings;
+		button.id = "showSettings";
+		button.classList.add("menuButton");  
+		document.getElementById("sources").appendChild(button);
 		
 		var button = document.createElement("button");
 		button.innerHTML = "Add Stream ID"; 
@@ -2058,41 +2485,82 @@
 		
 		var a = document.createElement("a");
 		a.innerHTML = "Invite Guest Link 📎"; 
-		a.href = "./?room="+roomname+"&sstype=3&broadcast"+additional;
+		//a.href = "./?room="+roomname+"&broadcast"+additional;
 		a.target = "_blank";
+		a.id = "mainInviteLink";
 		a.onclick = function(evt){copyFunction(this, evt);};
 		document.getElementById("sources").appendChild(a);
+		updateInviteLinks();
 		
 		var a = document.createElement("a");
 		a.innerHTML = "Scene View Link 📎";
-		a.href = "./?scene=0&layout&room="+roomname+additional;
+		a.href = "./?scene=0&layout&remote&room="+roomname+additional;
 		a.target = "_blank";
 		a.onclick = function(evt){copyFunction(this, evt);};
 		document.getElementById("sources").appendChild(a);
 		
 		
+		var button = document.createElement("button");
+		button.innerHTML = "Publish to Twitch";
+		button.id = "publishTwitch";
+		button.onclick = function(){
+			
+			var URL = window.location.href.split("/");
+			URL.pop();
+			URL = URL.join("/");
+			URL+="/?scene=0&layout&remote&room="+roomname+additional;
+			URL+="&clean&chroma=000&ssar=landscape&nosettings&prefercurrenttab&selfbrowsersurface=include&displaysurface=browser&np&nopush&publish&whippush=twitch&whippushtoken&screenshareaspectratio="+aspectRatio+"&locked="+aspectRatio;
+			var win = window.open( URL ,'targetWindow', 'toolbar=no,location=no,status=no,scaling=no,menubar=no,scrollbars=no,resizable=no,width=1280,height=720');
+			win.focus();
+			win.resizeTo(1280,720);
+		};
+		document.getElementById("sources").appendChild(button);
+		
+		var button = document.createElement("button");
+		button.innerHTML = "Publish via WHIP";
+		button.id = "publishOther";
+		button.onclick = function(){
+			var URL = window.location.href.split("/");
+			URL.pop();
+			URL = URL.join("/");
+			URL+="/?scene=0&layout&remote&room="+roomname+additional;
+			URL+="&clean&chroma=000&ssar=landscape&nosettings&prefercurrenttab&selfbrowsersurface=include&displaysurface=browser&np&nopush&publish&whippush&screenshareaspectratio="+aspectRatio+"&locked="+aspectRatio;
+			var win = window.open( URL ,'targetWindow', 'toolbar=no,location=no,status=no,scaling=no,menubar=no,scrollbars=no,resizable=no,width=1280,height=720');
+			win.focus();
+			win.resizeTo(1280,720);
+		};
+		document.getElementById("sources").appendChild(button);
+	
 		var slots = document.getElementById("col1").children;
 		for (var i=0;i<slots.length;i++){
 			slots[i].style.backgroundColor = colors[i];
 			slots[i].style.opacity = "0.9";
 		}
 		
-		//drawAddNewLayout();
 		drawAddNewLayout2();
-		//drawAutoLayout();
 		drawAddNewLayout3();
-		
-		for (var i in savedSession.layouts){
-			drawLayout(savedSession.layouts[i]);
+		 
+		 
+		 for (var i in savedSession.layouts){
+			if (savedSession.obsScenes && savedSession.obsScenes[i]){
+				drawLayout(savedSession.layouts[i], false, savedSession.obsScenes[i]);
+			} else {
+				drawLayout(savedSession.layouts[i]);
+			}
 		}
 		
 		document.getElementById("chatModule").classList.remove("hidden");
 		
 		iframe.onload = function(){
-			iframe.contentWindow.postMessage({ layouts: savedSession.layouts }, "*"); 
+			if (remoteSyncOBS){
+				iframe.contentWindow.postMessage({ layouts: savedSession.layouts , obsSceneTriggers: savedSession.obsScenes}, "*"); 
+			} else {
+				iframe.contentWindow.postMessage({ layouts: savedSession.layouts }, "*"); 
+			}
 		}
 		
 		iframe.src = iframesrc;
+		var iframeContainer = document.getElementById("iframeContainer");
 		iframeContainer.appendChild(iframe);
 		document.getElementById("container").appendChild(iframeContainer);
 		
@@ -2110,30 +2578,25 @@
 		eventer(messageEvent, function (e) {
 			if (e.source != iframe.contentWindow){return} // reject messages send from other iframes
 			
-			//console.log(e.data);
+			if ("gotChat" in e.data){
+				messageList.push(e.data.gotChat);
+				messageList = messageList.slice(-100);
+				updateMessages(e.data.gotChat);
+			} else if ("messageList" in e.data){
+				messageList = e.data.messageList;
+				updateMessages();
+			}
 			
 			if ("action" in e.data){
-				///var outputWindow = document.createElement("div");
-				//outputWindow.innerHTML = "event: "+e.data.action+"<br />";
-				//outputWindow.style.border="1px dotted black";
-				//iframeContainer.appendChild(outputWindow);
-				//console.log(e.data.action);
-				<!-- if (e.data.action === "view-connection"){ -->
-					<!-- if (e.data.value){ -->
-						<!-- iframe.contentWindow.postMessage({"getStreamIDs":true}, '*'); -->
-					<!-- } else if (e.data.streamID){ -->
-						<!-- for (var i = 0; i < streamIDs.length; i++){  -->
-							<!-- if (e.data.streamID == streamIDs[i]){ -->
-								<!-- streamIDs.splice(i,1); -->
-								<!-- if (document.getElementById("sid_"+e.data.streamID)){ -->
-									<!-- document.getElementById("sid_"+e.data.streamID).classList.add("disconnected"); -->
-									<!-- document.getElementById("sid_"+e.data.streamID).title = "Not currently connected, but can still be placed"; -->
-								<!-- } -->
-							<!-- } -->
-						<!-- } -->
-						<!-- updateList(e.data.streamID); -->
-					<!-- } -->
-				<!-- } -->
+				if (e.data.action === "widget-src"){
+					if (e.data.value){
+						widgetSrc = true;
+					} else {
+						widgetSrc = false;
+					}
+					changeAspectRatio(aspectRatio,false);
+				}
+				
 				
 				if (e.data.action === "slot-updated"){
 					for (var i in guestPositions){
@@ -2146,32 +2609,123 @@
 						remoteActivate(false, lastLayoutRaw);
 					}
 				}
-			}
 			
-			
-			if (e.data.action && (e.data.action == "scene-connected")){
-				if (lastLayout && lastLayout.scene == e.data.value){
-					var layoutIssue = {};
-					layoutIssue.layout = lastLayout.layout;
-					if (e.data.UUID){
-						layoutIssue.UUID = e.data.UUID;
-					}
-					layoutIssue.scene = lastLayout.scene
-					iframe.contentWindow.postMessage(lastLayout, '*');
+				if (e.data.action === "layout-updated"){
+					console.log(e.data);
 				}
-			}
 			
-			if (e.data.action && (e.data.action == "guest-connected")){
-				if (lastLayout){
-					var layoutIssue = {};
-					layoutIssue.layout = lastLayout.layout;
-					if (e.data.UUID){
-						layoutIssue.UUID = e.data.UUID;
+				if (e.data.action === "layout-index"){
+					if ("value" in e.data){
+						console.log(e.data);
+						var idx = parseInt(e.data.value) || 0;
+						if (!idx){
+							var ele = document.getElementById("automix");
+						} else {
+							var ele = document.querySelectorAll("#containermenu .canvasContainer")[idx-1];
+						}
+						
+						var layoutButtons = document.querySelectorAll(".pressed");
+						for (var i = 0;i<layoutButtons.length;i++){
+							layoutButtons[i].classList.remove("pressed");
+						}
+						if (ele){
+							ele.classList.add("pressed");
+							ele.classList.add("shake");
+							setTimeout(function(ele){ele.classList.remove("shake");},500,ele);
+						}
+						
 					}
-					iframe.contentWindow.postMessage(lastLayout, '*');
 				}
-			}
+				
+				if (e.data.action && (e.data.action == "scene-connected")){
+					if (lastLayout && lastLayout.scene == e.data.value){
+						var layoutIssue = {};
+						layoutIssue.layout = lastLayout.layout;
+						if (e.data.UUID){
+							layoutIssue.UUID = e.data.UUID;
+						}
+						layoutIssue.scene = lastLayout.scene
+						iframe.contentWindow.postMessage(lastLayout, '*');
+					}
+				}
+				
+				if (e.data.action && (e.data.action == "guest-connected")){
+					if (lastLayout){
+						var layoutIssue = {};
+						layoutIssue.layout = lastLayout.layout;
+						if (e.data.UUID){
+							layoutIssue.UUID = e.data.UUID;
+						}
+						iframe.contentWindow.postMessage(lastLayout, '*');
+					}
+				}
+				
+				if (e.data.action && (e.data.action == "view-connection")){
+					if (!e.data.value && e.data.streamID){
+						
+						for (var i in guestPositions){
+							if (guestPositions[i] === e.data.streamID){
+								delete guestPositions[i];
+							}
+						}
+						
+						if (updateOnSlotChange){
+							remoteActivate(false, lastLayoutRaw);
+						}
+					}
+				}
+				
+				if (e.data.action && (e.data.action == "director-share")){
+					if (!e.data.value && e.data.streamID){
+						for (var i in guestPositions){
+							if (guestPositions[i] === e.data.streamID){
+								delete guestPositions[i];
+							}
+						}
+						if (updateOnSlotChange){
+							remoteActivate(false, lastLayoutRaw);
+						}
+					}
+				}
+				
+				if (e.data.action == "obs-state"){
+					if (e.data.value && e.data.value.details){
+						currentOBSState = e.data.value.details;
+						
+						if (currentOBSState.currentScene && currentOBSState.currentScene.name){
+							console.log("Current OBS scene: " + currentOBSState.currentScene.name);
+							
+							if (remoteSyncOBS){
+								var layouts = document.querySelectorAll(".canvasContainer>canvas");
+								for (var i=0;i<layouts.length;i++){
+									if (!layouts[i].layout){
+										console.log("no layout");
+										continue;
+									}
+									try {
+										var obs = layouts[i].obsSceneName || false;
+										console.log("obs scene names:"+obs+ " vs "+currentOBSState.currentScene.name);
+										if (obs && obs.toLowerCase().trim() == currentOBSState.currentScene.name.toLowerCase().trim()){
+											if (layouts[i].parentNode && layouts[i].parentNode.classList.contains("pressed")){
+												console.log("Matched scene already active");
+											} else {
+												console.log("Syncing with OBS; matched");
+												layouts[i].click(); // triggers for everyone else.
+											}
+											break;
+										}
+									} catch(e){
+										errorlog(e);
+									}
+								}
+							}
+						} else {
+							console.log("No current scene in OBS's output");
+						}
+					}
+				}
 			
+			}
 			<!-- if ("streamIDs" in e.data){ -->
 				<!-- streamIDs = []; -->
 				<!-- for (var key in e.data.streamIDs){ -->
@@ -2228,13 +2782,15 @@
 		document.getElementById("inviteOptions").classList.remove("hidden");
 		updateInviteLinks();
 	}
-	var toggleBroadcast = false;
 	
-	function updateInviteLinks(event=false){	
+	async function updateInviteLinks(event=false){	
 		var additional = "";
 		
 		if (password){
-			additional += "&password="+password;
+			var hash = password.trim();
+			hash = encodeURIComponent(hash);
+			hash = await generateHash(hash + location.hostname, 4);
+			additional += "&hash="+hash;
 		}
 		
 		if (document.getElementById("toggleLabel").checked){
@@ -2244,23 +2800,68 @@
 			toggleLabel= false;
 		}
 		
-		if (!document.getElementById("toggleBroadcast").checked){
-			additional += "&broadcast";
+		if (document.getElementById("toggleBroadcast").checked){
+			additional += "&layout"; // do not use &broadcast with &layout, else you will get broken results.
 			toggleBroadcast = true;
 		} else {
-			additional += "&layout";
+			additional += "&broadcast";
 			toggleBroadcast = false;
+		}
+		
+		
+		if (document.getElementById("echoInvite").checked){
+			additional += "&ec=0"; // do not use &broadcast with &layout, else you will get broken results.
+			toggleEchoInvite = true;
+		}
+		
+		if (document.getElementById("denoiseInvite").checked){
+			additional += "&dn=0"; // do not use &broadcast with &layout, else you will get broken results.
+			toggleDenoiseInvite = true;
+		}
+		
+		if (document.getElementById("autogainInvite").checked){
+			additional += "&ag=0"; // do not use &broadcast with &layout, else you will get broken results.
+			toggleAutogainInvite = true;
 		}
 		
 		document.querySelectorAll(".roomname").forEach(ele=>{
 			ele.innerText = roomname;
 		});
+
+		var URL = window.location.href.split("/");
+		URL.pop();
+		URL = URL.join("/");
+		var inviteURL = URL+"/?room="+roomname+additional;
+		
+		
+		if (document.getElementById("additionalParams").value.trim().length){
+			additionalParams = document.getElementById("additionalParams").value.trim();
+			if (!additionalParams.startsWith("&")){
+				additionalParams = "&"+additionalParams;
+			}
+			inviteURL += additionalParams;
+		} else {
+			additionalParams = "";
+		}
+		
+		
+		if (document.getElementById("obfuscateInvites").checked){
+			obfuscateInvites = true;
+			inviteURL = processInvite(inviteURL);
+		} else {
+			obfuscateInvites = false;
+		}
+		
+		
+		document.getElementById("mainInviteLink").href = inviteURL
 		
 		document.querySelectorAll(".inviteLink").forEach(ele=>{
 			if (ele.tagName == "A"){
-				ele.href = "./?room="+roomname+additional;
+				ele.href = inviteURL
+			} else if (document.getElementById("obfuscateInvites").checked){
+				ele.innerHTML = inviteURL;
 			} else if (ele.tagName == "I"){
-				ele.innerHTML = "URL + ?room="+roomname+additional;
+				ele.innerHTML = "URL + ?room="+roomname+additional+additionalParams;
 			}
 			ele.onclick = function(evt){copyFunction(this, evt);};
 		});
@@ -2279,11 +2880,14 @@
 	function addLayout(){
 		var layout = prompt("Enter your new layout as a JSON string", '[{"x":0,"y":0,"w":100,"h":100}]');
 		layout = JSON.parse(layout);
-		console.log(layout);
+		log(layout);
 		drawLayout(layout);
 	}
 	
 	function addLayout2(item=false){
+	
+		closeScene();
+		
 		//document.getElementById("containermenu").classList.add("hidden");
 		iframe.classList.add("hidden");
 		document.getElementById("containermenu2").classList.add("hFadeIn");
@@ -2297,6 +2901,24 @@
 		
 		
 		document.getElementById("canvas").classList.remove("hidden");
+		
+		//if (item.target){
+		//	item = item.target;
+		//}
+		
+		try {
+			if (!item.target){
+				var obsSceneName = item.parentNode.querySelector("canvas").obsSceneName;
+				document.getElementById("canvas").obsSceneName = obsSceneName;
+			} else {
+				document.getElementById("canvas").obsSceneName = parseInt(Math.random()*1000000000);
+				document.getElementById("canvas").sceneName = parseInt(Math.random()*1000000000);
+			}
+		} catch(e){
+			document.getElementById("canvas").obsSceneName = "";
+			errorlog(e);
+		}
+		
 		try {
 			var tar = item.parentNode.querySelector("canvas").sceneName;
 			document.getElementById("canvas").sceneName = tar;
@@ -2316,6 +2938,7 @@
 		document.getElementById("containermenu2").classList.add("hFadeOut");
 		//document.getElementById("containermenu2").classList.add("hidden");
 		document.getElementById("canvas").classList.add("hidden");
+		document.getElementById("canvas").innerHTML = "";
 		
 		document.getElementById("iframeContainer").classList.remove("tFadeIn");
 		document.getElementById("iframeContainer").classList.add("tFadeout");
@@ -2336,8 +2959,91 @@
 		}
 		return 0;
 	}
+
+	function processInvite(input){
 	
-	function drawLayout(layoutOriginal, sceneName=false){
+		if (input.startsWith("https://obs.ninja/")){
+			input = input.replace('https://vdo.ninja/', '');
+		} else if (input.startsWith("http://obs.ninja/")){
+			input = input.replace('http://vdo.ninja/', '');
+		} else if (input.startsWith("obs.ninja/")){
+			input = input.replace('vdo.ninja/', '');
+		} else if (input.startsWith("https://vdo.ninja/")){
+			input = input.replace('https://vdo.ninja/', 'vdo.ninja/');
+		} else if (input.startsWith("http://vdo.ninja/")){
+			input = input.replace('http://vdo.ninja/', 'vdo.ninja/');
+		} 
+		
+		input = input.replace('&view=', '&v=');
+		input = input.replace('&view&', '&v&');
+		input = input.replace('?view&', '?v&');
+		input = input.replace('?view=', '?v=');
+		
+		input = input.replace('&videobitrate=', '&vb=');
+		input = input.replace('?videobitrate=', '?vb=');
+		input = input.replace('&bitrate=', '&vb=');
+		input = input.replace('?bitrate=', '?vb=');
+		
+		input = input.replace('?audiodevice=', '?ad=');
+		input = input.replace('&audiodevice=', '&ad=');
+		
+		input = input.replace('?label=', '?l=');
+		input = input.replace('&label=', '&l=');
+		
+		input = input.replace('?stereo=', '?s=');
+		input = input.replace('&stereo=', '&s=');
+		input = input.replace('&stereo&', '&s&');
+		input = input.replace('?stereo&', '?s&');
+		
+		input = input.replace('?webcam&', '?wc&');
+		input = input.replace('&webcam&', '&wc&');
+		
+		input = input.replace('?remote=', '?rm=');
+		input = input.replace('&remote=', '&rm=');
+		
+		input = input.replace('?password=', '?p=');
+		input = input.replace('&password=', '&p=');
+		
+		input = input.replace('&maxvideobitrate=', '&mvb=');
+		input = input.replace('?maxvideobitrate=', '?mvb=');
+		
+		input = input.replace('&maxbitrate=', '&mvb=');
+		input = input.replace('?maxbitrate=', '?mvb=');
+		
+		input = input.replace('&height=', '&h=');
+		input = input.replace('?height=', '?h=');
+		
+		input = input.replace('&width=', '&w=');
+		input = input.replace('?width=', '?w=');
+		
+		input = input.replace('&quality=', '&q=');
+		input = input.replace('?quality=', '?q=');
+		
+		input = input.replace('&cleanoutput=', '&clean=');
+		input = input.replace('?cleanoutput=', '?clean=');
+		
+		input = input.replace('&maxviewers=', '&clean=');
+		input = input.replace('?maxviewers=', '?clean=');
+		
+		input = input.replace('&framerate=', '&fr=');
+		input = input.replace('?framerate=', '?fr=');
+		
+		input = input.replace('&fps=', '&fr=');
+		input = input.replace('?fps=', '?fr=');
+		
+		input = input.replace('&permaid=', '&push=');
+		input = input.replace('?permaid=', '?push=');
+		
+		input = input.replace('&roomid=', '&r=');
+		input = input.replace('?roomid=', '?r=');
+		
+		input = input.replace('&room=', '&r=');
+		input = input.replace('?room=', '?r=');
+		
+		return "https://invite.cam/"+CryptoJS.AES.encrypt(input, atob('T0JTTklOSkFGT1JMSUZF')).toString();
+	}
+	
+	function drawLayout(layoutOriginal, sceneName=false, obsSceneName = ""){
 	
 		var layout = [];
 		
@@ -2366,18 +3072,18 @@
 		
 		for (var i=0;i<layout.length;i++){
 			
-			ctx.fillStyle = colors[parseInt(layout[i].slot)];
+			ctx.fillStyle = colors[parseInt(layout[i].slot)]; 
 			ctx.lineWidth = 3;
-			var x = layout[i].x*0.8 || 0;
-			var y = layout[i].y*0.45 || 0;
-			var w = layout[i].w*0.8 || 0;
-			var h = layout[i].h*0.45 || 0;
+			
+			var x = layout[i].x*0.8 || parseFloat(100*layout[i].xp/(pixelDensity*16/9)*0.8) ||  0;
+			var y = layout[i].y*0.45 || parseFloat(100*layout[i].yp/(pixelDensity*16/9)*0.8) ||  0;
+			var w = layout[i].w*0.8 || parseFloat(100*layout[i].wp/(pixelDensity*16/9)*0.8) ||  0;
+			var h = layout[i].h*0.45 || parseFloat(100*layout[i].hp/(pixelDensity*16/9)*0.8) ||  0;
 			
 			ctx.beginPath();
 			ctx.rect(x, y, w, h);
 			ctx.fill();
 		}
-		
 		canvas.layout = JSON.stringify(layout);
 		canvas.onclick = remoteActivate;
 		
@@ -2429,6 +3135,9 @@
 			sceneName = parseInt(Math.random()*1000000);
 		}	
 		canvas.sceneName = sceneName;
+		
+		canvas.obsSceneName = obsSceneName;
+		
 		canvas.title = "Activate this layout; the view scene link will be updated";
 		
 		var canvasContainer = document.createElement("div");
@@ -2549,6 +3258,7 @@
 		container.classList.add("inline");
 		//container.classList.add("canvasContainer");
 		container.appendChild(canvas);
+		container.id = "automix"
 		document.getElementById("containermenu").appendChild(container);
 		ctx.beginPath();
 		ctx.rect(0, 0, 80, 45);
@@ -2571,11 +3281,8 @@
 	function pullUp(event){
 		this.parentNode.zIndex = parseInt(this.parentNode.zIndex || 0) + 1;
 		this.parentNode.style.opacity = "0.9";
-		this.parentNode.style.zIndex=this.parentNode.zIndex;
-		this.parentNode.dimensions.innerHTML = parseInt(this.parentNode.style.width) +"x"+parseInt(this.parentNode.style.height);
-		this.parentNode.dimensions.innerHTML += " : " + parseInt(this.parentNode.style.left) +"x"+parseInt(this.parentNode.style.top);
-		this.parentNode.dimensions.innerHTML += " , layer: "+parseInt(this.parentNode.style.zIndex);
-		
+		this.parentNode.parent.style.zIndex=this.parentNode.zIndex;
+		this.parentNode.dimensions = updateSize(this.parentNode);
 	} 
 	
 	function pushDown(event){
@@ -2586,20 +3293,120 @@
 		} else {
 			this.parentNode.style.opacity = "0.9";
 		}
-		this.parentNode.style.zIndex=this.parentNode.zIndex;
-		this.parentNode.dimensions.innerHTML = parseInt(this.parentNode.style.width) +"x"+parseInt(this.parentNode.style.height);
-		this.parentNode.dimensions.innerHTML += " : " + parseInt(this.parentNode.style.left) +"x"+parseInt(this.parentNode.style.top);
-		this.parentNode.dimensions.innerHTML += " , layer: "+parseInt(this.parentNode.style.zIndex);
+		this.parentNode.parent.style.zIndex=this.parentNode.zIndex;
+		this.parentNode.dimensions = updateSize(this.parentNode);
+	}
+	
+	function updateSize(supercontainer){
+	
+		var container = supercontainer.container || supercontainer;
+		supercontainer = container.parent;
+		
+		if (container.dimensions){
+			var dimensions = container.dimensions;
+		} else {
+			var dimensions = document.createElement("div");
+			dimensions.className = "dimensions";
+			container.dimensions = dimensions;
+		}
+		
+		dimensions.innerHTML = "";
+		
+		var part = document.createElement("div");
+		dimensions.appendChild(part);
+		part.className = "part";
+		part.innerHTML = parseInt(supercontainer.style.width);
+		part.onclick = function(){
+				var value = prompt("Change the width",this.innerHTML);
+				if (value!==null){
+					value=parseInt(value);
+				}
+				if (value>=0){
+					supercontainer.style.width = value+"px";
+					updateSize(supercontainer);
+				}
+			};
+		
+		var part = document.createElement("div");
+		dimensions.appendChild(part);
+		part.className = "part0";
+		part.innerHTML = "x";
+		
+		var part = document.createElement("div");
+		dimensions.appendChild(part);
+		part.className = "part";
+		part.innerHTML = parseInt(supercontainer.style.height);
+		part.onclick = function(){
+				var value = prompt("Change the height",this.innerHTML);
+				if (value!==null){
+					value=parseInt(value);
+				}
+				if (value>=0){
+					supercontainer.style.height = value+"px";
+					updateSize(supercontainer);
+				}
+			};
+			
+		var part = document.createElement("div");
+		dimensions.appendChild(part);
+		part.className = "part0";
+		part.innerText = ":";
+		part.style.margin = "0px 5px";
+		
+		var part = document.createElement("div");
+		dimensions.appendChild(part);
+		part.className = "part";
+		part.innerHTML += parseInt(supercontainer.style.left);
+		part.onclick = function(){
+				var value = prompt("Left offset",this.innerHTML);
+				if (value!==null){
+					value=parseInt(value);
+				}
+				if (value>=0){
+					supercontainer.style.left = value+"px";
+					updateSize(supercontainer);
+				}
+			};
+		
+		
+		var part = document.createElement("div");
+		dimensions.appendChild(part);
+		part.className = "part0";
+		part.innerHTML = "x";
+		
+		var part = document.createElement("div");
+		dimensions.appendChild(part);
+		part.className = "part";
+		part.innerHTML += parseInt(supercontainer.style.top);
+		part.onclick = function(){
+				var value = prompt("Top offset",this.innerHTML);
+				if (value!==null){
+					value=parseInt(value);
+				}
+				if (value>=0){
+					supercontainer.style.top = value+"px";
+					updateSize(supercontainer);
+				}
+			};
+		
+		
+		var part = document.createElement("div");
+		dimensions.appendChild(part);
+		part.className = "part0";
+		part.innerHTML += " , layer: "+parseInt(container.zIndex);
+		
+		dimensions.style = "position:absolute;left:10px;bottom:0;max-width:250px;height:20px;";
+		return dimensions;
 	}
 	
 	function addOldElement(object){
 		document.getElementById("canvas").innerHTML = "";
 		
-		var hh = 720;
-		var ww = parseInt(1280 * (aspectRatio/(16/9)));
+		var hh = pixelDensity;
+		var ww = parseInt((pixelDensity*16/9) * (aspectRatio/(16/9)));
 		
-		document.getElementById('canvas').style.width = ww+"px";
-		document.getElementById('canvas').style.height = hh+"px";
+		document.documentElement.style.setProperty('--iframe-width', ww+"px");
+		document.documentElement.style.setProperty('--iframe-height',hh+"px");
 		
 		
 		for (var i=0;i<object.length;i++){
@@ -2607,9 +3414,19 @@
 			var slot = parseInt(object[i].slot) || 0;
 			
 			var color = colors[slot];
-			var container = document.createElement("div");
 			
-			container.className = "widget ui-widget-content draggable resizable";
+			var containerSuper = document.createElement("div");
+			document.getElementById("canvas").appendChild(containerSuper);
+			
+			
+			var container = document.createElement("div");
+			containerSuper.appendChild(container);
+			containerSuper.container = container;
+			
+			container.parent = containerSuper;
+			
+			container.className = "widget ui-widget-content";
+			containerSuper.className = "draggable resizable";
 			container.slot = slot;
 			
 			if ("cover" in object[i]){
@@ -2622,27 +3439,31 @@
 			container.zIndex = parseInt(object[i].zIndex) || parseInt(object[i].z) || 0;
 			//container.backgroundColor = object[i].backgroundColor || "#0000";
 			container.borderThickness = object[i].borderThickness || 0;
-			container.animated = object[i].animated || 0;
+			container.animated = parseInt(object[i].animated) || 0;
 			container.borderColor = object[i].borderColor || "#0000";
 			container.backgroundMedia = object[i].backgroundMedia || "";
+			container.iframeSrc = object[i].iframeSrc || "";
 			container.defaultStreamID = object[i].defaultStreamID || "";
 			container.margin = object[i].margin || 0;
 			container.muted = object[i].muted || false;
 			container.rounded = object[i].rounded || 0;
 			
-			var hh = 720;
-			var ww = 1280 * (aspectRatio/(16/9));
+			var hh = pixelDensity;
+			var ww = (pixelDensity*16/9) * (aspectRatio/(16/9));
 			
-			var yoffset =  object[i].y*hh/100;
-			var xoffset =object[i].x*ww/100;
-			var w = object[i].w*ww/100;
-			var h = object[i].h*hh/100;
+			var yoffset = object[i].y*hh/100 || object[i].yp || 0;
+			var xoffset = object[i].x*ww/100 || object[i].xp || 0;
+			var w = object[i].w*ww/100 || object[i].wp || 0;
+			var h = object[i].h*hh/100 || object[i].hp || 0;
 			
-			container.style = "z-index:"+container.zIndex+";left:"+xoffset+"px;top:"+yoffset+"px;width:"+w+"px;height:"+h+"px;background-color:"+color+";";
+			containerSuper.style = "z-index:"+container.zIndex+";position: absolute;left:"+xoffset+"px;top:"+yoffset+"px;width:"+w+"px;height:"+h+"px;";
+			container.style = "background-color:"+color+";";
+			
 			
 			var h3 = document.createElement("h3");
 			h3.className = "ui-widget-header";
 			h3.innerHTML = "drag/resize me";
+			h3.title = "Drag with your mouse to move. Tip: Hold CTRL (cmd) to disable grid snapping";
 			container.appendChild(h3);
 			
 			var button = document.createElement("button");
@@ -2668,27 +3489,22 @@
 			button.innerHTML = "Push Back";
 			button.onclick = pushDown;
 			container.appendChild(button);
-			container.dimensions = dimensions;
-			var dimensions = document.createElement("div");
-			container.dimensions = dimensions;
-			dimensions.innerHTML = parseInt(container.style.width) +"x"+parseInt(container.style.height);
-			dimensions.innerHTML += " : " + parseInt(container.style.left) +"x"+parseInt(container.style.top);
-			dimensions.innerHTML += " , layer: "+parseInt(container.style.zIndex);
-			dimensions.style = "position:absolute;left:10px;bottom:0;max-width:250px;height:20px;";
+			
+			
+			//part.onclick = function(){console.log(this.innerHTML);};
+			
+			var dimensions = updateSize(container);
 			
 			container.appendChild(dimensions);
-			container.ondrag = function(e){
-				this.dimensions.innerHTML = parseInt(this.style.width) +"x"+parseInt(this.style.height);
-				this.dimensions.innerHTML += " : " + parseInt(this.style.left) +"x"+parseInt(this.style.top);
-				this.dimensions.innerHTML += " , layer: "+parseInt(this.style.zIndex);
+			container.dimensions = dimensions;
+			
+			containerSuper.ondrag = function(e){
+				updateSize(this);
 			}
-			container.onresize = function(e){
-				this.dimensions.innerHTML = parseInt(this.style.width) +"x"+parseInt(this.style.height);
-				this.dimensions.innerHTML += " : " + parseInt(this.style.left) +"x"+parseInt(this.style.top);
-				this.dimensions.innerHTML += " , layer: "+parseInt(this.style.zIndex);
+			containerSuper.onresize = function(e){
+				updateSize(this);
 			}
 			
-			document.getElementById("canvas").appendChild(container);
 
 			$(function(){
 				$(".draggable").draggable({ snap: true  , grid: [ 10,10 ] });
@@ -2719,19 +3535,38 @@
 			}
 		}
 		
+		
 		var color = colors[slot];
-		var container = document.createElement("div"); // we use the long-form of meta attributes for container elements.
-		container.className = "widget ui-widget-content draggable resizable";
+		
+		var containerSuper = document.createElement("div");
+		document.getElementById("canvas").appendChild(containerSuper);
+		
+		
+		var container = document.createElement("div");
+		containerSuper.appendChild(container);
+		containerSuper.container = container;
+		
+		container.parent = containerSuper;
+		
+		container.className = "widget ui-widget-content";
+		containerSuper.className = "draggable resizable";
 		container.slot = slot;
+		
+		container.zIndex = 10;
 		
 		var yoffset = 20*(slot+1);
 		var xoffset =  20*(slot+1);
+		var w = 640;
+		var h = 360;
 		
-		container.style = "z-Index:10;left:"+xoffset+"px;top:"+yoffset+"px;width:640px;height:360px;background-color:"+color+";";
-		container.zIndex = 10;
+		containerSuper.style = "z-index:"+container.zIndex+";position: absolute;left:"+xoffset+"px;top:"+yoffset+"px;width:"+w+"px;height:"+h+"px;";
+		container.style = "background-color:"+color+";";
+		
+		
 		var h3 = document.createElement("h3");
 		h3.className = "ui-widget-header";
 		h3.innerHTML = "drag/resize me";
+		h3.title = "Drag with your mouse to move. Tip: Hold CTRL (cmd) to disable grid snapping";
 		container.appendChild(h3);
 		
 		var button = document.createElement("button");
@@ -2758,32 +3593,18 @@
 		button.onclick = pushDown;
 		container.appendChild(button);
 		
-		var dimensions = document.createElement("div");
-		container.dimensions = dimensions;
-		dimensions.innerHTML = parseInt(container.style.width) +"x"+parseInt(container.style.height);
-		dimensions.innerHTML += " : " + parseInt(container.style.left) +"x"+parseInt(container.style.top);
-		dimensions.style = "position:absolute;left:10px;bottom:0;max-width:250px;height:20px;";
-		dimensions.innerHTML += " , layer: "+parseInt(container.style.zIndex);
-				
+		var dimensions = updateSize(container);
+			
 		container.appendChild(dimensions);
-		container.ondrag = function(e){
-			this.dimensions.innerHTML = parseInt(this.style.width) +"x"+parseInt(this.style.height);
-			this.dimensions.innerHTML += " : " + parseInt(this.style.left) +"x"+parseInt(this.style.top);
-			this.dimensions.innerHTML += " , layer: "+parseInt(this.style.zIndex);
-			
+		container.dimensions = dimensions;
+		
+		containerSuper.ondrag = function(e){
+			updateSize(this);
 		}
-		container.onresize = function(e){
-			this.dimensions.innerHTML = parseInt(this.style.width) +"x"+parseInt(this.style.height);
-			this.dimensions.innerHTML += " : " + parseInt(this.style.left) +"x"+parseInt(this.style.top);
-			this.dimensions.innerHTML += " , layer: "+parseInt(this.style.zIndex);
-			
+		containerSuper.onresize = function(e){
+			updateSize(this);
 		}
 		
-		document.getElementById("canvas").appendChild(container);
-		
-		container.style.zIndex = "10";
-		container.zIndex = 10;
-
 		$(function(){
 			$(".draggable").draggable({ snap: true  , grid: [ 10,10 ] });
 		});
@@ -2794,38 +3615,36 @@
    
     function combinedLayout(layout){
 		var combined = {};
-		console.log(layout);
-		
 		for (var i=0;i<layout.length;i++){
-			console.log(i);
 			if (!layout[i]){continue;}
-			if (!("slot" in layout[i])){
-				continue;
-			}
-			try {
-				var stream = guestPositions[parseInt(layout[i].slot)+1]; // slot 1 is index of 0, but slot 0 is considered NULL; I need to stream line this a bit
-			} catch(e){
-				errorlog(e);
-				continue;
-			}
-			console.log(stream);
-			if (!stream){
-				if (layout[i].defaultStreamID){
-					combined[layout[i].defaultStreamID] = layout[i];
+			var stream = null;
+			if ("slot" in layout[i]){
+				try {
+					stream = guestPositions[parseInt(layout[i].slot)+1]; // slot 1 is index of 0, but slot 0 is considered NULL; I need to stream line this a bit
+				} catch(e){
+					errorlog(e);
+					stream = null;
 				}
-				continue;
 			}
-			combined[stream] = layout[i];
+			if (!stream){
+				//if (layout[i].defaultStreamID){
+				//	combined[layout[i].defaultStreamID] = layout[i];
+				//} else 
+				if (combined[""]){
+					combined[""].push(layout[i]);
+				} else {
+					combined[""] = [layout[i]];
+				}
+			} else {
+				combined[stream] = layout[i];
+			}
 		}
-		console.log(combined);
 		return combined;
 	}
    
    function remoteActivate(event=null, layout=null){
-		console.log(this);
-		console.log(event);
-		console.log(layout);
-		if (event.target && layout===null){
+   
+		if (event.target && event.target.layout && layout===null){
 			layout = event.target.layout;
 			var layoutButtons = document.querySelectorAll(".pressed");
 			for (var i = 0;i<layoutButtons.length;i++){
@@ -2846,7 +3665,14 @@
 		currentLayout = combined; // global current state
 		lastLayout = {"scene":"0", "layout":combined};
 		
-		iframe.contentWindow.postMessage({"scene":"0", "layout":combined}, '*');
+		if (event.target && event.target.obsSceneName && syncOBS){
+			var obsCommand = {"action": "setCurrentScene", "value": event.target.obsSceneName};
+			log({"scene":"0", "layout":combined, "obsCommand": obsCommand});
+			iframe.contentWindow.postMessage({"scene":"0", "layout":combined, "obsCommand": obsCommand}, '*');
+		} else {
+			log({"scene":"0", "layout":combined});
+			iframe.contentWindow.postMessage({"scene":"0", "layout":combined}, '*');
+		}
 	}
 	
 	function deleteElement(event){
@@ -2862,8 +3688,12 @@
 		}
 		
 		var setEle = document.createElement("div");
-		parent.appendChild(setEle);
+		
+		setEle.parent = parent;
 		parent.setting = setEle;
+		
+		parent.parent.appendChild(setEle);
+		
 		setEle.className = "settings";
 		setEle.innerHTML = "";
 		
@@ -2875,7 +3705,22 @@
 		var br = document.createElement("br");
 		setEle.appendChild(br);
 		var label = document.createElement("label");
+		label.innerHTML = "IFrame (URL)";
+		label.title = "If no video stream is present, load the specified website here as an IFRAME instead";
+		setEle.appendChild(label);
+		var input = document.createElement("input");
+		input.style.width = "200px";
+		setEle.appendChild(input);
+		input.value = parent.iframeSrc || "";
+		input.onchange = function(){
+			parent.iframeSrc = this.value;
+		}
+		
+		var br = document.createElement("br");
+		setEle.appendChild(br);
+		var label = document.createElement("label");
 		label.innerHTML = "Background Image (URL)";
+		label.title = "Set a background image for this space";
 		setEle.appendChild(label);
 		var input = document.createElement("input");
 		input.style.width = "200px";
@@ -2889,7 +3734,7 @@
 		setEle.appendChild(br);
 		var label = document.createElement("label");
 		label.innerHTML = "Default Stream ID";
-		label.title = "If the slot is empty, this will be the default stream ID used.";
+		label.title = "If the specified stream is connected, and both it and this element are unassigned, load that stream here.";
 		setEle.appendChild(label);
 		var input = document.createElement("input");
 		input.style.width = "200px";
@@ -2974,6 +3819,7 @@
 		setEle.appendChild(br);
 		var label = document.createElement("label");
 		label.innerHTML = "Media fully cover area?" ;
+		label.title = "This applies to the background image and video element.";
 		setEle.appendChild(label);
 		var checkbox = document.createElement("input");
 		checkbox.type = "checkbox";
@@ -2991,17 +3837,49 @@
 		setEle.appendChild(br);
 		var br = document.createElement("br");
 		setEle.appendChild(br);
+		
 		var label = document.createElement("label");
 		label.innerHTML = "Animated transitions";
 		setEle.appendChild(label);
+		
+		var input = document.createElement("input");
 		var checkbox = document.createElement("input");
 		checkbox.type = "checkbox";
+		checkbox.linked = input;
+		input.linked = checkbox;
 		setEle.appendChild(checkbox);
+		
+		if (parent.animated===true){
+			parent.animated = 300;
+		}
+		
 		if (parent.animated){
 			checkbox.checked = true;
+		} else {
+			input.disabled = true;
 		}
 		checkbox.onchange = function(){
-			parent.animated = this.checked;
+			if (this.checked){
+				this.linked.disabled = null;
+				delete this.linked.disabled;
+				parent.animated = this.linked.value || 300;
+			} else {
+				this.linked.disabled = true;
+				parent.animated = 0;
+			}
+		}
+		
+		var label = document.createElement("label");
+		label.innerHTML = "Speed (ms)";
+		label.style.marginLeft = "10px";
+		setEle.appendChild(label);
+		
+		input.type = "number";
+		input.style.width = "70px";
+		setEle.appendChild(input);
+		input.value = parent.animated || 0;
+		input.onchange = function(){
+			parent.animated = this.value;
 		}
 		
 		
@@ -3020,21 +3898,29 @@
 	
 	function copyJSON(){
 		var layout = [];
-		var pos = document.getElementById("canvas").getBoundingClientRect();
-		var bodyRect = document.body.getBoundingClientRect();
 		
-		var hh = parseInt(document.getElementById("canvas").style.height);
-		var ww = parseInt(document.getElementById("canvas").style.width);
+		var compute = window.getComputedStyle(document.getElementById("canvas"));
+		
+		var hh = parseInt(compute.height);
+		var ww = parseInt(compute.width);
+		
 		
 		var eles = document.querySelectorAll(".widget");
 		for (var i=0;i<eles.length;i++){
-			console.log(eles);
-			var compute = window.getComputedStyle(eles[i]);
+			compute = window.getComputedStyle(eles[i].parent);
 			var ele = {};
-			ele.w = parseFloat(compute.width)/ww*100;
-			ele.h = parseFloat(compute.height)/hh*100;
-			ele.x = parseFloat(compute.left)/ww*100;
-			ele.y = parseFloat(compute.top)/hh*100;
+			
+			if (absolutePixel){
+				ele.wp = parseFloat(compute.width);
+				ele.hp = parseFloat(compute.height);
+				ele.xp = parseFloat(compute.left);
+				ele.yp = parseFloat(compute.top);
+			} else {
+				ele.w = parseFloat(compute.width)/ww*100;
+				ele.h = parseFloat(compute.height)/hh*100;
+				ele.x = parseFloat(compute.left)/ww*100;
+				ele.y = parseFloat(compute.top)/hh*100;
+			}
 			
 			try {
 				ele.z = parseInt(eles[i].zIndex) || 0;
@@ -3053,6 +3939,7 @@
 				ele.animated = eles[i].animated || 0;
 				ele.borderColor = eles[i].borderColor || "#0000";
 				ele.backgroundMedia = eles[i].backgroundMedia || "";
+				ele.iframeSrc = eles[i].iframeSrc || "";
 				ele.defaultStreamID = eles[i].defaultStreamID || "";
 				ele.margin = parseInt(eles[i].margin) || 0;
 				ele.rounded = parseInt(eles[i].rounded) || 0;
@@ -3060,27 +3947,48 @@
 			} catch(e){errorlog(e);}
 			layout.push(ele);
 		}
-		
+		log(layout);
 		var combined = combinedLayout(layout);
 		
 		prompt("Layout as URL-encoded JSON. StreamIDs are based on current and default values.", encodeURIComponent(JSON.stringify(combined)));
+	}
+	
+	function setobsSceneName(){
+		var obsSceneName = document.getElementById("canvas").obsSceneName || "";
+		var input = prompt("Enter the OBS scene you want to link this scene to.\n\nWhen changing layouts it will auto-select the linked OBS scene, and vice versas.\n\nTo activate the syncing you also need to enable this feature in the mixer settings and enable permissions in the OBS browser source.", obsSceneName);
+		if (input !==null){
+			document.getElementById("canvas").obsSceneName = input;
+		}
 	}
   
 	function saveScene(makenew=false, event=null){
 		var scene = [];
 		
-		var hh = parseInt(document.getElementById("canvas").style.height);
-		var ww = parseInt(document.getElementById("canvas").style.width);
+		var compute = window.getComputedStyle(document.getElementById("canvas"));
+		
+		var hh = parseInt(compute.height);
+		var ww = parseInt(compute.width);
 		
 		var eles = document.querySelectorAll(".widget");
 		for (var i=0;i<eles.length;i++){
-			console.log(eles);
-			var compute = window.getComputedStyle(eles[i]);
 			var ele = {};
-			ele.w = parseFloat(eles[i].style.width)/ww*100;
-			ele.h = parseFloat(eles[i].style.height)/hh*100;
-			ele.x = parseFloat(eles[i].style.left)/ww*100;
-			ele.y = parseFloat(eles[i].style.top)/hh*100;
+			
+			if (absolutePixel){
+				ele.wp = parseFloat(eles[i].parent.style.width) || 0;
+				ele.hp = parseFloat(eles[i].parent.style.height) || 0;
+				ele.xp = parseFloat(eles[i].parent.style.left) || 0;
+				ele.yp = parseFloat(eles[i].parent.style.top) || 0;
+			} else {
+				ele.w = parseFloat(eles[i].parent.style.width)/ww*100 || 0;
+				ele.h = parseFloat(eles[i].parent.style.height)/hh*100 || 0;
+				ele.x = parseFloat(eles[i].parent.style.left)/ww*100 || 0;
+				ele.y = parseFloat(eles[i].parent.style.top)/hh*100 || 0;
+			}
+			
+			//ele.w = parseFloat(eles[i].style.width)/ww*100;
+			//ele.h = parseFloat(eles[i].style.height)/hh*100;
+			//ele.x = parseFloat(eles[i].style.left)/ww*100;
+			//ele.y = parseFloat(eles[i].style.top)/hh*100;
 			
 			try {
 				if ("slot" in eles[i]){
@@ -3098,20 +4006,20 @@
 				ele.animated = eles[i].animated || 0;
 				ele.borderColor = eles[i].borderColor || "#0000";
 				ele.backgroundMedia = eles[i].backgroundMedia || "";
+				ele.iframeSrc = eles[i].iframeSrc || "";
 				ele.defaultStreamID = eles[i].defaultStreamID || "";
 				ele.margin = parseInt(eles[i].margin) || 0;
 				ele.rounded = parseInt(eles[i].rounded) || 0;
 				ele.muted = eles[i].muted || false;
 			} catch(e){errorlog(e);}
+			
 			scene.push(ele);
 			//scene[sid] = ele;
 		}
-		console.log(scene);
+		log(scene);
 		
-		var sceneName = document.getElementById("canvas").sceneName || parseInt(Math.random()*1000000);
-		console.log("'sceneName: "+sceneName);
 		if (makenew){
-			var canvasContainer = drawLayout(scene, false); 
+			var canvasContainer = drawLayout(scene); 
 			popupMessage(event, "Saved as a new scene");
 			
 			document.querySelectorAll(".editButton").forEach(ele=>{
@@ -3125,7 +4033,10 @@
 			} catch(e){}
 			
 		} else {
-			drawLayout(scene, sceneName);
+			var sceneName = document.getElementById("canvas").sceneName || parseInt(Math.random()*1000000000);
+			var obsSceneName = document.getElementById("canvas").obsSceneName || "";
+			log("'sceneName: "+sceneName);
+			drawLayout(scene, sceneName, obsSceneName);
 			popupMessage(event, "Scene saved");
 		}
 		
@@ -3157,12 +4068,32 @@
 		savedSession.settings.assignSlotToGuest = assignSlotToGuest;
 		savedSession.settings.toggleLabel = toggleLabel;
 		savedSession.settings.toggleBroadcast = toggleBroadcast;
+		savedSession.settings.obfuscateInvites = obfuscateInvites;
+		savedSession.settings.additionalParams = additionalParams;
+		savedSession.settings.syncOBS = syncOBS;
+		savedSession.settings.remoteSyncOBS = remoteSyncOBS;
+		savedSession.settings.aspectRatio = aspectRatio;
+		savedSession.settings.pixelDensity = pixelDensity;
+		savedSession.settings.absolutePixel = absolutePixel;
+		savedSession.settings.showDirector = showDirector;
+		
+		
+		savedSession.settings.toggleEchoInvite = toggleEchoInvite;
+		savedSession.settings.toggleDenoiseInvite = toggleDenoiseInvite;
+		savedSession.settings.toggleAutogainInvite = toggleAutogainInvite;
+		
+		
+		savedSession.settings.advancedMode = advancedMode;
+		
 		savedSession.version = 1;
+		savedSession.obsScenes = [];
 		
 		for (var i=0;i<layouts.length;i++){
 			if (!layouts[i].layout){continue;}
 			try {
 				savedSession.layouts.push(JSON.parse(layouts[i].layout));
+				var obs = layouts[i].obsSceneName || false;
+				savedSession.obsScenes.push(obs);
 			} catch(e){
 				errorlog(e);
 			}
@@ -3170,19 +4101,69 @@
 		setStorage("savedSession", JSON.stringify(savedSession));
 		
 		if (iframe){
-			iframe.contentWindow.postMessage({ layouts: savedSession.layouts }, "*"); 
+			if (remoteSyncOBS){
+				iframe.contentWindow.postMessage({ layouts: savedSession.layouts , obsSceneTriggers: savedSession.obsScenes}, "*"); 
+			} else {
+				iframe.contentWindow.postMessage({ layouts: savedSession.layouts }, "*"); 
+			}
 		}
-		console.log(getStorage("savedSession"));
+		log(getStorage("savedSession"));
+	}
+	var widgetSrc = false;
+	function changeAspectRatio(ar, button=false){
+		if (button){
+			document.querySelectorAll(".aspectbutton").forEach(ele=>{
+				if (ele == button){return;}
+				ele.checked = false;
+				ele.value = false;
+			});
+		
+			aspectRatio = ar;
+			saveSession();
+		
+		}
+		
+		document.documentElement.style.setProperty('--aspect-ratio', ar);
+		
+		if (widgetSrc){
+			document.documentElement.style.setProperty('--aspect-ratio-widget', ar/0.75);
+		} else {
+			document.documentElement.style.setProperty('--aspect-ratio-widget', ar);
+		}
 	}
 	
-	function changeAspectRatio(ar, button){
-		document.querySelectorAll(".aspectbutton").forEach(ele=>{
+	function changeAbsolutePosition(value, button){
+		document.querySelectorAll(".absolutePosition").forEach(ele=>{
 			if (ele == button){return;}
 			ele.checked = false;
 			ele.value = false;
 		});
-		aspectRatio = ar;
-		document.documentElement.style.setProperty('--aspect-ratio', ar);
+		absolutePixel = value;
+		saveSession();
+		updateLayouts();
+	}
+	
+	function changePixelDensity(pd, button){  
+		document.querySelectorAll(".pixeldensity").forEach(ele=>{
+			if (ele == button){return;}
+			ele.checked = false;
+			ele.value = false;
+		});
+		pixelDensity = pd; 
+		saveSession();
+		
+		var hh = pixelDensity;
+		var ww = parseInt((pixelDensity*16/9) * (aspectRatio/(16/9)));
+		
+		changeAspectRatio(aspectRatio,false);
+		
+		document.documentElement.style.setProperty('--iframe-width', ww+"px");
+		document.documentElement.style.setProperty('--iframe-height', hh+"px");
+		
+		updateLayouts();
+		//document.getElementById('canvas').style.width = ww+"px";
+		//document.getElementById('canvas').style.height = hh+"px";
+		
 	}
 	
 	//let modal = document.querySelector("#modal");

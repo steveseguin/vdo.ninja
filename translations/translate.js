@@ -1,3 +1,25 @@
+/* function getAllContentNodes(element) { // takes an element.
+	
+	element.childNodes.forEach(node=>{
+		if (node.childNodes.length){
+			if (node.dataset.translate){return;}
+			getAllContentNodes(node)
+		} else if ((node.nodeType === 3) && node.textContent && (node.textContent.trim().length > 0)){
+			var datatag = node.textContent.toLowerCase().replace(/[^a-zA-Z0-9\s\-]/g, '').trim().replaceAll(" ","-");
+			if (datatag){
+				var newNode = document.createElement("span");
+				newNode.dataset.translate = datatag;
+				newNode.innerHTML = node.textContent;
+				node.parentNode.replaceChild(newNode, node);
+				
+			}
+			
+		} 
+	});
+}
+getAllContentNodes(document.body)
+
+ */
 // Copy and paste this code into VDO.Ninja's developer's console to generate new Translation files
 
 function downloadTranslation(filename, trans = {}) { // downloads the current translation to a file
@@ -82,6 +104,7 @@ const updateList = [
     "nl",
     "pig",
     "pt",
+	"pt-br",
     "ru",
     "tr",
 	"uk"
@@ -122,9 +145,9 @@ var counter = 0;
 for (const i in updateList) {
     const lang = updateList[i];
     setTimeout((ln) => {
-        var suceess = updateTranslation(ln); // we don't need to worry about DATA.
-        if (suceess[0] == true) {
-            const newTrans = suceess[1].innerHTML;
+        var success = updateTranslation(ln); // we don't need to worry about DATA.
+        if (success[0] == true) {
+            const newTrans = success[1].innerHTML;
             //const allItems = document.querySelectorAll('[data-translate]');
             allItems.forEach((ele) => {
                 const key = ele.dataset.translate;//.replace(/[\W]+/g, "-").toLowerCase();
@@ -145,7 +168,7 @@ for (const i in updateList) {
 				}
 			}
 
-            const newTransTitles = suceess[1].titles;
+            const newTransTitles = success[1].titles;
             //const allTitles = document.querySelectorAll('[title]');
             allTitles.forEach((ele) => {
                 const key = ele.dataset.key;
@@ -165,7 +188,7 @@ for (const i in updateList) {
 				}
 			}
 
-            const newPlaceholders = suceess[1].placeholders;
+            const newPlaceholders = success[1].placeholders;
            // const allPlaceholders = document.querySelectorAll('[placeholder]');
             allPlaceholders.forEach((ele) => {
                 const key = ele.dataset.key;
@@ -186,21 +209,24 @@ for (const i in updateList) {
 			}
 			
 			var miscellaneous = {};
-			if ("miscellaneous" in suceess[1]){
+			if ("miscellaneous" in success[1]){
+				miscellaneous = success[1].miscellaneous; // don't lose our old copy.
 				if (miscTranslations){
 					Object.keys(miscTranslations).forEach(key => {
-						if (key in suceess[1].miscellaneous) {
-							miscellaneous[key] = suceess[1].miscellaneous[key];
-						} else {
+						if (!(key in success[1].miscellaneous)){
 							miscellaneous[key] = miscTranslations[key];
 						}
 					});
-				} else {
-					miscellaneous = suceess[1].miscellaneous;
 				}
 			} else if (miscTranslations){
 				miscellaneous = miscTranslations;
 			}
+
+			Object.keys(miscellaneous).forEach(key => {
+				if (key in newTrans){ // lets delete misc item, since it exists in innerHTMl as an option. don't want to double translate if not needed
+					delete miscellaneous[key];
+				}
+			})
 
             // //// DOWNLOAD UPDATED TRANSLATION
             const outputTrans = {};
@@ -219,9 +245,9 @@ for (const i in updateList) {
 				outputTrans.placeholders[key] = newPlaceholders[key];
 			}
 			
-			outputTrans.titles = newTransTitles;
-            outputTrans.innerHTML = newTrans;
-			outputTrans.placeholders = newPlaceholders;
+			//outputTrans.titles = newTransTitles;
+           // outputTrans.innerHTML = newTrans;
+			//outputTrans.placeholders = newPlaceholders;
 			outputTrans.miscellaneous = miscellaneous;
             downloadTranslation(ln, outputTrans);
         }

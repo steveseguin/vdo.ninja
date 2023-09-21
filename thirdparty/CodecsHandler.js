@@ -27,6 +27,11 @@ Copyright (c) 2012-2020 [Muaz Khan](https://github.com/muaz-khan)
 
 var CodecsHandler = (function() {
     function preferCodec(sdp, codecName) {
+		
+		if (codecName){
+			codecName = codecName.toLowerCase();
+		}
+		
         var info = splitLines(sdp);
         if (!info.videoCodecNumbers) {
             return sdp;
@@ -36,20 +41,49 @@ var CodecsHandler = (function() {
             return sdp;
         } else if (codecName === 'h264' && info.h264LineNumber === info.videoCodecNumbers[0]) {
             return sdp;
+		} else if (codecName === 'h265' && info.h265LineNumber === info.videoCodecNumbers[0]) {
+            return sdp;
         } else if (codecName === 'av1' && info.av1LineNumber === info.videoCodecNumbers[0]) {
             return sdp;
-		} else if (codecName === 'red' && info.redLineNumber === info.videoCodecNumbers[0]) {
-            return sdp;
-		} else if (codecName === 'fec' && info.fecLineNumber === info.videoCodecNumbers[0]) {
-            return sdp;
-        }
+		}
+		//} else if (codecName === 'red' && info.redLineNumber === info.videoCodecNumbers[0]) {
+        //    return sdp;
+		//} else if (codecName === 'fec' && info.fecLineNumber === info.videoCodecNumbers[0]) {
+        //    return sdp;
+        //}
 
         sdp = preferCodecHelper(sdp, codecName, info);
 
         return sdp;
     }
+	
+	
+	function preferAudioCodec(sdp, codecName) {
+		if (codecName){
+			codecName = codecName.toLowerCase();
+		}
+        var info = splitAudioLines(sdp);
+        if (!info.audioCodecNumbers) {
+            return sdp;
+		} else if (codecName === 'opus' && info.opusLineNumber === info.audioCodecNumbers[0]) {
+            return sdp;
+		} else if (codecName === 'isac' && info.isacLineNumber === info.audioCodecNumbers[0]) {
+            return sdp;
+		} else if (codecName === 'g722' && info.g722LineNumber === info.audioCodecNumbers[0]) {
+            return sdp;
+		} else if (codecName === 'pcmu' && info.pcmuLineNumber === info.audioCodecNumbers[0]) {
+            return sdp;
+		} else if (codecName === 'pcma' && info.pcmaLineNumber === info.audioCodecNumbers[0]) {
+            return sdp;
+		} else if (codecName === 'red' && info.redLineNumber === info.audioCodecNumbers[0]) {
+            return sdp;
+        }
 
-    function preferCodecHelper(sdp, codec, info, ignore) {
+        sdp = preferAudioCodecHelper(sdp, codecName, info);
+        return sdp;
+    }
+
+    function preferCodecHelper(sdp, codec, info) {
         var preferCodecNumber = '';
 
         if (codec === 'vp8') {
@@ -69,34 +103,36 @@ var CodecsHandler = (function() {
                 return sdp;
             }
             preferCodecNumber = info.h264LineNumber;
-			
+		} else if (codec === 'h265') {
+            if (!info.h265LineNumber) {
+                return sdp;
+            }
+            preferCodecNumber = info.h265LineNumber;	
         } else if (codec === 'av1') {
             if (!info.av1LineNumber) {
                 return sdp;
             }
             preferCodecNumber = info.av1LineNumber;
+		} else {
+			return sdp;
+		}
+		//} else if (codec === 'red') {
+      //      if (!info.redLineNumber) {
+      //          return sdp;
+      //      }
+       //     preferCodecNumber = info.redLineNumber;
 			
-		} else if (codec === 'red') {
-            if (!info.redLineNumber) {
-                return sdp;
-            }
-            preferCodecNumber = info.redLineNumber;
-			
-		} else if (codec === 'fec') {
-            if (!info.fecLineNumber) {
-                return sdp;
-            }
-            preferCodecNumber = info.fecLineNumber;
-        }
+		//} else if (codec === 'fec') {
+      //      if (!info.fecLineNumber) {
+       //         return sdp;
+       //     }
+       //     preferCodecNumber = info.fecLineNumber;
+      //  }
 
         var newLine = info.videoCodecNumbersOriginal.split('SAVPF')[0] + 'SAVPF ';
 
         var newOrder = [preferCodecNumber];
-
-        if (ignore) {
-            newOrder = [];
-        }
-
+		
         info.videoCodecNumbers.forEach(function(codecNumber) {
             if (codecNumber === preferCodecNumber) return;
             newOrder.push(codecNumber);
@@ -105,6 +141,55 @@ var CodecsHandler = (function() {
         newLine += newOrder.join(' ');
 
         sdp = sdp.replace(info.videoCodecNumbersOriginal, newLine);
+        return sdp;
+    }
+	
+	function preferAudioCodecHelper(sdp, codec, info) {
+        var preferCodecNumber = '';
+
+        if (codec === 'opus') {
+            if (!info.opusLineNumber) {
+                return sdp;
+            }
+            preferCodecNumber = info.opusLineNumber;
+        } else if (codec === 'isac') {
+            if (!info.isacLineNumber) {
+                return sdp;
+            }
+            preferCodecNumber = info.isacLineNumber;
+		} else if (codec === 'g722') {
+            if (!info.g722LineNumber) {
+                return sdp;
+            }
+            preferCodecNumber = info.g722LineNumber;	
+        } else if (codec === 'pcmu') {
+            if (!info.pcmuLineNumber) {
+                return sdp;
+            }
+            preferCodecNumber = info.pcmuLineNumber;
+		 } else if (codec === 'pcma') {
+            if (!info.pcmaLineNumber) {
+                return sdp;
+            }
+            preferCodecNumber = info.pcmaLineNumber;	
+		} else if (codec === 'red') {
+            if (!info.redLineNumber) {
+                return sdp;
+            }
+            preferCodecNumber = info.redLineNumber;
+		}
+        var newLine = info.audioCodecNumbersOriginal.split('SAVPF')[0] + 'SAVPF ';
+
+        var newOrder = [preferCodecNumber];
+
+        info.audioCodecNumbers.forEach(function(codecNumber) {
+            if (codecNumber === preferCodecNumber) return;
+            newOrder.push(codecNumber);
+        });
+
+        newLine += newOrder.join(' ');
+
+        sdp = sdp.replace(info.audioCodecNumbersOriginal, newLine);
         return sdp;
     }
 
@@ -120,32 +205,82 @@ var CodecsHandler = (function() {
                     info.videoCodecNumbersOriginal = line;
                 });
             }
+			
+			var LINE = line.toUpperCase();
 
-            if (line.indexOf('VP8/90000') !== -1 && !info.vp8LineNumber) {
+            if (LINE.indexOf('VP8/90000') !== -1 && !info.vp8LineNumber) {
                 info.vp8LineNumber = line.replace('a=rtpmap:', '').split(' ')[0];
             }
 
-            if (line.indexOf('VP9/90000') !== -1 && !info.vp9LineNumber) {
+            if (LINE.indexOf('VP9/90000') !== -1 && !info.vp9LineNumber) {
                 info.vp9LineNumber = line.replace('a=rtpmap:', '').split(' ')[0];
             }
 
-            if (line.indexOf('H264/90000') !== -1 && !info.h264LineNumber) {
+            if (LINE.indexOf('H264/90000') !== -1 && !info.h264LineNumber) {
                 info.h264LineNumber = line.replace('a=rtpmap:', '').split(' ')[0];
             }
 			
-            if (line.indexOf('AV1X/90000') !== -1 && !info.av1LineNumber) {
+			if (LINE.indexOf('H265/90000') !== -1 && !info.h265LineNumber) {
+                info.h265LineNumber = line.replace('a=rtpmap:', '').split(' ')[0];
+            }
+			
+            if (LINE.indexOf('AV1X/90000') !== -1 && !info.av1LineNumber) {
                 info.av1LineNumber = line.replace('a=rtpmap:', '').split(' ')[0];
-            } else if (line.indexOf('AV1/90000') !== -1 && !info.av1LineNumber) {
+            } else if (LINE.indexOf('AV1/90000') !== -1 && !info.av1LineNumber) {
                 info.av1LineNumber = line.replace('a=rtpmap:', '').split(' ')[0];
             }
 			
-			if (line.indexOf('red/90000') !== -1 && !info.redLineNumber) {
+			//if (LINE.indexOf('RED/90000') !== -1 && !info.redLineNumber) {
+          //      info.redLineNumber = line.replace('a=rtpmap:', '').split(' ')[0];
+         //   }
+			
+		//	if (LINE.indexOf('FEC/90000') !== -1 && !info.fecLineNumber) {
+         //       info.fecLineNumber = line.replace('a=rtpmap:', '').split(' ')[0];
+          //  }
+        });
+
+        return info;
+    }
+	
+	function splitAudioLines(sdp) {
+        var info = {};
+        sdp.split('\n').forEach(function(line) {
+            if (line.indexOf('m=audio') === 0) {
+                info.audioCodecNumbers = [];
+                line.split('SAVPF')[1].split(' ').forEach(function(codecNumber) {
+                    codecNumber = codecNumber.trim();
+                    if (!codecNumber || !codecNumber.length) return;
+                    info.audioCodecNumbers.push(codecNumber);
+                    info.audioCodecNumbersOriginal = line;
+                });
+            }
+			
+			var LINE = line.toLowerCase();
+
+            if (LINE.indexOf('opus/48000') !== -1 && !info.opusLineNumber) {
+                info.opusLineNumber = line.replace('a=rtpmap:', '').split(' ')[0];
+            }
+
+            if (LINE.indexOf('isac/32000') !== -1 && !info.isacLineNumber) {
+                info.isacLineNumber = line.replace('a=rtpmap:', '').split(' ')[0];
+            }
+
+            if (LINE.indexOf('g722/8000') !== -1 && !info.g722LineNumber) {
+                info.g722LineNumber = line.replace('a=rtpmap:', '').split(' ')[0];
+            }
+			
+			if (LINE.indexOf('pcmu/8000') !== -1 && !info.pcmuLineNumber) {
+                info.pcmuLineNumber = line.replace('a=rtpmap:', '').split(' ')[0];
+            }
+			
+			if (LINE.indexOf('pcma/8000') !== -1 && !info.pcmaLineNumber) {
+                info.pcmaLineNumber = line.replace('a=rtpmap:', '').split(' ')[0];
+            }
+			
+			if (LINE.indexOf('red/48000') !== -1 && !info.redLineNumber) {
                 info.redLineNumber = line.replace('a=rtpmap:', '').split(' ')[0];
             }
 			
-			if (line.indexOf('ulpfec/90000') !== -1 && !info.fecLineNumber) {
-                info.fecLineNumber = line.replace('a=rtpmap:', '').split(' ')[0];
-            }
         });
 
         return info;
@@ -161,33 +296,9 @@ var CodecsHandler = (function() {
             throw 'Invalid arguments.';
         }
 
-		sdp = sdp.replace('a=rtcp-fb:35 nack\r\n', '');
-        sdp = sdp.replace('a=rtcp-fb:35 nack pli\r\n', 'a=rtcp-fb:35 pli\r\n');
-		sdp = sdp.replace('a=rtcp-fb:96 nack\r\n', '');
-        sdp = sdp.replace('a=rtcp-fb:96 nack pli\r\n', 'a=rtcp-fb:96 pli\r\n');
-		sdp = sdp.replace('a=rtcp-fb:97 nack\r\n', '');
-        sdp = sdp.replace('a=rtcp-fb:97 nack pli\r\n', 'a=rtcp-fb:97 pli\r\n');
-		sdp = sdp.replace('a=rtcp-fb:98 nack\r\n', '');
-        sdp = sdp.replace('a=rtcp-fb:98 nack pli\r\n', 'a=rtcp-fb:98 pli\r\n');
-		sdp = sdp.replace('a=rtcp-fb:99 nack\r\n', '');
-        sdp = sdp.replace('a=rtcp-fb:99 nack pli\r\n', 'a=rtcp-fb:99 pli\r\n');
-		sdp = sdp.replace('a=rtcp-fb:100 nack\r\n', '');
-        sdp = sdp.replace('a=rtcp-fb:100 nack pli\r\n', 'a=rtcp-fb:100 pli\r\n');
-		sdp = sdp.replace('a=rtcp-fb:102 nack\r\n', '');
-        sdp = sdp.replace('a=rtcp-fb:102 nack pli\r\n', 'a=rtcp-fb:102 pli\r\n');
-		sdp = sdp.replace('a=rtcp-fb:108 nack\r\n', '');
-        sdp = sdp.replace('a=rtcp-fb:108 nack pli\r\n', 'a=rtcp-fb:108 pli\r\n');
-		sdp = sdp.replace('a=rtcp-fb:124 nack\r\n', '');
-        sdp = sdp.replace('a=rtcp-fb:124 nack pli\r\n', 'a=rtcp-fb:124 pli\r\n');
-		sdp = sdp.replace('a=rtcp-fb:123 nack\r\n', '');
-        sdp = sdp.replace('a=rtcp-fb:123 nack pli\r\n', 'a=rtcp-fb:123 pli\r\n');
-		sdp = sdp.replace('a=rtcp-fb:125 nack\r\n', '');
-        sdp = sdp.replace('a=rtcp-fb:125 nack pli\r\n', 'a=rtcp-fb:125 pli\r\n');
-		sdp = sdp.replace('a=rtcp-fb:126 nack\r\n', '');
-        sdp = sdp.replace('a=rtcp-fb:126 nack pli\r\n', 'a=rtcp-fb:126 pli\r\n');
-		sdp = sdp.replace('a=rtcp-fb:127 nack\r\n', '');
-        sdp = sdp.replace('a=rtcp-fb:127 nack pli\r\n', 'a=rtcp-fb:127 pli\r\n');
-		
+		sdp = sdp.replace(/a=rtcp-fb:(\d+) nack\r\n/g, '');
+		sdp = sdp.replace(/a=rtcp-fb:(\d+) nack pli\r\n/g, 'a=rtcp-fb:$1 pli\r\n');
+		sdp = sdp.replace(/a=rtcp-fb:(\d+) pli nack\r\n/g, 'a=rtcp-fb:$1 pli\r\n');
         return sdp;
     }
 	
@@ -195,19 +306,8 @@ var CodecsHandler = (function() {
         if (!sdp || typeof sdp !== 'string') {
             throw 'Invalid arguments.';
         }
-		sdp = sdp.replace('a=rtcp-fb:35 goog-remb\r\n', '');
-		sdp = sdp.replace('a=rtcp-fb:96 goog-remb\r\n', '');
-		sdp = sdp.replace('a=rtcp-fb:97 goog-remb\r\n', '');
-		sdp = sdp.replace('a=rtcp-fb:98 goog-remb\r\n', '');
-		sdp = sdp.replace('a=rtcp-fb:99 goog-remb\r\n', '');
-		sdp = sdp.replace('a=rtcp-fb:100 goog-remb\r\n', '');
-		sdp = sdp.replace('a=rtcp-fb:102 goog-remb\r\n', '');
-		sdp = sdp.replace('a=rtcp-fb:108 goog-remb\r\n', '');
-		sdp = sdp.replace('a=rtcp-fb:124 goog-remb\r\n', '');
-		sdp = sdp.replace('a=rtcp-fb:123 goog-remb\r\n', '');
-		sdp = sdp.replace('a=rtcp-fb:125 goog-remb\r\n', '');
-		sdp = sdp.replace('a=rtcp-fb:126 goog-remb\r\n', '');
-		sdp = sdp.replace('a=rtcp-fb:127 goog-remb\r\n', '');
+
+		sdp = sdp.replace(/a=rtcp-fb:(\d+) goog-remb\r\n/g, '');
 		
         return sdp;
     }
@@ -217,32 +317,9 @@ var CodecsHandler = (function() {
             throw 'Invalid arguments.';
         }
 		
-		sdp = sdp.replace('a=rtcp-fb:35 pli\r\n', '');
-        sdp = sdp.replace('a=rtcp-fb:35 nack pli\r\n', 'a=rtcp-fb:35 nack\r\n');
-		sdp = sdp.replace('a=rtcp-fb:96 pli\r\n', '');
-        sdp = sdp.replace('a=rtcp-fb:96 nack pli\r\n', 'a=rtcp-fb:96 nack\r\n');
-		sdp = sdp.replace('a=rtcp-fb:97 pli\r\n', '');
-        sdp = sdp.replace('a=rtcp-fb:97 nack pli\r\n', 'a=rtcp-fb:97 nack\r\n');
-		sdp = sdp.replace('a=rtcp-fb:98 pli\r\n', '');
-        sdp = sdp.replace('a=rtcp-fb:98 nack pli\r\n', 'a=rtcp-fb:98 nack\r\n');
-		sdp = sdp.replace('a=rtcp-fb:99 pli\r\n', '');
-        sdp = sdp.replace('a=rtcp-fb:99 nack pli\r\n', 'a=rtcp-fb:99 nack\r\n');
-		sdp = sdp.replace('a=rtcp-fb:100 pli\r\n', '');
-        sdp = sdp.replace('a=rtcp-fb:100 nack pli\r\n', 'a=rtcp-fb:100 nack\r\n');
-		sdp = sdp.replace('a=rtcp-fb:102 pli\r\n', '');
-        sdp = sdp.replace('a=rtcp-fb:102 nack pli\r\n', 'a=rtcp-fb:102 nack\r\n');
-		sdp = sdp.replace('a=rtcp-fb:108 pli\r\n', '');
-        sdp = sdp.replace('a=rtcp-fb:108 nack pli\r\n', 'a=rtcp-fb:108 nack\r\n');
-		sdp = sdp.replace('a=rtcp-fb:124 pli\r\n', '');
-        sdp = sdp.replace('a=rtcp-fb:124 nack pli\r\n', 'a=rtcp-fb:124 nack\r\n');
-		sdp = sdp.replace('a=rtcp-fb:123 pli\r\n', '');
-        sdp = sdp.replace('a=rtcp-fb:123 nack pli\r\n', 'a=rtcp-fb:123 nack\r\n');
-		sdp = sdp.replace('a=rtcp-fb:125 pli\r\n', '');
-        sdp = sdp.replace('a=rtcp-fb:125 nack pli\r\n', 'a=rtcp-fb:125 nack\r\n');
-		sdp = sdp.replace('a=rtcp-fb:126 pli\r\n', '');
-        sdp = sdp.replace('a=rtcp-fb:126 nack pli\r\n', 'a=rtcp-fb:126 nack\r\n');
-		sdp = sdp.replace('a=rtcp-fb:127 pli\r\n', '');
-        sdp = sdp.replace('a=rtcp-fb:127 nack pli\r\n', 'a=rtcp-fb:127 nack\r\n');
+		sdp = sdp.replace(/a=rtcp-fb:(\d+) pli\r\n/g, '');
+		sdp = sdp.replace(/a=rtcp-fb:(\d+) nack pli\r\n/g, 'a=rtcp-fb:$1 nack\r\n');
+		sdp = sdp.replace(/a=rtcp-fb:(\d+) pli nack\r\n/g, 'a=rtcp-fb:$1 nack\r\n');
 		
         return sdp;
     }
@@ -300,6 +377,8 @@ var CodecsHandler = (function() {
         if (!codecPayload) {
             return defaultBitrate;
         }
+		
+		var codecDetails = findLine(sdpLines, 'a=fmtp:'+codecPayload);
 
         var rtxIndex = findLine(sdpLines, 'a=rtpmap', 'rtx/90000');
         var rtxPayload;
@@ -311,13 +390,23 @@ var CodecsHandler = (function() {
             return defaultBitrate;
         }
 
-        var rtxFmtpLineIndex = findLine(sdpLines, 'a=fmtp:' + rtxPayload.toString());
+        var rtxFmtpLineIndex = findLine(sdpLines, 'a=fmtp:' + codecPayload.toString());
         if (rtxFmtpLineIndex !== null) {
             try {
                 var maxBitrate = parseInt(sdpLines[rtxFmtpLineIndex].split("x-google-max-bitrate=")[1].split(";")[0]);
                 var minBitrate = parseInt(sdpLines[rtxFmtpLineIndex].split("x-google-min-bitrate=")[1].split(";")[0]);
             } catch(e){
-                return defaultBitrate;
+                rtxFmtpLineIndex = findLine(sdpLines, 'a=fmtp:' + codecPayload.toString());
+				if (rtxFmtpLineIndex !== null) {
+					try {
+						var maxBitrate = parseInt(sdpLines[rtxFmtpLineIndex].split("x-google-max-bitrate=")[1].split(";")[0]);
+						var minBitrate = parseInt(sdpLines[rtxFmtpLineIndex].split("x-google-min-bitrate=")[1].split(";")[0]);
+					} catch(e){
+						return defaultBitrate;
+					}
+				} else {
+					return defaultBitrate;
+				}
             }
            
            if (minBitrate>maxBitrate){
@@ -328,12 +417,9 @@ var CodecsHandler = (function() {
         } else {
             return defaultBitrate;
         }
-
-        
-        
     }
 
-    function setVideoBitrates(sdp, params, codec) {  // modified + Improved by Steve.
+    function setVideoBitrates(sdp, params = false, codec=false) {  // modified + Improved by Steve.
         
         if (codec){
             codec = codec.toUpperCase();
@@ -358,9 +444,15 @@ var CodecsHandler = (function() {
         codec = codecName || codec; // Try to find first Codec; else use expected/default
         
         params = params || {};
-        var min_bitrate = params.min.toString() || '30';
-        var max_bitrate = params.max.toString() || '2500';
 		
+		var min_bitrate = "30";
+		if (params.min){
+			min_bitrate = params.min.toString() || '30';
+		} 
+		var max_bitrate = "2500";
+		if (params.max){
+			max_bitrate = params.max.toString() || '2500';
+		}
 
         var codecIndex = findLine(sdpLines, 'a=rtpmap', codec+'/90000');
         var codecPayload;
@@ -397,7 +489,7 @@ var CodecsHandler = (function() {
         return sdp;
     }
 
-    function setOpusAttributes(sdp, params) { 
+    function setOpusAttributes(sdp, params, debug=false) { 
         params = params || {};
 
         var sdpLines = sdp.split('\r\n');
@@ -468,25 +560,34 @@ var CodecsHandler = (function() {
 				appendOpusNext += ';cbr=' + params.cbr; // default is 0 (vbr)
 			}
         }
+		
+		if (typeof params.dtx != 'undefined') {
+			if (params.dtx){
+				if (sdpLines[opusFmtpLineIndex].split("usedtx=").length==1){
+					appendOpusNext += ';usedtx=1';
+				}
+			}
+        }
 
         if (typeof params.useinbandfec != 'undefined') {  // useful for handling packet loss
 			if (sdpLines[opusFmtpLineIndex].split("useinbandfec=").length==1){
 				appendOpusNext += ';useinbandfec=' + params.useinbandfec;  // Defaults to 0
+			} else {
+				sdpLines[opusFmtpLineIndex] = sdpLines[opusFmtpLineIndex].replace("useinbandfec="+(params.useinbandfec ? 0 : 1), "useinbandfec="+params.useinbandfec);
 			}
         }
 
-        if (typeof params.usedtx != 'undefined') {  // Default is 0
-			if (sdpLines[opusFmtpLineIndex].split("usedtx=").length==1){
-				appendOpusNext += ';usedtx=' + params.usedtx; // if decoder prefers the use of DTX.
-			}
-        }
-
-        
-
-        sdpLines[opusFmtpLineIndex] = sdpLines[opusFmtpLineIndex].concat(appendOpusNext);
-
-        sdp = sdpLines.join('\r\n');
+		if (debug){
+			console.log();
+		}
 		
+        sdpLines[opusFmtpLineIndex] = sdpLines[opusFmtpLineIndex].concat(appendOpusNext);
+		
+		if (debug){
+			console.log("Adding to SDP (audio): "+appendOpusNext+" --> Result: "+sdpLines[opusFmtpLineIndex]);
+		}
+		
+        sdp = sdpLines.join('\r\n');
         return sdp;
     }
 	
@@ -522,6 +623,73 @@ var CodecsHandler = (function() {
 		}
         return 32768;
     }
+	
+	function modifyDescLyra(modifiedSDP) { // WIP 
+		if (!modifiedSDP.includes("m=audio")){ // don't bother modifying if no audio line found
+			return modifiedSDP;
+		}
+		///// Snippet based on Apache 2.0 licenced code. Source: https://github.com/Flash-Meeting/lyra-webrtc //////////
+		modifiedSDP = modifiedSDP.replace("SAVPF 111", "SAVPF 109 111").replace("a=rtpmap:111", "a=rtpmap:109 L16/16000/1\r\na=fmtp:109 ptime=20\r\na=rtpmap:111");
+		modifiedSDP = modifiedSDP.replace("a=rtpmap:106 CN/32000\r\n", "").replace("a=rtpmap:105 CN/16000\r\n", "").replace("a=rtpmap:13 CN/8000\r\n", "").replace(" 106 105 13", "");
+		///////////////////////////////
+		return modifiedSDP;
+	}
+
+	function modifyDescPCM(modifiedSDP, rate=32000, stereo=false, ptimeOverride=false) {
+		if (!modifiedSDP.includes("m=audio")){ // don't bother modifying if no audio line found
+			return modifiedSDP;
+		} 
+		var ptime = 10; 
+		if (ptimeOverride){
+			ptime = parseInt(ptimeOverride); // 10 seems to work with 48000, so might as well make it default
+		}
+		ptime = parseInt(ptime/10)*10;
+		if (ptime<10){
+			ptime = 10;
+		}
+		rate = parseInt(rate) || 32000;
+		
+		
+		if (!stereo && (rate>=48000)){
+			rate = 48000; // 44100 doesn't want to work for me, so we'll skip it.
+			ptime = 10; // 48000 only works with ptime=10
+		} else if (!stereo && rate>=44100){
+			rate = 44100; // 44100 doesn't want to work for me, so we'll skip it.
+			ptime = 10;
+		} else if (rate>=32000){
+			rate = 32000;
+			if (stereo){
+				ptime=10; // can be ptime = 20 if not stereo
+			} else if (ptime>20){
+				ptime=20;
+			}
+		} else if (rate>=16000){
+			rate = 16000;
+			if (stereo){
+				if (ptime>20){
+					ptime=20; // can be ptime = 20 if not stereo
+				}
+			} else if (ptime>40){
+				ptime=40;
+			}
+		} else {
+			rate = 8000;
+			if (stereo){
+				if (ptime>40){
+					ptime=40; // can be ptime = 20 if not stereo
+				}
+			}
+		}
+		
+		if (stereo){
+			modifiedSDP = modifiedSDP.replace("SAVPF 111", "SAVPF 109 111").replace("a=rtpmap:111", "a=rtpmap:109 L16/"+rate+"/2\r\na=fmtp:109 ptime="+ptime+"\r\na=rtpmap:111");
+		} else {
+			modifiedSDP = modifiedSDP.replace("SAVPF 111", "SAVPF 109 111").replace("a=rtpmap:111", "a=rtpmap:109 L16/"+rate+"/1\r\na=fmtp:109 ptime="+ptime+"\r\na=rtpmap:111");
+		}
+		
+		modifiedSDP = modifiedSDP.replace("a=rtpmap:106 CN/32000\r\n", "").replace("a=rtpmap:105 CN/16000\r\n", "").replace("a=rtpmap:13 CN/8000\r\n", "").replace(" 106 105 13", "");
+		return modifiedSDP;
+	}
 
 	
     return {
@@ -530,6 +698,10 @@ var CodecsHandler = (function() {
 		disablePLI: disablePLI,
 		
 		disableREMB: disableREMB,
+		
+		modifyDescPCM: modifyDescPCM,
+		
+		modifyDescLyra: modifyDescLyra,
         
 		getVideoBitrates: function(sdp) {
             return getVideoBitrates(sdp);
@@ -538,15 +710,17 @@ var CodecsHandler = (function() {
         setVideoBitrates: function(sdp, params, codec) {
             return setVideoBitrates(sdp, params, codec);
         },
-        setOpusAttributes: function(sdp, params) {
-            return setOpusAttributes(sdp, params);
+        setOpusAttributes: function(sdp, params, debug=false) {
+            return setOpusAttributes(sdp, params, debug);
         },
 		
 		getOpusBitrate: function(sdp){
 			return getOpusBitrate(sdp);
 		},
 
-        preferCodec: preferCodec
+        preferCodec: preferCodec,
+		
+		preferAudioCodec: preferAudioCodec
     };
 })();
 

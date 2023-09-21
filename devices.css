@@ -19,7 +19,6 @@ h1 {
     font-size: 1rem;
     padding: 10px;
     position: relative;
-    user-select: none;
     background: #d0d0d0;
     border-radius: 4px;
 }

@@ -39,7 +39,7 @@ If self-hosting, you might also wish to host your own video relay TURN server.  
 
 ### Develop vs Release versions
 
-The develop branch is a bit like the preview or nightly version of VDO.Ninja. It's intended to be functional, but it may not be that well tested or there could be incomplete features. This version aligns closely with what is normally on vdo.ninja/beta/ or vdo.ninja/alpha/, which is well suited for those wishing to submit code changes or to gain access to experimental new features.
+The develop branch is a bit like the preview or nightly version of VDO.Ninja. It's intended to be functional, but it may not be that well tested or there could be incomplete features. This version aligns closely with what is normally on vdo.ninja/beta/ or vdo.ninja/alpha/, which is well suited for those wishing to submit code changes or to gain access to experimental new features. You can access the GitHub develop on Github pages here as well: https://steveseguin.github.io/vdo.ninja/
 
 Release versions of VDO.Ninja have their own branches though, with the newest release being hosted at https://vdo.ninja/.  These latest release branch will be updated to fix bugs or critical issues as needed, but are otherwise unchanged. https://github.com/steveseguin/vdo.ninja/branches
 

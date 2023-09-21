@@ -31,7 +31,7 @@ For a very simple method on how to deploy VDO.Ninja, there's a detailed video gu
 
 Most users might find the Github Pages deployment option easiest and quickest. 
 
-### Deplying to a NGINX web server
+### Deploying to a NGINX web server
 
 For advanced users, NGINX might be more appropriate than using Github Pages, so find written directions below. There's also a community-created video tutorial on setting up on AWS + Nginx here; https://youtu.be/8sDMwBIlgwE, but it's not an official install guide.
 
@@ -85,7 +85,7 @@ To keep things easy, Steve generally recommends using Cloudflare to provide cach
 
 `sudo systemctl reload nginx` will reload the settings after making changes.
 
-At this point, if you've managed to make it this far, you should have VDO.Ninja's web code hosted and accessible via yuor domain name.
+At this point, if you've managed to make it this far, you should have VDO.Ninja's web code hosted and accessible via your domain name.
 
 You can find many settings for VDO.Ninja at the bottom of the `index.html` file, including settings for specifiying TURN servers and default values.
 
@@ -113,13 +113,22 @@ My suggestion to extensive editing? Limit changes to images and perhaps the tran
 
 ### Internet-free deployments 
 
-For those looking to deploy a completely Internet-free or fully-isolated hosting option, you'll need to deploy your own handshake server, and you may also need to deploy your own STUN/TURN service. STUN/TURN might not be needed on a Local Area Network, and TURN might not be needed at all if you have control over each participant connecting, but adding one isn't too hard and can help with firewall and mobile network issues.
+For those looking to deploy a completely Internet-free or fully-isolated hosting option, you'll need to deploy your own handshake server. You may not need to deploy a TURN / STUN server if using things just on a LAN.
 
-As of this writing, VDO.Ninja uses Google's public STUN servers, but most TURN-servers also offer optional STUN server functionality as well. Details on deploying a TURN server are mentioned previously in this article, so following those instructions should suffice if you wish to have a combined STUN/TURN service.
+I've created an install script, and also am providing a Raspberry Pi image, for those looking for a simple working example of how to do it all.
+See it here: https://github.com/steveseguin/offline_deployment
+
+Note, if doing things yourself, since you will be using a private handshake server, don't forget that you'll need to specify that in the VDO.Ninja index.html file.
+
+Lastly, SSL self-signed certificates will be a haunting issue for those not experienced. See below for a bit of direction on options there.
 
 #### Dealing with no SSL scenarios
 
-Internet-free deployments will also need to deal with private SSL certificates and any DNS secure context issues that may arise. VDO.Ninja relies on SSL for security, but if you can't figure out how to do private SSL issuance, these SSL restrictions can be somewhat disabled at the browser's command-line or for localhost via the Chrome://flags settings. VDO.Ninja may complain about the lack of security if you take this approach though, but you can edit out those lines of code which trigger those warnings as needed. You may still need to issue an SSL certificate, self-signed or what not, but with these flags enabled it doesn't at least need to be valid.
+Internet-free deployments will also need to deal with private SSL certificates and any DNS secure context issues that may arise. VDO.Ninja relies on SSL for security, but without Internet, you'll need to create and use a private ceriticate that get added to your system's trusted certificate key chain.
+
+On Mac, you open the Keychain Access and add the cert to the Certificates section, allowing it always. It's a bit more work on PC, but Google is your friend there. There's also plenty of guides on using openssl to create a self-signed certiificates als.
+
+If you can't figure out how to do private SSL issuance, these SSL restrictions can be somewhat disabled at the browser's command-line or for localhost via the Chrome://flags settings. VDO.Ninja may complain about the lack of security if you take this approach though, but you can edit out those lines of code which trigger those warnings as needed. You may still need to issue an SSL certificate, self-signed or what not, but with these flags enabled it doesn't at least need to be valid.
 
 Setting it via command line on Windows,
 ```
@@ -133,6 +142,8 @@ and if you intend to only access it as a localhost,
 ```
 chrome://flags/#allow-insecure-localhost
 ```
+
+
 ### Hand-shake server deployment
 
 Finally, there is a handshake server hosting option available; advanced users can host their own personal handshake server, which is useful for air-gapped private deployments of the service. Some basic documentation with instructions on setting it up are included here: https://github.com/steveseguin/websocket_server.  Just be sure that your SSL-certifcates are valid or that you modify your browser to support invalid SSL certificates, else it will not work. From there, you just need to modify a couple ilnes in the index.html file of VDO.Ninja to configure things.

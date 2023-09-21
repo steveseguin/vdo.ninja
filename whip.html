@@ -1,0 +1,567 @@
+<html>
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+	<link rel="stylesheet" href="./lineawesome/css/line-awesome.min.css" />
+	<style>
+	html {
+		border:0;
+		margin:0;
+		outline:0;
+		overflow: hidden;
+	}
+
+	video {
+
+		margin: 0;
+		padding: 0;
+		overflow: hidden;
+		cursor: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII=), none;
+		user-select: none;
+		
+	}
+	body {
+		padding: 0 0px;
+		height: 100%;
+		width: 100%;
+		background-color: -webkit-linear-gradient(to top, #363644, 50%, #151b29);  /* Chrome 10-25, Safari 5.1-6 */
+		background: linear-gradient(to top, #363644, 50%, #151b29); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+		font-size: 2em;
+		font-family: Helvetica, Arial, sans-serif;
+		display: flex;
+		flex-flow: column;
+		border:0;
+		margin:0;
+		outline:0;
+	}
+
+	button.glyphicon-button:focus,
+	button.glyphicon-button:active:focus,
+	button.glyphicon-button.active:focus,
+	button.glyphicon-button.focus,
+	button.glyphicon-button:active.focus,
+	button.glyphicon-button.active.focus {
+	  outline: none !important;
+	}
+
+	.gobutton {
+		font-size:14px;
+		font-weight: bold;
+		border: none;
+		background: #6aab23;
+		display: flex;
+		border-radius: 0px;
+		border-top-right-radius: 10px;
+		border-bottom-right-radius: 10px;
+		box-shadow: 0 12px 15px -10px #5ca70b, 0 2px 0px #6aab23;
+		color: white;
+		cursor: pointer;
+		box-sizing: border-box;
+		align-items: center;
+		padding: 0 1em;
+	}
+	.details{
+		font-size: 14px;
+		font-weight: bold;
+		border: none;
+		background: #555;
+		display: flex;
+		border-radius: 0px;
+		border-top-right-radius: 10px;
+		border-bottom-right-radius: 10px;
+		box-shadow: 0 12px 15px -10px #444, 0 2px 0px #555;
+		color: white;
+		box-sizing: border-box;
+		align-items: center;
+		padding: 0 1em;
+	}
+	#header{
+		width:100%;
+		background-color: #101520;
+	}
+	.changeText {
+		font-size: 1em;
+		align-self: center;
+		width: 100%;
+		padding: 1em;
+		font-weight: bold;
+		background: white;
+		border: 4px solid white;
+		box-shadow: 0px 30px 40px -32px #6aab23, 0 2px 0px #6aab23;
+		border-top-left-radius: 10px;
+		border-bottom-left-radius: 10px;
+		transition: all 0.2s linear;
+		box-sizing: border-box;
+		border-bottom-right-radius: 0;
+		border-top-right-radius: 0;
+	}
+
+	.changeText:focus {
+		outline: none;
+	}
+	select.changetext{
+		padding: .1em;
+	}
+
+	.container{
+		font-size: min(14px, 2vh);
+		align-self:center;
+		max-width: 100%;
+		width: 720px;
+		margin: auto auto;
+	}
+	label {
+		font: white;
+		font-size: 1em;
+		color: white;
+	}
+	input[type='checkbox'] {
+		-webkit-appearance:none;
+		width:30px;
+		height:30px;
+		background:white;
+		border-radius:5px;
+		border:2px solid #555;
+		cursor: pointer;
+	}
+	input[type='checkbox']:checked {
+		background: #1A1;
+	}
+	#audioOutput, #lastUrls {
+		font-size: calc(16px + 0.3vw);
+		width: 730px;
+		height: 100%;
+		flex: 20;
+		border-radius: 10px;
+		padding: 1em;
+		background: #eaeaea;
+		cursor:pointer;
+	}
+	label[for="audioOutput"] {
+		font-size: 3em;
+		color: #FE53BB;
+		text-shadow: 0px 0px 30px #fe53bb;
+		padding-right: 10px;
+	}
+	label[for="changeText"] {
+		font-size: 3em;
+		color: #00F6FF;
+		text-shadow: 0px 0px 30px #00f6ff;
+		padding-top: 5px;
+		padding-right: 10px;
+	}
+
+	label[for="lastUrls"] {
+	font-size: 3em;
+		color: #1a1;
+		text-shadow: 0px 0px 30px #1a1;
+		padding-right: 10px;
+		cursor: pointer;
+	}
+
+	div#audioOutputContainer, #history {
+		display: flex;
+		flex-direction: row;
+		flex-wrap: nowrap;
+		justify-content: center;
+		margin: 4em;
+	}
+		
+	@media only screen and (max-width: 1030px) {
+		body{
+			zoom: 0.9; 
+			-moz-transform: scale(0.9); 
+			-moz-transform-origin: 0 0;
+		}
+	}
+
+	#messageDiv {
+		font-size: .7em;
+		color: #DDD;
+		transition: all 0.5s linear;
+		font-style: italic;
+		opacity: 0;
+		text-align: center;
+		margin: 10px 0;
+	}
+
+	div.urlInput {
+		padding: 0 0 4vh 0;
+	}
+	
+	
+	@media only screen and (max-height: 839px) {
+		body{
+			zoom: 0.74; 
+			-moz-transform: scale(0.74); 
+			-moz-transform-origin: 0 0;
+			
+		}
+	}
+	
+	@media only screen and (max-width: 940px) {
+		body{
+			zoom: 0.74; 
+			-moz-transform: scale(0.74); 
+			-moz-transform-origin: 0 0;
+			
+		}
+		.container{
+			max-width:99%;
+		}
+		div.urlInput {
+		}
+		div#audioOutputContainer, #history {
+			margin: 2em;
+		}
+	}
+	@media only screen and (max-width: 840px) {
+		body{
+			zoom: 0.64; 
+			-moz-transform: scale(0.64); 
+			-moz-transform-origin: 0 0;
+			
+		}
+		
+	}
+	
+	@media only screen and (max-height: 639px) {
+		div.urlInput {
+		}
+		div#audioOutputContainer, #history {
+			margin: 2em;
+		}
+	}
+	
+	@media only screen and (max-width: 767px) {
+		
+		div.urlInput {
+		}
+		div#audioOutputContainer, #history {
+			margin:  2em 1em;
+		}
+	}
+	
+	
+	@media only screen and (max-height: 380px) {
+		div.urlInput {
+		}
+		div#audioOutputContainer, #history {
+			margin: 1em;
+		}
+	}
+	
+	
+
+	label[for="audioOutput"], label[for="lastUrls"] {
+		font-size: 3em;
+	}
+
+	#warning4mac, #electronVersion {
+		background: #8500f7;
+		box-shadow: 0px 0px 50px 10px #8500f7ab, inset 0px 0px 10px 2px #8d08ffba;
+		border: 2px solid #8500f7;
+		border-radius: 10px;
+		width: 90%;
+		padding:1em;
+		margin:0 auto;
+		color:white;
+		font-size:1.3em;
+		margin-bottom: 20px;
+	}
+
+	#warning4mac a, #electronVersion a {
+		color:white;
+	 }
+
+	 ul#lastUrls {
+		list-style: none;
+		background: #101520;
+		color: white;
+		padding: 1em;
+	}
+
+	ul#lastUrls li {
+		padding: 5px 0px;
+	}
+	ul#lastUrls li:nth-child(even) {
+		background-color: #182031;
+	}
+
+	.inputCombo {
+		display: flex;
+		flex-direction: row;
+		flex-wrap: nowrap;
+		flex-grow: 1;
+	}
+	#version{
+		margin: 0 auto;
+		font-size: 30%;
+		display: inline-block;
+		color: #000A;
+	}
+	h3 {
+		color: #b0e3ff;
+	}
+	.hidden{
+		display:none;
+		opacity:0;
+		visibility:none;
+		width:0;
+		height:0
+	}
+	
+
+	</style>
+</head>
+<body>
+	<div id="header" style="-webkit-app-region: drag; color:#6f6f6f;font-size:20px; line-height: 20px; padding: 5px 10px; letter-spacing: 3; font-weight: bold;">WHIP / WHEP simple sample setup</div>
+	
+		<div class="container">
+				<div id="urlInput1" class="urlInput" title="Put the link you want to load here">
+					
+					<h3>Publish a video from VDO.Ninja to a WHIP ingestion end-point</h3>
+					
+					<div  class="inputCombo" id="inputCombo1">
+						<label for="changeText">
+							<i class="las la-upload"></i>
+						</label>
+						<input type="text" id="changeText1" class="inputfield changeText" placeholder="WHIP Publishing URL" />
+						<button  onclick="gohere1();" class="gobutton" id="gobutton1">GO</button>
+					</div>
+					<div >
+						<div class="inputCombo" style="margin: 10px 0px 10px 10px;">
+							<input type="password" id="changeText1a" class="inputfield changeText" placeholder="🗝️ Authentication Bearer Token (optional)" />
+							<div class="details">⚙️</div>
+						</div>
+						
+						<div class="inputCombo" id="advanced" style="margin: 10px 0px 10px 10px;">
+							<select style="border-radius:10px;margin-right:5px;width:unset!important;" class="changeText" id="whipoutaudiobitrate"  title="Which audio bitrate target would you prefer?" >
+								<option value="0" selected>🎙️Default Audio Bitrate</option>
+								<option value="32">🎙️32-kbps</option>
+								<option value="64">🎙️64-kbps</option>
+								<option value="128">🎙️128-kbps</option>
+								<option value="256">🎙️256-kbps</option>
+							</select >
+							<select style="border-radius:10px;margin-right:5px;width:unset!important;" class="changeText" id="vbrcbr"  title="Which audio bitrate target would you prefer?" >
+								<option value="cbr" selected>🎙️CBR</option>
+								<option value="vbr">🎙️VBR</option>
+							</select >
+							<select style="border-radius:10px;margin-right:5px;width:unset!important;" class="changeText" id="denoise"  title="Which audio bitrate target would you prefer?" >
+								<option value="1" selected>🎙️Denoise On</option>
+								<option value="0">🎙️Denoise Off</option>
+							</select >
+							<select style="border-radius:10px;margin-right:5px;width:unset!important;" class="changeText" id="autogain"  title="Which audio bitrate target would you prefer?" >
+								<option value="1" selected>🎙️Auto Gain On</option>
+								<option value="0">🎙️Auto Gain Off</option>
+							</select >
+							<select style="border-radius:10px;margin-right:5px;width:unset!important;" class="changeText" id="stereo"  title="Which audio bitrate target would you prefer?" >
+								<option value="1" selected>🎙️Stereo</option>
+								<option value="0">🎙️Mono</option>
+							</select >
+						</div>
+						<div class="inputCombo" id="advanced2" style="margin: 10px 0px 10px 10px;">
+							<select style="border-radius:10px;margin-right:5px;width:unset!important;" class="changeText" id="bitrateGroupFlag" title="Which video bitrate target would you prefer?" >
+								<option value="0" selected>🎦Default Video Bitrate</option>
+								<option value="500">🎦500-kbps</option>
+								<option value="2500">🎦2500-kbps</option>
+								<option value="6000">🎦6000-kbps</option>
+								<option value="20000">🎦20000-kbps</option>
+							</select >
+							<select style="border-radius:10px;margin-right:5px;width:unset!important;" class="changeText"  id="codecGroupFlag"  title="Which video codec would you prefer to be used if available?" >
+								<option value="default" selected>🎦OpenH264</option>
+								<option value="vp9">🎦VP9</option>
+								<option value="h264">🎦H264</option>
+								<option value="vp8">🎦VP8</option>
+								<option value="av1">🎦AV1</option>
+							</select >
+							
+						</div>
+						
+						
+					</div>	
+				</div>
+				
+				<div id="urlInput1a" class="urlInput" title="Put the link you want to load here">
+					
+					<h3>Publish a video from VDO.Ninja to your Twitch channel</h3>
+					
+					<div  class="inputCombo" id="inputCombo1t">
+						<label for="changeText">
+							<i class="las la-upload"></i>
+						</label>
+						<input type="password" id="changeText1t" class="inputfield changeText" placeholder="Enter your Twitch stream token here" />
+						<button  onclick="gohere1t();" class="gobutton" id="gobutton1t">GO</button>
+					</div>
+				</div>
+				
+				<div id="urlInput2"  class="urlInput"title="Put the WHIP token you want to listen for">
+					
+					<h3>Setup VDO.Ninja to be a WHIP-ingestion end-point (ie: OBS -> VDO)</h3>
+					
+					<div class="inputCombo" id="inputCombo2">
+						<label for="changeText">
+						<i class="las la-play"></i>
+					</label>
+						<input type="text" id="changeText2" class="inputfield changeText" placeholder="Ingest WHIP token" />
+						<button  onclick="gohere2();"  class="gobutton" id="gobutton2">GO</button>
+					</div>
+					<h3 style="text-align: center;color:#ccc;"><i>The WHIP endpoint for VDO.Ninja is <b>https://whip.vdo.ninja</b></i></h3>
+				</div>
+				
+				<div id="urlInput3"  class="urlInput"title="Put the link you want to play here">
+					
+					<h3>Play a remote video stream available via WHEP</h3>
+					
+					<div  class="inputCombo" id="inputCombo3">
+						<label for="changeText">
+						<i class="las la-play"></i>
+					</label>
+						<input type="text" id="changeText3" class="inputfield changeText"  placeholder="WHEP Play URL" />
+						<button  onclick="gohere3();"  class="gobutton" id="gobutton3">GO</button>
+					</div>
+				</div>
+				
+				<div id="urlInput4" class="urlInput" title="Put the link you want to load here">
+					
+					<h3>Host a stream as a WHEP source  🚧</h3>
+					
+					<div  class="inputCombo" id="inputCombo4">
+					<label for="changeText">
+						<i class="las la-broadcast-tower"></i>
+					</label>
+						<input type="text" id="changeText4" class="inputfield changeText"  placeholder="WHEP Enabled Publishing Link" />
+						<button  onclick="gohere4();"  class="gobutton" id="gobutton4">GO</button>
+					</div>
+				</div>
+				
+				<div id="history" title="History of past links used. You can clear this history using the button to the left">
+					<h3 style='cursor:pointer;' onclick="resetHistory()">Clear History</h3>
+					<label for="lastUrls" onclick="resetHistory()">
+						<i class="las la-history"></i>
+					</label>
+				</div>
+		</div>
+<script>
+
+var domain = "./";
+
+document.querySelector("#changeText1").value = localStorage.getItem('changeText1') || "";
+document.querySelector("#changeText1t").value = localStorage.getItem('changeText1t') || "";
+document.querySelector("#changeText1a").value = localStorage.getItem('changeText1a') || "";
+document.querySelector("#changeText2").value = localStorage.getItem('changeText2') || "";
+document.querySelector("#changeText3").value = localStorage.getItem('changeText3') || "";
+
+function gohere1(){
+	if (document.getElementById('changeText1').value){
+		localStorage.setItem('changeText1', document.getElementById('changeText1').value);
+		localStorage.setItem('changeText1a', document.getElementById('changeText1a').value || "");
+		
+		localStorage.setItem('bitrateGroupFlag', document.getElementById('bitrateGroupFlag').value);
+		localStorage.setItem('codecGroupFlag', document.getElementById('codecGroupFlag').value);
+		
+		localStorage.setItem('whipoutaudiobitrate', document.getElementById('whipoutaudiobitrate').value);
+		localStorage.setItem('vbrcbr', document.getElementById('vbrcbr').value);
+		localStorage.setItem('autogain', document.getElementById('autogain').value);
+		localStorage.setItem('stereo', document.getElementById('stereo').value);
+		localStorage.setItem('denoise', document.getElementById('denoise').value);
+		
+		
+		var whipoutaudiobitrate = "";
+		if (parseInt(document.getElementById('whipoutaudiobitrate').value)){
+			whipoutaudiobitrate = "&whipoutaudiobitrate="+document.getElementById('whipoutaudiobitrate').value;
+		}
+		
+		var vbrcbr = "&"+document.getElementById('vbrcbr').value;
+		var autogain = "&autogain="+document.getElementById('autogain').value;
+		var stereo = "&stereo="+document.getElementById('stereo').value;
+		var denoise = "&denoise="+document.getElementById('denoise').value;
+		
+		
+		var bitrate = "";
+		if (parseInt(document.getElementById('bitrateGroupFlag').value)){
+			bitrate = "&whipoutvideobitrate="+document.getElementById('bitrateGroupFlag').value;
+		}
+		var codec = "";
+		if (document.getElementById('codecGroupFlag').value!=="default"){
+			codec = "&whipoutcodec="+document.getElementById('codecGroupFlag').value;
+		}
+		
+		if (document.getElementById('changeText1a').value){
+			window.location = domain + "?push&whippush=" + encodeURIComponent(document.getElementById('changeText1').value) + "&whippushtoken=" + document.getElementById('changeText1a').value + codec + bitrate+whipoutaudiobitrate+vbrcbr+autogain+stereo+denoise;
+		} else {
+			window.location = domain + "?push&whippush=" + encodeURIComponent(document.getElementById('changeText1').value) + codec + bitrate+whipoutaudiobitrate+vbrcbr+autogain+stereo+denoise;
+		}
+	}
+}
+
+function gohere1t(){
+	if (document.getElementById('changeText1t').value){
+		localStorage.setItem('changeText1t', document.getElementById('changeText1t').value);
+		window.location = domain + "?whipoutvideobitrate=5800&stereo&push&whippush=https%3A%2F%2Fg.webrtc.live-video.net%3A4443%2Fv2%2Foffer&whippushtoken="+ document.getElementById('changeText1t').value;
+	}
+}
+
+function gohere2(){
+	if (document.getElementById('changeText2').value){
+		localStorage.setItem('changeText2', document.getElementById('changeText2').value);
+		window.location = domain + "?hidemenu&whip=" + document.getElementById('changeText2').value;
+	}
+}
+
+function gohere3(){
+	if (document.getElementById('changeText3').value){
+		localStorage.setItem('changeText3', document.getElementById('changeText3').value);
+		window.location = domain + "?&hidemenu&whepplay=" + encodeURIComponent(document.getElementById('changeText3').value);
+	}
+}
+
+function gohere4(){
+	// nothing yet
+}
+
+function resetHistory(){
+	localStorage.clear();
+	document.querySelector("#changeText1").value = "";
+	document.querySelector("#changeText1a").value = "";
+	document.querySelector("#changeText2").value = "";
+	document.querySelector("#changeText3").value = "";
+	document.querySelector("#changeText1t").value = "";
+}
+
+(function (w) {
+    w.URLSearchParams = w.URLSearchParams || function (searchString) {
+        var self = this;
+        self.searchString = searchString;
+        self.get = function (name) {
+            var results = new RegExp('[\?&]' + name + '=([^&#]*)').exec(self.searchString);
+            if (results == null) {
+                return null;
+            }
+            else {
+                return decodeURI(results[1]) || 0;
+            }
+        };
+    }
+
+})(window)
+
+var urlParams = new URLSearchParams(window.location.search);
+
+function enterPressed(event, callback){
+  if (event.keyCode === 13){ // Number 13 is the "Enter" key on the keyboard
+    event.preventDefault(); // Cancel the default action, if needed
+    callback();
+  }
+}
+
+
+var isMobile = false;
+if( /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)){ // does not detect iPad Pros.
+	isMobile=true; // if iOS, default to H264?  meh.  let's not.
+}
+
+
+</script>
+</body>
+</html>

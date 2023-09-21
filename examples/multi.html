@@ -20,15 +20,11 @@ iframe {
 	display:block;
 }
 
-
-
 </style>
 </head>
 <body>
 
 <script>
-
-
 
 (function(w) {
 	w.URLSearchParams = w.URLSearchParams || function(searchString) {
@@ -57,20 +53,39 @@ if (urlEdited !== window.location.search){
 }
 var urlParams = new URLSearchParams(urlEdited);
 var path = window.location.host+window.location.pathname.split("/").slice(0,-1).join("/");
+
+var password = urlParams.get("passwords") || urlParams.get("password") || urlParams.get("pw") || urlParams.get("p") || null;
+
+
+
 var rooms = "";
-if (urlParams.has("rooms")){
-	rooms = urlParams.get("rooms");
+if (urlParams.has("rooms") || urlParams.has("room") || urlParams.has("r")){
+	rooms = urlParams.get("rooms") || urlParams.get("room") || urlParams.get("r");
 	rooms = rooms.split(",");
 	
-	var password = prompt("Enter the password for the rooms; leave blank for none");
+	if (password == null){
+		password = prompt("Enter the password for the rooms; leave blank for none");
+	}
 	if (password){
-		password = "&password="+password;
+		password = password.split(",");
 	} else {
 		password = "";
 	}
-	rooms.forEach(room=>{
-		loadIframes("https://"+path+"/../?clean&hidecodirectors&director="+room+password);
-	});
+	for (var i = 0;i<rooms.length;i++){
+		var pass = "";
+		if (password && (password.length>i)){
+			pass = decodeURIComponent(password[i]);
+			if (pass){
+				pass = "&password="+pass;
+			}
+		} else if (password[0]){
+			pass = decodeURIComponent(password[0]);
+			if (pass){
+				pass = "&password="+pass;
+			}
+		}
+		loadIframes("https://"+path+"/../?clean&hidecodirectors&director="+rooms[i]+pass);
+	}
 } else {
 	document.write("To use, comma separate the room names. ie: https://vdo.ninja/examples/multi?rooms=xxxx,yyy,ccc");
 }
@@ -78,7 +93,16 @@ if (urlParams.has("rooms")){
 function loadIframes(url){ 
 	var iframe = document.createElement("iframe");
 	iframe.allow = "autoplay;camera;microphone;fullscreen;picture-in-picture;";
-	iframe.src = url;
+	
+	var params = window.location.search || "";
+		
+	if (params.startsWith("?")){
+		params = params.slice(1);
+		iframe.src = url + "&" + params
+	} else {
+		iframe.src = url + params
+	}
+	
 	document.body.appendChild(iframe);
 	
 }

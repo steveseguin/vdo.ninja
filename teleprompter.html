@@ -1,0 +1,773 @@
+<html>
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+	<title>Teleprompter - VDO.Ninja</title>
+	<style>
+	html {
+		border:0;
+		margin:0;
+		outline:0;
+		overflow: hidden;
+	}
+
+	video {
+
+		margin: 0;
+		padding: 0;
+		overflow: hidden;
+		cursor: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII=), none;
+		user-select: none;
+		
+	}
+	body {
+		padding:0;
+		margin:0;
+		background-color:#003;
+		width:100%;
+		height:100%;
+		background-color: -webkit-linear-gradient(to top, #363644, 50%, #151b29);  /* Chrome 10-25, Safari 5.1-6 */
+		background: linear-gradient(to top, #363644, 50%, #151b29); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+		font-size: 2em;
+		font-family: Helvetica, Arial, sans-serif;
+		display: flex;
+		flex-flow: column;
+		border:0;
+		outline:0;
+	}
+
+	button.glyphicon-button:focus,
+	button.glyphicon-button:active:focus,
+	button.glyphicon-button.active:focus,
+	button.glyphicon-button.focus,
+	button.glyphicon-button:active.focus,
+	button.glyphicon-button.active.focus {
+	  outline: none !important;
+	}
+
+	iframe {
+		border:0;
+		margin:0;
+		padding:0;
+		display:block;
+		width: 100vw;
+		height: calc(100vh - 100px);
+		transform: rotate(0deg);
+		transform-origin: 0 0;
+		left: 0;
+		position: absolute;
+		top: 100px;
+	}
+
+	.gobutton {
+		font-size:min(30px, 2vw);
+		font-weight: bold;
+		border: none;
+		background: #6aab23;
+		display: flex;
+		border-radius: 0px;
+		border-top-right-radius: 10px;
+		border-bottom-right-radius: 10px;
+		box-shadow: 0 12px 15px -10px #5ca70b, 0 2px 0px #6aab23;
+		color: white;
+		cursor: pointer;
+		box-sizing: border-box;
+		align-items: center;
+		padding: 0 min(1vw, 10px);
+		margin: min(1vw, 10px) 0 ;
+	}
+	.details{
+		font-size: 14px;
+		font-weight: bold;
+		border: none;
+		background: #555;
+		display: flex;
+		border-radius: 0px;
+		border-top-right-radius: 10px;
+		border-bottom-right-radius: 10px;
+		box-shadow: 0 12px 15px -10px #444, 0 2px 0px #555;
+		color: white;
+		box-sizing: border-box;
+		align-items: center;
+		padding: 0 min(1vw, 10px);
+	}
+	#header{
+		width:100%;
+		background-color: #101520;
+	}
+	.changeText {
+		font-size: max(1vw, 10px)
+		align-self: center;
+		width: 100%;
+		padding: min(1vw, 10px);
+		font-weight: bold;
+		background: white;
+		border: 4px solid white;
+		box-shadow: 0px 30px 40px -32px #6aab23, 0 2px 0px #6aab23;
+		border-top-left-radius: 10px;
+		border-bottom-left-radius: 10px;
+		transition: all 0.2s linear;
+		box-sizing: border-box;
+		border-bottom-right-radius: 0;
+		border-top-right-radius: 0;
+		margin: min(1vw, 10px) 0;
+	}
+
+	.changeText:focus {
+		outline: none;
+	}
+	select.changetext{
+		padding: .1vw;
+	}
+
+	.container{
+		width:100%;
+		top:0;
+		position:absolute;
+		left:0;
+		margin: auto auto;
+		height: 70px;
+	}
+	label {
+		font: white;
+		font-size: 1vw;
+		color: white;
+	}
+	input[type='checkbox'] {
+		-webkit-appearance:none;
+		width:30px;
+		height:30px;
+		background:white;
+		border-radius:5px;
+		border:2px solid #555;
+		cursor: pointer;
+	}
+	input[type='checkbox']:checked {
+		background: #1A1;
+	}
+	#audioOutput, #lastUrls {
+		font-size: calc(16px + 0.3vw);
+		width: 730px;
+		height: 100%;
+		flex: 20;
+		border-radius: 10px;
+		padding: min(1vw, 10px);
+		background: #eaeaea;
+		cursor:pointer;
+	}
+	label[for="audioOutput"] {
+		font-size: min(30px, 2vw);
+		color: #FE53BB;
+		text-shadow: 0px 0px 30px #fe53bb;
+		padding-right: 10px;
+	}
+	label[for="changeText"] {
+		font-size: min(30px, 2.5vw);
+		color: #00F6FF;
+		text-shadow: 0px 0px 30px #00f6ff;
+		padding-right: 10px;
+		margin:auto auto;
+	}
+
+	label[for="lastUrls"] {
+	font-size: min(min(30px, 2vw), 2vw);
+		color: #1a1;
+		text-shadow: 0px 0px 30px #1a1;
+		padding-right: 10px;
+		cursor: pointer;
+	}
+
+	div#audioOutputContainer, #history {
+		display: flex;
+		flex-direction: row;
+		flex-wrap: nowrap;
+		justify-content: center;
+		margin: 4em;
+	}
+		
+	#messageDiv {
+		font-size: .7em;
+		color: #DDD;
+		transition: all 0.5s linear;
+		font-style: italic;
+		opacity: 0;
+		text-align: center;
+		margin: 10px 0;
+	}
+
+	div.urlInput {
+		padding: 0 0 4vh 0;
+	}
+	
+	
+
+	label[for="audioOutput"], label[for="lastUrls"] {
+		font-size: min(30px, 2vw);
+	}
+
+	#warning4mac, #electronVersion {
+		background: #8500f7;
+		box-shadow: 0px 0px 50px 10px #8500f7ab, inset 0px 0px 10px 2px #8d08ffba;
+		border: 2px solid #8500f7;
+		border-radius: 10px;
+		width: 90%;
+		padding:min(1vw, 10px);
+		margin:0 auto;
+		color:white;
+		font-size: 1.40px;
+		margin-bottom: 20px;
+	}
+
+	#warning4mac a, #electronVersion a {
+		color:white;
+	 }
+
+	 ul#lastUrls {
+		list-style: none;
+		background: #101520;
+		color: white;
+		padding: min(1vw, 10px);
+	}
+
+	ul#lastUrls li {
+		padding: 5px 0px;
+	}
+	ul#lastUrls li:nth-child(even) {
+		background-color: #182031;
+	}
+
+	.inputCombo {
+		display: flex;
+		flex-direction: row;
+		flex-wrap: nowrap;
+		flex-grow: 1;
+	}
+	#version{
+		margin: 0 auto;
+		font-size: 30%;
+		display: inline-block;
+		color: #000A;
+	}
+	h3 {
+		color: #b0e3ff;
+	}
+	.hidden{
+		display:none;
+		opacity:0;
+		visibility:none;
+		width:0;
+		height:0
+	}
+	.hidebutton{
+		font-size:min(30px, 2vw);
+		font-weight: bold;
+		border: none;
+		background: #ab236a;
+		display: flex;
+		border-radius: 10px;
+		box-shadow: 0 12px 15px -10px #a70b5c, 0 2px 0px #ab236a;
+		color: white;
+		cursor: pointer;
+		box-sizing: border-box;
+		align-items: center;
+		padding: 0 min(1vw, 10px);
+		margin: min(1vw, 5px) 0;
+	}
+	
+	
+
+	</style>
+</head>
+<body>
+	<div class="container" id="container">
+			<div style="display:inline-block;position:absolute;width:max(calc(100vw - 178px), 50%);">
+				<div  class="inputCombo" id="inputCombo1">
+					<label for="changeText">
+						🔗
+					</label>
+					<input type="text" id="iframeURL" onchange="updatedURL();" class="inputfield changeText" placeholder="Website URL to transform. ie: https://vdo.ninja" />
+					<input type="text" id="iframeURL_twitch" onchange="updatedURL();" class="hidden inputfield changeText" placeholder="Twitch Username; their chat will load" />
+					<input type="text" id="iframeURL_youtube" onchange="updatedURL();" class="hidden inputfield changeText" placeholder="Youtube Username; will try to load chat" />
+					<button  onclick="gohere1();" class="gobutton" id="gobutton1">Load</button>
+					<select style="border-radius:10px;margin-left:10px;margin-top: 13px;width:unset!important;" onchange="updateType();" class="changeText"  id="sourceType"  title="Which video codec would you prefer to be used if available?" >
+						<option value="url" selected>Website URL</option>
+						<option value="twitch">Twitch</option>
+					</select >
+					
+					<select style="border-radius:10px;margin-left:5px;margin-top: 13px;width:unset!important;" onchange="rotatePage();" class="changeText" id="rotation" title="Which video bitrate target would you prefer?" >
+						<option value="0" selected>No Rotation</option>
+						<option value="90">↩️90° CW</option>
+						<option value="180">↩️180° CW</option>
+						<option value="270">↩️270° CW</option>
+					</select >
+					<select style="border-radius:10px;margin-left:5px;margin-top: 13px;width:unset!important;" onchange="rotatePage();" class="changeText"  id="transform"  title="Which video codec would you prefer to be used if available?" >
+						<option value="0" selected>No Transform</option>
+						<option value="1">🪞Mirror</option>
+						<option value="2">🙃Flip</option>
+					</select >
+				</div>
+			</div>
+			
+			<div style="display:inline-block;position:absolute;right:0;">	
+				<div class="inputCombo" id="advanced2" style="margin: 10px 0px 0px 10px;">
+					<button  onclick="hidebar();" class="hidebutton">Hide Menu</button>
+					</div>
+				</div>
+					
+		</div>
+<script>
+
+
+var domain = "./";
+var urlParams = new URLSearchParams(window.location.search);
+var iframe = document.createElement("iframe");
+
+
+function changeParam(url, paramName, paramValue) {
+	paramName = paramName.replace("?", "");
+	var qind = url.indexOf('?');
+	url = url.replace("?", "&");
+	var params = url.substring(qind + 1).split('&');
+	var query = '';
+	var match = false;
+	for (var i = 0; i < params.length; i++) {
+		var tokens = params[i].split('=');
+		var name = tokens[0];
+		var value = "";
+		if (tokens.length > 1 && tokens[1] !== '') {
+			value = tokens[1];
+		}
+
+		if (name == paramName) {
+			if (match) {
+				continue;
+			} // already matched the first time.
+			match = true;
+			value = paramValue;
+		}
+		if (value !== "") {
+			value = '=' + value;
+		}
+
+		if (query == '') {
+			query = "?" + name + value;
+		} else {
+			query = query + '&' + name + value;
+		}
+	}
+	return url.substring(0, qind) + query;
+}
+function updateURL(param, force = false, cleanUrl = false) {
+	
+	param = param.replace("?", "");
+	var para = param.split('=');
+	if (cleanUrl) {
+		if (history.pushState) {
+			var href = new URL(cleanUrl);
+			if (para.length == 1) {
+				href = changeParam(cleanUrl, para[0], "");
+			} else {
+				href = changeParam(cleanUrl, para[0], para[1]);
+			}
+			window.history.pushState({path: href.toString()}, '', href.toString());
+		}
+	} else if (!(urlParams.has(para[0]))) { // don't need to replace as it doesn't exist.
+		if (history.pushState) {
+			var href = window.location.href;
+			href = href.replace("??", "?");
+			var arr = href.split('?');
+			var newurl;
+			if (arr.length > 1 && arr[1] !== '') {
+				newurl = href + '&' + param;
+			} else {
+				newurl = href + '?' + param;
+			}
+
+			window.history.pushState({path: newurl.toString()}, '', newurl.toString());
+		}
+	} else if (force) {
+		if (history.pushState) {
+			var href = new URL(window.location.href);
+			if (para.length == 1) {
+				href = changeParam(window.location.href, para[0], "");
+			} else {
+				href = changeParam(window.location.href, para[0], para[1]);
+			}
+			window.history.pushState({path: href.toString()}, '', href.toString());
+		}
+	}
+	urlParams = new URLSearchParams(window.location.search);
+}
+
+if (urlParams.has("rotate")){
+	document.querySelector("#rotation").value = urlParams.get("rotate") || 0;
+} else if (localStorage.getItem('rotation')){
+	document.querySelector("#rotation").value = localStorage.getItem('rotation') || 0;
+}
+
+
+
+if (urlParams.has("flip")){
+	document.querySelector("#transform").value = urlParams.get("flip") || 0;
+} else if (localStorage.getItem('transform')){
+	document.querySelector("#transform").value = localStorage.getItem('transform') || 0;
+} 
+
+
+if (localStorage.getItem('sourceType')){
+	document.querySelector("#sourceType").value = localStorage.getItem('sourceType') || "url";
+	updateType();
+}
+
+if (localStorage.getItem('iframeURL') || urlParams.has("link")){
+	try {
+		document.querySelector("#iframeURL").value = decodeURIComponent(urlParams.get("link") || "") || localStorage.getItem('iframeURL') || "";
+	} catch(e){
+		document.querySelector("#iframeURL").value = urlParams.get("link") || localStorage.getItem('iframeURL') || "";
+	}
+}
+if (localStorage.getItem('iframeURL_twitch') || urlParams.has("twitch")){
+	try {
+		document.querySelector("#iframeURL_twitch").value = decodeURIComponent(urlParams.get("twitch") || "") || localStorage.getItem('iframeURL_twitch') || "";
+	}  catch(e){
+		document.querySelector("#iframeURL_twitch").value = urlParams.get("twitch") || localStorage.getItem('iframeURL_twitch') || "";
+	}
+}
+if (localStorage.getItem('iframeURL_youtube') || urlParams.has("youtube")){
+	try {
+		document.querySelector("#iframeURL").value = decodeURIComponent(urlParams.get("youtube") || "") || localStorage.getItem('iframeURL_youtube') || "";
+	} catch(e){
+		document.querySelector("#iframeURL").value = urlParams.get("youtube") || localStorage.getItem('iframeURL_youtube') || "";
+	}
+}
+
+var menuOffset = "70px";
+
+if ( urlParams.has("hidemenu") || urlParams.has("hide") ||  urlParams.has("hidebar")){
+	container.classList.add("hidden");
+	menuOffset = "0px";
+}
+
+
+loadPage();
+
+
+
+function hidebar(){
+	// updateURL("hidemenu");
+	container.classList.add("hidden");
+	menuOffset = "0px";
+	loadPage();
+}
+
+function gohere1(){
+	localStorage.setItem('iframeURL', document.getElementById('iframeURL').value);
+	localStorage.setItem('iframeURL_twitch', document.getElementById('iframeURL_twitch').value);
+	localStorage.setItem('iframeURL_youtube', document.getElementById('iframeURL_youtube').value);
+	
+	localStorage.setItem('rotation', document.getElementById('rotation').value);
+	localStorage.setItem('transform', document.getElementById('transform').value);
+	localStorage.setItem('sourceType', document.getElementById('sourceType').value);
+	loadPage()
+}
+
+function updateType(){
+	
+	localStorage.setItem('sourceType', document.getElementById('sourceType').value);
+	
+	document.getElementById('iframeURL').classList.add('hidden');
+	document.getElementById('iframeURL_twitch').classList.add('hidden');
+	document.getElementById('iframeURL_youtube').classList.add('hidden');
+	
+	if ( document.getElementById('sourceType').value=="url"){
+		document.getElementById('iframeURL').classList.remove('hidden');
+	} else if ( document.getElementById('sourceType').value=="twitch"){
+		document.getElementById('iframeURL_twitch').classList.remove('hidden');
+	} else if ( document.getElementById('sourceType').value=="youtube"){
+		document.getElementById('iframeURL_youtube').classList.remove('hidden');
+	}
+}
+function updatedURL(){
+	if ( document.getElementById('iframeURL').value==""){
+		localStorage.setItem('iframeURL', document.getElementById('iframeURL').value);
+	}
+	if ( document.getElementById('iframeURL_twitch').value==""){
+		localStorage.setItem('iframeURL_twitch', document.getElementById('iframeURL_twitch').value);
+	}
+	if ( document.getElementById('iframeURL_youtube').value==""){
+		localStorage.setItem('iframeURL_youtube', document.getElementById('iframeURL_youtube').value);
+	}
+}
+function resetHistory(){
+	localStorage.clear();
+	document.querySelector("#iframeURL").value = "";
+	document.querySelector("#rotation").value = "";
+	document.querySelector("#transform").value = "";
+}
+
+(function (w) {
+    w.URLSearchParams = w.URLSearchParams || function (searchString) {
+        var self = this;
+        self.searchString = searchString;
+        self.get = function (name) {
+            var results = new RegExp('[\?&]' + name + '=([^&#]*)').exec(self.searchString);
+            if (results == null) {
+                return null;
+            }
+            else {
+                return decodeURI(results[1]) || 0;
+            }
+        };
+    }
+
+})(window)
+
+function enterPressed(event, callback){
+  if (event.keyCode === 13){ // Number 13 is the "Enter" key on the keyboard
+    event.preventDefault(); // Cancel the default action, if needed
+    callback();
+  }
+}
+
+var isMobile = false;
+if( /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)){ // does not detect iPad Pros.
+	isMobile=true; // if iOS, default to H264?  meh.  let's not.
+}
+
+
+
+async function loadPage(){
+
+
+	var iframeURL = document.getElementById('iframeURL').value;
+	
+	if ( document.getElementById('sourceType').value=="twitch"){
+		iframeURL =  document.getElementById('iframeURL_twitch').value;
+		
+		if (!iframeURL.length){
+			iframe.src = "";
+			return;
+		}
+		
+		iframeURL = "https://www.twitch.tv/popout/"+iframeURL+"/chat?darkpopout&popout=";
+	} else if ( document.getElementById('sourceType').value=="youtube"){
+		iframeURL = document.getElementById('iframeURL_youtube').value;
+		
+		if (!iframeURL.length){
+			iframe.src = "";
+			return;
+		}
+		
+		if (!iframeURL.startsWith("@")){
+			iframeURL = "@"+iframeURL;
+		}
+		try{
+			var response = await fetch("https://www.youtube.com/c/"+iframeURL+"/live");
+			var data = await response.text();
+			let videoID = data.split('{"videoId":"')[1].split('"')[0];
+			console.log(videoID);
+			iframeURL = "https://www.youtube.com/live_chat?is_popout=1&v="+videoID;
+		} catch(e){
+			alert("This Youtube user isn't live or is set to private");
+			return;
+		}
+		
+		
+	}
+	
+	if (!iframeURL.length){
+		iframe.src = "";
+		return;
+	}
+	
+	if (!(iframeURL.startsWith("file:") || iframeURL.startsWith("./") || iframeURL.startsWith("http://") || iframeURL.startsWith("https://"))){
+		iframeURL = "https://"+iframeURL;
+	}
+
+	var domain = (new URL(iframeURL));
+	domain = domain.hostname;
+
+	if (domain == "youtu.be"){
+		iframeURL  = iframeURL.replace("youtu.be/","youtube.com/watch?v=");
+	}
+
+	if ((domain == "youtu.be") || (domain=="www.youtube.com") || (domain=="youtube.com")){
+		var regExp = /^.*((youtu.be\/)|(v\/)|(\/u\/\w\/)|(embed\/)|(watch\?))\??v?=?([^#&?]*).*/;
+		var match = iframeURL.match(regExp);
+		var vidid = (match&&match[7].length==11)? match[7] : false;
+		
+		// https://www.youtube.com/live_chat?v=<your video ID>&embed_domain=<your blog domain>
+		if (iframeURL.includes("/live_chat")){
+			if (!iframeURL.includes("&embed_domain=")){
+				iframeURL += "&embed_domain="+location.hostname;
+			}
+		}
+		
+		if (vidid){
+			//specialResult = {};
+			//specialResult.originalSrc = iframeURL;
+			//specialResult.parsedSrc = "https://www.youtube.com/embed/"+vidid+"?autoplay=1&modestbranding=1&playsinline=1&enablejsapi=1";
+			//specialResult.handler = "youtube";
+			//specialResult.vid = vidid;
+			//iframeURL = specialResult;
+			iframeURL = createYoutubeLink(vidid);
+		} else { // see if there is a playlist link here or not.
+		
+			// https://youtube.com/playlist?list=PLWodc2tCfAH1l_LDvEyxEqFf42hOBKqQM
+			iframeURL  = iframeURL.replace("playlist?list=","embed/videoseries?list=");
+			
+			var regExp = /^.*((youtu.be\/)|(v\/)|(\/u\/\w\/)|(embed\/)|(videoseries\?))\??list?=?([^#&?]*).*/;
+			var match = iframeURL.match(regExp);
+			var plid = (match&&match[7].length==34)? match[7] : false;
+			if (plid){
+				iframeURL = 'https://www.youtube.com/embed/videoseries?list='+plid+"&autoplay=1&modestbranding=1&playsinline=1&enablejsapi=1";
+			}
+			
+		}
+
+	} else if ((domain=="twitch.tv") || (domain=="www.twitch.tv")){
+		if (iframeURL.includes("/embed/")){
+			// skip
+		} else if (iframeURL.includes("twitch.tv/popout/")){
+			// this is a twitch live chat window
+			iframeURL = iframeURL.replace("/popout/","/embed/");
+			iframeURL = iframeURL.replace("?popout=","?parent="+location.hostname);
+			iframeURL = iframeURL.replace("?popout","?parent="+location.hostname);
+			if (!iframeURL.includes("chat?")){
+				iframeURL = iframeURL.replace("&popout=","?parent="+location.hostname);
+				iframeURL = iframeURL.replace("&popout","?parent="+location.hostname);
+			}
+			if (iframeURL.includes("darkpopout=")){
+				iframeURL = iframeURL.replace("?darkpopout=","?darkpopout=&parent="+location.hostname);
+			} else if (!iframeURL.includes("?parent=")){
+				iframeURL = iframeURL.replace("?darkpopout","?darkpopout&parent="+location.hostname);
+			}
+		} else {
+			var vidid = iframeURL.split('/').pop().split('#')[0].split('?')[0];
+			if (vidid){
+				iframeURL = "https://player.twitch.tv/?channel="+vidid+"&parent="+location.hostname;
+			} 
+		}
+	} else if ((domain=="www.vimeo.com") || (domain=="vimeo.com")){
+		iframeURL = iframeURL.replace("//vimeo.com/","//player.vimeo.com/video/");
+		iframeURL = iframeURL.replace("//www.vimeo.com/","//player.vimeo.com/video/");
+	} else if (domain.includes("tiktok.com")){
+		var split = iframeURL.split("/video/");
+		if (split.length>1){
+			split = split[1].split("/")[0].split("?")[0].split("#")[0];
+			iframeURL = "https://www.tiktok.com/embed/v2/" + split;
+		}
+	}
+
+	var urlEdited = window.location.search.replace(/\?\?/g, "?");
+	urlEdited = urlEdited.replace(/\?/g, "&");
+	urlEdited = urlEdited.replace(/\&/, "?");
+	
+	updateURL("link="+ encodeURIComponent(iframeURL), true);
+	
+	iframe.allow = "encrypted-media;sync-xhr;usb;web-share;cross-origin-isolated;accelerometer;midi;geolocation;autoplay;camera;microphone;fullscreen;picture-in-picture;display-capture;";
+	iframe.src = iframeURL;
+
+	rotatePage();
+
+	// document.body.innerHTML = "";
+	document.body.appendChild(iframe);
+}
+
+
+function rotatePage(){
+
+	var rotate = document.querySelector("#rotation").value || 0;
+	var flip = document.querySelector("#transform").value;
+	
+	updateURL("rotate="+rotate, true);
+	updateURL("flip="+flip, true);
+	
+	localStorage.setItem('iframeURL', document.getElementById('iframeURL').value);
+	localStorage.setItem('rotation', document.getElementById('rotation').value);
+	//localStorage.setItem('backgroundColor', document.getElementById('backgroundColor').value);
+	localStorage.setItem('transform', document.getElementById('transform').value);
+		
+	if (rotate==180){
+		iframe.style.transform = "rotate(180deg)";
+		iframe.style.width = "100vw";
+		iframe.style.height = "calc(100vh - "+menuOffset+")";
+		iframe.style.transformOrigin = "0 0;";
+		iframe.style.position = "rotate(180deg)";
+		iframe.style.left = "100vw";
+		iframe.style.top = "calc(100vh)";
+		
+		if (flip==1){
+			iframe.style.transform += " scaleX(-1)";
+			iframe.style.top = "calc(" + (iframe.style.top) +" + )";
+			iframe.style.left = "calc(" + (iframe.style.left) +" - 100vw)";
+		} else if (flip==2){
+			iframe.style.transform += " scaleY(-1)";
+			iframe.style.top = "calc(" + (iframe.style.top) +" + "+menuOffset+" - 100vh)";
+			iframe.style.left = "calc(" + (iframe.style.left) +" )";
+		}
+		
+	} else if (rotate==270){
+		iframe.style.transform = "rotate(270deg)";
+		iframe.style.left = "0";
+		iframe.style.top = "100vh";
+		iframe.style.transformOrigin = "0 0;";
+		iframe.style.width = "calc(100vh - "+menuOffset+")";
+		iframe.style.height = "100vw";
+		
+		if (flip==1){
+			iframe.style.transform += " scaleX(-1)";
+			iframe.style.top = "calc(" + (iframe.style.top) +" + "+menuOffset+" - 100vh)";
+			iframe.style.left = "calc(" + (iframe.style.left) +" )";
+		} else if (flip==2){
+			iframe.style.transform += " scaleY(-1)";
+			iframe.style.top = "calc(" + (iframe.style.top) +"  )";
+			iframe.style.left = "calc(" + (iframe.style.left) +" + 100vw)";
+		} 
+		
+	} else if (rotate==90){
+		iframe.style.transform = "rotate(90deg)";
+		iframe.style.width = "calc(100vh - "+menuOffset+")";
+		iframe.style.height = "100vw";
+		iframe.style.transformOrigin = "0 0;";
+		iframe.style.left = "calc(100vw";
+		iframe.style.top = menuOffset;
+		
+		if (flip==1){
+			iframe.style.transform += " scaleX(-1)";
+			iframe.style.top = "calc(" + (iframe.style.top) +" - "+menuOffset+" + 100vh)";
+			iframe.style.left = "calc(" + (iframe.style.left) +" )";
+		} else if (flip==2){
+			iframe.style.transform += " scaleY(-1)";
+			iframe.style.top = "calc(" + (iframe.style.top) +" )";
+			iframe.style.left = "calc(" + (iframe.style.left) +" - 100vw)";
+		} 
+		
+	} else {
+		iframe.style.transform = "rotate(0deg)";
+		iframe.style.width = "100vw";
+		iframe.style.height = "calc(100vh - "+menuOffset+")";
+		iframe.style.transformOrigin = "0 0;";
+		iframe.style.position = "rotate(0deg)";
+		iframe.style.left = "0";
+		iframe.style.top = menuOffset;
+		
+		if (flip==1){
+			iframe.style.transform += " scaleX(-1)";
+			iframe.style.top = "calc(" + (iframe.style.top) +" )";
+			iframe.style.left = "calc(" + (iframe.style.left) +" + 100vw)";
+		} else if (flip==2){
+			iframe.style.transform += " scaleY(-1)";
+			iframe.style.top = "calc( 100vh)";
+			
+			//iframe.style.left = "calc(" + (iframe.style.left) +" + 100vw)";
+		}
+		
+	}
+	
+	
+}
+
+</script>
+</body>
+</html>

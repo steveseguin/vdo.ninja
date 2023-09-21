@@ -209,11 +209,11 @@
 	</style>
 	<script>
 		
-			function getChromeVersion() {
+			function getChromiumVersion() {
 				var raw = navigator.userAgent.match(/Chrom(e|ium)\/([0-9]+)\./);
 				return raw ? parseInt(raw[2], 10) : false;
 			}
-			if (!getChromeVersion()){
+			if (!getChromiumVersion()){
 				alert("This speedtest is optimized for Chromium-based browsers; graphs will not work for Firefox or Safari browsers.");
 			}
 		

@@ -1,7 +1,7 @@
 <html>
 	<head>
 		<link rel="stylesheet" href="./lineawesome/css/line-awesome.min.css" />
-		<link rel="stylesheet" href="./speedtest.css?ver=1" />
+		<link rel="stylesheet" href="./speedtest.css?ver=7" />
 		<meta charset="utf8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1" />
 		<title>VDON Speed Test</title>
@@ -59,6 +59,14 @@
 					Check out <a href="https://youtu.be/je2ljlvLzlY" target="_blank" style='color:#DEF;'>this Youtube video</a> for more details and solutions to reduce packet loss if suffering from any.
 				</li>
 			</ol>
+			<h2>Unsupervised guest check option</h2>
+			<span  style="margin:5px;line-height:32px;font-size:110%;">
+				You can also use <a target="_blank" style="color: #CCC;" href='./check.html'>this tool</a> to have a guest perform a system and connection test, with those results being available to you via a result's page for up to a week.<br />
+				You can either ask the remote guest to send you the link to their results page when they complete the test, or you can use <i style="color: #CCF;" >check.html?id=xxx</i> to pre-assign the test ID (ie: xxx), which will have the results then be available at <i style="color: #CCF;" >results.html?id=xxx</i>.
+				<br />If you have questions, <a href="https://discord.vdo.ninja" style="color: #CCC;" target="_blank">join the Discord here</a>.
+			</span>
+			<br />
+			<h3>More testing options below</h3>
 			<div id="screen" style="color: #CCC; margin:10px 0;"><a href="./speedtest?screen" style="color: #CCC;">Test screen-sharing performance here</a></div>
 			<div id="remote"></div>
 			<br />
@@ -86,14 +94,14 @@
 
 		<script>
 		
-			function getChromeVersion() {
+			function getChromiumVersion() {
 				var raw = navigator.userAgent.match(/Chrom(e|ium)\/([0-9]+)\./);
 				return raw ? parseInt(raw[2], 10) : false;
 			}
 			
-			if (!getChromeVersion()){
-				alert("This speedtest is optimized for Chromium-based browsers; graphs will not work for Firefox or Safari browsers.");
-			}
+			//if (!getChromiumVersion()){
+			//	alert("This speedtest is optimized for Chromium-based browsers; graphs will not work for Firefox or Safari browsers.");
+			//}
 		
 			(function (w) {
 				w.URLSearchParams =
@@ -265,7 +273,8 @@
 				var iframeContainer = document.createElement("span");
 
 				iframe.allow = "autoplay";
-				var srcString = "./?view=" + streamID + "&cleanoutput&privacy&noaudio&scale=0&speedtest="+zone; // No TURN servers set on the reciever. Don't want to query for TURN servers needlessly.
+				// I've removed &privacy from the view link, and left it just on the push link. This hopefully solves compatibility issues
+				var srcString = "./?view=" + streamID + "&cleanoutput&noaudio&scale=0&speedtest="+zone; // No TURN servers set on the reciever. Don't want to query for TURN servers needlessly.
 
 				if (urlParams.has("turn")) {
 					srcString = srcString + "&turn=" + urlParams.get("turn");
@@ -351,11 +360,20 @@
 				eventer(messageEvent, function (e) {
 					if ("action" in e.data) {
 					
+					
+						if (e.data.action == "view-stats-updated"){
+							return;
+						}
+						
+						if (e.data.action == "setVideoBitrate"){
+							logData("Target Video Bitrate",e.data.value);
+						}
+						
 						if (e.data.action == "available-speedtest-servers"){
-							console.warn("Speedtest server list loaded");
+							//console.warn("Speedtest server list loaded");
 							updateTurnlist(e.data.value);
 						} else {
-							logData(e.data.action, e.data.value);
+							//logData(e.data.action, e.data.value);
 						}
 
 						if (e.data.action == "new-view-connection") {
@@ -388,54 +406,68 @@
 					if ("stats" in e.data) {
 						var out = "";
 						
-						for (var streamID in e.data.stats.inbound_stats) {
-							out += printValues(e.data.stats.inbound_stats[streamID]);
+						for (var someValue in e.data.stats.inbound_stats) {
+							out += printValues(e.data.stats.inbound_stats[someValue]);
 						}
 						
-						for (var streamID in e.data.stats.outbound_stats) {
-							if (e.data.stats.outbound_stats[streamID].quality_limitation_reason){
-								if (quality_reason != e.data.stats.outbound_stats[streamID].quality_limitation_reason) {
-									quality_reason = e.data.stats.outbound_stats[streamID].quality_limitation_reason;
-									logData("Quality Limitation Reason:", quality_reason);
+						for (var someValue in e.data.stats.outbound_stats) {
+							if (e.data.stats.outbound_stats[someValue].quality_limitation_reason){
+								if (quality_reason != e.data.stats.outbound_stats[someValue].quality_limitation_reason) {
+									quality_reason = e.data.stats.outbound_stats[someValue].quality_limitation_reason;
+									logData("Quality Limitation Reason", quality_reason);
 								}
 							}
 							
-							if (e.data.stats.outbound_stats[streamID].encoder){
-								if (encoder != e.data.stats.outbound_stats[streamID].encoder) {
-									encoder = e.data.stats.outbound_stats[streamID].encoder;
-									logData("Encoder used:", encoder);
+							if (e.data.stats.outbound_stats[someValue].encoder){
+								if (encoder != e.data.stats.outbound_stats[someValue].encoder) {
+									encoder = e.data.stats.outbound_stats[someValue].encoder;
+									logData("Encoder used", encoder);
+								}
+							} else if (e.data.stats.outbound_stats[someValue].video_codec){
+								if (encoder != e.data.stats.outbound_stats[someValue].video_codec) {
+									encoder = e.data.stats.outbound_stats[someValue].video_codec;
+									logData("Encoder used", encoder);
 								}
 							}
 						}
 
-						if (out.split("Bitrate_in_kbps").length > 1) {
-							for (var key in e.data.stats.inbound_stats[streamID]) {
-								if (key.startsWith("RTCMediaStreamTrack_receiver")) {
-									var bitrate = e.data.stats.inbound_stats[streamID][key][
-											"Bitrate_in_kbps"
-										];
+						for (var key in e.data.stats.inbound_stats[streamID]){
+							if (typeof e.data.stats.inbound_stats[streamID][key] == "object"){
+								//console.error(e.data.stats.inbound_stats[streamID][key]);
+								if ("Bitrate_in_kbps" in e.data.stats.inbound_stats[streamID][key]){
+									var bitrate = e.data.stats.inbound_stats[streamID][key]["Bitrate_in_kbps"];
 									updateData("bitrate", bitrate);
+								}
 
-									var buffer = e.data.stats.inbound_stats[streamID][key][
-											"Buffer_Delay_in_ms"
-										];
+								if ("Jitter_Buffer_ms" in e.data.stats.inbound_stats[streamID][key]){
+									var buffer = e.data.stats.inbound_stats[streamID][key]["Jitter_Buffer_ms"];
 									updateData("buffer", buffer);
-
+								} else if ("Buffer_Delay_in_ms" in e.data.stats.inbound_stats[streamID][key]){
+									var buffer = e.data.stats.inbound_stats[streamID][key]["Buffer_Delay_in_ms"];
+									updateData("buffer", buffer);
+								} else if ("Added_Buffer_Delay_ms" in e.data.stats.inbound_stats[streamID][key]){
+									console.log("Added_Buffer_Delay_ms");
+									var buffer = e.data.stats.inbound_stats[streamID][key]["Added_Buffer_Delay_ms"];
+									updateData("buffer", buffer);
+								}
+								
+								
+								if ("packetLoss_in_percentage" in e.data.stats.inbound_stats[streamID][key]){
 									var packetloss = e.data.stats.inbound_stats[streamID][key]["packetLoss_in_percentage"];
 									if (packetloss != undefined) {
 										packetloss = packetloss.toFixed(2);
 										updateData("packetloss", packetloss);
 									}
+								}
 
+								if ("Resolution" in e.data.stats.inbound_stats[streamID][key]){
 									var resolution = e.data.stats.inbound_stats[streamID][key]["Resolution"];
-
 									if (previousResolution != resolution) {
 										previousResolution = resolution;
 										logData("Resolution", resolution);
 									}
 								}
 							}
-
 						}
 						
 						if (recordResults){

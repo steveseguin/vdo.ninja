@@ -1,0 +1,376 @@
+<html>
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+	<link rel="stylesheet" href="./lineawesome/css/line-awesome.min.css" />
+	<style>
+	html {
+		border:0;
+		margin:0;
+		outline:0;
+		overflow: hidden;
+	}
+
+	video {
+
+		margin: 0;
+		padding: 0;
+		overflow: hidden;
+		cursor: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII=), none;
+		user-select: none;
+		
+	}
+	body {
+		padding: 0 0px;
+		height: 100%;
+		width: 100%;
+		background-color: -webkit-linear-gradient(to top, #363644, 50%, #151b29);  /* Chrome 10-25, Safari 5.1-6 */
+		background: linear-gradient(to top, #363644, 50%, #151b29); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+		font-size: 2em;
+		font-family: Helvetica, Arial, sans-serif;
+		display: flex;
+		flex-flow: column;
+		border:0;
+		margin:0;
+		outline:0;
+	}
+
+	button.glyphicon-button:focus,
+	button.glyphicon-button:active:focus,
+	button.glyphicon-button.active:focus,
+	button.glyphicon-button.focus,
+	button.glyphicon-button:active.focus,
+	button.glyphicon-button.active.focus {
+	  outline: none !important;
+	}
+
+	.gobutton {
+		font-size:14px;
+		font-weight: bold;
+		border: none;
+		background: #6aab23;
+		display: flex;
+		border-radius: 0px;
+		border-top-right-radius: 10px;
+		border-bottom-right-radius: 10px;
+		box-shadow: 0 12px 15px -10px #5ca70b, 0 2px 0px #6aab23;
+		color: white;
+		cursor: pointer;
+		box-sizing: border-box;
+		align-items: center;
+		padding: 0 1em;
+	}
+	.details{
+		font-size: 14px;
+		font-weight: bold;
+		border: none;
+		background: #555;
+		display: flex;
+		border-radius: 0px;
+		border-top-right-radius: 10px;
+		border-bottom-right-radius: 10px;
+		box-shadow: 0 12px 15px -10px #444, 0 2px 0px #555;
+		color: white;
+		box-sizing: border-box;
+		align-items: center;
+		padding: 0 1em;
+	}
+	#header{
+		width:100%;
+		background-color: #101520;
+	}
+	input.changeText {
+		font-size: 1em;
+		align-self: center;
+		width: 100%;
+		padding: 1em;
+		font-weight: bold;
+		background: white;
+		border: 4px solid white;
+		box-shadow: 0px 30px 40px -32px #6aab23, 0 2px 0px #6aab23;
+		border-top-left-radius: 10px;
+		border-bottom-left-radius: 10px;
+		transition: all 0.2s linear;
+		box-sizing: border-box;
+		border-bottom-right-radius: 0;
+		border-top-right-radius: 0;
+	}
+
+	input.changeText:focus {
+		outline: none;
+	}
+
+	.container{
+		font-size: min(14px, 2vh);
+		align-self:center;
+		max-width: 100%;
+		width: 720px;
+		margin: auto auto;
+	}
+	label {
+		font: white;
+		font-size: 1em;
+		color: white;
+	}
+	input[type='checkbox'] {
+		-webkit-appearance:none;
+		width:30px;
+		height:30px;
+		background:white;
+		border-radius:5px;
+		border:2px solid #555;
+		cursor: pointer;
+	}
+	input[type='checkbox']:checked {
+		background: #1A1;
+	}
+	#audioOutput, #lastUrls {
+		font-size: calc(16px + 0.3vw);
+		width: 730px;
+		height: 100%;
+		flex: 20;
+		border-radius: 10px;
+		padding: 1em;
+		background: #eaeaea;
+		cursor:pointer;
+	}
+	label[for="audioOutput"] {
+		font-size: 3em;
+		color: #FE53BB;
+		text-shadow: 0px 0px 30px #fe53bb;
+		padding-right: 10px;
+	}
+	label[for="changeText"] {
+		font-size: 3em;
+		color: #00F6FF;
+		text-shadow: 0px 0px 30px #00f6ff;
+		padding-top: 5px;
+		padding-right: 10px;
+	}
+
+	label[for="lastUrls"] {
+	font-size: 3em;
+		color: #1a1;
+		text-shadow: 0px 0px 30px #1a1;
+		padding-right: 10px;
+		cursor: pointer;
+	}
+
+	div#audioOutputContainer, #history {
+		display: flex;
+		flex-direction: row;
+		flex-wrap: nowrap;
+		justify-content: center;
+		margin: 4em;
+	}
+		
+	@media only screen and (max-width: 1030px) {
+		body{
+			zoom: 0.9; 
+			-moz-transform: scale(0.9); 
+			-moz-transform-origin: 0 0;
+		}
+	}
+
+	#messageDiv {
+		font-size: .7em;
+		color: #DDD;
+		transition: all 0.5s linear;
+		font-style: italic;
+		opacity: 0;
+		text-align: center;
+		margin: 10px 0;
+	}
+
+	div.urlInput {
+		padding: 0 0 4vh 0;
+	}
+	@media only screen and (max-width: 940px) {
+		body{
+			zoom: 0.74; 
+			-moz-transform: scale(0.74); 
+			-moz-transform-origin: 0 0;
+			
+		}
+		.container{
+			max-width:99%;
+		}
+		div.urlInput {
+		}
+		div#audioOutputContainer, #history {
+			margin: 2em;
+		}
+	}
+	@media only screen and (max-width: 840px) {
+		body{
+			zoom: 0.64; 
+			-moz-transform: scale(0.64); 
+			-moz-transform-origin: 0 0;
+			
+		}
+		
+	}
+	
+	@media only screen and (max-height: 639px) {
+		div.urlInput {
+		}
+		div#audioOutputContainer, #history {
+			margin: 2em;
+		}
+	}
+	
+	@media only screen and (max-width: 767px) {
+		
+		div.urlInput {
+		}
+		div#audioOutputContainer, #history {
+			margin:  2em 1em;
+		}
+	}
+	
+	
+	@media only screen and (max-height: 380px) {
+		div.urlInput {
+		}
+		div#audioOutputContainer, #history {
+			margin: 1em;
+		}
+	}
+	
+	
+
+	label[for="audioOutput"], label[for="lastUrls"] {
+		font-size: 3em;
+	}
+
+	#warning4mac, #electronVersion {
+		background: #8500f7;
+		box-shadow: 0px 0px 50px 10px #8500f7ab, inset 0px 0px 10px 2px #8d08ffba;
+		border: 2px solid #8500f7;
+		border-radius: 10px;
+		width: 90%;
+		padding:1em;
+		margin:0 auto;
+		color:white;
+		font-size:1.3em;
+		margin-bottom: 20px;
+	}
+
+	#warning4mac a, #electronVersion a {
+		color:white;
+	 }
+
+	 ul#lastUrls {
+		list-style: none;
+		background: #101520;
+		color: white;
+		padding: 1em;
+	}
+
+	ul#lastUrls li {
+		padding: 5px 0px;
+	}
+	ul#lastUrls li:nth-child(even) {
+		background-color: #182031;
+	}
+
+	.inputCombo {
+		display: flex;
+		flex-direction: row;
+		flex-wrap: nowrap;
+		flex-grow: 1;
+	}
+	#version{
+		margin: 0 auto;
+		font-size: 30%;
+		display: inline-block;
+		color: #000A;
+	}
+	h3 {
+		color: #b0e3ff;
+	}
+
+	</style>
+</head>
+<body>
+	<div id="header" style="-webkit-app-region: drag; color:#6f6f6f;font-size:20px; line-height: 20px; padding: 5px 10px; letter-spacing: 3; font-weight: bold;">Publish VDO.Ninja video mix to Twitch</div>
+	
+		<div class="container">
+				<div id="urlInput1" class="urlInput" title="Put the link you want to load here">
+					
+					<h3>Publish a video from VDO.Ninja Scene or View link to Twitch directly</h3>
+					
+					<div  class="inputCombo" id="inputCombo1">
+						<label for="changeText">
+							<i class="las la-upload"></i>
+						</label>
+						<input type="text" id="changeText1" class="inputfield changeText" placeholder="VDO.Ninja scene link to publish" />
+						<button  onclick="gohere1();" class="gobutton" id="gobutton1">GO</button>
+					</div>
+					<div class="inputCombo" style="width:350px;margin:10 0 10 auto;">
+						<input type="password" id="changeText1a" class="inputfield changeText" placeholder="Authentication Bearer Token (optional)" />
+						<div class="details">⚙️</div>
+					</div>
+				</div>
+		</div>
+<script>
+
+var domain = "./";
+
+document.querySelector("#changeText1").value = localStorage.getItem('changeText1') || "";
+document.querySelector("#changeText1a").value = localStorage.getItem('changeText1a') || "";
+function gohere1(){
+	localStorage.setItem('changeText1', document.getElementById('changeText1').value);
+	localStorage.setItem('changeText1a', document.getElementById('changeText1a').value);
+	
+	var URL = document.getElementById('changeText1').value;
+	URL+="&clean&chroma=000&ssar=landscape&nosettings&prefercurrenttab&selfbrowsersurface=include&displaysurface=browser&np&nopush&publish&whippush=https%3A%2F%2Fg.webrtc.live-video.net%3A4443%2Fv2%2Foffer&whippushtoken="+document.querySelector("#changeText1a").value;
+	var win = window.open( URL ,'targetWindow', 'toolbar=no,location=no,status=no,scaling=no,menubar=no,scrollbars=no,resizable=no,width=1280,height=720');
+	win.focus();
+	win.resizeTo(1280,720);
+	
+}
+
+
+function resetHistory(){
+	localStorage.clear();
+	document.querySelector("#changeText1").value = "";
+	document.querySelector("#changeText1a").value = "";
+}
+
+(function (w) {
+    w.URLSearchParams = w.URLSearchParams || function (searchString) {
+        var self = this;
+        self.searchString = searchString;
+        self.get = function (name) {
+            var results = new RegExp('[\?&]' + name + '=([^&#]*)').exec(self.searchString);
+            if (results == null) {
+                return null;
+            }
+            else {
+                return decodeURI(results[1]) || 0;
+            }
+        };
+    }
+
+})(window)
+
+var urlParams = new URLSearchParams(window.location.search);
+
+function enterPressed(event, callback){
+  if (event.keyCode === 13){ // Number 13 is the "Enter" key on the keyboard
+    event.preventDefault(); // Cancel the default action, if needed
+    callback();
+  }
+}
+
+
+var isMobile = false;
+if( /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)){ // does not detect iPad Pros.
+	isMobile=true; // if iOS, default to H264?  meh.  let's not.
+}
+
+
+</script>
+</body>
+</html>

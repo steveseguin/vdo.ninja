@@ -1,0 +1,135 @@
+<html>
+<head><title>Rotated Scene</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+<meta content="text/html;charset=utf-8" http-equiv="Content-Type" />
+<style>
+body{
+	padding:0;
+	margin:0;
+	background-color:#003;
+	width:100%;
+	height:100%;
+}
+
+iframe {
+	width:100%;
+	height:470px;
+	border:0;
+	margin:0;
+	padding:0;
+	display:block;
+	width: 100vh;
+    height: 100vw;
+    transform: rotate(90deg);
+    transform-origin: 0 0;
+    left: 100vw;
+    position: relative;
+    top: 0;
+}
+
+</style>
+</head>
+<body>
+
+<script>
+
+function removeStorage(cname){
+	localStorage.removeItem(cname);
+}
+
+function clearStorage(){
+	localStorage.clear();
+	if (!session.cleanOutput){
+		warnUser("The local storage and saved settings have been cleared", 1000);
+	}
+}
+
+function setStorage(cname, cvalue, hours=9999){ // not actually a cookie
+	var now = new Date();
+	var item = {
+		value: cvalue,
+		expiry: now.getTime() + (hours * 60 * 60 * 1000),
+	};
+	try{
+		localStorage.setItem(cname, JSON.stringify(item));
+	}catch(e){errorlog(e);}
+}
+
+function getStorage(cname) {
+	try {
+		var itemStr = localStorage.getItem(cname);
+	} catch(e){
+		errorlog(e);
+		return;
+	}
+	if (!itemStr) {
+		return "";
+	}
+	var item = JSON.parse(itemStr);
+	var now = new Date();
+	if (now.getTime() > item.expiry) {
+		localStorage.removeItem(cname);
+		return "";
+	}
+	return item.value;
+}
+
+
+(function(w) {
+	w.URLSearchParams = w.URLSearchParams || function(searchString) {
+		var self = this;
+		searchString = searchString.replace("??", "?");
+		self.searchString = searchString;
+		self.get = function(name) {
+			var results = new RegExp('[\?&]' + name + '=([^&#]*)').exec(self.searchString);
+			if (results == null) {
+				return null;
+			} else {
+				return decodeURI(results[1]) || 0;
+			}
+		};
+	};
+
+})(window);
+
+var urlEdited = window.location.search.replace(/\?\?/g, "?");
+urlEdited = urlEdited.replace(/\?/g, "&");
+urlEdited = urlEdited.replace(/\&/, "?");
+
+if (urlEdited !== window.location.search){
+	window.history.pushState({path: urlEdited.toString()}, '', urlEdited.toString());
+}
+var urlParams = new URLSearchParams(urlEdited);
+
+var rotate = parseInt(urlParams.get("rotate")) || "90";
+
+var sdfasd = decodeURIComponent(urlParams.get("link") || "") || getStorage("savedRotateLink") ||  "";
+
+var linktoload = sdfasd || prompt("What URL would you like to load? (rotated)");
+setStorage("savedRotateLink", linktoload, 99999);
+
+
+
+var iframe = document.createElement("iframe");
+iframe.allow = "document-domain;encrypted-media;sync-xhr;usb;web-share;cross-origin-isolated;accelerometer;midi;geolocation;autoplay;camera;microphone;fullscreen;picture-in-picture;display-capture;";
+iframe.src = linktoload;
+
+if (rotate=="180"){
+	iframe.style.transform = "rotate(180deg)";
+	iframe.style.width = "100vw";
+	iframe.style.height = "100vh";
+	iframe.style.transformOrigin = "0 0;";
+	iframe.style.position = "rotate(180deg)";
+	iframe.style.left = "100vw";
+	iframe.style.top = "100vh";
+} else if (rotate=="270"){
+	iframe.style.transform = "rotate(270deg)";
+	iframe.style.left = "0";
+	iframe.style.top = "100vh";
+}
+
+document.body.appendChild(iframe);
+
+</script>
+</body>
+</html>

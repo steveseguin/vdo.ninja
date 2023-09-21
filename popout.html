@@ -1,36 +1,125 @@
 <html>
 <head>
 <meta name="theme-color" content="#ffffff" />
-<link rel="stylesheet" href="./main.css?ver=22" />
+<!-- <link rel="stylesheet" href="./main.css?ver=22" /> -->
 <style>
-#chatModule{
-    bottom: 0px;
-    position: fixed;
-    align-self: center;
-    width: 100%;
+
+:root {
+    --discord-grey-0: #121212;
+    --discord-grey-1: #1e1f22;
+	--discord-grey-1a: #1e1f22;
+    --discord-grey-2: #232428;
+    --discord-grey-3: #2b2d31;
+    --discord-grey-4: #2e3035;
+    --discord-grey-5: #313338;
+    --discord-grey-6: #383a40;
+    --discord-grey-7: #404249; 
+    --discord-grey-8: #5e6064; 
+    --discord-text: hsl( 210 calc(1 * 9.1%) 87.1% /1);
+
+    --baby-blue: #BCF;
 }
-#chatInput{
-    color: #000;
-    background-color: #FFFE;
-    max-width: 700px;
-    min-width: 390px;
-    font-size: 105%;
-    margin-left: 10px;
-    padding: 3px;
+
+* {
+    padding: 0;
+    margin: 0;
+    border: 0;
+    box-sizing: border-box;
 }
-#chatBody {
-    z-index: 12;
-    background-color: #0000;
-    width: 100%;
-    border-radius: 5px;
-    padding: 1px 7px;
-    overflow-y: scroll;
-    overflow-wrap: anywhere;
-    max-height: 800px;
-}
+
 body{
-	background-color:#EEE;
+    background-color: var(--discord-grey-0);
+    height: 100%;
+    width: 100%;
 }
+
+#chatModule{
+    display: flex;
+    flex-direction: column;
+    padding: 5px;
+    height: 100%;
+    gap: 5px;
+    justify-content: flex-end;
+}
+
+#chatBody {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    overflow-y: auto;
+}
+
+.outMessage, .inMessage {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 5px;
+
+    font-family: 'Roboto';
+    font-size: 14px;
+    text-align: right;
+    background-color: var(--baby-blue);
+    border-radius: 4px;
+    padding: 2px 5px;
+}
+
+.inMessage {
+    color: var(--discord-text);
+    background-color: var(--discord-grey-7);
+}
+
+.outMessage .chat_message {
+    font-weight: bold;
+}
+
+::-webkit-input-placeholder {
+	color: #ccc !important;
+}
+
+.controls {
+    display: flex;
+    flex-direction: row;
+    gap: 5px;
+    height: 25px;
+    flex-shrink: 0;
+}
+
+.controls input {
+    border-radius: 4px;
+    flex: 3;
+    color: var(--discord-text);
+    background-color: var(--discord-grey-5);
+    border: 1px solid var(--discord-grey-8);
+    padding: 0px 5px;
+}
+
+.controls button {
+    border-radius: 4px;
+    flex: 1;
+    color: var(--discord-text);
+    background-color: var(--discord-grey-2);
+    border: 1px solid var(--discord-grey-8);
+}
+
+/* SCROLL BAR STYLING  */
+::-webkit-scrollbar {
+  width: 12px; 
+}
+
+::-webkit-scrollbar-track {
+  background-color: var(--discord-grey-1); 
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: var(--discord-grey-7);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background-color: var(--discord-grey-8); 
+}
+
 </style>
 </head>
 <body>
@@ -40,8 +129,10 @@ body{
 			Welcome to VDO.Ninja! You can send text messages directly to connected peers from here.
 		</div>
 	</div>
-	<input id="chatInput" placeholder="Enter chat message to send here" onkeypress="EnterButtonChat(event)" />
-	<button style="width:60px;background-color:#ACA;" onclick="sendChatMessage()" data-translate='send-chat'>Send</button>
+    <div class="controls">
+        <input id="chatInput" placeholder="Enter chat message to send here" onkeypress="EnterButtonChat(event)" />
+        <button onclick="sendChatMessage()" data-translate='send-chat'>Send</button>
+    </div>
 </div>
 <script>
 
