@@ -119,7 +119,9 @@ Past supported sites that have ceased to exist.
 
 #### Adding sites yourself
 
-I have a video walk-thru on how I added a simple social site to Social Stream: [https://www.youtube.com/watch?v=5LquQ1xhmms](https://www.youtube.com/watch?v=5LquQ1xhmms)
+I have a video walk-thru on how I added a simple social site to Social Stream:
+
+{% embed url="https://youtu.be/5LquQ1xhmms?si=j6-FWJbe_GkvZhQ1" %}
 
 You can also refer to some of my code commits, where you can see which changes I made to add support for any specific site.
 
