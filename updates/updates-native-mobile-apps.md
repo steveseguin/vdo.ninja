@@ -2,6 +2,20 @@
 
 [native-mobile-app-versions.md](../steves-helper-apps/native-mobile-app-versions.md "mention")
 
+#### September 13
+
+* A new version of VDO.Ninja for iOS has finally been published to the Apple App Store\
+  \-- Has the recent camera-zoom support added\
+  \-- Also has forced-landscape mode support (I had to wait until iOS 17 launched to be able to release it)\
+  [https://apps.apple.com/app/vdo-ninja/id1607609685?platform=iphone](https://apps.apple.com/app/vdo-ninja/id1607609685?platform=iphone)
+
+![](<../.gitbook/assets/image (1).png>)
+
+#### September 10
+
+* Zoom-in/out support added to the native vdo.ninja app, however this change still needs to be rolled out. Available on Google Play; the App Store update may be a couple weeks however. (once iOS 17 launches)\
+  \-- Zoom is controlled with up/down swipe gestures; similar to how it is with the web app, but maybe a bit more stable.
+
 #### August 30
 
 * Updated the Android app with a "[force landscape](../advanced-settings/mobile-parameters/and-forcelandscape.md)" option\

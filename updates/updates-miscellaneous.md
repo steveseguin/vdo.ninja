@@ -1,5 +1,9 @@
 # Updates - Miscellaneous
 
+#### September 8
+
+* If you like the [vdo.ninja/twitch](https://vdo.ninja/twitch) page (chat and use VDO.Ninja at the same time), I created a version specific for Kick.com now also: [https://vdo.ninja/kick](https://vdo.ninja/kick). I may consolidate these tools at some point, but for now, hopefully it helps.
+
 #### July 20
 
 * Published a YouTube video demoing how to connect an iPhone to Ethernet, bypassing Wifi. Connecting all your components via Ethernet will ensure you get optimal quality and latency, without needing special drivers or settings. Dead easy to do and doesn't cost much at all, assuming your router/switch isn't miles away:
