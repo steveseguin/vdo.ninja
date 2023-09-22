@@ -16,23 +16,21 @@ H264 is the default video encoder on iOS, yet H264 only supports up to 720p30 on
 
 Both new and old iOS devices support 1080p30 when using the VP8 codec, which uses software-encoding rather than hardware. You may need to manually specific [`&width`](../source-settings/and-width.md) and [`&height`](../source-settings/and-height.md) to access 1080p mode on iOS 14 and older, but you can use also [`&quality=0`](../advanced-settings/video-parameters/and-quality.md) on iOS 15 and newer.
 
-VP9 is supported on iOS 14, but you have to enable it as an experimental flag in the iOS Safari advanced settings. It supports 1080p, software-based encoding, and acts a lot like VP8. It generally is finicky, with low-frame rates being common, so use at your own risk.\
-\
+VP9 is supported on iOS 14, but you have to enable it as an experimental flag in the iOS Safari advanced settings. It supports 1080p, software-based encoding, and acts a lot like VP8. It generally is finicky, with low-frame rates being common, so use at your own risk.
+
 The AV1 video codec is now also supported with modern iOS versions and works quite well with newer iOS devices. You may need to enable this however in the experimental advanced settings though in your Safari settings.
 
 ### Microphones and Audio
 
-Some external microphones are supported by Safari on iOS, however iOS devices are very finicky as to which microphones are supported. Just because your device is listed, doesn't mean it will work or stay selected.\
-\
-While there may be a drop down option for "external microphone", often iOS devices will auto-select and manage the microphone on its own once connected  Typically microphones that register as headsets, or some certified TRRS adapters, seem to work, but not all will still.
+Some external microphones are supported by Safari on iOS, however iOS devices are very finicky as to which microphones are supported. Just because your device is listed, doesn't mean it will work or stay selected.
+
+While there may be a drop down option for "external microphone", often iOS devices will auto-select and manage the microphone on its own once connected. Typically microphones that register as headsets, or some certified TRRS adapters, seem to work, but not all will still.
 
 One TRRS adapter that I have tested for myself that does seem to work is this one: [https://www.amazon.ca/gp/product/B07Q49SVYR](https://www.amazon.ca/gp/product/B07Q49SVYR)
 
 Airpods seem to work also, and some users report that USB devices on iPadOS 17 work, but this is not yet confirmed by me. It is hoped that this issue will be resolved in future versions of IOS, or perhaps one day I'll have support added to the native iOS app.
 
 Firefox mobile on Android supports USB microphones reliably, if that is a potential solution.
-
-
 
 **AirPods** can create clicking or distortion if used as a microphone; please ensure they are fully-charged if you intend to use them in a live production. If they are on low-power, they will create audible problems.
 
