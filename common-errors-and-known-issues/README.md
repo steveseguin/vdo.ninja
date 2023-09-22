@@ -44,3 +44,4 @@
 * [virtual-camera-not-working-on-mac.md](virtual-camera-not-working-on-mac.md "mention")
 * [mics-volume-keeps-changing.md](mics-volume-keeps-changing.md "mention")
 * [enable-camera-microphone-permissions.md](enable-camera-microphone-permissions.md "mention")
+* [fps-drop-if-app-not-in-focus.md](fps-drop-if-app-not-in-focus.md "mention")
