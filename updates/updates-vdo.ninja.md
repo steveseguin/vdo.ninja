@@ -414,10 +414,8 @@ I'll keep improving the support for WHIP/WHEP. Lots to do. Suggestions welcomed 
 
 #### June 26 <a href="#august-31" id="august-31"></a>
 
-**VDO.Ninja flags added**
-
-* Added `&poster` as a URL option; lets you specify a poster image for videos that have not yet started playing. (using the built-in HTML poster attribute) - This flag takes an encoded URL, pointing to a CORS-accessible image file.
-* Added `&hideplaybutton`, (`&hpb`), which will hide the default big play button that overlays a video when auto play is not allowed. This option is useful when you want to perhaps include your own playbutton as part of the poster image.
+* Added [`&poster`](../advanced-settings/mixer-scene-parameters/and-poster.md) as a URL option; lets you specify a poster image for videos that have not yet started playing. (using the built-in HTML poster attribute) - This flag takes an encoded URL, pointing to a CORS-accessible image file.
+* Added [`&hideplaybutton`](../advanced-settings/mixer-scene-parameters/and-hideplaybutton.md), (`&hpb`), which will hide the default big play button that overlays a video when auto play is not allowed. This option is useful when you want to perhaps include your own playbutton as part of the poster image.
 
 Example of the commands:
 

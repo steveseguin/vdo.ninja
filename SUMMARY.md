@@ -248,6 +248,8 @@
     * [\&square](newly-added-parameters/and-square.md)
     * [\&animated](advanced-settings/view-parameters/animated.md)
     * [\&manual](advanced-settings/view-parameters/manual.md)
+    * [\&poster](advanced-settings/mixer-scene-parameters/and-poster.md)
+    * [\&hideplaybutton](advanced-settings/mixer-scene-parameters/and-hideplaybutton.md)
     * [\&scene](advanced-settings/view-parameters/scene.md)
     * [\&scenetype](advanced-settings/mixer-scene-parameters/scenetype.md)
     * [\&autoadd](newly-added-parameters/and-autoadd.md)
