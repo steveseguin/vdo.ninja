@@ -429,7 +429,7 @@ https://vdo.ninja/alpha/?view=YbFmisR&poster=./media/bg_sample.webp&hideplaybutt
 
 #### June 19 <a href="#august-31" id="august-31"></a>
 
-* Created `&queuetransfer` (`&qt`), which will transfer a guest from one room into another, but one transferred, the guest will be in Queue mode. So they won't share their video with anyone by the director.
+* Created [`&queuetransfer`](../advanced-settings/settings-parameters/and-queuetransfer.md) (`&qt`), which will transfer a guest from one room into another, but one transferred, the guest will be in Queue mode. So they won't share their video with anyone by the director.
 *   Added an 'activate guest' button to the director's controls, so that when a guest connects in queue mode, (yet the director isn't also in queue mode, as is typical for a queue mode setup), the director can take any select user out of queue mode.
 
     \--- This has the result of guests joining a room in queue mode, and only being able to see the main director by default.\
@@ -437,7 +437,7 @@ https://vdo.ninja/alpha/?view=YbFmisR&poster=./media/bg_sample.webp&hideplaybutt
     \--- You could of achieved a similar function to this 'activate button' as just transferring the guest back to the same room, but this has some polish and is less confusing.
 * Some more CSS fixes when in dark-mode, plus the create room buttons are now green.
 
-\*\* on alpha and now also on production (edited)
+\*\* on alpha and now also on production
 
 #### June 14 <a href="#august-31" id="august-31"></a>
 
