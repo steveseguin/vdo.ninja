@@ -276,9 +276,9 @@
 							document.getElementById("details").innerHTML += "<br /><b>Max Upload bandwidth:</b> "+parseInt(data.summary.upload/(1024*1024))+"-mbps<br />";
 						}
 					}
-					if (data.scores && data.scores.gaming && data.scores.gaming.classificationName && data.scores.rtc && data.scores.rtc.classificationName && data.scores.streaming && data.scores.streaming.classificationName){
-						document.getElementById("details").innerHTML += "<br /><b>Gaming:</b> "+data.scores.gaming.classificationName+", <b>RTC:</b> "+data.scores.rtc.classificationName+", <b>Streaming:</b> "+data.scores.streaming.classificationName+"<br />";
-					}
+					//if (data.scores && data.scores.gaming && data.scores.gaming.classificationName && data.scores.rtc && data.scores.rtc.classificationName && data.scores.streaming && data.scores.streaming.classificationName){
+					//	document.getElementById("details").innerHTML += "<br /><b>Gaming:</b> "+data.scores.gaming.classificationName+", <b>RTC:</b> "+data.scores.rtc.classificationName+", <b>Streaming:</b> //"+data.scores.streaming.classificationName+"<br />";
+					//}
 					
 					if ("resolution" in data){
 						try {

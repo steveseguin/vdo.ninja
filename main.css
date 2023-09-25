@@ -3942,6 +3942,30 @@ a#reshare {
 	pointer-events:none;
 }
 
+.video-label>span:nth-child(2) {
+    font-size: 50%;
+    display: block;
+    text-align: center;
+}
+.video-label>span:nth-child(3) {
+    font-size: 25%;
+    display: block;
+    text-align: center;
+	line-height: 200%;
+}
+.video-label>span:nth-child(4) {
+    font-size: 25%;
+    display: block;
+    text-align: center;
+	line-height: 200%;
+}
+.video-label>span:nth-child(5) {
+    font-size: 25%;
+    display: block;
+    text-align: center;
+	line-height: 200%;
+}
+
 .video-label.zoom {
 	bottom: 0;
 	left: 0;

@@ -778,15 +778,7 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 	
 	if (urlParams.has("rotatewindow") || urlParams.has("rotatepage")){
 		let rotateThis = parseInt(urlParams.get("rotatewindow")) || parseInt(urlParams.get("rotatepage")) || 90;
-		if (rotateThis==270){
-			document.body.setAttribute( "style", "transform: rotate(270deg);position: absolute;top: 100vh;left: 0;height: 100vw;width: 100vh;transform-origin: 0 0;");
-		} else if (rotateThis==90){
-			document.body.setAttribute( "style", "transform: rotate(90deg);position: absolute;top: 0;left: 100vw;height: 100vw;width: 100vh;transform-origin: 0 0;");
-		} else if (rotateThis==180){
-			document.body.setAttribute( "style", "transform: rotate(180deg);position: absolute;top: 100vh;left: 100vw;height: 100vh;width: 100vw;transform-origin: 0 0;"); 
-		} else {
-			document.body.setAttribute( "style", "");
-		}
+		updateForceRotatedCSS(rotateThis);
 	}
 	
 	if (urlParams.has('facing') ) {
@@ -821,6 +813,10 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 		if (Firefox){
 			session.fullscreen = true;  // windowed mode complicates things in this mode
 		}
+	}
+	
+	if (urlParams.has('forceviewerlandscape')){
+		session.keepIncomingVideosInLandscape = parseInt(urlParams.get('forceviewerlandscape')) || 270;
 	}
 	
 	
@@ -3914,8 +3910,10 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 
 	if (urlParams.has('sendframes')) {
 		session.sendframes = urlParams.get('sendframes');
-		if(session.sendframes){
-			session.sendframes = decodeURIComponent(session.sendframes);
+		if (session.sendframes){
+			try {
+				session.sendframes = decodeURIComponent(session.sendframes);
+			} catch(e){}
 		} else {
 			session.sendframes = session.iframetarget || "*";
 		}
@@ -4505,8 +4503,7 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 		session.screenShareLabel = session.screenShareLabel.replace(/_/g, " ")
 	}
 	
-	// this is not the same as creating a whep source
-	if (urlParams.has('whepshare') || urlParams.has('whepsrc')) { // URL or data:base64 image. Becomes local to this viewer only.  This is like &avatar, but slightly different. Just CSS in this case
+	if (urlParams.has('whepshare') || urlParams.has('whepsrc')) {
 		try {
 			session.whepSrc = urlParams.get('whepshare') || urlParams.get('whepsrc') || null;
 			log("WHEP SRC: "+session.whepSrc);
@@ -4514,22 +4511,15 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 				try {
 					session.whepSrc = decodeURIComponent(session.whepSrc);
 				} catch(e){
-					session.whepSrc=null;
+					session.whepSrc = session.whepSrc;
 				}
-			}
-			if (!session.whepSrc && session.autostart){
+			} else {
 				session.whepSrc = await promptAlt("Enter the WHEP source as a URL");
 			}
 			if (session.whepSrc){
-				getById("whepURL").value = session.whepSrc;
+				session.whipoutSettings = {type:"whep", "url": session.whepSrc};
 			}
-			getById("container-16").classList.remove('hidden');
-			getById("container-16").classList.add("skip-animation");
-			getById("container-16").classList.remove('pointer');
 			
-			if (session.autostart && session.whepSrc){
-				delayedStartupFuncs.push([session.publishWhepSrc, session.whepSrc]);
-			}
 		} catch(e){
 			errorlog(e);
 		}
@@ -6470,7 +6460,7 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 		script.onload = function() { 
 			var script = document.createElement('script');
 			document.head.appendChild(script);
-			script.src = "./thirdparty/StreamSaver.js?v=13"; // dynamically load this only if its needed. Keeps loading time down.
+			script.src = "./thirdparty/StreamSaver.js?v=19"; // dynamically load this only if its needed. Keeps loading time down.
 		};
 		script.src = "./thirdparty/polyfill.min.js"; // dynamically load this only if its needed. Keeps loading time down.
 	},100);
