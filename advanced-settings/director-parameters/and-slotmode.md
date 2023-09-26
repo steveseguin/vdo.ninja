@@ -18,6 +18,10 @@ Adding `&slotmode` to a director's URL gives you the possibility to assign slots
 [mixer-app.md](../../steves-helper-apps/mixer-app.md)
 {% endcontent-ref %}
 
+{% content-ref url="../settings-parameters/and-slot.md" %}
+[and-slot.md](../settings-parameters/and-slot.md)
+{% endcontent-ref %}
+
 {% content-ref url="../mixer-scene-parameters/and-layout.md" %}
 [and-layout.md](../mixer-scene-parameters/and-layout.md)
 {% endcontent-ref %}

@@ -393,7 +393,7 @@ I'll keep improving the support for WHIP/WHEP. Lots to do. Suggestions welcomed 
 
 #### June 28 <a href="#august-31" id="august-31"></a>
 
-* Added `&slot=N`, which is a guest side property (sender side). It just tells the director ([Mixer App](../steves-helper-apps/mixer-app.md) / [`&slotsmode`](../advanced-settings/director-parameters/and-slotmode.md)) which slot the guest should prefer to be in, if slots are being auto-assigned. If the desired slot is already taken, then that guest will then not be assign a slot. If the guest was assigned a slot by the director, refreshing will keep the assign slot, and the URL-specified slot preference will be ignored.
+* Added [`&slot=N`](../advanced-settings/settings-parameters/and-slot.md), which is a guest side property (sender side). It just tells the director ([Mixer App](../steves-helper-apps/mixer-app.md) / [`&slotmode`](../advanced-settings/director-parameters/and-slotmode.md)) which slot the guest should prefer to be in, if slots are being auto-assigned. If the desired slot is already taken, then that guest will then not be assign a slot. If the guest was assigned a slot by the director, refreshing will keep the assign slot, and the URL-specified slot preference will be ignored.
 * Fixed an issue where custom scene names in the director's room were incorrectly being capitalized.
 * Users with old iOS (iOS 15 and older) versions will be greeted with a message, recommending they update their system's OS. iOS 16 and newer has many important bug fixes, so its strongly recommended. It should trigger when using Safari; not sure about all other browsers on iOS yet though.\
   ![](<../.gitbook/assets/image (5) (2) (1).png>)
