@@ -3,6 +3,10 @@
 [social-stream.md](../steves-helper-apps/social-stream.md "mention")\
 [chat-overlay.md](../steves-helper-apps/chat-overlay.md "mention")
 
+#### **September 25**
+
+* younow.com support added to Social Stream (since there's no pop out chat; just use the main view page)
+
 #### **September 18**
 
 * cozy.tv support added to Social Stream
@@ -21,7 +25,7 @@
 * Facebook sticker support added to Social Stream
 * Added an option to filter for 'members' to the dock's menu
 
-![](../.gitbook/assets/image.png)
+![](<../.gitbook/assets/image (2).png>)
 
 #### **September 8**
 
@@ -55,7 +59,7 @@
   \-- Actual translations for other languages still need to be actually added. (difficulty level: 3/10)\
   \-- (German was added\*)
 
-![](<../.gitbook/assets/image (1) (1) (1).png>)
+![](<../.gitbook/assets/image (1) (1) (1) (1).png>)
 
 #### **August 24**
 
@@ -95,7 +99,7 @@ On Social Stream now:
 
 * Due to many users having their docks set as narrow overlays, I've modified the default style to collapse into multi-lines when the width is less than 660px in OBS (or 330px in Chrome). You can get something similar with `&compact`, but some users were having trouble discovering that flag.\
   \-- Hopefully this makes it easier to use, without breaking any existing user setups. let me know though if having problems.\
-  ![](<../.gitbook/assets/image (2) (1) (1) (1).png>)
+  ![](<../.gitbook/assets/image (2) (1) (1) (1) (1).png>)
 
 #### **August 15**
 
@@ -115,7 +119,7 @@ On Social Stream now:
   \-- the more engaged your viewers are with the chat, the higher the score. Might encourage more chatting.\
   \-- this is a new dedicated overlay page\
   \-- basic styling options included, such as align left/right, disabling outlining, scale, etc\
-  ![](<../.gitbook/assets/image (11).png>)![](<../.gitbook/assets/image (1) (1) (1) (1).png>)
+  ![](<../.gitbook/assets/image (11).png>)![](<../.gitbook/assets/image (1) (1) (1) (1) (1).png>)
 
 #### **August 12**
 
@@ -129,7 +133,7 @@ On Social Stream now:
 #### **August 7**
 
 * Added an option to change the font-family type in social stream via a drop down setting, and also via `&font=xxxx`\
-  ![](<../.gitbook/assets/image (2) (1) (1) (1) (1).png>)
+  ![](<../.gitbook/assets/image (2) (1) (1) (1) (1) (1).png>)
 * made the "test message" button more accessible in the extension (pinned at the top now)\
   ![](<../.gitbook/assets/image (28).png>)
 * `&compact` mode as a toggle is more accessible and clearly defined as to what it does in the menu list
@@ -153,12 +157,12 @@ On Social Stream now:
 
 * Option to hide specific events in socialstream added. Takes comma,separated,values, and if any of those match a word in the event message, it will be blocked.
 * `&filterevents` can be used on the dock page, or there is a toggle and text-input in the extension that will apply globally.\
-  ![](<../.gitbook/assets/image (2) (1) (1) (1) (1) (1).png>)
+  ![](<../.gitbook/assets/image (2) (1) (1) (1) (1) (1) (1).png>)
 
 #### **July 30**
 
 * Support for `vstream.com` and `live.space` added to Social Stream\
-  ![](<../.gitbook/assets/image (1) (1) (1) (1) (1) (1) (1).png>)
+  ![](<../.gitbook/assets/image (1) (1) (1) (1) (1) (1) (1) (1).png>)
 
 #### **July 25**
 
@@ -423,7 +427,7 @@ Social Stream updates for today:
 
 * Social Stream has had the "open chat automatically" functionality improved a lot the last couple days. @River played a large part in that.
 * Added to Social Stream the option to map a chat command to some webhook API. Just an easy way to get started with making bot-actions, such as turning on a light. Happy to evolve this based on feedback.\
-  ![](<../.gitbook/assets/image (1) (1) (1) (1) (1) (1) (1) (1) (1) (1).png>)
+  ![](<../.gitbook/assets/image (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1).png>)
 
 #### **February 22**
 
