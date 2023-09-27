@@ -3195,8 +3195,18 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 	}
 
 	if (urlParams.has('totalroombitrate') || urlParams.has('totalroomvideobitrate') || urlParams.has('trb') || urlParams.has('totalbitrate') || urlParams.has('tb')) {
-		session.totalRoomBitrate = urlParams.get('totalroombitrate') || urlParams.get('totalroomvideobitrate') || urlParams.get('trb') || urlParams.get('totalbitrate') || urlParams.get('tb') || 0;
-		session.totalRoomBitrate = parseInt(session.totalRoomBitrate);
+		
+		session.totalRoomBitrate = urlParams.get('totalroombitrate') || urlParams.get('totalroomvideobitrate') || urlParams.get('trb') || urlParams.get('totalbitrate') || urlParams.get('tb') || "";
+		
+		if (session.totalRoomBitrate.split(",").length>1){
+			if (session.mobile){
+				session.totalRoomBitrate = session.totalRoomBitrate.split(",")[1];
+			} else {
+				session.totalRoomBitrate = session.totalRoomBitrate.split(",")[0];
+			}
+		}
+		
+		session.totalRoomBitrate = parseInt(session.totalRoomBitrate) || 0;
 
 		if (session.totalRoomBitrate < 1) {
 			session.totalRoomBitrate = 0;
@@ -4952,7 +4962,7 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 	//if (!session.flagship && session.mobile && (session.limitTotalBitrate===false)){
 		// session.limitTotalBitrate = session.totalRoomBitrate_default; // 500, with the max per guest stream out at maxMobileBitrate (350kbps) or 35-kbps if more than X in the room.
 	//}
-	
+	 
 	if (urlParams.has('maxmobilebitrate')) {
 		session.maxMobileBitrate = parseInt(urlParams.has('maxmobilebitrate')) || 0;
 	}
