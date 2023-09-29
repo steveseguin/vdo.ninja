@@ -3240,7 +3240,16 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 	}
 
 	if (urlParams.has('limittotalbitrate') || urlParams.has('ltb')){
-		session.limitTotalBitrate = urlParams.get('limittotalbitrate') || urlParams.get('ltb') || 2500;
+		session.limitTotalBitrate = urlParams.get('limittotalbitrate') || urlParams.get('ltb') || "2500";
+		
+		if (session.limitTotalBitrate.split(",").length>1){
+			if (session.mobile){
+				session.limitTotalBitrate = session.limitTotalBitrate.split(",")[1];
+			} else {
+				session.limitTotalBitrate = session.limitTotalBitrate.split(",")[0];
+			}
+		}
+		
 		session.limitTotalBitrate = parseInt(session.limitTotalBitrate);
 	}
 	
@@ -4160,9 +4169,25 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 			session.queue = false;
 		} else if (urlParams.get('queue') === "off"){
 			session.queue = false;
+		} else if (urlParams.get('queue')){
+			session.queue = urlParams.get('queue');
 		}
 	}
 	
+	if (urlParams.has('queue2') || urlParams.has('screen')) { // the guest can see the director, if the director doesn't have &queue
+		session.queue = true;
+		session.queueType = 2;
+	}
+	
+	if (urlParams.has('queue3') || urlParams.has('hold')) { // the guest can't see the director until approved, but does get a messaging telling them to wait.
+		session.queue = true;
+		session.queueType = 3;
+	}
+	
+	if (urlParams.has('queue4') || urlParams.has('holdwithvideo')) { // the guest can't see the director until approved, but does get a messaging telling them to wait.
+		session.queue = true;
+		session.queueType = 4;
+	}
 	
 
 	if (urlParams.has('push') || urlParams.has('id') || urlParams.has('permaid') ) {

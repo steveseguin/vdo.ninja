@@ -82,7 +82,8 @@ var miscTranslations = { // i can replace this list from time to time from the g
     "share-a-screen": "Share a screen",
     "stop-screen-sharing": "Stop screen sharing",
     "you-have-been-transferred": "You've been transferred to a different room",
-    "you-have-been-activated": "The director has allowed you to see others in the room now",
+    "you-have-been-activated": "The director has now allowed you to see others in the room",
+	"you-not-yet-activated": "Please wait until the director brings you into the room",
     "you-are-no-longer-a-co-director": "You are no longer a co-director as you were transferred.",
     "transferred": "Transferred",
     "room-changed": "Your room has changed",
@@ -1045,7 +1046,22 @@ function youveBeenTransferred(){
 }
 
 function youveBeenActivated(){
-	getChatMessage( getTranslation("you-have-been-activated"), label = false, director = false, overlay = true); // "you-have-been-transferred"
+	if (session.queueType==3){ // session.queue is now set to false
+		getById("overlayMsgs").innerText = "";
+		for (var UUID in session.pcs){
+			if (session.pcs[UUID].needsPublishing){
+				session.initialPublish(UUID); // let's starts publishing now
+			}
+		}
+	} else if (session.queueType==4){
+		getById("overlayMsgs").innerText = "";
+	}
+	getChatMessage( getTranslation("you-have-been-activated"), label = false, director = false, overlay = true);
+	hideHomeCheck();
+}
+
+function youreWaitingToBeActivated(){
+	getChatMessage( getTranslation("you-not-yet-activated"), label = false, director = false, overlay = true);
 	hideHomeCheck();
 }
 
@@ -5537,7 +5553,7 @@ function updateMixerRun(e=false){  // this is the main auto-mixing code.  It's a
 			
 			// log(vw + " : "+vh);
 			
-			if (cover){
+			if (cover && !session.structure){ //////
 				if ((("rotated" in vid) && ((vid.rotated==90) || (vid.rotated==270)))){
 					holder.style.left = borderOffset + "px";
 					holder.style.top = borderOffset + "px";
@@ -5595,6 +5611,7 @@ function updateMixerRun(e=false){  // this is the main auto-mixing code.  It's a
 				holder.style.borderRadius = borderRadius+"px";
 				
 			} else if ((vw && vh) || (vid.width && vid.height) || vid.dataset.aspectRatio){
+				
 				if (("rotated" in vid) && ((vid.rotated==90) || (vid.rotated==270))){
 					if (vw && vh){
 						var vvw = parseInt(vh);
@@ -5627,7 +5644,7 @@ function updateMixerRun(e=false){  // this is the main auto-mixing code.  It's a
 				var asw = (wrw - videoMargin*2 - borderOffset*2)/vvw;  // (window.innerWidth/ N)  /  vid.videoHeight;
 				var ash = (hrh - videoMargin*2 - borderOffset*2)/vvh;
 				
-				if (session.structure){
+				if (session.structure){ 
 					// wrw x hrh
 					var arx = (wrw - videoMargin*2 - borderOffset*2)/(hrh - videoMargin*2 - borderOffset*2);
 					var tarx = arW/arH;
@@ -16358,8 +16375,10 @@ function joinRoom(roomname) {
 								var streamID = session.desaltStreamID(response[i].streamID);
 								if (session.queue){
 									if (session.directorList.indexOf(response[i].UUID)>=0){
-										warnlog("PLAYING DIRECTOR");
-										play(streamID, response[i].UUID);
+										if (session.queueType==2){
+											warnlog("PLAYING DIRECTOR");
+											play(streamID, response[i].UUID);
+										}
 									} else if (session.view_set && session.view_set.includes(streamID)){
 										play(streamID, response[i].UUID);
 									} else if (session.queueList.length<5000){
@@ -16388,7 +16407,9 @@ function joinRoom(roomname) {
 								var streamID = session.desaltStreamID(response[i].streamID);
 								if (session.queue){
 									if (session.directorList.indexOf(response[i].UUID)>=0){
-										play(streamID, response[i].UUID);
+										if (session.queueType==2){
+											play(streamID, response[i].UUID);
+										}
 									} else if (session.view_set && session.view_set.includes(streamID)){
 										play(streamID, response[i].UUID);
 									} else if (session.queueList.length<5000){
@@ -24352,6 +24373,8 @@ session.postPublish = async function(){
 	if (session.welcomeMessage){
 		stickyMessage(session.welcomeMessage);
 		// getChatMessage(session.welcomeMessage, false, true, true);
+	} else if (session.queue && ((session.queueType==3) || (session.queueType==4)) && !session.director){
+		youreWaitingToBeActivated();
 	}
 	
 	if (session.welcomeImage){
@@ -32032,7 +32055,9 @@ function getChatMessage(msg, label = false, director = false, overlay = false) {
 					showtime = 8000;
 				}
 				setTimeout(function(ele) {
-					ele.parentNode.removeChild(ele);
+					try {
+						ele.parentNode.removeChild(ele);
+					} catch(e){}
 				}, showtime, spanOverlay);
 			}
 		}
@@ -38215,6 +38240,7 @@ async function createSecondStream2(UUID){
 		session.pcs[UUID+"_screen"].order = false;
 		session.pcs[UUID+"_screen"].preferVideoCodec = false;
 		session.pcs[UUID+"_screen"].startTime = Date.now();
+		session.pcs[UUID+"_screen"].needsPublishing = null;
 		// session.pcs[UUID+"_screen"].rotation = false; I don't think this will ever be used?
 		
 		// we will use allowVideo/allowAudio from the main UUID parent
