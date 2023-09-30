@@ -12,7 +12,7 @@ The default video bitrate of most modern browsers is around 2500-kbps, which is 
 
 [`https://vdo.ninja/?view=streamid&videobitrate=6000`](https://vdo.ninja/?view=streamid\&videobitrate=6000)
 
-You’ll notice that we added [`&videobitrate=6000`](../advanced-settings/video-bitrate-parameters/bitrate.md) to the viewer’s side and not the publishing side. The viewer gets to control the bitrate; every viewer can set their own custom video bitrate in fact.
+You’ll notice that we added [`&videobitrate=6000`](../advanced-settings/video-bitrate-parameters/bitrate.md) to the viewer’s side and not the publishing side. The viewer gets to control the bitrate; every viewer can set their own custom video bitrate in fact. (For some games, a bitrate of 20000-kbps may be needed, but normally that's overkill though, and can actually increase frame loss if it is higher than your connection can handle.)
 
 You can also play with different video codecs; [`&codec=av1`](../advanced-settings/view-parameters/codec.md#av1) is a viewer side option and tends to offer better colors and quality than the default vp8 or h264 codecs, but av1 will use a up a lot more CPU.
 
@@ -37,3 +37,11 @@ Up to 4K or beyond is possible as well, but you'll need to manually specify the 
 As VDO.Ninja dynamically also adjusts video resolution and bitrate to match the available Internet connection bandwidth availability, sometimes 1280x720 video resolutions won’t be maintainable. You can run the [https://vdo.ninja/speedtest](https://vdo.ninja/speedtest) to see if you are able to hit at least 2000-kbps, which is about what is needed for smooth 720p video.
 
 Using Ethernet instead of Wi-Fi will also help to ensure the quality and frame loss at these higher resolutions is obtainable. At higher resolutions, frame rates are more likely to be unstable and the resolution might be throttled to something lower. Packet loss will impact the quality of a video stream quite a bit, and in rare cases, you may need to use [`&relay`](../general-settings/and-relay.md) or [`&meshcast`](../newly-added-parameters/and-meshcast.md) mode to assist in overcoming network throttling or routing issues.
+
+### Group Room Settings
+
+When in a group room, specifically as a guest or director sharing video with another guest, the video will be limited to 500-kbps by default.
+
+The director can increase the total room bitrate using a slider under the room settings menu; the button for is found in the director's lower menu bar.
+
+You can also use \&trb=4000 to set a higher room bitrate via the URL, as well as experiment with other bitrate options or trying out \&meshcast. Setting the room bitrate too high though can cause everyone in the room to have problems, specifically with overloaded CPUs or network bandwidth saturation. 500-kbps is the default for a reason.
