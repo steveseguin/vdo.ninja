@@ -1,3 +1,7 @@
+---
+description: Permission denied when trying to access the camera or microphone
+---
+
 # Enable Camera / Microphone permissions
 
 Once camera / microphone permission have been denied, often accidentally, the browser won't let VDO.Ninja ask for it again. You'll need to manually change the permission to fix it, or use a different browser. How to change the permission depends on the browser and operation system.
@@ -8,7 +12,7 @@ I've provided links to some guides. If these guides are helpful for you, I'll of
 
 [https://support.google.com/chrome/answer/2693767?hl=en\&co=GENIE.Platform%3DAndroid\&oco=0](https://support.google.com/chrome/answer/2693767?hl=en\&co=GENIE.Platform%3DAndroid\&oco=0)
 
-### **Android**
+### **Android - Chrome Browser**
 
 1. On your Android device, open the Chrome app
 2. To the right of the address bar, tap More -> Settings
@@ -30,13 +34,41 @@ I've provided links to some guides. If these guides are helpful for you, I'll of
    &#x20;    \- To remove an existing exception or permission: To the right of the site, click Delete\
    &#x20;    \- To allow a site that you already blocked: Under "Not allowed," select the site's name and change the camera or microphone permission to "Allow."
 
+If you still have issues, try a different browser; perhaps Firefox.
+
 ![](<../.gitbook/assets/image (2) (1) (3).png>)
 
-### **Firefox**
+### **Firefox Desktop**
 
 [https://support.mozilla.org/en-US/kb/how-manage-your-camera-and-microphone-permissions](https://support.mozilla.org/en-US/kb/how-manage-your-camera-and-microphone-permissions)
+
+### **Firefox Mobile**
+
+In Firefox Mobile, you can try going to **Settings** -> **Site permissions** -> **exceptions** (at bottom) -> **vdo.ninja**, and then manually set the permissions for the camera and microphone to **enabled**.
+
+\
+If Firefox Mobile still gives you issues afterwards, try in incognito mode, try a different browser, or fully restart the device.
+
+### Vivaldi / Brave / Opera
+
+You can try following the same steps needed for Chrome above, however if that fails, ensure VDO.Ninja is not being loaded via an iframe.
+
+In the case of https://invite.cam for example, which loads VDO.Ninja via an IFRAME, you may need to give microphone and camera permissions to both the invite.cam and vdo.ninja domains.
+
+You can visit https://invite.cam and https://vdo.ninja, and for each domain, ensure the microphone and camera permissions are set to allow.
 
 ### **iOS**
 
 On an iPhone, it's a bit more complicated:\
 [https://gagonfamilymedicine.com/how-to-give-an-app-permission-to-access-your-microphone-on-an-iphone-or-ipad/](https://gagonfamilymedicine.com/how-to-give-an-app-permission-to-access-your-microphone-on-an-iphone-or-ipad/)
+
+If the issue persists, fully close Safari and try again.  Sometimes updating your version of iOS and restarting can help solve issues with camera permissions as well.
+
+### Try safe mode
+
+Adding \&safemode or \&vd=0\&ad=0 to the https://vdo.ninja/ link can either try the camera in safe mode or disable the camera/microphone completely.
+
+In either mode, you might be able to bypass the initial camera selection page, or start the system with the default camera settings.
+
+If you are able to start the session in this mode, you can go to the VDO.Ninja gear icon (settings), click on User settings, and then clear the local storage.  You can then retry, refreshing the page, and try to connect again.
+
