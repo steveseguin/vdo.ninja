@@ -2,6 +2,15 @@
 
 [raspberry.ninja](../steves-helper-apps/raspberry.ninja/ "mention")
 
+#### October 6
+
+* Added `--latency 200` and `--debug` as options\
+  \-- latency lets you adjust the jitter buffer delay, with the default being 200ms. (500ms might be better over bad wifi, with 70ms over Ethernet)\
+  \-- debug will let you toggle on the debug logs, for debugging issues; I have it off by default not as it was too verbose
+* Improved the reconnection logic; if you lose internet while streaming now, the viewer should auto-reconnect in under 30-seconds now, while before it could take up to 30-minutes in some edge cases.
+* Also updated the Raspberry Pi full-installer script, so it's tested and up to date. I've also included WHIP/WHEP gstreamer support as part of that specific installer, for those wanting to play with that. I'll have a full hosted RPI 64bit pre-built bullseye image based on this new installer coming soon I hope, too; so far results of testing it show it to be rather stable, so that's a relief.
+* Initial / partial `--password` support added. This feature requires the [vdo.ninja/alpha/](https://vdo.ninja/alpha/) to be used however, since I needed to add some changes there to get it compatible.
+
 #### August 23
 
 * Raspberry.Ninja updated with new feature and code example that allows developers to access VDO.Ninja video within OpenCV, Tensorflow, and other cv/ml python apps.\

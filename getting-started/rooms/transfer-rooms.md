@@ -6,7 +6,7 @@ description: A powerful tool that allows a director to move guests to a differen
 
 Sometimes you will want to move a user from one room to another. This is often the case if wanting to pre-screen users, or if you want to create break-out rooms. It also is a way to ensure when you kick a user out of a room, they cannot be allowed back in without express permission.
 
-![The transfer room button appears as an option for each guest](<../../.gitbook/assets/image (2) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1).png>)
+![The transfer room button appears as an option for each guest](<../../.gitbook/assets/image (2) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1).png>)
 
 ### Details
 
@@ -24,7 +24,7 @@ If someone in a transfer room disconnects or refresh, they will end up back in t
 
 ### Alternative option
 
-![An alternative to the transfer feature is the change URL function.](<../../.gitbook/assets/image (3) (1) (1) (1) (1) (1) (1) (1).png>)
+![An alternative to the transfer feature is the change URL function.](<../../.gitbook/assets/image (3) (1) (1) (1) (1) (1) (1) (1) (1).png>)
 
 If you'd like to transfer a user to a new room, along with a new password or setting, you can use the Change URL option instead; as seen in the image above. The guest transferred in this fashion WILL be able to see the room they were transferred to, along with any new password. If they get disconnected or if they refresh, they will stay in the new room. This is quite useful if privacy and security are not urgently needed, as it allows for more robust options.
 

@@ -1,10 +1,39 @@
 # Updates - VDO.Ninja
 
+#### October 7 <a href="#august-31" id="august-31"></a>
+
+* `&nocclabels` added to VDO.Ninja. This disables showing the names when using the [`&closedcaptions`](../advanced-settings/settings-parameters/and-closedcaptions.md) feature, as you might want to only show labels on the video themselves, and not in the transcription text.\
+  \*\*available for testing at vdo.ninja/alpha/
+
+#### October 6 <a href="#august-31" id="august-31"></a>
+
+* Pushed a hotfix for VDO.Ninja related to [`&deafen`](../general-settings/deafen.md) not working with [`&meshcast`](../newly-added-parameters/and-meshcast.md) or WHEP-in incoming audio sources.\
+  \*\* change on production as a hotfix and on alpha.
+
+#### September 27 <a href="#august-31" id="august-31"></a>
+
+* [`&totalroombitrate`](../advanced-settings/video-bitrate-parameters/totalroombitrate.md) can now take two values; the second of which gets used if the device is a 'mobile' device, while the first gets used otherwise. ie: `&totalroombitrate=1000,500`\
+  \-- useful if you don't know if the guest is going to join via Desktop or via Smartphone, and you wish to avoid overloading a mobile device.\
+  \*\*on alpha and GitHub
+* [`&limittotalbitrate`](../advanced-settings/video-bitrate-parameters/limittotalbitrate.md) also now has the option for two bitrates; desktop,mobile, just like with `&totalroombitrate`.
+*   The "queue" mode, when applied only to the guest-link, has been extended with new options. These modes do not apply when you have [`&queue`](../general-settings/queue.md) also on the director's link, however, rather just when added to the guest-invite link only.
+
+    \
+    These options might be appealing for screening guests when either you don't want to use a transfer room or don't expect too many guests to be in queue.\
+    \-- I changed [`&queue`](../general-settings/queue.md) to not allow the guest to see the director's video, until the director activates the guest with their pink activate-guest button. Otherwise, it's the same as before.\
+    \-- `&queue2` now replaces the way [`&queue`](../general-settings/queue.md) worked before, where the guest can see/hear the director, but not other guests, until activated.\
+    \-- `&queue2` is given the alias `&screen`, intending to imply you can use this mode to screen incoming guests by talking to them, before approving them.\
+    \-- `&queue3` added, with the alias `&hold`, which is like [`&queue`](../general-settings/queue.md), except the guest gets a message telling them they need to wait until approved by the director. They don't see the director until activated, and the director doesn't see the guest's video/audio either - just their control box with any label. Once activated, the director will see the guest's video/audio, and vice versa.\
+    \-- `&queue4` added, with the alias `&holdwithvideo`, which is just like `&queue3`, except the director does see the guest's video and audio before the guest is activated. The guest can't see the director until activated, but does get a message telling them they are waiting to be activated.\
+    \-- In any of the cases mentioned above, transferring the guest to another room will also automatically activate the guest. You don't need to press the pink 'activate' button if you just intend to transfer them and don't want to talk to the guest you are screening.
+
+\*\* on alpha at [https://vdo.ninja/alpha/](https://vdo.ninja/alpha/)
+
 #### September 25 <a href="#august-31" id="august-31"></a>
 
 * Updated [`&structure`](../advanced-settings/design-parameters/and-structure.md) to work with [`&cover`](../advanced-settings/view-parameters/cover.md), allowing for some more flexibility with controlling fixed aspect-ratios from the viewer/scene side.\
   ie: `https://vdo.ninja/alpha/?room=XXXXX&scene&cover&structure&square&fakeguests=10`\
-  ![](../.gitbook/assets/image.png)![](<../.gitbook/assets/image (1).png>)
+  ![](<../.gitbook/assets/image (3).png>)![](<../.gitbook/assets/image (1) (1).png>)
 * Fixed a couple bugs, such as the local screen share preview not re-appearing after full-windowing another guest's video while screen sharing.
 
 \*\* on alpha
@@ -42,7 +71,7 @@ So it's not super obvious how to do this currently, so I think the next goal wil
 }
 ```
 
-![](<../.gitbook/assets/image (2) (1).png>)
+![](<../.gitbook/assets/image (2) (1) (1).png>)
 
 \*\* this change is on alpha at [https://vdo.ninja/alpha](https://vdo.ninja/alpha/)
 
@@ -108,7 +137,7 @@ Fixed a few bugs and pushed to alpha (vdo.ninja/alpha). Thank you for reporting 
 
 * `&clock24` added to VDO.Ninja; this is the same as the existing [`&clock`](../advanced-settings/settings-parameters/and-clock.md) option, (which shows a clock) except it uses 24-hour time for the display (vs am/pm)\
   \-- if the director uses `&clock24` on their URL, and then enables the room clock, it will be 24-hour time for all guests, matching the director's settings.\
-  ![](<../.gitbook/assets/image (3) (1) (1).png>)
+  ![](<../.gitbook/assets/image (3) (1) (1) (1).png>)
 
 \*\* at [vdo.ninja/alpha/?clock24](https://vdo.ninja/alpha/?clock24)
 
@@ -133,7 +162,7 @@ meshcastcodec == whipoutcodec, woc
   \-- This should let you make your own Meshcast service with minimal work; the open-source WHIP API code I released the other day further makes it pretty easy.
 * If using a cloudflare.com WHIP URL on the sender side, I'll guess at the WHEP link - seems to be working so far. (built this logic into VDO.Ninja directly and works automatically). This of course still implies a unique whip URL per guest.
 
-![](<../.gitbook/assets/image (2) (1) (1) (1).png>)
+![](<../.gitbook/assets/image (2) (1) (1) (1) (1).png>)
 
 * To make using Cloudflare easier though, I've also created the WHIP end point `cloudflare.vdo.ninja`, which takes a Cloudflare API token, instead of a stream token.\
   \-- This special end point will auto-create a unique WHEP URL. The official cloudflare.com whip endpoint can only be used by one sender at a time, but this API special endpoint and token approach can be used by many senders at a time. It automatically generates unique WHIP/WHEP when used, in the same way Meshcast does, so no need for unique invite urls per guest.\
@@ -173,7 +202,7 @@ meshcastcodec == whipoutcodec, woc
 Option for a custom hang-up message added to VDO.Ninja.\
 \-- `&hangupmessage` (or `&hum`) , which take a URL encoded string. So it can be just "bye", or it can be some HTML, as shown in the link\
 \-- eg: [https://vdo.ninja/alpha/?hum=bye%3Cimg%20src%3D%22.%2Fmedia%2Flogo\_cropped.png%22%3E\&push=ZimFGxM](https://vdo.ninja/alpha/?hum=bye%3Cimg%20src%3D%22.%2Fmedia%2Flogo\_cropped.png%22%3E\&push=ZimFGxM)\
-![](<../.gitbook/assets/image (1) (1) (1) (1) (1) (1).png>)\
+![](<../.gitbook/assets/image (1) (1) (1) (1) (1) (1) (1).png>)\
 \
 \* on alpha
 
@@ -237,7 +266,7 @@ Option for a custom hang-up message added to VDO.Ninja.\
 
 * Fixed an issue where when you hung up on an iPhone, it would still stay the camera/mic was in use at the goodbye/reload page.
 * Added the "test" audio output button to the in-call settings menu (as seen in image).\
-  ![](<../.gitbook/assets/image (1) (1) (1) (1) (1) (1) (1).png>)
+  ![](<../.gitbook/assets/image (1) (1) (1) (1) (1) (1) (1) (1).png>)
 * Fixed an issue with Firefox mobile's camera rotation being wrong in the local preview. (let me know tho if the issues continues tho)
 * Firefox mobile should not go to sleep any more when idle.
 
@@ -1433,7 +1462,7 @@ https://vdo.ninja/alpha/?view=YbFmisR&poster=./media/bg_sample.webp&hideplaybutt
 
 * When using [`&waitimage`](../advanced-settings/newly-added-parameters/and-waitimage.md), the specified 'waiting to connect' image will appear after all connections end. This is a bit different than the default behaviour of the spinner, which doesn't re-appear, but I assume if you're advanced enough to use the `&waitimage` option, you're okay with this.
 *   Added the option to "draw on the screen", which might be a useful tool for niche use cases where you might need to take notes, etc. It doesn't affix to videos themselves, but rather it's just a full-window transparent canvas overlay, You can start/stop/clear and select a couple style-types with this feature, via the settings -> User menu. You can also do `CTRL + ALT + D` to toggle this as needed.\
-    ![](<../.gitbook/assets/image (2) (1) (1) (1) (1) (1) (1) (1) (1) (1).png>)\
+    ![](<../.gitbook/assets/image (2) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1).png>)\
 
 
     \*\* on alpha at vdo.ninja/alpha
