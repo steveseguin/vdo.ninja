@@ -26,7 +26,7 @@ Chronologically updates are here:
 
 Turn your Raspberry Pi, Nvidia Jetson, Orange Pi, or nearly any Python-compatible system into a ninja-cam with hardware-acceleration enabled! This lets you publish live streaming video and audio directly to your web browser or OBS instance using VDO.Ninja. Achieve very low streaming latency over the Internet or a LAN; all for free.
 
-It also has the ability to record remote VDO.Ninja streams to disk, without needing to transcode, and can broadcast a low-latency video stream to multiple viewers at time.
+It also has the ability to record remote VDO.Ninja streams to disk, without needing to transcode, and can broadcast a low-latency video stream to multiple viewers at time. More recently, fdsink and OpenCV support have been added, for ingesting remote video streams with sub-300-ms of latency into your computer vision projects.
 
 ### Preface
 
@@ -193,6 +193,9 @@ optional arguments:
   --noqos               This will disable the qos feature. The QOS feature will lower the bitrate of the video encoder if heavy packet loss is detected. It won't lower it more than 5x (20% of target), but I find this works well to combat times where the network bandwidth is insufficient. 
   --pipein              Lets you pipe data in from a unix pipe, something like: `ffmpeg -i input.mp4 -o - | python3 publish.py --pipein auto`
   --libcamera           Use libcamera as a source; this may be needed if using third party cameras like those from Arducam
+  --latency             Set the incoming jitter buffer, in milliseconds. 200-ms is the default.
+  --password            Start with VDO.Ninja v24, Raspberry.Ninja is partially compatible with passwords
+  --framebuffer         Specify the stream ID that you wish to ingest and output locally as as frame buffer (OpenCV friendly)
 
 ```
 
@@ -294,7 +297,7 @@ USB cameras are options, but currently with Raspberry Pi devices these are only 
 
 If low-light is important to you, the Sony IMX327 and IMX462 series of sensors might appeal to you. They are generally designed for security camera applications, but with the use of an IR Filter, you can make them adequate for use a standard video cameras. These options may require additional gstreamer and driver work to have work however, so they are for more advanced-users at this time.
 
-I have gotten the low-light Arducam IMX462 to work with the newest image for RPI working (the v5 bullseye image). It might require a small change to the `dtoverlay` line in the `/boot/config.txt` file though to configure your specific camera, but I think I have most working now without any need drivers. (a few exceptions) , oh, and if you are changing `dtoverlay`, you might need to also comment out the camera auto detect link that is also in the config.txt file. (else it might not work)
+I have gotten the low-light Arducam IMX462 to work with the newest image for RPI working (the Bullseye image). It might require a small change to the `dtoverlay` line in the `/boot/config.txt` file though to configure your specific camera, but I think I have most working now without any need drivers. (a few exceptions) , oh, and if you are changing `dtoverlay`, you might need to also comment out the camera auto detect link that is also in the config.txt file. (else it might not work)
 
 Links for such low-light cameras:
 
