@@ -41,7 +41,7 @@ Future versions of this feature will include the option to record to a cloud ser
 * It does not work with Meshcast.
 * Chunked transfer is supported in recent Chromium-based browsers, including OBS v27.2 and newer.
 * Audio and video sync isn't always guaranteed.
-* If screen sharing your entire display, and assuming that display supports higher than 60-fps, chunked mode will support the higher frame rate.  I've tested 120-fps on my gaming monitor, using chunked mode while screen sharing the entire display. Adding \&fps=120 to the sender's URL will configure the chunked mode to both capture and publish at 120-fps.  It will error out if not supported however.
+* If screen sharing your entire display, and assuming that display supports higher than 60-fps, chunked mode will support the higher frame rate. I've tested 120-fps on my gaming monitor, using chunked mode while screen sharing the entire display. Adding [`&fps=120`](../advanced-settings/video-parameters/and-fps.md) to the sender's URL will configure the chunked mode to both capture and publish at 120-fps. It will error out if not supported however.
 
 ## Related
 

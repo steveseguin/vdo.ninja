@@ -19,12 +19,11 @@ You can also play with different video codecs; [`&codec=av1`](../advanced-settin
 Another viewer side option is [`&scale=100`](../advanced-settings/view-parameters/scale.md), which will disable dynamic fit-to-window scaling optimizations. This is especially valuable if wanting to downlscale 4K to 1080p video, as otherwise VDO.Ninja would limit the resolution to the size of the OBS Browser source window. It can also help when there is more than one video on screen, but do note that disabling the auto-scale optimizations to achieve better quality will increase the CPU and network load for all parties.
 
 Sometimes adding some sharpness to the video as a digital video effect in OBS can help improve video quality, especially for video containing fine-text, like a screen share or video overlay. By default text might look a bit soft with VDO.Ninja, and sharpening can resolve it.\
-<img src="../.gitbook/assets/image (10) (7).png" alt="" data-size="original">![](<../.gitbook/assets/image (4) (1) (1) (1) (2).png>)\
-
+<img src="../.gitbook/assets/image (10) (7).png" alt="" data-size="original">![](<../.gitbook/assets/image (4) (1) (1) (1) (2).png>)
 
 ### Sender side options
 
-On the publishing side, the _default_ target resolution is already 1280x720 @ 60-fps, but we can set this higher by adding [`&quality=0`](../advanced-settings/video-parameters/and-quality.md) to the push link. This will have the publisher’s side try to make available a 1920x1080 video stream, if their camera or video device supports it. If not, it will fall back to 1280x720p. `https://vdo.ninja/?push=streamid&quality=0`
+On the publishing side, the _default_ target resolution is already 1280x720 @ 60-fps, but we can set this higher by adding [`&quality=0`](../advanced-settings/video-parameters/and-quality.md) to the push link. This will have the publisher’s side try to make available a 1920x1080 video stream, if their camera or video device supports it. If not, it will fall back to 1280x720p. [`https://vdo.ninja/?push=streamid&quality=0`](https://vdo.ninja/?push=streamid\&quality=0)
 
 For 1080p60 gaming, you’ll want to set the video bitrate to 12000-kbps or higher, as lower bitrates might cause the frame rate to be quite low otherwise. Otherwise, for talking head-type videos, the default video bitrate is often going to be adequate.
 
@@ -44,4 +43,4 @@ When in a group room, specifically as a guest or director sharing video with ano
 
 The director can increase the total room bitrate using a slider under the room settings menu; the button for is found in the director's lower menu bar.
 
-You can also use \&trb=4000 to set a higher room bitrate via the URL, as well as experiment with other bitrate options or trying out \&meshcast. Setting the room bitrate too high though can cause everyone in the room to have problems, specifically with overloaded CPUs or network bandwidth saturation. 500-kbps is the default for a reason.
+You can also use [`&totalroombitrate=4000`](../advanced-settings/video-bitrate-parameters/totalroombitrate.md) to set a higher room bitrate via the URL, as well as experiment with other bitrate options or trying out [`&meshcast`](../newly-added-parameters/and-meshcast.md). Setting the room bitrate too high though can cause everyone in the room to have problems, specifically with overloaded CPUs or network bandwidth saturation. 500-kbps is the default for a reason.

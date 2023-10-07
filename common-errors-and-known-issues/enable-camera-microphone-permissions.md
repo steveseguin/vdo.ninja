@@ -44,31 +44,29 @@ If you still have issues, try a different browser; perhaps Firefox.
 
 ### **Firefox Mobile**
 
-In Firefox Mobile, you can try going to **Settings** -> **Site permissions** -> **exceptions** (at bottom) -> **vdo.ninja**, and then manually set the permissions for the camera and microphone to **enabled**.
+In Firefox Mobile, you can try going to **Settings** -> **Site permissions** -> **exceptions** (at bottom) -> **VDO.Ninja**, and then manually set the permissions for the camera and microphone to **enabled**.
 
-\
 If Firefox Mobile still gives you issues afterwards, try in incognito mode, try a different browser, or fully restart the device.
 
 ### Vivaldi / Brave / Opera
 
-You can try following the same steps needed for Chrome above, however if that fails, ensure VDO.Ninja is not being loaded via an iframe.
+You can try following the same steps needed for Chrome above, however if that fails, ensure VDO.Ninja is not being loaded via an IFrame.
 
-In the case of https://invite.cam for example, which loads VDO.Ninja via an IFRAME, you may need to give microphone and camera permissions to both the invite.cam and vdo.ninja domains.
+In the case of [invite.cam](https://invite.cam/) for example, which loads VDO.Ninja via an IFrame, you may need to give microphone and camera permissions to both the invite.cam and VDO.Ninja domains.
 
-You can visit https://invite.cam and https://vdo.ninja, and for each domain, ensure the microphone and camera permissions are set to allow.
+You can visit [invite.cam](https://invite.cam/) and [vdo.ninja](https://vdo.ninja/), and for each domain, ensure the microphone and camera permissions are set to allow.
 
 ### **iOS**
 
 On an iPhone, it's a bit more complicated:\
 [https://gagonfamilymedicine.com/how-to-give-an-app-permission-to-access-your-microphone-on-an-iphone-or-ipad/](https://gagonfamilymedicine.com/how-to-give-an-app-permission-to-access-your-microphone-on-an-iphone-or-ipad/)
 
-If the issue persists, fully close Safari and try again.  Sometimes updating your version of iOS and restarting can help solve issues with camera permissions as well.
+If the issue persists, fully close Safari and try again. Sometimes updating your version of iOS and restarting can help solve issues with camera permissions as well.
 
 ### Try safe mode
 
-Adding \&safemode or \&vd=0\&ad=0 to the https://vdo.ninja/ link can either try the camera in safe mode or disable the camera/microphone completely.
+Adding [`&safemode`](../newly-added-parameters/and-safemode.md) or [`&videodevice=0`](../source-settings/videodevice.md)[`&audiodevice=0`](../source-settings/audiodevice.md) to the [https://vdo.ninja/](https://vdo.ninja/) link can either try the camera in safe mode or disable the camera/microphone completely.
 
 In either mode, you might be able to bypass the initial camera selection page, or start the system with the default camera settings.
 
-If you are able to start the session in this mode, you can go to the VDO.Ninja gear icon (settings), click on User settings, and then clear the local storage.  You can then retry, refreshing the page, and try to connect again.
-
+If you are able to start the session in this mode, you can go to the VDO.Ninja gear icon (settings), click on User settings, and then clear the local storage. You can then retry, refreshing the page, and try to connect again.
