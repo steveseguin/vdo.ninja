@@ -4,9 +4,17 @@ description: This is an archived snapshot of the documentation as of Aug. 16, 20
 
 # Documentation
 
+##
+
+## 👉👉👉Go to [https://raspberry.ninja](documentation.md#go-to-https-raspberry.ninja) 👈👈👈
+
+##
+
 ## Please note that this documentation is not kept up to date.
 
-Please visit [https://raspberry.ninja](../../updates/updates-raspberry.ninja.md) for the most up-to-date documentation for Raspberry.Ninja. This documentation is included here as a consolidate resource for our LMM AI support bot to learn from. It will be updated only occasional, as needed.
+Please visit [https://raspberry.ninja](../../updates/updates-raspberry.ninja.md) for the most up-to-date documentation for Raspberry.Ninja. This documentation is included here as a consolidate resource for our LMM AI support bot to learn from. The resource here will be updated only occasional, as needed, and many links or references may be out of date.
+
+
 
 Chronologically updates are here:
 
@@ -40,7 +48,7 @@ See below for different install options
 
 #### Setup for a Raspberry Pi
 
-See the `raspberry_pi` sub-folder for instructions on installing and setting up a Raspberry Pi. Jump there now
+See the `raspberry_pi` sub-folder for instructions on installing and setting up a Raspberry Pi. [Jump there now](https://github.com/steveseguin/raspberry\_ninja/tree/main/raspberry\_pi)
 
 A Raspberry Pi works fairly well with a CSI-connected camera, but USB-based cameras currently struggle a bit with older Raspberry Pi models. As a result, consider buying an Nvidia Jetson Nano 2GB instead of a Raspberry Pi if looking to jump into this all. Also, the RPI Zero W 1 and RPi 3 both don't have the greatest WiFi built-in, while the Raspberry Pi Zero 2 seems to work rather well. Without good connectivity, you may find yourself facing frame-drops and stutter. HDMI to CSI adapters do work, but they may be limited to 25-fps and can be finicky still with some camera sources; audio over HDMI is also a bit tricky to setup currently.
 
@@ -48,7 +56,7 @@ A Raspberry Pi works fairly well with a CSI-connected camera, but USB-based came
 
 #### Setup for an Nvidia Jetson
 
-Please see the `nvidia_jetson` folder for details on installation. Jump there now
+Please see the `nvidia_jetson` folder for details on installation. [Jump there now](https://github.com/steveseguin/raspberry\_ninja/blob/main/nvidia\_jetson/README.md)
 
 ![image](https://user-images.githubusercontent.com/2575698/127804651-fc8ce68e-3510-4cd0-9d5a-1953c6aac0d8.png)
 
@@ -56,7 +64,7 @@ Nvidia Jetsons work well with USB-connected cameras and have a selection of comp
 
 #### Setup for Linux Desktops
 
-You can deploy Raspberry.Ninja to a desktop pretty quickly in most cases, without compiling anything. I have an installer for recent versions of Ubuntu if interested. Jump there now
+You can deploy Raspberry.Ninja to a desktop pretty quickly in most cases, without compiling anything. I have an installer for recent versions of Ubuntu if interested. [Jump there now](https://github.com/steveseguin/raspberry\_ninja/blob/main/ubuntu)
 
 For other distros, see below for requirements
 
@@ -72,7 +80,7 @@ You can actually run Raspberry Ninja on a Windows PC via the WSL virtual machine
 
 Still, it might be useful if you want to pull a stream from a remote Raspberry.Ninja system, recording the stream to disk or using it for local machine learning.
 
-See the WSL install script here: Jump there now
+See the WSL install script here: [Jump there now](https://github.com/steveseguin/raspberry\_ninja/blob/main/wsl)
 
 It is possible to install Gstreamer for Windows natively, but due to the difficulty in that all, I'm not supporting it officially at present. The main challenge is `cairo` fails to compile, so that needs to be fixed first.
 
@@ -236,11 +244,11 @@ You can have multiple viewers at a time, but you must enable that with a command
 
 Also note, if you run with `sudo`, you might get a permissions error when using audio.
 
-#### Auto-starting the script on boot
+#### [Auto-starting the script on boot](https://github.com/steveseguin/raspberry\_ninja#auto-starting-the-script-on-boot) <a href="#user-content-auto-starting-the-script-on-boot" id="user-content-auto-starting-the-script-on-boot"></a>
 
 A guide on how to setup a RPI to auto-stream on boot can be found in the Rasbperry Pi folder, along with details on how to configure the WiFi SSID and password without needing to SSH in first.
 
-#### RTMP output
+#### [RTMP output](https://github.com/steveseguin/raspberry\_ninja#rtmp-output) <a href="#user-content-rtmp-output" id="user-content-rtmp-output"></a>
 
 RTMP support overrides WebRTC support at the moment, and the features that are support are pretty limited.
 
@@ -248,17 +256,29 @@ RTMP support overrides WebRTC support at the moment, and the features that are s
 
 Things like bitrate, width, height, raw, framerate are also supported, but not a whole lot else.
 
-RTMP support is currently experimental; example use with a Jetson here: https://www.youtube.com/watch?v=8JOn2sK4GfQ
+RTMP support is currently experimental; example use with a Jetson here: [https://www.youtube.com/watch?v=8JOn2sK4GfQ](https://www.youtube.com/watch?v=8JOn2sK4GfQ)
 
 You can't publish to vdo.ninja with RTMP, but rather a service like YouTube.
 
-#### SRT support
+#### [SRT support](https://github.com/steveseguin/raspberry\_ninja#srt-support) <a href="#user-content-srt-support" id="user-content-srt-support"></a>
 
-I have added SRT support to the Raspberry Pi image (v5 of image). You need to use it via ffmpeg or gstreamer via command line currently, as I haven't added it to the Raspberry Ninja code directly yet. Still, it's easy enough to publish via command line with SRT, and you get the benefits of an up-to-date Raspberry Pi image with drivers and software all pre-installed.
+I have added SRT support to the Raspberry Pi image. You need to use it via Ffmpeg or Gstreamer via command line currently, as I haven't added it to the Raspberry Ninja code directly yet. Still, it's easy enough to publish via command line with SRT, and you get the benefits of an up-to-date Raspberry Pi image with drivers and software all pre-installed.
 
-#### WHIP / Meshcast support
+#### [WHIP / Meshcast support](https://github.com/steveseguin/raspberry\_ninja#whip--meshcast-support) <a href="#user-content-whip--meshcast-support" id="user-content-whip--meshcast-support"></a>
 
-Coming soon I hope.
+I added WHIP/WHEP support to the Raspberry Pi x64 pre-built image, although currently its via the rust-based webrtchttp gstreamer plugins and is outside the scope of Raspberry.Ninja itself for now.
+
+[whipsink](https://gstreamer.freedesktop.org/documentation/webrtchttp/whipsink.html?gi-language=python) [whepsrc](https://gstreamer.freedesktop.org/documentation/webrtchttp/whepsrc.html?gi-language=python)
+
+You can technically build these plugins yourself also, using Rust (cargoc) and Gstreamer 1.22 I think, but I intend to offer my own version of WHEP/WHIP support as an integral part of Raspberry.Ninja at some point in the future instead.
+
+#### [NDI support](https://github.com/steveseguin/raspberry\_ninja#ndi-support) <a href="#user-content-ndi-support" id="user-content-ndi-support"></a>
+
+I've been experimenting with NDI support, but it's not officially working correct yet.
+
+#### [OpenCV / FFMPEG / FDSink / Framebuffer support](https://github.com/steveseguin/raspberry\_ninja#opencv--ffmpeg--fdsink--framebuffer-support) <a href="#user-content-opencv--ffmpeg--fdsink--framebuffer-support" id="user-content-opencv--ffmpeg--fdsink--framebuffer-support"></a>
+
+There's support for OpenCV/Framebuffer (--framebuffer STREAMIDHERE) and FDSink now. There's a Youtube video online demoing how to use Raspberry.Ninja to bring raw BGR video frames into Numpy.
 
 ### Hardware options
 
