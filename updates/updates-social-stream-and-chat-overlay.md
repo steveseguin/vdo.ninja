@@ -3,6 +3,10 @@
 [social-stream.md](../steves-helper-apps/social-stream.md "mention")\
 [chat-overlay.md](../steves-helper-apps/chat-overlay.md "mention")
 
+#### **October 7**
+
+* `&showonlymembers` and `&showonlydonos` added to the Social Stream's dock.html page, as URL options.
+
 #### **October 3**
 
 * sesssions.us added to Social Stream

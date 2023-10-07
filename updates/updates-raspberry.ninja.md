@@ -2,6 +2,11 @@
 
 [raspberry.ninja](../steves-helper-apps/raspberry.ninja/ "mention")
 
+#### October 7
+
+* I have a new version of the Raspberry.Ninja image for Raspberry Pi devices built and hosted now.\
+  [https://drive.google.com/file/d/1vWkznU544qkRsal1GyIj4YZ-O2pNFCfh/view?usp=drive\_link](https://drive.google.com/file/d/1vWkznU544qkRsal1GyIj4YZ-O2pNFCfh/view?usp=drive\_link) (bullseye 64bit; gst 1.22 /w USB drive support)
+
 #### October 6
 
 * Added `--latency 200` and `--debug` as options\
