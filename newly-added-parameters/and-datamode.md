@@ -14,7 +14,7 @@ General Option! ([`&push`](../source-settings/push.md), [`&room`](../general-set
 
 Adding the `&datamode` parameter just combines a bunch of flags together; no video, no audio, GUI, etc. It just auto connects with data-channels only open. Useful for MIDI or sensor-data modes or the like, as it lets you connect without user-interaction or pop-up requests.
 
-###
+
 
 ## Sample code and example
 
