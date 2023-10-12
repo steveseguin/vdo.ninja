@@ -18,7 +18,11 @@ For Logitech surround headphones specifically, the following old Reddit post men
 
 {% embed url="https://www.reddit.com/r/LogitechG/comments/f04vuz/logitech_g_pro_x_dts_surround_sound_is_horrible/" %}
 
-If the issue is just “Some gaming headsets (ie: Corsair) may need to be set to 2-channel output to work, as surround sound” displays, but everything works still, I suppose you can just ignore the message.
+Another possible fault is that the audio quality in Windows is too high; 384-khz or 32-bit audio may cause issues, for example. You might also have issues with ASIO-based drivers, DSD systems, and multi-channel audio systems. In these cases, set the audio output and microphone input in Windows to at most 24-bit at 48-khz stereo; VDO.Ninja doesn't typically offer better audio quality than this anyways.\
+\
+
+
+<figure><img src="../.gitbook/assets/image.png" alt="" width="391"><figcaption></figcaption></figure>
 
 Looking at the code, this error message is triggered when "NotReadableError" is reported by the browser, I think when screen sharing with audio. So, I suppose you can also screen-share without audio maybe, and then perhaps select a virtual audio device for the audio after the fact instead if you still need a window's audio. However, this is cumbersome to do.
 
