@@ -3,6 +3,17 @@
 [social-stream.md](../steves-helper-apps/social-stream.md "mention")\
 [chat-overlay.md](../steves-helper-apps/chat-overlay.md "mention")
 
+#### **October 9**
+
+* The emotes-wall in Social Stream now has an option to have the emotes float up, rather than just bounce around.\
+  ![](<../.gitbook/assets/image (187).png>)
+* YouTube chat from channel members can have all their chat be considered as "membership chat" now, rather than just their monthly highlighted messages. This can be enabled via the general mechanics option.
+
+#### **October 8**
+
+* The wait list overlay option in Social Stream now has a "random user draw" option added, which lets you select a random user who entered. A few buttons and options were added to the extension to customize the behavior and to select winners and clear/reset the entries as needed.\
+  ![](<../.gitbook/assets/image (186).png>)
+
 #### **October 7**
 
 * `&showonlymembers` and `&showonlydonos` added to the Social Stream's dock.html page, as URL options.

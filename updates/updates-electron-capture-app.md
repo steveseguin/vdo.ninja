@@ -2,6 +2,12 @@
 
 [electron-capture.md](../steves-helper-apps/electron-capture.md "mention")
 
+#### October 8
+
+* Updated the Electron Capture App with some recent security patches for browsers in general\
+  [https://github.com/steveseguin/electroncapture/releases/tag/2.17.6](https://github.com/steveseguin/electroncapture/releases/tag/2.17.6)\
+  \*\* mac and pc builds available.
+
 #### June 2
 
 *   Electron Capture updated to the newest version, along with some global hot key changes that some users reported were having issues.
