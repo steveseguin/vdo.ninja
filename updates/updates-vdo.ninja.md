@@ -1,5 +1,27 @@
 # Updates - VDO.Ninja
 
+#### October 13 <a href="#august-31" id="august-31"></a>
+
+* I re-wrote the canvas drawing logic (the digital effects code) to make it more performant when a tab is not visible. Some browsers will throttle hidden tabs, and it was causing low frame rates when doing green screen or digital zoom while multitasking. I'd love some testing of it from others, to ensure no bugs slipped in, and also to let me know if it actually helped.
+* added some logic to the green screen / virtual background code that tries to lower quality of the effect a bit when low frames are detected, to try to allow slow devices or mobile devices to maintain a better frame rate. If its an issue on mobile, [`&flagship`](../advanced-settings/upcoming-parameters/and-flagship.md) can disable that code.
+
+\*\* change on alpha ([https://vdo.ninja/alpha/](https://vdo.ninja/alpha/))
+
+#### October 12 <a href="#august-31" id="august-31"></a>
+
+* [`&effectvalue=1.2`](../newly-added-parameters/and-effectvalue.md) will now work with `&zoom` ([`&effects=7`](../source-settings/effects.md#options)), so you can trigger the camera to digitally zoom in on load.
+* Fixed a bug where [`&border`](../advanced-settings/design-parameters/and-border.md) was off by about 5%, causing some blank areas to sometimes show.
+* The sender's sub-gain audio sliders, while working, didn't update text label value fields correctly when making adjustments; that's fixed now.
+* Fixed an issue where some icons were white in dark mode, when they should have been black.
+
+\*\* updates on alpha at vdo.ninja/alpha/
+
+#### October 9 <a href="#august-31" id="august-31"></a>
+
+If you want the VDO.Ninja self-preview to not be mini-sized in broadcast mode, which might be the case on mobile, you can try using [`&minipreview=0`](../source-settings/and-minipreview.md) or `&largepreview`. These flags will disable the mini-preview functionality, keeping the preview the same size as other videos.
+
+\*\* on production (hot patch) and alpha
+
 #### October 7 <a href="#august-31" id="august-31"></a>
 
 * `&nocclabels` added to VDO.Ninja. This disables showing the names when using the [`&closedcaptions`](../advanced-settings/settings-parameters/and-closedcaptions.md) feature, as you might want to only show labels on the video themselves, and not in the transcription text.\

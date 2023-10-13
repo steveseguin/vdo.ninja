@@ -3,6 +3,12 @@
 [social-stream.md](../steves-helper-apps/social-stream.md "mention")\
 [chat-overlay.md](../steves-helper-apps/chat-overlay.md "mention")
 
+#### **October 12**
+
+* Improved `&floatup`; supports \&showtime now, to control speed, plus OBS fixes.
+* caffeine.tv support added to Social Stream.
+* Font-resizing for long messages is no longer enabled by default on the featured chat page; you'll need to now use `&fontfit` to enable it. (it's available as a toggle under featured->style)
+
 #### **October 9**
 
 * The emotes-wall in Social Stream now has an option to have the emotes float up, rather than just bounce around.\
