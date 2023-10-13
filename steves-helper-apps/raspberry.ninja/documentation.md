@@ -4,17 +4,11 @@ description: This is an archived snapshot of the documentation as of Aug. 16, 20
 
 # Documentation
 
-##
-
 ## 👉👉👉Go to [https://raspberry.ninja](documentation.md#go-to-https-raspberry.ninja) 👈👈👈
-
-##
 
 ## Please note that this documentation is not kept up to date.
 
 Please visit [https://raspberry.ninja](../../updates/updates-raspberry.ninja.md) for the most up-to-date documentation for Raspberry.Ninja. This documentation is included here as a consolidate resource for our LMM AI support bot to learn from. The resource here will be updated only occasional, as needed, and many links or references may be out of date.
-
-
 
 Chronologically updates are here:
 
@@ -347,7 +341,7 @@ If using a virtual MIDI device on the remote viewer's computer, such as `loopMID
 
 Please note, the raspberry\_ninja publish.py script can both send and recieve MIDI commands over a single peer connection, which is a bit different than how video/audio work currently. It's also different than how browser to browser currently is setup, where a sender won't ever request MIDI data, yet the raspberry\_ninja code does allow the sender to both send and receive MIDI data.
 
-midi demo video:
+Midi demo video:
 
 {% embed url="https://youtu.be/Gry9UFtOTmQ?si=SpIBdDBPu9J1MN2M" %}
 
