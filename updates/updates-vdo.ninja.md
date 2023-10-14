@@ -338,13 +338,13 @@ for eg: `https://vdo.ninja/alpha/?director=countrytownc&api=test123456` test dir
 
 #### July 20 <a href="#august-31" id="august-31"></a>
 
-* fixed an issue where adding a screen share to a group didn't work, along with some other director-related commands targetting a screen share.
+* Fixed an issue where adding a screen share to a group didn't work, along with some other director-related commands targetting a screen share.
 
 \*on [https://vdo.ninja/alpha/](https://vdo.ninja/alpha/)
 
 #### July 19 <a href="#august-31" id="august-31"></a>
 
-* `&app` added as an option to VDO.Ninja; this loads the site into an "**app mode**" and allows you to load a new URL via the website itself.\
+* [`&app`](../advanced-settings/mobile-parameters/and-app.md) added as an option to VDO.Ninja; this loads the site into an "**app mode**" and allows you to load a new URL via the website itself.\
   \-- This parameter is enabled in the mobile native app's new website-mode option by default (the screen share option is also hidden).\
   \* it will go live inside the native Android app whenever I push VDO.Ninja's alpha version into production\
   ![](<../.gitbook/assets/image (10) (8).png>)
