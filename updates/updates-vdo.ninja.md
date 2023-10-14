@@ -419,7 +419,7 @@ I'll keep improving the support for WHIP/WHEP. Lots to do. Suggestions welcomed 
 *   When using any [`&meterstyle`](../advanced-settings/design-parameters/meterstyle.md) effect, I now I include a data attribute called `data-speaking` to the video element. It will be either 0, 1, or 2. 0 is quiet, 1 is whispering, and 2 is loud. `&meterstyle=4` includes a fine-grain option already for loudness as an attribute, but for basic CSS needs, this option might be more approachable.
 
     \-- You can use this attribute to use CSS to customize your own effects when someone speaks. You can further target what is CSS used based on a specific guest by using each video's stream ID data attribute as well.
-*   `&avatarimg2` and `&avatarimg3` were added, and work in conjunction with the existing [`&bgimage`](../advanced-settings/design-parameters/and-bgimage.md) parameter. You pass an URL-encoded image URL to each, and when a guest speaks, it will switch their background image between the 3 possible images, based on their loudness.
+*   `&bgimage2` and `&bgimage3` were added, and work in conjunction with the existing [`&bgimage`](../advanced-settings/design-parameters/and-bgimage.md) parameter. You pass an URL-encoded image URL to each, and when a guest speaks, it will switch their background image between the 3 possible images, based on their loudness.
 
     \-- eg:
 
@@ -436,8 +436,8 @@ I'll keep improving the support for WHIP/WHEP. Lots to do. Suggestions welcomed 
 
 #### July 1 <a href="#august-31" id="august-31"></a>
 
-* Added `&whipoutcodec=av1,h264,vp8` (`&woc`), which lets you specify the WHIP video output codec. It can take multiple values; if not used, the default at the moment is open264
-* Added `&whipoutaudiobitrate` (`&woab`) and `&whipoutvideobitrate` (`&wovb`), which lets you specified the WHIP audio and video bitrate (kbps).
+* Added [`&whipoutcodec=av1,h264,vp8`](../advanced-settings/whip-parameters/and-whipoutcodec.md) (`&woc`), which lets you specify the WHIP video output codec. It can take multiple values; if not used, the default at the moment is open264
+* Added [`&whipoutaudiobitrate`](../advanced-settings/whip-parameters/and-whipoutaudiobitrate.md) (`&woab`) and [`&whipoutvideobitrate`](../advanced-settings/whip-parameters/and-whipoutvideobitrate.md) (`&wovb`), which lets you specified the WHIP audio and video bitrate (kbps).
 * [`&stereo`](../general-settings/stereo.md) now works with the WHIP output, so if enabled, you'll publish stereo 2.0 with a default audio bitrate of around 80 to 100-kbps; otherwise the default is mono at around 60kbps. These defaults bitrates might be changed own the road.
 * The WHIP sandbox test page is now configured with two drop down menus to let you select bitrate and codec for when publishing to a WHIP output.
 * The Twitch WHIP output example now has a default bitrate of 6000-kbps if used. The video codec for whip out by default is openh264, and the twitch output option uses that by default. (The Twitch defaults need to be changed via URL manually.)

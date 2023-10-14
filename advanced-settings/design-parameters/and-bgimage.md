@@ -30,6 +30,20 @@ You can encode your URL here:\
 
 If you want to change the background image / avatar on the sender's side for all viewers, use [`&avatar`](../video-parameters/and-avatar.md).
 
+## `&bgimage2` and `&bgimage3`
+
+`&bgimage2` and `&bgimage3` work in conjunction with the existing `&bgimage` parameter. You pass an URL-encoded image URL to each, and when a guest speaks, it will switch their background image between the 3 possible images, based on their loudness.
+
+eg:
+
+```
+vdo.ninja/alpha/?view=stream2,stream2&avatarimg=./media/avatar1.png&avatarimg2=./media/avatar2.png&avatarimg3=./media/avatar3.png
+```
+
+I've included some hand-drawn avatar sample images to test with; they are the default values for `&bgimage`, `&bgimage2`, and `&bgimage3`.
+
+The images will only show when there is no active video and is essentially the same as using [`&meterstyle=4`](meterstyle.md) with some custom CSS to specify the behaviour, but it is not stream ID specific however.
+
 ## Related
 
 {% content-ref url="style.md" %}
