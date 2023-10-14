@@ -444,6 +444,7 @@
     * [\&flagship](advanced-settings/upcoming-parameters/and-flagship.md)
     * [\&mobile](advanced-settings/upcoming-parameters/and-mobile.md)
     * [\&notmobile](advanced-settings/upcoming-parameters/and-notmobile.md)
+    * [\&app](advanced-settings/mobile-parameters/and-app.md)
   * [API & MIDI Parameters](advanced-settings/api-and-midi-parameters/README.md)
     * [\&api](general-settings/api.md)
       * [API reference](advanced-settings/api-and-midi-parameters/api/api-reference.md)
