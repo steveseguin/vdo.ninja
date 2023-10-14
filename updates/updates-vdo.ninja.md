@@ -419,16 +419,16 @@ I'll keep improving the support for WHIP/WHEP. Lots to do. Suggestions welcomed 
 *   When using any [`&meterstyle`](../advanced-settings/design-parameters/meterstyle.md) effect, I now I include a data attribute called `data-speaking` to the video element. It will be either 0, 1, or 2. 0 is quiet, 1 is whispering, and 2 is loud. `&meterstyle=4` includes a fine-grain option already for loudness as an attribute, but for basic CSS needs, this option might be more approachable.
 
     \-- You can use this attribute to use CSS to customize your own effects when someone speaks. You can further target what is CSS used based on a specific guest by using each video's stream ID data attribute as well.
-*   `&bgimage2` and `&bgimage3` were added, and work in conjunction with the existing [`&bgimage`](../advanced-settings/design-parameters/and-bgimage.md) parameter. You pass an URL-encoded image URL to each, and when a guest speaks, it will switch their background image between the 3 possible images, based on their loudness.
+* [`&bgimage2`](../advanced-settings/design-parameters/and-bgimage.md#and-bgimage2-and-and-bgimage3) and [`&bgimage3`](../advanced-settings/design-parameters/and-bgimage.md#and-bgimage2-and-and-bgimage3) were added, and work in conjunction with the existing [`&bgimage`](../advanced-settings/design-parameters/and-bgimage.md) parameter. You pass an URL-encoded image URL to each, and when a guest speaks, it will switch their background image between the 3 possible images, based on their loudness.
 
-    \-- eg:
+\-- eg:
 
-    ```
-    vdo.ninja/alpha/?view=stream2,stream2&avatarimg=./media/avatar1.png&avatarimg2=./media/avatar2.png&avatarimg3=./media/avatar3.png
-    ```
+```
+vdo.ninja/alpha/?view=stream2,stream2&avatarimg=./media/avatar1.png&avatarimg2=./media/avatar2.png&avatarimg3=./media/avatar3.png
+```
 
-    \-- I've included some hand-drawn avatar sample images to test with; they are the default values for `&bgimage`, `&avatarimg2`, and `&avatarimg3`. (ugly, but mean to be just placeholders)\
-    \-- The images will only show when there is no active video and is essentially the same as using `&meterstyle=4` with some custom CSS to specify the behaviour, but it is not stream ID specific however.
+\-- I've included some hand-drawn avatar sample images to test with; they are the default values for `&bgimage`, `&bgimage2`, and `&bgimage3`. (ugly, but mean to be just placeholders)\
+\-- The images will only show when there is no active video and is essentially the same as using `&meterstyle=4` with some custom CSS to specify the behaviour, but it is not stream ID specific however.
 
 ![](<../.gitbook/assets/image (24) (3).png>)
 
