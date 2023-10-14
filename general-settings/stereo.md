@@ -76,6 +76,10 @@ The default mode when `&stereo` is used alone is `&stereo=5`, which acts like ei
 
 Just for reference, the audio codec used by VDO.Ninja is OPUS (48khz), which can provide high-fidelity music transfer when the audio bitrate is set to 80-kbps per channel or higher. The default audio bitrate used is 32-kbps VBR, which is sufficient for most voice applications. Increasing the audio bitrate to a near-lossless 500-kbps or something may end up causing more problems than anything, but that is supported if needed.
 
+### WHIP
+
+`&stereo` now works with the WHIP output, so if enabled, you'll publish stereo 2.0 with a default audio bitrate of around 80 to 100-kbps; otherwise the default is mono at around 60kbps. These defaults bitrates might be changed own the road.
+
 ## Related
 
 {% content-ref url="../advanced-settings/view-parameters/audiobitrate.md" %}

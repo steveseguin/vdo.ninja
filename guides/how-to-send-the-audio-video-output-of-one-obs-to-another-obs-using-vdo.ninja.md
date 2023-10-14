@@ -117,4 +117,4 @@ You can also ask for help on [Discord](https://discord.vdo.ninja/); usually help
 
 ### WHIP Output
 
-Newer versions of OBS may also support WHIP output, which VDO.Ninja also supports. While the Virtual Camera might be the better option for many, details on [WHIP are here](../advanced-settings/mixer-scene-parameters/and-whip.md).
+Newer versions of OBS may also support WHIP output, which VDO.Ninja also supports. While the Virtual Camera might be the better option for many, details on [WHIP are here](../advanced-settings/whip-parameters/and-whip.md).
