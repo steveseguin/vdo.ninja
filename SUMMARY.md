@@ -277,6 +277,7 @@
     * [\&token](advanced-settings/settings-parameters/and-token.md)
     * [\&transcribe](source-settings/transcribe.md)
     * [\&signalmeter](newly-added-parameters/and-signalmeter.md)
+    * [\&batterymeter](advanced-settings/settings-parameters/and-batterymeter.md)
     * [\&consent](source-settings/consent.md)
     * [\&prompt](advanced-settings/settings-parameters/and-prompt.md)
     * [\&hands](https://docs.vdo.ninja/advanced-settings/buttons-and-control-bar-parameters/and-hands)
