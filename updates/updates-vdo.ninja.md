@@ -1,5 +1,10 @@
 # Updates - VDO.Ninja
 
+#### October 14 <a href="#august-31" id="august-31"></a>
+
+* Added `&nodirectorvideo` and `&nodirectoraudio` to VDO.Ninja; these are just like [`&novideo`](../advanced-settings/video-parameters/novideo-1.md) and [`&noaudio`](../advanced-settings/view-parameters/noaudio.md), except they only apply to incoming connections from room directors. So, if your are using the [Mixer App](../steves-helper-apps/mixer-app.md) with OBS, but you want to exclude the audio of yourself from the OBS, this potentially could be an easy way to do that.\
+  \*\* on alpha at vdo.ninja/alpha/
+
 #### October 13 <a href="#august-31" id="august-31"></a>
 
 * I re-wrote the canvas drawing logic (the digital effects code) to make it more performant when a tab is not visible. Some browsers will throttle hidden tabs, and it was causing low frame rates when doing green screen or digital zoom while multitasking. I'd love some testing of it from others, to ensure no bugs slipped in, and also to let me know if it actually helped.
