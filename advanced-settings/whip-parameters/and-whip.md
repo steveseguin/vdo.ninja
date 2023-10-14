@@ -6,6 +6,10 @@ description: Publish directly from OBS (or other) to VDO.Ninja without a virtual
 
 Viewer-Side Option! ([`&scene`](../view-parameters/scene.md), [`&room`](../../general-settings/room.md), [`&director`](../../viewers-settings/director.md))
 
+## Aliases
+
+* `&whipview`
+
 ## Options
 
 Example: `&whip=bearertoken`

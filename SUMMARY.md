@@ -433,6 +433,8 @@
   * [WHIP Parameters](advanced-settings/whip-parameters/README.md)
     * [\&whip](advanced-settings/whip-parameters/and-whip.md)
     * [\&whipoutcodec](advanced-settings/whip-parameters/and-whipoutcodec.md)
+    * [\&whipoutaudiobitrate](advanced-settings/whip-parameters/and-whipoutaudiobitrate.md)
+    * [\&whipoutvideobitrate](advanced-settings/whip-parameters/and-whipoutvideobitrate.md)
   * [Mobile Parameters](advanced-settings/mobile-parameters/README.md)
     * [\&facing](advanced-settings/mobile-parameters/and-facing.md)
     * [\&forcelandscape](advanced-settings/mobile-parameters/and-forcelandscape.md)
