@@ -2,8 +2,16 @@
 
 #### October 14 <a href="#august-31" id="august-31"></a>
 
-* Added `&nodirectorvideo` and `&nodirectoraudio` to VDO.Ninja; these are just like [`&novideo`](../advanced-settings/video-parameters/novideo-1.md) and [`&noaudio`](../advanced-settings/view-parameters/noaudio.md), except they only apply to incoming connections from room directors. So, if your are using the [Mixer App](../steves-helper-apps/mixer-app.md) with OBS, but you want to exclude the audio of yourself from the OBS, this potentially could be an easy way to do that.\
-  \*\* on alpha at vdo.ninja/alpha/
+*   I now include a trouble solving tip for users with extremely high audio sample rates set, which is the cause for some microphones not to work.
+
+    <div align="left">
+
+    <figure><img src="../.gitbook/assets/image (188).png" alt="" width="331"><figcaption></figcaption></figure>
+
+    </div>
+* Added `&nodirectorvideo` and `&nodirectoraudio` to VDO.Ninja; these are just like [`&novideo`](../advanced-settings/video-parameters/novideo-1.md) and [`&noaudio`](../advanced-settings/view-parameters/noaudio.md), except they only apply to incoming connections from room directors. So, if your are using the [Mixer App](../steves-helper-apps/mixer-app.md) with OBS, but you want to exclude the audio of yourself from the OBS, this potentially could be an easy way to do that.
+
+\*\* on alpha at vdo.ninja/alpha/
 
 #### October 13 <a href="#august-31" id="august-31"></a>
 
