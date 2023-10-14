@@ -25,6 +25,8 @@ Added a little "pin" icon to the end of the copy/view link when sharing your cam
 
 <figure><img src="../.gitbook/assets/image (8) (1) (2).png" alt=""><figcaption></figcaption></figure>
 
+`&sticky` and the "save room" button won't work for links loaded in OBS Studio anymore - there isn't a usecase for this really, and using `&sticky` there just complicates things for some users.
+
 ## Related
 
 {% content-ref url="../advanced-settings/settings-parameters/and-clearstorage.md" %}
