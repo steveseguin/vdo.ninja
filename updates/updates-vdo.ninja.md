@@ -382,10 +382,10 @@ for eg: `https://vdo.ninja/alpha/?director=countrytownc&api=test123456` test dir
 
 #### July 13 <a href="#august-31" id="august-31"></a>
 
-* `&batterymeter` added, curtesy of @Yong.\
+* [`&batterymeter`](../advanced-settings/settings-parameters/and-batterymeter.md) added, curtesy of @Yong.\
   \-- you can read their notes here: [https://github.com/steveseguin/vdo.ninja/pull/1078#issuecomment-1627799535](https://github.com/steveseguin/vdo.ninja/pull/1078#issuecomment-1627799535)\
   \-- It's the same concept of [`&signalmeter`](../newly-added-parameters/and-signalmeter.md), except shows the battery meter for guests that are on devices with a battery that's draining/charging.\
-  \-- Shows blinking warning if under 25% battery life\
+  \-- Shows blinking warning if under 25% battery life.\
   \-- The battery meter was already available by default as the director, but now it can be enabled as a guest, etc.\
   \-- Also supports disabling the meter with `&batterymeter=0`.\
   \
