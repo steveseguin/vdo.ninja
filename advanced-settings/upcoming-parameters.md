@@ -12,7 +12,7 @@ description: >-
 
 You can use/test these new parameters for Version 24 on [vdo.ninja/alpha](https://vdo.ninja/alpha/) and/or [vdo.ninja/beta](https://vdo.ninja/beta/):
 
-<table><thead><tr><th width="265">Parameter</th><th>Explanation</th></tr></thead><tbody><tr><td>-</td><td>No new parameters on alpha or beta at the moment</td></tr><tr><td><code>&#x26;notios</code></td><td></td></tr></tbody></table>
+<table><thead><tr><th width="265">Parameter</th><th>Explanation</th></tr></thead><tbody><tr><td>-</td><td>No new parameters on alpha or beta at the moment</td></tr></tbody></table>
 
 \***ALPHA-ONLY** - Only available at [https://vdo.ninja/alpha/](https://vdo.ninja/alpha/)\
 \*\*on [vdo.ninja/beta](https://vdo.ninja/beta/) and [vdo.ninja/alpha](https://vdo.ninja/alpha/)
