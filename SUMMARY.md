@@ -257,6 +257,7 @@
     * [\&waitimage](advanced-settings/newly-added-parameters/and-waitimage.md)
     * [\&waitmessage](advanced-settings/newly-added-parameters/and-waitmessage.md)
     * [\&waittimeout](advanced-settings/newly-added-parameters/and-waittimeout.md)
+    * [\&locked](advanced-settings/mixer-scene-parameters/and-locked.md)
   * [Settings Parameters](advanced-settings/settings-parameters/README.md)
     * [\&language](advanced-settings/settings-parameters/and-language.md)
     * [\&remote](general-settings/remote.md)

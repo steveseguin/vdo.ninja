@@ -314,11 +314,12 @@ Option for a custom hang-up message added to VDO.Ninja.\
 
 #### July 24 <a href="#august-31" id="august-31"></a>
 
-* Created a new parameter called `&locked` for **VDO.Ninja**, which will force a the VDO.Ninja's mixer output keep the mixed render contained to a specific aspect-ratio, regardless of the browser's window size. (as seen in photo)\
+* Created a new parameter called [`&locked`](../advanced-settings/mixer-scene-parameters/and-locked.md) for **VDO.Ninja**, which will force a the VDO.Ninja's mixer output keep the mixed render contained to a specific aspect-ratio, regardless of the browser's window size. (as seen in photo)\
+  ![](<../.gitbook/assets/image (189).png>)![](<../.gitbook/assets/image (190).png>)\
   \-- You'll get black bars (or whatever the background color is) as padding on the sides to force the inner video elements into the desired aspect ratio\
-  \-- When using `&locked`, the default aspect ratio is 16:9, but you can pass a floating point value for different aspect ratios, or use landscape (instead of 1.77777) / portrait / square as presets if needed.\
+  \-- When using [`&locked`](../advanced-settings/mixer-scene-parameters/and-locked.md), the default aspect ratio is 16:9, but you can pass a floating point value for different aspect ratios, or use landscape (instead of 1.77777) / portrait / square as presets if needed.\
   \-- Padding is centered, so the rendered video will be in the center of the screen. (tho using [`&widget`](../advanced-settings/settings-parameters/and-widget.md) mode might break things though).\
-  \-- This `&locked` option is added to the Mixer App's WHIP/T**witch publishing output option**, so regardless of window size, you'll get a 16:9 video render
+  \-- This [`&locked`](../advanced-settings/mixer-scene-parameters/and-locked.md) option is added to the Mixer App's WHIP/**Twitch publishing output option**, so regardless of window size, you'll get a 16:9 video render
 
 #### July 23 <a href="#august-31" id="august-31"></a>
 
