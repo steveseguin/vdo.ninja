@@ -287,7 +287,7 @@ Option for a custom hang-up message added to VDO.Ninja.\
 
 #### July 31 <a href="#august-31" id="august-31"></a>
 
-* Added a flag called `&notios`, as in "not iOS". It just tells the system that its not an iOS device, or iPad, even if it is. This might change the behavior of the phone in certain ways, mainly for the purposes of debugging.
+* Added a flag called [`&notios`](../advanced-settings/mobile-parameters/and-notios.md), as in "not iOS". It just tells the system that it's not an iOS device, or iPad, even if it is. This might change the behavior of the phone in certain ways, mainly for the purposes of debugging.
 * Updated the rotation logic so it supports legacy and now also future-API standards.
 * Rotating on Firefox should trigger the rotation event about 200ms faster now (found a faster event API).
 
@@ -297,8 +297,7 @@ Option for a custom hang-up message added to VDO.Ninja.\
 
 * Updated the logic for [`&noremb`](../other-parameters.md), [`&nopli`](../other-parameters.md), and [`&nonack`](../other-parameters.md) advanced viewer-side flags; there were some scenarios where they didn't kick in if used. I tried to fix that a bit.\
   \
-  These flags in theory I think should help try to force a bitrate or resolution, regardless of network conditions, but in practice they still seem to just smash your frame rate. I haven't really been able to find a good use for them yet, but let me know.\
-
+  These flags in theory I think should help try to force a bitrate or resolution, regardless of network conditions, but in practice they still seem to just smash your frame rate. I haven't really been able to find a good use for them yet, but let me know.
 * Fixed an issue where when you hung up on an iPhone, it would still stay the camera/mic was in use at the goodbye/reload page.
 * Added the "test" audio output button to the in-call settings menu (as seen in image).\
   ![](<../.gitbook/assets/image (1) (1) (1) (1) (1) (1) (1) (1) (1).png>)

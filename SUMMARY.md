@@ -442,6 +442,7 @@
     * [\&forcelandscape](advanced-settings/mobile-parameters/and-forcelandscape.md)
     * [\&forceportrait](advanced-settings/mobile-parameters/and-forceportrait.md)
     * [\&forceios](advanced-settings/mobile-parameters/and-forceios.md)
+    * [\&notios](advanced-settings/mobile-parameters/and-notios.md)
     * [\&flagship](advanced-settings/upcoming-parameters/and-flagship.md)
     * [\&mobile](advanced-settings/upcoming-parameters/and-mobile.md)
     * [\&notmobile](advanced-settings/upcoming-parameters/and-notmobile.md)
