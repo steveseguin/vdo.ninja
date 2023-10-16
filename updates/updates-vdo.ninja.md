@@ -1,5 +1,27 @@
 # Updates - VDO.Ninja
 
+#### October 16 <a href="#august-31" id="august-31"></a>
+
+* Added a new experimental option called `&retransmit`; it will relay the incoming '[chunked](../newly-added-parameters/and-chunked.md)' media stream to others connected to you, without transcoding. In a way, this enables a form of peer to peer to peer broadcasting.\
+  \
+  \-- It only works with incoming [`&chunked`](../newly-added-parameters/and-chunked.md) data streams, however trying to forward more than one chunked stream will break things currently.\
+  \-- It will disable your own mic/camera from being streamed; when `&retransmit` is used it configures itself as a viewer in a sense.\
+  \-- Chunked mode has a default play out buffer delay of about 1-second still, but that buffer time does not get passed down to the relayed viewer. There is still some transmission delay that gets introduced though, but it can be very low latency on a series of good computers/network. example p2p2p setup:
+
+```
+https://vdo.ninja/alpha/?chunked&push=PUBLISHER123   // this is the source. Notice they are publishing in chunked mode
+https://vdo.ninja/alpha/?view=PUBLISHER123&retransmit&push=RESTREAMER123   // this person is both viewing the video, but also relaying
+https://vdo.ninja/alpha/?view=RESTREAMER123   // this person is viewing the stream from the relayed chunked stream; p2p2p. They don't know they are getting a relayed stream.
+```
+
+This feature is just for fun at the moment. It's does not do automatic p2p2p broadcasting, as you still need to manually customize who sees what, and chunked mode isn't compatible with all browsers/devices yet. It's on alpha at the time being (vdo.ninja/alpha/).
+
+* Completed some needed server maintenance/upgrades @ \~2:20am est
+
+#### October 15 <a href="#august-31" id="august-31"></a>
+
+* I actually think I might have figured out a software solution to the previously mentioned issue, re: high sample rates, and so I just pushed a patch into production. If you notice any brand new issues with audio though, such as extremely clicking, let me know of course. Thanks!
+
 #### October 14 <a href="#august-31" id="august-31"></a>
 
 *   I now include a trouble solving tip for users with extremely high audio sample rates set, which is the cause for some microphones not to work.
