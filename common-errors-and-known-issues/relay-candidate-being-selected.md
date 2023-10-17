@@ -57,13 +57,17 @@ The smartphone and the production laptop will be able to make a direct peer to p
 
 The gaming desktop however will struggle to make a peer to peer connection with the laptop on the other router, since they are on different networks. As a result, the connection might end up going thru the relay server, on the Internet, which is a disappointing result given the opportunity for a much better connection.
 
-To fix such a scenario,&#x20;
+To fix such a scenario, some options:
 
-* Replace the travel router with an ethernet switch and if needed, a wireless access point for the smartphone to connect to; all systems are on the same network.
-* Enable an point the travel router's DMZ at the production laptop's local IP address; this makes the travel router transparent to the gaming desktop.
+* **RECOMMENDED SOLUTION:** Connect all devices to the main router instead
+  * Or alternatively, remove the main router, and connect all devices to the travel router instead, if feasible.
+* **RECOMMENDED SOLUTION:** Replace the travel router with an ethernet switch, and if needed, add a wireless access point for the smartphone to connect to.
+* Enable and point the travel router's DMZ at the production laptop's local IP address; this makes the travel router transparent to the gaming desktop. Just be sure to disable the DMZ mode when done.
 * Move all devices to the same router, using the main router or the travel router\* for all devices.
 
-\*Assuming you connect the gaming laptop to the travel router instead, another issue might occur, and that is any VDO.Ninja user you try to connect to on the Internet may end up in relay mode with you.  We can solve this issue potentially by putting our main router into bridge mode, which is often available as an option on cable modems in its gateway settings.
+\*Assuming you connect the gaming laptop to the travel router instead, another issue might occur, and that is any VDO.Ninja user you try to connect to on the Internet may end up in relay mode with you.  We can solve this issue potentially by putting our main router into bridge mode, which is often available as an option on cable modems in its gateway settings.\
+\
+The recommended solutions have the benefit of ensuring all the clients, even clients on the Internet, can establish a peer to peer connection with any other client on the network. This wouldn't be the case for example if we simply used the DMZ mode, as the smartphone would not be able to connect to clients on the Internet in a direct p2p mode.
 
 ### Final words
 
