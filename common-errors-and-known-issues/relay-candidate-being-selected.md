@@ -7,11 +7,9 @@ description: >-
 
 # Relay candidate being selected
 
-There's many reasons why your computer&#x20;
+There's many reasons why one client might not be able to make a direct connection with another client, resulting in their connections being relayed thru a TURN server, or perhaps failing entirely. Being in relay mode can sometimes hurt quality, add latency, and use up limited Internet bandwidth.
 
-
-
-
+Some common reasons, with some solutions, are listed below.
 
 ### Cellular connections
 
@@ -39,12 +37,18 @@ These issues can be hard to judge, especially if they are issues on the remote g
 * Corporate firewalls blocking webRTC or UDP traffic
   * Ask your IT department for a solution, perhaps be given an isolated network space.
   * Use a VPN, preferably something hosted close by to reduce performance issues
+  * Host your own TURN / STUN server, close to or within the corporate network, and specify it to be used within VDO.Ninja.
 * PFSense firewalls will block webRTC or UDP traffic.
   * Modify your firewall settings to allow those two options.
 * Symmetrical firewalls, such as with some fiber internet services, may cause issues.
   * Contact your ISP if this is the case.
 * Strict security software installed
   * Try from a different computer on the same network to see if its a local software issue
+* If using WHIP / WHEP, some third party applications may not support NAT traversal, lacking STUN server support, as it can be a lot of adding coding work. In these cases, VDO.Ninja might use a TURN server to assist things along, but it's far from ideal.
+  * Host your own TURN server locally, and specify it in VDO.Ninja.
+  * Reach out to the developers / support staff and ask for help
+* STUN servers are being block. The STUN servers are hosted by Google, so if they are blocked, TURN might be the fallback.&#x20;
+  * You can specify your own STUN servers if needed via URL parameters
 * Endless other reasons...
 
 ### Doubled up NAT firewalls
@@ -69,11 +73,13 @@ To fix such a scenario, some options:
 \
 The recommended solutions have the benefit of ensuring all the clients, even clients on the Internet, can establish a peer to peer connection with any other client on the network. This wouldn't be the case for example if we simply used the DMZ mode, as the smartphone would not be able to connect to clients on the Internet in a direct p2p mode.
 
-### Final words
+### Final comments and advice
 
 Identifying which client is the problem can go a long way to troubleshooting.
 
 Don't be afraid to try from different networks, computers, browsers, or other remote clients.
+
+Advanced users can always just deploy their own TURN server locally or nearby, and specify it via VDO.Ninja. Hosting it yourself can reduce latency, improve performance, and improve security (no ip leaking). Using relay mode doesn't need to be a bad thing!
 
 Join the discord if still stuck and need help: [https://discord.vdo.ninja ](https://discord.vdo.ninja)
 
