@@ -2442,7 +2442,7 @@ span[data-action-type="stats-graphs-details-container"]>span{
 	border-radius: 4px;
 }
 .manualInput{
-	width: 55px;
+	width: 75px;
 	display: inline-block;
 	overflow: scroll;
 	margin: 4px 0 4px 4px;
@@ -5248,7 +5248,7 @@ input[type='checkbox'], input[type='radio'] {
 	border: 1px solid var(--discord-grey-8);
 }
 .darktheme .largeDarkIcon{
-	color: var(--dark-background-color);
+	color: var(--dark-background-color)!important;
 }
 #addPasswordBasic,
 #avatarDiv,

@@ -58,7 +58,7 @@
 		<meta property="twitter:image" content="./media/vdoNinja_logo_full.png" />
 		<meta name="msapplication-TileColor" content="#da532c" />
 		<meta name="theme-color" content="#0f131d" />
-		<link rel="stylesheet" href="./main.css?ver=365" />
+		<link rel="stylesheet" href="./main.css?ver=368" />
 		<script type="text/javascript" crossorigin="anonymous" src="./thirdparty/adapter.js"></script>
 		<style id="lightbox-animations" type="text/css"></style>
 		
@@ -92,7 +92,7 @@
 		
 		<script type="text/javascript" crossorigin="anonymous"  src="./thirdparty/CodecsHandler.js?ver=49"></script>
 		<script type="text/javascript" crossorigin="anonymous" src="./thirdparty/aes.js"></script>
-		<script type="text/javascript" crossorigin="anonymous" src="./webrtc.js?ver=696"></script>
+		<script type="text/javascript" crossorigin="anonymous" src="./webrtc.js?ver=703"></script>
 		<input id="zoomSlider" type="range" style="display: none;" />
 		<span id="electronDragZone" style="pointer-events: none; z-index:-10; position:absolute;top:0;left:0;width:100%;height:2%;-webkit-app-region: drag;min-height:20px;"></span>
 		<div id="header">
@@ -185,10 +185,10 @@
                     <div id="mutespeakerbutton" onmousedown="event.preventDefault(); event.stopPropagation();" alt="Toggle the speaker output." aria-label="Mute Speaker output" title="Mute the Speaker" onclick="toggleSpeakerMute()"  tabindex="2" role="button" aria-pressed="false" onkeyup="enterPressedClick(event,this);"  class="hidden float" style="cursor: pointer;" >
                         <i id="mutespeakertoggle" class="toggleSize las la-volume-up" style="position: relative; top: 0.5px;"></i>
                     </div>
-                    <div id="mutebutton" onmousedown="toggleMute(false, event);event.preventDefault(); event.stopPropagation();"  alt="Mute the Mic" aria-label="Mute Microphone" title="Mute the Mic" ontouchstart="toggleMute(false, event);event.preventDefault(); event.stopPropagation();" tabindex="2" role="button" aria-pressed="false" onkeyup="enterPressedClick(event,this);"  class="hidden float" style="cursor: pointer;">
+                    <div id="mutebutton" onmousedown="toggleMute(false, event);event.preventDefault(); event.stopPropagation();" data-translate="mute-the-mic" title="Mute the Mic (CTRL/⌘ + M)" alt="Mute the Mic" aria-label="Mute Microphone" ontouchstart="toggleMute(false, event);event.preventDefault(); event.stopPropagation();" tabindex="2" role="button" aria-pressed="false" onkeyup="enterPressedClick(event,this);"  class="hidden float" style="cursor: pointer;">
                         <i id="mutetoggle" class="toggleSize las la-microphone" style="position: relative; top: 0.5px;"></i>
                     </div>
-                    <div id="mutevideobutton" onmousedown="event.preventDefault(); event.stopPropagation();"  title="Disable the Camera" alt="Disable the Camera" aria-label="Mute Camera" onclick="toggleVideoMute()"   tabindex="2" role="button" aria-pressed="false" onkeyup="enterPressedClick(event,this);"  class="hidden float" style="cursor: pointer;">
+                    <div id="mutevideobutton" onmousedown="event.preventDefault(); event.stopPropagation();" data-translate="disable-the-camera" title="Disable the Camera (CTRL/⌘ + B)" alt="Disable the Camera" aria-label="Mute Camera" onclick="toggleVideoMute()"   tabindex="2" role="button" aria-pressed="false" onkeyup="enterPressedClick(event,this);"  class="hidden float" style="cursor: pointer;">
                         <i id="mutevideotoggle" onmousedown="event.preventDefault(); event.stopPropagation();"  class="toggleSize las la-video"></i>
                     </div>
                     <div id="screensharebutton" onmousedown="event.preventDefault(); event.stopPropagation();"  title="Share a Screen with others" alt="Share a Screen with others" aria-label="Share a screen" onclick="screenshareTypeDecider(1)" tabindex="2" role="button" aria-pressed="false" onkeyup="enterPressedClick(event,this);"  class="float hidden task" data-menu="context-menu-screen-share" style="cursor: pointer;">
@@ -506,6 +506,7 @@
 							<p><span id="audioTipContext1"></span></p>
 						</div>
 					</div>
+					
 					<br style="line-height: 0;" />
 					<div id="headphonesDiv" class="audioMenu" aria-hidden="true">
 						<div class="title">
@@ -515,6 +516,10 @@
 						<div id="headphoneTip1" class="cameraTip hidden">
 							<i class="las la-info-circle"></i>
 							<p><span id="headphoneTipContext1"></span></p>
+						</div>
+						<div id="audioTipSR" class="cameraTip hidden">
+							<i class="las la-exclamation-circle"></i>
+							<p><span id="audioTipContextSR"></span></p>
 						</div>
 					</div>
 					<br style="line-height: 0;" />
@@ -2245,66 +2250,68 @@
 				<h3 data-translate="publish-settings">Publishing setup</h3>
 				<br />
 				<small>To publish this browser window, click the start publishing button below and then select the current browser window, with audio-selected if desired.  The stream will go live afterwards, automatically.</small>
-				
-				<div id="publishOutURL" class="hidden">
-					<br />
-					<span style="min-width: 85px; display: inline-block;">
-					WHIP URL
-					</span>
-					<input type="text" size="40"  placeholder="➡️ WHIP URL to publish to goes here">
-					<br /><br />
-				</div>
-				
-				<div id="publishOutToken" class="hidden">
-					<span style="min-width: 85px; display: inline-block;">
-					Auth Token
-					</span>
-					<input type="password" id="changeText1a"  size="40"  placeholder="🗝️ Authentication Bearer Token (optional)" />
-					<br /><br />
-				</div>
-				
-				<div id="advanced" style="margin: 10px 0;">
-					<select id="whipoutaudiobitrate"  title="Which audio bitrate target would you prefer?" >
-						<option value="0" selected>🎙️Default Audio Bitrate</option>
-						<option value="32">🎙️32-kbps</option>
-						<option value="64">🎙️64-kbps</option>
-						<option value="128">🎙️128-kbps</option>
-						<option value="256">🎙️256-kbps</option>
-					</select >
-					<select id="whipoutvbrcbr" title="Which audio bitrate target would you prefer?" >
-						<option value="cbr" selected>🎙️CBR</option>
-						<option value="vbr">🎙️VBR</option>
-					</select >
-					<select id="whipoutdenoise" title="Which audio bitrate target would you prefer?" >
-						<option value="1" selected>🎙️Denoise On</option>
-						<option value="0">🎙️Denoise Off</option>
-					</select >
-					<select id="whipoutautogain" title="Which audio bitrate target would you prefer?" >
-						<option value="1" selected>🎙️Auto Gain On</option>
-						<option value="0">🎙️Auto Gain Off</option>
-					</select >
-					<select id="whipoutstereo" title="Which audio bitrate target would you prefer?" >
-						<option value="1" selected>🎙️Stereo</option>
-						<option value="0">🎙️Mono</option>
-					</select >
-				</div>
-				<div style="margin: 10px 0px;">
-					<select  id="whipoutbitrateGroupFlag" title="Which video bitrate target would you prefer?" >
-						<option value="0" selected>🎦Default Video Bitrate</option>
-						<option value="500">🎦500-kbps</option>
-						<option value="2500">🎦2500-kbps</option>
-						<option value="6000">🎦6000-kbps</option>
-						<option value="20000">🎦20000-kbps</option>
-					</select >
-					<select id="whipoutcodecGroupFlag"  title="Which video codec would you prefer to be used if available?" >
-						<option value="default" selected>🎦OpenH264</option>
-						<option value="vp9">🎦VP9</option>
-						<option value="h264">🎦H264</option>
-						<option value="vp8">🎦VP8</option>
-						<option value="av1">🎦AV1</option>
-					</select >
+				<form>
+					<div id="publishOutURL" class="hidden">
+						<br />
+						<span style="min-width: 85px; display: inline-block;">
+						WHIP URL
+						</span>
+						<input type="text" size="40" autocomplete="whip-out-url" placeholder="➡️ WHIP URL to publish to goes here">
+						<br /><br />
+					</div>
 					
-				</div>
+					<div id="publishOutToken" class="hidden">
+						<span style="min-width: 85px; display: inline-block;">
+						Auth Token
+						</span>
+						
+						<input type="password" id="changeText1a" autocomplete="whip-out-bearer-token" size="40" placeholder="🗝️ Authentication Bearer Token (optional)" />
+						
+						<br /><br />
+					</div>
+					
+					<div id="advanced" style="margin: 10px 0;">
+						<select id="whipoutaudiobitrate"  title="Which audio bitrate target would you prefer?" >
+							<option value="0" selected>🎙️Default Audio Bitrate</option>
+							<option value="32">🎙️32-kbps</option>
+							<option value="64">🎙️64-kbps</option>
+							<option value="128">🎙️128-kbps</option>
+							<option value="256">🎙️256-kbps</option>
+						</select >
+						<select id="whipoutvbrcbr" title="Which audio bitrate target would you prefer?" >
+							<option value="cbr" selected>🎙️CBR</option>
+							<option value="vbr">🎙️VBR</option>
+						</select >
+						<select id="whipoutdenoise" title="Which audio bitrate target would you prefer?" >
+							<option value="1" selected>🎙️Denoise On</option>
+							<option value="0">🎙️Denoise Off</option>
+						</select >
+						<select id="whipoutautogain" title="Which audio bitrate target would you prefer?" >
+							<option value="1" selected>🎙️Auto Gain On</option>
+							<option value="0">🎙️Auto Gain Off</option>
+						</select >
+						<select id="whipoutstereo" title="Which audio bitrate target would you prefer?" >
+							<option value="1" selected>🎙️Stereo</option>
+							<option value="0">🎙️Mono</option>
+						</select >
+					</div>
+					<div style="margin: 10px 0px;">
+						<select  id="whipoutbitrateGroupFlag" title="Which video bitrate target would you prefer?" >
+							<option value="0" selected>🎦Default Video Bitrate</option>
+							<option value="500">🎦500-kbps</option>
+							<option value="2500">🎦2500-kbps</option>
+							<option value="6000">🎦6000-kbps</option>
+							<option value="20000">🎦20000-kbps</option>
+						</select >
+						<select id="whipoutcodecGroupFlag"  title="Which video codec would you prefer to be used if available?" >
+							<option value="default" selected>🎦OpenH264</option>
+							<option value="vp9">🎦VP9</option>
+							<option value="h264">🎦H264</option>
+							<option value="vp8">🎦VP8</option>
+							<option value="av1">🎦AV1</option>
+						</select >
+					</div>
+				</form>
 				<br />
 				<button class="gobutton green" onclick='startPublishing();'>⬆️ Select window and start publishing</button>
 				
@@ -2517,7 +2524,7 @@
 
 		
 			var session = WebRTC.Media; // session is a required global variable if configuring manually. Run before loading main.js but after webrtc.js.
-			session.version = "24.0b";
+			session.version = "24.1b";
 			session.streamID = session.generateStreamID(); // randomly generates a streamID for this session. You can set your own programmatically if needed
 			
 			session.defaultPassword = "someEncryptionKey123"; // Change this password if self-deploying for added security/privacy
@@ -2629,12 +2636,13 @@
 			// session.defaultBackgroundImages = ["./media/bg_sample1.webp", "./media/bg_sample2.webp"]; // for &effects=5 (virtual backgrounds)
 			// session.hidehome = true; // If used, 'hide home' will make the landing page inaccessible, along with hiding a few go-home elements.
 			// session.record = false; // uncomment to block users from being able to record via vdo.ninja's built in recording function
+			// session.whipServerURL = "wss://whip.vdo.ninja"; // If you deploy your own whip websocket service
 		</script>
-		<script type="text/javascript" crossorigin="anonymous" id="lib-js" src="./lib.js?ver=917"></script>
+		<script type="text/javascript" crossorigin="anonymous" id="lib-js" src="./lib.js?ver=929"></script>
 		<!-- 
 		// If you wish to change branding, blank offers a good clean start.
 		<script type="text/javascript" id="main-js" src="./main.js" data-translation="blank"></script>
 		-->
-		<script type="text/javascript" crossorigin="anonymous" id="main-js" src="./main.js?ver=737"></script>
+		<script type="text/javascript" crossorigin="anonymous" id="main-js" src="./main.js?ver=747"></script>
 	</body>
 </html>

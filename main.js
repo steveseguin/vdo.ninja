@@ -1425,6 +1425,11 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 		session.cleanOutput=true;
 	}
 	
+	if (urlParams.has('retransmit')) {
+		session.retransmit = true;
+		session.dataMode = true;
+	}
+	
 	if (urlParams.has('datamode') || urlParams.has('dataonly')) { // this disables all media in/out.
 		session.dataMode = true;
 	}
@@ -1490,7 +1495,10 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 	if (urlParams.has('cc') || urlParams.has('closedcaptions') || urlParams.has('captions')) {
 		session.closedCaptions = true;
 	}
-
+	if (urlParams.has('nocclabels') || urlParams.has('nocclabel') ||  urlParams.has('nocaptionlabels') || urlParams.has('nocaptionlabel')) {
+		session.nocaptionlabels = true;
+	}
+	
 	if (urlParams.has('css')){
 		var cssURL = urlParams.get('css');
 		cssURL = decodeURI(cssURL);
@@ -2218,10 +2226,23 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 		log("preview ON");
 		session.nopreview = false;
 	} else if ((urlParams.has('minipreview')) || (urlParams.has('mini'))) {
-		var mini = urlParams.has('minipreview') || urlParams.has('mini') || true; // 2 is a valid option. (3 is for iPhone with a hidden preview)
+		
+		var mini = urlParams.get('minipreview') || urlParams.get('mini'); // 2 is a valid option. (3 is for iPhone with a hidden preview)
+		
+		if (mini === '0'){
+			mini = false
+		} else if (mini){
+			mini = parseInt(mini);
+		} else {
+			mini = 1;
+		}
+		
 		log("preview ON");
 		session.nopreview = false;
 		session.minipreview = mini;
+	} else if ((urlParams.has('largepreview'))) {
+		session.nopreview = false;
+		session.minipreview = false;
 	}
 	
 	if (urlParams.has('minipreviewoffset') || urlParams.has('mpo')){ // 40 would be centered
@@ -2405,6 +2426,9 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 	if (window.obsstudio) {
 		session.disableWebAudio = true; // default true; might be useful to disable on slow or old computers?
 		session.audioMeterGuest = false;
+		
+		getById("miniTaskBar").classList.add('hidden');
+		
 		if (session.audioEffects===null){
 			session.audioEffects = false;
 		}
@@ -2461,7 +2485,7 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 					session.obsState.visibility = document.visibilityState==="visible";
 				}
 			
-				getOBSDetails();
+				getOBSDetails(); 
 				
 				window.addEventListener("obsSourceVisibleChanged", obsSourceVisibleChanged);
 				window.addEventListener("obsSourceActiveChanged", obsSourceActiveChanged);
@@ -2787,6 +2811,15 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 		log("disable audio playback");
 	}
 	
+	if (urlParams.has('nodirectoraudio')) {
+		session.nodirectoraudio = true;
+		log("disable audio playback from Directors");
+	}
+	if (urlParams.has('nodirectorvideo')) {
+		session.nodirectoraudio = true;
+		log("disable audio playback from Directors");
+	}
+	
 	if (urlParams.has('forceios')) {
 		log("allow iOS to work in video group chat; for this user at least");
 		session.forceios = true;
@@ -2861,6 +2894,7 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 	if (urlParams.has('nochunk') || urlParams.has('nochunked')) { // viewer side
 		session.nochunk = true;
 	}
+	
 	//if (urlParams.has('viewchunked') || urlParams.has('viewchunk') || urlParams.has('allowchunked') || urlParams.has('allowchunk')) { // viewer side
 	//	session.forceChunked = true;
 	//}
@@ -2884,8 +2918,6 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 		}
 		// registerToken();
 	}
-	
-	
 	
 	if (urlParams.has('debug')){
 		session.debug=true;
@@ -3443,6 +3475,9 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 	} else if (urlParams.has('showheader')) { // needs to happen the room and permaid applications
 		getById("header").style.display = "inherit";
 		getById("header").style.opacity = 1;
+	} else if (window.obsstudio){
+		getById("header").style.display = "none";
+		getById("header").style.opacity = 0;
 	}
 	
 	if (urlParams.has('minidirector')) {
@@ -3553,6 +3588,10 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 		if (!(session.cleanOutput)) {
 			delayedStartupFuncs.push([warnUser, "Enhanced Security Mode Enabled."]);
 		}
+	}
+	
+	if (urlParams.has('requireencryption')) {
+		session.requireencryption = true;
 	}
 
 	if (urlParams.has('random') || urlParams.has('randomize')) {
@@ -3850,13 +3889,13 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 	
 	
 
-	if (urlParams.has('samplerate') || urlParams.has('sr')) {
+	if (urlParams.has('samplerate') || urlParams.has('sr')) { // playout sample rate
 		session.sampleRate = parseInt(urlParams.get('samplerate')) || parseInt(urlParams.get('samplerate')) || 48000;
 		if (session.audioCtx) {
 			session.audioCtx.close(); // close the default audio context.
 		}
 		session.audioCtx = new AudioContext({ // create a new audio context with a higher sample rate. 
-			sampleRate: session.sampleRate
+			sampleRate: session.sampleRate // default is 48000 already
 		});
 		session.audioEffects = true;
 	}
@@ -4179,7 +4218,7 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 		session.queueType = 2;
 	}
 	
-	if (urlParams.has('queue3') || urlParams.has('hold')) { // the guest can't see the director until approved, but does get a messaging telling them to wait.
+	if (urlParams.has('queue3') || urlParams.has('hold')) { // the guest can't see the director until approved, but does get a messaging telling them to wait. The director won't see the guest's video/audio either, until activated.
 		session.queue = true;
 		session.queueType = 3;
 	}
@@ -4362,7 +4401,7 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 	
 	
 	if (urlParams.has('effectvalue') || urlParams.has('ev')) {
-		session.effectValue = parseInt(urlParams.get('effectvalue')) || parseInt(urlParams.get('ev')) || 0;
+		session.effectValue = parseFloat(urlParams.get('effectvalue')) || parseFloat(urlParams.get('ev')) || 0;
 		session.effectValue_default = session.effectValue;
 	}
 	
@@ -4940,7 +4979,11 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 	} else if (session.effect === "7"){
 		getById("selectEffectAmount").style.display = "block";
 		getById("selectEffectAmount3").style.display = "block";
-		session.effectValue = 1.0;
+		if (session.effectValue_default){
+			session.effectValue = session.effectValue_default;
+		} else {
+			session.effectValue = 1;
+		}
 		getById("selectEffectAmountInput").min = 1;
 		getById("selectEffectAmountInput").max = 1.99;
 		getById("selectEffectAmountInput").step = 0.01
@@ -4972,9 +5015,14 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 		session.autohide=true;
 	}
 	if (session.autohide && (session.scene===false)){// && (session.roomid!==false)){
-		getById("main").onmouseover = showControl; // this is correct. (it's not session.showControls)
-		document.ontouchstart = showControl; // this is correct. (it's not session.showControls)
-		getById("gridlayout").classList.add("nocontrolbar");
+		try {
+			getById("main").onmouseover = showControl; // this is correct. (it's not session.showControls)
+			document.ontouchstart = showControl; // this is correct. (it's not session.showControls)
+			getById("gridlayout").classList.add("nocontrolbar");
+			if (session.autostart){
+				showControl();
+			}
+		} catch(e){}
 	}
 	
 	if (urlParams.has('experimental')) {

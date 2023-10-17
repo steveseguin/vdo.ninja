@@ -102,6 +102,7 @@ var miscTranslations = { // i can replace this list from time to time from the g
     "no-screen-share-supported": "Sorry, your browser does not support screen-sharing.\n\nPlease use the desktop versions of Firefox or Chrome instead.",
     "speech-not-suppoted": "⚠ Speech Recognition is not supported by this browser",
     "blue-yeti-tip": "<i>Tip:</i> Blue Yeti microphones may experience issues being overly loud. <a href='https://support.google.com/chrome/thread/7542181?hl=en&msgid=79691143'>Please see here</a> for a solution or disable auto-gain in VDO.Ninja.",
+	"sample-rate-too-high": "Your audio playback device has its sample rate set very high. If having audio issues, try using 48-kHz instead.",
     "site-not-responsive": "<h3>Notice: The system cannot be accessed or is currently slow to respond.</h3>\nIf a routing issue, try adding <i title='or try visiting https://proxy.vdo.ninja/'>&proxy</i> to the URL; you can also try <i>https://proxy.vdo.ninja</i> or a VPN if the service is blocked in your country.\n\nIf the main service is down, a backup version is also available here: <i>https://backup.vdo.ninja</i>\n\nContact steve@seguin.email for added help.\n\nThis service requires the use of Websockets over port 443.",
     "no-audio-source-detected": "No Audio Source was detected.\n\nIf you were wanting to capture an Application's Audio, please see:\nhttps://docs.vdo.ninja/help/guides-and-how-tos#audio for some guides.",
     "viewer-count": "Total outbound p2p connections of this remote stream",
@@ -540,7 +541,13 @@ try{
 	
 } catch(e){errorlog(e);}
 
-
+if (session.audioCtx && session.audioCtx.sampleRate && (session.audioCtx.sampleRate > 192000)){
+	console.warn("Your audio playback device has a very high sample-rate set of "+session.audioCtx.sampleRate+"-Hz. If having audio problems, lower to at least 192000-Hz, but preferably 48000-Hz.");
+	if (!session.cleanOutput){
+		miniTranslate(getById("audioTipContextSR"),"sample-rate-too-high");
+		getById("audioTipSR").classList.remove("hidden");
+	}
+}
 
 if (isVingester){
 	console.warn("If Vingester isn't able to capture audio, get a fixed version of Vingester from here: https://github.com/steveseguin/vingester/releases/");
@@ -1198,6 +1205,9 @@ function closeModal(ele=false){
 		}
 	} catch(e){
 		warnlog(e);
+	}
+	if (session.timeoutTriggered){
+		session.warnUserTriggered = false;
 	}
 }
 
@@ -4514,7 +4524,7 @@ function updateMixerRun(e=false){  // this is the main auto-mixing code.  It's a
 						continue;
 					}
 					
-					if (session.rpcs[i].videoElement.style.display=="none"){ // currently this is considered the state of scenes.  pertty dumb on my part.
+					if (session.rpcs[i].videoElement && session.rpcs[i].videoElement.style.display=="none"){ // currently this is considered the state of scenes.  pertty dumb on my part.
 						continue;
 					}
 				
@@ -5664,12 +5674,12 @@ function updateMixerRun(e=false){  // this is the main auto-mixing code.  It's a
 				} else if (asw > ash){
 					var hsh = hrh - videoMargin*2;
 					var hst = videoMargin;
-					var hsw = (hsh - borderOffset)*(vvw/vvh);
+					var hsw = (hsh-borderOffset*2)*(vvw/vvh) + borderOffset*2;
 					var hsl = (wrw - hsw)/2;
 				} else {
 					var hsw = wrw - videoMargin*2;
 					var hsl = videoMargin;
-					var hsh = hsw/(vvw/vvh) + borderOffset;
+					var hsh = (hsw-borderOffset*2)/(vvw/vvh) + borderOffset*2;
 					var hst = (hrh - hsh)/2;
 				}
 				
@@ -6228,7 +6238,6 @@ function miniTranslate(ele, ident = false, direct=false) {
 			}
 			return;
 		} else {
-			warnlog(ident + ": not found in translation file");
 			
 			if (!(ident in miscTranslations)){ 
 				var value = ident.replaceAll("-", " "); // lets use the key as the translation
@@ -6253,7 +6262,7 @@ function miniTranslate(ele, ident = false, direct=false) {
 			ele2.innerHTML = translation.innerHTML[ele2.dataset.translate];
 		} else if (translation.miscellaneous && (ele2.dataset.translate in translation.miscellaneous)){
 			ele2.innerHTML = translation.miscellaneous[ele2.dataset.translate];
-		}
+		} 
 	});
 	if (ele.dataset){
 		if (translation.innerHTML && (ele.dataset.translate in translation.innerHTML)){
@@ -6265,15 +6274,32 @@ function miniTranslate(ele, ident = false, direct=false) {
 	if (translation.titles){
 		var allTitles = ele.querySelectorAll('[title]');
 		allTitles.forEach(function(ele2) {
-			var key = ele2.title.replace(/[\W]+/g, "-").toLowerCase();
+			
+			if (ele.dataset.key){
+				var key = ele2.dataset.key;
+			} else {
+				var key = ele2.title.replace(/[\W]+/g, "-").toLowerCase();
+				ele2.dataset.key = key;
+			}
+					
 			if (key in translation.titles) {
 				ele2.title = translation.titles[key];
+			} else if (ele2.dataset.translate && (ele2.dataset.translate in translation.titles)){
+				ele2.title = translation.titles[ele2.dataset.translate];
 			}
 		});
 		if (ele.title){
-			var key = ele.title.replace(/[\W]+/g, "-").toLowerCase();
+			if (ele.dataset.key){
+				var key = ele.dataset.key;
+			} else {
+				var key = ele.title.replace(/[\W]+/g, "-").toLowerCase();
+				ele.dataset.key = key;
+			}
+			
 			if (key in translation.titles) {
 				ele.title = translation.titles[key];
+			} else if (ele.dataset.translate && (ele.dataset.translate in translation.titles)){
+				ele.title = translation.titles[ele.dataset.translate];
 			}
 		}
 	}
@@ -6325,48 +6351,46 @@ async function changeLg(lang) {
 			await response.json().then(async function(data) {
 				translation = data; // translation.innerHTML[ele.dataset.translate]
 				
-				if (data.miscellaneous){
-					Object.keys(data.miscellaneous).forEach(key => {
-						miscTranslations[key] = data.miscellaneous[key];
+				if (translation.miscellaneous){
+					Object.keys(translation.miscellaneous).forEach(key => {
+						miscTranslations[key] = translation.miscellaneous[key];
 					});
 				}
-				data.miscellaneous = miscTranslations;
+				translation.miscellaneous = miscTranslations;
 				
-				var trans = data.innerHTML; 
+				
 				var allItems = document.querySelectorAll('[data-translate]');
 				allItems.forEach(function(ele) {
-					if (ele.dataset.translate in trans) {
-						ele.innerHTML = trans[ele.dataset.translate];
-					} else if (data.miscellaneous && (ele.dataset.translate in data.miscellaneous)){
-						ele.innerHTML = data.miscellaneous[ele.dataset.translate]; // use the misc translation if no main one is found
+					if (ele.dataset.translate in translation.innerHTML) {
+						ele.innerHTML = translation.innerHTML[ele.dataset.translate];
+					} else if (translation.miscellaneous && (ele.dataset.translate in translation.miscellaneous)){
+						ele.innerHTML = translation.miscellaneous[ele.dataset.translate]; // use the misc translation if no main one is found
 					}
-				});
+				}); 
 				
-				trans = data.titles;
 				var allTitles = document.querySelectorAll('[title]');
 				allTitles.forEach(function(ele) {
 					if (ele.dataset.key){
-						if (ele.dataset.key in trans) {
-							ele.title = trans[ele.dataset.key];
-						}
+						var key = ele.dataset.key;
 					} else {
 						var key = ele.title.replace(/[\W]+/g, "-").toLowerCase();
 						ele.dataset.key = key;
-						if (key in trans) {
-							ele.title = trans[key];
-						}
+					}
+					if (key in translation.titles) {
+						ele.title = translation.titles[key];
+					}  else if (ele.dataset.translate && translation.titles && (ele.dataset.translate in translation.titles)){
+						ele.title = translation.titles[ele.dataset.translate];
 					}
 				});
 				
-				trans = data.placeholders;
+				
 				var allPlaceholders = document.querySelectorAll('[placeholder]');
 				allPlaceholders.forEach(function(ele) {
 					var key = ele.placeholder.replace(/[\W]+/g, "-").toLowerCase();
-					if (key in trans) {
-						ele.placeholder = trans[key];
+					if (key in translation.placeholders) {
+						ele.placeholder = translation.placeholders[key];
 					}
 				});
-				
 				
 				if (translationBacklog.length){
 					for (var i=0;i<translationBacklog.length;i++){
@@ -7249,6 +7273,39 @@ function drawOnScreen(){
 }
 //////////  Canvas Effects  ///////////////
 
+
+function audioTimerLoop(callback, fps=40) {
+
+  fps += 5;
+  var aCtx = new AudioContext();
+  // Chrome needs our oscillator node to be attached to the destination
+  // So we create a silent Gain Node
+  var silence = aCtx.createGain();
+  silence.gain.value = 0;
+  silence.connect(aCtx.destination);
+
+  onOSCend();
+
+  var stopped = false;
+  function onOSCend() {
+    osc = aCtx.createOscillator();
+    osc.onended = onOSCend;
+    osc.connect(silence);
+    osc.start(0);
+    osc.stop(aCtx.currentTime + 1/fps);
+    callback(aCtx.currentTime);
+    if (stopped) {
+      osc.onended = function() {
+        return;
+      };
+    }
+  };
+  // return a function to stop our loop
+  return function() {
+    stopped = true;
+  };
+}
+
 function drawFrameMirrored(mirror=true, flip=false) {
 	session.canvasCtx.save();
 	if (flip){
@@ -8024,26 +8081,36 @@ function TFLiteWorker(){
 	session.tfliteModule.offsetTime = 0;
 	
 	
+	var aCtx = new AudioContext();
+	var silence = aCtx.createGain();
+	silence.gain.value = 0;
+	silence.connect(aCtx.destination);
+	var osc = aCtx.createOscillator();
+	osc.connect(silence);
+	
+	var slow = 0;
+	var slower = false;
+	
 	function process(){
-		
-		clearTimeout(session.tfliteModule.timeout);
-		
 		if (!(session.effect=="3" || session.effect=="4" || session.effect=="5")){
 			session.tfliteModule.looping=false;
 			return;
 		}
-		if (session.tfliteModule.activelyProcessing){return;}
 		
+		if (session.tfliteModule.activelyProcessing){return;}
 		session.tfliteModule.activelyProcessing=true;
 		
 		if (session.mobile){
 			if (screenWidth !== window.innerWidth){
 				screenWidth = window.innerWidth;
+				
+				session.tfliteModule.looping=false;
+				session.tfliteModule.activelyProcessing=false;
+				
 				setTimeout(function(){
 					updateRenderOutpipe();
 				},200);
-				session.tfliteModule.looping=false;
-				session.tfliteModule.activelyProcessing=false;
+				
 				return;
 			}
 		}
@@ -8077,110 +8144,42 @@ function TFLiteWorker(){
 
 			session.tfliteModule._runInference();
 			
-			if (!session.experimental){ // standard mode
-				
-				for (let i = 0; i < segmentationPixelCount; i++) {
-					const background = session.tfliteModule.HEAPF32[outputMemoryOffset + i * 2];
-					const person = session.tfliteModule.HEAPF32[outputMemoryOffset + i * 2 + 1];
-					const shift = Math.max(background, person);
-					const backgroundExp = Math.exp(background - shift);
-					const personExp = Math.exp(person - shift);
-					segmentationMask.data[i * 4 + 3] = Math.min(Math.pow((255 * personExp) / (backgroundExp + personExp),1.5) - 10,255); // softmax
-				}
-				
-				segmentationMaskCtx.putImageData(segmentationMask, 0, 0);
-				
-				session.canvasCtx.globalCompositeOperation = 'copy';
-				session.canvasCtx.filter = 'blur(8px)';
-				session.canvasCtx.drawImage(  
-				  segmentationMaskCanvas,
-				  0,
-				  0,
-				  segmentationWidth,
-				  segmentationHeight,
-				  0,
-				  0,
-				  session.canvasSource.width,
-				  session.canvasSource.height
-				)
-				
-				session.canvasCtx.globalCompositeOperation = 'source-in';
-				session.canvasCtx.filter = 'none';
-				session.canvasCtx.drawImage(session.canvasSource, 0, 0);
-				
-			} else { // experimental mode, so contouring
-			 
-				/* session.canvasCtx.clearRect(0, 0, session.canvasSource.width, session.canvasSource.height);
-			 
-				 for (let i = 0; i < segmentationPixelCount; i++) {
-					const background = session.tfliteModule.HEAPF32[outputMemoryOffset + i * 2];
-					const person = session.tfliteModule.HEAPF32[outputMemoryOffset + i * 2 + 1];
-					const shift = Math.max(background, person);
-					const backgroundExp = Math.exp(background - shift);
-					const personExp = Math.exp(person - shift);
-					const value = (255 * personExp) / (backgroundExp + personExp); // softmax
-					
-					if (value>70){
-						maskData[i] = 1;
-					} else if (value>20 && maskData[i]===1){ // was positive, lets keep it positive
-						maskData[i] = 1;
-					} else {
-						maskData[i] = 0;
-					}
-					
-				}
-				
-				try {
-					contours = FindContours(maskData, segmentationWidth, segmentationHeight);
-				} catch(e){
-					contours = [];
-				} 
-
-				var awidth = session.canvasSource.width/segmentationWidth;
-				var aheight = session.canvasSource.height/segmentationHeight;
-				
-				
-				
-				var biggestContour = [];
-				for (let contour of contours){
-					if (!contour.isHole && (contour.points.length > biggestContour.length)){
-						biggestContour = contour.points;
-					}
-				}
-				
-				if (biggestContour.length) { // don't show small things
-					session.canvasCtx.filter = "blur(4px)";
-					session.canvasCtx.beginPath();
-					biggestContour = approxPolyDP(biggestContour);
-					let pt = biggestContour.pop();
-					
-					let lastx= Math.round(pt[0]*awidth);
-					let lasty= Math.round(pt[1]*aheight);
-					session.canvasCtx.moveTo(lastx, lasty);
-					while (biggestContour.length){
-						pt = biggestContour.pop();
-						if (pt[0]<=1){pt[0]=-100;}
-						else if (pt[0]>=segmentationWidth-2){pt[0]=segmentationWidth+100;}
-						if (pt[1]<=1){pt[1]=-100;}
-						else if (pt[1]>=segmentationHeight-2){pt[1]=segmentationHeight+100;}
-						
-						let nox= Math.round(pt[0]*awidth);
-						let noy= Math.round(pt[1]*aheight);
-						
-						session.canvasCtx.quadraticCurveTo(lastx, lasty,nox,noy);
-						lastx = nox;
-						lasty = noy;
-					}
-					session.canvasCtx.closePath();
-					session.canvasCtx.fill();
-				}
-				
-				session.canvasCtx.globalCompositeOperation = 'source-in';
-				session.canvasCtx.filter = 'none';
-				session.canvasCtx.drawImage(session.canvasSource, 0, 0); */
+			for (let i = 0; i < segmentationPixelCount; i++) {
+				const background = session.tfliteModule.HEAPF32[outputMemoryOffset + i * 2];
+				const person = session.tfliteModule.HEAPF32[outputMemoryOffset + i * 2 + 1];
+				const shift = Math.max(background, person);
+				const backgroundExp = Math.exp(background - shift);
+				const personExp = Math.exp(person - shift);
+				segmentationMask.data[i * 4 + 3] = Math.min(Math.pow((255 * personExp) / (backgroundExp + personExp),1.5) - 10,255); // softmax
 			}
 			
+			segmentationMaskCtx.putImageData(segmentationMask, 0, 0);
+			
+			session.canvasCtx.globalCompositeOperation = 'copy';
+			if ((session.mobile && !session.flagship) || slower){
+				session.canvasCtx.filter = 'blur(4px)';
+			} else {
+				session.canvasCtx.filter = 'blur(8px)';
+			}
+			
+			session.canvasCtx.drawImage(  
+			  segmentationMaskCanvas,
+			  0,
+			  0,
+			  segmentationWidth,
+			  segmentationHeight,
+			  0,
+			  0,
+			  session.canvasSource.width,
+			  session.canvasSource.height
+			)
+			
+			session.canvasCtx.globalCompositeOperation = 'source-in';
+			session.canvasCtx.filter = 'none';
+			session.canvasCtx.drawImage(session.canvasSource, 0, 0);
+			
 			session.canvasCtx.globalCompositeOperation = 'destination-over';
+			
 			if (session.effect=="4"){ // greenscreen 
 				session.canvasCtx.filter = 'none';
 				session.canvasCtx.fillStyle = "#0F0";
@@ -8214,24 +8213,36 @@ function TFLiteWorker(){
 			session.tfliteModule.looping=false;
 			return;
 		}
-		
 		session.tfliteModule.lastTime = session.tfliteModule.nowTime;
 		session.tfliteModule.nowTime = new Date().getTime();
 		
 		var time  = 33 - (session.tfliteModule.nowTime - session.tfliteModule.lastTime);
 		time = time + session.tfliteModule.offsetTime;
 		session.tfliteModule.activelyProcessing=false;
+		
+		slow-=1;
+		
 		if (time <= 0 ){
-			session.tfliteModule.timeout = setTimeout(function(){process();},0);
+			if (time<-20){
+				slow+=1;
+				if (slow>100){
+					slower=true;
+				}
+			}
 			session.tfliteModule.offsetTime = 0;
+			setTimeout(function(){
+				process();
+			},0);
 		} else {
-			session.tfliteModule.timeout = setTimeout(function(){process();},time);
+			slow-=2;
 			session.tfliteModule.offsetTime = time;
+			osc.start(0);
+			osc.stop(aCtx.currentTime + time/1000);
 		}
 	}
 	
 	function processiOS(){
-		clearTimeout(session.tfliteModule.timeout);
+		
 		if (!(session.effect=="3" || session.effect=="4" || session.effect=="5")){
 			session.tfliteModule.looping=false;
 			return;
@@ -8433,12 +8444,16 @@ function TFLiteWorker(){
 		var time  = 33 - (session.tfliteModule.nowTime - session.tfliteModule.lastTime);
 		time = time + session.tfliteModule.offsetTime;
 		session.tfliteModule.activelyProcessing=false;
+		
 		if (time <= 0 ){
-			session.tfliteModule.timeout = setTimeout(function(){processiOS();},0);
 			session.tfliteModule.offsetTime = 0;
+			setTimeout(function(){
+				processiOS();
+			},0);
 		} else {
-			session.tfliteModule.timeout = setTimeout(function(){processiOS();},time);
 			session.tfliteModule.offsetTime = time;
+			osc.start(0);
+			osc.stop(aCtx.currentTime + time/1000);
 		}
 	}
 	session.tfliteModule.looping=true;
@@ -8459,9 +8474,11 @@ function TFLiteWorker(){
 		canvasBG.height = parseInt(session.canvas.height/12);;
 		ctxBG.width = canvasBG.width;
 		ctxBG.height = canvasBG.height;
-		processiOS();
 		
+		osc.onended = processiOS;
+		processiOS();
 	} else {
+		osc.onended = process;
 		process();
 	}
 }
@@ -8479,16 +8496,19 @@ function mainMeshMask() {
 		return "hsl(" + h + ", 100%, 50%)";
 	}
 	async function process(){
+		
 		if (session.TFJSModel.activelyProcessing){return;}
 		session.TFJSModel.activelyProcessing = true;
 		
-		clearTimeout(session.TFJSModel.timeout);
-		
-		if (session.effect!="6"){
-			//session.TFJSModel.looping=false;
+		if (session.effect !== "6"){
+			if (session.TFJSModel.timeoutDraw){
+				session.TFJSModel.timeoutDraw();
+				session.TFJSModel.timeoutDraw = null;
+			}
 			session.TFJSModel.activelyProcessing = false;
 			return;
 		}
+		
 		
 		const predictions = await session.TFJSModel.estimateFaces({
 			input: session.canvasSource
@@ -8533,21 +8553,16 @@ function mainMeshMask() {
 			}
 		}
 	  
-	    if (document.hidden) {
-			session.TFJSModel.lastTime = session.TFJSModel.nowTime || new Date().getTime();
-			session.TFJSModel.nowTime = new Date().getTime();
-			var time  = 33 - (session.TFJSModel.nowTime - session.TFJSModel.lastTime);
-			if (time <= 0 ){
-				session.TFJSModel.timeout = setTimeout(function(){process();},0);
-			} else {
-				session.TFJSModel.timeout = setTimeout(function(){process();},time);
+	  
+	  
+	    if (!session.TFJSModel.timeoutDraw){
+			try {
+				session.TFJSModel.timeoutDraw = audioTimerLoop(process, session.canvasSource.srcObject.getVideoTracks()[0].getSettings().frameRate || 30);
+			} catch(e){
+				session.TFJSModel.timeoutDraw = audioTimerLoop(process, 30); // setTimeout(function(){draw();},33);
 			}
-			session.TFJSModel.activelyProcessing = false;
-		} else {
-			session.TFJSModel.timeout = setTimeout(function(){process();},33);
-			session.TFJSModel.activelyProcessing = false;
-			window.requestAnimationFrame(process);
 		}
+		session.TFJSModel.activelyProcessing = false;
 		
 	}
 	process();
@@ -8556,6 +8571,7 @@ function mainMeshMask() {
 var faceDetector = false;
 var faceAlignment=false;
 var activeDetection = false;
+
 function drawFace() {
 	if (session.effect !== "1"){return;}
 	if (faceAlignment){
@@ -8567,7 +8583,6 @@ function drawFace() {
 	faceAlignment = null;
 	
 	var timers = {};
-	timers.activelyProcessing=false;
 	timers.activelyProcessingDraw = false;
 
 	var ctx = session.canvasCtx;
@@ -8607,7 +8622,7 @@ function drawFace() {
 					}
 					//setTimeout(function(){draw();},0);
 				}).catch((e) => {
-					//errorlog("Boo, Face Detection failed: " + e);
+					errorlog("Boo, Face Detection failed: " + e);
 				});
 			} catch(e){}
 			setTimeout(function(){detectFace();},200);
@@ -8622,15 +8637,18 @@ function drawFace() {
 		function draw() {
 			if (timers.activelyProcessingDraw){return;}
 			timers.activelyProcessingDraw = true;
-			clearTimeout(timers.timeoutDraw);
+			
 			if (session.effect !== "1"){
 				timers.activelyProcessingDraw = false;
+				if (timers.timeoutDraw){
+					timers.timeoutDraw();
+					timers.timeoutDraw = null;
+				}
 				return;
 			}
 			
 			try {
 				if (!session.canvasSource.width){
-					timers.timeoutDraw = setTimeout(function(){draw();},1000);
 					timers.activelyProcessingDraw = false;
 					return
 				}
@@ -8681,28 +8699,20 @@ function drawFace() {
 					
 				}
 				//console.log(x, y, w, h, session.canvasSource.width, session.canvasSource.height);
-				
 				ctx.drawImage(session.canvasSource, x, y, w, h, 0, 0, session.canvasSource.width, session.canvasSource.height);
 				//ctx.beginPath();
 				//ctx.rect(lastFace.x, lastFace.y, lastFace.w, lastFace.h);
 			//	ctx.stroke();
 			} catch(e){}
 
-			if (document.hidden){
-				timers.lastTimeDraw = timers.nowTimeDraw || new Date().getTime();
-				timers.nowTimeDraw = new Date().getTime();
-				var time  = 33 - (timers.nowTimeDraw - timers.lastTimeDraw);
-				if (time <= 0 ){
-					timers.timeoutDraw = setTimeout(function(){draw();},0);
-				} else {
-					timers.timeoutDraw = setTimeout(function(){draw();},time);
+			if (!timers.timeoutDraw){
+				try {
+					timers.timeoutDraw = audioTimerLoop(draw, session.canvasSource.srcObject.getVideoTracks()[0].getSettings().frameRate || 30);
+				} catch(e){
+					timers.timeoutDraw = audioTimerLoop(draw,40); // setTimeout(function(){draw();},33);
 				}
-				timers.activelyProcessingDraw = false;
-			} else {
-				timers.timeoutDraw = setTimeout(function(){draw();},33);
-				timers.activelyProcessingDraw = false;
-				window.requestAnimationFrame(draw);
 			}
+			timers.activelyProcessingDraw = false;
 		}
 		
 		if (window.FaceDetector == undefined) {
@@ -8788,7 +8798,6 @@ function simpleDraw(reinit=false) {
 	simpleDrawMain = null;
 	
 	var timers = {};
-	timers.activelyProcessing=false;
 	timers.activelyProcessingDraw = false;
 
 	var ctx = session.canvasCtx;
@@ -8803,14 +8812,16 @@ function simpleDraw(reinit=false) {
 			function draw() {
 				if (timers.activelyProcessingDraw){return;}
 				timers.activelyProcessingDraw = true;
-				clearTimeout(timers.timeoutDraw);
 				if (session.effect !== "8"){
+					if (timers.timeoutDraw){
+						timers.timeoutDraw();
+						timers.timeoutDraw = null;
+					}
 					timers.activelyProcessingDraw = false;
 					return;
 				}
 				try {
 					if (!session.canvasSource.width){
-						timers.timeoutDraw = setTimeout(function(){draw();},1000);
 						timers.activelyProcessingDraw = false;
 						return
 					}
@@ -8822,22 +8833,14 @@ function simpleDraw(reinit=false) {
 					
 				} catch(e){errorlog(e);}
 
-				if (document.hidden){
-					timers.lastTimeDraw = timers.nowTimeDraw || new Date().getTime();
-					timers.nowTimeDraw = new Date().getTime();
-					var time  = 33 - (timers.nowTimeDraw - timers.lastTimeDraw);
-					if (time <= 0 ){
-						timers.timeoutDraw = setTimeout(function(){draw();},0);
-					} else {
-						timers.timeoutDraw = setTimeout(function(){draw();},time);
+				if (!timers.timeoutDraw){
+					try {
+						timers.timeoutDraw = audioTimerLoop(draw, session.canvasSource.srcObject.getVideoTracks()[0].getSettings().frameRate || 30);
+					} catch(e){
+						timers.timeoutDraw = audioTimerLoop(draw,40); // setTimeout(function(){draw();},33);
 					}
-					timers.activelyProcessingDraw = false;
-				} else {
-					timers.timeoutDraw = setTimeout(function(){draw();},33);
-					timers.activelyProcessingDraw = false;
-					window.requestAnimationFrame(draw);
 				}
-			
+				timers.activelyProcessingDraw = false;
 			}
 		} catch(e){
 			errorlog(e);
@@ -8876,7 +8879,6 @@ function digitalZoom(reinit=false) {
 	digitalZoomMain = null;
 	
 	var timers = {};
-	timers.activelyProcessing=false;
 	timers.activelyProcessingDraw = false;
 
 	var ctx = session.canvasCtx;
@@ -8896,17 +8898,19 @@ function digitalZoom(reinit=false) {
 			function draw() {
 				if (timers.activelyProcessingDraw){return;}
 				timers.activelyProcessingDraw = true;
-				clearTimeout(timers.timeoutDraw);
 				if (session.effect !== "7"){
 					zz = 1.0;
 					xa = 0;
 					ya = 0;
-					timers.activelyProcessingDraw = false;
+					timers.activelyProcessingDraw = false; 
+					if (timers.timeoutDraw){
+						timers.timeoutDraw();
+						timers.timeoutDraw = null;
+					}
 					return;
 				}
 				try {
-					if (!session.canvasSource.width){
-						timers.timeoutDraw = setTimeout(function(){draw();},1000);
+					if (!session.canvasSource || !session.canvasSource.width){
 						timers.activelyProcessingDraw = false;
 						return
 					}
@@ -8935,22 +8939,14 @@ function digitalZoom(reinit=false) {
 				//	ctx.stroke();
 				} catch(e){errorlog(e);}
 
-				if (document.hidden){
-					timers.lastTimeDraw = timers.nowTimeDraw || new Date().getTime();
-					timers.nowTimeDraw = new Date().getTime();
-					var time  = 33 - (timers.nowTimeDraw - timers.lastTimeDraw);
-					if (time <= 0 ){
-						timers.timeoutDraw = setTimeout(function(){draw();},0);
-					} else {
-						timers.timeoutDraw = setTimeout(function(){draw();},time);
+				if (!timers.timeoutDraw){
+					try {
+						timers.timeoutDraw = audioTimerLoop(draw, session.canvasSource.srcObject.getVideoTracks()[0].getSettings().frameRate || 30);
+					} catch(e){
+						timers.timeoutDraw = audioTimerLoop(draw,40); // setTimeout(function(){draw();},33);
 					}
-					timers.activelyProcessingDraw = false;
-				} else {
-					timers.timeoutDraw = setTimeout(function(){draw();},33);
-					timers.activelyProcessingDraw = false;
-					window.requestAnimationFrame(draw);
 				}
-			
+				timers.activelyProcessingDraw = false;
 			}
 		} catch(e){
 			errorlog(e);
@@ -11497,7 +11493,6 @@ function toggleControlBar() {
 		delete getById("controlButtons").dataset.enabled;
 	}
 }
-
 
 function toggleMute(apply = false, event=false) { // TODO: I need to have this be MUTE, toggle, with volume not touched.
 
@@ -14266,7 +14261,11 @@ function updateForceRotate(skipLastBit=false){
 						//log("sending updated rotation info");
 					}
 				} catch(e){
-					warnlog("RTC Connection seems to be dead or not yet open? 8");
+					if (session.pcs[UUID].startTime + 100000 < Date.now()){
+						warnlog("RTC Connection seems to be dead or not yet open? 8");
+					} else {
+						log("RTC Connection seems to be dead or not yet open? 8");
+					}
 				}
 			}
 			
@@ -14329,7 +14328,11 @@ function updateForceRotate(skipLastBit=false){
 							//log("sending updated rotation info");
 						}
 					} catch(e){
-						warnlog("RTC Connection seems to be dead or not yet open? 8");
+						if (session.pcs[UUID].startTime + 100000 < Date.now()){
+							warnlog("RTC Connection seems to be dead or not yet open? 8");
+						} else {
+							log("RTC Connection seems to be dead or not yet open? 8");
+						}
 					}
 				}
 			}
@@ -15433,21 +15436,25 @@ function outboundAudioPipeline(){ // this function isn't letting me change the a
 
 			webAudio.id = tracks[0].id; // first track is used.
 
-			if (session.audioCtxOutbound){
+			if (session.audioCtxOutbound){ // outbound implies 48000, since webrtc opus is 48000.  (pcm may be excepted)
 				// already Created
 			} else if (session.audioLatency !== false) { // session.audioLatency could be useful for fixing clicking issues?
 				session.audioCtxOutbound = new AudioContext({
-					latencyHint: session.audioLatency / 1000.0 //, // needs to be in seconds, but VDON user input is via milliseconds
-					// sampleRate: 48000 // not sure this is a great idea, but might as well add this here, versus later on since it is needed anyways.
+					latencyHint: session.audioLatency / 1000.0, // needs to be in seconds, but VDON user input is via milliseconds
+					sampleRate: 48000 // not sure this is a great idea, but might as well add this here, versus later on since it is needed anyways.
 				});
 			} else {
-				session.audioCtxOutbound = new AudioContext();
+				try {
+					session.audioCtxOutbound = new AudioContext({sampleRate: 48000});
+				} catch(e){
+					session.audioCtxOutbound = new AudioContext(); // legacy support
+					errorlog(e);
+				}
 			}
 
-			var audioContext = session.audioCtxOutbound;
 			webAudio.audioContext = session.audioCtxOutbound;
 			
-			webAudio.destination = audioContext.createMediaStreamDestination();
+			webAudio.destination = session.audioCtxOutbound.createMediaStreamDestination();
 			
 			if (tracks.length>1){ // tries to 
 				try {
@@ -15459,18 +15466,18 @@ function outboundAudioPipeline(){ // this function isn't letting me change the a
 					
 					webAudio.subGainNodes = {};//
 					
-					var merger = audioContext.createChannelMerger(maxChannelCount);
+					var merger = session.audioCtxOutbound.createChannelMerger(maxChannelCount);
 					for (var i=0;i<tracks.length;i++){
 						try {
 							var tempStream = createMediaStream();
 							tempStream.addTrack(tracks[i]);
-							trackStream = audioContext.createMediaStreamSource(tempStream);
+							trackStream = session.audioCtxOutbound.createMediaStreamSource(tempStream);
 							
-							webAudio.subGainNodes[tracks[i].id] = audioContext.createGain();
+							webAudio.subGainNodes[tracks[i].id] = session.audioCtxOutbound.createGain();
 							trackStream.connect(webAudio.subGainNodes[tracks[i].id]);
 							
 							if (maxChannelCount==2){
-								var splitter = audioContext.createChannelSplitter(2);
+								var splitter = session.audioCtxOutbound.createChannelSplitter(2);
 								webAudio.subGainNodes[tracks[i].id].connect(splitter);
 								splitter.connect(merger, 0, 0);
 								try{
@@ -15487,24 +15494,24 @@ function outboundAudioPipeline(){ // this function isn't letting me change the a
 						} catch(e){errorlog(e);}
 					}
 					
-					webAudio.gainNode = audioGainNode(merger, audioContext);
+					webAudio.gainNode = audioGainNode(merger, session.audioCtxOutbound);
 				} catch(e){
 					errorlog(e);
-					webAudio.mediaStreamSource = audioContext.createMediaStreamSource(streamSrc);
-					webAudio.gainNode = audioGainNode(webAudio.mediaStreamSource, audioContext);
+					webAudio.mediaStreamSource = session.audioCtxOutbound.createMediaStreamSource(streamSrc);
+					webAudio.gainNode = audioGainNode(webAudio.mediaStreamSource, session.audioCtxOutbound);
 				}
 			} else {
-				webAudio.mediaStreamSource = audioContext.createMediaStreamSource(streamSrc); // clone to fix iOS issue
-				webAudio.gainNode = audioGainNode(webAudio.mediaStreamSource, audioContext);
+				webAudio.mediaStreamSource = session.audioCtxOutbound.createMediaStreamSource(streamSrc); // clone to fix iOS issue
+				webAudio.gainNode = audioGainNode(webAudio.mediaStreamSource, session.audioCtxOutbound);
 			}
 
 			var anonNode = webAudio.gainNode;
 			
 			
 			if (session.audioInputChannels == 1) {
-				webAudio.splitter = audioContext.createChannelSplitter(6);
+				webAudio.splitter = session.audioCtxOutbound.createChannelSplitter(6);
 				anonNode.connect(webAudio.splitter);
-				webAudio.merger = audioContext.createChannelMerger(1);
+				webAudio.merger = session.audioCtxOutbound.createChannelMerger(1);
 				webAudio.splitter.connect(webAudio.merger, 0, 0);
 				webAudio.splitter.connect(webAudio.merger, 1, 0);
 				webAudio.splitter.connect(webAudio.merger, 2, 0);
@@ -15516,15 +15523,15 @@ function outboundAudioPipeline(){ // this function isn't letting me change the a
 
 
 			if (session.lowcut) { // https://webaudioapi.com/samples/frequency-response/ for a tool to help set values
-				webAudio.lowcut1 = audioContext.createBiquadFilter();
+				webAudio.lowcut1 = session.audioCtxOutbound.createBiquadFilter();
 				webAudio.lowcut1.type = "highpass";
 				webAudio.lowcut1.frequency.value = session.lowcut;
 
-				webAudio.lowcut2 = audioContext.createBiquadFilter();
+				webAudio.lowcut2 = session.audioCtxOutbound.createBiquadFilter();
 				webAudio.lowcut2.type = "highpass";
 				webAudio.lowcut2.frequency.value = session.lowcut;
 
-				webAudio.lowcut3 = audioContext.createBiquadFilter();
+				webAudio.lowcut3 = session.audioCtxOutbound.createBiquadFilter();
 				webAudio.lowcut3.type = "highpass";
 				webAudio.lowcut3.frequency.value = session.lowcut;
 
@@ -15536,10 +15543,8 @@ function outboundAudioPipeline(){ // this function isn't letting me change the a
 			
 			
 			if (session.voicechanger) { 
-			
-				
 				function makeDistortionCurve(amount=10) {
-					var sampleRate = audioContext.sampleRate || 48000;
+					var sampleRate = session.audioCtxOutbound.sampleRate || 48000;
 					var curve = new Float32Array(sampleRate);
 					var x;
 					for (let i = 0; i < sampleRate; ++i ) {
@@ -15549,7 +15554,7 @@ function outboundAudioPipeline(){ // this function isn't letting me change the a
 					return curve;
 				}
 				
-				let waveShaper = audioContext.createWaveShaper();
+				let waveShaper = session.audioCtxOutbound.createWaveShaper();
 				waveShaper.curve = makeDistortionCurve(5);
 				
 				var realCoeffs = new Float32Array([1,0]);
@@ -15564,27 +15569,27 @@ function outboundAudioPipeline(){ // this function isn't letting me change the a
 					imagCoeffs[i] = 1 / (i * Math.PI) * (1  - Math.random()/2);
 				}
 				
-				let oscillator = audioContext.createOscillator();
+				let oscillator = session.audioCtxOutbound.createOscillator();
 				oscillator.frequency.value = 10;
-				const wave = audioContext.createPeriodicWave(realCoeffs, imagCoeffs);
+				const wave = session.audioCtxOutbound.createPeriodicWave(realCoeffs, imagCoeffs);
 				oscillator.setPeriodicWave(wave);
 				
-				let oscillatorGain = audioContext.createGain();
+				let oscillatorGain = session.audioCtxOutbound.createGain();
 				oscillatorGain.gain.value = 0.005;
 				oscillator.connect(oscillatorGain);
 				oscillator.start(0);
 				
-				let delay = audioContext.createDelay();
+				let delay = session.audioCtxOutbound.createDelay();
 				delay.delayTime.value = 0.01;
 				oscillatorGain.connect(delay.delayTime);
 				
-				let lowEQ = audioContext.createBiquadFilter();
+				let lowEQ = session.audioCtxOutbound.createBiquadFilter();
 				lowEQ.type = "peaking";
 				lowEQ.frequency.value = 200;
 				lowEQ.Q.value = 0.5;
 				lowEQ.gain.value = 6;
 				
-				let mid = audioContext.createBiquadFilter();
+				let mid = session.audioCtxOutbound.createBiquadFilter();
 				mid.type = "peaking";
 				mid.frequency.value = 500;
 				mid.Q.value = 0.5;
@@ -15598,18 +15603,18 @@ function outboundAudioPipeline(){ // this function isn't letting me change the a
 
 
 			if (session.equalizer) { // https://webaudioapi.com/samples/frequency-response/ for a tool to help set values
-				webAudio.lowEQ = audioContext.createBiquadFilter();
+				webAudio.lowEQ = session.audioCtxOutbound.createBiquadFilter();
 				webAudio.lowEQ.type = "lowshelf";
 				webAudio.lowEQ.frequency.value = 100;
 				webAudio.lowEQ.gain.value = 0;
 
-				webAudio.midEQ = audioContext.createBiquadFilter();
+				webAudio.midEQ = session.audioCtxOutbound.createBiquadFilter();
 				webAudio.midEQ.type = "peaking";
 				webAudio.midEQ.frequency.value = 1000;
 				webAudio.midEQ.Q.value = 0.5;
 				webAudio.midEQ.gain.value = 0;
 
-				webAudio.highEQ = audioContext.createBiquadFilter();
+				webAudio.highEQ = session.audioCtxOutbound.createBiquadFilter();
 				webAudio.highEQ.type = "highshelf";
 				webAudio.highEQ.frequency.value = 10000;
 				webAudio.highEQ.gain.value = 0;
@@ -15621,25 +15626,25 @@ function outboundAudioPipeline(){ // this function isn't letting me change the a
 			}
 
 			if (session.compressor === 1) {
-				webAudio.compressor = audioCompressor(anonNode, audioContext);
+				webAudio.compressor = audioCompressor(anonNode, session.audioCtxOutbound);
 				anonNode = webAudio.compressor;
 			} else if (session.compressor === 2) {
-				webAudio.compressor = audioLimiter(anonNode, audioContext);
+				webAudio.compressor = audioLimiter(anonNode, session.audioCtxOutbound);
 				anonNode = webAudio.compressor;
 			}
 			
 			if (session.micDelay!==false) {
-				webAudio.micDelay = micDelayNode(anonNode, audioContext);
+				webAudio.micDelay = micDelayNode(anonNode, session.audioCtxOutbound);
 				anonNode = webAudio.micDelay;
 			}
 			
 			if (session.noisegate!==false){
-				webAudio.analyser = audioMeter(anonNode, audioContext);
+				webAudio.analyser = audioMeter(anonNode, session.audioCtxOutbound);
 				anonNode = webAudio.analyser;
-				webAudio.gatingNode = audioGatingNode(anonNode, audioContext);
+				webAudio.gatingNode = audioGatingNode(anonNode, session.audioCtxOutbound);
 				webAudio.gatingNode.connect(webAudio.destination);
 			} else {
-				webAudio.analyser = audioMeter(anonNode, audioContext);
+				webAudio.analyser = audioMeter(anonNode, session.audioCtxOutbound);
 				webAudio.analyser.connect(webAudio.destination);
 			}
 
@@ -15709,8 +15714,8 @@ function outboundAudioPipeline(){ // this function isn't letting me change the a
 			}
 			
 			try {
-				if (audioContext.state == "suspended"){
-					audioContext.resume();
+				if (session.audioCtxOutbound.state == "suspended"){
+					session.audioCtxOutbound.resume();
 				}
 			} catch(e){warnlog("session.audioCtx.resume(); failed");}
 			
@@ -23937,6 +23942,9 @@ async function press2talk(clean = false) {
 	if (session.audioDevice===0){
 		constraint.audio = false;
 	}
+	
+	
+	
 	requestBasicPermissions(constraint, function(){ 
 		log("requestBasicPermissions done"); 
 		enumerateDevices().then(gotDevices).then(async function() {
@@ -23954,11 +23962,8 @@ async function press2talk(clean = false) {
 				log("SETTING AUDIO DEVICE!!");
 				activatedPreview = false; 
 				await grabAudio("#audioSource3");
-				
 			} 
 			
-			
-
 			if (session.videoDevice !== 0) { 
 				activatedPreview = false;
 				if (session.quality !== false) {
@@ -25865,12 +25870,11 @@ function togglePictureInPicture(videoElement) {
 
 
 function mixMinusAudio(uid=false){
-	var audioContext = new AudioContext();
 	
 	if (session.stereo===false){
-		var merger = audioContext.createChannelMerger(1);
+		var merger = session.audioCtx.createChannelMerger(1);
 	} else {
-		var merger = audioContext.createChannelMerger(2);
+		var merger = session.audioCtx.createChannelMerger(2);
 	}
 	
 	if (session.videoElement && session.videoElement.srcObject){
@@ -25879,10 +25883,10 @@ function mixMinusAudio(uid=false){
 			try {
 				var tempStream = createMediaStream();
 				tempStream.addTrack(tracks[i]);
-				trackStream = audioContext.createMediaStreamSource(tempStream);
+				trackStream = session.audioCtx.createMediaStreamSource(tempStream);
 				
 				if (session.stereo!==false){
-					var splitter = audioContext.createChannelSplitter(2);
+					var splitter = session.audioCtx.createChannelSplitter(2);
 					trackStream.connect(splitter);
 					splitter.connect(merger, 0, 0);
 					try{
@@ -25912,10 +25916,10 @@ function mixMinusAudio(uid=false){
 			try {
 				var tempStream = createMediaStream();
 				tempStream.addTrack(tracks[i]);
-				trackStream = audioContext.createMediaStreamSource(tempStream);
+				trackStream = session.audioCtx.createMediaStreamSource(tempStream);
 				
 				if (session.stereo!==false){
-					var splitter = audioContext.createChannelSplitter(2);
+					var splitter = session.audioCtx.createChannelSplitter(2);
 					trackStream.connect(splitter);
 					splitter.connect(merger, 0, 0);
 					try{
@@ -25933,7 +25937,7 @@ function mixMinusAudio(uid=false){
 		}
 	}
 	
-	var destination = audioContext.createMediaStreamDestination();
+	var destination = session.audioCtx.createMediaStreamDestination();
 	merger.connect(destination);
 	return destination.stream;
 }
@@ -28300,7 +28304,7 @@ function listAudioSettings() {
 					var div = document.createElement("div");
 					var label = document.createElement("label");
 					var i = "Gain";
-					//label.id = "label_" + i + "_" + track0.id;
+					label.id = "label_" + i + "_" + track0.id;
 					label.htmlFor = "constraints_" + i + "_" + track0.id;
 					label.innerText = "Gain:";
 					label.style = "display:inline-block; padding:0;margin-top: 15px";
@@ -28319,7 +28323,7 @@ function listAudioSettings() {
 					input.name = "constraints_" + i + "_" + track0.id;
 					
 					input.value = session.webAudios[webAudio].subGainNodes[track0.id].gain.value * 100;
-					label.innerHTML += " " + parseInt(session.webAudios[webAudio].subGainNodes[track0.id].gain.value * 100);
+					label.innerText += " " + parseInt(session.webAudios[webAudio].subGainNodes[track0.id].gain.value * 100);
 					input.title = parseInt(input.value);
 					
 					var manualInput = document.createElement("input");
@@ -28329,23 +28333,27 @@ function listAudioSettings() {
 					manualInput.dataset.labelname = label.innerHTML;
 					manualInput.value = parseFloat(input.value);
 					manualInput.className = "manualInput";
-					manualInput.id = "label_" + i + "_" + track0.id;
+					manualInput.id = "manualInput_" + i + "_" + track0.id;
 					
 					manualInput.onchange = function(e) {
-						getById("constraints_" + e.target.dataset.keyname).value = parseFloat(e.target.value);
+						getById("constraints_" + e.target.dataset.keyname+ "_" + e.target.dataset.deviceid).value = parseFloat(e.target.value);
+						getById("label_" + e.target.dataset.keyname + "_"+e.target.dataset.deviceid).innerText = "Gain: " + parseInt(e.target.value);
+						getById("manualInput_" + e.target.dataset.keyname + "_"+e.target.dataset.deviceid).value = parseFloat(e.target.value);
 						changeSubGain(e.target.value, e.target.dataset.deviceid);
 						e.target.title = e.target.value;
 						pokeIframeAPI("mic-constraint-changed", {name:e.target.dataset.keyname, value:e.target.value});
 					};
 					
 					input.oninput = function(e) {
-						getById("label_" + e.target.dataset.keyname).value = parseFloat(e.target.value);
+						getById("label_" + e.target.dataset.keyname + "_"+e.target.dataset.deviceid).innerText = "Gain: " + parseInt(e.target.value);
+						getById("manualInput_" + e.target.dataset.keyname + "_"+e.target.dataset.deviceid).value = parseFloat(e.target.value);
 						changeSubGain(e.target.value, e.target.dataset.deviceid);
 						e.target.title = e.target.value;
 					};
 					
 					input.onchange = function(e) {
-						getById("label_" + e.target.dataset.keyname).value = parseFloat(e.target.value);
+						getById("label_" + e.target.dataset.keyname + "_"+e.target.dataset.deviceid).innerText = "Gain: " + parseInt(e.target.value);
+						getById("manualInput_" + e.target.dataset.keyname + "_"+e.target.dataset.deviceid).value = parseFloat(e.target.value);
 						changeSubGain(e.target.value, e.target.dataset.deviceid);
 						e.target.title = e.target.value;
 						pokeIframeAPI("mic-constraint-changed", {name:e.target.dataset.keyname, value:e.target.value});
@@ -30330,8 +30338,22 @@ async function requestBasicPermissions(constraint = {video: true, audio: true}, 
 		}
 		setTimeout(function(gumID,constraint, timerBasicCheck, callback, miconly){
 			log(gumID);
+			var removeAudio = false;
+			if (!constraint.audio && !constraint.video){
+				constraint.audio = true
+				removeAudio = true;
+			}				
 			navigator.mediaDevices.getUserMedia(constraint).then(function(stream) { // Apple needs thi to happen before I can access EnumerateDevices. 
-				
+			
+				if (removeAudio){
+					constraint.audio = false;
+					stream.getTracks().forEach(function(track) {
+						stream.removeTrack(track);
+						track.stop();
+						log("stopping old track");
+					});
+				}
+					
 				log("got first stream");
 				clearTimeout(timerBasicCheck);
 				if (getUserMediaRequestID !== gumID) {
@@ -30372,6 +30394,11 @@ async function requestBasicPermissions(constraint = {video: true, audio: true}, 
 								warnUser("Permissions denied.\n\nTo access the camera or microphone from within OBS, please refer to:\n<a href='https://docs.vdo.ninja/guides/share-webcam-from-inside-obs'>docs.vdo.ninja/guides/share-webcam-from-inside-obs</a>.", false, false);
 							} else if (ChromiumVersion && !session.mobile){
 								warnUser("<h1>Camera/mic permissions denied</h1>\nPlease ensure you have allowed the mic/camera permissions in your browser, such as like:\n\n<img src='./media/permissions_chrome.jpg' />\n\nFor further help on how to resolve this issue, please refer to:\n\n<a target='_blank' href='https://docs.vdo.ninja/common-errors-and-known-issues/enable-camera-microphone-permissions'>https://docs.vdo.ninja/common-errors-and-known-issues/enable-camera-microphone-permissions</a>.", false, false);
+							} else if (Firefox && session.mobile){
+								warnUser("<h3>Camera/mic permission denied</h3>\nPlease allow mic/camera access.\n\n\
+								If not prompted, go to Settings -> Site permissions -> exceptions (at bottom) -> vdo.ninja, and then manually enable the permissions.\n\n\
+								If Firefox still gives you issues, try in incognito mode or a different browser.\
+								For further help, please refer to:\n\n<a target='_blank' href='https://docs.vdo.ninja/common-errors-and-known-issues/enable-camera-microphone-permissions'>https://docs.vdo.ninja/common-errors-and-known-issues/enable-camera-microphone-permissions</a>.", false, false);
 							} else {
 								warnUser("Permission access to the camera or microphone was denied.\n\nPlease ensure you have allowed the mic/camera permissions in your browser.\n\nFor guides on how to resolve this issue, please refer to:\n\n<a target='_blank' href='https://docs.vdo.ninja/common-errors-and-known-issues/enable-camera-microphone-permissions'>https://docs.vdo.ninja/common-errors-and-known-issues/enable-camera-microphone-permissions</a>.", false, false);
 							}
@@ -32113,8 +32140,9 @@ function updateClosedCaptions(msg, label, UUID) {
 	transcript = transcript.charAt(0).toUpperCase() + transcript.slice(1);
 	//transcript = transcript.substr(-1, 5000); // keep it from being too long
 
-
-	if (label && (!(session.view && !session.view_set))) {
+	if (session.nocaptionlabels){
+		label = "";
+	} else if (label && (!(session.view && !session.view_set))) {
 		label = sanitizeLabel(label);
 		label = "<b>" + label + ":</b> ";
 	} else {
@@ -34921,6 +34949,10 @@ function audioMeterGuest(mediaStreamSource, UUID, trackid){
 	function updateLevels() {
 		 
 		try {
+			if (!session.rpcs[UUID]){
+				return;
+			}
+			
 			session.rpcs[UUID].inboundAudioPipeline[trackid].analyser.getByteFrequencyData(dataArray);
 			var total = 0;
 			for (var i = 0; i < dataArray.length; i++){
@@ -35039,7 +35071,13 @@ function effectsDynamicallyUpdate(event, ele){
 	if (session.effect === "7"){ // digitalZoom
 		getById("selectEffectAmount").style.display = "block";
 		getById("selectEffectAmount3").style.display = "block"; 
-		session.effectValue = 1.0;
+		
+		if (session.effectValue_default){
+			session.effectValue = session.effectValue_default;
+		} else {
+			session.effectValue = 1;
+		}
+		
 		getById("selectEffectAmountInput").min = 1;
 		getById("selectEffectAmountInput").max = 1.99;
 		getById("selectEffectAmountInput").step = 0.01
@@ -36304,7 +36342,7 @@ function whipOut(){
 			});
 			
 			if (!sender){
-				warnlog("can't change bitrate; no video sender found");
+				log("GOP(): can't change bitrate; no video sender found");
 				return false;
 			}
 			
@@ -36353,7 +36391,7 @@ function whipClient(){ // publish to whip.vdo.ninja with obs, to use.  experimen
 		}
 		log("Trying to load whip websocket...");
 		
-		socket = new WebSocket("wss://whip.vdo.ninja");
+		socket = new WebSocket(session.whipServerURL);
 		
 		socket.onclose = function (){
 			failedCount+=1;
@@ -36503,7 +36541,7 @@ async function processWHIP(data){ // LISTEN FOR REMOTE WHIP
 	return sdpAnswer; // return SDP answer for the remote WHIP request
 }
 
-async function whepIn(whepInput=false,whepInputToken=false, UUID=false){ // PLAY WHEP
+async function whepIn(whepInput=false, whepInputToken=false, UUID=false){ // PLAY WHEP
 	var candidates = [];
 	var responseLocation = false;
 	if (!UUID){
@@ -38120,6 +38158,14 @@ function getReceivers2(UUID){
 	
 	var receivers = session.rpcs[UUID].getReceivers();
 	
+	try {
+		if (session.rpcs[UUID].whep){ // used to be "mc", not "whep"
+			try{
+				receivers = receivers.concat(session.rpcs[UUID].whep.getReceivers());
+			} catch(e){errorlog(e);}
+		}
+	} catch(e){errorlog(e);}
+	
 	if (isAlt){
 		for (var i=0;i<receivers.length;i++){
 			for (var j=0;j<ssTracks.length;j++){
@@ -38142,6 +38188,9 @@ function getReceivers2(UUID){
 			}
 		}
 	}
+	
+	
+	
 	return fixedReceivers;
 }
 
