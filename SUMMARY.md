@@ -563,6 +563,7 @@
   * [Enable Camera / Microphone permissions](common-errors-and-known-issues/enable-camera-microphone-permissions.md)
   * [FPS drop if app not in focus](common-errors-and-known-issues/fps-drop-if-app-not-in-focus.md)
   * [Surround sound error when screen sharing with USB headset](common-errors-and-known-issues/surround-sound-error-when-screen-sharing-with-usb-headset.md)
+  * [Relay candidate being selected](common-errors-and-known-issues/relay-candidate-being-selected.md)
 * [Platform specific issues](platform-specific-issues/README.md)
   * [Android](platform-specific-issues/android.md)
   * [macOS](platform-specific-issues/macos.md)
