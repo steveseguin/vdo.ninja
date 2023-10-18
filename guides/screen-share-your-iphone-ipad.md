@@ -17,11 +17,11 @@ One recently added way to screen share is with the VDO.Ninja native mobile app. 
 
 
 
-When using the native app to screen share, but sure to select the VDO.Ninja Screen Recorder option, once prompted by Apple. Then click Start Broadcast.\
+When using the native app to screen share, be sure to select the VDO.Ninja Screen Recorder option once prompted by Apple. Then click Start Broadcast.\
 \
-If you don't see the option, try scrolling down.  If you don't see it, update your iOS system version to the newest available version. Old versions may not support screen sharing, such as v15.x.\
+If you do not see the option, try scrolling down.  If you don't see it still, update your iOS system version to the newest available version. Old versions may not support screen sharing, such as v15.x.\
 \
-If you still cannot find it, check that the app has the correct permissions in your iOS settings or seek support.
+If you still cannot find it, check that the app has the correct permissions in your iOS settings, seek support, or try one of the other options below.
 
 ### Other options
 
