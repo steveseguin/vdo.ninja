@@ -21,7 +21,9 @@ When using the native app to screen share, be sure to select the VDO.Ninja Scree
 \
 If you do not see the option, try scrolling down.  If you don't see it still, update your iOS system version to the newest available version. Old versions may not support screen sharing, such as v15.x.\
 \
-If you still cannot find it, check that the app has the correct permissions in your iOS settings, seek support, or try one of the other options below.
+If you still cannot find it, check that the app has the correct permissions in your iOS settings, seek support, or try one of the other options below.\
+\
+You can leave all other settings as default when using the VDO.Ninja native app. Once you start your broadcast, you will be provided a link at the top of the app that you can put into your browser or OBS browser source.
 
 ### Other options
 
