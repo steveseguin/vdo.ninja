@@ -1,5 +1,17 @@
 # Updates - VDO.Ninja
 
+#### October 19 <a href="#august-31" id="august-31"></a>
+
+* Added `&recordmotion` as an option, which takes a video snapshot and saves it to disk as a PNG file whenever there is motion detected in a video.\
+  \-- Auto saves (to download folder) one photo per second, max.\
+  \-- It can take values, such as `&recordmotion=15`, which will control the sensitivity of the motion capture\
+  \-- It's primarily designed for the sender-side, but I think it should work if a viewer also\
+  \-- I don't think this will work within OBS, so Chrome/Chromium is recommended instead\
+  \-- I guess the point of this is to allow for basic security camera operation, but also as a source of inspiration for other ideas\
+  \-- File name of the saved file contains the timestamp\
+  \
+  \*\* on alpha at [https://vdo.ninja/alpha/?recordmotion\&webcam](https://vdo.ninja/alpha/?recordmotion\&webcam)
+
 #### October 16 <a href="#august-31" id="august-31"></a>
 
 * Added a new experimental option called `&retransmit`; it will relay the incoming '[chunked](../newly-added-parameters/and-chunked.md)' media stream to others connected to you, without transcoding. In a way, this enables a form of peer to peer to peer broadcasting.\
