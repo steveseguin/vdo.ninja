@@ -17,13 +17,13 @@ One recently added way to screen share is with the VDO.Ninja native mobile app. 
 
 
 
-When using the native app to screen share, be sure to select the VDO.Ninja Screen Recorder option once prompted by Apple. Then click Start Broadcast.\
-\
-If you do not see the option, try scrolling down.  If you don't see it still, update your iOS system version to the newest available version. Old versions may not support screen sharing, such as v15.x.\
-\
-If you still cannot find it, check that the app has the correct permissions in your iOS settings, seek support, or try one of the other options below.\
-\
-You can leave all other settings as default when using the VDO.Ninja native app. Once you start your broadcast, you will be provided a link at the top of the app that you can put into your browser or OBS browser source.
+When using the native app to screen share, be sure to select the VDO.Ninja Screen Recorder option once prompted by Apple. Then click Start Broadcast.
+
+If you do not see the option, try scrolling down. If you don't see it still, update your iOS system version to the newest available version. Old versions may not support screen sharing, such as v15.x.
+
+If you still cannot find it, check that the app has the correct permissions in your iOS settings, seek support, or try one of the other options below.
+
+You can leave all other settings as default when using the [VDO.Ninja native app](../steves-helper-apps/native-mobile-app-versions.md). Once you start your broadcast, you will be provided a link at the top of the app that you can put into your browser or OBS browser source.
 
 ### Other options
 
@@ -31,7 +31,7 @@ Another option to screen share is to use Apple Airplay to wirelessly cast your s
 
 Better than Airplay though, if you can connect your iPhone to a mac via USB, as QuickTime supports USB-connected access to an iPhone's camera. This does not require any downloads and offers a high-quality stream. Using a virtual audio device, you can even capture IOS audio with this method.
 
-In this guide we will show you how to screen-share to VDO.Ninja using QuickTime over USB with a Macbook and an iPhone. On Windows, you may wish to use Airplay instead, leveraging one of the free Airplay clients designed for PC.
+In this guide we will show you how to screen-share to VDO.Ninja using QuickTime over USB with a MacBook and an iPhone. On Windows, you may wish to use Airplay instead, leveraging one of the free Airplay clients designed for PC.
 
 {% hint style="info" %}
 Android users can use the native VDO.Ninja Android app to screen share directly to VDO.Ninja.
@@ -41,7 +41,7 @@ Android users can use the native VDO.Ninja Android app to screen share directly 
 
 ![](<../.gitbook/assets/image (106) (1) (1).png>)
 
-2\. Open the QuickTime Player on your mac.
+2\. Open the QuickTime Player on your Mac.
 
 ![](<../.gitbook/assets/image (90) (1) (1).png>)
 
@@ -91,4 +91,4 @@ The view link is normally found at the top of the VDO.Ninja page, but it can be 
 
 10\. If you want to increase the frame rate and quality of the VDO.Ninja stream, adding [`&videobitrate=6000`](../advanced-settings/video-bitrate-parameters/bitrate.md) to the URL will increase the quality by more than double. If you're looking to stream a game, you may want to increase this value even higher, although the default bitrate is more than enough for text and basic screen sharing.
 
-Please see the rest of the documentation for me details on customizing VDO.Ninja.
+Please see the rest of the documentation for more details on customizing VDO.Ninja.
