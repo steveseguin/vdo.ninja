@@ -71,3 +71,9 @@ Room support and passwords are not supported yet in the native mobile apps.
 {% content-ref url="../updates/updates-native-mobile-apps.md" %}
 [updates-native-mobile-apps.md](../updates/updates-native-mobile-apps.md)
 {% endcontent-ref %}
+
+## Related
+
+{% content-ref url="../guides/how-to-improve-quality-of-the-native-app.md" %}
+[how-to-improve-quality-of-the-native-app.md](../guides/how-to-improve-quality-of-the-native-app.md)
+{% endcontent-ref %}

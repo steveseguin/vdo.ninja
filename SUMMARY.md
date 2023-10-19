@@ -73,7 +73,7 @@
   * [How to set up a simple chat room](guides/how-to-set-up-a-simple-chat-room.md)
   * [How to screen share in 1080p](guides/how-to-screen-share-in-1080p.md)
   * [How to control PowerPoint remotely with VDO.Ninja](guides/how-to-control-powerpoint-remotely-with-vdo.ninja.md)
-  * [Improving quality of the native app](guides/improving-quality-of-the-native-app.md)
+  * [How to improve quality of the native app](guides/how-to-improve-quality-of-the-native-app.md)
 * [Advanced Options (URL Parameters)](advanced-settings.md)
   * [Most common Parameters](advanced-settings/cheat-sheet-of-basic-parameters/README.md)
     * [\&push](https://docs.vdo.ninja/advanced-settings/source-parameters/push)
