@@ -46,3 +46,4 @@
 * [enable-camera-microphone-permissions.md](enable-camera-microphone-permissions.md "mention")
 * [fps-drop-if-app-not-in-focus.md](fps-drop-if-app-not-in-focus.md "mention")
 * [surround-sound-error-when-screen-sharing-with-usb-headset.md](surround-sound-error-when-screen-sharing-with-usb-headset.md "mention")
+* [relay-candidate-being-selected.md](relay-candidate-being-selected.md "mention")
