@@ -1,5 +1,22 @@
 # Updates - VDO.Ninja
 
+#### October 21 <a href="#august-31" id="august-31"></a>
+
+* Added a work around for a chrome bug impacting some Androids where their video preview would sometimes freeze on initial camera loading, requiring a refresh.
+  * If curious, the fix just better detects that a player error occurred, and then just retries loading it again a second later, fixing itself.
+  * Pushed the change to production ([https://vdo.ninja/](https://vdo.ninja/)) as a hot patch, but the change is also on alpha and GitHub now.
+
+#### October 20 <a href="#august-31" id="august-31"></a>
+
+* 7.1 surround sound audio is being supported now, in a technical sense, although really only if the source is a server stream. To use, add [`&stereo=8`](../general-settings/stereo.md) on the viewer end. (5.1 multi channel was around supported with [`&stereo=4`](../general-settings/stereo.md) I think)
+* Fixed an issue with stereo sound not working on the WHEP viewer.
+* Fixed an issue with the WHEP player stats not showing correctly.
+* Fixed an issue where [`&buffer`](../advanced-settings/view-parameters/buffer.md) wasn't working with the WHEP player.
+* Made it a bit easier to setup the WHEP player as a basic viewer page; hiding menus that probably aren't commonly needed.
+* `&svc` is a new option, which is useful for publishing to WHIP broadcast servers that support scalable video modes. -- Takes an SVC value, with `L1T3` being the most universal option, but other options exist. You'll get an error when publishing if you use an invalid one.\
+  ![](<../.gitbook/assets/image (194).png>)
+* Improved the [`vdo.ninja/alpha/whip`](https://vdo.ninja/alpha/whip) page and added SVC scalable options to the WHIP output option there, making it easy to select a compatible SVC mode if desired.
+
 #### October 19 <a href="#august-31" id="august-31"></a>
 
 * Added `&recordmotion` as an option, which takes a video snapshot and saves it to disk as a PNG file whenever there is motion detected in a video.\
