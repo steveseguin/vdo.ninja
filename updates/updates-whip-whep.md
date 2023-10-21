@@ -88,7 +88,7 @@ I'll keep improving the support for WHIP/WHEP. Lots to do. Suggestions welcomed 
 
 #### May 1 <a href="#august-31" id="august-31"></a>
 
-* Added [`&suppresslocalaudio`](../advanced-settings/screen-share-parameters/and-suppresslocalaudio.md) as a new URL option. This will disable local audio playback of a Chrome tab while screen-sharing it. This can be used with the new WHIP output of VDO.Ninja to publish a VDO.Ninja scene directly to Twitch, without having to deal with any audio feedback issues while having that scene tab open.
+* [`&suppresslocalaudio`](../advanced-settings/screen-share-parameters/and-suppresslocalaudio.md) will disable local audio playback of a Chrome tab while screen-sharing it. This can be used with the new WHIP output of VDO.Ninja to publish a VDO.Ninja scene directly to Twitch, without having to deal with any audio feedback issues while having that scene tab open.
 
 #### April 16 <a href="#august-31" id="august-31"></a>
 
@@ -114,12 +114,12 @@ I'll keep improving the support for WHIP/WHEP. Lots to do. Suggestions welcomed 
 
 #### February 19
 
-* I've refined the [WHIP service](../advanced-settings/whip-parameters/and-whip.md) on `vdo.ninja/alpha/?whip=xxx`, making it as robust as I can I think, so if some third-party WHIP client/app doesn't work with it, it may not an issue with VDO.Ninja. In those cases it will be up to the client to ensure full support of the WHIP specification, else it may not work with VDO.Ninja.
+* I've refined the WHIP service on `vdo.ninja/alpha/?whip=xxx`, making it as robust as I can I think, so if some third-party WHIP client/app doesn't work with it, it may not an issue with VDO.Ninja. In those cases it will be up to the client to ensure full support of the WHIP specification, else it may not work with VDO.Ninja.
 
 ### 2022
 
 #### December 21
 
-* Added experimental "[WHIP](../advanced-settings/whip-parameters/and-whip.md)" support to VDO.Ninja, which means in the near future you'll be able to publish directly from OBS to VDO.Ninja without a virtual camera. There's some big caveats to it all, so I don't recommend it over the normal method to most users, but we'll see how it evolves. ([https://vdo.ninja/alpha/?whip=xxx](https://vdo.ninja/alpha/?whip=xxx) + [https://whip.vdo.ninja/](https://whip.vdo.ninja/) + xxx)\
+* Added experimental "WHIP" support to VDO.Ninja, which means in the near future you'll be able to publish directly from OBS to VDO.Ninja without a virtual camera. There's some big caveats to it all, so I don't recommend it over the normal method to most users, but we'll see how it evolves. ([https://vdo.ninja/alpha/?whip=xxx](https://vdo.ninja/alpha/?whip=xxx))\
   \
   YouTube tutorial: [https://youtu.be/ynSOE2d4Z9Y](https://youtu.be/ynSOE2d4Z9Y)
