@@ -20,7 +20,9 @@ To make using WHIP and WHEP more accessible, VDO.Ninja has a hosted page with co
 [https://vdo.ninja/whip](https://vdo.ninja/whip)
 {% endembed %}
 
-This is the future!  To try it out, visit [https://vdo.ninja/whip](https://vdo.ninja/whip), enter your Twitch stream token in the correct field, GO, and then select your camera in VDO.Ninja as normal.
+This is the future!  To try it out, visit [https://vdo.ninja/whip](https://vdo.ninja/whip), enter your Twitch stream token in the correct field, GO, and then select your camera in VDO.Ninja as normal.\
+\
+![](<../.gitbook/assets/image (198).png>)![](<../.gitbook/assets/image (199).png>)
 
 ### Alpha version of WHIP support and features
 
@@ -28,8 +30,7 @@ The alpha version of VDO.Ninja has the cutting edge available to it, often with 
 
 Check out the alpha version here: [https://vdo.ninja/alpha/whip](https://vdo.ninja/alpha/whip)
 
-\
-![](<../.gitbook/assets/image (198).png>)![](<../.gitbook/assets/image (199).png>)
+
 
 ### WHIP ingest from OBS Studio or other
 
