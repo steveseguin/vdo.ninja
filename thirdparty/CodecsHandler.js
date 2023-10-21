@@ -533,14 +533,52 @@ var CodecsHandler = (function() {
         }
 		
 		if (typeof params.stereo != 'undefined'){
-			if (params.stereo==0){
-				appendOpusNext += ';stereo=0;sprop-stereo=0';  // defaults to 0
-			} else if (params.stereo==1){
-				appendOpusNext += ';stereo=1;sprop-stereo=1'; // defaults to 0
-			} else if (params.stereo==2){
+			if (params.stereo==0){  // &stereo=0
+				sdpLines[opusFmtpLineIndex] = sdpLines[opusFmtpLineIndex].replace(";stereo=1", "");
+				sdpLines[opusFmtpLineIndex] = sdpLines[opusFmtpLineIndex].replace(";sprop-stereo=1", "");
+				sdpLines[opusFmtpLineIndex] = sdpLines[opusFmtpLineIndex].replace(";stereo=0", "");
+				sdpLines[opusFmtpLineIndex] = sdpLines[opusFmtpLineIndex].replace(";sprop-stereo=0", "");
+				
+				if (sdpLines[opusFmtpLineIndex].split(";stereo=0").length==1){
+					appendOpusNext += ';stereo=0';  // defaults to 0
+				}
+				if (sdpLines[opusFmtpLineIndex].split(";sprop-stereo=0").length==1){
+					appendOpusNext += ';sprop-stereo=0';  // defaults to 0
+				}
+			} else if (params.stereo==1){ // &stereo=1
+				sdpLines[opusFmtpLineIndex] = sdpLines[opusFmtpLineIndex].replace(";stereo=1", "");
+				sdpLines[opusFmtpLineIndex] = sdpLines[opusFmtpLineIndex].replace(";sprop-stereo=1", "");
+				sdpLines[opusFmtpLineIndex] = sdpLines[opusFmtpLineIndex].replace(";stereo=0", "");
+				sdpLines[opusFmtpLineIndex] = sdpLines[opusFmtpLineIndex].replace(";sprop-stereo=0", "");
+				
+				if (sdpLines[opusFmtpLineIndex].split(";stereo=1").length==1){
+					appendOpusNext += ';stereo=1'; // defaults to 0
+				}
+				if (sdpLines[opusFmtpLineIndex].split(";sprop-stereo=1").length==1){
+					appendOpusNext += ';sprop-stereo=1'; // defaults to 0
+				}
+			} else if (params.stereo==2){ // &stereo=4
+				sdpLines[opusFmtpLineIndex] = sdpLines[opusFmtpLineIndex].replace(";stereo=1", "");
+				sdpLines[opusFmtpLineIndex] = sdpLines[opusFmtpLineIndex].replace(";sprop-stereo=1", "");
+				sdpLines[opusFmtpLineIndex] = sdpLines[opusFmtpLineIndex].replace(";stereo=0", "");
+				sdpLines[opusFmtpLineIndex] = sdpLines[opusFmtpLineIndex].replace(";sprop-stereo=0", "");
+				
 				sdpLines[opusIndex] = sdpLines[opusIndex].replace("opus/48000/2", "multiopus/48000/6");
-				appendOpusNext += ';channel_mapping=0,4,1,2,3,5;num_streams=4;coupled_streams=2';  // Multi-channel 5.1 audio
+				if (sdpLines[opusFmtpLineIndex].split(";channel_mapping=0,4,1,2,3,5;num_streams=4;coupled_streams=2").length==1){
+					appendOpusNext += ';channel_mapping=0,4,1,2,3,5;num_streams=4;coupled_streams=2';  // Multi-channel 5.1 audio
+				}
+			} else if (params.stereo==3){ // &stereo=8
+				sdpLines[opusFmtpLineIndex] = sdpLines[opusFmtpLineIndex].replace(";stereo=1", "");
+				sdpLines[opusFmtpLineIndex] = sdpLines[opusFmtpLineIndex].replace(";sprop-stereo=1", "");
+				sdpLines[opusFmtpLineIndex] = sdpLines[opusFmtpLineIndex].replace(";stereo=0", "");
+				sdpLines[opusFmtpLineIndex] = sdpLines[opusFmtpLineIndex].replace(";sprop-stereo=0", "");
+			
+				sdpLines[opusIndex] = sdpLines[opusIndex].replace("opus/48000/2", "multiopus/48000/8");
+				if (sdpLines[opusFmtpLineIndex].split(";channel_mapping=0,6,1,2,3,4,5,7;num_streams=5;coupled_streams=3").length==1){
+					appendOpusNext += ';channel_mapping=0,6,1,2,3,4,5,7;num_streams=5;coupled_streams=3';  // Multi-channel 5.1 audio
+				}
 			}
+			
 		}
 		
         if (typeof params.maxaveragebitrate != 'undefined') {
@@ -577,10 +615,6 @@ var CodecsHandler = (function() {
 			}
         }
 
-		if (debug){
-			console.log();
-		}
-		
         sdpLines[opusFmtpLineIndex] = sdpLines[opusFmtpLineIndex].concat(appendOpusNext);
 		
 		if (debug){

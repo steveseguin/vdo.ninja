@@ -408,7 +408,17 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 		}
 	}
 	
-	
+	if (urlParams.has('svc') || urlParams.has('scalabilitymode')) { // Experiment with this feature here: https://webrtc.github.io/samples/src/content/extensions/svc/
+		session.scalabilityMode = urlParams.get('svc') || urlParams.get('scalabilitymode') || "L1T3";
+		if (!scalabilityModes.includes(session.scalabilityMode)){
+			scalabilityModes.forEach(sca=>{
+				if (sca.toLowerCase() === session.scalabilityMode.toLowerCase()){
+					session.scalabilityMode = sca;
+					log("Corrected the capitalization of the SVC value. just in case thats important");
+				}
+			});
+		}
+	}
 	
 	if (urlParams.has('whepplay')) { // URL or data:base64 image. Becomes local to this viewer only.  This is like &avatar, but slightly different. Just CSS in this case
 		if (urlParams.get('whepplay')){
@@ -747,6 +757,11 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 	if (urlParams.has('motionswitch') || urlParams.has('motiondetection')) { // switch OBS to this scene when there is motion, and "solo view" this video in the VDO.Ninja auto-mixer, if used
 		session.motionSwitch = parseInt(urlParams.get('motionswitch')) ||  parseInt(urlParams.get('motiondetection')) || 15; // threshold of motion needed to trigger
 	}
+	
+	if (urlParams.has('motionrecord') || urlParams.has('recordmotion')) { // switch OBS to this scene when there is motion, and "solo view" this video in the VDO.Ninja auto-mixer, if used
+		session.motionRecord = parseInt(urlParams.get('motionrecord')) || parseInt(urlParams.get('recordmotion')) || 15; // threshold of motion needed to trigger
+	}
+	
 	
 
 	if (urlParams.has('locked')) {
@@ -1831,6 +1846,10 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 			session.stereo = 4;
 		} else if (session.stereo === "multi") {
 			session.stereo = 4;
+		} else if (session.stereo === "8") {
+			session.stereo = 8;
+		} else if (session.stereo === "surround") {
+			session.stereo = 8;
 		} else if (session.stereo === "2") {
 			session.stereo = 2;
 		} else if (session.stereo === "6") {
@@ -2144,7 +2163,7 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 			fakeElement.id = parseInt(Math.random() * 10000000000);
 			session.fakeFeeds.push(fakeElement);
 		}
-		if (session.view!==false || session.scene!==false){
+		if ((session.view!==false) || (session.scene!==false) || session.whepInput){
 			setTimeout(function(){updateMixer();},1000);
 		}
 	}
@@ -4435,7 +4454,7 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 		getById("saveRoom").style.display = "none"; // don't let the user save the room if in OBS
 	}
 	if (session.cleanViewer){
-		if (session.view && !session.director && session.permaid===false){
+		if ((session.view || session.whepInput) && !session.director && session.permaid===false){
 			session.cleanOutput = true;
 		}
 	}
@@ -4708,7 +4727,7 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 				getById("head3").classList.remove('hidden');
 				getById("head3a").classList.remove('hidden');
 			}
-		} else if ((window.obsstudio) && (session.permaid === false) && (session.director === false) && (session.view) &&(session.roomid.length>0)) { // we already know roomid !== false
+		} else if (window.obsstudio && (session.permaid === false) && (session.director === false) && (session.view || session.whepInput) && (session.roomid.length>0)) { // we already know roomid !== false
 			updateURL("scene", true, false); // we also know it's not a scene, but we will assume it is in this specific case.
 		}
 		
@@ -4753,7 +4772,7 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 		} else if (session.chatbutton === false) {
 			getById("chatbutton").classList.add("hidden");
 		}
-	} else if (session.view && (session.permaid === false)) {
+	} else if ((session.view || session.whepInput) && (session.permaid === false)) {
 		//if (!session.activeSpeaker){
 		session.audioMeterGuest = false;
 		//}
@@ -4814,7 +4833,7 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 		getById("header").style.opacity = 0;
 	}
 	
-	if (session.view) {
+	if (session.view || session.whepInput) {
 		getById("main").className = "";
 		getById("credits").style.display = 'none';
 		try {
@@ -4839,7 +4858,7 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 		session.waitImage = urlParams.get('waitimage') || false;
 	}
 	
-	if (((session.view) && (session.roomid === false)) || (session.waitImage && (session.scene!==false))) {
+	if (((session.view || session.whepInput) && (session.roomid === false)) || (session.waitImage && (session.scene!==false))) {
 		
 		getById("container-4").className = 'column columnfade';
 		getById("container-3").className = 'column columnfade';
@@ -4870,7 +4889,7 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 			session.waitImageTimeoutObject = setTimeout(function() {
 				session.waitImageTimeoutObject = true;
 				try {
-					if ((session.view)) {
+					if ((session.view || session.whepInput)) {
 						if (document.getElementById("mainmenu")) {
 							if (session.waitImage){
 								getById("mainmenu").innerHTML += '<img id="retryimage"/>';
@@ -6077,7 +6096,7 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 	// Warns user about network going down
 	window.addEventListener("offline", function (e) {
 		warnlog("connection lost");
-		if ((session.view) && (session.permaid === false)) {
+		if ((session.view || session.whepInput) && (session.permaid === false)) {
 			log("VDO.Ninja has no network connectivity and can't work properly." );
 		} else if (session.scene !== false) {
 			log("VDO.Ninja has no network connectivity and can't work properly." );

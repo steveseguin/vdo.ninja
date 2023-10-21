@@ -33,6 +33,8 @@
 		border:0;
 		margin:0;
 		outline:0;
+		overflow-y: auto;
+		overflow-x: hidden;
 	}
 
 	button.glyphicon-button:focus,
@@ -59,6 +61,7 @@
 		box-sizing: border-box;
 		align-items: center;
 		padding: 0 1em;
+		min-width: 50px;
 	}
 	.details{
 		font-size: 14px;
@@ -74,6 +77,7 @@
 		box-sizing: border-box;
 		align-items: center;
 		padding: 0 1em;
+		min-width: 50px;
 	}
 	#header{
 		width:100%;
@@ -104,7 +108,7 @@
 	}
 
 	.container{
-		font-size: min(14px, 2vh);
+		font-size: 16px;
 		align-self:center;
 		max-width: 100%;
 		width: 720px;
@@ -164,7 +168,7 @@
 		flex-direction: row;
 		flex-wrap: nowrap;
 		justify-content: center;
-		margin: 4em;
+		margin: 2em;
 	}
 		
 	@media only screen and (max-width: 1030px) {
@@ -186,50 +190,14 @@
 	}
 
 	div.urlInput {
-		padding: 0 0 4vh 0;
-	}
-	
-	
-	@media only screen and (max-height: 839px) {
-		body{
-			zoom: 0.74; 
-			-moz-transform: scale(0.74); 
-			-moz-transform-origin: 0 0;
-			
-		}
-	}
-	
-	@media only screen and (max-width: 940px) {
-		body{
-			zoom: 0.74; 
-			-moz-transform: scale(0.74); 
-			-moz-transform-origin: 0 0;
-			
-		}
-		.container{
-			max-width:99%;
-		}
-		div.urlInput {
-		}
-		div#audioOutputContainer, #history {
-			margin: 2em;
-		}
-	}
-	@media only screen and (max-width: 840px) {
-		body{
-			zoom: 0.64; 
-			-moz-transform: scale(0.64); 
-			-moz-transform-origin: 0 0;
-			
-		}
-		
+		padding: 0 0 1vh 0;
 	}
 	
 	@media only screen and (max-height: 639px) {
 		div.urlInput {
 		}
 		div#audioOutputContainer, #history {
-			margin: 2em;
+			margin: 1em;
 		}
 	}
 	
@@ -336,26 +304,26 @@
 						</div>
 						
 						<div class="inputCombo" id="advanced" style="margin: 10px 0px 10px 10px;">
-							<select style="border-radius:10px;margin-right:5px;width:unset!important;" class="changeText" id="whipoutaudiobitrate"  title="Which audio bitrate target would you prefer?" >
+							<select style="border-radius:10px;margin-right:5px;width:unset!important;" class="changeText" id="whipoutaudiobitrate"  title="Which audio bitrate target would you prefer? 128-kbps is fine for music." >
 								<option value="0" selected>🎙️Default Audio Bitrate</option>
 								<option value="32">🎙️32-kbps</option>
 								<option value="64">🎙️64-kbps</option>
 								<option value="128">🎙️128-kbps</option>
 								<option value="256">🎙️256-kbps</option>
 							</select >
-							<select style="border-radius:10px;margin-right:5px;width:unset!important;" class="changeText" id="vbrcbr"  title="Which audio bitrate target would you prefer?" >
+							<select style="border-radius:10px;margin-right:5px;width:unset!important;" class="changeText" id="vbrcbr"  title="Whether the audio bitrate with be constant or variable" >
 								<option value="cbr" selected>🎙️CBR</option>
 								<option value="vbr">🎙️VBR</option>
 							</select >
-							<select style="border-radius:10px;margin-right:5px;width:unset!important;" class="changeText" id="denoise"  title="Which audio bitrate target would you prefer?" >
-								<option value="1" selected>🎙️Denoise On</option>
-								<option value="0">🎙️Denoise Off</option>
+							<select style="border-radius:10px;margin-right:5px;width:unset!important;" class="changeText" id="denoise" onchange="checkStereo()" title="Turn off to improve clarity, but you'll hear any background noise" >
+								<option value="0" selected>🎙️Denoise Off</option>
+								<option value="1">🎙️Denoise On</option>
 							</select >
-							<select style="border-radius:10px;margin-right:5px;width:unset!important;" class="changeText" id="autogain"  title="Which audio bitrate target would you prefer?" >
-								<option value="1" selected>🎙️Auto Gain On</option>
-								<option value="0">🎙️Auto Gain Off</option>
+							<select style="border-radius:10px;margin-right:5px;width:unset!important;" class="changeText" id="autogain" onchange="checkStereo()" title="Auto-controls the input volume; turn off to manage that yourself." >
+								<option value="0" selected>🎙️Auto Gain Off</option>
+								<option value="1">🎙️Auto Gain On</option>
 							</select >
-							<select style="border-radius:10px;margin-right:5px;width:unset!important;" class="changeText" id="stereo"  title="Which audio bitrate target would you prefer?" >
+							<select style="border-radius:10px;margin-right:5px;width:unset!important;" class="changeText" id="stereo"  title="Stereo is available only if auto-gain and noise-reduction is off." >
 								<option value="1" selected>🎙️Stereo</option>
 								<option value="0">🎙️Mono</option>
 							</select >
@@ -368,12 +336,15 @@
 								<option value="6000">🎦6000-kbps</option>
 								<option value="20000">🎦20000-kbps</option>
 							</select >
-							<select style="border-radius:10px;margin-right:5px;width:unset!important;" class="changeText"  id="codecGroupFlag"  title="Which video codec would you prefer to be used if available?" >
+							<select style="border-radius:10px;margin-right:5px;width:unset!important;" class="changeText"  id="codecGroupFlag" onchange="updateSVC();" title="Which video codec would you prefer to be used if available?" >
 								<option value="default" selected>🎦OpenH264</option>
-								<option value="vp9">🎦VP9</option>
-								<option value="h264">🎦H264</option>
-								<option value="vp8">🎦VP8</option>
 								<option value="av1">🎦AV1</option>
+								<option value="vp9">🎦VP9</option>
+								<option value="vp8">🎦VP8</option>
+								<option value="h264">🎦H264</option>
+							</select >
+							<select style="border-radius:10px;margin-right:5px;width:unset!important;" class="changeText" id="svcGroupFlag" title="Which scalable video coding do you want to use?" >
+								<option value="0" selected>🎦 SVC Off</option>
 							</select >
 							
 						</div>
@@ -452,6 +423,38 @@ document.querySelector("#changeText1a").value = localStorage.getItem('changeText
 document.querySelector("#changeText2").value = localStorage.getItem('changeText2') || "";
 document.querySelector("#changeText3").value = localStorage.getItem('changeText3') || "";
 
+const scalabilityModes = [
+	'L1T1',
+	'L1T2',
+	'L1T3',
+	'L2T1',
+	'L2T2',
+	'L2T3',
+	'L3T1',
+	'L3T2',
+	'L3T3',
+	'L2T1h',
+	'L2T2h',
+	'L2T3h',
+	'S2T1',
+	'S2T2',
+	'S2T3',
+	'S2T1h',
+	'S2T2h',
+	'S2T3h',
+	'S3T1',
+	'S3T2',
+	'S3T3',
+	'S3T1h',
+	'S3T2h',
+	'S3T3h',
+	'L2T2_KEY',
+	'L2T3_KEY',
+	'L3T2_KEY',
+	'L3T3_KEY'
+];
+
+
 function gohere1(){
 	if (document.getElementById('changeText1').value){
 		localStorage.setItem('changeText1', document.getElementById('changeText1').value);
@@ -459,6 +462,7 @@ function gohere1(){
 		
 		localStorage.setItem('bitrateGroupFlag', document.getElementById('bitrateGroupFlag').value);
 		localStorage.setItem('codecGroupFlag', document.getElementById('codecGroupFlag').value);
+		localStorage.setItem('svcGroupFlag', document.getElementById('svcGroupFlag').value);
 		
 		localStorage.setItem('whipoutaudiobitrate', document.getElementById('whipoutaudiobitrate').value);
 		localStorage.setItem('vbrcbr', document.getElementById('vbrcbr').value);
@@ -486,12 +490,56 @@ function gohere1(){
 		if (document.getElementById('codecGroupFlag').value!=="default"){
 			codec = "&whipoutcodec="+document.getElementById('codecGroupFlag').value;
 		}
+		var svc = "";
+		if (document.getElementById('svcGroupFlag').value!=="0"){
+			svc = "&svc="+document.getElementById('svcGroupFlag').value;
+		}
 		
 		if (document.getElementById('changeText1a').value){
-			window.location = domain + "?push&whippush=" + encodeURIComponent(document.getElementById('changeText1').value) + "&whippushtoken=" + document.getElementById('changeText1a').value + codec + bitrate+whipoutaudiobitrate+vbrcbr+autogain+stereo+denoise;
+			window.location = domain + "?push&whippush=" + encodeURIComponent(document.getElementById('changeText1').value) + "&whippushtoken=" + document.getElementById('changeText1a').value + codec + bitrate+whipoutaudiobitrate+vbrcbr+autogain+stereo+denoise+svc;
 		} else {
-			window.location = domain + "?push&whippush=" + encodeURIComponent(document.getElementById('changeText1').value) + codec + bitrate+whipoutaudiobitrate+vbrcbr+autogain+stereo+denoise;
+			window.location = domain + "?push&whippush=" + encodeURIComponent(document.getElementById('changeText1').value) + codec + bitrate+whipoutaudiobitrate+vbrcbr+autogain+stereo+denoise+svc;;
 		}
+	}
+}
+
+function checkStereo(){
+	if (parseInt(document.getElementById('autogain').value) || parseInt(document.getElementById('denoise').value)){
+		document.getElementById('stereo').disabled = true;
+		document.getElementById('stereo').title = "Noise reduction and auto-gain will prevent stereo audio from working";
+	} else {
+		document.getElementById('stereo').disabled = false;
+		delete document.getElementById('stereo').disabled;
+		document.getElementById('stereo').title = "Enable stereo 2.0 audio if available. Must be enabled on the viewer's end as well.";
+	}
+}
+
+function updateSVC(){
+	
+	var codecName = document.getElementById('codecGroupFlag').value;
+	var select = document.getElementById("svcGroupFlag");
+	var selectedValue = "0";
+	if (select.options && select.selectedIndex && select.options[select.selectedIndex]){
+		selectedValue = select.options[select.selectedIndex].value;
+	}
+	select.innerHTML = "";
+	
+	var option = document.createElement("option");
+	option.text = "🎦 SVC Off";
+	option.value = "0";
+	select.add(option);
+	select.selectedIndex = 0;
+	
+	if (svcLUT[codecName]){
+		svcLUT[codecName].forEach(opt=>{
+			option = document.createElement("option");
+			option.text = "🎦 "+opt;
+			option.value = opt;
+			select.add(option);
+			if (opt == selectedValue){
+				select.value = opt;
+			}
+		});
 	}
 }
 
@@ -527,6 +575,7 @@ function resetHistory(){
 	document.querySelector("#changeText2").value = "";
 	document.querySelector("#changeText3").value = "";
 	document.querySelector("#changeText1t").value = "";
+	checkStereo();
 }
 
 (function (w) {
@@ -555,12 +604,86 @@ function enterPressed(event, callback){
   }
 }
 
+checkStereo();
 
 var isMobile = false;
 if( /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)){ // does not detect iPad Pros.
 	isMobile=true; // if iOS, default to H264?  meh.  let's not.
 }
+var Firefox = navigator.userAgent.indexOf("Firefox")>=0;
+if (Firefox){
+	Firefox = parseInt(navigator.userAgent.split("irefox/").pop()) || true;
+} 
 
+var capabilityType = Firefox ? "transmission" : "webrtc";
+var codecs = RTCRtpSender.getCapabilities('video').codecs;
+var svcLUT = {};
+var svcDefault = {};
+
+function getCommonValues(obj) {
+	if (obj.default){
+		delete obj.default;
+	}
+	let commonValues = [];
+	let firstKey = Object.keys(obj)[0];
+	let firstArray = obj[firstKey];
+	for (let i = 0; i < firstArray.length; i++) {
+		let currentValue = firstArray[i];
+		let isCommonValue = true;
+		for (let key in obj) {
+			if (!obj[key].includes(currentValue)) {
+			isCommonValue = false;
+			break;
+			}
+		}
+		if (isCommonValue) {
+			commonValues.push(currentValue);
+		}
+	}
+	return commonValues
+}
+
+async function processCodecs(){
+	await codecs.forEach(async codec => {
+		var codecName = codec.mimeType.replace("video/","").toLowerCase();
+		if (['video/red', 'video/ulpfec', 'video/rtx'].includes(codec.mimeType)) {
+			return;
+		} else if (svcLUT[codecName]){ // already done
+			return;
+		}
+		
+		svcLUT[codecName] = [];
+		var capabilityPromises = [];
+		for (const mode of scalabilityModes) {
+			capabilityPromises.push(navigator.mediaCapabilities.encodingInfo({
+				type: capabilityType,
+				video: {
+					contentType: codec.mimeType,
+					width: 1920,
+					height: 1080,
+					bitrate: 10000,
+					framerate: 29.97,
+					scalabilityMode: mode
+				}
+			}));
+		}
+		var capabilityResults = await Promise.all(capabilityPromises);
+		for (var i = 0;i<capabilityResults.length;i++){
+			if (capabilityResults[i].supported){
+				svcLUT[codecName].push(scalabilityModes[i]);
+			}
+		}
+		
+		svcLUT['default'] = getCommonValues(svcLUT);
+		updateSVC();
+	});
+	console.log("available codecs");
+	console.log(svcLUT);
+
+	
+}
+
+processCodecs();
 
 </script>
 </body>
