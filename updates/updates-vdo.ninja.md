@@ -504,7 +504,7 @@ vdo.ninja/alpha/?view=stream2,stream2&avatarimg=./media/avatar1.png&avatarimg2=.
 
 ![](<../.gitbook/assets/image (9) (6).png>)
 
-\*\* all changes are on alpha, with the updated whip sandbox here: [https://vdo.ninja/alpha/whip](https://vdo.ninja/alpha/whip) (edited)
+\*\* all changes are on alpha, with the updated whip sandbox here: [https://vdo.ninja/alpha/whip](https://vdo.ninja/alpha/whip)
 
 #### June 28 <a href="#august-31" id="august-31"></a>
 
