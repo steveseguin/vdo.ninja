@@ -8,11 +8,14 @@ description: >-
 
 Using the newly added WHIP ingest end point at Twitch, you can now publish directly from VDO.Ninja to Twitch. Low-latency, no downloads needed, and free.
 
-This is the future, but available to play with now:
-
 {% embed url="https://vdo.ninja/whip" %}
 [https://vdo.ninja/whip](https://vdo.ninja/whip)
 {% endembed %}
+
+This is the future, but available to play with now.
+
+Go here, [https://vdo.ninja/whip](https://vdo.ninja/whip), enter your Twitch stream token in the correct field, GO, and then select your camera in VDO.Ninja as normal.\
+![](<../.gitbook/assets/image (198).png>)![](<../.gitbook/assets/image (199).png>)
 
 Alpha Version: [https://vdo.ninja/alpha/whip](https://vdo.ninja/alpha/whip)
 
