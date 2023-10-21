@@ -25,7 +25,7 @@
   * [Raspberry.Ninja](steves-helper-apps/raspberry.ninja/README.md)
     * [Documentation](steves-helper-apps/raspberry.ninja/documentation.md)
   * [Mixer App](steves-helper-apps/mixer-app.md)
-  * [WHIP/WHEP](steves-helper-apps/whip-whep.md)
+  * [WHIP and WHEP tooling](steves-helper-apps/whip-and-whep-tooling.md)
   * [Versus.cam](steves-helper-apps/versus.cam.md)
   * [Speed Test](steves-helper-apps/speed-test.md)
   * [Comms](steves-helper-apps/comms.md)
