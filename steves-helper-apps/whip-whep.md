@@ -29,3 +29,9 @@ Alpha Version: [https://vdo.ninja/alpha/whip](https://vdo.ninja/alpha/whip)
 {% content-ref url="../advanced-settings/whip-parameters/" %}
 [whip-parameters](../advanced-settings/whip-parameters/)
 {% endcontent-ref %}
+
+## Updates
+
+{% content-ref url="../updates/updates-whip-whep.md" %}
+[updates-whip-whep.md](../updates/updates-whip-whep.md)
+{% endcontent-ref %}

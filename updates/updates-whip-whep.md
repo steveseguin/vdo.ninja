@@ -1,5 +1,7 @@
 # Updates - WHIP/WHEP
 
+#### [whip-whep.md](../steves-helper-apps/whip-whep.md "mention") <a href="#august-31" id="august-31"></a>
+
 #### October 20 <a href="#august-31" id="august-31"></a>
 
 * Fixed an issue with stereo sound not working on the WHEP viewer.
