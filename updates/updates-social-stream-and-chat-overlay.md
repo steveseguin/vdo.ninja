@@ -3,6 +3,22 @@
 [social-stream.md](../steves-helper-apps/social-stream.md "mention")\
 [chat-overlay.md](../steves-helper-apps/chat-overlay.md "mention")
 
+#### **October 22**
+
+* I'm putting out a "still-in-development preview" version of the **Social Stream Standalone app**\
+  \
+  **--** I've been poking at this project for the past year, and due to frequent requests for it I'm making it available as a preview-build.\
+  \-- I'd say 90% of the features available in the extension work in this standalone version, with the interface about 50% done.\
+  \-- Available as an installer for Windows x64 only at this point, but a Mac build is probably not far off.
+
+[https://github.com/steveseguin/social\_stream/releases/tag/0.0.1](https://github.com/steveseguin/social\_stream/releases/tag/0.0.1)
+
+<div align="left">
+
+<figure><img src="../.gitbook/assets/image (201).png" alt=""><figcaption></figcaption></figure>
+
+</div>
+
 #### **October 12**
 
 * Improved `&floatup`; supports \&showtime now, to control speed, plus OBS fixes.

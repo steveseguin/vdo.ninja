@@ -1,5 +1,14 @@
 # Updates - VDO.Ninja
 
+#### October 22 <a href="#august-31" id="august-31"></a>
+
+* Re-wrote much of the the `Browser-to-RTMP` docker project, so it uses Chromium instead of Firefox now.
+  * Seems to fix audio/video sync issues.
+  * Tested support on Ubuntu x64 (cloud server) and Ubuntu Arm64 (orange pi).
+  * useful if you want a headless or cloud-hosted way of streaming VDO.Ninja to YouTube/Kick/Mp4, without needing OBS Studio.
+
+[https://github.com/steveseguin/browser-to-rtmp-docker](https://github.com/steveseguin/browser-to-rtmp-docker)
+
 #### October 21 <a href="#august-31" id="august-31"></a>
 
 * Added a work around for a chrome bug impacting some Androids where their video preview would sometimes freeze on initial camera loading, requiring a refresh.

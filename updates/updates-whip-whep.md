@@ -2,6 +2,11 @@
 
 #### [whip-and-whep-tooling.md](../steves-helper-apps/whip-and-whep-tooling.md "mention") <a href="#august-31" id="august-31"></a>
 
+#### October 21 <a href="#august-31" id="august-31"></a>
+
+* Added a menu option to choose a buffer delay on the WHEP player tooling can help reduce video playback stutter, for some sources. (@ [vdo.ninja/alpha/whip](https://vdo.ninja/alpha/whip))\
+  ![](<../.gitbook/assets/image (200).png>)
+
 #### October 20 <a href="#august-31" id="august-31"></a>
 
 * Fixed an issue with stereo sound not working on the WHEP viewer.
