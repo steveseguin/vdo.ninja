@@ -16,7 +16,7 @@ description: Show/hide buttons, adjust the user control bar and video control ba
 
 #### Positioning the control bar
 
-While you can position the control bar by dragging it around, you can also set it's initial position with the use of a custom CSS parameter. For example,
+While you can position the control bar by dragging it around, you can also set it's initial position with the use of a custom CSS parameter. For example:
 
 `&cssb64=I3N1YkNvbnRyb2xCdXR0b25ze3RyYW5zZm9ybTp0cmFuc2xhdGUoMHB4LCBjYWxjKC0xMDB2aCArIDkwcHgpKSFpbXBvcnRhbnR9Ow`
 
