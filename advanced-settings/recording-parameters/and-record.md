@@ -33,7 +33,9 @@ Do not force-close the browser or turn off the computer while it is recording; y
 
 The recording should stop automatically when the guest hangs-ups manually. I try my best to do the same when the browser is closed, but it's best to still purposefully stop recording first.
 
-It will automatically capture with stereo audio and echo cancellation off, if available. You can use [https://isolated.vdo.ninja/convert](https://isolated.vdo.ninja/convert) to convert from WebM file formats to opus or wav file formats, **without transcoding and without downloads**.
+It will automatically capture with stereo audio and echo cancellation off, if available.
+
+You can use [https://isolated.vdo.ninja/convert](https://isolated.vdo.ninja/convert) to convert from WebM file formats to OPUS or WAV file formats, **without transcoding and without downloads**. [More about converting from WebM to MP4 or WAV here](and-record.md#converting-and-playing-back-webm).
 
 ### Recording as the director
 
@@ -68,6 +70,8 @@ To make converting from WebM to other formats easier, a version of FFmpeg is hos
 Due to memory limits and other browser limitations, this FFmpeg tool can only process files under about 4-gigabytes in size. For larger files, you may need to download and use a desktop version of [FFmpeg](https://ffmpeg.org/download.html) instead.\
 \
 FFmpeg command lines are provided if you choose to run FFmpeg yourself locally, but if that is still to complicated, you can grab [Handbrake ](https://handbrake.fr/)for free; it's a GUI-based option that is fairly accessible.
+
+Lastly, sometimes a video recorded by VDO.Ninja will have a variable resolution or/and frame rate, which can cause problems with some video editors. For example, the quality might be stuck low, or it might freeze after a few seconds. In these cases, you may need to transcode the video to a fixed resolution and frame rate using FFmpeg (or Handbrake) first, before using.. Transcoding is very slow in the browser, so I'd recommend  you download Handbrake or FFmpeg for this task.
 
 {% embed url="https://vdo.ninja/convert" %}
 FFmpeg in the browser; up to 4-gb file sizes
