@@ -161,6 +161,11 @@ You can also use some advanced URL parameters to output the audio to specific ch
 
 You can still capture audio via OBS Browser source, appending [`&novideo`](../../advanced-settings/video-parameters/novideo-1.md) to the URL to disable video. Appending [`&noaudio`](../../advanced-settings/view-parameters/noaudio.md) to the Electron Capture URL would conversely disable audio there, allowing you to capture audio with OBS browser source and video with Electron Capture. The audio/video sync might be slightly off in this setup, but not noticible in most cases.
 
+More recently, with newer versions of OBS, you can capture an application's audio using OBS, but with older versions you can use the following OBS plugin to also do it: [https://github.com/bozbez/win-capture-audio](https://github.com/bozbez/win-capture-audio)&#x20;
+
+directly. ![](<../../.gitbook/assets/image (1).png>)
+
+\
 **Changing the audio output device**
 
 If you right click the app when on a site, you can change the audio output device for that site. This is useful for setting a YouTube or VDO.Ninja video to output to a virtual audio cable or headphones, rather than playout via the default audio device.
