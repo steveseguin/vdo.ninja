@@ -18,7 +18,7 @@ Example: `&recordcodec=h264`
 
 ## Details
 
-Adding `&recordcodec` to a source or director link lets you set the video recording codec (saving to disk mode; ala [`&record`](and-record.md)). The container format is still webm, and not all codecs are going to be supported, but things will fail back to vp8 if not supported. Main reason for this is because vp8 on chrome for android kinda stinks, so at least you have an option to tinker with things now.
+Adding `&recordcodec` to a source or director link lets you set the video recording codec (saving to disk mode; aka [`&record`](and-record.md)). The container format is still WebM, and not all codecs are going to be supported, but things will fail back to vp8 if not supported. Main reason for this is because vp8 on chrome for android kinda stinks, so at least you have an option to tinker with things now.
 
 As a guest or source side don't forget to add [`&record`](and-record.md) to the URL to get the record button.
 

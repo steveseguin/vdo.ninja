@@ -39,9 +39,9 @@ You can use [https://isolated.vdo.ninja/convert](https://isolated.vdo.ninja/conv
 
 ### Recording as the director
 
-When recording as the director, the button and option to record each guest is available by default.  It's hidden behind Advanced controls. You have the option to record locally, to your own disk, or record remotely, directly to the remote guest's local storage.\
-\
-When recording to the guest's local storage, quality should be near pristine, given as its not being sent via the Internet first.  Recording locally, the video may have dynamic resolutions and varying quality, due to the low latency transmission. ([`&chunked`](../../newly-added-parameters/and-chunked.md)-mode excepted)
+When recording as the director, the button and option to record each guest is available by default. It's hidden behind Advanced controls. You have the option to record locally, to your own disk, or record remotely, directly to the remote guest's local storage.
+
+When recording to the guest's local storage, quality should be near pristine, given as its not being sent via the Internet first. Recording locally, the video may have dynamic resolutions and varying quality, due to the low latency transmission. ([`&chunked`](../../newly-added-parameters/and-chunked.md)-mode excepted)
 
 Anyone can also access the recording options via right-clicking a video. This option is available as of VDO.Ninja [v22](../../releases/v22.md).
 
@@ -67,11 +67,11 @@ WebM is a universal container of sorts when used within a Chromium browser, but 
 
 To make converting from WebM to other formats easier, a version of FFmpeg is hosted within VDO.Ninja for this. It can be located here at [https://vdo.ninja/convert](https://vdo.ninja/convert), with several of the most common conversion options ready to go, such as WebM-PCM to WAV-PCM.
 
-Due to memory limits and other browser limitations, this FFmpeg tool can only process files under about 2-gigabytes in size. For larger files, you may need to download and use a desktop version of [FFmpeg](https://ffmpeg.org/download.html) instead.\
-\
+Due to memory limits and other browser limitations, this FFmpeg tool can only process files under about 2-gigabytes in size. For larger files, you may need to download and use a desktop version of [FFmpeg](https://ffmpeg.org/download.html) instead.
+
 FFmpeg command lines are provided if you choose to run FFmpeg yourself locally, but if that is still to complicated, you can grab [Handbrake ](https://handbrake.fr/)for free; it's a GUI-based option that is fairly accessible.
 
-Lastly, sometimes a video recorded by VDO.Ninja will have a variable resolution or/and frame rate, which can cause problems with some video editors. For example, the quality might be stuck low, or it might freeze after a few seconds. In these cases, you may need to transcode the video to a fixed resolution and frame rate using FFmpeg (or Handbrake) first, before using.. Transcoding is very slow in the browser, so I'd recommend  you download Handbrake or FFmpeg for this task.
+Lastly, sometimes a video recorded by VDO.Ninja will have a variable resolution or/and frame rate, which can cause problems with some video editors. For example, the quality might be stuck low, or it might freeze after a few seconds. In these cases, you may need to transcode the video to a fixed resolution and frame rate using FFmpeg (or Handbrake) first, before using.. Transcoding is very slow in the browser, so I'd recommend you download Handbrake or FFmpeg for this task.
 
 {% embed url="https://vdo.ninja/convert" %}
 FFmpeg in the browser; up to 4-gb file sizes

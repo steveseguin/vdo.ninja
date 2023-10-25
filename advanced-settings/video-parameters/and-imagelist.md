@@ -18,17 +18,21 @@ Added options to host your own default background images for the virtual backgro
 
 Code to generate the list properly can be found here: [https://jsfiddle.net/steveseguin/w7z28kgb/](https://jsfiddle.net/steveseguin/w7z28kgb/) (images must be cross origin enabled) - at the base of index.html, if self-hosting VDO.Ninja, you can hard-code the list of images as well.
 
+<div align="left">
+
 <figure><img src="../../.gitbook/assets/image (2) (1) (6).png" alt=""><figcaption><p>When selecting a background image, you'll get a gentle glow around the selected image now. There's also a horizontal scroll bar, if the number of images listed are too much to fit.</p></figcaption></figure>
 
-### Complicated? It's simple if using imgur (free hosting service)
+</div>
+
+### Complicated? It's simple if using Imgur (free hosting service)
 
 If looking for a free image host, I think [Imgur.com](https://imgur.com) offers free image hosting that is CORS friendly. The URLs it provides are also seemingly safe to use without URL encoding. You can just replace the `XXXXXXX` in the link below, with your Imgur provided ID value, and it might get you going.\
 \
-Example:  `&imagelist=[%22https://i.imgur.com/XXXXXXX.png%22]`
+Example: `&imagelist=[%22https://i.imgur.com/XXXXXXX.png%22]`
 
 ### Mirroring issues
 
-By default, the image may be mirrored to the publisher, as webcam previews are by default mirrored in VDO.Ninja.  The image will not be mirrored in the output however; just in the preview.
+By default, the image may be mirrored to the publisher, as webcam previews are by default mirrored in VDO.Ninja. The image will not be mirrored in the output however; just in the preview.
 
 You can disable the mirroring on the preview though; use `&nomirror` on the URL as a parameter.
 
