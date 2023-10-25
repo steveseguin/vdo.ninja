@@ -2,6 +2,10 @@
 
 [electron-capture.md](../steves-helper-apps/electron-capture.md "mention")
 
+#### October 23
+
+* Fixed an issue in Electron Capture so that if editing the URL; the window size won't change afterwards now. (window build for it published)
+
 #### October 8
 
 * Updated the Electron Capture App with some recent security patches for browsers in general\

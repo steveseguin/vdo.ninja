@@ -1,5 +1,10 @@
 # Updates - VDO.Ninja
 
+#### October 23 <a href="#august-31" id="august-31"></a>
+
+* I've made the [`&css`](../advanced-settings/design-parameters/css.md) parameter within VDO.Ninja more tolerant to invalid forms of input, so if you don't know what URL or Base64 encoding is, you might be able to get away without using any now.\
+  [`https://vdo.ninja/alpha/?css=body{background-color:blue!important}`](https://vdo.ninja/alpha/?css=body{background-color:blue!important})
+
 #### October 22 <a href="#august-31" id="august-31"></a>
 
 * Re-wrote much of the the `Browser-to-RTMP` docker project, so it uses Chromium instead of Firefox now.

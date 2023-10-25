@@ -3,6 +3,16 @@
 [social-stream.md](../steves-helper-apps/social-stream.md "mention")\
 [chat-overlay.md](../steves-helper-apps/chat-overlay.md "mention")
 
+#### **October 24**
+
+**Social Stream updates**
+
+* I warn the user in the dock when their messages are longer than 200-characters now (YouTube's chat limit length).\
+  ![](<../.gitbook/assets/image (203).png>)
+* I have an option to trim messages down in length that are sent to third party sites to be shorter when longer than a specified length.\
+  ![](<../.gitbook/assets/image (204).png>)
+* Fixed an issue with duplicate messages and cozy.tv.
+
 #### **October 22**
 
 * I'm putting out a "still-in-development preview" version of the **Social Stream Standalone app**\

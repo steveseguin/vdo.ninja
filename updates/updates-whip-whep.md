@@ -2,6 +2,12 @@
 
 #### [whip-and-whep-tooling.md](../steves-helper-apps/whip-and-whep-tooling.md "mention") <a href="#august-31" id="august-31"></a>
 
+#### October 23 <a href="#august-31" id="august-31"></a>
+
+* The WHEP player setup page has an option to control how long the system waits for ice candidates; 2-seconds default.\
+  ![](<../.gitbook/assets/image (202).png>)
+* The WHIP publishing client will default to AV1 video encoding, if its detect, rather than Openh264.
+
 #### October 21 <a href="#august-31" id="august-31"></a>
 
 * Added a menu option to choose a buffer delay on the WHEP player tooling can help reduce video playback stutter, for some sources. (@ [vdo.ninja/alpha/whip](https://vdo.ninja/alpha/whip))\
