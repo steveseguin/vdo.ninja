@@ -3,6 +3,27 @@
 [social-stream.md](../steves-helper-apps/social-stream.md "mention")\
 [chat-overlay.md](../steves-helper-apps/chat-overlay.md "mention")
 
+#### **October 28**
+
+* Added an option to hide messages based on custom start words; takes comma seperated values\
+  ![](<../.gitbook/assets/image (206).png>)
+
+#### **October 27**
+
+* Added support for Ko-Fi's donations to Social Stream; works via WebHook\
+  Details here: [https://github.com/steveseguin/social\_stream/blob/main/README.md#ko-fi-webhook-donation-support](https://github.com/steveseguin/social\_stream/blob/main/README.md#ko-fi-webhook-donation-support)\
+  ![](<../.gitbook/assets/image (205).png>)
+
+#### **October 26**
+
+* MacOS support added to the Standalone version of Social Stream
+* Several bugs fixed in the standalone version\
+  [https://github.com/steveseguin/social\_stream/releases/tag/0.1.1](https://github.com/steveseguin/social\_stream/releases/tag/0.1.1)
+
+#### **October 25**
+
+* Fixed an issue with TikTok events not working
+
 #### **October 24**
 
 **Social Stream updates**
