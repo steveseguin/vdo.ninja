@@ -70,6 +70,16 @@ While still a work in progress, some of the features of the [https://vdo.ninja/w
 
 While this may change in the future, adding `&publish` to the URL of a VDO.Ninja (v24) will let you select a screen to capture and publish to a WHIP endpoint. This may also be added as built-in menu option at some point as well, allowing you to select any screen, page, or element to publish via WHIP.
 
+### Raspberry Ninja also now supports WHIP output
+
+Raspberry.Ninja isn't just for Raspberry Pis, but works on a Linux system really, along with Windows WSL.
+
+If you want low-level controls over AV1 codec encoding and other facets of WHIP publishing that can't be obtained via the browser, check it out. It of course also supports VDO.Ninja, has a built-in SFU for VDO.Ninja, and lots more!
+
+{% embed url="https://raspberry.ninja" %}
+
+
+
 ## Related
 
 {% content-ref url="../advanced-settings/whip-parameters/and-whip.md" %}
