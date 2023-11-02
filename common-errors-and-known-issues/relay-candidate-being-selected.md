@@ -73,6 +73,16 @@ To fix such a scenario, some options:
 
 The recommended solutions have the benefit of ensuring all the clients, even clients on the Internet, can establish a peer to peer connection with any other client on the network. This wouldn't be the case for example if we simply used the DMZ mode, as the smartphone would not be able to connect to clients on the Internet in a direct p2p mode.
 
+### Ports used by VDO.Ninja
+
+TCP 443 and 3478 UDP are the most important ports to have open, if behind a strict firewall. These allow for websockets, STUN, and TURN, but they alone will not allow for direct peer to peer traffic.\
+\
+The actual media in direct peer to peer WebRTC (RTP/RTCP packets) is sent over random high-numbered UDP ports. These ports are negotiated by the ICE (Interactive Connectivity Establishment) process, which uses the STUN/TURN servers to help figure out how the peers can connect to each other.
+
+If you want to allow peer to peer traffic, and are dealing with something more complex than a NAT firewall, like PFSense Firewall, UDP ports 49152–65535 are commonly suggested to opened to allow peer to peer traffic. You might need to open lower as well though, along with port TCP 443 and UDP 3478.
+
+These high-numbered UDP ports used are dynamically chosen by the browser, and there isn't much control on VDO.Ninja's side to control that. Since you are also dealing with peer to peer mode, unless you know the IP address of each guest you intend to connect to, you can't easily unblock based on IP address either. This isn't the case if using a TURN relay server of course, but that's not direct p2p then.
+
 ### Final comments and advice
 
 Identifying which client is the problem can go a long way to troubleshooting.
