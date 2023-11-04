@@ -367,6 +367,8 @@
     * [\&cleanviewer](advanced-settings/design-parameters/and-cleanviewer.md)
     * [\&obsoff](advanced-settings/design-parameters/and-obsoff.md)
     * [\&pip](advanced-settings/design-parameters/and-pip.md)
+    * [\&pipall (alpha)](advanced-settings/design-parameters/and-pipall-alpha.md)
+    * [\&pipme (alpha)](advanced-settings/design-parameters/and-pipme-alpha.md)
   * [Director Parameters](advanced-settings/director-parameters/README.md)
     * [\&director](viewers-settings/director.md)
     * [\&codirector](director-settings/codirector.md)

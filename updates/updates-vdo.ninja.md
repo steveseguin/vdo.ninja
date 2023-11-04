@@ -405,7 +405,7 @@ Option for a custom hang-up message added to VDO.Ninja.\
 
 #### August 6 <a href="#august-31" id="august-31"></a>
 
-* `&pipme` (aka `&mypip` or `&pip3`) will cause your self-video preview window to pop out into its own picture in picture (floating/draggable) on load.\
+* [`&pipme`](../advanced-settings/design-parameters/and-pipme-alpha.md) (aka `&mypip` or `&pip3`) will cause your self-video preview window to pop out into its own picture in picture (floating/draggable) on load.\
   \-- this is not compatible with [`&autostart`](../source-settings/and-autostart.md)\
   \-- works with director or guest; not tested on mobile.
 * `CTRL + ALT + P` will also toggle the picture in picture, without needing any URL parameters. (`cmd + ALT + P` on Mac)
@@ -417,7 +417,7 @@ Option for a custom hang-up message added to VDO.Ninja.\
 
 * A few minor fixes:\
   \-- Rainbow puke button in [darkmode](../advanced-settings/design-parameters/darkmode.md) is correct now\
-  \-- New `&pipall` feature doesn't break the site if browser does not supported\
+  \-- New [`&pipall`](../advanced-settings/design-parameters/and-pipall-alpha.md) feature doesn't break the site if browser does not supported\
   \-- Added a new experimental background blur effect; [`&effects=13`](../source-settings/effects.md) I think, but it's not supported by most browsers/systems and its in origin trial, but it it works for you, let me know\
   \-- The startRoomTimer remote API command now works with specific guests (as well as for everyone still)\
   \*\* changes on alpha
@@ -425,7 +425,7 @@ Option for a custom hang-up message added to VDO.Ninja.\
 #### August 3 <a href="#august-31" id="august-31"></a>
 
 * Added a new floating picture in picture mode, so you can pop out the entire video mix as a pinned window overlay\
-  \-- `&pipall` (aka `&pip2`) will add a dedicated button for this mode\
+  \-- [`&pipall`](../advanced-settings/design-parameters/and-pipall-alpha.md) (aka `&pip2`) will add a dedicated button for this mode\
   ![](<../.gitbook/assets/image (7) (1) (1) (1).png>)\
   \-- Or just right-click any video and select "Picture in picture all" from the context menu. This is available without any URL option\
   \-- This requires Chrome v115 right now; it might vanish in v116 due to it being in a `chrome field trial`, and so you might need to enable it via `chrome:flags` if it stops working.\
