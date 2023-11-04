@@ -72,13 +72,11 @@ While this may change in the future, adding `&publish` to the URL of a VDO.Ninja
 
 ### Raspberry Ninja also now supports WHIP output
 
-Raspberry.Ninja isn't just for Raspberry Pis, but works on a Linux system really, along with Windows WSL.
+[Raspberry.Ninja](raspberry.ninja/) isn't just for Raspberry Pis, but works on a Linux system really, along with Windows WSL.
 
 If you want low-level controls over AV1 codec encoding and other facets of WHIP publishing that can't be obtained via the browser, check it out. It of course also supports VDO.Ninja, has a built-in SFU for VDO.Ninja, and lots more!
 
 {% embed url="https://raspberry.ninja" %}
-
-
 
 ## Related
 

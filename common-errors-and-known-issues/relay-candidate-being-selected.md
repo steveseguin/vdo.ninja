@@ -75,8 +75,8 @@ The recommended solutions have the benefit of ensuring all the clients, even cli
 
 ### Ports used by VDO.Ninja
 
-TCP 443 and 3478 UDP are the most important ports to have open, if behind a strict firewall. These allow for websockets, STUN, and TURN, but they alone will not allow for direct peer to peer traffic.\
-\
+TCP 443 and 3478 UDP are the most important ports to have open, if behind a strict firewall. These allow for WebSockets, STUN, and TURN, but they alone will not allow for direct peer to peer traffic.
+
 The actual media in direct peer to peer WebRTC (RTP/RTCP packets) is sent over random high-numbered UDP ports. These ports are negotiated by the ICE (Interactive Connectivity Establishment) process, which uses the STUN/TURN servers to help figure out how the peers can connect to each other.
 
 If you want to allow peer to peer traffic, and are dealing with something more complex than a NAT firewall, like PFSense Firewall, UDP ports 49152–65535 are commonly suggested to opened to allow peer to peer traffic. You might need to open lower as well though, along with port TCP 443 and UDP 3478.
