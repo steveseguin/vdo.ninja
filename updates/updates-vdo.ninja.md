@@ -382,7 +382,7 @@ meshcastcodec == whipoutcodec, woc
 #### August 11 <a href="#august-31" id="august-31"></a>
 
 Option for a custom hang-up message added to VDO.Ninja.\
-\-- `&hangupmessage` (or `&hum`) , which take a URL encoded string. So it can be just "bye", or it can be some HTML, as shown in the link\
+\-- [`&hangupmessage`](../advanced-settings/setup-parameters/and-hangupmessage-alpha.md) (or `&hum`) , which take a URL encoded string. So it can be just "bye", or it can be some HTML, as shown in the link\
 \-- eg: [https://vdo.ninja/alpha/?hum=bye%3Cimg%20src%3D%22.%2Fmedia%2Flogo\_cropped.png%22%3E\&push=ZimFGxM](https://vdo.ninja/alpha/?hum=bye%3Cimg%20src%3D%22.%2Fmedia%2Flogo\_cropped.png%22%3E\&push=ZimFGxM)\
 ![](<../.gitbook/assets/image (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1).png>)\
 \
@@ -400,7 +400,7 @@ Option for a custom hang-up message added to VDO.Ninja.\
 
 #### August 9 <a href="#august-31" id="august-31"></a>
 
-* Added `&nomirror` to VDO.Ninja, which unlike [`&mirror=0`](../advanced-settings/design-parameters/mirror.md), disables the default mirror state of the video preview for a guest. Previews are often mirrored by default... [`&mirror`](../advanced-settings/design-parameters/mirror.md) can be applied on top of that state, to mirror things back for everyone if needed.\
+* Added [`&nomirror`](../advanced-settings/design-parameters/and-nomirror-alpha.md) to VDO.Ninja, which unlike [`&mirror=0`](../advanced-settings/design-parameters/and-mirror.md), disables the default mirror state of the video preview for a guest. Previews are often mirrored by default... [`&mirror`](../advanced-settings/design-parameters/and-mirror.md) can be applied on top of that state, to mirror things back for everyone if needed.\
   On alpha at [`https://vdo.ninja/alpha/?nomirror`](https://vdo.ninja/alpha/?nomirror)
 
 #### August 6 <a href="#august-31" id="august-31"></a>
@@ -766,7 +766,7 @@ https://vdo.ninja/alpha/?view=YbFmisR&poster=./media/bg_sample.webp&hideplaybutt
 
 * Added an option for the director to mirror a guest's video\
   \-- This applies globally, so within scenes, other guests, and for the actual guest\
-  \-- If a guest's video preview is mirrored already, such as if using [`&mirror`](../advanced-settings/design-parameters/mirror.md), this function will mirror their local mirror effect; so it doesn't override it, but applies on top of it for them.\
+  \-- If a guest's video preview is mirrored already, such as if using [`&mirror`](../advanced-settings/design-parameters/and-mirror.md), this function will mirror their local mirror effect; so it doesn't override it, but applies on top of it for them.\
   \-- If a guest mirrors someone else's video via the right-click context menu manually, if the director changes the mirror for that video, it will override what the guest has set. They can always re-mirror it manually, but the director in this case takes precedent.\
   ![](<../.gitbook/assets/image (6) (1) (1) (2).png>)
 

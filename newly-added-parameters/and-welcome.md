@@ -34,3 +34,7 @@ You can also activate the welcome message as a director via a new toggle option.
 {% content-ref url="../advanced-settings/setup-parameters/and-welcomeimage.md" %}
 [and-welcomeimage.md](../advanced-settings/setup-parameters/and-welcomeimage.md)
 {% endcontent-ref %}
+
+{% content-ref url="../advanced-settings/setup-parameters/and-hangupmessage-alpha.md" %}
+[and-hangupmessage-alpha.md](../advanced-settings/setup-parameters/and-hangupmessage-alpha.md)
+{% endcontent-ref %}

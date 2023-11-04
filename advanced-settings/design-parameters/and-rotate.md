@@ -31,7 +31,7 @@ If you are looking for a form of mirroring and flipping that changes the actual 
 \
 Effects however may increase CPU/GPU usage, and could cause frame rate instability, especially if the browser tab is not in active focus.
 
-There's also the [`&flip`](and-flip.md) and [`&mirror`](mirror.md) options, which use CSS, but are generally viewer-side only.
+There's also the [`&flip`](and-flip.md) and [`&mirror`](and-mirror.md) options, which use CSS, but are generally viewer-side only.
 
 
 
@@ -53,6 +53,6 @@ In case the built-in options to mirror or flip don't work, the teleprompter app 
 [and-flip.md](and-flip.md)
 {% endcontent-ref %}
 
-{% content-ref url="mirror.md" %}
-[mirror.md](mirror.md)
+{% content-ref url="and-mirror.md" %}
+[and-mirror.md](and-mirror.md)
 {% endcontent-ref %}

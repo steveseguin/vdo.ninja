@@ -34,8 +34,8 @@ In case the built-in options to mirror or flip don't work, the teleprompter app 
 [teleprompter-tool.md](../../steves-helper-apps/teleprompter-tool.md)
 {% endcontent-ref %}
 
-{% content-ref url="mirror.md" %}
-[mirror.md](mirror.md)
+{% content-ref url="and-mirror.md" %}
+[and-mirror.md](and-mirror.md)
 {% endcontent-ref %}
 
 {% content-ref url="../../source-settings/effects.md" %}

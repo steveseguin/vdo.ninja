@@ -30,3 +30,7 @@ Example:\
 {% content-ref url="../../newly-added-parameters/and-welcome.md" %}
 [and-welcome.md](../../newly-added-parameters/and-welcome.md)
 {% endcontent-ref %}
+
+{% content-ref url="and-hangupmessage-alpha.md" %}
+[and-hangupmessage-alpha.md](and-hangupmessage-alpha.md)
+{% endcontent-ref %}
