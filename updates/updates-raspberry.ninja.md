@@ -2,6 +2,16 @@
 
 [raspberry.ninja](../steves-helper-apps/raspberry.ninja/ "mention")
 
+#### October 29
+
+*   Mainly just smoothed out some rough edges caused by rpicamsrc being depreciated by raspberry pi updates
+
+    * An issue with the camera freezing on load is also potentially resolved; impacted some RPI CSI camera users.
+    * Text is now color coded, adding some visual flare to the log output.
+    * Adjusted some rules/logic based on the raspberry pi 5's released and its high performance CPU.
+
+    [https://github.com/steveseguin/raspberry\_ninja/commit/c437916a5e76fa44a7907457522292063a14aa6b](https://github.com/steveseguin/raspberry\_ninja/commit/c437916a5e76fa44a7907457522292063a14aa6b)
+
 #### October 7
 
 * I have a new version of the Raspberry.Ninja image for Raspberry Pi devices built and hosted now.\
