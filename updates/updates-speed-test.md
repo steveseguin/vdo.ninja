@@ -2,6 +2,15 @@
 
 [speed-test.md](../steves-helper-apps/speed-test.md "mention")
 
+#### October 29
+
+*   Added a new check to the vdo.ninja/check page that will detect if the browser is blocking direct p2p by means of blocking IP leaking.
+
+    * This will help identify users ahead of time who might end up going thru a TURN relay server, when they don't need to be.
+    * This won't detect if there is a corporate firewall or VPN is blocking a direct connection, rather if its due to a browser setting or privacy-focused extension.
+
+    <figure><img src="../.gitbook/assets/image.png" alt=""><figcaption></figcaption></figure>
+
 #### April 21
 
 * Added a max bandwidth (upload / download) test\

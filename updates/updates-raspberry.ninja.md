@@ -2,6 +2,17 @@
 
 [raspberry.ninja](../steves-helper-apps/raspberry.ninja/ "mention")
 
+#### November 4
+
+* Pushed a patch for Raspberry.Ninja, where audio-only streams were having issues with Chrome. (issue was in the GST library being used; not Raspberry.Ninja itself)
+  * Update to get the fix; `git pull` or copy/paste from here: [https://github.com/steveseguin/raspberry\_ninja/commit/8dd93af9ee757a72559e93c2bacf4f3ae4d8de22](https://github.com/steveseguin/raspberry\_ninja/commit/8dd93af9ee757a72559e93c2bacf4f3ae4d8de22)
+
+#### November 1
+
+* Added AV1 encoding support to Raspberry Ninja, along with some tips on using gstreamer to do WHIP without needing it.\
+  [https://github.com/steveseguin/raspberry\_ninja#whip--meshcast-support](https://github.com/steveseguin/raspberry\_ninja#whip--meshcast-support)
+* Added WHIP output support to Raspberry.Ninja (`python3 publish.py --whip "https://yourwhipurl.com/here" --test`)
+
 #### October 29
 
 *   Mainly just smoothed out some rough edges caused by rpicamsrc being depreciated by raspberry pi updates

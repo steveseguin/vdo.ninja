@@ -9,7 +9,7 @@
   \-- Also has forced-landscape mode support (I had to wait until iOS 17 launched to be able to release it)\
   [https://apps.apple.com/app/vdo-ninja/id1607609685?platform=iphone](https://apps.apple.com/app/vdo-ninja/id1607609685?platform=iphone)
 
-![](<../.gitbook/assets/image (1) (1) (1) (1) (1) (1).png>)
+![](<../.gitbook/assets/image (1) (1) (1) (1) (1) (1) (1).png>)
 
 #### September 10
 
@@ -19,7 +19,7 @@
 #### August 30
 
 * Updated the Android app with a "[force landscape](../advanced-settings/mobile-parameters/and-forcelandscape.md)" option\
-  ![](<../.gitbook/assets/image (10).png>)\
+  ![](<../.gitbook/assets/image (10) (1).png>)\
   [https://drive.google.com/file/d/1M0kv5nWLtcfl2JOnsAGiG1zUmkeIVLyZ/view](https://drive.google.com/file/d/1M0kv5nWLtcfl2JOnsAGiG1zUmkeIVLyZ/view)\
   \-- I'll submit it to the Google play store in a little bit. The iOS version might be a while tho.
 

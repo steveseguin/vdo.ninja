@@ -2,6 +2,23 @@
 
 #### [whip-and-whep-tooling.md](../steves-helper-apps/whip-and-whep-tooling.md "mention") <a href="#august-31" id="august-31"></a>
 
+#### November 3 <a href="#august-31" id="august-31"></a>
+
+* Finished my first working version of the VDO.Ninja video -> WHEP video output option
+  * the WHEP playback URL is: [https://whep.vdo.ninja/whepIDhere](https://whep.vdo.ninja/whepIDhere), but you'll first need to have a VDO.Ninja push link open and ready with `&whepout=whepIDhere` added to its URL. (You need to include the `&whepout` on the URL if you wish to make it WHEP-output enabled).
+  * If no whepID is provided via the URL, it will auto use your stream ID as the whepID instead.
+  * In the future you'll be able to use this option to pull VDO.Ninja feeds into VLC, FFmpeg, OBS, or whatever, without needing a browser source; pretty exciting. It will just take time for this to be adopted by the community and for it all to mature.
+* `&whep` is now an alias of `&whepinput`
+*   If you open a VDO.Ninja WHEP URL in the browser, it will assume you want to play it, and give you the correct WHEP URL for playback.
+
+    ie: `https://whep.vdo.ninja/XXXXX` -> `https://vdo.ninja/alpha/?whep=XXXXX`\
+    ![](<../.gitbook/assets/image (6).png>)\
+    \*\* changes on alpha
+
+#### November 1 <a href="#august-31" id="august-31"></a>
+
+* Improved the vdo.ninja/alpha/whip page some more, based on user feedback; just mainly tweaks/fixes.
+
 #### October 23 <a href="#august-31" id="august-31"></a>
 
 * The WHEP player setup page has an option to control how long the system waits for ice candidates; 2-seconds default.\
@@ -47,7 +64,7 @@
       \-- This should let you make your own Meshcast service with minimal work; the open-source WHIP API code I released the other day further makes it pretty easy.
     * If using a cloudflare.com WHIP URL on the sender side, I'll guess at the WHEP link - seems to be working so far. (built this logic into VDO.Ninja directly and works automatically). This of course still implies a unique whip URL per guest.
 
-    ![](<../.gitbook/assets/image (2) (1) (1) (1) (1) (1) (1).png>)
+    ![](<../.gitbook/assets/image (2) (1) (1) (1) (1) (1) (1) (1).png>)
 
     * To make using Cloudflare easier though, I've also created the WHIP end point `cloudflare.vdo.ninja`, which takes a Cloudflare API token, instead of a stream token.\
       \-- This special end point will auto-create a unique WHEP URL. The official cloudflare.com whip endpoint can only be used by one sender at a time, but this API special endpoint and token approach can be used by many senders at a time. It automatically generates unique WHIP/WHEP when used, in the same way Meshcast does, so no need for unique invite urls per guest.\

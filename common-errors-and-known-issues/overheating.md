@@ -52,7 +52,7 @@ Charging a mobile phone creates heat. If you start charging your device after yo
 
 Professional cameras do often include a small fan inside them to reduce heat. Consider buying a heatsink that can be mounted onto the back of your smartphone, with an optional fan to turn on if it starts getting hot. These are not super common, probably not super effective, but they can be had for not much money.
 
-![](<../.gitbook/assets/image (4) (1) (1) (1) (1) (1).png>)
+![](<../.gitbook/assets/image (4) (1) (1) (1) (1) (1) (1).png>)
 
 Sometimes a thick protective case can insulate a smartphone, making it hotter than needed, too.
 
@@ -82,7 +82,7 @@ Older 2011-era Apple notebooks are prone to overheating. Even newer generation M
 
 Ensure you are not running a laptop at 100% CPU load, make sure it has plenty of cool ventilation, ensure the fans are clean and not full of dust, start with a full battery and keep the computer plugged in
 
-![](<../.gitbook/assets/image (5) (1) (1) (1) (1) (1).png>)
+![](<../.gitbook/assets/image (5) (1) (1) (1) (1) (1) (1).png>)
 
 ### Raspberry Pi, Nvidia Jetson, and dedicated hardware-encoders
 
@@ -94,7 +94,7 @@ Like with the native mobile app versions, the capabilities of this option is ver
 
 Using a Chromium browser with a Raspberry Pi, in software-encoded mode, will probably give more reliable results, but also generate a lot of heat and limit the maximum video resolution a lot.
 
-![](<../.gitbook/assets/image (6) (1) (1) (1) (1).png>)
+![](<../.gitbook/assets/image (6) (1) (1) (1) (1) (1).png>)
 
 Just as a consideration though, the Nvidia Jetson development boards support higher resolutions and seem to have better support for dynamic video and packet loss recovery. These products are a bit more expensive, but tend to work better than a Raspberry Pi when it comes to encoding HD video. I have a support for the Hardware-encoding capabilities of a Jetson here, buried away alongside the files for the Raspberry Pi: [https://github.com/steveseguin/raspberry\_ninja](https://github.com/steveseguin/raspberry\_ninja) It's pretty basic support also currently, but has a lot of potential.
 

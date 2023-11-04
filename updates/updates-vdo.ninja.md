@@ -1,5 +1,71 @@
 # Updates - VDO.Ninja
 
+#### November 4 <a href="#august-31" id="august-31"></a>
+
+*   When using the [`&limittotalbitrate`](../advanced-settings/video-bitrate-parameters/limittotalbitrate.md) option as a [director](../viewers-settings/director.md), the room settings will include a new slider to let you dynamically change that value.
+
+    * This lets the director set a maximum total bandwidth outbound from them to the guests; useful if you set the total room bitrate to something high. Combined, you can ensure the guests as high quality as possible from you, without causing your OBS RTMP output or whatever to get smashed.
+    * When using the [Mixer App](../steves-helper-apps/mixer-app.md) (vdo.ninja/alpha/mixer), the [`&limittotalbitrate`](../advanced-settings/video-bitrate-parameters/limittotalbitrate.md) value was set to 350-kbps before, but now I have it set to 1500-kbps. Guests in the Mixer App should as a result now see the director's broadcast output in 3x higher quality now, for better or worse.
+    * I may adjust the default value in the mixer based on user issue reports.
+    * The slider doesn't appear if not using the [`&limittotalbitrate`](../advanced-settings/video-bitrate-parameters/limittotalbitrate.md) value in the URL (or if not using the Mixer App). It's just too confusing to explain to include it by default.
+
+    <div align="left">
+
+    <figure><img src="../.gitbook/assets/image (9).png" alt="" width="375"><figcaption></figcaption></figure>
+
+    </div>
+
+    \*\* change on alpha
+*   Fixed [`&webp`](../advanced-settings/view-parameters/webp.md) + [`&codec=webp`](../advanced-settings/view-parameters/codec.md#webp) + `&alpha` so it properly supports alpha channels. Still a hacky mess, but if your needs are modest it can offer transparent streaming video when using [`&fileshare`](../source-settings/and-fileshare.md) /w a transparent WebM video source (or a virtual background /w a transparent png)\
+    ![](<../.gitbook/assets/image (7).png>)\
+
+
+    Update -- well, it does work with virtual transparent backgrounds\
+    ![](<../.gitbook/assets/image (8).png>)\
+    \
+    \*\* the alpha patch is on alpha
+
+#### November 3 <a href="#august-31" id="august-31"></a>
+
+* Improved [`&chunked`](../newly-added-parameters/and-chunked.md) mode when used with the [file-sharing](../source-settings/and-fileshare.md) method.
+  * I have AV1 used by default now (instead of vp9) if I detect it available
+  * 44.1-kHz audio and 1:1 resolution (TikTok/Twitter) videos now should work
+  * [https://vdo.ninja/alpha/?chunked\&fileshare](https://vdo.ninja/alpha/?chunked\&fileshare)
+
+#### November 1 <a href="#august-31" id="august-31"></a>
+
+* Dropbox support improved on vdo.ninja/alpha/, so that it works properly now, and will recover from a crashed browser once the guest re-opens their browser. Still no UI for this feature, so it's a WIP still.
+* Added an API hotkey option to toggle a remote guest's camera on/off.
+* Fixed a bug where if the director used the remote-record option on a guest's screen-share, it would instead record the guest's camera; not the screen share.
+* Improved the messaging of the two record options (local/remote); should be easier to understand what each does and the advantages.
+* Added some URL parameters to VDO.Ninja that let you manually pre-set some basic camera settings:\
+  \- `&whitebalance` (`&wb`)\
+  \- `&exposure`\
+  \- `&saturation`\
+  \- `&sharpness`\
+  \- `&contrast`\
+  \- `&brightness`\
+  \
+  \-- `&whitebalance` is in Kelvin I think, so `5000` or `6500` are typical values it will take.\
+  \-- The rest normally will take an integer value in the range of `1` to `255`, at least for a Logitech webcam.\
+  \-- I already currently auto-save camera settings for android devices that support video settings, but for desktop browsers, I am not. Using these new values though you can manually set things to auto-configure as you want.\
+  \-- These settings will apply to ALL video devices though, not just a specific one.\
+  \-- If a setting isn't supported by your camera or browser, it will just fail quietly, and not apply. You'll see an error in the console log though.\
+  \-- You can check the video settings menu as to whether a device supports a certain feature or what value; you can also check out [https://vdo.ninja/supports](https://vdo.ninja/supports).
+
+Feedback and bug reports welcomed \*\* Available for testing on alpha at [https://vdo.ninja/alpha/](https://vdo.ninja/alpha/)
+
+#### October 30 <a href="#august-31" id="august-31"></a>
+
+*   There's a new stat for helping tell if you or a remote guest is blocking p2p WebRTC traffic.
+
+    * If blocking p2p, it will still work, but via the relay server. This is far from ideal in most cases.
+    * Just changing the browser can often fix this issue if detected
+
+    ![](<../.gitbook/assets/image (4).png>)![](<../.gitbook/assets/image (3).png>)
+
+\*\* on alpha
+
 #### October 25 <a href="#august-31" id="august-31"></a>
 
 * Added support for something called "end to end encryption" using "insertable streams" to VDO.Ninja. To use, add `&e2ee` to both the viewer and sender side links. Can be used in conjunction with [`&password`](../general-settings/password.md) to specify a cipher.\
@@ -149,7 +215,7 @@ If you want the VDO.Ninja self-preview to not be mini-sized in broadcast mode, w
 
 * Updated [`&structure`](../advanced-settings/design-parameters/and-structure.md) to work with [`&cover`](../advanced-settings/view-parameters/cover.md), allowing for some more flexibility with controlling fixed aspect-ratios from the viewer/scene side.\
   ie: `https://vdo.ninja/alpha/?room=XXXXX&scene&cover&structure&square&fakeguests=10`\
-  ![](<../.gitbook/assets/image (3).png>)![](<../.gitbook/assets/image (1) (1) (1) (1) (1).png>)
+  ![](<../.gitbook/assets/image (3) (1).png>)![](<../.gitbook/assets/image (1) (1) (1) (1) (1) (1).png>)
 * Fixed a couple bugs, such as the local screen share preview not re-appearing after full-windowing another guest's video while screen sharing.
 
 \*\* on alpha
@@ -187,7 +253,7 @@ So it's not super obvious how to do this currently, so I think the next goal wil
 }
 ```
 
-![](<../.gitbook/assets/image (2) (1) (1) (1) (1).png>)
+![](<../.gitbook/assets/image (2) (1) (1) (1) (1) (1).png>)
 
 \*\* this change is on alpha at [https://vdo.ninja/alpha](https://vdo.ninja/alpha/)
 
@@ -246,14 +312,14 @@ Fixed a few bugs and pushed to alpha (vdo.ninja/alpha). Thank you for reporting 
 #### August 28 <a href="#august-31" id="august-31"></a>
 
 * When a user changes an advanced audio or video option (white balance, frame rate, main gain, etc), it will now announce that over the IFrame API.\
-  ![](<../.gitbook/assets/image (5) (1).png>)![](<../.gitbook/assets/image (6).png>)
+  ![](<../.gitbook/assets/image (5) (1) (1).png>)![](<../.gitbook/assets/image (6) (1).png>)
 * [vdo.ninja/alpha/](https://vdo.ninja/alpha/) updated with this change, and _**Github**_ has also had all recent changes pushed to it.
 
 #### August 27 <a href="#august-31" id="august-31"></a>
 
 * `&clock24` added to VDO.Ninja; this is the same as the existing [`&clock`](../advanced-settings/settings-parameters/and-clock.md) option, (which shows a clock) except it uses 24-hour time for the display (vs am/pm)\
   \-- if the director uses `&clock24` on their URL, and then enables the room clock, it will be 24-hour time for all guests, matching the director's settings.\
-  ![](<../.gitbook/assets/image (3) (1) (1) (1).png>)
+  ![](<../.gitbook/assets/image (3) (1) (1) (1) (1).png>)
 
 \*\* at [vdo.ninja/alpha/?clock24](https://vdo.ninja/alpha/?clock24)
 
@@ -278,7 +344,7 @@ meshcastcodec == whipoutcodec, woc
   \-- This should let you make your own Meshcast service with minimal work; the open-source WHIP API code I released the other day further makes it pretty easy.
 * If using a cloudflare.com WHIP URL on the sender side, I'll guess at the WHEP link - seems to be working so far. (built this logic into VDO.Ninja directly and works automatically). This of course still implies a unique whip URL per guest.
 
-![](<../.gitbook/assets/image (2) (1) (1) (1) (1) (1) (1).png>)
+![](<../.gitbook/assets/image (2) (1) (1) (1) (1) (1) (1) (1).png>)
 
 * To make using Cloudflare easier though, I've also created the WHIP end point `cloudflare.vdo.ninja`, which takes a Cloudflare API token, instead of a stream token.\
   \-- This special end point will auto-create a unique WHEP URL. The official cloudflare.com whip endpoint can only be used by one sender at a time, but this API special endpoint and token approach can be used by many senders at a time. It automatically generates unique WHIP/WHEP when used, in the same way Meshcast does, so no need for unique invite urls per guest.\
@@ -299,7 +365,7 @@ meshcastcodec == whipoutcodec, woc
 
 * Add a new remote API query option to VDO.Ninja; called getGuestList. eg: `https://api.vdo.ninja/APIKEYHERE123/getGuestList`\
   \-- It returns an object with guest slot values as its keys, along with the associated stream ID and label for each of those guests.\
-  ![](<../.gitbook/assets/image (5) (1) (1).png>)
+  ![](<../.gitbook/assets/image (5) (1) (1) (1).png>)
 * I've been trying to fix a recent [`&buffer`](../advanced-settings/view-parameters/buffer.md) issue where audio/video fell out of sync with a buffer greater than 3-seconds. The new code isn't yet perfected, but the sync is closer -- I'll continue to work on it. Might be best to keep the buffer under 3 seconds though in the interm.
 
 \*\* on alpha
@@ -318,7 +384,7 @@ meshcastcodec == whipoutcodec, woc
 Option for a custom hang-up message added to VDO.Ninja.\
 \-- `&hangupmessage` (or `&hum`) , which take a URL encoded string. So it can be just "bye", or it can be some HTML, as shown in the link\
 \-- eg: [https://vdo.ninja/alpha/?hum=bye%3Cimg%20src%3D%22.%2Fmedia%2Flogo\_cropped.png%22%3E\&push=ZimFGxM](https://vdo.ninja/alpha/?hum=bye%3Cimg%20src%3D%22.%2Fmedia%2Flogo\_cropped.png%22%3E\&push=ZimFGxM)\
-![](<../.gitbook/assets/image (1) (1) (1) (1) (1) (1) (1) (1) (1) (1).png>)\
+![](<../.gitbook/assets/image (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1).png>)\
 \
 \* on alpha
 
@@ -360,7 +426,7 @@ Option for a custom hang-up message added to VDO.Ninja.\
 
 * Added a new floating picture in picture mode, so you can pop out the entire video mix as a pinned window overlay\
   \-- `&pipall` (aka `&pip2`) will add a dedicated button for this mode\
-  ![](<../.gitbook/assets/image (7) (1) (1).png>)\
+  ![](<../.gitbook/assets/image (7) (1) (1) (1).png>)\
   \-- Or just right-click any video and select "Picture in picture all" from the context menu. This is available without any URL option\
   \-- This requires Chrome v115 right now; it might vanish in v116 due to it being in a `chrome field trial`, and so you might need to enable it via `chrome:flags` if it stops working.\
   \
@@ -381,7 +447,7 @@ Option for a custom hang-up message added to VDO.Ninja.\
   These flags in theory I think should help try to force a bitrate or resolution, regardless of network conditions, but in practice they still seem to just smash your frame rate. I haven't really been able to find a good use for them yet, but let me know.
 * Fixed an issue where when you hung up on an iPhone, it would still stay the camera/mic was in use at the goodbye/reload page.
 * Added the "test" audio output button to the in-call settings menu (as seen in image).\
-  ![](<../.gitbook/assets/image (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1).png>)
+  ![](<../.gitbook/assets/image (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1).png>)
 * Fixed an issue with Firefox mobile's camera rotation being wrong in the local preview. (let me know tho if the issues continues tho)
 * Firefox mobile should not go to sleep any more when idle.
 
@@ -781,7 +847,7 @@ https://vdo.ninja/alpha/?view=YbFmisR&poster=./media/bg_sample.webp&hideplaybutt
 * [`&selfbrowsersurface`](../advanced-settings/screen-share-parameters/and-selfbrowsersurface.md), which excludes the current tab as an screen share source option. (you can pass `include` or `exclude` as a value to control this though)
 * [`&systemaudio`](../advanced-settings/screen-share-parameters/and-systemaudio.md), which excludes the system-audio as an audio source when display sharing. Tab audio is still available though. (can help prevent accidental audio feedback loops)
 * [`&displaysurface`](../advanced-settings/screen-share-parameters/and-displaysurface.md) will pre-select "display-share", rather than tab-share, when screen sharing. You can pass `monitor`, `browser`, or `window` as options to customize this though.\
-  ![](<../.gitbook/assets/image (7) (1) (1) (1).png>)\
+  ![](<../.gitbook/assets/image (7) (1) (1) (1) (1).png>)\
   \
   For more details on these new features see here: [https://developer.chrome.com/docs/web-platform/screen-sharing-controls/](https://developer.chrome.com/docs/web-platform/screen-sharing-controls/) (Chrome/chromium-browsers only)\
   \
@@ -1174,7 +1240,7 @@ https://vdo.ninja/alpha/?view=YbFmisR&poster=./media/bg_sample.webp&hideplaybutt
   ![](<../.gitbook/assets/image (2) (1) (1) (3).png>)\
   \-- This was designed for Twitch / YouTube / Social Stream chat, but could in theory work with any CORS-friendly site, such as a third-party web tool.\
   \-- If the director uses [`&widget`](../advanced-settings/settings-parameters/and-widget.md), it will auto sync that with all guests as they connect. I'll try to find ways to make it easier to resize/minimize in the future.\
-  ![](<../.gitbook/assets/image (6) (1) (1) (1).png>)\
+  ![](<../.gitbook/assets/image (6) (1) (1) (1) (1).png>)\
   \
   \*\*changes on alpha at vdo.ninja/alpha/
 
@@ -1311,7 +1377,7 @@ https://vdo.ninja/alpha/?view=YbFmisR&poster=./media/bg_sample.webp&hideplaybutt
   \-- also while using `&fullscreenbutton`, the previous little 'full window' button in the top-right of videos (if in a group room) will also auto-F11 and isolate that video, rather than just isolate the video.\
   \-- you can still right-click and select "full-window" on any video to isolate it without going full screen, if you need that. -- you can test by opening two such guest links: [https://vdo.ninja/alpha/?fsb\&room=test123123123\&webcam\&autostart](https://vdo.ninja/alpha/?fsb\&room=test123123123\&webcam\&autostart)\
   \-- ultimately I'd like to override the native video full screen button with this behaviour, when `&fullscreenbutton` is used, but I'm still working on that aspect.\
-  ![](<../.gitbook/assets/image (7) (1) (1) (1) (1).png>)
+  ![](<../.gitbook/assets/image (7) (1) (1) (1) (1) (1).png>)
 * Fixed a bug where the guest screen share, while in broadcast mode, was misplaced on the screen.
 * Fixed a bug where [`&language`](../advanced-settings/settings-parameters/and-language.md) didn't work in translating a couple elements, like "join with camera".
 * Re-enabled [`&limittotalbitrate`](../advanced-settings/video-bitrate-parameters/limittotalbitrate.md) for non-guests, as it was causing me some problems before with versus.cam. It might still be causing issues, so more testing is needed.
@@ -1578,7 +1644,7 @@ https://vdo.ninja/alpha/?view=YbFmisR&poster=./media/bg_sample.webp&hideplaybutt
 
 * When using [`&waitimage`](../advanced-settings/newly-added-parameters/and-waitimage.md), the specified 'waiting to connect' image will appear after all connections end. This is a bit different than the default behaviour of the spinner, which doesn't re-appear, but I assume if you're advanced enough to use the `&waitimage` option, you're okay with this.
 *   Added the option to "draw on the screen", which might be a useful tool for niche use cases where you might need to take notes, etc. It doesn't affix to videos themselves, but rather it's just a full-window transparent canvas overlay, You can start/stop/clear and select a couple style-types with this feature, via the settings -> User menu. You can also do `CTRL + ALT + D` to toggle this as needed.\
-    ![](<../.gitbook/assets/image (2) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1).png>)\
+    ![](<../.gitbook/assets/image (2) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1).png>)\
 
 
     \*\* on alpha at vdo.ninja/alpha

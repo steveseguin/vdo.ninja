@@ -2,6 +2,20 @@
 
 [mixer-app.md](../steves-helper-apps/mixer-app.md "mention")
 
+#### November 4
+
+* When using the [Mixer App](../steves-helper-apps/mixer-app.md) (vdo.ninja/alpha/mixer), the [`&limittotalbitrate`](../advanced-settings/video-bitrate-parameters/limittotalbitrate.md) value was set to 350-kbps before, but now I have it set to 1500-kbps. Guests in the Mixer App should as a result now see the director's broadcast output in 3x higher quality now, for better or worse.
+* I may adjust the default value in the mixer based on user issue reports
+* The slider doesn't appear if not using the [`&limittotalbitrate`](../advanced-settings/video-bitrate-parameters/limittotalbitrate.md) value in the URL (or if not using the Mixer App). It's just too confusing to explain to include it by default.
+
+<div align="left">
+
+<figure><img src="../.gitbook/assets/image (9).png" alt="" width="375"><figcaption></figcaption></figure>
+
+</div>
+
+\*\* change on alpha
+
 #### July 24
 
 * [`&screenshareaspectratio`](../advanced-settings/screen-share-parameters/and-screenshareaspectratio.md) (already existed) is now used within the Mixer App's WHIP/Twitch output scene. This will force the screen share capture that is used to publish to the CDN to stay at a 16:9 aspect ratio, regardless of the window's actual aspect ratio.\
