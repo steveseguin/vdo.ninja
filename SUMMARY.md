@@ -443,6 +443,8 @@
     * [\&meshcastcode](advanced-settings/meshcast-parameters/and-meshcastcode.md)
     * [\&nomeshcast](advanced-settings/meshcast-parameters/and-nomeshcast.md)
   * [WHIP Parameters](advanced-settings/whip-parameters/README.md)
+    * [\&whipout](advanced-settings/whip-parameters/and-whipout.md)
+    * [\&cftoken (alpha)](advanced-settings/whip-parameters/and-cftoken-alpha.md)
     * [\&whipview](advanced-settings/whip-parameters/and-whip.md)
     * [\&whipoutcodec](advanced-settings/whip-parameters/and-whipoutcodec.md)
     * [\&whipoutaudiobitrate](advanced-settings/whip-parameters/and-whipoutaudiobitrate.md)
