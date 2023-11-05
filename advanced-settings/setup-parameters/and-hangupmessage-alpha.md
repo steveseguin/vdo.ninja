@@ -4,7 +4,8 @@ description: Option for a custom hang-up message
 
 # \&hangupmessage (alpha)
 
-Sender-Side Option! ([`&push`](../../source-settings/push.md))
+Sender-Side Option! ([`&push`](../../source-settings/push.md))\
+\***ALPHA-ONLY** - Only available at [https://vdo.ninja/alpha/](https://vdo.ninja/alpha/)
 
 ## Aliases
 
@@ -25,6 +26,10 @@ eg:\
 ![](<../../.gitbook/assets/image (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1).png>)
 
 ## Related
+
+{% content-ref url="and-humb64-alpha.md" %}
+[and-humb64-alpha.md](and-humb64-alpha.md)
+{% endcontent-ref %}
 
 {% content-ref url="../../newly-added-parameters/and-welcome.md" %}
 [and-welcome.md](../../newly-added-parameters/and-welcome.md)

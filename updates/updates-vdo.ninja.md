@@ -383,8 +383,8 @@ meshcastcodec == whipoutcodec, woc
 
 #### August 13 <a href="#august-31" id="august-31"></a>
 
-* `&humb64` and `&welcomeb64` added. These are the same as `&hangupmessage` and [`&welcome`](../newly-added-parameters/and-welcome.md), which already exist, except these new options take an input as a base64 encoded string. VDO.Ninja will decode the base64 on load.\
-  \-- Base64 values are less likely to get parsed by apps like Slack incorrectly, so safter to share. If feeling lazy, you can also just use [invite.cam](https://invite.cam/), and encode the entire link itself; has a similar effect.
+* [`&humb64`](../advanced-settings/setup-parameters/and-humb64-alpha.md) and [`&welcomeb64`](../advanced-settings/setup-parameters/and-welcomeb64-alpha.md) added. These are the same as [`&hangupmessage`](../advanced-settings/setup-parameters/and-hangupmessage-alpha.md) and [`&welcome`](../newly-added-parameters/and-welcome.md), which already exist, except these new options take an input as a base64 encoded string. VDO.Ninja will decode the base64 on load.\
+  \-- Base64 values are less likely to get parsed by apps like Slack incorrectly, so safer to share. If feeling lazy, you can also just use [invite.cam](https://invite.cam/), and encode the entire link itself; has a similar effect.
 * When using [`&cutscene`](../advanced-settings/settings-parameters/and-cutscene.md) or [`&bitratecutoff`](../advanced-settings/parameters-only-on-beta/and-bitratecutoff.md) on a room scene, it won't trigger due to a director being in the room with no video, unless they are using [`&showdirector`](../viewers-settings/and-showdirector.md).\
   \-- [`&cutscene`](../advanced-settings/settings-parameters/and-cutscene.md) wasn't intended really for a group scene; just a solo link or view link, but this fix makes it at more usable with a group scene.
 

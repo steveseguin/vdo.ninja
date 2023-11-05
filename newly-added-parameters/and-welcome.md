@@ -31,6 +31,10 @@ You can also activate the welcome message as a director via a new toggle option.
 
 ## Related
 
+{% content-ref url="../advanced-settings/setup-parameters/and-welcomeb64-alpha.md" %}
+[and-welcomeb64-alpha.md](../advanced-settings/setup-parameters/and-welcomeb64-alpha.md)
+{% endcontent-ref %}
+
 {% content-ref url="../advanced-settings/setup-parameters/and-welcomeimage.md" %}
 [and-welcomeimage.md](../advanced-settings/setup-parameters/and-welcomeimage.md)
 {% endcontent-ref %}
