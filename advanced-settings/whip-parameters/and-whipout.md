@@ -41,7 +41,11 @@ See this video for details how to set up OBS WHIP to VDO.Ninja:
 Publishing from OBS directly to VDO.Ninja
 {% endembed %}
 
-### Update in [v23](../../releases/v23.md)
+A goal for a while has been to allow anyone to drop-in their own Meshcast replacement, using a third-party WHIP/WHEP server/service. That is, publish to a whip-service, and have viewers of the stream get the WHEP-view link, so they can view via WHEP instead of p2p. I've achieved this finally; close enough at least.
+
+There's a few requirements to make it work though, so either an API wrapper is needed or a set of rules needs to be followed:\
+\-- If your WHIP server returns an exposed "WHEP" field in the POST response header, with the URL to the WHEP view link, it will use that WHEP link. You just need to then specify the `&whipout` URL on the sender side then.\
+\-- This should let you make your own Meshcast service with minimal work; the open-source WHIP API code I released the other day further makes it pretty easy.
 
 I've refined the WHIP service on `vdo.ninja/alpha/?whipview=xxx`, making it as robust as I can I think, so if some third-party WHIP client/app doesn't work with it, it may not an issue with VDO.Ninja. In those cases it will be up to the client to ensure full support of the WHIP specification, else it may not work with VDO.Ninja.
 

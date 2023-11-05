@@ -337,7 +337,7 @@ Fixed a few bugs and pushed to alpha (vdo.ninja/alpha). Thank you for reporting 
 #### August 26 <a href="#august-31" id="august-31"></a>
 
 * I've updated [vdo.ninja/alpha/](https://vdo.ninja/alpha/) to version "24.0b", to signify a large change to the code base.
-* I've merged the Meshcast and WHIP/WHEP features in VDO.Ninja to share about 95% of the same logic, including the URL options. If you want to use Meshcast, you still need to use [`&meshcast`](../newly-added-parameters/and-meshcast.md) instead of `&whipout`, but since Meshcast is essentially a WHIP/WHEP server, I just have Meshcast using the generic WHIP logic now.\
+* I've merged the Meshcast and WHIP/WHEP features in VDO.Ninja to share about 95% of the same logic, including the URL options. If you want to use Meshcast, you still need to use [`&meshcast`](../newly-added-parameters/and-meshcast.md) instead of [`&whipout`](../advanced-settings/whip-parameters/and-whipout.md), but since Meshcast is essentially a WHIP/WHEP server, I just have Meshcast using the generic WHIP logic now.\
   \-- Below shows what whip-output options now are fully interchangeable with Meshcast options, since they share the same code. (alias of each other)
 
 ```
@@ -349,9 +349,9 @@ mcaudiobitrate == whipoutaudiobitrate, woab
 meshcastcodec == whipoutcodec, woc
 ```
 
-* A goal for a while has been to allow anyone to drop-in their own Meshcast replacement, using a third-party WHIP/WHEP server/service. That is, publish to a whip-service, and have viewers of the stream get the whep-view link, so they can view via whep instead of p2p. I've achieved this finally; close enough at least.
+* A goal for a while has been to allow anyone to drop-in their own Meshcast replacement, using a third-party WHIP/WHEP server/service. That is, publish to a whip-service, and have viewers of the stream get the WHEP-view link, so they can view via WHEP instead of p2p. I've achieved this finally; close enough at least.
 * There's a few requirements to make it work though, so either an API wrapper is needed or a set of rules needs to be followed:\
-  \-- If your WHIP server returns an exposed "WHEP" field in the POST response header, with the URL to the WHEP view link, it will use that WHEP link. You just need to then specify the `&whipout` URL on the sender side then.\
+  \-- If your WHIP server returns an exposed "WHEP" field in the POST response header, with the URL to the WHEP view link, it will use that WHEP link. You just need to then specify the [`&whipout`](../advanced-settings/whip-parameters/and-whipout.md) URL on the sender side then.\
   \-- This should let you make your own Meshcast service with minimal work; the open-source WHIP API code I released the other day further makes it pretty easy.
 * If using a cloudflare.com WHIP URL on the sender side, I'll guess at the WHEP link - seems to be working so far. (built this logic into VDO.Ninja directly and works automatically). This of course still implies a unique whip URL per guest.
 
@@ -360,7 +360,7 @@ meshcastcodec == whipoutcodec, woc
 * To make using Cloudflare easier though, I've also created the WHIP end point `cloudflare.vdo.ninja`, which takes a Cloudflare API token, instead of a stream token.\
   \-- This special end point will auto-create a unique WHEP URL. The official cloudflare.com whip endpoint can only be used by one sender at a time, but this API special endpoint and token approach can be used by many senders at a time. It automatically generates unique WHIP/WHEP when used, in the same way Meshcast does, so no need for unique invite urls per guest.\
   \-- I've created a page to generate the required special api token; the page also provides further information on this all: [https://vdo.ninja/alpha/cloudflare](https://vdo.ninja/alpha/cloudflare)\
-  \-- `&cftoken` (`&cft`) is also now added to vdo.ninja/alpha/; this parameter accepts the special token without needing to specify the cloudflare.vdo.ninja part if using `&whipout` instead.
+  \-- [`&cftoken`](../advanced-settings/whip-parameters/and-cftoken-alpha.md) (`&cft`) is also now added to vdo.ninja/alpha/; this parameter accepts the special token without needing to specify the cloudflare.vdo.ninja part if using [`&whipout`](../advanced-settings/whip-parameters/and-whipout.md) instead.
 
 \*\* on vdo.ninja/alpha/
 
