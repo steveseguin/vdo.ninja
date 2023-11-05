@@ -4,7 +4,7 @@ description: Options for the &whip parameter
 
 # WHIP Parameters
 
-**WHIP Parameters** are specific to the [`&whip`](and-whip.md) parameter. They have to be used together with [`&whip`](and-whip.md).
+**WHIP Parameters** are specific to the[ WHIP and WHEP tooling](../../steves-helper-apps/whip-and-whep-tooling.md).
 
 ## Viewer side options
 
