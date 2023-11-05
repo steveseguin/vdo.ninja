@@ -24,8 +24,8 @@ Example: `&whipoutaudiobitrate=128`
 
 ## Related
 
-{% content-ref url="and-whipview.md" %}
-[and-whipview.md](and-whipview.md)
+{% content-ref url="and-whip.md" %}
+[and-whip.md](and-whip.md)
 {% endcontent-ref %}
 
 {% content-ref url="../view-parameters/audiobitrate.md" %}

@@ -31,6 +31,6 @@ Alternatively, if you need to dynamically adjust the resolution, that option alr
 [whip-and-whep-tooling.md](../../steves-helper-apps/whip-and-whep-tooling.md)
 {% endcontent-ref %}
 
-{% content-ref url="and-whipview.md" %}
-[and-whipview.md](and-whipview.md)
+{% content-ref url="and-whip.md" %}
+[and-whip.md](and-whip.md)
 {% endcontent-ref %}

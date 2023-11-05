@@ -8,7 +8,7 @@ Sender-Side Option! ([`&push`](../../source-settings/push.md))
 
 ## Details
 
-`&suppresslocalaudio` will disable local audio playback of a Chrome tab while screen-sharing it. This can be used with the new [WHIP](../whip-parameters/and-whipview.md) output of VDO.Ninja to publish a VDO.Ninja scene directly to Twitch, without having to deal with any audio feedback issues while having that scene tab open.
+`&suppresslocalaudio` will disable local audio playback of a Chrome tab while screen-sharing it. This can be used with the new [WHIP](../whip-parameters/and-whip.md) output of VDO.Ninja to publish a VDO.Ninja scene directly to Twitch, without having to deal with any audio feedback issues while having that scene tab open.
 
 For more details on these new features see here:\
 [https://developer.chrome.com/docs/web-platform/screen-sharing-controls/](https://developer.chrome.com/docs/web-platform/screen-sharing-controls/)\
@@ -16,6 +16,6 @@ For more details on these new features see here:\
 
 ## Related
 
-{% content-ref url="../whip-parameters/and-whipview.md" %}
-[and-whipview.md](../whip-parameters/and-whipview.md)
+{% content-ref url="../whip-parameters/and-whip.md" %}
+[and-whip.md](../whip-parameters/and-whip.md)
 {% endcontent-ref %}

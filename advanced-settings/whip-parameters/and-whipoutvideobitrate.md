@@ -24,8 +24,8 @@ Example: `&whipoutvideobitrate=6000`
 
 ## Related
 
-{% content-ref url="and-whipview.md" %}
-[and-whipview.md](and-whipview.md)
+{% content-ref url="and-whip.md" %}
+[and-whip.md](and-whip.md)
 {% endcontent-ref %}
 
 {% content-ref url="../video-bitrate-parameters/bitrate.md" %}

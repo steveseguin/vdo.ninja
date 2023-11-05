@@ -19,7 +19,7 @@ Example: `&whipoutscreensharebitrate=2000`
 
 ## Details
 
-`&whipoutscreensharebitrate` controls the outbound screen-share video bitrate of the [`&whip`](and-whipview.md) parameter while screen-sharing via WHIP. It will override the [`&whipoutvideobitrate`](and-whipoutvideobitrate.md) if the video is a screen-share.
+`&whipoutscreensharebitrate` controls the outbound screen-share video bitrate of the [`&whip`](and-whip.md) parameter while screen-sharing via WHIP. It will override the [`&whipoutvideobitrate`](and-whipoutvideobitrate.md) if the video is a screen-share.
 
 ## Related
 
@@ -27,6 +27,6 @@ Example: `&whipoutscreensharebitrate=2000`
 [whip-and-whep-tooling.md](../../steves-helper-apps/whip-and-whep-tooling.md)
 {% endcontent-ref %}
 
-{% content-ref url="and-whipview.md" %}
-[and-whipview.md](and-whipview.md)
+{% content-ref url="and-whip.md" %}
+[and-whip.md](and-whip.md)
 {% endcontent-ref %}

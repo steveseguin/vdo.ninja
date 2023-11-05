@@ -80,8 +80,8 @@ If you want low-level controls over AV1 codec encoding and other facets of WHIP 
 
 ## Related
 
-{% content-ref url="../advanced-settings/whip-parameters/and-whipview.md" %}
-[and-whipview.md](../advanced-settings/whip-parameters/and-whipview.md)
+{% content-ref url="../advanced-settings/whip-parameters/and-whip.md" %}
+[and-whip.md](../advanced-settings/whip-parameters/and-whip.md)
 {% endcontent-ref %}
 
 {% content-ref url="../advanced-settings/whip-parameters/" %}

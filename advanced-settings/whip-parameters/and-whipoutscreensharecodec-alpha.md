@@ -37,8 +37,8 @@ There's 4 codec options currently, including the default option:
 [whip-and-whep-tooling.md](../../steves-helper-apps/whip-and-whep-tooling.md)
 {% endcontent-ref %}
 
-{% content-ref url="and-whipview.md" %}
-[and-whipview.md](and-whipview.md)
+{% content-ref url="and-whip.md" %}
+[and-whip.md](and-whip.md)
 {% endcontent-ref %}
 
 {% content-ref url="and-whipoutcodec.md" %}
