@@ -4,7 +4,7 @@ description: Lets you specify the WHIP video output codec
 
 # \&whipoutcodec
 
-WHIP Option! ([`&whip`](and-whip.md))
+[WHIP Option](../../steves-helper-apps/whip-and-whep-tooling.md) / Sender-Side Option! ([`&push`](../../source-settings/push.md))
 
 ## Aliases
 
@@ -26,8 +26,8 @@ Added `&whipoutcodec=` lets you specify the WHIP video output codec. It can take
 
 ## Related
 
-{% content-ref url="and-whip.md" %}
-[and-whip.md](and-whip.md)
+{% content-ref url="and-whipview.md" %}
+[and-whipview.md](and-whipview.md)
 {% endcontent-ref %}
 
 {% content-ref url="../view-parameters/codec.md" %}

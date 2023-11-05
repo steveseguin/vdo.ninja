@@ -2,17 +2,17 @@
 description: Publish directly from OBS (or other) to VDO.Ninja without a virtual camera
 ---
 
-# \&whip
+# \&whipview
 
 Viewer-Side Option! ([`&scene`](../view-parameters/scene.md), [`&room`](../../general-settings/room.md), [`&director`](../../viewers-settings/director.md))
 
 ## Aliases
 
-* `&whipview`
+* `&whip`
 
 ## Options
 
-Example: `&whip=bearertoken`
+Example: `&whipview=bearertoken`
 
 | Value          | Description           |
 | -------------- | --------------------- |
@@ -42,7 +42,7 @@ Publishing from OBS directly to VDO.Ninja
 
 ### Update in [v23](../../releases/v23.md)
 
-I've refined the WHIP service on `vdo.ninja/alpha/?whip=xxx`, making it as robust as I can I think, so if some third-party WHIP client/app doesn't work with it, it may not an issue with VDO.Ninja. In those cases it will be up to the client to ensure full support of the WHIP specification, else it may not work with VDO.Ninja.
+I've refined the WHIP service on `vdo.ninja/alpha/?whipview=xxx`, making it as robust as I can I think, so if some third-party WHIP client/app doesn't work with it, it may not an issue with VDO.Ninja. In those cases it will be up to the client to ensure full support of the WHIP specification, else it may not work with VDO.Ninja.
 
 ## Related
 

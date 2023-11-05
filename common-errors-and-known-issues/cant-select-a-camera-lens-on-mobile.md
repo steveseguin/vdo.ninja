@@ -14,7 +14,7 @@ There is the option to digitally zoom with VDO.Ninja, [\&effects=7](../source-se
 
 ### WHIP mode
 
-VDO.Ninja supports the [WHIP](../advanced-settings/whip-parameters/and-whip.md) streaming protocol, so if there is a native camera app that has proper WHIP-output support, and has the camera features you are looking for, using that can be used with VDO.Ninja.
+VDO.Ninja supports the [WHIP](../advanced-settings/whip-parameters/and-whipview.md) streaming protocol, so if there is a native camera app that has proper WHIP-output support, and has the camera features you are looking for, using that can be used with VDO.Ninja.
 
 Currently WHIP support in VDO.Ninja is a bit experimental, but the publishing URL for a WHIP-enabled device to stream to is:
 

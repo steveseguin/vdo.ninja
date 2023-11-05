@@ -4,7 +4,7 @@ description: Lets you specify the WHIP video bitrate (kbps)
 
 # \&whipoutvideobitrate
 
-WHIP Option! ([`&whip`](and-whip.md))
+[WHIP Option](../../steves-helper-apps/whip-and-whep-tooling.md) / Sender-Side Option! ([`&push`](../../source-settings/push.md))
 
 ## Aliases
 
@@ -24,8 +24,8 @@ Example: `&whipoutvideobitrate=6000`
 
 ## Related
 
-{% content-ref url="and-whip.md" %}
-[and-whip.md](and-whip.md)
+{% content-ref url="and-whipview.md" %}
+[and-whipview.md](and-whipview.md)
 {% endcontent-ref %}
 
 {% content-ref url="../video-bitrate-parameters/bitrate.md" %}

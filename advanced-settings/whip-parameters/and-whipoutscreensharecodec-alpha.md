@@ -1,10 +1,11 @@
 ---
-description: Option to change codec of the &whip parameter while screen-sharing
+description: Option to change codec of the WHIP while screen-sharing
 ---
 
 # \&whipoutscreensharecodec (alpha)
 
-WHIP Option / Sender-Side Option! ([`&whip`](and-whip.md), [`&push`](../../source-settings/push.md))
+[WHIP Option](../../steves-helper-apps/whip-and-whep-tooling.md) / Sender-Side Option! ([`&push`](../../source-settings/push.md))\
+\***ALPHA-ONLY** - Only available at [https://vdo.ninja/alpha/](https://vdo.ninja/alpha/)
 
 ## Aliases
 
@@ -20,7 +21,7 @@ Example: `&whipoutscreensharecodec=h264`
 
 ## Details
 
-Adding `&whipoutscreensharecodec` to the publisher's side together with [`&whip`](and-whip.md) gives the option to change the publishing codec while screen-sharing via WHIP.
+Adding `&whipoutscreensharecodec` to the publisher's side gives the option to change the publishing codec while screen-sharing via WHIP.
 
 There's 4 codec options currently, including the default option:
 
@@ -36,8 +37,8 @@ There's 4 codec options currently, including the default option:
 [whip-and-whep-tooling.md](../../steves-helper-apps/whip-and-whep-tooling.md)
 {% endcontent-ref %}
 
-{% content-ref url="and-whip.md" %}
-[and-whip.md](and-whip.md)
+{% content-ref url="and-whipview.md" %}
+[and-whipview.md](and-whipview.md)
 {% endcontent-ref %}
 
 {% content-ref url="and-whipoutcodec.md" %}

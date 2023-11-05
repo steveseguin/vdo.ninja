@@ -4,7 +4,8 @@ description: Scales down the WHIP video output via the URL
 
 # \&whipoutscale (alpha)
 
-WHIP Option! / Sender-Side Option! ([`&whip`](and-whip.md), [`&push`](../../source-settings/push.md))
+[WHIP Option](../../steves-helper-apps/whip-and-whep-tooling.md) / Sender-Side Option! ([`&push`](../../source-settings/push.md))\
+\***ALPHA-ONLY** - Only available at [https://vdo.ninja/alpha/](https://vdo.ninja/alpha/)
 
 ## Aliases
 
@@ -30,6 +31,6 @@ Alternatively, if you need to dynamically adjust the resolution, that option alr
 [whip-and-whep-tooling.md](../../steves-helper-apps/whip-and-whep-tooling.md)
 {% endcontent-ref %}
 
-{% content-ref url="and-whip.md" %}
-[and-whip.md](and-whip.md)
+{% content-ref url="and-whipview.md" %}
+[and-whipview.md](and-whipview.md)
 {% endcontent-ref %}

@@ -809,7 +809,7 @@ https://vdo.ninja/alpha/?view=YbFmisR&poster=./media/bg_sample.webp&hideplaybutt
   \- the [Mixer App](../steves-helper-apps/mixer-app.md) has been improved, including with the option to sync OBS scenes to Mixer layouts\
   \- connection stats has new features and important fixes to the candidate type stat\
   \- a refresh to the UI, with a large contribution from Lindenkron there\
-  \- chunked mode improvements and options to dynamically change the buffer have been added - Initial [WHIP/WHEP](../advanced-settings/whip-parameters/and-whip.md) support added, including a test page at [https://vdo.ninja/whip](https://vdo.ninja/whip)
+  \- chunked mode improvements and options to dynamically change the buffer have been added - Initial [WHIP/WHEP](../advanced-settings/whip-parameters/and-whipview.md) support added, including a test page at [https://vdo.ninja/whip](https://vdo.ninja/whip)
 
 #### May 5 <a href="#august-31" id="august-31"></a>
 
@@ -1126,7 +1126,7 @@ https://vdo.ninja/alpha/?view=YbFmisR&poster=./media/bg_sample.webp&hideplaybutt
 
 #### February 19 <a href="#august-31" id="august-31"></a>
 
-* I've refined the [WHIP service](../advanced-settings/whip-parameters/and-whip.md) on `vdo.ninja/alpha/?whip=xxx`, making it as robust as I can I think, so if some third-party WHIP client/app doesn't work with it, it may not an issue with VDO.Ninja. In those cases it will be up to the client to ensure full support of the WHIP specification, else it may not work with VDO.Ninja.
+* I've refined the [WHIP service](../advanced-settings/whip-parameters/and-whipview.md) on `vdo.ninja/alpha/?whip=xxx`, making it as robust as I can I think, so if some third-party WHIP client/app doesn't work with it, it may not an issue with VDO.Ninja. In those cases it will be up to the client to ensure full support of the WHIP specification, else it may not work with VDO.Ninja.
 * Added [`&allowedscenes`](../advanced-settings/settings-parameters/and-allowedscenes.md) as an option to filter which OBS scenes a remote guest has access to controlling when using [`&controlobs`](../advanced-settings/settings-parameters/and-controlobs.md). Uses CSV to split up the scenes (avoid special characters in your scene names if there are issues)\
   example: `vdo.ninja/alpha/?view=xxx&remote&allowedscenes=Scene1,Scene2`\
   \
@@ -1291,7 +1291,7 @@ https://vdo.ninja/alpha/?view=YbFmisR&poster=./media/bg_sample.webp&hideplaybutt
 
 #### **December 21** <a href="#august-31" id="august-31"></a>
 
-* Added experimental "[WHIP](../advanced-settings/whip-parameters/and-whip.md)" support to VDO.Ninja, which means in the near future you'll be able to publish directly from OBS to VDO.Ninja without a virtual camera. There's some big caveats to it all, so I don't recommend it over the normal method to most users, but we'll see how it evolves. ([https://vdo.ninja/alpha/?whip=xxx](https://vdo.ninja/alpha/?whip=xxx) + [https://whip.vdo.ninja/](https://whip.vdo.ninja/) + xxx)\
+* Added experimental "[WHIP](../advanced-settings/whip-parameters/and-whipview.md)" support to VDO.Ninja, which means in the near future you'll be able to publish directly from OBS to VDO.Ninja without a virtual camera. There's some big caveats to it all, so I don't recommend it over the normal method to most users, but we'll see how it evolves. ([https://vdo.ninja/alpha/?whip=xxx](https://vdo.ninja/alpha/?whip=xxx) + [https://whip.vdo.ninja/](https://whip.vdo.ninja/) + xxx)\
   \
   YouTube tutorial: [https://youtu.be/ynSOE2d4Z9Y](https://youtu.be/ynSOE2d4Z9Y)
 

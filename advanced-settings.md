@@ -52,8 +52,8 @@ All of the available parameters can be seperated in five categories. You find th
   These parameters are specifically for the director of a room.
 * **Meshcast Option** ([`&meshcast`](newly-added-parameters/and-meshcast.md))\
   These parameters can only be used in combination with `&meshcast`. You can find them in [Meshcast Parameters](advanced-settings/meshcast-parameters/). These parameters are always Sender-Side Option, so you will find `&push` in the URL, too.
-* **WHIP Option** ([`&whip`](advanced-settings/whip-parameters/and-whip.md))\
-  These parameters are specific to the [`&whip`](advanced-settings/whip-parameters/and-whip.md) parameter. They have to be used together with [`&whip`](advanced-settings/whip-parameters/and-whip.md). You cand find them in [WHIP Parameters](advanced-settings/whip-parameters/).
+* **WHIP Option** ([`&whip`](advanced-settings/whip-parameters/and-whipview.md))\
+  These parameters are specific to the [`&whip`](advanced-settings/whip-parameters/and-whipview.md) parameter. They have to be used together with [`&whip`](advanced-settings/whip-parameters/and-whipview.md). You cand find them in [WHIP Parameters](advanced-settings/whip-parameters/).
 
 ## Navigating the available setting options
 
@@ -72,7 +72,7 @@ We've broken down the available URL parameters into 20 categories:
 * [screen-share-parameters](advanced-settings/screen-share-parameters/ "mention") (labels, audio filters, type, bitrate, quality, etc.)
 * [recording-parameters](advanced-settings/recording-parameters/ "mention") (options to specify recordings with VDO.Ninja)
 * [meshcast-parameters](advanced-settings/meshcast-parameters/ "mention") (options for the [`&meshcast`](newly-added-parameters/and-meshcast.md) parameter like audio filters, bitrate, screen-share, codecs, etc.)
-* [whip-parameters](advanced-settings/whip-parameters/ "mention") (options to specify the [`&whip`](advanced-settings/whip-parameters/and-whip.md) parameter)
+* [whip-parameters](advanced-settings/whip-parameters/ "mention") (options to specify the [`&whip`](advanced-settings/whip-parameters/and-whipview.md) parameter)
 * [mobile-parameters](advanced-settings/mobile-parameters/ "mention") (options to specify push links and guest invite links for mobile phones)
 * [api-and-midi-parameters](advanced-settings/api-and-midi-parameters/ "mention") (hotkey features via API and MIDI)
 * [turn-and-stun-parameters](advanced-settings/turn-and-stun-parameters/ "mention") (options for setting up TURN and STUN servers)

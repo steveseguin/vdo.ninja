@@ -4,7 +4,7 @@ description: Lets you specify the WHIP audio bitrate (kbps)
 
 # \&whipoutaudiobitrate
 
-WHIP Option! ([`&whip`](and-whip.md))
+[WHIP Option](../../steves-helper-apps/whip-and-whep-tooling.md) / Sender-Side Option! ([`&push`](../../source-settings/push.md))
 
 ## Aliases
 
@@ -24,8 +24,8 @@ Example: `&whipoutaudiobitrate=128`
 
 ## Related
 
-{% content-ref url="and-whip.md" %}
-[and-whip.md](and-whip.md)
+{% content-ref url="and-whipview.md" %}
+[and-whipview.md](and-whipview.md)
 {% endcontent-ref %}
 
 {% content-ref url="../view-parameters/audiobitrate.md" %}
