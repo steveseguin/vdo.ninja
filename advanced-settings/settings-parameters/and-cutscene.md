@@ -41,6 +41,8 @@ Note that the OBS browser source needs the permissions to be set to high, to giv
 Do not set the OBS browser source to "Shutdown" when not visible, as this will prevent things from being able to switch back.
 {% endhint %}
 
+When using `&cutscene` on a room scene, it won't trigger due to a director being in the room with no video, unless they are using [`&showdirector`](../../viewers-settings/and-showdirector.md). `&cutscene` wasn't intended really for a group scene; just a solo link or view link, but this fix makes it at more usable with a group scene.
+
 ## Related
 
 {% content-ref url="../parameters-only-on-beta/and-bitratecutoff.md" %}

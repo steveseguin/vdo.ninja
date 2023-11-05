@@ -29,6 +29,8 @@ Example: `&bitratecutoff=500`
 There is a 3-second delay in calculating the average bitrate. Won't work with viewers that are Firefox/Safari; just Chrome/Chromium, so OBS, vMix, Electron Capture, Chrome. This is because Firefox/Safari lack the stats in VDO.Ninja needed to trigger this.
 {% endhint %}
 
+When using `&bitratecutoff` on a room scene, it won't trigger due to a director being in the room with no video, unless they are using [`&showdirector`](../../viewers-settings/and-showdirector.md).
+
 ## Related
 
 {% content-ref url="../settings-parameters/and-cutscene.md" %}
