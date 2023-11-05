@@ -1,5 +1,16 @@
 # Updates - VDO.Ninja
 
+#### November 5 <a href="#august-31" id="august-31"></a>
+
+*   I put together a code example of how to use the IFrame API of VDO.Ninja to remotely control OBS; so you don't need to use the built-in controller menu, but you can make your own and integrate it into your own web apps.
+
+    * [https://vdo.ninja/alpha/examples/obsremote](https://vdo.ninja/alpha/examples/obsremote)
+    * I have an older OBS remote example, using WebSockets, but that's a bit depreciated at the moment.
+    * The page gives you a link to put into OBS, and assuming you did it right, you'll see your OBS scenes appear as buttons.
+    * This sample uses a newly added IFrame API end point in VDO.Ninja, designed for controlling OBS; it's on only alpha currently, so this sample only works on alpha atm. You could technically make your own OBS controller however instead, and just use VDO.Ninja to relay generic messages; that's how social stream does it, for example.
+
+    <figure><img src="../.gitbook/assets/image (209).png" alt=""><figcaption></figcaption></figure>
+
 #### November 4 <a href="#august-31" id="august-31"></a>
 
 *   When using the [`&limittotalbitrate`](../advanced-settings/video-bitrate-parameters/limittotalbitrate.md) option as a [director](../viewers-settings/director.md), the room settings will include a new slider to let you dynamically change that value.

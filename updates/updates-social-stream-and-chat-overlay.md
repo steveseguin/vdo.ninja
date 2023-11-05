@@ -3,6 +3,12 @@
 [social-stream.md](../steves-helper-apps/social-stream.md "mention")\
 [chat-overlay.md](../steves-helper-apps/chat-overlay.md "mention")
 
+#### **November 5**
+
+* I updated the sample `custom.js` file for Social Stream with the option to allow your public chat to control your OBS scenes with chat `!commands`.
+  * In the provided sample code, when a guest types `!cycle` into chat, it will tell your OBS to switch to the next available scene, cycling between them all. Timeout of 10-seconds between uses.
+  * More details and the code, check out here: [https://github.com/steveseguin/social\_stream/issues/148#issuecomment-1793594605](https://github.com/steveseguin/social\_stream/issues/148#issuecomment-1793594605)
+
 #### **October 30**
 
 *   Added a 'goodwords.txt' option to Social Stream
