@@ -29,6 +29,12 @@ This `&locked` option is added to the Mixer App's WHIP/**Twitch publishing outpu
 
 ## Related
 
+
+
+{% content-ref url="../design-parameters/and-structure.md" %}
+[and-structure.md](../design-parameters/and-structure.md)
+{% endcontent-ref %}
+
 {% content-ref url="../video-parameters/and-aspectratio.md" %}
 [and-aspectratio.md](../video-parameters/and-aspectratio.md)
 {% endcontent-ref %}
