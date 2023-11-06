@@ -20,6 +20,10 @@ May not yet work with [`&forcedlandscape`](../mobile-parameters/and-forcelandsca
 
 ## Related
 
+{% content-ref url="../mixer-scene-parameters/and-locked.md" %}
+[and-locked.md](../mixer-scene-parameters/and-locked.md)
+{% endcontent-ref %}
+
 {% content-ref url="and-color.md" %}
 [and-color.md](and-color.md)
 {% endcontent-ref %}
