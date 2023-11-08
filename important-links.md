@@ -51,6 +51,7 @@ description: All useful links you might take a look at
 | Publish via WHIP (alpha)                                                        | [https://vdo.ninja/alpha/whip](https://vdo.ninja/alpha/whip)                                                                                           |
 | Use VDO.Ninja and Kick chat at the same time                                    | [https://vdo.ninja/kick](https://vdo.ninja/kick)                                                                                                       |
 | Teleprompter                                                                    | [https://vdo.ninja/teleprompter](https://vdo.ninja/teleprompter)                                                                                       |
+| Mic Test                                                                        | [https://vdo.ninja/mictest](https://vdo.ninja/mictest)                                                                                                 |
 
 ### [Sponsor ❤](getting-started/sponsor.md)
 

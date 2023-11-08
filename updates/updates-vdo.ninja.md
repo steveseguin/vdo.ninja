@@ -1,7 +1,36 @@
 # Updates - VDO.Ninja
 
+#### November 8 <a href="#august-31" id="august-31"></a>
+
+*   Loading up the camera should be faster in most cases now, especially on mobile browsers when selecting the non-default camera.
+
+    * For example, loading the rear camera on an Android device should be under 1-second now, rather than 1 to 5-seconds.
+    * Things will still be slow if needing to request camera or mic permissions, or if using an older browser.
+    * Browsers have matured in the last three years since I previously wrote this logic, so I'm presuming issues of the past aren't present anymore.
+    * Please test it though and report any issues to me of course - I think everything should be _more_ stable now, but you never know.
+
+    \*\* changes on vdo.ninja/alpha/, as well, all the recent code updates (v24.2 beta) are on Github too.
+* Fixed an issue where if you were recording a [`&chunked`](../newly-added-parameters/and-chunked.md) stream remotely, and then refreshed the page accidentally, the video file often wouldn't close in time and the file would be lost. The new code now will do a faster emergency file close on a page reload, avoiding this issue; the non-chunked recording option already did this e-stop option.
+* The chunked file recording now supports AV1 video codec; before it was limited to VP9. (AV1 is the new default chunked mode atm)
+* The audio-level meter now works when at the preview-screen, even if [`&audiogain=0`](../advanced-settings/audio-parameters/and-audiogain.md) has the microphone muted. (I essentially just apply the custom gain only after the user hits "start" now, rather than immediately)\
+  ![](<../.gitbook/assets/image (212).png>)
+
+\*\* changes on alpha
+
 #### November 5 <a href="#august-31" id="august-31"></a>
 
+*   `ALT + A` as a hotkey will toggle the speaker-output audio mute on/off.
+
+    * This is only usable when the browser tab is in focus
+    * If you have conflicts with this option, please let me know and I'll change it up
+
+    <div align="left">
+
+    <figure><img src="../.gitbook/assets/image (211).png" alt=""><figcaption></figcaption></figure>
+
+    </div>
+
+    \*\* on alpha for test; [vdo.ninja/alpha/](https://vdo.ninja/alpha/)
 *   I put together a code example of how to use the IFrame API of VDO.Ninja to remotely control OBS; so you don't need to use the built-in controller menu, but you can make your own and integrate it into your own web apps.
 
     * [https://vdo.ninja/alpha/examples/obsremote](https://vdo.ninja/alpha/examples/obsremote)

@@ -1,5 +1,15 @@
 # Updates - Miscellaneous
 
+#### November 8
+
+* The [https://updates.vdo.ninja/](https://updates.vdo.ninja/) page now stores and hosts the discord images from this updates-channel; discord is dropping its CDN support, so having to host images myself now.
+
+#### November 6
+
+* Inspired to put Chat GPT to the test, it helped me create this microphone loudness testing tool in a few minutes: [https://vdo.ninja/mictest](https://vdo.ninja/mictest)
+  * Simple, no bloat and ad-free, which is the main reason I wanted it versus other options I could find.
+  * I fear for my job.
+
 #### September 8
 
 * If you like the [vdo.ninja/twitch](https://vdo.ninja/twitch) page (chat and use VDO.Ninja at the same time), I created a version specific for Kick.com now also: [https://vdo.ninja/kick](https://vdo.ninja/kick). I may consolidate these tools at some point, but for now, hopefully it helps.
