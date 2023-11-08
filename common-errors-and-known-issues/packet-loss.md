@@ -4,9 +4,9 @@ description: When data is lost or delayed during transfer between peers
 
 # Packet Loss
 
-Packet loss can cause audio distortion, clicking, and is the cause for numerous video problems. \
+Packet loss can cause low quality video, audio distortion, clicking, and is the cause for numerous other video problems. \
 \
-WiFi is often the main contributor to packet loss, but it's not the only cause. Still, eliminate WiFi as a possible culprit by removing it from your setup and from the guest's setup..
+WiFi is often the main contributor to packet loss, but it's not the only cause. Still, eliminate WiFi as a possible culprit by removing it from your setup and from the guest's setup.
 
 An Ethernet connection is highly recommended over WiFi.
 
@@ -58,7 +58,7 @@ Sometimes two peers just can't get a good connection, while with other peers the
 
 I have a video talking about packet loss, with details on how to setup Speedify as well: [https://www.youtube.com/watch?v=je2ljlvLzlYAnd](https://www.youtube.com/watch?v=je2ljlvLzlYAnd)
 
-## Connection testing tools
+## Connection testing tools and statistics
 
 There is a speedtest that the local user can try out to give them feedback on their packet loss. This is a special speedtest, different than normal tests, as it does not test for available bandwidth, but network quality and packet loss: [https://vdo.ninja/speedtest](https://vdo.ninja/speedtest)\
 \
@@ -67,8 +67,6 @@ If you'd like to remotely test a guest's connection, you can also have them perf
 You can also do a peer-to-peer test by just making a VDO.Ninja connection with the guest. If you hold down CTRL (cmd) and click on their video, you'll see the stats. Packet loss is a listed stat, as well as the candidate type. If a guest is connecting to you via RELAY candidate type, that implies there is a firewall or security setting blocking a direct peer to peer connection. Addressing this will likely resolve your issues.
 
 When doing a pre-check or speed test, make sure to test during the hours of the day you intend to go live. Mornings will often have less packet loss than evenings, with around 7pm to 10pm being especially bad.
-
-
 
 ### Asking ChatGPT about it..
 
