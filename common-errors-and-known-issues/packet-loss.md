@@ -24,6 +24,7 @@ An Ethernet connection is highly recommended over WiFi.
 * Disable any Anti-virus software or any security software that may disable webRTC IP leaking.
 * Advanced network firewalls, like _pfsense_, may block UDP packets or force traffic through a TURN relay server. VDO.Ninja uses mainly UDP packets in the high port range.
 * If your connection with a guest is going thru a TURN relay server, such as perhaps due to a security or privacy setting, resolving that may fix issues. VDO.Ninja offers publicly accessible and free TURN servers as part of its service, but these may introduce packet loss. You can always host your own TURN servers instead, but avoiding them if not needed is usually the best option.
+* Restart your Internet router; sometimes a router or network equipment just needs a good reset or update.
 
 #### Routing issues
 
@@ -38,7 +39,7 @@ Sometimes two peers just can't get a good connection, while with other peers the
 * Some cellular providers limit and throttle UDP packets, which are used by VDO.Ninja. Using a service such as Speedify, in TCP-mode, can bypass this limitation by wrapping the UDP packets as TCP and relaying them thru servers. Check with the cellular provider before purchasing a SIM card to ensure they do not throttle UDP packets as well, if intending to travel.
 * As mentioned before, sometimes the TURN relay severs get used, and this might be the case with cellular connections or corporate firewalls; hosting your own TURN server or finding a way to bypass them can sometimes help improve the quality of connections.
 
-#### Generic options
+#### More generic options to try
 
 * Using [\&chunked](../newly-added-parameters/and-chunked.md) mode on the sender's side can enable an alternative way of sending video data, but this option is only supported by Chrome and other Chromium-based browsers. It also is fairly CPU intensive and may require some tweaking of bitrates and buffers to have it work well for you situation
 * Try using [\&codec=av1](../advanced-settings/view-parameters/codec.md) on the viewer side; this won't solve packet loss issues, but the AV1 codec is more efficient than the default codecs, and so it may offer better video quality despite the packet loss.
