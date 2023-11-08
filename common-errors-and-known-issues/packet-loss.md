@@ -42,13 +42,17 @@ Sometimes two peers just can't get a good connection, while with other peers the
 
 * Using [\&chunked](../newly-added-parameters/and-chunked.md) mode on the sender's side can enable an alternative way of sending video data, but this option is only supported by Chrome and other Chromium-based browsers. It also is fairly CPU intensive and may require some tweaking of bitrates and buffers to have it work well for you situation
 * Try using [\&codec=av1](../advanced-settings/view-parameters/codec.md) on the viewer side; this won't solve packet loss issues, but the AV1 codec is more efficient than the default codecs, and so it may offer better video quality despite the packet loss.
+* Try adding [\&buffer=500](../advanced-settings/view-parameters/buffer.md) to the viewer link, as this might allow for more time for lost packets to arrive.
 * Reduce the bitrate of your video streams. If your connection can only handle 30-mbps in and 10-mbps out, trying to push it to do more will cause network thrashing and packet loss. In this case, try to ensure that your connection's up and download links are not saturated by more than 80% of their tested max capacity. Leaving some headroom will reduce latency and packet loss, ultimately leading to better quality.
+* Consider using Meshcast or a WHIP/WHEP server-based SFU provider, and use that with VDO.Ninja instead of a direct peer-to-peer connection. I have a [guide for setting up Cloudflare ](https://cloudflare.vdo.ninja/)to be used in this regard, but any WHIP+WHEP SFU can work. This can provide more advanced buffering and SVC options not available with direct browser to browser options.
+* Use Raspberry.Ninja or OBS Studio's WHIP output as a video source, instead of the browser. Raspberry.Ninja in particular supports double redundant video streams for added error correction, and while it uses more bandwidth, it can tolerate heavy packet loss and force a specified video quality. While packet loss will still exist, you might find the outcome is more to your liking
+* If screen sharing, you can use [\&contenthint=detail](../advanced-settings/video-parameters/and-contenthint.md), which can tell the system to prioritize frame resolution, than frame rate. While this isn't suitable for gaming, it might be a good option for screen shares, where packet loss might otherwise might text unreadable.
 
 ### Audio issues due to packet loss
 
 * Turning down the audio bitrate ([`&audiobitrate=128`](../advanced-settings/view-parameters/audiobitrate.md)) will be less prone to clicking issues vs something high, like 256-kbps. The default is 32-kbps.
 * You can add [`&enhance`](../advanced-settings/view-parameters/enhance.md) on the viewer side to try to prioritize the audio over the video. This might help with audio clicking issues.
-* Using \&audiocodec=red on the viewer side can increase the amount of error correction data being sent, reducing packet loss. This will double the audio bandwidth, but that shoulnd't be an issue for most modern connections.
+* Using [\&audiocodec=red](../advanced-settings/audio-parameters/minptime-1.md) on the viewer side can increase the amount of error correction data being sent, reducing packet loss. This will double the audio bandwidth, but that shoulnd't be an issue for most modern connections.
 
 ### Youtube Video guide on packet loss + VDO.Ninja
 
